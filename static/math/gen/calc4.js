@@ -531,10 +531,10 @@
     }
     // which f has gradient F (mistakes: double-counting a shared term, a factor off, a swapped variable)
     var terms = fP.terms(), mixed = terms.filter(function (t) { return t[1][0] && t[1][1]; })[0];
-    var w1 = fP.add(Poly.mono(XY, mixed[0], mixed[1])), w2 = fP.scale(2), w3 = fP.substAll({ x: Poly.v(XY, 'y'), y: Poly.v(XY, 'x') });
+    var w1 = mixed ? fP.add(Poly.mono(XY, mixed[0], mixed[1])) : fP.add(Poly.of(XY, [[2, { x: 1 }]])), w2 = fP.scale(2), w3 = fP.substAll({ x: Poly.v(XY, 'y'), y: Poly.v(XY, 'x') });
     var wrongs = [w1, w2, w3].filter(function (w) { return !(w.d('x').sub(F[0]).isZero() && w.d('y').sub(F[1]).isZero()); }).map(function (w) { return '$' + w.toTex() + '$'; });
     return { q: 'Which function $f$ has $\\nabla f = ' + fieldTex(F) + '$?', a: mc(R, '$' + fP.toTex() + '$', wrongs.concat(['$' + fP.add(Poly.of(XY, [[1, { x: 1, y: 1 }]])).toTex() + '$'])),
-      steps: ['Check each candidate by differentiating: the right one must give $f_x = ' + F[0].toTex() + '$ and $f_y = ' + F[1].toTex() + '$.', 'For $f = ' + fP.toTex() + '$: $f_x = ' + fP.d('x').toTex() + '$ and $f_y = ' + fP.d('y').toTex() + '$. Both match.', 'A term shared by both components (like $' + Poly.mono(XY, mixed[0], mixed[1]).toTex() + '$) must appear in $f$ only once.'],
+      steps: ['Check each candidate by differentiating: the right one must give $f_x = ' + F[0].toTex() + '$ and $f_y = ' + F[1].toTex() + '$.', 'For $f = ' + fP.toTex() + '$: $f_x = ' + fP.d('x').toTex() + '$ and $f_y = ' + fP.d('y').toTex() + '$. Both match.', mixed ? 'A term shared by both components (like $' + Poly.mono(XY, mixed[0], mixed[1]).toTex() + '$) must appear in $f$ only once.' : 'Each term of $f$ shows up in just one component here, since no term has both $x$ and $y$.'],
       hint: 'Differentiate each choice; the gradient must match both components.', chk: { k: 'whichf', F: fieldPlain(F), ans: '$' + fP.toTex() + '$' } };
   });
 
@@ -798,13 +798,15 @@
       var f3 = new Poly(XYZ).add(rmono(R, XYZ, 2, 3)).add(rmono(R, XYZ, 2, 3)).add(Poly.of(XYZ, [[R.nz(-2, 2), { x: 1, y: 1, z: 1 }]])), F3 = XYZ.map(function (v) { return f3.d(v); }), ok3 = R.coin();
       if (!ok3) F3[2] = F3[2].add(Poly.of(XYZ, [[R.nz(-2, 2), { x: 1 }]]));
       var Fe = F3.map(Ex.poly), cr = curlEx(Fe), crT = cr.map(function (c) { return c.toTex(); });
-      return { q: 'Is $\\mathbf{F}(x, y, z) = ' + fieldTex(F3) + '$ conservative on all of space?', a: { t: 'tf', v: ok3 },
+      return { q: 'Is this field conservative on all of space? $$\\mathbf{F}(x, y, z) = ' + fieldTex(F3) + '$$', a: { t: 'tf', v: ok3 },
         steps: ['All of space has no holes, so $\\mathbf{F}$ is conservative exactly when $\\nabla \\times \\mathbf{F} = \\mathbf{0}$.', '$\\nabla \\times \\mathbf{F} = \\langle R_y - Q_z, P_z - R_x, Q_x - P_y \\rangle = \\langle ' + crT.join(', ') + ' \\rangle$.', ok3 ? 'Every component is $0$: conservative.' : 'Not all components are $0$: not conservative.'],
         hint: 'Compute the curl.', chk: { k: 'tf3', F: fieldPlain(F3) } };
     }
     var f = new Poly(XY).add(rmono(R, XY, 3, 3)).add(rmono(R, XY, 2, 3)).add(Poly.of(XY, [[R.nz(-3, 3), { x: R.int(1, 3), y: R.int(1, 2) }]])), F = [f.d('x'), f.d('y')];
     if (kind === 'k') {
-      var mixed = f.terms().filter(function (t) { return t[1][0] && t[1][1]; })[0], c = mixed[0], p = mixed[1][0], qq = mixed[1][1], kval = c.mul(qq), hiddenTerm = Poly.mono(XY, kval, [p, qq - 1]);
+      var mixed = f.terms().filter(function (t) { return t[1][0] && t[1][1]; })[0];
+      if (!mixed) { f = f.add(Poly.of(XY, [[2, { x: 1, y: 1 }]])); F = [f.d('x'), f.d('y')]; mixed = f.terms().filter(function (t) { return t[1][0] && t[1][1]; })[0]; } // the random terms cancelled the mixed one
+      var c = mixed[0], p = mixed[1][0], qq = mixed[1][1], kval = c.mul(qq), hiddenTerm = Poly.mono(XY, kval, [p, qq - 1]);
       var Qrest = F[1].sub(hiddenTerm), Qtex = T.terms([[1, 'k' + (p ? (p === 1 ? 'x' : 'x^{' + p + '}') : '') + (qq - 1 ? (qq - 1 === 1 ? 'y' : 'y^{' + (qq - 1) + '}') : '')]]) + (Qrest.isZero() ? '' : (Qrest.toTex()[0] === '-' ? ' - ' + Qrest.toTex().slice(1) : ' + ' + Qrest.toTex()));
       return { q: 'Find the constant $k$ that makes $\\mathbf{F}(x, y) = \\left\\langle ' + F[0].toTex() + ', ' + Qtex + ' \\right\\rangle$ conservative.', a: { t: 'num', v: kval.toPlain() },
         steps: ['On the whole plane, $\\mathbf{F}$ is conservative exactly when $P_y = Q_x$.', '$P_y = ' + F[0].d('y').toTex() + '$.', '$Q_x$ contains $' + T.coef(p, 'k' + (p > 1 ? 'x^{' + (p - 1) + '}' : '') + (qq - 1 ? (qq - 1 === 1 ? 'y' : 'y^{' + (qq - 1) + '}') : '')) + '$ plus $' + Qrest.d('x').toTex() + '$.', 'Matching the terms gives $k = ' + kval.toTex() + '$.'],
@@ -925,17 +927,17 @@
       return { q: 'Which line integral around the counterclockwise boundary $C$ of a region $D$ gives the area of $D$?', a: mc(R, right, ['$\\oint_C y\\,dy$', '$\\oint_C x\\,dx$', '$\\oint_C y\\,dx$']),
         steps: ['Green\'s theorem turns $\\oint_C P\\,dx + Q\\,dy$ into $\\iint_D (Q_x - P_y)\\,dA$. For the area we need $Q_x - P_y = 1$.', '$P = 0$, $Q = x$ works: $\\oint_C x\\,dy = \\iint_D 1\\,dA$.', '$\\oint y\\,dx$ gives $-$area, and $\\oint x\\,dx$, $\\oint y\\,dy$ give $0$.'],
         hint: 'Find $P$, $Q$ with $Q_x - P_y = 1$.', chk: { k: 'which', ans: right } }; }
-    if (kind === 'ellipse') { var a = R.int(2, 6), b = R.intNot(1, 5, a);
+    if (kind === 'ellipse') { var a = R.int(2, 12), b = R.intNot(1, 10, a);
       return { q: 'Use $A = \\frac{1}{2}\\oint_C x\\,dy - y\\,dx$ to find the area inside the ellipse $\\mathbf{r}(t) = \\langle ' + cs(a) + '\\cos t, ' + cs(b) + '\\sin t \\rangle$, $0 \\le t \\le 2\\pi$.', a: { t: 'num', v: piPlain(a * b) },
         steps: ['$x = ' + cs(a) + '\\cos t$, $y = ' + cs(b) + '\\sin t$, so $dx = -' + cs(a) + '\\sin t\\,dt$ and $dy = ' + cs(b) + '\\cos t\\,dt$.', '$x\\,dy - y\\,dx = ' + a * b + '\\cos^2 t\\,dt + ' + a * b + '\\sin^2 t\\,dt = ' + a * b + '\\,dt$.', '$A = \\frac{1}{2}\\int_0^{2\\pi} ' + a * b + '\\,dt = ' + piTex(a * b) + '$, the familiar $\\pi ab$.'],
         hint: 'Substitute the parametrization; $\\cos^2 t + \\sin^2 t = 1$.', chk: { k: 'ellipse', a: a, b: b } }; }
-    if (kind === 'astroid') { var a2 = R.int(1, 4), C = circleMap(0, 0, 1), c = Poly.v(CS, 'cth'), s = Poly.v(CS, 'sth');
+    if (kind === 'astroid') { var a2 = R.int(1, 9), C = circleMap(0, 0, 1), c = Poly.v(CS, 'cth'), s = Poly.v(CS, 'sth');
       var x = c.pow(3).scale(a2), y = s.pow(3).scale(a2), dx = c.pow(2).mul(s).scale(-3 * a2), dy = s.pow(2).mul(c).scale(3 * a2), g = x.mul(dy).sub(y.mul(dx)).scale(Q(1, 2)), val = intCS(g, 0, 4, 'cth', 'sth');
       return { q: 'Find the area inside the astroid $\\mathbf{r}(t) = \\langle ' + T.coef(a2, '\\cos^3 t') + ', ' + T.coef(a2, '\\sin^3 t') + ' \\rangle$, $0 \\le t \\le 2\\pi$, using $A = \\frac{1}{2}\\oint_C x\\,dy - y\\,dx$.', a: { t: 'num', v: rpPlain(val) },
         steps: ['$dx = ' + T.coef(-3 * a2, '\\cos^2 t \\sin t') + '\\,dt$ and $dy = ' + T.coef(3 * a2, '\\sin^2 t \\cos t') + '\\,dt$.', '$x\\,dy - y\\,dx = ' + 3 * a2 * a2 + '(\\cos^4 t \\sin^2 t + \\sin^4 t \\cos^2 t)\\,dt = ' + 3 * a2 * a2 + '\\cos^2 t \\sin^2 t\\,dt$.', 'Over a full turn $\\int_0^{2\\pi} \\cos^2 t \\sin^2 t\\,dt = \\frac{\\pi}{4}$, so $A = \\frac{1}{2} \\cdot ' + 3 * a2 * a2 + ' \\cdot \\frac{\\pi}{4} = ' + rpTex(val) + '$.'],
         hint: 'Factor out $\\cos^2 t \\sin^2 t$; then use $\\cos^2 t \\sin^2 t = \\frac{1}{4}\\sin^2 2t$.', chk: { k: 'astroid', a: a2 } }; }
     // polygon by the shoelace sum
-    var pts; do { var n = R.pick([3, 4]); pts = []; for (var i = 0; i < n; i++) pts.push([R.int(-3, 4), R.int(-3, 4)]); var cx = pts.reduce(function (s0, p) { return s0 + p[0]; }, 0) / n, cy = pts.reduce(function (s0, p) { return s0 + p[1]; }, 0) / n;
+    var pts; do { var n = R.pick([3, 4]); pts = []; for (var i = 0; i < n; i++) pts.push([R.int(-5, 6), R.int(-5, 6)]); var cx = pts.reduce(function (s0, p) { return s0 + p[0]; }, 0) / n, cy = pts.reduce(function (s0, p) { return s0 + p[1]; }, 0) / n;
       pts.sort(function (p, r) { return Math.atan2(p[1] - cy, p[0] - cx) - Math.atan2(r[1] - cy, r[0] - cx); });
       var ok = true; for (i = 0; i < n; i++) { var A0 = pts[i], B0 = pts[(i + 1) % n], C0 = pts[(i + 2) % n]; if ((B0[0] - A0[0]) * (C0[1] - B0[1]) - (B0[1] - A0[1]) * (C0[0] - B0[0]) <= 0) ok = false; }
     } while (!ok);
@@ -1006,7 +1008,7 @@
     var L = lvl(ctx), kind = R.pick(ML.byLevel(ctx, ['point', 'identify', 'graph'], ['point', 'normal', 'identify', 'cyl'], ['normal', 'sphere', 'cyl', 'normal']));
     if (kind === 'point' || kind === 'normal') {
       var rs = [0, 1, 2].map(function () { var p = new Poly(UV).add(rmono(R, UV, kind === 'normal' ? 2 : 1, 3)).add(rmono(R, UV, 1, 3)).add(Poly.c(UV, R.int(-2, 2))); return p.isZero() ? Poly.v(UV, 'u') : p; });
-      var u0 = R.int(-2, 2), v0 = R.int(-2, 2), env = { u: u0, v: v0 };
+      var u0 = R.int(-3, 3), v0 = R.int(-3, 3), env = { u: u0, v: v0 };
       if (kind === 'point') { var P = rs.map(function (p) { return p.at(env); });
         return { q: 'Find the point on the surface $\\mathbf{r}(u, v) = ' + uvTex(rs) + '$ where $u = ' + u0 + '$ and $v = ' + v0 + '$.', a: { t: 'tuple', v: vPlain(P) },
           steps: ['A parametric surface sends each parameter pair $(u, v)$ to a point in space.', 'Substitute $u = ' + u0 + '$, $v = ' + v0 + '$ into each component: $' + ptTex(P) + '$.'],
@@ -1018,7 +1020,7 @@
         hint: 'Differentiate in $u$ and in $v$, substitute, then take the cross product.', chk: { k: 'normal', r: rs.map(function (p) { return p.toPlain(); }), u: u0, v: v0 } };
     }
     if (kind === 'identify') {
-      var a = R.int(2, 4), S = [['\\langle ' + a + '\\cos u, ' + a + '\\sin u, v \\rangle', 'a cylinder of radius $' + a + '$ around the $z$-axis'], ['\\langle ' + a + '\\sin u \\cos v, ' + a + '\\sin u \\sin v, ' + a + '\\cos u \\rangle', 'a sphere of radius $' + a + '$ centered at the origin'], ['\\langle v\\cos u, v\\sin u, v \\rangle', 'a cone with vertex at the origin'], ['\\langle u, v, u^2 + v^2 \\rangle', 'a paraboloid opening upward'], ['\\langle u, v, ' + a + ' - u - v \\rangle', 'a plane']];
+      var a = R.int(2, 9), S = [['\\langle ' + a + '\\cos u, ' + a + '\\sin u, v \\rangle', 'a cylinder of radius $' + a + '$ around the $z$-axis'], ['\\langle ' + a + '\\sin u \\cos v, ' + a + '\\sin u \\sin v, ' + a + '\\cos u \\rangle', 'a sphere of radius $' + a + '$ centered at the origin'], ['\\langle v\\cos u, v\\sin u, v \\rangle', 'a cone with vertex at the origin'], ['\\langle u, v, u^2 + v^2 \\rangle', 'a paraboloid opening upward'], ['\\langle u, v, ' + a + ' - u - v \\rangle', 'a plane']];
       var pickS = R.pick(S);
       return { q: 'What surface does $\\mathbf{r}(u, v) = ' + pickS[0] + '$ describe (for all allowed $u$, $v$)?', a: mc(R, pickS[1].replace(/^a /, 'A '), S.filter(function (s) { return s !== pickS; }).map(function (s) { return s[1].replace(/^a /, 'A '); }).slice(0, 3)),
         steps: ['Look for an equation the coordinates satisfy for every $u$ and $v$.', { 0: '$x^2 + y^2 = ' + a * a + '$ and $z = v$ is free: a cylinder.', 1: '$x^2 + y^2 + z^2 = ' + a * a + '(\\sin^2 u + \\cos^2 u) = ' + a * a + '$: a sphere.', 2: '$x^2 + y^2 = v^2 = z^2$: the cone $z^2 = x^2 + y^2$.', 3: '$z = x^2 + y^2$: a paraboloid.', 4: '$x + y + z = ' + a + '$: a plane.' }[S.indexOf(pickS)]],
@@ -1027,7 +1029,7 @@
       return { q: 'Parametrize the graph $z = ' + g.toTex() + '$ using $x = u$ and $y = v$.', a: { t: 'tuple', v: ['u', 'v', gu.toPlain()], vars: UV },
         steps: ['Any graph $z = f(x, y)$ is the parametric surface $\\mathbf{r}(u, v) = \\langle u, v, f(u, v) \\rangle$.', 'Here $\\mathbf{r}(u, v) = \\langle u, v, ' + gu.toTex() + ' \\rangle$.'],
         hint: 'Keep $x$ and $y$ as the parameters; $z$ comes from the formula.', chk: { k: 'graph', g: g.toPlain() } }; }
-    if (kind === 'cyl') { var a2 = R.int(2, 5);
+    if (kind === 'cyl') { var a2 = R.int(2, 9);
       return { q: 'Parametrize the cylinder $x^2 + y^2 = ' + a2 * a2 + '$ with $u$ the angle around the $z$-axis (measured from the positive $x$-axis) and $v = z$.', a: { t: 'tuple', v: [a2 + '*cos(u)', a2 + '*sin(u)', 'v'], vars: UV },
         steps: ['Each horizontal slice is a circle of radius $' + a2 + '$: $x = ' + a2 + '\\cos u$, $y = ' + a2 + '\\sin u$.', 'The height is free: $z = v$. So $\\mathbf{r}(u, v) = \\langle ' + a2 + '\\cos u, ' + a2 + '\\sin u, v \\rangle$.'],
         hint: 'Polar coordinates in each horizontal slice, plus the height.', chk: { k: 'cyl', a: a2 } }; }
@@ -1106,7 +1108,7 @@
         steps: ['$\\mathbf{r}_u \\times \\mathbf{r}_v = ' + vTex(a) + ' \\times ' + vTex(b) + ' = ' + vTex(N) + '$.', 'Its $z$-component is $' + qt(N[2]) + '$, ' + (up ? 'positive: it points upward, so it works.' : 'negative: it points downward, so use $\\mathbf{r}_v \\times \\mathbf{r}_u = ' + vTex(vsc(-1, N)) + '$ instead.')],
         hint: 'Upward means a positive $z$-component.', chk: { k: 'plane', a: a, b: b } }; }
     var g = new Poly(XY).add(rmono(R, XY, 2, 3)).add(rmono(R, XY, 1, 3)); if (g.isZero()) g = Poly.of(XY, [[1, { x: 2 }]]);
-    var P = [R.int(-2, 2), R.int(-2, 2)], env = envPt(XY, P), gx = g.d('x').at(env), gy = g.d('y').at(env), down = L >= 2 && R.coin(), N2 = down ? [gx, gy, Q(-1)] : [gx.neg(), gy.neg(), Q(1)];
+    var P = [R.int(-3, 3), R.int(-3, 3)], env = envPt(XY, P), gx = g.d('x').at(env), gy = g.d('y').at(env), down = L >= 2 && R.coin(), N2 = down ? [gx, gy, Q(-1)] : [gx.neg(), gy.neg(), Q(1)];
     return { q: 'Find the ' + (down ? '<b>downward</b>' : 'upward') + ' normal vector of the form $\\langle \\ldots, \\ldots, ' + (down ? '-1' : '1') + ' \\rangle$ to the surface $z = ' + g.toTex() + '$ at the point above $' + ptTex(P) + '$.', a: { t: 'tuple', v: vPlain(N2) },
       steps: ['With $\\mathbf{r}(x, y) = \\langle x, y, f(x, y) \\rangle$, $\\mathbf{r}_x \\times \\mathbf{r}_y = \\langle -f_x, -f_y, 1 \\rangle$, which points up.', '$f_x = ' + g.d('x').toTex() + '$ and $f_y = ' + g.d('y').toTex() + '$; at $' + ptTex(P) + '$ they are $' + gx.toTex() + '$ and $' + gy.toTex() + '$.', down ? 'Upward: $' + vTex([gx.neg(), gy.neg(), 1]) + '$. Downward is its negative: $' + vTex(N2) + '$.' : 'Upward normal: $' + vTex(N2) + '$.'],
       hint: 'Use $\\langle -f_x, -f_y, 1 \\rangle$ for upward' + (down ? ', then flip it.' : '.'), chk: { k: 'graphN', g: g.toPlain(), P: P, down: down } };
@@ -1256,7 +1258,7 @@
         hint: 'What kind of region is on each side: interval, curve, surface or solid?', chk: { k: 'which', ans: b[1] } }; }
     if (kind === 'tf') { var s = R.pick(BIG_TF); return { q: 'True or false: ' + s[0], a: { t: 'tf', v: s[1] }, steps: [s[2]], hint: 'Line up each theorem as "derivative inside = function on the boundary".', chk: { k: 'tf' } }; }
     var F = exField(R, XYZ, 2), cr = curlEx(F), dd = divEx(cr, XYZ), P = [R.int(-2, 2), R.int(-2, 2), R.int(-2, 2)];
-    return { q: 'For $\\mathbf{F}(x, y, z) = \\left\\langle ' + F.map(function (c) { return c.toTex(); }).join(', ') + ' \\right\\rangle$, find $\\nabla \\cdot (\\nabla \\times \\mathbf{F})$ at $' + ptTex(P) + '$.', a: { t: 'num', v: '0' },
+    return { q: 'Find $\\nabla \\cdot (\\nabla \\times \\mathbf{F})$ at $' + ptTex(P) + '$ for $$\\mathbf{F}(x, y, z) = \\left\\langle ' + F.map(function (c) { return c.toTex(); }).join(', ') + ' \\right\\rangle$$', a: { t: 'num', v: '0' },
       steps: ['$\\nabla \\times \\mathbf{F} = \\left\\langle ' + cr.map(function (c) { return c.toTex(); }).join(', ') + ' \\right\\rangle$.', 'Its divergence is $(R_y - Q_z)_x + (P_z - R_x)_y + (Q_x - P_y)_z = (R_{yx} - R_{xy}) + (P_{zy} - P_{yz}) + (Q_{xz} - Q_{zx})$.', 'Mixed partials are equal (Clairaut), so every pair cancels: $\\nabla \\cdot (\\nabla \\times \\mathbf{F}) = 0$ everywhere, including at $' + ptTex(P) + '$.'],
       hint: 'Write out the divergence of the curl and pair up mixed partials.', chk: { k: 'zero', F: F.map(function (c) { return c.toPlain(); }), P: P } };
   });
@@ -1347,23 +1349,23 @@
 
   G('calc4.shell-mass', function (R, ctx) {
     var L = lvl(ctx), kind = R.pick(ML.byLevel(ctx, ['hemi', 'cyl', 'hemi'], ['hemi', 'zbar', 'cyl', 'plane'], ['zbar', 'inertia', 'plane', 'hemi']));
-    if (kind === 'hemi') { var a = R.int(2, 3), ph = R.pick([1, 2]), dl = Poly.of(XYZ, R.pick(ph === 1 ? [[[1, { z: 1 }]], [[1, { x: 2 }], [1, { y: 2 }]], [[2, {}], [1, { z: 1 }]], [[3, {}]]] : [[[1, { z: 2 }]], [[1, {}], [1, { x: 2 }]], [[2, {}]]])), M = sphSurf(dl, a, ph);
+    if (kind === 'hemi') { var a = R.int(2, 5), ph = R.pick([1, 2]), dl = Poly.of(XYZ, R.pick(ph === 1 ? [[[1, { z: 1 }]], [[1, { x: 2 }], [1, { y: 2 }]], [[2, {}], [1, { z: 1 }]], [[3, {}]]] : [[[1, { z: 2 }]], [[1, {}], [1, { x: 2 }]], [[2, {}]]])), M = sphSurf(dl, a, ph);
       return { q: 'A thin shell has the shape of ' + sphereTex(a, ph) + ' and density $\\delta(x, y, z) = ' + dl.toTex() + '$ (mass per unit area). Find its mass.', a: { t: 'num', v: rpPlain(M) },
         steps: ['Mass $= \\iint_S \\delta\\,dS$, with $dS = ' + a * a + '\\sin\\varphi\\,d\\varphi\\,d\\theta$ on the sphere of radius $' + a + '$.', 'In spherical coordinates the density is $' + dl.substAll(sphMap(a, SPH)).toTex() + '$.', 'Integrate over $0 \\le \\theta \\le 2\\pi$, $0 \\le \\varphi \\le ' + (ph === 2 ? '\\pi' : '\\frac{\\pi}{2}') + '$: mass $= ' + rpTex(M) + '$.'],
         hint: 'Mass is the surface integral of the density.', chk: { k: 'hemi', f: dl.toPlain(), a: a, ph: ph } }; }
-    if (kind === 'cyl') { var a2 = R.int(2, 3), h = R.int(1, 4), dl2 = Poly.of(XYZ, R.pick([[[1, { z: 1 }]], [[1, {}], [1, { z: 1 }]], [[1, { x: 2 }]], [[2, { z: 1 }], [1, { y: 2 }]]])), M2 = cylSurf(dl2, a2, h);
+    if (kind === 'cyl') { var a2 = R.int(2, 5), h = R.int(1, 6), dl2 = Poly.of(XYZ, R.pick([[[1, { z: 1 }]], [[1, {}], [1, { z: 1 }]], [[1, { x: 2 }]], [[2, { z: 1 }], [1, { y: 2 }]]])), M2 = cylSurf(dl2, a2, h);
       return { q: 'A thin can (side only) is the cylinder $x^2 + y^2 = ' + a2 * a2 + '$, $0 \\le z \\le ' + h + '$, with density $\\delta = ' + dl2.toTex() + '$. Find its mass.', a: { t: 'num', v: rpPlain(M2) },
         steps: ['On the cylinder, $dS = ' + a2 + '\\,d\\theta\\,dz$.', 'Mass $= \\int_0^{2\\pi} \\int_0^{' + h + '} \\delta \\cdot ' + a2 + '\\,dz\\,d\\theta$ with $x = ' + a2 + '\\cos\\theta$, $y = ' + a2 + '\\sin\\theta$.', 'Mass $= ' + rpTex(M2) + '$.'],
         hint: 'Use $dS = a\\,d\\theta\\,dz$.', chk: { k: 'cyl', f: dl2.toPlain(), a: a2, h: h } }; }
-    if (kind === 'zbar') { var a3 = R.int(1, 4), dl3 = Poly.of(XYZ, R.pick([[[1, {}]], [[1, { z: 1 }]], [[1, { x: 2 }], [1, { y: 2 }]], [[1, {}], [1, { z: 1 }]]])), M3 = sphSurf(dl3, a3, 1), Mz = sphSurf(dl3.mul(Poly.v(XYZ, 'z')), a3, 1), zb = Mz.p.div(M3.p);
+    if (kind === 'zbar') { var a3 = R.int(1, 7), dl3 = Poly.of(XYZ, R.pick([[[1, {}]], [[1, { z: 1 }]], [[1, { x: 2 }], [1, { y: 2 }]], [[1, {}], [1, { z: 1 }]]])), M3 = sphSurf(dl3, a3, 1), Mz = sphSurf(dl3.mul(Poly.v(XYZ, 'z')), a3, 1), zb = Mz.p.div(M3.p);
       return { q: 'A hemispherical shell $x^2 + y^2 + z^2 = ' + a3 * a3 + '$, $z \\ge 0$, has density $\\delta = ' + dl3.toTex() + '$. Find the $z$-coordinate $\\bar{z}$ of its center of mass.', a: { t: 'num', v: zb.toPlain() },
         steps: ['$\\bar{z} = \\dfrac{\\iint_S z\\,\\delta\\,dS}{\\iint_S \\delta\\,dS}$ (by symmetry $\\bar{x} = \\bar{y} = 0$).', 'Mass: $\\iint_S \\delta\\,dS = ' + rpTex(M3) + '$.', 'Moment: $\\iint_S z\\delta\\,dS = ' + rpTex(Mz) + '$.', '$\\bar{z} = ' + zb.toTex() + '$.' + (dl3.isConst() ? ' For a uniform hemispherical shell, $\\bar{z}$ is half the radius.' : '')],
         hint: 'Divide the moment $\\iint z\\delta\\,dS$ by the mass.', chk: { k: 'zbar', f: dl3.toPlain(), a: a3 } }; }
-    if (kind === 'inertia') { var a4 = R.int(2, 3), m0 = R.int(1, 3), I = sphSurf(Poly.of(XYZ, [[m0, { x: 2 }], [m0, { y: 2 }]]), a4, 2);
+    if (kind === 'inertia') { var a4 = R.int(2, 5), m0 = R.int(1, 5), I = sphSurf(Poly.of(XYZ, [[m0, { x: 2 }], [m0, { y: 2 }]]), a4, 2);
       return { q: 'A spherical shell $x^2 + y^2 + z^2 = ' + a4 * a4 + '$ has constant density $\\delta = ' + m0 + '$. Find its moment of inertia about the $z$-axis, $I_z = \\iint_S (x^2 + y^2)\\,\\delta\\,dS$.', a: { t: 'num', v: rpPlain(I) },
         steps: ['On the sphere, $x^2 + y^2 = ' + a4 * a4 + '\\sin^2\\varphi$ and $dS = ' + a4 * a4 + '\\sin\\varphi\\,d\\varphi\\,d\\theta$.', '$I_z = ' + m0 + ' \\cdot ' + Math.pow(a4, 4) + ' \\int_0^{2\\pi} \\int_0^{\\pi} \\sin^3\\varphi\\,d\\varphi\\,d\\theta = ' + m0 * Math.pow(a4, 4) + ' \\cdot 2\\pi \\cdot \\frac{4}{3} = ' + rpTex(I) + '$.', 'The mass is $M = ' + m0 + ' \\cdot 4\\pi \\cdot ' + a4 * a4 + '$, so $I_z = \\frac{2}{3}Ma^2$, the textbook value for a thin spherical shell.'],
         hint: 'Write $x^2 + y^2$ in spherical coordinates.', chk: { k: 'inertia', m: m0, a: a4 } }; }
-    var al = R.int(0, 2), be = R.int(0, 2), c = R.int(2, 6), s = R.int(1, 3), g = Poly.of(XY, [[c, {}], [-al, { x: 1 }], [-be, { y: 1 }]]), dl4 = Poly.of(XYZ, R.pick([[[1, { x: 1 }]], [[1, { y: 1 }], [1, {}]], [[1, { x: 1, y: 1 }]], [[2, {}]]]));
+    var al = R.int(0, 3), be = R.int(0, 3), c = R.int(2, 9), s = R.int(1, 4), g = Poly.of(XY, [[c, {}], [-al, { x: 1 }], [-be, { y: 1 }]]), dl4 = Poly.of(XYZ, R.pick([[[1, { x: 1 }]], [[1, { y: 1 }], [1, {}]], [[1, { x: 1, y: 1 }]], [[2, {}]]]));
     var dxy = dl4.substAll({ __vars: XY, x: Poly.v(XY, 'x'), y: Poly.v(XY, 'y'), z: g }), I4 = dxy.defint('y', 0, Poly.of(XY, [[s, {}], [-1, { x: 1 }]])).defint('x', 0, s).cval(), n2 = 1 + al * al + be * be;
     return { q: 'A thin triangular plate lies in the plane $z = ' + g.toTex() + '$ above the triangle $x \\ge 0$, $y \\ge 0$, $x + y \\le ' + s + '$, with density $\\delta = ' + dl4.toTex() + '$. Find its mass.', a: { t: 'num', v: radPlain(I4, n2) },
       steps: ['$dS = \\sqrt{1 + f_x^2 + f_y^2}\\,dA = \\sqrt{1 + ' + al * al + ' + ' + be * be + '}\\,dA = ' + sqrtTex(n2) + '\\,dA$.', '$\\int_0^{' + s + '} \\int_0^{' + s + ' - x} ' + dxy.texParen() + '\\,dy\\,dx = ' + I4.toTex() + '$.', 'Mass $= ' + radTex(I4, n2) + '$.'],
@@ -1371,3 +1373,133 @@
   });
 
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
+   generator still has few different problems at a level sometimes asks the same skill in another form, built only from
+   problems that generator made, so every answer is the generator's own:
+   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+     classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
+     checker rejects it;
+   - two at once: two different short questions of the topic, answered together.
+   Topics whose generator already varies a lot at a level are left as they are. Placed after the generators and
+   registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'calc4', VAR = {};
+  // how often another form is used: never when the topic's own generator already varies a lot at this level, up to
+  // half the time when it has few different questions (counted once per topic and level from 40 fixed seeds)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 37 ? 0 : VAR[key] >= 30 ? 0.3 : VAR[key] >= 20 ? 0.45 : 0.55;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
+  // a nearby wrong answer for a number or an expression, or null
+  function wrongFor(R, a) {
+    var v = String(ML.answerValue(a)), cands = [], m;
+    if (a.t === 'num') {
+      if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
+      else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
+      else if (/^-?\d+\.\d+$/.test(v)) { var x = +v, dp = v.split('.')[1].length, st = Math.pow(10, -Math.min(dp, 2)); cands = [x + st, x - st, -x, x * 10, x / 10].map(function (y) { return ML.util.numStr(ML.util.round(y, dp + 1)); }); }
+      else return null;
+    } else if (a.t === 'expr') {
+      if (v.length > 60) return null;
+      if (/ \+ /.test(v)) cands.push(v.replace(' + ', ' - '));
+      if (/ - /.test(v)) cands.push(v.replace(' - ', ' + '));
+      if ((m = /(^|[^\d.^])(\d+)(?![\d.])/.exec(v)) && !/\^$/.test(v.slice(0, m.index + m[1].length))) cands.push(v.slice(0, m.index) + m[1] + (+m[2] + 1) + v.slice(m.index + m[0].length));
+      if (!cands.length) return null;
+    } else return null;
+    var nv = function (s) { var mm = /^(-?\d+)\/(\d+)$/.exec(s); return mm ? mm[1] / mm[2] : /^-?\d+(\.\d+)?$/.test(s) ? +s : null; }, v0 = nv(v);
+    cands = R.shuffle(cands.filter(function (c, i, all) { var x = nv(c); return c !== v && all.indexOf(c) === i && (x === null || v0 === null || (Math.abs(x - v0) >= 0.01 * Math.max(Math.abs(v0), 1e-12) && (v0 <= 0 || x > 0) && (v0 <= 0 || v0 > 1 || x <= 1))); })); // a believable slip: the same sign, and at most 1 when the right answer is
+    for (var i = 0; i < cands.length; i++) if (okAns(a, cands[i]) === false) return cands[i];
+    return null;
+  }
+  function checkable(p) {
+    var a = p.a;
+    if (!a || p.unit || (a.form && a.form !== 'int' && a.form !== 'frac' && a.form !== 'simplest')) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bclassmate\b/i.test(txt(p.q))) return false;
+    if (a.t === 'num' || a.t === 'expr') return okAns(a, ML.answerValue(a)) === true;
+    if (a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    return true;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || ['mc', 'tf', 'num'].indexOf(p.a.t) < 0) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= 300 && !/<(table|svg|img|canvas|ol|ul)\b|\$\$|\\begin\{/i.test(p.q);
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), shown, good;
+    if (a.t === 'mc') {
+      var k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+      shown = a.choices[k]; good = a.choices[a.v];
+    } else {
+      good = ML.answerShow(a);
+      var w = right ? null : wrongFor(R, a);
+      if (!right && w === null) return null;
+      shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
+      if (!shown || /undefined|NaN/.test(shown)) return null;
+    }
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var out = { q: '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q + '</li><li>' + p2.q + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + (p.steps || [''])[0]].concat((p.steps || []).slice(1), ['Question 2: ' + (p2.steps || [''])[0]], (p2.steps || []).slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), mode = ctx && ctx.mode;
+      if (!p || !p.a || !ML.check || !ML.answerShow || !R.chance(share(id, base, ctx))) return p;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check', 'check');
+      if (pairable(p, true)) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = null;
+      try { out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base); } catch (e) { out = null; }
+      return out || p;
+    };
+    fn._forms = true;
+    fn._base = base; // the topic's own generator (for tests)
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

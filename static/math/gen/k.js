@@ -122,11 +122,14 @@
   G('k.numerals-0-10', function (R, ctx) {
     var kind = ML.byLevel(ctx, 'count', R.pick(['count', 'which', 'zero']), R.pick(['which', 'flip', 'count']));
     if (kind === 'count') {
-      var n = R.chance(0.2) ? 0 : R.int(1, 10);
-      return { q: 'How many cookies are on the plate? Type the number.', viz: pic({ n: n, obj: 'cookie', plate: true, layout: n > 5 ? 'grid' : 'row' }), a: num(n),
-        steps: n ? ['Count the cookies: ' + countList(1, n) + '.', 'We write ' + n + '.'] : ['There are no cookies on the plate.', 'None at all is the number 0.'], hint: n ? 'Count each cookie one time.' : 'Look closely. Is anything on the plate?' };
+      var n = R.chance(0.15) ? 0 : R.int(1, 10), tc = pickThing(R), lay = n > 5 ? R.pick(['grid', 'row', 'scatter']) : R.pick(['row', 'line', 'scatter', 'circle']);
+      return { q: 'How many ' + tc.many + ' are on the mat? Type the number.', viz: pic({ n: n, obj: tc.obj, plate: true, layout: lay, seed: R.int(1, 99) }), a: num(n),
+        steps: n ? ['Count the ' + tc.many + ': ' + countList(1, n) + '.', 'We write ' + n + '.'] : ['There are no ' + tc.many + ' on the mat.', 'None at all is the number 0.'], hint: n ? 'Count each one time. Tap them to keep track.' : 'Look closely. Is anything on the mat?' };
     }
-    if (kind === 'zero') return { q: 'Which number means <b>none</b>, nothing at all?', a: mc(0, [1, 10]), steps: ['0 means none.', 'An empty plate has 0 cookies.'], hint: 'Think of an empty plate.' };
+    if (kind === 'zero') {
+      var tz = pickThing(R), nmz = R.pick(NAMES), wz = R.sample([1, 2, 3, 5, 10], 2);
+      return { q: nmz + ' had some ' + tz.many + '. Now they are all gone. Which number tells how many ' + tz.many + ' ' + nmz + ' has now?', a: mc(0, wz), steps: ['All gone means none are left.', 'None is the number 0.'], hint: 'Think of an empty mat. How many are on it?' };
+    }
     if (kind === 'which') {
       var t = pickThing(R), target = R.int(3, 9), others = R.sample([target - 2, target - 1, target + 1, target + 2].filter(function (x) { return x >= 1 && x <= 10; }), 2), cnts = R.shuffle([target].concat(others));
       var idx = cnts.indexOf(target);
@@ -134,7 +137,7 @@
         a: mcKeep(['A', 'B', 'C'], idx), steps: cnts.map(function (c, i) { return 'Box ' + LET[i] + ' has ' + w(c, t) + '.'; }).concat(['Box ' + LET[idx] + ' has ' + target + '.']), hint: 'Count each box. Tap the ' + t.many + ' to keep track.' };
     }
     var d = R.pick([2, 3, 4, 5, 6, 7, 9]), flipFirst = R.coin();
-    return { q: 'Which ' + d + ' is written the right way?', viz: pic({ kind: 'digits', items: [{ d: String(d), flip: flipFirst, name: 'A' }, { d: String(d), flip: !flipFirst, name: 'B' }] }),
+    return { q: R.pick(NAMES) + ' wrote the number ' + d + ' two times. Which ' + d + ' is written the right way?', viz: pic({ kind: 'digits', items: [{ d: String(d), flip: flipFirst, name: 'A' }, { d: String(d), flip: !flipFirst, name: 'B' }] }),
       a: mcKeep(['A', 'B'], flipFirst ? 1 : 0), steps: ['One of them is flipped, like in a mirror.', 'The right way is ' + (flipFirst ? 'B' : 'A') + '.', 'Trace it with your finger to feel the way it goes.'], hint: 'Picture how ' + d + ' looks in a book.' };
   });
 
@@ -213,8 +216,8 @@
 
   G('k.count-on', function (R, ctx) {
     if (ctx.level === 1) {
-      var s = R.int(3, 10), h = R.int(2, 3);
-      return { q: R.pick(['A frog', 'A bunny', 'A cricket', 'A kangaroo']) + ' starts on ' + s + ' and hops ' + h + ' more. Where does it land?', viz: pic({ kind: 'path', from: s - 2, to: s + h + 2, start: s, hops: h, hide: [s + h] }), a: num(s + h),
+      var s = R.int(2, 12), h = R.int(1, 3);
+      return { q: R.pick(['A frog', 'A bunny', 'A cricket', 'A kangaroo', 'A grasshopper', 'A puppy', 'A toad', 'A robin', 'A squirrel', 'A kitten', 'A sparrow', 'A beetle']) + ' starts on ' + s + ' and hops ' + h + ' more. Where does it land?', viz: pic({ kind: 'path', from: s - 2, to: s + h + 2, start: s, hops: h, hide: [s + h] }), a: num(s + h),
         steps: ['Start at ' + s + '. Do not go back to 1.', 'Hop and count on: ' + list(seq(s + 1, s + h)) + '.', 'You land on ' + (s + h) + '.'], hint: 'Say ' + s + ' quietly, then count the hops out loud.' };
     }
     if (ctx.level === 2 && R.coin()) {
@@ -239,11 +242,14 @@
         steps: nx % 10 === 0 ? ['After ' + (nx - 1) + ' the ones start over, and we go to the next ten.', (nx - 1) + ' is followed by ' + nx + '.'] : ['Keep counting by ones: ' + list([a, a + 1, a + 2, nx]) + '.'], hint: nx % 10 === 0 ? 'After a 9 comes a new ten: think 19, 20 or 29, 30.' : 'What comes after ' + (a + 2) + '?' };
     }
     if (kind === 'tens' || kind === 'tensmid') {
-      var d = R.int(1, kind === 'tens' ? 6 : 7), sh = kind === 'tensmid' ? R.int(0, 1) : 0, seqT = [d * 10, d * 10 + 10, d * 10 + 20, d * 10 + 30], hidx = sh ? 2 : 3, ansT = seqT[hidx];
-      return { q: 'Count by tens. What number goes in the box?<br>' + big(seqT.map(function (x, i) { return i === hidx ? sq() : x; }).join(', ')), a: num(ansT),
+      var d = R.int(1, kind === 'tens' ? 6 : 7), seqT = [d * 10, d * 10 + 10, d * 10 + 20, d * 10 + 30], hidx = kind === 'tensmid' ? R.int(1, 2) : R.pick([2, 3, 3]), ansT = seqT[hidx];
+      return { q: R.pick(NAMES) + ' counts by tens. What number goes in the box?<br>' + big(seqT.map(function (x, i) { return i === hidx ? sq() : x; }).join(', ')), a: num(ansT),
         steps: ['Counting by tens: ' + list(seqT) + '.', 'Each jump is 10 more: one more ten.', 'The missing number is ' + ansT + '.'], hint: 'Say the tens: ten, twenty, thirty, forty …' };
     }
-    if (kind === 'hundred') return { q: 'What number comes after 99?', a: num(100), steps: ['After 99 comes 100.', '100 is ten tens.'], hint: 'Count: 97, 98, 99 …' };
+    if (kind === 'hundred') {
+      var h0 = R.int(95, 97), nmh = R.pick(NAMES);
+      return { q: nmh + ' is counting all the way to 100. What number goes in the box?<br>' + big(list(seq(h0, 99)) + ', ' + sq()), a: num(100), steps: ['After 99 comes 100.', '100 is ten tens.'], hint: 'Count: ' + list(seq(h0, 99)) + ' …' };
+    }
     var row = R.int(0, 8), start = row * 10 + 1, ask = R.pick([start + 9, start + 10, start + R.int(2, 8)]);
     return { q: 'Here is part of the hundred chart. What number goes in the <b>?</b> square?', viz: pic({ kind: 'chart', start: start, rows: 2, cols: 10, ask: ask }), a: num(ask),
       steps: ['Each row counts on by ones.', 'Count to the ? square: … ' + (ask - 1) + ', ' + ask + '.'], hint: 'Look at the number just before the ? square.' };
@@ -268,8 +274,11 @@
 
   G('k.compare-numerals', function (R, ctx) {
     var a = R.int(0, 10), b = R.intNot(0, 10, [a]), big = M.max(a, b), small = M.min(a, b), kind = ML.byLevel(ctx, 'path', R.pick(['less', 'greater']), R.pick(['three', 'yesno', 'less']));
-    if (kind === 'path') return { q: 'Which number is <b>greater</b>, ' + a + ' or ' + b + '?', viz: pic({ kind: 'path', from: 0, to: 10, mark: [a, b] }), a: mc(big, [small]),
-      steps: ['When we count, ' + small + ' comes before ' + big + '.', 'Numbers later in the count are greater.', big + ' is greater than ' + small + '.'], hint: 'Which one do you say later when you count?' };
+    if (kind === 'path') {
+      var gp = R.coin();
+      return { q: 'Which number is <b>' + (gp ? 'greater' : 'less') + '</b>, ' + a + ' or ' + b + '?', viz: pic({ kind: 'path', from: 0, to: 10, mark: [a, b] }), a: mc(gp ? big : small, [gp ? small : big]),
+        steps: ['When we count, ' + small + ' comes before ' + big + '.', 'Numbers later in the count are greater. Numbers earlier in the count are less.', gp ? big + ' is greater than ' + small + '.' : small + ' is less than ' + big + '.'], hint: gp ? 'Which one do you say later when you count?' : 'Which one do you say first when you count?' };
+    }
     if (kind === 'greater' || kind === 'less') {
       var g = kind === 'greater';
       return { q: 'Which number is <b>' + (g ? 'greater' : 'less') + '</b>, ' + a + ' or ' + b + '?', a: mc(g ? big : small, [g ? small : big]),
@@ -343,8 +352,13 @@
   });
 
   G('k.number-partners', function (R, ctx) {
-    var n = ML.byLevel(ctx, R.int(3, 7), R.int(4, 9), R.int(5, 10)), a = R.int(1, n - 1), b = n - a, kind = ML.byLevel(ctx, 'bond', R.pick(['bond', 'eq', 'another']), R.pick(['another', 'not', 'eq']));
-    if (kind === 'bond') return { q: n + ' is ' + a + ' and what number?', viz: pic({ kind: 'bond', whole: n, a: a, hide: 'b' }), a: num(b),
+    var n = ML.byLevel(ctx, R.int(3, 7), R.int(4, 9), R.int(5, 10)), a = R.int(1, n - 1), b = n - a, kind = ML.byLevel(ctx, R.pick(['bond', 'bond', 'story']), R.pick(['bond', 'eq', 'another']), R.pick(['another', 'not', 'eq']));
+    if (kind === 'story') {
+      var tn = pickThing(R), nmn = R.pick(NAMES), boxes = R.pick([['in the red box', 'in the blue box'], ['in one hand', 'in the other hand'], ['on the top shelf', 'on the bottom shelf'], ['in the basket', 'on the table']]);
+      return { q: nmn + ' has ' + w(n, tn) + '. ' + a + ' ' + isAre(a) + ' ' + boxes[0] + '. How many are ' + boxes[1] + '?', viz: pic({ kind: 'bond', whole: n, a: a, hide: 'b' }), a: num(b),
+        steps: [n + ' is ' + a + ' and some more.', 'Count up from ' + a + ' to ' + n + ': ' + list(seq(a + 1, n)) + '.', 'That is ' + b + '. ' + n + ' is ' + a + ' and ' + b + '.'], hint: 'Hold up ' + n + ' fingers. Put down ' + a + '. How many are still up?' };
+    }
+    if (kind === 'bond') return { q: R.pick(NAMES) + ' is breaking apart ' + n + '. ' + n + ' is ' + a + ' and what number?', viz: pic({ kind: 'bond', whole: n, a: a, hide: 'b' }), a: num(b),
       steps: ['Start at ' + a + ' and count up to ' + n + ': ' + list(seq(a + 1, n)) + '.', 'That is ' + b + ' more.', n + ' is ' + a + ' and ' + b + '.'], hint: 'Hold up ' + n + ' fingers. Put down ' + a + '. How many are still up?' };
     if (kind === 'eq') return { q: 'What number goes in the box?<br>' + big(n + ' = ' + a + ' + ' + sq()), a: num(b),
       steps: [n + ' can be broken into ' + a + ' and ' + b + '.', '$' + n + ' = ' + a + ' + ' + b + '$'], hint: 'How many more than ' + a + ' make ' + n + '?' };
@@ -365,7 +379,7 @@
   G('k.make-ten', function (R, ctx) {
     var a = R.int(1, 9), b = 10 - a, kind = ML.byLevel(ctx, 'frame', R.pick(['bond', 'frame']), R.pick(['eq', 'eqL', 'bond']));
     var nmT = R.pick(NAMES);
-    if (kind === 'frame') return { q: nmT + ' put ' + a + ' ' + (a === 1 ? 'counter' : 'counters') + ' in a ten frame. How many more will fill it?', viz: pic({ layout: 'frame', n: a, frames: 1, tap: false }), a: num(b),
+    if (kind === 'frame') return { q: nmT + ' put ' + a + ' ' + (a === 1 ? 'counter' : 'counters') + ' in a ten frame. How many more will fill it?', viz: pic({ layout: 'frame', n: a, frames: 1, tap: false, obj: R.pick(['dot', 'dot', 'star', 'heart', 'apple', 'ball']) }), a: num(b),
       steps: ['There ' + isAre(a) + ' ' + a + ' ' + (a === 1 ? 'counter' : 'counters') + '.', 'Count the empty squares: ' + countList(1, b) + '.', a + ' and ' + b + ' make 10.'], hint: 'Count the empty squares.' };
     if (kind === 'bond') return { q: nmT + ' has ' + a + '. ' + a + ' and what number make 10?', viz: pic({ kind: 'bond', whole: 10, a: a, hide: 'b' }), a: num(b),
       steps: ['Start at ' + a + ' and count up to 10: ' + list(seq(a + 1, 10)) + '.', 'That is ' + b + ' more.', a + ' and ' + b + ' make 10.'], hint: 'Hold up 10 fingers. Put down ' + a + '.' };
@@ -376,10 +390,18 @@
   });
 
   G('k.facts-within-5', function (R, ctx) {
-    var add = R.coin(), a, b, c, kind = ML.byLevel(ctx, R.pick(['pic', 'story']), R.pick(['plain', 'story']), R.pick(['plain', 'missing', 'missing', 'story']));
+    var add = R.coin(), a, b, c, kind = ML.byLevel(ctx, R.pick(['pic', 'story']), R.pick(['plain', 'story', 'check']), R.pick(['plain', 'missing', 'missing', 'story', 'check']));
     if (add) { a = R.int(kind === 'missing' ? 1 : 0, 4); b = R.int(1, 5 - a); if (a === 0 && kind !== 'plain') a = 1; if (a + b > 5) b = 5 - a; c = a + b; }
     else { a = R.int(2, 5); b = R.int(1, a); c = a - b; }
+    if (kind === 'check') {
+      var ok = R.coin(), shown = ok ? c : (c === 0 ? 1 : c + R.pick([-1, 1])), nmc = R.pick(NAMES);
+      if (shown > 5) shown = c - 1;
+      return { q: nmc + ' wrote this. Is it right?<br>' + big(a + (add ? ' + ' : ' - ') + b + ' = ' + shown), a: mcKeep(['Yes', 'No'], ok ? 0 : 1),
+        steps: [add ? 'Start at ' + a + ' and count on ' + b + '.' : 'Start with ' + a + ' and take away ' + b + '.', '$' + a + (add ? ' + ' : ' - ') + b + ' = ' + c + '$', ok ? 'Yes, ' + nmc + ' is right.' : 'No. The answer is ' + c + ', not ' + shown + '.'], hint: 'Use your fingers to find the answer first.' };
+    }
     if (kind === 'missing') {
+      if (add && R.coin()) return { q: 'What number goes in the box?<br>' + big(sq() + ' + ' + b + ' = ' + c), a: num(a), steps: [a + ' and ' + b + ' make ' + c + '.', '$' + a + ' + ' + b + ' = ' + c + '$'], hint: 'Count back ' + b + ' from ' + c + ', or ask: what and ' + b + ' make ' + c + '?' };
+      if (!add && R.coin()) return { q: 'What number goes in the box?<br>' + big(sq() + ' - ' + b + ' = ' + c), a: num(a), steps: ['Start with ' + a + ', take away ' + b + ', and ' + c + ' ' + isAre(c) + ' left.', '$' + a + ' - ' + b + ' = ' + c + '$'], hint: 'Put them back together: ' + c + ' and ' + b + ' make what number?' };
       if (add) return { q: 'What number goes in the box?<br>' + big(a + ' + ' + sq() + ' = ' + c), a: num(b), steps: [a + ' and ' + b + ' make ' + c + '.', '$' + a + ' + ' + b + ' = ' + c + '$'], hint: 'Count up from ' + a + ' to ' + c + '.' };
       return { q: 'What number goes in the box?<br>' + big(a + ' - ' + sq() + ' = ' + c), a: num(b), steps: ['Take away ' + b + ' from ' + a + ' and ' + c + ' are left.', '$' + a + ' - ' + b + ' = ' + c + '$'], hint: 'How many must go away to leave ' + c + '?' };
     }
@@ -390,7 +412,8 @@
       return { q: qq, viz: ctx.level === 1 ? (add ? pic({ groups: [{ n: a, obj: t.obj }, { n: b, obj: t.obj }], op: '+' }) : pic({ n: a, obj: t.obj, cross: b })) : undefined, a: num(c),
         steps: [add ? 'Put ' + a + ' and ' + b + ' together.' : 'Take ' + b + ' away from ' + a + '.', '$' + a + (add ? ' + ' : ' - ') + b + ' = ' + c + '$'], hint: 'Show it with your fingers.' };
     }
-    var view = kind === 'pic' ? (add ? pic({ groups: [{ n: a, obj: 'dot', color: 'red' }, { n: b, obj: 'dot', color: 'yellow' }], op: '+' }) : pic({ n: a, obj: 'dot', cross: b })) : undefined;
+    var po = kind === 'pic' ? R.pick(['dot', 'dot', 'apple', 'star', 'ball', 'duck', 'fish', 'flower']) : 'dot';
+    var view = kind === 'pic' ? (add ? pic({ groups: [{ n: a, obj: po, color: po === 'dot' ? 'red' : undefined }, { n: b, obj: po, color: po === 'dot' ? 'yellow' : undefined }], op: '+' }) : pic({ n: a, obj: po, cross: b })) : undefined;
     return { q: '$' + a + (add ? ' + ' : ' - ') + b + ' = ' + sq() + '$', viz: view, a: num(c),
       steps: add ? [a + ' and ' + b + ' more.', 'Count on from ' + a + (b ? ': ' + list(seq(a + 1, c)) : '') + '.', '$' + a + ' + ' + b + ' = ' + c + '$'] : ['Start with ' + a + '. Take away ' + b + '.', c === 0 ? 'None are left. That is 0.' : c + ' ' + isAre(c) + ' left.', '$' + a + ' - ' + b + ' = ' + c + '$'],
       hint: 'Use your fingers: show ' + a + ', then ' + (add ? 'put up ' : 'put down ') + b + '.' };
@@ -399,7 +422,7 @@
   G('k.teens-ten-and-more', function (R, ctx) {
     var k = R.int(1, 9), n = 10 + k, kind = ML.byLevel(ctx, 'frame', R.pick(['add', 'split']), R.pick(['which', 'split', 'add']));
     var nmK = R.pick(NAMES);
-    if (kind === 'frame') return { q: nmK + ' has 10 counters and ' + k + ' more. What number is that?', viz: pic({ layout: 'frame', n: 10, m: k, split: true, tap: false }), a: num(n),
+    if (kind === 'frame') return { q: nmK + ' has 10 counters and ' + k + ' more. What number is that?', viz: pic({ layout: 'frame', n: 10, m: k, split: true, tap: false, obj: R.pick(['dot', 'dot', 'star', 'heart', 'ball']) }), a: num(n),
       steps: ['One full ten frame is 10.', 'The other frame has ' + k + ' more.', '10 and ' + k + ' more is ' + n + '.'], hint: 'Start at 10 and count on ' + k + '.' };
     if (kind === 'add') return { q: nmK + ' has a full ten frame and ' + k + ' more. Finish the number sentence:<br>' + big('10 + ' + k + ' = ' + sq()), a: num(n), steps: ['10 and ' + k + ' more.', 'Count on from 10: ' + list(seq(11, n)) + '.', '$10 + ' + k + ' = ' + n + '$'], hint: 'Think of a full ten frame and ' + k + ' more.' };
     if (kind === 'split') return { q: nmK + ' has ' + n + ' stickers. ' + n + ' is 10 and how many more?', viz: ctx.level === 2 ? pic({ layout: 'frame', n: n, split: false, tap: false }) : undefined, a: num(k),
@@ -493,6 +516,11 @@
     if (pos === 'front' || pos === 'behind') pool.sort(function (x) { return /front|behind/.test(x) ? -1 : 1; });
     var wr = (pos === 'front' || pos === 'behind') ? [pool[0]].concat(R.sample(pool.slice(1), 1)) : R.sample(pool, 2);
     var say = { above: 'It is higher than the table and not touching it.', on: 'It sits on top, touching it.', under: 'It is below the table top, between the legs.', left: 'It is beside it, on the floor.', right: 'It is beside it, on the floor.', in: 'It is inside the box.', front: 'It is closer to us than the box, so we see all of it.', behind: 'The box hides part of it. It is on the far side of the box.' };
+    if (R.chance(ctx.level === 1 ? 0.4 : 0.5)) {
+      var yes = R.coin(), claim = yes ? right : R.pick(wr), nmp = R.pick(NAMES);
+      return { q: nmp + ' says, "The ' + T + ' is ' + claim + '." Is ' + nmp + ' right?', viz: pic({ kind: 'scene', thing: thing, ref: ref, pos: pos }), a: mcKeep(['Yes', 'No'], yes ? 0 : 1),
+        steps: [say[pos], 'The ' + T + ' is ' + right + '.', yes ? 'Yes, ' + nmp + ' is right.' : 'No. It is not ' + claim + '.'], hint: pos === 'front' || pos === 'behind' ? 'Can you see all of the ' + T + ', or is the box hiding part of it?' : 'Is it touching the ' + ref + '? Is it higher, lower or beside it?' };
+    }
     return { q: 'Where is the ' + T + '?', viz: pic({ kind: 'scene', thing: thing, ref: ref, pos: pos }), a: mc('The ' + T + ' is ' + right + '.', wr.map(function (x) { return 'The ' + T + ' is ' + x + '.'; })),
       steps: [say[pos], 'The ' + T + ' is ' + right + '.'], hint: pos === 'front' || pos === 'behind' ? 'Can you see all of the ' + T + ', or is the box hiding part of it?' : 'Is it touching the ' + ref + '? Is it higher, lower or beside it?' };
   });
@@ -526,8 +554,8 @@
   G('k.flat-and-solid', function (R, ctx) {
     var colors = ['blue', 'orange', 'purple', 'red', 'green', 'yellow'];
     if (ctx.level === 1) {
-      var flat = R.coin(), s = flat ? R.pick(['square', 'circle', 'triangle', 'rectangle', 'hexagon']) : R.pick(SOLIDS.concat(['box']));
-      return { q: 'Is this shape <b>flat</b> or <b>solid</b>?', viz: pic({ kind: 'shapes', items: [{ s: s, color: R.pick(colors) }] }), a: mcKeep(['Flat', 'Solid'], flat ? 0 : 1),
+      var flat = R.coin(), s = flat ? R.pick(['square', 'circle', 'triangle', 'rectangle', 'hexagon', 'oval', 'triangle-right', 'rectangle-tall', 'pentagon', 'rhombus']) : R.pick(SOLIDS.concat(['box', 'pyramid']));
+      return { q: R.pick(NAMES) + ' found this shape. Is it <b>flat</b> or <b>solid</b>?', viz: pic({ kind: 'shapes', items: [{ s: s, color: R.pick(colors), scale: R.pick([0.85, 1, 1.1]) }] }), a: mcKeep(['Flat', 'Solid'], flat ? 0 : 1),
         steps: [flat ? 'It lies flat, like a drawing on paper. You cannot hold it like a block.' : 'It looks like something you can hold and turn: it has depth.', 'It is ' + (flat ? 'flat.' : 'solid.')], hint: 'Could you pick it up like a block or a ball?' };
     }
     if (ctx.level === 2) {
@@ -552,10 +580,10 @@
   G('k.sides-and-corners', function (R, ctx) {
     var colors = ['green', 'blue', 'red', 'orange', 'purple'];
     if (ctx.level <= 2) {
-      var s = ctx.level === 1 ? R.pick(['triangle', 'square', 'rectangle', 'hexagon']) : R.pick(['triangle-right', 'triangle-skinny', 'rectangle-tall', 'hexagon', 'pentagon', 'trapezoid', 'rhombus']);
+      var s = ctx.level === 1 ? R.pick(['triangle', 'square', 'rectangle', 'hexagon', 'triangle-right', 'rectangle-tall']) : R.pick(['triangle-right', 'triangle-skinny', 'rectangle-tall', 'hexagon', 'pentagon', 'trapezoid', 'rhombus']);
       var askSides = R.coin(), n = SIDES[s];
-      var colS = R.pick(colors);
-      return { q: 'How many <b>' + (askSides ? 'sides' : 'corners') + '</b> does this ' + colS + ' shape have?', viz: pic({ kind: 'shapes', items: [{ s: s, rot: ctx.level === 1 ? 0 : R.pick([0, 30, 90, 150]), color: colS, corners: !askSides && ctx.level === 1 }] }), a: num(n),
+      var colS = R.pick(colors.concat(['pink', 'yellow']));
+      return { q: R.pick(NAMES) + ' drew a ' + colS + ' shape. How many <b>' + (askSides ? 'sides' : 'corners') + '</b> does it have?', viz: pic({ kind: 'shapes', items: [{ s: s, rot: ctx.level === 1 ? 0 : R.pick([0, 30, 90, 150]), color: colS, corners: !askSides && ctx.level === 1, scale: R.pick([0.85, 1, 1.1]) }] }), a: num(n),
         steps: [askSides ? 'Touch each straight side as you count: ' + countList(1, n) + '.' : 'Touch each corner, where two sides meet: ' + countList(1, n) + '.', 'It has ' + n + ' ' + (askSides ? 'sides' : 'corners') + '. (It has the same number of sides and corners.)'], hint: askSides ? 'Put your finger on one side and go around.' : 'A corner is where two straight sides meet.' };
     }
     var kind = R.pick(['compare', 'riddle', 'circle']);

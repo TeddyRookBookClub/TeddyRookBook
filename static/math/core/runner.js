@@ -34,7 +34,9 @@
    ML.problem(id, { level, seed, mode }) → a problem { q, a, steps, hint?, viz?, unit?, id, seed, level } or null
                                         level 1 | 2 | 3 (default 2); seed: any number or string (same seed → same problem;
                                         default random); mode 'quiz' (default) | 'learn' | 'review' | 'place'. Retries a few
-                                        seeds if a generator throws; null when the topic has no generator.
+                                        seeds if a generator throws; null when the topic has no generator. Without a seed
+                                        it avoids the learner's recent problems (ML.recent in gen.js; fresh: false turns
+                                        that off). Every card the runner makes avoids them too.
    ML.makeProblem(id, seed, ctx)      the raw registry call (gen.js); throws on a malformed problem
    ML.check(spec, answer, { q, unit }) → { ok, msg?, invalid? }   (check.js)
    ML.problemCard(host, opts)         → { el, next(), destroy(), log }   a problem card (the same card the ladders use):
@@ -118,12 +120,17 @@
   ML.problem = function (id, o) {
     o = o || {};
     if (!hasGen(id)) return null;
-    var seed = o.seed === undefined || o.seed === null ? Math.floor(Math.random() * 1e9) : o.seed;
-    for (var t = 0; t < 4; t++) {
-      try { return ML.makeProblem(id, t ? String(seed) + '~' + t : seed, { level: o.level || 2, mode: o.mode || 'quiz' }); }
-      catch (e) { if (W.console) W.console.warn(e); }
+    var given = !(o.seed === undefined || o.seed === null), seed = given ? o.seed : Math.floor(Math.random() * 1e9);
+    function one(sd) {
+      for (var t = 0; t < 4; t++) {
+        try { return ML.makeProblem(id, t ? String(sd) + '~' + t : sd, { level: o.level || 2, mode: o.mode || 'quiz' }); }
+        catch (e) { if (W.console) W.console.warn(e); }
+      }
+      return null;
     }
-    return null;
+    // a given seed always makes the same problem; without one, skip the problems this learner saw recently
+    if (given || o.fresh === false || !ML.recent) return one(seed);
+    return ML.recent.pick(id, function (k) { return one(k ? seed + k * 7919 : seed); });
   };
   ML.problemCard = function (host, o) { return ML.runner(host, Object.assign({}, o || {}, { mode: 'card' })); };
   function hasGen(id) { try { return ML.hasGen ? ML.hasGen(id) : false; } catch (e) { return false; } }
@@ -194,11 +201,16 @@
         return ML.problem(id, { level: levelFor(id), seed: it.seed, mode: o.genMode || 'quiz' });
       }
       if (!hasGen(id)) return null;
-      for (var t = 0; t < 4; t++) {
-        try { return ML.makeProblem(id, seedBase + (sat++) * 7919 + t, { level: levelFor(id), mode: mode === 'try' ? 'learn' : mode }); }
-        catch (e) { if (W.console) W.console.warn(e); }
+      var lv = levelFor(id), md = mode === 'try' ? 'learn' : mode;
+      function one() {
+        for (var t = 0; t < 4; t++) {
+          try { return ML.makeProblem(id, seedBase + (sat++) * 7919 + t, { level: lv, mode: md }); }
+          catch (e) { if (W.console) W.console.warn(e); }
+        }
+        return null;
       }
-      return null;
+      // not one the learner saw recently (ML.recent, gen.js): redraws, then the least recently seen
+      return ML.recent ? ML.recent.pick(id, one) : one();
     }
 
     function paintProgress() {

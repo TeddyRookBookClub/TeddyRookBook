@@ -319,10 +319,10 @@
   G('comp.concluding-sentences', function (R, ctx) {
     var P = R.pick(PARAS), L = ctx.level, shape = ML.byLevel(ctx, 'best', R.pick(['best', 'what']), R.pick(['what', 'best4']));
     if (shape === 'best' || shape === 'best4') {
-      var wrong = L === 1 ? [P.newIdea] : [P.topic, P.newIdea].concat(shape === 'best4' ? ['That is everything about ' + P.subject + '.'] : []);
+      var wrong = L === 1 ? [P.newIdea, P.announce] : [P.topic, P.newIdea].concat(shape === 'best4' ? ['That is everything about ' + P.subject + '.'] : []);
       return { q: q([para('Here is a paragraph without its last sentence:'), quote([P.topic].concat(P.sup).join(' ')), para('Which is the best concluding sentence?')]), a: mc(P.conc, wrong),
         hint: 'A good ending returns to the main idea in new words. It doesn’t copy the topic sentence or start a new idea.',
-        steps: ['“' + P.conc + '” returns to the main idea in new words.', '“' + P.newIdea + '” starts a new idea at the very end.'].concat(L === 1 ? [] : ['“' + P.topic + '” copies the topic sentence word for word.']) };
+        steps: ['“' + P.conc + '” returns to the main idea in new words.', '“' + P.newIdea + '” starts a new idea at the very end.'].concat(L === 1 ? ['“' + P.announce + '” only announces the subject.'] : ['“' + P.topic + '” copies the topic sentence word for word.']) };
     }
     var kinds = [['It copies the topic sentence word for word.', P.topic], ['It brings in a new idea at the very end.', P.newIdea], ['Nothing: it wraps up the main idea in new words.', P.conc]];
     var k = R.int(0, 2);
@@ -470,10 +470,9 @@
   G('comp.expository', function (R, ctx) {
     var e = R.pick(EXPO), shape = ML.byLevel(ctx, 'fits', R.pick(['fits', 'word']), R.pick(['word', 'all']));
     if (shape === 'fits') {
-      var wrong = [e[1]];
-      if (ctx.level >= 2) wrong.push(pickOther(R, EXPO, e)[1]);
+      var wrong = [e[1], pickOther(R, EXPO, e)[1]];
       return { q: q([para('Which sentence belongs in an expository report that informs the reader?')]), a: mc(e[0], wrong),
-        hint: 'Expository writing explains with facts in a neutral voice.', steps: ['“' + e[0] + '” states information a reader can check.', 'The other choice gives the writer’s feelings.'] };
+        hint: 'Expository writing explains with facts in a neutral voice.', steps: ['“' + e[0] + '” states information a reader can check.', 'The other choices give the writer’s feelings.'] };
     }
     if (shape === 'word') {
       var words = e[1].replace(/[.,]/g, '').split(' ').filter(function (w) { return w.length > 3 && w.toLowerCase() !== e[2] && !/^(the|and|with|that|this|than|anyone|everyone|most|them)$/i.test(w); });
@@ -714,15 +713,19 @@
     ['Our school should start a composting program.', 'Composting would teach students real science.', 'In a pilot at Lakeview School, students measured how fast scraps broke down in three bins.', 'Measuring and comparing like this is the work scientists do, so the bins would turn lunch scraps into lab lessons.', 'Students at Lakeview measured scraps breaking down in three bins.', 'Worms are interesting animals.'],
     ['Our town should plant trees on Main Street.', 'Trees would bring more shoppers to Main Street.', 'In a survey of shoppers in a nearby town, most said they would stay longer on a shady street.', 'If shoppers stay longer on our street, they have more time to stop in and buy something from local stores.', 'Most shoppers in the survey said they would stay longer on a shady street.', 'Some trees live for hundreds of years.'],
     ['The library should open on Sundays.', 'Sunday hours would help students finish weekend projects.', 'At our school, 46 of 120 seventh graders said they have no quiet place to study at home.', 'For those students, a quiet library table on Sunday could be the difference between a rushed project and a finished one.', 'Almost half of the seventh graders surveyed have no quiet place to study.', 'The library has a new reading room.'],
-    ['Students should learn to cook.', 'Cooking at home saves families money.', 'A family dinner made at home often costs a fraction of the same meal from a restaurant.', 'Teenagers who can cook a few simple meals help their families keep that money for other needs.', 'Home cooking costs much less than eating out.', 'Restaurants come in many styles.']
+    ['Students should learn to cook.', 'Cooking at home saves families money.', 'A family dinner made at home often costs a fraction of the same meal from a restaurant.', 'Teenagers who can cook a few simple meals help their families keep that money for other needs.', 'Home cooking costs much less than eating out.', 'Restaurants come in many styles.'],
+    ['Our school should add a daily reading period.', 'A reading period would help students read more each year.', 'At Pine Hill Middle School, students who had twenty minutes of free reading each day finished an average of eleven more books a year.', 'Eleven extra books means hundreds of extra pages of practice, which is how readers grow faster and more confident.', 'Pine Hill students with a reading period finished about eleven more books a year.', 'Some books are made into movies.'],
+    ['Our town should open a tool library.', 'A tool library would save neighbors money.', 'In a neighboring town, members borrowed ladders, drills and saws more than 3,000 times in its first year.', 'Each of those loans is a tool a family did not have to buy for a job that took one afternoon.', 'Members of the tool library made more than 3,000 loans in a year.', 'Hammers have been used for thousands of years.'],
+    ['The school should add bike racks by the front doors.', 'More bike racks would get more students riding to school.', 'When Cedar School added twenty racks, the number of students biking on a typical morning rose from 15 to 41.', 'Students were ready to ride; they only needed a safe place to leave their bikes once they arrived.', 'Cedar School went from 15 to 41 bike riders after adding racks.', 'Bikes come in many colors.'],
+    ['Our class should keep a class pet.', 'Caring for a pet would teach students responsibility.', 'In one fourth-grade class with a pet guinea pig, students took turns with a weekly chart for feeding, water and cleaning.', 'Having a living animal depend on them each day showed students that their jobs mattered, and they kept the chart without reminders.', 'The class used a weekly chart for feeding, water and cleaning.', 'Guinea pigs come from South America.']
   ];
   G('comp.body-paragraphs', function (R, ctx) {
     var b = R.pick(BODIES), shape = ML.byLevel(ctx, 'comment', R.pick(['comment', 'topic']), R.pick(['role', 'comment4']));
     if (shape === 'comment' || shape === 'comment4') {
-      var wrong = shape === 'comment' ? [b[4]] : [b[4], b[5], 'That is a fact.'];
+      var wrong = shape === 'comment' ? [b[4], b[5]] : [b[4], b[5], 'That is a fact.'];
       return { q: q([para('Topic sentence: <b>' + b[1] + '</b>'), para('Evidence: <b>' + b[2] + '</b>'), para('Which sentence should come next, to explain the evidence?'), para('<small>(The evidence is invented for practice.)</small>')]), a: mc(b[3], wrong),
         hint: 'After evidence, answer the question “so what?” How does it support the point?',
-        steps: ['“' + b[3] + '” explains how the evidence supports the topic sentence: that is commentary.', '“' + b[4] + '” only repeats the evidence.'].concat(shape === 'comment4' ? ['The other choices add nothing or change the subject.'] : []) };
+        steps: ['“' + b[3] + '” explains how the evidence supports the topic sentence: that is commentary.', '“' + b[4] + '” only repeats the evidence.'].concat(shape === 'comment' ? ['“' + b[5] + '” changes the subject.'] : []).concat(shape === 'comment4' ? ['The other choices add nothing or change the subject.'] : []) };
     }
     if (shape === 'topic') {
       return { q: q([para('Thesis: <b>' + b[0] + '</b>'), para('Which topic sentence ties a body paragraph to the thesis?')]), a: mc(b[1], [b[5], R.pick(BODIES.filter(function (x) { return x !== b; }))[1]]),
@@ -947,10 +950,10 @@
   G('comp.summarizing', function (R, ctx) {
     var P = R.pick(PASSAGES), shape = ML.byLevel(ctx, 'best', R.pick(['best', 'label']), R.pick(['label', 'best4']));
     if (shape === 'best' || shape === 'best4') {
-      var wrong = ctx.level === 1 ? [P[2]] : shape === 'best4' ? [P[2], P[3], P[4]] : [P[2], P[3]];
+      var wrong = ctx.level === 1 ? [P[2], P[4]] : shape === 'best4' ? [P[2], P[3], P[4]] : [P[2], P[3]];
       return { q: q([para('Read the passage (written for practice):'), quote(P[0]), para('Which is the best summary?')]), a: mc(P[1], wrong),
         hint: 'A summary gives the main idea in your own words, much shorter, with no opinion added.',
-        steps: ['“' + P[1] + '” gives the main idea in new words and leaves out minor details.', 'A summary that adds an opinion reports the writer, not the source.'].concat(ctx.level === 1 ? [] : ['Copying the first sentences retells details instead of the main idea.']) };
+        steps: ['“' + P[1] + '” gives the main idea in new words and leaves out minor details.', 'A summary that adds an opinion reports the writer, not the source.'].concat(ctx.level === 1 ? ['A summary that gets the main idea wrong misleads the reader.'] : ['Copying the first sentences retells details instead of the main idea.']) };
     }
     var k = R.int(0, 3), s = [P[2], P[3], P[4], P[1]][k];
     return { q: q([para('Passage (written for practice):'), quote(P[0]), para('A student’s summary:'), quote(s), para('What is the problem with the summary?')]), a: mcK(SUM_LAB, k),
@@ -1102,7 +1105,7 @@
   G('comp.research-questions', function (R, ctx) {
     var r = R.pick(RQ), shape = ML.byLevel(ctx, 'which', R.pick(['which', 'problem']), R.pick(['note', 'problem', 'which3']));
     if (shape === 'which' || shape === 'which3') {
-      var wrong = shape === 'which' ? [r[2]] : [r[2], r[3]];
+      var wrong = [r[2], r[3]];
       if (ctx.level === 2) wrong = [r[2], r[3]];
       return { q: q([para('Which is the best research question?')]), a: mc(r[1], wrong),
         hint: 'A research question is focused, and it needs several sources to answer well.', steps: ['“' + r[1] + '” is focused and needs several sources.', '“' + r[2] + '” can be answered with one fact.'].concat(wrong.length > 1 ? ['“' + r[3] + '” is far too broad or vague.'] : []) };
@@ -1219,7 +1222,7 @@
     var right = W().citeText(s, 'mla', 'intext'), L1 = s.authors[0].last, nm = lasts(s), pg = s.page;
     if (shape === 'which' || shape === 'which4') {
       var wrong = uniq(['(' + nm + ', ' + pg + ')', '(' + nm + ', p. ' + pg + ')', '(' + nm + ', ' + s.year + ', p. ' + pg + ')', '(' + s.authors[0].first + ' ' + L1 + ' ' + pg + ')'], right);
-      wrong = ctx.level === 1 ? wrong.slice(0, 1) : shape === 'which4' ? wrong.slice(0, 3) : R.sample(wrong.slice(0, 3), 2);
+      wrong = ctx.level === 1 ? R.sample(wrong, 1) : shape === 'which4' ? wrong.slice(0, 3) : R.sample(wrong.slice(0, 3), 2);
       return { q: q([para('You quote page ' + pg + ' of this source. Which is the correct MLA in-text citation?'), para(describe(s)), SRC_NOTE]), a: mc(right, wrong),
         hint: 'MLA: the author’s last name and the page, with no comma and no “p.”', steps: ['Last name' + (s.authors.length > 1 ? 's' : '') + ': ' + nm + '. Page: ' + pg + '.', 'No comma, no “p.”: ' + right + '.'] };
     }
@@ -1561,3 +1564,104 @@
       hint: 'Subject line, greeting, the main point, thanks, closing, name.', steps: ['Subject line, greeting, the request first, thanks, closing, name.', 'In letters: ' + op.code + '.'] };
   });
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen"): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - two at once: two different questions of the topic, answered together (short questions only, at most one of them with
+     a picture, which then comes first; not in the courses for young children, whose answer box for two parts would
+     also show a keypad button they don't need).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'comp', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf')) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

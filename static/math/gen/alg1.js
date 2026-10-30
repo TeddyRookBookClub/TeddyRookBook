@@ -1747,12 +1747,12 @@
 
   // ---- alg1.simplify-square-roots
   G('alg1.simplify-square-roots', function (R, ctx) {
-    var shape = R.pick(by(ctx, ['basic', 'basic', 'basic'], ['basic', 'coef', 'error'], ['coef', 'big', 'error']));
+    var shape = R.pick(by(ctx, ['basic', 'basic', 'coef'], ['basic', 'coef', 'error'], ['coef', 'big', 'error']));
     if (shape === 'error') {
       var p = R.pick([[9, 16], [36, 64], [25, 144], [16, 9], [64, 36], [144, 25]]), s = p[0] + p[1], rs = Math.sqrt(s), wrong = Math.sqrt(p[0]) + Math.sqrt(p[1]);
       return { q: 'What is $\\sqrt{' + p[0] + ' + ' + p[1] + '}$?', a: mc('$' + T.sqrt(s) + '$', ['$' + wrong + '$', '$' + T.sqrt(p[0] * p[1]) + '$', '$' + (p[0] + p[1]) / 2 + '$']), steps: ['Add first, because the root covers the whole sum: $' + p[0] + ' + ' + p[1] + ' = ' + s + '$.', '$\\sqrt{' + s + '} = ' + T.sqrt(s) + '$.', 'A square root does not split over a sum: $\\sqrt{' + p[0] + '} + \\sqrt{' + p[1] + '} = ' + wrong + '$ is a different number.'], hint: 'Do what is under the root first.' };
     }
-    var sq = by(ctx, [2, 3, 4, 5], [2, 3, 4, 5, 6, 7], [3, 4, 5, 6, 7, 8, 9, 10]), b = R.pick([2, 3, 5, 6, 7, 10, 11]), a = R.pick(sq), n = a * a * b, k = shape === 'coef' ? R.pick([2, 3, 4, 5]) : 1;
+    var sq = by(ctx, [2, 3, 4, 5, 6, 7], [2, 3, 4, 5, 6, 7, 8], [3, 4, 5, 6, 7, 8, 9, 10]), b = R.pick([2, 3, 5, 6, 7, 10, 11, 13, 14, 15]), a = R.pick(sq), n = a * a * b, k = shape === 'coef' ? R.pick(ctx.level === 1 ? [2, 3] : [2, 3, 4, 5]) : 1;
     if (shape === 'big') { a = R.pick([6, 8, 9, 10, 12]); n = a * a * b; }
     var steps = ['Find the largest perfect square that divides $' + n + '$: $' + n + ' = ' + a * a + ' \\cdot ' + b + '$.', 'Split the root over the product: $\\sqrt{' + n + '} = \\sqrt{' + a * a + '} \\cdot \\sqrt{' + b + '} = ' + a + '\\sqrt{' + b + '}$.'];
     if (k > 1) steps.push('Multiply by the $' + k + '$ in front: $' + k + ' \\cdot ' + a + '\\sqrt{' + b + '} = ' + k * a + '\\sqrt{' + b + '}$.');
@@ -2000,8 +2000,10 @@
 
   // ---- alg1.special-products
   G('alg1.special-products', function (R, ctx) {
-    var shape = R.pick(by(ctx, ['sq', 'diff', 'sq'], ['sq', 'diff', 'fill', 'sqminus'], ['sqminus', 'diff', 'fill', 'sq']));
-    var a = by(ctx, 1, R.pick([1, 2, 3]), R.pick([2, 3, 4, 5])), b = R.int(1, 9);
+    var shape = R.pick(by(ctx, ['sq', 'diff', 'sqminus', 'fill'], ['sq', 'diff', 'fill', 'sqminus'], ['sqminus', 'diff', 'fill', 'sq']));
+    var a = by(ctx, R.pick([1, 1, 1, 2, 3]), R.pick([1, 2, 3, 4]), R.pick([2, 3, 4, 5, 6])), b = R.int(1, by(ctx, 12, 10, 9));
+    for (var gtry = 0; gtry < 30 && U.gcd(a, b) > 1; gtry++) b = R.int(1, by(ctx, 12, 10, 9)); // no common factor: the factored form is complete
+    if (U.gcd(a, b) > 1) b = 1;
     if (shape === 'fill') {
       var sg = R.sign(), mid = 2 * a * b * sg;
       return out({ q: 'Fill in the missing middle coefficient: $' + tfac(a, sg * b) + '^2 = ' + T.mono(a * a, 'x^2') + ' + \\square x + ' + b * b + '$.', a: num(mid), steps: ['$(p + q)^2 = p^2 + 2pq + q^2$, so the middle term is $2pq$.', 'Here $p = ' + T.mono(a, 'x') + '$ and $q = ' + sg * b + '$: $2 \\cdot ' + T.mono(a, 'x') + ' \\cdot ' + tp(sg * b) + ' = ' + T.mono(mid, 'x') + '$.', 'The missing coefficient is $' + mid + '$.'], hint: 'The middle term of a squared binomial is twice the product of its two terms.' }, { k: 'num', v: mid });
@@ -2105,8 +2107,10 @@
 
   // ---- alg1.factor-special-products
   G('alg1.factor-special-products', function (R, ctx) {
-    var shape = R.pick(by(ctx, ['diff', 'diff', 'square'], ['diff', 'square', 'which'], ['square', 'diff2', 'which', 'square']));
-    var a = by(ctx, 1, R.pick([1, 2, 3]), R.pick([2, 3, 4, 5])), b = R.int(1, 9);
+    var shape = R.pick(by(ctx, ['diff', 'diff', 'square'], ['diff', 'square', 'which', 'diff2'], ['square', 'diff2', 'which', 'square']));
+    var a = by(ctx, R.pick([1, 1, 1, 2, 3]), R.pick([1, 2, 3, 4]), R.pick([2, 3, 4, 5, 6])), b = R.int(1, by(ctx, 12, 10, 9));
+    for (var gtry = 0; gtry < 30 && U.gcd(a, b) > 1; gtry++) b = R.int(1, by(ctx, 12, 10, 9)); // no common factor: the factored form is complete
+    if (U.gcd(a, b) > 1) b = 1;
     if (shape === 'which') {
       var sq = [[1, 4], [1, 9], [4, 25], [1, 16], [9, 1], [1, 36]], pk = R.pick(sq);
       var sumSq = (pk[0] === 1 ? '' : pk[0]) + 'x^2 + ' + pk[1];
@@ -2503,15 +2507,16 @@
   G('alg1.correlation-causation', function (R, ctx) {
     var shape = R.pick(by(ctx, ['estimate', 'cause', 'estimate'], ['estimate', 'cause', 'tf'], ['cause', 'estimate', 'tf']));
     if (shape === 'estimate') {
-      var targets = [-0.9, -0.5, 0, 0.5, 0.9], tg = R.pick(targets), pts, r = 0;
-      retry(function () {
+      var targets = [-0.9, -0.5, 0, 0.5, 0.9], tg = R.pick(targets), pts, r = 0, best = null, bestErr = 9;
+      try { retry(function () {
         pts = []; var s = tg === 0 ? 0 : tg > 0 ? 1 : -1, noise = Math.abs(tg) > 0.8 ? 1.2 : Math.abs(tg) > 0.3 ? 4 : 6;
         for (var i = 0; i < 12; i++) { var x = U.fix(1 + i * 0.75 + R.real(-0.2, 0.2, 1)); pts.push([x, U.fix(10 + s * 1.2 * x + R.real(-noise, noise, 1))]); }
         var n = pts.length, mx = U.mean(pts.map(function (p) { return p[0]; })), my = U.mean(pts.map(function (p) { return p[1]; })), sxy = 0, sxx = 0, syy = 0;
         pts.forEach(function (p) { sxy += (p[0] - mx) * (p[1] - my); sxx += (p[0] - mx) * (p[0] - mx); syy += (p[1] - my) * (p[1] - my); });
         r = sxy / Math.sqrt(sxx * syy);
+        if (Math.abs(r - tg) < bestErr) { bestErr = Math.abs(r - tg); best = pts; }
         return Math.abs(r - tg) < 0.12;
-      }, 400);
+      }, 400); } catch (e) { pts = best; } // rare: keep the closest plot found (in tests it is within 0.15 of the target; the choices are 0.4 apart)
       var lab = function (v) { return '$r = ' + tn(v) + '$'; };
       return { q: 'Which correlation coefficient best matches this scatter plot?', viz: { name: 'alg1-dots', opts: { points: pts, xlabel: 'x', ylabel: 'y' } }, a: mc(lab(tg), targets.filter(function (v) { return v !== tg; }).sort(function (a, b) { return Math.abs(a - tg) - Math.abs(b - tg); }).slice(0, 3).map(lab)), steps: ['The sign of $r$ is the direction: ' + (tg > 0 ? 'the points rise from left to right, so $r > 0$.' : tg < 0 ? 'the points fall from left to right, so $r < 0$.' : 'there is no upward or downward trend, so $r$ is near $0$.'), 'The size of $r$ is how tightly the points hug a line: near $\\pm 1$ is tight, near $\\pm 0.5$ is a loose cloud with a trend, near $0$ is no linear trend.', 'This plot fits $' + lab(tg).slice(1, -1) + '$ (computed from the data: $r \\approx ' + nf(U.round(r, 2)) + '$).'], hint: 'First the sign (up or down), then the strength (how close to a line).' };
     }

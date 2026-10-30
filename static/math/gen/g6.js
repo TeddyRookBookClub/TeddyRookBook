@@ -597,7 +597,13 @@
     return { name: 'tapediagram', opts: { tapes: [{ parts: parts, labels: labels, colors: cols }], braces: [{ tape: 0, from: 0, to: n, label: dividend.toString() }, { tape: 0, from: 0, to: total, label: wholes === 1 ? '1 whole' : wholes + ' wholes', up: false }] }, label: 'A tape cut into pieces of 1/' + unitDen + ', with ' + dividend.toString() + ' shaded' };
   }
   G('g6.divide-fractions-meaning', function (R, ctx) {
-    var l = lv(ctx), shape = R.pick(BY(ctx, ['count', 'count', 'which'], ['count', 'count2', 'which', 'part'], ['count2', 'part', 'which', 'part']));
+    var l = lv(ctx), shape = R.pick(BY(ctx, ['count', 'story', 'which', 'story'], ['count', 'count2', 'which', 'part', 'story'], ['count2', 'part', 'which', 'part', 'story']));
+    if (shape === 'story') {
+      var sd = R.pick(l === 1 ? [2, 3, 4, 6, 8] : [3, 4, 6, 8, 10, 12]), sk = R.int(2, l === 1 ? 3 * sd : 4 * sd), sv = Q(sk, sd), sn = name(R), sc = R.pick([['cups of rice', 'a scoop that holds', 'cup', 'scoops'], ['pounds of trail mix', 'bags that each hold', 'pound', 'bags'], ['yards of ribbon', 'pieces that are each', 'yard', 'pieces'], ['liters of juice', 'glasses that each hold', 'liter', 'glasses'], ['miles of trail', 'sections that are each', 'mile', 'sections']]);
+      return { q: sn + ' has ' + $(sv.isInt() ? String(sv) : (sv.gt(1) ? MX(sv) : F(sv))) + ' ' + sc[0] + ' and splits it into ' + sc[1] + ' ' + $('\\frac{1}{' + sd + '}') + ' ' + sc[2] + '. How many ' + sc[3] + ' is that?', a: num(sk),
+        steps: ['The question is ' + $((sv.isInt() ? String(sv) : F(sv)) + ' \\div \\frac{1}{' + sd + '}') + ': how many ' + $('\\frac{1}{' + sd + '}') + 's fit in it?', 'Each whole holds ' + sd + ' of them. Write the amount in ' + ths(sd) + ': ' + $('\\frac{' + sk + '}{' + sd + '}') + '.', 'That is ' + sk + ' pieces, so ' + sk + ' ' + sc[3] + '.'],
+        hint: 'How many pieces of size 1/' + sd + ' make one whole?', chk: { kind: 'q', a: sv.toPlain(), b: Q(1, sd).toPlain() } };
+    }
     if (shape === 'which') {
       var w = R.int(2, 6), d = R.int(2, 5), uf = '\\frac{1}{' + d + '}';
       return {
@@ -930,8 +936,15 @@
     return v;
   }
   G('g6.opposites', function (R, ctx) {
-    var l = lv(ctx), shape = R.pick(BY(ctx, ['opp', 'opp', 'dneg'], ['opp', 'dneg', 'pair'], ['opp', 'dneg', 'tneg', 'pair']));
+    var l = lv(ctx), shape = R.pick(BY(ctx, ['opp', 'story', 'dneg', 'story'], ['opp', 'dneg', 'pair', 'story'], ['opp', 'dneg', 'tneg', 'pair']));
     var v = rnd(R, l); if (v.isZero()) v = Q(3);
+    if (shape === 'story') {
+      var mag = R.int(1, l === 1 ? 60 : 500), up = R.coin(), sc = R.pick([['A town is', 'feet above sea level', 'feet below sea level'], ['A diver is', 'feet above sea level', 'feet below sea level'], ['The temperature is', 'degrees above zero', 'degrees below zero'], [name(R) + ' has a bank balance that is', 'dollars above zero', 'dollars below zero'], ['A football team’s play went', 'yards forward', 'yards back'], ['An elevator stops', 'floors above the ground floor', 'floors below the ground floor']]);
+      var val = up ? mag : -mag;
+      return { q: sc[0] + ' ' + mag + ' ' + (up ? sc[1] : sc[2]) + '. Write this as an integer, then give its opposite. What is the opposite?', a: num(-val, 'int'),
+        steps: ['Above zero (or forward) is positive and below zero (or back) is negative, so the situation is ' + $(String(val)) + '.', 'The opposite is the same distance from 0 on the other side: ' + $(String(-val)) + '.', 'In words: ' + mag + ' ' + (up ? sc[2] : sc[1]) + '.'],
+        hint: 'Which direction is negative? The opposite flips the sign.', chk: { kind: 'val', v: String(-val) } };
+    }
     if (shape === 'opp') return {
       q: 'What is the opposite of ' + $(SV(v)) + '?', a: numSV(v.neg()),
       steps: ['Opposites are the same distance from 0 on different sides of it.', $(SV(v)) + ' is ' + $(SV(v.abs())) + ' units ' + (v.sign() < 0 ? 'left' : 'right') + ' of 0, so its opposite is ' + $(SV(v.abs())) + ' units ' + (v.sign() < 0 ? 'right' : 'left') + ': ' + $(SV(v.neg())) + '.'],
@@ -1126,8 +1139,17 @@
   function powTex(b, e) { return T.pow(b, e); }
   function prodTex(b, e) { var a = []; for (var i = 0; i < e; i++) a.push(b); return a.join(' \\times '); }
   G('g6.whole-number-exponents', function (R, ctx) {
-    var l = lv(ctx), shape = R.pick(BY(ctx, ['eval', 'eval', 'write', 'mc'], ['eval', 'write', 'mc', 'cmp'], ['frac', 'eval', 'write', 'cmp', 'frac']));
+    var l = lv(ctx), shape = R.pick(BY(ctx, ['eval', 'eval', 'write', 'mc', 'check', 'miss'], ['eval', 'write', 'mc', 'cmp', 'check', 'miss'], ['frac', 'eval', 'write', 'cmp', 'frac', 'check', 'miss']));
     var b, e;
+    if (shape === 'check' || shape === 'miss') {
+      b = R.int(2, l === 1 ? 10 : 15); e = R.int(2, b <= 5 ? (l === 1 ? 5 : 6) : b <= 10 ? 3 : 2); if (b === 10) e = R.int(2, 6);
+      var vv = Math.pow(b, e), wn = name(R);
+      if (shape === 'miss') return { q: wn + ' found that ' + $(T.pow(b, '\\square') + ' = ' + T.commas(vv)) + '. What exponent goes in the box?', a: num(e, 'int'),
+        steps: ['Multiply ' + b + ' by itself until you reach ' + T.commas(vv) + ': ' + $([b].concat((function () { var o = [], r = b; for (var i = 2; i <= e; i++) { r *= b; o.push(T.commas(r)); } return o; })()).join(' \to ')) + '.', 'That uses ' + e + ' factors of ' + b + ', so the exponent is ' + e + '.'], hint: 'How many times is ' + b + ' used as a factor?', chk: { kind: 'pow', b: b, e: e } };
+      var wrongV = R.pick([b * e, b + e, Math.pow(b, e - 1), Math.pow(e, b)].filter(function (x) { return x !== vv; })), ok = R.coin(), shown = ok ? vv : wrongV;
+      return { q: wn + ' says ' + $(T.pow(b, e) + ' = ' + T.commas(shown)) + '. Is ' + wn + ' right?', a: mcKeep(['Yes', 'No'], ok ? 0 : 1),
+        steps: [$(T.pow(b, e)) + ' means ' + $(prodTex(b, e)) + '.', 'That is ' + T.commas(vv) + '.', ok ? 'So ' + wn + ' is right.' : 'So ' + wn + ' is not right: ' + T.commas(shown) + ' is not ' + T.commas(vv) + '.' + (shown === b * e ? ' (' + b + ' × ' + e + ' multiplies the base by the exponent, which is a common mix-up.)' : '')], hint: 'Write out the factors, then multiply.', chk: { kind: 'powchk', b: b, e: e, shown: shown, v: ok } };
+    }
     function pickBE(max) { var t = 0; do { b = R.int(2, l === 1 ? 6 : 12); e = R.int(2, l === 1 ? 4 : 5); t++; } while ((Math.pow(b, e) > max || (b === 2 && e === 2)) && t < 100); if (t >= 100) { b = 3; e = 3; } }
     if (shape === 'eval') {
       pickBE(l === 1 ? 300 : 10000); if (R.chance(0.15)) { b = 10; e = R.int(2, l === 1 ? 4 : 6); }
@@ -1873,9 +1895,21 @@
         hint: 'Compute both, or think about which way the outlier pulls the mean.', chk: { kind: 'mvm', data: base, v: mean.gt(med) ? 0 : 1 } };
     }
     if (shape === 'shape') {
-      var kind = R.pick(['sym', 'right', 'left']), dd = [], counts = kind === 'sym' ? [1, 2, 4, 5, 4, 2, 1] : kind === 'right' ? [3, 6, 5, 3, 2, 1, 1] : [1, 1, 2, 3, 5, 6, 3];
-      counts.forEach(function (c, j) { for (var t = 0; t < c; t++) dd.push(j + 1); });
-      return { q: 'How would you describe the shape of the data in the dot plot?', a: mcKeep(['roughly symmetric', 'skewed right (a long tail to the right)', 'skewed left (a long tail to the left)'], kind === 'sym' ? 0 : kind === 'right' ? 1 : 2), viz: { name: 'g6-dots', opts: { data: dd, min: 0, max: 8, label: 'Value' }, label: 'A dot plot' },
+      var kind = R.pick(['sym', 'right', 'left']), dd = [], counts, off = R.int(0, 12);
+      if (kind === 'sym') { var half = [1, R.int(1, 2), R.int(3, 4), R.int(5, 6)]; half[1] = Math.max(half[1], half[0]); counts = half.concat(half.slice(0, 3).reverse()); }
+      else {
+        for (var tries = 0; tries < 30; tries++) { // a clear tail: the mean must sit on the tail side of the median
+          var pk = R.int(4, 7), sh = R.int(2, 3), tail = [R.int(1, 2), pk, pk - R.int(0, 1)], cur = tail[2];
+          while (tail.length < 7) { cur = Math.max(1, cur - R.int(1, sh)); tail.push(cur); }
+          var vals = []; tail.forEach(function (c, j) { for (var t = 0; t < c; t++) vals.push(j); });
+          var mn = vals.reduce(function (a, b) { return a + b; }, 0) / vals.length, md = vals.length % 2 ? vals[(vals.length - 1) / 2] : (vals[vals.length / 2 - 1] + vals[vals.length / 2]) / 2;
+          if (mn - md >= 0.3 && tail[6] <= 2) break;
+          tail = [3, 6, 5, 3, 2, 1, 1];
+        }
+        counts = kind === 'right' ? tail : tail.slice().reverse();
+      }
+      counts.forEach(function (c, j) { for (var t = 0; t < c; t++) dd.push(off + j + 1); });
+      return { q: name(R) + ' made a dot plot of ' + R.pick(['test scores', 'hours of sleep', 'plant heights', 'jump distances', 'ages at a party', 'minutes spent reading']) + '. How would you describe the shape of the data?', a: mcKeep(['roughly symmetric', 'skewed right (a long tail to the right)', 'skewed left (a long tail to the left)'], kind === 'sym' ? 0 : kind === 'right' ? 1 : 2), viz: { name: 'g6-dots', opts: { data: dd, min: off, max: off + 8, label: 'Value' }, label: 'A dot plot' },
         steps: ['Look at where the dots pile up and where they trail off.', kind === 'sym' ? 'The pile is in the middle and both sides trail off about the same way: roughly symmetric.' : kind === 'right' ? 'The dots pile up on the left and trail off in a long tail to the right: skewed right.' : 'The dots pile up on the right and trail off in a long tail to the left: skewed left.'],
         hint: 'Which side has the long, thin tail?', chk: { kind: 'mc' } };
     }

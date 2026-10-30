@@ -1,6 +1,6 @@
 # The lesson planner's subjects and courses (layouts/homeschool/planner.html, static/homeschool/planner.js).
 # The ladders lead; the classic public-domain books stay as options ("also try" courses or their own subjects).
-# Subject: key, name, icon, note (shown under the name),
+# Subject: key, name, icon, note (shown under the name), link: {url, text} (a link after the note, when that page is built),
 #   on_ages: [[from, to], ...]  the ages it is switched on by default (empty: off until a parent switches it on),
 #   rank: [[age up to, rank], ...]  its place in the list at each age: lower comes first, ties keep this file's order,
 #     100 or more puts it under "More subjects" for that age. Ranks only order the list; they never switch anything on or off.
@@ -28,6 +28,8 @@ subjects:
   replaces: [arithmetic, spelling, mathladder]
   mins: [[4, 100], [99, 125]]
   hw: [[99, 0]]
+  note: 'Hannah Ward''s Little House lessons cover math and English. The Math Ladder''s Pre-K course and the pre-reading games are here too, as options.'
+  link: {url: /homeschool/pre-k/, text: 'More in Pre-K at home →'}
   courses:
   - key: ar-little-house-prek
     ar: little-house-prek
@@ -37,6 +39,26 @@ subjects:
     to: 4
     rep: 1
     mins: 20
+  - key: ml-pk
+    ladder: math
+    lc: pk
+    name: 'Math Ladder: Pre-K'
+    from: 3
+    to: 5
+    rep: 1
+    mins: 80
+    alt: true
+  - key: prek-letters
+    name: Pre-reading games (Teddy Rook Book)
+    practice: /homeschool/pre-k/letters
+    url: /homeschool/pre-k/letters/
+    sessions: 180
+    w: Session
+    from: 3
+    to: 5
+    rep: 1
+    mins: 10
+    alt: true
   - key: ar-little-house-kindergarten
     ar: little-house-kindergarten
     url: /homeschool/actual-reading/little-house-kindergarten/
@@ -1181,7 +1203,7 @@ subjects:
     name: SAT Math practice (Test Prep)
     practice: /test-prep/sat-math
     url: /test-prep/sat-math/
-    sessions: 60
+    sessions: 180
     w: Session
     from: 15
     to: 99
@@ -1191,7 +1213,7 @@ subjects:
     name: Reading, writing and grammar practice (SAT, ACT and CLT)
     practice: /test-prep/grammar
     url: /test-prep/grammar/
-    sessions: 60
+    sessions: 180
     w: Session
     from: 15
     to: 99
@@ -1201,7 +1223,7 @@ subjects:
     name: ACT Math practice (Test Prep)
     practice: /test-prep/act-math
     url: /test-prep/act-math/
-    sessions: 60
+    sessions: 180
     w: Session
     from: 15
     to: 99
@@ -1212,7 +1234,7 @@ subjects:
     name: CLT Quantitative practice (Test Prep)
     practice: /test-prep/clt-quantitative
     url: /test-prep/clt-quantitative/
-    sessions: 60
+    sessions: 180
     w: Session
     from: 14
     to: 99

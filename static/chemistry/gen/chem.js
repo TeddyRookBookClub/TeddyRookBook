@@ -216,6 +216,15 @@
   }
   /* formula string from counts in the given element order */
   function fstr(counts, els) { return els.map(function (e) { return e + (counts[e] === 1 ? '' : counts[e]); }).join(''); }
+  /* variety helpers: more forms of one skill from one bank ("which one is …", "choose all that are …"), so the
+     distractors combine. vOne: one item that passes ok and n - 1 that do not; vAll: n items, at least one of each. */
+  function vOne(R, pool, ok, n) { var g = pool.filter(ok), b = pool.filter(function (x) { return !ok(x); }), r = R.pick(g), it = R.shuffle([r].concat(R.sample(b, n - 1))); return { items: it, v: it.indexOf(r), right: r }; }
+  function vAll(R, pool, ok, n) {
+    var g = pool.filter(ok), b = pool.filter(function (x) { return !ok(x); }), k = R.int(1, Math.min(n - 1, g.length)); if (b.length < n - k) k = n - b.length;
+    var it = R.shuffle(R.sample(g, k).concat(R.sample(b, n - k)));
+    return { items: it, v: it.map(function (x, i) { return ok(x) ? i : -1; }).filter(function (i) { return i >= 0; }) };
+  }
+  function MCA(items, v) { return { t: 'mc', choices: items, v: v }; }
 
   // ======================= 01-matter.js
   // ---------------------------------------------------------------- unit: Matter and Measurement
@@ -241,7 +250,27 @@
     'mixture of an element and a compound': [[{ f: 'O2', n: 3 }, { f: 'CO2', n: 3 }], [{ f: 'N2', n: 3 }, { f: 'H2O', n: 3 }], [{ f: 'He', n: 4 }, { f: 'CH4', n: 3 }]]
   };
   G('chem.matter-classification', W(function (R, ctx) {
-    var L = lvl(ctx), kind = R.int(0, L === 1 ? 2 : 3);
+    var L = lvl(ctx), kind = R.pick(L === 1 ? [0, 1, 2, 4, 4] : [0, 2, 3, 4, 5, 5]);
+    if (kind === 4) { // which one is …? (or, from level 2, which one is not …?)
+      var want = R.int(0, 3), not = L > 1 && R.coin();
+      var o = vOne(R, SUBST, function (x) { return not ? x[1] !== want : x[1] === want; }, 4), kw = KINDS[want];
+      return {
+        q: 'Which of these is ' + (not ? '<b>not</b> ' : '') + art(kw) + ' ' + kw + '?',
+        a: MCA(o.items.map(function (x) { return cap(x[0]); }), o.v),
+        steps: o.items.map(function (x) { return cap(x[0]) + ': ' + art(KINDS[x[1]]) + ' ' + KINDS[x[1]] + '.'; }).concat([KIND_WHY[kw], 'So the answer is <b>' + o.right[0] + '</b>.']),
+        hint: 'Sort each one: pure substance (element or compound) or mixture (even or uneven)?'
+      };
+    }
+    if (kind === 5) { // choose all
+      var grp = R.pick([['pure substances', function (x) { return x[1] <= 1; }], ['mixtures', function (x) { return x[1] >= 2; }], ['elements', function (x) { return x[1] === 0; }], ['compounds', function (x) { return x[1] === 1; }], ['homogeneous mixtures', function (x) { return x[1] === 2; }]]);
+      var al = vAll(R, SUBST, grp[1], 4);
+      return {
+        q: 'Choose all of these that are ' + grp[0] + '.',
+        a: MCA(al.items.map(function (x) { return cap(x[0]); }), al.v),
+        steps: al.items.map(function (x) { return cap(x[0]) + ': ' + art(KINDS[x[1]]) + ' ' + KINDS[x[1]] + '.'; }).concat(['Pure substances are elements and compounds; mixtures can be homogeneous (even) or heterogeneous (uneven).', 'So the ' + grp[0] + ' are <b>' + al.v.map(function (i) { return al.items[i][0]; }).join('</b>, <b>') + '</b>.']),
+        hint: 'Classify each one by itself first.'
+      };
+    }
     if (kind <= 1) { // classify a named material
       var s = R.pick(SUBST), k = KINDS[s[1]];
       return {
@@ -287,7 +316,20 @@
     ['iron', 1538, 2861], ['copper', 1085, 2562], ['lead', 327, 1749], ['aluminum', 660, 2519], ['sodium chloride', 801, 1465]
   ];
   G('chem.states-of-matter', W(function (R, ctx) {
-    var L = lvl(ctx), kind = R.int(0, L === 1 ? 1 : 2);
+    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.pick([0, 1, 2, 3, 3]);
+    if (kind === 3) { // which substance is in a given state at one temperature? (a little table)
+      var Tq = R.pick([-200, -150, -100, -50, -20, 0, 25, 50, 80, 150, 200, 400, 700, 1000, 1200, 1500, 2000, 2700]);
+      var stOf = function (s) { return Tq < s[1] ? 0 : Tq < s[2] ? 1 : 2; };
+      var cand = MPBP.filter(function (s) { return Tq !== s[1] && Tq !== s[2]; }), byState = [0, 1, 2].map(function (k) { return cand.filter(function (s) { return stOf(s) === k; }); });
+      var wantSt = R.pick([0, 1, 2].filter(function (k) { return byState[k].length && cand.length - byState[k].length >= 3; }));
+      var o3 = vOne(R, cand, function (s) { return stOf(s) === wantSt; }, 4), nm3 = ['solid', 'liquid', 'gas'];
+      return {
+        q: 'At 1 atm, which of these substances is a <b>' + nm3[wantSt] + '</b> at $' + Tq + '\\ ^\\circ\\text{C}$?<br>' + o3.items.map(function (s) { return s[0] + ': melts at ' + s[1] + ' °C, boils at ' + s[2] + ' °C'; }).join('<br>'),
+        a: MCA(o3.items.map(function (s) { return cap(s[0]); }), o3.v),
+        steps: o3.items.map(function (s) { return cap(s[0]) + ': ' + Tq + ' °C is ' + (stOf(s) === 0 ? 'below its melting point, so it is solid.' : stOf(s) === 1 ? 'between its melting and boiling points, so it is liquid.' : 'above its boiling point, so it is a gas.'); }).concat(['So the answer is <b>' + o3.right[0] + '</b>.']),
+        hint: 'For each substance, compare the temperature with its melting point and its boiling point.'
+      };
+    }
     if (kind === 0) {
       var s = R.pick(MPBP), st = R.int(0, 2), T0;
       if (st === 0) T0 = s[1] - R.pick([20, 30, 50, 80]);
@@ -342,14 +384,41 @@
     ['milk souring', 1, 'Bacteria change the milk sugar into lactic acid, a new substance.'], ['an egg frying', 1, 'The proteins in the egg change permanently into new structures.'],
     ['gasoline burning in an engine', 1, 'Gasoline reacts with oxygen to make carbon dioxide and water.'], ['a silver spoon tarnishing', 1, 'Silver reacts with sulfur compounds in the air to make black silver sulfide.'],
     ['an antacid tablet fizzing in water', 1, 'Substances in the tablet react to make carbon dioxide, a gas that was not there before.'],
-    ['leaves making sugar by photosynthesis', 1, 'Carbon dioxide and water react to make glucose and oxygen.'], ['a match burning', 1, 'The match head and wood react with oxygen to make new substances.']
+    ['leaves making sugar by photosynthesis', 1, 'Carbon dioxide and water react to make glucose and oxygen.'], ['a match burning', 1, 'The match head and wood react with oxygen to make new substances.'],
+    ['butter melting in a warm pan', 0, 'Solid butter becomes liquid butter: a change of state.'], ['carrots being chopped into slices', 0, 'Only the size and shape change.'],
+    ['a puddle drying up in the sun', 0, 'The liquid water evaporates into water vapor, still H₂O.'], ['a sheet of paper being torn in half', 0, 'Each piece is still paper; only the size and shape change.'],
+    ['frost forming on a cold window', 0, 'Water vapor turns straight into ice: a change of state.'], ['coffee beans being ground into powder', 0, 'The pieces get smaller, but they are still coffee.'],
+    ['a rubber band being stretched', 0, 'Only the shape changes; it snaps back and is still rubber.'], ['iodine crystals turning into purple vapor when warmed', 0, 'Solid iodine becomes iodine gas (sublimation), the same substance in another state.'],
+    ['charcoal burning in a grill', 1, 'Carbon in the charcoal reacts with oxygen to make carbon dioxide, a new substance.'], ['vinegar and baking soda fizzing together', 1, 'The acid and the baking soda react to make carbon dioxide gas, water and a salt.'],
+    ['a copper roof slowly turning green', 1, 'Copper reacts with air and water to make a green coating of new copper compounds.'], ['bread toasting until it turns brown', 1, 'Sugars and proteins on the surface react in the heat to make new brown substances.'],
+    ['a glow stick lighting up after it is bent', 1, 'Two chemicals inside mix and react, and the reaction gives off light.'], ['fireworks exploding into colors', 1, 'The powders react quickly with oxygen to make new substances, heat, light and gas.']
   ];
   var PROPS = [
     ['the density of a metal', 0], ['the boiling point of ethanol', 0], ['the color of copper', 0], ['how hard a diamond is', 0], ['whether sugar dissolves in water', 0], ['whether gold can be hammered into thin sheets', 0],
     ['whether wood can burn', 1], ['whether iron rusts in moist air', 1], ['whether a metal reacts with acid', 1], ['whether baking soda breaks down when heated', 1], ['whether silver tarnishes in air', 1]
   ];
   G('chem.physical-chemical-changes', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 0, 1]) : R.int(0, 2 + (L === 3 ? 1 : 0));
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 0, 1, 4, 4]) : R.pick([0, 1, 2, 4, 5, 5].concat(L === 3 ? [3, 6] : [3]));
+    if (kind === 4 || kind === 5) { // which one is …? / choose all
+      var ph = R.int(0, 1), wd = ph ? 'chemical' : 'physical';
+      var oc = kind === 4 ? vOne(R, CHANGES, function (x) { return x[1] === ph; }, L === 1 ? 3 : 4) : vAll(R, CHANGES, function (x) { return x[1] === ph; }, 4);
+      var many = kind === 5, rv = many ? oc.v : [oc.v];
+      return {
+        q: many ? 'Choose all of these that are <b>' + wd + '</b> changes.' : 'Which of these is a <b>' + wd + '</b> change?',
+        a: MCA(oc.items.map(function (x) { return cap(x[0]); }), oc.v),
+        steps: oc.items.map(function (x) { return cap(x[0]) + ': ' + (x[1] ? 'chemical' : 'physical') + '. ' + x[2]; }).concat(['So the answer is <b>' + rv.map(function (i) { return oc.items[i][0]; }).join('</b>, <b>') + '</b>.']),
+        hint: 'A chemical change makes a new substance. A change of state, size or shape does not.'
+      };
+    }
+    if (kind === 6) { // properties: which one is a chemical (or physical) property?
+      var pp = R.int(0, 1), op = vOne(R, PROPS, function (x) { return x[1] === pp; }, 4);
+      return {
+        q: 'Which of these is a <b>' + (pp ? 'chemical' : 'physical') + ' property</b>?',
+        a: MCA(op.items.map(function (x) { return cap(x[0]); }), op.v),
+        steps: ['A physical property can be observed without turning the substance into something new; a chemical property describes how it reacts to make new substances.'].concat(op.items.map(function (x) { return cap(x[0]) + ': ' + (x[1] ? 'chemical' : 'physical') + ' property.'; }), ['So the answer is <b>' + op.right[0] + '</b>.']),
+        hint: 'Do you have to make a new substance to find it out?'
+      };
+    }
     if (kind === 0) {
       var c = R.pick(CHANGES);
       return {
@@ -437,7 +506,7 @@
     }
     if (from === to) to = '';
     if (from === to) from = avail[0];
-    var mant = R.pick(['2.5', '3.6', '4.2', '7.5', '0.35', '12', '45', '250', '0.068', '1.8', '640', '15.2', '0.92']);
+    var mant = R.coin() ? R.pick(['2.5', '3.6', '4.2', '7.5', '0.35', '12', '45', '250', '0.068', '1.8', '640', '15.2', '0.92']) : String(fx(R.int(11, 99) / R.pick([1, 10, 100])));
     var k = PRE[from] - PRE[to], ans = shift(mant, k);
     var uF = from + base, uT = to + base;
     var bigger = k > 0;
@@ -676,14 +745,23 @@
     { q: 'days to hours', fromU: 'days', toU: 'h', f: [[24, 'h', 1, 'day']], gen: function (R) { return R.int(3, 30) / 2; } },
     { q: 'inches to centimeters', fromU: 'in', toU: 'cm', f: [[2.54, 'cm', 1, 'in']], gen: function (R) { return R.int(2, 48) / 2; }, note: '$1\\ \\text{in} = 2.54\\ \\text{cm}$ exactly' },
     { q: 'pounds to grams', fromU: 'lb', toU: 'g', f: [[453.6, 'g', 1, 'lb']], gen: function (R) { return R.int(1, 20) / 4; }, note: '$1\\ \\text{lb} = 453.6\\ \\text{g}$' },
-    { q: 'liters to milliliters', fromU: 'L', toU: 'mL', f: [[1000, 'mL', 1, 'L']], gen: function (R) { return R.int(5, 250) / 100; } }
+    { q: 'liters to milliliters', fromU: 'L', toU: 'mL', f: [[1000, 'mL', 1, 'L']], gen: function (R) { return R.int(5, 250) / 100; } },
+    { q: 'minutes to seconds', fromU: 'min', toU: 's', f: [[60, 's', 1, 'min']], gen: function (R) { return R.int(3, 90) / 2; } },
+    { q: 'weeks to days', fromU: 'weeks', toU: 'days', f: [[7, 'days', 1, 'week']], gen: function (R) { return R.int(2, 60) / 2; } },
+    { q: 'feet to inches', fromU: 'ft', toU: 'in', f: [[12, 'in', 1, 'ft']], gen: function (R) { return R.int(2, 60) / 2; } },
+    { q: 'ounces to grams', fromU: 'oz', toU: 'g', f: [[28.35, 'g', 1, 'oz']], gen: function (R) { return R.int(1, 64) / 2; }, note: '$1\\ \\text{oz} = 28.35\\ \\text{g}$' },
+    { q: 'milliliters to liters', fromU: 'mL', toU: 'L', f: [[1, 'L', 1000, 'mL']], gen: function (R) { return R.int(5, 400) * 5; } }
   ];
   var DA2 = [
     { q: 'a speed of', fromU: 'km/h', toU: 'm/s', f: [[1000, 'm', 1, 'km'], [1, 'h', 3600, 's']], gen: function (R) { return R.coin() ? 18 * R.int(1, 8) : R.int(10, 130); } },
     { q: 'a time of', fromU: 'days', toU: 's', f: [[24, 'h', 1, 'day'], [3600, 's', 1, 'h']], gen: function (R) { return R.int(1, 10) / 2; } },
     { q: 'a mass of', fromU: 'mg', toU: 'kg', f: [[1, 'g', 1000, 'mg'], [1, 'kg', 1000, 'g']], gen: function (R) { return R.int(2, 99) * 50; } },
     { q: 'a flow rate of', fromU: 'L/min', toU: 'mL/s', f: [[1000, 'mL', 1, 'L'], [1, 'min', 60, 's']], gen: function (R) { return R.int(3, 24) / 2; } },
-    { q: 'a rate of', fromU: 'm/s', toU: 'km/h', f: [[1, 'km', 1000, 'm'], [3600, 's', 1, 'h']], gen: function (R) { return R.int(2, 40); } }
+    { q: 'a rate of', fromU: 'm/s', toU: 'km/h', f: [[1, 'km', 1000, 'm'], [3600, 's', 1, 'h']], gen: function (R) { return R.int(2, 40); } },
+    { q: 'a time of', fromU: 'h', toU: 's', f: [[60, 'min', 1, 'h'], [60, 's', 1, 'min']], gen: function (R) { return R.int(1, 40) / 4; } },
+    { q: 'a mass of', fromU: 'kg', toU: 'mg', f: [[1000, 'g', 1, 'kg'], [1000, 'mg', 1, 'g']], gen: function (R) { return R.int(1, 300) / 100; } },
+    { q: 'a dose rate of', fromU: 'mL/h', toU: 'L/day', f: [[1, 'L', 1000, 'mL'], [24, 'h', 1, 'day']], gen: function (R) { return R.int(2, 60) * 5; } },
+    { q: 'a length of', fromU: 'ft', toU: 'cm', f: [[12, 'in', 1, 'ft'], [2.54, 'cm', 1, 'in']], gen: function (R) { return R.int(1, 40) / 2; }, note: '$1\\ \\text{ft} = 12\\ \\text{in}$ and $1\\ \\text{in} = 2.54\\ \\text{cm}$' }
   ];
   var DA3 = [
     { q: 'a volume of', fromU: 'cm3', toU: 'm3', f: [[1, 'm', 100, 'cm', 3]], gen: function (R) { return R.int(2, 250) * 50; } },
@@ -718,7 +796,7 @@
   G('chem.density', W(function (R, ctx) {
     var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 3 : 4);
     if (kind === 0) { // d = m / V
-      var md = R.pick(METALS), V = R.pick([2.5, 4.0, 5.0, 8.0, 10.0, 12.5, 15.0, 20.0]), m = +(md[1] * V).toFixed(2);
+      var md = R.pick(METALS), V = R.int(4, 50) / 2, m = +(md[1] * V).toFixed(2);
       var d = m / V;
       return {
         q: 'A block of metal has a mass of $' + tv(m) + '\\ \\text{g}$ and a volume of $' + tv(V) + '\\ \\text{cm}^3$. What is its density?',
@@ -731,7 +809,7 @@
       var liq = R.pick([['ethanol', 0.789, 'g/mL'], ['glycerol', 1.26, 'g/mL'], ['mercury', 13.5, 'g/mL'], ['olive oil', 0.92, 'g/mL']].concat(METALS.slice(0, 5).map(function (x) { return [x[0], x[1], 'g/cm3']; })));
       var vu = liq[2] === 'g/mL' ? 'mL' : 'cm3', findM = R.coin();
       if (findM) {
-        var V2 = R.pick([25, 40, 50, 75, 120, 250]), m2 = liq[1] * V2;
+        var V2 = R.int(2, 60) * 5, m2 = liq[1] * V2;
         return {
           q: 'The density of ' + liq[0] + ' is $' + tv(liq[1]) + '\\ ' + ut(liq[2]) + '$. What is the mass of $' + V2 + '\\ ' + ut(vu) + '$ of ' + liq[0] + '?',
           a: A(m2, 3, 0.01), unit: 'g',
@@ -739,7 +817,7 @@
           hint: 'Mass = density × volume.'
         };
       }
-      var m3 = R.pick([50, 80, 100, 150, 200, 250]), V3 = m3 / liq[1];
+      var m3 = R.int(4, 60) * 5, V3 = m3 / liq[1];
       return {
         q: 'The density of ' + liq[0] + ' is $' + tv(liq[1]) + '\\ ' + ut(liq[2]) + '$. What volume does $' + m3 + '\\ \\text{g}$ of ' + liq[0] + ' take up?',
         a: A(V3, 3, 0.01), unit: vu === 'cm3' ? 'cm³' : 'mL',
@@ -748,7 +826,7 @@
       };
     }
     if (kind === 2 || kind === 4) { // identify by water displacement
-      var mt = R.pick(METALS), dv = R.pick([2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]), v1 = R.pick([20.0, 25.0, 30.0, 40.0]), mm2 = +(mt[1] * dv).toFixed(1);
+      var mt = R.pick(METALS), dv = R.int(8, 30) / 4, v1 = R.int(30, 90) / 2, mm2 = +(mt[1] * dv).toFixed(1);
       var dd = mm2 / dv, others = METALS.filter(function (x) { return x[0] !== mt[0] && abs(x[1] - dd) / dd > 0.08; });
       var choices = R.sample(others, 3).map(function (x) { return cap(x[0]) + ' (' + x[1].toPrecision(3) + ' g/cm³)'; });
       return {
@@ -762,7 +840,12 @@
       ['A block of aluminum is cut in half. Each half has half the density of the whole block.', false, 'Cutting halves both the mass and the volume, so mass ÷ volume stays the same. Density does not depend on how much you have.'],
       ['A large log can float on water while a small pebble sinks, because the pebble is denser than water and the log is not.', true, 'Floating depends on density, not size: wood is less dense than water, and rock is denser.'],
       ['A heavier object is always denser than a lighter one.', false, 'A heavy object might also be very large. Density compares mass with volume: a large block of foam is heavier than a paper clip but much less dense.'],
-      ['Two samples of pure copper of different sizes have the same density at the same temperature.', true, 'Density is a property of the substance itself.']
+      ['Two samples of pure copper of different sizes have the same density at the same temperature.', true, 'Density is a property of the substance itself.'],
+      ['If you pour half of the water out of a glass, the water left behind is half as dense.', false, 'Mass and volume both drop by half, so the density of the water stays the same.'],
+      ['An object sinks in water when its density is greater than the density of water.', true, 'A denser object weighs more than the water it pushes aside, so it sinks.'],
+      ['Ice floats on liquid water because solid water is less dense than liquid water.', true, 'Water molecules in ice are held in an open pattern, so ice is about 0.92 g/cm³, less than liquid water (about 1.00 g/cm³).'],
+      ['To find the density of a rock, you need both its mass and its volume.', true, 'Density is mass divided by volume, so both are needed.'],
+      ['A gold ring and a gold bar have different densities because the bar is bigger.', false, 'Both are gold, so they have the same density (about 19.3 g/cm³); only their mass and volume differ.']
     ];
     var t = R.pick(tfs);
     return { q: 'True or false: ' + t[0], a: TF(t[1]), steps: [t[2], 'So the statement is <b>' + (t[1] ? 'true' : 'false') + '</b>.'], hint: 'Density is mass divided by volume; it does not depend on the amount.' };
@@ -772,7 +855,7 @@
   G('chem.temperature-scales', W(function (R, ctx) {
     var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 3 : 4);
     if (kind === 0) {
-      var C = R.coin() ? R.pick([25, 37, 100, -40, -78, -196, 0, 450, 1085, -183]) : R.int(-90, 160), K = C + 273.15;
+      var C = R.chance(0.2) ? R.pick([25, 37, 100, -40, -78, -196, 0, 450, 1085, -183]) : R.int(-120, 400), K = C + 273.15;
       return {
         q: 'Convert $' + C + '\\ ^\\circ\\text{C}$ to kelvins.',
         a: { t: 'num', v: String(fx(K)), tol: 0.16 }, unit: 'K',
@@ -781,7 +864,7 @@
       };
     }
     if (kind === 1) {
-      var K2 = R.coin() ? R.pick([300, 350, 77, 195, 400, 250, 500, 1000, 4]) : R.int(60, 700), C2 = K2 - 273.15;
+      var K2 = R.chance(0.2) ? R.pick([300, 350, 77, 195, 400, 250, 500, 1000, 4]) : R.int(60, 900), C2 = K2 - 273.15;
       return {
         q: 'A sample is at $' + K2 + '\\ \\text{K}$. What is its temperature in degrees Celsius?',
         a: { t: 'num', v: String(fx(C2)), tol: 0.16 }, unit: '°C',
@@ -803,7 +886,12 @@
         ['At $0\\ ^\\circ\\text{C}$, the particles of a substance have no thermal energy.', false, '0 °C is just the freezing point of water, 273.15 K. Particles there still move. Only absolute zero, 0 K, is the bottom of the scale.'],
         ['Water at $20\\ ^\\circ\\text{C}$ has twice the average particle kinetic energy of water at $10\\ ^\\circ\\text{C}$.', false, 'Average kinetic energy is proportional to the kelvin temperature: 293 K is only about 3.5% more than 283 K, not double.'],
         ['A change of $10\\ \\text{K}$ is the same size as a change of $10\\ ^\\circ\\text{C}$.', true, 'The two scales have steps of the same size; they only start at different places.'],
-        ['Nothing can be cooled below $0\\ \\text{K}$.', true, 'Absolute zero is the lowest temperature on the scale; real samples can get close but never reach it.']
+        ['Nothing can be cooled below $0\\ \\text{K}$.', true, 'Absolute zero is the lowest temperature on the scale; real samples can get close but never reach it.'],
+        ['Temperatures in kelvins are never negative.', true, 'The kelvin scale starts at absolute zero, the lowest possible temperature, so every kelvin temperature is zero or more.'],
+        ['$-40\\ ^\\circ\\text{C}$ is colder than $200\\ \\text{K}$.', false, '$-40\\ ^\\circ\\text{C}$ is $233.15\\ \\text{K}$, which is warmer than $200\\ \\text{K}$.'],
+        ['Water boils at $373.15\\ \\text{K}$ at 1 atm.', true, 'Water boils at $100\\ ^\\circ\\text{C}$, and $100 + 273.15 = 373.15$.'],
+        ['To change a Celsius temperature to kelvins, you multiply by 273.15.', false, 'You add 273.15; the two scales only start at different places.'],
+        ['Room temperature is about $295\\ \\text{K}$.', true, 'Room temperature is about $22\\ ^\\circ\\text{C}$, and $22 + 273 = 295$.']
       ];
       var t = R.pick(tfs);
       return { q: 'True or false: ' + t[0], a: TF(t[1]), steps: [t[2], 'So the statement is <b>' + (t[1] ? 'true' : 'false') + '</b>.'], hint: 'Ratios of temperatures only make sense in kelvins.' };
@@ -832,7 +920,26 @@
     ['Which particle did James Chadwick identify in 1932?', 'The neutron', ['The electron', 'The proton', 'The alpha particle']]
   ];
   G('chem.atomic-models', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? 0 : R.pick(L === 2 ? [0, 0, 1, 2] : [0, 1, 2, 3]);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 4, 4]) : R.pick(L === 2 ? [0, 1, 2, 4, 5] : [0, 1, 2, 3, 4, 5]);
+    if (kind === 4) { // match a scientist and an idea, both ways
+      var pool = L === 1 ? SCI.slice(1, 7) : SCI, who = R.pick(pool), rest = R.sample(pool.filter(function (x) { return x !== who; }), 3), its = R.shuffle([who].concat(rest)), byName = R.coin();
+      return {
+        q: byName ? 'Which scientist ' + who[2] + '?' : 'What is ' + who[0] + ' (' + who[1] + ') known for in the story of the atom?',
+        a: MCA(its.map(function (x) { return byName ? x[0] : cap(x[2]); }), its.indexOf(who)),
+        steps: its.map(function (x) { return x[0] + ' (' + x[1] + ') ' + x[2] + '.'; }).concat(['So the answer is <b>' + (byName ? who[0] : who[2]) + '</b>.']),
+        hint: 'Each new idea came from a new experiment or a new problem the older model could not explain.'
+      };
+    }
+    if (kind === 5) { // put in order
+      var four = R.sample(SCI, 4).sort(function (x, y) { return x[3] - y[3]; }), rightO = four.map(function (x) { return x[0]; }).join(', '), wrongO = [];
+      for (var g = 0; g < 40 && wrongO.length < 3; g++) { var p = R.shuffle(four).map(function (x) { return x[0]; }).join(', '); if (p !== rightO && wrongO.indexOf(p) < 0) wrongO.push(p); }
+      return {
+        q: 'Put these scientists in the order of their work on the atom, earliest first: ' + R.shuffle(four).map(function (x) { return x[0]; }).join(', ') + '.',
+        a: MC(rightO, wrongO),
+        steps: four.map(function (x) { return x[0] + ' (' + x[1] + ') ' + x[2] + '.'; }).concat(['Earliest first: <b>' + rightO + '</b>.']),
+        hint: 'Each model was built on the one before it.'
+      };
+    }
     if (kind === 0) {
       var b = R.pick(L === 1 ? MODELQ.slice(0, 5) : MODELQ);
       return { q: b[0], a: MC(b[1], b[2]), steps: [b[1] + '.', MODELW[MODELQ.indexOf(b)]], hint: 'Match each scientist with the experiment or idea that changed the model.' };
@@ -874,12 +981,22 @@
     'Bohr explained why atoms give off light only of certain colors: electrons jump between fixed energy levels.',
     'Chadwick found a neutral particle in the nucleus with about the mass of a proton.'
   ];
+  var SCI = [ // name, date, idea, year for sorting (standard history of the atom)
+    ['Democritus', 'about 400 BC', 'gave the atom its name, from a Greek word meaning "uncuttable"', -400],
+    ['John Dalton', '1808', 'described atoms as tiny solid spheres that join in whole-number ratios', 1808],
+    ['J. J. Thomson', '1897', 'discovered the electron using cathode rays', 1897],
+    ['Robert Millikan', '1909', 'measured the charge of one electron using tiny oil drops', 1909],
+    ['Ernest Rutherford', '1911', 'explained the gold-foil results with a tiny, dense, positive nucleus', 1911],
+    ['Niels Bohr', '1913', 'placed electrons in fixed energy levels around the nucleus', 1913],
+    ['Erwin Schrödinger', '1926', 'described electrons as waves, which led to the electron-cloud model', 1926],
+    ['James Chadwick', '1932', 'discovered the neutron', 1932]
+  ];
 
   var COMMON = ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar', 'K', 'Ca', 'Fe', 'Cu', 'Zn', 'Br', 'Ag', 'I', 'Au', 'Pb'];
   G('chem.subatomic-particles', W(function (R, ctx) {
     var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 3 : 4);
     if (kind === 0) {
-      var e = EL[R.pick(COMMON)], askE = R.coin();
+      var e = R.coin() ? EL[R.pick(COMMON)] : ELZ[R.int(1, 56)], askE = R.coin();
       return {
         q: 'A neutral atom of ' + lname(e) + ' (' + e.s + ') has atomic number ' + e.Z + '. How many ' + (askE ? 'electrons' : 'protons') + ' does it have?',
         a: { t: 'num', v: String(e.Z) },
@@ -887,8 +1004,27 @@
         hint: 'Atomic number = number of protons; neutral means equal numbers of protons and electrons.'
       };
     }
+    if (L === 1 && R.chance(0.3)) { // check a given answer
+      var e6 = ELZ[R.int(3, 56)], said = R.pick([e6.Z, e6.Z, e6.Z + 1, e6.Z - 1, Math.round(e6.Z * 2.1)]), what = R.pick(['electrons', 'protons']);
+      return {
+        q: 'Nia says a neutral atom of ' + lname(e6) + ' (atomic number ' + e6.Z + ') has ' + said + ' ' + what + '. Is she right?',
+        a: MCK(['Yes', 'No'], said === e6.Z ? 0 : 1),
+        steps: ['The atomic number is the number of protons, and a neutral atom has the same number of electrons: ' + e6.Z + '.', said === e6.Z ? 'So <b>yes</b>, ' + said + ' is right.' : 'So <b>no</b>: it has ' + e6.Z + ' ' + what + ', not ' + said + '.'],
+        hint: 'Atomic number = protons; neutral means electrons = protons.'
+      };
+    }
+    if (kind === 1 && R.coin()) {
+      var e5 = ELZ[R.int(1, 56)];
+      return {
+        q: 'A neutral atom has ' + e5.Z + ' ' + plural(e5.Z, 'electron') + '. Which element is it? Type its symbol.',
+        viz: { name: 'ch-periodic', opts: { mode: 'category' } },
+        a: { t: 'formula', v: [e5.s] },
+        steps: ['A neutral atom has as many protons as electrons: ' + e5.Z + '.', 'The atomic number ' + e5.Z + ' belongs to ' + lname(e5) + ': <b>' + e5.s + '</b>.'],
+        hint: 'Neutral means protons = electrons.'
+      };
+    }
     if (kind === 1) {
-      var e1 = ELZ[R.int(1, 30)], nn = Math.max(0, Math.round(e1.Z * R.real(1.0, 1.2, 2)) + (e1.Z === 1 ? 0 : 0));
+      var e1 = ELZ[R.int(1, 36)], nn = Math.max(0, Math.round(e1.Z * R.real(1.0, 1.2, 2)) + (e1.Z === 1 ? 0 : 0));
       if (e1.Z === 1) nn = R.int(0, 1);
       return {
         q: 'An atom has ' + e1.Z + ' ' + plural(e1.Z, 'proton') + ', ' + nn + ' ' + plural(nn, 'neutron') + ' and ' + e1.Z + ' ' + plural(e1.Z, 'electron') + '. Which element is it? Type its symbol. (Use the periodic table: each cell shows its atomic number.)',
@@ -928,12 +1064,21 @@
     };
   }));
 
-  var ISO = { H: [1, 2, 3], He: [3, 4], Li: [6, 7], B: [10, 11], C: [12, 13, 14], N: [14, 15], O: [16, 17, 18], Ne: [20, 21, 22], Mg: [24, 25, 26], Si: [28, 29, 30], Cl: [35, 37], K: [39, 40, 41], Ca: [40, 42, 44, 48], Fe: [54, 56, 57, 58], Co: [59, 60], Cu: [63, 65], Br: [79, 81], Sr: [88, 90], Ag: [107, 109], I: [127, 131], Cs: [133, 137], U: [235, 238], Pb: [206, 207, 208] };
+  var ISO = { H: [1, 2, 3], He: [3, 4], Li: [6, 7], B: [10, 11], C: [12, 13, 14], N: [14, 15], O: [16, 17, 18], Ne: [20, 21, 22], Mg: [24, 25, 26], Si: [28, 29, 30], Cl: [35, 37], K: [39, 40, 41], Ca: [40, 42, 44, 48], Fe: [54, 56, 57, 58], Co: [59, 60], Cu: [63, 65], Br: [79, 81], Sr: [88, 90], Ag: [107, 109], I: [127, 131], Cs: [133, 137], U: [235, 238], Pb: [206, 207, 208],
+    F: [18, 19], Na: [22, 23, 24], Al: [26, 27], P: [31, 32], S: [32, 33, 34, 36], Ar: [36, 38, 40], Ti: [46, 47, 48, 49, 50], Cr: [50, 52, 53, 54], Ni: [58, 60, 61, 62, 64], Zn: [64, 66, 67, 68, 70], Kr: [78, 80, 82, 83, 84, 86], Rb: [85, 87], Xe: [129, 131, 132, 134, 136] }; // known isotopes (stable ones and a few well-known radioactive ones: H-3, C-14, Na-22, Na-24, Al-26, P-32, Co-60, Sr-90, I-131, Cs-137, U-235, U-238)
   var ISOK = Object.keys(ISO);
   function nuc(A, Z, s) { return '{}^{' + A + '}_{' + Z + '}\\mathrm{' + s + '}'; }
   G('chem.isotopes', W(function (R, ctx) {
     var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 3 : 4);
-    var s = R.pick(L === 1 ? ['H', 'C', 'N', 'O', 'Cl', 'Mg', 'Ne', 'Li', 'B'] : ISOK), e = EL[s], A = R.pick(ISO[s]), n = A - e.Z;
+    var s = R.pick(L === 1 ? ISOK.filter(function (k) { return EL[k].Z <= 36; }) : ISOK), e = EL[s], A = R.pick(ISO[s]), n = A - e.Z;
+    if (L === 1 && R.chance(0.3)) { // work backward: which element?
+      return {
+        q: 'An atom has mass number ' + A + ' and ' + n + ' ' + plural(n, 'neutron') + '. How many protons does it have, and which element is it?',
+        a: { t: 'multi', parts: [{ label: 'protons', a: { t: 'num', v: String(e.Z) } }, { label: 'element symbol', a: { t: 'formula', v: [s] } }] },
+        steps: ['Protons $= A - \\text{neutrons} = ' + A + ' - ' + n + ' = ' + e.Z + '$', 'Element ' + e.Z + ' is ' + lname(e) + ' (<b>' + s + '</b>), so this is ' + lname(e) + '-' + A + '.'],
+        hint: 'The mass number counts protons and neutrons together.'
+      };
+    }
     if (kind === 0) {
       var form = R.coin() ? '$' + nuc(A, e.Z, s) + '$' : lname(e) + '-' + A + ' (atomic number ' + e.Z + ')';
       return {
@@ -986,8 +1131,44 @@
 
   G('chem.ions', W(function (R, ctx) {
     var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 3 : 4);
-    var IONS = [['Na', 1], ['K', 1], ['Li', 1], ['Mg', 2], ['Ca', 2], ['Al', 3], ['F', -1], ['Cl', -1], ['Br', -1], ['O', -2], ['S', -2], ['N', -3], ['Fe', 2], ['Fe', 3], ['Cu', 2], ['Zn', 2], ['I', -1], ['Ba', 2]];
+    var IONS = [['Na', 1], ['K', 1], ['Li', 1], ['Mg', 2], ['Ca', 2], ['Al', 3], ['F', -1], ['Cl', -1], ['Br', -1], ['O', -2], ['S', -2], ['N', -3], ['Fe', 2], ['Fe', 3], ['Cu', 2], ['Zn', 2], ['I', -1], ['Ba', 2],
+      ['Rb', 1], ['Cs', 1], ['Sr', 2], ['Be', 2], ['Ag', 1], ['Cu', 1], ['Ni', 2], ['Co', 2], ['Mn', 2], ['Cr', 3], ['Sn', 2], ['Pb', 2], ['P', -3], ['Se', -2], ['H', 1], ['Cd', 2], ['Ga', 3], ['Sc', 3]];
     var io = R.pick(IONS), e = EL[io[0]], q = io[1], ne = e.Z - q;
+    if (L > 1 && R.chance(0.3)) { // which ion has this many electrons? (one, or choose all)
+      var target = R.pick(IONS.filter(function (x) { return IONS.filter(function (y) { return EL[y[0]].Z - y[1] === EL[x[0]].Z - x[1]; }).length >= 2; })), tn_ = EL[target[0]].Z - target[1];
+      var hasN = function (x) { return EL[x[0]].Z - x[1] === tn_; }, allF = L === 3 && R.coin(), oi = allF ? vAll(R, IONS, hasN, 4) : vOne(R, IONS, hasN, 4);
+      return {
+        q: allF ? 'Choose all of these ions that have exactly ' + tn_ + ' electrons.' : 'Which of these ions has exactly ' + tn_ + ' electrons?',
+        a: MCA(oi.items.map(function (x) { return '$' + ft(ionF(x[0], x[1])) + '$'; }), oi.v),
+        steps: oi.items.map(function (x) { var z = EL[x[0]].Z; return '$' + ft(ionF(x[0], x[1])) + '$: ' + z + ' protons, charge ' + signedT(x[1]) + ', so $' + z + (x[1] > 0 ? ' - ' + x[1] : ' + ' + (-x[1])) + ' = ' + (z - x[1]) + '$ electrons.'; }).concat(['Electrons = atomic number − charge.']),
+        hint: 'Start from the atomic number, then take away electrons for a positive charge or add them for a negative one.'
+      };
+    }
+    if (L === 1 && R.chance(0.25)) { // which ion has more (or fewer) electrons than protons?
+      var neg = R.coin(), oc = vOne(R, IONS, function (x) { return neg ? x[1] < 0 : x[1] > 0; }, 3);
+      return {
+        q: 'Which of these ions has ' + (neg ? 'more' : 'fewer') + ' electrons than protons?',
+        a: MCA(oc.items.map(function (x) { return '$' + ft(ionF(x[0], x[1])) + '$'; }), oc.v),
+        steps: ['A negative ion has gained electrons, so it has more electrons than protons; a positive ion has lost electrons, so it has fewer.'].concat(oc.items.map(function (x) { return '$' + ft(ionF(x[0], x[1])) + '$ has a ' + (x[1] > 0 ? 'positive charge: fewer electrons than protons.' : 'negative charge: more electrons than protons.'); })),
+        hint: 'Look at the sign of the charge.'
+      };
+    }
+    if (L === 1 && R.chance(0.3)) { // the charge from a named ion's electrons
+      return {
+        q: 'An ion of ' + lname(e) + ' (atomic number ' + e.Z + ') has ' + ne + ' ' + plural(ne, 'electron') + '. What is its charge? (Give a signed number, like −2 or +3.)',
+        a: { t: 'num', v: String(q) },
+        steps: ['It has ' + e.Z + ' protons, the atomic number.', 'Charge = protons − electrons $= ' + e.Z + ' - ' + ne + ' = ' + signed(q) + '$'],
+        hint: 'Charge = protons − electrons.'
+      };
+    }
+    if (L === 1 && R.chance(0.3)) { // work backward: protons from electrons and charge
+      return {
+        q: 'An ion has a charge of ' + signedT(q) + ' and ' + ne + ' ' + plural(ne, 'electron') + '. How many protons does it have?',
+        a: { t: 'num', v: String(e.Z) },
+        steps: ['Charge = protons − electrons, so protons = electrons + charge.', 'Protons $= ' + ne + (q > 0 ? ' + ' + q : ' - ' + (-q)) + ' = ' + e.Z + '$, so it is ' + (e.s === 'Cu' && q === 1 ? 'a copper ion' : 'an ion of ' + lname(e)) + ', $' + ft(ionF(e.s, q)) + '$.'],
+        hint: 'A positive ion has fewer electrons than protons.'
+      };
+    }
     if (kind === 0) {
       return {
         q: 'A particle has ' + e.Z + ' protons and ' + ne + ' electrons. What is its charge? (Give a signed number, like −2 or +3.)',
@@ -1024,6 +1205,7 @@
       return { q: b[0], a: MC(b[1], b[2]), steps: ['In chemical changes only electrons move between atoms; the nucleus (protons and neutrons) stays the same.', 'Losing negative electrons leaves a positive charge; gaining them leaves a negative charge.', 'Answer: <b>' + b[1] + '</b>.'], hint: 'Only electrons move in chemistry.' };
     }
     var COMMONA = { Na: [23], K: [39, 41], Li: [6, 7], Mg: [24, 26], Ca: [40, 44], Al: [27], F: [19], Cl: [35, 37], Br: [79, 81], O: [16, 18], S: [32, 34], N: [14, 15], Fe: [54, 56], Cu: [63, 65], Zn: [64, 66], I: [127], Ba: [137, 138] };
+    Object.assign(COMMONA, { Rb: [85, 87], Cs: [133], Sr: [86, 88], Be: [9], Ag: [107, 109], Ni: [58, 60], Co: [59], Mn: [55], Cr: [52, 53], Sn: [118, 120], Pb: [206, 208], P: [31], Se: [78, 80], H: [1, 2], Cd: [112, 114], Ga: [69, 71], Sc: [45] });
     var A2 = R.pick(COMMONA[e.s]);
     return {
       q: 'The ion $' + '{}^{' + A2 + '}_{' + e.Z + '}\\mathrm{' + e.s + '}^{' + chgT(q) + '}' + '$ has how many protons, neutrons and electrons?',
@@ -1041,7 +1223,27 @@
   var AAM3 = { magnesium: [['Mg', 23.985, 78.99], ['Mg', 24.986, 10.00], ['Mg', 25.983, 11.01]], silicon: [['Si', 27.977, 92.22], ['Si', 28.976, 4.69], ['Si', 29.974, 3.09]], neon: [['Ne', 19.992, 90.48], ['Ne', 20.994, 0.27], ['Ne', 21.991, 9.25]] };
   function isoName(el, m) { return el + '-' + Math.round(m); }
   G('chem.average-atomic-mass', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 0, 3]) : L === 2 ? R.pick([0, 1, 1, 3, 4]) : R.pick([0, 1, 2, 2, 3, 4]);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 0, 3]) : L === 2 ? R.pick([0, 0, 1, 3, 4, 5, 5]) : R.pick([0, 1, 2, 3, 4, 5, 5, 6, 6]);
+    if (kind === 5) { // find an abundance from the average (made-up element, clean numbers)
+      var m5 = R.int(20, 150), d5 = R.pick([1, 2, 2, 3]), a5 = R.int(11, 89), av5 = fx(m5 + d5 * (100 - a5) / 100);
+      return {
+        q: 'Element Q has two isotopes, with masses $' + m5 + '.0\\ \\text{u}$ and $' + (m5 + d5) + '.0\\ \\text{u}$. Its average atomic mass is $' + av5.toFixed(2) + '\\ \\text{u}$. What percent of Q atoms are the lighter isotope?',
+        a: { t: 'num', v: String(a5), pct: true, tol: 0.3 },
+        steps: ['Let $x$ be the fraction that is the lighter isotope, so $1 - x$ is the heavier one.', '$' + m5 + 'x + ' + (m5 + d5) + '(1 - x) = ' + av5.toFixed(2) + '$', '$' + (m5 + d5) + ' - ' + d5 + 'x = ' + av5.toFixed(2) + '$, so $' + d5 + 'x = ' + tn(m5 + d5 - av5, 4) + '$ and $x = ' + fx(a5 / 100) + '$', 'So <b>' + a5 + '%</b> are the lighter isotope. (Check: the average is closer to the lighter mass exactly when that isotope is more than half.)'],
+        nolint: ['1x'],
+        hint: 'Call one fraction x and the other 1 − x.'
+      };
+    }
+    if (kind === 6) { // three made-up isotopes
+      var m6 = R.int(20, 120), ab = [R.int(10, 70)]; ab.push(R.int(5, 90 - ab[0])); ab.push(100 - ab[0] - ab[1]);
+      var iso6 = ab.map(function (p, i) { return [m6 + i, p]; }), av6 = iso6.reduce(function (s, x) { return s + x[0] * x[1] / 100; }, 0);
+      return {
+        q: 'Element Z has three isotopes: ' + U.list(iso6.map(function (x) { return 'mass $' + x[0] + '.0\\ \\text{u}$ (' + x[1] + '%)'; })) + '. What is its average atomic mass? Give it to two decimal places.',
+        a: { t: 'num', v: av6.toFixed(2), tol: 0.011 }, unit: 'u',
+        steps: ['Weight each mass by its abundance as a decimal, then add.', '$' + iso6.map(function (x) { return '(' + x[0] + ')(' + fx(x[1] / 100) + ')'; }).join(' + ') + ' = ' + av6.toFixed(2) + '\\ \\text{u}$', 'Check: the abundances add to 100%, and the average lies between the lightest and the heaviest mass.'],
+        hint: 'Multiply each mass by its abundance as a decimal, then add.'
+      };
+    }
     if (kind <= 2) {
       var iso, name;
       if (kind === 0) { var m1 = R.int(10, 120), d = R.pick([1, 2]), a1 = L === 1 ? R.pick([60, 70, 75, 80, 90]) : R.int(110, 190) / 2; iso = [['X', m1 + 0.0, a1], ['X', m1 + d + 0.0, fx(100 - a1)]]; name = 'element X'; }
@@ -1084,8 +1286,38 @@
   // ---------------------------------------------------------------- unit: Electrons in Atoms
   function shellsT(arr) { return arr.join(', '); }
   G('chem.electron-shells', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 3 : 5);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 2, 6, 7, 8]) : R.pick(L === 2 ? [0, 1, 2, 3, 6, 7, 8] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 8]);
     var e = ELZ[R.int(L === 1 ? 3 : 3, 20)], sh = shells20(e.Z);
+    if (kind === 6) { // how many shells, or how many inner electrons
+      var inner = R.coin() && sh.length > 1, pic6 = R.coin();
+      return {
+        q: (pic6 ? 'The diagram shows a neutral atom. ' : 'Think of a neutral ' + lname(e) + ' atom (atomic number ' + e.Z + '). ') + (inner ? 'How many electrons are in its inner shells (all but the outermost)?' : 'How many shells hold electrons?'),
+        viz: pic6 ? { name: 'ch-atom', opts: { p: e.Z, n: Math.round(e.Z * 1.1), e: e.Z, quiet: true, edit: false, motion: false } } : undefined,
+        a: { t: 'num', v: String(inner ? e.Z - sh[sh.length - 1] : sh.length) },
+        steps: ['The arrangement is ' + shellsT(sh) + '.', inner ? 'Inner electrons: $' + sh.slice(0, -1).join(' + ') + ' = ' + (e.Z - sh[sh.length - 1]) + '$' : 'That is <b>' + sh.length + '</b> ' + plural(sh.length, 'shell') + ', the same as its period in the periodic table.'],
+        hint: 'Shells fill 2, then 8, then 8, then 2.'
+      };
+    }
+    if (kind === 7) { // check a given arrangement
+      var wrong = sh.slice(), ok7 = R.coin();
+      if (!ok7) { if (sh.length >= 2 && sh[1] === 8 && sh.length === 2) wrong = [2, 7, 1]; else if (sh.length >= 2) { wrong = sh.slice(); wrong[wrong.length - 1] += 1; wrong[wrong.length - 2] -= 1; if (wrong[wrong.length - 2] < 1 || (wrong.length === 2 && wrong[1] > 8)) wrong = [3].concat(sh.slice(1)); if (wrong.join() === sh.join()) wrong = [1].concat(sh.slice(0, -1), [sh[sh.length - 1] + 1]); } else wrong = [3]; }
+      var shown = ok7 ? sh : wrong; if (shown.reduce(function (s, x) { return s + x; }, 0) !== e.Z) { shown = sh; ok7 = true; }
+      return {
+        q: 'Leo wrote the electron arrangement of ' + lname(e) + ' (atomic number ' + e.Z + ') as ' + shellsT(shown) + '. Is he right?',
+        a: MCK(['Yes', 'No'], ok7 ? 0 : 1),
+        steps: ['Fill the shells in order: 2 in the first, up to 8 in the second, up to 8 in the third, then the fourth.', 'For ' + e.Z + ' electrons that gives ' + shellsT(sh) + '.', ok7 ? 'So <b>yes</b>, he is right.' : 'So <b>no</b>: ' + shellsT(shown) + ' puts electrons in a shell before the shell inside it is full, or overfills a shell.'],
+        hint: 'Is each inner shell full before the next one starts?'
+      };
+    }
+    if (kind === 8) { // which atom has this many outer electrons?
+      var want8 = R.int(1, 8), pool8 = ELZ.slice(3, 21), o8 = vOne(R, pool8, function (x) { var s = shells20(x.Z); return s[s.length - 1] === want8; }, 4);
+      return {
+        q: 'Which of these neutral atoms has ' + want8 + ' ' + plural(want8, 'electron') + ' in its outermost shell?',
+        a: MCA(o8.items.map(function (x) { return cap(lname(x)) + ' (' + x.Z + ')'; }), o8.v),
+        steps: o8.items.map(function (x) { return cap(lname(x)) + ': ' + shellsT(shells20(x.Z)) + '.'; }).concat(['So the answer is <b>' + lname(o8.right) + '</b>.']),
+        hint: 'Write each arrangement, then look at the last number.'
+      };
+    }
     if (kind === 0) {
       return {
         q: 'Write the electron arrangement of ' + lname(e) + ' (atomic number ' + e.Z + ') by shell, from the inside out, like 2, 8, 1.',
@@ -1191,8 +1423,18 @@
 
   var SUBL = { s: [1, 2], p: [3, 6], d: [5, 10], f: [7, 14] };
   G('chem.orbitals-sublevels', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 4 : 5);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 2, 3, 4, 6, 6]) : R.pick(L === 2 ? [0, 1, 2, 3, 4, 6, 6] : [0, 1, 2, 3, 4, 5, 6, 6]);
     var letters = ['s', 'p', 'd', 'f'];
+    if (kind === 6) { // capacity of several sublevels together
+      var real = []; for (var nq = 1; nq <= 5; nq++) for (var li = 0; li < Math.min(nq, 4); li++) real.push(nq + letters[li]);
+      var some = R.sample(real, R.int(2, 4)).sort(function (x, y) { return real.indexOf(x) - real.indexOf(y); }), cap6 = some.reduce(function (s, x) { return s + SUBL[x[1]][1]; }, 0);
+      return {
+        q: 'What is the greatest number of electrons that the ' + U.list(some) + ' sublevels can hold all together?',
+        a: { t: 'num', v: String(cap6) },
+        steps: ['Only the letter matters: s holds 2, p holds 6, d holds 10 and f holds 14.', '$' + some.map(function (x) { return SUBL[x[1]][1]; }).join(' + ') + ' = ' + cap6 + '$'],
+        hint: 'Each orbital holds 2 electrons: s has 1 orbital, p 3, d 5, f 7.'
+      };
+    }
     if (kind === 0 || kind === 1) {
       var lt = R.pick(L === 1 ? ['s', 'p', 'd'] : letters), n = Math.max(letters.indexOf(lt) + 1, R.int(2, 5)), want = kind === 0 ? 'orbitals' : 'electrons';
       var v = kind === 0 ? SUBL[lt][0] : SUBL[lt][1];
@@ -1225,7 +1467,7 @@
       };
     }
     if (kind === 4) {
-      var lt2 = R.pick(['p', 'd']), nn = lt2 === 'p' ? R.int(2, 5) : R.int(3, 5), ne = R.int(1, SUBL[lt2][1] - 1);
+      var lt2 = R.pick(L === 3 ? ['p', 'd', 'f'] : ['p', 'd']), nn = lt2 === 'p' ? R.int(2, 5) : lt2 === 'd' ? R.int(3, 5) : R.int(4, 5), ne = R.int(1, SUBL[lt2][1] - 1);
       return {
         q: 'The ' + nn + lt2 + ' sublevel of an atom holds ' + ne + ' ' + plural(ne, 'electron') + '. How many more electrons could it hold?',
         a: { t: 'num', v: String(SUBL[lt2][1] - ne) },
@@ -1246,9 +1488,19 @@
   function cfgOk(Z) { return Z !== 24 && Z !== 29; }
   function cfgStrT(list) { return cfgTex(list); }
   G('chem.electron-configuration', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 2) : R.int(0, 4), Z;
-    do { Z = L === 1 ? R.int(3, 18) : L === 2 ? R.int(3, 36) : R.int(11, 38); } while (!cfgOk(Z));
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 2, 3, 5, 5]) : R.pick([0, 1, 2, 3, 4, 5]), Z;
+    do { Z = L === 1 ? R.int(3, 20) : L === 2 ? R.int(3, 36) : R.int(11, 38); } while (!cfgOk(Z));
     var e = ELZ[Z], c = cfg(Z), last = c[c.length - 1];
+    if (kind === 5) { // how many electrons in all the s (or p) sublevels, or in a given level?
+      var byL = R.coin(), lt5 = R.pick(c.some(function (x) { return x[0][1] === 'p'; }) ? ['s', 'p'] : ['s']), lv5 = R.int(1, Math.min(3, ELZ[Z].period));
+      var cnt = c.filter(function (x) { return byL ? x[0][0] === String(lv5) : x[0][1] === lt5; }).reduce(function (s, x) { return s + x[1]; }, 0);
+      return {
+        q: 'Write the electron configuration of ' + lname(e) + ' (atomic number ' + Z + '). How many electrons are ' + (byL ? 'in energy level ' + lv5 + ' (all its sublevels together)?' : 'in all of its ' + lt5 + ' sublevels together?'),
+        a: { t: 'num', v: String(cnt) },
+        steps: ['$' + cfgTex(c) + '$', (byL ? 'Level ' + lv5 + ': ' : 'The ' + lt5 + ' sublevels: ') + c.filter(function (x) { return byL ? x[0][0] === String(lv5) : x[0][1] === lt5; }).map(function (x) { return x[0] + '^' + x[1]; }).join(', ') + ', so <b>' + cnt + '</b> electrons.'],
+        hint: 'Write the whole configuration first; the superscripts add up to ' + Z + '.'
+      };
+    }
     if (kind === 0) {
       var withE = c.filter(function (x) { return x[1] > 0; }), pick = R.pick(withE.slice(Math.max(0, withE.length - 3)));
       return {
@@ -1301,8 +1553,29 @@
   var METALLOIDS = ['B', 'Si', 'Ge', 'As', 'Sb', 'Te'];
   function kindOf(e) { if (METALLOIDS.indexOf(e.s) >= 0) return 'metalloid'; if (e.Z === 1) return 'nonmetal'; if ((e.group >= 13 && e.group <= 18) && !(e.s === 'Al' || e.s === 'Ga' || e.s === 'In' || e.s === 'Sn' || e.s === 'Pb' || e.s === 'Tl' || e.s === 'Bi')) return 'nonmetal'; return 'metal'; }
   G('chem.periodic-table-organization', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 4 : 5);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 3, 6, 7]) : R.pick(L === 2 ? [0, 1, 2, 3, 4, 6, 7] : [0, 1, 2, 3, 4, 5, 6, 7]);
     var pool = []; for (var z = 1; z <= 56; z++) pool.push(ELZ[z]);
+    if (kind === 6) { // the inverse: which element sits at this group and period?
+      var e6 = R.pick(pool.filter(function (x) { return x.Z > 2; }));
+      return {
+        q: 'Use the periodic table. Which element is in group ' + e6.group + ', period ' + e6.period + '? Type its symbol.',
+        viz: { name: 'ch-periodic', opts: { mode: 'category', quiet: true } },
+        a: { t: 'formula', v: [e6.s] },
+        steps: ['Go down to row ' + e6.period + ', then across to column ' + e6.group + '.', 'That cell is ' + lname(e6) + ', <b>' + e6.s + '</b> (atomic number ' + e6.Z + ').'],
+        hint: 'Rows are periods; columns are groups.'
+      };
+    }
+    if (kind === 7) { // which one is in a family?
+      var g7 = R.pick([1, 2, 17, 18, 0]), inFam = function (x) { return g7 ? x.group === g7 && x.Z > 2 : x.group >= 3 && x.group <= 12; };
+      var fam7 = g7 ? FAMILY[g7] : 'transition metals', o7 = vOne(R, pool.filter(function (x) { return x.Z > 2; }), inFam, 4);
+      return {
+        q: 'Which of these elements is one of the <b>' + fam7 + '</b>?',
+        viz: L === 1 ? { name: 'ch-periodic', opts: { mode: 'category', quiet: true } } : undefined,
+        a: MCA(o7.items.map(function (x) { return cap(lname(x)) + ' (' + x.s + ')'; }), o7.v),
+        steps: ['Group 1 (below hydrogen): alkali metals. Group 2: alkaline earth metals. Groups 3–12: transition metals. Group 17: halogens. Group 18: noble gases.'].concat(o7.items.map(function (x) { return cap(lname(x)) + ' is in group ' + x.group + '.'; }), ['So the answer is <b>' + lname(o7.right) + '</b>.']),
+        hint: 'Find each element’s column.'
+      };
+    }
     if (kind === 0) {
       var e = R.pick(pool.filter(function (x) { return x.Z > 2; }));
       return {
@@ -1370,9 +1643,28 @@
 
   var MAIN = []; for (var zz = 1; zz <= 56; zz++) if (isMain(ELZ[zz])) MAIN.push(ELZ[zz]);
   G('chem.valence-electrons', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 3 : 4);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 2, 5, 6]) : R.pick(L === 2 ? [0, 1, 2, 3, 5, 6] : [0, 1, 2, 3, 4, 5, 6]);
     var pool = MAIN.filter(function (x) { return x.Z > 2 && x.group !== 18 || x.Z === 10 || x.Z === 18; });
     var e = R.pick(pool), v = valE(e);
+    if (kind === 5) { // choose all with this many valence electrons
+      var v5 = R.int(1, 7), al5 = vAll(R, pool.filter(function (x) { return x.group !== 18; }), function (x) { return valE(x) === v5; }, 4);
+      return {
+        q: 'Choose all of these elements that have ' + v5 + ' valence ' + plural(v5, 'electron') + '.',
+        viz: { name: 'ch-periodic', opts: { mode: 'category', quiet: true } },
+        a: MCA(al5.items.map(function (x) { return cap(lname(x)) + ' (' + x.s + ')'; }), al5.v),
+        steps: al5.items.map(function (x) { return cap(lname(x)) + ': group ' + x.group + ', so ' + valE(x) + ' valence ' + plural(valE(x), 'electron') + '.'; }).concat(['Groups 1 and 2: the group number. Groups 13–17: the group number minus 10.']),
+        hint: 'Turn each group number into a number of valence electrons.'
+      };
+    }
+    if (kind === 6) { // check a given answer
+      var said = R.pick([v, v, e.group, v + 1, v - 1].filter(function (x) { return x > 0 && x <= 8; }));
+      return {
+        q: 'Ava says a neutral ' + lname(e) + ' atom (' + e.s + ', group ' + e.group + ') has ' + said + ' valence ' + plural(said, 'electron') + '. Is she right?',
+        a: MCK(['Yes', 'No'], said === v ? 0 : 1),
+        steps: [e.group <= 2 ? 'Groups 1 and 2: the number of valence electrons is the group number.' : 'Groups 13–18: subtract 10 from the group number.', cap(lname(e)) + ' has ' + v + '. So ' + (said === v ? '<b>yes</b>, she is right.' : '<b>no</b>: it has ' + v + ', not ' + said + '.')],
+        hint: 'No main-group atom has more than 8 valence electrons.'
+      };
+    }
     if (kind === 0) {
       var giveG = L === 1;
       return {
@@ -1583,10 +1875,38 @@
   var NOBLEZ = [2, 10, 18, 36, 54];
   function nobleOf(n) { var m = null; NOBLEZ.forEach(function (z) { if (z === n) m = ELZ[z]; }); return m; }
   G('chem.ion-charges', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 3 : 4);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 2, 5, 6, 7]) : R.pick(L === 2 ? [0, 1, 2, 3, 5, 6, 7] : [0, 1, 2, 3, 4, 5, 6, 7]);
     var e = EL[R.pick(IONEL)], q = IONGRP[e.group], ne = e.Z - q, ng = nobleOf(ne);
+    if (kind === 5) { // which element forms an ion with this charge?
+      var q5 = R.pick([1, 2, 3, -1, -2, -3]), o5 = vOne(R, IONEL, function (s) { return IONGRP[EL[s].group] === q5; }, L === 1 ? 3 : 4);
+      return {
+        q: 'Which of these elements usually forms an ion with a charge of ' + signedT(q5) + '?',
+        viz: L === 1 ? { name: 'ch-periodic', opts: { mode: 'category', quiet: true } } : undefined,
+        a: MCA(o5.items.map(function (s) { return cap(lname(EL[s])) + ' (' + s + ')'; }), o5.v),
+        steps: ['Group 1: +1. Group 2: +2. Group 13: +3. Group 15: −3. Group 16: −2. Group 17: −1.'].concat(o5.items.map(function (s) { return cap(lname(EL[s])) + ' is in group ' + EL[s].group + ', so it forms ' + signedT(IONGRP[EL[s].group]) + ' ions.'; })),
+        hint: 'Find each element’s group.'
+      };
+    }
+    if (kind === 7) { // choose all that form negative ions
+      var negF = R.coin(), al7 = vAll(R, IONEL, function (s) { return (IONGRP[EL[s].group] < 0) === negF; }, 4);
+      return {
+        q: 'Choose all of these elements that usually form <b>' + (negF ? 'negative' : 'positive') + '</b> ions.',
+        a: MCA(al7.items.map(function (s) { return cap(lname(EL[s])) + ' (' + s + ')'; }), al7.v),
+        steps: al7.items.map(function (s) { return cap(lname(EL[s])) + ' (group ' + EL[s].group + ') forms $' + ft(ionF(s, IONGRP[EL[s].group])) + '$.'; }).concat(['Metals lose electrons and form positive ions; nonmetals gain electrons and form negative ions.']),
+        hint: 'Metal or nonmetal?'
+      };
+    }
     var why = q > 0 ? cap(lname(e)) + ' is in group ' + e.group + ' with ' + valE(e) + ' valence ' + plural(valE(e), 'electron') + '. Losing ' + q + ' leaves the electron arrangement of ' + lname(ng) + '; gaining ' + (8 - valE(e)) + ' would take far more energy.' :
       cap(lname(e)) + ' is in group ' + e.group + ' with ' + valE(e) + ' valence electrons. Gaining ' + (-q) + ' ' + plural(-q, 'electron') + ' gives it the arrangement of ' + lname(ng) + '.';
+    if (kind === 6) { // check a given ion
+      var qs = R.pick([q, q, -q, q > 0 ? q + 1 : q - 1].filter(function (x) { return abs(x) <= 3 && x !== 0; })), okq = qs === q;
+      return {
+        q: 'Ben says ' + lname(e) + ' (' + e.s + ', group ' + e.group + ') usually forms the ion $' + ft(ionF(e.s, qs)) + '$. Is he right?',
+        a: MCK(['Yes', 'No'], okq ? 0 : 1),
+        steps: [why, okq ? 'So <b>yes</b>, $' + ft(ionF(e.s, q)) + '$ is right.' : 'So <b>no</b>: the ion is $' + ft(ionF(e.s, q)) + '$.'],
+        hint: 'Metals on the left lose electrons; nonmetals on the right gain them.'
+      };
+    }
     if (kind === 0) {
       return {
         q: 'What charge does ' + lname(e) + ' (' + e.s + ', group ' + e.group + ') usually have as an ion? (Give a signed number, like −2 or +3.)',
@@ -1711,7 +2031,7 @@
   }));
 
   G('chem.ionic-formulas', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? 0 : R.int(0, L === 2 ? 2 : 3);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 0, 1, 4, 5]) : R.pick(L === 2 ? [0, 1, 2, 4, 5] : [0, 1, 2, 3, 4, 5]);
     var pool = binPairs(false).filter(function (p) { return L === 1 ? !VARMETAL[p[0][0]] : true; });
     var pr = R.pick(pool), c = pr[0], a = pr[1], bf = binF(c, a), qa = MONO[a][0];
     var cI = ionF(c[0], c[1]), aI = ionF(a, qa);
@@ -1719,6 +2039,23 @@
       bf.nc === 1 && bf.na === 1 ? 'The charges are equal in size, so one of each: $(' + signed(c[1]) + ') + (' + qa + ') = 0$.' :
         'The smallest total charge both can reach is ' + (bf.nc * c[1]) + ': $' + bf.nc + ' \\times (' + signed(c[1]) + ') + ' + bf.na + ' \\times (' + qa + ') = 0$.',
       'Formula: <b>$' + ft(bf.f) + '$</b>' + (bf.nc > 1 || bf.na > 1 ? ' (subscripts give the number of each ion; a subscript of 1 is not written).' : '.')];
+    if (kind === 4) { // how many of each ion?
+      return {
+        q: 'In the ionic compound made of $' + ft(cI) + '$ and $' + ft(aI) + '$ ions, how many of each ion are in one formula unit?',
+        a: { t: 'multi', parts: [{ label: c[0] + ' ions', a: { t: 'num', v: String(bf.nc) } }, { label: a + ' ions', a: { t: 'num', v: String(bf.na) } }] },
+        steps: steps.slice(0, 2).concat(['So ' + bf.nc + ' ' + c[0] + ' ' + plural(bf.nc, 'ion') + ' and ' + bf.na + ' ' + a + ' ' + plural(bf.na, 'ion') + ': $' + ft(bf.f) + '$.']),
+        hint: 'Find the smallest numbers that make the charges add to zero.'
+      };
+    }
+    if (kind === 5) { // check a given formula
+      var wf = R.pick([bf.f, bf.f, c[0] + a, c[0] + (bf.na > 1 ? bf.na : '') + a + (bf.nc > 1 ? bf.nc : ''), c[0] + (-qa > 1 ? -qa : '') + a + (c[1] > 1 ? c[1] : '')].filter(function (x) { return !/NaN/.test(x); })), okf = wf === bf.f;
+      return {
+        q: 'Mia wrote $' + ft(wf) + '$ for the compound of $' + ft(cI) + '$ and $' + ft(aI) + '$ ions. Is her formula right?',
+        a: MCK(['Yes', 'No'], okf ? 0 : 1),
+        steps: steps.concat([okf ? 'So <b>yes</b>, her formula is right.' : 'So <b>no</b>: $' + ft(wf) + '$ ' + (atoms(wf)[c[0]] * c[1] + atoms(wf)[a] * qa === 0 ? 'has zero charge but is not in the smallest whole-number ratio.' : 'does not have zero total charge.')]),
+        hint: 'Multiply each subscript by its ion’s charge; the totals must cancel.'
+      };
+    }
     if (kind === 0) {
       return { q: 'Write the formula of the ionic compound formed from $' + ft(cI) + '$ and $' + ft(aI) + '$ ions.', a: { t: 'formula', v: [bf.f] }, steps: steps, hint: 'Find how many of each ion make the charges add to zero.' };
     }
@@ -1752,9 +2089,18 @@
   }));
 
   G('chem.naming-ionic', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 2 : 3);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 4]) : R.pick(L === 2 ? [0, 1, 2, 4] : [0, 1, 2, 3, 4]);
     var pool = binPairs(false).filter(function (p) { return L === 1 ? !VARMETAL[p[0][0]] : (R.chance(0.5) ? VARMETAL[p[0][0]] : true); });
     var pr = R.pick(pool), c = pr[0], a = pr[1], f = binF(c, a).f, name = c[2] + ' ' + MONO[a][1], isVar = !!VARMETAL[c[0]];
+    if (kind === 4) { // which formula matches the name?
+      var o4 = vOne(R, pool, function (p) { return p === pr; }, 4);
+      return {
+        q: 'Which formula is ' + name + '?',
+        a: MCA(o4.items.map(function (p) { return '$' + ft(binF(p[0], p[1]).f) + '$'; }), o4.v),
+        steps: o4.items.map(function (p) { return '$' + ft(binF(p[0], p[1]).f) + '$ is ' + p[0][2] + ' ' + MONO[p[1]][1] + '.'; }).concat(['So the answer is <b>$' + ft(f) + '$</b>.']),
+        hint: 'Match the metal first, then the -ide ending.'
+      };
+    }
     var why = isVar ? [cap(lname(EL[c[0]])) + ' can form more than one ion, so the name must show the charge with a Roman numeral.',
       'The anion is $' + ft(ionF(a, MONO[a][0])) + '$; ' + binF(c, a).na + ' of them carry $' + (binF(c, a).na * MONO[a][0]) + '$, so each of the ' + binF(c, a).nc + ' metal ' + plural(binF(c, a).nc, 'ion') + ' is ' + signed(c[1]) + ': ' + c[2] + '.'] :
       [cap(lname(EL[c[0]])) + ' forms only one common ion, so no Roman numeral is needed.'];
@@ -1824,7 +2170,16 @@
   function anIon(an) { return POLYS[an] ? ionF(an, POLYS[an][0]) : ionF(an, MONO[an][0]); }
   function polyNames(c, an) { var base = c[2] + ' ' + anName(an), out = nameAll(base); if (POLYS[an] && POLYS[an][2]) POLYS[an][2].forEach(function (alt) { out = out.concat(nameAll(c[2] + ' ' + alt)); }); return out; }
   G('chem.polyatomic-ions', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 3 : 4);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 3, 5]) : R.pick(L === 2 ? [0, 1, 2, 3, 5] : [0, 1, 2, 3, 4, 5]);
+    if (kind === 5) { // which ion is this?
+      var keys5 = Object.keys(POLYS), byF = R.coin(), w5 = R.pick(keys5), ch5 = R.shuffle([w5].concat(R.sample(keys5.filter(function (k) { return k !== w5; }), 3)));
+      return {
+        q: byF ? 'Which polyatomic ion is $' + ft(ionF(w5, POLYS[w5][0])) + '$?' : 'Which is the formula of the ' + POLYS[w5][1] + ' ion?',
+        a: MCA(ch5.map(function (k) { return byF ? cap(POLYS[k][1]) : '$' + ft(ionF(k, POLYS[k][0])) + '$'; }), ch5.indexOf(w5)),
+        steps: ch5.map(function (k) { return '$' + ft(ionF(k, POLYS[k][0])) + '$: ' + POLYS[k][1] + '.'; }).concat(['So the answer is <b>' + (byF ? POLYS[w5][1] : '$' + ft(ionF(w5, POLYS[w5][0])) + '$') + '</b>.']),
+        hint: '-ate ions have one more oxygen than the matching -ite ions.'
+      };
+    }
     var pairs = polyPairs(), fpairs = pairs.filter(function (p) { return polyF(p[0], p[1]).f.indexOf('NaN') < 0; }); // the checker reads 'NaN' in NaNO3 as not-a-number
     var pr = R.pick(kind === 0 ? fpairs : pairs), c = pr[0], an = pr[1], pf = polyF(c, an), name = c[2] + ' ' + anName(an);
     var ionsLine = 'The ions are $' + ft(ionF(c[0], c[1])) + '$ and $' + ft(anIon(an)) + '$.';
@@ -1885,7 +2240,36 @@
 
   var BONDS_USUAL = { H: 1, C: 4, N: 3, O: 2, F: 1, Cl: 1, Br: 1, I: 1, S: 2, P: 3, Si: 4 };
   G('chem.covalent-bonding', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 3 : 4);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 2, 5, 6, 7]) : R.pick(L === 2 ? [0, 1, 2, 3, 5, 6, 7] : [0, 1, 2, 3, 4, 5, 6, 7]);
+    if (kind === 5) { // which atom usually forms this many bonds?
+      var nb5 = R.pick([1, 2, 3, 4]), o5 = vOne(R, Object.keys(BONDS_USUAL), function (s) { return BONDS_USUAL[s] === nb5; }, 4);
+      return {
+        q: 'In most neutral molecules, which of these atoms forms ' + nb5 + ' covalent ' + plural(nb5, 'bond') + '?',
+        a: MCA(o5.items.map(function (s) { return cap(lname(EL[s])) + ' (' + s + ')'; }), o5.v),
+        steps: o5.items.map(function (s) { return cap(lname(EL[s])) + ' has ' + (s === 'H' ? '1 valence electron and needs 1 more' : valE(EL[s]) + ' valence electrons and shares ' + (8 - valE(EL[s])) + ' more') + ': ' + BONDS_USUAL[s] + ' ' + plural(BONDS_USUAL[s], 'bond') + '.'; }),
+        hint: 'Bonds usually formed = 8 − valence electrons (2 − 1 for hydrogen).'
+      };
+    }
+    if (kind === 6) { // how many bonds does this molecule have?
+      var d6 = R.pick(LEWD.filter(function (x) { return x[0].indexOf('^') < 0 && !x[6] && !x[7]; }));
+      return {
+        q: 'Every bond in $' + ft(d6[0]) + '$ is a single bond. How many covalent bonds does one molecule have?',
+        a: { t: 'num', v: String(d6[3]) },
+        steps: ['Each single bond joins two atoms with one shared pair.', '$' + ft(d6[0]) + '$ has ' + d6[3] + ' bonded ' + plural(d6[3], 'pair') + ' linking its ' + Object.keys(atoms(d6[0])).reduce(function (s, k) { return s + atoms(d6[0])[k]; }, 0) + ' atoms: <b>' + d6[3] + '</b> bonds.'],
+        hint: 'In a molecule with only single bonds, the number of bonds is one less than the number of atoms (when there are no rings).'
+      };
+    }
+    if (kind === 7) { // choose all pairs that share electrons
+      var PAIRS7 = [['C', 'H', 1], ['N', 'O', 1], ['S', 'O', 1], ['P', 'Cl', 1], ['C', 'Cl', 1], ['H', 'O', 1], ['N', 'H', 1], ['C', 'O', 1], ['Si', 'O', 1], ['C', 'F', 1], ['H', 'Br', 1], ['S', 'Cl', 1],
+        ['Na', 'Cl', 0], ['K', 'O', 0], ['Mg', 'F', 0], ['Ca', 'Br', 0], ['Li', 'F', 0], ['Ba', 'S', 0], ['Al', 'O', 0], ['K', 'I', 0], ['Na', 'S', 0], ['Ca', 'O', 0]];
+      var cov7 = R.coin(), al7 = vAll(R, PAIRS7, function (p) { return !!p[2] === cov7; }, 4);
+      return {
+        q: 'Choose all of these pairs of atoms that would form ' + (cov7 ? 'covalent' : 'ionic') + ' bonds with each other.',
+        a: MCA(al7.items.map(function (p) { return (p[0] === 'H' ? 'Hydrogen' : cap(lname(EL[p[0]]))) + ' and ' + lname(EL[p[1]]); }), al7.v),
+        steps: ['Two nonmetals share electrons: covalent. A metal and a nonmetal transfer electrons: ionic.'].concat(al7.items.map(function (p) { return cap(lname(EL[p[0]])) + ' and ' + lname(EL[p[1]]) + ': ' + (p[2] ? 'two nonmetals, covalent.' : 'a metal and a nonmetal, ionic.'); })),
+        hint: 'Is each element a metal or a nonmetal?'
+      };
+    }
     if (kind === 0) {
       var s = R.pick(Object.keys(BONDS_USUAL)), e = EL[s], nb = BONDS_USUAL[s];
       return {
@@ -1949,7 +2333,27 @@
   ];
   var PREF = ['', 'mono', 'di', 'tri', 'tetra', 'penta', 'hexa', 'hepta', 'octa', 'nona', 'deca'];
   G('chem.naming-covalent', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 2 : 3);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 4, 4, 5]) : R.pick(L === 2 ? [0, 1, 2, 4, 5] : [0, 1, 2, 3, 4, 5]);
+    if (kind === 4) { // which formula matches the name (or the reverse)?
+      var w4 = R.pick(COVN), sim = COVN.filter(function (x) { return x !== w4 && x[0].replace(/\d/g, '') === w4[0].replace(/\d/g, ''); }), oth = COVN.filter(function (x) { return x !== w4 && sim.indexOf(x) < 0; });
+      var ch4 = R.shuffle([w4].concat(sim.slice(0, 2), R.sample(oth, 3 - Math.min(2, sim.length)))), byN = R.coin();
+      return {
+        q: byN ? 'Which formula is ' + w4[1] + '?' : 'Which is the name of $' + ft(w4[0]) + '$?',
+        a: MCA(ch4.map(function (x) { return byN ? '$' + ft(x[0]) + '$' : cap(x[1]); }), ch4.indexOf(w4)),
+        steps: ch4.map(function (x) { return '$' + ft(x[0]) + '$: ' + x[1] + '.'; }).concat(['Each prefix gives the number of that atom; mono- is left off the first element.']),
+        hint: 'mono 1, di 2, tri 3, tetra 4, penta 5, hexa 6, hepta 7, octa 8, nona 9, deca 10.'
+      };
+    }
+    if (kind === 5) { // check a given name
+      var w5 = R.pick(COVN), f5 = w5[0].match(/[A-Z][a-z]?/g), a5 = atoms(w5[0]), first5 = lname(EL[f5[0]]), sec = w5[1].slice(w5[1].indexOf(' ') + 1);
+      var bad5 = R.pick([w5[1], w5[1], (a5[f5[0]] === 1 ? 'mono' : '') + w5[1], w5[1].replace(/^(di|tri|tetra|penta)/, ''), first5 + ' ' + sec.replace(/^(mono|di|tri|tetra|penta|hexa|hepta|deca)/, '').replace(/^xide/, 'oxide')]), ok5 = bad5 === w5[1] || (w5[2] || []).indexOf(bad5) >= 0;
+      return {
+        q: 'Ravi named $' + ft(w5[0]) + '$ "' + bad5 + '." Is his name right?',
+        a: MCK(['Yes', 'No'], ok5 ? 0 : 1),
+        steps: ['Use prefixes for the number of each atom; leave mono- off the first element, but always give the second element its prefix.', 'The name is <b>' + w5[1] + '</b>, so ' + (ok5 ? 'yes, he is right.' : 'no.')],
+        hint: 'Count each kind of atom in the formula.'
+      };
+    }
     var c = R.pick(COVN), at = atoms(c[0]), els = c[0].match(/[A-Z][a-z]?/g).filter(function (x, i, a) { return a.indexOf(x) === i; });
     var expl = els.map(function (e, i) { return at[e] + ' ' + lname(EL[e]) + ' ' + plural(at[e], 'atom') + ': ' + (i === 0 && at[e] === 1 ? 'no prefix (mono- is left off the first element)' : PREF[at[e]] + '-'); }).join('; ');
     if (kind === 0) {
@@ -2006,7 +2410,16 @@
     return { text: s, tot: tot - ch };
   }
   G('chem.lewis-structures', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 0, 5]) : R.int(0, L === 2 ? 2 : 5);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 0, 5, 6, 6]) : R.pick(L === 2 ? [0, 1, 2, 5, 6, 6] : [0, 1, 2, 3, 4, 5, 6, 6]);
+    if (kind === 6) { // which molecule or ion has this many valence electrons?
+      var pool6 = L === 1 ? LEWD.filter(function (x) { return x[0].indexOf('^') < 0; }) : LEWD, t6 = R.pick(pool6)[1], o6 = vOne(R, pool6, function (x) { return x[1] === t6; }, 4);
+      return {
+        q: 'Which of these has exactly ' + t6 + ' valence electrons in its Lewis structure?',
+        a: MCA(o6.items.map(function (x) { return '$' + ft(x[0]) + '$'; }), o6.v),
+        steps: o6.items.map(function (x) { return '$' + ft(x[0]) + '$: ' + veSteps(x[0]).text + '.'; }).concat(['So the answer is <b>$' + ft(o6.right[0]) + '$</b>.']),
+        hint: 'Add the valence electrons of every atom, then adjust for any charge.'
+      };
+    }
     if (kind === 5) {
       var d5 = R.pick(LEWD);
       return {
@@ -2074,8 +2487,17 @@
   ];
   var SHAPES = ['linear', 'trigonal planar', 'bent', 'tetrahedral', 'trigonal pyramidal'];
   G('chem.vsepr-shapes', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 2 : 4), d = R.pick(VSD);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 5, 5]) : R.pick(L === 2 ? [0, 1, 2, 5, 6] : [0, 1, 2, 3, 4, 5, 6]), d = R.pick(VSD);
     var bonded = d[1] - d[2];
+    if (kind === 5 || kind === 6) { // which one has this shape? / choose all
+      var sh5 = R.pick(SHAPES), isSh = function (x) { return x[3] === sh5; }, many = kind === 6, o5 = many ? vAll(R, VSD, isSh, 4) : vOne(R, VSD, isSh, 4), rv = many ? o5.v : [o5.v];
+      return {
+        q: many ? 'Choose all of these that are <b>' + sh5 + '</b>.' : 'Which of these has a <b>' + sh5 + '</b> shape?',
+        a: MCA(o5.items.map(function (x) { return '$' + ft(x[0]) + '$'; }), o5.v),
+        steps: ['Count electron groups and lone pairs on the central atom.'].concat(o5.items.map(function (x) { return '$' + ft(x[0]) + '$: ' + x[1] + ' groups, ' + x[2] + ' lone ' + plural(x[2], 'pair') + ', so ' + x[3] + '.'; }), ['So the answer is <b>' + rv.map(function (i) { return '$' + ft(o5.items[i][0]) + '$'; }).join(', ') + '</b>.']),
+        hint: 'Draw each Lewis structure and look at the central atom.'
+      };
+    }
     var why = ['Count electron groups around the central atom: each bonded atom is one group (single, double or triple bond alike) and each lone pair is one group. $' + ft(d[0]) + '$ has ' + bonded + ' bonded ' + plural(bonded, 'atom') + ' and ' + d[2] + ' lone ' + plural(d[2], 'pair') + ': ' + d[1] + ' groups.',
       d[1] + ' groups spread out ' + ['', '', 'in a line (180°)', 'in a flat triangle (120°)', 'toward the corners of a tetrahedron (109.5°)'][d[1]] + '.' + (d[2] ? ' The shape names only the atoms, so with ' + d[2] + ' of the groups being lone ' + plural(d[2], 'pair') + ', the shape is ' + d[3] + '.' : '')];
     if (kind === 0) {
@@ -2126,8 +2548,28 @@
   function bclass(d) { return d < 0.4 ? 0 : d <= 1.8 ? 1 : 2; }
   var BCL = ['nonpolar covalent', 'polar covalent', 'ionic'];
   G('chem.bond-polarity', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 3 : 4);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 2, 5, 6]) : R.pick(L === 2 ? [0, 1, 2, 3, 5, 6] : [0, 1, 2, 3, 4, 5, 6]);
     var good = BPAIRS.filter(function (p) { var d = dEN(p); return abs(d - 0.4) >= 0.1 && abs(d - 1.8) >= 0.1; });
+    if (kind === 5 || kind === 6) { // which bond is of this class? / which is the most (least) polar?
+      var lab5 = function (x) { return x[0] + '–' + x[1]; }, ens = function (its) { return '(Electronegativities: ' + its.reduce(function (a, x) { x.forEach(function (s) { if (a.indexOf(s) < 0) a.push(s); }); return a; }, []).map(function (s) { return s + ' ' + ENV[s].toFixed(2); }).join(', ') + '.)'; };
+      if (kind === 5) {
+        var cl = R.int(0, 2), o5 = vOne(R, good, function (x) { return bclass(dEN(x)) === cl; }, L === 1 ? 3 : 4);
+        return {
+          q: 'Using the usual guide (difference below 0.4: nonpolar covalent; 0.4 to 1.8: polar covalent; above 1.8: ionic), which of these bonds is <b>' + BCL[cl] + '</b>? ' + ens(o5.items),
+          a: MCA(o5.items.map(lab5), o5.v),
+          steps: o5.items.map(function (x) { return lab5(x) + ': $\\Delta EN = ' + dEN(x).toFixed(2) + '$, ' + BCL[bclass(dEN(x))] + '.'; }).concat(['So the answer is <b>' + lab5(o5.right) + '</b>.']),
+          hint: 'Find each difference, then place it on the scale.'
+        };
+      }
+      var most = R.coin(), four = []; for (var g6 = 0; g6 < 50 && four.length < 4; g6++) { var c6 = R.pick(good); if (four.every(function (x) { return lab5(x) !== lab5(c6) && abs(dEN(x) - dEN(c6)) >= 0.15; })) four.push(c6); }
+      var best = four.slice().sort(function (x, y) { return most ? dEN(y) - dEN(x) : dEN(x) - dEN(y); })[0];
+      return {
+        q: 'Which bond is the ' + (most ? 'most' : 'least') + ' polar? ' + ens(four),
+        a: MCA(four.map(lab5), four.indexOf(best)),
+        steps: four.map(function (x) { return lab5(x) + ': $\\Delta EN = ' + dEN(x).toFixed(2) + '$'; }).concat(['The ' + (most ? 'largest' : 'smallest') + ' difference is ' + dEN(best).toFixed(2) + ': <b>' + lab5(best) + '</b>.']),
+        hint: 'A larger electronegativity difference means a more polar bond.'
+      };
+    }
     var p = R.pick(good), d = dEN(p), A = EL[p[0]], B = EL[p[1]];
     var given = '(Electronegativities: ' + p[0] + ' ' + ENV[p[0]].toFixed(2) + (p[0] === p[1] ? '' : ', ' + p[1] + ' ' + ENV[p[1]].toFixed(2)) + '.)';
     if (kind === 0) {
@@ -2188,7 +2630,16 @@
     ['NF3', 1, 'trigonal pyramidal: the N–F dipoles do not cancel', 'NF3'], ['SiH4', 0, 'tetrahedral with four identical bonds: the dipoles cancel', 'SiH4'], ['CH2O', 1, 'trigonal planar, but the C=O bond is much more polar than the C–H bonds', 'H2CO'], ['HF', 1, 'a single, very polar bond', 'HF']
   ];
   G('chem.molecular-polarity', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? 0 : R.int(0, L === 2 ? 2 : 3);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 0, 1, 4]) : R.pick(L === 2 ? [0, 1, 2, 4] : [0, 1, 2, 3, 4, 4]);
+    if (kind === 4) { // choose all that are polar (or nonpolar)
+      var wantP = R.coin(), al4 = vAll(R, MPOL, function (x) { return !!x[1] === wantP; }, 4);
+      return {
+        q: 'Choose all of these molecules that are <b>' + (wantP ? 'polar' : 'nonpolar') + '</b>.',
+        a: MCA(al4.items.map(function (x) { return '$' + ft(x[0]) + '$'; }), al4.v),
+        steps: al4.items.map(function (x) { return '$' + ft(x[0]) + '$ is ' + x[2] + ', so it is ' + (x[1] ? 'polar' : 'nonpolar') + '.'; }),
+        hint: 'Look at the shape: do the bond dipoles cancel?'
+      };
+    }
     if (kind === 0) {
       var m = R.pick(MPOL), pic = L === 1 || R.coin();
       return {
@@ -2262,7 +2713,17 @@
     return 'melts at ' + R.int(30, 160) * 10 + ' °C, ' + R.pick(['is shiny', 'has a metallic shine', 'is gray and shiny']) + ', ' + R.pick(['can be hammered into thin sheets', 'can be drawn into wire', 'bends instead of shattering']) + ' and conducts electricity as a solid';
   }
   G('chem.bond-types-properties', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 2 : 3);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 2, 4]) : R.pick(L === 2 ? [0, 1, 2, 4] : [0, 1, 2, 3, 4]);
+    if (kind === 4) { // which of these is a … solid?
+      var all4 = []; STYPES.forEach(function (t) { SOLIDS[SKEY[t]].forEach(function (s) { all4.push([s, t]); }); });
+      var t4 = R.pick(STYPES), o4 = vOne(R, all4, function (x) { return x[1] === t4; }, 4);
+      return {
+        q: 'Which of these is ' + art(t4) + ' <b>' + t4 + '</b> solid?',
+        a: MCA(o4.items.map(function (x) { return cap(x[0]); }), o4.v),
+        steps: o4.items.map(function (x) { return cap(x[0]) + ': ' + x[1] + '.'; }).concat([cap(t4) + ' solids are made of ' + SPART[SKEY[t4]] + '.']),
+        hint: 'Think about the particles: ions, molecules, a network of atoms, or metal atoms.'
+      };
+    }
     if (kind === 0) {
       var t = R.pick(STYPES), k = SKEY[t], prop = R.coin() ? R.pick(SPROPS[k]) : genProp(R, k);
       return {
@@ -2325,7 +2786,17 @@
     return 'It has no H atom bonded to N, O or F, so there are no hydrogen bonds.';
   }
   G('chem.intermolecular-forces', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 3 : 4);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 5, 6]) : R.pick(L === 2 ? [0, 1, 2, 3, 5, 6] : [0, 1, 2, 3, 4, 5, 6]);
+    if (kind === 5 || kind === 6) { // which one (or choose all) can hydrogen-bond / is polar / has only dispersion forces?
+      var crit = R.pick([['can form hydrogen bonds with each other', function (f) { return !!IMFD[f][2]; }], ['have only London dispersion forces between them', function (f) { return !IMFD[f][1]; }], ['have dipole–dipole forces between them', function (f) { return !!IMFD[f][1]; }]]);
+      var many = kind === 6, o5 = many ? vAll(R, IMFK, crit[1], 4) : vOne(R, IMFK, crit[1], 4), rv = many ? o5.v : [o5.v];
+      return {
+        q: (many ? 'Choose all of these whose particles ' : 'Which of these has particles that ') + crit[0].replace(/^have/, many ? 'have' : 'have').replace(/^can/, 'can') + '?',
+        a: MCA(o5.items.map(function (f) { return cap(IMFD[f][3]) + ', $' + ft(f) + '$'; }), o5.v),
+        steps: o5.items.map(function (f) { return cap(IMFD[f][3]) + ': ' + forcesOf(f).map(function (i) { return FORCES[i].toLowerCase(); }).join(', ') + '.'; }).concat(['So the answer is <b>' + rv.map(function (i) { return IMFD[o5.items[i]][3]; }).join(', ') + '</b>.']),
+        hint: 'Every substance has dispersion forces; polar molecules add dipole–dipole forces; H bonded to N, O or F adds hydrogen bonds.'
+      };
+    }
     if (kind === 0) {
       var f = R.pick(IMFK), d = IMFD[f], v = forcesOf(f);
       return {
@@ -2405,7 +2876,7 @@
     return { hi: 'H2O', lo: 'H2S', why: CURATED[4][2] };
   }
   G('chem.imf-properties', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? 0 : R.int(0, L === 2 ? 3 : 4);
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 0, 2]) : R.int(0, L === 2 ? 3 : 4);
     if (kind === 0 || kind === 2) {
       var p = bpPair(R), two = R.shuffle([p.hi, p.lo]), askVP = kind === 2;
       var ans = askVP ? p.lo : p.hi;
@@ -2466,9 +2937,9 @@
   }
 
   G('chem.mole-concept', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 3 : 4);
+    var L = lvl(ctx), kind = L === 1 ? R.int(0, 2) : R.int(0, L === 2 ? 3 : 4);
     if (kind === 0) {
-      var f = R.pick(['Fe', 'Cu', 'He', 'C', 'Ag', 'H2O', 'CO2', 'NH3', 'O2', 'CH4']), n = L === 1 ? R.pick([0.500, 2.00, 3.00, 1.50, 0.250, 5.00, 4.00]) : R.real(0.12, 9.5, 2), N = n * NA;
+      var f = R.pick(['Fe', 'Cu', 'He', 'C', 'Ag', 'H2O', 'CO2', 'NH3', 'O2', 'CH4', 'Al', 'Na', 'S', 'Au', 'N2', 'C6H12O6', 'C2H5OH', 'C12H22O11']), n = L === 1 ? (R.coin() ? R.pick([0.500, 2.00, 3.00, 1.50, 0.250, 5.00, 4.00]) : R.int(1, 40) / 4) : R.real(0.12, 9.5, 2), N = n * NA;
       return {
         q: 'How many ' + partWord(f) + ' are in $' + tk(n, 3) + '\\ \\text{mol}$ of ' + named(f) + '?',
         a: A(N, 3, 0.01),
@@ -2477,7 +2948,7 @@
       };
     }
     if (kind === 1) {
-      var f1 = R.pick(['Fe', 'Al', 'Na', 'H2O', 'CO2', 'C6H12O6', 'S']), n1 = L === 1 ? R.pick([0.500, 2.00, 3.00, 0.250, 1.50, 10.0]) : R.real(0.05, 8, 2), N1 = +(n1 * NA).toPrecision(4);
+      var f1 = R.pick(['Fe', 'Al', 'Na', 'H2O', 'CO2', 'C6H12O6', 'S', 'Cu', 'Ag', 'He', 'NH3', 'CH4', 'O2', 'C2H5OH']), n1 = L === 1 ? (R.coin() ? R.pick([0.500, 2.00, 3.00, 0.250, 1.50, 10.0]) : R.int(1, 40) / 4) : R.real(0.05, 8, 2), N1 = +(n1 * NA).toPrecision(4);
       return {
         q: 'A sample of ' + namedC(f1) + ' contains $' + sciT(N1, 4) + '$ ' + partWord(f1) + '. How many moles is that?',
         a: A(N1 / NA, 3, 0.01), unit: 'mol',
@@ -2486,7 +2957,7 @@
       };
     }
     if (kind === 2) {
-      var e = R.pick(['C', 'O', 'Na', 'Mg', 'Al', 'S', 'Ca', 'Fe', 'Cu', 'Ag', 'Au', 'Pb']), m1 = R.pick([1, 1, 2, 0.5, 3]);
+      var e = R.pick(['C', 'O', 'Na', 'Mg', 'Al', 'S', 'Ca', 'Fe', 'Cu', 'Ag', 'Au', 'Pb', 'K', 'Zn', 'Ni', 'Sn', 'Si', 'P', 'Cl', 'Li']), m1 = R.pick([1, 1, 2, 0.5, 3, 4, 0.25, 1.5, 2.5, 5]);
       return {
         q: 'The atomic mass of ' + lname(EL[e]) + ' is $' + amT(e) + '\\ \\text{u}$. What is the mass of $' + tk(m1, 3) + '\\ \\text{mol}$ of ' + lname(EL[e]) + ' atoms?',
         a: A(m1 * AM[e], 4, 0.005), unit: 'g',
@@ -2513,11 +2984,23 @@
     return { q: 'True or false: ' + t[0], a: TF(t[1]), steps: [t[2], 'So the statement is <b>' + (t[1] ? 'true' : 'false') + '</b>.'], hint: 'A mole is a number of particles.' };
   }));
 
-  var MM1 = ['H2O', 'CO2', 'NaCl', 'NH3', 'CH4', 'O2', 'HCl', 'KCl', 'MgO', 'CaO', 'N2', 'SO2', 'CO', 'H2S', 'KBr', 'NaF', 'CaCl2', 'MgCl2', 'Cl2', 'NO2', 'SO3', 'LiCl', 'HF', 'CuO', 'ZnO'];
+  var MM1 = ['H2O', 'CO2', 'NaCl', 'NH3', 'CH4', 'O2', 'HCl', 'KCl', 'MgO', 'CaO', 'N2', 'SO2', 'CO', 'H2S', 'KBr', 'NaF', 'CaCl2', 'MgCl2', 'Cl2', 'NO2', 'SO3', 'LiCl', 'HF', 'CuO', 'ZnO',
+    'NaBr', 'KI', 'CaS', 'BaO', 'CS2', 'PCl3', 'SiO2', 'CaF2', 'Na2O', 'K2S', 'HBr', 'NO', 'N2O', 'AlCl3', 'FeCl2', 'CuCl2', 'ZnCl2', 'AgCl', 'BaCl2', 'LiF', 'MgS', 'H2O2', 'C2H6', 'Br2', 'I2', 'KF', 'NaI', 'CCl4', 'PbO', 'SnO2'];
   var MM2 = ['C6H12O6', 'H2SO4', 'CaCO3', 'Al2O3', 'C2H5OH', 'NaHCO3', 'KMnO4', 'Fe2O3', 'C3H8', 'CH3COOH', 'C12H22O11', 'C8H18', 'NH4NO3', 'KNO3', 'Na2CO3', 'H3PO4', 'HNO3', 'C4H10', 'Na2SO4', 'K2Cr2O7', 'C2H4', 'AgNO3', 'CaSO4', 'Fe3O4', 'NaOH'];
   var MM3 = ['Ca(NO3)2', '(NH4)2SO4', 'Al2(SO4)3', 'Mg(OH)2', 'Ca3(PO4)2', 'Fe(OH)3', '(NH4)3PO4', 'Ba(OH)2', 'CuSO4·5H2O', 'Pb(NO3)2', 'CO(NH2)2', 'Al(OH)3', 'Ca(OH)2', 'Mg3(PO4)2', '(NH4)2CO3', 'Fe2(SO4)3', 'Cu(NO3)2', 'Zn(NO3)2', 'MgSO4·7H2O', 'CaCl2·2H2O', 'Al(NO3)3'];
   G('chem.molar-mass', W(function (R, ctx) {
-    var L = lvl(ctx), f = R.pick(L === 1 ? MM1 : L === 2 ? MM2 : MM3.concat(MM2.slice(0, 4))), a = atoms(f), M = mm(f);
+    var L = lvl(ctx), f = R.pick(L === 1 ? MM1 : L === 2 ? MM2.concat(MM1.slice(25)) : MM3.concat(MM2.slice(0, 4))), a = atoms(f), M = mm(f);
+    if (R.chance(0.25)) { // which has the greatest (or smallest) molar mass? (masses given)
+      var four = []; for (var g4 = 0; g4 < 60 && four.length < 4; g4++) { var c4 = R.pick(L === 1 ? MM1 : L === 2 ? MM2 : MM3); if (four.every(function (x) { return x !== c4 && abs(mm(x) - mm(c4)) > 3; })) four.push(c4); }
+      var big = R.coin(), best4 = four.slice().sort(function (x, y) { return big ? mm(y) - mm(x) : mm(x) - mm(y); })[0], els4 = [];
+      four.forEach(function (x) { Object.keys(atoms(x)).forEach(function (e) { if (els4.indexOf(e) < 0) els4.push(e); }); });
+      return {
+        q: 'Which of these has the ' + (big ? 'greatest' : 'smallest') + ' molar mass? (Atomic masses: ' + els4.map(function (e) { return e + ' ' + amT(e); }).join(', ') + '.)',
+        a: MCA(four.map(function (x) { return '$' + ft(x) + '$'; }), four.indexOf(best4)),
+        steps: four.map(function (x) { return '$' + ft(x) + '$: ' + mmSteps(x).replace(/^\$/, '$'); }).concat(['The ' + (big ? 'greatest' : 'smallest') + ' is <b>$' + ft(best4) + '$</b>.']),
+        hint: 'Find each molar mass: add the atomic masses, each times its subscript.'
+      };
+    }
     var counts = Object.keys(a).map(function (e) { return e + ': ' + a[e] + ' × ' + amT(e) + ' = ' + tv(fx(a[e] * AM[e])); });
     var paren = /\(/.test(f) ? 'The subscript after the parentheses multiplies every atom inside them. ' : '', hyd = /·/.test(f) ? 'The number in front of H₂O counts whole water molecules per formula unit. ' : '';
     if (L >= 2 && R.chance(0.3) && Object.keys(a).length > 1) { // the mass of one element in a mole of the compound
@@ -2601,7 +3084,7 @@
   G('chem.percent-composition', W(function (R, ctx) {
     var L = lvl(ctx), kind = L === 1 ? R.pick([0, 0, 2]) : R.int(0, L === 2 ? 3 : 4);
     if (kind === 0 || kind === 1) {
-      var f = R.pick(L === 1 ? PC.slice(0, 8) : PC), a = atoms(f), e = R.pick(Object.keys(a)), M = mm(f), part = a[e] * AM[e], pct = part / M * 100;
+      var f = R.pick(L === 1 ? PC.slice(0, 8).concat(MM1) : PC.concat(MM2)), a = atoms(f), e = R.pick(Object.keys(a)), M = mm(f), part = a[e] * AM[e], pct = part / M * 100;
       if (kind === 0) {
         return {
           q: 'What percent of the mass of ' + namedC(f) + ' is ' + lname(EL[e]) + '? (Atomic masses: ' + massList(f) + '.)',
@@ -2648,9 +3131,10 @@
   }));
 
   /* empirical formulas: [formula in standard order] */
-  var EF1 = ['CH4', 'NO2', 'SO3', 'Cu2O', 'Na2O', 'CaCl2', 'MgCl2', 'SO2', 'H2S', 'CO2', 'NH3', 'K2O', 'CuO', 'MgO', 'CH2', 'FeS2'];
-  var EF2 = ['Fe2O3', 'Al2O3', 'N2O3', 'Fe3O4', 'C3H4', 'P2O5', 'N2O5', 'C3H8', 'Cr2O3', 'C3H5', 'C4H5', 'Mn2O7'];
-  var EF3 = ['CH2O', 'C2H6O', 'C3H4O3', 'C2H4O', 'K2Cr2O7', 'Na2SO4', 'C3H6O', 'CaCO3', 'C7H6O2', 'C9H8O4', 'C2H3O2', 'KClO3'];
+  var EF1 = ['CH4', 'NO2', 'SO3', 'Cu2O', 'Na2O', 'CaCl2', 'MgCl2', 'SO2', 'H2S', 'CO2', 'NH3', 'K2O', 'CuO', 'MgO', 'CH2', 'FeS2',
+    'Li2O', 'NaCl', 'KCl', 'CaO', 'FeO', 'ZnS', 'NO', 'N2O', 'SiO2', 'CS2', 'PCl3', 'CCl4', 'CaF2', 'BaO', 'MgS', 'K2S', 'Na2S', 'CH3', 'ZnO', 'CuS', 'AlCl3', 'FeCl3', 'SiCl4', 'NaF'];
+  var EF2 = ['Fe2O3', 'Al2O3', 'N2O3', 'Fe3O4', 'C3H4', 'P2O5', 'N2O5', 'C3H8', 'Cr2O3', 'C3H5', 'C4H5', 'Mn2O7', 'Al2S3', 'Mg3N2', 'Ca3N2', 'Li3N', 'B2O3', 'C2H5', 'C3H7', 'C4H9', 'C5H12', 'C2H3', 'C5H8', 'C7H8', 'Mn2O3', 'Cu2S', 'Mg3P2', 'Na3N', 'C6H5', 'Co2O3'];
+  var EF3 = ['CH2O', 'C2H6O', 'C3H4O3', 'C2H4O', 'K2Cr2O7', 'Na2SO4', 'C3H6O', 'CaCO3', 'C7H6O2', 'C9H8O4', 'C2H3O2', 'KClO3', 'C2H5O', 'C3H6O2', 'CH4O', 'C4H8O', 'C3H8O', 'C4H10O', 'CH2Cl', 'C2H5Cl', 'Na2CO3', 'K2SO4', 'CaSO4', 'NaNO3', 'KNO3', 'NH4Cl', 'MgSO4', 'C5H10O', 'C2H7N', 'C3H9N'];
   function elOrder(f) { return f.match(/[A-Z][a-z]?/g).filter(function (x, i, a) { return a.indexOf(x) === i; }); }
   /* solveEmp(pcts {el: percent}): the whole-number formula and the working */
   function solveEmp(pc) {
@@ -2674,7 +3158,7 @@
     return { f: f, els: els, given: given, tot: tot, sol: sol };
   }
   G('chem.empirical-formula', W(function (R, ctx) {
-    var L = lvl(ctx), P = null, guard = 0, useMass = L >= 2 && R.chance(0.4);
+    var L = lvl(ctx), P = null, guard = 0, useMass = L >= 2 ? R.chance(0.65) : R.chance(0.5);
     while (!P && guard++ < 30) P = empProblem(R, R.pick(L === 1 ? EF1 : L === 2 ? EF2.concat(EF1.slice(0, 4)) : EF3.concat(EF2.slice(0, 4))), useMass);
     if (!P) P = empProblem(R, 'Fe2O3', false);
     var els = P.els, s = P.sol;
@@ -2699,7 +3183,34 @@
     ['C2H3', 'C4H6', 'butadiene'], ['C3H8O', 'C3H8O', 'propanol'], ['CH2', 'C5H10', 'cyclopentane'], ['C2H4O', 'C4H8O2', 'ethyl acetate'], ['CH2O', 'C3H6O3', 'lactic acid'],
     ['C3H7', 'C6H14', 'hexane'], ['C4H9', 'C8H18', 'octane'], ['CH3', 'C2H6', 'ethane'], ['NH2', 'N2H4', 'hydrazine'], ['CH2O', 'C5H10O5', 'ribose'], ['BH3', 'B2H6', 'diborane'], ['CH2', 'C4H8', 'butene']];
   G('chem.molecular-formula', W(function (R, ctx) {
-    var L = lvl(ctx), kind = L === 1 ? R.int(0, 1) : R.int(0, L === 2 ? 2 : 4), d = R.pick(MF.filter(function (x) { return x[2]; }));
+    var L = lvl(ctx), kind = L === 1 ? R.pick([0, 1, 4, 5, 5, 5, 5]) : R.pick(L === 2 ? [0, 1, 2, 4, 5, 5, 5, 6] : [0, 1, 2, 3, 4, 5, 5, 5, 6]), d = R.pick(MF.filter(function (x) { return x[2]; }));
+    if (kind === 5) { // made-up compound: empirical formula times n, clean numbers
+      var bases = ['CH2', 'CH', 'CH2O', 'NO2', 'CH3', 'C2H5', 'HO', 'NH2', 'CH2Cl', 'C2H3', 'C3H4', 'CHO', 'C2H4O', 'CH3O'], b5 = R.pick(bases), n5 = R.int(2, L === 1 ? 6 : 8), a5 = atoms(b5), m5 = {};
+      Object.keys(a5).forEach(function (e) { m5[e] = a5[e] * n5; });
+      var mf5 = fstr(m5, elOrder(b5)), M5 = mm(mf5);
+      if (R.coin()) return {
+        q: 'A compound has the empirical formula $' + ft(b5) + '$ and a molar mass of $' + M5.toFixed(2) + '\\ \\text{g/mol}$. By what whole number $n$ must you multiply the empirical formula to get the molecular formula? (Atomic masses: ' + massList(b5) + '.)',
+        a: { t: 'num', v: String(n5), form: 'int' },
+        steps: ['Molar mass of $' + ft(b5) + '$: ' + mmSteps(b5) + '.', '$n = \\dfrac{' + M5.toFixed(2) + '}{' + mm(b5).toFixed(2) + '} = ' + n5 + '$'],
+        hint: 'Divide the molar mass by the empirical formula’s mass.'
+      };
+      return {
+        q: 'A compound has the empirical formula $' + ft(b5) + '$ and a molar mass of $' + M5.toFixed(2) + '\\ \\text{g/mol}$. What is its molecular formula? (Atomic masses: ' + massList(b5) + '.)',
+        a: { t: 'formula', v: orders(m5).sort(function (x, y) { return x === mf5 ? -1 : y === mf5 ? 1 : 0; }) },
+        steps: ['Molar mass of $' + ft(b5) + '$: ' + mmSteps(b5) + '.', '$n = \\dfrac{' + M5.toFixed(2) + '}{' + mm(b5).toFixed(2) + '} = ' + n5 + '$', 'Multiply every subscript by ' + n5 + ': <b>$' + ft(mf5) + '$</b>.'],
+        hint: 'Divide the molar mass by the empirical formula’s mass to find n.'
+      };
+    }
+    if (kind === 6) { // which two share an empirical formula?
+      var emp = R.pick(MF.filter(function (x) { return MF.filter(function (y) { return y[0] === x[0] && y[1] !== x[1]; }).length; }))[0], sameE = MF.filter(function (x) { return x[0] === emp && x[0] !== x[1]; });
+      var o6 = vOne(R, MF.filter(function (x) { return x[0] !== x[1]; }), function (x) { return x[0] === emp; }, 4);
+      return {
+        q: 'Which of these compounds has the empirical formula $' + ft(emp) + '$?',
+        a: MCA(o6.items.map(function (x) { return cap(x[2]) + ', $' + ft(x[1]) + '$'; }), o6.v),
+        steps: o6.items.map(function (x) { return '$' + ft(x[1]) + '$ reduces to $' + ft(x[0]) + '$.'; }).concat(['Divide the subscripts by their greatest common factor.']),
+        hint: 'Reduce each formula to its simplest whole-number ratio.'
+      };
+    }
     var Me = mm(d[0]), Mm = mm(d[1]), n = Math.round(Mm / Me), Mshow = Mm.toFixed(2);
     var accept = orders(atoms(d[1])).sort(function (x, y) { return x === d[1] ? -1 : y === d[1] ? 1 : 0; });
     var stepsN = ['Molar mass of the empirical formula $' + ft(d[0]) + '$: ' + mmSteps(d[0]) + '.', '$n = \\dfrac{' + Mshow + '}{' + Me.toFixed(2) + '} = ' + tk(Mm / Me, 3) + '$, so $n = ' + n + '$.'];
@@ -2796,6 +3307,15 @@
     });
   }
   function lv(ctx, a, b, c) { return ML.byLevel(ctx, a, b, c); }
+  /* variety helpers: "which one is …" and "choose all that are …" from one bank, so distractors combine */
+  function vOne(R, pool, ok, n) { var g = pool.filter(ok), b = pool.filter(function (x) { return !ok(x); }), r = R.pick(g), it = R.shuffle([r].concat(R.sample(b, n - 1))); return { items: it, v: it.indexOf(r), right: r }; }
+  function vAll(R, pool, ok, n) {
+    var g = pool.filter(ok), b = pool.filter(function (x) { return !ok(x); }), k = R.int(1, M.min(n - 1, g.length)); if (b.length < n - k) k = n - b.length;
+    var it = R.shuffle(R.sample(g, k).concat(R.sample(b, n - k)));
+    return { items: it, v: it.map(function (x, i) { return ok(x) ? i : -1; }).filter(function (i) { return i >= 0; }) };
+  }
+  function MCA(items, v) { return { t: 'mc', choices: items, v: v }; }
+  function cap(s) { s = String(s); return s.charAt(0).toUpperCase() + s.slice(1); }
 
   // ------------------------------------------------------------------ numbers
   function fix(x) { return Number(Number(x).toPrecision(12)) + 0; }
@@ -2981,7 +3501,8 @@
         'Ask whether any gas leaves the balance, or any gas from the air joins the solid.', null, { k: 'scene', v: sc[1] });
     }
     if (shape === 'atoms') {
-      var ae = R.pick(['CH4 + 2O2 -> CO2 + 2H2O', '2H2 + O2 -> 2H2O', 'N2 + 3H2 -> 2NH3', '2C2H6 + 7O2 -> 4CO2 + 6H2O', 'C3H8 + 5O2 -> 3CO2 + 4H2O', '4Fe + 3O2 -> 2Fe2O3']);
+      var ae = R.pick(['CH4 + 2O2 -> CO2 + 2H2O', '2H2 + O2 -> 2H2O', 'N2 + 3H2 -> 2NH3', '2C2H6 + 7O2 -> 4CO2 + 6H2O', 'C3H8 + 5O2 -> 3CO2 + 4H2O', '4Fe + 3O2 -> 2Fe2O3'])
+      if (R.chance(0.7)) { var bb = R.pick(BAL.filter(function (x) { return x[2] <= (ctx.level || 1) + 1; })), tt = bb[0].split(/ \+ | -> /), kk = 0; ae = bb[0].replace(/[A-Z(][^ ]*/g, function (fm) { var c = bb[1][kk++]; return (c > 1 ? c : '') + fm; }); }
       var E = parseEq(ae), La = sideAtoms(E.L), els = Object.keys(La), el = R.pick(els), n = La[el];
       var detail = E.R.map(function (t) { var c = parseF(t.f).atoms[el] || 0; return c ? t.c + ' \\times ' + c : null; }).filter(Boolean).join(' + ');
       return P('In the balanced equation $$' + eqT(E) + '$$ how many ' + el + ' atoms are on the product side?',
@@ -2991,7 +3512,7 @@
     }
     var pool = lv(ctx, CM_SETUPS.slice(0, 4), CM_SETUPS.slice(0, 5), CM_SETUPS.slice(2));
     var S = R.pick(pool), E2 = parseEq(S.eq), cg = coefOf(E2, S.give);
-    var m0 = lv(ctx, R.int(4, 24) / 2, R.int(25, 200) / 10, R.int(100, 2000) / 100);
+    var m0 = lv(ctx, R.int(4, 80) / 2, R.int(25, 400) / 10, R.int(100, 4000) / 100);
     var n0 = m0 / mm(S.give), mass = {};
     E2.L.concat(E2.R).forEach(function (t) { mass[t.f] = rnd(n0 * t.c / cg * mm(t.f), 2); });
     mass[S.give] = m0;
@@ -3071,7 +3592,22 @@
     ['C2H6 + O2 -> CO2 + H2O', [2, 7, 4, 6], 3], ['C4H10 + O2 -> CO2 + H2O', [2, 13, 8, 10], 3], ['C6H12O6 + O2 -> CO2 + H2O', [1, 6, 6, 6], 3], ['NH3 + O2 -> NO + H2O', [4, 5, 4, 6], 3],
     ['Al + CuSO4 -> Al2(SO4)3 + Cu', [2, 3, 1, 3], 3], ['Fe + H2O -> Fe3O4 + H2', [3, 4, 1, 4], 3], ['C2H5OH + O2 -> CO2 + H2O', [1, 3, 2, 3], 3], ['Ca3(PO4)2 + H2SO4 -> CaSO4 + H3PO4', [1, 3, 3, 2], 3],
     ['Al(OH)3 + H2SO4 -> Al2(SO4)3 + H2O', [2, 3, 1, 6], 3], ['C8H18 + O2 -> CO2 + H2O', [2, 25, 16, 18], 3], ['FeS2 + O2 -> Fe2O3 + SO2', [4, 11, 2, 8], 3], ['Pb(NO3)2 + KI -> PbI2 + KNO3', [1, 2, 1, 2], 3],
-    ['NO2 + H2O -> HNO3 + NO', [3, 1, 2, 1], 3]
+    ['NO2 + H2O -> HNO3 + NO', [3, 1, 2, 1], 3],
+    ['Ca + O2 -> CaO', [2, 1, 2], 1], ['Na + O2 -> Na2O', [4, 1, 2], 1], ['K + Cl2 -> KCl', [2, 1, 2], 1], ['H2 + Br2 -> HBr', [1, 1, 2], 1], ['Mg + HCl -> MgCl2 + H2', [1, 2, 1, 1], 1],
+    ['H2O -> H2 + O2', [2, 2, 1], 1], ['Na + Br2 -> NaBr', [2, 1, 2], 1], ['Li + Cl2 -> LiCl', [2, 1, 2], 1], ['Zn + O2 -> ZnO', [2, 1, 2], 1], ['HgO -> Hg + O2', [2, 2, 1], 1],
+    ['NaCl -> Na + Cl2', [2, 2, 1], 1], ['C + O2 -> CO', [2, 1, 2], 1], ['CO + O2 -> CO2', [2, 1, 2], 1], ['K + O2 -> K2O', [4, 1, 2], 1], ['Ba + O2 -> BaO', [2, 1, 2], 1],
+    ['Cu + S -> Cu2S', [2, 1, 1], 1], ['Ca + HCl -> CaCl2 + H2', [1, 2, 1, 1], 1], ['Fe + HCl -> FeCl2 + H2', [1, 2, 1, 1], 1], ['Mg + N2 -> Mg3N2', [3, 1, 1], 1], ['N2 + O2 -> NO', [1, 1, 2], 1],
+    ['H2 + I2 -> HI', [1, 1, 2], 1], ['K + I2 -> KI', [2, 1, 2], 1], ['Ag + S -> Ag2S', [2, 1, 1], 1], ['Sr + O2 -> SrO', [2, 1, 2], 1],
+    ['C2H4 + O2 -> CO2 + H2O', [1, 3, 2, 2], 2], ['CH3OH + O2 -> CO2 + H2O', [2, 3, 2, 4], 2], ['Fe + Cl2 -> FeCl3', [2, 3, 2], 2], ['Li + N2 -> Li3N', [6, 1, 2], 2], ['Al + Br2 -> AlBr3', [2, 3, 2], 2],
+    ['P + O2 -> P2O5', [4, 5, 2], 2], ['K + H2O -> KOH + H2', [2, 2, 2, 1], 2], ['Ca + H2O -> Ca(OH)2 + H2', [1, 2, 1, 1], 2], ['CaCO3 + HCl -> CaCl2 + H2O + CO2', [1, 2, 1, 1, 1], 2],
+    ['BaCl2 + Na2SO4 -> BaSO4 + NaCl', [1, 1, 1, 2], 2], ['Pb(NO3)2 + NaCl -> PbCl2 + NaNO3', [1, 2, 1, 2], 2], ['Zn + AgNO3 -> Zn(NO3)2 + Ag', [1, 2, 1, 2], 2], ['Cu + AgNO3 -> Cu(NO3)2 + Ag', [1, 2, 1, 2], 2],
+    ['N2O5 -> NO2 + O2', [2, 4, 1], 2], ['NaN3 -> Na + N2', [2, 2, 3], 2], ['Fe2O3 + H2 -> Fe + H2O', [1, 3, 2, 3], 2], ['Al2O3 -> Al + O2', [2, 4, 3], 2], ['Mg + CO2 -> MgO + C', [2, 1, 2, 1], 2],
+    ['H2S + O2 -> SO2 + H2O', [2, 3, 2, 2], 2], ['K2O + H2O -> KOH', [1, 1, 2], 2], ['Fe(OH)3 -> Fe2O3 + H2O', [2, 1, 3], 2], ['NH4NO3 -> N2O + H2O', [1, 1, 2], 2], ['Na2O + H2O -> NaOH', [1, 1, 2], 2],
+    ['C5H12 + O2 -> CO2 + H2O', [1, 8, 5, 6], 3], ['C3H6 + O2 -> CO2 + H2O', [2, 9, 6, 6], 3], ['C2H2 + O2 -> CO2 + H2O', [2, 5, 4, 2], 3], ['C6H6 + O2 -> CO2 + H2O', [2, 15, 12, 6], 3],
+    ['C12H22O11 + O2 -> CO2 + H2O', [1, 12, 12, 11], 3], ['C3H7OH + O2 -> CO2 + H2O', [2, 9, 6, 8], 3], ['Fe2O3 + C -> Fe + CO2', [2, 3, 4, 3], 3], ['Ca(OH)2 + H3PO4 -> Ca3(PO4)2 + H2O', [3, 2, 1, 6], 3],
+    ['Al + H2SO4 -> Al2(SO4)3 + H2', [2, 3, 1, 3], 3], ['Na2CO3 + HCl -> NaCl + H2O + CO2', [1, 2, 2, 1, 1], 3], ['Cu + HNO3 -> Cu(NO3)2 + NO + H2O', [3, 8, 3, 2, 4], 3], ['P4 + O2 -> P4O10', [1, 5, 1], 3],
+    ['KO2 + CO2 -> K2CO3 + O2', [4, 2, 2, 3], 3], ['Fe3O4 + H2 -> Fe + H2O', [1, 4, 3, 4], 3], ['NH3 + O2 -> N2 + H2O', [4, 3, 2, 6], 3], ['Al4C3 + H2O -> Al(OH)3 + CH4', [1, 12, 4, 3], 3],
+    ['SiCl4 + H2O -> SiO2 + HCl', [1, 2, 1, 4], 3], ['Na2O2 + H2O -> NaOH + O2', [2, 2, 4, 1], 3], ['C4H8 + O2 -> CO2 + H2O', [1, 6, 4, 4], 3], ['Mg3N2 + H2O -> Mg(OH)2 + NH3', [1, 6, 3, 2], 3]
   ];
   function withCoef(sk, co) { var E = parseEq(sk), i = 0; E.L.forEach(function (t) { t.c = co[i++]; }); E.R.forEach(function (t) { t.c = co[i++]; }); return E; }
   function tallyLine(E) { var A = sideAtoms(E.L), B = sideAtoms(E.R); return Object.keys(A).map(function (e) { return e + ': ' + A[e] + ' = ' + B[e]; }).join(', '); }
@@ -3091,7 +3627,19 @@
     var lvl = ctx.level || 1, pool = BAL.filter(function (b) { return b[2] === lvl || (lvl === 3 && b[2] === 2 && R.chance(0.15)); });
     if (!pool.length) pool = BAL.filter(function (b) { return b[2] === lvl; });
     var b = R.pick(pool), sk = b[0], co = b[1], E = parseEq(sk);
-    var shape = R.pick(lv(ctx, ['all', 'all', 'one'], ['all', 'all', 'one', 'error'], ['all', 'all', 'one']));
+    var shape = R.pick(lv(ctx, ['all', 'all', 'one', 'check', 'pick'], ['all', 'all', 'one', 'error', 'check', 'pick'], ['all', 'all', 'one', 'check', 'pick']));
+    var perturb = function () { var c2 = co.slice(), j = R.int(0, co.length - 1); c2[j] = c2[j] === 1 ? 2 : c2[j] + (R.coin() ? 1 : -1); return c2; };
+    var eqC = function (cs) { return eqT(withCoef(sk, cs)); };
+    if (shape === 'check') { // check a given answer: is this balanced?
+      var okC = R.coin(), shown = okC ? co : perturb();
+      return P('Jo balanced an equation like this: $$' + eqC(shown) + '$$ Is it balanced?', mc(okC ? 'Yes, every element balances' : 'No, at least one element does not balance', [okC ? 'No, at least one element does not balance' : 'Yes, every element balances']),
+        ['Count each element on both sides, using the coefficients.', okC ? 'Every element matches: ' + tallyLine(withCoef(sk, co)) + '. So <b>yes</b>.' : 'The balanced equation is $$' + eqC(co) + '$$ so Jo\'s version does not balance: <b>no</b>.'],
+        'Multiply each subscript by the coefficient in front, then add up each side.', null, { k: 'balCheck', sk: sk, co: co, shown: shown });
+    }
+    if (shape === 'pick') { // which set of coefficients balances it?
+      var sets = [co.join(', ')]; for (var g = 0; g < 40 && sets.length < 4; g++) { var w = perturb().join(', '); if (sets.indexOf(w) < 0) sets.push(w); }
+      return P('Which coefficients balance $$' + eqT(E, { skeleton: true }) + '$$ (in order, left to right)?', mc(sets[0], sets.slice(1)), balSteps(sk, co), 'Try each set: count every element on both sides.', null, { k: 'balPick', sk: sk, co: co });
+    }
     if (shape === 'error') {
       var f0 = E.R[0].f, ex = R.pick([['H2 + O2 -> H2O', 'H2O2', 'H2O'], ['Mg + O2 -> MgO', 'MgO2', 'MgO'], ['Na + Cl2 -> NaCl', 'NaCl2', 'NaCl'], ['H2 + Cl2 -> HCl', 'H2Cl2', 'HCl']]);
       var good = BAL.filter(function (x) { return x[0] === ex[0]; })[0];
@@ -3186,9 +3734,29 @@
     return { sx: sx, sy: sy, eq: (a > 1 ? a : '') + x + ' + ' + (b > 1 ? b : '') + sy + ' -> ' + (c > 1 ? c : '') + sx + ' + ' + (d > 1 ? d : '') + y };
   }
   G('chem.activity-series', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['react', 'react', 'acid'], ['react', 'product', 'acid', 'notreact'], ['product', 'rank', 'halogen', 'notreact', 'acidProduct']));
+    var shape = R.pick(lv(ctx, ['react', 'react', 'acid', 'acidOne', 'most', 'allSalt'], ['react', 'product', 'acid', 'notreact', 'acidOne', 'most', 'allSalt'], ['product', 'rank', 'halogen', 'notreact', 'acidProduct', 'most', 'allSalt']));
     var series = '$' + ['Mg', 'Al', 'Zn', 'Fe', 'Ni', 'Sn', 'Pb', 'H', 'Cu', 'Ag', 'Au'].map(function (m) { return '\\mathrm{' + m + '}'; }).join(' > ') + '$';
     var seriesNote = 'Activity series (most active first): ' + series + '.';
+    var AS = ['Mg', 'Al', 'Zn', 'Fe', 'Ni', 'Sn', 'Pb', 'Cu', 'Ag', 'Au'], mn = function (m) { return METAL[m][0]; };
+    if (shape === 'acidOne') { // which one reacts (or does not react) with acid?
+      var reacts = R.coin(), oa = vOne(R, AS, function (m) { return above(m, 'H') === reacts; }, 4);
+      return P('Which of these metals ' + (reacts ? 'gives off hydrogen gas in' : 'does <b>not</b> react with') + ' hydrochloric acid? ' + seriesNote, MCA(oa.items.map(function (m) { return cap(mn(m)); }), oa.v),
+        oa.items.map(function (m) { return cap(mn(m)) + ' is ' + (above(m, 'H') ? 'above' : 'below') + ' hydrogen' + (above(m, 'H') ? ', so it replaces hydrogen in the acid.' : ', so nothing happens.'); }),
+        'Compare each metal with hydrogen (H) in the series.', null, { k: 'acidOne' });
+    }
+    if (shape === 'most') { // most (or least) active of four
+      var four = R.sample(AS, 4), top = R.coin(), best = four.slice().sort(function (a, b) { return top ? ACT.indexOf(a) - ACT.indexOf(b) : ACT.indexOf(b) - ACT.indexOf(a); })[0];
+      return P('Which of these metals is the ' + (top ? 'most' : 'least') + ' active? ' + seriesNote, MCA(four.map(function (m) { return cap(mn(m)); }), four.indexOf(best)),
+        ['The higher a metal is in the series, the more easily it gives up electrons, so the more active it is.', 'Of these, ' + mn(best) + ' is ' + (top ? 'highest' : 'lowest') + ': <b>' + mn(best) + '</b>.'],
+        'Find each metal in the series.', null, { k: 'most' });
+    }
+    if (shape === 'allSalt') { // choose all metals that will replace the metal in this solution
+      var tg = R.pick(['Zn', 'Fe', 'Ni', 'Pb', 'Cu', 'Ag']), sl = saltF(tg, METAL[tg][1], ANION[SALT_OF[tg]][0], ANION[SALT_OF[tg]][1]), cand = AS.filter(function (m) { return m !== tg && okPair(m, tg); });
+      var al = vAll(R, cand, function (m) { return above(m, tg); }, 4);
+      return P('A solution contains $' + fT(sl) + '$. ' + seriesNote + ' Choose all of these metals that will react with it.', MCA(al.items.map(function (m) { return cap(mn(m)); }), al.v),
+        al.items.map(function (m) { return cap(mn(m)) + ' is ' + (above(m, tg) ? 'above' : 'below') + ' ' + mn(tg) + (above(m, tg) ? ': it reacts.' : ': no reaction.'); }),
+        'Only a metal above ' + mn(tg) + ' can replace it.', null, { k: 'allSalt' });
+    }
     if (shape === 'react' || shape === 'product') {
       var mets = ['Mg', 'Al', 'Zn', 'Fe', 'Ni', 'Sn', 'Pb', 'Cu', 'Ag'], x, y;
       do { x = R.pick(mets); y = R.pick(mets); } while (x === y || (shape === 'product' && !above(x, y)) || !okPair(x, y));
@@ -3428,16 +3996,16 @@
       return P(c[0], mc(c[1][0], c[1].slice(1)), [c[2]], 'Think about particles moving fast in every direction.', null, { k: 'concept' });
     }
     if (shape === 'force') {
-      var F = R.pick([200, 500, 800, 1200, 1500, 2000, 3000]), A = R.pick([0.010, 0.020, 0.025, 0.040, 0.050]), Pa = F / A, atm = Pa / 101325;
+      var F = R.int(4, 60) * 50, A = R.pick([0.010, 0.020, 0.025, 0.040, 0.050, 0.080, 0.100]), Pa = F / A, atm = Pa / 101325;
       return P('A gas pushes with a total force of $' + gx(F) + '\\ \\text{N}$ on a piston with an area of $' + gx(A) + '\\ \\text{m}^2$. What is the pressure in atmospheres? ($1\\ \\text{atm} = 101{,}325\\ \\text{Pa}$, and $1\\ \\text{Pa} = 1\\ \\text{N/m}^2$.)', ans(atm, 0.01),
         ['Pressure is force per area: $P = \\dfrac{F}{A} = \\dfrac{' + gx(F) + '\\ \\text{N}}{' + gx(A) + '\\ \\text{m}^2} = ' + gx(Pa) + '\\ \\text{Pa}$.', 'Convert: $' + gx(Pa) + '\\ \\text{Pa} \\times \\dfrac{1\\ \\text{atm}}{101{,}325\\ \\text{Pa}} = ' + qx(atm, 'atm') + '$.'],
         'Divide force by area to get pascals, then convert to atm.', 'atm', { k: 'force', F: F, A: A, v: atm });
     }
     var pairs = lv(ctx, [['atm', 'mmHg'], ['mmHg', 'atm'], ['atm', 'kPa']], [['kPa', 'atm'], ['mmHg', 'kPa'], ['kPa', 'mmHg'], ['atm', 'mmHg']], [['mmHg', 'kPa'], ['kPa', 'mmHg'], ['kPa', 'atm']]);
     var pr = R.pick(pairs), from = pr[0], to = pr[1], v;
-    if (from === 'atm') v = R.pick([0.50, 0.75, 0.85, 0.95, 1.20, 1.50, 2.00, 2.50, 3.00, 0.25]);
-    else if (from === 'mmHg') v = R.pick([380, 456, 608, 722, 745, 752, 770, 1140, 912, 684]);
-    else v = R.pick([50.0, 75.0, 85.0, 95.0, 98.6, 101.3, 120, 150, 202.6, 250]);
+    if (from === 'atm') v = R.chance(0.3) ? R.pick([0.50, 0.75, 0.85, 0.95, 1.20, 1.50, 2.00, 2.50, 3.00, 0.25]) : R.int(5, 70) / 20;
+    else if (from === 'mmHg') v = R.chance(0.3) ? R.pick([380, 456, 608, 722, 745, 752, 770, 1140, 912, 684]) : R.int(30, 160) * 5;
+    else v = R.chance(0.3) ? R.pick([50.0, 75.0, 85.0, 95.0, 98.6, 101.3, 120, 150, 202.6, 250]) : R.int(80, 600) / 2;
     var inAtm = from === 'atm' ? v : from === 'mmHg' ? v / MMHG : v / KPA, res = to === 'atm' ? inAtm : to === 'mmHg' ? inAtm * MMHG : inAtm * KPA;
     var fac = { atm: '1\\ \\text{atm}', mmHg: '760\\ \\text{mmHg}', kPa: '101.325\\ \\text{kPa}' };
     var ctxs = { atm: '', mmHg: R.pick(['A barometer reads ', 'A mercury column stands ']), kPa: 'A pressure gauge reads ' };
@@ -3453,14 +4021,20 @@
     ['The average kinetic energy of gas particles is proportional to the kelvin temperature.', true, 'This is the meaning of temperature in kinetic molecular theory: double the kelvin temperature and the average kinetic energy doubles.'],
     ['The particles of a gas take up most of the space in their container.', false, 'The particles are tiny compared with the distances between them; a gas is mostly empty space, which is why it can be squeezed.'],
     ['Collisions between gas particles and the walls are what we measure as pressure.', true, 'Every bounce pushes on the wall; together the collisions make the pressure.'],
+    ['A gas spreads out to fill any container it is put in.', true, 'Gas particles move freely in straight lines until they hit something, so they spread through the whole container.'],
+    ['Gas particles slow down a little after every collision, until they stop.', false, 'Collisions are elastic: kinetic energy is passed between particles, but the total does not drain away while the temperature stays the same.'],
+    ['Heating a gas in a sealed, rigid container raises its pressure.', true, 'Faster particles hit the walls more often and harder, so the pressure goes up.'],
+    ['Gas particles attract each other strongly, which is why gases stay together.', false, 'In the kinetic theory model the attractions are so weak they are ignored; that is why a gas spreads out instead of clumping.'],
+    ['Cooling a gas lowers the average kinetic energy of its particles.', true, 'Temperature measures the average kinetic energy, so a lower temperature means slower particles on average.'],
+    ['Smells spread across a room because the gas particles move and collide.', true, 'The particles of the smell move fast and bump through the air, so they spread out (diffusion).'],
     ['At the same temperature, helium atoms and nitrogen molecules have the same average kinetic energy.', true, 'Average kinetic energy depends only on temperature. The lighter helium atoms make up for their smaller mass by moving faster.']
   ];
   G('chem.kinetic-molecular-theory', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['tf', 'tf', 'ratioK'], ['ratioC', 'tf', 'compare'], ['ratioC', 'targetT', 'compare']));
+    var shape = R.pick(lv(ctx, ['tf', 'ratioK', 'ratioK', 'targetT', 'compare'], ['ratioC', 'tf', 'compare', 'ratioK'], ['ratioC', 'targetT', 'compare']));
     if (shape === 'tf') { var t = R.pick(KMT_TF); return P('True or false: ' + t[0], tf(t[1]), [t[2]], 'Think of particles moving fast and randomly, with temperature measuring their average kinetic energy.', null, { k: 'tf' }); }
     if (shape === 'compare') {
       var gases = [['He', 4.00], ['Ne', 20.18], ['N2', 28.02], ['O2', 32.00], ['Ar', 39.95], ['CO2', 44.01], ['Xe', 131.29]];
-      var two = R.sample(gases, 2).sort(function (x, y) { return x[1] - y[1]; }), T = R.pick([250, 300, 350, 400]);
+      var two = R.sample(gases, 2).sort(function (x, y) { return x[1] - y[1]; }), T = R.int(10, 40) * 10 + R.pick([0, 0, 5]);
       var ask = R.pick(['speed', 'ke']);
       if (ask === 'ke') return P('Samples of $' + fT(two[0][0]) + '$ and $' + fT(two[1][0]) + '$ are both at $' + T + '\\ \\text{K}$. Which has the greater average kinetic energy per particle?', mc('They are the same.', ['$' + fT(two[0][0]) + '$, because its particles are lighter', '$' + fT(two[1][0]) + '$, because its particles are heavier', 'It depends on how much gas there is.']),
         ['Average kinetic energy depends only on the kelvin temperature.', 'Both are at $' + T + '\\ \\text{K}$, so their particles have the same average kinetic energy (the lighter ones move faster to make up for their smaller mass).'],
@@ -3470,13 +4044,13 @@
         'Same temperature means same average kinetic energy. What must a lighter particle do?', null, { k: 'speed' });
     }
     if (shape === 'targetT') {
-      var T1 = R.pick([150, 200, 250, 300, 400]), f = R.pick([2, 3, 1.5, 4, 0.5]), T2 = T1 * f;
+      var T1 = R.int(3, 16) * 25, f = R.pick([2, 3, 1.5, 4, 0.5, 5, 2.5]), T2 = T1 * f;
       return P('A gas is at $' + T1 + '\\ \\text{K}$. At what kelvin temperature would the average kinetic energy of its particles be ' + (f === 0.5 ? 'half as large' : f === 1.5 ? '1.5 times as large' : f + ' times as large') + '?', ans(T2, 0.01),
         ['Average kinetic energy is proportional to the kelvin temperature.', 'So multiply the kelvin temperature by the same factor: $' + T1 + ' \\times ' + gx(f) + ' = ' + qx(T2, 'K') + '$.'],
         'Kinetic energy and kelvin temperature grow in proportion.', 'K', { k: 'targetT', T1: T1, f: f, v: T2 });
     }
     var c1, c2;
-    if (shape === 'ratioK') { c1 = R.pick([100, 150, 200, 250, 300]); c2 = c1 * R.pick([2, 3, 4]); }
+    if (shape === 'ratioK') { c1 = R.int(2, 16) * 25; c2 = c1 * R.pick([2, 3, 4, 1.5, 2.5]); }
     else { do { c1 = R.pick([-73, -23, 0, 10, 20, 27, 50, 77, 100]); c2 = R.pick([27, 50, 77, 100, 127, 227, 327, 527]); } while (c2 <= c1); }
     var K1 = shape === 'ratioK' ? c1 : toK(c1), K2 = shape === 'ratioK' ? c2 : toK(c2), ratio = K2 / K1;
     if (shape === 'ratioK') return P('A gas is warmed from $' + c1 + '\\ \\text{K}$ to $' + c2 + '\\ \\text{K}$. By what factor does the average kinetic energy of its particles change?', ans(ratio, 0.01),
@@ -3679,7 +4253,7 @@
     var shape = R.pick(lv(ctx, ['mc', 'mc', 'mass'], ['ions', 'mc', 'mass'], ['ions', 'ionsOne', 'mc']));
     if (shape === 'mc') { var d = R.pick(DISS_MC); return P(d[0], mc(d[1][0], d[1].slice(1)), [d[2]], 'Think about what water molecules do to the particles of the solute.', null, { k: 'mc' }); }
     if (shape === 'mass') {
-      var ms = R.pick([5.0, 10.0, 12.5, 20.0, 25.0, 3.5]), mw = R.pick([50.0, 100.0, 150.0, 200.0, 250.0]), sol = R.pick(['sugar', 'table salt', 'potassium nitrate']);
+      var ms = R.int(4, 60) / 2, mw = R.int(5, 50) * 10, sol = R.pick(['sugar', 'table salt', 'potassium nitrate', 'baking soda', 'potassium chloride', 'copper(II) sulfate']);
       return P('$' + gx(ms) + '\\ \\text{g}$ of ' + sol + ' dissolves completely in $' + gx(mw) + '\\ \\text{g}$ of water. What is the mass of the solution?', ansX(ms + mw),
         ['Dissolving does not destroy anything: every particle of ' + sol + ' is still there, spread among the water molecules.', 'Mass of solution $= ' + gx(ms) + ' + ' + gx(mw) + ' = ' + qg(fix(ms + mw), 'g') + '$.'],
         'Is any matter lost when something dissolves?', 'g', { k: 'mass', v: ms + mw });
@@ -3717,7 +4291,7 @@
     }
     var f = R.pick(salts), i = R.int(lv(ctx, 1, 1, 1), lv(ctx, 4, 4, 4)), S = SOLT[f][i], T = i * 20;
     if (shape === 'classify') {
-      var kind = R.int(0, 2), amt = kind === 0 ? rnd(S * R.pick([0.4, 0.6, 0.8]), 0) : kind === 1 ? S : rnd(S * R.pick([1.15, 1.3]), 0);
+      var kind = R.int(0, 2), amt = kind === 0 ? rnd(S * R.pick([0.3, 0.4, 0.5, 0.6, 0.7, 0.8]), 0) : kind === 1 ? S : rnd(S * R.pick([1.15, 1.2, 1.3, 1.4, 1.5]), 0);
       if (kind !== 1 && amt === S) amt = kind === 0 ? S - 2 : S + 2;
       var names = ['unsaturated', 'saturated', 'supersaturated'];
       var desc = kind === 2 ? 'A clear solution, with no solid in it, holds' : kind === 1 ? 'A solution in contact with a little undissolved solid holds' : 'A clear solution holds';
@@ -3834,8 +4408,15 @@
     return { eq: (co[0] > 1 ? co[0] : '') + s1 + ' + ' + (co[1] > 1 ? co[1] : '') + s2 + ' -> ' + ppt + ' + ' + (co[3] > 1 ? co[3] : '') + s4, s1: s1, s2: s2, ppt: ppt, s4: s4, co: co };
   }
   G('chem.precipitation-reactions', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['ppt', 'soluble', 'ppt'], ['ppt', 'which', 'soluble'], ['ppt', 'which', 'balance']));
+    var shape = R.pick(lv(ctx, ['ppt', 'soluble', 'ppt', 'which1', 'allSol'], ['ppt', 'which', 'soluble', 'which1', 'allSol'], ['ppt', 'which', 'balance', 'allSol']));
     var spect = R.pick(['Na^+', 'K^+']);
+    if (shape === 'which1' || shape === 'allSol') { // which one is insoluble / choose all soluble
+      var allW = Object.keys(CAT).reduce(function (acc, c) { Object.keys(AN).forEach(function (a) { var r = solRule(c, a); if (r) acc.push([c, a, r]); }); return acc; }, []);
+      var wantS = R.coin(), many = shape === 'allSol', ow = many ? vAll(R, allW, function (x) { return (x[2] === 's') === wantS; }, 4) : vOne(R, allW, function (x) { return (x[2] === 's') === wantS; }, 4), rv = many ? ow.v : [ow.v];
+      return P((many ? 'Choose all of these compounds that are ' : 'Which of these compounds is ') + '<b>' + (wantS ? 'soluble' : 'insoluble') + '</b> in water?', MCA(ow.items.map(function (x) { return saltName(x[0], x[1]) + ', $' + fT(ionSalt(x[0], x[1])) + '$'; }), ow.v),
+        ow.items.map(function (x) { return saltName(x[0], x[1]) + ': ' + (x[2] === 's' ? 'soluble.' : 'insoluble.'); }).concat(['Sodium, potassium and ammonium compounds and all nitrates are soluble; most carbonates, phosphates and hydroxides are not; chlorides are soluble except with silver and lead(II); sulfates are soluble except with barium and lead(II).']),
+        'Check each compound against the solubility rules.', null, { k: shape });
+    }
     if (shape === 'soluble') {
       var all = Object.keys(CAT).reduce(function (acc, c) { Object.keys(AN).forEach(function (a) { var r = solRule(c, a); if (r) acc.push([c, a, r]); }); return acc; }, []);
       var it = R.pick(all), f = ionSalt(it[0], it[1]);
@@ -3873,6 +4454,7 @@
     ['NaOH', 'base', 'sodium hydroxide'], ['KOH', 'base', 'potassium hydroxide'], ['Ca(OH)2', 'base', 'calcium hydroxide'], ['LiOH', 'base', 'lithium hydroxide'], ['NH3', 'base', 'ammonia'], ['Ba(OH)2', 'base', 'barium hydroxide'],
     ['HI', 'acid', 'hydroiodic acid'], ['HClO4', 'acid', 'perchloric acid'], ['HCOOH', 'acid', 'formic acid'], ['Sr(OH)2', 'base', 'strontium hydroxide'], ['KCl', 'neither', 'potassium chloride'], ['C12H22O11', 'neither', 'sucrose (table sugar)'],
     ['CH4', 'neither', 'methane'], ['CH3OH', 'neither', 'methanol'], ['C2H5OH', 'neither', 'ethanol'], ['C6H12O6', 'neither', 'glucose'], ['NaCl', 'neither', 'sodium chloride'], ['KNO3', 'neither', 'potassium nitrate']];
+  var AB2 = AB.concat([['H3PO4', 'acid', 'phosphoric acid'], ['HClO3', 'acid', 'chloric acid'], ['Mg(OH)2', 'base', 'magnesium hydroxide'], ['RbOH', 'base', 'rubidium hydroxide'], ['CaCl2', 'neither', 'calcium chloride'], ['C3H8', 'neither', 'propane'], ['KBr', 'neither', 'potassium bromide'], ['Na2SO4', 'neither', 'sodium sulfate']]);
   var AB_WHY = {
     HCl: 'It gives its H⁺ to water: $\\mathrm{HCl} + \\mathrm{H}_{2}\\mathrm{O} \\to \\mathrm{H}_{3}\\mathrm{O}^{+} + \\mathrm{Cl}^{-}$.',
     HNO3: 'It gives its H⁺ to water, making $\\mathrm{H}_{3}\\mathrm{O}^{+}$ and nitrate ions.', H2SO4: 'It gives H⁺ to water, making $\\mathrm{H}_{3}\\mathrm{O}^{+}$.', HBr: 'It gives its H⁺ to water, making $\\mathrm{H}_{3}\\mathrm{O}^{+}$.',
@@ -3887,7 +4469,13 @@
     'Sr(OH)2': 'It dissolves into $\\mathrm{Sr}^{2+}$ and $\\mathrm{OH}^{-}$ ions.', KCl: 'It dissolves into $\\mathrm{K}^{+}$ and $\\mathrm{Cl}^{-}$: a neutral salt.', C12H22O11: 'Sugar dissolves as whole molecules; its many OH groups stay bonded to carbon, so it is not a base.',
     NaCl: 'It dissolves into $\\mathrm{Na}^{+}$ and $\\mathrm{Cl}^{-}$, neither of which changes the amount of $\\mathrm{H}_{3}\\mathrm{O}^{+}$ or $\\mathrm{OH}^{-}$: a neutral salt.', KNO3: 'It dissolves into $\\mathrm{K}^{+}$ and $\\mathrm{NO}_{3}^{-}$: a neutral salt.' };
   G('chem.acid-base-definitions', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['classify', 'classify', 'ion', 'litmus', 'pick'], ['classify', 'ion', 'trouble', 'pick'], ['classify', 'trouble', 'countOH', 'pick']));
+    var shape = R.pick(lv(ctx, ['classify', 'classify', 'ion', 'litmus', 'pick', 'allAB'], ['classify', 'ion', 'trouble', 'pick', 'allAB', 'allAB'], ['classify', 'trouble', 'countOH', 'pick', 'allAB']));
+    if (shape === 'allAB') { // choose all the acids (or bases)
+      var roleA = R.pick(['acid', 'base']), alA = vAll(R, AB2, function (x) { return x[1] === roleA; }, 4);
+      return P('Choose all of these that are <b>' + roleA + 's</b> (Arrhenius definition).', MCA(alA.items.map(function (x) { return cap(x[2]) + ', $' + fT(x[0]) + '$'; }), alA.v),
+        alA.items.map(function (x) { return cap(x[2]) + ': ' + (x[1] === 'neither' ? 'neither an acid nor a base.' : 'a' + (x[1] === 'acid' ? 'n acid: it gives H⁺ (as H₃O⁺) in water.' : ' base: it gives OH⁻ in water' + (x[0] === 'NH3' ? ' (by taking H⁺ from water).' : '.'))); }),
+        'Acids make H⁺ (H₃O⁺) in water; bases make OH⁻.', null, { k: 'allAB' });
+    }
     if (shape === 'pick') {
       var role = R.pick(['acid', 'base']), right = R.pick(AB.filter(function (x) { return x[1] === role; })), wr = R.sample(AB.filter(function (x) { return x[1] !== role; }), 3);
       return P('Which of these is ' + (role === 'acid' ? 'an acid' : 'a base') + ' in water?', mc(right[2] + ', $' + fT(right[0]) + '$', wr.map(function (w) { return w[2] + ', $' + fT(w[0]) + '$'; })),
@@ -3940,7 +4528,7 @@
     return out.filter(function (f) { return f && !/^\^/.test(f) && f !== a; });
   }
   G('chem.bronsted-lowry', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['cbase', 'cacid', 'which'], ['cbase', 'cacid', 'which', 'pair'], ['cbase', 'cacid', 'which', 'pair']));
+    var shape = R.pick(lv(ctx, ['cbase', 'cacid', 'which', 'pair', 'which'], ['cbase', 'cacid', 'which', 'pair'], ['cbase', 'cacid', 'which', 'pair']));
     var lvl = ctx.level || 1, pool = CONJ.filter(function (c) { return c[2] <= (lvl === 1 ? 1 : 2); });
     if (shape === 'cbase' || shape === 'cacid') {
       var c = R.pick(pool.filter(function (x) { return shape === 'cbase' ? x[0] !== 'H3O^+' : x[1] !== 'H2O' || R.chance(0.5); }));
@@ -3950,7 +4538,7 @@
           '$' + fT(given) + (shape === 'cbase' ? ' - \\mathrm{H}^{+} = ' : ' + \\mathrm{H}^{+} = ') + fT(want) + '$.'],
         shape === 'cbase' ? 'Take away one H⁺: one H and one positive charge.' : 'Add one H⁺: one H and one positive charge.', null, { k: shape, given: given, v: want });
     }
-    var r = R.pick(lvl === 1 ? BLR.slice(0, 6) : BLR), E = parseEq(r[0]);
+    var r = R.pick(lvl === 1 ? BLR.slice(0, 9) : BLR), E = parseEq(r[0]);
     if (shape === 'which') {
       var role = R.pick(['acid', 'base']), right = role === 'acid' ? r[1] : r[2], others = E.L.concat(E.R).map(function (t) { return t.f; }).filter(function (f) { return f !== right; });
       return P('In the reaction $$' + eqT(E) + '$$ which species on the left acts as the Brønsted–Lowry ' + role + ' (the proton ' + (role === 'acid' ? 'donor' : 'acceptor') + ')?', mc('$' + fT(right) + '$', others.map(function (f) { return '$' + fT(f) + '$'; })),
@@ -3966,7 +4554,32 @@
   });
 
   G('chem.ph-scale', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['conc2pH', 'pH2conc', 'factor', 'classify'], ['factor', 'conc2pH', 'factor', 'classify'], ['strong', 'dilute', 'factor']));
+    var shape = R.pick(lv(ctx, ['conc2pH', 'pH2conc', 'factor', 'classify', 'most', 'decimal', 'checkPH'], ['factor', 'conc2pH', 'classify', 'most', 'decimal', 'dilute', 'checkPH', 'strongB'], ['strong', 'dilute', 'factor', 'most', 'decimal', 'strongB', 'checkPH', 'most']));
+    if (shape === 'most') { // which solution is the most acidic (or basic)?
+      var phs = R.sample([0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5], 4), acidQ = R.coin(), labs = R.sample(['lemon juice', 'tap water', 'soap water', 'tomato juice', 'baking soda water', 'rainwater', 'a cleaning solution', 'black coffee', 'seawater', 'milk', 'solution A', 'solution B'], 4);
+      var best = phs.slice().sort(function (x, y) { return acidQ ? x - y : y - x; })[0], bi = phs.indexOf(best);
+      return P('Four samples are tested: ' + labs.map(function (l, i) { return l.replace(/^solution/, 'Solution') + ' has a pH of ' + gx(phs[i]); }).join('; ') + '. Which is the most ' + (acidQ ? 'acidic' : 'basic') + '?', mcAll(labs.map(cap), bi),
+        ['The lower the pH, the more acidic; the higher the pH, the more basic.', 'The ' + (acidQ ? 'lowest' : 'highest') + ' pH here is ' + gx(best) + ', so the answer is <b>' + labs[bi] + '</b>.'],
+        'Compare the pH values: low is acidic, high is basic.', null, { k: 'most', v: bi });
+    }
+    if (shape === 'checkPH') { // check a given answer
+      var nc = R.int(1, 13), said = R.pick([nc, nc, -nc, 14 - nc, nc + 1].filter(function (x) { return x !== 7 || nc === 7; })), okc = said === nc;
+      return P('A solution has $[\\mathrm{H}_{3}\\mathrm{O}^{+}] = 1 \\times 10^{-' + nc + '}\\ \\text{M}$. Sam says its pH is ' + said + '. Is Sam right?', mcAll(['Yes', 'No'], okc ? 0 : 1, true),
+        ['For $[\\mathrm{H}_{3}\\mathrm{O}^{+}] = 1 \\times 10^{-n}\\ \\text{M}$, the pH is $n$.', 'So the pH is ' + nc + (okc ? ': <b>yes</b>.' : ', not ' + said + ': <b>no</b>.')],
+        'pH is the negative of the power of ten.', null, { k: 'checkPH', v: okc });
+    }
+    if (shape === 'decimal') { // the same idea with a plain decimal concentration
+      var nd = R.int(1, 6), cdec = '0.' + '0'.repeat(nd - 1) + '1';
+      return P('A solution has $[\\mathrm{H}_{3}\\mathrm{O}^{+}] = ' + cdec + '\\ \\text{M}$. What is its pH?', exact(nd),
+        ['Write the concentration as a power of ten: $' + cdec + ' = 1 \\times 10^{-' + nd + '}$.', 'For $1 \\times 10^{-n}$, the pH is $n$: <b>' + nd + '</b>.'],
+        'Count the places after the decimal point to the 1.', null, { k: 'decimal', v: nd });
+    }
+    if (shape === 'strongB') { // a strong base: pH from [OH-]
+      var eb = R.int(1, 5), cbs = '0.' + '0'.repeat(eb - 1) + '1', bb = R.pick(['NaOH', 'KOH', 'LiOH']);
+      return P('$' + fT(bb) + '$ is a strong base: it dissolves completely into ions. What is the pH of $' + cbs + '\\ \\text{M}$ $' + fT(bb) + '$ at 25 °C?', exact(14 - eb),
+        ['$[\\mathrm{OH}^{-}] = ' + cbs + ' = 1 \\times 10^{-' + eb + '}\\ \\text{M}$, so pOH $= ' + eb + '$.', 'pH $= 14 - ' + eb + ' = ' + (14 - eb) + '$.'],
+        'Find the pOH first, then use pH + pOH = 14.', null, { k: 'strongB', v: 14 - eb });
+    }
     if (shape === 'conc2pH') {
       var nexp = R.int(1, 13), Hc = '1 \\times 10^{-' + nexp + '}';
       return P('A solution has $[\\mathrm{H}_{3}\\mathrm{O}^{+}] = ' + Hc + '\\ \\text{M}$. What is its pH?', exact(nexp),
@@ -3980,7 +4593,7 @@
         'The pH is the power of ten, with a minus sign.', 'M', { k: 'pH2conc', pH: ph, v: M.pow(10, -ph) });
     }
     if (shape === 'classify') {
-      var p2 = R.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 7, 6.5, 8.3]), k = p2 < 7 ? 0 : p2 > 7 ? 1 : 2;
+      var p2 = R.chance(0.15) ? 7 : R.int(0, 140) / 10, k = p2 < 7 ? 0 : p2 > 7 ? 1 : 2;
       return P('A solution at 25 °C has a pH of ' + gx(p2) + '. Is it acidic, basic or neutral?', mcAll(['acidic', 'basic', 'neutral'], k, true),
         ['At 25 °C, pH 7 is neutral; below 7 is acidic and above 7 is basic.', 'pH ' + gx(p2) + ' is ' + ['acidic', 'basic', 'neutral'][k] + '.'],
         'Compare the pH with 7.', null, { k: 'classify', v: k }, { name: 'ch-phscale', opts: { pH: p2, quiet: true } });
@@ -3992,7 +4605,7 @@
         'Write the concentration as a power of ten.', null, { k: 'strong', v: e });
     }
     if (shape === 'dilute') {
-      var p0 = R.int(1, 3), f = R.pick([10, 100, 1000]), d = M.round(M.log10(f));
+      var p0 = R.int(1, 4), f = R.pick([10, 100, 1000]), d = M.round(M.log10(f));
       return P('A strong acid solution has a pH of ' + p0 + '. It is diluted with water to ' + T.commas(f) + ' times its volume. What is the new pH?', exact(p0 + d),
         ['Diluting ' + T.commas(f) + ' times cuts $[\\mathrm{H}_{3}\\mathrm{O}^{+}]$ to $1/' + T.commas(f).replace(/,/g, '{,}') + '$ of what it was: from $10^{-' + p0 + '}$ to $10^{-' + (p0 + d) + '}\\ \\text{M}$.', 'Each factor of 10 raises the pH by 1, so the pH goes from ' + p0 + ' to ' + (p0 + d) + '.'],
         'How many factors of ten is the dilution?', null, { k: 'dilute', v: p0 + d });
@@ -4007,7 +4620,13 @@
   });
 
   G('chem.ph-poh', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['pOH', 'OHfromH', 'tf'], ['OHcoef', 'OHfromPH', 'pOH', 'tf'], ['base', 'OHcoef', 'HfromOH']));
+    var shape = R.pick(lv(ctx, ['pOH', 'OHfromH', 'tf', 'pHfromPOH', 'pOH'], ['OHcoef', 'OHfromPH', 'pOH', 'tf', 'pHfromPOH'], ['base', 'OHcoef', 'HfromOH', 'pHfromPOH']));
+    if (shape === 'pHfromPOH') { // pH from pOH, then acidic or basic
+      var po = rnd(R.int(5, 135) / 10, 1), phv = fix(14 - po);
+      return P('A solution at 25 °C has a pOH of ' + po.toFixed(1) + '. What is its pH, and is it acidic or basic?', { t: 'multi', parts: [{ label: 'pH', a: { t: 'num', v: String(phv), tol: 0.02 } }, { label: 'acidic or basic', a: mcAll(['acidic', 'basic', 'neutral'], phv < 7 ? 0 : phv > 7 ? 1 : 2, true) }] },
+        ['At 25 °C, pH + pOH = 14.', 'pH $= 14 - ' + po.toFixed(1) + ' = ' + phv.toFixed(1) + '$, which is ' + (phv < 7 ? 'below 7: acidic.' : phv > 7 ? 'above 7: basic.' : 'exactly 7: neutral.')],
+        'pH + pOH = 14.', null, { k: 'pHfromPOH', v: phv });
+    }
     if (shape === 'tf') {
       var t = R.pick([['A basic solution contains no $\\mathrm{H}_{3}\\mathrm{O}^{+}$ ions at all.', false, 'Every water solution contains both ions, because $[\\mathrm{H}_{3}\\mathrm{O}^{+}][\\mathrm{OH}^{-}] = 1.0 \\times 10^{-14}$. In a basic solution $\\mathrm{H}_{3}\\mathrm{O}^{+}$ is outnumbered by $\\mathrm{OH}^{-}$, but it is never zero.'],
         ['Pure water contains no ions.', false, 'Water molecules trade $\\mathrm{H}^{+}$ with each other, so pure water at 25 °C holds $1.0 \\times 10^{-7}\\ \\text{M}$ of $\\mathrm{H}_{3}\\mathrm{O}^{+}$ and the same amount of $\\mathrm{OH}^{-}$.'],
@@ -4031,13 +4650,13 @@
         'The exponents of the two concentrations add to −14.', 'M', { k: 'OH', H: M.pow(10, -e), v: M.pow(10, -(14 - e)) });
     }
     if (shape === 'OHcoef' || shape === 'HfromOH') {
-      var cf2 = R.pick([2.0, 4.0, 5.0, 2.5, 8.0]), e2 = R.int(3, 11), given = cf2 * M.pow(10, -e2), res = 1e-14 / given;
+      var cf2 = R.int(11, 99) / 10, e2 = R.int(3, 11), given = cf2 * M.pow(10, -e2), res = 1e-14 / given;
       var gN = shape === 'OHcoef' ? '[\\mathrm{H}_{3}\\mathrm{O}^{+}]' : '[\\mathrm{OH}^{-}]', aN = shape === 'OHcoef' ? '[\\mathrm{OH}^{-}]' : '[\\mathrm{H}_{3}\\mathrm{O}^{+}]';
       return P('A solution at 25 °C has $' + gN + ' = ' + cf2.toFixed(1) + ' \\times 10^{-' + e2 + '}\\ \\text{M}$. What is $' + aN + '$? (Scientific notation such as 2.5e-9 is fine.)', ans(res, 0.01),
         ['$[\\mathrm{H}_{3}\\mathrm{O}^{+}][\\mathrm{OH}^{-}] = 1.0 \\times 10^{-14}$, so $' + aN + ' = \\dfrac{1.0 \\times 10^{-14}}{' + cf2.toFixed(1) + ' \\times 10^{-' + e2 + '}}$.', 'Divide the numbers and subtract the exponents: $\\dfrac{1.0}{' + cf2.toFixed(1) + '} \\times 10^{-14 + ' + e2 + '} = ' + fx(res, 2) + '\\ \\text{M}$.'],
         'Divide $1.0 \\times 10^{-14}$ by the concentration you know.', 'M', { k: shape, given: given, v: res });
     }
-    var bs = R.pick([['NaOH', 1], ['KOH', 1]]), ex = R.int(1, 4), cs = M.pow(10, -ex), phB = 14 - ex;
+    var bs = R.pick([['NaOH', 1], ['KOH', 1], ['LiOH', 1]]), ex = R.int(1, 5), cs = M.pow(10, -ex), phB = 14 - ex;
     return P('$' + fT(bs[0]) + '$ dissolves completely into ions. What is the pH of $' + gx(cs) + '\\ \\text{M}$ $' + fT(bs[0]) + '$ at 25 °C?', exact(phB),
       ['$[\\mathrm{OH}^{-}] = ' + gx(cs) + '\\ \\text{M} = 1 \\times 10^{-' + ex + '}\\ \\text{M}$, so pOH $= ' + ex + '$.', 'pH $= 14 - ' + ex + ' = ' + phB + '$.'],
       'Find the pOH from $[\\mathrm{OH}^{-}]$ first.', null, { k: 'base', OH: cs, v: phB });
@@ -4048,7 +4667,13 @@
   // percent ionized of acetic acid (Ka = 1.8e-5, OpenStax Appendix H) at a few concentrations, from the exact quadratic
   function pctAcetic(C) { var Ka = 1.8e-5, x = (-Ka + M.sqrt(Ka * Ka + 4 * Ka * C)) / 2; return x / C * 100; }
   G('chem.strong-weak-acids', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['classify', 'strongH', 'compare'], ['classify', 'weakH', 'compare', 'strongH'], ['weakH', 'trap', 'meaning']));
+    var shape = R.pick(lv(ctx, ['classify', 'strongH', 'compare', 'pickS'], ['classify', 'weakH', 'compare', 'strongH', 'pickS'], ['weakH', 'trap', 'meaning', 'weakH', 'pickS', 'strongH']));
+    if (shape === 'pickS') { // which is strong / choose all weak
+      var wantS = R.coin(), many = (ctx.level || 1) > 1 && R.coin(), poolS = STRONG.concat(WEAK), os = many ? vAll(R, poolS, function (a) { return (STRONG.indexOf(a) >= 0) === wantS; }, 4) : vOne(R, poolS, function (a) { return (STRONG.indexOf(a) >= 0) === wantS; }, 4);
+      return P((many ? 'Choose all of these that are ' : 'Which of these is a ') + '<b>' + (wantS ? 'strong' : 'weak') + '</b> ' + (many ? 'acids' : 'acid') + '?', MCA(os.items.map(function (a) { return cap(ACNAME[a]) + ', $' + fT(a) + '$'; }), os.v),
+        ['The common strong acids are HCl, HBr, HI, HNO₃, H₂SO₄ and HClO₄; most other acids are weak.'].concat(os.items.map(function (a) { return cap(ACNAME[a]) + ': ' + (STRONG.indexOf(a) >= 0 ? 'strong.' : 'weak.'); })),
+        'Learn the short list of strong acids; the rest are weak.', null, { k: 'pickS' });
+    }
     if (shape === 'classify') {
       var isS = R.coin(), a = R.pick(isS ? STRONG : WEAK);
       return P('Is ' + ACNAME[a] + ' ($' + fT(a) + '$) a strong acid or a weak acid?', mcAll(['strong', 'weak'], isS ? 0 : 1, true),
@@ -4056,7 +4681,7 @@
         'Learn the short list of strong acids; most other acids are weak.', null, { k: 'classify', v: isS });
     }
     if (shape === 'strongH') {
-      var s = R.pick(['HCl', 'HNO3', 'HBr', 'HI']), C = R.pick([0.10, 0.050, 0.25, 0.0020, 0.015, 1.0]);
+      var s = R.pick(['HCl', 'HNO3', 'HBr', 'HI', 'HClO4']), C = sgf(R.int(10, 99) / 10 * M.pow(10, -R.int(1, 3)), 2);
       return P('What is $[\\mathrm{H}_{3}\\mathrm{O}^{+}]$ in $' + gx(C) + '\\ \\text{M}$ ' + ACNAME[s] + ' ($' + fT(s) + '$), a strong acid?', ans(C, 0.01),
         ['A strong acid ionizes completely: each $' + fT(s) + '$ gives one $\\mathrm{H}_{3}\\mathrm{O}^{+}$.', 'So $[\\mathrm{H}_{3}\\mathrm{O}^{+}] = ' + qg(C, 'M') + '$.'],
         'How many of the acid molecules give away their H⁺?', 'M', { k: 'strongH', v: C });
@@ -4090,7 +4715,7 @@
     ['H2SO4', 2, 'Mg(OH)2', 2, 'MgSO4'], ['HClO4', 1, 'NaOH', 1, 'NaClO4'], ['H3PO4', 3, 'NaOH', 1, 'Na3PO4']];
   function neutEq(n) { var g = gcd(n[1], n[3]), a = n[3] / g, b = n[1] / g, w = a * n[1]; return { eq: (a > 1 ? a : '') + n[0] + ' + ' + (b > 1 ? b : '') + n[2] + ' -> ' + n[4] + ' + ' + (w > 1 ? w : '') + 'H2O', co: [a, b, 1, w] }; }
   G('chem.neutralization', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['salt', 'salt', 'mix'], ['moles', 'salt', 'mix'], ['moles', 'balance', 'mix']));
+    var shape = R.pick(lv(ctx, ['salt', 'salt', 'mix', 'mix'], ['moles', 'salt', 'mix', 'balance'], ['moles', 'balance', 'mix']));
     var n = R.pick(NEUT.filter(function (x) { return x[4] !== 'BaSO4' || shape === 'balance'; })), ne = neutEq(n);
     if (shape === 'salt') {
       return P('Write the formula of the salt formed when ' + nm(n[0]) + ' ($' + fT(n[0]) + '$) is neutralized by ' + nm(n[2]) + ' ($' + fT(n[2]) + '$).', formula(n[4]),
@@ -4103,12 +4728,12 @@
         'Match the number of H⁺ with the number of OH⁻.', null, { k: 'balance', eq: ne.eq, co: ne.co });
     }
     if (shape === 'moles') {
-      var na = R.pick([0.10, 0.20, 0.25, 0.30, 0.50, 0.15, 0.050, 0.40, 0.60, 1.2]), nb = na * n[1] / n[3];
+      var na = R.int(1, 60) * 0.025, nb = na * n[1] / n[3];
       return P('How many moles of $' + fT(n[2]) + '$ exactly neutralize $' + gx(na) + '\\ \\text{mol}$ of $' + fT(n[0]) + '$?', ans(nb, 0.01),
         ['$' + gx(na) + '\\ \\text{mol}\\ ' + fT(n[0]) + '$ gives $' + gx(na) + ' \\times ' + n[1] + ' = ' + gx(na * n[1]) + '\\ \\text{mol}$ of $\\mathrm{H}^{+}$.', 'Each $' + fT(n[2]) + '$ gives ' + n[3] + ' $\\mathrm{OH}^{-}$, so it takes $' + gx(na * n[1]) + ' \\div ' + n[3] + ' = ' + qx(nb, 'mol') + '$ of $' + fT(n[2]) + '$.', 'Equation: $$' + eqT(ne.eq) + '$$'],
         'Match moles of H⁺ with moles of OH⁻.', 'mol', { k: 'moles', na: na, h: n[1], oh: n[3], v: nb });
     }
-    var nh = R.pick([0.10, 0.20, 0.30, 0.050, 0.15, 0.25, 0.40, 0.60]), kind = R.int(0, 2), nOH = kind === 2 ? nh : kind === 0 ? nh * R.pick([0.5, 0.25, 0.8]) : nh * R.pick([1.5, 2, 1.25]);
+    var nh = R.int(2, 40) * 0.025, kind = R.int(0, 2), nOH = kind === 2 ? nh : kind === 0 ? nh * R.pick([0.5, 0.25, 0.8]) : nh * R.pick([1.5, 2, 1.25]);
     var acidM = nh, baseM = nOH;
     return P('A solution with $' + gx(acidM) + '\\ \\text{mol}$ of HCl is mixed with a solution of $' + gx(fix(baseM)) + '\\ \\text{mol}$ of NaOH. After the reaction, is the mixture acidic, basic or neutral?', mcAll(['acidic', 'basic', 'neutral'], kind, true),
       ['HCl gives $' + gx(acidM) + '\\ \\text{mol}$ of $\\mathrm{H}^{+}$; NaOH gives $' + gx(fix(baseM)) + '\\ \\text{mol}$ of $\\mathrm{OH}^{-}$. They react one to one.', kind === 2 ? 'They are equal, so both are used up: neutral, pH 7.' : kind === 0 ? 'There is more H⁺ than OH⁻, so $' + gx(fix(acidM - baseM)) + '\\ \\text{mol}$ of acid is left over: acidic.' : 'There is more OH⁻ than H⁺, so $' + gx(fix(baseM - acidM)) + '\\ \\text{mol}$ of base is left over: basic.', 'Mixing an acid and a base gives pH 7 only when the moles match.'],
@@ -4155,8 +4780,8 @@
     var shape = R.pick(lv(ctx, ['mc', 'mc', 'mixEq'], ['mc', 'mix', 'mixEq'], ['mix', 'mix', 'mc']));
     if (shape === 'mc') { var m = R.pick(HT_MC); return P(m[0], mc(m[1][0], m[1].slice(1)), [m[2]], 'Heat flows from hotter to colder; temperature is an average per particle.', null, { k: 'mc' }); }
     var m1, m2, T1, T2;
-    if (shape === 'mixEq') { m1 = m2 = R.pick([100, 200, 250, 50]); T1 = R.pick([80, 90, 70, 60, 64]); T2 = R.pick([10, 20, 30, 24, 16]); }
-    else { m1 = R.pick([100, 200, 300, 150, 50]); do { m2 = R.pick([100, 200, 300, 400, 50, 250]); } while (m2 === m1); T1 = R.pick([80, 90, 70, 60, 75]); T2 = R.pick([10, 20, 15, 25, 5]); }
+    if (shape === 'mixEq') { m1 = m2 = R.int(2, 12) * 25; T1 = R.int(28, 47) * 2; T2 = R.int(3, 15) * 2; }
+    else { m1 = R.int(1, 8) * 50; do { m2 = R.int(1, 8) * 50; } while (m2 === m1); T1 = R.int(12, 19) * 5; T2 = R.int(1, 5) * 5; }
     var Tf = (m1 * T1 + m2 * T2) / (m1 + m2);
     return P('$' + m1 + '\\ \\text{g}$ of water at $' + T1 + '^\\circ\\text{C}$ is mixed with $' + m2 + '\\ \\text{g}$ of water at $' + T2 + '^\\circ\\text{C}$ in an insulated container. What is the final temperature?', ans(Tf, 0.01),
       ['Heat lost by the hot water = heat gained by the cold water. Both are water, so each degree of change in each gram counts the same.', m1 === m2 ? 'Equal masses change by equal amounts, so the final temperature is halfway: $\\dfrac{' + T1 + ' + ' + T2 + '}{2} = ' + fx(Tf, 3) + '^\\circ\\text{C}$.' : '$' + m1 + '(' + T1 + ' - T_f) = ' + m2 + '(T_f - ' + T2 + ')$, so $T_f = \\dfrac{' + m1 + ' \\times ' + T1 + ' + ' + m2 + ' \\times ' + T2 + '}{' + (m1 + m2) + '} = ' + fx(Tf, 3) + '^\\circ\\text{C}$.', 'Check: it lies between ' + T2 + ' °C and ' + T1 + ' °C, closer to the temperature of the larger mass.'],
@@ -4234,7 +4859,7 @@
 
   var HFUS = 6.01, HVAP = 40.7, MW = 18.02;
   G('chem.heating-curves', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['mc', 'mc', 'plateau'], ['melt', 'boil', 'mc'], ['melt', 'boil', 'ratio', 'condense']));
+    var shape = R.pick(lv(ctx, ['mc', 'mc', 'plateau', 'melt'], ['melt', 'boil', 'mc', 'condense'], ['melt', 'boil', 'ratio', 'condense']));
     if (shape === 'mc') {
       var items = [
         ['A heating curve for water shows a flat segment at 0 °C. What is happening there?', ['Ice is melting; the added heat pulls molecules apart instead of speeding them up.', 'The temperature is rising slowly while ice melts.', 'The water molecules are breaking into hydrogen and oxygen.', 'Nothing: the heater is off during that part.'],
@@ -4287,14 +4912,20 @@
     ['A beaker feels colder after two solids react inside it.', 1, 'The reaction took heat from the beaker and the air, so the surroundings cooled.']
   ];
   G('chem.exo-endo', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['classify', 'classify', 'sign'], ['classify', 'dH', 'diagram', 'sign'], ['dH', 'diagram', 'classify', 'surround']));
+    var shape = R.pick(lv(ctx, ['classify', 'classify', 'sign', 'one', 'all'], ['classify', 'dH', 'diagram', 'sign', 'one', 'all'], ['dH', 'diagram', 'classify', 'surround', 'all']));
+    if (shape === 'one' || shape === 'all') { // which one is exothermic (endothermic)? / choose all
+      var ex = R.int(0, 1), many = shape === 'all', oe = many ? vAll(R, EXO, function (x) { return x[1] === ex; }, 4) : vOne(R, EXO, function (x) { return x[1] === ex; }, 3);
+      return P((many ? 'Choose all of these that are ' : 'Which of these is ') + '<b>' + (ex ? 'endothermic' : 'exothermic') + '</b>?', MCA(oe.items.map(function (x) { return x[0]; }), oe.v),
+        oe.items.map(function (x) { return x[0] + ' ' + (x[1] ? 'Endothermic: ' : 'Exothermic: ') + x[2]; }),
+        'Exothermic: the surroundings get warmer. Endothermic: they get cooler.', null, { k: shape });
+    }
     if (shape === 'classify') {
       var e = R.pick(EXO);
       return P(e[0] + ' Is this process exothermic or endothermic?', mcAll(['exothermic', 'endothermic'], e[1], true), [e[2], e[1] === 0 ? 'Energy leaves the system: exothermic ($\\Delta H < 0$).' : 'Energy enters the system: endothermic ($\\Delta H > 0$).'],
         'Ask which way the energy flows between the system and its surroundings.', null, { k: 'classify', v: e[1] });
     }
     if (shape === 'sign') {
-      var dH = R.pick([-890, -286, -57, -92, 178, 44, 6.01, 131, -1648, 2803]), idx = dH < 0 ? 0 : 1;
+      var dH = R.chance(0.3) ? R.pick([-890, -286, -57, -92, 178, 44, 6.01, 131, -1648, 2803]) : (R.coin() ? -1 : 1) * R.int(5, 300) * 5, idx = dH < 0 ? 0 : 1;
       return P('A reaction has $\\Delta H = ' + (dH > 0 ? '+' : '') + gx(dH) + '\\ \\text{kJ}$. Is it exothermic or endothermic?', mcAll(['exothermic', 'endothermic'], idx, true),
         ['$\\Delta H$ is the energy of the products minus that of the reactants.', dH < 0 ? 'Negative: the products have less energy, so energy was released. Exothermic.' : 'Positive: the products have more energy, so energy was absorbed. Endothermic.'],
         'A negative ΔH means energy left the system.', null, { k: 'sign', v: idx });
@@ -4337,7 +4968,7 @@
   function bondTex(list) { return list.map(function (b) { return (b[1] > 1 ? b[1] + '(' + BE[b[0]] + ')' : String(BE[b[0]])); }).join(' + '); }
   function bondNames(list) { return list.map(function (b) { return (b[1] > 1 ? b[1] + ' ' : '') + b[0]; }).join(', '); }
   G('chem.bond-energy', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['inout', 'calc', 'concept'], ['calc', 'calc', 'concept'], ['calc', 'calc', 'calc', 'concept']));
+    var shape = R.pick(lv(ctx, ['inout', 'calc', 'concept', 'inout'], ['calc', 'calc', 'concept', 'inout'], ['calc', 'calc', 'concept', 'inout']));
     if (shape === 'concept') {
       var c = R.pick([
         ['What happens to energy when a chemical bond breaks?', ['Energy must be added to break it.', 'Energy is released when it breaks.', 'No energy change happens.', 'It depends on whether the reaction is exothermic.'], 'Atoms in a bond attract each other. Pulling them apart takes energy, like pulling two magnets apart. Energy is released only when bonds form.'],
@@ -4376,7 +5007,7 @@
       'Cooling slows the particles. Fewer collisions reach the activation energy, so the reactions of spoiling slow down.']
   ];
   G('chem.collision-theory', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['mc', 'mc', 'area'], ['mc', 'area', 'freq'], ['freq', 'area', 'mc', 'tf']));
+    var shape = R.pick(lv(ctx, ['mc', 'area', 'area', 'freq'], ['mc', 'area', 'freq', 'tf'], ['freq', 'area', 'mc', 'tf']));
     if (shape === 'mc') { var m = R.pick(CT_MC); return P(m[0], mc(m[1][0], m[1].slice(1)), [m[2]], 'A reaction needs collisions that are both energetic enough and properly lined up.', null, { k: 'mc' }); }
     if (shape === 'tf') {
       var t = R.pick([['Heating a reaction speeds it up only because the particles collide more often.', false, 'Collisions do become more frequent, but the larger effect is that many more of them carry at least the activation energy.'],
@@ -4385,13 +5016,13 @@
       return P('True or false: ' + t[0], tf(t[1]), [t[2]], 'Think about how often particles collide and how hard.', null, { k: 'tf' });
     }
     if (shape === 'area') {
-      var L = R.pick([2, 3, 4, 6]), s = R.pick([1, 0.5]); if (L / s > 8) s = 1;
+      var L = R.int(2, 10), s = R.pick([0.5, 1, 2].filter(function (z) { return L / z >= 2 && L / z <= 10 && L % z === 0; })), mat = R.pick(['zinc', 'magnesium', 'chalk (calcium carbonate)', 'iron', 'marble (calcium carbonate)']);
       var nCubes = M.pow(L / s, 3), A0 = 6 * L * L, A1 = nCubes * 6 * s * s;
-      return P('A cube of zinc measures $' + L + '\\ \\text{cm}$ on each edge. It is cut into small cubes $' + gx(s) + '\\ \\text{cm}$ on each edge. What is the total surface area of all the small cubes? (The big cube had $' + A0 + '\\ \\text{cm}^2$.)', ansX(A1),
-        ['Number of small cubes: $\\left(\\dfrac{' + L + '}{' + gx(s) + '}\\right)^3 = ' + gx(nCubes) + '$.', 'Area of each: $6 \\times ' + gx(s) + '^2 = ' + gx(6 * s * s) + '\\ \\text{cm}^2$; total $= ' + gx(nCubes) + ' \\times ' + gx(6 * s * s) + ' = ' + qg(A1, 'cm2') + '$.', 'That is ' + gx(A1 / A0) + ' times the original surface, so ' + gx(A1 / A0) + ' times as many zinc atoms are exposed to an acid: the cut pieces react faster.'],
+      return P('A cube of ' + mat + ' measures $' + L + '\\ \\text{cm}$ on each edge. It is cut into small cubes $' + gx(s) + '\\ \\text{cm}$ on each edge. What is the total surface area of all the small cubes? (The big cube had $' + A0 + '\\ \\text{cm}^2$.)', ansX(A1),
+        ['Number of small cubes: $\\left(\\dfrac{' + L + '}{' + gx(s) + '}\\right)^3 = ' + gx(nCubes) + '$.', 'Area of each: $6 \\times ' + gx(s) + '^2 = ' + gx(6 * s * s) + '\\ \\text{cm}^2$; total $= ' + gx(nCubes) + ' \\times ' + gx(6 * s * s) + ' = ' + qg(A1, 'cm2') + '$.', 'That is ' + gx(A1 / A0) + ' times the original surface, so ' + gx(A1 / A0) + ' times as many of its particles are exposed to an acid: the cut pieces react faster.'],
         'Count the small cubes and add up their faces.', 'cm2', { k: 'area', L: L, s: s, v: A1 });
     }
-    var a = R.pick([2, 3, 0.5, 4]), b = R.pick([1, 2, 3, 0.5]), f = a * b;
+    var a = R.pick([2, 3, 0.5, 4, 5, 1.5, 2.5, 6]), b = R.pick([1, 2, 3, 0.5, 4, 1.5, 5]), f = a * b;
     return P('In a gas, the number of collisions per second between A and B particles is proportional to $[\\mathrm{A}] \\times [\\mathrm{B}]$. If $[\\mathrm{A}]$ is ' + (a === 0.5 ? 'cut in half' : 'multiplied by ' + a) + (b === 1 ? ' and $[\\mathrm{B}]$ stays the same' : ' and $[\\mathrm{B}]$ is ' + (b === 0.5 ? 'cut in half' : 'multiplied by ' + b)) + ', by what factor does the number of A–B collisions per second change?', ansX(f),
       ['Each A particle can hit any B particle, so the collision count goes as the product of the two concentrations.', 'Factor $= ' + gx(a) + ' \\times ' + gx(b) + ' = ' + gx(f) + '$.'],
       'Multiply the two factors.', null, { k: 'freq', a: a, b: b, v: f });
@@ -4426,7 +5057,7 @@
   });
 
   G('chem.dynamic-equilibrium', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['mc', 'rate', 'time'], ['mc', 'time', 'conserve'], ['conserve2', 'time', 'mc']));
+    var shape = R.pick(lv(ctx, ['mc', 'rate', 'time', 'rate'], ['mc', 'time', 'conserve', 'rate'], ['conserve2', 'time', 'mc', 'conserve']));
     if (shape === 'mc') {
       var m = R.pick([
         ['What is true of a reaction at chemical equilibrium?', ['The forward and reverse reactions keep going at equal rates.', 'Both reactions have stopped.', 'The amounts of reactants and products must be equal.', 'Only the forward reaction is still running.'], 'At equilibrium, molecules keep reacting in both directions, but each change is undone as fast as it happens, so the amounts stay constant.'],
@@ -4435,13 +5066,13 @@
       return P(m[0], mc(m[1][0], m[1].slice(1)), [m[2]], 'Equilibrium is a balance of two ongoing processes.', null, { k: 'mc' }, { name: 'ch-equilibrium', opts: { rxn: 'A<=>B', c0: { A: 1.0 }, quiet: true, show: ['rates'] } });
     }
     if (shape === 'rate') {
-      var rf = R.pick([0.020, 0.0050, 0.12, 0.30, 0.0080, 1.5]);
+      var rf = sgf(R.int(11, 99) / 10 * M.pow(10, -R.int(0, 3)), 2);
       return P('A reaction $\\mathrm{A} \\rightleftharpoons \\mathrm{B}$ has reached equilibrium. The forward reaction is turning A into B at a rate of $' + gx(rf) + '\\ \\text{M/s}$. At what rate is the reverse reaction turning B into A?', ansX(rf),
         ['At equilibrium the two rates are equal, which is why the concentrations stop changing.', 'Reverse rate $= ' + gx(rf) + '\\ \\text{M/s}$. Both reactions are still running.'],
         'What does "equilibrium" say about the two rates?', 'M/s', { k: 'rate', v: rf });
     }
     if (shape === 'time') {
-      var kf = R.pick([0.20, 0.15, 0.30, 0.25]), kr = R.pick([0.05, 0.10, 0.08, 0.12]), A0 = 1.00, step = R.pick([5, 10]), times = [], A = [], B = [];
+      var kf = R.pick([0.20, 0.15, 0.30, 0.25, 0.18, 0.22, 0.35]), kr = R.pick([0.05, 0.10, 0.08, 0.12, 0.06, 0.15]), A0 = R.pick([1.00, 1.00, 2.00, 0.80]), step = R.pick([5, 10]), times = [], A = [], B = [];
       var Aeq = A0 * kr / (kf + kr);
       for (var i = 0; i <= 8; i++) { var t = i * step, a = Aeq + (A0 - Aeq) * M.exp(-(kf + kr) * t); times.push(t); A.push(rnd(a, 2)); B.push(rnd(A0 - a, 2)); }
       var first = 8; for (var j = 8; j >= 0; j--) { if (A[j] === A[8] && B[j] === B[8]) first = j; else break; }
@@ -4452,12 +5083,12 @@
         'Find the first time after which the values stay the same.', 's', { k: 'time', A: A, B: B, times: times, v: times[first] });
     }
     if (shape === 'conserve') {
-      var a0 = R.pick([1.00, 0.80, 2.00, 0.50]), aEq = rnd(a0 * R.pick([0.25, 0.3, 0.4, 0.6, 0.7]), 2), bEq = a0 - aEq;
+      var a0 = R.pick([1.00, 0.80, 2.00, 0.50, 1.50, 1.20, 0.60]), aEq = rnd(a0 * R.int(15, 85) / 100, 2), bEq = a0 - aEq;
       return P('A flask starts with $' + d2(a0) + '\\ \\text{M}$ of A and no B. The reaction $\\mathrm{A} \\rightleftharpoons \\mathrm{B}$ reaches equilibrium with $[\\mathrm{A}] = ' + d2(aEq) + '\\ \\text{M}$. What is $[\\mathrm{B}]$ at equilibrium?', ans(bEq, 0.01),
         ['Each A that reacts becomes one B.', '$[\\mathrm{B}] = ' + d2(a0) + ' - ' + d2(aEq) + ' = ' + qx(bEq, 'M') + '$.', 'The two are not equal at equilibrium, and they do not need to be.'],
         'Whatever A is used up appears as B.', 'M', { k: 'conserve', a0: a0, aEq: aEq, v: bEq });
     }
-    var n0 = R.pick([1.00, 0.800, 0.600, 2.00]), y = rnd(n0 * R.pick([0.2, 0.3, 0.35, 0.4]), 3), nEq = n0 - 2 * y;
+    var n0 = R.pick([1.00, 0.800, 0.600, 2.00, 1.50, 1.20]), y = rnd(n0 * R.int(10, 45) / 100, 3), nEq = n0 - 2 * y;
     return P('A sealed flask starts with $' + gx(n0) + '\\ \\text{M}$ of brown $\\mathrm{NO}_{2}$ and no $\\mathrm{N}_{2}\\mathrm{O}_{4}$. The reaction $$2\\mathrm{NO}_{2} \\rightleftharpoons \\mathrm{N}_{2}\\mathrm{O}_{4}$$ reaches equilibrium with $[\\mathrm{N}_{2}\\mathrm{O}_{4}] = ' + gx(y) + '\\ \\text{M}$. What is $[\\mathrm{NO}_{2}]$ at equilibrium?', ans(nEq, 0.01),
       ['Each $\\mathrm{N}_{2}\\mathrm{O}_{4}$ formed used up two $\\mathrm{NO}_{2}$.', '$\\mathrm{NO}_{2}$ used: $2 \\times ' + gx(y) + ' = ' + gx(2 * y) + '\\ \\text{M}$.', '$[\\mathrm{NO}_{2}] = ' + gx(n0) + ' - ' + gx(2 * y) + ' = ' + qx(nEq, 'M') + '$.'],
       'Use the coefficients: two NO₂ for every N₂O₄.', 'M', { k: 'conserve2', n0: n0, y: y, v: nEq });
@@ -4479,7 +5110,18 @@
   ];
   var LC_CH = ['toward the products (to the right)', 'toward the reactants (to the left)', 'no shift'];
   G('chem.le-chatelier', function (R, ctx) {
-    var lvl = ctx.level || 1, shape = R.pick(lv(ctx, ['conc', 'conc', 'catalyst'], ['conc', 'pressure', 'temp', 'catalyst'], ['temp', 'pressure', 'partial', 'conc']));
+    var lvl = ctx.level || 1, shape = R.pick(lv(ctx, ['conc', 'conc', 'catalyst', 'pickR'], ['conc', 'pressure', 'temp', 'catalyst', 'pickR'], ['temp', 'pressure', 'partial', 'conc', 'pickR']));
+    if (shape === 'pickR') { // which change shifts it toward the products (or reactants)?
+      var rxp = R.pick(LCR), Ep = parseEq(rxp.eq), right = R.coin(), opts = [];
+      rxp.sp.r.forEach(function (x) { opts.push(['Adding more $' + fT(x) + '$', 0], ['Removing some $' + fT(x) + '$', 1]); });
+      rxp.sp.p.forEach(function (x) { opts.push(['Adding more $' + fT(x) + '$', 1], ['Removing some $' + fT(x) + '$', 0]); });
+      if (lvl > 1 && rxp.dH !== null) opts.push(['Raising the temperature', rxp.dH > 0 ? 0 : 1], ['Lowering the temperature', rxp.dH > 0 ? 1 : 0]);
+      var catO = ['Adding a catalyst', 2], want = right ? 0 : 1, goodO = opts.filter(function (o) { return o[1] === want; }), badO = opts.filter(function (o) { return o[1] !== want; }).concat([catO]);
+      var gO = R.pick(goodO), its = R.shuffle([gO].concat(R.sample(badO, M.min(3, badO.length))));
+      return P('For the equilibrium $$' + eqT(Ep) + (lvl > 1 && rxp.dH !== null ? ' \\qquad \\Delta H = ' + (rxp.dH > 0 ? '+' : '') + rxp.dH + '\\ \\text{kJ}' : '') + '$$ which change shifts it toward the <b>' + (right ? 'products' : 'reactants') + '</b>?', MCA(its.map(function (o) { return o[0]; }), its.indexOf(gO)),
+        its.map(function (o) { return o[0] + ': ' + ['shifts toward the products', 'shifts toward the reactants', 'no shift (a catalyst speeds up both directions equally)'][o[1]] + '.'; }).concat(['The system shifts to partly undo each change: it uses up what is added and replaces what is removed' + (lvl > 1 ? ', and treats heat like a reactant (endothermic) or a product (exothermic)' : '') + '.']),
+        'Ask what the system does to undo each change.', null, { k: 'pickR', eq: rxp.eq });
+    }
     var rx = R.pick(LCR.filter(function (r) { return shape !== 'temp' || r.dH !== null; }).filter(function (r) { return shape !== 'pressure' || lvl === 3 || r.gl !== r.gr || R.chance(0.3); }));
     var E = parseEq(rx.eq), eqTex = '$$' + eqT(E) + (rx.dH !== null ? ' \\qquad \\Delta H = ' + (rx.dH > 0 ? '+' : '') + rx.dH + '\\ \\text{kJ}' : '') + '$$', ans3, why, change;
     var viz = rx.eq === 'N2 + 3H2 <=> 2NH3' && shape === 'conc' && lvl === 1 ? { name: 'ch-equilibrium', opts: { rxn: 'N2+3H2<=>2NH3', events: [{ t: 20, type: 'add', sp: 'N2', amt: 0.5 }], quiet: true } } : null;
@@ -4610,7 +5252,8 @@
   });
 
   // fission of U-235 by a neutron: [product 1, A1, product 2, A2, neutrons]
-  var FIS = [['Ba', 141, 'Kr', 92, 3], ['Xe', 140, 'Sr', 94, 2], ['Xe', 139, 'Sr', 95, 2], ['Cs', 137, 'Rb', 96, 3], ['Te', 137, 'Zr', 97, 2], ['La', 147, 'Br', 87, 2]];
+  var FIS = [['Ba', 141, 'Kr', 92, 3], ['Xe', 140, 'Sr', 94, 2], ['Xe', 139, 'Sr', 95, 2], ['Cs', 137, 'Rb', 96, 3], ['Te', 137, 'Zr', 97, 2], ['La', 147, 'Br', 87, 2],
+    ['Ba', 144, 'Kr', 89, 3], ['Xe', 134, 'Sr', 100, 2], ['Cs', 140, 'Rb', 93, 3], ['Sn', 132, 'Mo', 101, 3], ['I', 137, 'Y', 97, 2], ['Sb', 133, 'Nb', 99, 4], ['Ba', 139, 'Kr', 95, 2], ['Xe', 143, 'Sr', 90, 3], ['Te', 134, 'Zr', 99, 3], ['La', 145, 'Br', 88, 3]]; // U-235 + n: A sums to 236 with the neutrons, Z to 92
   var FUS = [[['H', 2], ['H', 3], ['He', 4], 'n'], [['H', 2], ['H', 2], ['He', 3], 'n'], [['H', 2], ['H', 2], ['H', 3], 'p'], [['H', 1], ['H', 2], ['He', 3], 'g'], [['He', 3], ['He', 3], ['He', 4], '2p']];
   function fisEq(f, hide) { return nuc('U', 235) + ' + ' + PART.n + ' \\to ' + (hide === 1 ? '\\ ?\\ ' : nuc(f[0], f[1])) + ' + ' + (hide === 2 ? '\\ ?\\ ' : nuc(f[2], f[3])) + ' + ' + (hide === 3 ? '\\ ?\\ ' : f[4]) + PART.n; }
   function fusEq(f) { var x = f[3]; return nuc(f[0][0], f[0][1]) + ' + ' + nuc(f[1][0], f[1][1]) + ' \\to ' + nuc(f[2][0], f[2][1]) + ' + ' + (x === 'n' ? PART.n : x === 'p' ? '{}^{1}_{1}\\mathrm{H}' : x === '2p' ? '2\\,{}^{1}_{1}\\mathrm{H}' : '{}^{0}_{0}\\gamma'); }
@@ -4651,12 +5294,12 @@
         'Balance the top numbers and the bottom numbers separately.', null, { k: 'missing', f: f, hide: hide }));
     }
     if (shape === 'mass') {
-      var Ej = R.pick([9.0, 4.5, 1.8, 2.7, 3.6, 18, 45, 0.90]) * 1e13, kg = Ej / 9.00e16, gm = kg * 1000;
+      var Ej = R.int(2, 99) / 10 * M.pow(10, R.int(12, 14)), kg = Ej / 9.00e16, gm = kg * 1000;
       return P('A nuclear reaction releases $' + gx(Ej, 1) + '\\ \\text{J}$. How many grams of mass disappeared? Use $E = mc^2$ with $c = 3.00 \\times 10^{8}\\ \\text{m/s}$.', ans(gm, 0.01),
         ['$m = \\dfrac{E}{c^2} = \\dfrac{' + gx(Ej, 1) + '}{9.00 \\times 10^{16}} = ' + qx(kg, 'kg') + '$.', 'In grams: $' + fx(kg, 3) + '\\ \\text{kg} \\times 1000 = ' + qx(gm, 'g') + '$.'],
         'Divide the energy by $c^2$; the result is in kilograms.', 'g', { k: 'mass', E: Ej, v: gm });
     }
-    var mg = R.pick([0.10, 0.50, 1.0, 2.0, 0.25, 0.020, 0.040, 0.20, 1.5, 0.0050, 3.0, 0.80]), E = mg / 1000 * 9.00e16;
+    var mg = sgf(R.int(11, 99) / 10 * M.pow(10, -R.int(0, 3)), 2), E = mg / 1000 * 9.00e16;
     return P('In a nuclear reaction, $' + gx(mg) + '\\ \\text{g}$ of mass disappears. How much energy, in joules, is released? Use $E = mc^2$ with $c = 3.00 \\times 10^{8}\\ \\text{m/s}$. (Scientific notation such as 9.0e13 is fine.)', ans(E, 0.01),
       ['Mass in kilograms: $' + gx(mg) + '\\ \\text{g} = ' + gx(mg / 1000) + '\\ \\text{kg}$.', '$E = mc^2 = ' + gx(mg / 1000) + ' \\times (3.00 \\times 10^{8})^2 = ' + gx(mg / 1000) + ' \\times 9.00 \\times 10^{16} = ' + qx(E, 'J') + '$.', 'A tiny mass gives an enormous energy, because $c^2$ is so large.'],
       'Change grams to kilograms first.', 'J', { k: 'emc2', m: mg, v: E });
@@ -4665,3 +5308,138 @@
   // exposed for the part's node tests (a unique name, so part A's helpers never collide)
   ML._chemB = { parseF: parseF, mm: mm, fT: fT, parseEq: parseEq, eqT: eqT, sideAtoms: sideAtoms, sfStr: sfStr, fx: fx, gx: gx, AM: AM };
 })(window.MathLadder);
+
+
+/* ---- More forms of the same questions (round 7, "widen"): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - two at once: two different questions of the topic, answered together (short questions only, at most one of them with
+     a picture, which then comes first; not in the courses for young children, whose answer box for two parts would
+     also show a keypad button they don't need).
+   - check a number: a numeric question with a classmate's number, either the right one or a slip learners often make
+     (a power of ten, a factor of two, a lost minus sign, off by one), and "Is that right?" (Yes / No; not in placement).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'chem', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf')) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function numVal(a) { var s = String(a.v).replace(/\s/g, ''), m = /^(-?[\d.]+)\*10\^(-?\d+)$/.exec(s); return m ? +m[1] * Math.pow(10, +m[2]) : (/^-?\d*\.?\d+$/.test(s) ? +s : NaN); }
+  function sigOf(a) { var s = String(a.v).split('*')[0].replace(/^-/, '').replace('.', '').replace(/^0+/, ''); return Math.max(2, Math.min(4, s.length || 1)); }
+  function numTex(x, n) {
+    var y = Number(x.toPrecision(n)), e = y === 0 ? 0 : Math.floor(Math.log10(Math.abs(y)) + 1e-12);
+    if (e >= 6 || e <= -4) { var m = Number((y / Math.pow(10, e)).toPrecision(n)); return m.toFixed(Math.max(0, n - 1)) + ' \\times 10^{' + e + '}'; }
+    return y.toFixed(Math.max(0, n - 1 - e));
+  }
+  function numCheckable(p) {
+    var a = p.a; if (YOUNG || !a || a.t !== 'num' || a.form || a.frac) return false;
+    var v = numVal(a); return isFinite(v) && v !== 0 && txt(p.q).length <= 700;
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = numVal(a), exact = !a.rtol && Math.round(v) === v, n = sigOf(a), right = R.coin(), w;
+    var cands = exact ? [v + 1, v - 1, 2 * v, v + 2].filter(function (x) { return x !== v && (v < 0 || x >= 0); })
+      : [10, 0.1, 2, 0.5, 1000, 0.001].concat(v < 0 || /\bsign\b/i.test(txt(p.q)) ? [-1, -1, -1] : []).map(function (k) { return v * k; });
+    // a wrong value must really be wrong: it has to fail the problem's own answer check
+    cands = cands.filter(function (x) { try { return !ML.check(a, exact ? String(x) : numTex(x, n).replace(' \\times 10^{', 'e').replace('}', ''), { q: p.q, unit: p.unit }).ok; } catch (e) { return false; } });
+    if (!cands.length) return null;
+    w = R.pick(cands);
+    var unit = p.unit ? '&nbsp;' + p.unit : '', pc = a.pct && !p.unit ? '\\%' : '';
+    function vTex() { var s = String(a.v).replace(/\s/g, ''), m = /^(-?[\d.]+)\*10\^(-?\d+)$/.exec(s); return m ? m[1] + ' \\times 10^{' + m[2] + '}' : s; } // the answer exactly as the problem gives it
+    function tex(x) { return '$' + (x === v ? vTex() : exact ? String(x) : numTex(x, n)) + pc + '$' + unit; }
+    var shown = right ? v : w;
+    var out = { q: p.q + '<p>A classmate answered: <b>' + tex(shown) + '</b></p><p>Is that right?</p>', a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: (p.steps || []).concat([right ? 'So <b>yes</b>, the classmate is right.' : 'So <b>no</b>: the answer is ' + tex(v) + ', not ' + tex(shown) + '.']) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (mode !== 'place' && numCheckable(p)) forms.push('num');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'num' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

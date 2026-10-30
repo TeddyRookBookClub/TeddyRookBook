@@ -919,7 +919,7 @@
     var who = person(R);
     if (kind === 'single') {
       var r = R.pick([0.04, 0.05, 0.06, 0.08, 0.1]), t = R.int(2, 10), pv0 = R.int(2, 40) * 100, fv = pv0 * M.pow(1 + r, t), FV = M.round(fv / 10) * 10, pv = FV / M.pow(1 + r, t);
-      if (ctx.level === 1) { r = 0.1; t = 2; FV = R.int(1, 9) * 121 * 10; pv = FV / 1.21; }
+      if (ctx.level === 1) { var e1 = R.pick([[0.1, 2, 121], [0.1, 1, 110], [0.05, 1, 105], [0.2, 1, 120], [0.2, 2, 144], [0.25, 1, 125], [0.08, 1, 108], [0.04, 1, 104]]); r = e1[0]; t = e1[1]; FV = R.int(1, 12) * e1[2] * 10; pv = FV / M.pow(1 + r, t); }
       return P('What is the present value of ' + money(FV) + ' received ' + t + ' years from now, if the interest rate is ' + T.pct(r * 100) + ' a year (compounded yearly)?', A(pv, { rtol: 0.002 }),
         ['$PV = \\dfrac{FV}{(1 + r)^t} = \\dfrac{' + T.commas(FV) + '}{(' + T.num(1 + r) + ')^{' + t + '}}$.', '$(' + T.num(1 + r) + ')^{' + t + '} ' + apx(M.pow(1 + r, t), 4) + '$.', '$PV ' + apx(pv, 2) + '$ dollars: put that much in the bank today at ' + T.pct(r * 100) + ' and it grows to ' + money(FV) + ' in ' + t + ' years.'],
         'Divide by (1 + r) once for every year of waiting.', { unit: 'dollars', chk: { k: 'pv', flows: [[t, FV]], r: r } });
@@ -1366,7 +1366,7 @@
   G('imicro.tax-incidence-formula', function (R, ctx) {
     var kind = R.pick(lv(ctx, ['share', 'pb', 'share'], ['share', 'pb', 'ps', 'who'], ['pb', 'ps', 'eshare', 'who']));
     if (kind === 'share' || kind === 'who') {
-      var eD = R.pick([Q(-1, 2), Q(-1), Q(-3, 2), Q(-2), Q(-3), Q(-1, 4)]), eS = R.pick([Q(1, 2), Q(1), Q(3, 2), Q(2), Q(3), Q(1, 4)]); if (eD.abs().eq(eS)) eS = eS.add(Q(1, 2));
+      var eD = R.pick([Q(-1, 2), Q(-1), Q(-3, 2), Q(-2), Q(-3), Q(-1, 4), Q(-3, 4), Q(-5, 2), Q(-4)]), eS = R.pick([Q(1, 2), Q(1), Q(3, 2), Q(2), Q(3), Q(1, 4), Q(3, 4), Q(5, 2), Q(4)]); if (eD.abs().eq(eS)) eS = eS.add(Q(1, 2));
       var sh = eS.div(eS.sub(eD));
       if (kind === 'who') { var more = eD.abs().lt(eS) ? 'Buyers bear more, because demand is less elastic' : 'Sellers bear more, because supply is less elastic';
         return P('At the equilibrium, the price elasticity of demand is $' + nx(eD) + '$ and the price elasticity of supply is $' + nx(eS) + '$. A small per-unit tax is collected from sellers. Who bears more of it?', mc(more, ['Buyers bear more, because demand is less elastic', 'Sellers bear more, because supply is less elastic', 'Sellers bear all of it, because they send the money to the government', 'Each side bears half'].filter(function (x) { return x !== more; })),
@@ -1845,11 +1845,20 @@
     if (kind === 'concept') {
       var qs = [['What does the first welfare theorem say?', 'With complete competitive markets, no externalities and full information, every competitive equilibrium is Pareto efficient', ['Every competitive equilibrium is fair', 'Every Pareto-efficient allocation is a competitive equilibrium of the existing endowments', 'Markets always reach equilibrium quickly']],
         ['What does the second welfare theorem say?', 'With convex preferences, any Pareto-efficient allocation can be reached as a competitive equilibrium after suitable lump-sum transfers', ['Taxes on prices are the best way to redistribute', 'Every competitive equilibrium is the fairest efficient allocation', 'Efficiency requires equal endowments']],
-        ['Which situation breaks the conditions of the first welfare theorem?', 'A factory\u2019s smoke harms neighbors who are not part of any market', ['Many buyers and sellers, each too small to affect prices', 'Consumers with different tastes', 'An allocation where one person is much richer than another']]];
+        ['Which situation breaks the conditions of the first welfare theorem?', 'A factory\u2019s smoke harms neighbors who are not part of any market', ['Many buyers and sellers, each too small to affect prices', 'Consumers with different tastes', 'An allocation where one person is much richer than another']],
+        ['Which situation breaks the conditions of the first welfare theorem?', 'One seller controls the whole market and sets its price', ['Many buyers and sellers, each too small to affect prices', 'Consumers with different tastes', 'Buyers and sellers who know the quality of what they trade']],
+        ['Which situation breaks the conditions of the first welfare theorem?', 'Sellers of used cars know their quality, but buyers cannot tell', ['Many buyers and sellers, each too small to affect prices', 'An allocation where one person is much richer than another', 'Consumers with different tastes']],
+        ['What does it mean for an allocation to be Pareto efficient?', 'No one can be made better off without making someone else worse off', ['Everyone has the same amount', 'Total income is as large as possible', 'Every market has the same price']],
+        ['Which is a lump-sum transfer, as the second welfare theorem uses the term?', 'A one-time payment whose size does not depend on anything the person chooses', ['A tax on each unit of a good bought', 'A tax that rises with the hours a person works', 'A subsidy on each unit of a good sold']]];
       var qq = R.pick(qs);
       return P(qq[0], mc(qq[1], qq[2]), ['The first theorem: competitive equilibrium (with its conditions: price-taking, complete markets, no externalities, full information) is Pareto efficient. It says nothing about fairness.', 'The second theorem: with convex preferences (and those conditions), any efficient allocation can be supported by prices after lump-sum transfers of wealth, which separates efficiency from distribution.', 'Answer: ' + qq[1] + '.'], 'Separate efficiency from fairness, and remember the conditions.', { chk: { k: 'const', text: qq[1] } });
     }
-    if (kind === 'tf') { var tfs = [['The first welfare theorem shows that competitive markets produce fair outcomes.', false, 'It shows only that they produce Pareto-efficient outcomes, under its conditions. An efficient outcome can be very unequal.'], ['The second welfare theorem suggests separating efficiency from distribution: redistribute wealth with lump-sum transfers, then let markets work.', true, 'That is its message. Real taxes are rarely lump-sum, which is why redistribution usually has some efficiency cost.'], ['The first welfare theorem holds even when there are large externalities.', false, 'Externalities are one of the conditions it needs: when actions affect others outside markets, equilibrium need not be efficient.']]; var f = R.pick(tfs);
+    if (kind === 'tf') { var tfs = [['The first welfare theorem shows that competitive markets produce fair outcomes.', false, 'It shows only that they produce Pareto-efficient outcomes, under its conditions. An efficient outcome can be very unequal.'], ['The second welfare theorem suggests separating efficiency from distribution: redistribute wealth with lump-sum transfers, then let markets work.', true, 'That is its message. Real taxes are rarely lump-sum, which is why redistribution usually has some efficiency cost.'], ['The first welfare theorem holds even when there are large externalities.', false, 'Externalities are one of the conditions it needs: when actions affect others outside markets, equilibrium need not be efficient.'],
+      ['A Pareto-efficient allocation can be very unequal.', true, 'Giving everything to one person is Pareto efficient: no one can gain without that person losing.'],
+      ['Under the first welfare theorem\u2019s conditions, a competitive equilibrium leaves no trade that would make someone better off and no one worse off.', true, 'That is what Pareto efficiency means, and the theorem says competitive equilibrium has it.'],
+      ['The first welfare theorem needs buyers and sellers to be price-takers.', true, 'Price-taking is one of its conditions; a firm with market power can hold output below the efficient level.'],
+      ['A tax on each unit of a good is a lump-sum transfer.', false, 'Its size depends on how much a person buys, so it changes choices; a lump-sum transfer does not.'],
+      ['If two people could both gain from a trade they have not made, their allocation is not Pareto efficient.', true, 'A trade that helps both, or helps one and hurts no one, means the allocation can still be improved.']]; var f = R.pick(tfs);
       return P('True or false? ' + f[0], { t: 'tf', v: f[1] }, [f[2], f[1] ? 'True.' : 'False.'], 'Efficiency is not fairness; check the conditions.', { chk: { k: 'tf', v: f[1], s: f[0] } }); }
     // identical Cobb-Douglas a: p = a Y/((1-a) X); target on the diagonal
     var a = R.pick([Q(1, 2), Q(1, 3), Q(2, 3), Q(1, 4)]), p = R.pick([Q(1, 2), Q(1), Q(2), Q(3, 2), Q(3)]), X = R.int(4, 12) * 10, Y = p.mul(Q(1).sub(a)).div(a).mul(X);
@@ -2009,3 +2018,166 @@
   });
 
 })(window.MathLadder);
+
+/* ---- widen: more forms of the same questions (so practice repeats less) ----------------------------------------
+   Every topic of this course keeps its own problems, and some draws are turned into other forms of the same skill,
+   built only from the topic's own problems (so their answers stay the ones the topic already checks):
+     check   "Ava chose X. Is Ava right?" (Yes or No) from a one-answer multiple-choice problem
+     pairs   two or three lines "question → answer"; which line is right (or, at level 3, which one is wrong)
+     tfpick  "Which sentence is true?" (or false) from three of the topic's true-or-false sentences
+   Questions whose answer depends on the other choices (first, best, most, not …) show the choices in the check form
+   and never go into pairs. Mix per level: CFG.mix[level] = [check, pairs, tfpick] shares; the rest stays as it was. */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var CFG = {"prefix":"imicro.","only":["cobb-douglas-demand","present-value","minimum-average-cost","tax-incidence-formula","lerner-index","welfare-theorems"]};
+  var NAMES = ['Ava', 'Ben', 'Cora', 'Dev', 'Eli', 'Finn', 'Gus', 'Hana', 'Ivy', 'Jude', 'Kai', 'Lena', 'Milo', 'Nora', 'Omar', 'Pia',
+    'Quinn', 'Rosa', 'Sam', 'Tess', 'Uma', 'Vic', 'Wren', 'Zoe', 'Ada', 'Leo', 'Mia', 'Theo', 'June', 'Max'];
+  var REL = /\b(first|last|earliest|latest|earlier|later|before|after|older|oldest|newer|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|look|read|here|example|examples|likely|probably|mainly|main|usually|typically|other|another|which one|each|order|then|next)\b|n['’]t\b/i;
+  // pairs judge each line on its own, so only questions whose answer depends on the other choices are left out
+  var RELP = /\b(first|last|earliest|latest|oldest|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|which one|other|another|rank|order|more|less|fewer)\b|n['’]t\b|\w+est\b/i;
+  var REF = /\b(this|these|those|shown|picture|map|table|chart|graph|diagram|passage|scene|story|above|below|here|following)\b/i;
+  var BADCH = /\b(all|none|both|neither) of\b|\b(above|below)\b|^(both|neither|all|none)\b|\bchoice\b|\boption\b/i;
+  function strip(s) { return String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function plainish(s) { return !/<(?!\/?(b|i|em|strong)\b)[^>]*>/.test(String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1')); }
+  function add(q, html) { // inside a read-aloud big span when there is one
+    var m = /<span class="[\w-]*big">/.exec(q);
+    if (m) { var k = q.lastIndexOf('</span>'); if (k > m.index) return q.slice(0, k) + '<br>' + html.replace(/<\/p>\s*<p[^>]*>/g, '<br>').replace(/<\/?p[^>]*>/g, '') + q.slice(k); }
+    return q + html;
+  }
+  function single(p) {
+    return p && p.a && p.a.t === 'mc' && !Array.isArray(p.a.v) && Array.isArray(p.a.choices) && p.a.choices.length >= 2 &&
+      !p.a.choices.some(function (c) { return BADCH.test(strip(c)); });
+  }
+  function hash(t) { var h = 7; for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return h; }
+  function nameFor(q, key) { // the same claim always gets the same name, so a name alone never makes a "new" problem
+    var t = strip(q), ok = NAMES.filter(function (n) { return t.indexOf(n) < 0 && String(key).indexOf(n) < 0; });
+    return (ok.length ? ok : NAMES)[hash(t + '|' + key) % (ok.length || NAMES.length)];
+  }
+  function dot(s) { s = String(s); return /[.!?…"”')\]]\s*(<\/b>)?$/.test(strip(s)) || /\$$/.test(s) ? s : s + '.'; }
+  function optList(ch) { return '<p class="wd-opts">The choices were:<br>' + ch.map(function (c) { return '• ' + c; }).join('<br>') + '</p>'; }
+  function copyP(p, q, a, steps) { var o = {}; for (var k in p) if (Object.prototype.hasOwnProperty.call(p, k)) o[k] = p[k]; o.q = q; o.a = a; o.steps = steps; delete o.choices; return o; }
+
+  // check: show one choice (the right one half the time) and ask whether it is right
+  function check(p, R) {
+    var ch = p.a.choices, v = p.a.v, idx = ch.map(function (_, i) { return i; }), others = idx.filter(function (i) { return i !== v; });
+    var i = R.chance(0.5) ? v : R.pick(others), ok = i === v, nm = nameFor(p.q, ch[i]), letters = ch.every(function (c) { return /^[A-Z]$/.test(String(c)); });
+    var stem = strip(p.q), html = '';
+    if (!letters && (REL.test(stem) || ch.length > 4 || CFG.listAll)) {
+      var shown = p.a.keep ? ch.slice() : R.shuffle(ch);
+      html += optList(shown);
+    }
+    html += '<p class="wd-check">' + nm + ' chose: <b>' + ch[i] + '</b>' + (/[.!?…"”]$/.test(strip(ch[i])) ? '' : '.') + ' Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes. ' + dot(ch[v]) + ' is the right answer.' : 'No. The right answer is: ' + dot(ch[v]);
+    if (ok) first = 'Yes, that is the right answer.';
+    return copyP(p, add(p.q, html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [first].concat(p.steps || []));
+  }
+  // check for "choose all": the whole list is shown, and one learner's picks; right only if exactly the right ones
+  function checkAll(p, R) {
+    var ch = p.a.choices, v = p.a.v.slice().sort(), n = ch.length, pick;
+    if (R.chance(0.45)) pick = v.slice();
+    else {
+      var t = 0; do { var j = R.int(0, n - 1), s = v.slice(), k = s.indexOf(j); if (k >= 0) s.splice(k, 1); else s.push(j); if (R.chance(0.3)) { var j2 = R.int(0, n - 1), k2 = s.indexOf(j2); if (k2 >= 0) s.splice(k2, 1); else s.push(j2); } pick = s.sort(); t++; }
+      while (t < 20 && (!pick.length || pick.join() === v.join()));
+      if (!pick.length || pick.join() === v.join()) return null;
+    }
+    var ok = pick.join() === v.join(), nm = nameFor(p.q, pick.join());
+    var html = optList(ch) + '<p class="wd-check">' + nm + ' chose ' +
+      (pick.length === 1 ? 'only: <b>' + ch[pick[0]] + '</b>' : 'these: <b>' + pick.map(function (i) { return ch[i]; }).join('</b>; <b>') + '</b>') + '. Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes, those are exactly the right ones.' : 'No. The right ones are: ' + v.map(function (i) { return ch[i]; }).join('; ');
+    return copyP(p, add(p.q.replace(/\s*(Choose|Select|Pick) (all|every)[^.?!<]*[.?!]?/i, ''), html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [dot(first)].concat(p.steps || []));
+  }
+
+  // items for pairs: one-answer questions that stand on their own (no picture, no passage, no "first/best/…")
+  function pairItem(p) {
+    if (!single(p) || p.viz) return null;
+    var max = CFG.maxStem || 120, maxA = CFG.maxAns || 70, a = strip(p.a.choices[p.a.v]), stem, group = '';
+    // "prompt<br><b>thing</b>" or "prompt<blockquote>thing</blockquote>": a line is "thing → answer", lines share the prompt
+    var q0 = p.q.replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1').trim();
+    var m = /^([^<]{6,140}?)\s*(?:<br>\s*<b>([^<]{3,140})<\/b>|<blockquote>([^<]{3,140})<\/blockquote>)\s*$/.exec(q0);
+    if (m) { group = m[1].trim(); stem = (m[2] || m[3]).trim(); if (RELP.test(group.replace(/\b(this|these)\b/gi, ''))) return null; }
+    else {
+      if (!plainish(p.q)) return null;
+      stem = strip(p.q); if (RELP.test(stem)) return null;
+    }
+    if (stem.length > max || stem.length < 3 || a.length > maxA || /^[A-Z]$/.test(a) || /\$/.test(stem + a + group)) return null;
+    var w = p.a.choices.filter(function (_, i) { return i !== p.a.v; }).map(strip).filter(function (x) { return x.length <= maxA && x !== a; });
+    if (!w.length) return null;
+    return { stem: stem.replace(/\s*(Choose one|Pick one)\.?$/i, ''), a: a, w: w, why: (p.steps || [])[0] || '', group: group };
+  }
+  function tfItem(p) {
+    if (!p || !p.a || p.a.t !== 'tf' || p.viz || !plainish(p.q)) return null;
+    var s = strip(p.q).replace(/^(True or false\?|True or false:)\s*/i, '').replace(/\s*(True or false\?|Is this true or false\?|Is it true or false\?)$/i, '').trim();
+    if (s.length < 8 || s.length > (CFG.maxStem || 120) + 20 || REF.test(s) || /\?$/.test(s) || /\$/.test(s)) return null;
+    return { s: s, v: p.a.v, why: (p.steps || [])[0] || '' };
+  }
+  function harvest(base, R, ctx, make, n, distinct) {
+    var out = [], keys = {};
+    for (var t = 0; t < 24 && out.length < n; t++) {
+      // at level 3, lines may come from level 2 questions too: three lines with one wrong is the harder form
+      var c2 = ctx && ctx.level >= 3 && (t % 2) ? Object.assign({}, ctx, { level: 2 }) : ctx;
+      var p; try { p = base(ML.rand(R.int(1, 2e9)), c2); } catch (e) { continue; }
+      var it = make(p); if (!it) continue;
+      if (out.length && it.group !== undefined && it.group !== out[0].group) continue;
+      var k = distinct(it); if (k.some(function (x) { return keys[x]; })) continue;
+      k.forEach(function (x) { keys[x] = 1; }); out.push(it);
+    }
+    return out;
+  }
+  function pairs(base, R, ctx, n, wrongOne) {
+    var its = harvest(base, R, ctx, pairItem, n, function (it) { return it.group ? ['s:' + it.stem] : ['s:' + it.stem, 'a:' + it.a]; });
+    if (its.length < n) return null;
+    var answers = its.map(function (it) { return it.a; }), used = {};
+    var target = R.int(0, n - 1), lines = [], steps = [];
+    for (var i = 0; i < n; i++) {
+      var it = its[i], right = wrongOne ? i !== target : i === target, ans = it.a;
+      if (!right) {
+        var ws = it.w.filter(function (x) { return (its[0].group || answers.indexOf(x) < 0) && !used[x]; });
+        if (!ws.length) return null;
+        ans = R.pick(ws); if (!its[0].group) used[ans] = 1;
+      }
+      lines.push(it.stem + ' → ' + ans); // plain text: ladder pages show choices as text
+      steps.push(it.group ? dot(it.stem) + ' Answer: ' + it.a + (right ? '.' : ', not ' + ans + '.') : it.stem + ' The answer is ' + it.a + (right ? '.' : ', not ' + ans + '.'));
+    }
+    var g = its[0].group, q = g ? '<p class="wd-group">The question for every line: <i>' + g + '</i></p>' + (wrongOne ? 'One line has the <b>wrong</b> answer. Which line is it?' : n === 2 ? 'Which line has the <b>right</b> answer?' : 'Only one line has the right answer. Which line is it?') : wrongOne ? 'Each line is a question and an answer. One answer is <b>wrong</b>. Which line is it?'
+      : (n === 2 ? 'Each line is a question and an answer. Which line has the <b>right</b> answer?' : 'Each line is a question and an answer. Only one answer is right. Which line is it?');
+    if (its[target].why) steps.push(its[target].why);
+    return { q: q, a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own. Does the answer fit the question?' };
+  }
+  function tfpick(base, R, ctx, wantFalse) {
+    var its = harvest(base, R, ctx, tfItem, 6, function (it) { return ['s:' + it.s]; });
+    var T = its.filter(function (x) { return x.v; }), F = its.filter(function (x) { return !x.v; });
+    var odd = wantFalse ? F : T, rest = wantFalse ? T : F;
+    if (!odd.length || rest.length < 2) return null;
+    var pick = [odd[0], rest[0], rest[1]], order = R.shuffle([0, 1, 2]), choices = order.map(function (i) { return pick[i].s; });
+    var steps = pick.map(function (x) { return x.s + ' ' + (x.v ? 'True.' : 'False.'); });
+    if (odd[0].why) steps.push(odd[0].why);
+    return { q: wantFalse ? 'Which sentence is <b>false</b>?' : 'Which sentence is <b>true</b>?', a: { t: 'mc', choices: choices, v: order.indexOf(0) }, steps: steps,
+      hint: 'Decide about each sentence on its own.' };
+  }
+  var MIX = CFG.mix || { 1: [0.38, 0.25, 0.04], 2: [0.27, 0.3, 0.1], 3: [0.17, 0.4, 0.15] };
+  function wrap(id, base) {
+    var fn = function (R, ctx) {
+      var lv = ctx && ctx.level || 1, p = base(R, ctx), m = MIX[lv] || MIX[3], r = R.next();
+      if (p.nowiden || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf') || (CFG.skip && CFG.skip.indexOf(id) >= 0)) return p; // typed answers stay as they are
+      var form = r < m[0] ? 0 : r < m[0] + m[1] ? 1 : r < m[0] + m[1] + m[2] ? 2 : -1;
+      if (form < 0) return p;
+      var tries = [form, (form + 1) % 3, (form + 2) % 3].filter(function (f) { return m[f] > 0; });
+      for (var t = 0; t < tries.length; t++) {
+        var f = tries[t], alt = null;
+        if (f === 0) alt = single(p) ? check(p, R) : (p.a && p.a.t === 'mc' && Array.isArray(p.a.v) && !p.viz ? checkAll(p, R) : null);
+        else if (f === 1) alt = pairs(base, R, ctx, lv === 1 ? 2 : 3, lv >= 3 && R.chance(0.6));
+        else alt = tfpick(base, R, ctx, R.chance(0.4));
+        if (alt) return alt;
+      }
+      return p;
+    };
+    fn.widened = true;
+    return fn;
+  }
+  ML.genIds().forEach(function (id) {
+    if (id.indexOf(CFG.prefix) !== 0 || (CFG.only && CFG.only.indexOf(id.slice(CFG.prefix.length)) < 0)) return;
+    var g = ML.getGen(id); if (g && !g.widened) ML.gen(id, wrap(id, g));
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen ---- */

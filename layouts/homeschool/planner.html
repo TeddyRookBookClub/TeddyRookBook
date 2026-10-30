@@ -89,6 +89,7 @@
   {{- if isset . "on_ages" }}{{ $s = merge $s (dict "ages" (.on_ages | default slice)) }}{{ end -}}
   {{- with .rank }}{{ $s = merge $s (dict "rank" .) }}{{ end -}}
   {{- with .note }}{{ $s = merge $s (dict "note" .) }}{{ end -}}
+  {{- with .link }}{{ if site.GetPage (strings.TrimSuffix "/" .url) }}{{ $s = merge $s (dict "link" (dict "u" (.url | relURL) "t" .text)) }}{{ end }}{{ end -}}
   {{- if .more }}{{ $s = merge $s (dict "more" true) }}{{ end -}}
   {{- $subs = $subs | append $s -}}
   {{- end -}}

@@ -1,0 +1,56 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap">
+<link rel="stylesheet" href="{{ "homeschool/prek/prek.css" | relURL }}?v={{ (os.Stat "static/homeschool/prek/prek.css").ModTime.Unix }}">
+<div class="hs ps pk pk-pr" id="pkp">
+  <nav class="hs-crumbs ps-noprint"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/pre-k/" | relURL }}">Pre-K at home</a> › Hand-skills printables</nav>
+  <header class="hs-hero pk-hero ps-noprint">
+    <p class="hs-eyebrow">Pre-K at home · Printables</p>
+    <h1>Hand-skills printables</h1>
+    <p>Sheets for little hands: tracing, mazes, coloring, cutting and dot-to-dot. Pick a kind, check the preview, and print. Press “Generate a new sheet” for a different page every time.</p>
+  </header>
+  <div class="pl-tabs ps-noprint" role="tablist" aria-label="Kind of sheet">
+    <button type="button" role="tab" data-t="lines" aria-selected="true">〰️ Tracing lines</button>
+    <button type="button" role="tab" data-t="shapes" aria-selected="false">🔺 Shapes</button>
+    <button type="button" role="tab" data-t="nums" aria-selected="false">🔢 Numbers 0–10</button>
+    <button type="button" role="tab" data-t="maze" aria-selected="false">🧭 Mazes</button>
+    <button type="button" role="tab" data-t="color" aria-selected="false">🖍️ Color by shape</button>
+    <button type="button" role="tab" data-t="cut" aria-selected="false">✂️ Cutting lines</button>
+    <button type="button" role="tab" data-t="dots" aria-selected="false">✏️ Dot-to-dot</button>
+  </div>
+  <section class="ps-opts ps-noprint" id="pkp-opts" aria-label="Sheet options"><noscript><p>The sheets are drawn by JavaScript in your browser.</p></noscript></section>
+  <div class="ps-preview" id="pkp-prev"></div>
+  <section class="hs-sec ps-noprint" aria-labelledby="pkp-gu-h">
+    <h2 id="pkp-gu-h">For the grown-up</h2>
+    <div class="pk-gu">
+      <div class="pk-box">
+        <h3>Tips for little hands</h3>
+        <ul>
+          <li>Thick crayons, short crayon pieces and chunky pencils are easier to hold.</li>
+          <li>Let your child trace with a finger first, then with a crayon.</li>
+          <li>One sheet, or even one row, is plenty. Stop while it's fun.</li>
+          <li>Put the sheet in a clear sleeve and use a dry-erase marker to trace it again and again.</li>
+        </ul>
+      </div>
+      <div class="pk-box">
+        <h3>Hand skills away from the paper</h3>
+        <ul>
+          <li>Roll, squeeze and pinch play dough.</li>
+          <li>Pick up pom-poms or cereal with clothespins or tongs.</li>
+          <li>Thread big beads or pasta tubes on a shoelace.</li>
+          <li>Draw in a tray of salt or sand with a finger.</li>
+          <li>Tear paper into strips and glue them down.</li>
+        </ul>
+      </div>
+      <div class="pk-box">
+        <h3>More printables</h3>
+        <p><a href="{{ "homeschool/practice-sheets/" | relURL }}">Practice sheets</a> make handwriting paper, letters to trace and arithmetic drills. <a href="{{ "puzzles/" | relURL }}">Brain Puzzles</a> has more mazes for older children. Little ones learning letters can play the <a href="{{ "homeschool/pre-k/letters/" | relURL }}">pre-reading games</a>.</p>
+      </div>
+    </div>
+  </section>
+</div>
+<script src="{{ "puzzles/core.js" | relURL }}?v={{ (os.Stat "static/puzzles/core.js").ModTime.Unix }}" defer></script>
+<script src="{{ "puzzles/gen-shapes.js" | relURL }}?v={{ (os.Stat "static/puzzles/gen-shapes.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/prek/printables.js" | relURL }}?v={{ (os.Stat "static/homeschool/prek/printables.js").ModTime.Unix }}" defer></script>
+{{ end }}

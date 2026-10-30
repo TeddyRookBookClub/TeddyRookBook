@@ -50,6 +50,14 @@
     });
   }
   function lv(ctx, a, b, c) { return ML.byLevel(ctx, a, b, c); }
+  /* variety helpers: "which one is …" and "choose all that are …" from one bank, so distractors combine */
+  function vOne(R, pool, ok, n) { var g = pool.filter(ok), b = pool.filter(function (x) { return !ok(x); }), r = R.pick(g), it = R.shuffle([r].concat(R.sample(b, n - 1))); return { items: it, v: it.indexOf(r), right: r }; }
+  function vAll(R, pool, ok, n) {
+    var g = pool.filter(ok), b = pool.filter(function (x) { return !ok(x); }), k = R.int(1, M.min(n - 1, g.length)); if (b.length < n - k) k = n - b.length;
+    var it = R.shuffle(R.sample(g, k).concat(R.sample(b, n - k)));
+    return { items: it, v: it.map(function (x, i) { return ok(x) ? i : -1; }).filter(function (i) { return i >= 0; }) };
+  }
+  function MCA(items, v) { return { t: 'mc', choices: items, v: v }; }
 
   // ------------------------------------------------------------------ numbers
   function cm(x) { return T.commas(x).replace(/,/g, '{,}'); }   // thousands separators that TeX does not space
@@ -443,7 +451,7 @@
   G('gchem2.graphical-order', function (R, ctx) {
     var L = ctx.level || 1;
     if (L === 1) {
-      var o = R.int(0, 2), kv = R.pick([0.0125, 0.0230, 0.0350, 0.0462, 0.115, 0.250, 0.0080]), names = ['[\\mathrm{A}]', '\\ln[\\mathrm{A}]', '1/[\\mathrm{A}]'];
+      var o = R.int(0, 2), kv = R.chance(0.3) ? R.pick([0.0125, 0.0230, 0.0350, 0.0462, 0.115, 0.250, 0.0080]) : R.int(11, 99) * M.pow(10, R.int(-4, -2)), names = ['[\\mathrm{A}]', '\\ln[\\mathrm{A}]', '1/[\\mathrm{A}]'];
       var slope = o === 2 ? kv : -kv, su = ['\\text{M/s}', '\\text{s}^{-1}', '\\text{M}^{-1}\\,\\text{s}^{-1}'][o];
       if (R.coin()) return P('A plot of $' + names[o] + '$ against time is a straight line with slope $' + gv(slope) + '\\ ' + su + '$. What is the order of the reaction?', int(o), [
         'Each order has its own straight-line plot: $[\\mathrm{A}]$ vs $t$ for zero order, $\\ln[\\mathrm{A}]$ vs $t$ for first order, $1/[\\mathrm{A}]$ vs $t$ for second order.',
@@ -479,13 +487,13 @@
 
   G('gchem2.arrhenius', function (R, ctx) {
     var kind = lv(ctx, R.pick(['slope', 'convert']), R.pick(['Ea', 'Ea', 'k2']), R.pick(['k2', 'factor', 'Ea']));
-    if (kind === 'slope') { var s = R.pick([4.2, 5.5, 6.0, 6.5, 7.2, 8.0, 9.6, 1.2e1]) * 1000, Ea = s * C.R / 1000;
+    if (kind === 'slope') { var s = R.int(30, 140) / 10 * 1000, Ea = s * C.R / 1000;
       return P('A plot of $\\ln k$ against $1/T$ for a reaction is a straight line with slope $-' + cm(s) + '\\ \\text{K}$. What is the activation energy in kJ/mol?', num(Ea), [
         'Take the log of $k = Ae^{-E_a/RT}$: $\\ln k = -\\dfrac{E_a}{R}\\cdot\\dfrac{1}{T} + \\ln A$. That is a line in $1/T$ with slope $-E_a/R$.',
         '$E_a = -R \\times \\text{slope} = (8.314\\ \\text{J/(mol·K)})(' + cm(s) + '\\ \\text{K}) = ' + fx(s * C.R, 4) + '\\ \\text{J/mol}$.',
         'In kJ/mol: $E_a = ' + q(Ea, 'kJ/mol') + '$.'
       ], 'The slope is −Ea/R.', 'kJ/mol', { k: 'arrslope', s: s, ans: Ea }); }
-    if (kind === 'convert') { var Tc = R.pick([25, 35, 50, 75, 100, 150]), Tk = Tc + 273, Ea2 = R.pick([50, 60, 75, 80, 100]), x = Ea2 * 1000 / (C.R * Tk);
+    if (kind === 'convert') { var Tc = 5 * R.int(3, 40), Tk = Tc + 273, Ea2 = 5 * R.int(8, 30), x = Ea2 * 1000 / (C.R * Tk);
       return P('A reaction has $E_a = ' + Ea2 + '\\ \\text{kJ/mol}$. At $' + Tc + '^\\circ\\text{C}$, what is the exponent $E_a/RT$ in $k = Ae^{-E_a/RT}$? (Use $R = 8.314\\ \\text{J/(mol·K)}$.)', num(x), [
         'Change the temperature to kelvins: $T = ' + Tc + ' + 273 = ' + Tk + '\\ \\text{K}$.',
         'Change $E_a$ to J/mol so its units match $R$: $' + Ea2 + '\\ \\text{kJ/mol} = ' + cm(Ea2 * 1000) + '\\ \\text{J/mol}$.',
@@ -1210,7 +1218,7 @@
         okx ? 'Find $x = [\\mathrm{H_3O^+}] = [' + F(A.base) + ']$: $x \\approx \\sqrt{K_a C} = \\sqrt{(' + gv(A.Ka) + ')(' + gv(C) + ')} = ' + fx(x, 3) + '\\ \\text{M}$ (under 5% of $C$, so the shortcut holds).' : 'The shortcut $\\sqrt{K_a C} = ' + fx(xa, 3) + '$ is over 5% of $C$, so solve $\\dfrac{x^2}{' + gv(C) + ' - x} = ' + gv(A.Ka) + '$ exactly: $x = ' + fx(x, 3) + '\\ \\text{M}$.',
         'Percent ionization $= \\dfrac{x}{C} \\times 100\\% = \\dfrac{' + fx(x, 3) + '}{' + gv(C) + '} \\times 100\\% = ' + fx(pc, 3) + '\\%$.'
       ], 'Percent ionization = [A⁻]/C × 100%.', '%', { k: 'pi', Ka: A.Ka, C: C, ans: pc }); }
-    if (kind === 'pctExact') { var pk = R.pick([['HF', 0.010], ['HNO2', 0.0050], ['HCOOH', 0.0010], ['HF', 0.0040]]), A2 = ACID[pk[0]], C2 = pk[1], x2 = waExact(A2.Ka, C2), pc2 = x2 / C2 * 100;
+    if (kind === 'pctExact') { var pk = R.pick([['HF', 0.010], ['HNO2', 0.0050], ['HCOOH', 0.0010], ['HF', 0.0040], ['HF', 0.0050], ['HF', 0.0020], ['HF', 0.0080], ['HNO2', 0.0020], ['HNO2', 0.0040], ['HNO2', 0.0010], ['HCOOH', 0.0020]]), A2 = ACID[pk[0]], C2 = pk[1], x2 = waExact(A2.Ka, C2), pc2 = x2 / C2 * 100;
       return P('What percent of the molecules are ionized in $' + qv(C2, 'M') + '$ ' + A2.name + ' ($K_a = ' + gv(A2.Ka) + '$)? The small-$x$ shortcut fails here, so solve exactly. (Use a calculator.)', { t: 'num', v: sfStr(pc2, 3), rtol: 0.02, pct: true }, [
         'Solve $\\dfrac{x^2}{' + gv(C2) + ' - x} = ' + gv(A2.Ka) + '$, i.e. $x^2 + ' + gv(A2.Ka) + 'x - ' + fx(A2.Ka * C2, 3) + ' = 0$: $x = ' + fx(x2, 3) + '\\ \\text{M}$.',
         'Percent ionization $= \\dfrac{' + fx(x2, 3) + '}{' + gv(C2) + '} \\times 100\\% = ' + fx(pc2, 3) + '\\%$: a dilute weak acid can be far from "barely ionized".'
@@ -1221,12 +1229,12 @@
         'A smaller $C$ gives a larger percent: the more dilute solution ionizes a larger share, even though its $[\\mathrm{H_3O^+}]$ is lower.',
         'Why: dilution spreads out the ions, so they meet and recombine less often (Le Chatelier: the side with more particles is favored).'
       ], 'Percent ionization ≈ √(Ka/C). What happens as C shrinks?', null, { k: 'piw', Ka: A.Ka, c1: c1, c2: c2, ans: hi }); }
-    if (kind === 'dilute') { var f = R.pick([10, 100, 4, 25]), r = M.sqrt(f);
+    if (kind === 'dilute') { var f = R.pick([10, 100, 4, 25, 9, 16, 36, 49, 64, 1000]), r = M.sqrt(f);
       return P('A solution of ' + A.name + ' is diluted to $\\tfrac{1}{' + f + '}$ of its concentration (it stays dilute enough that the small-$x$ shortcut holds both before and after). By what factor does its percent ionization change?', num(r, 3, 0.02), [
         'Percent ionization $\\approx \\sqrt{K_a/C} \\times 100\\%$.',
         'Dividing $C$ by ' + f + ' multiplies $\\sqrt{K_a/C}$ by $\\sqrt{' + f + '} = ' + fx(r, 3) + '$: the percent ionization grows.'
       ], 'Use percent ≈ √(Ka/C).', null, { k: 'pidil', f: f, ans: r }); }
-    var C3 = concPick(R, [0.10, 0.050, 0.20]), pp = R.pick([1.2, 1.9, 2.5, 3.4, 4.1, 0.85]), alpha = pp / 100, KaC = C3 * alpha * alpha / (1 - alpha);
+    var C3 = concPick(R, [0.10, 0.050, 0.20]), pp = R.int(6, 48) / 10, alpha = pp / 100, KaC = C3 * alpha * alpha / (1 - alpha);
     return P('A $' + qv(C3, 'M') + '$ solution of a weak acid HA is $' + T.num(pp) + '\\%$ ionized. What is $K_a$? (Use a calculator.)', num(KaC, 2, 0.03), [
       '$[\\mathrm{H_3O^+}] = [\\mathrm{A^-}] = ' + T.num(pp / 100) + ' \\times ' + gv(C3) + ' = ' + fx(alpha * C3, 3) + '\\ \\text{M}$; $[\\mathrm{HA}] = ' + gv(C3) + ' - ' + fx(alpha * C3, 3) + ' = ' + fx(C3 * (1 - alpha), 3) + '\\ \\text{M}$.',
       '$K_a = \\dfrac{(' + fx(alpha * C3, 3) + ')^2}{' + fx(C3 * (1 - alpha), 3) + '} = ' + fx(KaC, 2) + '$.'
@@ -1234,7 +1242,7 @@
   });
 
   G('gchem2.weak-base-ph', function (R, ctx) {
-    var L = ctx.level || 1, bk = R.pick(L === 1 ? ['NH3', 'CH3NH2', '(CH3)2NH', 'N2H4'] : Object.keys(BASE)), B = BASE[bk], C = concPick(R, [0.10, 0.20, 0.050, 0.25, 0.50, 0.15, 0.30, 0.40, 0.020, 0.075]);
+    var L = ctx.level || 1, bk = R.pick(L === 1 ? ['NH3', 'CH3NH2', '(CH3)2NH', 'N2H4'] : Object.keys(BASE)), B = BASE[bk], C = concPick(R, [0.10, 0.20, 0.050, 0.25, 0.50, 0.15, 0.30, 0.40, 0.020, 0.075, 0.12, 0.35, 0.45, 0.60, 0.080, 0.18, 0.040, 0.030, 0.70, 0.065]);
     var viaKa = L >= 3 && R.coin(), Kb = viaKa ? 1e-14 / sgf(1e-14 / B.Kb, 2) : B.Kb, tries = 0;
     while (M.sqrt(Kb * C) / C > 0.05 && tries++ < 10) C = concPick(R, [0.20, 0.25, 0.50]);
     var x = M.sqrt(Kb * C) / C > 0.05 ? (-Kb + M.sqrt(Kb * Kb + 4 * Kb * C)) / 2 : M.sqrt(Kb * C), ex = M.sqrt(Kb * C) / C > 0.05, pOH = -log10(x), pH = 14 - pOH;
@@ -1551,7 +1559,7 @@
   var INDIC = [['methyl orange', 3.1, 4.4], ['bromocresol green', 3.8, 5.4], ['methyl red', 4.4, 6.2], ['bromothymol blue', 6.0, 7.6], ['phenol red', 6.8, 8.4], ['phenolphthalein', 8.2, 10.0], ['thymolphthalein', 9.4, 10.6], ['alizarin yellow R', 10.1, 12.0]];
   G('gchem2.indicators', function (R, ctx) {
     var kind = lv(ctx, R.pick(['choose', 'pKa', 'tf']), R.pick(['choose', 'chooseB', 'pKa']), R.pick(['choose', 'chooseB', 'calc']));
-    if (kind === 'pKa') { var Ki = R.pick([1.0e-9, 2.0e-4, 4.0e-8, 1.6e-5, 3.2e-10, 5.0e-7]), p = -log10(Ki);
+    if (kind === 'pKa') { var Ki = R.int(10, 99) / 10 * M.pow(10, R.int(-10, -3)), p = -log10(Ki);
       return P('An indicator HIn has $K_a = ' + gv(Ki) + '$. Around what pH does it change color? (Give the pH where $[\\mathrm{HIn}] = [\\mathrm{In^-}]$.)', phA(p), ['An indicator is a weak acid whose two forms have different colors: $\\mathrm{HIn \\rightleftharpoons H^+ + In^-}$.', 'Its color is halfway between the two when $[\\mathrm{HIn}] = [\\mathrm{In^-}]$, i.e. at $\\text{pH} = \\text{p}K_a = ' + d2(p) + '$. The eye sees the change over about $\\text{p}K_a \\pm 1$.'], 'An indicator is a weak acid; the color change is centered on its pKa.', null, { k: 'indpka', Ka: Ki, ans: p }); }
     if (kind === 'tf') { var s = R.pick([['Every acid–base titration should use an indicator that changes color at pH 7.', false], ['For a weak acid titrated with NaOH, the indicator should change color above pH 7.', true], ['An indicator should change color on the steep part of the titration curve.', true]]);
       return P('True or false: ' + s[0], tf(s[1]), ['The indicator must change color where the pH jumps, right at the equivalence point.', 'That is at pH 7 only for a strong acid with a strong base. A weak acid with NaOH has its equivalence point above 7; a weak base with HCl, below 7.', 'So the statement is ' + (s[1] ? 'true' : 'false') + '.'], 'Where is the equivalence point for each kind of titration?', null, { k: 'indtf', ans: s[1] }); }
@@ -1744,13 +1752,13 @@
         'Adding reactions multiplies their constants: $K = K_{sp}K_f = (' + gv(KK[2]) + ')(' + gv(KK[6]) + ') = ' + fx(Kc, 3) + '$.',
         'That is far larger than $K_{sp}$ alone: ' + KK[7] + ' pulls the silver salt into solution.'
       ], 'Add the dissolving and the complex formation; multiply the K values.', null, { k: 'cxK', Ksp: KK[2], Kf: KK[6], ans: Kc }); }
-    if (kind === 'free') { var cm = R.pick([0.010, 0.0050, 0.020, 0.0010, 0.015, 0.0025]), cl = R.pick([1.0, 0.50, 2.0, 0.80, 1.5, 0.60]), n = Kf[2], lig = cl - n * cm, free = cm / (Kf[4] * M.pow(lig, n));
+    if (kind === 'free') { var cm = R.pick([0.010, 0.0050, 0.020, 0.0010, 0.015, 0.0025, 0.0040, 0.0080, 0.030, 0.0020]), cl = R.pick([1.0, 0.50, 2.0, 0.80, 1.5, 0.60, 1.2, 0.40, 2.5, 0.90]), n = Kf[2], lig = cl - n * cm, free = cm / (Kf[4] * M.pow(lig, n));
       return P('A solution is made with $' + qv(cm, 'M') + '$ $' + F(Kf[0]) + '$ (total) and $' + qv(cl, 'M') + '$ $' + F(Kf[1]) + '$ (total, a large excess). $K_f$ for $' + F(Kf[3]) + '$ is $' + gv(Kf[4]) + '$. What is the concentration of free $' + F(Kf[0]) + '$ left? (Use a calculator.)', num(free, 3, 0.03), [
         '$K_f$ is huge, so almost all the metal ion becomes the complex: $' + cc(Kf[3]) + ' \\approx ' + gv(cm) + '\\ \\text{M}$.',
         'That uses $' + n + ' \\times ' + gv(cm) + ' = ' + fx(n * cm, 3) + '\\ \\text{M}$ of $' + F(Kf[1]) + '$, leaving $' + gv(cl) + ' - ' + fx(n * cm, 3) + ' = ' + fx(lig, 3) + '\\ \\text{M}$.',
         '$K_f = \\dfrac{' + cc(Kf[3]) + '}{' + cc(Kf[0]) + pw(cc(Kf[1]), n) + '}$, so $' + cc(Kf[0]) + ' = \\dfrac{' + gv(cm) + '}{(' + gv(Kf[4]) + ')(' + fx(lig, 3) + ')^{' + n + '}} = ' + q(free, 'M') + '$.'
       ], 'Assume the complex forms completely, then use Kf to find the tiny amount of free metal ion.', 'M', { k: 'cxfree', Kf: Kf[4], n: n, cm: cm, cl: cl, ans: free }); }
-    var cN = R.pick([1.0, 0.50, 2.0, 3.0]), K2 = 1.8e-10 * 1.7e7, rt = M.sqrt(K2), sol = cN * rt / (1 + 2 * rt);
+    var cN = R.int(3, 30) / 10, K2 = 1.8e-10 * 1.7e7, rt = M.sqrt(K2), sol = cN * rt / (1 + 2 * rt);
     return P('What is the molar solubility of AgCl in $' + qv(cN, 'M') + '$ $\\mathrm{NH_3}$? Use $K_{sp} = 1.8 \\times 10^{-10}$ and $K_f = 1.7 \\times 10^7$ for $[\\mathrm{Ag(NH_3)_2}]^+$. (Use a calculator.)', num(sol, 3, 0.03), [
       'Overall: $' + EQ('AgCl(s) + 2NH3(aq) <=> [Ag(NH3)2]^+(aq) + Cl^-(aq)') + '$, with $K = K_{sp}K_f = ' + fx(K2, 3) + '$.',
       'If $s$ dissolves: $[\\mathrm{Ag(NH_3)_2^+}] = [\\mathrm{Cl^-}] = s$ and $[\\mathrm{NH_3}] = ' + gv(cN) + ' - 2s$. So $\\dfrac{s^2}{(' + gv(cN) + ' - 2s)^2} = ' + fx(K2, 3) + '$.',
@@ -1787,7 +1795,7 @@
 
   G('gchem2.entropy-microstates', function (R, ctx) {
     var kind = lv(ctx, R.pick(['ways', 'prob', 'mix']), R.pick(['ways', 'dS', 'einstein', 'prob']), R.pick(['dS', 'S', 'einstein']));
-    if (kind === 'ways') { var N = lv(ctx, R.int(4, 6), R.int(6, 10)), k = R.int(1, N - 1), W = U.nCr(N, k);
+    if (kind === 'ways') { var N = lv(ctx, R.int(3, 8), R.int(6, 12)), k = R.int(1, N - 1), W = U.nCr(N, k);
       return P('$' + N + '$ identical gas molecules move freely in a box with a left half and a right half. In how many ways (microstates) can exactly $' + k + '$ of them be in the left half?', int(W), [
         'Choose which ' + k + ' of the ' + N + ' molecules are on the left; the rest are on the right. The number of choices is $\\binom{' + N + '}{' + k + '} = \\dfrac{' + N + '!}{' + k + '!\\,' + (N - k) + '!}$.',
         '$\\binom{' + N + '}{' + k + '} = ' + W + '$.',
@@ -1968,13 +1976,13 @@
   G('gchem2.free-energy-k', function (R, ctx) {
     var kind = lv(ctx, R.pick(['K', 'G0']), R.pick(['K', 'G0', 'G']), R.pick(['G', 'dir', 'tf', 'K']));
     var Tk = 298;
-    if (kind === 'K') { var G0 = R.pick([-5.7, -11.4, -17.1, -8.0, 4.0, 10.0, -20.0, 15.0, -25.0]), K = M.exp(-G0 * 1000 / (C.R * Tk));
+    if (kind === 'K') { var G0 = R.chance(0.3) ? R.pick([-5.7, -11.4, -17.1, -8.0, 4.0, 10.0, -20.0, 15.0, -25.0]) : R.pick([-1, 1, -1]) * R.int(10, 300) / 10, K = M.exp(-G0 * 1000 / (C.R * Tk));
       return P('A reaction has $\\Delta G^\\circ = ' + T.num(G0) + '\\ \\text{kJ/mol}$ at 298 K. What is $K$? (Use $R = 8.314\\ \\text{J/(mol·K)}$ and a calculator.)', num(K, 3, 0.04), [
         'Rearrange $\\Delta G^\\circ = -RT\\ln K$: $\\ln K = -\\dfrac{\\Delta G^\\circ}{RT}$.',
         '$\\ln K = -\\dfrac{' + T.num(rd(G0 * 1000, 0)) + '}{(8.314)(298)} = ' + fx(-G0 * 1000 / (C.R * Tk), 3) + '$, so $K = e^{' + fx(-G0 * 1000 / (C.R * Tk), 3) + '} = ' + fx(K, 3) + '$.',
         G0 < 0 ? 'Negative $\\Delta G^\\circ$ gives $K > 1$: products are favored at equilibrium.' : 'Positive $\\Delta G^\\circ$ gives $K < 1$: reactants are favored at equilibrium.'
       ], 'K = e^(−ΔG°/RT), with ΔG° in J/mol.', null, { k: 'GK', G0: G0, ans: K }); }
-    if (kind === 'G0') { var K2 = R.pick([1.8e-5, 4.5e3, 0.25, 7.0e10, 2.0e-9, 55]), G2 = -C.R * Tk * M.log(K2) / 1000;
+    if (kind === 'G0') { var K2 = R.chance(0.3) ? R.pick([1.8e-5, 4.5e3, 0.25, 7.0e10, 2.0e-9, 55]) : R.int(11, 99) / 10 * M.pow(10, R.pick([-9, -7, -5, -3, -2, -1, 1, 2, 3, 5, 8, 10])), G2 = -C.R * Tk * M.log(K2) / 1000;
       return P('At 298 K, $K = ' + gv(K2) + '$ for a reaction. What is $\\Delta G^\\circ$ in kJ/mol? (Use a calculator.)', num(G2), ['$\\Delta G^\\circ = -RT\\ln K = -(8.314)(298)\\ln(' + gv(K2) + ')$.', '$\\ln(' + gv(K2) + ') = ' + fx(M.log(K2), 3) + '$, so $\\Delta G^\\circ = ' + fx(G2 * 1000, 3) + '\\ \\text{J/mol} = ' + q(G2, 'kJ/mol') + '$.'], 'ΔG° = −RT ln K; convert J to kJ at the end.', 'kJ/mol', { k: 'KG', K: K2, ans: G2 }); }
     if (kind === 'tf') { var t = R.pick([['At equilibrium, ΔG° = 0.', false], ['At equilibrium, ΔG = 0 and Q = K.', true], ['ΔG° is fixed for a reaction at a given temperature, while ΔG changes as the reaction proceeds.', true]]);
       return P('True or false: ' + t[0], tf(t[1]), ['$\\Delta G^\\circ$ belongs to the standard state (all 1 M or 1 bar): it is a fixed number for the reaction at that temperature, $-RT\\ln K$.', '$\\Delta G = \\Delta G^\\circ + RT\\ln Q$ describes the mixture right now. It shrinks toward zero as $Q$ approaches $K$; at equilibrium $\\Delta G = 0$, not $\\Delta G^\\circ$.', 'So the statement is ' + (t[1] ? 'true' : 'false') + '.'], 'Which one depends on the current mixture?', null, { k: 'GKtf', ans: t[1] }); }
@@ -2466,7 +2474,7 @@
       ], 'Not the absorbed color: its complement.', null, { k: 'cfcol', ans: cap(col[2]) }); }
     if (kind === 'series') { var sets = [['CN^-', 'NH3', 'H2O', 'Cl^-'], ['CO', 'en', 'F^-', 'I^-'], ['NH3', 'OH^-', 'Br^-', 'I^-'], ['CN^-', 'H2O', 'F^-', 'Br^-']], s = R.pick(sets);
       return P('Which ligand produces the largest crystal-field splitting $\\Delta_o$ with the same metal ion?', mc('$' + F(s[0]) + '$', s.slice(1).map(function (x) { return '$' + F(x) + '$'; })), ['The spectrochemical series, measured from absorption spectra: $\\mathrm{I^- < Br^- < Cl^- < F^- < OH^- < H_2O < NH_3 < en < CN^- < CO}$.', 'The farther right, the larger $\\Delta_o$. Here $' + F(s[0]) + '$ is farthest right. Note that a ligand\u2019s charge does not decide it: neutral $\\mathrm{NH_3}$ splits more than $\\mathrm{F^-}$.'], 'Recall the spectrochemical series.', null, { k: 'cfser', ans: s[0] }); }
-    var lam = R.pick([400, 450, 498, 520, 560, 600, 650, 700]), dl = C.h * C.c * C.NA / (lam * 1e-9) / 1000;
+    var lam = R.int(40, 70) * 10, dl = C.h * C.c * C.NA / (lam * 1e-9) / 1000;
     return P('An octahedral complex absorbs light most strongly at $' + lam + '\\ \\text{nm}$, which promotes an electron across the gap $\\Delta_o$. What is $\\Delta_o$ in kJ/mol? (Use $h = 6.626 \\times 10^{-34}\\ \\text{J·s}$, $c = 3.00 \\times 10^8\\ \\text{m/s}$ and $N_A = 6.022 \\times 10^{23}$.)', num(dl), [
       'Energy of one photon: $E = \\dfrac{hc}{\\lambda} = \\dfrac{(6.626 \\times 10^{-34})(3.00 \\times 10^8)}{' + lam + ' \\times 10^{-9}\\ \\text{m}} = ' + fx(C.h * C.c / (lam * 1e-9), 3) + '\\ \\text{J}$.',
       'Per mole: $' + fx(C.h * C.c / (lam * 1e-9), 3) + ' \\times 6.022 \\times 10^{23} = ' + fx(dl * 1000, 3) + '\\ \\text{J/mol} = ' + q(dl, 'kJ/mol') + '$.',
@@ -2478,3 +2486,466 @@
   // exposed for the course's node tests
   ML.gchem2Helpers = { sfStr: sfStr, fx: fx, gv: gv, F: F, EQ: EQ, sgf: sgf, TD: TD };
 })(window.MathLadder);
+
+/* ---- More of the same skills (round 7, "widen"): larger fact banks ----
+   Topics whose levels had few different problems also draw from the banks below, built from the topic's own facts:
+   true or false; which statement is true (or false); sorting (which one is …, which is not, choose all, which group);
+   a term and its meaning, both ways; and the order of steps (what comes next, what comes first, put in order).
+   Every answer comes from the bank itself, so the right choice and the others can never disagree. Shares are per level:
+   the topic's own generator still makes the rest. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen) return;
+  var BK = {};
+  function T(id, o) { var b = BK[id] || (BK[id] = {}); Object.keys(o).forEach(function (k) { b[k] = k === 'share' || k === 'forms' ? Object.assign(b[k] || {}, o[k]) : o[k]; }); }
+  function cap(s) { s = String(s); return s.charAt(0).toUpperCase() + s.slice(1); }
+  function capI(s) { s = String(s); return /\s/.test(s) || s.length > 3 ? cap(s) : s; } // genotypes like tt stay as written
+  function low(s) { s = String(s); return /^[A-Z][a-z]/.test(s) && !/^(DNA|RNA|ATP|I )/.test(s) ? s.charAt(0).toLowerCase() + s.slice(1) : s; }
+  function dot(s) { s = String(s).replace(/\s+$/, ''); return /[.!?)]$/.test(s) ? s : s + '.'; }
+  function nodot(s) { return String(s).replace(/\.$/, ''); }
+  function fill(t, o) { return t.replace(/\{(\w)\}/g, function (_, k) { return o[k]; }); }
+  function MC(right, wrong) { return { t: 'mc', choices: [right].concat(wrong), v: 0 }; }
+  function TF(v) { return { t: 'mc', choices: ['True', 'False'], v: v ? 0 : 1, keep: true }; }
+  function LT(i) { return String.fromCharCode(65 + i); }
+  function uniq(a) { return a.filter(function (x, i) { return a.indexOf(x) === i; }); }
+
+  var FORMS = { 1: ['tf', 'tf1', 'one', 'cat', 'fwd', 'back', 'next'], 2: ['tf', 'tf1', 'one', 'not', 'cat', 'fwd', 'back', 'next', 'first'], 3: ['tf1', 'not', 'all', 'back', 'fwd', 'order', 'first', 'cat'] };
+  function can(o, f) {
+    var tf = o.tf || [], s = o.sort, pr = o.pair, sq = o.seq;
+    if (f === 'custom') return !!o.make;
+    if (f === 'tf') return tf.length > 0;
+    if (f === 'tf1') return tf.filter(function (x) { return x[1]; }).length >= 3 && tf.filter(function (x) { return !x[1]; }).length >= 3;
+    if (f === 'one' || f === 'not' || f === 'all' || f === 'cat') return !!s;
+    if (f === 'fwd' || f === 'back') return !!pr;
+    return !!sq;
+  }
+  function make(R, o, L) {
+    var forms = (o.forms && o.forms[L]) || FORMS[L];
+    forms = forms.filter(function (f) { return can(o, f); });
+    if (!forms.length) return null;
+    var f = R.pick(forms), p = null;
+    if (f === 'custom') p = o.make(R, L);
+    else if (f === 'tf' || f === 'tf1') p = mkTf(R, o, f);
+    else if (o.sort && (f === 'one' || f === 'not' || f === 'all' || f === 'cat')) p = mkSort(R, o.sort, f, L);
+    else if (f === 'fwd' || f === 'back') p = mkPair(R, o.pair, f);
+    else p = mkSeq(R, o.seq, f, L);
+    if (p && !p.hint) p.hint = o.hint || 'Think back to the lesson, then check each choice.';
+    return p;
+  }
+  function mkTf(R, o, f) {
+    var tf = o.tf;
+    if (f === 'tf') {
+      var t = R.pick(tf);
+      return { q: 'True or false: ' + dot(t[0]), a: TF(t[1]), steps: [t[2] ? dot(t[2]) : 'The statement is ' + (t[1] ? 'true.' : 'false.'), 'So the answer is <b>' + (t[1] ? 'true' : 'false') + '</b>.'] };
+    }
+    var wantTrue = R.coin(), good = tf.filter(function (x) { return x[1] === wantTrue; }), bad = tf.filter(function (x) { return x[1] !== wantTrue; });
+    var r = R.pick(good), ws = R.sample(bad, 3);
+    return { q: 'Which statement is <b>' + (wantTrue ? 'true' : 'false') + '</b>?', a: MC(dot(r[0]), ws.map(function (x) { return dot(x[0]); })),
+      steps: [(wantTrue ? 'True: ' : 'False: ') + dot(r[0]) + (r[2] ? ' ' + dot(r[2]) : '')].concat(ws.map(function (x) { return (wantTrue ? 'False: ' : 'True: ') + dot(x[0]) + (x[2] ? ' ' + dot(x[2]) : ''); })) };
+  }
+  function why(s, it) {
+    if (it[2]) return dot(cap(it[2]));
+    if (it[0].length <= 3) return it[0] + ': ' + low(s.cats[it[1]][2]) + '.';
+    if (/[.?!]$/.test(it[0])) return '“' + cap(it[0]) + '” ' + cap(s.cats[it[1]][2]) + '.';
+    return cap(dot(it[0] + ' ' + (s.be || 'is') + ' ' + s.cats[it[1]][0]));
+  }
+  function mkSort(R, s, f, L) {
+    var keys = Object.keys(s.cats), k = R.pick(keys.filter(function (c) { return s.items.some(function (x) { return x[1] === c; }); })), C = s.cats[k];
+    // names ("a frog") and descriptions ("It has no tubes for water.") are not mixed in one list of choices
+    var isD = function (x) { return /[.?!]$/.test(x[0]); }, names = s.items.filter(function (x) { return !isD(x); }), descs = s.items.filter(isD);
+    var useD = f !== 'cat' && (names.length < 6 || (descs.length >= 6 && R.coin())), pool = useD ? descs : names;
+    var inC = pool.filter(function (x) { return x[1] === k; }), outC = pool.filter(function (x) { return x[1] !== k; });
+    var verb1 = useD ? 'describes ' : (s.be === 'are' ? 'are ' : 'is '), verbN = useD ? 'describe ' : 'are ';
+    var lead = s.lead ? s.lead + ' ' : '';
+    if (f === 'cat') {
+      var it = R.pick(s.items), opts = keys.length > 4 ? [it[1]].concat(R.sample(keys.filter(function (c) { return c !== it[1]; }), 3)) : [it[1]].concat(keys.filter(function (c) { return c !== it[1]; }));
+      var a = { t: 'mc', choices: opts.map(function (c) { return cap(s.cats[c][2]); }), v: 0 };
+      if (keys.length <= 3) { a.choices = keys.map(function (c) { return cap(s.cats[c][2]); }); a.v = keys.indexOf(it[1]); a.keep = true; }
+      return { q: lead + fill(s.catq || 'Which group does this belong to? {x}', { x: dot(capI(it[0])) }), a: a, steps: [why(s, it), 'So the answer is <b>' + low(s.cats[it[1]][2]) + '</b>.'] };
+    }
+    if (f === 'one' && inC.length && outC.length >= 3) {
+      var r = R.pick(inC), w = R.sample(outC, 3);
+      return { q: lead + 'Which of these ' + verb1 + C[0] + '?', a: MC(capI(r[0]), w.map(function (x) { return capI(x[0]); })),
+        steps: [why(s, r)].concat(w.map(function (x) { return why(s, x); })) };
+    }
+    if (f === 'not' && inC.length >= 3 && outC.length) {
+      var r2 = R.pick(outC), w2 = R.sample(inC, 3);
+      return { q: lead + 'Three of these ' + verbN + C[1] + '. Which one ' + (useD ? 'does' : 'is') + ' <b>not</b>?', a: MC(capI(r2[0]), w2.map(function (x) { return capI(x[0]); })),
+        steps: [why(s, r2)].concat(w2.map(function (x) { return why(s, x); })) };
+    }
+    if (f === 'all' && inC.length >= 1 && outC.length >= 1) {
+      var n = M5(R, inC.length + outC.length), kk = R.int(Math.max(1, n - outC.length), Math.min(inC.length, n - 1)), items = R.shuffle(R.sample(inC, kk).concat(R.sample(outC, n - kk)));
+      return { q: lead + 'Choose <b>all</b> of these that ' + verbN + C[1] + '.', a: { t: 'mc', choices: items.map(function (x) { return capI(x[0]); }), v: items.map(function (x, i) { return x[1] === k ? i : -1; }).filter(function (i) { return i >= 0; }) },
+        steps: items.map(function (x) { return why(s, x); }) };
+    }
+    return mkSort(R, s, 'cat', L);
+  }
+  function M5(R, total) { return Math.min(total, R.pick([4, 5])); }
+  function mkPair(R, pr, f) {
+    var it = R.pick(pr.items), kx = f === 'fwd' ? 1 : 0, seen = {}, pool = pr.items.filter(function (x) { if (x === it || x[0] === it[0] || x[1] === it[1] || seen[x[kx]]) return false; seen[x[kx]] = 1; return true; }), others = R.sample(pool, Math.min(3, pool.length));
+    if (f === 'fwd') return { q: fill(pr.fwd, { t: it[0] }), a: MC(cap(it[1]), others.map(function (x) { return cap(x[1]); })), steps: [cap(it[0]) + ': ' + low(dot(it[1]))].concat(others.length ? ['The others: ' + others.map(function (x) { return low(nodot(x[1])) + ' (' + x[0] + ')'; }).join('; ') + '.'] : []) };
+    return { q: fill(pr.back, { d: low(nodot(it[1])) }), a: MC(cap(it[0]), others.map(function (x) { return cap(x[0]); })), steps: [cap(it[0]) + ': ' + low(dot(it[1]))].concat(others.length ? ['The others: ' + others.map(function (x) { return x[0] + ', ' + low(nodot(x[1])); }).join('; ') + '.'] : []) };
+  }
+  function mkSeq(R, sq, f, L) {
+    var lists = sq.lists || [sq], s = R.pick(lists), it = s.items, name = s.name;
+    if (f === 'next') {
+      var i = R.int(0, it.length - 2), w = R.sample(it.filter(function (x, j) { return j !== i + 1 && j !== i; }), Math.min(3, it.length - 2));
+      return { q: 'In ' + name + ', what comes right after this: ' + low(nodot(it[i])) + '?', a: MC(cap(it[i + 1]), w.map(cap)), steps: ['The order: ' + it.map(nodot).join(' → ') + '.', 'Right after ' + low(nodot(it[i])) + ' comes <b>' + low(nodot(it[i + 1])) + '</b>.'] };
+    }
+    var n = Math.min(it.length, L === 3 ? 4 : 3), idx = R.sample(it.map(function (_, j) { return j; }), n).sort(function (a, b) { return a - b; });
+    if (f === 'first') {
+      var last = R.coin() && L > 1, pickI = last ? idx[idx.length - 1] : idx[0];
+      return { q: 'In ' + name + ', which of these comes <b>' + (last ? 'last' : 'first') + '</b>?', a: MC(cap(it[pickI]), idx.filter(function (j) { return j !== pickI; }).map(function (j) { return cap(it[j]); })),
+        steps: ['The order: ' + idx.map(function (j) { return nodot(it[j]); }).join(' → ') + '.', 'So <b>' + low(nodot(it[pickI])) + '</b> comes ' + (last ? 'last' : 'first') + '.'] };
+    }
+    var shown = R.shuffle(idx.slice()), right = idx.map(function (j) { return LT(shown.indexOf(j)); }).join(''), wr = [], g = 0;
+    while (wr.length < 3 && g++ < 100) { var c = R.shuffle(right.split('')).join(''); if (c !== right && wr.indexOf(c) < 0) wr.push(c); }
+    return { q: 'Put these in order for ' + name + ':<br>' + shown.map(function (j, i) { return '<b>' + LT(i) + '</b>: ' + low(nodot(it[j])); }).join('<br>'), a: MC(right.split('').join(', '), wr.map(function (x) { return x.split('').join(', '); })),
+      steps: ['The order: ' + idx.map(function (j) { return LT(shown.indexOf(j)) + ' (' + low(nodot(it[j])) + ')'; }).join(' → ') + '.', 'So the answer is <b>' + right.split('').join(', ') + '</b>.'] };
+  }
+
+  /* ===== gchem2 ===== */
+  function cf(s) { // "H2SO4" -> $\mathrm{H_{2}SO_{4}}$; "NO3^-" -> $\mathrm{NO_{3}^{-}}$
+    var p = String(s).split('^'), b = p[0].replace(/([A-Za-z)\]])(\d+)/g, '$1_{$2}');
+    return '$\\mathrm{' + b + (p[1] ? '^{' + p[1] + '}' : '') + '}$';
+  }
+  function cmp(R, pairs, what, why) { // pairs: [stronger, weaker, reason]; ask for the stronger or the weaker
+    var pr = R.pick(pairs), hi = R.coin(), sw = R.coin(), a = sw ? pr[1] : pr[0], b = sw ? pr[0] : pr[1], right = hi ? pr[0] : pr[1];
+    return { q: 'Which is the ' + (hi ? what[0] : what[1]) + ': ' + cf(a) + ' or ' + cf(b) + '?', a: { t: 'mc', choices: [cf(a), cf(b)], v: right === a ? 0 : 1, keep: true },
+      hint: why, steps: [dot(cap(pr[2])), 'So the ' + (hi ? what[0] : what[1]) + ' is <b>' + cf(right) + '</b>.'] };
+  }
+
+  T('gchem2.acid-strength-structure', { share: { 1: 0.8, 2: 0.4 }, forms: { 1: ['custom', 'custom', 'tf'], 2: ['custom', 'tf', 'tf1'] },
+    make: function (R) {
+      return cmp(R, [['HClO4', 'HClO3', 'more oxygens pull electron density away from the O–H bond and spread out the anion\'s charge'], ['HClO3', 'HClO2', 'more oxygens on the same central atom make the acid stronger'], ['HClO2', 'HClO', 'more oxygens on the same central atom make the acid stronger'],
+        ['HNO3', 'HNO2', 'the extra oxygen pulls electron density away from the O–H bond'], ['H2SO4', 'H2SO3', 'the extra oxygen pulls electron density away from the O–H bond'], ['HI', 'HBr', 'down a group the H–X bond gets longer and weaker'], ['HBr', 'HCl', 'down a group the H–X bond gets longer and weaker'],
+        ['HCl', 'HF', 'the H–F bond is short and very strong, so HF is a weak acid'], ['H2Te', 'H2Se', 'down a group the bond to H gets longer and weaker'], ['H2Se', 'H2S', 'down a group the bond to H gets longer and weaker'], ['H2S', 'H2O', 'down a group the bond to H gets longer and weaker'],
+        ['HF', 'H2O', 'across a period, a more electronegative atom holds the negative charge better'], ['H2O', 'NH3', 'across a period, a more electronegative atom holds the negative charge better'], ['NH3', 'CH4', 'across a period, a more electronegative atom holds the negative charge better'],
+        ['HClO', 'HBrO', 'with the same structure, a more electronegative central atom pulls more electron density from the O–H bond'], ['HBrO', 'HIO', 'with the same structure, a more electronegative central atom pulls more electron density from the O–H bond'],
+        ['CCl3COOH', 'CH3COOH', 'electronegative chlorines pull electron density away and stabilize the anion'], ['CH2ClCOOH', 'CH3COOH', 'an electronegative chlorine pulls electron density away and stabilizes the anion'], ['CF3COOH', 'CH3COOH', 'electronegative fluorines pull electron density away and stabilize the anion']],
+        ['stronger acid', 'weaker acid'], 'Compare bond strength (down a group), electronegativity (across a period or of the central atom), and the number of oxygens.');
+    },
+    tf: [['Down a group, binary acids get stronger because the H–X bond gets weaker', true], ['HF is a strong acid because fluorine is the most electronegative element', false, 'HF is weak: its H–F bond is very strong'],
+      ['For oxoacids of the same element, more oxygens means a stronger acid', true], ['A more stable conjugate base means a stronger acid', true], ['Across a period, binary acids get stronger as the atom bonded to H becomes more electronegative', true],
+      ['HClO is a stronger acid than HClO4', false, 'HClO4 has more oxygens and is far stronger'], ['Resonance that spreads out the negative charge of the conjugate base makes an acid stronger', true], ['Acetic acid is a stronger acid than trichloroacetic acid', false]] });
+
+  T('gchem2.mechanisms', { share: { 1: 0.4, 2: 0.55 },
+    tf: [['An intermediate is made in one step and used up in a later step', true], ['A catalyst is used up in an early step and made again in a later step', true], ['An intermediate appears in the overall balanced equation', false, 'Intermediates cancel when the steps are added'],
+      ['The steps of a mechanism must add up to the overall equation', true], ['A catalyst appears in the overall balanced equation', false, 'It is regenerated, so it cancels'], ['A mechanism must agree with the measured rate law', true],
+      ['A mechanism that fits the rate law is proved to be correct', false, 'It is only consistent with the data; another mechanism might fit too'], ['Each step of a mechanism is an elementary step', true],
+      ['Intermediates can sometimes be detected while the reaction runs', true], ['A catalyst changes the overall ΔH of the reaction', false]] });
+
+  T('gchem2.rate-determining-step', { share: { 2: 0.6, 3: 0.55 }, forms: { 2: ['tf', 'tf1'], 3: ['tf1', 'tf'] },
+    tf: [['The slowest step limits the rate of the whole reaction', true], ['The rate law of the overall reaction comes from the slow step', true], ['A reactant that enters only after the slow step does not appear in the rate law (when the first step is slow)', true],
+      ['The rate-determining step is always the first step', false, 'It can be any step'], ['The overall rate law can be read from the overall balanced equation', false, 'It must be found by experiment or from the mechanism'],
+      ['Speeding up a fast step does not change the overall rate much', true], ['If the first step is slow, the rate law matches that step\'s reactants', true], ['The rate-determining step has the highest activation energy along the path', true],
+      ['Every step of a mechanism goes at the same speed', false], ['Intermediates must not appear in the final rate law', true]] });
+
+  T('gchem2.pre-equilibrium', { share: { 2: 0.55 }, forms: { 2: ['tf', 'tf1'] },
+    tf: [['In a pre-equilibrium, a fast reversible step comes before the slow step', true], ['An intermediate\'s concentration can be found from the fast equilibrium', true], ['The final rate law may not contain any intermediates', true],
+      ['A fast equilibrium step means its forward and reverse rates are nearly equal', true], ['The observed rate constant can combine constants from several steps', true], ['In a pre-equilibrium mechanism the first step is the slow step', false, 'The first step is fast and reversible'], ['The pre-equilibrium approach replaces the intermediate with reactant concentrations', true]] });
+
+  T('gchem2.elementary-steps', { share: { 1: 0.5 },
+    sort: { cats: { u: ['unimolecular', 'unimolecular steps', 'Unimolecular'], b: ['bimolecular', 'bimolecular steps', 'Bimolecular'], t: ['termolecular', 'termolecular steps', 'Termolecular'] }, be: 'is', catq: 'This is an elementary step. What is its molecularity? {x}', items: [
+      ['O₃ → O₂ + O', 'u'], ['N₂O₄ → 2 NO₂', 'u'], ['Cl₂ → 2 Cl', 'u'], ['N₂O₅ → NO₂ + NO₃', 'u'], ['C₄H₈ → 2 C₂H₄', 'u'], ['Br₂ → 2 Br', 'u'],
+      ['NO + O₃ → NO₂ + O₂', 'b'], ['2 NO₂ → NO₃ + NO', 'b'], ['H + Cl₂ → HCl + Cl', 'b'], ['NO₂ + CO → NO + CO₂', 'b'], ['O + O₃ → 2 O₂', 'b'], ['2 HI → H₂ + I₂', 'b'],
+      ['2 NO + O₂ → 2 NO₂', 't'], ['2 NO + Cl₂ → 2 NOCl', 't']] },
+    tf: [['For an elementary step, the rate law follows from its coefficients', true], ['Termolecular steps are rare, because three particles seldom collide at once', true], ['A unimolecular step involves one particle', true], ['The rate law of any overall reaction comes from its coefficients', false, 'Only for elementary steps']] });
+
+  T('gchem2.kp-kc', { share: { 1: 0.45 }, forms: { 1: ['custom', 'custom', 'tf'] },
+    make: function (R) { // Δn from a made-up gas reaction (some species may be solids or liquids)
+      var names = ['A', 'B', 'C', 'D'], co = names.map(function () { return R.int(1, 3); }), ph = names.map(function (n, i) { return R.chance(0.2) ? R.pick(['s', 'l']) : 'g'; });
+      if (ph.every(function (x) { return x !== 'g'; })) ph[0] = 'g';
+      function sd(i) { return (co[i] > 1 ? co[i] + '\\,' : '') + '\\mathrm{' + names[i] + '}(\\mathrm{' + ph[i] + '})'; }
+      var gr = (ph[0] === 'g' ? co[0] : 0) + (ph[1] === 'g' ? co[1] : 0), gp = (ph[2] === 'g' ? co[2] : 0) + (ph[3] === 'g' ? co[3] : 0), dn = gp - gr;
+      return { q: 'For $' + sd(0) + ' + ' + sd(1) + ' \\rightleftharpoons ' + sd(2) + ' + ' + sd(3) + '$, what is $\\Delta n$ in $K_p = K_c(RT)^{\\Delta n}$?', a: { t: 'num', v: String(dn) },
+        hint: 'Count moles of gas only: products minus reactants.', steps: ['Moles of gas on the product side: ' + gp + '. On the reactant side: ' + gr + '.', 'Solids and liquids do not count.', '$\\Delta n = ' + gp + ' - ' + gr + ' = ' + dn + '$.'] };
+    },
+    tf: [['K_p equals K_c when the moles of gas are the same on both sides', true], ['Solids and liquids count in Δn', false, 'Only gases count'], ['Δn is moles of gaseous products minus moles of gaseous reactants', true]] });
+
+  T('gchem2.indicators', { share: { 1: 0.35 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['An indicator changes color over a range of about pH = pKₐ ± 1', true], ['Every acid–base titration should use an indicator that changes color at pH 7', false, 'Choose one that changes near the equivalence point'],
+      ['For a weak acid titrated with a strong base, the equivalence point is above pH 7', true], ['For a weak base titrated with a strong acid, the equivalence point is below pH 7', true], ['Phenolphthalein is colorless in acid and pink in base', true],
+      ['An indicator is itself a weak acid or a weak base', true], ['Methyl orange changes color in the acidic range, around pH 3 to 4', true], ['A good indicator changes color near the equivalence point of the titration', true],
+      ['The end point and the equivalence point are always exactly the same', false, 'The end point is where the color changes; a good indicator makes it close'], ['At pH = pKₐ of the indicator, the acid and base forms are present in equal amounts', true]] });
+
+  T('gchem2.comparing-solubility', { share: { 2: 0.45 }, forms: { 2: ['tf', 'tf1'] },
+    tf: [['Ksp values can be compared directly only for salts that make the same number of ions', true], ['A smaller Ksp always means a smaller molar solubility', false, 'Only when the salts make the same number of ions'],
+      ['Molar solubility is the number of moles of salt that dissolve per liter of saturated solution', true], ['For a 1 : 1 salt, the molar solubility is the square root of Ksp', true], ['For a salt like CaF₂, Ksp = 4s³', true],
+      ['Adding a common ion lowers a salt\'s solubility', true], ['Ksp has the same value at every temperature', false], ['For a 1 : 2 salt, the molar solubility is the square root of Ksp', false, 'It is the cube root of Ksp / 4']] });
+
+  T('gchem2.complex-ions', { share: { 1: 0.4, 3: 0.45 }, forms: { 3: ['tf1', 'tf'] },
+    tf: [['A Lewis acid must contain a hydrogen atom', false, 'A Lewis acid accepts an electron pair; metal ions like Ag⁺ are Lewis acids'], ['Adding ammonia makes silver chloride more soluble, because Ag⁺ forms [Ag(NH₃)₂]⁺', true],
+      ['A large formation constant Kf means the complex ion is very stable', true], ['In a complex ion, ligands donate electron pairs to the metal ion', true], ['Forming a complex ion lowers the free metal ion concentration', true],
+      ['Ammonia is a Lewis base because it has a lone pair', true], ['A metal ion in a complex acts as a Lewis base', false, 'It accepts electron pairs: a Lewis acid'], ['Thiosulfate dissolves silver bromide by forming a complex ion', true],
+      ['Adding excess ligand pushes more metal into the complex', true], ['A complex ion always has a positive charge', false, 'It can be positive, negative or neutral']] });
+
+  T('gchem2.entropy-microstates', { share: { 1: 0.45, 2: 0.4 }, forms: { 1: ['tf', 'tf1'], 2: ['tf', 'tf1'] },
+    tf: [['Entropy is related to the number of microstates: S = k ln W', true], ['A system with more microstates has higher entropy', true], ['Gas molecules spreading into a larger volume increases entropy', true],
+      ['A perfect crystal at 0 K has one microstate and zero entropy', true], ['Doubling the volume of a gas halves its number of microstates', false, 'It greatly increases them'], ['Mixing two gases increases entropy', true],
+      ['Entropy is a measure of how many ways energy and matter can be arranged', true], ['Heating a substance usually increases its entropy', true], ['A system always moves toward fewer microstates on its own', false],
+      ['Spreading energy over more particles increases the number of microstates', true]] });
+
+  T('gchem2.standard-entropy', { share: { 2: 0.4 }, forms: { 2: ['custom', 'custom', 'tf'] },
+    make: function (R) {
+      return cmp(R, [['H2O(g)', 'H2O(l)', 'a gas has far more freedom of motion than a liquid'], ['H2O(l)', 'H2O(s)', 'a liquid has more freedom of motion than a solid'], ['Br2(g)', 'Br2(l)', 'a gas has far more freedom of motion than a liquid'],
+        ['C2H6(g)', 'CH4(g)', 'a larger, more complex molecule has more ways to move and vibrate'], ['C3H8(g)', 'C2H6(g)', 'a larger, more complex molecule has more ways to move and vibrate'], ['Cl2(g)', 'F2(g)', 'a heavier molecule has more closely spaced energy levels'],
+        ['O3(g)', 'O2(g)', 'more atoms per molecule means more ways to vibrate and rotate'], ['NO2(g)', 'NO(g)', 'more atoms per molecule means more ways to vibrate and rotate'], ['I2(g)', 'I2(s)', 'a gas has far more freedom of motion than a solid'],
+        ['C(graphite)', 'C(diamond)', 'graphite\'s layers allow more motion than diamond\'s rigid network'], ['CO2(g)', 'CO2(s)', 'a gas has far more freedom of motion than a solid'], ['N2O4(g)', 'NO2(g)', 'a larger molecule has more ways to vibrate and rotate']],
+        ['one with the higher standard entropy', 'one with the lower standard entropy'], 'Gases beat liquids beat solids; then bigger and more complex molecules win.');
+    },
+    tf: [['A gas has a higher standard entropy than the same substance as a liquid', true], ['Elements in their standard states have S° = 0', false, 'That is true of ΔHf°, not of S°'], ['Larger, more complex molecules usually have higher S°', true]] });
+
+  T('gchem2.free-energy-k', { share: { 1: 0.35 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['A negative ΔG° means K is greater than 1', true], ['A positive ΔG° means K is less than 1', true], ['If ΔG° = 0, then K = 1', true], ['At equilibrium, ΔG° = 0', false, 'At equilibrium ΔG = 0 and Q = K; ΔG° is fixed'],
+      ['ΔG° = −RT ln K', true], ['A reaction with a very large K has a very negative ΔG°', true], ['A positive ΔG° means no products ever form', false, 'Some products form; K is simply less than 1'], ['ΔG depends on the current mixture, while ΔG° does not', true]] });
+
+  T('gchem2.coupled-reactions', { share: { 1: 0.4, 2: 0.4, 3: 0.4 }, forms: { 1: ['tf', 'tf1'], 2: ['tf', 'tf1'], 3: ['tf1', 'tf'] },
+    tf: [['Coupling a nonspontaneous reaction to a spontaneous one can make the total ΔG negative', true], ['When reactions are added, their ΔG° values add', true], ['Cells use ATP hydrolysis to drive reactions that would not go on their own', true],
+      ['Coupled reactions must share an intermediate or be linked in some way', true], ['Coupling changes the ΔG° of each separate reaction', false, 'Each keeps its own ΔG°; the totals add'], ['Smelting iron ore with carbon is a coupled process in which carbon\'s oxidation drives the reduction of the ore', true],
+      ['A coupled process with a total ΔG° of +5 kJ/mol is strongly favored', false], ['When reactions are added, their K values multiply', true], ['Hydrolysis of ATP has a ΔG° of about −30.5 kJ/mol', true]] });
+
+  T('gchem2.electrolytic-cells', { share: { 3: 0.4 }, forms: { 3: ['tf1', 'tf1', 'cat'] },
+    sort: { cats: { g: ['true of a galvanic cell', 'true of galvanic cells', 'Galvanic cell'], e: ['true of an electrolytic cell', 'true of electrolytic cells', 'Electrolytic cell'], b: ['true of both', 'true of both', 'Both'] }, catq: 'Which kind of cell does this describe? {x}', items: [
+      ['A spontaneous reaction pushes electrons through the wire.', 'g'], ['Its cell potential is positive.', 'g'], ['The anode is the negative electrode.', 'g'], ['It turns chemical energy into electrical energy.', 'g'],
+      ['An outside power supply forces a nonspontaneous reaction.', 'e'], ['The anode is the positive electrode.', 'e'], ['It turns electrical energy into chemical energy.', 'e'], ['It is used to plate silver onto a spoon.', 'e'],
+      ['Oxidation happens at the anode.', 'b'], ['Reduction happens at the cathode.', 'b'], ['Electrons flow from the anode to the cathode in the outer circuit.', 'b']] },
+    tf: [['Oxidation happens at the anode in both galvanic and electrolytic cells', true], ['The anode is the negative electrode in every kind of cell', false, 'In an electrolytic cell the anode is positive'], ['Electrolysis of molten NaCl makes sodium metal and chlorine gas', true],
+      ['In the electrolysis of water, hydrogen forms at the cathode', true], ['Electrolysis needs a voltage at least as large as the cell\'s reverse potential', true], ['Electrolysis of water makes twice as much hydrogen as oxygen, by volume', true]] });
+
+  T('gchem2.batteries-corrosion', { share: { 1: 0.4, 2: 0.4, 3: 0.4 },
+    sort: { cats: { p: ['a way to slow corrosion', 'ways to slow corrosion', 'Slows corrosion'], s: ['something that speeds up corrosion', 'things that speed up corrosion', 'Speeds up corrosion'] }, catq: 'Does this slow down or speed up the rusting of iron? {x}', items: [
+      ['painting the iron', 'p'], ['coating it with zinc (galvanizing)', 'p'], ['bolting a block of magnesium to it', 'p'], ['keeping it dry', 'p'], ['coating it with oil or grease', 'p'], ['mixing in chromium to make stainless steel', 'p'],
+      ['salt water on the surface', 's'], ['damp air', 's'], ['touching a piece of copper', 's'], ['acid rain', 's'], ['scratches through the paint', 's']] },
+    tf: [['A battery stores electrons, which flow out when it is connected', false, 'It stores reactants that push electrons around a circuit when they react'], ['Rusting of iron needs both oxygen and water', true], ['Zinc protects iron because zinc is oxidized more easily than iron', true],
+      ['A rechargeable battery runs its reaction backward when it is charged', true], ['A fuel cell needs a steady supply of fuel and oxygen', true], ['Cells in series add their voltages', true], ['A dead battery has run out of electrons', false, 'Its reactants are used up'],
+      ['Connecting iron to copper protects the iron from rusting', false, 'Iron is oxidized more easily than copper, so it rusts faster'], ['A hydrogen fuel cell gives water as its product', true]] });
+
+  T('gchem2.binding-energy', { share: { 1: 0.35 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['A nucleus has less mass than the separate protons and neutrons it is made of', true], ['A nucleus has more mass than the separate protons and neutrons it is made of', false], ['Energy must be added to split a nucleus into its separate protons and neutrons', true],
+      ['The mass defect is converted to energy by E = mc²', true], ['Iron-56 is among the most tightly bound nuclei per nucleon', true], ['Fusion of light nuclei can release energy', true], ['Fission of heavy nuclei can release energy', true],
+      ['Binding energy per nucleon is highest for the heaviest nuclei', false, 'It peaks near iron'], ['One atomic mass unit is equivalent to about 931.5 MeV', true]] });
+
+  T('gchem2.coordination-compounds', { share: { 1: 0.4, 3: 0.4 }, forms: { 1: ['tf', 'tf1'], 3: ['tf1', 'tf'] },
+    tf: [['The coordination number is the number of donor atoms bonded to the metal', true], ['Ethylenediamine (en) is a bidentate ligand', true], ['In [Co(NH₃)₆]Cl₃, the chloride ions are counter ions outside the brackets', true],
+      ['A complex with coordination number 6 is usually octahedral', true], ['A coordination number of 4 can be tetrahedral or square planar', true], ['The coordination number always equals the number of ligands', false, 'A bidentate ligand gives two donor atoms'],
+      ['The oxidation state of the metal plus the ligand charges equals the charge of the complex ion', true], ['Water and ammonia are neutral ligands', true], ['Chloride is a neutral ligand', false, 'Chloride carries a −1 charge'], ['EDTA can bind a metal ion at six points', true]] });
+
+  T('gchem2.coordination-isomers', { share: { 1: 0.45 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['Rotating a model of [Co(NH₃)₄Cl₂]⁺ can turn the cis isomer into the trans isomer', false, 'Cis and trans are different compounds'], ['cis- and trans-[Pt(NH₃)₂Cl₂] have the same formula but different properties', true],
+      ['A tetrahedral complex MA₂B₂ has no cis and trans isomers', true], ['A square planar complex MA₂B₂ has cis and trans isomers', true], ['Optical isomers are mirror images that cannot be superimposed', true],
+      ['Cisplatin, a cancer drug, is the cis isomer', true], ['An octahedral MA₄B₂ complex has two geometric isomers', true], ['An octahedral MA₆ complex has geometric isomers', false, 'All six positions hold the same ligand'],
+      ['In a trans isomer, two like ligands are across from each other', true], ['Every complex has an optical isomer', false]] });
+
+  T('gchem2.graphical-order', { share: { 1: 0.3 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['For a zero-order reaction, [A] against time is a straight line', true], ['For a first-order reaction, ln[A] against time is a straight line', true], ['For a second-order reaction, 1/[A] against time is a straight line', true],
+      ['For a first-order reaction, the slope of ln[A] against time is −k', true], ['For a second-order reaction, the slope of 1/[A] against time is +k', true], ['For a first-order reaction, [A] against time is a straight line', false, 'It curves; ln[A] is straight'],
+      ['The half-life of a first-order reaction does not depend on the starting concentration', true], ['For a zero-order reaction, the slope of [A] against time is +k', false, 'It is −k']] });
+
+  T('gchem2.arrhenius', { share: { 1: 0.3 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['A plot of ln k against 1/T is a straight line with slope −Eₐ/R', true], ['Raising the temperature increases the rate constant', true], ['A larger activation energy makes the rate more sensitive to temperature', true],
+      ['A catalyst raises the activation energy', false, 'It lowers it'], ['Temperature must be in kelvins in the Arrhenius equation', true], ['The rate constant does not depend on temperature', false]] });
+
+  T('gchem2.weak-base-ph', { share: { 1: 0.3 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['For a weak base, x from the equilibrium is [OH⁻], so you find pOH first', true], ['pH + pOH = 14.00 at 25 °C', true], ['A solution of a weak base has a pH above 7', true], ['Ammonia is a strong base', false, 'It is a weak base'],
+      ['K_b × K_a of the conjugate acid = K_w', true], ['A larger K_b means a stronger base', true], ['For a weak base, x is [H₃O⁺]', false, 'x is [OH⁻]']] });
+
+  T('gchem2.percent-ionization', { share: { 3: 0.3 }, forms: { 3: ['tf1', 'tf'] },
+    tf: [['Diluting a weak acid raises its percent ionization', true], ['A stronger weak acid (larger Kₐ) has a higher percent ionization at the same concentration', true], ['Percent ionization = [H₃O⁺] at equilibrium ÷ starting acid concentration × 100', true],
+      ['Diluting a weak acid lowers its percent ionization', false], ['The small-x shortcut works when the percent ionization is under about 5%', true], ['Diluting by 100 times raises the percent ionization about 10 times', true]] });
+  T('gchem2.pre-equilibrium', { share: { 2: 0.65 } });
+  T('gchem2.coupled-reactions', { share: { 2: 0.5 } });
+  T('gchem2.coordination-compounds', { share: { 3: 0.5 } });
+  T('gchem2.pre-equilibrium', { tf: [['In a pre-equilibrium, a fast reversible step comes before the slow step', true], ['An intermediate\'s concentration can be found from the fast equilibrium', true], ['The final rate law may not contain any intermediates', true],
+      ['A fast equilibrium step means its forward and reverse rates are nearly equal', true], ['The observed rate constant can combine constants from several steps', true], ['In a pre-equilibrium mechanism the first step is the slow step', false, 'The first step is fast and reversible'],
+      ['The pre-equilibrium approach replaces the intermediate with reactant concentrations', true], ['The rate law of a pre-equilibrium mechanism always has an intermediate in it', false, 'The intermediate is replaced using the equilibrium'],
+      ['In a pre-equilibrium, the fast step\'s equilibrium constant is k₁ ÷ k₋₁', true], ['The slow step in a pre-equilibrium mechanism is reversible and fast', false, 'The slow step is the bottleneck that follows the fast equilibrium'],
+      ['The observed rate constant for a pre-equilibrium mechanism is often k₂k₁ ÷ k₋₁', true], ['A pre-equilibrium means the whole reaction is at equilibrium', false, 'Only the fast first step is near equilibrium']] });
+  T('gchem2.coupled-reactions', { tf: [['Coupling a nonspontaneous reaction to a spontaneous one can make the total ΔG negative', true], ['When reactions are added, their ΔG° values add', true], ['Cells use ATP hydrolysis to drive reactions that would not go on their own', true],
+      ['Coupled reactions must share an intermediate or be linked in some way', true], ['Coupling changes the ΔG° of each separate reaction', false, 'Each keeps its own ΔG°; the totals add'], ['Smelting iron ore with carbon is a coupled process in which carbon\'s oxidation drives the reduction of the ore', true],
+      ['A coupled process with a total ΔG° of +5 kJ/mol is strongly favored', false], ['When reactions are added, their K values multiply', true], ['Hydrolysis of ATP has a ΔG° of about −30.5 kJ/mol', true],
+      ['When reactions are added, their K values add', false, 'K values multiply'], ['Any two reactions in the same flask are automatically coupled', false, 'They must be linked, for example by a shared intermediate'],
+      ['Reversing a reaction changes the sign of its ΔG°', true], ['Multiplying a reaction by 2 doubles its ΔG°', true]] });
+
+  /* ---- more topics, so variety does not lean on the extra forms ---- */
+  T('gchem2.standard-entropy', { share: { 1: 0.55 }, forms: { 1: ['custom', 'custom', 'tf'] } });
+  T('gchem2.manipulating-k', { share: { 1: 0.4, 2: 0.4, 3: 0.3 }, forms: { 1: ['tf', 'tf1'], 2: ['tf', 'tf1'], 3: ['tf1'] },
+    tf: [['Reversing a reaction gives a new K equal to 1/K', true], ['Multiplying a reaction by 2 squares K', true], ['Halving a reaction gives the square root of K', true], ['Adding two reactions multiplies their K values', true],
+      ['Multiplying a reaction by 2 doubles K', false, 'K is squared'], ['Reversing a reaction gives −K', false, 'It gives 1/K'], ['Adding two reactions adds their K values', false, 'The K values multiply'], ['K changes when the temperature changes', true],
+      ['Multiplying a reaction by 3 raises K to the third power', true], ['Reversing a reaction leaves K the same', false]] });
+  T('gchem2.weak-acid-ph', { share: { 2: 0.3, 3: 0.4 }, forms: { 2: ['tf', 'tf1'], 3: ['tf1'] },
+    tf: [['For a weak acid, the small-x shortcut works when x is under about 5% of the starting concentration', true], ['A weak acid ionizes only partly in water', true], ['At the same concentration, a weak acid has a higher pH than a strong acid', true],
+      ['For a weak acid, [H₃O⁺] equals the starting acid concentration', false, 'Only a small share ionizes'], ['A larger Kₐ means a stronger acid', true], ['pH = −log[H₃O⁺]', true], ['Diluting a weak acid lowers its pH', false, 'It raises the pH'],
+      ['When the shortcut fails, you solve the quadratic equation', true], ['For a weak acid HA, [A⁻] = [H₃O⁺] at equilibrium (ignoring water)', true], ['A weak acid has a pH of exactly 7', false]] });
+  T('gchem2.kinetic-control', { share: { 1: 0.65 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['ΔG° tells you nothing about the activation energy of a reaction', true], ['A reaction with a negative ΔG° may still be too slow to notice', true], ['Diamond turns into graphite at room temperature so slowly that it is not seen', true], ['A large negative ΔG° means a reaction is fast', false, 'ΔG° says nothing about speed'],
+      ['A spark can start a hydrogen–oxygen reaction by getting molecules over the activation barrier', true], ['A catalyst changes ΔG° for a reaction', false, 'It only lowers the activation energy'], ['Wood does not burn at room temperature without ignition, though burning is favored', true],
+      ['Thermodynamics tells whether a reaction is favored; kinetics tells how fast it goes', true], ['Every favored reaction happens quickly', false], ['Raising the temperature speeds up most reactions', true]] });
+
+  /* ---- auto shares: every level still under 60% on its own also draws from the bank (never lowers a share set above) ---- */
+  (function () { var up = function (id, s) { var b = BK[id], tf = (b && b.tf) || []; if (!b) return; if (!(b.sort || b.pair || b.yn || (tf.filter(function (x) { return x[1]; }).length >= 3 && tf.filter(function (x) { return !x[1]; }).length >= 3))) return; b.share = b.share || {}; Object.keys(s).forEach(function (L) { b.share[L] = Math.max(b.share[L] || 0, s[L]); }); };
+    up('gchem2.mechanisms', { 1: 0.35 });
+    up('gchem2.pre-equilibrium', { 1: 0.35 });
+    up('gchem2.manipulating-k', { 1: 0.35 });
+    up('gchem2.kp-kc', { 2: 0.35, 3: 0.35 });
+    up('gchem2.percent-ionization', { 3: 0.35 });
+    up('gchem2.weak-base-ph', { 1: 0.35 });
+    up('gchem2.acid-strength-structure', { 1: 0.35 });
+    up('gchem2.indicators', { 1: 0.35, 3: 0.35 });
+    up('gchem2.comparing-solubility', { 3: 0.35 });
+    up('gchem2.complex-ions', { 1: 0.5, 2: 0.35 });
+    up('gchem2.entropy-microstates', { 1: 0.35, 2: 0.35 });
+    up('gchem2.standard-entropy', { 1: 0.35, 2: 0.35 });
+    up('gchem2.kinetic-control', { 3: 0.35 });
+    up('gchem2.free-energy-k', { 1: 0.35 });
+    up('gchem2.coupled-reactions', { 1: 0.35, 3: 0.35 });
+    up('gchem2.electrolytic-cells', { 1: 0.35, 2: 0.35, 3: 0.35 });
+    up('gchem2.binding-energy', { 1: 0.5, 3: 0.35 });
+    up('gchem2.coordination-compounds', { 1: 0.35, 3: 0.5 });
+    up('gchem2.coordination-isomers', { 3: 0.35 });
+  })();
+
+  Object.keys(BK).forEach(function (id) {
+    var base = ML.getGen(id); if (!base) return;
+    ML.gen(id, function (R, ctx) {
+      var o = BK[id], L = (ctx && ctx.level) || 1, sh = o.share && o.share[L];
+      if (sh && R.chance(sh)) { var p = make(R, o, L); if (p) return p; }
+      return base(R, ctx);
+    });
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);
+
+
+/* ---- More forms of the same questions (round 7, "widen"): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - two at once: two different questions of the topic, answered together (short questions only, at most one of them with
+     a picture, which then comes first; not in the courses for young children, whose answer box for two parts would
+     also show a keypad button they don't need).
+   - check a number: a numeric question with a classmate's number, either the right one or a slip learners often make
+     (a power of ten, a factor of two, a lost minus sign, off by one), and "Is that right?" (Yes / No; not in placement).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'gchem2', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf')) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function numVal(a) { var s = String(a.v).replace(/\s/g, ''), m = /^(-?[\d.]+)\*10\^(-?\d+)$/.exec(s); return m ? +m[1] * Math.pow(10, +m[2]) : (/^-?\d*\.?\d+$/.test(s) ? +s : NaN); }
+  function sigOf(a) { var s = String(a.v).split('*')[0].replace(/^-/, '').replace('.', '').replace(/^0+/, ''); return Math.max(2, Math.min(4, s.length || 1)); }
+  function numTex(x, n) {
+    var y = Number(x.toPrecision(n)), e = y === 0 ? 0 : Math.floor(Math.log10(Math.abs(y)) + 1e-12);
+    if (e >= 6 || e <= -4) { var m = Number((y / Math.pow(10, e)).toPrecision(n)); return m.toFixed(Math.max(0, n - 1)) + ' \\times 10^{' + e + '}'; }
+    return y.toFixed(Math.max(0, n - 1 - e));
+  }
+  function numCheckable(p) {
+    var a = p.a; if (YOUNG || !a || a.t !== 'num' || a.form || a.frac) return false;
+    var v = numVal(a); return isFinite(v) && v !== 0 && txt(p.q).length <= 700;
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = numVal(a), exact = !a.rtol && Math.round(v) === v, n = sigOf(a), right = R.coin(), w;
+    var cands = exact ? [v + 1, v - 1, 2 * v, v + 2].filter(function (x) { return x !== v && (v < 0 || x >= 0); })
+      : [10, 0.1, 2, 0.5, 1000, 0.001].concat(v < 0 || /\bsign\b/i.test(txt(p.q)) ? [-1, -1, -1] : []).map(function (k) { return v * k; });
+    // a wrong value must really be wrong: it has to fail the problem's own answer check
+    cands = cands.filter(function (x) { try { return !ML.check(a, exact ? String(x) : numTex(x, n).replace(' \\times 10^{', 'e').replace('}', ''), { q: p.q, unit: p.unit }).ok; } catch (e) { return false; } });
+    if (!cands.length) return null;
+    w = R.pick(cands);
+    var unit = p.unit ? '&nbsp;' + p.unit : '', pc = a.pct && !p.unit ? '\\%' : '';
+    function vTex() { var s = String(a.v).replace(/\s/g, ''), m = /^(-?[\d.]+)\*10\^(-?\d+)$/.exec(s); return m ? m[1] + ' \\times 10^{' + m[2] + '}' : s; } // the answer exactly as the problem gives it
+    function tex(x) { return '$' + (x === v ? vTex() : exact ? String(x) : numTex(x, n)) + pc + '$' + unit; }
+    var shown = right ? v : w;
+    var out = { q: p.q + '<p>A classmate answered: <b>' + tex(shown) + '</b></p><p>Is that right?</p>', a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: (p.steps || []).concat([right ? 'So <b>yes</b>, the classmate is right.' : 'So <b>no</b>: the answer is ' + tex(v) + ', not ' + tex(shown) + '.']) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (mode !== 'place' && numCheckable(p)) forms.push('num');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'num' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

@@ -291,8 +291,10 @@
     var shape3 = R.int(0, 2);
     if (shape3 === 0) { var ph = R.int(2, 9); return { q: 'What is the hydrogen ion concentration of a solution at pH ' + ph + '? (Type it like 1e-5.)', a: num('1e-' + ph, { rtol: 0.01 }), unit: 'mol/L', hint: '$[\\text{H}^+] = 10^{-\\text{pH}}$.', steps: ['$[\\text{H}^+] = 10^{-\\text{pH}}$.', 'So $[\\text{H}^+] = 10^{-' + ph + '}$ mol/L.'] }; }
     if (shape3 === 1) { var h = R.int(2, 10); return { q: 'A solution has $[\\text{H}^+] = 10^{-' + h + '}$ mol/L. What is its pH?', a: num(h), hint: 'The pH is the power of ten, without the minus sign.', steps: ['$[\\text{H}^+] = 10^{-\\text{pH}}$, so the pH is the exponent without the sign.', 'pH = <b>' + h + '</b> (' + (h < 7 ? 'acidic' : h === 7 ? 'neutral' : 'basic') + ').'] }; }
-    var p0 = R.int(5, 8), drop = R.int(1, 3), p1 = p0 - drop;
-    return { q: 'Acid rain falls on a pond, and its pH drops from ' + p0 + ' to ' + p1 + '. By what factor does the H⁺ concentration change?', a: num(Math.pow(10, drop)), hint: 'Did H⁺ go up or down? By how many powers of ten?', steps: ['The pH fell by ' + drop + ', so H⁺ rose.', 'Factor: $10^{' + drop + '} = ' + commas(Math.pow(10, drop)) + '$.', 'The water has <b>' + commas(Math.pow(10, drop)) + ' times</b> as much H⁺ as before.'] };
+    var p0 = R.int(5, 8), drop = R.int(1, 3), p1 = p0 - drop, where = R.pick(['Acid rain falls on a pond', 'Acid rain falls on a lake', 'Runoff from a mine drains into a stream', 'A gardener adds sulfur to the soil water in a pot', 'Carbon dioxide bubbles into a fish tank', 'Lemon juice is stirred into a glass of water']);
+    if (R.chance(0.3)) { var up0 = R.int(3, 6), rise = R.int(1, 3), what = R.pick(['Lime is added to an acidic lake', 'Baking soda is stirred into an acidic solution', 'A farmer spreads lime on acidic soil, and the soil water changes']);
+      return { q: what + ', and the pH rises from ' + up0 + ' to ' + (up0 + rise) + '. By what factor does the H⁺ concentration go down?', a: num(Math.pow(10, rise)), hint: 'Each step up in pH means ten times less H⁺.', steps: ['The pH rose by ' + rise + '.', 'Each unit is a factor of 10, so H⁺ went down by $10^{' + rise + '} = ' + Math.pow(10, rise) + '$ times.'] }; }
+    return { q: where + ', and its pH drops from ' + p0 + ' to ' + p1 + '. By what factor does the H⁺ concentration change?', a: num(Math.pow(10, drop)), hint: 'Did H⁺ go up or down? By how many powers of ten?', steps: ['The pH fell by ' + drop + ', so H⁺ rose.', 'Factor: $10^{' + drop + '} = ' + commas(Math.pow(10, drop)) + '$.', 'The water has <b>' + commas(Math.pow(10, drop)) + ' times</b> as much H⁺ as before.'] };
   });
 
   /* ---- monomers and polymers ---- */
@@ -317,10 +319,10 @@
         ['A cell builds a protein from amino acids. Which reaction is this, and does it use or release water?', 'Dehydration synthesis, which releases water', ['Dehydration synthesis, which uses water', 'Hydrolysis, which releases water', 'Hydrolysis, which uses water'], 'Building a bond between monomers releases a water molecule: dehydration synthesis.']]);
       return { q: q2[0], a: mc(q2[1], q2[2]), viz: quiet('bi-molecule', { mode: 'polymer', n: 3 }), hint: '"Dehydration" means water taken out; "hydrolysis" means splitting with water.', steps: [q2[3], 'So: <b>' + q2[1] + '</b>'] };
     }
-    var shape = R.int(0, 2), n = R.int(3, 12);
+    var shape = R.int(0, 2), n = R.int(3, 30);
     if (shape === 0) return { q: 'A chain of ' + n + ' amino acids is built by dehydration synthesis. How many water molecules are released?', a: num(n - 1), hint: 'How many links join ' + n + ' units in a row?', steps: ['Each new bond between neighbors releases one water.', 'A chain of ' + n + ' units has ' + (n - 1) + ' bonds.', 'So <b>' + (n - 1) + '</b> water molecules.'] };
     if (shape === 1) { var m = R.int(20, 300); return { q: 'A starch chain of ' + m + ' glucose units is completely hydrolyzed into glucose. How many water molecules are used?', a: num(m - 1), hint: 'One water for each bond broken.', steps: ['The chain has $' + m + ' - 1 = ' + (m - 1) + '$ bonds.', 'Hydrolysis uses one water per bond: <b>' + (m - 1) + '</b>.'] }; }
-    var k = R.int(2, 4), C = 6 * k, H = 12 * k - 2 * (k - 1), O = 6 * k - (k - 1), f = 'C' + C + 'H' + H + 'O' + O;
+    var k = R.int(2, 6), C = 6 * k, H = 12 * k - 2 * (k - 1), O = 6 * k - (k - 1), f = 'C' + C + 'H' + H + 'O' + O;
     return { q: 'Glucose is C₆H₁₂O₆. What is the formula of the molecule made by joining ' + k + ' glucose molecules in a chain by dehydration synthesis?', a: { t: 'formula', v: f }, hint: 'Add up the atoms of the glucose molecules, then subtract one H₂O for each new bond.',
       steps: [k + ' glucose: C' + sub(C) + 'H' + sub(12 * k) + 'O' + sub(6 * k) + '.', k + ' units in a chain have ' + (k - 1) + ' bond' + (k > 2 ? 's' : '') + ', so ' + (k - 1) + ' H₂O leave' + (k > 2 ? '' : 's') + ': subtract H' + sub(2 * (k - 1)) + 'O' + (k > 2 ? sub(k - 1) : '') + '.', 'The product is <b>C' + sub(C) + 'H' + sub(H) + 'O' + sub(O) + '</b>.'] };
   });
@@ -695,8 +697,8 @@
     var L = lv(ctx);
     if (L === 1) { var q = R.pick(ATP_Q); return { q: q[0], a: mc(q[1], q[2]), viz: quiet('bi-energy', { mode: 'atp' }), hint: 'ATP → ADP + phosphate + energy; food energy recharges ADP.', steps: ['ATP (adenine, ribose, three phosphates) releases energy when it becomes ADP and phosphate; energy from food recharges ADP.', 'So: <b>' + q[1] + '</b>'] }; }
     if (L === 2) return tfItem(R.pick(ATP_TF), 'Does breaking a bond release energy or take it in?');
-    if (R.coin()) { var n = R.int(2, 12); return { q: 'Under standard conditions, hydrolyzing 1 mole of ATP releases about 7.3 kcal. How much energy do ' + n + ' moles release?', a: num(fix(7.3 * n, 3), { rtol: 0.01 }), unit: 'kcal', hint: 'Multiply the moles by 7.3 kcal.', steps: ['$' + n + ' \\times 7.3 = ' + fix(7.3 * n, 3) + '$ kcal.'] }; }
-    var need = R.pick([5, 9, 12, 15, 17, 20, 25, 28, 33, 40]), k = Math.ceil(need / 7.3);
+    if (R.coin()) { var n = R.int(2, 25); return { q: 'Under standard conditions, hydrolyzing 1 mole of ATP releases about 7.3 kcal. How much energy do ' + n + ' moles release?', a: num(fix(7.3 * n, 3), { rtol: 0.01 }), unit: 'kcal', hint: 'Multiply the moles by 7.3 kcal.', steps: ['$' + n + ' \\times 7.3 = ' + fix(7.3 * n, 3) + '$ kcal.'] }; }
+    var need = R.int(5, 45), k = Math.ceil(need / 7.3);
     return { q: 'A reaction needs ' + need + ' kcal/mol to go forward. Each ATP hydrolysis supplies about 7.3 kcal/mol. What is the smallest whole number of ATP the cell must spend per reaction?', a: num(k), hint: 'How many 7.3s does it take to reach ' + need + '?', steps: [(k - 1) + ' ATP give $' + (k - 1) + ' \\times 7.3 = ' + fix((k - 1) * 7.3, 2) + '$ kcal: not enough.', k + ' ATP give $' + k + ' \\times 7.3 = ' + fix(k * 7.3, 2) + '$ kcal: enough.', 'So <b>' + k + '</b> ATP.'] };
   });
 
@@ -798,7 +800,7 @@
     if (L === 2) { var t = R.pick(FER_TR); return { q: t[0], a: mc(t[1], t[2]), hint: 'Fermentation keeps glycolysis going; glycolysis makes 2 ATP.', steps: ['Glycolysis makes 2 ATP per glucose and uses NAD⁺. Fermentation recycles the NAD⁺ but makes no ATP itself.', 'So: <b>' + t[1] + '</b>'] }; }
     var shape = R.int(0, 1);
     if (shape === 0) { var g = R.int(2, 30); return { q: 'A cell has ' + g + ' glucose molecules. How many ATP does it get by fermentation, and about how many with oxygen (about 30 per glucose)?', a: { t: 'multi', parts: [{ label: 'Fermentation', a: num(2 * g) }, { label: 'Aerobic (about)', a: num(30 * g, { rtol: 0.07 }) }] }, hint: '2 per glucose without oxygen; about 30 with it.', steps: ['Fermentation: $' + g + ' \\times 2 = ' + 2 * g + '$ ATP.', 'Aerobic: $' + g + ' \\times 30 = ' + 30 * g + '$ ATP (about).'] }; }
-    var atp = R.pick([20, 40, 60, 100, 120, 200, 300]);
+    var atp = 2 * R.int(5, 150);
     return { q: 'A muscle cell needs ' + atp + ' ATP. How many glucose molecules must it use by fermentation alone?', a: num(atp / 2), hint: 'Fermentation gives 2 ATP per glucose.', steps: ['$' + atp + ' \\div 2 = ' + atp / 2 + '$ glucose.', 'With oxygen it would need only about $' + atp + ' \\div 30 \\approx ' + fix(atp / 30, 1) + '$.'] };
   });
 
@@ -827,7 +829,8 @@
 
   /* ================= Unit 6: Cell Division ================= */
   // diploid numbers (Grokipedia, List of organisms by chromosome count, read 2026-10-26)
-  var SPECIES = [['fruit fly', 8], ['thale cress (Arabidopsis)', 10], ['onion', 16], ['corn', 20], ['rice', 24], ['cat', 38], ['human', 46], ['chimpanzee', 48], ['elephant', 56], ['dog', 78], ['chicken', 78]];
+  var SPECIES = [['fruit fly', 8], ['thale cress (Arabidopsis)', 10], ['onion', 16], ['corn', 20], ['rice', 24], ['cat', 38], ['human', 46], ['chimpanzee', 48], ['elephant', 56], ['dog', 78], ['chicken', 78],
+    ['garden pea', 14], ['tomato', 24], ['mosquito (Aedes aegypti)', 6], ['house mouse', 40], ['cow', 60], ['horse', 64]];
   var CHR_TF = [
     ['Homologous chromosomes are identical copies of each other.', false, 'Homologs carry the same genes in the same order, but one came from each parent and they may carry different alleles. Identical copies are sister chromatids.'],
     ['Sister chromatids are identical copies made when DNA is copied.', true, 'They are joined at the centromere until they separate.'],
@@ -953,7 +956,7 @@
   ];
   G('hsbio.meiosis-variation', function (R, ctx) {
     var L = lv(ctx);
-    if (L === 1) { var n = R.int(1, 8); var pv = { q: 'A species has ' + n + ' homologous pair' + (n > 1 ? 's' : '') + ' of chromosomes ($n = ' + n + '$). How many different chromosome combinations can its gametes have from independent assortment alone?', a: num(Math.pow(2, n)), hint: 'Each pair can line up two ways.', steps: ['Each pair sorts 2 ways, independently of the others.', '$2^{' + n + '} = ' + Math.pow(2, n) + '$ combinations.'] }; if (n <= 3) pv.viz = quiet('bi-meiosis', { pairs: n, stage: 'metaphase1' }); return pv; }
+    if (L === 1) { var n = R.int(1, 10); var pv = { q: 'A species has ' + n + ' homologous pair' + (n > 1 ? 's' : '') + ' of chromosomes ($n = ' + n + '$). How many different chromosome combinations can its gametes have from independent assortment alone?', a: num(Math.pow(2, n)), hint: 'Each pair can line up two ways.', steps: ['Each pair sorts 2 ways, independently of the others.', '$2^{' + n + '} = ' + Math.pow(2, n) + '$ combinations.'] }; if (n <= 3) pv.viz = quiet('bi-meiosis', { pairs: n, stage: 'metaphase1' }); return pv; }
     if (L === 2) { var t = R.pick(VAR_TR); return { q: t[0], a: mc(t[1], t[2]), viz: quiet('bi-meiosis', { pairs: 2, stage: 'prophase1' }), hint: 'Crossing over: between homologs. Assortment: each pair on its own.', steps: ['Crossing over swaps pieces between non-sister chromatids of homologs in prophase I; each pair lines up independently in metaphase I.', 'So: <b>' + t[1] + '</b>'] }; }
     var sp = R.pick(SPECIES.filter(function (s) { return s[1] <= 24; }).concat([['human', 46]])), tn = sp[1], n = tn / 2, comb = Math.pow(2, n), shape = R.coin() && n <= 8;
     if (shape) return { q: 'A ' + sp[0] + ' has $2n = ' + tn + '$. Counting independent assortment only, how many chromosome combinations are possible when one gamete from each of two parents combine?', a: num(comb * comb), hint: 'Find the combinations for one gamete first, then multiply for two.', steps: ['Pairs: $n = ' + tn + ' \\div 2 = ' + n + '$.', 'One gamete: $2^{' + n + '} = ' + commas(comb) + '$.', 'Two gametes: $' + commas(comb) + ' \\times ' + commas(comb) + ' = ' + commas(comb * comb) + '$.'] };
@@ -1258,7 +1261,7 @@
       return { q: 'Cuttings from one ' + sp + ' plant, so all with the same genes, are grown in rich soil and in poor soil. The plants in rich soil grow much taller. What explains the difference?', a: mc('The environment: the genes are the same', ['Different genes in the two groups', 'Mutations caused by the poor soil', 'The plants in rich soil inherited more height alleles']),
         hint: 'What differs between the two groups?', steps: ['Cuttings of one plant have identical genes.', 'Only the soil differs, so the difference comes from <b>the environment</b>.'] };
     }
-    var ng = R.int(2, L === 2 ? 5 : 3);
+    var ng = R.int(2, L === 2 ? 8 : 4);
     if (L === 2) return { q: 'A trait is set by ' + ng + ' genes, and each capital allele adds one dose of pigment. Two plants heterozygous for all ' + ng + ' genes are crossed. How many different shades can the offspring have?', a: num(2 * ng + 1),
       hint: 'How many alleles of these genes does each offspring have? Count from 0 capitals up to all capitals.', steps: ['Each offspring has ' + 2 * ng + ' alleles of these genes.', 'The number of capital alleles can be 0, 1, … ' + 2 * ng + '.', 'That is <b>' + (2 * ng + 1) + '</b> shades.'] };
     var k = R.int(0, 2 * ng), ways = nCr(2 * ng, k), tot = Math.pow(4, ng), genotype = GENE_L.slice(0, ng).map(function (x) { return x + x.toLowerCase(); }).join('');
@@ -1384,7 +1387,7 @@
       return { q: 'A DNA molecule is copied once. What is each of the two new DNA molecules made of?', a: mc('One old strand and one new strand', ['Two new strands (the old molecule stays whole)', 'Two old strands', 'Pieces of old and new DNA mixed along each strand']),
         hint: 'What does each old strand serve as?', steps: ['Each old strand is a template for one new strand.', 'So each copy has <b>one old strand and one new strand</b>: semiconservative replication.'] };
     }
-    var n = R.int(1, 5), tot = Math.pow(2, n), what = R.pick(['total', 'heavy', 'light', 'frac']);
+    var n = R.int(1, 8), tot = Math.pow(2, n), what = R.pick(['total', 'heavy', 'light', 'frac']);
     var q = 'Bacteria with only heavy-nitrogen DNA are moved to light nitrogen. Follow one DNA molecule as it is copied ' + n + ' time' + (n > 1 ? 's' : '') + '. ';
     var steps = ['Each round doubles the molecules: 2<sup>' + n + '</sup> = ' + tot + '.', 'The 2 original heavy strands are never lost; each ends up in its own hybrid (heavy + light) molecule.'];
     if (what === 'total') return { q: q + 'How many DNA molecules are there now?', a: num(tot), hint: 'Each round of copying doubles the number of molecules.', steps: [steps[0], 'There are <b>' + tot + '</b> molecules.'] };
@@ -1515,10 +1518,10 @@
         hint: 'Each cycle doubles the number of copies.', steps: ['Each cycle doubles: ' + n + ' cycles multiply by $2^{' + n + '}$, which is ' + T.commas(Math.pow(2, n)) + '.', (k === 1 ? '' : k + ' × ' + T.commas(Math.pow(2, n)) + ' = ') + '<b>' + T.commas(v) + '</b> copies.'] };
     }
     if (L === 2) {
-      if (R.coin()) { var X = R.pick([1000, 5000, 10000, 50000, 100000, 1000000, 500, 2000]), c = Math.ceil(Math.log(X) / Math.LN2 - 1e-12);
+      if (R.coin()) { var X = R.pick([1, 2, 5]) * Math.pow(10, R.int(2, 7)), c = Math.ceil(Math.log(X) / Math.LN2 - 1e-12);
         return { q: 'Starting from a single copy, what is the fewest number of PCR cycles that makes at least ' + T.commas(X) + ' copies (in an ideal reaction)?', a: num(c),
           hint: 'Find the smallest power of 2 that reaches ' + T.commas(X) + '.', steps: ['$2^{' + (c - 1) + '}$ = ' + T.commas(Math.pow(2, c - 1)) + ', which is less than ' + T.commas(X) + '.', '$2^{' + c + '}$ = ' + T.commas(Math.pow(2, c)) + ', which is enough: <b>' + c + ' cycles</b>.'] }; }
-      var n2 = R.int(3, 8);
+      var n2 = R.int(3, 12);
       return { q: 'A student says that ' + n2 + ' cycles of PCR, starting from 1 copy, make ' + 2 * n2 + ' copies. How many copies are there really (ideal reaction)?', a: num(Math.pow(2, n2)),
         hint: 'Does each cycle add 2 copies, or double the number?', steps: ['Each cycle doubles every copy present; it does not just add two.', '1 → 2 → 4 → … after ' + n2 + ' cycles: $2^{' + n2 + '}$ = <b>' + Math.pow(2, n2) + '</b>.'] };
     }
@@ -1648,7 +1651,7 @@
       return { q: 'A colony of ' + T.commas(N) + ' bacteria has ' + r + ' resistant cells. An antibiotic kills every cell that is not resistant. The survivors then double every hour. How many bacteria are there ' + h + ' hours later?', a: num(r * Math.pow(2, h)),
         hint: 'Only the resistant cells are left. How many doublings happen?', steps: ['Survivors: the ' + r + ' resistant cells.', h + ' doublings multiply by $2^{' + h + '}$, which is ' + Math.pow(2, h) + '.', r + ' × ' + Math.pow(2, h) + ' = <b>' + T.commas(r * Math.pow(2, h)) + '</b>, all resistant.'] };
     }
-    var f = R.pick([1, 2, 5, 10]), s = R.pick([10, 20, 25, 50]), res = 100 * f / (f + (100 - f) * s / 100);
+    var f = R.int(1, 12), s = R.pick([5, 10, 15, 20, 25, 30, 40, 50]), res = 100 * f / (f + (100 - f) * s / 100);
     return { q: 'In a population of insects, ' + f + '% carry a resistance allele. One spraying kills every insect except the resistant ones and ' + s + '% of the others. What percent of the survivors are resistant? (Round to the nearest whole percent.)', a: { t: 'num', v: String(Math.round(res)), tol: 0.6, pct: true },
       hint: 'Imagine 100 insects. How many of each kind survive?', steps: ['Out of 100 insects: ' + f + ' resistant all survive; ' + (100 - f) + ' others, ' + s + '% survive = ' + T.num(fix((100 - f) * s / 100)) + '.', 'Resistant share: ' + f + ' ÷ ' + T.num(fix(f + (100 - f) * s / 100)) + ' ≈ <b>' + Math.round(res) + '%</b>, up from ' + f + '%.'] };
   });
@@ -1890,7 +1893,7 @@
     if (L === 2) {
       if (R.chance(0.3)) return { q: 'Only about 10% of the energy in one trophic level ends up in the next. What happens to most of the rest?', a: mc('It is used in cellular respiration and given off as heat', ['It is destroyed', 'It is stored in the soil for later', 'It turns into matter']),
         hint: 'Energy is never created or destroyed.', steps: ['Most food energy powers the eater\'s own life through respiration, plus some is lost in waste.', 'That energy leaves as <b>heat</b>; it is not destroyed.'] };
-      var top = R.pick([5, 10, 20, 50, 100]), lev = R.int(3, 4), need = top * Math.pow(10, lev - 1);
+      var top = R.pick([2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60, 75, 80, 100]), lev = R.int(3, 4), need = top * Math.pow(10, lev - 1);
       return { q: 'A top predator at trophic level ' + lev + ' (producers are level 1) gets ' + top + ' kcal per square meter each year. About how much energy must the producers capture, by the 10% rule?', a: num(need), unit: 'kcal',
         hint: 'Going down a level, multiply by 10.', steps: ['Each level down holds about 10 times as much energy.', top + ' × 10' + (lev > 2 ? '<sup>' + (lev - 1) + '</sup>' : '') + ' = <b>' + T.commas(need) + ' kcal</b>.'] };
     }
@@ -1931,7 +1934,7 @@
       hint: 'Do all organisms need oxygen?', steps: ['Many microbes do not need oxygen, and some cannot survive it.', 'So <b>anaerobic life keeps going</b>, by fermentation or by using other substances in place of oxygen.'] };
       var w = R.pick([['aerobic', 'with oxygen'], ['anaerobic', 'without oxygen']]); return { q: 'What does "' + w[0] + '" mean?', a: mc(cap(w[1]), [w[0] === 'aerobic' ? 'Without oxygen' : 'With oxygen', 'With light', 'Without water']), hint: 'Aero- refers to air.', steps: ['"' + cap(w[0]) + '" means <b>' + w[1] + '</b>.'] }; }
     if (L === 2) { var c = R.pick(ANA); return { q: c[0], a: mc(c[1], c[2]), hint: 'What changes when oxygen is missing?', steps: ['Without oxygen, microbes switch to other pathways.', '<b>' + c[1] + '</b>.'] }; }
-    var g = R.int(2, 12), aer = 30, ferm = 2;
+    var g = R.int(2, 30), aer = 30, ferm = 2;
     if (R.coin()) return { q: 'Take aerobic respiration to make about ' + aer + ' ATP per glucose, and fermentation 2. How many glucose molecules must a cell ferment to make as much ATP as it gets from ' + g + ' glucose by aerobic respiration?', a: num(g * aer / ferm),
       hint: 'Find the ATP from aerobic respiration, then divide by 2 per glucose.', steps: [g + ' × ' + aer + ' = ' + g * aer + ' ATP.', g * aer + ' ÷ 2 = <b>' + g * aer / ferm + '</b> glucose by fermentation.'] };
     return { q: 'A yeast culture in a sealed jar ferments ' + g * 10 + ' glucose molecules. Fermentation makes 2 ATP per glucose. How many ATP does it make?', a: num(g * 20),
@@ -1980,7 +1983,7 @@
   G('hsbio.group-behavior', function (R, ctx) {
     var L = lvl(ctx);
     if (L === 1) { var g = R.pick(GB); return { q: g[0] + ' Which benefit of group living does this show?', a: mc(g[1], GB.filter(function (x) { return x !== g; }).map(function (x) { return x[1]; })), hint: 'Is it about seeing, sharing risk, confusing, or hunting?', steps: ['<b>' + g[1] + '</b>.'] }; }
-    var n = R.pick([5, 8, 10, 20, 25, 40, 50, 100]);
+    var n = R.chance(0.3) ? R.pick([5, 8, 10, 20, 25, 40, 50, 100]) : R.int(4, 80);
     if (L === 2) { if (R.chance(0.3)) return { q: 'Why do animals that live in groups keep that behavior over many generations?', a: mc('It raises the survival and reproduction of the individuals who do it', ['They do it for the good of the species', 'They are taught it by the oldest animal', 'Groups never have any costs']),
       hint: 'Natural selection acts on what individuals pass on.', steps: ['Selection favors alleles that help the individuals carrying them.', 'Group behavior persists because it <b>helps the individuals</b> in the group, not because it helps the species.'] };
       return { q: 'A predator catches exactly one animal each time it attacks a group of ' + n + '. What is the chance that a particular animal in the group is the one caught in one attack?', a: fracA(1, n), hint: 'Each animal is equally likely to be the one.', steps: ['Each of the ' + n + ' is equally likely to be taken.', 'Chance: <b>' + T.frac(1, n) + '</b>' + (100 % n === 0 ? ' = ' + 100 / n + '%' : '') + '.'] }; }
@@ -2039,7 +2042,7 @@
       var v = hot ? 'widen' : 'narrow';
       return { q: 'When the body is too ' + (hot ? 'warm' : 'cold') + ', blood vessels in the skin ' + v + '. How does that help?', a: mc(hot ? 'More warm blood flows near the surface, where heat escapes to the air' : 'Less warm blood flows near the surface, so less heat escapes', [hot ? 'Less blood near the surface keeps the heat in' : 'More blood near the surface warms the skin from outside', 'It makes the heart beat slower', 'It makes more sweat']),
         hint: 'Blood carries heat. Where does heat escape from the body?', steps: ['Blood carries heat from the core.', hot ? 'Wider skin vessels bring more of it to the surface, where it is lost: the body cools.' : 'Narrower skin vessels keep warm blood deep in the body: heat is kept in.'] }; }
-    var E = R.pick([240, 360, 480, 600, 720, 1200]);
+    var E = 120 * R.int(1, 15);
     return { q: 'Evaporating sweat carries away about 2.4 kJ of heat per gram. During a workout, a person\'s body must get rid of ' + E + ' kJ of extra heat by sweating. About how many grams of sweat must evaporate?', a: num(E / 2.4, { rtol: 0.01 }), unit: 'g',
       hint: 'Divide the heat by the heat per gram.', steps: [E + ' kJ ÷ 2.4 kJ per gram = <b>' + T.num(fix(E / 2.4)) + ' g</b> of sweat, if all of it evaporates.'] };
   });
@@ -2179,7 +2182,7 @@
     if (L === 2) { var dry = R.coin();
       return { q: dry ? 'After hours of hiking in the heat with nothing to drink, what happens to ADH and to the urine?' : 'After drinking several large glasses of water, what happens to ADH and to the urine?', a: mc(dry ? 'More ADH; less urine, and more concentrated' : 'Less ADH; more urine, and more dilute', [dry ? 'Less ADH; more urine, and more dilute' : 'More ADH; less urine, and more concentrated', 'No change in ADH; the kidneys stop working', 'More ADH; more urine']),
         viz: { name: 'bi-feedback', opts: { loop: 'water', side: dry ? 'low' : 'high', quiet: true, interactive: false } }, hint: 'ADH tells the kidneys to keep water.', steps: [dry ? 'The blood is short of water, so the brain releases more ADH.' : 'The blood has extra water, so the brain releases less ADH.', dry ? 'The kidneys keep more water: <b>less urine, more concentrated</b>.' : 'The kidneys let more water go: <b>more urine, more dilute</b>.'] }; }
-    var F = R.pick([150, 160, 170, 180, 200]), U = R.pick([1, 1.2, 1.5, 1.6, 1.8, 2]), pc = fix(100 * (F - U) / F);
+    var F = R.int(14, 20) * 10, U = R.int(8, 25) / 10, pc = fix(100 * (F - U) / F);
     return { q: 'Suppose a person\'s kidneys filter ' + F + ' liters of fluid out of the blood in a day, and ' + T.num(U) + ' liters leave the body as urine. What percent of the filtered fluid is reabsorbed? (Round to one decimal place.)', a: { t: 'num', v: String(+pc.toFixed(1)), tol: 0.051, pct: true },
       hint: 'Reabsorbed = filtered − urine. Then divide by the amount filtered.', steps: ['Reabsorbed: ' + F + ' − ' + T.num(U) + ' = ' + T.num(fix(F - U)) + ' L.', T.num(fix(F - U)) + ' ÷ ' + F + ' × 100 ≈ <b>' + T.num(+pc.toFixed(1)) + '%</b>.'] };
   });
@@ -2199,3 +2202,640 @@
       a: num(hrs[mx]), hint: 'Find the highest point.', steps: ['The highest point is at hour ' + hrs[mx] + '.', drought ? 'In dry soil, the stomata partly close around midday, when water loss would be greatest; that is ABA at work.' : 'With plenty of water, they open widest around midday, when light for photosynthesis is strongest.', 'Answer: <b>' + hrs[mx] + '</b>.'] };
   });
 })(window.MathLadder);
+
+/* ---- More of the same skills (round 7, "widen"): larger fact banks ----
+   Topics whose levels had few different problems also draw from the banks below, built from the topic's own facts:
+   true or false; which statement is true (or false); sorting (which one is …, which is not, choose all, which group);
+   a term and its meaning, both ways; and the order of steps (what comes next, what comes first, put in order).
+   Every answer comes from the bank itself, so the right choice and the others can never disagree. Shares are per level:
+   the topic's own generator still makes the rest. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen) return;
+  var BK = {};
+  function T(id, o) { var b = BK[id] || (BK[id] = {}); Object.keys(o).forEach(function (k) { b[k] = k === 'share' || k === 'forms' ? Object.assign(b[k] || {}, o[k]) : o[k]; }); }
+  function cap(s) { s = String(s); return s.charAt(0).toUpperCase() + s.slice(1); }
+  function capI(s) { s = String(s); return /\s/.test(s) || s.length > 3 ? cap(s) : s; } // genotypes like tt stay as written
+  function low(s) { s = String(s); return /^[A-Z][a-z]/.test(s) && !/^(DNA|RNA|ATP|I )/.test(s) ? s.charAt(0).toLowerCase() + s.slice(1) : s; }
+  function dot(s) { s = String(s).replace(/\s+$/, ''); return /[.!?)]$/.test(s) ? s : s + '.'; }
+  function nodot(s) { return String(s).replace(/\.$/, ''); }
+  function fill(t, o) { return t.replace(/\{(\w)\}/g, function (_, k) { return o[k]; }); }
+  function MC(right, wrong) { return { t: 'mc', choices: [right].concat(wrong), v: 0 }; }
+  function TF(v) { return { t: 'mc', choices: ['True', 'False'], v: v ? 0 : 1, keep: true }; }
+  function LT(i) { return String.fromCharCode(65 + i); }
+  function uniq(a) { return a.filter(function (x, i) { return a.indexOf(x) === i; }); }
+
+  var FORMS = { 1: ['tf', 'tf1', 'one', 'cat', 'fwd', 'back', 'next'], 2: ['tf', 'tf1', 'one', 'not', 'cat', 'fwd', 'back', 'next', 'first'], 3: ['tf1', 'not', 'all', 'back', 'fwd', 'order', 'first', 'cat'] };
+  function can(o, f) {
+    var tf = o.tf || [], s = o.sort, pr = o.pair, sq = o.seq;
+    if (f === 'custom') return !!o.make;
+    if (f === 'tf') return tf.length > 0;
+    if (f === 'tf1') return tf.filter(function (x) { return x[1]; }).length >= 3 && tf.filter(function (x) { return !x[1]; }).length >= 3;
+    if (f === 'one' || f === 'not' || f === 'all' || f === 'cat') return !!s;
+    if (f === 'fwd' || f === 'back') return !!pr;
+    return !!sq;
+  }
+  function make(R, o, L) {
+    var forms = (o.forms && o.forms[L]) || FORMS[L];
+    forms = forms.filter(function (f) { return can(o, f); });
+    if (!forms.length) return null;
+    var f = R.pick(forms), p = null;
+    if (f === 'custom') p = o.make(R, L);
+    else if (f === 'tf' || f === 'tf1') p = mkTf(R, o, f);
+    else if (o.sort && (f === 'one' || f === 'not' || f === 'all' || f === 'cat')) p = mkSort(R, o.sort, f, L);
+    else if (f === 'fwd' || f === 'back') p = mkPair(R, o.pair, f);
+    else p = mkSeq(R, o.seq, f, L);
+    if (p && !p.hint) p.hint = o.hint || 'Think back to the lesson, then check each choice.';
+    return p;
+  }
+  function mkTf(R, o, f) {
+    var tf = o.tf;
+    if (f === 'tf') {
+      var t = R.pick(tf);
+      return { q: 'True or false: ' + dot(t[0]), a: TF(t[1]), steps: [t[2] ? dot(t[2]) : 'The statement is ' + (t[1] ? 'true.' : 'false.'), 'So the answer is <b>' + (t[1] ? 'true' : 'false') + '</b>.'] };
+    }
+    var wantTrue = R.coin(), good = tf.filter(function (x) { return x[1] === wantTrue; }), bad = tf.filter(function (x) { return x[1] !== wantTrue; });
+    var r = R.pick(good), ws = R.sample(bad, 3);
+    return { q: 'Which statement is <b>' + (wantTrue ? 'true' : 'false') + '</b>?', a: MC(dot(r[0]), ws.map(function (x) { return dot(x[0]); })),
+      steps: [(wantTrue ? 'True: ' : 'False: ') + dot(r[0]) + (r[2] ? ' ' + dot(r[2]) : '')].concat(ws.map(function (x) { return (wantTrue ? 'False: ' : 'True: ') + dot(x[0]) + (x[2] ? ' ' + dot(x[2]) : ''); })) };
+  }
+  function why(s, it) {
+    if (it[2]) return dot(cap(it[2]));
+    if (it[0].length <= 3) return it[0] + ': ' + low(s.cats[it[1]][2]) + '.';
+    if (/[.?!]$/.test(it[0])) return '“' + cap(it[0]) + '” ' + cap(s.cats[it[1]][2]) + '.';
+    return cap(dot(it[0] + ' ' + (s.be || 'is') + ' ' + s.cats[it[1]][0]));
+  }
+  function mkSort(R, s, f, L) {
+    var keys = Object.keys(s.cats), k = R.pick(keys.filter(function (c) { return s.items.some(function (x) { return x[1] === c; }); })), C = s.cats[k];
+    // names ("a frog") and descriptions ("It has no tubes for water.") are not mixed in one list of choices
+    var isD = function (x) { return /[.?!]$/.test(x[0]); }, names = s.items.filter(function (x) { return !isD(x); }), descs = s.items.filter(isD);
+    var useD = f !== 'cat' && (names.length < 6 || (descs.length >= 6 && R.coin())), pool = useD ? descs : names;
+    var inC = pool.filter(function (x) { return x[1] === k; }), outC = pool.filter(function (x) { return x[1] !== k; });
+    var verb1 = useD ? 'describes ' : (s.be === 'are' ? 'are ' : 'is '), verbN = useD ? 'describe ' : 'are ';
+    var lead = s.lead ? s.lead + ' ' : '';
+    if (f === 'cat') {
+      var it = R.pick(s.items), opts = keys.length > 4 ? [it[1]].concat(R.sample(keys.filter(function (c) { return c !== it[1]; }), 3)) : [it[1]].concat(keys.filter(function (c) { return c !== it[1]; }));
+      var a = { t: 'mc', choices: opts.map(function (c) { return cap(s.cats[c][2]); }), v: 0 };
+      if (keys.length <= 3) { a.choices = keys.map(function (c) { return cap(s.cats[c][2]); }); a.v = keys.indexOf(it[1]); a.keep = true; }
+      return { q: lead + fill(s.catq || 'Which group does this belong to? {x}', { x: dot(capI(it[0])) }), a: a, steps: [why(s, it), 'So the answer is <b>' + low(s.cats[it[1]][2]) + '</b>.'] };
+    }
+    if (f === 'one' && inC.length && outC.length >= 3) {
+      var r = R.pick(inC), w = R.sample(outC, 3);
+      return { q: lead + 'Which of these ' + verb1 + C[0] + '?', a: MC(capI(r[0]), w.map(function (x) { return capI(x[0]); })),
+        steps: [why(s, r)].concat(w.map(function (x) { return why(s, x); })) };
+    }
+    if (f === 'not' && inC.length >= 3 && outC.length) {
+      var r2 = R.pick(outC), w2 = R.sample(inC, 3);
+      return { q: lead + 'Three of these ' + verbN + C[1] + '. Which one ' + (useD ? 'does' : 'is') + ' <b>not</b>?', a: MC(capI(r2[0]), w2.map(function (x) { return capI(x[0]); })),
+        steps: [why(s, r2)].concat(w2.map(function (x) { return why(s, x); })) };
+    }
+    if (f === 'all' && inC.length >= 1 && outC.length >= 1) {
+      var n = M5(R, inC.length + outC.length), kk = R.int(Math.max(1, n - outC.length), Math.min(inC.length, n - 1)), items = R.shuffle(R.sample(inC, kk).concat(R.sample(outC, n - kk)));
+      return { q: lead + 'Choose <b>all</b> of these that ' + verbN + C[1] + '.', a: { t: 'mc', choices: items.map(function (x) { return capI(x[0]); }), v: items.map(function (x, i) { return x[1] === k ? i : -1; }).filter(function (i) { return i >= 0; }) },
+        steps: items.map(function (x) { return why(s, x); }) };
+    }
+    return mkSort(R, s, 'cat', L);
+  }
+  function M5(R, total) { return Math.min(total, R.pick([4, 5])); }
+  function mkPair(R, pr, f) {
+    var it = R.pick(pr.items), kx = f === 'fwd' ? 1 : 0, seen = {}, pool = pr.items.filter(function (x) { if (x === it || x[0] === it[0] || x[1] === it[1] || seen[x[kx]]) return false; seen[x[kx]] = 1; return true; }), others = R.sample(pool, Math.min(3, pool.length));
+    if (f === 'fwd') return { q: fill(pr.fwd, { t: it[0] }), a: MC(cap(it[1]), others.map(function (x) { return cap(x[1]); })), steps: [cap(it[0]) + ': ' + low(dot(it[1]))].concat(others.length ? ['The others: ' + others.map(function (x) { return low(nodot(x[1])) + ' (' + x[0] + ')'; }).join('; ') + '.'] : []) };
+    return { q: fill(pr.back, { d: low(nodot(it[1])) }), a: MC(cap(it[0]), others.map(function (x) { return cap(x[0]); })), steps: [cap(it[0]) + ': ' + low(dot(it[1]))].concat(others.length ? ['The others: ' + others.map(function (x) { return x[0] + ', ' + low(nodot(x[1])); }).join('; ') + '.'] : []) };
+  }
+  function mkSeq(R, sq, f, L) {
+    var lists = sq.lists || [sq], s = R.pick(lists), it = s.items, name = s.name;
+    if (f === 'next') {
+      var i = R.int(0, it.length - 2), w = R.sample(it.filter(function (x, j) { return j !== i + 1 && j !== i; }), Math.min(3, it.length - 2));
+      return { q: 'In ' + name + ', what comes right after this: ' + low(nodot(it[i])) + '?', a: MC(cap(it[i + 1]), w.map(cap)), steps: ['The order: ' + it.map(nodot).join(' → ') + '.', 'Right after ' + low(nodot(it[i])) + ' comes <b>' + low(nodot(it[i + 1])) + '</b>.'] };
+    }
+    var n = Math.min(it.length, L === 3 ? 4 : 3), idx = R.sample(it.map(function (_, j) { return j; }), n).sort(function (a, b) { return a - b; });
+    if (f === 'first') {
+      var last = R.coin() && L > 1, pickI = last ? idx[idx.length - 1] : idx[0];
+      return { q: 'In ' + name + ', which of these comes <b>' + (last ? 'last' : 'first') + '</b>?', a: MC(cap(it[pickI]), idx.filter(function (j) { return j !== pickI; }).map(function (j) { return cap(it[j]); })),
+        steps: ['The order: ' + idx.map(function (j) { return nodot(it[j]); }).join(' → ') + '.', 'So <b>' + low(nodot(it[pickI])) + '</b> comes ' + (last ? 'last' : 'first') + '.'] };
+    }
+    var shown = R.shuffle(idx.slice()), right = idx.map(function (j) { return LT(shown.indexOf(j)); }).join(''), wr = [], g = 0;
+    while (wr.length < 3 && g++ < 100) { var c = R.shuffle(right.split('')).join(''); if (c !== right && wr.indexOf(c) < 0) wr.push(c); }
+    return { q: 'Put these in order for ' + name + ':<br>' + shown.map(function (j, i) { return '<b>' + LT(i) + '</b>: ' + low(nodot(it[j])); }).join('<br>'), a: MC(right.split('').join(', '), wr.map(function (x) { return x.split('').join(', '); })),
+      steps: ['The order: ' + idx.map(function (j) { return LT(shown.indexOf(j)) + ' (' + low(nodot(it[j])) + ')'; }).join(' → ') + '.', 'So the answer is <b>' + right.split('').join(', ') + '</b>.'] };
+  }
+
+  /* ===== hsbio ===== */
+  T('hsbio.elements-bonds', { share: { 1: 0.45 },
+    pair: { fwd: 'How many covalent bonds does {t} usually form?', back: 'Which atom usually forms {d}?', items: [['hydrogen (H)', 'one covalent bond'], ['oxygen (O)', 'two covalent bonds'], ['nitrogen (N)', 'three covalent bonds'], ['carbon (C)', 'four covalent bonds']] },
+    sort: { cats: { c: ['a covalent bond', 'covalent bonds', 'Covalent bond'], h: ['a hydrogen bond', 'hydrogen bonds', 'Hydrogen bond'], i: ['an ionic bond', 'ionic bonds', 'Ionic bond'] }, catq: 'What kind of bond is this? {x}', items: [
+      ['the bond between carbon and hydrogen in methane', 'c'], ['the bond that joins two glucose units in starch', 'c'], ['the bond between the two oxygen atoms in O₂', 'c'], ['the bonds along the sugar-phosphate backbone of DNA', 'c'], ['the bond between an oxygen and a hydrogen inside one water molecule', 'c'],
+      ['the attraction between one water molecule and the next', 'h'], ['the attraction that holds the two strands of DNA together', 'h'], ['the attraction that holds a protein\'s helix in shape', 'h'], ['the attraction that makes water molecules stick together (cohesion)', 'h'],
+      ['the attraction between Na⁺ and Cl⁻ in table salt', 'i'], ['the attraction between Ca²⁺ and Cl⁻ in calcium chloride', 'i'], ['the attraction between K⁺ and Cl⁻ in potassium chloride', 'i']] },
+    tf: [['About 96% of the mass of living things is carbon, hydrogen, oxygen and nitrogen', true], ['Carbon can form four covalent bonds', true], ['Hydrogen bonds are stronger than covalent bonds', false, 'Hydrogen bonds are much weaker'],
+      ['An ionic bond forms when one atom gives electrons to another', true], ['In a covalent bond, atoms share electrons', true], ['Water molecules are held to each other by covalent bonds', false, 'They are attracted by hydrogen bonds']] });
+
+  T('hsbio.carbohydrates', { share: { 1: 0.5 },
+    sort: { cats: { m: ['a monosaccharide', 'monosaccharides', 'Monosaccharide'], d: ['a disaccharide', 'disaccharides', 'Disaccharide'], p: ['a polysaccharide', 'polysaccharides', 'Polysaccharide'] }, catq: 'Is this a monosaccharide, a disaccharide or a polysaccharide? {x}', items: [
+      ['glucose', 'm'], ['fructose', 'm'], ['galactose', 'm'], ['ribose', 'm'], ['deoxyribose', 'm'], ['sucrose (table sugar)', 'd'], ['lactose (milk sugar)', 'd'], ['maltose', 'd'],
+      ['starch', 'p'], ['glycogen', 'p'], ['cellulose', 'p'], ['chitin', 'p']] },
+    pair: { fwd: 'What is the main job of {t}?', back: 'Which carbohydrate has this job: {d}?', items: [['starch', 'stores energy in plants'], ['glycogen', 'stores energy in animals, in the liver and muscles'], ['cellulose', 'builds plant cell walls'],
+      ['chitin', 'builds insect exoskeletons and fungal cell walls'], ['glucose', 'is the sugar cells break down first for energy'], ['ribose', 'is the sugar in RNA']] } });
+
+  T('hsbio.lipids', { share: { 2: 0.75 },
+    tf: [['Fats are polymers made of many identical repeating monomers', false, 'A fat is glycerol plus three fatty acids'], ['Fats are built by dehydration synthesis, releasing three water molecules', true],
+      ['A gram of fat stores about twice as much energy as a gram of carbohydrate', true], ['Steroids are built from glycerol and fatty acids', false, 'Steroids are built of four fused carbon rings'], ['What all lipids have in common is that they do not mix well with water', true],
+      ['Phospholipids form the double layer of cell membranes', true], ['Saturated fats have only single bonds between the carbons of their fatty acids', true], ['Unsaturated fats have one or more double bonds in their fatty acids', true],
+      ['Butter is mostly saturated fat and is solid at room temperature', true], ['Olive oil is mostly unsaturated fat and is liquid at room temperature', true], ['Cholesterol is a steroid', true],
+      ['The body uses cholesterol to build some hormones', true], ['Waxes help keep leaves and feathers waterproof', true], ['Lipids dissolve easily in water', false],
+      ['A phospholipid has a head that is attracted to water and tails that avoid it', true], ['Fat under the skin helps insulate the body', true]],
+    sort: { cats: { s: ['a saturated fat', 'saturated fats', 'Saturated'], u: ['an unsaturated fat', 'unsaturated fats', 'Unsaturated'] }, catq: 'Is this mostly saturated or unsaturated fat? {x}', items: [
+      ['butter', 's'], ['lard', 's'], ['coconut oil', 's'], ['the fat in cheese', 's'], ['olive oil', 'u'], ['canola oil', 'u'], ['the oil in fish', 'u'], ['corn oil', 'u'], ['the oil in nuts', 'u']] } });
+
+  T('hsbio.nucleic-acids', { share: { 1: 0.5 },
+    sort: { cats: { d: ['true of DNA only', 'true of DNA only', 'DNA'], r: ['true of RNA only', 'true of RNA only', 'RNA'], b: ['true of both DNA and RNA', 'true of both', 'Both'] }, catq: 'Is this true of DNA, RNA or both? {x}', items: [
+      ['It has the sugar deoxyribose.', 'd'], ['It contains the base thymine (T).', 'd'], ['It is usually two strands in a double helix.', 'd'], ['It stores genes long term in the nucleus.', 'd'],
+      ['It has the sugar ribose.', 'r'], ['It contains the base uracil (U).', 'r'], ['It is usually a single strand.', 'r'], ['It carries a gene\'s message from the nucleus to a ribosome.', 'r'], ['It brings amino acids to the ribosome.', 'r'],
+      ['It is a polymer of nucleotides.', 'b'], ['It contains the bases adenine, guanine and cytosine.', 'b'], ['It has a backbone of sugars and phosphates.', 'b'], ['Its nucleotides each have a sugar, a phosphate and a base.', 'b']] },
+    tf: [['A nucleotide is made of a sugar, a phosphate group and a nitrogen base', true], ['In DNA, A pairs with T and C pairs with G', true], ['RNA contains thymine', false, 'RNA has uracil in place of thymine'], ['ATP is a nucleotide', true]] });
+
+  T('hsbio.enzymes', { share: { 2: 0.75 },
+    tf: [['An enzyme does not change the overall energy released by a reaction', true], ['A competitive inhibitor blocks an enzyme by sitting in its active site', true], ['Enzymes supply the energy that makes a reaction happen', false, 'They lower the activation energy'],
+      ['One enzyme molecule can catalyze the same reaction many times', true], ['An enzyme makes a reaction release more energy', false], ['Most enzymes are proteins', true], ['Enzymes lower the activation energy of a reaction', true],
+      ['An enzyme is used up in the reaction it speeds up', false, 'It comes out unchanged'], ['Each enzyme has an active site that fits its substrate', true], ['High temperatures can denature an enzyme and change its shape', true],
+      ['Each enzyme works best at a certain pH and temperature', true], ['Pepsin works best in the acid of the stomach', true], ['Enzymes speed up reactions that would happen anyway, only much more slowly', true],
+      ['An enzyme can speed up any reaction in the cell', false, 'Each enzyme is specific to its substrates'], ['Raising the substrate amount speeds up a reaction until the enzymes are all busy', true],
+      ['Names of many enzymes end in -ase, like lactase and amylase', true], ['A denatured enzyme works faster', false, 'It loses its shape and stops working']],
+    pair: { fwd: 'What does the enzyme {t} break down?', back: 'Which enzyme breaks down {d}?', items: [['amylase', 'starch into sugars'], ['lactase', 'lactose (milk sugar)'], ['protease', 'proteins into amino acids'], ['lipase', 'fats into glycerol and fatty acids'], ['catalase', 'hydrogen peroxide into water and oxygen']] } });
+
+  T('hsbio.prokaryotes-eukaryotes', { share: { 2: 0.7 },
+    sort: { cats: { p: ['true of prokaryotic cells only', 'true of prokaryotic cells only', 'Prokaryotic cells only'], e: ['true of eukaryotic cells only', 'true of eukaryotic cells only', 'Eukaryotic cells only'], b: ['true of both', 'true of both', 'Both'] }, catq: 'Which cells does this fit? {x}', items: [
+      ['They have a nucleus.', 'e'], ['They have mitochondria.', 'e'], ['They have an endoplasmic reticulum.', 'e'], ['Their DNA is in several linear chromosomes inside a nucleus.', 'e'], ['They are usually 10 to 100 µm across.', 'e'],
+      ['They have no nucleus.', 'p'], ['Their DNA is one circular chromosome in the cytoplasm.', 'p'], ['They are usually 1 to 10 µm across.', 'p'], ['They include bacteria and archaea.', 'p'],
+      ['They have a cell membrane.', 'b'], ['They have ribosomes.', 'b'], ['They have DNA.', 'b'], ['They have cytoplasm.', 'b']] },
+    tf: [['Bacteria and archaea are both prokaryotes', true], ['A cell wall shows that a cell is a plant cell', false, 'Bacteria, fungi and plants all have cell walls'], ['Prokaryotic cells have ribosomes', true], ['Prokaryotes have no DNA', false],
+      ['Fungi and protists are eukaryotes', true], ['Mitochondria are found only in animal cells', false, 'Plants, fungi and protists have them too']] });
+
+  T('hsbio.channels-pumps', { share: { 1: 0.5 },
+    sort: { cats: { s: ['simple diffusion', 'simple diffusion', 'Simple diffusion'], f: ['facilitated diffusion', 'facilitated diffusion', 'Facilitated diffusion'], a: ['active transport', 'active transport', 'Active transport'] }, be: 'shows', catq: 'Which kind of transport is this? {x}', items: [
+      ['Carbon dioxide leaves a cell straight through the lipid bilayer.', 's'], ['Oxygen moves from an air sac in the lungs into a blood cell through the membrane.', 's'], ['A small, nonpolar molecule slips through the bilayer down its gradient.', 's'],
+      ['Glucose enters a red blood cell through a carrier protein, from more to less concentrated.', 'f'], ['Sodium ions rush into a nerve cell through open channels.', 'f'], ['Water moves into a root cell through aquaporins.', 'f'], ['Chloride ions pass through a channel protein down their gradient.', 'f'],
+      ['The sodium-potassium pump moves Na⁺ out and K⁺ in, using ATP.', 'a'], ['A root cell takes in minerals that are already more concentrated inside it.', 'a'], ['Cells in the small intestine pull in glucose against its gradient using energy.', 'a'], ['A pump uses ATP to move H⁺ against its gradient.', 'a']] },
+    tf: [['Active transport needs energy, usually from ATP', true], ['Facilitated diffusion moves substances from low to high concentration', false, 'It moves them down their gradient, from high to low'], ['Channel proteins let specific ions pass through the membrane', true],
+      ['Simple diffusion needs no protein and no energy', true], ['Facilitated diffusion uses ATP', false, 'It needs a protein but no energy']] });
+
+  T('hsbio.bulk-transport', { share: { 1: 0.6 },
+    sort: { cats: { n: ['endocytosis', 'endocytosis', 'Endocytosis'], x: ['exocytosis', 'exocytosis', 'Exocytosis'] }, be: 'shows', catq: 'Is this endocytosis or exocytosis? {x}', items: [
+      ['An amoeba surrounds a bit of food and pulls it inside.', 'n'], ['A white blood cell engulfs a dead cell.', 'n'], ['A cell takes in iron-carrying proteins caught by receptors.', 'n'], ['A cell sips in a little of the fluid around it.', 'n'], ['A macrophage swallows a bacterium.', 'n'],
+      ['A nerve cell releases chemical messengers at its tip.', 'x'], ['A gland cell in the stomach releases digestive enzymes.', 'x'], ['A plant cell sends materials for its cell wall out of the cell.', 'x'], ['A salivary gland cell releases amylase into the saliva.', 'x'], ['A cell releases antibodies into the blood.', 'x']] },
+    tf: [['Endocytosis brings large particles into a cell in vesicles', true], ['Exocytosis releases materials when a vesicle fuses with the membrane', true], ['Phagocytosis is "cell eating," a kind of endocytosis', true],
+      ['Bulk transport needs no energy', false, 'It uses energy'], ['Exocytosis takes materials into the cell', false, 'Exocytosis sends them out']] });
+
+  T('hsbio.atp', { share: { 2: 0.75 },
+    tf: [['ATP hydrolysis releases energy overall because the products are more stable than ATP', true], ['Breaking a chemical bond always takes energy', true], ['Cells couple ATP hydrolysis to reactions that need energy, often by moving a phosphate onto another molecule', true],
+      ['A cell keeps a large stockpile of ATP that lasts for days', false, 'ATP is used and remade constantly'], ['ATP stores energy in one high-energy bond that releases energy when it breaks', false, 'Energy is released overall because the products are more stable'],
+      ['ATP stands for adenosine triphosphate', true], ['ATP has three phosphate groups', true], ['When ATP loses a phosphate it becomes ADP', true], ['Cellular respiration makes ATP from ADP and phosphate', true],
+      ['Muscle contraction, active transport and building molecules all use ATP', true], ['ATP is made only in plant cells', false, 'All cells make ATP'], ['ADP has two phosphate groups', true], ['The body recycles ATP very quickly', true]] });
+
+  T('hsbio.cellular-respiration', { share: { 2: 0.45 },
+    seq: { name: 'cellular respiration', items: ['glycolysis in the cytoplasm', 'pyruvate oxidation', 'the Krebs (citric acid) cycle', 'the electron transport chain'] },
+    tf: [['Glycolysis happens in the cytoplasm', true], ['The Krebs cycle happens in the mitochondria', true], ['Most ATP is made by the electron transport chain', true], ['Oxygen accepts electrons at the end of the electron transport chain', true],
+      ['The carbon dioxide you breathe out comes from food molecules', true], ['Glycolysis needs oxygen', false, 'Glycolysis works without oxygen'], ['The oxygen you breathe in becomes the carbon dioxide you breathe out', false, 'It becomes water'], ['Glycolysis splits glucose into two pyruvate', true]] });
+
+  T('hsbio.fermentation', { share: { 3: 0.35 }, forms: { 3: ['tf1', 'all', 'not'] },
+    sort: { cats: { l: ['lactic acid fermentation', 'lactic acid fermentation', 'Lactic acid fermentation'], a: ['alcoholic fermentation', 'alcoholic fermentation', 'Alcoholic fermentation'] }, be: 'uses', items: [
+      ['bacteria making yogurt', 'l'], ['your muscles during a hard sprint', 'l'], ['bacteria making sauerkraut', 'l'], ['bacteria making pickles', 'l'], ['yeast making bread rise', 'a'], ['yeast in a sugar solution giving off gas', 'a']] },
+    tf: [['Fermentation makes 2 ATP per glucose, from glycolysis', true], ['Fermentation needs oxygen', false], ['Fermentation lets glycolysis keep going by recycling NAD⁺', true], ['Aerobic respiration makes far more ATP per glucose than fermentation', true],
+      ['Alcoholic fermentation gives off carbon dioxide', true], ['Lactic acid fermentation gives off carbon dioxide', false]] });
+
+  T('hsbio.photo-resp-carbon', { share: { 1: 0.8, 2: 0.75 }, forms: { 1: ['cat', 'tf'], 2: ['tf', 'tf1', 'cat', 'not'] },
+    sort: { cats: { a: ['a process that adds CO₂ to the air', 'processes that add CO₂ to the air', 'Adds CO₂ to the air'], r: ['a process that removes CO₂ from the air', 'processes that remove CO₂ from the air', 'Removes CO₂ from the air'] }, catq: 'Does this add CO₂ to the air or remove it? {x}', items: [
+      ['a cow breathing', 'a'], ['a car burning gasoline', 'a'], ['a forest fire', 'a'], ['mushrooms decaying a log', 'a'], ['a person running', 'a'], ['a volcano erupting', 'a'], ['yeast making bread rise', 'a'], ['a power plant burning coal', 'a'], ['a sleeping cat', 'a'],
+      ['a cornfield on a sunny afternoon', 'r'], ['kelp growing in sunlit ocean water', 'r'], ['a young tree growing in summer', 'r'], ['grass growing in spring sunshine', 'r'], ['phytoplankton at the ocean surface in daylight', 'r'], ['a houseplant in a bright window', 'r']] },
+    tf: [['Over a whole day, a growing plant takes in more CO₂ than it gives off', true], ['The oxygen made by photosynthesis is used by respiration, and the CO₂ made by respiration is used by photosynthesis', true],
+      ['Plants only photosynthesize, and animals only respire', false, 'Plants do both'], ['Plants respire both day and night', true], ['A plant in bright light gives off more CO₂ than it takes in', false],
+      ['Decomposers return carbon to the air by respiration', true], ['Burning fossil fuels releases carbon that was stored underground for millions of years', true], ['The ocean takes in carbon dioxide from the air', true],
+      ['Photosynthesis moves carbon from the air into living things', true], ['A plant in the dark takes in CO₂', false, 'With no light it only respires and gives CO₂ off'], ['Carbon atoms in your body were once in carbon dioxide in the air', true]] });
+
+  T('hsbio.chromosomes', { share: { 2: 0.6 },
+    tf: [['Homologous chromosomes are identical copies of each other', false, 'They carry the same genes but may have different alleles'], ['Sister chromatids are identical copies made when DNA is copied', true], ['An X-shaped copied chromosome counts as two chromosomes', false, 'It counts as one chromosome made of two chromatids'],
+      ['Human body cells have 23 pairs of chromosomes', true], ['One chromosome of each homologous pair comes from each parent', true], ['A centromere holds sister chromatids together', true], ['Human gametes have 23 chromosomes', true],
+      ['A karyotype is a picture of a cell\'s chromosomes arranged in pairs', true], ['Bigger organisms always have more chromosomes', false, 'A dog has 78; a human has 46'], ['Homologous chromosomes carry the same genes in the same order', true],
+      ['Autosomes are all the chromosomes other than the sex chromosomes', true]] });
+
+  T('hsbio.cell-cycle', { share: { 1: 0.7 },
+    seq: { name: 'the cell cycle', items: ['G1: the cell grows and works', 'S: the DNA is copied', 'G2: the cell gets ready to divide', 'M: mitosis and cytokinesis'] },
+    tf: [['Most of a cell\'s life is spent in interphase', true], ['DNA is copied during the S phase', true], ['Mitosis divides the nucleus; cytokinesis divides the cytoplasm', true], ['G0 is a resting state where a cell stops dividing', true],
+      ['Interphase is a time when the cell does nothing', false, 'The cell grows, works and copies its DNA'], ['Mature nerve cells usually stay in G0', true], ['A cell copies its DNA during mitosis', false, 'DNA is copied in S phase, before mitosis'],
+      ['Skin cells divide often to replace worn-out cells', true], ['Interphase includes G1, S and G2', true], ['After cytokinesis there are two daughter cells', true]],
+    sort: { cats: { g1: ['G1', 'G1', 'G1'], s: ['S', 'S', 'S'], g2: ['G2', 'G2', 'G2'], m: ['M', 'M', 'M'], g0: ['G0', 'G0', 'G0'] }, catq: 'In which phase does this happen? {x}', items: [
+      ['A new daughter cell grows and makes more organelles.', 'g1'], ['The cell does its normal job, such as making proteins, before copying its DNA.', 'g1'], ['Each chromosome is copied to make two sister chromatids.', 's'], ['The DNA content of the cell doubles.', 's'],
+      ['The cell makes the proteins for the spindle and checks its copied DNA.', 'g2'], ['The copied chromosomes condense and the spindle pulls them apart.', 'm'], ['The cytoplasm pinches into two cells.', 'm'], ['A mature muscle cell works but no longer divides.', 'g0']] } });
+
+  T('hsbio.mitosis', { share: { 1: 0.5 },
+    seq: { name: 'mitosis', items: ['prophase', 'metaphase', 'anaphase', 'telophase'] },
+    sort: { cats: { p: ['prophase', 'prophase', 'Prophase'], m: ['metaphase', 'metaphase', 'Metaphase'], a: ['anaphase', 'anaphase', 'Anaphase'], t: ['telophase', 'telophase', 'Telophase'] }, catq: 'Which stage of mitosis is this? {x}', items: [
+      ['The chromosomes condense and become visible.', 'p'], ['The nuclear envelope breaks down.', 'p'], ['The spindle begins to form.', 'p'],
+      ['The chromosomes line up in a single row across the middle.', 'm'], ['Spindle fibers from both poles attach to every chromosome at the equator.', 'm'],
+      ['Sister chromatids separate and move to opposite poles.', 'a'], ['The cell stretches longer as the chromatids are pulled apart.', 'a'],
+      ['Two new nuclear envelopes form.', 't'], ['The chromosomes uncoil at the two poles.', 't'], ['The spindle breaks down, and cytokinesis often begins.', 't']] } });
+
+  T('hsbio.cell-cycle-control', { share: { 1: 0.65 },
+    tf: [['Cancer is cell division that has escaped normal controls', true], ['Checkpoints stop the cycle if something is wrong', true], ['Cyclins and kinases help push the cell through the cycle', true], ['A cell with badly damaged DNA may destroy itself', true],
+      ['Normal cells usually stop dividing when they touch their neighbors on all sides', true], ['Cancer cells obey the signals that tell them to stop dividing', false, 'They ignore them'], ['Growth factors are signals that tell cells to divide', true],
+      ['Mutations in genes that control the cell cycle can lead to cancer', true], ['A tumor is a mass of cells dividing out of control', true], ['Sunlight and tobacco smoke can damage DNA and raise the risk of cancer', true],
+      ['The G1 checkpoint checks whether the cell is ready to copy its DNA', true], ['The spindle checkpoint checks that every chromosome is attached to the spindle', true]],
+    sort: { cats: { g1: ['the G1 checkpoint', 'the G1 checkpoint', 'G1 checkpoint'], g2: ['the G2 checkpoint', 'the G2 checkpoint', 'G2 checkpoint'], m: ['the M (spindle) checkpoint', 'the M checkpoint', 'M (spindle) checkpoint'] }, catq: 'Which checkpoint asks this question? {x}', items: [
+      ['Does the cell have enough nutrients to copy its DNA?', 'g1'], ['Has a growth signal told the cell to divide?', 'g1'], ['Is the DNA undamaged before it is copied?', 'g1'], ['Is the cell large enough to start the cycle?', 'g1'],
+      ['Was all the DNA copied correctly?', 'g2'], ['Is the copied DNA free of damage before mitosis begins?', 'g2'], ['Is the cell ready to enter mitosis?', 'g2'],
+      ['Is every chromosome attached to spindle fibers from both poles?', 'm'], ['Are all the chromosomes lined up before the chromatids separate?', 'm']] } });
+
+  T('hsbio.meiosis-variation', { share: { 1: 0.4, 3: 0.4 },
+    tf: [['Crossing over swaps pieces between homologous chromosomes', true], ['Independent assortment means each homologous pair lines up on its own, separately from the others', true], ['Meiosis makes cells that are genetically identical to the parent cell', false],
+      ['Random fertilization adds even more variation', true], ['Crossing over happens in prophase I', true], ['Brothers and sisters get different mixes of their parents\' chromosomes', true], ['A species with n pairs of chromosomes can make 2ⁿ combinations by independent assortment', true],
+      ['Crossing over happens between sister chromatids of the same chromosome only', false, 'It happens between homologous chromosomes'], ['Meiosis makes four cells that each have half the chromosomes', true], ['Variation from meiosis helps a population survive changes', true]],
+    forms: { 1: ['tf', 'tf1'], 3: ['tf1', 'tf1', 'tf'] } });
+
+  T('hsbio.mitosis-vs-meiosis', { share: { 1: 0.4, 3: 0.65 },
+    sort: { cats: { mi: ['true of mitosis only', 'true of mitosis only', 'Mitosis'], me: ['true of meiosis only', 'true of meiosis only', 'Meiosis'], b: ['true of both', 'true of both', 'Both'] }, catq: 'Mitosis, meiosis or both? {x}', items: [
+      ['It makes two daughter cells.', 'mi'], ['Its daughter cells are identical to the parent cell.', 'mi'], ['It is used for growth and repair.', 'mi'], ['Its daughter cells have the full set of chromosomes (2n).', 'mi'], ['It has one division.', 'mi'],
+      ['It makes four daughter cells.', 'me'], ['Its daughter cells are haploid (n).', 'me'], ['Crossing over happens.', 'me'], ['Homologous chromosomes pair up and then separate.', 'me'], ['It makes gametes.', 'me'], ['It has two divisions.', 'me'],
+      ['The DNA is copied before it begins.', 'b'], ['A spindle moves the chromosomes.', 'b'], ['Sister chromatids separate at some point.', 'b'], ['It happens in eukaryotic cells.', 'b']] } });
+
+  T('hsbio.dihybrid', { share: { 1: 0.5 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['AaBb can make four kinds of gametes: AB, Ab, aB and ab', true], ['Each gamete gets one allele of each gene', true], ['AABB can make only one kind of gamete', true], ['A dihybrid cross of AaBb × AaBb gives a 9 : 3 : 3 : 1 ratio of phenotypes', true],
+      ['Genes on different chromosomes assort independently', true], ['A gamete from AaBb can carry both A and a', false, 'A gamete gets only one allele of each gene'], ['AaBB makes the gametes AB and aB', true], ['Aabb makes the gametes Ab and ab', true],
+      ['AaBbCc can make eight kinds of gametes', true], ['A Punnett square for AaBb × AaBb has 16 boxes', true]] });
+
+  T('hsbio.incomplete-codominance', { share: { 1: 0.55, 2: 0.6 },
+    sort: { cats: { c: ['complete dominance', 'complete dominance', 'Complete dominance'], i: ['incomplete dominance', 'incomplete dominance', 'Incomplete dominance'], o: ['codominance', 'codominance', 'Codominance'] }, be: 'shows', catq: 'Which pattern of inheritance is this? {x}', items: [
+      ['A tall pea plant crossed with a short one gives all tall offspring.', 'c'], ['Black guinea pigs crossed with white ones give all black pups.', 'c'], ['Round pea seeds crossed with wrinkled ones give all round seeds.', 'c'],
+      ['Red snapdragons crossed with white ones give pink offspring.', 'i'], ['Red four o\'clock flowers crossed with white ones give pink flowers.', 'i'], ['Two pink snapdragons crossed together give red, pink and white offspring.', 'i'],
+      ['Red cattle crossed with white cattle give roan calves with both red and white hairs.', 'o'], ['A person with type AB blood has both A and B markers on red blood cells.', 'o'], ['Black chickens crossed with white chickens give chicks with some all-black and some all-white feathers.', 'o']] },
+    tf: [['In incomplete dominance the heterozygote looks like a blend of the two parents', true], ['In codominance both alleles show fully in the heterozygote', true], ['In incomplete dominance the alleles blend and are lost forever', false, 'Crossing two pink plants gives red, pink and white again'],
+      ['Crossing two pink snapdragons gives about 1 red : 2 pink : 1 white', true], ['Type AB blood is an example of codominance', true], ['A red × white snapdragon cross gives all red offspring', false, 'It gives all pink']] });
+
+  T('hsbio.ph', { share: { 3: 0.3 }, forms: { 3: ['tf1', 'all', 'not'] },
+    sort: { cats: { a: ['acidic (pH below 7)', 'acidic', 'Acidic'], n: ['about neutral (pH near 7)', 'about neutral', 'Neutral'], b: ['basic (pH above 7)', 'basic', 'Basic'] }, items: [
+      ['lemon juice', 'a'], ['stomach acid', 'a'], ['vinegar', 'a'], ['black coffee', 'a'], ['tomato juice', 'a'], ['pure water', 'n'], ['human blood (pH about 7.4)', 'b'], ['baking soda in water', 'b'], ['household ammonia', 'b'], ['soapy water', 'b'], ['bleach', 'b'], ['seawater (pH about 8)', 'b']] },
+    tf: [['Each step of one on the pH scale is a tenfold change in H⁺ concentration', true], ['A solution at pH 3 has ten times more H⁺ than one at pH 4', true], ['A buffer resists changes in pH', true], ['Blood is kept near pH 7.4 by buffers', true],
+      ['A lower pH means fewer hydrogen ions', false, 'A lower pH means more hydrogen ions'], ['Pure water has a pH of 7', true], ['Enzymes work at every pH equally well', false]] });
+
+  T('hsbio.meiosis-variation', { share: { 1: 0.6 } });
+
+  T('hsbio.multiple-alleles', { share: { 1: 0.5, 2: 0.3 },
+    sort: { cats: { A: ['type A', 'type A', 'A'], B: ['type B', 'type B', 'B'], AB: ['type AB', 'type AB', 'AB'], O: ['type O', 'type O', 'O'] }, catq: 'What blood type does a person with this genotype have? {x}', items: [
+      ['I<sup>A</sup>I<sup>A</sup>', 'A'], ['I<sup>A</sup>i', 'A'], ['I<sup>B</sup>I<sup>B</sup>', 'B'], ['I<sup>B</sup>i', 'B'], ['I<sup>A</sup>I<sup>B</sup>', 'AB'], ['ii', 'O']] },
+    tf: [['The ABO blood group gene has three alleles: I<sup>A</sup>, I<sup>B</sup> and i', true], ['Each person carries only two of the three ABO alleles', true], ['I<sup>A</sup> and I<sup>B</sup> are codominant', true],
+      ['The i allele is recessive to both I<sup>A</sup> and I<sup>B</sup>', true], ['A person with type O blood has the genotype ii', true], ['A person can carry three ABO alleles at once', false, 'Each person has two copies of the gene'],
+      ['Two type O parents can have a type A child', false, 'Both can pass on only i'], ['Two type A parents can have a type O child', true, 'If both are I<sup>A</sup>i'], ['A type AB parent cannot have a type O child', true, 'The parent always passes on I<sup>A</sup> or I<sup>B</sup>']] });
+
+  T('hsbio.polygenic', { share: { 2: 0.75, 3: 0.6 },
+    tf: [['Polygenic traits are controlled by many genes', true], ['Polygenic traits show a continuous range of values', true], ['Height in people is shaped by many genes and by the environment', true], ['A polygenic trait usually falls into just two clear types', false, 'It forms a smooth range'],
+      ['When many genes add up, the middle values are the most common', true], ['The extremes of a polygenic trait are rarer than the middle values', true], ['Skin color, height and eye color are each shaped by more than one gene', true],
+      ['Blood type in the ABO system is a polygenic trait', false, 'ABO blood type is set by one gene with three alleles'], ['A graph of a polygenic trait in a large population often looks like a bell-shaped curve', true],
+      ['Nutrition can affect how tall a plant or person grows', true], ['With n genes adding doses, there are 2n + 1 possible dose counts', true], ['Every offspring of AaBb × AaBb has exactly two capital alleles', false, 'Offspring can have from 0 to 4']],
+    forms: { 2: ['tf', 'tf1'], 3: ['tf1', 'tf'] } });
+
+  T('hsbio.x-linked', { share: { 2: 0.7, 3: 0.5 }, forms: { 2: ['tf', 'tf1'], 3: ['tf1', 'tf'] },
+    tf: [['A son gets his X chromosome from his mother', true], ['A son gets his X chromosome from his father', false, 'His father gives him a Y'], ['X-linked recessive traits show up more often in XY people than in XX people', true],
+      ['A carrier XX person has one normal allele and one recessive allele, and usually shows the normal trait', true], ['An XY person with one recessive X-linked allele shows the trait', true, 'The Y has no matching allele'],
+      ['Red-green color blindness is an X-linked recessive trait', true], ['Hemophilia, a disorder in which blood clots poorly, is an X-linked recessive trait', true], ['A father passes his X chromosome to all of his daughters', true],
+      ['An X-linked trait can never appear in an XX person', false, 'It appears when both X chromosomes carry the recessive allele'], ['The Y chromosome carries the same genes as the X chromosome', false, 'The Y is small and carries few genes'],
+      ['A daughter of a color-blind father and a mother with two normal alleles is a carrier', true], ['A son of a carrier mother has a 1 in 2 chance of getting her recessive allele', true]] });
+
+  T('hsbio.dna-replication', { share: { 3: 0.5 }, forms: { 3: ['order', 'next', 'tf1', 'fwd', 'back'] },
+    seq: { name: 'DNA replication', items: ['helicase unwinds and unzips the double helix', 'primase lays down a short RNA primer', 'DNA polymerase adds matching nucleotides to each strand', 'the primers are replaced with DNA', 'ligase seals the gaps between fragments'] },
+    pair: { fwd: 'What does {t} do in DNA replication?', back: 'Which enzyme does this in DNA replication: {d}?', items: [['helicase', 'unwinds the double helix and separates the strands'], ['DNA polymerase', 'adds nucleotides that match the template strand'], ['primase', 'makes a short RNA primer to start a new strand'], ['ligase', 'joins the Okazaki fragments into one strand']] },
+    tf: [['DNA replication is semiconservative: each new molecule keeps one old strand', true], ['Each new DNA molecule is made of two brand-new strands', false, 'Each keeps one old strand'], ['A pairs with T, and C pairs with G', true],
+      ['The lagging strand is made in short pieces called Okazaki fragments', true], ['DNA polymerase adds nucleotides only to the 3′ end of a growing strand', true], ['Meselson and Stahl used heavy nitrogen to show that replication is semiconservative', true]] });
+
+  T('hsbio.translation', { share: { 2: 0.35 }, forms: { 2: ['tf', 'tf1', 'fwd', 'back'] },
+    pair: { fwd: 'What is the job of {t} in making a protein?', back: 'Which molecule has this job in making a protein: {d}?', items: [['mRNA', 'carries the code for the protein from the DNA to the ribosome'], ['tRNA', 'brings one amino acid and matches its anticodon to a codon'],
+      ['the ribosome', 'reads the mRNA and links amino acids together'], ['rRNA', 'makes up much of the ribosome and helps join amino acids'], ['the start codon AUG', 'marks where translation begins'], ['a stop codon', 'marks where translation ends']] },
+    tf: [['Translation happens at the ribosomes', true], ['Each codon is three bases long', true], ['A tRNA anticodon pairs with an mRNA codon', true], ['Translation turns DNA into RNA', false, 'That is transcription; translation builds a protein from mRNA'],
+      ['Each tRNA brings one amino acid', true], ['A stop codon codes for an amino acid', false, 'A stop codon ends translation']] });
+
+  T('hsbio.genetic-code', { share: { 1: 0.45 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['The genetic code is read three bases at a time', true], ['AUG is the start codon and codes for methionine', true], ['There are 64 codons', true], ['Some amino acids have more than one codon', true],
+      ['UAA, UAG and UGA are stop codons', true], ['Each codon codes for several different amino acids', false, 'Each codon has one meaning'], ['Nearly all living things use the same genetic code', true], ['There are 20 common amino acids in proteins', true]] });
+
+  T('hsbio.gene-regulation', { share: { 2: 0.85, 3: 0.55 },
+    pair: { fwd: 'In the lac operon, what does {t} do?', back: 'Which part of the lac operon does this: {d}?', items: [['the repressor', 'binds the operator and blocks RNA polymerase'], ['the operator', 'is the stretch of DNA where the repressor binds'],
+      ['the promoter', 'is where RNA polymerase attaches to start transcription'], ['lactose', 'binds the repressor and pulls it off the operator'], ['the structural genes', 'code for the enzymes that break down lactose']] },
+    tf: [['Every cell in your body has the same genes, but different cells turn on different genes', true], ['The lac operon is turned on when lactose is present', true], ['When lactose is absent, the lac repressor sits on the operator', true],
+      ['Gene regulation lets a cell make only the proteins it needs', true], ['Bacteria make lactose-digesting enzymes all the time, whether or not lactose is present', false], ['A muscle cell and a nerve cell differ because they use different genes', true],
+      ['Transcription factors can turn genes on or off', true], ['Cells save energy by not making proteins they do not need', true], ['A mutation in the operator can keep the repressor from binding', true],
+      ['Liver cells have different DNA from skin cells', false, 'They have the same DNA; they express different genes']] });
+
+  T('hsbio.pcr', { share: { 2: 0.6 },
+    seq: { name: 'one cycle of PCR', items: ['heat to about 95 °C to separate the DNA strands', 'cool to about 55 °C so primers bind', 'warm to about 72 °C so the polymerase builds new strands'] },
+    tf: [['PCR doubles the target DNA each cycle, in an ideal reaction', true], ['PCR uses a heat-stable DNA polymerase', true], ['Primers mark the start of the stretch of DNA to be copied', true], ['PCR copies a whole genome in each cycle', false, 'It copies the stretch between the primers'],
+      ['After n cycles, one copy becomes 2ⁿ copies in an ideal reaction', true], ['PCR is used to copy tiny samples of DNA so they can be studied', true], ['The DNA strands are separated by heat in PCR', true], ['After 3 cycles, one copy becomes 6 copies', false, 'It becomes 2³ = 8 copies']] });
+
+  T('hsbio.selection-patterns', { share: { 1: 0.5, 2: 0.7 },
+    sort: { cats: { d: ['directional selection', 'directional selection', 'Directional'], s: ['stabilizing selection', 'stabilizing selection', 'Stabilizing'], x: ['disruptive selection', 'disruptive selection', 'Disruptive'] }, be: 'shows', catq: 'Which kind of selection is this? {x}', items: [
+      ['Over many years, giraffes with longer necks reach more leaves and leave more young.', 'd'], ['Insects that resist a pesticide survive, and resistance spreads.', 'd'], ['During a drought, finches with deeper beaks crack hard seeds and survive.', 'd'], ['Darker moths survive better on soot-covered trees.', 'd'],
+      ['Human babies of middle birth weight survive best.', 's'], ['Lizards of middle size escape predators best; tiny ones and huge ones do worse.', 's'], ['Plants of middle height survive both wind and shade best.', 's'], ['Birds that lay a middle number of eggs raise the most chicks.', 's'],
+      ['Seedcrackers with small beaks or large beaks do well, but medium beaks do poorly, because only small and large seeds are common.', 'x'], ['Light and dark snails survive on a beach of light sand and dark rocks, but medium-colored snails are spotted.', 'x'], ['Small males sneak, large males fight, and medium males lose out.', 'x']] },
+    tf: [['Directional selection shifts the average of a trait one way', true], ['Stabilizing selection favors the middle of the range', true], ['Disruptive selection favors both extremes', true], ['Stabilizing selection widens the range of a trait', false, 'It narrows it'],
+      ['Disruptive selection can split a population into two groups', true], ['Natural selection acts on the traits of individuals, and populations change over generations', true]] });
+
+  T('hsbio.adaptation-in-action', { share: { 3: 0.3 }, forms: { 3: ['tf1', 'tf'] },
+    tf: [['Antibiotic resistance spreads because resistant bacteria survive and multiply', true], ['Bacteria become resistant because they try to survive the antibiotic', false, 'Resistance comes from mutations that were already there'],
+      ['Pesticide resistance can spread through an insect population in a few years', true], ['Each round of spraying raises the share of resistant insects', true], ['Using the same pesticide again and again speeds up resistance', true],
+      ['An individual insect becomes resistant during its life because it was sprayed', false], ['Finch beak sizes in the Galápagos changed after droughts', true], ['Selection can change a population quickly when generations are short', true]] });
+
+  T('hsbio.evidence-fossils-anatomy', { share: { 1: 0.5 },
+    sort: { cats: { h: ['homologous structures', 'homologous structures', 'Homologous structures'], a: ['analogous structures', 'analogous structures', 'Analogous structures'], v: ['a vestigial structure', 'vestigial structures', 'Vestigial structures'] }, catq: 'Which kind of evidence is this? {x}', items: [
+      ['a dolphin flipper and a human arm', 'h'], ['a bird wing and a lizard front leg', 'h'], ['a cat leg and a whale flipper', 'h'], ['a frog front leg and a bat wing', 'h'], ['a mole\'s digging paw and a human hand', 'h'],
+      ['an insect wing and a bird wing', 'a'], ['a shark fin and a dolphin fin (outer shape)', 'a'], ['an octopus eye and a human eye', 'a'], ['a hummingbird wing and a moth wing', 'a'],
+      ['the tiny hip bones inside a whale', 'v'], ['the wings of an ostrich, which cannot fly', 'v'], ['the small leg bones inside some snakes', 'v'], ['the eyes of blind cave fish, which do not see', 'v'], ['the human appendix', 'v']] } });
+
+  T('hsbio.density-factors', { share: { 1: 0.5 },
+    sort: { cats: { d: ['density-dependent', 'density-dependent factors', 'Density-dependent'], i: ['density-independent', 'density-independent factors', 'Density-independent'] }, catq: 'Is this a density-dependent or a density-independent factor? {x}', items: [
+      ['disease spreading through a crowded herd', 'd'], ['parasites passing easily between nearby hosts', 'd'], ['competition for nesting sites', 'd'], ['a shortage of food in a crowded habitat', 'd'], ['more predators drawn to where prey are crowded', 'd'], ['stress from crowding that lowers births', 'd'],
+      ['a hurricane', 'i'], ['an early frost', 'i'], ['a flood', 'i'], ['a volcanic eruption', 'i'], ['a very hot summer', 'i'], ['a hard freeze that kills insects', 'i'], ['a long drought', 'i']] },
+    tf: [['Density-dependent factors have a bigger effect when a population is crowded', true], ['A flood affects a population the same way no matter how crowded it is', true], ['Disease is a density-independent factor', false, 'It spreads more easily in crowds']] });
+
+  T('hsbio.energy-flow', { share: { 2: 0.45 },
+    tf: [['Only about 10% of the energy in one trophic level is passed to the next', true], ['Most of the energy at each level is used for life processes and given off as heat', true], ['Energy is recycled in an ecosystem the way matter is', false, 'Energy flows through and leaves as heat; matter cycles'],
+      ['Food chains rarely have more than four or five levels', true], ['Producers capture the energy that enters most ecosystems', true], ['Top predators have the most energy available in an ecosystem', false, 'They have the least'],
+      ['An energy pyramid is widest at the producers', true], ['Eating lower on the food chain uses less of the energy producers captured', true]] });
+
+  T('hsbio.aerobic-anaerobic', { share: { 3: 0.3 }, forms: { 3: ['tf1', 'all', 'not'] },
+    sort: { cats: { a: ['aerobic (uses oxygen)', 'aerobic', 'Aerobic'], n: ['anaerobic (no oxygen)', 'anaerobic', 'Anaerobic'] }, items: [
+      ['a marathon runner\'s leg muscles at a steady pace', 'a'], ['a plant leaf at night', 'a'], ['a mouse breathing at rest', 'a'], ['a fish in well-oxygenated water', 'a'],
+      ['yeast in a sealed jar of sugar water', 'n'], ['a sprinter\'s muscles in a 10-second dash', 'n'], ['bacteria deep in a swamp\'s mud', 'n'], ['bacteria making yogurt', 'n']] },
+    tf: [['Aerobic respiration makes about 30 ATP per glucose', true], ['Fermentation makes 2 ATP per glucose', true], ['Anaerobic means without oxygen', true], ['Fermentation makes more ATP than aerobic respiration', false]] });
+
+  T('hsbio.group-behavior', { share: { 2: 0.6, 3: 0.5 },
+    sort: { cats: { s: ['safety from predators', 'safety from predators', 'Safety from predators'], f: ['finding or catching food', 'finding food', 'Finding food'], c: ['saving energy or staying warm', 'saving energy or warmth', 'Saving energy or warmth'] }, be: 'shows', catq: 'Which benefit of living in a group does this show? {x}', items: [
+      ['Musk oxen form a circle with their horns facing out when wolves come.', 's'], ['A school of fish swirls so a predator cannot pick out one fish.', 's'], ['Meerkats take turns standing guard and call out when a hawk flies over.', 's'], ['Zebras in a herd are harder for a lion to single out.', 's'],
+      ['Wolves hunt together and can bring down a moose.', 'f'], ['Honeybees dance to tell hive mates where flowers are.', 'f'], ['Pelicans swim in a line to herd fish into shallow water.', 'f'], ['Orcas work together to wash a seal off an ice floe.', 'f'],
+      ['Emperor penguins huddle together through the winter storms.', 'c'], ['Geese fly in a V, so each bird behind saves effort.', 'c'], ['Bats cluster together in a cave to stay warm.', 'c']] },
+    tf: [['Living in a group can lower each animal\'s chance of being caught', true], ['Group living has costs too, such as competing for food and spreading disease', true], ['Group behavior can be passed on because it helps individuals survive and reproduce', true],
+      ['Animals in groups never compete with each other', false], ['Some animals warn others in the group with alarm calls', true]] });
+
+  T('hsbio.feedback-loops', { share: { 1: 0.5 },
+    sort: { cats: { n: ['negative feedback', 'negative feedback', 'Negative feedback'], p: ['positive feedback', 'positive feedback', 'Positive feedback'] }, be: 'shows', catq: 'Is this negative or positive feedback? {x}', items: [
+      ['When blood sugar rises after a meal, the pancreas releases insulin and blood sugar falls.', 'n'], ['When blood sugar falls, the pancreas releases glucagon and blood sugar rises.', 'n'], ['When you are cold, you shiver and warm back up.', 'n'],
+      ['When carbon dioxide in the blood rises, you breathe faster and blow it off.', 'n'], ['When blood pressure rises, the heart slows and blood pressure falls.', 'n'], ['When a plant loses too much water, its stomata close.', 'n'],
+      ['A cut releases signals that draw more and more platelets until a clot forms.', 'p'], ['One ripe apple releases ethylene that ripens the apples around it, which release more ethylene.', 'p'], ['A nerve signal opens some sodium channels, and the inflow opens more of them.', 'p']] },
+    tf: [['Negative feedback brings a condition back toward its set point', true], ['Positive feedback pushes a change further in the same direction', true], ['Most homeostasis in the body uses negative feedback', true], ['Positive feedback keeps body temperature steady', false, 'Negative feedback does']] });
+
+  T('hsbio.temperature-control', { share: { 3: 0.5 }, forms: { 3: ['tf1', 'all', 'not', 'cat'] },
+    sort: { cats: { w: ['a way the body warms itself or keeps heat', 'ways the body keeps warm', 'Keeps heat in'], c: ['a way the body cools itself', 'ways the body cools down', 'Cools the body'] }, catq: 'Does this help the body keep heat in or cool down? {x}', items: [
+      ['shivering', 'w'], ['narrowing the blood vessels near the skin', 'w'], ['goose bumps raising body hair', 'w'], ['curling up into a ball', 'w'], ['huddling together, as penguins do', 'w'],
+      ['sweating', 'c'], ['widening the blood vessels near the skin', 'c'], ['panting, as dogs do', 'c'], ['resting in the shade', 'c'], ['an elephant flapping its large ears', 'c']] },
+    tf: [['Evaporating sweat carries heat away from the skin', true], ['Shivering makes heat by muscle activity', true], ['The hypothalamus in the brain acts as the body\'s thermostat', true], ['Widening skin blood vessels helps keep heat in', false, 'It brings warm blood to the skin to lose heat'],
+      ['Sweat cools you less well in very humid air', true, 'Sweat evaporates more slowly'], ['Body temperature control is an example of negative feedback', true]] });
+
+  T('hsbio.circulation', { share: { 2: 0.8 },
+    sort: { cats: { r: ['carrying oxygen-rich blood', 'carrying oxygen-rich blood', 'Oxygen-rich'], p: ['carrying oxygen-poor blood', 'carrying oxygen-poor blood', 'Oxygen-poor'] }, be: 'is', catq: 'Does this carry oxygen-rich or oxygen-poor blood? {x}', items: [
+      ['the aorta', 'r'], ['the pulmonary veins', 'r'], ['the left atrium', 'r'], ['the left ventricle', 'r'], ['the arteries to the arms and legs', 'r'], ['the coronary arteries that feed the heart muscle', 'r'],
+      ['the pulmonary arteries', 'p'], ['the venae cavae', 'p'], ['the right atrium', 'p'], ['the right ventricle', 'p'], ['the veins coming back from the legs', 'p']] },
+    seq: { name: 'the path of blood from the body to the body again', items: ['the venae cavae', 'the right atrium', 'the right ventricle', 'the pulmonary arteries', 'the lungs', 'the pulmonary veins', 'the left atrium', 'the left ventricle', 'the aorta'] },
+    tf: [['The pulmonary arteries are the only arteries that carry oxygen-poor blood', true], ['Arteries always carry oxygen-rich blood', false, 'The pulmonary arteries carry oxygen-poor blood'], ['The left ventricle has the thickest wall of the four chambers', true],
+      ['Blood passes through the heart twice on each full trip around the body', true], ['Gas exchange with the tissues happens in the capillaries', true]] });
+
+  T('hsbio.immune-system', { share: { 1: 0.5 },
+    sort: { cats: { i: ['an innate defense', 'innate defenses', 'Innate'], a: ['an adaptive defense', 'adaptive defenses', 'Adaptive'] }, catq: 'Is this an innate or an adaptive defense? {x}', items: [
+      ['Stomach acid kills germs in food.', 'i'], ['Tears wash germs from the eyes.', 'i'], ['A fever slows the growth of some germs.', 'i'], ['Inflammation brings more blood and white blood cells to an infected cut.', 'i'], ['Neutrophils engulf any bacteria they meet.', 'i'], ['Coughing clears germs from the airways.', 'i'],
+      ['Antibodies attach to one particular kind of germ.', 'a'], ['Killer T cells destroy body cells infected by a certain virus.', 'a'], ['A vaccine leaves memory cells ready for one disease.', 'a'], ['Helper T cells activate B cells that match an invader.', 'a'], ['The second infection by the same germ is fought off faster.', 'a']] },
+    tf: [['Innate defenses act the same way against any germ', true], ['Adaptive defenses target one particular germ', true], ['The adaptive response is faster the first time than the second time', false, 'It is faster the second time, thanks to memory cells'],
+      ['Vaccines work by training the adaptive immune system', true], ['Antibodies are made by B cells', true]] });
+
+  T('hsbio.kidneys', { share: { 2: 0.75, 3: 0.2 },
+    seq: { name: 'the path of fluid through the urinary system', items: ['blood is filtered in the kidney\'s nephrons', 'the filtrate flows through the nephron tubules, where most water returns to the blood', 'urine collects and flows down the ureter', 'urine is stored in the bladder', 'urine leaves through the urethra'] },
+    tf: [['More ADH makes the kidneys return more water to the blood', true], ['When you are dehydrated, your urine becomes more concentrated', true], ['After drinking a lot of water, the body releases less ADH and makes more urine', true],
+      ['The kidneys filter about 180 liters of fluid a day but make only about 1.5 liters of urine', true], ['The kidneys help keep the right amounts of water and salt in the blood', true], ['Nephrons are the filtering units of the kidney', true],
+      ['ADH makes the kidneys release more water as urine', false, 'ADH makes them hold on to water'], ['Most of the fluid filtered by the kidneys leaves the body as urine', false, 'About 99% is reabsorbed']] });
+
+  T('hsbio.plant-homeostasis', { share: { 1: 0.85 }, forms: { 1: ['cat', 'tf', 'cat'] },
+    sort: { cats: { o: ['open stomata', 'open stomata', 'Open'], c: ['closed stomata', 'closed stomata', 'Closed'] }, catq: 'Are this plant\'s stomata most likely open or closed? {x}', items: [
+      ['A well-watered bean plant in morning sunlight.', 'o'], ['A tomato plant with moist soil at midday in spring.', 'o'], ['A leaf in bright light that needs carbon dioxide for photosynthesis.', 'o'], ['A pond lily leaf floating in sunshine.', 'o'], ['A wheat plant in a watered field on a mild, sunny day.', 'o'],
+      ['A wilting plant in dry soil on a hot afternoon.', 'c'], ['A plant whose roots cannot find water during a drought.', 'c'], ['A corn plant in a field that has not had rain for weeks, in hot wind.', 'c'], ['A plant whose guard cells have lost water and gone limp.', 'c'], ['A thirsty houseplant with drooping leaves.', 'c']] },
+    tf: [['Guard cells open and close the stomata', true], ['Closing the stomata saves water but also stops carbon dioxide from getting in', true], ['Stomata let carbon dioxide in and water vapor out', true], ['Guard cells swell with water and open the stoma', true],
+      ['A plant keeps its stomata wide open in a drought', false, 'Closing them saves water'], ['Many desert plants open their stomata at night, when it is cooler', true]] });
+  T('hsbio.genetic-code', { tf: [['The genetic code is read three bases at a time', true], ['AUG is the start codon and codes for methionine', true], ['There are 64 codons', true], ['Some amino acids have more than one codon', true],
+      ['UAA, UAG and UGA are stop codons', true], ['Each codon codes for several different amino acids', false, 'Each codon has one meaning'], ['Nearly all living things use the same genetic code', true], ['There are 20 common amino acids in proteins', true],
+      ['The genetic code is read two bases at a time', false, 'It is read in triplets'], ['Every amino acid has exactly one codon', false, 'Most have two or more'], ['Codons are found on tRNA', false, 'Codons are on mRNA; anticodons are on tRNA'],
+      ['There are 20 codons, one for each amino acid', false, 'There are 64 codons'], ['A change in one base can change the amino acid a codon codes for', true]] });
+  T('hsbio.meiosis-variation', { tf: [['Crossing over swaps pieces between homologous chromosomes', true], ['Independent assortment means each homologous pair lines up on its own, separately from the others', true], ['Meiosis makes cells that are genetically identical to the parent cell', false],
+      ['Random fertilization adds even more variation', true], ['Crossing over happens in prophase I', true], ['Brothers and sisters get different mixes of their parents\' chromosomes', true], ['A species with n pairs of chromosomes can make 2ⁿ combinations by independent assortment', true],
+      ['Crossing over happens between sister chromatids of the same chromosome only', false, 'It happens between homologous chromosomes'], ['Meiosis makes four cells that each have half the chromosomes', true], ['Variation from meiosis helps a population survive changes', true],
+      ['Independent assortment gives every gamete the same set of chromosomes', false, 'It gives different combinations'], ['A species with 3 pairs of chromosomes can make 6 combinations by independent assortment', false, 'It can make 2³ = 8'],
+      ['Crossing over can put new combinations of alleles on one chromosome', true], ['Meiosis has only one division', false, 'It has two']] });
+
+  /* ---- more levels and topics, so variety does not lean on the extra forms ---- */
+  T('hsbio.elements-bonds', { share: { 2: 0.55 }, forms: { 2: ['cat', 'one', 'not', 'tf', 'back'] } });
+  T('hsbio.ph', { share: { 2: 0.5 }, forms: { 2: ['cat', 'one', 'not', 'tf'] } });
+  T('hsbio.nucleic-acids', { share: { 1: 0.6 } });
+  T('hsbio.prokaryotes-eukaryotes', { share: { 1: 0.7 } });
+  T('hsbio.bulk-transport', { share: { 1: 0.7 } });
+  T('hsbio.photo-resp-carbon', { share: { 1: 0.85 } });
+  T('hsbio.dihybrid', { share: { 1: 0.65 } });
+  T('hsbio.pcr', { share: { 1: 0.6, 2: 0.65 }, forms: { 1: ['tf', 'tf1', 'next', 'order'] } });
+  T('hsbio.plant-homeostasis', { share: { 2: 0.6 } });
+  T('hsbio.scientific-theories', { share: { 1: 0.7, 2: 0.6 },
+    sort: { cats: { o: ['an observation', 'observations', 'Observation'], h: ['a hypothesis', 'hypotheses', 'Hypothesis'], l: ['a law', 'laws', 'Law'], t: ['a theory', 'theories', 'Theory'] }, catq: 'What kind of scientific idea is this statement? {x}', items: [
+      ['"The leaves on this plant turned yellow after two weeks in the dark."', 'o'], ['"The thermometer read 37 °C."', 'o'], ['"Ten of the twelve seeds sprouted."', 'o'], ['"The yeast mixture gave off bubbles."', 'o'],
+      ['"If plants need light to make chlorophyll, then seedlings grown in the dark will be pale."', 'h'], ['"If the enzyme is a protein, then boiling it will stop it from working."', 'h'], ['"If fertilizer causes algal blooms, then ponds near farms will have more algae."', 'h'],
+      ['"Energy is neither created nor destroyed in ordinary chemical changes."', 'l'], ['"Mass is conserved in a chemical reaction."', 'l'], ['"For a gas at constant temperature, pressure times volume stays the same."', 'l'],
+      ['"All living things are made of cells, and cells come from other cells."', 't'], ['"Species change over many generations by natural selection."', 't'], ['"Many diseases are caused by microorganisms."', 't']] },
+    tf: [['A scientific theory is a well-tested explanation supported by many lines of evidence', true], ['A theory is just a guess', false, 'In science a theory is a broad, well-tested explanation'], ['A law describes what happens; a theory explains why', true],
+      ['A theory becomes a law when it is proved', false, 'Theories and laws are different kinds of ideas'], ['A hypothesis must be testable', true], ['Scientific ideas can change when new evidence appears', true], ['One experiment can prove a theory forever', false]] });
+  T('hsbio.membrane-structure', { share: { 2: 0.75 },
+    tf: [['Phospholipid heads face the water on both sides of the membrane', true], ['Phospholipid tails are hydrophobic and point toward the middle of the bilayer', true], ['The membrane is a rigid, solid wall', false, 'It is fluid: its parts drift sideways'],
+      ['The fluid mosaic model describes a membrane with proteins floating in a lipid bilayer', true], ['Cholesterol helps keep animal cell membranes from getting too fluid or too stiff', true], ['Small nonpolar molecules like O₂ cross the bilayer easily', true],
+      ['Ions cross the lipid bilayer easily without help', false, 'Charged particles need channels or pumps'], ['Glycoproteins on the surface help cells recognize each other', true], ['Large polar molecules like glucose need a protein to cross', true],
+      ['The membrane is selectively permeable', true], ['Membrane proteins never move', false, 'Many drift within the bilayer'], ['Water can cross the membrane, and aquaporins speed it up', true]],
+    sort: { cats: { e: ['able to cross the bilayer on its own', 'molecules that cross the bilayer on their own', 'Crosses on its own'], n: ['needing a protein to cross', 'molecules that need a protein', 'Needs a protein'] }, catq: 'Can this cross the lipid bilayer on its own, or does it need a protein? {x}', items: [
+      ['oxygen', 'e'], ['carbon dioxide', 'e'], ['nitrogen gas', 'e'], ['a small steroid hormone', 'e'], ['sodium ions', 'n'], ['potassium ions', 'n'], ['glucose', 'n'], ['chloride ions', 'n'], ['amino acids', 'n'], ['calcium ions', 'n']] } });
+  T('hsbio.hardy-weinberg', { share: { 2: 0.45 }, forms: { 2: ['tf', 'tf1'] },
+    tf: [['In Hardy-Weinberg equilibrium, p + q = 1', true], ['In Hardy-Weinberg equilibrium, p² + 2pq + q² = 1', true], ['q² is the frequency of homozygous recessive individuals', true], ['2pq is the frequency of heterozygous individuals', true],
+      ['A recessive allele always becomes rarer over time', false, 'Without selection or other forces, allele frequencies stay the same'], ['Hardy-Weinberg equilibrium needs a large population with random mating', true], ['Natural selection keeps a population in Hardy-Weinberg equilibrium', false, 'Selection changes allele frequencies'],
+      ['Migration can change allele frequencies', true], ['If q = 0.3, then p = 0.7', true], ['If q² = 0.04, then q = 0.2', true], ['p is the frequency of the dominant phenotype', false, 'p is the frequency of the dominant allele']] });
+  T('hsbio.gas-exchange', { share: { 3: 0.6 }, forms: { 3: ['tf1', 'order', 'next', 'all'] },
+    seq: { name: 'the path of oxygen from the air to a muscle cell', items: ['the nose and trachea', 'the bronchi and bronchioles', 'the alveoli', 'the capillaries around the alveoli', 'red blood cells in the blood', 'capillaries in the muscle', 'the muscle cell'] },
+    tf: [['Gas exchange in the lungs happens by diffusion across the alveolar walls', true], ['Alveoli give the lungs a very large surface area', true], ['Thin walls speed up diffusion', true], ['Oxygen moves from the blood into the alveoli', false, 'Oxygen moves from the alveoli into the blood'],
+      ['Carbon dioxide moves from the blood into the alveoli', true], ['Fish gills use countercurrent flow to take in more oxygen', true], ['Diffusion rate goes up when the concentration difference goes up', true], ['Thicker walls speed up gas exchange', false, 'They slow it'],
+      ['Leaves exchange gases through their stomata', true], ['Insects carry air to their cells through tubes called tracheae', true]],
+    sort: { cats: { u: ['a change that speeds up gas exchange', 'changes that speed up gas exchange', 'Speeds it up'], d: ['a change that slows gas exchange', 'changes that slow gas exchange', 'Slows it'] }, items: [['more surface area', 'u'], ['a bigger concentration difference', 'u'], ['thinner walls', 'u'], ['faster blood flow past the alveoli', 'u'], ['less surface area', 'd'], ['thicker walls', 'd'], ['a smaller concentration difference', 'd'], ['fluid filling some alveoli', 'd']] } });
+
+  /* ---- auto shares: every level still under 60% on its own also draws from the bank (never lowers a share set above) ---- */
+  (function () { var up = function (id, s) { var b = BK[id], tf = (b && b.tf) || []; if (!b) return; if (!(b.sort || b.pair || b.yn || (tf.filter(function (x) { return x[1]; }).length >= 3 && tf.filter(function (x) { return !x[1]; }).length >= 3))) return; b.share = b.share || {}; Object.keys(s).forEach(function (L) { b.share[L] = Math.max(b.share[L] || 0, s[L]); }); };
+    up('hsbio.ph', { 1: 0.35 });
+    up('hsbio.nucleic-acids', { 1: 0.5 });
+    up('hsbio.prokaryotes-eukaryotes', { 1: 0.35 });
+    up('hsbio.channels-pumps', { 1: 0.5 });
+    up('hsbio.bulk-transport', { 1: 0.5, 2: 0.35 });
+    up('hsbio.atp', { 2: 0.35, 3: 0.35 });
+    up('hsbio.cellular-respiration', { 1: 0.35 });
+    up('hsbio.fermentation', { 1: 0.5 });
+    up('hsbio.photo-resp-carbon', { 1: 0.5 });
+    up('hsbio.chromosomes', { 1: 0.35, 2: 0.35 });
+    up('hsbio.cell-cycle', { 1: 0.35 });
+    up('hsbio.mitosis', { 1: 0.35 });
+    up('hsbio.cell-cycle-control', { 1: 0.35, 3: 0.35 });
+    up('hsbio.meiosis-variation', { 1: 0.35, 3: 0.35 });
+    up('hsbio.mitosis-vs-meiosis', { 1: 0.35 });
+    up('hsbio.dihybrid', { 1: 0.5 });
+    up('hsbio.incomplete-codominance', { 1: 0.35, 2: 0.35 });
+    up('hsbio.multiple-alleles', { 3: 0.35 });
+    up('hsbio.polygenic', { 2: 0.35 });
+    up('hsbio.x-linked', { 2: 0.35 });
+    up('hsbio.gene-regulation', { 3: 0.35 });
+    up('hsbio.pcr', { 1: 0.35, 2: 0.5 });
+    up('hsbio.selection-patterns', { 1: 0.5 });
+    up('hsbio.adaptation-in-action', { 1: 0.35 });
+    up('hsbio.evidence-fossils-anatomy', { 1: 0.35 });
+    up('hsbio.density-factors', { 1: 0.5 });
+    up('hsbio.energy-flow', { 1: 0.35, 2: 0.5, 3: 0.5 });
+    up('hsbio.aerobic-anaerobic', { 1: 0.35 });
+    up('hsbio.feedback-loops', { 1: 0.5 });
+    up('hsbio.temperature-control', { 2: 0.35, 3: 0.35 });
+    up('hsbio.immune-system', { 1: 0.5 });
+    up('hsbio.plant-homeostasis', { 1: 0.5 });
+  })();
+
+  Object.keys(BK).forEach(function (id) {
+    var base = ML.getGen(id); if (!base) return;
+    ML.gen(id, function (R, ctx) {
+      var o = BK[id], L = (ctx && ctx.level) || 1, sh = o.share && o.share[L];
+      if (sh && R.chance(sh)) { var p = make(R, o, L); if (p) return p; }
+      return base(R, ctx);
+    });
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);
+
+
+/* ---- More forms of the same questions (round 7, "widen"): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - two at once: two different questions of the topic, answered together (short questions only, at most one of them with
+     a picture, which then comes first; not in the courses for young children, whose answer box for two parts would
+     also show a keypad button they don't need).
+   - check a number: a numeric question with a classmate's number, either the right one or a slip learners often make
+     (a power of ten, a factor of two, a lost minus sign, off by one), and "Is that right?" (Yes / No; not in placement).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'hsbio', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf')) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function numVal(a) { var s = String(a.v).replace(/\s/g, ''), m = /^(-?[\d.]+)\*10\^(-?\d+)$/.exec(s); return m ? +m[1] * Math.pow(10, +m[2]) : (/^-?\d*\.?\d+$/.test(s) ? +s : NaN); }
+  function sigOf(a) { var s = String(a.v).split('*')[0].replace(/^-/, '').replace('.', '').replace(/^0+/, ''); return Math.max(2, Math.min(4, s.length || 1)); }
+  function numTex(x, n) {
+    var y = Number(x.toPrecision(n)), e = y === 0 ? 0 : Math.floor(Math.log10(Math.abs(y)) + 1e-12);
+    if (e >= 6 || e <= -4) { var m = Number((y / Math.pow(10, e)).toPrecision(n)); return m.toFixed(Math.max(0, n - 1)) + ' \\times 10^{' + e + '}'; }
+    return y.toFixed(Math.max(0, n - 1 - e));
+  }
+  function numCheckable(p) {
+    var a = p.a; if (YOUNG || !a || a.t !== 'num' || a.form || a.frac) return false;
+    var v = numVal(a); return isFinite(v) && v !== 0 && txt(p.q).length <= 700;
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = numVal(a), exact = !a.rtol && Math.round(v) === v, n = sigOf(a), right = R.coin(), w;
+    var cands = exact ? [v + 1, v - 1, 2 * v, v + 2].filter(function (x) { return x !== v && (v < 0 || x >= 0); })
+      : [10, 0.1, 2, 0.5, 1000, 0.001].concat(v < 0 || /\bsign\b/i.test(txt(p.q)) ? [-1, -1, -1] : []).map(function (k) { return v * k; });
+    // a wrong value must really be wrong: it has to fail the problem's own answer check
+    cands = cands.filter(function (x) { try { return !ML.check(a, exact ? String(x) : numTex(x, n).replace(' \\times 10^{', 'e').replace('}', ''), { q: p.q, unit: p.unit }).ok; } catch (e) { return false; } });
+    if (!cands.length) return null;
+    w = R.pick(cands);
+    var unit = p.unit ? '&nbsp;' + p.unit : '', pc = a.pct && !p.unit ? '\\%' : '';
+    function vTex() { var s = String(a.v).replace(/\s/g, ''), m = /^(-?[\d.]+)\*10\^(-?\d+)$/.exec(s); return m ? m[1] + ' \\times 10^{' + m[2] + '}' : s; } // the answer exactly as the problem gives it
+    function tex(x) { return '$' + (x === v ? vTex() : exact ? String(x) : numTex(x, n)) + pc + '$' + unit; }
+    var shown = right ? v : w;
+    var out = { q: p.q + '<p>A classmate answered: <b>' + tex(shown) + '</b></p><p>Is that right?</p>', a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: (p.steps || []).concat([right ? 'So <b>yes</b>, the classmate is right.' : 'So <b>no</b>: the answer is ' + tex(v) + ', not ' + tex(shown) + '.']) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (mode !== 'place' && numCheckable(p)) forms.push('num');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'num' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

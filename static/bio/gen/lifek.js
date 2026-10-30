@@ -11,7 +11,10 @@
 (function (ML) {
   'use strict';
   if (!ML || !ML.gen) return;
-  var G = ML.gen;
+  // Each topic may also have extra forms (EXTRA[id], defined at the end of this file) built from the kit's facts, so the
+  // same skill comes in more shapes; an extra form returns null to fall back to the topic's own problems.
+  var EXTRA = {};
+  var G = function (id, fn) { ML.gen(id, function (R, ctx) { var ex = EXTRA[id]; if (ex) { var p = ex(R, ctx); if (p) return p; } return fn(R, ctx); }); };
   function B() { return ML.bio; }
   var READ = '<p class="bi-readme"><b>Read to me</b> Read the question and the choices aloud.</p>';
   function big(s) { return READ + '<span class="bi-big">' + s + '</span>'; }
@@ -188,7 +191,15 @@
   function perms(n) { if (n === 1) return [[0]]; var out = []; perms(n - 1).forEach(function (p) { for (var i = 0; i <= p.length; i++) out.push(p.slice(0, i).concat([n - 1], p.slice(i))); }); return out; }
   // a bank item becomes a problem. it: { q, a, w: [wrong choices] } or { q, yn: true | false }; s: steps (string or array);
   // pic: [THINGS keys] or a full viz object; h: hint; keep: keep the choices in the written order (for reading aloud)
+  var KIDS = ['Mia', 'Leo', 'Ava', 'Sam', 'Nia', 'Ben', 'Zoe', 'Max', 'Ivy', 'Eli', 'Ana', 'Kai'];
   function bank(R, it, hint) {
+    if (it.yn === undefined && it.w && it.w.length && R.chance(0.4)) { // check a given answer: someone gives an answer; is it right?
+      var said = R.coin() ? it.a : R.pick(it.w), ok = said === it.a, who = R.pick(KIDS);
+      var pc = { q: big(it.q.replace(/\s*Choose[^.?]*[.?]$/, '') + ' ' + who + ' says, “' + said.replace(/\.$/, '') + '.” Is ' + who + ' right?'), a: yesNo(ok), hint: it.h || hint || 'Think about what you learned, then check the answer.',
+        steps: (ok ? [] : ['The right answer is: ' + it.a.replace(/\.$/, '') + '.']).concat(it.s ? [].concat(it.s) : [], ['So the answer is <b>' + (ok ? 'yes' : 'no') + '</b>.']) };
+      if (it.pic) pc.viz = Array.isArray(it.pic) ? pic(it.pic) : it.pic;
+      return pc;
+    }
     var yn = it.yn !== undefined, ans = yn ? yesNo(it.yn) : mc(R, it.a, it.w, it.keep);
     var end = yn ? 'So the answer is <b>' + (it.yn ? 'yes' : 'no') + '</b>.' : it.a.split(' ').length <= 5 ? 'So the answer is <b>' + lcf(it.a.replace(/\.$/, '')) + '</b>.' : 'The answer: <b>' + it.a + '</b>';
     var p = { q: big(it.q), a: ans, hint: it.h || hint || 'Read each choice and think about what you learned.', steps: (it.s ? [].concat(it.s) : []).concat([end]) };
@@ -1273,4 +1284,624 @@
     return chooseAll(R, 'Which of these are kind ways to care for nature?', [['watch animals quietly from far away', true], ['put rocks and logs back the way you found them', true], ['take your trash home', true], ['leave nests alone', true],
       ['chase the ducks', false, 'it scares them'], ['take a baby bird home', false, 'its parents are usually nearby'], ['break branches off trees', false, 'it hurts the tree']], 4, 'Would the animal or plant be better off?');
   });
+
+  /* ---------- extra forms from the kit's facts (MathLadder.bio.THINGS), the same at every topic:
+     level 1 Yes / No about one picture; level 2 which one of three lettered pictures; level 3 choose all of four. ---------- */
+  function T_(k) { return B().THINGS[k]; }
+  function kidSort(R, L, o) { // o: { pool, ok(k), yn(k) question, which, all, why(k) sentence, hint }
+    var good = o.pool.filter(o.ok), bad = o.pool.filter(function (k) { return !o.ok(k); });
+    if (good.length < 1 || bad.length < 3) return null;
+    if (L === 1 && R.coin()) return whichPic(R, R.pick(good), R.sample(bad, 1), o.which, o.why, o.hint); // two pictures
+    if (L === 1) {
+      var yes = R.coin(), k = R.pick(yes ? good : bad);
+      return { q: big(o.yn(k)), viz: pic([k]), a: yesNo(yes), hint: o.hint, steps: [cap(o.why(k)), 'So the answer is <b>' + (yes ? 'yes' : 'no') + '</b>.'] };
+    }
+    if (L === 2) return whichPic(R, R.pick(good), R.sample(bad, 2), o.which, o.why, o.hint);
+    var n = 4, kk = R.int(Math.max(1, n - bad.length), Math.min(good.length, 2)), items = R.shuffle(R.sample(good, kk).concat(R.sample(bad, n - kk)));
+    return { q: big(o.all + ' Choose all that are right.'), viz: pic(items, { letters: true }),
+      a: { t: 'mc', choices: items.map(function (k, i) { return LT(i) + ': ' + name(k); }), v: items.map(function (k, i) { return o.ok(k) ? i : -1; }).filter(function (i) { return i >= 0; }), keep: true },
+      hint: o.hint, steps: items.map(function (k, i) { return LT(i) + ' shows ' + the(k) + '. ' + cap(o.why(k)); }).concat(['So the right ones are <b>' + items.filter(o.ok).map(name).join(', ') + '</b>.']) };
+  }
+  function animals(test) { return keys(function (t, k) { return t.kind === 'animal' && !t.stage && (!test || test(t, k)); }); }
+  function has(arr, x) { return Array.isArray(arr) && arr.indexOf(x) >= 0; }
+  function extra(id, chance, make) { EXTRA[id] = function (R, ctx) { return R.chance(ctx.level === 2 ? chance + 0.15 : chance) ? make(R, ctx.level || 1) : null; }; }
+
+  extra('lifek.living-nonliving', 0.45, function (R, L) {
+    var pool = LIVING().concat(NEVER().filter(function (k) { return T_(k).tri !== false; }));
+    return kidSort(R, L, { pool: pool, ok: function (k) { return T_(k).life === 'living'; }, yn: function (k) { return 'Is ' + a_(k) + ' alive?'; },
+      which: 'Which one is living?', all: 'Which ones are living?', why: function (k) { return T_(k).life === 'living' ? a_(k) + ' grows and needs food and water: living' : a_(k) + ' does not grow, eat or drink: not living'; },
+      hint: 'Does it grow? Does it need food and water?' });
+  });
+  extra('lifek.once-living', 0.45, function (R, L) {
+    var ONCE = keys(function (t) { return t.life === 'once'; }), NEV = ['rock', 'coin', 'crystal', 'water', 'car', 'ball', 'robot'];
+    return kidSort(R, L, { pool: ONCE.concat(NEV), ok: function (k) { return T_(k).life === 'once'; }, yn: function (k) { return 'Did ' + nm2(k) + ' come from something that was once alive?'; },
+      which: 'Which one came from something that was once alive?', all: 'Which ones came from something that was once alive?',
+      why: function (k) { return T_(k).life === 'once' ? onceWhy(k).replace(/^./, function (c) { return c.toLowerCase(); }) : nm2(k) + ' never came from a plant or an animal'; },
+      hint: 'Did it come from a plant or an animal?' });
+  });
+  var GRP_ONE = { mammal: 'a mammal', bird: 'a bird', fish: 'a fish', reptile: 'a reptile', amphibian: 'an amphibian', insect: 'an insect' };
+  var GRP_WHY = { mammal: 'has fur or hair and feeds its babies milk', bird: 'has feathers and a beak, and hatches from an egg', fish: 'lives in water, breathes with gills and has fins',
+    reptile: 'has dry, scaly skin and breathes air', amphibian: 'has smooth, moist skin and starts life in water', insect: 'has six legs and three body parts' };
+  ['mammal', 'bird', 'fish', 'reptile', 'amphibian', 'insect'].forEach(function (g) {
+    extra('lifek.' + (g === 'fish' ? 'fish' : g + 's'), 0.45, function (R, L) {
+      var pool = animals(function (t) { return L > 1 || !t.trick; });
+      return kidSort(R, L, { pool: pool, ok: function (k) { return T_(k).group === g; }, yn: function (k) { return 'Is ' + a_(k) + ' ' + GRP_ONE[g] + '?'; },
+        which: 'Which one is ' + GRP_ONE[g] + '?', all: 'Which ones are ' + (g === 'fish' ? 'fish' : g + 's') + '?',
+        why: function (k) { var t = T_(k); return t.group === g ? a_(k) + ' ' + GRP_WHY[g] + ': ' + GRP_ONE[g] : a_(k) + ' is ' + (GRP_ONE[t.group] || 'not ' + GRP_ONE[g]); },
+        hint: cap(GRP_ONE[g]) + ' ' + GRP_WHY[g] + '.' });
+    });
+  });
+  var COV_ASK = { fur: 'has fur', feathers: 'has feathers', scales: 'has scales', 'moist skin': 'has smooth, moist skin', exoskeleton: 'has a hard outer covering (an exoskeleton)' };
+  extra('lifek.coverings', 0.5, function (R, L) {
+    var c = R.pick(L === 1 ? ['fur', 'feathers', 'scales'] : Object.keys(COV_ASK)), pool = animals(function (t) { return !!COV_ASK[t.cover] || t.cover === 'skin and a little hair'; });
+    return kidSort(R, L, { pool: pool, ok: function (k) { return T_(k).cover === c; }, yn: function (k) { return 'Does ' + a_(k) + ' have ' + COV_ASK[c].replace(/^has /, '') + '?'; },
+      which: 'Which one ' + COV_ASK[c] + '?', all: 'Which ones ' + COV_ASK[c].replace(/^has/, 'have') + '?',
+      why: function (k) { return a_(k) + ' is covered with ' + (T_(k).cover === 'skin and a little hair' ? 'skin and a little hair' : T_(k).cover === 'exoskeleton' ? 'a hard outer covering' : T_(k).cover); },
+      hint: 'Picture the animal. What covers its body?' });
+  });
+  var MOV_ASK = { fly: 'can fly', swim: 'can swim', hop: 'hops', crawl: 'crawls' };
+  extra('lifek.moving', 0.5, function (R, L) {
+    var m = 'fly', pool = animals(function (t, k) { return Array.isArray(t.moves) && k !== 'hen'; }); // chickens flutter a little, so they are left out
+    return kidSort(R, L, { pool: pool, ok: function (k) { return has(T_(k).moves, m); }, yn: function (k) { return 'Does ' + a_(k) + ' ' + { fly: 'fly', swim: 'swim', hop: 'hop', crawl: 'crawl' }[m] + '?'; },
+      which: 'Which one ' + MOV_ASK[m] + '?', all: 'Which ones ' + MOV_ASK[m].replace(/s$/, '') + '?',
+      why: function (k) { return a_(k) + ' moves by ' + T_(k).moves.map(function (x) { return { walk: 'walking', run: 'running', swim: 'swimming', climb: 'climbing', fly: 'flying', hop: 'hopping', crawl: 'crawling', slither: 'slithering' }[x] || x; }).join(' and '); },
+      hint: 'Think about the animal’s body: wings, fins, strong back legs, or no legs at all?' });
+  });
+  var DIET_ASK = { herbivore: ['eats only plants', 'eat only plants'], carnivore: ['eats meat (other animals), not plants', 'eat meat (other animals), not plants'], omnivore: ['eats both plants and animals', 'eat both plants and animals'] };
+  extra('lifek.animal-diets', 0.5, function (R, L) {
+    var d = R.pick(L === 1 ? ['herbivore', 'carnivore'] : ['herbivore', 'carnivore', 'omnivore']), pool = animals(function (t) { return !!DIET_ASK[t.diet] && (d !== 'carnivore' || t.diet !== 'omnivore'); }); // an omnivore eats animals too, so it is never a wrong choice for "eats other animals"
+    return kidSort(R, L, { pool: pool, ok: function (k) { return T_(k).diet === d; }, yn: function (k) { return 'Does ' + a_(k) + ' ' + DIET_ASK[d][1] + '?'; },
+      which: 'Which one ' + DIET_ASK[d][0] + '?', all: 'Which ones ' + DIET_ASK[d][1] + '?',
+      why: function (k) { return a_(k) + ' ' + DIET_ASK[T_(k).diet][0]; }, hint: 'Think about what the animal eats.' });
+  });
+  // habitats: the other choices come from clearly different places, so no animal could fairly fit both
+  var HAB_ASK = { ocean: 'lives in the ocean', pond: 'lives in a pond', forest: 'lives in a forest', desert: 'lives in the desert', polar: 'lives on icy polar land', farm: 'lives on a farm' };
+  var HAB_NOT = { ocean: ['forest', 'grassland', 'desert', 'farm', 'home'], pond: ['desert', 'polar', 'farm', 'home', 'ocean'], forest: ['ocean', 'polar', 'desert', 'farm'], desert: ['ocean', 'pond', 'polar'], polar: ['desert', 'farm', 'pond', 'grassland', 'home'], farm: ['ocean', 'polar', 'desert'] };
+  function habTopic(list) { return function (R, L) {
+    var h = R.pick(list), pool = animals(function (t) { return Array.isArray(t.habitat) && (has(t.habitat, h) || t.habitat.every(function (x) { return HAB_NOT[h].indexOf(x) >= 0; })); });
+    return kidSort(R, L, { pool: pool, ok: function (k) { return has(T_(k).habitat, h); }, yn: function (k) { return 'Does ' + a_(k) + ' ' + HAB_ASK[h].replace(/^lives/, 'live') + '?'; },
+      which: 'Which one ' + HAB_ASK[h] + '?', all: 'Which ones ' + HAB_ASK[h].replace(/^lives/, 'live') + '?',
+      why: function (k) { return a_(k) + ' lives ' + T_(k).habitat.map(function (x) { return { ocean: 'in the ocean', pond: 'in or near ponds', forest: 'in forests', desert: 'in deserts', polar: 'on icy polar land', farm: 'on farms', grassland: 'in grasslands', home: 'in homes and yards' }[x]; }).join(' and '); },
+      hint: 'Picture where the animal finds its food, water and shelter.' });
+  }; }
+  extra('lifek.habitats', 0.5, habTopic(['ocean', 'pond', 'forest', 'desert', 'polar', 'farm']));
+  extra('lifek.land-habitats', 0.5, habTopic(['forest', 'desert', 'polar', 'farm']));
+  extra('lifek.water-habitats', 0.5, habTopic(['ocean', 'pond']));
+  var HOME_ASK = { nest: 'a nest', burrow: 'a burrow', den: 'a den', hive: 'a hive', web: 'a web', lodge: 'a lodge', anthill: 'an anthill' };
+  extra('lifek.animal-homes', 0.5, function (R, L) {
+    var hm = R.pick(['nest', 'burrow', 'den', 'nest', 'burrow']), pool = animals(function (t, k) { return !!HOME_ASK[t.home] && (t.home === hm || !((hm === 'den' && t.home === 'burrow') || (hm === 'burrow' && t.home === 'den') || (hm === 'nest' && ['mouse', 'bee', 'ant'].indexOf(k) >= 0))); }); // a fox's den may be a burrow, and mice build nests
+    return kidSort(R, L, { pool: pool, ok: function (k) { return T_(k).home === hm; }, yn: function (k) { return 'Does ' + a_(k) + ' make its home in ' + HOME_ASK[hm] + '?'; },
+      which: 'Which one makes its home in ' + HOME_ASK[hm] + '?', all: 'Which ones make their homes in ' + HOME_ASK[hm] + '?',
+      why: function (k) { return a_(k) + ' makes its home in ' + HOME_ASK[T_(k).home]; }, hint: 'Where does the animal rest and keep its babies safe?' });
+  });
+  extra('lifek.parents-young', 0.45, function (R, L) {
+    var chg = L === 1 ? R.coin() : R.chance(0.6), pool = animals();
+    return kidSort(R, L, { pool: pool, ok: function (k) { return (T_(k).young === 'changes') === chg; },
+      yn: function (k) { return chg ? 'Does a baby ' + name(k) + ' look very different from its parents?' : 'Does a baby ' + name(k) + ' look a lot like its parents?'; },
+      which: chg ? 'Which one has babies that look very different from the grown-ups?' : 'Which one has babies that look like small grown-ups?',
+      all: chg ? 'Which ones have babies that look very different from the grown-ups?' : 'Which ones have babies that look like small grown-ups?',
+      why: function (k) { return T_(k).young === 'changes' ? 'a young ' + name(k) + ' changes a lot as it grows up' : 'a baby ' + name(k) + ' looks like a small grown-up'; },
+      hint: 'Think of a baby of each animal. Does it change a lot as it grows?' });
+  });
+  var WIN_ASK = { hibernate: ['sleeps through the winter (hibernates)', 'sleep through the winter (hibernate)'], migrate: ['travels to a warmer place for the winter (migrates)', 'travel to a warmer place for the winter (migrate)'], active: ['stays active all winter', 'stay active all winter'] };
+  function winTopic(R, L) {
+    var w = R.pick(['hibernate', 'migrate', 'active']), pool = animals(function (t, k) { return !!WIN_ASK[t.winter] && k !== 'bee'; });
+    return kidSort(R, L, { pool: pool, ok: function (k) { return T_(k).winter === w; }, yn: function (k) { return 'Does ' + a_(k) + ' ' + WIN_ASK[w][1] + '?'; },
+      which: 'Which one ' + WIN_ASK[w][0] + '?', all: 'Which ones ' + WIN_ASK[w][1] + '?',
+      why: function (k) { return a_(k) + ' ' + WIN_ASK[T_(k).winter][0]; }, hint: 'Animals get through winter in three ways: they sleep, travel or stay active.' });
+  }
+  extra('lifek.animals-winter', 0.5, winTopic);
+  extra('lifek.pollinators', 0.4, function (R, L) {
+    var pool = animals(function (t, k) { return (t.group === 'insect' || t.group === 'bird' || t.group === 'mammal') && ['bat', 'ant', 'ladybug'].indexOf(k) < 0; });
+    return kidSort(R, L, { pool: pool, ok: function (k) { return !!T_(k).pollinator; }, yn: function (k) { return 'Does ' + a_(k) + ' carry pollen from flower to flower?'; },
+      which: 'Which one carries pollen from flower to flower?', all: 'Which ones carry pollen from flower to flower?',
+      why: function (k) { return T_(k).pollinator ? a_(k) + ' visits flowers for nectar and carries pollen' : a_(k) + ' does not visit flowers for nectar'; }, hint: 'Which animals visit flowers to drink nectar?' });
+  });
+  extra('lifek.producers-consumers', 0.45, function (R, L) {
+    var pool = keys(function (t) { return (t.kind === 'plant' && !t.part && !t.stage) || (t.kind === 'animal' && !t.stage); }).filter(function (k) { return ['burr', 'coconut', 'peapod', 'seed', 'sprout'].indexOf(k) < 0; }), prod = R.coin();
+    return kidSort(R, L, { pool: pool, ok: function (k) { return (T_(k).kind === 'plant') === prod; }, yn: function (k) { return prod ? 'Does ' + a_(k) + ' make its own food from sunlight?' : 'Does ' + a_(k) + ' have to eat other living things for food?'; },
+      which: prod ? 'Which one makes its own food (a producer)?' : 'Which one eats other living things (a consumer)?', all: prod ? 'Which ones make their own food (producers)?' : 'Which ones eat other living things (consumers)?',
+      why: function (k) { return T_(k).kind === 'plant' ? a_(k) + ' is a plant: it makes its own food with sunlight, a producer' : a_(k) + ' is an animal: it eats other living things, a consumer'; },
+      hint: 'Plants make food; animals eat food.' });
+  });
 })(window.MathLadder);
+
+/* ---- More of the same skills (round 7, "widen"): larger banks for young learners ----
+   Topics whose levels had few different problems also draw from the small banks below, read aloud like the rest of the
+   course: Yes / No questions; which one (two choices at level 1, three at level 2); is it …? ; choose all, which one does
+   not belong, and what comes next or put in order (level 3). Every answer comes from the bank itself. Shares are per
+   level: the topic's own generator still makes the rest. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen) return;
+  var BK = {};
+  function T(id, o) { var b = BK[id] || (BK[id] = {}); Object.keys(o).forEach(function (k) { b[k] = k === 'share' || k === 'forms' ? Object.assign(b[k] || {}, o[k]) : o[k]; }); }
+  var READ = '<p class="bi-readme"><b>Read to me</b> Read the question and the choices aloud.</p>';
+  function big(s) { return READ + '<span class="bi-big">' + s + '</span>'; }
+  function cap(s) { s = String(s); return s.charAt(0).toUpperCase() + s.slice(1); }
+  function dot(s) { s = String(s).replace(/\s+$/, ''); return /[.!?]$/.test(s) ? s : s + '.'; }
+  function YN(v) { return { t: 'mc', choices: ['Yes', 'No'], v: v ? 0 : 1, keep: true }; }
+  function MC(right, wrong) { return { t: 'mc', choices: [right].concat(wrong), v: 0 }; }
+  function LT(i) { return String.fromCharCode(65 + i); }
+  var FORMS = { 1: ['yn', 'two', 'two', 'isit', 'pf', 'pb'], 2: ['yn', 'three', 'three', 'isit', 'next', 'pf', 'pb'], 3: ['all', 'odd', 'order', 'three', 'next', 'pf', 'pb'] };
+  function can(o, f) {
+    if (f === 'yn') return !!(o.yn && o.yn.length);
+    if (f === 'next' || f === 'order') return !!o.seq;
+    if (f === 'pf' || f === 'pb') return !!o.pair;
+    return !!o.sort;
+  }
+  function make(R, o, L) {
+    var forms = ((o.forms && o.forms[L]) || FORMS[L]).filter(function (f) { return can(o, f); });
+    if (!forms.length) return null;
+    var f = R.pick(forms), p = f === 'pf' || f === 'pb' ? mkPair(R, o.pair, f, L) : f === 'yn' ? mkYn(R, o) : f === 'next' || f === 'order' ? mkSeq(R, o.seq, f) : mkSort(R, o.sort, f);
+    if (p && !p.hint) p.hint = o.hint || 'Think about what you learned.';
+    return p;
+  }
+  function mkYn(R, o) {
+    var t = R.pick(o.yn);
+    return { q: big(t[0]), a: YN(t[1]), steps: [t[2] ? dot(cap(t[2])) : (t[1] ? 'Yes.' : 'No.'), 'So the answer is <b>' + (t[1] ? 'yes' : 'no') + '</b>.'] };
+  }
+  function why(s, it) { return it[2] ? dot(cap(it[2])) : dot(cap(it[0]) + ' ' + (s.cats[it[1]].be || 'is') + ' ' + s.cats[it[1]].is); }
+  function mkSort(R, s, f) {
+    var keys = Object.keys(s.cats).filter(function (c) { return s.cats[c].one; }), k = R.pick(keys), C = s.cats[k];
+    var inC = s.items.filter(function (x) { return x[1] === k; }), outC = s.items.filter(function (x) { return x[1] !== k; });
+    if (f === 'isit') {
+      var it = R.pick(s.items), cat = s.cats[it[1]].one ? it[1] : k, c2 = R.coin() ? s.cats[cat] : C, yes = it[1] === (c2 === C ? k : cat);
+      if (!c2.ask) return mkSort(R, s, 'two');
+      return { q: big(c2.ask.replace('{x}', it[0])), a: YN(yes), steps: [why(s, it), 'So the answer is <b>' + (yes ? 'yes' : 'no') + '</b>.'] };
+    }
+    if (f === 'two' || f === 'three') {
+      var n = f === 'two' ? 1 : 2; if (!inC.length || outC.length < n) return null;
+      var r = R.pick(inC), w = R.sample(outC, n);
+      return { q: big(C.one), a: MC(cap(r[0]), w.map(function (x) { return cap(x[0]); })), steps: [why(s, r)].concat(w.map(function (x) { return why(s, x); })).concat(['So the answer is <b>' + r[0] + '</b>.']) };
+    }
+    if (f === 'odd') { // two that fit and one that does not
+      if (inC.length < 2 || !outC.length || !C.odd) return mkSort(R, s, 'three');
+      var w2 = R.sample(inC, 2), r2 = R.pick(outC);
+      return { q: big(C.odd), a: MC(cap(r2[0]), w2.map(function (x) { return cap(x[0]); })), steps: [why(s, r2)].concat(w2.map(function (x) { return why(s, x); })).concat(['So <b>' + r2[0] + '</b> does not belong.']) };
+    }
+    if (!C.all || !inC.length || !outC.length) return mkSort(R, s, 'three');
+    var tot = Math.min(4, inC.length + outC.length), kk = R.int(Math.max(1, tot - outC.length), Math.min(inC.length, tot - 1)), items = R.shuffle(R.sample(inC, kk).concat(R.sample(outC, tot - kk)));
+    return { q: big(C.all + ' Choose all that are right.'), a: { t: 'mc', choices: items.map(function (x) { return cap(x[0]); }), v: items.map(function (x, i) { return x[1] === k ? i : -1; }).filter(function (i) { return i >= 0; }), keep: true },
+      steps: items.map(function (x) { return why(s, x); }).concat(['So the right ones are <b>' + items.filter(function (x) { return x[1] === k; }).map(function (x) { return x[0]; }).join(', ') + '</b>.']) };
+  }
+  function mkPair(R, pr, f, L) { // pr: { fwd: 'What does {t} grow into?', back: 'Which one grows into {d}?', items: [[t, d, why]] }
+    var it = R.pick(pr.items), k = f === 'pf' ? 1 : 0, seen = {}, pool = pr.items.filter(function (x) { if (x[0] === it[0] || x[1] === it[1] || seen[x[k]]) return false; seen[x[k]] = 1; return true; }), w = R.sample(pool, Math.min(L === 1 ? 1 : 2, pool.length));
+    var st = [it[2] ? dot(cap(it[2])) : dot(cap(it[0]) + ': ' + it[1])];
+    if (f === 'pf') return { q: big(pr.fwd.replace('{t}', it[0])), a: MC(cap(it[1]), w.map(function (x) { return cap(x[1]); })), steps: st.concat(['So the answer is <b>' + it[1] + '</b>.']) };
+    return { q: big(pr.back.replace('{d}', it[1])), a: MC(cap(it[0]), w.map(function (x) { return cap(x[0]); })), steps: st.concat(['So the answer is <b>' + it[0] + '</b>.']) };
+  }
+  function mkSeq(R, sq, f) {
+    var lists = sq.lists || [sq], s = R.pick(lists), it = s.items;
+    if (f === 'next') {
+      var i = R.int(0, it.length - 2), w = R.sample(it.filter(function (x, j) { return j !== i + 1 && j !== i; }), Math.min(2, it.length - 2));
+      return { q: big(s.name + ': what comes right after ' + it[i] + '?'), a: MC(cap(it[i + 1]), w.map(cap)), steps: ['The order: ' + it.join(' → ') + '.', 'After ' + it[i] + ' comes <b>' + it[i + 1] + '</b>.'] };
+    }
+    var n = Math.min(3, it.length), st = R.int(0, it.length - n), idx = [st, st + 1, st + 2].slice(0, n), shown = R.shuffle(idx.slice()), right = idx.map(function (j) { return LT(shown.indexOf(j)); }).join(', '), wr = [], g = 0;
+    while (wr.length < 2 && g++ < 60) { var c = R.shuffle(right.split(', ')).join(', '); if (c !== right && wr.indexOf(c) < 0) wr.push(c); }
+    return { q: big(s.name + ': put these in order.') + '<p>' + shown.map(function (j, i) { return '<b>' + LT(i) + '</b>: ' + it[j]; }).join('<br>') + '</p>', a: MC(right, wr),
+      steps: ['The order: ' + idx.map(function (j) { return it[j]; }).join(' → ') + '.', 'So the answer is <b>' + right + '</b>.'] };
+  }
+
+  /* ===== lifek ===== */
+  function C(is, plural) { // a group for sorting: "a mammal", "mammals"
+    return { is: is, one: 'Which one is ' + is + '?', all: 'Which ones are ' + plural + '?', odd: 'Which one is not ' + is + '?', ask: 'Is {x} ' + is + '?' };
+  }
+  function N(is) { return { is: is }; } // the other group: used for wrong choices only
+
+  T('lifek.living-nonliving', { share: { 1: 0.3 },
+    sort: { cats: { l: C('alive', 'alive'), n: N('not alive') }, items: [['a puppy', 'l'], ['a tree', 'l'], ['a goldfish', 'l'], ['a sunflower', 'l'], ['a ladybug', 'l'], ['a snail', 'l'], ['a mushroom', 'l'], ['a horse', 'l'], ['moss', 'l'], ['a duck', 'l'],
+      ['a rock', 'n'], ['a spoon', 'n'], ['a toy truck', 'n'], ['a cloud', 'n'], ['a crayon', 'n'], ['a kite', 'n'], ['a puddle', 'n'], ['a teddy bear', 'n'], ['a bike', 'n']] } });
+
+  T('lifek.needs', { share: { 1: 0.35, 2: 0.5 },
+    yn: [['Does a puppy need water?', true], ['Does a tree need water?', true], ['Does a goldfish need food?', true], ['Does a plant need sunlight?', true], ['Does a rock need food?', false, 'A rock is not alive'], ['Does a kitten need air?', true],
+      ['Does a flower need candy?', false, 'Plants need water, air and light, not candy'], ['Does a horse need a place to live?', true], ['Does a toy robot need food?', false, 'A toy is not alive'], ['Do people need water to live?', true], ['Does a bird need food?', true], ['Does a spoon need water?', false]],
+    sort: { cats: { y: C('something living things need', 'things living things need'), n: N('not something living things need') }, items: [['water', 'y'], ['air', 'y'], ['food', 'y'], ['a place to live', 'y'], ['sunlight for plants', 'y'], ['toys', 'n'], ['candy', 'n'], ['a hat', 'n'], ['a TV', 'n'], ['glitter', 'n']] } });
+
+  T('lifek.once-living', { share: { 1: 0.45 },
+    sort: { cats: { o: C('made from something that was once alive', 'made from things that were once alive'), n: N('made from something that was never alive') }, items: [
+      ['a wooden spoon', 'o', 'Wood comes from a tree'], ['a leaf on the ground', 'o', 'The leaf grew on a living tree'], ['a feather', 'o', 'A feather grew on a bird'], ['a seashell', 'o', 'An animal once lived in the shell'], ['a paper bag', 'o', 'Paper is made from trees'], ['a cotton shirt', 'o', 'Cotton comes from a plant'], ['a pinecone', 'o', 'It grew on a pine tree'], ['a wool sock', 'o', 'Wool comes from sheep'],
+      ['a glass marble', 'n', 'Glass is made from sand'], ['a metal key', 'n', 'Metal comes from rocks'], ['a pebble', 'n', 'A pebble was never alive'], ['water', 'n', 'Water was never alive'], ['an ice cube', 'n', 'Ice is frozen water, which was never alive'], ['salt', 'n', 'Salt was never alive']] } });
+
+  T('lifek.grow-change', { share: { 1: 0.8 },
+    yn: [['Can a tadpole grow into a frog?', true], ['Can a caterpillar grow into a butterfly?', true], ['Can a seed grow into a plant?', true], ['Can an acorn grow into an oak tree?', true], ['Can a puppy grow into a dog?', true], ['Can a chick grow into a hen?', true],
+      ['Can a kitten grow into a cat?', true], ['Can a baby grow into a grown-up?', true], ['Can a calf grow into a cow?', true], ['Can a duckling grow into a duck?', true],
+      ['Can a puppy grow into a cat?', false, 'A puppy grows into a dog'], ['Can a seed grow into a rock?', false, 'A seed grows into a plant'], ['Can a tadpole grow into a fish?', false, 'A tadpole grows into a frog'], ['Can a kitten grow into a lion?', false, 'A kitten grows into a house cat'],
+      ['Can a chick grow into a duck?', false, 'A chick grows into a chicken'], ['Can an acorn grow into an apple tree?', false, 'An acorn grows into an oak tree'], ['Does a rock grow bigger like a puppy does?', false, 'A rock is not alive'], ['Do you grow taller as you get older?', true]] });
+
+  T('lifek.plant-needs', { share: { 1: 0.4, 3: 0.65 },
+    sort: { cats: { y: C('something a plant needs', 'things a plant needs'), n: N('not something a plant needs') }, items: [['water', 'y'], ['sunlight', 'y'], ['air', 'y'], ['space to grow', 'y'], ['soil with nutrients', 'y'], ['candy', 'n'], ['a blanket', 'n'], ['a hat', 'n'], ['music', 'n'], ['juice', 'n'], ['a toy', 'n']] },
+    yn: [['Does a plant need light to grow?', true], ['Does a plant need water?', true], ['Will a plant grow well in a dark closet?', false, 'Plants need light'], ['Does a plant need space to grow?', true], ['Does a plant need to eat candy?', false]] });
+
+  T('lifek.plant-parts', { share: { 1: 0.4, 3: 0.75 }, forms: { 3: ['all', 'odd', 'three', 'isit'] },
+    sort: { cats: { r: C('a root', 'roots'), s: C('a stem', 'stems'), l: C('a leaf', 'leaves'), f: C('a flower', 'flowers') }, items: [
+      ['a carrot we eat', 'r'], ['the part that holds the plant in the soil', 'r'], ['the part that drinks water from the ground', 'r'], ['a radish we eat', 'r'],
+      ['a tree trunk', 's'], ['a celery stalk', 's'], ['the part that holds the plant up', 's'], ['an asparagus spear', 's'],
+      ['a lettuce leaf', 'l'], ['a spinach leaf', 'l'], ['the flat green part that makes food from sunlight', 'l'], ['a basil leaf', 'l'],
+      ['a rose bloom', 'f'], ['a sunflower head', 'f'], ['the colorful part that makes seeds', 'f'], ['broccoli tops', 'f']] } });
+
+  T('lifek.roots', { share: { 1: 0.8, 2: 0.4 },
+    yn: [['Do roots hold a plant in the ground?', true], ['Do roots take in water?', true], ['Do most roots grow under the ground?', true], ['Is a carrot a root?', true], ['Do roots grow up into the sky?', false, 'Roots grow down into the soil'],
+      ['Do roots make the flowers?', false, 'Flowers make seeds'], ['Is a radish a root?', true], ['Do roots help a tree stand up in the wind?', true], ['Does a potted plant have roots in the soil?', true], ['Do roots catch sunlight?', false, 'Leaves catch sunlight'],
+      ['Do roots drink water from the soil?', true], ['Is a sweet potato a root?', true], ['Is a lettuce leaf a root?', false, 'Lettuce is a leaf'], ['Do roots take in water from the soil for the whole plant?', true]] });
+
+  T('lifek.stems-leaves', { share: { 1: 0.6 },
+    yn: [['Is a tree trunk a stem?', true], ['Are most leaves green in summer?', true], ['Do leaves make food for the plant?', true], ['Does a stem hold a plant up?', true], ['Does water move up the stem?', true],
+      ['Is celery a stem?', true], ['Is lettuce a leaf?', true], ['Are most leaves blue?', false, 'Most leaves are green'], ['Do leaves need sunlight?', true], ['Is a carrot a leaf?', false, 'A carrot is a root'],
+      ['Does a stem carry water to the leaves?', true], ['Are pine needles leaves?', true], ['Do leaves grow under the ground?', false, 'Most leaves grow in the air and light']] });
+
+  T('lifek.flowers-fruits-seeds', { share: { 1: 0.8, 2: 0.65 },
+    sort: { cats: { f: C('a fruit', 'fruits'), n: N('not a fruit') }, items: [
+      ['an apple', 'f', 'An apple holds seeds: a fruit'], ['a tomato', 'f', 'A tomato holds seeds: a fruit'], ['a pumpkin', 'f', 'A pumpkin holds seeds: a fruit'], ['a cucumber', 'f', 'A cucumber holds seeds: a fruit'], ['a peach', 'f', 'A peach holds a seed: a fruit'], ['a pepper', 'f', 'A pepper holds seeds: a fruit'], ['a watermelon', 'f', 'A watermelon holds seeds: a fruit'], ['an orange', 'f', 'An orange holds seeds: a fruit'],
+      ['a carrot', 'n', 'A carrot is a root'], ['a lettuce leaf', 'n', 'Lettuce is a leaf'], ['a celery stalk', 'n', 'Celery is a stem'], ['a potato', 'n', 'A potato grows under the ground and holds no seeds'], ['a spinach leaf', 'n', 'Spinach is a leaf']] },
+    yn: [['Does a fruit hold seeds?', true], ['Do flowers make seeds?', true], ['Can a seed grow into a new plant?', true], ['Does an apple have seeds inside?', true], ['Does a pumpkin have seeds inside?', true], ['Does a rock have seeds inside?', false]] });
+
+  T('lifek.pollinators', { share: { 1: 0.65 },
+    sort: { cats: { p: C('a pollinator', 'pollinators'), n: N('not a pollinator') }, items: [['a bee', 'p'], ['a butterfly', 'p'], ['a hummingbird', 'p'], ['a moth', 'p'], ['a bat that drinks nectar', 'p'], ['a beetle on a flower', 'p'],
+      ['a rock', 'n'], ['a fish', 'n'], ['a snake', 'n'], ['a worm in the soil', 'n'], ['a toy car', 'n'], ['a cloud', 'n']] },
+    yn: [['Do bees carry pollen from flower to flower?', true], ['Do pollinators help flowers make seeds?', true], ['Do flowers have sweet nectar that animals drink?', true], ['Can a hummingbird carry pollen?', true], ['Does a fish carry pollen from flower to flower?', false]] });
+
+  T('lifek.seeds-travel', { share: { 2: 0.6 },
+    sort: { cats: { w: C('carried by the wind', 'carried by the wind'), a: C('carried by an animal', 'carried by animals'), r: C('carried by water', 'carried by water') }, items: [
+      ['a dandelion seed with a fluffy top', 'w'], ['a maple seed that spins like a helicopter', 'w'], ['a cottonwood seed with soft fluff', 'w'],
+      ['a burr that sticks to a dog\'s fur', 'a'], ['a cherry seed a bird drops far away', 'a'], ['an acorn a squirrel buries', 'a'], ['a berry seed a bear eats and leaves behind', 'a'],
+      ['a coconut floating in the sea', 'r'], ['a seed that drifts down a stream', 'r']] },
+    yn: [['Can wind carry seeds?', true], ['Can a bird carry seeds?', true], ['Can a coconut float to a new beach?', true], ['Do seeds travel to find new places to grow?', true], ['Do all seeds stay right under their parent plant?', false, 'Many travel far away']] });
+
+  T('lifek.seed-grows', { share: { 1: 0.8, 2: 0.5 },
+    yn: [['Is there a tiny plant inside a seed?', true], ['Does a seed need water to start growing?', true], ['Does a seed need warmth to start growing?', true], ['Does the root come out of the seed first?', true], ['Does the root grow down into the soil?', true],
+      ['Does the shoot grow up toward the light?', true], ['Does a seed need candy to grow?', false], ['Does a seed have food stored inside for the baby plant?', true], ['Will a dry seed in a cold freezer start to grow?', false, 'It needs water and warmth'],
+      ['Does a bean seed grow into a bean plant?', true], ['Does a bean seed grow into a sunflower?', false, 'A bean seed grows into a bean plant'], ['Is a sprout a young plant?', true]],
+    seq: { name: 'A seed grows', items: ['a seed in the soil', 'the seed gets water', 'a root grows down', 'a shoot grows up', 'leaves open in the sun'] } });
+
+  T('lifek.plant-life-cycle', { share: { 2: 0.5 },
+    seq: { lists: [{ name: 'A plant\'s life cycle', items: ['a seed', 'a sprout', 'a young plant', 'a grown plant with flowers', 'fruits with new seeds'] }, { name: 'An apple tree\'s life', items: ['an apple seed', 'a tiny sprout', 'a young tree', 'a tree with blossoms', 'apples with seeds inside'] }] },
+    yn: [['Does a plant\'s life cycle start with a seed?', true], ['Do flowers turn into fruits with seeds?', true], ['Can a new seed grow into a new plant?', true], ['Does a sprout come before a seed?', false, 'The seed comes first']] });
+
+  T('lifek.plants-make-food', { share: { 1: 0.8, 3: 0.6 }, forms: { 3: ['all', 'odd', 'three', 'yn'] },
+    sort: { cats: { m: C('a living thing that makes its own food', 'living things that make their own food'), e: N('a living thing that eats other things for food') }, items: [
+      ['a tree', 'm'], ['grass', 'm'], ['a sunflower', 'm'], ['a fern', 'm'], ['moss', 'm'], ['a cactus', 'm'], ['seaweed', 'm'],
+      ['a rabbit', 'e'], ['a fox', 'e'], ['a person', 'e'], ['a cow', 'e'], ['a bird', 'e'], ['a bee', 'e'], ['a mushroom', 'e']] },
+    yn: [['Do plants make their own food?', true], ['Do plants use sunlight to make food?', true], ['Do leaves make food for the plant?', true], ['Can a rabbit make its own food from sunlight?', false, 'A rabbit eats plants'], ['Does a plant eat soil for food?', false, 'A plant makes its own food in its leaves'],
+      ['Do plants need water to make food?', true], ['Do plants take in air to make food?', true], ['Can a dog make its own food from sunlight?', false], ['Does a cow eat plants?', true], ['Is a leaf like a food factory for the plant?', true]] });
+
+  T('lifek.animal-needs', { share: { 2: 0.65 },
+    yn: [['Does a fish need water with air in it?', true], ['Does a whale come up to breathe air?', true], ['Does a fish breathe with gills?', true], ['Do animals need food?', true], ['Do animals need water?', true], ['Do animals need a safe place to live?', true],
+      ['Does a dog breathe with gills?', false, 'A dog breathes air with lungs'], ['Does a bird need food every day?', true], ['Can a goldfish live in a dry bowl?', false, 'A fish needs water'], ['Do animals need sunlight to make their own food?', false, 'Animals eat food'],
+      ['Does a frog need water nearby?', true], ['Can a polar bear live without food?', false]],
+    sort: { cats: { y: C('something animals need', 'things animals need'), n: N('not something animals need') }, items: [['food', 'y'], ['water', 'y'], ['air', 'y'], ['shelter', 'y'], ['a safe place to raise young', 'y'], ['toys', 'n'], ['a TV', 'n'], ['shoes', 'n'], ['candy', 'n']] } });
+
+  T('lifek.parents-young', { share: { 1: 0.5 },
+    sort: { cats: { s: C('a baby that looks like its parents', 'babies that look like their parents'), d: N('a baby that does not look like its parents yet') }, items: [
+      ['a puppy', 's'], ['a kitten', 's'], ['a foal (baby horse)', 's'], ['a calf (baby cow)', 's'], ['a lamb', 's'], ['a baby elephant', 's'], ['a duckling', 's'],
+      ['a tadpole', 'd'], ['a caterpillar', 'd'], ['a grub (baby beetle)', 'd']] },
+    yn: [['Do baby animals look like their parents?', true, 'Many do, but some, like tadpoles and caterpillars, change a lot'], ['Does a tadpole look like a frog?', false], ['Does a puppy look like a dog?', true], ['Does a caterpillar look like a butterfly?', false], ['Does a kitten look like a cat?', true]] });
+
+  var GRPS = { mammal: ['a mammal', 'mammals'], bird: ['a bird', 'birds'], fish: ['a fish', 'fish'], reptile: ['a reptile', 'reptiles'], amphibian: ['an amphibian', 'amphibians'], insect: ['an insect', 'insects'] };
+  var ANIMALS = [['a whale', 'mammal'], ['a bat', 'mammal'], ['a horse', 'mammal'], ['a mouse', 'mammal'], ['a dog', 'mammal'], ['a lion', 'mammal'], ['a giraffe', 'mammal'], ['a bear', 'mammal'], ['a cow', 'mammal'], ['a squirrel', 'mammal'],
+    ['an eagle', 'bird'], ['a penguin', 'bird'], ['an owl', 'bird'], ['a parrot', 'bird'], ['a duck', 'bird'], ['an ostrich', 'bird'], ['a robin', 'bird'], ['a chicken', 'bird'],
+    ['a goldfish', 'fish'], ['a shark', 'fish'], ['a salmon', 'fish'], ['a clownfish', 'fish'], ['a trout', 'fish'], ['a catfish', 'fish'],
+    ['a snake', 'reptile'], ['a turtle', 'reptile'], ['a lizard', 'reptile'], ['an alligator', 'reptile'], ['a crocodile', 'reptile'], ['a gecko', 'reptile'],
+    ['a frog', 'amphibian'], ['a toad', 'amphibian'], ['a salamander', 'amphibian'], ['a newt', 'amphibian'],
+    ['a bee', 'insect'], ['an ant', 'insect'], ['a ladybug', 'insect'], ['a grasshopper', 'insect'], ['a butterfly', 'insect'], ['a beetle', 'insect']];
+  ['mammal', 'bird', 'fish', 'reptile', 'amphibian'].forEach(function (g) {
+    var cats = {}; Object.keys(GRPS).forEach(function (k) { cats[k] = k === g ? C(GRPS[k][0], GRPS[k][1]) : N(GRPS[k][0]); });
+    T('lifek.' + (g === 'fish' ? 'fish' : g + 's'), { share: { 1: 0.5, 2: 0.3 }, sort: { cats: cats, items: ANIMALS } });
+  });
+  T('lifek.mammals', { yn: [['Do mammals have fur or hair?', true], ['Do mammal mothers feed their babies milk?', true], ['Is a whale a mammal?', true], ['Is a bat a mammal?', true], ['Is a shark a mammal?', false, 'A shark is a fish'], ['Are people mammals?', true]] });
+  T('lifek.birds', { yn: [['Do all birds have feathers?', true], ['Do birds hatch from eggs?', true], ['Can every bird fly?', false, 'Penguins and ostriches cannot fly'], ['Does a bird have a beak?', true], ['Is a bat a bird?', false, 'A bat is a mammal with fur']] });
+  T('lifek.fish', { yn: [['Do fish breathe with gills?', true], ['Do fish live in water?', true], ['Do most fish have fins and scales?', true], ['Is a whale a fish?', false, 'A whale is a mammal that breathes air'], ['Is a shark a fish?', true]] });
+  T('lifek.reptiles', { yn: [['Do reptiles have dry, scaly skin?', true], ['Do most reptiles lay eggs?', true], ['Is a snake a reptile?', true], ['Is a frog a reptile?', false, 'A frog is an amphibian with smooth, wet skin'], ['Is a turtle a reptile?', true]] });
+  T('lifek.amphibians', { yn: [['Do frogs start life in water?', true], ['Do amphibians have smooth, wet skin?', true], ['Is a toad an amphibian?', true], ['Is a lizard an amphibian?', false, 'A lizard is a reptile with dry, scaly skin'], ['Does a tadpole grow into a frog?', true]] });
+
+  T('lifek.habitats', { share: { 1: 0.5 },
+    sort: { cats: { d: C('an animal that lives in the desert', 'animals that live in the desert'), f: C('an animal that lives in the forest', 'animals that live in the forest'), p: C('an animal that lives on icy polar land', 'animals that live on icy polar land'), o: C('an animal that lives in the ocean', 'animals that live in the ocean') }, items: [
+      ['a camel', 'd'], ['a rattlesnake', 'd'], ['a roadrunner', 'd'], ['a scorpion', 'd'], ['a deer', 'f'], ['a woodpecker', 'f'], ['a black bear', 'f'], ['a chipmunk', 'f'], ['a polar bear', 'p'], ['a walrus', 'p'], ['an arctic fox', 'p'], ['a snowy owl', 'p'],
+      ['an octopus', 'o'], ['a dolphin', 'o'], ['a sea turtle', 'o'], ['a jellyfish', 'o']] } });
+
+  T('lifek.water-habitats', { share: { 1: 0.5 },
+    sort: { cats: { p: C('an animal that lives in a pond', 'animals that live in a pond'), o: C('an animal that lives in the ocean', 'animals that live in the ocean') }, items: [
+      ['a frog', 'p'], ['a duck', 'p'], ['a tadpole', 'p'], ['a dragonfly', 'p'], ['a pond turtle', 'p'], ['a goldfish', 'p'], ['a snail in the pond', 'p'],
+      ['a whale', 'o'], ['a shark', 'o'], ['an octopus', 'o'], ['a sea star', 'o'], ['a crab', 'o'], ['a dolphin', 'o'], ['a jellyfish', 'o']] },
+    yn: [['Is ocean water salty?', true], ['Is pond water salty like the ocean?', false, 'Pond water is fresh water'], ['Can a whale live in a small pond?', false, 'A whale needs the big ocean'], ['Do frogs lay eggs in ponds?', true]] });
+
+  T('lifek.fit-habitat', { share: { 2: 0.8 },
+    yn: [['Could a fish live on dry land?', false, 'A fish needs water'], ['Could a polar bear live well in a hot desert?', false, 'Its thick fur is for the cold'], ['Could a cactus grow well in a wet swamp?', false, 'A cactus is made for dry land'], ['Does a camel live well in the desert?', true],
+      ['Does a duck\'s webbed feet help it swim?', true], ['Does a polar bear\'s thick fur keep it warm?', true], ['Could a whale live in a forest?', false], ['Does a cactus store water in its stem?', true], ['Do a frog\'s strong legs help it jump?', true],
+      ['Could a penguin live well in a hot desert?', false], ['Does a giraffe\'s long neck help it reach leaves?', true], ['Do a fish\'s fins help it swim?', true], ['Could a monkey live well on icy polar land?', false], ['Does a rabbit\'s fur coat get thicker for winter?', true]] });
+
+  T('lifek.change-surroundings', { share: { 1: 0.6, 2: 0.5 },
+    yn: [['Can a beaver change a stream by building a dam?', true], ['Do people change the land when they build a road?', true], ['Do only people change the land?', false, 'Animals and plants change it too'], ['Can tree roots crack a sidewalk?', true],
+      ['Can a squirrel plant an oak tree by forgetting an acorn?', true], ['Do earthworms change the soil?', true], ['Do birds build nests from twigs?', true], ['Can a prairie dog dig tunnels in the ground?', true], ['Does a rock change the land by building a nest?', false],
+      ['Can elephants knock down trees?', true], ['Do people plant gardens and change the land?', true], ['Can ants build hills of soil?', true]] });
+
+  T('lifek.sun-energy', { share: { 1: 0.8, 2: 0.5 },
+    yn: [['Does the energy in a food chain start with the sun?', true], ['Do plants use sunlight to make food?', true], ['Does a rabbit get energy by eating plants?', true], ['Does a fox get energy by eating other animals?', true], ['Can a fox make food from sunlight?', false, 'Only plants can'],
+      ['Does the sun give us light and warmth?', true], ['Does a cow get energy from eating grass?', true], ['Do plants need the sun to grow?', true], ['Does a lion get its energy from the sun directly?', false, 'It eats animals that ate plants that used sunlight'], ['Does all food start with plants and the sun?', true]],
+    seq: { lists: [{ name: 'Energy in a food chain', items: ['the sun', 'grass', 'a rabbit', 'a fox'] }, { name: 'Energy in a pond food chain', items: ['the sun', 'pond plants', 'a tadpole', 'a heron'] }, { name: 'Energy in a forest food chain', items: ['the sun', 'an oak leaf', 'a caterpillar', 'a bird'] }] } });
+
+  T('lifek.producers-consumers', { share: { 1: 0.5 },
+    sort: { cats: { p: C('a producer', 'producers'), c: C('a consumer', 'consumers') }, items: [['grass', 'p'], ['an oak tree', 'p'], ['a sunflower', 'p'], ['seaweed', 'p'], ['a cactus', 'p'], ['moss', 'p'], ['clover', 'p'],
+      ['a rabbit', 'c'], ['a fox', 'c'], ['a deer', 'c'], ['an owl', 'c'], ['a frog', 'c'], ['a cow', 'c'], ['a bee', 'c'], ['a person', 'c']] } });
+
+  T('lifek.decomposers', { share: { 1: 0.85, 2: 0.5 },
+    sort: { cats: { d: C('a decomposer', 'decomposers'), n: N('not a decomposer') }, items: [['a mushroom', 'd'], ['an earthworm', 'd'], ['mold', 'd'], ['tiny bacteria in the soil', 'd'], ['a pill bug', 'd'], ['a millipede', 'd'],
+      ['a hawk', 'n'], ['a deer', 'n'], ['a sunflower', 'n'], ['a rabbit', 'n'], ['a rock', 'n'], ['a fox', 'n'], ['an oak tree', 'n']] },
+    yn: [['Do decomposers break down dead plants and animals?', true], ['Do decomposers give nutrients back to the soil?', true], ['Is a mushroom a decomposer?', true], ['Does a fallen log slowly rot away?', true], ['Do worms help make soil?', true], ['Is a hawk a decomposer?', false]] });
+
+  T('lifek.butterfly-cycle', { share: { 2: 0.8 },
+    seq: { name: 'A butterfly\'s life cycle', items: ['egg', 'caterpillar', 'chrysalis', 'butterfly'] },
+    yn: [['Does a caterpillar hatch from a butterfly\'s egg?', true], ['Does a caterpillar eat a lot of leaves?', true], ['Does a caterpillar grow inside a chrysalis into a butterfly?', true], ['Does a butterfly hatch straight out of the egg?', false, 'A caterpillar hatches first'],
+      ['Does a butterfly lay eggs?', true], ['Does a caterpillar look like a butterfly?', false], ['Does a butterfly change shape as it grows up?', true], ['Is a chrysalis a stage before the butterfly?', true]], forms: { 2: ['next', 'yn', 'yn'] } });
+
+  T('lifek.frog-cycle', { share: { 2: 0.75 },
+    seq: { name: 'A frog\'s life cycle', items: ['egg', 'tadpole', 'tadpole with legs', 'froglet', 'frog'] },
+    yn: [['Does a tadpole hatch from a frog\'s egg?', true], ['Does a tadpole live in water?', true], ['Does a tadpole grow legs?', true], ['Does a tadpole grow up to be a fish?', false, 'It grows up to be a frog'], ['Does a frog lay eggs in water?', true],
+      ['Does a tadpole have a tail?', true], ['Can a grown frog hop on land?', true], ['Does a frog start life as a frog with legs?', false, 'It starts as an egg, then a tadpole']], forms: { 2: ['next', 'yn', 'yn'] } });
+
+  T('lifek.chicken-cycle', { share: { 2: 0.6 },
+    seq: { name: 'A chicken\'s life cycle', items: ['egg', 'chick', 'young chicken', 'grown hen or rooster'] },
+    yn: [['Does a chick hatch from an egg?', true], ['Is a chick covered in soft, fluffy down?', true], ['Does a chick look a little like a grown chicken?', true], ['Does a hen lay eggs?', true], ['Does a chicken change into a whole new shape, like a butterfly?', false],
+      ['Does an egg need to be kept warm to hatch?', true], ['Does a chick hatch with all its grown-up feathers?', false, 'It has soft down first']], forms: { 2: ['next', 'yn', 'yn'] } });
+
+  T('lifek.compare-cycles', { share: { 1: 0.85, 2: 0.5 },
+    sort: { cats: { c: C('an animal that changes shape completely as it grows', 'animals that change shape completely as they grow'), s: N('an animal that looks like its parents as it grows') }, items: [
+      ['a butterfly', 'c'], ['a frog', 'c'], ['a ladybug', 'c'], ['a moth', 'c'], ['a toad', 'c'], ['a bee', 'c'], ['a chicken', 's'], ['a dog', 's'], ['a horse', 's'], ['a duck', 's'], ['a cat', 's'], ['a turtle', 's']] },
+    yn: [['Do all living things have a life cycle?', true], ['Do frogs and butterflies change shape as they grow?', true], ['Does a puppy change shape completely as it grows?', false], ['Do plants have a life cycle too?', true], ['Do all animals start as seeds?', false, 'Plants start as seeds; many animals start as eggs'],
+      ['Do baby animals grow up and have babies of their own?', true]] });
+
+  T('lifek.five-senses', { share: { 2: 0.6 },
+    sort: { cats: { e: C('something you use your eyes for', 'things you use your eyes for'), n: C('something you use your nose for', 'things you use your nose for'), r: C('something you use your ears for', 'things you use your ears for'), t: C('something you use your tongue for', 'things you use your tongue for'), s: C('something you use your skin for', 'things you use your skin for') }, items: [
+      ['seeing a rainbow', 'e'], ['reading a book', 'e'], ['spotting a red apple', 'e'], ['smelling cookies', 'n'], ['smelling a flower', 'n'], ['smelling smoke', 'n'], ['hearing a dog bark', 'r'], ['hearing music', 'r'], ['hearing thunder', 'r'],
+      ['tasting a lemon', 't'], ['tasting salty crackers', 't'], ['feeling a soft kitten', 's'], ['feeling cold snow', 's'], ['feeling a rough rock', 's']] } });
+
+  T('lifek.animal-senses', { share: { 2: 0.75 },
+    yn: [['Can a dog smell things that people cannot?', true], ['Can many bats find insects in total darkness?', true], ['Does a snake smell with its tongue?', true], ['Can an owl see well at night?', true], ['Can an eagle see far away?', true],
+      ['Do cats have whiskers that help them feel?', true], ['Can a rabbit turn its ears to hear better?', true], ['Do fish feel movements in the water?', true], ['Can a mole see as well as an eagle?', false, 'Moles see very little; they feel and smell their way'],
+      ['Do bees see flowers?', true], ['Does an elephant use its trunk to smell?', true], ['Do all animals have the same senses as people?', false, 'Some animals sense things people cannot']] });
+
+  T('lifek.observing', { share: { 1: 0.85, 3: 0.3 },
+    sort: { cats: { o: C('an observation (something you can see, hear, smell, feel or count)', 'observations'), n: N('a guess about feelings, not an observation') }, items: [
+      ['"The leaf is green."', 'o'], ['"The rock feels rough."', 'o'], ['"The dog barked two times."', 'o'], ['"The flower smells sweet."', 'o'], ['"The plant is 10 inches tall."', 'o'], ['"The ice melted in the sun."', 'o'], ['"The bird has red feathers."', 'o'], ['"There are 5 ants on the log."', 'o'],
+      ['"The cat wants a friend."', 'n'], ['"The tree is sad."', 'n'], ['"The bird likes the color blue."', 'n'], ['"The worm feels lonely."', 'n'], ['"The fish is happy today."', 'n']] } });
+
+  T('lifek.trees-seasons', { share: { 2: 0.75 },
+    seq: { name: 'The seasons', items: ['spring', 'summer', 'fall', 'winter'] },
+    yn: [['Do many trees drop their leaves in fall?', true], ['Is a maple tree with no leaves in winter dead?', false, 'It is resting until spring'], ['Do new leaves grow in spring?', true], ['Do leaves change color in fall?', true], ['Do pine trees keep their needles in winter?', true],
+      ['Are trees full of green leaves in summer?', true], ['Do flowers bloom on many trees in spring?', true], ['Does snow fall on trees in summer?', false]] });
+
+  T('lifek.getting-ready', { share: { 1: 0.85, 2: 0.5 },
+    yn: [['Does a squirrel bury nuts in fall to eat later?', true], ['Do some birds fly south for the winter?', true], ['Does a bear sleep through much of the winter?', true], ['Does a groundhog eat extra food before winter?', true], ['Does a rabbit grow a thicker coat for winter?', true],
+      ['Does a squirrel build a snowman?', false], ['Do some animals store food for winter?', true], ['Do geese fly to warmer places in fall?', true], ['Do many trees drop their leaves before winter?', true], ['Do bears go to the beach in winter?', false],
+      ['Is food harder to find in winter?', true], ['Do some animals sleep in burrows through the winter?', true]] });
+
+  T('lifek.pet-care', { share: { 1: 0.8, 2: 0.6 },
+    yn: [['Does a pet dog need food every day?', true], ['Does a pet need fresh water?', true], ['Does a dog need walks and play?', true], ['Does a pet fish need clean water?', true], ['Should you be gentle with a pet?', true],
+      ['Does a pet need care every day?', true], ['Does a pet rabbit need to be left with no water?', false], ['Does a pet cat need to be squeezed tight?', false, 'Be gentle'], ['Does a pet need a safe place to sleep?', true], ['Does a pet hamster need a clean cage?', true],
+      ['Should a pet go without food for a week?', false], ['Does a pet bird need food and water?', true]] });
+
+  T('lifek.plant-care', { share: { 1: 0.7 },
+    yn: [['Does a potted plant need water?', true], ['Does a potted plant need light?', true], ['Is a sunny window a good spot for most potted plants?', true], ['Will a plant grow well in a dark closet?', false], ['Can a plant get too much water?', true],
+      ['Does a plant need soil or water for its roots?', true], ['Does a plant need candy?', false], ['Should you check if the soil is dry before watering?', true], ['Does a plant grow toward the light?', true], ['Does a bigger plant sometimes need a bigger pot?', true]] });
+
+  T('lifek.caring-nature', { share: { 1: 0.9, 2: 0.6 },
+    yn: [['Should you leave a bird\'s nest alone?', true], ['Should you chase a squirrel in the park?', false], ['Should you take your trash home?', true], ['Should you put a log back the way you found it?', true], ['Should you watch animals quietly from far away?', true],
+      ['Should you break branches off trees?', false], ['Should you pick up litter in the park?', true], ['Should you stay on the trail?', true], ['Should you scare the ducks?', false], ['Is a fallen log a home for small animals?', true],
+      ['Should you take a baby bird home?', false, 'Its parents are usually nearby'], ['Should you leave wildflowers for others to enjoy?', true], ['Should you throw rocks into a bird\'s nest?', false]] });
+
+  /* more forms for the topics that only had Yes / No questions */
+  T('lifek.once-living', { share: { 1: 0.6 } });
+  T('lifek.grow-change', { pair: { fwd: 'What does {t} grow into?', back: 'Which baby grows into {d}?', items: [['a tadpole', 'a frog'], ['a caterpillar', 'a butterfly'], ['a puppy', 'a dog'], ['a kitten', 'a cat'], ['a chick', 'a chicken'], ['a duckling', 'a duck'],
+    ['a calf', 'a cow'], ['a foal', 'a horse'], ['a lamb', 'a sheep'], ['a cub', 'a bear'], ['an acorn', 'an oak tree'], ['a sunflower seed', 'a sunflower'], ['a joey', 'a kangaroo'], ['a fawn', 'a deer'], ['a gosling', 'a goose'], ['a piglet', 'a pig']] } });
+  T('lifek.roots', { share: { 1: 0.85, 2: 0.6 }, forms: { 1: ['yn', 'two', 'two', 'isit'], 2: ['yn', 'three', 'three', 'isit'] },
+    sort: { cats: { r: C('a root', 'roots'), o: N('not a root') }, items: [['a carrot', 'r', 'A carrot is a root we eat'], ['a radish', 'r', 'A radish is a root we eat'], ['a beet', 'r', 'A beet is a root we eat'], ['a sweet potato', 'r', 'A sweet potato is a root we eat'], ['a turnip', 'r', 'A turnip is a root we eat'], ['a parsnip', 'r', 'A parsnip is a root we eat'],
+      ['a lettuce leaf', 'o', 'Lettuce is a leaf'], ['an apple', 'o', 'An apple is a fruit'], ['a celery stalk', 'o', 'Celery is a stem'], ['a rose', 'o', 'A rose is a flower'], ['a pea', 'o', 'A pea is a seed'], ['a spinach leaf', 'o', 'Spinach is a leaf']] } });
+  T('lifek.stems-leaves', { share: { 1: 0.85 }, forms: { 1: ['yn', 'two', 'two', 'isit'] },
+    sort: { cats: { s: C('a stem', 'stems'), l: C('a leaf', 'leaves') }, items: [['a tree trunk', 's'], ['a celery stalk', 's'], ['an asparagus spear', 's'], ['a sugarcane stalk', 's'], ['a flower\'s green stalk', 's'], ['a cactus pad', 's', 'A cactus pad is a thick stem that stores water'],
+      ['a lettuce leaf', 'l'], ['a spinach leaf', 'l'], ['a cabbage leaf', 'l'], ['a pine needle', 'l', 'A pine needle is a thin leaf'], ['a maple leaf', 'l'], ['a mint leaf', 'l'], ['a basil leaf', 'l']] } });
+  T('lifek.flowers-fruits-seeds', { share: { 1: 0.85, 2: 0.75 } });
+  T('lifek.pollinators', { share: { 1: 0.8 } });
+  T('lifek.seed-grows', { share: { 1: 0.85, 2: 0.6 }, pair: { fwd: 'What does {t} grow into?', back: 'Which seed grows into {d}?', items: [['an acorn', 'an oak tree'], ['a sunflower seed', 'a sunflower'], ['a bean seed', 'a bean plant'], ['an apple seed', 'an apple tree'], ['a pumpkin seed', 'a pumpkin vine'],
+    ['a corn kernel', 'a corn plant'], ['a pea seed', 'a pea plant'], ['a maple seed', 'a maple tree'], ['a pine seed', 'a pine tree'], ['a coconut', 'a coconut palm'], ['a tomato seed', 'a tomato plant'], ['a watermelon seed', 'a watermelon vine']] } });
+  T('lifek.plant-life-cycle', { share: { 2: 0.7 }, pair: { fwd: 'What does {t} grow into?', back: 'Which seed grows into {d}?', items: [['an acorn', 'an oak tree'], ['a sunflower seed', 'a sunflower'], ['a bean seed', 'a bean plant'], ['an apple seed', 'an apple tree'], ['a pumpkin seed', 'a pumpkin vine'], ['a corn kernel', 'a corn plant'], ['a pea seed', 'a pea plant'], ['a maple seed', 'a maple tree']] } });
+  T('lifek.plants-make-food', { share: { 1: 0.85 } });
+  T('lifek.animal-needs', { share: { 1: 0.4, 2: 0.8 }, forms: { 2: ['yn', 'three', 'isit', 'pf', 'pb'] }, pair: { fwd: 'How does {t} get the air it needs?', back: 'Which animal gets air this way: {d}?', items: [['a fish', 'with gills, from the water'], ['a whale', 'by coming up to breathe through its blowhole'], ['a dog', 'by breathing with its lungs'], ['a tadpole', 'with gills, from the water'], ['a dolphin', 'by coming up to breathe through its blowhole'], ['a bird', 'by breathing with its lungs']] } });
+  T('lifek.fish', { share: { 1: 0.7 } });
+  T('lifek.reptiles', { share: { 1: 0.7 } });
+  T('lifek.fit-habitat', { share: { 2: 0.85 }, forms: { 2: ['yn', 'pf', 'pb'] }, pair: { fwd: 'Where does {t} live best?', back: 'Which animal lives best here: {d}?', items: [['a camel', 'in a hot, dry desert'], ['a polar bear', 'on cold, icy land'], ['a whale', 'in the deep ocean'], ['a monkey', 'in a warm rain forest'], ['a frog', 'in a wet pond'], ['a woodpecker', 'in a forest of trees'], ['a prairie dog', 'in a wide, grassy field']] } });
+  T('lifek.change-surroundings', { share: { 1: 0.85, 2: 0.75 }, forms: { 1: ['yn', 'pf', 'pb'], 2: ['yn', 'pf', 'pb'] },
+    pair: { fwd: 'What changes the land here: {t}?', back: 'Which change does {d} make?', items: [['a dam of sticks across a stream', 'a beaver'], ['a cracked sidewalk lifted by roots', 'a tree'], ['a new road through a field', 'people'], ['tunnels and holes in a grassy field', 'prairie dogs'],
+      ['soft, crumbly soil full of tiny tunnels', 'earthworms'], ['a hill of sand grains near the sidewalk', 'ants'], ['trees knocked down on the savanna', 'elephants'], ['a nest of twigs in a tree', 'a bird']] } });
+  T('lifek.sun-energy', { share: { 1: 0.85 }, forms: { 1: ['yn', 'two', 'two', 'isit'] },
+    sort: { cats: { s: C('a living thing that gets its energy from sunlight', 'living things that get energy from sunlight'), e: N('a living thing that gets its energy by eating food') }, items: [
+      ['grass', 's', 'Grass makes its food using sunlight'], ['an oak tree', 's', 'An oak tree makes its food using sunlight'], ['a sunflower', 's', 'A sunflower makes its food using sunlight'], ['clover', 's', 'Clover makes its food using sunlight'], ['seaweed', 's', 'Seaweed makes its food using sunlight'], ['a fern', 's', 'A fern makes its food using sunlight'],
+      ['a rabbit', 'e', 'A rabbit eats plants'], ['a fox', 'e', 'A fox eats other animals'], ['a deer', 'e', 'A deer eats plants'], ['an owl', 'e', 'An owl eats mice'], ['a cow', 'e', 'A cow eats grass'], ['a frog', 'e', 'A frog eats insects']] } });
+  T('lifek.decomposers', { share: { 1: 0.85, 2: 0.65 }, sort: { cats: { d: C('a decomposer', 'decomposers'), n: N('not a decomposer') }, items: [['a mushroom', 'd'], ['an earthworm', 'd'], ['mold', 'd'], ['tiny bacteria in the soil', 'd'], ['a pill bug', 'd'], ['a millipede', 'd'], ['a slug', 'd'], ['a bracket fungus on a log', 'd'],
+      ['a hawk', 'n'], ['a deer', 'n'], ['a sunflower', 'n'], ['a rabbit', 'n'], ['a rock', 'n'], ['a fox', 'n'], ['an oak tree', 'n'], ['a robin', 'n'], ['a cow', 'n']] } });
+  function stages(name) { var cats = {}; cats.o = C('part of ' + name + '\'s life cycle', 'parts of ' + name + '\'s life cycle'); cats.x = N('not part of ' + name + '\'s life cycle'); return cats; }
+  T('lifek.butterfly-cycle', { share: { 2: 0.85 }, forms: { 2: ['next', 'yn', 'three', 'isit'] }, sort: { cats: stages('a butterfly'), items: [['a tiny egg on a leaf', 'o'], ['a caterpillar', 'o'], ['a chrysalis', 'o'], ['a butterfly with wings', 'o'], ['a tadpole', 'x'], ['a chick', 'x'], ['a puppy', 'x'], ['a froglet', 'x'], ['a seed', 'x']] } });
+  T('lifek.frog-cycle', { share: { 2: 0.85 }, forms: { 2: ['next', 'yn', 'three', 'isit'] }, sort: { cats: stages('a frog'), items: [['jelly-covered eggs in a pond', 'o'], ['a tadpole', 'o'], ['a tadpole with back legs', 'o'], ['a froglet with a short tail', 'o'], ['a grown frog', 'o'], ['a caterpillar', 'x'], ['a chrysalis', 'x'], ['a chick', 'x'], ['a kitten', 'x'], ['a sprout', 'x']] } });
+  T('lifek.chicken-cycle', { share: { 2: 0.8 }, forms: { 2: ['next', 'yn', 'three', 'isit'] }, sort: { cats: stages('a chicken'), items: [['an egg in a warm nest', 'o'], ['a fluffy chick', 'o'], ['a young chicken growing feathers', 'o'], ['a grown hen', 'o'], ['a tadpole', 'x'], ['a caterpillar', 'x'], ['a chrysalis', 'x'], ['a puppy', 'x'], ['a sprout', 'x']] } });
+  T('lifek.compare-cycles', { share: { 1: 0.85 } });
+  T('lifek.animal-senses', { share: { 2: 0.85 }, forms: { 2: ['yn', 'pf', 'pb'] }, pair: { fwd: 'Which sense helps most here: {t}?', back: 'Which animal uses its sense of {d} this way?', items: [
+    ['a dog follows a trail across a field', 'smell'], ['a bat finds insects in the dark by listening to echoes', 'hearing'], ['an eagle spots a fish from high in the sky', 'sight'], ['a cat feels its way with its whiskers', 'touch'], ['a butterfly tastes a leaf with its feet', 'taste']] } });
+  T('lifek.observing', { share: { 1: 0.9 } });
+  T('lifek.trees-seasons', { share: { 2: 0.85 }, forms: { 2: ['next', 'yn', 'pf', 'pb'] }, pair: { fwd: 'In which season do we see this: {t}?', back: 'What might you see on a maple tree in {d}?', items: [['tiny new leaves and blossoms', 'spring'], ['big green leaves on hot days', 'summer'], ['red, orange and yellow leaves falling', 'fall'], ['bare branches covered with snow', 'winter']] } });
+  T('lifek.getting-ready', { share: { 1: 0.9, 2: 0.75 }, forms: { 1: ['yn', 'pf', 'pb'], 2: ['yn', 'pf', 'pb'] }, pair: { fwd: 'How does {t} get ready for winter?', back: 'Which animal does this to get ready for winter: {d}?', items: [
+    ['a squirrel', 'it buries nuts to eat later'], ['a goose', 'it flies to a warmer place'], ['a bear', 'it eats a lot, then sleeps in a den'], ['a rabbit', 'it grows a thicker coat'], ['a beaver', 'it stores branches underwater near its lodge'], ['a groundhog', 'it eats extra food, then sleeps in its burrow']] } });
+  T('lifek.pet-care', { share: { 1: 0.85, 2: 0.75 }, forms: { 1: ['yn', 'two', 'two', 'isit'], 2: ['yn', 'three', 'three', 'isit'] },
+    sort: { cats: { g: C('a good way to care for a pet', 'good ways to care for a pet'), b: N('not a good way to care for a pet') }, items: [['giving it fresh water every day', 'g'], ['feeding it the right food', 'g'], ['petting it gently', 'g'], ['taking a dog for a walk', 'g'], ['keeping its bed clean', 'g'], ['playing with it', 'g'], ['brushing its fur', 'g'],
+      ['forgetting to feed it', 'b'], ['pulling its tail', 'b'], ['leaving it with no water', 'b'], ['squeezing it tight', 'b'], ['yelling at it', 'b'], ['feeding it candy', 'b']] } });
+  T('lifek.plant-care', { share: { 1: 0.85 }, forms: { 1: ['yn', 'two', 'two', 'isit'] },
+    sort: { cats: { g: C('a good way to care for a plant', 'good ways to care for a plant'), b: N('not a good way to care for a plant') }, items: [['watering it when the soil is dry', 'g'], ['putting it near a sunny window', 'g'], ['giving it a bigger pot when it grows', 'g'], ['pulling weeds around it', 'g'], ['turning the pot so all sides get light', 'g'],
+      ['keeping it in a dark closet', 'b'], ['pouring juice on it', 'b'], ['never watering it', 'b'], ['stepping on it', 'b'], ['pulling off its leaves', 'b']] } });
+  T('lifek.caring-nature', { share: { 1: 0.9, 2: 0.75 }, forms: { 1: ['yn', 'two', 'two', 'isit'], 2: ['yn', 'three', 'three', 'isit'] },
+    sort: { cats: { g: C('a kind way to treat nature', 'kind ways to treat nature'), b: N('not a kind way to treat nature') }, items: [['watching birds quietly', 'g'], ['putting a log back the way you found it', 'g'], ['picking up litter', 'g'], ['staying on the trail', 'g'], ['taking your trash home', 'g'], ['leaving a nest alone', 'g'], ['planting a tree', 'g'],
+      ['chasing the ducks', 'b'], ['breaking branches', 'b'], ['leaving trash in the park', 'b'], ['taking a baby bird home', 'b', 'Its parents are usually nearby'], ['stomping on flowers', 'b'], ['throwing rocks at a nest', 'b']] } });
+  ['roots', 'flowers-fruits-seeds', 'pollinators', 'sun-energy', 'decomposers', 'compare-cycles', 'observing', 'plant-care'].forEach(function (t) { T('lifek.' + t, { share: { 1: 0.9 }, forms: { 1: ['yn', 'two', 'two', 'two', 'isit'] } }); });
+  T('lifek.butterfly-cycle', { forms: { 2: ['next', 'yn', 'three', 'three', 'isit'] } });
+  T('lifek.trees-seasons', { share: { 1: 0.6 }, forms: { 1: ['yn', 'pf', 'pb'] } });
+  T('lifek.flowers-fruits-seeds', { sort: { cats: { f: C('a fruit', 'fruits'), n: N('not a fruit') }, items: [
+      ['an apple', 'f', 'An apple holds seeds: a fruit'], ['a tomato', 'f', 'A tomato holds seeds: a fruit'], ['a pumpkin', 'f', 'A pumpkin holds seeds: a fruit'], ['a cucumber', 'f', 'A cucumber holds seeds: a fruit'], ['a peach', 'f', 'A peach holds a seed: a fruit'], ['a pepper', 'f', 'A pepper holds seeds: a fruit'], ['a watermelon', 'f', 'A watermelon holds seeds: a fruit'], ['an orange', 'f', 'An orange holds seeds: a fruit'],
+      ['a cherry', 'f', 'A cherry holds a seed: a fruit'], ['a pea pod', 'f', 'A pea pod holds seeds: a fruit'], ['a strawberry', 'f', 'A strawberry has tiny seeds on the outside: a fruit'], ['a lemon', 'f', 'A lemon holds seeds: a fruit'],
+      ['a carrot', 'n', 'A carrot is a root'], ['a lettuce leaf', 'n', 'Lettuce is a leaf'], ['a celery stalk', 'n', 'Celery is a stem'], ['a potato', 'n', 'A potato grows under the ground and holds no seeds'], ['a spinach leaf', 'n', 'Spinach is a leaf'], ['a radish', 'n', 'A radish is a root'], ['a cabbage leaf', 'n', 'Cabbage is made of leaves'], ['an asparagus spear', 'n', 'Asparagus is a stem']] } });
+  T('lifek.pollinators', { sort: { cats: { p: C('a pollinator', 'pollinators'), n: N('not a pollinator') }, items: [['a bee', 'p'], ['a butterfly', 'p'], ['a hummingbird', 'p'], ['a moth', 'p'], ['a bat that drinks nectar', 'p'], ['a beetle on a flower', 'p'], ['a bumblebee', 'p'], ['a fly visiting a flower', 'p'],
+      ['a rock', 'n'], ['a fish', 'n'], ['a snake', 'n'], ['a worm in the soil', 'n'], ['a toy car', 'n'], ['a cloud', 'n'], ['a crab', 'n'], ['a turtle', 'n'], ['a spoon', 'n']] } });
+  T('lifek.compare-cycles', { sort: { cats: { c: C('an animal that changes shape completely as it grows', 'animals that change shape completely as they grow'), s: N('an animal that looks like its parents as it grows') }, items: [
+      ['a butterfly', 'c'], ['a frog', 'c'], ['a ladybug', 'c'], ['a moth', 'c'], ['a toad', 'c'], ['a bee', 'c'], ['a beetle', 'c'], ['a fly', 'c'], ['a salamander', 'c', 'A salamander starts life in water with gills, then changes'],
+      ['a chicken', 's'], ['a dog', 's'], ['a horse', 's'], ['a duck', 's'], ['a cat', 's'], ['a turtle', 's'], ['a cow', 's'], ['a snake', 's'], ['a rabbit', 's']] } });
+  T('lifek.plant-care', { sort: { cats: { g: C('a good way to care for a plant', 'good ways to care for a plant'), b: N('not a good way to care for a plant') }, items: [['watering it when the soil is dry', 'g'], ['putting it near a sunny window', 'g'], ['giving it a bigger pot when it grows', 'g'], ['pulling weeds around it', 'g'], ['turning the pot so all sides get light', 'g'], ['giving it a pot with holes so extra water drains', 'g'], ['wiping dust off its leaves', 'g'],
+      ['keeping it in a dark closet', 'b'], ['pouring juice on it', 'b'], ['never watering it', 'b'], ['stepping on it', 'b'], ['pulling off its leaves', 'b'], ['leaving it out in a hard freeze', 'b'], ['pouring salt in its soil', 'b']] } });
+  T('lifek.butterfly-cycle', { share: { 1: 0.4 }, forms: { 1: ['yn', 'two', 'two', 'isit'] } });
+  T('lifek.grow-change', { share: { 2: 0.6 } });
+
+  /* ---- auto shares: every level still under 60% on its own also draws from the bank (never lowers a share set above) ---- */
+  (function () { var up = function (id, s) { var b = BK[id], tf = (b && b.tf) || []; if (!b) return; if (!(b.sort || b.pair || b.yn || (tf.filter(function (x) { return x[1]; }).length >= 3 && tf.filter(function (x) { return !x[1]; }).length >= 3))) return; b.share = b.share || {}; Object.keys(s).forEach(function (L) { b.share[L] = Math.max(b.share[L] || 0, s[L]); }); };
+    up('lifek.stems-leaves', { 2: 0.35 });
+    up('lifek.plant-care', { 2: 0.35 });
+  })();
+
+  Object.keys(BK).forEach(function (id) {
+    var base = ML.getGen(id); if (!base) return;
+    ML.gen(id, function (R, ctx) {
+      var o = BK[id], L = (ctx && ctx.level) || 1, sh = o.share && o.share[L];
+      if (sh && R.chance(sh)) { var p = make(R, o, L); if (p) return p; }
+      return base(R, ctx);
+    });
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);
+
+
+/* ---- More forms of the same questions (round 7, "widen"): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - two at once: two different questions of the topic, answered together (short questions only, at most one of them with
+     a picture, which then comes first; not in the courses for young children, whose answer box for two parts would
+     also show a keypad button they don't need).
+   - check a number: a numeric question with a classmate's number, either the right one or a slip learners often make
+     (a power of ten, a factor of two, a lost minus sign, off by one), and "Is that right?" (Yes / No; not in placement).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'lifek', YOUNG = true, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf')) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function numVal(a) { var s = String(a.v).replace(/\s/g, ''), m = /^(-?[\d.]+)\*10\^(-?\d+)$/.exec(s); return m ? +m[1] * Math.pow(10, +m[2]) : (/^-?\d*\.?\d+$/.test(s) ? +s : NaN); }
+  function sigOf(a) { var s = String(a.v).split('*')[0].replace(/^-/, '').replace('.', '').replace(/^0+/, ''); return Math.max(2, Math.min(4, s.length || 1)); }
+  function numTex(x, n) {
+    var y = Number(x.toPrecision(n)), e = y === 0 ? 0 : Math.floor(Math.log10(Math.abs(y)) + 1e-12);
+    if (e >= 6 || e <= -4) { var m = Number((y / Math.pow(10, e)).toPrecision(n)); return m.toFixed(Math.max(0, n - 1)) + ' \\times 10^{' + e + '}'; }
+    return y.toFixed(Math.max(0, n - 1 - e));
+  }
+  function numCheckable(p) {
+    var a = p.a; if (YOUNG || !a || a.t !== 'num' || a.form || a.frac) return false;
+    var v = numVal(a); return isFinite(v) && v !== 0 && txt(p.q).length <= 700;
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = numVal(a), exact = !a.rtol && Math.round(v) === v, n = sigOf(a), right = R.coin(), w;
+    var cands = exact ? [v + 1, v - 1, 2 * v, v + 2].filter(function (x) { return x !== v && (v < 0 || x >= 0); })
+      : [10, 0.1, 2, 0.5, 1000, 0.001].concat(v < 0 || /\bsign\b/i.test(txt(p.q)) ? [-1, -1, -1] : []).map(function (k) { return v * k; });
+    // a wrong value must really be wrong: it has to fail the problem's own answer check
+    cands = cands.filter(function (x) { try { return !ML.check(a, exact ? String(x) : numTex(x, n).replace(' \\times 10^{', 'e').replace('}', ''), { q: p.q, unit: p.unit }).ok; } catch (e) { return false; } });
+    if (!cands.length) return null;
+    w = R.pick(cands);
+    var unit = p.unit ? '&nbsp;' + p.unit : '', pc = a.pct && !p.unit ? '\\%' : '';
+    function vTex() { var s = String(a.v).replace(/\s/g, ''), m = /^(-?[\d.]+)\*10\^(-?\d+)$/.exec(s); return m ? m[1] + ' \\times 10^{' + m[2] + '}' : s; } // the answer exactly as the problem gives it
+    function tex(x) { return '$' + (x === v ? vTex() : exact ? String(x) : numTex(x, n)) + pc + '$' + unit; }
+    var shown = right ? v : w;
+    var out = { q: p.q + '<p>A classmate answered: <b>' + tex(shown) + '</b></p><p>Is that right?</p>', a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: (p.steps || []).concat([right ? 'So <b>yes</b>, the classmate is right.' : 'So <b>no</b>: the answer is ' + tex(v) + ', not ' + tex(shown) + '.']) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (mode !== 'place' && numCheckable(p)) forms.push('num');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'num' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

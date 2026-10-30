@@ -439,9 +439,9 @@
 
   G('calc1.limits-by-factoring', function (R, ctx) {
     var kind = lv(ctx, R.pick(['lin', 'lin', 'dsq']), R.pick(['quad', 'lin', 'dsq']), R.pick(['quad', 'cube', 'cube2', 'cfrac']));
-    var a = R.intNot(-4, 5, 0), top, bot, L, st, f;
+    var a = R.intNot(-7, 8, 0), top, bot, L, st, f;
     if (kind === 'lin') {
-      var r = R.intNot(-6, 6, a), k = ctx.level >= 2 ? R.pick([1, 1, 2, 3, -1]) : 1;
+      var r = R.intNot(-9, 9, a), k = ctx.level >= 2 ? R.pick([1, 1, 2, 3, -1, 4, -2]) : R.pick([1, 1, 1, 2]);
       top = fromRoots(k, [a, r]); bot = P([-a, 1]); L = q(k * (a - r));
       st = ['Substituting $x = ' + a + '$ gives $' + frac(0, 0) + '$. That is not an answer; it says $' + xm(a) + '$ is a factor of the top.',
         'Factor: $' + top.tex() + ' = ' + (k === 1 ? '' : k === -1 ? '-' : k) + '(' + xm(a) + ')(' + xm(r) + ')$.',
@@ -455,7 +455,7 @@
         flip ? 'Cancel $' + xm(a) + '$: the expression equals $' + frac(1, xm(-a)) + '$.' : 'Cancel $' + xm(a) + '$: the expression equals $' + xm(-a) + '$.',
         'Substitute $x = ' + a + '$: $' + tx(L) + '$.'];
     } else if (kind === 'quad') {
-      var r2 = R.intNot(-6, 6, a), s = R.intNot(-6, 6, [a, r2]);
+      var r2 = R.intNot(-8, 8, a), s = R.intNot(-8, 8, [a, r2]);
       top = fromRoots(1, [a, r2]); bot = fromRoots(1, [a, s]); L = q(a - r2).div(a - s);
       st = ['Substituting gives $' + frac(0, 0) + '$: both top and bottom have the factor $' + xm(a) + '$.',
         'Factor both: $' + frac('(' + xm(a) + ')(' + xm(r2) + ')', '(' + xm(a) + ')(' + xm(s) + ')') + '$.',
@@ -495,7 +495,7 @@
 
   G('calc1.limits-by-rationalizing', function (R, ctx) {
     var kind = lv(ctx, R.pick(['zero', 'sqrtx']), R.pick(['shift', 'flip', 'zero', 'm']), R.pick(['m', 'flip', 'two']));
-    var c = R.int(1, 6), p, n, m, L, topT, botT, f, st, a;
+    var c = R.int(1, 9), p, n, m, L, topT, botT, f, st, a;
     if (kind === 'zero') {
       a = 0; topT = '\\sqrt{x + ' + (c * c) + '} - ' + c; botT = 'x'; L = q(1).div(2 * c); f = '(sqrt(x+' + (c * c) + ')-' + c + ')/x';
       st = ['Substituting $x = 0$ gives $' + frac('\\sqrt{' + (c * c) + '} - ' + c, 0) + ' = ' + frac(0, 0) + '$.',
@@ -510,7 +510,7 @@
         'Cancel $x - ' + a + '$: the expression is $' + frac(1, '\\sqrt{x} + ' + c) + '$.',
         'Substitute: $' + frac(1, c + ' + ' + c) + ' = ' + tx(L) + '$.'];
     } else if (kind === 'shift' || kind === 'm' || kind === 'flip') {
-      m = kind === 'm' ? R.pick([2, 3, 4, 5]) : 1; p = R.intNot(-4, 5, 0); c = R.int(1, 5); n = c * c - m * p; a = p;
+      m = kind === 'm' ? R.pick([2, 3, 4, 5, 6]) : 1; p = R.intNot(-6, 7, 0); c = R.int(1, 7); n = c * c - m * p; a = p;
       var inside = linT(m, n), insideP = linP(m, n);
       if (kind === 'flip') {
         topT = xm(p); botT = '\\sqrt{' + inside + '} - ' + c; L = q(2 * c); f = '(' + xmP(p) + ')/(sqrt(' + insideP + ')-' + c + ')';
@@ -590,7 +590,7 @@
 
   G('calc1.trig-limits', function (R, ctx) {
     var kind = lv(ctx, R.pick(['sinab', 'sinab', 'tan']), R.pick(['sinsin', 'tan', 'xsin', 'factor', 'cos1']), R.pick(['cos2', 'sinsq', 'factor', 'sinsin']));
-    var a = R.int(2, 7), b = R.intNot(2, 9, a), L, ft, f, st;
+    var a = R.int(2, 9), b = R.intNot(2, 12, a), L, ft, f, st;
     var ax = a + 'x', bx = b + 'x';
     if (kind === 'sinab') {
       L = q(a).div(b); ft = dfrac('\\sin(' + ax + ')', bx); f = 'sin(' + ax + ')/(' + bx + ')';
@@ -1079,7 +1079,7 @@
     var kind = lv(ctx, R.pick(['abs', 'class']), R.pick(['class', 'abs2', 'class']), R.pick(['match', 'class', 'abs2']));
     if (kind === 'abs' || kind === 'abs2') {
       if (kind === 'abs') {
-        var a = R.int(-5, 5), c = R.nz(-4, 4), d = R.int(-5, 5), lin = R.int(-3, 3);
+        var a = R.int(-7, 7), c = R.nz(-6, 6), d = R.int(-7, 7), lin = R.int(-5, 5);
         var fT = (abs(c) === 1 ? (c < 0 ? '-' : '') : c) + '\\lvert ' + xm(a) + ' \\rvert' + T.coef(lin, 'x', false) + sg(d);
         return {
           q: 'Where is $f(x) = ' + fT + '$ not differentiable? List every such $x$.',
@@ -1103,7 +1103,7 @@
       };
     }
     if (kind === 'class') {
-      var a2 = R.int(-3, 3), t = R.pick(['corner', 'cusp', 'vert', 'jump', 'smooth']), ft;
+      var a2 = R.int(-6, 6), t = R.pick(['corner', 'cusp', 'vert', 'jump', 'smooth']), ft;
       var C = ['Differentiable at that point', 'Continuous, but not differentiable: a corner', 'Continuous, but not differentiable: a cusp', 'Continuous, but not differentiable: a vertical tangent', 'Not continuous, so not differentiable'];
       var ix = { smooth: 0, corner: 1, cusp: 2, vert: 3, jump: 4 }[t], st;
       var xa = a2 === 0 ? 'x' : '(' + xm(a2) + ')';
@@ -1118,7 +1118,7 @@
         steps: st, hint: 'Check continuity first, then compare the slopes from the left and the right.', chk: { k: 'mc' }
       };
     }
-    var a3 = R.int(-3, 3), c3 = R.int(-5, 5), m = 2 * a3, b = c3 - a3 * a3;
+    var a3 = R.int(-6, 6), c3 = R.int(-9, 9), m = 2 * a3, b = c3 - a3 * a3;
     return {
       q: 'Find $m$ and $b$ so that $f(x) = ' + cases([['x^{2}' + sg(c3), 'x \\le ' + a3], ['mx + b', 'x > ' + a3]]) + '$ is differentiable at $x = ' + a3 + '$.',
       a: multi([['$m =$', num(m)], ['$b =$', num(b)]]),
@@ -1343,7 +1343,7 @@
     var kind = lv(ctx, R.pick(['lin', 'lin', 'recip']), R.pick(['quad', 'table', 'xover', 'recip']), R.pick(['quad', 'root', 'table', 'xover']));
     var top, bot, ans, st, fT, fP;
     if (kind === 'table') {
-      var a = R.int(1, 4), fa = R.nz(-6, 6), fpa = R.nz(-5, 5), ga = R.pick([-3, -2, -1, 1, 2, 3, 4]), gpa = R.nz(-5, 5), v = q(fpa * ga - fa * gpa).div(ga * ga);
+      var a = R.int(1, 9), fa = R.nz(-9, 9), fpa = R.nz(-8, 8), ga = R.pick([-4, -3, -2, -1, 1, 2, 3, 4, 5]), gpa = R.nz(-8, 8), v = q(fpa * ga - fa * gpa).div(ga * ga);
       return {
         q: 'Suppose $f(' + a + ') = ' + fa + '$, $f\'(' + a + ') = ' + fpa + '$, $g(' + a + ') = ' + ga + '$ and $g\'(' + a + ') = ' + gpa + '$. Let $h(x) = ' + frac('f(x)', 'g(x)') + '$. Find $h\'(' + a + ')$.',
         a: num(v),
@@ -1431,7 +1431,7 @@
       };
     }
     if (kind === 'prod') {
-      var n = R.int(1, 4), fn = R.pick(['sin', 'cos']), c = R.pick([1, 1, 2, 3, -1]);
+      var n = R.int(1, 8), fn = R.pick(['sin', 'cos']), c = R.pick([1, 1, 2, 3, -1, 4, -2]);
       var xn = n === 1 ? 'x' : 'x^{' + n + '}', fT2 = T.coef(c, xn + '\\' + fn + ' x');
       var dfn = fn === 'sin' ? ['\\cos x', 'cos(x)', 1] : ['\\sin x', 'sin(x)', -1];
       var dP2 = c * n + '*x^' + (n - 1) + '*' + fn + '(x)+' + (c * dfn[2]) + '*x^' + n + '*' + dfn[1];
@@ -1453,7 +1453,7 @@
         hint: '(f′g − fg′)/g².', chk: { k: 'd', f: 'sin(x)/x' }
       };
     }
-    var k2 = R.int(1, 4), fnc = R.coin();
+    var k2 = R.int(1, 8), fnc = R.coin();
     return {
       q: 'Find $' + ddx() + '\\left[' + frac(fnc ? '\\sin x' : '\\cos x', k2 + ' + ' + (fnc ? '\\cos x' : '\\sin x')) + '\\right]$ and simplify.',
       a: expr(fnc ? (k2 === 1 ? '1/(1+cos(x))' : '(' + k2 + '*cos(x)+1)/(' + k2 + '+cos(x))^2') : (k2 === 1 ? '-1/(1+sin(x))' : '-(' + k2 + '*sin(x)+1)/(' + k2 + '+sin(x))^2')),
@@ -1470,7 +1470,7 @@
   G('calc1.higher-derivatives', function (R, ctx) {
     var kind = lv(ctx, R.pick(['poly2', 'poly2', 'at']), R.pick(['poly3', 'mixed', 'at']), R.pick(['nth', 'mixed', 'nthpow']));
     if (kind === 'poly2' || kind === 'poly3' || kind === 'at') {
-      var f = P([R.int(-6, 6), R.int(-6, 6), R.int(-5, 5), R.nz(-4, 4), kind === 'poly2' ? 0 : R.int(-3, 3)]), n = kind === 'poly3' ? 3 : 2, d1 = f.d(), d2 = d1.d(), d3 = d2.d();
+      var f = P([R.int(-9, 9), R.int(-9, 9), R.int(-7, 7), R.nz(-6, 6), kind === 'poly2' ? 0 : R.int(-4, 4)]), n = kind === 'poly3' ? 3 : 2, d1 = f.d(), d2 = d1.d(), d3 = d2.d();
       var dn = n === 3 ? d3 : d2, st = ['$f\'(x) = ' + d1.tex() + '$.', '$f\'\'(x) = ' + d2.tex() + '$ (differentiate $f\'$).'];
       if (n === 3) st.push('$f\'\'\'(x) = ' + d3.tex() + '$.');
       if (kind === 'at') { var a = R.int(-3, 3); st.push('At $x = ' + a + '$: $f\'\'(' + a + ') = ' + d2.subT(a) + ' = ' + tx(d2.at(a)) + '$.'); return { q: 'Let $f(x) = ' + f.tex() + '$. Find $f\'\'(' + a + ')$.', a: num(d2.at(a)), steps: st, hint: 'Differentiate twice, then substitute.', chk: { k: 'dat', f: f.plain(), x: a, n: 2 } }; }
@@ -1487,7 +1487,7 @@
       };
     }
     if (kind === 'nth') {
-      var n2 = R.int(3, 5), c = R.pick([1, 2, 3, -1]), fact = 1; for (var i = 2; i <= n2; i++) fact *= i;
+      var n2 = R.int(3, 7), c = R.pick([1, 2, 3, -1, -2, 4]), fact = 1; for (var i = 2; i <= n2; i++) fact *= i;
       var coef = c * fact * (n2 % 2 ? -1 : 1);
       return {
         q: 'Let $f(x) = ' + frac(c, 'x') + '$. Find $f^{(' + n2 + ')}(x)$, the ' + U.ordinal(n2) + ' derivative.',
@@ -1498,7 +1498,7 @@
         hint: 'Find the first three derivatives and look for the pattern.', chk: { k: 'dn', f: c + '/x', n: n2 }
       };
     }
-    var m2 = R.int(4, 7), k2 = R.int(2, m2 - 1), c2 = 1; for (var j = 0; j < k2; j++) c2 *= (m2 - j);
+    var m2 = R.int(4, 10), k2 = R.int(2, m2 - 1), c2 = 1; for (var j = 0; j < k2; j++) c2 *= (m2 - j);
     return {
       q: 'Let $f(x) = x^{' + m2 + '}$. Find $f^{(' + k2 + ')}(x)$.',
       a: expr(c2 + '*x^' + (m2 - k2)),
@@ -1568,16 +1568,16 @@
 
   G('calc1.chain-rule-layers', function (R, ctx) {
     var t = lv(ctx, R.pick(['sinpow', 'sqrtsin', 'tansq']), R.pick(['cospow', 'sinsqrt', 'nested', 'sincos']), R.pick(['nested', 'cossin', 'sqrtsinsq', 'sincos']));
-    var k = R.pick([2, 3, 4, 5]), n = R.int(2, 5), c = R.int(2, 5), fT, fP, layers, ansT, ansP;
+    var k = R.pick([2, 3, 4, 5, 6, 7]), n = R.int(2, 8), c = R.int(2, 9), fT, fP, layers, ansT, ansP;
     var kx = k + 'x';
     if (t === 'sinpow') { fT = '\\sin^{' + n + '}(' + kx + ')'; fP = 'sin(' + kx + ')^' + n; layers = ['$(\\,\\cdot\\,)^{' + n + '}$', '$\\sin(\\,\\cdot\\,)$', '$' + kx + '$']; ansT = n + '\\sin' + (n - 1 > 1 ? '^{' + (n - 1) + '}' : '') + '(' + kx + ') \\cdot \\cos(' + kx + ') \\cdot ' + k + ' = ' + (n * k) + '\\sin' + (n - 1 > 1 ? '^{' + (n - 1) + '}' : '') + '(' + kx + ')\\cos(' + kx + ')'; ansP = (n * k) + '*sin(' + kx + ')^' + (n - 1) + '*cos(' + kx + ')'; }
     else if (t === 'cospow') { var u = P([R.nz(-4, 4), 0, R.pick([1, 2, 3])]); fT = '\\cos^{' + n + '}(' + u.tex() + ')'; fP = 'cos(' + u.plain() + ')^' + n; layers = ['$(\\,\\cdot\\,)^{' + n + '}$', '$\\cos(\\,\\cdot\\,)$', '$' + u.tex() + '$']; ansT = n + '\\cos' + (n - 1 > 1 ? '^{' + (n - 1) + '}' : '') + '(' + u.tex() + ') \\cdot \\big(-\\sin(' + u.tex() + ')\\big) \\cdot ' + u.d().tex(); ansP = (-n) + '*cos(' + u.plain() + ')^' + (n - 1) + '*sin(' + u.plain() + ')*(' + u.d().plain() + ')'; }
     else if (t === 'sqrtsin') { fT = '\\sqrt{' + c + ' + \\sin(' + kx + ')}'; fP = 'sqrt(' + c + '+sin(' + kx + '))'; layers = ['$\\sqrt{\\,\\cdot\\,}$', '$' + c + ' + \\sin(\\,\\cdot\\,)$', '$' + kx + '$']; ansT = frac(1, '2\\sqrt{' + c + ' + \\sin(' + kx + ')}') + ' \\cdot \\cos(' + kx + ') \\cdot ' + k + ' = ' + (k % 2 ? frac(k + '\\cos(' + kx + ')', '2\\sqrt{' + c + ' + \\sin(' + kx + ')}') : frac((k / 2 === 1 ? '' : k / 2) + '\\cos(' + kx + ')', '\\sqrt{' + c + ' + \\sin(' + kx + ')}')); ansP = k % 2 ? k + '*cos(' + kx + ')/(2*sqrt(' + c + '+sin(' + kx + ')))' : (k / 2) + '*cos(' + kx + ')/sqrt(' + c + '+sin(' + kx + '))'; }
     else if (t === 'tansq') { fT = '\\tan^{2}(' + kx + ')'; fP = 'tan(' + kx + ')^2'; layers = ['$(\\,\\cdot\\,)^{2}$', '$\\tan(\\,\\cdot\\,)$', '$' + kx + '$']; ansT = '2\\tan(' + kx + ') \\cdot \\sec^{2}(' + kx + ') \\cdot ' + k + ' = ' + (2 * k) + '\\tan(' + kx + ')\\sec^{2}(' + kx + ')'; ansP = (2 * k) + '*tan(' + kx + ')*sec(' + kx + ')^2'; }
-    else if (t === 'sinsqrt') { var a = R.int(1, 4), b = R.int(1, 9); fT = '\\sin\\left(\\sqrt{' + linT(a, b) + '}\\right)'; fP = 'sin(sqrt(' + linP(a, b) + '))'; layers = ['$\\sin(\\,\\cdot\\,)$', '$\\sqrt{\\,\\cdot\\,}$', '$' + linT(a, b) + '$']; ansT = '\\cos\\left(\\sqrt{' + linT(a, b) + '}\\right) \\cdot ' + frac(1, '2\\sqrt{' + linT(a, b) + '}') + ' \\cdot ' + a + ' = ' + frac((a === 1 ? '' : a) + '\\cos\\left(\\sqrt{' + linT(a, b) + '}\\right)', '2\\sqrt{' + linT(a, b) + '}'); ansP = a + '*cos(sqrt(' + linP(a, b) + '))/(2*sqrt(' + linP(a, b) + '))'; }
-    else if (t === 'nested') { var m = R.int(2, 3), a2 = R.pick([2, 3, -2]), b2 = R.int(-3, 3), w = linT(a2, b2), wP = linP(a2, b2); fT = '\\left(1 + (' + w + ')^{' + m + '}\\right)^{' + n + '}'; fP = '(1+(' + wP + ')^' + m + ')^' + n; layers = ['$(\\,\\cdot\\,)^{' + n + '}$', '$1 + (\\,\\cdot\\,)^{' + m + '}$', '$' + w + '$']; ansT = n + '\\left(1 + (' + w + ')^{' + m + '}\\right)' + (n - 1 > 1 ? '^{' + (n - 1) + '}' : '') + ' \\cdot ' + m + '(' + w + ')' + (m - 1 > 1 ? '^{' + (m - 1) + '}' : '') + ' \\cdot ' + tp(a2); ansP = (n * m * a2) + '*(1+(' + wP + ')^' + m + ')^' + (n - 1) + '*(' + wP + ')^' + (m - 1); }
+    else if (t === 'sinsqrt') { var a = R.int(1, 7), b = R.int(1, 15); fT = '\\sin\\left(\\sqrt{' + linT(a, b) + '}\\right)'; fP = 'sin(sqrt(' + linP(a, b) + '))'; layers = ['$\\sin(\\,\\cdot\\,)$', '$\\sqrt{\\,\\cdot\\,}$', '$' + linT(a, b) + '$']; ansT = '\\cos\\left(\\sqrt{' + linT(a, b) + '}\\right) \\cdot ' + frac(1, '2\\sqrt{' + linT(a, b) + '}') + ' \\cdot ' + a + ' = ' + frac((a === 1 ? '' : a) + '\\cos\\left(\\sqrt{' + linT(a, b) + '}\\right)', '2\\sqrt{' + linT(a, b) + '}'); ansP = a + '*cos(sqrt(' + linP(a, b) + '))/(2*sqrt(' + linP(a, b) + '))'; }
+    else if (t === 'nested') { var m = R.int(2, 3), a2 = R.pick([2, 3, -2, -3]), b2 = R.int(-4, 4), w = linT(a2, b2), wP = linP(a2, b2); fT = '\\left(1 + (' + w + ')^{' + m + '}\\right)^{' + n + '}'; fP = '(1+(' + wP + ')^' + m + ')^' + n; layers = ['$(\\,\\cdot\\,)^{' + n + '}$', '$1 + (\\,\\cdot\\,)^{' + m + '}$', '$' + w + '$']; ansT = n + '\\left(1 + (' + w + ')^{' + m + '}\\right)' + (n - 1 > 1 ? '^{' + (n - 1) + '}' : '') + ' \\cdot ' + m + '(' + w + ')' + (m - 1 > 1 ? '^{' + (m - 1) + '}' : '') + ' \\cdot ' + tp(a2); ansP = (n * m * a2) + '*(1+(' + wP + ')^' + m + ')^' + (n - 1) + '*(' + wP + ')^' + (m - 1); }
     else if (t === 'sincos') { fT = '\\sin\\big(\\cos(' + kx + ')\\big)'; fP = 'sin(cos(' + kx + '))'; layers = ['$\\sin(\\,\\cdot\\,)$', '$\\cos(\\,\\cdot\\,)$', '$' + kx + '$']; ansT = '\\cos\\big(\\cos(' + kx + ')\\big) \\cdot \\big(-\\sin(' + kx + ')\\big) \\cdot ' + k + ' = -' + k + '\\sin(' + kx + ')\\cos\\big(\\cos(' + kx + ')\\big)'; ansP = (-k) + '*sin(' + kx + ')*cos(cos(' + kx + '))'; }
-    else if (t === 'cossin') { var a3 = R.pick([1, 2, 3]); fT = '\\cos\\big(\\sin(' + (a3 === 1 ? '' : a3) + 'x^{2})\\big)'; fP = 'cos(sin(' + a3 + 'x^2))'; layers = ['$\\cos(\\,\\cdot\\,)$', '$\\sin(\\,\\cdot\\,)$', '$' + (a3 === 1 ? '' : a3) + 'x^{2}$']; ansT = '-\\sin\\big(\\sin(' + (a3 === 1 ? '' : a3) + 'x^{2})\\big) \\cdot \\cos(' + (a3 === 1 ? '' : a3) + 'x^{2}) \\cdot ' + (2 * a3) + 'x'; ansP = (-2 * a3) + 'x*sin(sin(' + a3 + 'x^2))*cos(' + a3 + 'x^2)'; }
+    else if (t === 'cossin') { var a3 = R.pick([1, 2, 3, 4, 5, 6]); fT = '\\cos\\big(\\sin(' + (a3 === 1 ? '' : a3) + 'x^{2})\\big)'; fP = 'cos(sin(' + a3 + 'x^2))'; layers = ['$\\cos(\\,\\cdot\\,)$', '$\\sin(\\,\\cdot\\,)$', '$' + (a3 === 1 ? '' : a3) + 'x^{2}$']; ansT = '-\\sin\\big(\\sin(' + (a3 === 1 ? '' : a3) + 'x^{2})\\big) \\cdot \\cos(' + (a3 === 1 ? '' : a3) + 'x^{2}) \\cdot ' + (2 * a3) + 'x'; ansP = (-2 * a3) + 'x*sin(sin(' + a3 + 'x^2))*cos(' + a3 + 'x^2)'; }
     else { fT = '\\sqrt{1 + \\sin^{2}(' + kx + ')}'; fP = 'sqrt(1+sin(' + kx + ')^2)'; layers = ['$\\sqrt{\\,\\cdot\\,}$', '$1 + (\\,\\cdot\\,)^{2}$', '$\\sin(\\,\\cdot\\,)$', '$' + kx + '$']; ansT = frac(1, '2\\sqrt{1 + \\sin^{2}(' + kx + ')}') + ' \\cdot 2\\sin(' + kx + ') \\cdot \\cos(' + kx + ') \\cdot ' + k + ' = ' + frac(k + '\\sin(' + kx + ')\\cos(' + kx + ')', '\\sqrt{1 + \\sin^{2}(' + kx + ')}'); ansP = k + '*sin(' + kx + ')*cos(' + kx + ')/sqrt(1+sin(' + kx + ')^2)'; }
     return {
       q: 'Find $' + ddx() + '\\left[' + fT + '\\right]$.',
@@ -1592,12 +1592,12 @@
 
   G('calc1.exp-log-derivatives', function (R, ctx) {
     var t = lv(ctx, R.pick(['ekx', 'lnlin', 'ekx']), R.pick(['equad', 'lnquad', 'xe', 'base', 'xln']), R.pick(['lnsin', 'xe', 'logb', 'esin', 'equot']));
-    var k = R.intNot(-5, 6, [0, 1]), a = R.nz(-5, 6), fT, fP, ansP, st;
+    var k = R.intNot(-9, 9, [0, 1]), a = R.nz(-9, 9), fT, fP, ansP, st;
     if (t === 'ekx') { fT = T.coef(a, 'e^{' + T.coef(k, 'x') + '}'); fP = a + '*e^(' + k + 'x)'; ansP = (a * k) + '*e^(' + k + 'x)'; st = ['$e^{u}$ is its own derivative, but here the exponent is $u = ' + T.coef(k, 'x') + '$, so the chain rule adds a factor $' + frac('du', 'dx') + ' = ' + k + '$.', '$' + ddx() + '\\left[' + fT + '\\right] = ' + tx(a) + ' \\cdot e^{' + T.coef(k, 'x') + '} \\cdot ' + tp(k) + ' = ' + T.coef(a * k, 'e^{' + T.coef(k, 'x') + '}') + '$.']; }
-    else if (t === 'lnlin') { var b = R.nz(-6, 6), m = R.int(2, 5); fT = '\\ln(' + linT(m, b) + ')'; fP = 'ln(' + linP(m, b) + ')'; ansP = m + '/(' + linP(m, b) + ')'; st = ['$' + ddx('u') + '\\ln u = ' + frac(1, 'u') + '$, with $u = ' + linT(m, b) + '$ and $' + frac('du', 'dx') + ' = ' + m + '$.', 'Chain rule: $' + frac(1, linT(m, b)) + ' \\cdot ' + tp(m) + ' = ' + frac(m, linT(m, b)) + '$.']; }
+    else if (t === 'lnlin') { var b = R.nz(-9, 9), m = R.int(2, 9); fT = '\\ln(' + linT(m, b) + ')'; fP = 'ln(' + linP(m, b) + ')'; ansP = m + '/(' + linP(m, b) + ')'; st = ['$' + ddx('u') + '\\ln u = ' + frac(1, 'u') + '$, with $u = ' + linT(m, b) + '$ and $' + frac('du', 'dx') + ' = ' + m + '$.', 'Chain rule: $' + frac(1, linT(m, b)) + ' \\cdot ' + tp(m) + ' = ' + frac(m, linT(m, b)) + '$.']; }
     else if (t === 'equad') { var u = P([0, R.int(-4, 4), R.nz(-3, 3)]); fT = 'e^{' + u.tex() + '}'; fP = 'e^(' + u.plain() + ')'; ansP = '(' + u.d().plain() + ')*e^(' + u.plain() + ')'; st = ['Outer layer $e^{u}$ (derivative $e^{u}$), inner layer $u = ' + u.tex() + '$ (derivative $' + u.d().tex() + '$).', 'Chain rule: $' + u.d().ptex() + 'e^{' + u.tex() + '}$.']; }
-    else if (t === 'lnquad') { var c = R.int(1, 9), A = R.pick([1, 2, 3]); fT = '\\ln(' + T.coef(A, 'x^{2}') + ' + ' + c + ')'; fP = 'ln(' + A + 'x^2+' + c + ')'; ansP = (2 * A) + 'x/(' + A + 'x^2+' + c + ')'; st = ['$' + ddx('u') + '\\ln u = ' + frac(1, 'u') + '$ with $u = ' + T.coef(A, 'x^{2}') + ' + ' + c + '$, $' + frac('du', 'dx') + ' = ' + T.coef(2 * A, 'x') + '$.', 'So the derivative is $' + frac(T.coef(2 * A, 'x'), T.coef(A, 'x^{2}') + ' + ' + c) + '$: the derivative of the inside over the inside.']; }
-    else if (t === 'xe') { var n = R.int(1, 3), xn = xpw(n), ek = 'e^{' + T.coef(k, 'x') + '}'; fT = xn + ek; fP = 'x^' + n + '*e^(' + k + 'x)'; ansP = '(' + n + '*x^' + (n - 1) + '+' + k + '*x^' + n + ')*e^(' + k + 'x)'; st = ['Product rule: $(' + xn + ')\' = ' + T.coef(n, xpw(n - 1)) + '$ and $(' + ek + ')\' = ' + T.coef(k, ek) + '$ (chain rule).', '$' + T.coef(n, xpw(n - 1) + ek) + T.coef(k, xn + ek, false) + ' = ' + xpw(n - 1) + '(' + linT(k, n) + ')' + ek + '$.']; }
+    else if (t === 'lnquad') { var c = R.int(1, 15), A = R.pick([1, 2, 3, 4, 5]); fT = '\\ln(' + T.coef(A, 'x^{2}') + ' + ' + c + ')'; fP = 'ln(' + A + 'x^2+' + c + ')'; ansP = (2 * A) + 'x/(' + A + 'x^2+' + c + ')'; st = ['$' + ddx('u') + '\\ln u = ' + frac(1, 'u') + '$ with $u = ' + T.coef(A, 'x^{2}') + ' + ' + c + '$, $' + frac('du', 'dx') + ' = ' + T.coef(2 * A, 'x') + '$.', 'So the derivative is $' + frac(T.coef(2 * A, 'x'), T.coef(A, 'x^{2}') + ' + ' + c) + '$: the derivative of the inside over the inside.']; }
+    else if (t === 'xe') { var n = R.int(1, 5), xn = xpw(n), ek = 'e^{' + T.coef(k, 'x') + '}'; fT = xn + ek; fP = 'x^' + n + '*e^(' + k + 'x)'; ansP = '(' + n + '*x^' + (n - 1) + '+' + k + '*x^' + n + ')*e^(' + k + 'x)'; st = ['Product rule: $(' + xn + ')\' = ' + T.coef(n, xpw(n - 1)) + '$ and $(' + ek + ')\' = ' + T.coef(k, ek) + '$ (chain rule).', '$' + T.coef(n, xpw(n - 1) + ek) + T.coef(k, xn + ek, false) + ' = ' + xpw(n - 1) + '(' + linT(k, n) + ')' + ek + '$.']; }
     else if (t === 'xln') { var n2 = R.int(1, 4), xn2 = xpw(n2); fT = xn2 + '\\ln x'; fP = 'x^' + n2 + '*ln(x)'; ansP = n2 + '*x^' + (n2 - 1) + '*ln(x)+x^' + (n2 - 1); st = ['Product rule with $' + xn2 + '$ and $\\ln x$ (derivative $' + frac(1, 'x') + '$).', '$' + T.coef(n2, xpw(n2 - 1) + '\\ln x') + ' + ' + xn2 + ' \\cdot ' + frac(1, 'x') + ' = ' + T.coef(n2, xpw(n2 - 1) + '\\ln x') + ' + ' + (xpw(n2 - 1) || '1') + '$.']; }
     else if (t === 'base') { var B = R.pick([2, 3, 5, 10]), kk = R.pick([1, 1, 2, 3]); fT = B + '^{' + (kk === 1 ? '' : kk) + 'x}'; fP = B + '^(' + kk + 'x)'; ansP = kk + '*' + B + '^(' + kk + 'x)*ln(' + B + ')'; st = ['Write $' + B + ' = e^{\\ln ' + B + '}$, so $' + fT + ' = e^{' + (kk === 1 ? '' : kk) + '(\\ln ' + B + ')x}$.', 'Differentiate: $e^{' + (kk === 1 ? '' : kk) + '(\\ln ' + B + ')x} \\cdot ' + (kk === 1 ? '' : kk) + '\\ln ' + B + ' = ' + (kk === 1 ? '' : kk + ' \\cdot ') + B + '^{' + (kk === 1 ? '' : kk) + 'x}\\ln ' + B + '$.', 'The power rule does not apply: the variable is in the exponent, not the base.']; }
     else if (t === 'logb') { var B2 = R.pick([2, 3, 5, 10]); fT = '\\log_{' + B2 + '} x'; fP = 'ln(x)/ln(' + B2 + ')'; ansP = '1/(x*ln(' + B2 + '))'; st = ['Change of base: $\\log_{' + B2 + '} x = ' + frac('\\ln x', '\\ln ' + B2) + '$, and $\\ln ' + B2 + '$ is just a constant.', 'So the derivative is $' + frac(1, '\\ln ' + B2) + ' \\cdot ' + frac(1, 'x') + ' = ' + frac(1, 'x\\ln ' + B2) + '$.']; }
@@ -1684,7 +1684,7 @@
 
   G('calc1.inverse-derivatives', function (R, ctx) {
     var t = lv(ctx, R.pick(['asin', 'atanlin', 'atanlin', 'overa']), R.pick(['atansq', 'acos', 'xatan', 'overa', 'inv', 'inv']), R.pick(['inv', 'inv', 'xatan', 'atansqrt', 'at', 'xasin']));
-    var k = R.pick([2, 3, 4, 5]), c = R.pick([1, 1, 2, 3, -1]), fT, fP, ansP, st;
+    var k = R.pick([2, 3, 4, 5, 6, 7]), c = R.pick([1, 1, 2, 3, -1, 4, -2, 5]), fT, fP, ansP, st;
     if (t === 'inv') {
       var deg = R.pick([3, 3, 5]), p = R.int(1, 4), c0 = R.int(-5, 5), a = R.pick(deg === 5 ? [-1, 0, 1] : [-1, 0, 1, 2]), coeffs = [c0, p]; while (coeffs.length < deg) coeffs.push(0); coeffs.push(1);
       var f = P(coeffs), b = f.at(a), fp = f.d(), v = q(1).div(fp.at(a));
@@ -1713,8 +1713,8 @@
     var cT = c === 1 ? '' : c === -1 ? '-' : String(c);
     if (t === 'asin') { fT = cT + '\\arcsin(' + k + 'x)'; fP = c + '*asin(' + k + 'x)'; ansP = (c * k) + '/sqrt(1-' + (k * k) + 'x^2)'; st = ['$' + ddx('u') + '\\arcsin u = ' + frac(1, '\\sqrt{1 - u^{2}}') + '$, with $u = ' + k + 'x$ and $u\' = ' + k + '$.', '$' + cT + frac(1, '\\sqrt{1 - (' + k + 'x)^{2}}') + ' \\cdot ' + k + ' = ' + frac(c * k, '\\sqrt{1 - ' + (k * k) + 'x^{2}}') + '$.']; }
     else if (t === 'acos') { fT = '\\arccos(' + k + 'x)'; fP = 'acos(' + k + 'x)'; ansP = -k + '/sqrt(1-' + (k * k) + 'x^2)'; st = ['$' + ddx('u') + '\\arccos u = -' + frac(1, '\\sqrt{1 - u^{2}}') + '$, with $u = ' + k + 'x$ and $u\' = ' + k + '$.', '$-' + frac(k, '\\sqrt{1 - ' + (k * k) + 'x^{2}}') + '$.']; }
-    else if (t === 'atanlin') { var kk = R.int(1, 5), bb = kk === 1 ? R.nz(-3, 3) : R.int(-3, 3), u = linT(kk, bb); fT = cT + '\\arctan(' + u + ')'; fP = c + '*atan(' + linP(kk, bb) + ')'; ansP = (c * kk) + '/(1+(' + linP(kk, bb) + ')^2)'; st = ['$' + ddx('u') + '\\arctan u = ' + frac(1, '1 + u^{2}') + '$, with $u = ' + u + '$ and $u\' = ' + kk + '$.', '$' + cT + frac(1, '1 + (' + u + ')^{2}') + ' \\cdot ' + kk + ' = ' + frac(c * kk, '1 + (' + u + ')^{2}') + '$.']; }
-    else if (t === 'overa') { var A = R.int(2, 6), tn = R.coin(); fT = (tn ? '\\arctan' : '\\arcsin') + '\\left(' + frac('x', A) + '\\right)'; fP = (tn ? 'atan' : 'asin') + '(x/' + A + ')'; ansP = tn ? A + '/(' + (A * A) + '+x^2)' : '1/sqrt(' + (A * A) + '-x^2)';
+    else if (t === 'atanlin') { var kk = R.int(1, 8), bb = kk === 1 ? R.nz(-6, 6) : R.int(-6, 6), u = linT(kk, bb); fT = cT + '\\arctan(' + u + ')'; fP = c + '*atan(' + linP(kk, bb) + ')'; ansP = (c * kk) + '/(1+(' + linP(kk, bb) + ')^2)'; st = ['$' + ddx('u') + '\\arctan u = ' + frac(1, '1 + u^{2}') + '$, with $u = ' + u + '$ and $u\' = ' + kk + '$.', '$' + cT + frac(1, '1 + (' + u + ')^{2}') + ' \\cdot ' + kk + ' = ' + frac(c * kk, '1 + (' + u + ')^{2}') + '$.']; }
+    else if (t === 'overa') { var A = R.int(2, 12), tn = R.coin(); fT = (tn ? '\\arctan' : '\\arcsin') + '\\left(' + frac('x', A) + '\\right)'; fP = (tn ? 'atan' : 'asin') + '(x/' + A + ')'; ansP = tn ? A + '/(' + (A * A) + '+x^2)' : '1/sqrt(' + (A * A) + '-x^2)';
       st = tn ? ['$u = ' + frac('x', A) + '$, $u\' = ' + frac(1, A) + '$: $' + frac(1, '1 + x^{2}/' + (A * A)) + ' \\cdot ' + frac(1, A) + '$.', 'Multiply top and bottom by $' + (A * A) + '$: $' + frac(A, (A * A) + ' + x^{2}') + '$.']
         : ['$u = ' + frac('x', A) + '$, $u\' = ' + frac(1, A) + '$: $' + frac(1, '\\sqrt{1 - x^{2}/' + (A * A) + '}') + ' \\cdot ' + frac(1, A) + '$.', 'Since $' + A + '\\sqrt{1 - x^{2}/' + (A * A) + '} = \\sqrt{' + (A * A) + ' - x^{2}}$, this is $' + frac(1, '\\sqrt{' + (A * A) + ' - x^{2}}') + '$.']; }
     else if (t === 'atansq') { var s2 = R.coin(), m = R.pick([1, 2, 3]); var mx = m === 1 ? 'x^{2}' : m + 'x^{2}'; fT = (s2 ? '\\arctan(' : '\\arcsin(') + mx + ')'; fP = (s2 ? 'atan(' : 'asin(') + m + 'x^2)'; ansP = s2 ? (2 * m) + 'x/(1+' + (m * m) + 'x^4)' : (2 * m) + 'x/sqrt(1-' + (m * m) + 'x^4)'; st = ['Inner $u = ' + mx + '$, $u\' = ' + (2 * m) + 'x$.', s2 ? '$' + frac(1, '1 + (' + mx + ')^{2}') + ' \\cdot ' + (2 * m) + 'x = ' + frac((2 * m) + 'x', '1 + ' + (m * m === 1 ? '' : m * m) + 'x^{4}') + '$.' : '$' + frac(1, '\\sqrt{1 - (' + mx + ')^{2}}') + ' \\cdot ' + (2 * m) + 'x = ' + frac((2 * m) + 'x', '\\sqrt{1 - ' + (m * m === 1 ? '' : m * m) + 'x^{4}}') + '$.']; }
@@ -1726,9 +1726,9 @@
 
   G('calc1.log-differentiation', function (R, ctx) {
     var t = lv(ctx, R.pick(['xx', 'xpow', 'xpow', 'at']), R.pick(['xpow', 'xsq', 'xsin', 'at', 'xpow']), R.pick(['xinv', 'prod', 'xsin', 'baseq', 'lnx', 'prod', 'xpow']));
-    var fT, fP, ansP, st, k = R.int(2, 9);
+    var fT, fP, ansP, st, k = R.int(2, 15);
     if (t === 'at') {
-      var form = R.pick(['xx', 'xpow', 'xpow']), a = form === 'xx' ? R.pick([1, 2, 3]) : 1, kk = R.int(1, 6), cc = R.int(-5, 5), val, fT0, fP0, lines;
+      var form = R.pick(['xx', 'xpow', 'xpow']), a = form === 'xx' ? R.pick([1, 2, 3]) : 1, kk = R.int(1, 9), cc = R.int(-8, 8), val, fT0, fP0, lines;
       if (kk === 1 && cc === 0) cc = 3;
       if (form === 'xx') { fT0 = 'x^{x}'; fP0 = 'x^x'; val = a === 1 ? '1' : Math.pow(a, a) + '*ln(' + a + ')+' + Math.pow(a, a); lines = ['$\\ln y = x\\ln x$, so $' + frac('y\'', 'y') + ' = \\ln x + 1$ and $y\' = x^{x}(\\ln x + 1)$.', 'At $x = ' + a + '$: $' + a + '^{' + a + '}(\\ln ' + a + ' + 1) = ' + (a === 1 ? '1 \\cdot (0 + 1) = 1' : Math.pow(a, a) + '\\ln ' + a + ' + ' + Math.pow(a, a)) + '$.']; }
       else { var eT = linT(kk, cc); fT0 = 'x^{' + eT + '}'; fP0 = 'x^(' + linP(kk, cc) + ')'; val = String(kk + cc); lines = ['$\\ln y = (' + eT + ')\\ln x$, so $' + frac('y\'', 'y') + ' = ' + T.coef(kk, '\\ln x') + ' + ' + frac(eT, 'x') + '$.', 'At $x = 1$: $y = 1^{' + (kk + cc) + '} = 1$ and $\\ln 1 = 0$, so $y\'(1) = 1 \\cdot \\left(0' + sg(kk + cc) + '\\right) = ' + (kk + cc) + '$.']; }
@@ -1747,9 +1747,9 @@
       };
     }
     if (t === 'xx') { fT = 'x^{x}'; fP = 'x^x'; ansP = 'x^x*(ln(x)+1)'; st = ['Let $y = x^{x}$. Take $\\ln$ of both sides: $\\ln y = x\\ln x$.', 'Differentiate both sides (the left by the chain rule): $' + frac(1, 'y') + '\\,y\' = \\ln x + x \\cdot ' + frac(1, 'x') + ' = \\ln x + 1$.', 'Multiply by $y$: $y\' = x^{x}(\\ln x + 1)$.']; }
-    else if (t === 'xpow') { var ka = R.int(1, 6), kb = R.int(-5, 5); if (ka === 1 && kb === 0) kb = R.pick([-2, 3]); var eT2 = linT(ka, kb); fT = 'x^{' + eT2 + '}'; fP = 'x^(' + linP(ka, kb) + ')'; ansP = 'x^(' + linP(ka, kb) + ')*(' + ka + '*ln(x)+' + ka + '+' + kb + '/x)'; st = ['$\\ln y = (' + eT2 + ')\\ln x$.', 'Product rule on the right: $' + frac('y\'', 'y') + ' = ' + T.coef(ka, '\\ln x') + ' + (' + eT2 + ') \\cdot ' + frac(1, 'x') + ' = ' + T.coef(ka, '\\ln x') + ' + ' + ka + (kb ? (kb < 0 ? ' - ' : ' + ') + frac(abs(kb), 'x') : '') + '$.', 'Multiply by $y$: $y\' = x^{' + eT2 + '}\\left(' + T.coef(ka, '\\ln x') + ' + ' + ka + (kb ? (kb < 0 ? ' - ' : ' + ') + frac(abs(kb), 'x') : '') + '\\right)$.']; }
+    else if (t === 'xpow') { var ka = R.int(1, 9), kb = R.int(-9, 9); if (ka === 1 && kb === 0) kb = R.pick([-2, 3]); var eT2 = linT(ka, kb); fT = 'x^{' + eT2 + '}'; fP = 'x^(' + linP(ka, kb) + ')'; ansP = 'x^(' + linP(ka, kb) + ')*(' + ka + '*ln(x)+' + ka + '+' + kb + '/x)'; st = ['$\\ln y = (' + eT2 + ')\\ln x$.', 'Product rule on the right: $' + frac('y\'', 'y') + ' = ' + T.coef(ka, '\\ln x') + ' + (' + eT2 + ') \\cdot ' + frac(1, 'x') + ' = ' + T.coef(ka, '\\ln x') + ' + ' + ka + (kb ? (kb < 0 ? ' - ' : ' + ') + frac(abs(kb), 'x') : '') + '$.', 'Multiply by $y$: $y\' = x^{' + eT2 + '}\\left(' + T.coef(ka, '\\ln x') + ' + ' + ka + (kb ? (kb < 0 ? ' - ' : ' + ') + frac(abs(kb), 'x') : '') + '\\right)$.']; }
     else if (t === 'xkx') { fT = 'x^{' + k + 'x}'; fP = 'x^(' + k + 'x)'; ansP = 'x^(' + k + 'x)*' + k + '*(ln(x)+1)'; st = ['$\\ln y = ' + k + 'x\\ln x$.', '$' + frac('y\'', 'y') + ' = ' + k + '\\ln x + ' + k + 'x \\cdot ' + frac(1, 'x') + ' = ' + k + '(\\ln x + 1)$.', '$y\' = ' + k + 'x^{' + k + 'x}(\\ln x + 1)$.']; }
-    else if (t === 'xpc') { var c = R.nz(-5, 5); fT = 'x^{x' + sg(c) + '}'; fP = 'x^(x+' + c + ')'; ansP = 'x^(x+' + c + ')*(ln(x)+1+' + c + '/x)'; st = ['$\\ln y = (x' + sg(c) + ')\\ln x$.', 'Product rule: $' + frac('y\'', 'y') + ' = \\ln x + (x' + sg(c) + ') \\cdot ' + frac(1, 'x') + ' = \\ln x + 1' + (c < 0 ? ' - ' : ' + ') + frac(abs(c), 'x') + '$.', '$y\' = x^{x' + sg(c) + '}\\left(\\ln x + 1' + (c < 0 ? ' - ' : ' + ') + frac(abs(c), 'x') + '\\right)$.']; }
+    else if (t === 'xpc') { var c = R.nz(-9, 9); fT = 'x^{x' + sg(c) + '}'; fP = 'x^(x+' + c + ')'; ansP = 'x^(x+' + c + ')*(ln(x)+1+' + c + '/x)'; st = ['$\\ln y = (x' + sg(c) + ')\\ln x$.', 'Product rule: $' + frac('y\'', 'y') + ' = \\ln x + (x' + sg(c) + ') \\cdot ' + frac(1, 'x') + ' = \\ln x + 1' + (c < 0 ? ' - ' : ' + ') + frac(abs(c), 'x') + '$.', '$y\' = x^{x' + sg(c) + '}\\left(\\ln x + 1' + (c < 0 ? ' - ' : ' + ') + frac(abs(c), 'x') + '\\right)$.']; }
     else if (t === 'xsq') { var am = R.int(1, 3), ax = am === 1 ? 'x^{2}' : am + 'x^{2}'; fT = 'x^{' + ax + '}'; fP = 'x^(' + am + 'x^2)'; ansP = 'x^(' + am + 'x^2)*(' + (2 * am) + 'x*ln(x)+' + am + 'x)'; st = ['$\\ln y = ' + ax + '\\ln x$.', '$' + frac('y\'', 'y') + ' = ' + (2 * am) + 'x\\ln x + ' + ax + ' \\cdot ' + frac(1, 'x') + ' = ' + (2 * am) + 'x\\ln x + ' + (am === 1 ? '' : am) + 'x$.', '$y\' = x^{' + ax + '}(' + (2 * am) + 'x\\ln x + ' + (am === 1 ? '' : am) + 'x)$.']; }
     else if (t === 'xsin') { var fn = R.pick(['sin', 'cos']), m2 = R.pick([1, 1, 2, 3]), arg = m2 === 1 ? 'x' : m2 + 'x', argT = m2 === 1 ? ' x' : '(' + m2 + 'x)', dT = (fn === 'sin' ? '' : '-') + (m2 === 1 ? '' : m2) + '\\' + (fn === 'sin' ? 'cos' : 'sin') + argT; fT = 'x^{\\' + fn + argT + '}'; fP = 'x^(' + fn + '(' + arg + '))'; ansP = 'x^(' + fn + '(' + arg + '))*(' + (fn === 'sin' ? '' : '-') + m2 + '*' + (fn === 'sin' ? 'cos' : 'sin') + '(' + arg + ')*ln(x)+' + fn + '(' + arg + ')/x)'; st = ['$\\ln y = \\' + fn + argT + ' \\cdot \\ln x$.', 'Product rule on the right: $' + frac('y\'', 'y') + ' = ' + dT + '\\ln x + ' + frac('\\' + fn + argT, 'x') + '$.', '$y\' = x^{\\' + fn + argT + '}\\left(' + dT + '\\ln x + ' + frac('\\' + fn + argT, 'x') + '\\right)$.']; }
     else if (t === 'xinv') { var kq = R.int(1, 4), kT = kq === 1 ? '' : kq; fT = 'x^{' + kq + '/x}'; fP = 'x^(' + kq + '/x)'; ansP = 'x^(' + kq + '/x)*' + kq + '*(1-ln(x))/x^2'; st = ['$\\ln y = ' + frac(kT + '\\ln x', 'x') + '$.', 'Quotient rule: $' + frac('y\'', 'y') + ' = ' + frac(kT + '(1 - \\ln x)', 'x^{2}') + '$.', '$y\' = x^{' + kq + '/x} \\cdot ' + frac(kT + '(1 - \\ln x)', 'x^{2}') + '$.']; }
@@ -1931,7 +1931,7 @@
   G('calc1.linear-approximation', function (R, ctx) {
     var kind = lv(ctx, R.pick(['sqrt', 'sqrt', 'L']), R.pick(['cbrt', 'diff', 'L', 'circle']), R.pick(['pow', 'trig', 'cbrt', 'circle', 'L']));
     if (kind === 'sqrt' || kind === 'cbrt') {
-      var cube = kind === 'cbrt', a = cube ? R.int(2, 5) : R.int(3, 10), d = R.nz(-3, 3) * (cube ? R.pick([1, 2]) : 1), base = cube ? a * a * a : a * a, xv = base + d;
+      var cube = kind === 'cbrt', a = cube ? R.int(2, 7) : R.int(2, 15), d = R.nz(-4, 4) * (cube ? R.pick([1, 2, 3]) : 1), base = cube ? a * a * a : a * a, xv = base + d;
       var slope = cube ? q(1).div(3 * a * a) : q(1).div(2 * a), est = q(a).add(slope.mul(d));
       return {
         q: 'Use a linear approximation (the tangent line at $x = ' + base + '$) to estimate $' + (cube ? '\\sqrt[3]{' + xv + '}' : '\\sqrt{' + xv + '}') + '$. Give the exact value of the estimate.',
@@ -1945,9 +1945,9 @@
     }
     if (kind === 'L') {
       var which = R.pick(['sqrt', 'recip', 'cube']), L, fT, fP, a2, st, fa;
-      if (which === 'sqrt') { var c = R.int(1, 6); a2 = c * c; fa = q(c); L = P([q(c).sub(q(a2).div(2 * c)), q(1).div(2 * c)]); fT = '\\sqrt{x}'; fP = 'sqrt(x)'; st = ['$f(' + a2 + ') = ' + c + '$ and $f\'(x) = ' + frac(1, '2\\sqrt{x}') + '$, so $f\'(' + a2 + ') = ' + frac(1, 2 * c) + '$.']; }
-      else if (which === 'recip') { a2 = R.nz(-4, 4); fa = q(1).div(a2); L = P([q(2).div(a2), q(-1).div(a2 * a2)]); fT = frac(1, 'x'); fP = '1/x'; st = ['$f(' + a2 + ') = ' + tx(q(1).div(a2)) + '$ and $f\'(x) = -' + frac(1, 'x^{2}') + '$, so $f\'(' + a2 + ') = ' + tx(q(-1).div(a2 * a2)) + '$.']; }
-      else { a2 = R.nz(-3, 3); fa = q(a2 * a2 * a2); L = P([-2 * a2 * a2 * a2, 3 * a2 * a2]); fT = 'x^{3}'; fP = 'x^3'; st = ['$f(' + a2 + ') = ' + (a2 * a2 * a2) + '$ and $f\'(x) = 3x^{2}$, so $f\'(' + a2 + ') = ' + (3 * a2 * a2) + '$.']; }
+      if (which === 'sqrt') { var c = R.int(1, 12); a2 = c * c; fa = q(c); L = P([q(c).sub(q(a2).div(2 * c)), q(1).div(2 * c)]); fT = '\\sqrt{x}'; fP = 'sqrt(x)'; st = ['$f(' + a2 + ') = ' + c + '$ and $f\'(x) = ' + frac(1, '2\\sqrt{x}') + '$, so $f\'(' + a2 + ') = ' + frac(1, 2 * c) + '$.']; }
+      else if (which === 'recip') { a2 = R.nz(-9, 9); fa = q(1).div(a2); L = P([q(2).div(a2), q(-1).div(a2 * a2)]); fT = frac(1, 'x'); fP = '1/x'; st = ['$f(' + a2 + ') = ' + tx(q(1).div(a2)) + '$ and $f\'(x) = -' + frac(1, 'x^{2}') + '$, so $f\'(' + a2 + ') = ' + tx(q(-1).div(a2 * a2)) + '$.']; }
+      else { a2 = R.nz(-6, 6); fa = q(a2 * a2 * a2); L = P([-2 * a2 * a2 * a2, 3 * a2 * a2]); fT = 'x^{3}'; fP = 'x^3'; st = ['$f(' + a2 + ') = ' + (a2 * a2 * a2) + '$ and $f\'(x) = 3x^{2}$, so $f\'(' + a2 + ') = ' + (3 * a2 * a2) + '$.']; }
       return {
         q: 'Find the linearization $L(x)$ of $f(x) = ' + fT + '$ at $a = ' + a2 + '$. Write it as $mx + b$.',
         a: expr(L.plain()),
@@ -2203,7 +2203,7 @@
   G('calc1.curve-sketching', function (R, ctx) {
     var kind = lv(ctx, 'cubic', R.pick(['cubic', 'rational', 'bump']), R.pick(['bump', 'xplus', 'rational', 'quartic']));
     if (kind === 'cubic') {
-      var p = R.int(-3, 1), q2 = p + 2 * R.int(1, 2), s = R.pick([1, -1]), f = niceCubic(p, q2, R.int(-6, 6), s), d1 = f.d(), d2 = d1.d(), mx = s > 0 ? p : q2, mn = s > 0 ? q2 : p, m = (p + q2) / 2;
+      var p = R.int(-5, 3), q2 = p + 2 * R.int(1, 3), s = R.pick([1, -1]), f = niceCubic(p, q2, R.int(-9, 9), s), d1 = f.d(), d2 = d1.d(), mx = s > 0 ? p : q2, mn = s > 0 ? q2 : p, m = (p + q2) / 2;
       return {
         q: 'For $f(x) = ' + f.tex() + '$, find the $x$-values of the local maximum, the local minimum and the inflection point.',
         a: multi([['local max at $x =$', num(mx)], ['local min at $x =$', num(mn)], ['inflection at $x =$', num(m)]]),
@@ -2229,7 +2229,7 @@
       };
     }
     if (kind === 'bump') {
-      var k = R.pick([1, 2, 3, 4, 6]), aa = R.int(1, 3), fP = k + 'x/(x^2+' + (aa * aa) + ')', ymax = q(k).div(2 * aa);
+      var k = R.pick([1, 2, 3, 4, 6, 5, 8, 10]), aa = R.int(1, 6), fP = k + 'x/(x^2+' + (aa * aa) + ')', ymax = q(k).div(2 * aa);
       return {
         q: 'For $f(x) = ' + dfrac(T.coef(k, 'x'), 'x^{2} + ' + (aa * aa)) + '$, find the location and value of the local maximum, and the horizontal asymptote.',
         a: multi([['local max at $x =$', num(aa)], ['local max value $=$', num(ymax)], ['horizontal asymptote $y =$', num(0)]]),
@@ -2241,7 +2241,7 @@
       };
     }
     if (kind === 'xplus') {
-      var k2 = R.int(1, 5), fP2 = 'x+' + (k2 * k2) + '/x';
+      var k2 = R.int(1, 12), fP2 = 'x+' + (k2 * k2) + '/x';
       return {
         q: 'For $f(x) = x + ' + frac(k2 * k2, 'x') + '$, find the local minimum value, the local maximum value, and the vertical asymptote.',
         a: multi([['local min value $=$', num(2 * k2)], ['local max value $=$', num(-2 * k2)], ['vertical asymptote $x =$', num(0)]]),
@@ -2251,7 +2251,7 @@
         chk: [{ k: 'fn', test: function (spec, val, fn) { return near(fn(fP2)(k2), val(spec)) ? true : 'min'; } }, { k: 'fn', test: function (spec, val, fn) { return near(fn(fP2)(-k2), val(spec)) ? true : 'max'; } }, { k: 'val', v: 0 }]
       };
     }
-    var k3 = R.int(1, 3), fq = P([0, 0, -2 * k3 * k3, 0, 1]);
+    var k3 = R.int(1, 6), fq = P([0, 0, -2 * k3 * k3, 0, 1]);
     return {
       q: 'For $f(x) = ' + fq.tex() + '$, find the local maximum value, the $x$-values of the local minima, and the $x$-values of the inflection points.',
       a: multi([['local max value $=$', num(0)], ['local minima at $x =$', { t: 'set', v: [String(k3), String(-k3)] }], ['inflection points at $x =$', { t: 'set', v: [k3 + '*sqrt(3)/3', '-' + k3 + '*sqrt(3)/3'] }]]),
@@ -2355,12 +2355,12 @@
 
   G('calc1.lhopital', function (R, ctx) {
     var kind = lv(ctx, R.pick(['exp', 'ln', 'sinexp']), R.pick(['pow', 'inf', 'trap', 'twice', 'exp']), R.pick(['twice', 'e', 'xln', 'inf', 'trap']));
-    var a = R.int(2, 7), b = R.intNot(2, 9, a), L, fT, fP, st, lim0 = lim(0), atP = 0, side = 0;
+    var a = R.int(2, 9), b = R.intNot(2, 12, a), L, fT, fP, st, lim0 = lim(0), atP = 0, side = 0;
     var rule = 'The limit has the form $' + frac(0, 0) + '$, so L\'Hôpital\'s rule applies: replace the top and bottom by their derivatives (separately; this is not the quotient rule).';
     if (kind === 'exp') { L = q(a).div(b); fT = dfrac('e^{' + a + 'x} - 1', b + 'x'); fP = '(e^(' + a + 'x)-1)/(' + b + 'x)'; st = [rule, 'Derivatives: top $' + a + 'e^{' + a + 'x}$, bottom $' + b + '$.', 'Limit: $' + frac(a + 'e^{0}', b) + ' = ' + tx(L) + '$.']; }
     else if (kind === 'ln') { L = q(a).div(b); fT = dfrac('\\ln(1 + ' + a + 'x)', b + 'x'); fP = 'ln(1+' + a + 'x)/(' + b + 'x)'; st = [rule, 'Derivatives: top $' + frac(a, '1 + ' + a + 'x') + '$, bottom $' + b + '$.', 'Limit: $' + frac(a, b) + (gcd(a, b) > 1 ? ' = ' + tx(L) : '') + '$.']; }
     else if (kind === 'sinexp') { L = q(a).div(b); fT = dfrac('\\sin(' + a + 'x)', 'e^{' + b + 'x} - 1'); fP = 'sin(' + a + 'x)/(e^(' + b + 'x)-1)'; st = [rule, 'Derivatives: top $' + a + '\\cos(' + a + 'x)$, bottom $' + b + 'e^{' + b + 'x}$.', 'At $x = 0$: $' + frac(a + ' \\cdot 1', b + ' \\cdot 1') + ' = ' + tx(L) + '$.']; }
-    else if (kind === 'pow') { var c = R.int(1, 3), n = R.int(3, 6); atP = c; L = q(n * Math.pow(c, n - 1)); fT = dfrac('x^{' + n + '} - ' + Math.pow(c, n), xm(c)); fP = '(x^' + n + '-' + Math.pow(c, n) + ')/(x-' + c + ')'; lim0 = lim(c); st = ['At $x = ' + c + '$ both top and bottom are 0: form $' + frac(0, 0) + '$.', 'Derivatives: top $' + n + 'x^{' + (n - 1) + '}$, bottom $1$.', 'Limit: $' + n + ' \\cdot ' + c + '^{' + (n - 1) + '} = ' + tx(L) + '$. (Factoring would also work, but this is quicker.)']; }
+    else if (kind === 'pow') { var c = R.int(1, 4), n = R.int(2, 7); atP = c; L = q(n * Math.pow(c, n - 1)); fT = dfrac('x^{' + n + '} - ' + Math.pow(c, n), xm(c)); fP = '(x^' + n + '-' + Math.pow(c, n) + ')/(x-' + c + ')'; lim0 = lim(c); st = ['At $x = ' + c + '$ both top and bottom are 0: form $' + frac(0, 0) + '$.', 'Derivatives: top $' + n + 'x^{' + (n - 1) + '}$, bottom $1$.', 'Limit: $' + n + ' \\cdot ' + c + '^{' + (n - 1) + '} = ' + tx(L) + '$. (Factoring would also work, but this is quicker.)']; }
     else if (kind === 'twice') { var tw = R.coin(); L = q(a * a).div(2); fT = tw ? dfrac('1 - \\cos(' + a + 'x)', 'x^{2}') : dfrac('e^{' + a + 'x} - 1 - ' + a + 'x', 'x^{2}'); fP = tw ? '(1-cos(' + a + 'x))/x^2' : '(e^(' + a + 'x)-1-' + a + 'x)/x^2';
       st = [rule, tw ? 'Once: $' + frac(a + '\\sin(' + a + 'x)', '2x') + '$, still $' + frac(0, 0) + '$.' : 'Once: $' + frac(a + 'e^{' + a + 'x} - ' + a, '2x') + '$, still $' + frac(0, 0) + '$.', tw ? 'Again: $' + frac((a * a) + '\\cos(' + a + 'x)', 2) + ' \\to ' + frac(a * a, 2) + '$.' : 'Again: $' + frac((a * a) + 'e^{' + a + 'x}', 2) + ' \\to ' + frac(a * a, 2) + '$.', 'So the limit is $' + tx(L) + '$.']; }
     else if (kind === 'inf') { var t = R.pick(['xe', 'lnx', 'ex']), n2 = R.int(1, 3), k = R.int(1, 3);
@@ -2369,7 +2369,7 @@
       else { L = 'inf'; fT = dfrac('e^{' + (k === 1 ? '' : k) + 'x}', 'x^{' + n2 + '}').replace('x^{1}', 'x'); fP = 'e^(' + k + 'x)/x^' + n2; st = ['Form $' + frac('\\infty', '\\infty') + '$.', 'Apply the rule ' + n2 + ' time' + (n2 > 1 ? 's' : '') + ': the bottom becomes a constant, the top stays a multiple of $e^{' + (k === 1 ? '' : k) + 'x}$.', 'So the limit is $\\infty$.']; }
       return { q: 'Find $' + limInf(1) + ' ' + fT + '$.' + (L === 'inf' ? ' Answer ∞ if the values grow without bound.' : ''), a: num(L === 'inf' ? 'inf' : '0'), steps: st, hint: 'Check the form, then differentiate top and bottom separately.', chk: { k: 'lim', f: fP, a: 'inf' } };
     }
-    else if (kind === 'trap') { var aa = R.int(1, 5), bb = R.nz(-4, 4), tr = R.coin(); L = tr ? q(1 + aa).div(bb) : q(1).div(bb); fT = tr ? dfrac('e^{x} + ' + aa, xm(-bb)) : dfrac('\\cos x', xm(-bb)); fP = tr ? '(e^x+' + aa + ')/(x+' + bb + ')' : 'cos(x)/(x+' + bb + ')';
+    else if (kind === 'trap') { var aa = R.int(1, 9), bb = R.nz(-8, 8), tr = R.coin(); L = tr ? q(1 + aa).div(bb) : q(1).div(bb); fT = tr ? dfrac('e^{x} + ' + aa, xm(-bb)) : dfrac('\\cos x', xm(-bb)); fP = tr ? '(e^x+' + aa + ')/(x+' + bb + ')' : 'cos(x)/(x+' + bb + ')';
       st = ['First check the form: at $x = 0$ the top is $' + (tr ? '1 + ' + aa + ' = ' + (1 + aa) : '1') + '$ and the bottom is $' + bb + '$.', 'This is not $' + frac(0, 0) + '$ or $' + frac('\\infty', '\\infty') + '$, so L\'Hôpital\'s rule does not apply (it would give the wrong answer $' + (tr ? frac(1, 1) : '0') + '$).'.replace('\\frac{1}{1}', '1'), 'The function is continuous there; just substitute: $' + tx(L) + '$.']; }
     else if (kind === 'e') { var aE = R.int(1, 5), form = R.coin(); L = 'e'; fT = form ? '\\left(1 + ' + frac(aE, 'x') + '\\right)^{x}' : '(1 + ' + (aE === 1 ? '' : aE) + 'x)^{1/x}'; fP = form ? '(1+' + aE + '/x)^x' : '(1+' + aE + 'x)^(1/x)';
       st = ['This is the indeterminate form $1^{\\infty}$. Take logs: $\\ln y = ' + (form ? 'x\\ln\\left(1 + ' + frac(aE, 'x') + '\\right)' : frac('\\ln(1 + ' + (aE === 1 ? '' : aE) + 'x)', 'x')) + '$.', form ? 'Rewrite as $' + frac('\\ln(1 + ' + aE + '/x)', '1/x') + '$, a $' + frac(0, 0) + '$ form; L\'Hôpital gives $' + frac(aE, '1 + ' + aE + '/x') + ' \\to ' + aE + '$.' : 'L\'Hôpital: $' + frac(aE, '1 + ' + (aE === 1 ? '' : aE) + 'x') + ' \\to ' + aE + '$.', 'So $\\ln y \\to ' + aE + '$ and $y \\to e^{' + aE + '}$.'];
@@ -2386,7 +2386,7 @@
     var kind = lv(ctx, R.pick(['sqrt', 'formula']), R.pick(['sqrt', 'cbrt', 'cubic']), R.pick(['two', 'cubic', 'fail', 'cbrt']));
     function newton(fP, x0) { return { k: 'fn', test: function (spec, val, fn, nd) { var f = fn(fP), x1 = x0 - f(x0) / nd(f, x0); return near(x1, val(spec), 1e-9) ? true : 'newton step ' + x1; } }; }
     if (kind === 'formula') {
-      var n0 = R.pick([2, 3, 5, 6, 7, 10, 11]);
+      var n0 = R.pick([2, 3, 5, 6, 7, 10, 11, 8, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 31, 33, 34, 35, 37, 38, 39, 40]);
       return {
         q: 'Write the Newton\'s method update $x - ' + frac('f(x)', 'f\'(x)') + '$ for $f(x) = x^{2} - ' + n0 + '$ as a single simplified fraction.',
         a: expr('(x^2+' + n0 + ')/(2x)'),
@@ -2420,7 +2420,7 @@
       };
     }
     if (kind === 'cubic') {
-      var p = R.int(1, 4), qq = R.nz(-6, 6), f = P([qq, p, 0, 1]), x0c = R.int(-2, 2), fx = f.at(x0c), fpx = f.d().at(x0c), x1c = q(x0c).sub(fx.div(fpx));
+      var p = R.int(1, 6), qq = R.nz(-9, 9), f = P([qq, p, 0, 1]), x0c = R.int(-3, 3), fx = f.at(x0c), fpx = f.d().at(x0c), x1c = q(x0c).sub(fx.div(fpx));
       return {
         q: 'Use one step of Newton\'s method on $f(x) = ' + f.tex() + '$, starting from $x_0 = ' + x0c + '$. Give $x_1$ exactly.',
         a: num(x1c),
@@ -2428,7 +2428,7 @@
         hint: 'x₁ = x₀ − f(x₀)/f′(x₀).', chk: newton(f.plain(), x0c)
       };
     }
-    var k = R.int(1, 3), c = R.int(1, 9), fq = 'x^{2} - ' + (2 * k) + 'x' + ' - ' + c;
+    var k = R.int(1, 5), c = R.int(1, 15), fq = 'x^{2} - ' + (2 * k) + 'x' + ' - ' + c;
     return {
       q: 'Newton\'s method is started at $x_0 = ' + k + '$ for $f(x) = ' + fq + '$. What goes wrong?',
       a: mc('$f\'(' + k + ') = 0$: the tangent line is horizontal and never meets the $x$-axis, so there is no $x_1$.', ['Nothing: $x_1 = ' + k + '$ is already a root.', 'The method converges to the wrong root.', '$f(' + k + ') = 0$, so the method stops.']),
@@ -2703,7 +2703,7 @@
   var UPS = [{ T: 'x^{2}', P: 'x^2', dT: '2x', dP: '2x' }, { T: 'x^{3}', P: 'x^3', dT: '3x^{2}', dP: '3x^2' }, { T: '3x', P: '3x', dT: '3', dP: '3' }, { T: '\\sin x', P: 'sin(x)', dT: '\\cos x', dP: 'cos(x)' }, { T: '\\sqrt{x}', P: 'sqrt(x)', dT: frac(1, '2\\sqrt{x}'), dP: '1/(2*sqrt(x))' }];
   G('calc1.ftc-accumulation', function (R, ctx) {
     var kind = lv(ctx, R.pick(['basic', 'basic', 'flip']), R.pick(['chain', 'chain', 'flip', 'value']), R.pick(['both', 'chain', 'max', 'value']));
-    var f = R.pick(ACC), a = R.int(0, 2);
+    var f = R.pick(ACC), a = R.int(0, 4);
     var thm = 'Fundamental Theorem, Part 1: if $g(x) = ' + I('a', 'x', 'f(t)', 't') + '$, then $g\'(x) = f(x)$. The rate at which area piles up equals the height of the curve at the moving edge.';
     if (kind === 'basic' || kind === 'flip') {
       var flip = kind === 'flip';
@@ -2733,7 +2733,7 @@
       };
     }
     if (kind === 'value') {
-      var pp = P([R.int(-4, 4), R.int(-3, 3), R.nz(-2, 2)]), c = R.int(-2, 3), u3 = R.coin() ? UPS[0] : null, val, st;
+      var pp = P([R.int(-7, 7), R.int(-5, 5), R.nz(-3, 3)]), c = R.int(-4, 5), u3 = R.coin() ? UPS[0] : null, val, st;
       if (u3) { val = pp.at(c * c).mul(2 * c); st = ['$g\'(x) = f(x^{2}) \\cdot 2x$ with $f(t) = ' + pp.tex('t') + '$.', '$g\'(' + c + ') = f(' + (c * c) + ') \\cdot ' + (2 * c) + ' = ' + tx(pp.at(c * c)) + ' \\cdot ' + tp(2 * c) + ' = ' + tx(val) + '$.']; }
       else { val = pp.at(c); st = ['$g\'(x) = ' + pp.tex() + '$.', '$g\'(' + c + ') = ' + pp.subT(c) + ' = ' + tx(val) + '$.']; }
       return {
@@ -2742,7 +2742,7 @@
         chk: { k: 'fn', test: function (spec, vv, fn, nd, simpson) { var ff = fn(pp.plain('t'), ['t']), g = function (x) { return simpson(ff, a, u3 ? x * x : x, 400); }, h = 1e-4, d = (g(c + h) - g(c - h)) / (2 * h); return near(d, vv(spec), 1e-5) ? true : 'gprime ' + d; } }
       };
     }
-    var p = R.int(-2, 2), q2 = p + R.int(1, 4), pr = fromRoots(1, [p, q2]);
+    var p = R.int(-5, 5), q2 = p + R.int(1, 6), pr = fromRoots(1, [p, q2]);
     return {
       q: 'Let $g(x) = ' + I(0, 'x', '(' + pr.tex('t') + ')', 't') + '$. At what $x$ does $g$ have a local maximum?',
       a: num(p),
@@ -2798,7 +2798,7 @@
   G('calc1.net-change', function (R, ctx) {
     var kind = lv(ctx, R.pick(['lin', 'flow']), R.pick(['vel', 'lin', 'cost']), R.pick(['vel', 'vel', 'flow']));
     if (kind === 'flow') {
-      var a = R.int(2, 10), b = R.pick([1, 2, 3, 4]), T0 = R.pick([5, 10, 20]), V0 = R.pick([0, 50, 100, 200]), rate = P([a, b]), add = rate.anti().at(T0), V = add.add(V0);
+      var a = R.int(2, 15), b = R.pick([1, 2, 3, 4, 5, 6]), T0 = R.pick([5, 10, 20, 4, 6, 8, 12, 15]), V0 = R.pick([0, 50, 100, 200, 25, 75, 150, 300]), rate = P([a, b]), add = rate.anti().at(T0), V = add.add(V0);
       return {
         q: 'Water flows into a tank at $r(t) = ' + rate.tex('t') + '$ liters per minute. The tank starts with $' + V0 + '$ liters. How much water is in it after $' + T0 + '$ minutes?',
         a: num(V), unit: 'liters',
@@ -2807,7 +2807,7 @@
       };
     }
     if (kind === 'cost') {
-      var A = R.pick([40, 50, 60, 80]), B = R.pick([0.1, 0.2, 0.5]), x1 = R.pick([100, 200]), x2 = x1 + R.pick([50, 100]), mc_ = P([A, -B]), dC = mc_.anti().at(x2).sub(mc_.anti().at(x1));
+      var A = R.pick([40, 50, 60, 80, 30, 45, 70, 90]), B = R.pick([0.1, 0.2, 0.5, 0.05, 0.25]), x1 = R.pick([100, 200, 50, 150]), x2 = x1 + R.pick([50, 100, 25]), mc_ = P([A, -B]), dC = mc_.anti().at(x2).sub(mc_.anti().at(x1));
       return {
         q: 'The marginal cost of making $x$ bikes is $C\'(x) = ' + mc_.tex() + '$ dollars per bike. How much does the total cost rise when production goes from ' + x1 + ' to ' + x2 + ' bikes?',
         a: num(dC), unit: 'dollars',
@@ -2816,7 +2816,7 @@
       };
     }
     if (kind === 'lin') {
-      var m = R.int(1, 4), c = m * R.int(1, 3), Tt = c / m + R.int(1, 3), v = P([-c, m]), disp = v.anti().at(Tt), r0 = c / m, dist = q(c * r0).div(2).add(q(m * (Tt - r0) * (Tt - r0)).div(2));
+      var m = R.int(1, 6), c = m * R.int(1, 4), Tt = c / m + R.int(1, 4), v = P([-c, m]), disp = v.anti().at(Tt), r0 = c / m, dist = q(c * r0).div(2).add(q(m * (Tt - r0) * (Tt - r0)).div(2));
       return {
         q: 'A cart moves along a track with velocity $v(t) = ' + v.tex('t') + '$ m/s for $0 \\le t \\le ' + Tt + '$. Find its displacement and the total distance it travels.',
         a: multi([['displacement: ', num(disp)], ['total distance: ', num(dist)]]),
@@ -2826,7 +2826,7 @@
         chk: [{ k: 'int', f: v.plain(), a: 0, b: Tt }, { k: 'int', f: v.plain(), a: 0, b: Tt, abs: true }]
       };
     }
-    var p = R.int(1, 2), q2 = p + R.int(1, 3), T1 = q2 + R.int(1, 2), vv = fromRoots(1, [p, q2]), F = vv.anti(), d = F.at(T1).sub(F.at(0));
+    var p = R.int(1, 4), q2 = p + R.int(1, 4), T1 = q2 + R.int(1, 3), vv = fromRoots(1, [p, q2]), F = vv.anti(), d = F.at(T1).sub(F.at(0));
     var seg1 = F.at(p).sub(F.at(0)), seg2 = F.at(q2).sub(F.at(p)), seg3 = F.at(T1).sub(F.at(q2)), tot = seg1.abs().add(seg2.abs()).add(seg3.abs());
     return {
       q: 'A particle moves with velocity $v(t) = ' + vv.tex('t') + '$ m/s for $0 \\le t \\le ' + T1 + '$. Find its displacement and the total distance traveled.',
@@ -2843,11 +2843,11 @@
     var kind = lv(ctx, 'poly', R.pick(['poly', 'trig', 'c']), R.pick(['c', 'trig', 'recip', 'poly']));
     var def = 'Average value: $f_{\\text{avg}} = ' + frac(1, 'b - a') + I('a', 'b', 'f(x)') + '$: the height of the rectangle with the same area.';
     if (kind === 'poly') {
-      var f = P([R.int(-4, 6), R.int(-4, 4) * 2, R.pick([3, -3, 6])]), a = R.int(-1, 1), b = a + R.int(1, 4), F = f.anti(), I_ = F.at(b).sub(F.at(a)), av = I_.div(b - a);
+      var f = P([R.int(-9, 9), R.int(-6, 6) * 2, R.pick([3, -3, 6, -6, 9])]), a = R.int(-3, 3), b = a + R.int(1, 6), F = f.anti(), I_ = F.at(b).sub(F.at(a)), av = I_.div(b - a);
       return { q: 'Find the average value of $f(x) = ' + f.tex() + '$ on $[' + a + ', ' + b + ']$.', a: num(av), steps: [def, '$' + I(a, b, '(' + f.tex() + ')') + ' = ' + bracket(F.tex(), a, b) + ' = ' + tx(I_) + '$.', 'Divide by the length $' + (b - a) + '$: $f_{\\text{avg}} = ' + tx(av) + '$.'], hint: 'Integrate, then divide by the length of the interval.', chk: { k: 'int', f: f.plain(), a: a, b: b, scale: 1 / (b - a) } };
     }
     if (kind === 'trig') {
-      var k = R.int(1, 5), t = R.pick(['sin0pi', 'cos0half', 'sin0half']), bT = t === 'sin0pi' ? '\\pi' : frac('\\pi', 2), I2 = t === 'sin0pi' ? 2 * k : k, Lp = t === 'sin0pi' ? 'pi' : 'pi/2', av2 = (2 * k) + '/pi';
+      var k = R.int(1, 12), t = R.pick(['sin0pi', 'cos0half', 'sin0half']), bT = t === 'sin0pi' ? '\\pi' : frac('\\pi', 2), I2 = t === 'sin0pi' ? 2 * k : k, Lp = t === 'sin0pi' ? 'pi' : 'pi/2', av2 = (2 * k) + '/pi';
       return { q: 'Find the average value of $f(x) = ' + T.coef(k, t.indexOf('sin') === 0 ? '\\sin x' : '\\cos x') + '$ on $[0, ' + bT + ']$.', a: num(av2), steps: [def, '$' + I(0, bT, T.coef(k, t.indexOf('sin') === 0 ? '\\sin x' : '\\cos x')) + ' = ' + I2 + '$.', 'Divide by the length $' + bT + '$: $' + frac(I2, bT) + ' = ' + frac(2 * k, '\\pi') + '$.'], hint: 'Integrate over the interval, then divide by its length.', chk: { k: 'int', f: k + '*' + (t.indexOf('sin') === 0 ? 'sin' : 'cos') + '(x)', a: 0, b: Lp, scale: 1 / ML.evalPlain(Lp) } };
     }
     if (kind === 'recip') {
@@ -2865,13 +2865,13 @@
 
   G('calc1.u-substitution', function (R, ctx) {
     var kind = lv(ctx, R.pick(['xpow', 'lin', 'trigk']), R.pick(['root', 'cube', 'sinn', 'xcos', 'xexp']), R.pick(['adjust', 'shift', 'xcos', 'root', 'sinn']));
-    var a = R.int(1, 9), n = R.int(2, 6), fT, fP, ansP, st;
+    var a = R.int(1, 15), n = R.int(2, 9), fT, fP, ansP, st;
     var steps0 = 'Look for an inside function $u$ whose derivative also appears (up to a constant factor).';
     if (kind === 'xpow') { var k = R.pick([2, 4, 6, 1, 3]); fT = T.coef(k, 'x') + '(x^{2} + ' + a + ')^{' + n + '}'; fP = k + '*x*(x^2+' + a + ')^' + n; ansP = cmulP(q(k).div(2 * (n + 1)), '(x^2+' + a + ')^' + (n + 1)) + '+C';
       st = [steps0, 'Let $u = x^{2} + ' + a + '$. Then $du = 2x\\,dx$, so $x\\,dx = ' + frac(1, 2) + 'du$.', 'The integral becomes $' + cI(q(k).div(2), II('u^{' + n + '}', 'u')) + ' = ' + (q(k).div(2).eq(1) ? '' : tx(q(k).div(2)) + ' \\cdot ') + frac('u^{' + (n + 1) + '}', n + 1) + ' + C$.', 'Back to $x$: $' + T.coef(q(k).div(2 * (n + 1)), '(x^{2} + ' + a + ')^{' + (n + 1) + '}') + ' + C$.']; }
-    else if (kind === 'lin') { var m = R.pick([2, 3, 4, 5, -2]), b = R.int(-6, 6); fT = '(' + linT(m, b) + ')^{' + n + '}'; fP = '(' + linP(m, b) + ')^' + n; ansP = '(' + linP(m, b) + ')^' + (n + 1) + '/(' + (m * (n + 1)) + ')+C';
+    else if (kind === 'lin') { var m = R.pick([2, 3, 4, 5, -2, 6, 7, -3]), b = R.int(-9, 9); fT = '(' + linT(m, b) + ')^{' + n + '}'; fP = '(' + linP(m, b) + ')^' + n; ansP = '(' + linP(m, b) + ')^' + (n + 1) + '/(' + (m * (n + 1)) + ')+C';
       st = [steps0, 'Let $u = ' + linT(m, b) + '$, so $du = ' + m + '\\,dx$ and $dx = ' + frac(1, m) + 'du$.'.replace('\\frac{1}{-2}', '-\\frac{1}{2}'), '$' + II('(' + linT(m, b) + ')^{' + n + '}') + ' = ' + frac(1, m).replace('\\frac{1}{-2}', '-\\frac{1}{2}') + II('u^{' + n + '}', 'u') + ' = ' + frac('u^{' + (n + 1) + '}', (m * (n + 1))) + ' + C$.', 'Back to $x$: $' + frac('(' + linT(m, b) + ')^{' + (n + 1) + '}', m * (n + 1)) + ' + C$.']; }
-    else if (kind === 'trigk') { var kk = R.int(2, 7), fn = R.pick(['sin', 'cos']); fT = '\\' + fn + '(' + kk + 'x)'; fP = fn + '(' + kk + 'x)'; ansP = (fn === 'sin' ? '-' : '') + (fn === 'sin' ? 'cos' : 'sin') + '(' + kk + 'x)/' + kk + '+C';
+    else if (kind === 'trigk') { var kk = R.int(2, 12), fn = R.pick(['sin', 'cos']); fT = '\\' + fn + '(' + kk + 'x)'; fP = fn + '(' + kk + 'x)'; ansP = (fn === 'sin' ? '-' : '') + (fn === 'sin' ? 'cos' : 'sin') + '(' + kk + 'x)/' + kk + '+C';
       st = [steps0, 'Let $u = ' + kk + 'x$, so $dx = ' + frac(1, kk) + 'du$.', '$' + frac(1, kk) + II('\\' + fn + ' u', 'u') + ' = ' + (fn === 'sin' ? '-' : '') + frac(1, kk) + '\\' + (fn === 'sin' ? 'cos' : 'sin') + ' u + C$.', 'Answer: $' + (fn === 'sin' ? '-' : '') + frac(1, kk) + '\\' + (fn === 'sin' ? 'cos' : 'sin') + '(' + kk + 'x) + C$. (Check: differentiating brings back the factor ' + kk + '.)']; }
     else if (kind === 'root') { fT = 'x\\sqrt{x^{2} + ' + a + '}'; fP = 'x*sqrt(x^2+' + a + ')'; ansP = '(x^2+' + a + ')^(3/2)/3+C';
       st = [steps0, 'Let $u = x^{2} + ' + a + '$, $du = 2x\\,dx$, so $x\\,dx = ' + frac(1, 2) + 'du$.', '$' + frac(1, 2) + II('u^{1/2}', 'u') + ' = ' + frac(1, 2) + ' \\cdot ' + frac(2, 3) + 'u^{3/2} + C = ' + frac(1, 3) + 'u^{3/2} + C$.', 'Answer: $' + frac(1, 3) + '(x^{2} + ' + a + ')^{3/2} + C$.']; }
@@ -2894,32 +2894,32 @@
     var kind = lv(ctx, R.pick(['lin', 'xpow']), R.pick(['xpow', 'trig', 'exp']), R.pick(['root', 'trig', 'exp', 'xpow']));
     var note = 'Change the limits along with the variable, so you never have to go back to $x$.';
     if (kind === 'lin') {
-      var m = R.pick([2, 3, -2]), b = R.int(0, 4), n = R.int(1, 3), lims = R.pick([[0, 1], [-1, 0], [0, 2], [1, 2]]), lo = lims[0], hi = lims[1], uL = m * lo + b, uH = m * hi + b, v = q(Math.pow(uH, n + 1) - Math.pow(uL, n + 1)).div(m * (n + 1));
+      var m = R.pick([2, 3, -2, 4, -3]), b = R.int(0, 6), n = R.int(1, 4), lims = R.pick([[0, 1], [-1, 0], [0, 2], [1, 2], [-1, 1], [0, 3]]), lo = lims[0], hi = lims[1], uL = m * lo + b, uH = m * hi + b, v = q(Math.pow(uH, n + 1) - Math.pow(uL, n + 1)).div(m * (n + 1));
       return { q: 'Evaluate $' + I(lo, hi, '(' + linT(m, b) + ')^{' + n + '}') + '$.'.replace('^{1}', ''), a: num(v), steps: ['Let $u = ' + linT(m, b) + '$, $du = ' + m + '\\,dx$.', note + ' When $x = ' + lo + '$, $u = ' + uL + '$; when $x = ' + hi + '$, $u = ' + uH + '$.', '$' + (m < 0 ? '-' + frac(1, -m) : frac(1, m)) + I(uL, uH, 'u^{' + n + '}', 'u') + ' = ' + frac(1, m) + bracket(frac('u^{' + (n + 1) + '}', n + 1), uL, uH) + ' = ' + (m < 0 ? '-' + frac(1, -m) : frac(1, m)) + ' \\cdot ' + frac(Math.pow(uH, n + 1) + ' - ' + T.p(Math.pow(uL, n + 1)), n + 1) + ' = ' + tx(v) + '$.'.replace('u^{1}', 'u')], hint: 'Substitute, and change the limits to u-values.', chk: { k: 'int', f: '(' + linP(m, b) + ')^' + n, a: lo, b: hi } };
     }
     if (kind === 'xpow') {
-      var a = R.int(0, 3), bb = R.int(1, 2), n2 = R.int(1, 3), uL2 = a, uH2 = bb * bb + a, v2 = q(Math.pow(uH2, n2 + 1) - Math.pow(uL2, n2 + 1)).div(2 * (n2 + 1));
+      var a = R.int(0, 6), bb = R.int(1, 3), n2 = R.int(1, 3), uL2 = a, uH2 = bb * bb + a, v2 = q(Math.pow(uH2, n2 + 1) - Math.pow(uL2, n2 + 1)).div(2 * (n2 + 1));
       return { q: 'Evaluate $' + I(0, bb, 'x(x^{2}' + sg(a) + ')' + (n2 === 1 ? '' : '^{' + n2 + '}')) + '$.', a: num(v2), steps: ['Let $u = x^{2}' + sg(a) + '$, $du = 2x\\,dx$, so $x\\,dx = ' + frac(1, 2) + 'du$.', note + ' $x = 0 \\Rightarrow u = ' + uL2 + '$; $x = ' + bb + ' \\Rightarrow u = ' + uH2 + '$.', '$' + frac(1, 2) + I(uL2, uH2, 'u^{' + n2 + '}', 'u') + ' = ' + frac(1, 2) + ' \\cdot ' + frac(Math.pow(uH2, n2 + 1) + ' - ' + Math.pow(uL2, n2 + 1), n2 + 1) + ' = ' + tx(v2) + '$.'.replace('u^{1}', 'u'), 'Keeping the old limits $0$ and $' + bb + '$ with $u$ would give a wrong answer.'], hint: 'u = x² + ' + a + '; find the new limits by plugging in x = 0 and x = ' + bb + '.', chk: { k: 'int', f: 'x*(x^2+' + a + ')^' + n2, a: 0, b: bb } };
     }
     if (kind === 'trig') {
-      var n3 = R.int(1, 5), fn = R.pick(['sin', 'cos']), other = fn === 'sin' ? 'cos' : 'sin', kc = R.pick([1, 1, 2, 3, 4]), v3 = q(kc).div(n3 + 1);
+      var n3 = R.int(1, 9), fn = R.pick(['sin', 'cos']), other = fn === 'sin' ? 'cos' : 'sin', kc = R.pick([1, 1, 2, 3, 4, 5, 6]), v3 = q(kc).div(n3 + 1);
       return { q: ('Evaluate $' + I(0, frac('\\pi', 2), (kc === 1 ? '' : kc) + '\\' + fn + '^{' + n3 + '} x\\,\\' + other + ' x') + '$.').replace('^{1} x', ' x'), a: num(v3), steps: ['Let $u = \\' + fn + ' x$, $du = ' + (fn === 'sin' ? '' : '-') + '\\' + other + ' x\\,dx$.', note + ' $x = 0 \\Rightarrow u = ' + (fn === 'sin' ? 0 : 1) + '$; $x = ' + frac('\\pi', 2) + ' \\Rightarrow u = ' + (fn === 'sin' ? 1 : 0) + '$.', (fn === 'sin' ? '$' + (kc === 1 ? '' : kc) + I(0, 1, 'u^{' + n3 + '}', 'u') + ' = ' + frac(kc, n3 + 1) + '$.' : '$-' + (kc === 1 ? '' : kc) + I(1, 0, 'u^{' + n3 + '}', 'u') + ' = ' + (kc === 1 ? '' : kc) + I(0, 1, 'u^{' + n3 + '}', 'u') + ' = ' + frac(kc, n3 + 1) + '$ (the minus sign flips the limits back).') + (gcd(kc, n3 + 1) > 1 ? ' That is $' + tx(v3) + '$.' : '')], hint: 'u = ' + fn + ' x.', chk: { k: 'int', f: kc + '*' + fn + '(x)^' + n3 + '*' + other + '(x)', a: 0, b: 'pi/2' } };
     }
     if (kind === 'exp') {
       var k = R.int(1, 3), cc = R.pick([1, 2]);
       return { q: 'Evaluate $' + I(0, cc === 1 ? 1 : '\\sqrt{' + k + '}', 'x\\,e^{x^{2}}') + '$ exactly.', a: num(cc === 1 ? '(e-1)/2' : '(e^' + k + '-1)/2'), steps: ['Let $u = x^{2}$, $x\\,dx = ' + frac(1, 2) + 'du$.', note + ' $x = 0 \\Rightarrow u = 0$; $x = ' + (cc === 1 ? 1 : '\\sqrt{' + k + '}') + ' \\Rightarrow u = ' + (cc === 1 ? 1 : k) + '$.', '$' + frac(1, 2) + I(0, cc === 1 ? 1 : k, 'e^{u}', 'u') + ' = ' + frac(1, 2) + '(e^{' + (cc === 1 ? 1 : k) + '} - 1)$.'.replace('e^{1}', 'e')], hint: 'u = x².', chk: { k: 'int', f: 'x*e^(x^2)', a: 0, b: cc === 1 ? 1 : 'sqrt(' + k + ')' } };
     }
-    var tr = R.pick([[3, 4, 5], [6, 8, 10], [5, 12, 13], [4, 3, 5], [8, 6, 10]]), A = tr[0], C = tr[1], v4 = tr[2] - A;
+    var tr = R.pick([[3, 4, 5], [6, 8, 10], [5, 12, 13], [4, 3, 5], [8, 6, 10], [12, 5, 13], [9, 12, 15], [12, 9, 15], [8, 15, 17], [15, 8, 17], [7, 24, 25]]), A = tr[0], C = tr[1], v4 = tr[2] - A;
     return { q: 'Evaluate $' + I(0, C, frac('x', '\\sqrt{x^{2} + ' + (A * A) + '}')) + '$.', a: num(v4), steps: ['Let $u = x^{2} + ' + (A * A) + '$, $x\\,dx = ' + frac(1, 2) + 'du$.', note + ' $x = 0 \\Rightarrow u = ' + (A * A) + '$; $x = ' + C + ' \\Rightarrow u = ' + (C * C + A * A) + '$.', '$' + frac(1, 2) + I(A * A, C * C + A * A, 'u^{-1/2}', 'u') + ' = \\Big[\\sqrt{u}\\Big]_{' + (A * A) + '}^{' + (C * C + A * A) + '} = ' + tr[2] + ' - ' + A + ' = ' + v4 + '$.'], hint: 'u = x² + ' + (A * A) + '.', chk: { k: 'int', f: 'x/sqrt(x^2+' + (A * A) + ')', a: 0, b: C } };
   });
 
   G('calc1.exp-log-integrals', function (R, ctx) {
     function c1(t) { return t === '1' ? '' : t === '-1' ? '-' : t; } // a coefficient of 1 is not written
     var kind = lv(ctx, R.pick(['ekx', 'lin']), R.pick(['quad', 'def', 'base', 'trap']), R.pick(['tan', 'defneg', 'trap', 'quad']));
-    if (kind === 'ekx') { var a = R.nz(-6, 8), k = R.intNot(-5, 6, [0, 1]); return { q: 'Find $' + II(T.coef(a, 'e^{' + T.coef(k, 'x') + '}')) + '$.', a: expr(cmulP(q(a).div(k), 'e^(' + k + 'x)') + '+C'), steps: ['Let $u = ' + T.coef(k, 'x') + '$, $dx = ' + frac(1, k).replace('\\frac{1}{-', '-\\frac{1}{') + 'du$.', '$' + II('e^{u}', 'u') + ' = e^{u} + C$, so the answer is $' + T.coef(q(a).div(k), 'e^{' + T.coef(k, 'x') + '}') + ' + C$.', 'Check: differentiating brings down a factor $' + k + '$, which cancels the $' + frac(1, k).replace('\\frac{1}{-', '-\\frac{1}{') + '$.'], hint: 'Divide by the coefficient of x in the exponent.', chk: { k: 'anti', f: a + '*e^(' + k + 'x)' } }; }
-    if (kind === 'lin') { var c = R.nz(-6, 6), m = R.int(2, 5), b = R.nz(-6, 6), r = q(c).div(m); return { q: 'Find $' + II(frac(c, linT(m, b))) + '$.', a: expr(cl(pl(r) + '*ln(abs(' + linP(m, b) + '))+C')), steps: ['Let $u = ' + linT(m, b) + '$, $du = ' + m + '\\,dx$.', '$' + c1(tx(q(c).div(m))) + II(frac(1, 'u'), 'u') + ' = ' + c1(tx(r)) + '\\ln\\lvert u \\rvert + C$.', 'Answer: $' + T.coef(r, '\\ln\\lvert ' + linT(m, b) + ' \\rvert') + ' + C$. (The absolute value keeps the log defined where $' + linT(m, b) + ' < 0$.)'], hint: 'The antiderivative of 1/u is ln|u|.', chk: { k: 'anti', f: c + '/(' + linP(m, b) + ')' } }; }
-    if (kind === 'quad') { var kq = R.pick([1, 2, 3, 4, 6]), aq = R.int(1, 9); return { q: 'Find $' + II(frac(T.coef(kq, 'x'), 'x^{2} + ' + aq)) + '$.', a: expr(cmulP(q(kq).div(2), 'ln(x^2+' + aq + ')') + '+C'), steps: ['Let $u = x^{2} + ' + aq + '$; $du = 2x\\,dx$, so $x\\,dx = ' + frac(1, 2) + 'du$.', '$' + cI(q(kq).div(2), II(frac(1, 'u'), 'u')) + ' = ' + cI(q(kq).div(2), '\\ln u') + ' + C$.', 'Answer: $' + T.coef(q(kq).div(2), '\\ln(x^{2} + ' + aq + ')') + ' + C$ (no absolute value needed: $x^{2} + ' + aq + ' > 0$).'], hint: 'The top is (a multiple of) the derivative of the bottom.', chk: { k: 'anti', f: kq + 'x/(x^2+' + aq + ')' } }; }
-    if (kind === 'base') { var B = R.pick([2, 3, 5, 10]); return { q: 'Find $' + II(B + '^{x}') + '$.', a: expr(B + '^x/ln(' + B + ')+C'), steps: ['$' + ddx() + B + '^{x} = ' + B + '^{x}\\ln ' + B + '$.', 'So divide by the constant $\\ln ' + B + '$: $' + II(B + '^{x}') + ' = ' + frac(B + '^{x}', '\\ln ' + B) + ' + C$.'], hint: 'What is the derivative of ' + B + '^x?', chk: { k: 'anti', f: B + '^x' } }; }
+    if (kind === 'ekx') { var a = R.nz(-9, 9), k = R.intNot(-9, 9, [0, 1]); return { q: 'Find $' + II(T.coef(a, 'e^{' + T.coef(k, 'x') + '}')) + '$.', a: expr(cmulP(q(a).div(k), 'e^(' + k + 'x)') + '+C'), steps: ['Let $u = ' + T.coef(k, 'x') + '$, $dx = ' + frac(1, k).replace('\\frac{1}{-', '-\\frac{1}{') + 'du$.', '$' + II('e^{u}', 'u') + ' = e^{u} + C$, so the answer is $' + T.coef(q(a).div(k), 'e^{' + T.coef(k, 'x') + '}') + ' + C$.', 'Check: differentiating brings down a factor $' + k + '$, which cancels the $' + frac(1, k).replace('\\frac{1}{-', '-\\frac{1}{') + '$.'], hint: 'Divide by the coefficient of x in the exponent.', chk: { k: 'anti', f: a + '*e^(' + k + 'x)' } }; }
+    if (kind === 'lin') { var c = R.nz(-9, 9), m = R.int(2, 9), b = R.nz(-9, 9), r = q(c).div(m); return { q: 'Find $' + II(frac(c, linT(m, b))) + '$.', a: expr(cl(pl(r) + '*ln(abs(' + linP(m, b) + '))+C')), steps: ['Let $u = ' + linT(m, b) + '$, $du = ' + m + '\\,dx$.', '$' + c1(tx(q(c).div(m))) + II(frac(1, 'u'), 'u') + ' = ' + c1(tx(r)) + '\\ln\\lvert u \\rvert + C$.', 'Answer: $' + T.coef(r, '\\ln\\lvert ' + linT(m, b) + ' \\rvert') + ' + C$. (The absolute value keeps the log defined where $' + linT(m, b) + ' < 0$.)'], hint: 'The antiderivative of 1/u is ln|u|.', chk: { k: 'anti', f: c + '/(' + linP(m, b) + ')' } }; }
+    if (kind === 'quad') { var kq = R.pick([1, 2, 3, 4, 6, 5, 8, 10]), aq = R.int(1, 20); return { q: 'Find $' + II(frac(T.coef(kq, 'x'), 'x^{2} + ' + aq)) + '$.', a: expr(cmulP(q(kq).div(2), 'ln(x^2+' + aq + ')') + '+C'), steps: ['Let $u = x^{2} + ' + aq + '$; $du = 2x\\,dx$, so $x\\,dx = ' + frac(1, 2) + 'du$.', '$' + cI(q(kq).div(2), II(frac(1, 'u'), 'u')) + ' = ' + cI(q(kq).div(2), '\\ln u') + ' + C$.', 'Answer: $' + T.coef(q(kq).div(2), '\\ln(x^{2} + ' + aq + ')') + ' + C$ (no absolute value needed: $x^{2} + ' + aq + ' > 0$).'], hint: 'The top is (a multiple of) the derivative of the bottom.', chk: { k: 'anti', f: kq + 'x/(x^2+' + aq + ')' } }; }
+    if (kind === 'base') { var B = R.pick([2, 3, 5, 10, 4, 6, 7, 8]); return { q: 'Find $' + II(B + '^{x}') + '$.', a: expr(B + '^x/ln(' + B + ')+C'), steps: ['$' + ddx() + B + '^{x} = ' + B + '^{x}\\ln ' + B + '$.', 'So divide by the constant $\\ln ' + B + '$: $' + II(B + '^{x}') + ' = ' + frac(B + '^{x}', '\\ln ' + B) + ' + C$.'], hint: 'What is the derivative of ' + B + '^x?', chk: { k: 'anti', f: B + '^x' } }; }
     if (kind === 'tan') { var tn = R.coin(); return { q: 'Find $' + II(tn ? '\\tan x' : '\\cot x') + '$.', a: expr(tn ? '-ln(abs(cos(x)))+C' : 'ln(abs(sin(x)))+C'), steps: ['Write $' + (tn ? '\\tan x = ' + frac('\\sin x', '\\cos x') : '\\cot x = ' + frac('\\cos x', '\\sin x')) + '$.', 'Let $u = ' + (tn ? '\\cos x' : '\\sin x') + '$, $du = ' + (tn ? '-\\sin x' : '\\cos x') + '\\,dx$.', '$' + (tn ? '-' : '') + II(frac(1, 'u'), 'u') + ' = ' + (tn ? '-' : '') + '\\ln\\lvert u \\rvert + C = ' + (tn ? '-\\ln\\lvert \\cos x \\rvert' : '\\ln\\lvert \\sin x \\rvert') + ' + C$.'], hint: 'Write it as sine over cosine (or the reverse), then substitute.', chk: { k: 'anti', f: tn ? 'tan(x)' : 'cot(x)', pts: [0.3, 0.7, 1.1, 2.0, 2.6, 3.5, 4.0] } }; }
     if (kind === 'def') { var kd = R.int(1, 4), w = R.coin(); return w ? { q: 'Evaluate $' + I(1, kd === 1 ? 'e' : 'e^{' + kd + '}', frac(1, 'x')) + '$.', a: num(kd), steps: ['$' + II(frac(1, 'x')) + ' = \\ln\\lvert x \\rvert + C$.', '$\\ln(' + (kd === 1 ? 'e' : 'e^{' + kd + '}') + ') - \\ln 1 = ' + kd + ' - 0 = ' + kd + '$.'], hint: 'ln(e^k) = k.', chk: { k: 'int', f: '1/x', a: 1, b: 'e^' + kd } } : { q: 'Evaluate $' + I(0, '\\ln ' + (kd + 2), 'e^{x}') + '$.', a: num(kd + 1), steps: ['$' + II('e^{x}') + ' = e^{x} + C$.', '$e^{\\ln ' + (kd + 2) + '} - e^{0} = ' + (kd + 2) + ' - 1 = ' + (kd + 1) + '$.'], hint: 'e^(ln k) = k.', chk: { k: 'int', f: 'e^x', a: 0, b: 'ln(' + (kd + 2) + ')' } }; }
     if (kind === 'defneg') { var kn = R.int(1, 3); return { q: 'Evaluate $' + I(kn === 1 ? '-e' : '-e^{' + kn + '}', -1, frac(1, 'x')) + '$.', a: num(-kn), steps: ['On this interval $x$ is negative, so $\\ln x$ is undefined there; the absolute value in $\\ln\\lvert x \\rvert$ is what makes the formula work.', '$\\Big[\\ln\\lvert x \\rvert\\Big]_{' + (kn === 1 ? '-e' : '-e^{' + kn + '}') + '}^{-1} = \\ln 1 - \\ln(' + (kn === 1 ? 'e' : 'e^{' + kn + '}') + ') = 0 - ' + kn + ' = ' + (-kn) + '$.', 'This makes sense: $' + frac(1, 'x') + '$ is negative on the interval, so the signed area is negative.'], hint: 'Use ln|x|: the absolute value matters for negative x.', chk: { k: 'int', f: '1/x', a: '-e^' + kn, b: -1 } }; }
@@ -2930,10 +2930,10 @@
 
   G('calc1.inverse-trig-integrals', function (R, ctx) {
     var kind = lv(ctx, R.pick(['atan', 'asin']), R.pick(['def', 'kx', 'atan', 'asin', 'contrast']), R.pick(['square', 'contrast', 'def', 'mix']));
-    var a = R.int(2, 6), c = R.pick([1, 1, 2, 3, 5]);
+    var a = R.int(2, 12), c = R.pick([1, 1, 2, 3, 5, 4, 6, 7]);
     if (kind === 'atan') return { q: 'Find $' + II(frac(c, (a * a) + ' + x^{2}')) + '$.', a: expr(cmulP(q(c).div(a), 'atan(x/' + a + ')') + '+C'), steps: ['Factor out $' + (a * a) + '$: $' + frac(c, (a * a) + ' + x^{2}') + ' = ' + frac(c, a * a) + ' \\cdot ' + frac(1, '1 + (x/' + a + ')^{2}') + '$.', 'Let $u = ' + frac('x', a) + '$, $dx = ' + a + '\\,du$: $' + frac(c, a * a) + ' \\cdot ' + a + II(frac(1, '1 + u^{2}'), 'u') + ' = ' + frac(c, a) + '\\arctan u + C$.', 'Answer: $' + T.coef(q(c).div(a), '\\arctan\\left(' + frac('x', a) + '\\right)') + ' + C$.'], hint: '∫ 1/(a² + x²) dx = (1/a) arctan(x/a) + C.', chk: { k: 'anti', f: c + '/(' + (a * a) + '+x^2)' } };
     if (kind === 'asin') return { q: 'Find $' + II(frac(c, '\\sqrt{' + (a * a) + ' - x^{2}}')) + '$.', a: expr(cl(c + '*asin(x/' + a + ')+C')), steps: ['Factor $' + a + '$ out of the root: $\\sqrt{' + (a * a) + ' - x^{2}} = ' + a + '\\sqrt{1 - (x/' + a + ')^{2}}$.', 'Let $u = ' + frac('x', a) + '$, $dx = ' + a + '\\,du$: the $' + a + '$s cancel, leaving $' + (c === 1 ? '' : c) + II(frac(1, '\\sqrt{1 - u^{2}}'), 'u') + ' = ' + T.coef(c, '\\arcsin u') + ' + C$.', 'Answer: $' + T.coef(c, '\\arcsin\\left(' + frac('x', a) + '\\right)') + ' + C$.'], hint: '∫ 1/√(a² − x²) dx = arcsin(x/a) + C.', chk: { k: 'anti', f: c + '/sqrt(' + (a * a) + '-x^2)', pts: [-1.5, -0.6, 0.35, 0.8, 1.3, 1.7] } };
-    if (kind === 'kx') { var k = R.int(2, 6); return { q: 'Find $' + II(frac(1, '1 + ' + (k * k) + 'x^{2}')) + '$.', a: expr('atan(' + k + 'x)/' + k + '+C'), steps: ['Write $' + (k * k) + 'x^{2} = (' + k + 'x)^{2}$ and let $u = ' + k + 'x$, $dx = ' + frac(1, k) + 'du$.', '$' + frac(1, k) + II(frac(1, '1 + u^{2}'), 'u') + ' = ' + frac(1, k) + '\\arctan u + C = ' + frac(1, k) + '\\arctan(' + k + 'x) + C$.'], hint: 'Let u = ' + k + 'x.', chk: { k: 'anti', f: '1/(1+' + (k * k) + 'x^2)' } }; }
+    if (kind === 'kx') { var k = R.int(2, 12); return { q: 'Find $' + II(frac(1, '1 + ' + (k * k) + 'x^{2}')) + '$.', a: expr('atan(' + k + 'x)/' + k + '+C'), steps: ['Write $' + (k * k) + 'x^{2} = (' + k + 'x)^{2}$ and let $u = ' + k + 'x$, $dx = ' + frac(1, k) + 'du$.', '$' + frac(1, k) + II(frac(1, '1 + u^{2}'), 'u') + ' = ' + frac(1, k) + '\\arctan u + C = ' + frac(1, k) + '\\arctan(' + k + 'x) + C$.'], hint: 'Let u = ' + k + 'x.', chk: { k: 'anti', f: '1/(1+' + (k * k) + 'x^2)' } }; }
     if (kind === 'def') {
       var t = R.pick(['atan1', 'atan3', 'atansym', 'asinhalf']), A = R.int(1, 5), res, upT, upP, lo = 0, fT, fP;
       if (t === 'atan1') { res = 'pi/' + (4 * A); upT = String(A); upP = String(A); fT = frac(1, (A * A) + ' + x^{2}'); fP = '1/(' + (A * A) + '+x^2)'; }
@@ -2947,7 +2947,7 @@
         hint: 'Use the arctan or arcsin antiderivative, then exact unit-circle values.', chk: { k: 'int', f: fP, a: lo, b: upP } };
     }
     if (kind === 'contrast') {
-      var withX = R.coin(), kk = R.pick([1, 2, 3, 4]);
+      var withX = R.coin(), kk = R.pick([1, 2, 3, 4, 5, 6]);
       return withX ? { q: 'Find $' + II(frac(T.coef(kk, 'x'), '1 + x^{2}')) + '$.', a: expr(cmulP(q(kk).div(2), 'ln(1+x^2)') + '+C'), steps: ['The top is a multiple of the derivative of the bottom ($2x$), so this is a log integral, not an arctan.', 'Let $u = 1 + x^{2}$: $' + cI(q(kk).div(2), II(frac(1, 'u'), 'u')) + ' = ' + T.coef(q(kk).div(2), '\\ln(1 + x^{2})') + ' + C$.'], hint: 'Is the numerator the derivative of the denominator (up to a constant)?', chk: { k: 'anti', f: kk + 'x/(1+x^2)' } }
         : { q: 'Find $' + II(frac(kk, '1 + x^{2}')) + '$.', a: expr(kk + '*atan(x)+C'), steps: ['There is no $x$ on top, so $u = 1 + x^{2}$ does not help ($du = 2x\\,dx$ needs an $x$).', 'This is a standard form: $' + II(frac(1, '1 + x^{2}')) + ' = \\arctan x + C$. So the answer is $' + T.coef(kk, '\\arctan x') + ' + C$ (not a logarithm).'], hint: 'What has derivative 1/(1 + x²)?', chk: { k: 'anti', f: kk + '/(1+x^2)' } };
     }
@@ -2959,3 +2959,133 @@
 
   ML.calc1Poly = P; // exposed for the course's node tests
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
+   generator still has few different problems at a level sometimes asks the same skill in another form, built only from
+   problems that generator made, so every answer is the generator's own:
+   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+     classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
+     checker rejects it;
+   - two at once: two different short questions of the topic, answered together.
+   Topics whose generator already varies a lot at a level are left as they are. Placed after the generators and
+   registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'calc1', VAR = {};
+  // how often another form is used: never when the topic's own generator already varies a lot at this level, up to
+  // half the time when it has few different questions (counted once per topic and level from 40 fixed seeds)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 37 ? 0 : VAR[key] >= 30 ? 0.3 : VAR[key] >= 20 ? 0.45 : 0.55;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
+  // a nearby wrong answer for a number or an expression, or null
+  function wrongFor(R, a) {
+    var v = String(ML.answerValue(a)), cands = [], m;
+    if (a.t === 'num') {
+      if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
+      else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
+      else if (/^-?\d+\.\d+$/.test(v)) { var x = +v, dp = v.split('.')[1].length, st = Math.pow(10, -Math.min(dp, 2)); cands = [x + st, x - st, -x, x * 10, x / 10].map(function (y) { return ML.util.numStr(ML.util.round(y, dp + 1)); }); }
+      else return null;
+    } else if (a.t === 'expr') {
+      if (v.length > 60) return null;
+      if (/ \+ /.test(v)) cands.push(v.replace(' + ', ' - '));
+      if (/ - /.test(v)) cands.push(v.replace(' - ', ' + '));
+      if ((m = /(^|[^\d.^])(\d+)(?![\d.])/.exec(v)) && !/\^$/.test(v.slice(0, m.index + m[1].length))) cands.push(v.slice(0, m.index) + m[1] + (+m[2] + 1) + v.slice(m.index + m[0].length));
+      if (!cands.length) return null;
+    } else return null;
+    var nv = function (s) { var mm = /^(-?\d+)\/(\d+)$/.exec(s); return mm ? mm[1] / mm[2] : /^-?\d+(\.\d+)?$/.test(s) ? +s : null; }, v0 = nv(v);
+    cands = R.shuffle(cands.filter(function (c, i, all) { var x = nv(c); return c !== v && all.indexOf(c) === i && (x === null || v0 === null || (Math.abs(x - v0) >= 0.01 * Math.max(Math.abs(v0), 1e-12) && (v0 <= 0 || x > 0) && (v0 <= 0 || v0 > 1 || x <= 1))); })); // a believable slip: the same sign, and at most 1 when the right answer is
+    for (var i = 0; i < cands.length; i++) if (okAns(a, cands[i]) === false) return cands[i];
+    return null;
+  }
+  function checkable(p) {
+    var a = p.a;
+    if (!a || p.unit || (a.form && a.form !== 'int' && a.form !== 'frac' && a.form !== 'simplest')) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bclassmate\b/i.test(txt(p.q))) return false;
+    if (a.t === 'num' || a.t === 'expr') return okAns(a, ML.answerValue(a)) === true;
+    if (a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    return true;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || ['mc', 'tf', 'num'].indexOf(p.a.t) < 0) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= 300 && !/<(table|svg|img|canvas|ol|ul)\b|\$\$|\\begin\{/i.test(p.q);
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), shown, good;
+    if (a.t === 'mc') {
+      var k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+      shown = a.choices[k]; good = a.choices[a.v];
+    } else {
+      good = ML.answerShow(a);
+      var w = right ? null : wrongFor(R, a);
+      if (!right && w === null) return null;
+      shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
+      if (!shown || /undefined|NaN/.test(shown)) return null;
+    }
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var out = { q: '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q + '</li><li>' + p2.q + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + (p.steps || [''])[0]].concat((p.steps || []).slice(1), ['Question 2: ' + (p2.steps || [''])[0]], (p2.steps || []).slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), mode = ctx && ctx.mode;
+      if (!p || !p.a || !ML.check || !ML.answerShow || !R.chance(share(id, base, ctx))) return p;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check', 'check');
+      if (pairable(p, true)) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = null;
+      try { out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base); } catch (e) { out = null; }
+      return out || p;
+    };
+    fn._forms = true;
+    fn._base = base; // the topic's own generator (for tests)
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

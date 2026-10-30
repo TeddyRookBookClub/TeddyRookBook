@@ -518,14 +518,14 @@
 
   G('physsci.first-law-inertia', function (R, ctx) {
     function coast() {
-      var v = R.pick([8, 11, 15, 17, 20, 25]), when = R.pick(['an hour', 'a day', 'a week', 'a year']), d = R.pick(['away from the Sun', 'toward a distant star', 'in a straight line']);
+      var v = R.pick([6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22, 25, 30]), when = R.pick(['an hour', 'a day', 'a week', 'a month', 'a year', 'ten years']), d = R.pick(['away from the Sun', 'toward a distant star', 'in a straight line', 'out of the solar system']);
       return pr('A space probe far from any planet or star coasts ' + d + ' at ' + MQ(v, 'km/s') + ' with its engines off. Ignoring tiny pulls from distant objects, what is its speed ' + when + ' later?', num(v, 0), [
         'Far from planets and stars there is almost no friction, air or gravity, so the net force is about zero.',
         'By the first law, zero net force means the velocity does not change: still ' + MQ(v, 'km/s') + '.'
       ], 'What would change its speed?', { unit: 'km/s', vk: 'same' });
     }
     function concept() {
-      var obj = R.pick(['hockey puck', 'curling stone', 'toy car', 'skateboard']);
+      var obj = R.pick(['hockey puck', 'curling stone', 'toy car', 'skateboard', 'wooden block', 'shuffleboard disk', 'roller skate']);
       var K = R.pick([
         ['A ' + obj + ' slides across a floor and slows to a stop. Why does it stop?', 'Friction from the floor pushes against its motion.', ['The force from the push runs out.', 'Its inertia gets used up.', 'Moving things naturally stop when nothing pushes them.']],
         ['A ' + obj + ' glides on very smooth ice after the push ends. What happens to it?', 'It keeps going at nearly the same speed in a straight line.', ['It slows down right away because no force pushes it.', 'It speeds up for a moment, then stops.', 'It curves to the side.']],
@@ -547,7 +547,13 @@
         ['An object at rest with zero net force stays at rest.', true],
         ['A rolling ball stops because its force of motion runs out.', false],
         ['A heavier object has more inertia than a lighter one.', true],
-        ['A spaceship coasting in deep space needs its engines on to keep moving.', false]
+        ['A spaceship coasting in deep space needs its engines on to keep moving.', false],
+        ['An object moving in a straight line at a steady speed can have zero net force on it.', true],
+        ['A car turning a corner at a steady speed has zero net force on it.', false],
+        ['Inertia depends on an object\'s mass.', true],
+        ['A seat belt works by giving you inertia during a sudden stop.', false],
+        ['A hockey puck on ice slows down because friction and air push against it.', true],
+        ['Objects in space have no inertia.', false]
       ]);
       return pr('True or false: ' + K[0].charAt(0).toLowerCase() + K[0].slice(1), tf(K[1]), [
         'First law: with zero net force, an object keeps the velocity it has, at rest or moving.',
@@ -555,7 +561,7 @@
       ], 'Does motion need a force, or does a change in motion need a force?', { vk: 'concept' });
     }
     function inertia() {
-      var a = R.pick([[2, 'cat'], [5, 'bag of rice'], [8, 'bowling ball'], [15, 'suitcase'], [40, 'child'], [70, 'adult']]), b = R.pick([[0.4, 'soccer ball'], [1, 'textbook'], [3, 'cat'], [25, 'dog'], [120, 'motorbike'], [1500, 'car']]);
+      var a = R.pick([[2, 'cat'], [5, 'bag of rice'], [8, 'bowling ball'], [15, 'suitcase'], [40, 'child'], [70, 'adult'], [0.06, 'tennis ball'], [12, 'watermelon'], [30, 'dog'], [250, 'piano']]), b = R.pick([[0.4, 'soccer ball'], [1, 'textbook'], [3, 'cat'], [25, 'dog'], [120, 'motorbike'], [1500, 'car'], [0.15, 'baseball'], [9, 'bicycle'], [500, 'horse'], [60, 'refrigerator']]);
       if (a[0] === b[0]) b = [a[0] * 3, 'crate'];
       var big = a[0] > b[0] ? a : b, small = a[0] > b[0] ? b : a;
       return pr('Which is harder to start moving or to stop: a ' + N(a[0]) + ' kg ' + a[1] + ' or a ' + N(b[0]) + ' kg ' + b[1] + '?', mc('The ' + N(big[0]) + ' kg ' + big[1], ['The ' + N(small[0]) + ' kg ' + small[1], 'Both are equally hard', 'It depends only on how fast they move']), [
@@ -563,7 +569,7 @@
         'More mass means more inertia: the ' + big[1] + '.'
       ], 'Compare the masses.', { vk: 'inertia' });
     }
-    return lv(R, ctx, [concept, truefalse, coast], [concept, truefalse, coast, inertia], [concept, coast, inertia, truefalse]);
+    return lv(R, ctx, [concept, truefalse, coast, inertia], [concept, truefalse, coast, inertia], [concept, coast, inertia, truefalse]);
   });
 
   G('physsci.second-law-intro', function (R, ctx) {
@@ -617,23 +623,23 @@
     return lv(R, ctx, [findA, findF], [findA, findF, findM, withFriction, concept], [findM, withFriction, ratio, concept]);
   });
 
-  var PLANETS = [['the Moon', 1.6], ['Mars', 3.7], ['Jupiter (at its cloud tops)', 24.8], ['Venus', 8.9], ['Mercury', 3.7]];
+  var PLANETS = [['the Moon', 1.6], ['Mars', 3.7], ['Jupiter (at its cloud tops)', 24.8], ['Venus', 8.9], ['Mercury', 3.7], ['Saturn (at its cloud tops)', 10.4], ['Neptune (at its cloud tops)', 11.2], ['Uranus (at its cloud tops)', 8.9]];
   G('physsci.mass-weight', function (R, ctx) {
     function wE() {
-      var m = R.pick([2, 5, 10, 20, 25, 30, 40, 45, 50, 60, 65, 70, 80, 0.5, 1.5]), what = m < 5 ? R.pick(['bag of flour', 'melon', 'textbook']) : m < 35 ? R.pick(['dog', 'suitcase', 'bag of cement']) : R.pick(['student', 'astronaut', 'teacher']);
+      var m = R.pick([0.5, 1, 1.5, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 90]), what = m < 5 ? R.pick(['bag of flour', 'melon', 'textbook']) : m < 35 ? R.pick(['dog', 'suitcase', 'bag of cement']) : R.pick(['student', 'astronaut', 'teacher']);
       return pr('What is the weight on Earth of ' + aQ(m, 'kg') + ' ' + what + '? Use ' + M('g = 9.8\\,\\mathrm{N/kg}') + '.', num(m * 9.8), [
         M('W = m\\,g = ' + Q(m, 'kg') + ' \\times 9.8\\,\\mathrm{N/kg} = ' + Q(m * 9.8, 'N')) + '.'
       ], 'Weight = mass × 9.8 N/kg.', { unit: 'N', vk: 'W' });
     }
     function mFromW() {
-      var m = R.pick([2, 5, 10, 15, 20, 30, 40, 50, 60, 75]), W = fix(m * 9.8);
-      return pr('A crate weighs ' + MQ(W, 'N') + ' on Earth. What is its mass? Use ' + M('g = 9.8\\,\\mathrm{N/kg}') + '.', num(m), [
+      var m = R.pick([1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60, 75, 80, 100]), W = fix(m * 9.8), thing = R.pick(['A crate', 'A suitcase', 'A bag of soil', 'A box of books', 'A sack of potatoes', 'A backpack']);
+      return pr(thing + ' weighs ' + MQ(W, 'N') + ' on Earth. What is its mass? Use ' + M('g = 9.8\\,\\mathrm{N/kg}') + '.', num(m), [
         'Rearrange ' + M('W = m\\,g') + ' to ' + M('m = \\dfrac{W}{g}') + '.',
         M('m = \\dfrac{' + Q(W, 'N') + '}{9.8\\,\\mathrm{N/kg}} = ' + Q(m, 'kg')) + '.'
       ], 'Divide the weight by g.', { unit: 'kg', vk: 'm' });
     }
     function planet() {
-      var p = R.pick(PLANETS), m = R.pick([10, 20, 40, 50, 60, 70, 80, 90, 100, 120]), askM = R.chance(0.35);
+      var p = R.pick(PLANETS), m = R.pick([5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 75, 80, 90, 100, 120, 150, 200]), askM = R.chance(0.35);
       if (askM) return pr('An astronaut has a mass of ' + MQ(m, 'kg') + ' on Earth. What is her mass on ' + p[0] + '?', num(m, 0), [
         'Mass is the amount of matter in her body. Traveling does not change it.',
         'Her mass is still ' + MQ(m, 'kg') + '. Only her weight changes.'
@@ -644,10 +650,13 @@
       ], 'Use that place\'s g, not 9.8.', { unit: 'N', vk: 'Wp' });
     }
     function concept() {
-      var m = R.int(40, 90);
+      var m = R.int(30, 95);
       var K = R.pick([
         ['Which of these is a weight?', Q(m * 9.8, 'N'), [Q(m, 'kg'), Q(m, 'm'), Q(m, 'kg/m^3')]],
         ['An astronaut flies from Earth to the Moon. What happens to her mass and her weight?', 'Her mass stays the same; her weight gets smaller.', ['Both get smaller.', 'Her mass gets smaller; her weight stays the same.', 'Both stay the same.']],
+        ['Which of these is a mass?', Q(m, 'kg'), [Q(m * 9.8, 'N'), Q(m, 'N/kg'), Q(m, 'm/s')]],
+        ['Which tool measures weight (a force)?', 'A spring scale that reads in newtons', ['A ruler', 'A thermometer', 'A measuring cup']],
+        ['Where would a ' + m + ' kg astronaut weigh the most?', 'On Jupiter', ['On the Moon', 'On Mars', 'Her weight is the same everywhere']],
         ['What does a weight measure?', 'The pull of gravity on an object', ['The amount of matter in an object', 'How much space an object takes up', 'How fast an object falls']],
         ['A bathroom scale shows ' + m + ' kg. What is actually being pushed on the scale?', 'A force of about ' + N(m * 9.8) + ' N (the person\'s weight)', ['A force of ' + m + ' kg', 'A mass of ' + N(m * 9.8) + ' N', 'No force; scales measure mass directly']]
       ]);
@@ -657,7 +666,7 @@
         'Answer: ' + (isMath ? M(K[1]) : K[1])
       ], 'Kilograms measure mass; newtons measure force.', { vk: 'concept' });
     }
-    return lv(R, ctx, [wE, wE, concept], [wE, mFromW, planet, concept], [mFromW, planet, concept]);
+    return lv(R, ctx, [wE, wE, concept, mFromW], [wE, mFromW, planet, concept], [mFromW, planet, concept, wE]);
   });
 
   G('physsci.friction-intro', function (R, ctx) {
@@ -712,6 +721,10 @@
     function pairF() {
       var C = R.pick([
         ['A truck hits a fly. The truck pushes on the fly with ' , 'How hard does the fly push on the truck?', [0.5, 1, 2, 3]],
+          ['A soccer player kicks a ball with ', 'How hard does the ball push on the player\'s foot?', [100, 200, 400, 600, 800]],
+          ['A tennis racket hits a ball with ', 'How hard does the ball push on the racket?', [150, 250, 400, 500]],
+          ['You push a heavy box with ', 'How hard does the box push on you?', [50, 80, 120, 200, 250]],
+          ['A tugboat pushes a ship with ', 'How hard does the ship push on the tugboat?', [20000, 30000, 50000]],
         ['A skater pushes on a wall with ', 'How hard does the wall push on the skater?', [40, 60, 90, 120, 150]],
         ['A heavy bowling ball hits a pin with ', 'How hard does the pin push on the ball?', [200, 300, 450, 600]],
         ['A hammer hits a nail with ', 'How hard does the nail push on the hammer?', [500, 800, 1200, 1500]],
@@ -724,7 +737,7 @@
       ], 'Third-law pairs are equal in size.', { unit: 'N', vk: 'pair' });
     }
     function skaters() {
-      var m1 = R.int(40, 80), m2 = R.int(25, m1 - 5), F = 10 * R.int(6, 20);
+      var m1 = R.int(40, 90), m2 = R.int(25, m1 - 5), F = 10 * R.int(4, 25);
       return pr('' + cap(aQ(m1, 'kg')) + ' skater and ' + aQ(m2, 'kg') + ' skater stand on ice and push each other apart. The bigger skater pushes the smaller one with ' + MQ(F, 'N') + '. What force does the smaller skater exert on the bigger one?', num(F, 0), [
         'The two pushes are a third-law pair, so they are equal in size and opposite in direction: ' + MQ(F, 'N') + '.',
         'The smaller skater moves away faster only because the same force does more to a smaller mass.'
@@ -1001,7 +1014,7 @@
   });
 
   G('physsci.kinetic-energy', function (R, ctx) {
-    var OBJ = [['ball', [1, 2, 4, 6]], ['cart', [2, 4, 5, 10, 20]], ['bicycle and rider', [60, 70, 80, 90]], ['car', [800, 1000, 1200, 1500]], ['runner', [50, 60, 70, 80]], ['bowling ball', [4, 6, 8]]];
+    var OBJ = [['ball', [0.5, 1, 2, 4, 6]], ['cart', [2, 3, 4, 5, 8, 10, 20]], ['bicycle and rider', [60, 70, 75, 80, 90]], ['car', [800, 900, 1000, 1200, 1400, 1500]], ['runner', [45, 50, 55, 60, 65, 70, 80]], ['bowling ball', [4, 5, 6, 7, 8]], ['skateboarder', [40, 50, 60]], ['wagon', [10, 15, 20, 25]], ['horse', [400, 500, 600]]];
     function ke() {
       var o = R.pick(OBJ), m = R.pick(o[1]), v = m >= 800 ? R.pick([10, 15, 20, 25, 30]) : m >= 50 ? R.int(2, 10) : R.int(2, 12), E = m * v * v / 2;
       return pr('Find the kinetic energy of ' + aQ(m, 'kg') + ' ' + o[0] + ' moving at ' + MQ(v, 'm/s') + '.', num(E), [
@@ -1010,35 +1023,35 @@
       ], 'KE = ½ m v². Square the speed before multiplying.', { unit: 'J', vk: 'KE' });
     }
     function ratio() {
-      var k = R.pick([2, 3, 4, 0.5]), E = R.pick([50, 100, 120, 200, 400, 500, 1000]), E2 = E * k * k, how = k === 2 ? 'doubles' : k === 3 ? 'triples' : k === 4 ? 'becomes four times as fast' : 'is cut in half';
+      var k = R.pick([2, 3, 4, 0.5]), E = R.pick([20, 40, 50, 60, 80, 100, 120, 150, 200, 240, 300, 400, 500, 600, 800, 1000, 1200, 2000]), E2 = E * k * k, how = k === 2 ? 'doubles' : k === 3 ? 'triples' : k === 4 ? 'becomes four times as fast' : 'is cut in half';
       return pr('A skateboarder has ' + MQ(E, 'J') + ' of kinetic energy. If her speed ' + how + ', what is her kinetic energy?', num(E2), [
         'KE depends on the speed squared, so multiply the energy by ' + M((k === 0.5 ? '\\left(\\tfrac{1}{2}\\right)' : k) + '^2 = ' + (k === 0.5 ? '\\tfrac{1}{4}' : k * k)) + '.',
         M(N(E) + ' \\times ' + (k === 0.5 ? '\\tfrac{1}{4}' : k * k) + ' = ' + Q(E2, 'J')) + '.'
       ], 'Speed is squared in the formula.', { unit: 'J', vk: 'ratio' });
     }
     function findV() {
-      var m = R.pick([2, 4, 5, 10, 50, 100]), v = R.int(2, 10), E = m * v * v / 2;
+      var m = R.pick([2, 4, 5, 6, 8, 10, 20, 40, 50, 60, 80, 100]), v = R.int(2, 12), E = m * v * v / 2;
       return pr('' + cap(aQ(m, 'kg')) + ' object has ' + MQ(E, 'J') + ' of kinetic energy. How fast is it moving?', num(v), [
         M(N(E) + ' = \\tfrac{1}{2} \\times ' + N(m) + ' \\times v^2') + ', so ' + M(N(E) + ' = ' + (m === 2 ? '' : N(m / 2) + '\\,') + 'v^2') + '.',
         M('v^2 = ' + (m === 2 ? N(v * v) : N(E) + ' \\div ' + N(m / 2) + ' = ' + N(v * v))) + ', so ' + M('v = \\sqrt{' + N(v * v) + '} = ' + Q(v, 'm/s')) + '.'
       ], 'Undo the ½ m first, then take the square root.', { unit: 'm/s', vk: 'v' });
     }
     function findM() {
-      var v = R.int(2, 10), m = R.pick([2, 3, 4, 5, 6, 8, 10, 20]), E = m * v * v / 2;
+      var v = R.int(2, 12), m = R.pick([1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 40, 50]), E = m * v * v / 2;
       return pr('A cart moving at ' + MQ(v, 'm/s') + ' has ' + MQ(E, 'J') + ' of kinetic energy. What is its mass?', num(m), [
         M('\\tfrac{1}{2}\\,m\\,v^2 = \\tfrac{1}{2} \\times m \\times ' + N(v * v) + ' = ' + N(v * v / 2) + '\\,m') + '.',
         M(N(v * v / 2) + '\\,m = ' + N(E)) + ', so ' + M('m = ' + Q(m, 'kg')) + '.'
       ], 'Work out ½ v² first, then divide.', { unit: 'kg', vk: 'm' });
     }
     function compare() {
-      var mA = R.pick([1000, 1200, 1500]), vA = R.pick([10, 12, 15]), mB = mA / 2, vB = vA * 2, EA = mA * vA * vA / 2, EB = mB * vB * vB / 2;
+      var mA = R.pick([800, 1000, 1200, 1400, 1500, 1600, 2000]), vA = R.pick([5, 8, 10, 12, 15]), mB = mA / 2, vB = vA * 2, EA = mA * vA * vA / 2, EB = mB * vB * vB / 2;
       return pr('Car A has a mass of ' + MQ(mA, 'kg') + ' and moves at ' + MQ(vA, 'm/s') + '. Car B has half the mass and moves twice as fast. Which has more kinetic energy?', mcAll('Car B', ['Car A', 'They have the same kinetic energy']), [
         'Car A: ' + M('\\tfrac{1}{2} \\times ' + N(mA) + ' \\times ' + N(vA) + '^2 = ' + Q(EA, 'J')) + '.',
         'Car B: ' + M('\\tfrac{1}{2} \\times ' + N(mB) + ' \\times ' + N(vB) + '^2 = ' + Q(EB, 'J')) + '.',
         'Halving the mass halves KE, but doubling the speed multiplies it by 4, so B has twice as much.'
       ], 'Which matters more: the mass or the speed?', { vk: 'cmpKE' });
     }
-    return lv(R, ctx, [ke, ke, ratio], [ke, ratio, findV, findM], [ratio, findV, findM, compare]);
+    return lv(R, ctx, [ke, ke, ratio, findM], [ke, ratio, findV, findM], [ratio, findV, findM, compare]);
   });
 
   G('physsci.potential-energy', function (R, ctx) {
@@ -1340,16 +1353,16 @@
 
   G('physsci.heat-transfer', function (R, ctx) {
     var SC = [
-      ['A metal spoon left in a cup of hot cocoa gets hot at the handle.', 'Conduction'], ['You warm your hands by holding a mug of tea.', 'Conduction'], ['An egg cooks on a hot frying pan.', 'Conduction'], ['Your feet feel cold on a tile floor.', 'Conduction'], ['An ice cube melts in your hand.', 'Conduction'],
-      ['Warm air rises from a heater and cool air sinks, warming the whole room.', 'Convection'], ['Water at the bottom of a pot rises as it heats while cooler water sinks.', 'Convection'], ['A sea breeze blows in from the cool ocean toward warm land.', 'Convection'], ['Hot air from a hair dryer warms your hair.', 'Convection'],
-      ['Sunlight warms your face on a cold day.', 'Radiation'], ['You feel the warmth of a campfire from several meters away.', 'Radiation'], ['The Sun\'s energy reaches Earth through empty space.', 'Radiation'], ['A red-hot stove burner warms your hand held to the side of it.', 'Radiation'], ['A thermal camera "sees" people by the infrared light they give off.', 'Radiation']
+      ['A metal spoon left in a cup of hot cocoa gets hot at the handle.', 'Conduction'], ['You warm your hands by holding a mug of tea.', 'Conduction'], ['An egg cooks on a hot frying pan.', 'Conduction'], ['Your feet feel cold on a tile floor.', 'Conduction'], ['An ice cube melts in your hand.', 'Conduction'], ['A pot handle gets hot when the pot sits on the stove.', 'Conduction'], ['A hot water bottle warms your cold feet.', 'Conduction'], ['Your hand gets cold holding a snowball.', 'Conduction'], ['A grilled cheese sandwich browns where it touches the pan.', 'Conduction'],
+      ['Warm air rises from a heater and cool air sinks, warming the whole room.', 'Convection'], ['Water at the bottom of a pot rises as it heats while cooler water sinks.', 'Convection'], ['A sea breeze blows in from the cool ocean toward warm land.', 'Convection'], ['Hot air from a hair dryer warms your hair.', 'Convection'], ['Hot air inside a hot-air balloon makes it rise.', 'Convection'], ['Warm water from a heater spreads through a fish tank as it circulates.', 'Convection'], ['Smoke from a campfire rises up into the sky.', 'Convection'], ['A fan blows warm air from a heater across the room.', 'Convection'],
+      ['Sunlight warms your face on a cold day.', 'Radiation'], ['You feel the warmth of a campfire from several meters away.', 'Radiation'], ['The Sun\'s energy reaches Earth through empty space.', 'Radiation'], ['A red-hot stove burner warms your hand held to the side of it.', 'Radiation'], ['A thermal camera "sees" people by the infrared light they give off.', 'Radiation'], ['A heat lamp keeps food warm at a counter from above.', 'Radiation'], ['A dark car seat gets hot sitting in sunlight.', 'Radiation'], ['You feel warmth on your face from a glowing toaster\'s coils, without touching them.', 'Radiation'], ['The Sun\'s warmth melts snow on a sunny day.', 'Radiation']
     ];
     function which() { var s = R.pick(SC); return pr(s[0] + ' Which kind of heat transfer is this mainly?', { t: 'mc', choices: ['Conduction', 'Convection', 'Radiation'], v: ['Conduction', 'Convection', 'Radiation'].indexOf(s[1]), keep: true }, [
       'Conduction: through touching materials. Convection: carried by a moving liquid or gas. Radiation: as light, even across empty space.',
       'Here: ' + s[1].toLowerCase() + '.'
     ], 'Touching, moving fluid, or light?', { vk: 'concept' }); }
     function dir() {
-      var hot = R.pick([['a cup of hot soup', 60, 90], ['a warm loaf of bread', 40, 70], ['a hot pan', 80, 150], ['your warm hand', 33, 36]]), cold = R.pick([['the air in the room', 18, 24], ['a cold kitchen counter', 10, 18], ['an ice pack', -5, 0], ['a cold window', 2, 10]]);
+      var hot = R.pick([['a cup of hot soup', 60, 90], ['a warm loaf of bread', 40, 70], ['a hot pan', 80, 150], ['your warm hand', 33, 36], ['a mug of tea', 55, 85], ['a baked potato', 70, 95], ['a warm puppy', 37, 39]]), cold = R.pick([['the air in the room', 18, 24], ['a cold kitchen counter', 10, 18], ['an ice pack', -5, 0], ['a cold window', 2, 10], ['a glass of ice water', 1, 5], ['a snowbank', -10, -1]]);
       var a = R.int(hot[1], hot[2]), b = R.int(cold[1], cold[2]), A = hot[0], B = cold[0];
       return pr(cap(A) + ' at ' + MQ(a, '°C') + ' touches ' + B + ' at ' + MQ(b, '°C') + '. Which way does heat flow?', mcAll('From ' + A + ' to ' + B, ['From ' + B + ' to ' + A, 'Cold flows from ' + B + ' into ' + A, 'No heat flows until they touch for a long time']), [
         'Heat always flows from the hotter object to the colder one.',
@@ -1363,11 +1376,15 @@
         ['How does a thermos with a vacuum between its walls keep soup hot?', 'The vacuum stops conduction and convection, since there are no particles to carry the heat.', ['The vacuum stops radiation.', 'The vacuum makes cold.', 'The vacuum adds heat to the soup.']],
         ['Why is the warmest air in a room near the ceiling?', 'Warm air is less dense, so convection carries it upward.', ['Heat always moves upward by conduction.', 'The ceiling gives off radiation.', 'Cold air rises.']],
         ['How does the Sun\'s energy reach Earth?', 'By radiation, which needs no material to travel through.', ['By conduction through space.', 'By convection currents in space.', 'It doesn\'t; Earth makes its own heat.']],
+        ['Which material makes the best insulator for a cooler?', 'Foam with lots of trapped air', ['Copper', 'Aluminum foil alone', 'Steel']],
+        ['In which direction does heat flow on its own?', 'From a warmer object to a cooler one', ['From a cooler object to a warmer one', 'Only upward', 'It never flows on its own']],
+        ['Why is a radiator usually placed low on a wall?', 'Warm air from it rises, setting up convection that spreads heat through the room.', ['Cold air rises past it.', 'Radiation only travels downward.', 'Conduction works only near the floor.']],
+        ['Which kind of heat transfer can happen in empty space?', 'Radiation', ['Conduction', 'Convection', 'None of them']],
         ['A winter coat keeps you warm mainly by…', 'trapping still air, a poor conductor, so less heat leaves your body.', ['adding heat to your body.', 'keeping the cold from flowing in.', 'reflecting the Sun\'s radiation into you.']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['Heat flows from hot to cold by conduction (touching), convection (moving fluid) or radiation (light).', 'Answer: ' + K[1]], 'Think about which way heat flows and how it travels.', { vk: 'concept' });
     }
-    return lv(R, ctx, [which, which, dir], [which, dir, concept], [which, concept, concept, dir]);
+    return lv(R, ctx, [which, which, dir, dir], [which, dir, concept], [which, concept, concept, dir]);
   });
 
   G('physsci.phase-changes', function (R, ctx) {
@@ -1420,40 +1437,40 @@
   // ---------- g4_waves.js ----------
   // ===================== Unit 4: Waves, Sound and Light =====================
   G('physsci.wave-parts', function (R, ctx) {
-    var SRC = ['A buoy bobs up and down', 'A guitar string vibrates', 'A child\'s toy boat rocks', 'A float on a fishing line bobs', 'A speaker cone moves back and forth'];
+    var SRC = ['A buoy bobs up and down', 'A guitar string vibrates', 'A child\'s toy boat rocks', 'A float on a fishing line bobs', 'A speaker cone moves back and forth', 'A rubber duck bobs on the bath water', 'A cork bobs on a pond', 'A tuning fork prong moves back and forth', 'A leaf on a stream bobs up and down', 'A jump rope swings up and down'];
     function period() {
-      var f = R.pick([2, 4, 5, 8, 10, 20, 25, 50, 0.5, 0.25]);
+      var f = R.pick([2, 4, 5, 8, 10, 16, 20, 25, 40, 50, 100, 200, 250, 500, 0.5, 0.25, 0.2, 0.1, 1.25, 2.5]);
       return pr('Waves pass a point with a frequency of ' + MQ(f, 'Hz') + '. What is their period?', num(1 / f), [
         'The period is the time for one wave: ' + M('T = \\dfrac{1}{f}') + '.',
         M('T = \\dfrac{1}{' + N(f) + '} = ' + Q(fix(1 / f), 's')) + '.'
       ], 'Period = 1 ÷ frequency.', { unit: 's', vk: 'T' });
     }
     function freq() {
-      var T = R.pick([0.5, 0.25, 0.2, 0.1, 0.05, 2, 4, 5]);
+      var T = R.pick([0.5, 0.25, 0.2, 0.1, 0.05, 0.04, 0.02, 0.01, 0.125, 0.4, 0.8, 1.25, 2, 2.5, 4, 5, 8, 10]);
       return pr('Each wave takes ' + MQ(T, 's') + ' to pass a point. What is the frequency?', num(1 / T), [
         M('f = \\dfrac{1}{T} = \\dfrac{1}{' + N(T) + '} = ' + Q(fix(1 / T), 'Hz')) + '.'
       ], 'Frequency = 1 ÷ period.', { unit: 'Hz', vk: 'f' });
     }
     function count() {
-      var f = R.pick([2, 3, 4, 5, 6, 8, 10]), t = R.pick([2, 3, 4, 5, 10]), n = f * t, s = R.pick(SRC);
+      var f = R.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15]), t = R.pick([2, 3, 4, 5, 6, 8, 10, 20]), n = f * t, s = R.pick(SRC);
       return pr(s + ' ' + n + ' times in ' + MQ(t, 's') + '. What is the frequency?', num(f), [
         'Frequency is the number of cycles per second.',
         M(N(n) + ' \\div ' + Q(t, 's') + ' = ' + Q(f, 'Hz')) + '.'
       ], 'How many cycles each second?', { unit: 'Hz', vk: 'count' });
     }
     function crests() {
-      var lam = R.pick([0.5, 0.8, 1.2, 1.5, 2, 2.5, 3, 4]), x0 = R.pick([0.5, 1, 1.5, 2]), k = R.int(3, 4), xs = []; for (var i = 0; i < k; i++) xs.push(fix(x0 + i * lam));
+      var lam = R.pick([0.4, 0.5, 0.6, 0.8, 0.9, 1.2, 1.4, 1.5, 1.6, 2, 2.4, 2.5, 3, 3.5, 4]), x0 = R.pick([0.2, 0.5, 1, 1.5, 2, 2.5, 3]), k = R.int(3, 4), xs = []; for (var i = 0; i < k; i++) xs.push(fix(x0 + i * lam));
       return pr('A snapshot of a wave on a rope shows crests at ' + U.list(xs.map(function (x) { return MQ(x, 'm'); })) + ' along the rope. What is the wavelength?', num(lam), [
         'Wavelength is the distance from one crest to the next.',
         M(N(xs[1]) + ' - ' + N(xs[0]) + ' = ' + Q(lam, 'm')) + ', and every other pair gives the same.'
       ], 'Crest to the next crest.', { unit: 'm', vk: 'lam' });
     }
     function half() {
-      if (R.coin()) { var d = R.pick([0.6, 1, 1.4, 2, 3, 0.8]); return pr('On a water wave, the horizontal distance from a crest to the very next trough is ' + MQ(d, 'm') + '. What is the wavelength?', num(fix(2 * d)), [
+      if (R.coin()) { var d = R.pick([0.3, 0.4, 0.6, 0.7, 0.8, 1, 1.2, 1.4, 1.5, 2, 2.5, 3, 4]); return pr('On a water wave, the horizontal distance from a crest to the very next trough is ' + MQ(d, 'm') + '. What is the wavelength?', num(fix(2 * d)), [
         'From a crest to the next trough is only half a wave.',
         'A full wavelength (crest to crest) is ' + M('2 \\times ' + Q(d, 'm') + ' = ' + Q(fix(2 * d), 'm')) + '.'
       ], 'Is crest-to-trough a whole wave?', { unit: 'm', vk: 'half' }); }
-      var h = R.pick([20, 30, 40, 50, 60, 1.2, 0.8]), u = h > 10 ? 'cm' : 'm';
+      var h = R.pick([12, 16, 20, 24, 30, 36, 40, 50, 60, 70, 80, 90, 1.2, 0.8, 1.6, 2, 3, 4]), u = h > 10 ? 'cm' : 'm';
       return pr('The vertical distance from the top of a crest to the bottom of a trough is ' + MQ(h, u) + '. What is the amplitude?', num(h / 2), [
         'Amplitude is measured from the rest position to a crest, not crest to trough.',
         'Crest to trough is twice the amplitude: ' + M(Q(h, u) + ' \\div 2 = ' + Q(fix(h / 2), u)) + '.'
@@ -1464,15 +1481,19 @@
         ['A duck floats on a pond as waves pass. What does the duck do?', 'It bobs up and down, staying in about the same place.', ['It is carried along with the waves.', 'It stays perfectly still.', 'It moves sideways faster than the waves.']],
         ['What does a wave carry from place to place?', 'Energy', ['The water or rope itself', 'Air', 'Nothing']],
         ['A wave\'s frequency doubles. What happens to its period?', 'It is cut in half.', ['It doubles.', 'It stays the same.', 'It becomes four times as long.']],
+        ['A wave\'s period gets longer. What happens to its frequency?', 'It gets smaller.', ['It gets bigger.', 'It stays the same.', 'It doubles.']],
+        ['What is the amplitude of a wave?', 'The distance from the rest position to a crest', ['The distance from crest to trough', 'The distance from one crest to the next', 'The time for one wave']],
+        ['What is the wavelength of a wave?', 'The distance from one crest to the next crest', ['The height of a crest', 'The time for one wave to pass', 'The number of waves each second']],
+        ['A frequency of 5 Hz means…', '5 waves pass a point each second.', ['each wave takes 5 seconds.', 'the waves are 5 meters long.', 'the waves are 5 meters tall.']],
         ['Which wave carries the most energy?', 'One with a large amplitude', ['One with a small amplitude', 'One with a long period and tiny amplitude', 'Amplitude has nothing to do with energy']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['A wave carries energy, not the medium: each bit of the medium moves back and forth around one spot. Bigger amplitude means more energy, and T = 1/f.', 'Answer: ' + K[1]], 'The wave shape travels; the medium stays put.', { vk: 'concept' });
     }
-    return lv(R, ctx, [period, count, crests, concept], [period, freq, count, crests, half, concept], [freq, crests, half, concept]);
+    return lv(R, ctx, [period, count, crests, concept], [period, freq, count, crests, half, concept], [freq, crests, half, count, period, concept]);
   });
 
   G('physsci.wave-speed', function (R, ctx) {
-    var KIND = [['Waves on a rope', [0.5, 1, 2, 4, 5], [0.5, 1, 1.5, 2, 3]], ['Ocean waves', [0.1, 0.2, 0.25, 0.5], [8, 10, 12, 20, 30]], ['Ripples on a pond', [2, 4, 5, 10], [0.02, 0.05, 0.1, 0.2]], ['Waves on a slinky', [1, 2, 3, 4], [0.25, 0.5, 0.75, 1]]];
+    var KIND = [['Waves on a rope', [0.5, 1, 1.5, 2, 3, 4, 5], [0.5, 0.8, 1, 1.2, 1.5, 2, 2.5, 3]], ['Ocean waves', [0.1, 0.125, 0.2, 0.25, 0.5], [6, 8, 10, 12, 15, 16, 20, 24, 30, 40]], ['Ripples on a pond', [2, 3, 4, 5, 6, 8, 10], [0.02, 0.03, 0.04, 0.05, 0.06, 0.08, 0.1, 0.2]], ['Waves on a slinky', [0.5, 1, 1.5, 2, 3, 4], [0.2, 0.25, 0.4, 0.5, 0.6, 0.75, 1, 1.2]], ['Waves on a stretched string', [10, 20, 25, 40, 50, 100], [0.2, 0.4, 0.5, 0.8, 1, 1.5]], ['Water waves in a wave tank', [1, 2, 4, 5, 8], [0.05, 0.08, 0.1, 0.12, 0.15, 0.2]]];
     function v() {
       var k = R.pick(KIND), f = R.pick(k[1]), lam = R.pick(k[2]);
       return pr(k[0] + ' have a frequency of ' + MQ(f, 'Hz') + ' and a wavelength of ' + MQ(lam, 'm') + '. How fast do they travel?', num(fix(f * lam)), [
@@ -1480,21 +1501,21 @@
       ], 'Speed = frequency × wavelength.', { unit: 'm/s', vk: 'v' });
     }
     function lam() {
-      var f = R.pick([86, 171.5, 343, 686, 1372, 245, 490, 98]), L0 = 343 / f;
+      var f = R.pick([86, 98, 110, 131, 147, 165, 171.5, 196, 220, 245, 262, 294, 330, 343, 392, 440, 490, 523, 686, 880, 1000, 1372, 2000, 3430]), L0 = 343 / f;
       return pr('Sound travels at ' + MQ(343, 'm/s') + ' in air. What is the wavelength of a ' + MQ(f, 'Hz') + ' sound?', num(sig(L0, 3)), [
         'Rearrange ' + M('v = f\\,\\lambda') + ' to ' + M('\\lambda = \\dfrac{v}{f}') + '.',
         M('\\lambda = \\dfrac{343}{' + N(f) + '} = ' + Q(sig(L0, 3), 'm')) + '.'
       ], 'Wavelength = speed ÷ frequency.', { unit: 'm', vk: 'lam' });
     }
     function f() {
-      var vv = R.pick([2, 4, 6, 8, 10, 12, 20]), L0 = R.pick([0.5, 1, 2, 4]), ff = vv / L0;
+      var vv = R.pick([2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 16, 20, 24, 30, 40]), L0 = R.pick([0.2, 0.25, 0.4, 0.5, 0.8, 1, 1.25, 2, 2.5, 4, 5]), ff = vv / L0;
       return pr('Waves travel along a string at ' + MQ(vv, 'm/s') + ' with a wavelength of ' + MQ(L0, 'm') + '. What is their frequency?', num(fix(ff)), [
         'Rearrange ' + M('v = f\\,\\lambda') + ' to ' + M('f = \\dfrac{v}{\\lambda}') + '.',
         M('f = \\dfrac{' + N(vv) + '}{' + N(L0) + '} = ' + Q(fix(ff), 'Hz')) + '.'
       ], 'Frequency = speed ÷ wavelength.', { unit: 'Hz', vk: 'f' });
     }
     function change() {
-      var vv = R.pick([4, 6, 8, 12]), f1 = R.pick([1, 2, 4]), k = R.pick([2, 3, 4]), L1 = vv / f1, L2 = vv / (f1 * k);
+      var vv = R.pick([3, 4, 5, 6, 8, 10, 12, 15, 16, 20, 24]), f1 = R.pick([1, 2, 4, 5]), k = R.pick([2, 3, 4]), L1 = vv / f1, L2 = vv / (f1 * k);
       return pr('Waves on a rope travel at ' + MQ(vv, 'm/s') + '. At ' + MQ(f1, 'Hz') + ' their wavelength is ' + MQ(fix(L1), 'm') + '. You shake the rope ' + (k === 2 ? 'twice' : k === 3 ? 'three times' : 'four times') + ' as fast, without changing the rope. What is the new wavelength?', num(sig(L2, 3)), [
         'The rope sets the speed, so ' + MQ(vv, 'm/s') + ' stays the same.',
         'New frequency: ' + MQ(f1 * k, 'Hz') + '. ' + M('\\lambda = \\dfrac{' + N(vv) + '}{' + N(f1 * k) + '} ' + (Number.isInteger(fix(L2 * 100)) ? '= ' : '\\approx ') + Q(sig(L2, 3), 'm')) + '.',
@@ -1502,10 +1523,10 @@
       ], 'Which stays the same: the speed or the wavelength?', { unit: 'm', vk: 'chg' });
     }
     function radio() {
-      var MHz = R.pick([75, 100, 150, 300, 600, 1500]), L0 = 300 / MHz;
+      var MHz = R.pick([60, 75, 88, 90, 96, 100, 102, 105, 120, 150, 200, 240, 300, 400, 600, 750, 1000, 1500, 2400]), L0 = 300 / MHz;
       return pr('A radio station broadcasts at ' + MQ(MHz, 'MHz') + ' (' + M(N(MHz) + ' \\times 10^{6}\\,\\mathrm{Hz}') + '). Radio waves travel at ' + M('3.0 \\times 10^{8}\\,\\mathrm{m/s}') + '. What is the wavelength?', num(fix(L0)), [
         M('\\lambda = \\dfrac{v}{f} = \\dfrac{3.0 \\times 10^{8}}{' + N(MHz) + ' \\times 10^{6}}') + '.',
-        M('= \\dfrac{300}{' + N(MHz) + '} = ' + Q(fix(L0), 'm')) + '.'
+        M('= \\dfrac{300}{' + N(MHz) + '} ' + (Number(L0.toPrecision(3)) === fix(L0) ? '= ' : '\\approx ') + Q(Number(L0.toPrecision(3)), 'm')) + '.'
       ], 'λ = v ÷ f; cancel the powers of ten.', { unit: 'm', vk: 'radio' });
     }
     function concept() {
@@ -1513,32 +1534,43 @@
       var K = R.pick([
         ['Two sounds travel through the same air: one at ' + a + ' Hz and one at ' + b + ' Hz. Which arrives first from the same distance?', 'They arrive at the same time.', ['The ' + b + ' Hz sound', 'The ' + a + ' Hz sound', 'It depends on how loud they are']],
         ['You shake a rope faster, without changing the rope. What happens to the waves?', 'Their wavelength gets shorter; their speed stays the same.', ['They travel faster.', 'Their wavelength gets longer.', 'They travel slower.']],
+        ['A wave\'s frequency is doubled in the same medium. What happens to its wavelength?', 'It is cut in half.', ['It doubles.', 'It stays the same.', 'It becomes four times as long.']],
+        ['Waves on a rope have a wavelength of 2 m and a frequency of 3 Hz. Which tells you their speed?', 'Multiply: 2 m × 3 Hz = 6 m/s', ['Divide: 2 m ÷ 3 Hz', 'Add: 2 + 3 = 5 m/s', 'Subtract: 3 − 2 = 1 m/s']],
+        ['In which of these does sound travel fastest?', 'Steel', ['Water', 'Air', 'A vacuum']],
         ['What mainly decides how fast a wave travels?', 'The medium it travels through', ['Its frequency', 'Its wavelength', 'Its amplitude']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['The medium sets a wave\'s speed. Changing the frequency changes the wavelength so that ' + M('f\\,\\lambda') + ' stays equal to that speed.', 'Answer: ' + K[1]], 'What belongs to the medium?', { vk: 'concept' });
     }
-    return lv(R, ctx, [v, v, f], [v, lam, f, change, concept], [lam, change, radio, concept]);
+    return lv(R, ctx, [v, v, f, lam], [v, lam, f, change, concept], [lam, change, radio, f, v, concept]);
   });
 
   G('physsci.wave-types', function (R, ctx) {
     var EXS = [
       ['Sound traveling through air', 'L'], ['A push-and-pull pulse sent along a stretched slinky', 'L'], ['An ultrasound wave in the body', 'L'], ['An earthquake P wave', 'L'], ['Sound traveling through water', 'L'],
-      ['A wave made by shaking a rope up and down', 'T'], ['Light', 'T'], ['A "stadium wave" in a crowd', 'T'], ['A wiggle on a plucked guitar string', 'T'], ['An earthquake S wave', 'T'], ['A side-to-side wiggle sent along a slinky', 'T']
+      ['A dolphin\'s click traveling through seawater', 'L'], ['Sound traveling along a steel railroad track', 'L'], ['The hum of a tuning fork reaching your ear', 'L'], ['A whale\'s call traveling through the ocean', 'L'], ['A bat\'s high-pitched call traveling through the air', 'L'], ['The boom of a drum reaching the back of a hall', 'L'],
+      ['A wave made by shaking a rope up and down', 'T'], ['Light', 'T'], ['A "stadium wave" in a crowd', 'T'], ['A wiggle on a plucked guitar string', 'T'], ['An earthquake S wave', 'T'], ['A side-to-side wiggle sent along a slinky', 'T'], ['Radio waves from a broadcast tower', 'T'], ['Microwaves inside a microwave oven', 'T'], ['A flick sent down a jump rope', 'T'], ['A wiggle on a bowed violin string', 'T'], ['X-rays passing through a suitcase at an airport', 'T'], ['Sunlight reaching Earth through space', 'T']
     ];
     function classify() { var e = R.pick(EXS); var right = e[1] === 'L' ? 'Longitudinal' : 'Transverse'; return pr('What kind of wave is this? ' + e[0] + '.', { t: 'mc', choices: ['Transverse', 'Longitudinal'], v: e[1] === 'L' ? 1 : 0, keep: true }, [
       'Transverse: the medium moves across the direction of travel. Longitudinal: it moves back and forth along it.',
       e[1] === 'L' ? 'Here the medium is squeezed and stretched along the direction of travel: longitudinal.' : 'Here the medium moves across the direction of travel: transverse.'
     ], 'Which way does the medium move compared with the wave?', { vk: 'concept' }); }
+    function pickOne() { // pick the one wave of the other kind from four examples
+      var wantL = R.coin(), right = R.pick(EXS.filter(function (e) { return (e[1] === 'L') === wantL; })), wr = R.sample(EXS.filter(function (e) { return (e[1] === 'L') !== wantL; }), 3);
+      return pr('Which of these is a ' + (wantL ? 'longitudinal' : 'transverse') + ' wave?', mc(right[0], wr.map(function (e) { return e[0]; })), [
+        wantL ? 'In a longitudinal wave the medium is squeezed and stretched along the direction of travel, as in sound.' : 'In a transverse wave the medium moves across the direction of travel, as on a shaken rope, or the wave is light or another electromagnetic wave.',
+        'Answer: ' + right[0] + '. The others are ' + (wantL ? 'transverse' : 'longitudinal') + '.'
+      ], 'Which way does the medium move compared with the wave?', { vk: 'concept' });
+    }
     function motion() {
-      var dir = R.pick(['east', 'north', 'to the right']), long = R.coin();
-      var opp = { east: 'north-south', north: 'east-west', 'to the right': 'up and down' }[dir], along = { east: 'east-west', north: 'north-south', 'to the right': 'left and right' }[dir];
+      var dir = R.pick(['east', 'north', 'to the right', 'west', 'south', 'to the left']), long = R.coin();
+      var opp = { east: 'north-south', west: 'north-south', north: 'east-west', south: 'east-west', 'to the right': 'up and down', 'to the left': 'up and down' }[dir], along = { east: 'east-west', west: 'east-west', north: 'north-south', south: 'north-south', 'to the right': 'left and right', 'to the left': 'left and right' }[dir];
       return pr('A ' + (long ? 'longitudinal' : 'transverse') + ' wave travels ' + dir + ' through a medium. Which way do the bits of the medium move?', mc('Back and forth ' + (long ? along : opp), ['Back and forth ' + (long ? opp : along), 'Steadily ' + dir + ', along with the wave', 'They don\'t move at all']), [
         long ? 'In a longitudinal wave the medium moves back and forth along the direction of travel.' : 'In a transverse wave the medium moves across the direction of travel.',
         'The bits of the medium don\'t travel with the wave; they move back and forth around their own spots.'
       ], 'Along the path, or across it?', { vk: 'concept' });
     }
     function lamQ() {
-      var d = R.pick([0.4, 0.5, 0.8, 1, 1.2, 1.5, 2]), halfQ = R.coin();
+      var d = R.pick([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2, 2.5, 3]), halfQ = R.coin();
       if (halfQ) return pr('In a sound wave, the distance from the center of a compression to the center of the next rarefaction is ' + MQ(d, 'm') + '. What is the wavelength?', num(fix(2 * d)), [
         'Compression to the next rarefaction is half a wave; compression to the next compression is a whole wave.',
         M('\\lambda = 2 \\times ' + Q(d, 'm') + ' = ' + Q(fix(2 * d), 'm')) + '.'
@@ -1552,11 +1584,16 @@
       var K = R.pick([
         ['In a sound wave, what are compressions?', 'Places where the air is squeezed together', ['The highest points of the wave', 'Places where the air is spread out', 'Places with no air at all']],
         ['In a sound wave, what are rarefactions?', 'Places where the air is spread out', ['Places where the air is squeezed together', 'The lowest points of the wave', 'Places where the sound is loudest']],
+        ['A slinky is pushed and pulled along its length. Which way does each coil move?', 'Back and forth along the length of the slinky', ['Up and down, across the slinky', 'All the way to the far end with the wave', 'It doesn\'t move at all']],
+        ['A transverse wave has crests and troughs. What does a longitudinal wave have instead?', 'Compressions and rarefactions', ['Crests and troughs too', 'Only one big pulse', 'Nothing that repeats']],
+        ['Which of these can travel through empty space?', 'Light, a transverse electromagnetic wave', ['Sound', 'An earthquake P wave', 'A pulse on a slinky']],
+        ['Which earthquake waves reach a faraway seismometer first?', 'P waves, which are longitudinal', ['S waves, which are transverse', 'Both kinds arrive together', 'Neither; they never arrive']],
+        ['A crowd does a "stadium wave." Each person stands up and sits down while the wave moves around the stadium. What kind of wave is it like?', 'Transverse: people move up and down while the wave moves sideways.', ['Longitudinal: people move along the wave\'s direction.', 'It is not like a wave at all.', 'Longitudinal, because people stay in their seats.']],
         ['Earthquake S waves can\'t pass through Earth\'s outer core. What does that tell scientists?', 'The outer core is liquid, since S waves (transverse) can\'t travel through liquids.', ['The outer core is empty space.', 'The outer core is the hottest layer.', 'The outer core is solid iron.']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['Longitudinal waves are squeezes (compressions) and stretches (rarefactions) along the direction of travel; transverse waves have crests and troughs across it.', 'Answer: ' + K[1]], 'Picture a slinky being pushed and pulled.', { vk: 'concept' });
     }
-    return lv(R, ctx, [classify, classify, motion], [classify, motion, lamQ, concept], [motion, lamQ, concept, classify]);
+    return lv(R, ctx, [classify, pickOne, motion, concept], [classify, pickOne, motion, lamQ, concept], [motion, lamQ, lamQ, pickOne, concept, classify]);
   });
 
   G('physsci.sound', function (R, ctx) {
@@ -1596,7 +1633,7 @@
   });
 
   G('physsci.echoes', function (R, ctx) {
-    var MED = [['air', 343, 'You shout toward a cliff', 'the cliff'], ['air', 343, 'A bat chirps at a moth', 'the moth'], ['seawater', 1500, 'A ship\'s sonar sends a pulse straight down', 'the seabed'], ['seawater', 1500, 'A dolphin clicks toward a fish', 'the fish'], ['air', 343, 'You clap in front of a tall building', 'the building']];
+    var MED = [['air', 343, 'You shout toward a cliff', 'the cliff'], ['air', 343, 'A bat chirps at a moth', 'the moth'], ['seawater', 1500, 'A ship\'s sonar sends a pulse straight down', 'the seabed'], ['seawater', 1500, 'A dolphin clicks toward a fish', 'the fish'], ['air', 343, 'You clap in front of a tall building', 'the building'], ['air', 343, 'A hiker yells across a canyon', 'the far canyon wall'], ['seawater', 1500, 'A fishing boat\'s fish finder pings straight down', 'the seabed'], ['air', 343, 'You whistle toward a hillside', 'the hillside']];
     function dist() {
       var m = R.pick(MED), t = m[1] === 343 ? (m[3] === 'the moth' ? R.int(4, 30) / 1000 : R.int(2, 30) / 10) : (m[3] === 'the fish' ? R.int(2, 20) / 100 : R.int(2, 16) / 2);
       var d = m[1] * t / 2;
@@ -1606,14 +1643,14 @@
       ], 'The sound goes there and back: halve the total path.', { unit: 'm', vk: 'd' });
     }
     function time() {
-      var water = R.coin(), v = water ? 1500 : 343, d = water ? R.pick([150, 300, 750, 1500, 3000]) : R.pick([34.3, 68.6, 171.5, 343, 686]), t = 2 * d / v;
+      var water = R.coin(), v = water ? 1500 : 343, d = water ? R.pick([75, 150, 225, 300, 375, 450, 600, 750, 900, 1200, 1500, 2250, 3000, 4500]) : R.pick([17.15, 34.3, 51.45, 68.6, 85.75, 102.9, 137.2, 171.5, 257.25, 343, 514.5, 686]), t = 2 * d / v;
       return pr((water ? 'The seabed is ' : 'A cliff is ') + MQ(d, 'm') + ' away. Sound travels at ' + MQ(v, 'm/s') + (water ? ' in seawater' : ' in air') + '. How long after sending a sound will the echo return?', num(fix(t)), [
         'The sound must go there and back: ' + M('2 \\times ' + N(d) + ' = ' + Q(fix(2 * d), 'm')) + '.',
         M('t = \\dfrac{' + N(fix(2 * d)) + '}{' + N(v) + '} = ' + Q(fix(t), 's')) + '.'
       ], 'Double the distance, then divide by the speed.', { unit: 's', vk: 't' });
     }
     function speed() {
-      var v = R.pick([340, 343, 1480, 1500]), d = R.pick([50, 100, 150, 200, 300, 600]), t = fix(2 * d / v);
+      var v = R.pick([340, 343, 346, 1480, 1500]), d = R.pick([40, 50, 60, 75, 80, 100, 120, 150, 200, 250, 300, 400, 600]), t = fix(2 * d / v);
       t = sig(t, 3); var vv = 2 * d / t;
       return pr('A student stands ' + MQ(d, 'm') + ' from a wall' + (v > 1000 ? ' in a long water tank' : '') + ' and times an echo: ' + MQ(t, 's') + ' from clap to echo. What speed of sound does this give?', num(sig(vv, 3), 0.02), [
         'The sound traveled to the wall and back: ' + M('2 \\times ' + N(d) + ' = ' + Q(2 * d, 'm')) + '.',
@@ -1624,16 +1661,19 @@
       var K = R.pick([
         ['Why do we divide by 2 when finding a distance from an echo?', 'The sound travels to the object and back.', ['Sound slows to half speed after it reflects.', 'Only half the sound comes back.', 'Echoes always travel half as far.']],
         ['A ship\'s sonar hears the echo from the seabed later than before. What does that mean?', 'The water under the ship is deeper.', ['The water is shallower.', 'The sound got louder.', 'The sonar\'s frequency went up.']],
+        ['Sound travels faster in seawater than in air. For the same echo time, the object in water is…', 'farther away.', ['closer.', 'the same distance away.', 'impossible to find.']],
+        ['Why does an echo sound fainter than the original shout?', 'Some of the sound is absorbed or spread out along the way.', ['Echoes travel slower.', 'The echo has a different speed of sound.', 'Sound gets used up by reflecting.']],
+        ['A soft, bumpy surface like heavy curtains makes echoes…', 'weaker, because it absorbs more sound.', ['stronger, because it reflects more sound.', 'faster.', 'higher in pitch.']],
         ['Many bats find insects in the dark mainly by…', 'listening to echoes of their own high-pitched calls.', ['seeing them with very sensitive eyes.', 'smelling them from far away.', 'feeling the air move.']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['An echo is reflected sound. Its round trip takes time ' + M('t') + ', so the one-way distance is ' + M('d = \\dfrac{v\\,t}{2}') + '.', 'Answer: ' + K[1]], 'There and back.', { vk: 'concept' });
     }
-    return lv(R, ctx, [dist, dist, concept], [dist, time, concept], [dist, time, speed, concept]);
+    return lv(R, ctx, [dist, dist, time, concept], [dist, time, speed, concept], [dist, time, speed, concept]);
   });
 
   G('physsci.wave-behavior', function (R, ctx) {
     function pct() {
-      var a = R.int(1, 8) * 5, b = R.int(1, 6) * 5, roles = R.shuffle(['reflects', 'absorbs', 'transmits']), mat = R.pick(['A sheet of tinted glass', 'A frosted window', 'A thin curtain', 'A pair of sunglasses lenses', 'A sheet of colored plastic']);
+      var a = R.int(1, 12) * 5, b = R.int(1, 7) * 5, roles = R.shuffle(['reflects', 'absorbs', 'transmits']), mat = R.pick(['A sheet of tinted glass', 'A frosted window', 'A thin curtain', 'A pair of sunglasses lenses', 'A sheet of colored plastic', 'A pane of stained glass', 'A paper lampshade', 'A window blind', 'A shower curtain']);
       var c = 100 - a - b;
       var nm2 = { reflects: 'reflected', absorbs: 'absorbed', transmits: 'transmitted' };
       return pr(mat + ' ' + roles[0] + ' ' + a + '% of the light that hits it and ' + roles[1] + ' ' + b + '%. What percent of the light does it ' + roles[2].replace(/s$/, '') + '?', { t: 'num', v: String(c), pct: true, rtol: 0.001 }, [
@@ -1649,6 +1689,10 @@
         ['Thick foam panels in a recording studio mainly…', 'absorb sound.', ['reflect sound.', 'transmit sound.', 'make sound louder.']],
         ['An X-ray image shows bones as light shapes because bones…', 'absorb more X-rays than soft tissue does.', ['reflect X-rays back to the machine.', 'transmit more X-rays than soft tissue.', 'make their own X-rays.']],
         ['Why can you see a sheet of paper in a lit room?', 'It reflects light, scattered in all directions, into your eyes.', ['It makes its own light.', 'It absorbs all the light.', 'Only shiny things reflect light, so you see its shadow.']],
+        ['A mirror forms an image because it mostly…', 'reflects light in one neat direction.', ['absorbs light.', 'transmits light.', 'makes its own light.']],
+        ['A green leaf looks green because it…', 'reflects mostly green light and absorbs other colors.', ['absorbs only green light.', 'makes green light.', 'transmits all colors equally.']],
+        ['Sunglasses cut glare mainly by…', 'absorbing much of the light before it reaches your eyes.', ['making the light faster.', 'adding more light.', 'turning light into sound.']],
+        ['Why is it hard to hear a friend through a thick brick wall?', 'The wall reflects and absorbs most of the sound, transmitting little.', ['Bricks speed sound up too much.', 'Sound can\'t reflect.', 'Bricks make their own sound.']],
         ['A white wall looks bright because it…', 'reflects most of the light that hits it.', ['absorbs most of the light.', 'transmits most of the light.', 'glows on its own.']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['When a wave meets a material, its energy is reflected, absorbed or transmitted, in some mix.', 'Answer: ' + K[1]], 'Bounce back, taken in, or pass through?', { vk: 'concept' });
@@ -1658,11 +1702,15 @@
         ['Only shiny surfaces like mirrors reflect light.', false, 'Paper, skin and walls reflect light too, scattered in all directions; that is how you see them.'],
         ['When light hits a material, the reflected, absorbed and transmitted parts add up to all of the light.', true, 'Energy is conserved, so the three shares add to 100%.'],
         ['Sound can be reflected, absorbed and transmitted, just like light.', true, 'All waves can do all three.'],
-        ['A dark object absorbs more light than a white one.', true, 'Dark objects absorb most colors; white objects reflect most.']
+        ['A dark object absorbs more light than a white one.', true, 'Dark objects absorb most colors; white objects reflect most.'],
+        ['Light can pass through clear glass because the glass transmits most of it.', true, 'Clear materials transmit most of the light that hits them.'],
+        ['A black shirt reflects most of the sunlight that hits it.', false, 'Black absorbs most light, which is why it warms up in the sun.'],
+        ['Echoes are reflected sound.', true, 'Sound bounces off hard surfaces and comes back.'],
+        ['Soft materials such as foam and carpet reflect sound better than hard walls.', false, 'Soft, porous materials absorb more sound.']
       ]);
       return pr('True or false: ' + K[0], tf(K[1]), [K[2], K[1] ? 'True.' : 'False.'], 'Think about where the wave\'s energy goes.', { vk: 'concept' });
     }
-    return lv(R, ctx, [what, tfq, pct], [what, tfq, pct], [pct, what, tfq]);
+    return lv(R, ctx, [what, tfq, pct], [what, tfq, pct, pct], [pct, pct, what, tfq]);
   });
 
   var BANDS = ['radio waves', 'microwaves', 'infrared', 'visible light', 'ultraviolet', 'X-rays', 'gamma rays'];
@@ -1744,10 +1792,10 @@
   });
 
   G('physsci.refraction-intro', function (R, ctx) {
-    var MAT = [['air', 300000], ['water', 225000], ['glass', 200000], ['diamond', 124000]];
+    var MAT = [['air', 300000], ['water', 225000], ['glass', 200000], ['diamond', 124000], ['ice', 229000], ['cooking oil', 204000]];
     function bend() {
-      var a = R.int(0, 3), b = R.int(0, 3); while (b === a) b = R.int(0, 3);
-      var A = MAT[a], B = MAT[b], angs = [0, 0, 20, 30, 40, 50, 60].filter(function (x) { return B[1] <= A[1] || MA.sin(x * MA.PI / 180) < 0.9 * A[1] / B[1]; }), ang = R.pick(angs);
+      var a = R.int(0, MAT.length - 1), b = R.int(0, MAT.length - 1); while (b === a) b = R.int(0, MAT.length - 1);
+      var A = MAT[a], B = MAT[b], angs = [0, 0, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60].filter(function (x) { return B[1] <= A[1] || MA.sin(x * MA.PI / 180) < 0.9 * A[1] / B[1]; }), ang = R.pick(angs);
       var right = ang === 0 ? 'It does not bend; it goes straight through.' : B[1] < A[1] ? 'It bends toward the normal.' : 'It bends away from the normal.';
       return pr('Light travels from ' + A[0] + ' (about ' + MQ(A[1], 'km/s') + ') into ' + B[0] + ' (about ' + MQ(B[1], 'km/s') + '), hitting the boundary at ' + M(T.deg(ang)) + ' from the normal. What happens to its direction?', mcAll(right, ['It bends toward the normal.', 'It bends away from the normal.', 'It does not bend; it goes straight through.'].filter(function (x) { return x !== right; })), [
         ang === 0 ? 'At ' + M(T.deg(0)) + ' the light meets the boundary straight on. It changes speed but not direction.' : 'It hits at an angle, so it bends.',
@@ -1767,11 +1815,16 @@
         ['A swimming pool looks shallower than it really is. Why?', 'Light from the bottom bends as it leaves the water, so the bottom appears raised.', ['Water absorbs the light from the bottom.', 'The pool\'s walls reflect the light.', 'Light can\'t travel through water.']],
         ['Which kind of lens brings parallel light rays together at a point?', 'A converging lens, thicker in the middle', ['A diverging lens, thinner in the middle', 'A flat sheet of glass', 'Any mirror']],
         ['What causes light to bend when it passes from air into glass at an angle?', 'It changes speed at the boundary.', ['Glass attracts light.', 'Its frequency changes.', 'Some of the light is absorbed.']],
+        ['Light goes from air into water at an angle. What happens to its speed?', 'It slows down.', ['It speeds up.', 'It stays the same.', 'It stops completely.']],
+        ['A magnifying glass makes small print look bigger. What kind of lens is it?', 'A converging lens, thicker in the middle', ['A diverging lens, thinner in the middle', 'A flat piece of glass', 'A mirror']],
+        ['A spoon in a glass of water seems to bend at the surface. Is the spoon really bent?', 'No; the light from it bends as it leaves the water.', ['Yes; water softens metal.', 'Yes; the glass squeezes it.', 'No; the spoon is too far away to see.']],
+        ['Light passes from glass back out into air at an angle. Which way does it bend?', 'Away from the normal, because it speeds up', ['Toward the normal, because it speeds up', 'It doesn\'t bend at all', 'Toward the normal, because it slows down']],
+        ['A prism splits white light into a rainbow of colors. What causes this?', 'Each color bends by a slightly different amount.', ['The prism paints the light.', 'The prism adds colors to the light.', 'Only red light can pass through glass.']],
         ['A laser beam hits a block of glass straight on (along the normal). What happens?', 'It slows down but keeps going in the same direction.', ['It bends toward the normal.', 'It bends away from the normal.', 'It stops.']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['Light bends when it crosses a boundary at an angle and changes speed: toward the normal when it slows down, away when it speeds up. Straight on, it does not bend. Lenses use this bending to focus light.', 'Answer: ' + K[1]], 'Refraction comes from a change in speed at an angle.', { vk: 'concept' });
     }
-    return lv(R, ctx, [bend, concept], [bend, concept, times], [bend, times, concept]);
+    return lv(R, ctx, [bend, bend, concept], [bend, concept, times], [bend, times, concept]);
   });
 
   G('physsci.radiation-energy', function (R, ctx) {
@@ -1785,7 +1838,7 @@
       ], 'Higher frequency, more energy per photon.', { vk: 'cmp' });
     }
     function scale() {
-      var E = R.pick([1, 1.5, 2, 2.5, 3]), k = R.pick([2, 3, 4, 5, 10]), half = R.chance(0.25);
+      var E = R.pick([0.5, 1, 1.2, 1.5, 1.8, 2, 2.2, 2.5, 3, 3.5, 4]), k = R.pick([2, 3, 4, 5, 6, 8, 10]), half = R.chance(0.25);
       if (half) return pr('A photon of frequency ' + M('f') + ' carries ' + MQ(E * k, 'eV') + ' of energy. How much energy does a photon of frequency ' + M('\\dfrac{f}{' + k + '}') + ' carry?', num(E), [
         'Photon energy is proportional to frequency.',
         M('\\dfrac{1}{' + k + '}') + ' of the frequency gives ' + M('\\dfrac{1}{' + k + '}') + ' of the energy: ' + M(N(E * k) + ' \\div ' + k + ' = ' + Q(E, 'eV')) + '.'
@@ -1800,11 +1853,16 @@
         ['A very bright red lamp and a dim ultraviolet lamp shine on a sample of molecules that one UV photon can break apart. Which breaks the molecules?', 'The dim ultraviolet lamp', ['The bright red lamp', 'Both equally', 'Neither']],
         ['Making a light brighter (without changing its color) changes…', 'the number of photons, not the energy of each photon.', ['the energy of each photon.', 'the frequency of the light.', 'the color of each photon.']],
         ['Why can ultraviolet light damage skin cells when even very bright visible light doesn\'t?', 'Each UV photon carries enough energy to break some molecules in cells; a visible photon doesn\'t.', ['UV light is brighter than visible light.', 'There are more UV photons in sunlight.', 'UV light is a kind of heat.']],
-        ['Which kind of light has the least energy per photon?', 'Radio waves', ['Gamma rays', 'X-rays', 'Ultraviolet']]
+        ['Which kind of light has the least energy per photon?', 'Radio waves', ['Gamma rays', 'X-rays', 'Ultraviolet']],
+        ['Which kind of light has the most energy per photon?', 'Gamma rays', ['Radio waves', 'Microwaves', 'Visible light']],
+        ['Which visible color has the most energy per photon?', 'Violet', ['Red', 'Orange', 'Yellow']],
+        ['Which visible color has the least energy per photon?', 'Red', ['Violet', 'Blue', 'Green']],
+        ['Why are X-ray technicians careful to limit how many X-rays people get?', 'Each X-ray photon carries a lot of energy and can damage cells.', ['X-rays are too dim to see.', 'X-rays make sound.', 'X-ray photons carry very little energy.']],
+        ['As the frequency of light goes up, the energy of each photon…', 'goes up.', ['goes down.', 'stays the same.', 'drops to zero.']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['A photon\'s energy depends on its frequency alone. Brightness is the number of photons. Breaking a molecule needs one photon with enough energy.', 'Answer: ' + K[1]], 'Think one photon at a time.', { vk: 'concept' });
     }
-    return lv(R, ctx, [compare, concept], [compare, scale, concept], [compare, scale, concept]);
+    return lv(R, ctx, [compare, compare, concept], [compare, scale, concept], [compare, scale, concept]);
   });
 
   G('physsci.digital-signals', function (R, ctx) {
@@ -1816,9 +1874,9 @@
       ], 'Multiply 2 by itself once for each bit.', { vk: 'lev' });
     }
     function bits() {
-      var want = R.pick([4, 8, 16, 32, 64, 100, 200, 256, 1000]), n = MA.ceil(MA.log2(want) - 1e-9);
+      var want = R.pick([3, 4, 5, 6, 8, 10, 12, 16, 20, 26, 30, 32, 50, 60, 64, 100, 128, 150, 200, 256, 300, 500, 512, 1000, 2000]), n = MA.ceil(MA.log2(want) - 1e-9);
       return pr('What is the smallest number of bits that can give each of ' + N(want) + ' different values its own code?', num(n, 0), [
-        'Powers of 2: ' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].slice(0, n + 1).map(function (k) { return M('2^{' + k + '} = ' + MA.pow(2, k)); }).join(', ') + '.',
+        'Powers of 2: ' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].slice(0, n + 1).map(function (k) { return M('2^{' + k + '} = ' + MA.pow(2, k)); }).join(', ') + '.',
         M('2^{' + n + '} = ' + MA.pow(2, n)) + ' is the first one at least ' + N(want) + ', so ' + n + ' bits.'
       ], 'Find the first power of 2 that is big enough.', { vk: 'bits' });
     }
@@ -1836,11 +1894,16 @@
         ['Which of these signals is digital?', 'A text message sent as 0s and 1s', ['A voice on an old AM radio', 'The groove of a vinyl record', 'The height of liquid in a glass thermometer']],
         ['Which of these is analog?', 'The groove of a vinyl record, which copies the sound wave\'s shape', ['A song stored as numbers on a phone', 'A photo stored as 0s and 1s', 'A message in Morse code dots and dashes']],
         ['Why can a digital signal be copied many times without getting worse?', 'Each bit only has to be read as 0 or 1, so small errors are cleaned up every time.', ['Digital signals have no noise at all.', 'Digital signals are electronic.', 'Digital signals travel faster than analog ones.']],
+        ['A thermometer with a liquid that rises smoothly is an example of…', 'an analog display', ['a digital display', 'a binary code', 'a bit']],
+        ['How many values can one bit have?', 'Two: 0 or 1', ['One', 'Ten: 0 to 9', 'Any value at all']],
+        ['A song is stored on a phone. How is it stored?', 'As numbers made of 0s and 1s (digital)', ['As a wavy groove (analog)', 'As tiny sound waves trapped inside', 'As magnets that hum']],
+        ['Adding one more bit to a code does what to the number of different values it can send?', 'Doubles it', ['Adds one', 'Halves it', 'Leaves it the same']],
+        ['Why do many signals today travel as digital data?', 'They are easy to copy, store and send without losing quality.', ['They are always louder.', 'They need no energy.', 'They can only travel by wire.']],
         ['What does "digital" mean for a signal?', 'It is sent as separate, countable values, such as 0s and 1s.', ['It is sent using electricity.', 'It is sent by radio.', 'It is sent by a computer.']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['Digital signals use a few distinct values (bits). Small noise can\'t change which value a bit is, so the message can be read and copied exactly. Analog signals vary smoothly, so noise becomes part of them.', 'Answer: ' + K[1]], 'Digital means separate values, not "electronic".', { vk: 'concept' });
     }
-    return lv(R, ctx, [levels, concept, read], [levels, read, concept], [bits, read, concept, levels]);
+    return lv(R, ctx, [levels, concept, read, read], [levels, read, bits, concept], [bits, read, concept, levels]);
   });
 
   // ---------- g5_elec.js ----------
@@ -1848,7 +1911,7 @@
   var ATOMS = [['hydrogen', 1], ['helium', 2], ['lithium', 3], ['carbon', 6], ['nitrogen', 7], ['oxygen', 8], ['fluorine', 9], ['sodium', 11], ['magnesium', 12], ['aluminum', 13], ['sulfur', 16], ['chlorine', 17], ['calcium', 20], ['iron', 26]];
   function sgn(n) { return n > 0 ? '+' + n : String(n); }
   G('physsci.charges-in-atoms', function (R, ctx) {
-    var IONS = [['sodium', 11, 'loses', 1], ['magnesium', 12, 'loses', 2], ['aluminum', 13, 'loses', 3], ['calcium', 20, 'loses', 2], ['lithium', 3, 'loses', 1], ['potassium', 19, 'loses', 1], ['iron', 26, 'loses', 2], ['iron', 26, 'loses', 3], ['oxygen', 8, 'gains', 2], ['chlorine', 17, 'gains', 1], ['fluorine', 9, 'gains', 1], ['sulfur', 16, 'gains', 2], ['nitrogen', 7, 'gains', 3]];
+    var IONS = [['sodium', 11, 'loses', 1], ['magnesium', 12, 'loses', 2], ['aluminum', 13, 'loses', 3], ['calcium', 20, 'loses', 2], ['lithium', 3, 'loses', 1], ['potassium', 19, 'loses', 1], ['iron', 26, 'loses', 2], ['iron', 26, 'loses', 3], ['beryllium', 4, 'loses', 2], ['barium', 56, 'loses', 2], ['zinc', 30, 'loses', 2], ['copper', 29, 'loses', 2], ['silver', 47, 'loses', 1], ['strontium', 38, 'loses', 2], ['oxygen', 8, 'gains', 2], ['bromine', 35, 'gains', 1], ['iodine', 53, 'gains', 1], ['chlorine', 17, 'gains', 1], ['fluorine', 9, 'gains', 1], ['sulfur', 16, 'gains', 2], ['nitrogen', 7, 'gains', 3]];
     function net() {
       var a = R.pick(IONS), gain = a[2] === 'gains', k = a[3], e = gain ? a[1] + k : a[1] - k;
       return pr((/^[aeiou]/.test(a[0]) ? 'An ' : 'A ') + a[0] + ' atom has ' + a[1] + ' protons. It ' + a[2] + ' ' + k + ' electron' + (k > 1 ? 's' : '') + '. What is its net charge, in units of the electron\'s charge? (Use a sign: positive or negative.)', num(a[1] - e, 0), [
@@ -1865,7 +1928,7 @@
       ], 'More electrons means negative.', { vk: 'sign' });
     }
     function cons() {
-      var n = R.pick([2, 3, 5, 8, 10, 20, 50]), unit = R.pick(['million', 'billion']), A = R.pick([['A balloon', 'your hair'], ['A plastic comb', 'a wool sweater'], ['A glass rod', 'a silk cloth'], ['A sock', 'a towel in the dryer']]), aGains = R.coin();
+      var n = R.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30, 40, 50, 75, 100]), unit = R.pick(['million', 'billion']), A = R.pick([['A balloon', 'your hair'], ['A plastic comb', 'a wool sweater'], ['A glass rod', 'a silk cloth'], ['A sock', 'a towel in the dryer'], ['A plastic ruler', 'a cotton cloth'], ['A rubber rod', 'a piece of fur'], ['A plastic straw', 'a paper napkin']]), aGains = R.coin();
       var askPos = R.coin();
       return pr(A[0] + ' is rubbed on ' + A[1] + ' and ' + (aGains ? 'gains' : 'loses') + ' ' + n + ' ' + unit + ' electrons. How many electrons did ' + A[1] + ' ' + (aGains ? 'lose' : 'gain') + ', in ' + unit + 's?', num(n, 0), [
         'Charge is conserved: electrons only move from one object to the other.',
@@ -1877,25 +1940,30 @@
         ['How does a neutral object usually become positively charged?', 'It loses electrons.', ['It gains protons.', 'It gains electrons.', 'It loses protons.']],
         ['Rubbing gives a plastic rod a negative charge. What happened?', 'Electrons moved onto the rod.', ['Protons moved off the rod.', 'Protons moved onto the rod.', 'New electrons were created.']],
         ['Why do electrons, not protons, move when objects are rubbed together?', 'Outer electrons are loosely held; protons are locked in the nucleus.', ['Protons are too small to move.', 'Electrons are heavier than protons.', 'Protons have no charge.']],
+        ['Which particle in an atom has a negative charge?', 'The electron', ['The proton', 'The neutron', 'The nucleus']],
+        ['Which particle in an atom has no charge?', 'The neutron', ['The proton', 'The electron', 'All of them have charge']],
+        ['Where are an atom\'s protons?', 'In the nucleus, at the center', ['Moving around outside the nucleus', 'Spread evenly through the atom', 'Outside the atom']],
+        ['An atom gains two electrons. Its charge becomes…', 'negative.', ['positive.', 'neutral.', 'zero, then positive.']],
+        ['How does a proton\'s charge compare with an electron\'s?', 'Same size, opposite sign', ['A proton\'s is much bigger', 'An electron\'s is much bigger', 'Both are positive']],
         ['A neutral atom has…', 'equal numbers of protons and electrons.', ['no protons or electrons.', 'more protons than electrons.', 'only neutrons.']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['In everyday charging, electrons move; protons stay in their nuclei. Gaining electrons makes an object negative; losing them makes it positive.', 'Answer: ' + K[1]], 'Only electrons move.', { vk: 'concept' });
     }
-    return lv(R, ctx, [counts, net, concept], [net, cons, concept], [net, cons, concept, counts]);
+    return lv(R, ctx, [counts, net, concept, cons], [net, cons, concept, counts], [net, cons, concept, counts]);
   });
 
   G('physsci.static-forces', function (R, ctx) {
     function pair() {
       var P0 = R.pick([['positive', 'positive'], ['negative', 'negative'], ['positive', 'negative'], ['negative', 'positive'], ['negative', 'neutral'], ['positive', 'neutral']]);
       var right = P0[1] === 'neutral' ? 'They attract.' : P0[0] === P0[1] ? 'They repel.' : 'They attract.';
-      var objs = R.pick([['bead', 'bead'], ['balloon', 'balloon'], ['rod', 'ball'], ['comb', 'scrap of paper']]);
+      var objs = R.pick([['bead', 'bead'], ['balloon', 'balloon'], ['rod', 'ball'], ['comb', 'scrap of paper'], ['plastic straw', 'plastic straw'], ['glass rod', 'foil ball'], ['balloon', 'ping-pong ball'], ['plastic ruler', 'bit of thread'], ['pith ball', 'pith ball'], ['sphere', 'sphere']]);
       return pr('A ' + P0[0] + 'ly charged ' + objs[0] + ' is brought near a ' + (P0[1] === 'neutral' ? 'neutral (uncharged)' : P0[1] + 'ly charged') + ' ' + objs[1] + '. What happens?', { t: 'mc', choices: ['They attract.', 'They repel.', 'Nothing: there is no force.'], v: right === 'They attract.' ? 0 : 1, keep: true }, [
         P0[1] === 'neutral' ? 'The charged ' + objs[0] + ' shifts the charges in the neutral ' + objs[1] + ': the near side becomes slightly opposite in charge, and nearer charges pull harder.' : P0[0] === P0[1] ? 'Like charges repel.' : 'Unlike charges attract.',
         right
       ], 'Like charges repel; unlike charges attract. A charged object also attracts a neutral one.', { vk: 'pair' });
     }
     function scale() {
-      var F = R.pick([0.2, 0.4, 0.6, 0.9, 1.2, 1.8, 3.6, 7.2]), kind = R.pick(['d2', 'd3', 'dh', 'q2', 'q3', 'both']), k = 1, txt = [], st = [];
+      var F = R.pick([0.2, 0.3, 0.4, 0.6, 0.8, 0.9, 1.2, 1.5, 1.8, 2.4, 2.7, 3.6, 4.5, 5.4, 7.2, 9]), kind = R.pick(['d2', 'd3', 'dh', 'q2', 'q3', 'both']), k = 1, txt = [], st = [];
       if (kind === 'd2' || kind === 'both') { k /= 4; txt.push('the distance between them is doubled'); st.push('Distance × 2: force ÷ 4.'); }
       if (kind === 'd3') { k /= 9; txt.push('the distance between them is tripled'); st.push('Distance × 3: force ÷ 9.'); }
       if (kind === 'dh') { k *= 4; txt.push('the distance between them is cut in half'); st.push('Distance ÷ 2: force × 4.'); }
@@ -1908,33 +1976,39 @@
     function concept() {
       var K = R.pick([
         ['A balloon rubbed on hair sticks to a neutral wall. Why?', 'The balloon shifts the wall\'s charges, and the nearer, opposite charges pull harder than the farther ones push.', ['The wall has a hidden positive charge.', 'Only opposite charges attract, so the wall must be charged.', 'Air pressure pushes the balloon onto the wall.']],
+        ['Rubbing a balloon on your hair moves electrons from your hair to the balloon. What charge does the balloon get?', 'Negative, because it gains electrons', ['Positive, because it gains electrons', 'Positive, because it gains protons', 'None; rubbing can\'t charge things']],
+        ['Rubbing a balloon on your hair moves electrons onto the balloon. What charge does your hair get?', 'Positive, because it lost electrons', ['Negative, because it lost electrons', 'Positive, because it gained protons', 'It stays neutral no matter what']],
+        ['Two charged balls are moved farther apart. What happens to the force between them?', 'It gets weaker.', ['It gets stronger.', 'It stays the same.', 'It changes from a pull to a push.']],
+        ['When you rub two objects to charge them, what actually moves from one to the other?', 'Electrons', ['Protons', 'Whole atoms\' nuclei', 'Neutrons']],
+        ['Why might you feel a small shock touching a metal doorknob after walking on a carpet?', 'Charge built up on you jumps to the doorknob.', ['The doorknob is magnetic.', 'The carpet makes the doorknob hot.', 'The doorknob is plugged into the wall.']],
+        ['A charged rod is brought near a neutral bit of paper without touching it. The paper\'s total charge…', 'stays zero; its charges just shift a little.', ['becomes the same as the rod\'s.', 'becomes opposite to the rod\'s.', 'doubles.']],
         ['Two charged balls are moved closer together. What happens to the force between them?', 'It gets stronger.', ['It gets weaker.', 'It stays the same.', 'It changes from a push to a pull.']],
         ['Socks often cling together when they come out of a clothes dryer. Why?', 'Tumbling moves electrons between them, leaving them with opposite charges that attract.', ['The dryer makes them magnetic.', 'Heat makes cloth sticky.', 'They have the same charge, which attracts.']],
         ['Two balloons, both rubbed on the same sweater, hang near each other. They…', 'push apart, because they have the same kind of charge.', ['pull together, because they are both charged.', 'don\'t affect each other.', 'pull together, because they have opposite charges.']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['Like charges repel, unlike charges attract, and the force is stronger when the charges are closer. A charged object attracts a neutral one by shifting its charges.', 'Answer: ' + K[1]], 'Closer charges pull or push harder.', { vk: 'concept' });
     }
-    return lv(R, ctx, [pair, pair, concept], [pair, scale, concept], [scale, concept, pair]);
+    return lv(R, ctx, [pair, pair, concept, concept], [pair, scale, concept], [scale, scale, concept, pair]);
   });
 
   G('physsci.fields-intro', function (R, ctx) {
-    var PL = [['Earth', 9.8], ['the Moon', 1.6], ['Mars', 3.7], ['Jupiter (at its cloud tops)', 24.8]];
+    var PL = [['Earth', 9.8], ['the Moon', 1.6], ['Mars', 3.7], ['Jupiter (at its cloud tops)', 24.8], ['Venus', 8.9], ['Mercury', 3.7], ['Saturn (at its cloud tops)', 10.4], ['Neptune (at its cloud tops)', 11.2]];
     function force() {
-      var p = R.pick(PL), m = R.pick([2, 5, 10, 20, 40, 50, 100]);
+      var p = R.pick(PL), m = R.pick([1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60, 75, 80, 100]);
       return pr('The gravitational field near the surface of ' + p[0] + ' is about ' + MQ(p[1], 'N/kg') + '. What force does it exert on a ' + MQ(m, 'kg') + ' object?', num(fix(m * p[1])), [
         'A field of ' + MQ(p[1], 'N/kg') + ' puts ' + MQ(p[1], 'N') + ' on each kilogram.',
         M('F = ' + N(m) + ' \\times ' + N(p[1]) + ' = ' + Q(fix(m * p[1]), 'N')) + '.'
       ], 'Force = mass × field strength.', { unit: 'N', vk: 'gF' });
     }
     function strength() {
-      var g0 = R.pick([1.6, 3.7, 8.9, 9.8, 11.2, 24.8]), m = R.pick([2, 5, 10, 20]), F = fix(m * g0);
+      var g0 = R.pick([1.6, 3.7, 8.9, 9.8, 10.4, 11.2, 24.8]), m = R.pick([2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25]), F = fix(m * g0);
       return pr('On a distant planet, a ' + MQ(m, 'kg') + ' test mass is pulled down with ' + MQ(F, 'N') + '. What is the gravitational field strength there?', num(g0), [
         'Field strength is force per kilogram.',
         M('\\dfrac{' + Q(F, 'N') + '}{' + Q(m, 'kg') + '} = ' + Q(g0, 'N/kg')) + '.'
       ], 'Divide the force by the mass.', { unit: 'N/kg', vk: 'g' });
     }
     function efield() {
-      var q = R.pick([2, 3, 4, 5]), E = R.pick([10, 20, 50, 100, 200]);
+      var q = R.pick([2, 3, 4, 5, 6, 8]), E = R.pick([10, 20, 25, 30, 40, 50, 60, 80, 100, 150, 200, 250]);
       return pr('A small object with ' + MQ(q, 'C') + ' of charge feels an electric force of ' + MQ(q * E, 'N') + '. What is the electric field strength there, in newtons per coulomb?', num(E), [
         'Electric field strength is force per coulomb of charge.',
         M('\\dfrac{' + Q(q * E, 'N') + '}{' + Q(q, 'C') + '} = ' + Q(E, 'N/C')) + '.'
@@ -1945,30 +2019,34 @@
         ['Which of these forces can act across empty space, without touching?', 'Gravity', ['Friction', 'A push from your hand', 'The tension in a rope']],
         ['On a field-line drawing, where is the field strongest?', 'Where the lines are closest together', ['Where the lines are farthest apart', 'At the ends of the lines', 'It is the same everywhere']],
         ['What do field lines show?', 'The direction of the force at each point, and how strong it is', ['The paths objects must follow', 'Real strings connecting the objects', 'Where the objects will end up']],
+        ['A magnet pulls a paper clip from a short distance away. What carries the force across the gap?', 'The magnet\'s magnetic field', ['The air between them', 'Tiny strings', 'Gravity from the paper clip']],
+        ['A charged balloon makes your hair stand up without touching it. Which field is at work?', 'An electric field', ['A gravitational field', 'A magnetic field', 'No field: the balloon must touch']],
+        ['You move a test mass farther from a planet. What happens to the planet\'s gravitational field strength there?', 'It gets weaker.', ['It gets stronger.', 'It stays the same.', 'It changes direction.']],
+        ['Which way does Earth\'s gravitational field point near its surface?', 'Down, toward Earth\'s center', ['Up, away from Earth', 'North', 'Sideways, east to west']],
         ['Can two field lines from the same field ever cross?', 'No: at each point the force has only one direction.', ['Yes, wherever the field is strong.', 'Yes, at the poles.', 'Only in magnetic fields.']],
         ['Outside a bar magnet, which way do its field lines run?', 'From the north pole to the south pole', ['From the south pole to the north pole', 'In circles around the middle', 'Straight out of both poles and never back']],
         ['Which kind of field acts on a compass needle?', 'A magnetic field', ['A gravitational field', 'An electric field from a charged balloon', 'No field: compasses point north on their own']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['Gravity, electric and magnetic forces act at a distance through fields. Field lines map the direction of the force; crowded lines mean a strong field.', 'Answer: ' + K[1]], 'A field is a map of the force at each point.', { vk: 'concept' });
     }
-    return lv(R, ctx, [concept, force], [concept, force, strength], [force, strength, efield, concept]);
+    return lv(R, ctx, [concept, force, force], [concept, force, strength, strength], [force, strength, efield, concept]);
   });
 
   G('physsci.current-voltage', function (R, ctx) {
     function I() {
-      var a = R.pick([0.5, 1, 2, 3, 4, 5, 10]), t = R.pick([2, 4, 5, 10, 20, 30, 60]), Qc = fix(a * t);
+      var a = R.pick([0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]), t = R.pick([2, 3, 4, 5, 8, 10, 12, 15, 20, 30, 40, 60]), Qc = fix(a * t);
       return pr(MQ(Qc, 'C') + ' of charge flows through a ' + R.pick(['lamp', 'wire', 'heater', 'motor']) + ' in ' + MQ(t, 's') + '. What is the current?', num(a), [
         M('I = \\dfrac{Q}{t} = \\dfrac{' + Q(Qc, 'C') + '}{' + Q(t, 's') + '} = ' + Q(a, 'A')) + '.'
       ], 'Current = charge ÷ time.', { unit: 'A', vk: 'I' });
     }
     function Qq() {
-      var a = R.pick([0.2, 0.5, 1.5, 2, 3, 6]), t = R.pick([10, 30, 60, 120, 300]);
+      var a = R.pick([0.1, 0.2, 0.25, 0.4, 0.5, 0.8, 1, 1.5, 2, 2.5, 3, 4, 6]), t = R.pick([5, 10, 15, 20, 30, 45, 60, 90, 120, 180, 300, 600]);
       return pr('A current of ' + MQ(a, 'A') + ' flows for ' + MQ(t, 's') + '. How much charge passes?', num(fix(a * t)), [
         'Rearrange ' + M('I = \\dfrac{Q}{t}') + ': ' + M('Q = I\\,t = ' + N(a) + ' \\times ' + N(t) + ' = ' + Q(fix(a * t), 'C')) + '.'
       ], 'Charge = current × time.', { unit: 'C', vk: 'Q' });
     }
     function energy() {
-      var V = R.pick([1.5, 3, 6, 9, 12]), Qc = R.pick([2, 4, 5, 10, 20, 100]);
+      var V = R.pick([1.5, 3, 4.5, 6, 9, 12, 24]), Qc = R.pick([1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 25, 50, 100]);
       if (R.coin()) return pr('A ' + MQ(V, 'V') + ' battery pushes ' + MQ(Qc, 'C') + ' of charge around a circuit. How much energy does it give the charge?', num(fix(V * Qc)), [
         'Each coulomb gets ' + MQ(V, 'J') + ' (that is what ' + MQ(V, 'V') + ' means).',
         M(N(Qc) + ' \\times ' + N(V) + ' = ' + Q(fix(V * Qc), 'J')) + '.'
@@ -1979,7 +2057,7 @@
       ], 'Divide the energy by the charge.', { unit: 'V', vk: 'V' });
     }
     function same() {
-      var a = R.pick([0.2, 0.3, 0.5, 0.8, 1.5, 2]);
+      var a = R.pick([0.1, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.8, 1, 1.2, 1.5, 2, 2.5, 3]);
       return pr('In a simple loop with a battery and one bulb, an ammeter just before the bulb reads ' + MQ(a, 'A') + '. What does an ammeter just after the bulb read?', num(a, 0), [
         'The charge that goes into the bulb comes out of it; current is not used up.',
         'So it reads the same: ' + MQ(a, 'A') + '. What the bulb takes is energy, not charge.'
@@ -1990,6 +2068,10 @@
         ['What does a bulb take from the flowing charge?', 'Energy, which it turns into light and heat', ['The charge itself, so less current leaves it', 'Electrons, which are used up', 'Voltage, which becomes current']],
         ['What does the voltage of a battery tell you?', 'How much energy it gives each coulomb of charge', ['How much charge it holds', 'How fast the electrons move', 'How long it will last']],
         ['A current of 2 A means…', '2 coulombs of charge pass a point each second.', ['2 electrons pass each second.', '2 joules of energy per coulomb.', '2 volts of push.']],
+        ['Which instrument measures voltage?', 'A voltmeter', ['An ammeter', 'A thermometer', 'A compass']],
+        ['What is the unit of electric current?', 'The ampere (A)', ['The volt (V)', 'The coulomb (C)', 'The joule (J)']],
+        ['A 9 V battery gives each coulomb of charge…', '9 joules of energy.', ['9 amperes of current.', '9 coulombs of charge.', '9 electrons.']],
+        ['In a simple loop, how does the current going into a bulb compare with the current coming out?', 'They are the same.', ['More goes in than comes out.', 'More comes out than goes in.', 'No current comes out.']],
         ['Which instrument measures current?', 'An ammeter', ['A voltmeter', 'A thermometer', 'A compass']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['Current is the flow of charge (coulombs per second, amperes). Voltage is energy per coulomb (volts). Charge is not used up; energy is transferred.', 'Answer: ' + K[1]], 'Current = charge per second; voltage = energy per charge.', { vk: 'concept' });
@@ -2009,55 +2091,66 @@
         'Answer: ' + right + '.'
       ], 'Trace a loop from the battery through that bulb and back.', { viz: { name: 'ph-circuit', opts: { circuit: circ, interactive: false, quiet: true } }, vk: 'sw' });
     }
-    function count() {
-      var C = R.pick([
-        ['Three bulbs are connected in one single loop with a battery and a switch. The switch is open.', 0, 'All three bulbs share one loop, and the open switch breaks it.'],
-        ['Three bulbs are connected in one single loop with a battery and a switch. The switch is closed.', 3, 'The single loop is complete, so current flows through all three.'],
-        ['Two bulbs are on separate branches, each connected straight across a battery. Only the first branch has a switch, and it is open.', 1, 'The second branch is still a complete loop through the battery.'],
-        ['Three bulbs are on separate branches, each connected straight across a battery. Each branch has its own switch; two of the switches are open.', 1, 'Only the branch with the closed switch makes a complete loop.'],
-        ['Two bulbs in one single loop with a battery. One bulb\'s filament breaks.', 0, 'The broken filament is a gap in the only loop, so the current stops everywhere.'],
-        ['Three bulbs are on separate branches, each connected straight across a battery. One bulb\'s filament breaks.', 2, 'The other two branches are still complete loops.'],
-        ['Four bulbs are on separate branches, each connected straight across a battery, with one switch in the wire leading out of the battery. That switch is open.', 0, 'Every branch needs the shared wire with the open switch, so no loop is complete.']
-      ]);
-      return pr(C[0] + ' How many bulbs are lit?', num(C[1], 0), [
+    function count() { // built from parts: series or parallel, n bulbs, one change
+      var WORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six'], n = R.int(2, 6), par = R.coin(), ev = R.int(0, par ? 4 : 3), txt, lit, why;
+      var base = par ? cap(WORD[n]) + ' bulbs are on separate branches, each connected straight across a battery.' : cap(WORD[n]) + ' bulbs are connected in one single loop with a battery';
+      var bad = R.pick(['One bulb\'s filament breaks.', 'One bulb is unscrewed.', 'One bulb burns out.']);
+      if (!par) {
+        if (ev === 0) { txt = base + ' and a switch. The switch is open.'; lit = 0; why = 'All the bulbs share one loop, and the open switch breaks it.'; }
+        else if (ev === 1) { txt = base + ' and a switch. The switch is closed.'; lit = n; why = 'The single loop is complete, so current flows through every bulb.'; }
+        else if (ev === 2) { txt = base + '. ' + bad; lit = 0; why = 'That makes a gap in the only loop, so the current stops everywhere.'; }
+        else { txt = base + ' and a switch. The switch is closed, but one wire comes loose from the battery.'; lit = 0; why = 'The loose wire breaks the only loop.'; }
+      } else {
+        if (ev === 0) { txt = base + ' ' + bad; lit = n - 1; why = 'The other branches are still complete loops through the battery.'; }
+        else if (ev === 1) { var k = R.int(0, n); txt = base + ' Each branch has its own switch; ' + (k === n ? 'all of them are closed.' : k === 0 ? 'all of them are open.' : WORD[k] + ' of the switches ' + (k === 1 ? 'is' : 'are') + ' closed and the rest are open.'); lit = k; why = 'Each branch with a closed switch is its own complete loop; an open switch breaks only its own branch.'; }
+        else if (ev === 2) { txt = base + ' One switch sits in the wire leading out of the battery, before the branches split. That switch is open.'; lit = 0; why = 'Every branch needs that shared wire to reach the battery, so no loop is complete.'; }
+        else if (ev === 3) { txt = base + ' One switch sits in the wire leading out of the battery, before the branches split. That switch is closed, but ' + bad.charAt(0).toLowerCase() + bad.slice(1); lit = n - 1; why = 'The shared switch is closed, and only the broken bulb\'s own branch is open.'; }
+        else { txt = base + ' Only the first branch has a switch, and it is open.'; lit = n - 1; why = 'The open switch breaks only the first branch; the others are still complete loops.'; }
+      }
+      return pr(txt + ' How many bulbs are lit?', num(lit, 0), [
         'A bulb lights only if it is part of a complete (closed) loop through the battery.',
-        C[2] + ' So ' + C[1] + ' bulb' + (C[1] === 1 ? ' is' : 's are') + ' lit.'
-      ], 'Look for complete loops through each bulb.', { vk: 'count' });
+        why + ' So ' + lit + ' bulb' + (lit === 1 ? ' is' : 's are') + ' lit.'
+      ], 'Look for complete loops through each bulb.', { vk: 'count', cnt: { n: n, par: par, txt: txt } });
     }
     function concept() {
       var K = R.pick([
         ['A bulb\'s two connection points are joined, one to each terminal of a battery. What happens?', 'The bulb lights, because there is a complete loop.', ['Nothing, because the bulb needs only one wire.', 'The bulb lights only if a switch is added.', 'The battery sends current one way only, so nothing happens.']],
         ['A wire runs from a battery\'s + terminal to one point on a bulb. Nothing else is connected. What happens?', 'Nothing: there is no path back to the battery.', ['The bulb lights dimly.', 'The bulb lights brightly.', 'The battery empties quickly.']],
+        ['In a single-loop circuit with two bulbs, one bulb burns out. What happens to the other bulb?', 'It goes out too, because the loop is broken.', ['It gets brighter.', 'It stays the same.', 'It flickers but stays on.']],
+        ['In a house, one lamp burns out but the others stay on. How are the lamps most likely connected?', 'On separate branches (in parallel)', ['In one single loop (in series)', 'They are not connected to anything', 'Through the light switch only']],
+        ['Which of these is a good conductor to use for circuit wires?', 'Copper', ['Rubber', 'Glass', 'Plastic']],
+        ['Why are wires covered with plastic?', 'Plastic is an insulator, so current stays in the wire.', ['Plastic makes the current flow faster.', 'Plastic stores extra charge.', 'Plastic is a good conductor.']],
+        ['What part of a circuit supplies the energy that pushes the current?', 'The battery', ['The bulb', 'The switch', 'The wire']],
         ['What does a switch do when it is opened?', 'It makes a gap, so current stops in that loop.', ['It lets more current through.', 'It stores charge for later.', 'It reverses the current.']],
         ['Why does one switch by the door turn off a ceiling light across the room?', 'The switch and the light are in the same loop, so opening the switch breaks the whole loop.', ['The switch sends a signal through the air.', 'The light uses up the current.', 'The switch stores the charge.']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['Charge flows only around a closed loop from one battery terminal, through the devices, back to the other. Any gap stops the current in that loop.', 'Answer: ' + K[1]], 'Is there a complete loop?', { vk: 'concept' });
     }
-    return lv(R, ctx, [concept, count], [count, sw, concept], [sw, count, concept]);
+    return lv(R, ctx, [concept, count, count], [count, sw, concept], [sw, count, concept]);
   });
 
   G('physsci.ohms-law', function (R, ctx) {
     function cviz(V, Rr, show) { return { name: 'ph-circuit', opts: { circuit: 'V(' + V + ') series(A1, R1:' + Rr + ')', interactive: false, quiet: true } }; }
     function findI() {
-      var Rr = R.pick([2, 3, 4, 5, 6, 8, 10, 12, 20]), I0 = R.pick([0.5, 1, 1.5, 2, 3, 4]), V = fix(Rr * I0);
+      var Rr, I0, V; do { Rr = R.pick([2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 24, 25, 30, 40, 50]); I0 = R.pick([0.2, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4]); V = fix(Rr * I0); } while (V < 1.5 || V > 60);
       return pr('A ' + MQ(V, 'V') + ' battery is connected to ' + aQ(Rr, 'Ω') + ' resistor. What current flows?', num(I0), [
         M('I = \\dfrac{V}{R} = \\dfrac{' + Q(V, 'V') + '}{' + Q(Rr, 'Ω') + '} = ' + Q(I0, 'A')) + '.'
       ], 'Current = voltage ÷ resistance.', { unit: 'A', viz: cviz(V, Rr), vk: 'I' });
     }
     function findV() {
-      var Rr = R.pick([5, 10, 15, 20, 50, 100]), I0 = R.pick([0.1, 0.2, 0.3, 0.5, 1, 2]), V = fix(Rr * I0);
+      var Rr = R.pick([5, 10, 12, 15, 20, 25, 30, 40, 50, 60, 75, 100, 150]), I0 = R.pick([0.05, 0.1, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.8, 1, 1.5, 2]), V = fix(Rr * I0);
       return pr('A current of ' + MQ(I0, 'A') + ' flows through ' + aQ(Rr, 'Ω') + ' resistor. What is the voltage across it?', num(V), [
         M('V = I\\,R = ' + Q(I0, 'A') + ' \\times ' + Q(Rr, 'Ω') + ' = ' + Q(V, 'V')) + '.'
       ], 'Voltage = current × resistance.', { unit: 'V', vk: 'V' });
     }
     function findR() {
-      var Rr = R.pick([3, 4, 6, 8, 12, 15, 24, 30, 60]), I0 = R.pick([0.25, 0.5, 2, 3, 4]), V = fix(Rr * I0);
+      var Rr, I0, V; do { Rr = R.pick([2, 3, 4, 5, 6, 8, 10, 12, 15, 16, 20, 24, 25, 30, 40, 48, 50, 60, 80, 100]); I0 = R.pick([0.1, 0.2, 0.25, 0.4, 0.5, 0.75, 1, 1.5, 2, 3, 4]); V = fix(Rr * I0); } while (V < 1.5 || V > 240);
       return pr('A lamp draws ' + MQ(I0, 'A') + ' from ' + aQ(V, 'V') + ' supply. What is its resistance?', num(Rr), [
         M('R = \\dfrac{V}{I} = \\dfrac{' + Q(V, 'V') + '}{' + Q(I0, 'A') + '} = ' + Q(Rr, 'Ω')) + '.'
       ], 'Resistance = voltage ÷ current.', { unit: 'Ω', vk: 'R' });
     }
     function predict() {
-      var Rr = R.pick([4, 5, 8, 10, 20]), V1 = R.pick([2, 4, 6]), k = R.pick([2, 3, 1.5, 0.5]), V2 = fix(V1 * k), I1 = fix(V1 / Rr), I2 = fix(V2 / Rr);
+      var Rr = R.pick([2, 4, 5, 8, 10, 16, 20, 25, 40, 50]), V1 = R.pick([1, 2, 3, 4, 5, 6, 8, 10, 12]), k = R.pick([2, 3, 4, 1.5, 2.5, 0.5]), V2 = fix(V1 * k), I1 = fix(V1 / Rr), I2 = fix(V2 / Rr);
       return pr('A resistor carries ' + MQ(I1, 'A') + ' when ' + MQ(V1, 'V') + ' is across it. What current flows when the voltage is changed to ' + MQ(V2, 'V') + '?', num(I2), [
         'The resistance stays the same: ' + M('R = \\dfrac{' + N(V1) + '}{' + N(I1) + '} = ' + Q(Rr, 'Ω')) + '.',
         M('I = \\dfrac{' + N(V2) + '}{' + N(Rr) + '} = ' + Q(I2, 'A')) + '. (The current changes in proportion to the voltage.)'
@@ -2067,31 +2160,35 @@
       var K = R.pick([
         ['The voltage across an ordinary resistor is doubled. What happens?', 'The current doubles and the resistance stays the same.', ['The resistance doubles and the current stays the same.', 'The current halves.', 'Both the current and the resistance double.']],
         ['Which of these has the most resistance?', 'A long, thin wire', ['A short, thick wire', 'A long, thick wire', 'A short, thin piece of the same wire']],
+        ['The current through a resistor is 2 A at 6 V. If the voltage is cut in half, the current…', 'is cut in half, to 1 A.', ['doubles, to 4 A.', 'stays at 2 A.', 'drops to zero.']],
+        ['Two resistors have the same voltage across them. Which carries more current?', 'The one with less resistance', ['The one with more resistance', 'They always carry the same current', 'The one that is warmer']],
+        ['What does a resistor do in a circuit?', 'It limits how much current flows.', ['It stores charge like a battery.', 'It makes the voltage bigger.', 'It turns the current on and off.']],
+        ['Which formula is Ohm\'s law?', 'V = I × R', ['V = I ÷ R', 'I = V × R', 'R = V × I']],
         ['What is the unit of resistance?', 'The ohm (Ω)', ['The ampere (A)', 'The volt (V)', 'The watt (W)']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['Ohm\'s law: ' + M('V = I\\,R') + '. For an ordinary resistor, R is fixed by the resistor itself (material, length, thickness), so the current is proportional to the voltage.', 'Answer: ' + K[1]], 'R belongs to the resistor.', { vk: 'concept' });
     }
-    return lv(R, ctx, [findI, findV], [findI, findV, findR, concept], [findR, predict, concept, findI]);
+    return lv(R, ctx, [findI, findV, findR], [findI, findV, findR, concept], [findR, predict, concept, findI, findV]);
   });
 
   G('physsci.series-parallel-intro', function (R, ctx) {
-    var PAIRS = [[2, 4], [3, 6], [2, 2], [4, 4], [1, 3], [2, 6], [4, 12], [6, 6], [3, 3], [2, 10]];
+    var PAIRS = [[2, 4], [3, 6], [2, 2], [4, 4], [1, 3], [2, 6], [4, 12], [6, 6], [3, 3], [2, 10], [1, 2], [1, 5], [2, 3], [3, 9], [5, 5], [5, 10], [5, 15], [4, 6], [2, 8], [6, 12], [10, 10], [10, 20], [4, 8], [3, 12]];
     function seriesI() {
-      var p = R.pick(PAIRS), Rt = p[0] + p[1], I0 = R.pick([0.5, 1, 1.5, 2, 3]), V = fix(I0 * Rt);
+      var p = R.pick(PAIRS), Rt = p[0] + p[1], I0 = R.pick([0.5, 1, 1.5, 2, 2.5, 3, 4]), V = fix(I0 * Rt);
       return pr('A ' + MQ(V, 'V') + ' battery is connected to ' + aQ(p[0], 'Ω') + ' and ' + aQ(p[1], 'Ω') + ' resistor <b>in series</b>. What current flows?', num(I0), [
         'In series, resistances add: ' + M(N(p[0]) + ' + ' + N(p[1]) + ' = ' + Q(Rt, 'Ω')) + '.',
         M('I = \\dfrac{' + N(V) + '}{' + N(Rt) + '} = ' + Q(I0, 'A')) + ', the same through both.'
       ], 'Add series resistances first.', { unit: 'A', viz: { name: 'ph-circuit', opts: { circuit: 'V(' + V + ') series(R1:' + p[0] + ', R2:' + p[1] + ')', interactive: false, quiet: true } }, vk: 'sI' });
     }
     function seriesV() {
-      var p = R.pick(PAIRS.filter(function (x) { return x[0] !== x[1]; })), Rt = p[0] + p[1], I0 = R.pick([0.5, 1, 2]), V = fix(I0 * Rt), which = R.int(0, 1);
+      var p = R.pick(PAIRS.filter(function (x) { return x[0] !== x[1]; })), Rt = p[0] + p[1], I0 = R.pick([0.5, 1, 1.5, 2, 3]), V = fix(I0 * Rt), which = R.int(0, 1);
       return pr('A ' + MQ(V, 'V') + ' battery is connected to resistors R1 = ' + MQ(p[0], 'Ω') + ' and R2 = ' + MQ(p[1], 'Ω') + ' in series. What is the voltage across R' + (which + 1) + '?', num(fix(I0 * p[which])), [
         'Total resistance: ' + M(Q(Rt, 'Ω')) + '. Current: ' + M(N(V) + ' \\div ' + N(Rt) + ' = ' + Q(I0, 'A')) + '.',
         'Across R' + (which + 1) + ': ' + M(N(I0) + ' \\times ' + N(p[which]) + ' = ' + Q(fix(I0 * p[which]), 'V')) + '. (The two voltages add up to the battery\'s ' + MQ(V, 'V') + '.)'
       ], 'Find the current first, then V = IR for that resistor.', { unit: 'V', viz: { name: 'ph-circuit', opts: { circuit: 'V(' + V + ') series(R1:' + p[0] + ', R2:' + p[1] + ')', interactive: false, quiet: true } }, vk: 'sV' });
     }
     function parI() {
-      var p = R.pick(PAIRS), V = R.pick(p[0] <= 2 ? [6, 12] : [6, 12, 24]), which = R.pick([0, 1, 2]), I1 = fix(V / p[0]), I2 = fix(V / p[1]);
+      var p = R.pick(PAIRS), V = R.pick([3, 6, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 60].filter(function (v) { return v % p[0] === 0 && v % p[1] === 0 && v / p[0] <= 20; }).concat(p[0] === 1 && p[1] === 5 ? [5] : [])), which = R.pick([0, 1, 2]), I1 = fix(V / p[0]), I2 = fix(V / p[1]);
       var ask = which === 2 ? 'the total current from the battery' : 'the current through R' + (which + 1);
       var ans = which === 0 ? I1 : which === 1 ? I2 : fix(I1 + I2);
       return pr('Resistors R1 = ' + MQ(p[0], 'Ω') + ' and R2 = ' + MQ(p[1], 'Ω') + ' are connected <b>in parallel</b> to ' + aQ(V, 'V') + ' battery. What is ' + ask + '?', num(ans), [
@@ -2101,7 +2198,7 @@
       ], 'Each parallel branch has the full battery voltage.', { unit: 'A', viz: { name: 'ph-circuit', opts: { circuit: 'V(' + V + ') par(R1:' + p[0] + ', R2:' + p[1] + ')', interactive: false, quiet: true } }, vk: which === 2 ? 'pT' : 'pI' + (which + 1) });
     }
     function parR() {
-      var p = R.pick([[3, 6], [6, 6], [4, 12], [2, 2], [12, 6], [10, 10], [20, 5]]), V = 12, It = fix(V / p[0] + V / p[1]), Req = fix(V / It);
+      var p = R.pick([[3, 6], [6, 6], [4, 12], [2, 2], [12, 6], [10, 10], [20, 5], [4, 4], [3, 3], [2, 6], [12, 12], [4, 6], [6, 12], [2, 3], [12, 24], [8, 8], [24, 8], [3, 4], [6, 2]]), V = 12, It = fix(V / p[0] + V / p[1]), Req = fix(V / It);
       return pr('Resistors of ' + MQ(p[0], 'Ω') + ' and ' + MQ(p[1], 'Ω') + ' are connected in parallel to ' + aQ(V, 'V') + ' battery. Find the total current, then the total resistance of the pair (battery voltage ÷ total current).', num(Req), [
         'Branch currents: ' + M('12 \\div ' + N(p[0]) + ' = ' + Q(fix(V / p[0]), 'A')) + ' and ' + M('12 \\div ' + N(p[1]) + ' = ' + Q(fix(V / p[1]), 'A')) + '. Total ' + MQ(It, 'A') + '.',
         M('R = \\dfrac{12}{' + N(It) + '} = ' + Q(Req, 'Ω')) + '. That is less than either resistor alone: a second path makes it easier for current to flow.'
@@ -2121,7 +2218,7 @@
   });
 
   G('physsci.electric-power', function (R, ctx) {
-    var DEV = [['hair dryer', 120, [10, 12.5]], ['toaster', 120, [6, 7.5, 9]], ['laptop charger', 20, [2, 3, 3.25]], ['flashlight bulb', 3, [0.5, 0.25]], ['car headlight', 12, [5, 4.5]], ['electric kettle', 120, [12.5, 15]], ['space heater', 120, [12.5, 10]]];
+    var DEV = [['hair dryer', 120, [10, 12.5, 11]], ['toaster', 120, [6, 7.5, 9, 8]], ['laptop charger', 20, [2, 3, 3.25, 4.5]], ['flashlight bulb', 3, [0.5, 0.25, 0.3]], ['car headlight', 12, [5, 4.5, 4]], ['electric kettle', 120, [12.5, 15, 10]], ['space heater', 120, [12.5, 10, 8]], ['phone charger', 5, [1, 2, 2.4, 3]], ['blender', 120, [3, 4, 5, 6]], ['microwave oven', 120, [8, 9, 10, 12.5]], ['toy car motor', 6, [0.5, 1, 1.5, 2]], ['vacuum cleaner', 120, [5, 6, 8, 10]], ['electric drill', 120, [3, 4, 5, 6.5]], ['bike light', 3.7, [0.5, 1, 2]], ['fan', 120, [0.5, 0.75, 1, 1.5]]];
     function P() {
       var d = R.pick(DEV), I0 = R.pick(d[2]), Pw = fix(d[1] * I0);
       return pr('A ' + d[0] + ' draws ' + MQ(I0, 'A') + ' from ' + aQ(d[1], 'V') + ' supply. What is its power?', num(Pw), [
@@ -2129,14 +2226,14 @@
       ], 'Power = voltage × current.', { unit: 'W', vk: 'P' });
     }
     function I() {
-      var Pw = R.pick([60, 120, 240, 600, 900, 1200, 1500, 1800]), V = 120;
+      var Pw = R.pick([60, 120, 180, 240, 300, 360, 480, 600, 720, 900, 960, 1080, 1200, 1440, 1500, 1800]), V = 120;
       return pr('A ' + MQ(Pw, 'W') + ' appliance runs on ' + aQ(V, 'V') + ' outlet. What current does it draw?', num(fix(Pw / V)), [
         'Rearrange ' + M('P = V\\,I') + ' to ' + M('I = \\dfrac{P}{V}') + '.',
         M('I = \\dfrac{' + N(Pw) + '}{120} = ' + Q(fix(Pw / V), 'A')) + '.'
       ], 'Current = power ÷ voltage.', { unit: 'A', vk: 'I' });
     }
     function kwh() {
-      var Pw = R.pick([0.5, 1, 1.2, 1.5, 2, 3, 4.5]), h = R.pick([2, 3, 4, 5, 6, 8, 10]), thing = R.pick(['space heater', 'air conditioner', 'oven', 'pool pump', 'clothes dryer']);
+      var Pw = R.pick([0.5, 0.75, 1, 1.2, 1.5, 2, 2.5, 3, 4, 4.5, 5]), h = R.pick([1, 2, 3, 4, 5, 6, 7, 8, 10, 12]), thing = R.pick(['space heater', 'air conditioner', 'oven', 'pool pump', 'clothes dryer', 'electric stove', 'water heater', 'dishwasher']);
       var askW = R.chance(0.35);
       return pr('A ' + (askW ? MQ(Pw * 1000, 'W') : MQ(Pw, 'kW')) + ' ' + thing + ' runs for ' + MQ(h, 'h') + '. How much energy does it use, in kilowatt-hours?', num(fix(Pw * h)), [
         askW ? 'First change to kilowatts: ' + M(N(Pw * 1000) + '\\,\\mathrm{W} = ' + Q(Pw, 'kW')) + '.' : 'Energy = power × time, with power in kW and time in hours.',
@@ -2144,7 +2241,7 @@
       ], 'kWh = kW × hours.', { unit: 'kWh', vk: askW ? 'kwhW' : 'kwh' });
     }
     function cost() {
-      var Pw = R.pick([0.1, 0.5, 1, 1.5, 2]), h = R.pick([2, 4, 5, 10, 20, 30]), c = R.pick([10, 12, 15, 20]), E = fix(Pw * h), C = fix(E * c);
+      var Pw = R.pick([0.1, 0.2, 0.25, 0.5, 0.75, 1, 1.5, 2, 3]), h = R.pick([1, 2, 3, 4, 5, 6, 8, 10, 12, 20, 30]), c = R.pick([8, 10, 11, 12, 14, 15, 16, 18, 20, 25]), E = fix(Pw * h), C = fix(E * c);
       return pr('A ' + MQ(Pw, 'kW') + ' device runs for ' + MQ(h, 'h') + '. Electricity costs ' + c + ' cents per kWh. What does the energy cost, in cents?', num(C, 0.01), [
         'Energy: ' + M(Q(Pw, 'kW') + ' \\times ' + Q(h, 'h') + ' = ' + Q(E, 'kWh')) + '.',
         'Cost: ' + M(N(E) + ' \\times ' + c + ' = ' + N(C)) + ' cents.'
@@ -2154,6 +2251,9 @@
       var K = R.pick([
         ['Which of these is an amount of energy?', '3 kWh', ['3 kW', '3 A', '3 V']],
         ['A 2 kW kettle and a 2 kW heater are both switched on. Which uses more energy?', 'Whichever runs longer', ['The kettle, always', 'The heater, always', 'They always use the same energy']],
+        ['What is the unit of power?', 'The watt (W)', ['The joule (J)', 'The kilowatt-hour (kWh)', 'The volt (V)']],
+        ['A 1,000 W microwave runs for 1 hour. How much energy does it use?', '1 kWh', ['1 kW', '1,000 kWh', '1 W']],
+        ['Which uses energy faster: a 60 W bulb or a 1,500 W hair dryer?', 'The hair dryer', ['The bulb', 'They use energy at the same rate', 'It depends on the time of day']],
         ['What does a power company charge you for?', 'Energy, in kilowatt-hours', ['Power, in kilowatts', 'Current, in amperes', 'Voltage, in volts']],
         ['A 100 W bulb and a 10 W LED give the same light. Over the same time, the LED uses…', 'one tenth of the energy.', ['the same energy.', 'ten times the energy.', 'no energy.']]
       ]);
@@ -2170,11 +2270,20 @@
         a + ' and ' + b + ' are ' + (a === b ? 'like' : 'unlike') + ' poles, so: ' + right.toLowerCase()
       ], 'Like poles repel.', { vk: 'poles' });
     }
+    function twoStep() { // find a pole from a test, then the other end of the same magnet
+      var NAMES2 = [['A', 'B'], ['X', 'Y'], ['P', 'Q'], ['red', 'blue'], ['C', 'D'], ['J', 'K'], ['green', 'yellow'], ['left', 'right']], nmz = R.pick(NAMES2), known = R.pick(['north', 'south']), att = R.coin(), other = R.coin();
+      var e1 = known === 'north' ? 'south' : 'north', end1 = att ? e1 : known, ans = other ? (end1 === 'north' ? 'south' : 'north') : end1;
+      var mag = nmz[0].length === 1 ? 'magnet ' + nmz[0] : 'the ' + nmz[0] + ' magnet', mag2 = nmz[1].length === 1 ? 'magnet ' + nmz[1] : 'the ' + nmz[1] + ' magnet';
+      return pr('One end of ' + mag + ' is held near the ' + known + ' pole of ' + mag2 + ', and they ' + (att ? 'attract' : 'repel') + '. What kind of pole is ' + (other ? 'the far end of ' + mag + ' (the end not being tested)' : 'the tested end of ' + mag) + '?', { t: 'mc', choices: ['A north pole', 'A south pole', 'It can\'t be a pole'], v: ans === 'north' ? 0 : 1, keep: true }, [
+        (att ? 'Unlike poles attract' : 'Like poles repel') + ', so the tested end of ' + mag + ' is a ' + end1 + ' pole.',
+        other ? 'A bar magnet has one pole at each end, so its far end is the opposite kind: ' + ans + '.' : 'Answer: ' + ans + '.'
+      ], 'Like poles repel; unlike poles attract. Each magnet has a north and a south end.', { vk: 'ident2' });
+    }
     function pieces() {
-      var n = R.int(2, 6), askN = R.coin();
-      return pr('A bar magnet is snapped into ' + n + ' pieces. Altogether, how many ' + (askN ? 'north' : 'south') + ' poles are there now?', num(n, 0), [
+      var n = R.int(2, 15), ask = R.pick(['north', 'south', 'all']), ansP = ask === 'all' ? 2 * n : n;
+      return pr('A bar magnet is snapped into ' + n + ' pieces. Altogether, how many ' + (ask === 'all' ? 'poles (north and south together)' : ask + ' poles') + ' are there now?', num(ansP, 0), [
         'Every piece of a magnet is a complete magnet with its own north and south pole.',
-        'So ' + n + ' pieces have ' + n + ' ' + (askN ? 'north' : 'south') + ' poles (and ' + n + ' of the other kind).'
+        ask === 'all' ? 'So ' + n + ' pieces have ' + n + ' north poles and ' + n + ' south poles: ' + M(n + ' \\times 2 = ' + 2 * n) + ' poles.' : 'So ' + n + ' pieces have ' + n + ' ' + ask + ' poles (and ' + n + ' of the other kind).'
       ], 'Does a piece of a magnet ever have just one pole?', { vk: 'pieces' });
     }
     function concept() {
@@ -2183,6 +2292,14 @@
         ['Which of these is attracted to a magnet?', 'An iron nail', ['An aluminum can', 'A copper coin', 'A plastic spoon']],
         ['Outside a bar magnet, its field lines run…', 'from the north pole to the south pole.', ['from the south pole to the north pole.', 'only around the middle.', 'away from both poles and never return.']],
         ['A bar magnet is cut in half. What do you get?', 'Two smaller magnets, each with a north and a south pole', ['A north pole and a separate south pole', 'Two pieces that are no longer magnets', 'Two north poles']],
+        ['Earth acts like a giant magnet. What does a compass needle line up with?', 'Earth\'s magnetic field', ['The Sun\'s light', 'The wind', 'The nearest mountain']],
+        ['Which metal is strongly attracted to magnets?', 'Iron', ['Copper', 'Aluminum', 'Gold']],
+        ['A paper clip touching a magnet can pick up a second paper clip. Why?', 'The first clip becomes a temporary magnet.', ['The clips are glued.', 'Paper clips are always magnets.', 'Gravity pulls them together.']],
+        ['Which of these would a magnet NOT pick up?', 'A wooden pencil', ['A steel paper clip', 'An iron nail', 'A steel pin']],
+        ['Iron filings are sprinkled around a bar magnet. Where do they bunch up the most?', 'Near the two ends (the poles)', ['In the middle', 'Evenly all around', 'Far away from the magnet']],
+        ['A compass is placed near the north pole of a bar magnet. Which way does the compass\'s north end point?', 'Away from the magnet\'s north pole', ['Toward the magnet\'s north pole', 'Straight up', 'It spins without stopping']],
+        ['How can you tell for sure that a piece of metal is a magnet?', 'One end of it repels a pole of a known magnet.', ['A magnet attracts it.', 'It is shiny.', 'It is heavy.']],
+        ['A magnet\'s pull works through a sheet of paper. What does that show?', 'Magnetic forces act without touching, through some materials.', ['Paper is magnetic.', 'The magnet is very heavy.', 'Paper conducts electricity.']],
         ['Where is a bar magnet\'s pull strongest?', 'At its poles (the ends)', ['In the middle', 'Equally everywhere', 'Far from the magnet']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['Every magnet has a north and a south pole; like poles repel and unlike attract. Field lines run from north to south outside the magnet. Iron, nickel and cobalt are attracted; most other metals are not.', 'Answer: ' + K[1]], 'Think of the rules for poles.', { vk: 'concept' });
@@ -2195,13 +2312,24 @@
         'It is a ' + ans + ' pole.' + (att ? ' (A repel test is the surest check: an unmagnetized piece of iron would be attracted too, but only a like pole repels.)' : '')
       ], 'Like poles repel; unlike poles attract.', { vk: 'ident' });
     }
-    return lv(R, ctx, [poles, identify, concept], [poles, pieces, identify, concept], [pieces, identify, concept, poles]);
+    return lv(R, ctx, [poles, identify, identify, pieces, concept], [poles, pieces, identify, twoStep, concept], [pieces, identify, twoStep, concept, concept, poles]);
   });
 
   G('physsci.electromagnets', function (R, ctx) {
+    function compare2() { // one coil has at least as many turns AND at least as much current, and more of one
+      var n1 = R.pick([20, 30, 40, 50, 60, 80, 100, 120, 150, 200]), i1 = R.pick([0.5, 1, 1.5, 2, 2.5, 3]), how = R.int(0, 2);
+      var n2 = how === 1 ? n1 : n1 + R.pick([10, 20, 30, 50, 100]), i2 = how === 0 ? i1 : fix(i1 + R.pick([0.5, 1, 1.5, 2]));
+      var bFirst = R.coin(), A = bFirst ? [n2, i2] : [n1, i1], B = bFirst ? [n1, i1] : [n2, i2], right = bFirst ? 'Coil A' : 'Coil B';
+      return pr('Two electromagnets have the same size and the same iron core. Coil A has ' + A[0] + ' turns carrying ' + MQ(A[1], 'A') + '. Coil B has ' + B[0] + ' turns carrying ' + MQ(B[1], 'A') + '. Which is stronger?', { t: 'mc', choices: ['Coil A', 'Coil B', 'They are equally strong'], v: right === 'Coil A' ? 0 : 1, keep: true }, [
+        'More turns and more current both make a stronger electromagnet.',
+        how === 0 ? 'The currents are the same; ' + right + ' has more turns.' : how === 1 ? 'The turns are the same; ' + right + ' carries more current.' : right + ' has more turns and more current.',
+        'Answer: ' + right + '.'
+      ], 'Compare the turns and the currents.', { vk: 'em2' });
+    }
     function stronger() {
-      var ok = R.pick(['Wind more turns of wire on the coil', 'Increase the current through the coil', 'Put an iron core inside the coil']);
-      return pr('Which change makes an electromagnet stronger?', mc(ok, ['Use a wooden core instead of an iron one', 'Reverse the direction of the current', 'Reduce the current through the coil']), [
+      var weaker = R.chance(0.35), ok = weaker ? R.pick(['Wind fewer turns of wire on the coil', 'Reduce the current through the coil', 'Take the iron core out of the coil']) : R.pick(['Wind more turns of wire on the coil', 'Increase the current through the coil', 'Put an iron core inside the coil', 'Use a battery with a higher voltage']);
+      var bad = R.sample(weaker ? ['Wind more turns of wire on the coil', 'Put an iron core inside the coil', 'Reverse the direction of the current', 'Increase the current through the coil', 'Paint the coil a different color'] : ['Use a wooden core instead of an iron one', 'Reverse the direction of the current', 'Reduce the current through the coil', 'Wind fewer turns of wire on the coil', 'Paint the coil a different color'], 3);
+      return pr('Which change makes an electromagnet ' + (weaker ? 'weaker' : 'stronger') + '?', mc(ok, bad), [
         'More current, more turns and an iron core all strengthen an electromagnet.',
         'Reversing the current only swaps its north and south poles.', 'Answer: ' + ok + '.'
       ], 'What adds to the magnetic field?', { vk: 'concept' });
@@ -2213,6 +2341,9 @@
         ['The current in an electromagnet is reversed. What happens?', 'Its north and south poles swap.', ['It stops working.', 'It gets twice as strong.', 'Nothing changes.']],
         ['An electric motor changes…', 'electrical energy into kinetic energy (motion).', ['kinetic energy into electrical energy.', 'chemical energy into light.', 'heat into electrical energy.']],
         ['Why is a scrapyard crane magnet an electromagnet instead of a permanent magnet?', 'It can be switched off to drop its load.', ['Permanent magnets can\'t lift iron.', 'Electromagnets don\'t need electricity.', 'It is lighter than any permanent magnet.']],
+        ['A loudspeaker makes sound using…', 'an electromagnet that pushes and pulls on a magnet, making a cone vibrate', ['a tiny generator that makes light', 'a heater that warms the air', 'a battery that stores sound']],
+        ['Why does an electromagnet with an iron core pick up more paper clips than one without?', 'The iron becomes magnetized and adds its field to the coil\'s.', ['Iron makes the current smaller.', 'Iron is lighter than air.', 'The iron core heats up the clips.']],
+        ['The field around a single straight wire carrying current forms…', 'circles around the wire.', ['straight lines along the wire.', 'nothing; only coils make fields.', 'lines pointing only north.']],
         ['Which of these makes a magnetic field?', 'A wire carrying an electric current', ['A wire with no current in it', 'A plastic rod', 'A glass of water']]
       ]);
       return pr(K[0], mc(K[1], K[2]), ['Every electric current makes a magnetic field. A coil concentrates it, and an iron core makes it much stronger. In a motor, magnetic forces on a current-carrying coil make it spin.', 'Answer: ' + K[1]], 'Currents make magnetic fields.', { vk: 'concept' });
@@ -2220,13 +2351,19 @@
     function tfq() {
       var K = R.pick([
         ['Only permanent magnets can make magnetic fields.', false, 'Any electric current makes a magnetic field.'],
+        ['Reversing the current in an electromagnet swaps its north and south poles.', true, 'The field flips when the current flows the other way.'],
+        ['An electromagnet keeps its full strength after its current is switched off.', false, 'Its field mostly disappears without current.'],
+        ['A wire carrying a current can make a compass needle turn.', true, 'The current makes a magnetic field around the wire.'],
+        ['Winding the wire into a coil makes its magnetic field weaker.', false, 'Coiling the wire lets the fields of the turns add up.'],
+        ['A doorbell, a loudspeaker and an electric motor all use electromagnets.', true, 'Each uses a current-carrying coil to make magnetic forces.'],
+        ['An electromagnet can work with no electric current at all.', false, 'It needs a current to make its field.'],
         ['Adding more turns of wire to an electromagnet\'s coil makes it stronger.', true, 'The fields of the turns add together.'],
         ['An iron core makes an electromagnet weaker.', false, 'The iron\'s own tiny magnets line up and add a much bigger field.'],
         ['An electric motor uses magnetic forces to make something spin.', true, 'Magnetic forces on the current in its coil turn it.']
       ]);
       return pr('True or false: ' + K[0], tf(K[1]), [K[2], K[1] ? 'True.' : 'False.'], 'Currents make magnetic fields.', { vk: 'concept' });
     }
-    return lv(R, ctx, [stronger, concept, tfq], [stronger, concept, tfq], [stronger, concept, tfq]);
+    return lv(R, ctx, [stronger, concept, tfq, compare2], [stronger, concept, tfq, compare2], [stronger, concept, tfq, compare2]);
   });
 
   G('physsci.generators', function (R, ctx) {
@@ -2249,14 +2386,14 @@
       return pr(K[0], mc(K[1], K[2]), ['A generator turns kinetic energy into electrical energy. Energy is conserved: the electrical energy comes from the work done turning it.', 'Answer: ' + K[1]], 'Follow the energy.', { vk: 'concept' });
     }
     function eff() {
-      var inn = R.pick([1000, 2000, 5000, 10000]), pct = R.pick([80, 85, 90, 95]), out = inn * pct / 100;
+      var inn = R.pick([200, 400, 500, 800, 1000, 1200, 1500, 2000, 2500, 4000, 5000, 8000, 10000]), pct = R.pick([60, 65, 70, 75, 80, 85, 90, 95]), out = inn * pct / 100;
       return pr('A generator is turned with ' + MQ(inn, 'J') + ' of kinetic energy and delivers ' + MQ(out, 'J') + ' of electrical energy. Where did the other ' + MQ(inn - out, 'J') + ' go, and what is its efficiency, as a percent?', { t: 'num', v: String(pct), pct: true, rtol: 0.001 }, [
         'The missing energy became heat (and some sound) from friction and from current in the coil\'s wires; none was destroyed.',
         'Efficiency: ' + M('\\dfrac{' + N(out) + '}{' + N(inn) + '} \\times 100\\% = ' + pct + '\\%') + '.'
       ], 'Useful energy out ÷ energy in.', { vk: 'eff' });
     }
     function freq() {
-      var f = R.pick([50, 60, 10, 20, 30]);
+      var f = R.pick([5, 8, 10, 12, 15, 20, 24, 25, 30, 40, 50, 60]);
       return pr('A simple generator\'s coil turns ' + f + ' times each second, and its current flows one way for half of each turn and the other way for the other half. How many complete back-and-forth cycles of current does it make each second (its frequency, in Hz)?', num(f, 0), [
         'Each full turn of the coil gives one full cycle: one way, then the other way.',
         f + ' turns per second → ' + MQ(f, 'Hz') + '.'
@@ -2266,3 +2403,131 @@
   });
 
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen"; Physics and Earth ladders): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - check a number: the question and a classmate's numeric answer, either the generator's own answer or that answer
+     off by a common slip (a factor of 2, 4 or 10), and "Is that right?" (Yes / No; not in placement);
+   - two at once: two different questions of the topic, answered together (short questions only, multiple-choice or
+     numeric, each keeping its own unit; at most one of them with a picture, which then comes first).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'physsci', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function numable(p) { // a single numeric answer with a plain decimal value (not a fraction or an expression)
+    var a = p.a;
+    return !!a && a.t === 'num' && /^-?\d+(\.\d+)?(e-?\d+)?$/.test(String(a.v)) && +a.v !== 0 && isFinite(+a.v) &&
+      !(a.tol && a.tol >= Math.abs(+a.v) / 3) && !((a.rtol || 0) > 0.3); // a slip by a factor of 2 must fall outside the tolerance
+  }
+  function sig(v) { var m = String(v).replace(/e.*$/, '').replace(/^-?0*\.?0*/, '').replace('.', ''); return Math.min(6, Math.max(3, m.length)); }
+  function show(x, n) { // a number as the classmate would write it: 3 significant figures, scientific notation when large or small
+    var ax = Math.abs(x);
+    if (ax >= 1e5 || ax < 1e-3) { var e = Math.floor(Math.log10(ax)), m = Number((x / Math.pow(10, e)).toPrecision(n || 3)); if (Math.abs(m) >= 10) { m = m / 10; e++; } return '$' + m + ' \\times 10^{' + e + '}$'; }
+    var s = String(Number(x.toPrecision(n || 3)));
+    return '$' + (ax >= 1e4 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, '{,}') : s) + '$';
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = +a.v, n = sig(a.v), right = R.coin(), f = R.pick([2, 0.5, 10, 0.1, 4, 0.25]), shown = right ? v : v * f;
+    var who = 'A classmate worked it out and got', u = p.unit ? ' ' + p.unit : '';
+    var q = p.q + '<p>' + who + ': <b>' + show(shown, n) + u + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right.' : 'No. The answer is ' + show(v, n) + u + '; ' + (f > 1 ? 'the classmate\'s answer is ' + f + ' times too big.' : 'the classmate\'s answer is ' + Math.round(1 / f) + ' times too small.'))].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf' && !numable(p))) return false;
+    if (p.a.t !== 'num' && p.unit) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function part(l, x) { var o = { label: l, a: x.a }; if (x.unit) o.unit = x.unit; return o; }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [part('1.', p), part('2.', p2)] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (mode !== 'place' && numable(p)) forms.push('ncheck');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'ncheck' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

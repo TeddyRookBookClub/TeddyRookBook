@@ -53,6 +53,31 @@
       steps: [it0.why, 'In order: ' + it0.order.map(function (t, k) { return LET.charAt(start.indexOf(k)) + ' (' + t + ')'; }).join(', then ') + '. So the answer is ' + ans + '.']
     };
   }
+  // ---- widen_civ2: questions about a topic's cases, from the kit's case table (MathLadder.civics.CASES; this file's XC if any)
+  var TRB_SKIP = ['clintonjones', 'clintonny', 'bushgore', 'boumediene', 'nixonus', 'roe', 'casey', 'bakke', 'grutter', 'gratz', 'chevron', 'lemon'];
+  function TRBcase(R, lv, keys) {
+    var C = (ML.civics && ML.civics.CASES) || {}, X = typeof XC !== 'undefined' ? XC : typeof EXTRA !== 'undefined' ? EXTRA : {};
+    function get(k) { if (TRB_SKIP.indexOf(k) >= 0) return null; if (typeof cs === 'function') { try { var z = cs(k); if (z) return z; } catch (e) { } } return C[k] || null; }
+    function ny2(k) { var c = get(k); return c.name + ' (' + c.year + ')'; }
+    var ok = keys.filter(function (k) { var c = get(k); return c && c.year <= 2020; });
+    var k = R.pick(ok), c = get(k), kinds = ['year', 'year'];
+    if (c.q) kinds.push('which', 'which');
+    if (c.holding && c.holding.length > 30 && lv >= 2) kinds.push('holding');
+    var kind = R.pick(kinds), all = Object.keys(C).concat(Object.keys(X)).filter(function (x) { var z = get(x); return x !== k && z && z.year <= 2020; });
+    var near = function (list) { var seen = {}; return list.filter(function (x) { if (seen[x]) return false; seen[x] = 1; return true; }); };
+    if (kind === 'year') {
+      var ys = near(all.map(function (x) { return String(get(x).year); }).filter(function (y) { return Math.abs(y - c.year) >= 3; }));
+      ys.sort(function (a, b) { return Math.abs(a - c.year) - Math.abs(b - c.year) || a - b; });
+      return { q: 'In what year was <i>' + c.name + '</i> decided?', a: String(c.year), w: ys.slice(0, 6), why: c.name + ' was decided in ' + c.year + (c.holding ? '. Holding: ' + c.holding : '.') };
+    }
+    var pool = near(keys.filter(function (x) { return x !== k && get(x) && get(x).year <= 2020; }).concat(all.filter(function (x) { return c.area && get(x).area === c.area; })).concat(all));
+    if (kind === 'which') {
+      var names = pool.filter(function (x) { return get(x).q !== c.q; }).slice(0, 6).map(ny2);
+      return { q: 'Which case asked this question? “' + c.q + '”', a: ny2(k), w: names, why: ny2(k) + ': ' + c.holding };
+    }
+    var hs = near(pool.filter(function (x) { var h = get(x).holding; return h && h.length > 30 && h !== c.holding; }).map(function (x) { return get(x).holding; })).slice(0, 5);
+    return { q: 'What did <i>' + c.name + '</i> (' + c.year + ') hold?', a: c.holding, w: hs, why: ny2(k) + ': ' + c.holding };
+  }
   function fromBank(bank, hint) {
     return function (R, ctx) {
       var lv = ctx.level || 1, pool = bank.filter(function (x) { return x.L.indexOf(lv) >= 0; });
@@ -123,6 +148,8 @@
   ], 'Ask which government the right limits, and when.'));
 
   G('conlaw2.slaughter-house', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['slaughterhouse', 'saenz', 'mcdonald', 'duncan']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['slaughterhouse', 'saenz', 'mcdonald', 'duncan']); } },
     { L: [1, 2], q: 'Which clause did the Slaughter-House Cases (1873) read narrowly?', a: 'the Fourteenth Amendment\'s Privileges or Immunities Clause', w: ['the Due Process Clause', 'the Equal Protection Clause', 'the Commerce Clause'], why: 'The Court said it protects only rights of national citizenship.' },
     { L: [1, 2], q: 'What was the vote in the Slaughter-House Cases?', a: '5 to 4', w: ['9 to 0', '7 to 2', '6 to 3'], why: 'A 5 to 4 decision by Justice Miller.' },
     { L: [1, 2, 3], q: 'The Slaughter-House majority said the clause protects rights such as access to the seaports and protection on the high seas.', tf: true, why: 'Justice Miller listed rights that owe their existence to the national government.' },
@@ -184,6 +211,8 @@
 
   var LOCH = ['holden', 'lochner', 'muller', 'adkins', 'nebbia', 'westcoast'];
   G('conlaw2.lochner-era', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['lochner', 'muller', 'adkins', 'nebbia', 'holden', 'westcoast']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['lochner', 'muller', 'adkins', 'nebbia', 'holden', 'westcoast']); } },
     { L: [1, 2], q: 'What did <i>Lochner v. New York</i> (1905) strike down?', a: 'a maximum-hours law for bakers', w: ['a minimum wage for women', 'a ban on child labor', 'an eight-hour law for miners'], why: 'New York limited bakery employees to 10 hours a day and 60 a week.' },
     { L: [1, 2], q: 'What right did the Lochner majority say the bakers\' hours law violated?', a: 'liberty of contract', w: ['freedom of speech', 'equal protection', 'the right to a jury'], why: 'The majority read "liberty" in the Due Process Clause to include freedom of contract.' },
     { L: [1, 2], q: 'Who wrote that "the Fourteenth Amendment does not enact Mr. Herbert Spencer\'s Social Statics"?', a: 'Justice Holmes, dissenting in Lochner', w: ['Justice Peckham, for the majority in Lochner', 'Justice Brandeis, in Muller', 'Chief Justice Hughes, in West Coast Hotel'], why: 'Holmes\'s dissent.' },
@@ -198,6 +227,8 @@
   ], 'Was the law seen as a real health measure, or as shifting bargaining power?'));
 
   G('conlaw2.end-of-lochner', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['westcoast', 'nebbia', 'carolene', 'leeoptical']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['westcoast', 'nebbia', 'carolene', 'leeoptical']); } },
     { L: [1, 2], q: 'Which 1937 case overruled Adkins and upheld a state minimum wage for women?', a: ny('westcoast'), w: [ny('nebbia'), ny('lochner'), ny('carolene')], why: 'West Coast Hotel Co. v. Parrish (1937), 5 to 4.' },
     { L: [1, 2], q: 'Since 1937, what level of review do ordinary economic regulations get?', a: 'rational basis', w: ['strict scrutiny', 'intermediate scrutiny', 'liberty of contract review'], why: 'Economic laws are presumed valid if any rational basis supports them.' },
     { L: [1, 2], q: 'Which case upheld New York\'s fixed retail price for milk?', a: ny('nebbia'), w: [ny('westcoast'), ny('leeoptical'), ny('lochner')], why: 'Nebbia v. New York (1934).' },
@@ -211,6 +242,8 @@
   ], 'After 1937: economic laws get rational basis; personal rights went on.'));
 
   G('conlaw2.sdp-methods', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['glucksberg', 'griswold', 'lawrence', 'obergefell']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['glucksberg', 'griswold', 'lawrence', 'obergefell']); } },
     { L: [1, 2], q: 'Which case asks for a "careful description" of an asserted right and whether it is deeply rooted in the Nation\'s history and tradition?', a: ny('glucksberg'), w: [ny('obergefell'), ny('griswold'), ny('lochner')], why: 'Washington v. Glucksberg (1997).' },
     { L: [1, 2], q: 'Whose dissent described tradition as "a living thing"?', a: 'Justice Harlan, in Poe v. Ullman (1961)', w: ['Justice Scalia, in Lawrence', 'Chief Justice Rehnquist, in Glucksberg', 'Justice Holmes, in Lochner'], why: 'Harlan\'s Poe dissent.' },
     { L: [1, 2], q: 'Which 2015 case said history and tradition "do not set its outer boundaries"?', a: ny('obergefell'), w: [ny('glucksberg'), ny('lawrence'), ny('casey')], why: 'Obergefell v. Hodges followed the reasoned-judgment approach.' },
@@ -255,6 +288,8 @@
 
   var LIB = ['loving', 'bowers', 'lawrence', 'obergefell', 'cruzan', 'glucksberg'];
   G('conlaw2.liberty-and-marriage', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['loving', 'obergefell', 'griswold', 'lawrence']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['loving', 'obergefell', 'griswold', 'lawrence']); } },
     { L: [1, 2], q: 'Which case struck down Virginia\'s ban on interracial marriage?', a: ny('loving'), w: [ny('obergefell'), ny('griswold'), ny('plessy')], why: 'Loving v. Virginia (1967), unanimously.' },
     { L: [1, 2], q: 'Which case overruled Bowers v. Hardwick?', a: ny('lawrence'), w: [ny('obergefell'), ny('romer'), ny('casey')], why: 'Lawrence v. Texas (2003).' },
     { L: [1, 2], q: 'Did Washington v. Glucksberg find a fundamental right to assisted suicide?', a: 'no; states may ban it, and may also choose to allow it by statute', w: ['yes, a fundamental right', 'yes, but only for the terminally ill', 'the Court did not reach the question'], why: 'Glucksberg (1997) found no such fundamental right.' },
@@ -299,6 +334,8 @@
   ], 'Identify the classification, then the tier.'));
 
   G('conlaw2.ep-rational-basis', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['railwayexpress', 'cleburne', 'romer', 'rodriguez']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['railwayexpress', 'cleburne', 'romer', 'rodriguez']); } },
     { L: [1, 2], q: 'Under rational basis review, a law is valid if it is…', a: 'rationally related to a legitimate interest', w: ['narrowly tailored to a compelling interest', 'substantially related to an important interest', 'the least restrictive means'], why: 'The most deferential tier.' },
     { L: [1, 2], q: 'Which case upheld a city ban on advertising on delivery trucks except for the owner\'s own business?', a: ny('railwayexpress'), w: [ny('cleburne'), ny('romer'), ny('lochner')], why: 'Railway Express Agency v. New York (1949).' },
     { L: [1, 2], q: 'Which case struck down a city\'s denial of a permit for a group home for people with intellectual disabilities?', a: ny('cleburne'), w: [ny('railwayexpress'), ny('rodriguez'), ny('romer')], why: 'Cleburne (1985): irrational prejudice, under rational basis.' },
@@ -312,6 +349,8 @@
   ], 'Any conceivable legitimate reason, but not animus.'));
 
   G('conlaw2.race-strict-scrutiny', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['strauder', 'yickwo', 'batson', 'adarand', 'bolling', 'croson', 'korematsu', 'loving']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['strauder', 'yickwo', 'batson', 'adarand', 'bolling', 'croson', 'korematsu', 'loving']); } },
     { L: [1, 2], q: 'What tier of review applies to racial classifications?', a: 'strict scrutiny', w: ['rational basis', 'intermediate scrutiny', 'no review'], why: 'A compelling interest and narrow tailoring.' },
     { L: [1, 2], q: 'Which 1880 case struck down a law allowing only white men to serve on juries?', a: ny('strauder'), w: [ny('plessy'), ny('yickwo'), ny('batson')], why: 'Strauder v. West Virginia.' },
     { L: [1, 2], q: 'Did the Court in Korematsu v. United States (1944) uphold or strike down the wartime exclusion order?', a: 'upheld it', w: ['struck it down', 'declined to decide', 'sent it back to Congress'], why: 'It upheld the order while saying racial restrictions get the most rigid scrutiny.' },
@@ -326,6 +365,8 @@
 
   var PB = ['plessy', 'gaines', 'sweatt', 'mclaurin', 'brown', 'brown2'];
   G('conlaw2.plessy-to-brown', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['plessy', 'brown', 'sweatt', 'gaines', 'mclaurin', 'bolling']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['plessy', 'brown', 'sweatt', 'gaines', 'mclaurin', 'bolling']); } },
     { L: [1, 2], q: 'Which case upheld "separate but equal"?', a: ny('plessy'), w: [ny('brown'), ny('sweatt'), ny('gaines')], why: 'Plessy v. Ferguson (1896).' },
     { L: [1, 2], q: 'What was the vote in Brown v. Board of Education (1954)?', a: '9 to 0', w: ['5 to 4', '7 to 2', '6 to 3'], why: 'Unanimous, led by Chief Justice Warren.' },
     { L: [1, 2], q: 'Who was the only dissenter in Plessy v. Ferguson?', a: 'Justice John Marshall Harlan', w: ['Chief Justice Earl Warren', 'Justice Henry Billings Brown', 'Thurgood Marshall'], why: 'Harlan wrote "Our Constitution is color-blind."' },
@@ -340,6 +381,8 @@
   ], 'Plessy upheld separation; the graduate cases showed inequality; Brown ended it in schools.'));
 
   G('conlaw2.discriminatory-purpose', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['yickwo', 'washingtondavis', 'arlington', 'feeney']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['yickwo', 'washingtondavis', 'arlington', 'feeney']); } },
     { L: [1, 2], q: 'Under Washington v. Davis (1976), is a disparate impact alone enough to violate the Equal Protection Clause?', a: 'no; discriminatory purpose must be shown', w: ['yes, always', 'yes, if the impact is over 50 percent', 'only for federal laws'], why: 'Impact is evidence, not enough by itself.' },
     { L: [1, 2], q: 'Which case struck down the discriminatory enforcement of a San Francisco laundry permit rule?', a: ny('yickwo'), w: [ny('washingtondavis'), ny('strauder'), ny('plessy')], why: 'Yick Wo v. Hopkins (1886).' },
     { L: [1, 2], q: 'Which statute, unlike the Constitution, reaches disparate impact in employment?', a: 'Title VII of the Civil Rights Act of 1964', w: ['the Voting Rights Act\'s Section 5', 'the Religious Freedom Restoration Act', 'the Espionage Act'], why: 'Griggs v. Duke Power (1971) read Title VII to reach impact.' },
@@ -359,6 +402,8 @@
 
   var AA = ['bakke', 'croson', 'adarand', 'grutter', 'gratz'];
   G('conlaw2.affirmative-action', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['croson', 'adarand']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['croson', 'adarand']); } },
     { L: [1, 2], q: 'Which case barred fixed racial quotas in admissions but allowed race as one factor (in Justice Powell\'s controlling opinion)?', a: ny('bakke'), w: [ny('grutter'), ny('croson'), ny('gratz')], why: 'Regents of the University of California v. Bakke (1978).' },
     { L: [1, 2], q: 'Which case held that federal racial classifications, like state ones, get strict scrutiny?', a: ny('adarand'), w: [ny('grutter'), ny('bakke'), ny('gratz')], why: 'Adarand Constructors v. Peña (1995): "consistency."' },
     { L: [1, 2], q: 'What tier applies to racial classifications meant to help, such as set-asides?', a: 'strict scrutiny', w: ['intermediate scrutiny', 'rational basis', 'no review'], why: 'Croson (state and local) and Adarand (federal).' },
@@ -399,6 +444,8 @@
 
   var FR = ['reynolds', 'harper', 'shapiro', 'rodriguez', 'saenz', 'bushgore'];
   G('conlaw2.ep-fundamental-rights', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['reynolds', 'harper', 'shapiro', 'saenz', 'rodriguez', 'plyler']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['reynolds', 'harper', 'shapiro', 'saenz', 'rodriguez', 'plyler']); } },
     { L: [1, 2], q: 'Which case required "one person, one vote" for both houses of a state legislature?', a: ny('reynolds'), w: [ny('harper'), ny('bushgore'), ny('shapiro')], why: 'Reynolds v. Sims (1964).' },
     { L: [1, 2], q: 'Which case struck down poll taxes in state elections?', a: ny('harper'), w: [ny('reynolds'), ny('saenz'), ny('rodriguez')], why: 'Harper v. Virginia Board of Elections (1966).' },
     { L: [1, 2], q: 'Is education a fundamental right under the federal Constitution?', a: 'no (Rodriguez, 1973)', w: ['yes (Brown, 1954)', 'yes (Plyler, 1982)', 'only for high school'], why: 'Many state constitutions protect it, though.' },
@@ -414,6 +461,8 @@
   /* ======================================================== Unit 4: Freedom of Speech and Press */
   var CPD = ['schenck', 'abrams', 'gitlow', 'whitney', 'dennis', 'brandenburg'];
   G('conlaw2.clear-present-danger', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['schenck', 'abrams', 'gitlow', 'whitney', 'dennis', 'brandenburg']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['schenck', 'abrams', 'gitlow', 'whitney', 'dennis', 'brandenburg']); } },
     { L: [1, 2], q: 'Which case announced the "clear and present danger" test?', a: ny('schenck'), w: [ny('brandenburg'), ny('dennis'), ny('gitlow')], why: 'Schenck v. United States (1919), Justice Holmes for a unanimous Court.' },
     { L: [1, 2], q: 'The words about "falsely shouting fire in a theatre" come from which case?', a: ny('schenck'), w: [ny('abrams'), ny('brandenburg'), ny('tinker')], why: 'An analogy in Schenck, not its holding.' },
     { L: [1, 2], q: 'In Abrams v. United States (1919), Holmes wrote in…', a: 'dissent, defending "free trade in ideas"', w: ['the majority, upholding the convictions', 'a concurrence joining the majority', 'a unanimous opinion'], why: 'Abrams was 7 to 2; Holmes and Brandeis dissented.' },
@@ -427,6 +476,8 @@
   ], 'Schenck\'s test was narrowed, then replaced by Brandenburg.'));
 
   G('conlaw2.brandenburg', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['brandenburg', 'whitney', 'schenck', 'dennis']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['brandenburg', 'whitney', 'schenck', 'dennis']); } },
     { L: [1, 2], q: 'Brandenburg v. Ohio (1969) protects advocacy of lawbreaking unless it is directed to inciting <b>what</b> kind of lawless action?', a: 'imminent', w: ['eventual', 'any', 'political'], why: '"Imminent lawless action."' },
     { L: [1, 2], q: 'Which earlier case did Brandenburg overrule?', a: ny('whitney'), w: [ny('schenck'), ny('gitlow'), ny('dennis')], why: 'Whitney v. California (1927).' },
     { L: [1, 2], q: 'How many elements must be present for speech to be unprotected incitement under Brandenburg?', num: 3, why: 'Intent (directed to), imminence, and likelihood.' },
@@ -442,6 +493,8 @@
   ], 'Directed, imminent, likely: all three.'));
 
   G('conlaw2.content-based', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['reedgilbert', 'ward', 'matal', 'rosenberger', 'rav']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['reedgilbert', 'ward', 'matal', 'rosenberger', 'rav']); } },
     { L: [1, 2], q: 'What tier applies to a content-based law regulating speech?', a: 'strict scrutiny', w: ['intermediate scrutiny', 'rational basis'], why: 'Reed v. Town of Gilbert (2015).' },
     { L: [1, 2], q: 'What tier applies to a content-neutral rule like a limit on sign size?', a: 'intermediate scrutiny', w: ['strict scrutiny', 'rational basis'], why: 'Content-neutral rules get intermediate review.' },
     { L: [1, 2], q: 'Which case held a town sign code with categories like "ideological" and "directional" content-based?', a: ny('reedgilbert'), w: [ny('ward'), ny('brandenburg'), ny('johnson')], why: 'Reed v. Town of Gilbert (2015).' },
@@ -472,6 +525,8 @@
   ], 'Name the category before calling speech unprotected.'));
 
   G('conlaw2.symbolic-speech', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['obrien', 'johnson', 'tinker', 'barnette']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['obrien', 'johnson', 'tinker', 'barnette']); } },
     { L: [1, 2], q: 'Which case upheld a conviction for burning a draft card?', a: ny('obrien'), w: [ny('johnson'), ny('tinker'), ny('barnette')], why: 'United States v. O\'Brien (1968).' },
     { L: [1, 2], q: 'Which case protected burning the American flag as political protest?', a: ny('johnson'), w: [ny('obrien'), ny('tinker'), ny('brandenburg')], why: 'Texas v. Johnson (1989), 5 to 4.' },
     { L: [1, 2], q: 'What did students wear in Tinker v. Des Moines (1969)?', a: 'black armbands protesting the Vietnam War', w: ['political T-shirts', 'campaign buttons', 'flags on their backpacks'], why: 'The armbands were protected expression.' },
@@ -487,6 +542,8 @@
   ], 'Is the government\'s interest related to the message?'));
 
   G('conlaw2.defamation', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['sullivan', 'gertz', 'snyder']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['sullivan', 'gertz', 'snyder']); } },
     { L: [1, 2], q: 'What must a public official prove to win a defamation suit about official conduct?', a: 'actual malice', w: ['negligence', 'that the statement was offensive', 'that the speaker disliked him'], why: 'New York Times Co. v. Sullivan (1964).' },
     { L: [1, 2], q: '"Actual malice" means…', a: 'knowing falsity or reckless disregard for the truth', w: ['ill will or spite toward the person', 'any factual error', 'a failure to apologize'], why: 'A term of art about knowledge of falsity.' },
     { L: [1, 2], q: 'Which case let states set a lower standard for private figures, as long as there is fault?', a: ny('gertz'), w: [ny('sullivan'), ny('near'), ny('snyder')], why: 'Gertz v. Robert Welch (1974).' },
@@ -501,6 +558,8 @@
   ], 'Actual malice is about knowledge of falsity, not spite.'));
 
   G('conlaw2.prior-restraint', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['near', 'pentagonpapers']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['near', 'pentagonpapers']); } },
     { L: [1, 2], q: 'A court order stopping a newspaper from publishing a story is called…', a: 'a prior restraint', w: ['a time, place and manner rule', 'a content-neutral law', 'a defamation judgment'], why: 'It stops speech before it happens.' },
     { L: [1, 2], q: 'Which case struck down a Minnesota law allowing a newspaper to be shut down as a "public nuisance"?', a: ny('near'), w: [ny('pentagonpapers'), ny('sullivan'), ny('gitlow')], why: 'Near v. Minnesota (1931).' },
     { L: [1, 2], q: 'In the Pentagon Papers case (1971), did the government get an order stopping publication?', a: 'no; it did not meet its heavy burden', w: ['yes, for national security', 'yes, but only for the Post', 'the Court did not decide'], why: 'New York Times Co. v. United States, 6 to 3.' },
@@ -542,6 +601,8 @@
 
   var SCH = ['tinker', 'bethel', 'hazelwood', 'morse'];
   G('conlaw2.schools-employees', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['tinker', 'hazelwood', 'bethel', 'morse', 'pickering', 'garcetti']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['tinker', 'hazelwood', 'bethel', 'morse', 'pickering', 'garcetti']); } },
     { L: [1, 2], q: 'Under Tinker, when may a school forbid student speech?', a: 'when it would materially and substantially disrupt school or invade others\' rights', w: ['whenever a teacher disagrees', 'whenever it is political', 'never'], why: 'Students do not shed their rights "at the schoolhouse gate."' },
     { L: [1, 2], q: 'Which case let a principal remove articles from a school-sponsored newspaper?', a: ny('hazelwood'), w: [ny('tinker'), ny('bethel'), ny('morse')], why: 'Hazelwood v. Kuhlmeier (1988).' },
     { L: [1, 2], q: 'Which case protected a public employee\'s speech as a citizen on public concerns, through a balancing test?', a: ny('pickering'), w: [ny('garcetti'), ny('tinker'), ny('hazelwood')], why: 'Pickering v. Board of Education (1968).' },
@@ -557,6 +618,8 @@
   ], 'Tinker is the baseline; then the special rules.'));
 
   G('conlaw2.campaign-speech', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['buckley', 'citizensunited']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['buckley', 'citizensunited']); } },
     { L: [1, 2], q: 'In Buckley v. Valeo (1976), what happened to limits on contributions to candidates?', a: 'they were upheld', w: ['they were struck down', 'they were not reviewed', 'they were left to the states'], why: 'They serve the interest in preventing corruption or its appearance.' },
     { L: [1, 2], q: 'In Buckley, what happened to limits on independent expenditures?', a: 'they were struck down', w: ['they were upheld', 'they were raised', 'they applied only to corporations'], why: 'They directly limit the quantity of political speech.' },
     { L: [1, 2], q: 'Which case held corporations and unions may spend independently on elections?', a: ny('citizensunited'), w: [ny('buckley'), ny('sullivan'), ny('naacpalabama')], why: 'Citizens United v. FEC (2010), 5 to 4.' },
@@ -570,6 +633,8 @@
 
   var CSA = ['gobitis', 'barnette', 'naacpalabama', 'wooley', 'hurley', 'dale'];
   G('conlaw2.compelled-speech-association', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['barnette', 'gobitis', 'wooley', 'dale', 'naacpalabama', 'hurley']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['barnette', 'gobitis', 'wooley', 'dale', 'naacpalabama', 'hurley']); } },
     { L: [1, 2], q: 'Which case held public schools may not require students to salute the flag?', a: ny('barnette'), w: [ny('gobitis'), ny('tinker'), ny('wooley')], why: 'West Virginia v. Barnette (1943).' },
     { L: [1, 2], q: 'Which case did Barnette overrule?', a: ny('gobitis'), w: [ny('tinker'), ny('wooley'), ny('everson')], why: 'Minersville School District v. Gobitis (1940).' },
     { L: [1, 2], q: 'Which case let a driver cover the motto "Live Free or Die" on his license plate?', a: ny('wooley'), w: [ny('barnette'), ny('johnson'), ny('dale')], why: 'Wooley v. Maynard (1977).' },
@@ -584,6 +649,8 @@
 
   /* ======================================================== Unit 5: The Religion Clauses; Unit 6: The Second Amendment */
   G('conlaw2.establishment-history', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['everson', 'engel', 'abington']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['everson', 'engel', 'abington']); } },
     { L: [1, 2], q: 'Which case applied the Establishment Clause to the states?', a: ny('everson'), w: [ny('lemon'), ny('engel'), ny('barron')], why: 'Everson v. Board of Education (1947).' },
     { L: [1, 2], q: 'Where does the phrase "wall of separation between church and State" come from?', a: 'Jefferson\'s 1802 letter to the Danbury Baptists', w: ['the First Amendment\'s text', 'the Declaration of Independence', 'the Federalist Papers'], why: 'The Constitution says "no law respecting an establishment of religion."' },
     { L: [1, 2], q: 'In Everson, did the Court uphold or strike down repaying parents for bus fares to religious schools?', a: 'upheld it as a general public benefit', w: ['struck it down', 'sent it back to the state', 'did not decide'], why: 'Like police and fire protection.' },
@@ -597,6 +664,8 @@
   ], 'Two clauses; the famous phrase is Jefferson\'s.'));
 
   G('conlaw2.establishment-tests', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['leeweisman', 'marshchambers', 'galloway', 'santafe', 'wallace', 'lynch', 'amlegion']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['leeweisman', 'marshchambers', 'galloway', 'santafe', 'wallace', 'lynch', 'amlegion']); } },
     { L: [1, 2], q: 'Which test asked about secular purpose, primary effect and excessive entanglement?', a: 'the Lemon test', w: ['the endorsement test', 'the coercion test', 'the Brandenburg test'], why: 'Lemon v. Kurtzman (1971).' },
     { L: [1, 2], q: 'Which case set out the coercion test, striking down prayers at a middle school graduation?', a: ny('leeweisman'), w: [ny('lemon'), ny('marshchambers'), ny('galloway')], why: 'Lee v. Weisman (1992).' },
     { L: [1, 2], q: 'Who proposed the endorsement test?', a: 'Justice O\'Connor, concurring in Lynch v. Donnelly (1984)', w: ['Chief Justice Burger, in Lemon', 'Justice Kennedy, in Lee v. Weisman', 'Justice Black, in Everson'], why: 'A reasonable observer asks whether government endorses religion.' },
@@ -614,6 +683,8 @@
 
   var SP = ['engel', 'abington', 'wallace', 'leeweisman', 'santafe'];
   G('conlaw2.school-prayer', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['engel', 'abington', 'leeweisman', 'santafe', 'wallace']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['engel', 'abington', 'leeweisman', 'santafe', 'wallace']); } },
     { L: [1, 2], q: 'Which case struck down a prayer written by New York\'s Board of Regents for public schools?', a: ny('engel'), w: [ny('abington'), ny('leeweisman'), ny('santafe')], why: 'Engel v. Vitale (1962).' },
     { L: [1, 2], q: 'May students pray privately at public school?', a: 'yes; the cases bar only school-sponsored prayer', w: ['no, never', 'only before 8 a.m.', 'only with a teacher present'], why: 'Private student prayer is protected.' },
     { L: [1, 2], q: 'Which case struck down clergy-led prayers at a middle school graduation?', a: ny('leeweisman'), w: [ny('santafe'), ny('engel'), ny('abington')], why: 'Lee v. Weisman (1992): subtle coercion.' },
@@ -628,6 +699,8 @@
 
   var AID = ['everson', 'zelman', 'trinity', 'espinoza'];
   G('conlaw2.aid-to-religion', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['zelman', 'everson', 'espinoza', 'trinity']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['zelman', 'everson', 'espinoza', 'trinity']); } },
     { L: [1, 2], q: 'Which case upheld school vouchers that parents could use at religious schools?', a: ny('zelman'), w: [ny('lemon'), ny('espinoza'), ny('everson')], why: 'Zelman v. Simmons-Harris (2002): true private choice.' },
     { L: [1, 2], q: 'Which case held a church preschool could not be excluded from a playground-surface grant program because it was a church?', a: ny('trinity'), w: [ny('espinoza'), ny('everson'), ny('zelman')], why: 'Trinity Lutheran v. Comer (2017).' },
     { L: [1, 2], q: 'Under Zelman, aid reaches religious schools legitimately when…', a: 'parents independently choose where to use it', w: ['the government picks the schools', 'the schools promise not to teach religion', 'Congress approves each school'], why: '"True private choice."' },
@@ -641,6 +714,8 @@
 
   var FE = ['sherbert', 'yoder', 'smith', 'lukumi'];
   G('conlaw2.free-exercise', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['smith', 'sherbert', 'yoder', 'lukumi']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['smith', 'sherbert', 'yoder', 'lukumi']); } },
     { L: [1, 2], q: 'Which case held that neutral, generally applicable laws need no religious exemption?', a: ny('smith'), w: [ny('sherbert'), ny('yoder'), ny('lukumi')], why: 'Employment Division v. Smith (1990).' },
     { L: [1, 2], q: 'Which case struck down city ordinances aimed at a faith\'s ritual practices?', a: ny('lukumi'), w: [ny('smith'), ny('yoder'), ny('boerne')], why: 'Church of the Lukumi Babalu Aye v. City of Hialeah (1993), 9 to 0.' },
     { L: [1, 2], q: 'What test did Sherbert v. Verner (1963) apply to burdens on religion?', a: 'strict scrutiny (a compelling interest)', w: ['rational basis', 'the Lemon test', 'intermediate scrutiny'], why: 'Sherbert and Yoder applied strict scrutiny.' },
@@ -657,6 +732,8 @@
   ], 'Neutral and generally applicable? If not, strict scrutiny.'));
 
   G('conlaw2.rfra', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['boerne', 'smith', 'hobbylobby', 'ocentro', 'holt']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['boerne', 'smith', 'hobbylobby', 'ocentro', 'holt']); } },
     { L: [1, 2], q: 'What test does RFRA apply to substantial burdens on religious exercise?', a: 'a compelling interest pursued by the least restrictive means', w: ['rational basis', 'the Lemon test', 'intermediate scrutiny'], why: 'RFRA restored the Sherbert-Yoder test.' },
     { L: [1, 2], q: 'Which case held RFRA invalid as applied to the states?', a: ny('boerne'), w: [ny('smith'), ny('hobbylobby'), ny('lukumi')], why: 'City of Boerne v. Flores (1997).' },
     { L: [1, 2], q: 'In what year did Congress pass RFRA?', num: 1993, why: '1993, three years after Smith.' },
@@ -685,6 +762,8 @@
   ], 'An individual right (Heller), applied to the states (McDonald).'));
 
   G('conlaw2.bruen-rahimi', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['heller', 'mcdonald', 'usmiller', 'caetano']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['heller', 'mcdonald', 'usmiller', 'caetano']); } },
     { L: [1, 2], q: 'Which kind of law did Heller describe as "presumptively lawful"?', a: 'longstanding bans on possession of firearms by felons', w: ['a ban on handguns in the home', 'a ban on all firearms in the home', 'a rule that guns at home be kept disassembled'], why: 'Heller listed bans on possession by felons and the mentally ill, carrying in sensitive places, and conditions on commercial sale.' },
     { L: [1, 2], q: 'Which places did Heller name as "sensitive places" where carrying firearms may be forbidden?', a: 'schools and government buildings', w: ['homes', 'private farms', 'every public street'], why: 'Heller: "sensitive places such as schools and government buildings."' },
     { L: [1, 2], q: 'Which case applied Heller to stun guns?', a: ny('caetano'), w: [ny('mcdonald'), ny('usmiller'), ny('heller')], why: 'Caetano v. Massachusetts (2016), an unsigned opinion.' },
@@ -748,6 +827,8 @@
   ], 'Exclude the tainted evidence, unless an exception applies.'));
 
   G('conlaw2.miranda', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['miranda', 'dickerson', 'quarles']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['miranda', 'dickerson', 'quarles']); } },
     { L: [1, 2], q: 'Miranda warnings are required before…', a: 'custodial interrogation', w: ['any conversation with police', 'any arrest, even without questions', 'a traffic stop'], why: 'Both custody and interrogation.' },
     { L: [1, 2], q: 'Which case held that Congress cannot overrule Miranda by statute?', a: ny('dickerson'), w: [ny('quarles'), ny('miranda'), ny('gideon')], why: 'Dickerson v. United States (2000), 7 to 2.' },
     { L: [1, 2], q: 'Which amendment\'s privilege does Miranda protect?', a: 'the Fifth Amendment', w: ['the Fourth Amendment', 'the Sixth Amendment', 'the Eighth Amendment'], why: 'The privilege against self-incrimination.' },
@@ -780,6 +861,8 @@
 
   var RC = ['powell', 'betts', 'gideon', 'argersinger', 'scottil', 'strickland'];
   G('conlaw2.right-to-counsel', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['gideon', 'betts', 'powell', 'argersinger', 'scottil', 'strickland']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['gideon', 'betts', 'powell', 'argersinger', 'scottil', 'strickland']); } },
     { L: [1, 2], q: 'Which case required states to provide lawyers to poor defendants charged with felonies?', a: ny('gideon'), w: [ny('betts'), ny('powell'), ny('miranda')], why: 'Gideon v. Wainwright (1963), unanimous.' },
     { L: [1, 2], q: 'Which case did Gideon overrule?', a: ny('betts'), w: [ny('powell'), ny('argersinger'), ny('palko')], why: 'Betts v. Brady (1942).' },
     { L: [1, 2], q: 'What are the two parts of the Strickland test for ineffective assistance?', a: 'deficient performance and prejudice', w: ['custody and interrogation', 'intent and imminence', 'purpose and effect'], why: 'Strickland v. Washington (1984).' },
@@ -811,6 +894,8 @@
 
   var EI = ['furman', 'gregg', 'atkins', 'roper', 'kennedyla', 'timbs'];
   G('conlaw2.eighth-amendment', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['roper', 'atkins', 'gregg', 'furman', 'timbs', 'kennedyla']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['roper', 'atkins', 'gregg', 'furman', 'timbs', 'kennedyla']); } },
     { L: [1, 2], q: 'Did Furman v. Georgia (1972) abolish the death penalty?', a: 'no; it struck down the systems then in use', w: ['yes, permanently', 'yes, until 2005', 'it upheld all death sentences'], why: 'Gregg (1976) upheld revised statutes.' },
     { L: [1, 2], q: 'Which case barred the death penalty for crimes committed under age 18?', a: ny('roper'), w: [ny('atkins'), ny('gregg'), ny('furman')], why: 'Roper v. Simmons (2005).' },
     { L: [1, 2], q: 'Which case applied the Excessive Fines Clause to the states?', a: ny('timbs'), w: [ny('roper'), ny('gregg'), ny('mapp')], why: 'Timbs v. Indiana (2019), unanimous.' },
@@ -842,6 +927,8 @@
 
   var VR = ['sckatz', 'gingles', 'shaw', 'shelby', 'rucho'];
   G('conlaw2.voting-rights-law', fromBank([
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['shelby', 'gingles', 'sckatz', 'shaw']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['shelby', 'gingles', 'sckatz', 'shaw']); } },
     { L: [1, 2], q: 'Which case struck down the Voting Rights Act\'s preclearance coverage formula?', a: ny('shelby'), w: [ny('gingles'), ny('rucho'), ny('sckatz')], why: 'Shelby County v. Holder (2013).' },
     { L: [1, 2], q: 'Which case held that partisan gerrymandering claims are beyond the reach of federal courts?', a: ny('rucho'), w: [ny('shaw'), ny('shelby'), ny('baker')], why: 'Rucho v. Common Cause (2019).' },
     { L: [1, 2], q: 'In what year did Congress pass the Voting Rights Act?', num: 1965, why: 'Signed August 6, 1965.' },
@@ -858,3 +945,354 @@
   ], 'Section 2 nationwide; Section 4(b) struck; partisan claims left to the political process.'));
 
 })(window.MathLadder);
+
+/* ---- widen_hum: more questions from the lesson's own tables -----------------------------------------------------
+   Each topic listed below also asks about the facts in its lesson's tables (copied here from the lesson, so the
+   answers are the lesson's own). Forms, by level:
+     match   "Which museum is in Turin?": the right cell and others from the same column (3 choices at level 1, 4 above)
+     pairs   lines "A → B": which pairing is right (level 2), or which one is wrong (level 3)
+     sort    a comparison table: which column does this cell describe (levels 1-2), or choose all for one column (level 3)
+   How often: about a third to a half of the draws, more when the topic's own questions are few at that level.
+   Generated by /tmp/work_widen_widen_hum/tabbuild.js from data/<ladder>/lessons/<course>.json. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var TABS = [{"k":"conlaw2.barron#4","h":["Text","Whom it limits","Why that matters"],"r":[["Article I, Section 9: \"No Bill of Attainder or ex post facto Law shall be passed\"","Congress (it sits in the article about Congress)","general words, read in context"],["Article I, Section 10: \"No State shall…\"","the states, by name","the framers could name states when they meant to"],["First Amendment: \"Congress shall make no law…\"","Congress, by name","the plainest case"],["Fifth Amendment: \"…nor shall private property be taken for public use, without just compensation\"","under Barron, the federal government only","no state is named"]],"cap":"","m":[[0,1,"Whom does this limit: {a}?",0]]},
+    {"k":"conlaw2.incorporation#2","h":["Approach","Main voice","What it says"],"r":[["Fundamental fairness","Justice Cardozo in <i>Palko v. Connecticut</i> (1937)","apply only rights \"implicit in the concept of ordered liberty\"; decide case by case"],["Total incorporation","Justice Black, dissenting in <i>Adamson v. California</i> (1947)","the Fourteenth Amendment applies the whole Bill of Rights to the states"],["Selective incorporation (the Court's method)","<i>Duncan v. Louisiana</i> (1968)","apply a right if it is fundamental to \"our scheme of ordered liberty\" and deeply rooted; once applied, it applies against states with the same content as against the federal government"]],"cap":"","m":[[1,0,"Which approach to incorporation is linked with {a}?",0,"an approach with its main voice"],[2,0,"Which approach to incorporation says this: {a}?",0,0,2]]},
+    {"k":"conlaw2.family-autonomy#2","h":["Case","The law","Holding"],"r":[["<i>Meyer v. Nebraska</i> (1923)","Nebraska banned teaching any modern foreign language to children before eighth grade","struck down: liberty includes the right of parents to have children taught and of teachers to teach"],["<i>Pierce v. Society of Sisters</i> (1925)","Oregon required children to attend public schools","struck down: \"the child is not the mere creature of the State\"; parents may choose private schools"],["<i>Griswold v. Connecticut</i> (1965)","Connecticut banned the use of contraceptives, even by married couples","struck down: a right of marital privacy"],["<i>Moore v. City of East Cleveland</i> (1977)","a city zoning rule allowed only a narrow \"family\" to share a home, excluding a grandmother living with two grandsons","struck down (plurality): the extended family living together is protected"],["<i>Troxel v. Granville</i> (2000)","a statute let \"any person\" seek court-ordered visits with a child \"at any time\"","struck down as applied (plurality): a fit parent's decisions about her children deserve special weight"]],"cap":"","m":[[1,0,"Which case concerned this law: {a}?",0],[0,2,"What did the Court hold in {a}?",0,0,2]]},
+    {"k":"conlaw2.sex-discrimination#2","h":["Case","Law","What the Court did"],"r":[["<i>Reed v. Reed</i> (1971)","Idaho preferred men over women as administrators of estates",""],["<i>Frontiero v. Richardson</i> (1973)","the military gave male members' wives benefits automatically, but female members' husbands had to prove dependency","struck it down (8 to 1); a plurality of four would have applied strict scrutiny, one vote short"],["<i>Craig v. Boren</i> (1976)","Oklahoma let women buy 3.2 percent beer at 18 but men only at 21","struck it down; set <b>intermediate scrutiny</b>: an important objective and a substantial relationship"],["<i>United States v. Virginia</i> (1996)","the Virginia Military Institute admitted only men; Virginia offered a separate program for women","struck it down (7 to 1); the state must show an \"exceedingly persuasive justification\""]],"cap":"","m":[[1,0,"Which case concerned this law: {a}?",0],[0,2,"What did the Court do in {a}?",0,0,2]]},
+    {"k":"conlaw2.other-classifications#2","h":["Classification","Tier","Leading case and notes"],"r":[["State laws about lawfully present noncitizens (alienage)","strict, usually","<i>Graham v. Richardson</i> (1971): exception: states may limit \"political functions\" such as police officers and public school teachers to citizens; federal immigration rules get deference"],["Birth outside marriage (legitimacy)","intermediate","the Court's legitimacy cases: children should not be penalized for their parents' status"],["Age","rational basis","<i>Massachusetts Board of Retirement v. Murgia</i> (1976): mandatory retirement for state police at 50 upheld"],["Wealth","rational basis","<i>San Antonio Independent School District v. Rodriguez</i> (1973): school funding through local property taxes upheld"],["Disability","rational basis","<i>City of Cleburne v. Cleburne Living Center</i> (1985): though the denial in Cleburne failed even that test"],["Children not lawfully present, denied schooling","special case","<i>Plyler v. Doe</i> (1982): struck down: the law did not further a substantial state goal"]],"cap":"","m":[[0,1,"Which tier of review applies to {a:l}?",0,"a classification with its tier"]]},
+    {"k":"conlaw2.brandenburg#3","h":["Element","Words in Brandenburg","What it rules out"],"r":[["1. Intent","\"directed to inciting or producing\"","speech that is careless or reckless about violence but not aimed at it"],["2. Imminence","\"imminent lawless action\"","advocacy of lawbreaking at some later time"],["3. Likelihood","\"likely to incite or produce such action\"","calls to violence that no one is likely to act on"]],"cap":"","m":[[1,0,"Which element of the Brandenburg test do these words state: {a}?",0,"an element with its words"],[2,0,"Which element of the Brandenburg test rules out {a}?",0,0,2]]},
+    {"k":"conlaw2.content-based#2","h":["Kind of law","Example","Review"],"r":[["<b>Viewpoint-based</b>: favors or disfavors one side","a ban on signs criticizing the mayor, but not praising","almost always invalid (the most suspect)"],["<b>Content-based</b>: depends on the subject or message","a ban on all political signs, or a code with different rules for \"ideological\" and \"directional\" signs","strict scrutiny: compelling interest, narrowly tailored"],["<b>Content-neutral</b>: applies regardless of message","no signs larger than 16 square feet; no loudspeakers after 10 p.m","intermediate scrutiny (see time, place and manner)"]],"cap":"","m":[[1,0,"What kind of law is this: {a}?",0],[0,2,"What review does a court give to a {a:l}?",0,0,2]]},
+    {"k":"conlaw2.unprotected-categories#2","h":["Category","Leading case","The test, in brief"],"r":[["Incitement","<i>Brandenburg v. Ohio</i> (1969)","directed to imminent lawless action and likely to produce it"],["True threats","<i>Virginia v. Black</i> (2003)","statements in which the speaker means to communicate a serious expression of an intent to commit unlawful violence against a particular person or group; crude political exaggeration is not enough (<i>Watts v. United States</i> (1969))"],["Fighting words","<i>Chaplinsky v. New Hampshire</i> (1942)","face-to-face personal insults likely to provoke an immediate violent reaction; read very narrowly today"],["Obscenity","<i>Miller v. California</i> (1973)","a three-part test: by contemporary community standards the work as a whole appeals to the prurient interest; it describes sexual conduct defined by state law in a patently offensive way; and it lacks serious literary, artistic, political or scientific value"],["Defamation","<i>New York Times Co. v. Sullivan</i> (1964)","false statements of fact that harm reputation, with constitutional limits (next topics)"],["Fraud, speech integral to crime","many cases","false statements to get money; speech that is part of a criminal act"]],"cap":"","m":[[0,1,"What is the leading case for {a:l}?",0,"a category with its leading case"],[1,0,"Which category of unprotected speech does {a} define?",0,0,2]]},
+    {"k":"conlaw2.defamation#4","h":["Plaintiff","Must prove (for compensatory damages)","Case"],"r":[["Public official","actual malice","<i>New York Times Co. v. Sullivan</i> (1964)"],["Public figure","actual malice","Curtis Publishing Co. v. Butts (1967)"],["Private figure, public concern","at least fault, as the state sets (often negligence)","<i>Gertz v. Robert Welch, Inc.</i> (1974)"]],"cap":"","m":[[0,2,"Which case set the rule for a {a:l} plaintiff?",0,0,2]]},
+    {"k":"conlaw2.time-place-manner#3","h":["Requirement","Question","Ward"],"r":[["Content-neutral","Does the rule apply without regard to the message?","yes: all bandshell concerts"],["Significant interest","Is the goal important?","yes: protecting residents and park users from excessive noise"],["Narrowly tailored","Does it avoid burdening substantially more speech than needed? (Not least restrictive means)","yes: the city mixed sound to the group's wishes, controlling only volume"],["Ample alternatives","Can the speaker still reach the audience?","yes: concerts still went on"]],"cap":"","m":[[0,1,"In time, place and manner review, which question goes with the requirement \"{a}\"?",0,"a requirement with its question"]]},
+    {"k":"conlaw2.schools-employees#3","h":["Case","Speech","Rule"],"r":[["<i>Bethel School District No. 403 v. Fraser</i> (1986)","a lewd speech at a school assembly","schools may prohibit vulgar and lewd speech"],["<i>Hazelwood School District v. Kuhlmeier</i> (1988)","articles in a school-sponsored newspaper","schools may edit school-sponsored speech for reasons reasonably related to legitimate teaching concerns"],["<i>Morse v. Frederick</i> (2007)","a banner at a school event reasonably read as promoting illegal drug use","schools may restrict such speech"]],"cap":"","m":[[1,0,"Which case concerned this speech: {a}?",0,"a case with its speech"],[0,2,"What rule came from {a}?",0,0,2]]},
+    {"k":"conlaw2.fourth-amendment-search#5","h":["Test","Source","Question"],"r":[["Reasonable expectation of privacy","Katz (1967), Harlan concurrence","Did the person expect privacy, and is that expectation reasonable?"],["Trespass (property)","Jones (2012); also Florida v. Jardines (2013)","Did the government physically intrude on a person, house, papers or effects to gather information?"],["Third-party doctrine","Smith v. Maryland (1979)","Did the person voluntarily convey the information to a third party? (Not extended to cell-site records in Carpenter)"]],"cap":"","m":[[0,1,"Where does the {a} test come from?",0,"a test with its source"],[2,0,"Which Fourth Amendment test asks: {a}",0,0,2]]},
+    {"k":"conlaw2.warrants-exceptions#2","h":["Exception","Leading case","What it allows"],"r":[["Consent","Schneckloth v. Bustamonte (1973)","a search a person voluntarily agrees to; knowing of the right to refuse is not required"],["Plain view","Horton v. California (1990)","seizing evidence in plain view from a lawful vantage point, if its incriminating nature is immediately apparent"],["Search incident to arrest","<i>Chimel v. California</i> (1969)","searching the arrested person and the area within his immediate control; not a whole house. Cell phone data needs a warrant (<i>Riley v. California</i> (2014))"],["Automobile exception","<i>Carroll v. United States</i> (1925)","searching a car with probable cause, because cars can be moved quickly"],["Exigent circumstances","Brigham City v. Stuart (2006)","emergencies: hot pursuit, preventing evidence destruction, helping someone in danger"],["Stop and frisk","<i>Terry v. Ohio</i> (1968)","a brief stop on <b>reasonable suspicion</b> of crime; a pat-down for weapons if the person may be armed and dangerous"]],"cap":"","m":[[0,1,"What is the leading case for the {a:l} exception to the warrant requirement?",0,"an exception with its leading case"],[2,0,"Which exception to the warrant requirement allows {a}?",0,0,2]]},
+    {"k":"conlaw2.jury-confrontation#2","h":["Right","Case","Rule"],"r":[["Jury trial in state courts","<i>Duncan v. Louisiana</i> (1968)","incorporated for serious crimes"],["Which crimes are serious","<i>Baldwin v. New York</i> (1970)","any offense punishable by more than six months; petty offenses may be tried by a judge"],["Jury size","Williams v. Florida (1970)","six-person juries allowed in state cases"],["Unanimity","<i>Ramos v. Louisiana</i> (2020)","a unanimous verdict is required to convict of a serious offense in state court; overruled Apodaca (1972)"],["Jury selection","<i>Batson v. Kentucky</i> (1986)","a prosecutor may not strike jurors because of their race (and, later, sex: J.E.B. v. Alabama, 1994)"],["Confrontation","<i>Crawford v. Washington</i> (2004)",""]],"cap":"","m":[[0,1,"Which case is linked with this right: {a}?",0,"a right with its case"],[1,2,"What rule came from {a}?",0,0,2]]},
+    {"k":"conlaw2.takings#4","h":["Rule","Case","When"],"r":[["Physical occupation is a taking, however small","<i>Loretto v. Teleprompter Manhattan CATV Corp.</i> (1982)","a permanent physical occupation (a cable box on a roof)"],["Total loss of economic value is a taking","<i>Lucas v. South Carolina Coastal Council</i> (1992)","a rule leaves land with no economically beneficial use, unless background principles of property or nuisance law already forbade the use"],["Otherwise, balance","<i>Penn Central Transportation Co. v. New York City</i> (1978)","weigh the economic impact, interference with distinct investment-backed expectations, and the character of the government action"]],"cap":"","m":[[0,1,"Which case stated this takings rule: {a}?",0,"a rule with its case"]]}];
+  var FUNS = {};
+  function plain(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim(); }
+  function txt(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function low(s) { return txt(s).toLowerCase().replace(/[.;:,]+$/, ''); }
+  function big(x) { return String(x).replace(/<span class="(sc-b|eg-cop|eg-h)">/g, '<span class="$1" style="font-size:1.6em;line-height:1">'); }
+  function fill(t, x) { x = big(x); return t.replace('{a:l}', String(x).replace(/^[A-Z](?=[a-z])/, function (c) { return c.toLowerCase(); })).replace('{a}', x); }
+  function dot(s) { s = String(s); return /[.!?…"”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function sameRow(t, i, a) { return t.r.filter(function (r) { return low(r[a]) === low(t.r[i][a]); }); }
+  function partnerSteps(t, tp, right, shown) { // what each wrong choice goes with
+    var out = [];
+    shown.forEach(function (c) {
+      if (low(c) === low(right)) return;
+      var rows = t.r.filter(function (r) { return low(r[tp[1]]) === low(c); });
+      if (rows.length === 1 && txt(rows[0][tp[0]]).length <= 90) out.push(dot(c + ': that goes with ' + rows[0][tp[0]]));
+    });
+    return out.slice(0, 3);
+  }
+  // match: ask for column b from a cell of column a
+  function match(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][b]).length <= 130; });
+    if (!ok.length) return null;
+    var i = R.pick(ok), right = t.r[i][b], seen = {};
+    seen[low(right)] = 1;
+    var bad = {}; sameRow(t, i, a).forEach(function (r) { bad[low(r[b])] = 1; }); // never a choice that is also right
+    var pool = []; t.r.forEach(function (r) { var k = low(r[b]); if (r[b] && !seen[k] && !bad[k] && txt(r[b]).length <= 130) { seen[k] = 1; pool.push(r[b]); } });
+    var k = Math.min(L === 1 ? 3 : 4, pool.length + 1); if (k < 3) return null;
+    var wrongs = R.shuffle(pool).slice(0, k - 1), choices = [right].concat(wrongs);
+    return { q: fill(tp[2], t.r[i][a]), a: { t: 'mc', choices: choices, v: 0 },
+      steps: [dot(t.r[i][a] + ' → ' + right), ].concat(partnerSteps(t, tp, right, choices)),
+      hint: tp[3] || 'Think back to the lesson’s table' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 'm', a, b, i, txt(t.r[i][a])] };
+  }
+  // pairs: three or four lines "a → b"; one right (level 2) or one wrong (level 3)
+  function pairs(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][a]).length <= 70 && txt(t.r[i][b]).length <= 70; });
+    var uniq = {}; ok = ok.filter(function (i) { var k = low(t.r[i][a]); if (uniq[k]) return false; uniq[k] = 1; return true; });
+    var n = Math.min(4, ok.length); if (n < 3) return null;
+    var rows = R.shuffle(ok).slice(0, n), wrongOne = L >= 3, target = R.int(0, n - 1), lines = [], steps = [];
+    for (var j = 0; j < n; j++) {
+      var i = rows[j], right = wrongOne ? j !== target : j === target, ans = t.r[i][b];
+      if (!right) {
+        var good = {}; sameRow(t, i, a).forEach(function (r) { good[low(r[b])] = 1; });
+        var ws = []; t.r.forEach(function (r) { if (r[b] && !good[low(r[b])] && txt(r[b]).length <= 70 && ws.map(low).indexOf(low(r[b])) < 0) ws.push(r[b]); });
+        if (!ws.length) return null;
+        ans = R.pick(ws);
+      }
+      lines.push(t.r[i][a] + ' → ' + ans);
+      steps.push(dot(t.r[i][a] + ' → ' + t.r[i][b] + (right ? ': right' : ', not ' + ans)));
+    }
+    var what = tp[4] ? ' Each line pairs ' + tp[4] + '.' : '';
+    return { q: (wrongOne ? 'Exactly one of these pairings is <b>wrong</b>. Which one?' : 'Exactly one of these pairings is right. Which one?') + what,
+      a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own against what you learned.', wh: [t.k, wrongOne ? 'pw' : 'pr', a, b] };
+  }
+  // sort: which column of a comparison table does a cell belong to
+  function sortQ(R, t, L) {
+    var cols = t.h.map(function (_, j) { return j; }).filter(function (j) { return j >= (t.na ? 0 : 1) && txt(t.h[j]); });
+    if (cols.length < 2) return null;
+    var cells = [];
+    t.r.forEach(function (r, i) { cols.forEach(function (j) {
+      if (!r[j] || (!t.na && !txt(r[0]))) return;
+      var dup = cols.some(function (j2) { return j2 !== j && r[j2] && (low(r[j2]) === low(r[j]) || low(r[j2]).indexOf(low(r[j])) >= 0 || low(r[j]).indexOf(low(r[j2])) >= 0); });
+      if (!dup && txt(r[j]).length <= 140) cells.push([i, j]);
+    }); });
+    if (cells.length < 2) return null;
+    var heads = cols.map(function (j) { return t.h[j]; });
+    if (L >= 3 && cells.length >= 5) {
+      var j0 = R.pick(cols), pick = R.shuffle(cells).slice(0, Math.min(5, cells.length));
+      var hits = pick.filter(function (c) { return c[1] === j0; }).length;
+      if (hits >= 1 && hits < pick.length) {
+        var ch = pick.map(function (c) { return lab(t, c); });
+        var v = pick.map(function (c, k) { return c[1] === j0 ? k : -1; }).filter(function (k) { return k >= 0; });
+        return { q: fill(t.all, t.h[j0]), a: { t: 'mc', choices: ch, v: v },
+          steps: pick.map(function (c) { return dot(lab(t, c) + ' (' + t.h[c[1]] + ')'); }),
+          hint: 'Go through them one at a time.', wh: [t.k, 'sa', j0, pick] };
+      }
+    }
+    var c = R.pick(cells);
+    return { q: t.one + (t.na ? (/^["“]/.test(txt(t.r[c[0]][c[1]])) ? '<br>' + t.r[c[0]][c[1]] : '<br>“' + t.r[c[0]][c[1]] + '”') : '<br>' + asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]), a: { t: 'mc', choices: heads.slice(), v: cols.indexOf(c[1]) },
+      steps: t.na ? [dot('That is ' + t.h[c[1]].replace(/^./, function (x) { return x.toLowerCase(); }))] : [dot(txt(t.r[c[0]][0]) + ' for ' + t.h[c[1]] + ': ' + t.r[c[0]][c[1]])].concat(cols.filter(function (j) { return j !== c[1] && t.r[c[0]][j]; }).map(function (j) { return dot('For ' + t.h[j] + ': ' + t.r[c[0]][j]); })),
+      hint: 'Think back to the lesson’s comparison' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 's', c[0], c[1]] };
+  }
+  function asp(x) { return '<b>' + x + (/\?$/.test(txt(x)) ? '' : ':') + '</b> '; }
+  function lab(t, c) { return t.na ? t.r[c[0]][c[1]] : asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]; }
+  // extra bank items: { q, a, w: [wrong answers, more than are shown], s: [steps], h: hint, lv } or { q, tf: true|false, s, lv }
+  function extra(R, t, L) {
+    var its = t.x.filter(function (it) { return (it.lv || 1) <= L; }); if (!its.length) return null;
+    var it = R.pick(its), p;
+    if (it.f) { it = FUNS[it.f](R, L); if (!it) return null; }
+    if (it.num !== undefined) {
+      p = { q: it.q, a: { t: 'num', v: String(it.num) }, steps: it.s.slice() };
+      if (Number.isInteger(it.num) && !it.unit && !it.pct) p.a.form = 'int';
+      if (it.pct) p.a.pct = true;
+      if (it.tol != null) p.a.tol = it.tol;
+      if (it.unit) p.unit = it.unit;
+    }
+    else if (it.tf !== undefined) p = { q: it.q, a: { t: 'tf', v: it.tf }, steps: it.s.slice() };
+    else {
+      var k = Math.min(L === 1 ? 3 : 4, it.w.length + 1);
+      p = { q: it.q, a: { t: 'mc', choices: [it.a].concat(R.shuffle(it.w).slice(0, k - 1)), v: 0 }, steps: it.s.slice() };
+    }
+    p.hint = it.h || 'Think back to the lesson.';
+    p.wh = [t.k, 'x', its.indexOf(it) >= 0 ? t.x.indexOf(it) : -1];
+    return FUNS.__wrap ? FUNS.__wrap(p, L) : p;
+  }
+  function make(R, list, L) {
+    for (var tries = 0; tries < 8; tries++) {
+      var t = R.pick(list), p = null;
+      if (t.x) p = extra(R, t, L);
+      else if (t.one) p = sortQ(R, t, L);
+      else {
+        var tps = t.m.filter(function (tp) { return (tp[5] || 1) <= L; }); if (!tps.length) continue;
+        var tp = R.pick(tps);
+        p = L >= 2 && tp[4] && R.chance(0.35) ? pairs(R, t, tp, L) : match(R, t, tp, L);
+      }
+      if (p) {
+        // ladder pages show choices as plain text (only $…$ math is rendered), so choices carry no tags
+        if (p.a.t === 'mc') { p.a.choices = p.a.choices.map(plain); var seen = {}; if (p.a.choices.some(function (c) { var k = seen[c]; seen[c] = 1; return k; })) continue; }
+        p.nowiden = true; return p;
+      }
+    }
+    return null;
+  }
+  var BY = {}; TABS.forEach(function (t) { var id = t.k.split('#')[0].split('@')[0]; (BY[id] = BY[id] || []).push(t); });
+  var VAR = {};
+  function baseCount(id, base, L) { // different questions (ignoring the order of choices) from 40 fixed seeds
+    var key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        try { var p = base(ML.rand(id + '#whv#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; } } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  function extCount(id, L) { // different table questions from 40 fixed seeds
+    var key = id + '|x|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        var p = make(ML.rand(id + '#whx#' + s + '#' + L), BY[id], L); if (!p) continue;
+        var k = p.q + '|' + JSON.stringify(p.a.choices ? p.a.choices.slice().sort() : p.a.v);
+        if (!seen[k]) { seen[k] = 1; n++; }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  Object.keys(BY).forEach(function (id) {
+    var base = ML.getGen(id); if (!base || base._wh) return;
+    var fn = function (R, ctx) {
+      var L = (ctx && ctx.level) || 1, n = baseCount(id, base, L), x = extCount(id, L), share = Math.max(0.15, Math.min(0.5, x / (x + n + 1)));
+      if (R.chance(share)) { var p = make(R, BY[id], L); if (p) return p; }
+      return base(R, ctx);
+    };
+    fn._wh = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen_hum ---- */
+
+/* ---- widen: more forms of the same questions (so practice repeats less) ----------------------------------------
+   Every topic of this course keeps its own problems, and some draws are turned into other forms of the same skill,
+   built only from the topic's own problems (so their answers stay the ones the topic already checks):
+     check   "Ava chose X. Is Ava right?" (Yes or No) from a one-answer multiple-choice problem
+     pairs   two or three lines "question → answer"; which line is right (or, at level 3, which one is wrong)
+     tfpick  "Which sentence is true?" (or false) from three of the topic's true-or-false sentences
+   Questions whose answer depends on the other choices (first, best, most, not …) show the choices in the check form
+   and never go into pairs. Mix per level: CFG.mix[level] = [check, pairs, tfpick] shares; the rest stays as it was. */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var CFG = {"prefix":"conlaw2.","only":["barron","slaughter-house","incorporation","state-action","procedural-due-process","lochner-era","end-of-lochner","sdp-methods","family-autonomy","abortion-cases","liberty-and-marriage","ep-framework","ep-rational-basis","race-strict-scrutiny","plessy-to-brown","discriminatory-purpose","affirmative-action","sex-discrimination","other-classifications","ep-fundamental-rights","clear-present-danger","brandenburg","content-based","unprotected-categories","symbolic-speech","defamation","prior-restraint","public-forum","time-place-manner","schools-employees","campaign-speech","compelled-speech-association","establishment-history","establishment-tests","school-prayer","aid-to-religion","free-exercise","rfra","heller-mcdonald","bruen-rahimi","fourth-amendment-search","warrants-exceptions","exclusionary-rule","miranda","fifth-amendment","right-to-counsel","jury-confrontation","eighth-amendment","takings","voting-rights-law"]};
+  var NAMES = ['Ava', 'Ben', 'Cora', 'Dev', 'Eli', 'Finn', 'Gus', 'Hana', 'Ivy', 'Jude', 'Kai', 'Lena', 'Milo', 'Nora', 'Omar', 'Pia',
+    'Quinn', 'Rosa', 'Sam', 'Tess', 'Uma', 'Vic', 'Wren', 'Zoe', 'Ada', 'Leo', 'Mia', 'Theo', 'June', 'Max'];
+  var REL = /\b(first|last|earliest|latest|earlier|later|before|after|older|oldest|newer|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|look|read|here|example|examples|likely|probably|mainly|main|usually|typically|other|another|which one|each|order|then|next)\b|n['’]t\b/i;
+  // pairs judge each line on its own, so only questions whose answer depends on the other choices are left out
+  var RELP = /\b(first|last|earliest|latest|oldest|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|which one|other|another|rank|order|more|less|fewer)\b|n['’]t\b|\w+est\b/i;
+  var REF = /\b(this|these|those|shown|picture|map|table|chart|graph|diagram|passage|scene|story|above|below|here|following)\b/i;
+  var BADCH = /\b(all|none|both|neither) of\b|\b(above|below)\b|^(both|neither|all|none)\b|\bchoice\b|\boption\b/i;
+  function strip(s) { return String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function plainish(s) { return !/<(?!\/?(b|i|em|strong)\b)[^>]*>/.test(String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1')); }
+  function add(q, html) { // inside a read-aloud big span when there is one
+    var m = /<span class="[\w-]*big">/.exec(q);
+    if (m) { var k = q.lastIndexOf('</span>'); if (k > m.index) return q.slice(0, k) + '<br>' + html.replace(/<\/p>\s*<p[^>]*>/g, '<br>').replace(/<\/?p[^>]*>/g, '') + q.slice(k); }
+    return q + html;
+  }
+  function single(p) {
+    return p && p.a && p.a.t === 'mc' && !Array.isArray(p.a.v) && Array.isArray(p.a.choices) && p.a.choices.length >= 2 &&
+      !p.a.choices.some(function (c) { return BADCH.test(strip(c)); });
+  }
+  function hash(t) { var h = 7; for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return h; }
+  function nameFor(q, key) { // the same claim always gets the same name, so a name alone never makes a "new" problem
+    var t = strip(q), ok = NAMES.filter(function (n) { return t.indexOf(n) < 0 && String(key).indexOf(n) < 0; });
+    return (ok.length ? ok : NAMES)[hash(t + '|' + key) % (ok.length || NAMES.length)];
+  }
+  function dot(s) { s = String(s); return /[.!?…"”')\]]\s*(<\/b>)?$/.test(strip(s)) || /\$$/.test(s) ? s : s + '.'; }
+  function optList(ch) { return '<p class="wd-opts">The choices were:<br>' + ch.map(function (c) { return '• ' + c; }).join('<br>') + '</p>'; }
+  function copyP(p, q, a, steps) { var o = {}; for (var k in p) if (Object.prototype.hasOwnProperty.call(p, k)) o[k] = p[k]; o.q = q; o.a = a; o.steps = steps; delete o.choices; return o; }
+
+  // check: show one choice (the right one half the time) and ask whether it is right
+  function check(p, R) {
+    var ch = p.a.choices, v = p.a.v, idx = ch.map(function (_, i) { return i; }), others = idx.filter(function (i) { return i !== v; });
+    var i = R.chance(0.5) ? v : R.pick(others), ok = i === v, nm = nameFor(p.q, ch[i]), letters = ch.every(function (c) { return /^[A-Z]$/.test(String(c)); });
+    var stem = strip(p.q), html = '';
+    if (!letters && (REL.test(stem) || ch.length > 4 || CFG.listAll)) {
+      var shown = p.a.keep ? ch.slice() : R.shuffle(ch);
+      html += optList(shown);
+    }
+    html += '<p class="wd-check">' + nm + ' chose: <b>' + ch[i] + '</b>' + (/[.!?…"”]$/.test(strip(ch[i])) ? '' : '.') + ' Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes. ' + dot(ch[v]) + ' is the right answer.' : 'No. The right answer is: ' + dot(ch[v]);
+    if (ok) first = 'Yes, that is the right answer.';
+    return copyP(p, add(p.q, html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [first].concat(p.steps || []));
+  }
+  // check for "choose all": the whole list is shown, and one learner's picks; right only if exactly the right ones
+  function checkAll(p, R) {
+    var ch = p.a.choices, v = p.a.v.slice().sort(), n = ch.length, pick;
+    if (R.chance(0.45)) pick = v.slice();
+    else {
+      var t = 0; do { var j = R.int(0, n - 1), s = v.slice(), k = s.indexOf(j); if (k >= 0) s.splice(k, 1); else s.push(j); if (R.chance(0.3)) { var j2 = R.int(0, n - 1), k2 = s.indexOf(j2); if (k2 >= 0) s.splice(k2, 1); else s.push(j2); } pick = s.sort(); t++; }
+      while (t < 20 && (!pick.length || pick.join() === v.join()));
+      if (!pick.length || pick.join() === v.join()) return null;
+    }
+    var ok = pick.join() === v.join(), nm = nameFor(p.q, pick.join());
+    var html = optList(ch) + '<p class="wd-check">' + nm + ' chose ' +
+      (pick.length === 1 ? 'only: <b>' + ch[pick[0]] + '</b>' : 'these: <b>' + pick.map(function (i) { return ch[i]; }).join('</b>; <b>') + '</b>') + '. Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes, those are exactly the right ones.' : 'No. The right ones are: ' + v.map(function (i) { return ch[i]; }).join('; ');
+    return copyP(p, add(p.q.replace(/\s*(Choose|Select|Pick) (all|every)[^.?!<]*[.?!]?/i, ''), html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [dot(first)].concat(p.steps || []));
+  }
+
+  // items for pairs: one-answer questions that stand on their own (no picture, no passage, no "first/best/…")
+  function pairItem(p) {
+    if (!single(p) || p.viz) return null;
+    var max = CFG.maxStem || 120, maxA = CFG.maxAns || 70, a = strip(p.a.choices[p.a.v]), stem, group = '';
+    // "prompt<br><b>thing</b>" or "prompt<blockquote>thing</blockquote>": a line is "thing → answer", lines share the prompt
+    var q0 = p.q.replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1').trim();
+    var m = /^([^<]{6,140}?)\s*(?:<br>\s*<b>([^<]{3,140})<\/b>|<blockquote>([^<]{3,140})<\/blockquote>)\s*$/.exec(q0);
+    if (m) { group = m[1].trim(); stem = (m[2] || m[3]).trim(); if (RELP.test(group.replace(/\b(this|these)\b/gi, ''))) return null; }
+    else {
+      if (!plainish(p.q)) return null;
+      stem = strip(p.q); if (RELP.test(stem)) return null;
+    }
+    if (stem.length > max || stem.length < 3 || a.length > maxA || /^[A-Z]$/.test(a) || /\$/.test(stem + a + group)) return null;
+    var w = p.a.choices.filter(function (_, i) { return i !== p.a.v; }).map(strip).filter(function (x) { return x.length <= maxA && x !== a; });
+    if (!w.length) return null;
+    return { stem: stem.replace(/\s*(Choose one|Pick one)\.?$/i, ''), a: a, w: w, why: (p.steps || [])[0] || '', group: group };
+  }
+  function tfItem(p) {
+    if (!p || !p.a || p.a.t !== 'tf' || p.viz || !plainish(p.q)) return null;
+    var s = strip(p.q).replace(/^(True or false\?|True or false:)\s*/i, '').replace(/\s*(True or false\?|Is this true or false\?|Is it true or false\?)$/i, '').trim();
+    if (s.length < 8 || s.length > (CFG.maxStem || 120) + 20 || REF.test(s) || /\?$/.test(s) || /\$/.test(s)) return null;
+    return { s: s, v: p.a.v, why: (p.steps || [])[0] || '' };
+  }
+  function harvest(base, R, ctx, make, n, distinct) {
+    var out = [], keys = {};
+    for (var t = 0; t < 24 && out.length < n; t++) {
+      // at level 3, lines may come from level 2 questions too: three lines with one wrong is the harder form
+      var c2 = ctx && ctx.level >= 3 && (t % 2) ? Object.assign({}, ctx, { level: 2 }) : ctx;
+      var p; try { p = base(ML.rand(R.int(1, 2e9)), c2); } catch (e) { continue; }
+      var it = make(p); if (!it) continue;
+      if (out.length && it.group !== undefined && it.group !== out[0].group) continue;
+      var k = distinct(it); if (k.some(function (x) { return keys[x]; })) continue;
+      k.forEach(function (x) { keys[x] = 1; }); out.push(it);
+    }
+    return out;
+  }
+  function pairs(base, R, ctx, n, wrongOne) {
+    var its = harvest(base, R, ctx, pairItem, n, function (it) { return it.group ? ['s:' + it.stem] : ['s:' + it.stem, 'a:' + it.a]; });
+    if (its.length < n) return null;
+    var answers = its.map(function (it) { return it.a; }), used = {};
+    var target = R.int(0, n - 1), lines = [], steps = [];
+    for (var i = 0; i < n; i++) {
+      var it = its[i], right = wrongOne ? i !== target : i === target, ans = it.a;
+      if (!right) {
+        var ws = it.w.filter(function (x) { return (its[0].group || answers.indexOf(x) < 0) && !used[x]; });
+        if (!ws.length) return null;
+        ans = R.pick(ws); if (!its[0].group) used[ans] = 1;
+      }
+      lines.push(it.stem + ' → ' + ans); // plain text: ladder pages show choices as text
+      steps.push(it.group ? dot(it.stem) + ' Answer: ' + it.a + (right ? '.' : ', not ' + ans + '.') : it.stem + ' The answer is ' + it.a + (right ? '.' : ', not ' + ans + '.'));
+    }
+    var g = its[0].group, q = g ? '<p class="wd-group">The question for every line: <i>' + g + '</i></p>' + (wrongOne ? 'One line has the <b>wrong</b> answer. Which line is it?' : n === 2 ? 'Which line has the <b>right</b> answer?' : 'Only one line has the right answer. Which line is it?') : wrongOne ? 'Each line is a question and an answer. One answer is <b>wrong</b>. Which line is it?'
+      : (n === 2 ? 'Each line is a question and an answer. Which line has the <b>right</b> answer?' : 'Each line is a question and an answer. Only one answer is right. Which line is it?');
+    if (its[target].why) steps.push(its[target].why);
+    return { q: q, a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own. Does the answer fit the question?' };
+  }
+  function tfpick(base, R, ctx, wantFalse) {
+    var its = harvest(base, R, ctx, tfItem, 6, function (it) { return ['s:' + it.s]; });
+    var T = its.filter(function (x) { return x.v; }), F = its.filter(function (x) { return !x.v; });
+    var odd = wantFalse ? F : T, rest = wantFalse ? T : F;
+    if (!odd.length || rest.length < 2) return null;
+    var pick = [odd[0], rest[0], rest[1]], order = R.shuffle([0, 1, 2]), choices = order.map(function (i) { return pick[i].s; });
+    var steps = pick.map(function (x) { return x.s + ' ' + (x.v ? 'True.' : 'False.'); });
+    if (odd[0].why) steps.push(odd[0].why);
+    return { q: wantFalse ? 'Which sentence is <b>false</b>?' : 'Which sentence is <b>true</b>?', a: { t: 'mc', choices: choices, v: order.indexOf(0) }, steps: steps,
+      hint: 'Decide about each sentence on its own.' };
+  }
+  var MIX = CFG.mix || { 1: [0.38, 0.25, 0.04], 2: [0.27, 0.3, 0.1], 3: [0.17, 0.4, 0.15] };
+  function wrap(id, base) {
+    var fn = function (R, ctx) {
+      var lv = ctx && ctx.level || 1, p = base(R, ctx), m = MIX[lv] || MIX[3], r = R.next();
+      if (p.nowiden || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf') || (CFG.skip && CFG.skip.indexOf(id) >= 0)) return p; // typed answers stay as they are
+      var form = r < m[0] ? 0 : r < m[0] + m[1] ? 1 : r < m[0] + m[1] + m[2] ? 2 : -1;
+      if (form < 0) return p;
+      var tries = [form, (form + 1) % 3, (form + 2) % 3].filter(function (f) { return m[f] > 0; });
+      for (var t = 0; t < tries.length; t++) {
+        var f = tries[t], alt = null;
+        if (f === 0) alt = single(p) ? check(p, R) : (p.a && p.a.t === 'mc' && Array.isArray(p.a.v) && !p.viz ? checkAll(p, R) : null);
+        else if (f === 1) alt = pairs(base, R, ctx, lv === 1 ? 2 : 3, lv >= 3 && R.chance(0.6));
+        else alt = tfpick(base, R, ctx, R.chance(0.4));
+        if (alt) return alt;
+      }
+      return p;
+    };
+    fn.widened = true;
+    return fn;
+  }
+  ML.genIds().forEach(function (id) {
+    if (id.indexOf(CFG.prefix) !== 0 || (CFG.only && CFG.only.indexOf(id.slice(CFG.prefix.length)) < 0)) return;
+    var g = ML.getGen(id); if (g && !g.widened) ML.gen(id, wrap(id, g));
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen ---- */

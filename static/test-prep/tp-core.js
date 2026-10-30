@@ -24,7 +24,9 @@
    TP.makeItem(slot, test, R, opts) → { id, area, level, p, typed } a ready problem in the test's format, or null:
                           typed (the SAT's student-produced response) when opts.typed and the answer is one number;
                           otherwise multiple choice with test.format.choices options; opts.native keeps the generator's own
-                          answer format (AP unit practice); opts.seen (set of question texts) avoids repeats.
+                          answer format (AP unit practice); opts.seen (set of question texts) avoids repeats;
+                          opts.fresh: also skip problems the learner saw recently (MathLadder.recent) and remember the
+                          ones used (the page's practice sets; without it a seed always gives the same set).
    TP.build(test, n, seed, opts) → { items, seed } a whole set (typed share from test.format.typed); opts.seen is shared
                           across calls when given (no repeated question text)
    TP.buildSet(test, counts, seed, opts) → { items, parts } a timed set made of the test's parts (test.parts: [{ name,
@@ -413,15 +415,16 @@
   function sprOK(p, f) { return p.a.t === 'num' && p.a.tol === undefined && p.a.dp === undefined && !p.a.pct && SPR.test(str(p.a.v).trim()) && typedFits(p.a.v, f && f.grid); }
   function makeItem(slot, test, R, opts) {
     opts = opts || {};
-    var f = test.format || {}, k = f.choices || 4, seen = opts.seen || {};
+    var f = test.format || {}, k = f.choices || 4, seen = opts.seen || {}, mem = opts.fresh && ML().recent, skips = 0;
     var topics = [slot.topic].concat(R.shuffle(((test.areas || []).filter(function (a) { return a.key === slot.area; })[0] || { topics: [] }).topics.filter(function (t) { return t !== slot.topic && (!opts.avail || opts.avail(t)); })));
     function make(id) {
       var seed = Math.floor(R.next() * 1e9), p;
       try { p = ML().makeProblem(id, seed, { level: slot.level, mode: 'quiz' }); } catch (e) { return null; }
       if (!p || seen[p.q] || (f.hand && !handOK(p))) return null;
+      if (mem && skips < 25 && mem.seen(id, p)) { skips++; return null; } // seen recently in practice: another one first
       p.seedUsed = seed; return p;
     }
-    function item(id, p, out, typed) { seen[p.q] = 1; return { id: id, area: slot.area, level: slot.level, seed: p.seedUsed, p: out, typed: typed }; }
+    function item(id, p, out, typed) { seen[p.q] = 1; if (mem) mem.add(id, p); return { id: id, area: slot.area, level: slot.level, seed: p.seedUsed, p: out, typed: typed }; }
     var ti, t, id, p, out;
     if (opts.typed && !opts.native) {   // look for a one-number answer in this area first
       for (ti = 0; ti < topics.length && ti < 5; ti++) {
@@ -449,7 +452,7 @@
     R.sample(slots.map(function (s, i) { return i; }), Math.min(nTyped, slots.length)).forEach(function (i) { typedIdx[i] = 1; });
     var seen = opts.seen || {}, items = [];
     slots.forEach(function (s, i) {
-      var it = makeItem(s, test, R, { typed: !!typedIdx[i], seen: seen, avail: opts.avail, native: opts.native });
+      var it = makeItem(s, test, R, { typed: !!typedIdx[i], seen: seen, avail: opts.avail, native: opts.native, fresh: opts.fresh });
       if (it) items.push(it);
     });
     return { items: items, seed: seed };
@@ -468,7 +471,7 @@
     var seen = {}, items = [], out = [];
     (counts || [f.questions]).forEach(function (n, k) {
       var P = parts[k]; if (!n || !P) return;
-      var pt = partTest(test, P, k), b = build(pt, n, seed + '.' + k, { avail: opts.avail, seen: seen });
+      var pt = partTest(test, P, k), b = build(pt, n, seed + '.' + k, { avail: opts.avail, seen: seen, fresh: opts.fresh });
       if (!b.items.length) return;
       b.items.forEach(function (it) { it.part = out.length; items.push(it); });
       out.push({ name: P.name || 'Part ' + (k + 1), k: k, n: b.items.length, secs: Math.round(P.minutes * 60 * b.items.length / P.questions), calculator: !pt.format.hand, grid: pt.format.grid, choices: pt.format.choices });

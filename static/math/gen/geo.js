@@ -411,7 +411,7 @@
     var kind = R.pick(byL(ctx, ['hexper', 'central', 'concept'], ['sq', 'central', 'concept', 'sqarea'], ['tri', 'sq', 'dodec', 'triper']));
     var r = R.int(2, 15);
     if (kind === 'hexper') return { q: 'A regular hexagon is inscribed in a circle of radius $' + r + '$ cm. What is the perimeter of the hexagon?', a: num(6 * r), steps: ['Each side of an inscribed regular hexagon equals the radius: each side and two radii form an equilateral triangle (central angle $60^\\circ$).', 'Perimeter $= 6 \\cdot ' + r + ' = ' + 6 * r + '$ cm.'], hint: 'The construction steps around the circle with the radius as the compass width.' };
-    if (kind === 'central') { var n = R.pick([3, 4, 5, 6, 8, 9, 10, 12]); return { q: 'A regular polygon with ' + n + ' sides is inscribed in a circle. What is the measure of each central angle (the angle at the center between two neighboring vertices)?', a: num(360 / n), steps: ['The ' + n + ' central angles are equal and fill the full turn of $360^\\circ$.', '$360 \\div ' + n + ' = ' + deg(360 / n) + '$.'], hint: 'Split 360° evenly.' }; }
+    if (kind === 'central') { var n = R.pick([3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36]); return { q: 'A regular polygon with ' + n + ' sides is inscribed in a circle. What is the measure of each central angle (the angle at the center between two neighboring vertices)?', a: num(360 / n), steps: ['The ' + n + ' central angles are equal and fill the full turn of $360^\\circ$.', '$360 \\div ' + n + ' = ' + deg(360 / n) + '$.'], hint: 'Split 360° evenly.' }; }
     if (kind === 'sq' || kind === 'sqarea') {
       var s = rad(r, 1, 2);
       if (kind === 'sqarea') return { q: 'A square is inscribed in a circle of radius $' + r + '$. Find the area of the square.', a: num(2 * r * r), steps: ['The diagonals of the inscribed square are diameters: each is $2 \\cdot ' + r + ' = ' + 2 * r + '$.', 'A square\'s area is half the product of its diagonals: $\\dfrac{' + 2 * r + ' \\cdot ' + 2 * r + '}{2} = ' + 2 * r * r + '$.', 'Check with the side: $s = ' + rtex(s) + '$ and $s^2 = ' + 2 * r * r + '$.'], hint: 'Its diagonals are diameters of the circle.' };
@@ -422,7 +422,7 @@
       return { q: 'An equilateral triangle is inscribed in a circle of radius $' + r + '$. Find ' + (kind === 'tri' ? 'the length of one side' : 'its perimeter') + '. Give an exact answer.', a: rnum(kind === 'tri' ? side : per),
         steps: ['Each central angle is $360^\\circ \\div 3 = 120^\\circ$. The radius to a vertex and the perpendicular from the center to a side make a $30$-$60$-$90$ triangle with hypotenuse $' + r + '$.', 'Half of a side is the leg opposite $60^\\circ$: $\\dfrac{' + r + '\\sqrt{3}}{2}$. So a side is $' + rtex(side) + '$.'].concat(kind === 'triper' ? ['Perimeter: $3 \\cdot ' + rtex(side) + ' = ' + rtex(per) + '$.'] : []), hint: 'Draw radii to two vertices and drop a perpendicular from the center to the side between them.' };
     }
-    if (kind === 'dodec') { var k = R.pick([[6, 12], [4, 8], [3, 6], [8, 16]]); return { q: 'You inscribe a regular polygon with ' + k[0] + ' sides in a circle, then bisect each of its central angles to mark new points on the circle. How many sides does the new regular polygon have?', a: num(k[1]), steps: ['Bisecting each of the ' + k[0] + ' arcs adds one new point per arc.', 'That doubles the number of vertices: $2 \\cdot ' + k[0] + ' = ' + k[1] + '$ sides, each central angle $' + deg(360 / k[1]) + '$.'], hint: 'Each arc gets a new point in its middle.' }; }
+    if (kind === 'dodec') { var k = R.pick([[6, 12], [4, 8], [3, 6], [8, 16], [5, 10], [10, 20], [12, 24], [9, 18]]); return { q: 'You inscribe a regular polygon with ' + k[0] + ' sides in a circle, then bisect each of its central angles to mark new points on the circle. How many sides does the new regular polygon have?', a: num(k[1]), steps: ['Bisecting each of the ' + k[0] + ' arcs adds one new point per arc.', 'That doubles the number of vertices: $2 \\cdot ' + k[0] + ' = ' + k[1] + '$ sides, each central angle $' + deg(360 / k[1]) + '$.'], hint: 'Each arc gets a new point in its middle.' }; }
     var c = R.pick([
       ['You have constructed a regular hexagon $ABCDEF$ in a circle. How do you get an inscribed equilateral triangle?', 'Connect every other vertex: $A$, $C$ and $E$.', ['Connect $A$, $B$ and $C$.', 'Bisect each side of the hexagon.', 'Draw the three diameters.'], 'Skipping every other vertex joins points $120^\\circ$ apart around the center. Three equal central angles give three equal chords: an equilateral triangle.'],
       ['What is the first step for inscribing a square in a circle with center $O$?', 'Draw a diameter, then construct the diameter perpendicular to it.', ['Step around the circle with the radius.', 'Draw a chord equal to the radius.', 'Bisect an angle at $O$.'], 'Two perpendicular diameters make four $90^\\circ$ central angles. Their endpoints are the corners of a square (its diagonals are equal, perpendicular, and bisect each other).'],
@@ -759,7 +759,7 @@
   G('geo.polygon-symmetry', function (R, ctx) {
     var kind = R.pick(byL(ctx, ['minrot', 'lines', 'minrot', 'both'], ['tfrot', 'count', 'quad', 'which'], ['quad', 'sides', 'tfrot', 'count', 'which', 'both']));
     var NAMES = { 3: 'equilateral triangle', 4: 'square', 5: 'regular pentagon', 6: 'regular hexagon', 8: 'regular octagon', 9: 'regular nonagon', 10: 'regular decagon', 12: 'regular dodecagon', 15: 'regular 15-gon', 18: 'regular 18-gon', 20: 'regular 20-gon' };
-    var n = R.pick(byL(ctx, [3, 4, 5, 6, 8], [3, 4, 5, 6, 8, 9, 10, 12], [5, 6, 8, 9, 10, 12, 15, 18, 20])), nm = NAMES[n], step = 360 / n;
+    var n = R.pick(byL(ctx, [3, 4, 5, 6, 8, 9, 10, 12], [3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20], [5, 6, 8, 9, 10, 12, 15, 18, 20])), nm = NAMES[n], step = 360 / n;
     if (kind === 'both') return { q: 'A ' + nm + ' is carried onto itself by some reflections and some rotations about its center. Give the number of lines of symmetry and the smallest positive rotation angle.', a: { t: 'multi', parts: [{ label: 'Lines of symmetry:', a: num(n) }, { label: 'Smallest rotation (degrees):', a: num(step) }] },
       steps: ['A regular polygon with ' + n + ' sides has ' + n + ' lines of symmetry, all through its center.', 'It turns onto itself every $360^\\circ \\div ' + n + ' = ' + deg(step) + '$.'], hint: 'Both answers come from the number of sides.' };
     if (kind === 'which') { var good = step * R.int(1, n - 1), bads = [10, 20, 25, 35, 50, 65, 80, 100, 110, 130, 140, 155, 170, 190, 200, 230, 260, 275, 290, 310, 320, 340].filter(function (x) { return x % step !== 0; });
@@ -770,7 +770,7 @@
     if (kind === 'tfrot') { var k = R.int(1, 6), ang2 = R.chance(0.55) ? step * R.int(1, n - 1) : R.pick([25, 40, 50, 70, 100, 135, 150, 210, 225, 250].filter(function (x) { return x % step !== 0; })); var ok = ang2 % step === 0;
       return { q: 'True or false: a rotation of $' + deg(ang2) + '$ about its center carries a ' + nm + ' onto itself.', a: tf(ok), steps: ['The rotations that work are multiples of $360^\\circ \\div ' + n + ' = ' + deg(step) + '$.', ok ? '$' + ang2 + ' = ' + ang2 / step + ' \\cdot ' + step + '$, a multiple, so it works.' : '$' + ang2 + ' \\div ' + step + '$ is not a whole number, so it does not.'], hint: 'Is the angle a multiple of 360° ÷ ' + n + '?' }; }
     if (kind === 'count') return { q: 'How many rotations with angles greater than $0^\\circ$ and less than $360^\\circ$ carry a ' + nm + ' onto itself?', a: num(n - 1), steps: ['They are the multiples of $' + deg(step) + '$: ' + U.range(1, n - 1).map(function (i) { return '$' + deg(i * step) + '$'; }).join(', ') + '.', 'That is $' + (n - 1) + '$ rotations (the next multiple is $360^\\circ$, a full turn).'], hint: 'List the multiples of 360° ÷ ' + n + ' below 360°.' };
-    if (kind === 'sides') { var n2 = R.pick([5, 6, 8, 9, 10, 12, 15, 18, 20, 24]), s2 = 360 / n2; return { q: 'The smallest positive rotation that carries a regular polygon onto itself is $' + deg(s2) + '$. How many sides does it have?', a: num(n2), steps: ['The smallest rotation is $360^\\circ \\div n$.', '$n = 360 \\div ' + s2 + ' = ' + n2 + '$.'], hint: 'Undo the division: 360° ÷ the angle.' }; }
+    if (kind === 'sides') { var n2 = R.pick([5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60, 72]), s2 = 360 / n2; return { q: 'The smallest positive rotation that carries a regular polygon onto itself is $' + deg(s2) + '$. How many sides does it have?', a: num(n2), steps: ['The smallest rotation is $360^\\circ \\div n$.', '$n = 360 \\div ' + s2 + ' = ' + n2 + '$.'], hint: 'Undo the division: 360° ÷ the angle.' }; }
     var Q4 = R.pick([['rectangle that is not a square', 2, '180^\\circ'], ['rhombus that is not a square', 2, '180^\\circ'], ['parallelogram that is not a rectangle or a rhombus', 0, '180^\\circ'], ['isosceles trapezoid', 1, 'none'], ['kite that is not a rhombus', 1, 'none'], ['square', 4, '90^\\circ']]);
     if (R.coin()) return { q: 'How many lines of symmetry does a ' + Q4[0] + ' have?', a: num(Q4[1]), steps: [{ 2: 'The lines through the midpoints of opposite sides (rectangle) or through opposite vertices (rhombus) work: 2 lines. The diagonals of a rectangle are not lines of symmetry, and neither are the side bisectors of a rhombus.', 0: 'No line folds a slanted parallelogram onto itself, even though a $180^\\circ$ turn does.', 1: 'Only one line works: the line through the midpoints of the two bases (trapezoid), or the diagonal joining the vertices between equal sides (kite).', 4: 'Two diagonals and two lines through the midpoints of opposite sides: 4 lines.' }[Q4[1]]], hint: 'Imagine folding the shape so the halves match.' };
     var opts = ['$90^\\circ$', '$180^\\circ$', 'No rotation less than $360^\\circ$ works', '$45^\\circ$'], right = Q4[2] === 'none' ? 2 : Q4[2] === '90^\\circ' ? 0 : 1;
@@ -1235,10 +1235,10 @@
 
   G('geo.polygon-angle-sums', function (R, ctx) {
     var kind = R.pick(byL(ctx, ['sum', 'each', 'ext', 'sum'], ['nfromext', 'nfromint', 'missing', 'extsum'], ['nfromsum', 'alg', 'nfromint', 'extsum']));
-    var n = R.pick([5, 6, 7, 8, 9, 10, 12, 15, 18, 20]);
+    var n = R.pick([5, 6, 7, 8, 9, 10, 12, 15, 18, 20, 11, 13, 14, 16, 24, 30]);
     if (kind === 'sum') return { q: 'Find the sum of the interior angles of a ' + pname(n) + ' (' + n + ' sides).', a: num((n - 2) * 180),
       steps: ['Draw every diagonal from one vertex. They split the polygon into $' + n + ' - 2 = ' + (n - 2) + '$ triangles.', 'Each triangle has $180^\\circ$, and together their angles make up the polygon\'s angles.', 'Sum $= ' + (n - 2) + ' \\cdot 180^\\circ = ' + deg((n - 2) * 180) + '$.'], hint: 'How many triangles do the diagonals from one vertex make?' };
-    var nr = R.pick([5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36]);
+    var nr = R.pick([5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60, 72, 90]);
     if (kind === 'each') return { q: 'Find the measure of each interior angle of a regular ' + pname(nr) + '.', a: num((nr - 2) * 180 / nr),
       steps: ['Sum of the interior angles: $(' + nr + ' - 2) \\cdot 180^\\circ = ' + deg((nr - 2) * 180) + '$.', 'A regular polygon has equal angles: $' + (nr - 2) * 180 + ' \\div ' + nr + ' = ' + deg((nr - 2) * 180 / nr) + '$.', 'Check: each exterior angle is $360 \\div ' + nr + ' = ' + 360 / nr + '$, and $' + (nr - 2) * 180 / nr + ' + ' + 360 / nr + ' = 180$.'], hint: 'Find the total, then share it equally.' };
     if (kind === 'ext') return { q: 'Find the measure of each exterior angle of a regular ' + pname(nr) + '.', a: num(360 / nr),
@@ -1246,7 +1246,7 @@
     if (kind === 'nfromext') return { q: 'Each exterior angle of a regular polygon measures $' + deg(360 / nr) + '$. How many sides does it have?', a: num(nr), steps: ['The exterior angles add to $360^\\circ$ and are all equal.', '$n = 360 \\div ' + 360 / nr + ' = ' + nr + '$.'], hint: 'How many of these angles fit in 360°?' };
     if (kind === 'nfromint') { var ia = (nr - 2) * 180 / nr; return { q: 'Each interior angle of a regular polygon measures $' + deg(ia) + '$. How many sides does it have?', a: num(nr),
       steps: ['Each exterior angle is $180 - ' + ia + ' = ' + deg(180 - ia) + '$ (they form a linear pair).', 'The exterior angles add to $360^\\circ$: $n = 360 \\div ' + (180 - ia) + ' = ' + nr + '$.'], hint: 'Work with the exterior angle: it is easier.' }; }
-    if (kind === 'missing') { var m = R.pick([5, 6]), total = (m - 2) * 180, given, left;
+    if (kind === 'missing') { var m = R.pick([4, 5, 6, 7]), total = (m - 2) * 180, given, left;
       do { left = R.int(70, 170); given = []; var acc = 0; for (var i = 0; i < m - 2; i++) { var v = R.int(95, 150); given.push(v); acc += v; } given.push(total - left - acc); } while (given[m - 2] < 60 || given[m - 2] > 175);
       return { q: 'A ' + pname(m) + ' has interior angles of ' + given.map(function (g) { return '$' + deg(g) + '$'; }).join(', ') + ' and $x^\\circ$. Find $x$.', a: num(left),
         steps: ['Sum for a ' + pname(m) + ': $(' + m + ' - 2) \\cdot 180 = ' + total + '$.', 'Known angles: $' + given.join(' + ') + ' = ' + (total - left) + '$.', '$x = ' + total + ' - ' + (total - left) + ' = ' + left + '$.'], hint: 'Find the total first.' }; }
@@ -1521,7 +1521,7 @@
     var p, q;
     function srFig(labs) { var P0 = 3.2, Q0 = 5.8, h = M.sqrt(P0 * Q0), f = { pts: { A: [0, 0], B: [P0 + Q0, 0], D: [P0, 0], C: [P0, h] }, polys: [['A', 'B', 'C', { fill: 'blue' }]], segs: [['C', 'D', { dash: 1 }]], angs: [['A', 'C', 'B', { right: 1 }], ['B', 'D', 'C', { right: 1 }]], labpos: { D: 's', C: 'n' }, height: 200 };
       Object.keys(labs).forEach(function (k) { f.segs.push([k[0], k[1], { lab: labs[k], side: k === 'CD' ? 1 : undefined }]); }); return fig(f, 'Right triangle ABC with altitude CD to the hypotenuse'); }
-    if (kind === 'alt') { if ((ctx.level || 1) === 1) { var g = R.int(2, 6), u = R.pick([[1, 4], [1, 9], [4, 9], [1, 16], [4, 25], [9, 16], [2, 8], [3, 12], [2, 18]]); p = u[0] * (u[0] < 4 ? g : 1); q = u[1] * (u[0] < 4 ? g : 1); if (!U.isSquare(p * q)) { p = u[0]; q = u[1]; } } else { p = R.int(2, 12); q = R.int(2, 12); }
+    if (kind === 'alt') { if ((ctx.level || 1) === 1) { var g = R.int(2, 9), u = R.pick([[1, 4], [1, 9], [4, 9], [1, 16], [4, 25], [9, 16], [2, 8], [3, 12], [2, 18], [1, 25], [9, 25], [16, 25], [1, 36], [4, 9], [3, 27], [5, 20]]); p = u[0] * (u[0] < 4 ? g : 1); q = u[1] * (u[0] < 4 ? g : 1); if (!U.isSquare(p * q)) { p = u[0]; q = u[1]; } } else { p = R.int(2, 12); q = R.int(2, 12); }
       var h = sqrtN(p * q);
       return { q: 'In right $' + tri('ABC') + '$, $' + seg('CD') + '$ is the altitude to the hypotenuse $' + seg('AB') + '$. $AD = ' + p + '$ and $DB = ' + q + '$. Find $CD$. Give an exact answer.', a: rnum(h), viz: srFig({ AD: String(p), DB: String(q), CD: '?' }),
         steps: ['The altitude splits the triangle into two triangles similar to each other: $' + tri('ACD') + ' \\sim ' + tri('CBD') + '$.', 'So $\\dfrac{AD}{CD} = \\dfrac{CD}{DB}$, which means $CD^2 = AD \\cdot DB = ' + p + ' \\cdot ' + q + ' = ' + p * q + '$.', '$CD = \\sqrt{' + p * q + '}' + (h.r !== p * q ? ' = ' + rtex(h) : '') + '$. (The altitude is the geometric mean of the two pieces.)'], hint: 'CD² = AD · DB.' }; }
@@ -1546,7 +1546,7 @@
       steps: ['$' + ang('A') + '$ belongs to both triangles.', '$' + ang('ADC') + '$ is a right angle (the altitude is perpendicular to $' + seg('AB') + '$), and $' + ang('ACB') + '$ is the right angle of the big triangle.', 'Two pairs of congruent angles: AA similarity.'], hint: 'Which angles do you know without measuring?' };
     if (kind === 'eq') { var b = R.coin(); return { q: 'In right $' + tri('ABC') + '$ (right angle at $C$), let $a = BC$, $b = AC$, $c = AB$, and let altitude $' + seg('CD') + '$ split $c$ into $AD = p$ and $DB = q$. Which equation follows from $' + tri(b ? 'ACD' : 'CBD') + ' \\sim ' + tri('ABC') + '$?', a: mc(b ? '$b^2 = cp$' : '$a^2 = cq$', b ? ['$b^2 = cq$', '$b = cp$', '$a^2 = cp$'] : ['$a^2 = cp$', '$a = cq$', '$b^2 = cq$']),
       steps: [b ? 'Matching sides: $\\dfrac{AD}{AC} = \\dfrac{AC}{AB}$, that is $\\dfrac{p}{b} = \\dfrac{b}{c}$.' : 'Matching sides: $\\dfrac{DB}{BC} = \\dfrac{BC}{AB}$, that is $\\dfrac{q}{a} = \\dfrac{a}{c}$.', 'Cross-multiply: ' + (b ? '$b^2 = cp$.' : '$a^2 = cq$.')], hint: 'Match the short leg with the short leg and the hypotenuse with the hypotenuse.' }; }
-    if (kind === 'sum') { var tr = R.pick([[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17]]), c = tr[2], pp = ML.Q(tr[1] * tr[1], c), qq = ML.Q(tr[0] * tr[0], c);
+    if (kind === 'sum') { var tr = R.pick([[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17], [9, 12, 15], [7, 24, 25], [12, 16, 20], [20, 21, 29], [4, 3, 5], [12, 5, 13]]), c = tr[2], pp = ML.Q(tr[1] * tr[1], c), qq = ML.Q(tr[0] * tr[0], c);
       return { q: 'In the similarity proof of the Pythagorean theorem we get $a^2 = cq$ and $b^2 = cp$, where $p + q = c$. If $c = ' + c + '$, $p = ' + pp.toTex() + '$ and $q = ' + qq.toTex() + '$, find $a^2 + b^2$.', a: num(c * c),
         steps: ['Add the two equations: $a^2 + b^2 = cq + cp = c(p + q)$.', '$p + q = ' + pp.toTex() + ' + ' + qq.toTex() + ' = ' + c + '$, which is $c$.', 'So $a^2 + b^2 = c \\cdot c = ' + c * c + '$: the Pythagorean theorem.'], hint: 'Add the equations and factor out c.' }; }
     if (kind === 'num') { var p = R.int(2, 10), q = R.int(2, 12), c2 = p + q, b2 = sqrtN(c2 * p);
@@ -1577,10 +1577,10 @@
 
   G('geo.special-right-triangles', function (R, ctx) {
     var kind = R.pick(byL(ctx, ['45leg', '30short', 'which'], ['45hyp', '30hyp', '30short', 'which'], ['30long', '45hyp', 'apply', '30long']));
-    var s = R.int(2, 12);
+    var s = R.int(2, 25);
     if (kind === '45leg') return { q: 'A $45$-$45$-$90$ triangle has legs of length $' + s + '$. Find the hypotenuse. Give an exact answer.', a: rnum(rad(s, 1, 2)), viz: fig(rtFig(45, { BC: String(s), CA: String(s), AB: '?', A: '45°' }), 'An isosceles right triangle'),
       steps: ['A $45$-$45$-$90$ triangle is half of a square, so its legs are equal.', 'Pythagorean theorem: $c = \\sqrt{' + s + '^2 + ' + s + '^2} = \\sqrt{2 \\cdot ' + s * s + '} = ' + rtex(rad(s, 1, 2)) + '$.', 'Shortcut: hypotenuse $=$ leg $\\cdot \\sqrt{2}$.'], hint: 'Hypotenuse = leg · √2.' };
-    if (kind === '45hyp') { var useR = R.coin(), H = useR ? null : R.int(3, 14), k = R.int(2, 10), leg = useR ? rad(k) : rad(H, 2, 2);
+    if (kind === '45hyp') { var useR = R.coin(), H = useR ? null : R.int(3, 25), k = R.int(2, 20), leg = useR ? rad(k) : rad(H, 2, 2);
       return { q: 'A $45$-$45$-$90$ triangle has hypotenuse $' + (useR ? rtex(rad(k, 1, 2)) : H) + '$. Find the length of a leg. Give an exact answer.', a: rnum(leg), viz: fig(rtFig(45, { AB: useR ? k + '√2' : String(H), BC: '?', A: '45°' }), 'An isosceles right triangle'),
         steps: ['Hypotenuse $=$ leg $\\cdot \\sqrt{2}$, so leg $=$ hypotenuse $\\div \\sqrt{2}$.', useR ? 'leg $= \\dfrac{' + rtex(rad(k, 1, 2)) + '}{\\sqrt{2}} = ' + k + '$.' : 'leg $= \\dfrac{' + H + '}{\\sqrt{2}} = \\dfrac{' + H + '\\sqrt{2}}{2}' + (H % 2 === 0 ? ' = ' + rtex(leg) : '') + '$ (multiply top and bottom by $\\sqrt{2}$).'], hint: 'Divide the hypotenuse by √2.' }; }
     if (kind === '30short') { var askH = R.coin();
@@ -1589,7 +1589,7 @@
     if (kind === '30hyp') { var Hh = 2 * s, askS = R.coin();
       return { q: 'In a $30$-$60$-$90$ triangle, the hypotenuse is $' + Hh + '$. Find the ' + (askS ? 'shorter leg' : 'longer leg') + '.' + (askS ? '' : ' Give an exact answer.'), a: askS ? num(s) : rnum(rad(s, 1, 3)), viz: fig(rtFig(30, { AB: String(Hh), A: '30°', B: '60°', BC: askS ? '?' : '', CA: askS ? '' : '?' }), 'A 30-60-90 triangle'),
         steps: ['The shorter leg is half the hypotenuse: $' + Hh + ' \\div 2 = ' + s + '$.', 'The longer leg is the shorter leg times $\\sqrt{3}$: $' + rtex(rad(s, 1, 3)) + '$.'], hint: 'Start with the shorter leg: it is half the hypotenuse.' }; }
-    if (kind === '30long') { var useR2 = R.coin(), m = R.int(2, 12), Lg = useR2 ? rad(m, 1, 3) : rad(R.int(3, 15)), short = useR2 ? rad(m) : rad(Lg.n, 3, 3), askH2 = R.coin(), ans = askH2 ? rad(short.n * 2, short.d, short.r) : short;
+    if (kind === '30long') { var useR2 = R.coin(), m = R.int(2, 20), Lg = useR2 ? rad(m, 1, 3) : rad(R.int(3, 24)), short = useR2 ? rad(m) : rad(Lg.n, 3, 3), askH2 = R.coin(), ans = askH2 ? rad(short.n * 2, short.d, short.r) : short;
       return { q: 'In a $30$-$60$-$90$ triangle, the longer leg is $' + rtex(Lg) + '$. Find the ' + (askH2 ? 'hypotenuse' : 'shorter leg') + '. Give an exact answer.', a: rnum(ans),
         steps: ['Longer leg $=$ shorter leg $\\cdot \\sqrt{3}$, so shorter leg $= \\dfrac{' + rtex(Lg) + '}{\\sqrt{3}}' + (useR2 ? '' : ' = \\dfrac{' + Lg.n + '\\sqrt{3}}{3}') + ' = ' + rtex(short) + '$.'].concat(askH2 ? ['Hypotenuse $= 2 \\cdot$ shorter leg $= ' + rtex(ans) + '$.'] : []), hint: 'Divide the longer leg by √3 to get the shorter leg.' }; }
     if (kind === 'which') return { q: 'In a $30$-$60$-$90$ triangle with shorter leg $s$, which side has length $s\\sqrt{3}$?', a: mc('The leg opposite the $60^\\circ$ angle', ['The hypotenuse', 'The leg opposite the $30^\\circ$ angle', 'The leg next to the $60^\\circ$ angle']), viz: fig(rtFig(30, { A: '30°', B: '60°', BC: 's', AB: '2s', CA: 's√3' }), 'A 30-60-90 triangle with sides s, s√3 and 2s'),
@@ -1737,15 +1737,15 @@
     var kind = R.pick(byL(ctx, ['nice', 'exact', 'nice'], ['exact', 'calc', 'error'], ['sss', 'calc', 'sssnice']));
     var NICE = [[3, 8, 60, 7], [5, 8, 60, 7], [8, 15, 60, 13], [7, 15, 60, 13], [5, 21, 60, 19], [3, 5, 120, 7], [7, 8, 120, 13], [5, 16, 120, 19], [16, 5, 120, 19], [8, 3, 60, 7]];
     if (kind === 'nice' || kind === 'exact') { var a, b, C, c2, cv;
-      if (kind === 'nice') { var n = R.pick(NICE), k = R.int(1, 3); a = n[0] * k; b = n[1] * k; C = n[2]; cv = rad(n[3] * k); c2 = cv.n * cv.n; }
-      else { a = R.int(2, 12); b = R.int(2, 12); C = R.pick([60, 120, 90]); c2 = a * a + b * b + (C === 60 ? -a * b : C === 120 ? a * b : 0); cv = sqrtN(c2); }
+      if (kind === 'nice') { var n = R.pick(NICE), k = R.int(1, 5); a = n[0] * k; b = n[1] * k; C = n[2]; cv = rad(n[3] * k); c2 = cv.n * cv.n; }
+      else { a = R.int(2, 15); b = R.int(2, 15); C = R.pick([60, 120, 90]); c2 = a * a + b * b + (C === 60 ? -a * b : C === 120 ? a * b : 0); cv = sqrtN(c2); }
       var cosT = C === 60 ? '\\frac{1}{2}' : C === 120 ? '-\\frac{1}{2}' : '0', mid2 = C === 60 ? -a * b : C === 120 ? a * b : 0;
       return { q: 'In $' + tri('ABC') + '$, $a = ' + a + '$, $b = ' + b + '$ and the included angle $' + mang('C') + ' = ' + deg(C) + '$. Find $c$. Give an exact answer.', a: rnum(cv), viz: fig(triFig(triFromAngles(C, aD(M.atan2(a * sinD(C), b - a * cosD(C))), 0), ['C', 'A', 'B'], { angLabs: [C + '°', '', ''], sideLabs: [String(b), 'c', String(a)] }), 'Triangle ABC with sides a and b and the angle C between them'),
         steps: ['Law of Cosines: $c^2 = a^2 + b^2 - 2ab \\cos C$.', '$c^2 = ' + a + '^2 + ' + b + '^2 - 2 \\cdot ' + a + ' \\cdot ' + b + ' \\cdot ' + T.p(cosT) + '$.', 'Multiply first: $c^2 = ' + a * a + ' + ' + b * b + (mid2 < 0 ? ' - ' + (-mid2) : mid2 > 0 ? ' + ' + mid2 : ' - 0') + ' = ' + c2 + '$.', '$c = \\sqrt{' + c2 + '}' + (cv.r !== c2 ? ' = ' + rtex(cv) : '') + '$.'], hint: 'Multiply 2ab by cos C before you combine anything.', nolint: ['+ 0', '- 0', '+ -'] }; }
     if (kind === 'calc') { var a2 = R.int(4, 20), b2 = R.int(4, 20), C2 = R.int(25, 150); while ([60, 90, 120].indexOf(C2) >= 0) C2 = R.int(25, 150); var cc = M.sqrt(a2 * a2 + b2 * b2 - 2 * a2 * b2 * cosD(C2));
       return { q: 'In $' + tri('ABC') + '$, $a = ' + a2 + '$, $b = ' + b2 + '$ and $' + mang('C') + ' = ' + deg(C2) + '$. Find $c$ to the nearest tenth.', a: tol(cc),
         steps: ['Law of Cosines: $c^2 = a^2 + b^2 - 2ab \\cos C$, so $c^2 = ' + a2 * a2 + ' + ' + b2 * b2 + ' - ' + 2 * a2 * b2 + ' \\cos ' + deg(C2) + '$.', '$' + 2 * a2 * b2 + ' \\cos ' + deg(C2) + ' \\approx ' + dec(2 * a2 * b2 * cosD(C2), 2) + '$, so $c^2 \\approx ' + dec(cc * cc, 2) + '$.', '$c \\approx ' + dec(cc, 1) + '$.'], hint: 'Compute 2ab cos C first, then subtract.' }; }
-    if (kind === 'error') { var e = R.pick([[5, 8, 60], [4, 7, 60], [6, 9, 60]]), wrong = (e[0] * e[0] + e[1] * e[1] - 2 * e[0] * e[1]) * 0.5, right = e[0] * e[0] + e[1] * e[1] - e[0] * e[1];
+    if (kind === 'error') { var e = R.pick([[5, 8, 60], [4, 7, 60], [6, 9, 60], [3, 8, 60], [7, 10, 60], [5, 12, 60], [6, 10, 60], [8, 9, 60]]), wrong = (e[0] * e[0] + e[1] * e[1] - 2 * e[0] * e[1]) * 0.5, right = e[0] * e[0] + e[1] * e[1] - e[0] * e[1];
       return { q: 'Sam finds $c$ with $a = ' + e[0] + '$, $b = ' + e[1] + '$ and $C = 60^\\circ$. He writes $c^2 = (' + e[0] + '^2 + ' + e[1] + '^2 - 2 \\cdot ' + e[0] + ' \\cdot ' + e[1] + ')\\cos 60^\\circ = ' + T.num(wrong) + '$. What went wrong, and what is the correct $c^2$?', a: mc('He multiplied the whole difference by $\\cos 60^\\circ$; only $2ab$ should be. $c^2 = ' + right + '$', ['Nothing is wrong. $c^2 = ' + T.num(wrong) + '$', 'He should add $2ab$, not subtract it. $c^2 = ' + (e[0] * e[0] + e[1] * e[1] + 2 * e[0] * e[1]) + '$', 'He should use $\\sin 60^\\circ$. $c^2 = ' + right + '$']),
         steps: ['The formula is $c^2 = a^2 + b^2 - (2ab \\cos C)$: only the $2ab$ term is multiplied by $\\cos C$.', '$c^2 = ' + e[0] * e[0] + ' + ' + e[1] * e[1] + ' - 2 \\cdot ' + e[0] + ' \\cdot ' + e[1] + ' \\cdot \\frac{1}{2} = ' + right + '$.'], hint: 'Order of operations: multiply before subtracting.' }; }
     if (kind === 'sssnice') { var S = R.pick([[3, 5, 7, 120], [5, 7, 8, 60, 7], [3, 7, 8, 60, 7], [7, 8, 13, 120], [5, 16, 19, 120], [8, 13, 15, 60, 13], [7, 13, 15, 60, 13]]), k2 = R.int(1, 3), sides = S.slice(0, 3).map(function (v) { return v * k2; }), opp = (S[4] || S[2]) * k2, others = sides.filter(function (v, i) { return v !== opp || sides.indexOf(v) !== i; });
@@ -1838,7 +1838,7 @@
 
   G('geo.tangent-lines', function (R, ctx) {
     var kind = R.pick(byL(ctx, ['op', 'tlen', 'two'], ['tlen', 'two', 'op', 'angle'], ['angle', 'istan', 'two', 'tlen']));
-    var tr = R.pick([[3, 4, 5], [5, 12, 13], [8, 15, 17], [6, 8, 10], [7, 24, 25], [9, 12, 15], [20, 21, 29]]);
+    var tr = R.pick([[3, 4, 5], [5, 12, 13], [8, 15, 17], [6, 8, 10], [7, 24, 25], [9, 12, 15], [20, 21, 29], [4, 3, 5], [12, 5, 13], [15, 8, 17], [12, 16, 20], [10, 24, 26]]);
     function tFig(labs) { var r = 3, d = M.min(3 * tr[2] / tr[0], 9.5), t = M.acos(r / d) * 180 / M.PI;
       return fig({ pts: { O: [0, 0], A: onC(t, r), P: [d, 0] }, circles: [['O', r]], segs: [['O', 'A', { lab: labs.r }], ['A', 'P', { lab: labs.t, color: 'blue' }], ['O', 'P', { lab: labs.d, dash: 1 }]], angs: [['O', 'A', 'P', { right: 1 }]], height: 210 }, 'Circle O with a tangent segment from P touching at A'); }
     if (kind === 'op' || kind === 'tlen') { var lv = ctx.level || 1, useTr = lv === 1 || R.chance(0.5), r = useTr ? tr[0] : R.int(2, 9), t = useTr ? tr[1] : R.int(2, 12), d2 = r * r + t * t;
@@ -1849,7 +1849,7 @@
     if (kind === 'two') { var xv = R.int(2, 9), P = eqPair(R, xv, 6, 40);
       return { q: '$' + seg('PA') + '$ and $' + seg('PB') + '$ are tangent to circle $O$ from the same outside point $P$. $PA = ' + lin(P.a, P.b) + '$ and $PB = ' + lin(P.c, P.d) + '$. Find $PA$.', a: num(P.val),
         steps: ['Two tangent segments to a circle from the same outside point are congruent (the right triangles $OAP$ and $OBP$ are congruent by HL).'].concat(solveSteps({ a: P.a, b: P.b }, { a: P.c, b: P.d }, xv)).concat(['$PA = ' + P.val + '$.']), hint: 'Tangents from one point are equal.' }; }
-    if (kind === 'angle') { var ap = R.int(25, 140), askC = R.coin();
+    if (kind === 'angle') { var ap = R.int(20, 160), askC = R.coin();
       return askC ? { q: '$' + seg('PA') + '$ and $' + seg('PB') + '$ are tangent to circle $O$ at $A$ and $B$, and $' + mang('APB') + ' = ' + deg(ap) + '$. Find the central angle $' + mang('AOB') + '$.', a: num(180 - ap),
         steps: ['$' + ang('OAP') + '$ and $' + ang('OBP') + '$ are right angles (tangent ⟂ radius).', 'The angles of quadrilateral $OAPB$ add to $360^\\circ$: $' + mang('AOB') + ' = 360 - 90 - 90 - ' + ap + ' = ' + deg(180 - ap) + '$.'], hint: 'Quadrilateral OAPB has two right angles.' }
         : { q: '$' + seg('PA') + '$ and $' + seg('PB') + '$ are tangent to circle $O$ at $A$ and $B$, and $' + mang('AOB') + ' = ' + deg(180 - ap) + '$. Find $' + mang('APB') + '$.', a: num(ap),
@@ -1956,10 +1956,10 @@
 
   G('geo.parabola-focus-directrix', function (R, ctx) {
     var kind = R.pick(byL(ctx, ['origin', 'dist', 'origin'], ['shift', 'focus', 'dist'], ['shift', 'side', 'focus', 'dir']));
-    var p = R.pick([1, 2, 3, 4, 5, -1, -2, -3, '1/2', '-1/2', '1/4', '3/2']), pq2 = ML.Q.from(p), fourp = pq2.mul(4);
+    var p = R.pick([1, 2, 3, 4, 5, -1, -2, -3, '1/2', '-1/2', '1/4', '3/2', 6, -4, -5, '5/2', '-3/2', '-1/4', '3/4', 8]), pq2 = ML.Q.from(p), fourp = pq2.mul(4);
     if (kind === 'origin') return { q: 'Write an equation of the parabola with focus $' + T.pt(['0', pq2.toPlain()]) + '$ and directrix $y = ' + pq2.neg().toTex() + '$.', a: { t: 'eq', v: 'x^2 = ' + fourp.toPlain() + '*y' }, viz: { name: 'parabola', opts: { quiet: true, form: 'vertex', a: ML.Q(1).div(fourp).toNumber(), h: 0, k: 0, show: ['vertex', 'focus'], xmin: -8, xmax: 8, ymin: -8, ymax: 8 }, label: 'The parabola with its focus and directrix' },
       steps: ['A point $(x, y)$ is on the parabola when it is the same distance from the focus and from the directrix.', 'Distance to the focus: $\\sqrt{x^2 + (y' + T.signed(pq2.neg()) + ')^2}$. Distance to the directrix: $\\left|y' + T.signed(pq2) + '\\right|$.', 'Square and set equal: $x^2 + (y' + T.signed(pq2.neg()) + ')^2 = (y' + T.signed(pq2) + ')^2$.', 'Expand both sides; $y^2$ and the constant cancel, leaving $x^2 = 4py$ with $p = ' + pq2.toTex() + '$.', 'So $x^2 = ' + T.coef(fourp, 'y') + '$.'], hint: 'For focus (0, p) and directrix y = −p, the parabola is x² = 4py.', nolint: ['--', '+ -'] };
-    var h = R.int(-5, 5), k = R.int(-5, 5);
+    var h = R.int(-9, 9), k = R.int(-9, 9);
     if (kind === 'shift') { var fy = pq2.add(k), dy = pq2.neg().add(k);
       return { q: 'Write an equation of the parabola with focus $' + T.pt([String(h), fy.toPlain()]) + '$ and directrix $y = ' + dy.toTex() + '$.', a: { t: 'eq', v: '(x' + (h ? (h > 0 ? '-' : '+') + M.abs(h) : '') + ')^2 = ' + fourp.toPlain() + '*(y' + (k ? (k > 0 ? '-' : '+') + M.abs(k) : '') + ')' }, nolint: ['+ 0'],
         steps: ['The vertex is halfway between the focus and the directrix: $' + pt([h, k]) + '$.', '$p$ is the distance from the vertex up to the focus (negative if the focus is below): $p = ' + fy.toTex() + ' - ' + T.p(k) + ' = ' + pq2.toTex() + '$.', 'Equation: $' + sq('x', h) + ' = 4p' + (k === 0 ? 'y' : '(y' + T.signed(-k) + ')') + ' = ' + T.coef(fourp, k === 0 ? 'y' : '(y' + T.signed(-k) + ')') + '$.'], hint: 'Find the vertex and p first: (x − h)² = 4p(y − k).' }; }
@@ -1968,10 +1968,10 @@
         steps: ['Match $(x - h)^2 = 4p(y - k)$: the vertex is $' + pt([h, k]) + '$ and $4p = ' + fourp.toTex() + '$, so $p = ' + pq2.toTex() + '$.', 'The focus is $p$ units ' + (pq2.sign() > 0 ? 'above' : 'below') + ' the vertex: $' + T.pt([String(h), fy2.toPlain()]) + '$.'], hint: 'Find p from 4p, then move from the vertex.' };
       return { q: 'Find the directrix of the parabola $' + eqT + '$.', a: { t: 'eq', v: 'y = ' + dy2.toPlain() }, nolint: ['+ 0'],
         steps: ['Vertex $' + pt([h, k]) + '$ and $4p = ' + fourp.toTex() + '$, so $p = ' + pq2.toTex() + '$.', 'The directrix is the horizontal line $p$ units on the other side of the vertex: $y = ' + T.num(k) + ' - ' + T.p(pq2.toTex()) + ' = ' + dy2.toTex() + '$.'], hint: 'The directrix is as far from the vertex as the focus, on the opposite side.' }; }
-    if (kind === 'side') { var pi = R.pick([1, 2, 3, -1, -2]);
+    if (kind === 'side') { var pi = R.pick([1, 2, 3, -1, -2, 4, -3, 5]);
       return { q: 'Write an equation of the parabola with focus $' + pt([pi, 0]) + '$ and directrix $x = ' + (-pi) + '$.', a: { t: 'eq', v: 'y^2 = ' + 4 * pi + '*x' },
         steps: ['Points on the parabola are equally far from $' + pt([pi, 0]) + '$ and from the vertical line $x = ' + (-pi) + '$.', '$(x' + T.signed(-pi) + ')^2 + y^2 = (x' + T.signed(pi) + ')^2$.', 'Expand and simplify: $y^2 = ' + 4 * pi + 'x$. (The parabola opens ' + (pi > 0 ? 'right' : 'left') + ', toward the focus.)'], hint: 'Here the roles of x and y switch: y² = 4px.' }; }
-    var pp = R.int(1, 4), x0 = 2 * pp * R.nz(-3, 3), y0 = x0 * x0 / (4 * pp), dd = y0 + pp;
+    var pp = R.int(1, 6), x0 = 2 * pp * R.nz(-4, 4), y0 = x0 * x0 / (4 * pp), dd = y0 + pp;
     return { q: 'The parabola $x^2 = ' + 4 * pp + 'y$ has focus $(0, ' + pp + ')$ and directrix $y = ' + (-pp) + '$. The point $' + pt([x0, y0]) + '$ is on it. How far is this point from the focus?', a: num(dd),
       steps: ['Every point on a parabola is the same distance from the focus as from the directrix.', 'The distance from $' + pt([x0, y0]) + '$ down to the line $y = ' + (-pp) + '$ is $' + y0 + ' - ' + T.p(-pp) + ' = ' + dd + '$.', 'So the distance to the focus is also $' + dd + '$. Check: $\\sqrt{' + T.p(x0) + '^2 + (' + y0 + ' - ' + pp + ')^2} = \\sqrt{' + (x0 * x0 + (y0 - pp) * (y0 - pp)) + '} = ' + dd + '$.'], hint: 'Use the directrix: its distance is easy.' };
   });
@@ -1985,20 +1985,20 @@
   function qdec(q) { var s = q.toDec(4); return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s; }
   G('geo.regular-polygon-area', function (R, ctx) {
     var kind = R.pick(byL(ctx, ['given', 'square', 'given'], ['hex', 'tri', 'given'], ['hexap', 'calc', 'hex', 'tri']));
-    if (kind === 'given') { var n = R.pick([5, 6, 8, 10]), s = R.int(4, 20), ratio = { 5: 0.688, 6: 0.866, 8: 1.207, 10: 1.539 }[n], a = U.round(s * ratio, 1), P = n * s, A = ML.Q.from(a).mul(P).div(2);
+    if (kind === 'given') { var n = R.pick([5, 6, 8, 10]), s = R.int(3, 40), ratio = { 5: 0.688, 6: 0.866, 8: 1.207, 10: 1.539 }[n], a = U.round(s * ratio, 1), P = n * s, A = ML.Q.from(a).mul(P).div(2);
       return { q: 'A regular ' + pname(n) + ' has side length $' + s + '$ cm and apothem $' + T.num(a) + '$ cm. Find its area.', a: num(qdec(A)),
         steps: ['Cut the polygon into ' + n + ' congruent triangles from the center. Each has base $' + s + '$ (a side) and height $' + T.num(a) + '$ (the apothem).', 'Area $= ' + n + ' \\cdot \\frac{1}{2} \\cdot ' + s + ' \\cdot ' + T.num(a) + '$, which is $\\frac{1}{2} \\cdot \\text{apothem} \\cdot \\text{perimeter}$.', 'Perimeter $= ' + n + ' \\cdot ' + s + ' = ' + P + '$, so area $= \\frac{1}{2} \\cdot ' + T.num(a) + ' \\cdot ' + P + ' = ' + A.toTex() + '$ cm$^2$.'], hint: 'Area = ½ · apothem · perimeter.' }; }
-    if (kind === 'square') { var ap = R.int(2, 12);
+    if (kind === 'square') { var ap = R.int(2, 25);
       return { q: 'A square has an apothem (the distance from its center to a side) of $' + ap + '$. Use $A = \\frac{1}{2}aP$ to find its area.', a: num(4 * ap * ap),
         steps: ['The apothem of a square is half its side, so the side is $' + 2 * ap + '$ and the perimeter is $' + 8 * ap + '$.', '$A = \\frac{1}{2} \\cdot ' + ap + ' \\cdot ' + 8 * ap + ' = ' + 4 * ap * ap + '$.', 'Check: $' + 2 * ap + '^2 = ' + 4 * ap * ap + '$.'], hint: 'Find the side and the perimeter first.' }; }
-    var s2 = R.int(2, 14);
+    var s2 = R.int(2, 24);
     if (kind === 'hex') { var A2 = rad(3 * s2 * s2, 2, 3);
       return { q: 'Find the area of a regular hexagon with side length $' + s2 + '$. Give an exact answer.', a: rnum(A2), viz: hexFig(),
         steps: ['A regular hexagon is six equilateral triangles with side $' + s2 + '$.', 'The apothem is the height of one of them: $\\frac{' + s2 + '\\sqrt{3}}{2}$ (the longer leg of a $30$-$60$-$90$ triangle with short leg $' + T.num(s2 / 2) + '$).', 'Area $= \\frac{1}{2} \\cdot \\text{apothem} \\cdot \\text{perimeter}$, so area $= \\frac{1}{2} \\cdot \\frac{' + s2 + '\\sqrt{3}}{2} \\cdot ' + 6 * s2 + ' = ' + rtex(A2) + '$.'], hint: 'The apothem is the height of an equilateral triangle with side ' + s2 + '.' }; }
     if (kind === 'tri') { var A3 = rad(s2 * s2, 4, 3);
       return { q: 'Find the area of an equilateral triangle with side length $' + s2 + '$. Give an exact answer.', a: rnum(A3),
         steps: ['The height splits it into two $30$-$60$-$90$ triangles, so the height is $\\frac{' + s2 + '\\sqrt{3}}{2}$.', 'Area $= \\frac{1}{2} \\cdot ' + s2 + ' \\cdot \\frac{' + s2 + '\\sqrt{3}}{2} = \\frac{\\sqrt{3}}{4} \\cdot ' + s2 * s2 + ' = ' + rtex(A3) + '$.'], hint: 'Find the height with a 30-60-90 triangle.' }; }
-    if (kind === 'hexap') { var k = R.int(1, 8), A4 = rad(6 * k * k, 1, 3);
+    if (kind === 'hexap') { var k = R.int(1, 15), A4 = rad(6 * k * k, 1, 3);
       return { q: 'A regular hexagon has an apothem of $' + rtex(rad(k, 1, 3)) + '$. Find its area. Give an exact answer.', a: rnum(A4),
         steps: ['The apothem is the longer leg of a $30$-$60$-$90$ triangle whose shorter leg is half a side. Shorter leg $= \\frac{' + rtex(rad(k, 1, 3)) + '}{\\sqrt{3}} = ' + k + '$, so a side is $' + 2 * k + '$.', 'Perimeter $= 6 \\cdot ' + 2 * k + ' = ' + 12 * k + '$.', 'Area $= \\frac{1}{2} \\cdot ' + rtex(rad(k, 1, 3)) + ' \\cdot ' + 12 * k + ' = ' + rtex(A4) + '$.'], hint: 'Find the side from the apothem first.' }; }
     var n2 = R.pick([5, 7, 8, 9, 10, 12]), s3 = R.int(3, 15), apo = s3 / (2 * tanD(180 / n2)), A5 = 0.5 * apo * n2 * s3;
@@ -2053,11 +2053,11 @@
 
   G('geo.pyramids-cones-spheres', function (R, ctx) {
     var kind = R.pick(byL(ctx, ['pyr', 'cone', 'sphere'], ['cone', 'sphere', 'slant', 'hemi'], ['slant', 'rev', 'comp', 'rev']));
-    if (kind === 'pyr') { var s = R.int(2, 12), h = 3 * R.int(1, 6), V = s * s * h / 3;
+    if (kind === 'pyr') { var s = R.int(2, 15), h = 3 * R.int(1, 8), V = s * s * h / 3;
       return { q: 'A pyramid has a square base with side $' + s + '$ m and a height of $' + h + '$ m. Find its volume.', a: num(V),
         steps: ['A pyramid holds exactly one third of the prism with the same base and height: $V = \\frac{1}{3}Bh$.', '$B = ' + s + '^2 = ' + s * s + '$, so $V = \\frac{1}{3} \\cdot ' + s * s + ' \\cdot ' + h + ' = ' + V + '$ m$^3$.'], hint: 'One third of base times height.' }; }
-    var r = R.int(2, 10);
-    if (kind === 'cone') { var h2 = R.int(2, 15), V2 = pq(r * r * h2, 3);
+    var r = R.int(2, 15);
+    if (kind === 'cone') { var h2 = R.int(2, 20), V2 = pq(r * r * h2, 3);
       return { q: 'Find the volume of a cone with radius $' + r + '$ and height $' + h2 + '$. Give an exact answer in terms of $\\pi$.', a: pnum(V2),
         steps: ['$V = \\frac{1}{3}\\pi r^2 h$ (one third of the cylinder with the same base and height).', '$V = \\frac{1}{3} \\cdot \\pi \\cdot ' + r * r + ' \\cdot ' + h2 + ' = ' + ptex(V2) + '$.'], hint: 'One third of πr²h.' }; }
     if (kind === 'sphere' || kind === 'hemi') { var hemi = kind === 'hemi', V3 = pq(4 * r * r * r, hemi ? 6 : 3);
@@ -2077,16 +2077,16 @@
 
   G('geo.surface-area-solids', function (R, ctx) {
     var kind = R.pick(byL(ctx, ['prism', 'cyl', 'sphere'], ['cone', 'pyr', 'cyl', 'sphere'], ['coneh', 'pyrh', 'hemi', 'cone']));
-    if (kind === 'prism') { var l = R.int(2, 12), w = R.int(2, 10), h = R.int(2, 10), S = 2 * (l * w + l * h + w * h);
+    if (kind === 'prism') { var l = R.int(2, 15), w = R.int(2, 12), h = R.int(2, 12), S = 2 * (l * w + l * h + w * h);
       return { q: 'Find the surface area of a rectangular prism that is $' + l + '$ by $' + w + '$ by $' + h + '$ cm.', a: num(S), viz: { name: 'nets', opts: { quiet: true, solid: 'prism', l: M.min(l, 6), w: M.min(w, 5), h: M.min(h, 4), fold: 0.3 }, label: 'A net of a rectangular prism' },
         steps: ['Unfold it: six rectangles in three matching pairs.', '$2(' + l + ' \\cdot ' + w + ') + 2(' + l + ' \\cdot ' + h + ') + 2(' + w + ' \\cdot ' + h + ')$, which is $' + 2 * l * w + ' + ' + 2 * l * h + ' + ' + 2 * w * h + ' = ' + S + '$ cm$^2$.'], hint: 'Three pairs of rectangles.' }; }
-    var r = R.int(2, 10);
-    if (kind === 'cyl') { var h2 = R.int(2, 15), S2 = pq(2 * r * r + 2 * r * h2);
+    var r = R.int(2, 15);
+    if (kind === 'cyl') { var h2 = R.int(2, 20), S2 = pq(2 * r * r + 2 * r * h2);
       return { q: 'Find the surface area of a cylinder with radius $' + r + '$ and height $' + h2 + '$. Give an exact answer in terms of $\\pi$.', a: pnum(S2), viz: { name: 'nets', opts: { quiet: true, solid: 'cylinder', r: 1, h: 3, fold: 0.2 }, label: 'A net of a cylinder: two circles and a rectangle' },
         steps: ['The net is two circles and a rectangle. The rectangle\'s length is the circumference, $2\\pi \\cdot ' + r + ' = ' + ptex(pq(2 * r)) + '$.', 'Two circles: $2 \\cdot \\pi \\cdot ' + r * r + ' = ' + ptex(pq(2 * r * r)) + '$. Rectangle: $' + ptex(pq(2 * r)) + ' \\cdot ' + h2 + ' = ' + ptex(pq(2 * r * h2)) + '$.', 'Total: $' + ptex(S2) + '$.'], hint: '2πr² + 2πrh.' }; }
     if (kind === 'sphere') return { q: 'Find the surface area of a sphere with radius $' + r + '$. Give an exact answer in terms of $\\pi$.', a: pnum(pq(4 * r * r)), steps: ['$S = 4\\pi r^2$: exactly four times the area of a circle with the same radius.', '$S = 4 \\cdot \\pi \\cdot ' + r * r + ' = ' + ptex(pq(4 * r * r)) + '$.'], hint: 'S = 4πr².' };
     if (kind === 'hemi') return { q: 'Find the total surface area of a solid hemisphere with radius $' + r + '$, including its flat circular face. Give an exact answer in terms of $\\pi$.', a: pnum(pq(3 * r * r)), steps: ['Curved part: half of a sphere, $\\frac{1}{2} \\cdot 4\\pi r^2 = 2\\pi \\cdot ' + r * r + ' = ' + ptex(pq(2 * r * r)) + '$.', 'Flat face: a circle, $\\pi \\cdot ' + r * r + ' = ' + ptex(pq(r * r)) + '$.', 'Total: $' + ptex(pq(3 * r * r)) + '$.'], hint: 'Half a sphere plus one circle.' };
-    var tr = R.pick([[3, 4, 5], [6, 8, 10], [5, 12, 13], [8, 15, 17], [9, 12, 15], [12, 5, 13], [4, 3, 5]]);
+    var tr = R.pick([[3, 4, 5], [6, 8, 10], [5, 12, 13], [8, 15, 17], [9, 12, 15], [12, 5, 13], [4, 3, 5], [7, 24, 25], [15, 8, 17], [12, 16, 20], [20, 21, 29], [10, 24, 26]]);
     if (kind === 'cone' || kind === 'coneh') { var rr = tr[0], hh = tr[1], l = tr[2], S3 = pq(rr * rr + rr * l);
       return { q: 'A cone has radius $' + rr + '$ and ' + (kind === 'cone' ? 'slant height $' + l + '$' : 'height $' + hh + '$') + '. Find its total surface area in terms of $\\pi$.', a: pnum(S3),
         steps: (kind === 'coneh' ? ['The lateral area needs the slant height $\\ell$ (along the side), not the height: $\\ell = \\sqrt{' + rr + '^2 + ' + hh + '^2} = ' + l + '$.'] : []).concat(['Base: $\\pi \\cdot ' + rr + '^2 = ' + ptex(pq(rr * rr)) + '$. Lateral area: $\\pi r \\ell = \\pi \\cdot ' + rr + ' \\cdot ' + l + ' = ' + ptex(pq(rr * l)) + '$.', 'Total: $' + ptex(S3) + '$.']), hint: kind === 'coneh' ? 'Find the slant height first.' : 'Base πr² plus lateral πrℓ.' }; }
@@ -2152,3 +2152,133 @@
   });
 
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
+   generator still has few different problems at a level sometimes asks the same skill in another form, built only from
+   problems that generator made, so every answer is the generator's own:
+   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+     classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
+     checker rejects it;
+   - two at once: two different short questions of the topic, answered together.
+   Topics whose generator already varies a lot at a level are left as they are. Placed after the generators and
+   registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'geo', VAR = {};
+  // how often another form is used: never when the topic's own generator already varies a lot at this level, up to
+  // half the time when it has few different questions (counted once per topic and level from 40 fixed seeds)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 37 ? 0 : VAR[key] >= 30 ? 0.3 : VAR[key] >= 20 ? 0.45 : 0.55;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
+  // a nearby wrong answer for a number or an expression, or null
+  function wrongFor(R, a) {
+    var v = String(ML.answerValue(a)), cands = [], m;
+    if (a.t === 'num') {
+      if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
+      else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
+      else if (/^-?\d+\.\d+$/.test(v)) { var x = +v, dp = v.split('.')[1].length, st = Math.pow(10, -Math.min(dp, 2)); cands = [x + st, x - st, -x, x * 10, x / 10].map(function (y) { return ML.util.numStr(ML.util.round(y, dp + 1)); }); }
+      else return null;
+    } else if (a.t === 'expr') {
+      if (v.length > 60) return null;
+      if (/ \+ /.test(v)) cands.push(v.replace(' + ', ' - '));
+      if (/ - /.test(v)) cands.push(v.replace(' - ', ' + '));
+      if ((m = /(^|[^\d.^])(\d+)(?![\d.])/.exec(v)) && !/\^$/.test(v.slice(0, m.index + m[1].length))) cands.push(v.slice(0, m.index) + m[1] + (+m[2] + 1) + v.slice(m.index + m[0].length));
+      if (!cands.length) return null;
+    } else return null;
+    var nv = function (s) { var mm = /^(-?\d+)\/(\d+)$/.exec(s); return mm ? mm[1] / mm[2] : /^-?\d+(\.\d+)?$/.test(s) ? +s : null; }, v0 = nv(v);
+    cands = R.shuffle(cands.filter(function (c, i, all) { var x = nv(c); return c !== v && all.indexOf(c) === i && (x === null || v0 === null || (Math.abs(x - v0) >= 0.01 * Math.max(Math.abs(v0), 1e-12) && (v0 <= 0 || x > 0) && (v0 <= 0 || v0 > 1 || x <= 1))); })); // a believable slip: the same sign, and at most 1 when the right answer is
+    for (var i = 0; i < cands.length; i++) if (okAns(a, cands[i]) === false) return cands[i];
+    return null;
+  }
+  function checkable(p) {
+    var a = p.a;
+    if (!a || p.unit || (a.form && a.form !== 'int' && a.form !== 'frac' && a.form !== 'simplest')) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bclassmate\b/i.test(txt(p.q))) return false;
+    if (a.t === 'num' || a.t === 'expr') return okAns(a, ML.answerValue(a)) === true;
+    if (a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    return true;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || ['mc', 'tf', 'num'].indexOf(p.a.t) < 0) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= 300 && !/<(table|svg|img|canvas|ol|ul)\b|\$\$|\\begin\{/i.test(p.q);
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), shown, good;
+    if (a.t === 'mc') {
+      var k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+      shown = a.choices[k]; good = a.choices[a.v];
+    } else {
+      good = ML.answerShow(a);
+      var w = right ? null : wrongFor(R, a);
+      if (!right && w === null) return null;
+      shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
+      if (!shown || /undefined|NaN/.test(shown)) return null;
+    }
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var out = { q: '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q + '</li><li>' + p2.q + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + (p.steps || [''])[0]].concat((p.steps || []).slice(1), ['Question 2: ' + (p2.steps || [''])[0]], (p2.steps || []).slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), mode = ctx && ctx.mode;
+      if (!p || !p.a || !ML.check || !ML.answerShow || !R.chance(share(id, base, ctx))) return p;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check', 'check');
+      if (pairable(p, true)) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = null;
+      try { out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base); } catch (e) { out = null; }
+      return out || p;
+    };
+    fn._forms = true;
+    fn._base = base; // the topic's own generator (for tests)
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

@@ -140,15 +140,15 @@
   G('g1.doubles-near-doubles', function (R, ctx) {
     var who = R.pick(NAMES), a;
     if (ctx.level === 1) {
-      a = R.int(2, 10);
-      return { q: who + ' shows a double on two ten frames. What is $' + a + ' + ' + a + '$?', viz: pic({ layout: 'frame', n: a, m: a, split: true, tap: false }), a: num(2 * a),
+      a = R.int(1, 10);
+      return { q: who + ' shows a double on two ten frames. What is $' + a + ' + ' + a + '$?', viz: pic({ layout: 'frame', n: a, m: a, split: true, tap: false, obj: R.pick(['dot', 'dot', 'star', 'heart', 'ball']) }), a: num(2 * a),
         steps: ['Each frame has ' + a + '.', a + ' and ' + a + ' is a double.', '$' + a + ' + ' + a + ' = ' + 2 * a + '$'], hint: 'Count one frame, then count on the same number.' };
     }
     a = R.int(2, 9);
     var up = R.coin(), b = up ? a + 1 : a - 1, first = R.coin(), x = first ? a : b, y = first ? b : a, small = M.min(a, b);
     if (ctx.level === 2) return { q: who + ' knows $' + a + ' + ' + a + ' = ' + 2 * a + '$. Use it to find $' + x + ' + ' + y + '$.', a: num(a + b),
       steps: ['$' + x + ' + ' + y + '$ is one ' + (up ? 'more' : 'less') + ' than $' + a + ' + ' + a + '$.', '$' + a + ' + ' + a + ' = ' + 2 * a + '$, and ' + (up ? 'one more is ' : 'one less is ') + (a + b) + '.', '$' + x + ' + ' + y + ' = ' + (a + b) + '$'], hint: (up ? b + ' is one more than ' + a : b + ' is one less than ' + a) + '.' };
-    if (R.coin()) return { q: 'Which double helps you find $' + small + ' + ' + (small + 1) + '$?', a: mc('$' + small + ' + ' + small + '$', ['$' + (small + 2) + ' + ' + (small + 2) + '$', '$' + (small + 3) + ' + ' + (small + 3) + '$']),
+    if (R.coin()) return { q: who + ' wants to find $' + small + ' + ' + (small + 1) + '$. Which double helps?', a: mc('$' + small + ' + ' + small + '$', ['$' + (small + 2) + ' + ' + (small + 2) + '$', '$' + (small + 3) + ' + ' + (small + 3) + '$']),
       steps: ['$' + small + ' + ' + (small + 1) + '$ is close to $' + small + ' + ' + small + '$.', '$' + small + ' + ' + small + ' = ' + 2 * small + '$, so $' + small + ' + ' + (small + 1) + ' = ' + (2 * small + 1) + '$.'], hint: 'Look for a double with one of the same numbers.' };
     return { q: who + ' uses a near double. What is $' + x + ' + ' + y + '$?', a: num(a + b), steps: ['$' + small + ' + ' + small + ' = ' + 2 * small + '$.', 'One more: $' + x + ' + ' + y + ' = ' + (a + b) + '$.'], hint: 'Find the double of the smaller number first.' };
   });
@@ -164,7 +164,7 @@
     }
     if (R.coin()) return { q: who + ' says $' + a + ' + ' + b + ' = 10 + ' + b + ' = ' + (10 + b) + '$. What is $' + a + ' + ' + b + '$ really?', a: num(s),
       steps: ['To make 10, ' + who + ' moved ' + need + ' from the ' + b + ' over to the ' + a + '.', 'Then only ' + rest + ' are left, not ' + b + '.', '$' + a + ' + ' + b + ' = 10 + ' + rest + ' = ' + s + '$'], hint: 'After you move ' + need + ' to make the ten, how many of the ' + b + ' are left?' };
-    return { q: 'To make a ten for $' + a + ' + ' + b + '$, break ' + b + ' into ' + need + ' and what number?', a: num(rest),
+    return { q: who + ' makes a ten for $' + a + ' + ' + b + '$ by breaking ' + b + ' into ' + need + ' and another number. What is the other number?', a: num(rest),
       steps: [a + ' needs ' + need + ' to make 10.', b + ' is ' + need + ' and ' + rest + '.', 'So $' + a + ' + ' + b + ' = 10 + ' + rest + ' = ' + s + '$.'], hint: need + ' and what make ' + b + '?' };
   });
 
@@ -175,9 +175,9 @@
       steps: upSteps.concat(['So $' + b + ' + ' + d + ' = ' + c + '$ and $' + c + ' - ' + b + ' = ' + d + '$.']), hint: 'Count up from ' + b + '. Stop at 10 on the way.' };
     if (ctx.level === 2) return { q: who + ' thinks: ' + b + ' plus what makes ' + c + '? What is $' + c + ' - ' + b + '$?', a: num(d),
       steps: ['Think $' + b + ' + ' + sq() + ' = ' + c + '$.'].concat(upSteps).concat(['$' + c + ' - ' + b + ' = ' + d + '$']), hint: 'Count up from ' + b + ' to ' + c + '.' };
-    var t = pickThing(R, ['bear']);
-    return { q: 'There are ' + w(c, t) + '. ' + b + ' are in a box. The rest are on the table. How many ' + t.many + ' are on the table?', a: num(d),
-      steps: ['We need $' + b + ' + ' + sq() + ' = ' + c + '$, which is $' + c + ' - ' + b + '$.'].concat(upSteps).concat(['There are ' + w(d, t) + ' on the table.']), hint: 'Think: ' + b + ' and how many more make ' + c + '?' };
+    var t = pickThing(R, ['bear']), pl = R.pick([['in a box', 'on the table'], ['in a bag', 'on the rug'], ['in the basket', 'on the shelf'], ['in a bucket', 'on the grass'], ['in a jar', 'on the desk']]);
+    return { q: who + ' has ' + w(c, t) + '. ' + b + ' are ' + pl[0] + '. The rest are ' + pl[1] + '. How many ' + t.many + ' are ' + pl[1] + '?', a: num(d),
+      steps: ['We need $' + b + ' + ' + sq() + ' = ' + c + '$, which is $' + c + ' - ' + b + '$.'].concat(upSteps).concat(['There are ' + w(d, t) + ' ' + pl[1] + '.']), hint: 'Think: ' + b + ' and how many more make ' + c + '?' };
   });
 
   G('g1.facts-within-20', function (R, ctx) {
@@ -373,8 +373,8 @@
   G('g1.count-by-tens', function (R, ctx) {
     var who = R.pick(NAMES);
     if (ctx.level === 1) {
-      var t = R.int(2, 9);
-      return { q: who + ' has these ten-sticks. Count by tens. How many cubes in all?', viz: pic({ kind: 'blocks', tens: t, ones: 0 }), a: num(10 * t),
+      var t = R.int(1, 10);
+      return { q: who + ' has these ten-sticks. ' + R.pick(['Count by tens. How many cubes in all?', 'Each stick has 10 cubes. How many cubes are there?', 'Count the sticks by tens. What number do they show?']), viz: pic({ kind: 'blocks', tens: t, ones: 0 }), a: num(10 * t),
         steps: ['Each stick is 10 cubes.', 'Count by tens: ' + list(seq(1, t).map(function (k) { return 10 * k; })) + '.', t + ' tens is ' + 10 * t + '.'], hint: 'Say 10, 20, 30 … one number for each stick.' };
     }
     if (ctx.level === 2) {
@@ -484,10 +484,15 @@
       return { q: 'The ' + c3[0] + ' ' + ob2 + ' is longer than the ' + c3[1] + ' ' + ob2 + '. The ' + c3[1] + ' ' + ob2 + ' is longer than the ' + c3[2] + ' ' + ob2 + '. Which ' + ob2 + ' is the ' + (askLong ? 'longest' : 'shortest') + '?',
         a: mc('The ' + c3[askLong ? 0 : 2] + ' ' + ob2, ['The ' + c3[1] + ' ' + ob2, 'The ' + c3[askLong ? 2 : 0] + ' ' + ob2]), steps: ['Put them in order from longest to shortest: ' + c3[0] + ', ' + c3[1] + ', ' + c3[2] + '.', 'The ' + c3[askLong ? 0 : 2] + ' ' + ob2 + ' is the ' + (askLong ? 'longest' : 'shortest') + '.'], hint: 'Draw three lines in the order the story tells.' };
     }
-    var objs = R.pick([['pencil', 'crayon', 'eraser'], ['rope', 'string', 'ribbon'], ['bus', 'car', 'bike'], ['snake', 'worm', 'caterpillar'], ['table', 'chair', 'stool']]);
-    if (R.coin()) return { q: 'The ' + objs[0] + ' is longer than the ' + objs[1] + '. The ' + objs[1] + ' is longer than the ' + objs[2] + '. Is the ' + objs[0] + ' longer than the ' + objs[2] + '?', a: mcKeep(['Yes', 'No', 'We can’t tell'], 0),
+    var objs = R.pick([['pencil', 'crayon', 'eraser'], ['rope', 'string', 'ribbon'], ['bus', 'car', 'bike'], ['snake', 'worm', 'caterpillar'], ['table', 'chair', 'stool'], ['train', 'bus', 'car'], ['couch', 'chair', 'stool'], ['carrot', 'bean', 'pea pod'], ['broom', 'spoon', 'pin'], ['ladder', 'umbrella', 'fork'], ['jump rope', 'shoelace', 'paper clip'], ['bench', 'book', 'eraser']]);
+    if (R.chance(0.3)) {
+      var lead = R.coin();
+      return { q: who + ' says: "The ' + objs[0] + ' is longer than the ' + objs[2] + '. The ' + objs[1] + ' is longer than the ' + objs[2] + '." Is the ' + (lead ? objs[0] : objs[1]) + ' longer than the ' + (lead ? objs[1] : objs[0]) + '?', a: mcKeep(['Yes', 'No', 'We can’t tell'], 2),
+        steps: ['Both are longer than the ' + objs[2] + '.', 'That does not tell us which of the ' + objs[0] + ' and the ' + objs[1] + ' is longer.', 'We can’t tell. We would need to compare them.'], hint: 'Does the ' + objs[2] + ' help you compare the other two?' };
+    }
+    if (R.coin()) return { q: who + ' compares three things. The ' + objs[0] + ' is longer than the ' + objs[1] + '. The ' + objs[1] + ' is longer than the ' + objs[2] + '. Is the ' + objs[0] + ' longer than the ' + objs[2] + '?', a: mcKeep(['Yes', 'No', 'We can’t tell'], 0),
       steps: ['The ' + objs[0] + ' is longer than the ' + objs[1] + ', and the ' + objs[1] + ' is longer than the ' + objs[2] + '.', 'So the ' + objs[0] + ' is longer than the ' + objs[2] + ' too.', 'Yes.'], hint: 'Use the ' + objs[1] + ' to compare the other two.' };
-    return { q: 'The ' + objs[2] + ' is shorter than the ' + objs[1] + '. The ' + objs[1] + ' is shorter than the ' + objs[0] + '. Which is the shortest?', a: mc('The ' + objs[2], ['The ' + objs[1], 'The ' + objs[0]]),
+    return { q: who + ' compares three things. The ' + objs[2] + ' is shorter than the ' + objs[1] + '. The ' + objs[1] + ' is shorter than the ' + objs[0] + '. Which is the shortest?', a: mc('The ' + objs[2], ['The ' + objs[1], 'The ' + objs[0]]),
       steps: ['Order from shortest to longest: ' + objs[2] + ', ' + objs[1] + ', ' + objs[0] + '.', 'The ' + objs[2] + ' is the shortest.'], hint: 'Which one is shorter than something that is already short?' };
   });
 
@@ -499,7 +504,8 @@
       var bad = R.pick(['gaps', 'overlaps']), goodFirst = R.coin(), badUnits = bad === 'gaps' ? { n: L - 1, obj: unit, gaps: [1] } : { n: L + 1, obj: unit, overlaps: [2, M.max(3, L - 1)] };
       var good = { len: L, obj: ob, units: { n: L, obj: unit } }, wrong = { len: L, obj: ob, units: badUnits };
       var items = goodFirst ? [good, wrong] : [wrong, good]; items[0].name = 'A'; items[1].name = 'B';
-      return { q: 'Two children measured the same ' + ob + ' with ' + uw + '. Who measured the right way?', viz: pic({ kind: 'lengths', items: items }), a: mcKeep(['A', 'B'], goodFirst ? 0 : 1),
+      var two = R.sample(NAMES, 2);
+      return { q: two[0] + ' (A) and ' + two[1] + ' (B) measured the same ' + ob + ' with ' + uw + '. Who measured the right way?', viz: pic({ kind: 'lengths', items: items }), a: mcKeep(['A', 'B'], goodFirst ? 0 : 1),
         steps: ['Units must touch end to end: no gaps and no overlaps.', (goodFirst ? 'B' : 'A') + ' has ' + (bad === 'gaps' ? 'a gap between two units.' : 'units that overlap.'), (goodFirst ? 'A' : 'B') + ' measured the right way: ' + L + ' ' + uw + '.'], hint: 'Look for a space between units, or units on top of each other.' };
     }
     var L2 = R.intNot(2, 9, [L]), big = M.max(L, L2), small = M.min(L, L2), o2 = R.pick(['pencil', 'crayon', 'straw', 'ribbon'].filter(function (x) { return x !== ob; }));

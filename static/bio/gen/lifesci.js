@@ -139,18 +139,22 @@
   /* ---------- 3. Using a Microscope ---------- */
   var MPARTS = { eyepiece: 'the lens you look through, usually 10×', objective: 'the lenses just above the slide, each with its own power', nosepiece: 'turns to switch from one objective lens to another', stage: 'the flat platform that holds the slide', clips: 'hold the slide still on the stage', diaphragm: 'controls how much light reaches the slide', light: 'shines light up through the slide', coarse: 'the large knob that moves the lens a lot, for focusing at low power', fine: 'the small knob for sharpening the focus, used at high power', arm: 'holds the top of the microscope; you carry it here', base: 'the bottom that supports the microscope' };
   G('lifesci.microscope', function (R, ctx) {
-    var L = lv(ctx), eye = R.pick([10, 10, 10, 15, 5]), obj = R.pick([4, 10, 40, 100]), tot = B().mag(eye, obj);
-    if (L === 1) return { q: R.pick(['A microscope has a ' + eye + '× eyepiece and a ' + obj + '× objective lens. What is the total magnification?', 'You look at an onion cell with a ' + eye + '× eyepiece and the ' + obj + '× objective. How many times wider than real does the cell look?', 'The eyepiece is marked ' + eye + '× and the objective in use is ' + obj + '×. What total magnification are you seeing?']), a: num(tot), unit: '×',
+    var L = lv(ctx), eye = R.pick([10, 10, 10, 15, 5, 20]), obj = R.pick([4, 10, 40, 100, 20, 60]), tot = B().mag(eye, obj);
+    var spec = R.pick(['an onion cell', 'a cheek cell', 'a drop of pond water', 'a thin slice of cork', 'a moss leaf', 'a strand of hair', 'a grain of pollen', 'a yeast cell', 'a slice of a leaf', 'a paramecium']);
+    if (L === 1) return { q: R.pick(['A microscope has a ' + eye + '× eyepiece and a ' + obj + '× objective lens. What is the total magnification?', 'You look at ' + spec + ' with a ' + eye + '× eyepiece and the ' + obj + '× objective. How many times wider than real does it look?', 'The eyepiece is marked ' + eye + '× and the objective in use is ' + obj + '×. What total magnification are you seeing?', 'To study ' + spec + ', you use the ' + obj + '× objective with a ' + eye + '× eyepiece. What is the total magnification?']), a: num(tot), unit: '×',
       hint: 'Multiply the two powers.', steps: ['Total magnification = eyepiece power × objective power.', '$' + eye + ' \\times ' + obj + ' = ' + tot + '$.', 'So the image looks <b>' + tot + ' times</b> as wide as the object.'] };
     if (L === 2) {
       var shape = R.int(0, 2);
-      if (shape === 0) return { q: 'Lena uses a ' + eye + '× eyepiece and a ' + obj + '× objective. She says the total magnification is ' + eye + ' + ' + obj + ' = ' + (eye + obj) + '×. What is the right total magnification?', a: num(tot), unit: '×',
+      if (shape === 0) return { q: R.pick(['Lena', 'Omar', 'Priya', 'Sam', 'Jordan', 'Mei', 'Ben', 'Ana']) + ' uses a ' + eye + '× eyepiece and a ' + obj + '× objective. She says the total magnification is ' + eye + ' + ' + obj + ' = ' + (eye + obj) + '×. What is the right total magnification?', a: num(tot), unit: '×',
         hint: 'Each lens magnifies the image the one before it made.', steps: ['The objective makes an image ' + obj + ' times wider; the eyepiece magnifies that image ' + eye + ' times more.', 'So the powers multiply: $' + eye + ' \\times ' + obj + ' = ' + tot + '$.', 'Adding them (' + (eye + obj) + '×) is the mistake.'] };
-      if (shape === 1) { var t2 = R.pick([40, 100, 400, 1000]), e2 = 10, o2 = t2 / e2;
+      if (shape === 1) { var e2 = R.pick([5, 10, 10, 15, 20]), o2 = R.pick([4, 10, 20, 40, 60, 100]), t2 = e2 * o2;
         return { q: 'A student sees a cell at ' + t2 + '× total magnification with a ' + e2 + '× eyepiece. What objective lens is she using?', a: num(o2), unit: '×', hint: 'Total = eyepiece × objective, so objective = total ÷ eyepiece.',
           steps: ['Total = eyepiece × objective.', 'Objective = $' + t2 + ' \\div ' + e2 + ' = ' + o2 + '$.', 'So she is using the <b>' + o2 + '×</b> objective.'] }; }
-      return { q: 'You switch from the 10× objective to the 40× objective. What happens to what you see?', a: mc('You see a smaller area of the slide, but it looks larger.', ['You see more of the slide, and it looks larger.', 'You see the same area, only sharper.', 'You see more of the slide, and it looks smaller.']),
-        hint: 'Think of zooming in on a photo.', steps: ['Higher power makes everything look wider by 4 times.', 'The circle you look through stays the same size, so it now holds only a quarter as much of the slide across.', 'So you see <b>a smaller area, larger</b>. (It also often looks dimmer.)'] };
+      var sw = R.pick([[10, 40], [4, 10], [40, 100], [4, 40], [10, 100]]), up = R.coin(), fac = sw[1] / sw[0];
+      if (!up) return { q: 'Looking at ' + spec + ', you switch from the ' + sw[1] + '× objective back to the ' + sw[0] + '× objective. What happens to what you see?', a: mc('You see more of the slide, but it looks smaller.', ['You see a smaller area of the slide, and it looks larger.', 'You see the same area, only sharper.', 'You see less of the slide, and it looks smaller.']),
+        hint: 'Think of zooming out on a photo.', steps: ['Lower power makes everything look ' + fac + ' times less wide.', 'The circle you look through stays the same size, so it now holds ' + fac + ' times as much of the slide across.', 'So you see <b>more of the slide, smaller</b>.'] };
+      return { q: 'Looking at ' + spec + ', you switch from the ' + sw[0] + '× objective to the ' + sw[1] + '× objective. What happens to what you see?', a: mc('You see a smaller area of the slide, but it looks larger.', ['You see more of the slide, and it looks larger.', 'You see the same area, only sharper.', 'You see more of the slide, and it looks smaller.']),
+        hint: 'Think of zooming in on a photo.', steps: ['Higher power makes everything look ' + fac + ' times wider.', 'The circle you look through stays the same size, so it now holds only 1/' + fac + ' as much of the slide across.', 'So you see <b>a smaller area, larger</b>. (It also often looks dimmer.)'] };
     }
     if (R.coin()) { var keys = Object.keys(MPARTS), p = R.pick(keys), wr = R.sample(keys.filter(function (k) { return k !== p; }), 3);
       var nm = function (k) { return cap(B().MICROSCOPE_PARTS[k]); };
@@ -338,14 +342,14 @@
       return { q: 'A cube-shaped cell has sides ' + s + ' µm long. What is its ' + (askV ? 'volume' : 'surface area') + '?', viz: qv('lifesci-cubes', { sides: [s] }), a: num(askV ? c.v : c.sa), unit: askV ? 'µm³' : 'µm²',
         hint: askV ? 'Volume = side × side × side.' : 'A cube has 6 square faces. Find one face, then multiply by 6.',
         steps: askV ? ['Volume = side × side × side.', '$' + s + ' \\times ' + s + ' \\times ' + s + ' = ' + c.v + '$ µm³.'] : ['One face: $' + s + ' \\times ' + s + ' = ' + s * s + '$ µm².', 'Six faces: $6 \\times ' + s * s + ' = ' + c.sa + '$ µm².'] }; }
-    if (L === 2) { var k = R.pick([2, 3, 2, 4, 5, 10]), s0 = k > 4 ? 1 : R.int(1, 3), askV2 = R.coin();
+    if (L === 2) { var k = R.pick([2, 3, 2, 4, 5, 6, 10]), s0 = k > 5 ? R.int(1, 2) : R.int(1, 6), askV2 = R.coin();
       return { q: 'A cube-shaped cell grows from ' + s0 + ' µm to ' + s0 * k + ' µm on each side (' + k + ' times as wide). How many times larger does its ' + (askV2 ? 'volume' : 'surface area') + ' become?', viz: qv('lifesci-cubes', { sides: [s0, s0 * k] }), a: num(askV2 ? k * k * k : k * k), unit: '×',
         hint: askV2 ? 'Volume uses side three times: side × side × side.' : 'Surface area uses side twice: side × side.',
         steps: ['Before: surface area $6 \\times ' + s0 + '^2 = ' + C(s0).sa + '$ µm², volume $' + s0 + '^3 = ' + C(s0).v + '$ µm³.', 'After: surface area $6 \\times ' + s0 * k + '^2 = ' + C(s0 * k).sa + '$ µm², volume $' + s0 * k + '^3 = ' + C(s0 * k).v + '$ µm³.', askV2 ? 'Volume: $' + C(s0 * k).v + ' \\div ' + C(s0).v + ' = ' + k * k * k + '$, which is $' + k + '^3$.' : 'Surface area: $' + C(s0 * k).sa + ' \\div ' + C(s0).sa + ' = ' + k * k + '$, which is $' + k + '^2$.', 'Volume grows faster than surface, so a big cell has less surface for each bit of its inside.'] }; }
-    if (R.coin()) { var s3 = R.pick([1, 2, 3, 4, 5, 6, 8, 10, 12, 20]), c3 = C(s3);
+    if (R.coin()) { var s3 = R.pick([1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 24, 25, 30, 40, 50, 60]), c3 = C(s3);
       return { q: 'For a cube-shaped cell with sides ' + s3 + ' µm, find its surface area divided by its volume (the surface-to-volume ratio).', viz: qv('lifesci-cubes', { sides: [s3] }), a: num(c3.ratio, { rtol: 0.01 }),
         hint: 'Find the surface area and the volume first.', steps: ['Surface area: $6 \\times ' + s3 + ' \\times ' + s3 + ' = ' + c3.sa + '$ µm².', 'Volume: $' + s3 + ' \\times ' + s3 + ' \\times ' + s3 + ' = ' + c3.v + '$ µm³.', 'Ratio: $' + c3.sa + ' \\div ' + c3.v + ' = ' + fmtN(c3.ratio) + '$ (per µm).', 'The smaller the cell, the bigger this number, and the easier it is to move materials in and out.'] }; }
-    var a = R.pick([1, 2, 3]), b = R.pick([4, 6, 3, 8, 10, 12].filter(function (x) { return x > a && x % a === 0; })), ra = C(a).ratio, rb = C(b).ratio;
+    var a = R.pick([1, 2, 3, 4, 5]), b = R.pick([2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 24, 25, 30, 40, 50, 60].filter(function (x) { return x > a && x % a === 0; })), ra = C(a).ratio, rb = C(b).ratio;
     return { q: 'Cube A has sides ' + a + ' µm and cube B has sides ' + b + ' µm. How many times more surface area for each unit of volume does cube A have than cube B?', viz: qv('lifesci-cubes', { sides: [a, b] }), a: num(ra / rb, { rtol: 0.01 }), unit: '×',
       hint: 'Find surface area ÷ volume for each cube, then divide.', steps: ['Cube A: $' + C(a).sa + ' \\div ' + C(a).v + ' = ' + fmtN(ra) + '$.', 'Cube B: $' + C(b).sa + ' \\div ' + C(b).v + ' = ' + fmtN(rb) + '$.', '$' + fmtN(ra) + ' \\div ' + fmtN(rb) + ' = ' + fmtN(ra / rb) + '$: the smaller cube has <b>' + fmtN(ra / rb) + ' times</b> as much surface for its size.'] };
   });
@@ -550,6 +554,9 @@
   /* ---------- 18. How Bacteria Multiply ---------- */
   G('lifesci.bacteria-growth', function (R, ctx) {
     var L = lv(ctx), D = B().doubling;
+    if (L === 1 && R.chance(0.6)) { var n0 = R.pick([2, 3, 4, 5, 10]), nn = R.int(2, 6), NN = D(n0, nn), place = R.pick(['A dish of broth', 'A jar of milk', 'A slice of bread', 'A drop of pond water', 'A petri dish', 'A test tube of broth']);
+      return { q: place + ' starts with ' + n0 + ' bacteria. Each one divides into two every generation. If nothing runs out, how many bacteria are there after ' + nn + ' generations?', viz: qv('bi-population', { model: 'doubling', gens: nn, N0: n0 }), a: num(NN), unit: 'bacteria',
+        hint: 'Double ' + n0 + ' again and again, ' + nn + ' times.', steps: ['Each generation the number doubles: ' + [0, 1, 2, 3, 4, 5, 6].slice(0, nn + 1).map(function (i) { return commas(D(n0, i)); }).join(', ') + '.', 'So there are <b>' + commas(NN) + '</b> bacteria.'] }; }
     if (L === 1) { var n = R.int(3, 10), N = D(1, n);
       return { q: 'One bacterium divides into two every generation. If nothing runs out, how many bacteria are there after ' + n + ' generations?', viz: qv('bi-population', { model: 'doubling', gens: n, N0: 1 }), a: num(N), unit: 'bacteria',
         hint: 'Double the number ' + n + ' times: 1, 2, 4, 8, …', steps: ['Each generation the number doubles.', 'After ' + n + ' generations: $2^{' + n + '} = ' + commas(N) + '$.', 'So there are <b>' + commas(N) + '</b> bacteria.'] }; }
@@ -1370,7 +1377,8 @@
       return { q: 'A pond plant population doubles every week: ' + g0 + ', ' + 2 * g0 + ', ' + 4 * g0 + ', ' + 8 * g0 + ' … A student says it grows by the same number, ' + g0 + ', each week. Is that right?', a: mc(R, 'No. The number added doubles each week too', ['Yes. It adds ' + g0 + ' every week', 'No. It adds fewer plants each week']),
         hint: 'Find how many are added each week.', steps: ['Added each week: ' + g0 + ', then ' + 2 * g0 + ', then ' + 4 * g0 + '.', 'Each plant makes new ones, so a bigger population adds more.', 'So <b>no</b>: the gain doubles each week.'] };
     }
-    var dt = R.pick([20, 30]), hrs = R.pick([2, 3]), start = R.pick([1, 5, 10, 100]), gens = hrs * 60 / dt, endN = start * Math.pow(2, gens);
+    var dt = R.pick([20, 30, 60, 15]), hrs = R.int(1, dt === 15 ? 2 : dt === 20 ? 3 : dt === 30 ? 4 : 6), start = R.pick([1, 2, 3, 5, 10, 20, 50, 100]), gens = hrs * 60 / dt, endN = start * Math.pow(2, gens);
+    if (hrs === 1) hrs = dt === 60 ? 2 : hrs, gens = hrs * 60 / dt, endN = start * Math.pow(2, gens);
     return { q: 'A colony of ' + start + ' bacteri' + (start === 1 ? 'um' : 'a') + ' doubles every ' + dt + ' minutes with plenty of food. How many bacteria are there after ' + hrs + ' hours?', a: num(endN),
       viz: quiet('bi-population', { model: 'doubling', gens: Math.min(gens, 9), N0: 1 }),
       hint: 'First find how many doublings fit in ' + hrs + ' hours.', steps: [hrs + ' hours = ' + hrs * 60 + ' minutes; ' + hrs * 60 + ' ÷ ' + dt + ' = ' + gens + ' doublings.', start + ' × 2<sup>' + gens + '</sup> = ' + start + ' × ' + Math.pow(2, gens) + ' = <b>' + fmtN(endN) + '</b>.'] };
@@ -1543,7 +1551,7 @@
       var s = R.pick([['We breathe in only oxygen and breathe out only carbon dioxide.', false, 'Both kinds of air are mostly nitrogen (about 78%). Air out still has about 16% oxygen and only about 4% carbon dioxide.'], ['Air we breathe out still contains a lot of oxygen.', true, 'Exhaled air is still about 16% oxygen.'], ['Most of the air we breathe in is nitrogen.', true, 'Air is about 78% nitrogen, and the body does not use it.']]);
       return { q: 'True or false: ' + s[0], a: tf(s[1]), hint: 'What is air made of?', steps: [s[2], 'So the statement is <b>' + (s[1] ? 'true' : 'false') + '</b>.'] };
     }
-    var vol = R.pick([400, 500, 600, 800, 1000]), sh3 = R.int(0, 1);
+    var vol = R.int(4, 12) * 100, sh3 = R.int(0, 1);
     if (sh3 === 0) return { q: 'A breath brings ' + vol + ' mL of air into the lungs. Air is about 21% oxygen. About how many mL of that breath is oxygen?', a: num(vol * 0.21, 0.01), unit: 'mL', hint: 'Find 21% of ' + vol + '.',
       steps: ['21% of ' + vol + ' = 0.21 × ' + vol + ' = <b>' + fmtN(vol * 0.21) + ' mL</b>.'] };
     return { q: 'A breath of ' + vol + ' mL goes in at about 21% oxygen and comes out at about 16% oxygen. About how many mL of oxygen did the body take from that breath?', a: num(vol * 0.05, 0.01), unit: 'mL', hint: 'Find the oxygen in, the oxygen out, and subtract.',
@@ -1602,9 +1610,9 @@
         steps: ['Solid waste is mostly food the body never absorbed, plus gut bacteria.', 'Cell wastes travel in the blood and leave through the kidneys, lungs and skin.', 'So the statement is <b>false</b>.'] };
     }
     var sh = R.int(0, 1);
-    if (sh === 0) { var u = R.pick([1, 1.5, 2]), days0 = R.pick([1, 2, 3, 7]), kept = (150 - u) * days0; return { q: 'The kidneys filter about 150 quarts of blood fluid a day and make about ' + u + ' quart' + (u === 1 ? '' : 's') + ' of urine a day. Over ' + days0 + ' day' + (days0 > 1 ? 's' : '') + ', how many quarts of the filtered fluid go back into the blood?', a: num(kept, 0.001), unit: 'quarts',
+    if (sh === 0) { var u = R.pick([1, 1.5, 2]), days0 = R.int(1, 7), kept = (150 - u) * days0; return { q: 'The kidneys filter about 150 quarts of blood fluid a day and make about ' + u + ' quart' + (u === 1 ? '' : 's') + ' of urine a day. Over ' + days0 + ' day' + (days0 > 1 ? 's' : '') + ', how many quarts of the filtered fluid go back into the blood?', a: num(kept, 0.001), unit: 'quarts',
       hint: 'Kept each day = filtered − urine.', steps: ['Kept each day: 150 − ' + u + ' = ' + (150 - u) + ' quarts.', (days0 > 1 ? 'Over ' + days0 + ' days: ' + (150 - u) + ' × ' + days0 + ' = ' : 'So ') + '<b>' + fmtN(kept) + ' quarts</b>' + (days0 > 1 ? '' : ' a day') + '.', 'That is about 99% of what is filtered: most water, sugar and salt are taken back.'] }; }
-    var days = R.pick([2, 3, 7, 10]);
+    var days = R.int(2, 14);
     return { q: 'The kidneys filter about 150 quarts of blood a day. How many quarts do they filter in ' + days + ' days?', a: num(150 * days), unit: 'quarts', hint: 'Multiply.', steps: ['150 × ' + days + ' = <b>' + fmtN(150 * days) + ' quarts</b>.'] };
   });
 
@@ -1620,11 +1628,11 @@
       return { q: 'Which systems change their activity when you run? Choose all that apply.', a: mcAll(R, pick), hint: 'Think about muscles, breathing, the heart and the signals that control them.',
         steps: ['Muscles work harder (muscular), breathing speeds up (respiratory), the heart beats faster (circulatory), and the brain controls the changes (nervous).', 'No system works alone.'] };
     }
-    var rest = R.pick([60, 65, 70, 72, 75, 80]), mult = R.pick([1.5, 2, 2.5]), ex = rest * mult;
+    var rest = R.pick([60, 62, 64, 65, 66, 68, 70, 72, 74, 75, 76, 78, 80]), mult = R.pick([1.5, 2, 2.5]), ex = rest * mult;
     if (ex !== Math.round(ex)) { rest = 70; ex = rest * mult; }
     if (R.coin()) return { q: 'A student\'s heart rate is ' + rest + ' beats per minute at rest and ' + ex + ' just after running. How many times faster is it beating?', a: num(mult, 0.01), hint: 'Divide the running rate by the resting rate.',
       steps: [ex + ' ÷ ' + rest + ' = <b>' + mult + '</b>.', 'The circulatory system speeds up to deliver more oxygen to the muscles.'] };
-    var br = R.pick([12, 14, 15, 16]), br2 = br * R.pick([2, 3]);
+    var br = R.int(12, 18), br2 = R.coin() ? br * R.pick([2, 3]) : br + R.int(8, 24);
     return { q: 'At rest you take ' + br + ' breaths a minute. After running you take ' + br2 + '. How many more breaths a minute is that?', a: num(br2 - br), unit: 'breaths', hint: 'Subtract.', steps: [br2 + ' − ' + br + ' = <b>' + (br2 - br) + '</b> more breaths a minute.'] };
   });
 
@@ -1709,7 +1717,10 @@
     return { q: s3[0], a: mc(R, s3[1], s3[2]), hint: 'Think about copies and mixes.', steps: [s3[1] + '.'] };
   });
 
-  var TRAITS = [['pea flower color', 'P', 'purple flowers', 'white flowers', 'pea plant'], ['pea seed shape', 'R', 'round seeds', 'wrinkled seeds', 'pea plant'], ['pea pod color', 'G', 'green pods', 'yellow pods', 'pea plant'], ['pea plant height', 'T', 'tall stems', 'short stems', 'pea plant'], ['guinea pig fur color', 'B', 'black fur', 'white fur', 'guinea pig'], ['rabbit fur length', 'S', 'short fur', 'long fur', 'rabbit'], ['fruit fly wing shape', 'W', 'normal wings', 'curled wings', 'fruit fly']];
+  var TRAITS = [['pea flower color', 'P', 'purple flowers', 'white flowers', 'pea plant'], ['pea seed shape', 'R', 'round seeds', 'wrinkled seeds', 'pea plant'], ['pea pod color', 'G', 'green pods', 'yellow pods', 'pea plant'], ['pea plant height', 'T', 'tall stems', 'short stems', 'pea plant'], ['guinea pig fur color', 'B', 'black fur', 'white fur', 'guinea pig'], ['rabbit fur length', 'S', 'short fur', 'long fur', 'rabbit'], ['fruit fly wing shape', 'W', 'normal wings', 'curled wings', 'fruit fly'],
+    ['pea seed color', 'Y', 'yellow seeds', 'green seeds', 'pea plant'], ['pea pod shape', 'I', 'inflated pods', 'pinched pods', 'pea plant'], ['pea flower position', 'A', 'flowers along the stem', 'flowers at the tip', 'pea plant'],
+    ['fruit fly body color', 'G', 'gray bodies', 'black bodies', 'fruit fly'], ['mouse fur color', 'B', 'black fur', 'brown fur', 'mouse'], ['corn kernel color', 'P', 'purple kernels', 'yellow kernels', 'corn plant'],
+    ['cat fur length', 'L', 'short fur', 'long fur', 'cat'], ['guinea pig fur texture', 'R', 'rough fur', 'smooth fur', 'guinea pig']];
   function domPhrase(t) { return 'the allele for ' + t[2] + ' (' + t[1] + ') is dominant over the allele for ' + t[3] + ' (' + t[1].toLowerCase() + ')'; }
   function geno(t, k) { var d = t[1], r = d.toLowerCase(); return [d + d, d + r, r + r][k]; }
   G('lifesci.alleles', function (R, ctx) {
@@ -1773,7 +1784,7 @@
         hint: 'Count the boxes, then divide by 4.', steps: ['Boxes: ' + c.X.grid.map(function (row) { return row.join(', '); }).join('; ') + '.', ph + ' boxes: ' + n + ' of 4.', n + ' ÷ 4 = <b>' + PCT[n] + '</b>.'] };
     }
     if (L === 2) { // the trouble spot: each offspring is a new chance
-      var sp = R.pick([['guinea pigs', 'pups', 'black', 'white'], ['rabbits', 'kits', 'short-furred', 'long-furred'], ['dogs', 'puppies', 'black', 'brown']]), k = R.int(2, 4);
+      var sp = R.pick([['guinea pigs', 'pups', 'black', 'white'], ['rabbits', 'kits', 'short-furred', 'long-furred'], ['dogs', 'puppies', 'black', 'brown'], ['mice', 'pups', 'black', 'brown'], ['cats', 'kittens', 'short-haired', 'long-haired'], ['guinea pigs', 'pups', 'rough-coated', 'smooth-coated']]), k = R.int(2, 6);
       if (R.coin()) return { q: 'Two ' + sp[0] + ', both Bb, have had ' + k + ' ' + sp[2] + ' ' + sp[1] + ' in a row (' + sp[3] + ', bb, is recessive). What is the chance the next one is ' + sp[3] + '?', a: mcFixed(PCT, '25%'),
         hint: 'Do the earlier offspring change the Punnett square?', steps: ['Each offspring is a new, independent chance from the same square.', 'bb is 1 box of 4, so the chance is still <b>25%</b>; no color is "due."'] };
       return { q: 'A Pp × Pp cross gives a 3 : 1 ratio of purple to white flowers. A gardener grows exactly 4 of these plants. True or false: exactly 3 will be purple and 1 white.', a: tf(false),
@@ -1903,9 +1914,724 @@
       return { q: 'Why did dark peppered moths become common near Manchester in the 1800s, and pale ones common again after clean-air laws?', a: mc(R, 'Birds ate the moths that stood out most against the bark, and the bark color changed with the soot', ['Each moth changed its color to match the trees', 'Soot dyed the moths dark, and rain washed them pale', 'Dark moths were made by factories']),
         hint: 'Who was choosing which moths survived?', steps: ['Soot darkened the bark, so pale moths stood out and were eaten more; dark moths left more offspring.', 'After the air was cleaned, the bark grew pale again and selection favored pale moths.', 'Moth color is inherited; individual moths did not change.'] };
     }
-    var start = R.pick([5, 10, 20, 25]), dt = R.pick([20, 30]), hrs = R.pick([2, 3]), g = hrs * 60 / dt, n = start * Math.pow(2, g);
+    var start = R.pick([2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30]), dt = R.pick([20, 30, 60]), hrs = R.int(2, dt === 20 ? 3 : dt === 30 ? 5 : 8), g = hrs * 60 / dt, n = start * Math.pow(2, g);
     return { q: 'A colony of 1,000,000 bacteria includes ' + start + ' that resist an antibiotic. The antibiotic kills all the others. The resistant ones double every ' + dt + ' minutes. How many resistant bacteria are there ' + hrs + ' hours later?', a: num(n),
       hint: 'Count the doublings first.', steps: [hrs + ' hours = ' + hrs * 60 + ' minutes; ' + hrs * 60 + ' ÷ ' + dt + ' = ' + g + ' doublings.', start + ' × 2<sup>' + g + '</sup> = ' + start + ' × ' + Math.pow(2, g) + ' = <b>' + fmtN(n) + '</b>.', 'The new population is made almost entirely of resistant bacteria.'] };
   });
 
 })(window.MathLadder);
+
+/* ---- More of the same skills (round 7, "widen"): larger fact banks ----
+   Topics whose levels had few different problems also draw from the banks below, built from the topic's own facts:
+   true or false; which statement is true (or false); sorting (which one is …, which is not, choose all, which group);
+   a term and its meaning, both ways; and the order of steps (what comes next, what comes first, put in order).
+   Every answer comes from the bank itself, so the right choice and the others can never disagree. Shares are per level:
+   the topic's own generator still makes the rest. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen) return;
+  var BK = {};
+  function T(id, o) { var b = BK[id] || (BK[id] = {}); Object.keys(o).forEach(function (k) { b[k] = k === 'share' || k === 'forms' ? Object.assign(b[k] || {}, o[k]) : o[k]; }); }
+  function cap(s) { s = String(s); return s.charAt(0).toUpperCase() + s.slice(1); }
+  function capI(s) { s = String(s); return /\s/.test(s) || s.length > 3 ? cap(s) : s; } // genotypes like tt stay as written
+  function low(s) { s = String(s); return /^[A-Z][a-z]/.test(s) && !/^(DNA|RNA|ATP|I )/.test(s) ? s.charAt(0).toLowerCase() + s.slice(1) : s; }
+  function dot(s) { s = String(s).replace(/\s+$/, ''); return /[.!?)]$/.test(s) ? s : s + '.'; }
+  function nodot(s) { return String(s).replace(/\.$/, ''); }
+  function fill(t, o) { return t.replace(/\{(\w)\}/g, function (_, k) { return o[k]; }); }
+  function MC(right, wrong) { return { t: 'mc', choices: [right].concat(wrong), v: 0 }; }
+  function TF(v) { return { t: 'mc', choices: ['True', 'False'], v: v ? 0 : 1, keep: true }; }
+  function LT(i) { return String.fromCharCode(65 + i); }
+  function uniq(a) { return a.filter(function (x, i) { return a.indexOf(x) === i; }); }
+
+  var FORMS = { 1: ['tf', 'tf1', 'one', 'cat', 'fwd', 'back', 'next'], 2: ['tf', 'tf1', 'one', 'not', 'cat', 'fwd', 'back', 'next', 'first'], 3: ['tf1', 'not', 'all', 'back', 'fwd', 'order', 'first', 'cat'] };
+  function can(o, f) {
+    var tf = o.tf || [], s = o.sort, pr = o.pair, sq = o.seq;
+    if (f === 'custom') return !!o.make;
+    if (f === 'tf') return tf.length > 0;
+    if (f === 'tf1') return tf.filter(function (x) { return x[1]; }).length >= 3 && tf.filter(function (x) { return !x[1]; }).length >= 3;
+    if (f === 'one' || f === 'not' || f === 'all' || f === 'cat') return !!s;
+    if (f === 'fwd' || f === 'back') return !!pr;
+    return !!sq;
+  }
+  function make(R, o, L) {
+    var forms = (o.forms && o.forms[L]) || FORMS[L];
+    forms = forms.filter(function (f) { return can(o, f); });
+    if (!forms.length) return null;
+    var f = R.pick(forms), p = null;
+    if (f === 'custom') p = o.make(R, L);
+    else if (f === 'tf' || f === 'tf1') p = mkTf(R, o, f);
+    else if (o.sort && (f === 'one' || f === 'not' || f === 'all' || f === 'cat')) p = mkSort(R, o.sort, f, L);
+    else if (f === 'fwd' || f === 'back') p = mkPair(R, o.pair, f);
+    else p = mkSeq(R, o.seq, f, L);
+    if (p && !p.hint) p.hint = o.hint || 'Think back to the lesson, then check each choice.';
+    return p;
+  }
+  function mkTf(R, o, f) {
+    var tf = o.tf;
+    if (f === 'tf') {
+      var t = R.pick(tf);
+      return { q: 'True or false: ' + dot(t[0]), a: TF(t[1]), steps: [t[2] ? dot(t[2]) : 'The statement is ' + (t[1] ? 'true.' : 'false.'), 'So the answer is <b>' + (t[1] ? 'true' : 'false') + '</b>.'] };
+    }
+    var wantTrue = R.coin(), good = tf.filter(function (x) { return x[1] === wantTrue; }), bad = tf.filter(function (x) { return x[1] !== wantTrue; });
+    var r = R.pick(good), ws = R.sample(bad, 3);
+    return { q: 'Which statement is <b>' + (wantTrue ? 'true' : 'false') + '</b>?', a: MC(dot(r[0]), ws.map(function (x) { return dot(x[0]); })),
+      steps: [(wantTrue ? 'True: ' : 'False: ') + dot(r[0]) + (r[2] ? ' ' + dot(r[2]) : '')].concat(ws.map(function (x) { return (wantTrue ? 'False: ' : 'True: ') + dot(x[0]) + (x[2] ? ' ' + dot(x[2]) : ''); })) };
+  }
+  function why(s, it) {
+    if (it[2]) return dot(cap(it[2]));
+    if (it[0].length <= 3) return it[0] + ': ' + low(s.cats[it[1]][2]) + '.';
+    if (/[.?!]$/.test(it[0])) return '“' + cap(it[0]) + '” ' + cap(s.cats[it[1]][2]) + '.';
+    return cap(dot(it[0] + ' ' + (s.be || 'is') + ' ' + s.cats[it[1]][0]));
+  }
+  function mkSort(R, s, f, L) {
+    var keys = Object.keys(s.cats), k = R.pick(keys.filter(function (c) { return s.items.some(function (x) { return x[1] === c; }); })), C = s.cats[k];
+    // names ("a frog") and descriptions ("It has no tubes for water.") are not mixed in one list of choices
+    var isD = function (x) { return /[.?!]$/.test(x[0]); }, names = s.items.filter(function (x) { return !isD(x); }), descs = s.items.filter(isD);
+    var useD = f !== 'cat' && (names.length < 6 || (descs.length >= 6 && R.coin())), pool = useD ? descs : names;
+    var inC = pool.filter(function (x) { return x[1] === k; }), outC = pool.filter(function (x) { return x[1] !== k; });
+    var verb1 = useD ? 'describes ' : (s.be === 'are' ? 'are ' : 'is '), verbN = useD ? 'describe ' : 'are ';
+    var lead = s.lead ? s.lead + ' ' : '';
+    if (f === 'cat') {
+      var it = R.pick(s.items), opts = keys.length > 4 ? [it[1]].concat(R.sample(keys.filter(function (c) { return c !== it[1]; }), 3)) : [it[1]].concat(keys.filter(function (c) { return c !== it[1]; }));
+      var a = { t: 'mc', choices: opts.map(function (c) { return cap(s.cats[c][2]); }), v: 0 };
+      if (keys.length <= 3) { a.choices = keys.map(function (c) { return cap(s.cats[c][2]); }); a.v = keys.indexOf(it[1]); a.keep = true; }
+      return { q: lead + fill(s.catq || 'Which group does this belong to? {x}', { x: dot(capI(it[0])) }), a: a, steps: [why(s, it), 'So the answer is <b>' + low(s.cats[it[1]][2]) + '</b>.'] };
+    }
+    if (f === 'one' && inC.length && outC.length >= 3) {
+      var r = R.pick(inC), w = R.sample(outC, 3);
+      return { q: lead + 'Which of these ' + verb1 + C[0] + '?', a: MC(capI(r[0]), w.map(function (x) { return capI(x[0]); })),
+        steps: [why(s, r)].concat(w.map(function (x) { return why(s, x); })) };
+    }
+    if (f === 'not' && inC.length >= 3 && outC.length) {
+      var r2 = R.pick(outC), w2 = R.sample(inC, 3);
+      return { q: lead + 'Three of these ' + verbN + C[1] + '. Which one ' + (useD ? 'does' : 'is') + ' <b>not</b>?', a: MC(capI(r2[0]), w2.map(function (x) { return capI(x[0]); })),
+        steps: [why(s, r2)].concat(w2.map(function (x) { return why(s, x); })) };
+    }
+    if (f === 'all' && inC.length >= 1 && outC.length >= 1) {
+      var n = M5(R, inC.length + outC.length), kk = R.int(Math.max(1, n - outC.length), Math.min(inC.length, n - 1)), items = R.shuffle(R.sample(inC, kk).concat(R.sample(outC, n - kk)));
+      return { q: lead + 'Choose <b>all</b> of these that ' + verbN + C[1] + '.', a: { t: 'mc', choices: items.map(function (x) { return capI(x[0]); }), v: items.map(function (x, i) { return x[1] === k ? i : -1; }).filter(function (i) { return i >= 0; }) },
+        steps: items.map(function (x) { return why(s, x); }) };
+    }
+    return mkSort(R, s, 'cat', L);
+  }
+  function M5(R, total) { return Math.min(total, R.pick([4, 5])); }
+  function mkPair(R, pr, f) {
+    var it = R.pick(pr.items), kx = f === 'fwd' ? 1 : 0, seen = {}, pool = pr.items.filter(function (x) { if (x === it || x[0] === it[0] || x[1] === it[1] || seen[x[kx]]) return false; seen[x[kx]] = 1; return true; }), others = R.sample(pool, Math.min(3, pool.length));
+    if (f === 'fwd') return { q: fill(pr.fwd, { t: it[0] }), a: MC(cap(it[1]), others.map(function (x) { return cap(x[1]); })), steps: [cap(it[0]) + ': ' + low(dot(it[1]))].concat(others.length ? ['The others: ' + others.map(function (x) { return low(nodot(x[1])) + ' (' + x[0] + ')'; }).join('; ') + '.'] : []) };
+    return { q: fill(pr.back, { d: low(nodot(it[1])) }), a: MC(cap(it[0]), others.map(function (x) { return cap(x[0]); })), steps: [cap(it[0]) + ': ' + low(dot(it[1]))].concat(others.length ? ['The others: ' + others.map(function (x) { return x[0] + ', ' + low(nodot(x[1])); }).join('; ') + '.'] : []) };
+  }
+  function mkSeq(R, sq, f, L) {
+    var lists = sq.lists || [sq], s = R.pick(lists), it = s.items, name = s.name;
+    if (f === 'next') {
+      var i = R.int(0, it.length - 2), w = R.sample(it.filter(function (x, j) { return j !== i + 1 && j !== i; }), Math.min(3, it.length - 2));
+      return { q: 'In ' + name + ', what comes right after this: ' + low(nodot(it[i])) + '?', a: MC(cap(it[i + 1]), w.map(cap)), steps: ['The order: ' + it.map(nodot).join(' → ') + '.', 'Right after ' + low(nodot(it[i])) + ' comes <b>' + low(nodot(it[i + 1])) + '</b>.'] };
+    }
+    var n = Math.min(it.length, L === 3 ? 4 : 3), idx = R.sample(it.map(function (_, j) { return j; }), n).sort(function (a, b) { return a - b; });
+    if (f === 'first') {
+      var last = R.coin() && L > 1, pickI = last ? idx[idx.length - 1] : idx[0];
+      return { q: 'In ' + name + ', which of these comes <b>' + (last ? 'last' : 'first') + '</b>?', a: MC(cap(it[pickI]), idx.filter(function (j) { return j !== pickI; }).map(function (j) { return cap(it[j]); })),
+        steps: ['The order: ' + idx.map(function (j) { return nodot(it[j]); }).join(' → ') + '.', 'So <b>' + low(nodot(it[pickI])) + '</b> comes ' + (last ? 'last' : 'first') + '.'] };
+    }
+    var shown = R.shuffle(idx.slice()), right = idx.map(function (j) { return LT(shown.indexOf(j)); }).join(''), wr = [], g = 0;
+    while (wr.length < 3 && g++ < 100) { var c = R.shuffle(right.split('')).join(''); if (c !== right && wr.indexOf(c) < 0) wr.push(c); }
+    return { q: 'Put these in order for ' + name + ':<br>' + shown.map(function (j, i) { return '<b>' + LT(i) + '</b>: ' + low(nodot(it[j])); }).join('<br>'), a: MC(right.split('').join(', '), wr.map(function (x) { return x.split('').join(', '); })),
+      steps: ['The order: ' + idx.map(function (j) { return LT(shown.indexOf(j)) + ' (' + low(nodot(it[j])) + ')'; }).join(' → ') + '.', 'So the answer is <b>' + right.split('').join(', ') + '</b>.'] };
+  }
+
+  /* ===== lifesci ===== */
+  T('lifesci.microscope', { share: { 1: 0.3, 2: 0.45 }, forms: { 1: ['fwd', 'back'], 2: ['fwd', 'back', 'tf', 'tf1'] },
+    pair: { fwd: 'What is the job of the {t} on a light microscope?', back: 'Which part of a light microscope does this job: {d}?', items: [
+      ['eyepiece', 'the lens you look through; it usually magnifies 10 times'], ['objective lenses', 'the lenses close to the slide; you turn the nosepiece to choose one'],
+      ['stage', 'the flat platform that holds the slide'], ['stage clips', 'hold the slide still on the stage'], ['light source', 'shines light up through the slide'],
+      ['coarse focus knob', 'moves the stage a lot, for focusing at low power'], ['fine focus knob', 'moves the stage a tiny bit, to sharpen the image'],
+      ['diaphragm', 'changes how much light passes up through the slide'], ['nosepiece', 'turns to swing a different objective lens into place'], ['arm', 'the part you hold when you carry the microscope']] },
+    tf: [['Total magnification is the eyepiece power times the objective power', true], ['Total magnification is the eyepiece power plus the objective power', false, 'The powers multiply: a 10× eyepiece with a 40× objective gives 400×'],
+      ['At higher power you see a smaller area of the slide', true], ['At higher power you see more of the slide', false, 'You zoom in, so the circle you see holds less of the slide'],
+      ['You should use only the fine focus knob at high power', true, 'The coarse knob moves too far and can crack the slide'], ['A light microscope can show viruses clearly', false, 'Viruses are too small; scientists use electron microscopes to see them'],
+      ['You should carry a microscope with one hand on the arm and one under the base', true], ['You should start looking at a slide with the highest-power objective', false, 'Start at low power to find the object, then switch up'],
+      ['A thin slice works better than a thick one, because light must pass through it', true], ['The image in a light microscope usually looks upside down and reversed', true]] });
+
+  T('lifesci.cell-theory', { share: { 2: 0.6 },
+    tf: [['All living things are made of one or more cells', true], ['The cell is the basic unit of structure and function in living things', true], ['New cells come only from cells that already exist', true],
+      ['An amoeba, made of one cell, is a complete living thing', true], ['A blue whale has much bigger cells than a mouse', false, 'Big animals have more cells, not bigger ones'], ['The cells in your skin came from other cells', true],
+      ['Bacteria are made of cells', true], ['A moss plant is made of cells', true], ['Cells can form on their own from dust or mud', false, 'Every cell comes from a cell that already existed'],
+      ['A mushroom is made of cells', true], ['A virus is made of cells', false, 'A virus is not a cell; it is genetic material in a protein coat'], ['Wood from a tree is made of the walls of cells that were once alive', true],
+      ['Robert Hooke named cells after looking at thin slices of cork', true], ['Microscopes helped scientists discover cells', true], ['Only animals are made of cells', false, 'Plants, fungi, protists and bacteria are made of cells too'],
+      ['A grain of salt is made of cells', false, 'Salt was never alive; it is a crystal'], ['Your body is made of trillions of cells', true], ['Every cell in your body came from the single cell you started as', true],
+      ['A cell can do the jobs that keep it alive, such as taking in food and getting rid of wastes', true], ['A rock is made of very small cells', false, 'Rocks were never alive and have no cells']] });
+
+  T('lifesci.cell-parts', { share: { 2: 0.7 }, forms: { 2: ['fwd', 'back', 'tf', 'tf1'] },
+    pair: { fwd: 'What is the job of the {t}?', back: 'Which cell part does this job: {d}?', items: [
+      ['nucleus', 'holds the DNA, the instructions the cell follows'], ['cell membrane', 'lets some materials in and out and keeps others out'], ['cytoplasm', 'the jelly-like fluid that fills the cell and holds its parts'],
+      ['mitochondria', 'release energy from food for the cell to use'], ['chloroplasts', 'capture light energy to make sugar'], ['cell wall', 'a stiff layer outside the membrane that supports a plant cell'],
+      ['vacuole', 'stores water and other materials'], ['ribosomes', 'build proteins'], ['endoplasmic reticulum', 'a folded network that carries materials through the cell'],
+      ['Golgi apparatus', 'packages proteins and sends them where they are needed'], ['lysosomes', 'break down wastes and worn-out cell parts']] },
+    tf: [['The nucleus holds the cell\'s DNA', true], ['Only plant cells have a cell membrane', false, 'Every cell has a cell membrane'], ['Mitochondria release energy from food', true],
+      ['Animal cells have chloroplasts', false, 'Chloroplasts are found in plants and algae'], ['Ribosomes build proteins', true], ['The cell wall is found in plant cells but not in animal cells', true],
+      ['The cell membrane is a solid wall that blocks everything', false, 'It lets some things through and keeps others out'], ['Plant cells usually have one large vacuole', true]] });
+
+  T('lifesci.viruses', { share: { 1: 0.65 }, forms: { 1: ['tf', 'tf', 'one'] },
+    tf: [['A virus is a cell', false, 'A virus is genetic material inside a protein coat, with no cell parts'], ['A virus can make copies of itself only inside a living host cell', true],
+      ['A virus eats food and grows bigger before it divides', false, 'A virus does not eat or grow'], ['A virus is made of genetic material inside a protein coat', true], ['Viruses are much smaller than bacteria', true],
+      ['Antibiotics kill viruses', false, 'Antibiotics work on bacteria, not viruses'], ['Vaccines help the body get ready to fight certain viruses', true], ['The common cold is caused by viruses', true],
+      ['A virus outside a host cell carries out life processes such as using energy', false, 'Outside a cell a virus does nothing at all'], ['Viruses can infect plants, animals and even bacteria', true],
+      ['Most scientists do not count viruses as living things', true], ['A virus has a nucleus and mitochondria', false, 'A virus has no cell parts at all'], ['A virus can be seen with a light microscope at school', false, 'Most viruses can be seen only with an electron microscope'],
+      ['Washing your hands helps stop the spread of many viruses', true], ['Each kind of virus can infect only certain kinds of cells', true], ['Viruses make their own food by photosynthesis', false]],
+    sort: { cats: { v: ['caused by a virus', 'caused by viruses', 'Virus'], b: ['caused by bacteria', 'caused by bacteria', 'Bacteria'] }, lead: 'Think about what causes each illness.', items: [
+      ['the common cold', 'v'], ['the flu', 'v'], ['chickenpox', 'v'], ['measles', 'v'], ['mumps', 'v'], ['strep throat', 'b'], ['tuberculosis', 'b'], ['tetanus', 'b'], ['whooping cough', 'b'], ['cholera', 'b']] } });
+
+  T('lifesci.fungi', { share: { 2: 0.7 },
+    tf: [['A mushroom is a plant', false, 'Fungi have no chlorophyll and cannot make their own food'], ['The mushroom you see is the whole fungus', false, 'Most of the fungus is a web of threads (hyphae) hidden in the soil or wood'],
+      ['Fungi get food by breaking down and absorbing it', true], ['Yeast is a fungus made of one cell', true], ['Fungi make their own food from sunlight', false, 'They take in food from what they grow on'],
+      ['Many fungi are decomposers that break down dead things', true], ['Fungal cell walls are made of chitin', true], ['Mold on old bread is a fungus', true],
+      ['Fungi spread by making spores', true], ['Yeast helps bread dough rise', true], ['All fungi are safe to eat', false, 'Some wild mushrooms are deadly; never eat one you find'],
+      ['Some fungi cause illnesses such as athlete\'s foot', true], ['The medicine penicillin was first found in a mold', true], ['Fungi have roots, stems and leaves', false, 'Fungi have thread-like hyphae, not roots, stems or leaves']],
+    sort: { cats: { f: ['a fungus', 'fungi', 'Fungus'], p: ['a plant', 'plants', 'Plant'] }, items: [['a mushroom', 'f'], ['bread mold', 'f'], ['yeast', 'f'], ['a puffball', 'f'], ['a bracket fungus on a tree', 'f'], ['the mold on an orange', 'f'],
+      ['a fern', 'p'], ['a moss', 'p'], ['an oak tree', 'p'], ['grass', 'p'], ['a cactus', 'p'], ['a dandelion', 'p']] } });
+
+  T('lifesci.helpful-harmful-microbes', { share: { 3: 0.6 }, forms: { 3: ['cat', 'one', 'not', 'all', 'tf1'] },
+    sort: { cats: { h: ['a helpful use of microbes', 'helpful uses of microbes', 'Helpful'], x: ['harm done by microbes', 'harms done by microbes', 'Harmful'] }, catq: 'Is this a helpful use of microbes or harm done by them? {x}', items: [
+      ['bacteria turning milk into yogurt', 'h'], ['yeast making bread dough rise', 'h'], ['decomposers turning dead leaves into soil', 'h'], ['bacteria in your gut helping digest food', 'h'],
+      ['bacteria in root nodules adding nitrogen to the soil', 'h'], ['a mold used to make the medicine penicillin', 'h'], ['bacteria breaking down sewage at a treatment plant', 'h'], ['microbes making cheese', 'h'],
+      ['bacteria causing strep throat', 'x'], ['a virus causing the flu', 'x'], ['mold spoiling a loaf of bread', 'x'], ['a protist causing malaria', 'x'], ['a fungus causing athlete\'s foot', 'x'],
+      ['bacteria causing food poisoning', 'x'], ['a fungus causing a disease on crop plants', 'x']] },
+    tf: [['Most bacteria are harmless or helpful', true], ['All microbes cause disease', false, 'Most do not, and many are helpful'], ['Malaria is caused by a protist', true], ['Tuberculosis is caused by bacteria', true],
+      ['Chickenpox is caused by bacteria', false, 'It is caused by a virus'], ['Athlete\'s foot is caused by a fungus', true], ['Antibiotics can treat infections caused by bacteria', true], ['Antibiotics cure the flu', false, 'The flu is caused by a virus']] });
+
+  T('lifesci.photosynthesis', { share: { 3: 0.35 }, forms: { 3: ['tf1', 'tf1', 'all'] },
+    tf: [['Photosynthesis takes in carbon dioxide and water', true], ['Photosynthesis gives off oxygen', true], ['Photosynthesis makes sugar (glucose)', true], ['Photosynthesis happens in the chloroplasts', true],
+      ['Photosynthesis needs light energy', true], ['Photosynthesis gives off carbon dioxide', false, 'It takes carbon dioxide in'], ['Photosynthesis takes in oxygen to make sugar', false, 'Oxygen is given off, not taken in'],
+      ['Photosynthesis happens in the mitochondria', false, 'It happens in chloroplasts'], ['Plants get the mass of their wood mostly from the soil', false, 'Most of it comes from carbon dioxide in the air'], ['Animals carry out photosynthesis', false]],
+    sort: { cats: { i: ['an input (something photosynthesis uses)', 'inputs of photosynthesis', 'Input'], o: ['an output (something photosynthesis makes)', 'outputs of photosynthesis', 'Output'] }, catq: 'For photosynthesis, is this an input or an output? {x}', items: [
+      ['carbon dioxide', 'i'], ['water', 'i'], ['light energy', 'i'], ['glucose (sugar)', 'o'], ['oxygen', 'o']] } });
+
+  T('lifesci.cellular-respiration', { share: { 2: 0.5 },
+    tf: [['Cellular respiration is another word for breathing', false, 'Breathing moves air; cellular respiration releases energy from sugar inside cells'], ['Plant cells carry out cellular respiration day and night', true],
+      ['Cellular respiration uses glucose and oxygen', true], ['Cellular respiration gives off carbon dioxide and water', true], ['Cellular respiration happens in the mitochondria', true],
+      ['Cellular respiration releases energy that the cell can use', true], ['Only animals carry out cellular respiration', false, 'Plants, fungi and most other living things do it too'], ['Cellular respiration makes oxygen', false, 'It uses oxygen'],
+      ['A mushroom carries out cellular respiration', true], ['A muscle cell that works hard needs more cellular respiration', true], ['Cellular respiration happens only in the lungs', false, 'It happens in nearly every cell'],
+      ['Cellular respiration takes in carbon dioxide', false, 'It gives carbon dioxide off']],
+    sort: { cats: { y: ['a living thing that carries out cellular respiration', 'living things that carry out cellular respiration', 'Yes'], n: ['not alive, so it does not carry out cellular respiration', 'nonliving things', 'No'] }, catq: 'Does this carry out cellular respiration? {x}', items: [
+      ['a moss', 'y'], ['an oak tree', 'y'], ['a mushroom', 'y'], ['a person', 'y'], ['a yeast cell', 'y'], ['a goldfish', 'y'], ['a sunflower', 'y'], ['a rock', 'n'], ['a candle flame', 'n'], ['a car engine', 'n']] } });
+
+  T('lifesci.photo-resp-together', { share: { 1: 0.75 }, forms: { 1: ['cat', 'tf', 'cat'] },
+    sort: { cats: { p: ['part of photosynthesis', 'parts of photosynthesis', 'Photosynthesis'], r: ['part of cellular respiration', 'parts of cellular respiration', 'Cellular respiration'] }, catq: 'Which process is this? {x}', items: [
+      ['It uses carbon dioxide and water.', 'p'], ['It gives off oxygen.', 'p'], ['It stores light energy in sugar.', 'p'], ['It happens in chloroplasts.', 'p'], ['It needs light.', 'p'], ['It makes glucose.', 'p'],
+      ['It uses glucose and oxygen.', 'r'], ['It gives off carbon dioxide and water.', 'r'], ['It releases energy from sugar for the cell to use.', 'r'], ['It happens in mitochondria.', 'r'],
+      ['It goes on day and night in plant and animal cells.', 'r'], ['It uses the oxygen that plants give off.', 'r'], ['It uses the carbon dioxide that animals breathe out.', 'p']] },
+    tf: [['The products of photosynthesis are the inputs of cellular respiration', true], ['The products of cellular respiration are the inputs of photosynthesis', true], ['Plants do photosynthesis but never cellular respiration', false, 'Plants do both'],
+      ['Animals do cellular respiration but not photosynthesis', true], ['Photosynthesis stores energy in sugar, and respiration releases it', true], ['Both processes happen in the mitochondria', false, 'Photosynthesis happens in chloroplasts']] });
+
+  T('lifesci.plant-transport', { share: { 2: 0.7 },
+    pair: { fwd: 'What does the {t} do in a plant?', back: 'Which part does this: {d}?', items: [['xylem', 'carries water and minerals up from the roots'], ['phloem', 'carries sugar from the leaves to the rest of the plant'],
+      ['root hairs', 'take in water and minerals from the soil'], ['stomata', 'tiny openings in leaves that let gases in and out and water vapor escape'], ['guard cells', 'open and close the stomata'], ['stem', 'holds up the leaves and holds the tubes that join roots and leaves']] },
+    tf: [['Xylem and phloem carry the same materials', false, 'Xylem carries water and minerals; phloem carries sugar'], ['Water evaporating from leaves helps pull water up the stem', true], ['Xylem carries water up from the roots', true],
+      ['Phloem carries sugar made in the leaves', true], ['Transpiration is water vapor leaving the leaves', true], ['Water moves down from the leaves to the roots in the xylem', false, 'In the xylem water moves up'],
+      ['Stomata are tiny openings, mostly on the underside of leaves', true], ['Mosses have xylem and phloem', false, 'Mosses have no tubes for water, which is why they stay small'], ['A plant loses more water on a hot, dry, windy day', true],
+      ['Sugar can move both up and down in the phloem', true], ['Root hairs give the root more surface to take in water', true], ['Plants take in water mainly through their flowers', false, 'Mostly through their roots']] });
+
+  T('lifesci.plant-responses', { share: { 1: 0.45 },
+    sort: { cats: { l: ['phototropism', 'phototropism', 'Phototropism'], g: ['gravitropism', 'gravitropism', 'Gravitropism'], t: ['thigmotropism', 'thigmotropism', 'Thigmotropism'] }, catq: 'Which response is this? {x}', be: 'shows', items: [
+      ['A houseplant on a windowsill leans toward the window.', 'l'], ['Sunflower seedlings bend toward the light.', 'l'], ['Grass under a board grows sideways out to the light.', 'l'], ['A seedling in a dark closet with a crack of light grows toward the crack.', 'l'],
+      ['A root grows downward even when the seed was planted upside down.', 'g'], ['A potted plant knocked on its side turns its stem to grow upward again.', 'g'], ['A shoot pushes up through the soil before it reaches any light.', 'g'], ['Corn roots grow down into the soil.', 'g'],
+      ['A morning glory vine twists around a pole.', 't'], ['A pea tendril curls around a string it touches.', 't'], ['Ivy grips a wall as it climbs.', 't'], ['A cucumber tendril wraps around a fence wire.', 't']] } });
+
+  T('lifesci.plant-groups', { share: { 1: 0.5 },
+    sort: { cats: { m: ['a moss', 'mosses', 'Mosses'], f: ['a fern', 'ferns', 'Ferns'], c: ['a conifer', 'conifers', 'Conifers'], a: ['a flowering plant', 'flowering plants', 'Flowering plants'] }, catq: 'Which plant group fits this? {x}', items: [
+      ['It has no tubes for water and grows as a soft green mat on damp rocks.', 'm'], ['It spreads by spores from little capsules on stalks, and has no roots.', 'm'], ['Peat moss in a bog', 'm'],
+      ['It has tubes and fronds, and spores in dots under its leaves.', 'f'], ['Its new leaves uncurl like fiddleheads.', 'f'], ['A horsetail', 'f'], ['A bracken growing in a forest', 'f'],
+      ['It makes seeds in cones and has needles.', 'c'], ['A pine tree', 'c'], ['A spruce tree', 'c'], ['A redwood tree', 'c'], ['A fir tree', 'c'],
+      ['It makes seeds inside fruits.', 'a'], ['An apple tree', 'a'], ['A rose', 'a'], ['Grass', 'a'], ['A sunflower', 'a'], ['An oak tree', 'a'], ['A tomato plant', 'a']] },
+    tf: [['Mosses have no tubes for water', true], ['Ferns make seeds', false, 'Ferns spread by spores'], ['Conifers make seeds in cones', true], ['Flowering plants make seeds inside fruits', true], ['Grass is a flowering plant', true], ['Pine trees make flowers', false, 'Pines make cones']] });
+
+  T('lifesci.backbones', { share: { 1: 0.35, 2: 0.75 },
+    sort: { cats: { v: ['a vertebrate (it has a backbone)', 'vertebrates', 'Vertebrate'], i: ['an invertebrate (it has no backbone)', 'invertebrates', 'Invertebrate'] }, catq: 'Is this a vertebrate or an invertebrate? {x}', items: [
+      ['a frog', 'v'], ['a snake', 'v'], ['a shark', 'v'], ['an eagle', 'v'], ['a horse', 'v'], ['a salamander', 'v'], ['a whale', 'v'], ['a turtle', 'v'], ['a goldfish', 'v'], ['a bat', 'v'],
+      ['an octopus', 'i'], ['a jellyfish', 'i'], ['a spider', 'i'], ['an earthworm', 'i'], ['a crab', 'i'], ['a snail', 'i'], ['a sea star', 'i'], ['a beetle', 'i'], ['a clam', 'i'], ['a lobster', 'i']] },
+    tf: [['Most kinds of animals have a backbone', false, 'About 95 out of every 100 animal species are invertebrates'], ['Insects are invertebrates', true], ['A shark has a backbone', true], ['An octopus has a backbone', false],
+      ['The backbone is a column of small bones called vertebrae', true], ['Some invertebrates, such as crabs, have a hard outer covering instead of a backbone', true], ['Fish are invertebrates', false, 'Fish have backbones'],
+      ['Jellyfish and worms are invertebrates', true], ['The backbone protects the spinal cord', true], ['Birds are invertebrates', false]] });
+
+  T('lifesci.vertebrate-groups', { share: { 1: 0.5 },
+    sort: { cats: { m: ['a mammal', 'mammals', 'Mammals'], b: ['a bird', 'birds', 'Birds'], f: ['a fish', 'fish', 'Fish'], r: ['a reptile', 'reptiles', 'Reptiles'], a: ['an amphibian', 'amphibians', 'Amphibians'] }, catq: 'Which vertebrate group does this animal belong to? {x}', items: [
+      ['a whale', 'm'], ['a bat', 'm'], ['a kangaroo', 'm'], ['a dolphin', 'm'], ['a squirrel', 'm'], ['a seal', 'm'], ['an ostrich', 'b'], ['a penguin', 'b'], ['an owl', 'b'], ['a parrot', 'b'], ['a hummingbird', 'b'],
+      ['a shark', 'f'], ['a salmon', 'f'], ['a seahorse', 'f'], ['an eel', 'f'], ['a tuna', 'f'], ['a crocodile', 'r'], ['a turtle', 'r'], ['a gecko', 'r'], ['a rattlesnake', 'r'], ['an iguana', 'r'],
+      ['a salamander', 'a'], ['a toad', 'a'], ['a newt', 'a'], ['a bullfrog', 'a'], ['a tree frog', 'a']] },
+    pair: { fwd: 'Which group of vertebrates has this: {t}?', back: 'Which body clue belongs to {d}?', items: [['fur or hair, and they feed their young milk', 'mammals'], ['feathers, a beak, and eggs with hard shells', 'birds'],
+      ['gills, fins and (most often) scales', 'fish'], ['dry, scaly skin, and eggs with leathery shells laid on land', 'reptiles'], ['moist skin, and young that usually start life in water', 'amphibians']].map(function (x) { return [x[0], x[1]]; }) } });
+
+  T('lifesci.behavioral-adaptations', { share: { 1: 0.5 },
+    sort: { cats: { i: ['an instinct', 'instincts', 'Instinct'], l: ['learned', 'learned behaviors', 'Learned'] }, catq: 'Is this behavior an instinct or learned? {x}', items: [
+      ['A spider spins its first web without ever seeing one made.', 'i'], ['A newborn kangaroo crawls to its mother\'s pouch.', 'i'], ['Sea turtle hatchlings crawl toward the ocean.', 'i'], ['A baby bird opens its mouth wide when a parent lands on the nest.', 'i'],
+      ['A beaver builds a dam.', 'i'], ['Salmon swim back up the river where they hatched.', 'i'], ['A dog pants when it is hot.', 'i'], ['Geese fly south in the fall.', 'i'], ['A possum goes limp when attacked.', 'i'], ['A human baby grips a finger placed in its palm.', 'i'],
+      ['A dog sits when it hears the word "sit."', 'l'], ['A chimpanzee uses a stick to fish termites out of a mound, after watching others.', 'l'], ['A parrot repeats words it hears.', 'l'], ['A cat runs to the kitchen when it hears the can opener.', 'l'],
+      ['A bird stops eating a bad-tasting kind of butterfly after one try.', 'l'], ['A sea lion balances a ball at the aquarium.', 'l'], ['A child learns to ride a bike.', 'l'], ['A pigeon in a park walks up to people who feed it.', 'l']] } });
+
+  T('lifesci.body-temperature', { share: { 1: 0.45 },
+    sort: { cats: { e: ['an endotherm', 'endotherms', 'Endotherm'], x: ['an ectotherm', 'ectotherms', 'Ectotherm'] }, catq: 'Is this animal an endotherm or an ectotherm? {x}', items: [
+      ['a robin', 'e'], ['a polar bear', 'e'], ['a bat', 'e'], ['an owl', 'e'], ['a mouse', 'e'], ['a whale', 'e'], ['a horse', 'e'], ['a hummingbird', 'e'], ['a rabbit', 'e'],
+      ['a lizard', 'x'], ['a frog', 'x'], ['a snake', 'x'], ['a goldfish', 'x'], ['a turtle', 'x'], ['a toad', 'x'], ['a grasshopper', 'x'], ['a crocodile', 'x'], ['a trout', 'x']] },
+    tf: [['Endotherms keep a steady body temperature using heat from their own bodies', true], ['Ectotherms get most of their body heat from their surroundings', true], ['Birds and mammals are endotherms', true],
+      ['An ectotherm needs much more food for its size than an endotherm', false, 'Endotherms burn far more food to stay warm'], ['A lizard basks in the sun to warm up', true], ['Ectotherms are always cold', false, 'In warm surroundings they can be quite warm'],
+      ['Shivering helps an endotherm make heat', true], ['Reptiles are endotherms', false, 'Reptiles are ectotherms']] });
+
+  T('lifesci.ecosystem-roles', { share: { 1: 0.5, 3: 0.5 },
+    sort: { cats: { p: ['a producer', 'producers', 'Producer'], c: ['a consumer', 'consumers', 'Consumer'], d: ['a decomposer', 'decomposers', 'Decomposer'] }, catq: 'What role does this play in its ecosystem? {x}', items: [
+      ['a maple tree', 'p'], ['seaweed in the ocean', 'p'], ['a cactus in the desert', 'p'], ['clover in a field', 'p'], ['pond algae', 'p'], ['a pine tree', 'p'], ['a sunflower', 'p'],
+      ['a rabbit eating clover', 'c'], ['a hawk', 'c'], ['a deer', 'c'], ['a frog catching flies', 'c'], ['a bear eating berries and fish', 'c'], ['a grasshopper', 'c'], ['a shark', 'c'],
+      ['a mushroom growing on a log', 'd'], ['bacteria breaking down a fallen leaf', 'd'], ['mold growing on a dead plant', 'd'], ['a fungus breaking down a dead tree', 'd']] },
+    pair: { fwd: 'What does an animal that is {t} eat?', back: 'What do we call an animal that eats {d}?', items: [['a herbivore', 'only plants'], ['a carnivore', 'only other animals'], ['an omnivore', 'both plants and animals']] } });
+
+  T('lifesci.web-changes', { share: { 1: 0.3 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['If a prey population crashes, its predators usually decrease too', true], ['If a predator is removed, its prey often increases at first', true], ['Removing one species from a food web can affect many others', true],
+      ['A change in one population never affects the rest of a food web', false, 'Food webs link many populations'], ['If the producers die off, the whole food web is in trouble', true], ['A species that has several foods is hurt less when one food runs low', true],
+      ['When prey increase, predators have more food and can increase too', true], ['Decomposers have no effect on a food web', false, 'They return nutrients that producers need']] });
+
+  T('lifesci.species-interactions', { share: { 1: 0.45, 2: 0.6 },
+    sort: { cats: { c: ['competition', 'competition', 'Competition'], p: ['predation', 'predation', 'Predation'], m: ['mutualism', 'mutualism', 'Mutualism'], o: ['commensalism', 'commensalism', 'Commensalism'], x: ['parasitism', 'parasitism', 'Parasitism'] }, be: 'shows', catq: 'Which kind of interaction is this? {x}', items: [
+      ['Two kinds of birds eat the same seeds in a meadow.', 'c'], ['Oak trees and maple trees in a forest reach for the same sunlight.', 'c'], ['Cheetahs and lions hunt the same gazelles.', 'c'], ['Weeds and carrots in a garden take water from the same soil.', 'c'],
+      ['A hawk catches a rabbit.', 'p'], ['A frog snaps up a fly.', 'p'], ['An orca hunts a seal.', 'p'], ['A ladybug eats aphids.', 'p'],
+      ['A clownfish lives among a sea anemone\'s stinging arms and chases away fish that eat the anemone.', 'm'], ['A hummingbird drinks nectar and carries pollen to other flowers.', 'm'], ['Oxpecker birds eat ticks off a rhino.', 'm'], ['Bacteria in a termite\'s gut digest the wood it eats.', 'm'],
+      ['A barnacle rides on a whale without helping or harming it.', 'o'], ['A spider builds its web on a plant without harming it.', 'o'], ['Cattle egrets eat the insects that grazing cows stir up.', 'o'], ['A hermit crab lives in an empty snail shell.', 'o'],
+      ['A tapeworm lives in a dog\'s intestine and takes its food.', 'x'], ['A mosquito drinks a horse\'s blood.', 'x'], ['Lice live in a bird\'s feathers and feed on it.', 'x'], ['Mistletoe grows into a tree and takes its water.', 'x']] } });
+
+  T('lifesci.nitrogen-cycle', { share: { 2: 0.75 },
+    tf: [['Plants take nitrogen gas in through their leaves and use it to build proteins', false, 'Plants take in ammonium or nitrate through their roots'], ['Air is about 78% nitrogen', true],
+      ['Bacteria in soil and in root nodules turn nitrogen gas into forms plants can use', true], ['Animals get their nitrogen by eating plants or other animals', true], ['Living things need nitrogen to build proteins', true],
+      ['Decomposers return nitrogen from dead things to the soil', true], ['Lightning can change some nitrogen gas into forms plants can use', true], ['Animals breathe in nitrogen gas and use it to build proteins', false, 'They get nitrogen from food'],
+      ['Some bacteria turn nitrates back into nitrogen gas', true], ['Beans and peas have root nodules with bacteria that fix nitrogen', true], ['Farmers add fertilizers to give crops more nitrogen', true],
+      ['Nitrogen moves in a cycle between the air, soil and living things', true], ['Nitrogen is used up and lost forever once a plant uses it', false, 'It cycles back when living things die and decay']],
+    seq: { name: 'one path of nitrogen through an ecosystem', items: ['Nitrogen gas in the air', 'Bacteria in soil fix it into ammonium', 'Other bacteria change it into nitrate', 'A plant takes in nitrate through its roots', 'An animal eats the plant', 'Decomposers break down the animal\'s wastes and remains'] } });
+
+  T('lifesci.succession', { share: { 1: 0.5, 2: 0.75 },
+    sort: { cats: { p: ['primary succession', 'primary succession', 'Primary succession'], s: ['secondary succession', 'secondary succession', 'Secondary succession'] }, catq: 'Is this primary or secondary succession? {x}', items: [
+      ['Lichens grow on bare rock left by a melting glacier.', 'p'], ['Plants first appear on a new island made by a volcano.', 'p'], ['Life returns to rock scraped bare of soil by a landslide.', 'p'], ['Mosses start growing on cooled lava.', 'p'], ['Life slowly covers a new sand dune.', 'p'],
+      ['A farm field is left alone and weeds, then shrubs, move in.', 's'], ['A forest grows back after a wildfire.', 's'], ['Grass and trees return to a meadow after a flood.', 's'], ['Trees regrow on land that was logged.', 's'], ['A vacant lot slowly fills with plants.', 's']] },
+    seq: { name: 'primary succession on bare rock', items: ['Bare rock', 'Lichens and mosses', 'Thin soil with grasses and small plants', 'Shrubs', 'Fast-growing trees', 'A mature forest'] },
+    tf: [['Once a mature forest forms, the ecosystem stays exactly the same forever', false, 'Ecosystems keep changing'], ['Primary succession starts where there is no soil', true], ['Secondary succession starts where soil is still there', true],
+      ['Lichens are often the first living things on bare rock', true], ['Secondary succession is usually faster than primary succession', true, 'The soil, seeds and roots are already there'], ['Succession happens in a few days', false, 'It takes many years']] });
+
+  T('lifesci.human-impact', { share: { 1: 0.4, 2: 0.85 },
+    sort: { cats: { h: ['habitat loss', 'habitat loss', 'Habitat loss'], i: ['an invasive species', 'invasive species', 'Invasive species'], p: ['pollution', 'pollution', 'Pollution'], o: ['overharvesting', 'overharvesting', 'Overharvesting'] }, be: 'shows', catq: 'Which kind of threat to an ecosystem is this? {x}', items: [
+      ['A prairie is plowed to plant one crop.', 'h'], ['A mangrove swamp is cleared to build a resort.', 'h'], ['A river is dammed and the valley above it floods.', 'h'], ['A forest is cut down for a highway.', 'h'],
+      ['Zebra mussels from another continent cover the bottom of a lake.', 'i'], ['Kudzu vines brought from Asia smother trees in the southern United States.', 'i'], ['Rabbits brought to Australia ate the plants native animals needed.', 'i'], ['Cane toads spread across Australia and poison native predators.', 'i'],
+      ['Oil spills from a tanker onto a coast.', 'p'], ['Fertilizer washes off fields into a lake and feeds huge blooms of algae.', 'p'], ['Plastic trash collects in the ocean.', 'p'], ['Smoke from factories causes acid rain.', 'p'],
+      ['Fishing boats catch cod faster than the fish can breed.', 'o'], ['Bison were hunted until only a few hundred were left.', 'o'], ['A rare cactus is dug up and sold until few remain.', 'o'], ['Too many trees are cut from a forest each year for it to regrow.', 'o']] },
+    tf: [['An invasive species often spreads fast because the predators and diseases that controlled it at home are missing', true], ['Solutions to ecosystem problems usually have both costs and benefits that people weigh', true],
+      ['Any change people make to an ecosystem harms it', false, 'Some changes, such as replanting or cleaning up a river, help'], ['Nature always repairs itself, so people\'s effects do not matter', false],
+      ['Habitat loss is one of the biggest threats to many species', true], ['Planting native trees can help restore a habitat', true], ['Fishing limits are one way to prevent overharvesting', true],
+      ['Pollution can only harm the place where it was made', false, 'Air and water carry it far away'], ['Protected parks and reserves help species keep their habitat', true], ['An invasive species is any species that lives in a lake', false, 'It is a species brought to a new place where it spreads and causes harm'],
+      ['Recycling and using less plastic can reduce ocean pollution', true], ['Wetlands filter water and give homes to many species', true]] });
+
+  T('lifesci.classification-ranks', { share: { 3: 0.5 }, forms: { 3: ['order', 'first', 'next', 'tf1'] },
+    seq: { lists: [{ name: 'the ranks of classification, from the broadest to the most specific', items: ['Domain', 'Kingdom', 'Phylum', 'Class', 'Order', 'Family', 'Genus', 'Species'] }] },
+    tf: [['Organisms in the same genus are also in the same family', true], ['Organisms in the same family are always in the same genus', false, 'A family holds several genera'], ['Species is the most specific rank', true],
+      ['Domain is the broadest rank', true], ['Two organisms that share more ranks are more closely related', true], ['A scientific name is made of the genus and the species', true],
+      ['Lions and tigers share the genus Panthera', true], ['Organisms in the same class are always in the same order', false, 'A class holds several orders'], ['Every rank below kingdom holds fewer kinds of organisms than the rank above it', true],
+      ['Two organisms in different phyla can be in the same class', false, 'A class is inside one phylum'], ['The genus name in a scientific name starts with a capital letter', true], ['Humans and lions are in the same order', false, 'Humans are primates; lions are carnivores']] });
+
+  T('lifesci.domains-kingdoms', { share: { 3: 0.5 },
+    sort: { cats: { b: ['in the domain Bacteria', 'in the domain Bacteria', 'Bacteria'], a: ['in the domain Archaea', 'in the domain Archaea', 'Archaea'], e: ['in the domain Eukarya', 'in the domain Eukarya', 'Eukarya'] }, catq: 'Which domain does this organism belong to? {x}', items: [
+      ['an oak tree', 'e'], ['a mushroom', 'e'], ['an amoeba', 'e'], ['a human', 'e'], ['bread mold', 'e'], ['a paramecium', 'e'], ['a kelp seaweed', 'e'], ['a honeybee', 'e'], ['a yeast cell', 'e'],
+      ['the bacteria that turn milk into yogurt', 'b'], ['E. coli living in the gut', 'b'], ['the bacteria that cause strep throat', 'b'], ['cyanobacteria in a pond', 'b'], ['the bacteria in bean root nodules', 'b'],
+      ['microbes without a nucleus that live in boiling hot springs', 'a'], ['microbes without a nucleus that thrive in very salty lakes', 'a'], ['methane-making microbes without a nucleus in a cow\'s gut', 'a']] },
+    tf: [['Bacteria and archaea have no nucleus', true], ['All organisms in the domain Eukarya have cells with a nucleus', true], ['Plants, animals, fungi and protists are all in the domain Eukarya', true],
+      ['Archaea are a kind of plant', false, 'Archaea are single cells with no nucleus'], ['Fungi are in the plant kingdom', false, 'Fungi have their own kingdom'], ['Many archaea live in extreme places such as hot springs', true]] });
+
+  T('lifesci.body-temperature', { share: { 1: 0.45, 3: 0.3 }, forms: { 3: ['all', 'not', 'tf1'] } });
+
+  T('lifesci.limiting-factors', { share: { 3: 0.75 },
+    tf: [['The resource in shortest supply sets the limit on a population', true], ['A population at its carrying capacity stays at exactly the same number every year', false, 'It rises and falls around that level'],
+      ['Carrying capacity can change, for example in a drought', true], ['A population with plenty of food can keep growing forever', false, 'Space, water, disease or predators will limit it'], ['Disease spreads more easily in a crowded population, which helps limit it', true],
+      ['Carrying capacity is the largest population an area can support over time', true], ['Food, water, space and shelter are limiting factors', true], ['Predators can be a limiting factor for their prey', true],
+      ['A cold winter can limit a population', true], ['A population always grows fastest when it is near its carrying capacity', false, 'Growth slows as it nears the limit'],
+      ['Competition for food grows stronger as a population gets crowded', true], ['A limiting factor always affects every species in the same way', false, 'Different species need different things'],
+      ['Adding nest boxes can raise the number of birds an area supports if nest sites were the limit', true], ['Limiting factors only include living things', false, 'Water, sunlight and temperature limit populations too']],
+    sort: { cats: { b: ['a biotic (living) limiting factor', 'biotic limiting factors', 'Biotic'], a: ['an abiotic (nonliving) limiting factor', 'abiotic limiting factors', 'Abiotic'] }, catq: 'Is this a biotic or an abiotic limiting factor? {x}', items: [
+      ['predators', 'b'], ['disease-causing bacteria', 'b'], ['competition from another species', 'b'], ['the amount of plant food', 'b'], ['parasites', 'b'],
+      ['rainfall', 'a'], ['sunlight', 'a'], ['temperature', 'a'], ['space for nests', 'a'], ['minerals in the soil', 'a'], ['oxygen in the water', 'a']] } });
+
+  T('lifesci.predator-prey', { share: { 2: 0.55 },
+    tf: [['Predators usually eat every last one of their prey', false, 'As prey get scarce, predators go hungry and decline first'], ['In a predator-prey cycle, the prey population usually peaks first', true],
+      ['When prey are plentiful, predators have more young', true], ['When predators become scarce, the prey population often grows', true], ['Predator and prey populations rise and fall in a repeating pattern', true],
+      ['The predator population is usually larger than the prey population', false, 'It takes many prey to feed one predator'], ['Predators can keep a prey population from growing too large', true],
+      ['When the prey population crashes, the predator population soon falls too', true], ['Predators and prey always rise and fall at exactly the same time', false, 'The predators lag behind the prey']] });
+
+  T('lifesci.skeletal-system', { share: { 2: 0.75 },
+    pair: { fwd: 'What does {t} do?', back: 'Which part of the skeletal system does this: {d}?', items: [['the skull', 'protects the brain'], ['the rib cage', 'protects the heart and lungs'], ['the backbone', 'protects the spinal cord and holds the body upright'],
+      ['bone marrow', 'makes blood cells'], ['a joint', 'is a place where two bones meet and the body can bend'], ['a ligament', 'holds bones together at a joint'], ['cartilage', 'cushions the ends of bones in a joint'], ['a tendon', 'connects a muscle to a bone']] },
+    tf: [['Bones are living organs with cells and blood vessels', true], ['Bones are dead, dry material, like chalk', false], ['Some bones make blood cells', true], ['Bones never change after they form', false, 'Bones grow and repair themselves'],
+      ['A broken bone can grow back together', true], ['Bones store calcium for the body', true], ['The skull protects the brain', true], ['An adult human skeleton has about 206 bones', true],
+      ['A baby has fewer bones than an adult', false, 'A baby has more; some fuse as it grows'], ['Your knee is a hinge joint that bends mostly one way', true], ['Bones move the body all by themselves', false, 'Muscles pull on bones to move them'],
+      ['Exercise and calcium help keep bones strong', true], ['The femur in the thigh is the longest bone in the body', true], ['Cartilage is harder than bone', false, 'Cartilage is softer and bendy']] });
+
+  T('lifesci.muscular-system', { share: { 1: 0.5, 3: 0.55 },
+    sort: { cats: { s: ['skeletal muscle', 'skeletal muscle', 'Skeletal muscle'], m: ['smooth muscle', 'smooth muscle', 'Smooth muscle'], c: ['cardiac muscle', 'cardiac muscle', 'Cardiac muscle'] }, be: 'uses', catq: 'Which kind of muscle does this? {x}', items: [
+      ['kicking a soccer ball', 's'], ['smiling', 's'], ['writing your name', 's'], ['chewing food', 's'], ['jumping rope', 's'], ['turning your head', 's'], ['climbing stairs', 's'],
+      ['pushing food along the intestines', 'm'], ['narrowing a blood vessel', 'm'], ['squeezing the bladder', 'm'], ['making your pupils smaller in bright light', 'm'], ['moving food down the esophagus', 'm'],
+      ['pumping blood through the body', 'c'], ['making the heart beat faster during a race', 'c'], ['squeezing the heart\'s chambers', 'c']] },
+    tf: [['Smooth muscle works without your having to think about it', true], ['Skeletal muscles work in pairs', true], ['Muscles can push as well as pull', false, 'Muscles can only pull; a partner muscle pulls the other way'],
+      ['The heart is made of smooth muscle', false, 'It is made of cardiac muscle'], ['Skeletal muscles are attached to bones by tendons', true], ['You control your skeletal muscles by choice', true],
+      ['Cardiac muscle never needs to rest the way skeletal muscle does when you stop exercising', true], ['When your biceps contracts, your arm bends at the elbow', true], ['When your triceps contracts, your arm straightens', true],
+      ['Exercise can make skeletal muscles stronger', true], ['Muscles get shorter and fatter when they contract', true], ['Smooth muscle is found in the walls of the stomach and intestines', true]] });
+
+  T('lifesci.circulatory-system', { share: { 2: 0.75, 3: 0.55 },
+    pair: { fwd: 'What do {t} do?', back: 'Which part of the circulatory system does this: {d}?', items: [['arteries', 'carry blood away from the heart'], ['veins', 'carry blood back to the heart'], ['capillaries', 'are tiny vessels where materials pass between the blood and the cells'],
+      ['red blood cells', 'carry oxygen'], ['white blood cells', 'fight germs'], ['platelets', 'help blood clot'], ['plasma', 'is the liquid part of blood that carries nutrients and wastes'], ['valves', 'keep blood flowing in one direction']] },
+    seq: { lists: [{ name: 'the path of blood through the heart and lungs', items: ['the body', 'the right atrium', 'the right ventricle', 'the lungs', 'the left atrium', 'the left ventricle'] }] },
+    tf: [['Blood in veins is blue until it reaches the lungs and turns red', false, 'Blood is always red; it is darker red when low in oxygen'], ['Blood is always some shade of red', true], ['The heart has four chambers', true],
+      ['The right side of the heart pumps blood to the lungs', true], ['The left ventricle pumps blood out to the body', true], ['Arteries carry blood away from the heart', true], ['Veins have valves that keep blood from flowing backward', true],
+      ['Capillaries have walls only one cell thick', true], ['Blood picks up oxygen in the lungs', true], ['Veins carry blood away from the heart', false, 'Veins carry blood back to the heart'], ['The heart is about the size of a fist', true],
+      ['Your heart beats faster during exercise to deliver more oxygen', true]] });
+
+  T('lifesci.respiratory-system', { share: { 2: 0.7, 3: 0.3 }, forms: { 3: ['order', 'next', 'tf1'] },
+    seq: { name: 'the path of air into the lungs', items: ['the nose or mouth', 'the pharynx (throat)', 'the trachea (windpipe)', 'the bronchi', 'the bronchioles', 'the alveoli'] },
+    pair: { fwd: 'What does {t} do?', back: 'Which part of the respiratory system does this: {d}?', items: [['the diaphragm', 'contracts and moves down to pull air into the lungs'], ['the trachea', 'carries air from the throat toward the lungs'],
+      ['the alveoli', 'are tiny air sacs where oxygen passes into the blood'], ['the bronchi', 'branch from the trachea into each lung'], ['the nose hairs and mucus', 'trap dust and germs'], ['the epiglottis', 'covers the windpipe when you swallow']] },
+    tf: [['Air we breathe out still contains a lot of oxygen', true], ['We breathe in only oxygen and breathe out only carbon dioxide', false, 'Air is mostly nitrogen, in and out'], ['Most of the air we breathe in is nitrogen', true],
+      ['Oxygen passes into the blood in the alveoli', true], ['Carbon dioxide passes from the blood into the alveoli to be breathed out', true], ['The diaphragm moves down when you breathe in', true],
+      ['We breathe out more carbon dioxide than we breathe in', true], ['The lungs have muscles that pull air in by themselves', false, 'The diaphragm and rib muscles do the work'], ['You breathe faster during exercise', true],
+      ['Air is about 21% oxygen', true]] });
+
+  T('lifesci.immune-basics', { share: { 2: 0.75 },
+    tf: [['Skin is part of the body\'s defense against germs', true], ['A fever during an illness is the germ itself', false, 'A fever is the body\'s response'], ['Redness and swelling around a cut mean white blood cells are gathering to fight germs', true],
+      ['A runny nose during a cold helps wash germs out', true], ['Antibiotics work against bacteria but not against viruses such as colds and flu', true], ['White blood cells help fight germs', true],
+      ['Mucus in the nose traps germs', true], ['Stomach acid kills many germs in food', true], ['Antibodies are made by the immune system to mark germs', true], ['Vaccines help the body learn to fight a germ before you meet it', true],
+      ['Tears help wash germs out of the eyes', true], ['All germs make you sick', false, 'Many microbes are harmless or helpful'], ['Washing hands with soap helps stop germs from spreading', true],
+      ['The immune system can remember germs it has fought before', true], ['Red blood cells are the main germ fighters', false, 'White blood cells fight germs; red blood cells carry oxygen']] });
+
+  T('lifesci.excretory-system', { share: { 2: 0.75 },
+    pair: { fwd: 'What do {t} do?', back: 'Which organ helps with this: {d}?', items: [['the kidneys', 'filter wastes from the blood and make urine'], ['the lungs', 'remove carbon dioxide from the body'], ['the skin', 'gives off water, salt and a little waste in sweat'],
+      ['the bladder', 'stores urine'], ['the liver', 'breaks down harmful substances and makes urea from extra protein'], ['the ureters', 'carry urine from the kidneys to the bladder']] },
+    tf: [['Solid waste from digestion is mostly the wastes that the body\'s cells make', false, 'It is mostly food the body did not digest'], ['The kidneys filter wastes from the blood', true], ['Urine is stored in the bladder', true],
+      ['The lungs remove carbon dioxide, a waste from cells', true], ['Sweat carries water and salts out through the skin', true], ['Most of the fluid the kidneys filter goes back into the blood', true],
+      ['People can live with one healthy kidney', true], ['The kidneys help control how much water is in the body', true], ['The large intestine removes the wastes made by the body\'s cells', false, 'It removes undigested food; the kidneys, lungs and skin remove cell wastes']] });
+
+  T('lifesci.inherited-acquired', { share: { 2: 0.8 },
+    sort: { cats: { i: ['an inherited trait', 'inherited traits', 'Inherited'], a: ['an acquired trait', 'acquired traits', 'Acquired'] }, catq: 'Is this trait inherited or acquired? {x}', items: [
+      ['eye color', 'i'], ['naturally curly hair', 'i'], ['the shape of a leaf on an oak tree', 'i'], ['a dog\'s floppy ears', 'i'], ['a zebra\'s stripes', 'i'], ['a bird\'s beak shape', 'i'], ['the color of a rose\'s petals', 'i'], ['freckles', 'i'], ['blood type', 'i'],
+      ['a scar from a fall', 'a'], ['knowing how to read', 'a'], ['strong muscles from lifting weights', 'a'], ['a parrot saying words it heard', 'a'], ['a tan from the sun', 'a'], ['a dog trained to fetch', 'a'], ['speaking Spanish', 'a'], ['a bonsai tree\'s small, trimmed shape', 'a'], ['a cat\'s tail lost in an accident', 'a']] },
+    tf: [['Acquired traits are passed to offspring through genes', false, 'Acquired traits are not in the DNA, so they are not inherited'], ['Inherited traits are passed from parents to offspring in DNA', true],
+      ['A skill learned by a parent is not inherited by the parent\'s children', true], ['Some traits depend on both genes and the environment, like height', true], ['A plant\'s flower color is usually inherited', true],
+      ['A puppy will be born with a short tail if its parent lost part of its tail in an accident', false]] });
+
+  T('lifesci.dna-genes', { share: { 2: 0.8 },
+    tf: [['Only blood cells contain DNA', false, 'Nearly every cell has DNA'], ['A skin cell and a liver cell from the same person carry the same DNA', true], ['Genes and chromosomes are separate things found in different parts of the cell', false, 'Genes are sections of DNA on chromosomes'],
+      ['A chromosome is one long DNA molecule that carries many genes', true], ['A gene is a section of DNA that holds the instructions for a protein', true], ['DNA is found in the nucleus of a plant or animal cell', true],
+      ['Human body cells have 46 chromosomes, in 23 pairs', true], ['DNA is shaped like a twisted ladder, called a double helix', true], ['Bacteria have no DNA', false, 'Bacteria have DNA, but no nucleus'], ['The order of the bases in DNA carries the instructions', true],
+      ['Every living thing uses DNA to carry its instructions', true], ['A gene and a trait are exactly the same thing', false, 'A gene is a piece of DNA; a trait is a feature it helps produce'], ['You get half of your chromosomes from each parent', true],
+      ['A cell copies its DNA before it divides', true], ['DNA has four kinds of bases: A, T, C and G', true], ['Brothers and sisters (other than identical twins) have exactly the same DNA', false]],
+    seq: { name: 'from the biggest to the smallest', items: ['a cell', 'its nucleus', 'a chromosome', 'a gene', 'a base pair'] } });
+
+  T('lifesci.one-or-two-parents', { share: { 1: 0.5 },
+    sort: { cats: { a: ['asexual reproduction (one parent)', 'asexual reproduction', 'One parent: an exact copy'], s: ['sexual reproduction (two parents)', 'sexual reproduction', 'Two parents: a new mix'] }, be: 'shows', catq: 'Are these offspring from one parent or two? {x}', items: [
+      ['A potato sprouts new plants from its eyes.', 'a'], ['A bacterium splits in two.', 'a'], ['A yeast cell grows a bud that breaks off.', 'a'], ['A hydra grows a small bud that becomes a new hydra.', 'a'], ['A planarian worm cut in half regrows two worms.', 'a'], ['A gardener plants a piece of a geranium stem, and it roots.', 'a'], ['An amoeba divides into two.', 'a'],
+      ['Puppies are born to a mother and father dog.', 's'], ['A robin hatches from an egg laid after its parents mated.', 's'], ['Apple seeds form after bees carry pollen from another tree.', 's'], ['Frog eggs are fertilized in a pond.', 's'], ['A kitten looks a little like each parent.', 's'], ['A corn kernel forms when pollen from another plant lands on the silk.', 's']] },
+    tf: [['Asexual reproduction makes offspring with the same genes as the parent', true], ['Sexual reproduction makes offspring with a new mix of genes', true], ['Only animals reproduce asexually', false, 'Many plants, fungi and microbes do'],
+      ['Variation among offspring helps a species survive changes', true], ['Asexual reproduction needs two parents', false]] });
+
+  T('lifesci.alleles', { share: { 1: 0.5, 2: 0.8 },
+    tf: [['A recessive trait shows only when an organism has two copies of the recessive allele', true], ['You get one allele of each gene from each parent', true], ['A dominant allele is the "stronger" or better version of a gene', false, 'Dominant only means it shows when present'],
+      ['A dominant allele is always the most common one in a population', false], ['Alleles are different versions of the same gene', true], ['An organism with Tt shows the dominant trait', true], ['An organism with tt shows the recessive trait', true],
+      ['A dominant allele is written with a capital letter', true], ['Two parents that both show a dominant trait can have a child with the recessive trait', true, 'If both carry the recessive allele'], ['An organism usually has two alleles for each gene', true],
+      ['A recessive allele disappears when it is paired with a dominant one', false, 'It is still there and can be passed on'], ['An organism with TT can pass on only the T allele', true]],
+    sort: { cats: { d: ['showing the dominant trait', 'showing the dominant trait', 'Dominant trait'], r: ['showing the recessive trait', 'showing the recessive trait', 'Recessive trait'] }, catq: 'Which trait does an organism with these alleles show? {x}', items: [
+      ['TT', 'd'], ['Tt', 'd'], ['tt', 'r'], ['BB', 'd'], ['Bb', 'd'], ['bb', 'r'], ['RR', 'd'], ['Rr', 'd'], ['rr', 'r'], ['GG', 'd'], ['Gg', 'd'], ['gg', 'r'], ['Ss', 'd'], ['ss', 'r'], ['Pp', 'd'], ['pp', 'r']] } });
+
+  T('lifesci.genotype-phenotype', { share: { 3: 0.45 },
+    tf: [['Genotype is the set of alleles an organism has', true], ['Phenotype is the trait you can see or measure', true], ['Two organisms with the same phenotype always have the same genotype', false, 'TT and Tt can look the same'],
+      ['Crossing an unknown dominant-looking organism with a recessive one can show its genotype', true], ['If any offspring of a cross with tt show the recessive trait, the other parent must carry the recessive allele', true],
+      ['A homozygous organism has two identical alleles', true], ['A heterozygous organism has two different alleles', true], ['Phenotype can depend on the environment as well as the genotype', true]],
+    sort: { cats: { o: ['homozygous dominant', 'homozygous dominant', 'Homozygous dominant'], h: ['heterozygous', 'heterozygous', 'Heterozygous'], r: ['homozygous recessive', 'homozygous recessive', 'Homozygous recessive'] }, catq: 'What do we call this genotype? {x}', items: [
+      ['AA', 'o'], ['Aa', 'h'], ['aa', 'r'], ['BB', 'o'], ['Bb', 'h'], ['bb', 'r'], ['TT', 'o'], ['Tt', 'h'], ['tt', 'r'], ['RR', 'o'], ['Rr', 'h'], ['rr', 'r'], ['GG', 'o'], ['Gg', 'h'], ['gg', 'r']] } });
+
+  T('lifesci.punnett-probability', { share: { 2: 0.4 },
+    tf: [['Each offspring of a cross is a new, independent chance', true], ['After three black pups, a white pup is "due" next', false, 'Earlier pups do not change the chance'], ['A 3 : 1 ratio is a promise for a family of four', false, 'It is a chance for each one'],
+      ['A Punnett square shows the chances for one offspring', true], ['Large numbers of offspring come closer to the expected ratio than small numbers', true], ['A Bb × bb cross gives about half Bb and half bb', true],
+      ['A BB × bb cross can give a bb offspring', false, 'Every offspring gets B from the BB parent'], ['A Bb × Bb cross gives a 1 in 4 chance of bb', true]] });
+
+  T('lifesci.mutations', { share: { 2: 0.75 },
+    tf: [['A mutation always creates a strange new kind of creature', false, 'Most mutations change little or nothing you can see'], ['A mutation is a change in DNA', true], ['Some mutations are helpful, like the change that lets many adults digest milk sugar', true],
+      ['Whether a mutation helps can depend on the environment', true], ['Every mutation is harmful', false], ['Many mutations have no effect at all', true], ['Mutations can happen when DNA is copied', true],
+      ['Ultraviolet light from the sun can cause mutations in skin cells', true], ['A mutation in a skin cell is passed on to a person\'s children', false, 'Only mutations in egg or sperm cells can be passed on'], ['Mutations are a source of new variation in a species', true],
+      ['A mutation in a bacterium can make it resistant to an antibiotic', true], ['Mutations happen only in animals', false, 'They happen in all living things'], ['A mutation can change the protein a gene makes', true]] });
+
+  T('lifesci.breeding-engineering', { share: { 2: 0.7 },
+    sort: { cats: { s: ['selective breeding', 'selective breeding', 'Selective breeding'], g: ['genetic engineering', 'genetic engineering', 'Genetic engineering'] }, be: 'shows', catq: 'Is this selective breeding or genetic engineering? {x}', items: [
+      ['Farmers for many generations kept seeds from the sweetest corn.', 's'], ['People bred wolves into many breeds of dogs.', 's'], ['Breeders mated the cows that gave the most milk.', 's'], ['Gardeners crossed roses to get new colors.', 's'], ['Wild cabbage was bred into broccoli, kale and cauliflower.', 's'], ['A farmer breeds the chickens that lay the most eggs.', 's'],
+      ['Scientists put the human insulin gene into bacteria.', 'g'], ['Scientists added a gene to rice so it makes vitamin A.', 'g'], ['A gene from a jellyfish was put into a fish so it glows.', 'g'], ['Scientists moved a gene into a crop so it resists an insect pest.', 'g']] },
+    tf: [['Selective breeding creates brand-new genes', false, 'It makes existing alleles more or less common'], ['Genetic engineering moves genes directly from one organism to another', true], ['Bacteria can make human insulin once they carry the human gene', true],
+      ['Selective breeding has been done for thousands of years', true], ['Selective breeding works over many generations', true], ['Nearly all living things read the genetic code the same way', true]] });
+
+  T('lifesci.fossil-record', { share: { 2: 0.75 },
+    tf: [['All kinds of living things appear together in the oldest rock layers', false, 'The oldest layers hold only simple life'], ['The fossil record includes every species that ever lived', false, 'Most living things never became fossils'],
+      ['In undisturbed rock, fossils in lower layers are generally older than fossils in higher layers', true], ['The fossil record has gaps, but the order it shows is consistent worldwide', true], ['Many species in the fossil record are now extinct', true],
+      ['Fossils form most often when living things are buried quickly in sediment', true], ['Hard parts like bones, shells and teeth become fossils more easily than soft parts', true], ['Footprints and burrows can be fossils too', true],
+      ['Fossils of sea animals found on mountains show that the land was once under water', true], ['Dinosaurs and humans lived at the same time', false, 'Dinosaurs (other than birds) died out about 66 million years before humans appeared'],
+      ['Fossils show that life on Earth has changed over time', true], ['Most fossils form in sedimentary rock', true]],
+    sort: { cats: { f: ['a fossil', 'fossils', 'Fossil'], n: ['not a fossil', 'not fossils', 'Not a fossil'] }, catq: 'Is this a fossil? {x}', items: [
+      ['a dinosaur footprint preserved in stone', 'f'], ['a shell turned to stone in a rock layer', 'f'], ['an insect trapped in amber', 'f'], ['a leaf print in a slab of shale', 'f'], ['a mammoth tooth from the Ice Age', 'f'], ['a worm burrow preserved in rock', 'f'],
+      ['a seashell on a beach today', 'n'], ['a bone from a dog that died last year', 'n'], ['a crystal of quartz', 'n'], ['a leaf that fell last fall', 'n']] } });
+
+  T('lifesci.comparing-bodies', { share: { 1: 0.45, 2: 0.7 },
+    sort: { cats: { h: ['homologous structures (the same bones, from a shared ancestor)', 'homologous structures', 'Homologous'], a: ['analogous structures (the same job, built differently)', 'analogous structures', 'Analogous'] }, catq: 'Are these homologous or analogous structures? {x}', items: [
+      ['a human arm and a whale flipper', 'h'], ['a cat leg and a bat wing', 'h'], ['a horse leg and a human arm', 'h'], ['a bird wing and a crocodile front leg', 'h'], ['a dolphin flipper and a dog leg', 'h'], ['a frog front leg and a human arm', 'h'],
+      ['a bird wing and a bee wing', 'a'], ['a fish fin and a dolphin flipper (outer shape)', 'a'], ['an octopus eye and a human eye', 'a'], ['a bat wing and a butterfly wing', 'a'], ['a penguin flipper and a shark fin (outer shape)', 'a']] },
+    tf: [['Homologous structures have the same bones in the same arrangement', true], ['Analogous structures show that two animals are close relatives', false, 'They show only that the animals do similar jobs'],
+      ['A whale\'s flipper and a human arm have the same set of bones', true], ['Similar bones in different animals are evidence of a common ancestor', true], ['Wings on a bird and a butterfly came from a shared winged ancestor', false, 'Their wings are built differently and arose separately'],
+      ['Embryos of different vertebrates look alike early on', true], ['Similar DNA is evidence that two species are related', true]] });
+
+  T('lifesci.natural-selection', { share: { 1: 0.5 },
+    sort: { cats: { v: ['variation', 'variation', 'Variation'], i: ['inheritance', 'inheritance', 'Inheritance'], o: ['more young than can survive', 'more young than can survive', 'More young than can survive'], s: ['selection', 'selection', 'Selection'] }, be: 'shows', catq: 'Which part of natural selection does this describe? {x}', items: [
+      ['Some rabbits in a litter have thicker fur than others.', 'v'], ['Giraffes in a herd have necks of different lengths.', 'v'], ['The snails on a beach have shells of many colors.', 'v'], ['Some mice run faster than others.', 'v'],
+      ['Fast-running parent deer tend to have fast-running fawns.', 'i'], ['Thick-furred rabbits pass thick fur to their young.', 'i'], ['Finches with deep beaks have chicks with deep beaks.', 'i'],
+      ['A frog lays thousands of eggs, but only a few grow up.', 'o'], ['A fish lays millions of eggs, but most are eaten.', 'o'], ['An oak drops thousands of acorns, but few become trees.', 'o'],
+      ['In a snowy winter, rabbits with white fur are caught less often and raise more young.', 's'], ['Mice that match the dark soil are eaten less by owls, so they leave more young.', 's'], ['Bacteria that resist an antibiotic survive it and multiply.', 's']] } });
+
+  T('lifesci.populations-change', { share: { 3: 0.4 },
+    tf: [['Individuals change their genes to survive', false, 'Individuals do not change; the population does, over generations'], ['Natural selection acts on traits that already vary in a population', true], ['Antibiotic resistance can spread through a population of bacteria quickly', true],
+      ['A population changes over many generations as helpful traits become more common', true], ['A trait that helps in one environment may not help in another', true], ['Every member of a species is exactly alike', false],
+      ['Peppered moths became darker on average when soot covered tree bark', true], ['Finishing every dose of an antibiotic helps prevent resistant bacteria', true]] });
+  T('lifesci.predator-prey', { share: { 3: 0.25 }, forms: { 3: ['tf1', 'tf'] } });
+  T('lifesci.excretory-system', { share: { 3: 0.25 }, forms: { 3: ['back', 'fwd', 'tf1'] } });
+  T('lifesci.cell-size', { share: { 3: 0.25 }, forms: { 3: ['tf1', 'tf'] },
+    tf: [['As a cell grows, its volume grows faster than its surface area', true], ['A small cell has more surface for each unit of its volume than a big cell', true], ['Materials enter and leave a cell through its surface', true],
+      ['Big cells can always get food and oxygen to their middle as fast as small cells', false, 'The inside of a big cell is far from the surface'], ['Most cells are too small to see without a microscope', true], ['Doubling a cube\'s side doubles its volume', false, 'The volume grows 8 times'],
+      ['Doubling a cube\'s side makes its surface area 4 times as large', true], ['Large living things grow by adding more cells, not by making each cell huge', true], ['A cell\'s surface-to-volume ratio gets bigger as the cell grows', false, 'It gets smaller']] });
+
+  /* ---- more levels and topics, so variety does not lean on the extra forms ---- */
+  T('lifesci.helpful-harmful-microbes', { share: { 2: 0.45 } });
+  T('lifesci.cellular-respiration', { share: { 3: 0.45 } });
+  T('lifesci.photo-resp-together', { share: { 3: 0.55 }, forms: { 3: ['tf1', 'all', 'not', 'cat'] } });
+  T('lifesci.plant-responses', { share: { 2: 0.5 }, forms: { 2: ['one', 'not', 'cat'] } });
+  T('lifesci.plant-groups', { share: { 2: 0.5 } });
+  T('lifesci.vertebrate-groups', { share: { 3: 0.5 }, forms: { 3: ['all', 'not', 'back'] } });
+  T('lifesci.web-changes', { share: { 2: 0.6 }, forms: { 2: ['tf', 'tf1'] } });
+  T('lifesci.muscular-system', { share: { 1: 0.65 } });
+  T('lifesci.circulatory-system', { share: { 1: 0.5 }, forms: { 1: ['fwd', 'back', 'tf'] } });
+  T('lifesci.inherited-acquired', { share: { 1: 0.65 } });
+  T('lifesci.one-or-two-parents', { share: { 1: 0.65, 2: 0.6 } });
+  T('lifesci.genotype-phenotype', { share: { 1: 0.6 }, forms: { 1: ['cat', 'tf'] } });
+  T('lifesci.breeding-engineering', { share: { 1: 0.7 }, forms: { 1: ['cat', 'tf'] } });
+  T('lifesci.field-of-view', { share: { 1: 0.45, 2: 0.45, 3: 0.3 }, forms: { 1: ['tf', 'tf1'], 2: ['tf', 'tf1'], 3: ['tf1'] },
+    tf: [['1 millimeter equals 1,000 micrometers', true], ['1 micrometer equals 1,000 millimeters', false, '1 millimeter is 1,000 micrometers'], ['At higher magnification, the field of view gets smaller', true],
+      ['If the field of view is 4 mm across at 40×, it is about 1 mm across at 160×', true, 'Four times the power gives one fourth the width'], ['You can estimate a cell\'s size by how many fit across the field of view', true],
+      ['Doubling the magnification doubles the width of the field of view', false, 'It halves it'], ['Most plant and animal cells are between about 10 and 100 micrometers across', true], ['A bacterium is usually larger than a plant cell', false, 'Bacteria are usually much smaller'],
+      ['If 5 cells fit across a 1,000 µm field, each cell is about 200 µm long', true], ['The field of view is the circle of light you see through the eyepiece', true]] });
+  T('lifesci.one-or-many-cells', { share: { 1: 0.7 },
+    sort: { cats: { u: ['unicellular (one cell)', 'unicellular', 'Unicellular'], m: ['multicellular (many cells)', 'multicellular', 'Multicellular'] }, catq: 'Is this living thing unicellular or multicellular? {x}', items: [
+      ['an amoeba', 'u'], ['a paramecium', 'u'], ['a bacterium', 'u'], ['a yeast cell', 'u'], ['a euglena', 'u'], ['a diatom', 'u'], ['a single-celled alga called Chlamydomonas', 'u'],
+      ['a mushroom', 'm'], ['an oak tree', 'm'], ['a frog', 'm'], ['a honeybee', 'm'], ['a moss plant', 'm'], ['an earthworm', 'm'], ['a human', 'm'], ['a jellyfish', 'm'], ['kelp seaweed', 'm']] } });
+  T('lifesci.plant-animal-cells', { share: { 2: 0.75, 3: 0.55 },
+    sort: { cats: { p: ['found in plant cells only', 'found in plant cells only', 'Plant cells only'], a: ['found in animal cells only', 'found in animal cells only', 'Animal cells only'], b: ['found in both plant and animal cells', 'found in both', 'Both'] }, catq: 'Where is this found? {x}', items: [
+      ['a cell wall', 'p'], ['chloroplasts', 'p'], ['one large central vacuole', 'p'], ['a nucleus', 'b'], ['a cell membrane', 'b'], ['mitochondria', 'b'], ['ribosomes', 'b'], ['cytoplasm', 'b'], ['endoplasmic reticulum', 'b'], ['centrioles', 'a']] },
+    tf: [['Plant cells have chloroplasts instead of mitochondria', false, 'Plant cells have both'], ['Plant cells have both chloroplasts and mitochondria', true], ['Animal cells have a cell wall', false], ['Both plant and animal cells have a nucleus', true],
+      ['A plant cell usually has a boxy shape because of its cell wall', true], ['Animal cells have chloroplasts', false], ['Plant cells usually have one large central vacuole', true], ['Both plant and animal cells have a cell membrane', true],
+      ['Root cells usually have no chloroplasts', true, 'They grow in the dark'], ['Mitochondria release energy in both plant and animal cells', true]] });
+  T('lifesci.levels-of-organization', { share: { 1: 0.6 }, forms: { 1: ['cat', 'next', 'tf'] },
+    sort: { cats: { c: ['a cell', 'cells', 'Cell'], t: ['a tissue', 'tissues', 'Tissue'], o: ['an organ', 'organs', 'Organ'], s: ['an organ system', 'organ systems', 'Organ system'], g: ['an organism', 'organisms', 'Organism'] }, catq: 'Which level of organization is this? {x}', items: [
+      ['a red blood cell', 'c'], ['a nerve cell', 'c'], ['a muscle cell', 'c'], ['a guard cell in a leaf', 'c'], ['muscle tissue', 't'], ['the lining of the stomach', 't'], ['nerve tissue', 't'], ['the xylem in a stem', 't'],
+      ['the heart', 'o'], ['the stomach', 'o'], ['a leaf', 'o'], ['the brain', 'o'], ['a lung', 'o'], ['the skin', 'o'], ['the nervous system', 's'], ['the circulatory system', 's'], ['the respiratory system', 's'], ['the skeletal system', 's'],
+      ['a horse', 'g'], ['a sunflower', 'g'], ['a person', 'g'], ['an earthworm', 'g']] },
+    seq: { name: 'the levels of organization, from small to large', items: ['cell', 'tissue', 'organ', 'organ system', 'organism'] },
+    tf: [['A tissue is a group of similar cells doing the same job', true], ['An organ is made of several kinds of tissue', true], ['An organ system is a single organ', false, 'It is a group of organs working together'], ['A unicellular organism is a cell and an organism at once', true]] });
+  T('lifesci.protists', { share: { 2: 0.6, 3: 0.6 },
+    sort: { cats: { a: ['an animal-like protist', 'animal-like protists', 'Animal-like'], p: ['a plant-like protist', 'plant-like protists', 'Plant-like'], f: ['a fungus-like protist', 'fungus-like protists', 'Fungus-like'] }, catq: 'Which kind of protist is this? {x}', items: [
+      ['an amoeba that engulfs food with its pseudopods', 'a'], ['a paramecium that sweeps food in with its cilia', 'a'], ['a protist with a whip-like flagellum that hunts bacteria', 'a'], ['the protist that causes malaria', 'a'],
+      ['a diatom with a glassy shell that makes food from sunlight', 'p'], ['green algae in a pond', 'p'], ['kelp, a giant seaweed', 'p'], ['a euglena using its chloroplasts in sunlight', 'p'], ['red algae on a coral reef', 'p'],
+      ['a slime mold creeping over a rotting log', 'f'], ['a water mold growing on a dead fish', 'f'], ['the water mold that caused the Irish potato famine', 'f']] },
+    tf: [['Protists are eukaryotes', true], ['Most protists are unicellular', true], ['Algae make food by photosynthesis', true], ['Protists have no nucleus', false, 'Protists are eukaryotes with a nucleus'],
+      ['Kelp is a protist, not a true plant', true], ['All protists are harmful', false], ['Algae produce much of the oxygen in the air', true], ['Slime molds are a kind of fungus', false, 'They are fungus-like protists']] });
+  T('lifesci.biotic-abiotic', { share: { 1: 0.65, 2: 0.75 },
+    sort: { cats: { b: ['biotic (living or once living)', 'biotic factors', 'Biotic'], a: ['abiotic (never alive)', 'abiotic factors', 'Abiotic'] }, catq: 'Is this a biotic or an abiotic factor? {x}', items: [
+      ['a fallen log', 'b'], ['a hawk', 'b'], ['bacteria in the soil', 'b'], ['grass', 'b'], ['a dead leaf', 'b'], ['a mushroom', 'b'], ['an earthworm', 'b'], ['a bird\'s feather on the ground', 'b'], ['seaweed', 'b'], ['a coral', 'b'],
+      ['sunlight', 'a'], ['rainwater', 'a'], ['air temperature', 'a'], ['sand', 'a'], ['a rock', 'a'], ['oxygen in the water', 'a'], ['wind', 'a'], ['salt in seawater', 'a'], ['soil minerals', 'a']] } });
+  T('lifesci.population-growth', { share: { 2: 0.55 }, forms: { 2: ['tf', 'tf1'] },
+    tf: [['Exponential growth makes a J-shaped curve', true], ['Logistic growth makes an S-shaped curve that levels off', true], ['A population that doubles each year grows by the same number each year', false, 'The number added gets bigger each year'],
+      ['Carrying capacity is where logistic growth levels off', true], ['Exponential growth can go on forever in nature', false, 'Resources run out'], ['Birth rate higher than death rate makes a population grow', true],
+      ['Immigration adds to a population, and emigration subtracts from it', true], ['A population at carrying capacity has births and deaths about balanced', true], ['Bacteria with plenty of food can grow exponentially for a while', true], ['Logistic growth is fastest at the very start', false, 'It is fastest at about half the carrying capacity']] });
+
+  /* ---- auto shares: every level still under 60% on its own also draws from the bank (never lowers a share set above) ---- */
+  (function () { var up = function (id, s) { var b = BK[id], tf = (b && b.tf) || []; if (!b) return; if (!(b.sort || b.pair || b.yn || (tf.filter(function (x) { return x[1]; }).length >= 3 && tf.filter(function (x) { return !x[1]; }).length >= 3))) return; b.share = b.share || {}; Object.keys(s).forEach(function (L) { b.share[L] = Math.max(b.share[L] || 0, s[L]); }); };
+    up('lifesci.microscope', { 3: 0.35 });
+    up('lifesci.field-of-view', { 1: 0.35, 2: 0.35 });
+    up('lifesci.cell-theory', { 2: 0.35, 3: 0.5 });
+    up('lifesci.cell-size', { 1: 0.35, 2: 0.35 });
+    up('lifesci.levels-of-organization', { 1: 0.35 });
+    up('lifesci.classification-ranks', { 2: 0.35 });
+    up('lifesci.domains-kingdoms', { 2: 0.35 });
+    up('lifesci.viruses', { 1: 0.35, 2: 0.5, 3: 0.35 });
+    up('lifesci.protists', { 1: 0.35 });
+    up('lifesci.helpful-harmful-microbes', { 2: 0.35 });
+    up('lifesci.photosynthesis', { 3: 0.35 });
+    up('lifesci.cellular-respiration', { 2: 0.35 });
+    up('lifesci.photo-resp-together', { 1: 0.5 });
+    up('lifesci.plant-responses', { 1: 0.35 });
+    up('lifesci.backbones', { 1: 0.35 });
+    up('lifesci.behavioral-adaptations', { 1: 0.35 });
+    up('lifesci.body-temperature', { 2: 0.5 });
+    up('lifesci.ecosystem-roles', { 1: 0.35 });
+    up('lifesci.web-changes', { 1: 0.35, 2: 0.5 });
+    up('lifesci.succession', { 1: 0.35 });
+    up('lifesci.human-impact', { 1: 0.35 });
+    up('lifesci.population-growth', { 3: 0.35 });
+    up('lifesci.predator-prey', { 2: 0.35, 3: 0.35 });
+    up('lifesci.muscular-system', { 1: 0.35 });
+    up('lifesci.respiratory-system', { 3: 0.35 });
+    up('lifesci.immune-basics', { 1: 0.35 });
+    up('lifesci.excretory-system', { 3: 0.35 });
+    up('lifesci.inherited-acquired', { 1: 0.35 });
+    up('lifesci.one-or-two-parents', { 1: 0.35, 3: 0.35 });
+    up('lifesci.genotype-phenotype', { 1: 0.35 });
+    up('lifesci.punnett-probability', { 2: 0.35 });
+    up('lifesci.mutations', { 2: 0.35, 3: 0.35 });
+    up('lifesci.breeding-engineering', { 1: 0.5 });
+    up('lifesci.comparing-bodies', { 1: 0.35, 3: 0.35 });
+    up('lifesci.natural-selection', { 1: 0.35, 2: 0.35 });
+    up('lifesci.populations-change', { 2: 0.5 });
+  })();
+
+  Object.keys(BK).forEach(function (id) {
+    var base = ML.getGen(id); if (!base) return;
+    ML.gen(id, function (R, ctx) {
+      var o = BK[id], L = (ctx && ctx.level) || 1, sh = o.share && o.share[L];
+      if (sh && R.chance(sh)) { var p = make(R, o, L); if (p) return p; }
+      return base(R, ctx);
+    });
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);
+
+
+/* ---- More forms of the same questions (round 7, "widen"): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - two at once: two different questions of the topic, answered together (short questions only, at most one of them with
+     a picture, which then comes first; not in the courses for young children, whose answer box for two parts would
+     also show a keypad button they don't need).
+   - check a number: a numeric question with a classmate's number, either the right one or a slip learners often make
+     (a power of ten, a factor of two, a lost minus sign, off by one), and "Is that right?" (Yes / No; not in placement).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'lifesci', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf')) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function numVal(a) { var s = String(a.v).replace(/\s/g, ''), m = /^(-?[\d.]+)\*10\^(-?\d+)$/.exec(s); return m ? +m[1] * Math.pow(10, +m[2]) : (/^-?\d*\.?\d+$/.test(s) ? +s : NaN); }
+  function sigOf(a) { var s = String(a.v).split('*')[0].replace(/^-/, '').replace('.', '').replace(/^0+/, ''); return Math.max(2, Math.min(4, s.length || 1)); }
+  function numTex(x, n) {
+    var y = Number(x.toPrecision(n)), e = y === 0 ? 0 : Math.floor(Math.log10(Math.abs(y)) + 1e-12);
+    if (e >= 6 || e <= -4) { var m = Number((y / Math.pow(10, e)).toPrecision(n)); return m.toFixed(Math.max(0, n - 1)) + ' \\times 10^{' + e + '}'; }
+    return y.toFixed(Math.max(0, n - 1 - e));
+  }
+  function numCheckable(p) {
+    var a = p.a; if (YOUNG || !a || a.t !== 'num' || a.form || a.frac) return false;
+    var v = numVal(a); return isFinite(v) && v !== 0 && txt(p.q).length <= 700;
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = numVal(a), exact = !a.rtol && Math.round(v) === v, n = sigOf(a), right = R.coin(), w;
+    var cands = exact ? [v + 1, v - 1, 2 * v, v + 2].filter(function (x) { return x !== v && (v < 0 || x >= 0); })
+      : [10, 0.1, 2, 0.5, 1000, 0.001].concat(v < 0 || /\bsign\b/i.test(txt(p.q)) ? [-1, -1, -1] : []).map(function (k) { return v * k; });
+    // a wrong value must really be wrong: it has to fail the problem's own answer check
+    cands = cands.filter(function (x) { try { return !ML.check(a, exact ? String(x) : numTex(x, n).replace(' \\times 10^{', 'e').replace('}', ''), { q: p.q, unit: p.unit }).ok; } catch (e) { return false; } });
+    if (!cands.length) return null;
+    w = R.pick(cands);
+    var unit = p.unit ? '&nbsp;' + p.unit : '', pc = a.pct && !p.unit ? '\\%' : '';
+    function vTex() { var s = String(a.v).replace(/\s/g, ''), m = /^(-?[\d.]+)\*10\^(-?\d+)$/.exec(s); return m ? m[1] + ' \\times 10^{' + m[2] + '}' : s; } // the answer exactly as the problem gives it
+    function tex(x) { return '$' + (x === v ? vTex() : exact ? String(x) : numTex(x, n)) + pc + '$' + unit; }
+    var shown = right ? v : w;
+    var out = { q: p.q + '<p>A classmate answered: <b>' + tex(shown) + '</b></p><p>Is that right?</p>', a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: (p.steps || []).concat([right ? 'So <b>yes</b>, the classmate is right.' : 'So <b>no</b>: the answer is ' + tex(v) + ', not ' + tex(shown) + '.']) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (mode !== 'place' && numCheckable(p)) forms.push('num');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'num' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

@@ -773,15 +773,15 @@
   });
 
   G('nt.wilson', function (R, ctx) {
-    var L = ctx.level, k = L === 1 ? 0 : L === 2 ? R.int(1, 2) : R.int(2, 4), pr, st, v;
+    var L = ctx.level, k = L === 1 ? 0 : L === 2 ? R.int(1, 3) : R.int(2, 5), pr, st, v;
     if (L === 1) {
-      var n = R.coin() ? R.pick(primes(5, 97)) : R.pick([4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 33, 35]);
+      var n = R.coin() ? R.pick(primes(5, 199)) : R.pick([4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 33, 35, 30, 32, 34, 36, 38, 39, 40, 42, 44, 45, 46, 48, 49, 50]);
       if (isPrime(n)) { v = n - 1; st = ['$' + n + '$ is prime, so Wilson\'s theorem applies: $(' + n + ' - 1)! \\equiv -1' + pmod(n) + '$.', 'The least nonnegative residue of $-1$ is $' + (n - 1) + '$.', 'Why: each factor from 2 to ' + (n - 2) + ' pairs with its own inverse mod ' + n + ' (a different number), and those pairs multiply to 1, leaving $1 \\cdot ' + (n - 1) + ' \\equiv -1$.']; }
       else if (n === 4) { v = 2; st = ['$3! = 6 \\equiv 2' + pmod(4) + '$.', '4 is the one composite where the answer is not 0: $4 = 2 \\cdot 2$ uses the factor 2 twice, and $3!$ has only one 2.']; }
       else { v = 0; var f2 = factor(n), a1, b1; if (f2.length > 1 || f2[0][1] > 2 || (f2[0][1] === 2 && f2[0][0] > 2)) { a1 = spf(n); b1 = n / a1; } st = ['$' + n + '$ is composite: $' + n + ' = ' + a1 + ' \\cdot ' + b1 + '$' + (a1 === b1 ? ', and $' + a1 + '$ and $' + 2 * a1 + '$ are both at most ' + (n - 1) + '.' : ' with both factors at most ' + (n - 1) + '.'), 'So $' + n + '$ divides $(' + n + ' - 1)! = 1 \\cdot 2 \\cdots ' + (n - 1) + '$, and $(' + n + ' - 1)! \\equiv 0' + pmod(n) + '$, not $-1$.']; }
       return { q: 'Find $' + (n - 1) + '!$ mod $' + n + '$.', a: num(v), steps: st, hint: 'Is ' + n + ' prime? Wilson\'s theorem is about primes.' };
     }
-    pr = R.pick(primes(L === 2 ? 7 : 11, L === 2 ? 61 : 97));
+    pr = R.pick(primes(L === 2 ? 7 : 11, L === 2 ? 113 : 199));
     // (p - 1)! = (p - k - 1)! · (p - 1)(p - 2)…(p - k) ≡ (p - k - 1)! · (-1)^k · k!
     var kf = U.factorial(k), sgn = k % 2 ? -1 : 1, rhs = mod(-sgn * inv(kf, pr), pr), m = pr - k - 1;
     v = rhs;
@@ -877,7 +877,7 @@
   G('nt.order-mod-n', function (R, ctx) {
     var L = ctx.level, n, a, k, st;
     if (L <= 2) {
-      n = L === 1 ? R.pick([5, 7, 11, 13]) : R.pick([9, 10, 14, 15, 16, 18, 20, 21, 22, 25, 26, 27, 17, 19, 23]);
+      n = L === 1 ? R.pick([5, 7, 9, 10, 11, 13, 14, 17]) : R.pick([9, 10, 14, 15, 16, 18, 20, 21, 22, 25, 26, 27, 17, 19, 23, 28, 29, 31, 33, 35]);
       do { a = R.int(2, n - 1); } while (gcd(a, n) !== 1 || (L === 1 && a === n - 1 && R.chance(0.7)));
       k = ord(a, n); var ph = phi(n);
       if (L === 1) st = ['List the powers of $' + a + '$ mod $' + n + '$ until you reach 1: ' + powListTex(a, n, powList(a, n, n)) + '.', 'The first power that is 1 is the ' + U.ordinal(k) + ', so $\\operatorname{ord}_{' + n + '}(' + a + ') = ' + k + '$. (It divides $\\varphi(' + n + ') = ' + ph + '$, as every order does.)'];
@@ -1021,8 +1021,14 @@
   function squaresMod(n) { var s = {}; for (var x = 1; x < n; x++) s[mod(x * x, n)] = 1; return Object.keys(s).map(Number).filter(function (v) { return v; }).sort(function (a, b) { return a - b; }); }
   G('nt.quadratic-residues', function (R, ctx) {
     var L = ctx.level, pr, a, sols;
+    if (L === 1 && R.chance(0.6)) { // is a a square mod p?
+      var pq = R.pick([5, 7, 11, 13, 17, 19, 23, 29]), sqq = squaresMod(pq), aq = R.int(2, pq - 1), yes = sqq.indexOf(aq) >= 0;
+      return { q: 'Is $' + aq + '$ a square mod $' + pq + '$? (Is there an $x$ with $x^{2} \\equiv ' + aq + pmod(pq) + '$?)', a: { t: 'mc', choices: ['Yes', 'No'], v: yes ? 0 : 1, keep: true },
+        steps: ['Square $x = 1, 2, \\dots, ' + (pq - 1) / 2 + '$: ' + sqTable(pq) + '.', 'The values $' + pq + ' - x$ repeat these squares, so the nonzero squares mod ' + pq + ' are ' + sqq.join(', ') + '.', yes ? aq + ' is on the list, so the answer is yes.' : aq + ' is not on the list, so the answer is no.'],
+        hint: 'Square 1, 2, … up to ' + (pq - 1) / 2 + ' and reduce mod ' + pq + '.' };
+    }
     if (L === 1) {
-      pr = R.pick([5, 7, 11, 13, 17, 19]); var sq = squaresMod(pr);
+      pr = R.pick([5, 7, 11, 13, 17, 19, 23]); var sq = squaresMod(pr);
       return { q: 'List the nonzero squares mod $' + pr + '$: every $a$ from 1 to ' + (pr - 1) + ' with $x^{2} \\equiv a' + pmod(pr) + '$ for some $x$.', a: setA(sq),
         steps: ['Square $x = 1, 2, \\dots, ' + (pr - 1) / 2 + '$: ' + sqTable(pr) + '.', 'No need to go further: $(' + pr + ' - x)^{2} \\equiv (-x)^{2} = x^{2}$, so $x$ and $' + pr + ' - x$ give the same square.', 'The nonzero squares are ' + sq.join(', ') + ': exactly $(' + pr + ' - 1)/2 = ' + sq.length + '$ of them.'],
         hint: 'Square 1, 2, … up to ' + (pr - 1) / 2 + '. The rest repeat these.' };
@@ -1054,7 +1060,7 @@
         steps: ['Euler\'s criterion shows the symbol is multiplicative: $\\left(\\frac{ab}{p}\\right) \\equiv (ab)^{(p-1)/2} = a^{(p-1)/2} b^{(p-1)/2} \\equiv \\left(\\frac{a}{p}\\right)\\left(\\frac{b}{p}\\right)$.', '$' + n + ' = ' + fx(n) + '$, so $' + leg(n, pr) + ' = ' + [[2, i, l2], [3, j, l3], [5, k, l5]].filter(function (t) { return t[1]; }).map(function (t) { return leg(t[0], pr) + (t[1] > 1 ? '^{' + t[1] + '}' : ''); }).join('') + '$.', 'Even powers give 1: the value is $' + [[2, i, l2], [3, j, l3], [5, k, l5]].filter(function (t) { return t[1] % 2; }).map(function (t) { return '(' + t[2] + ')'; }).join(' \\cdot ') + ' = ' + v + '$.'],
         hint: 'Factor ' + n + '; the symbol of a product is the product of the symbols.' };
     }
-    pr = L === 1 ? R.pick([7, 11, 13]) : R.pick(primes(17, 61)); a = R.int(2, pr - 2); h = (pr - 1) / 2;
+    pr = L === 1 ? R.pick([7, 11, 13, 17, 19, 23]) : R.pick(primes(17, 89)); a = R.int(2, pr - 2); h = (pr - 1) / 2;
     f = L === 1 ? smallPow(a, h, pr) : fastPow(a, h, pr); v = (L === 1 ? f.v : f.v) === 1 ? 1 : -1;
     st = ['Euler\'s criterion: $' + leg(a, pr) + ' \\equiv ' + a + '^{(' + pr + ' - 1)/2} = ' + a + '^{' + h + '}' + pmod(pr) + '$.'];
     st = st.concat(L === 1 ? [f.line + '.'] : f.steps);
@@ -1109,7 +1115,7 @@
   // ================================================================ Unit 8: Diophantine equations and continued fractions
   function goodMN(R, maxM) { var m, n; do { m = R.int(2, maxM); n = R.int(1, m - 1); } while (gcd(m, n) !== 1 || (m - n) % 2 === 0); return [m, n]; }
   G('nt.pythagorean-triples', function (R, ctx) {
-    var L = ctx.level, mn, m, n, A, B, C, shape = L === 1 ? 'gen' : L === 2 ? R.pick(['prim', 'findmn', 'complete']) : R.pick(['count', 'odd', 'complete']);
+    var L = ctx.level, mn, m, n, A, B, C, shape = L === 1 ? R.pick(['gen', 'gen', 'complete']) : L === 2 ? R.pick(['prim', 'findmn', 'complete']) : R.pick(['count', 'odd', 'complete', 'complete']);
     if (shape === 'complete') {
       mn = goodMN(R, 12); m = mn[0]; n = mn[1]; A = m * m - n * n; B = 2 * m * n; C = m * m + n * n; var miss = R.int(0, 2), lg2 = [A, B].sort(function (x, y) { return x - y; });
       if (miss === 2) return { q: 'The legs of a right triangle are $' + lg2[0] + '$ and $' + lg2[1] + '$. How long is the hypotenuse?', a: num(C), steps: ['$c^{2} = ' + lg2[0] + '^{2} + ' + lg2[1] + '^{2} = ' + cm(lg2[0] * lg2[0]) + ' + ' + cm(lg2[1] * lg2[1]) + ' = ' + cm(C * C) + '$.', '$c = ' + C + '$. It is the primitive triple from $m = ' + m + '$, $n = ' + n + '$: $m^{2} + n^{2} = ' + C + '$.'], hint: 'One leg is odd and one is even; guess $m$ and $n$ from the even leg $2mn$, or just use $a^{2} + b^{2} = c^{2}$.' };
@@ -1117,7 +1123,7 @@
       return { q: 'A primitive Pythagorean triple has hypotenuse $' + C + '$ and one leg $' + known + '$. Find the other leg.', a: num(other), steps: ['$b^{2} = ' + C + '^{2} - ' + known + '^{2} = ' + cm(C * C) + ' - ' + cm(known * known) + ' = ' + cm(other * other) + '$.', '$b = ' + other + '$. With $m = ' + m + '$, $n = ' + n + '$: $(m^{2} - n^{2}, 2mn, m^{2} + n^{2}) = (' + A + ', ' + B + ', ' + C + ')$.'], hint: 'Use $b^{2} = c^{2} - a^{2}$, or factor it as $(c - a)(c + a)$.' };
     }
     if (shape === 'gen') {
-      mn = goodMN(R, 10); m = mn[0]; n = mn[1]; A = m * m - n * n; B = 2 * m * n; C = m * m + n * n;
+      mn = R.chance(0.6) ? goodMN(R, 14) : (function () { var mm = R.int(2, 12); return [mm, R.int(1, mm - 1)]; })(); m = mn[0]; n = mn[1]; A = m * m - n * n; B = 2 * m * n; C = m * m + n * n;
       return { q: 'Use $m = ' + m + '$ and $n = ' + n + '$ in $(m^{2} - n^{2},\\ 2mn,\\ m^{2} + n^{2})$.', a: multi([['$m^{2} - n^{2} =$', num(A)], ['$2mn =$', num(B)], ['$m^{2} + n^{2} =$', num(C)]]),
         steps: ['$m^{2} - n^{2} = ' + m * m + ' - ' + n * n + ' = ' + A + '$, $2mn = 2 \\cdot ' + m + ' \\cdot ' + n + ' = ' + B + '$, $m^{2} + n^{2} = ' + C + '$.', 'Check: $' + A + '^{2} + ' + B + '^{2} = ' + cm(A * A) + ' + ' + cm(B * B) + ' = ' + cm(C * C) + ' = ' + C + '^{2}$.', '$m$ and $n$ are coprime with one even and one odd, so the triple is primitive.'],
         hint: 'Square $m$ and $n$, then subtract, multiply and add.' };
@@ -1145,7 +1151,7 @@
         steps: ['$m$ and $n$ both odd make $m^{2} - n^{2}$, $2mn$ and $m^{2} + n^{2}$ all even.', 'Halve them: $(' + A / 2 + ', ' + B / 2 + ', ' + C / 2 + ')$, and $' + (A / 2) + '^{2} + ' + (B / 2) + '^{2} = ' + cm(C * C / 4) + ' = ' + C / 2 + '^{2}$.', 'The odd leg is $' + (hp[0] % 2 ? hp[0] : hp[1]) + '$. (It comes from $m\' = ' + (m + n) / 2 + '$, $n\' = ' + (m - n) / 2 + '$, which are coprime and of opposite parity.)'],
         hint: 'Divide every side by 2.' };
     }
-    var Nh = R.pick([30, 40, 50, 60, 70, 80, 100]), list = [];
+    var Nh = R.int(3, 15) * 10, list = [];
     for (m = 2; m * m < Nh; m++) for (n = 1; n < m; n++) if (gcd(m, n) === 1 && (m - n) % 2 && m * m + n * n < Nh) list.push([m, n, m * m - n * n, 2 * m * n, m * m + n * n]);
     return { q: 'How many primitive Pythagorean triples have hypotenuse less than $' + Nh + '$? (Count each triple once, whatever the order of its legs.)', a: num(list.length),
       steps: ['Every primitive triple comes from exactly one pair $m > n > 0$, coprime and of opposite parity, with hypotenuse $m^{2} + n^{2}$.', 'Pairs with $m^{2} + n^{2} < ' + Nh + '$: ' + list.map(function (t) { return '$(' + t[0] + ', ' + t[1] + ') \\to (' + t[2] + ', ' + t[3] + ', ' + t[4] + ')$'; }).join(', ') + '.', 'That is <b>' + list.length + '</b>.'],

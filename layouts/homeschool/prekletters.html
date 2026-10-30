@@ -1,0 +1,91 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap">
+<link rel="stylesheet" href="{{ "homeschool/phonics/phonics.css" | relURL }}?v={{ (os.Stat "static/homeschool/phonics/phonics.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/prek/prek.css" | relURL }}?v={{ (os.Stat "static/homeschool/prek/prek.css").ModTime.Unix }}">
+{{ $step1 := "homeschool/actual-reading/phonics-practice/letters/" | relURL }}
+<div class="hs pp pk pk-l" id="pkl" data-next="{{ $step1 }}">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/pre-k/" | relURL }}">Pre-K at home</a> › Pre-reading games</nav>
+
+  <header class="pp-head">
+    <span class="pp-head-ic" aria-hidden="true">🔤</span>
+    <div>
+      <p class="pp-eyebrow">Pre-K at home · Ages 3 to 5, with a grown-up</p>
+      <h1>Pre-reading games</h1>
+      <p>Letters, rhymes, claps and listening: the games that come before reading. A few minutes at a time, side by side.</p>
+    </div>
+  </header>
+
+  <section class="pp-kid" id="pp-kid" aria-label="Games for your child">
+    <div class="pp-bar">
+      <label class="pp-who">
+        <span>Player</span>
+        <select id="pp-child" aria-label="Who is playing?"><option>Player 1</option></select>
+      </label>
+      <button type="button" class="pp-mini" id="pp-add" aria-label="Add a child">＋ Add</button>
+      <span class="pp-sp"></span>
+      <button type="button" class="pp-mini" id="pp-sound" aria-pressed="true" title="The voice says whole words, letter names and sentences, never single sounds.">🔊 Voice on</button>
+      <button type="button" class="pp-mini" id="pp-full" aria-pressed="false">⛶ Big screen</button>
+    </div>
+    <form class="pp-addf" id="pp-addf" hidden>
+      <label for="pp-name">Child's name</label>
+      <input id="pp-name" maxlength="24" autocomplete="off">
+      <button type="submit" class="hs-btn pri">Add</button>
+      <button type="button" class="hs-btn ghost" id="pp-addx">Cancel</button>
+    </form>
+    <div class="pp-acts" id="pp-acts" role="group" aria-label="Games"></div>
+    <div class="pp-stage" id="pp-stage">
+      <noscript><p class="pp-nojs">The games need JavaScript. The ideas below work without a screen at all.</p></noscript>
+    </div>
+  </section>
+
+  <section class="pp-gu" aria-labelledby="pk-gu-h">
+    <h2 id="pk-gu-h">For the grown-up</h2>
+    <div class="pp-gu-grid">
+      <div class="pp-box">
+        <h3>How to play</h3>
+        <ul>
+          <li>Sit together and play one game, or part of one. Five to ten minutes is plenty.</li>
+          <li>Say the words with your child. Tap a picture to hear its name again.</li>
+          <li>A wrong tap just fades away. Nothing is timed, and there is no score to lose.</li>
+          <li>The voice says whole words, letter names and sentences, never single letter sounds. Turn it off any time and read the words yourself.</li>
+        </ul>
+      </div>
+      <div class="pp-box">
+        <h3>Away from the screen</h3>
+        <ul>
+          <li><b>Letters:</b> point out letters on cereal boxes, signs and books. Start with the letters in your child's name.</li>
+          <li><b>Big and small:</b> make letter pairs from paper or magnets, and match them on the fridge.</li>
+          <li><b>Rhymes:</b> read nursery rhymes and stop before the rhyming word. Make up silly rhymes: “cat, hat, zat!”</li>
+          <li><b>Claps:</b> clap the parts of everyone's names at dinner: Ma-ri-a, Ben.</li>
+          <li><b>Same start:</b> gather toys that start the same, like a bear, a ball and a block.</li>
+          <li><b>Listening:</b> say a short sentence and put down a button or a block for each word.</li>
+        </ul>
+      </div>
+      <div class="pp-box pp-han">
+        <h3>What comes next</h3>
+        <p>When your child knows many letters and enjoys these games, move on to <a href="{{ $step1 }}">Phonics Practice, Step 1: Letters and sounds</a>, beside Hannah Ward's lessons. There you say each letter's sound yourself, with a key picture to help.</p>
+        <p>Hannah's <a href="{{ "homeschool/actual-reading/little-house-pre-k/" | relURL }}">Little House Pre-K</a> and <a href="{{ "homeschool/actual-reading/pre-reading-workbook/" | relURL }}">Crystal and Shell Pre-Reading Workbook</a> fit well alongside these games.</p>
+      </div>
+    </div>
+    <h3 class="pp-h3">The six games</h3>
+    <ul class="pk-games">
+      <li><b>🔠 Big and small</b>Match a capital letter to its small letter, and back again.</li>
+      <li><b>🔍 Find the letter</b>Find every copy of one letter in a grid.</li>
+      <li><b>🎶 Rhyme time</b>Which picture rhymes with the first one?</li>
+      <li><b>👏 Clap the parts</b>Say a word, clap its parts, and count the claps.</li>
+      <li><b>🖼️ Same start</b>Pictures whose names start the same, and ones that don't.</li>
+      <li><b>👂 Listen for words</b>Hear a sentence: find the word in it, or count its words.</li>
+    </ul>
+    <p class="hs-small">Each child's stars stay in this browser only. The words, pictures and sentences are original to Teddy Rook Book.</p>
+  </section>
+
+  <nav class="pp-nav" aria-label="Pre-K">
+    <a class="hs-btn ghost" href="{{ "homeschool/pre-k/" | relURL }}">← Pre-K at home</a>
+    <a class="hs-btn ghost" href="{{ "homeschool/pre-k/printables/" | relURL }}">Hand-skills printables</a>
+    <a class="hs-btn ghost" href="{{ $step1 }}">Next: Phonics Practice, Step 1 →</a>
+  </nav>
+</div>
+<script src="{{ "homeschool/prek/letters.js" | relURL }}?v={{ (os.Stat "static/homeschool/prek/letters.js").ModTime.Unix }}" defer></script>
+{{ end }}

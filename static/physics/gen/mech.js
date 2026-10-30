@@ -513,19 +513,19 @@
   G('mech.galilean-frames', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['walk', 'accel', 'walk'], ['walk', 'rain', 'accel', 'vec'], ['rain', 'vec', 'wind', 'accel']));
     if (shape === 'walk') {
-      var u = R.pick([12, 15, 20, 25, 30]), w = R.pick([-3, -2, -1.5, 1.5, 2, 3]), what = R.pick(['ground', 'train']);
+      var u = R.pick([12, 15, 20, 25, 30, 8, 10, 18, 22, 24, 28, 35]), w = R.pick([-3, -2, -1.5, 1.5, 2, 3, -2.5, -1, 1, 2.5]), what = R.pick(['ground', 'train']);
       if (what === 'ground') return P('A train moves east at $' + u + '\\ \\text{m/s}$ relative to the ground. A passenger walks ' + (w > 0 ? 'toward the front' : 'toward the back') + ' at $' + gx(M.abs(w)) + '\\ \\text{m/s}$ relative to the train. What is her velocity relative to the ground? (East positive.)',
         ans(u + w, 0.01),
         ['Galilean addition: $v_{\\text{ground}} = v_{\\text{train frame}} + u$.', '$v = ' + pn(w) + ' + ' + u + ' = ' + qg(fix(u + w), 'ms') + '$ (east).'],
         'Add the frame\'s velocity to the velocity measured in the frame.', 'ms', { k: 'gal1', v: w, u: u, dir: 'toGround' });
-      var vb = R.pick([5, 10, 30, 40]) * R.pick([1, -1]);
+      var vb = R.pick([5, 10, 30, 40, 8, 12, 15, 20, 25, 50]) * R.pick([1, -1]);
       return P('A train moves east at $' + u + '\\ \\text{m/s}$. A car on the road beside it moves ' + (vb > 0 ? 'east' : 'west') + ' at $' + M.abs(vb) + '\\ \\text{m/s}$ relative to the ground. What is the car\'s velocity measured by a passenger in the train? (East positive.)',
         ans(vb - u, 0.01),
         ['In the train\'s frame, $v\' = v - u$.', '$v\' = ' + pn(vb) + ' - ' + u + ' = ' + qg(vb - u, 'ms') + '$' + (vb - u < 0 ? ': the car moves west relative to the train.' : '.')],
         'Subtract the frame\'s velocity.', 'ms', { k: 'gal1', v: vb, u: u, dir: 'toFrame' });
     }
     if (shape === 'accel') {
-      var uu = R.pick([20, 25, 30, 40]);
+      var uu = R.pick([20, 25, 30, 40, 15, 18, 22, 35, 45]);
       return P('A train moves along a straight, level track at a steady $' + uu + '\\ \\text{m/s}$. A passenger drops a ball. What is the size of the ball\'s acceleration as measured by the passenger? (No air resistance; $g = 9.8\\ \\text{m/s}^2$.)',
         ans(9.8, 0.01),
         ['In the train\'s frame, $\\vec{r}\\,\' = \\vec{r} - \\vec{u}t$, so $\\vec{v}\\,\' = \\vec{v} - \\vec{u}$.', 'Differentiate again: $\\vec{a}\\,\' = \\vec{a} - \\dfrac{d\\vec{u}}{dt} = \\vec{a}$, because $\\vec{u}$ is constant.',
@@ -533,7 +533,7 @@
         'Differentiate $\\vec{v}\\,\' = \\vec{v} - \\vec{u}$ when $\\vec{u}$ is constant.', 'ms2', { k: 'galA', u: uu });
     }
     if (shape === 'rain') {
-      var vr = R.pick([4, 5, 6, 8, 10]), vc = R.pick([5, 8, 10, 12, 15, 20]), ang = deg(M.atan(vc / vr)), ask = R.pick(['ang', 'speed']), spd = M.hypot(vr, vc);
+      var vr = R.pick([4, 5, 6, 8, 10, 3, 7, 9, 12]), vc = R.pick([5, 8, 10, 12, 15, 20, 6, 9, 14, 18, 25]), ang = deg(M.atan(vc / vr)), ask = R.pick(['ang', 'speed']), spd = M.hypot(vr, vc);
       if (ask === 'ang') return P('Rain falls straight down at $' + vr + '\\ \\text{m/s}$. A car drives through it at $' + vc + '\\ \\text{m/s}$. At what angle from vertical do the raindrops streak across the car\'s side window?',
         ans(ang, 0.01),
         ['In the car\'s frame, $\\vec{v}_{\\text{rain}}\' = \\vec{v}_{\\text{rain}} - \\vec{v}_{\\text{car}} = \\langle -' + vc + ', -' + vr + ' \\rangle\\ \\text{m/s}$ (forward and up positive).',
@@ -555,7 +555,7 @@
         'Differentiate, then subtract the frame velocity.', null, { k: 'galvec', x: polyPlain(cx), y: polyPlain(cy), ux: ux, uy: uy, t: t1 });
     }
     // wind: plane heading north at airspeed va, wind from west (blowing east) at vw
-    var va = R.pick([60, 80, 100, 120, 150]), vw = R.pick([15, 20, 25, 30, 40]), gs = M.hypot(va, vw), want = R.pick(['speed', 'ang']), drift = deg(M.atan(vw / va));
+    var va = R.pick([60, 80, 100, 120, 150, 50, 70, 90, 110, 140, 180, 200]), vw = R.pick([15, 20, 25, 30, 40, 10, 12, 18, 35, 45, 50]), gs = M.hypot(va, vw), want = R.pick(['speed', 'ang']), drift = deg(M.atan(vw / va));
     return P('A small plane points due north with an airspeed of $' + va + '\\ \\text{m/s}$. The air moves east at $' + vw + '\\ \\text{m/s}$ relative to the ground. ' + (want === 'speed' ? 'Find the plane\'s speed relative to the ground.' : 'By what angle east of north does its path over the ground drift?'),
       ans(want === 'speed' ? gs : drift, 0.01),
       ['The air is a frame moving at $\\vec{u} = \\langle ' + vw + ', 0 \\rangle$; the plane\'s velocity in that frame is $\\langle 0, ' + va + ' \\rangle$.', 'Ground velocity: $\\vec{v} = \\vec{v}\\,\' + \\vec{u} = \\langle ' + vw + ', ' + va + ' \\rangle\\ \\text{m/s}$.',
@@ -639,7 +639,7 @@
 
   G('mech.linear-drag', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['vT', 'tau', 'vT'], ['vt', 'tfrac', 'vT', 'coastx'], ['tfrac', 'vt', 'coastv', 'coastx']));
-    var m = R.pick([0.02, 0.05, 0.1, 0.2]), b = R.pick([0.05, 0.1, 0.2, 0.4, 0.5]), vT = m * g0 / b, tau = m / b;
+    var m = R.pick([0.02, 0.05, 0.1, 0.2, 0.01, 0.03, 0.04, 0.08, 0.15, 0.25, 0.3]), b = R.pick([0.05, 0.1, 0.2, 0.4, 0.5, 0.02, 0.08, 0.15, 0.25, 0.3, 0.6, 0.8]), vT = m * g0 / b, tau = m / b;
     var intro = 'A small sphere of mass $' + qg(m, 'kg') + '$ sinks through thick oil, which pushes back with a drag force $F = -bv$, where $b = ' + qg(b, 'Nsm') + '$. Ignore buoyancy. ';
     if (shape === 'vT') return P(intro + 'What is its terminal speed?',
       ans(vT, 0.01),
@@ -658,7 +658,7 @@
         'Find $v_T$ and $\\tau$ first.', 'ms', { k: 'ldrag', m: m, b: b, t: t1, want: 'v' });
     }
     if (shape === 'tfrac') {
-      var f = R.pick([0.5, 0.9, 0.95, 0.99]), tf = -tau * M.log(1 - f);
+      var f = R.pick([0.5, 0.9, 0.95, 0.99, 0.25, 0.63, 0.75, 0.8, 0.98]), tf = -tau * M.log(1 - f);
       return P(intro + 'Dropped from rest, how long does it take to reach $' + (f * 100) + '\\%$ of its terminal speed?',
         ans(tf, 0.02),
         ['$v(t) = v_T\\left(1 - e^{-t/\\tau}\\right)$ with $\\tau = \\dfrac{m}{b} = ' + qx(tau, 's', 4) + '$.', 'Set $v = ' + gx(f) + 'v_T$: $e^{-t/\\tau} = ' + gx(fix(1 - f)) + '$, so $t = -\\tau\\ln(' + gx(fix(1 - f)) + ') = ' + fx(-M.log(1 - f), 4) + '\\tau$.',
@@ -666,9 +666,9 @@
         'Set $1 - e^{-t/\\tau}$ equal to the fraction and solve for $t$.', 's', { k: 'ldrag', m: m, b: b, f: f, want: 'tfrac' });
     }
     // coasting horizontally: m dv/dt = -bv
-    var mc_ = R.pick([0.5, 1, 2, 5]), bc = R.pick([0.5, 1, 2]), v0 = R.int(2, 8), tc = mc_ / bc;
+    var mc_ = R.pick([0.5, 1, 2, 5, 0.2, 1.5, 3, 4, 8, 10]), bc = R.pick([0.5, 1, 2, 0.2, 0.25, 0.4, 1.5, 4]), v0 = R.int(2, 15), tc = mc_ / bc;
     var introC = 'A $' + qg(mc_, 'kg') + '$ puck glides across a layer of thick grease at $' + qg(v0, 'ms') + '$. The only horizontal force is drag $F = -bv$ with $b = ' + qg(bc, 'Nsm') + '$. ';
-    if (shape === 'coastv') { var t2 = R.pick([1, 2, 3]), v2 = v0 * M.exp(-t2 / tc);
+    if (shape === 'coastv') { var t2 = R.pick([1, 2, 3, 0.5, 1.5, 2.5, 4, 5]); if (t2 / tc > 3) t2 = sgf(tc * R.pick([0.5, 1, 1.5, 2, 2.5]), 2); var v2 = v0 * M.exp(-t2 / tc);
       return P(introC + 'How fast is it moving after $' + qg(t2, 's') + '$?',
         ans(v2, 0.02),
         ['$m\\dfrac{dv}{dt} = -bv$, so $\\dfrac{dv}{v} = -\\dfrac{b}{m}dt$ and $v(t) = v_0e^{-t/\\tau}$ with $\\tau = \\dfrac{m}{b} = ' + qx(tc, 's', 4) + '$.', '$v(' + t2 + ') = ' + v0 + 'e^{-' + fx(t2 / tc, 4) + '} = ' + qx(v2, 'ms') + '$.'],
@@ -688,7 +688,7 @@
       ans(vT, 0.02),
       ['At terminal speed the drag balances the weight: $\\tfrac{1}{2}C\\rho Av_T^2 = mg$.', '$v_T = \\sqrt{\\dfrac{2mg}{C\\rho A}} = \\sqrt{\\dfrac{2(' + gx(m) + ')(9.8)}{(' + gx(C) + ')(1.2)(' + gx(A) + ')}} = ' + qx(vT, 'ms') + '$.'],
       'Set the drag force equal to the weight.', 'ms', { k: 'qdrag', m: m, C: C, A: A, rho: rho, want: 'vT' });
-    if (shape === 'drag') { var v = sgf(vT * R.pick([0.3, 0.5, 0.6, 0.8]), 2), Fd = 0.5 * C * rho * A * v * v;
+    if (shape === 'drag') { var v = sgf(vT * R.pick([0.3, 0.5, 0.6, 0.8, 0.2, 0.25, 0.4, 0.7, 0.75, 0.9, 0.35]), 2), Fd = 0.5 * C * rho * A * v * v;
       return P(intro + 'What drag force acts on it when it falls at $' + qg(v, 'ms') + '$?',
         ans(Fd, 0.02),
         ['$F_D = \\tfrac{1}{2}C\\rho Av^2 = \\tfrac{1}{2}(' + gx(C) + ')(1.2)(' + gx(A) + ')(' + gx(v) + ')^2 = ' + qx(Fd, 'N') + '$.', 'Compare with its weight, $mg = ' + qx(m * g0, 'N') + '$: the drag is still smaller, so it is still speeding up.'],
@@ -702,7 +702,7 @@
         ans(Cm, 0.02),
         ['At terminal speed, $\\tfrac{1}{2}C\\rho Av_T^2 = mg$.', '$C = \\dfrac{2mg}{\\rho Av_T^2} = \\dfrac{2(' + gx(m) + ')(9.8)}{(1.2)(' + gx(A) + ')(' + gx(vTm) + ')^2} = ' + fx(Cm, 3) + '$.'],
         'Solve the terminal-speed balance for $C$.', null, { k: 'qdrag', m: m, A: A, rho: rho, vT: vTm, want: 'C' }); }
-    if (shape === 'ratio') { var k = R.pick([4, 9, 2]);
+    if (shape === 'ratio') { var k = R.pick([4, 9, 2, 3, 5, 6, 8, 10, 16, 25, 1.5, 2.5, 3.5, 7, 12, 15, 20]);
       return P('Two balls have the same size and shape, so the same $C$ and $A$, but one is ' + k + ' times as massive as the other. In air (quadratic drag), what is the ratio of the heavy ball\'s terminal speed to the light ball\'s?',
         ans(M.sqrt(k), 0.01),
         ['$v_T = \\sqrt{\\dfrac{2mg}{C\\rho A}}$, so with $C$, $\\rho$ and $A$ the same, $v_T \\propto \\sqrt{m}$.', 'Ratio $= \\sqrt{' + k + '} = ' + fx(M.sqrt(k), 3) + '$.', 'In air the heavier ball does fall faster. In a vacuum both would fall together, with the same acceleration $g$.'],
@@ -754,14 +754,14 @@
 
   G('mech.pulley-constraints', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['rate', 'table', 'table'], ['table', 'hang', 'tableT', 'rate'], ['hang', 'hangT', 'tableT', 'hang']));
-    if (shape === 'rate') { var u = R.pick([0.4, 0.6, 0.8, 1.2, 1.5, 2]), up_ = R.coin();
+    if (shape === 'rate') { var u = R.pick([0.4, 0.6, 0.8, 1.2, 1.5, 2, 0.2, 0.3, 0.5, 1, 1.6, 2.4, 2.5, 3]), up_ = R.coin();
       return P('A load hangs from a movable pulley. One end of the rope is tied to the ceiling; the rope runs down around the movable pulley and back up over a fixed pulley, and you pull its free end down at ' + (up_ ? '$' + qg(u, 'ms') + '$. How fast does the load rise?' : 'a steady speed. The load rises at $' + qg(u, 'ms') + '$. How fast must you pull the rope?'),
         ans(up_ ? u / 2 : 2 * u, 0.01),
         ['Let $y$ be the load\'s height and $s$ the length of rope you have pulled through. The rope\'s length is fixed, and two strands hold the movable pulley.', 'When the load rises by $\\Delta y$, both strands shorten by $\\Delta y$, so $2\\Delta y$ of rope comes out at your hand: $s = 2y + \\text{constant}$.',
           'Differentiate: $\\dfrac{ds}{dt} = 2\\dfrac{dy}{dt}$, so ' + (up_ ? 'the load rises at $\\dfrac{' + gx(u) + '}{2} = ' + qg(fix(u / 2), 'ms') + '$.' : 'you must pull at $2(' + gx(u) + ') = ' + qg(fix(2 * u), 'ms') + '$.')],
         'Write the rope length in terms of the positions, then differentiate.', 'ms', { k: 'rope', u: u, want: up_ ? 'load' : 'pull' }); }
     if (shape === 'table' || shape === 'tableT') {
-      var m1 = R.pick([1, 2, 3, 4, 5]), m2 = R.pick([2, 4, 6, 8, 10]), a2 = m2 * g0 / (m2 + 4 * m1), a1 = 2 * a2, T = m1 * a1, askT = shape === 'tableT';
+      var m1 = R.pick([1, 2, 3, 4, 5, 0.5, 1.5, 2.5, 6, 8]), m2 = R.pick([2, 4, 6, 8, 10, 1, 3, 5, 7, 12, 15]), a2 = m2 * g0 / (m2 + 4 * m1), a1 = 2 * a2, T = m1 * a1, askT = shape === 'tableT';
       var q = 'A $' + m1 + '\\ \\text{kg}$ block on a frictionless table is tied to a rope that runs over a light pulley at the table\'s edge, down around a light movable pulley, and up to a hook on the underside of the table. A $' + m2 + '\\ \\text{kg}$ block hangs from the movable pulley. ';
       var st = ['Constraint: when the hanging block drops by $d$, both strands around the movable pulley lengthen by $d$, so the table block slides $2d$. Thus $a_1 = 2a_2$.',
         'Table block: $T = m_1a_1 = 2m_1a_2$. Hanging block (two strands pull up): $m_2g - 2T = m_2a_2$.',
@@ -773,7 +773,7 @@
         'The rope length gives $a_1 = 2a_2$; write Newton\'s second law for each block.', 'ms2', { k: 'pulley', cfg: 'table', m1: m1, m2: m2, want: which });
     }
     // hang: load m1 on movable pulley, counterweight m2 on the free end over a fixed pulley (the kit's movable-pulley scene)
-    var M1 = R.pick([4, 6, 8, 10, 12]), M2 = R.pick([3, 4, 5, 6, 7, 8]);
+    var M1 = R.pick([4, 6, 8, 10, 12, 3, 5, 7, 9, 14, 16, 20]), M2 = R.pick([3, 4, 5, 6, 7, 8, 2, 9, 10, 12]);
     if (2 * M2 === M1) M2 += 1;
     var aL = (2 * M2 - M1) * g0 / (M1 + 4 * M2), aC = 2 * aL, Th = M2 * (g0 - aC), askT2 = shape === 'hangT';
     var q2 = 'A $' + M1 + '\\ \\text{kg}$ load hangs from a light movable pulley. One end of the rope is tied to the ceiling; the rope runs down around the movable pulley, up over a fixed pulley, and down to a $' + M2 + '\\ \\text{kg}$ counterweight. ';
@@ -966,29 +966,29 @@
 
   G('mech.potential-from-force', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['spring', 'const', 'dU'], ['spring', 'cubic', 'dU', 'grav'], ['cubic', 'grav', 'dU', 'cubic']));
-    if (shape === 'spring') { var k = R.pick([10, 20, 30, 40, 50, 60, 80, 100, 150, 200, 300, 500]);
+    if (shape === 'spring') { var k = R.pick([10, 20, 30, 40, 50, 60, 80, 100, 150, 200, 300, 500, 12, 15, 25, 35, 70, 90, 120, 250, 350, 400]);
       return P('A spring exerts $F(x) = -' + kt(k, 'x') + '$ (newtons, $x$ in meters from its natural length). Find its potential energy $U(x)$ in joules, with $U = 0$ at $x = 0$.',
         expr(plainNum(k / 2) + '*x^2', ['x']),
         ['$U(x) = -\\int_0^x F(x\')\\,dx\' = -\\int_0^x (-' + kt(k, "x'") + ')\\,dx\' = ' + cf(k) + '\\cdot\\dfrac{x^2}{2}$.', '$U(x) = ' + cf(fix(k / 2)) + 'x^2$, which is $\\tfrac{1}{2}kx^2$: zero at natural length and positive on both sides.'],
         'Use $U(x) = -\\int F\\,dx$ starting from the reference point.', null, { k: 'Uexpr', F: '-' + k + '*x', ref: 0 }); }
-    if (shape === 'const') { var m = R.pick([0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]);
+    if (shape === 'const') { var m = R.pick([0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10, 0.2, 0.25, 0.75, 1.2, 3.5, 7, 12, 15, 20, 0.3, 0.35, 0.4, 0.6, 0.7, 0.8, 0.9, 9]);
       return P('A $' + m + '\\ \\text{kg}$ box near Earth\'s surface feels gravity $F_y = -' + gx(m * g0) + '\\ \\text{N}$ ($y$ up, in meters). Find the gravitational potential energy $U(y)$ in joules, with $U = 0$ at $y = 0$.',
         expr(plainNum(m * g0) + '*y', ['y']),
         ['$U(y) = -\\int_0^y F_y\\,dy\' = -\\int_0^y (-' + gx(m * g0) + ')\\,dy\'$.', '$U(y) = ' + gx(m * g0) + 'y$, which is $mgy$: it grows as the box rises, because gravity points down.'],
         'Mind the minus sign in $U = -\\int F\\,dy$.', null, { k: 'Uexpr', F: '-' + plainNum(m * g0), ref: 0, v: 'y' }); }
-    if (shape === 'cubic') { var k2 = R.pick([2, 4, 6, 8, 10, 20]), b = R.pick([2, 4, 8, 12, 16, 20]);
+    if (shape === 'cubic') { var k2 = R.pick([2, 4, 6, 8, 10, 20, 1, 3, 5, 12, 15, 30]), b = R.pick([2, 4, 8, 12, 16, 20, 1, 3, 5, 6, 10, 24, 30]);
       return P('A stiffening spring pulls back with $F(x) = -' + kt(k2, 'x') + ' - ' + cf(b) + 'x^3$ (newtons, $x$ in meters). Find $U(x)$ in joules, with $U(0) = 0$.',
         expr(plainNum(k2 / 2) + '*x^2+' + plainNum(b / 4) + '*x^4', ['x']),
         ['$U(x) = -\\int_0^x F\\,dx\' = \\int_0^x \\left(' + kt(k2, "x'") + ' + ' + cf(b) + "x'^3" + '\\right)dx\'$.', '$U(x) = ' + cf(fix(k2 / 2)) + 'x^2 + ' + cf(fix(b / 4)) + 'x^4$.', 'Check: $-\\dfrac{dU}{dx} = -' + kt(k2, 'x') + ' - ' + cf(b) + 'x^3 = F$.'],
         'Integrate each term, and keep the minus sign.', null, { k: 'Uexpr', F: '-' + k2 + '*x-' + b + '*x^3', ref: 0 }); }
-    if (shape === 'dU') { var a = R.pick([3, 6, 9, 12]), x1 = R.int(0, 2), x2 = x1 + R.int(1, 2), up = R.coin(), dU = up ? a * (M.pow(x2, 3) - M.pow(x1, 3)) / 3 : -a * (M.pow(x2, 3) - M.pow(x1, 3)) / 3;
+    if (shape === 'dU') { var a = R.pick([3, 6, 9, 12, 15, 18, 21, 24, 30]), x1 = R.int(0, 3), x2 = x1 + R.int(1, 3), up = R.coin(), dU = up ? a * (M.pow(x2, 3) - M.pow(x1, 3)) / 3 : -a * (M.pow(x2, 3) - M.pow(x1, 3)) / 3;
       var Ftex = (up ? '-' : '') + cf(a) + 'x^2';
       return P('A conservative force $F(x) = ' + Ftex + '$ (newtons, $x$ in meters) acts on a particle. By how much does the potential energy change, $\\Delta U = U(' + x2 + ') - U(' + x1 + ')$, as the particle moves from $x = ' + x1 + '\\ \\text{m}$ to $x = ' + x2 + '\\ \\text{m}$?',
         ans(dU, 0.01),
         ['$\\Delta U = -\\int_{' + x1 + '}^{' + x2 + '} F\\,dx = -\\left[' + (up ? '-' : '') + fr(a, 3) + 'x^3\\right]_{' + x1 + '}^{' + x2 + '}$.', '$\\Delta U = ' + (up ? '' : '-') + fr(a, 3) + '\\left(' + x2 + '^3 - ' + x1 + '^3\\right) = ' + qg(dU, 'J') + '$.',
           up ? 'The force points in $-x$ while the particle moves in $+x$: the force does negative work, so $U$ rises.' : 'The force points along the motion and does positive work, so $U$ falls.'],
         '$\\Delta U$ is minus the work done by the force.', 'J', { k: 'dU', F: (up ? '-' : '') + a + '*x^2', x1: x1, x2: x2 }); }
-    var C = R.pick([2, 4, 6, 8, 12]), X = R.pick([1, 2, 3, 4]), Ug = -C / X;
+    var C = R.pick([2, 4, 6, 8, 12, 3, 5, 10, 15, 16, 20, 24]), X = R.pick([1, 2, 3, 4, 5, 6, 8, 7]), Ug = -C / X;
     return P('An attractive force $F(r) = -\\dfrac{' + C + '}{r^2}$ (newtons, $r$ in meters) pulls a particle toward the origin. Taking $U = 0$ at $r \\to \\infty$, find $U$ at $r = ' + X + '\\ \\text{m}$.',
       ans(Ug, 0.01),
       ['$U(r) = -\\int_{\\infty}^{r} F\\,dr\' = \\int_{\\infty}^{r} \\dfrac{' + C + '}{r\'^2}\\,dr\' = \\left[-\\dfrac{' + C + '}{r\'}\\right]_{\\infty}^{r} = -\\dfrac{' + C + '}{r}$.', '$U(' + X + ') = -\\dfrac{' + C + '}{' + X + '} = ' + qx(Ug, 'J') + '$: negative, because work would have to be done to pull the particle away to where $U = 0$.'],
@@ -1046,7 +1046,7 @@
           '$\\dfrac{d^2U}{dx^2} = ' + (12 * a) + 'x^2 - ' + (2 * b) + '$: at $x = 0$ it is $-' + (2 * b) + ' < 0$ (a hilltop, unstable); at $x = \\pm' + gx(fix(xw)) + '$ it is $' + gx(12 * a * xw * xw - 2 * b) + ' > 0$ (a valley, stable).',
           'A turning point depends on the energy, not only on $U$: it is where $U = E$, and there the force is generally not zero.'],
         'Find $dU/dx$ and $d^2U/dx^2$ at that point.', null, { k: 'mc' }, { name: 'ph-energy', opts: { mode: 'ucurve', U: (a === 1 ? '' : a + '*') + 'x^4-' + b + '*x^2', E: -b * b / (8 * a), domain: [-2.2 * xw, 2.2 * xw], range: [-1.25 * b * b / (4 * a), 0.6 * b * b / (4 * a)], x0: xw, interactive: false, quiet: true, hide: ['force', 'turning', 'equilibria', 'kgap'] } }); }
-    if (shape === 'vmax' || shape === 'vmax3') { var m = R.pick([0.5, 1, 2, 4]), Umin = shape === 'vmax' ? 0 : -R.pick([2, 4, 8]), kk = R.pick([2, 4, 6]), E2 = R.pick([2, 4, 8, 9, 16]), vmax = M.sqrt(2 * (E2 - Umin) / m);
+    if (shape === 'vmax' || shape === 'vmax3') { var m = R.pick([0.5, 1, 2, 4, 0.25, 1.5, 3, 5, 8]), Umin = shape === 'vmax' ? 0 : -R.pick([2, 4, 8]), kk = R.pick([2, 4, 6, 1, 3, 8]), E2 = R.pick([2, 4, 8, 9, 16, 1, 3, 5, 6, 12, 18, 25]), vmax = M.sqrt(2 * (E2 - Umin) / m);
       var Ux = shape === 'vmax' ? kt(kk, 'x') + '^2' : cf(kk) + '(x - 1)^2 - ' + M.abs(Umin), Up = shape === 'vmax' ? kk + '*x^2' : kk + '*(x-1)^2-' + M.abs(Umin);
       return P('A $' + qg(m, 'kg') + '$ particle moves in the potential $U(x) = ' + Ux + '$ (joules, meters) with total energy $E = ' + qg(E2, 'J') + '$. What is its greatest speed?',
         ans(vmax, 0.01),
@@ -1064,7 +1064,7 @@
 
   G('mech.instantaneous-power', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['Fv', 'vec', 'Fv'], ['xt', 'vec', 'Fv', 'constP'], ['constP', 'xt', 'drag', 'vec']));
-    if (shape === 'Fv') { var F = R.pick([300, 400, 500, 600, 800]), v = R.pick([15, 20, 25, 30]);
+    if (shape === 'Fv') { var F = R.pick([300, 400, 500, 600, 800, 350, 700]), v = R.pick([15, 20, 25, 30, 16, 21, 24, 29]);
       return P('A car cruises at a steady $' + qg(v, 'ms') + '$ on a level road. Air drag and rolling friction add up to $' + qg(F, 'N') + '$ against it. What power must the engine deliver to the wheels?',
         ans(F * v, 0.01),
         ['At steady speed the driving force from the road equals the resistance, $' + F + '\\ \\text{N}$.', 'Power: $P = \\dfrac{dW}{dt} = \\vec{F}\\cdot\\vec{v} = Fv = ' + F + '(' + v + ') = ' + qg(F * v, 'W') + '$ (' + gx(F * v / 1000) + ' kW).'],
@@ -1081,12 +1081,12 @@
         ans(Pn, 0.01),
         ['$v(t) = ' + poly(dc) + '$ and $a(t) = ' + poly(d2) + '$, so at $t = ' + t1 + '$: $v = ' + vv + '\\ \\text{m/s}$, $a = ' + aa + '\\ \\text{m/s}^2$.', 'Net force: $F = ma = ' + (m * aa) + '\\ \\text{N}$.', '$P = Fv = (' + (m * aa) + ')(' + vv + ') = ' + qg(Pn, 'W') + '$. This equals $\\dfrac{dK}{dt}$, the rate the kinetic energy changes.'],
         'Find $F = ma$ and $v$ at that instant, then multiply.', 'W', { k: 'power', m: m, x: polyPlain(c), t: t1, kind: 'dKdt' }); }
-    if (shape === 'constP') { var Pw = R.pick([20, 40, 60, 80, 100]) * 1000, mc_ = R.pick([1000, 1200, 1500, 2000]), vT = R.pick([10, 15, 20, 25]), tT = mc_ * vT * vT / (2 * Pw);
+    if (shape === 'constP') { var Pw = R.pick([20, 40, 60, 80, 100, 25, 30, 35, 70, 90]) * 1000, mc_ = R.pick([1000, 1200, 1500, 2000]), vT = R.pick([10, 15, 20, 25, 11, 16, 19, 24]), tT = mc_ * vT * vT / (2 * Pw);
       return P('A $' + gx(mc_) + '\\ \\text{kg}$ car starts from rest and its engine delivers a constant $' + gx(Pw / 1000) + '\\ \\text{kW}$ to the wheels. Ignoring friction and drag, how long does it take to reach $' + qg(vT, 'ms') + '$?',
         ans(tT, 0.01),
         ['Constant power means $\\dfrac{dK}{dt} = P$, so $K = Pt$ starting from rest.', '$\\tfrac{1}{2}mv^2 = Pt$, so $t = \\dfrac{mv^2}{2P} = \\dfrac{' + gx(mc_) + '(' + vT + ')^2}{2(' + gx(Pw) + ')} = ' + qx(tT, 's') + '$.', 'The force $P/v$ is huge at low speed and fades as the car speeds up, so the constant-acceleration equations do not apply.'],
         'With constant power, the kinetic energy grows linearly in time.', 's', { k: 'power', P: Pw, m: mc_, v: vT, kind: 'constP' }); }
-    var C = 0.3, A = R.pick([2, 2.2, 2.5]), v1 = R.pick([20, 25, 30, 35]), Pd = 0.5 * C * 1.2 * A * v1 * v1 * v1;
+    var C = 0.3, A = R.pick([2, 2.2, 2.5]), v1 = R.pick([20, 25, 30, 35, 21, 26, 29, 34]), Pd = 0.5 * C * 1.2 * A * v1 * v1 * v1;
     return P('A car has drag coefficient $C = 0.3$ and frontal area $' + qg(A, 'm2') + '$. Air density is $1.2\\ \\text{kg/m}^3$. What power does the engine need just to push through the air at $' + qg(v1, 'ms') + '$?',
       ans(Pd, 0.02),
       ['Drag force: $F_D = \\tfrac{1}{2}C\\rho Av^2 = \\tfrac{1}{2}(0.3)(1.2)(' + gx(A) + ')(' + v1 + ')^2 = ' + qx(0.5 * C * 1.2 * A * v1 * v1, 'N') + '$.', 'Power: $P = F_Dv = \\tfrac{1}{2}C\\rho Av^3 = ' + qx(Pd, 'W') + '$.', 'Because $P \\propto v^3$, driving 10% faster takes about 33% more power against drag.'],
@@ -1095,8 +1095,8 @@
 
   G('mech.escape-speed', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['esc', 'esc', 'mass'], ['esc', 'alt', 'hmax', 'mass'], ['vinf', 'hmax', 'alt', 'vinf']));
-    var B = R.chance(0.45) ? R.pick(BODIES) : (function () { var f = R.pick([0.5, 2, 3, 4, 5, 6, 8, 10]), hh = R.pick([0.8, 1.1, 1.2, 1.5, 1.8, 2]); return { n: 'a rocky exoplanet', M: sgf(f * 5.972e24, 3), R: sgf(hh * 6.371e6, 3) }; })(), GM = GN * B.M;
-    if (shape === 'mass') { var m1 = R.pick([5, 20, 50, 200, 500]), m2 = m1 * R.pick([10, 100, 1000]), ve = M.sqrt(2 * GM / B.R);
+    var B = R.chance(0.45) ? R.pick(BODIES) : (function () { var f = R.pick([0.5, 2, 3, 4, 5, 6, 8, 10, 0.3, 0.8, 1.5, 2.5, 7, 12, 15, 0.35, 0.4, 0.6, 0.7, 0.9, 1, 1.2, 3.5, 9]), hh = R.pick([0.8, 1.1, 1.2, 1.5, 1.8, 2, 0.6, 0.7, 0.9, 1.3, 1.4, 1.6, 2.2, 2.5, 1]); return { n: 'a rocky exoplanet', M: sgf(f * 5.972e24, 3), R: sgf(hh * 6.371e6, 3) }; })(), GM = GN * B.M;
+    if (shape === 'mass') { var m1 = R.pick([5, 20, 50, 200, 500, 1, 10, 100, 1000, 2000, 1.2, 3, 6, 12, 30, 70, 120, 350, 700, 1500]), m2 = m1 * R.pick([10, 100, 1000, 12, 120, 900]), ve = M.sqrt(2 * GM / B.R);
       return P('A $' + gx(m1) + '\\ \\text{kg}$ probe and a $' + gx(m2) + '\\ \\text{kg}$ probe are launched from the surface of ' + B.n + ' ($M = ' + Mtex(B) + '$, $R = ' + qg(B.R, 'm') + '$). What escape speed does the heavier probe need, in km/s? (Ignore the air.)',
         ans(ve / 1000, 0.02),
         ['To escape, $\\tfrac{1}{2}mv^2 - \\dfrac{GMm}{R} \\ge 0$. The probe\'s mass $m$ is in every term, so it cancels: $v_{\\text{esc}} = \\sqrt{\\dfrac{2GM}{R}}$, the same for both probes.',
@@ -1109,17 +1109,17 @@
           '$v_{\\text{esc}} = \\sqrt{\\dfrac{2GM}{R}} = \\sqrt{\\dfrac{2(6.674 \\times 10^{-11})(' + gx(B.M) + ')}{' + gx(B.R) + '}} = ' + qx(ve2, 'ms') + '$.', 'That is $' + qx(ve2 / 1000, 'kms') + '$.'],
         'Set the total energy $K + U$ equal to zero.', 'kms', { k: 'esc', GM: GM, R: B.R, want: 'vesc', scale: 1000 }); }
     var E = BODIES[0], GME = GN * E.M;
-    if (shape === 'alt') { var h = R.pick([300, 400, 1000, 2000, 5000, 20000]) * 1000, va = M.sqrt(2 * GME / (E.R + h));
+    if (shape === 'alt') { var h = R.pick([300, 400, 1000, 2000, 5000, 20000, 200, 500, 600, 800, 1500, 3000, 8000, 10000, 35786, 250, 350, 700, 900, 1200, 2500, 3500, 6000, 7000, 9000, 12000, 15000, 25000, 30000, 35000]) * 1000, va = M.sqrt(2 * GME / (E.R + h));
       return P('A spacecraft coasts at an altitude of $' + gx(h / 1000) + '\\ \\text{km}$ above Earth ($M = ' + Mtex(E) + '$, $R = ' + qg(E.R, 'm') + '$). What is the escape speed from that height, in km/s?',
         ans(va / 1000, 0.02),
         ['Use the distance from Earth\'s <b>center</b>: $r = R + h = ' + gx(E.R) + ' + ' + gx(h) + ' = ' + fx(E.R + h, 4) + '\\ \\text{m}$.', '$v_{\\text{esc}} = \\sqrt{\\dfrac{2GM}{r}} = ' + qx(va, 'ms') + ' = ' + qx(va / 1000, 'kms') + '$, a little less than from the surface.'],
         'The $r$ in $U = -GMm/r$ is measured from the center.', 'kms', { k: 'esc', GM: GME, R: E.R + h, want: 'vesc', scale: 1000 }); }
-    if (shape === 'vinf') { var v0 = R.pick([12, 13, 14, 15, 16, 18]) * 1000, vesc = M.sqrt(2 * GME / E.R), vi = M.sqrt(v0 * v0 - vesc * vesc);
+    if (shape === 'vinf') { var v0 = R.pick([12, 13, 14, 15, 16, 18, 11.5, 12.5, 13.5, 17, 20, 22]) * 1000, vesc = M.sqrt(2 * GME / E.R), vi = M.sqrt(v0 * v0 - vesc * vesc);
       return P('A probe leaves Earth\'s surface (ignore the air) at $' + gx(v0 / 1000) + '\\ \\text{km/s}$, faster than the escape speed. How fast is it moving when it is very far from Earth, in km/s? (Earth: $M = ' + Mtex(E) + '$, $R = ' + qg(E.R, 'm') + '$; ignore the Sun.)',
         ans(vi / 1000, 0.02),
         ['Energy is conserved: $\\tfrac{1}{2}mv_0^2 - \\dfrac{GMm}{R} = \\tfrac{1}{2}mv_{\\infty}^2 + 0$.', 'So $v_{\\infty}^2 = v_0^2 - \\dfrac{2GM}{R} = v_0^2 - v_{\\text{esc}}^2$, with $v_{\\text{esc}} = ' + qx(vesc, 'ms', 4) + '$.', '$v_{\\infty} = \\sqrt{(' + gx(v0) + ')^2 - (' + fx(vesc, 4) + ')^2} = ' + qx(vi, 'ms') + ' = ' + qx(vi / 1000, 'kms') + '$.'],
         'Far away, $U \\to 0$; set the energies equal.', 'kms', { k: 'esc', GM: GME, R: E.R, v0: v0, want: 'vinf', scale: 1000 }); }
-    var vu = R.pick([3, 4, 5, 6, 7, 8]) * 1000, rmax = 1 / (1 / E.R - vu * vu / (2 * GME)), hm = rmax - E.R;
+    var vu = R.pick([3, 4, 5, 6, 7, 8, 2, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 9, 10]) * 1000, rmax = 1 / (1 / E.R - vu * vu / (2 * GME)), hm = rmax - E.R;
     return P('A projectile is fired straight up from Earth\'s surface at $' + gx(vu / 1000) + '\\ \\text{km/s}$ (ignore the air). How high above the surface does it rise, in km? (Earth: $M = ' + Mtex(E) + '$, $R = ' + qg(E.R, 'm') + '$.)',
       ans(hm / 1000, 0.02),
       ['At this speed $g$ is not constant over the climb, so use $U = -GMm/r$: $\\tfrac{1}{2}mv_0^2 - \\dfrac{GMm}{R} = -\\dfrac{GMm}{r_{\\max}}$.', '$\\dfrac{1}{r_{\\max}} = \\dfrac{1}{R} - \\dfrac{v_0^2}{2GM} = ' + fx(1 / E.R, 4) + ' - ' + fx(vu * vu / (2 * GME), 4) + ' = ' + fx(1 / rmax, 4) + '\\ \\text{m}^{-1}$.',
@@ -1300,26 +1300,26 @@
 
   G('mech.moment-of-inertia-integral', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['rodend', 'rodcenter', 'lin'], ['lin', 'rodend', 'disk', 'linfar'], ['linear2', 'sigma', 'linfar', 'disk']));
-    var Mr = R.pick([0.5, 1, 1.5, 2, 3, 4]), L = R.pick([0.5, 1, 1.2, 1.5, 2]);
+    var Mr = R.pick([0.5, 1, 1.5, 2, 3, 4, 0.2, 0.25, 0.8, 1.2, 2.5, 5, 6]), L = R.pick([0.5, 1, 1.2, 1.5, 2, 0.3, 0.4, 0.6, 0.8, 1.8, 2.5, 3]);
     if (shape === 'rodend' || shape === 'rodcenter') { var end = shape === 'rodend', I = end ? Mr * L * L / 3 : Mr * L * L / 12;
       return P('A uniform rod of mass $' + qg(Mr, 'kg') + '$ and length $' + qg(L, 'm') + '$ spins about an axis perpendicular to it through ' + (end ? 'one end' : 'its center') + '. Find its moment of inertia by integration.',
         ans(I, 0.01),
         ['Slice the rod: a piece of length $dx$ has mass $dm = \\dfrac{M}{L}dx$ and sits a distance $|x|$ from the axis, so $I = \\int x^2\\,dm$.', end ? '$I = \\dfrac{M}{L}\\int_0^{L} x^2\\,dx = \\dfrac{M}{L}\\cdot\\dfrac{L^3}{3} = \\dfrac{1}{3}ML^2$.' : '$I = \\dfrac{M}{L}\\int_{-L/2}^{L/2} x^2\\,dx = \\dfrac{M}{L}\\cdot\\dfrac{L^3}{12} = \\dfrac{1}{12}ML^2$.',
           '$I = \\dfrac{1}{' + (end ? 3 : 12) + '}(' + gx(Mr) + ')(' + gx(L) + ')^2 = ' + qx(I, 'kgm2') + '$.'],
         'Integrate $x^2\\,dm$ with $dm = (M/L)\\,dx$, measuring $x$ from the axis.', 'kgm2', { k: 'Irod', lam: plainNum(Mr / L), L: L, axis: end ? 0 : L / 2 }); }
-    if (shape === 'lin' || shape === 'linfar') { var k = R.pick([2, 3, 4, 6, 8]), far = shape === 'linfar', Il = far ? k * M.pow(L, 4) / 12 : k * M.pow(L, 4) / 4;
+    if (shape === 'lin' || shape === 'linfar') { var k = R.pick([2, 3, 4, 6, 8, 1, 5, 10, 12]), far = shape === 'linfar', Il = far ? k * M.pow(L, 4) / 12 : k * M.pow(L, 4) / 4;
       return P('A rod of length $' + qg(L, 'm') + '$ has linear density $\\lambda(x) = ' + kt(k, 'x') + '$ (kg/m, $x$ in meters from end A). Find its moment of inertia about an axis through end ' + (far ? 'B (at $x = L$)' : 'A') + ', perpendicular to the rod.',
         ans(Il, 0.01),
         [far ? 'The distance from the axis at B is $L - x$, so $I = \\int_0^{L} (L - x)^2\\,' + kt(k, 'x') + '\\,dx$.' : 'The distance from the axis is $x$, so $I = \\int_0^{L} x^2 \\cdot ' + kt(k, 'x') + '\\,dx = ' + cf(k) + '\\dfrac{L^4}{4}$.',
           far ? 'Expand: $' + cf(k) + '\\int_0^{L}\\left(L^2x - 2Lx^2 + x^3\\right)dx = ' + cf(k) + 'L^4\\left(\\tfrac{1}{2} - \\tfrac{2}{3} + \\tfrac{1}{4}\\right) = ' + cf(k) + '\\dfrac{L^4}{12}$.' : 'The heavy end is far from the axis, so it counts a lot.',
           '$I = ' + gx(k) + '\\dfrac{(' + gx(L) + ')^4}{' + (far ? 12 : 4) + '} = ' + qx(Il, 'kgm2') + '$.' + (far ? ' Smaller than about A, because now the dense end is near the axis.' : '')],
         'Write $dm = \\lambda\\,dx$ and the distance from the chosen axis, then integrate.', 'kgm2', { k: 'Irod', lam: k + '*x', L: L, axis: far ? L : 0 }); }
-    if (shape === 'linear2') { var a = R.pick([1, 2, 3]), b = R.pick([1, 2, 4, 6]), I2 = a * M.pow(L, 3) / 3 + b * M.pow(L, 4) / 4;
+    if (shape === 'linear2') { var a = R.pick([1, 2, 3, 4, 5]), b = R.pick([1, 2, 4, 6, 3, 8]), I2 = a * M.pow(L, 3) / 3 + b * M.pow(L, 4) / 4;
       return P('A tapered bat-like rod of length $' + qg(L, 'm') + '$ has $\\lambda(x) = ' + a + ' + ' + kt(b, 'x') + '$ (kg/m, $x$ in meters from the handle). Find its moment of inertia about an axis through the handle end, perpendicular to the rod.',
         ans(I2, 0.01),
         ['$I = \\int_0^{L} x^2(' + a + ' + ' + kt(b, 'x') + ')\\,dx = \\left[' + fr(a, 3) + 'x^3 + ' + fr(b, 4) + 'x^4\\right]_0^{' + gx(L) + '}$.', '$I = ' + fx(a * M.pow(L, 3) / 3, 4) + ' + ' + fx(b * M.pow(L, 4) / 4, 4) + ' = ' + qx(I2, 'kgm2') + '$.'],
         'Multiply $x^2$ by $\\lambda(x)$ and integrate over the length.', 'kgm2', { k: 'Irod', lam: a + '+' + b + '*x', L: L, axis: 0 }); }
-    var Md = R.pick([1, 2, 4, 5, 10]), Rd = R.pick([0.1, 0.2, 0.25, 0.3, 0.5]);
+    var Md = R.pick([1, 2, 4, 5, 10, 0.5, 1.5, 3, 6, 8]), Rd = R.pick([0.1, 0.2, 0.25, 0.3, 0.5, 0.05, 0.15, 0.4, 0.6, 0.75]);
     if (shape === 'disk') { var Id = 0.5 * Md * Rd * Rd;
       return P('A uniform solid disk of mass $' + qg(Md, 'kg') + '$ and radius $' + qg(Rd, 'm') + '$ spins about its axle. Find its moment of inertia by adding up thin rings.',
         ans(Id, 0.01),
@@ -1393,18 +1393,18 @@
 
   G('mech.rolling-dynamics', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['accel', 'speed', 'accel'], ['accel', 'friction', 'speed', 'mu'], ['mu', 'friction', 'speed', 'accel']));
-    var key = R.pick(['hoop', 'disk', 'sphere', 'shell']), S = SHP[key], c = S.c, th = R.pick([10, 15, 20, 25, 30, 35]), sn = M.sin(rad(th)), a = g0 * sn / (1 + c);
+    var key = R.pick(['hoop', 'disk', 'sphere', 'shell']), S = SHP[key], c = S.c, th = R.pick([10, 15, 20, 25, 30, 35, 5, 8, 12, 18, 22, 28, 32, 40]), sn = M.sin(rad(th)), a = g0 * sn / (1 + c);
     var who = 'A ' + S.n + ' ($I = ' + S.I + '$)';
     if (shape === 'accel') return P(who + ' rolls without slipping down a ramp tilted at $' + th + '^\\circ$. Find its acceleration.',
       ans(a, 0.01),
       ['Along the ramp: $Mg\\sin\\theta - f = Ma$. About the center: $fR = I\\alpha = ' + S.t + 'MR^2\\cdot\\dfrac{a}{R}$, using the rolling condition $a = R\\alpha$.', 'So $f = ' + S.t + 'Ma$, and $Mg\\sin\\theta = Ma(1 + ' + S.t + ')$.', '$a = \\dfrac{g\\sin\\theta}{1 + ' + S.t + '} = \\dfrac{9.8\\sin ' + th + '^\\circ}{' + gx(fix(1 + c)) + '} = ' + qx(a, 'ms2') + '$.'],
       'Write the force equation and the torque equation, linked by $a = R\\alpha$.', 'ms2', { k: 'roll', c: c, th: th, want: 'a' }, { name: 'ph-rotation', opts: { mode: 'race', shapes: [key], angle: th, interactive: false, quiet: true, t: 0 } });
-    if (shape === 'speed') { var hh = R.pick([0.5, 1, 1.5, 2, 3]), v = M.sqrt(2 * g0 * hh / (1 + c));
+    if (shape === 'speed') { var hh = R.pick([0.5, 1, 1.5, 2, 3, 0.2, 0.3, 0.4, 0.8, 1.2, 2.5, 4, 5]), v = M.sqrt(2 * g0 * hh / (1 + c));
       return P(who + ' starts from rest and rolls without slipping down a ramp, dropping a height of $' + qg(hh, 'm') + '$. How fast is it moving at the bottom?',
         ans(v, 0.01),
         ['Static friction does no work on a rolling object (the contact point is momentarily at rest), so mechanical energy is conserved.', '$Mgh = \\tfrac{1}{2}Mv^2 + \\tfrac{1}{2}I\\omega^2 = \\tfrac{1}{2}Mv^2\\left(1 + ' + S.t + '\\right)$, using $\\omega = v/R$.', '$v = \\sqrt{\\dfrac{2gh}{1 + ' + S.t + '}} = \\sqrt{\\dfrac{2(9.8)(' + gx(hh) + ')}{' + gx(fix(1 + c)) + '}} = ' + qx(v, 'ms') + '$.'],
         'Share the energy between moving and spinning.', 'ms', { k: 'roll', c: c, th: 30, h: hh, want: 'v' }); }
-    var m = R.pick([0.5, 1, 2, 4, 5]), f = c * m * a, mu = c * M.tan(rad(th)) / (1 + c);
+    var m = R.pick([0.5, 1, 2, 4, 5, 0.2, 0.25, 1.5, 3, 6, 8, 10]), f = c * m * a, mu = c * M.tan(rad(th)) / (1 + c);
     if (shape === 'friction') return P('A $' + qg(m, 'kg') + '$ ' + S.n + ' ($I = ' + S.I + '$) rolls without slipping down a $' + th + '^\\circ$ ramp. How large is the static friction force on it?',
       ans(f, 0.01),
       ['Acceleration: $a = \\dfrac{g\\sin\\theta}{1 + ' + S.t + '} = ' + qx(a, 'ms2', 4) + '$.', 'Torque equation: $fR = I\\dfrac{a}{R}$, so $f = ' + S.t + 'Ma = ' + gx(fix(c)) + '(' + gx(m) + ')(' + fx(a, 4) + ') = ' + qx(f, 'N') + '$, pointing up the ramp.'],
@@ -1417,7 +1417,7 @@
 
   G('mech.skidding-to-rolling', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['vf', 'time', 'vf'], ['vf', 'time', 'dist', 'loss'], ['dist', 'other', 'time', 'loss']));
-    var v0 = R.pick([4, 5, 6, 7, 8, 9]), mu = R.pick([0.1, 0.15, 0.2, 0.25, 0.3]);
+    var v0 = R.pick([4, 5, 6, 7, 8, 9, 3, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 10]), mu = R.pick([0.1, 0.15, 0.2, 0.25, 0.3, 0.05, 0.08, 0.12, 0.18, 0.22, 0.35, 0.4]);
     if (shape === 'other') { var key = R.pick(['hoop', 'disk', 'shell']), S = SHP[key], vf2 = v0 / (1 + S.c);
       return P('A ' + S.n + ' ($I = ' + S.I + '$) is launched sliding along a floor at $' + qg(v0, 'ms') + '$ with no spin. Kinetic friction slows it and spins it up until it rolls without slipping. What is its speed then?',
         ans(vf2, 0.01),
@@ -1433,7 +1433,7 @@
       'Find when $v = R\\omega$, then the speed at that moment.', 'ms', { k: 'skid', c: 0.4, v0: v0, mu: mu, want: 'vf' });
     if (shape === 'dist') return P(intro + 'How far does it slide before it starts rolling without slipping?', ans(d, 0.01), st.concat(['Distance with constant deceleration $\\mu_kg$: $d = v_0t - \\tfrac{1}{2}\\mu_kgt^2 = \\dfrac{12v_0^2}{49\\mu_kg} = ' + qx(d, 'm') + '$.']),
       'Find the skid time, then use the constant-deceleration equations.', 'm', { k: 'skid', c: 0.4, v0: v0, mu: mu, want: 'd' });
-    var mb = R.pick([5, 6, 7]), Kl = mb * v0 * v0 / 7;
+    var mb = R.pick([5, 6, 7, 4, 4.5, 5.5, 6.5, 7.5, 8]), Kl = mb * v0 * v0 / 7;
     return P(intro + 'The ball\'s mass is $' + mb + '\\ \\text{kg}$. How much kinetic energy is turned into thermal energy while it skids?', ans(Kl, 0.01),
       st.concat(['Final speed $\\tfrac{5}{7}v_0 = ' + fx(vf, 4) + '\\ \\text{m/s}$, and final $K = \\tfrac{1}{2}Mv^2(1 + \\tfrac{2}{5}) = \\tfrac{7}{10}M\\left(\\tfrac{5}{7}v_0\\right)^2 = \\tfrac{5}{14}Mv_0^2$.', 'Lost: $\\tfrac{1}{2}Mv_0^2 - \\tfrac{5}{14}Mv_0^2 = \\tfrac{1}{7}Mv_0^2 = \\tfrac{1}{7}(' + mb + ')(' + v0 + ')^2 = ' + qx(Kl, 'J') + '$, two-sevenths of the start.']),
       'Compare the kinetic energy (moving plus spinning) before and after.', 'J', { k: 'skid', c: 0.4, v0: v0, mu: mu, m: mb, want: 'loss' });
@@ -1496,22 +1496,22 @@
 
   G('mech.rotational-work-power', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['P', 'omega', 'P'], ['P', 'W', 'omega', 'Prpm'], ['W', 'Wvar', 'Prpm', 'omega']));
-    if (shape === 'P') { var tau = R.pick([20, 50, 80, 100, 150, 200]), w = R.pick([10, 20, 30, 50, 100]);
+    if (shape === 'P') { var tau = R.pick([20, 50, 80, 100, 150, 200, 10, 25, 30, 40, 60, 120, 250, 300]), w = R.pick([10, 20, 30, 50, 100, 5, 15, 25, 40, 60, 80, 150, 200]);
       return P('A motor applies a steady torque of $' + qg(tau, 'Nm') + '$ to a shaft spinning at $' + qg(w, 'rads') + '$. What power does it deliver?',
         ans(tau * w, 0.01),
         ['In a small turn $d\\theta$ the torque does work $dW = \\tau\\,d\\theta$, so $P = \\dfrac{dW}{dt} = \\tau\\dfrac{d\\theta}{dt} = \\tau\\omega$.', '$P = ' + tau + '(' + w + ') = ' + qg(tau * w, 'W') + '$.'],
         '$P = \\tau\\omega$, with $\\omega$ in rad/s.', 'W', { k: 'rwork', tau: tau, w: w, want: 'P' }); }
-    if (shape === 'Prpm') { var t2 = R.pick([100, 150, 200, 250, 300, 400]), rpm = R.pick([1500, 2000, 2500, 3000, 4000, 6000]), wr = rpm * 2 * PI / 60, P2 = t2 * wr;
+    if (shape === 'Prpm') { var t2 = R.pick([100, 150, 200, 250, 300, 400, 120, 180, 350, 500]), rpm = R.pick([1500, 2000, 2500, 3000, 4000, 6000, 600, 900, 1000, 1200, 1800, 3600, 5000, 7200]), wr = rpm * 2 * PI / 60, P2 = t2 * wr;
       return P('A car engine produces a torque of $' + qg(t2, 'Nm') + '$ at $' + gx(rpm) + '\\ \\text{rpm}$ (revolutions per minute). What power is that, in kilowatts?',
         ans(P2 / 1000, 0.01),
         ['Convert to rad/s: $\\omega = ' + gx(rpm) + '\\ \\dfrac{\\text{rev}}{\\text{min}}\\times\\dfrac{2\\pi\\ \\text{rad}}{1\\ \\text{rev}}\\times\\dfrac{1\\ \\text{min}}{60\\ \\text{s}} = ' + qx(wr, 'rads', 4) + '$.', '$P = \\tau\\omega = ' + t2 + '(' + fx(wr, 4) + ') = ' + qx(P2, 'W', 4) + ' = ' + qx(P2 / 1000, 'kW') + '$.'],
         'Convert rpm to rad/s first.', 'kW', { k: 'rwork', tau: t2, w: wr, want: 'P', scale: 1000 }); }
-    if (shape === 'omega') { var I = R.pick([0.5, 1, 2, 4, 5]), tq = R.pick([2, 4, 5, 8, 10]), n = R.pick([2, 5, 10, 20]), th = 2 * PI * n, wf = M.sqrt(2 * tq * th / I);
+    if (shape === 'omega') { var I = R.pick([0.5, 1, 2, 4, 5, 0.2, 0.25, 0.8, 1.5, 3, 6, 8]), tq = R.pick([2, 4, 5, 8, 10, 1, 3, 6, 12, 15, 20]), n = R.pick([2, 5, 10, 20, 1, 3, 4, 8, 15, 25, 50]), th = 2 * PI * n, wf = M.sqrt(2 * tq * th / I);
       return P('A flywheel ($I = ' + qg(I, 'kgm2') + '$) starts from rest. A steady torque of $' + qg(tq, 'Nm') + '$ turns it through ' + n + ' revolutions. How fast is it spinning then?',
         ans(wf, 0.01),
         ['Work by the torque: $W = \\tau\\Delta\\theta$, with the angle in <b>radians</b>: $\\Delta\\theta = ' + n + '(2\\pi) = ' + fx(th, 4) + '\\ \\text{rad}$, so $W = ' + qx(tq * th, 'J', 4) + '$.', 'Work-energy for rotation: $W = \\tfrac{1}{2}I\\omega^2$, so $\\omega = \\sqrt{\\dfrac{2W}{I}} = \\sqrt{\\dfrac{2(' + fx(tq * th, 4) + ')}{' + gx(I) + '}} = ' + qx(wf, 'rads') + '$.'],
         'Convert revolutions to radians, then set the work equal to $\\tfrac{1}{2}I\\omega^2$.', 'rads', { k: 'rwork', I: I, tau: tq, th: th, want: 'w' }); }
-    if (shape === 'W') { var t3 = R.pick([10, 20, 30, 40]), ang = R.pick([30, 45, 60, 90, 120, 180]), W3 = t3 * ang * PI / 180;
+    if (shape === 'W') { var t3 = R.pick([10, 20, 30, 40, 5, 8, 12, 15, 25, 35, 50, 60]), ang = R.pick([30, 45, 60, 90, 120, 180, 15, 20, 36, 72, 135, 150, 240, 270, 360]), W3 = t3 * ang * PI / 180;
       return P('A steady torque of $' + qg(t3, 'Nm') + '$ turns a valve wheel through $' + ang + '^\\circ$. How much work does it do?',
         ans(W3, 0.01),
         ['$W = \\int\\tau\\,d\\theta = \\tau\\Delta\\theta$ with $\\Delta\\theta$ in radians: $' + ang + '^\\circ = ' + fx(ang * PI / 180, 4) + '\\ \\text{rad}$.', '$W = ' + t3 + '(' + fx(ang * PI / 180, 4) + ') = ' + qx(W3, 'J') + '$. (Using ' + ang + ' would give ' + (t3 * ang) + ' J, far too much.)'],
@@ -1582,23 +1582,23 @@
 
   G('mech.shell-theorem', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['outside', 'inside', 'center'], ['inside', 'outside', 'tunnel', 'center'], ['inside', 'tunnel', 'ratio', 'shell']));
-    var planet = R.pick([{ n: 'a rocky planet', g: 9.8, R: 6.4e6 }, { n: 'a small moon', g: 1.6, R: 1.7e6 }, { n: 'a planet', g: 3.7, R: 3.4e6 }, { n: 'an exoplanet', g: 12, R: 8e6 }, { n: 'a dwarf planet', g: 0.6, R: 1.2e6 }]);
+    var planet = R.pick([{ n: 'a rocky planet', g: 9.8, R: 6.4e6 }, { n: 'a small moon', g: 1.6, R: 1.7e6 }, { n: 'a planet', g: 3.7, R: 3.4e6 }, { n: 'an exoplanet', g: 12, R: 8e6 }, { n: 'a dwarf planet', g: 0.6, R: 1.2e6 }, { n: 'a rocky exoplanet', g: 15, R: 9e6 }, { n: 'a moon', g: 1.3, R: 2.6e6 }, { n: 'a planet', g: 8.9, R: 6.1e6 }, { n: 'an exoplanet', g: 6, R: 5e6 }, { n: 'a small rocky world', g: 2.4, R: 2.4e6 }]);
     if (shape === 'center') return P('Model a planet as a uniform solid sphere. Where inside or on the planet is its gravitational field strength the greatest?',
       mc('At its surface', ['At its center', 'Halfway between the center and the surface', 'It is the same everywhere inside']),
       ['Inside a uniform sphere, only the mass closer to the center than you pulls on you overall (the shell theorem): $M(r) = M\\dfrac{r^3}{R^3}$.', 'So $g(r) = \\dfrac{GM(r)}{r^2} = \\dfrac{GM}{R^3}r$: it grows in proportion to $r$, from zero at the center to its largest value at the surface.', 'Outside, $g = GM/r^2$ falls off again. At the very center the pulls from all sides cancel: $g = 0$.'],
       'How much of the planet\'s mass is closer to the center than you are?', null, { k: 'mc' });
-    if (shape === 'shell') { var Ms = R.pick([2, 5, 8]) * 1e20, Rs = R.pick([2, 3, 5]) * 1e5, rr = R.pick([0.5, 0.8, 1.5, 2]) * Rs, gs = rr < Rs ? 0 : GN * Ms / (rr * rr);
+    if (shape === 'shell') { var Ms = R.pick([2, 5, 8, 1, 3, 4, 6, 10]) * 1e20, Rs = R.pick([2, 3, 5, 1, 4, 6, 8]) * 1e5, rr = R.pick([0.5, 0.8, 1.5, 2, 0.25, 0.6, 1.2, 2.5, 3, 4]) * Rs, gs = rr < Rs ? 0 : GN * Ms / (rr * rr);
       return P('A thin, uniform spherical shell has mass $' + qg(Ms, 'kg') + '$ and radius $' + qg(Rs, 'm') + '$. What is the gravitational field strength it produces at a distance $' + qg(rr, 'm') + '$ from its center?',
         rr < Rs ? exact(0) : ans(gs, 0.02),
         rr < Rs ? ['The point is inside the shell ($' + gx(rr) + ' < ' + gx(Rs) + '$).', 'Shell theorem: the pulls of the near and far parts of a uniform shell cancel exactly at every inside point. The nearer patch is closer but smaller in the cone it fills; both scale as the area grows like distance squared.', '$g = 0$.']
           : ['The point is outside, so the shell acts as if all its mass were at its center.', '$g = \\dfrac{GM}{r^2} = \\dfrac{(6.674 \\times 10^{-11})(' + gx(Ms) + ')}{(' + gx(rr) + ')^2} = ' + qx(gs, 'Nkg') + '$.'],
         'Inside or outside the shell?', 'Nkg', { k: 'shell', kind: 'shell', M: Ms, R: Rs, r: rr }); }
-    if (shape === 'outside') { var h = R.pick([0.25, 0.5, 1, 2]) * planet.R, go = planet.g * M.pow(planet.R / (planet.R + h), 2);
+    if (shape === 'outside') { var h = R.pick([0.25, 0.5, 1, 2, 0.1, 0.2, 0.75, 1.5, 3, 4]) * planet.R, go = planet.g * M.pow(planet.R / (planet.R + h), 2);
       return P(planet.n.charAt(0).toUpperCase() + planet.n.slice(1) + ' has radius $' + qg(planet.R, 'm') + '$ and surface gravity $' + qg(planet.g, 'ms2') + '$. Treating it as a sphere, find $g$ at an altitude of $' + qg(h, 'm') + '$ above its surface.',
         ans(go, 0.01),
         ['Outside a spherical body, $g = \\dfrac{GM}{r^2}$ with $r$ from the center, so $g \\propto \\dfrac{1}{r^2}$.', '$r = R + h = ' + gx(planet.R + h) + '\\ \\text{m}$, so $g = g_s\\left(\\dfrac{R}{R + h}\\right)^2 = ' + gx(planet.g) + '\\left(\\dfrac{' + gx(planet.R) + '}{' + gx(planet.R + h) + '}\\right)^2 = ' + qx(go, 'ms2') + '$.'],
         'Measure $r$ from the center and use the inverse square.', 'ms2', { k: 'shell', kind: 'solid', gs: planet.g, R: planet.R, r: planet.R + h }); }
-    if (shape === 'inside') { var f = R.pick([0.2, 0.25, 0.4, 0.5, 0.6, 0.75, 0.8]), depth = (1 - f) * planet.R, gi = planet.g * f;
+    if (shape === 'inside') { var f = R.pick([0.2, 0.25, 0.4, 0.5, 0.6, 0.75, 0.8, 0.1, 0.3, 0.35, 0.45, 0.55, 0.65, 0.7, 0.85, 0.9]), depth = (1 - f) * planet.R, gi = planet.g * f;
       return P('Model ' + planet.n + ' (radius $' + qg(planet.R, 'm') + '$, surface gravity $' + qg(planet.g, 'ms2') + '$) as a uniform solid sphere. What is $g$ at the bottom of a shaft $' + qg(depth, 'm') + '$ deep?',
         ans(gi, 0.01),
         ['At distance $r$ from the center, only the mass inside radius $r$ pulls: $M(r) = M\\dfrac{r^3}{R^3}$, so $g(r) = \\dfrac{GM(r)}{r^2} = g_s\\dfrac{r}{R}$.', '$r = R - d = ' + gx(planet.R) + ' - ' + gx(depth) + ' = ' + gx(f * planet.R) + '\\ \\text{m}$, which is ' + gx(f) + ' of the radius.', '$g = ' + gx(planet.g) + '(' + gx(f) + ') = ' + qx(gi, 'ms2') + '$, <i>less</i> than at the surface.'],
@@ -1644,13 +1644,13 @@
 
   G('mech.kepler-second-from-newton', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['ratio', 'va', 'va'], ['va', 'vp', 'areal', 'ratio'], ['va', 'areal', 'vp', 'va']));
-    if (shape === 'ratio') { var rp = R.pick([1, 2, 3]), ra = rp * R.pick([2, 3, 4, 5, 8]);
+    if (shape === 'ratio') { var rp = R.pick([1, 2, 3, 0.5, 1.5, 4, 5]), ra = rp * R.pick([2, 3, 4, 5, 8, 1.5, 2.5, 6, 10, 12, 20]);
       return P('A comet\'s closest distance to the Sun is $' + rp + '\\ \\text{AU}$ and its farthest is $' + ra + '\\ \\text{AU}$. How many times faster does it move at its closest point than at its farthest?',
         ans(ra / rp, 0.01),
         ['Gravity points straight at the Sun, so its torque about the Sun is zero and the comet\'s angular momentum $L = m|\\vec{r}\\times\\vec{v}|$ is constant.', 'At the closest and farthest points the velocity is perpendicular to $\\vec{r}$, so $mr_pv_p = mr_av_a$.', '$\\dfrac{v_p}{v_a} = \\dfrac{r_a}{r_p} = \\dfrac{' + ra + '}{' + rp + '} = ' + gx(ra / rp) + '$.'],
         'Angular momentum about the Sun is conserved.', null, { k: 'kep2', kind: 'ratio', rp: rp, ra: ra }); }
     // physically consistent orbits around the Sun: rp, ra in AU; vp from energy and angular momentum
-    var rpA = R.pick([0.3, 0.5, 0.6, 0.8, 1, 1.2]), raA = sgf(rpA * R.pick([1.5, 2, 3, 5, 10, 20]), 2), aA = (rpA + raA) / 2, rp_ = rpA * AU, ra_ = raA * AU;
+    var rpA = R.pick([0.3, 0.5, 0.6, 0.8, 1, 1.2, 0.2, 0.4, 0.7, 0.9, 1.5, 2]), raA = sgf(rpA * R.pick([1.5, 2, 3, 5, 10, 20, 1.2, 2.5, 4, 6, 8, 12, 15, 30]), 2), aA = (rpA + raA) / 2, rp_ = rpA * AU, ra_ = raA * AU;
     var vp = M.sqrt(GM_S * (2 / rp_ - 1 / (aA * AU))), vpS = sgf(vp / 1000, 3), va = vpS * rpA / raA;
     if (shape === 'va') return P('An asteroid passes its closest point to the Sun, $' + gx(rpA) + '\\ \\text{AU}$, at $' + gx(vpS) + '\\ \\text{km/s}$. Its farthest distance from the Sun is $' + gx(raA) + '\\ \\text{AU}$. How fast is it moving there, in km/s?',
       ans(va, 0.01),
@@ -1681,12 +1681,17 @@
         ans(Mp, 0.02),
         ['$T = ' + gx(mo.T) + '\\times 86\\,400\\ \\text{s} = ' + qx(Ts, 's', 4) + '$.', 'From $\\dfrac{GMm}{r^2} = m\\dfrac{4\\pi^2r}{T^2}$: $M = \\dfrac{4\\pi^2r^3}{GT^2}$.', '$M = \\dfrac{4\\pi^2(' + gx(mo.r) + ')^3}{(6.674 \\times 10^{-11})(' + fx(Ts, 4) + ')^2} = ' + qx(Mp, 'kg') + '$.'],
         'Solve $T^2 = 4\\pi^2r^3/(GM)$ for $M$, with $T$ in seconds.', 'kg', { k: 'kep3', r: mo.r, T: Ts, want: 'M' }); }
+    if (shape === 'geo' && R.coin()) { var SY = R.pick([{ n: 'Mars', GM: GN * 6.417e23, R: 3.3895e6, T: 88643, Tt: '88\\,643' }, { n: 'an imaginary planet', GM: R.pick([2, 3, 5, 8, 4, 6, 7]) * 1e14, R: R.pick([5, 6, 7, 8]) * 1e6, T: R.pick([20, 24, 30, 36, 40, 21, 26, 31, 34, 39]) * 3600 }]), rsy = M.pow(SY.GM * SY.T * SY.T / (4 * PI * PI), 1 / 3), hsy = rsy - SY.R, Tt = SY.Tt || ML.T.commas(SY.T).replace(/,/g, '\\,');
+      return P('A synchronous satellite circles above the equator of ' + SY.n + ' once per sidereal day ($' + Tt + '\\ \\text{s}$), so it stays over one spot. How high above the surface is it, in km? (' + SY.n.charAt(0).toUpperCase() + SY.n.slice(1) + ': $GM = ' + fx(SY.GM, 4) + '\\ \\text{m}^3/\\text{s}^2$, $R = ' + qg(SY.R, 'm') + '$.)',
+        ans(hsy / 1000, 0.01),
+        ['$r^3 = \\dfrac{GMT^2}{4\\pi^2} = \\dfrac{(' + fx(SY.GM, 4) + ')(' + Tt + ')^2}{4\\pi^2}$, so $r = ' + qx(rsy, 'm', 4) + '$.', 'Altitude: $h = r - R = ' + qx(hsy, 'm', 4) + ' \\approx ' + qx(hsy / 1000, 'km') + '$.'],
+        'Solve Kepler\'s third law for $r$, then subtract the planet\'s radius.', 'km', { k: 'kep3', GM: SY.GM, T: SY.T, want: 'r', sub: SY.R, scale: 1000 }); }
     if (shape === 'geo') { var Tsid = 86164, rg = M.pow(GM_E * Tsid * Tsid / (4 * PI * PI), 1 / 3), hg = rg - R_E;
       return P('A geostationary satellite circles above the equator once per sidereal day ($86\\,164\\ \\text{s}$), so it stays over one spot. How high above Earth\'s surface is it, in km? (Earth: $GM = ' + fx(GM_E, 4) + '\\ \\text{m}^3/\\text{s}^2$, $R = ' + qg(R_E, 'm') + '$.)',
         ans(hg / 1000, 0.01),
         ['$r^3 = \\dfrac{GMT^2}{4\\pi^2} = \\dfrac{(' + fx(GM_E, 4) + ')(86\\,164)^2}{4\\pi^2}$, so $r = ' + qx(rg, 'm', 4) + '$.', 'Altitude: $h = r - R = ' + qx(hg, 'm', 4) + ' \\approx ' + qx(hg / 1000, 'km') + '$.'],
         'Solve Kepler\'s third law for $r$, then subtract Earth\'s radius.', 'km', { k: 'kep3', GM: GM_E, T: Tsid, want: 'r', sub: R_E, scale: 1000 }); }
-    var Mx = R.pick([2, 4, 6, 8]) * 1e23, Tx = R.pick([2, 4, 6, 10, 12]) * 3600, rx = M.pow(GN * Mx * Tx * Tx / (4 * PI * PI), 1 / 3);
+    var Mx = R.pick([2, 4, 6, 8, 1, 3, 5, 10, 12, 7, 9, 11]) * 1e23, Tx = R.pick([2, 4, 6, 10, 12, 1, 3, 5, 8, 15, 18, 24, 7, 9, 11, 13, 17, 19, 21, 23]) * 3600, rx = M.pow(GN * Mx * Tx * Tx / (4 * PI * PI), 1 / 3);
     return P('A probe will orbit a moon of mass $' + qg(Mx, 'kg') + '$ with a period of $' + gx(Tx / 3600) + '$ hours. What orbital radius (from the moon\'s center) does that need, in km?',
       ans(rx / 1000, 0.01),
       ['$T = ' + gx(Tx / 3600) + '\\ \\text{h} = ' + gx(Tx) + '\\ \\text{s}$.', '$r^3 = \\dfrac{GMT^2}{4\\pi^2} = \\dfrac{(6.674 \\times 10^{-11})(' + gx(Mx) + ')(' + gx(Tx) + ')^2}{4\\pi^2}$, so $r = ' + qx(rx, 'm', 4) + ' = ' + qx(rx / 1000, 'km') + '$.'],
@@ -1700,7 +1705,7 @@
       ['Right after the burn the craft is at the same place, so the burn point stays on the orbit: it becomes the closest point (perigee).', 'With more speed at the same $r$, the energy $\\tfrac{1}{2}v^2 - GM/r$ is higher, so the semi-major axis $a$ grows: $v^2 = GM\\left(\\dfrac{2}{r} - \\dfrac{1}{a}\\right)$.', 'Bigger $a$ with the same perigee means a higher apogee, half an orbit later on the far side. That is how transfer orbits work.'],
       'Where on the new orbit is the burn point?', null, { k: 'mc' });
     if (shape === 'vsun' || shape === 'a') {
-      var aA = R.pick([1.5, 2, 2.5, 3, 4, 5.2]), e = R.pick([0.2, 0.3, 0.4, 0.5, 0.6]), rA = sgf(aA * (1 + e * R.pick([-1, -0.5, 0.5, 1]) * 0.9), 2), a = aA * AU, r = rA * AU, v = M.sqrt(GM_S * (2 / r - 1 / a));
+      var aA = R.pick([1.5, 2, 2.5, 3, 4, 5.2, 1.2, 1.8, 2.2, 2.8, 3.5, 4.5, 6, 9.5]), e = R.pick([0.2, 0.3, 0.4, 0.5, 0.6, 0.1, 0.15, 0.25, 0.35, 0.45, 0.55, 0.7]), rA = sgf(aA * (1 + e * R.pick([-1, -0.5, 0.5, 1]) * 0.9), 2), a = aA * AU, r = rA * AU, v = M.sqrt(GM_S * (2 / r - 1 / a));
       if (shape === 'vsun') return P('An asteroid\'s orbit around the Sun has a semi-major axis of $' + gx(aA) + '\\ \\text{AU}$. How fast is it moving when it is $' + gx(rA) + '\\ \\text{AU}$ from the Sun, in km/s? (Sun: $GM = 1.327 \\times 10^{20}\\ \\text{m}^3/\\text{s}^2$; $1\\ \\text{AU} = 1.496 \\times 10^{11}\\ \\text{m}$.)',
         ans(v / 1000, 0.01),
         ['On an ellipse the total energy per kilogram is $-\\dfrac{GM}{2a}$, so $\\tfrac{1}{2}v^2 - \\dfrac{GM}{r} = -\\dfrac{GM}{2a}$, which is the vis-viva equation $v^2 = GM\\left(\\dfrac{2}{r} - \\dfrac{1}{a}\\right)$.',
@@ -1713,7 +1718,7 @@
         'Solve the vis-viva equation for $a$.', 'AU', { k: 'visviva', GM: GM_S, r: r, v: vS * 1000, want: 'a', scale: AU });
     }
     // Hohmann transfer around Earth
-    var h1 = R.pick([200, 300, 400, 500]) * 1000, h2 = R.pick([2000, 5000, 10000, 20000, 35786]) * 1000, r1 = R_E + h1, r2 = R_E + h2, at = (r1 + r2) / 2;
+    var h1 = R.pick([200, 300, 400, 500, 250, 350, 600, 800, 1000]) * 1000, h2 = R.pick([2000, 5000, 10000, 20000, 35786, 3000, 4000, 8000, 15000, 20200, 25000, 30000]) * 1000, r1 = R_E + h1, r2 = R_E + h2, at = (r1 + r2) / 2;
     var vc1 = M.sqrt(GM_E / r1), vp = M.sqrt(GM_E * (2 / r1 - 1 / at)), dv1 = vp - vc1, vc2 = M.sqrt(GM_E / r2), va = M.sqrt(GM_E * (2 / r2 - 1 / at)), dv2 = vc2 - va, second = shape === 'hoh2';
     return P('A satellite in a circular orbit $' + gx(h1 / 1000) + '\\ \\text{km}$ up moves to a circular orbit $' + gx(h2 / 1000) + '\\ \\text{km}$ up using a transfer ellipse that touches both circles (a Hohmann transfer). How big is the ' + (second ? 'second burn, at the top of the transfer ellipse' : 'first burn, at the bottom of the transfer ellipse') + ', in km/s? (Earth: $GM = ' + fx(GM_E, 4) + '\\ \\text{m}^3/\\text{s}^2$, $R = ' + qg(R_E, 'm') + '$.)',
       ans((second ? dv2 : dv1) / 1000, 0.02),
@@ -1774,14 +1779,14 @@
 
   G('mech.vertical-spring', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['stretch', 'T', 'Tstretch'], ['T', 'Tstretch', 'release', 'stretch'], ['release', 'Fmax', 'Tstretch', 'release']));
-    var m = R.pick([0.1, 0.2, 0.25, 0.5, 1, 2]), k = R.pick([10, 20, 25, 40, 50, 100, 200]), d = m * g0 / k;
+    var m = R.pick([0.1, 0.2, 0.25, 0.5, 1, 2, 0.05, 0.15, 0.3, 0.4, 0.75, 0.8, 1.5, 3]), k = R.pick([10, 20, 25, 40, 50, 100, 200, 5, 15, 30, 60, 75, 80, 120, 150, 250, 400]), d = m * g0 / k;
     var intro = 'A $' + qg(m, 'kg') + '$ mass hangs from a spring with $k = ' + qg(k, 'Nperm') + '$. ';
     if (shape === 'stretch') return P(intro + 'How far below the spring\'s natural length is its equilibrium position?', ans(d, 0.01),
       ['At equilibrium the spring holds up the weight: $kd = mg$.', '$d = \\dfrac{mg}{k} = \\dfrac{' + gx(m) + '(9.8)}{' + k + '} = ' + qx(d, 'm') + '$.'], 'Balance the spring force and the weight.', 'm', { k: 'vspring', m: m, kk: k, want: 'd' });
     if (shape === 'T') return P(intro + 'It is pulled down a little and released. Find the period.', ans(2 * PI * M.sqrt(m / k), 0.01),
       ['Measure $y$ from the new equilibrium (stretch $d = mg/k$), down positive. The net force is $mg - k(d + y) = -ky$, since $kd = mg$.', 'So $m\\ddot{y} = -ky$: the same equation as a horizontal spring. Gravity only moved the equilibrium point.', '$T = 2\\pi\\sqrt{\\dfrac{m}{k}} = 2\\pi\\sqrt{\\dfrac{' + gx(m) + '}{' + k + '}} = ' + qx(2 * PI * M.sqrt(m / k), 's') + '$.'],
       'Does gravity change the restoring force about the new equilibrium?', 's', { k: 'vspring', m: m, kk: k, want: 'T' });
-    if (shape === 'Tstretch') { var ds = R.pick([0.02, 0.05, 0.1, 0.2, 0.25, 0.4]), Ts = 2 * PI * M.sqrt(ds / g0);
+    if (shape === 'Tstretch') { var ds = R.pick([0.02, 0.05, 0.1, 0.2, 0.25, 0.4, 0.01, 0.03, 0.04, 0.06, 0.08, 0.12, 0.15, 0.3, 0.5]), Ts = 2 * PI * M.sqrt(ds / g0);
       return P('Hanging a mass on a spring stretches it $' + qg(ds, 'm') + '$ at equilibrium. If the mass is pulled down slightly and released, what is the period? (You aren\'t told the mass or $k$.)', ans(Ts, 0.01),
         ['At equilibrium $kd = mg$, so $\\dfrac{m}{k} = \\dfrac{d}{g}$.', '$T = 2\\pi\\sqrt{\\dfrac{m}{k}} = 2\\pi\\sqrt{\\dfrac{d}{g}} = 2\\pi\\sqrt{\\dfrac{' + gx(ds) + '}{9.8}} = ' + qx(Ts, 's') + '$.'],
         'Use the equilibrium stretch to find $m/k$.', 's', { k: 'vspring', m: 1, kk: g0 / ds, want: 'T' }); }
@@ -1799,7 +1804,7 @@
       return P('A small bob hangs on a light string $' + qg(Ls, 'm') + '$ long and swings through small angles. Find its period.', ans(Ts, 0.01),
         ['Torque about the pivot: $\\tau = -mgL\\sin\\theta \\approx -mgL\\theta$ for small $\\theta$ (in radians). With $I = mL^2$: $mL^2\\ddot{\\theta} = -mgL\\theta$.', 'So $\\ddot{\\theta} = -\\dfrac{g}{L}\\theta$: simple harmonic with $\\omega = \\sqrt{g/L}$.', '$T = 2\\pi\\sqrt{\\dfrac{L}{g}} = 2\\pi\\sqrt{\\dfrac{' + gx(Ls) + '}{9.8}} = ' + qx(Ts, 's') + '$.'],
         'Linearize $\\sin\\theta \\approx \\theta$.', 's', { k: 'ppend', I: 1 * Ls * Ls, m: 1, d: Ls, want: 'T' }); }
-    var L = R.int(3, 20) / 10, Mr = R.pick([0.5, 1, 2]);
+    var L = R.int(3, 20) / 10, Mr = R.pick([0.5, 1, 2, 0.2, 0.25, 0.4, 0.75, 1.5, 3]);
     if (shape === 'rod' || shape === 'Leq') { var I = Mr * L * L / 3, T = 2 * PI * M.sqrt(I / (Mr * g0 * L / 2));
       if (shape === 'Leq') return P('A uniform rod $' + qg(L, 'm') + '$ long swings from one end. How long would a simple pendulum (a small bob on a string) have to be to have the same period?', ans(2 * L / 3, 0.01),
         ['Physical pendulum: $T = 2\\pi\\sqrt{\\dfrac{I}{mgd}}$ with $I = \\tfrac{1}{3}mL^2$ and $d = \\tfrac{L}{2}$ (pivot to center of mass).', 'So $T = 2\\pi\\sqrt{\\dfrac{2L}{3g}}$. A simple pendulum has $T = 2\\pi\\sqrt{\\ell/g}$.', 'Equal periods: $\\ell = \\dfrac{2L}{3} = ' + qx(2 * L / 3, 'm') + '$.'],
@@ -1881,3 +1886,131 @@
   // exposed for the course's node tests
   ML.mechHelpers = { sfStr: sfStr, fx: fx, gx: gx, polyPlain: polyPlain, polyAt: polyAt, polyD: polyD, polyI: polyI, wideMath: wideMath };
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen"; Physics and Earth ladders): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - check a number: the question and a classmate's numeric answer, either the generator's own answer or that answer
+     off by a common slip (a factor of 2, 4 or 10), and "Is that right?" (Yes / No; not in placement);
+   - two at once: two different questions of the topic, answered together (short questions only, multiple-choice or
+     numeric, each keeping its own unit; at most one of them with a picture, which then comes first).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'mech', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function numable(p) { // a single numeric answer with a plain decimal value (not a fraction or an expression)
+    var a = p.a;
+    return !!a && a.t === 'num' && /^-?\d+(\.\d+)?(e-?\d+)?$/.test(String(a.v)) && +a.v !== 0 && isFinite(+a.v) &&
+      !(a.tol && a.tol >= Math.abs(+a.v) / 3) && !((a.rtol || 0) > 0.3); // a slip by a factor of 2 must fall outside the tolerance
+  }
+  function sig(v) { var m = String(v).replace(/e.*$/, '').replace(/^-?0*\.?0*/, '').replace('.', ''); return Math.min(6, Math.max(3, m.length)); }
+  function show(x, n) { // a number as the classmate would write it: 3 significant figures, scientific notation when large or small
+    var ax = Math.abs(x);
+    if (ax >= 1e5 || ax < 1e-3) { var e = Math.floor(Math.log10(ax)), m = Number((x / Math.pow(10, e)).toPrecision(n || 3)); if (Math.abs(m) >= 10) { m = m / 10; e++; } return '$' + m + ' \\times 10^{' + e + '}$'; }
+    var s = String(Number(x.toPrecision(n || 3)));
+    return '$' + (ax >= 1e4 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, '{,}') : s) + '$';
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = +a.v, n = sig(a.v), right = R.coin(), f = R.pick([2, 0.5, 10, 0.1, 4, 0.25]), shown = right ? v : v * f;
+    var who = 'A classmate worked it out and got', u = p.unit ? ' ' + p.unit : '';
+    var q = p.q + '<p>' + who + ': <b>' + show(shown, n) + u + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right.' : 'No. The answer is ' + show(v, n) + u + '; ' + (f > 1 ? 'the classmate\'s answer is ' + f + ' times too big.' : 'the classmate\'s answer is ' + Math.round(1 / f) + ' times too small.'))].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf' && !numable(p))) return false;
+    if (p.a.t !== 'num' && p.unit) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function part(l, x) { var o = { label: l, a: x.a }; if (x.unit) o.unit = x.unit; return o; }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [part('1.', p), part('2.', p2)] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (mode !== 'place' && numable(p)) forms.push('ncheck');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'ncheck' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

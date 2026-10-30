@@ -414,8 +414,8 @@
 
   // ---------------------------------------------------------------- g5.powers-of-ten
   G('g5.powers-of-ten', function (R, ctx) {
-    var lv = L(ctx), shape = R.pickW(['value', 'exp', 'times', 'pick', 'zeros', 'expanded', 'ratio', 'split'], [3, 2, lv === 1 ? 1 : 3, 2, 1, lv === 3 ? 3 : 0, lv === 1 ? 0 : 2, 2]);
-    var k = by(ctx, R.int(2, 4), R.int(2, 6), R.int(3, 7)), big = Math.pow(10, k);
+    var lv = L(ctx), shape = R.pickW(['value', 'exp', 'times', 'pick', 'zeros', 'expanded', 'ratio', 'split'], [2, 2, 4, 1, 1, lv === 3 ? 3 : 0, lv === 1 ? 0 : 2, 3]);
+    var k = by(ctx, R.int(1, 6), R.int(2, 7), R.int(3, 8)), big = Math.pow(10, k);
     var rep = Array(k + 1).join('10' + X).slice(0, -X.length);
     if (shape === 'value') return {
       q: 'What is the value of $10^{' + k + '}$?',
@@ -430,7 +430,7 @@
       hint: 'Count the zeros.'
     };
     if (shape === 'times') {
-      var kk = by(ctx, R.int(1, 3), R.int(2, 4), R.int(2, 5)), a = by(ctx, R.int(2, 9), R.pick([R.int(2, 9), R.int(11, 99)]), R.pick([R.int(11, 99), q(R.int(11, 99), 10)])), av = q(a), res = av.mul(Math.pow(10, kk));
+      var kk = by(ctx, R.int(1, 4), R.int(2, 5), R.int(2, 5)), a = by(ctx, R.pick([R.int(2, 9), R.int(11, 99)]), R.pick([R.int(2, 9), R.int(11, 99)]), R.pick([R.int(11, 99), q(R.int(11, 99), 10)])), av = q(a), res = av.mul(Math.pow(10, kk));
       return {
         q: 'What is $' + dt(av) + X + '10^{' + kk + '}$?',
         a: num(ds(res)),
@@ -439,7 +439,7 @@
       };
     }
     if (shape === 'pick') {
-      var kp = R.int(2, 4);
+      var kp = R.int(2, 6);
       return {
         q: 'Which number is equal to $10^{' + kp + '}$?',
         a: mc('$' + nc(Math.pow(10, kp)) + '$', ['$' + (10 * kp) + '$', '$' + nc(Math.pow(10, kp + 1)) + '$', '$' + nc(Math.pow(10, kp - 1)) + '$', '$' + (10 + kp) + '$']),
@@ -457,7 +457,7 @@
       return { q: 'How many times as large is $10^{' + hi + '}$ as $10^{' + lo + '}$?', a: num(kr, 'int'),
         steps: ['$10^{' + hi + '}$ has ' + (hi - lo) + ' more factors of 10 than $10^{' + lo + '}$.', 'So it is $' + Array(hi - lo + 1).join('10' + X).slice(0, -X.length) + ' = ' + nc(kr) + '$ times as large. Check: $' + nc(Math.pow(10, hi)) + DV + nc(Math.pow(10, lo)) + ' = ' + nc(kr) + '$.'],
         hint: 'Count the extra factors of 10.' }; }
-    if (shape === 'split') { var dg = R.int(2, 9), ks = R.int(2, by(ctx, 4, 6, 7)), big2 = dg * Math.pow(10, ks);
+    if (shape === 'split') { var dg = R.pick([R.int(2, 9), R.int(11, 99)]), ks = R.int(2, by(ctx, 4, 6, 7)), big2 = dg * Math.pow(10, ks);
       return { q: 'Write $' + nc(big2) + '$ as $' + dg + X + '10^{\\square}$. What is the exponent?', a: num(ks, 'int'),
         steps: ['$' + nc(big2) + ' = ' + dg + X + nc(Math.pow(10, ks)) + '$.', '$' + nc(Math.pow(10, ks)) + '$ has ' + ks + ' zeros, so it is $10^{' + ks + '}$.'],
         hint: 'How many zeros follow the ' + dg + '?' }; }
@@ -1129,7 +1129,7 @@
 
   // ---------------------------------------------------------------- g5.subtract-unlike-fractions
   G('g5.subtract-unlike-fractions', function (R, ctx) {
-    var lv = L(ctx), shape = R.pickW(['calc', 'missing', 'story'], [6, lv === 1 ? 0 : 2, lv === 1 ? 1 : 2]), f1, f2;
+    var lv = L(ctx), shape = R.pickW(['calc', 'missing', 'story'], [5, lv === 1 ? 1 : 2, lv === 1 ? 3 : 2]), f1, f2;
     for (var t = 0; t < 100; t++) { var dd = dens(R, lv); f1 = randF(R, dd[0]); f2 = randF(R, dd[1]); if (!f1.q.eq(f2.q)) break; }
     if (f1.q.lt(f2.q)) { var tt = f1; f1 = f2; f2 = tt; }
     var res = addSubFrac(f1, f2, false);
@@ -1306,7 +1306,7 @@
   });
 
   // ---------------------------------------------------------------- g5.fractions-and-decimals
-  var TERM1 = [[1, 2], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5], [3, 10], [7, 10], [9, 10], [1, 20], [3, 20], [7, 20], [1, 25], [6, 25], [11, 50], [17, 100]];
+  var TERM1 = [[1, 2], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5], [1, 10], [3, 10], [7, 10], [9, 10], [1, 20], [3, 20], [7, 20], [9, 20], [11, 20], [1, 25], [6, 25], [12, 25], [11, 50], [17, 100], [37, 100]];
   var TERM2 = [[1, 8], [3, 8], [5, 8], [7, 8], [3, 40], [7, 40], [9, 20], [13, 25], [21, 50], [123, 1000], [3, 200]];
   function toDecSteps(n, d) {
     var r = Q(n, d), k = [10, 100, 1000].filter(function (m) { return m % d === 0; })[0], s = [];
@@ -1319,11 +1319,11 @@
     var f = R.pick(lv === 1 ? TERM1 : R.pick([TERM1, TERM2])), n = f[0], d = f[1], r = Q(n, d);
     if (shape === 'toDec') {
       if (lv === 3 && R.coin()) { var w = R.int(1, 9), mixq = r.add(w); return { q: 'Write $' + w + fr(n, d) + '$ as a decimal.', a: num(ds(mixq), 'dec'), steps: ['The whole number ' + w + ' goes before the decimal point.'].concat(toDecSteps(n, d), ['So $' + w + fr(n, d) + ' = ' + dt(mixq) + '$.']), hint: 'Change the fraction part to a decimal, then put the whole number in front.' }; }
-      return { q: 'Write $' + fr(n, d) + '$ as a decimal.', a: num(ds(r), 'dec'), steps: toDecSteps(n, d), hint: 'Rename the fraction with a denominator of 10, 100 or 1,000.' };
+      return { q: R.pick(['Write $' + fr(n, d) + '$ as a decimal.', who(R) + ' ' + R.pick(['ran $' + fr(n, d) + '$ of a mile', 'used $' + fr(n, d) + '$ of a bag of flour', 'filled $' + fr(n, d) + '$ of a jar', 'mowed $' + fr(n, d) + '$ of a lawn', 'read $' + fr(n, d) + '$ of a book']) + '. Write $' + fr(n, d) + '$ as a decimal.']), a: num(ds(r), 'dec'), steps: toDecSteps(n, d), hint: 'Rename the fraction with a denominator of 10, 100 or 1,000.' };
     }
     if (shape === 'toFrac') {
       var s = ds(r), k = Math.pow(10, dpOf(r)), top = Math.round(r.toNumber() * k);
-      return { q: 'Write $' + s + '$ as a fraction in simplest form.', a: num(r.toString(), 'frac'),
+      return { q: R.pick(['', who(R) + ' ' + R.pick(['ran', 'walked', 'swam', 'biked']) + ' $' + s + '$ of a mile. ']) + 'Write $' + s + '$ as a fraction in simplest form.', a: num(r.toString(), 'frac'),
         steps: ['$' + s + '$ is ' + top + ' ' + unitName(dpOf(r)) + ': $' + fr(top, nc(k)) + '$.', U.gcd(top, k) > 1 ? 'Simplify: divide the top and the bottom by ' + U.gcd(top, k) + '. $' + fr(top, nc(k)) + ' = ' + r.toTex() + '$.' : 'That is already in simplest form.'], hint: 'Read the decimal: how many tenths, hundredths or thousandths?' };
     }
     if (shape === 'pick') {
@@ -1486,7 +1486,7 @@
 
   // ---------------------------------------------------------------- g5.unit-fraction-divided-by-whole
   G('g5.unit-fraction-divided-by-whole', function (R, ctx) {
-    var lv = L(ctx), a = R.int(2, by(ctx, 5, 8, 10)), b = R.int(2, by(ctx, 5, 8, 10)), r = Q(1, a * b), shape = R.pickW(['calc', 'story', 'check', 'missing'], [4, 3, 2, lv === 1 ? 0 : 2]);
+    var lv = L(ctx), a = R.int(2, by(ctx, 6, 8, 10)), b = R.int(2, by(ctx, 6, 8, 10)), r = Q(1, a * b), shape = R.pickW(['calc', 'story', 'check', 'missing'], [3, 4, 2, lv === 1 ? 0 : 2]);
     var steps = ['Split $' + fr(1, a) + '$ into ' + b + ' equal parts.', 'Cutting each $' + fr(1, a) + '$ into ' + b + ' parts cuts the whole into $' + a + X + b + ' = ' + (a * b) + '$ parts, so each part is $' + fr(1, a * b) + '$.', '$' + fr(1, a) + DV + b + ' = ' + fr(1, a * b) + '$. Check: $' + fr(1, a * b) + X + b + ' = ' + fr(b, a * b) + ' = ' + fr(1, a) + '$.'];
     if (shape === 'story') {
       var nm = who(R), k = R.int(0, 2), qs = ['There is $' + fr(1, a) + '$ of a pan of cornbread left. ' + b + ' friends share it equally. What fraction of the whole pan does each friend get?', nm + ' has $' + fr(1, a) + '$ pound of nuts to put equally into ' + b + ' bags. How many pounds go in each bag?', 'A $' + fr(1, a) + '$-mile path is split into ' + b + ' equal parts for a relay. How long is each part, in miles?'];
@@ -1809,7 +1809,7 @@
   // ---------------------------------------------------------------- g5.two-patterns
   G('g5.two-patterns', function (R, ctx) {
     var lv = L(ctx), a, b;
-    if (lv === 3 && R.coin()) { var pr = R.pick([[2, 3], [4, 6], [2, 5], [4, 10], [6, 9]]); a = pr[0]; b = pr[1]; } else { a = R.int(1, 6); b = a * R.int(2, 4); }
+    if (lv === 3 && R.coin()) { var pr = R.pick([[2, 3], [4, 6], [2, 5], [4, 10], [6, 9], [3, 4], [3, 5], [4, 5], [6, 8], [5, 15]]); a = pr[0]; b = pr[1]; } else { a = R.int(1, 9); b = a * R.int(2, 5); }
     var swap = R.coin(), A = { r: a, n: 'A' }, B = { r: b, n: 'B' };
     var ta = [0, 1, 2, 3, 4].map(function (i) { return i * a; }), tb = [0, 1, 2, 3, 4].map(function (i) { return i * b; }), ratio = Q(b, a);
     var intro = 'Pattern A starts at 0 and adds ' + a + ' each time: ' + ta.join(', ') + ', … Pattern B starts at 0 and adds ' + b + ' each time: ' + tb.join(', ') + ', … ';

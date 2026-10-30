@@ -1133,7 +1133,7 @@
         ['x^{2} + y^{2}', 'Circles centered at the origin', 'Each level curve $x^2 + y^2 = k$ (for $k > 0$) is a circle of radius $\\sqrt{k}$.'],
         [T.coef(a, 'x^{2}') + ' + ' + (a + b) + 'y^{2}', 'Ellipses centered at the origin', '$' + T.coef(a, 'x^2') + ' + ' + (a + b) + 'y^2 = k$ is an ellipse for each $k > 0$ (unequal coefficients).'],
         ['y - ' + (a === 1 ? '' : a) + 'x^{2}', 'Parabolas', '$y = ' + (a === 1 ? '' : a) + 'x^2 + k$: the same parabola shifted up or down.'],
-        [T.lin(a, 'x', 0) + ' + ' + T.mono(b, 'y'), 'Parallel lines', '$' + a + 'x + ' + b + 'y = k$ is a line with slope $-\\frac{' + a + '}{' + b + '}$ for every $k$.'],
+        [T.lin(a, 'x', 0) + ' + ' + T.mono(b, 'y'), 'Parallel lines', '$' + T.lin(a, 'x', 0) + ' + ' + T.mono(b, 'y') + ' = k$ is a line with slope $-\\frac{' + a + '}{' + b + '}$ for every $k$.'],
         ['x^{2} - y^{2}', 'Hyperbolas (and two crossing lines for $k = 0$)', '$x^2 - y^2 = k$ is a hyperbola for $k \\ne 0$ and the lines $y = \\pm x$ for $k = 0$.'],
         ['xy', 'Hyperbolas (and the two axes for $k = 0$)', '$xy = k$ is a hyperbola $y = \\frac{k}{x}$ for $k \\ne 0$; $k = 0$ gives the axes.']]);
       var all = ['Circles centered at the origin', 'Ellipses centered at the origin', 'Parabolas', 'Parallel lines', 'Hyperbolas (and two crossing lines for $k = 0$)', 'Hyperbolas (and the two axes for $k = 0$)'];
@@ -1213,23 +1213,23 @@
   G('calc3.multivariable-limits', function (R, ctx) {
     var L = lvl(ctx), kind = R.pick(ML.byLevel(ctx, ['cont', 'line', 'decide'], ['line', 'decide', 'parab', 'cont'], ['decide', 'parab', 'decide', 'line']));
     if (kind === 'cont') {
-      if (R.coin()) { var a = R.nz(-4, 4), b = R.nz(-4, 4); return { q: 'Find $\\displaystyle\\lim_{(x, y) \\to ' + ptTex([a, a]) + '} \\frac{x^{2} - y^{2}}{x - y}$.', a: { t: 'num', v: String(2 * a) },
+      if (R.coin()) { var a = R.nz(-9, 9), b = R.nz(-9, 9); return { q: 'Find $\\displaystyle\\lim_{(x, y) \\to ' + ptTex([a, a]) + '} \\frac{x^{2} - y^{2}}{x - y}$.', a: { t: 'num', v: String(2 * a) },
         steps: ['Direct substitution gives $\\frac{0}{0}$, so simplify first.', 'Factor: $\\frac{(x - y)(x + y)}{x - y} = x + y$ wherever $x \\ne y$.', 'The limit of $x + y$ is $' + a + ' + ' + pf(a) + ' = ' + 2 * a + '$.'],
         hint: 'Factor the numerator as a difference of squares.', chk: { k: 'cont', f: '(x^2-y^2)/(x-y)', P: [a, a] }, nolint: ['+ -'] }; }
-      var P = [R.int(-3, 3), R.int(-3, 3)], nu = Poly.of(XY, [[R.nz(-3, 3), { x: 2 }], [R.nz(-4, 4), { x: 1, y: 1 }], [R.int(-5, 5), {}]]), de = Poly.of(XY, [[1, { x: 2 }], [1, { y: 2 }], [R.int(1, 4), {}]]), val = nu.at(envPt(XY, P)).div(de.at(envPt(XY, P)));
+      var P = [R.int(-5, 5), R.int(-5, 5)], nu = Poly.of(XY, [[R.nz(-5, 5), { x: 2 }], [R.nz(-6, 6), { x: 1, y: 1 }], [R.int(-9, 9), {}]]), de = Poly.of(XY, [[1, { x: 2 }], [1, { y: 2 }], [R.int(1, 4), {}]]), val = nu.at(envPt(XY, P)).div(de.at(envPt(XY, P)));
       return { q: 'Find $\\displaystyle\\lim_{(x, y) \\to ' + ptTex(P) + '} \\frac{' + nu.toTex() + '}{' + de.toTex() + '}$.', a: { t: 'num', v: val.toPlain() },
         steps: ['A rational function is continuous wherever its denominator is not zero.', 'At $' + ptTex(P) + '$ the denominator is $' + de.at(envPt(XY, P)).toTex() + ' \\ne 0$, so substitute.', 'The limit is $\\frac{' + nu.at(envPt(XY, P)).toTex() + '}{' + de.at(envPt(XY, P)).toTex() + '} = ' + val.toTex() + '$.'],
         hint: 'Check the denominator first; if it is not zero, just substitute.', chk: { k: 'cont', f: '(' + nu.toPlain() + ')/(' + de.toPlain() + ')', P: P } };
     }
     if (kind === 'line') {
-      var c1 = R.pick([1, 2, 3]), m1 = R.pick([0, 1, 2, -1, 3]), m2 = R.pick([1, 2, -1, -2, 3].filter(function (m) { return m !== m1; }));
+      var c1 = R.pick([1, 2, 3, 4, 5]), m1 = R.pick([0, 1, 2, -1, 3, -2, 4]), m2 = R.pick([1, 2, -1, -2, 3, -3, 4].filter(function (m) { return m !== m1; }));
       var fr = function (m) { return Q(c1 * m, 1 + m * m); };
       return { q: 'Let $f(x, y) = \\dfrac{' + T.mono(c1, 'xy') + '}{x^{2} + y^{2}}$. Find the limit of $f$ as $(x, y) \\to (0, 0)$ along the line $y = ' + T.mono(m1, 'x') + '$ and along $y = ' + T.mono(m2, 'x') + '$. Then: does $\\displaystyle\\lim_{(x, y) \\to (0, 0)} f(x, y)$ exist?', a: { t: 'multi', parts: [{ label: 'along $y = ' + T.mono(m1, 'x') + '$:', a: { t: 'num', v: fr(m1).toPlain() } }, { label: 'along $y = ' + T.mono(m2, 'x') + '$:', a: { t: 'num', v: fr(m2).toPlain() } }, { label: 'the limit exists?', a: { t: 'mc', choices: ['Yes', 'No'], v: 1, keep: true } }] },
         steps: ['Along $y = mx$ (with $x \\ne 0$): $f(x, mx) = \\frac{' + T.mono(c1, 'm') + 'x^2}{x^2 + m^2x^2} = \\frac{' + T.mono(c1, 'm') + '}{1 + m^2}$, a constant.', '$m = ' + m1 + '$ gives $' + fr(m1).toTex() + '$; $m = ' + m2 + '$ gives $' + fr(m2).toTex() + '$.', 'Two paths into the origin give two different values, so the limit does not exist.'],
         hint: 'Put $y = mx$ into $f$ and simplify; the $x$\'s cancel.', chk: { k: 'line', c: c1, m1: m1, m2: m2 } };
     }
     if (kind === 'parab') {
-      var kk = R.pick([1, 2, 3, -1, -2]), val2 = Q(kk, 1 + kk * kk);
+      var kk = R.pick([1, 2, 3, -1, -2, 4, -3, 5]), val2 = Q(kk, 1 + kk * kk);
       return { q: 'Let $f(x, y) = \\dfrac{x^{2}y}{x^{4} + y^{2}}$. Along every line $y = mx$ the limit at the origin is $0$. Find the limit along the parabola $y = ' + T.mono(kk, 'x^{2}') + '$, and decide whether $\\displaystyle\\lim_{(x, y) \\to (0, 0)} f(x, y)$ exists.', a: { t: 'multi', parts: [{ label: 'along the parabola:', a: { t: 'num', v: val2.toPlain() } }, { label: 'the limit exists?', a: { t: 'mc', choices: ['Yes, it is 0', 'No'], v: 1, keep: true } }] },
         steps: ['Put $y = ' + T.mono(kk, 'x^{2}') + '$: $f = \\frac{x^2 \\cdot ' + pf(kk) + 'x^2}{x^4 + ' + kk * kk + 'x^4} = \\frac{' + kk + '}{' + (1 + kk * kk) + '}$.', 'That is not $0$, but lines give $0$. Different paths, different values.', 'So the limit does not exist. Checking only straight lines is not enough.'],
         hint: 'Substitute $y = ' + T.mono(kk, 'x^{2}') + '$; every term becomes a multiple of $x^4$.', chk: { k: 'parab', kk: kk }, nolint: ['1x'] };
@@ -1659,7 +1659,7 @@
 
   G('calc3.iterated-integrals', function (R, ctx) {
     var L = lvl(ctx), kind = R.pick(ML.byLevel(ctx, ['full', 'inner', 'full'], ['full', 'inner', 'exp'], ['exp', 'full', 'exp']));
-    var a = R.int(0, 1), b = a + R.int(1, 3), c = R.int(-1, 1), d = c + R.int(1, 3), f = polyXY(R, L === 1 ? 1 : 2, L === 1 ? 2 : 3), inX = R.coin();
+    var a = R.int(-1, 2), b = a + R.int(1, 3), c = R.int(-2, 2), d = c + R.int(1, 3), f = polyXY(R, L === 1 ? 1 : 2, L === 1 ? 2 : 3), inX = R.coin();
     if (kind === 'inner') {
       var innerV = inX ? 'y' : 'x', lo = inX ? c : a, hi = inX ? d : b, res = f.defint(innerV, lo, hi);
       return { q: 'Evaluate the inner integral $\\displaystyle\\int_{' + lo + '}^{' + hi + '} \\left(' + f.toTex() + '\\right) d' + innerV + '$ (the answer is a function of $' + (inX ? 'x' : 'y') + '$).', a: { t: 'expr', v: res.toPlain(), vars: XY },
@@ -1673,7 +1673,7 @@
         steps: ['Work from the inside out. Inner integral (in $' + (inX ? 'y' : 'x') + '$): $' + inner.toTex() + '$.', 'Outer integral of that from $' + lims[0][0] + '$ to $' + lims[0][1] + '$: $' + I.toTex() + '$.', 'By Fubini\'s theorem the other order gives the same number.'],
         hint: 'Do the inner integral first, holding the outer variable constant.', chk: { k: 'int', f: f.toPlain(), lim: [[a, b], [c, d]] } };
     }
-    var A = R.int(1, 2), B = R.pick([1, 2, 3]);
+    var A = R.int(1, 3), B = R.pick([1, 2, 3, 4]);
     var ans = '(e^' + A * B + ' - 1)/' + B + ' - ' + A, ansT = '\\frac{e^{' + A * B + '} - 1}{' + B + '} - ' + A;
     return { q: 'Evaluate $\\displaystyle\\int_0^{' + A + '}\\int_0^{' + B + '} x\\,e^{xy}\\,dy\\,dx$.', a: { t: 'num', v: ans },
       steps: ['Inner integral in $y$ ($x$ is a constant): $\\int_0^{' + B + '} x\\,e^{xy}\\,dy = \\left[e^{xy}\\right]_{y=0}^{y=' + B + '} = e^{' + (B === 1 ? '' : B) + 'x} - 1$.', 'Outer: $\\int_0^{' + A + '} \\left(e^{' + (B === 1 ? '' : B) + 'x} - 1\\right) dx = \\left[\\frac{e^{' + (B === 1 ? '' : B) + 'x}}{' + B + '} - x\\right]_0^{' + A + '}$.', '$= ' + ansT + '$.', 'Doing $x$ first would need integration by parts: choosing the easy order is part of the skill.'],
@@ -1718,13 +1718,13 @@
         hint: 'Sketch the region first. New outer limits: the full range of $y$. New inner limits: left and right curves, solved for $x$.', chk: { k: 'limits', ans: right } };
     }
     if (kind === 'evalexp' && R.coin()) {
-      var a1 = R.pick([1, 2]), c1 = R.pick([1, 2, 4]), ans1 = c1 === 1 ? '(e^' + a1 * a1 + ' - 1)/2' : c1 + '*(e^' + a1 * a1 + ' - 1)/2';
+      var a1 = R.pick([1, 2, 3]), c1 = R.pick([1, 2, 4, 3, 6]), ans1 = c1 === 1 ? '(e^' + a1 * a1 + ' - 1)/2' : c1 + '*(e^' + a1 * a1 + ' - 1)/2';
       return { q: 'Evaluate $\\displaystyle\\int_0^{' + a1 + '}\\int_{x}^{' + a1 + '} ' + T.coef(c1, 'e^{y^{2}}') + '\\,dy\\,dx$ by reversing the order of integration.', a: { t: 'num', v: ans1 },
         steps: ['$e^{y^2}$ has no elementary antiderivative in $y$.', 'Region: $0 \\le x \\le y \\le ' + a1 + '$, a triangle. Slicing horizontally: $0 \\le y \\le ' + a1 + '$ and $0 \\le x \\le y$.', '$\\displaystyle\\int_0^{' + a1 + '}\\int_0^{y} ' + T.coef(c1, 'e^{y^{2}}') + '\\,dx\\,dy = \\int_0^{' + a1 + '} ' + T.coef(c1, 'y e^{y^{2}}') + '\\,dy$.', 'With $u = y^2$: $\\frac{' + c1 + '}{2}\\left(e^{' + a1 * a1 + '} - 1\\right)$.'],
         hint: 'Integrate in $x$ first; it produces the factor $y$ that $e^{y^2}$ needs.', chk: { k: 'num2', f: c1 + '*e^(x^2)', inner: 'x', lo: 'y', hi: String(a1), outer: [0, a1] } };
     }
     if (kind === 'evalexp') {
-      var a = R.pick([1, 2]), k = R.pick([1, 2, 3]), ans = k === 1 ? '(e^' + a * a + ' - 1)/2' : k + '*(e^' + a * a + ' - 1)/2';
+      var a = R.pick([1, 2, 3]), k = R.pick([1, 2, 3, 4, 5]), ans = k === 1 ? '(e^' + a * a + ' - 1)/2' : k + '*(e^' + a * a + ' - 1)/2';
       var top = k * a, inLo = k === 1 ? 'y' : '\\frac{y}{' + k + '}';
       return { q: 'Evaluate $\\displaystyle\\int_0^{' + top + '}\\int_{' + inLo + '}^{' + a + '} e^{x^{2}}\\,dx\\,dy$ by reversing the order of integration.', a: { t: 'num', v: ans },
         steps: ['$e^{x^2}$ has no elementary antiderivative, so the inner integral cannot be done as written.', 'Region: $0 \\le y \\le ' + top + '$ and $' + inLo + ' \\le x \\le ' + a + '$, a triangle with vertices $(0, 0)$, $(' + a + ', 0)$, $(' + a + ', ' + top + ')$. Slicing vertically: $0 \\le x \\le ' + a + '$ and $0 \\le y \\le ' + T.mono(k, 'x') + '$.', '$\\displaystyle\\int_0^{' + a + '}\\int_0^{' + T.mono(k, 'x') + '} e^{x^{2}}\\,dy\\,dx = \\int_0^{' + a + '} ' + T.mono(k, 'x') + 'e^{x^{2}}\\,dx$.', 'Substitute $u = x^2$: $= \\frac{' + k + '}{2}\\left[e^{x^{2}}\\right]_0^{' + a + '} = \\frac{' + k + '}{2}\\left(e^{' + a * a + '} - 1\\right)$.'],
@@ -1747,18 +1747,18 @@
   G('calc3.polar-double-integrals', function (R, ctx) {
     var L = lvl(ctx), kind = R.pick(ML.byLevel(ctx, ['disk', 'area', 'convert'], ['disk', 'gauss', 'sector', 'convert'], ['sector', 'gauss', 'annulus', 'sector']));
     if (kind === 'convert') {
-      var Rr = R.int(1, 4), right = '$\\displaystyle\\int_0^{2\\pi}\\int_0^{' + Rr + '} r^{2}\\cdot r\\,dr\\,d\\theta$';
+      var Rr = R.int(1, 9), right = '$\\displaystyle\\int_0^{2\\pi}\\int_0^{' + Rr + '} r^{2}\\cdot r\\,dr\\,d\\theta$';
       return { q: 'Which polar integral equals $\\displaystyle\\iint_D (x^{2} + y^{2})\\,dA$, where $D$ is the disk $x^{2} + y^{2} \\le ' + Rr * Rr + '$?', a: mc(R, right, ['$\\displaystyle\\int_0^{2\\pi}\\int_0^{' + Rr + '} r^{2}\\,dr\\,d\\theta$', '$\\displaystyle\\int_0^{2\\pi}\\int_0^{' + Rr * Rr + '} r^{2}\\cdot r\\,dr\\,d\\theta$', '$\\displaystyle\\int_0^{\\pi}\\int_0^{' + Rr + '} r^{2}\\cdot r\\,dr\\,d\\theta$']),
         steps: ['$x^2 + y^2 = r^2$, and the disk is $0 \\le r \\le ' + Rr + '$ (the radius, not $' + Rr * Rr + '$), $0 \\le \\theta \\le 2\\pi$.', 'The area element is $dA = r\\,dr\\,d\\theta$: a small polar box is about $\\Delta r$ by $r\\,\\Delta\\theta$.', 'So the integrand becomes $r^2 \\cdot r$.'],
         hint: 'Do not forget the extra factor $r$ in $dA$, and use the radius as the upper limit for $r$.', chk: { k: 'convert', R: Rr, ans: right } };
     }
     if (kind === 'gauss') {
-      var R2 = R.pick([1, 2, 3]), k = R.pick([1, 2]), ans = k === 1 ? 'pi*(1 - e^(-' + R2 * R2 + '))' : 'pi*(1 - e^(-' + 2 * R2 * R2 + '))/2';
+      var R2 = R.pick([1, 2, 3, 4, 5]), k = R.pick([1, 2]), ans = k === 1 ? 'pi*(1 - e^(-' + R2 * R2 + '))' : 'pi*(1 - e^(-' + 2 * R2 * R2 + '))/2';
       return { q: 'Evaluate $\\displaystyle\\iint_D e^{-' + (k === 1 ? '' : k) + '(x^{2} + y^{2})}\\,dA$ over the disk $x^{2} + y^{2} \\le ' + R2 * R2 + '$.', a: { t: 'num', v: ans },
         steps: ['In polar coordinates: $\\displaystyle\\int_0^{2\\pi}\\int_0^{' + R2 + '} e^{-' + (k === 1 ? '' : k) + 'r^2}\\, r\\,dr\\,d\\theta$.', 'The factor $r$ from $dA$ makes the inner integral easy: with $u = ' + (k === 1 ? '' : k) + 'r^2$, $\\int_0^{' + R2 + '} e^{-' + (k === 1 ? '' : k) + 'r^2} r\\,dr = \\frac{1}{' + 2 * k + '}\\left(1 - e^{-' + k * R2 * R2 + '}\\right)$.', 'Multiply by $2\\pi$: $' + (k === 1 ? '\\pi\\left(1 - e^{-' + R2 * R2 + '}\\right)' : '\\frac{\\pi}{2}\\left(1 - e^{-' + 2 * R2 * R2 + '}\\right)') + '$.'],
         hint: 'Switch to polar; the extra $r$ is exactly what a substitution needs.', chk: { k: 'polar', f: 'e^(-' + k + '*(x^2+y^2))', r: [0, R2], th: [0, 4] } };
     }
-    var Rr2 = R.int(1, 3), j1 = 4, j0 = 0, r0 = 0, f, desc;
+    var Rr2 = R.int(1, 6), j1 = 4, j0 = 0, r0 = 0, f, desc;
     if (kind === 'area') { f = Poly.c(XY, 1); var th = R.pick([[0, 1, 'the quarter disk in the first quadrant'], [0, 2, 'the upper half of the disk'], [1, 2, 'the quarter disk in the second quadrant']]); j0 = th[0]; j1 = th[1]; r0 = R.coin() ? 0 : 1; Rr2 = r0 + R.int(1, 3); desc = r0 ? 'the part of the ring $' + r0 + ' \\le x^2 + y^2 \\le ' + Rr2 * Rr2 + '$ in ' + (j0 === 0 && j1 === 1 ? 'the first quadrant' : j1 === 2 && j0 === 0 ? 'the upper half-plane' : 'the second quadrant') : th[2] + ' of radius ' + Rr2; }
     else if (kind === 'disk') { var pw = R.int(1, 2); f = Poly.of(XY, [[1, { x: 2 }], [1, { y: 2 }]]).pow(pw); desc = 'the disk $x^2 + y^2 \\le ' + Rr2 * Rr2 + '$'; }
     else if (kind === 'sector') { var th2 = R.pick([[0, 1, 'first quadrant'], [0, 2, 'upper half'], [1, 2, 'second quadrant'], [3, 4, 'fourth quadrant']]); j0 = th2[0]; j1 = th2[1]; f = Poly.of(XY, R.pick([[[1, { x: 1 }]], [[1, { y: 1 }]], [[1, { x: 1, y: 1 }]], [[1, { x: 2 }]], [[2, { x: 1 }], [1, { y: 1 }]]])); desc = 'the ' + th2[2] + ' part of the disk $x^2 + y^2 \\le ' + Rr2 * Rr2 + '$'; }
@@ -1776,7 +1776,7 @@
       if (kind === 'kconst') { var f0 = Poly.of(XY, R.pick([[[1, { x: 1, y: 1 }]], [[1, { x: 1 }], [1, { y: 1 }]], [[1, { x: 2 }], [1, { y: 1 }]], [[1, { x: 1, y: 2 }]]])), tot = I2(f0, 0, 1, 0, 1), k = tot.inv();
         return { q: 'For which constant $k$ is $f(x, y) = k\\left(' + f0.toTex() + '\\right)$ a joint probability density on the unit square $0 \\le x \\le 1$, $0 \\le y \\le 1$ (and $0$ elsewhere)?', a: { t: 'num', v: k.toPlain() },
           steps: ['A density must have total probability $1$: $\\iint f\\,dA = 1$.', '$\\int_0^1\\int_0^1 \\left(' + f0.toTex() + '\\right) dy\\,dx = ' + tot.toTex() + '$.', 'So $k \\cdot ' + tot.toTex() + ' = 1$ and $k = ' + k.toTex() + '$.'], hint: 'Set the total integral equal to $1$.', chk: { k: 'kconst', f: f0.toPlain() } }; }
-      var lam = R.pick([1, 2, 3]), mu = R.pick([1, 2]), a = R.pick([1, 2]), b = R.pick([1, 2]);
+      var lam = R.pick([1, 2, 3, 4, 5]), mu = R.pick([1, 2, 3]), a = R.pick([1, 2, 3]), b = R.pick([1, 2, 3]);
       return { q: 'The waiting times $X$ and $Y$ (minutes) at two counters have joint density $f(x, y) = ' + T.coef(lam * mu, 'e^{-' + T.lin(lam, 'x', 0) + ' - ' + T.mono(mu, 'y') + '}') + '$ for $x, y \\ge 0$. Find $P(X \\le ' + a + ',\\ Y \\le ' + b + ')$.', a: { t: 'num', v: '(1 - e^(-' + lam * a + '))*(1 - e^(-' + mu * b + '))' },
         steps: ['$P = \\displaystyle\\int_0^{' + a + '}\\int_0^{' + b + '} ' + T.coef(lam * mu, 'e^{-' + T.lin(lam, 'x', 0) + '}e^{-' + T.mono(mu, 'y') + '}') + '\\,dy\\,dx$: integrate the density over the event.', 'It splits: $\\left(\\int_0^{' + a + '} ' + T.coef(lam, 'e^{-' + T.mono(lam, 'x') + '}') + '\\,dx\\right)\\left(\\int_0^{' + b + '} ' + T.coef(mu, 'e^{-' + T.mono(mu, 'y') + '}') + '\\,dy\\right)$.', '$= \\left(1 - e^{-' + lam * a + '}\\right)\\left(1 - e^{-' + mu * b + '}\\right) \\approx ' + ((1 - Math.exp(-lam * a)) * (1 - Math.exp(-mu * b))).toFixed(4) + '$.'],
         hint: 'A probability is the double integral of the density over the region the event describes.', chk: { k: 'prob', lam: lam, mu: mu, a: a, b: b } };
@@ -1801,7 +1801,7 @@
   G('calc3.surface-area-double', function (R, ctx) {
     var L = lvl(ctx), kind = R.pick(ML.byLevel(ctx, ['plane', 'plane', 'cone'], ['plane', 'parab', 'cone'], ['parab', 'cap', 'plane']));
     if (kind === 'plane') {
-      var pl = R.pick(SA_PL.filter(function (t) { return L > 1 || t[2]; })), a = pl[0] * R.sign(), b = pl[1] * R.sign(), c0 = R.int(0, 9), s = 1 + a * a + b * b;
+      var pl = R.pick(SA_PL.filter(function (t) { return L > 1 || t[2]; })), a = pl[0] * R.sign(), b = pl[1] * R.sign(), c0 = R.int(-9, 15), s = 1 + a * a + b * b;
       var reg = R.pick([['the rectangle $0 \\le x \\le 2$, $0 \\le y \\le 3$', Q(6), 'Area of the rectangle: $6$.'], ['the triangle with vertices $(0, 0)$, $(4, 0)$, $(0, 2)$', Q(4), 'Area of the triangle: $\\frac{1}{2}(4)(2) = 4$.'], ['the disk $x^2 + y^2 \\le 4$', null, 'Area of the disk: $4\\pi$.']]);
       var areaD = reg[1], ansP = areaD ? radPlain(areaD, s) : radPlain(4, s).replace(/^/, '') + '*pi', ansT = areaD ? radTex(areaD, s) : radTex(4, s) + '\\pi';
       if (!areaD) ansP = '(' + radPlain(4, s) + ')*pi';
@@ -1810,7 +1810,7 @@
         hint: 'For a plane the stretching factor $\\sqrt{1 + f_x^2 + f_y^2}$ is constant: multiply it by the area of the region below.', chk: { k: 'graph', f: c0 + ' + (' + a + ')*x + (' + b + ')*y', reg: areaD ? (reg[1].eq(6) ? 'rect' : 'tri') : 'disk' } };
     }
     if (kind === 'cone') {
-      var Rr = R.int(1, 4), h0 = R.coin();
+      var Rr = R.int(1, 9), h0 = R.coin();
       return { q: 'Find the area of the part of the cone $z = \\sqrt{x^{2} + y^{2}}$ that lies ' + (h0 ? 'below the plane $z = ' + Rr + '$' : 'above the disk $x^2 + y^2 \\le ' + Rr * Rr + '$') + '.', a: { t: 'num', v: radPlain(Rr * Rr, 2) + '*pi' },
         steps: ['$f_x = \\frac{x}{\\sqrt{x^2 + y^2}}$, $f_y = \\frac{y}{\\sqrt{x^2 + y^2}}$, so $1 + f_x^2 + f_y^2 = 1 + \\frac{x^2 + y^2}{x^2 + y^2} = 2$.', 'The stretching factor is $\\sqrt{2}$ everywhere.', 'The shadow is the disk of radius $' + Rr + '$, area $' + piTex(Rr * Rr) + '$.', 'Area $= \\sqrt{2} \\cdot ' + piTex(Rr * Rr) + ' = ' + radTex(Rr * Rr, 2) + '\\pi$.'],
         hint: 'Compute $1 + f_x^2 + f_y^2$; it simplifies to a constant.', chk: { k: 'cone', R: Rr } };
@@ -1821,7 +1821,7 @@
         steps: ['The shadow is the disk $x^2 + y^2 \\le ' + hh + '$. The factor is $\\sqrt{1 + 4x^2 + 4y^2} = \\sqrt{1 + 4r^2}$.', 'In polar coordinates: $A = \\displaystyle\\int_0^{2\\pi}\\int_0^{' + sqrtTex(hh) + '} \\sqrt{1 + 4r^2}\\, r\\,dr\\,d\\theta$.', 'With $u = 1 + 4r^2$: $\\int \\sqrt{1 + 4r^2}\\,r\\,dr = \\frac{1}{12}(1 + 4r^2)^{3/2}$.', '$A = 2\\pi \\cdot \\frac{1}{12}\\left(' + m + '^{3/2} - 1\\right) = \\frac{\\pi}{6}\\left(' + m + '^{3/2} - 1\\right)' + (U.isSquare(m) ? ' = ' + piTex(Q(Math.pow(Math.sqrt(m), 3) - 1, 6)) : '') + '$.'],
         hint: 'The shadow is a disk: switch to polar coordinates; the factor $r$ makes a substitution work.', chk: { k: 'parab', h: hh } };
     }
-    var Rs = R.int(2, 5), hc = R.int(0, Rs - 1);
+    var Rs = R.int(2, 9), hc = R.int(0, Rs - 1);
     return { q: 'Find the area of the cap of the sphere $x^{2} + y^{2} + z^{2} = ' + Rs * Rs + '$ that lies above the plane $z = ' + hc + '$.', a: { t: 'num', v: piPlain(2 * Rs * (Rs - hc)) },
       steps: ['Top half: $z = \\sqrt{' + Rs * Rs + ' - x^2 - y^2}$, and $1 + z_x^2 + z_y^2 = \\frac{' + Rs * Rs + '}{' + Rs * Rs + ' - r^2}$.', 'The cap lies over the disk $r \\le \\sqrt{' + (Rs * Rs - hc * hc) + '}$ (where $z = ' + hc + '$).', '$A = \\displaystyle\\int_0^{2\\pi}\\int_0^{\\sqrt{' + (Rs * Rs - hc * hc) + '}} \\frac{' + Rs + '}{\\sqrt{' + Rs * Rs + ' - r^2}}\\,r\\,dr\\,d\\theta = 2\\pi \\cdot ' + Rs + '\\left[-\\sqrt{' + Rs * Rs + ' - r^2}\\right]_0^{\\sqrt{' + (Rs * Rs - hc * hc) + '}}$.', '$= 2\\pi \\cdot ' + Rs + '(' + Rs + ' - ' + hc + ') = ' + piTex(2 * Rs * (Rs - hc)) + '$.'],
       hint: 'Use polar coordinates on the shadow; the integrand becomes $\\frac{R\\,r}{\\sqrt{R^2 - r^2}}$.', chk: { k: 'cap', R: Rs, h: hc } };
@@ -1858,13 +1858,13 @@
     var L = lvl(ctx), kind = R.pick(ML.byLevel(ctx, ['parab', 'cyl', 'cyl'], ['parab', 'cone', 'cyl'], ['cone', 'icecream', 'cyl', 'parab']));
     var r = Poly.v(RZ, 'r'), z = Poly.v(RZ, 'z');
     if (kind === 'icecream') {
-      var a = R.pick([1, 2]), ans = '4*pi*' + a * a * a + '*(sqrt(2) - 1)/3';
+      var a = R.pick([1, 2, 3, 4]), ans = '4*pi*' + a * a * a + '*(sqrt(2) - 1)/3';
       return { q: 'Find the volume of the solid above the cone $z = \\sqrt{x^{2} + y^{2}}$ and below the sphere $x^{2} + y^{2} + z^{2} = ' + 2 * a * a + '$.', a: { t: 'num', v: ans },
         steps: ['In cylindrical coordinates: $r \\le z \\le \\sqrt{' + 2 * a * a + ' - r^2}$. They meet where $r = \\sqrt{' + 2 * a * a + ' - r^2}$, at $r = ' + a + '$.', '$V = \\displaystyle\\int_0^{2\\pi}\\int_0^{' + a + '}\\int_r^{\\sqrt{' + 2 * a * a + ' - r^2}} r\\,dz\\,dr\\,d\\theta = 2\\pi\\int_0^{' + a + '} \\left(r\\sqrt{' + 2 * a * a + ' - r^2} - r^2\\right) dr$.', '$= 2\\pi\\left[-\\frac{1}{3}(' + 2 * a * a + ' - r^2)^{3/2} - \\frac{r^3}{3}\\right]_0^{' + a + '} = \\frac{4\\pi \\cdot ' + a * a * a + '}{3}\\left(\\sqrt{2} - 1\\right)$.'],
         hint: 'Find where the cone meets the sphere; that radius is the outer limit for $r$. Remember $dV = r\\,dz\\,dr\\,d\\theta$.', chk: { k: 'cylnum', f: '1', zlo: 'r', zhi: 'sqrt(' + 2 * a * a + '-r^2)', r: [0, a], th: [0, 4] } };
     }
     var f, zlo, zhi, r1, j1 = 4, desc;
-    if (kind === 'parab' && R.coin()) { var hh = R.int(1, 5), sq = Math.sqrt(hh); f = R.coin() ? Poly.c(XYZ, 1) : Poly.v(XYZ, 'z'); zlo = r.pow(2); zhi = Poly.c(RZ, hh); r1 = null; desc = (f.isConst() ? 'Find the volume of the solid' : 'Evaluate $\\iiint_E z\\,dV$ over the solid $E$') + ' between the paraboloid $z = x^{2} + y^{2}$ and the plane $z = ' + hh + '$.';
+    if (kind === 'parab' && R.coin()) { var hh = R.int(1, 9), sq = Math.sqrt(hh); f = R.coin() ? Poly.c(XYZ, 1) : Poly.v(XYZ, 'z'); zlo = r.pow(2); zhi = Poly.c(RZ, hh); r1 = null; desc = (f.isConst() ? 'Find the volume of the solid' : 'Evaluate $\\iiint_E z\\,dV$ over the solid $E$') + ' between the paraboloid $z = x^{2} + y^{2}$ and the plane $z = ' + hh + '$.';
       var fcp = toCyl(f).mul(r), inZp = fcp.defint('z', zlo, zhi), rr = Poly.v(RZ, 'r'); // r from 0 to sqrt(h): integrate in u = r^2 exactly: inZp is a polynomial in r^2 times r
       var uV = ['u'], inU = new Poly(uV); for (var key in inZp.m) { var ex = key.split(',').map(Number); inU = inU.add(Poly.mono(uV, inZp.m[key].div(2), [(ex[0] - 1) / 2])); }
       var valP = inU.defint('u', 0, hh).cval().mul(2);
@@ -1872,9 +1872,9 @@
         steps: ['Cylindrical coordinates: $r^2 \\le z \\le ' + hh + '$, and the shadow is the disk $r \\le ' + sqrtTex(hh) + '$.', 'With $dV = r\\,dz\\,dr\\,d\\theta$, the inner integral gives $' + inZp.toTex() + '$.', 'Integrate in $r$ from $0$ to $' + sqrtTex(hh) + '$ (the substitution $u = r^2$ helps), then multiply by $2\\pi$: $' + piTex(valP) + '$.'],
         hint: 'The paraboloid is $z = r^2$; it meets the plane where $r^2 = ' + hh + '$.', chk: { k: 'cylnum', f: f.toPlain(), zlo: 'r^2', zhi: String(hh), r: [0, sq], th: [0, 4] } };
     }
-    if (kind === 'parab') { var A = R.pick([1, 4, 9, 16]), sA = Math.sqrt(A); f = Poly.c(XYZ, 1); zlo = Poly.c(RZ, 0); zhi = Poly.c(RZ, A).sub(r.pow(2)); r1 = sA; desc = 'Find the volume of the solid under the paraboloid $z = ' + A + ' - x^{2} - y^{2}$ and above the $xy$-plane.'; }
-    if (kind === 'cone') { var h = R.int(1, 5); f = R.coin() ? Poly.c(XYZ, 1) : Poly.v(XYZ, 'z'); zlo = r; zhi = Poly.c(RZ, h); r1 = h; desc = (f.isConst() ? 'Find the volume of the solid' : 'Evaluate $\\iiint_E z\\,dV$ over the solid $E$') + ' between the cone $z = \\sqrt{x^{2} + y^{2}}$ and the plane $z = ' + h + '$.'; }
-    if (kind === 'cyl') { var Rr = R.int(1, 4), H = R.int(1, 5), half = L > 1 && R.coin(); f = Poly.of(XYZ, half ? R.pick([[[1, { y: 1 }]], [[1, { y: 1, z: 1 }]], [[1, { x: 2 }]]]) : R.pick([[[1, { x: 2 }], [1, { y: 2 }]], [[1, { z: 1 }]], [[1, { x: 2 }], [1, { y: 2 }], [1, { z: 1 }]], [[1, { y: 2 }]]])); zlo = Poly.c(RZ, 0); zhi = Poly.c(RZ, H); r1 = Rr; if (half) j1 = 2; desc = 'Evaluate $\\iiint_E \\left(' + f.toTex() + '\\right) dV$ where $E$ is the solid ' + (half ? 'half-cylinder $x^{2} + y^{2} \\le ' + Rr * Rr + '$, $y \\ge 0$' : 'cylinder $x^{2} + y^{2} \\le ' + Rr * Rr + '$') + ', $0 \\le z \\le ' + H + '$.'; }
+    if (kind === 'parab') { var A = R.pick([1, 4, 9, 16, 25, 36]), sA = Math.sqrt(A); f = Poly.c(XYZ, 1); zlo = Poly.c(RZ, 0); zhi = Poly.c(RZ, A).sub(r.pow(2)); r1 = sA; desc = 'Find the volume of the solid under the paraboloid $z = ' + A + ' - x^{2} - y^{2}$ and above the $xy$-plane.'; }
+    if (kind === 'cone') { var h = R.int(1, 9); f = R.coin() ? Poly.c(XYZ, 1) : Poly.v(XYZ, 'z'); zlo = r; zhi = Poly.c(RZ, h); r1 = h; desc = (f.isConst() ? 'Find the volume of the solid' : 'Evaluate $\\iiint_E z\\,dV$ over the solid $E$') + ' between the cone $z = \\sqrt{x^{2} + y^{2}}$ and the plane $z = ' + h + '$.'; }
+    if (kind === 'cyl') { var Rr = R.int(1, 6), H = R.int(1, 8), half = L > 1 && R.coin(); f = Poly.of(XYZ, half ? R.pick([[[1, { y: 1 }]], [[1, { y: 1, z: 1 }]], [[1, { x: 2 }]]]) : R.pick([[[1, { x: 2 }], [1, { y: 2 }]], [[1, { z: 1 }]], [[1, { x: 2 }], [1, { y: 2 }], [1, { z: 1 }]], [[1, { y: 2 }]]])); zlo = Poly.c(RZ, 0); zhi = Poly.c(RZ, H); r1 = Rr; if (half) j1 = 2; desc = 'Evaluate $\\iiint_E \\left(' + f.toTex() + '\\right) dV$ where $E$ is the solid ' + (half ? 'half-cylinder $x^{2} + y^{2} \\le ' + Rr * Rr + '$, $y \\ge 0$' : 'cylinder $x^{2} + y^{2} \\le ' + Rr * Rr + '$') + ', $0 \\le z \\le ' + H + '$.'; }
     var fc = toCyl(f).mul(r), inZ = fc.defint('z', zlo, zhi), inR = inZ.defint('r', 0, r1), val = intCS(inR, 0, j1, 'cth', 'sth');
     return { q: desc, a: { t: 'num', v: rpPlain(val) },
       steps: ['Cylindrical coordinates: $x = r\\cos\\theta$, $y = r\\sin\\theta$, $z = z$, and $dV = r\\,dz\\,dr\\,d\\theta$.', 'Limits: $' + zlo.toTex() + ' \\le z \\le ' + zhi.toTex() + '$, $0 \\le r \\le ' + r1 + '$, $0 \\le \\theta \\le ' + (j1 === 2 ? '\\pi' : '2\\pi') + '$.', 'Integrand times $r$: $' + fc.toTex() + '$. After $z$: $' + inZ.toTex() + '$.', 'After $r$: $' + inR.toTex() + '$. After $\\theta$: $' + rpTex(val) + '$.'],
@@ -1883,7 +1883,7 @@
 
   G('calc3.triple-spherical', function (R, ctx) {
     var L = lvl(ctx), kind = R.pick(ML.byLevel(ctx, ['ball', 'cone', 'ball'], ['cone', 'zhemi', 'ball', 'dv'], ['exp', 'zhemi', 'shell', 'dv']));
-    var a = R.int(1, 4);
+    var a = R.int(1, 7);
     if (kind === 'dv') {
       var right = '$\\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$ with $0 \\le \\varphi \\le \\pi$';
       return { q: 'In spherical coordinates, which is the volume element for a whole ball centered at the origin, with the right range for $\\varphi$?', a: mc(R, right, ['$\\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$ with $0 \\le \\varphi \\le 2\\pi$', '$\\rho\\,d\\rho\\,d\\varphi\\,d\\theta$ with $0 \\le \\varphi \\le \\pi$', '$\\rho^2\\cos\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$ with $0 \\le \\varphi \\le \\pi$']),
@@ -1906,7 +1906,7 @@
     if (kind === 'exp') return { q: 'Evaluate $\\displaystyle\\iiint_B e^{(x^{2} + y^{2} + z^{2})^{3/2}}\\,dV$ over the ball $x^{2} + y^{2} + z^{2} \\le 1$.', a: { t: 'num', v: '4*pi*(e - 1)/3' },
       steps: ['$(x^2 + y^2 + z^2)^{3/2} = \\rho^3$, so the integral is $\\displaystyle\\int_0^{2\\pi}\\int_0^{\\pi}\\int_0^1 e^{\\rho^3}\\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$.', 'The $\\rho^2$ from $dV$ makes $u = \\rho^3$ work: $\\int_0^1 e^{\\rho^3}\\rho^2\\,d\\rho = \\frac{1}{3}(e - 1)$.', 'Times $2$ (from $\\varphi$) and $2\\pi$ (from $\\theta$): $\\frac{4\\pi}{3}(e - 1)$.'],
       hint: 'In spherical coordinates the exponent is $\\rho^3$; the volume element supplies $\\rho^2$.', chk: { k: 'sph', f: 'e^((x^2+y^2+z^2)^(3/2))', rho: [0, 1], phi: [0, 1], th: [0, 2] } };
-    var b = a + R.int(1, 2);
+    var b = a + R.int(1, 4);
     return { q: 'Find the volume of the spherical shell between $\\rho = ' + a + '$ and $\\rho = ' + b + '$ that lies above the $xy$-plane.', a: { t: 'num', v: piPlain(Q(2 * (b * b * b - a * a * a), 3)) },
       steps: ['$V = \\displaystyle\\int_0^{2\\pi}\\int_0^{\\pi/2}\\int_{' + a + '}^{' + b + '} \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$.', '$\\int_{' + a + '}^{' + b + '}\\rho^2\\,d\\rho = \\frac{' + (b * b * b - a * a * a) + '}{3}$, $\\int_0^{\\pi/2}\\sin\\varphi\\,d\\varphi = 1$.', '$V = 2\\pi \\cdot \\frac{' + (b * b * b - a * a * a) + '}{3} = ' + piTex(Q(2 * (b * b * b - a * a * a), 3)) + '$.'],
       hint: 'Above the $xy$-plane means $0 \\le \\varphi \\le \\frac{\\pi}{2}$.', chk: { k: 'sph', f: '1', rho: [a, b], phi: [0, 0.5], th: [0, 2] } };
@@ -1914,19 +1914,19 @@
 
   G('calc3.triple-applications', function (R, ctx) {
     var L = lvl(ctx), kind = R.pick(ML.byLevel(ctx, ['mass', 'mass', 'zbarbox'], ['zbarbox', 'hemi', 'Iz', 'mass'], ['hemi', 'conebar', 'Iz', 'zbarbox']));
-    if (kind === 'mass') { var a = R.int(1, 3), b = R.int(1, 3), c = R.int(1, 3), rho = Poly.of(XYZ, R.pick([[[1, { x: 1 }], [1, { y: 1 }], [1, { z: 1 }]], [[1, { x: 1, y: 1 }]], [[1, { z: 1 }], [1, {}]], [[1, { x: 2 }]]])), m = rho.defint('z', 0, c).defint('y', 0, b).defint('x', 0, a).cval();
+    if (kind === 'mass') { var a = R.int(1, 5), b = R.int(1, 5), c = R.int(1, 5), rho = Poly.of(XYZ, R.pick([[[1, { x: 1 }], [1, { y: 1 }], [1, { z: 1 }]], [[1, { x: 1, y: 1 }]], [[1, { z: 1 }], [1, {}]], [[1, { x: 2 }]]])), m = rho.defint('z', 0, c).defint('y', 0, b).defint('x', 0, a).cval();
       return { q: 'A solid box $[0, ' + a + '] \\times [0, ' + b + '] \\times [0, ' + c + ']$ has density $\\rho(x, y, z) = ' + rho.toTex() + '$. Find its mass.', a: { t: 'num', v: m.toPlain() },
         steps: ['$m = \\iiint_B \\rho\\,dV$.', 'Integrate $z$, then $y$, then $x$ over the box: $' + rho.defint('z', 0, c).toTex() + '$, then $' + rho.defint('z', 0, c).defint('y', 0, b).toTex() + '$.', '$m = ' + m.toTex() + '$.'], hint: 'Mass is the triple integral of density.', chk: { k: 'boxw', rho: rho.toPlain(), w: '1', a: a, b: b, c: c } }; }
-    if (kind === 'zbarbox') { var a2 = R.int(1, 3), b2 = R.int(1, 3), c2 = R.int(1, 4), rho2 = Poly.of(XYZ, R.pick([[[1, { z: 1 }]], [[1, { z: 1 }], [1, {}]], [[1, { z: 2 }]]])), m2 = rho2.defint('z', 0, c2).cval().mul(a2 * b2), Mz = rho2.mul(Poly.v(XYZ, 'z')).defint('z', 0, c2).cval().mul(a2 * b2), zb = Mz.div(m2);
+    if (kind === 'zbarbox') { var a2 = R.int(1, 5), b2 = R.int(1, 5), c2 = R.int(1, 6), rho2 = Poly.of(XYZ, R.pick([[[1, { z: 1 }]], [[1, { z: 1 }], [1, {}]], [[1, { z: 2 }]]])), m2 = rho2.defint('z', 0, c2).cval().mul(a2 * b2), Mz = rho2.mul(Poly.v(XYZ, 'z')).defint('z', 0, c2).cval().mul(a2 * b2), zb = Mz.div(m2);
       return { q: 'A box $[0, ' + a2 + '] \\times [0, ' + b2 + '] \\times [0, ' + c2 + ']$ has density $\\rho = ' + rho2.toTex() + '$ (heavier higher up). Find $\\bar{z}$.', a: { t: 'num', v: zb.toPlain() },
         steps: ['$\\bar{z} = \\dfrac{\\iiint z\\rho\\,dV}{\\iiint \\rho\\,dV}$.', 'Mass: $' + m2.toTex() + '$. Moment: $\\iiint z\\rho\\,dV = ' + Mz.toTex() + '$.', '$\\bar{z} = ' + zb.toTex() + '$, above the middle height $' + Q(c2, 2).toTex() + '$, as expected.'], hint: 'Center of mass = moment / mass. The $x$ and $y$ integrals give the same factor on top and bottom.', chk: { k: 'boxbar', rho: rho2.toPlain(), a: a2, b: b2, c: c2 } }; }
-    if (kind === 'hemi') { var A2 = R.int(1, 4) * R.pick([1, 2]);
+    if (kind === 'hemi') { var A2 = R.int(1, 6) * R.pick([1, 2]);
       return { q: 'Find $\\bar{z}$ for the solid upper half-ball $x^{2} + y^{2} + z^{2} \\le ' + A2 * A2 + '$, $z \\ge 0$, with constant density.', a: { t: 'num', v: Q(3 * A2, 8).toPlain() },
         steps: ['Volume (mass with density $1$): $\\frac{2}{3}\\pi(' + A2 + ')^3$.', 'Moment: $\\iiint z\\,dV = \\frac{\\pi(' + A2 + ')^4}{4}$ (spherical coordinates, $z = \\rho\\cos\\varphi$).', '$\\bar{z} = \\dfrac{\\pi(' + A2 + ')^4/4}{2\\pi(' + A2 + ')^3/3} = \\frac{3(' + A2 + ')}{8} = ' + Q(3 * A2, 8).toTex() + '$.'], hint: 'Use spherical coordinates for both integrals.', chk: { k: 'hemi', a: A2 } }; }
-    if (kind === 'conebar') { var h = R.int(1, 4) * 4;
+    if (kind === 'conebar') { var h = R.int(1, 7) * 4;
       return { q: 'Find $\\bar{z}$ for the solid cone $\\sqrt{x^{2} + y^{2}} \\le z \\le ' + h + '$ with constant density.', a: { t: 'num', v: String(3 * h / 4) },
         steps: ['Cylindrical coordinates: $r \\le z \\le ' + h + '$, $0 \\le r \\le ' + h + '$.', 'Volume: $\\int_0^{2\\pi}\\int_0^{' + h + '}\\int_r^{' + h + '} r\\,dz\\,dr\\,d\\theta = \\frac{\\pi(' + h + ')^3}{3}$.', 'Moment: $\\int_0^{2\\pi}\\int_0^{' + h + '}\\int_r^{' + h + '} z\\,r\\,dz\\,dr\\,d\\theta = \\frac{\\pi(' + h + ')^4}{4}$.', '$\\bar{z} = \\frac{3}{4}(' + h + ') = ' + 3 * h / 4 + '$: three quarters of the way up from the tip.'], hint: 'In cylindrical coordinates the cone is $r \\le z$.', chk: { k: 'cone', h: h } }; }
-    var Rr = R.int(1, 3), H = R.int(1, 4);
+    var Rr = R.int(1, 5), H = R.int(1, 7);
     return { q: 'Find the moment of inertia about the $z$-axis, $I_z = \\iiint (x^{2} + y^{2})\\,dV$, of the solid cylinder $x^{2} + y^{2} \\le ' + Rr * Rr + '$, $0 \\le z \\le ' + H + '$ (density $1$).', a: { t: 'num', v: piPlain(Q(Math.pow(Rr, 4) * H, 2)) },
       steps: ['$x^2 + y^2 = r^2$ is the squared distance from the $z$-axis.', '$I_z = \\displaystyle\\int_0^{2\\pi}\\int_0^{' + Rr + '}\\int_0^{' + H + '} r^2 \\cdot r\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot ' + H + ' \\cdot \\frac{' + Math.pow(Rr, 4) + '}{4}$.', '$= ' + piTex(Q(Math.pow(Rr, 4) * H, 2)) + '$ (the familiar $\\frac{1}{2}MR^2$ with $M = \\pi(' + Rr + ')^2(' + H + ')$).'], hint: 'Cylindrical coordinates; the integrand is $r^2$ and $dV$ adds another $r$.', chk: { k: 'Iz', R: Rr, H: H } };
   });
@@ -2211,3 +2211,133 @@
   // ==== neural-network thread (nn) end ====
 
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
+   generator still has few different problems at a level sometimes asks the same skill in another form, built only from
+   problems that generator made, so every answer is the generator's own:
+   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+     classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
+     checker rejects it;
+   - two at once: two different short questions of the topic, answered together.
+   Topics whose generator already varies a lot at a level are left as they are. Placed after the generators and
+   registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'calc3', VAR = {};
+  // how often another form is used: never when the topic's own generator already varies a lot at this level, up to
+  // half the time when it has few different questions (counted once per topic and level from 40 fixed seeds)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 37 ? 0 : VAR[key] >= 30 ? 0.3 : VAR[key] >= 20 ? 0.45 : 0.55;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
+  // a nearby wrong answer for a number or an expression, or null
+  function wrongFor(R, a) {
+    var v = String(ML.answerValue(a)), cands = [], m;
+    if (a.t === 'num') {
+      if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
+      else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
+      else if (/^-?\d+\.\d+$/.test(v)) { var x = +v, dp = v.split('.')[1].length, st = Math.pow(10, -Math.min(dp, 2)); cands = [x + st, x - st, -x, x * 10, x / 10].map(function (y) { return ML.util.numStr(ML.util.round(y, dp + 1)); }); }
+      else return null;
+    } else if (a.t === 'expr') {
+      if (v.length > 60) return null;
+      if (/ \+ /.test(v)) cands.push(v.replace(' + ', ' - '));
+      if (/ - /.test(v)) cands.push(v.replace(' - ', ' + '));
+      if ((m = /(^|[^\d.^])(\d+)(?![\d.])/.exec(v)) && !/\^$/.test(v.slice(0, m.index + m[1].length))) cands.push(v.slice(0, m.index) + m[1] + (+m[2] + 1) + v.slice(m.index + m[0].length));
+      if (!cands.length) return null;
+    } else return null;
+    var nv = function (s) { var mm = /^(-?\d+)\/(\d+)$/.exec(s); return mm ? mm[1] / mm[2] : /^-?\d+(\.\d+)?$/.test(s) ? +s : null; }, v0 = nv(v);
+    cands = R.shuffle(cands.filter(function (c, i, all) { var x = nv(c); return c !== v && all.indexOf(c) === i && (x === null || v0 === null || (Math.abs(x - v0) >= 0.01 * Math.max(Math.abs(v0), 1e-12) && (v0 <= 0 || x > 0) && (v0 <= 0 || v0 > 1 || x <= 1))); })); // a believable slip: the same sign, and at most 1 when the right answer is
+    for (var i = 0; i < cands.length; i++) if (okAns(a, cands[i]) === false) return cands[i];
+    return null;
+  }
+  function checkable(p) {
+    var a = p.a;
+    if (!a || p.unit || (a.form && a.form !== 'int' && a.form !== 'frac' && a.form !== 'simplest')) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bclassmate\b/i.test(txt(p.q))) return false;
+    if (a.t === 'num' || a.t === 'expr') return okAns(a, ML.answerValue(a)) === true;
+    if (a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    return true;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || ['mc', 'tf', 'num'].indexOf(p.a.t) < 0) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= 300 && !/<(table|svg|img|canvas|ol|ul)\b|\$\$|\\begin\{/i.test(p.q);
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), shown, good;
+    if (a.t === 'mc') {
+      var k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+      shown = a.choices[k]; good = a.choices[a.v];
+    } else {
+      good = ML.answerShow(a);
+      var w = right ? null : wrongFor(R, a);
+      if (!right && w === null) return null;
+      shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
+      if (!shown || /undefined|NaN/.test(shown)) return null;
+    }
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var out = { q: '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q + '</li><li>' + p2.q + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + (p.steps || [''])[0]].concat((p.steps || []).slice(1), ['Question 2: ' + (p2.steps || [''])[0]], (p2.steps || []).slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), mode = ctx && ctx.mode;
+      if (!p || !p.a || !ML.check || !ML.answerShow || !R.chance(share(id, base, ctx))) return p;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check', 'check');
+      if (pairable(p, true)) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = null;
+      try { out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base); } catch (e) { out = null; }
+      return out || p;
+    };
+    fn._forms = true;
+    fn._base = base; // the topic's own generator (for tests)
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

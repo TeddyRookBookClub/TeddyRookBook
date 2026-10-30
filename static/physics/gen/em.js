@@ -266,20 +266,20 @@
         'Add up only the charges inside, then divide by ε₀.', { kind: k, qs: qs, ins: ins });
     }
     if (k === 'qenc') {
-      q = R.pick([2, 3, 4, 5, 6, 8, -2, -3, -5]); Phi = q * 1e-9 / EPS0; var shown = +Phi.toPrecision(3);
+      q = R.pick([2, 3, 4, 5, 6, 8, -2, -3, -5, 1, 7, 9, 10, 12, 15, -1, -4, -6, -8, -10]); Phi = q * 1e-9 / EPS0; var shown = +Phi.toPrecision(3);
       return P('Measurements show a net flux of ' + $(gu(shown, 'N·m²/C')) + ' out through a closed surface. How much net charge is inside, in nC?',
         num(shown * EPS0 * 1e9, 'nC'), ['Gauss\'s law turned around: $q_{\\text{enc}} = \\varepsilon_0\\,\\Phi$.', $('q_{\\text{enc}} = (8.85 \\times 10^{-12})(' + gv(shown) + ') = ' + nu(shown * EPS0, 'C') + ' = ' + nu(shown * EPS0 * 1e9, 'nC')) + (q < 0 ? ' Negative flux (more field going in than out) means negative charge inside.' : '')],
         'q_enc = ε₀Φ.', { kind: k, Phi: shown });
     }
     if (k === 'face' || k === 'hemi') {
-      q = R.pick([3, 4, 5, 6, 8, 9, 12]);
+      q = R.pick([3, 4, 5, 6, 8, 9, 12, 1, 2, 7, 10, 15, 18, 20]);
       Phi = q * 1e-9 / EPS0 / (k === 'face' ? 6 : 2);
       return P(k === 'face' ? 'A point charge of ' + $(gu(q, 'nC')) + ' sits at the exact center of a cube. How much flux passes through one face of the cube?' : 'A point charge of ' + $(gu(q, 'nC')) + ' sits at the center of a sphere. How much flux passes through the upper half (a hemisphere) of that sphere?',
         num(Phi, 'N·m²/C'), ['The whole closed surface gets $q/\\varepsilon_0 = ' + nu(q * 1e-9 / EPS0, 'N·m²/C') + '$.', k === 'face' ? 'By symmetry the six faces share it equally: $\\Phi = \\dfrac{q}{6\\varepsilon_0} = ' + nu(Phi, 'N·m²/C') + '$.' : 'By symmetry the two halves share it equally: $\\Phi = \\dfrac{q}{2\\varepsilon_0} = ' + nu(Phi, 'N·m²/C') + '$.'],
         'Find the total flux with Gauss\'s law, then share it out by symmetry.', { kind: k, q: q });
     }
     if (k === 'corner' || k === 'cornerFar') {
-      q = R.pick([4, 6, 8, 12, 16, 24]); Phi = q * 1e-9 / EPS0 / (k === 'corner' ? 8 : 24);
+      q = R.pick([4, 6, 8, 12, 16, 24, 2, 3, 5, 10, 18, 20, 30, 36, 48]); Phi = q * 1e-9 / EPS0 / (k === 'corner' ? 8 : 24);
       return P('A point charge of ' + $(gu(q, 'nC')) + ' sits exactly at one corner of an imaginary cube. ' + (k === 'corner' ? 'How much flux passes out through the cube as a whole?' : 'How much flux passes through one of the three faces that do not touch that corner?'),
         num(Phi, 'N·m²/C'), ['Picture eight identical cubes meeting at the charge: together they surround it, so together they get $q/\\varepsilon_0$, and each gets $q/(8\\varepsilon_0)$.', k === 'corner' ? '$\\Phi = \\dfrac{q}{8\\varepsilon_0} = \\dfrac{' + gv(q) + ' \\times 10^{-9}}{8(8.85 \\times 10^{-12})} = ' + nu(Phi, 'N·m²/C') + '$.' : 'In our cube, the three faces that touch the corner lie along field lines from the charge (the field skims them), so they get no flux. The three far faces share $q/(8\\varepsilon_0)$ equally: $\\Phi = \\dfrac{q}{24\\varepsilon_0} = ' + nu(Phi, 'N·m²/C') + '$.'],
         'How many identical cubes would it take to surround the charge completely?', { kind: k, q: q });
@@ -409,7 +409,7 @@
 
   G('em.conductors', function (R, ctx) {
     var k = kind(R, ctx, ['shellIn', 'shellOut', 'sigE', 'mc'], ['shellOut', 'sphereE', 'Esig', 'regions', 'mc'], ['regions', 'shellOut', 'sphereE']);
-    var q = R.pick([-5, -4, -3, -2, 2, 3, 4, 5, 6]), Qs = R.pick([-6, -3, -2, 0, 2, 4, 5, 8]);
+    var q = R.pick([-5, -4, -3, -2, 2, 3, 4, 5, 6, -8, -7, -6, -1, 1, 7, 8, 9]), Qs = R.pick([-6, -3, -2, 0, 2, 4, 5, 8, -9, -5, -4, -1, 1, 3, 6, 10]);
     if (k === 'shellIn' || k === 'shellOut') {
       var ans = k === 'shellIn' ? -q : q + Qs;
       return P('A point charge of ' + $(gu(q, 'nC')) + ' sits at the center of a hollow metal sphere (a thick conducting shell) that carries a net charge of ' + $(gu(Qs, 'nC')) + '. How much charge is on the shell\'s ' + (k === 'shellIn' ? 'inner' : 'outer') + ' surface, in nC?',
@@ -418,13 +418,13 @@
         'Draw a Gaussian sphere inside the metal, where E = 0.', { kind: k, q: q, Qs: Qs }, { unit: 'nC' });
     }
     if (k === 'sigE' || k === 'Esig') {
-      var sig = R.pick([5, 8, 10, 20, 25, 40, 50]);
+      var sig = R.pick([5, 8, 10, 20, 25, 40, 50, 2, 3, 4, 6, 12, 15, 30, 60, 80, 100]);
       if (k === 'sigE') { var E = sig * 1e-9 / EPS0; return P('A charged metal object has surface charge density ' + $(gu(sig, 'nC/m²')) + ' on a flat part of its surface. How strong is the field just outside that part?', num(E, 'N/C'), ['Use a tiny pillbox with one cap just outside the surface and one inside the metal. Inside, $E = 0$; the sides get no flux because the field outside is perpendicular to the surface.', 'So $EA = \\sigma A/\\varepsilon_0$ and $E = \\sigma/\\varepsilon_0$. (Twice the $\\sigma/2\\varepsilon_0$ of a lone sheet, because all the field goes out one side.)', $('E = \\dfrac{' + gv(sig) + ' \\times 10^{-9}}{8.85 \\times 10^{-12}} = ' + nu(E, 'N/C'))], 'Just outside a conductor, E = σ/ε₀.', { kind: k, sig: sig }); }
-      var E2 = R.pick([1000, 2000, 3000, 4500, 6000, 9000]), s2 = E2 * EPS0 * 1e9;
+      var E2 = R.pick([1000, 2000, 3000, 4500, 6000, 9000, 500, 1500, 2500, 4000, 5000, 7500, 12000, 15000]), s2 = E2 * EPS0 * 1e9;
       return P('Just outside the surface of a charged metal plate, the field is ' + $(gu(E2, 'N/C')) + ', pointing away from the plate. What is the surface charge density there, in nC/m²?', num(s2, 'nC/m²'), ['Just outside a conductor $E = \\sigma/\\varepsilon_0$, so $\\sigma = \\varepsilon_0 E$.', $('\\sigma = (8.85 \\times 10^{-12})(' + gv(E2) + ') = ' + nu(s2, 'nC/m²')) + ', positive because the field points away.'], 'σ = ε₀E just outside a conductor.', { kind: k, E: E2 });
     }
     if (k === 'sphereE') {
-      var Q = R.pick([2, 4, 5, 8, 10, 15]), Rr = R.pick([0.05, 0.10, 0.15, 0.20]), sg = Q * 1e-9 / (4 * PI * Rr * Rr), Ex = sg / EPS0;
+      var Q = R.pick([2, 4, 5, 8, 10, 15, 1, 3, 6, 12, 20, 25]), Rr = R.pick([0.05, 0.10, 0.15, 0.20, 0.02, 0.03, 0.04, 0.08, 0.12, 0.25, 0.30]), sg = Q * 1e-9 / (4 * PI * Rr * Rr), Ex = sg / EPS0;
       return P('A solid metal sphere of radius ' + $(gu(Rr * 100, 'cm')) + ' carries ' + $(gu(Q, 'nC')) + '. Find the field just outside its surface.', num(Ex, 'N/C'),
         ['The charge spreads evenly over the surface: $\\sigma = Q/(4\\pi R^2) = ' + nu(sg, 'C/m²') + '$.', 'Just outside, $E = \\sigma/\\varepsilon_0 = ' + nu(Ex, 'N/C') + '$.', 'Check with Gauss for a sphere: $kQ/R^2 = ' + nu(KC * Q * 1e-9 / (Rr * Rr), 'N/C') + '$, the same.'],
         'All the charge is on the surface. E just outside is σ/ε₀, or kQ/R².', { kind: k, Q: Q, R: Rr });
@@ -608,8 +608,8 @@
         'U is the work to bring the charges together from far apart.', { kind: 'mc' });
     }
     var qs, pos, d, s;
-    if (k === 'line3') { d = R.pick([0.10, 0.20, 0.30]); qs = [R.pick([2, 3, 4]), R.pick([-2, -1, 1, 2, -3]), R.pick([1, 2, 3, -2])]; pos = [[0, 0], [d, 0], [2 * d, 0]]; }
-    else if (k === 'tri') { s = R.pick([0.10, 0.20, 0.30]); qs = [R.pick([2, 3, 4]), R.pick([-2, -1, 1, 2]), R.pick([1, 2, 3, -3])]; pos = [[0, 0], [s, 0], [s / 2, s * M.sqrt(3) / 2]]; }
+    if (k === 'line3') { d = R.pick([0.10, 0.20, 0.30, 0.12, 0.15, 0.25]); qs = [R.pick([2, 3, 4]), R.pick([-2, -1, 1, 2, -3]), R.pick([1, 2, 3, -2])]; pos = [[0, 0], [d, 0], [2 * d, 0]]; }
+    else if (k === 'tri') { s = R.pick([0.10, 0.20, 0.30, 0.12, 0.15, 0.25]); qs = [R.pick([2, 3, 4]), R.pick([-2, -1, 1, 2]), R.pick([1, 2, 3, -3])]; pos = [[0, 0], [s, 0], [s / 2, s * M.sqrt(3) / 2]]; }
     else if (k === 'right') { s = 0.10; qs = [R.pick([2, 3, 4]), R.pick([-2, -1, 1, 2]), R.pick([1, 2, -3])]; pos = [[0, 0], [0.3, 0], [0, 0.4]]; }
     else { s = R.pick([0.10, 0.20]); var qq = R.pick([1, 2, 3]); qs = R.coin() ? [qq, qq, qq, qq] : [qq, -qq, qq, -qq]; pos = [[0, 0], [s, 0], [s, s], [0, s]]; }
     var terms = [];
@@ -640,28 +640,28 @@
     var k = kind(R, ctx, ['electron', 'proton', 'mc'], ['electron', 'release', 'closest', 'proton', 'mc'], ['release', 'closest', 'two']);
     var dV, v, K0;
     if (k === 'electron' || k === 'proton') {
-      dV = R.pick([50, 100, 150, 200, 500, 1000, 2000]); var m = k === 'electron' ? ME : MP; v = M.sqrt(2 * QE * dV / m);
+      dV = R.pick([50, 100, 150, 200, 500, 1000, 2000, 10, 20, 25, 75, 250, 300, 400, 750, 1500, 3000, 5000, 12, 15, 30, 35, 40, 60, 70, 80, 90, 350, 600, 700, 800, 900, 1200, 2500, 3500, 4000]); var m = k === 'electron' ? ME : MP; v = M.sqrt(2 * QE * dV / m);
       return P('A' + (k === 'electron' ? 'n electron' : ' proton') + ' starts from rest and is accelerated through a potential difference of ' + $(gu(dV, 'V')) + '. How fast is it moving at the end? (' + (k === 'electron' ? '$m_e = 9.11 \\times 10^{-31}\\ \\text{kg}$' : '$m_p = 1.67 \\times 10^{-27}\\ \\text{kg}$') + ', $e = 1.60 \\times 10^{-19}\\ \\text{C}$)',
         num(v, 'm/s'), ['Energy is conserved: $\\Delta K = -q\\Delta V$. ' + (k === 'electron' ? 'The electron is negative, so it speeds up moving toward <i>higher</i> potential, gaining $e\\,|\\Delta V|$.' : 'The proton speeds up moving toward lower potential, gaining $e\\,|\\Delta V|$.'),
           $('K = (1.60 \\times 10^{-19})(' + gv(dV) + ') = ' + nu(QE * dV, 'J') + ' = ' + gv(dV) + '\\ \\text{eV}'), $('v = \\sqrt{\\dfrac{2K}{m}} = \\sqrt{\\dfrac{2(' + sf(QE * dV) + ')}{' + (k === 'electron' ? '9.11 \\times 10^{-31}' : '1.67 \\times 10^{-27}') + '}} = ' + nu(v, 'm/s'))],
         'Set ½mv² equal to e|ΔV|.', { kind: k, dV: dV });
     }
     if (k === 'release') {
-      var Q = R.pick([2, 4, 5, 8, 10]), r1 = R.pick([1, 2, 5]) * 1e-3, toInf = R.coin(), r2 = toInf ? Infinity : r1 * R.pick([2, 4, 5]);
+      var Q = R.pick([2, 4, 5, 8, 10, 1, 3, 6, 12, 15, 20, 7, 9, 11, 13, 14, 16, 17, 18, 19]), r1 = R.pick([1, 2, 5, 1.5, 3, 4, 8, 10, 1.2, 2.5, 3.5, 6, 7, 9]) * 1e-3, toInf = R.coin(), r2 = toInf ? Infinity : r1 * R.pick([2, 4, 5, 3, 6, 8, 10, 7, 9]);
       var dU = KC * Q * 1e-9 * QE * (1 / r1 - (toInf ? 0 : 1 / r2)); v = M.sqrt(2 * dU / MP);
       return P('A proton is released from rest ' + $(gu(r1 * 1000, 'mm')) + ' from a fixed ' + $(gu(Q, 'nC')) + ' point charge. How fast is it moving when it is ' + (toInf ? 'very far away' : $(gu(r2 * 1000, 'mm')) + ' from the charge') + '? ($m_p = 1.67 \\times 10^{-27}\\ \\text{kg}$)',
         num(v, 'm/s', 0.02), ['The proton is pushed away; the potential energy it loses becomes kinetic energy: $\\tfrac{1}{2}mv^2 = kQe\\left(\\dfrac{1}{r_1} - \\dfrac{1}{r_2}\\right)$.', $('\\Delta K = ' + tK + '(' + gv(Q) + ' \\times 10^{-9})(1.60 \\times 10^{-19})\\left(\\dfrac{1}{' + gv(r1) + '}' + (toInf ? '' : ' - \\dfrac{1}{' + gv(r2) + '}') + '\\right) = ' + nu(dU, 'J')), $('v = \\sqrt{\\dfrac{2(' + sf(dU) + ')}{1.67 \\times 10^{-27}}} = ' + nu(v, 'm/s'))],
         'Potential energy lost = kinetic energy gained.', { kind: k, Q: Q, r1: r1, r2: toInf ? 0 : r2 });
     }
     if (k === 'closest') {
-      var Z = R.pick([79, 47, 29, 82, 13]), name = { 79: 'gold', 47: 'silver', 29: 'copper', 82: 'lead', 13: 'aluminum' }[Z]; K0 = R.pick([2, 4, 5, 6, 7.7]);
+      var Z = R.pick([79, 47, 29, 82, 13]), name = { 79: 'gold', 47: 'silver', 29: 'copper', 82: 'lead', 13: 'aluminum' }[Z]; K0 = R.pick([2, 4, 5, 6, 7.7, 1, 3, 4.5, 5.5, 8, 9, 10]);
       var rmin = KC * 2 * Z * QE * QE / (K0 * 1e6 * QE);
       return P('An alpha particle (charge $+2e$) with ' + $(gu(K0, 'MeV')) + ' of kinetic energy heads straight at a ' + name + ' nucleus (charge $+' + Z + 'e$), which stays put. How close does it get, in femtometers ($1\\ \\text{fm} = 10^{-15}\\ \\text{m}$)?',
         num(rmin * 1e15, 'fm', 0.02), ['At the closest point the alpha particle stops for an instant: all its kinetic energy has become potential energy, $K = \\dfrac{k(2e)(Ze)}{r_{\\min}}$.', $('K = ' + gv(K0) + ' \\times 10^{6} \\times 1.60 \\times 10^{-19}\\ \\text{J} = ' + nu(K0 * 1e6 * QE, 'J')), '$$r_{\\min} = \\frac{k(2e)(' + Z + 'e)}{K} = \\frac{' + tK + '(2)(' + Z + ')(1.60 \\times 10^{-19})^2}{' + sf(K0 * 1e6 * QE) + '} = ' + nu(rmin, 'm') + '$$', 'That is $' + sf(rmin * 1e15) + '\\ \\text{fm}$. Rutherford used this kind of estimate to show that a nucleus is tiny.'],
         'At closest approach all the kinetic energy has turned into potential energy.', { kind: k, Z: Z, K0: K0 });
     }
     if (k === 'two') {
-      var q1 = R.pick([2, 3, 4]), q2 = R.pick([1, 2, 3]), m1 = R.pick([1, 2, 3]), m2 = R.pick([4, 5, 6]), d0 = R.pick([0.05, 0.10, 0.20]);
+      var q1 = R.pick([2, 3, 4, 1, 5, 6]), q2 = R.pick([1, 2, 3, 4, 5]), m1 = R.pick([1, 2, 3]), m2 = R.pick([4, 5, 6]), d0 = R.pick([0.05, 0.10, 0.20, 0.02, 0.03, 0.08, 0.15, 0.25, 0.30, 0.025, 0.035, 0.04, 0.06, 0.07, 0.09, 0.12]);
       var U0 = KC * q1 * q2 * 1e-12 / d0; // J, charges in μC, masses in grams
       var M1 = m1 * 1e-3, M2 = m2 * 1e-3, v1 = M.sqrt(2 * U0 * M2 / (M1 * (M1 + M2)));
       return P('Two small charged beads, $' + gu(q1, 'μC') + '$ with mass $' + gu(m1, 'g') + '$ and $' + gu(q2, 'μC') + '$ with mass $' + gu(m2, 'g') + '$, are held ' + $(gu(d0, 'm')) + ' apart on a smooth table and released. How fast is the lighter bead moving when they are far apart?',
@@ -717,18 +717,18 @@
     var k = kind(R, ctx, ['plates', 'plates', 'iso', 'mc'], ['plates', 'cyl', 'sph', 'Q', 'mc'], ['cyl', 'sph', 'rev', 'revcyl']);
     var C;
     if (k === 'plates' || k === 'Q' || k === 'rev') {
-      var A = R.pick([25, 50, 100, 200, 400]), d = R.pick([0.5, 1.0, 1.5, 2.0, 2.5]);
+      var A = R.pick([25, 50, 100, 200, 400, 10, 20, 40, 75, 150, 250, 300, 500]), d = R.pick([0.5, 1.0, 1.5, 2.0, 2.5, 0.2, 0.25, 0.4, 0.75, 1.2, 3.0, 4.0, 5.0]);
       C = EPS0 * A * 1e-4 / (d * 1e-3);
       if (k === 'plates') return P('A parallel-plate capacitor has plates of area ' + $(gu(A, 'cm²')) + ' separated by ' + $(gu(d, 'mm')) + ' of air. Find its capacitance in pF.',
         num(C * 1e12, 'pF'), ['Gauss\'s law gives a uniform field $E = \\sigma/\\varepsilon_0 = Q/(\\varepsilon_0 A)$ between the plates, so $\\Delta V = Ed = \\dfrac{Qd}{\\varepsilon_0 A}$.', '$C = \\dfrac{Q}{\\Delta V} = \\dfrac{\\varepsilon_0 A}{d}$.', $('C = \\dfrac{' + tE0 + '(' + gv(A * 1e-4) + ')}{' + gv(d * 1e-3) + '} = ' + nu(C, 'F') + ' = ' + nu(C * 1e12, 'pF'))],
         'C = ε₀A/d, with A in m² and d in m.', { kind: k, A: A, d: d });
-      if (k === 'Q') { var V = R.pick([6, 9, 12, 24, 50, 100]); return P('A capacitor with plates of area ' + $(gu(A, 'cm²')) + ' and a ' + $(gu(d, 'mm')) + ' air gap is connected to a ' + $(gu(V, 'V')) + ' battery. How much charge, in nC, sits on its positive plate?', num(C * V * 1e9, 'nC'), ['$C = \\dfrac{\\varepsilon_0 A}{d} = ' + nu(C, 'F') + '$.', $('Q = CV = (' + sf(C) + ')(' + gv(V) + ') = ' + nu(C * V, 'C') + ' = ' + nu(C * V * 1e9, 'nC'))], 'Find C from the geometry first, then Q = CV.', { kind: k, A: A, d: d, V: V }); }
-      var Ct = R.pick([20, 50, 100, 150, 200]), dneed = EPS0 * A * 1e-4 / (Ct * 1e-12) * 1000;
+      if (k === 'Q') { var V = R.pick([6, 9, 12, 24, 50, 100, 1.5, 3, 5, 15, 20, 30, 48, 200]); return P('A capacitor with plates of area ' + $(gu(A, 'cm²')) + ' and a ' + $(gu(d, 'mm')) + ' air gap is connected to a ' + $(gu(V, 'V')) + ' battery. How much charge, in nC, sits on its positive plate?', num(C * V * 1e9, 'nC'), ['$C = \\dfrac{\\varepsilon_0 A}{d} = ' + nu(C, 'F') + '$.', $('Q = CV = (' + sf(C) + ')(' + gv(V) + ') = ' + nu(C * V, 'C') + ' = ' + nu(C * V * 1e9, 'nC'))], 'Find C from the geometry first, then Q = CV.', { kind: k, A: A, d: d, V: V }); }
+      var Ct = R.pick([20, 50, 100, 150, 200, 10, 25, 30, 40, 75, 120, 250, 300]), dneed = EPS0 * A * 1e-4 / (Ct * 1e-12) * 1000;
       return P('What gap (in mm) would give an air-filled parallel-plate capacitor with plates of area ' + $(gu(A, 'cm²')) + ' a capacitance of ' + $(gu(Ct, 'pF')) + '?', num(dneed, 'mm'),
         ['$C = \\varepsilon_0 A/d$, so $d = \\varepsilon_0 A/C$.', $('d = \\dfrac{' + tE0 + '(' + gv(A * 1e-4) + ')}{' + gv(Ct) + ' \\times 10^{-12}} = ' + nu(dneed / 1000, 'm') + ' = ' + nu(dneed, 'mm'))], 'Solve C = ε₀A/d for d.', { kind: k, A: A, Ct: Ct });
     }
     if (k === 'cyl' || k === 'revcyl') {
-      var a = R.pick([0.5, 1.0, 1.5]), b = a * R.pick([2, 3, 4, 5]), Lc = R.pick([0.5, 1, 2, 5, 10]);
+      var a = R.pick([0.5, 1.0, 1.5, 0.2, 0.3, 0.8, 1.2, 2.0, 2.5]), b = a * R.pick([2, 3, 4, 5, 1.5, 2.5, 6, 8, 10]), Lc = R.pick([0.5, 1, 2, 5, 10, 0.2, 0.3, 1.5, 3, 4, 8, 20, 50]);
       C = 2 * PI * EPS0 * Lc / M.log(b / a);
       if (k === 'cyl') return P('A coaxial cable ' + $(gu(Lc, 'm')) + ' long has an inner conductor of radius ' + $(gu(a, 'mm')) + ' and an outer conductor of radius ' + $(gu(b, 'mm')) + ', with air between. Find its capacitance in pF.',
         num(C * 1e12, 'pF'), ['Put $+Q$ on the inner conductor. Between them Gauss gives $E = \\dfrac{\\lambda}{2\\pi\\varepsilon_0 r}$ with $\\lambda = Q/L$.', '$\\Delta V = \\int_a^b E\\,dr = \\dfrac{\\lambda}{2\\pi\\varepsilon_0}\\ln\\dfrac{b}{a}$, so $C = \\dfrac{Q}{\\Delta V} = \\dfrac{2\\pi\\varepsilon_0 L}{\\ln(b/a)}$.', $('C = \\dfrac{2\\pi' + tE0 + '(' + gv(Lc) + ')}{\\ln ' + gv(b / a) + '} = ' + nu(C * 1e12, 'pF'))],
@@ -739,13 +739,13 @@
         'Divide C = 2πε₀L/ln(b/a) by L.', { kind: k, a: a, b: b });
     }
     if (k === 'sph') {
-      var ra = R.pick([2, 3, 4, 5]), rb = ra + R.pick([1, 2, 3, 5]); C = 4 * PI * EPS0 * (ra / 100) * (rb / 100) / ((rb - ra) / 100);
+      var ra = R.pick([2, 3, 4, 5, 1, 1.5, 2.5, 6, 8, 10]), rb = ra + R.pick([1, 2, 3, 5, 0.5, 1.5, 4, 6, 10]); C = 4 * PI * EPS0 * (ra / 100) * (rb / 100) / ((rb - ra) / 100);
       return P('A spherical capacitor has an inner sphere of radius ' + $(gu(ra, 'cm')) + ' and an outer shell of radius ' + $(gu(rb, 'cm')) + ', with air between. Find its capacitance in pF.',
         num(C * 1e12, 'pF'), ['Between the spheres $E = kQ/r^2$, so $\\Delta V = kQ\\left(\\dfrac{1}{a} - \\dfrac{1}{b}\\right) = kQ\\,\\dfrac{b - a}{ab}$.', '$C = \\dfrac{Q}{\\Delta V} = \\dfrac{ab}{k(b - a)} = 4\\pi\\varepsilon_0\\dfrac{ab}{b - a}$.', $('C = 4\\pi' + tE0 + '\\dfrac{(' + gv(ra / 100) + ')(' + gv(rb / 100) + ')}{' + gv((rb - ra) / 100) + '} = ' + nu(C * 1e12, 'pF'))],
         'ΔV = kQ(1/a − 1/b), then C = Q/ΔV.', { kind: k, a: ra, b: rb });
     }
     if (k === 'iso') {
-      var Rr = R.pick([0.05, 0.10, 0.20, 0.50, 1.0]); C = 4 * PI * EPS0 * Rr;
+      var Rr = R.pick([0.05, 0.10, 0.20, 0.50, 1.0, 0.01, 0.02, 0.03, 0.15, 0.25, 0.30, 0.75, 2.0, 5.0]); C = 4 * PI * EPS0 * Rr;
       return P('An isolated metal sphere of radius ' + $(gu(Rr * 100, 'cm')) + ' acts as a capacitor whose other "plate" is far away. Find its capacitance in pF.', num(C * 1e12, 'pF'),
         ['A sphere holding $Q$ has potential $V = kQ/R$ (zero far away).', '$C = \\dfrac{Q}{V} = \\dfrac{R}{k} = 4\\pi\\varepsilon_0 R$.', $('C = 4\\pi' + tE0 + '(' + gv(Rr) + ') = ' + nu(C * 1e12, 'pF'))],
         'C = Q/V with V = kQ/R.', { kind: k, R: Rr });
@@ -760,34 +760,34 @@
     var k = kind(R, ctx, ['u', 'u', 'uE'], ['Uplates', 'sphere', 'u', 'uE'], ['fraction', 'pull', 'sphere', 'Uplates']);
     var E, u;
     if (k === 'u' || k === 'uE') {
-      if (k === 'u') { E = R.pick([1e4, 2e4, 5e4, 1e5, 2e5, 3e5, 5e5, 8e5, 1e6, 1.5e6, 2e6, 2.5e6, 3e6]); u = 0.5 * EPS0 * E * E;
+      if (k === 'u') { E = R.pick([1e4, 2e4, 5e4, 1e5, 2e5, 3e5, 5e5, 8e5, 1e6, 1.5e6, 2e6, 2.5e6, 3e6, 12000, 25000, 30000, 35000, 60000, 80000, 90000, 120000, 250000, 400000, 600000, 700000, 1.2e+06]); u = 0.5 * EPS0 * E * E;
         return P('The electric field in a region is ' + $(gu(E, 'V/m')) + '. What is the energy density stored in the field?', num(u, 'J/m³'),
           ['$u = \\tfrac{1}{2}\\varepsilon_0 E^2$.', $('u = \\tfrac{1}{2}' + tE0 + '(' + gv(E) + ')^2 = ' + nu(u, 'J/m³'))], 'u = ½ε₀E².', { kind: k, E: E }); }
-      var V = R.pick([20, 50, 100, 150, 200, 300, 500]), d = R.pick([0.2, 0.5, 1, 1.5, 2]); E = V / (d * 1e-3); u = 0.5 * EPS0 * E * E;
+      var V = R.pick([20, 50, 100, 150, 200, 300, 500, 10, 25, 40, 75, 120, 250, 400, 600, 1000, 12, 15, 30, 35, 60, 70, 80, 90, 350, 700, 800, 900]), d = R.pick([0.2, 0.5, 1, 1.5, 2, 0.1, 0.25, 0.3, 0.4, 0.8, 1.2, 2.5, 3, 5, 0.12, 0.15, 0.35, 0.6, 0.7, 0.9, 3.5, 4]); E = V / (d * 1e-3); u = 0.5 * EPS0 * E * E;
       return P('A parallel-plate capacitor with a ' + $(gu(d, 'mm')) + ' air gap is charged to ' + $(gu(V, 'V')) + '. What is the energy density in the field between its plates?', num(u, 'J/m³'),
         ['The field between the plates is uniform: $E = V/d = ' + gv(V) + '/' + gv(d * 1e-3) + ' = ' + nu(E, 'V/m') + '$.', $('u = \\tfrac{1}{2}\\varepsilon_0 E^2 = \\tfrac{1}{2}' + tE0 + '(' + sf(E) + ')^2 = ' + nu(u, 'J/m³'))], 'Find E = V/d, then u = ½ε₀E².', { kind: k, V: V, d: d });
     }
     if (k === 'Uplates') {
-      var A = R.pick([25, 50, 100, 200, 400]), dd = R.pick([0.5, 1, 1.5, 2]), Vv = R.pick([12, 24, 50, 100, 200]);
+      var A = R.pick([25, 50, 100, 200, 400, 10, 20, 40, 75, 150, 250, 300, 500, 12, 15, 30, 35, 60, 70, 80, 90, 120, 350]), dd = R.pick([0.5, 1, 1.5, 2, 0.2, 0.25, 0.4, 0.75, 1.2, 2.5, 3, 0.3, 0.35, 0.6, 0.7, 0.8, 0.9]), Vv = R.pick([12, 24, 50, 100, 200, 3, 6, 9, 15, 30, 48, 75, 150, 300, 3.5, 4, 5, 7, 10, 20, 25, 35, 40, 60, 80, 90, 120, 250]);
       E = Vv / (dd * 1e-3); u = 0.5 * EPS0 * E * E; var Ut = u * A * 1e-4 * dd * 1e-3;
       return P('An air-filled capacitor has plates of area ' + $(gu(A, 'cm²')) + ', ' + $(gu(dd, 'mm')) + ' apart, charged to ' + $(gu(Vv, 'V')) + '. Find the energy stored, in nJ, by multiplying the field\'s energy density by the volume between the plates.',
         num(Ut * 1e9, 'nJ'), ['$E = V/d = ' + nu(E, 'V/m') + '$, so $u = \\tfrac{1}{2}\\varepsilon_0 E^2 = ' + nu(u, 'J/m³') + '$.', 'Volume between the plates: $Ad = (' + gv(A * 1e-4) + ')(' + gv(dd * 1e-3) + ') = ' + nu(A * 1e-7 * dd, 'm³') + '$.', $('U = u\\,Ad = ' + nu(Ut, 'J') + ' = ' + nu(Ut * 1e9, 'nJ')), 'Check: $\\tfrac{1}{2}CV^2$ with $C = \\varepsilon_0 A/d$ gives the same.'],
         'U = (½ε₀E²)(volume).', { kind: k, A: A, d: dd, V: Vv });
     }
     if (k === 'sphere') {
-      var Q = R.pick([2, 3, 5, 8, 10, 20, 50]), Rr = R.pick([0.02, 0.05, 0.08, 0.10, 0.20]), Us = KC * Q * Q * 1e-18 / (2 * Rr);
+      var Q = R.pick([2, 3, 5, 8, 10, 20, 50, 1, 4, 6, 12, 15, 25, 30, 40, 100, 1.2, 1.5, 2.5, 3.5, 7, 9, 35, 60, 70, 80, 90]), Rr = R.pick([0.02, 0.05, 0.08, 0.10, 0.20, 0.01, 0.03, 0.04, 0.06, 0.12, 0.15, 0.25, 0.30, 0.012, 0.015, 0.025, 0.035, 0.07, 0.09]), Us = KC * Q * Q * 1e-18 / (2 * Rr);
       return P('A metal sphere of radius ' + $(gu(Rr * 100, 'cm')) + ' carries ' + $(gu(Q, 'nC')) + '. Find the total energy stored in its electric field, in μJ, by integrating the energy density over all space outside the sphere.',
         num(Us * 1e6, 'μJ'), ['Outside, $E = kQ/r^2$, so $u = \\tfrac{1}{2}\\varepsilon_0\\dfrac{k^2Q^2}{r^4}$. Inside the metal $E = 0$.', 'Use thin shells of volume $4\\pi r^2\\,dr$: $$U = \\int_R^\\infty \\frac{\\varepsilon_0 k^2Q^2}{2r^4}\\,4\\pi r^2\\,dr = \\frac{kQ^2}{2R}$$ using $4\\pi\\varepsilon_0 k = 1$.', $('U = \\dfrac{' + tK + '(' + gv(Q) + ' \\times 10^{-9})^2}{2(' + gv(Rr) + ')} = ' + nu(Us, 'J') + ' = ' + nu(Us * 1e6, 'μJ')), 'The same as $\\tfrac{1}{2}QV$ with $V = kQ/R$.'],
         'Integrate u = ½ε₀E² over shells 4πr² dr from R to infinity.', { kind: k, Q: Q, R: Rr });
     }
     if (k === 'fraction') {
-      var n = R.pick([1.5, 2, 2.5, 3, 4, 5, 8, 10]), f = 1 - 1 / n;
+      var n = R.pick([1.5, 2, 2.5, 3, 4, 5, 8, 10, 1.2, 1.25, 6, 20, 80, 3.5, 7, 9, 12, 15, 25, 30, 35, 40, 50, 60, 70]), f = 1 - 1 / n;
       return P('A charged metal sphere has radius $R$. What fraction of the energy in its electric field lies within a distance $' + n + 'R$ of its center? (Answer as a decimal.)',
         { t: 'num', v: pl(f, 4), rtol: 0.01 }, ['Energy in the field between $R$ and $r$: $$\\int_R^r \\frac{kQ^2}{2s^2}\\,ds = \\frac{kQ^2}{2}\\left(\\frac{1}{R} - \\frac{1}{r}\\right)$$', 'The total (out to infinity) is $\\dfrac{kQ^2}{2R}$, so the fraction is $1 - \\dfrac{R}{r} = 1 - \\dfrac{1}{' + n + '} = ' + sf(f) + '$.', 'Most of the energy sits close to the sphere, where the field is strong.'],
         'Integrate the energy density from R to nR and divide by the total from R to infinity.', { kind: k, n: n });
     }
     // pull: isolated capacitor, plates pulled apart
-    var Ap = R.pick([100, 200, 400]), Qp = R.pick([1, 2, 5, 10]), d1 = R.pick([1, 2]), d2 = d1 + R.pick([1, 2, 3]);
+    var Ap = R.pick([100, 200, 400, 50, 150, 250, 300, 500, 60, 70, 80, 90, 120, 350]), Qp = R.pick([1, 2, 5, 10, 3, 4, 6, 8, 15, 20, 7, 9, 11, 12, 13, 14, 16, 17, 18, 19]), d1 = R.pick([1, 2, 0.5, 1.5, 3, 0.6, 0.7, 0.8, 1.2, 2.5]), d2 = d1 + R.pick([1, 2, 3, 0.5, 1.5, 4, 5, 0.6, 0.7, 0.8, 0.9, 1.2, 2.5, 3.5]);
     var W = Qp * Qp * 1e-18 * (d2 - d1) * 1e-3 / (2 * EPS0 * Ap * 1e-4);
     return P('An isolated parallel-plate capacitor (plates ' + $(gu(Ap, 'cm²')) + ') holds ' + $(gu(Qp, 'nC')) + '. How much work, in μJ, does it take to pull the plates from ' + $(gu(d1, 'mm')) + ' to ' + $(gu(d2, 'mm')) + ' apart?',
       num(W * 1e6, 'μJ'), ['Isolated means $Q$ stays fixed, and so does the field $E = Q/(\\varepsilon_0 A)$ and its energy density.', 'Pulling the plates apart creates new field-filled volume $A\\,\\Delta d$, and the work you do becomes the energy in it: $$W = u\\,A\\,\\Delta d = \\frac{Q^2\\,\\Delta d}{2\\varepsilon_0 A}$$', $('W = \\dfrac{(' + gv(Qp) + ' \\times 10^{-9})^2(' + gv((d2 - d1) * 1e-3) + ')}{2' + tE0 + '(' + gv(Ap * 1e-4) + ')} = ' + nu(W * 1e6, 'μJ'))],
@@ -1018,9 +1018,9 @@
     }
     if (k === 'zero') {
       var Bz = small(R); while (Bz.every(function (x) { return x === 0; })) Bz = small(R); var par = Bz.map(function (x) { return 2 * x; }), wr1 = cross(Bz, [1, 0, 0]), wr2 = cross(Bz, [0, 0, 1]), wr3 = [Bz[1] || 1, -(Bz[0]) || 0, Bz[2] + 1];
-      if (wr1.every(function (x) { return x === 0; })) wr1 = cross(Bz, [0, 1, 0]); if (wr2.every(function (x) { return x === 0; })) wr2 = cross(Bz, [0, 1, 0]);
-      var all = [par, wr1, wr2, wr3].map(function (x) { return '$' + tv(x, 1e3) + '$ m/s'; });
-      if (all[3] === all[0] || all[3] === all[1] || all[3] === all[2]) all[3] = '$' + tv([Bz[0] + 1, Bz[1] - 1, Bz[2] + 2], 1e3) + '$ m/s';
+      var cand = [wr1, wr2, wr3, cross(Bz, [0, 1, 0]), [Bz[0] + 1, Bz[1] - 1, Bz[2] + 2], [Bz[2] || 2, Bz[0] || 1, -Bz[1] || 1], [1, 1, 0], [0, 1, 1], [1, 0, 1]], seen = {}, wrs = [];
+      seen[tv(par, 1e3)] = 1; cand.forEach(function (x) { var s = tv(x, 1e3); if (wrs.length < 3 && !x.every(function (y) { return y === 0; }) && !cross(x, Bz).every(function (y) { return y === 0; }) && !seen[s]) { seen[s] = 1; wrs.push(x); } });
+      wr1 = wrs[0]; wr2 = wrs[1]; wr3 = wrs[2]; var all = [par, wr1, wr2, wr3].map(function (x) { return '$' + tv(x, 1e3) + '$ m/s'; });
       return P('A uniform field $\\vec{B} = ' + tv(Bz, 0.1) + '\\ \\text{T}$. For which velocity does a moving charge feel <b>no</b> magnetic force?', mcq(all[0], all.slice(1)),
         ['$\\vec{F} = q\\,\\vec{v}\\times\\vec{B}$ is zero only when $\\vec{v}$ is parallel (or antiparallel) to $\\vec{B}$, since then $\\sin\\theta = 0$.', 'The velocity $' + tv(par, 1e3) + '$ m/s is a multiple of $' + tv(Bz, 0.1) + '$, so it is parallel to $\\vec{B}$. The others have parts perpendicular to $\\vec{B}$.'],
         'Which velocity points along the field?', { kind: k, B: Bz, choices: [par, wr1, wr2, wr3] });
@@ -1044,24 +1044,24 @@
 
   G('em.crossed-fields', function (R, ctx) {
     var k = kind(R, ctx, ['v', 'v', 'mc'], ['plates', 'r', 'v', 'mc'], ['sep', 'mass', 'r']);
-    var E = R.pick([10, 20, 25, 40, 50, 80]) * 1e3, B = R.pick([0.1, 0.2, 0.25, 0.4, 0.5]), v = E / B;
+    var E = R.pick([10, 20, 25, 40, 50, 80, 5, 8, 12, 15, 30, 60, 75, 100, 120]) * 1e3, B = R.pick([0.1, 0.2, 0.25, 0.4, 0.5, 0.05, 0.08, 0.15, 0.3, 0.6, 0.75, 0.8, 1]), v = E / B;
     if (k === 'v') return P('In a velocity selector, an electric field of ' + $(gu(E / 1000, 'kV/m')) + ' and a magnetic field of ' + $(gu(B, 'T')) + ' are at right angles to each other and to the beam. What speed passes straight through?', num(v, 'm/s'),
       ['Straight through means the electric force $qE$ and the magnetic force $qvB$ cancel: $qE = qvB$.', $('v = \\dfrac{E}{B} = \\dfrac{' + gv(E) + '}{' + gv(B) + '} = ' + nu(v, 'm/s')), 'The charge cancels: protons, electrons and ions of any mass are selected at the same speed.'],
       'Set the electric and magnetic forces equal.', { kind: k, E: E, B: B });
-    if (k === 'plates') { var Vp = R.pick([100, 200, 300, 500, 1000]), d = R.pick([0.5, 1, 2, 2.5]), Ep = Vp / (d / 100), vp = Ep / B;
+    if (k === 'plates') { var Vp = R.pick([100, 200, 300, 500, 1000, 50, 150, 250, 400, 600, 750, 800, 1200, 1500, 2000]), d = R.pick([0.5, 1, 2, 2.5, 0.2, 0.25, 0.4, 0.8, 1.2, 1.5, 3, 4, 5]), Ep = Vp / (d / 100), vp = Ep / B;
       return P('The electric field in a velocity selector comes from plates ' + $(gu(d, 'cm')) + ' apart held at ' + $(gu(Vp, 'V')) + '. The magnetic field is ' + $(gu(B, 'T')) + '. Which speed passes straight through?', num(vp, 'm/s'),
         ['$E = V/d = ' + gv(Vp) + '/' + gv(d / 100) + ' = ' + nu(Ep, 'V/m') + '$.', $('v = E/B = ' + sf(Ep) + '/' + gv(B) + ' = ' + nu(vp, 'm/s'))], 'Find E = V/d, then v = E/B.', { kind: k, V: Vp, d: d, B: B }); }
     var ions = [['carbon-12', 12], ['carbon-13', 13], ['carbon-14', 14], ['neon-20', 20], ['neon-22', 22], ['chlorine-35', 35], ['chlorine-37', 37], ['uranium-235', 235], ['uranium-238', 238]];
-    var B2 = R.pick([0.2, 0.4, 0.5, 0.8, 1.0]), vs = R.pick([2, 4, 5]) * 1e4;
+    var B2 = R.pick([0.2, 0.4, 0.5, 0.8, 1.0, 0.1, 0.15, 0.25, 0.3, 0.6, 0.75, 1.2, 1.5]), vs = R.pick([2, 4, 5, 1, 1.5, 2.5, 3, 6, 8, 10]) * 1e4;
     if (k === 'r') { var ion = R.pick(ions), rr = ion[1] * AMU * vs / (QE * B2);
       return P('Singly charged ' + ion[0] + ' ions ($m = ' + ion[1] + '\\ \\text{u}$, $1\\ \\text{u} = 1.66 \\times 10^{-27}\\ \\text{kg}$) leave a velocity selector at ' + $(gu(vs, 'm/s')) + ' and enter a ' + $(gu(B2, 'T')) + ' field at right angles. What is the radius of their path, in cm?', num(rr * 100, 'cm'),
         ['The magnetic force supplies the centripetal force: $qvB = \\dfrac{mv^2}{r}$, so $r = \\dfrac{mv}{qB}$.', $('r = \\dfrac{(' + ion[1] + ')(1.66 \\times 10^{-27})(' + gv(vs) + ')}{(1.60 \\times 10^{-19})(' + gv(B2) + ')} = ' + nu(rr, 'm') + ' = ' + nu(rr * 100, 'cm'))],
         'r = mv/(qB), with the mass in kilograms.', { kind: k, m: ion[1], v: vs, B: B2 }); }
-    if (k === 'sep') { var pair = R.pick([[12, 13], [12, 14], [20, 22], [35, 37], [235, 238]]), r1 = pair[0] * AMU * vs / (QE * B2), r2 = pair[1] * AMU * vs / (QE * B2), sep = 2 * (r2 - r1);
+    if (k === 'sep') { var pair = R.pick([[12, 13], [12, 14], [20, 22], [35, 37], [235, 238], [16, 18], [24, 26], [39, 41], [63, 65], [6, 7], [10, 11], [28, 30], [204, 208]]), r1 = pair[0] * AMU * vs / (QE * B2), r2 = pair[1] * AMU * vs / (QE * B2), sep = 2 * (r2 - r1);
       return P('In a mass spectrometer, singly charged ions all leave the velocity selector at ' + $(gu(vs, 'm/s')) + ', enter a ' + $(gu(B2, 'T')) + ' field, travel a half circle and land on a detector. How far apart, in mm, do ions of mass ' + pair[0] + ' u and ' + pair[1] + ' u land? ($1\\ \\text{u} = 1.66 \\times 10^{-27}\\ \\text{kg}$)', num(sep * 1000, 'mm'),
         ['Each ion lands a diameter, $2r = \\dfrac{2mv}{qB}$, from where it entered.', 'The difference: $\\Delta(2r) = \\dfrac{2v\\,\\Delta m}{qB} = \\dfrac{2(' + gv(vs) + ')(' + (pair[1] - pair[0]) + ' \\times 1.66 \\times 10^{-27})}{(1.60 \\times 10^{-19})(' + gv(B2) + ')}$.', $('\\Delta(2r) = ' + nu(sep, 'm') + ' = ' + nu(sep * 1000, 'mm'))],
         'Each lands a full diameter 2mv/(qB) from the entrance.', { kind: k, m1: pair[0], m2: pair[1], v: vs, B: B2 }); }
-    if (k === 'mass') { var mt = R.pick([7, 16, 24, 27, 40, 56]), rm = mt * AMU * vs / (QE * B2), rms = Number((rm * 100).toPrecision(3)), mu = QE * B2 * (rms / 100) / (vs * AMU);
+    if (k === 'mass') { var mt = R.pick([7, 16, 24, 27, 40, 56, 4, 12, 14, 19, 20, 23, 28, 32, 39, 59, 63, 64]), rm = mt * AMU * vs / (QE * B2), rms = Number((rm * 100).toPrecision(3)), mu = QE * B2 * (rms / 100) / (vs * AMU);
       return P('Singly charged ions moving at ' + $(gu(vs, 'm/s')) + ' enter a ' + $(gu(B2, 'T')) + ' field and follow a circle of radius ' + $(gu(rms, 'cm')) + '. What is their mass in atomic mass units? ($1\\ \\text{u} = 1.66 \\times 10^{-27}\\ \\text{kg}$)', num(mu, 'u', 0.02),
         ['$r = \\dfrac{mv}{qB}$, so $m = \\dfrac{qBr}{v}$.', $('m = \\dfrac{(1.60 \\times 10^{-19})(' + gv(B2) + ')(' + gv(rms / 100) + ')}{' + gv(vs) + '} = ' + nu(mu * AMU, 'kg')), 'Divide by $1.66 \\times 10^{-27}$: $m = ' + nu(mu, 'u') + '$.'],
         'Solve r = mv/(qB) for m, then convert to u.', { kind: k, v: vs, B: B2, r: rms }); }
@@ -1073,13 +1073,13 @@
 
   G('em.hall-effect', function (R, ctx) {
     var k = kind(R, ctx, ['VH', 'sign'], ['VH', 'n', 'vd', 'sign'], ['n', 'semi', 'vd', 'sign']);
-    var I = R.pick([2, 5, 10, 15, 20]), B = R.pick([0.5, 1.0, 1.5, 2.0]), tmm = R.pick([0.1, 0.2, 0.5, 1.0]), n = 8.5e28, VH;
+    var I = R.pick([2, 5, 10, 15, 20, 1, 3, 4, 8, 12, 25, 30]), B = R.pick([0.5, 1.0, 1.5, 2.0, 0.2, 0.25, 0.3, 0.4, 0.8, 1.2, 2.5, 3.0]), tmm = R.pick([0.1, 0.2, 0.5, 1.0, 0.05, 0.15, 0.25, 0.3, 0.4, 0.8, 2.0]), n = 8.5e28, VH;
     if (k === 'VH') { VH = I * B / (n * QE * tmm * 1e-3);
       return P('A copper strip ' + $(gu(tmm, 'mm')) + ' thick (measured along the field) carries ' + $(gu(I, 'A')) + ' across a ' + $(gu(B, 'T')) + ' magnetic field. Copper has $8.5 \\times 10^{28}$ free electrons per m³. Find the Hall voltage, in μV.', num(VH * 1e6, 'μV'),
         ['Carriers pile up on one edge until the sideways electric force balances the magnetic one: $qE_H = qv_dB$, so $E_H = v_dB$.', 'With $v_d = \\dfrac{I}{nqA}$ and $A = wt$, the voltage across the width is $V_H = E_Hw = \\dfrac{IB}{nqt}$.', $('V_H = \\dfrac{(' + gv(I) + ')(' + gv(B) + ')}{(8.5 \\times 10^{28})(1.60 \\times 10^{-19})(' + gv(tmm * 1e-3) + ')} = ' + nu(VH, 'V') + ' = ' + nu(VH * 1e6, 'μV'))],
         'V_H = IB/(nqt), with t the thickness along B.', { kind: k, I: I, B: B, t: tmm }); }
     if (k === 'n' || k === 'semi') {
-      var ns = R.pick([1e21, 2e21, 5e21, 1e22, 4e22]); VH = I / 1000 * B / (ns * QE * tmm * 1e-3); var VHs = Number((VH * 1000).toPrecision(3)), nf = (I / 1000) * B / (VHs / 1000 * QE * tmm * 1e-3);
+      var ns = R.pick([1e21, 2e21, 5e21, 1e22, 4e22, 3e21, 8e21, 2e22, 6e22, 1e23]); VH = I / 1000 * B / (ns * QE * tmm * 1e-3); var VHs = Number((VH * 1000).toPrecision(3)), nf = (I / 1000) * B / (VHs / 1000 * QE * tmm * 1e-3);
       if (k === 'n') return P('A semiconductor strip ' + $(gu(tmm, 'mm')) + ' thick carries ' + $(gu(I, 'mA')) + ' in a ' + $(gu(B, 'T')) + ' field and shows a Hall voltage of ' + $(gu(VHs, 'mV')) + '. Assuming each carrier has charge $e$, how many carriers are there per cubic meter?', num(nf, 'm⁻³'),
         ['$V_H = \\dfrac{IB}{nqt}$, so $n = \\dfrac{IB}{qtV_H}$.', $('n = \\dfrac{(' + gv(I / 1000) + ')(' + gv(B) + ')}{(1.60 \\times 10^{-19})(' + gv(tmm * 1e-3) + ')(' + gv(VHs / 1000) + ')} = ' + nu(nf, 'm⁻³')), 'Far fewer carriers than in copper, which is why semiconductors show large Hall voltages and make good field sensors.'],
         'Solve V_H = IB/(nqt) for n.', { kind: k, I: I, B: B, t: tmm, VH: VHs });
@@ -1087,7 +1087,7 @@
       return P('The same current and field are applied to a copper strip ($8.5 \\times 10^{28}$ carriers per m³) and to a semiconductor strip of the same thickness with ' + $(gu(ns, 'm⁻³')) + ' carriers. How many times larger is the semiconductor\'s Hall voltage?', { t: 'num', v: pl(ratio), rtol: 0.02 },
         ['$V_H = \\dfrac{IB}{nqt}$: with the same $I$, $B$, $q$ and $t$, $V_H \\propto 1/n$.', $('\\dfrac{V_{\\text{semi}}}{V_{\\text{Cu}}} = \\dfrac{8.5 \\times 10^{28}}{' + gv(ns) + '} = ' + sf(ratio))], 'V_H goes as 1/n.', { kind: k, ns: ns });
     }
-    if (k === 'vd') { var w = R.pick([1, 2, 5]), Vh = R.pick([2, 5, 10, 20]) * 1e-6, vd = Vh / (B * w * 1e-2);
+    if (k === 'vd') { var w = R.pick([1, 2, 5, 0.5, 1.5, 3, 4, 8, 10]), Vh = R.pick([2, 5, 10, 20, 1, 3, 4, 8, 12, 15, 25, 50]) * 1e-6, vd = Vh / (B * w * 1e-2);
       return P('A conducting strip ' + $(gu(w, 'cm')) + ' wide sits in a ' + $(gu(B, 'T')) + ' field, and the Hall voltage across its width is ' + $(gu(Vh * 1e6, 'μV')) + '. Find the carriers\' drift speed, in mm/s.', num(vd * 1000, 'mm/s'),
         ['In steady state $qE_H = qv_dB$, so $v_d = E_H/B$, and $E_H = V_H/w$.', $('v_d = \\dfrac{V_H}{Bw} = \\dfrac{' + gv(Vh) + '}{(' + gv(B) + ')(' + gv(w / 100) + ')} = ' + nu(vd, 'm/s') + ' = ' + nu(vd * 1000, 'mm/s'))],
         'Balance qE_H = qv_dB with E_H = V_H/w.', { kind: k, w: w, B: B, Vh: Vh }); }
@@ -1147,15 +1147,15 @@
 
   G('em.biot-savart', function (R, ctx) {
     var k = kind(R, ctx, ['element', 'inline'], ['segment', 'element', 'square', 'inline'], ['segEnd', 'square', 'segment']);
-    var I = R.pick([2, 3, 5, 8, 10, 15, 20]), B;
-    if (k === 'element') { var dl = R.pick([1, 2, 5]), r = R.pick([0.05, 0.1, 0.2]), th = R.pick([30, 45, 60, 90, 120]); B = 1e-7 * I * dl * 1e-3 * M.sin(deg(th)) / (r * r);
+    var I = R.pick([2, 3, 5, 8, 10, 15, 20, 1, 4, 6, 12, 25, 30, 40, 50]), B;
+    if (k === 'element') { var dl = R.pick([1, 2, 5, 0.5, 1.5, 3, 4, 8, 10]), r = R.pick([0.05, 0.1, 0.2, 0.02, 0.03, 0.04, 0.08, 0.15, 0.25, 0.3]), th = R.pick([30, 45, 60, 90, 120, 10, 15, 20, 37, 53, 75, 135, 150]); B = 1e-7 * I * dl * 1e-3 * M.sin(deg(th)) / (r * r);
       return P('A short piece of wire ' + $(gu(dl, 'mm')) + ' long carries ' + $(gu(I, 'A')) + '. Find the size of its field $dB$, in nT, at a point ' + $(gu(r * 100, 'cm')) + ' away along a line that makes a $' + th + '^\\circ$ angle with the current\'s direction.', num(B * 1e9, 'nT'),
         ['Biot–Savart: $dB = \\dfrac{\\mu_0}{4\\pi}\\dfrac{I\\,d\\ell\\,\\sin\\theta}{r^2}$, with $\\mu_0/4\\pi = 10^{-7}\\ \\text{T·m/A}$.', $('dB = (10^{-7})\\dfrac{(' + gv(I) + ')(' + gv(dl / 1000) + ')\\sin ' + th + '^\\circ}{(' + gv(r) + ')^2} = ' + nu(B, 'T') + ' = ' + nu(B * 1e9, 'nT'))],
         'dB = (μ₀/4π) I dℓ sin θ / r².', { kind: k, I: I, dl: dl, r: r, th: th }); }
     if (k === 'inline') return P('A straight segment of wire carries ' + $(gu(I, 'A')) + '. Point P lies on the line of the wire, ' + $(gu(R.pick([5, 10, 20]), 'cm')) + ' beyond one end. How strong is the field the segment makes at P?', num(0, 'T'),
       ['For every piece, the direction to P is along the current itself, so $d\\vec{\\ell}\\times\\hat{r} = 0$ ($\\sin 0^\\circ = 0$).', 'No piece contributes, so $B = 0$ at P. A current makes no field straight ahead of itself.'],
       'What is the angle between dℓ and the line to P?', { kind: k });
-    var d = R.pick([0.02, 0.05, 0.10]), a = R.pick([0.05, 0.10, 0.20]);
+    var d = R.pick([0.02, 0.05, 0.10, 0.01, 0.03, 0.04, 0.08, 0.15, 0.20]), a = R.pick([0.05, 0.10, 0.20, 0.02, 0.03, 0.08, 0.15, 0.25, 0.30]);
     if (k === 'segment') { B = MU0 * I * a / (2 * PI * d * M.sqrt(a * a + d * d));
       return P('A straight segment of wire ' + $(gu(2 * a * 100, 'cm')) + ' long carries ' + $(gu(I, 'A')) + '. Find the field, in μT, at a point ' + $(gu(d * 100, 'cm')) + ' from the segment\'s midpoint, on its perpendicular bisector.', num(B * 1e6, 'μT'),
         ['A piece at $x$ (measured from the midpoint) is $r = \\sqrt{x^2 + d^2}$ away, and $\\sin\\theta = d/r$. Every piece\'s field points the same way (circling the wire), so the sizes add.', '$$B = \\frac{\\mu_0 I}{4\\pi}\\int_{-a}^{a}\\frac{d\\,dx}{(x^2 + d^2)^{3/2}} = \\frac{\\mu_0 I}{2\\pi d}\\cdot\\frac{a}{\\sqrt{a^2 + d^2}}$$', $('B = \\dfrac{' + tMU + '(' + gv(I) + ')}{2\\pi(' + gv(d) + ')}\\cdot\\dfrac{' + gv(a) + '}{\\sqrt{(' + gv(a) + ')^2 + (' + gv(d) + ')^2}} = ' + nu(B * 1e6, 'μT'))],
@@ -1164,7 +1164,7 @@
       return P('A straight segment ' + $(gu(Ls * 100, 'cm')) + ' long carries ' + $(gu(I, 'A')) + '. Find the field it makes, in μT, at a point ' + $(gu(d * 100, 'cm')) + ' from one end, on the line through that end perpendicular to the segment.', num(B * 1e6, 'μT'),
         ['Put the segment from $x = 0$ to $x = L$ and the point at $(0, d)$. A piece at $x$ is $r = \\sqrt{x^2 + d^2}$ away with $\\sin\\theta = d/r$.', '$$B = \\frac{\\mu_0 I d}{4\\pi}\\int_0^L\\frac{dx}{(x^2 + d^2)^{3/2}} = \\frac{\\mu_0 I}{4\\pi d}\\cdot\\frac{L}{\\sqrt{L^2 + d^2}}$$', $('B = \\dfrac{' + tMU + '(' + gv(I) + ')}{4\\pi(' + gv(d) + ')}\\cdot\\dfrac{' + gv(Ls) + '}{\\sqrt{(' + gv(Ls) + ')^2 + (' + gv(d) + ')^2}} = ' + nu(B * 1e6, 'μT'))],
         'Same integral as the symmetric case, but from 0 to L.', { kind: k, I: I, L: Ls, d: d }); }
-    var s = R.pick([0.05, 0.10, 0.20]); B = 2 * M.SQRT2 * MU0 * I / (PI * s);
+    var s = R.pick([0.05, 0.10, 0.20, 0.02, 0.03, 0.04, 0.08, 0.15, 0.25, 0.30]); B = 2 * M.SQRT2 * MU0 * I / (PI * s);
     return P('A square loop with sides of ' + $(gu(s * 100, 'cm')) + ' carries ' + $(gu(I, 'A')) + '. Find the field at its center, in μT.', num(B * 1e6, 'μT'),
       ['Each side is a segment of half-length $a = s/2$, seen from a distance $d = s/2$ on its bisector: $B_{\\text{side}} = \\dfrac{\\mu_0I}{2\\pi d}\\cdot\\dfrac{a}{\\sqrt{a^2 + d^2}} = \\dfrac{\\mu_0 I}{2\\pi(s/2)}\\cdot\\dfrac{1}{\\sqrt{2}}$.', 'All four sides make fields in the same direction at the center (the right-hand rule around the loop), so $B = 4B_{\\text{side}} = \\dfrac{2\\sqrt{2}\\,\\mu_0 I}{\\pi s}$.', $('B = \\dfrac{2\\sqrt{2}' + tMU + '(' + gv(I) + ')}{\\pi(' + gv(s) + ')} = ' + nu(B * 1e6, 'μT'))],
       'Four finite segments, each seen from its perpendicular bisector.', { kind: 'square', I: I, s: s });
@@ -1172,16 +1172,16 @@
 
   G('em.loop-field', function (R, ctx) {
     var k = kind(R, ctx, ['center', 'center', 'mc'], ['arc', 'axis', 'center', 'ratio'], ['hairpin', 'axis', 'arc']);
-    var I = R.pick([1, 2, 3, 5, 10]), Rr = R.pick([0.02, 0.05, 0.10, 0.15]), B;
-    if (k === 'center') { var N = R.pick([1, 10, 20, 50, 100]); B = MU0 * N * I / (2 * Rr);
+    var I = R.pick([1, 2, 3, 5, 10, 0.5, 1.5, 4, 6, 8, 12, 15, 20]), Rr = R.pick([0.02, 0.05, 0.10, 0.15, 0.01, 0.03, 0.04, 0.08, 0.12, 0.20, 0.25]), B;
+    if (k === 'center') { var N = R.pick([1, 10, 20, 50, 100, 5, 15, 25, 30, 40, 60, 75, 150, 200, 500]); B = MU0 * N * I / (2 * Rr);
       return P((N === 1 ? 'A circular loop' : 'A flat circular coil of ' + N + ' turns') + ' of radius ' + $(gu(Rr * 100, 'cm')) + ' carries ' + $(gu(I, 'A')) + '. Find the field at its center, in μT.', num(B * 1e6, 'μT'),
         ['Every piece $d\\ell$ is the same distance $R$ from the center and perpendicular to the line to it ($\\sin\\theta = 1$), and all the contributions point the same way.', 'So $B = \\dfrac{\\mu_0 I}{4\\pi R^2}\\oint d\\ell = \\dfrac{\\mu_0 I}{4\\pi R^2}(2\\pi R) = \\dfrac{\\mu_0 I}{2R}$ per turn.', $('B = \\dfrac{' + (N === 1 ? '' : N) + tMU + '(' + gv(I) + ')}{2(' + gv(Rr) + ')} = ' + nu(B * 1e6, 'μT'))],
         'At the center, B = μ₀NI/(2R).', { kind: k, N: N, I: I, R: Rr }); }
-    if (k === 'arc') { var ph = R.pick([60, 90, 120, 180, 270]); B = MU0 * I * deg(ph) / (4 * PI * Rr);
+    if (k === 'arc') { var ph = R.pick([60, 90, 120, 180, 270, 30, 45, 135, 150, 225, 240, 300]); B = MU0 * I * deg(ph) / (4 * PI * Rr);
       return P('A wire bent into a circular arc of $' + ph + '^\\circ$ with radius ' + $(gu(Rr * 100, 'cm')) + ' carries ' + $(gu(I, 'A')) + '. Find the field the arc makes at its center, in μT.', num(B * 1e6, 'μT'),
         ['Every piece of the arc is $R$ from the center at right angles, so $B = \\dfrac{\\mu_0 I}{4\\pi R^2}\\times(\\text{arc length}) = \\dfrac{\\mu_0 I}{4\\pi R^2}(R\\phi) = \\dfrac{\\mu_0 I\\phi}{4\\pi R}$, with $\\phi$ in radians.', '$\\phi = ' + ph + '^\\circ = ' + sf(deg(ph)) + '\\ \\text{rad}$.', $('B = \\dfrac{' + tMU + '(' + gv(I) + ')(' + sf(deg(ph)) + ')}{4\\pi(' + gv(Rr) + ')} = ' + nu(B * 1e6, 'μT'))],
         'The arc gives the fraction φ/2π of a full loop\'s μ₀I/(2R).', { kind: k, I: I, R: Rr, ph: ph }); }
-    if (k === 'axis') { var z = R.pick([0.02, 0.05, 0.10]); B = MU0 * I * Rr * Rr / (2 * M.pow(z * z + Rr * Rr, 1.5));
+    if (k === 'axis') { var z = R.pick([0.02, 0.05, 0.10, 0.01, 0.03, 0.04, 0.08, 0.15, 0.20]); B = MU0 * I * Rr * Rr / (2 * M.pow(z * z + Rr * Rr, 1.5));
       return P('A circular loop of radius ' + $(gu(Rr * 100, 'cm')) + ' carries ' + $(gu(I, 'A')) + '. Find the field on its axis, ' + $(gu(z * 100, 'cm')) + ' from the center, in μT.', num(B * 1e6, 'μT'),
         ['Every piece is $r = \\sqrt{z^2 + R^2}$ away and perpendicular to the line to the point, so $dB = \\dfrac{\\mu_0 I\\,d\\ell}{4\\pi r^2}$. The parts across the axis cancel; the parts along it carry a factor $R/r$.', '$$B = \\frac{\\mu_0 I}{4\\pi r^2}\\cdot\\frac{R}{r}\\cdot 2\\pi R = \\frac{\\mu_0 IR^2}{2(z^2 + R^2)^{3/2}}$$', $('B = \\dfrac{' + tMU + '(' + gv(I) + ')(' + gv(Rr) + ')^2}{2\\left((' + gv(z) + ')^2 + (' + gv(Rr) + ')^2\\right)^{3/2}} = ' + nu(B * 1e6, 'μT'))],
         'Only the axial parts survive: B = μ₀IR²/(2(z² + R²)^(3/2)).', { kind: k, I: I, R: Rr, z: z }); }
@@ -1394,21 +1394,21 @@
 
   G('em.inductance', function (R, ctx) {
     var k = kind(R, ctx, ['emf', 'sol', 'mc'], ['sol', 'Iexpr', 'flux', 'scale'], ['tor', 'Iexpr', 'sol']);
-    if (k === 'emf') { var Lh = R.pick([0.05, 0.1, 0.2, 0.5, 2]), dI = R.pick([2, 5, 10, 20, 50]), e = Lh * dI;
+    if (k === 'emf') { var Lh = R.pick([0.05, 0.1, 0.2, 0.5, 2, 0.01, 0.02, 0.025, 0.25, 0.3, 0.8, 1, 1.5, 5]), dI = R.pick([2, 5, 10, 20, 50, 1, 3, 4, 8, 15, 25, 40, 100, 200]), e = Lh * dI;
       return P('The current in a ' + $(LH(Lh)) + ' inductor is increasing at ' + $(gu(dI, 'A/s')) + '. How big is the emf across it?', num(e, 'V'), ['$|\\varepsilon| = L\\dfrac{dI}{dt}$.', $('|\\varepsilon| = (' + gv(Lh) + ')(' + gv(dI) + ') = ' + nu(e, 'V')) + ', pointing to oppose the increase.'], 'ε = L dI/dt.', { kind: k, L: Lh, dI: dI }); }
-    var N = R.pick([200, 300, 500, 1000]), ln = R.pick([0.1, 0.2, 0.25, 0.5]), rr = R.pick([1, 1.5, 2, 3]), A = PI * sq(rr / 100), L = MU0 * N * N * A / ln;
+    var N = R.pick([200, 300, 500, 1000, 100, 150, 250, 400, 600, 800, 1200, 1500, 2000]), ln = R.pick([0.1, 0.2, 0.25, 0.5, 0.05, 0.08, 0.15, 0.3, 0.4, 0.6, 0.75, 1]), rr = R.pick([1, 1.5, 2, 3, 0.5, 0.8, 1.2, 2.5, 4, 5]), A = PI * sq(rr / 100), L = MU0 * N * N * A / ln;
     if (k === 'sol') return P('A long solenoid ' + $(gu(ln * 100, 'cm')) + ' long has ' + N + ' turns and a radius of ' + $(gu(rr, 'cm')) + '. Find its self-inductance in mH.', num(L * 1000, 'mH'),
       ['With current $I$: $B = \\mu_0\\dfrac{N}{\\ell}I$, and each turn holds flux $BA$. The total flux linkage is $N\\Phi = \\mu_0\\dfrac{N^2A}{\\ell}I$.', '$L = \\dfrac{N\\Phi}{I} = \\dfrac{\\mu_0 N^2A}{\\ell}$.', $('L = \\dfrac{' + tMU + '(' + N + ')^2\\pi(' + gv(rr / 100) + ')^2}{' + gv(ln) + '} = ' + nu(L, 'H') + ' = ' + nu(L * 1000, 'mH'))],
       'L = NΦ/I = μ₀N²A/ℓ.', { kind: k, N: N, l: ln, r: rr });
-    if (k === 'flux') { var I = R.pick([0.5, 1, 2, 4]), Phi = R.pick([2, 5, 10, 20]) * 1e-6, L2 = N * Phi / I;
+    if (k === 'flux') { var I = R.pick([0.5, 1, 2, 4, 0.2, 0.25, 1.5, 3, 5, 8, 10]), Phi = R.pick([2, 5, 10, 20, 1, 3, 4, 8, 15, 25, 40, 50]) * 1e-6, L2 = N * Phi / I;
       return P('A coil of ' + N + ' turns carries ' + $(gu(I, 'A')) + ', and its own field puts ' + $(gu(Phi * 1e6, 'μWb')) + ' of flux through each turn. Find its inductance in mH.', num(L2 * 1000, 'mH'), ['$L = \\dfrac{N\\Phi}{I}$: flux linkage per amp.', $('L = \\dfrac{(' + N + ')(' + gv(Phi) + ')}{' + gv(I) + '} = ' + nu(L2 * 1000, 'mH'))], 'L = NΦ/I.', { kind: k, N: N, I: I, Phi: Phi }); }
     if (k === 'scale') { var f = R.pick([2, 3]), g = R.pick([1, 2]), ratio = f * f / g;
       return P('A long solenoid is rewound with ' + f + ' times as many turns over ' + (g === 1 ? 'the same length' : 'twice the length') + ', with the same radius. By what factor does its inductance change?', { t: 'num', v: pl(ratio), rtol: 0.01 },
         ['$L = \\dfrac{\\mu_0N^2A}{\\ell}$: more turns give a stronger field <i>and</i> more turns for that field to thread, so $L \\propto N^2$.', 'Factor: $\\dfrac{' + f + '^2}{' + g + '} = ' + sf(ratio) + '$.'], 'L goes as N²/ℓ.', { kind: k, f: f, g: g }); }
-    if (k === 'Iexpr') { var Lh2 = R.pick([0.02, 0.05, 0.1, 0.25]), I0 = R.pick([1, 2, 3]), f2 = R.pick([50, 60]), w = 2 * PI * f2, t3 = R.pick([1, 2, 4]) * 1e-3, e2 = Lh2 * I0 * w * M.abs(M.cos(w * t3));
+    if (k === 'Iexpr') { var Lh2 = R.pick([0.02, 0.05, 0.1, 0.25, 0.01, 0.03, 0.15, 0.2, 0.5]), I0 = R.pick([1, 2, 3, 0.5, 1.5, 4, 5]), f2 = R.pick([50, 60]), w = 2 * PI * f2, t3 = R.pick([1, 2, 4, 0.5, 1.5, 3, 5, 6]) * 1e-3, e2 = Lh2 * I0 * w * M.abs(M.cos(w * t3));
       return P('The current in a ' + $(gu(Lh2 * 1000, 'mH')) + ' inductor is $I = ' + gv(I0) + '\\sin(\\omega t)$ amperes with $f = ' + gu(f2, 'Hz') + '$. Find the size of the emf across it at $t = ' + gu(t3 * 1000, 'ms') + '$.', num(e2, 'V'),
         ['$|\\varepsilon| = L\\left|\\dfrac{dI}{dt}\\right| = LI_0\\omega|\\cos\\omega t|$, with $\\omega = 2\\pi f = ' + sf(w) + '\\ \\text{rad/s}$.', $('|\\varepsilon| = (' + gv(Lh2) + ')(' + gv(I0) + ')(' + sf(w) + ')|\\cos(' + sf(w * t3) + ')| = ' + nu(e2, 'V'))], 'Differentiate the current; the angle is in radians.', { kind: k, L: Lh2, I0: I0, f: f2, t: t3 }); }
-    if (k === 'tor') { var Nt = R.pick([500, 1000, 2000]), h = R.pick([1, 2, 3]) / 100, a = R.pick([4, 5]) / 100, b = a + R.pick([1, 2, 4]) / 100, Lt = MU0 * Nt * Nt * h * M.log(b / a) / (2 * PI);
+    if (k === 'tor') { var Nt = R.pick([500, 1000, 2000, 200, 300, 400, 750, 1500]), h = R.pick([1, 2, 3, 0.5, 1.5, 2.5, 4, 5]) / 100, a = R.pick([4, 5, 2, 3, 6, 8]) / 100, b = a + R.pick([1, 2, 4, 0.5, 1.5, 3, 5, 6]) / 100, Lt = MU0 * Nt * Nt * h * M.log(b / a) / (2 * PI);
       return P('A toroid of ' + Nt + ' turns has a rectangular cross section: height ' + $(gu(h * 100, 'cm')) + ', from inner radius ' + $(gu(a * 100, 'cm')) + ' to outer radius ' + $(gu(+(b * 100).toPrecision(3), 'cm')) + '. Find its inductance in mH.', num(Lt * 1000, 'mH'),
         ['Inside, $B = \\dfrac{\\mu_0NI}{2\\pi r}$. Flux through one turn, by strips of area $h\\,dr$: $\\Phi = \\dfrac{\\mu_0NIh}{2\\pi}\\ln\\dfrac{b}{a}$.', '$L = \\dfrac{N\\Phi}{I} = \\dfrac{\\mu_0N^2h}{2\\pi}\\ln\\dfrac{b}{a}$.', $('L = (2 \\times 10^{-7})(' + Nt + ')^2(' + gv(h) + ')\\ln ' + gv(+(b / a).toPrecision(4)) + ' = ' + nu(Lt * 1000, 'mH'))],
         'Integrate the toroid\'s field over the rectangular cross section, then L = NΦ/I.', { kind: k, N: Nt, h: h, a: a, b: b }); }
@@ -1467,19 +1467,19 @@
 
   G('em.magnetic-energy', function (R, ctx) {
     var k = kind(R, ctx, ['U', 'u', 'mc'], ['sol', 'I', 'u', 'U'], ['rl', 'sol', 'compare']);
-    if (k === 'U' || k === 'I') { var Lh = R.pick([0.01, 0.05, 0.1, 0.5, 2]), I = R.pick([0.5, 1, 2, 3, 5]), U = 0.5 * Lh * I * I;
+    if (k === 'U' || k === 'I') { var Lh = R.pick([0.01, 0.05, 0.1, 0.5, 2, 0.002, 0.005, 0.02, 0.025, 0.2, 0.25, 1, 1.5, 5]), I = R.pick([0.5, 1, 2, 3, 5, 0.1, 0.2, 0.25, 1.5, 2.5, 4, 6, 8, 10]), U = 0.5 * Lh * I * I;
       if (k === 'U') return P('How much energy is stored in a ' + $(LH(Lh)) + ' inductor carrying ' + $(gu(I, 'A')) + '?', num(U, 'J'), ['$U = \\tfrac{1}{2}LI^2$: the work done against the back emf while the current was built up.', $('U = \\tfrac{1}{2}(' + gv(Lh) + ')(' + gv(I) + ')^2 = ' + nu(U, 'J'))], 'U = ½LI².', { kind: k, L: Lh, I: I });
-      var Ut = R.pick([0.1, 0.5, 1, 5, 10]), In = M.sqrt(2 * Ut / Lh); return P('What current must flow in a ' + $(LH(Lh)) + ' inductor for it to store ' + $(gu(Ut, 'J')) + '?', num(In, 'A'), ['$U = \\tfrac{1}{2}LI^2$, so $I = \\sqrt{2U/L}$.', $('I = \\sqrt{\\dfrac{2(' + gv(Ut) + ')}{' + gv(Lh) + '}} = ' + nu(In, 'A'))], 'Solve U = ½LI² for I.', { kind: k, L: Lh, U: Ut }); }
-    if (k === 'u') { var B = R.pick([0.01, 0.1, 0.5, 1, 1.5, 2]), u = B * B / (2 * MU0);
+      var Ut = R.pick([0.1, 0.5, 1, 5, 10, 0.01, 0.02, 0.05, 0.2, 0.25, 2, 2.5, 4, 20]), In = M.sqrt(2 * Ut / Lh); return P('What current must flow in a ' + $(LH(Lh)) + ' inductor for it to store ' + $(gu(Ut, 'J')) + '?', num(In, 'A'), ['$U = \\tfrac{1}{2}LI^2$, so $I = \\sqrt{2U/L}$.', $('I = \\sqrt{\\dfrac{2(' + gv(Ut) + ')}{' + gv(Lh) + '}} = ' + nu(In, 'A'))], 'Solve U = ½LI² for I.', { kind: k, L: Lh, U: Ut }); }
+    if (k === 'u') { var B = R.pick([0.01, 0.1, 0.5, 1, 1.5, 2, 0.001, 0.005, 0.02, 0.05, 0.2, 0.25, 0.3, 0.8, 1.2, 3]), u = B * B / (2 * MU0);
       return P('What is the energy density of a ' + $(gu(B, 'T')) + ' magnetic field?', num(u, 'J/m³'), ['$u_B = \\dfrac{B^2}{2\\mu_0}$.', $('u_B = \\dfrac{(' + gv(B) + ')^2}{2' + tMU + '} = ' + nu(u, 'J/m³'))], 'u = B²/(2μ₀).', { kind: k, B: B }); }
-    if (k === 'sol') { var N = R.pick([500, 1000]), ln = R.pick([0.2, 0.5]), rr = R.pick([1, 2]) / 100, I2 = R.pick([1, 2, 5]), n = N / ln, B2 = MU0 * n * I2, vol = PI * rr * rr * ln, U2 = B2 * B2 / (2 * MU0) * vol;
+    if (k === 'sol') { var N = R.pick([500, 1000, 200, 300, 400, 600, 800, 1200, 1500, 2000]), ln = R.pick([0.2, 0.5, 0.1, 0.15, 0.25, 0.3, 0.4, 0.6]), rr = R.pick([1, 2, 0.5, 1.5, 2.5, 3]) / 100, I2 = R.pick([1, 2, 5, 0.5, 1.5, 3, 4, 8, 10]), n = N / ln, B2 = MU0 * n * I2, vol = PI * rr * rr * ln, U2 = B2 * B2 / (2 * MU0) * vol;
       return P('A solenoid ' + $(gu(ln * 100, 'cm')) + ' long with ' + N + ' turns and radius ' + $(gu(rr * 100, 'cm')) + ' carries ' + $(gu(I2, 'A')) + '. Find the energy stored in its field, in mJ, from the energy density times the volume.', num(U2 * 1000, 'mJ'),
         ['$B = \\mu_0 nI = ' + tMU + '(' + sf(n) + ')(' + gv(I2) + ') = ' + nu(B2, 'T') + '$, so $u = B^2/(2\\mu_0) = ' + nu(B2 * B2 / (2 * MU0), 'J/m³') + '$.', 'Volume inside: $\\pi r^2\\ell = ' + nu(vol, 'm³') + '$.', $('U = u\\,V = ' + nu(U2 * 1000, 'mJ')), 'Check: $\\tfrac{1}{2}LI^2$ with $L = \\mu_0N^2A/\\ell$ gives the same.'],
         'Find B, then u = B²/(2μ₀), times the volume.', { kind: k, N: N, l: ln, r: rr, I: I2 }); }
-    if (k === 'rl') { var e = R.pick([6, 12, 24]), Rr = R.pick([2, 4, 6]), Lh2 = R.pick([0.5, 1, 2]), If = e / Rr, Ut2 = 0.5 * Lh2 * sq(If * (1 - M.exp(-1)));
+    if (k === 'rl') { var e = R.pick([6, 12, 24, 3, 4.5, 9, 18, 36, 48]), Rr = R.pick([2, 4, 6, 1, 3, 5, 8, 10, 12]), Lh2 = R.pick([0.5, 1, 2, 0.1, 0.2, 0.25, 0.4, 0.8, 1.5, 3]), If = e / Rr, Ut2 = 0.5 * Lh2 * sq(If * (1 - M.exp(-1)));
       return P('A ' + $(gu(Lh2, 'H')) + ' inductor in series with ' + $(gu(Rr, 'Ω')) + ' is connected to ' + $(gu(e, 'V')) + ' at $t = 0$. How much energy is stored in the inductor after one time constant?', num(Ut2, 'J'),
         ['After one time constant $I = \\dfrac{\\varepsilon}{R}(1 - e^{-1}) = ' + sf(If) + '(0.632) = ' + nu(If * (1 - M.exp(-1)), 'A') + '$.', $('U = \\tfrac{1}{2}LI^2 = \\tfrac{1}{2}(' + gv(Lh2) + ')(' + sf(If * (1 - M.exp(-1))) + ')^2 = ' + nu(Ut2, 'J'))], 'Find I at t = τ first.', { kind: k, e: e, R: Rr, L: Lh2 }); }
-    if (k === 'compare') { var E = R.pick([1e5, 3e5, 1e6, 3e6]), Bc = E / CL, ratio = (Bc * Bc / (2 * MU0)) / (0.5 * EPS0 * E * E);
+    if (k === 'compare') { var E = R.pick([1e5, 3e5, 1e6, 3e6, 1e4, 3e4, 5e4, 2e5, 5e5, 2e6]), Bc = E / CL, ratio = (Bc * Bc / (2 * MU0)) / (0.5 * EPS0 * E * E);
       return P('In a light wave, $B = E/c$. Compare the magnetic energy density with the electric energy density at a point where $E = ' + gu(E, 'V/m') + '$: what is $u_B/u_E$?', { t: 'num', v: '1', rtol: 0.02 },
         ['$u_E = \\tfrac{1}{2}\\varepsilon_0E^2 = ' + nu(0.5 * EPS0 * E * E, 'J/m³') + '$.', '$B = E/c = ' + nu(Bc, 'T') + '$, so $u_B = \\dfrac{B^2}{2\\mu_0} = ' + nu(Bc * Bc / (2 * MU0), 'J/m³') + '$.', 'The ratio is $1$ (with rounded constants, $' + sf(ratio) + '$): since $c^2 = 1/(\\mu_0\\varepsilon_0)$, $\\dfrac{B^2/2\\mu_0}{\\varepsilon_0E^2/2} = \\dfrac{1}{\\mu_0\\varepsilon_0c^2} = 1$. Light carries its energy equally in both fields.'],
         'Compute both densities, or use c² = 1/(μ₀ε₀).', { kind: k, E: E }); }
@@ -1490,7 +1490,7 @@
 
   G('em.lc-circuits', function (R, ctx) {
     var k = kind(R, ctx, ['f', 'f', 'mc'], ['Imax', 'T4', 'tune', 'energy'], ['qatI', 'tune', 'Imax']);
-    var Lh = R.pick([0.01, 0.02, 0.05, 0.1, 0.2]), Cu = R.pick([1, 2, 5, 10, 20, 50]), C = Cu * 1e-6, w = 1 / M.sqrt(Lh * C), f = w / (2 * PI), V0 = R.pick([5, 10, 12, 20]);
+    var Lh = R.pick([0.01, 0.02, 0.05, 0.1, 0.2, 0.012, 0.03, 0.06, 0.08, 0.15]), Cu = R.pick([1, 2, 5, 10, 20, 50, 1.2, 3, 6, 9, 25, 40]), C = Cu * 1e-6, w = 1 / M.sqrt(Lh * C), f = w / (2 * PI), V0 = R.pick([5, 10, 12, 20, 6, 11, 15, 19]);
     var setup = 'A ' + $(gu(Cu, 'μF')) + ' capacitor charged to ' + $(gu(V0, 'V')) + ' is connected at $t = 0$ to a ' + $(gu(Lh * 1000, 'mH')) + ' inductor (no resistance). ';
     if (k === 'mc') return P('In an LC circuit oscillating with no resistance, when is the current largest?', mcq('When the capacitor has no charge on it', ['When the capacitor holds its most charge', 'When the capacitor is half charged', 'The current is the same at every moment']),
       ['Energy moves back and forth between the capacitor ($q^2/2C$) and the inductor ($\\tfrac{1}{2}LI^2$), and the total stays the same.', 'The current, and so the inductor\'s energy, is largest when the capacitor\'s energy is zero: when it has no charge.', 'Like a mass on a spring, which moves fastest as it passes the middle, where the spring is relaxed.'],
@@ -1503,12 +1503,12 @@
       'I_max = Q₀ω, or use ½LI² = ½CV².', { kind: k, L: Lh, C: Cu, V0: V0 });
     if (k === 'T4') { var T = 2 * PI * M.sqrt(Lh * C);
       return P(setup + 'How long, in ms, until the capacitor first has no charge on it?', num(T / 4 * 1000, 'ms'), ['$q = Q_0\\cos\\omega t$ first reaches zero at $\\omega t = \\pi/2$: a quarter period.', $('T = 2\\pi\\sqrt{LC} = ' + nu(T * 1000, 'ms') + ', so t = T/4 = ' + nu(T / 4 * 1000, 'ms')), 'At that moment all the energy is in the inductor and the current is largest.'], 'A quarter of the period T = 2π√(LC).', { kind: k, L: Lh, C: Cu }); }
-    if (k === 'tune') { var ft = R.pick([0.5, 1, 1.5, 2]) * 1e6, Cp = R.pick([100, 200, 300, 500]) * 1e-12, Ln = 1 / (sq(2 * PI * ft) * Cp);
+    if (k === 'tune') { var ft = R.pick([0.5, 1, 1.5, 2, 0.6, 0.7, 0.9, 1.2]) * 1e6, Cp = R.pick([100, 200, 300, 500, 120, 150, 350, 400]) * 1e-12, Ln = 1 / (sq(2 * PI * ft) * Cp);
       return P('A radio tuner uses an LC circuit with a ' + $(gu(Cp * 1e12, 'pF')) + ' capacitor. What inductance, in μH, tunes it to ' + $(gu(ft / 1e6, 'MHz')) + '?', num(Ln * 1e6, 'μH'),
         ['$f = \\dfrac{1}{2\\pi\\sqrt{LC}}$, so $L = \\dfrac{1}{(2\\pi f)^2C}$.', $('L = \\dfrac{1}{(2\\pi \\cdot ' + gv(ft) + ')^2(' + gv(Cp) + ')} = ' + nu(Ln, 'H') + ' = ' + nu(Ln * 1e6, 'μH'))], 'Solve f = 1/(2π√(LC)) for L.', { kind: k, f: ft, C: Cp }); }
     if (k === 'energy') { var U = 0.5 * C * V0 * V0;
       return P(setup + 'How much energy is stored in the inductor at the moment the current is largest, in μJ?', num(U * 1e6, 'μJ'), ['With no resistance the total energy stays $\\tfrac{1}{2}CV_0^2$.', 'The current is largest when the capacitor is empty, so then all the energy is in the inductor.', $('U = \\tfrac{1}{2}(' + gv(C) + ')(' + gv(V0) + ')^2 = ' + nu(U * 1e6, 'μJ'))], 'Where is all the energy when the current peaks?', { kind: k, C: Cu, V0: V0, L: Lh }); }
-    var frac = R.pick([0.5, 0.6, 0.8]), qq = Q0 * M.sqrt(1 - frac * frac);
+    var frac = R.pick([0.5, 0.6, 0.8, 0.7]), qq = Q0 * M.sqrt(1 - frac * frac);
     return P(setup + 'At the moment the current is ' + (frac * 100) + '% of its maximum, how much charge (in μC) is on the capacitor?', num(qq * 1e6, 'μC'),
       ['Energy is shared: $\\dfrac{q^2}{2C} + \\tfrac{1}{2}LI^2 = \\dfrac{Q_0^2}{2C}$, and $\\tfrac{1}{2}LI_{\\max}^2 = \\dfrac{Q_0^2}{2C}$.', 'So $q^2 = Q_0^2\\left(1 - \\dfrac{I^2}{I_{\\max}^2}\\right) = Q_0^2(1 - ' + gv(frac) + '^2)$.', $('q = Q_0\\sqrt{1 - ' + gv(frac * frac) + '} = (' + sf(Q0 * 1e6) + ')(' + sf(M.sqrt(1 - frac * frac)) + ') = ' + nu(qq * 1e6, 'μC'))],
       'Total energy stays the same: q²/2C + ½LI² = Q₀²/2C.', { kind: 'qatI', L: Lh, C: Cu, V0: V0, frac: frac });
@@ -1544,16 +1544,16 @@
 
   G('em.ac-rms', function (R, ctx) {
     var k = kind(R, ctx, ['rms', 'peak', 'mc'], ['P', 'I', 'peakP', 'rms'], ['tri', 'square', 'P', 'I']);
-    var V0 = R.pick([10, 20, 50, 100, 170, 325]), Rr = R.pick([10, 20, 50, 100, 200]), Vr = V0 / M.SQRT2;
+    var V0 = R.pick([10, 20, 50, 100, 170, 325, 5, 12, 15, 25, 30, 40, 60, 75, 120, 150, 200, 340]), Rr = R.pick([10, 20, 50, 100, 200, 5, 8, 15, 25, 40, 60, 75, 120, 150, 250, 500, 6, 7, 9, 12, 30, 35, 70, 80, 90, 300, 350, 400]), Vr = V0 / M.SQRT2;
     if (k === 'rms') return P('An AC source has a peak voltage of ' + $(gu(V0, 'V')) + '. What is its rms voltage?', num(Vr, 'V'),
       ['For a sine wave, $\\overline{\\sin^2} = \\tfrac{1}{2}$ over a cycle, so $V_{\\text{rms}} = \\sqrt{\\overline{V^2}} = V_0/\\sqrt{2}$.', $('V_{\\text{rms}} = \\dfrac{' + gv(V0) + '}{\\sqrt{2}} = ' + nu(Vr, 'V'))], 'Divide the peak by √2.', { kind: k, V0: V0 });
-    if (k === 'peak') { var Vrms = R.pick([120, 230, 240, 12, 24]); return P((Vrms > 100 ? 'A household outlet is rated ' : 'A low-voltage AC supply is rated ') + $(gu(Vrms, 'V')) + ' (rms). What is the peak voltage?', num(Vrms * M.SQRT2, 'V'),
+    if (k === 'peak') { var Vrms = R.pick([120, 230, 240, 12, 24, 6, 9, 15, 18, 36, 48, 100, 110, 220]); return P((Vrms > 100 ? 'A household outlet is rated ' : 'A low-voltage AC supply is rated ') + $(gu(Vrms, 'V')) + ' (rms). What is the peak voltage?', num(Vrms * M.SQRT2, 'V'),
       ['Ratings for AC are rms values; the sine wave swings to $V_0 = \\sqrt{2}\\,V_{\\text{rms}}$.', $('V_0 = \\sqrt{2}(' + gv(Vrms) + ') = ' + nu(Vrms * M.SQRT2, 'V'))], 'Multiply the rms value by √2.', { kind: k, Vrms: Vrms }); }
     if (k === 'P') return P('An AC source with peak voltage ' + $(gu(V0, 'V')) + ' drives a ' + $(gu(Rr, 'Ω')) + ' resistor. What average power does the resistor use?', num(Vr * Vr / Rr, 'W'),
       ['Power at each instant is $V^2/R = \\dfrac{V_0^2}{R}\\sin^2\\omega t$, which averages to $\\dfrac{V_0^2}{2R} = \\dfrac{V_{\\text{rms}}^2}{R}$.', $('\\bar{P} = \\dfrac{(' + gv(V0) + ')^2}{2(' + gv(Rr) + ')} = ' + nu(Vr * Vr / Rr, 'W'))], 'Average power is V_rms²/R, not zero.', { kind: k, V0: V0, R: Rr });
     if (k === 'peakP') return P('An AC source with peak voltage ' + $(gu(V0, 'V')) + ' drives a ' + $(gu(Rr, 'Ω')) + ' resistor. What is the largest instantaneous power?', num(V0 * V0 / Rr, 'W'),
       ['$P = \\dfrac{V^2}{R}$ is largest when $V = \\pm V_0$: $P_{\\max} = \\dfrac{V_0^2}{R}$, twice the average.', $('P_{\\max} = \\dfrac{(' + gv(V0) + ')^2}{' + gv(Rr) + '} = ' + nu(V0 * V0 / Rr, 'W'))], 'Use the peak voltage in V²/R.', { kind: k, V0: V0, R: Rr });
-    if (k === 'I') { var Pw = R.pick([60, 100, 500, 1000, 1500]), Vrms2 = R.pick([120, 230]); return P('A ' + $(gu(Pw, 'W')) + ' heater runs on ' + $(gu(Vrms2, 'V')) + ' rms. Find the rms current and the peak current.', { t: 'multi', parts: [{ label: '$I_{\\text{rms}}$', a: { t: 'num', v: pl(Pw / Vrms2), rtol: 0.02 }, unit: 'A' }, { label: '$I_0$', a: { t: 'num', v: pl(Pw / Vrms2 * M.SQRT2), rtol: 0.02 }, unit: 'A' }] },
+    if (k === 'I') { var Pw = R.pick([60, 100, 500, 1000, 1500, 70, 150, 300, 600, 1200]), Vrms2 = R.pick([120, 230]); return P('A ' + $(gu(Pw, 'W')) + ' heater runs on ' + $(gu(Vrms2, 'V')) + ' rms. Find the rms current and the peak current.', { t: 'multi', parts: [{ label: '$I_{\\text{rms}}$', a: { t: 'num', v: pl(Pw / Vrms2), rtol: 0.02 }, unit: 'A' }, { label: '$I_0$', a: { t: 'num', v: pl(Pw / Vrms2 * M.SQRT2), rtol: 0.02 }, unit: 'A' }] },
       ['For a resistor, $\\bar{P} = I_{\\text{rms}}V_{\\text{rms}}$, so $I_{\\text{rms}} = ' + gv(Pw) + '/' + gv(Vrms2) + ' = ' + nu(Pw / Vrms2, 'A') + '$.', 'The peak current is $\\sqrt{2}$ times larger: $I_0 = ' + nu(Pw / Vrms2 * M.SQRT2, 'A') + '$.'], 'P = I_rms V_rms for a resistor.', { kind: k, P: Pw, V: Vrms2 }); }
     if (k === 'tri' || k === 'square') { var rmsv = k === 'tri' ? V0 / M.sqrt(3) : V0;
       return P('A ' + (k === 'tri' ? 'triangle wave (rising and falling in straight lines between $-V_0$ and $+V_0$)' : 'square wave (jumping between $+V_0$ and $-V_0$ and staying at each for half a cycle)') + ' has $V_0 = ' + gu(V0, 'V') + '$. Find its rms value.', num(rmsv, 'V'),
@@ -1566,10 +1566,10 @@
 
   G('em.reactance', function (R, ctx) {
     var k = kind(R, ctx, ['XC', 'XL', 'mc'], ['XC', 'XL', 'I', 'scale'], ['cross', 'I', 'scale']);
-    var f = R.pick([50, 60, 100, 500, 1000]), w = 2 * PI * f, Cu = R.pick([1, 2, 5, 10, 22, 47, 100]), Lh = R.pick([0.01, 0.02, 0.05, 0.1, 0.2, 0.5]);
+    var f = R.pick([50, 60, 100, 500, 1000, 25, 120, 200, 250, 400, 800, 2000, 5000]), w = 2 * PI * f, Cu = R.pick([1, 2, 5, 10, 22, 47, 100, 0.5, 3.3, 4.7, 15, 33, 68, 220]), Lh = R.pick([0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 0.005, 0.025, 0.03, 0.15, 0.25, 0.3, 0.8, 1]);
     if (k === 'XC') { var XC = 1 / (w * Cu * 1e-6); return P('Find the reactance of a ' + $(gu(Cu, 'μF')) + ' capacitor at ' + $(gu(f, 'Hz')) + '.', num(XC, 'Ω'), ['$X_C = \\dfrac{1}{\\omega C}$ with $\\omega = 2\\pi f = ' + sf(w) + '\\ \\text{rad/s}$.', $('X_C = \\dfrac{1}{(' + sf(w) + ')(' + gv(Cu * 1e-6) + ')} = ' + nu(XC, 'Ω'))], 'X_C = 1/(ωC), ω = 2πf.', { kind: k, f: f, C: Cu }); }
     if (k === 'XL') { var XL = w * Lh; return P('Find the reactance of a ' + $(gu(Lh * 1000, 'mH')) + ' inductor at ' + $(gu(f, 'Hz')) + '.', num(XL, 'Ω'), ['$X_L = \\omega L$ with $\\omega = 2\\pi f = ' + sf(w) + '\\ \\text{rad/s}$.', $('X_L = (' + sf(w) + ')(' + gv(Lh) + ') = ' + nu(XL, 'Ω'))], 'X_L = ωL.', { kind: k, f: f, L: Lh }); }
-    if (k === 'I') { var Vr = R.pick([12, 24, 120, 230]), isC = R.coin(), X = isC ? 1 / (w * Cu * 1e-6) : w * Lh, I = Vr / X;
+    if (k === 'I') { var Vr = R.pick([12, 24, 120, 230, 5, 6, 9, 15, 18, 36, 48, 100]), isC = R.coin(), X = isC ? 1 / (w * Cu * 1e-6) : w * Lh, I = Vr / X;
       return P('A ' + (isC ? $(gu(Cu, 'μF')) + ' capacitor' : $(gu(Lh * 1000, 'mH')) + ' inductor') + ' is connected alone across a ' + $(gu(Vr, 'V')) + ' rms, ' + $(gu(f, 'Hz')) + ' source. Find the rms current, in mA.', num(I * 1000, 'mA'),
         [isC ? '$X_C = \\dfrac{1}{2\\pi fC} = ' + nu(X, 'Ω') + '$.' : '$X_L = 2\\pi fL = ' + nu(X, 'Ω') + '$.', $('I_{\\text{rms}} = \\dfrac{V_{\\text{rms}}}{X} = \\dfrac{' + gv(Vr) + '}{' + sf(X) + '} = ' + nu(I * 1000, 'mA'))], 'Find the reactance, then I = V/X.', { kind: k, f: f, C: Cu, L: Lh, V: Vr, isC: isC }); }
     if (k === 'scale') { var g = R.pick([2, 3, 4, 10]), isC2 = R.coin(), ratio = isC2 ? 1 / g : g;
@@ -1636,25 +1636,25 @@
 
   G('em.displacement-current', function (R, ctx) {
     var k = kind(R, ctx, ['Id', 'Id', 'mc'], ['B', 'dEdt', 'Bout', 'Id'], ['dVdt', 'B', 'Bout']);
-    var Rp = R.pick([0.05, 0.10, 0.15]), A = PI * Rp * Rp, I = R.pick([0.5, 1, 2, 5]);
+    var Rp = R.pick([0.05, 0.10, 0.15, 0.02, 0.03, 0.04, 0.08, 0.12, 0.20, 0.25]), A = PI * Rp * Rp, I = R.pick([0.5, 1, 2, 5, 0.1, 0.2, 0.25, 1.5, 3, 4, 8, 10]);
     var plates = 'A capacitor with circular plates of radius ' + $(gu(Rp * 100, 'cm')) + ' is being charged by a current of ' + $(gu(I, 'A')) + '. ';
     if (k === 'mc') return P('While a capacitor charges, current flows in the wires on both sides. What happens in the empty gap between the plates?', mcq('No charge crosses it; the growing electric field there acts as a "displacement current" equal to the current in the wires', ['Electrons jump across the gap, carrying the current over', 'Nothing: the gap breaks the circuit, so there is no magnetic field around it', 'Charge crosses the gap only once the voltage is high enough']),
       ['No charge crosses an ideal capacitor\'s gap: charge piles up on one plate and leaves the other.', 'But the electric field in the gap grows as the charge builds, and $\\varepsilon_0\\,d\\Phi_E/dt$ equals the current $I$ in the wires.', 'Maxwell added this term to Ampère\'s law, so a magnetic field circles the gap just as it circles the wires.'],
       'What changes in the gap while the plates charge up?', { kind: 'mc' });
-    if (k === 'Id') { var dEdt = R.pick([1, 2, 5, 10]) * 1e12, Id = EPS0 * A * dEdt;
+    if (k === 'Id') { var dEdt = R.pick([1, 2, 5, 10, 0.5, 1.5, 3, 4, 8, 20, 50]) * 1e12, Id = EPS0 * A * dEdt;
       return P('Between the circular plates (radius ' + $(gu(Rp * 100, 'cm')) + ') of a charging capacitor, the electric field grows at ' + $(gu(dEdt, 'V/(m·s)')) + '. What is the displacement current?', num(Id, 'A'),
         ['$I_d = \\varepsilon_0\\dfrac{d\\Phi_E}{dt} = \\varepsilon_0A\\dfrac{dE}{dt}$ (the field is uniform between the plates).', $('I_d = ' + tE0 + '\\pi(' + gv(Rp) + ')^2(' + gv(dEdt) + ') = ' + nu(Id, 'A'))], 'I_d = ε₀ A dE/dt.', { kind: k, R: Rp, dEdt: dEdt }); }
     if (k === 'dEdt') return P(plates + 'How fast is the electric field between the plates increasing?', num(I / (EPS0 * A), 'V/(m·s)'),
       ['The displacement current in the gap equals the conduction current in the wires: $\\varepsilon_0A\\dfrac{dE}{dt} = I$.', '(Directly: $E = \\dfrac{q}{\\varepsilon_0A}$, so $\\dfrac{dE}{dt} = \\dfrac{I}{\\varepsilon_0A}$.)', $('\\dfrac{dE}{dt} = \\dfrac{' + gv(I) + '}{' + tE0 + '\\pi(' + gv(Rp) + ')^2} = ' + nu(I / (EPS0 * A), 'V/(m·s)'))], 'ε₀A dE/dt equals the current in the wires.', { kind: k, R: Rp, I: I });
-    if (k === 'B') { var r = Rp * R.pick([0.25, 0.5, 0.75]), B = MU0 * I * r / (2 * PI * Rp * Rp);
+    if (k === 'B') { var r = Rp * R.pick([0.25, 0.5, 0.75, 0.1, 0.2, 0.4, 0.6, 0.8, 0.9]), B = MU0 * I * r / (2 * PI * Rp * Rp);
       return P(plates + 'Find the magnetic field between the plates, ' + $(gu(+(r * 100).toPrecision(3), 'cm')) + ' from the axis, in μT.', num(B * 1e6, 'μT'),
         ['Ampère–Maxwell around a circle of radius $r$ between the plates: no charge crosses it, but it encloses the fraction $r^2/R^2$ of the displacement current, which equals $I$ in total.', '$B(2\\pi r) = \\mu_0I\\dfrac{r^2}{R^2}$, so $B = \\dfrac{\\mu_0Ir}{2\\pi R^2}$.', $('B = \\dfrac{' + tMU + '(' + gv(I) + ')(' + gv(+r.toPrecision(3)) + ')}{2\\pi(' + gv(Rp) + ')^2} = ' + nu(B * 1e6, 'μT'))],
         'Treat the displacement current like a current spread evenly over the plates.', { kind: k, R: Rp, I: I, r: r }); }
-    if (k === 'Bout') { var r2 = Rp * R.pick([1.5, 2, 3]), B2 = MU0 * I / (2 * PI * r2);
+    if (k === 'Bout') { var r2 = Rp * R.pick([1.5, 2, 3, 1.2, 1.25, 2.5, 4, 5, 10]), B2 = MU0 * I / (2 * PI * r2);
       return P(plates + 'Find the magnetic field in the plane midway between the plates, ' + $(gu(+(r2 * 100).toPrecision(3), 'cm')) + ' from the axis (outside the plates\' edge), in μT.', num(B2 * 1e6, 'μT'),
         ['A circle of radius $r > R$ encloses all of the displacement current, $I_d = I$.', $('B = \\dfrac{\\mu_0I}{2\\pi r} = \\dfrac{' + tMU + '(' + gv(I) + ')}{2\\pi(' + gv(+r2.toPrecision(3)) + ')} = ' + nu(B2 * 1e6, 'μT')), 'Exactly what the wire would make at that distance: the gap is invisible to Ampère–Maxwell.'],
         'The whole displacement current is enclosed.', { kind: k, R: Rp, I: I, r: r2 }); }
-    var Cpf = R.pick([100, 200, 500, 1000]), dV = R.pick([1, 2, 5, 10]) * 1e6, Id2 = Cpf * 1e-12 * dV;
+    var Cpf = R.pick([100, 200, 500, 1000, 10, 20, 47, 50, 220, 470, 2000]), dV = R.pick([1, 2, 5, 10, 0.5, 1.5, 3, 4, 8, 20]) * 1e6, Id2 = Cpf * 1e-12 * dV;
     return P('The voltage across a ' + $(gu(Cpf, 'pF')) + ' parallel-plate capacitor rises at ' + $(gu(dV, 'V/s')) + '. What displacement current flows between its plates, in mA?', num(Id2 * 1000, 'mA'),
       ['$I_d = \\varepsilon_0A\\dfrac{dE}{dt}$ with $E = V/d$: $I_d = \\dfrac{\\varepsilon_0A}{d}\\dfrac{dV}{dt} = C\\dfrac{dV}{dt}$.', $('I_d = (' + gv(Cpf * 1e-12) + ')(' + gv(dV) + ') = ' + nu(Id2 * 1000, 'mA')), 'The same as the charging current in the wires, $dq/dt = C\\,dV/dt$.'],
       'Write E = V/d and recognize ε₀A/d = C.', { kind: 'dVdt', C: Cpf, dV: dV });
@@ -1670,15 +1670,15 @@
         ['Gauss (electric): flux of $\\vec{E}$ through a closed surface counts enclosed charge. Gauss (magnetic): flux of $\\vec{B}$ through a closed surface is always zero. Faraday: changing $\\Phi_B$ makes a circulating $\\vec{E}$. Ampère–Maxwell: currents and changing $\\Phi_E$ make a circulating $\\vec{B}$.', 'This statement is ' + MAXW[s[0]][0] + '.'],
         'Is it about flux through a closed surface or circulation around a loop? Of E or of B?', { kind: k, s: s[0] });
     }
-    if (k === 'gaussB') { var p1 = R.pick([2, 3, 5, 8]), p2 = R.pick([-6, -4, -1, 1, 3]), side = -(p1 + p2);
+    if (k === 'gaussB') { var p1 = R.pick([2, 3, 5, 8, 1, 4, 6, 7, 10]), p2 = R.pick([-6, -4, -1, 1, 3, -8, -7, -5, -3, -2, 2, 4]), side = -(p1 + p2);
       return P('A closed cylindrical surface sits in a magnetic field. The outward flux through its top end is ' + $(gu(p1, 'mWb')) + ' and through its bottom end is ' + $(gu(p2, 'mWb')) + '. What is the outward flux through its curved side?', { a: { t: 'num', v: String(side) }, unit: 'mWb' },
         ['Gauss\'s law for magnetism: the total outward flux through any closed surface is zero, because there are no magnetic charges.', '$' + p1 + ' + (' + p2 + ') + \\Phi_{\\text{side}} = 0$, so $\\Phi_{\\text{side}} = ' + side + '\\ \\text{mWb}$.'],
         'The flux through the whole closed surface must add to zero.', { kind: k, p1: p1, p2: p2 }); }
-    if (k === 'faraday') { var Rs = R.pick([0.02, 0.05, 0.1]), dB = R.pick([0.5, 1, 2, 4]), circ = -PI * Rs * Rs * dB;
+    if (k === 'faraday') { var Rs = R.pick([0.02, 0.05, 0.1, 0.01, 0.03, 0.04, 0.08, 0.15, 0.2]), dB = R.pick([0.5, 1, 2, 4, 0.1, 0.2, 0.25, 1.5, 3, 5]), circ = -PI * Rs * Rs * dB;
       return P('A uniform magnetic field fills a circular region of radius ' + $(gu(Rs * 100, 'cm')) + ' and points out of the page, growing at ' + $(gu(dB, 'T/s')) + '. Going counterclockwise around the edge of the region, what is $\\oint\\vec{E}\\cdot d\\vec{\\ell}$, in mV?', { a: { t: 'num', v: pl(circ * 1000), rtol: 0.02 }, unit: 'mV' },
         ['Faraday\'s law: $\\oint\\vec{E}\\cdot d\\vec{\\ell} = -\\dfrac{d\\Phi_B}{dt}$, with the normal (out of the page) set by the counterclockwise direction.', $('-\\pi(' + gv(Rs) + ')^2(' + gv(dB) + ') = ' + nu(circ * 1000, 'mV')), 'Negative: the induced field circulates clockwise, opposing the growing flux (Lenz).'],
         'Use Faraday\'s law with the right-hand rule for the sign.', { kind: k, R: Rs, dB: dB }); }
-    var I = R.pick([1, 2, 3]), dPE = R.pick([1, 2, 5]) * 1e11, val = MU0 * (I + EPS0 * dPE);
+    var I = R.pick([1, 2, 3, 0.5, 1.5, 4, 5]), dPE = R.pick([1, 2, 5, 0.5, 1.5, 3, 4, 8]) * 1e11, val = MU0 * (I + EPS0 * dPE);
     return P('A closed path encloses a wire carrying ' + $(gu(I, 'A')) + ' and also part of a capacitor gap, where the electric flux through the path is changing at ' + $(gu(dPE, 'V·m/s')) + '. What is $\\oint\\vec{B}\\cdot d\\vec{\\ell}$ around the path, in μT·m?', num(val * 1e6, 'μT·m'),
       ['Ampère–Maxwell: $\\oint\\vec{B}\\cdot d\\vec{\\ell} = \\mu_0\\left(I + \\varepsilon_0\\dfrac{d\\Phi_E}{dt}\\right)$.', 'Displacement current: $\\varepsilon_0\\dfrac{d\\Phi_E}{dt} = (8.85 \\times 10^{-12})(' + gv(dPE) + ') = ' + nu(EPS0 * dPE, 'A') + '$.', $('\\oint\\vec{B}\\cdot d\\vec{\\ell} = ' + tMU + '(' + gv(I) + ' + ' + sf(EPS0 * dPE) + ') = ' + nu(val * 1e6, 'μT·m'))],
       'Add the conduction current and the displacement current.', { kind: 'ampmax', I: I, dPE: dPE });
@@ -1686,8 +1686,8 @@
 
   G('em.em-waves-maxwell', function (R, ctx) {
     var k = kind(R, ctx, ['B0', 'E0', 'mc'], ['dir', 'Bdir', 'lambda', 'B0'], ['medium', 'dir', 'Bdir']);
-    if (k === 'B0') { var E0 = R.pick([3, 10, 30, 100, 300, 1000]), B0 = E0 / CL; return P('In a light wave the electric field has amplitude ' + $(gu(E0, 'V/m')) + '. What is the amplitude of the magnetic field, in nT?', num(B0 * 1e9, 'nT'), ['In an electromagnetic wave $E = cB$ at every point and every instant.', $('B_0 = \\dfrac{E_0}{c} = \\dfrac{' + gv(E0) + '}{3.00 \\times 10^{8}} = ' + nu(B0, 'T') + ' = ' + nu(B0 * 1e9, 'nT'))], 'B = E/c.', { kind: k, E0: E0 }); }
-    if (k === 'E0') { var B1 = R.pick([1, 2, 5, 10, 50]) * 1e-9, E1 = CL * B1; return P('A radio wave\'s magnetic field has amplitude ' + $(gu(B1 * 1e9, 'nT')) + '. What is the amplitude of its electric field?', num(E1, 'V/m'), ['$E = cB$.', $('E_0 = (3.00 \\times 10^{8})(' + gv(B1) + ') = ' + nu(E1, 'V/m'))], 'E = cB.', { kind: k, B0: B1 }); }
+    if (k === 'B0') { var E0 = R.pick([3, 10, 30, 100, 300, 1000, 1, 5, 15, 20, 50, 150, 200, 500, 600, 2000, 1.2, 2, 2.5, 4, 7, 9, 12, 35, 60, 80, 90, 250, 400, 800, 900, 1500]), B0 = E0 / CL; return P('In a light wave the electric field has amplitude ' + $(gu(E0, 'V/m')) + '. What is the amplitude of the magnetic field, in nT?', num(B0 * 1e9, 'nT'), ['In an electromagnetic wave $E = cB$ at every point and every instant.', $('B_0 = \\dfrac{E_0}{c} = \\dfrac{' + gv(E0) + '}{3.00 \\times 10^{8}} = ' + nu(B0, 'T') + ' = ' + nu(B0 * 1e9, 'nT'))], 'B = E/c.', { kind: k, E0: E0 }); }
+    if (k === 'E0') { var B1 = R.pick([1, 2, 5, 10, 50, 0.5, 3, 4, 8, 20, 25, 100, 200, 0.6, 0.8, 1.2, 1.5, 3.5, 7, 9, 15, 35, 60, 80, 90, 150]) * 1e-9, E1 = CL * B1; return P('A radio wave\'s magnetic field has amplitude ' + $(gu(B1 * 1e9, 'nT')) + '. What is the amplitude of its electric field?', num(E1, 'V/m'), ['$E = cB$.', $('E_0 = (3.00 \\times 10^{8})(' + gv(B1) + ') = ' + nu(E1, 'V/m'))], 'E = cB.', { kind: k, B0: B1 }); }
     var AX = { '+x': [1, 0, 0], '-x': [-1, 0, 0], '+y': [0, 1, 0], '-y': [0, -1, 0], '+z': [0, 0, 1], '-z': [0, 0, -1] }, names = Object.keys(AX);
     function nameOf(v) { for (var n in AX) if (AX[n][0] === v[0] && AX[n][1] === v[1] && AX[n][2] === v[2]) return n; }
     if (k === 'dir' || k === 'Bdir') { var eA = R.pick(names), bA = R.pick(names.filter(function (n) { return n[1] !== eA[1]; })), sA = nameOf(cross(AX[eA], AX[bA]));
@@ -1696,7 +1696,7 @@
       var dA = sA, bN = nameOf(cross(AX[dA], AX[eA])); // B = (s × E) direction
       return P('A light wave travels along $' + dA + '$. At some instant its electric field points along $' + eA + '$. Which way does its magnetic field point there?', mcq('$' + bN + '$', ['$' + nameOf(AX[bN].map(function (x) { return -x; })) + '$', '$' + dA + '$', '$' + eA + '$']),
         ['$\\vec{E}$, $\\vec{B}$ and the direction of travel are mutually perpendicular, with $\\vec{E}\\times\\vec{B}$ along the travel direction.', 'That makes $\\vec{B}$ point along (travel) $\\times\\ \\vec{E}$: $' + dA + ' \\times ' + eA + ' = ' + bN + '$. Check: $' + eA + ' \\times ' + bN + ' = ' + dA + '$.'], 'E × B must point along the travel direction.', { kind: k, eA: eA, dA: dA }); }
-    if (k === 'lambda') { var f = R.pick([88, 100, 2400, 5000]) * 1e6, lam = CL / f; return P('A wave of frequency ' + $(gu(f / 1e6, 'MHz')) + ' travels through empty space. What is its wavelength, in cm?', num(lam * 100, 'cm'), ['All electromagnetic waves travel at $c = 1/\\sqrt{\\mu_0\\varepsilon_0} = 3.00 \\times 10^{8}\\ \\text{m/s}$ in empty space, and $c = f\\lambda$.', $('\\lambda = \\dfrac{c}{f} = \\dfrac{3.00 \\times 10^{8}}{' + gv(f) + '} = ' + nu(lam, 'm') + ' = ' + nu(lam * 100, 'cm'))], 'λ = c/f.', { kind: k, f: f }); }
+    if (k === 'lambda') { var f = R.pick([88, 100, 2400, 5000, 1, 10, 50, 60, 92, 105, 150, 300, 900, 1800, 1900, 2450, 10000]) * 1e6, lam = CL / f; return P('A wave of frequency ' + $(gu(f / 1e6, 'MHz')) + ' travels through empty space. What is its wavelength, in cm?', num(lam * 100, 'cm'), ['All electromagnetic waves travel at $c = 1/\\sqrt{\\mu_0\\varepsilon_0} = 3.00 \\times 10^{8}\\ \\text{m/s}$ in empty space, and $c = f\\lambda$.', $('\\lambda = \\dfrac{c}{f} = \\dfrac{3.00 \\times 10^{8}}{' + gv(f) + '} = ' + nu(lam, 'm') + ' = ' + nu(lam * 100, 'cm'))], 'λ = c/f.', { kind: k, f: f }); }
     if (k === 'medium') { var kap = R.pick([1.5, 2, 2.25, 4, 81]), v = CL / M.sqrt(kap); return P('In a nonmagnetic material with dielectric constant $\\kappa = ' + gv(kap) + '$ (so $\\varepsilon = \\kappa\\varepsilon_0$), Maxwell\'s equations give the wave speed $v = 1/\\sqrt{\\mu_0\\varepsilon}$. Find $v$.', num(v, 'm/s'),
       ['$v = \\dfrac{1}{\\sqrt{\\mu_0\\kappa\\varepsilon_0}} = \\dfrac{c}{\\sqrt{\\kappa}}$.', $('v = \\dfrac{3.00 \\times 10^{8}}{\\sqrt{' + gv(kap) + '}} = ' + nu(v, 'm/s')) + '. (At the frequencies of light, the relevant $\\kappa$ is the square of the refractive index.)'], 'Replace ε₀ with κε₀.', { kind: k, kap: kap }); }
     return P('In a traveling light wave, how do the electric and magnetic fields at one point vary in time?', mcq('They rise and fall together: both peak at the same instant', ['The magnetic field peaks a quarter cycle after the electric field', 'The magnetic field is largest when the electric field is zero', 'Only the electric field oscillates; the magnetic field stays steady']),
@@ -1706,20 +1706,20 @@
 
   G('em.em-wave-energy', function (R, ctx) {
     var k = kind(R, ctx, ['I', 'press', 'mc'], ['E0', 'press', 'force', 'B0'], ['point', 'force', 'momentum']);
-    if (k === 'I') { var E0 = R.pick([5, 10, 20, 50, 80, 100, 200, 500, 800, 1000]), I = 0.5 * CL * EPS0 * E0 * E0; return P('A light wave has an electric field amplitude of ' + $(gu(E0, 'V/m')) + '. What is its intensity?', num(I, 'W/m²'), ['The average energy density is $\\bar{u} = \\tfrac{1}{2}\\varepsilon_0E_0^2$ (half electric, half magnetic), and it moves at $c$.', $('I = c\\bar{u} = \\tfrac{1}{2}c\\varepsilon_0E_0^2 = \\tfrac{1}{2}(3.00 \\times 10^{8})' + tE0 + '(' + gv(E0) + ')^2 = ' + nu(I, 'W/m²'))], 'I = ½cε₀E₀².', { kind: k, E0: E0 }); }
-    if (k === 'E0' || k === 'B0') { var In = R.pick([1360, 1000, 800, 500, 200, 100, 50, 10]), E1 = M.sqrt(2 * In / (CL * EPS0));
+    if (k === 'I') { var E0 = R.pick([5, 10, 20, 50, 80, 100, 200, 500, 800, 1000, 1, 2, 15, 25, 30, 40, 60, 150, 300, 400, 600, 1.2, 1.5, 2.5, 3, 3.5, 4, 6, 7, 8, 9, 12, 35, 70, 90, 120, 250, 350, 700, 900]), I = 0.5 * CL * EPS0 * E0 * E0; return P('A light wave has an electric field amplitude of ' + $(gu(E0, 'V/m')) + '. What is its intensity?', num(I, 'W/m²'), ['The average energy density is $\\bar{u} = \\tfrac{1}{2}\\varepsilon_0E_0^2$ (half electric, half magnetic), and it moves at $c$.', $('I = c\\bar{u} = \\tfrac{1}{2}c\\varepsilon_0E_0^2 = \\tfrac{1}{2}(3.00 \\times 10^{8})' + tE0 + '(' + gv(E0) + ')^2 = ' + nu(I, 'W/m²'))], 'I = ½cε₀E₀².', { kind: k, E0: E0 }); }
+    if (k === 'E0' || k === 'B0') { var In = R.pick([1360, 1000, 800, 500, 200, 100, 50, 10, 5, 20, 30, 75, 150, 300, 400, 600, 1200, 1500, 6, 7, 8, 9, 12, 15, 25, 35, 40, 60, 70, 80, 90, 120, 250, 350, 700, 900]), E1 = M.sqrt(2 * In / (CL * EPS0));
       if (k === 'E0') return P((In === 1360 ? 'Sunlight above Earth\'s atmosphere has an intensity of about ' + $(gu(1360, 'W/m²')) + '. Treating it as a single wave, what' : 'A beam of light has an intensity of ' + $(gu(In, 'W/m²')) + '. What') + ' is its electric field amplitude?', num(E1, 'V/m'), ['$I = \\tfrac{1}{2}c\\varepsilon_0E_0^2$, so $E_0 = \\sqrt{\\dfrac{2I}{c\\varepsilon_0}}$.', $('E_0 = \\sqrt{\\dfrac{2(' + gv(In) + ')}{(3.00 \\times 10^{8})(8.85 \\times 10^{-12})}} = ' + nu(E1, 'V/m'))], 'Solve I = ½cε₀E₀² for E₀.', { kind: k, I: In });
       return P('A light beam has intensity ' + $(gu(In, 'W/m²')) + '. What is the amplitude of its magnetic field, in μT?', num(E1 / CL * 1e6, 'μT'), ['$E_0 = \\sqrt{\\dfrac{2I}{c\\varepsilon_0}} = ' + nu(E1, 'V/m') + '$.', $('B_0 = \\dfrac{E_0}{c} = ' + nu(E1 / CL * 1e6, 'μT'))], 'Find E₀, then B₀ = E₀/c.', { kind: k, I: In }); }
-    if (k === 'press' || k === 'force') { var In2 = R.pick([1360, 1000, 800, 500, 2000, 300]), refl = R.coin(), Pp = (refl ? 2 : 1) * In2 / CL;
+    if (k === 'press' || k === 'force') { var In2 = R.pick([1360, 1000, 800, 500, 2000, 300, 100, 200, 400, 600, 1200, 1500, 3000, 5000, 120, 150, 250, 350, 700, 900, 2500, 3500, 4000]), refl = R.coin(), Pp = (refl ? 2 : 1) * In2 / CL;
       if (k === 'press') return P('Light of intensity ' + $(gu(In2, 'W/m²')) + ' falls straight onto a surface that ' + (refl ? 'reflects all of it' : 'absorbs all of it') + '. What radiation pressure does it exert, in μPa?', num(Pp * 1e6, 'μPa'),
         ['Light carries momentum $U/c$ along with energy $U$, so the momentum arriving per second per square meter is $I/c$.', refl ? 'Reflected light leaves with its momentum reversed, so the surface must supply twice the change: $p = 2I/c$.' : 'Absorbed light simply stops: $p = I/c$.', $('p = ' + (refl ? '2' : '') + '\\dfrac{' + gv(In2) + '}{3.00 \\times 10^{8}} = ' + nu(Pp * 1e6, 'μPa'))], refl ? 'Reflection doubles the push: 2I/c.' : 'Absorption: I/c.', { kind: k, I: In2, refl: refl });
-      var Asail = R.pick([100, 200, 400, 800, 1000, 5000, 10000]), Fs = Pp * Asail;
+      var Asail = R.pick([100, 200, 400, 800, 1000, 5000, 10000, 50, 150, 250, 500, 2000, 3000, 20000, 60, 80, 90, 300, 350, 700, 900, 1500, 2500, 4000, 6000, 8000, 9000, 15000]), Fs = Pp * Asail;
       return P('A solar sail of area ' + $(gu(Asail, 'm²')) + ' faces ' + (In2 === 1360 ? 'sunlight near Earth, of intensity ' : 'light of intensity ') + $(gu(In2, 'W/m²')) + ' head-on and ' + (refl ? 'reflects it all' : 'absorbs it all') + '. What force does the light exert, in mN?', num(Fs * 1000, 'mN'),
         ['Pressure: $' + (refl ? '2I/c' : 'I/c') + ' = ' + nu(Pp, 'Pa') + '$.', $('F = pA = (' + sf(Pp) + ')(' + gv(Asail) + ') = ' + nu(Fs * 1000, 'mN')) + '. Tiny, but it never stops pushing.'], 'Force = pressure × area.', { kind: k, I: In2, refl: refl, A: Asail }); }
-    if (k === 'point') { var Pw = R.pick([1, 5, 10, 40, 60, 100]), rr = R.pick([0.5, 1, 2, 3, 5, 10]), Ip = Pw / (4 * PI * rr * rr), E2 = M.sqrt(2 * Ip / (CL * EPS0));
+    if (k === 'point') { var Pw = R.pick([1, 5, 10, 40, 60, 100, 2, 3, 15, 20, 25, 50, 75, 150, 200, 1.2, 1.5, 2.5, 3.5, 4, 6, 7, 9, 12, 30, 35, 70, 80, 90, 120]), rr = R.pick([0.5, 1, 2, 3, 5, 10, 0.2, 0.25, 0.8, 1.5, 2.5, 4, 6, 8, 15, 20, 0.3, 0.35, 0.4, 0.6, 0.7, 0.9, 1.2, 3.5, 7, 9, 12]), Ip = Pw / (4 * PI * rr * rr), E2 = M.sqrt(2 * Ip / (CL * EPS0));
       return P('A small lamp radiates ' + $(gu(Pw, 'W')) + ' of light evenly in all directions. What is the electric field amplitude ' + $(gu(rr, 'm')) + ' away?', num(E2, 'V/m'),
         ['The power spreads over a sphere: $I = \\dfrac{P}{4\\pi r^2} = ' + nu(Ip, 'W/m²') + '$.', $('E_0 = \\sqrt{\\dfrac{2I}{c\\varepsilon_0}} = ' + nu(E2, 'V/m'))], 'Find the intensity on a sphere first.', { kind: k, P: Pw, r: rr }); }
-    if (k === 'momentum') { var In3 = R.pick([1000, 1360]), A3 = R.pick([1, 2, 10]), tt = R.pick([60, 3600]), pm = In3 * A3 * tt / CL;
+    if (k === 'momentum') { var In3 = R.pick([1000, 1360, 500, 800, 1200, 600, 700, 900]), A3 = R.pick([1, 2, 10, 0.5, 3, 4, 5, 20, 50, 0.6, 0.8, 1.2, 2.5, 6, 9, 15, 30, 40]), tt = R.pick([60, 3600, 1, 10, 600, 1800, 86400]), pm = In3 * A3 * tt / CL;
       return P('Sunlight of intensity ' + $(gu(In3, 'W/m²')) + ' is absorbed by a ' + $(gu(A3, 'm²')) + ' panel facing it for ' + (tt === 60 ? 'one minute' : 'one hour') + '. How much momentum does the light deliver?', num(pm, 'kg·m/s'),
         ['Energy absorbed: $U = IAt = ' + nu(In3 * A3 * tt, 'J') + '$.', $('p = \\dfrac{U}{c} = \\dfrac{' + sf(In3 * A3 * tt) + '}{3.00 \\times 10^{8}} = ' + nu(pm, 'kg·m/s'))], 'Light carries momentum U/c.', { kind: k, I: In3, A: A3, t: tt }); }
     return P('The same beam of light falls on a black card, which absorbs it, and then on a mirror, which reflects it straight back. How do the pushes compare?', mcq('The mirror is pushed twice as hard', ['They are pushed equally hard', 'The black card is pushed twice as hard, since it takes in the energy', 'Neither is pushed, since light has no mass']),
@@ -1728,3 +1728,131 @@
   });
 
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen"; Physics and Earth ladders): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - check a number: the question and a classmate's numeric answer, either the generator's own answer or that answer
+     off by a common slip (a factor of 2, 4 or 10), and "Is that right?" (Yes / No; not in placement);
+   - two at once: two different questions of the topic, answered together (short questions only, multiple-choice or
+     numeric, each keeping its own unit; at most one of them with a picture, which then comes first).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'em', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function numable(p) { // a single numeric answer with a plain decimal value (not a fraction or an expression)
+    var a = p.a;
+    return !!a && a.t === 'num' && /^-?\d+(\.\d+)?(e-?\d+)?$/.test(String(a.v)) && +a.v !== 0 && isFinite(+a.v) &&
+      !(a.tol && a.tol >= Math.abs(+a.v) / 3) && !((a.rtol || 0) > 0.3); // a slip by a factor of 2 must fall outside the tolerance
+  }
+  function sig(v) { var m = String(v).replace(/e.*$/, '').replace(/^-?0*\.?0*/, '').replace('.', ''); return Math.min(6, Math.max(3, m.length)); }
+  function show(x, n) { // a number as the classmate would write it: 3 significant figures, scientific notation when large or small
+    var ax = Math.abs(x);
+    if (ax >= 1e5 || ax < 1e-3) { var e = Math.floor(Math.log10(ax)), m = Number((x / Math.pow(10, e)).toPrecision(n || 3)); if (Math.abs(m) >= 10) { m = m / 10; e++; } return '$' + m + ' \\times 10^{' + e + '}$'; }
+    var s = String(Number(x.toPrecision(n || 3)));
+    return '$' + (ax >= 1e4 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, '{,}') : s) + '$';
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = +a.v, n = sig(a.v), right = R.coin(), f = R.pick([2, 0.5, 10, 0.1, 4, 0.25]), shown = right ? v : v * f;
+    var who = 'A classmate worked it out and got', u = p.unit ? ' ' + p.unit : '';
+    var q = p.q + '<p>' + who + ': <b>' + show(shown, n) + u + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right.' : 'No. The answer is ' + show(v, n) + u + '; ' + (f > 1 ? 'the classmate\'s answer is ' + f + ' times too big.' : 'the classmate\'s answer is ' + Math.round(1 / f) + ' times too small.'))].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf' && !numable(p))) return false;
+    if (p.a.t !== 'num' && p.unit) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function part(l, x) { var o = { label: l, a: x.a }; if (x.unit) o.unit = x.unit; return o; }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [part('1.', p), part('2.', p2)] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (mode !== 'place' && numable(p)) forms.push('ncheck');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'ncheck' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

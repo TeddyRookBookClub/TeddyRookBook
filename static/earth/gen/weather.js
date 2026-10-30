@@ -137,7 +137,7 @@
       ], 'Find the pressure at both heights first.', { unit: 'hPa', vk: 'layer', vd: { p0: p0, a: a, b: b } });
     }
     function anyHeight() {
-      var p0 = R.int(1000, 1025), z = R.pick([1, 1.5, 2, 2.5, 3, 4, 7, 8, 9]), p = p0 * MA.pow(0.5, z / 5.5);
+      var p0 = R.int(1000, 1025), z = R.pick([1, 1.5, 2, 2.5, 3, 4, 7, 8, 9, 1.2, 3.5, 5, 6]), p = p0 * MA.pow(0.5, z / 5.5);
       return pr('Use $P = P_0 \\left(\\tfrac{1}{2}\\right)^{z/5.5}$ with $z$ in km. If $P_0$ = ' + q(p0, 'hPa') + ', what is the pressure at ' + q(z, 'km') + '? Round to the nearest hectopascal.', num(p, 0.006), [
         'Exponent: $z/5.5$ = ' + nt(z) + ' ÷ 5.5 ≈ ' + nt(rnd(z / 5.5, 3)) + '.',
         '$(\\tfrac{1}{2})^{' + nt(rnd(z / 5.5, 3)) + '}$ ≈ ' + nt(rnd(MA.pow(0.5, z / 5.5), 3)) + '.',
@@ -145,7 +145,7 @@
       ], 'Work out the exponent z/5.5 first.', { unit: 'hPa', vk: 'any', vd: { p0: p0, z: z } });
     }
     function solveZ() {
-      var p0 = 1000, p = R.pick([900, 850, 800, 700, 600, 400, 300, 200]), z = 5.5 * MA.log(p0 / p) / MA.LN2;
+      var p0 = 1000, p = R.pick([900, 850, 800, 700, 600, 400, 300, 200, 250, 350, 500]), z = 5.5 * MA.log(p0 / p) / MA.LN2;
       return pr('With $P = P_0 \\left(\\tfrac{1}{2}\\right)^{z/5.5}$ and a ground pressure of ' + q(p0, 'hPa') + ', at about what height (in km) is the pressure ' + q(p, 'hPa') + '?', num(z, 0.02), [
         'Divide: $(\\tfrac{1}{2})^{z/5.5} = ' + p + '/' + p0 + '$, so $2^{z/5.5}$ = ' + nt(rnd(p0 / p, 4)) + '.',
         'Take logarithms: $z/5.5 = \\log_2$(' + nt(rnd(p0 / p, 4)) + ') = ' + nt(rnd(MA.log(p0 / p) / MA.LN2, 3)) + '.',
@@ -242,7 +242,7 @@
       ], 'Divide 2898 by the temperature in kelvins.', { unit: 'μm', vk: 'peak', vd: { T: o[1] } });
     }
     function band() {
-      var lam = R.pick([0.25, 0.3, 0.35, 0.45, 0.5, 0.55, 0.6, 0.65, 1.5, 3, 5, 10, 12, 15]);
+      var lam = R.pick([0.25, 0.3, 0.35, 0.45, 0.5, 0.55, 0.6, 0.65, 1.5, 3, 5, 10, 12, 15, 0.4, 0.7, 0.8, 0.9, 1, 1.2, 2, 2.5, 3.5, 4, 6, 7, 8, 9]);
       var right = lam < 0.4 ? 'Ultraviolet' : lam <= 0.7 ? 'Visible light' : 'Infrared';
       return pr('Light with a wavelength of ' + q(lam, 'μm') + ' is which kind? (Visible light runs from about 0.4 to 0.7 μm.)', mcK(right, ['Ultraviolet', 'Visible light', 'Infrared'].filter(function (x) { return x !== right; })), [
         'Visible light: about 0.4 to 0.7 μm. Shorter is ultraviolet; longer is infrared.',
@@ -250,7 +250,7 @@
       ], 'Compare with the visible range, 0.4 to 0.7 μm.', { vk: 'band', vd: { lam: lam } });
     }
     function tempFrom() {
-      var lam = R.pick([0.5, 0.6, 0.8, 1, 1.5, 2, 2.5, 3, 4, 5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 14]), T = WIEN / lam, inC = lam >= 8 && R.coin();
+      var lam = R.pick([0.5, 0.6, 0.8, 1, 1.5, 2, 2.5, 3, 4, 5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 14, 0.7, 0.9, 1.2, 3.5, 6, 7]), T = WIEN / lam, inC = lam >= 8 && R.coin();
       return pr('An object\'s glow peaks at ' + q(lam, 'μm') + '. Using $\\lambda_{\\text{peak}} = 2898\\ \\mu\\text{m·K} \\div T$, what is its temperature' + (inC ? ' in °C?' : ' in kelvins?'), inC ? numT(T - CK, 1) : num(T, 0.01), [
         'Solve for $T$: $T = 2898 \\div \\lambda_{\\text{peak}}$ = 2898 ÷ ' + nt(lam) + ' ≈ ' + q(rnd(T, 1), 'K') + '.'
       ].concat(inC ? ['In Celsius: ' + nt(rnd(T, 1)) + ' − 273.15 ≈ ' + q(rnd(T - CK, 1), '°C') + '.'] : []), 'Rearrange Wien\'s law for T.', { unit: inC ? '°C' : 'K', vk: inC ? 'tempC' : 'tempK', vd: { lam: lam } });
@@ -291,7 +291,7 @@
       ], 'Find T₂/T₁ first, then raise it to the fourth power.', { vk: 'ratio', vd: { a: P[0], b: P[1] } });
     }
     function reverse() {
-      var k = R.pick([2, 3, 0.5]), f = MA.pow(k, 4), T1 = R.pick([120, 150, 200, 220, 250, 260, 280, 300, 320, 350, 400]);
+      var k = R.pick([2, 3, 0.5, 0.6, 1, 2.5]), f = MA.pow(k, 4), T1 = R.pick([120, 150, 200, 220, 250, 260, 280, 300, 320, 350, 400]);
       return pr('A surface at ' + q(T1, 'K') + ' changes temperature, and now each square meter gives off ' + (k < 1 ? '1/16 as much' : nt(f) + ' times as much') + ' energy. What is its new temperature?', num(T1 * k, 0.01), [
         'The energy goes as $T^4$, so the temperature changes by the fourth root of the energy factor: $\\sqrt[4]{' + (k < 1 ? '1/16' : nt(f)) + '}$ = ' + nt(k) + '.',
         'New temperature: ' + nt(T1) + ' × ' + nt(k) + ' = ' + q(T1 * k, 'K') + '.'
@@ -312,7 +312,7 @@
       ], 'Divide by σ, then take the fourth root.', { unit: 'K', vk: 'temp', vd: { E: E } });
     }
     function celsius() {
-      var t1 = R.int(-10, 20), t2 = t1 + R.pick([5, 10, 15, 20, 30]), r = MA.pow((t2 + CK) / (t1 + CK), 4);
+      var t1 = R.int(-10, 20), t2 = t1 + R.pick([5, 10, 15, 20, 30, 7, 11, 19, 25, 29]), r = MA.pow((t2 + CK) / (t1 + CK), 4);
       return pr('A field warms from ' + q(t1, '°C') + ' to ' + q(t2, '°C') + '. By what factor does its infrared glow increase? (Round to three decimal places.)', num(r, 0.004), [
         'Use kelvins: ' + q(t1 + CK, 'K') + ' and ' + q(t2 + CK, 'K') + '.',
         'Ratio: (' + nt(t2 + CK) + '/' + nt(t1 + CK) + ')⁴ ≈ ' + nt(rnd((t2 + CK) / (t1 + CK), 4)) + '⁴ ≈ ' + nt(rnd(r, 3)) + '.',
@@ -399,19 +399,19 @@
       ], 'Albedo is the share reflected; the rest is absorbed.', { unit: 'W/m²', vk: 'abs', vd: { a: s[1], I: I } });
     }
     function reflected() {
-      var s = R.pick(SURF), I = R.pick([300, 400, 500, 600, 800, 1000]), Rf = s[1] * I;
+      var s = R.pick(SURF), I = R.pick([300, 400, 500, 600, 800, 1000, 350, 700, 900]), Rf = s[1] * I;
       return pr('Sunlight of ' + q(I, 'W/m²') + ' falls on ' + s[0] + ' (albedo ' + nt(s[1]) + '). How much is reflected from each square meter?', num(Rf, 0.01), [
         'Reflected = albedo × incoming = ' + nt(s[1]) + ' × ' + nt(I) + ' = ' + q(fix(Rf), 'W/m²') + '.'
       ], 'Albedo is the fraction reflected.', { unit: 'W/m²', vk: 'refl', vd: { a: s[1], I: I } });
     }
     function findAlbedo() {
-      var I = R.pick([200, 250, 300, 340, 400, 500, 800, 1000]), a = R.pick([0.05, 0.1, 0.2, 0.25, 0.3, 0.4, 0.6, 0.75, 0.8, 0.9]), Rf = fix(a * I), asP = R.coin();
+      var I = R.pick([200, 250, 300, 340, 400, 500, 800, 1000, 350, 600, 700, 900]), a = R.pick([0.05, 0.1, 0.2, 0.25, 0.3, 0.4, 0.6, 0.75, 0.8, 0.9, 0.06, 0.07, 0.08, 0.09, 0.12, 0.15, 0.35, 0.5, 0.7]), Rf = fix(a * I), asP = R.coin();
       return pr('A satellite measures ' + q(I, 'W/m²') + ' of sunlight reaching a region and ' + q(Rf, 'W/m²') + ' reflected back. What is the region\'s albedo' + (asP ? ', as a percent?' : ', as a decimal?'), asP ? pct(a * 100, 0.05) : { t: 'num', v: vstr(a), tol: 0.0051 }, [
         'Albedo = reflected ÷ incoming = ' + nt(Rf) + ' ÷ ' + nt(I) + ' = ' + nt(a) + (asP ? ' = ' + nt(a * 100) + '%' : '') + '.'
       ], 'Divide what is reflected by what arrives.', { vk: 'find', vd: { I: I, Rf: Rf, _pct: asP ? 1 : 0 } });
     }
     function compare() {
-      var I = R.pick([500, 600, 800]), A = [['open ocean', 0.06], ['a forest', 0.12]], B = [['fresh snow', 0.85], ['fresh snow', 0.88], ['sea ice', 0.6]], a = R.pick(A), b = R.pick(B), r = (1 - a[1]) / (1 - b[1]);
+      var I = R.pick([500, 600, 800, 700]), A = [['open ocean', 0.06], ['a forest', 0.12]], B = [['fresh snow', 0.85], ['fresh snow', 0.88], ['sea ice', 0.6]], a = R.pick(A), b = R.pick(B), r = (1 - a[1]) / (1 - b[1]);
       return pr('Under the same sunlight (' + q(I, 'W/m²') + '), how many times as much energy does ' + a[0] + ' (albedo ' + nt(a[1]) + ') absorb as ' + b[0] + ' (albedo ' + nt(b[1]) + ')?', num(r, 0.01), [
         a[0] + ' absorbs ' + nt(fix(1 - a[1])) + ' × ' + nt(I) + ' = ' + q(fix((1 - a[1]) * I), 'W/m²') + '; ' + b[0] + ' absorbs ' + nt(fix(1 - b[1])) + ' × ' + nt(I) + ' = ' + q(fix((1 - b[1]) * I), 'W/m²') + '.',
         'Ratio: ' + nt(fix((1 - a[1]) * I)) + ' ÷ ' + nt(fix((1 - b[1]) * I)) + ' ≈ ' + nt(rnd(r, 2)) + '. Melting ice that uncovers ocean multiplies the energy absorbed.'
@@ -427,14 +427,14 @@
       return pr(K[0], mc(K[1], K[2]), ['Albedo is the fraction of sunlight reflected; absorbed = 1 − albedo.', 'Answer: ' + K[1] + '.'], 'High albedo: bright and reflective.', { vk: 'concept' });
     }
     function mixArea() {
-      var f = R.pick([0.2, 0.25, 0.4, 0.5, 0.6, 0.75, 0.8]), aS = 0.8, aG = 0.2, a = f * aS + (1 - f) * aG;
+      var f = R.pick([0.2, 0.25, 0.4, 0.5, 0.6, 0.75, 0.8, 0.3, 0.35, 0.7]), aS = 0.8, aG = 0.2, a = f * aS + (1 - f) * aG;
       return pr('A valley is ' + nt(f * 100) + '% covered by snow (albedo ' + nt(aS) + ') and the rest is bare ground (albedo ' + nt(aG) + '). What is the albedo of the valley as a whole?', { t: 'num', v: vstr(fix(a)), tol: 0.0051 }, [
         'Average the albedos, weighted by area: ' + nt(f) + ' × ' + nt(aS) + ' + ' + nt(fix(1 - f)) + ' × ' + nt(aG) + '.',
         '= ' + nt(fix(f * aS)) + ' + ' + nt(fix((1 - f) * aG)) + ' = ' + nt(fix(a)) + '.'
       ], 'Weight each surface\'s albedo by the share of area it covers.', { vk: 'mix', vd: { f: f * 100, aS: aS, aG: aG } });
     }
     function earthDrop() {
-      var a1 = 0.3, a2 = R.pick([0.29, 0.31, 0.32, 0.28]), I = 340, d = (1 - a2) * I - (1 - a1) * I;
+      var a1 = 0.3, a2 = R.pick([0.29, 0.31, 0.32, 0.28, 0.3]), I = 340, d = (1 - a2) * I - (1 - a1) * I;
       return pr('Earth receives about ' + q(I, 'W/m²') + ' of sunlight on average, and its albedo is ' + nt(a1) + '. If clouds and ice changed the albedo to ' + nt(a2) + ', by how many W/m² would the absorbed sunlight change? (Give a negative number for a decrease.)', { t: 'num', v: vstr(fix(d)), tol: 0.05 }, [
         'Before: (1 − ' + nt(a1) + ') × ' + nt(I) + ' = ' + q(fix((1 - a1) * I), 'W/m²') + '. After: (1 − ' + nt(a2) + ') × ' + nt(I) + ' = ' + q(fix((1 - a2) * I), 'W/m²') + '.',
         'Change: ' + sgn(fix(d), 'W/m²') + '. A change of a few W/m² is about as big as the push from doubling carbon dioxide.'
@@ -619,28 +619,28 @@
       ], 'Rearrange Q = mL for m.', { unit: 'kg', vk: 'mass', vd: { _Q: Q } });
     }
     function airWarm() {
-      var g = R.pick([0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]), Q = g / 1000 * LV, dT = Q / CPA;
+      var g = R.pick([0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10, 0.6, 0.7, 0.8, 0.9, 1.2, 3.5, 7, 9]), Q = g / 1000 * LV, dT = Q / CPA;
       return pr('In a rising cloud, ' + q(g, 'g') + ' of water vapor condenses in each kilogram of air. If all the latent heat went into that kilogram of air ($c_p$ = 1005 J/(kg·°C)), by how much would it warm? Use $L_v = 2.5 \\times 10^6$ J/kg.', num(dT, 0.02), [
         'Energy released: ' + nt(g / 1000) + ' kg × 2,500,000 J/kg = ' + q(Q, 'J') + '.',
         'Warming: $\\Delta T = Q/(mc_p)$ = ' + nt(Q) + ' ÷ 1005 ≈ ' + q(rnd(dT, 1), '°C') + '. In a rising parcel this offsets part of the cooling from expansion.'
       ], 'Find the energy released, then use Q = mcΔT for the air.', { unit: '°C', vk: 'air', vd: { g: g } });
     }
     function ratio() {
-      var dt = R.pick([1, 2, 5, 10, 20, 25, 50, 100]), r = LV / (4186 * dt);
+      var dt = R.pick([1, 2, 5, 10, 20, 25, 50, 100, 1.2, 3, 4, 8, 12, 35, 60, 90]), r = LV / (4186 * dt);
       return pr('How many times as much energy does it take to evaporate 1 kg of water as to warm 1 kg of liquid water by ' + q(dt, '°C') + '? ($L_v = 2.5 \\times 10^6$ J/kg, $c$ = 4186 J/(kg·°C))', num(r, 0.01), [
         'Evaporating: 2,500,000 J. Warming: 4186 × ' + nt(dt) + ' = ' + q(4186 * dt, 'J') + '.',
         'Ratio: 2,500,000 ÷ ' + nt(4186 * dt) + ' ≈ ' + nt(rnd(r, 1)) + '.'
       ], 'Compute both energies for 1 kg and divide.', { vk: 'ratio', vd: { dt: dt } });
     }
     function storm() {
-      var mm = R.pick([5, 10, 20, 25, 40, 50]), km2 = R.pick([10, 50, 100, 200, 500]), Q = mm * km2 * 1e6 * LV;
+      var mm = R.pick([5, 10, 20, 25, 40, 50, 6, 7, 9, 12, 30, 35]), km2 = R.pick([10, 50, 100, 200, 500, 12, 30, 70, 150, 400]), Q = mm * km2 * 1e6 * LV;
       return pr('A storm drops ' + q(mm, 'mm') + ' of rain over ' + q(km2, 'km²') + '. Each millimeter of rain on a square meter is 1 kg of water. How much latent heat was released when that water condensed in the clouds? Use $L_v = 2.5 \\times 10^6$ J/kg and give your answer in joules.', num(Q, 0.01), [
         'Area: ' + nt(km2) + ' km² = ' + sci(km2 * 1e6, 3) + ' m². Water: ' + nt(mm) + ' kg/m² × ' + sci(km2 * 1e6, 3) + ' m² = ' + sci(mm * km2 * 1e6, 3) + ' kg.',
         '$Q = mL_v$ = ' + sci(mm * km2 * 1e6, 3) + ' × 2.5 × 10⁶ ≈ ' + sci(Q, 3) + ' J, released into the air inside the storm.'
       ], 'Find the mass of rain first: millimeters times square meters gives kilograms.', { unit: 'J', vk: 'storm', vd: { mm: mm, km2: km2 } });
     }
     function melt() {
-      var m = R.pick([0.2, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 10]), Q = m * LF;
+      var m = R.pick([0.2, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 10, 0.25, 0.3, 0.4, 0.6, 0.8, 0.9, 3.5, 6, 8, 9]), Q = m * LF;
       return pr('How much energy does it take to melt ' + q(m, 'kg') + ' of ice at 0 °C? Use $L_f = 3.34 \\times 10^5$ J/kg.', num(Q, 0.01), [
         '$Q = mL_f$ = ' + nt(m) + ' × 334,000 = ' + q(Q, 'J') + '.',
         'That is far less than the ' + q(m * LV, 'J') + ' it would take to evaporate the same water.'
@@ -906,14 +906,14 @@
       ], 'Ground heating, mountains, fronts or winds meeting?', { vk: 'concept' });
     }
     function ridge() {
-      var t0 = R.int(5, 30), h = R.pick([0.5, 1, 1.2, 1.5, 2, 2.5, 3]), t = t0 - 10 * h;
+      var t0 = R.int(5, 30), h = R.pick([0.5, 1, 1.2, 1.5, 2, 2.5, 3, 0.6, 0.7, 0.8, 0.9]), t = t0 - 10 * h;
       return pr('Wind pushes unsaturated air at ' + q(t0, '°C') + ' up a mountain ' + q(h, 'km') + ' high. If no cloud forms, what is its temperature at the top? Use 10 °C per km.', numT(fix(t), 0.051), [
         'Cooling: ' + nt(h) + ' × 10 = ' + q(fix(10 * h), '°C') + '.',
         nt(t0) + ' − ' + nt(fix(10 * h)) + ' = ' + q(fix(t), '°C') + '.'
       ], 'Forced lifting cools the air at the dry rate.', { unit: '°C', vk: 'ridge', vd: { t0: t0, h: h } });
     }
     function overAndBack() {
-      var t0 = R.int(5, 30), h = R.pick([0.5, 1, 1.5, 2]);
+      var t0 = R.int(5, 30), h = R.pick([0.5, 1, 1.5, 2, 0.6, 0.7, 0.9, 1.2]);
       return pr('Unsaturated air at ' + q(t0, '°C') + ' crosses a ridge ' + q(h, 'km') + ' high and comes back down to its starting height on the other side. No cloud forms. What is its temperature at the end? Use 10 °C per km both ways.', numT(t0, 0.051), [
         'Going up it cools ' + q(10 * h, '°C') + ', to ' + q(fix(t0 - 10 * h), '°C') + '.',
         'Coming down it warms by the same ' + q(10 * h, '°C') + ', back to ' + q(t0, '°C') + '. With no condensation, the trip is reversible.'
@@ -1030,14 +1030,14 @@
 
   G('weather.rain-shadow', function (R, ctx) {
     function satStart() {
-      var t0 = R.int(5, 20), H = R.pick([1, 1.5, 2, 2.5, 3]), top = t0 - 6 * H, lee = top + 10 * H;
+      var t0 = R.int(5, 20), H = R.pick([1, 1.5, 2, 2.5, 3, 1.2]), top = t0 - 6 * H, lee = top + 10 * H;
       return pr('Saturated air at ' + q(t0, '°C') + ' (its cloud base is at the ground) crosses a mountain ' + q(H, 'km') + ' high, raining all the way up. Coming down the other side it is dry. What is its temperature back at its starting height? Use 6 °C per km up and 10 °C per km down.', numT(fix(lee), 0.051), [
         'Up, moist: ' + nt(t0) + ' − 6 × ' + nt(H) + ' = ' + q(fix(top), '°C') + ' at the top.',
         'Down, dry: ' + nt(fix(top)) + ' + 10 × ' + nt(H) + ' = ' + q(fix(lee), '°C') + ', ' + q(fix(lee - t0), '°C') + ' warmer than at the start.'
       ], 'Moist rate up, dry rate down.', { unit: '°C', vk: 'sat', vd: { t0: t0, H: H } });
     }
     function full() {
-      var t0 = R.int(14, 28), s = R.pick([4, 8, 12]), td0 = t0 - s, zb = s / 8, H = R.pick([2, 2.5, 3, 3.5, 4]), tb = t0 - 10 * zb, top = tb - 6 * (H - zb), lee = top + 10 * H;
+      var t0 = R.int(14, 28), s = R.pick([4, 8, 12, 5, 7, 11]), td0 = t0 - s, zb = s / 8, H = R.pick([2, 2.5, 3, 3.5, 4]), tb = t0 - 10 * zb, top = tb - 6 * (H - zb), lee = top + 10 * H;
       return pr('Air at ' + q(t0, '°C') + ' with a dew point of ' + q(td0, '°C') + ' crosses a mountain range ' + q(H, 'km') + ' high. Use 10 °C per km (dry), 2 °C per km for the dew point and 6 °C per km (moist). What is its temperature when it returns to its starting height on the lee side?', numT(fix(lee), 0.051), [
         'Cloud base: ' + nt(s) + ' ÷ 8 = ' + q(zb, 'km') + ', at ' + nt(t0) + ' − 10 × ' + nt(zb) + ' = ' + q(tb, '°C') + '.',
         'Moist to the top: ' + nt(tb) + ' − 6 × ' + nt(fix(H - zb)) + ' = ' + q(fix(top), '°C') + '.',
@@ -1045,7 +1045,7 @@
       ], 'Three legs: dry to the cloud base, moist to the top, dry down.', { unit: '°C', vk: 'full', vd: { t0: t0, td0: td0, H: H } });
     }
     function noCloud() {
-      var t0 = R.int(15, 30), s = R.pick([16, 20, 24]), td0 = t0 - s, H = R.pick([0.5, 1, 1.5]), zb = s / 8;
+      var t0 = R.int(15, 30), s = R.pick([16, 20, 24, 17, 19, 23]), td0 = t0 - s, H = R.pick([0.5, 1, 1.5, 0.6, 0.8, 1.2]), zb = s / 8;
       return pr('Air at ' + q(t0, '°C') + ' with a dew point of ' + q(td0, '°C') + ' crosses a ridge ' + q(H, 'km') + ' high. Its cloud base would be ' + nt(s) + ' × 125 m = ' + q(125 * s, 'm') + '. What is its temperature when it comes back down to its starting height on the far side? (Use 10 °C per km.)', numT(t0, 0.051), [
         'The cloud base (' + q(zb, 'km') + ') is above the ridge (' + q(H, 'km') + '), so no cloud forms.',
         'It cools ' + nt(10 * H) + ' °C going up and warms ' + nt(10 * H) + ' °C coming down: back to ' + q(t0, '°C') + '. No rain, no rain shadow, no extra warmth.'
@@ -1293,14 +1293,14 @@
   function bearingName(b) { b = ((b % 360) + 360) % 360; return C8[MA.round(b / 45) % 8]; }
   G('weather.pressure-gradient', function (R, ctx) {
     function grad() {
-      var p1 = R.int(250, 258) * 4, k = R.pick([1, 2, 3]), dn = R.pick([100, 150, 200, 250, 300, 400, 600]), g = 4 * k / dn * 100;
+      var p1 = R.int(250, 258) * 4, k = R.pick([1, 2, 3]), dn = R.pick([100, 150, 200, 250, 300, 400, 600, 120, 350, 500]), g = 4 * k / dn * 100;
       return pr('Two isobars, ' + q(p1, 'hPa') + ' and ' + q(p1 - 4 * k, 'hPa') + ', are ' + q(dn, 'km') + ' apart. What is the pressure gradient, in hPa per 100 km?', num(g, 0.01), [
         'Difference: ' + nt(p1) + ' − ' + nt(p1 - 4 * k) + ' = ' + q(4 * k, 'hPa') + '.',
         'Per 100 km: ' + nt(4 * k) + ' ÷ ' + nt(dn) + ' × 100 ≈ ' + nt(rnd(g, 2)) + ' hPa per 100 km.'
       ], 'Pressure difference divided by distance.', { unit: 'hPa per 100 km', vk: 'grad', vd: { p1: p1, p2: p1 - 4 * k, dn: dn } });
     }
     function windier() {
-      var a = R.pick([100, 150, 200, 250]), b = a * R.pick([2, 3]), sw = R.coin();
+      var a = R.pick([100, 150, 200, 250, 120]), b = a * R.pick([2, 3]), sw = R.coin();
       var A = sw ? b : a, B = sw ? a : b, right = A < B ? 'Town A, where the isobars are closer together' : 'Town B, where the isobars are closer together';
       return pr('On a weather map with isobars every 4 hPa, the isobars near town A are ' + q(A, 'km') + ' apart and near town B ' + q(B, 'km') + ' apart. Where is the wind likely stronger?', mcK(right, [A < B ? 'Town B, where the isobars are farther apart' : 'Town A, where the isobars are farther apart', 'The same, since the isobars are 4 hPa apart in both', 'Wherever the pressure is lowest, whatever the spacing']), [
         'The push depends on the gradient: the same 4 hPa over a shorter distance is a steeper gradient.',
@@ -1308,7 +1308,7 @@
       ], 'Compare the spacing.', { vk: 'concept' });
     }
     function accel() {
-      var dp = R.pick([2, 4, 6, 8]), dn = R.pick([100, 200, 300, 400]), rho = R.pick([1.2, 1.0, 0.8]), a = dp * 100 / (rho * dn * 1000);
+      var dp = R.pick([2, 4, 6, 8, 3, 5, 7]), dn = R.pick([100, 200, 300, 400, 120, 150, 250, 350]), rho = R.pick([1.2, 1.0, 0.8, 0.9]), a = dp * 100 / (rho * dn * 1000);
       return pr('The pressure drops ' + q(dp, 'hPa') + ' over ' + q(dn, 'km') + ', and the air density is ' + q(rho, 'kg/m³') + '. What acceleration does the pressure gradient force give the air? Use $a = \\dfrac{\\Delta p}{\\rho\\,\\Delta n}$.', num(a, 0.01), [
         'Convert: ' + q(dp, 'hPa') + ' = ' + q(dp * 100, 'Pa') + '; ' + q(dn, 'km') + ' = ' + q(dn * 1000, 'm') + '.',
         '$a$ = ' + nt(dp * 100) + ' ÷ (' + nt(rho) + ' × ' + nt(dn * 1000) + ') ≈ ' + q(sig(a, 3), 'm/s²') + '.'
@@ -1322,7 +1322,7 @@
       ], 'From high toward low.', { vk: 'concept' });
     }
     function gain() {
-      var a = R.pick([0.001, 0.002, 0.003, 0.004]), h = R.pick([1, 2, 3]), v = a * h * 3600;
+      var a = R.pick([0.001, 0.002, 0.003, 0.004, 0.0012, 0.0015, 0.0025, 0.0035]), h = R.pick([1, 2, 3]), v = a * h * 3600;
       return pr('If the pressure gradient force gave the air a steady acceleration of ' + q(a, 'm/s²') + ' and nothing else acted, how fast would air starting at rest be moving after ' + q(h, h === 1 ? 'hour' : 'hours') + '?', num(v, 0.01), [
         'Time: ' + nt(h) + ' × 3600 = ' + q(h * 3600, 's') + '.',
         '$v = at$ = ' + nt(a) + ' × ' + nt(h * 3600) + ' = ' + q(fix(v), 'm/s') + '. In reality the Coriolis effect turns the air long before this.'
@@ -1445,7 +1445,7 @@
   G('weather.highs-and-lows', function (R, ctx) {
     var SP = { NL: 'counterclockwise, spiraling inward', NH: 'clockwise, spiraling outward', SL: 'clockwise, spiraling inward', SH: 'counterclockwise, spiraling outward' };
     function rotation() {
-      var h = R.pick(['N', 'S']), sys = R.pick(['L', 'H']), place = h === 'N' ? R.pick(['Canada', 'Japan', 'Texas', 'France']) : R.pick(['Argentina', 'Australia', 'New Zealand', 'South Africa']);
+      var h = R.pick(['N', 'S']), sys = R.pick(['L', 'H']), place = h === 'N' ? R.pick(['Canada', 'Japan', 'Texas', 'France', 'Germany', 'Mexico', 'Ohio', 'Spain', 'Korea', 'Alaska', 'Egypt', 'India']) : R.pick(['Argentina', 'Australia', 'New Zealand', 'South Africa', 'Chile', 'Uruguay', 'Madagascar', 'Tasmania']);
       var right = SP[h + sys];
       return pr('Near the ground in ' + place + ', how does the air move around a ' + (sys === 'L' ? 'low' : 'high') + '-pressure center?', mcK(cap(right), Object.keys(SP).map(function (k) { return cap(SP[k]); }).filter(function (x) { return x !== cap(right); })), [
         place + ' is in the ' + (h === 'N' ? 'Northern' : 'Southern') + ' Hemisphere, where moving air turns ' + (h === 'N' ? 'right' : 'left') + '.',
@@ -1479,7 +1479,7 @@
       ], 'Sketch the circle of wind, then tilt it inward for a low or outward for a high.', { vk: 'point', vd: { _h: h, _s: sys, _side: side } });
     }
     function surfaceDir() {
-      var h = R.pick(['N', 'S']), from = R.int(0, 7) * 45, al = R.pick([10, 15, 20, 25, 30, 35, 40]), sf = ((from + (h === 'N' ? -al : al)) % 360 + 360) % 360;
+      var h = R.pick(['N', 'S']), from = R.int(0, 7) * 45, al = R.pick([10, 15, 20, 25, 30, 35, 40, 12, 16, 22, 26, 28, 34, 38]), sf = ((from + (h === 'N' ? -al : al)) % 360 + 360) % 360;
       return pr('In the ' + (h === 'N' ? 'Northern' : 'Southern') + ' Hemisphere, the wind 2 km up blows along the isobars from ' + q(from, '°') + ' (a compass bearing: 0° is north, 90° east). Near the ground, friction turns the wind ' + q(al, '°') + ' toward the low. From what bearing does the surface wind blow?', numT(sf, 0.5), [
         'Aloft, the low is on the wind\'s ' + (h === 'N' ? 'left' : 'right') + '. Turning toward it ' + (h === 'N' ? 'swings the wind counterclockwise' : 'swings the wind clockwise') + ' on the compass.',
         'Surface wind: ' + nt(from) + '° ' + (h === 'N' ? '−' : '+') + ' ' + nt(al) + '° = ' + q(sf, '°') + (sf !== (h === 'N' ? from - al : from + al) ? ' (adjusted to between 0° and 360°)' : '') + '.'
@@ -1765,7 +1765,7 @@
 
   G('weather.cold-fronts', function (R, ctx) {
     function arrive() {
-      var d = R.pick([60, 90, 120, 150, 180, 240, 300]), v = R.pick([20, 25, 30, 40, 50, 60]), t = d / v;
+      var d = R.pick([60, 90, 120, 150, 180, 240, 300, 70, 80, 100, 200, 250]), v = R.pick([20, 25, 30, 40, 50, 60, 22, 28, 36, 44, 52, 58]), t = d / v;
       return pr('A cold front is ' + q(d, 'km') + ' west of a town and moving east at ' + q(v, 'km/h') + '. In how many hours will it reach the town?', num(t, 0.01), ['Time = distance ÷ speed = ' + nt(d) + ' ÷ ' + nt(v) + '.', '= ' + q(rnd(t, 2), 'h') + '.'], 'Divide the distance by the speed.', { unit: 'h', vk: 'arrive', vd: { d: d, v: v } });
     }
     function after() {
@@ -1777,7 +1777,7 @@
       return pr(K[0], mc(K[1], K[2]), ['Cold air plows under warm air and lifts it sharply; cold, dry, dense air follows.', 'Answer: ' + K[1] + '.'], 'What kind of air arrives behind the front?', { vk: 'concept' });
     }
     function depth() {
-      var k = R.pick([50, 60, 80, 100]), d = R.pick([50, 100, 150, 200, 240, 300]), h = d / k;
+      var k = R.pick([50, 60, 80, 100, 70, 90]), d = R.pick([50, 100, 150, 200, 240, 300, 60, 70, 80, 90, 120, 250]), h = d / k;
       return pr('A cold front slopes 1 km up for every ' + q(k, 'km') + ' of horizontal distance. How deep is the cold air ' + q(d, 'km') + ' behind the front at the ground?', num(h, 0.01), ['Height = distance ÷ ' + k + ' = ' + nt(d) + ' ÷ ' + nt(k) + '.', '≈ ' + q(rnd(h, 2), 'km') + '.'], 'Use the slope: 1 km up per ' + k + ' km across.', { unit: 'km', vk: 'depth', vd: { k: k, d: d } });
     }
     function record() {
@@ -1808,11 +1808,11 @@
 
   G('weather.warm-fronts', function (R, ctx) {
     function ahead() {
-      var k = R.pick([150, 200, 250, 300]), h = R.pick([3, 4, 6, 8, 9]), d = h * k;
+      var k = R.pick([150, 200, 250, 300]), h = R.pick([3, 4, 6, 8, 9, 5, 7]), d = h * k;
       return pr('A warm front slopes 1 km up for every ' + q(k, 'km') + '. How far ahead of the front at the ground is the frontal surface ' + q(h, 'km') + ' up?', num(d, 0.01), ['Distance = height × ' + k + ' = ' + nt(h) + ' × ' + nt(k) + '.', '= ' + q(d, 'km') + '. High clouds can arrive that far ahead of the front.'], 'Each kilometer up is ' + k + ' km ahead.', { unit: 'km', vk: 'ahead', vd: { k: k, h: h } });
     }
     function when() {
-      var d = R.pick([300, 450, 600, 750, 900, 1200]), v = R.pick([15, 20, 25, 30]), t = d / v;
+      var d = R.pick([300, 450, 600, 750, 900, 1200, 350, 400, 500, 700, 800, 1000]), v = R.pick([15, 20, 25, 30, 16, 21, 24, 29]), t = d / v;
       return pr('Cirrostratus clouds spread over a town while the warm front is ' + q(d, 'km') + ' away, moving toward it at ' + q(v, 'km/h') + '. About how many hours until the front passes the town?', num(t, 0.01), ['Time = ' + nt(d) + ' ÷ ' + nt(v) + ' = ' + q(rnd(t, 1), 'h') + '.'], 'Distance divided by speed.', { unit: 'h', vk: 'when', vd: { d: d, v: v } });
     }
     function order() {
@@ -1828,7 +1828,7 @@
       return pr(K[0], mc(K[1], K[2]), ['At a warm front, warm air rides up a gentle ramp of cold air.', 'Answer: ' + K[1] + '.'], 'Which air is denser, and where does it stay?', { vk: 'concept' });
     }
     function compare() {
-      var kc = R.pick([60, 80, 100]), kw = R.pick([200, 250, 300]), d = R.pick([300, 400, 600]), diff = d / kc - d / kw;
+      var kc = R.pick([60, 80, 100, 62, 78, 98]), kw = R.pick([200, 250, 300]), d = R.pick([300, 400, 600, 350, 500]), diff = d / kc - d / kw;
       return pr('A cold front slopes 1 km per ' + q(kc, 'km') + ' and a warm front 1 km per ' + q(kw, 'km') + '. At ' + q(d, 'km') + ' from each front (into the cold air), how much higher is the cold front\'s surface than the warm front\'s?', num(diff, 0.01), [
         'Cold front: ' + nt(d) + ' ÷ ' + nt(kc) + ' = ' + q(rnd(d / kc, 2), 'km') + '. Warm front: ' + nt(d) + ' ÷ ' + nt(kw) + ' = ' + q(rnd(d / kw, 2), 'km') + '.',
         'Difference ≈ ' + q(rnd(diff, 2), 'km') + ': the cold front is much steeper.'
@@ -1854,11 +1854,11 @@
       return pr(K[0], mc(K[1], K[2]), ['Occlusion happens late, when the faster cold front catches the warm front.', 'Answer: ' + K[1] + '.'], 'Which front is faster?', { vk: 'concept' });
     }
     function catchup() {
-      var vc = R.pick([35, 40, 45, 50]), vw = R.pick([20, 25, 30]), gap = R.pick([300, 450, 600, 750]), t = gap / (vc - vw);
+      var vc = R.pick([35, 40, 45, 50, 36, 41, 44, 49]), vw = R.pick([20, 25, 30, 21, 26, 29]), gap = R.pick([300, 450, 600, 750, 350, 400, 500, 700]), t = gap / (vc - vw);
       return pr('A storm\'s cold front moves at ' + q(vc, 'km/h') + ' and its warm front at ' + q(vw, 'km/h') + ', in the same direction, ' + q(gap, 'km') + ' apart. In about how many hours does the cold front catch up (occlusion)?', num(t, 0.01), ['The gap closes at ' + nt(vc) + ' − ' + nt(vw) + ' = ' + q(vc - vw, 'km/h') + '.', 'Time: ' + nt(gap) + ' ÷ ' + nt(vc - vw) + ' = ' + q(rnd(t, 1), 'h') + '.'], 'How fast is the gap closing?', { unit: 'h', vk: 'catch', vd: { vc: vc, vw: vw, gap: gap } });
     }
     function travel() {
-      var v = R.pick([30, 35, 40, 45, 50]), dys = R.pick([2, 3, 4]), d = v * 24 * dys;
+      var v = R.pick([30, 35, 40, 45, 50, 31, 36, 41, 44, 49]), dys = R.pick([2, 3, 4]), d = v * 24 * dys;
       return pr('A mid-latitude low travels east at ' + q(v, 'km/h') + ' for ' + dys + ' days. How far does it go?', num(d, 0.01), ['Hours: ' + dys + ' × 24 = ' + (24 * dys) + '.', 'Distance: ' + nt(v) + ' × ' + (24 * dys) + ' = ' + q(d, 'km') + ': across much of a continent in its lifetime.'], 'Change days to hours.', { unit: 'km', vk: 'travel', vd: { v: v, dys: dys } });
     }
     function jet() {
@@ -1885,11 +1885,11 @@
       ], 'Which way does pressure change as you move away from the center?', { unit: 'hPa', vk: 'isobar', vd: { c: c, n: n } });
     }
     function eta() {
-      var d = R.pick([400, 500, 600, 800, 900, 1000, 1200]), v = R.pick([30, 40, 50]), t = d / v;
+      var d = R.pick([400, 500, 600, 800, 900, 1000, 1200, 700]), v = R.pick([30, 40, 50, 31, 39, 49]), t = d / v;
       return pr('A low is ' + q(d, 'km') + ' west of a city and moving east at ' + q(v, 'km/h') + '. In about how many hours will it reach the city\'s longitude?', num(t, 0.01), ['Time = ' + nt(d) + ' ÷ ' + nt(v) + ' = ' + q(rnd(t, 1), 'h') + '.'], 'Distance divided by speed.', { unit: 'h', vk: 'eta', vd: { d: d, v: v } });
     }
     function fall() {
-      var g = R.pick([1, 2, 3, 4]), v = R.pick([25, 40, 50, 60]), hrs = R.pick([3, 6]), r0 = g * v / 100, tot = r0 * hrs;
+      var g = R.pick([1, 2, 3, 4]), v = R.pick([25, 40, 50, 60, 27, 37, 49, 59]), hrs = R.pick([3, 6]), r0 = g * v / 100, tot = r0 * hrs;
       return pr('Ahead of an approaching low, the pressure rises ' + q(g, 'hPa') + ' for every 100 km toward the east, and the pattern moves east at ' + q(v, 'km/h') + ' without changing. By how much does a town\'s pressure fall in ' + hrs + ' hours?', num(tot, 0.01), [
         'Each hour the pattern moves ' + nt(v) + ' km, so the town sees ' + nt(v) + '/100 × ' + nt(g) + ' = ' + q(fix(r0), 'hPa') + ' less pressure per hour.',
         'In ' + hrs + ' hours: ' + nt(fix(r0)) + ' × ' + hrs + ' = ' + q(fix(tot), 'hPa') + '.'
@@ -1948,7 +1948,7 @@
       return pr(K[0], mc(K[1], K[2]), ['Thunderstorms need moisture, instability and a lift.', 'Answer: ' + K[1] + '.'], 'Moisture, instability, lift.', { vk: 'concept' });
     }
     function updraft() {
-      var w = R.pick([5, 8, 10, 15, 20, 25]), zb = R.pick([1, 1.5, 2]), zt = R.pick([9, 10, 12, 14]), t = (zt - zb) * 1000 / w / 60;
+      var w = R.pick([5, 8, 10, 15, 20, 25, 6, 11, 14, 17, 21, 24]), zb = R.pick([1, 1.5, 2, 1.2]), zt = R.pick([9, 10, 12, 14, 11, 13]), t = (zt - zb) * 1000 / w / 60;
       return pr('A thunderstorm\'s updraft rises at ' + q(w, 'm/s') + ' from the cloud base at ' + q(zb, 'km') + ' to the top at ' + q(zt, 'km') + '. How many minutes does the air take to make the trip?', num(t, 0.01), [
         'Distance: ' + nt(zt) + ' − ' + nt(zb) + ' = ' + q(fix(zt - zb), 'km') + ' = ' + q(fix((zt - zb) * 1000), 'm') + '.',
         'Time: ' + nt(fix((zt - zb) * 1000)) + ' ÷ ' + nt(w) + ' = ' + q(rnd((zt - zb) * 1000 / w, 0), 's') + ' ≈ ' + q(rnd(t, 1), 'min') + '.'
@@ -1980,11 +1980,11 @@
       return pr('Using the rule of ' + (miles ? '5 seconds per mile' : '3 seconds per kilometer') + ', how far away is lightning whose thunder arrives ' + t + ' seconds after the flash?', num(d, 0.01), [t + ' ÷ ' + (miles ? 5 : 3) + ' = ' + q(rnd(d, 2), miles ? 'mi' : 'km') + '.'], 'Divide the seconds by the rule\'s number.', { unit: miles ? 'mi' : 'km', vk: 'rule', vd: { t: t } });
     }
     function delay() {
-      var d = R.pick([1, 2, 3, 4, 5, 6, 8, 10]), t = d * 1000 / 343;
+      var d = R.pick([1, 2, 3, 4, 5, 6, 8, 10, 7, 9]), t = d * 1000 / 343;
       return pr('Lightning strikes ' + q(d, 'km') + ' away. How many seconds pass before you hear the thunder? Use 343 m/s.', num(t, 0.01), ['Time = distance ÷ speed = ' + nt(d * 1000) + ' ÷ 343 ≈ ' + q(rnd(t, 1), 's') + '.'], 'Distance divided by the speed of sound.', { unit: 's', vk: 'delay', vd: { d: d } });
     }
     function approach() {
-      var t1 = R.pick([15, 18, 21, 24, 27, 30]), t2 = R.pick([3, 6, 9]), m = R.pick([5, 10, 15, 20]), v = (t1 - t2) / 3 / (m / 60);
+      var t1 = R.pick([15, 18, 21, 24, 27, 30]), t2 = R.pick([3, 6, 9]), m = R.pick([5, 10, 15, 20, 6, 11, 14, 19]), v = (t1 - t2) / 3 / (m / 60);
       return pr('At first the thunder comes ' + t1 + ' s after the flash; ' + m + ' minutes later it comes ' + t2 + ' s after. Using 3 s per km, about how fast is the storm approaching, in km/h?', num(v, 0.01), [
         'Distances: ' + t1 + ' ÷ 3 = ' + q(t1 / 3, 'km') + ', then ' + t2 + ' ÷ 3 = ' + q(t2 / 3, 'km') + '. It came ' + q((t1 - t2) / 3, 'km') + ' closer.',
         m + ' minutes = ' + nt(rnd(m / 60, 3)) + ' h. Speed: ' + nt((t1 - t2) / 3) + ' ÷ ' + nt(rnd(m / 60, 3)) + ' ≈ ' + q(rnd(v, 1), 'km/h') + '.'
@@ -2007,7 +2007,7 @@
 
   G('weather.tornadoes', function (R, ctx) {
     function rate() {
-      var m = R.pick([70, 80, 90, 100, 105, 115, 125, 130, 140, 150, 160, 170, 185, 195, 210, 220]), e = efOf(m);
+      var m = R.pick([70, 80, 90, 100, 105, 115, 125, 130, 140, 150, 160, 170, 185, 195, 210, 220, 120, 200]), e = efOf(m);
       return pr('A damage survey estimates a tornado\'s strongest 3-second gusts at ' + q(m, 'mph') + '. On the Enhanced Fujita scale (EF0 65–85, EF1 86–110, EF2 111–135, EF3 136–165, EF4 166–200, EF5 over 200 mph), what is its rating?', mcK('EF' + e, ['EF0', 'EF1', 'EF2', 'EF3', 'EF4', 'EF5'].filter(function (x) { return x !== 'EF' + e; }).slice(0, 5)), [
         q(m, 'mph') + ' falls in the range ' + EFT[e][1] + (e === 5 ? ' and up' : '–' + EFT[e][2]) + ' mph.',
         'Rating: EF' + e + '.'
@@ -2515,7 +2515,7 @@
       return pr('Does ' + K[0] + ' push the climate toward warming or cooling?', mcK(K[1], ['Warming (positive forcing)', 'Cooling (negative forcing)', 'No effect at all'].filter(function (x) { return x !== K[1]; })), ['A forcing that adds energy (more sunlight absorbed or less infrared escaping) is positive; one that removes it is negative.', 'Answer: ' + K[1].toLowerCase() + '.'], 'Does it trap more energy or reflect more sunlight?', { vk: 'concept' });
     }
     function formula() {
-      var C = R.pick([340, 350, 380, 400, 420, 450, 500, 560, 700]), F = 5.35 * MA.log(C / 280);
+      var C = R.pick([340, 350, 380, 400, 420, 450, 500, 560, 700, 600]), F = 5.35 * MA.log(C / 280);
       return pr('Use $\\Delta F = 5.35 \\ln(C/C_0)$ W/m² with $C_0$ = 280 ppm. What is the forcing when CO₂ is ' + q(C, 'ppm') + '?', num(F, 0.01), ['$C/C_0$ = ' + C + '/280 ≈ ' + nt(rnd(C / 280, 4)) + '; ln of that ≈ ' + nt(rnd(MA.log(C / 280), 4)) + '.', '$\\Delta F$ ≈ 5.35 × ' + nt(rnd(MA.log(C / 280), 4)) + ' ≈ ' + q(rnd(F, 2), 'W/m²') + '.'], 'Divide by 280, take the natural log, multiply by 5.35.', { unit: 'W/m²', vk: 'formula', vd: { C: C } });
     }
     function noFB() {
@@ -2557,7 +2557,7 @@
       return pr('A forcing of ' + q(F, 'W/m²') + ' acts on a climate whose net feedback is ' + sgn(-lam) + ' W/m² per °C. How much does Earth warm at balance?', num(dT, 0.01), ['Warming = forcing ÷ (minus the net feedback) = ' + nt(F) + ' ÷ ' + nt(lam) + '.', '≈ ' + q(rnd(dT, 2), '°C') + '.'], 'Divide the forcing by the size of the net feedback.', { unit: '°C', vk: 'warm', vd: { F: F, lam: lam } });
     }
     function netSum() {
-      var p = R.pick([-3.2, -3.3, -3.1]), v = R.pick([1.1, 1.2, 1.3, 1.4, 1.5]), i = R.pick([0.25, 0.3, 0.35, 0.4, 0.45]), c = R.pick([0.1, 0.2, 0.3, 0.4, 0.5, 0.6]), n = fix(p + v + i + c);
+      var p = R.pick([-3.2, -3.3, -3.1]), v = R.pick([1.1, 1.2, 1.3, 1.4, 1.5]), i = R.pick([0.25, 0.3, 0.35, 0.4, 0.45]), c = R.pick([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.12, 0.15, 0.25, 0.35]), n = fix(p + v + i + c);
       return pr('Feedback values (W/m² per °C): Earth\'s glow ' + nt(p) + ', water vapor ' + sgn(v) + ', ice and snow ' + sgn(i) + ', clouds ' + sgn(c) + '. What is the net feedback?', numT(n, 0.006), ['Add with signs: ' + nt(p) + ' + ' + nt(v) + ' + ' + nt(i) + ' + ' + nt(c) + ' = ' + nt(n) + '.', 'Still negative, so the climate settles, but much less negative than the glow alone.'], 'Add them, keeping the signs.', { unit: 'W/m² per °C', vk: 'net', vd: { p: p, v: v, i: i, c: c } });
     }
     function amp() {
@@ -2672,11 +2672,11 @@
       return pr('Eventual warming ≈ $S \\times \\log_2(C/C_0)$. With $S$ = ' + q(S, '°C') + ' per doubling and $C_0$ = 280 ppm, what eventual warming comes with ' + q(C, 'ppm') + '?', num(dT, 0.01), ['$\\log_2$(' + C + '/280) = ln(' + nt(rnd(C / 280, 4)) + ') ÷ ln 2 ≈ ' + nt(rnd(n, 3)) + ' doublings.', 'Warming ≈ ' + nt(S) + ' × ' + nt(rnd(n, 3)) + ' ≈ ' + q(rnd(dT, 2), '°C') + '.'], 'Find the number of doublings with a base-2 logarithm.', { unit: '°C', vk: 'gen', vd: { C: C, S: S } });
     }
     function target() {
-      var dT = R.pick([1.5, 2, 3, 4.5]), S = 3, C = 280 * MA.pow(2, dT / S);
+      var dT = R.pick([1.5, 2, 3, 4.5, 2.5, 3.5, 4]), S = 3, C = 280 * MA.pow(2, dT / S);
       return pr('With a sensitivity of 3 °C per doubling and $C_0$ = 280 ppm, at what CO₂ level would the eventual warming be ' + q(dT, '°C') + '?', num(C, 0.01), ['Doublings needed: ' + nt(dT) + ' ÷ 3 = ' + nt(rnd(dT / 3, 4)) + '.', '$C$ = 280 × 2^' + nt(rnd(dT / 3, 4)) + ' ≈ ' + q(rnd(C, 0), 'ppm') + '.'], 'Undo the logarithm with a power of 2.', { unit: 'ppm', vk: 'target', vd: { dT: dT } });
     }
     function range() {
-      var n = R.pick([0.5, 1, 1.5, 2]), vl = R.coin(), a0 = vl ? 2 : 2.5, b0 = vl ? 5 : 4, lo = a0 * n, hi = b0 * n;
+      var n = R.pick([0.5, 1, 1.5, 2, 0.6, 0.7, 0.9, 1.2]), vl = R.coin(), a0 = vl ? 2 : 2.5, b0 = vl ? 5 : 4, lo = a0 * n, hi = b0 * n;
       return pr('The equilibrium climate sensitivity is ' + (vl ? 'very likely 2 to 5' : 'likely 2.5 to 4') + ' °C per doubling. For ' + nt(n) + ' doubling' + (n === 1 ? '' : 's') + ' of CO₂, what is the width of that range of eventual warming?', num(hi - lo, 0.01), ['Range: ' + nt(lo) + ' to ' + nt(hi) + ' °C.', 'Width: ' + nt(hi) + ' − ' + nt(lo) + ' = ' + q(fix(hi - lo), '°C') + '.'], 'Multiply both ends by the number of doublings.', { unit: '°C', vk: 'range', vd: { _n: n } });
     }
     function pushN() {
@@ -2711,11 +2711,11 @@
       return pr('If all of ' + nmz + ' melted (density 0.917), about how many meters would global sea level rise? Ocean area: about 361,000,000 km².', num(m, 0.02), ['Water: ' + nt(V) + ' × 10⁶ × 0.917 ≈ ' + M(nt(sig(V * 0.917, 3)) + ' \\times 10^{6}') + ' km³.', 'Rise: that ÷ 3.61 × 10⁸ km² ≈ ' + nt(sig(m / 1000, 3)) + ' km ≈ ' + q(sig(m, 3), 'm') + '. (The real figure is a little smaller, since some ice sits below sea level.)'], 'Same method as for a small ice cap, with bigger numbers.', { unit: 'm', vk: 'sheet', vd: { V: V } });
     }
     function thermal() {
-      var d = R.pick([500, 700, 1000, 2000]), b = R.pick([0.0001, 0.0002, 0.0003]), t = R.pick([0.2, 0.5, 1]), h = d * b * t;
+      var d = R.pick([500, 700, 1000, 2000, 600, 800, 1200, 1500]), b = R.pick([0.0001, 0.0002, 0.0003, 0.00012, 0.00015, 0.00025]), t = R.pick([0.2, 0.5, 1, 0.25, 0.6, 0.9]), h = d * b * t;
       return pr('The top ' + q(d, 'm') + ' of the ocean warms by ' + q(t, '°C') + ', and seawater expands by ' + nt(b) + ' of its height for each °C. By how many centimeters does sea level rise?', num(h * 100, 0.01), ['Rise = ' + nt(d) + ' × ' + nt(b) + ' × ' + nt(t) + ' = ' + q(fix(h), 'm') + '.', '= ' + q(fix(h * 100), 'cm') + '.'], 'Multiply the depth by the expansion per degree and the warming.', { unit: 'cm', vk: 'thermal', vd: { d: d, b: b, t: t } });
     }
     function rate() {
-      var r = R.pick([3, 3.7, 4, 4.5]), y = R.pick([10, 20, 25, 50]), x = r * y / 10;
+      var r = R.pick([3, 3.7, 4, 4.5]), y = R.pick([10, 20, 25, 50, 12, 26, 36, 48]), x = r * y / 10;
       return pr('If sea level rises ' + q(r, 'mm') + ' a year, how many centimeters does it rise in ' + y + ' years?', num(x, 0.01), [nt(r) + ' × ' + y + ' = ' + q(fix(r * y), 'mm') + ' = ' + q(fix(x), 'cm') + '.'], 'Multiply, then change millimeters to centimeters.', { unit: 'cm', vk: 'rate', vd: { r: r, y: y } });
     }
     function which() {
@@ -2781,3 +2781,131 @@
   });
 
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen"; Physics and Earth ladders): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - check a number: the question and a classmate's numeric answer, either the generator's own answer or that answer
+     off by a common slip (a factor of 2, 4 or 10), and "Is that right?" (Yes / No; not in placement);
+   - two at once: two different questions of the topic, answered together (short questions only, multiple-choice or
+     numeric, each keeping its own unit; at most one of them with a picture, which then comes first).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'weather', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function numable(p) { // a single numeric answer with a plain decimal value (not a fraction or an expression)
+    var a = p.a;
+    return !!a && a.t === 'num' && /^-?\d+(\.\d+)?(e-?\d+)?$/.test(String(a.v)) && +a.v !== 0 && isFinite(+a.v) &&
+      !(a.tol && a.tol >= Math.abs(+a.v) / 3) && !((a.rtol || 0) > 0.3); // a slip by a factor of 2 must fall outside the tolerance
+  }
+  function sig(v) { var m = String(v).replace(/e.*$/, '').replace(/^-?0*\.?0*/, '').replace('.', ''); return Math.min(6, Math.max(3, m.length)); }
+  function show(x, n) { // a number as the classmate would write it: 3 significant figures, scientific notation when large or small
+    var ax = Math.abs(x);
+    if (ax >= 1e5 || ax < 1e-3) { var e = Math.floor(Math.log10(ax)), m = Number((x / Math.pow(10, e)).toPrecision(n || 3)); if (Math.abs(m) >= 10) { m = m / 10; e++; } return '$' + m + ' \\times 10^{' + e + '}$'; }
+    var s = String(Number(x.toPrecision(n || 3)));
+    return '$' + (ax >= 1e4 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, '{,}') : s) + '$';
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = +a.v, n = sig(a.v), right = R.coin(), f = R.pick([2, 0.5, 10, 0.1, 4, 0.25]), shown = right ? v : v * f;
+    var who = 'A classmate worked it out and got', u = p.unit ? ' ' + p.unit : '';
+    var q = p.q + '<p>' + who + ': <b>' + show(shown, n) + u + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right.' : 'No. The answer is ' + show(v, n) + u + '; ' + (f > 1 ? 'the classmate\'s answer is ' + f + ' times too big.' : 'the classmate\'s answer is ' + Math.round(1 / f) + ' times too small.'))].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf' && !numable(p))) return false;
+    if (p.a.t !== 'num' && p.unit) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function part(l, x) { var o = { label: l, a: x.a }; if (x.unit) o.unit = x.unit; return o; }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [part('1.', p), part('2.', p2)] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (mode !== 'place' && numable(p)) forms.push('ncheck');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'ncheck' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

@@ -1,0 +1,143 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "homeschool/prek/prek.css" | relURL }}?v={{ (os.Stat "static/homeschool/prek/prek.css").ModTime.Unix }}">
+{{ $W := site.Data.prek.week }}
+<div class="hs pk" id="pk">
+  <nav class="hs-crumbs pk-noprint"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Pre-K at home</nav>
+  <header class="hs-hero pk-hero pk-noprint">
+    <p class="hs-eyebrow">Homeschool · Ages 3 to 5</p>
+    <h1>Pre-K at home</h1>
+    <p>Pre-K is mostly stories, songs, play and talk, done together. Here is a gentle rhythm for the day, lessons to follow if you want them, games and printables for a few minutes of practice, and a week of ideas to print.</p>
+  </header>
+
+  <section class="hs-sec pk-noprint" aria-labelledby="pk-rh-h">
+    <h2 id="pk-rh-h">A gentle daily rhythm</h2>
+    <p class="hs-small">Not a timetable: a few good things most days, in whatever order suits your home. Short and cheerful beats long and tired.</p>
+    <ol class="pk-rhythm">
+      <li><span class="pk-ic" aria-hidden="true">📖</span><div><h3>Story</h3><p>Read aloud every day, and more than once if your child asks. Talk about the pictures. Let your child finish a rhyme or turn the page.</p></div></li>
+      <li><span class="pk-ic" aria-hidden="true">🎵</span><div><h3>Song or music</h3><p>Sing nursery songs, clap along, march and freeze. Tap a pot with a wooden spoon for a drum.</p></div></li>
+      <li><span class="pk-ic" aria-hidden="true">🔢</span><div><h3>Counting</h3><p>Count everyday things: stairs, spoons, buttons, snacks. Line up toys from small to big, and look for circles and squares around the house.</p></div></li>
+      <li><span class="pk-ic" aria-hidden="true">🌳</span><div><h3>Outdoor time</h3><p>Walk, run, dig and look. Collect leaves, watch birds and clouds, and talk about what you see.</p></div></li>
+      <li><span class="pk-ic" aria-hidden="true">🖍️</span><div><h3>Art</h3><p>Crayons, play dough, paper and glue. Let your child make whatever they like, then tell you about it.</p></div></li>
+      <li><span class="pk-ic" aria-hidden="true">✏️</span><div><h3>A little practice</h3><p>Five to ten minutes, sitting together: a lesson from Hannah Ward's Little House Pre-K, a Math Ladder lesson, a pre-reading game or a printable sheet. Stop while it's still fun.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="hs-sec pk-noprint" aria-labelledby="pk-les-h">
+    <h2 id="pk-les-h">Lessons and practice</h2>
+    <div class="hs-cards pk-les">
+      <a class="hs-card feat" href="{{ "homeschool/actual-reading/little-house-pre-k/" | relURL }}">
+        <span class="big" aria-hidden="true">🏡</span>
+        <h2>Little House Pre-K, by Hannah Ward</h2>
+        <p>A full year of open-and-go preschool: 180 short daily lessons, each a math page and an English page. Hannah's lessons are free and shared with her permission; they open on her site.</p>
+        <span class="go">Open the lessons →</span>
+      </a>
+      <a class="hs-card feat" href="{{ "math/pre-k/" | relURL }}">
+        <span class="big" aria-hidden="true">🔢</span>
+        <h2>Math Ladder: Pre-K</h2>
+        <p>Counting, how many, more and fewer, shapes, patterns, sizes and position words, with picture practice to tap and read aloud. Each lesson has ideas for real blocks, spoons and snacks.</p>
+        <span class="go">Start counting →</span>
+      </a>
+      <a class="hs-card feat" href="{{ "homeschool/pre-k/letters/" | relURL }}">
+        <span class="big" aria-hidden="true">🔤</span>
+        <h2>Pre-reading games</h2>
+        <p>Big and small letters, finding a letter, rhymes, clapping the parts of a word, words that start the same, and listening for words in a sentence. Then on to Phonics Practice.</p>
+        <span class="go">Play together →</span>
+      </a>
+      <a class="hs-card feat" href="{{ "homeschool/pre-k/printables/" | relURL }}">
+        <span class="big" aria-hidden="true">✂️</span>
+        <h2>Hand-skills printables</h2>
+        <p>Tracing lines, shapes and numbers 0 to 10, mazes, color by shape, cutting lines and dot-to-dot. A new sheet every time you ask.</p>
+        <span class="go">Make a sheet →</span>
+      </a>
+    </div>
+    <p class="hs-small pk-next">When letters feel easy: <a href="{{ "homeschool/actual-reading/phonics-practice/letters/" | relURL }}">Phonics Practice, Step 1: Letters and sounds</a>, alongside Hannah Ward's <a href="{{ "homeschool/actual-reading/pre-reading-workbook/" | relURL }}">Crystal and Shell Pre-Reading Workbook</a> or <a href="{{ "homeschool/actual-reading/teach-your-child-the-alphabet/" | relURL }}">Teach Your Child the Alphabet in 60 Lessons</a>. The <a href="{{ "homeschool/planner/" | relURL }}">lesson planner</a> can lay out any of these, week by week.</p>
+  </section>
+
+  <section class="hs-sec pk-noprint" aria-labelledby="pk-more-h">
+    <h2 id="pk-more-h">More to explore together</h2>
+    <p class="hs-small">These courses are written for ages 5 and up. Many four- and five-year-olds enjoy the first lessons with a grown-up reading aloud; skip anything that isn't fun yet.</p>
+    <div class="pk-tiles">
+      <a class="pk-tile" href="{{ "etiquette/young-children/" | relURL }}"><span aria-hidden="true">🧸</span><b>Manners for Young Children</b><span>Please and thank you, sharing, greetings and table manners.</span></a>
+      <a class="pk-tile" href="{{ "homeschool/nature-study/" | relURL }}"><span aria-hidden="true">🌿</span><b>Nature study</b><span>Go outside and look closely at birds, bugs, trees and flowers.</span></a>
+      <a class="pk-tile" href="{{ "art/young-artists/" | relURL }}"><span aria-hidden="true">🖍️</span><b>Drawing for Young Artists</b><span>Lines, shapes and colors, one cheerful drawing at a time.</span></a>
+      <a class="pk-tile" href="{{ "geography/maps-and-places/" | relURL }}"><span aria-hidden="true">🧭</span><b>Maps and Places</b><span>Near and far, left and right, and a first map of your home.</span></a>
+      <a class="pk-tile" href="{{ "biology/young-learners/" | relURL }}"><span aria-hidden="true">🐛</span><b>Life Science for Young Learners</b><span>Plants, animals and the seasons.</span></a>
+      <a class="pk-tile" href="{{ "american-history/young-learners/" | relURL }}"><span aria-hidden="true">🦅</span><b>American History for Young Learners</b><span>Stories, symbols and holidays.</span></a>
+      <a class="pk-tile" href="{{ "science-lab/night-sky/" | relURL }}"><span aria-hidden="true">🌙</span><b>Science Lab: Sky and Solar System</b><span>Watch the Moon change shape, then look for it tonight.</span></a>
+      <a class="pk-tile" href="{{ "science-lab/pendulums/" | relURL }}"><span aria-hidden="true">🕰️</span><b>Science Lab: Pendulums</b><span>Watch pendulums swing, then push a swing at the park.</span></a>
+      <div class="pk-tile"><span aria-hidden="true">🎹</span><b><a href="{{ "music/" | relURL }}">Music</a></b><span>Play <a href="{{ "music/songs/twinkle-twinkle-little-star/" | relURL }}">Twinkle, Twinkle</a>, <a href="{{ "music/songs/hot-cross-buns/" | relURL }}">Hot Cross Buns</a> or <a href="{{ "music/songs/mary-had-a-little-lamb/" | relURL }}">Mary Had a Little Lamb</a> on the piano page and sing along.</span></div>
+    </div>
+  </section>
+
+  <section class="hs-sec pk-noprint" aria-labelledby="pk-read-h">
+    <h2 id="pk-read-h">Books to read aloud</h2>
+    <ul class="pk-books">
+      <li><a href="{{ "books/aesops-fables/" | relURL }}">Aesop's Fables</a>: very short stories with a lesson. Read one, then ask what the animal should have done.</li>
+      <li><a href="{{ "books/the-complete-tales-of-winnie-the-pooh/" | relURL }}">Winnie-the-Pooh</a>: gentle, funny chapters to read in short sittings.</li>
+      <li><a href="{{ "books/beauty-and-the-beast-and-other-classic-fairy-tales/" | relURL }}">Classic fairy tales</a>: read them first yourself and choose the ones that suit your child.</li>
+      <li><a href="{{ "homeschool/mcguffey/primer/" | relURL }}">McGuffey's Primer</a>: short picture lessons to read aloud now, and for your child to read later.</li>
+      <li><a href="{{ "homeschool/actual-reading/hannahs-book-lists/" | relURL }}">Hannah Ward's book lists</a>: picture books and read-alouds by age.</li>
+      <li>Nursery rhymes, picture books from your library, and the same favorite book again and again.</li>
+    </ul>
+  </section>
+
+  <section class="hs-sec pk-week" id="week" aria-labelledby="pk-week-h">
+    <div class="pk-noprint">
+      <h2 id="pk-week-h">A week of ideas</h2>
+      <p class="hs-small">One idea a day for each part of the rhythm. Print it for the fridge, or ask for a new week.</p>
+      <div class="hs-actions"><button type="button" class="hs-btn" id="pk-new">🔀 New week of ideas</button><button type="button" class="hs-btn pri" id="pk-print">🖨 Print this week</button></div>
+    </div>
+    <div class="pk-sheet" id="pk-sheet" data-pools="{{ $W | jsonify }}">
+      <p class="pk-sheet-h"><b>A week of Pre-K ideas</b><span>teddyrookbook.com/homeschool/pre-k/</span></p>
+      <table class="pk-wk">
+        <thead><tr><th scope="col"><span class="pk-vh">Day</span></th>{{ range $W }}<th scope="col"><span aria-hidden="true">{{ .icon }}</span> {{ .name }}</th>{{ end }}</tr></thead>
+        <tbody id="pk-wk-b">
+          {{ range $i, $d := slice "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" }}
+          <tr><th scope="row">{{ $d }}</th>{{ range $W }}<td data-c="{{ .name }}">{{ index .ideas $i }}</td>{{ end }}</tr>
+          {{ end }}
+        </tbody>
+      </table>
+      <p class="pk-sheet-f">Do what fits the day. Read aloud every day, and count everyday things.</p>
+    </div>
+  </section>
+
+  <section class="hs-sec pk-noprint" aria-labelledby="pk-gu-h">
+    <h2 id="pk-gu-h">For grown-ups</h2>
+    <div class="pk-gu">
+      <div class="pk-box">
+        <h3>Read, talk, play</h3>
+        <ul>
+          <li>Read aloud every day. Pediatricians encourage shared reading from birth through at least kindergarten.</li>
+          <li>Talk with your child all day: name things, ask questions, and wait for answers.</li>
+          <li>Play is learning. Blocks, dough, sand, water and pretend play all count.</li>
+          <li>Count everyday things out loud, and let your child count with you.</li>
+        </ul>
+      </div>
+      <div class="pk-box">
+        <h3>Screens, kept small</h3>
+        <ul>
+          <li>The American Academy of Pediatrics suggests no more than about an hour a day of screen media for children 2 to 5, and good programs only.</li>
+          <li>Use the games here together, for a few minutes, and then do the same thing with real things: blocks, spoons, crayons.</li>
+          <li>Most of what's on this page needs no screen at all.</li>
+        </ul>
+      </div>
+      <div class="pk-box">
+        <h3>Gently does it</h3>
+        <ul>
+          <li>Every child learns at their own pace. Follow your child's interest and come back to things later.</li>
+          <li>Praise effort: “You kept trying!”</li>
+          <li>Stop while it's still fun, and try again another day.</li>
+        </ul>
+      </div>
+    </div>
+    <h3 class="pk-h3">Sources</h3>
+    <ul class="pk-src hs-small">
+      <li>American Academy of Pediatrics, “<a href="https://healthychildren.org/English/news/Pages/beyond-literacy-shared-reading-starting-in-infancy-offers-lifelong-benefits.aspx" target="_blank" rel="noopener">Beyond literacy: shared reading starting in infancy offers lifelong benefits</a>” (HealthyChildren.org, 2024), on the policy statement “Literacy Promotion: An Essential Component of Primary Care Pediatric Practice” (<i>Pediatrics</i>, 2024).</li>
+      <li>AAP Council on Communications and Media, “Media and Young Minds,” <i>Pediatrics</i> 138(5), 2016 (doi:10.1542/peds.2016-2591): limit screen use for children 2 to 5 to about 1 hour a day of high-quality programs; summary at <a href="https://www.healio.com/news/pediatrics/20161020/aap-recommends-1-hour-limit-on-digital-media-use-for-preschoolers" target="_blank" rel="noopener">Healio</a>.</li>
+      <li>The daily rhythm, week of ideas, games and printables are original to Teddy Rook Book. Hannah Ward's lessons stay on her own site.</li>
+    </ul>
+  </section>
+</div>
+<script src="{{ "homeschool/prek/week.js" | relURL }}?v={{ (os.Stat "static/homeschool/prek/week.js").ModTime.Unix }}" defer></script>
+{{ end }}

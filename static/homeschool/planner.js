@@ -127,7 +127,7 @@
       var paces = PACES.map(function (p) { return '<option value="' + p[0] + '"' + (p[0] === +x.pace ? ' selected' : '') + '>' + p[1] + '</option>'; }).join('');
       return '<div class="pl-sub' + (x.on ? '' : ' off') + (rankOf(s, k.age) >= 100 ? ' more' : '') + '" data-s="' + s.key + '">' +
         '<label class="pl-on"><input type="checkbox" data-f="on"' + (x.on ? ' checked' : '') + '> <span>' + s.icon + ' ' + esc(s.name) + '</span></label>' +
-        (s.note ? '<p class="pl-sn">' + esc(s.note) + '</p>' : '') +
+        (s.note || s.link ? '<p class="pl-sn">' + esc(s.note || '') + (s.link ? (s.note ? ' ' : '') + '<a href="' + esc(s.link.u) + '">' + esc(s.link.t) + '</a>' : '') + '</p>' : '') +
         '<label class="pl-f"><span>Book</span><select data-f="course">' + opts + '</select></label>' +
         '<label class="pl-f pl-sm"><span>From lesson</span><input type="number" min="1" max="' + c.lessons[c.lessons.length - 1][0] + '" value="' + x.lesson + '" data-f="lesson"></label>' +
         '<label class="pl-f pl-sm"><span>Minutes a week</span><input type="number" min="0" max="1200" step="5" value="' + x.mins + '" data-f="mins"></label>' +

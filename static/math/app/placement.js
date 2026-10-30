@@ -28,7 +28,7 @@
       var sec = el('div', 'mlp-pl-band'); sec.appendChild(el('h3', '', band));
       var g = el('div', 'mlp-pl-grid');
       cs.forEach(function (c) {
-        var b = el('button', 'mlp-pl-opt', '<span aria-hidden="true">' + c.icon + '</span><span>' + esc(c.title) + '<small>' + (/Grade|Kindergarten/.test(c.title) ? '' : c.grade === 'College' ? 'College · ' : 'Grade ' + esc(c.grade) + ' · ') + c.n + ' topics</small></span>');
+        var b = el('button', 'mlp-pl-opt', '<span aria-hidden="true">' + c.icon + '</span><span>' + esc(c.title) + '<small>' + (c.grade === 'Pre-K' ? 'Ages 3 to 5 · ' : /Grade|Kindergarten/.test(c.title) ? '' : c.grade === 'College' ? 'College · ' : 'Grade ' + esc(c.grade) + ' · ') + c.n + ' topics</small></span>');
         b.type = 'button'; b.style.setProperty('--c', c.color); b.addEventListener('click', function () { start(c.key); });
         g.appendChild(b);
       });

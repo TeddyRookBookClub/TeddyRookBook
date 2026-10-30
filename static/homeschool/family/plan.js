@@ -17,7 +17,9 @@
              [items], kids: [[items]] }] }] }
      A spec is { kind: 'ws' | 'quiz' | 'test', ids: [[topicId, genLevel]], n, seed }.
    makeSet(ML, spec)  -> [{ id, gl, p }]: n problems, topics in turn, from ML.makeProblem (the ladders' generators);
-     repeats are skipped (a few more seeds are tried); null problems are skipped.
+     repeats are skipped: up to 25 more seeds for that topic, then the sheet's other topics; a repeat is used only when
+     every topic has run out of new problems. null problems are skipped. The same spec always makes the same sheet (the
+     answer key matches the printed page), so sheets don't use the practice memory (MathLadder.recent).
    keyOf(p)  -> { letter: 'B' | '', text } the answer for the answer key (mc: the letter and the choice).
    plannerDays(plan) -> one title per school day, for the lesson planner's "Family study" subject.                   */
 (function (root, factory) {
@@ -122,9 +124,9 @@
 
   // n problems for a spec, topics in turn
   function makeSet(ML, sp) {
-    var out = [], seen = {}, ids = sp.ids || [];
+    var out = [], seen = {}, ids = sp.ids || [], again = 0, spare = [];
     if (!ids.length) return out;
-    for (var j = 0, tries = 0; out.length < sp.n && tries < sp.n * 6; tries++) {
+    for (var j = 0, tries = 0; out.length < sp.n && tries < sp.n * 12; tries++) {
       var it = ids[j % ids.length], p = null;
       for (var t = 0; t < 4 && !p; t++) {
         try { p = ML.makeProblem(it[0], sp.seed + ':' + tries + (t ? '~' + t : ''), { level: it[1], mode: 'quiz' }); } catch (e) { p = null; }
@@ -134,9 +136,14 @@
       // the same question with the same answer (mc choices in another order count as the same) and the same picture
       var a = p.a, right = a.t === 'mc' ? (Array.isArray(a.v) ? a.v : [a.v]).map(function (i) { return a.choices[i]; }).join(';') : JSON.stringify(a.v === undefined ? a : a.v);
       var sig = hash(p.q + '|' + right + '|' + (p.viz ? JSON.stringify(p.viz) : ''));
-      if (seen[sig] && tries < sp.n * 5) { j--; continue; } // same problem again: try another seed for this topic
-      seen[sig] = 1; out.push({ id: it[0], gl: it[1], p: p });
+      if (seen[sig]) { // same problem again: try another seed for this topic; after 25, this topic has no new one, so the next topic
+        if (spare.length < sp.n) spare.push({ id: it[0], gl: it[1], p: p });
+        if (++again < 25) j--; else again = 0;
+        continue;
+      }
+      again = 0; seen[sig] = 1; out.push({ id: it[0], gl: it[1], p: p });
     }
+    while (out.length < sp.n && spare.length) out.push(spare.shift()); // only when every topic ran out of new problems
     return out;
   }
   function letter(i) { return String.fromCharCode(65 + i); }

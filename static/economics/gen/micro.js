@@ -209,7 +209,13 @@
     { s: 'Raising the minimum wage to 30 dollars an hour would end all poverty.', lv: 2, note: 'It is almost surely false, but it is a claim evidence can test.' },
     { s: 'Printing more money always lowers prices.', lv: 2, note: 'It is false, but it is still a testable claim.' },
     { s: 'Economists estimate that a 10 percent rise in cigarette prices reduces smoking by a few percent.', lv: 3 },
-    { s: 'If tuition falls, more students will enroll in college.', lv: 1 }
+    { s: 'If tuition falls, more students will enroll in college.', lv: 1 },
+    { s: 'When the price of movie tickets falls, more people go to the movies, other things equal.' },
+    { s: 'The town’s bakery sold more bread in December than in July.' },
+    { s: 'A frost that destroys orange trees will raise the price of orange juice.', lv: 2 },
+    { s: 'Households with higher incomes spend more on restaurant meals, on average.', lv: 2 },
+    { s: 'If a bus fare doubles, fewer people will ride the bus.', lv: 2 },
+    { s: 'Apple prices fall in the fall, when the harvest comes in.', lv: 2, note: 'Records of prices can check it.' }
   ];
   var NORM = [
     { s: 'The government should raise the minimum wage.' }, { s: 'Gasoline taxes are too high.' },
@@ -219,7 +225,13 @@
     { s: 'The income tax rate on the highest earners should be 50 percent.', lv: 2, note: 'A number does not make it positive.' },
     { s: 'A 5 percent unemployment rate is too high to accept.', lv: 3, note: '"Too high to accept" is a judgment, even with a number in it.' },
     { s: 'Schools should not sell soda to students.', lv: 1 },
-    { s: 'Protecting local jobs is worth paying higher prices for imported goods.', lv: 3 }
+    { s: 'Protecting local jobs is worth paying higher prices for imported goods.', lv: 3 },
+    { s: 'The school should start the day an hour later.' },
+    { s: 'Movie tickets cost too much.' },
+    { s: 'The town ought to build a new library before it repaves the parking lot.', lv: 2 },
+    { s: 'It is wrong for stores to raise prices during a holiday rush.', lv: 2 },
+    { s: 'Saving money is more important than spending it on vacations.', lv: 2 },
+    { s: 'Every town deserves a public swimming pool.', lv: 2 }
   ];
   G('micro.positive-normative', function (R, ctx) {
     var L = ctx.level || 1;
@@ -1450,10 +1462,13 @@
   var SHIFT_COST = [
     { s: 'The city raises the yearly license fee for the business.', f: true }, { s: 'The landlord raises the monthly rent on the shop.', f: true }, { s: 'The government charges the business a lump-sum tax that does not depend on output.', f: true },
     { s: 'The owner buys a more expensive insurance policy with a fixed yearly premium.', f: true, lv: 2 }, { s: 'Wages of the workers who make the product rise.', f: false }, { s: 'The price of the raw materials used in each unit rises.', f: false },
-    { s: 'The government adds a tax on each unit sold.', f: false, lv: 2 }, { s: 'Electricity used to run the machines for each unit gets more expensive.', f: false, lv: 2 }
+    { s: 'The government adds a tax on each unit sold.', f: false, lv: 2 }, { s: 'Electricity used to run the machines for each unit gets more expensive.', f: false, lv: 2 },
+    { s: 'The yearly payment on the loan for the factory building goes up.', f: true }, { s: 'The price of the cloth used in each shirt rises.', f: false },
+    { s: 'The cost of the box that each product is shipped in rises.', f: false }, { s: 'The monthly fee for the store’s security alarm goes up.', f: true },
+    { s: 'Workers paid by the hour get a raise, and more units need more hours.', f: false }, { s: 'The yearly property tax on the factory rises.', f: true }
   ];
   G('micro.cost-shifts', function (R, ctx) {
-    var L = ctx.level || 1, shape = L === 1 ? 'which' : R.pick(['which', 'which', 'output', 'atc', 'mc']);
+    var L = ctx.level || 1, shape = L === 1 ? R.pick(['which', 'which', 'mc']) : R.pick(['which', 'which', 'output', 'atc', 'mc']);
     if (shape === 'which' || shape === 'output') {
       var ev = bank(R, ctx, SHIFT_COST), up = true;
       if (shape === 'output') {
@@ -1617,7 +1632,17 @@
   });
 
   G('micro.efficiency', function (R, ctx) {
-    var L = ctx.level || 1, shape = L === 1 ? R.pick(['class', 'def']) : R.pick(['class', 'class', 'def', 'tf']);
+    var L = ctx.level || 1, shape = L === 1 ? R.pick(['class', 'class', 'def', 'tf']) : R.pick(['class', 'class', 'def', 'tf']);
+    if (shape === 'def' && R.chance(0.6)) {
+      var dk = R.pick([
+        ['Which kind of efficiency means making the amount of a good whose last unit is worth just what it costs?', 0, 'Allocative efficiency is about making the right amount: the value of the last unit (the price) equals its cost (MC).'],
+        ['Which kind of efficiency means making goods at the lowest possible cost per unit?', 1, 'Productive efficiency is about cost: producing at the minimum of average total cost.'],
+        ['A firm sells where its price equals its marginal cost. Which kind of efficiency does that condition describe?', 0, 'P = MC is the condition for allocative efficiency.'],
+        ['A firm produces at the lowest point of its average total cost curve. Which kind of efficiency does that describe?', 1, 'Minimum ATC is the condition for productive efficiency.'],
+        ['Which kind of efficiency is about producing the right amount of a good, the amount buyers value at its cost?', 0, 'That is allocative efficiency: P = MC.'],
+        ['Which kind of efficiency is about using the cheapest way to make each unit?', 1, 'That is productive efficiency: production at minimum ATC.']]);
+      return P(dk[0], keep(['Allocative efficiency', 'Productive efficiency'], dk[1]), [dk[2]], 'Allocative: the right amount. Productive: the lowest cost per unit.', null, { kind: 'defk', v: dk[1] });
+    }
     if (shape === 'def') {
       var al = R.coin(), ch = ['Price equals marginal cost', 'Production at the lowest average total cost', 'Price equals average total cost', 'Total revenue is as large as possible'];
       return P('Which condition describes <b>' + (al ? 'allocative' : 'productive') + '</b> efficiency?', keep(ch, al ? 0 : 1),
@@ -1628,7 +1653,11 @@
         { s: 'An allocatively efficient outcome is always a fair one.', v: false, why: 'Efficiency is about the size of the total gain, not how it is shared.' },
         { s: 'In long-run equilibrium, a perfectly competitive firm is both allocatively and productively efficient.', v: true, why: 'It sets P = MC, and entry and exit push P to minimum ATC.' },
         { s: 'If price is above marginal cost, society would gain from producing more of the good.', v: true, why: 'Buyers value one more unit more than it costs to make.' },
-        { s: 'Productive efficiency means price equals marginal cost.', v: false, why: 'That is allocative efficiency. Productive efficiency means producing at minimum ATC.' }]);
+        { s: 'Productive efficiency means price equals marginal cost.', v: false, why: 'That is allocative efficiency. Productive efficiency means producing at minimum ATC.' },
+        { s: 'Allocative efficiency means price equals marginal cost.', v: true, why: 'When P = MC, the value of the last unit to buyers equals its cost.' },
+        { s: 'Productive efficiency means making goods at the lowest possible average total cost.', v: true, why: 'That is the definition: production at minimum ATC.' },
+        { s: 'If price is below marginal cost, too much of the good is being made.', v: true, why: 'The last unit costs more to make than buyers value it.' },
+        { s: 'A firm making its goods at an average total cost above the minimum is productively efficient.', v: false, why: 'Productive efficiency needs ATC at its minimum.' }]);
       return P('True or false: ' + t.s, tf(t.v), [t.why, 'So the statement is <b>' + (t.v ? 'true' : 'false') + '</b>.'], 'Keep the two conditions apart.', null, { kind: 'tf', s: t.s, v: t.v });
     }
     var pr = R.int(10, 40), alloc = R.coin(), prod = R.coin(), mc = alloc ? pr : pr + R.pick([-4, -3, -2, 2, 3, 4]), minA = R.int(8, 35), atc = prod ? minA : minA + R.int(1, 5);
@@ -1645,7 +1674,11 @@
     { s: 'One set of water pipes can serve a whole town more cheaply than two competing sets.', v: 0 }, { s: 'A rail line between two cities would cost billions to duplicate, and one line can carry all the traffic.', v: 0, lv: 2 },
     { s: 'A firm owns the only known deposits of a rare mineral used in its product.', v: 2 }, { s: 'A company owns every spring that feeds the only source of a famous mineral water.', v: 2, lv: 2 },
     { s: 'Everyone uses the same messaging app because all their friends are on it.', v: 3 }, { s: 'A game console has the most games because it has the most players, and the most players because it has the most games.', v: 3, lv: 2 },
-    { s: 'An online marketplace attracts the most sellers because it has the most buyers.', v: 3, lv: 3 }, { s: 'A power company spreads the huge cost of its plant over a whole region, so its average cost keeps falling as it serves more customers.', v: 0, lv: 2 }
+    { s: 'An online marketplace attracts the most sellers because it has the most buyers.', v: 3, lv: 3 }, { s: 'A power company spreads the huge cost of its plant over a whole region, so its average cost keeps falling as it serves more customers.', v: 0, lv: 2 },
+    { s: 'A songwriter holds the copyright on a popular song.', v: 1 }, { s: 'A town lets only one company collect trash, under a city license.', v: 1, lv: 2 },
+    { s: 'One natural gas pipeline network can serve a whole city more cheaply than two competing networks.', v: 0 }, { s: 'A mining company owns the only quarry of a rare marble in the region.', v: 2 },
+    { s: 'A ski resort owns the only mountain within a day’s drive.', v: 2, lv: 3 }, { s: 'A payment app is useful to shops because so many shoppers use it, and to shoppers because so many shops accept it.', v: 3, lv: 2 },
+    { s: 'A toy maker holds a patent on a new kind of building block.', v: 1, lv: 3 }, { s: 'A bridge across a wide river costs so much to build that one bridge serves all the traffic most cheaply.', v: 0, lv: 3 }
   ];
   G('micro.monopoly-sources', function (R, ctx) {
     var L = ctx.level || 1;
@@ -1654,7 +1687,11 @@
         { s: 'Because a monopoly is the only seller, it can charge any price and still sell as much as it wants.', v: false, why: 'A monopoly faces the market demand curve: a higher price means buyers buy less.' },
         { s: 'Without barriers to entry, a monopoly’s profits would attract new competitors.', v: true, why: 'Profits invite entry unless something keeps rivals out.' },
         { s: 'A patent gives an inventor a temporary legal monopoly.', v: true, why: 'It bars others from making the invention for a limited period.' },
-        { s: 'A natural monopoly happens when average cost keeps falling across the whole range of market demand.', v: true, why: 'Then one firm can serve the market more cheaply than two or more.' }]);
+        { s: 'A natural monopoly happens when average cost keeps falling across the whole range of market demand.', v: true, why: 'Then one firm can serve the market more cheaply than two or more.' },
+        { s: 'A copyright lasts forever.', v: false, why: 'A copyright, like a patent, lasts for a limited time.' },
+        { s: 'Network effects mean a product becomes more valuable as more people use it.', v: true, why: 'Each new user makes it more useful to the others.' },
+        { s: 'Control of a key resource can keep rivals out of a market.', v: true, why: 'Rivals can’t make the product without the input.' },
+        { s: 'A monopoly can only arise from a government license.', v: false, why: 'Economies of scale, control of a resource and network effects can also create one.' }]);
       return P('True or false: ' + t.s, tf(t.v), [t.why, 'So the statement is <b>' + (t.v ? 'true' : 'false') + '</b>.'], 'A monopoly is still limited by demand.', null, { kind: 'tf', s: t.s, v: t.v });
     }
     if (R.chance(0.5)) {
@@ -1669,7 +1706,7 @@
       'Is it cost, the law, a scarce input, or the number of other users?', null, { kind: 'barrier', s: it.s, v: it.v });
   });
 
-  function demandSched(R) { var p0 = R.int(10, 20), s = R.pick([1, 1, 2]); return { p0: p0, s: s, P: function (q) { return p0 - s * q; } }; }
+  function demandSched(R) { var s = R.pick([1, 1, 2, 3]), p0 = R.int(6 * s + 4, 6 * s + 14); return { p0: p0, s: s, P: function (q) { return p0 - s * q; } }; }
   G('micro.monopoly-marginal-revenue', function (R, ctx) {
     var L = ctx.level || 1, shape = L === 1 ? R.pick(['table', 'table', 'why']) : R.pick(['table', 'linear', 'zero', 'why', 'linear']);
     if (shape === 'why') {
@@ -2153,3 +2190,166 @@
   });
 
 })(window.MathLadder);
+
+/* ---- widen: more forms of the same questions (so practice repeats less) ----------------------------------------
+   Every topic of this course keeps its own problems, and some draws are turned into other forms of the same skill,
+   built only from the topic's own problems (so their answers stay the ones the topic already checks):
+     check   "Ava chose X. Is Ava right?" (Yes or No) from a one-answer multiple-choice problem
+     pairs   two or three lines "question → answer"; which line is right (or, at level 3, which one is wrong)
+     tfpick  "Which sentence is true?" (or false) from three of the topic's true-or-false sentences
+   Questions whose answer depends on the other choices (first, best, most, not …) show the choices in the check form
+   and never go into pairs. Mix per level: CFG.mix[level] = [check, pairs, tfpick] shares; the rest stays as it was. */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var CFG = {"prefix":"micro.","only":["scarcity-resources","positive-normative","economic-systems","demand-shift-vs-movement","demand-shifters","substitutes-complements","supply-shifters","equilibrium-changes","elasticity-determinants","total-revenue-test","price-elasticity-supply","cost-curves","cost-shifts","long-run-competition","efficiency","monopoly-sources","monopoly-marginal-revenue","price-discrimination","monopolistic-competition","factor-market-shifts","externality-policy","types-of-goods"]};
+  var NAMES = ['Ava', 'Ben', 'Cora', 'Dev', 'Eli', 'Finn', 'Gus', 'Hana', 'Ivy', 'Jude', 'Kai', 'Lena', 'Milo', 'Nora', 'Omar', 'Pia',
+    'Quinn', 'Rosa', 'Sam', 'Tess', 'Uma', 'Vic', 'Wren', 'Zoe', 'Ada', 'Leo', 'Mia', 'Theo', 'June', 'Max'];
+  var REL = /\b(first|last|earliest|latest|earlier|later|before|after|older|oldest|newer|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|look|read|here|example|examples|likely|probably|mainly|main|usually|typically|other|another|which one|each|order|then|next)\b|n['’]t\b/i;
+  // pairs judge each line on its own, so only questions whose answer depends on the other choices are left out
+  var RELP = /\b(first|last|earliest|latest|oldest|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|which one|other|another|rank|order|more|less|fewer)\b|n['’]t\b|\w+est\b/i;
+  var REF = /\b(this|these|those|shown|picture|map|table|chart|graph|diagram|passage|scene|story|above|below|here|following)\b/i;
+  var BADCH = /\b(all|none|both|neither) of\b|\b(above|below)\b|^(both|neither|all|none)\b|\bchoice\b|\boption\b/i;
+  function strip(s) { return String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function plainish(s) { return !/<(?!\/?(b|i|em|strong)\b)[^>]*>/.test(String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1')); }
+  function add(q, html) { // inside a read-aloud big span when there is one
+    var m = /<span class="[\w-]*big">/.exec(q);
+    if (m) { var k = q.lastIndexOf('</span>'); if (k > m.index) return q.slice(0, k) + '<br>' + html.replace(/<\/p>\s*<p[^>]*>/g, '<br>').replace(/<\/?p[^>]*>/g, '') + q.slice(k); }
+    return q + html;
+  }
+  function single(p) {
+    return p && p.a && p.a.t === 'mc' && !Array.isArray(p.a.v) && Array.isArray(p.a.choices) && p.a.choices.length >= 2 &&
+      !p.a.choices.some(function (c) { return BADCH.test(strip(c)); });
+  }
+  function hash(t) { var h = 7; for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return h; }
+  function nameFor(q, key) { // the same claim always gets the same name, so a name alone never makes a "new" problem
+    var t = strip(q), ok = NAMES.filter(function (n) { return t.indexOf(n) < 0 && String(key).indexOf(n) < 0; });
+    return (ok.length ? ok : NAMES)[hash(t + '|' + key) % (ok.length || NAMES.length)];
+  }
+  function dot(s) { s = String(s); return /[.!?…"”')\]]\s*(<\/b>)?$/.test(strip(s)) || /\$$/.test(s) ? s : s + '.'; }
+  function optList(ch) { return '<p class="wd-opts">The choices were:<br>' + ch.map(function (c) { return '• ' + c; }).join('<br>') + '</p>'; }
+  function copyP(p, q, a, steps) { var o = {}; for (var k in p) if (Object.prototype.hasOwnProperty.call(p, k)) o[k] = p[k]; o.q = q; o.a = a; o.steps = steps; delete o.choices; return o; }
+
+  // check: show one choice (the right one half the time) and ask whether it is right
+  function check(p, R) {
+    var ch = p.a.choices, v = p.a.v, idx = ch.map(function (_, i) { return i; }), others = idx.filter(function (i) { return i !== v; });
+    var i = R.chance(0.5) ? v : R.pick(others), ok = i === v, nm = nameFor(p.q, ch[i]), letters = ch.every(function (c) { return /^[A-Z]$/.test(String(c)); });
+    var stem = strip(p.q), html = '';
+    if (!letters && (REL.test(stem) || ch.length > 4 || CFG.listAll)) {
+      var shown = p.a.keep ? ch.slice() : R.shuffle(ch);
+      html += optList(shown);
+    }
+    html += '<p class="wd-check">' + nm + ' chose: <b>' + ch[i] + '</b>' + (/[.!?…"”]$/.test(strip(ch[i])) ? '' : '.') + ' Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes. ' + dot(ch[v]) + ' is the right answer.' : 'No. The right answer is: ' + dot(ch[v]);
+    if (ok) first = 'Yes, that is the right answer.';
+    return copyP(p, add(p.q, html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [first].concat(p.steps || []));
+  }
+  // check for "choose all": the whole list is shown, and one learner's picks; right only if exactly the right ones
+  function checkAll(p, R) {
+    var ch = p.a.choices, v = p.a.v.slice().sort(), n = ch.length, pick;
+    if (R.chance(0.45)) pick = v.slice();
+    else {
+      var t = 0; do { var j = R.int(0, n - 1), s = v.slice(), k = s.indexOf(j); if (k >= 0) s.splice(k, 1); else s.push(j); if (R.chance(0.3)) { var j2 = R.int(0, n - 1), k2 = s.indexOf(j2); if (k2 >= 0) s.splice(k2, 1); else s.push(j2); } pick = s.sort(); t++; }
+      while (t < 20 && (!pick.length || pick.join() === v.join()));
+      if (!pick.length || pick.join() === v.join()) return null;
+    }
+    var ok = pick.join() === v.join(), nm = nameFor(p.q, pick.join());
+    var html = optList(ch) + '<p class="wd-check">' + nm + ' chose ' +
+      (pick.length === 1 ? 'only: <b>' + ch[pick[0]] + '</b>' : 'these: <b>' + pick.map(function (i) { return ch[i]; }).join('</b>; <b>') + '</b>') + '. Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes, those are exactly the right ones.' : 'No. The right ones are: ' + v.map(function (i) { return ch[i]; }).join('; ');
+    return copyP(p, add(p.q.replace(/\s*(Choose|Select|Pick) (all|every)[^.?!<]*[.?!]?/i, ''), html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [dot(first)].concat(p.steps || []));
+  }
+
+  // items for pairs: one-answer questions that stand on their own (no picture, no passage, no "first/best/…")
+  function pairItem(p) {
+    if (!single(p) || p.viz) return null;
+    var max = CFG.maxStem || 120, maxA = CFG.maxAns || 70, a = strip(p.a.choices[p.a.v]), stem, group = '';
+    // "prompt<br><b>thing</b>" or "prompt<blockquote>thing</blockquote>": a line is "thing → answer", lines share the prompt
+    var q0 = p.q.replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1').trim();
+    var m = /^([^<]{6,140}?)\s*(?:<br>\s*<b>([^<]{3,140})<\/b>|<blockquote>([^<]{3,140})<\/blockquote>)\s*$/.exec(q0);
+    if (m) { group = m[1].trim(); stem = (m[2] || m[3]).trim(); if (RELP.test(group.replace(/\b(this|these)\b/gi, ''))) return null; }
+    else {
+      if (!plainish(p.q)) return null;
+      stem = strip(p.q); if (RELP.test(stem)) return null;
+    }
+    if (stem.length > max || stem.length < 3 || a.length > maxA || /^[A-Z]$/.test(a) || /\$/.test(stem + a + group)) return null;
+    var w = p.a.choices.filter(function (_, i) { return i !== p.a.v; }).map(strip).filter(function (x) { return x.length <= maxA && x !== a; });
+    if (!w.length) return null;
+    return { stem: stem.replace(/\s*(Choose one|Pick one)\.?$/i, ''), a: a, w: w, why: (p.steps || [])[0] || '', group: group };
+  }
+  function tfItem(p) {
+    if (!p || !p.a || p.a.t !== 'tf' || p.viz || !plainish(p.q)) return null;
+    var s = strip(p.q).replace(/^(True or false\?|True or false:)\s*/i, '').replace(/\s*(True or false\?|Is this true or false\?|Is it true or false\?)$/i, '').trim();
+    if (s.length < 8 || s.length > (CFG.maxStem || 120) + 20 || REF.test(s) || /\?$/.test(s) || /\$/.test(s)) return null;
+    return { s: s, v: p.a.v, why: (p.steps || [])[0] || '' };
+  }
+  function harvest(base, R, ctx, make, n, distinct) {
+    var out = [], keys = {};
+    for (var t = 0; t < 24 && out.length < n; t++) {
+      // at level 3, lines may come from level 2 questions too: three lines with one wrong is the harder form
+      var c2 = ctx && ctx.level >= 3 && (t % 2) ? Object.assign({}, ctx, { level: 2 }) : ctx;
+      var p; try { p = base(ML.rand(R.int(1, 2e9)), c2); } catch (e) { continue; }
+      var it = make(p); if (!it) continue;
+      if (out.length && it.group !== undefined && it.group !== out[0].group) continue;
+      var k = distinct(it); if (k.some(function (x) { return keys[x]; })) continue;
+      k.forEach(function (x) { keys[x] = 1; }); out.push(it);
+    }
+    return out;
+  }
+  function pairs(base, R, ctx, n, wrongOne) {
+    var its = harvest(base, R, ctx, pairItem, n, function (it) { return it.group ? ['s:' + it.stem] : ['s:' + it.stem, 'a:' + it.a]; });
+    if (its.length < n) return null;
+    var answers = its.map(function (it) { return it.a; }), used = {};
+    var target = R.int(0, n - 1), lines = [], steps = [];
+    for (var i = 0; i < n; i++) {
+      var it = its[i], right = wrongOne ? i !== target : i === target, ans = it.a;
+      if (!right) {
+        var ws = it.w.filter(function (x) { return (its[0].group || answers.indexOf(x) < 0) && !used[x]; });
+        if (!ws.length) return null;
+        ans = R.pick(ws); if (!its[0].group) used[ans] = 1;
+      }
+      lines.push(it.stem + ' → ' + ans); // plain text: ladder pages show choices as text
+      steps.push(it.group ? dot(it.stem) + ' Answer: ' + it.a + (right ? '.' : ', not ' + ans + '.') : it.stem + ' The answer is ' + it.a + (right ? '.' : ', not ' + ans + '.'));
+    }
+    var g = its[0].group, q = g ? '<p class="wd-group">The question for every line: <i>' + g + '</i></p>' + (wrongOne ? 'One line has the <b>wrong</b> answer. Which line is it?' : n === 2 ? 'Which line has the <b>right</b> answer?' : 'Only one line has the right answer. Which line is it?') : wrongOne ? 'Each line is a question and an answer. One answer is <b>wrong</b>. Which line is it?'
+      : (n === 2 ? 'Each line is a question and an answer. Which line has the <b>right</b> answer?' : 'Each line is a question and an answer. Only one answer is right. Which line is it?');
+    if (its[target].why) steps.push(its[target].why);
+    return { q: q, a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own. Does the answer fit the question?' };
+  }
+  function tfpick(base, R, ctx, wantFalse) {
+    var its = harvest(base, R, ctx, tfItem, 6, function (it) { return ['s:' + it.s]; });
+    var T = its.filter(function (x) { return x.v; }), F = its.filter(function (x) { return !x.v; });
+    var odd = wantFalse ? F : T, rest = wantFalse ? T : F;
+    if (!odd.length || rest.length < 2) return null;
+    var pick = [odd[0], rest[0], rest[1]], order = R.shuffle([0, 1, 2]), choices = order.map(function (i) { return pick[i].s; });
+    var steps = pick.map(function (x) { return x.s + ' ' + (x.v ? 'True.' : 'False.'); });
+    if (odd[0].why) steps.push(odd[0].why);
+    return { q: wantFalse ? 'Which sentence is <b>false</b>?' : 'Which sentence is <b>true</b>?', a: { t: 'mc', choices: choices, v: order.indexOf(0) }, steps: steps,
+      hint: 'Decide about each sentence on its own.' };
+  }
+  var MIX = CFG.mix || { 1: [0.38, 0.25, 0.04], 2: [0.27, 0.3, 0.1], 3: [0.17, 0.4, 0.15] };
+  function wrap(id, base) {
+    var fn = function (R, ctx) {
+      var lv = ctx && ctx.level || 1, p = base(R, ctx), m = MIX[lv] || MIX[3], r = R.next();
+      if (p.nowiden || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf') || (CFG.skip && CFG.skip.indexOf(id) >= 0)) return p; // typed answers stay as they are
+      var form = r < m[0] ? 0 : r < m[0] + m[1] ? 1 : r < m[0] + m[1] + m[2] ? 2 : -1;
+      if (form < 0) return p;
+      var tries = [form, (form + 1) % 3, (form + 2) % 3].filter(function (f) { return m[f] > 0; });
+      for (var t = 0; t < tries.length; t++) {
+        var f = tries[t], alt = null;
+        if (f === 0) alt = single(p) ? check(p, R) : (p.a && p.a.t === 'mc' && Array.isArray(p.a.v) && !p.viz ? checkAll(p, R) : null);
+        else if (f === 1) alt = pairs(base, R, ctx, lv === 1 ? 2 : 3, lv >= 3 && R.chance(0.6));
+        else alt = tfpick(base, R, ctx, R.chance(0.4));
+        if (alt) return alt;
+      }
+      return p;
+    };
+    fn.widened = true;
+    return fn;
+  }
+  ML.genIds().forEach(function (id) {
+    if (id.indexOf(CFG.prefix) !== 0 || (CFG.only && CFG.only.indexOf(id.slice(CFG.prefix.length)) < 0)) return;
+    var g = ML.getGen(id); if (g && !g.widened) ML.gen(id, wrap(id, g));
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen ---- */

@@ -41,6 +41,7 @@
   // vars for one problem: roles A, B, C, D (cast keys), with names and pronouns, plus pools
   function cast(R, roles) {
     var used = {}, v = { _keys: [] };
+    (roles || []).forEach(function (r) { if (['peer', 'elder', 'teen', 'kid', 'any'].indexOf(r) < 0) used[r] = 1; }); // named people are never also picked as a peer
     function take(list) { var ok = list.filter(function (k) { return !used[k]; }); var k = R.pick(ok.length ? ok : list); used[k] = 1; return k; }
     (roles || ['peer', 'peer']).forEach(function (r, i) {
       var k = r === 'peer' ? take(PEERS) : r === 'elder' ? take(ELDERS) : r === 'teen' || r === 'kid' ? take(KIDS) : r === 'any' ? take(PEERS.concat(ELDERS)) : (used[r] = 1, r);
@@ -404,6 +405,9 @@
     hint: 'Make a lowercase b with your left hand and a d with your right: bread, drinks.',
     custom: { piece: function (R, ctx) { return pieceP(R, ctx, ['informal']); }, num: function (R, ctx) { return numberP(R, ctx, ['informal']); }, spot: function (R, ctx) { return spotSetP(R, ctx); } },
     sc: [
+      {"p":"table","r":["peer","peer"],"s":"At a dinner party, {A} sees two glasses above the knife on {Ahis} right and one glass above {B}'s knife.","q":"Which glasses are {Ahers}?","ok":["The two above {Ahis} own knife, on {Ahis} right."],"bad":["The glass above {B}'s knife.","Whichever glass is closest to {Ahis} left hand.","Any glass, as long as {Ahe} keeps using the same one."],"why":"Drinks are on the right. The glasses above {Ahis} knife belong to {A}."},
+      {"p":"table","r":["peer","peer"],"s":"At a dinner party, {A} sees a spoon on the far right, then a knife, then the plate.","q":"What is that outer spoon most likely for?","ok":["The first course, such as soup."],"bad":["Dessert, at the end of the meal.","Stirring coffee after dinner.","Nothing: it is there in case a spoon is dropped."],"why":"Utensils are used from the outside in, so the outermost spoon belongs to the first course that needs a spoon."},
+      {"p":"table","r":["peer","peer"],"s":"{A} is helping set the table for {B}'s dinner party and is placing the dinner knife.","q":"Which way should the blade face?","ok":["Toward the plate."],"bad":["Away from the plate, toward the neighbor.","Up, toward the glasses.","It doesn't matter."],"why":"The blade faces the plate so no sharp edge points at a neighbor."},
       { p: 'table', r: ['peer', 'peer', 'peer'], s: 'At a crowded round table, {A} sees bread plates on both sides of {Ahis} dinner plate.', q: 'Which one is {Ahers}?',
         ok: ['The one on {Ahis} left.'], bad: ['The one on {Ahis} right.', 'Whichever one has more room.', 'Whichever one {B} hasn\'t used yet.'], why: 'Bread goes on the left. The plate on the right belongs to the guest on {Ahis} right.' },
       { p: 'table', r: ['peer', 'peer'], s: '{B}, on {A}\'s right, has already put a roll on {A}\'s bread plate by mistake.', q: 'What should {A} do?',
@@ -417,7 +421,7 @@
       { q: 'Why does a knife lie with its blade facing the plate?', a: 'So no sharp edge points toward a neighbor.', w: ['So that it looks neater in photographs.', 'Because the handle is heavier on that side.', 'So the server can tell which guest it belongs to.'] },
       { q: 'Why are utensils set in the order you will use them, from the outside in?', a: 'So guests never have to ask or guess which piece comes next.', w: ['So the expensive pieces are nearest the plate.', 'Because forks used last must stay clean the longest.', 'So servers can count how many courses are left.'] }
     ],
-    mix: { 1: ['piece', 'sc', 'spot'], 2: ['piece', 'num', 'spot', 'sc', 'why'], 3: ['piece', 'num', 'spot', 'sc'] }
+    mix: { 1: ['piece', 'sc', 'spot'], 2: ['piece', 'num', 'spot', 'sc', 'why'], 3: ['piece', 'num', 'spot', 'sc', 'sc'] }
   }));
 
   G('adult.formal-setting', bank('adult.formal-setting', {
@@ -447,6 +451,8 @@
     rudeWhy: 'it leaves a mess for someone else or draws attention',
     order: [{ title: 'Put the napkin\'s routine in order.', steps: ['Wait until the host places a napkin on their lap', 'Unfold your napkin on your lap', 'Blot your lips gently when needed', 'Set it loosely to the left of your plate at the end of the meal'], all: true }],
     sc: [
+      {"p":"table","r":["peer","peer"],"s":"Halfway through dinner at {B}'s home, {A} has a little sauce at the corner of {Ahis} mouth.","q":"What should {A} do?","ok":["Blot it with {Ahis} napkin and set the napkin back on {Ahis} lap."],"bad":[["Wipe {Ahis} whole face with the napkin.","Blotting is quieter and tidier than wiping."],"Lick it off.","Leave it until dessert."],"why":"A quick blot is quiet and tidy."},
+      {"p":"table","r":["peer","elder"],"s":"{A} is a guest at {B}'s formal dinner. The napkin rests on the plate.","q":"When should {A} unfold it?","ok":["After {B}, the host, places a napkin on {Bhis} lap."],"bad":[["The moment {Ahe} walks into the dining room.","Waiting for the host lets the host set the pace."],"Only when food spills.","At the very end of the meal."],"why":"Guests place the napkin on the lap after the host does."},
       { p: 'table', r: ['peer', 'peer'], s: 'During dinner at {B}\'s home, {A} needs to step away from the table for a moment.', q: 'Where can the napkin go? Choose the polite option.',
         ok: ['On {Ahis} chair.', 'Loosely to the left of {Ahis} plate.'], bad: [['Crumpled on {Ahis} plate.', 'A crumpled napkin on the plate puts a used napkin beside food that others can see.'], 'Tucked into {Ahis} pocket.', 'Over the back of the next person\'s chair.'], why: 'Writers differ between the chair and the left of the plate; both keep a used napkin away from the food. The plate is not the place.' },
       { p: 'table', r: ['peer', 'peer'], s: '{A} sits down at a dinner party. The host, {B}, has not yet sat down.', q: 'When does {A} put the napkin on {Ahis} lap?',
@@ -454,10 +460,10 @@
       { p: 'table', r: ['peer', 'peer'], s: 'The meal is over and everyone is standing to leave the table.', q: 'What should {A} do with {Ahis} napkin?',
         ok: ['Set it loosely to the left of {Ahis} plate.'], bad: ['Leave it crumpled on the plate.', 'Fold it neatly into its original shape.', 'Drop it on the chair.'], why: 'Loosely to the left of the plate says "finished" without displaying a used napkin; a neat fold looks unused, and the plate is for food.' }
     ],
-    good: ['Placing the napkin on your lap after the host does', 'Blotting your lips before you drink', 'Leaving the napkin on your chair when you step away', 'Setting the napkin loosely to the left of the plate at the end'],
+    good: [ "Blotting your mouth with the napkin", "Keeping the napkin on your lap during the meal", "Folding the napkin loosely when the meal ends",'Placing the napkin on your lap after the host does', 'Blotting your lips before you drink', 'Leaving the napkin on your chair when you step away', 'Setting the napkin loosely to the left of the plate at the end'],
     fine: ['Leaving the napkin loosely to the left of the plate when you step away'],
-    rude: ['Tucking the napkin into your collar at a dinner party', 'Leaving a crumpled napkin on your plate', 'Using the napkin to blow your nose', 'Wiping your whole face with the napkin'],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'order', 'all'], 3: ['all', 'order', 'sc'] }
+    rude: [ ["Using the tablecloth as a napkin","the napkin is there for that"], ["Shaking the napkin out with a loud snap","a quiet unfold is enough"], ["Dropping a used napkin on the floor","set it on your chair or beside your plate"],'Tucking the napkin into your collar at a dinner party', 'Leaving a crumpled napkin on your plate', 'Using the napkin to blow your nose', 'Wiping your whole face with the napkin'],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'order', 'all'], 3: ['all', 'order', 'sc'] }
   }));
 
   G('adult.bread-glasses', bank('adult.bread-glasses', {
@@ -582,6 +588,8 @@
     rudeWhy: 'it embarrasses someone, drags on, or pressures a guest',
     order: [{ title: 'Put the steps of giving a toast in order.', steps: ['Wait until everyone has something to drink', 'Stand, or raise your glass at a small table', 'Say a few warm words about the person or the occasion', 'Raise your glass toward the honored person', 'Take a sip with everyone and sit down'], all: true }],
     sc: [
+      {"p":"party","r":["peer","peer","peer"],"s":"At a dinner for {B}'s retirement, {A} wants to give a toast after the host's.","q":"Which toast fits best?","ok":["\"To {B}, who taught so many of us the ropes. Enjoy every day!\""],"bad":[["A ten-minute story about {B}'s first year at work.","Short is kind: everyone is holding a glass."],"\"To {B}, finally leaving!\"","A toast about {A}'s own plans for the year."],"why":"A toast is short, kind and about the honored person."},
+      {"p":"party","r":["peer","peer"],"s":"At {B}'s party, {A}'s glass is empty when the host stands to give a toast.","q":"What should {A} do?","ok":["Raise the empty glass, or simply look at the honored person and smile."],"bad":[["Hurry to the kitchen to refill it during the toast.","Leaving during the toast pulls attention away."],"Stay looking at {Ahis} phone.","Ask the host to wait."],"why":"What matters is joining the moment, not what is in the glass."},
       { p: 'table', r: ['peer', 'elder'], s: 'At {B}\'s birthday dinner, {A}, the host, stands and raises a glass: "To {B}!"', q: 'What should {B} do?',
         ok: ['Stay seated, smile, and not drink; then thank everyone.'], bad: [['Stand and drink along with everyone.', 'Drinking to yourself is like clapping for yourself; the toast is a gift from the others.'], 'Give a longer speech right away.', 'Raise a glass to {Bhim}self.'], why: 'The honored person receives the toast and then thanks the others, perhaps with a toast back.' },
       { p: 'table', r: ['peer', 'peer'], s: '{A} is drinking water when the host raises a toast.', q: 'What should {A} do?',
@@ -593,9 +601,9 @@
       { q: 'Why does the person being toasted not drink?', a: 'The toast is a gift from the others, and drinking to yourself is like clapping for yourself.', w: ['Because it is bad luck to drink during your own toast.', 'So they can drink twice as much later.', 'Because the host has not given permission.'] },
       { q: 'Why should toasts be short?', a: 'Everyone is holding a glass and waiting; brief and kind keeps the moment warm.', w: ['Because long toasts are against the law at restaurants.', 'So the speaker can give more toasts later.', 'Because short toasts are more expensive.'] }
     ],
-    good: ['Keeping a toast under a minute', 'Raising a glass of water', 'Staying seated when the toast is to you', 'Looking at the person being honored'],
-    rude: ['Drinking to yourself when the toast is to you', 'Telling an embarrassing story about the guest of honor', 'Urging a guest to switch drinks for the toast', 'Talking on your phone during the toast'],
-    mix: { 1: ['sc', 'tf', 'why'], 2: ['sc', 'order', 'why', 'all'], 3: ['order', 'all', 'sc'] }
+    good: [ "Standing or raising your glass when the host toasts", "Thanking everyone after a toast to you", "Toasting the host back after a toast to you",'Keeping a toast under a minute', 'Raising a glass of water', 'Staying seated when the toast is to you', 'Looking at the person being honored'],
+    rude: [ ["Clinking your glass loudly to stop every conversation more than once","one toast at a time, and not too many"], ["Giving a toast full of inside jokes","a toast includes the whole table"], ["Chatting during someone else's toast","listen while the toast is given"],'Drinking to yourself when the toast is to you', 'Telling an embarrassing story about the guest of honor', 'Urging a guest to switch drinks for the toast', 'Talking on your phone during the toast'],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'order', 'why', 'all'], 3: ['order', 'all', 'sc'] }
   }));
 
   G('adult.restaurants', bank('adult.restaurants', {
@@ -604,6 +612,8 @@
     ctxLine: 'At a restaurant:',
     rudeWhy: 'it is discourteous to the staff or to the host',
     sc: [
+      {"p":"restaurant","r":["peer","peer"],"s":"{A} and {B} have a dinner reservation for 7:00. At 6:45 {A} sees they will be twenty minutes late.","q":"What should {A} do?","ok":["Call the restaurant, say they are running late, and ask if the table can be held."],"bad":[["Arrive at 7:20 without a word.","The restaurant may give the table away, and other diners are waiting."],"Cancel without calling.","Ask {B} to call instead and forget about it."],"why":"A reservation lets the restaurant plan, and a call keeps the plan working."},
+      {"p":"restaurant","r":["peer","peer"],"s":"At dinner, {A}'s soup arrives cold.","q":"What should {A} do?","ok":["When the server comes by, say quietly, \"Excuse me, my soup is cold. Could it be warmed?\""],"bad":[["Complain loudly so nearby tables hear.","A quiet word solves the problem without a scene."],"Eat it and leave a rude review.","Wave both arms at the server across the room."],"why":"Problems are raised quietly and kindly."},
       { p: 'restaurant', r: ['peer', 'peer'], s: '{A} ordered the {food}, and a different dish arrives.', q: 'What should {Ahe} do?',
         ok: ['Wait for the server to come near and say quietly, "Excuse me, I think I ordered the {food}."'], bad: [['Call across the room, "Hey! This is wrong!"', 'Shouting embarrasses the server and disturbs other diners.'], 'Eat it and complain online later.', 'Push the plate away and refuse to speak to the server.'], why: 'A quiet, friendly word fixes the problem without a scene.' },
       { p: 'restaurant', r: ['peer', 'priya'], s: '{B} has invited {A} to lunch to welcome {Ahim} to the team. The menu runs from \\$12 to \\$45.', q: 'What should {A} order?',
@@ -615,9 +625,9 @@
       { p: 'restaurant', r: ['peer', 'peer'], intro: '{A} and {B} are finishing dinner.', lines: [[0, 'Excuse me, when you have a moment, could we see the dessert menu?'], [1, 'Hey! Over here! We need the check!'], [0, 'Thank you so much. Dinner was lovely.']], fault: 1, why: 'Shouting across a restaurant puts the server on the spot and disturbs other diners.' },
       { p: 'restaurant', r: ['peer', 'peer'], intro: '{A} and {B} arrive at a restaurant.', lines: [[0, 'Good evening. We have a reservation for two under {Afull}.'], [1, 'We\'re twenty minutes late, but you can still seat us now, right?'], [0, 'Thank you for holding the table for us.']], fault: 1, why: 'Arriving late and demanding a table ignores the plans of the staff and other diners. A call ahead and a polite request are kinder.' }
     ],
-    good: ['Calling ahead if you will be late for a reservation', 'Saying thank you when a dish arrives', 'Raising a problem quietly with the server', 'Ordering near your host\'s price'],
-    rude: ['Snapping your fingers at a server', 'Sending food back with a loud complaint', 'Ordering the most expensive dish when someone else is treating', 'Ignoring the server when they speak to you'],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'spot', 'all'], 3: ['all', 'spot', 'sc'] }
+    good: [ "Greeting the host stand politely", "Waiting for everyone to be served before eating", "Thanking the server when you leave",'Calling ahead if you will be late for a reservation', 'Saying thank you when a dish arrives', 'Raising a problem quietly with the server', 'Ordering near your host\'s price'],
+    rude: [ ["Waving both arms to get a server's attention","catch the server's eye or raise a hand slightly"], ["Taking a phone call at the table","step outside if you must take a call"], ["Lingering for hours while people wait for tables","others are waiting for the table"],'Snapping your fingers at a server', 'Sending food back with a loud complaint', 'Ordering the most expensive dish when someone else is treating', 'Ignoring the server when they speak to you'],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'spot', 'all'], 3: ['all', 'spot', 'sc'] }
   }));
 
   G('adult.splitting-bill', bank('adult.splitting-bill', {
@@ -760,6 +770,8 @@
     ctxLine: 'Greeting people at a gathering:',
     rudeWhy: 'it ignores how the other person chose to greet you',
     sc: [
+      {"p":"office","r":["peer","elder"],"s":"{A} is sitting at {Ahis} desk when {B}, a visitor, is brought over to meet {Ahim}.","q":"What should {A} do?","ok":["Stand, smile, offer a hand and say {Ahis} name."],"bad":[["Stay seated and wave without looking up.","Standing shows respect."],"Nod and keep typing.","Ask the visitor to come back later."],"why":"Standing and a warm greeting say \"I am glad to meet you.\""},
+      {"p":"party","r":["peer","peer"],"s":"At a party, {B} greets {A} with a small bow.","q":"What is a courteous response?","ok":["Return a small bow or a nod and a warm hello."],"bad":[["Reach out and press a handshake on {B}.","Follow the other person's lead."],"Ask {B} why {Bhe} bowed.","Ignore it and walk past."],"why":"Matching the other person's greeting puts them at ease."},
       { p: 'office', r: ['peer', 'peer'], poses: { 1: 'heart' }, s: '{A} reaches out to shake hands with {B}, who smiles and places {Bhis} right hand on {Bhis} heart instead.', q: 'What should {A} do?',
         ok: ['Lower {Ahis} hand, smile, and nod or return the gesture.'], bad: [['Keep {Ahis} hand out until {B} shakes it.', 'Pressing a handshake ignores the greeting {B} chose.'], 'Ask {B} why {Bhe} doesn\'t shake hands.', 'Look away and say nothing.'], why: 'Follow the other person\'s lead; a warm greeting can take many forms.' },
       { p: 'party', r: ['peer', 'peer'], s: '{A} is seated at a party when the host brings over {B} to meet {Ahim}.', q: 'What should {A} do?',
@@ -767,9 +779,9 @@
       { p: 'office', r: ['peer', 'peer'], poses: { 0: 'shake', 1: 'shake' }, flip: { 1: true }, s: '{A} meets {B} at a job fair, and they shake hands.', q: 'What makes a good handshake?',
         ok: ['A firm, brief grip, palm to palm, while looking at {B} and saying {Ahis} name.'], bad: ['A limp grip while looking at the floor.', 'A crushing grip held for ten seconds.', 'Just the fingertips, to be gentle.'], why: 'Firm, brief and with a look at the person\'s face: that is the American handshake.' }
     ],
-    good: ['Standing and smiling when introduced', 'Returning a bow with a nod', 'Greeting a person who doesn\'t shake hands with a warm hello', 'Saying your name as you shake hands'],
-    rude: [['Pressing a handshake on someone who has bowed', 'it ignores the greeting they chose'], ['A limp handshake while looking away', 'a firm grip and a look at the person show you mean it'], ['Commenting on how someone chose to greet you', 'a greeting needs no comment'], ['Staying seated and scrolling while being introduced', 'it says the person isn\'t worth your attention']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'all'], 3: ['all', 'sc'] }
+    good: [ "Looking at the person while you say hello", "Repeating a new name: \"Nice to meet you, Ana\"", "Waiting to see which greeting the other person offers",'Standing and smiling when introduced', 'Returning a bow with a nod', 'Greeting a person who doesn\'t shake hands with a warm hello', 'Saying your name as you shake hands'],
+    rude: [ ["Shaking hands while looking over the person's shoulder","look at the person you are greeting"], ["A crushing handshake","firm and brief is enough"], ["Turning away before the introduction is finished","a greeting deserves your full attention"],['Pressing a handshake on someone who has bowed', 'it ignores the greeting they chose'], ['A limp handshake while looking away', 'a firm grip and a look at the person show you mean it'], ['Commenting on how someone chose to greet you', 'a greeting needs no comment'], ['Staying seated and scrolling while being introduced', 'it says the person isn\'t worth your attention']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'all'], 3: ['all', 'sc'] }
   }));
 
   G('adult.small-talk', bank('adult.small-talk', {
@@ -877,6 +889,8 @@
     ctxLine: 'Choosing a gift to bring to a dinner host:',
     rudeWhy: 'it adds work for the host right when guests are arriving',
     sc: [
+      {"p":"door","r":["peer","peer"],"s":"{A} is going to {B}'s dinner party and wants to bring {hostgift}.","q":"When should {A} give it?","ok":["At the door, with a quick \"This is for you to enjoy later.\""],"bad":[["In the middle of dinner, asking {B} to open it for everyone.","A host gift should never add work or interrupt the evening."],"At the end, asking {B} to serve it.","Never: hide it in the kitchen."],"why":"A host gift is handed over simply and enjoyed later."},
+      {"p":"door","r":["peer","peer"],"s":"{A} has bought loose cut flowers for {B}'s dinner party.","q":"What is the most helpful thing to do?","ok":["Put them in a simple vase first, or send them the day before or after."],"bad":[["Hand them over at the door and ask for a vase.","The host is pulled away from guests to find a vase."],"Leave them on the doorstep.","Put them in {B}'s sink."],"why":"A gift should never add work for the host."},
       { p: 'door', r: ['peer', 'peer'], holds: { 0: 'gift' }, poses: { 0: 'give' }, s: '{A} hands {B} {hostgift} at the door of {Bhis} dinner party.', q: 'What should {A} expect?',
         ok: ['That {B} will put it aside to enjoy later.'], bad: [['That {B} will open and serve it tonight.', 'A host gift is for later; the host has already planned the meal.'], 'That {B} will open it in front of everyone.', 'That {B} will send it back with {Ahim}.'], why: 'A host gift says thank you; the host enjoys it later, or shares it if {Bhe} likes.' },
       { p: 'door', r: ['peer', 'peer'], s: '{A} wants to bring flowers to {B}\'s dinner.', q: 'How can {Ahe} make them easy for the host?',
@@ -884,10 +898,10 @@
       { p: 'door', r: ['peer', 'peer'], s: '{A} is going to {B}\'s dinner and wonders about bringing a homemade dish of {food}.', q: 'What is the courteous plan?',
         ok: ['Bring it only if {B} asks for a dish; otherwise bring a small gift to enjoy later.'], bad: [['Bring it and expect it on the table.', 'An unplanned dish upsets the host\'s menu.'], 'Bring it and heat it in {B}\'s oven during dinner.', 'Bring it and tell guests the host forgot dessert.'], why: 'The host planned the menu. Bring food when invited to; otherwise choose a gift for later.' }
     ],
-    good: ['Bringing flowers already in a vase', 'Bringing a box of chocolates for the host to enjoy later', 'Bringing a jar of jam for the host\'s breakfast', 'Bringing a dish when the host asked for one'],
+    good: [ "Bringing a small treat for the host to enjoy later", "Bringing a jar of something for the pantry", "Saying \"This is for you to enjoy another day\"",'Bringing flowers already in a vase', 'Bringing a box of chocolates for the host to enjoy later', 'Bringing a jar of jam for the host\'s breakfast', 'Bringing a dish when the host asked for one'],
     fine: ['Bringing nothing to a casual get-together where gifts are not the custom'],
-    rude: [['Expecting the host to serve the dessert you brought', 'the host planned the menu'], ['Handing the host a loose bunch of flowers as guests arrive', 'it sends the host hunting for a vase'], ['Asking the host to open your gift in front of everyone', 'it puts the host and other guests on the spot']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'all'], 3: ['all', 'sc'] }
+    rude: [ ["Bringing a dish and asking for oven space","that pulls the host into the kitchen"], ["Bringing a big, costly gift to a casual dinner","a small thank-you fits the occasion"], ["Asking the host to open the gift and pass it around","the gift is for the host to enjoy later"],['Expecting the host to serve the dessert you brought', 'the host planned the menu'], ['Handing the host a loose bunch of flowers as guests arrive', 'it sends the host hunting for a vase'], ['Asking the host to open your gift in front of everyone', 'it puts the host and other guests on the spot']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'all'], 3: ['all', 'sc'] }
   }));
 
   G('adult.hosting-dinner', bank('adult.hosting-dinner', {
@@ -917,6 +931,8 @@
     rudeWhy: 'it adds to the host\'s load or ignores the household',
     order: [{ title: 'Put a guest\'s visit in order.', steps: ['Agree on arrival and departure dates ahead', 'Arrive when planned, with a small gift', 'Follow the household\'s routine', 'Strip the bed or tidy the room before leaving', 'Send a thank-you note after the visit'], all: true }],
     sc: [
+      {"p":"home","r":["peer","peer"],"s":"{A} is staying with {B} for three nights. On the second morning, {A}'s room is a mess.","q":"What should {A} do?","ok":["Make the bed and tidy the room each morning."],"bad":[["Leave it for {B} to tidy.","A guest keeps their space tidy."],"Close the door and tidy only on the last day.","Ask {B} where the cleaning service is."],"why":"A tidy guest lightens the host's load."},
+      {"p":"home","r":["peer","peer"],"s":"{B} will be busy working one afternoon while {A} is visiting.","q":"What should {A} do?","ok":["Enjoy some quiet time: read, take a walk or explore on {Ahis} own."],"bad":[["Sigh that there is nothing to do.","A guest who can enjoy quiet time is a gift to the host."],"Ask {B} to skip work.","Knock on {B}'s door every half hour."],"why":"A good guest doesn't expect to be entertained every hour."},
       { p: 'home', r: ['peer', 'peer'], s: '{A} is staying with {B} for the weekend and would like to stay until Tuesday.', q: 'What should {A} do?',
         ok: ['Ask early and make it easy to say no: "Would Tuesday be all right? No worries if not."'], bad: [['Stay until Tuesday and mention it on Sunday night.', 'Changing the dates is a request, not an announcement.'], 'Ask on Monday morning.', 'Hint about it until {B} offers.'], why: 'The host may have plans. A clear, early request respects them.' },
       { p: 'kitchen', r: ['peer', 'peer'], s: 'At {B}\'s home, breakfast is at 7:30. {A} usually sleeps late.', q: 'What should {A} do?',
@@ -924,9 +940,9 @@
       { p: 'home', r: ['peer', 'peer'], s: '{B} has houseguests arriving tonight.', q: 'What will help them most?',
         ok: ['Set out towels and sheets, explain the key and the plan, and give them some time to rest.'], bad: ['Plan an activity for every hour.', 'Let them find things on their own.', 'Tell them the house rules as they break them.'], why: 'A host who sets things out and explains the plan spares guests from asking for every small thing.' }
     ],
-    good: ['Making your bed each morning', 'Offering to wash the dishes', 'Asking before extending your stay', 'Sending a thank-you note after the visit'],
-    rude: [['Extending your stay without asking', 'the host may have plans'], ['Expecting to be entertained every hour', 'a host needs rest, too'], ['Leaving wet towels on the floor', 'it leaves cleanup for the host'], ['Ignoring the household\'s quiet hours', 'the household has its routine']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'order', 'all'], 3: ['all', 'order', 'sc'] }
+    good: [ "Agreeing on arrival and departure dates ahead", "Keeping your belongings in your room", "Stripping the bed if the host asks on your last morning",'Making your bed each morning', 'Offering to wash the dishes', 'Asking before extending your stay', 'Sending a thank-you note after the visit'],
+    rude: [ ["Arriving a day early without asking","agree on dates ahead"], ["Using the last of the hot water every morning","share the household's things fairly"], ["Inviting your own friends over without asking","it is the host's home"],['Extending your stay without asking', 'the host may have plans'], ['Expecting to be entertained every hour', 'a host needs rest, too'], ['Leaving wet towels on the floor', 'it leaves cleanup for the host'], ['Ignoring the household\'s quiet hours', 'the household has its routine']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'order', 'all'], 3: ['all', 'order', 'sc'] }
   }));
 
   // ================================================================ Unit 5: Notes, Letters and Email
@@ -989,6 +1005,8 @@
     rudeWhy: 'it explains or compares the loss instead of comforting',
     custom: { order: function (R, ctx, T) { return noteOrderP(R, ctx, 'condolence', T); }, missing: function (R, ctx, T) { return noteMissingP(R, ctx, 'condolence', T); } },
     sc: [
+      {"p":"home","r":["peer","peer"],"s":"{B}'s grandmother has died. {A} wants to write a note but worries about saying the wrong thing.","q":"What is best?","ok":["Write a short note: \"I'm so sorry about your grandmother. I remember her garden and her laugh.\""],"bad":[["Send nothing so as not to say the wrong thing.","A short note is far better than none."],"Write \"I know exactly how you feel.\"","Write a long letter about {A}'s own losses."],"why":"Simple, sincere words are best."},
+      {"p":"home","r":["peer","peer"],"s":"{A} is closing a condolence note to {B}.","q":"Which closing fits best?","ok":["\"With deepest sympathy, {A}\""],"bad":[["\"Cheer up soon! {A}\"","A condolence note closes with sympathy."],"\"Best of luck, {A}\"","\"See you at the party, {A}\""],"why":"A condolence note closes with sympathy."},
       { p: null, r: ['peer', 'peer'], s: '{A}\'s draft to {B}, whose father died, includes the line "Everything happens for a reason."', q: 'What should {A} write instead?',
         ok: ['A memory or a good quality: "Your dad always made everyone laugh at the block party."'], bad: [['"I know exactly how you feel."', 'Comparing losses turns attention away from {B}.'], '"At least he lived a long life."', '"Let me know if you need anything."'], why: 'A memory tells {B} that {Bhis} father mattered to others too. Explanations of the loss can feel dismissive.' },
       { p: null, r: ['peer', 'peer'], s: '{A} wants to help {B} after a loss.', q: 'Which offer is best?',
@@ -996,9 +1014,9 @@
       { p: null, r: ['peer', 'peer'], s: '{A} doesn\'t know what to say to {B}, whose grandmother has died, and is afraid of saying the wrong thing.', q: 'What should {A} do?',
         ok: ['Send a short note: "I\'m so sorry about your grandmother. Thinking of you."'], bad: [['Say nothing until {Ahe} thinks of the perfect words.', 'Silence can feel like not caring; simple words are enough.'], 'Write a long letter about {Ahis} own losses.', 'Wait a year and then mention it.'], why: 'Simple, sincere words are best, and a short note is far better than none.' }
     ],
-    good: ['"I\'m so sorry for your loss."', '"She was the kindest teacher I ever had."', '"I\'ll bring dinner on Thursday."', '"Thinking of you and your family."'],
-    rude: [['"I know how you feel."', 'it turns the attention to the writer'], ['"Everything happens for a reason."', 'it explains the loss instead of comforting'], ['"At least he lived a long life."', '"at least" makes the loss sound small'], ['"You\'ll get over it soon."', 'grief has no schedule']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'missing', 'all'], 3: ['all', 'order', 'missing', 'sc'] }
+    good: [ "Sharing one happy memory of the person who died", "Offering one specific kind of help", "Signing \"With sympathy\"",'"I\'m so sorry for your loss."', '"She was the kindest teacher I ever had."', '"I\'ll bring dinner on Thursday."', '"Thinking of you and your family."'],
+    rude: [ ["Writing \"Everything happens for a reason\"","it explains the loss instead of comforting"], ["Writing \"I know how you feel\"","it turns attention away from the grieving person"], ["Asking how the person died","the note is for comfort, not questions"],['"I know how you feel."', 'it turns the attention to the writer'], ['"Everything happens for a reason."', 'it explains the loss instead of comforting'], ['"At least he lived a long life."', '"at least" makes the loss sound small'], ['"You\'ll get over it soon."', 'grief has no schedule']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'missing', 'all'], 3: ['all', 'order', 'missing', 'sc'] }
   }));
 
   G('adult.letters', bank('adult.letters', {
@@ -1146,6 +1164,8 @@
     rudeWhy: 'it disturbs the meeting or shows you aren\'t paying attention',
     order: [{ title: 'Put the steps of joining a video meeting in order.', steps: ['Test your camera and microphone a few minutes early', 'Choose a quiet spot with light on your face', 'Join on time and say hello', 'Mute when you are not speaking', 'Unmute and look at the camera when it\'s your turn'], all: true }],
     sc: [
+      {"p":"office","r":["peer","peer"],"s":"{A} has a video meeting at 10:00 and has never used the meeting app before.","q":"What should {A} do?","ok":["Open the app a few minutes early and test the sound and camera."],"bad":[["Join at 10:05 and fix the sound while everyone waits.","Fumbling with sound wastes everyone's time at once."],"Skip the meeting.","Join with the camera pointed at the ceiling."],"why":"Joining on time with working sound respects everyone's minutes."},
+      {"p":"office","r":["peer","peer"],"s":"During a video meeting, {B} is speaking and {A} has a question.","q":"What should {A} do?","ok":["Wait for {B} to finish, or use the raise-hand button, then unmute and ask."],"bad":[["Unmute and talk over {B}.","Interrupting is as rude on a screen as in a room."],"Type the question in all capital letters.","Leave the meeting and email later."],"why":"A video meeting is a room you walked into."},
       { p: 'office', r: ['peer', 'peer'], s: 'In the middle of a video meeting, {A}\'s dog starts barking.', q: 'What should {A} do?',
         ok: ['Mute right away, and if {Ahe} needs to speak, say "One moment" and settle the dog.'], bad: [['Keep talking over the barking.', 'An open microphone drowns out whoever is speaking.'], 'Leave the meeting without a word.', 'Apologize at length to the whole group.'], why: 'Muting protects the meeting; a light word is enough.' },
       { p: 'office', r: ['peer', 'elder'], s: '{A} wants to answer emails during a long video meeting with the camera off.', q: 'What is best?',
@@ -1153,9 +1173,9 @@
       { p: 'office', r: ['peer', 'peer'], s: '{A} is about to present on a video call.', q: 'Where should {Ahe} look while speaking?',
         ok: ['At the camera.'], bad: ['At {Ahis} own picture on the screen.', 'At {Ahis} phone.', 'Out the window.'], why: 'Looking at the camera is how you make eye contact on a screen.' }
     ],
-    good: ['Muting when you aren\'t speaking', 'Testing your sound before the meeting', 'Looking at the camera when you speak', 'Sending a quick note if you will join late'],
-    rude: [['Eating a crunchy snack with your microphone on', 'microphones pick up every crunch'], ['Joining ten minutes late without a word', 'everyone blocked out the same time'], ['Answering emails while a colleague presents', 'it shows you aren\'t listening'], ['Taking a call from another room with the microphone open', 'the meeting hears it all']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'order', 'all'], 3: ['all', 'order', 'sc'] }
+    good: [ "Checking what is behind you before you turn on the camera", "Saying your name before speaking on a large call", "Using the raise-hand button to ask a question",'Muting when you aren\'t speaking', 'Testing your sound before the meeting', 'Looking at the camera when you speak', 'Sending a quick note if you will join late'],
+    rude: [ ["Leaving the camera on while you walk around the house","it distracts everyone"], ["Typing loudly with your microphone on","microphones pick up every key"], ["Talking over a colleague who is presenting","wait your turn"],['Eating a crunchy snack with your microphone on', 'microphones pick up every crunch'], ['Joining ten minutes late without a word', 'everyone blocked out the same time'], ['Answering emails while a colleague presents', 'it shows you aren\'t listening'], ['Taking a call from another room with the microphone open', 'the meeting hears it all']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'order', 'all'], 3: ['all', 'order', 'sc'] }
   }));
 
   // ================================================================ Unit 7: Work
@@ -1166,6 +1186,8 @@
     rudeWhy: 'it shows less respect for someone\'s time or role',
     order: [{ title: 'Put the steps of an interview day in order.', steps: ['Learn about the company and plan your questions', 'Arrive about ten minutes early', 'Greet the receptionist warmly and give your name', 'Stand, smile and shake hands with the interviewer', 'Listen fully and answer truthfully', 'Ask one or two good questions', 'Send a thank-you within a day'] }],
     sc: [
+      {"p":"office","r":["peer","priya"],"s":"{A}'s interview with {B} is at 2:00, and traffic is very heavy. {A} will be about fifteen minutes late.","q":"What should {A} do?","ok":["Call ahead, apologize, and give the new arrival time."],"bad":[["Arrive late and say nothing about it.","Being on time respects the interviewer's schedule; a call is the next best thing."],"Skip the interview without a word.","Arrive late and blame the receptionist."],"why":"A call respects the interviewer's schedule."},
+      {"p":"office","r":["peer","priya"],"s":"{B} asks {A}, \"Why did you leave your last job?\"","q":"Which answer fits best?","ok":["A short, truthful answer about what {Ahe} hopes to do next."],"bad":[["A long list of complaints about {Ahis} last boss.","Criticizing a past employer at length reflects poorly on you."],"Refuse to answer.","Change the subject to vacation days."],"why":"Listen, answer truthfully, and stay positive."},
       { p: 'office', r: ['peer', 'peer'], s: '{A} arrives for an interview. The receptionist, {B}, is on the phone.', q: 'What should {A} do?',
         ok: ['Wait quietly until {B} is free, then greet {Bhim} and give {Ahis} name and the time of the interview.'], bad: [['Tap the desk to get {Bhis} attention.', 'The receptionist\'s impression counts too, and impatience shows.'], 'Walk past to find the interviewer.', 'Sit down and wait to be noticed, without a word.'], why: 'Courtesy to the front desk is courtesy to the company, and it is noticed.' },
       { p: 'office', r: ['teen', 'priya'], s: '{A} is interviewing for a job at a store where staff wear polo shirts and khakis.', q: 'What should {Ahe} wear?',
@@ -1175,9 +1197,9 @@
       { p: null, r: ['peer', 'priya'], s: '{A} had an interview with {B} this morning.', q: 'When should {Ahe} send a thank-you?',
         ok: ['Within a day, by email or a short note.'], bad: ['After hearing whether {Ahe} got the job.', 'In two weeks.', 'Only if {Bhe} asks for one.'], why: 'A prompt thank-you shows follow-through.' }
     ],
-    good: ['Arriving about ten minutes early', 'Thanking the receptionist', 'Silencing your phone in the waiting room', 'Sending a thank-you email within a day'],
-    rude: [['Being curt with the receptionist', 'everyone you meet may be asked about you'], ['Arriving twenty minutes late without a call', 'it wastes the interviewer\'s schedule'], ['Checking your phone while the interviewer talks', 'it says the interview isn\'t worth your attention'], ['Criticizing your last boss at length', 'it makes the interviewer wonder what you would say about them']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'order', 'all'], 3: ['all', 'order', 'sc'] }
+    good: [ "Learning about the company before the interview", "Greeting the receptionist warmly", "Thanking the interviewer at the end",'Arriving about ten minutes early', 'Thanking the receptionist', 'Silencing your phone in the waiting room', 'Sending a thank-you email within a day'],
+    rude: [ ["Interrupting the interviewer's questions","listen fully before answering"], ["Chewing gum during the interview","it looks careless"], ["Leaving without a goodbye or a thank-you","thank the interviewer for the time"],['Being curt with the receptionist', 'everyone you meet may be asked about you'], ['Arriving twenty minutes late without a call', 'it wastes the interviewer\'s schedule'], ['Checking your phone while the interviewer talks', 'it says the interview isn\'t worth your attention'], ['Criticizing your last boss at length', 'it makes the interviewer wonder what you would say about them']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'order', 'all'], 3: ['all', 'order', 'sc'] }
   }));
 
   G('adult.dress-codes', bank('adult.dress-codes', {
@@ -1223,6 +1245,8 @@
       { p: 'office', r: ['peer', 'peer', 'peer'], intro: 'A project meeting.', lines: [[0, 'I\'ll share the schedule, then we can talk about the launch.'], [1, 'Sorry, before you finish, I just want to say the schedule is wrong.'], [2, 'Could we hear the whole schedule first and then discuss it?'], [0, 'Thanks. I\'ll send notes after the meeting.']], fault: 1, why: 'Breaking in before someone finishes cuts off the plan before anyone has heard it. Wait for a pause.' }
     ],
     sc: [
+      {"p":"office","r":["peer","peer","peer"],"s":"In a team meeting, {B} suggests a new schedule. Later, {A} likes the idea and wants to support it.","q":"What should {A} say?","ok":["\"I agree with {B}'s idea about the schedule.\""],"bad":[["\"Here's my idea: a new schedule.\"","Repeating a colleague's idea as your own breaks trust."],"Nothing, and tell the boss later it was {Ahis} idea.","\"That idea won't work,\" and then suggest the same thing."],"why":"Credit the idea by name."},
+      {"p":"office","r":["peer","peer"],"s":"{B} sent a short report to read before a 3:00 meeting. At 2:55, {A} still has not opened it.","q":"What is the most courteous plan?","ok":["Read it quickly now, and from now on read such reports ahead of time."],"bad":[["Skim it during the meeting while {B} is talking.","Coming prepared respects everyone's time."],"Ask {B} to read the whole report aloud to the group.","Skip the meeting without a word."],"why":"Come prepared: a meeting costs everyone the same hour."},
       { p: 'office', r: ['peer', 'peer'], s: '{B} is explaining a plan when {A} has an idea.', q: 'What should {A} do?',
         ok: ['Jot it down and, at a pause, say, "Can I add something?"'], bad: [['Break in right away so the idea isn\'t lost.', 'Interrupting cuts off {B} before the plan is heard.'], 'Whisper it to the person next to {Ahim}.', 'Keep it to {Ahim}self forever.'], why: 'Letting others finish lets the best ideas come out, not just the loudest.' },
       { p: 'office', r: ['peer', 'peer'], s: 'In a meeting, {A} wants to build on an idea {B} raised last week.', q: 'How should {Ahe} say it?',
@@ -1230,9 +1254,9 @@
       { p: 'office', r: ['peer', 'peer'], s: 'At the end of a meeting, {A} promised to send the notes.', q: 'When should {Ahe} do it?',
         ok: ['That day or the next, as promised.'], bad: ['When someone reminds {Ahim}.', 'Next month.', 'Never; others took notes too.'], why: 'Following up shows that {Ahis} word means something.' }
     ],
-    good: ['Reading the agenda before the meeting', 'Saying "Building on Ruby\'s idea…"', 'Sending the notes you promised', 'Arriving a minute or two early'],
-    rude: [['Interrupting to look sharp', 'let others finish'], ['Repeating a colleague\'s idea as your own', 'credit belongs to the person who had it'], ['Answering email during a colleague\'s presentation', 'give the meeting your attention'], ['Arriving late and asking for a recap', 'it makes everyone repeat themselves']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'spot', 'all'], 3: ['all', 'spot', 'sc'] }
+    good: [ "Bringing the notes you promised", "Keeping your comment to the topic", "Ending on time",'Reading the agenda before the meeting', 'Saying "Building on Ruby\'s idea…"', 'Sending the notes you promised', 'Arriving a minute or two early'],
+    rude: [ ["Arriving ten minutes late with no word","lateness costs everyone the same minutes"], ["Starting a side conversation while someone speaks","let others finish"], ["Taking over the meeting with an unrelated topic","keep to the topic"],['Interrupting to look sharp', 'let others finish'], ['Repeating a colleague\'s idea as your own', 'credit belongs to the person who had it'], ['Answering email during a colleague\'s presentation', 'give the meeting your attention'], ['Arriving late and asking for a recap', 'it makes everyone repeat themselves']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'spot', 'all'], 3: ['all', 'spot', 'sc'] }
   }));
 
   G('adult.shared-spaces', bank('adult.shared-spaces', {
@@ -1241,6 +1265,8 @@
     ctxLine: 'In the office kitchen:',
     rudeWhy: 'it leaves work or trouble for the next person',
     sc: [
+      {"p":"kitchen","r":["peer","peer"],"s":"{A} heats leftover fish in the office microwave at lunchtime.","q":"What is the most considerate choice?","ok":["Choose a lunch with a milder smell for the office, or eat the fish at home."],"bad":[["Heat the fish every day and leave the door open.","Strong smells reach everyone nearby."],"Heat it and then complain about the smell.","Ask {B} to air out the kitchen."],"why":"Keep smells modest in shared spaces."},
+      {"p":"office","r":["peer","peer"],"s":"The office printer runs out of paper while {A} is printing.","q":"What should {A} do?","ok":["Refill the paper tray before leaving."],"bad":[["Leave it empty for the next person.","Refill what you empty."],"Move to another printer and say nothing.","Put a note on it saying \"Out of paper.\""],"why":"Leave a shared space as you would want to find it."},
       { p: 'kitchen', r: ['peer', 'peer'], holds: { 0: 'cup' }, s: '{A} pours the last cup of coffee in the office kitchen.', q: 'What should {Ahe} do?',
         ok: ['Make a fresh pot, or let whoever handles it know the coffee is out.'], bad: [['Leave the empty pot on the warmer.', 'The next tired person finds an empty, scorching pot.'], 'Hide the empty pot.', 'Pour half back for the next person.'], why: 'Refill what you empty.' },
       { p: 'kitchen', r: ['peer', 'peer'], s: '{A} burned some rice in a pot and wants to leave it "to soak" in the office sink.', q: 'What is best?',
@@ -1248,9 +1274,9 @@
       { p: 'kitchen', r: ['peer', 'peer'], s: 'The fridge is cleared every Friday. {A}\'s container of {food} has been there since Monday.', q: 'What should {Ahe} do?',
         ok: ['Take it home or throw it out before Friday, and label lunches with name and date.'], bad: ['Leave it; it is someone else\'s job.', 'Move it to the back so it isn\'t thrown out.', 'Put {B}\'s name on it.'], why: 'Labels and clearing out keep the shared fridge usable for everyone.' }
     ],
-    good: ['Washing your mug right away', 'Making a new pot after taking the last cup', 'Labeling your food with your name and the date', 'Wiping up a spill on the counter'],
-    rude: [['Eating a lunch from the fridge that isn\'t yours', 'it isn\'t yours to take'], ['Leaving a dish in the sink for days', 'someone else has to deal with it'], ['Reheating strong-smelling fish in a small office', 'smells travel to everyone nearby'], ['Taking a long phone call on speaker in the break room', 'others share the space']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'all'], 3: ['all', 'sc'] }
+    good: [ "Wiping the microwave after a splatter", "Putting your mug in the dishwasher", "Taking phone calls away from shared desks",'Washing your mug right away', 'Making a new pot after taking the last cup', 'Labeling your food with your name and the date', 'Wiping up a spill on the counter'],
+    rude: [ ["Eating a colleague's labeled yogurt","don't take what isn't yours"], ["Leaving old food in the fridge for weeks","label and clear out your food"], ["Leaving your dishes in the sink \"to soak\"","it becomes someone else's job"],['Eating a lunch from the fridge that isn\'t yours', 'it isn\'t yours to take'], ['Leaving a dish in the sink for days', 'someone else has to deal with it'], ['Reheating strong-smelling fish in a small office', 'smells travel to everyone nearby'], ['Taking a long phone call on speaker in the break room', 'others share the space']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'all'], 3: ['all', 'sc'] }
   }));
 
   // ================================================================ Unit 8: Life's Big Occasions
@@ -1287,6 +1313,8 @@
     rudeWhy: 'it draws attention or adds a burden for the family',
     order: [{ title: 'Put the steps of attending a funeral in order.', steps: ['Dress in quiet, dark or muted colors', 'Arrive early and silence your phone', 'Sign the guest book', 'Follow the family\'s customs during the service', 'Offer the family short, sincere words'], all: true }],
     sc: [
+      {"p":"hall","r":["peer","peer"],"s":"{A} is going to the funeral of {B}'s father and wonders what to wear.","q":"What fits best?","ok":["Quiet colors, such as dark gray, navy or black."],"bad":[["A bright party outfit.","Quiet dress keeps the focus where it belongs."],"Workout clothes.","A shirt with a loud slogan."],"why":"Quiet dress shows respect."},
+      {"p":"hall","r":["peer","peer"],"s":"At the memorial service, {A} reaches {B}, whose mother has died.","q":"What should {A} say?","ok":["\"I'm so sorry. Your mother was always so kind to me.\""],"bad":[["\"At least she lived a long life.\"","Phrases that explain the loss don't comfort."],"A long story about {Ahis} own family.","Nothing, and slip out before the family sees {Ahim}."],"why":"Short, sincere words are always enough."},
       { p: 'hall', r: ['peer', 'diaz'], moods: { 1: 'sad' }, s: 'At the service for {B}\'s wife, {A} reaches {B} in the receiving line.', q: 'What should {A} say?',
         ok: ['"I\'m so sorry. She was always so kind to everyone."'], bad: [['"I know exactly how you feel."', 'Comparing losses turns attention to the speaker.'], '"How did it happen?"', '"At least she isn\'t suffering anymore."'], why: 'Short, sincere words and a good memory comfort the family.' },
       { p: 'hall', r: ['peer', 'peer'], s: '{A} is going to a funeral in a faith {Ahe} doesn\'t know.', q: 'What should {Ahe} do?',
@@ -1294,9 +1322,9 @@
       { p: null, r: ['peer', 'peer'], s: '{A} doesn\'t know what to say to {B}\'s family and is thinking of skipping the memorial.', q: 'What would most people advise?',
         ok: ['Go; "I\'m so sorry" is enough, and showing up matters most.'], bad: [['Skip it so as not to say the wrong thing.', 'Families remember who came.'], 'Go but leave before speaking to anyone.', 'Send a text during the service.'], why: 'Showing up matters most; simple words are enough.' }
     ],
-    good: ['Wearing quiet colors', 'Arriving early', 'Signing the guest book', 'Saying "I\'m so sorry for your loss"'],
-    rude: [['Arriving late and walking in during the service', 'it disturbs the service'], ['Asking the family how the person died', 'it is painful and personal'], ['Taking a phone call in the service', 'silence your phone'], ['Telling the family "Everything happens for a reason"', 'it explains instead of comforting']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'order', 'all'], 3: ['all', 'order', 'sc'] }
+    good: [ "Arriving early for the service", "Speaking quietly before the service begins", "Following the family's customs for the service",'Wearing quiet colors', 'Arriving early', 'Signing the guest book', 'Saying "I\'m so sorry for your loss"'],
+    rude: [ ["Arriving late and walking in during a prayer","arrive early so you don't disturb the service"], ["Checking your phone during the service","silence it and set it away"], ["Telling the family how they should mourn","follow their customs"],['Arriving late and walking in during the service', 'it disturbs the service'], ['Asking the family how the person died', 'it is painful and personal'], ['Taking a phone call in the service', 'silence your phone'], ['Telling the family "Everything happens for a reason"', 'it explains instead of comforting']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'order', 'all'], 3: ['all', 'order', 'sc'] }
   }));
 
   G('adult.visiting-bereaved', bank('adult.visiting-bereaved', {
@@ -1333,6 +1361,8 @@
       { title: '{B}', msgs: [[1, 'Surgery went fine. I\'m in the hospital until Monday.']], q: 'Which reply is best?', ok: ['So glad it went well! Would you like a visitor this weekend, or would you rather rest?'], bad: ['I\'ll come by tonight with a few friends!', 'What exactly did they do? Tell me everything.', 'ok'], why: 'Asking first lets {B} choose, and gives {Bhim} an easy way to say "not yet."' }
     ],
     sc: [
+      {"p":"home","r":["peer","peer"],"s":"{B} just came home with a new baby. {A} would like to visit.","q":"What should {A} do?","ok":["Text first, ask when is a good time, and keep the visit short."],"bad":[["Drop by unannounced and stay all afternoon.","New parents need rest more than company."],"Arrive with a group of friends.","Ask to hold the baby the moment {Ahe} walks in."],"why":"Ask first and keep it short."},
+      {"p":"home","r":["peer","peer"],"s":"{A} planned to visit {B} in the hospital tomorrow, but {Ahe} has a cold.","q":"What should {A} do?","ok":["Stay home, send a kind message, and visit after getting well."],"bad":[["Visit anyway and keep {Ahis} distance.","Staying home when sick protects someone recovering."],"Visit and not mention the cold.","Bring the cold medicine to share."],"why":"Staying home when sick is the kind choice."},
       { p: 'home', r: ['peer', 'peer'], s: '{A} has a cold and was planning to meet {B}\'s newborn this weekend.', q: 'What should {A} do?',
         ok: ['Stay home and offer to drop off a meal at the door instead.'], bad: [['Visit but keep a little distance.', 'Staying home when sick is the widely agreed way to protect a newborn.'], 'Visit and hold the baby briefly.', 'Visit without mentioning the cold.'], why: 'Stay home if you are sick; a meal at the door still helps.' },
       { p: 'home', r: ['peer', 'peer'], s: '{A} visits {B} and {Bhis} new baby.', q: 'What helps most?',
@@ -1340,9 +1370,9 @@
       { p: 'doctor', r: ['peer', 'peer'], s: '{A} wants to visit {B}, who is recovering in the hospital.', q: 'What should {A} do first?',
         ok: ['Ask {B} if a visit would be welcome, and check the visiting hours.'], bad: [['Drop in as a surprise.', 'Patients need rest; let {B} choose.'], 'Call the nurses for {B}\'s medical details.', 'Bring a big group to cheer {Bhim} up.'], why: 'Asking first lets {B} choose a good time, or say not yet.' }
     ],
-    good: ['Texting before you visit', 'Staying home when you have a cold', 'Washing your hands when you arrive', 'Bringing a meal for the freezer'],
-    rude: [['Dropping in unannounced', 'let them choose a good time'], ['Staying for three hours', 'patients and new parents need rest'], ['Asking to hold the newborn as soon as you arrive', 'that is the parents\' offer to make'], ['Visiting a newborn while you have a cold', 'stay home when sick']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'text', 'all'], 3: ['all', 'text', 'sc'] }
+    good: [ "Bringing a meal the family can freeze", "Offering to run an errand", "Sending a card instead when the family wants quiet",'Texting before you visit', 'Staying home when you have a cold', 'Washing your hands when you arrive', 'Bringing a meal for the freezer'],
+    rude: [ ["Staying for hours when the patient looks tired","keep visits short"], ["Waking a sleeping baby to see it","the family needs rest"], ["Posting photos of the baby without asking","let the family share their news"],['Dropping in unannounced', 'let them choose a good time'], ['Staying for three hours', 'patients and new parents need rest'], ['Asking to hold the newborn as soon as you arrive', 'that is the parents\' offer to make'], ['Visiting a newborn while you have a cold', 'stay home when sick']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'text', 'all'], 3: ['all', 'text', 'sc'] }
   }));
 
   G('adult.gifts-regifting', bank('adult.gifts-regifting', {
@@ -1383,6 +1413,8 @@
     rudeWhy: 'it turns a favor into a burden for the lender',
     order: [{ title: 'Put the steps of borrowing a neighbor\'s {item} in order.', steps: ['Ask, and say when you will return it', 'Use it with care', 'Clean it and put back anything you used up', 'Return it on time, with a thank-you'], all: true }],
     sc: [
+      {"p":"home","r":["peer","peer"],"s":"{A} borrowed {B}'s {item} for the weekend. It is now Monday evening.","q":"What should {A} do?","ok":["Return it clean and on time, with thanks."],"bad":[["Keep it until {B} asks for it.","The lender should not have to chase you."],"Lend it to another friend first.","Return it dirty and say nothing."],"why":"Return it on time, in as good shape or better."},
+      {"p":"home","r":["peer","peer"],"s":"{A} borrowed a book from {B} and spilled water on it.","q":"What should {A} do?","ok":["Tell {B}, apologize, and replace the book."],"bad":[["Return it and hope {B} doesn't notice.","Replacing what you break shows you value the lender's trust."],"Keep it so {B} won't see.","Return it and blame the rain."],"why":"Replace what you break."},
       { p: 'street', r: ['peer', 'peer'], s: '{A} borrowed {B}\'s car for the weekend. The tank was full when {Ahe} took it.', q: 'What should {A} do before returning it?',
         ok: ['Fill the tank, clear out any trash, and return it when promised.'], bad: [['Return it with whatever gas is left.', 'Refilling what you used is part of returning it in as good shape.'], 'Leave a note saying the tank is low.', 'Keep it an extra day without asking.'], why: 'Return it as good as or better than you found it.' },
       { p: 'home', r: ['peer', 'elder'], s: '{A} borrowed a serving dish from {B}, and it cracked at {Ahis} party.', q: 'What should {A} do?',
@@ -1390,9 +1422,9 @@
       { p: 'street', r: ['peer', 'peer'], s: '{B} asks to borrow {A}\'s {item}, which {A} would be very upset to lose.', q: 'What is wise?',
         ok: ['Kindly say no, or offer to help with the job instead.'], bad: ['Lend it and worry the whole time.', 'Lend it and charge a fee.', 'Pretend {Ahe} doesn\'t own one.'], why: 'Lend only what you can afford to lose; it protects the friendship.' }
     ],
-    good: ['Returning a ladder on the day you promised', 'Washing a borrowed dish before returning it', 'Telling the owner you broke something', 'Refilling a borrowed car\'s tank'],
-    rude: [['Returning a car with an empty tank', 'refill what you used'], ['Keeping a book for a year without asking', 'return it on time, or ask'], ['Lending a borrowed item to someone else', 'it wasn\'t yours to lend'], ['Returning a tool broken without a word', 'tell the owner and fix it']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'order', 'all'], 3: ['all', 'order', 'sc'] }
+    good: [ "Asking before you borrow", "Refilling a borrowed tank before returning it", "Returning a borrowed dish washed",'Returning a ladder on the day you promised', 'Washing a borrowed dish before returning it', 'Telling the owner you broke something', 'Refilling a borrowed car\'s tank'],
+    rude: [ ["Borrowing a tool without asking","ask first"], ["Returning a borrowed car with an empty tank","return it as you found it, or better"], ["Lending out something you borrowed","it isn't yours to lend"],['Returning a car with an empty tank', 'refill what you used'], ['Keeping a book for a year without asking', 'return it on time, or ask'], ['Lending a borrowed item to someone else', 'it wasn\'t yours to lend'], ['Returning a tool broken without a word', 'tell the owner and fix it']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'order', 'all'], 3: ['all', 'order', 'sc'] }
   }));
 
   G('adult.neighbors', bank('adult.neighbors', {
@@ -1401,6 +1433,8 @@
     ctxLine: 'Living next door to others:',
     rudeWhy: 'it makes your home a burden on theirs',
     sc: [
+      {"p":"street","r":["peer","peer"],"s":"{A} is planning a backyard party on Saturday night.","q":"What is a considerate step for the neighbors?","ok":["Let them know ahead, give a phone number, and keep the noise down by a reasonable hour."],"bad":[["Say nothing and play loud music past midnight.","A heads-up lets neighbors plan."],"Park guests' cars across the neighbors' driveways.","Tell the neighbors after the party."],"why":"Warn neighbors about a party and keep noise reasonable."},
+      {"p":"street","r":["peer","peer"],"s":"{B}'s trash cans have been at the curb for a week, and they block the sidewalk near {A}'s house.","q":"What should {A} do first?","ok":["Mention it to {B} directly, in a friendly way."],"bad":[["Post a complaint online.","A direct, friendly word comes first."],"Move the cans onto {B}'s porch without a word.","Report {B} to the landlord right away."],"why":"A friendly conversation solves most problems."},
       { p: 'street', r: ['peer', 'peer'], s: '{B}\'s dog barks for hours every day while {B} is at work. {A} lives next door.', q: 'What should {A} do first?',
         ok: ['Tell {B} kindly, in person or with a friendly note; {Bhe} may not know.'], bad: [['Complain to the landlord.', 'Going over {B}\'s head first turns a small problem into a feud.'], 'Post about it on a neighborhood website.', 'Bang on the wall.'], why: 'A direct, friendly word solves most problems, and it gives {B} a chance to fix it.' },
       { p: 'street', r: ['peer', 'peer'], s: '{A} is hosting {event} on Saturday evening.', q: 'What would a good neighbor do?',
@@ -1408,9 +1442,9 @@
       { p: 'street', r: ['peer', 'peer'], s: '{A} has guests coming and the street is crowded.', q: 'Where should the guests park?',
         ok: ['Where they don\'t block anyone\'s driveway or mailbox.'], bad: ['Across {B}\'s driveway, just for an hour.', 'On {B}\'s lawn.', 'Anywhere, since {A} will move cars if asked.'], why: 'Park considerately so neighbors can come and go.' }
     ],
-    good: ['Waving to a neighbor across the street', 'Picking up after your dog', 'Telling neighbors before a party or a big project', 'Talking to a neighbor directly and kindly about a problem'],
-    rude: [['Blocking a neighbor\'s driveway', 'they need to come and go'], ['Complaining online before talking to the neighbor', 'a direct, friendly word solves most problems'], ['Running a loud leaf blower at 6 a.m.', 'noise carries into their home'], ['Letting your dog roam into a neighbor\'s yard', 'keep pets in your own space']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'all'], 3: ['all', 'sc'] }
+    good: [ "Waving hello to the neighbors", "Cleaning up after your dog on walks", "Telling neighbors before a big roofing job",'Waving to a neighbor across the street', 'Picking up after your dog', 'Telling neighbors before a party or a big project', 'Talking to a neighbor directly and kindly about a problem'],
+    rude: [ ["Blocking a neighbor's driveway with your car","park considerately"], ["Letting your dog bark for hours","your pet's noise reaches their home"], ["Complaining about a neighbor to others before telling them","talk to them directly first"],['Blocking a neighbor\'s driveway', 'they need to come and go'], ['Complaining online before talking to the neighbor', 'a direct, friendly word solves most problems'], ['Running a loud leaf blower at 6 a.m.', 'noise carries into their home'], ['Letting your dog roam into a neighbor\'s yard', 'keep pets in your own space']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'all'], 3: ['all', 'sc'] }
   }));
 
   G('adult.travel-courtesy', bank('adult.travel-courtesy', {
@@ -1474,6 +1508,8 @@
     ctxLine: 'After a spill at a dinner party:',
     rudeWhy: 'it keeps attention on the accident or hides it',
     sc: [
+      {"p":"table","r":["peer","peer"],"s":"At {B}'s dinner, {A} drops and breaks one of {B}'s good glasses.","q":"What should {A} do?","ok":["Apologize, help clean up carefully, and offer to replace the glass."],"bad":[["Keep apologizing all evening.","One sincere apology and a fix is enough."],"Pretend someone else did it.","Leave the pieces for {B} to find."],"why":"Apologize briefly, help, offer to pay, and move on."},
+      {"p":"home","r":["peer","peer"],"s":"A guest, {B}, spills juice on {A}'s rug and looks upset.","q":"What should {A}, the host, say?","ok":["\"Don't worry about it at all. It will clean up.\""],"bad":[["\"That rug was very expensive.\"","The host's job is to put the guest at ease."],"Nothing, and frown all evening.","\"Please be more careful next time.\""],"why":"A host makes light of it and puts the guest at ease."},
       { p: 'table', r: ['peer', 'peer'], moods: { 0: 'worried' }, s: 'At {B}\'s dinner, {A} drips sauce on the white tablecloth.', q: 'What should {A} do?',
         ok: ['Apologize once, help blot it if {B} wants, offer to pay for cleaning, and rejoin the talk.'], bad: [['Apologize again every half hour.', 'Repeated apologies keep everyone focused on the accident.'], 'Cover it with a plate and say nothing.', 'Laugh and blame the sauce.'], why: 'One sincere apology and a fix is enough.' },
       { p: 'table', r: ['peer', 'peer'], moods: { 1: 'worried' }, s: '{B}, a guest, knocks over a glass at {A}\'s dinner.', q: 'What should {A}, the host, do?',
@@ -1481,9 +1517,9 @@
       { p: 'home', r: ['peer', 'peer'], s: '{A} borrowed {B}\'s jacket and spilled coffee on it.', q: 'What should {A} do?',
         ok: ['Tell {B}, apologize, and pay for the cleaning.'], bad: [['Return it and hope {B} won\'t notice.', 'Hiding damage breaks trust.'], 'Keep it until {B} forgets.', 'Return it and say it was already stained.'], why: 'Apologize, fix it, and move on.' }
     ],
-    good: ['One sincere apology and help cleaning up', 'Offering to pay for a cleaning', 'As host, saying "Don\'t worry at all"', 'Returning to the conversation after the cleanup'],
-    rude: [['Apologizing every half hour all evening', 'it keeps the attention on the accident'], ['Hiding a stain under a cushion', 'tell the host so it can be fixed'], ['As host, sulking about the stain', 'the guest matters more than the cloth'], ['Blaming the person sitting next to you', 'own the accident']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'all'], 3: ['all', 'sc'] }
+    good: [ "Telling the host right away about a stain", "Helping blot a spill", "Laughing it off kindly as the host",'One sincere apology and help cleaning up', 'Offering to pay for a cleaning', 'As host, saying "Don\'t worry at all"', 'Returning to the conversation after the cleanup'],
+    rude: [ ["Pretending you didn't see your own spill","own the accident"], ["As host, mentioning the spill again at dessert","let it go"], ["Leaving broken glass for the host to find","help clean up"],['Apologizing every half hour all evening', 'it keeps the attention on the accident'], ['Hiding a stain under a cushion', 'tell the host so it can be fixed'], ['As host, sulking about the stain', 'the guest matters more than the cloth'], ['Blaming the person sitting next to you', 'own the accident']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'all'], 3: ['all', 'sc'] }
   }));
 
   G('adult.others-mistakes', bank('adult.others-mistakes', {
@@ -1537,14 +1573,16 @@
       { title: '{B}', msgs: [[1, 'We\'re doing karaoke Friday night! You in?']], q: '{A} doesn\'t want to go. Which reply is best?', ok: ['Thanks for thinking of me! I\'ll sit this one out, but have a great time.'], bad: ['Maybe, I\'ll see.', 'I have a work thing. (There is no work thing.)', 'Karaoke is the worst.'], why: 'A kind no is honest and lets {B} plan. An invented excuse can be found out.' }
     ],
     sc: [
+      {"p":"office","r":["peer","peer"],"s":"{B} asks {A} to join a weekend volunteer project. {A} can't do it.","q":"Which reply is best?","ok":["\"Thank you for thinking of me. I can't this time.\""],"bad":[["Say yes and then not show up.","The other person is counting on you."],"Invent a long story about a family emergency.","Ignore the message."],"why":"A kind, clear no respects the other person."},
+      {"p":"table","r":["peer","elder"],"s":"At {B}'s dinner, {B} offers {A} a second helping, but {A} is full.","q":"What should {A} say?","ok":["\"No, thank you. It was delicious.\""],"bad":[["Take more and leave it on the plate.","A kind, clear no is better than wasted food."],"\"I didn't like it much.\"","Say nothing and push the dish away."],"why":"Decline food kindly and briefly."},
       { p: 'table', r: ['peer', 'peer'], s: 'The host, {B}, offers {A} a second helping of {food}. {A} is full.', q: 'What should {A} say?',
         ok: ['"No, thank you. It was delicious, but I couldn\'t eat another bite."'], bad: [['"I\'m on a strict diet, so I really shouldn\'t have had any."', 'No excuse is needed, and a diet talk at the table can make the host uneasy.'], 'Take more and leave it on the plate.', '"No."'], why: 'A warm "No, thank you" with a compliment is all it needs.' },
       { p: 'office', r: ['peer', 'peer'], s: '{B} asks {A} to take on a project {A} has no time for.', q: 'What is the best reply?',
         ok: ['"Thanks for thinking of me. I can\'t take that on right now, but I could look over the plan next week."'], bad: [['Say yes, then quietly never do it.', 'The other person counts on a yes.'], 'Invent a family emergency.', 'Ignore the request.'], why: 'A clear, kind no, perhaps with another way to help, is polite and honest.' }
     ],
-    good: ['"Thank you for asking; I can\'t make it."', '"No, thank you. It was delicious."', 'Replying promptly so they can ask someone else', 'Offering another way to help when you can'],
-    rude: [['Saying yes and then not showing up', 'the other person counted on you'], ['Inventing an elaborate excuse', 'a long excuse isn\'t needed, and a lie can be found out'], ['Leaving an invitation unanswered', 'the host can\'t plan'], ['Declining with a criticism of the plan', 'a no needs no insult']],
-    mix: { 1: ['sc', 'tf'], 2: ['sc', 'text', 'all'], 3: ['all', 'text', 'sc'] }
+    good: [ "Saying \"Thank you for asking; I can't make it\"", "Answering an invitation promptly", "Declining a second helping with thanks",'"Thank you for asking; I can\'t make it."', '"No, thank you. It was delicious."', 'Replying promptly so they can ask someone else', 'Offering another way to help when you can'],
+    rude: [ ["Saying yes, then not showing up","they counted on you"], ["Inventing a long excuse","a kind, clear no is enough"], ["Ignoring an invitation instead of replying","a reply lets them plan"],['Saying yes and then not showing up', 'the other person counted on you'], ['Inventing an elaborate excuse', 'a long excuse isn\'t needed, and a lie can be found out'], ['Leaving an invitation unanswered', 'the host can\'t plan'], ['Declining with a criticism of the plan', 'a no needs no insult']],
+    mix: { 1: ['sc', 'sc', 'tf'], 2: ['sc', 'text', 'all'], 3: ['all', 'text', 'sc'] }
   }));
 
   // ================================================================ Unit 11: Dating Courtesy and Presence
@@ -1621,3 +1659,345 @@
 
   ML._etAdult = { TOPICS: TOPICS, make: make, cast: cast, fill: fill };
 })(window.MathLadder);
+
+/* ---- widen_hum: more questions from the lesson's own tables -----------------------------------------------------
+   Each topic listed below also asks about the facts in its lesson's tables (copied here from the lesson, so the
+   answers are the lesson's own). Forms, by level:
+     match   "Which museum is in Turin?": the right cell and others from the same column (3 choices at level 1, 4 above)
+     pairs   lines "A → B": which pairing is right (level 2), or which one is wrong (level 3)
+     sort    a comparison table: which column does this cell describe (levels 1-2), or choose all for one column (level 3)
+   How often: about a third to a half of the draws, more when the topic's own questions are few at that level.
+   Generated by /tmp/work_widen_widen_hum/tabbuild.js from data/<ladder>/lessons/<course>.json. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var TABS = [{"k":"adult.tricky-foods#3","h":["Food","How"],"r":[["Soup","Spoon away from you; sip from the side; tip the bowl away for the last spoonfuls"],["Long pasta","Twirl a few strands against the plate or a spoon; don't slurp"],["Bread","One bite-size piece at a time"],["Corn on the cob, ribs, fried chicken at a picnic","Fingers"],["Olives, cherries","Pit back onto the spoon or fingertips, then to the plate's edge"],["Cherry tomatoes","Whole in one bite, or pierce gently first"],["Shrimp with tails","Hold the tail with fingers; leave it on the plate"]],"cap":"A few tricky foods.","m":[[0,1,"At a meal with others, how is {a:l} usually eaten politely?",0,"a food with how to eat it"],[1,0,"Which food is eaten this way: {a}?",0,0,2]]},
+    {"k":"adult.overnight-guests#3","h":["The guest","The host"],"r":[["Agrees on arrival and departure dates","Offers clear dates and a plan for the visit"],["Follows the household's routine","Explains the routine: meals, quiet hours, the key"],["Makes the bed and keeps the room tidy","Sets out towels, sheets and space for a suitcase"],["Offers to help with meals and dishes","Lets the guest have some time to rest"],["Sends a thank-you note after","Says goodbye warmly"]],"cap":"Both sides of a visit.","one":"During an overnight visit, is this the guest's part or the host's part?","all":"Which of these are {a:l}'s part? Choose all that apply.","na":1},
+    {"k":"adult.condolence-notes#4","h":["Comforting","Better left out"],"r":[["\"I'm so sorry for your loss.\"","\"I know how you feel.\""],["\"She was the kindest teacher I ever had.\"","\"Everything happens for a reason.\""],["\"I'll bring dinner on Thursday.\"","\"Let me know if you need anything.\""],["\"Thinking of you and your family.\"","\"At least he lived a long life.\""]],"cap":"Phrases for a condolence note.","one":"In a condolence note, is this comforting, or better left out?","all":"Which of these are \"{a}\" in a condolence note? Choose all that apply.","na":1},
+    {"k":"adult.phones-company#3","h":["Place","The courteous habit"],"r":[["A meal with others","Phone silenced and out of sight; step away if you must take a call"],["A meeting or class","Silenced; check it only at a break"],["A concert, play, movie or service","Off or silenced, screen dark the whole time"],["A bus, train or waiting room","Headphones for sound; short, quiet calls"],["A store checkout","End the call and talk with the cashier"]],"cap":"Phones in company and in public.","m":[[0,1,"What is the courteous phone habit at {a:l}?",0,"a place with the courteous habit"],[1,0,"Where is this the courteous phone habit: {a}?",0,0,2]]},
+    {"k":"adult.customs-abroad#3","h":["Before you go, find out","Why it matters"],"r":[["Hello, please and thank you in the language","A small effort shows respect"],["How to dress at sacred and formal sites","Many ask for covered shoulders and knees, or for shoes to be removed"],["Tipping customs","Service may be included or tipping not expected"],["Greetings","A bow, a nod, a handshake or a cheek kiss may be usual"],["Shoes indoors","In many homes, shoes come off at the door"]],"cap":"A short checklist for travelers.","m":[[0,1,"Before a trip abroad, why find out about this: {a}?",0,"something to find out with why it matters"]]},
+    {"k":"adult.rude-remarks#3","h":["The remark","A calm reply"],"r":[["\"How much did your house cost?\"","\"Enough! But we love it. Have you been to the new park nearby?\""],["\"Why aren't you married yet?\"","\"Why do you ask?\" or \"That's not something I discuss, but thank you.\""],["\"You've gained weight.\"","\"I'd rather not talk about that.\" Then change the subject"],["\"That's a weird thing to eat.\"","\"It's a favorite of mine. Would you like to try some?\""]],"cap":"Calm answers to rude remarks.","m":[[0,1,"Someone asks: {a} Which is a calm, polite reply?",0]]}];
+  var FUNS = {};
+  function plain(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim(); }
+  function txt(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function low(s) { return txt(s).toLowerCase().replace(/[.;:,]+$/, ''); }
+  function big(x) { return String(x).replace(/<span class="(sc-b|eg-cop|eg-h)">/g, '<span class="$1" style="font-size:1.6em;line-height:1">'); }
+  function fill(t, x) { x = big(x); return t.replace('{a:l}', String(x).replace(/^[A-Z](?=[a-z])/, function (c) { return c.toLowerCase(); })).replace('{a}', x); }
+  function dot(s) { s = String(s); return /[.!?…"”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function sameRow(t, i, a) { return t.r.filter(function (r) { return low(r[a]) === low(t.r[i][a]); }); }
+  function partnerSteps(t, tp, right, shown) { // what each wrong choice goes with
+    var out = [];
+    shown.forEach(function (c) {
+      if (low(c) === low(right)) return;
+      var rows = t.r.filter(function (r) { return low(r[tp[1]]) === low(c); });
+      if (rows.length === 1 && txt(rows[0][tp[0]]).length <= 90) out.push(dot(c + ': that goes with ' + rows[0][tp[0]]));
+    });
+    return out.slice(0, 3);
+  }
+  // match: ask for column b from a cell of column a
+  function match(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][b]).length <= 130; });
+    if (!ok.length) return null;
+    var i = R.pick(ok), right = t.r[i][b], seen = {};
+    seen[low(right)] = 1;
+    var bad = {}; sameRow(t, i, a).forEach(function (r) { bad[low(r[b])] = 1; }); // never a choice that is also right
+    var pool = []; t.r.forEach(function (r) { var k = low(r[b]); if (r[b] && !seen[k] && !bad[k] && txt(r[b]).length <= 130) { seen[k] = 1; pool.push(r[b]); } });
+    var k = Math.min(L === 1 ? 3 : 4, pool.length + 1); if (k < 3) return null;
+    var wrongs = R.shuffle(pool).slice(0, k - 1), choices = [right].concat(wrongs);
+    return { q: fill(tp[2], t.r[i][a]), a: { t: 'mc', choices: choices, v: 0 },
+      steps: [dot(t.r[i][a] + ' → ' + right), ].concat(partnerSteps(t, tp, right, choices)),
+      hint: tp[3] || 'Think back to the lesson’s table' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 'm', a, b, i, txt(t.r[i][a])] };
+  }
+  // pairs: three or four lines "a → b"; one right (level 2) or one wrong (level 3)
+  function pairs(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][a]).length <= 70 && txt(t.r[i][b]).length <= 70; });
+    var uniq = {}; ok = ok.filter(function (i) { var k = low(t.r[i][a]); if (uniq[k]) return false; uniq[k] = 1; return true; });
+    var n = Math.min(4, ok.length); if (n < 3) return null;
+    var rows = R.shuffle(ok).slice(0, n), wrongOne = L >= 3, target = R.int(0, n - 1), lines = [], steps = [];
+    for (var j = 0; j < n; j++) {
+      var i = rows[j], right = wrongOne ? j !== target : j === target, ans = t.r[i][b];
+      if (!right) {
+        var good = {}; sameRow(t, i, a).forEach(function (r) { good[low(r[b])] = 1; });
+        var ws = []; t.r.forEach(function (r) { if (r[b] && !good[low(r[b])] && txt(r[b]).length <= 70 && ws.map(low).indexOf(low(r[b])) < 0) ws.push(r[b]); });
+        if (!ws.length) return null;
+        ans = R.pick(ws);
+      }
+      lines.push(t.r[i][a] + ' → ' + ans);
+      steps.push(dot(t.r[i][a] + ' → ' + t.r[i][b] + (right ? ': right' : ', not ' + ans)));
+    }
+    var what = tp[4] ? ' Each line pairs ' + tp[4] + '.' : '';
+    return { q: (wrongOne ? 'Exactly one of these pairings is <b>wrong</b>. Which one?' : 'Exactly one of these pairings is right. Which one?') + what,
+      a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own against what you learned.', wh: [t.k, wrongOne ? 'pw' : 'pr', a, b] };
+  }
+  // sort: which column of a comparison table does a cell belong to
+  function sortQ(R, t, L) {
+    var cols = t.h.map(function (_, j) { return j; }).filter(function (j) { return j >= (t.na ? 0 : 1) && txt(t.h[j]); });
+    if (cols.length < 2) return null;
+    var cells = [];
+    t.r.forEach(function (r, i) { cols.forEach(function (j) {
+      if (!r[j] || (!t.na && !txt(r[0]))) return;
+      var dup = cols.some(function (j2) { return j2 !== j && r[j2] && (low(r[j2]) === low(r[j]) || low(r[j2]).indexOf(low(r[j])) >= 0 || low(r[j]).indexOf(low(r[j2])) >= 0); });
+      if (!dup && txt(r[j]).length <= 140) cells.push([i, j]);
+    }); });
+    if (cells.length < 2) return null;
+    var heads = cols.map(function (j) { return t.h[j]; });
+    if (L >= 3 && cells.length >= 5) {
+      var j0 = R.pick(cols), pick = R.shuffle(cells).slice(0, Math.min(5, cells.length));
+      var hits = pick.filter(function (c) { return c[1] === j0; }).length;
+      if (hits >= 1 && hits < pick.length) {
+        var ch = pick.map(function (c) { return lab(t, c); });
+        var v = pick.map(function (c, k) { return c[1] === j0 ? k : -1; }).filter(function (k) { return k >= 0; });
+        return { q: fill(t.all, t.h[j0]), a: { t: 'mc', choices: ch, v: v },
+          steps: pick.map(function (c) { return dot(lab(t, c) + ' (' + t.h[c[1]] + ')'); }),
+          hint: 'Go through them one at a time.', wh: [t.k, 'sa', j0, pick] };
+      }
+    }
+    var c = R.pick(cells);
+    return { q: t.one + (t.na ? (/^["“]/.test(txt(t.r[c[0]][c[1]])) ? '<br>' + t.r[c[0]][c[1]] : '<br>“' + t.r[c[0]][c[1]] + '”') : '<br>' + asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]), a: { t: 'mc', choices: heads.slice(), v: cols.indexOf(c[1]) },
+      steps: t.na ? [dot('That is ' + t.h[c[1]].replace(/^./, function (x) { return x.toLowerCase(); }))] : [dot(txt(t.r[c[0]][0]) + ' for ' + t.h[c[1]] + ': ' + t.r[c[0]][c[1]])].concat(cols.filter(function (j) { return j !== c[1] && t.r[c[0]][j]; }).map(function (j) { return dot('For ' + t.h[j] + ': ' + t.r[c[0]][j]); })),
+      hint: 'Think back to the lesson’s comparison' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 's', c[0], c[1]] };
+  }
+  function asp(x) { return '<b>' + x + (/\?$/.test(txt(x)) ? '' : ':') + '</b> '; }
+  function lab(t, c) { return t.na ? t.r[c[0]][c[1]] : asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]; }
+  // extra bank items: { q, a, w: [wrong answers, more than are shown], s: [steps], h: hint, lv } or { q, tf: true|false, s, lv }
+  function extra(R, t, L) {
+    var its = t.x.filter(function (it) { return (it.lv || 1) <= L; }); if (!its.length) return null;
+    var it = R.pick(its), p;
+    if (it.f) { it = FUNS[it.f](R, L); if (!it) return null; }
+    if (it.num !== undefined) {
+      p = { q: it.q, a: { t: 'num', v: String(it.num) }, steps: it.s.slice() };
+      if (Number.isInteger(it.num) && !it.unit && !it.pct) p.a.form = 'int';
+      if (it.pct) p.a.pct = true;
+      if (it.tol != null) p.a.tol = it.tol;
+      if (it.unit) p.unit = it.unit;
+    }
+    else if (it.tf !== undefined) p = { q: it.q, a: { t: 'tf', v: it.tf }, steps: it.s.slice() };
+    else {
+      var k = Math.min(L === 1 ? 3 : 4, it.w.length + 1);
+      p = { q: it.q, a: { t: 'mc', choices: [it.a].concat(R.shuffle(it.w).slice(0, k - 1)), v: 0 }, steps: it.s.slice() };
+    }
+    p.hint = it.h || 'Think back to the lesson.';
+    p.wh = [t.k, 'x', its.indexOf(it) >= 0 ? t.x.indexOf(it) : -1];
+    return FUNS.__wrap ? FUNS.__wrap(p, L) : p;
+  }
+  function make(R, list, L) {
+    for (var tries = 0; tries < 8; tries++) {
+      var t = R.pick(list), p = null;
+      if (t.x) p = extra(R, t, L);
+      else if (t.one) p = sortQ(R, t, L);
+      else {
+        var tps = t.m.filter(function (tp) { return (tp[5] || 1) <= L; }); if (!tps.length) continue;
+        var tp = R.pick(tps);
+        p = L >= 2 && tp[4] && R.chance(0.35) ? pairs(R, t, tp, L) : match(R, t, tp, L);
+      }
+      if (p) {
+        // ladder pages show choices as plain text (only $…$ math is rendered), so choices carry no tags
+        if (p.a.t === 'mc') { p.a.choices = p.a.choices.map(plain); var seen = {}; if (p.a.choices.some(function (c) { var k = seen[c]; seen[c] = 1; return k; })) continue; }
+        p.nowiden = true; return p;
+      }
+    }
+    return null;
+  }
+  var BY = {}; TABS.forEach(function (t) { var id = t.k.split('#')[0].split('@')[0]; (BY[id] = BY[id] || []).push(t); });
+  var VAR = {};
+  function baseCount(id, base, L) { // different questions (ignoring the order of choices) from 40 fixed seeds
+    var key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        try { var p = base(ML.rand(id + '#whv#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; } } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  function extCount(id, L) { // different table questions from 40 fixed seeds
+    var key = id + '|x|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        var p = make(ML.rand(id + '#whx#' + s + '#' + L), BY[id], L); if (!p) continue;
+        var k = p.q + '|' + JSON.stringify(p.a.choices ? p.a.choices.slice().sort() : p.a.v);
+        if (!seen[k]) { seen[k] = 1; n++; }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  Object.keys(BY).forEach(function (id) {
+    var base = ML.getGen(id); if (!base || base._wh) return;
+    var fn = function (R, ctx) {
+      var L = (ctx && ctx.level) || 1, n = baseCount(id, base, L), x = extCount(id, L), share = Math.max(0.15, Math.min(0.5, x / (x + n + 1)));
+      if (R.chance(share)) { var p = make(R, BY[id], L); if (p) return p; }
+      return base(R, ctx);
+    };
+    fn._wh = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen_hum ---- */
+
+/* ---- widen: more forms of the same questions (so practice repeats less) ----------------------------------------
+   Every topic of this course keeps its own problems, and some draws are turned into other forms of the same skill,
+   built only from the topic's own problems (so their answers stay the ones the topic already checks):
+     check   "Ava chose X. Is Ava right?" (Yes or No) from a one-answer multiple-choice problem
+     pairs   two or three lines "question → answer"; which line is right (or, at level 3, which one is wrong)
+     tfpick  "Which sentence is true?" (or false) from three of the topic's true-or-false sentences
+   Questions whose answer depends on the other choices (first, best, most, not …) show the choices in the check form
+   and never go into pairs. Mix per level: CFG.mix[level] = [check, pairs, tfpick] shares; the rest stays as it was. */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var CFG = {"prefix":"adult.","only":["why-etiquette","manners-etiquette","reading-setting","formal-setting","napkin-use","bread-glasses","american-continental","resting-finished","courses-service","tricky-foods","toasts","restaurants","forms-of-address","greetings","small-talk","arriving-leaving","host-gifts","overnight-guests","condolence-notes","email","phones-company","texting-messaging","social-media","video-meetings","interviews","dress-codes","meetings","shared-spaces","weddings","funerals","hospitals-babies","borrowing-lending","neighbors","travel-courtesy","customs-abroad","spills","others-mistakes","rude-remarks","declining","posture-presence"]};
+  var NAMES = ['Ava', 'Ben', 'Cora', 'Dev', 'Eli', 'Finn', 'Gus', 'Hana', 'Ivy', 'Jude', 'Kai', 'Lena', 'Milo', 'Nora', 'Omar', 'Pia',
+    'Quinn', 'Rosa', 'Sam', 'Tess', 'Uma', 'Vic', 'Wren', 'Zoe', 'Ada', 'Leo', 'Mia', 'Theo', 'June', 'Max'];
+  var REL = /\b(first|last|earliest|latest|earlier|later|before|after|older|oldest|newer|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|look|read|here|example|examples|likely|probably|mainly|main|usually|typically|other|another|which one|each|order|then|next)\b|n['’]t\b/i;
+  // pairs judge each line on its own, so only questions whose answer depends on the other choices are left out
+  var RELP = /\b(first|last|earliest|latest|oldest|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|which one|other|another|rank|order|more|less|fewer)\b|n['’]t\b|\w+est\b/i;
+  var REF = /\b(this|these|those|shown|picture|map|table|chart|graph|diagram|passage|scene|story|above|below|here|following)\b/i;
+  var BADCH = /\b(all|none|both|neither) of\b|\b(above|below)\b|^(both|neither|all|none)\b|\bchoice\b|\boption\b/i;
+  function strip(s) { return String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function plainish(s) { return !/<(?!\/?(b|i|em|strong)\b)[^>]*>/.test(String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1')); }
+  function add(q, html) { // inside a read-aloud big span when there is one
+    var m = /<span class="[\w-]*big">/.exec(q);
+    if (m) { var k = q.lastIndexOf('</span>'); if (k > m.index) return q.slice(0, k) + '<br>' + html.replace(/<\/p>\s*<p[^>]*>/g, '<br>').replace(/<\/?p[^>]*>/g, '') + q.slice(k); }
+    return q + html;
+  }
+  function single(p) {
+    return p && p.a && p.a.t === 'mc' && !Array.isArray(p.a.v) && Array.isArray(p.a.choices) && p.a.choices.length >= 2 &&
+      !p.a.choices.some(function (c) { return BADCH.test(strip(c)); });
+  }
+  function hash(t) { var h = 7; for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return h; }
+  function nameFor(q, key) { // the same claim always gets the same name, so a name alone never makes a "new" problem
+    var t = strip(q), ok = NAMES.filter(function (n) { return t.indexOf(n) < 0 && String(key).indexOf(n) < 0; });
+    return (ok.length ? ok : NAMES)[hash(t + '|' + key) % (ok.length || NAMES.length)];
+  }
+  function dot(s) { s = String(s); return /[.!?…"”')\]]\s*(<\/b>)?$/.test(strip(s)) || /\$$/.test(s) ? s : s + '.'; }
+  function optList(ch) { return '<p class="wd-opts">The choices were:<br>' + ch.map(function (c) { return '• ' + c; }).join('<br>') + '</p>'; }
+  function copyP(p, q, a, steps) { var o = {}; for (var k in p) if (Object.prototype.hasOwnProperty.call(p, k)) o[k] = p[k]; o.q = q; o.a = a; o.steps = steps; delete o.choices; return o; }
+
+  // check: show one choice (the right one half the time) and ask whether it is right
+  function check(p, R) {
+    var ch = p.a.choices, v = p.a.v, idx = ch.map(function (_, i) { return i; }), others = idx.filter(function (i) { return i !== v; });
+    var i = R.chance(0.5) ? v : R.pick(others), ok = i === v, nm = nameFor(p.q, ch[i]), letters = ch.every(function (c) { return /^[A-Z]$/.test(String(c)); });
+    var stem = strip(p.q), html = '';
+    if (!letters && (REL.test(stem) || ch.length > 4 || CFG.listAll)) {
+      var shown = p.a.keep ? ch.slice() : R.shuffle(ch);
+      html += optList(shown);
+    }
+    html += '<p class="wd-check">' + nm + ' chose: <b>' + ch[i] + '</b>' + (/[.!?…"”]$/.test(strip(ch[i])) ? '' : '.') + ' Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes. ' + dot(ch[v]) + ' is the right answer.' : 'No. The right answer is: ' + dot(ch[v]);
+    if (ok) first = 'Yes, that is the right answer.';
+    return copyP(p, add(p.q, html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [first].concat(p.steps || []));
+  }
+  // check for "choose all": the whole list is shown, and one learner's picks; right only if exactly the right ones
+  function checkAll(p, R) {
+    var ch = p.a.choices, v = p.a.v.slice().sort(), n = ch.length, pick;
+    if (R.chance(0.45)) pick = v.slice();
+    else {
+      var t = 0; do { var j = R.int(0, n - 1), s = v.slice(), k = s.indexOf(j); if (k >= 0) s.splice(k, 1); else s.push(j); if (R.chance(0.3)) { var j2 = R.int(0, n - 1), k2 = s.indexOf(j2); if (k2 >= 0) s.splice(k2, 1); else s.push(j2); } pick = s.sort(); t++; }
+      while (t < 20 && (!pick.length || pick.join() === v.join()));
+      if (!pick.length || pick.join() === v.join()) return null;
+    }
+    var ok = pick.join() === v.join(), nm = nameFor(p.q, pick.join());
+    var html = optList(ch) + '<p class="wd-check">' + nm + ' chose ' +
+      (pick.length === 1 ? 'only: <b>' + ch[pick[0]] + '</b>' : 'these: <b>' + pick.map(function (i) { return ch[i]; }).join('</b>; <b>') + '</b>') + '. Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes, those are exactly the right ones.' : 'No. The right ones are: ' + v.map(function (i) { return ch[i]; }).join('; ');
+    return copyP(p, add(p.q.replace(/\s*(Choose|Select|Pick) (all|every)[^.?!<]*[.?!]?/i, ''), html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [dot(first)].concat(p.steps || []));
+  }
+
+  // items for pairs: one-answer questions that stand on their own (no picture, no passage, no "first/best/…")
+  function pairItem(p) {
+    if (!single(p) || p.viz) return null;
+    var max = CFG.maxStem || 120, maxA = CFG.maxAns || 70, a = strip(p.a.choices[p.a.v]), stem, group = '';
+    // "prompt<br><b>thing</b>" or "prompt<blockquote>thing</blockquote>": a line is "thing → answer", lines share the prompt
+    var q0 = p.q.replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1').trim();
+    var m = /^([^<]{6,140}?)\s*(?:<br>\s*<b>([^<]{3,140})<\/b>|<blockquote>([^<]{3,140})<\/blockquote>)\s*$/.exec(q0);
+    if (m) { group = m[1].trim(); stem = (m[2] || m[3]).trim(); if (RELP.test(group.replace(/\b(this|these)\b/gi, ''))) return null; }
+    else {
+      if (!plainish(p.q)) return null;
+      stem = strip(p.q); if (RELP.test(stem)) return null;
+    }
+    if (stem.length > max || stem.length < 3 || a.length > maxA || /^[A-Z]$/.test(a) || /\$/.test(stem + a + group)) return null;
+    var w = p.a.choices.filter(function (_, i) { return i !== p.a.v; }).map(strip).filter(function (x) { return x.length <= maxA && x !== a; });
+    if (!w.length) return null;
+    return { stem: stem.replace(/\s*(Choose one|Pick one)\.?$/i, ''), a: a, w: w, why: (p.steps || [])[0] || '', group: group };
+  }
+  function tfItem(p) {
+    if (!p || !p.a || p.a.t !== 'tf' || p.viz || !plainish(p.q)) return null;
+    var s = strip(p.q).replace(/^(True or false\?|True or false:)\s*/i, '').replace(/\s*(True or false\?|Is this true or false\?|Is it true or false\?)$/i, '').trim();
+    if (s.length < 8 || s.length > (CFG.maxStem || 120) + 20 || REF.test(s) || /\?$/.test(s) || /\$/.test(s)) return null;
+    return { s: s, v: p.a.v, why: (p.steps || [])[0] || '' };
+  }
+  function harvest(base, R, ctx, make, n, distinct) {
+    var out = [], keys = {};
+    for (var t = 0; t < 24 && out.length < n; t++) {
+      // at level 3, lines may come from level 2 questions too: three lines with one wrong is the harder form
+      var c2 = ctx && ctx.level >= 3 && (t % 2) ? Object.assign({}, ctx, { level: 2 }) : ctx;
+      var p; try { p = base(ML.rand(R.int(1, 2e9)), c2); } catch (e) { continue; }
+      var it = make(p); if (!it) continue;
+      if (out.length && it.group !== undefined && it.group !== out[0].group) continue;
+      var k = distinct(it); if (k.some(function (x) { return keys[x]; })) continue;
+      k.forEach(function (x) { keys[x] = 1; }); out.push(it);
+    }
+    return out;
+  }
+  function pairs(base, R, ctx, n, wrongOne) {
+    var its = harvest(base, R, ctx, pairItem, n, function (it) { return it.group ? ['s:' + it.stem] : ['s:' + it.stem, 'a:' + it.a]; });
+    if (its.length < n) return null;
+    var answers = its.map(function (it) { return it.a; }), used = {};
+    var target = R.int(0, n - 1), lines = [], steps = [];
+    for (var i = 0; i < n; i++) {
+      var it = its[i], right = wrongOne ? i !== target : i === target, ans = it.a;
+      if (!right) {
+        var ws = it.w.filter(function (x) { return (its[0].group || answers.indexOf(x) < 0) && !used[x]; });
+        if (!ws.length) return null;
+        ans = R.pick(ws); if (!its[0].group) used[ans] = 1;
+      }
+      lines.push(it.stem + ' → ' + ans); // plain text: ladder pages show choices as text
+      steps.push(it.group ? dot(it.stem) + ' Answer: ' + it.a + (right ? '.' : ', not ' + ans + '.') : it.stem + ' The answer is ' + it.a + (right ? '.' : ', not ' + ans + '.'));
+    }
+    var g = its[0].group, q = g ? '<p class="wd-group">The question for every line: <i>' + g + '</i></p>' + (wrongOne ? 'One line has the <b>wrong</b> answer. Which line is it?' : n === 2 ? 'Which line has the <b>right</b> answer?' : 'Only one line has the right answer. Which line is it?') : wrongOne ? 'Each line is a question and an answer. One answer is <b>wrong</b>. Which line is it?'
+      : (n === 2 ? 'Each line is a question and an answer. Which line has the <b>right</b> answer?' : 'Each line is a question and an answer. Only one answer is right. Which line is it?');
+    if (its[target].why) steps.push(its[target].why);
+    return { q: q, a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own. Does the answer fit the question?' };
+  }
+  function tfpick(base, R, ctx, wantFalse) {
+    var its = harvest(base, R, ctx, tfItem, 6, function (it) { return ['s:' + it.s]; });
+    var T = its.filter(function (x) { return x.v; }), F = its.filter(function (x) { return !x.v; });
+    var odd = wantFalse ? F : T, rest = wantFalse ? T : F;
+    if (!odd.length || rest.length < 2) return null;
+    var pick = [odd[0], rest[0], rest[1]], order = R.shuffle([0, 1, 2]), choices = order.map(function (i) { return pick[i].s; });
+    var steps = pick.map(function (x) { return x.s + ' ' + (x.v ? 'True.' : 'False.'); });
+    if (odd[0].why) steps.push(odd[0].why);
+    return { q: wantFalse ? 'Which sentence is <b>false</b>?' : 'Which sentence is <b>true</b>?', a: { t: 'mc', choices: choices, v: order.indexOf(0) }, steps: steps,
+      hint: 'Decide about each sentence on its own.' };
+  }
+  var MIX = CFG.mix || { 1: [0.38, 0.25, 0.04], 2: [0.27, 0.3, 0.1], 3: [0.17, 0.4, 0.15] };
+  function wrap(id, base) {
+    var fn = function (R, ctx) {
+      var lv = ctx && ctx.level || 1, p = base(R, ctx), m = MIX[lv] || MIX[3], r = R.next();
+      if (p.nowiden || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf') || (CFG.skip && CFG.skip.indexOf(id) >= 0)) return p; // typed answers stay as they are
+      var form = r < m[0] ? 0 : r < m[0] + m[1] ? 1 : r < m[0] + m[1] + m[2] ? 2 : -1;
+      if (form < 0) return p;
+      var tries = [form, (form + 1) % 3, (form + 2) % 3].filter(function (f) { return m[f] > 0; });
+      for (var t = 0; t < tries.length; t++) {
+        var f = tries[t], alt = null;
+        if (f === 0) alt = single(p) ? check(p, R) : (p.a && p.a.t === 'mc' && Array.isArray(p.a.v) && !p.viz ? checkAll(p, R) : null);
+        else if (f === 1) alt = pairs(base, R, ctx, lv === 1 ? 2 : 3, lv >= 3 && R.chance(0.6));
+        else alt = tfpick(base, R, ctx, R.chance(0.4));
+        if (alt) return alt;
+      }
+      return p;
+    };
+    fn.widened = true;
+    return fn;
+  }
+  ML.genIds().forEach(function (id) {
+    if (id.indexOf(CFG.prefix) !== 0 || (CFG.only && CFG.only.indexOf(id.slice(CFG.prefix.length)) < 0)) return;
+    var g = ML.getGen(id); if (g && !g.widened) ML.gen(id, wrap(id, g));
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen ---- */

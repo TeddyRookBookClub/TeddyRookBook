@@ -611,15 +611,15 @@
 
   G('g4.divide-with-remainders', function (R, ctx) {
     var d = R.int(L(ctx, 2, 3, 3), L(ctx, 5, 9, 9)), qq = R.int(2, L(ctx, 9, 10, 12)), r = R.int(ctx.level === 2 && R.chance(0.15) ? 0 : 1, d - 1), n = qq * d + r;
-    var kind = R.pick(L(ctx, ['qr', 'qr', 'story'], ['qr', 'story', 'which'], ['qr', 'which', 'reverse', 'story']));
+    var kind = R.pick(L(ctx, ['qr', 'story', 'story'], ['qr', 'story', 'which'], ['qr', 'which', 'reverse', 'story']));
     var st = ['Think of the ' + d + 's facts: $' + qq + ' \\times ' + d + ' = ' + qq * d + '$ is the biggest one that fits in ' + n + ' (the next, $' + (qq + 1) + ' \\times ' + d + ' = ' + (qq + 1) * d + '$, is too big).',
       'Left over: $' + n + ' - ' + qq * d + ' = ' + r + '$.' + (r ? ' ' + r + ' is less than ' + d + ', so no more groups fit.' : ' Nothing is left over.'),
       'So $' + n + ' \\div ' + d + ' = ' + qq + '$' + (r ? ' R ' + r : '') + '.'];
     if (kind === 'qr') return { q: 'Divide: $' + n + ' \\div ' + d + '$. Give the quotient and the remainder.', a: qrSpec(qq, r), steps: st, hint: 'Which multiple of ' + d + ' is closest to ' + n + ' without going over?' };
     if (kind === 'story') {
-      var s = R.pick([['apples', 'bags'], ['crayons', 'boxes'], ['cookies', 'plates'], ['stickers', 'pages'], ['eggs', 'cartons']]);
+      var s = R.pick([['apples', 'bags'], ['crayons', 'boxes'], ['cookies', 'plates'], ['stickers', 'pages'], ['eggs', 'cartons'], ['muffins', 'trays'], ['photos', 'album pages'], ['seeds', 'pots'], ['books', 'shelves'], ['beads', 'necklaces'], ['tulips', 'vases'], ['marbles', 'jars']]);
       return {
-        q: 'There are ' + n + ' ' + s[0] + '. You put ' + d + ' ' + s[0] + ' in each of the ' + s[1] + '. How many ' + s[1] + ' can you fill, and how many ' + s[0] + ' are left over?',
+        q: R.pick(NAMES) + ' has ' + n + ' ' + s[0] + '. You put ' + d + ' ' + s[0] + ' in each of the ' + s[1] + '. How many ' + s[1] + ' can you fill, and how many ' + s[0] + ' are left over?',
         a: { t: 'multi', parts: [{ label: 'Full ' + s[1] + ':', a: num(qq) }, { label: 'Left over:', a: num(r) }] },
         steps: ['Find $' + n + ' \\div ' + d + '$.'].concat(st).concat([qq + ' full ' + s[1] + ', with ' + r + ' ' + s[0] + ' left over.']),
         hint: 'How many groups of ' + d + ' fit in ' + n + '?'
@@ -647,19 +647,29 @@
     if (zero) { d = R.pick([2, 4, 5, 6, 8]); qd = d === 5 ? R.pick([2, 4, 6, 8]) : 5; } // the fact ends in 0: 30 hundreds ÷ 5
     var units = d * qd, n = units * pow10(k), Qt = qd * pow10(k);
     if (n >= 10000) { k = 2; n = units * 100; Qt = qd * 100; }
-    var kind = R.pick(L(ctx, ['calc', 'unit', 'calc'], ['calc', 'calc', 'unit'], ['calc', 'calc', 'story']));
+    var kind = R.pick(L(ctx, ['calc', 'unit', 'story'], ['calc', 'story', 'unit'], ['calc', 'story', 'story', 'check']));
     var uk = zero ? k + 1 : k, ucount = n / pow10(uk), uq = ucount / d; // count in the largest unit that keeps a whole number fact
     if (!Number.isInteger(uq) || ucount < d) { uk = k; ucount = units; uq = qd; }
     var steps = ['Think in ' + PL[uk] + ': $' + C(n) + '$ is ' + C(ucount) + ' ' + PL[uk] + '.',
       C(ucount) + ' ' + PL[uk] + ' $\\div ' + d + ' = ' + uq + '$ ' + pn(uk, uq) + ', because $' + uq + ' \\times ' + d + ' = ' + ucount + '$.',
       uq + ' ' + pn(uk, uq) + ' is $' + C(Qt) + '$. So $' + C(n) + ' \\div ' + d + ' = ' + C(Qt) + '$.'];
+    if (kind === 'check') {
+      var okc = R.coin(), shownc = okc ? Qt : R.pick([Qt * 10, Qt / 10, Qt + pow10(k)].filter(function (v) { return Number.isInteger(v) && v !== Qt; })), whoc = R.pick(NAMES);
+      return { q: whoc + ' says $' + C(n) + ' \\div ' + d + ' = ' + C(shownc) + '$. Is ' + whoc + ' right?', a: mcKeep(['Yes', 'No'], okc ? 0 : 1), steps: steps.concat([okc ? 'So ' + whoc + ' is right.' : 'So ' + whoc + ' is not right. Check: $' + C(shownc) + ' \\times ' + d + ' = ' + C(shownc * d) + '$, not ' + C(n) + '.']), hint: 'Multiply back to check: the answer times ' + d + ' should make ' + C(n) + '.' };
+    }
     if (kind === 'unit') return {
       q: '$' + C(n) + '$ is ' + C(ucount) + ' ' + PL[uk] + '. So $' + C(n) + ' \\div ' + d + '$ is how many ' + PL[uk] + '?', a: num(uq),
       steps: [C(ucount) + ' ' + PL[uk] + ' shared into ' + d + ' equal groups: $' + ucount + ' \\div ' + d + ' = ' + uq + '$.', 'So the answer is ' + uq + ' ' + pn(uk, uq) + ' (which is $' + C(Qt) + '$).'],
       hint: 'Use the fact $' + ucount + ' \\div ' + d + '$.'
     };
     if (kind === 'story') {
-      var s = R.pick([['A school has ' + C(n) + ' pencils to share equally among ' + d + ' classes. How many pencils does each class get?', 'pencils'], ['A farmer packs ' + C(n) + ' strawberries equally into ' + d + ' crates. How many strawberries go in each crate?', 'strawberries'], ['A library has ' + C(n) + ' books on ' + d + ' equal shelves. How many books are on each shelf?', 'books']]);
+      var wn = R.pick(NAMES), s = R.pick([['A school has ' + C(n) + ' pencils to share equally among ' + d + ' classes. How many pencils does each class get?', 'pencils'],
+        [wn + ' reads ' + C(n) + ' pages in ' + d + ' weeks, the same number each week. How many pages is that each week?', 'pages'],
+        ['A bakery makes ' + C(n) + ' rolls and packs them equally into ' + d + ' big boxes. How many rolls go in each box?', 'rolls'],
+        [wn + ' walks ' + C(n) + ' meters in ' + d + ' equal laps. How long is each lap?', 'meters'],
+        ['A club raises $\\$' + C(n) + '$ and splits it equally among ' + d + ' projects. How many dollars does each project get?', 'dollars'],
+        ['A garden has ' + C(n) + ' seeds to plant in ' + d + ' equal rows. How many seeds go in each row?', 'seeds'],
+        ['A team runs ' + C(n) + ' laps in ' + d + ' days, the same number each day. How many laps is that each day?', 'laps'], ['A farmer packs ' + C(n) + ' strawberries equally into ' + d + ' crates. How many strawberries go in each crate?', 'strawberries'], ['A library has ' + C(n) + ' books on ' + d + ' equal shelves. How many books are on each shelf?', 'books']]);
       return { q: s[0], a: num(Qt), unit: s[1], steps: ['Share equally: $' + C(n) + ' \\div ' + d + '$.'].concat(steps), hint: 'Think of $' + C(n) + '$ as a number of ' + PL[uk] + '.' };
     }
     return { q: 'Divide: $' + C(n) + ' \\div ' + d + '$', a: num(Qt), steps: steps, hint: 'Think of $' + C(n) + '$ as ' + PL[uk] + '. Which basic fact helps?' };
@@ -794,9 +804,14 @@
   }
   var COMPOSITES = [12, 16, 18, 20, 24, 28, 30, 32, 36, 40, 42, 44, 45, 48, 50, 54, 56, 60, 63, 64, 66, 70, 72, 75, 78, 80, 81, 84, 88, 90, 96, 98, 100];
   G('g4.factor-pairs', function (R, ctx) {
-    var pool = COMPOSITES.filter(function (v) { return v <= L(ctx, 30, 60, 100) && v >= L(ctx, 12, 16, 24); });
+    var pool = U.range(L(ctx, 6, 12, 24), L(ctx, 40, 72, 100)).filter(function (v) { return !U.isPrime(v); });
     var n = R.pick(pool), prs = U.factorPairs(n), fs = U.factors(n);
-    var kind = R.pick(L(ctx, ['list', 'partner', 'is'], ['list', 'count', 'partner', 'is'], ['list', 'count', 'notpair', 'is']));
+    var kind = R.pick(L(ctx, ['list', 'partner', 'is', 'rows'], ['list', 'count', 'partner', 'is', 'rows'], ['list', 'count', 'notpair', 'is', 'rows']));
+    if (kind === 'rows') {
+      var prr = R.pick(prs), swr = R.coin(), rr = swr ? prr[1] : prr[0], cr = n / rr, wr = R.pick(NAMES), objr = R.pick([['chairs', 'rows'], ['tiles', 'rows'], ['plants', 'rows'], ['photos', 'rows'], ['desks', 'rows'], ['stamps', 'rows']]);
+      return { q: wr + ' sets out ' + n + ' ' + objr[0] + ' in equal rows, with ' + rr + ' ' + (rr === 1 ? 'row' : 'rows') + '. How many ' + objr[0] + ' are in each row?', a: num(cr),
+        steps: ['Equal rows make an array: ' + rr + ' × (number in each row) = ' + n + '.', '$' + n + ' \\div ' + rr + ' = ' + cr + '$.', 'So ' + rr + ' and ' + cr + ' are a factor pair of ' + n + '.'], hint: 'What times ' + rr + ' makes ' + n + '?' };
+    }
     if (kind === 'list') return {
       q: 'List all the factors of ' + n + '. Separate them with commas.', a: { t: 'set', v: fs.map(String) },
       steps: pairSteps(n).concat(['Every number in those pairs is a factor: ' + fs.join(', ') + '.']),
@@ -900,8 +915,14 @@
     return ['$' + f + ' \\times ' + n / f + ' = ' + n + '$, so ' + f + ' is a factor of ' + n + '.', n + ' has more than two factors, so it is <b>composite</b>.'];
   }
   G('g4.prime-composite', function (R, ctx) {
-    var kind = R.pick(L(ctx, ['classify', 'classify', 'whichP'], ['classify', 'whichP', 'whichC'], ['classify', 'whichP', 'all']));
-    var max = L(ctx, 30, 60, 100);
+    var kind = R.pick(L(ctx, ['classify', 'classify', 'whichP', 'rect'], ['classify', 'whichP', 'whichC', 'rect'], ['classify', 'whichP', 'all', 'rect']));
+    var max = L(ctx, 50, 75, 100);
+    if (kind === 'rect') {
+      var nr = R.int(L(ctx, 5, 11, 21), max), wh = R.pick(NAMES), ob = R.pick(['square tiles', 'chairs', 'stickers', 'small photos', 'plants', 'cupcakes']), isP = U.isPrime(nr);
+      var pairs = U.factorPairs(nr).filter(function (p2) { return p2[0] > 1; });
+      return { q: wh + ' has ' + nr + ' ' + ob + '. Can ' + wh + ' arrange all of them in equal rows, with more than one row and more than one in each row?', a: mcKeep(['Yes', 'No'], isP ? 1 : 0),
+        steps: isP ? [nr + ' has only the factors 1 and ' + nr + '.', 'The only arrays are 1 row of ' + nr + ' or ' + nr + ' rows of 1.', 'So no: ' + nr + ' is prime.'] : [nr + ' has a factor pair without 1: $' + pairs[0][0] + ' \\times ' + pairs[0][1] + ' = ' + nr + '$.', 'So yes: ' + pairs[0][0] + ' rows of ' + pairs[0][1] + '. A number with an array like this is composite.'], hint: 'Is ' + nr + ' prime or composite?' };
+    }
     if (kind === 'classify') {
       var r = R.next(), n;
       if (r < 0.08) n = 1;
@@ -930,9 +951,9 @@
 
   G('g4.number-patterns', function (R, ctx) {
     var kind = R.pick(L(ctx, ['next', 'next', 'nth'], ['nth', 'miss', 'feature', 'next'], ['nth', 'feature', 'mult', 'miss']));
-    var st = R.int(1, L(ctx, 9, 15, 25)), k = R.int(2, L(ctx, 6, 9, 12)), terms = [];
+    var st = R.int(1, L(ctx, 20, 30, 40)), k = R.int(2, L(ctx, 9, 12, 15)), terms = [];
     for (var i = 0; i < 12; i++) terms.push(st + i * k);
-    var rule = 'Start at ' + st + '. Add ' + k + ' each time.';
+    var rule = R.pick(['', '', R.pick(NAMES) + ' makes a number pattern. ']) + 'Start at ' + st + '. Add ' + k + ' each time.';
     if (kind === 'next') return {
       q: rule + ' The pattern begins $' + terms.slice(0, 4).join(',\\ ') + ',\\ \\ldots$ What is the next number?', a: num(terms[4]),
       steps: ['Add ' + k + ' to the last number: $' + terms[3] + ' + ' + k + ' = ' + terms[4] + '$.'],
@@ -984,9 +1005,14 @@
   function properLowest(R, ds) { var d = R.pick(ds), n; for (var t = 0; t < 30; t++) { n = R.int(1, d - 1); if (lowest(n, d)) break; } if (!lowest(n, d)) n = 1; return [n, d]; }
 
   G('g4.equivalent-fractions-multiply', function (R, ctx) {
-    var f = properLowest(R, L(ctx, [2, 3, 4, 5, 6], [2, 3, 4, 5, 6, 8, 10], [3, 4, 5, 6, 8, 10, 12])), a = f[0], b = f[1];
-    var k = R.int(2, L(ctx, 4, 6, 8)); if (b * k > 100) k = 2;
-    var kind = R.pick(L(ctx, ['num', 'num', 'den'], ['num', 'den', 'which', 'factor'], ['den', 'which', 'tf', 'factor']));
+    var f = properLowest(R, L(ctx, [2, 3, 4, 5, 6, 8, 10, 12], [2, 3, 4, 5, 6, 8, 10, 12], [3, 4, 5, 6, 8, 10, 12])), a = f[0], b = f[1];
+    var k = R.int(2, L(ctx, 5, 6, 8)); if (b * k > 100) k = 2;
+    var kind = R.pick(L(ctx, ['num', 'den', 'story'], ['num', 'den', 'which', 'factor', 'story'], ['den', 'which', 'tf', 'factor', 'story']));
+    if (kind === 'story') {
+      var two = names(R, 2), th = R.pick(['pizza', 'pan of cornbread', 'garden', 'chocolate bar', 'pie', 'poster']);
+      return { q: two[0] + ' and ' + two[1] + ' each have the same size ' + th + '. ' + two[0] + ' cut one into ' + b + ' equal pieces and used ' + a + ' of them. ' + two[1] + ' cut the other one into ' + b * k + ' equal pieces. How many pieces must ' + two[1] + ' use to match ' + two[0] + '?', a: num(a * k),
+        steps: ['' + two[0] + ' used $' + fq(a, b) + '$.', 'Each of ' + two[0] + '’s pieces is the same as ' + k + ' of ' + two[1] + '’s pieces, because $' + b + ' \\times ' + k + ' = ' + b * k + '$.', '$' + fq(a, b) + ' = ' + fq(a * k, b * k) + '$, so ' + two[1] + ' uses ' + a * k + ' pieces.'], hint: 'How many small pieces make one big piece?' };
+    }
     var why = 'Multiplying the top and bottom by ' + k + ' cuts every piece into ' + k + ' smaller pieces: there are ' + k + ' times as many pieces, each ' + k + ' times smaller, so the amount stays the same.';
     if (kind === 'num') return {
       q: 'Find the missing number: $' + fq(a, b) + ' = ' + fq('?', b * k) + '$', a: num(a * k),
@@ -1021,12 +1047,12 @@
   });
 
   G('g4.simplest-form', function (R, ctx) {
-    var f = properLowest(R, L(ctx, [2, 3, 4, 5], [2, 3, 4, 5, 6], [3, 4, 5, 6, 8])), a = f[0], b = f[1];
-    var k = L(ctx, R.int(2, 3), R.int(2, 6), R.pick([4, 6, 8, 9])); if (b * k > 100) k = 2;
+    var f = properLowest(R, L(ctx, [2, 3, 4, 5, 6, 8, 10], [2, 3, 4, 5, 6, 8, 10], [3, 4, 5, 6, 8])), a = f[0], b = f[1];
+    var k = L(ctx, R.int(2, 5), R.int(2, 6), R.pick([4, 6, 8, 9])); if (b * k > 100) k = 2;
     var A = a * k, B = b * k, kind = R.pick(L(ctx, ['simp', 'simp', 'miss'], ['simp', 'miss', 'tf'], ['simp', 'fix', 'tf']));
     var gsteps = ['Find a number that divides both ' + A + ' and ' + B + '. The greatest one is ' + k + '.', 'Divide the top and the bottom by ' + k + ': $' + fq(A + ' \\div ' + k, B + ' \\div ' + k) + ' = ' + fq(a, b) + '$.', 'The only common factor of ' + a + ' and ' + b + ' is 1, so $' + fq(a, b) + '$ is in simplest form: fewer, larger pieces, the same amount.'];
     if (k > 3 && (k === 4 || k === 8)) gsteps.splice(2, 0, '(You could also divide by 2 more than once: you would get the same answer.)');
-    if (kind === 'simp') return { q: 'Write $' + fq(A, B) + '$ in simplest form.', a: num(a + '/' + b, 'frac'), steps: gsteps, hint: 'Divide the top and bottom by the same number. Keep going until only 1 divides both.' };
+    if (kind === 'simp') return { q: R.pick(['Write $' + fq(A, B) + '$ in simplest form.', names(R, 1)[0] + ' ' + R.pick(['ate', 'read', 'painted', 'planted', 'used']) + ' $' + fq(A, B) + '$ of ' + R.pick(['the whole', 'it']) + '. Write that fraction in simplest form.']), a: num(a + '/' + b, 'frac'), steps: gsteps, hint: 'Divide the top and bottom by the same number. Keep going until only 1 divides both.' };
     if (kind === 'miss') return {
       q: 'Find the missing number: $' + fq(A, B) + ' = ' + fq('?', b) + '$', a: num(a),
       steps: ['The bottom went from ' + B + ' to ' + b + ': it was divided by ' + k + '.', 'Divide the top by the same number: $' + A + ' \\div ' + k + ' = ' + a + '$.', 'So $' + fq(A, B) + ' = ' + fq(a, b) + '$.'],
@@ -1053,15 +1079,15 @@
     function rel(n, d) { return 2 * n < d ? 0 : 2 * n > d ? 1 : 2; } // vs 1/2: less, more, equal
     function halfStep(n, d) { return 'Half of ' + d + ' is ' + (d % 2 ? M.floor(d / 2) + ' and a half' : d / 2) + '. $' + fq(n, d) + '$ has ' + n + ' ' + dn(d, n) + ', which is ' + (2 * n < d ? 'less than' : 2 * n > d ? 'more than' : 'exactly') + ' half of ' + d + '.'; }
     if (kind === 'half') {
-      var d = R.pick(L(ctx, [4, 6, 8, 10], [3, 5, 6, 7, 8, 9, 10, 12], [5, 7, 9, 11, 12])), n = R.int(1, d - 1), r = rel(n, d);
+      var d = R.pick(L(ctx, [3, 4, 5, 6, 8, 10, 12], [3, 5, 6, 7, 8, 9, 10, 12], [5, 7, 9, 11, 12])), n = R.int(1, d - 1), r = rel(n, d);
       return {
-        q: 'Is $' + fq(n, d) + '$ more than, less than, or equal to $\\dfrac{1}{2}$?', a: mcKeep(['more than $\\dfrac{1}{2}$', 'less than $\\dfrac{1}{2}$', 'equal to $\\dfrac{1}{2}$'], [1, 0, 2][r]),
+        q: R.pick(['', names(R, 1)[0] + ' ' + R.pick(['ate $' + fq(n, d) + '$ of a sandwich', 'read $' + fq(n, d) + '$ of a book', 'walked $' + fq(n, d) + '$ of a mile', 'filled $' + fq(n, d) + '$ of a jar', 'painted $' + fq(n, d) + '$ of a wall']) + '. ']) + 'Is $' + fq(n, d) + '$ more than, less than, or equal to $\\dfrac{1}{2}$?', a: mcKeep(['more than $\\dfrac{1}{2}$', 'less than $\\dfrac{1}{2}$', 'equal to $\\dfrac{1}{2}$'], [1, 0, 2][r]),
         steps: [halfStep(n, d), 'So $' + fq(n, d) + '$ is ' + ['less than', 'more than', 'equal to'][r] + ' $\\dfrac{1}{2}$.'],
         hint: 'Double the numerator and compare it with the denominator.'
       };
     }
     if (kind === 'one') {
-      var d2 = R.pick([3, 4, 5, 6, 8, 10]), n2 = R.int(1, 2 * d2 - 1), r2 = n2 < d2 ? 0 : n2 > d2 ? 1 : 2;
+      var d2 = R.pick([2, 3, 4, 5, 6, 8, 10, 12]), n2 = R.int(1, 2 * d2 - 1), r2 = n2 < d2 ? 0 : n2 > d2 ? 1 : 2;
       if (R.chance(0.15)) { n2 = d2; r2 = 2; }
       return {
         q: 'Is $' + fq(n2, d2) + '$ more than, less than, or equal to 1?', a: mcKeep(['more than 1', 'less than 1', 'equal to 1'], [1, 0, 2][r2]),
@@ -1110,8 +1136,13 @@
   });
 
   G('g4.decompose-fractions', function (R, ctx) {
-    var d = R.pick(L(ctx, [3, 4, 5, 6, 8], [5, 6, 8, 10, 12], [4, 5, 6, 8, 10, 12])), n = R.int(3, d - 1);
-    var kind = R.pick(L(ctx, ['miss', 'unit', 'miss'], ['miss3', 'which', 'unit'], ['which', 'mixed', 'miss3']));
+    var d = R.pick(L(ctx, [3, 4, 5, 6, 8, 10, 12], [5, 6, 8, 10, 12], [4, 5, 6, 8, 10, 12])), n = R.int(ctx.level === 1 ? 2 : 3, d - 1);
+    var kind = R.pick(L(ctx, ['miss', 'unit', 'miss', 'story'], ['miss3', 'which', 'unit', 'story'], ['which', 'mixed', 'miss3']));
+    if (kind === 'story') {
+      var p0 = R.int(1, n - 1), who0 = names(R, 1)[0], job = R.pick([['paints', 'of a fence', 'in the morning', 'in the afternoon'], ['reads', 'of a book', 'on Monday', 'on Tuesday'], ['walks', 'of a trail', 'before lunch', 'after lunch'], ['plants', 'of a garden', 'on Saturday', 'on Sunday']]);
+      return { q: who0 + ' ' + job[0] + ' $' + fq(n, d) + '$ ' + job[1] + ' in all: $' + fq(p0, d) + '$ ' + job[2] + ' and the rest ' + job[3] + '. What fraction ' + job[1] + ' is done ' + job[3] + '? Give the numerator of $' + fq('?', d) + '$.', a: num(n - p0),
+        steps: ['$' + fq(n, d) + ' = ' + fq(p0, d) + ' + ' + fq('?', d) + '$.', 'Count ' + dn(d) + ': ' + n + ' in all, ' + p0 + ' done first, so $' + n + ' - ' + p0 + ' = ' + (n - p0) + '$ more.', 'So $' + fq(n - p0, d) + '$ is done ' + job[3] + '.'], hint: 'What plus ' + p0 + ' makes ' + n + '?' };
+    }
     if (kind === 'unit') return {
       q: 'How many copies of $' + fq(1, d) + '$ add up to $' + fq(n, d) + '$?', a: num(n),
       steps: ['$' + fq(n, d) + '$ means ' + n + ' pieces of size $' + fq(1, d) + '$.', (n <= 5 ? '$' + Array(n + 1).join(fq(1, d) + ' + ').slice(0, -3) + ' = ' + fq(n, d) + '$' : '$' + fq(1, d) + ' + ' + fq(1, d) + ' + \\cdots + ' + fq(1, d) + ' = ' + fq(n, d) + '$ with ' + n + ' copies') + ', so the answer is ' + n + '.'],
@@ -1154,10 +1185,19 @@
   });
 
   G('g4.add-like-fractions', function (R, ctx) {
-    var d = R.pick(L(ctx, [3, 4, 5, 6, 8], [4, 5, 6, 8, 10, 12], [5, 6, 8, 10, 12])), kind = R.pick(L(ctx, ['add', 'add', 'sub'], ['add', 'sub', 'big'], ['three', 'miss', 'fromone', 'sub']));
+    var d = R.pick(L(ctx, [3, 4, 5, 6, 8], [4, 5, 6, 8, 10, 12], [5, 6, 8, 10, 12])), kind = R.pick(L(ctx, ['add', 'sub', 'story', 'story'], ['add', 'sub', 'story', 'big'], ['three', 'miss', 'fromone', 'sub']));
     var a, b, c;
     function ans(n) { return num(vr(n, d)); }
     var note = 'The pieces stay ' + dn(d) + ', so the denominator stays ' + d + '. Only the number of pieces changes.';
+    if (kind === 'story') {
+      var sw = names(R, 1)[0], plus = R.coin(), sc = R.pick([['ran', 'of a mile', 'ran', 'in all', 'farther did the first run go than the second'], ['ate', 'of a pizza', 'ate', 'in all', 'more did the first time take than the second'], ['painted', 'of a fence', 'painted', 'in all', 'more was painted the first time']]);
+      a = R.int(1, d - 2); b = R.int(1, d - 1 - a);
+      if (plus) return { q: sw + ' ' + sc[0] + ' $' + fq(a, d) + '$ ' + sc[1] + ' in the morning and $' + fq(b, d) + '$ ' + sc[1] + ' in the afternoon. How much ' + sc[1] + ' did ' + sw + ' ' + (sc[0] === 'ran' ? 'run' : sc[0] === 'ate' ? 'eat' : 'paint') + ' in all?', a: ans(a + b),
+        steps: ['Put the two parts together: $' + fq(a, d) + ' + ' + fq(b, d) + '$.', a + ' ' + dn(d, a) + ' plus ' + b + ' ' + dn(d, b) + ' is ' + (a + b) + ' ' + dn(d, a + b) + '.', note, '$' + fq(a, d) + ' + ' + fq(b, d) + ' = ' + fq(a + b, d) + '$'], hint: 'Add the numerators. The pieces stay the same size.' };
+      var big = a + b;
+      return { q: sw + ' had $' + fq(big, d) + '$ of a ' + R.pick(['ribbon', 'rope', 'roll of paper', 'strip of cloth']) + ' and used $' + fq(a, d) + '$ of it. How much of it is left?', a: ans(b),
+        steps: ['Take away: $' + fq(big, d) + ' - ' + fq(a, d) + '$.', big + ' ' + dn(d, big) + ' minus ' + a + ' ' + dn(d, a) + ' is ' + b + ' ' + dn(d, b) + '.', note, '$' + fq(big, d) + ' - ' + fq(a, d) + ' = ' + fq(b, d) + '$'], hint: 'Subtract the numerators. The pieces stay the same size.' };
+    }
     if (kind === 'add' || kind === 'big') {
       if (kind === 'add') { a = R.int(1, d - 2); b = R.int(1, d - 1 - a); } else { a = R.int(2, d - 1); b = R.int(d - a + 1 > d - 1 ? 1 : d - a + 1, d - 1); }
       return {
@@ -1199,10 +1239,15 @@
   });
 
   G('g4.mixed-numbers', function (R, ctx) {
-    var d = R.pick(L(ctx, [2, 3, 4, 5], [3, 4, 5, 6, 8], [4, 5, 6, 8, 10, 12])), w = R.int(1, L(ctx, 3, 5, 9)), n;
+    var d = R.pick(L(ctx, [2, 3, 4, 5, 6, 8], [3, 4, 5, 6, 8, 10], [4, 5, 6, 8, 10, 12])), w = R.int(1, L(ctx, 5, 6, 9)), n;
     for (var t = 0; t < 20; t++) { n = R.int(1, d - 1); if (lowest(n, d)) break; }
     if (!lowest(n, d)) n = 1;
-    var N = w * d + n, kind = R.pick(L(ctx, ['toImp', 'toMix', 'wholes'], ['toImp', 'toMix', 'toMix', 'wholes'], ['toImp', 'toMix', 'which']));
+    var N = w * d + n, kind = R.pick(L(ctx, ['toImp', 'toMix', 'wholes', 'story'], ['toImp', 'toMix', 'toMix', 'wholes', 'story'], ['toImp', 'toMix', 'which', 'story']));
+    if (kind === 'story') {
+      var who = names(R, 1)[0], it = R.pick([['pies', 'pie'], ['pizzas', 'pizza'], ['loaves of bread', 'loaf'], ['pans of cornbread', 'pan'], ['melons', 'melon']]);
+      return { q: who + ' has ' + w + ' whole ' + (w === 1 ? it[1] : it[0]) + ' and $' + fq(n, d) + '$ of another. Every ' + it[1] + ' is cut into ' + dn(d) + '. How many ' + dn(d) + ' is that? Write the amount as a fraction.', a: num(N + '/' + d, 'frac'),
+        steps: ['Each whole is ' + d + ' ' + dn(d) + ', so ' + w + ' whole' + (w > 1 ? 's are' : ' is') + ' $' + w + ' \\times ' + d + ' = ' + w * d + '$ ' + dn(d) + '.', 'Add the other ' + n + ': $' + w * d + ' + ' + n + ' = ' + N + '$ ' + dn(d) + '.', 'So $' + mx(w, n, d) + ' = ' + fq(N, d) + '$.'], hint: 'How many ' + dn(d) + ' are in one whole?' };
+    }
     if (kind === 'toImp') return {
       q: 'Write $' + mx(w, n, d) + '$ as a fraction.', a: num(N + '/' + d, 'frac'),
       steps: ['Each whole is $' + fq(d, d) + '$, so ' + w + ' whole' + (w > 1 ? 's are' : ' is') + ' $' + w + ' \\times ' + d + ' = ' + w * d + '$ ' + dn(d) + '.', 'Add the ' + n + ' extra ' + dn(d, n) + ': $' + w * d + ' + ' + n + ' = ' + N + '$.', 'So $' + mx(w, n, d) + ' = ' + fq(N, d) + '$.'],
@@ -1322,7 +1367,7 @@
   G('g4.fraction-times-whole', function (R, ctx) {
     var d = R.pick(L(ctx, [3, 4, 5, 6, 8], [3, 4, 5, 6, 8, 10, 12], [4, 5, 6, 8, 10, 12])), a = R.int(L(ctx, 1, 1, 2), L(ctx, 1, d - 1, d - 1)), n = R.int(L(ctx, 2, 2, 3), L(ctx, 6, 8, 9));
     if (ctx.level === 1 && R.coin()) a = R.int(1, d - 1);
-    var P = n * a, kind = R.pick(L(ctx, ['calc', 'unit', 'calc'], ['calc', 'story', 'which', 'unit'], ['story', 'which', 'between', 'calc']));
+    var P = n * a, kind = R.pick(L(ctx, ['calc', 'unit', 'story'], ['calc', 'story', 'which', 'unit'], ['story', 'which', 'between', 'calc']));
     var core = ['$' + n + ' \\times ' + fq(a, d) + '$ means ' + n + ' groups of $' + fq(a, d) + '$: $' + Array(n + 1).join(fq(a, d) + ' + ').slice(0, -3) + '$.', 'That is ' + n + ' × ' + a + ' = ' + P + ' ' + dn(d, P) + ': $' + fq(P, d) + '$' + (P >= d ? ' $= ' + mr(P, d) + '$' : '') + '.', 'Only the number of pieces is multiplied. The pieces are still ' + dn(d) + '.'];
     if (n > 5) core[0] = '$' + n + ' \\times ' + fq(a, d) + '$ means ' + n + ' groups of $' + fq(a, d) + '$, which is ' + n + ' × ' + a + ' pieces of size $' + fq(1, d) + '$.';
     if (kind === 'calc') return { q: 'Multiply: $' + n + ' \\times ' + fq(a, d) + '$', a: num(vr(P, d)), steps: core, hint: 'Count the pieces: ' + n + ' groups of ' + a + ' ' + dn(d, a) + '.' };
@@ -1357,8 +1402,16 @@
 
   function dec2(h) { return Q(h, 100).toDec(2).replace(/0$/, '').replace(/\.$/, ''); } // hundredths -> "0.3", "0.07", "1.25"
   G('g4.tenths-hundredths', function (R, ctx) {
-    var kind = R.pick(L(ctx, ['t2h', 't2h', 'h2t', 'add'], ['t2h', 'h2t', 'add', 'which'], ['add', 'add2', 'which', 'h2t']));
-    var t = R.int(1, 9), h = R.int(1, 9);
+    var kind = R.pick(L(ctx, ['t2h', 'h2t', 'add', 'money', 'meter'], ['t2h', 'h2t', 'add', 'which', 'money', 'meter'], ['add', 'add2', 'which', 'h2t', 'money']));
+    var t = R.int(1, 9), h = R.int(1, 9), whoT = names(R, 1)[0];
+    if (kind === 'money') {
+      if (R.coin()) return { q: whoT + ' has ' + t + ' ' + (t === 1 ? 'dime' : 'dimes') + '. A dime is $' + fq(1, 10) + '$ of a dollar and a penny is $' + fq(1, 100) + '$ of a dollar. How many pennies are worth the same as ' + t + ' ' + (t === 1 ? 'dime' : 'dimes') + '?', a: num(10 * t),
+        steps: ['1 dime is worth 10 pennies, just as $' + fq(1, 10) + ' = ' + fq(10, 100) + '$.', t + ' dimes are $' + fq(t, 10) + ' = ' + fq(10 * t, 100) + '$ of a dollar.', 'That is ' + 10 * t + ' pennies.'], hint: 'How many pennies make one dime?' };
+      return { q: whoT + ' has ' + t + ' ' + (t === 1 ? 'dime' : 'dimes') + ' and ' + h + ' ' + (h === 1 ? 'penny' : 'pennies') + '. What fraction of a dollar is that, in hundredths? Fill in: $' + fq('?', 100) + '$', a: num(10 * t + h),
+        steps: [t + ' dimes are $' + fq(t, 10) + ' = ' + fq(10 * t, 100) + '$ of a dollar.', h + ' pennies are $' + fq(h, 100) + '$ of a dollar.', 'Together: $' + fq(10 * t, 100) + ' + ' + fq(h, 100) + ' = ' + fq(10 * t + h, 100) + '$.'], hint: 'Change the dimes to hundredths first.' };
+    }
+    if (kind === 'meter') return { q: whoT + ' cuts a ribbon that is $' + fq(t, 10) + '$ of a meter long. A meter is 100 centimeters. How many hundredths of a meter (centimeters) long is the ribbon?', a: num(10 * t),
+      steps: ['Each tenth of a meter is 10 centimeters, because $' + fq(1, 10) + ' = ' + fq(10, 100) + '$.', '$' + fq(t, 10) + ' = ' + fq(10 * t, 100) + '$, so the ribbon is ' + 10 * t + ' centimeters long.'], hint: 'How many hundredths are in one tenth?' };
     if (kind === 't2h') return {
       q: 'Find the missing number: $' + fq(t, 10) + ' = ' + fq('?', 100) + '$', a: num(t * 10),
       steps: ['Cut each tenth into 10 equal pieces. Each piece is a hundredth.', t + ' tenths become $' + t + ' \\times 10 = ' + t * 10 + '$ hundredths: multiply the top and bottom by 10.', 'So $' + fq(t, 10) + ' = ' + fq(t * 10, 100) + '$.'],
@@ -1397,7 +1450,7 @@
     }
     if (kind === 'f2d') {
       var fr = useH ? fq(v, 100) : fq(v / 10, 10);
-      return { q: 'Write $' + fr + '$ as a decimal.', a: num(D, 'dec'), steps: placeSteps(v), hint: onlyH ? 'Hundredths need two places after the point. Is the tenths place empty?' : 'Tenths take one place after the point; hundredths take two.' };
+      return { q: R.pick(['Write $' + fr + '$ as a decimal.', names(R, 1)[0] + ' ' + R.pick(['shaded $' + fr + '$ of a grid', 'ate $' + fr + '$ of a pizza', 'walked $' + fr + '$ of a kilometer', 'painted $' + fr + '$ of a fence', 'filled $' + fr + '$ of a tank']) + '. Write $' + fr + '$ as a decimal.']), a: num(D, 'dec'), steps: placeSteps(v), hint: onlyH ? 'Hundredths need two places after the point. Is the tenths place empty?' : 'Tenths take one place after the point; hundredths take two.' };
     }
     if (kind === 'w2d') {
       var words = useH ? (v === 1 ? 'one hundredth' : U.words(v) + ' hundredths') : U.words(v / 10) + ' tenth' + (v === 10 ? '' : 's');
@@ -1473,11 +1526,11 @@
   ];
   G('g4.convert-units', function (R, ctx) {
     var u = R.pick(L(ctx, UNITS.filter(function (x) { return x[4] <= 100; }), UNITS, UNITS)), f = u[4];
-    var kind = R.pick(L(ctx, ['simple', 'simple', 'table'], ['simple', 'two', 'table'], ['two', 'compare', 'table', 'simple']));
+    var kind = R.pick(L(ctx, ['simple', 'simple', 'table', 'two'], ['simple', 'two', 'table'], ['two', 'compare', 'table', 'simple']));
     var n = R.int(2, L(ctx, 9, 12, 15));
     if (f >= 1000) n = R.int(2, 9);
     if (kind === 'simple') return {
-      q: 'Convert: ' + n + ' ' + u[1] + ' = ? ' + u[3], a: num(n * f), unit: u[3],
+      q: R.pick(['Convert: ' + n + ' ' + u[1] + ' = ? ' + u[3], names(R, 1)[0] + ' ' + R.pick(['needs', 'has', 'measured', 'wrote down']) + ' ' + n + ' ' + u[1] + '. How many ' + u[3] + ' is that?']), a: num(n * f), unit: u[3],
       steps: ['1 ' + u[0] + ' = ' + C(f) + ' ' + u[3] + '.', 'Each ' + u[0] + ' becomes ' + C(f) + ' ' + u[3] + ', so multiply: $' + n + ' \\times ' + C(f) + ' = ' + C(n * f) + '$.', 'Check: ' + u[3] + ' are smaller than ' + u[1] + ', so it takes more of them. The number should get bigger, and it did.'],
       hint: 'How many ' + u[3] + ' are in one ' + u[0] + '? You need ' + n + ' of those.'
     };
@@ -1704,7 +1757,7 @@
     if (kind === 'fit') {
       var dd = R.pick(L(ctx, [90, 180, 120, 60], [30, 45, 60, 90, 120, 36, 40], [10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 72]));
       return {
-        q: 'How many $' + dd + '^\\circ$ angles fit together, with no gaps or overlaps, to make a full turn?', a: num(360 / dd),
+        q: R.pick(['How many $' + dd + '^\\circ$ angles fit together, with no gaps or overlaps, to make a full turn?', names(R, 1)[0] + ' cuts a round ' + R.pick(['pizza', 'pie', 'cake', 'paper circle']) + ' from the center into equal slices. Each slice has a $' + dd + '^\\circ$ angle at the center. How many slices are there?', 'A ' + R.pick(['sprinkler', 'lighthouse beam', 'fan blade', 'toy top']) + ' turns $' + dd + '^\\circ$ at a time. How many of these turns make one full turn?']), a: num(360 / dd),
         steps: ['A full turn is $360^\\circ$.', 'Angles that fit together add, so ask how many ' + dd + 's make 360: $360 \\div ' + dd + ' = ' + 360 / dd + '$.', 'Check: $' + 360 / dd + ' \\times ' + dd + ' = 360$.'],
         hint: 'How many ' + dd + 's are in 360?'
       };
@@ -1712,12 +1765,12 @@
     if (kind === 'frac' || kind === 'rev') {
       var f = R.pick(L(ctx, TURNS.slice(0, 4), TURNS.slice(0, 10), TURNS.slice(4))), deg = 360 * f[0] / f[1], ft = f[0] === f[1] ? '1' : fq(f[0], f[1]);
       if (kind === 'rev') return {
-        q: 'An angle measures $' + deg + '^\\circ$. What fraction of a full turn is it?', a: num(f[0] + '/' + f[1]),
+        q: R.pick(['An angle measures $' + deg + '^\\circ$. What fraction of a full turn is it?', names(R, 1)[0] + ' turns $' + deg + '^\\circ$ on ' + R.pick(['ice skates', 'a swivel chair', 'a dance floor', 'the spot']) + '. What fraction of a full turn is that?']), a: num(f[0] + '/' + f[1]),
         steps: ['A full turn is $360^\\circ$.', 'The angle is $' + deg + '$ of the 360 one-degree turns: $' + fq(deg, 360) + ' = ' + ft + '$ of a full turn.', 'Check: $' + ft + ' \\times 360 = ' + deg + '$.'],
         hint: 'How many angles of $' + deg + '^\\circ$ fit in $360^\\circ$?'
       };
       return {
-        q: 'How many degrees is ' + (f[0] === f[1] ? 'a full turn' : '$' + ft + '$ of a full turn') + '?', a: num(deg), unit: 'degrees',
+        q: R.pick(['How many degrees is ' + (f[0] === f[1] ? 'a full turn' : '$' + ft + '$ of a full turn') + '?', names(R, 1)[0] + ' turns ' + (f[0] === f[1] ? 'a full turn' : '$' + ft + '$ of a full turn') + ' ' + R.pick(['on a skateboard', 'in a swivel chair', 'while dancing', 'on the spot', 'on a merry-go-round']) + '. How many degrees is that?']), a: num(deg), unit: 'degrees',
         steps: ['A full turn is $360^\\circ$: 360 one-degree turns.', f[0] === f[1] ? 'So a full turn is $360^\\circ$.' : 'Split 360 into ' + f[1] + ' equal parts: $360 \\div ' + f[1] + ' = ' + 360 / f[1] + '$.' + (f[0] > 1 ? ' Take ' + f[0] + ' of them: $' + f[0] + ' \\times ' + 360 / f[1] + ' = ' + deg + '$.' : ''), 'So the angle is $' + deg + '^\\circ$.'],
         hint: 'A full turn is $360^\\circ$.'
       };
@@ -1727,10 +1780,10 @@
       return { q: 'An angle turns through ' + n + ' one-degree angles. What is its measure in degrees?', a: num(n), unit: 'degrees', steps: ['Each one-degree angle adds $1^\\circ$.', n + ' of them make $' + n + '^\\circ$.'], hint: 'A degree is the turn of a one-degree angle.' };
     }
     if (kind === 'clock') {
-      var k = R.int(1, 11);
+      var k = R.int(1, 11), k0 = R.int(0, 11), k1 = (k0 + k) % 12 || 12, k0s = k0 || 12;
       return {
-        q: 'The minute hand of a clock turns from the 12 to the ' + k + '. How many degrees does it turn?', a: num(30 * k), unit: 'degrees',
-        steps: ['The 12 numbers split a full turn into 12 equal parts: $360 \\div 12 = 30$, so each number is $30^\\circ$.', 'From 12 to ' + k + ' is ' + k + ' of those parts: $' + k + ' \\times 30 = ' + 30 * k + '^\\circ$.'],
+        q: 'The minute hand of a clock turns ' + (R.coin() ? 'forward ' : '') + 'from the ' + k0s + ' to the ' + k1 + '. How many degrees does it turn?', a: num(30 * k), unit: 'degrees',
+        steps: ['The 12 numbers split a full turn into 12 equal parts: $360 \\div 12 = 30$, so each number is $30^\\circ$.', 'From ' + k0s + ' to ' + k1 + ' (going clockwise) is ' + k + ' of those parts: $' + k + ' \\times 30 = ' + 30 * k + '^\\circ$.'],
         hint: 'How many degrees from one number to the next?'
       };
     }
@@ -1753,10 +1806,10 @@
   function angleKind(d) { return d < 90 ? 0 : d === 90 ? 1 : d < 180 ? 2 : 3; }
   var KINDS = ['acute', 'right', 'obtuse', 'straight'];
   G('g4.angle-types', function (R, ctx) {
-    var kind = R.pick(L(ctx, ['pic', 'pic', 'meas'], ['pic', 'meas', 'which', 'pic'], ['pic', 'which', 'clock', 'meas']));
+    var kind = R.pick(L(ctx, ['pic', 'meas', 'meas'], ['pic', 'meas', 'which', 'pic'], ['pic', 'which', 'clock', 'meas']));
     if (kind === 'pic') {
       var k = R.int(0, ctx.level === 1 ? 2 : 3), deg = k === 0 ? R.int(4, 14) * 5 : k === 1 ? 90 : k === 2 ? R.int(22, 33) * 5 : 180;
-      var base = ctx.level === 1 ? R.pick([0, 0, 180 - deg]) : R.int(0, 23) * 15, V = [5, 3], items = [];
+      var base = ctx.level === 1 ? R.pick([0, 0, 180 - deg, 15, 30, 345]) : R.int(0, 23) * 15, V = [5, 3], items = [];
       if (k === 1) items.push({ t: 'right', at: V, d1: base, d2: base + 90, s: 0.45, color: 'red' }); else items.push({ t: 'angle', at: V, a1: base, a2: base + deg, r: 0.7, color: 'red' });
       items.push({ t: 'ray', a: V, dir: base, len: 2.5, color: 'green' }, { t: 'ray', a: V, dir: base + deg, len: 2.5, color: 'green' });
       return {
@@ -1790,9 +1843,9 @@
   });
 
   G('g4.measure-angles', function (R, ctx) {
-    var mode = L(ctx, 'outer', R.pick(['outer', 'inner', 'inner']), R.pick(['inner', 'rot', 'rot', 'outer'])), step = L(ctx, 10, 5, 5);
+    var mode = L(ctx, R.pick(['outer', 'outer', 'inner']), R.pick(['outer', 'inner', 'inner', 'rot']), R.pick(['inner', 'rot', 'rot', 'outer'])), step = L(ctx, R.pick([10, 5]), 5, 5);
     var D = R.int(M.ceil(15 / step), M.floor(165 / step)) * step; if (D === 90) D += step;
-    var rot = mode === 'rot' ? R.pick([15, 20, 30, 40]) : 0, V = [5, +(1 + 4 * M.sin(rot * M.PI / 180)).toFixed(3)], H = +(V[1] + 4.75).toFixed(2);
+    var rot = mode === 'rot' ? R.pick([10, 15, 20, 25, 30, 35, 40]) : 0, V = [5, +(1 + 4 * M.sin(rot * M.PI / 180)).toFixed(3)], H = +(V[1] + 4.75).toFixed(2);
     var d0 = mode === 'inner' ? 180 : rot, d1 = mode === 'inner' ? 180 - D : rot + D;
     var items = [{ t: 'ray', a: V, dir: d0, len: 4.45, color: 'ink', width: 3.5 }, { t: 'ray', a: V, dir: d1, len: 4.45, color: 'green', width: 3.5 },
       { t: 'angle', at: V, a1: M.min(d0, d1), a2: M.max(d0, d1), r: 0.75, color: 'red' }, { t: 'protractor', at: V, r: 4, rot: rot }];
@@ -1800,7 +1853,7 @@
     var steps = ['The center of the protractor is on the corner of the angle, and one side lies along the 0 line.', 'That side starts at 0 on the ' + scale + '. Follow that scale to the other side: it reads $' + D + '^\\circ$.', 'Check: the angle is ' + (D < 90 ? 'acute (smaller than a square corner)' : 'obtuse (wider than a square corner)') + ', so $' + D + '^\\circ$ makes sense and $' + (180 - D) + '^\\circ$ (the other scale) does not.'];
     var viz = geo(10, H, items, 'An angle with a protractor on it'); viz.opts.grid = 'none';
     viz.opts.crop = [+(V[0] - 4.55).toFixed(2), +(V[1] - 4 * M.sin(rot * M.PI / 180) - 0.3).toFixed(2), +(V[0] + 4.55).toFixed(2), +(V[1] + 4.55).toFixed(2)];
-    if (ctx.level >= 2 && R.chance(0.35)) {
+    if (R.chance(ctx.level === 1 ? 0.4 : 0.35)) {
       var wr = [180 - D, D + 10, D - 10].filter(function (x) { return x > 0 && x < 180 && x !== D; });
       return { q: 'Read the protractor. What is the measure of the shaded angle?', a: mcOf('$' + D + '^\\circ$', wr.map(function (x) { return '$' + x + '^\\circ$'; })), viz: viz, steps: steps, hint: 'Which scale has its 0 on the side where the angle starts? Is the angle acute or obtuse?' };
     }

@@ -83,10 +83,15 @@
     return ['Think addition: what goes with ' + a + ' to make ' + s + '?', m(a + ' + ' + b + ' = ' + s) + ', so ' + m(s + ' - ' + a + ' = ' + b) + '.'];
   }
   G('g2.facts-from-memory', function (R, ctx) {
-    var shape = by(ctx, R.pick(['add', 'add', 'sub']), R.pick(['add', 'sub', 'missA', 'missB']), R.pick(['add', 'sub', 'missA', 'missB', 'start', 'ten']));
+    var shape = by(ctx, R.pick(['add', 'sub', 'story', 'story']), R.pick(['add', 'sub', 'missA', 'missB', 'story']), R.pick(['add', 'sub', 'missA', 'missB', 'start', 'ten', 'story']));
     var a = R.int(2, 9), b = R.int(2, 9);
     if (a + b < 11 && chance(R, 0.75)) b = R.int(Math.max(2, 11 - a), 9);
     var s = a + b;
+    if (shape === 'story') {
+      var kd = kids(R, 1)[0], th = R.pick(THINGS), sub = R.coin();
+      if (!sub) return { q: kd.n + ' has ' + pl(a, th[0], th[1]) + '. ' + kd.P + ' gets ' + b + ' more. How many ' + th[1] + ' does ' + kd.p + ' have now?', a: N(s), steps: ['Join the two groups: ' + m(a + ' + ' + b) + '.'].concat(addSteps(a, b)), hint: 'Put ' + a + ' and ' + b + ' together.' };
+      return { q: kd.n + ' has ' + pl(s, th[0], th[1]) + '. ' + kd.P + ' gives ' + a + ' away. How many ' + th[1] + ' does ' + kd.p + ' have left?', a: N(b), steps: ['Take ' + a + ' away from ' + s + ': ' + m(s + ' - ' + a) + '.'].concat(subSteps(s, a)), hint: 'Think: ' + a + ' plus what makes ' + s + '?' };
+    }
     if (shape === 'ten' && s <= 10) shape = 'add';
     var q, ans, steps, hint;
     if (shape === 'add') { q = m(a + ' + ' + b + ' = ' + BOX); ans = s; steps = addSteps(a, b); hint = a === b ? 'It is a double.' : Math.abs(a - b) === 1 ? 'It is close to a double.' : s > 10 ? 'Can you make a 10 first?' : 'Start at the bigger number.'; }
@@ -99,7 +104,12 @@
   });
 
   G('g2.even-odd', function (R, ctx) {
-    var shape = by(ctx, 'pic', R.pick(['two', 'two', 'double', 'zero']), R.pick(['three', 'which', 'two']));
+    var shape = by(ctx, R.pick(['pic', 'pairs']), R.pick(['two', 'two', 'double', 'double', 'pairs', 'pairs', 'pairs', chance(R, 0.25) ? 'zero' : 'two']), R.pick(['three', 'which', 'two']));
+    if (shape === 'pairs') {
+      var kp = kids(R, 1)[0], tp = R.pick(THINGS), np = by(ctx, R.int(4, 20), R.int(11, 40)), hp = Math.floor(np / 2);
+      return { q: kp.n + ' has ' + np + ' ' + tp[1] + '. ' + kp.P + ' puts them in pairs. Is ' + np + ' even or odd?', a: mcKeep(['even', 'odd'], np % 2),
+        steps: ['Make pairs: ' + np + ' ' + tp[1] + ' make ' + pl(hp, 'pair') + (np % 2 ? ' with 1 left over.' : ' with none left over.'), np % 2 ? m(np + ' = ' + hp + ' + ' + hp + ' + 1') + ', so ' + np + ' is <b>odd</b>.' : m(np + ' = ' + hp + ' + ' + hp) + ' (a double), so ' + np + ' is <b>even</b>.'], hint: 'Is one left over with no partner?' };
+    }
     var EO = ['even', 'odd'];
     function why(n) {
       var d = n % 10, ev = n % 2 === 0;
@@ -110,14 +120,14 @@
       return out;
     }
     if (shape === 'pic') {
-      var n = R.int(5, 18), h = Math.floor(n / 2);
-      return { q: 'Is the number of dots even or odd? Look for pairs.', viz: { name: 'g2-array', opts: { n: n, layout: 'pairs', highlight: false, label: n + ' dots set out in pairs' } }, a: mcKeep(EO, n % 2),
-        steps: ['Count the dots: there are ' + n + '.', 'Match them in pairs: ' + pl(h, 'pair') + (n % 2 ? ' and 1 dot left over.' : ' and none left over.'), (n % 2 ? m(n + ' = ' + h + ' + ' + h + ' + 1') + ', so ' + n + ' is <b>odd</b>.' : m(n + ' = ' + h + ' + ' + h) + ' (a double), so ' + n + ' is <b>even</b>.')],
-        hint: 'Is there a dot with no partner?' };
+      var n = R.int(4, 20), h = Math.floor(n / 2);
+      return { q: 'Is the number of things in the picture even or odd? Look for pairs.', viz: { name: 'g2-array', opts: { n: n, layout: 'pairs', highlight: false, item: R.pick(['dot', 'star', 'heart', 'square', 'apple']), color: R.pick(['red', 'blue', 'green']), label: n + ' things set out in pairs' } }, a: mcKeep(EO, n % 2),
+        steps: ['Count them: there are ' + n + '.', 'Match them in pairs: ' + pl(h, 'pair') + (n % 2 ? ' and 1 left over.' : ' and none left over.'), (n % 2 ? m(n + ' = ' + h + ' + ' + h + ' + 1') + ', so ' + n + ' is <b>odd</b>.' : m(n + ' = ' + h + ' + ' + h) + ' (a double), so ' + n + ' is <b>even</b>.')],
+        hint: 'Is there one with no partner?' };
     }
     if (shape === 'zero') return { q: 'Is ' + m(0) + ' even or odd?', a: mcKeep(EO, 0), steps: ['Zero things can be shared into two equal groups of 0, with nothing left over: ' + m('0 = 0 + 0') + '.', 'Also, counting by 2s goes 0, 2, 4, 6, … and 0 is on that list.', 'So 0 is <b>even</b>.'], hint: 'Can you split 0 into two equal groups?' };
     if (shape === 'double') {
-      var d2 = R.int(6, 25), n2 = 2 * d2;
+      var d2 = R.int(6, 49), n2 = 2 * d2;
       return { q: m(n2) + ' is even, so it is a double. Fill in the box: ' + m(n2 + ' = ' + BOX + ' + ' + BOX) + ' (the same number twice).', a: N(d2),
         steps: ['Split ' + n2 + ' into two equal groups.', n2 >= 20 ? 'Halve the tens and the ones: half of ' + (n2 - n2 % 10) + ' and half of ' + (n2 % 10) + '.' + (Math.floor(n2 / 10) % 2 ? ' The tens are odd, so think of ' + n2 + ' as ' + (n2 - 10 - n2 % 10) + ' and ' + (10 + n2 % 10) + ': halves ' + (n2 - 10 - n2 % 10) / 2 + ' and ' + (10 + n2 % 10) / 2 + '.' : '') : 'Think of a double you know.', m(d2 + ' + ' + d2 + ' = ' + n2) + ', so the number is ' + d2 + '.'], hint: 'What number plus itself makes ' + n2 + '?' };
     }
@@ -143,16 +153,20 @@
   G('g2.hundred-is-ten-tens', function (R, ctx) {
     var shape = by(ctx, R.pick(['tensIn100', 'hToT', 'hNum', 'pic10']), R.pick(['hToT', 'tToH', 'picT', 'tensIn', 'hNum']), R.pick(['mixT', 'tensOf', 'picT', 'tensIn']));
     var h, t;
-    if (shape === 'tensIn100') return { q: 'Count by tens: 10, 20, 30, … all the way to 100. How many tens make 100?', a: N(10), steps: ['Count the tens on your fingers: 10, 20, 30, 40, 50, 60, 70, 80, 90, 100.', 'That is 10 tens.', 'So 10 tens make 1 hundred: ' + m('10 \\text{ tens} = 100') + '.'], hint: 'Put up one finger for each ten you say.' };
-    if (shape === 'pic10') return { q: 'Here are 10 tens. Bundle them into 1 hundred. What number is that?', viz: { name: 'g2-blocks', opts: { t: 10, cols: 3 } }, a: N(100), steps: ['Count the rods by tens: 10, 20, 30, 40, 50, 60, 70, 80, 90, 100.', '10 tens make 1 hundred, which is written 100: 1 in the hundreds place, 0 tens and 0 ones.'], hint: 'Count the rods by tens.' };
+    var kh = kids(R, 1)[0];
+    if (shape === 'tensIn100') {
+      var pk = R.pick([['beads', 'strings'], ['crayons', 'boxes'], ['stickers', 'strips'], ['pencils', 'packs'], ['cubes', 'rods'], ['buttons', 'cards']]), ask100 = R.pick([100, 100, 200, 300, 400, 500]);
+      return { q: kh.n + ' has ' + ask100 + ' ' + pk[0] + ' in ' + pk[1] + ' of 10. How many ' + pk[1] + ' of 10 is that?', a: N(ask100 / 10), steps: ['Each hundred is 10 tens.', (ask100 / 100 > 1 ? ask100 / 100 + ' hundreds is ' + (ask100 / 100) + ' groups of 10 tens: ' : '1 hundred is ') + (ask100 / 10) + ' tens.', 'So there are ' + (ask100 / 10) + ' ' + pk[1] + ' of 10.'], hint: 'Count by tens: 10, 20, 30 … How many tens make 100?' };
+    }
+    if (shape === 'pic10') { var hh = R.int(0, 4), tt = R.int(10, 14), cc = R.pick([2, 3, 4, 5]); return { q: kh.n + ' has these blocks. Bundle 10 tens into 1 hundred. What number do the blocks show?', viz: { name: 'g2-blocks', opts: { h: hh, t: tt, cols: cc } }, a: N(100 * hh + 10 * tt), steps: ['Count the rods by tens: there are ' + tt + ' tens.', '10 tens make 1 hundred, so ' + tt + ' tens are 1 hundred and ' + pl(tt - 10, 'ten') + '.', (hh ? 'With the ' + pl(hh, 'hundred') + ' already there, that makes ' + pl(hh + 1, 'hundred') : 'That makes 1 hundred') + ' and ' + pl(tt - 10, 'ten') + ': <b>' + (100 * hh + 10 * tt) + '</b>.'], hint: 'Count the rods by tens. 10 rods make a hundred.' }; }
     var box = R.pick(['crayons come in boxes of 10', 'pencils come in packs of 10', 'stickers come in strips of 10', 'beads come on strings of 10']);
-    if (shape === 'hToT') { h = by(ctx, R.int(2, 4), R.int(2, 9)); return { q: R.pick(['How many tens are in ' + pl(h, 'hundred') + '?', 'At a school store, ' + box + '. How many tens make ' + 100 * h + '?']), a: N(10 * h), steps: ['Each hundred is 10 tens.', pl(h, 'hundred') + ' is ' + (h <= 5 ? range(1, h, 1).map(function () { return '10'; }).join(' + ') + ' = ' : '') + (10 * h) + ' tens.', 'Check: ' + 10 * h + ' tens is ' + c(100 * h) + ', and so is ' + pl(h, 'hundred') + '.'], hint: '1 hundred is 10 tens.' }; }
-    if (shape === 'hNum') { h = R.int(1, 9); return { q: 'Write the number for ' + pl(h, 'hundred') + ', 0 tens and 0 ones.', a: N(100 * h), steps: ['Put ' + h + ' in the hundreds place, 0 in the tens place and 0 in the ones place.', 'The number is ' + 100 * h + ' (' + U.words(100 * h) + ').'], hint: 'The zeros hold the tens and ones places.' }; }
-    if (shape === 'tToH') { h = R.int(2, 9); return { q: m(10 * h) + ' tens make how many hundreds?', a: N(h), steps: ['Every 10 tens make 1 hundred.', 'Count the tens by tens: ' + range(10, 10 * h, 10).join(', ') + ' tens. That is ' + h + ' groups of 10 tens.', 'So ' + 10 * h + ' tens make ' + pl(h, 'hundred') + ' = ' + 100 * h + '.'], hint: 'How many groups of 10 tens can you make?' }; }
-    if (shape === 'tensIn') { h = R.int(2, 9); t = by(ctx, 0, R.pick([0, 0, R.int(1, 9)])); var n = 100 * h + 10 * t; return { q: 'How many tens are in ' + m(n) + '?', a: N(10 * h + t), steps: [n + ' is ' + pl(h, 'hundred') + (t ? ' and ' + pl(t, 'ten') : '') + '.', 'Each hundred is 10 tens, so ' + pl(h, 'hundred') + ' is ' + 10 * h + ' tens.' + (t ? ' Add the other ' + t + ': ' + (10 * h + t) + ' tens.' : ''), 'So ' + n + ' has ' + (10 * h + t) + ' tens in all.'], hint: 'Each hundred is 10 tens.' }; }
+    if (shape === 'hToT') { h = by(ctx, R.int(1, 6), R.int(2, 9)); return { q: R.pick(['How many tens are in ' + pl(h, 'hundred') + '?', 'At a school store, ' + box + '. How many tens make ' + 100 * h + '?']), a: N(10 * h), steps: ['Each hundred is 10 tens.', pl(h, 'hundred') + ' is ' + (h <= 5 ? range(1, h, 1).map(function () { return '10'; }).join(' + ') + ' = ' : '') + (10 * h) + ' tens.', 'Check: ' + 10 * h + ' tens is ' + c(100 * h) + ', and so is ' + pl(h, 'hundred') + '.'], hint: '1 hundred is 10 tens.' }; }
+    if (shape === 'hNum') { h = R.int(1, 9); var hp = R.pick([['hundred flat', 'hundred flats', 'small cubes'], ['box of 100 crayons', 'boxes of 100 crayons', 'crayons'], ['bag of 100 marbles', 'bags of 100 marbles', 'marbles'], ['jar of 100 beads', 'jars of 100 beads', 'beads']]); return { q: R.coin() ? 'Write the number for ' + pl(h, 'hundred') + ', 0 tens and 0 ones.' : kh.n + ' has ' + pl(h, hp[0], hp[1]) + '. How many ' + hp[2] + ' is that in all?', a: N(100 * h), steps: ['Put ' + h + ' in the hundreds place, 0 in the tens place and 0 in the ones place.', 'The number is ' + 100 * h + ' (' + U.words(100 * h) + ').'], hint: 'The zeros hold the tens and ones places.' }; }
+    if (shape === 'tToH') { h = R.int(2, 9); return { q: R.pick([m(10 * h) + ' tens make how many hundreds?', kh.n + ' stacks ' + 10 * h + ' rods of 10 cubes. How many hundreds is that?', kh.n + ' has ' + 10 * h + ' bags of 10 beads. That is how many hundred beads?']), a: N(h), steps: ['Every 10 tens make 1 hundred.', 'Count the tens by tens: ' + range(10, 10 * h, 10).join(', ') + ' tens. That is ' + h + ' groups of 10 tens.', 'So ' + 10 * h + ' tens make ' + pl(h, 'hundred') + ' = ' + 100 * h + '.'], hint: 'How many groups of 10 tens can you make?' }; }
+    if (shape === 'tensIn') { h = R.int(1, 9); t = by(ctx, 0, R.pick([0, R.int(1, 9)]), R.int(0, 9)); var n = 100 * h + 10 * t; return { q: 'How many tens are in ' + m(n) + '?', a: N(10 * h + t), steps: [n + ' is ' + pl(h, 'hundred') + (t ? ' and ' + pl(t, 'ten') : '') + '.', 'Each hundred is 10 tens, so ' + pl(h, 'hundred') + ' is ' + 10 * h + ' tens.' + (t ? ' Add the other ' + t + ': ' + (10 * h + t) + ' tens.' : ''), 'So ' + n + ' has ' + (10 * h + t) + ' tens in all.'], hint: 'Each hundred is 10 tens.' }; }
     if (shape === 'picT') {
       t = by(ctx, 10, R.int(10, 16), R.int(11, 19));
-      return { q: 'How much do these tens make? Count them by tens.', viz: { name: 'g2-blocks', opts: { t: t, cols: 3 } }, a: N(10 * t), steps: ['There are ' + t + ' tens.', '10 of them make 1 hundred. ' + (t > 10 ? 'The other ' + (t - 10) + ' tens are ' + 10 * (t - 10) + '.' : ''), 'So ' + t + ' tens make ' + 10 * t + '.'], hint: 'Find 10 tens first: that is 1 hundred.' };
+      return { q: kh.n + ' has these tens. ' + R.pick(['How much do they make? Count them by tens.', 'Count by tens. What number do they show?', 'How many cubes is that in all?']), viz: { name: 'g2-blocks', opts: { t: t, cols: 3 } }, a: N(10 * t), steps: ['There are ' + t + ' tens.', '10 of them make 1 hundred. ' + (t > 10 ? 'The other ' + (t - 10) + ' tens are ' + 10 * (t - 10) + '.' : ''), 'So ' + t + ' tens make ' + 10 * t + '.'], hint: 'Find 10 tens first: that is 1 hundred.' };
     }
     if (shape === 'mixT') { h = R.int(1, 8); t = R.int(1, 9); return { q: pl(h, 'hundred') + ' and ' + pl(t, 'ten') + ' make how many tens in all?', a: N(10 * h + t), steps: [pl(h, 'hundred') + ' is ' + 10 * h + ' tens.', 'Add ' + t + ' more tens: ' + m(10 * h + ' + ' + t + ' = ' + (10 * h + t)) + ' tens.', 'Check: ' + (10 * h + t) + ' tens is ' + (100 * h + 10 * t) + '.'], hint: 'Change the hundreds into tens first.' }; }
     // tensOf: ? tens = n
@@ -211,7 +225,8 @@
     var askStep = L === 3 && chance(R, 0.25);
     var pos = askStep ? -1 : by(ctx, R.int(2, 4), R.int(1, 4), R.int(0, 3));
     var shown = seq.map(function (x, j) { return j === pos ? BOX : c(x); }).join(',\\ ');
-    var word = back ? 'Count back by ' + d + 's.' : 'Count by ' + d + 's.';
+    var ks = kids(R, 1)[0], ctxW = { 5: ['nickels', 'fingers on hands', 'tally marks', 'jumps on a number line'], 10: ['dimes', 'toes', 'crayons in boxes of 10', 'jumps on a number line'], 100: ['beads in jars of 100', 'sheets of paper in packs of 100', 'jumps on a number line', 'stickers in books of 100'] }[d];
+    var word = ks.n + (L === 1 && !back ? ' counts ' + R.pick(ctxW) + ' by ' + d + 's.' : ' counts ' + (back ? 'back ' : '') + 'by ' + d + 's.');
     if (askStep) return { q: 'What are these numbers counting by? ' + m(seq.map(c).join(',\\ ')), a: N(d), steps: ['Find how much the numbers change each time: ' + m(c(seq[1]) + ' - ' + c(seq[0]) + ' = ' + Math.abs(seq[1] - seq[0])) + '.', 'Each number is ' + d + (back ? ' less' : ' more') + ' than the one before, so they count ' + (back ? 'back ' : '') + 'by ' + d + 's.'], hint: 'How much bigger is each number than the one before?' };
     var ans = seq[pos], prev = pos > 0 ? seq[pos - 1] : null, next = seq[pos + 1];
     var steps = ['Each number is ' + d + (back ? ' less' : ' more') + ' than the one before it.'];
@@ -286,12 +301,12 @@
   });
 
   G('g2.number-line-to-1000', function (R, ctx) {
-    var L = ctx.level, kind = by(ctx, R.pick(['0to100', 'tenOnes']), R.pick(['hund10', '0to1000', 'by5', 'hund10']), R.pick(['mid', 'jump', 'by20', 'by2', 'hund10']));
+    var L = ctx.level, kind = by(ctx, R.pick(['0to100', 'tenOnes', 'tenOnes']), R.pick(['hund10', '0to1000', 'by5', 'hund10']), R.pick(['mid', 'jump', 'by20', 'by2', 'hund10']));
     var lo, step, n = 10, labels = 'ends', v, askJump = false;
     if (kind === '0to100') { lo = 0; step = 10; labels = R.coin() ? 'ends' : [0, 50, 100]; }
-    else if (kind === 'tenOnes') { lo = 10 * R.int(1, 9); step = 1; }
-    else if (kind === 'hund10') { lo = 100 * R.int(1, 8); step = 10; }
-    else if (kind === '0to1000') { lo = 0; step = 100; }
+    else if (kind === 'tenOnes') { lo = 10 * R.int(1, L === 1 ? 30 : 99); step = 1; }
+    else if (kind === 'hund10') { lo = 100 * R.int(0, 9); step = 10; if (chance(R, 0.4)) labels = [lo, lo + 50, lo + 100]; }
+    else if (kind === '0to1000') { lo = 0; step = 100; labels = R.pick(['ends', [0, 500, 1000]]); }
     else if (kind === 'by5') { lo = 50 * R.int(0, 18); step = 5; }
     else if (kind === 'by20') { lo = 100 * R.int(0, 8); step = 20; n = 5; }
     else if (kind === 'by2') { lo = 10 * R.int(2, 40); step = 2; n = 10; }
@@ -314,7 +329,7 @@
     if (j >= 0) steps.push('Start at ' + c(base) + ' and count ' + Math.abs(j) + ' jump' + (Math.abs(j) === 1 ? '' : 's') + ' to the right: ' + range(base + step, v, step).map(c).join(', ') + '.');
     else steps.push('Start at ' + c(base) + ' and count ' + Math.abs(j) + ' jump' + (Math.abs(j) === 1 ? '' : 's') + ' to the left: ' + range(base - step, v, -step).map(c).join(', ') + '.');
     steps.push('The dot is at <b>' + c(v) + '</b>.');
-    return { q: 'What number is the dot at?', viz: { name: 'g2-line', opts: { min: lo, max: hi, step: step, labels: labels, points: [{ v: v, text: '?' }] } }, a: N(v), steps: steps, hint: 'First find how much each jump is worth. Count jumps, not marks.' };
+    return { q: R.pick(['What number is the dot at?', kids(R, 1)[0].n + ' put a dot on the number line. What number is the dot at?', kids(R, 1)[0].n + ' marked a number with a dot. What number is it?']), viz: { name: 'g2-line', opts: { min: lo, max: hi, step: step, labels: labels, points: [{ v: v, text: '?' }] } }, a: N(v), steps: steps, hint: 'First find how much each jump is worth. Count jumps, not marks.' };
   });
 
   G('g2.ten-hundred-more-less', function (R, ctx) {
@@ -352,12 +367,12 @@
     var L = ctx.level, shape = by(ctx, R.pick(['pic', 'pic', 'split']), R.pick(['split', 'break', 'tf', 'pic']), R.pick(['hund', 'break', 'tf', 'breakH']));
     var t, o, n;
     if (shape === 'pic') {
-      t = R.int(1, 6); o = R.int(11, 19); n = 10 * t + o;
-      return { q: 'What number do the blocks show? (Hint: there are more than 9 ones.)', viz: { name: 'g2-blocks', opts: { t: t, o: o, ring: L === 1 } }, a: N(n), steps: ['The blocks show ' + pl(t, 'ten') + ' and ' + pl(o, 'one') + '.', 'Trade 10 ones for 1 ten. Now there are ' + pl(t + 1, 'ten') + ' and ' + pl(o - 10, 'one') + '.', 'Trading does not change how much there is: ' + m(10 * t + ' + ' + o + ' = ' + n) + ' and ' + m(10 * (t + 1) + ' + ' + (o - 10) + ' = ' + n) + '.', 'The number is <b>' + n + '</b>.'], hint: 'Make a ten from 10 of the ones.' };
+      t = R.int(1, 8); o = R.int(10, 19); n = 10 * t + o;
+      return { q: kids(R, 1)[0].n + ' built a number with blocks. What number do the blocks show? (There are more than 9 ones.)', viz: { name: 'g2-blocks', opts: { t: t, o: o, ring: L === 1 } }, a: N(n), steps: ['The blocks show ' + pl(t, 'ten') + ' and ' + pl(o, 'one') + '.', 'Trade 10 ones for 1 ten. Now there are ' + pl(t + 1, 'ten') + ' and ' + pl(o - 10, 'one') + '.', 'Trading does not change how much there is: ' + m(10 * t + ' + ' + o + ' = ' + n) + ' and ' + m(10 * (t + 1) + ' + ' + (o - 10) + ' = ' + n) + '.', 'The number is <b>' + n + '</b>.'], hint: 'Make a ten from 10 of the ones.' };
     }
     if (shape === 'split') {
-      t = R.int(1, 7); o = R.int(10, 19); n = 10 * t + o;
-      return { q: 'Trade 10 ones for 1 ten. ' + pl(t, 'ten') + ' and ' + pl(o, 'one') + ' is the same as how many tens and ones?', a: { t: 'multi', parts: [{ label: 'Tens:', a: N(t + 1) }, { label: 'Ones:', a: N(o - 10) }] }, steps: ['Take 10 of the ' + o + ' ones and trade them for 1 ten.', 'Tens: ' + m(t + ' + 1 = ' + (t + 1)) + '. Ones: ' + m(o + ' - 10 = ' + (o - 10)) + '.', 'Both ways show ' + n + '.'], hint: '10 ones make 1 ten.' };
+      t = R.int(1, 8); o = R.int(10, 19); n = 10 * t + o;
+      return { q: kids(R, 1)[0].n + ' trades 10 ones for 1 ten. ' + pl(t, 'ten') + ' and ' + pl(o, 'one') + ' is the same as how many tens and ones?', a: { t: 'multi', parts: [{ label: 'Tens:', a: N(t + 1) }, { label: 'Ones:', a: N(o - 10) }] }, steps: ['Take 10 of the ' + o + ' ones and trade them for 1 ten.', 'Tens: ' + m(t + ' + 1 = ' + (t + 1)) + '. Ones: ' + m(o + ' - 10 = ' + (o - 10)) + '.', 'Both ways show ' + n + '.'], hint: '10 ones make 1 ten.' };
     }
     if (shape === 'break') {
       t = R.int(2, 9); o = R.int(0, 9); n = 10 * t + o;
@@ -714,9 +729,10 @@
     }
     if (shape === 'convert') {
       var kind = R.pick(['ft', 'yd', 'm']);
-      if (kind === 'ft') { var f = R.int(2, 8); return { q: '1 foot is 12 inches. How many inches long is a board that is ' + f + ' feet long?', a: N(12 * f), steps: ['Each foot is 12 inches.', f + ' feet is ' + m(Array(f + 1).join('12 + ').slice(0, -3) + ' = ' + 12 * f) + '.', 'So ' + f + ' feet = ' + 12 * f + ' inches. More units, because inches are smaller.'], hint: 'Add 12 for each foot.', unit: 'inches' }; }
-      if (kind === 'yd') { var y = R.int(2, 9); return { q: '1 yard is 3 feet. How many feet long is a rope that is ' + y + ' yards long?', a: N(3 * y), steps: ['Each yard is 3 feet.', y + ' yards is ' + m(Array(y + 1).join('3 + ').slice(0, -3) + ' = ' + 3 * y) + '.', 'So ' + y + ' yards = ' + 3 * y + ' feet.'], hint: 'Count by 3s, once for each yard.', unit: 'feet' }; }
-      var mm = R.int(2, 9); return { q: '1 meter is 100 centimeters. How many centimeters long is a path that is ' + mm + ' meters long?', a: N(100 * mm), steps: ['Each meter is 100 centimeters.', 'Count by hundreds: ' + range(100, 100 * mm, 100).join(', ') + '.', 'So ' + mm + ' meters = ' + 100 * mm + ' centimeters.'], hint: 'Count by 100s, once for each meter.', unit: 'centimeters' };
+      var kc = kids(R, 1)[0];
+      if (kind === 'ft') { var f = R.int(2, 8); return { q: '1 foot is 12 inches. ' + kc.n + ' has ' + R.pick(['a board', 'a rug', 'a shelf', 'a bench', 'a fence', 'a rope']) + ' that is ' + f + ' feet long. How many inches long is it?', a: N(12 * f), steps: ['Each foot is 12 inches.', f + ' feet is ' + m(Array(f + 1).join('12 + ').slice(0, -3) + ' = ' + 12 * f) + '.', 'So ' + f + ' feet = ' + 12 * f + ' inches. More units, because inches are smaller.'], hint: 'Add 12 for each foot.', unit: 'inches' }; }
+      if (kind === 'yd') { var y = R.int(2, 9); return { q: '1 yard is 3 feet. ' + kc.n + ' has ' + R.pick(['a rope', 'a ribbon', 'a hose', 'a string of lights', 'a strip of fabric']) + ' that is ' + y + ' yards long. How many feet long is it?', a: N(3 * y), steps: ['Each yard is 3 feet.', y + ' yards is ' + m(Array(y + 1).join('3 + ').slice(0, -3) + ' = ' + 3 * y) + '.', 'So ' + y + ' yards = ' + 3 * y + ' feet.'], hint: 'Count by 3s, once for each yard.', unit: 'feet' }; }
+      var mm = R.int(2, 9); return { q: '1 meter is 100 centimeters. ' + kc.n + ' walks along ' + R.pick(['a path', 'a hallway', 'a fence', 'a garden row', 'a bridge']) + ' that is ' + mm + ' meters long. How many centimeters long is it?', a: N(100 * mm), steps: ['Each meter is 100 centimeters.', 'Count by hundreds: ' + range(100, 100 * mm, 100).join(', ') + '.', 'So ' + mm + ' meters = ' + 100 * mm + ' centimeters.'], hint: 'Count by 100s, once for each meter.', unit: 'centimeters' };
     }
     if (shape === 'convert2') {
       var f2 = R.int(1, 5), in2 = R.int(1, 11); return { q: 'A plant is ' + pl(f2, 'foot', 'feet') + ' and ' + pl(in2, 'inch', 'inches') + ' tall. How many inches tall is it? (1 foot is 12 inches.)', a: N(12 * f2 + in2), steps: [pl(f2, 'foot', 'feet') + ' is ' + 12 * f2 + ' inches.', 'Add the other ' + in2 + ': ' + m(12 * f2 + ' + ' + in2 + ' = ' + (12 * f2 + in2)) + '.', 'It is ' + (12 * f2 + in2) + ' inches tall.'], hint: 'Change the feet into inches first.', unit: 'inches' };
@@ -750,8 +766,9 @@
   var BESTU = [['the length of a soccer field', 'meters', 'centimeters'], ['the length of an ant', 'centimeters', 'meters'], ['the length of your shoe', 'inches', 'yards'], ['the length of a hallway', 'feet', 'inches'], ['the width of a book', 'centimeters', 'meters'], ['the height of a tree', 'feet', 'inches'], ['the length of a pencil', 'centimeters', 'meters'], ['how far you can throw a ball', 'meters', 'centimeters']];
   G('g2.estimate-length', function (R, ctx) {
     var L = ctx.level, shape = by(ctx, R.pick(['about', 'unit']), R.pick(['about', 'tf', 'guess']), R.pick(['guess', 'about', 'tf']));
-    if (shape === 'about') { var e = R.pick(EST); return { q: 'About how ' + e[1].split(' ')[0] + ' is ' + e[0] + (e[1].indexOf(' ') > 0 ? ' ' + e[1].split(' ').slice(1).join(' ') : '') + '? Pick the best estimate.', a: mc(e[2], e[3]), steps: ['Think of benchmarks: 1 centimeter is about the width of a fingertip, 1 inch is about the width of a quarter, 1 foot is about the length of a sheet of paper, and 1 meter is about one big step.', cap(e[0]) + ' is about ' + e[2] + ' ' + e[1] + '.', 'The other choices are much too big or much too small.'], hint: 'Picture the thing next to a ruler or a meter stick.' }; }
-    if (shape === 'unit') { var b = R.pick(BESTU); return { q: 'Which unit is better for measuring ' + b[0] + ': ' + b[1] + ' or ' + b[2] + '?', a: mc(cap(b[1]), [cap(b[2])]), steps: ['Small things: use small units (centimeters, inches). Big things: use big units (meters, feet, yards).', 'For ' + b[0] + ', ' + b[1] + ' fit best. With ' + b[2] + ', the number would be ' + (/meters|yards|feet/.test(b[2]) && !/centi/.test(b[2]) ? 'too tiny to be useful.' : 'very large and hard to measure.')], hint: 'Is the thing small or big?' }; }
+    var ke = kids(R, 1)[0];
+    if (shape === 'about') { var e = R.pick(EST); return { q: (L === 1 ? ke.n + ' wants to estimate. ' : '') + 'About how ' + e[1].split(' ')[0] + ' is ' + e[0] + (e[1].indexOf(' ') > 0 ? ' ' + e[1].split(' ').slice(1).join(' ') : '') + '? Pick the best estimate.', a: mc(e[2], e[3]), steps: ['Think of benchmarks: 1 centimeter is about the width of a fingertip, 1 inch is about the width of a quarter, 1 foot is about the length of a sheet of paper, and 1 meter is about one big step.', cap(e[0]) + ' is about ' + e[2] + ' ' + e[1] + '.', 'The other choices are much too big or much too small.'], hint: 'Picture the thing next to a ruler or a meter stick.' }; }
+    if (shape === 'unit') { var b = R.pick(BESTU); return { q: ke.n + ' is measuring ' + b[0] + '. Which unit is better for that: ' + b[1] + ' or ' + b[2] + '?', a: mc(cap(b[1]), [cap(b[2])]), steps: ['Small things: use small units (centimeters, inches). Big things: use big units (meters, feet, yards).', 'For ' + b[0] + ', ' + b[1] + ' fit best. With ' + b[2] + ', the number would be ' + (/meters|yards|feet/.test(b[2]) && !/centi/.test(b[2]) ? 'too tiny to be useful.' : 'very large and hard to measure.')], hint: 'Is the thing small or big?' }; }
     if (shape === 'tf') {
       var e2 = R.pick(EST), good = R.coin(), est = good ? e2[2] : R.pick(e2[3]);
       return { q: 'True or false: ' + cap(e2[0]) + ' is about ' + est + ' ' + e2[1] + '.', a: { t: 'tf', v: good }, steps: [cap(e2[0]) + ' is about ' + e2[2] + ' ' + e2[1] + '.', good ? 'So the statement is <b>true</b>.' : est + ' is ' + (est === e2[3][0] || /0 /.test(est) ? 'far off' : 'far off') + ', so the statement is <b>false</b>.'], hint: 'Compare it with a ruler (1 foot) or a big step (1 meter).' };
@@ -845,7 +862,7 @@
 
   var CV = { penny: 1, nickel: 5, dime: 10, quarter: 25 }, CP = { penny: 'pennies', nickel: 'nickels', dime: 'dimes', quarter: 'quarters' };
   G('g2.coin-values', function (R, ctx) {
-    var L = ctx.level, shape = by(ctx, R.pick(['value', 'more']), R.pick(['howMany', 'more', 'which', 'value']), R.pick(['howMany', 'tf', 'dollar', 'howMany']));
+    var L = ctx.level, shape = by(ctx, R.pick(['value', 'more']), R.pick(['howMany', 'more', 'which', 'value']), R.pick(['howMany', 'tf', 'dollar', 'howMany', 'many', 'many']));
     var coin = R.pick(['penny', 'nickel', 'dime', 'quarter']), kid = kids(R, 1)[0];
     if (shape === 'howMany' && chance(R, 0.4)) shape = 'two';
     if (shape === 'two') { var two = R.sample(['penny', 'nickel', 'dime', 'quarter'], 2).sort(function (x, y) { return CV[y] - CV[x]; }); return { q: kid.n + ' has a ' + two[0] + ' and a ' + two[1] + '. How many cents is that?', viz: { name: 'g2-coins', opts: { coins: two, show: 'name' } }, a: N(CV[two[0]] + CV[two[1]]), steps: ['A ' + two[0] + ' is ' + CV[two[0]] + '¢ and a ' + two[1] + ' is ' + CV[two[1]] + '¢.', 'Start with the bigger value and count on: ' + m(CV[two[0]] + ' + ' + CV[two[1]] + ' = ' + (CV[two[0]] + CV[two[1]])) + '.', 'That is ' + (CV[two[0]] + CV[two[1]]) + '¢.'], hint: 'What is each coin worth?', unit: '¢' }; }
@@ -855,7 +872,8 @@
     if (shape === 'which') { var cn = R.pick(['nickel', 'dime', 'quarter']); return { q: 'Which coin is worth ' + CV[cn] + '¢?', a: mc('A ' + cn, ['A penny', 'A nickel', 'A dime', 'A quarter'].filter(function (s) { return s !== 'A ' + cn; })), steps: ['Penny 1¢, nickel 5¢, dime 10¢, quarter 25¢.', 'The coin worth ' + CV[cn] + '¢ is a <b>' + cn + '</b>.'], hint: 'Say the four coins and their values.' }; }
     if (shape === 'howMany') { var pairs = [['penny', 'nickel'], ['penny', 'dime'], ['nickel', 'dime'], ['nickel', 'quarter'], ['penny', 'quarter']], p2 = R.pick(pairs), n = CV[p2[1]] / CV[p2[0]];
       return { q: kid.n + ' wants to trade 1 ' + p2[1] + ' for ' + CP[p2[0]] + '. How many ' + CP[p2[0]] + ' are worth the same as 1 ' + p2[1] + '?', a: N(n), steps: ['A ' + p2[1] + ' is worth ' + CV[p2[1]] + '¢. A ' + p2[0] + ' is worth ' + CV[p2[0]] + '¢.', 'Count by ' + CV[p2[0]] + 's to ' + CV[p2[1]] + ': ' + range(CV[p2[0]], CV[p2[1]], CV[p2[0]]).join(', ') + '.', 'That is <b>' + n + '</b> ' + CP[p2[0]] + '.'], hint: 'Count by ' + CV[p2[0]] + 's until you reach ' + CV[p2[1]] + '.' }; }
-    if (shape === 'dollar') { var cd = R.pick(['dime', 'quarter', 'nickel']), n2 = 100 / CV[cd]; return { q: 'One dollar is 100¢. How many ' + CP[cd] + ' make 1 dollar?', a: N(n2), steps: ['A ' + cd + ' is ' + CV[cd] + '¢.', 'Count by ' + CV[cd] + 's to 100: ' + range(CV[cd], 100, CV[cd]).join(', ') + '.', 'That is <b>' + n2 + '</b> ' + CP[cd] + '.'], hint: 'Count by ' + CV[cd] + 's up to 100.' }; }
+    if (shape === 'many') { var cm = R.pick(['nickel', 'dime', 'dime', 'quarter']), nm = cm === 'quarter' ? R.int(2, 3) : R.int(2, 9), vm = nm * CV[cm]; return { q: kid.n + ' has ' + nm + ' ' + CP[cm] + ' in ' + kid.q + ' ' + R.pick(['pocket', 'piggy bank', 'coin purse', 'jar']) + '. How many cents is that?', viz: { name: 'g2-coins', opts: { coins: Array(nm).fill(cm), show: 'name' } }, a: N(vm), steps: ['A ' + cm + ' is worth ' + CV[cm] + '¢.', 'Count by ' + CV[cm] + 's ' + nm + ' times: ' + range(CV[cm], vm, CV[cm]).join(', ') + '.', 'That is <b>' + vm + '¢</b>.'], hint: 'Count by ' + CV[cm] + 's.' }; }
+    if (shape === 'dollar') { var cd = R.pick(['dime', 'quarter', 'nickel']), n2 = 100 / CV[cd]; return { q: kid.n + ' wants to trade coins for 1 dollar. One dollar is 100¢. How many ' + CP[cd] + ' make 1 dollar?', a: N(n2), steps: ['A ' + cd + ' is ' + CV[cd] + '¢.', 'Count by ' + CV[cd] + 's to 100: ' + range(CV[cd], 100, CV[cd]).join(', ') + '.', 'That is <b>' + n2 + '</b> ' + CP[cd] + '.'], hint: 'Count by ' + CV[cd] + 's up to 100.' }; }
     var TF = R.pick([['2 dimes and 1 nickel are worth the same as 1 quarter.', true, '2 dimes are 20¢ and 1 nickel is 5¢: 25¢. A quarter is 25¢ too.'], ['3 nickels are worth the same as 1 dime.', false, '3 nickels are 15¢, but a dime is 10¢. It takes 2 nickels to make a dime.'], ['5 nickels are worth the same as 1 quarter.', true, '5 nickels: 5, 10, 15, 20, 25. That is 25¢, the same as a quarter.'], ['A nickel is worth more than a dime because it is bigger.', false, 'A nickel is bigger, but it is worth 5¢. A dime is worth 10¢.'], ['10 pennies are worth the same as 1 dime.', true, '10 pennies are 10¢, and a dime is 10¢.'], ['4 quarters make 1 dollar.', true, '25, 50, 75, 100: 4 quarters are 100¢, which is 1 dollar.'], ['2 quarters are worth the same as 5 dimes.', true, '2 quarters are 50¢ and 5 dimes are 50¢.'], ['A quarter is worth the same as 2 dimes.', false, '2 dimes are 20¢, but a quarter is 25¢.']]);
     return { q: 'True or false: ' + TF[0], a: { t: 'tf', v: TF[1] }, steps: [TF[2], 'So it is <b>' + (TF[1] ? 'true' : 'false') + '</b>.'], hint: 'Find the value of each side in cents.' };
   });
@@ -876,7 +894,7 @@
     steps.unshift('Sort the coins: ' + kinds.map(function (c3) { return pl(cnt[c3], c3, CP[c3]); }).join(', ') + '. Count quarters by 25s, dimes by 10s, nickels by 5s and pennies by 1s.');
     if (shape === 'count') {
       steps.push('The total is <b>' + total + '¢</b>.');
-      return { q: 'How much money is this? Write the number of cents.', viz: { name: 'g2-coins', opts: { coins: L === 1 ? list : R.shuffle(list), show: L === 1 ? 'both' : 'name' } }, a: N(total), steps: steps, hint: 'Start with the biggest coins. Change how you count when the coin changes.', unit: '¢' };
+      return { q: kids(R, 1)[0].n + ' ' + R.pick(['found these coins', 'has these coins', 'saved these coins', 'got these coins as change']) + '. How much money is this? Write the number of cents.', viz: { name: 'g2-coins', opts: { coins: L === 1 ? list : R.shuffle(list), show: L === 1 ? 'both' : 'name' } }, a: N(total), steps: steps, hint: 'Start with the biggest coins. Change how you count when the coin changes.', unit: '¢' };
     }
     if (shape === 'toDollar') {
       steps.push('The coins make ' + total + '¢.', 'A dollar is 100¢. Count up from ' + total + ' to 100: ' + m('100 - ' + total + ' = ' + (100 - total)) + '.');
@@ -972,20 +990,20 @@
     if (shape === 'name') return { q: R.pick(['What is the name of this shape?', who.n + ' made this shape with sticks. What is it called?']), viz: viz, a: mc(cap(PNAME[n]), NAMES.filter(function (x) { return x !== PNAME[n]; }).map(cap)), steps: ['Count the sides: ' + range(1, n, 1).join(', ') + '. It has ' + n + ' sides and ' + n + ' corners.', 'A shape with ' + n + ' sides is a <b>' + PNAME[n] + '</b>, even if its sides are not all the same length or it is turned.'], hint: 'Count the sides first.' };
     if (shape === 'nameFrom') return { q: 'A flat shape has ' + n + ' straight sides and ' + n + ' corners. What is it called?', a: mc(cap(PNAME[n]), NAMES.filter(function (x) { return x !== PNAME[n]; }).map(cap)), steps: ['Triangle: 3 sides. Quadrilateral: 4 sides. Pentagon: 5 sides. Hexagon: 6 sides.', 'So ' + n + ' sides makes a <b>' + PNAME[n] + '</b>.'], hint: 'Tri- means 3, quad- means 4, penta- means 5, hexa- means 6.' };
     if (shape === 'cube') { var w = R.pick([['faces (flat sides)', 6, 'Each face is a square: top, bottom, front, back, left and right.'], ['corners (vertices)', 8, '4 corners on the top square and 4 on the bottom square.'], ['edges', 12, '4 edges around the top, 4 around the bottom, and 4 going up and down.']]);
-      return { q: 'How many ' + w[0] + ' does a cube have?', viz: { name: 'g2-shapes', opts: { items: [{ shape: 'cube' }], label: 'A cube' } }, a: N(w[1]), steps: [w[2], 'So a cube has <b>' + w[1] + '</b> ' + w[0].split(' ')[0] + '.'], hint: 'Think of the top, the bottom and the sides.' }; }
-    if (shape === 'compare') { var a2 = R.sample([3, 4, 5, 6], 2).sort(function (p, q) { return q - p; }); return { q: 'How many more sides does a ' + PNAME[a2[0]] + ' have than a ' + PNAME[a2[1]] + '?', a: N(a2[0] - a2[1]), steps: ['A ' + PNAME[a2[0]] + ' has ' + a2[0] + ' sides. A ' + PNAME[a2[1]] + ' has ' + a2[1] + ' sides.', m(a2[0] + ' - ' + a2[1] + ' = ' + (a2[0] - a2[1])) + '.'], hint: 'How many sides does each shape have?' }; }
+      return { q: R.pick(['How many ' + w[0] + ' does a cube have?', who.n + ' holds ' + R.pick(['a number cube', 'a toy block shaped like a cube', 'a box shaped like a cube', 'a cube of cheese']) + '. How many ' + w[0] + ' does it have?']), viz: { name: 'g2-shapes', opts: { items: [{ shape: 'cube' }], label: 'A cube' } }, a: N(w[1]), steps: [w[2], 'So a cube has <b>' + w[1] + '</b> ' + w[0].split(' ')[0] + '.'], hint: 'Think of the top, the bottom and the sides.' }; }
+    if (shape === 'compare') { var a2 = R.sample([3, 4, 5, 6], 2).sort(function (p, q) { return q - p; }), cw = R.pick(['sides', 'corners']); return { q: who.n + ' drew a ' + PNAME[a2[0]] + ' and a ' + PNAME[a2[1]] + '. How many more ' + cw + ' does the ' + PNAME[a2[0]] + ' have?', a: N(a2[0] - a2[1]), steps: ['A ' + PNAME[a2[0]] + ' has ' + a2[0] + ' ' + cw + '. A ' + PNAME[a2[1]] + ' has ' + a2[1] + ' ' + cw + '.' + (cw === 'corners' ? ' (A flat shape with straight sides has as many corners as sides.)' : ''), m(a2[0] + ' - ' + a2[1] + ' = ' + (a2[0] - a2[1])) + '.'], hint: 'How many ' + cw + ' does each shape have?' }; }
     var TF = R.pick([['Every shape with 4 sides is a square.', false, 'A square has 4 sides, but so do rectangles and many other quadrilaterals with sides of different lengths.'], ['A triangle has 3 sides and 3 corners.', true, 'Tri- means 3: 3 sides and 3 corners.'], ['A hexagon has 6 sides.', true, 'Hexa- means 6.'], ['If you turn a square, it is not a square anymore.', false, 'Turning a shape does not change its sides or corners, so it is still a square.'], ['A pentagon has more sides than a quadrilateral.', true, 'A pentagon has 5 sides and a quadrilateral has 4.'], ['A big triangle has more corners than a small triangle.', false, 'Every triangle has 3 corners, big or small.']]);
     return { q: 'True or false: ' + TF[0], a: { t: 'tf', v: TF[1] }, steps: [TF[2], 'So it is <b>' + (TF[1] ? 'true' : 'false') + '</b>.'], hint: 'Size, color and turning do not change a shape’s name.' };
   });
 
   G('g2.partition-rectangle', function (R, ctx) {
     var L = ctx.level, shape = by(ctx, R.pick(['total', 'total', 'rows']), R.pick(['total', 'text', 'rows']), R.pick(['each', 'howRows', 'total']));
-    var r = by(ctx, R.int(2, 3), R.int(2, 5), R.int(2, 5)), cl = by(ctx, R.int(2, 5), R.int(2, 6), R.int(3, 6)), tot = r * cl;
+    var r = by(ctx, R.int(2, 4), R.int(2, 5), R.int(2, 5)), cl = by(ctx, R.int(2, 5), R.int(2, 6), R.int(3, 6)), tot = r * cl;
     var viz = { name: 'g2-array', opts: { rows: r, cols: cl, squares: true } };
     var add = range(1, r, 1).map(function () { return cl; }).join(' + ');
-    var CTX = [['a sheet of stamps', 'stamps'], ['a pan of corn bread', 'pieces'], ['a garden', 'garden beds'], ['a quilt', 'quilt squares'], ['a window', 'panes of glass'], ['a chocolate bar', 'pieces'], ['a sheet of stickers', 'stickers'], ['a tray of ice', 'ice cubes']], cx = R.pick(CTX);
-    if (shape === 'total') return { q: R.pick(['The rectangle is cut into same-size squares. How many squares are there?', cap(cx[0]) + ' is a rectangle cut into same-size squares. How many ' + cx[1] + ' are there?']), viz: viz, a: N(tot), steps: ['There are ' + pl(r, 'row') + ' with ' + cl + ' squares in each row.', 'Add the rows: ' + m(add + ' = ' + tot) + '.', 'There are ' + tot + ' squares.'], hint: 'Count one row, then add the rows together.' };
-    if (shape === 'rows') { var askR = R.coin(); return { q: 'How many ' + (askR ? 'rows (going across)' : 'columns (going up and down)') + ' of squares are there?', viz: viz, a: N(askR ? r : cl), steps: [askR ? 'Rows go across, left to right. Count them from top to bottom: ' + range(1, r, 1).join(', ') + '.' : 'Columns go up and down. Count them from left to right: ' + range(1, cl, 1).join(', ') + '.', 'There are ' + (askR ? pl(r, 'row') : pl(cl, 'column')) + '.'], hint: askR ? 'Rows go across, like seats in a movie theater.' : 'Columns stand up and down, like the columns of a building.' }; }
+    var CTX = [['a sheet of stamps', 'stamps'], ['a pan of corn bread', 'pieces'], ['a garden', 'garden beds'], ['a quilt', 'quilt squares'], ['a window', 'panes of glass'], ['a chocolate bar', 'pieces'], ['a sheet of stickers', 'stickers'], ['a tray of ice', 'ice cubes'], ['a waffle', 'squares'], ['a tile floor', 'tiles'], ['a game board', 'squares'], ['a pan of brownies', 'brownies']], cx = R.pick(CTX);
+    if (shape === 'total') return { q: R.pick([kids(R, 1)[0].n + ' cut a rectangle into same-size squares. How many squares are there?', cap(cx[0]) + ' is a rectangle cut into same-size squares. How many ' + cx[1] + ' are there?']), viz: viz, a: N(tot), steps: ['There are ' + pl(r, 'row') + ' with ' + cl + ' squares in each row.', 'Add the rows: ' + m(add + ' = ' + tot) + '.', 'There are ' + tot + ' squares.'], hint: 'Count one row, then add the rows together.' };
+    if (shape === 'rows') { var askR = R.coin(); return { q: cap(cx[0]) + ' is cut into same-size squares. How many ' + (askR ? 'rows (going across)' : 'columns (going up and down)') + ' of squares are there?', viz: viz, a: N(askR ? r : cl), steps: [askR ? 'Rows go across, left to right. Count them from top to bottom: ' + range(1, r, 1).join(', ') + '.' : 'Columns go up and down. Count them from left to right: ' + range(1, cl, 1).join(', ') + '.', 'There are ' + (askR ? pl(r, 'row') : pl(cl, 'column')) + '.'], hint: askR ? 'Rows go across, like seats in a movie theater.' : 'Columns stand up and down, like the columns of a building.' }; }
     if (shape === 'text') return { q: cap(cx[0]) + ' is cut into ' + pl(r, 'row') + ' of same-size squares. Each row has ' + cl + ' ' + cx[1] + '. How many ' + cx[1] + ' are there in all?', a: N(tot), steps: ['Each row has ' + cl + '.', 'Add ' + r + ' rows of ' + cl + ': ' + m(add + ' = ' + tot) + '.'], hint: 'Add ' + cl + ' once for each row.' };
     if (shape === 'each') return { q: cap(cx[0]) + ' is cut into ' + tot + ' same-size squares in ' + pl(r, 'row') + '. Each row has the same number. How many ' + cx[1] + ' are in each row?', a: N(cl), steps: ['Try a number for each row and add it ' + r + ' times.', 'With ' + cl + ' in each row: ' + m(add + ' = ' + tot) + '. That matches.', 'So each row has ' + cl + ' squares.'], hint: 'What number added ' + r + ' times makes ' + tot + '?' };
     return { q: cap(cx[0]) + ' is cut into ' + tot + ' same-size squares. Each row has ' + cl + ' ' + cx[1] + '. How many rows are there?', a: N(r), steps: ['Count by ' + cl + 's until you reach ' + tot + ': ' + range(cl, tot, cl).join(', ') + '.', 'That took ' + r + ' counts, so there are ' + pl(r, 'row') + '.'], hint: 'Count by ' + cl + 's to ' + tot + '.' };
@@ -994,10 +1012,10 @@
   G('g2.arrays-repeated-addition', function (R, ctx) {
     var L = ctx.level, shape = by(ctx, 'total', R.pick(['total', 'which', 'cols']), R.pick(['each', 'which', 'total', 'rowsFrom']));
     var r = R.int(2, 5), cl = R.int(2, 5); if (r === cl && R.coin()) cl = cl === 5 ? 4 : cl + 1;
-    var tot = r * cl, item = R.pick(['dot', 'star', 'heart', 'apple']), word = { dot: 'dots', star: 'stars', heart: 'hearts', apple: 'apples' }[item];
-    var viz = { name: 'g2-array', opts: { rows: r, cols: cl, item: item, groups: L === 1 ? 'rows' : undefined } };
+    var tot = r * cl, item = R.pick(['dot', 'star', 'heart', 'apple', 'square']), word = { dot: 'dots', star: 'stars', heart: 'hearts', apple: 'apples', square: 'tiles' }[item], ka = kids(R, 1)[0];
+    var viz = { name: 'g2-array', opts: { rows: r, cols: cl, item: item, color: R.pick(['red', 'blue', 'green']), groups: L === 1 ? 'rows' : undefined } };
     var add = range(1, r, 1).map(function () { return cl; }).join(' + '), addC = range(1, cl, 1).map(function () { return r; }).join(' + ');
-    if (shape === 'total') return { q: 'There are ' + pl(r, 'row') + ' of ' + word + '. Add the rows. How many ' + word + ' are there in all?', viz: viz, a: N(tot), steps: ['Each row has ' + cl + ' ' + word + '.', 'Add the equal rows: ' + m(add + ' = ' + tot) + '. (Skip count: ' + range(cl, tot, cl).join(', ') + '.)', 'There are ' + tot + ' ' + word + '.'], hint: 'How many are in one row? Add that number once for each row.' };
+    if (shape === 'total') return { q: ka.n + ' ' + R.pick(['made', 'drew', 'set out', 'lined up']) + ' ' + pl(r, 'row') + ' of ' + word + '. Add the rows. How many ' + word + ' are there in all?', viz: viz, a: N(tot), steps: ['Each row has ' + cl + ' ' + word + '.', 'Add the equal rows: ' + m(add + ' = ' + tot) + '. (Skip count: ' + range(cl, tot, cl).join(', ') + '.)', 'There are ' + tot + ' ' + word + '.'], hint: 'How many are in one row? Add that number once for each row.' };
     if (shape === 'cols') return { q: 'Add the columns (up and down) to find how many ' + word + ' there are.', viz: viz, a: N(tot), steps: ['There are ' + pl(cl, 'column') + ' with ' + r + ' in each.', m(addC + ' = ' + tot) + '.', 'Adding the rows gives the same total: ' + m(add + ' = ' + tot) + '.'], hint: 'Each column has ' + r + '.' };
     if (shape === 'which') {
       var wrongs = [range(1, r, 1).map(function () { return r; }).join(' + '), r + ' + ' + cl, range(1, r + 1, 1).map(function () { return cl; }).join(' + ')];

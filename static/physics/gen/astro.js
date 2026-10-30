@@ -67,13 +67,13 @@
   G('astro.celestial-sphere', function (R, ctx) {
     var shape = by(ctx, R.pick(['deg', 'deg', 'why', 'pole']), R.pick(['deg', 'hours', 'why', 'pole', 'dir']), R.pick(['hours', 'trail', 'dir', 'why']));
     if (shape === 'deg') {
-      var h = R.int(2, 8);
+      var h = R.int(1, 23);
       return P('The sky turns once around the celestial pole in about 24 hours. Through how many degrees does a star near the pole move in $' + h + '$ hours?',
         exact(15 * h), ['In 24 hours the sky turns $360^\\circ$, so each hour it turns $360^\\circ \\div 24 = 15^\\circ$.', 'In $' + h + '$ hours: $' + h + ' \\times 15^\\circ = ' + 15 * h + '^\\circ$.'],
         'How many degrees per hour?', { unit: '°', vf: { k: 'deg', h: h } });
     }
     if (shape === 'hours' || shape === 'trail') {
-      var hh = R.pick([1, 2, 3, 4, 5, 6, 8, 10]), d = 15 * hh;
+      var hh = R.int(1, 24) / 2, d = 15 * hh;
       var q = shape === 'trail' ? 'A camera pointed at the north celestial pole takes one long exposure. Each star makes a curved trail around the pole, and every trail is an arc of $' + d + '^\\circ$. How long was the exposure, in hours?'
         : 'You watch a star circle the north celestial pole. It moves $' + d + '^\\circ$ around the pole. About how many hours have passed?';
       return P(q, exact(hh), ['The sky turns $15^\\circ$ each hour ($360^\\circ$ in 24 h).', 'Hours $= ' + d + '^\\circ \\div 15^\\circ/\\text{h} = ' + hh + '$ h.', shape === 'trail' ? 'Every star trail has the same angle, because the whole sky turns together as Earth spins.' : 'Stars near the pole never set, so you can watch the whole arc.'],
@@ -104,7 +104,7 @@
     var L = R.pick(LATS), lat = L[0], city = L[1];
     if (shape === 'polaris') return P('In ' + city + ' (latitude $' + lat + '^\\circ$ N), how high above the northern horizon is Polaris? Give its altitude in degrees.', exact(lat),
       ['The north celestial pole sits above the horizon at an altitude equal to your latitude.', 'Polaris is within about $1^\\circ$ of the pole.', 'So its altitude is about $' + lat + '^\\circ$.'], 'Altitude of the pole = latitude.', { unit: '°', vf: { k: 'id', x: lat } });
-    if (shape === 'lat') { var a = R.int(20, 65); return P('From a campsite, you measure Polaris at $' + a + '^\\circ$ above the northern horizon. What is your latitude (in degrees north)?', exact(a),
+    if (shape === 'lat') { var a = R.int(5, 80); return P('From a campsite, you measure Polaris at $' + a + '^\\circ$ above the northern horizon. What is your latitude (in degrees north)?', exact(a),
       ['The altitude of the celestial pole equals the observer\'s latitude.', 'So the latitude is about $' + a + '^\\circ$ N.'], 'Polaris\'s altitude tells you directly.', { unit: '°', vf: { k: 'id', x: a } }); }
     if (shape === 'circ') { return P('At latitude $' + lat + '^\\circ$ N, a star never sets if it is close enough to the north celestial pole. What is the smallest declination a star can have and still be circumpolar there?', exact(90 - lat),
       ['A circumpolar star\'s whole daily circle stays above the horizon.', 'The pole is $' + lat + '^\\circ$ up, so circles of radius up to $' + lat + '^\\circ$ around it clear the northern horizon.', 'A star at declination $\\delta$ is $90^\\circ - \\delta$ from the pole, so we need $90^\\circ - \\delta \\le ' + lat + '^\\circ$, that is $\\delta \\ge 90^\\circ - ' + lat + '^\\circ = ' + (90 - lat) + '^\\circ$.'],
@@ -129,7 +129,7 @@
   G('astro.celestial-coordinates', function (R, ctx) {
     var shape = by(ctx, R.pick(['toDeg', 'toDeg', 'overhead']), R.pick(['toDeg', 'toRA', 'meridian', 'mc', 'overhead']), R.pick(['meridian', 'toRA', 'mc', 'meridian2']));
     if (shape === 'toDeg') {
-      var h = R.int(1, 22), m = by(ctx, 0, R.pick([0, 20, 40]), R.pick([12, 20, 36, 48])), d = 15 * (h + m / 60);
+      var h = R.int(1, 23), m = by(ctx, R.pick([0, 0, 20, 40]), R.pick([0, 12, 20, 24, 36, 40, 48]), R.pick([4, 8, 12, 16, 20, 28, 32, 36, 44, 48, 52, 56])), d = 15 * (h + m / 60);
       return P('A star has right ascension $' + ra(h, m) + '$. How many degrees east of the starting line (the March equinox) is that?', num(d, 4, 0.002),
         ['The 24 hours of right ascension cover $360^\\circ$, so $1^{\\mathrm{h}} = 15^\\circ$' + (m ? ' and $1^{\\mathrm{m}} = 15\' = 0.25^\\circ$' : '') + '.', m ? '$' + ra(h, m) + ' = ' + h + ' + \\frac{' + m + '}{60} = ' + fd(h + m / 60, 3) + '$ h.' : 'The angle is $' + h + ' \\times 15^\\circ$.', '$' + fd(h + m / 60, 3) + ' \\times 15^\\circ = ' + fd(d, 2) + '^\\circ$.'],
         'One hour of right ascension is 15 degrees.', { unit: '°', vf: { k: 'toDeg', h: h, m: m } });
@@ -186,15 +186,27 @@
         ['In 24 hours Earth moves about $360^\\circ \\div 365.25 \\approx 1^\\circ$ along its orbit.', 'To bring the Sun back to the meridian it must turn that extra $1^\\circ$: about $361^\\circ$ in all.', 'One full $360^\\circ$ turn, relative to the stars, takes 23 h 56 min: the sidereal day.'], 'Does the Sun stay in the same direction as Earth orbits?', { vf: { k: 'mc' } });
     }
     if (shape === 'count') {
+      if (R.coin()) { var ny = R.int(60, 900), pn = R.pick(['An imaginary planet', 'A planet in a science-fiction story', 'A made-up planet']);
+        return P(pn + ' spins in the same direction as it orbits its star, and its year lasts $' + ny + '$ of its solar days. How many times does it turn relative to the stars (how many sidereal days are in its year)?', num(ny + 1, 4, 0.0005),
+          ['Going once around its star in the same direction as it spins, the planet makes one extra turn relative to the stars.', 'Sidereal days $= ' + ny + ' + 1 = ' + (ny + 1) + '$.'],
+          'One extra turn per orbit.', { vf: { k: 'count', n: ny } }); }
       return P('In one year of $365.25$ solar days, how many times does Earth turn relative to the stars (how many sidereal days are in a year)?', num(366.25, 5, 0.0005),
         ['Going once around the Sun in the same direction as it spins, Earth makes one extra turn relative to the stars.', 'Sidereal days $= 365.25 + 1 = 366.25$.', 'Check: $366.25 \\times 23.934\\text{ h} \\approx 365.25 \\times 24\\text{ h} = 8766$ h.'], 'The orbit itself adds one turn.', { vf: { k: 'count' } });
     }
     if (shape === 'deg') {
+      if (R.coin()) { var sp = R.pick([10, 12, 15, 18, 20, 24, 30]), mv = R.pick([0.5, 0.6, 0.8, 1, 1.2, 1.5, 2, 2.5, 3]), mn = mv / sp * 60;
+        return P('An imaginary planet spins $' + sp + '^\\circ$ per hour and moves about $' + fd(mv, 1) + '^\\circ$ along its orbit each day, in the same direction. About how many minutes longer is its solar day than its sidereal day?', num(mn, 3, 0.02),
+          ['To face its star again, the planet must turn an extra $' + fd(mv, 1) + '^\\circ$ beyond one full turn.', 'At $' + sp + '^\\circ$ per hour that takes $' + fd(mv, 1) + ' \\div ' + sp + ' = ' + fd(mv / sp, 4) + '$ h.', '$' + fd(mv / sp, 4) + ' \\times 60 \\approx ' + fd(mn, 2) + '$ min.'],
+          'Extra angle ÷ spin rate.', { unit: 'min', vf: { k: 'deg', sp: sp, mv: mv } }); }
       return P('Earth spins $15^\\circ$ per hour and moves about $0.986^\\circ$ along its orbit each day. About how many minutes does the extra turn take that a solar day needs beyond a sidereal day?', num(0.986 / 15 * 60, 3, 0.02),
         ['Earth must turn an extra $0.986^\\circ$ to face the Sun again.', 'At $15^\\circ$ per hour, that takes $0.986 \\div 15 = 0.0657$ h.', '$0.0657 \\times 60 \\approx 3.94$ min, so a sidereal day is about 23 h 56 min.'], 'Time = angle ÷ rate.', { unit: 'min', vf: { k: 'deg' } });
     }
     // sid: compute the sidereal day from the formula
     var year = 365.25;
+    if (R.coin()) { var sd = R.pick([10, 12, 16, 18, 20, 30, 36, 48]), yd = R.pick([100, 150, 200, 250, 300, 400, 500, 700, 1000]), yh = sd * yd, sid = 1 / (1 / sd + 1 / yh);
+      return P('An imaginary planet spins in the same direction as it orbits. Its solar day is $' + sd + '$ h and its year is $' + yd + '$ of those days ($' + T.commas(yh) + '$ h). Use $\\dfrac{1}{\\text{sidereal day}} = \\dfrac{1}{\\text{solar day}} + \\dfrac{1}{\\text{year}}$ to find its sidereal day, in hours. (Give 4 significant figures.)', num(sid, 5, 0.0003),
+        ['$\\frac{1}{' + sd + '} + \\frac{1}{' + yh + '} = ' + fd(1 / sd + 1 / yh, 6) + '$ per hour.', 'Sidereal day $= 1 \\div ' + fd(1 / sd + 1 / yh, 6) + ' \\approx ' + fd(sid, 3) + '$ h.'],
+        'Add the rates, then take 1 over the sum.', { unit: 'h', vf: { k: 'sid', sd: sd, yh: yh } }); }
     return P('Use $\\dfrac{1}{\\text{sidereal day}} = \\dfrac{1}{\\text{solar day}} + \\dfrac{1}{\\text{year}}$ with a solar day of $24$ h and a year of $365.25 \\times 24 = 8766$ h. How long is the sidereal day, in hours? (Give 4 significant figures.)', num(1 / (1 / 24 + 1 / 8766), 5, 0.0003),
       ['$\\frac{1}{24} + \\frac{1}{8766} = 0.041667 + 0.000114 = 0.041781$ per hour.', 'Sidereal day $= 1 \\div 0.041781 = 23.934$ h.', '$0.934$ h $\\approx 56$ min, so 23 h 56 min.'], 'Add the rates of turning, then flip.', { unit: 'h', vf: { k: 'sid' } });
   });
@@ -222,7 +234,7 @@
         'The polar circles are $90^\\circ$ minus the tilt.', { unit: '°', vf: { k: 'polar', tilt: TILT } });
     }
     if (shape === 'tilt' || shape === 'tilt2') {
-      var pl = R.pick([['Mars', 25.2], ['Saturn', 26.7], ['Neptune', 28.3], ['an imaginary planet', R.pick([10, 15, 20, 30, 35, 40])]]);
+      var pl = R.pick([['Mars', 25.2], ['Saturn', 26.7], ['Neptune', 28.3], ['an imaginary planet', R.pick([10, 15, 20, 30, 35, 40, 12, 16, 22, 28, 34, 38])]]);
       var askPolar = shape === 'tilt2' || R.coin(), val = askPolar ? 90 - pl[1] : pl[1];
       return P('The axis of ' + pl[0] + ' is tilted $' + fd(pl[1], 1) + '^\\circ$. If it had tropics and polar circles like Earth\'s, at what latitude would its ' + (askPolar ? 'polar circles' : 'tropics') + ' be?', num(val, 3, 0.005),
         ['The Sun\'s declination swings up to the tilt angle, $' + fd(pl[1], 1) + '^\\circ$, on each side of the equator.', askPolar ? 'Polar circles: where the Sun can stay up all day, $90^\\circ$ minus the tilt: $90^\\circ - ' + fd(pl[1], 1) + '^\\circ = ' + fd(val, 1) + '^\\circ$.' : 'Tropics: the farthest from the equator the Sun can be overhead, equal to the tilt: $' + fd(val, 1) + '^\\circ$.'],
@@ -246,24 +258,24 @@
         'Start from the equinox value, then add the declination.', { unit: '°', vf: { k: 'noon', lat: lat, dec: dec } });
     }
     if (shape === 'reverse' || shape === 'reverse2') {
-      var d2 = shape === 'reverse2' ? R.pick([23.4, -23.4]) : 0, h = d2 < 0 ? R.int(20, 60) : R.int(30, 70), la = 90 - h + d2;
+      var d2 = shape === 'reverse2' ? R.pick([23.4, -23.4]) : 0, h = d2 < 0 ? R.int(15, 65) : R.int(25, 75), la = 90 - h + d2;
       return P('On ' + (d2 === 0 ? 'an equinox' : d2 > 0 ? 'the June solstice' : 'the December solstice') + ', you measure the noon Sun at $' + h + '^\\circ$ above the southern horizon. What is your latitude (degrees north)?', num(la, 3, 0.005),
         ['Noon altitude $h = 90^\\circ - \\text{latitude} + \\delta$, so latitude $= 90^\\circ - h + \\delta$.', 'Here $\\delta = ' + fd(d2, 1) + '^\\circ$.', 'Latitude $= 90^\\circ - ' + h + '^\\circ ' + (d2 > 0 ? '+ 23.4^\\circ' : d2 < 0 ? '- 23.4^\\circ' : '') + ' = ' + fd(la, 1) + '^\\circ$ N.'],
         'Solve the noon-altitude formula for latitude.', { unit: '°', vf: { k: 'revnoon', h: h, dec: d2 } });
     }
     if (shape === 'south') {
-      var sc = R.pick([['Sydney', 34], ['Cape Town', 34], ['Buenos Aires', 35], ['Santiago', 33], ['Melbourne', 38], ['Auckland', 37]]), jun2 = R.coin(), dec2 = jun2 ? 23.4 : -23.4, alt2 = 90 - M.abs(-sc[1] - dec2);
+      var sc = R.pick([['Sydney', 34], ['Cape Town', 34], ['Buenos Aires', 35], ['Santiago', 33], ['Melbourne', 38], ['Auckland', 37], ['Perth', 32], ['Brisbane', 27], ['Wellington', 41], ['Montevideo', 35], ['Hobart', 43]]), jun2 = R.coin(), dec2 = jun2 ? 23.4 : -23.4, alt2 = 90 - M.abs(-sc[1] - dec2);
       return P('What is the noon Sun\'s altitude in ' + sc[0] + ' (latitude $' + sc[1] + '^\\circ$ S) on the ' + (jun2 ? 'June' : 'December') + ' solstice?', num(alt2, 3, 0.005),
         ['In general, noon altitude $= 90^\\circ - |\\text{latitude} - \\delta|$, with south counted negative.', 'Latitude $= -' + sc[1] + '^\\circ$, $\\delta = ' + fd(dec2, 1) + '^\\circ$: the difference is $' + fd(M.abs(-sc[1] - dec2), 1) + '^\\circ$.', 'Altitude $= 90^\\circ - ' + fd(M.abs(-sc[1] - dec2), 1) + '^\\circ = ' + fd(alt2, 1) + '^\\circ$' + (jun2 ? ': winter there, so the Sun is low (in the north).' : ': summer there, so the Sun is high (in the north).')],
         'In the Southern Hemisphere the seasons are reversed.', { unit: '°', vf: { k: 'noon', lat: -sc[1], dec: dec2 } });
     }
     if (shape === 'erato') {
-      var ang = R.pick([6, 7.2, 7.5, 8, 9, 10]), dist = R.pick([600, 700, 800, 900, 1000]), circ = dist * 360 / ang;
+      var ang = R.pick([6, 7.2, 7.5, 8, 9, 10, 4, 4.5, 5, 6.4, 12]), dist = R.pick([600, 700, 800, 900, 1000, 400, 450, 500, 550, 650, 750, 850, 1200]), circ = dist * 360 / ang;
       return P('At noon on the June solstice the Sun is straight overhead in one town, while in a second town $' + dist + '$ km due north the Sun is $' + fd(ang, 1) + '^\\circ$ from overhead. Using Eratosthenes\'s method, how big around is the planet, in km?', num(circ, 3, 0.02),
         ['The Sun\'s rays arrive parallel, so the $' + fd(ang, 1) + '^\\circ$ difference is the angle between the towns at Earth\'s center.', '$' + fd(ang, 1) + '^\\circ$ is $\\frac{' + fd(ang, 1) + '}{360}$ of a full circle, and it spans $' + dist + '$ km.', 'Circumference $= ' + dist + ' \\times \\frac{360}{' + fd(ang, 1) + '} = ' + T.commas(rnd(circ, 3)) + '$ km.'],
         'What fraction of 360° is the angle?', { unit: 'km', vf: { k: 'erato', ang: ang, dist: dist } });
     }
-    var la2 = R.pick([35, 40, 42, 45, 47]), mx = 90 - la2 + 23.4;
+    var la2 = R.pick([35, 40, 42, 45, 47, 30, 32, 33, 38, 44, 50, 52, 55, 60, 34, 36, 46, 48, 54, 56, 58]), mx = 90 - la2 + 23.4;
     var right = 'No. The highest it gets is $' + fd(mx, 1) + '^\\circ$, at noon on the June solstice';
     var wr = ['Yes, at noon on the June solstice', 'Yes, at noon every day in summer', 'Yes, at noon on the equinoxes', 'No, because the Sun is always due east at noon'];
     return P('At latitude $' + la2 + '^\\circ$ N, is the Sun ever straight overhead?', mc(right, wrongs(R, wr, 3)),
@@ -311,8 +323,12 @@
   });
 
   G('astro.synodic-month', function (R, ctx) {
-    var shape = by(ctx, R.pick(['earthDeg', 'moonK']), R.pick(['moonK', 'reverse', 'earth']), R.pick(['planet', 'reverse', 'moonK']));
+    var shape = by(ctx, R.pick(['earthDeg', 'moonK', 'moonK']), R.pick(['moonK', 'reverse', 'earth', 'earthDeg']), R.pick(['planet', 'reverse', 'moonK']));
     if (shape === 'earthDeg') {
+      if (R.chance(0.75)) { var IV = R.pick([['one synodic month ($29.5$ days)', 29.5], ['one week ($7$ days)', 7], ['$10$ days', 10], ['two weeks ($14$ days)', 14], ['$30$ days', 30], ['$45$ days', 45], ['$60$ days', 60], ['$73$ days', 73], ['one season (about $91.3$ days)', 91.3], ['$100$ days', 100], ['$120$ days', 120], ['$146$ days', 146], ['half a year ($182.6$ days)', 182.6], ['$200$ days', 200], ['$250$ days', 250], ['$300$ days', 300]]), dg = IV[1] * 360 / 365.25;
+        return P('In ' + IV[0] + ', how many degrees does Earth move along its orbit? (A year is $365.25$ days.)', num(dg, 3, 0.02),
+          ['Earth moves $360^\\circ$ in $365.25$ days: $0.986^\\circ$ per day.', '$' + fd(IV[1], 1) + ' \\times \\dfrac{360^\\circ}{365.25} \\approx ' + fd(dg, 1) + '^\\circ$.'],
+          'Degrees per day × days.', { unit: '°', vf: { k: 'earthDeg', d: IV[1] } }); }
       return P('In one sidereal month ($27.3$ days), how many degrees does Earth move along its orbit? (A year is $365.25$ days.)', num(27.3 * 360 / 365.25, 3, 0.02),
         ['Earth moves $360^\\circ$ in $365.25$ days: $0.986^\\circ$ per day.', '$27.3 \\times 0.986^\\circ \\approx ' + fd(27.3 * 360 / 365.25, 1) + '^\\circ$.', 'So after one orbit relative to the stars, the Moon still has about $27^\\circ$ to go to line up with the Sun again: two more days.'], 'Degrees per day × days.', { unit: '°', vf: { k: 'earthDeg' } });
     }
@@ -322,7 +338,7 @@
         ['$\\frac{1}{27.32} = 0.036603$ and $\\frac{1}{365.25} = 0.002738$ per day.', '$\\frac{1}{S} = 0.036603 - 0.002738 = 0.033865$ per day.', '$S = 1 \\div 0.033865 \\approx 29.53$ days.'], 'Subtract the rates, then flip.', { unit: 'days', vf: { k: 'syn', p: 27.32, y: 365.25 } });
     }
     if (shape === 'moonK' || shape === 'reverse') {
-      var k = R.pick([4, 5, 6, 9, 11, 13, 21]), p = R.pick([2, 3, 4, 5, 6, 8, 10, 12]), y = k * p, s = p * k / (k - 1);
+      var k = R.pick([3, 4, 5, 6, 7, 9, 11, 13, 16, 21, 26]), p = R.pick([2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 20]), y = k * p, s = p * k / (k - 1);
       if (shape === 'reverse') return P('On a moon of a distant planet, the phases repeat every $' + fd(s, 3) + '$ days. The planet orbits its star in $' + y + '$ days. How long does the moon take to orbit the planet relative to the stars?', num(p, 3, 0.01),
         ['The synodic month is longer than the sidereal one: $\\frac{1}{S} = \\frac{1}{P} - \\frac{1}{Y}$, so $\\frac{1}{P} = \\frac{1}{S} + \\frac{1}{Y}$.', '$\\frac{1}{P} = \\frac{1}{' + fd(s, 3) + '} + \\frac{1}{' + y + '} = ' + fd(1 / s, 5) + ' + ' + fd(1 / y, 5) + ' = ' + fd(1 / s + 1 / y, 5) + '$ per day.', '$P = ' + fd(p, 2) + '$ days.'],
         'The sidereal month is the shorter one.', { unit: 'days', vf: { k: 'sid', s: s, y: y } });
@@ -330,7 +346,7 @@
         ['$\\frac{1}{S} = \\frac{1}{P} - \\frac{1}{Y} = \\frac{1}{' + p + '} - \\frac{1}{' + y + '}$.', 'Common denominator $' + y + '$: $\\frac{' + k + ' - 1}{' + y + '} = \\frac{' + (k - 1) + '}{' + y + '}$.', '$S = \\frac{' + y + '}{' + (k - 1) + '} = ' + fd(s, 2) + '$ days, a bit longer than ' + p + ' days.'],
         'Subtract the rates.', { unit: 'days', vf: { k: 'syn', p: p, y: y } });
     }
-    var pl = R.pick([['Mars', 1.88], ['Jupiter', 11.86], ['Saturn', 29.46], ['Venus', 0.615], ['Mercury', 0.241]]), inner = pl[1] < 1, S2 = 1 / M.abs(1 / pl[1] - 1);
+    var pl = R.pick([['Mars', 1.88], ['Jupiter', 11.86], ['Saturn', 29.46], ['Venus', 0.615], ['Mercury', 0.241], ['Uranus', 84.0], ['Neptune', 164.8], ['the dwarf planet Ceres', 4.60], ['an imaginary planet', R.pick([1.5, 2, 2.5, 3, 4, 5, 6, 8])], ['an imaginary planet', R.pick([0.3, 0.4, 0.5, 0.6, 0.75, 0.8])]]), inner = pl[1] < 1, S2 = 1 / M.abs(1 / pl[1] - 1);
     return P('The same idea gives a planet\'s synodic period, the time between one ' + (inner ? 'inferior conjunction' : 'opposition') + ' and the next: $\\dfrac{1}{S} = \\left|\\dfrac{1}{P} - \\dfrac{1}{1\\,\\text{yr}}\\right|$. ' + pl[0] + ' orbits the Sun in $' + fd(pl[1], 3) + '$ years. Find its synodic period in years.', num(S2, 3, 0.01),
       ['Rates: ' + pl[0] + ' goes around $\\frac{1}{' + fd(pl[1], 3) + '} = ' + fd(1 / pl[1], 4) + '$ times per year, Earth once per year.', 'The faster one gains on the slower at $' + fd(M.abs(1 / pl[1] - 1), 4) + '$ laps per year.', '$S = 1 \\div ' + fd(M.abs(1 / pl[1] - 1), 4) + ' \\approx ' + fd(S2, 2) + '$ years' + (inner ? '.' : ': that is how often ' + pl[0] + ' goes into retrograde.')],
       'Which planet laps the other?', { unit: 'yr', vf: { k: 'planetSyn', p: pl[1] } });
@@ -422,7 +438,7 @@
         'The Sun is off-center by a·e.', { unit: 'AU', vf: { k: isP ? 'peri' : 'aph', a: a, e: e } });
     }
     if (shape === 'aOf' || shape === 'eOf') {
-      var q = R.pick([0.5, 0.6, 0.8, 1.0, 1.2, 1.5, 2, 3, 4]), Q = q + R.pick([0.4, 1, 2, 3, 5, 8, 12, 20, 30]), aa = (q + Q) / 2, ee = (Q - q) / (Q + q);
+      var q = R.pick([0.5, 0.6, 0.8, 1.0, 1.2, 1.5, 2, 3, 4, 0.3, 0.4, 0.7, 0.9, 2.5, 5, 6, 0.35, 3.5]), Q = q + R.pick([0.4, 1, 2, 3, 5, 8, 12, 20, 30, 0.2, 0.6, 1.5, 4, 6, 10, 15, 25, 40, 0.25, 0.3, 0.35, 0.5, 0.7, 0.8, 0.9, 1.2, 2.5, 3.5, 7, 9, 35]), aa = (q + Q) / 2, ee = (Q - q) / (Q + q);
       if (shape === 'aOf') return P('An asteroid comes within $' + fd(q, 2) + '$ AU of the Sun at perihelion and goes out to $' + fd(Q, 2) + '$ AU at aphelion. What is the semi-major axis of its orbit?', num(aa, 3, 0.01),
         ['Perihelion and aphelion are the two ends of the long axis, which has length $2a$.', '$2a = ' + fd(q, 2) + ' + ' + fd(Q, 2) + ' = ' + fd(q + Q, 2) + '$ AU.', '$a = ' + fd(aa, 3) + '$ AU.'], 'The long axis runs from perihelion to aphelion.', { unit: 'AU', vf: { k: 'aOf', q: q, Q: Q } });
       return P('A comet\'s perihelion distance is $' + fd(q, 2) + '$ AU and its aphelion distance is $' + fd(Q, 2) + '$ AU. What is the eccentricity of its orbit?', num(ee, 3, 0.01),
@@ -452,7 +468,7 @@
         'Equal areas: a short line has to sweep faster.', { viz: { name: 'ph-orbit', opts: { mode: 'areas', e: 0.6, a: 1, interactive: false, quiet: true, hide: ['velocity', 'pa'], t: 0.15, tags: tags } }, vf: { k: 'mc' } });
     }
     if (shape === 'same') {
-      var days = R.pick([10, 15, 20, 30, 45, 60]);
+      var days = R.pick([10, 15, 20, 30, 45, 60, 5, 7, 12, 25, 40, 50, 90, 6, 8, 9, 35, 70, 80]);
       return P('Near perihelion, a comet takes $' + days + '$ days to sweep out a certain area (the triangle-like region between the Sun and its path). Far out, near aphelion, how many days does it take to sweep out an area of the same size?', exact(days),
         ['Kepler\'s second law: equal areas in equal times, anywhere on the orbit.', 'So the same area takes the same time: $' + days + '$ days.', 'Near aphelion that area is a long, thin wedge, so the comet covers much less of its path in those ' + days + ' days.'],
         'Equal areas, equal times.', { unit: 'days', vf: { k: 'same', d: days } });
@@ -465,12 +481,12 @@
           ['At perihelion and aphelion the motion is sideways to the Sun, so equal areas means $v_p\\, r_p = v_a\\, r_a$.', '$\\frac{v_p}{v_a} = \\frac{r_a}{r_p} = \\frac{a(1 + e)}{a(1 - e)} = \\frac{1 + e}{1 - e}$.', '$\\frac{1 + ' + fd(o[2], 3) + '}{1 - ' + fd(o[2], 3) + '} = ' + fd(r1, 3) + '$.'],
           'Write both distances with a and e.', { vf: { k: 'ratioE', e: o[2] } });
       }
-      var q = R.pick([0.3, 0.4, 0.5, 0.6, 0.8, 1.0]), Q = q * R.pick([1.5, 2, 2.5, 3, 4, 5, 10]);
+      var q = R.pick([0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 0.2, 0.7, 0.9, 1.2, 1.5, 2.0, 0.25, 0.35]), Q = q * R.pick([1.5, 2, 2.5, 3, 4, 5, 10, 1.2, 3.5, 6, 8, 20, 7, 9, 12, 15]);
       return P('A small body is $' + fd(q, 2) + '$ AU from the Sun at perihelion and $' + fd(Q, 2) + '$ AU at aphelion. How many times faster does it move at perihelion than at aphelion?', num(Q / q, 3, 0.01),
         ['At the ends of the orbit, equal areas in equal times gives $v_p\\, r_p = v_a\\, r_a$.', '$\\frac{v_p}{v_a} = \\frac{r_a}{r_p} = \\frac{' + fd(Q, 2) + '}{' + fd(q, 2) + '} = ' + fd(Q / q, 3) + '$.'],
         'Speed times distance is the same at both ends.', { vf: { k: 'ratio', q: q, Q: Q } });
     }
-    var rp = R.pick([0.5, 0.6, 0.8, 1.0, 1.2]), ra2 = rp * R.pick([1.5, 2, 3, 4, 6]), vp = R.pick([30, 36, 40, 45, 50, 60]), va = vp * rp / ra2;
+    var rp = R.pick([0.5, 0.6, 0.8, 1.0, 1.2, 0.3, 0.4, 0.7, 0.9, 1.5, 2.0, 0.35]), ra2 = rp * R.pick([1.5, 2, 3, 4, 6, 1.2, 2.5, 5, 8, 10, 3.5, 7, 9]), vp = R.pick([30, 36, 40, 45, 50, 60, 20, 24, 25, 32, 35, 48, 54, 70]), va = vp * rp / ra2;
     return P('A comet moves at $' + vp + '$ km/s at perihelion, $' + fd(rp, 2) + '$ AU from the Sun. Its aphelion is $' + fd(ra2, 2) + '$ AU from the Sun. How fast is it moving at aphelion?', num(va, 3, 0.01),
       ['At perihelion and aphelion, Kepler\'s second law gives $v_p\\, r_p = v_a\\, r_a$.', '$v_a = v_p \\cdot \\frac{r_p}{r_a} = ' + vp + ' \\times \\frac{' + fd(rp, 2) + '}{' + fd(ra2, 2) + '}$.', '$v_a = ' + fd(va, 3) + '$ km/s: slower, because it is farther out.'],
       'Speed times distance stays the same.', { unit: 'km/s', vf: { k: 'vap', vp: vp, rp: rp, ra: ra2 } });
@@ -478,11 +494,11 @@
 
   G('astro.kepler-third-law', function (R, ctx) {
     var shape = by(ctx, R.pick(['pFromA', 'aFromP']), R.pick(['pDec', 'aDec', 'ratio', 'mc']), R.pick(['days', 'aDec', 'ratio', 'pDec']));
-    if (shape === 'pFromA') { var a = R.pick([4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144]), pp = M.pow(a, 1.5);
+    if (shape === 'pFromA') { var a = R.pick([4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 1.44, 2.25, 6.25, 12.25, 169, 196, 225, 256, 400]), pp = M.pow(a, 1.5);
       return P('An asteroid orbits the Sun with semi-major axis $' + a + '$ AU. What is its orbital period in years?', exact(pp),
         ['Kepler\'s third law with $P$ in years and $a$ in AU: $P^2 = a^3$.', '$P^2 = ' + a + '^3 = ' + T.commas(a * a * a) + '$.', '$P = \\sqrt{' + T.commas(a * a * a) + '} = ' + pp + '$ years. (Or $P = a^{3/2} = (\\sqrt{' + a + '})^3 = ' + M.sqrt(a) + '^3$.)'],
         'P² = a³; a perfect square makes the root easy.', { unit: 'yr', vf: { k: 'p', a: a } }); }
-    if (shape === 'aFromP') { var b = R.int(2, 12), P0 = b * b * b, aa = b * b;
+    if (shape === 'aFromP') { var b = R.int(2, 20), P0 = b * b * b, aa = b * b;
       return P('A distant object takes $' + P0 + '$ years to orbit the Sun. What is the semi-major axis of its orbit, in AU?', exact(aa),
         ['$P^2 = a^3$, so $a = P^{2/3} = \\left(\\sqrt[3]{P}\\right)^2$.', '$\\sqrt[3]{' + P0 + '} = ' + b + '$.', '$a = ' + b + '^2 = ' + aa + '$ AU.'],
         'Take the cube root first.', { unit: 'AU', vf: { k: 'a', p: P0 } }); }
@@ -494,11 +510,11 @@
       return P(c[0] + ' orbits the Sun once every $' + fd(c[1], 1) + '$ years. What is the semi-major axis of its orbit?', num(a3, 3, 0.01),
         ['$a^3 = P^2 = ' + fd(c[1], 1) + '^2 = ' + fd(c[1] * c[1], 2) + '$.', '$a = \\sqrt[3]{' + fd(c[1] * c[1], 2) + '} = ' + fd(a3, 3) + '$ AU.'],
         'Square P, then take the cube root.', { unit: 'AU', vf: { k: 'a', p: c[1] } }); }
-    if (shape === 'ratio') { var k = R.pick([1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]), r = M.pow(k, 1.5);
+    if (shape === 'ratio') { var k = R.pick([1.5, 2, 2.5, 3, 4, 5, 6, 8, 10, 1.2, 3.5, 7, 9, 12, 16, 20, 15]), r = M.pow(k, 1.5);
       return P('Planet B orbits a star $' + k + '$ times as far out as planet A does. How many times longer is planet B\'s year?', num(r, 3, 0.01),
         ['Kepler\'s third law: $P^2 \\propto a^3$, so $P \\propto a^{3/2}$.', '$\\frac{P_B}{P_A} = ' + k + '^{3/2} = ' + k + '\\sqrt{' + k + '} = ' + fd(r, 3) + '$.', 'More than ' + k + ' times: the farther planet has a longer path <em>and</em> moves more slowly.'],
         'Raise the distance ratio to the 3/2 power.', { vf: { k: 'ratio', k2: k } }); }
-    if (shape === 'days') { var pl = R.pick([['Mercury', 88.0], ['Venus', 224.7], ['Mars', 687]]), py = pl[1] / 365.25, ad = M.pow(py, 2 / 3);
+    if (shape === 'days') { var pl = R.pick([['Mercury', 88.0], ['Venus', 224.7], ['Mars', 687], ['Jupiter', 4333], ['Saturn', 10759], ['the dwarf planet Ceres', 1680]]), py = pl[1] / 365.25, ad = M.pow(py, 2 / 3);
       return P(pl[0] + ' orbits the Sun in $' + fd(pl[1], 1) + '$ days. How far from the Sun is it on average (its semi-major axis, in AU)? A year is $365.25$ days.', num(ad, 3, 0.01),
         ['Kepler\'s form needs years: $P = ' + fd(pl[1], 1) + ' \\div 365.25 = ' + fd(py, 4) + '$ yr.', '$a^3 = P^2 = ' + fd(py * py, 4) + '$.', '$a = \\sqrt[3]{' + fd(py * py, 4) + '} = ' + fd(ad, 3) + '$ AU.'],
         'Convert days to years first.', { unit: 'AU', vf: { k: 'a', p: py } }); }
@@ -523,7 +539,7 @@
         'Put the period in seconds before you use G.', { unit: 'kg', vf: { k: 'si', a: m[2], P: Ps } });
     }
     if (shape === 'period') {
-      var Ms2 = R.pick([0.5, 2, 4, 9, 0.25, 0.8, 1.5, 3]), a2 = R.pick([1, 2, 4, 0.5, 0.3, 1.5, 3, 6]), P2 = M.sqrt(a2 * a2 * a2 / Ms2);
+      var Ms2 = R.pick([0.5, 2, 4, 9, 0.25, 0.8, 1.5, 3, 0.3, 0.6, 1.2, 2.5, 6, 16]), a2 = R.pick([1, 2, 4, 0.5, 0.3, 1.5, 3, 6, 0.1, 0.2, 0.8, 2.5, 5, 8, 10]), P2 = M.sqrt(a2 * a2 * a2 / Ms2);
       return P('A planet orbits a star of $' + fd(Ms2, 2) + '$ solar masses at $' + fd(a2, 2) + '$ AU. What is its orbital period in years?', num(P2, 3, 0.01),
         ['$M = \\frac{a^3}{P^2}$, so $P = \\sqrt{\\frac{a^3}{M}}$.', '$P = \\sqrt{\\frac{' + fd(a2 * a2 * a2, 3) + '}{' + fd(Ms2, 2) + '}} = ' + fd(P2, 3) + '$ years.', Ms2 > 1 ? 'A heavier star pulls harder, so the planet orbits faster than it would around the Sun.' : 'A lighter star pulls more weakly, so the year is longer than it would be around the Sun.'],
         'Solve M = a³/P² for P.', { unit: 'yr', vf: { k: 'period', M: Ms2, a: a2 } });
@@ -538,13 +554,13 @@
     var shape = by(ctx, R.pick(['esc', 'esc', 'mc']), R.pick(['vc', 'escS', 'esc', 'mc']), R.pick(['period', 'vc', 'escS']));
     var B = [['Earth', 3.986e14, 6371], ['Mars', 4.283e13, 3390], ['the Moon', 4.905e12, 1737], ['Jupiter', 1.267e17, 69911], ['Venus', 3.249e14, 6052]];
     if (shape === 'esc') {
-      var vc = R.pick([1.68, 3.55, 7.91, 7.33, 42.1, 0.4, 2.1, 5.2, 7.7, 3.07]);
+      var vc = R.pick([1.68, 3.55, 7.91, 7.33, 42.1, 0.4, 2.1, 5.2, 7.7, 3.07, 1.5, 2.5, 3.9, 4.6, 6.0, 7.1, 7.5, 10.2, 13.1, 17.3, 25.1, 29.8]);
       return P('A spacecraft is in a circular orbit moving at $' + fd(vc, 3) + '$ km/s. What speed would it need, at that same distance, to escape the planet\'s gravity completely?', num(vc * M.SQRT2, 3, 0.01),
         ['Circular speed $v_c = \\sqrt{GM/r}$; escape speed $v_{\\text{esc}} = \\sqrt{2GM/r}$.', 'So $v_{\\text{esc}} = \\sqrt{2}\\,v_c$.', '$1.414 \\times ' + fd(vc, 3) + ' = ' + fd(vc * M.SQRT2, 3) + '$ km/s.'],
         'Escape speed is √2 times the circular speed.', { unit: 'km/s', vf: { k: 'esc', vc: vc } });
     }
     if (shape === 'vc' || shape === 'period') {
-      var b = R.pick(B), h = b[0] === 'Earth' ? R.pick([200, 400, 800, 2000, 20200, 35786]) : R.pick([100, 200, 500, 1000]), r = (b[2] + h) * 1000, v = M.sqrt(b[1] / r);
+      var b = R.pick(B), h = b[0] === 'Earth' ? R.pick([200, 300, 400, 500, 600, 800, 1000, 1500, 2000, 5000, 10000, 20200, 35786, 250, 700, 900, 1200, 3000, 4000, 6000, 7000, 9000, 15000, 20000, 25000, 35000]) : R.pick([50, 100, 150, 200, 300, 400, 500, 750, 1000, 2000, 60, 70, 90, 120, 250, 600, 700, 800, 1200, 1500]), r = (b[2] + h) * 1000, v = M.sqrt(b[1] / r);
       if (shape === 'period') {
         var Tm = 2 * M.PI * r / v / 60;
         return P('A satellite circles ' + b[0] + ' $' + T.commas(h) + '$ km above the surface. ' + b[0][0].toUpperCase() + b[0].slice(1) + '\'s radius is $' + T.commas(b[2]) + '$ km and $GM = ' + fx(b[1], 4) + '\\,\\text{m}^3/\\text{s}^2$. How many minutes does one orbit take?', num(Tm, 3, 0.02),
@@ -582,7 +598,7 @@
         'Lined up, or at right angles?', { viz: { name: 'astro-springneap', opts: { age: R.pick(ages), interactive: false, quiet: true } }, vf: { k: 'mc' } });
     }
     if (shape === 'range') {
-      var am = R.pick([0.8, 1.0, 1.2, 1.5, 2.0, 2.4, 3.0]), as = fix(am * 0.46), spr = R.coin(), v = spr ? am + as : am - as;
+      var am = R.pick([0.8, 1.0, 1.2, 1.5, 2.0, 2.4, 3.0, 0.5, 0.6, 0.9, 1.1, 1.3, 1.6, 1.8, 2.2, 2.6, 3.5, 4.0, 5.0, 0.7, 2.5]), as = fix(am * 0.46), spr = R.coin(), v = spr ? am + as : am - as;
       return P('On one coast the Moon alone would raise a tidal range of $' + fd(am, 2) + '$ m, and the Sun alone $' + fd(as, 3) + '$ m. What is the tidal range at ' + (spr ? 'spring' : 'neap') + ' tide?', num(v, 3, 0.01),
         [spr ? 'At spring tide (new or full moon) the two tides line up and add.' : 'At neap tide (quarter moons) the Sun\'s bulges sit between the Moon\'s and partly cancel them.', spr ? '$' + fd(am, 2) + ' + ' + fd(as, 3) + ' = ' + fd(v, 3) + '$ m.' : '$' + fd(am, 2) + ' - ' + fd(as, 3) + ' = ' + fd(v, 3) + '$ m.'],
         spr ? 'Lined up: add.' : 'At right angles: subtract.', { unit: 'm', vf: { k: spr ? 'spring' : 'neap', am: am, as: as } });
@@ -599,7 +615,7 @@
         'Tides depend on the difference in pull across Earth, which falls off as 1/d³.', { vf: { k: 'sunmoon' } });
     }
     if (shape === 'perigee') {
-      var dp = R.pick([357000, 360000, 363000]), da = R.pick([405000, 406000]), rr = M.pow(da / dp, 3);
+      var dp = R.pick([357000, 360000, 363000, 356500, 358000, 361000, 362000, 364000, 365000]), da = R.pick([405000, 406000, 404000, 404500, 405500, 406500]), rr = M.pow(da / dp, 3);
       return P('The Moon\'s tidal effect goes as $1/d^3$. How many times stronger is it at perigee ($' + T.commas(dp) + '$ km) than at apogee ($' + T.commas(da) + '$ km)?', num(rr, 3, 0.01),
         ['Ratio $= \\left(\\frac{d_{\\text{apogee}}}{d_{\\text{perigee}}}\\right)^3 = \\left(\\frac{' + T.commas(da) + '}{' + T.commas(dp) + '}\\right)^3$.', '$' + fd(da / dp, 4) + '^3 = ' + fd(rr, 3) + '$.', 'When a perigee falls near new or full moon, spring tides are unusually large.'],
         'Cube the distance ratio.', { vf: { k: 'perigee', dp: dp, da: da } });
@@ -629,19 +645,19 @@
         'Distance ÷ speed.', { unit: inMin ? 'min' : 's', vf: { k: inMin ? 'tmin' : 'ts', d: b[1] } });
     }
     if (shape === 'lykm') {
-      var yrs = R.pick([1, 4.2, 8.6, 10, 25, 100]);
+      var yrs = R.pick([1, 4.2, 8.6, 10, 25, 100, 2, 3, 5, 6, 11.4, 16.7, 20, 37, 50, 65, 200, 300, 1000]);
       return P('Light travels $3.00 \\times 10^{5}$ km every second, and a year has $3.156 \\times 10^{7}$ s. How many kilometers is ' + (yrs === 1 ? 'one light-year' : tx(yrs) + ' light-years') + '?', num(yrs * CKM * YR, 3, 0.02),
         ['One light-year: $3.00 \\times 10^{5} \\times 3.156 \\times 10^{7} = 9.47 \\times 10^{12}$ km.', yrs === 1 ? 'About 9.5 trillion km.' : 'Times ' + tx(yrs) + ': $' + fx(yrs * CKM * YR, 3) + '$ km.'],
         'Speed × time.', { unit: 'km', vf: { k: 'lykm', y: yrs } });
     }
     if (shape === 'probe') {
-      var dk = R.pick([1.5e10, 2.0e10, 2.4e10, 1.2e10, 3.0e10]), th = dk / CKM / 3600;
+      var dk = R.pick([1.5e10, 2.0e10, 2.4e10, 1.2e10, 3.0e10, 1.0e10, 1.8e10, 2.2e10, 2.7e10, 3.6e10, 4.5e10]), th = dk / CKM / 3600;
       return P('A space probe is $' + fx(dk, 2) + '$ km from Earth. How many hours does a radio command (which travels at the speed of light, $3.00 \\times 10^{5}$ km/s) take to reach it?', num(th, 3, 0.02),
         ['Radio waves are light, so they move at $3.00 \\times 10^{5}$ km/s.', 'Time $= \\frac{' + fx(dk, 2) + '}{3.00 \\times 10^{5}} = ' + fx(dk / CKM, 3) + '$ s.', 'In hours: $\\div 3600 = ' + fd(th, 1) + '$ h.'],
         'Find seconds, then convert.', { unit: 'h', vf: { k: 'probe', d: dk } });
     }
     if (shape === 'rover') {
-      var dm = R.pick([7.8e7, 1.5e8, 2.25e8, 3.0e8, 3.75e8]), rt = 2 * dm / CKM / 60;
+      var dm = R.pick([7.8e7, 1.5e8, 2.25e8, 3.0e8, 3.75e8, 6.0e7, 9.0e7, 1.2e8, 1.8e8, 2.0e8, 2.5e8, 3.3e8, 4.0e8]), rt = 2 * dm / CKM / 60;
       return P('A rover on Mars is $' + fx(dm, 3) + '$ km from Earth. A driver sends a command and waits for the rover\'s reply. How many minutes at least pass between sending and receiving? (Light speed: $3.00 \\times 10^{5}$ km/s.)', num(rt, 3, 0.02),
         ['The signal goes there and back: $2 \\times ' + fx(dm, 3) + ' = ' + fx(2 * dm, 3) + '$ km.', 'Time $= \\frac{' + fx(2 * dm, 3) + '}{3.00 \\times 10^{5}} = ' + fx(2 * dm / CKM, 3) + '$ s $= ' + fd(rt, 1) + '$ min.', 'That is why rovers drive themselves between commands.'],
         'Round trip: double the distance.', { unit: 'min', vf: { k: 'rover', d: dm } });
@@ -672,13 +688,13 @@
         'Convert to kelvins first.', { unit: 'nm', vf: { k: 'celsius', C: c[0] } });
     }
     if (shape === 'micron') {
-      var Tm = R.pick([10, 20, 50, 100, 310, 2.725]), lm = WIEN / Tm / 1000;
+      var Tm = R.pick([10, 20, 50, 100, 310, 2.725, 5, 15, 30, 40, 60, 80, 150, 200, 250, 290]), lm = WIEN / Tm / 1000;
       return P('Something at $' + fd(Tm, 3) + '$ K glows with a peak at what wavelength, in micrometers (one micrometer is 1000 nm)? Use $\\lambda_{\\text{peak}} = \\dfrac{2.90 \\times 10^{6}\\ \\text{nm·K}}{T}$.', num(lm, 3, 0.02),
         ['$\\lambda_{\\text{peak}} = \\frac{2.90 \\times 10^{6}}{' + fd(Tm, 3) + '} = ' + fx(lm * 1000, 3) + '$ nm.', 'In micrometers: $\\div 1000 = ' + fx(lm, 3) + '\\ \\mu$m.', Tm < 100 ? 'Far infrared or microwave: cold things need special telescopes.' : 'Infrared.'],
         'Find nanometers, then divide by 1000.', { unit: 'μm', vf: { k: 'micron', T: Tm } });
     }
     if (shape === 'ratio') {
-      var r = R.pick([1.5, 2, 2.5, 3, 4, 5]), lb = R.pick([400, 500, 600, 800, 900, 1000]);
+      var r = R.pick([1.5, 2, 2.5, 3, 4, 5, 1.2, 1.25, 1.6, 6, 8, 10]), lb = R.pick([400, 500, 600, 800, 900, 1000, 300, 450, 550, 650, 700, 750, 1200, 1500]);
       return P('Star A\'s spectrum peaks at $' + lb + '$ nm and star B\'s at $' + fd(lb / r, 1) + '$ nm. How many times hotter is star B than star A?', num(r, 3, 0.02),
         ['Wien\'s law: $\\lambda_{\\text{peak}} \\propto \\frac{1}{T}$, so $\\frac{T_B}{T_A} = \\frac{\\lambda_A}{\\lambda_B}$.', '$\\frac{' + lb + '}{' + fd(lb / r, 1) + '} = ' + fd(r, 2) + '$.'], 'Shorter peak, hotter star.', { vf: { k: 'ratio', a: lb, b: lb / r } });
     }
@@ -690,19 +706,19 @@
   G('astro.luminosity-radius-temperature', function (R, ctx) {
     var shape = by(ctx, R.pick(['L', 'L', 'mc']), R.pick(['R', 'L', 'cmp', 'mc']), R.pick(['si', 'R', 'cmp']));
     if (shape === 'L') {
-      var Rr = R.pick([0.1, 0.2, 0.5, 0.8, 1.5, 2, 3, 4, 5, 8, 10, 20, 50, 100]), Tt = R.pick([0.4, 0.5, 0.6, 0.7, 0.8, 1, 1.2, 1.5, 2, 2.5, 3]), Lv = Rr * Rr * M.pow(Tt, 4);
+      var Rr = R.pick([0.1, 0.2, 0.5, 0.8, 1.5, 2, 3, 4, 5, 8, 10, 20, 50, 100, 0.3, 0.4, 0.6, 1.2, 2.5, 6, 15, 30, 40, 70, 200, 0.12, 0.15, 0.25, 0.35, 0.7, 0.9, 1, 3.5, 7, 9, 12, 25, 35, 60, 80, 90, 120, 150]), Tt = R.pick([0.4, 0.5, 0.6, 0.7, 0.8, 1, 1.2, 1.5, 2, 2.5, 3, 0.55, 0.65, 0.75, 0.9, 1.1, 1.3, 1.7, 1.8, 4, 5, 3.5]), Lv = Rr * Rr * M.pow(Tt, 4);
       return P('A star has $' + fd(Rr, 2) + '$ times the Sun\'s radius and $' + fd(Tt, 2) + '$ times the Sun\'s surface temperature. How many times as luminous as the Sun is it?', num(Lv, 3, 0.02),
         ['In solar units, $L = R^2 T^4$.', '$R^2 = ' + fd(Rr * Rr, 4) + '$ and $T^4 = ' + fd(Tt, 2) + '^4 = ' + fd(M.pow(Tt, 4), 4) + '$.', '$L = ' + fd(Rr * Rr, 4) + ' \\times ' + fd(M.pow(Tt, 4), 4) + ' = ' + fx(Lv, 3) + '$ times the Sun\'s luminosity.'],
         'Square the radius; raise the temperature to the fourth power.', { unit: 'L☉', vf: { k: 'L', R: Rr, T: Tt } });
     }
     if (shape === 'R') {
-      var c = R.pick([[100, 0.5], [400, 0.5], [10000, 2], [1, 2], [0.01, 2], [900, 0.6], [16, 2], [81, 3], [10000, 0.5], [0.04, 1.5]]), Rv = M.sqrt(c[0]) / (c[1] * c[1]);
+      var c = R.pick([[100, 0.5], [400, 0.5], [10000, 2], [1, 2], [0.01, 2], [900, 0.6], [16, 2], [81, 3], [10000, 0.5], [0.04, 1.5], [2500, 1], [36, 0.5], [1000, 0.8], [0.1, 1.2], [625, 5], [256, 2], [50, 0.75], [4, 0.5], [0.0025, 0.5]]), Rv = M.sqrt(c[0]) / (c[1] * c[1]);
       return P('A star is $' + T.commas(c[0]) + '$ times as luminous as the Sun, with $' + fd(c[1], 2) + '$ times the Sun\'s surface temperature. What is its radius, in solar radii?', num(Rv, 3, 0.02),
         ['$L = R^2 T^4$ in solar units, so $R = \\frac{\\sqrt{L}}{T^2}$.', '$\\sqrt{' + T.commas(c[0]) + '} = ' + fd(M.sqrt(c[0]), 3) + '$ and $T^2 = ' + fd(c[1] * c[1], 4) + '$.', '$R = ' + fd(M.sqrt(c[0]), 3) + ' \\div ' + fd(c[1] * c[1], 4) + ' = ' + fx(Rv, 3) + '$ solar radii.', Rv > 10 ? 'A giant.' : Rv < 0.1 ? 'Tiny: a white dwarf.' : 'A main-sequence-sized star.'],
         'Solve L = R²T⁴ for R.', { unit: 'R☉', vf: { k: 'R', L: c[0], T: c[1] } });
     }
     if (shape === 'cmp') {
-      var sameT = R.coin(), k = sameT ? R.pick([4, 9, 25, 100, 10000]) : R.pick([2, 3, 0.5]);
+      var sameT = R.coin(), k = sameT ? R.pick([4, 9, 25, 100, 10000]) : R.pick([2, 3, 0.5, 0.6, 1, 2.5]);
       if (sameT) return P('Two stars have the same surface temperature, but one is $' + T.commas(k) + '$ times as luminous as the other. How many times larger is its radius?', num(M.sqrt(k), 3, 0.01),
         ['Same $T$, so $L \\propto R^2$.', '$\\frac{R_1}{R_2} = \\sqrt{' + T.commas(k) + '} = ' + fd(M.sqrt(k), 3) + '$.'], 'With T fixed, L goes as R².', { vf: { k: 'cmpR', r: k } });
       return P('Two stars have the same radius, but one has $' + fd(k, 2) + '$ times the surface temperature of the other. How many times as luminous is it?', num(M.pow(k, 4), 3, 0.01),
@@ -752,13 +768,13 @@
     var shape = by(ctx, R.pick(['v', 'v', 'dir']), R.pick(['v', 'obs', 'dir', 'mc']), R.pick(['wobble', 'obs', 'v']));
     var lines = [['hydrogen-alpha', 656.3], ['hydrogen-beta', 486.1], ['sodium', 589.0], ['calcium K', 393.4], ['magnesium', 517.3]];
     if (shape === 'v') {
-      var l = R.pick(lines), vv = R.pick([-300, -150, -90, -60, 30, 60, 75, 120, 150, 240, 450, 600, -45]), dl = rnd(l[1] * vv / CKM, 2), lam = fix(l[1] + dl), vr = CKM * (lam - l[1]) / l[1];
+      var l = R.pick(lines), vv = R.pick([-300, -150, -90, -60, 30, 60, 75, 120, 150, 240, 450, 600, -45, -600, -450, -240, -200, -120, -75, -30, 15, 45, 90, 180, 200, 300, 360, 750, 900]), dl = rnd(l[1] * vv / CKM, 2), lam = fix(l[1] + dl), vr = CKM * (lam - l[1]) / l[1];
       return P('In the lab, the ' + l[0] + ' line is at $' + fd(l[1], 1) + '$ nm. In a star\'s spectrum it is at $' + fd(lam, 3) + '$ nm. Find the star\'s radial velocity in km/s, with $+$ for moving away from us and $-$ for moving toward us. ($c = 3.00 \\times 10^{5}$ km/s.)', num(vr, 3, 0.03),
         ['Shift: $\\Delta\\lambda = ' + fd(lam, 3) + ' - ' + fd(l[1], 1) + ' = ' + fd(lam - l[1], 3) + '$ nm (' + (lam > l[1] ? 'longer: a redshift' : 'shorter: a blueshift') + ').', '$v = c\\,\\frac{\\Delta\\lambda}{\\lambda} = 3.00 \\times 10^{5} \\times \\frac{' + fd(lam - l[1], 3) + '}{' + fd(l[1], 1) + '}$.', '$v = ' + fd(vr, 0) + '$ km/s: ' + (vr > 0 ? 'moving away.' : 'moving toward us.')],
         'Δλ/λ = v/c.', { unit: 'km/s', vf: { k: 'v', l0: l[1], l: lam } });
     }
     if (shape === 'obs') {
-      var l2 = R.pick(lines), v2 = R.pick([-200, -60, 45, 90, 150, 300, 1500, 3000, 6000]), lo = l2[1] * (1 + v2 / CKM);
+      var l2 = R.pick(lines), v2 = R.pick([-200, -60, 45, 90, 150, 300, 1500, 3000, 6000, -1000, -500, -120, -30, 30, 60, 120, 250, 600, 900, 2000, 4500, 9000]), lo = l2[1] * (1 + v2 / CKM);
       return P('A galaxy moves ' + (v2 > 0 ? 'away from' : 'toward') + ' us at $' + T.commas(M.abs(v2)) + '$ km/s. Where do we see its ' + l2[0] + ' line, whose lab wavelength is $' + fd(l2[1], 1) + '$ nm? ($c = 3.00 \\times 10^{5}$ km/s.) Give at least two decimal places.', { t: 'num', v: ans(lo, 7), tol: fix(rnd(M.max(0.003, 0.04 * M.abs(lo - l2[1])), 2)) },
         ['$\\Delta\\lambda = \\lambda\\,\\frac{v}{c} = ' + fd(l2[1], 1) + ' \\times \\frac{' + v2 + '}{3.00 \\times 10^{5}} = ' + fd(l2[1] * v2 / CKM, 3) + '$ nm.', 'Observed: $' + fd(l2[1], 1) + (v2 > 0 ? ' + ' : ' - ') + fd(M.abs(l2[1] * v2 / CKM), 3) + ' = ' + fd(lo, 3) + '$ nm (' + (v2 > 0 ? 'redshifted' : 'blueshifted') + ').'],
         'Find the shift, then add it (away) or subtract it (toward).', { unit: 'nm', vf: { k: 'obs', l0: l2[1], v: v2 } });
@@ -769,7 +785,7 @@
         ['A source moving away stretches the light waves (longer wavelengths: redshift); one moving toward us squeezes them (blueshift).', 'Only motion along our line of sight shifts the lines; sideways motion does not.', 'Here the lines are ' + (red ? 'longer, so it is moving away.' : 'shorter, so it is moving toward us.')], 'Away stretches; toward squeezes.', { vf: { k: 'mc' } });
     }
     if (shape === 'wobble') {
-      var w = R.pick([12.5, 30, 60, 0.09, 100]), l3 = R.pick(lines), dd = l3[1] * w / 3.00e8;
+      var w = R.pick([12.5, 30, 60, 0.09, 100, 0.5, 1, 5, 10, 20, 40, 50, 75, 150, 200]), l3 = R.pick(lines), dd = l3[1] * w / 3.00e8;
       return P('A planet tugs its star back and forth at $' + fd(w, 2) + '$ m/s. How big a shift does that make in the ' + l3[0] + ' line at $' + fd(l3[1], 1) + '$ nm? Give $\\Delta\\lambda$ in nm. ($c = 3.00 \\times 10^{8}$ m/s.)', num(dd, 3, 0.02),
         ['$\\Delta\\lambda = \\lambda\\,\\frac{v}{c} = ' + fd(l3[1], 1) + ' \\times \\frac{' + fd(w, 2) + '}{3.00 \\times 10^{8}}$.', '$\\Delta\\lambda = ' + fx(dd, 3) + '$ nm: tiny, which is why planet hunters need extremely stable spectrographs.'],
         'Keep both speeds in m/s.', { unit: 'nm', vf: { k: 'wobble', l0: l3[1], v: w } });
@@ -782,7 +798,7 @@
   G('astro.telescopes', function (R, ctx) {
     var shape = by(ctx, R.pick(['ratio', 'ratio', 'mc']), R.pick(['eye', 'res', 'ratio', 'mc']), R.pick(['res', 'time', 'mag', 'eye']));
     if (shape === 'ratio') {
-      var d1 = R.pick([2, 3, 4, 5, 10, 8, 6]), d2 = d1 * R.pick([2, 3, 4, 5, 1.5, 2.5]), u = R.pick(['m', 'inch']);
+      var d1 = R.pick([2, 3, 4, 5, 10, 8, 6, 1, 1.5, 2.5, 7, 12, 16]), d2 = d1 * R.pick([2, 3, 4, 5, 1.5, 2.5]), u = R.pick(['m', 'inch']);
       return P('Telescope A has a mirror $' + fd(d1, 2) + '$ ' + u + (u === 'inch' ? 'es' : '') + ' across and telescope B one $' + fd(d2, 2) + '$ ' + u + (u === 'inch' ? 'es' : '') + ' across. How many times more light does B collect?', num(M.pow(d2 / d1, 2), 3, 0.01),
         ['Light collected is proportional to the mirror\'s area, which goes as the diameter squared.', '$\\left(\\frac{' + fd(d2, 2) + '}{' + fd(d1, 2) + '}\\right)^2 = ' + fd(d2 / d1, 2) + '^2 = ' + fd(M.pow(d2 / d1, 2), 3) + '$.'], 'Area goes as D².', { vf: { k: 'ratio', a: d1, b: d2 } });
     }
@@ -792,18 +808,18 @@
         ['Ratio of areas $= \\left(\\frac{D}{d_{\\text{eye}}}\\right)^2$. Use the same units: $' + fd(D[0], 2) + '$ m $= ' + T.commas(D[0] * 1000) + '$ mm.', '$\\left(\\frac{' + T.commas(D[0] * 1000) + '}{7}\\right)^2 = ' + fx(rr, 3) + '$.'], 'Put both diameters in mm.', { vf: { k: 'eye', D: D[0] } });
     }
     if (shape === 'res') {
-      var Dm = R.pick([0.1, 0.2, 1, 2.4, 6.5, 10, 0.25, 0.5]), lam = R.pick([500, 550, 600, 2000]), th = 2.5e5 * lam * 1e-9 / Dm;
+      var Dm = R.pick([0.1, 0.2, 1, 2.4, 6.5, 10, 0.25, 0.5, 0.08, 0.15, 0.3, 0.4, 0.6, 0.8, 1.5, 3.5, 4, 8.2]), lam = R.pick([500, 550, 600, 2000, 400, 450, 650, 700, 1000, 1500]), th = 2.5e5 * lam * 1e-9 / Dm;
       return P('The finest detail a telescope can resolve is about $\\theta = 2.5 \\times 10^{5}\\,\\dfrac{\\lambda}{D}$ arcseconds, with $\\lambda$ and $D$ in the same units. What is $\\theta$ for a $' + fd(Dm, 2) + '$ m telescope observing at $' + lam + '$ nm?', num(th, 3, 0.02),
         ['$\\lambda = ' + lam + '$ nm $= ' + fx(lam * 1e-9, 3) + '$ m.', '$\\theta = 2.5 \\times 10^{5} \\times \\frac{' + fx(lam * 1e-9, 3) + '}{' + fd(Dm, 2) + '} = ' + fx(th, 3) + '$ arcseconds.', 'A bigger aperture gives a smaller angle: finer detail.'],
         'Convert nm to m first.', { unit: 'arcsec', vf: { k: 'res', lam: lam, D: Dm } });
     }
     if (shape === 'time') {
-      var t1 = R.pick([20, 40, 60, 80, 90, 120]), f = R.pick([2, 3, 4]);
+      var t1 = R.pick([20, 40, 60, 80, 90, 120, 10, 15, 30, 45, 50, 100, 150, 180, 240]), f = R.pick([2, 3, 4]);
       return P('A photo of a faint galaxy needs a $' + t1 + '$-minute exposure on a telescope with a $0.5$ m mirror. How many minutes would the same photo take on a telescope with a mirror $' + f + '$ times as wide?', num(t1 / (f * f), 3, 0.01),
         ['A mirror ' + f + ' times as wide has $' + f + '^2 = ' + f * f + '$ times the area, so it collects light ' + f * f + ' times as fast.', 'Time $= ' + t1 + ' \\div ' + f * f + ' = ' + fd(t1 / (f * f), 2) + '$ min.'], 'Light gathered goes as D².', { unit: 'min', vf: { k: 'time', t: t1, f: f } });
     }
     if (shape === 'mag') {
-      var fo = R.pick([900, 1000, 1200, 2000]), fe = R.pick([10, 20, 25, 40]);
+      var fo = R.pick([900, 1000, 1200, 2000, 500, 600, 750, 800, 1500, 2400, 3000]), fe = R.pick([10, 20, 25, 40, 4, 5, 6, 8, 12, 15, 30, 32]);
       return P('A telescope\'s objective has a focal length of $' + T.commas(fo) + '$ mm and its eyepiece $' + fe + '$ mm. What is the magnification?', num(fo / fe, 3, 0.01),
         ['Magnification $= \\frac{f_{\\text{objective}}}{f_{\\text{eyepiece}}} = \\frac{' + T.commas(fo) + '}{' + fe + '} = ' + fd(fo / fe, 1) + '$.', 'Swapping eyepieces changes the magnification, but not how much light the telescope gathers or the finest detail it can show.'], 'Divide the focal lengths.', { vf: { k: 'mag', fo: fo, fe: fe } });
     }
@@ -851,7 +867,7 @@
   G('astro.planet-families', function (R, ctx) {
     var shape = by(ctx, R.pick(['simple', 'simple', 'mc']), R.pick(['full', 'class', 'mc', 'simple']), R.pick(['full', 'mass', 'float']));
     if (shape === 'simple') {
-      var mm = R.pick([2, 3, 4, 5, 6, 8, 9, 10, 12]), vv = R.pick([1, 2, 3, 4, 5, 6, 8]), d = mm / vv;
+      var mm = R.pick([2, 3, 4, 5, 6, 8, 9, 10, 12, 1, 7, 15, 16, 20, 11, 13, 14, 17, 18, 19]), vv = R.pick([1, 2, 3, 4, 5, 6, 8, 2.5, 10, 1.2, 1.5, 3.5, 7, 9]), d = mm / vv;
       var big = R.coin(), Mx = mm * (big ? 1e26 : 1e23), Vx = vv * (big ? 1e23 : 1e20);
       return P('A planet has a mass of $' + fx(Mx, 2) + '$ kg and a volume of $' + fx(Vx, 2) + '\\ \\text{m}^3$. What is its average density in g/cm³? ($1000\\ \\text{kg/m}^3 = 1\\ \\text{g/cm}^3$.)', num(d, 3, 0.01),
         ['Density $= \\frac{\\text{mass}}{\\text{volume}} = \\frac{' + fx(Mx, 2) + '}{' + fx(Vx, 2) + '} = ' + fx(d * 1000, 3) + '\\ \\text{kg/m}^3$.', 'Divide by $1000$: $' + fd(d, 3) + '$ g/cm³.', d > 3 ? 'Dense enough for rock and metal: a rocky planet.' : 'Light, like a giant planet made mostly of hydrogen, helium and ices.'],
@@ -867,7 +883,7 @@
         'Find the volume of a sphere first; keep units in meters.', { unit: 'g/cm³', vf: { k: 'full', M: p[1], R: p[2] } });
     }
     if (shape === 'mass') {
-      var dd = R.pick([1.5, 2, 3, 4, 5, 5.5]), rr = R.pick([2000, 3000, 5000, 8000, 10000]), Mm = dd * 1000 * 4 / 3 * M.PI * M.pow(rr * 1000, 3);
+      var dd = R.pick([1.5, 2, 3, 4, 5, 5.5, 1, 2.5, 3.5, 4.5, 1.2]), rr = R.pick([2000, 3000, 5000, 8000, 10000, 1000, 1500, 2500, 4000, 6000, 7000, 1200, 3500, 9000]), Mm = dd * 1000 * 4 / 3 * M.PI * M.pow(rr * 1000, 3);
       return P('An exoplanet has a radius of $' + T.commas(rr) + '$ km. If it is rocky with an average density of $' + fd(dd, 2) + '$ g/cm³, what is its mass in kg?', num(Mm, 3, 0.02),
         ['Density in SI: $' + fd(dd, 2) + '$ g/cm³ $= ' + T.commas(dd * 1000) + '$ kg/m³.', 'Volume $= \\frac{4}{3}\\pi (' + fx(rr * 1000, 3) + ')^3 = ' + fx(4 / 3 * M.PI * M.pow(rr * 1000, 3), 3) + '\\ \\text{m}^3$.', 'Mass $= \\rho V = ' + fx(Mm, 3) + '$ kg.'], 'Mass = density × volume.', { unit: 'kg', vf: { k: 'mass', d: dd, R: rr } });
     }
@@ -895,7 +911,7 @@
         ['In the disk around the young Sun, the temperature fell with distance.', 'Rock and metal can condense even where it is hot, but ices (water, ammonia, methane) freeze only far out, beyond the frost line, a few AU from the Sun.', 'Out there, plentiful ice built large cores, which grew massive enough to capture hydrogen and helium: the giant planets.'], 'Think about what can freeze where.', { vf: { k: 'mc' } });
     }
     if (shape === 'spin' || shape === 'spin2') {
-      var f = R.pick([2, 3, 4, 5, 10, 20, 100]);
+      var f = R.pick([2, 3, 4, 5, 10, 20, 100, 2.5, 7, 9, 25, 40, 60, 90]);
       if (shape === 'spin2') return P('A slowly turning cloud of gas shrinks until its radius is $\\frac{1}{' + f + '}$ of what it was. Its angular momentum, which goes as $r^2\\omega$ for its spinning parts, stays the same. By what factor does its spin rate $\\omega$ increase?', num(f * f, 3, 0.01),
         ['Angular momentum is conserved: $r_1^2 \\omega_1 = r_2^2 \\omega_2$.', '$\\frac{\\omega_2}{\\omega_1} = \\left(\\frac{r_1}{r_2}\\right)^2 = ' + f + '^2 = ' + f * f + '$.', 'Spinning that fast, the cloud flattens into a disk: the birthplace of planets.'], 'Like a spinning skater pulling in her arms.', { vf: { k: 'spin', f: f } });
       return P('A spinning cloud shrinks to half its radius while keeping its angular momentum ($r^2\\omega$ stays the same). How many times faster does it spin?', num(4, 3, 0.01),
@@ -934,12 +950,12 @@
   G('astro.exoplanets', function (R, ctx) {
     var shape = by(ctx, R.pick(['depth', 'depth', 'mc']), R.pick(['depth', 'radius', 'wobble', 'mc']), R.pick(['radius', 'wobble', 'orbit', 'depthKm']));
     if (shape === 'depth') {
-      var r = R.pick([0.05, 0.08, 0.1, 0.12, 0.15, 0.2, 0.02, 0.03]), pct = r * r * 100;
+      var r = R.pick([0.05, 0.08, 0.1, 0.12, 0.15, 0.2, 0.02, 0.03, 0.01, 0.04, 0.06, 0.07, 0.09, 0.11, 0.13, 0.14, 0.16, 0.18, 0.25, 0.012, 0.015, 0.025, 0.035]), pct = r * r * 100;
       return P('A planet whose radius is $' + fd(r, 2) + '$ of its star\'s radius passes in front of the star. By what percent does the star\'s light dip?', pnum(pct, 3, 0.01),
         ['The planet blocks a disk of area $\\pi R_p^2$ out of the star\'s $\\pi R_\\star^2$.', 'Fraction blocked $= \\left(\\frac{R_p}{R_\\star}\\right)^2 = ' + fd(r, 2) + '^2 = ' + fd(r * r, 6) + '$.', 'As a percent: $' + fd(pct, 4) + '\\%$.'], 'Compare the areas of the two disks.', { viz: { name: 'ph-orbit', opts: { mode: 'transit', rp: r, interactive: false, quiet: true, t: 0.5 } }, vf: { k: 'depth', r: r } });
     }
     if (shape === 'radius' || shape === 'depthKm') {
-      var dp = R.pick([0.25, 0.36, 0.49, 0.64, 1, 1.21, 1.44, 2.25, 0.01, 0.04, 0.09]), Rs = R.pick([[1, 696000, 'Sun-like'], [0.5, 348000, 'small'], [0.2, 139000, 'red dwarf']]), rp = M.sqrt(dp / 100) * Rs[1];
+      var dp = R.pick([0.25, 0.36, 0.49, 0.64, 1, 1.21, 1.44, 2.25, 0.01, 0.04, 0.09, 0.16, 0.81, 1.69, 1.96, 4, 0.0084, 0.02, 0.5]), Rs = R.pick([[1, 696000, 'Sun-like'], [0.5, 348000, 'small'], [0.2, 139000, 'red dwarf']]), rp = M.sqrt(dp / 100) * Rs[1];
       if (shape === 'depthKm') return P('A ' + Rs[2] + ' star with a radius of $' + T.commas(Rs[1]) + '$ km dims by $' + fd(dp, 2) + '\\%$ each time its planet passes in front. What is the planet\'s radius, in km?', num(rp, 3, 0.02),
         ['Depth $= \\left(\\frac{R_p}{R_\\star}\\right)^2 = ' + fd(dp / 100, 4) + '$.', '$\\frac{R_p}{R_\\star} = \\sqrt{' + fd(dp / 100, 4) + '} = ' + fd(M.sqrt(dp / 100), 3) + '$.', '$R_p = ' + fd(M.sqrt(dp / 100), 3) + ' \\times ' + T.commas(Rs[1]) + ' = ' + T.commas(rnd(rp, 3)) + '$ km.'], 'Take the square root of the depth (as a fraction).', { unit: 'km', vf: { k: 'depthKm', d: dp, Rs: Rs[1] } });
       return P('A star dims by $' + fd(dp, 2) + '\\%$ when its planet transits. What is the planet\'s radius as a fraction of the star\'s radius?', num(M.sqrt(dp / 100), 3, 0.01),
@@ -952,7 +968,7 @@
         'Momenta balance about the center of mass.', { unit: 'm/s', vf: { k: 'wobble', vp: pl[1], ratio: pl[2] } });
     }
     if (shape === 'orbit') {
-      var Ms = R.pick([1, 0.5, 2, 0.8, 1.2]), Py = R.pick([0.1, 0.25, 0.5, 1, 2, 4]), aa = M.cbrt(Ms * Py * Py);
+      var Ms = R.pick([1, 0.5, 2, 0.8, 1.2, 0.3, 0.6, 0.7, 1.5, 1.8, 2.5, 3, 0.35, 0.4, 0.9]), Py = R.pick([0.1, 0.25, 0.5, 1, 2, 4, 0.05, 0.2, 0.75, 1.5, 3, 5, 8, 10, 0.06, 0.07, 0.09, 0.12, 0.3, 0.35, 0.4, 0.7, 0.8, 0.9, 2.5, 3.5, 7, 9]), aa = M.cbrt(Ms * Py * Py);
       return P('Transits repeat every $' + fd(Py, 2) + '$ years around a star of $' + fd(Ms, 2) + '$ solar masses. How far from the star is the planet (its semi-major axis, in AU)? Use $M = \\dfrac{a^3}{P^2}$.', num(aa, 3, 0.01),
         ['The time between transits is the orbital period.', '$a^3 = M P^2 = ' + fd(Ms, 2) + ' \\times ' + fd(Py, 2) + '^2 = ' + fd(Ms * Py * Py, 4) + '$.', '$a = \\sqrt[3]{' + fd(Ms * Py * Py, 4) + '} = ' + fd(aa, 3) + '$ AU.'], 'Solve Newton\'s form of Kepler\'s law for a.', { unit: 'AU', vf: { k: 'orbit', M: Ms, P: Py } });
     }
@@ -993,24 +1009,26 @@
         ['$0.7\\% = 0.007$.', '$0.007 \\times ' + T.commas(m) + ' = ' + fd(0.007 * m, 3) + '$ kg.', 'The other $99.3\\%$ ends up as helium.'], 'Turn the percent into a decimal.', { unit: 'kg', vf: { k: 'frac', m: m } });
     }
     if (shape === 'perkg') {
-      var m2 = R.int(1, 25), E = 0.007 * m2 * C * C;
+      var m2 = R.int(1, 60), E = 0.007 * m2 * C * C;
       return P('About $0.7\\%$ of the mass of fused hydrogen becomes energy. How many joules come from fusing $' + m2 + '$ kg of hydrogen? Use $E = mc^2$ with $c = 3.00 \\times 10^{8}$ m/s.', num(E, 3, 0.02),
         ['Mass converted: $0.007 \\times ' + m2 + ' = ' + fd(0.007 * m2, 3) + '$ kg.', '$E = mc^2 = ' + fd(0.007 * m2, 3) + ' \\times (3.00 \\times 10^{8})^2 = ' + fx(E, 3) + '$ J.', 'Burning ' + m2 + ' kg of coal gives only about $' + fx(3e7 * m2, 1) + '$ J: fusion is millions of times richer.'],
         'Find the mass that disappears, then E = mc².', { unit: 'J', vf: { k: 'perkg', m: m2 } });
     }
     if (shape === 'rate') {
-      var Lr = R.chance(0.3) ? [3.83e26, 'the Sun'] : (function () { var k = R.pick([0.01, 0.05, 0.25, 2, 5, 10, 25, 100, 1000]); return [rnd(3.83e26 * k, 3), 'a star ' + (k < 1 ? fd(k, 2) + ' times' : T.commas(k) + ' times') + ' as luminous as the Sun']; })(), dm = Lr[0] / (C * C);
+      var Lr = R.chance(0.3) ? [3.83e26, 'the Sun'] : (function () { var k = R.pick([0.01, 0.05, 0.25, 2, 5, 10, 25, 100, 1000, 0.1, 0.5, 3, 50, 500, 10000, 0.012, 0.03, 0.08, 0.3, 0.7, 1.2, 6, 15, 40, 90, 300, 800, 2000, 4000, 9000]); return [rnd(3.83e26 * k, 3), 'a star ' + (k < 1 ? fd(k, 2) + ' times' : T.commas(k) + ' times') + ' as luminous as the Sun']; })(), dm = Lr[0] / (C * C);
       return P(Lr[1][0].toUpperCase() + Lr[1].slice(1) + ' gives off $' + fx(Lr[0], 3) + '$ W. How many kilograms of mass does it turn into energy every second? ($c = 3.00 \\times 10^{8}$ m/s.)', num(dm, 3, 0.02),
         ['Power is energy per second, and $E = mc^2$, so mass per second $= \\frac{L}{c^2}$.', '$\\frac{' + fx(Lr[0], 3) + '}{(3.00 \\times 10^{8})^2} = \\frac{' + fx(Lr[0], 3) + '}{9.00 \\times 10^{16}} = ' + fx(dm, 3) + '$ kg/s.', Lr[1] === 'the Sun' ? 'Millions of tonnes per second, yet tiny next to the Sun\'s $2 \\times 10^{30}$ kg.' : 'Large by everyday standards, but tiny next to the mass of a star.'],
         'Divide the power by c².', { unit: 'kg/s', vf: { k: 'rate', L: Lr[0] } });
     }
     if (shape === 'hrate') {
-      var dm2 = 3.83e26 / (C * C), h = dm2 / 0.007;
-      return P('The Sun converts $' + fx(dm2, 3) + '$ kg of mass into energy each second, and that is $0.7\\%$ of the hydrogen it fuses. How many kilograms of hydrogen does it fuse each second?', num(h, 3, 0.02),
-        ['Mass converted $= 0.007 \\times$ hydrogen fused.', 'Hydrogen fused $= \\frac{' + fx(dm2, 3) + '}{0.007} = ' + fx(h, 3) + '$ kg/s: about 600 million tonnes every second.'], 'Divide by 0.007.', { unit: 'kg/s', vf: { k: 'hrate', dm: dm2 } });
+      var kk = R.chance(0.3) ? 1 : R.pick([0.1, 0.2, 0.5, 2, 3, 4, 5, 8, 10, 20, 50, 100, 1000]), dm2 = 3.83e26 * kk / (C * C), h = dm2 / 0.007;
+      return P((kk === 1 ? 'The Sun' : 'A star ' + T.commas(kk) + ' times as luminous as the Sun') + ' converts $' + fx(dm2, 3) + '$ kg of mass into energy each second, and that is $0.7\\%$ of the hydrogen it fuses. How many kilograms of hydrogen does it fuse each second?', num(h, 3, 0.02),
+        ['Mass converted $= 0.007 \\times$ hydrogen fused.', 'Hydrogen fused $= \\frac{' + fx(dm2, 3) + '}{0.007} = ' + fx(h, 3) + '$ kg/s' + (kk === 1 ? ': about 600 million tonnes every second.' : '.')], 'Divide by 0.007.', { unit: 'kg/s', vf: { k: 'hrate', dm: dm2, kk: kk } });
     }
     if (shape === 'mev') {
-      var mH = 1.007825, mHe = 4.002603, dmu = 4 * mH - mHe, mev = dmu * 931.5;
+      var mH = 1.007825, mHe = 4.002603, dmu = 4 * mH - mHe, mev = dmu * 931.5, nHe = R.chance(0.35) ? 1 : R.int(2, 60);
+      if (nHe > 1) return P('In the Sun\'s core, every helium-4 atom made from four hydrogen atoms ($1.007825$ u each; helium-4 is $4.002603$ u) releases energy. How much energy, in MeV, is released in making $' + nHe + '$ helium-4 atoms? ($1$ u of mass $= 931.5$ MeV.)', num(nHe * mev, 3, 0.01),
+        ['Mass lost for one helium atom: $4 \\times 1.007825 - 4.002603 = 0.028697$ u.', 'Energy for one: $0.028697 \\times 931.5 = ' + fd(mev, 2) + '$ MeV.', 'For $' + nHe + '$ atoms: $' + nHe + ' \\times ' + fd(mev, 2) + ' = ' + fd(nHe * mev, 1) + '$ MeV.'], 'Find the energy for one helium atom first.', { unit: 'MeV', vf: { k: 'mev', n: nHe } });
       return P('Four hydrogen atoms ($1.007825$ u each) end up as one helium-4 atom ($4.002603$ u). How much energy, in MeV, does that release? ($1$ u of mass $= 931.5$ MeV.)', num(mev, 3, 0.01),
         ['Mass before: $4 \\times 1.007825 = 4.031300$ u.', 'Mass lost: $4.031300 - 4.002603 = 0.028697$ u, which is $0.71\\%$ of the starting mass.', 'Energy: $0.028697 \\times 931.5 = ' + fd(mev, 1) + '$ MeV.'], 'Find the mass difference first.', { unit: 'MeV', vf: { k: 'mev' } });
     }
@@ -1022,7 +1040,7 @@
   G('astro.sun-lifetime', function (R, ctx) {
     var shape = by(ctx, R.pick(['simple', 'mc', 'simple']), R.pick(['full', 'coal', 'simple', 'mc']), R.pick(['full', 'star', 'coal']));
     if (shape === 'simple') {
-      var E = R.int(5, 40) * 1e43, Lw = R.pick([3.83e26, 4e26, 1e26, 2e26, 8e26, 3.83e27]), ts = E / Lw, ty = ts / YR;
+      var E = R.int(5, 40) * 1e43, Lw = R.pick([3.83e26, 4e26, 1e26, 2e26, 8e26, 3.83e27, 5e26, 6e26, 1.5e27, 3e25, 3.5e+25, 5e+25, 7e+25, 9e+25, 1.5e+26, 3.5e+26, 9e+26, 1.2e+27, 2.5e+27, 3.5e+27]), ts = E / Lw, ty = ts / YR;
       return P('A star has $' + fx(E, 3) + '$ J of usable fusion energy and gives off $' + fx(Lw, 3) + '$ W. About how many years can it shine at that rate? (One year is $3.156 \\times 10^{7}$ s.)', num(ty, 3, 0.03),
         ['Time $= \\frac{\\text{energy}}{\\text{power}} = \\frac{' + fx(E, 3) + '}{' + fx(Lw, 3) + '} = ' + fx(ts, 3) + '$ s.', 'In years: $\\frac{' + fx(ts, 3) + '}{3.156 \\times 10^{7}} = ' + fx(ty, 2) + '$ years.'], 'Fuel ÷ rate of use.', { unit: 'yr', vf: { k: 'simple', E: E, L: Lw } });
     }
@@ -1033,13 +1051,13 @@
         'Fuel energy ÷ power, then convert to years.', { unit: 'yr', vf: { k: 'full', f: fr } });
     }
     if (shape === 'coal') {
-      var ec = R.pick([3e7, 2.5e7]), tc = MSUN * ec / LSUN / YR;
+      var ec = R.pick([3e7, 2.5e7, 2.4e7, 2.8e7, 3.2e7]), tc = MSUN * ec / LSUN / YR;
       return P('Suppose the Sun were a giant lump of coal, releasing $' + fx(ec, 2) + '$ J per kilogram when burned. With mass $1.99 \\times 10^{30}$ kg and power $3.83 \\times 10^{26}$ W, how many years could it shine? ($1$ yr $= 3.156 \\times 10^{7}$ s.)', num(tc, 3, 0.03),
         ['Energy: $1.99 \\times 10^{30} \\times ' + fx(ec, 2) + ' = ' + fx(MSUN * ec, 3) + '$ J.', 'Time: $\\frac{' + fx(MSUN * ec, 3) + '}{3.83 \\times 10^{26}} = ' + fx(MSUN * ec / LSUN, 3) + '$ s $\\approx ' + T.commas(rnd(tc, 2)) + '$ years.', 'Only a few thousand years, far shorter than the age of Earth\'s rocks, so the Sun cannot be burning: it must run on fusion.'],
         'Total energy ÷ power.', { unit: 'yr', vf: { k: 'coal', e: ec } });
     }
     if (shape === 'star') {
-      var pair = R.pick([[2, 16], [3, 81], [0.5, 0.06], [4, 256], [0.8, 0.4], [1.5, 5], [6, 1300], [1.2, 2.1], [0.7, 0.24], [10, 10000], [5, 625], [2.5, 39]]), t2 = 10 * pair[0] / pair[1];
+      var pair = R.pick([[2, 16], [3, 81], [0.5, 0.06], [4, 256], [0.8, 0.4], [1.5, 5], [6, 1300], [1.2, 2.1], [0.7, 0.24], [10, 10000], [5, 625], [2.5, 39], [1.1, 1.5], [1.3, 2.9], [0.9, 0.66], [3.5, 150], [7, 2400], [8, 4100]]), t2 = 10 * pair[0] / pair[1];
       return P('Stars burn about the same fraction of their mass on the main sequence, so a star\'s lifetime is about $10$ billion years $\\times \\dfrac{M}{L}$ (in solar units). How long does a star of $' + fd(pair[0], 2) + '$ solar masses and $' + T.commas(pair[1]) + '$ solar luminosities last, in billions of years?', num(t2, 3, 0.02),
         ['Fuel goes as $M$; the rate of use goes as $L$.', '$t = 10 \\times \\frac{' + fd(pair[0], 2) + '}{' + T.commas(pair[1]) + '} = ' + fx(t2, 3) + '$ billion years.', pair[0] > 1 ? 'More fuel, but used much faster: a shorter life.' : 'Less fuel, but used very slowly: a longer life.'],
         'Fuel ÷ rate, scaled to the Sun.', { unit: 'billion years', vf: { k: 'star', M: pair[0], L: pair[1] } });
@@ -1061,12 +1079,12 @@
         ['The Sun\'s gas is a plasma that drags magnetic field lines along as it moves.', 'Twisted fields burst through the surface in loops; where they come out, they block convection and cool the gas.'], 'Think about magnets and moving gas.', { vf: { k: 'mc' } });
     }
     if (shape === 'ratio') {
-      var Ts = R.pick([3800, 4000, 4200, 4500]), Tp = R.pick([5800, 5772]), rr = M.pow(Ts / Tp, 4);
+      var Ts = R.pick([3800, 4000, 4200, 4500, 3500, 3600, 3900, 4100, 4400, 4600]), Tp = R.pick([5800, 5772]), rr = M.pow(Ts / Tp, 4);
       return P('A sunspot is at $' + T.commas(Ts) + '$ K and the surrounding photosphere at $' + T.commas(Tp) + '$ K. Each square meter gives off power in proportion to $T^4$. What fraction of the surrounding brightness does the sunspot give off, per square meter?', num(rr, 3, 0.03),
         ['Ratio $= \\left(\\frac{' + T.commas(Ts) + '}{' + T.commas(Tp) + '}\\right)^4 = ' + fd(Ts / Tp, 3) + '^4$.', '$= ' + fd(rr, 2) + '$: only about $' + fd(rr * 100, 0) + '\\%$ as bright, so it looks dark by contrast, though it is still hotter than a lamp filament.'], 'Fourth power of the temperature ratio.', { vf: { k: 'ratio', a: Ts, b: Tp } });
     }
     if (shape === 'cycle' || shape === 'cycle2') {
-      var y0 = R.pick([2001, 2014, 2025, 1989, 1979, 1968]), what = shape === 'cycle2' ? R.pick([['the third maximum after it', 33], ['the second maximum after it', 22], ['the next minimum', 5.5]]) : ['the next maximum', 11];
+      var y0 = R.pick([2001, 2014, 2025, 1989, 1979, 1968, 1958, 1947, 1937]), what = shape === 'cycle2' ? R.pick([['the third maximum after it', 33], ['the second maximum after it', 22], ['the next minimum', 5.5]]) : ['the next maximum', 11];
       return P('A solar maximum (the peak of sunspot activity) happened around ' + y0 + '. The cycle averages about 11 years, with minima about halfway between maxima. About how many years after ' + y0 + ' would ' + what[0] + ' come?', num(what[1], 3, 0.1),
         ['Maxima repeat about every 11 years (single cycles run from about 9 to 14 years).', what[1] === 5.5 ? 'A minimum comes about halfway along: $11 \\div 2 = 5.5$ years.' : '$' + what[1] / 11 + ' \\times 11 = ' + what[1] + '$ years.'], 'Count cycles of 11 years.', { unit: 'yr', vf: { k: 'cycle', v: what[1] } });
     }
@@ -1098,12 +1116,12 @@
         ['$d = \\frac{1}{' + fd(s2[1], 4) + '} = ' + fd(d2, 3) + '$ pc.', '$' + fd(d2, 3) + ' \\times 3.26 = ' + fd(d2 * PC_LY, 3) + '$ light-years.'], 'Parsecs first, then convert.', { unit: 'ly', vf: { k: 'ly', p: s2[1] } });
     }
     if (shape === 'mas') {
-      var m = R.chance(0.5) ? R.pick([1, 2, 4, 5, 8, 10, 20, 25, 40, 0.5]) : R.real(0.5, 60, 1);
+      var m = R.chance(0.5) ? R.pick([1, 2, 4, 5, 8, 10, 20, 25, 40, 0.5, 0.6, 0.8, 0.9, 1.5, 3, 3.5, 7, 12, 15, 35]) : R.real(0.5, 60, 1);
       return P('The Gaia spacecraft measures a star\'s parallax as $' + fd(m, 2) + '$ milliarcseconds ($1$ mas $= 0.001$ arcsecond). How far away is the star, in parsecs?', num(1000 / m, 3, 0.01),
         ['$p = ' + fd(m, 2) + '$ mas $= ' + fd(m / 1000, 5) + '$ arcseconds.', '$d = \\frac{1}{' + fd(m / 1000, 5) + '} = ' + fx(1000 / m, 3) + '$ pc.'], 'Convert to arcseconds first.', { unit: 'pc', vf: { k: 'mas', m: m } });
     }
     if (shape === 'ratio') {
-      var k = R.pick([2, 3, 4, 5, 10]), big = R.coin();
+      var k = R.pick([2, 3, 4, 5, 10, 2.5, 6, 8, 20, 3.5, 7, 9, 12, 15]), big = R.coin();
       return P('Star A\'s parallax is $' + k + '$ times ' + (big ? 'larger' : 'smaller') + ' than star B\'s. How many times farther away is ' + (big ? 'star B than star A' : 'star A than star B') + '?', num(k, 3, 0.01),
         ['Distance is inversely proportional to parallax: $d = 1/p$.', big ? 'A\'s larger parallax means A is closer; B is ' + k + ' times farther.' : 'A\'s smaller parallax means A is farther: ' + k + ' times as far as B.'], 'A bigger shift means a closer star.', { vf: { k: 'ratio', r: k } });
     }
@@ -1119,7 +1137,7 @@
   G('astro.brightness-distance', function (R, ctx) {
     var shape = by(ctx, R.pick(['ratio', 'ratio', 'mc']), R.pick(['flux', 'sameb', 'ratio', 'planet']), R.pick(['lum', 'flux', 'sameb', 'planet']));
     if (shape === 'ratio') {
-      var k = R.chance(0.5) ? R.pick([2, 3, 4, 5, 10, 0.5, 1.5]) : R.real(1.2, 9, 1), b = 1 / (k * k);
+      var k = R.chance(0.5) ? R.pick([2, 3, 4, 5, 10, 0.5, 1.5, 0.6, 0.8, 1, 2.5, 3.5, 7, 9]) : R.real(1.2, 9, 1), b = 1 / (k * k);
       return P('A star is moved to $' + fd(k, 2) + '$ times its distance from us. Its apparent brightness becomes what fraction of what it was?', num(b, 3, 0.01),
         ['Light spreads over a sphere of area $4\\pi d^2$, so brightness $b = \\frac{L}{4\\pi d^2} \\propto \\frac{1}{d^2}$.', '$\\frac{b_{\\text{new}}}{b_{\\text{old}}} = \\frac{1}{' + fd(k, 2) + '^2} = ' + fx(b, 3) + '$.'], 'Inverse square.', { vf: { k: 'ratio', k2: k } });
     }
@@ -1135,7 +1153,7 @@
         ['Equal brightness: $\\frac{L_A}{4\\pi d_A^2} = \\frac{L_B}{4\\pi d_B^2}$.', '$\\frac{d_A}{d_B} = \\sqrt{\\frac{L_A}{L_B}} = \\sqrt{' + Lr + '} = ' + fd(M.sqrt(Lr), 3) + '$.'], 'Set the two brightnesses equal.', { vf: { k: 'sameb', r: Lr } });
     }
     if (shape === 'lum') {
-      var dpc = R.pick([5, 8, 10, 15, 20, 25, 40, 50, 100]), bb = R.int(1, 9) * R.pick([1e-8, 1e-9, 1e-10]), dmet = dpc * 3.086e16, Lw = 4 * M.PI * dmet * dmet * bb;
+      var dpc = R.pick([5, 8, 10, 15, 20, 25, 40, 50, 100, 2, 3, 4, 6, 12, 30, 60, 200, 2.5, 3.5, 7, 9, 35, 70, 80, 90, 120, 150]), bb = R.int(1, 9) * R.pick([1e-8, 1e-9, 1e-10]), dmet = dpc * 3.086e16, Lw = 4 * M.PI * dmet * dmet * bb;
       return P('A star ' + dpc + ' pc away delivers $' + fx(bb, 2) + '$ W/m² to Earth. What is its luminosity, in watts? ($1$ pc $= 3.086 \\times 10^{16}$ m.)', num(Lw, 3, 0.02),
         ['$L = 4\\pi d^2 b$.', '$d = ' + dpc + ' \\times 3.086 \\times 10^{16} = ' + fx(dmet, 4) + '$ m.', '$L = 4\\pi (' + fx(dmet, 4) + ')^2 \\times ' + fx(bb, 2) + ' = ' + fx(Lw, 3) + '$ W, about $' + fx(Lw / LSUN, 2) + '$ times the Sun.'],
         'Solve b = L/(4πd²) for L.', { unit: 'W', vf: { k: 'lum', d: dmet, b: bb } });
@@ -1154,12 +1172,12 @@
         ['On the magnitude scale, <b>smaller</b> numbers mean <b>brighter</b> stars (it began as "first-class" stars being the brightest).', 'Star ' + br + ' has the smaller magnitude, so it looks brighter.'], 'Smaller magnitude = brighter.', { vf: { k: 'mc' } });
     }
     if (shape === 'five') {
-      var dm = R.pick([5, 10, 15, 20, 2.5, 7.5]), r = M.pow(10, dm / 2.5);
+      var dm = R.pick([5, 10, 15, 20, 2.5, 7.5, 1, 2, 3, 4, 6, 8, 12.5, 1.2, 1.5, 3.5, 7, 9, 12]), r = M.pow(10, dm / 2.5);
       return P('Two stars differ by $' + fd(dm, 1) + '$ magnitudes. How many times brighter is the brighter one? (Every $5$ magnitudes is a factor of $100$.)', num(r, 3, 0.01),
         ['$5$ magnitudes $= 100\\times$, so each $2.5$ magnitudes is $\\sqrt{100} = 10\\times$.', '$' + fd(dm, 1) + '$ magnitudes $= ' + fd(dm / 2.5, 0) + '$ steps of $2.5$: $10^{' + fd(dm / 2.5, 0) + '} = ' + T.commas(r) + '$.'], 'Count steps of 5 (factor 100) or 2.5 (factor 10).', { vf: { k: 'dm', dm: dm } });
     }
     if (shape === 'one') {
-      var d1 = R.chance(0.5) ? R.pick([1, 2, 3, 4, 6, 1.5]) : R.real(0.5, 7, 1), r1 = M.pow(100, d1 / 5);
+      var d1 = R.chance(0.5) ? R.pick([1, 2, 3, 4, 6, 1.5, 1.2, 2.5, 3.5, 5]) : R.real(0.5, 7, 1), r1 = M.pow(100, d1 / 5);
       return P('Star A is magnitude $' + fd(1 + d1, 1) + '$ and star B is magnitude $1.0$. How many times brighter is star B? (Brightness ratio $= 100^{\\Delta m / 5}$.)', num(r1, 3, 0.01),
         ['$\\Delta m = ' + fd(1 + d1, 1) + ' - 1.0 = ' + fd(d1, 1) + '$.', 'Ratio $= 100^{' + fd(d1, 1) + '/5} = 2.512^{' + fd(d1, 1) + '} = ' + fd(r1, 3) + '$.', 'Star B (the smaller magnitude) is the brighter one.'], 'Each magnitude is a factor of about 2.512.', { vf: { k: 'dm', dm: d1 } });
     }
@@ -1238,7 +1256,7 @@
         ['Newton\'s form of Kepler\'s law: $M_1 + M_2 = \\frac{a^3}{P^2}$ (solar masses, AU, years).', '$\\frac{' + c[0] + '^3}{' + c[1] + '^2} = \\frac{' + T.commas(c[0] * c[0] * c[0]) + '}{' + c[1] * c[1] + '} = ' + fd(Mt, 3) + '$.'], 'a³ ÷ P².', { unit: 'M☉', vf: { k: 'total', a: c[0], p: c[1] } });
     }
     if (shape === 'ratio') {
-      var r1 = R.pick([1, 2, 3, 4]), r2 = r1 * R.pick([2, 3, 4, 1.5]);
+      var r1 = R.pick([1, 2, 3, 4, 5, 6]), r2 = r1 * R.pick([2, 3, 4, 1.5, 2.5, 5, 3.5]);
       return P('In a binary star, star A stays $' + r1 + '$ AU from the center of mass and star B $' + fd(r2, 2) + '$ AU from it. How many times more massive is star A than star B?', num(r2 / r1, 3, 0.01),
         ['The center of mass is the balance point: $M_A r_A = M_B r_B$.', '$\\frac{M_A}{M_B} = \\frac{r_B}{r_A} = \\frac{' + fd(r2, 2) + '}{' + r1 + '} = ' + fd(r2 / r1, 2) + '$.', 'The heavier star stays closer to the center, like the heavier child on a seesaw.'], 'Like a seesaw.', { vf: { k: 'ratio', a: r1, b: r2 } });
     }
@@ -1249,9 +1267,9 @@
         'Total from Kepler; split with the seesaw rule.', { unit: 'M☉', vf: { k: 'split', a: c2[0], p: c2[1], q: q } });
     }
     if (shape === 'vel' || shape === 'vel2') {
-      var v1 = R.pick([10, 15, 20, 30, 40]), v2 = v1 * R.pick([2, 3, 1.5, 4]);
+      var v1 = R.pick([10, 15, 20, 30, 40, 5, 8, 12, 25, 50, 6, 7, 9, 35]), v2 = v1 * R.pick([2, 3, 1.5, 4, 2.5, 5, 3.5]);
       if (shape === 'vel2') {
-        var tot = R.pick([2, 3, 4, 5, 6, 8]), mA = tot * v2 / (v1 + v2);
+        var tot = R.pick([2, 3, 4, 5, 6, 8, 1.5, 2.5, 3.5, 10, 7, 9]), mA = tot * v2 / (v1 + v2);
         return P('In a binary, Doppler shifts show star A moving at $' + v1 + '$ km/s and star B at $' + v2 + '$ km/s around their center of mass. Their total mass is $' + tot + '$ solar masses. What is star A\'s mass?', num(mA, 3, 0.01),
           ['Both stars take the same time to go around, so speed is proportional to orbit size: $\\frac{M_A}{M_B} = \\frac{v_B}{v_A} = ' + fd(v2 / v1, 2) + '$.', '$M_A = ' + tot + ' \\times \\frac{' + v2 + '}{' + v1 + ' + ' + v2 + '} = ' + fd(mA, 3) + '\\ M_\\odot$.'], 'The slower star is the heavier one.', { unit: 'M☉', vf: { k: 'vel2', v1: v1, v2: v2, M: tot } });
       }
@@ -1283,7 +1301,7 @@
         ['A shrinking protostar heats up but also leaks energy away, so it keeps shrinking.', 'Once fusion starts, the core makes as much energy as the surface radiates.', 'The hot gas then pushes out just hard enough to balance gravity: hydrostatic equilibrium. The star is gas all the way through.'], 'What keeps the core hot without shrinking?', { vf: { k: 'mc' } });
     }
     if (shape === 'ir') {
-      var Tp = R.pick([10, 20, 30, 50, 100, 300, 500, 1000, 2000]), lu = 2900 / Tp;
+      var Tp = R.pick([10, 20, 30, 50, 100, 300, 500, 1000, 2000, 12, 25, 60, 90, 150, 250, 600, 900, 1500]), lu = 2900 / Tp;
       return P('A ' + (Tp < 100 ? 'cold cloud core' : 'young protostar wrapped in dust') + ' glows at about $' + T.commas(Tp) + '$ K. At what wavelength, in micrometers, does its glow peak? (Wien\'s law: $\\lambda_{\\text{peak}} = \\dfrac{2900\\ \\mu\\text{m·K}}{T}$.)', num(lu, 3, 0.02),
         ['$\\lambda_{\\text{peak}} = \\frac{2900}{' + T.commas(Tp) + '} = ' + fx(lu, 3) + '\\ \\mu$m.', lu > 3 ? 'That is infrared (or longer): invisible to the eye, so star birth is studied with infrared and radio telescopes such as the James Webb Space Telescope and ALMA.' : 'Near infrared: telescopes like the James Webb Space Telescope can see it through the dust.'],
         'Wien\'s law with T in kelvins.', { unit: 'μm', vf: { k: 'ir', T: Tp } });
@@ -1293,7 +1311,7 @@
         ['$0.08 \\times 1047 = ' + fd(0.08 * 1047, 1) + '$ Jupiter masses.', 'Lighter objects never get hot enough in their cores for hydrogen fusion: they are brown dwarfs, glowing faintly as they slowly cool.'], 'Multiply.', { vf: { k: 'brown' } });
     }
     if (shape === 'count') {
-      var Mc = R.pick([1e4, 5e4, 1e5, 2e5, 1e6]), f = R.pick([0.01, 0.02, 0.05, 0.1]), avg = R.pick([0.5, 1]);
+      var Mc = R.pick([1e4, 5e4, 1e5, 2e5, 1e6, 12000, 35000, 90000, 400000, 900000]), f = R.pick([0.01, 0.02, 0.05, 0.1, 0.012, 0.03, 0.06, 0.09]), avg = R.pick([0.5, 1]);
       return P('A molecular cloud has $' + fx(Mc, 1) + '$ solar masses of gas. If $' + fd(f * 100, 0) + '\\%$ of it turns into stars with an average mass of $' + fd(avg, 1) + '$ solar masses, about how many stars form?', num(Mc * f / avg, 3, 0.02),
         ['Mass turned into stars: $' + fd(f, 2) + ' \\times ' + fx(Mc, 1) + ' = ' + fx(Mc * f, 2) + '$ solar masses.', 'Number of stars: $' + fx(Mc * f, 2) + ' \\div ' + fd(avg, 1) + ' = ' + fx(Mc * f / avg, 2) + '$.', 'Stars are born in clusters, from one cloud, at nearly the same time.'],
         'Find the mass that becomes stars first.', { vf: { k: 'count', M: Mc, f: f, a: avg } });
@@ -1305,7 +1323,7 @@
   G('astro.main-sequence-lifetime', function (R, ctx) {
     var shape = by(ctx, R.pick(['ML', 'ML', 'mc']), R.pick(['pow', 'ML', 'Lfrom', 'mc']), R.pick(['pow', 'ratio', 'Lfrom']));
     if (shape === 'ML') {
-      var mm0 = R.chance(0.4) ? R.pick([2, 3, 5, 10, 0.5, 1.5, 4, 20]) : R.real(0.6, 15, 1), pr = [mm0, rnd(mm0 < 0.43 ? 0.23 * M.pow(mm0, 2.3) : mm0 < 2 ? M.pow(mm0, 4) : 1.4 * M.pow(mm0, 3.5), 2)], t = 10 * pr[0] / pr[1], useMy = t < 1;
+      var mm0 = R.chance(0.4) ? R.pick([2, 3, 5, 10, 0.5, 1.5, 4, 20, 0.6, 0.8, 1, 2.5, 3.5, 7, 9, 15]) : R.real(0.6, 15, 1), pr = [mm0, rnd(mm0 < 0.43 ? 0.23 * M.pow(mm0, 2.3) : mm0 < 2 ? M.pow(mm0, 4) : 1.4 * M.pow(mm0, 3.5), 2)], t = 10 * pr[0] / pr[1], useMy = t < 1;
       return P('A main-sequence star has $' + fd(pr[0], 2) + '$ times the Sun\'s mass and $' + T.commas(pr[1]) + '$ times its luminosity. The Sun lasts about $10$ billion years. How long does this star last, in ' + (useMy ? 'millions' : 'billions') + ' of years? (Lifetime $\\propto$ fuel $\\div$ rate $= M/L$.)', num(useMy ? t * 1000 : t, 3, 0.02),
         ['$t = 10\\ \\text{billion years} \\times \\frac{M}{L} = 10 \\times \\frac{' + fd(pr[0], 2) + '}{' + T.commas(pr[1]) + '}$.', '$t = ' + fx(t, 3) + '$ billion years' + (useMy ? ' $= ' + fx(t * 1000, 3) + '$ million years.' : '.')],
         'Fuel ÷ rate, scaled to the Sun.', { unit: useMy ? 'million years' : 'billion years', vf: { k: 'ML', M: pr[0], L: pr[1], my: useMy } });
@@ -1323,7 +1341,7 @@
         'M^3.5 = M³ × √M.', { unit: 'L☉', vf: { k: 'Lfrom', M: m2 } });
     }
     if (shape === 'ratio') {
-      var a = R.pick([1, 2, 4]), b = a * R.pick([4, 9, 2.25, 16]), rr = M.pow(b / a, 2.5);
+      var a = R.pick([1, 2, 4, 0.5, 3, 0.6, 0.8, 1.2, 1.5, 3.5]), b = a * R.pick([4, 9, 2.25, 16, 6.25, 1.44, 25]), rr = M.pow(b / a, 2.5);
       return P('Star A has $' + fd(a, 2) + '$ solar masses and star B $' + fd(b, 2) + '$ solar masses. Using $t \\propto M^{-2.5}$, how many times longer does star A live than star B?', num(rr, 3, 0.02),
         ['$\\frac{t_A}{t_B} = \\left(\\frac{M_B}{M_A}\\right)^{2.5} = ' + fd(b / a, 2) + '^{2.5}$.', '$= ' + fd(b / a, 2) + '^2 \\times \\sqrt{' + fd(b / a, 2) + '} = ' + fx(rr, 3) + '$.'], 'The lighter star lives longer.', { vf: { k: 'ratio', a: a, b: b } });
     }
@@ -1343,7 +1361,7 @@
         ['With no fusion in the core, gravity squeezes it; it heats up.', 'Hydrogen around the core then fuses in a shell, faster than before, and the extra energy puffs the outer layers out to enormous size.', 'The surface cools and reddens while the star grows far more luminous. Later the core reaches about 100 million K and fuses helium into carbon.'], 'What does gravity do to a core with no fusion?', { vf: { k: 'mc' } });
     }
     if (shape === 'radius' || shape === 'au') {
-      var c = R.pick([[100, 0.7], [400, 0.65], [1000, 0.6], [2500, 0.55], [200, 0.75], [3000, 0.6]]), Rr = M.sqrt(c[0]) / (c[1] * c[1]), au = Rr * RSUN / AU;
+      var c = R.pick([[100, 0.7], [400, 0.65], [1000, 0.6], [2500, 0.55], [200, 0.75], [3000, 0.6], [150, 0.7], [600, 0.6], [1500, 0.58], [5000, 0.55], [800, 0.65]]), Rr = M.sqrt(c[0]) / (c[1] * c[1]), au = Rr * RSUN / AU;
       if (shape === 'au') return P('A red giant has $' + T.commas(c[0]) + '$ times the Sun\'s luminosity and $' + fd(c[1], 2) + '$ of its surface temperature. Its radius in solar radii is $R = \\sqrt{L}/T^2$. How big is that in AU? (The Sun\'s radius is $6.96 \\times 10^{5}$ km and $1$ AU $= 1.496 \\times 10^{8}$ km.)', num(au, 3, 0.02),
         ['$R = \\frac{\\sqrt{' + T.commas(c[0]) + '}}{' + fd(c[1], 2) + '^2} = ' + fd(Rr, 3) + '$ solar radii.', '$1$ solar radius $= \\frac{6.96 \\times 10^{5}}{1.496 \\times 10^{8}} = 0.00465$ AU.', '$' + fd(Rr, 3) + ' \\times 0.00465 = ' + fd(au, 3) + '$ AU.', au > 0.39 ? 'Larger than Mercury\'s orbit.' : 'Still inside Mercury\'s orbit, but over a hundred times the Sun\'s size.'],
         'Find R in solar radii, then convert.', { unit: 'AU', vf: { k: 'au', L: c[0], T: c[1] } });
@@ -1352,7 +1370,7 @@
         'Solve L = R²T⁴ for R.', { unit: 'R☉', vf: { k: 'radius', L: c[0], T: c[1] } });
     }
     if (shape === 'wd' || shape === 'spoon') {
-      var Mw = R.pick([0.5, 0.6, 0.7, 0.8, 1.0]), Rk = R.pick([5000, 6000, 7000, 8000]), rho = Mw * MSUN / (4 / 3 * M.PI * M.pow(Rk * 1000, 3));
+      var Mw = R.pick([0.5, 0.6, 0.7, 0.8, 1.0, 0.55, 0.65, 0.9, 1.1, 1.2]), Rk = R.pick([5000, 6000, 7000, 8000, 5500, 6500, 7500, 9000, 10000]), rho = Mw * MSUN / (4 / 3 * M.PI * M.pow(Rk * 1000, 3));
       if (shape === 'spoon') return P('A white dwarf has $' + fd(Mw, 1) + '$ solar masses packed into a radius of $' + T.commas(Rk) + '$ km. What is the mass of one cubic centimeter of its matter, in kg? ($M_\\odot = 1.99 \\times 10^{30}$ kg; $1\\ \\text{cm}^3 = 10^{-6}\\ \\text{m}^3$.)', num(rho * 1e-6, 3, 0.03),
         ['Volume: $\\frac{4}{3}\\pi (' + fx(Rk * 1000, 2) + ')^3 = ' + fx(4 / 3 * M.PI * M.pow(Rk * 1000, 3), 3) + '\\ \\text{m}^3$.', 'Density: $\\frac{' + fd(Mw, 1) + ' \\times 1.99 \\times 10^{30}}{' + fx(4 / 3 * M.PI * M.pow(Rk * 1000, 3), 3) + '} = ' + fx(rho, 3) + '$ kg/m³.', 'One cubic centimeter: $' + fx(rho, 3) + ' \\times 10^{-6} = ' + fx(rho * 1e-6, 3) + '$ kg, about the mass of a car in a sugar cube.'],
         'Find the density in kg/m³, then take a millionth.', { unit: 'kg', vf: { k: 'spoon', M: Mw, R: Rk } });
@@ -1365,13 +1383,13 @@
   G('astro.star-cluster-ages', function (R, ctx) {
     var shape = by(ctx, R.pick(['which', 'age', 'mc']), R.pick(['age', 'mto', 'pic', 'which']), R.pick(['mto', 'pic', 'age']));
     if (shape === 'age') {
-      var m = R.pick([1, 1.21, 1.44, 2.25, 4, 9, 16, 6.25, 0.81]), t = 10 * M.pow(m, -2.5), my = t < 1;
+      var m = R.pick([1, 1.21, 1.44, 2.25, 4, 9, 16, 6.25, 0.81, 1.69, 1.96, 3.24, 0.64]), t = 10 * M.pow(m, -2.5), my = t < 1;
       return P('A star cluster\'s main sequence ends (its turnoff) at stars of $' + fd(m, 2) + '$ solar masses. Using $t = 10\\ \\text{billion years} \\times M^{-2.5}$, how old is the cluster, in ' + (my ? 'millions' : 'billions') + ' of years?', num(my ? t * 1000 : t, 3, 0.02),
         ['All the cluster\'s stars formed together. The turnoff stars are just now running out of core hydrogen, so the cluster\'s age equals their lifetime.', '$M^{2.5} = ' + fd(m, 2) + '^{2.5} = ' + fd(M.pow(m, 2.5), 4) + '$, so $t = 10 \\div ' + fd(M.pow(m, 2.5), 4) + ' = ' + fx(t, 3) + '$ billion years' + (my ? ' $= ' + fx(t * 1000, 3) + '$ million years.' : '.')],
         'The age is the lifetime of the turnoff stars.', { unit: my ? 'million years' : 'billion years', vf: { k: 'age', M: m, my: my } });
     }
     if (shape === 'mto') {
-      var m2 = R.pick([1, 1.21, 1.44, 2.25, 4, 9, 0.81, 1.69]), age = rnd(10 * M.pow(m2, -2.5), 3), mt = M.pow(10 / age, 0.4);
+      var m2 = R.pick([1, 1.21, 1.44, 2.25, 4, 9, 0.81, 1.69, 1.96, 2.56, 6.25, 16]), age = rnd(10 * M.pow(m2, -2.5), 3), mt = M.pow(10 / age, 0.4);
       return P('A cluster is $' + fd(age, 4) + '$ billion years old. Using $t = 10\\ \\text{billion years} \\times M^{-2.5}$, what is the mass of the stars at its main-sequence turnoff?', num(mt, 3, 0.02),
         ['Set the lifetime equal to the age: $10\\,M^{-2.5} = ' + fd(age, 4) + '$, so $M^{2.5} = \\frac{10}{' + fd(age, 4) + '} = ' + fd(10 / age, 4) + '$.', '$M = (' + fd(10 / age, 4) + ')^{1/2.5} = (' + fd(10 / age, 4) + ')^{0.4} = ' + fd(mt, 3) + '$ solar masses.', 'Stars heavier than that have already left the main sequence.'],
         'Solve for M with the power 1/2.5 = 0.4.', { unit: 'M☉', vf: { k: 'mto', age: age } });
@@ -1433,24 +1451,24 @@
         ['A neutron star has a strong magnetic field, and beams of radiation stream out along its magnetic poles.', 'The magnetic axis is tilted from the spin axis, so as the star spins the beams sweep around.', 'If a beam crosses Earth, we see a pulse once per turn, as regular as a clock.'], 'Think of a lighthouse.', { viz: { name: 'astro-pulsar', opts: { interactive: false, quiet: true, t: 0.15 } }, vf: { k: 'mc' } });
     }
     if (shape === 'period') {
-      var n = R.pick([30, 11, 2, 0.5, 100, 641, 716, 4]);
+      var n = R.pick([30, 11, 2, 0.5, 100, 641, 716, 4, 1, 3, 7.5, 10, 20, 50, 174, 300]);
       return P('A pulsar sends $' + n + '$ pulses per second, one per turn. How long is its spin period, in seconds?', num(1 / n, 3, 0.01),
         ['Period $= \\frac{1}{\\text{frequency}} = \\frac{1}{' + n + '}$ s.', '$= ' + fx(1 / n, 3) + '$ s.'], 'Period is 1 over the number per second.', { unit: 's', vf: { k: 'period', n: n } });
     }
     if (shape === 'density') {
-      var m = R.pick([1.2, 1.4, 1.6, 2.0]), rk = R.pick([10, 11, 12, 13]), rho = m * MSUN / (4 / 3 * M.PI * M.pow(rk * 1000, 3));
+      var m = R.pick([1.2, 1.4, 1.6, 2.0, 1.3, 1.5, 1.8, 1.9]), rk = R.pick([10, 11, 12, 13, 14]), rho = m * MSUN / (4 / 3 * M.PI * M.pow(rk * 1000, 3));
       return P('A neutron star has $' + fd(m, 1) + '$ solar masses in a radius of $' + rk + '$ km. What is its average density, in kg/m³? ($M_\\odot = 1.99 \\times 10^{30}$ kg.)', num(rho, 3, 0.03),
         ['Mass: $' + fd(m, 1) + ' \\times 1.99 \\times 10^{30} = ' + fx(m * MSUN, 3) + '$ kg.', 'Volume: $\\frac{4}{3}\\pi (' + fx(rk * 1000, 2) + ')^3 = ' + fx(4 / 3 * M.PI * M.pow(rk * 1000, 3), 3) + '\\ \\text{m}^3$.', 'Density $= ' + fx(rho, 3) + '$ kg/m³: a sugar cube of it would have a mass of hundreds of millions of tonnes, like the density of an atomic nucleus.'],
         'Mass ÷ volume.', { unit: 'kg/m³', vf: { k: 'density', M: m, R: rk } });
     }
     if (shape === 'speed') {
-      var P0 = R.pick([0.0334, 0.089, 0.00156, 0.25, 1.0, 0.0014]), rk2 = R.pick([10, 12]), v = 2 * M.PI * rk2 * 1000 / P0;
+      var P0 = R.pick([0.0334, 0.089, 0.00156, 0.25, 1.0, 0.0014, 0.005, 0.01, 0.05, 0.1, 0.5, 2.0]), rk2 = R.pick([10, 12, 11, 13]), v = 2 * M.PI * rk2 * 1000 / P0;
       return P('A neutron star of radius $' + rk2 + '$ km spins once every $' + fd(P0, 4) + '$ s. How fast does a point on its equator move, in m/s?', num(v, 3, 0.02),
         ['Distance per turn: $2\\pi r = 2\\pi \\times ' + fx(rk2 * 1000, 2) + ' = ' + fx(2 * M.PI * rk2 * 1000, 3) + '$ m.', '$v = \\frac{' + fx(2 * M.PI * rk2 * 1000, 3) + '}{' + fd(P0, 4) + '} = ' + fx(v, 3) + '$ m/s' + (v > 3e7 ? ', more than a tenth of the speed of light.' : '.')],
         'Circumference ÷ period.', { unit: 'm/s', vf: { k: 'speed', P: P0, R: rk2 } });
     }
     if (shape === 'spinup') {
-      var r0 = R.pick([5000, 6000, 7000]), day = R.pick([1, 2, 5, 10]), f = r0 / 10, Pn = day * 86400 / (f * f);
+      var r0 = R.pick([5000, 6000, 7000, 4000, 7500, 8000]), day = R.pick([1, 2, 5, 10, 3, 7, 25]), f = r0 / 10, Pn = day * 86400 / (f * f);
       return P('A star\'s core of radius $' + T.commas(r0) + '$ km, spinning once every ' + day + ' day' + (day > 1 ? 's' : '') + ', collapses to a neutron star of radius $10$ km, keeping its angular momentum ($r^2\\omega$ fixed). What is its new spin period, in seconds?', num(Pn, 3, 0.02),
         ['$r^2\\omega$ fixed means $\\omega \\propto \\frac{1}{r^2}$: the core spins $\\left(\\frac{' + T.commas(r0) + '}{10}\\right)^2 = ' + T.commas(f * f) + '$ times faster.', 'Old period: $' + day + ' \\times 86{,}400 = ' + T.commas(day * 86400) + '$ s.', 'New period: $\\frac{' + T.commas(day * 86400) + '}{' + T.commas(f * f) + '} = ' + fx(Pn, 3) + '$ s. Collapse alone makes neutron stars spin fast.'],
         'Like a skater pulling in her arms, squared.', { unit: 's', vf: { k: 'spinup', r0: r0, d: day } });
@@ -1462,7 +1480,7 @@
   G('astro.black-holes', function (R, ctx) {
     var shape = by(ctx, R.pick(['rs', 'rs', 'mc']), R.pick(['rs', 'mass', 'sgr', 'mc']), R.pick(['sgr', 'earth', 'vesc', 'mass']));
     if (shape === 'rs') {
-      var m = R.chance(0.3) ? R.pick([3, 5, 8, 10, 15, 20, 30, 60, 1]) : R.int(3, 80), rs = 2 * GN * m * MSUN / (C * C) / 1000;
+      var m = R.chance(0.3) ? R.pick([3, 5, 8, 10, 15, 20, 30, 60, 1, 1.2, 2, 2.5, 4, 6, 9, 25, 35, 50]) : R.int(3, 80), rs = 2 * GN * m * MSUN / (C * C) / 1000;
       return P('What is the event-horizon radius $R_s = \\dfrac{2GM}{c^2}$ of a black hole of $' + m + '$ solar mass' + (m > 1 ? 'es' : '') + '? Give it in km. ($G = 6.674 \\times 10^{-11}$, $M_\\odot = 1.99 \\times 10^{30}$ kg, $c = 3.00 \\times 10^{8}$ m/s.)', num(rs, 3, 0.02),
         ['$M = ' + m + ' \\times 1.99 \\times 10^{30} = ' + fx(m * MSUN, 3) + '$ kg.', '$R_s = \\frac{2 \\times 6.674 \\times 10^{-11} \\times ' + fx(m * MSUN, 3) + '}{(3.00 \\times 10^{8})^2} = ' + fx(rs * 1000, 3) + '$ m.', 'That is $' + fd(rs, 1) + '$ km: about $2.95$ km for each solar mass.'],
         'Plug into 2GM/c² with SI units.', { unit: 'km', vf: { k: 'rs', M: m } });
@@ -1502,12 +1520,12 @@
   G('astro.milky-way', function (R, ctx) {
     var shape = by(ctx, R.pick(['cross', 'where', 'band']), R.pick(['orbit', 'cross', 'where', 'mc']), R.pick(['orbit', 'laps', 'center']));
     if (shape === 'cross') {
-      var d = R.pick([100000, 26000, 1000, 120000, 50000]);
+      var d = R.pick([100000, 26000, 1000, 120000, 50000, 4000, 8000, 15000, 30000, 75000]);
       return P('How many years does light take to travel $' + T.commas(d) + '$ light-years' + (d === 26000 ? ', from the center of the Milky Way to us' : d >= 100000 ? ', across the Milky Way\'s disk' : '') + '?', num(d, 3, 0.01),
         ['A light-year is the distance light travels in one year.', 'So $' + T.commas(d) + '$ light-years takes $' + T.commas(d) + '$ years.'], 'Light-years and years match up.', { unit: 'yr', vf: { k: 'cross', d: d } });
     }
     if (shape === 'orbit' || shape === 'laps') {
-      var r = R.pick([25000, 26000, 27000]), v = R.pick([200, 220, 230, 240]), Ty = 2 * M.PI * r * LY / (v * 1000) / YR;
+      var r = R.pick([25000, 26000, 27000, 24000, 28000]), v = R.pick([200, 220, 230, 240, 210, 250]), Ty = 2 * M.PI * r * LY / (v * 1000) / YR;
       if (shape === 'laps') return P('The Sun orbits the galaxy\'s center $' + T.commas(r) + '$ light-years away at $' + v + '$ km/s, taking about $' + fx(Ty, 2) + '$ years per orbit. The Sun is about $4.6 \\times 10^{9}$ years old. How many times has it gone around?', num(4.6e9 / rnd(Ty, 2), 3, 0.05),
         ['Number of orbits $= \\frac{\\text{age}}{\\text{period}} = \\frac{4.6 \\times 10^{9}}{' + fx(Ty, 2) + '}$.', '$\\approx ' + fd(4.6e9 / rnd(Ty, 2), 0) + '$ orbits.'], 'Age ÷ period.', { vf: { k: 'laps', T: rnd(Ty, 2) } });
       return P('The Sun orbits the center of the Milky Way at a distance of $' + T.commas(r) + '$ light-years and a speed of $' + v + '$ km/s. How many years does one orbit take? ($1$ ly $= 9.46 \\times 10^{15}$ m; $1$ yr $= 3.156 \\times 10^{7}$ s.)', num(Ty, 3, 0.03),
@@ -1523,7 +1541,7 @@
         ['Our galaxy is a thin disk about 100,000 light-years across, and we are inside it.', 'Looking along the disk, we see a band packed with faint, distant stars; looking out of the disk, we see far fewer.', 'Galileo first saw with a telescope that the band is made of countless stars.'], 'What do you see looking along a flat disk from inside it?', { vf: { k: 'mc' } });
     }
     if (shape === 'center') {
-      var Mbh = 4.3e6, rau = R.pick([1000, 1200, 950]), Py = M.sqrt(rau * rau * rau / Mbh);
+      var Mbh = 4.3e6, rau = R.pick([1000, 1200, 950, 800, 900, 1100, 1500, 2000]), Py = M.sqrt(rau * rau * rau / Mbh);
       return P('A star orbits the black hole at the Milky Way\'s center, Sagittarius A* ($' + fx(Mbh, 2) + '$ solar masses), with a semi-major axis of $' + T.commas(rau) + '$ AU. What is its orbital period in years? ($P = \\sqrt{a^3/M}$ in AU, years and solar masses.)', num(Py, 3, 0.02),
         ['$a^3 = ' + T.commas(rau) + '^3 = ' + fx(rau * rau * rau, 3) + '$.', '$P = \\sqrt{\\frac{' + fx(rau * rau * rau, 3) + '}{' + fx(Mbh, 2) + '}} = ' + fd(Py, 1) + '$ years.', 'Stars like this (S2 has a period of about 16 years) are how the black hole was weighed: the 2020 Nobel Prize in Physics.'],
         'Newton\'s form of Kepler\'s third law.', { unit: 'yr', vf: { k: 'center', a: rau, M: Mbh } });
@@ -1558,7 +1576,7 @@
   G('astro.dark-matter', function (R, ctx) {
     var shape = by(ctx, R.pick(['kepler', 'mc', 'flat']), R.pick(['mass', 'kepler', 'frac', 'mc']), R.pick(['mass', 'frac', 'mass2']));
     if (shape === 'kepler' || shape === 'flat') {
-      var v1 = R.pick([200, 220, 240, 250]), f = R.pick([4, 9, 16, 2, 3]), v2 = v1 / M.sqrt(f);
+      var v1 = R.pick([200, 220, 240, 250, 180, 210, 230, 260, 280]), f = R.pick([4, 9, 16, 2, 3]), v2 = v1 / M.sqrt(f);
       if (shape === 'flat') return P('Stars $30{,}000$ light-years from a galaxy\'s center orbit at $' + v1 + '$ km/s. If almost all the mass were inside that distance, how fast should stars $' + T.commas(30000 * f) + '$ light-years out move? ($v = \\sqrt{GM/r}$.)', num(v2, 3, 0.02),
         ['With the same mass $M$ inside both orbits, $v \\propto \\frac{1}{\\sqrt{r}}$.', '$v_2 = v_1\\sqrt{\\frac{r_1}{r_2}} = ' + v1 + ' \\times \\sqrt{\\frac{1}{' + f + '}} = ' + fd(v2, 1) + '$ km/s.', 'Measured rotation curves stay near ' + v1 + ' km/s instead: there must be much more mass out there than we see.'],
         'Speed falls as 1/√r when the mass is all inside.', { unit: 'km/s', vf: { k: 'kep', v: v1, f: f } });
@@ -1566,13 +1584,13 @@
         ['$v = \\sqrt{\\frac{GM}{r}}$ with fixed $M$: $v \\propto \\frac{1}{\\sqrt{r}}$.', 'Speed drops by $\\sqrt{' + f + '} = ' + fd(M.sqrt(f), 3) + '$.', 'Real galaxies don\'t do this: their rotation curves stay flat.'], 'v ∝ 1/√r.', { vf: { k: 'kepf', f: f } });
     }
     if (shape === 'mass' || shape === 'mass2') {
-      var v = R.pick([200, 220, 230, 250, 300]), rk = R.pick([26, 30, 50, 60, 100]), r = rk * 1000 * LY, Mk = (v * 1000) * (v * 1000) * r / GN, Ms = Mk / MSUN;
+      var v = R.pick([200, 220, 230, 250, 300, 180, 210, 240, 260, 280]), rk = R.pick([26, 30, 50, 60, 100, 20, 40, 75, 150]), r = rk * 1000 * LY, Mk = (v * 1000) * (v * 1000) * r / GN, Ms = Mk / MSUN;
       return P('Gas $' + T.commas(rk * 1000) + '$ light-years from a galaxy\'s center orbits at $' + v + '$ km/s. Treating the orbit as a circle, $M = \\dfrac{v^2 r}{G}$ gives the mass inside it. Find that mass in solar masses. ($1$ ly $= 9.46 \\times 10^{15}$ m; $G = 6.674 \\times 10^{-11}$; $M_\\odot = 1.99 \\times 10^{30}$ kg.)', num(Ms, 3, 0.03),
         ['$r = ' + T.commas(rk * 1000) + ' \\times 9.46 \\times 10^{15} = ' + fx(r, 3) + '$ m; $v = ' + fx(v * 1000, 2) + '$ m/s.', '$M = \\frac{(' + fx(v * 1000, 2) + ')^2 \\times ' + fx(r, 3) + '}{6.674 \\times 10^{-11}} = ' + fx(Mk, 3) + '$ kg.', 'In solar masses: $' + fx(Ms, 3) + '$, far more than the stars and gas we can see.'],
         'Units: m, m/s, kg.', { unit: 'M☉', vf: { k: 'mass', v: v, r: r } });
     }
     if (shape === 'frac') {
-      var tot = R.pick([1e12, 5e11, 2e12, 8e11]), vis = tot * R.pick([0.1, 0.15, 0.2, 0.05]), pct = (1 - vis / tot) * 100;
+      var tot = R.pick([1e12, 5e11, 2e12, 8e11, 3e11, 1.5e12, 4e12, 3.5e+11, 4e+11, 7e+11, 9e+11, 1.2e+12, 3e+12, 3.5e+12]), vis = tot * R.pick([0.1, 0.15, 0.2, 0.05, 0.08, 0.12, 0.25, 0.06, 0.07, 0.09]), pct = (1 - vis / tot) * 100;
       return P('Orbits show a galaxy holds $' + fx(tot, 2) + '$ solar masses in all, but its stars and gas add up to only $' + fx(vis, 2) + '$ solar masses. What percent of its mass is dark? Give the answer as a percent.', pnum(pct, 3, 0.01),
         ['Dark mass $= ' + fx(tot, 2) + ' - ' + fx(vis, 2) + ' = ' + fx(tot - vis, 2) + '$ solar masses.', 'Fraction $= \\frac{' + fx(tot - vis, 2) + '}{' + fx(tot, 2) + '} = ' + fd(1 - vis / tot, 2) + '$, which is $' + fd(pct, 0) + '\\%$.'], 'Subtract, then divide by the total.', { vf: { k: 'frac', t: tot, v: vis } });
     }
@@ -1600,7 +1618,7 @@
         ['Equal peak luminosities: $d_2 = d_1\\sqrt{\\frac{b_1}{b_2}}$.', '$d_2 = ' + d0 + ' \\times \\sqrt{' + T.commas(rr) + '} = ' + T.commas(rnd(dd, 4)) + '$ Mpc.'], 'Inverse square, backward.', { unit: 'Mpc', vf: { k: 'snia', d0: d0, r: rr } });
     }
     if (shape === 'mag') {
-      var dm = R.chance(0.5) ? R.pick([5, 10, 15, 2.5, 7.5]) : R.real(1, 14, 1), f = M.pow(10, dm / 5);
+      var dm = R.chance(0.5) ? R.pick([5, 10, 15, 2.5, 7.5, 3, 4, 7, 8, 12]) : R.real(1, 14, 1), f = M.pow(10, dm / 5);
       return P('Two standard candles have the same luminosity, but one appears $' + fd(dm, 1) + '$ magnitudes fainter. How many times farther away is it? ($5$ magnitudes is a factor of $100$ in brightness.)', num(f, 3, 0.01),
         ['Brightness ratio: $100^{' + fd(dm, 1) + '/5} = ' + T.commas(M.pow(100, dm / 5)) + '$.', 'Distance ratio is the square root: $\\sqrt{' + T.commas(M.pow(100, dm / 5)) + '} = ' + fx(f, 3) + '$.'], 'Magnitudes to brightness, then square root.', { vf: { k: 'mag', dm: dm } });
     }
@@ -1642,18 +1660,18 @@
   G('astro.age-of-universe', function (R, ctx) {
     var shape = by(ctx, R.pick(['short', 'short', 'mc']), R.pick(['full', 'short', 'H', 'mc']), R.pick(['full', 'H', 'compare']));
     if (shape === 'short') {
-      var H = R.chance(0.4) ? R.pick([50, 60, 65, 67, 70, 73, 75, 80, 100]) : R.int(50, 100), t = 977.8 / H;
+      var H = R.chance(0.4) ? R.pick([50, 60, 65, 67, 70, 73, 75, 80, 100, 90]) : R.int(50, 100), t = 977.8 / H;
       return P('The Hubble time $1/H_0$ estimates the age of the universe. A handy shortcut is $\\dfrac{1}{H_0} = \\dfrac{978}{H_0}$ billion years, with $H_0$ in km/s/Mpc. What is $1/H_0$ for $H_0 = ' + H + '$ km/s/Mpc?', num(t, 3, 0.01),
         ['$\\frac{978}{' + H + '} = ' + fd(t, 2) + '$ billion years.', 'A bigger $H_0$ (faster expansion) means less time to reach today\'s distances, so a younger universe.'], 'Divide 978 by H₀.', { unit: 'billion years', vf: { k: 'age', H: H } });
     }
     if (shape === 'full') {
-      var H2 = R.int(55, 85), ts = 3.086e19 / H2, ty = ts / YR / 1e9;
+      var H2 = R.int(45, 100), ts = 3.086e19 / H2, ty = ts / YR / 1e9;
       return P('Find $1/H_0$ in billions of years for $H_0 = ' + H2 + '$ km/s/Mpc. ($1$ Mpc $= 3.086 \\times 10^{19}$ km; $1$ yr $= 3.156 \\times 10^{7}$ s.)', num(ty, 3, 0.02),
         ['$H_0$ is a speed per distance: km/s per Mpc. Put the Mpc in km so the km cancel: $H_0 = \\frac{' + H2 + '\\ \\text{km/s}}{3.086 \\times 10^{19}\\ \\text{km}} = ' + fx(H2 / 3.086e19, 3) + '$ per second.', '$\\frac{1}{H_0} = ' + fx(ts, 3) + '$ s.', 'In years: $\\frac{' + fx(ts, 3) + '}{3.156 \\times 10^{7}} = ' + fx(ts / YR, 3) + '$ years $= ' + fd(ty, 1) + '$ billion years.'],
         'Make the distance units cancel first.', { unit: 'billion years', vf: { k: 'age', H: H2 } });
     }
     if (shape === 'H') {
-      var t2 = R.int(9, 20), Hh = 977.8 / t2;
+      var t2 = R.int(7, 25), Hh = 977.8 / t2;
       return P('If $1/H_0$ were $' + t2 + '$ billion years, what would $H_0$ be, in km/s/Mpc? (Use $\\frac{1}{H_0} = \\frac{978}{H_0}$ billion years.)', num(Hh, 3, 0.01),
         ['$\\frac{978}{H_0} = ' + t2 + '$, so $H_0 = \\frac{978}{' + t2 + '} = ' + fd(Hh, 1) + '$ km/s/Mpc.'], 'Solve for H₀.', { unit: 'km/s/Mpc', vf: { k: 'H', t: t2 } });
     }
@@ -1684,12 +1702,12 @@
         ['$\\lambda_{\\text{peak}} = \\frac{2.90 \\times 10^{6}}{' + fd(T0, 3) + '} = ' + fx(lam * 1e6, 3) + '$ nm.', 'In millimeters: $' + fd(lam, 2) + '$ mm: microwaves, hence the name.'], 'Wien\'s law, then convert.', { unit: 'mm', vf: { k: 'cmb', T: T0 } });
     }
     if (shape === 'then') {
-      var z = R.pick([1100, 1090, 10, 3, 1000]), Tt = 2.725 * (1 + z);
+      var z = R.pick([1100, 1090, 10, 3, 1000, 1, 2, 5, 20, 50, 100, 500]), Tt = 2.725 * (1 + z);
       return P('As space expands, the background radiation cools in proportion: $T = T_{\\text{now}}(1 + z)$, with $T_{\\text{now}} = 2.725$ K. How hot was it at redshift $z = ' + T.commas(z) + '$?', num(Tt, 3, 0.02),
         ['$T = 2.725 \\times (1 + ' + T.commas(z) + ') = 2.725 \\times ' + T.commas(1 + z) + '$.', '$T = ' + T.commas(rnd(Tt, 3)) + '$ K.', z > 500 ? 'About 3000 K: just cool enough for atoms to form, which let the light travel freely. That light is the microwave background.' : 'Hotter than today because the universe was smaller.'],
         'Multiply by 1 + z.', { unit: 'K', vf: { k: 'then', z: z } });
     }
-    var z2 = R.pick([1, 2, 3, 9, 1100, 0.5]), s = 1 / (1 + z2);
+    var z2 = R.pick([1, 2, 3, 9, 1100, 0.5, 0.1, 0.2, 0.25, 4, 5, 7, 19]), s = 1 / (1 + z2);
     return P('Light from a galaxy at redshift $z = ' + T.commas(z2) + '$ left it when the universe was smaller. What fraction of today\'s size was the universe then? (Size then $=\\dfrac{1}{1 + z}$ of today\'s.)', num(s, 3, 0.01),
       ['Wavelengths stretch with space: $1 + z = \\frac{\\text{size now}}{\\text{size then}}$.', 'Size then $= \\frac{1}{1 + ' + T.commas(z2) + '} = ' + fx(s, 3) + '$ of today\'s.'], '1 + z is the stretch factor.', { vf: { k: 'size', z: z2 } });
   });
@@ -1720,3 +1738,131 @@
 
 // ---- 99_tail.js
 })(typeof window !== 'undefined' ? window.MathLadder : (typeof global !== 'undefined' ? global.MathLadder : undefined));
+
+/* ---- More forms of the same questions (round 7, "widen"; Physics and Earth ladders): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - check a number: the question and a classmate's numeric answer, either the generator's own answer or that answer
+     off by a common slip (a factor of 2, 4 or 10), and "Is that right?" (Yes / No; not in placement);
+   - two at once: two different questions of the topic, answered together (short questions only, multiple-choice or
+     numeric, each keeping its own unit; at most one of them with a picture, which then comes first).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'astro', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function numable(p) { // a single numeric answer with a plain decimal value (not a fraction or an expression)
+    var a = p.a;
+    return !!a && a.t === 'num' && /^-?\d+(\.\d+)?(e-?\d+)?$/.test(String(a.v)) && +a.v !== 0 && isFinite(+a.v) &&
+      !(a.tol && a.tol >= Math.abs(+a.v) / 3) && !((a.rtol || 0) > 0.3); // a slip by a factor of 2 must fall outside the tolerance
+  }
+  function sig(v) { var m = String(v).replace(/e.*$/, '').replace(/^-?0*\.?0*/, '').replace('.', ''); return Math.min(6, Math.max(3, m.length)); }
+  function show(x, n) { // a number as the classmate would write it: 3 significant figures, scientific notation when large or small
+    var ax = Math.abs(x);
+    if (ax >= 1e5 || ax < 1e-3) { var e = Math.floor(Math.log10(ax)), m = Number((x / Math.pow(10, e)).toPrecision(n || 3)); if (Math.abs(m) >= 10) { m = m / 10; e++; } return '$' + m + ' \\times 10^{' + e + '}$'; }
+    var s = String(Number(x.toPrecision(n || 3)));
+    return '$' + (ax >= 1e4 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, '{,}') : s) + '$';
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = +a.v, n = sig(a.v), right = R.coin(), f = R.pick([2, 0.5, 10, 0.1, 4, 0.25]), shown = right ? v : v * f;
+    var who = 'A classmate worked it out and got', u = p.unit ? ' ' + p.unit : '';
+    var q = p.q + '<p>' + who + ': <b>' + show(shown, n) + u + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right.' : 'No. The answer is ' + show(v, n) + u + '; ' + (f > 1 ? 'the classmate\'s answer is ' + f + ' times too big.' : 'the classmate\'s answer is ' + Math.round(1 / f) + ' times too small.'))].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf' && !numable(p))) return false;
+    if (p.a.t !== 'num' && p.unit) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function part(l, x) { var o = { label: l, a: x.a }; if (x.unit) o.unit = x.unit; return o; }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [part('1.', p), part('2.', p2)] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (mode !== 'place' && numable(p)) forms.push('ncheck');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'ncheck' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

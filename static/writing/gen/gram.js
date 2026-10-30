@@ -1922,7 +1922,14 @@
     function () { return ['We wondered where the cat went.', D().clause({ s: 'We', v: 'wondered', do: { ncl: D().clause({ s: D().n('cat', ['the']), v: D().n('went', ['where']) }) } }), ['do.c.v.m0', 'do.c.s'], 'direct object', 'do']; },
     function () { return ['Whoever finishes first wins a prize.', D().clause({ s: { ncl: D().clause({ s: 'Whoever', v: D().n('finishes', ['first']) }) }, v: 'wins', do: D().n('prize', ['a']) }), ['s.c.s', 's.c.v'], 'subject', 's']; },
     function () { return ['My hope is that the rain stops.', D().clause({ s: D().n('hope', ['My']), v: 'is', pn: { ncl: D().clause({ s: D().n('rain', ['the']), v: 'stops', intro: 'that' }) } }), ['pn.c.intro', 'pn.c.s'], 'predicate noun', 'pn']; },
-    function () { return ['I know that she wants to win.', D().clause({ s: 'I', v: 'know', do: { ncl: D().clause({ s: 'she', v: 'wants', do: { inf: 'win' }, intro: 'that' }) } }), ['do.c.intro', 'do.c.v'], 'direct object', 'do']; }
+    function () { return ['I know that she wants to win.', D().clause({ s: 'I', v: 'know', do: { ncl: D().clause({ s: 'she', v: 'wants', do: { inf: 'win' }, intro: 'that' }) } }), ['do.c.intro', 'do.c.v'], 'direct object', 'do']; },
+    function () { return ['We know that the team won.', D().clause({ s: 'We', v: 'know', do: { ncl: D().clause({ s: D().n('team', ['the']), v: 'won', intro: 'that' }) } }), ['do.c.intro', 'do.c.s'], 'direct object', 'do']; },
+    function () { return ['Whoever knocks gets a cookie.', D().clause({ s: { ncl: D().clause({ s: 'Whoever', v: 'knocks' }) }, v: 'gets', do: D().n('cookie', ['a']) }), ['s.c.s', 's.c.v'], 'subject', 's']; },
+    function () { return ['The rule is that everyone helps.', D().clause({ s: D().n('rule', ['The']), v: 'is', pn: { ncl: D().clause({ s: 'everyone', v: 'helps', intro: 'that' }) } }), ['pn.c.intro', 'pn.c.s'], 'predicate noun', 'pn']; },
+    function () { return ['I wonder where the keys went.', D().clause({ s: 'I', v: 'wonder', do: { ncl: D().clause({ s: D().n('keys', ['the']), v: D().n('went', ['where']) }) } }), ['do.c.v.m0', 'do.c.s'], 'direct object', 'do']; },
+    function () { return ['What she built amazed us.', D().clause({ s: { ncl: D().clause({ s: 'she', v: 'built', do: 'What' }) }, v: 'amazed', do: 'us' }), ['s.c.do', 's.c.v'], 'subject', 's']; },
+    function () { return ['Our plan is that we leave early.', D().clause({ s: D().n('plan', ['Our']), v: 'is', pn: { ncl: D().clause({ s: 'we', v: D().n('leave', ['early']), intro: 'that' }) } }), ['pn.c.intro', 'pn.c.s'], 'predicate noun', 'pn']; },
+    function () { return ['They knew that Grandpa liked music.', D().clause({ s: 'They', v: 'knew', do: { ncl: D().clause({ s: 'Grandpa', v: 'liked', do: 'music', intro: 'that' }) } }), ['do.c.intro', 'do.c.s'], 'direct object', 'do']; }
   ];
   G('gram.diagram-noun-clauses', function (R, ctx) {
     var L = ctx.level, shape = ML.byLevel(ctx, 'ask', R.pick(['job', 'ask', 'choose']), R.pick(['choose', 'job']));
@@ -1940,3 +1947,104 @@
     return dgAsk(R, spec, e[0], R.pick(e[2]), L, ['The noun clause sits on a stand in the ' + e[3] + '’s place, with its own subject and verb.']);
   });
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen"): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - two at once: two different questions of the topic, answered together (short questions only, at most one of them with
+     a picture, which then comes first; not in the courses for young children, whose answer box for two parts would
+     also show a keypad button they don't need).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'gram', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf')) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

@@ -752,9 +752,21 @@
       { s: '{A} is standing in line to meet the author at a book signing.', ask: 'Which way of standing shows poise?',
         ok: ['Weight on both feet, head up, hands holding {Ahis} book in front.'],
         near: [['Slumped over {Ahis} phone.', 'It looks as if {A} isn’t interested.'], ['Shifting from foot to foot and kicking the floor.', 'Still feet look calm and ready.'], ['Standing like a soldier at attention, not moving at all.', 'Poise is relaxed, not frozen.']],
-        why: 'Poise is calm and ready: still, upright and easy.', sc: ['library', ['A', 'B']] }
+        why: 'Poise is calm and ready: still, upright and easy.', sc: ['library', ['A', 'B']] },
+      { s: '{A} is standing at the front of the class to give a short report.', ask: 'Which shows poise?',
+        ok: ['Standing tall with weight on both feet, notes held still, looking up at the class.'],
+        near: [['Rocking from heel to toe the whole time.', 'Rocking draws eyes away from the report.'], ['Hiding behind {Ahis} notes.', 'Head up shows the class {Ahe} is talking to them.'], ['Leaning on the teacher’s desk with arms crossed.', 'Leaning and crossed arms can look bored.']],
+        why: 'Tall, still and looking at the listeners is poise.', sc: ['classroom', ['A', 'B']] },
+      { s: '{A} is introduced to a friend’s grandmother in the hallway.', ask: 'How should {A} stand while they talk?',
+        ok: ['Facing her, standing tall and easy, hands still.'],
+        near: [['Half turned toward the door, ready to leave.', 'It looks as if {A} wants to be somewhere else.'], ['Bouncing on {Ahis} toes.', 'Bouncing looks restless.'], ['Leaning against the wall with hands in {Ahis} pockets.', 'Standing up straight shows respect.']],
+        why: 'Facing the person and standing tall shows attention and respect.', sc: ['library', ['A', 'B']] }
     ],
     tf: [
+      ['Facing the person you are talking with is part of good posture in company.', true, 'It shows you are paying attention to them.'],
+      ['Crossing your arms tightly always looks friendly.', false, 'Crossed arms can look closed off or impatient.'],
+      ['Keeping your head up and eyes forward helps you look calm and ready.', true, 'Head up shows attention.'],
+      ['Bouncing or swaying while someone talks to you shows poise.', false, 'Fidgeting draws attention away from the speaker.'],
       ['Poise means standing stiff and completely still, like a soldier.', false, 'Poise looks easy and relaxed, not rigid.'],
       ['Standing with your weight on both feet and your hands still is part of poise.', true, 'It looks calm and ready.'],
       ['Slumping with hands in your pockets can look as if you would rather be somewhere else.', true, 'People read posture as a message, even when you don’t mean one.'],
@@ -2250,3 +2262,166 @@
   });
 
 })(typeof window !== 'undefined' ? window.MathLadder : global.MathLadder);
+
+/* ---- widen: more forms of the same questions (so practice repeats less) ----------------------------------------
+   Every topic of this course keeps its own problems, and some draws are turned into other forms of the same skill,
+   built only from the topic's own problems (so their answers stay the ones the topic already checks):
+     check   "Ava chose X. Is Ava right?" (Yes or No) from a one-answer multiple-choice problem
+     pairs   two or three lines "question → answer"; which line is right (or, at level 3, which one is wrong)
+     tfpick  "Which sentence is true?" (or false) from three of the topic's true-or-false sentences
+   Questions whose answer depends on the other choices (first, best, most, not …) show the choices in the check form
+   and never go into pairs. Mix per level: CFG.mix[level] = [check, pairs, tfpick] shares; the rest stays as it was. */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var CFG = {"prefix":"growing.","only":["starting-conversation","listening-well","sharing-the-talk","topics-to-skip","ending-conversation","introducing-yourself","eye-contact","handshake","remembering-names","addressing-adults","standing-poise","sitting-well","entering-room","standing-to-greet","setting-table","using-utensils","reaching-elbows","table-mishaps","thanking-cook","phone-calls","video-calls","phones-around-people","friends-over","sleepovers","birthday-invitations","giving-gifts","receiving-gifts","apologizing","disagreeing","sportsmanship","school-teachers","respect-elders","helping-home","lines-crowds","doors-elevators","sidewalks","movies-shows","pledge-anthem","flag-display","flag-care"]};
+  var NAMES = ['Ava', 'Ben', 'Cora', 'Dev', 'Eli', 'Finn', 'Gus', 'Hana', 'Ivy', 'Jude', 'Kai', 'Lena', 'Milo', 'Nora', 'Omar', 'Pia',
+    'Quinn', 'Rosa', 'Sam', 'Tess', 'Uma', 'Vic', 'Wren', 'Zoe', 'Ada', 'Leo', 'Mia', 'Theo', 'June', 'Max'];
+  var REL = /\b(first|last|earliest|latest|earlier|later|before|after|older|oldest|newer|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|look|read|here|example|examples|likely|probably|mainly|main|usually|typically|other|another|which one|each|order|then|next)\b|n['’]t\b/i;
+  // pairs judge each line on its own, so only questions whose answer depends on the other choices are left out
+  var RELP = /\b(first|last|earliest|latest|oldest|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|which one|other|another|rank|order|more|less|fewer)\b|n['’]t\b|\w+est\b/i;
+  var REF = /\b(this|these|those|shown|picture|map|table|chart|graph|diagram|passage|scene|story|above|below|here|following)\b/i;
+  var BADCH = /\b(all|none|both|neither) of\b|\b(above|below)\b|^(both|neither|all|none)\b|\bchoice\b|\boption\b/i;
+  function strip(s) { return String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function plainish(s) { return !/<(?!\/?(b|i|em|strong)\b)[^>]*>/.test(String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1')); }
+  function add(q, html) { // inside a read-aloud big span when there is one
+    var m = /<span class="[\w-]*big">/.exec(q);
+    if (m) { var k = q.lastIndexOf('</span>'); if (k > m.index) return q.slice(0, k) + '<br>' + html.replace(/<\/p>\s*<p[^>]*>/g, '<br>').replace(/<\/?p[^>]*>/g, '') + q.slice(k); }
+    return q + html;
+  }
+  function single(p) {
+    return p && p.a && p.a.t === 'mc' && !Array.isArray(p.a.v) && Array.isArray(p.a.choices) && p.a.choices.length >= 2 &&
+      !p.a.choices.some(function (c) { return BADCH.test(strip(c)); });
+  }
+  function hash(t) { var h = 7; for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return h; }
+  function nameFor(q, key) { // the same claim always gets the same name, so a name alone never makes a "new" problem
+    var t = strip(q), ok = NAMES.filter(function (n) { return t.indexOf(n) < 0 && String(key).indexOf(n) < 0; });
+    return (ok.length ? ok : NAMES)[hash(t + '|' + key) % (ok.length || NAMES.length)];
+  }
+  function dot(s) { s = String(s); return /[.!?…"”')\]]\s*(<\/b>)?$/.test(strip(s)) || /\$$/.test(s) ? s : s + '.'; }
+  function optList(ch) { return '<p class="wd-opts">The choices were:<br>' + ch.map(function (c) { return '• ' + c; }).join('<br>') + '</p>'; }
+  function copyP(p, q, a, steps) { var o = {}; for (var k in p) if (Object.prototype.hasOwnProperty.call(p, k)) o[k] = p[k]; o.q = q; o.a = a; o.steps = steps; delete o.choices; return o; }
+
+  // check: show one choice (the right one half the time) and ask whether it is right
+  function check(p, R) {
+    var ch = p.a.choices, v = p.a.v, idx = ch.map(function (_, i) { return i; }), others = idx.filter(function (i) { return i !== v; });
+    var i = R.chance(0.5) ? v : R.pick(others), ok = i === v, nm = nameFor(p.q, ch[i]), letters = ch.every(function (c) { return /^[A-Z]$/.test(String(c)); });
+    var stem = strip(p.q), html = '';
+    if (!letters && (REL.test(stem) || ch.length > 4 || CFG.listAll)) {
+      var shown = p.a.keep ? ch.slice() : R.shuffle(ch);
+      html += optList(shown);
+    }
+    html += '<p class="wd-check">' + nm + ' chose: <b>' + ch[i] + '</b>' + (/[.!?…"”]$/.test(strip(ch[i])) ? '' : '.') + ' Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes. ' + dot(ch[v]) + ' is the right answer.' : 'No. The right answer is: ' + dot(ch[v]);
+    if (ok) first = 'Yes, that is the right answer.';
+    return copyP(p, add(p.q, html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [first].concat(p.steps || []));
+  }
+  // check for "choose all": the whole list is shown, and one learner's picks; right only if exactly the right ones
+  function checkAll(p, R) {
+    var ch = p.a.choices, v = p.a.v.slice().sort(), n = ch.length, pick;
+    if (R.chance(0.45)) pick = v.slice();
+    else {
+      var t = 0; do { var j = R.int(0, n - 1), s = v.slice(), k = s.indexOf(j); if (k >= 0) s.splice(k, 1); else s.push(j); if (R.chance(0.3)) { var j2 = R.int(0, n - 1), k2 = s.indexOf(j2); if (k2 >= 0) s.splice(k2, 1); else s.push(j2); } pick = s.sort(); t++; }
+      while (t < 20 && (!pick.length || pick.join() === v.join()));
+      if (!pick.length || pick.join() === v.join()) return null;
+    }
+    var ok = pick.join() === v.join(), nm = nameFor(p.q, pick.join());
+    var html = optList(ch) + '<p class="wd-check">' + nm + ' chose ' +
+      (pick.length === 1 ? 'only: <b>' + ch[pick[0]] + '</b>' : 'these: <b>' + pick.map(function (i) { return ch[i]; }).join('</b>; <b>') + '</b>') + '. Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes, those are exactly the right ones.' : 'No. The right ones are: ' + v.map(function (i) { return ch[i]; }).join('; ');
+    return copyP(p, add(p.q.replace(/\s*(Choose|Select|Pick) (all|every)[^.?!<]*[.?!]?/i, ''), html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [dot(first)].concat(p.steps || []));
+  }
+
+  // items for pairs: one-answer questions that stand on their own (no picture, no passage, no "first/best/…")
+  function pairItem(p) {
+    if (!single(p) || p.viz) return null;
+    var max = CFG.maxStem || 120, maxA = CFG.maxAns || 70, a = strip(p.a.choices[p.a.v]), stem, group = '';
+    // "prompt<br><b>thing</b>" or "prompt<blockquote>thing</blockquote>": a line is "thing → answer", lines share the prompt
+    var q0 = p.q.replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1').trim();
+    var m = /^([^<]{6,140}?)\s*(?:<br>\s*<b>([^<]{3,140})<\/b>|<blockquote>([^<]{3,140})<\/blockquote>)\s*$/.exec(q0);
+    if (m) { group = m[1].trim(); stem = (m[2] || m[3]).trim(); if (RELP.test(group.replace(/\b(this|these)\b/gi, ''))) return null; }
+    else {
+      if (!plainish(p.q)) return null;
+      stem = strip(p.q); if (RELP.test(stem)) return null;
+    }
+    if (stem.length > max || stem.length < 3 || a.length > maxA || /^[A-Z]$/.test(a) || /\$/.test(stem + a + group)) return null;
+    var w = p.a.choices.filter(function (_, i) { return i !== p.a.v; }).map(strip).filter(function (x) { return x.length <= maxA && x !== a; });
+    if (!w.length) return null;
+    return { stem: stem.replace(/\s*(Choose one|Pick one)\.?$/i, ''), a: a, w: w, why: (p.steps || [])[0] || '', group: group };
+  }
+  function tfItem(p) {
+    if (!p || !p.a || p.a.t !== 'tf' || p.viz || !plainish(p.q)) return null;
+    var s = strip(p.q).replace(/^(True or false\?|True or false:)\s*/i, '').replace(/\s*(True or false\?|Is this true or false\?|Is it true or false\?)$/i, '').trim();
+    if (s.length < 8 || s.length > (CFG.maxStem || 120) + 20 || REF.test(s) || /\?$/.test(s) || /\$/.test(s)) return null;
+    return { s: s, v: p.a.v, why: (p.steps || [])[0] || '' };
+  }
+  function harvest(base, R, ctx, make, n, distinct) {
+    var out = [], keys = {};
+    for (var t = 0; t < 24 && out.length < n; t++) {
+      // at level 3, lines may come from level 2 questions too: three lines with one wrong is the harder form
+      var c2 = ctx && ctx.level >= 3 && (t % 2) ? Object.assign({}, ctx, { level: 2 }) : ctx;
+      var p; try { p = base(ML.rand(R.int(1, 2e9)), c2); } catch (e) { continue; }
+      var it = make(p); if (!it) continue;
+      if (out.length && it.group !== undefined && it.group !== out[0].group) continue;
+      var k = distinct(it); if (k.some(function (x) { return keys[x]; })) continue;
+      k.forEach(function (x) { keys[x] = 1; }); out.push(it);
+    }
+    return out;
+  }
+  function pairs(base, R, ctx, n, wrongOne) {
+    var its = harvest(base, R, ctx, pairItem, n, function (it) { return it.group ? ['s:' + it.stem] : ['s:' + it.stem, 'a:' + it.a]; });
+    if (its.length < n) return null;
+    var answers = its.map(function (it) { return it.a; }), used = {};
+    var target = R.int(0, n - 1), lines = [], steps = [];
+    for (var i = 0; i < n; i++) {
+      var it = its[i], right = wrongOne ? i !== target : i === target, ans = it.a;
+      if (!right) {
+        var ws = it.w.filter(function (x) { return (its[0].group || answers.indexOf(x) < 0) && !used[x]; });
+        if (!ws.length) return null;
+        ans = R.pick(ws); if (!its[0].group) used[ans] = 1;
+      }
+      lines.push(it.stem + ' → ' + ans); // plain text: ladder pages show choices as text
+      steps.push(it.group ? dot(it.stem) + ' Answer: ' + it.a + (right ? '.' : ', not ' + ans + '.') : it.stem + ' The answer is ' + it.a + (right ? '.' : ', not ' + ans + '.'));
+    }
+    var g = its[0].group, q = g ? '<p class="wd-group">The question for every line: <i>' + g + '</i></p>' + (wrongOne ? 'One line has the <b>wrong</b> answer. Which line is it?' : n === 2 ? 'Which line has the <b>right</b> answer?' : 'Only one line has the right answer. Which line is it?') : wrongOne ? 'Each line is a question and an answer. One answer is <b>wrong</b>. Which line is it?'
+      : (n === 2 ? 'Each line is a question and an answer. Which line has the <b>right</b> answer?' : 'Each line is a question and an answer. Only one answer is right. Which line is it?');
+    if (its[target].why) steps.push(its[target].why);
+    return { q: q, a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own. Does the answer fit the question?' };
+  }
+  function tfpick(base, R, ctx, wantFalse) {
+    var its = harvest(base, R, ctx, tfItem, 6, function (it) { return ['s:' + it.s]; });
+    var T = its.filter(function (x) { return x.v; }), F = its.filter(function (x) { return !x.v; });
+    var odd = wantFalse ? F : T, rest = wantFalse ? T : F;
+    if (!odd.length || rest.length < 2) return null;
+    var pick = [odd[0], rest[0], rest[1]], order = R.shuffle([0, 1, 2]), choices = order.map(function (i) { return pick[i].s; });
+    var steps = pick.map(function (x) { return x.s + ' ' + (x.v ? 'True.' : 'False.'); });
+    if (odd[0].why) steps.push(odd[0].why);
+    return { q: wantFalse ? 'Which sentence is <b>false</b>?' : 'Which sentence is <b>true</b>?', a: { t: 'mc', choices: choices, v: order.indexOf(0) }, steps: steps,
+      hint: 'Decide about each sentence on its own.' };
+  }
+  var MIX = CFG.mix || { 1: [0.38, 0.25, 0.04], 2: [0.27, 0.3, 0.1], 3: [0.17, 0.4, 0.15] };
+  function wrap(id, base) {
+    var fn = function (R, ctx) {
+      var lv = ctx && ctx.level || 1, p = base(R, ctx), m = MIX[lv] || MIX[3], r = R.next();
+      if (p.nowiden || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf') || (CFG.skip && CFG.skip.indexOf(id) >= 0)) return p; // typed answers stay as they are
+      var form = r < m[0] ? 0 : r < m[0] + m[1] ? 1 : r < m[0] + m[1] + m[2] ? 2 : -1;
+      if (form < 0) return p;
+      var tries = [form, (form + 1) % 3, (form + 2) % 3].filter(function (f) { return m[f] > 0; });
+      for (var t = 0; t < tries.length; t++) {
+        var f = tries[t], alt = null;
+        if (f === 0) alt = single(p) ? check(p, R) : (p.a && p.a.t === 'mc' && Array.isArray(p.a.v) && !p.viz ? checkAll(p, R) : null);
+        else if (f === 1) alt = pairs(base, R, ctx, lv === 1 ? 2 : 3, lv >= 3 && R.chance(0.6));
+        else alt = tfpick(base, R, ctx, R.chance(0.4));
+        if (alt) return alt;
+      }
+      return p;
+    };
+    fn.widened = true;
+    return fn;
+  }
+  ML.genIds().forEach(function (id) {
+    if (id.indexOf(CFG.prefix) !== 0 || (CFG.only && CFG.only.indexOf(id.slice(CFG.prefix.length)) < 0)) return;
+    var g = ML.getGen(id); if (g && !g.widened) ML.gen(id, wrap(id, g));
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen ---- */

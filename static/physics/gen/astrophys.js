@@ -316,7 +316,7 @@
           '$= ' + tx(rr, 3) + '$' + (rr < 1 ? ': relatively less blue light, so a cooler, redder star.' : ': relatively more blue light, so a hotter star.')],
         hint: 'Undo $-2.5\\log_{10}$: raise 10 to the power $-0.4(B - V)$.' };
     } else if (kind === 'flux2') {
-      var s1 = R.pick([-0.3, -0.2, 0.0, 0.3]), s2 = R.pick([0.65, 1.0, 1.4, 1.85]), f2 = M.pow(10, 0.4 * (s2 - s1));
+      var s1 = R.pick([-0.3, -0.2, 0.0, 0.3]), s2 = R.pick([0.65, 1.0, 1.4, 1.85, 0.7, 0.8, 1.2, 1.5]), f2 = M.pow(10, 0.4 * (s2 - s1));
       d = { s1: s1, s2: s2, ans: f2 };
       p = { q: 'Star P has $B - V = ' + td(s1, 2) + '$ and star Q has $B - V = ' + td(s2, 2) + '$. By what factor is P\'s blue-to-visual flux ratio $F_B/F_V$ larger than Q\'s?',
         a: num(f2),
@@ -342,22 +342,22 @@
     var id = 'astrophys.planck-function', p, d, b = 2.898e-3, hck = 1.4388e-2;
     if (kind === 'peak') {
       var obj = R.pick([['a red dwarf', 3200], ['the Sun', 5772], ['Sirius A', 9940], ['Rigel', 12100], ['an O star', 35000], ['Betelgeuse', 3600], ['a white dwarf', 25000], ['a brown dwarf', 1300]]);
-      var T = L === 1 ? obj[1] : sig(R.int(2500, 40000), 3), lam = b / T * 1e9;
+      var named = L === 1 && R.coin(), T = named ? obj[1] : L === 1 ? R.int(13, 400) * 100 : sig(R.int(2500, 40000), 3), lam = b / T * 1e9;
       d = { T: T, ans: lam };
-      p = { q: 'At what wavelength does ' + (L === 1 ? obj[0] + ', with $T = ' + tx(T, 4) + '$ K,' : 'a blackbody at $' + tx(T, 3) + '$ K') + ' emit the most energy per unit wavelength? (Wien\'s constant $b = 2.898 \\times 10^{-3}$ m·K.)',
+      p = { q: 'At what wavelength does ' + (named ? obj[0] + ', with $T = ' + tx(T, 4) + '$ K,' : 'a blackbody at $' + tx(T, 3) + '$ K') + ' emit the most energy per unit wavelength? (Wien\'s constant $b = 2.898 \\times 10^{-3}$ m·K.)',
         a: num(lam), unit: 'nm',
         steps: ['Wien\'s law: $\\lambda_{\\max} = b/T$.', '$\\lambda_{\\max} = 2.898 \\times 10^{-3}\\text{ m·K}/' + tx(T, 4) + '\\text{ K} = ' + tx(lam * 1e-9, 3) + '$ m.',
           '$= ' + tx(lam, 3) + '$ nm' + (lam < 400 ? ' (ultraviolet).' : lam > 700 ? ' (infrared).' : ' (visible).')],
         hint: 'Use $\\lambda_{\\max} T = 2.898 \\times 10^{-3}$ m·K.' };
     } else if (kind === 'temp') {
-      var lam2 = L === 1 ? R.pick([500, 290, 145, 966, 1000, 725, 350]) : R.int(120, 2000), T2 = b / (lam2 * 1e-9);
+      var lam2 = L === 1 ? R.int(20, 200) * 5 : R.int(120, 2000), T2 = b / (lam2 * 1e-9);
       d = { lam: lam2, ans: T2 };
       p = { q: 'A star\'s spectrum peaks at $' + lam2 + '$ nm. Treating it as a blackbody, what is its surface temperature? ($b = 2.898 \\times 10^{-3}$ m·K.)',
         a: num(T2), unit: 'K',
         steps: ['Wien\'s law solved for $T$: $T = b/\\lambda_{\\max}$.', '$\\lambda_{\\max} = ' + lam2 + '\\text{ nm} = ' + tx(lam2 * 1e-9, 3) + '$ m.', '$T = 2.898 \\times 10^{-3}/' + tx(lam2 * 1e-9, 3) + ' = ' + tx(T2, 3) + '$ K.'],
         hint: 'Convert nanometers to meters, then $T = b/\\lambda_{\\max}$.' };
     } else if (kind === 'flux') {
-      var T1 = sig(R.int(3000, 6000), 2), f = R.pick([1.5, 2, 2.5, 3, 4]), T3 = T1 * f, ratio = M.pow(f, 4), both = L === 3;
+      var T1 = sig(R.int(3000, 6000), 2), f = R.pick([1.5, 2, 2.5, 3, 4, 3.5]), T3 = T1 * f, ratio = M.pow(f, 4), both = L === 3;
       var F1 = 5.67e-8 * M.pow(T1, 4);
       d = { T1: T1, T3: T3, both: both, ans: both ? F1 : ratio };
       p = both ? { q: 'Integrating the Planck function over all wavelengths gives the flux leaving a blackbody\'s surface, $F = \\sigma T^4$. Find $F$ for a star\'s surface at $' + tx(T1, 2) + '$ K. ($\\sigma = 5.67 \\times 10^{-8}$ W/(m²·K⁴).)',
@@ -368,7 +368,7 @@
         steps: ['The area under the Planck curve gives $F = \\sigma T^4$.', 'So $F_B/F_A = (T_B/T_A)^4 = (' + td(f, 1) + ')^4$.', '$= ' + tx(ratio, 3) + '$.'],
         hint: 'The total flux grows as the fourth power of temperature.' };
     } else if (kind === 'ratio') {
-      var lamr = R.pick([400, 500, 550, 700, 1000, 2000]), Ta = R.pick([3000, 4000, 5000, 6000]), Tb = Ta * R.pick([1.5, 2]), xa = hck / (lamr * 1e-9 * Ta), xb = hck / (lamr * 1e-9 * Tb);
+      var lamr = R.pick([400, 500, 550, 700, 1000, 2000, 600, 800, 900, 1200, 1500]), Ta = R.pick([3000, 4000, 5000, 6000, 3500]), Tb = Ta * R.pick([1.5, 2]), xa = hck / (lamr * 1e-9 * Ta), xb = hck / (lamr * 1e-9 * Tb);
       var rat = (M.exp(xa) - 1) / (M.exp(xb) - 1);
       d = { lam: lamr, Ta: Ta, Tb: Tb, ans: rat };
       p = { q: 'Compare blackbodies at $' + tx(Ta, 2) + '$ K and $' + tx(Tb, 2) + '$ K at the single wavelength $\\lambda = ' + lamr + '$ nm. Find $B_\\lambda(' + tx(Tb, 2) + '\\text{ K})/B_\\lambda(' + tx(Ta, 2) + '\\text{ K})$. (Use $hc/k = 1.4388 \\times 10^{-2}$ m·K.)',
@@ -378,7 +378,7 @@
           'Ratio $= \\dfrac{e^{' + td(xa, 3) + '} - 1}{e^{' + td(xb, 3) + '} - 1} = ' + tx(rat, 3) + '$. The hotter body is brighter here too.'],
         hint: 'Only the factor $1/(e^{hc/\\lambda kT} - 1)$ changes with temperature.' };
     } else { // radio: long-wavelength limit
-      var lr = R.pick([1, 2, 5, 21]) /* cm */, T4 = R.pick([3000, 4000, 5800, 10000]), T5 = T4 * R.pick([2, 3, 1.5]), x4 = hck / (lr * 1e-2 * T4), x5 = hck / (lr * 1e-2 * T5);
+      var lr = R.pick([1, 2, 5, 21]) /* cm */, T4 = R.pick([3000, 4000, 5800, 10000, 3500, 6000, 7000, 9000]), T5 = T4 * R.pick([2, 3, 1.5, 2.5]), x4 = hck / (lr * 1e-2 * T4), x5 = hck / (lr * 1e-2 * T5);
       var rr2 = (M.exp(x4) - 1) / (M.exp(x5) - 1);
       d = { lam: lr, Ta: T4, Tb: T5, ans: rr2 };
       p = { q: 'At the radio wavelength $\\lambda = ' + lr + '$ cm, find the ratio $B_\\lambda(' + tx(T5, 2) + '\\text{ K})/B_\\lambda(' + tx(T4, 2) + '\\text{ K})$. ($hc/k = 1.4388 \\times 10^{-2}$ m·K.)',
@@ -459,14 +459,14 @@
         steps: ['$kT = 8.617 \\times 10^{-5}\\text{ eV/K} \\times ' + tx(T, 2) + '\\text{ K}$.', '$kT = ' + tx(kT, 3) + '$ eV, ' + (kT < 10.2 ? 'far below the $10.2$ eV needed to lift hydrogen from $n = 1$ to $n = 2$; only the tail of the energy distribution can do it.' : 'comparable to atomic energies.')],
         hint: 'Multiply Boltzmann\'s constant in eV/K by the temperature.' };
     } else if (kind === 'hyd') {
-      var T2 = L === 1 ? R.pick([5800, 8000, 10000, 12000, 15000, 20000]) : sig(R.int(4500, 25000), 2), kT2 = k * T2, r = 4 * M.exp(-10.2 / kT2);
+      var T2 = L === 1 ? R.pick([5800, 8000, 10000, 12000, 15000, 20000, 6000, 7000, 9000]) : sig(R.int(4500, 25000), 2), kT2 = k * T2, r = 4 * M.exp(-10.2 / kT2);
       d = { T: T2, ans: r };
       p = { q: 'In a hydrogen atmosphere at $' + tx(T2, 2) + '$ K, find the ratio of atoms in level $n = 2$ to atoms in $n = 1$, $N_2/N_1$. ($g_n = 2n^2$, $E_2 - E_1 = 10.2$ eV, $k = 8.617 \\times 10^{-5}$ eV/K.)',
         a: num(r),
         steps: ['Boltzmann: $\\dfrac{N_2}{N_1} = \\dfrac{g_2}{g_1}e^{-\\Delta E/kT}$ with $g_2/g_1 = 8/2 = 4$.', '$kT = ' + tx(kT2, 3) + '$ eV, so $\\Delta E/kT = 10.2/' + tx(kT2, 3) + ' = ' + td(10.2 / kT2, 2) + '$.', '$N_2/N_1 = 4e^{-' + td(10.2 / kT2, 2) + '} = ' + tx(r, 3) + '$.'],
         hint: 'Find $\\Delta E/kT$ first; the statistical weights give a factor of 4.' };
     } else if (kind === 'gen') {
-      var ga = R.pick([1, 2, 3]), gb = R.pick([3, 5, 6, 8]), dE = R.real(1.5, 4.5, 1), T3 = sig(R.int(3500, 12000), 2), kT3 = k * T3, r3 = gb / ga * M.exp(-dE / kT3);
+      var ga = R.pick([1, 2, 3]), gb = R.pick([3, 5, 6, 8, 4, 7]), dE = R.real(1.5, 4.5, 1), T3 = sig(R.int(3500, 12000), 2), kT3 = k * T3, r3 = gb / ga * M.exp(-dE / kT3);
       d = { ga: ga, gb: gb, dE: dE, T: T3, ans: r3 };
       p = { q: 'An atom has a lower level $a$ with $g_a = ' + ga + '$ and an upper level $b$ with $g_b = ' + gb + '$, $' + td(dE, 1) + '$ eV higher. At $' + tx(T3, 2) + '$ K, what is $N_b/N_a$? ($k = 8.617 \\times 10^{-5}$ eV/K.)',
         a: num(r3),
@@ -975,7 +975,7 @@
     var L = lv(ctx), kind = R.pick(by(ctx, ['tkh', 'tkh', 'concept'], ['si', 'factor', 'nuclear'], ['rate', 'nuclear', 'si']));
     var id = 'astrophys.kelvin-helmholtz', p, d, GV = '$G = 6.67 \\times 10^{-11}$, $M_\\odot = 1.99 \\times 10^{30}$ kg, $R_\\odot = 6.96 \\times 10^{8}$ m, $L_\\odot = 3.83 \\times 10^{26}$ W, $1\\text{ yr} = 3.16 \\times 10^{7}$ s';
     if (kind === 'tkh' || kind === 'factor') {
-      var Ms = L === 1 ? R.pick([1, 1, 2, 0.5, 5]) : R.real(0.5, 10, 1), Rs = sig(M.pow(Ms, 0.8), 2), Ls = sig(M.pow(Ms, 3.5), 2), f = kind === 'factor' ? 0.3 : 1;
+      var Ms = L === 1 ? R.pick([1, 1, 2, 0.5, 5, 0.6, 0.8, 1.2, 3, 4]) : R.real(0.5, 10, 1), Rs = sig(M.pow(Ms, 0.8), 2), Ls = sig(M.pow(Ms, 3.5), 2), f = kind === 'factor' ? 0.3 : 1;
       var t = f * K.G * M.pow(Ms * K.Msun, 2) / (Rs * K.Rsun * Ls * K.Lsun) / K.yr;
       d = { M: Ms, R: Rs, L: Ls, f: f, ans: t / 1e6 };
       p = { q: (kind === 'factor' ? 'For a uniform sphere, contraction can supply at most about $\\tfrac{3}{10}GM^2/R$ of radiated energy. How long, at its present luminosity, could that power' : 'Estimate the Kelvin–Helmholtz time $t_{KH} \\approx GM^2/(RL)$, the time that gravitational contraction alone could power') + ' a star with $M = ' + tx(Ms, 2) + '\\,M_\\odot$, $R = ' + tx(Rs, 2) + '\\,R_\\odot$ and $L = ' + tx(Ls, 2) + '\\,L_\\odot$? Answer in millions of years. (' + GV + '.)',
@@ -990,14 +990,14 @@
         steps: ['$GM^2/R = 6.67 \\times 10^{-11} \\times (' + tx(Mkg, 2) + ')^2/' + tx(Rm, 2) + ' = ' + tx(K.G * Mkg * Mkg / Rm, 3) + '$ J.', 'Divide by $L$: $' + tx(K.G * Mkg * Mkg / (Rm * LW), 3) + '$ s.', 'In years: $' + tx(t2, 3) + '$ yr.'],
         hint: 'Gravitational energy over power gives a time.' };
     } else if (kind === 'nuclear') {
-      var Ms2 = R.pick([1, 1, 0.5, 2, 3, 0.8]), Ls2 = sig(M.pow(Ms2, 3.5), 2), tn = 0.007 * 0.1 * Ms2 * K.Msun * K.c * K.c / (Ls2 * K.Lsun) / K.yr;
+      var Ms2 = R.pick([1, 1, 0.5, 2, 3, 0.8, 0.6, 0.7, 0.9, 1.2, 1.5, 2.5]), Ls2 = sig(M.pow(Ms2, 3.5), 2), tn = 0.007 * 0.1 * Ms2 * K.Msun * K.c * K.c / (Ls2 * K.Lsun) / K.yr;
       d = { M: Ms2, L: Ls2, ans: tn / 1e9 };
       p = { q: 'A star of $' + tx(Ms2, 2) + '\\,M_\\odot$ and $' + tx(Ls2, 2) + '\\,L_\\odot$ can fuse about 10% of its mass, and fusion turns 0.7% of that mass into energy. How long can fusion power it, in billions of years? ($M_\\odot = 1.99 \\times 10^{30}$ kg, $c = 3.00 \\times 10^{8}$ m/s, $L_\\odot = 3.83 \\times 10^{26}$ W, $1\\text{ yr} = 3.16 \\times 10^{7}$ s.)',
         a: num(tn / 1e9), unit: 'Gyr',
         steps: ['Energy: $E = 0.007 \\times 0.1 \\times Mc^2 = 7 \\times 10^{-4} \\times ' + tx(Ms2 * K.Msun, 3) + ' \\times (3.00 \\times 10^{8})^2 = ' + tx(7e-4 * Ms2 * K.Msun * 9e16, 3) + '$ J.', 'Time: $E/L = ' + tx(7e-4 * Ms2 * K.Msun * 9e16 / (Ls2 * K.Lsun), 3) + '$ s.', '$= ' + tx(tn, 3) + '$ yr $\\approx ' + tx(tn / 1e9, 3) + '$ billion years, hundreds of times the Kelvin–Helmholtz time.'],
         hint: 'Energy from $E = (\\text{mass fused})(0.007)c^2$, then divide by $L$.' };
     } else if (kind === 'rate') {
-      var Ms3 = R.pick([1, 1, 0.5, 2]), Rs3 = sig(M.pow(Ms3, 0.8), 2), Ls3 = sig(M.pow(Ms3, 3.5), 2), v = 10 * Ls3 * K.Lsun * M.pow(Rs3 * K.Rsun, 2) / (3 * K.G * M.pow(Ms3 * K.Msun, 2)) * K.yr;
+      var Ms3 = R.pick([1, 1, 0.5, 2, 0.6, 0.8, 0.9, 1.5]), Rs3 = sig(M.pow(Ms3, 0.8), 2), Ls3 = sig(M.pow(Ms3, 3.5), 2), v = 10 * Ls3 * K.Lsun * M.pow(Rs3 * K.Rsun, 2) / (3 * K.G * M.pow(Ms3 * K.Msun, 2)) * K.yr;
       d = { M: Ms3, R: Rs3, L: Ls3, ans: v };
       p = { q: 'If a star of $' + tx(Ms3, 2) + '\\,M_\\odot$, $' + tx(Rs3, 2) + '\\,R_\\odot$ and $' + tx(Ls3, 2) + '\\,L_\\odot$ were powered only by contraction (uniform density, virial equilibrium: radiated energy $= \\tfrac{3}{10}GM^2/R$), how fast would its radius have to shrink, in meters per year? (' + GV + '.)',
         a: num(v, { rtol: 0.03 }), unit: 'm/yr',
@@ -1021,12 +1021,26 @@
     var L = lv(ctx), kind = R.pick(by(ctx, ['Q', 'frac', 'concept'], ['rate', 'mass', 'Q'], ['step', 'rate', 'mass']));
     var id = 'astrophys.fusion-chains', p, d;
     var Qall = (4 * AM.H1 - AM.He4) * 931.5;
-    if (kind === 'Q') {
+    if (kind === 'Q' && R.coin()) {
+      var nQ = R.int(2, 60);
+      d = { n: nQ, ans: nQ * Qall };
+      p = { q: 'In the Sun, four hydrogen-1 atoms end up as one helium-4 atom. Using atomic masses $m(^{1}\\text{H}) = 1.007825$ u and $m(^{4}\\text{He}) = 4.002603$ u, and $1\\text{ u} = 931.5$ MeV/$c^2$, how much energy is released in making $' + nQ + '$ helium-4 atoms?',
+        a: num(nQ * Qall), unit: 'MeV',
+        steps: ['For one helium-4 atom: $\\Delta m = 4 \\times 1.007825 - 4.002603 = 0.028697$ u.', '$E = 0.028697 \\times 931.5 = ' + td(Qall, 2) + '$ MeV.', 'For $' + nQ + '$ atoms: $' + nQ + ' \\times ' + td(Qall, 2) + ' = ' + tx(nQ * Qall, 3) + '$ MeV.'],
+        hint: 'Find the energy for one helium atom, then multiply.' };
+    } else if (kind === 'Q') {
       d = { ans: Qall };
       p = { q: 'In the Sun, four hydrogen-1 atoms end up as one helium-4 atom. Using atomic masses $m(^{1}\\text{H}) = 1.007825$ u and $m(^{4}\\text{He}) = 4.002603$ u, and $1\\text{ u} = 931.5$ MeV/$c^2$, how much energy is released?',
         a: num(Qall), unit: 'MeV',
         steps: ['Mass before: $4 \\times 1.007825 = 4.031300$ u. Mass after: $4.002603$ u. (Atomic masses include the electrons, so the positrons\' annihilation energy is counted automatically.)', '$\\Delta m = 4.031300 - 4.002603 = 0.028697$ u.', '$Q = 0.028697 \\times 931.5 = ' + td(Qall, 1) + '$ MeV.'],
         hint: 'Find the mass that disappears and convert with 931.5 MeV per u.' };
+    } else if (kind === 'frac' && R.coin()) {
+      var fr0 = (4 * AM.H1 - AM.He4) / (4 * AM.H1), mk = R.int(1, 40) * R.pick([1, 10, 1000]);
+      d = { m: mk, ans: fr0 * mk };
+      p = { q: 'When four hydrogen-1 atoms ($1.007825$ u each) become one helium-4 atom ($4.002603$ u), some mass turns into energy. If $' + tx(mk, 3) + '$ kg of hydrogen fuses into helium, how many kilograms of mass become energy?',
+        a: num(fr0 * mk), unit: 'kg',
+        steps: ['Fraction lost: $0.028697/4.031300 = 0.00712$.', 'Mass turned into energy: $0.00712 \\times ' + tx(mk, 3) + ' = ' + tx(fr0 * mk, 3) + '$ kg.'],
+        hint: 'Find the fraction of the mass that is lost first.' };
     } else if (kind === 'frac') {
       var fr = (4 * AM.H1 - AM.He4) / (4 * AM.H1) * 100;
       d = { ans: fr };
@@ -1035,7 +1049,7 @@
         steps: ['Starting mass: $4.031300$ u. Lost: $0.028697$ u.', 'Fraction: $0.028697/4.031300 = 0.00712$.', 'About $' + td(fr, 2) + '\\%$.'],
         hint: 'Divide the mass lost by the starting mass.' };
     } else if (kind === 'rate' || kind === 'mass') {
-      var Ls = L === 2 && kind === 'rate' ? R.pick([1, 1, 0.5, 2, 10, 100]) : rnd(R, 0.01, 1e4, 2), LW = Ls * K.Lsun, E1 = 26.7 * K.MeV, rate = LW / E1;
+      var Ls = L === 2 && kind === 'rate' ? R.pick([1, 1, 0.5, 2, 10, 100, 0.6, 1.5, 5, 15, 40, 90]) : rnd(R, 0.01, 1e4, 2), LW = Ls * K.Lsun, E1 = 26.7 * K.MeV, rate = LW / E1;
       var sub = kind === 'mass' ? R.pick(['mass', 'hyd']) : 'rate', ans = sub === 'rate' ? rate : sub === 'mass' ? LW / (K.c * K.c) : rate * 4 * K.mp;
       d = { L: Ls, sub: sub, ans: ans };
       p = { q: 'A star of $' + tx(Ls, 2) + '\\,L_\\odot$ is powered by the proton–proton chain, which releases $26.7$ MeV for each helium-4 nucleus made. ' + (sub === 'rate' ? 'How many helium nuclei does it make per second?' : sub === 'mass' ? 'How much mass does it turn into energy each second?' : 'How much hydrogen does it consume each second? (Use $1.67 \\times 10^{-27}$ kg per proton.)') + ' ($L_\\odot = 3.83 \\times 10^{26}$ W, $1\\text{ MeV} = 1.602 \\times 10^{-13}$ J' + (sub === 'mass' ? ', $c = 3.00 \\times 10^{8}$ m/s' : '') + '.)',
@@ -1083,28 +1097,28 @@
         steps: ['$kT = 8.617 \\times 10^{-5} \\times ' + tx(T, 2) + '$ eV.', '$= ' + tx(kT * 1000, 3) + '$ eV $= ' + tx(kT, 3) + '$ keV.'],
         hint: 'Multiply, then divide by 1000 to go from eV to keV.' };
     } else if (kind === 'barrier') {
-      var pr = R.pick(pairs), r = R.pick([1, 1.5, 2, 3, 4]), U = 1.44 * pr[1] * pr[2] / r;
+      var pr = R.pick(pairs), r = R.pick([1, 1.5, 2, 3, 4, 1.2, 2.5, 3.5]), U = 1.44 * pr[1] * pr[2] / r;
       d = { Z1: pr[1], Z2: pr[2], r: r, ans: U };
       p = { q: 'How high is the electric potential-energy barrier between ' + pr[0] + ' (charges $' + (pr[1] === 1 ? '' : pr[1]) + 'e$ and $' + (pr[2] === 1 ? '' : pr[2]) + 'e$) at a separation of $' + r + '$ fm, where the strong force takes over? ($ke^2 = 1.44$ MeV·fm.)',
         a: num(U), unit: 'MeV',
         steps: ['$U = \\dfrac{kZ_1Z_2e^2}{r} = \\dfrac{1.44\\text{ MeV·fm} \\times ' + (pr[1] * pr[2]) + '}{' + r + '\\text{ fm}}$.', '$U = ' + tx(U, 3) + '$ MeV.'],
         hint: 'Coulomb energy $kZ_1Z_2e^2/r$, with $ke^2 = 1.44$ MeV·fm.' };
     } else if (kind === 'ratio') {
-      var T2 = sig(R.real(10, 25, 1) * 1e6, 2), r2 = R.pick([1, 1.5, 2]), U2 = 1.44 / r2, ratio = U2 * 1e6 / (k * T2);
+      var T2 = sig(R.real(10, 25, 1) * 1e6, 2), r2 = R.pick([1, 1.5, 2, 1.2]), U2 = 1.44 / r2, ratio = U2 * 1e6 / (k * T2);
       d = { T: T2, r: r2, ans: ratio };
       p = { q: 'In a core at $' + tx(T2, 2) + '$ K, how many times larger is the Coulomb barrier between two protons at $' + r2 + '$ fm than the typical thermal energy $kT$? ($ke^2 = 1.44$ MeV·fm, $k = 8.617 \\times 10^{-5}$ eV/K.)',
         a: num(ratio),
         steps: ['Barrier: $U = 1.44/' + r2 + ' = ' + tx(U2, 3) + '$ MeV $= ' + tx(U2 * 1e6, 3) + '$ eV.', '$kT = 8.617 \\times 10^{-5} \\times ' + tx(T2, 2) + ' = ' + tx(k * T2, 3) + '$ eV.', 'Ratio: $' + tx(ratio, 3) + '$. Classically, almost no proton could ever get over.'],
         hint: 'Put both energies in eV, then divide.' };
     } else if (kind === 'Tclass') {
-      var r3 = R.pick([1, 1.5, 2]), avg = R.coin(), U3 = 1.44e6 / r3, Tn = avg ? 2 * U3 / (3 * k) : U3 / k;
+      var r3 = R.pick([1, 1.5, 2, 1.2]), avg = R.coin(), U3 = 1.44e6 / r3, Tn = avg ? 2 * U3 / (3 * k) : U3 / k;
       d = { r: r3, avg: avg, ans: Tn };
       p = { q: 'Without tunneling, two protons would need about the full Coulomb barrier at $' + r3 + '$ fm ($ke^2 = 1.44$ MeV·fm) to touch. At what temperature would ' + (avg ? 'the average kinetic energy $\\tfrac32kT$' : '$kT$') + ' equal that barrier? ($k = 8.617 \\times 10^{-5}$ eV/K.)',
         a: num(Tn), unit: 'K',
         steps: ['$U = 1.44/' + r3 + '$ MeV $= ' + tx(U3, 3) + '$ eV.', avg ? '$\\tfrac32kT = U$ gives $T = \\dfrac{2U}{3k}$.' : '$kT = U$ gives $T = U/k$.', '$T = ' + tx(Tn, 3) + '$ K, about a thousand times hotter than the Sun\'s core (15.7 million K).'],
         hint: 'Set the thermal energy equal to the barrier and solve for $T$.' };
     } else if (kind === 'gamow') {
-      var pr2 = R.pick(pairs.slice(0, 2)), mr = pr2[1] * pr2[2] === 1 ? 469.1 : 749.6, alpha = 1 / 137.0, EG = 2 * mr * M.pow(M.PI * alpha * pr2[1] * pr2[2], 2) * 1000, E = R.pick([1, 2, 5, 6, 10, 20]), P = M.exp(-M.sqrt(EG / E));
+      var pr2 = R.pick(pairs.slice(0, 2)), mr = pr2[1] * pr2[2] === 1 ? 469.1 : 749.6, alpha = 1 / 137.0, EG = 2 * mr * M.pow(M.PI * alpha * pr2[1] * pr2[2], 2) * 1000, E = R.int(1, 30), P = M.exp(-M.sqrt(EG / E));
       var askP = R.coin();
       d = { mr: mr, Z1: pr2[1], Z2: pr2[2], E: E, askP: askP, ans: askP ? P : EG };
       p = { q: 'The Gamow energy $E_G = 2m_rc^2(\\pi\\alpha Z_1Z_2)^2$ sets the tunneling probability, $P \\approx e^{-\\sqrt{E_G/E}}$. For ' + pr2[0] + ' (reduced mass $m_rc^2 = ' + td(mr, 1) + '$ MeV, $\\alpha = 1/137.0$), ' + (askP ? 'find $P$ at a collision energy of $E = ' + E + '$ keV.' : 'find $E_G$ in keV.'),
@@ -1127,14 +1141,14 @@
     var L = lv(ctx), kind = R.pick(by(ctx, ['N', 'N', 'concept'], ['time', 'ratio', 'N'], ['mfp', 'ell', 'time']));
     var id = 'astrophys.energy-transport', p, d;
     if (kind === 'N') {
-      var ell = R.pick([1, 2, 5, 0.5]), D = R.pick([10, 20, 100, 1000, 50]), unit = R.pick(['cm', 'm']), N = M.pow(D / ell, 2);
+      var ell = R.pick([1, 2, 5, 0.5, 0.6, 0.9, 2.5, 4]), D = R.pick([10, 20, 100, 1000, 50, 12, 40, 120, 400, 900]), unit = R.pick(['cm', 'm']), N = M.pow(D / ell, 2);
       d = { ell: ell, D: D, ans: N };
       p = { q: 'A photon random-walks in steps of $' + ell + '$ ' + unit + ' in random directions. About how many steps does it take to get $' + D + '$ ' + unit + ' from where it started?',
         a: num(N),
         steps: ['After $N$ random steps of length $\\ell$, the typical distance from the start is $\\sqrt{N}\\,\\ell$.', 'Set $\\sqrt{N}\\,\\ell = D$: $N = (D/\\ell)^2$.', '$N = (' + D + '/' + ell + ')^2 = ' + tx(N, 3) + '$ steps, not $' + tx(D / ell, 3) + '$.'],
         hint: 'Random steps add like the sides of a right triangle: distance grows as $\\sqrt{N}$.' };
     } else if (kind === 'time' || kind === 'ell') {
-      var ell2 = R.pick([0.0005, 0.001, 0.002, 0.005, 0.01]), Rr = K.Rsun, t = Rr * Rr / (ell2 * K.c) / K.yr;
+      var ell2 = R.pick([0.0005, 0.001, 0.002, 0.005, 0.01, 0.0006, 0.0009, 0.0025, 0.006, 0.009]), Rr = K.Rsun, t = Rr * Rr / (ell2 * K.c) / K.yr;
       if (kind === 'time') {
         d = { ell: ell2, ans: t };
         p = { q: 'If a photon in the Sun random-walks with a mean free path of $' + tx(ell2 * 1000, 2) + '$ mm all the way out, roughly how many years does it take to travel the Sun\'s radius? ($R_\\odot = 6.96 \\times 10^{8}$ m, $c = 3.00 \\times 10^{8}$ m/s, $1\\text{ yr} = 3.16 \\times 10^{7}$ s.)',
@@ -1150,7 +1164,7 @@
           hint: 'Rearrange $t = R^2/(\\ell c)$ for $\\ell$.' };
       }
     } else if (kind === 'ratio') {
-      var ell3 = R.pick([0.001, 0.01, 0.0001, 0.002]), Rr3 = R.pick([1, 2, 0.5]) * K.Rsun, ratio = Rr3 / ell3;
+      var ell3 = R.pick([0.001, 0.01, 0.0001, 0.002, 0.00012, 0.0005, 0.003, 0.009]), Rr3 = R.pick([1, 2, 0.5, 0.6, 0.8, 1.5]) * K.Rsun, ratio = Rr3 / ell3;
       d = { ell: ell3, R: Rr3 / K.Rsun, ans: ratio };
       p = { q: 'How many times longer does a random walk with mean free path $' + tx(ell3, 1) + '$ m take to cross a star of radius $' + td(Rr3 / K.Rsun, 1) + '\\,R_\\odot$ than a straight flight at the speed of light? ($R_\\odot = 6.96 \\times 10^{8}$ m.)',
         a: num(ratio),
@@ -1180,14 +1194,14 @@
     var L = lv(ctx), kind = R.pick(by(ctx, ['L', 'life', 'L'], ['M', 'ratio', 'life'], ['turnoff', 'exp', 'ratio']));
     var id = 'astrophys.mass-luminosity', p, d;
     if (kind === 'L') {
-      var Ms = L === 1 ? R.pick([2, 3, 4, 5, 10, 0.5, 0.8]) : R.real(0.5, 20, 1), Ls = M.pow(Ms, 3.5);
+      var Ms = L === 1 ? R.pick([2, 3, 4, 5, 10, 0.5, 0.8, 0.6, 0.9, 1.2, 2.5, 3.5, 7, 9]) : R.real(0.5, 20, 1), Ls = M.pow(Ms, 3.5);
       d = { M: Ms, ans: Ls };
       p = { q: 'Using $L/L_\\odot \\approx (M/M_\\odot)^{3.5}$, what is the luminosity of a $' + td(Ms, 1) + '\\,M_\\odot$ main-sequence star?',
         a: num(Ls), unit: 'L☉',
         steps: ['$L = ' + td(Ms, 1) + '^{3.5}\\,L_\\odot$.', '$' + td(Ms, 1) + '^{3.5} = ' + td(Ms, 1) + '^3 \\times \\sqrt{' + td(Ms, 1) + '} = ' + tx(Ls, 3) + '$.', '$L \\approx ' + tx(Ls, 3) + '\\,L_\\odot$' + (Ms > 1 ? ', far more than ' + td(Ms, 1) + ' times the Sun.' : '.')],
         hint: 'Raise the mass ratio to the power 3.5.' };
     } else if (kind === 'life') {
-      var M2 = L === 1 ? R.pick([2, 3, 5, 10, 0.5, 0.8, 1.5]) : R.real(0.6, 25, 1), t = 10 * M.pow(M2, -2.5);
+      var M2 = L === 1 ? R.pick([2, 3, 5, 10, 0.5, 0.8, 1.5, 0.6, 0.9, 1.2, 3.5, 4, 7, 9]) : R.real(0.6, 25, 1), t = 10 * M.pow(M2, -2.5);
       d = { M: M2, ans: t };
       p = { q: 'A star lives on the main sequence for about $t \\approx 10\\text{ Gyr} \\times (M/M_\\odot)^{-2.5}$. How long does a $' + td(M2, 1) + '\\,M_\\odot$ star last?',
         a: num(t), unit: 'Gyr',
@@ -1201,14 +1215,14 @@
         steps: ['$M/M_\\odot = (L/L_\\odot)^{1/3.5}$.', '$= (' + tx(L3, 2) + ')^{0.286}$.', '$M \\approx ' + tx(M3, 3) + '\\,M_\\odot$.'],
         hint: 'Take the 3.5th root.' };
     } else if (kind === 'ratio') {
-      var a = R.pick([0.5, 1, 2, 3]), b = a * R.pick([2, 3, 4, 5, 10]), r = M.pow(b / a, 2.5);
+      var a = R.pick([0.5, 1, 2, 3, 0.6, 0.8, 1.2, 2.5]), b = a * R.pick([2, 3, 4, 5, 10, 6, 7, 8, 9]), r = M.pow(b / a, 2.5);
       d = { a: a, b: b, ans: r };
       p = { q: 'How many times longer does a $' + td(a, 1) + '\\,M_\\odot$ star stay on the main sequence than a $' + td(b, 1) + '\\,M_\\odot$ star? (Use $t \\propto M^{-2.5}$.)',
         a: num(r),
         steps: ['$t_1/t_2 = (M_1/M_2)^{-2.5} = (M_2/M_1)^{2.5}$.', '$= (' + td(b / a, 1) + ')^{2.5}$.', '$= ' + tx(r, 3) + '$: the lighter star wins by a wide margin.'],
         hint: 'Write the ratio and flip the negative power.' };
     } else if (kind === 'turnoff') {
-      var age = R.pick([0.1, 0.5, 1, 2, 4, 6, 12, 0.05, 0.02]), Mt = M.pow(age / 10, -0.4);
+      var age = R.pick([0.1, 0.5, 1, 2, 4, 6, 12, 0.05, 0.02, 0.025, 0.06, 0.09, 0.2, 0.4, 0.9, 2.5, 5, 10]), Mt = M.pow(age / 10, -0.4);
       d = { age: age, ans: Mt };
       p = { q: 'A star cluster is $' + tx(age, 2) + '$ billion years old. Using $t \\approx 10\\text{ Gyr}\\,(M/M_\\odot)^{-2.5}$, what is the mass of the stars just leaving the main sequence now (the turnoff mass)?',
         a: num(Mt), unit: 'M☉',
@@ -1272,7 +1286,7 @@
     var L = lv(ctx), kind = R.pick(by(ctx, ['rate', 'time', 'concept', 'rate'], ['flux', 'thumb', 'concept', 'rate'], ['thumb', 'flux', 'concept', 'time']));
     var id = 'astrophys.solar-neutrinos', p, d, E1 = 26.7 * K.MeV;
     if (kind === 'rate') {
-      var Ls = L === 1 ? R.pick([0.5, 2, 10, 4, 0.1]) : rnd(R, 0.01, 1e5, 2), rate = 2 * Ls * K.Lsun / E1;
+      var Ls = L === 1 ? R.pick([0.5, 2, 10, 4, 0.1, 0.12, 0.35, 0.9, 3.5, 9]) : rnd(R, 0.01, 1e5, 2), rate = 2 * Ls * K.Lsun / E1;
       d = { L: Ls, ans: rate };
       p = { q: 'Each completed proton–proton chain releases $26.7$ MeV and two neutrinos. How many neutrinos per second does a star of $' + tx(Ls, 2) + '\\,L_\\odot$ give off? ($L_\\odot = 3.83 \\times 10^{26}$ W, $1\\text{ MeV} = 1.602 \\times 10^{-13}$ J.)',
         a: num(rate), unit: 'per second',
@@ -1280,7 +1294,7 @@
         hint: 'Count reactions per second, then neutrinos per reaction.' };
       delete p.unit;
     } else if (kind === 'flux' || kind === 'thumb') {
-      var rateS = 2 * K.Lsun / E1, F = rateS / (4 * M.PI * K.AU * K.AU), A = R.pick([1, 2, 1.5, 0.5, 3, 4, 5, 10]), dAU = kind === 'flux' ? R.pick([1, 5.2, 0.39, 1.52, 9.58, 30.1, 0.72, 19.2]) : 1, Fd = F / (dAU * dAU);
+      var rateS = 2 * K.Lsun / E1, F = rateS / (4 * M.PI * K.AU * K.AU), A = R.pick([1, 2, 1.5, 0.5, 3, 4, 5, 10, 0.6, 0.7, 0.9, 1.2, 3.5, 6, 8, 9]), dAU = kind === 'flux' ? R.pick([1, 5.2, 0.39, 1.52, 9.58, 30.1, 0.72, 19.2]) : 1, Fd = F / (dAU * dAU);
       var ans = kind === 'flux' ? Fd : F * 1e-4 * A;
       d = { d: dAU, A: kind === 'thumb' ? A : undefined, ans: ans };
       p = { q: kind === 'flux' ? 'The Sun gives off about $' + tx(rateS, 3) + '$ neutrinos per second. How many cross each square meter per second at $' + dAU + '$ AU from the Sun? ($1\\text{ AU} = 1.496 \\times 10^{11}$ m.)' : 'The Sun gives off about $' + tx(rateS, 3) + '$ neutrinos per second. How many pass through a $' + A + '$ cm² patch of your skin (facing the Sun) each second? ($1\\text{ AU} = 1.496 \\times 10^{11}$ m.)',
@@ -1317,21 +1331,21 @@
     var L = lv(ctx), kind = R.pick(by(ctx, ['direction', 'order', 'radius'], ['radius', 'turnoff', 'direction'], ['giantR', 'young', 'turnoff']));
     var id = 'astrophys.evolution-tracks', p, d;
     if (kind === 'radius') {
-      var L1 = R.pick([1, 2, 5, 10, 50]), T1 = sig(R.int(4500, 9000), 2), f = R.pick([3, 10, 20, 50, 100]), L2 = L1 * f, T2 = sig(T1 * R.real(0.5, 0.9, 2), 2), rr = M.sqrt(L2 / L1) * M.pow(T1 / T2, 2);
+      var L1 = R.pick([1, 2, 5, 10, 50, 1.2, 3.5, 8, 20, 40]), T1 = sig(R.int(4500, 9000), 2), f = R.pick([3, 10, 20, 50, 100, 3.5, 7, 15, 40, 90]), L2 = L1 * f, T2 = sig(T1 * R.real(0.5, 0.9, 2), 2), rr = M.sqrt(L2 / L1) * M.pow(T1 / T2, 2);
       d = { L1: L1, T1: T1, L2: L2, T2: T2, ans: rr };
       p = { q: 'A star leaves the main sequence at $L = ' + tx(L1, 2) + '\\,L_\\odot$, $T = ' + tx(T1, 2) + '$ K and later sits at $L = ' + tx(L2, 2) + '\\,L_\\odot$, $T = ' + tx(T2, 2) + '$ K. By what factor has its radius grown?',
         a: num(rr),
         steps: ['$L \\propto R^2T^4$, so $R_2/R_1 = \\sqrt{L_2/L_1}\\,(T_1/T_2)^2$.', '$\\sqrt{' + tx(L2 / L1, 3) + '} = ' + tx(M.sqrt(L2 / L1), 3) + '$; $(' + tx(T1, 2) + '/' + tx(T2, 2) + ')^2 = ' + tx(M.pow(T1 / T2, 2), 3) + '$.', '$R_2/R_1 = ' + tx(rr, 3) + '$: moving up and to the right on the H–R diagram means swelling.'],
         hint: 'Use $L \\propto R^2T^4$ for both points and divide.' };
     } else if (kind === 'giantR') {
-      var Lg = R.pick([300, 1000, 2000, 2500, 3000]), Tg = sig(R.int(2900, 4000), 2), Rg = M.sqrt(Lg) * M.pow(5772 / Tg, 2), au = Rg * 6.96e8 / 1.496e11;
+      var Lg = R.pick([300, 1000, 2000, 2500, 3000, 350, 500, 700, 900, 1500]), Tg = sig(R.int(2900, 4000), 2), Rg = M.sqrt(Lg) * M.pow(5772 / Tg, 2), au = Rg * 6.96e8 / 1.496e11;
       d = { L: Lg, T: Tg, ans: au };
       p = { q: 'Near the top of its red-giant branch, a Sun-like star reaches about $L = ' + tx(Lg, 2) + '\\,L_\\odot$ with $T = ' + tx(Tg, 2) + '$ K. What is its radius in AU? ($T_\\odot = 5772$ K, $R_\\odot = 6.96 \\times 10^{8}$ m, $1\\text{ AU} = 1.496 \\times 10^{11}$ m.)',
         a: num(au), unit: 'AU',
         steps: ['$R/R_\\odot = \\sqrt{L/L_\\odot}\\,(T_\\odot/T)^2 = \\sqrt{' + tx(Lg, 2) + '} \\times (5772/' + tx(Tg, 2) + ')^2 = ' + tx(Rg, 3) + '$.', '$R = ' + tx(Rg, 3) + ' \\times 6.96 \\times 10^{8}\\text{ m} = ' + tx(Rg * 6.96e8, 3) + '$ m.', '$R = ' + tx(au, 3) + '$ AU, ' + (au > 0.72 ? 'past the orbit of Venus (0.72 AU).' : au > 0.39 ? 'past the orbit of Mercury (0.39 AU).' : 'inside the orbit of Mercury (0.39 AU).')],
         hint: 'Find $R/R_\\odot$ from $L$ and $T$, then convert.' };
     } else if (kind === 'turnoff') {
-      var Lt = R.pick([1, 3, 10, 30, 100, 300, 1000]) * R.pick([1, 2]), Mt = M.pow(Lt, 1 / 3.5), age = 10 * M.pow(Mt, -2.5);
+      var Lt = R.pick([1, 3, 10, 30, 100, 300, 1000, 1.2, 4, 12, 40, 90, 400, 900]) * R.pick([1, 2]), Mt = M.pow(Lt, 1 / 3.5), age = 10 * M.pow(Mt, -2.5);
       d = { L: Lt, ans: age };
       p = { q: 'The brightest main-sequence stars left in a star cluster have $L \\approx ' + tx(Lt, 2) + '\\,L_\\odot$. Using $L \\propto M^{3.5}$ and lifetime $10\\text{ Gyr} \\times (M/M_\\odot)^{-2.5}$, estimate the cluster\'s age in billions of years.',
         a: num(age), unit: 'Gyr',
@@ -1423,21 +1437,21 @@
     var L = lv(ctx), kind = R.pick(by(ctx, ['scale', 'density', 'scale'], ['density', 'g', 'volume'], ['gamma', 'g', 'scale']));
     var id = 'astrophys.white-dwarf-mass-radius', p, d;
     if (kind === 'scale') {
-      var M1 = R.pick([0.4, 0.5, 0.6, 0.7]), R1 = sig(8700 * M.pow(M1 / 0.6, -1 / 3), 2), M2 = R.pick([0.2, 0.3, 0.9, 1.0, 1.2]), R2 = R1 * M.pow(M2 / M1, -1 / 3);
+      var M1 = R.pick([0.4, 0.5, 0.6, 0.7]), R1 = sig(8700 * M.pow(M1 / 0.6, -1 / 3), 2), M2 = R.pick([0.2, 0.3, 0.9, 1.0, 1.2, 0.25, 0.4, 0.5, 0.6, 0.8]), R2 = R1 * M.pow(M2 / M1, -1 / 3);
       d = { M1: M1, R1: R1, M2: M2, ans: R2 };
       p = { q: 'A $' + td(M1, 1) + '\\,M_\\odot$ white dwarf has a radius of $' + tx(R1, 2) + '$ km. Using $R \\propto M^{-1/3}$, estimate the radius of a $' + td(M2, 1) + '\\,M_\\odot$ white dwarf.',
         a: num(R2), unit: 'km',
         steps: ['$R_2 = R_1(M_2/M_1)^{-1/3}$.', '$(' + td(M2, 1) + '/' + td(M1, 1) + ')^{-1/3} = ' + td(M.pow(M2 / M1, -1 / 3), 3) + '$.', '$R_2 = ' + tx(R1, 2) + ' \\times ' + td(M.pow(M2 / M1, -1 / 3), 3) + ' = ' + tx(R2, 3) + '$ km: ' + (M2 > M1 ? 'heavier, so smaller.' : 'lighter, so larger.') + (M2 >= 1 ? ' (Near the Chandrasekhar limit real white dwarfs shrink even faster than this.)' : '')],
         hint: 'More mass, smaller radius: $R \\propto M^{-1/3}$.' };
     } else if (kind === 'density') {
-      var Mw = R.pick([0.5, 0.6, 0.7, 1.0, 0.8]), Rk = sig(8700 * M.pow(Mw / 0.6, -1 / 3) * R.real(0.9, 1.1, 2), 2), rho = Mw * K.Msun / (4 / 3 * M.PI * cube(Rk * 1e3)), tsp = R.coin();
+      var Mw = R.pick([0.5, 0.6, 0.7, 1.0, 0.8, 0.9]), Rk = sig(8700 * M.pow(Mw / 0.6, -1 / 3) * R.real(0.9, 1.1, 2), 2), rho = Mw * K.Msun / (4 / 3 * M.PI * cube(Rk * 1e3)), tsp = R.coin();
       d = { M: Mw, R: Rk, tsp: tsp, ans: tsp ? rho * 5e-6 : rho };
       p = { q: 'A white dwarf has $' + td(Mw, 1) + '\\,M_\\odot$ packed into a radius of $' + tx(Rk, 2) + '$ km. ' + (tsp ? 'What would a teaspoon (5 cm³) of its average matter weigh in kilograms?' : 'What is its mean density?') + ' ($M_\\odot = 1.99 \\times 10^{30}$ kg.)',
         a: num(tsp ? rho * 5e-6 : rho), unit: tsp ? 'kg' : 'kg/m³',
         steps: ['Volume: $\\tfrac43\\pi R^3 = \\tfrac43\\pi(' + tx(Rk * 1e3, 2) + '\\text{ m})^3 = ' + tx(4 / 3 * M.PI * cube(Rk * 1e3), 3) + '$ m³.', '$\\bar\\rho = ' + tx(Mw * K.Msun, 3) + '/' + tx(4 / 3 * M.PI * cube(Rk * 1e3), 3) + ' = ' + tx(rho, 3) + '$ kg/m³.'].concat(tsp ? ['A teaspoon is $5 \\times 10^{-6}$ m³: $' + tx(rho * 5e-6, 3) + '$ kg, about the mass of a car or more.'] : []),
         hint: 'Mass over the volume of a sphere, with the radius in meters.' };
     } else if (kind === 'g') {
-      var Mg = R.pick([0.5, 0.6, 0.8, 1.0]), Rg = sig(8700 * M.pow(Mg / 0.6, -1 / 3), 2), esc = R.coin(), gs = K.G * Mg * K.Msun / M.pow(Rg * 1e3, 2), ve = M.sqrt(2 * K.G * Mg * K.Msun / (Rg * 1e3)) / 1e3;
+      var Mg = R.pick([0.5, 0.6, 0.8, 1.0, 0.7, 0.9]), Rg = sig(8700 * M.pow(Mg / 0.6, -1 / 3), 2), esc = R.coin(), gs = K.G * Mg * K.Msun / M.pow(Rg * 1e3, 2), ve = M.sqrt(2 * K.G * Mg * K.Msun / (Rg * 1e3)) / 1e3;
       d = { M: Mg, R: Rg, esc: esc, ans: esc ? ve : gs };
       p = { q: 'Find the ' + (esc ? 'escape speed from' : 'surface gravity of') + ' a white dwarf with $' + td(Mg, 1) + '\\,M_\\odot$ and radius $' + tx(Rg, 2) + '$ km. ($G = 6.67 \\times 10^{-11}$, $M_\\odot = 1.99 \\times 10^{30}$ kg.)',
         a: num(esc ? ve : gs), unit: esc ? 'km/s' : 'm/s²',
@@ -1445,7 +1459,7 @@
           : ['$g = GM/R^2$.', '$= 6.67 \\times 10^{-11} \\times ' + tx(Mg * K.Msun, 3) + '/(' + tx(Rg * 1e3, 2) + ')^2$.', '$g = ' + tx(gs, 3) + '$ m/s², hundreds of thousands of times Earth\'s.'],
         hint: esc ? 'Use $\\sqrt{2GM/R}$ with $R$ in meters.' : 'Use $GM/R^2$ with $R$ in meters.' };
     } else if (kind === 'volume') {
-      var a = R.pick([0.4, 0.5, 0.6]), b = R.pick([0.8, 1.0, 1.2]), vr = a / b;
+      var a = R.pick([0.4, 0.5, 0.6]), b = R.pick([0.8, 1.0, 1.2, 0.9]), vr = a / b;
       d = { a: a, b: b, ans: vr };
       p = { q: 'Since $R \\propto M^{-1/3}$, the product $MR^3$ is the same for all (nonrelativistic) white dwarfs. What is the ratio of the volume of a $' + td(b, 1) + '\\,M_\\odot$ white dwarf to that of a $' + td(a, 1) + '\\,M_\\odot$ one?',
         a: num(vr),
@@ -1468,7 +1482,7 @@
     var L = lv(ctx), kind = R.pick(by(ctx, ['mue', 'stable', 'mue'], ['estimate', 'mue', 'stable'], ['rel', 'pFratio', 'estimate']));
     var id = 'astrophys.chandrasekhar-limit', p, d;
     if (kind === 'mue') {
-      var mix = L > 1 && R.coin(), comp = R.pick([['helium-4', 2, 4, 2], ['carbon-12', 2, 12, 6], ['oxygen-16', 2, 16, 8], ['iron-56', 56 / 26, 56, 26], ['neon-20', 2, 20, 10]]), X = R.pick([0.1, 0.2, 0.3, 0.5, 0.7, 0.4]);
+      var mix = L > 1 && R.coin(), comp = R.pick([['helium-4', 2, 4, 2], ['carbon-12', 2, 12, 6], ['oxygen-16', 2, 16, 8], ['iron-56', 56 / 26, 56, 26], ['neon-20', 2, 20, 10]]), X = R.pick([0.1, 0.2, 0.3, 0.5, 0.7, 0.4, 0.12, 0.15, 0.25, 0.35, 0.6]);
       var mue = mix ? 2 / (1 + X) : comp[2] / comp[3], Mch = 5.83 / (mue * mue);
       d = { A: mix ? undefined : comp[2], Z: mix ? undefined : comp[3], X: mix ? X : undefined, ans: Mch };
       if (mix) p = { q: 'The Chandrasekhar mass is $M_{\\text{Ch}} \\approx 5.83\\,M_\\odot/\\mu_e^2$, where $\\mu_e$ is the number of nucleons per electron. For fully ionized matter with hydrogen mass fraction $X = ' + X + '$ (the rest helium and heavier elements, each with about two nucleons per electron), $\\mu_e = 2/(1 + X)$. Find $M_{\\text{Ch}}$.',
@@ -1488,7 +1502,7 @@
         steps: ['As mass grows, a white dwarf shrinks and its electrons are squeezed to relativistic speeds; their pressure then rises only as $\\rho^{4/3}$, no faster than gravity\'s demand.', 'Above the Chandrasekhar mass, about $1.4\\,M_\\odot$ for $\\mu_e = 2$, no radius gives a balance: ' + (ok ? 'this one is below it, so it is stable.' : 'this one is above it, so it cannot exist as a white dwarf.')],
         hint: 'Compare the mass with the Chandrasekhar limit.' };
     } else if (kind === 'estimate') {
-      var mue2 = R.pick([2, 2, 2.15, 1]), est = M.pow(3.16e-26 / K.G, 1.5) / M.pow(mue2 * K.mp, 2) / K.Msun;
+      var mue2 = R.pick([2, 2, 2.15, 1, 1.5, 1.2, 1.8, 1.67]), est = M.pow(3.16e-26 / K.G, 1.5) / M.pow(mue2 * K.mp, 2) / K.Msun;
       d = { mue: mue2, ans: est };
       p = { q: 'A dimensional estimate of the maximum mass of a body held up by relativistic degenerate electrons is $M \\sim \\left(\\dfrac{\\hbar c}{G}\\right)^{3/2}\\dfrac{1}{(\\mu_em_p)^2}$. Evaluate it for $\\mu_e = ' + mue2 + '$ in solar masses. ($\\hbar c = 3.16 \\times 10^{-26}$ J·m, $G = 6.67 \\times 10^{-11}$, $m_p = 1.67 \\times 10^{-27}$ kg, $M_\\odot = 1.99 \\times 10^{30}$ kg.)',
         a: num(est), unit: 'M☉',
@@ -1496,7 +1510,14 @@
         hint: 'Compute $(\\hbar c/G)^{3/2}$ first; it has units of kg³.' };
     } else { // rel or pFratio
       var mue3 = 2, nRel = M.pow(ME * K.c / HB, 3) / (3 * M.PI * M.PI), rhoRel = mue3 * K.mp * nRel;
-      if (kind === 'rel') {
+      if (kind === 'rel' && R.chance(0.7)) {
+        var fR = R.pick([0.2, 0.25, 0.5, 2, 3, 4, 5, 10]), cmp = R.pick([['carbon–oxygen', 2, '2'], ['helium', 2, '2'], ['iron', 56 / 26, '2.15']]), nF = M.pow(fR * ME * K.c / HB, 3) / (3 * M.PI * M.PI), rhoF = cmp[1] * K.mp * nF;
+        d = { f: fR, mue: cmp[1], ans: rhoF };
+        p = { q: 'At what density do electrons in ' + cmp[0] + ' white-dwarf matter ($\\mu_e = ' + cmp[2] + '$) have Fermi momentum $p_F = \\hbar(3\\pi^2n_e)^{1/3}$ equal to $' + fR + 'm_ec$? ($\\hbar = 1.055 \\times 10^{-34}$ J·s, $m_e = 9.11 \\times 10^{-31}$ kg, $c = 3.00 \\times 10^{8}$ m/s, $m_p = 1.67 \\times 10^{-27}$ kg.)',
+          a: num(rhoF), unit: 'kg/m³',
+          steps: ['$p_F = ' + fR + 'm_ec$ means $n_e = \\dfrac{1}{3\\pi^2}\\left(\\dfrac{' + fR + 'm_ec}{\\hbar}\\right)^3$.', '$' + fR + 'm_ec/\\hbar = ' + tx(fR * ME * K.c / HB, 3) + '$ m⁻¹, so $n_e = ' + tx(nF, 3) + '$ m⁻³.', '$\\rho = \\mu_em_pn_e = ' + cmp[2] + ' \\times 1.67 \\times 10^{-27} \\times ' + tx(nF, 3) + ' = ' + tx(rhoF, 3) + '$ kg/m³.' + (fR > 1 ? ' The electrons there are relativistic.' : ' The electrons there are not yet relativistic.')],
+          hint: 'Solve $\\hbar(3\\pi^2n_e)^{1/3} = p_F$ for $n_e$, then $\\rho = \\mu_em_pn_e$.' };
+      } else if (kind === 'rel') {
         d = { ans: rhoRel };
         p = { q: 'At what density do electrons in carbon–oxygen matter ($\\mu_e = 2$) have Fermi momentum $p_F = \\hbar(3\\pi^2n_e)^{1/3}$ equal to $m_ec$, the point where relativity starts to soften their pressure? ($\\hbar = 1.055 \\times 10^{-34}$ J·s, $m_e = 9.11 \\times 10^{-31}$ kg, $c = 3.00 \\times 10^{8}$ m/s, $m_p = 1.67 \\times 10^{-27}$ kg.)',
           a: num(rhoRel), unit: 'kg/m³',
@@ -1561,7 +1582,7 @@
     var L = lv(ctx), kind = R.pick(by(ctx, ['spin', 'B', 'spin'], ['density', 'g', 'B'], ['breakup', 'rhomin', 'density']));
     var id = 'astrophys.neutron-star-physics', p, d, GV = '$G = 6.67 \\times 10^{-11}$, $M_\\odot = 1.99 \\times 10^{30}$ kg';
     if (kind === 'spin') {
-      var Ri = R.pick([3000, 5000, 6000, 8000]), Pi = R.pick([10, 20, 30, 60]) * 60, Rf = R.pick([10, 12, 15]), Pf = Pi * M.pow(Rf / Ri, 2);
+      var Ri = R.pick([3000, 5000, 6000, 8000, 3500, 4000, 7000]), Pi = R.pick([10, 20, 30, 60, 12, 25, 35, 50]) * 60, Rf = R.pick([10, 12, 15, 11, 13, 14]), Pf = Pi * M.pow(Rf / Ri, 2);
       d = { Ri: Ri, Pi: Pi, Rf: Rf, ans: Pf * 1000 };
       p = { q: 'A stellar core of radius $' + tx(Ri, 2) + '$ km turns once every $' + Pi / 60 + '$ minutes. It collapses to a neutron star of radius $' + Rf + '$ km. If it keeps its angular momentum and its shape of mass distribution, what is the new rotation period in milliseconds?',
         a: num(Pf * 1000), unit: 'ms',
@@ -1575,14 +1596,14 @@
         steps: ['Flux $\\Phi \\propto BR^2$ is constant.', '$B_f = B_i(R_i/R_f)^2 = ' + tx(Bi, 1) + ' \\times (' + tx(Ri2, 1) + '/' + Rf2 + ')^2$.', '$B_f = ' + tx(Bf, 3) + '$ T' + (Bf > 1e6 ? ', comparable to the $10^{8}$ T fields measured in pulsars.' : '.')],
         hint: 'Field times area stays the same.' };
     } else if (kind === 'density') {
-      var Mn = R.pick([1.2, 1.4, 1.6, 2.0]), Rn = R.pick([10, 11, 12, 13]), rho = Mn * K.Msun / (4 / 3 * M.PI * cube(Rn * 1e3)), tsp = R.coin();
+      var Mn = R.pick([1.2, 1.4, 1.6, 2.0, 1.5]), Rn = R.pick([10, 11, 12, 13]), rho = Mn * K.Msun / (4 / 3 * M.PI * cube(Rn * 1e3)), tsp = R.coin();
       d = { M: Mn, R: Rn, tsp: tsp, ans: tsp ? rho * 5e-6 : rho };
       p = { q: 'A neutron star has $' + td(Mn, 1) + '\\,M_\\odot$ within a radius of $' + Rn + '$ km. ' + (tsp ? 'What would a teaspoon (5 cm³) of its average matter weigh, in kilograms?' : 'What is its mean density?') + ' ($M_\\odot = 1.99 \\times 10^{30}$ kg.)',
         a: num(tsp ? rho * 5e-6 : rho), unit: tsp ? 'kg' : 'kg/m³',
         steps: ['Volume: $\\tfrac43\\pi(' + tx(Rn * 1e3, 2) + ')^3 = ' + tx(4 / 3 * M.PI * cube(Rn * 1e3), 3) + '$ m³.', '$\\bar\\rho = ' + tx(Mn * K.Msun, 3) + '/' + tx(4 / 3 * M.PI * cube(Rn * 1e3), 3) + ' = ' + tx(rho, 3) + '$ kg/m³, about the density of an atomic nucleus.'].concat(tsp ? ['Times $5 \\times 10^{-6}$ m³: $' + tx(rho * 5e-6, 3) + '$ kg, roughly a billion tonnes or more.'] : []),
         hint: 'Mass over volume, with the radius in meters.' };
     } else if (kind === 'g') {
-      var Mn2 = R.pick([1.4, 1.4, 1.6, 2.0]), Rn2 = R.pick([10, 12, 13]), esc = R.coin(), gs = K.G * Mn2 * K.Msun / M.pow(Rn2 * 1e3, 2), ve = M.sqrt(2 * K.G * Mn2 * K.Msun / (Rn2 * 1e3)) / K.c;
+      var Mn2 = R.pick([1.4, 1.4, 1.6, 2.0, 1.5]), Rn2 = R.pick([10, 12, 13, 11]), esc = R.coin(), gs = K.G * Mn2 * K.Msun / M.pow(Rn2 * 1e3, 2), ve = M.sqrt(2 * K.G * Mn2 * K.Msun / (Rn2 * 1e3)) / K.c;
       d = { M: Mn2, R: Rn2, esc: esc, ans: esc ? ve : gs };
       p = { q: esc ? 'Find the escape speed from the surface of a $' + td(Mn2, 1) + '\\,M_\\odot$, $' + Rn2 + '$ km neutron star, as a fraction of $c$. (' + GV + ', $c = 3.00 \\times 10^{8}$ m/s.)' : 'Find the surface gravity of a $' + td(Mn2, 1) + '\\,M_\\odot$, $' + Rn2 + '$ km neutron star. (' + GV + '.)',
         a: num(esc ? ve : gs), unit: esc ? undefined : 'm/s²',
@@ -1590,7 +1611,7 @@
         hint: esc ? 'Compute $\\sqrt{2GM/R}$ and divide by $c$.' : 'Use $GM/R^2$ in SI units.' };
       if (esc) delete p.unit;
     } else if (kind === 'breakup') {
-      var Mn3 = R.pick([1.4, 1.6, 2.0]), Rn3 = R.pick([10, 12, 14]), Pmin = 2 * M.PI * M.sqrt(cube(Rn3 * 1e3) / (K.G * Mn3 * K.Msun));
+      var Mn3 = R.pick([1.4, 1.6, 2.0, 1.5]), Rn3 = R.pick([10, 12, 14, 11, 13]), Pmin = 2 * M.PI * M.sqrt(cube(Rn3 * 1e3) / (K.G * Mn3 * K.Msun));
       d = { M: Mn3, R: Rn3, ans: Pmin * 1000 };
       p = { q: 'A spinning star flies apart if its equator moves faster than orbital speed. What is the shortest rotation period of a $' + td(Mn3, 1) + '\\,M_\\odot$, $' + Rn3 + '$ km neutron star, in milliseconds? (' + GV + '.)',
         a: num(Pmin * 1000), unit: 'ms',
@@ -1714,7 +1735,7 @@
         hint: 'Climbing out of a potential well $GM/R$ costs a fraction $GM/(Rc^2)$ of a photon\'s energy.' };
       if (!askv) delete p.unit;
     } else if (kind === 'rate') {
-      var n = R.real(1.1, 10, 1), tau = R.pick([1, 10, 60, 2, 5, 30]), rate = M.sqrt(1 - 1 / n), tfar = tau / rate;
+      var n = R.real(1.1, 10, 1), tau = R.pick([1, 10, 60, 2, 5, 30, 1.2, 3, 6, 12, 25, 50]), rate = M.sqrt(1 - 1 / n), tfar = tau / rate;
       d = { n: n, tau: tau, ans: tfar };
       p = { q: 'A clock hovers at $r = ' + n + 'r_s$ outside a black hole and ticks off $' + tau + '$ ' + (tau === 1 ? 'hour' : tau >= 30 ? 'minutes' : 'hours') + '. How much time passes for a distant observer?',
         a: num(tfar), unit: tau >= 30 ? 'min' : 'h',
@@ -1757,7 +1778,7 @@
         steps: ['$a(r) = GM/r^2$, so $da/dr = -2GM/r^3$ and, for $\\Delta r \\ll r$, $|\\Delta a| \\approx 2GM\\,\\Delta r/r^3$.', '$2GM\\Delta r = ' + tx(2 * K.G * c[1] * c[4], 3) + '$; $r^3 = ' + tx(cube(c[2]), 3) + '$.', '$\\Delta a = ' + tx(da, 3) + '$ m/s².'],
         hint: 'Use the linear approximation of $GM/r^2$.' };
     } else if (kind === 'scale') {
-      var k = R.pick([2, 3, 0.5, 10, 4]), tr = 1 / cube(k), gr = 1 / (k * k), askG = R.coin();
+      var k = R.pick([2, 3, 0.5, 10, 4, 0.6, 0.9, 1.5, 6, 9]), tr = 1 / cube(k), gr = 1 / (k * k), askG = R.coin();
       d = { f: k, askG: askG, ans: askG ? tr / gr : tr };
       p = { q: 'A moon is moved to $' + td(k, 1) + '$ times its distance from its planet. ' + (askG ? 'By what factor does the ratio (tidal force on it)/(gravitational force on it) change?' : 'By what factor does the tidal stretching force on it change?'),
         a: num(askG ? tr / gr : tr),
@@ -1771,7 +1792,7 @@
         steps: ['Tidal acceleration $\\propto M/r^3$, so the ratio is $\\dfrac{M_\\odot}{M_{\\text{Moon}}}\\left(\\dfrac{r_{\\text{Moon}}}{r_\\odot}\\right)^3$.', '$M_\\odot/M_{\\text{Moon}} = ' + tx(1.99e30 / 7.35e22, 3) + '$; $(r_{\\text{Moon}}/r_\\odot)^3 = ' + tx(cube(rM / rS), 3) + '$.', 'Ratio $= ' + tx(ratio, 3) + '$: the Sun pulls Earth 180 times harder than the Moon does, yet raises smaller tides.'],
         hint: 'Tides depend on $M/r^3$, not $M/r^2$.' };
     } else if (kind === 'roche') {
-      var pl = R.pick([['Saturn', 6.03e4, 687], ['Jupiter', 7.15e4, 1330], ['Earth', 6.37e3, 5510], ['Neptune', 2.48e4, 1640]]), rhom = R.pick([500, 900, 1000, 2000, 3000]), dR = pl[1] * M.pow(2 * pl[2] / rhom, 1 / 3);
+      var pl = R.pick([['Saturn', 6.03e4, 687], ['Jupiter', 7.15e4, 1330], ['Earth', 6.37e3, 5510], ['Neptune', 2.48e4, 1640]]), rhom = R.pick([500, 900, 1000, 2000, 3000, 600, 700, 800, 1500, 2500]), dR = pl[1] * M.pow(2 * pl[2] / rhom, 1 / 3);
       d = { Rp: pl[1], rhoP: pl[2], rhom: rhom, ans: dR };
       p = { q: 'A small rigid moon of density $' + tx(rhom, 2) + '$ kg/m³ approaches ' + pl[0] + ' (radius $' + tx(pl[1], 3) + '$ km, density $' + tx(pl[2], 3) + '$ kg/m³). Loose rocks on its surface are pulled off when the tidal pull beats the moon\'s own gravity, at $d = R_P\\left(2\\rho_P/\\rho_m\\right)^{1/3}$. Find $d$ in km.',
         a: num(dR), unit: 'km',
@@ -1785,7 +1806,7 @@
         steps: ['$r_s = ' + tx(rs, 3) + '$ m.', '$\\Delta a = 2GM(2\\text{ m})/r_s^3 = ' + tx(2 * K.G * Mb * K.Msun * 2, 3) + '/' + tx(cube(rs), 3) + '$.', '$\\Delta a = ' + tx(da2, 3) + '$ m/s², ' + (da2 > 1e3 ? 'enough to stretch her apart ("spaghettification") before she even reaches the horizon.' : 'gentle: at a giant black hole she would cross the horizon without feeling anything unusual.')],
         hint: 'Find $r_s$ first; then $\\Delta a \\propto M/r_s^3 \\propto 1/M^2$.' };
     } else { // radius
-      var Mb2 = R.int(3, 60), amax = R.pick([10, 100, 1000, 50, 500]) * 9.8, dr2 = 2, rr = M.pow(2 * K.G * Mb2 * K.Msun * dr2 / amax, 1 / 3), rs2 = 2 * K.G * Mb2 * K.Msun / (K.c * K.c);
+      var Mb2 = R.int(3, 60), amax = R.pick([10, 100, 1000, 50, 500, 12, 35, 90, 350, 900]) * 9.8, dr2 = 2, rr = M.pow(2 * K.G * Mb2 * K.Msun * dr2 / amax, 1 / 3), rs2 = 2 * K.G * Mb2 * K.Msun / (K.c * K.c);
       d = { M: Mb2, a: amax, ans: rr / 1e3 };
       p = { q: 'At what distance from a $' + Mb2 + '\\,M_\\odot$ black hole does the tidal difference across a 2 m body reach $' + tx(amax, 3) + '$ m/s²? Give the distance in km. ($G = 6.67 \\times 10^{-11}$, $M_\\odot = 1.99 \\times 10^{30}$ kg.)',
         a: num(rr / 1e3), unit: 'km',
@@ -1798,7 +1819,10 @@
   G('astrophys.accretion-power', function (R, ctx) {
     var L = lv(ctx), kind = R.pick(by(ctx, ['eff', 'compare', 'eff'], ['L', 'mdot', 'compare'], ['quasar', 'eddrate', 'L']));
     var id = 'astrophys.accretion-power', p, d;
-    var objs = [['a neutron star', 1.4, 12], ['a neutron star', 1.4, 10], ['a white dwarf', 0.6, 8700], ['a white dwarf', 1.0, 5800]];
+    var WD = [[0.4, 10700], [0.5, 9700], [0.6, 8700], [0.7, 7900], [0.8, 7100], [0.9, 6500], [1.0, 5800], [1.1, 5000], [1.2, 4000]];
+    function nsObj() { return ['a neutron star', R.pick([1.2, 1.3, 1.4, 1.4, 1.5, 1.6, 1.8, 2.0]), R.int(10, 13)]; }
+    function wdObj() { var w = R.pick(WD); return ['a white dwarf', w[0], w[1]]; }
+    var objs = [nsObj(), nsObj(), wdObj(), wdObj()];
     if (kind === 'eff' || kind === 'compare') {
       var o = R.pick(objs), e = K.G * o[1] * K.Msun / (o[2] * 1e3), eff = e / (K.c * K.c), askEff = kind === 'eff' && R.coin();
       var ans = kind === 'compare' ? e / (0.007 * K.c * K.c) : askEff ? eff * 100 : e;
@@ -1826,7 +1850,7 @@
           hint: 'Divide the luminosity by the energy released per kilogram.' };
       }
     } else if (kind === 'quasar') {
-      var Lq = sig(rnd(R, 1e38, 1e41, 2), 2), eps = R.pick([0.06, 0.1, 0.1, 0.2, 0.3]), mq = Lq / (eps * K.c * K.c) * K.yr / K.Msun;
+      var Lq = sig(rnd(R, 1e38, 1e41, 2), 2), eps = R.pick([0.06, 0.1, 0.1, 0.2, 0.3, 0.07, 0.08, 0.09, 0.15, 0.25]), mq = Lq / (eps * K.c * K.c) * K.yr / K.Msun;
       d = { L: Lq, eps: eps, ans: mq };
       p = { q: 'A quasar shines with $' + tx(Lq, 2) + '$ W. If gas spiraling into its black hole radiates a fraction $\\epsilon = ' + eps + '$ of its rest energy, how many solar masses must it swallow per year? ($c = 3.00 \\times 10^{8}$ m/s, $M_\\odot = 1.99 \\times 10^{30}$ kg, $1\\text{ yr} = 3.16 \\times 10^{7}$ s.)',
         a: num(mq), unit: 'M☉ per year',
@@ -1998,7 +2022,7 @@
         steps: ['Closest approach: $r_p = a(1 - e) = ' + tx(rp, 3) + '$ AU $= ' + tx(rp * K.AU, 3) + '$ m.', '$GM = ' + tx(GM, 3) + '$ m³/s²; $2/r_p - 1/a = ' + tx(2 / (rp * K.AU) - 1 / (a3 * K.AU), 3) + '$ m⁻¹.', '$v = ' + tx(vp * 1e3, 3) + '$ m/s $= ' + tx(vp, 3) + '$ km/s, a few percent of the speed of light.'],
         hint: 'Use the vis-viva equation at $r = a(1 - e)$.' };
     } else { // influence
-      var Mb4 = R.pick([4.3e6, 1e8, 1e9, 6.5e9]), sg = R.pick([100, 150, 200, 250, 300, 350]), ri = K.G * Mb4 * K.Msun / M.pow(sg * 1e3, 2) / 3.09e16;
+      var Mb4 = R.pick([4.3e6, 1e8, 1e9, 6.5e9]), sg = R.pick([100, 150, 200, 250, 300, 350, 120]), ri = K.G * Mb4 * K.Msun / M.pow(sg * 1e3, 2) / 3.09e16;
       d = { M: Mb4, s: sg, ans: ri };
       p = { q: 'A black hole dominates the motions of stars out to roughly $r = GM/\\sigma^2$, where $\\sigma$ is the stars\' typical speed. Find $r$ in parsecs for $M = ' + tx(Mb4, 2) + '\\,M_\\odot$ and $\\sigma = ' + sg + '$ km/s. ($G = 6.67 \\times 10^{-11}$, $M_\\odot = 1.99 \\times 10^{30}$ kg, $1\\text{ pc} = 3.09 \\times 10^{16}$ m.)',
         a: num(ri), unit: 'pc',
@@ -2055,7 +2079,7 @@
     var id = 'astrophys.redshift-scale-factor', p, d;
     var lines = [['Lyman-alpha', 121.6], ['H-alpha', 656.3], ['H-beta', 486.1], ['oxygen [O III]', 500.7], ['calcium K', 393.4]];
     if (kind === 'z' || kind === 'lam') {
-      var ln = R.pick(lines), z = kind === 'z' ? sig(R.real(0.05, 8, 2), 2) : R.pick([0.5, 1, 2, 3, 5, 6, 7, 1.5, 0.1]), lo = ln[1] * (1 + z);
+      var ln = R.pick(lines), z = kind === 'z' ? sig(R.real(0.05, 8, 2), 2) : R.pick([0.5, 1, 2, 3, 5, 6, 7, 1.5, 0.1, 0.12, 0.2, 0.3, 0.35, 0.6, 0.8, 0.9, 2.5, 4]), lo = ln[1] * (1 + z);
       if (kind === 'z') { lo = sig(lo, 4); z = lo / ln[1] - 1; }
       d = { lam: ln[1], lo: kind === 'z' ? lo : undefined, z: kind === 'lam' ? z : undefined, ans: kind === 'z' ? z : lo };
       p = kind === 'z' ? { q: 'The ' + ln[0] + ' line, emitted at $' + td(ln[1], 1) + '$ nm, is observed in a distant galaxy at $' + tx(lo, 4) + '$ nm. What is the galaxy\'s redshift $z$?',
@@ -2076,7 +2100,7 @@
         steps: ['The wavelength stretched along with space: $\\lambda_{\\text{obs}}/\\lambda_{\\text{emit}} = a_{\\text{now}}/a_{\\text{then}}$.', 'So the growth factor is $1 + z = ' + tx(1 + z2, 4) + '$.'],
         hint: 'The stretch of the wavelength is the stretch of space.' };
     } else if (kind === 'two') {
-      var z1 = R.pick([2, 3, 4, 5]), z3 = R.pick([0.5, 1, 1.5]), zr = (1 + z1) / (1 + z3) - 1;
+      var z1 = R.pick([2, 3, 4, 5]), z3 = R.pick([0.5, 1, 1.5, 0.6, 0.8, 1.2]), zr = (1 + z1) / (1 + z3) - 1;
       d = { z1: z1, z2: z3, ans: zr };
       p = { q: 'Light from a quasar reaches us with $z = ' + z1 + '$. On its way, it passed a galaxy whose own light reaches us with $z = ' + z3 + '$. What redshift did that galaxy\'s astronomers measure for the quasar light as it passed them?',
         a: num(zr),
@@ -2105,7 +2129,7 @@
     var L = lv(ctx), kind = R.pick(by(ctx, ['dist', 'H0', 'time'], ['pec', 'tension', 'dist'], ['matter', 'pec', 'tension']));
     var id = 'astrophys.hubble-time', p, d;
     if (kind === 'dist') {
-      var z = sig(R.real(0.002, 0.05, 3), 2), H0 = R.pick([70, 70, 67, 73]), dd = 3e5 * z / H0;
+      var z = sig(R.real(0.002, 0.05, 3), 2), H0 = R.pick([70, 70, 67, 73, 68, 69, 71, 72]), dd = 3e5 * z / H0;
       d = { z: z, H0: H0, ans: dd };
       p = { q: 'A nearby galaxy has redshift $z = ' + tx(z, 2) + '$. Using $H_0 = ' + H0 + '$ km/s/Mpc and $c = 3.00 \\times 10^{5}$ km/s, how far away is it?',
         a: num(dd), unit: 'Mpc',
@@ -2140,7 +2164,7 @@
         steps: ['$1/H_0$ in Gyr is $(3.09 \\times 10^{19}/H_0)/(3.16 \\times 10^{16})$.', '$H_0 = 67$: $' + tx(t67, 3) + '$ Gyr; $H_0 = 73$: $' + tx(t73, 3) + '$ Gyr.', 'Difference: $' + tx(t67 - t73, 2) + '$ Gyr. The disagreement, called the Hubble tension, is an open question.'],
         hint: 'Compute each Hubble time and subtract.' };
     } else { // matter-only age
-      var H4 = R.pick([67, 70, 73]), tH = 3.09e19 / H4 / K.yr / 1e9, tm = 2 / 3 * tH;
+      var H4 = R.pick([67, 70, 73, 68, 71, 72]), tH = 3.09e19 / H4 / K.yr / 1e9, tm = 2 / 3 * tH;
       d = { H0: H4, ans: tm };
       p = { q: 'In a flat universe with only matter, the scale factor grows as $a \\propto t^{2/3}$, so $H = \\dot a/a = 2/(3t)$ and the age is $t_0 = \\tfrac23\\,(1/H_0)$. For $H_0 = ' + H4 + '$ km/s/Mpc, what age would that give, in Gyr? ($1\\text{ Mpc} = 3.09 \\times 10^{19}$ km, $1\\text{ yr} = 3.16 \\times 10^{7}$ s.)',
         a: num(tm), unit: 'Gyr',
@@ -2153,7 +2177,7 @@
   G('astrophys.friedmann-equation', function (R, ctx) {
     var L = lv(ctx), kind = R.pick(by(ctx, ['rhoc', 'atoms', 'curv'], ['omega', 'H', 'rhoc'], ['Hz', 'escape', 'omega']));
     var id = 'astrophys.friedmann-equation', p, d;
-    var H0 = R.pick([67, 70, 73, 68, 72]), Hs = H0 / 3.09e19, rhoc = 3 * Hs * Hs / (8 * M.PI * K.G);
+    var H0 = R.pick([67, 70, 73, 68, 72, 69, 71]), Hs = H0 / 3.09e19, rhoc = 3 * Hs * Hs / (8 * M.PI * K.G);
     if (kind === 'rhoc' || kind === 'atoms') {
       var ans = kind === 'rhoc' ? rhoc : rhoc / 1.67e-27;
       d = { H0: H0, ans: ans };
@@ -2170,7 +2194,7 @@
         steps: ['$\\rho_c = ' + tx(rhoc, 3) + '$ kg/m³.', '$\\Omega = ' + tx(rho, 2) + '/' + tx(rhoc, 3) + ' = ' + tx(Om, 3) + '$.', Om > 1.02 ? 'Above 1: positive curvature (a "closed" geometry).' : Om < 0.98 ? 'Below 1: negative curvature (an "open" geometry).' : 'Very close to 1: nearly flat.'],
         hint: 'Find $\\rho_c$, then divide.' };
     } else if (kind === 'curv') {
-      var Om2 = R.pick([0.3, 0.8, 1.0, 1.2, 2.0, 0.05]), ans2 = Om2 > 1 ? 'positive ($k > 0$): like the surface of a sphere, triangles add up to more than 180°' : Om2 < 1 ? 'negative ($k < 0$): like a saddle, triangles add up to less than 180°' : 'zero ($k = 0$): flat, triangles add up to exactly 180°';
+      var Om2 = R.pick([0.3, 0.8, 1.0, 1.2, 2.0, 0.05, 0.06, 0.09, 0.15, 0.35, 0.6, 1.5]), ans2 = Om2 > 1 ? 'positive ($k > 0$): like the surface of a sphere, triangles add up to more than 180°' : Om2 < 1 ? 'negative ($k < 0$): like a saddle, triangles add up to less than 180°' : 'zero ($k = 0$): flat, triangles add up to exactly 180°';
       var all = ['positive ($k > 0$): like the surface of a sphere, triangles add up to more than 180°', 'negative ($k < 0$): like a saddle, triangles add up to less than 180°', 'zero ($k = 0$): flat, triangles add up to exactly 180°'];
       d = { Om: Om2, ans: ans2 };
       p = { q: 'A universe has total density parameter $\\Omega = ' + Om2 + '$. According to the Friedmann equation, what is the curvature of space?',
@@ -2185,14 +2209,14 @@
         steps: ['With $k = 0$, $H^2 = 8\\pi G\\rho/3$.', '$H = \\sqrt{8\\pi \\times 6.67 \\times 10^{-11} \\times ' + tx(rho2, 2) + '/3} = ' + tx(Hh / 3.09e19, 3) + '$ s⁻¹.', 'Times $3.09 \\times 10^{19}$ km/Mpc: $H = ' + tx(Hh, 3) + '$ km/s/Mpc.'],
         hint: 'Solve the flat Friedmann equation for $H$.' };
     } else if (kind === 'Hz') {
-      var z = R.pick([0.5, 1, 2, 3, 0.3, 1.5]), Om3 = 0.31, OL = 0.69, Hz = H0 * M.sqrt(Om3 * cube(1 + z) + OL);
+      var z = R.pick([0.5, 1, 2, 3, 0.3, 1.5, 0.35, 0.4, 0.7, 0.8, 1.2, 2.5]), Om3 = 0.31, OL = 0.69, Hz = H0 * M.sqrt(Om3 * cube(1 + z) + OL);
       d = { H0: H0, z: z, ans: Hz };
       p = { q: 'In a flat universe with $\\Omega_m = 0.31$ and $\\Omega_\\Lambda = 0.69$ (radiation negligible), $H(z) = H_0\\sqrt{\\Omega_m(1 + z)^3 + \\Omega_\\Lambda}$. With $H_0 = ' + H0 + '$ km/s/Mpc, what was $H$ at $z = ' + z + '$?',
         a: num(Hz), unit: 'km/s/Mpc',
         steps: ['Matter density scales as $(1 + z)^3$: $0.31 \\times ' + td(1 + z, 1) + '^3 = ' + td(Om3 * cube(1 + z), 3) + '$.', 'Add $0.69$: $' + td(Om3 * cube(1 + z) + OL, 3) + '$; square root: $' + td(M.sqrt(Om3 * cube(1 + z) + OL), 3) + '$.', '$H = ' + H0 + ' \\times ' + td(M.sqrt(Om3 * cube(1 + z) + OL), 3) + ' = ' + tx(Hz, 3) + '$ km/s/Mpc: the universe expanded faster in the past.'],
         hint: 'Scale each density to that redshift, add, take the root.' };
     } else { // escape analog
-      var Om4 = R.pick([0.3, 0.5, 2, 4, 0.1, 1.5]), ratio = 1 / M.sqrt(Om4);
+      var Om4 = R.pick([0.3, 0.5, 2, 4, 0.1, 1.5, 0.12, 0.25, 0.6, 0.8, 1.2, 3.5]), ratio = 1 / M.sqrt(Om4);
       d = { Om: Om4, ans: ratio };
       p = { q: 'Think of a ball of galaxies of radius $R$ expanding at $v = HR$, with mass $M = \\tfrac43\\pi R^3\\rho$. Show that $v/v_{\\text{esc}} = 1/\\sqrt{\\Omega}$ and evaluate it for $\\Omega = ' + Om4 + '$.',
         a: num(ratio),
@@ -2347,3 +2371,131 @@
   });
 
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen"; Physics and Earth ladders): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - check a number: the question and a classmate's numeric answer, either the generator's own answer or that answer
+     off by a common slip (a factor of 2, 4 or 10), and "Is that right?" (Yes / No; not in placement);
+   - two at once: two different questions of the topic, answered together (short questions only, multiple-choice or
+     numeric, each keeping its own unit; at most one of them with a picture, which then comes first).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'astrophys', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function numable(p) { // a single numeric answer with a plain decimal value (not a fraction or an expression)
+    var a = p.a;
+    return !!a && a.t === 'num' && /^-?\d+(\.\d+)?(e-?\d+)?$/.test(String(a.v)) && +a.v !== 0 && isFinite(+a.v) &&
+      !(a.tol && a.tol >= Math.abs(+a.v) / 3) && !((a.rtol || 0) > 0.3); // a slip by a factor of 2 must fall outside the tolerance
+  }
+  function sig(v) { var m = String(v).replace(/e.*$/, '').replace(/^-?0*\.?0*/, '').replace('.', ''); return Math.min(6, Math.max(3, m.length)); }
+  function show(x, n) { // a number as the classmate would write it: 3 significant figures, scientific notation when large or small
+    var ax = Math.abs(x);
+    if (ax >= 1e5 || ax < 1e-3) { var e = Math.floor(Math.log10(ax)), m = Number((x / Math.pow(10, e)).toPrecision(n || 3)); if (Math.abs(m) >= 10) { m = m / 10; e++; } return '$' + m + ' \\times 10^{' + e + '}$'; }
+    var s = String(Number(x.toPrecision(n || 3)));
+    return '$' + (ax >= 1e4 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, '{,}') : s) + '$';
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = +a.v, n = sig(a.v), right = R.coin(), f = R.pick([2, 0.5, 10, 0.1, 4, 0.25]), shown = right ? v : v * f;
+    var who = 'A classmate worked it out and got', u = p.unit ? ' ' + p.unit : '';
+    var q = p.q + '<p>' + who + ': <b>' + show(shown, n) + u + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right.' : 'No. The answer is ' + show(v, n) + u + '; ' + (f > 1 ? 'the classmate\'s answer is ' + f + ' times too big.' : 'the classmate\'s answer is ' + Math.round(1 / f) + ' times too small.'))].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf' && !numable(p))) return false;
+    if (p.a.t !== 'num' && p.unit) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function part(l, x) { var o = { label: l, a: x.a }; if (x.unit) o.unit = x.unit; return o; }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [part('1.', p), part('2.', p2)] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (mode !== 'place' && numable(p)) forms.push('ncheck');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'ncheck' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

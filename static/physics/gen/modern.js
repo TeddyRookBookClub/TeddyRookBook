@@ -174,17 +174,17 @@
         steps: ['$P_{\\text{avg}} = \\tfrac{1}{2}\\mu\\omega^2A^2v$, and $\\mu$ and $v = \\sqrt{F_T/\\mu}$ do not change.', 'So $P \\propto \\omega^2A^2$, and $\\omega \\propto f$.', 'Factor: $(' + nx(fa, 2) + ')^2 \\times (' + nx(ff, 2) + ')^2 = ' + nx(factor, 4) + '$.'],
         hint: 'Power depends on the squares of both the amplitude and the frequency.' };
     } else if (kind === 'power' || kind === 'powerT') {
-      var mu = R.pick([0.050, 0.10, 0.20, 0.25, 0.40, 0.50]), f = R.pick([1.5, 2.0, 2.5, 3.0, 4.0, 5.0]), A = R.pick([0.020, 0.030, 0.040, 0.050, 0.060, 0.080]);
+      var mu = R.pick([0.050, 0.10, 0.20, 0.25, 0.40, 0.50, 0.06, 0.07, 0.09, 0.12, 0.3, 0.35]), f = R.pick([1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 3.5]), A = R.pick([0.020, 0.030, 0.040, 0.050, 0.060, 0.080, 0.025, 0.035, 0.07]);
       var v, FT, vstep = [];
-      if (kind === 'power') { v = R.pick([8.0, 10, 12, 15, 20]); }
-      else { FT = R.pick([20, 40, 50, 80, 100]); v = M.sqrt(FT / mu); vstep = ['$v = \\sqrt{F_T/\\mu} = \\sqrt{' + nx(FT) + '/' + nx(mu, 2) + '} = ' + qu(v, 'm/s') + '$.']; }
+      if (kind === 'power') { v = R.pick([8.0, 10, 12, 15, 20, 9, 13, 16, 17, 19]); }
+      else { FT = R.pick([20, 40, 50, 80, 100, 25, 30, 35, 70, 90]); v = M.sqrt(FT / mu); vstep = ['$v = \\sqrt{F_T/\\mu} = \\sqrt{' + nx(FT) + '/' + nx(mu, 2) + '} = ' + qu(v, 'm/s') + '$.']; }
       var w = 2 * PI * f, P = 0.5 * mu * w * w * A * A * v;
       rec('modern.wave-power', { kind: kind, mu: mu, f: f, A: A, v: v });
       p = { q: 'A rope with linear density $' + qu(mu, 'kg/m', 2) + '$ ' + (kind === 'power' ? 'carries waves at $' + qu(v, 'm/s', 2) + '$' : 'is held at tension $' + qu(FT, 'N', 2) + '$') + '. You shake one end at $' + qu(f, 'Hz', 2) + '$ with amplitude $' + qu(A * 100, 'cm', 2) + '$. What average power does the wave carry?', a: num(P), unit: 'W',
         steps: vstep.concat(['$\\omega = 2\\pi f = 2\\pi(' + nx(f, 2) + ') = ' + qu(w, 'rad/s') + '$.', '$P = \\tfrac{1}{2}\\mu\\omega^2A^2v = \\tfrac{1}{2}(' + nx(mu, 2) + ')(' + nx(w) + ')^2(' + nx(A, 2) + ')^2(' + nx(v) + ')$.', '$P = ' + qu(P, 'W') + '$.']),
         hint: 'Use $P_{\\text{avg}} = \\tfrac{1}{2}\\mu\\omega^2A^2v$ with $A$ in meters and $\\omega = 2\\pi f$.' };
     } else {
-      var mu2 = R.pick([2.0e-3, 4.0e-3, 5.0e-3, 8.0e-3, 0.010]), FT2 = R.pick([40, 60, 80, 100, 120]), f2 = R.pick([40, 50, 60, 80, 100, 120]), P2 = R.pick([0.50, 1.0, 1.5, 2.0, 3.0, 5.0]);
+      var mu2 = R.pick([2.0e-3, 4.0e-3, 5.0e-3, 8.0e-3, 0.010, 0.0025, 0.003, 0.0035, 0.007, 0.009]), FT2 = R.pick([40, 60, 80, 100, 120, 50, 70, 90]), f2 = R.pick([40, 50, 60, 80, 100, 120, 70, 90]), P2 = R.pick([0.50, 1.0, 1.5, 2.0, 3.0, 5.0, 0.6, 0.7, 0.9, 1.2, 3.5, 4]);
       var v2 = M.sqrt(FT2 / mu2), w2 = 2 * PI * f2, A2 = M.sqrt(2 * P2 / (mu2 * w2 * w2 * v2));
       rec('modern.wave-power', { kind: kind, mu: mu2, FT: FT2, f: f2, P: P2 });
       p = { q: 'A string has linear density $' + qu(mu2, 'kg/m', 2) + '$ and tension $' + qu(FT2, 'N', 2) + '$. What amplitude, in millimeters, must a $' + qu(f2, 'Hz', 2) + '$ wave have to carry an average power of $' + qu(P2, 'W', 2) + '$?', a: num(A2 * 1000), unit: 'mm',
@@ -198,7 +198,7 @@
     var kind = R.pick(by(ctx, ['amp', 'classify'], ['speakers', 'amp', 'classify', 'inverse'], ['lowf', 'speakers', 'inverse']));
     var p;
     if (kind === 'amp') {
-      var A = R.pick([2.0, 3.0, 4.0, 5.0, 6.0, 8.0]), fr = R.pick([[1, 3], [1, 2], [2, 3], [1, 4], [3, 4], [1, 6], [5, 6], [4, 3], [3, 2]]);
+      var A = R.pick([2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 7]), fr = R.pick([[1, 3], [1, 2], [2, 3], [1, 4], [3, 4], [1, 6], [5, 6], [4, 3], [3, 2]]);
       var phi = fr[0] * PI / fr[1], Ar = 2 * A * M.abs(M.cos(phi / 2));
       var phT = (fr[0] === 1 ? '' : fr[0]) + '\\pi/' + fr[1];
       rec('modern.phase-interference', { kind: kind, A: A, phi: phi });
@@ -206,7 +206,7 @@
         steps: ['$A_{\\text{res}} = 2A\\left|\\cos\\dfrac{\\phi}{2}\\right| = 2(' + nx(A, 2) + ')\\left|\\cos\\dfrac{' + phT + '}{2}\\right|$.', '$= ' + nx(2 * A, 2) + ' \\times ' + nx(M.abs(M.cos(phi / 2)), 3) + ' = ' + qu(Ar, 'mm') + '$.'],
         hint: 'Add the two sines with the sum-to-product formula: the amplitude is $2A|\\cos(\\phi/2)|$.' };
     } else if (kind === 'classify') {
-      var lam = R.pick([0.40, 0.50, 0.80, 1.0, 1.2, 1.6, 2.0]), m = R.pick([0.5, 1, 1.5, 2, 2.5, 3, 0.25, 0.75, 1.25]), dr = m * lam;
+      var lam = R.pick([0.40, 0.50, 0.80, 1.0, 1.2, 1.6, 2.0, 0.6, 0.7, 0.9, 1.5]), m = R.pick([0.5, 1, 1.5, 2, 2.5, 3, 0.25, 0.75, 1.25]), dr = m * lam;
       var type = M.abs(m - M.round(m)) < 1e-9 ? 0 : M.abs(m - M.floor(m) - 0.5) < 1e-9 ? 1 : 2;
       var ch = ['Constructive: the waves arrive in step', 'Destructive: the waves arrive exactly out of step', 'Neither: partly constructive'];
       rec('modern.phase-interference', { kind: kind, lam: lam, dr: dr, type: type });
@@ -214,16 +214,16 @@
         steps: ['Number of wavelengths in the path difference: $\\Delta r/\\lambda = ' + nx(dr, 3) + '/' + nx(lam, 2) + ' = ' + nx(m, 3) + '$.', 'Phase difference: $\\phi = 2\\pi(' + nx(m, 3) + ') = ' + (type === 0 ? M.round(2 * m) + '\\pi' : nx(2 * m, 3) + '\\pi') + '$ rad.', type === 0 ? 'A whole number of wavelengths: crest meets crest.' : type === 1 ? 'A whole number plus a half: crest meets trough.' : 'Neither a whole nor a half number: the amplitude is between 0 and $2A$.'],
         hint: 'Divide the path difference by the wavelength.' };
     } else if (kind === 'speakers') {
-      var f = R.pick([340, 400, 500, 600, 680, 750, 850, 1000]), d1 = R.pick([2.00, 2.50, 3.00, 4.00]), dd = R.pick([0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.45]);
+      var f = R.pick([340, 400, 500, 600, 680, 750, 850, 1000, 350, 700, 800, 900]), d1 = R.pick([2.00, 2.50, 3.00, 4.00, 3.5]), dd = R.pick([0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.45, 0.12, 0.4]);
       var lam2 = 343 / f, phi2 = 2 * PI * dd / lam2, cf = M.abs(M.cos(phi2 / 2)), tries = 0;
-      while ((cf < 0.15 || cf > 0.97) && tries < 20) { dd = R.pick([0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.45, 0.55]); phi2 = 2 * PI * dd / lam2; cf = M.abs(M.cos(phi2 / 2)); tries++; }
+      while ((cf < 0.15 || cf > 0.97) && tries < 20) { dd = R.pick([0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.45, 0.55, 0.12, 0.4, 0.5]); phi2 = 2 * PI * dd / lam2; cf = M.abs(M.cos(phi2 / 2)); tries++; }
       var rel = 4 * cf * cf;
       rec('modern.phase-interference', { kind: kind, f: f, dd: dd });
       p = { q: 'Two speakers driven in phase play $' + qu(f, 'Hz', 3) + '$ tones of equal strength ($v = 343$ m/s). You stand $' + qu(d1, 'm', 3) + '$ from one and $' + qu(d1 + dd, 'm', 3) + '$ from the other. What is the sound intensity there, as a multiple of the intensity of one speaker alone?', a: num(rel, 0.03), unit: '',
         steps: ['$\\lambda = v/f = 343/' + f + ' = ' + qu(lam2, 'm') + '$.', '$\\Delta r = ' + qu(dd, 'm', 2) + '$, so $\\phi = 2\\pi\\dfrac{\\Delta r}{\\lambda} = ' + nx(phi2) + '$ rad.', 'Amplitude: $2A\\left|\\cos\\dfrac{\\phi}{2}\\right| = ' + nx(2 * cf) + 'A$.', 'Intensity goes as amplitude squared: $(' + nx(2 * cf) + ')^2 = ' + nx(rel) + '$ times one speaker.'],
         hint: 'Find the phase difference from the path difference, then square the amplitude ratio.' };
     } else if (kind === 'inverse') {
-      var r = R.pick([0.5, 1.0, 1.2, 1.5, 1.8, 0.8]), phi3 = 2 * M.acos(r / 2);
+      var r = R.pick([0.5, 1.0, 1.2, 1.5, 1.8, 0.8, 0.6, 0.7, 0.9]), phi3 = 2 * M.acos(r / 2);
       rec('modern.phase-interference', { kind: kind, r: r });
       p = { q: 'Two equal waves of amplitude $A$ add to a wave of amplitude $' + nx(r, 2) + 'A$. What is the smallest phase difference between them, in radians?', a: num(phi3), unit: 'rad',
         steps: ['$2A\\cos\\dfrac{\\phi}{2} = ' + nx(r, 2) + 'A$, so $\\cos\\dfrac{\\phi}{2} = ' + nx(r / 2, 3) + '$.', '$\\dfrac{\\phi}{2} = \\cos^{-1}(' + nx(r / 2, 3) + ') = ' + nx(phi3 / 2) + '$ rad.', '$\\phi = ' + nx(phi3) + '$ rad $= ' + deg(phi3 * 180 / PI) + '$.'],
@@ -280,30 +280,30 @@
     var kind = R.pick(by(ctx, ['speed', 'lambda'], ['dp', 'smax', 'speed', 'where'], ['dp', 'smax', 'intensity', 'where']));
     var p, rho = 1.20, v = 343;
     if (kind === 'speed') {
-      var med = R.pick([['water', 2.2e9, 1000], ['air', 1.42e5, 1.20], ['a liquid', R.pick([1.2e9, 1.5e9, 1.8e9, 2.6e9]), R.pick([800, 900, 1100, 1200])], ['a light oil', R.pick([1.0e9, 1.3e9]), R.pick([850, 900])]]);
+      var med = R.pick([['water', 2.2e9, 1000], ['air', 1.42e5, 1.20], ['a liquid', R.pick([1.2e9, 1.5e9, 1.8e9, 2.6e9, 2e+09, 2.5e+09]), R.pick([800, 900, 1100, 1200, 1000])], ['a light oil', R.pick([1.0e9, 1.3e9]), R.pick([850, 900])]]);
       var vs = M.sqrt(med[1] / med[2]);
       rec('modern.sound-waves', { kind: kind, B: med[1], rho: med[2] });
       p = { q: 'Find the speed of sound in ' + med[0] + ', with bulk modulus $B = ' + qu(med[1], 'Pa', 3) + '$ and density $\\rho = ' + qu(med[2], 'kg/m³', 3) + '$.', a: num(vs), unit: 'm/s',
         steps: ['$v = \\sqrt{B/\\rho} = \\sqrt{\\dfrac{' + qu(med[1], 'Pa') + '}{' + qu(med[2], 'kg/m³') + '}}$.', '$v = ' + qu(vs, 'm/s') + '$. (Pa divided by kg/m³ is m²/s².)'], hint: 'Stiffness over inertia: $v = \\sqrt{B/\\rho}$.' };
     } else if (kind === 'lambda') {
-      var f = R.pick([110, 220, 256, 440, 880, 1000, 2000, 4000]), medium = R.pick([['air', 343], ['water', 1480]]);
+      var f = R.pick([110, 220, 256, 440, 880, 1000, 2000, 4000, 120, 200, 350, 500, 700, 900, 2500, 3500]), medium = R.pick([['air', 343], ['water', 1480]]);
       rec('modern.sound-waves', { kind: kind, f: f, v: medium[1] });
       p = { q: 'A ' + f + ' Hz sound wave travels through ' + medium[0] + ' at $' + medium[1] + '$ m/s. What is its wave number $k$?', a: num(2 * PI * f / medium[1]), unit: 'rad/m',
         steps: ['$\\lambda = v/f = ' + medium[1] + '/' + f + ' = ' + qu(medium[1] / f, 'm') + '$.', '$k = 2\\pi/\\lambda = ' + qu(2 * PI * f / medium[1], 'rad/m') + '$. (Or $k = \\omega/v$.)'], hint: 'Use $k = \\omega/v = 2\\pi f/v$.' };
     } else if (kind === 'dp' || kind === 'smax' || kind === 'intensity') {
-      var f2 = R.pick([250, 500, 1000, 2000, 3000, 4000]), w = 2 * PI * f2;
+      var f2 = R.pick([250, 500, 1000, 2000, 3000, 4000, 300, 400, 700, 900, 1500, 3500]), w = 2 * PI * f2;
       if (kind === 'dp') {
-        var s = R.pick([1.0, 2.0, 5.0, 10, 20, 50]) * 1e-9, dp = rho * v * w * s;
+        var s = R.pick([1.0, 2.0, 5.0, 10, 20, 50, 1.2, 3, 6, 9, 25, 40]) * 1e-9, dp = rho * v * w * s;
         rec('modern.sound-waves', { kind: kind, f: f2, s: s });
         p = { q: 'A $' + f2 + '$ Hz sound wave in air ($\\rho = 1.20$ kg/m³, $v = 343$ m/s) has displacement amplitude $' + qu(s, 'm', 2) + '$. What is its pressure amplitude?', a: num(dp), unit: 'Pa',
           steps: ['$\\Delta p_{\\max} = Bks_{\\max} = \\rho v\\omega s_{\\max}$ (since $B = \\rho v^2$ and $k = \\omega/v$).', '$\\omega = 2\\pi(' + f2 + ') = ' + qu(w, 'rad/s') + '$.', '$\\Delta p_{\\max} = (1.20)(343)(' + nx(w) + ')(' + nx(s, 2) + ') = ' + qu(dp, 'Pa') + '$.'], hint: 'Pressure comes from squeezing: $\\Delta p = -B\\,\\partial s/\\partial x$.' };
       } else if (kind === 'smax') {
-        var dp2 = R.pick([0.010, 0.020, 0.050, 0.10, 0.20, 0.50, 1.0]), s2 = dp2 / (rho * v * w);
+        var dp2 = R.pick([0.010, 0.020, 0.050, 0.10, 0.20, 0.50, 1.0, 0.012, 0.03, 0.06, 0.12, 0.3, 0.6, 0.9]), s2 = dp2 / (rho * v * w);
         rec('modern.sound-waves', { kind: kind, f: f2, dp: dp2 });
         p = { q: 'A $' + f2 + '$ Hz tone in air ($\\rho = 1.20$ kg/m³, $v = 343$ m/s) has pressure amplitude $' + qu(dp2, 'Pa', 2) + '$. How far does each layer of air swing, in nanometers (the displacement amplitude)?', a: num(s2 * 1e9), unit: 'nm',
           steps: ['$s_{\\max} = \\dfrac{\\Delta p_{\\max}}{\\rho v\\omega}$.', '$\\omega = 2\\pi(' + f2 + ') = ' + qu(w, 'rad/s') + '$.', '$s_{\\max} = \\dfrac{' + nx(dp2, 2) + '}{(1.20)(343)(' + nx(w) + ')} = ' + qu(s2, 'm') + ' = ' + qu(s2 * 1e9, 'nm') + '$.'], hint: 'Rearrange $\\Delta p_{\\max} = \\rho v\\omega s_{\\max}$.' };
       } else {
-        var dp3 = R.pick([0.020, 0.050, 0.10, 0.20, 0.50, 1.0, 2.0]), I = dp3 * dp3 / (2 * rho * v);
+        var dp3 = R.pick([0.020, 0.050, 0.10, 0.20, 0.50, 1.0, 2.0, 0.025, 0.04, 0.08, 0.25, 0.4, 0.8, 1.5]), I = dp3 * dp3 / (2 * rho * v);
         rec('modern.sound-waves', { kind: kind, dp: dp3 });
         p = { q: 'The intensity of a sound wave is $I = \\dfrac{\\Delta p_{\\max}^2}{2\\rho v}$. Find the intensity of a sound in air ($\\rho = 1.20$ kg/m³, $v = 343$ m/s) with pressure amplitude $' + qu(dp3, 'Pa', 2) + '$.', a: num(I), unit: 'W/m²',
           steps: ['$I = \\dfrac{(' + nx(dp3, 2) + ')^2}{2(1.20)(343)}$.', '$I = ' + qu(I, 'W/m²') + '$.'], hint: 'Square the pressure amplitude; intensity goes as amplitude squared.' };
@@ -365,12 +365,12 @@
       p = { q: 'A photo of a bullet in flight shows a shock cone with half-angle $' + th2 + '^\\circ$. What is the bullet\'s Mach number?', a: num(Mn2), unit: '',
         steps: ['$\\sin\\theta = \\dfrac{1}{M}$, so $M = \\dfrac{1}{\\sin\\theta}$.', '$M = \\dfrac{1}{\\sin ' + th2 + '^\\circ} = ' + nx(Mn2) + '$.'], hint: 'A narrower cone means a faster source.' };
     } else if (kind === 'speed') {
-      var vw = R.pick([295, 300, 310, 320, 330, 340, 343]), th3 = R.pick([25, 28, 30, 32, 35, 38, 40, 45, 50, 55]), vs = vw / sind(th3);
+      var vw = R.pick([295, 300, 310, 320, 330, 340, 343]), th3 = R.pick([25, 28, 30, 32, 35, 38, 40, 45, 50, 55, 27, 29, 31, 37, 39, 41, 43, 49, 51, 53]), vs = vw / sind(th3);
       rec('modern.shock-waves', { kind: kind, vw: vw, th: th3 });
       p = { q: 'A plane\'s shock cone has a half-angle of $' + th3 + '^\\circ$ where the speed of sound is $' + vw + '$ m/s. How fast is the plane flying?', a: num(vs), unit: 'm/s',
         steps: ['$\\sin\\theta = \\dfrac{v}{v_s}$, so $v_s = \\dfrac{v}{\\sin\\theta}$.', '$v_s = \\dfrac{' + vw + '}{\\sin ' + th3 + '^\\circ} = ' + qu(vs, 'm/s') + '$.'], hint: 'Solve $\\sin\\theta = v/v_s$ for the source speed.' };
     } else if (kind === 'delay' || kind === 'height') {
-      var Mn3 = R.pick([1.25, 1.5, 2.0, 2.5]), vw3 = R.pick([295, 300, 320]), h = R.pick([5.0, 6.0, 8.0, 10, 12]) * 1000, vs3 = Mn3 * vw3, th4 = asind(1 / Mn3), t = h / (vs3 * tand(th4));
+      var Mn3 = R.pick([1.25, 1.5, 2.0, 2.5]), vw3 = R.pick([295, 300, 320]), h = R.pick([5.0, 6.0, 8.0, 10, 12, 7, 9, 11]) * 1000, vs3 = Mn3 * vw3, th4 = asind(1 / Mn3), t = h / (vs3 * tand(th4));
       rec('modern.shock-waves', { kind: kind, M: Mn3, vw: vw3, h: h });
       if (kind === 'delay') p = { q: 'A jet flies level at Mach $' + nx(Mn3, 3) + '$, $' + qu(h / 1000, 'km', 2) + '$ above you, where the speed of sound is $' + vw3 + '$ m/s (take it the same all the way down). How long after the jet passes directly overhead do you hear the boom?', a: num(t), unit: 's',
         steps: ['$\\sin\\theta = 1/M = ' + nx(1 / Mn3) + '$, so $\\theta = ' + deg(th4) + '$; the jet\'s speed is $' + nx(Mn3, 3) + ' \\times ' + vw3 + ' = ' + qu(vs3, 'm/s') + '$.', 'The cone reaches you when the jet is a horizontal distance $x = h/\\tan\\theta$ past you: $x = ' + nx(h) + '/' + nx(tand(th4)) + ' = ' + qu(h / tand(th4), 'm') + '$.', '$t = x/v_s = ' + qu(t, 's') + '$.'], hint: 'Draw the cone\'s edge from the jet down to you: it makes the half-angle with the flight path.' };
@@ -393,7 +393,7 @@
     var kind = R.pick(by(ctx, ['grow', 'lamIn'], ['wavelet', 'lamIn', 'grow'], ['wavelet', 'speedFrom', 'concept']));
     var med = R.pick(MEDIA), n = med[1], p;
     if (kind === 'grow') {
-      var t = R.pick([1.0, 2.0, 0.50, 1.5, 3.0]), d = C * t * 1e-9 / n * 100;
+      var t = R.pick([1.0, 2.0, 0.50, 1.5, 3.0, 0.6, 0.7, 0.8, 1.2, 2.5]), d = C * t * 1e-9 / n * 100;
       rec('modern.huygens-principle', { kind: kind, n: n, t: t });
       p = { q: 'Light travels through ' + med[0] + ' ($n = ' + nx(n, 3) + '$). In $' + qu(t, 'ns', 2) + '$, how far does a Huygens wavelet grow, in centimeters?', a: num(d), unit: 'cm',
         steps: ['Wavelets spread at the local speed of light, $v = c/n = \\dfrac{' + nx(C) + '\\ \\text{m/s}}{' + nx(n, 3) + '} = ' + qu(C / n, 'm/s') + '$.', 'Radius: $vt = (' + nx(C / n) + ')(' + nx(t, 2) + ' \\times 10^{-9}) = ' + qu(d / 100, 'm') + ' = ' + qu(d, 'cm') + '$.'],
@@ -405,13 +405,13 @@
         steps: ['The frequency stays the same: each wavefront that arrives must leave.', 'The speed drops by a factor of $n$, so the wavelength does too: $\\lambda_n = \\lambda/n = ' + lam + '/' + nx(n, 3) + ' = ' + qu(lam / n, 'nm') + '$.'],
         hint: 'Frequency is fixed by the source; $v = f\\lambda$.' };
     } else if (kind === 'wavelet') {
-      var th1 = R.pick([30, 35, 40, 45, 50, 55, 60]), r1 = R.pick([1.0, 1.2, 1.5, 2.0, 3.0]), ratio = 1 / n, r2 = r1 * ratio, AC = r1 / sind(th1), th2 = asind(r2 / AC);
+      var th1 = R.pick([30, 35, 40, 45, 50, 55, 60, 32, 36, 42, 46, 48, 54, 58]), r1 = R.pick([1.0, 1.2, 1.5, 2.0, 3.0, 2.5]), ratio = 1 / n, r2 = r1 * ratio, AC = r1 / sind(th1), th2 = asind(r2 / AC);
       rec('modern.huygens-principle', { kind: kind, th1: th1, r1: r1, n: n });
       p = { q: 'A straight wavefront of light in air meets a flat surface of ' + med[0] + ' ($n = ' + nx(n, 3) + '$) at $' + th1 + '^\\circ$ from the normal. In the time the far end of the wavefront travels the last $' + qu(r1, 'μm', 2) + '$ to the surface, the wavelet from the near end grows into the ' + med[0] + '. Use that wavelet to find the angle of refraction.', a: num(th2), unit: '°',
         steps: ['The wavelet grows at $c/n$: radius $' + nx(r1, 2) + '/' + nx(n, 3) + ' = ' + qu(r2, 'μm') + '$.', 'Stretch of surface between the two ends: $AC = \\dfrac{' + nx(r1, 2) + '}{\\sin ' + th1 + '^\\circ} = ' + qu(AC, 'μm') + '$.', 'The new wavefront is tangent to the wavelet: $\\sin\\theta_2 = \\dfrac{' + nx(r2) + '}{' + nx(AC) + '} = ' + nx(r2 / AC) + '$.', '$\\theta_2 = ' + deg(th2) + '$, the same as Snell\'s law gives.'],
         hint: 'Two right triangles share the stretch of surface AC as their hypotenuse.' };
     } else if (kind === 'speedFrom') {
-      var th1b = R.pick([30, 40, 45, 50, 60]), th2b = asind(sind(th1b) / n), th2s = rnd(th2b, 3), v2 = C * sind(th2s) / sind(th1b);
+      var th1b = R.pick([30, 40, 45, 50, 60, 32, 38, 46, 52, 58]), th2b = asind(sind(th1b) / n), th2s = rnd(th2b, 3), v2 = C * sind(th2s) / sind(th1b);
       rec('modern.huygens-principle', { kind: kind, th1: th1b, th2: th2s });
       p = { q: 'Wavefronts of light in air ($v = 3.00 \\times 10^8$ m/s) strike a clear material at $' + th1b + '^\\circ$ from the normal and leave the boundary at $' + nx(th2s, 3) + '^\\circ$ from the normal. How fast do the Huygens wavelets spread inside the material?', a: num(v2), unit: 'm/s',
         steps: ['From the wavelet construction, $\\dfrac{\\sin\\theta_1}{\\sin\\theta_2} = \\dfrac{v_1}{v_2}$.', '$v_2 = v_1\\dfrac{\\sin\\theta_2}{\\sin\\theta_1} = (3.00 \\times 10^8)\\dfrac{\\sin ' + nx(th2s, 3) + '^\\circ}{\\sin ' + th1b + '^\\circ} = ' + qu(v2, 'm/s') + '$.'],
@@ -447,7 +447,7 @@
         steps: ['$\\theta_B = \\tan^{-1}(' + nx(n, 3) + ') = ' + deg(tb3) + '$.', 'At Brewster\'s angle the reflected and refracted rays are perpendicular, so $\\theta_2 = 90^\\circ - \\theta_B = ' + deg(90 - tb3) + '$.', 'Check with Snell\'s law: $\\sin\\theta_2 = \\sin ' + nx(tb3, 3) + '^\\circ/' + nx(n, 3) + ' = ' + nx(sind(tb3) / n) + '$.'],
         hint: 'At Brewster\'s angle, $\\theta_B + \\theta_2 = 90^\\circ$.' };
     } else if (kind === 'sun') {
-      var w = R.pick([['a calm lake', 1.33], ['a sheet of ice', 1.31], ['a flat glass skylight', R.pick([1.50, 1.52])], ['a wet road', 1.33], ['a glossy plastic table', R.pick([1.46, 1.49, 1.55, 1.59])], ['a pool of oil', R.pick([1.44, 1.47])]]), tb4 = atand(w[1]);
+      var w = R.pick([['a calm lake', 1.33], ['a sheet of ice', 1.31], ['a flat glass skylight', R.pick([1.50, 1.52])], ['a wet road', 1.33], ['a glossy plastic table', R.pick([1.46, 1.49, 1.55, 1.59, 1.5])], ['a pool of oil', R.pick([1.44, 1.47])]]), tb4 = atand(w[1]);
       rec('modern.brewster-angle', { kind: kind, n: w[1] });
       p = { q: 'Sunlight reflects from ' + w[0] + ' ($n = ' + nx(w[1], 3) + '$). How high above the horizon is the Sun, in degrees, when the reflection is completely polarized?', a: num(90 - tb4), unit: '°',
         steps: ['$\\theta_B = \\tan^{-1}(' + nx(w[1], 3) + ') = ' + deg(tb4) + '$, measured from the normal, which points straight up.', 'Height above the horizon is measured from the surface: $90^\\circ - ' + nx(tb4) + '^\\circ = ' + deg(90 - tb4) + '$.'],
@@ -507,7 +507,7 @@
 
   G('modern.diffraction-envelope', function (R, ctx) {
     var kind = R.pick(by(ctx, ['missing', 'missing'], ['count', 'Im', 'missing'], ['width', 'count', 'Im']));
-    var r = by(ctx, R.pick([2, 3, 4, 5]), R.pick([2, 3, 4, 5, 6]), R.pick([2, 3, 4, 5, 2.5, 3.5])), a = R.pick([0.020, 0.025, 0.040, 0.050, 0.10]), d = rnd(a * r, 3), p;
+    var r = by(ctx, R.pick([2, 3, 4, 5]), R.pick([2, 3, 4, 5, 6]), R.pick([2, 3, 4, 5, 2.5, 3.5])), a = R.pick([0.020, 0.025, 0.040, 0.050, 0.10, 0.03, 0.035, 0.06, 0.08, 0.09]), d = rnd(a * r, 3), p;
     var dT = qu(d, 'mm', 3), aT = qu(a, 'mm', 2);
     if (kind === 'missing') {
       rec('modern.diffraction-envelope', { kind: kind, d: d, a: a });
@@ -529,7 +529,7 @@
         steps: ['At the $m = ' + m + '$ fringe, $d\\sin\\theta = ' + (m === 1 ? '' : m) + '\\lambda$, so the two-slit factor $\\cos^2(\\pi d\\sin\\theta/\\lambda)$ equals 1.', 'Envelope there: $\\beta = \\dfrac{\\pi a\\sin\\theta}{\\lambda} = ' + (m === 1 ? '' : m) + '\\pi\\dfrac{a}{d} = ' + nx(beta) + '$ rad.', '$\\left(\\dfrac{\\sin\\beta}{\\beta}\\right)^2 = \\left(\\dfrac{' + nx(M.sin(beta)) + '}{' + nx(beta) + '}\\right)^2 = ' + nx(env) + '$.'],
         hint: 'Only the single-slit envelope dims a bright fringe; find $\\beta$ at that fringe.' };
     } else {
-      var rr = R.pick([3, 4, 5, 6]), dd = R.pick([0.10, 0.12, 0.15, 0.20, 0.24, 0.30]), aa = dd / rr;
+      var rr = R.pick([3, 4, 5, 6]), dd = R.pick([0.10, 0.12, 0.15, 0.20, 0.24, 0.30, 0.25]), aa = dd / rr;
       rec('modern.diffraction-envelope', { kind: kind, d: dd, r: rr });
       p = { q: 'A double slit with centers $' + qu(dd, 'mm', 2) + '$ apart shows every bright order up to $m = ' + (rr - 1) + '$, but the $m = ' + rr + '$ fringe is missing. How wide is each slit, in micrometers?', a: num(aa * 1000), unit: 'μm',
         steps: ['The first missing order is where the first zero of the envelope lands: $m = d/a$.', '$a = \\dfrac{d}{' + rr + '} = \\dfrac{' + nx(dd, 2) + '\\ \\text{mm}}{' + rr + '} = ' + qu(aa * 1000, 'μm') + '$.'],
@@ -550,7 +550,7 @@
       else p = { q: 'Find the diffraction limit of ' + scope[0] + ' with an aperture $' + qu(scope[1], 'm', 2) + '$ across, at $' + qu(lam, 'nm', 3) + '$, in arcseconds (1 rad $= 206{,}265\'\'$).', a: num(as), unit: '″',
         steps: ['$\\theta_R = 1.22\\dfrac{\\lambda}{D} = 1.22\\,\\dfrac{' + nx(lam * 1e-9, 3) + '}{' + nx(scope[1], 2) + '} = ' + qu(th, 'rad') + '$.', 'In arcseconds: $' + nx(th) + ' \\times 206{,}265 = ' + nx(as) + '\'\'$.'], hint: 'Find the angle in radians first, then convert.' };
     } else if (kind === 'sep') {
-      var c = R.pick([['the Moon', 3.84e8, 'm'], ['a mountain 50 km away', 5.0e4, 'cm'], ['a satellite 400 km up', 4.0e5, 'm'], ['a sign 2.0 km away', 2.0e3, 'mm']]), D = R.pick([0.050, 0.10, 0.15, 0.20, 0.50, 1.0, 2.4]);
+      var c = R.pick([['the Moon', 3.84e8, 'm'], ['a mountain 50 km away', 5.0e4, 'cm'], ['a satellite 400 km up', 4.0e5, 'm'], ['a sign 2.0 km away', 2.0e3, 'mm']]), D = R.pick([0.050, 0.10, 0.15, 0.20, 0.50, 1.0, 2.4, 0.06, 0.08, 0.25, 0.4, 0.7, 0.9, 2]);
       var sep = 1.22 * lam * 1e-9 / D * c[1], scale = c[2] === 'cm' ? 100 : c[2] === 'mm' ? 1000 : 1;
       rec('modern.resolution', { kind: kind, lam: lam, D: D, L: c[1], scale: scale });
       p = { q: 'A telescope with a $' + qu(D * 100, 'cm', 3) + '$ aperture looks at ' + c[0] + ' (distance $' + qu(c[1], 'm', 3) + '$) in $' + qu(lam, 'nm', 3) + '$ light. What is the smallest separation between two features it could resolve there, if diffraction is the only limit? Answer in ' + { m: 'meters', cm: 'centimeters', mm: 'millimeters' }[c[2]] + '.', a: num(sep * scale), unit: c[2],
@@ -564,7 +564,7 @@
         steps: ['$\\theta_R = 1.22\\,\\dfrac{' + nx(lam * 1e-9, 3) + '}{' + nx(pup * 1e-3, 2) + '} = ' + qu(thE, 'rad') + '$.', 'Distance $= \\dfrac{\\text{separation}}{\\theta_R} = \\dfrac{' + nx(s[1], 2) + '}{' + nx(thE) + '} = ' + qu(dist, 'm') + '$.'],
         hint: 'At the limit, the separation divided by the distance equals $\\theta_R$.' };
     } else {
-      var L2 = R.pick([3.84e8, 1.0e6, 3.6e7]), s2 = R.pick([10, 20, 50, 100, 200]), Dn = 1.22 * lam * 1e-9 * L2 / s2;
+      var L2 = R.pick([3.84e8, 1.0e6, 3.6e7]), s2 = R.pick([10, 20, 50, 100, 200, 12, 30, 60, 80, 150]), Dn = 1.22 * lam * 1e-9 * L2 / s2;
       rec('modern.resolution', { kind: kind, lam: lam, L: L2, s: s2 });
       p = { q: 'What is the smallest aperture, in meters, that could resolve two features $' + qu(s2, 'm', 2) + '$ apart from a distance of $' + qu(L2, 'm', 3) + '$, at $' + qu(lam, 'nm', 3) + '$?', a: num(Dn), unit: 'm',
         steps: ['The features subtend $\\theta = \\dfrac{' + nx(s2, 2) + '}{' + nx(L2) + '} = ' + qu(s2 / L2, 'rad') + '$.', 'Set $1.22\\lambda/D = \\theta$: $D = \\dfrac{1.22\\lambda}{\\theta} = \\dfrac{1.22(' + nx(lam * 1e-9, 3) + ')}{' + nx(s2 / L2) + '} = ' + qu(Dn, 'm') + '$.'],
@@ -575,33 +575,33 @@
 
   G('modern.michelson-interferometer', function (R, ctx) {
     var kind = R.pick(by(ctx, ['N', 'N'], ['d', 'lam', 'N'], ['film', 'gas', 'lam']));
-    var lam = R.pick([546, 589, 633, 532, 488, 650]), p;
+    var lam = R.pick([546, 589, 633, 532, 488, 650, 500, 600]), p;
     if (kind === 'N') {
-      var d = R.pick([0.010, 0.020, 0.050, 0.10, 0.25, 0.50]), N = 2 * d * 1e-3 / (lam * 1e-9);
+      var d = R.pick([0.010, 0.020, 0.050, 0.10, 0.25, 0.50, 0.012, 0.03, 0.06, 0.09, 0.2, 0.4]), N = 2 * d * 1e-3 / (lam * 1e-9);
       rec('modern.michelson-interferometer', { kind: kind, lam: lam, d: d });
       p = { q: 'In a Michelson interferometer lit by $' + qu(lam, 'nm', 3) + '$ light, one mirror is moved $' + qu(d, 'mm', 2) + '$. How many fringes pass the center of the pattern?', a: num(N, 0.01), unit: 'fringes',
         steps: ['The light goes out and back, so the path changes by $2d = ' + qu(2 * d, 'mm', 2) + '$.', '$N = \\dfrac{2d}{\\lambda} = \\dfrac{' + nx(2 * d * 1e-3, 2) + '}{' + nx(lam * 1e-9, 3) + '} = ' + nx(N, 4) + '$.'],
         hint: 'One fringe for each half wavelength of mirror motion.' };
     } else if (kind === 'd') {
-      var N2 = R.pick([100, 150, 200, 250, 400, 500, 800, 1000]), d2 = N2 * lam * 1e-9 / 2;
+      var N2 = R.pick([100, 150, 200, 250, 400, 500, 800, 1000, 120, 300, 350, 600, 700, 900]), d2 = N2 * lam * 1e-9 / 2;
       rec('modern.michelson-interferometer', { kind: kind, lam: lam, N: N2 });
       p = { q: 'A Michelson interferometer uses $' + qu(lam, 'nm', 3) + '$ light. While a mirror moves, $' + N2 + '$ fringes pass. How far did the mirror move, in micrometers?', a: num(d2 * 1e6), unit: 'μm',
         steps: ['Each fringe is $\\lambda/2$ of mirror motion.', '$d = \\dfrac{N\\lambda}{2} = \\dfrac{' + N2 + '(' + nx(lam * 1e-9, 3) + ')}{2} = ' + qu(d2, 'm') + ' = ' + qu(d2 * 1e6, 'μm') + '$.'],
         hint: 'The round trip grows by $2d$; each fringe is one wavelength of round trip.' };
     } else if (kind === 'lam') {
-      var d3 = R.pick([0.100, 0.150, 0.200, 0.250]), N3 = M.round(2 * d3 * 1e-3 / (lam * 1e-9)), l3 = 2 * d3 * 1e-3 / N3;
+      var d3 = R.pick([0.100, 0.150, 0.200, 0.250, 0.12]), N3 = M.round(2 * d3 * 1e-3 / (lam * 1e-9)), l3 = 2 * d3 * 1e-3 / N3;
       rec('modern.michelson-interferometer', { kind: kind, d: d3, N: N3 });
       p = { q: 'Moving a Michelson interferometer\'s mirror by $' + qu(d3, 'mm', 3) + '$ makes $' + N3 + '$ fringes pass. What is the wavelength of the light, in nanometers?', a: num(l3 * 1e9), unit: 'nm',
         steps: ['$N = 2d/\\lambda$, so $\\lambda = \\dfrac{2d}{N}$.', '$\\lambda = \\dfrac{2(' + nx(d3 * 1e-3, 3) + ')}{' + N3 + '} = ' + qu(l3, 'm') + ' = ' + qu(l3 * 1e9, 'nm') + '$.'],
         hint: 'Solve $N = 2d/\\lambda$ for $\\lambda$.' };
     } else if (kind === 'film') {
-      var nf = R.pick([1.40, 1.45, 1.50, 1.58, 1.60]), t = R.pick([5.0, 8.0, 10, 12, 20]), Nf = 2 * t * 1e-6 * (nf - 1) / (lam * 1e-9);
+      var nf = R.pick([1.40, 1.45, 1.50, 1.58, 1.60]), t = R.pick([5.0, 8.0, 10, 12, 20, 6, 9, 14, 17, 19]), Nf = 2 * t * 1e-6 * (nf - 1) / (lam * 1e-9);
       rec('modern.michelson-interferometer', { kind: kind, lam: lam, n: nf, t: t });
       p = { q: 'A thin plastic sheet $' + qu(t, 'μm', 2) + '$ thick with index $' + nx(nf, 3) + '$ is slipped into one arm of a Michelson interferometer lit by $' + qu(lam, 'nm', 3) + '$ light, perpendicular to the beam. How many fringes shift?', a: num(Nf, 0.01), unit: 'fringes',
         steps: ['The beam crosses the sheet twice. The sheet holds $nt/\\lambda$ wavelengths where there were $t/\\lambda$ before.', 'Extra path: $2t(n - 1) = 2(' + nx(t * 1e-6, 2) + ')(' + nx(nf - 1, 2) + ') = ' + qu(2 * t * 1e-6 * (nf - 1), 'm') + '$.', '$N = \\dfrac{2t(n - 1)}{\\lambda} = ' + nx(Nf) + '$.'],
         hint: 'Only the extra wavelengths count: $n - 1$, and the light passes through twice.' };
     } else {
-      var Lc = R.pick([2.0, 3.0, 4.0, 5.0, 10]), Ng = R.pick([18, 20, 25, 28, 30, 40, 45]), ng = 1 + Ng * lam * 1e-9 / (2 * Lc * 1e-2);
+      var Lc = R.pick([2.0, 3.0, 4.0, 5.0, 10, 6, 7, 8, 9]), Ng = R.pick([18, 20, 25, 28, 30, 40, 45, 22, 24, 32, 34, 36, 42, 44]), ng = 1 + Ng * lam * 1e-9 / (2 * Lc * 1e-2);
       rec('modern.michelson-interferometer', { kind: kind, lam: lam, L: Lc, N: Ng });
       p = { q: 'An empty cell $' + qu(Lc, 'cm', 2) + '$ long sits in one arm of a Michelson interferometer lit by $' + qu(lam, 'nm', 3) + '$ light. As gas flows into the cell, $' + Ng + '$ fringes pass. What is $n - 1$ for the gas?', a: num(ng - 1), unit: '',
         steps: ['The light crosses the cell twice, so the extra path is $2L(n - 1)$.', '$2L(n - 1) = N\\lambda$: $n - 1 = \\dfrac{' + Ng + '(' + nx(lam * 1e-9, 3) + ')}{2(' + nx(Lc * 1e-2, 2) + ')} = ' + nx(ng - 1) + '$.'],
@@ -626,7 +626,7 @@
         steps: ['$n_c^2 = (1.00)(' + nx(ng, 3) + ')$.', '$n_c = \\sqrt{' + nx(ng, 3) + '} = ' + nx(M.sqrt(ng)) + '$.'],
         hint: 'The coating index should be the geometric mean of the indices on either side.' };
     } else if (kind === 'wedge' || kind === 'spacing') {
-      var Lp = R.pick([5.0, 8.0, 10.0, 12.0, 15.0]), m2 = R.pick([40, 60, 80, 100, 120, 150, 200]), tw = m2 * lam / 2;
+      var Lp = R.pick([5.0, 8.0, 10.0, 12.0, 15.0, 6, 7, 9, 13, 14]), m2 = R.pick([40, 60, 80, 100, 120, 150, 200, 50, 70, 90]), tw = m2 * lam / 2;
       rec('modern.thin-film-design', { kind: kind, lam: lam, L: Lp, m: m2 });
       if (kind === 'wedge') p = { q: 'Two flat glass plates $' + qu(Lp, 'cm', 2) + '$ long touch along one edge and are held apart by a thin wire at the other edge, making an air wedge. In $' + qu(lam, 'nm', 3) + '$ light, the dark fringe at the wire is the $' + m2 + '$th one counted from the contact line (which is dark fringe number 0). How thick is the wire, in micrometers?', a: num(tw / 1000), unit: 'μm',
         steps: ['Only the reflection at the lower plate (air to glass) flips, so dark fringes are where $2t = m\\lambda$; the contact line is $m = 0$.', 'At the wire: $t = \\dfrac{m\\lambda}{2} = \\dfrac{' + m2 + '(' + lam + '\\ \\text{nm})}{2} = ' + qu(tw, 'nm') + ' = ' + qu(tw / 1000, 'μm') + '$.'],
@@ -654,17 +654,17 @@
       p = { q: 'X-rays of wavelength $' + qu(lam, 'nm', 3) + '$ reflect from crystal planes $' + qu(d, 'nm', 3) + '$ apart. Find the glancing angle (measured from the planes) for ' + (m === 1 ? 'first' : 'second') + '-order reflection.', a: num(th), unit: '°',
         steps: ['Bragg: $2d\\sin\\theta = m\\lambda$, so $\\sin\\theta = \\dfrac{' + (m === 1 ? '' : m) + '(' + nx(lam, 3) + ')}{2(' + nx(d, 3) + ')} = ' + nx(m * lam / (2 * d)) + '$.', '$\\theta = ' + deg(th) + '$.'], hint: 'Use $2d\\sin\\theta = m\\lambda$ with the angle from the planes.' };
     } else if (kind === 'd') {
-      var th2 = R.pick([10.0, 12.5, 15.0, 17.5, 20.0, 22.5, 25.0]), m2 = R.pick([1, 2]), d2 = m2 * lam / (2 * sind(th2));
+      var th2 = R.pick([10.0, 12.5, 15.0, 17.5, 20.0, 22.5, 25.0, 12]), m2 = R.pick([1, 2]), d2 = m2 * lam / (2 * sind(th2));
       rec('modern.bragg-diffraction', { kind: kind, lam: lam, th: th2, m: m2 });
       p = { q: 'X-rays of wavelength $' + qu(lam, 'nm', 3) + '$ give a ' + (m2 === 1 ? 'first' : 'second') + '-order Bragg reflection at a glancing angle of $' + nx(th2, 3) + '^\\circ$. What is the spacing of the planes?', a: num(d2), unit: 'nm',
         steps: ['$d = \\dfrac{m\\lambda}{2\\sin\\theta} = \\dfrac{' + m2 + '(' + nx(lam, 3) + ')}{2\\sin ' + nx(th2, 3) + '^\\circ}$.', '$d = ' + qu(d2, 'nm') + '$.'], hint: 'Solve Bragg\'s law for $d$.' };
     } else if (kind === 'lam') {
-      var th3 = R.pick([12.0, 14.0, 16.0, 18.0, 20.0, 24.0]), l3 = 2 * d * sind(th3);
+      var th3 = R.pick([12.0, 14.0, 16.0, 18.0, 20.0, 24.0, 13, 15, 17, 21, 22, 23]), l3 = 2 * d * sind(th3);
       rec('modern.bragg-diffraction', { kind: kind, d: d, th: th3 });
       p = { q: 'Planes $' + qu(d, 'nm', 3) + '$ apart give a first-order Bragg reflection at a glancing angle of $' + nx(th3, 3) + '^\\circ$. What is the X-ray wavelength?', a: num(l3), unit: 'nm',
         steps: ['$\\lambda = 2d\\sin\\theta$ for $m = 1$.', '$\\lambda = 2(' + nx(d, 3) + ')\\sin ' + nx(th3, 3) + '^\\circ = ' + qu(l3, 'nm') + '$.'], hint: 'First order: $\\lambda = 2d\\sin\\theta$.' };
     } else if (kind === 'normal' || kind === 'turned') {
-      var thg = R.pick([11.0, 13.0, 15.0, 18.0, 21.0, 24.0]), dd = lam / (2 * sind(thg));
+      var thg = R.pick([11.0, 13.0, 15.0, 18.0, 21.0, 24.0, 12, 14, 17, 19, 22, 23]), dd = lam / (2 * sind(thg));
       rec('modern.bragg-diffraction', { kind: kind, lam: lam, th: thg });
       var given = kind === 'normal' ? 'makes an angle of $' + nx(90 - thg, 3) + '^\\circ$ with the normal to the crystal planes' : 'is turned through a total angle of $' + nx(2 * thg, 3) + '^\\circ$ by the crystal';
       p = { q: 'A beam of $' + qu(lam, 'nm', 3) + '$ X-rays ' + given + ' when it gives a first-order Bragg reflection. What is the spacing of the planes?', a: num(dd), unit: 'nm',
@@ -751,25 +751,25 @@
     var kind = R.pick(by(ctx, ['myopia', 'hyperopia'], ['myopiaG', 'farFrom', 'hyperopia'], ['hyperopiaG', 'myopiaG', 'type']));
     var p;
     if (kind === 'myopia' || kind === 'myopiaG') {
-      var FP = R.pick([0.25, 0.30, 0.40, 0.50, 0.60, 0.75, 0.80, 1.0, 1.2, 1.25, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0]), dg = kind === 'myopia' ? 0 : R.pick([0.010, 0.012, 0.015, 0.018, 0.020, 0.025]), P = -1 / (FP - dg);
+      var FP = R.pick([0.25, 0.30, 0.40, 0.50, 0.60, 0.75, 0.80, 1.0, 1.2, 1.25, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 0.35, 0.7, 0.9, 3.5]), dg = kind === 'myopia' ? 0 : R.pick([0.010, 0.012, 0.015, 0.018, 0.020, 0.025]), P = -1 / (FP - dg);
       rec('modern.eye-and-glasses', { kind: kind, FP: FP, d: dg });
       p = { q: 'A nearsighted person\'s far point is $' + qu(FP * 100, 'cm', 3) + '$ from the eye. What power of ' + (dg ? 'glasses worn $' + qu(dg * 100, 'cm', 2) + '$ in front of the eye' : 'contact lens') + ' lets them see distant objects clearly?', a: num(P), unit: 'D',
         steps: ['The lens must make a virtual image of a distant object at the far point.', dg ? 'Measured from the glasses, the far point is $' + nx(FP, 3) + ' - ' + nx(dg, 2) + ' = ' + qu(FP - dg, 'm') + '$ away.' : 'A contact lens sits on the eye, so the far point is $' + qu(FP, 'm') + '$ from the lens.', '$\\dfrac{1}{f} = \\dfrac{1}{\\infty} + \\dfrac{1}{-' + nx(FP - dg) + '\\ \\text{m}}$, so $P = ' + qu(P, 'D') + '$ (diverging).'],
         hint: 'The image of a faraway object must land at the far point, on the same side as the object.' };
     } else if (kind === 'hyperopia' || kind === 'hyperopiaG') {
-      var NP = R.pick([0.40, 0.50, 0.60, 0.75, 0.80, 1.0, 1.2, 1.25, 1.5, 2.0, 3.0]), dh = kind === 'hyperopia' ? 0 : R.pick([0.010, 0.015, 0.018, 0.020]), Ph = 1 / (0.25 - dh) - 1 / (NP - dh);
+      var NP = R.pick([0.40, 0.50, 0.60, 0.75, 0.80, 1.0, 1.2, 1.25, 1.5, 2.0, 3.0, 0.7, 0.9, 2.5]), dh = kind === 'hyperopia' ? 0 : R.pick([0.010, 0.015, 0.018, 0.020, 0.012]), Ph = 1 / (0.25 - dh) - 1 / (NP - dh);
       rec('modern.eye-and-glasses', { kind: kind, NP: NP, d: dh });
       p = { q: 'A farsighted person\'s near point is $' + qu(NP * 100, 'cm', 3) + '$ from the eye. What power of ' + (dh ? 'reading glasses worn $' + qu(dh * 100, 'cm', 2) + '$ in front of the eye' : 'contact lens') + ' lets them read a page held 25 cm from the eye?', a: num(Ph), unit: 'D',
         steps: ['The lens must make a virtual image of the page at the near point.', dh ? 'From the glasses: page at $d_o = 0.25 - ' + nx(dh, 2) + ' = ' + qu(0.25 - dh, 'm') + '$, image at $d_i = -(' + nx(NP, 3) + ' - ' + nx(dh, 2) + ') = ' + qu(-(NP - dh), 'm') + '$.' : 'Page at $d_o = 0.25$ m; image at $d_i = -' + qu(NP, 'm') + '$.', '$P = \\dfrac{1}{d_o} + \\dfrac{1}{d_i} = ' + nx(1 / (0.25 - dh)) + ' - ' + nx(1 / (NP - dh)) + ' = ' + qu(Ph, 'D') + '$ (converging).'],
         hint: 'Image the page (at 25 cm) at the near point, on the same side as the page.' };
     } else if (kind === 'farFrom') {
-      var Pf = -R.pick([0.25, 0.50, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 3.0, 3.5, 4.0, 5.0]), fp = -1 / Pf;
+      var Pf = -R.pick([0.25, 0.50, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 3.0, 3.5, 4.0, 5.0, 0.3, 0.35, 0.4, 0.6, 0.7, 0.8, 0.9, 1.2]), fp = -1 / Pf;
       rec('modern.eye-and-glasses', { kind: kind, P: Pf });
       p = { q: 'A contact lens prescription reads $' + qu(Pf, 'D', 3) + '$. How far from the eye, in centimeters, is the person\'s far point without lenses?', a: num(fp * 100), unit: 'cm',
         steps: ['$f = 1/P = 1/(' + nx(Pf, 3) + ') = ' + qu(1 / Pf, 'm') + '$.', 'This diverging lens images distant objects at its focal point, which must be the far point: $' + qu(fp, 'm') + ' = ' + qu(fp * 100, 'cm') + '$.'],
         hint: 'For a nearsighted eye, the lens\'s focal length equals minus the far point distance.' };
     } else {
-      var which = R.pick(['near', 'far']), dist = which === 'near' ? R.pick([50, 60, 75, 80, 100, 120, 150]) : R.pick([40, 50, 60, 80, 100, 150, 200, 300]);
+      var which = R.pick(['near', 'far']), dist = which === 'near' ? R.pick([50, 60, 75, 80, 100, 120, 150, 70, 90]) : R.pick([40, 50, 60, 80, 100, 150, 200, 300, 70, 90, 120, 250]);
       rec('modern.eye-and-glasses', { kind: kind, which: which });
       var right = which === 'far' ? 'A diverging lens with negative power' : 'A converging lens with positive power';
       var wrong = which === 'far' ? ['A converging lens with positive power', 'A converging lens, because the person cannot see far away', 'No lens can help'] : ['A diverging lens with negative power', 'A diverging lens, because the person cannot see up close', 'No lens can help'];
@@ -784,30 +784,30 @@
     var kind = R.pick(by(ctx, ['mag', 'product'], ['tube', 'magNear', 'product'], ['lens', 'tube', 'feFor']));
     var p;
     if (kind === 'mag' || kind === 'magNear') {
-      var f = R.pick([2.0, 2.5, 4.0, 5.0, 6.0, 8.0, 10, 12.5]), Mg = kind === 'mag' ? 25 / f : 1 + 25 / f;
+      var f = R.pick([2.0, 2.5, 4.0, 5.0, 6.0, 8.0, 10, 12.5, 3, 3.5, 7, 9, 12]), Mg = kind === 'mag' ? 25 / f : 1 + 25 / f;
       rec('modern.microscopes', { kind: kind, f: f });
       p = { q: 'A magnifying glass has a focal length of $' + qu(f, 'cm', 2) + '$. What is its angular magnification ' + (kind === 'mag' ? 'when the object is at its focal point (relaxed eye)' : 'when the image is at the near point, 25 cm from the eye') + '?', a: num(Mg, 0.01), unit: '×',
         steps: kind === 'mag' ? ['Without the lens, the object at 25 cm covers $\\theta_0 = h/25$; at the focal point, through the lens, it covers $\\theta = h/f$.', '$M = \\dfrac{25\\ \\text{cm}}{f} = \\dfrac{25}{' + nx(f, 2) + '} = ' + nx(Mg) + '$.'] : ['With the image at the near point, $M = 1 + \\dfrac{25\\ \\text{cm}}{f}$.', '$M = 1 + \\dfrac{25}{' + nx(f, 2) + '} = ' + nx(Mg) + '$.'],
         hint: 'Compare the angle through the lens with the angle at 25 cm without it.' };
     } else if (kind === 'product') {
-      var mo = R.pick([4, 10, 20, 40, 60, 100]), me = R.pick([5, 10, 12.5, 15, 20]);
+      var mo = R.pick([4, 10, 20, 40, 60, 100]), me = R.pick([5, 10, 12.5, 15, 20, 6, 7, 8, 9, 12]);
       rec('modern.microscopes', { kind: kind, mo: mo, me: me });
       p = { q: 'A microscope has a $' + mo + '\\times$ objective and a $' + nx(me, 3) + '\\times$ eyepiece. What is its total magnification (as a positive number)?', a: num(mo * me, 0.01), unit: '×',
         steps: ['The eyepiece magnifies the image the objective has already enlarged, so the factors multiply.', '$' + mo + ' \\times ' + nx(me, 3) + ' = ' + nx(mo * me, 4) + '$.'], hint: 'Two enlargements in a row multiply.' };
     } else if (kind === 'tube') {
-      var fo = R.pick([0.40, 0.50, 0.80, 1.0, 1.6, 2.0]), fe = R.pick([1.25, 2.0, 2.5, 4.0, 5.0]), Lt = 16, Mt = Lt / fo * 25 / fe;
+      var fo = R.pick([0.40, 0.50, 0.80, 1.0, 1.6, 2.0, 0.6, 0.7, 0.9, 1.2, 1.5]), fe = R.pick([1.25, 2.0, 2.5, 4.0, 5.0, 1.5, 3, 3.5]), Lt = 16, Mt = Lt / fo * 25 / fe;
       rec('modern.microscopes', { kind: kind, fo: fo, fe: fe, L: Lt });
       p = { q: 'A microscope has an objective with $f_{\\text{obj}} = ' + qu(fo, 'cm', 2) + '$, an eyepiece with $f_{\\text{eye}} = ' + qu(fe, 'cm', 3) + '$ and a tube length $L = 16$ cm. What is the size of its total magnification?', a: num(Mt), unit: '×',
         steps: ['Objective: $|m_{\\text{obj}}| = \\dfrac{L}{f_{\\text{obj}}} = \\dfrac{16}{' + nx(fo, 2) + '} = ' + nx(Lt / fo) + '$.', 'Eyepiece: $M_{\\text{eye}} = \\dfrac{25}{' + nx(fe, 3) + '} = ' + nx(25 / fe) + '$.', 'Total: $' + nx(Lt / fo) + ' \\times ' + nx(25 / fe) + ' = ' + nx(Mt) + '$.'],
         hint: 'Multiply the objective\'s $L/f_{\\text{obj}}$ by the eyepiece\'s $25\\ \\text{cm}/f_{\\text{eye}}$.' };
     } else if (kind === 'lens') {
-      var fo2 = R.pick([0.40, 0.50, 0.60, 0.80, 1.0]), dO = rnd(fo2 * R.pick([1.02, 1.04, 1.05, 1.08, 1.1]), 3), fe2 = R.pick([2.0, 2.5, 4.0, 5.0]), di = 1 / (1 / fo2 - 1 / dO), mo2 = -di / dO, Mt2 = mo2 * 25 / fe2;
+      var fo2 = R.pick([0.40, 0.50, 0.60, 0.80, 1.0, 0.7, 0.9]), dO = rnd(fo2 * R.pick([1.02, 1.04, 1.05, 1.08, 1.1]), 3), fe2 = R.pick([2.0, 2.5, 4.0, 5.0, 3, 3.5]), di = 1 / (1 / fo2 - 1 / dO), mo2 = -di / dO, Mt2 = mo2 * 25 / fe2;
       rec('modern.microscopes', { kind: kind, fo: fo2, dO: dO, fe: fe2 });
       p = { q: 'A microscope\'s objective ($f = ' + qu(fo2, 'cm', 2) + '$) holds a specimen $' + qu(dO, 'cm', 3) + '$ away. The eyepiece has $f = ' + qu(fe2, 'cm', 2) + '$ and is used with a relaxed eye. Find the total magnification, with its sign (negative for an inverted image).', a: num(Mt2, 0.03), unit: '',
         steps: ['Objective: $\\dfrac{1}{d_i} = \\dfrac{1}{' + nx(fo2, 2) + '} - \\dfrac{1}{' + nx(dO, 3) + '}$, so $d_i = ' + qu(di, 'cm') + '$.', '$m_{\\text{obj}} = -\\dfrac{d_i}{d_o} = -\\dfrac{' + nx(di) + '}{' + nx(dO, 3) + '} = ' + nx(mo2) + '$.', 'Eyepiece: $M_{\\text{eye}} = \\dfrac{25}{' + nx(fe2, 2) + '} = ' + nx(25 / fe2) + '$.', '$M = (' + nx(mo2) + ')(' + nx(25 / fe2) + ') = ' + nx(Mt2) + '$.'],
         hint: 'Use the thin lens equation for the objective, then multiply by the eyepiece\'s magnification.' };
     } else {
-      var target = R.pick([200, 250, 400, 500, 1000]), mo3 = R.pick([10, 20, 40, 50, 100]), Me = target / mo3, fe3 = 25 / Me;
+      var target = R.pick([200, 250, 400, 500, 1000, 300, 350, 600, 800, 900]), mo3 = R.pick([10, 20, 40, 50, 100, 12, 25, 35, 70, 90]), Me = target / mo3, fe3 = 25 / Me;
       if (Me < 2) { mo3 = 20; Me = target / mo3; fe3 = 25 / Me; }
       rec('modern.microscopes', { kind: kind, target: target, mo: mo3 });
       p = { q: 'You want a total magnification of $' + target + '\\times$ from a microscope whose objective magnifies $' + mo3 + '\\times$. What eyepiece focal length do you need (relaxed eye)?', a: num(fe3), unit: 'cm',
@@ -819,7 +819,7 @@
 
   G('modern.telescope-optics', function (R, ctx) {
     var kind = R.pick(by(ctx, ['mag', 'length'], ['fe', 'light', 'mag'], ['crater', 'light', 'angle']));
-    var fo = R.pick([50, 60, 80, 90, 100, 120, 150, 200]), fe = R.pick([1.0, 1.25, 1.5, 2.0, 2.5, 4.0, 5.0]), p;
+    var fo = R.pick([50, 60, 80, 90, 100, 120, 150, 200, 70]), fe = R.pick([1.0, 1.25, 1.5, 2.0, 2.5, 4.0, 5.0, 1.2, 3, 3.5]), p;
     if (kind === 'mag') {
       rec('modern.telescope-optics', { kind: kind, fo: fo, fe: fe });
       p = { q: 'A refracting telescope has an objective with $f_o = ' + qu(fo, 'cm', 3) + '$ and an eyepiece with $f_e = ' + qu(fe, 'cm', 3) + '$. What is the size of its angular magnification?', a: num(fo / fe, 0.01), unit: '×',
@@ -829,7 +829,7 @@
       p = { q: 'A refracting telescope uses an objective with $f_o = ' + qu(fo, 'cm', 3) + '$ and an eyepiece with $f_e = ' + qu(fe, 'cm', 3) + '$, set for a relaxed eye. How far apart are the two lenses?', a: num(fo + fe, 0.01), unit: 'cm',
         steps: ['The objective\'s image of a distant star forms in its focal plane, $f_o$ behind it.', 'For parallel rays to leave the eyepiece, that image must be at the eyepiece\'s focal point: separation $= f_o + f_e = ' + qu(fo + fe, 'cm', 4) + '$.'], hint: 'The two lenses share a focal point.' };
     } else if (kind === 'fe') {
-      var Mw = R.pick([25, 30, 40, 50, 60, 75, 100]);
+      var Mw = R.pick([25, 30, 40, 50, 60, 75, 100, 35, 70, 80, 90]);
       rec('modern.telescope-optics', { kind: kind, fo: fo, M: Mw });
       p = { q: 'A telescope objective has $f_o = ' + qu(fo, 'cm', 3) + '$. What eyepiece focal length gives an angular magnification of $' + Mw + '\\times$?', a: num(fo / Mw), unit: 'cm',
         steps: ['$|M| = f_o/f_e$, so $f_e = \\dfrac{f_o}{|M|} = \\dfrac{' + nx(fo, 3) + '}{' + Mw + '} = ' + qu(fo / Mw, 'cm') + '$.'], hint: 'Solve $|M| = f_o/f_e$ for $f_e$.' };
@@ -849,7 +849,7 @@
       p = { q: obj[0].charAt(0).toUpperCase() + obj[0].slice(1) + ' covers about $' + nx(obj[1], 2) + '^\\circ$ of sky. Through a telescope with $f_o = ' + qu(fo, 'cm', 3) + '$ and $f_e = ' + qu(fe, 'cm', 3) + '$, about how large an angle does it appear to cover, in degrees?', a: num(obj[1] * Mm, 0.02), unit: '°',
         steps: ['The telescope multiplies small angles by $f_o/f_e = ' + nx(Mm) + '$.', 'Apparent angle: $' + nx(obj[1], 2) + '^\\circ \\times ' + nx(Mm) + ' = ' + deg(obj[1] * Mm) + '$.'], hint: 'Angular magnification multiplies angles.' };
     } else {
-      var D = R.pick([0.10, 0.15, 0.20, 0.30, 0.50, 1.0, 2.4]), lam = 550, dist = 3.84e8, sMin = 1.22 * lam * 1e-9 / D * dist;
+      var D = R.pick([0.10, 0.15, 0.20, 0.30, 0.50, 1.0, 2.4, 0.12, 0.35, 0.4, 0.7, 0.9, 1.2, 2]), lam = 550, dist = 3.84e8, sMin = 1.22 * lam * 1e-9 / D * dist;
       rec('modern.telescope-optics', { kind: kind, D: D });
       p = { q: 'A telescope with a $' + qu(D * 100, 'cm', 3) + '$ aperture views the Moon ($3.84 \\times 10^8$ m away) in $550$ nm light. If diffraction is the only limit, what is the smallest crater it can make out, in kilometers? (Magnification does not change the answer.)', a: num(sMin / 1000), unit: 'km',
         steps: ['$\\theta_R = 1.22\\dfrac{\\lambda}{D} = 1.22\\,\\dfrac{550 \\times 10^{-9}}{' + nx(D, 2) + '} = ' + qu(1.22 * lam * 1e-9 / D, 'rad') + '$.', 'Size: $L\\theta_R = (3.84 \\times 10^8)(' + nx(1.22 * lam * 1e-9 / D) + ') = ' + qu(sMin, 'm') + ' = ' + qu(sMin / 1000, 'km') + '$.'],
@@ -911,20 +911,20 @@
         steps: ['Take $+x$ toward the ' + head + ' end. For events simultaneous in the ' + (setup === 'platform' ? 'platform' : 'station') + ' frame, the Lorentz transformation gives $t\' = -\\gamma\\dfrac{vx}{c^2}$ (plus a constant) in a frame moving at $+v$.', 'So the event with the larger $x$, the ' + head + ' one, has the smaller $t\'$.', 'By the moving clocks, the ' + head + ' event happened first; the gap is $\\gamma v\\Delta x/c^2$.'],
         hint: 'In a frame moving toward one of two events, that event happens first.' };
     } else if (kind === 'dt' || kind === 'dtkm') {
-      var dx = kind === 'dt' ? R.pick([300, 450, 600, 900, 1200, 1500]) : R.pick([1.0, 2.0, 3.0, 5.0, 10]) * 1000, dtp = g * b * dx / C;
+      var dx = kind === 'dt' ? R.pick([300, 450, 600, 900, 1200, 1500, 350, 400, 500, 700, 800, 1000]) : R.pick([1.0, 2.0, 3.0, 5.0, 10, 4, 6, 7, 8, 9]) * 1000, dtp = g * b * dx / C;
       rec('modern.simultaneity', { kind: kind, b: b, dx: dx });
       p = { q: 'Two events happen at the same time in the lab, $' + (kind === 'dt' ? qu(dx, 'm', 3) : qu(dx / 1000, 'km', 2)) + '$ apart. A ship flies along the line joining them at $' + bT(b) + 'c$. How far apart in time are the two events on the ship\'s clocks, in microseconds?', a: num(dtp * 1e6), unit: 'μs',
         steps: ['$' + gT(b) + '$.', '$\\Delta t\' = \\gamma\\dfrac{v\\Delta x}{c^2} = \\gamma\\,\\dfrac{\\beta\\,\\Delta x}{c} = ' + nx(g, 4) + ' \\times \\dfrac{(' + bT(b) + ')(' + nx(dx, 3) + ')}{3.00 \\times 10^8}$.', '$\\Delta t\' = ' + qu(dtp, 's') + ' = ' + qu(dtp * 1e6, 'μs') + '$; the event ahead of the ship comes first.'],
         hint: 'Use $\\Delta t\' = \\gamma v\\Delta x/c^2$; note that $v/c^2 = \\beta/c$.' };
     } else if (kind === 'speedFor') {
-      var dx2 = R.pick([600, 900, 1500, 3000]), dt2 = R.pick([1.0, 2.0, 3.0, 4.0]) * 1e-6, k = C * dt2 / dx2, bb = k / M.sqrt(1 + k * k);
+      var dx2 = R.pick([600, 900, 1500, 3000, 700, 1000, 1200, 2500]), dt2 = R.pick([1.0, 2.0, 3.0, 4.0]) * 1e-6, k = C * dt2 / dx2, bb = k / M.sqrt(1 + k * k);
       if (k > 6) { dt2 = 1.0e-6; k = C * dt2 / dx2; bb = k / M.sqrt(1 + k * k); }
       rec('modern.simultaneity', { kind: kind, dx: dx2, dt: dt2 });
       p = { q: 'Two events $' + qu(dx2, 'm', 3) + '$ apart are simultaneous in frame $S$. How fast must a frame move along the line joining them for the events to be $' + qu(dt2 * 1e6, 'μs', 2) + '$ apart in that frame? Give the speed as a fraction of $c$.', a: num(bb, 0.01), unit: 'c',
         steps: ['$\\Delta t\' = \\gamma\\beta\\dfrac{\\Delta x}{c}$, so $\\gamma\\beta = \\dfrac{c\\Delta t\'}{\\Delta x} = \\dfrac{(3.00 \\times 10^8)(' + nx(dt2, 2) + ')}{' + nx(dx2, 3) + '} = ' + nx(k) + '$.', '$\\gamma\\beta = \\dfrac{\\beta}{\\sqrt{1 - \\beta^2}} = k$ gives $\\beta = \\dfrac{k}{\\sqrt{1 + k^2}}$.', '$\\beta = \\dfrac{' + nx(k) + '}{\\sqrt{1 + ' + nx(k) + '^2}} = ' + nx(bb) + '$.'],
         hint: 'Solve $\\gamma\\beta = c\\Delta t\'/\\Delta x$ for $\\beta$; square both sides.' };
     } else if (kind === 'causal') {
-      var dx3 = R.pick([300, 600, 900, 1200, 1800]), dt3 = R.pick([1.0, 2.0, 3.0, 4.0, 5.0]) * 1e-6, reach = C * dt3;
+      var dx3 = R.pick([300, 600, 900, 1200, 1800, 350, 500, 700, 800, 1500]), dt3 = R.pick([1.0, 2.0, 3.0, 4.0, 5.0]) * 1e-6, reach = C * dt3;
       if (M.abs(reach - dx3) < 50) dt3 += 1e-6, reach = C * dt3;
       var canFlip = dx3 > reach;
       rec('modern.simultaneity', { kind: kind, dx: dx3, dt: dt3 });
@@ -933,7 +933,7 @@
         steps: ['In $' + qu(dt3 * 1e6, 'μs', 2) + '$, light travels $(3.00 \\times 10^8)(' + nx(dt3, 2) + ') = ' + qu(reach, 'm') + '$.', canFlip ? 'B is farther than that, so no signal links them (a spacelike pair); for a frame with $v/c > c\\Delta t/\\Delta x$, the order reverses.' : 'B is within that distance, so A could cause B; $\\Delta t\' = \\gamma(\\Delta t - v\\Delta x/c^2) > 0$ for every $v < c$.'],
         hint: 'Compare the distance with how far light travels in the time between the events.' };
     } else {
-      var L0 = R.pick([150, 300, 450, 600, 900]), lag = L0 * b / C;
+      var L0 = R.pick([150, 300, 450, 600, 900, 200, 350, 400, 500, 800]), lag = L0 * b / C;
       rec('modern.simultaneity', { kind: kind, L0: L0, b: b });
       p = { q: 'A rocket $' + qu(L0, 'm', 3) + '$ long (in its own frame) has clocks at its nose and tail, synchronized in the rocket\'s frame. It flies past Earth nose first at $' + bT(b) + 'c$. At one instant of Earth time, Earth observers read both clocks. How much less does the nose clock read than the tail clock, in nanoseconds?', a: num(lag * 1e9), unit: 'ns',
         steps: ['The two readings are simultaneous in Earth\'s frame, and in Earth\'s frame the clocks are $L_0/\\gamma$ apart.', 'In the rocket\'s frame those two reading events are $\\Delta t\' = \\gamma\\dfrac{v}{c^2}\\cdot\\dfrac{L_0}{\\gamma} = \\dfrac{vL_0}{c^2}$ apart, with the nose event earlier.', 'So the nose clock reads less by $\\dfrac{\\beta L_0}{c} = \\dfrac{(' + bT(b) + ')(' + L0 + ')}{3.00 \\times 10^8} = ' + qu(lag, 's') + ' = ' + qu(lag * 1e9, 'ns') + '$ ("leading clocks lag").'],
@@ -946,19 +946,19 @@
     var kind = R.pick(by(ctx, ['dilate', 'trip'], ['speed', 'muon', 'trip'], ['small', 'which', 'speed']));
     var b = R.pick(BETAS), g = gam(b), p;
     if (kind === 'dilate') {
-      var sc = R.pick([['A particle lives', 'μs', R.pick([2.2, 0.026, 1.5, 0.89])], ['An astronaut naps for', 'h', R.pick([1.0, 2.0, 8.0])], ['A ship\'s clock ticks off', 's', R.pick([10, 60, 100])], ['A machine on a ship runs for', 'min', R.pick([15, 30, 45])]]);
+      var sc = R.pick([['A particle lives', 'μs', R.pick([2.2, 0.026, 1.5, 0.89])], ['An astronaut naps for', 'h', R.pick([1.0, 2.0, 8.0, 3, 5, 7])], ['A ship\'s clock ticks off', 's', R.pick([10, 60, 100, 12, 35, 90])], ['A machine on a ship runs for', 'min', R.pick([15, 30, 45, 17, 29, 43])]]);
       rec('modern.time-dilation', { kind: kind, b: b, tau: sc[2] });
       p = { q: sc[0] + ' $' + qu(sc[2], sc[1], 2) + '$ by its own clock while moving at $' + bT(b) + 'c$ relative to Earth. How long does this last as measured from Earth?', a: num(g * sc[2]), unit: sc[1],
         steps: ['The proper time $\\Delta\\tau = ' + qu(sc[2], sc[1], 2) + '$ is measured by the moving clock, present at both events.', '$' + gT(b) + '$.', '$\\Delta t = \\gamma\\Delta\\tau = ' + nx(g, 4) + ' \\times ' + nx(sc[2], 2) + ' = ' + qu(g * sc[2], sc[1]) + '$.'],
         hint: 'Earth sees the moving clock run slow: the Earth time is longer.' };
     } else if (kind === 'trip') {
-      var D = R.pick([4.2, 5.0, 8.6, 10, 12, 20, 25]), tE = D / b, tS = tE / g;
+      var D = R.pick([4.2, 5.0, 8.6, 10, 12, 20, 25, 6, 7, 8, 9, 15]), tE = D / b, tS = tE / g;
       rec('modern.time-dilation', { kind: kind, b: b, D: D });
       p = { q: 'A ship travels $' + qu(D, 'ly', 3) + '$ at $' + bT(b) + 'c$ to a star at rest relative to Earth. How long does the trip take according to the ship\'s clock?', a: num(tS), unit: 'yr',
         steps: ['Earth frame: $t = \\dfrac{' + nx(D, 3) + '\\ \\text{ly}}{' + bT(b) + '\\ \\text{ly/yr}} = ' + qu(tE, 'yr') + '$.', 'Departure and arrival both happen at the ship, so its clock reads the proper time.', '$' + gT(b) + '$, so $\\Delta\\tau = \\dfrac{' + nx(tE) + '}{' + nx(g, 4) + '} = ' + qu(tS, 'yr') + '$.'],
         hint: 'Find the Earth-frame time first; the ship\'s clock reads less by the factor $\\gamma$.' };
     } else if (kind === 'speed') {
-      var ratio = R.pick([1.25, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 10]), bb = M.sqrt(1 - 1 / (ratio * ratio)), tau = R.pick([1.0, 2.0, 4.0, 6.0]);
+      var ratio = R.pick([1.25, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 10, 3.5, 6, 7, 8, 9]), bb = M.sqrt(1 - 1 / (ratio * ratio)), tau = R.pick([1.0, 2.0, 4.0, 6.0, 3, 5]);
       rec('modern.time-dilation', { kind: kind, ratio: ratio });
       p = { q: 'A clock on a fast ship records $' + qu(tau, 'h', 2) + '$, while Earth observers measure the same interval as $' + qu(tau * ratio, 'h', 3) + '$. How fast is the ship moving, as a fraction of $c$?', a: num(bb, 0.005), unit: 'c',
         steps: ['$\\gamma = \\dfrac{\\Delta t}{\\Delta\\tau} = \\dfrac{' + nx(tau * ratio, 3) + '}{' + nx(tau, 2) + '} = ' + nx(ratio, 3) + '$.', '$\\beta = \\sqrt{1 - \\dfrac{1}{\\gamma^2}} = \\sqrt{1 - \\dfrac{1}{' + nx(ratio, 3) + '^2}} = ' + nx(bb, 4) + '$.'],
@@ -996,22 +996,22 @@
       p = { q: obj[0] + ' is $' + qu(obj[1], obj[2], 3) + '$ long in its own frame. How long is it, measured in a frame where it moves lengthwise at $' + bT(b) + 'c$?', a: num(obj[1] / g), unit: obj[2],
         steps: ['$' + gT(b) + '$.', '$L = \\dfrac{L_0}{\\gamma} = \\dfrac{' + nx(obj[1], 3) + '}{' + nx(g, 4) + '} = ' + qu(obj[1] / g, obj[2]) + '$.'], hint: 'Moving lengths are shorter along the motion: divide by $\\gamma$.' };
     } else if (kind === 'speedFor') {
-      var frac = R.pick([0.20, 0.25, 0.40, 0.50, 0.60, 0.75, 0.80, 0.90]), bb = M.sqrt(1 - frac * frac);
+      var frac = R.pick([0.20, 0.25, 0.40, 0.50, 0.60, 0.75, 0.80, 0.90, 0.3, 0.35, 0.7]), bb = M.sqrt(1 - frac * frac);
       rec('modern.length-contraction', { kind: kind, frac: frac });
       p = { q: 'How fast must a rod move along its length to be measured at $' + nx(frac * 100, 2) + '\\%$ of its proper length? Give $v$ as a fraction of $c$.', a: num(bb, 0.005), unit: 'c',
         steps: ['$\\dfrac{L}{L_0} = \\sqrt{1 - \\beta^2} = ' + nx(frac, 2) + '$.', '$\\beta = \\sqrt{1 - ' + nx(frac, 2) + '^2} = ' + nx(bb, 4) + '$.'], hint: 'Square both sides of $L/L_0 = \\sqrt{1 - \\beta^2}$.' };
     } else if (kind === 'proper') {
-      var Lm = R.pick([30, 45, 60, 80, 120]);
+      var Lm = R.pick([30, 45, 60, 80, 120, 35, 40, 50, 90, 100]);
       rec('modern.length-contraction', { kind: kind, b: b, L: Lm });
       p = { q: 'Earth observers measure a passing ship to be $' + qu(Lm, 'm', 3) + '$ long while it moves at $' + bT(b) + 'c$. How long is the ship in its own frame?', a: num(Lm * g), unit: 'm',
         steps: ['The ship\'s own length is its proper length, the longest one: $L_0 = \\gamma L$.', '$' + gT(b) + '$, so $L_0 = ' + nx(g, 4) + ' \\times ' + nx(Lm, 3) + ' = ' + qu(Lm * g, 'm') + '$.'], hint: 'The measured (moving) length is the shorter one.' };
     } else if (kind === 'muonFrame') {
-      var bm = R.pick([0.98, 0.99, 0.995, 0.999]), H = R.pick([8.0, 10, 12, 15]);
+      var bm = R.pick([0.98, 0.99, 0.995, 0.999]), H = R.pick([8.0, 10, 12, 15, 9, 11, 13, 14]);
       rec('modern.length-contraction', { kind: kind, b: bm, H: H });
       p = { q: 'In Earth\'s frame, a muon moving straight down at $' + bT(bm) + 'c$ crosses $' + qu(H, 'km', 2) + '$ of atmosphere. How thick is that layer of atmosphere in the muon\'s frame?', a: num(H / gam(bm)), unit: 'km',
         steps: ['The atmosphere is at rest on Earth, so $' + qu(H, 'km', 2) + '$ is its proper length.', 'In the muon\'s frame the atmosphere rushes past at $' + bT(bm) + 'c$: $' + gT(bm) + '$.', '$L = \\dfrac{' + nx(H, 2) + '}{' + nx(gam(bm), 4) + '} = ' + qu(H / gam(bm), 'km') + '$.'], hint: 'In the muon\'s frame it is the atmosphere that moves.' };
     } else {
-      var L0 = R.pick([1.00, 2.00, 0.50, 1.50]), th = R.pick([30, 37, 45, 53, 60]), Lx = L0 * cosd(th) / g, Ly = L0 * sind(th), Ln = M.hypot(Lx, Ly), an = atand(Ly / Lx);
+      var L0 = R.pick([1.00, 2.00, 0.50, 1.50, 0.6, 0.7, 0.9, 1.2]), th = R.pick([30, 37, 45, 53, 60, 32, 38, 44, 52, 58]), Lx = L0 * cosd(th) / g, Ly = L0 * sind(th), Ln = M.hypot(Lx, Ly), an = atand(Ly / Lx);
       rec('modern.length-contraction', { kind: kind, b: b, L0: L0, th: th });
       var ask = kind === 'tilt' ? 'length' : 'angle';
       p = { q: 'A rod $' + qu(L0, 'm', 3) + '$ long lies at $' + th + '^\\circ$ to the $x$-axis in its own frame. It moves along $x$ at $' + bT(b) + 'c$. What is its ' + (ask === 'length' ? 'length' : 'angle to the $x$-axis') + ' in the lab frame?', a: num(ask === 'length' ? Ln : an), unit: ask === 'length' ? 'm' : '°',
@@ -1063,14 +1063,14 @@
         steps: ['$s^2 = (' + dt + ')^2 - (' + dx + ')^2 = ' + s2 + '$ ly² (positive: timelike).'].concat(kind === 'tau' ? ['The traveling clock is at both events, so it reads the proper time: $\\Delta\\tau = s/c = \\sqrt{' + s2 + '} = ' + qu(M.sqrt(s2), 'yr') + '$.', 'Check: it moves at $' + dx + '/' + dt + ' = ' + nx(dx / dt) + 'c$, and $' + dt + '/\\gamma$ gives the same.'] : []),
         hint: kind === 'tau' ? 'The proper time is the interval divided by $c$.' : 'Square the time (in years) and the distance (in light-years), and subtract.' };
     } else if (kind === 'classify') {
-      var a = R.pick([1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 8.0]), d = R.pick([1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 8.0]), ty = a > d ? 0 : a < d ? 1 : 2;
+      var a = R.pick([1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 8.0, 1.2, 3.5, 7]), d = R.pick([1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 8.0, 1.2, 3.5, 7]), ty = a > d ? 0 : a < d ? 1 : 2;
       rec('modern.spacetime-interval', { kind: kind, dt: a, dx: d });
       p = { q: 'Two events are $' + qu(a, 'yr', 2) + '$ apart in time and $' + qu(d, 'ly', 2) + '$ apart in space in some frame. What kind of separation do they have?',
         a: { t: 'mc', choices: ['Timelike: one could cause the other, and every observer agrees on their order', 'Spacelike: no signal can link them, and their order depends on the frame', 'Lightlike: only a light signal could link them'], v: ty, keep: true },
         steps: ['$s^2 = (c\\Delta t)^2 - \\Delta x^2 = ' + nx(a * a, 3) + ' - ' + nx(d * d, 3) + ' = ' + nx(a * a - d * d, 3) + '$ ly².', ty === 0 ? 'Positive: timelike.' : ty === 1 ? 'Negative: spacelike.' : 'Zero: lightlike.'],
         hint: 'Compare $c\\Delta t$ with $\\Delta x$.' };
     } else if (kind === 'xprime') {
-      var tp = dt + R.pick([1, 2, 3, 5]), xp = M.sqrt(tp * tp - s2);
+      var tp = dt + R.pick([1, 2, 3, 5, 4]), xp = M.sqrt(tp * tp - s2);
       rec('modern.spacetime-interval', { kind: kind, dt: dt, dx: dx, tp: tp });
       p = { q: 'In frame $S$, two events are $' + dt + '$ yr and $' + dx + '$ ly apart. In another frame $S\'$ they are $' + tp + '$ yr apart. How far apart in space are they in $S\'$? (Use $c = 1$ ly/yr.)', a: num(xp, 0.01), unit: 'ly',
         steps: ['The interval is the same in both frames: $s^2 = ' + dt + '^2 - ' + dx + '^2 = ' + s2 + '$ ly².', 'In $S\'$: $' + tp + '^2 - \\Delta x\'^2 = ' + s2 + '$, so $\\Delta x\'^2 = ' + (tp * tp - s2) + '$.', '$\\Delta x\' = ' + qu(xp, 'ly') + '$.'],
@@ -1087,7 +1087,7 @@
 
   G('modern.velocity-addition', function (R, ctx) {
     var kind = R.pick(by(ctx, ['forward', 'forward'], ['backward', 'approach', 'forward'], ['inverse', 'approach', 'inverse']));
-    var v = R.pick([0.50, 0.60, 0.70, 0.80, 0.90, 0.40, 0.25]), u1 = R.pick([0.50, 0.60, 0.70, 0.80, 0.90, 0.40, 0.25, 0.30]), p;
+    var v = R.pick([0.50, 0.60, 0.70, 0.80, 0.90, 0.40, 0.25, 0.3, 0.35]), u1 = R.pick([0.50, 0.60, 0.70, 0.80, 0.90, 0.40, 0.25, 0.30, 0.35]), p;
     if (kind === 'forward' || kind === 'backward') {
       var up = kind === 'forward' ? u1 : -u1, u = (up + v) / (1 + up * v);
       rec('modern.velocity-addition', { kind: kind, v: v, up: up });
@@ -1101,7 +1101,7 @@
         steps: ['Work in A\'s frame, which moves at $v = ' + bT(va) + 'c$. In Earth\'s frame B moves at $u = -' + bT(vb) + 'c$.', '$u\' = \\dfrac{u - v}{1 - uv/c^2} = \\dfrac{-' + bT(vb) + ' - ' + bT(va) + '}{1 + (' + bT(vb) + ')(' + bT(va) + ')}c = ' + nx(-rel, 4) + 'c$.', 'So B approaches at $' + nx(rel, 4) + 'c$, less than $c$.'],
         hint: 'Transform B\'s velocity into A\'s frame with $u\' = (u - v)/(1 - uv/c^2)$.' };
     } else {
-      var uu = R.pick([0.80, 0.85, 0.90, 0.95, 0.98]), vv = R.pick([0.30, 0.40, 0.50, 0.60]), upp = (uu - vv) / (1 - uu * vv);
+      var uu = R.pick([0.80, 0.85, 0.90, 0.95, 0.98]), vv = R.pick([0.30, 0.40, 0.50, 0.60, 0.35]), upp = (uu - vv) / (1 - uu * vv);
       rec('modern.velocity-addition', { kind: kind, u: uu, v: vv });
       p = { q: 'In Earth\'s frame a particle moves at $' + bT(uu) + 'c$. A ship follows it in the same direction at $' + bT(vv) + 'c$. How fast does the particle move as measured from the ship? (As a multiple of $c$.)', a: num(upp, 0.01), unit: 'c',
         steps: ['$u\' = \\dfrac{u - v}{1 - uv/c^2} = \\dfrac{' + bT(uu) + ' - ' + bT(vv) + '}{1 - (' + bT(uu) + ')(' + bT(vv) + ')}c = \\dfrac{' + nx(uu - vv, 3) + '}{' + nx(1 - uu * vv, 4) + '}c$.', '$u\' = ' + nx(upp, 4) + 'c$ (Galileo would say $' + nx(uu - vv, 3) + 'c$).'],
@@ -1112,7 +1112,7 @@
 
   G('modern.relativistic-doppler', function (R, ctx) {
     var kind = R.pick(by(ctx, ['lamRecede', 'fApproach'], ['betaFromLam', 'z', 'fRecede'], ['betaFromRatio', 'betaFromLam', 'compare']));
-    var b = R.pick([0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.80]), fac = M.sqrt((1 + b) / (1 - b)), p;
+    var b = R.pick([0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.80, 0.06, 0.07, 0.08, 0.09, 0.15, 0.25, 0.35, 0.7]), fac = M.sqrt((1 + b) / (1 - b)), p;
     var line = R.pick([['hydrogen\'s red line', 656.3], ['hydrogen\'s blue-green line', 486.1], ['a sodium line', 589.0], ['a calcium line', 393.4]]);
     if (kind === 'lamRecede' || kind === 'z') {
       var lam = line[1] * fac;
@@ -1121,7 +1121,7 @@
         steps: ['Receding: $\\lambda = \\lambda_0\\sqrt{\\dfrac{1 + \\beta}{1 - \\beta}} = \\lambda_0\\sqrt{\\dfrac{' + nx(1 + b, 3) + '}{' + nx(1 - b, 3) + '}} = ' + nx(fac, 4) + '\\lambda_0$.', kind === 'lamRecede' ? '$\\lambda = ' + nx(fac, 4) + ' \\times ' + nx(line[1], 4) + ' = ' + qu(lam, 'nm', 4) + '$.' : '$z = \\dfrac{\\lambda - \\lambda_0}{\\lambda_0} = ' + nx(fac, 4) + ' - 1 = ' + nx(fac - 1, 3) + '$ (the same for every line).'],
         hint: 'A receding source stretches wavelengths by $\\sqrt{(1 + \\beta)/(1 - \\beta)}$.' };
     } else if (kind === 'fApproach' || kind === 'fRecede') {
-      var f0 = R.pick([5.0, 6.0, 10, 2.4, 1.0]), ap = kind === 'fApproach', fo = ap ? f0 * fac : f0 / fac;
+      var f0 = R.pick([5.0, 6.0, 10, 2.4, 1.0, 1.2, 2, 3, 7, 9]), ap = kind === 'fApproach', fo = ap ? f0 * fac : f0 / fac;
       rec('modern.relativistic-doppler', { kind: kind, b: b, f0: f0 });
       p = { q: 'A beacon on a spacecraft transmits at $' + qu(f0, 'GHz', 2) + '$ in its own frame. The craft ' + (ap ? 'approaches' : 'moves away from') + ' Earth at $' + bT(b) + 'c$. What frequency do we receive?', a: num(fo, 0.005), unit: 'GHz',
         steps: [(ap ? 'Approaching' : 'Receding') + ': $f = f_0\\sqrt{\\dfrac{1 ' + (ap ? '+' : '-') + ' \\beta}{1 ' + (ap ? '-' : '+') + ' \\beta}} = f_0\\sqrt{\\dfrac{' + nx(ap ? 1 + b : 1 - b, 3) + '}{' + nx(ap ? 1 - b : 1 + b, 3) + '}}$.', '$f = ' + nx(f0, 2) + ' \\times ' + nx(ap ? fac : 1 / fac, 4) + ' = ' + qu(fo, 'GHz', 4) + '$.'],
@@ -1133,13 +1133,13 @@
         steps: ['$\\dfrac{\\lambda}{\\lambda_0} = \\dfrac{' + nx(lo, 4) + '}{' + nx(line[1], 4) + '} = ' + nx(r, 4) + '$.', 'Square: $\\dfrac{1 + \\beta}{1 - \\beta} = ' + nx(r * r, 4) + '$, so $\\beta = \\dfrac{' + nx(r * r, 4) + ' - 1}{' + nx(r * r, 4) + ' + 1} = ' + nx(bb, 3) + '$.'],
         hint: 'Square the wavelength ratio, then solve for $\\beta$.' };
     } else if (kind === 'betaFromRatio') {
-      var ratio = R.pick([1.5, 2.0, 2.5, 3.0, 4.0, 0.5, 0.75, 1.2]), bb2 = (ratio * ratio - 1) / (ratio * ratio + 1);
+      var ratio = R.pick([1.5, 2.0, 2.5, 3.0, 4.0, 0.5, 0.75, 1.2, 0.6, 0.7, 0.8, 0.9, 1, 3.5]), bb2 = (ratio * ratio - 1) / (ratio * ratio + 1);
       rec('modern.relativistic-doppler', { kind: kind, ratio: ratio });
       p = { q: 'A source\'s light arrives with ' + nx(ratio, 2) + ' times its emitted frequency. What is its velocity toward us, as a fraction of $c$ (negative if it is moving away)?', a: num(bb2, 0.01), unit: 'c',
         steps: ['$\\dfrac{f}{f_0} = \\sqrt{\\dfrac{1 + \\beta}{1 - \\beta}}$ with $\\beta > 0$ for approach.', '$\\dfrac{1 + \\beta}{1 - \\beta} = ' + nx(ratio * ratio, 4) + '$, so $\\beta = \\dfrac{' + nx(ratio * ratio, 4) + ' - 1}{' + nx(ratio * ratio, 4) + ' + 1} = ' + nx(bb2, 3) + '$.'],
         hint: 'Square the frequency ratio and solve for $\\beta$.' };
     } else {
-      var bc = R.pick([0.20, 0.40, 0.50, 0.60, 0.80]), rel = M.sqrt((1 + bc) / (1 - bc));
+      var bc = R.pick([0.20, 0.40, 0.50, 0.60, 0.80, 0.25, 0.3, 0.35, 0.7]), rel = M.sqrt((1 + bc) / (1 - bc));
       rec('modern.relativistic-doppler', { kind: kind, b: bc });
       p = { q: 'A source approaches at $' + bT(bc) + 'c$. Someone wrongly uses the sound formula $f = \\dfrac{f_0}{1 - \\beta}$ and gets $' + nx(1 / (1 - bc), 3) + 'f_0$. What is the correct ratio $f/f_0$?', a: num(rel, 0.005), unit: '',
         steps: ['Correct: $\\dfrac{f}{f_0} = \\sqrt{\\dfrac{1 + \\beta}{1 - \\beta}} = \\sqrt{\\dfrac{' + nx(1 + bc, 3) + '}{' + nx(1 - bc, 3) + '}} = ' + nx(rel, 4) + '$.', 'The sound formula is too large by $\\gamma = ' + nx(gam(bc), 4) + '$: it leaves out the slowing of the source\'s clock.'],
@@ -1159,14 +1159,14 @@
         steps: ['$' + gT(b) + '$.', kind === 'p' ? '$pc = \\gamma mc^2\\beta = ' + nx(g, 4) + ' \\times ' + nx(mc2, mc2 < 1 ? 3 : 4) + ' \\times ' + bT(b) + ' = ' + qu(pc, 'MeV') + '$, so $p = ' + nx(pc) + '$ MeV/$c$.' : '$E = \\gamma mc^2 = ' + nx(g, 4) + ' \\times ' + nx(mc2, mc2 < 1 ? 3 : 4) + ' = ' + qu(E, 'MeV') + '$.'].concat(kind === 'K' ? ['$K = E - mc^2 = ' + nx(E) + ' - ' + nx(mc2, mc2 < 1 ? 3 : 4) + ' = ' + qu(K, 'MeV') + '$.'] : []),
         hint: kind === 'K' ? 'Kinetic energy is the total energy minus the rest energy.' : kind === 'p' ? 'Use $p = \\gamma mu$, so $pc = \\gamma mc^2\\beta$.' : 'Total energy is $\\gamma mc^2$.' };
     } else if (kind === 'vFromK' || kind === 'pFromK') {
-      var Kk = mc2 * R.pick([0.25, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0]), Kr = rnd(Kk, 3), g2 = 1 + Kr / mc2, b2 = M.sqrt(1 - 1 / (g2 * g2)), pc2 = M.sqrt(Kr * Kr + 2 * Kr * mc2);
+      var Kk = mc2 * R.pick([0.25, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 0.3, 0.4, 0.6, 0.8, 1.2, 2.5, 4]), Kr = rnd(Kk, 3), g2 = 1 + Kr / mc2, b2 = M.sqrt(1 - 1 / (g2 * g2)), pc2 = M.sqrt(Kr * Kr + 2 * Kr * mc2);
       rec('modern.relativistic-energy', { kind: kind, mc2: mc2, K: Kr });
       if (kind === 'vFromK') p = { q: 'A particle accelerator gives ' + part[0] + ' ($mc^2 = ' + qu(mc2, 'MeV', mc2 < 1 ? 3 : 4) + '$) a kinetic energy of $' + qu(Kr, 'MeV', 3) + '$. How fast does it move, as a fraction of $c$?', a: num(b2, 0.005), unit: 'c',
         steps: ['$\\gamma = 1 + \\dfrac{K}{mc^2} = 1 + \\dfrac{' + nx(Kr, 3) + '}{' + nx(mc2, mc2 < 1 ? 3 : 4) + '} = ' + nx(g2, 4) + '$.', '$\\beta = \\sqrt{1 - \\dfrac{1}{\\gamma^2}} = \\sqrt{1 - \\dfrac{1}{' + nx(g2, 4) + '^2}} = ' + nx(b2, 4) + '$.'], hint: 'Get $\\gamma$ from $K = (\\gamma - 1)mc^2$.' };
       else p = { q: 'What is the momentum of ' + part[0] + ' ($mc^2 = ' + qu(mc2, 'MeV', mc2 < 1 ? 3 : 4) + '$) with kinetic energy $' + qu(Kr, 'MeV', 3) + '$, in MeV/$c$?', a: num(pc2), unit: 'MeV/c',
         steps: ['$E = K + mc^2 = ' + nx(Kr, 3) + ' + ' + nx(mc2, mc2 < 1 ? 3 : 4) + ' = ' + qu(Kr + mc2, 'MeV') + '$.', '$pc = \\sqrt{E^2 - (mc^2)^2} = \\sqrt{' + nx(Kr + mc2) + '^2 - ' + nx(mc2, mc2 < 1 ? 3 : 4) + '^2} = ' + qu(pc2, 'MeV') + '$.', '$p = ' + nx(pc2) + '$ MeV/$c$.'], hint: 'Use $E^2 = (pc)^2 + (mc^2)^2$ with $E = K + mc^2$.' };
     } else if (kind === 'voltage') {
-      var V = R.pick([0.10, 0.20, 0.50, 1.0, 2.0, 5.0]), K3 = V, g3 = 1 + K3 / MEC2, b3 = M.sqrt(1 - 1 / (g3 * g3));
+      var V = R.pick([0.10, 0.20, 0.50, 1.0, 2.0, 5.0, 0.12, 0.3, 0.6, 0.9, 2.5, 4]), K3 = V, g3 = 1 + K3 / MEC2, b3 = M.sqrt(1 - 1 / (g3 * g3));
       rec('modern.relativistic-energy', { kind: kind, V: V });
       p = { q: 'An electron ($mc^2 = 0.511$ MeV) starts from rest and is accelerated through a potential difference of $' + qu(V, 'MV', 2) + '$. How fast is it moving, as a fraction of $c$?', a: num(b3, 0.005), unit: 'c',
         steps: ['It gains kinetic energy $K = eV = ' + qu(K3, 'MeV', 2) + '$.', '$\\gamma = 1 + \\dfrac{K}{mc^2} = 1 + \\dfrac{' + nx(K3, 2) + '}{0.511} = ' + nx(g3, 4) + '$.', '$\\beta = \\sqrt{1 - 1/\\gamma^2} = ' + nx(b3, 4) + '$.' + (V >= 0.5 ? ' (The classical $\\frac{1}{2}mv^2$ would give more than $c$.)' : '')],
@@ -1189,36 +1189,36 @@
     var kind = R.pick(by(ctx, ['peak', 'Tfrom'], ['ratio', 'power', 'peakE'], ['meanE', 'ratio', 'power']));
     var p;
     if (kind === 'peak') {
-      var obj = R.chance(0.4) ? R.pick([['the Sun\'s surface', 5772], ['a stove element', 1000], ['a light bulb filament', 2800], ['a person\'s skin', 306], ['a warm cup of tea', 340], ['the cosmic microwave background', 2.725], ['a lava flow', 1400]]) : [R.pick(['a star\'s surface', 'the surface of a star', 'a star']), R.pick([3000, 3200, 3500, 4000, 4500, 5000, 6000, 7500, 9000, 10000, 12000, 15000, 20000, 25000, 30000])];
+      var obj = R.chance(0.4) ? R.pick([['the Sun\'s surface', 5772], ['a stove element', 1000], ['a light bulb filament', 2800], ['a person\'s skin', 306], ['a warm cup of tea', 340], ['the cosmic microwave background', 2.725], ['a lava flow', 1400]]) : [R.pick(['a star\'s surface', 'the surface of a star', 'a star']), R.pick([3000, 3200, 3500, 4000, 4500, 5000, 6000, 7500, 9000, 10000, 12000, 15000, 20000, 25000, 30000, 7000, 8000])];
       rec('modern.planck-blackbody', { kind: kind, T: obj[1] });
       var lm = WIEN / obj[1], unit = lm < 1e-6 ? 'nm' : lm < 1e-3 ? 'μm' : 'mm', sc = unit === 'nm' ? 1e9 : unit === 'μm' ? 1e6 : 1e3;
       p = { q: 'At what wavelength does the thermal radiation of ' + obj[0] + ' (about $' + qu(obj[1], 'K', obj[1] >= 1000 ? 4 : 3) + '$) peak? Answer in ' + { nm: 'nanometers', 'μm': 'micrometers', mm: 'millimeters' }[unit] + '.', a: num(lm * sc), unit: unit,
         steps: ['Wien\'s law: $\\lambda_{\\max} = \\dfrac{2.898 \\times 10^{-3}\\ \\text{m·K}}{T} = \\dfrac{2.898 \\times 10^{-3}}{' + nx(obj[1], 4) + '}$.', '$\\lambda_{\\max} = ' + qu(lm, 'm') + ' = ' + qu(lm * sc, unit) + '$.'],
         hint: 'Use Wien\'s displacement law with $T$ in kelvins.' };
     } else if (kind === 'Tfrom') {
-      var lam = R.pick([290, 350, 400, 420, 450, 480, 500, 520, 550, 580, 600, 650, 700, 750, 800, 900, 1000, 1200, 1500, 2000]), T = WIEN / (lam * 1e-9);
+      var lam = R.pick([290, 350, 400, 420, 450, 480, 500, 520, 550, 580, 600, 650, 700, 750, 800, 900, 1000, 1200, 1500, 2000, 300]), T = WIEN / (lam * 1e-9);
       rec('modern.planck-blackbody', { kind: kind, lam: lam });
       p = { q: 'A star\'s spectrum peaks at $' + qu(lam, 'nm', 3) + '$. Treating it as a blackbody, what is its surface temperature?', a: num(T), unit: 'K',
         steps: ['$T = \\dfrac{2.898 \\times 10^{-3}\\ \\text{m·K}}{\\lambda_{\\max}} = \\dfrac{2.898 \\times 10^{-3}}{' + nx(lam * 1e-9, 3) + '}$.', '$T = ' + qu(T, 'K') + '$.'], hint: 'Solve Wien\'s law for $T$.' };
     } else if (kind === 'ratio') {
-      var f = R.pick([1.5, 2, 3, 0.5, 1.2, 10]), what = R.pick(['power', 'peak']);
+      var f = R.pick([1.5, 2, 3, 0.5, 1.2, 10, 0.6, 0.8, 2.5, 4, 7, 9]), what = R.pick(['power', 'peak']);
       rec('modern.planck-blackbody', { kind: kind, f: f, what: what });
       p = { q: 'A blackbody\'s absolute temperature is multiplied by ' + nx(f, 2) + ' (its size stays the same). By what factor does ' + (what === 'power' ? 'the total power it radiates' : 'the wavelength of its peak') + ' change?', a: num(what === 'power' ? M.pow(f, 4) : 1 / f, 0.01), unit: '×',
         steps: what === 'power' ? ['Stefan–Boltzmann: $P = \\sigma AT^4$, so $P \\propto T^4$.', 'Factor: $' + nx(f, 2) + '^4 = ' + nx(M.pow(f, 4), 4) + '$.'] : ['Wien: $\\lambda_{\\max} \\propto 1/T$.', 'Factor: $1/' + nx(f, 2) + ' = ' + nx(1 / f, 3) + '$.'],
         hint: what === 'power' ? 'Total power goes as the fourth power of $T$.' : 'The peak wavelength is inversely proportional to $T$.' };
     } else if (kind === 'power') {
-      var A = R.pick([0.010, 0.050, 0.10, 0.50, 1.0, 2.0]), T2 = R.pick([300, 500, 800, 1000, 1500, 2000, 3000]), P = SIGMA * A * M.pow(T2, 4);
+      var A = R.pick([0.010, 0.050, 0.10, 0.50, 1.0, 2.0, 0.012, 0.035, 0.08, 0.25, 0.6, 1.5]), T2 = R.pick([300, 500, 800, 1000, 1500, 2000, 3000, 350, 400, 600, 700, 900, 1200, 2500]), P = SIGMA * A * M.pow(T2, 4);
       rec('modern.planck-blackbody', { kind: kind, A: A, T: T2 });
       p = { q: 'A blackbody with surface area $' + qu(A, 'm²', 2) + '$ is at $' + qu(T2, 'K', 4) + '$. What total power does it radiate? ($\\sigma = 5.67 \\times 10^{-8}$ W/(m²·K⁴).)', a: num(P), unit: 'W',
         steps: ['$P = \\sigma AT^4 = (5.67 \\times 10^{-8})(' + nx(A, 2) + ')(' + nx(T2, 4) + ')^4$.', '$P = ' + qu(P, 'W') + '$.'], hint: 'Stefan–Boltzmann law with emissivity 1.' };
     } else if (kind === 'peakE') {
-      var T3 = R.pick([3000, 4000, 5772, 6000, 8000, 10000]), lm3 = WIEN / T3, E3 = HC / (lm3 * 1e9);
+      var T3 = R.pick([3000, 4000, 5772, 6000, 8000, 10000, 3500, 5000, 7000, 9000]), lm3 = WIEN / T3, E3 = HC / (lm3 * 1e9);
       rec('modern.planck-blackbody', { kind: kind, T: T3 });
       p = { q: 'A blackbody is at $' + qu(T3, 'K', 4) + '$. What is the energy, in eV, of a photon at the peak wavelength of its spectrum? ($hc = 1240$ eV·nm.)', a: num(E3), unit: 'eV',
         steps: ['$\\lambda_{\\max} = \\dfrac{2.898 \\times 10^{-3}}{' + nx(T3, 4) + '} = ' + qu(lm3 * 1e9, 'nm') + '$.', '$E = \\dfrac{hc}{\\lambda} = \\dfrac{1240}{' + nx(lm3 * 1e9) + '} = ' + qu(E3, 'eV') + '$.'], hint: 'Find the peak wavelength first, then $E = hc/\\lambda$.' };
     } else {
-      var T4 = R.pick([1000, 2000, 3000, 5000, 6000]), lam4 = R.pick([500, 1000, 2000, 5000, 10000]), hf = HC / lam4, kT = KBEV * T4, x = hf / kT, ratio = x / (M.exp(x) - 1), tries = 0;
-      while ((x < 0.3 || x > 9) && tries < 30) { T4 = R.pick([1000, 2000, 3000, 5000, 6000]); lam4 = R.pick([500, 1000, 2000, 5000, 10000]); hf = HC / lam4; kT = KBEV * T4; x = hf / kT; ratio = x / (M.exp(x) - 1); tries++; }
+      var T4 = R.pick([1000, 2000, 3000, 5000, 6000, 1200, 1500, 2500, 3500, 4000]), lam4 = R.pick([500, 1000, 2000, 5000, 10000, 600, 900, 2500, 6000, 9000]), hf = HC / lam4, kT = KBEV * T4, x = hf / kT, ratio = x / (M.exp(x) - 1), tries = 0;
+      while ((x < 0.3 || x > 9) && tries < 30) { T4 = R.pick([1000, 2000, 3000, 5000, 6000, 1200, 1500, 2500, 3500, 4000]); lam4 = R.pick([500, 1000, 2000, 5000, 10000, 600, 900, 2500, 6000, 9000]); hf = HC / lam4; kT = KBEV * T4; x = hf / kT; ratio = x / (M.exp(x) - 1); tries++; }
       rec('modern.planck-blackbody', { kind: kind, T: T4, lam: lam4 });
       p = { q: 'In a cavity at $' + qu(T4, 'K', 4) + '$, what is the average energy of a radiation mode of wavelength $' + qu(lam4, 'nm', 3) + '$, as a fraction of the classical value $k_BT$? ($hc = 1240$ eV·nm, $k_B = 8.617 \\times 10^{-5}$ eV/K.)', a: num(ratio, 0.02), unit: '',
         steps: ['$hf = \\dfrac{1240}{' + nx(lam4, 3) + '} = ' + qu(hf, 'eV') + '$ and $k_BT = ' + qu(kT, 'eV') + '$, so $x = \\dfrac{hf}{k_BT} = ' + nx(x) + '$.', 'Planck: $\\dfrac{\\langle E\\rangle}{k_BT} = \\dfrac{x}{e^x - 1} = \\dfrac{' + nx(x) + '}{' + nx(M.exp(x) - 1) + '} = ' + nx(ratio) + '$.'],
@@ -1228,15 +1228,15 @@
   });
 
   G('modern.compton-formula', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['shift', 'shift'], ['lamPrime', 'theta', 'shift'], ['Ke', 'Eprime', 'theta']));
-    var th = R.pick([30, 45, 60, 90, 120, 135, 150, 180]), l0 = R.pick([10, 20, 30, 50, 71, 100, 154]), dl = LCOMP * (1 - cosd(th)), p;
+    var kind = R.pick(by(ctx, ['shift', 'lamPrime'], ['lamPrime', 'theta', 'shift'], ['Ke', 'Eprime', 'theta']));
+    var th = R.int(4, 36) * 5, l0 = R.pick([10, 20, 30, 50, 71, 100, 154, 12, 25, 35, 60, 80, 90, 150]), dl = LCOMP * (1 - cosd(th)), p;
     if (kind === 'shift' || kind === 'lamPrime') {
       rec('modern.compton-formula', { kind: kind, th: th, l0: l0 });
       p = { q: (kind === 'shift' ? 'X-rays scatter from free electrons through $' + th + '^\\circ$. By how much does their wavelength increase?' : 'X-rays of wavelength $' + qu(l0, 'pm', 3) + '$ scatter from free electrons through $' + th + '^\\circ$. What is the scattered wavelength?'), a: num(kind === 'shift' ? dl : l0 + dl, 0.01), unit: 'pm',
         steps: ['$\\Delta\\lambda = \\dfrac{h}{m_ec}(1 - \\cos\\theta) = (2.426\\ \\text{pm})(1 - \\cos ' + th + '^\\circ)$.', '$\\Delta\\lambda = 2.426 \\times ' + nx(1 - cosd(th), 3) + ' = ' + qu(dl, 'pm') + '$.'].concat(kind === 'lamPrime' ? ['$\\lambda\' = ' + nx(l0, 3) + ' + ' + nx(dl) + ' = ' + qu(l0 + dl, 'pm', 4) + '$.'] : []),
         hint: 'The scale of the shift is the electron\'s Compton wavelength, 2.426 pm.' };
     } else if (kind === 'theta') {
-      var dl2 = R.pick([0.50, 1.00, 1.50, 2.00, 2.43, 3.00, 3.50, 4.00, 4.50]), th2 = acosd(1 - dl2 / LCOMP);
+      var dl2 = R.pick([0.50, 1.00, 1.50, 2.00, 2.43, 3.00, 3.50, 4.00, 4.50, 0.6, 0.7, 0.8, 0.9, 1.2, 2.5]), th2 = acosd(1 - dl2 / LCOMP);
       rec('modern.compton-formula', { kind: kind, dl: dl2 });
       p = { q: 'X-rays scattered from free electrons come out with wavelengths $' + qu(dl2, 'pm', 3) + '$ longer than they went in. Through what angle were they scattered?', a: num(th2), unit: '°',
         steps: ['$1 - \\cos\\theta = \\dfrac{\\Delta\\lambda}{h/m_ec} = \\dfrac{' + nx(dl2, 3) + '}{2.426} = ' + nx(dl2 / LCOMP) + '$.', '$\\cos\\theta = ' + nx(1 - dl2 / LCOMP) + '$, so $\\theta = ' + deg(th2) + '$.'], hint: 'Solve the Compton formula for $\\cos\\theta$.' };
@@ -1267,7 +1267,7 @@
       return { q: 'A hydrogen atom has energy $' + qu(Eq, 'eV', 3) + '$. Which level $n$ is its electron in?', a: exact(nq),
         steps: ['$E_n = -\\dfrac{13.6}{n^2}$, so $n^2 = \\dfrac{13.6}{' + nx(-Eq, 3) + '} = ' + nx(13.6 / -Eq, 3) + '$.', '$n = ' + nq + '$.'], hint: 'Solve $-13.6/n^2 = E$ for $n$.' };
     }
-    var n = R.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20]), p;
+    var n = R.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 11, 13, 14, 16, 17, 18, 19]), p;
     if (kind === 'E' || kind === 'r') {
       rec('modern.bohr-hydrogen', { kind: kind, n: n });
       p = kind === 'E' ? { q: 'What is the energy of hydrogen\'s $n = ' + n + '$ level?', a: num(-13.6 / (n * n)), unit: 'eV', steps: ['$E_n = -\\dfrac{13.6\\ \\text{eV}}{n^2} = -\\dfrac{13.6}{' + n * n + '} = ' + qu(-13.6 / (n * n), 'eV') + '$.'], hint: 'The levels are $-13.6\\ \\text{eV}/n^2$: negative, rising toward 0.' }
@@ -1299,7 +1299,7 @@
 
   G('modern.hydrogen-series', function (R, ctx) {
     var kind = R.pick(by(ctx, ['lam', 'lam', 'photonE'], ['limit', 'identify', 'lines', 'lam'], ['series', 'longest', 'identify']));
-    var nf = R.pick([1, 2, 3]), ni = nf + R.pick([1, 2, 3, 4, 5, 6]), SER = { 1: 'Lyman', 2: 'Balmer', 3: 'Paschen' }, p;
+    var nf = R.pick([1, 2, 3]), ni = nf + R.int(1, 9), SER = { 1: 'Lyman', 2: 'Balmer', 3: 'Paschen' }, p;
     var inv = function (a, b) { return RH * (1 / (a * a) - 1 / (b * b)); };
     if (kind === 'photonE') {
       var Eph = 13.6 * (1 / (nf * nf) - 1 / (ni * ni));
@@ -1343,7 +1343,7 @@
     var kind = R.pick(by(ctx, ['dp', 'dv'], ['dx', 'dE', 'dv'], ['nucleus', 'dE', 'dx']));
     var p;
     if (kind === 'dp' || kind === 'dv') {
-      var dx = R.pick([0.020, 0.050, 0.080, 0.10, 0.15, 0.20, 0.25, 0.30, 0.50, 0.75, 1.0, 2.0, 5.0, 10, 50]) * 1e-9, dp = HBAR / (2 * dx);
+      var dx = R.pick([0.020, 0.050, 0.080, 0.10, 0.15, 0.20, 0.25, 0.30, 0.50, 0.75, 1.0, 2.0, 5.0, 10, 50, 0.025, 0.035, 0.06, 0.09, 0.4, 0.7, 0.9, 1.5, 3, 4, 7, 12, 20, 30, 40]) * 1e-9, dp = HBAR / (2 * dx);
       rec('modern.uncertainty-principle', { kind: kind, dx: dx });
       var who = R.pick(['A particle', 'An atom', 'A molecule', 'An electron']);
       if (kind === 'dp') p = { q: who + ' is confined to a region $' + qu(dx * 1e9, 'nm', 2) + '$ wide ($\\Delta x$). What is the smallest possible spread in its momentum, $\\Delta p$?', a: num(dp), unit: 'kg·m/s',
@@ -1351,7 +1351,7 @@
       else p = { q: 'An electron ($m = 9.11 \\times 10^{-31}$ kg) is confined to a region $' + qu(dx * 1e9, 'nm', 2) + '$ wide. What is the smallest possible spread in its velocity?', a: num(dp / ME), unit: 'm/s',
         steps: ['$\\Delta p \\ge \\dfrac{\\hbar}{2\\Delta x} = ' + qu(dp, 'kg·m/s') + '$.', '$\\Delta v = \\dfrac{\\Delta p}{m} = \\dfrac{' + nx(dp) + '}{9.11 \\times 10^{-31}} = ' + qu(dp / ME, 'm/s') + '$.'], hint: 'Find $\\Delta p$, then divide by the mass.' };
     } else if (kind === 'dx') {
-      var obj = R.pick([['An electron', ME, R.pick([1.0e3, 2.0e3, 5.0e3, 1.0e4, 2.0e4, 5.0e4, 1.0e5, 5.0e5])], ['A proton', MP, R.pick([1.0, 5.0, 10, 20, 50, 100, 1.0e3])], ['A neutron', 1.675e-27, R.pick([2.0, 10, 50, 200])], ['A dust grain of mass $1.0 \\times 10^{-15}$ kg', 1.0e-15, R.pick([1.0e-3, 1.0e-6, 1.0e-9])]]), dxm = HBAR / (2 * obj[1] * obj[2]);
+      var obj = R.pick([['An electron', ME, R.pick([1.0e3, 2.0e3, 5.0e3, 1.0e4, 2.0e4, 5.0e4, 1.0e5, 5.0e5, 1200, 3500, 7000, 15000, 40000, 90000, 200000, 400000])], ['A proton', MP, R.pick([1.0, 5.0, 10, 20, 50, 100, 1.0e3, 1.2, 3.5, 12, 40, 120, 400, 900])], ['A neutron', 1.675e-27, R.pick([2.0, 10, 50, 200, 2.5, 8, 40, 150])], ['A dust grain of mass $1.0 \\times 10^{-15}$ kg', 1.0e-15, R.pick([1.0e-3, 1.0e-6, 1.0e-9])]]), dxm = HBAR / (2 * obj[1] * obj[2]);
       rec('modern.uncertainty-principle', { kind: kind, m: obj[1], dv: obj[2] });
       p = { q: obj[0] + '\'s velocity is known to within $' + qu(obj[2], 'm/s', 2) + '$. What is the smallest possible spread in its position?', a: num(dxm), unit: 'm',
         steps: ['$\\Delta p = m\\Delta v = ' + qu(obj[1] * obj[2], 'kg·m/s') + '$.', '$\\Delta x \\ge \\dfrac{\\hbar}{2\\Delta p} = \\dfrac{1.055 \\times 10^{-34}}{2(' + nx(obj[1] * obj[2]) + ')} = ' + qu(dxm, 'm') + '$.'], hint: 'Turn the velocity spread into a momentum spread first.' };
@@ -1361,7 +1361,7 @@
       p = { q: 'An excited state lives about $' + qu(tau * 1e9, 'ns', 2) + '$. Estimate the smallest spread in the energy of the photons it emits, in eV, using $\\Delta E\\,\\Delta t \\ge \\hbar/2$.', a: num(dE), unit: 'eV',
         steps: ['$\\Delta E \\ge \\dfrac{\\hbar}{2\\Delta t} = \\dfrac{1.055 \\times 10^{-34}}{2(' + nx(tau, 2) + ')} = ' + qu(dE * QE, 'J') + '$.', 'In eV: $\\dfrac{' + nx(dE * QE) + '}{1.602 \\times 10^{-19}} = ' + qu(dE, 'eV') + '$.'], hint: 'The lifetime plays the role of $\\Delta t$.' };
     } else {
-      var Lf = R.pick([2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 10, 12, 15]), pc = HBARC * 1e-6 * 1e6 / (2 * Lf), Kn = pc * pc / (2 * MPC2); // ħc = 197.3 MeV·fm
+      var Lf = R.pick([2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 10, 12, 15, 9, 11, 13, 14]), pc = HBARC * 1e-6 * 1e6 / (2 * Lf), Kn = pc * pc / (2 * MPC2); // ħc = 197.3 MeV·fm
       rec('modern.uncertainty-principle', { kind: kind, L: Lf });
       p = { q: 'A proton ($mc^2 = 938.3$ MeV) is confined in a nucleus to $\\Delta x = ' + qu(Lf, 'fm', 2) + '$. Taking its momentum to be about $\\Delta p = \\hbar/(2\\Delta x)$, estimate its kinetic energy in MeV. ($\\hbar c = 197.3$ MeV·fm.)', a: num(Kn, 0.02), unit: 'MeV',
         steps: ['$pc \\approx \\dfrac{\\hbar c}{2\\Delta x} = \\dfrac{197.3}{2(' + nx(Lf, 2) + ')} = ' + qu(pc, 'MeV') + '$.', 'This is much less than $mc^2$, so $K \\approx \\dfrac{(pc)^2}{2mc^2} = \\dfrac{' + nx(pc) + '^2}{2(938.3)} = ' + qu(Kn, 'MeV') + '$.'],
@@ -1374,7 +1374,7 @@
     var kind = R.pick(by(ctx, ['uniform', 'uniformA'], ['box', 'expA', 'expP'], ['box', 'poly', 'expP']));
     var p;
     if (kind === 'uniform' || kind === 'uniformA') {
-      var L = R.pick([0.50, 1.0, 2.0, 4.0, 5.0]), a = rnd(L * R.pick([0.1, 0.2, 0.25, 0.3, 0.4]), 3), b = rnd(L * R.pick([0.5, 0.6, 0.75, 0.8, 0.9]), 3);
+      var L = R.pick([0.50, 1.0, 2.0, 4.0, 5.0, 0.6, 0.8, 1.2, 2.5, 3.5]), a = rnd(L * R.pick([0.1, 0.2, 0.25, 0.3, 0.4, 0.12, 0.15, 0.35]), 3), b = rnd(L * R.pick([0.5, 0.6, 0.75, 0.8, 0.9, 0.7]), 3);
       rec('modern.wavefunction-probability', { kind: kind, L: L, a: a, b: b });
       if (kind === 'uniform') p = { q: 'A particle\'s wave function is $\\psi = A$ (a constant) for $0 < x < ' + qu(L, 'nm', 2) + '$ and zero elsewhere. What is the probability of finding it between $x = ' + qu(a, 'nm', 3) + '$ and $x = ' + qu(b, 'nm', 3) + '$?', a: num((b - a) / L, 0.01), unit: '',
         steps: ['Normalize: $\\int_0^L A^2\\,dx = A^2L = 1$, so $A^2 = \\dfrac{1}{L}$.', '$P = \\int_a^b \\dfrac{1}{L}\\,dx = \\dfrac{b - a}{L} = \\dfrac{' + nx(b - a, 3) + '}{' + nx(L, 2) + '} = ' + nx((b - a) / L, 3) + '$.'], hint: 'A uniform density spreads the probability evenly over the region.' };
@@ -1389,14 +1389,14 @@
         steps: ['$P = \\dfrac{2}{L}\\int \\sin^2\\dfrac{' + (n === 1 ? '' : n) + '\\pi x}{L}\\,dx$; with $u = x/L$ and $\\sin^2\\theta = \\tfrac{1}{2}(1 - \\cos 2\\theta)$, the antiderivative is $u - \\dfrac{\\sin(' + 2 * n + '\\pi u)}{' + 2 * n + '\\pi}$.', 'Evaluate from $u = ' + nx(fr[0], 3) + '$ to $u = ' + nx(fr[1], 3) + '$: $' + nx(F(fr[1]), 4) + ' - ' + nx(F(fr[0]), 4) + ' = ' + nx(P, 3) + '$.'],
         hint: 'Integrate $|\\psi|^2$, not $\\psi$, using $\\sin^2\\theta = \\tfrac{1}{2}(1 - \\cos 2\\theta)$.' };
     } else if (kind === 'expA' || kind === 'expP') {
-      var a2 = R.pick([0.10, 0.20, 0.25, 0.50, 1.0]), b2 = rnd(a2 * R.pick([0.25, 0.5, 1, 1.5, 2]), 3);
+      var a2 = R.pick([0.10, 0.20, 0.25, 0.50, 1.0, 0.12, 0.3, 0.4, 0.7, 0.9]), b2 = rnd(a2 * R.pick([0.25, 0.5, 1, 1.5, 2, 0.3, 0.4, 0.7, 0.8, 1.2]), 3);
       rec('modern.wavefunction-probability', { kind: kind, a: a2, b: b2 });
       if (kind === 'expA') p = { q: 'A wave function is $\\psi = Ae^{-x/a}$ for $x \\ge 0$ (and zero for $x < 0$), with $a = ' + qu(a2, 'nm', 2) + '$. Find $A^2$, in nm⁻¹, so that it is normalized.', a: num(2 / a2, 0.01), unit: 'nm⁻¹',
         steps: ['$\\int_0^\\infty A^2e^{-2x/a}\\,dx = A^2\\,\\dfrac{a}{2} = 1$.', '$A^2 = \\dfrac{2}{a} = \\dfrac{2}{' + nx(a2, 2) + '} = ' + qu(2 / a2, 'nm⁻¹') + '$.'], hint: 'Square $\\psi$ first: $|\\psi|^2 = A^2e^{-2x/a}$.' };
       else p = { q: 'A normalized wave function is $\\psi = \\sqrt{2/a}\\,e^{-x/a}$ for $x \\ge 0$, with $a = ' + qu(a2, 'nm', 2) + '$. What is the probability of finding the particle between $x = 0$ and $x = ' + qu(b2, 'nm', 3) + '$?', a: num(1 - M.exp(-2 * b2 / a2), 0.01), unit: '',
         steps: ['$P = \\int_0^b \\dfrac{2}{a}e^{-2x/a}\\,dx = 1 - e^{-2b/a}$.', '$\\dfrac{2b}{a} = ' + nx(2 * b2 / a2, 3) + '$, so $P = 1 - e^{-' + nx(2 * b2 / a2, 3) + '} = ' + nx(1 - M.exp(-2 * b2 / a2), 3) + '$.'], hint: 'Integrate $|\\psi|^2 = \\frac{2}{a}e^{-2x/a}$.' };
     } else {
-      var L3 = R.pick([0.50, 1.0, 2.0]);
+      var L3 = R.pick([0.50, 1.0, 2.0, 0.6, 0.8, 1.5]);
       rec('modern.wavefunction-probability', { kind: kind, L: L3 });
       p = { q: 'Find $A^2$ so that $\\psi = A\\,x(L - x)$ on $0 < x < L$ (zero elsewhere) is normalized, for $L = ' + qu(L3, 'nm', 2) + '$. Give $A^2$ in nm⁻⁵.', a: num(30 / M.pow(L3, 5), 0.01), unit: 'nm⁻⁵',
         steps: ['$\\int_0^L x^2(L - x)^2\\,dx = \\int_0^L (L^2x^2 - 2Lx^3 + x^4)\\,dx = \\dfrac{L^5}{3} - \\dfrac{L^5}{2} + \\dfrac{L^5}{5} = \\dfrac{L^5}{30}$.', '$A^2\\,\\dfrac{L^5}{30} = 1$, so $A^2 = \\dfrac{30}{L^5} = \\dfrac{30}{' + nx(L3, 2) + '^5} = ' + qu(30 / M.pow(L3, 5), 'nm⁻⁵') + '$.'], hint: 'Expand $x^2(L - x)^2$ and integrate term by term.' };
@@ -1408,30 +1408,36 @@
     var kind = R.pick(by(ctx, ['Efree', 'Efree'], ['kappa', 'Efromkappa', 'Ebox'], ['gauss', 'which', 'kappa']));
     var p;
     if (kind === 'Efree') {
-      var k = R.pick([2.0, 4.0, 5.0, 8.0, 10, 12, 15, 20]), E = HB2M * k * k;
+      var k = R.int(2, 25), E = HB2M * k * k;
+      if (R.chance(0.45)) { // work backward: the energy is given, find k
+        var Eb = R.int(2, 60) * 0.5, kb2 = M.sqrt(Eb / HB2M);
+        rec('modern.schrodinger-equation', { kind: 'kFromE', E: Eb });
+        return { q: 'In a region where $U = 0$, an electron with energy $E = ' + qu(Eb, 'eV', 3) + '$ has the wave function $\\psi = A\\sin(kx)$. What is $k$? ($\\hbar^2/2m_e = 0.0381$ eV·nm².)', a: num(kb2), unit: 'nm⁻¹',
+          steps: ['$\\psi\'\' = -k^2\\psi$, so the Schrödinger equation with $U = 0$ gives $E = \\dfrac{\\hbar^2k^2}{2m}$.', '$k^2 = \\dfrac{E}{\\hbar^2/2m} = \\dfrac{' + nx(Eb, 3) + '}{0.0381} = ' + qu(Eb / HB2M, 'nm⁻²') + '$.', '$k = ' + qu(kb2, 'nm⁻¹') + '$.'], hint: 'Solve $E = \\hbar^2k^2/2m$ for $k$.' };
+      }
       rec('modern.schrodinger-equation', { kind: kind, k: k });
       p = { q: 'In a region where $U = 0$, an electron has the wave function $\\psi = A\\sin(kx)$ with $k = ' + qu(k, 'nm⁻¹', 2) + '$. What is its energy? ($\\hbar^2/2m_e = 0.0381$ eV·nm².)', a: num(E), unit: 'eV',
         steps: ['$\\psi\'\' = -k^2\\psi$, so $-\\dfrac{\\hbar^2}{2m}\\psi\'\' = \\dfrac{\\hbar^2k^2}{2m}\\psi$, and the equation holds with $E = \\dfrac{\\hbar^2k^2}{2m}$.', '$E = 0.0381 \\times ' + nx(k, 2) + '^2 = ' + qu(E, 'eV') + '$.'], hint: 'Differentiate twice and compare with $E\\psi$.' };
     } else if (kind === 'kappa' || kind === 'Efromkappa') {
-      var U0 = R.pick([2.0, 4.0, 5.0, 6.0, 8.0, 10]), Ee = rnd(U0 * R.pick([0.2, 0.25, 0.4, 0.5, 0.6, 0.75]), 3), kap = M.sqrt((U0 - Ee) / HB2M);
+      var U0 = R.pick([2.0, 4.0, 5.0, 6.0, 8.0, 10, 3, 7, 9]), Ee = rnd(U0 * R.pick([0.2, 0.25, 0.4, 0.5, 0.6, 0.75, 0.3, 0.35, 0.7]), 3), kap = M.sqrt((U0 - Ee) / HB2M);
       if (kind === 'kappa') {
         rec('modern.schrodinger-equation', { kind: kind, U0: U0, E: Ee });
         p = { q: 'An electron with $E = ' + qu(Ee, 'eV', 3) + '$ is in a region where $U = ' + qu(U0, 'eV', 2) + '$. There its wave function is $\\psi = Ae^{-\\kappa x}$. Find $\\kappa$. ($\\hbar^2/2m_e = 0.0381$ eV·nm².)', a: num(kap), unit: 'nm⁻¹',
           steps: ['$\\psi\'\' = \\kappa^2\\psi$, so the equation reads $-\\dfrac{\\hbar^2\\kappa^2}{2m} + U = E$.', '$\\kappa^2 = \\dfrac{U - E}{\\hbar^2/2m} = \\dfrac{' + nx(U0 - Ee, 3) + '}{0.0381} = ' + qu(kap * kap, 'nm⁻²') + '$.', '$\\kappa = ' + qu(kap, 'nm⁻¹') + '$.'], hint: 'Put $e^{-\\kappa x}$ into the equation; the second derivative brings out $+\\kappa^2$.' };
       } else {
-        var kq = R.pick([3.0, 4.0, 5.0, 6.0, 8.0]), Uq = R.pick([3.0, 4.0, 5.0, 6.0]), Eq = Uq - HB2M * kq * kq;
+        var kq = R.pick([3.0, 4.0, 5.0, 6.0, 8.0, 7]), Uq = R.pick([3.0, 4.0, 5.0, 6.0]), Eq = Uq - HB2M * kq * kq;
         if (Eq <= 0.1) { kq = 4.0; Uq = 5.0; Eq = Uq - HB2M * 16; }
         rec('modern.schrodinger-equation', { kind: kind, k: kq, U0: Uq });
         p = { q: 'Inside a barrier where $U = ' + qu(Uq, 'eV', 2) + '$, an electron\'s wave function is $\\psi = Ae^{-\\kappa x}$ with $\\kappa = ' + qu(kq, 'nm⁻¹', 2) + '$. What is the electron\'s energy? ($\\hbar^2/2m_e = 0.0381$ eV·nm².)', a: num(Eq), unit: 'eV',
           steps: ['The equation gives $E = U - \\dfrac{\\hbar^2\\kappa^2}{2m}$.', '$E = ' + nx(Uq, 2) + ' - 0.0381 \\times ' + nx(kq, 2) + '^2 = ' + nx(Uq, 2) + ' - ' + nx(HB2M * kq * kq) + ' = ' + qu(Eq, 'eV') + '$.'], hint: 'In a forbidden region, the second-derivative term lowers the energy below $U$.' };
       }
     } else if (kind === 'Ebox') {
-      var L = R.pick([0.20, 0.25, 0.40, 0.50, 1.0]), n = R.pick([1, 2, 3]), kb = n * PI / L, Eb = HB2M * kb * kb;
+      var L = R.pick([0.20, 0.25, 0.40, 0.50, 1.0, 0.3, 0.35, 0.6, 0.8, 0.9]), n = R.pick([1, 2, 3]), kb = n * PI / L, Eb = HB2M * kb * kb;
       rec('modern.schrodinger-equation', { kind: kind, L: L, n: n });
       p = { q: 'An electron between hard walls at $x = 0$ and $x = ' + qu(L, 'nm', 2) + '$ ($U = 0$ between them) has $\\psi = A\\sin(kx)$, with the smallest $k$ that ' + (n === 1 ? '' : 'has ' + (n - 1) + ' zero' + (n > 2 ? 's' : '') + ' between the walls and ') + 'meets the boundary conditions. Find its energy. ($\\hbar^2/2m_e = 0.0381$ eV·nm².)', a: num(Eb), unit: 'eV',
         steps: ['$\\psi(L) = 0$ needs $kL = n\\pi$; here $n = ' + n + '$, so $k = \\dfrac{' + (n === 1 ? '' : n) + '\\pi}{' + nx(L, 2) + '} = ' + qu(kb, 'nm⁻¹') + '$.', '$E = \\dfrac{\\hbar^2k^2}{2m} = 0.0381 \\times ' + nx(kb) + '^2 = ' + qu(Eb, 'eV') + '$.'], hint: 'The boundary condition picks out $k$; then $E = \\hbar^2k^2/2m$.' };
     } else if (kind === 'gauss') {
-      var b = R.pick([0.050, 0.10, 0.20, 0.30]), Eg = HB2M / (b * b);
+      var b = R.pick([0.050, 0.10, 0.20, 0.30, 0.06, 0.08, 0.12, 0.25]), Eg = HB2M / (b * b);
       rec('modern.schrodinger-equation', { kind: kind, b: b });
       p = { q: 'The function $\\psi = e^{-x^2/2b^2}$ with $b = ' + qu(b, 'nm', 2) + '$ solves the Schrödinger equation for an electron in the potential $U = \\dfrac{\\hbar^2x^2}{2m_eb^4}$ (a harmonic oscillator). Find its energy. ($\\hbar^2/2m_e = 0.0381$ eV·nm².)', a: num(Eg), unit: 'eV',
         steps: ['$\\psi\'\' = \\left(\\dfrac{x^2}{b^4} - \\dfrac{1}{b^2}\\right)\\psi$.', '$-\\dfrac{\\hbar^2}{2m}\\psi\'\' + U\\psi = \\left(\\dfrac{\\hbar^2}{2mb^2} - \\dfrac{\\hbar^2x^2}{2mb^4} + \\dfrac{\\hbar^2x^2}{2mb^4}\\right)\\psi = \\dfrac{\\hbar^2}{2mb^2}\\psi$.', '$E = \\dfrac{0.0381}{' + nx(b, 2) + '^2} = ' + qu(Eg, 'eV') + '$.'], hint: 'Differentiate the Gaussian twice; the $x^2$ terms cancel with $U$.' };
@@ -1448,7 +1454,7 @@
 
   G('modern.particle-in-box', function (R, ctx) {
     var kind = R.pick(by(ctx, ['En', 'En'], ['photon', 'Lfrom', 'ratio'], ['nucleon', 'photon', 'Lfrom']));
-    var L = R.pick([0.20, 0.25, 0.30, 0.40, 0.50, 0.80, 1.0, 1.5, 2.0]), p;
+    var L = R.pick([0.20, 0.25, 0.30, 0.40, 0.50, 0.80, 1.0, 1.5, 2.0, 0.35, 0.6, 0.7, 0.9, 1.2]), p;
     if (kind === 'En') {
       var n = R.pick([1, 2, 3, 4]), E = n * n * ELBOX / (L * L);
       rec('modern.particle-in-box', { kind: kind, L: L, n: n });
@@ -1461,7 +1467,7 @@
       p = { q: 'An electron in a box $' + qu(L, 'nm', 2) + '$ wide drops from $n = ' + hi + '$ to $n = ' + lo + '$. What wavelength of light does it emit? ($h^2/8m_e = 0.376$ eV·nm², $hc = 1240$ eV·nm.)', a: num(lam), unit: 'nm',
         steps: ['$\\Delta E = (' + hi + '^2 - ' + lo + '^2)\\dfrac{0.376}{' + nx(L, 2) + '^2} = ' + qu(dE, 'eV') + '$.', '$\\lambda = \\dfrac{1240}{' + nx(dE) + '} = ' + qu(lam, 'nm') + '$.'], hint: 'Find the energy difference, then $\\lambda = hc/\\Delta E$.' };
     } else if (kind === 'Lfrom') {
-      var E1 = R.pick([0.50, 1.0, 1.5, 2.0, 3.0, 5.0, 10]), Lf = M.sqrt(ELBOX / E1);
+      var E1 = R.pick([0.50, 1.0, 1.5, 2.0, 3.0, 5.0, 10, 0.6, 0.8, 1.2, 3.5, 4, 7, 9]), Lf = M.sqrt(ELBOX / E1);
       rec('modern.particle-in-box', { kind: kind, E1: E1 });
       p = { q: 'An electron in a box has a ground-state energy of $' + qu(E1, 'eV', 2) + '$. How wide is the box? ($h^2/8m_e = 0.376$ eV·nm².)', a: num(Lf), unit: 'nm',
         steps: ['$E_1 = \\dfrac{0.376}{L^2}$, so $L = \\sqrt{\\dfrac{0.376}{E_1}} = \\sqrt{\\dfrac{0.376}{' + nx(E1, 2) + '}}$.', '$L = ' + qu(Lf, 'nm') + '$.'], hint: 'Solve $E_1 = h^2/8mL^2$ for $L$.' };
@@ -1472,7 +1478,7 @@
       p = ask === 'ratio' ? { q: 'For a particle in a box, how many times larger is $E_' + a + '$ than $E_' + b + '$?', a: num(a * a / (b * b), 0.005), unit: '×', steps: ['$E_n \\propto n^2$, so $\\dfrac{E_' + a + '}{E_' + b + '} = \\dfrac{' + a * a + '}{' + b * b + '} = ' + nx(a * a / (b * b), 3) + '$.'], hint: 'Energies go as $n^2$.' }
         : { q: 'For a particle in a box, the gap $E_' + a + ' - E_' + b + '$ is how many times the ground-state energy $E_1$?', a: exact(a * a - b * b), steps: ['$E_n = n^2E_1$.', '$E_' + a + ' - E_' + b + ' = (' + a * a + ' - ' + b * b + ')E_1 = ' + (a * a - b * b) + 'E_1$.'], hint: 'Write each level as $n^2E_1$.' };
     } else {
-      var part = R.pick([['a proton', MPC2], ['a neutron', MNC2]]), Lfm = R.pick([5.0, 8.0, 10, 12, 15]), Enuc = 1240 * 1240 / (8 * part[1] * Lfm * Lfm);
+      var part = R.pick([['a proton', MPC2], ['a neutron', MNC2]]), Lfm = R.pick([5.0, 8.0, 10, 12, 15, 6, 7, 9, 13, 14]), Enuc = 1240 * 1240 / (8 * part[1] * Lfm * Lfm);
       rec('modern.particle-in-box', { kind: kind, mc2: part[1], L: Lfm });
       p = { q: 'Model ' + part[0] + ' ($mc^2 = ' + qu(part[1], 'MeV', 4) + '$) as trapped in a box $' + qu(Lfm, 'fm', 2) + '$ wide, about the size of a nucleus. Estimate its ground-state energy, in MeV. ($hc = 1240$ MeV·fm.)', a: num(Enuc), unit: 'MeV',
         steps: ['$E_1 = \\dfrac{h^2}{8mL^2} = \\dfrac{(hc)^2}{8(mc^2)L^2}$.', '$E_1 = \\dfrac{1240^2}{8(' + nx(part[1], 4) + ')(' + nx(Lfm, 2) + ')^2} = ' + qu(Enuc, 'MeV') + '$.'], hint: 'Multiply top and bottom by $c^2$ to work in MeV and fm.' };
@@ -1516,7 +1522,7 @@
     var kind = R.pick(by(ctx, ['En', 'zero'], ['photon', 'zero', 'En'], ['kFrom', 'amp', 'photon']));
     var p;
     if (kind === 'En' || kind === 'zero') {
-      var hw = R.pick([0.050, 0.10, 0.12, 0.15, 0.20, 0.25, 0.30, 0.36, 0.40, 0.50, 0.60, 0.80]), n = kind === 'zero' ? 0 : R.pick([1, 2, 3, 4, 5, 6, 8, 10]);
+      var hw = R.pick([0.050, 0.10, 0.12, 0.15, 0.20, 0.25, 0.30, 0.36, 0.40, 0.50, 0.60, 0.80, 0.06, 0.07, 0.08, 0.09, 0.35, 0.7]), n = kind === 'zero' ? 0 : R.pick([1, 2, 3, 4, 5, 6, 8, 10, 7, 9]);
       rec('modern.quantum-oscillator', { kind: kind, hw: hw, n: n });
       p = { q: 'A quantum harmonic oscillator has level spacing $\\hbar\\omega = ' + qu(hw, 'eV', 2) + '$. What is the energy of its ' + (n === 0 ? 'ground state ($n = 0$)' : '$n = ' + n + '$ level') + '?', a: num((n + 0.5) * hw), unit: 'eV',
         steps: ['$E_n = \\left(n + \\tfrac{1}{2}\\right)\\hbar\\omega = \\left(' + n + ' + \\tfrac{1}{2}\\right)(' + nx(hw, 2) + ')$.', '$E_{' + n + '} = ' + qu((n + 0.5) * hw, 'eV') + '$' + (n === 0 ? ', the zero-point energy.' : '.')], hint: 'Levels sit at half-integer multiples of $\\hbar\\omega$.' };
@@ -1526,12 +1532,12 @@
       p = { q: 'A molecule vibrates like a quantum oscillator at $f = ' + qu(f, 'Hz', 3) + '$. What wavelength of light lifts it from $n = 0$ to $n = 1$, in micrometers? ($h = 4.136 \\times 10^{-15}$ eV·s, $hc = 1240$ eV·nm.)', a: num(lam), unit: 'μm',
         steps: ['The gap is one step: $\\Delta E = hf = (4.136 \\times 10^{-15})(' + nx(f, 3) + ') = ' + qu(hf, 'eV') + '$.', '$\\lambda = \\dfrac{1240}{' + nx(hf) + '}\\ \\text{nm} = ' + qu(lam * 1000, 'nm') + ' = ' + qu(lam, 'μm') + '$ (infrared).'], hint: 'Every step on the ladder is $\\hbar\\omega = hf$.' };
     } else if (kind === 'kFrom') {
-      var m = R.pick([1.0, 1.6, 2.0, 2.3]) * 1e-26, hw2 = R.pick([0.10, 0.15, 0.20, 0.25, 0.30]), w = hw2 / HBAREV, k = m * w * w;
+      var m = R.pick([1.0, 1.6, 2.0, 2.3]) * 1e-26, hw2 = R.pick([0.10, 0.15, 0.20, 0.25, 0.30, 0.12]), w = hw2 / HBAREV, k = m * w * w;
       rec('modern.quantum-oscillator', { kind: kind, m: m, hw: hw2 });
       p = { q: 'An atom of mass $' + qu(m, 'kg', 2) + '$ vibrates in a molecule like a quantum oscillator with level spacing $' + qu(hw2, 'eV', 2) + '$. What is the effective spring constant? ($\\hbar = 6.582 \\times 10^{-16}$ eV·s.)', a: num(k), unit: 'N/m',
         steps: ['$\\omega = \\dfrac{\\Delta E}{\\hbar} = \\dfrac{' + nx(hw2, 2) + '}{6.582 \\times 10^{-16}} = ' + qu(w, 'rad/s') + '$.', '$k = m\\omega^2 = (' + nx(m, 2) + ')(' + nx(w) + ')^2 = ' + qu(k, 'N/m') + '$.'], hint: 'Get $\\omega$ from the spacing, then $k = m\\omega^2$.' };
     } else {
-      var mm = R.pick([['an electron', ME], ['a proton', MP]]), wv = R.pick([1.0e14, 2.0e14, 5.0e14, 1.0e15]), A = M.sqrt(HBAR / (mm[1] * wv));
+      var mm = R.pick([['an electron', ME], ['a proton', MP]]), wv = R.pick([1.0e14, 2.0e14, 5.0e14, 1.0e15, 1.2e+14, 3e+14, 6e+14, 9e+14]), A = M.sqrt(HBAR / (mm[1] * wv));
       rec('modern.quantum-oscillator', { kind: kind, m: mm[1], w: wv });
       p = { q: 'A quantum oscillator made of ' + mm[0] + ' ($m = ' + qu(mm[1], 'kg', 4) + '$) has $\\omega = ' + qu(wv, 'rad/s', 2) + '$. In its ground state, how far from the center is the classical turning point (where $\\tfrac{1}{2}m\\omega^2x^2 = E_0$)? Give it in nanometers.', a: num(A * 1e9), unit: 'nm',
         steps: ['$\\tfrac{1}{2}m\\omega^2x^2 = \\tfrac{1}{2}\\hbar\\omega$ gives $x = \\sqrt{\\dfrac{\\hbar}{m\\omega}}$.', '$x = \\sqrt{\\dfrac{1.055 \\times 10^{-34}}{(' + nx(mm[1], 4) + ')(' + nx(wv, 2) + ')}} = ' + qu(A, 'm') + ' = ' + qu(A * 1e9, 'nm') + '$.'], hint: 'Set the potential energy equal to the zero-point energy.' };
@@ -1540,7 +1546,7 @@
   });
 
   G('modern.quantum-numbers', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['shell', 'mlCount'], ['valid', 'subshell', 'Lmag'], ['angle', 'valid', 'nml']));
+    var kind = R.pick(by(ctx, ['shell', 'mlCount', 'valid'], ['valid', 'subshell', 'Lmag'], ['angle', 'valid', 'nml']));
     var p, LET = ['s', 'p', 'd', 'f', 'g'];
     if (kind === 'shell') {
       var n = R.pick([1, 2, 3, 4, 5]);
@@ -1590,7 +1596,7 @@
   function configTex(Z) { return config(Z).map(function (c) { return c[0] + '^{' + c[1] + '}'; }).join('\\,'); }
 
   G('modern.exclusion-principle', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['subMax', 'shellMax'], ['outer', 'config', 'lCount'], ['mlzero', 'spin', 'config']));
+    var kind = R.pick(by(ctx, ['subMax', 'shellMax', 'outer'], ['outer', 'config', 'lCount'], ['mlzero', 'spin', 'config']));
     var p, LET = ['s', 'p', 'd', 'f'];
     if (kind === 'subMax') {
       var l = R.pick([0, 1, 2, 3]);
@@ -1641,13 +1647,16 @@
   G('modern.band-theory', function (R, ctx) {
     var kind = R.pick(by(ctx, ['cutoff', 'led'], ['gapFrom', 'dope', 'cutoff'], ['thermal', 'temp', 'gapFrom']));
     var mat = R.pick([['silicon', 1.12], ['germanium', 0.67], ['gallium arsenide', 1.42], ['gallium nitride', 3.4], ['diamond', 5.5], ['cadmium sulfide', 2.42]]), p;
+    if (kind === 'cutoff' && R.coin()) mat = ['a semiconductor', R.int(5, 40) / 10];
     if (kind === 'cutoff') {
       var lam = HC / mat[1];
       rec('modern.band-theory', { kind: kind, Eg: mat[1] });
       p = { q: (mat[0].charAt(0).toUpperCase() + mat[0].slice(1)) + ' has a band gap of $' + qu(mat[1], 'eV', 3) + '$. What is the longest wavelength of light that can lift an electron across the gap? ($hc = 1240$ eV·nm.)', a: num(lam), unit: 'nm',
         steps: ['A photon needs $hf \\ge E_g$, so $\\lambda \\le \\dfrac{hc}{E_g}$.', '$\\lambda_{\\max} = \\dfrac{1240}{' + nx(mat[1], 3) + '} = ' + qu(lam, 'nm') + '$.'], hint: 'Longer wavelength means less energy per photon.' };
     } else if (kind === 'led' || kind === 'gapFrom') {
-      var col = R.pick([['red', 630], ['orange', 605], ['yellow', 590], ['green', 525], ['blue', 465], ['violet', 405], ['infrared', 850]]);
+      var col = R.pick([['red', 620, 700], ['orange', 590, 620], ['yellow', 570, 590], ['green', 495, 570], ['blue', 450, 495], ['violet', 400, 450], ['infrared', 760, 1000]]);
+      col = [col[0], R.int(col[1] / 5, col[2] / 5) * 5];
+      if (kind === 'gapFrom') col[1] = R.int(60, 220) * 5;
       rec('modern.band-theory', { kind: kind, lam: col[1] });
       p = kind === 'led' ? { q: 'An LED emits light with photon energy close to its band gap. What gap gives ' + col[0] + ' light at $' + qu(col[1], 'nm', 3) + '$? ($hc = 1240$ eV·nm.)', a: num(HC / col[1]), unit: 'eV', steps: ['An electron falling across the gap emits one photon: $E_g \\approx \\dfrac{hc}{\\lambda}$.', '$E_g = \\dfrac{1240}{' + col[1] + '} = ' + qu(HC / col[1], 'eV') + '$.'], hint: 'Photon energy $= hc/\\lambda$.' }
         : { q: 'A semiconductor starts absorbing light only at wavelengths shorter than $' + qu(col[1], 'nm', 3) + '$. What is its band gap? ($hc = 1240$ eV·nm.)', a: num(HC / col[1]), unit: 'eV', steps: ['The absorption edge is where $hc/\\lambda = E_g$.', '$E_g = \\dfrac{1240}{' + col[1] + '} = ' + qu(HC / col[1], 'eV') + '$.'], hint: 'The longest absorbed wavelength matches the gap.' };
@@ -1658,7 +1667,7 @@
       var wrong = d[2] === 'n' ? ['p-type: each atom leaves a hole in the valence band', 'It makes silicon an insulator by widening the gap', 'It has no effect, since the atom has the same number of outer electrons as silicon'] : ['n-type: each atom donates an extra electron to the conduction band', 'It makes silicon an insulator by widening the gap', 'It has no effect, since the atom has the same number of outer electrons as silicon'];
       p = { q: 'A small amount of ' + d[0] + ' (' + d[1] + ' outer electrons) is added to silicon (4 outer electrons). What does it do?', a: mc(right, wrong), steps: ['Silicon atoms bond with 4 outer electrons each.', d[2] === 'n' ? 'With 5, the extra electron is only loosely held and is easily freed into the conduction band: n-type.' : 'With 3, one bond is missing an electron: a hole that acts as a positive carrier: p-type.'], hint: 'Compare the number of outer electrons with silicon\'s four.' };
     } else if (kind === 'thermal') {
-      var T1 = R.pick([250, 300]), T2 = T1 + R.pick([25, 50, 100]), Eg = R.pick([0.67, 1.12, 1.42]), r = M.exp(Eg / (2 * KBEV) * (1 / T1 - 1 / T2));
+      var T1 = R.pick([250, 300]), T2 = T1 + R.pick([25, 50, 100, 30, 60, 90]), Eg = R.pick([0.67, 1.12, 1.42]), r = M.exp(Eg / (2 * KBEV) * (1 / T1 - 1 / T2));
       rec('modern.band-theory', { kind: kind, Eg: Eg, T1: T1, T2: T2 });
       p = { q: 'The number of electrons thermally excited across a gap $E_g$ goes roughly as $e^{-E_g/2k_BT}$. For a gap of $' + qu(Eg, 'eV', 3) + '$, by what factor does this factor grow when the temperature rises from $' + T1 + '$ K to $' + T2 + '$ K? ($k_B = 8.617 \\times 10^{-5}$ eV/K.)', a: num(r, 0.03), unit: '×',
         steps: ['Ratio: $\\exp\\left[\\dfrac{E_g}{2k_B}\\left(\\dfrac{1}{T_1} - \\dfrac{1}{T_2}\\right)\\right]$.', '$\\dfrac{E_g}{2k_B} = \\dfrac{' + nx(Eg, 3) + '}{2(8.617 \\times 10^{-5})} = ' + qu(Eg / (2 * KBEV), 'K') + '$.', 'Exponent: $' + nx(Eg / (2 * KBEV)) + '\\left(\\dfrac{1}{' + T1 + '} - \\dfrac{1}{' + T2 + '}\\right) = ' + nx(Eg / (2 * KBEV) * (1 / T1 - 1 / T2)) + '$, so the factor is $' + nx(r) + '$.'],
@@ -1793,7 +1802,7 @@
   G('modern.q-values', function (R, ctx) {
     var kind = R.pick(by(ctx, ['alpha', 'defect', 'sample'], ['betaMinus', 'fusion', 'alpha', 'endo', 'sample'], ['betaPlus', 'Kalpha', 'fission', 'perKg', 'sample']));
     if (kind === 'sample') {
-      var ps = R.pick(ALPHA), Qs1 = (NUC[ps[0]][2] - NUC[ps[1]][2] - NUC['He-4'][2]) * UMEV, mug = R.pick([1.0, 2.0, 3.0, 4.0, 5.0, 8.0, 10, 12, 15, 20, 25, 30, 40, 50, 75, 100, 150, 200, 500]), A0 = NUC[ps[0]][1], Ns = mug * 1e-6 / A0 * 6.022e23, Es = Ns * Qs1 * 1.602e-13;
+      var ps = R.pick(ALPHA), Qs1 = (NUC[ps[0]][2] - NUC[ps[1]][2] - NUC['He-4'][2]) * UMEV, mug = R.pick([1.0, 2.0, 3.0, 4.0, 5.0, 8.0, 10, 12, 15, 20, 25, 30, 40, 50, 75, 100, 150, 200, 500, 1.2, 1.5, 2.5, 3.5, 6, 7, 9, 35, 60, 70, 80, 90, 120, 250, 300, 350, 400]), A0 = NUC[ps[0]][1], Ns = mug * 1e-6 / A0 * 6.022e23, Es = Ns * Qs1 * 1.602e-13;
       rec('modern.q-values', { kind: kind, par: ps[0], dau: ps[1], mug: mug });
       return { q: 'Each alpha decay $' + sup(ps[0]) + ' \\to ' + sup(ps[1]) + ' + \\alpha$ releases $' + qu(Qs1, 'MeV') + '$. How much energy, in joules, do these decays release in all when $' + qu(mug, 'μg', 2) + '$ of ' + NUC[ps[0]][3] + ' decays completely (counting only this first step)? (Molar mass about ' + A0 + ' g/mol; 1 MeV $= 1.602 \\times 10^{-13}$ J.)', a: num(Es, 0.02), unit: 'J',
         steps: ['Nuclei: $\\dfrac{' + nx(mug * 1e-6, 2) + '\\ \\text{g}}{' + A0 + '\\ \\text{g/mol}} \\times 6.022 \\times 10^{23} = ' + nx(Ns) + '$.', 'Energy: $' + nx(Ns) + ' \\times ' + nx(Qs1) + '\\ \\text{MeV} \\times 1.602 \\times 10^{-13}\\ \\text{J/MeV} = ' + qu(Es, 'J') + '$.'], hint: 'Count the nuclei, then multiply by the energy per decay.' };
@@ -1853,7 +1862,7 @@
     var kind = R.pick(by(ctx, ['cFrac', 'cHalves'], ['cActivity', 'uPb', 'cFrac'], ['method', 'leftAfter', 'uPb']));
     var TC = 5730, p;
     if (kind === 'cFrac') {
-      var f = R.pick([0.90, 0.80, 0.70, 0.60, 0.45, 0.35, 0.30, 0.20, 0.15, 0.10, 0.05]), t = TC / M.LN2 * M.log(1 / f);
+      var f = R.pick([0.90, 0.80, 0.70, 0.60, 0.45, 0.35, 0.30, 0.20, 0.15, 0.10, 0.05, 0.06, 0.07, 0.08, 0.09, 0.12, 0.25, 0.4, 0.5]), t = TC / M.LN2 * M.log(1 / f);
       rec('modern.radioactive-dating', { kind: kind, f: f });
       p = { q: 'A piece of ' + R.pick(['wood', 'charcoal', 'bone', 'linen cloth', 'a seed']) + ' has ' + nx(f * 100, 2) + '% of the carbon-14 found in living things. How old is it? (Half-life 5730 years.)', a: num(t), unit: 'yr',
         steps: ['$t = \\dfrac{T_{1/2}}{\\ln 2}\\ln\\dfrac{N_0}{N} = \\dfrac{5730}{0.693}\\ln\\dfrac{1}{' + nx(f, 2) + '}$.', '$t = 8267 \\times ' + nx(M.log(1 / f)) + ' = ' + qu(t, 'yr') + '$.'], hint: 'Solve $N/N_0 = e^{-\\lambda t}$ for $t$.' };
@@ -1864,17 +1873,17 @@
         steps: ['$' + T.frac(1, M.pow(2, k)) + ' = \\left(\\tfrac{1}{2}\\right)^{' + k + '}$: ' + k + ' half-li' + (k === 1 ? 'fe has' : 'ves have') + ' passed.', '$t = ' + k + ' \\times 5730 = ' + qu(k * TC, 'yr', 5) + '$.'], hint: 'Count the halvings.' };
       void f2;
     } else if (kind === 'cActivity') {
-      var a = R.pick([12.0, 10.0, 8.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.5]), t3 = TC / M.LN2 * M.log(15.3 / a);
+      var a = R.pick([12.0, 10.0, 8.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.5, 2.5, 3.5, 7, 9]), t3 = TC / M.LN2 * M.log(15.3 / a);
       rec('modern.radioactive-dating', { kind: kind, a: a });
       p = { q: 'Carbon in living things gives about 15.3 decays per minute per gram. Carbon from an ancient sample gives $' + nx(a, 2) + '$ decays per minute per gram. How old is the sample? (Half-life 5730 years.)', a: num(t3), unit: 'yr',
         steps: ['Activity is proportional to the number of carbon-14 nuclei: $\\dfrac{N_0}{N} = \\dfrac{15.3}{' + nx(a, 2) + '} = ' + nx(15.3 / a) + '$.', '$t = \\dfrac{5730}{0.693}\\ln(' + nx(15.3 / a) + ') = ' + qu(t3, 'yr') + '$.'], hint: 'The ratio of activities equals the ratio of carbon-14 amounts.' };
     } else if (kind === 'uPb') {
-      var r = R.pick([0.10, 0.20, 0.25, 0.30, 0.40, 0.50, 0.60, 0.75, 0.90, 1.0]), tu = 4.47e9 / M.LN2 * M.log(1 + r);
+      var r = R.pick([0.10, 0.20, 0.25, 0.30, 0.40, 0.50, 0.60, 0.75, 0.90, 1.0, 0.12, 0.15, 0.35, 0.7, 0.8]), tu = 4.47e9 / M.LN2 * M.log(1 + r);
       rec('modern.radioactive-dating', { kind: kind, r: r });
       p = { q: 'A zircon crystal contains $' + nx(r, 2) + '$ atoms of lead-206 for every atom of uranium-238. Assuming it started with no lead and kept every atom, how old is it? (Uranium-238 half-life $4.47 \\times 10^9$ yr.)', a: num(tu), unit: 'yr',
         steps: ['Each decayed uranium atom became a lead atom: $N_0 = N_{\\text{U}} + N_{\\text{Pb}}$, so $\\dfrac{N_0}{N_{\\text{U}}} = 1 + ' + nx(r, 2) + '$.', '$t = \\dfrac{4.47 \\times 10^9}{0.693}\\ln(' + nx(1 + r, 3) + ') = ' + qu(tu, 'yr') + '$.'], hint: 'The lead atoms count the uranium atoms that have decayed.' };
     } else if (kind === 'leftAfter') {
-      var age = R.pick([1000, 2500, 5000, 10000, 20000, 30000, 50000]), fl = M.exp(-M.LN2 * age / TC);
+      var age = R.pick([1000, 2500, 5000, 10000, 20000, 30000, 50000, 1200, 2000, 4000, 7000, 9000, 25000, 40000]), fl = M.exp(-M.LN2 * age / TC);
       rec('modern.radioactive-dating', { kind: kind, age: age });
       p = { q: 'What fraction of its original carbon-14 does a ' + T.commas(age) + '-year-old bone still have? (Half-life 5730 years.)', a: num(fl, 0.02), unit: '',
         steps: ['$\\dfrac{N}{N_0} = \\left(\\tfrac{1}{2}\\right)^{t/T_{1/2}} = 0.5^{' + nx(age / TC, 3) + '}$.', '$= ' + nx(fl) + '$.'], hint: 'Divide the age by the half-life to count half-lives.' };
@@ -1962,7 +1971,7 @@
       else p = { q: pp[0].charAt(0).toUpperCase() + pp[0].slice(1) + ', both at rest, annihilate into two photons. What is the wavelength of each photon, in picometers? ($mc^2 = ' + qu(pp[1], 'MeV', pp[1] < 1 ? 3 : 4) + '$ each; $hc = 1240$ MeV·fm $= 1.240 \\times 10^{-3}$ MeV·nm.)', a: num(1.240e-3 / pp[1] * 1000, 0.01), unit: 'pm',
         steps: ['Each photon has $E = mc^2 = ' + qu(pp[1], 'MeV', pp[1] < 1 ? 3 : 4) + '$.', '$\\lambda = \\dfrac{hc}{E} = \\dfrac{1.240 \\times 10^{-3}\\ \\text{MeV·nm}}{' + nx(pp[1], pp[1] < 1 ? 3 : 4) + '\\ \\text{MeV}} = ' + qu(1.240e-3 / pp[1], 'nm') + ' = ' + qu(1.240e-3 / pp[1] * 1000, 'pm') + '$.'], hint: 'Find each photon\'s energy, then $\\lambda = hc/E$.' };
     } else if (kind === 'moving') {
-      var K = R.pick([0.10, 0.20, 0.25, 0.30, 0.40, 0.50, 0.75, 1.0, 1.5, 2.0, 3.0]);
+      var K = R.pick([0.10, 0.20, 0.25, 0.30, 0.40, 0.50, 0.75, 1.0, 1.5, 2.0, 3.0, 0.12, 0.15, 0.35, 0.6, 0.7, 0.8, 0.9, 1.2, 2.5]);
       rec('modern.antimatter', { kind: kind, K: K });
       p = { q: 'An electron and a positron, each with kinetic energy $' + qu(K, 'MeV', 2) + '$, collide head-on with equal and opposite momenta and annihilate into two photons. What is the energy of each photon? ($m_ec^2 = 0.511$ MeV.)', a: num(MEC2 + K, 0.01), unit: 'MeV',
         steps: ['Total momentum is zero (equal and opposite), so the two photons have equal energies.', 'Total energy: $2(0.511 + ' + nx(K, 2) + ') = ' + qu(2 * (MEC2 + K), 'MeV') + '$; each photon: $' + qu(MEC2 + K, 'MeV') + '$.'], hint: 'Each particle brings its rest energy plus its kinetic energy.' };
@@ -2061,3 +2070,131 @@
 
   // ---- tail
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen"; Physics and Earth ladders): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - check a number: the question and a classmate's numeric answer, either the generator's own answer or that answer
+     off by a common slip (a factor of 2, 4 or 10), and "Is that right?" (Yes / No; not in placement);
+   - two at once: two different questions of the topic, answered together (short questions only, multiple-choice or
+     numeric, each keeping its own unit; at most one of them with a picture, which then comes first).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'modern', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function numable(p) { // a single numeric answer with a plain decimal value (not a fraction or an expression)
+    var a = p.a;
+    return !!a && a.t === 'num' && /^-?\d+(\.\d+)?(e-?\d+)?$/.test(String(a.v)) && +a.v !== 0 && isFinite(+a.v) &&
+      !(a.tol && a.tol >= Math.abs(+a.v) / 3) && !((a.rtol || 0) > 0.3); // a slip by a factor of 2 must fall outside the tolerance
+  }
+  function sig(v) { var m = String(v).replace(/e.*$/, '').replace(/^-?0*\.?0*/, '').replace('.', ''); return Math.min(6, Math.max(3, m.length)); }
+  function show(x, n) { // a number as the classmate would write it: 3 significant figures, scientific notation when large or small
+    var ax = Math.abs(x);
+    if (ax >= 1e5 || ax < 1e-3) { var e = Math.floor(Math.log10(ax)), m = Number((x / Math.pow(10, e)).toPrecision(n || 3)); if (Math.abs(m) >= 10) { m = m / 10; e++; } return '$' + m + ' \\times 10^{' + e + '}$'; }
+    var s = String(Number(x.toPrecision(n || 3)));
+    return '$' + (ax >= 1e4 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, '{,}') : s) + '$';
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = +a.v, n = sig(a.v), right = R.coin(), f = R.pick([2, 0.5, 10, 0.1, 4, 0.25]), shown = right ? v : v * f;
+    var who = 'A classmate worked it out and got', u = p.unit ? ' ' + p.unit : '';
+    var q = p.q + '<p>' + who + ': <b>' + show(shown, n) + u + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right.' : 'No. The answer is ' + show(v, n) + u + '; ' + (f > 1 ? 'the classmate\'s answer is ' + f + ' times too big.' : 'the classmate\'s answer is ' + Math.round(1 / f) + ' times too small.'))].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf' && !numable(p))) return false;
+    if (p.a.t !== 'num' && p.unit) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function part(l, x) { var o = { label: l, a: x.a }; if (x.unit) o.unit = x.unit; return o; }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [part('1.', p), part('2.', p2)] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (mode !== 'place' && numable(p)) forms.push('ncheck');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'ncheck' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

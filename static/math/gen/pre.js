@@ -310,7 +310,7 @@
       };
     }
     if (kind === 'turn') {
-      var f = R.pick(by(ctx, [[1, 2], [1, 4], [3, 4], [1, 1]], [[1, 3], [2, 3], [1, 6], [5, 6], [1, 8], [3, 8], [3, 2]], [[5, 12], [1, 12], [7, 8], [5, 4], [7, 6], [2, 1]]));
+      var f = R.pick(by(ctx, [[1, 2], [1, 4], [3, 4], [1, 1], [2, 1], [3, 2], [1, 3], [2, 3], [3, 1], [5, 4], [1, 6]], [[1, 3], [2, 3], [1, 6], [5, 6], [1, 8], [3, 8], [3, 2], [5, 8], [7, 12], [5, 3], [9, 4], [1, 5], [2, 5]], [[5, 12], [1, 12], [7, 8], [5, 4], [7, 6], [2, 1], [11, 12], [3, 10], [7, 4], [4, 3], [5, 2], [1, 9]]));
       var ang = piRed(2 * f[0], f[1]);
       return {
         q: 'A wheel turns $' + T.mixed(f[0], f[1]) + '$ ' + (f[0] > f[1] || (f[0] === f[1]) ? 'turn' + (f[0] === f[1] ? '' : 's') : 'of a turn') + '. Through what angle, in radians, does a spoke turn? Give an exact answer.',
@@ -321,7 +321,7 @@
       };
     }
     if (kind === 'arc') {
-      var th2 = R.pick([Q(2), Q(3), Q(5, 2), Q(3, 2), Q(1, 2), Q(4)]), r2 = R.int(2, 9) * (th2.den() === 2 ? 2 : 1), s2 = th2.mul(r2);
+      var th2 = R.pick([Q(2), Q(3), Q(5, 2), Q(3, 2), Q(1, 2), Q(4), Q(1), Q(5), Q(7, 2), Q(6)]), r2 = R.int(2, 12) * (th2.den() === 2 ? 2 : 1), s2 = th2.mul(r2);
       return {
         q: 'An angle of $' + th2.toTex() + '$ radians sits at the center of a circle of radius $' + r2 + '$ m. How long is the arc it cuts off?',
         a: numA(s2.toPlain()),
@@ -341,7 +341,7 @@
       };
     }
     // quad: which quadrant is an angle of k radians in?
-    var kr = R.pick([1, 2, 3, 4, 5, 6, 1.5, 2.5, 3.5, 4.5, 5.5]), qd = kr < PI / 2 ? 1 : kr < PI ? 2 : kr < 3 * PI / 2 ? 3 : 4;
+    var kr = R.pick([1, 2, 3, 4, 5, 6, 1.5, 2.5, 3.5, 4.5, 5.5, 0.5, 1.2, 1.8, 2.8, 3.3, 4.1, 4.9, 5.2, 5.9, 0.8, 2.2, 3.9, 6.1]), qd = kr < PI / 2 ? 1 : kr < PI ? 2 : kr < 3 * PI / 2 ? 3 : 4;
     return {
       q: 'An angle of $' + T.num(kr) + '$ radians (no $\\pi$) is drawn in standard position. In which quadrant does it end?',
       a: { t: 'mc', choices: ['Quadrant I', 'Quadrant II', 'Quadrant III', 'Quadrant IV'], v: qd - 1, keep: true },
@@ -357,7 +357,9 @@
     var P1 = [30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330, 360];
     var P2 = [15, 75, 105, 165, 390, 405, 450, 540, 720, -45, -60, -120, -150, -210, -270, 195, 255, 285];
     var P3 = [20, 40, 36, 72, 100, 200, 10, 18, 160, 252, 50, 80, 140, -40, -100, 25];
-    var deg = R.pick(by(ctx, P1, P2.concat(P1.slice(4)), P3.concat(P2)));
+    var M15 = [], M5 = [], M5n = []; for (var dd = 15; dd <= 720; dd += 15) M15.push(dd); for (dd = 5; dd < 360; dd += 5) if (dd % 15) M5.push(dd); for (dd = -355; dd < 0; dd += 5) if (dd % 15) M5n.push(dd);
+    var L1x = [10, 20, 40, 50, 70, 80, 100, 110, 140, 160, 200, 220, 250, 260, 280, 320, 340, 350, 18, 36, 72, 108, 144, 105, 75, 165, 195, 255, 285, 345];
+    var deg = R.pick(by(ctx, P1.concat(L1x), P2.concat(P1.slice(4)).concat(M15.filter(function (x) { return x > 360; })).concat(M15.map(function (x) { return -x; }).filter(function (x) { return x > -360; })), P3.concat(P2).concat(M5).concat(M5n)));
     var r = degPi(deg);
     if (kind === 'd2r') {
       var g = gcd(deg, 180);
@@ -379,8 +381,8 @@
         hint: 'Replace $\\pi$ with $180^\\circ$, then simplify.'
       };
     }
-    var k = R.pick([2, 3, 4, 5, 1, 6]);
-    var exact = Q(180 * k);
+    var k = R.pick([2, 3, 4, 5, 1, 6, 7, 8, 9, 10, 12, 1.5, 2.5, 0.5]);
+    var exact = Q.from(String(180 * k));
     return {
       q: 'Convert $' + k + '$ radian' + (k === 1 ? '' : 's') + ' to degrees. Give the exact value (it will contain $\\pi$).',
       a: numA(exact.toPlain() + '/pi'),
@@ -446,9 +448,9 @@
   });
 
   G('pre.unit-circle-sine-cosine', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['point', 'axis', 'point'], ['point', 'axis', 'scale', 'find'], ['find', 'scale', 'axis', 'point']));
+    var kind = R.pick(by(ctx, ['point', 'axis', 'point', 'scale'], ['point', 'axis', 'scale', 'find'], ['find', 'scale', 'axis', 'point']));
     if (kind === 'point' || kind === 'find') {
-      var t = triple(R, by(ctx, 1, 3, 5)), qd = R.int(1, 4), sg = quadSigns(qd);
+      var t = triple(R, by(ctx, 3, 4, 5)), qd = R.int(1, 4), sg = quadSigns(qd);
       var x = Q(sg[0] * t[0], t[2]), y = Q(sg[1] * t[1], t[2]);
       if (kind === 'point') {
         var ask = R.pick(['cos', 'sin', 'both']);
@@ -474,7 +476,7 @@
       };
     }
     if (kind === 'scale') {
-      var t2 = triple(R, 3), k = R.int(2, 4), q2 = R.int(1, 4), s2 = quadSigns(q2), X = s2[0] * t2[0] * k, Y = s2[1] * t2[1] * k, r = t2[2] * k;
+      var t2 = triple(R, by(ctx, 2, 3, 5)), k = R.int(2, 6), q2 = R.int(1, 4), s2 = quadSigns(q2), X = s2[0] * t2[0] * k, Y = s2[1] * t2[1] * k, r = t2[2] * k;
       var ask2 = R.pick(['cos', 'sin']), v2 = Q(ask2 === 'cos' ? X : Y, r);
       return {
         q: 'The point $' + T.pt([X, Y]) + '$ lies on a circle of radius $' + r + '$ centered at the origin, on the terminal side of angle $\\theta$. Find $\\' + ask2 + '\\theta$.',
@@ -496,10 +498,10 @@
   });
 
   G('pre.special-angles', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['val', 'pt', 'inv', 'scale'], ['val', 'expr', 'inv', 'scale'], ['expr', 'inv', 'val', 'scale']));
-    var mode = R.pick(by(ctx, ['deg', 'rad'], ['rad', 'deg'], ['rad']));
+    var kind = R.pick(by(ctx, ['val', 'pt', 'inv', 'scale', 'expr', 'scale'], ['val', 'expr', 'inv', 'scale'], ['expr', 'inv', 'val', 'scale', 'expr']));
+    var mode = R.pick(by(ctx, ['deg', 'rad'], ['rad', 'deg'], ['rad', 'rad', 'deg']));
     if (kind === 'pt' || kind === 'scale') {
-      var dP = R.pick([30, 45, 60]), rr = kind === 'pt' ? 1 : R.pick([2, 4, 6, 8, 10, 12, 3, 5]);
+      var dP = R.pick([30, 45, 60]), rr = kind === 'pt' ? 1 : R.pick([2, 4, 6, 8, 10, 12, 3, 5, 7, 9, 14, 16, 20]);
       var cx = sdScale(sdTrig('cos', dP), rr), cy = sdScale(sdTrig('sin', dP), rr);
       var stP = [dP === 45 ? 'At $45^\\circ$ the triangle under the radius is a $45^\\circ$-$45^\\circ$-$90^\\circ$ triangle: its legs are equal, each $\\frac{\\sqrt{2}}{2}$ of the hypotenuse.' : 'The triangle under the radius is a $30^\\circ$-$60^\\circ$-$90^\\circ$ triangle: the side opposite $30^\\circ$ is half the hypotenuse, and the other leg is $\\frac{\\sqrt{3}}{2}$ of it.',
         dP === 60 ? 'At $60^\\circ$ the radius is steep, so the longer leg is vertical: $x = ' + (rr === 1 ? '' : rr + ' \\cdot ') + '\\frac{1}{2}$ and $y = ' + (rr === 1 ? '' : rr + ' \\cdot ') + '\\frac{\\sqrt{3}}{2}$.' : dP === 30 ? 'At $30^\\circ$ the radius is shallow, so the longer leg is horizontal: $x = ' + (rr === 1 ? '' : rr + ' \\cdot ') + '\\frac{\\sqrt{3}}{2}$ and $y = ' + (rr === 1 ? '' : rr + ' \\cdot ') + '\\frac{1}{2}$.' : 'So $x = y = ' + (rr === 1 ? '' : rr + ' \\cdot ') + '\\frac{\\sqrt{2}}{2}$.',
@@ -541,7 +543,12 @@
       ['\\sin A + \\cos B', function (a, b) { return sdAdd(sdTrig('sin', a), sdTrig('cos', b)); }, 2],
       ['\\sin A\\cos B', function (a, b) { return sdMul(sdTrig('sin', a), sdTrig('cos', b)); }, 2],
       ['\\tan A\\tan B', function (a, b) { return sdMul(sdTrig('tan', a), sdTrig('tan', b)); }, 2],
-      ['\\cos A - \\sin B', function (a, b) { return sdSub(sdTrig('cos', a), sdTrig('sin', b)); }, 2]
+      ['\\cos A - \\sin B', function (a, b) { return sdSub(sdTrig('cos', a), sdTrig('sin', b)); }, 2],
+      ['\\tan A + \\tan B', function (a, b) { return sdAdd(sdTrig('tan', a), sdTrig('tan', b)); }, 2],
+      ['\\sin A\\sin B', function (a, b) { return sdMul(sdTrig('sin', a), sdTrig('sin', b)); }, 2],
+      ['\\cos A\\cos B', function (a, b) { return sdMul(sdTrig('cos', a), sdTrig('cos', b)); }, 2],
+      ['2\\cos^2 A - 1', function (a) { return sdSub(sdMul(sdQ(2), sdMul(sdTrig('cos', a), sdTrig('cos', a))), sdQ(1)); }, 1],
+      ['\\sin A - \\sin B', function (a, b) { return sdSub(sdTrig('sin', a), sdTrig('sin', b)); }, 2]
     ];
     var F = R.pick(forms), A = R.pick([30, 45, 60]), B = F[2] === 1 ? A : R.pick([30, 45, 60]);
     var val = F[1](A, B), expr = F[0].replace(/A/g, angTex(A, mode).replace(/^/, ' ')).replace(/B/g, ' ' + angTex(B, mode));
@@ -557,11 +564,12 @@
   });
 
   G('pre.reference-angles', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['ref', 'val', 'val'], ['val', 'ref', 'sign', 'val'], ['val', 'sign', 'val', 'ref']));
+    var kind = R.pick(by(ctx, ['ref', 'val', 'val', 'ref'], ['val', 'ref', 'sign', 'val'], ['val', 'sign', 'val', 'ref', 'ref']));
     var mode = R.pick(by(ctx, ['deg', 'deg', 'rad'], ['rad', 'deg'], ['rad']));
     if (kind === 'ref') {
-      var d = R.pick(by(ctx, [120, 135, 150, 210, 225, 240, 300, 315, 330, 100, 200, 290, 160, 250, 340], [120, 135, 150, 210, 225, 240, 300, 315, 330, -30, -150, 390, 480], [-120, -225, 510, 600, -330, 690]));
-      if (mode === 'deg' || [100, 200, 290, 160, 250, 340].indexOf(d) >= 0) mode = R.pick(['deg', mode]);
+      var dAny = 5 * R.int(by(ctx, 19, 19, -71), by(ctx, 71, 71, 143)); if (dAny % 90 === 0) dAny += 5;
+      var d = R.coin() ? dAny : R.pick(by(ctx, [120, 135, 150, 210, 225, 240, 300, 315, 330, 100, 200, 290, 160, 250, 340, 110, 170, 190, 260, 280, 310, 350, 95, 185, 265, 275, 125, 205, 325, 145], [120, 135, 150, 210, 225, 240, 300, 315, 330, -30, -150, 390, 480], [-120, -225, 510, 600, -330, 690, -60, -210, 405, 570, 660, -390, 840, -480, 750, -150]));
+      if (mode === 'deg' || d % 15) mode = R.pick(['deg', mode]);
       if (mode === 'rad' && degPi(d).d > 12) mode = 'deg';
       var m = mod(d, 360), qd = quadOf(m), rf = refDeg(m);
       var rule = ['', '', '$180^\\circ - \\theta$', '$\\theta - 180^\\circ$', '$360^\\circ - \\theta$'][qd];
@@ -573,8 +581,8 @@
       return { q: 'Find the reference angle for $\\theta = ' + angTex(d, mode) + '$.', a: numA(angPlain(rf, mode), 'simplest'), steps: st, hint: 'Measure the acute angle between the terminal side and the nearest part of the $x$-axis.' };
     }
     if (kind === 'val') {
-      var d2 = R.pick(by(ctx, NONAX.filter(function (a) { return a > 90; }), NONAX.filter(function (a) { return a > 90; }).concat([-30, -45, -60, -120]), [-150, -135, -240, 390, 405, 480, 570, 660, -315, 495]));
-      var fn = R.pick(by(ctx, ['sin', 'cos'], ['sin', 'cos', 'tan'], ['sin', 'cos', 'tan']));
+      var d2 = R.pick(by(ctx, NONAX.filter(function (a) { return a > 90; }), NONAX.filter(function (a) { return a > 90; }).concat([-30, -45, -60, -120, -135, -150, 390, 420]), [-150, -135, -240, 390, 405, 480, 570, 660, -315, 495, -30, -60, -210, -300, 750, 780, 870, -405, -120, 600]));
+      var fn = R.pick(by(ctx, ['sin', 'cos', 'tan'], ['sin', 'cos', 'tan'], ['sin', 'cos', 'tan']));
       var v = trigDeg(fn, d2), m2 = mod(d2, 360), q2 = quadOf(m2), rf2 = refDeg(m2), base = trigDeg(fn, rf2);
       var pos = v.v > 0;
       var st2 = [];
@@ -775,14 +783,14 @@
   }
 
   G('pre.sine-cosine-graphs', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['ext', 'zeros', 'value', 'value', 'which'], ['ext', 'zeros', 'incr', 'range', 'which', 'value'], ['incr', 'zeros', 'cross', 'ext', 'range', 'value']));
-    var fn = R.pick(['sin', 'cos']);
+    var kind = R.pick(by(ctx, ['ext', 'zeros', 'value', 'value', 'which'], ['ext', 'zeros', 'incr', 'range', 'which', 'value'], ['incr', 'zeros', 'cross', 'ext', 'range', 'value', 'value']));
+    var fn = R.pick(['sin', 'cos']), kS = R.pick(by(ctx, [0, 0, -1], [0, 1, -1], [0, 1, -1, 2]));
     var circ = 'The graph is the unit circle unrolled: the height of $y = \\' + fn + ' x$ is the ' + (fn === 'sin' ? '$y$' : '$x$') + '-coordinate of the point at angle $x$.';
     if (kind === 'ext') {
       var isMax = R.coin(), at = fn === 'sin' ? (isMax ? [1, 2] : [3, 2]) : (isMax ? [0, 1] : [1, 1]);
-      var dom = fn === 'cos' ? '[0, 2\\pi)' : '[0, 2\\pi]', sh = ctx.level >= 2 && R.coin() ? R.pick([2, -2]) : 0;
+      var dom = fn === 'cos' ? '[0, 2\\pi)' : '[0, 2\\pi]', sh = ctx.level >= 2 && R.coin() ? R.pick([2, -2, 4, -4]) : 0;
       var at0 = at.slice();
-      if (sh) { at = [at[0] + sh * at[1], at[1]]; dom = sh > 0 ? (fn === 'cos' ? '[2\\pi, 4\\pi)' : '[2\\pi, 4\\pi]') : (fn === 'cos' ? '[-2\\pi, 0)' : '[-2\\pi, 0]'); }
+      if (sh) { at = [at[0] + sh * at[1], at[1]]; dom = '[' + piTex(sh, 1) + ', ' + piTex(sh + 2, 1) + (fn === 'cos' ? ')' : ']'); }
       return {
         q: 'On the interval $' + dom + '$, at what value of $x$ does $y = \\' + fn + ' x$ reach its ' + (isMax ? 'maximum' : 'minimum') + '?',
         a: numA(piPlain(at[0], at[1]), 'simplest'),
@@ -794,18 +802,18 @@
     if (kind === 'zeros') {
       var big = ctx.level >= 3 && R.coin(), hi = big ? 4 : 2;
       var zs = [];
-      for (var k = 0; k <= 2 * hi; k++) { var xx = k * 90; if (xx > hi * 180) break; if (Math.abs(trigNum(fn, xx)) < 1e-9) zs.push(xx); }
-      var vals = zs.map(function (d) { return radPlain(d); });
+      for (var k = 0; k <= 2 * hi; k++) { var xx = 360 * kS + k * 90; if (xx > 360 * kS + hi * 180) break; if (Math.abs(trigNum(fn, xx)) < 1e-9) zs.push(xx); }
+      var vals = zs.map(function (d) { return radPlain(d); }), zLo = piTex(2 * kS, 1), zHi = piTex(2 * kS + hi, 1);
       return {
-        q: 'Find every $x$ in $[0, ' + piTex(hi, 1) + ']$ where the graph of $y = \\' + fn + ' x$ crosses the $x$-axis.',
+        q: 'Find every $x$ in $[' + zLo + ', ' + zHi + ']$ where the graph of $y = \\' + fn + ' x$ crosses the $x$-axis.',
         a: { t: 'set', v: vals, form: 'simplest' },
         steps: [circ, (fn === 'sin' ? 'Sine is $0$ where the point is on the $x$-axis: at $0$, $\\pi$, $2\\pi$, … (every multiple of $\\pi$).' : 'Cosine is $0$ where the point is on the $y$-axis: at $\\frac{\\pi}{2}$, $\\frac{3\\pi}{2}$, … (odd multiples of $\\frac{\\pi}{2}$).'),
-          'In $[0, ' + piTex(hi, 1) + ']$ that gives $x = ' + texList(zs.map(radTex)) + '$.'],
+          'In $[' + zLo + ', ' + zHi + ']$ that gives $x = ' + texList(zs.map(radTex)) + '$.'],
         hint: 'Where is the point on the unit circle at height ' + (fn === 'sin' ? '$0$' : 'zero $x$-coordinate') + '?'
       };
     }
     if (kind === 'value') {
-      var d = R.pick(SPECIAL.concat([360, -30, -90, -150, -60, 390, 420, 450, 540]));
+      var d = R.pick(SPECIAL.concat([360, -30, -90, -150, -60, 390, 420, 450, 540, 600, 630, -210, -270, -330, 480, 510, 570, 660, 690, 720, -45, -135, -225, -315, 405, 495, 585, 675]));
       var v = trigDeg(fn, d);
       return {
         q: 'The graph of $y = \\' + fn + ' x$ passes through a point with $x = ' + radTex(d) + '$. What is its $y$-coordinate? Give an exact value.',
@@ -815,11 +823,11 @@
       };
     }
     if (kind === 'incr') {
-      var up = R.coin(), iv;
-      if (fn === 'sin') iv = up ? ['[0, pi/2] U [3*pi/2, 2*pi]', '\\left[0, \\frac{\\pi}{2}\\right] \\cup \\left[\\frac{3\\pi}{2}, 2\\pi\\right]'] : ['[pi/2, 3*pi/2]', '\\left[\\frac{\\pi}{2}, \\frac{3\\pi}{2}\\right]'];
-      else iv = up ? ['[pi, 2*pi]', '[\\pi, 2\\pi]'] : ['[0, pi]', '[0, \\pi]'];
+      var up = R.coin(), iq = fn === 'sin' ? (up ? [[0, 1], [3, 4]] : [[1, 3]]) : (up ? [[2, 4]] : [[0, 2]]);
+      iq = iq.map(function (pr) { return [pr[0] + 4 * kS, pr[1] + 4 * kS]; });
+      var iv = [iq.map(function (pr) { return '[' + piPlain(pr[0], 2) + ', ' + piPlain(pr[1], 2) + ']'; }).join(' U '), iq.map(function (pr) { return '\\left[' + piTex(pr[0], 2) + ', ' + piTex(pr[1], 2) + '\\right]'; }).join(' \\cup ')];
       return {
-        q: 'On $[0, 2\\pi]$, where is $y = \\' + fn + ' x$ ' + (up ? 'increasing' : 'decreasing') + '? Answer in interval notation (use U to join two intervals).',
+        q: 'On $[' + piTex(2 * kS, 1) + ', ' + piTex(2 * kS + 2, 1) + ']$, where is $y = \\' + fn + ' x$ ' + (up ? 'increasing' : 'decreasing') + '? Answer in interval notation (use U to join two intervals).',
         a: { t: 'interval', v: iv[0] },
         steps: [circ, fn === 'sin' ? 'As the point goes around, its height rises from $0$ up to $1$ (at $\\frac{\\pi}{2}$), falls to $-1$ (at $\\frac{3\\pi}{2}$), then rises back to $0$.' : 'Its $x$-coordinate starts at $1$, falls to $-1$ at $\\pi$, then rises back to $1$ at $2\\pi$.',
           'So it is ' + (up ? 'increasing' : 'decreasing') + ' on $' + iv[1] + '$.'],
@@ -842,9 +850,9 @@
     }
     // cross: where sin x = cos x
     return {
-      q: 'Where do the graphs of $y = \\sin x$ and $y = \\cos x$ cross on $[0, 2\\pi)$?',
-      a: { t: 'set', v: ['pi/4', '5*pi/4'], form: 'simplest' },
-      steps: ['They cross where $\\sin x = \\cos x$: the point on the unit circle has equal coordinates.', 'That happens on the line $y = x$, at $\\frac{\\pi}{4}$ (both $\\frac{\\sqrt{2}}{2}$) and at $\\frac{5\\pi}{4}$ (both $-\\frac{\\sqrt{2}}{2}$).'],
+      q: 'Where do the graphs of $y = \\sin x$ and $y = \\cos x$ cross on $[' + piTex(2 * kS, 1) + ', ' + piTex(2 * kS + 2, 1) + ')$?',
+      a: { t: 'set', v: [piPlain(1 + 8 * kS, 4), piPlain(5 + 8 * kS, 4)], form: 'simplest' },
+      steps: ['They cross where $\\sin x = \\cos x$: the point on the unit circle has equal coordinates.', 'That happens on the line $y = x$, at $\\frac{\\pi}{4}$ (both $\\frac{\\sqrt{2}}{2}$) and at $\\frac{5\\pi}{4}$ (both $-\\frac{\\sqrt{2}}{2}$).'].concat(kS ? ['Shift by $' + piTex(2 * kS, 1) + '$ to land in the interval: $x = ' + piTex(1 + 8 * kS, 4) + '$ and $x = ' + piTex(5 + 8 * kS, 4) + '$.'] : []),
       hint: 'Where on the unit circle are the two coordinates equal?'
     };
   });
@@ -970,7 +978,7 @@
   });
 
   G('pre.tangent-reciprocal-graphs', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['period', 'asym', 'which'], ['period', 'asym', 'range', 'which'], ['asym', 'period', 'range']));
+    var kind = R.pick(by(ctx, ['period', 'asym', 'which', 'asym'], ['period', 'asym', 'range', 'which', 'asym'], ['asym', 'period', 'range', 'asym', 'period']));
     if (kind === 'period') {
       var fn = R.pick(by(ctx, ['tan', 'tan', 'sec', 'csc'], ['tan', 'cot', 'sec', 'csc'], ['tan', 'cot', 'sec', 'csc'])), B = pickB(R, ctx), A = R.pick([1, 2, 3, -2, 4]);
       var base = fn === 'tan' || fn === 'cot' ? 1 : 2, per = periodOf(B, base);
@@ -983,13 +991,14 @@
       };
     }
     if (kind === 'asym') {
-      var fn2 = R.pick(['tan', 'sec', 'csc', 'cot']), Bk = by(ctx, 1, R.pick([1, 2]), R.pick([2, 3, 1]));
+      var fn2 = R.pick(['tan', 'sec', 'csc', 'cot']), Bk = by(ctx, R.pick([1, 1, 2]), R.pick([1, 2, 3]), R.pick([2, 3, 4, 1]));
+      var DM = by(ctx, [[0, 360, '0 \\le x < 2\\pi'], [-180, 180, '-\\pi \\le x < \\pi']], [[0, 360, '0 \\le x < 2\\pi'], [-180, 180, '-\\pi \\le x < \\pi'], [0, 180, '0 \\le x < \\pi']], [[0, 360, '0 \\le x < 2\\pi'], [-180, 180, '-\\pi \\le x < \\pi'], [0, 180, '0 \\le x < \\pi'], [-360, 0, '-2\\pi \\le x < 0']]), dm = R.pick(DM);
       var zeroOf = fn2 === 'tan' || fn2 === 'sec' ? 'cos' : 'sin', xs = [];
-      for (var k = 0; k < 24 * Bk; k++) { var dd = k * 15; if (dd >= 360) break; if (Math.abs(trigNum(zeroOf, dd * Bk)) < 1e-9) xs.push(dd); }
+      for (var dd = dm[0]; dd < dm[1]; dd += 7.5) { if (Math.abs(Math.round(dd * Bk) - dd * Bk) < 1e-9 && Math.abs(trigNum(zeroOf, Math.round(dd * Bk))) < 1e-9) xs.push(dd); }
       var arg = Bk === 1 ? 'x' : Bk + 'x';
       return {
-        q: 'Find every vertical asymptote of $y = \\' + fn2 + ' ' + (Bk === 1 ? 'x' : '(' + arg + ')') + '$ with $0 \\le x < 2\\pi$. List the $x$-values.',
-        a: { t: 'set', v: xs.map(radPlain), form: 'simplest' },
+        q: 'Find every vertical asymptote of $y = \\' + fn2 + ' ' + (Bk === 1 ? 'x' : '(' + arg + ')') + '$ with $' + dm[2] + '$. List the $x$-values.',
+        a: { t: 'set', v: xs.map(radPlainQ), form: 'simplest' },
         steps: ['$\\' + fn2 + ' u = ' + { tan: '\\frac{\\sin u}{\\cos u}', sec: '\\frac{1}{\\cos u}', csc: '\\frac{1}{\\sin u}', cot: '\\frac{\\cos u}{\\sin u}' }[fn2] + '$ is undefined where $\\' + zeroOf + ' u = 0$: there the graph shoots up or down.',
           '$\\' + zeroOf + ' u = 0$ at $u = ' + (zeroOf === 'cos' ? '\\frac{\\pi}{2} + k\\pi' : 'k\\pi') + '$.' + (Bk === 1 ? '' : ' With $u = ' + arg + '$, divide by $' + Bk + '$: $x = ' + (zeroOf === 'cos' ? piTex(1, 2 * Bk) + ' + ' + (Bk === 1 ? '' : '\\frac{k\\pi}{' + Bk + '}') : '\\frac{k\\pi}{' + Bk + '}') + '$.'),
           'In $[0, 2\\pi)$: $x = ' + texList(xs.map(radTex)) + '$.'],
@@ -1074,7 +1083,7 @@
     if (kind === 'eval' || kind === 'deg') {
       var f = R.pick(['arcsin', 'arccos', 'arctan']);
       var pool = f === 'arctan' ? ['0', '1', 'sqrt(3)', 'sqrt(3)/3'] : ['0', '1/2', 'sqrt(2)/2', 'sqrt(3)/2', '1'];
-      var vp = R.pick(pool), neg = ctx.level >= 2 && vp !== '0' && R.chance(0.6);
+      var vp = R.pick(pool), neg = vp !== '0' && R.chance(ctx.level >= 2 ? 0.6 : 0.35);
       var x = ML.evalPlain(vp) * (neg ? -1 : 1), e = exv(x), ang = invNum(f, x), pr = piRatio(ang), deg = Math.round(ang * 180 / PI);
       var mode = kind === 'deg' ? 'deg' : 'rad';
       var base = INV[f];
@@ -1128,7 +1137,7 @@
       return { q: 'Find the exact value of $' + invTex(f, fnAng(base, d, 'rad'), 0) + '$.', a: numA(piPlain(pr.n, pr.d), 'simplest'), steps: st, hint: 'Evaluate the inside first, then find the angle in the range of $\\' + f + '$.' };
     }
     if (kind === 'fninv') {
-      var t = triple(R, by(ctx, 1, 3, 3)), f2 = R.pick(['arcsin', 'arccos', 'arctan']), out2 = R.pick(['sin', 'cos', 'tan']);
+      var t = triple(R, by(ctx, 3, 4, 5)), f2 = R.pick(['arcsin', 'arccos', 'arctan']), out2 = R.pick(['sin', 'cos', 'tan']);
       var sgn = ctx.level >= 2 && R.coin() ? -1 : 1, arg, x, y;
       // angle phi = f2(arg): build its (cos, sin) exactly
       if (f2 === 'arcsin') { arg = Q(sgn * t[1], t[2]); x = Q(t[0], t[2]); y = arg; }
@@ -1157,7 +1166,21 @@
       ['sec', 'arctan', 'sqrt(1+x^2)', 'adjacent $1$, opposite $x$, hypotenuse $\\sqrt{1 + x^2}$'],
       ['tan', 'arccos', 'sqrt(1-x^2)/x', 'adjacent $x$, hypotenuse $1$, opposite $\\sqrt{1 - x^2}$']
     ];
-    var F = R.pick(forms);
+    var F = R.pick(forms), ka = R.int(2, 6);
+    if (R.chance(0.6)) { // the same idea with x/a inside
+      var FA = { 'cos arctan': [ka + '/sqrt(' + ka * ka + '+x^2)', 'adjacent $' + ka + '$, opposite $x$, hypotenuse $\\sqrt{' + ka * ka + ' + x^2}$'], 'sin arctan': ['x/sqrt(' + ka * ka + '+x^2)', 'adjacent $' + ka + '$, opposite $x$, hypotenuse $\\sqrt{' + ka * ka + ' + x^2}$'],
+        'sin arccos': ['sqrt(' + ka * ka + '-x^2)/' + ka, 'adjacent $x$, hypotenuse $' + ka + '$, opposite $\\sqrt{' + ka * ka + ' - x^2}$'], 'cos arcsin': ['sqrt(' + ka * ka + '-x^2)/' + ka, 'opposite $x$, hypotenuse $' + ka + '$, adjacent $\\sqrt{' + ka * ka + ' - x^2}$'],
+        'tan arcsin': ['x/sqrt(' + ka * ka + '-x^2)', 'opposite $x$, hypotenuse $' + ka + '$, adjacent $\\sqrt{' + ka * ka + ' - x^2}$'], 'sec arctan': ['sqrt(' + ka * ka + '+x^2)/' + ka, 'adjacent $' + ka + '$, opposite $x$, hypotenuse $\\sqrt{' + ka * ka + ' + x^2}$'],
+        'tan arccos': ['sqrt(' + ka * ka + '-x^2)/x', 'adjacent $x$, hypotenuse $' + ka + '$, opposite $\\sqrt{' + ka * ka + ' - x^2}$'] }[F[0] + ' ' + F[1]];
+      return {
+        q: 'Write $\\' + F[0] + '\\left(\\' + F[1] + '\\frac{x}{' + ka + '}\\right)$ as an algebraic expression in $x$ (no trig functions).',
+        a: { t: 'expr', v: FA[0], vars: ['x'] },
+        steps: ['Let $\\theta = \\' + F[1] + '\\frac{x}{' + ka + '}$, so $\\' + INV[F[1]] + '\\theta = \\frac{x}{' + ka + '}$.',
+          'Draw a right triangle with ' + FA[1] + ' (Pythagorean theorem).',
+          'Read off $\\' + F[0] + '\\theta = ' + T.plain(FA[0]) + '$. ' + (F[1] === 'arccos' ? 'On $[0, \\pi]$ sine is never negative, so the root is positive.' : 'On the range of $\\' + F[1] + '$, cosine is never negative, so the signs work for negative $x$ too.')],
+        hint: 'Call the angle $\\theta$ and build a right triangle from $\\' + INV[F[1]] + '\\theta = \\frac{x}{' + ka + '}$.'
+      };
+    }
     return {
       q: 'Write $\\' + F[0] + '\\left(\\' + F[1] + ' x\\right)$ as an algebraic expression in $x$ (no trig functions).',
       a: { t: 'expr', v: F[2], vars: ['x'] },
@@ -1180,7 +1203,7 @@
   // all x in [0, 360) (multiples of 2.5 degrees) where f(x in radians) = 0
   function solveScan(f) { var out = []; for (var k = 0; k < 144; k++) { var d = k * 2.5, v = f(d * PI / 180); if (isFinite(v) && Math.abs(v) < 1e-9) out.push(d); } return out; }
   var DOMS = [{ lo: 0, hi: 360, a: true, b: false, tex: '0 \\le x < 2\\pi', iv: '[0, 2\\pi)' }, { lo: 0, hi: 180, a: true, b: true, tex: '0 \\le x \\le \\pi', iv: '[0, \\pi]' }, { lo: -180, hi: 180, a: false, b: true, tex: '-\\pi < x \\le \\pi', iv: '(-\\pi, \\pi]' }];
-  function pickDom(R, ctx) { return ctx.level >= 2 && R.chance(0.35) ? R.pick(DOMS.slice(1)) : DOMS[0]; }
+  function pickDom(R, ctx) { return R.chance(ctx.level >= 2 ? 0.4 : 0.3) ? R.pick(DOMS.slice(1)) : DOMS[0]; }
   function solveD(f, D) { var out = []; for (var k = Math.ceil(D.lo / 2.5); k * 2.5 <= D.hi; k++) { var d = k * 2.5; if ((d === D.lo && !D.a) || (d === D.hi && !D.b)) continue; var v = f(d * PI / 180); if (isFinite(v) && Math.abs(v) < 1e-9) out.push(d); } return out; }
   function solSet(degs) { return ord(degs).map(radPlainQ); }
   function solTex(degs) { return degs.length ? texList(ord(degs).map(radTexQ)) : '\\text{no solution}'; }
@@ -1200,7 +1223,13 @@
       ['\\dfrac{\\tan x}{\\sec x}', 'sin(x)', '\\sin x', ['Write both in sines and cosines: $\\dfrac{\\sin x / \\cos x}{1 / \\cos x}$.', 'Multiply top and bottom by $\\cos x$: $\\sin x$.']],
       ['\\dfrac{\\sin x}{\\csc x}', 'sin(x)^2', '\\sin^2 x', ['Write $\\csc x = \\dfrac{1}{\\sin x}$.', 'Dividing by $\\frac{1}{\\sin x}$ is multiplying by $\\sin x$: $\\sin x \\cdot \\sin x = \\sin^2 x$.']],
       ['\\cot x\\sec x', 'csc(x)', '\\csc x', ['$\\dfrac{\\cos x}{\\sin x} \\cdot \\dfrac{1}{\\cos x} = \\dfrac{1}{\\sin x}$.', 'That is $\\csc x$.']],
-      ['\\dfrac{\\csc x}{\\cot x}', 'sec(x)', '\\sec x', ['$\\dfrac{1/\\sin x}{\\cos x/\\sin x}$; multiply top and bottom by $\\sin x$.', '$\\dfrac{1}{\\cos x} = \\sec x$.']]
+      ['\\dfrac{\\csc x}{\\cot x}', 'sec(x)', '\\sec x', ['$\\dfrac{1/\\sin x}{\\cos x/\\sin x}$; multiply top and bottom by $\\sin x$.', '$\\dfrac{1}{\\cos x} = \\sec x$.']],
+      ['\\csc x\\sin x', '1', '1', ['Write $\\csc x = \\dfrac{1}{\\sin x}$.', '$\\dfrac{1}{\\sin x} \\cdot \\sin x = 1$.']],
+      ['\\tan x\\cot x', '1', '1', ['$\\cot x = \\dfrac{1}{\\tan x}$, so the product is $1$.']],
+      ['\\sin x\\sec x', 'tan(x)', '\\tan x', ['Write $\\sec x = \\dfrac{1}{\\cos x}$.', '$\\sin x \\cdot \\dfrac{1}{\\cos x} = \\dfrac{\\sin x}{\\cos x} = \\tan x$.']],
+      ['\\dfrac{\\cos x}{\\cot x}', 'sin(x)', '\\sin x', ['Write $\\cot x = \\dfrac{\\cos x}{\\sin x}$.', 'Dividing by it is multiplying by $\\dfrac{\\sin x}{\\cos x}$: $\\cos x \\cdot \\dfrac{\\sin x}{\\cos x} = \\sin x$.']],
+      ['\\dfrac{\\sec x}{\\csc x}', 'tan(x)', '\\tan x', ['$\\dfrac{1/\\cos x}{1/\\sin x} = \\dfrac{\\sin x}{\\cos x}$.', 'That is $\\tan x$.']],
+      ['\\dfrac{\\cot x}{\\cos x}', 'csc(x)', '\\csc x', ['$\\dfrac{\\cos x / \\sin x}{\\cos x} = \\dfrac{1}{\\sin x}$.', 'That is $\\csc x$.']]
     ];
     var L2 = [
       ['\\dfrac{1 - \\cos^2 x}{\\sin x}', 'sin(x)', '\\sin x', ['From $\\sin^2 x + \\cos^2 x = 1$: $1 - \\cos^2 x = \\sin^2 x$.', '$\\dfrac{\\sin^2 x}{\\sin x} = \\sin x$.']],
@@ -1217,14 +1246,19 @@
       ['\\dfrac{1}{1 - \\cos x} + \\dfrac{1}{1 + \\cos x}', '2*csc(x)^2', '2\\csc^2 x', ['Common denominator $(1 - \\cos x)(1 + \\cos x) = 1 - \\cos^2 x = \\sin^2 x$.', 'Numerator: $(1 + \\cos x) + (1 - \\cos x) = 2$, so the sum is $\\dfrac{2}{\\sin^2 x} = 2\\csc^2 x$.']],
       ['\\tan x + \\cot x', 'sec(x)*csc(x)', '\\sec x\\csc x', ['$\\dfrac{\\sin x}{\\cos x} + \\dfrac{\\cos x}{\\sin x} = \\dfrac{\\sin^2 x + \\cos^2 x}{\\sin x\\cos x}$.', '$= \\dfrac{1}{\\sin x\\cos x} = \\sec x\\csc x$.']],
       ['\\sin^4 x - \\cos^4 x', 'sin(x)^2-cos(x)^2', '\\sin^2 x - \\cos^2 x', ['Difference of squares: $(\\sin^2 x + \\cos^2 x)(\\sin^2 x - \\cos^2 x)$.', 'The first factor is $1$, so the result is $\\sin^2 x - \\cos^2 x$.']],
-      ['\\dfrac{\\cos x}{1 - \\sin x} - \\dfrac{\\cos x}{1 + \\sin x}', '2*tan(x)', '2\\tan x', ['Common denominator $1 - \\sin^2 x = \\cos^2 x$.', 'Numerator: $\\cos x(1 + \\sin x) - \\cos x(1 - \\sin x) = 2\\sin x\\cos x$.', '$\\dfrac{2\\sin x\\cos x}{\\cos^2 x} = 2\\tan x$.']]
+      ['\\dfrac{\\cos x}{1 - \\sin x} - \\dfrac{\\cos x}{1 + \\sin x}', '2*tan(x)', '2\\tan x', ['Common denominator $1 - \\sin^2 x = \\cos^2 x$.', 'Numerator: $\\cos x(1 + \\sin x) - \\cos x(1 - \\sin x) = 2\\sin x\\cos x$.', '$\\dfrac{2\\sin x\\cos x}{\\cos^2 x} = 2\\tan x$.']],
+      ['\\dfrac{\\sin x}{1 + \\cos x} + \\dfrac{1 + \\cos x}{\\sin x}', '2*csc(x)', '2\\csc x', ['Common denominator $\\sin x(1 + \\cos x)$. Numerator: $\\sin^2 x + (1 + \\cos x)^2 = \\sin^2 x + 1 + 2\\cos x + \\cos^2 x = 2 + 2\\cos x$.', '$\\dfrac{2(1 + \\cos x)}{\\sin x(1 + \\cos x)} = \\dfrac{2}{\\sin x} = 2\\csc x$.']],
+      ['\\dfrac{1 - \\sin^2 x}{1 - \\cos^2 x}', 'cot(x)^2', '\\cot^2 x', ['$1 - \\sin^2 x = \\cos^2 x$ and $1 - \\cos^2 x = \\sin^2 x$.', '$\\dfrac{\\cos^2 x}{\\sin^2 x} = \\cot^2 x$.']],
+      ['\\sec x\\csc x - \\cot x', 'tan(x)', '\\tan x', ['$\\dfrac{1}{\\cos x\\sin x} - \\dfrac{\\cos x}{\\sin x} = \\dfrac{1 - \\cos^2 x}{\\sin x\\cos x}$.', '$= \\dfrac{\\sin^2 x}{\\sin x\\cos x} = \\dfrac{\\sin x}{\\cos x} = \\tan x$.']],
+      ['(\\sec x - \\tan x)(\\sec x + \\tan x)', '1', '1', ['Multiply out: $\\sec^2 x - \\tan^2 x$.', 'From $1 + \\tan^2 x = \\sec^2 x$, this is $1$.']]
     ];
     var it = R.pick(by(ctx, L1.concat(L2.slice(0, 2)), L2.concat(L1.slice(4)), L3.concat(L2.slice(2))));
-    var V = varSwap(R, ctx), sw = function (s) { return s.replace(/\bx\b/g, V.t); };
+    var V = varSwap(R, ctx), sw = function (s) { return s.replace(/\bx\b/g, V.t); }, kf = ctx.level < 3 && !/^\d/.test(it[2]) || it[2] === '1' ? R.pick([1, 1, 2, 3, 4, 5]) : 1;
+    var eT = kf === 1 ? sw(it[0]) : kf + '\\left(' + sw(it[0]) + '\\right)', rT = kf === 1 ? sw(it[2]) : it[2] === '1' ? String(kf) : kf + sw(it[2]);
     return {
-      q: 'Simplify $' + sw(it[0]) + '$ to a single trig function, a constant, or a short product.',
-      a: { t: 'expr', v: it[1].replace(/\bx\b/g, V.p), vars: [V.v] },
-      steps: it[3].map(sw).concat(['So $' + sw(it[0]) + ' = ' + sw(it[2]) + '$.']),
+      q: 'Simplify $' + eT + '$ to a single trig function, a constant, or a short product.',
+      a: { t: 'expr', v: (kf === 1 ? '' : kf + '*') + '(' + it[1].replace(/\bx\b/g, V.p) + ')', vars: [V.v] },
+      steps: (kf === 1 ? [] : ['Simplify the part in parentheses; the factor $' + kf + '$ just comes along.']).concat(it[3].map(sw)).concat(['So $' + eT + ' = ' + rT + '$.']),
       hint: 'Rewrite everything in terms of sine and cosine, then look for $\\sin^2 + \\cos^2 = 1$.'
     };
   });
@@ -1245,9 +1279,9 @@
     ['\\dfrac{1}{\\sin x}', '\\sec x', false, '$\\dfrac{1}{\\sin x} = \\csc x$. At $x = \\frac{\\pi}{6}$: $2 \\ne \\frac{2\\sqrt{3}}{3}$.']
   ];
   G('pre.verify-identities', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['tf', 'first', 'tf'], ['tf', 'step', 'first'], ['step', 'simp', 'tf']));
+    var kind = R.pick(by(ctx, ['tf', 'first', 'tf', 'step'], ['tf', 'step', 'first', 'simp'], ['step', 'simp', 'tf']));
     if (kind === 'tf') {
-      var I = R.pick(IDS), V = varSwap(R, { level: 1 }), sw = function (s) { return s.replace(/\bx\b/g, V.t).replace(/\$x = /g, '$' + V.t + ' = '); };
+      var I = R.pick(IDS), V = varSwap(R, ctx), sw = function (s) { return s.replace(/\bx\b/g, V.t).replace(/\$x = /g, '$' + V.t + ' = '); };
       return {
         q: 'True or false: $' + sw(I[0]) + ' = ' + sw(I[1]) + '$ is an identity (true for every $' + V.t + '$ where both sides are defined).',
         a: { t: 'tf', v: I[2] },
@@ -1279,10 +1313,11 @@
         ['\\tan x + \\cot x = \\sec x\\csc x', 'the left side, as one fraction over $\\sin x\\cos x$', '(sin(x)^2+cos(x)^2)/(sin(x)*cos(x))', '\\dfrac{\\sin^2 x + \\cos^2 x}{\\sin x\\cos x}', 'by finding a common denominator'],
         ['\\cos^2 x - \\sin^2 x = 2\\cos^2 x - 1', 'the term $\\sin^2 x$, written using cosine', '1-cos(x)^2', '1 - \\cos^2 x', 'from the Pythagorean identity']
       ]);
+      var VS = varSwap(R, ctx), sws = function (s) { return s.replace(/\bx\b/g, VS.t); };
       return {
-        q: 'To prove $' + S[0] + '$, the first step rewrites ' + S[1] + '. What does it become?',
-        a: { t: 'expr', v: S[2], vars: ['x'] },
-        steps: ['It becomes $' + S[3] + '$, ' + S[4] + '.', 'The proof then continues on the same side until it matches the other side.'],
+        q: 'To prove $' + sws(S[0]) + '$, the first step rewrites ' + sws(S[1]) + '. What does it become?',
+        a: { t: 'expr', v: S[2].replace(/\bx\b/g, VS.p), vars: [VS.v] },
+        steps: ['It becomes $' + sws(S[3]) + '$, ' + S[4] + '.', 'The proof then continues on the same side until it matches the other side.'],
         hint: 'Use $\\sin^2 x + \\cos^2 x = 1$ or a quotient identity.'
       };
     }
@@ -1290,18 +1325,24 @@
       ['\\dfrac{\\sin^2 x}{1 - \\cos x}', '1+cos(x)', '1 + \\cos x', 'Replace $\\sin^2 x$ with $1 - \\cos^2 x = (1 - \\cos x)(1 + \\cos x)$ and cancel $1 - \\cos x$.'],
       ['\\dfrac{\\cos^2 x}{1 + \\sin x}', '1-sin(x)', '1 - \\sin x', 'Replace $\\cos^2 x$ with $1 - \\sin^2 x = (1 - \\sin x)(1 + \\sin x)$ and cancel $1 + \\sin x$.'],
       ['\\dfrac{\\tan^2 x}{\\sec x + 1}', 'sec(x)-1', '\\sec x - 1', 'Replace $\\tan^2 x$ with $\\sec^2 x - 1 = (\\sec x - 1)(\\sec x + 1)$ and cancel $\\sec x + 1$.'],
-      ['\\dfrac{1 - \\sin^2 x}{1 - \\cos^2 x}', 'cot(x)^2', '\\cot^2 x', 'The top is $\\cos^2 x$ and the bottom is $\\sin^2 x$; their quotient is $\\cot^2 x$.']
-    ]);
+      ['\\dfrac{1 - \\sin^2 x}{1 - \\cos^2 x}', 'cot(x)^2', '\\cot^2 x', 'The top is $\\cos^2 x$ and the bottom is $\\sin^2 x$; their quotient is $\\cot^2 x$.'],
+      ['\\dfrac{\\sin^2 x}{1 + \\cos x}', '1-cos(x)', '1 - \\cos x', 'Replace $\\sin^2 x$ with $1 - \\cos^2 x = (1 - \\cos x)(1 + \\cos x)$ and cancel $1 + \\cos x$.'],
+      ['\\dfrac{\\cos^2 x}{1 - \\sin x}', '1+sin(x)', '1 + \\sin x', 'Replace $\\cos^2 x$ with $1 - \\sin^2 x = (1 - \\sin x)(1 + \\sin x)$ and cancel $1 - \\sin x$.'],
+      ['\\dfrac{\\tan^2 x}{\\sec x - 1}', 'sec(x)+1', '\\sec x + 1', 'Replace $\\tan^2 x$ with $\\sec^2 x - 1 = (\\sec x - 1)(\\sec x + 1)$ and cancel $\\sec x - 1$.'],
+      ['\\dfrac{\\cot^2 x}{\\csc x + 1}', 'csc(x)-1', '\\csc x - 1', 'Replace $\\cot^2 x$ with $\\csc^2 x - 1 = (\\csc x - 1)(\\csc x + 1)$ and cancel $\\csc x + 1$.'],
+      ['\\dfrac{\\cot^2 x}{\\csc x - 1}', 'csc(x)+1', '\\csc x + 1', 'Replace $\\cot^2 x$ with $\\csc^2 x - 1 = (\\csc x - 1)(\\csc x + 1)$ and cancel $\\csc x - 1$.'],
+      ['\\dfrac{\\sec^2 x - 1}{\\sec^2 x}', 'sin(x)^2', '\\sin^2 x', 'The top is $\\tan^2 x$, and $\\dfrac{\\tan^2 x}{\\sec^2 x} = \\dfrac{\\sin^2 x}{\\cos^2 x}\\cdot\\cos^2 x = \\sin^2 x$.']
+    ]), VM = varSwap(R, ctx), swm = function (s) { return s.replace(/\bx\b/g, VM.t); };
     return {
-      q: 'To verify an identity, you rewrite the left side $' + Sm[0] + '$ until it is as simple as possible. What is the simplest form?',
-      a: { t: 'expr', v: Sm[1], vars: ['x'] },
-      steps: [Sm[3], 'So the left side equals $' + Sm[2] + '$.'],
+      q: 'To verify an identity, you rewrite the left side $' + swm(Sm[0]) + '$ until it is as simple as possible. What is the simplest form?',
+      a: { t: 'expr', v: Sm[1].replace(/\bx\b/g, VM.p), vars: [VM.v] },
+      steps: [swm(Sm[3]), 'So the left side equals $' + swm(Sm[2]) + '$.'],
       hint: 'Factor a difference of squares after using a Pythagorean identity.'
     };
   });
 
   // a + b decompositions for sums/differences: [angle, A, B, sign]
-  var SUMS = [[15, 45, 30, -1], [75, 45, 30, 1], [105, 60, 45, 1], [165, 120, 45, 1], [195, 150, 45, 1], [255, 210, 45, 1], [285, 240, 45, 1], [345, 300, 45, 1], [15, 60, 45, -1], [105, 135, 30, -1], [75, 120, 45, -1], [165, 135, 30, 1]];
+  var SUMS = [[15, 45, 30, -1], [75, 45, 30, 1], [105, 60, 45, 1], [165, 120, 45, 1], [195, 150, 45, 1], [255, 210, 45, 1], [285, 240, 45, 1], [345, 300, 45, 1], [15, 60, 45, -1], [105, 135, 30, -1], [75, 120, 45, -1], [165, 135, 30, 1], [-15, 30, 45, -1], [-75, -120, 45, 1], [-105, -60, 45, -1], [-165, -120, 45, -1], [375, 330, 45, 1], [435, 390, 45, 1], [225 - 30, 225, 30, -1], [315 - 30, 315, 30, -1]];
   function sumVal(fn, A, B, s) { // exact Sd of fn(A + sB)
     var sA = sdTrig('sin', A), cA = sdTrig('cos', A), sB = sdScale(sdTrig('sin', B), s), cB = sdTrig('cos', B);
     var sn = sdAdd(sdMul(sA, cB), sdMul(cA, sB)), cs = sdSub(sdMul(cA, cB), sdMul(sA, sB));
@@ -1311,7 +1352,7 @@
     var kind = R.pick(by(ctx, ['exact', 'recog', 'exact'], ['exact', 'given', 'recog'], ['given', 'exact', 'recog', 'tangiv']));
     var FORM = { sin: '\\sin(A \\pm B) = \\sin A\\cos B \\pm \\cos A\\sin B', cos: '\\cos(A \\pm B) = \\cos A\\cos B \\mp \\sin A\\sin B', tan: '\\tan(A \\pm B) = \\dfrac{\\tan A \\pm \\tan B}{1 \\mp \\tan A\\tan B}' };
     if (kind === 'exact') {
-      var S = R.pick(SUMS), fn = R.pick(by(ctx, ['sin', 'cos'], ['sin', 'cos', 'tan'], ['sin', 'cos', 'tan'])), mode = R.pick(by(ctx, ['deg'], ['deg', 'rad'], ['rad']));
+      var S = R.pick(SUMS), fn = R.pick(by(ctx, ['sin', 'cos'], ['sin', 'cos', 'tan'], ['sin', 'cos', 'tan'])), mode = R.pick(by(ctx, ['deg', 'deg', 'rad'], ['deg', 'rad'], ['rad']));
       var v = sumVal(fn, S[1], S[2], S[3]), sg = S[3] > 0 ? '+' : '-';
       var st = ['Write $' + angTex(S[0], mode) + ' = ' + angTex(S[1], mode) + ' ' + sg + ' ' + angTex(S[2], mode) + '$, two angles with known exact values.', 'Use $' + FORM[fn] + '$.'];
       if (fn === 'tan') st.push('$\\tan ' + angTex(S[1], mode) + ' = ' + trigDeg('tan', S[1]).t + '$ and $\\tan ' + angTex(S[2], mode) + ' = ' + trigDeg('tan', S[2]).t + '$, so $' + fnAng('tan', S[0], mode) + ' = \\dfrac{' + trigDeg('tan', S[1]).t + ' ' + sg + ' ' + pp(trigDeg('tan', S[2]).t) + '}{1 ' + (S[3] > 0 ? '-' : '+') + ' ' + pp(trigDeg('tan', S[1]).t) + pp(trigDeg('tan', S[2]).t) + '}$; rationalize to get $' + sdTex(v) + '$.');
@@ -1427,9 +1468,9 @@
   });
 
   G('pre.half-angle', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['exact', 'given', 'exact'], ['exact', 'given', 'power'], ['given', 'exact', 'power', 'tan']));
+    var kind = R.pick(by(ctx, ['exact', 'given', 'given'], ['exact', 'given', 'power'], ['given', 'exact', 'power', 'tan']));
     if (kind === 'exact' || kind === 'tan') {
-      var th = R.pick([30, 45, 135, 150, 210, 225, 315, 330]), h = th / 2, fn = kind === 'tan' ? 'tan' : R.pick(['sin', 'cos']), mode = R.pick(by(ctx, ['deg'], ['deg', 'rad'], ['rad', 'deg']));
+      var th = R.pick([30, 45, 135, 150, 210, 225, 315, 330].concat(ctx.level > 1 ? [-30, -45, -135, -150, 390, 405, 510, 570, 675, 690] : [])), h = th / 2, fn = kind === 'tan' ? 'tan' : R.pick(['sin', 'cos']), mode = R.pick(by(ctx, ['deg', 'deg', 'rad'], ['deg', 'rad'], ['rad', 'deg']));
       var c = sdTrig('cos', th), s = sdTrig('sin', th);
       if (fn === 'tan') {
         var tv = sdDiv(sdSub(sdQ(1), c), s);
@@ -1500,8 +1541,8 @@
     throw new Error('linTrig ' + v);
   }
   G('pre.solve-trig-basic', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['solve', 'solve', 'plain'], ['solve', 'solve', 'count', 'none'], ['solve', 'sq', 'general', 'count']));
-    var fn = R.pick(['sin', 'cos', 'tan']);
+    var kind = R.pick(by(ctx, ['solve', 'solve', 'plain'], ['solve', 'solve', 'count', 'none', 'sq'], ['solve', 'sq', 'general', 'count']));
+    var fn = R.pick(['sin', 'cos', 'tan']), DB = R.chance(0.35) ? R.pick(DOMS.slice(1)) : DOMS[0];
     var vals = fn === 'tan' ? [1, -1, R3, -R3, R3 / 3, -R3 / 3, 0] : [0.5, -0.5, R2 / 2, -R2 / 2, R3 / 2, -R3 / 2, 1, -1, 0];
     var v = R.pick(vals), ev = exv(v);
     var sols = solveScan(function (x) { var y = fn === 'sin' ? Math.sin(x) : fn === 'cos' ? Math.cos(x) : Math.tan(x); return y - v; });
@@ -1519,7 +1560,9 @@
     if (kind === 'plain' || kind === 'solve') {
       var eq = kind === 'plain' ? '\\' + fn + ' x = ' + ev.t : linTrig(R, fn, v);
       var st = kind === 'plain' ? [] : ['Isolate the trig function: $\\' + fn + ' x = ' + ev.t + '$.'];
-      return { q: 'Solve $' + eq + '$ for $0 \\le x < 2\\pi$. List every solution.', a: { t: 'set', v: solSet(sols), form: 'simplest' }, steps: st.concat(explain()), hint: 'Find the reference angle, then every quadrant where ' + FNNAME[fn] + ' has the right sign.' };
+      var solsB = DB === DOMS[0] ? sols : solveD(function (x) { var y = fn === 'sin' ? Math.sin(x) : fn === 'cos' ? Math.cos(x) : Math.tan(x); return y - v; }, DB);
+      var stB = DB === DOMS[0] ? [] : ['Keep only the angles in $' + DB.iv + '$ (add or subtract $2\\pi$' + (fn === 'tan' ? ' or $\\pi$' : '') + ' to move a solution into the interval): $x = ' + solTex(solsB) + '$.'];
+      return { q: 'Solve $' + eq + '$ for $' + DB.tex + '$. List every solution.', a: { t: 'set', v: solSet(solsB), form: 'simplest' }, steps: st.concat(explain()).concat(stB), hint: 'Find the reference angle, then every quadrant where ' + FNNAME[fn] + ' has the right sign.' };
     }
     if (kind === 'none') {
       var bad = R.pick(['2', '-3', '\\frac{3}{2}', '-\\frac{5}{4}']), fnb = R.pick(['sin', 'cos']);
@@ -1843,7 +1886,7 @@
   G('pre.vector-applications', function (R, ctx) {
     var kind = R.pick(by(ctx, ['perp', 'river', 'forces'], ['forces', 'river', 'equil', 'perp'], ['forces', 'equil', 'river']));
     if (kind === 'perp') {
-      var t = triple(R, 2), k = R.pick([5, 10, 20]), air = t[1] * k, wind = t[0] * k, gs = t[2] * k;
+      var t = triple(R, 4), k = R.pick([2, 3, 4, 5, 10, 20]), air = t[1] * k, wind = t[0] * k, gs = t[2] * k;
       if (air < wind) { var tmp = air; air = wind; wind = tmp; }
       var dir = R.pick([['north', 'east', 'west'], ['east', 'south', 'north'], ['south', 'west', 'east'], ['west', 'north', 'south']]);
       return {
@@ -1855,8 +1898,8 @@
       };
     }
     if (kind === 'river') {
-      var tr = triple(R, 1), boat = tr[1], cur = tr[0], W = boat * R.pick([1, 2, 3]) * 0.1 * 10, tm = Q(W, boat), drift = tm.mul(cur);
-      W = boat * R.pick([1, 2, 3]); tm = Q(W, boat); drift = tm.mul(cur);
+      var tr = triple(R, 3), boat = tr[1], cur = tr[0], W = boat * R.pick([1, 2, 3]) * 0.1 * 10, tm = Q(W, boat), drift = tm.mul(cur);
+      W = boat * R.pick([1, 2, 3, 4, 5]) / R.pick([1, 1, 2]); tm = Q.from(String(W)).div(boat); drift = tm.mul(cur);
       return {
         q: 'A boat crosses a river $' + W + '$ km wide. It points straight across at $' + boat + '$ km/h while the current flows downstream at $' + cur + '$ km/h. How long does the crossing take (in hours), and how far downstream does the boat land (in km)?',
         a: { t: 'multi', parts: [{ label: 'Time (h)', a: numA(tm.toPlain()) }, { label: 'Downstream (km)', a: numA(drift.toPlain()) }] },
@@ -2192,13 +2235,13 @@
 
   G('pre.complex-roots', function (R, ctx) {
     var kind = R.pick(by(ctx, ['roots', 'args', 'roots'], ['roots', 'args', 'spacing'], ['roots', 'args', 'roots']));
-    var combos = [[0, 2], [0, 3], [0, 4], [0, 6], [180, 2], [180, 3], [180, 4], [180, 6], [90, 2], [90, 3], [270, 2], [270, 3], [120, 2], [60, 2], [240, 2], [300, 2]];
-    var c = R.pick(by(ctx, combos.filter(function (x) { return x[1] <= 3; }), combos, combos.filter(function (x) { return x[1] >= 3; }))), phi = c[0], n = c[1];
-    var m = R.pick(n === 2 ? [1, 2, 3] : n === 3 ? [1, 2, 3] : [1, 2]), Rm = Math.pow(m, n);
+    var combos = [[0, 2], [0, 3], [0, 4], [0, 6], [180, 2], [180, 3], [180, 4], [180, 6], [90, 2], [90, 3], [270, 2], [270, 3], [120, 2], [60, 2], [240, 2], [300, 2], [0, 8]];
+    var c = R.pick(by(ctx, combos.filter(function (x) { return x[1] <= 3; }), combos, combos.filter(function (x) { return x[1] >= 3 || x[0] % 90; }))), phi = c[0], n = c[1];
+    var m = R.pick(n === 2 ? [1, 2, 3, 4, 5] : n === 3 ? [1, 2, 3, 4] : n === 4 ? [1, 2, 3] : n === 8 ? [1] : [1, 2]), Rm = Math.pow(m, n);
     var wx = sdScale(sdTrig('cos', phi), Rm), wy = sdScale(sdTrig('sin', phi), Rm);
     var angs = []; for (var k = 0; k < n; k++) angs.push((phi + 360 * k) / n);
     var wT = cxTex(wx, wy);
-    var name = { 2: 'square', 3: 'cube', 4: 'fourth', 6: 'sixth' }[n];
+    var name = { 2: 'square', 3: 'cube', 4: 'fourth', 6: 'sixth', 8: 'eighth' }[n];
     var base = ['Polar form: $' + wT + ' = ' + cisTex(String(Rm), radTex(phi)) + '$.',
       'An $n$th root has modulus $\\sqrt[' + n + ']{' + Rm + '} = ' + m + '$ and angle $\\dfrac{' + radTex(phi) + ' + 2\\pi k}{' + n + '}$ for $k = 0, 1' + (n > 2 ? ', \\ldots, ' + (n - 1) : '') + '$: adding full turns before dividing gives new angles.',
       'The angles are $' + texList(angs.map(radTex)) + '$, spaced $\\frac{2\\pi}{' + n + '}$ apart around a circle of radius $' + m + '$.'];
@@ -2261,17 +2304,18 @@
       return { q: 'Eliminate the parameter: $x = ' + (h2 ? h2 + ' + ' : '') + T.coef(r, '\\cos t') + '$, $y = ' + (k3 ? k3 + ' + ' : '') + T.coef(r, '\\sin t') + '$.', a: { t: 'eq', v: sqPl('x', h2) + '+' + sqPl('y', k3) + '=' + r * r }, steps: ['Isolate the trig parts: $\\cos t = \\dfrac{' + xs + '}{' + r + '}$ and $\\sin t = \\dfrac{' + ys + '}{' + r + '}$.', 'Use $\\cos^2 t + \\sin^2 t = 1$: $\\dfrac{(' + xs + ')^2}{' + r * r + '} + \\dfrac{(' + ys + ')^2}{' + r * r + '} = 1$.', 'Multiply by $' + r * r + '$: $(' + xs + ')^2 + (' + ys + ')^2 = ' + r * r + '$, a circle.'], hint: 'Solve for $\\cos t$ and $\\sin t$, then use the Pythagorean identity.' };
     }
     if (kind === 'ellipse' || kind === 'hyper') {
-      var A = R.int(2, 5), B = R.int(2, 5); if (A === B) B++;
+      var A = R.int(2, 7), B = R.int(2, 7); if (A === B) B++;
       if (kind === 'ellipse') return { q: 'Eliminate the parameter: $x = ' + A + '\\cos t$, $y = ' + B + '\\sin t$.', a: { t: 'eq', v: 'x^2/' + A * A + '+y^2/' + B * B + '=1' }, steps: ['$\\cos t = \\dfrac{x}{' + A + '}$ and $\\sin t = \\dfrac{y}{' + B + '}$.', '$\\cos^2 t + \\sin^2 t = 1$ gives $\\dfrac{x^2}{' + A * A + '} + \\dfrac{y^2}{' + B * B + '} = 1$, an ellipse.'], hint: 'Use $\\cos^2 t + \\sin^2 t = 1$.' };
       return { q: 'Eliminate the parameter: $x = ' + A + '\\sec t$, $y = ' + B + '\\tan t$.', a: { t: 'eq', v: 'x^2/' + A * A + '-y^2/' + B * B + '=1' }, steps: ['$\\sec t = \\dfrac{x}{' + A + '}$ and $\\tan t = \\dfrac{y}{' + B + '}$.', 'Use $\\sec^2 t - \\tan^2 t = 1$ (from $1 + \\tan^2 t = \\sec^2 t$): $\\dfrac{x^2}{' + A * A + '} - \\dfrac{y^2}{' + B * B + '} = 1$, a hyperbola.'], hint: 'Which identity connects $\\sec t$ and $\\tan t$?' };
     }
-    var E = R.pick([['x = e^{t}', 'y = e^{2t}', 'y=x^2', '$e^{2t} = (e^t)^2$, so $y = x^2$ (only $x > 0$, since $e^t > 0$).'], ['x = e^{t}', 'y = 3e^{-t}', 'x*y=3', '$e^{-t} = \\frac{1}{e^t} = \\frac{1}{x}$, so $y = \\frac{3}{x}$, or $xy = 3$ (with $x > 0$).'], ['x = \\sqrt{t}', 'y = t + 2', 'y=x^2+2', '$t = x^2$ (with $x \\ge 0$), so $y = x^2 + 2$.'], ['x = 2^{t}', 'y = 2^{t+1}', 'y=2*x', '$2^{t + 1} = 2 \\cdot 2^t$, so $y = 2x$ (with $x > 0$).']]);
+    var E = R.pick([['x = e^{t}', 'y = e^{3t}', 'y=x^3', '$e^{3t} = (e^t)^3$, so $y = x^3$ (only $x > 0$, since $e^t > 0$).'], ['x = 2e^{t}', 'y = e^{2t}', 'y=x^2/4', '$e^{t} = \\frac{x}{2}$, so $y = (e^t)^2 = \\frac{x^2}{4}$ (only $x > 0$).'], ['x = e^{t}', 'y = 5e^{-t}', 'x*y=5', '$e^{-t} = \\frac{1}{e^t} = \\frac{1}{x}$, so $y = \\frac{5}{x}$, or $xy = 5$ (with $x > 0$).'], ['x = e^{2t}', 'y = e^{t}', 'x=y^2', '$e^{2t} = (e^t)^2$, so $x = y^2$ (only $y > 0$).'], ['x = e^{t}', 'y = e^{2t} + 1', 'y=x^2+1', '$e^{2t} = (e^t)^2 = x^2$, so $y = x^2 + 1$ (only $x > 0$).'],
+      ['x = e^{t}', 'y = e^{2t}', 'y=x^2', '$e^{2t} = (e^t)^2$, so $y = x^2$ (only $x > 0$, since $e^t > 0$).'], ['x = e^{t}', 'y = 3e^{-t}', 'x*y=3', '$e^{-t} = \\frac{1}{e^t} = \\frac{1}{x}$, so $y = \\frac{3}{x}$, or $xy = 3$ (with $x > 0$).'], ['x = \\sqrt{t}', 'y = t + 2', 'y=x^2+2', '$t = x^2$ (with $x \\ge 0$), so $y = x^2 + 2$.'], ['x = 2^{t}', 'y = 2^{t+1}', 'y=2*x', '$2^{t + 1} = 2 \\cdot 2^t$, so $y = 2x$ (with $x > 0$).']]);
     return { q: 'Eliminate the parameter: $' + E[0] + '$, $' + E[1] + '$.', a: { t: 'eq', v: E[2] }, steps: [E[3]], hint: 'Write $y$ using the same power that appears in $x$.' };
   });
 
   G('pre.projectile-motion', function (R, ctx) {
     var kind = R.pick(by(ctx, ['comps', 'tmax', 'hmax'], ['tmax', 'hmax', 'land', 'eqs', 'height'], ['land', 'range', 'hmax', 'eqs']));
-    var th = R.pick(by(ctx, [30], [30, 45], [30, 45, 60])), k = R.pick([1, 2, 3, 4]), v0, vx, vy, v0T;
+    var th = R.pick(by(ctx, [30, 60], [30, 45, 60], [30, 45, 60])), k = R.pick([1, 2, 3, 4, 5, 6]), v0, vx, vy, v0T;
     if (th === 30) { v0 = 32 * k; vy = sdQ(16 * k); vx = Sd({ 3: 16 * k }); v0T = String(v0); }
     else if (th === 45) { vy = sdQ(16 * k); vx = sdQ(16 * k); v0 = null; v0T = 16 * k + '\\sqrt{2}'; }
     else { v0 = 32 * k; vx = sdQ(16 * k); vy = Sd({ 3: 16 * k }); v0T = String(v0); }
@@ -2299,7 +2343,7 @@
 
   G('pre.parabolas-conics', function (R, ctx) {
     var kind = R.pick(by(ctx, ['focus', 'directrix', 'opens'], ['focus', 'directrix', 'write', 'shifted'], ['write', 'complete', 'shifted']));
-    var p = R.pick(by(ctx, [1, 2, 3, -1, -2, -3], [1, 2, 3, 4, -1, -2, -3], [Q(1, 2), 1, 2, 3, Q(-1, 2), -2, Q(3, 2)])); p = Q.from(p);
+    var p = R.pick(by(ctx, [1, 2, 3, -1, -2, -3, 4, -4, 5, -5, Q(1, 2), Q(-1, 2), 6, -6], [1, 2, 3, 4, -1, -2, -3, 5, -5, Q(1, 2), Q(-3, 2)], [Q(1, 2), 1, 2, 3, Q(-1, 2), -2, Q(3, 2)])); p = Q.from(p);
     var hor = R.coin(), h = by(ctx, 0, R.int(-4, 4), R.int(-5, 5)), k = by(ctx, 0, R.int(-4, 4), R.int(-5, 5));
     if (kind === 'focus' || kind === 'directrix' || kind === 'opens') { h = 0; k = 0; }
     var fp = Q(4).mul(p);
@@ -2321,8 +2365,8 @@
     return { q: 'Find the vertex of the parabola $' + genT + '$.', a: { t: 'tuple', v: [String(h), String(k)] }, steps: ['Keep the squared variable on one side and complete the square: $' + eqT + '$.', 'The vertex is $' + T.pt([h, k]) + '$.'], hint: 'Move the non-squared terms to the right, then complete the square.' };
   });
 
-  var ELL = [[5, 4, 3], [5, 3, 4], [13, 12, 5], [13, 5, 12], [10, 8, 6], [10, 6, 8], [17, 15, 8], [17, 8, 15], [25, 24, 7], [25, 7, 24]];
-  var ELLR = [[3, 2], [4, 2], [4, 3], [6, 3], [5, 2], [3, 1], [6, 4], [7, 3]];
+  var ELL = [[5, 4, 3], [5, 3, 4], [13, 12, 5], [13, 5, 12], [10, 8, 6], [10, 6, 8], [17, 15, 8], [17, 8, 15], [25, 24, 7], [25, 7, 24], [15, 12, 9], [15, 9, 12], [20, 16, 12], [20, 12, 16], [26, 24, 10], [26, 10, 24], [29, 21, 20], [29, 20, 21]];
+  var ELLR = [[3, 2], [4, 2], [4, 3], [6, 3], [5, 2], [3, 1], [6, 4], [7, 3], [4, 1], [5, 1], [6, 2], [7, 2], [8, 3], [6, 5], [7, 4], [9, 4]];
   G('pre.ellipses', function (R, ctx) {
     var kind = R.pick(by(ctx, ['foci', 'axes', 'major'], ['foci', 'write', 'axes', 'rad'], ['shift', 'write', 'rad', 'foci']));
     var e = R.pick(ELL), a = e[0], b = e[1], c = { p: String(e[2]), t: String(e[2]) }, vert = R.coin();
@@ -2345,7 +2389,7 @@
     return { q: 'Find the center of the ellipse $' + eqT + '$ and the distance $c$ from the center to each focus.', a: { t: 'multi', parts: [{ label: 'Center', a: { t: 'tuple', v: [String(h), String(k)] } }, { label: '$c =$', a: numA(c.p) }] }, steps: ['Read the center from the shifts: $' + T.pt([h, k]) + '$.'].concat(base), hint: 'The center is $(h, k)$; then $c^2 = a^2 - b^2$.' };
   });
 
-  var HYP = [[3, 4, 5], [4, 3, 5], [5, 12, 13], [12, 5, 13], [6, 8, 10], [8, 6, 10], [8, 15, 17], [15, 8, 17], [7, 24, 25]];
+  var HYP = [[3, 4, 5], [4, 3, 5], [5, 12, 13], [12, 5, 13], [6, 8, 10], [8, 6, 10], [8, 15, 17], [15, 8, 17], [7, 24, 25], [9, 12, 15], [12, 9, 15], [10, 24, 26], [24, 10, 26], [20, 21, 29], [21, 20, 29], [12, 16, 20], [16, 12, 20], [24, 7, 25]];
   G('pre.hyperbolas', function (R, ctx) {
     var kind = R.pick(by(ctx, ['opens', 'vertex', 'foci'], ['foci', 'asym', 'write', 'opens'], ['asym', 'write', 'foci', 'shift']));
     var e = R.pick(HYP), a = e[0], b = e[1], c = e[2], vert = R.coin();
@@ -2647,11 +2691,16 @@
     ['\\dfrac{1}{i(i + 1)}', '\\dfrac{n}{n + 1}', '1/(k*(k+1))', 'n/(n+1)', '\\dfrac{1}{1 \\cdot 2} + \\dfrac{1}{2 \\cdot 3} + \\cdots + \\dfrac{1}{n(n + 1)}'],
     ['4i - 3', 'n(2n - 1)', '4*k-3', 'n*(2*n-1)', '1 + 5 + 9 + \\cdots + (4n - 3)'],
     ['3i - 1', '\\dfrac{n(3n + 1)}{2}', '3*k-1', 'n*(3*n+1)/2', '2 + 5 + 8 + \\cdots + (3n - 1)'],
-    ['i^3', '\\left(\\dfrac{n(n + 1)}{2}\\right)^2', 'k^3', '(n*(n+1)/2)^2', '1^3 + 2^3 + \\cdots + n^3']
+    ['i^3', '\\left(\\dfrac{n(n + 1)}{2}\\right)^2', 'k^3', '(n*(n+1)/2)^2', '1^3 + 2^3 + \\cdots + n^3'],
+    ['2i', 'n(n + 1)', '2*k', 'n*(n+1)', '2 + 4 + 6 + \\cdots + 2n'],
+    ['3^{i - 1}', '\\dfrac{3^n - 1}{2}', '3^(k-1)', '(3^n-1)/2', '1 + 3 + 9 + \\cdots + 3^{n - 1}'],
+    ['5i - 4', '\\dfrac{n(5n - 3)}{2}', '5*k-4', 'n*(5*n-3)/2', '1 + 6 + 11 + \\cdots + (5n - 4)'],
+    ['i(i + 1)', '\\dfrac{n(n + 1)(n + 2)}{3}', 'k*(k+1)', 'n*(n+1)*(n+2)/3', '1 \\cdot 2 + 2 \\cdot 3 + \\cdots + n(n + 1)'],
+    ['3i', '\\dfrac{3n(n + 1)}{2}', '3*k', '3*n*(n+1)/2', '3 + 6 + 9 + \\cdots + 3n']
   ];
   function subN(plain, v) { return plain.replace(/\bn\b/g, v); }
   G('pre.induction', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['base', 'next', 'value', 'logic'], ['next', 'target', 'value', 'logic', 'divis'], ['target', 'combine', 'divis', 'next']));
+    var kind = R.pick(by(ctx, ['base', 'next', 'value', 'logic'], ['next', 'target', 'value', 'logic', 'divis'], ['target', 'combine', 'divis', 'next', 'value']));
     var I = R.pick(INDS), stmt = I[4] + ' = ' + I[1];
     var term = function (i) { return ML.evalPlain(I[2].replace(/k/g, '(' + i + ')')); };
     if (kind === 'base') {
@@ -2668,12 +2717,12 @@
       return { q: qq, a: { t: 'expr', v: tgt, vars: ['k'] }, steps: kind === 'target' ? ['The goal is the same formula with $n$ replaced by $k + 1$: $' + T.plain(tgt) + '$.', 'The proof must show that the assumed sum plus the next term equals this.'] : ['Combine over a common denominator and factor; the result should be the formula with $n = k + 1$.', 'It equals $' + T.plain(tgt) + '$, which is exactly the statement for $n = k + 1$.'], hint: 'Put $k + 1$ in place of $n$ in the closed form.' };
     }
     if (kind === 'value') {
-      var N = R.int(5, 12), tot = 0; for (var i = 1; i <= N; i++) tot = Q.from(tot).add(Q.from(I[2] === '1/(k*(k+1))' ? Q(1, i * (i + 1)) : term(i)));
+      var N = R.int(5, 20), tot = 0; for (var i = 1; i <= N; i++) tot = Q.from(tot).add(Q.from(I[2] === '1/(k*(k+1))' ? Q(1, i * (i + 1)) : term(i)));
       return { q: 'Use the formula $' + stmt + '$ to find the sum with $n = ' + N + '$ terms.', a: numA(Q.from(tot).toPlain()), steps: ['Substitute $n = ' + N + '$ into the right side: $' + I[1].replace(/n/g, '(' + N + ')') + ' = ' + Q.from(tot).toTex() + '$.', 'Adding the ' + N + ' terms one by one gives the same total, which the induction proof guarantees for every $n$.'], hint: 'Put $n = ' + N + '$ into the formula.' };
     }
     if (kind === 'divis') {
-      var a = R.int(2, 7), b = a + 1;
-      return { q: 'To prove $' + a + '$ divides $' + b + '^n - 1$ for all $n \\ge 1$, assume $' + b + '^k - 1$ is a multiple of $' + a + '$. Fill in the number $m$: $' + b + '^{k+1} - 1 = ' + b + '(' + b + '^k - 1) + m$.', a: numA(a), steps: ['$' + b + '(' + b + '^k - 1) = ' + b + '^{k+1} - ' + b + '$.', 'To get $' + b + '^{k+1} - 1$ we must add back $' + b + ' - 1 = ' + a + '$, so $m = ' + a + '$.', 'Both $' + b + '(' + b + '^k - 1)$ (by the assumption) and $' + a + '$ are multiples of $' + a + '$, so their sum is too. With the base case $' + b + '^1 - 1 = ' + a + '$, the proof is complete.'], hint: 'Expand $' + b + '(' + b + '^k - 1)$ and compare.' };
+      var a = R.int(2, 12), jj = R.pick([1, 1, 2, 3]), b = a * jj + 1, bm = b - 1;
+      return { q: 'To prove $' + a + '$ divides $' + b + '^n - 1$ for all $n \\ge 1$, assume $' + b + '^k - 1$ is a multiple of $' + a + '$. Fill in the number $m$: $' + b + '^{k+1} - 1 = ' + b + '(' + b + '^k - 1) + m$.', a: numA(bm), steps: ['$' + b + '(' + b + '^k - 1) = ' + b + '^{k+1} - ' + b + '$.', 'To get $' + b + '^{k+1} - 1$ we must add back $' + b + ' - 1 = ' + bm + '$, so $m = ' + bm + '$.', 'Both $' + b + '(' + b + '^k - 1)$ (by the assumption) and $' + bm + (jj === 1 ? '' : ' = ' + jj + ' \\cdot ' + a) + '$ are multiples of $' + a + '$, so their sum is too. With the base case $' + b + '^1 - 1 = ' + bm + '$, which is a multiple of $' + a + '$, the proof is complete.'], hint: 'Expand $' + b + '(' + b + '^k - 1)$ and compare.' };
     }
     var L = R.pick([
       ['A student checks $n = 1, 2, 3, 4$ and finds the formula works each time, then concludes it is true for all $n$.', 'It is not a proof: checking examples never covers every $n$.', ['It is a complete proof by induction.', 'It is a proof, but only for even $n$.', 'It would be a proof if one more case were checked.']],
@@ -2702,7 +2751,7 @@
   });
 
   G('pre.difference-quotient', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['fxh', 'lin', 'numq'], ['dq', 'fxh', 'numq', 'recip'], ['dq', 'cubic', 'recip', 'sqrt']));
+    var kind = R.pick(by(ctx, ['fxh', 'lin', 'numq'], ['dq', 'fxh', 'numq', 'recip'], ['dq', 'cubic', 'recip', 'sqrt', 'dq', 'dq']));
     var a = R.nz(-4, 4), b = R.int(-6, 6), c = R.int(-6, 6), fT = T.poly([a, b, c], 'x');
     if (kind === 'fxh') {
       var ex = polyPlain([a, 0, 0], 'x') ;
@@ -2722,13 +2771,15 @@
       return { q: 'For $f(x) = ' + fT + '$, simplify $\\dfrac{f(x + h) - f(x)}{h}$ (for $h \\ne 0$).', a: { t: 'expr', v: dq, vars: ['x', 'h'], form: 'expanded' }, steps: ['$f(x + h) = ' + T.terms([[a, 'x^2'], [2 * a, 'xh'], [a, 'h^2'], [b, 'x'], [b, 'h'], [c, '']]) + '$.', '$f(x + h) - f(x) = ' + T.terms([[2 * a, 'xh'], [a, 'h^2'], [b, 'h']]) + '$ (the terms of $f(x)$ cancel).', 'Factor out $h$ and cancel: $' + T.terms([[2 * a, 'x'], [a, 'h'], [b, '']]) + '$.'], hint: 'Expand, subtract, then every remaining term has a factor of $h$.' };
     }
     if (kind === 'cubic') {
-      return { q: 'For $f(x) = x^3$, simplify $\\dfrac{f(x + h) - f(x)}{h}$ (for $h \\ne 0$).', a: { t: 'expr', v: '3*x^2+3*x*h+h^2', vars: ['x', 'h'], form: 'expanded' }, steps: ['$(x + h)^3 = x^3 + 3x^2h + 3xh^2 + h^3$.', 'Subtract $x^3$: $3x^2h + 3xh^2 + h^3$.', 'Divide by $h$: $3x^2 + 3xh + h^2$.'], hint: 'Expand $(x + h)^3$ first.' };
+      var kc = R.pick([1, 1, 2, 3, -1, -2, 4]), kcT = kc === 1 ? '' : kc === -1 ? '-' : String(kc);
+      return { q: 'For $f(x) = ' + kcT + 'x^3$, simplify $\\dfrac{f(x + h) - f(x)}{h}$ (for $h \\ne 0$).', a: { t: 'expr', v: plainTerms([[3 * kc, 'x^2'], [3 * kc, 'x*h'], [kc, 'h^2']]), vars: ['x', 'h'], form: 'expanded' }, steps: ['$(x + h)^3 = x^3 + 3x^2h + 3xh^2 + h^3$.', 'Subtract $x^3$: $3x^2h + 3xh^2 + h^3$.', 'Divide by $h$: $3x^2 + 3xh + h^2$.'].concat(kc === 1 ? [] : ['Multiply by $' + kc + '$: $' + T.terms([[3 * kc, 'x^2'], [3 * kc, 'xh'], [kc, 'h^2']]) + '$.']), hint: 'Expand $(x + h)^3$ first.' };
     }
     if (kind === 'recip') {
-      var k = R.pick([1, 2, 3, 5]);
+      var k = R.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12]);
       return { q: 'For $f(x) = \\dfrac{' + k + '}{x}$, simplify $\\dfrac{f(x + h) - f(x)}{h}$ (for $h \\ne 0$).', a: { t: 'expr', v: '-' + k + '/(x*(x+h))', vars: ['x', 'h'] }, steps: ['$f(x + h) - f(x) = \\dfrac{' + k + '}{x + h} - \\dfrac{' + k + '}{x} = \\dfrac{' + (k === 1 ? 'x - (x + h)' : k + 'x - ' + k + '(x + h)') + '}{x(x + h)} = \\dfrac{-' + (k === 1 ? '' : k) + 'h}{x(x + h)}$.', 'Divide by $h$: $-\\dfrac{' + k + '}{x(x + h)}$.'], hint: 'Combine the two fractions over $x(x + h)$ first.' };
     }
-    return { q: 'For $f(x) = \\sqrt{x}$, simplify $\\dfrac{f(x + h) - f(x)}{h}$ so that $h$ is no longer in a denominator by itself.', a: { t: 'expr', v: '1/(sqrt(x+h)+sqrt(x))', vars: ['x', 'h'] }, steps: ['Multiply top and bottom by the conjugate $\\sqrt{x + h} + \\sqrt{x}$.', 'The top becomes $(x + h) - x = h$.', 'Cancel $h$: $\\dfrac{1}{\\sqrt{x + h} + \\sqrt{x}}$.'], hint: 'Multiply by the conjugate of the numerator.' };
+    var cs = R.pick([0, 0, 1, 2, 3, 5, -1, -2]), inA = cs ? 'x' + T.signed(cs) : 'x', inB = cs ? 'x + h' + T.signed(cs) : 'x + h', pA = cs ? 'x' + (cs > 0 ? '+' : '') + cs : 'x', pB = cs ? 'x+h' + (cs > 0 ? '+' : '') + cs : 'x+h';
+    return { q: 'For $f(x) = \\sqrt{' + inA + '}$, simplify $\\dfrac{f(x + h) - f(x)}{h}$ so that $h$ is no longer in a denominator by itself.', a: { t: 'expr', v: '1/(sqrt(' + pB + ')+sqrt(' + pA + '))', vars: ['x', 'h'] }, steps: ['Multiply top and bottom by the conjugate $\\sqrt{' + inB + '} + \\sqrt{' + inA + '}$.', 'The top becomes $(' + inB + ') - (' + inA + ') = h$.', 'Cancel $h$: $\\dfrac{1}{\\sqrt{' + inB + '} + \\sqrt{' + inA + '}}$.'], hint: 'Multiply by the conjugate of the numerator.' };
   });
 
   G('pre.limits-intro', function (R, ctx) {
@@ -2762,14 +2813,17 @@
   });
 
   G('pre.limits-graphs-tables', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['table', 'side', 'table'], ['table', 'side', 'jump'], ['table', 'jump', 'side']));
+    var kind = R.pick(by(ctx, ['table', 'side', 'table', 'side'], ['table', 'side', 'jump'], ['table', 'jump', 'side']));
     if (kind === 'table') {
       var Fs = [
         function () { var a = R.int(-3, 4), s = R.intNot(-4, 4, a); return { tex: '\\dfrac{' + T.poly([1, -(a + s), a * s], 'x') + '}{' + T.lin(1, 'x', -a) + '}', f: function (x) { return x - s; }, a: a, L: String(a - s), why: 'Factoring shows $f(x) = ' + T.lin(1, 'x', -s) + '$ for $x \\ne ' + a + '$, which confirms the limit $' + (a - s) + '$.' }; },
         function () { var k = R.int(2, 5); return { tex: '\\dfrac{\\sin ' + k + 'x}{x}', f: function (x) { return Math.sin(k * x) / x; }, a: 0, L: String(k), why: 'For small angles (in radians) $\\sin u \\approx u$, so $\\frac{\\sin ' + k + 'x}{x} \\approx \\frac{' + k + 'x}{x} = ' + k + '$.' }; },
         function () { return { tex: '\\dfrac{e^x - 1}{x}', f: function (x) { return (Math.exp(x) - 1) / x; }, a: 0, L: '1', why: 'The values close in on $1$ from both sides.' }; },
         function () { var c = R.pick([4, 9, 16, 25]), r = Math.sqrt(c); return { tex: '\\dfrac{\\sqrt{x + ' + c + '} - ' + r + '}{x}', f: function (x) { return (Math.sqrt(x + c) - r) / x; }, a: 0, L: '1/' + 2 * r, why: 'Multiplying by the conjugate gives $\\frac{1}{\\sqrt{x + ' + c + '} + ' + r + '} \\to \\frac{1}{' + 2 * r + '}$.' }; },
-        function () { return { tex: '\\dfrac{1 - \\cos x}{x}', f: function (x) { return (1 - Math.cos(x)) / x; }, a: 0, L: '0', why: 'The values shrink toward $0$ from both sides (negative on the left, positive on the right).' }; }
+        function () { return { tex: '\\dfrac{1 - \\cos x}{x}', f: function (x) { return (1 - Math.cos(x)) / x; }, a: 0, L: '0', why: 'The values shrink toward $0$ from both sides (negative on the left, positive on the right).' }; },
+        function () { var k = R.int(2, 5); return { tex: '\\dfrac{\\tan ' + k + 'x}{x}', f: function (x) { return Math.tan(k * x) / x; }, a: 0, L: String(k), why: 'For small angles (in radians) $\\tan u \\approx u$, so the values close in on $' + k + '$.' }; },
+        function () { return { tex: '\\dfrac{1 - \\cos x}{x^2}', f: function (x) { return (1 - Math.cos(x)) / (x * x); }, a: 0, L: '1/2', why: 'The values close in on $0.5$ from both sides.' }; },
+        function () { var k = R.int(2, 4); return { tex: '\\dfrac{e^{' + k + 'x} - 1}{x}', f: function (x) { return (Math.exp(k * x) - 1) / x; }, a: 0, L: String(k), why: 'The values close in on $' + k + '$ from both sides.' }; }
       ];
       var F = R.pick(Fs)(), hs = [-0.1, -0.01, -0.001, 0.001, 0.01, 0.1];
       var rows = hs.map(function (h) { var x = U.fix(F.a + h); return T.num(x) + ' & ' + T.num(U.round(F.f(x), 5)); });

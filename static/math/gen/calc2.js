@@ -279,7 +279,7 @@
   G('calc2.volume-slicing', function (R, ctx) {
     var shape = by(ctx, R.pick(['pyr', 'base', 'cone']), R.pick(['base', 'disk', 'pyr', 'base']), R.pick(['base', 'disk']));
     if (shape === 'pyr') {
-      var s1 = R.pick([2, 3, 4, 6]), s2 = R.pick([s1, s1, 2, 3, 5]), h = R.pick([3, 4, 5, 6, 9, 10]), V0 = Q(s1 * s2 * h, 3), kA = Q(s1 * s2, h * h);
+      var s1 = R.pick([2, 3, 4, 5, 6, 8]), s2 = R.pick([s1, s1, 2, 3, 4, 5, 7]), h = R.pick([3, 4, 5, 6, 8, 9, 10, 12]), V0 = Q(s1 * s2 * h, 3), kA = Q(s1 * s2, h * h);
       var base = s1 === s2 ? 'a square base of side ' + s1 + ' m' : 'a rectangular base ' + s1 + ' m by ' + s2 + ' m';
       return done({
         q: 'A pyramid has ' + base + ' and height ' + h + ' m. Find its volume by slicing it parallel to the base.',
@@ -294,7 +294,7 @@
       }, { int: kA.toPlain() + '*x^2', a: 0, b: h });
     }
     if (shape === 'cone') {
-      var rc = R.int(1, 5), hc = R.pick([2, 3, 4, 6, 9, 12]), Vc = Q(rc * rc * hc, 3), kc = Q(rc * rc, hc * hc);
+      var rc = R.int(1, 8), hc = R.pick([2, 3, 4, 5, 6, 8, 9, 10, 12, 15]), Vc = Q(rc * rc * hc, 3), kc = Q(rc * rc, hc * hc);
       return done({
         q: 'A cone has base radius ' + rc + ' cm and height ' + hc + ' cm. Slice it into thin disks parallel to the base and find its volume. Give an exact answer.',
         a: { t: 'num', v: kPlain(Vc, 'pi') }, unit: 'cm³',
@@ -308,8 +308,24 @@
       }, { int: Math.PI * kc.toNumber() + '*x^2', a: 0, b: hc });
     }
     var S = by(ctx, R.pick([SECTIONS[0], SECTIONS[3]]), R.pick(SECTIONS), R.pick(SECTIONS));
+    if (shape === 'disk' && R.int(1, 3) > 1) { // an elliptical base x^2/a^2 + y^2/b^2 <= 1
+      var ea = R.int(1, 6), eb = R.int(1, 6); if (eb === ea) eb = ea === 6 ? 5 : ea + 1;
+      var eI = Q(16 * ea * eb * eb, 3), eV = eI.mul(S.k), ek4 = S.k.mul(Q(4 * eb * eb, ea * ea)), ekT = ek4.eq(1) && !S.sym ? '' : kTex(ek4, S.sym);
+      return done({
+        q: 'A solid has an elliptical base $\\frac{x^{2}}{' + ea * ea + '} + \\frac{y^{2}}{' + eb * eb + '} \\le 1$. Cross-sections perpendicular to the $x$-axis are ' + S.n + '. Find its volume.',
+        a: { t: 'num', v: kPlain(eV, S.sp) },
+        steps: [
+          'Solve for $y$: $y = \\pm ' + (eb === 1 ? '' : eb) + '\\sqrt{1 - \\frac{x^{2}}{' + ea * ea + '}}$, for $-' + ea + ' \\le x \\le ' + ea + '$.',
+          'The slice at $x$ has width $s = ' + 2 * eb + '\\sqrt{1 - \\frac{x^{2}}{' + ea * ea + '}}$, so $s^{2} = ' + 4 * eb * eb + '\\left(1 - \\frac{x^{2}}{' + ea * ea + '}\\right) = ' + tx(Q(4 * eb * eb, ea * ea)) + '(' + ea * ea + ' - x^{2})$.',
+          'Area of one slice: ' + S.say + '. So $A(x) = ' + ekT + '(' + ea * ea + ' - x^{2})$.',
+          D('V = ' + ekT + '\\int_{-' + ea + '}^{' + ea + '} (' + ea * ea + ' - x^{2})' + DX + ' = ' + (ekT ? ekT + '\\cdot ' : '') + tx(Q(4 * ea * ea * ea, 3))),
+          '$V = ' + kTex(eV, S.sym) + '$.'
+        ],
+        hint: 'Find the width of the base at $x$ (top edge minus bottom edge); that is the side $s$ of the cross-section.'
+      }, { int: secK(S) + '*' + 4 * eb * eb + '*(1-x^2/' + ea * ea + ')', a: -ea, b: ea });
+    }
     if (shape === 'disk') {
-      var rr = R.int(1, 5), I = Q(16 * rr * rr * rr, 3), V = I.mul(S.k);
+      var rr = R.int(1, 6), I = Q(16 * rr * rr * rr, 3), V = I.mul(S.k);
       return done({
         q: 'A solid has a circular base $x^{2} + y^{2} \\le ' + rr * rr + '$. Cross-sections perpendicular to the $x$-axis are ' + S.n + '. Find its volume.',
         a: { t: 'num', v: kPlain(V, S.sp) },
@@ -323,10 +339,10 @@
       }, { int: secK(S) + '*4*(' + rr * rr + '-x^2)', a: -rr, b: rr });
     }
     var fam = R.pick(['lin', 'root', 'par', 'tri']), s2p, sTex, lo = 0, hi, baseTex;
-    if (fam === 'lin') { var m = R.int(1, 4), b = R.int(1, 5); s2p = P(0, 0, m * m); sTex = cf(m, 'x'); hi = b; baseTex = 'the triangle bounded by $y = ' + sTex + '$, $y = 0$ and $x = ' + b + '$'; }
-    else if (fam === 'tri') { var c0 = R.int(2, 6); s2p = pmul(P(c0, -1), P(c0, -1)); sTex = c0 + ' - x'; hi = c0; baseTex = 'the triangle bounded by $y = ' + sTex + '$ and the coordinate axes'; }
-    else if (fam === 'root') { var cc = R.int(1, 4), b2 = R.int(1, 6); s2p = P(0, cc * cc); sTex = (cc === 1 ? '' : cc) + '\\sqrt{x}'; hi = b2; baseTex = 'the region under $y = ' + sTex + '$ from $x = 0$ to $x = ' + b2 + '$'; }
-    else { var c2 = R.pick([1, 2, 3]); s2p = pmul(P(c2 * c2, 0, -1), P(c2 * c2, 0, -1)); sTex = c2 * c2 + ' - x^{2}'; lo = -c2; hi = c2; baseTex = 'the region between $y = ' + sTex + '$ and the $x$-axis'; }
+    if (fam === 'lin') { var m = R.int(1, 5), b = R.int(1, 6); s2p = P(0, 0, m * m); sTex = cf(m, 'x'); hi = b; baseTex = 'the triangle bounded by $y = ' + sTex + '$, $y = 0$ and $x = ' + b + '$'; }
+    else if (fam === 'tri') { var c0 = R.int(2, 9); s2p = pmul(P(c0, -1), P(c0, -1)); sTex = c0 + ' - x'; hi = c0; baseTex = 'the triangle bounded by $y = ' + sTex + '$ and the coordinate axes'; }
+    else if (fam === 'root') { var cc = R.int(1, 5), b2 = R.int(1, 8); s2p = P(0, cc * cc); sTex = (cc === 1 ? '' : cc) + '\\sqrt{x}'; hi = b2; baseTex = 'the region under $y = ' + sTex + '$ from $x = 0$ to $x = ' + b2 + '$'; }
+    else { var c2 = R.pick([1, 2, 3, 4]); s2p = pmul(P(c2 * c2, 0, -1), P(c2 * c2, 0, -1)); sTex = c2 * c2 + ' - x^{2}'; lo = -c2; hi = c2; baseTex = 'the region between $y = ' + sTex + '$ and the $x$-axis'; }
     var I2 = pdef(s2p, lo, hi), V2 = I2.mul(S.k), pre = secPre(S);
     return done({
       q: 'The base of a solid is ' + baseTex + '. Cross-sections perpendicular to the $x$-axis are ' + S.n + '. Find the volume.',
@@ -347,7 +363,7 @@
     if (shape === 'disk') {
       var fam = R.pick(['cone', 'root', 'sq', 'exp']), f2, fT, b, vizf;
       if (fam === 'exp') {
-        var bb = R.pick([1, 2, 3]), kk = R.pick([1, 2]), vt = kTex(Q(1, 2 * kk), '\\pi') + '\\left(e^{' + 2 * kk * bb + '} - 1\\right)', ek = kk === 1 ? '' : kk;
+        var bb = R.pick([1, 2, 3, 4]), kk = R.pick(bb > 2 ? [1] : bb > 1 ? [1, 2, 3] : [1, 2, 3, 4, 5, 6]), vt = kTex(Q(1, 2 * kk), '\\pi') + '\\left(e^{' + 2 * kk * bb + '} - 1\\right)', ek = kk === 1 ? '' : kk;
         return done({
           q: 'The region under $y = e^{' + ek + 'x}$ from $x = 0$ to $x = ' + bb + '$ is revolved about the $x$-axis. Find the volume exactly.',
           a: { t: 'num', v: 'pi*(e^' + 2 * kk * bb + '-1)/' + 2 * kk },
@@ -360,9 +376,9 @@
           viz: { name: 'solids', opts: { quiet: true, f: 'e^(' + kk + '*x)', a: 0, b: bb, axis: 'x', angle: 300 } }
         }, { int: 'pi*e^(' + 2 * kk + '*x)', a: 0, b: bb });
       }
-      if (fam === 'cone') { var m = R.int(1, 4); b = R.int(1, 5); f2 = P(0, 0, m * m); fT = cf(m, 'x'); vizf = m + '*x'; }
-      else if (fam === 'root') { var c = R.int(1, 4); b = R.int(1, 6); fT = (c === 1 ? '' : c) + '\\sqrt{x}'; f2 = P(0, c * c); vizf = c + '*sqrt(x)'; }
-      else { var k2 = R.pick([1, 2]); b = R.pick([1, 2, 3]); f2 = P(0, 0, 0, 0, k2 * k2); fT = cf(k2, 'x^{2}'); vizf = k2 + '*x^2'; }
+      if (fam === 'cone') { var m = R.int(1, 5); b = R.int(1, 6); f2 = P(0, 0, m * m); fT = cf(m, 'x'); vizf = m + '*x'; }
+      else if (fam === 'root') { var c = R.int(1, 5); b = R.int(1, 8); fT = (c === 1 ? '' : c) + '\\sqrt{x}'; f2 = P(0, c * c); vizf = c + '*sqrt(x)'; }
+      else { var k2 = R.pick([1, 2, 3]); b = R.pick([1, 2, 3]); f2 = P(0, 0, 0, 0, k2 * k2); fT = cf(k2, 'x^{2}'); vizf = k2 + '*x^2'; }
       var I = pdef(f2, 0, b);
       return done({
         q: 'The region under $y = ' + fT + '$ from $x = 0$ to $x = ' + b + '$ is revolved about the $x$-axis. Find the volume of the solid.',
@@ -378,7 +394,7 @@
       }, { int: 'pi*(' + pplain(f2) + ')', a: 0, b: b });
     }
     if (shape === 'pick') {
-      var m2 = R.int(1, 4), sgp = R.pick(['x^{2}', 'x^{3}']), lineT = cf(sgp === 'x^{3}' ? m2 * m2 : m2, 'x'), hiP = m2;
+      var m2 = R.int(1, 6), kp = R.pick([1, 1, 2, 3]), sgp0 = R.pick(['x^{2}', 'x^{3}']), sgp = cf(kp, sgp0), lineT = cf(kp * (sgp0 === 'x^{3}' ? m2 * m2 : m2), 'x'), hiP = m2;
       var right = '\\pi\\int_{0}^{' + hiP + '} \\left[(' + lineT + ')^{2} - (' + sgp + ')^{2}\\right]' + DX;
       var wrongs = ['\\pi\\int_{0}^{' + hiP + '} (' + lineT + ' - ' + sgp + ')^{2}' + DX, '\\pi\\int_{0}^{' + hiP + '} \\left[(' + sgp + ')^{2} - (' + lineT + ')^{2}\\right]' + DX, '\\pi\\int_{0}^{' + hiP + '} (' + lineT + ' - ' + sgp + ')' + DX];
       return done({
@@ -394,9 +410,9 @@
     }
     if (shape === 'washer') {
       var kind = R.pick(['linepar', 'flat', 'rootlin']), top2, bot, hi, tT, bT, vt2, vb;
-      if (kind === 'linepar') { var mm = R.pick([1, 2, 3]); top2 = P(0, 0, mm * mm); bot = P(0, 0, 1); hi = mm; tT = cf(mm, 'x'); bT = 'x^{2}'; vt2 = mm + '*x'; vb = 'x^2'; }
-      else if (kind === 'flat') { var cc = R.pick([1, 2, 3]); top2 = P(cc * cc * cc * cc); bot = P(0, 0, 1); hi = cc; tT = String(cc * cc); bT = 'x^{2}'; vt2 = String(cc * cc); vb = 'x^2'; }
-      else { var c3 = R.pick([1, 2]); top2 = P(0, c3 * c3); bot = P(0, 1); hi = c3 * c3; tT = (c3 === 1 ? '' : c3) + '\\sqrt{x}'; bT = 'x'; vt2 = c3 + '*sqrt(x)'; vb = 'x'; }
+      if (kind === 'linepar') { var mm = R.pick([1, 2, 3, 4]), kb = R.pick([1, 1, 2, 3]); top2 = P(0, 0, mm * mm * kb * kb); bot = P(0, 0, kb); hi = mm; tT = cf(mm * kb, 'x'); bT = cf(kb, 'x^{2}'); vt2 = mm * kb + '*x'; vb = kb + '*x^2'; }
+      else if (kind === 'flat') { var cc = R.pick([1, 2, 3, 4]); if (R.coin()) { top2 = P(cc * cc * cc * cc); bot = P(0, 0, 1); hi = cc; tT = String(cc * cc); bT = 'x^{2}'; vt2 = String(cc * cc); vb = 'x^2'; } else { var mf = R.pick([1, 2, 3]); cc = R.int(1, 5); top2 = P(mf * mf * cc * cc); bot = P(0, mf); hi = cc; tT = String(mf * cc); bT = cf(mf, 'x'); vt2 = String(mf * cc); vb = mf + '*x'; } }
+      else { var c3 = R.pick([1, 2, 3]); top2 = P(0, c3 * c3); bot = P(0, 1); hi = c3 * c3; tT = (c3 === 1 ? '' : c3) + '\\sqrt{x}'; bT = 'x'; vt2 = c3 + '*sqrt(x)'; vb = 'x'; }
       var integrand = psub(top2, pmul(bot, bot)), Vw = pdef(integrand, 0, hi);
       return done({
         q: 'The region between $y = ' + tT + '$ and $y = ' + bT + '$ for $0 \\le x \\le ' + hi + '$ is revolved about the $x$-axis. Find the volume.',
@@ -412,7 +428,7 @@
       }, { int: 'pi*(' + pplain(integrand) + ')', a: 0, b: hi });
     }
     if (shape === 'ydisk') {
-      var h = R.int(1, 6), ky = R.pick([1, 2, 3]), Vy = Q(h * h, 2 * ky);
+      var h = R.int(1, 12), ky = R.pick([1, 2, 3, 4]), Vy = Q(h * h, 2 * ky);
       return done({
         q: 'The region bounded by $y = ' + cf(ky, 'x^{2}') + '$, the $y$-axis and the line $y = ' + h + '$ (with $x \\ge 0$) is revolved about the $y$-axis. Find the volume.',
         a: { t: 'num', v: kPlain(Vy, 'pi') },
@@ -425,14 +441,14 @@
         hint: 'Slice across the axis of rotation, so here use $dy$ and write the radius in terms of $y$.'
       }, { int: 'pi*x/' + ky, a: 0, b: h });
     }
-    var m3 = R.pick([1, 2, 3]), below = R.coin(), kk2 = below ? R.int(1, 4) : m3 * m3 + R.int(0, 2), lT = cf(m3, 'x');
+    var m3 = R.pick([1, 2, 3, 4]), kq = m3 > 2 ? 1 : R.pick([1, 1, 2, 3]), below = R.coin(), kk2 = below ? R.int(1, 8) : kq * m3 * m3 + R.int(0, 4), lT = cf(kq * m3, 'x'), pT = cf(kq, 'x^{2}');
     var Rr, rr2, RT, rT;
-    if (below) { Rr = P(kk2, m3); rr2 = P(kk2, 0, 1); RT = lT + ' + ' + kk2; rT = 'x^{2} + ' + kk2; }
-    else { Rr = P(kk2, 0, -1); rr2 = P(kk2, -m3); RT = kk2 + ' - x^{2}'; rT = kk2 + ' - ' + lT; }
+    if (below) { Rr = P(kk2, kq * m3); rr2 = P(kk2, 0, kq); RT = lT + ' + ' + kk2; rT = pT + ' + ' + kk2; }
+    else { Rr = P(kk2, 0, -kq); rr2 = P(kk2, -kq * m3); RT = kk2 + ' - ' + pT; rT = kk2 + ' - ' + lT; }
     var integ2 = psub(pmul(Rr, Rr), pmul(rr2, rr2)), Vs = pdef(integ2, 0, m3);
     var axisT = below ? 'y = -' + kk2 : 'y = ' + kk2;
     return done({
-      q: 'The region between $y = ' + lT + '$ and $y = x^{2}$ (for $0 \\le x \\le ' + m3 + '$) is revolved about the line $' + axisT + '$. Find the volume.',
+      q: 'The region between $y = ' + lT + '$ and $y = ' + pT + '$ (for $0 \\le x \\le ' + m3 + '$) is revolved about the line $' + axisT + '$. Find the volume.',
       a: { t: 'num', v: kPlain(Vs, 'pi') },
       steps: [
         'Radii are distances to the axis $' + axisT + '$, not heights. ' + (below ? 'The axis is below the region, so a point at height $y$ is $y + ' + kk2 + '$ from the axis.' : 'The axis is above the region, so a point at height $y$ is $' + kk2 + ' - y$ from the axis.'),
@@ -442,20 +458,20 @@
         'Integrate: $\\pi' + pbracket(pint(integ2), 0, m3) + ' = ' + kTex(Vs, '\\pi') + '$.'
       ],
       hint: 'Measure each radius from the axis of rotation.',
-      viz: { name: 'solids', opts: { quiet: true, f: m3 + '*x', g: 'x^2', a: 0, b: m3, axis: 'x', k: below ? -kk2 : kk2, angle: 300 } }
+      viz: { name: 'solids', opts: { quiet: true, f: kq * m3 + '*x', g: kq + '*x^2', a: 0, b: m3, axis: 'x', k: below ? -kk2 : kk2, angle: 300 } }
     }, { int: 'pi*(' + pplain(integ2) + ')', a: 0, b: m3 });
   });
 
   G('calc2.shells', function (R, ctx) {
     var shape = by(ctx, R.pick(['under', 'under', 'between']), R.pick(['between', 'under', 'shift', 'xaxis']), R.pick(['shift', 'shift', 'between', 'xaxis']));
     if (shape === 'under' || shape === 'shift') {
-      var fam = R.pick(['dome', 'dome', 'par', 'lin', 'cap']), f, fT, hi, desc;
-      if (fam === 'cap') { var cq2 = R.int(1, 4); f = P(cq2 * cq2, 0, -1); fT = cq2 * cq2 + ' - x^{2}'; hi = cq2; desc = 'in the first quadrant under $y = ' + fT + '$'; }
-      else if (fam === 'dome') { var c = R.int(2, 5); f = P(0, c, -1); fT = c + 'x - x^{2}'; hi = c; desc = 'between $y = ' + fT + '$ and the $x$-axis'; }
-      else if (fam === 'par') { var k = R.int(1, 3); hi = R.int(1, 3); f = P(0, 0, k); fT = cf(k, 'x^{2}'); desc = 'under $y = ' + fT + '$ from $x = 0$ to $x = ' + hi + '$'; }
-      else { var m = R.int(1, 4); hi = R.int(1, 4); f = P(0, m); fT = cf(m, 'x'); desc = 'under $y = ' + fT + '$ from $x = 0$ to $x = ' + hi + '$'; }
+      var fam = R.pick(['dome', 'par', 'lin', 'cap']), f, fT, hi, desc, kd = R.pick([1, 1, 2, 3]);
+      if (fam === 'cap') { var cq2 = R.int(1, 6); f = P(kd * cq2 * cq2, 0, -kd); fT = kd * cq2 * cq2 + ' - ' + cf(kd, 'x^{2}'); hi = cq2; desc = 'in the first quadrant under $y = ' + fT + '$'; }
+      else if (fam === 'dome') { var c = R.int(2, 8); f = P(0, kd * c, -kd); fT = cf(kd * c, 'x') + ' - ' + cf(kd, 'x^{2}'); hi = c; desc = 'between $y = ' + fT + '$ and the $x$-axis'; }
+      else if (fam === 'par') { var k = R.int(1, 4); hi = R.int(1, 4); f = P(0, 0, k); fT = cf(k, 'x^{2}'); desc = 'under $y = ' + fT + '$ from $x = 0$ to $x = ' + hi + '$'; }
+      else { var m = R.int(1, 6); hi = R.int(1, 5); f = P(0, m); fT = cf(m, 'x'); desc = 'under $y = ' + fT + '$ from $x = 0$ to $x = ' + hi + '$'; }
       var d = 0, side = 0, rad, radT, axisT = 'the $y$-axis', kAx = 0;
-      if (shape === 'shift') { side = R.coin() ? -1 : 1; d = R.int(1, 3); if (side < 0) { rad = P(d, 1); radT = 'x + ' + d; kAx = -d; axisT = 'the line $x = -' + d + '$'; } else { rad = P(hi + d, -1); radT = (hi + d) + ' - x'; kAx = hi + d; axisT = 'the line $x = ' + (hi + d) + '$'; } }
+      if (shape === 'shift') { side = R.coin() ? -1 : 1; d = R.int(1, 5); if (side < 0) { rad = P(d, 1); radT = 'x + ' + d; kAx = -d; axisT = 'the line $x = -' + d + '$'; } else { rad = P(hi + d, -1); radT = (hi + d) + ' - x'; kAx = hi + d; axisT = 'the line $x = ' + (hi + d) + '$'; } }
       else { rad = P(0, 1); radT = 'x'; }
       var integ = pmul(rad, f), I = pdef(integ, 0, hi), V = I.mul(2);
       return done({
@@ -473,7 +489,7 @@
       }, { int: '2*pi*(' + pplain(integ) + ')', a: 0, b: hi });
     }
     if (shape === 'between') {
-      var m2 = R.int(1, 4), s = R.pick([1, 1, 2]), lT = cf(s * m2, 'x'), pT = cf(s, 'x^{2}'), h = P(0, s * m2, -s), integ2 = pmul(P(0, 1), h), I2 = pdef(integ2, 0, m2), V2 = I2.mul(2);
+      var m2 = R.int(1, 6), s = R.pick([1, 1, 2, 3]), lT = cf(s * m2, 'x'), pT = cf(s, 'x^{2}'), h = P(0, s * m2, -s), integ2 = pmul(P(0, 1), h), I2 = pdef(integ2, 0, m2), V2 = I2.mul(2);
       return done({
         q: 'The region between $y = ' + lT + '$ and $y = ' + pT + '$ is revolved about the $y$-axis. Use shells to find the volume.',
         a: { t: 'num', v: kPlain(V2, 'pi') },
@@ -487,24 +503,25 @@
         viz: { name: 'solids', opts: { quiet: true, f: s * m2 + '*x', g: s + '*x^2', a: 0, b: m2, axis: 'y', angle: 300 } }
       }, { int: '2*pi*x*(' + pplain(h) + ')', a: 0, b: m2 });
     }
-    var sb = R.int(1, 5), b = sb * sb, V3 = Q(b * b, 2);
+    var sb = R.int(1, 7), b = sb * sb, cr = R.pick([1, 1, 2, 3]), V3 = Q(cr * cr * b * b, 2), top = cr * sb, c2r = cr * cr;
+    var leftT = cr === 1 ? 'y^{2}' : '\\frac{y^{2}}{' + c2r + '}';
     return done({
-      q: 'The region bounded by $y = \\sqrt{x}$, $y = 0$ and $x = ' + b + '$ is revolved about the $x$-axis. Use cylindrical shells (horizontal strips) to find the volume.',
+      q: 'The region bounded by $y = ' + (cr === 1 ? '' : cr) + '\\sqrt{x}$, $y = 0$ and $x = ' + b + '$ is revolved about the $x$-axis. Use cylindrical shells (horizontal strips) to find the volume.',
       a: { t: 'num', v: kPlain(V3, 'pi') },
       steps: [
-        'Horizontal strips at height $y$ run from the curve $x = y^{2}$ to the line $x = ' + b + '$, for $0 \\le y \\le ' + sb + '$.',
-        'Each strip sweeps out a shell with radius $y$ (distance to the $x$-axis) and length $' + b + ' - y^{2}$.',
-        D('V = 2\\pi\\int_{0}^{' + sb + '} y(' + b + ' - y^{2})' + DY + ' = 2\\pi\\left[\\frac{' + (b === 1 ? '' : b) + 'y^{2}}{2} - \\frac{y^{4}}{4}\\right]_{0}^{' + sb + '}'),
-        '$V = 2\\pi\\left(' + tx(Q(b * b, 2)) + ' - ' + tx(Q(b * b, 4)) + '\\right) = ' + kTex(V3, '\\pi') + '$. The disk method agrees: $\\pi\\int_0^{' + b + '} x\\,dx = ' + kTex(V3, '\\pi') + '$.'
+        'Horizontal strips at height $y$ run from the curve $x = ' + leftT + '$ to the line $x = ' + b + '$, for $0 \\le y \\le ' + top + '$.',
+        'Each strip sweeps out a shell with radius $y$ (distance to the $x$-axis) and length $' + b + ' - ' + leftT + '$.',
+        D('V = 2\\pi\\int_{0}^{' + top + '} y\\left(' + b + ' - ' + leftT + '\\right)' + DY + ' = 2\\pi\\left[\\frac{' + (b === 1 ? '' : b) + 'y^{2}}{2} - \\frac{y^{4}}{' + 4 * c2r + '}\\right]_{0}^{' + top + '}'),
+        '$V = 2\\pi\\left(' + tx(Q(b * top * top, 2)) + ' - ' + tx(Q(Math.pow(top, 4), 4 * c2r)) + '\\right) = ' + kTex(V3, '\\pi') + '$. The disk method agrees: $\\pi\\int_0^{' + b + '} ' + (cr === 1 ? '' : c2r) + 'x\\,dx = ' + kTex(V3, '\\pi') + '$.'
       ],
       hint: 'With shells about the $x$-axis, strips are horizontal: radius $y$, length (right minus left).'
-    }, { int: '2*pi*x*(' + b + '-x^2)', a: 0, b: sb });
+    }, { int: '2*pi*x*(' + b + '-x^2/' + c2r + ')', a: 0, b: top });
   });
 
   G('calc2.arc-length', function (R, ctx) {
-    var shape = by(ctx, R.pick(['pow', 'pick', 'pow', 'cube']), R.pick(['pow', 'recip', 'log', 'pick', 'cube']), R.pick(['recip', 'log', 'cos', 'cube']));
+    var shape = by(ctx, R.pick(['pow', 'pick', 'pow', 'cube']), R.pick(['pow', 'recip', 'log', 'pick', 'cube']), R.pick(['recip', 'log', 'cube', 'recip', 'log', 'cos']));
     if (shape === 'pick') {
-      var fs = [['x^{3}', '3x^{2}'], ['\\sin x', '\\cos x'], ['e^{2x}', '2e^{2x}'], ['x^{4}', '4x^{3}'], ['\\ln x', '\\frac{1}{x}'], ['\\sqrt{x}', '\\frac{1}{2\\sqrt{x}}']], F = R.pick(fs), a = R.pick([1, 2]), b = a + R.pick([1, 2, 3]);
+      var fs = [['x^{3}', '3x^{2}'], ['\\sin x', '\\cos x'], ['e^{2x}', '2e^{2x}'], ['x^{4}', '4x^{3}'], ['\\ln x', '\\frac{1}{x}'], ['\\sqrt{x}', '\\frac{1}{2\\sqrt{x}}'], ['x^{2}', '2x'], ['x^{5}', '5x^{4}'], ['e^{x}', 'e^{x}'], ['x^{3/2}', '\\frac{3}{2}\\sqrt{x}'], ['\\tan^{-1} x', '\\frac{1}{1 + x^{2}}'], ['\\cosh x', '\\sinh x']], F = R.pick(fs), a = R.pick([1, 2, 3]), b = a + R.pick([1, 2, 3, 4]);
       var right = '\\int_{' + a + '}^{' + b + '} \\sqrt{1 + \\left(' + F[1] + '\\right)^{2}}' + DX;
       var wr = ['\\int_{' + a + '}^{' + b + '} \\sqrt{1 + ' + F[1] + '}' + DX, '\\int_{' + a + '}^{' + b + '} \\sqrt{1 + \\left(' + F[0] + '\\right)^{2}}' + DX, '\\int_{' + a + '}^{' + b + '} \\left(1 + \\left(' + F[1] + '\\right)^{2}\\right)' + DX];
       return done({
@@ -519,11 +536,11 @@
       }, null);
     }
     if (shape === 'pow') {
-      var opt = R.pick([{ k: '\\frac{2}{3}', kp: '2/3', c: 1, pts: [0, 3, 8, 15, 24, 35] }, { k: '\\frac{4}{3}', kp: '4/3', c: 4, pts: [0, 2, 6, 12, 20] }]);
+      var opt = R.pick([{ k: '\\frac{2}{3}', kp: '2/3', c: 1, pts: [0, 3, 8, 15, 24, 35, 48] }, { k: '\\frac{4}{3}', kp: '4/3', c: 4, pts: [0, 2, 6, 12, 20, 30] }, { k: '2', kp: '2', c: 9, pts: [0, 7, 11, 32, 40] }, { k: '\\frac{8}{3}', kp: '8/3', c: 16, pts: [0, 3, 5, 14] }]);
       var ij = R.sample(opt.pts.map(function (_, i) { return i; }), 2).sort(function (x, y) { return x - y; }), A = opt.pts[ij[0]], B = opt.pts[ij[1]], c = opt.c;
       var uA = 1 + c * A, uB = 1 + c * B, sA = Math.round(Math.sqrt(uA)), sB = Math.round(Math.sqrt(uB));
       var L = Q(2, 3 * c).mul(sB * sB * sB - sA * sA * sA);
-      var yp = c === 1 ? '\\sqrt{x}' : '2\\sqrt{x}', inner = c === 1 ? '1 + x' : '1 + 4x';
+      var yp = c === 1 ? '\\sqrt{x}' : Math.round(Math.sqrt(c)) + '\\sqrt{x}', inner = c === 1 ? '1 + x' : '1 + ' + c + 'x';
       return done({
         q: 'Find the length of the curve $y = ' + opt.k + 'x^{3/2}$ from $x = ' + A + '$ to $x = ' + B + '$.',
         a: { t: 'num', v: L.toPlain() },
@@ -537,7 +554,7 @@
       }, { len: opt.kp + '*x^(3/2)', a: A, b: B });
     }
     if (shape === 'cube') {
-      var a3 = R.int(0, 3), b3 = a3 + R.int(1, 4), Fc = function (x) { return Q(x * x * x, 3).add(x); }, L3 = Fc(b3).sub(Fc(a3));
+      var a3 = R.int(0, 5), b3 = a3 + R.int(1, 5), Fc = function (x) { return Q(x * x * x, 3).add(x); }, L3 = Fc(b3).sub(Fc(a3));
       return done({
         q: 'Find the length of $y = \\frac{1}{3}\\left(x^{2} + 2\\right)^{3/2}$ from $x = ' + a3 + '$ to $x = ' + b3 + '$.',
         a: { t: 'num', v: L3.toPlain() },
@@ -551,14 +568,11 @@
       }, { len: '(x^2+2)^(3/2)/3', a: a3, b: b3 });
     }
     if (shape === 'recip') {
-      var fam = R.pick(['36', '48']), a2 = R.pick([1, 1, 2]), b2 = a2 + R.pick([1, 2]), Fp, fT, ypT, sqT, FT;
-      if (fam === '36') {
-        Fp = function (x) { return Q(x * x * x, 6).sub(Q(1, 2 * x)); };
-        fT = '\\frac{x^{3}}{6} + \\frac{1}{2x}'; ypT = '\\frac{x^{2}}{2} - \\frac{1}{2x^{2}}'; sqT = '\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}'; FT = '\\frac{x^{3}}{6} - \\frac{1}{2x}';
-      } else {
-        Fp = function (x) { return Q(x * x * x * x, 8).sub(Q(1, 4 * x * x)); };
-        fT = '\\frac{x^{4}}{8} + \\frac{1}{4x^{2}}'; ypT = '\\frac{x^{3}}{2} - \\frac{1}{2x^{3}}'; sqT = '\\frac{x^{3}}{2} + \\frac{1}{2x^{3}}'; FT = '\\frac{x^{4}}{8} - \\frac{1}{4x^{2}}';
-      }
+      // y = x^(n+1)/(2(n+1)) + 1/(2(n-1)x^(n-1)), so y' = x^n/2 - 1/(2x^n)
+      var nR = R.pick([2, 3, 4]), fam = String(nR), a2 = R.pick([1, 1, 2, 3, 4]), b2 = a2 + R.pick([1, 2, 3, 4]), Fp, fT, ypT, sqT, FT;
+      var pw = function (e) { return e === 1 ? 'x' : 'x^{' + e + '}'; }, d1 = 2 * (nR + 1), d2 = 2 * (nR - 1);
+      Fp = function (x) { return Q(Math.pow(x, nR + 1), d1).sub(Q(1, d2 * Math.pow(x, nR - 1))); };
+      fT = '\\frac{' + pw(nR + 1) + '}{' + d1 + '} + \\frac{1}{' + d2 + pw(nR - 1) + '}'; ypT = '\\frac{' + pw(nR) + '}{2} - \\frac{1}{2' + pw(nR) + '}'; sqT = '\\frac{' + pw(nR) + '}{2} + \\frac{1}{2' + pw(nR) + '}'; FT = '\\frac{' + pw(nR + 1) + '}{' + d1 + '} - \\frac{1}{' + d2 + pw(nR - 1) + '}';
       return done({
         q: 'Find the length of $y = ' + fT + '$ from $x = ' + a2 + '$ to $x = ' + b2 + '$.',
         a: { t: 'num', v: Fp(b2).sub(Fp(a2)).toPlain() },
@@ -569,11 +583,11 @@
           '$L = ' + evalDiff(Fp(b2), Fp(a2)) + '$.'
         ],
         hint: 'Expand $1 + (y\')^{2}$. It turns out to be a perfect square, so the root disappears.'
-      }, { len: fam === '36' ? 'x^3/6+1/(2*x)' : 'x^4/8+1/(4*x^2)', a: a2, b: b2 });
+      }, { len: 'x^' + (nR + 1) + '/' + d1 + '+1/(' + d2 + '*x^' + (nR - 1) + ')', a: a2, b: b2 });
     }
     if (shape === 'log') {
       // y = k x^2/2 - ln(x)/(4k): 1 + y'^2 = (k x + 1/(4 k x))^2
-      var kq = R.pick([Q(1, 2), Q(1), Q(2), Q(1, 4)]), a4 = R.pick([1, 1, 2, 3]), b4 = a4 + R.int(1, 4);
+      var kq = R.pick([Q(1, 2), Q(1), Q(2), Q(1, 4)]), a4 = R.pick([1, 1, 2, 3, 4]), b4 = a4 + R.int(1, 5);
       var c1 = kq.div(2), c2 = Q(1).div(kq.mul(4)), Lq = c1.mul(b4 * b4 - a4 * a4);
       var t1 = kq.eq(2) ? 'x^{2}' : '\\frac{' + (kq.n === 1n ? '' : kq.n) + 'x^{2}}{' + c1.inv().num() * Number(kq.n) + '}';
       var t2 = '\\frac{\\ln x}{' + c2.inv().toTex() + '}', ypT = cf(kq, 'x') + ' - \\frac{1}{' + cf(kq.mul(4), 'x') + '}', sqT = cf(kq, 'x') + ' + \\frac{1}{' + cf(kq.mul(4), 'x') + '}';
@@ -590,25 +604,25 @@
         hint: 'After squaring the derivative and adding 1, look for a perfect square.'
       }, { len: c1.toPlain() + '*x^2-(' + c2.toPlain() + ')*ln(x)', a: a4, b: b4 });
     }
-    var up = R.pick([['\\frac{\\pi}{4}', Math.PI / 4, 'ln(sqrt(2)+1)', '\\ln\\left(\\sqrt{2} + 1\\right)', '\\sec\\frac{\\pi}{4} + \\tan\\frac{\\pi}{4} = \\sqrt{2} + 1'], ['\\frac{\\pi}{3}', Math.PI / 3, 'ln(2+sqrt(3))', '\\ln\\left(2 + \\sqrt{3}\\right)', '\\sec\\frac{\\pi}{3} + \\tan\\frac{\\pi}{3} = 2 + \\sqrt{3}'], ['\\frac{\\pi}{6}', Math.PI / 6, 'ln(sqrt(3))', '\\ln\\sqrt{3} = \\frac{1}{2}\\ln 3', '\\sec\\frac{\\pi}{6} + \\tan\\frac{\\pi}{6} = \\frac{2}{\\sqrt{3}} + \\frac{1}{\\sqrt{3}} = \\sqrt{3}']]);
+    var secF = R.coin(), up = R.pick([['\\frac{\\pi}{4}', Math.PI / 4, 'ln(sqrt(2)+1)', '\\ln\\left(\\sqrt{2} + 1\\right)', '\\sec\\frac{\\pi}{4} + \\tan\\frac{\\pi}{4} = \\sqrt{2} + 1'], ['\\frac{\\pi}{3}', Math.PI / 3, 'ln(2+sqrt(3))', '\\ln\\left(2 + \\sqrt{3}\\right)', '\\sec\\frac{\\pi}{3} + \\tan\\frac{\\pi}{3} = 2 + \\sqrt{3}'], ['\\frac{\\pi}{6}', Math.PI / 6, 'ln(sqrt(3))', '\\ln\\sqrt{3} = \\frac{1}{2}\\ln 3', '\\sec\\frac{\\pi}{6} + \\tan\\frac{\\pi}{6} = \\frac{2}{\\sqrt{3}} + \\frac{1}{\\sqrt{3}} = \\sqrt{3}']]);
     return done({
-      q: 'Find the length of $y = \\ln(\\cos x)$ from $x = 0$ to $x = ' + up[0] + '$. Give an exact answer.',
+      q: 'Find the length of $y = ' + (secF ? '\\ln(\\sec x)' : '\\ln(\\cos x)') + '$ from $x = 0$ to $x = ' + up[0] + '$. Give an exact answer.',
       a: { t: 'num', v: up[2] },
       steps: [
-        '$\\frac{dy}{dx} = \\frac{-\\sin x}{\\cos x} = -\\tan x$, so $1 + \\left(\\frac{dy}{dx}\\right)^{2} = 1 + \\tan^{2} x = \\sec^{2} x$.',
+        secF ? '$\\frac{dy}{dx} = \\frac{\\sec x\\tan x}{\\sec x} = \\tan x$, so $1 + \\left(\\frac{dy}{dx}\\right)^{2} = 1 + \\tan^{2} x = \\sec^{2} x$.' : '$\\frac{dy}{dx} = \\frac{-\\sin x}{\\cos x} = -\\tan x$, so $1 + \\left(\\frac{dy}{dx}\\right)^{2} = 1 + \\tan^{2} x = \\sec^{2} x$.',
         'On this interval $\\sec x > 0$, so $\\sqrt{\\sec^{2} x} = \\sec x$.',
         D('L = \\int_{0}^{' + up[0] + '} \\sec x' + DX + ' = \\Big[\\ln\\left|\\sec x + \\tan x\\right|\\Big]_{0}^{' + up[0] + '}'),
         'At the top: $' + up[4] + '$. At $0$: $\\ln(1 + 0) = 0$. So $L = ' + up[3] + '$.'
       ],
       hint: 'Use $1 + \\tan^{2} x = \\sec^{2} x$.'
-    }, { len: 'ln(cos(x))', a: 0, b: up[1] });
+    }, { len: secF ? '-ln(cos(x))' : 'ln(cos(x))', a: 0, b: up[1] });
   });
 
-  var PYTH = [[3, 4, 5], [4, 3, 5], [5, 12, 13], [12, 5, 13], [8, 15, 17], [15, 8, 17]];
+  var PYTH = [[3, 4, 5], [4, 3, 5], [5, 12, 13], [12, 5, 13], [8, 15, 17], [15, 8, 17], [7, 24, 25], [24, 7, 25]];
   G('calc2.surface-of-revolution', function (R, ctx) {
-    var shape = by(ctx, R.pick(['cone', 'sphere', 'frustum']), R.pick(['cone', 'sphere', 'root', 'frustum']), R.pick(['root', 'cube', 'sphere', 'root']));
+    var shape = by(ctx, R.pick(['cone', 'sphere', 'frustum']), R.pick(['cone', 'sphere', 'root', 'frustum']), R.pick(['root', 'cube', 'sphere', 'root', 'sphere']));
     if (shape === 'cone' || shape === 'frustum') {
-      var kk = R.pick(PYTH), k = Q(kk[0], kk[1]), b = kk[1] * R.int(1, 3), c0 = shape === 'frustum' ? R.int(1, 5) : 0;
+      var kk = R.pick(PYTH), k = Q(kk[0], kk[1]), b = kk[1] * R.int(1, kk[1] > 12 ? 2 : 4), c0 = shape === 'frustum' ? R.int(1, 6) : 0;
       var sqr = Q(kk[2], kk[1]), inner = k.mul(b * b).div(2).add(c0 * b), S = sqr.mul(inner).mul(2), fT = cf(k, 'x') + (c0 ? ' + ' + c0 : '');
       return done({
         q: 'The segment $y = ' + fT + '$, $0 \\le x \\le ' + b + '$, is revolved about the $x$-axis' + (c0 ? '' : ', making a cone') + '. Find the area of the surface it sweeps out' + (c0 ? '' : ' (not counting the base)') + '.',
@@ -622,7 +636,7 @@
       }, { surf: k.toPlain() + '*x+' + c0, a: 0, b: b });
     }
     if (shape === 'sphere') {
-      var r0 = R.pick([2, 3, 4, 5, 6]), a = R.int(-r0 + 1, 0), b2 = R.int(a + 1, r0), S2 = Q(2 * r0 * (b2 - a));
+      var r0 = R.pick([2, 3, 4, 5, 6, 7, 8]), a = R.int(-r0 + 1, 0), b2 = R.int(a + 1, r0), S2 = Q(2 * r0 * (b2 - a));
       return done({
         q: 'The curve $y = \\sqrt{' + r0 * r0 + ' - x^{2}}$ for $' + a + ' \\le x \\le ' + b2 + '$ is revolved about the $x$-axis, making a band on a sphere. Find its surface area.',
         a: { t: 'num', v: kPlain(S2, 'pi') },
@@ -636,35 +650,36 @@
       }, { surf: 'sqrt(' + r0 * r0 + '-x^2)', a: a, b: b2 });
     }
     if (shape === 'root') {
-      var opt = R.pick([{ c: 1, list: [2, 6, 12, 20] }, { c: 2, list: [3, 8, 15, 24] }, { c: 4, list: [5, 12, 21] }]), cc = opt.c, bb = R.pick(opt.list);
-      var sh = Q(cc * cc, 4), top = sh.add(bb), rt = function (q) { var n = Math.round(Math.sqrt(q.num())), d = Math.round(Math.sqrt(q.den())); return Q(n * n * n, d * d * d); };
-      var S3 = Q(4 * cc, 3).mul(rt(top).sub(rt(sh))), cT = cc === 1 ? '' : cc, shT = tx(sh);
+      var opt = R.pick([{ c: 1, list: [2, 6, 12, 20, 30] }, { c: 2, list: [3, 8, 15, 24, 35] }, { c: 3, list: [4, 10, 18, 28] }, { c: 4, list: [5, 12, 21, 32] }, { c: 6, list: [7, 16, 27, 40] }]), cc = opt.c, lst = [0].concat(opt.list);
+      var ijr = R.coin() ? [0, R.int(1, lst.length - 1)] : R.sample(lst.map(function (_, i) { return i; }), 2).sort(function (x, y) { return x - y; }), aa = lst[ijr[0]], bb = lst[ijr[1]];
+      var sh = Q(cc * cc, 4), top = sh.add(bb), low = sh.add(aa), rt = function (q) { var n = Math.round(Math.sqrt(q.num())), d = Math.round(Math.sqrt(q.den())); return Q(n * n * n, d * d * d); };
+      var S3 = Q(4 * cc, 3).mul(rt(top).sub(rt(low))), cT = cc === 1 ? '' : cc, shT = tx(sh);
       return done({
-        q: 'The curve $y = ' + cT + '\\sqrt{x}$, $0 \\le x \\le ' + bb + '$, is revolved about the $x$-axis. Find the surface area.',
+        q: 'The curve $y = ' + cT + '\\sqrt{x}$, $' + aa + ' \\le x \\le ' + bb + '$, is revolved about the $x$-axis. Find the surface area.',
         a: { t: 'num', v: kPlain(S3, 'pi') },
         steps: [
           '$y\' = \\frac{' + cc + '}{2\\sqrt{x}}$, so $y\\sqrt{1 + (y\')^{2}} = ' + cT + '\\sqrt{x}\\sqrt{1 + \\frac{' + cc * cc + '}{4x}} = ' + cT + '\\sqrt{x + ' + shT + '}$.',
-          D('S = 2\\pi\\int_{0}^{' + bb + '} ' + cT + '\\sqrt{x + ' + shT + '}' + DX + ' = ' + kTex(Q(4 * cc, 3), '\\pi') + '\\left[\\left(x + ' + shT + '\\right)^{3/2}\\right]_{0}^{' + bb + '}'),
-          '$\\left(' + tx(top) + '\\right)^{3/2} = ' + tx(rt(top)) + '$ and $\\left(' + shT + '\\right)^{3/2} = ' + tx(rt(sh)) + '$.',
-          '$S = ' + kTex(Q(4 * cc, 3), '\\pi') + '\\left(' + evalDiff(rt(top), rt(sh)) + '\\right) = ' + kTex(S3, '\\pi') + '$.'
+          D('S = 2\\pi\\int_{' + aa + '}^{' + bb + '} ' + cT + '\\sqrt{x + ' + shT + '}' + DX + ' = ' + kTex(Q(4 * cc, 3), '\\pi') + '\\left[\\left(x + ' + shT + '\\right)^{3/2}\\right]_{' + aa + '}^{' + bb + '}'),
+          '$\\left(' + tx(top) + '\\right)^{3/2} = ' + tx(rt(top)) + '$ and $\\left(' + tx(low) + '\\right)^{3/2} = ' + tx(rt(low)) + '$.',
+          '$S = ' + kTex(Q(4 * cc, 3), '\\pi') + '\\left(' + evalDiff(rt(top), rt(low)) + '\\right) = ' + kTex(S3, '\\pi') + '$.'
         ],
         hint: 'Multiply $y$ into the root before integrating.'
-      }, { surf: cc + '*sqrt(x)', a: 0, b: bb });
+      }, { surf: cc + '*sqrt(x)', a: aa, b: bb });
     }
-    var cq = R.pick([[1, 3], [2, 3], [1, 1]]), c = Q(cq[0], cq[1]), iv = Q(1).add(c.mul(c).mul(9)).num(), coef = Q(1).div(c.mul(27));
+    var cq = R.pick([[1, 3], [2, 3], [1, 1], [4, 3], [2, 1]]), c = Q(cq[0], cq[1]), bU = R.pick([1, 1, 2]), iv = Q(1).add(c.mul(c).mul(9 * Math.pow(bU, 4))).num(), coef = Q(1).div(c.mul(27));
     var ansP = ps([[coef, 'pi*(' + iv + '*sqrt(' + iv + ')-1)']]), ansT = kTex(coef, '\\pi') + '\\left(' + iv + '\\sqrt{' + iv + '} - 1\\right)';
     var c9 = c.mul(c).mul(9), c9T = c9.eq(1) ? '' : tx(c9);
     return done({
-      q: 'The curve $y = ' + cf(c, 'x^{3}') + '$, $0 \\le x \\le 1$, is revolved about the $x$-axis. Find the surface area exactly.',
+      q: 'The curve $y = ' + cf(c, 'x^{3}') + '$, $0 \\le x \\le ' + bU + '$, is revolved about the $x$-axis. Find the surface area exactly.',
       a: { t: 'num', v: ansP },
       steps: [
         '$y\' = ' + cf(c.mul(3), 'x^{2}') + '$, so $1 + (y\')^{2} = 1 + ' + c9T + 'x^{4}$.',
-        D('S = 2\\pi\\int_{0}^{1} ' + cf(c, 'x^{3}') + '\\sqrt{1 + ' + c9T + 'x^{4}}' + DX),
+        D('S = 2\\pi\\int_{0}^{' + bU + '} ' + cf(c, 'x^{3}') + '\\sqrt{1 + ' + c9T + 'x^{4}}' + DX),
         'Let $u = 1 + ' + c9T + 'x^{4}$, so $du = ' + cf(c.mul(c).mul(36), 'x^{3}') + '\\,dx$; $u$ runs from $1$ to $' + iv + '$.',
         '$S = 2\\pi\\cdot ' + tx(c) + '\\cdot\\frac{1}{' + tx(c.mul(c).mul(36)) + '}\\cdot\\frac{2}{3}\\left[u^{3/2}\\right]_{1}^{' + iv + '} = ' + ansT + '$.'
       ],
       hint: 'A $u$-substitution with $u = 1 + (y\')^{2}$ works because $x^{3}$ sits outside the root.'
-    }, { surf: c.toPlain() + '*x^3', a: 0, b: 1 });
+    }, { surf: c.toPlain() + '*x^3', a: 0, b: bU });
   });
 
   G('calc2.work', function (R, ctx) {
@@ -757,7 +772,7 @@
   G('calc2.fluid-force', function (R, ctx) {
     var rho = 9800, shape = by(ctx, R.pick(['rect']), R.pick(['rect', 'tri']), R.pick(['tri', 'semi', 'disk']));
     if (shape === 'rect') {
-      var w = R.int(1, 5), h = R.int(1, 4), d = R.int(0, 3), F = Q(rho * w).mul(Q(h * d).add(Q(h * h, 2)));
+      var w = R.int(1, 8), h = R.int(1, 6), d = R.int(0, 5), F = Q(rho * w).mul(Q(h * d).add(Q(h * h, 2)));
       return done({
         q: 'A rectangular plate ' + w + ' m wide and ' + h + ' m tall is submerged vertically in water (weight density $9800$ N/m³) with its top edge ' + (d ? d + ' m below the surface' : 'at the surface') + '. Find the force of the water on one side.',
         a: { t: 'num', v: F.toPlain() }, unit: 'N',
@@ -771,7 +786,7 @@
       }, { int: rho * w + '*x', a: d, b: d + h });
     }
     if (shape === 'tri') {
-      var b = R.pick([2, 3, 4, 6]), h2 = R.int(1, 3), up = R.coin(), F2, wid;
+      var b = R.pick([2, 3, 4, 5, 6, 8]), h2 = R.int(1, 5), up = R.coin(), F2, wid;
       if (!up) { F2 = Q(rho * b * h2 * h2, 6); wid = b + '\\left(1 - \\frac{y}{' + h2 + '}\\right)'; }
       else { F2 = Q(rho * b * h2 * h2, 3); wid = cf(Q(b, h2), 'y'); }
       return done({
@@ -786,8 +801,22 @@
         hint: 'Write the strip width as a function of depth using similar triangles.'
       }, { int: up ? rho * b / h2 + '*x^2' : rho * b + '*x*(1-x/' + h2 + ')', a: 0, b: h2 });
     }
+    if (shape === 'semi' && R.coin()) { // straight edge level, d m below the surface
+      var rs = R.int(1, 5), ds = R.int(1, 4), Fa = Q(rho * 2 * rs * rs * rs, 3), Fb = Q(rho * ds * rs * rs, 2);
+      return done({
+        q: 'A plate shaped like a half disk of radius ' + rs + ' m is submerged vertically in water (weight density $9800$ N/m³). Its straight edge is level, ' + ds + ' m below the surface, and the curved part hangs below it. Find the force on one side. Give an exact answer.',
+        a: { t: 'num', v: ps([[Fa, ''], [Fb, 'pi']]) }, unit: 'N',
+        steps: [
+          'Let $y$ be depth. The plate spans depths $' + ds + '$ to $' + (ds + rs) + '$, and at depth $y$ it is $2\\sqrt{' + rs * rs + ' - (y - ' + ds + ')^{2}}$ wide.',
+          D('F = 9800\\int_{' + ds + '}^{' + (ds + rs) + '} y\\cdot 2\\sqrt{' + rs * rs + ' - (y - ' + ds + ')^{2}}' + DY),
+          'Write $y = (y - ' + ds + ') + ' + ds + '$. With $u = ' + rs * rs + ' - (y - ' + ds + ')^{2}$, the first part gives $\\frac{2}{3}\\cdot ' + rs * rs * rs + ' = ' + tx(Q(2 * rs * rs * rs, 3)) + '$. The second part is $' + ds + '$ times the half disk\'s area, $' + kTex(Q(rs * rs, 2), '\\pi') + '$.',
+          '$F = 9800\\left(' + tx(Q(2 * rs * rs * rs, 3)) + ' + ' + kTex(Q(ds * rs * rs, 2), '\\pi') + '\\right) = ' + numShow(Fa) + ' + ' + kTex(Fb, '\\pi') + '$ N.'
+        ],
+        hint: 'Split the depth into (distance below the straight edge) + (depth of the straight edge).'
+      }, { int: rho + '*x*2*sqrt(' + rs * rs + '-(x-' + ds + ')^2)', a: ds, b: ds + rs });
+    }
     if (shape === 'semi') {
-      var r0 = R.int(1, 4), F3 = Q(rho * 2 * r0 * r0 * r0, 3);
+      var r0 = R.int(1, 6), F3 = Q(rho * 2 * r0 * r0 * r0, 3);
       return done({
         q: 'A plate shaped like a half disk of radius ' + r0 + ' m is submerged vertically in water (weight density $9800$ N/m³), with its straight edge along the surface. Find the force on one side.',
         a: { t: 'num', v: F3.toPlain() }, unit: 'N',
@@ -800,7 +829,7 @@
         hint: 'The width at depth $y$ comes from the circle $x^{2} + y^{2} = r^{2}$.'
       }, { int: rho + '*x*2*sqrt(' + r0 * r0 + '-x^2)', a: 0, b: r0 });
     }
-    var r1 = R.int(1, 3), dc = r1 + R.int(1, 4), F4 = Q(rho * r1 * r1 * dc);
+    var r1 = R.int(1, 5), dc = r1 + R.int(0, 5), F4 = Q(rho * r1 * r1 * dc);
     return done({
       q: 'A circular window of radius ' + r1 + ' m in the side of a large aquarium has its center ' + dc + ' m below the surface. Find the force of the water (weight density $9800$ N/m³) on the window. Give an exact answer in terms of $\\pi$.',
       a: { t: 'num', v: kPlain(F4, 'pi') }, unit: 'N',
@@ -831,13 +860,17 @@
     }
     var f, g, a = 0, b, desc;
     if (shape === 'under') {
-      var fam = R.pick(['par', 'lin', 'dome']);
-      if (fam === 'par') { var k = R.int(1, 3); b = R.int(1, 3); f = P(0, 0, k); desc = 'under $y = ' + cf(k, 'x^{2}') + '$ from $x = 0$ to $x = ' + b + '$'; }
-      else if (fam === 'lin') { var m = R.int(1, 3); b = R.pick([2, 3, 6]); f = P(0, m); desc = 'in the triangle under $y = ' + cf(m, 'x') + '$ from $x = 0$ to $x = ' + b + '$'; }
-      else { var c = R.int(2, 4); b = c; f = P(0, c, -1); desc = 'between $y = ' + c + 'x - x^{2}$ and the $x$-axis'; }
+      var fam = R.pick(['par', 'lin', 'dome', 'cap']);
+      if (fam === 'par') { var k = R.int(1, 4); b = R.int(1, 4); f = P(0, 0, k); desc = 'under $y = ' + cf(k, 'x^{2}') + '$ from $x = 0$ to $x = ' + b + '$'; }
+      else if (fam === 'lin') { var m = R.int(1, 5); b = R.int(1, 6); f = P(0, m); desc = 'in the triangle under $y = ' + cf(m, 'x') + '$ from $x = 0$ to $x = ' + b + '$'; }
+      else if (fam === 'dome') { var c = R.int(2, 8); b = c; f = P(0, c, -1); desc = 'between $y = ' + c + 'x - x^{2}$ and the $x$-axis'; }
+      else { var cq = R.int(1, 6); b = cq; f = P(cq * cq, 0, -1); desc = 'in the first quadrant under $y = ' + cq * cq + ' - x^{2}$'; }
       g = P(0);
     } else {
-      var mm = R.int(1, 3), s = R.pick([1, 2]); b = mm; f = P(0, s * mm); g = P(0, 0, s); desc = 'between $y = ' + cf(s * mm, 'x') + '$ and $y = ' + cf(s, 'x^{2}') + '$';
+      var bk = R.pick(['lp', 'lp', 'flatp', 'flatl']);
+      if (bk === 'lp') { var mm = R.int(1, 5), s = R.pick([1, 1, 2, 3]); b = mm; f = P(0, s * mm); g = P(0, 0, s); desc = 'between $y = ' + cf(s * mm, 'x') + '$ and $y = ' + cf(s, 'x^{2}') + '$'; }
+      else if (bk === 'flatp') { var kf = R.int(1, 3); b = R.int(1, 4); f = P(kf * b * b); g = P(0, 0, kf); desc = 'between $y = ' + cf(kf, 'x^{2}') + '$, the line $y = ' + kf * b * b + '$ and the $y$-axis'; }
+      else { var ml = R.int(1, 4); b = R.int(1, 5); f = P(ml * b); g = P(0, ml); desc = 'in the triangle between $y = ' + cf(ml, 'x') + '$, the line $y = ' + ml * b + '$ and the $y$-axis'; }
     }
     var h = psub(f, g), A = pdef(h, a, b), My = pdef(pmul(P(0, 1), h), a, b), Mx = pdef(psub(pmul(f, f), pmul(g, g)), a, b).div(2);
     var xb2 = My.div(A), yb2 = Mx.div(A), askX = by(ctx, R.coin(), false, false);
@@ -966,7 +999,7 @@
       }, null);
     }
     if (shape === 'xexp') {
-      var k = R.pick([1, 2, 3, -1, -2, Q(1, 2)]), a = R.pick([1, 1, 2, 3]), b = by(ctx, 0, R.int(-3, 3), R.int(-3, 3)), kq = Qf(k);
+      var k = R.pick([1, 2, 3, 4, -1, -2, -3, Q(1, 2), Q(-1, 2), Q(1, 3)]), a = R.pick([1, 1, 2, 3, 4, 5]), b = by(ctx, 0, R.int(-4, 4), R.int(-4, 4)), kq = Qf(k);
       var c1 = Q(a).div(kq), c0 = Q(b).div(kq).sub(Q(a).div(kq.mul(kq)));
       var poly = P(c0, c1), polyT = ptex(poly), uT = linT(a, b);
       return done({
@@ -982,7 +1015,7 @@
       }, { anti: linP(a, b) + '*' + eP(kq) });
     }
     if (shape === 'xtrig') {
-      var k2 = R.pick([1, 2, 3, 4]), fn = R.pick(['sin', 'cos']), a2 = R.pick([1, 1, 2, 3]), b2 = by(ctx, 0, R.pick([0, 0, 1, -1, 2]), R.int(-2, 2));
+      var k2 = R.pick([1, 2, 3, 4, 5, 6]), fn = R.pick(['sin', 'cos']), a2 = R.pick([1, 1, 2, 3, 4, 5]), b2 = by(ctx, 0, R.pick([0, 0, 1, -1, 2, -2, 3]), R.int(-3, 3));
       var uT2 = linT(a2, b2), uP = linP(a2, b2), k2q = Q(k2);
       var vT = fn === 'sin' ? cf(Q(-1, k2), trT('cos', k2)) : cf(Q(1, k2), trT('sin', k2));
       var ans, ansT, st3;
@@ -1002,7 +1035,7 @@
       }, { anti: uP + '*' + fn + '(' + k2 + '*x)' });
     }
     if (shape === 'xln') {
-      var n = R.int(0, 3), c = R.pick([1, 1, 2, 3]), n1 = n + 1, cq = Q(c);
+      var n = R.int(0, 5), c = R.pick([1, 1, 2, 3, 4, 5, 6]), n1 = n + 1, cq = Q(c);
       var t1 = cq.div(n1), t2 = cq.div(n1 * n1), xn1 = n1 === 1 ? 'x' : 'x^{' + n1 + '}', xn = n === 0 ? '' : n === 1 ? 'x' : 'x^{' + n + '}';
       return done({
         q: 'Find $\\int ' + (c === 1 ? '' : c) + xn + '\\ln x\\,dx$.',
@@ -1037,7 +1070,7 @@
       }, { int: D2[5], a: D2[6], b: D2[7] });
     }
     if (shape === 'twice') {
-      var fam = R.pick(['exp', 'sin', 'cos']), k3 = fam === 'exp' ? R.pick([1, 2, -1, 3]) : R.pick([1, 2, 3]), kq3 = Q(k3), ans3, ansT3, st;
+      var fam = R.pick(['exp', 'sin', 'cos']), k3 = fam === 'exp' ? R.pick([1, 2, 3, 4, -1, -2, -3]) : R.pick([1, 2, 3, 4, 5]), kq3 = Q(k3), ans3, ansT3, st;
       if (fam === 'exp') {
         var cA = Q(1).div(kq3), cB = Q(-2).div(kq3.pow(2)), cC = Q(2).div(kq3.pow(3)), polyx = P(cC, cB, cA);
         ans3 = eP(kq3) + '*(' + pplain(polyx) + ')+C'; ansT3 = eT(kq3) + '\\left(' + ptex(polyx) + '\\right) + C';
@@ -1061,7 +1094,7 @@
       }, { anti: 'x^2*' + (fam === 'exp' ? eP(kq3) : fam + '(' + k3 + '*x)') });
     }
     // cyclic: ∫ e^{ax} sin(bx) or cos(bx)
-    var a4 = R.pick([1, 2, 3, -1]), b4 = R.pick([1, 2, 3]), fn4 = R.pick(['sin', 'cos']), den = a4 * a4 + b4 * b4;
+    var a4 = R.pick([1, 2, 3, 4, -1, -2, -3]), b4 = R.pick([1, 2, 3, 4, 5]), fn4 = R.pick(['sin', 'cos']), den = a4 * a4 + b4 * b4;
     var bx = b4 === 1 ? 'x' : b4 + '*x', inner = fn4 === 'sin' ? ps([[a4, 'sin(' + bx + ')'], [-b4, 'cos(' + bx + ')']]) : ps([[a4, 'cos(' + bx + ')'], [b4, 'sin(' + bx + ')']]);
     var innerT = fn4 === 'sin' ? T.terms([[a4, trT('sin', b4)], [-b4, trT('cos', b4)]]) : T.terms([[a4, trT('cos', b4)], [b4, trT('sin', b4)]]);
     return done({
@@ -1078,9 +1111,9 @@
   });
 
   G('calc2.trig-integrals', function (R, ctx) {
-    var shape = by(ctx, R.pick(['odd', 'sq', 'sectan']), R.pick(['odd', 'sectan', 'def', 'sq']), R.pick(['odd5', 'prod', 'def', 'tansec']));
+    var shape = by(ctx, R.pick(['odd', 'sq', 'sectan']), R.pick(['odd', 'sectan', 'def', 'sq']), R.pick(['odd5', 'prod', 'odd5', 'prod', 'def', 'tansec']));
     if (shape === 'odd' || shape === 'odd5') {
-      var oddFn = R.pick(['sin', 'cos']), other = oddFn === 'sin' ? 'cos' : 'sin', m = shape === 'odd5' ? 5 : 3, n = R.int(0, 4), mult = R.pick([1, 1, 2, 3, 4]);
+      var oddFn = R.pick(['sin', 'cos']), other = oddFn === 'sin' ? 'cos' : 'sin', m = shape === 'odd5' ? 5 : 3, n = R.int(0, 4), mult = R.pick([1, 1, 2, 3, 4, 5, 6]);
       // ∫ odd^m other^n: keep one odd factor, rest (1 - u^2)^k with u = other
       var kk = (m - 1) / 2, base = kk === 1 ? P(1, 0, -1) : P(1, 0, -2, 0, 1);
       var shifted = []; for (var i = 0; i < n; i++) shifted.push(Q(0)); shifted = shifted.concat(base); // u^n (1-u^2)^k
@@ -1102,7 +1135,7 @@
       }, { anti: mult + '*' + oddFn + '(x)^' + m + '*' + other + '(x)^' + n });
     }
     if (shape === 'sq') {
-      var fn = R.pick(['sin', 'cos']), k = R.int(1, 4), c = R.pick([1, 1, 2, 4]);
+      var fn = R.pick(['sin', 'cos']), k = R.int(1, 6), c = R.pick([1, 1, 2, 3, 4, 6, 8]);
       var s2 = Q(c, 4 * k), sg = fn === 'sin' ? -1 : 1;
       return done({
         q: 'Find $\\int ' + (c === 1 ? '' : c) + '\\' + fn + '^{2}' + (k === 1 ? ' x' : '(' + k + 'x)') + '\\,dx$.',
@@ -1116,7 +1149,7 @@
       }, { anti: c + '*' + fn + '(' + k + '*x)^2' });
     }
     if (shape === 'sectan') {
-      var n2 = R.int(1, 5), which = R.pick(['tan', 'sec']), mt = R.pick([1, 1, 2, 3, 6]), mtT = mt === 1 ? '' : mt;
+      var n2 = R.int(1, 7), which = R.pick(['tan', 'sec']), mt = R.pick([1, 1, 2, 3, 4, 5, 6, 8]), mtT = mt === 1 ? '' : mt;
       if (which === 'tan') return done({
         q: 'Find $\\int ' + mtT + '\\tan' + (n2 === 1 ? '' : '^{' + n2 + '}') + ' x\\,\\sec^{2} x\\,dx$.',
         a: { t: 'expr', v: ps([[Q(mt, n2 + 1), 'tan(x)^' + (n2 + 1)]]) + '+C', vars: ['x'] },
@@ -1131,13 +1164,23 @@
       }, { anti: mt + '*sec(x)^' + n2 + '*tan(x)', pts: [0.31, 0.77, 1.13, -0.43, 0.05, -1.37, 2.29, 2.9] });
     }
     if (shape === 'tansec') {
-      var tf = R.pick(['tan2', 'tan3sec', 'tan3']);
+      var tf = R.pick(['tan2k', 'tan2k', 'tan2', 'tan3sec', 'tan3']);
+      if (tf === 'tan2k') {
+        var tk = R.int(1, 4), tc = R.pick([1, 2, 3, 4, 5, 6]), tcT = tc === 1 ? '' : tc, tkx = tk === 1 ? 'x' : tk + '*x';
+        if (tk === 1 && tc === 1) tk = 2, tkx = '2*x';
+        return done({
+          q: 'Find $\\int ' + tcT + trT('tan', tk).replace('\\tan', '\\tan^{2}') + '\\,dx$.',
+          a: { t: 'expr', v: ps([[Q(tc, tk), 'tan(' + tkx + ')'], [Q(-tc), 'x']]) + '+C', vars: ['x'] },
+          steps: ['Use $\\tan^{2}\\theta = \\sec^{2}\\theta - 1$.', '$\\int ' + tcT + '\\left(' + trT('sec', tk).replace('\\sec', '\\sec^{2}') + ' - 1\\right)\\,dx = ' + T.terms([[Q(tc, tk), trT('tan', tk)], [Q(-tc), 'x']]) + ' + C$' + (tk === 1 ? '.' : ', since the antiderivative of $' + trT('sec', tk).replace('\\sec', '\\sec^{2}') + '$ is $\\frac{1}{' + tk + '}' + trT('tan', tk) + '$.')],
+          hint: 'Rewrite $\\tan^{2}$ with the identity $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$.'
+        }, { anti: tc + '*tan(' + tkx + ')^2', pts: [0.31, 0.27, 0.13, -0.23, 0.05, -0.17] });
+      }
       if (tf === 'tan2') return done({ q: 'Find $\\int \\tan^{2} x\\,dx$.', a: { t: 'expr', v: 'tan(x)-x+C', vars: ['x'] }, steps: ['Use $\\tan^{2} x = \\sec^{2} x - 1$.', '$\\int (\\sec^{2} x - 1)\\,dx = \\tan x - x + C$.'], hint: 'Rewrite $\\tan^{2} x$ with the identity $1 + \\tan^{2} x = \\sec^{2} x$.' }, { anti: 'tan(x)^2', pts: [0.31, 0.77, 1.13, -0.43, 0.05, -1.37, 2.29, 2.9] });
       if (tf === 'tan3sec') return done({ q: 'Find $\\int \\tan^{3} x\\,\\sec x\\,dx$.', a: { t: 'expr', v: 'sec(x)^3/3-sec(x)+C', vars: ['x'] }, steps: ['Save $\\sec x\\tan x$ for $du$ and write $\\tan^{2} x = \\sec^{2} x - 1$.', 'With $u = \\sec x$: $\\int (u^{2} - 1)\\,du = \\frac{u^{3}}{3} - u + C$.', 'Answer: $\\frac{\\sec^{3} x}{3} - \\sec x + C$.'], hint: 'An odd power of tangent: save $\\sec x\\tan x\\,dx$ and convert the rest to secants.' }, { anti: 'tan(x)^3*sec(x)', pts: [0.31, 0.77, 1.13, -0.43, 0.05, -1.37, 2.29, 2.9] });
       return done({ q: 'Find $\\int \\tan^{3} x\\,dx$.', a: { t: 'expr', v: 'tan(x)^2/2+ln(abs(cos(x)))+C', vars: ['x'] }, steps: ['Write $\\tan^{3} x = \\tan x(\\sec^{2} x - 1) = \\tan x\\sec^{2} x - \\tan x$.', '$\\int \\tan x\\sec^{2} x\\,dx = \\frac{\\tan^{2} x}{2}$ (let $u = \\tan x$).', '$\\int \\tan x\\,dx = -\\ln|\\cos x|$.', 'Answer: $\\frac{\\tan^{2} x}{2} + \\ln|\\cos x| + C$ (equivalently $\\frac{\\tan^{2} x}{2} - \\ln|\\sec x| + C$).'], hint: 'Split off $\\tan x\\cdot\\tan^{2} x$ and use $\\tan^{2} x = \\sec^{2} x - 1$.' }, { anti: 'tan(x)^3', pts: [0.31, 0.77, 1.13, -0.43, 0.05, -1.37, 2.29, 2.9] });
     }
     if (shape === 'prod') {
-      var a = R.int(2, 5), b = R.intNot(1, 4, a), f1 = R.pick(['sin', 'cos']), s1 = a + b, d1 = a - b, ad = Math.abs(d1), adx = ad === 1 ? 'x' : ad + '*x', adT = ad === 1 ? ' x' : '(' + ad + 'x)';
+      var a = R.int(2, 7), b = R.intNot(1, 6, a), f1 = R.pick(['sin', 'cos']), s1 = a + b, d1 = a - b, ad = Math.abs(d1), adx = ad === 1 ? 'x' : ad + '*x', adT = ad === 1 ? ' x' : '(' + ad + 'x)';
       // sin(ax)cos(bx) = [sin((a+b)x) + sin((a-b)x)]/2 ; cos(ax)cos(bx) = [cos((a-b)x) + cos((a+b)x)]/2
       var ans, ansT, idT;
       if (f1 === 'sin') { ans = ps([[Q(-1, 2 * s1), 'cos(' + s1 + '*x)'], [Q(-1, 2 * d1), 'cos(' + adx + ')']]) + '+C'; ansT = T.terms([[Q(-1, 2 * s1), '\\cos(' + s1 + 'x)'], [Q(-1, 2 * d1), '\\cos' + adT]]) + ' + C'; idT = '\\sin A\\cos B = \\frac{1}{2}\\left[\\sin(A + B) + \\sin(A - B)\\right]'; }
@@ -1169,7 +1212,7 @@
 
   G('calc2.trig-substitution', function (R, ctx) {
     var shape = by(ctx, R.pick(['which', 'back', 'circle']), R.pick(['back', 'circle', 'indef', 'which']), R.pick(['indef', 'indef', 'circle']));
-    var a = R.int(2, 5), a2 = a * a;
+    var a = R.int(2, 9), a2 = a * a;
     if (shape === 'which') {
       var kind = R.pick(['sin', 'tan', 'sec']), cc = R.pick([1, 1, 2, 3]), c2 = cc * cc;
       var rad = kind === 'sin' ? a2 + ' - ' + (c2 === 1 ? '' : c2) + 'x^{2}' : kind === 'tan' ? (c2 === 1 ? '' : c2) + 'x^{2} + ' + a2 : (c2 === 1 ? '' : c2) + 'x^{2} - ' + a2;
@@ -1230,6 +1273,12 @@
     else if (form === 'rootlog') { Iq = '\\frac{1}{\\sqrt{x^{2} + ' + a2 + '}}'; ansP = 'ln(abs(x+sqrt(x^2+' + a2 + ')))+C'; ansT = '\\ln\\left|x + \\sqrt{x^{2} + ' + a2 + '}\\right| + C'; chk = '1/sqrt(x^2+' + a2 + ')'; st3 = ['Let $x = ' + a + '\\tan\\theta$: $dx = ' + a + '\\sec^{2}\\theta\\,d\\theta$ and $\\sqrt{x^{2} + ' + a2 + '} = ' + a + '\\sec\\theta$.', 'The integral becomes $\\int\\sec\\theta\\,d\\theta = \\ln|\\sec\\theta + \\tan\\theta| + C$.', 'Triangle: $\\sec\\theta = \\frac{\\sqrt{x^{2} + ' + a2 + '}}{' + a + '}$, $\\tan\\theta = \\frac{x}{' + a + '}$, so this is $\\ln\\left|\\frac{x + \\sqrt{x^{2} + ' + a2 + '}}{' + a + '}\\right| + C$.', 'The $-\\ln ' + a + '$ joins the constant: $' + ansT + '$.']; }
     else if (form === 'x2over') { Iq = '\\frac{x^{2}}{\\sqrt{' + a2 + ' - x^{2}}}'; ansP = ps([[Q(a2, 2), 'arcsin(x/' + a + ')'], [Q(-1, 2), 'x*sqrt(' + a2 + '-x^2)']]) + '+C'; ansT = '\\frac{' + a2 + '}{2}\\arcsin\\frac{x}{' + a + '} - \\frac{x\\sqrt{' + a2 + ' - x^{2}}}{2} + C'; chk = 'x^2/sqrt(' + a2 + '-x^2)'; st3 = ['Let $x = ' + a + '\\sin\\theta$: the integral becomes $\\int \\frac{' + a2 + '\\sin^{2}\\theta}{' + a + '\\cos\\theta}\\cdot ' + a + '\\cos\\theta\\,d\\theta = ' + a2 + '\\int\\sin^{2}\\theta\\,d\\theta$.', '$= ' + a2 + '\\left(\\frac{\\theta}{2} - \\frac{\\sin\\theta\\cos\\theta}{2}\\right) + C$.', 'Triangle: $\\theta = \\arcsin\\frac{x}{' + a + '}$, $\\sin\\theta = \\frac{x}{' + a + '}$, $\\cos\\theta = \\frac{\\sqrt{' + a2 + ' - x^{2}}}{' + a + '}$.', 'Answer: $' + ansT + '$.']; }
     else { Iq = '\\sqrt{' + a2 + ' - x^{2}}'; ansP = ps([[Q(a2, 2), 'arcsin(x/' + a + ')'], [Q(1, 2), 'x*sqrt(' + a2 + '-x^2)']]) + '+C'; ansT = '\\frac{' + a2 + '}{2}\\arcsin\\frac{x}{' + a + '} + \\frac{x\\sqrt{' + a2 + ' - x^{2}}}{2} + C'; chk = 'sqrt(' + a2 + '-x^2)'; st3 = ['Let $x = ' + a + '\\sin\\theta$: the integral becomes $' + a2 + '\\int\\cos^{2}\\theta\\,d\\theta = ' + a2 + '\\left(\\frac{\\theta}{2} + \\frac{\\sin\\theta\\cos\\theta}{2}\\right) + C$.', 'Triangle: $\\theta = \\arcsin\\frac{x}{' + a + '}$, $\\sin\\theta = \\frac{x}{' + a + '}$, $\\cos\\theta = \\frac{\\sqrt{' + a2 + ' - x^{2}}}{' + a + '}$.', 'Answer: $' + ansT + '$.']; }
+    var tm = by(ctx, 1, R.pick([1, 1, 2, 3]), R.pick([1, 1, 2, 3, 4, 5, 6]));
+    if (tm > 1) {
+      Iq = /^\\frac\{1\}/.test(Iq) ? Iq.replace(/^\\frac\{1\}/, '\\frac{' + tm + '}') : /^\\frac\{x\^\{2\}\}/.test(Iq) ? Iq.replace(/^\\frac\{x\^\{2\}\}/, '\\frac{' + tm + 'x^{2}}') : tm + Iq;
+      ansP = tm + '*(' + ansP.replace(/\+C$/, '') + ')+C'; chk = tm + '*' + chk;
+      st3 = ['Pull the constant $' + tm + '$ out front. Find the integral without it, then multiply by $' + tm + '$.'].concat(st3.slice(0, -1)).concat([st3[st3.length - 1].replace(/^Answer: /, 'Without the constant: '), 'Multiply by $' + tm + '$: $' + tm + '\\left(' + ansT.replace(/ \+ C$/, '') + '\\right) + C$.']);
+    }
     return done({
       q: 'Find $\\int ' + Iq + '\\,dx$.',
       a: { t: 'expr', v: ansP, vars: ['x'] },
@@ -1751,7 +1800,7 @@
   });
 
   G('calc2.separable-equations', function (R, ctx) {
-    var shape = by(ctx, R.pick(['exp', 'xy', 'shift']), R.pick(['xy', 'sqrt', 'shift', 'lost']), R.pick(['recip', 'expo', 'tan', 'sqrt']));
+    var shape = by(ctx, R.pick(['exp', 'xy', 'shift']), R.pick(['xy', 'sqrt', 'shift', 'lost']), R.pick(['recip', 'expo', 'tan', 'sqrt', 'sqrt', 'expo']));
     var odeChk = function (yP, rhs, v, x0, y0) { return { custom: function () {
       var Y = function (t) { var e = {}; e[v] = t; return ML.evalPlain(yP, e); }, h = 1e-5, bad = '';
       if (Math.abs(Y(x0) - y0) > 1e-9) return 'initial value ' + Y(x0) + ' vs ' + y0;
@@ -1814,23 +1863,23 @@
       }, odeChk(ansP2, function (t, y) { return kk.toNumber() * (y - M0); }, v2, 0, y02));
     }
     if (shape === 'sqrt') {
-      var a3 = R.int(1, 5), sgn = R.coin() ? 1 : -1, c3 = R.pick([1, 1, 2]);
+      var a3 = R.int(1, 8), sgn = R.coin() ? 1 : -1, c3 = R.pick([1, 1, 2, 3, 4]);
       // y y' = sgn * c3 * x  ->  y^2 = sgn*c3*x^2 + a3^2
-      var ansP3 = 'sqrt(' + ps([[sgn * c3, 'x^2'], [a3 * a3, '']]) + ')';
+      var negY = R.chance(0.3), ansP3 = (negY ? '-' : '') + 'sqrt(' + ps([[sgn * c3, 'x^2'], [a3 * a3, '']]) + ')';
       return done({
-        q: 'Solve $\\frac{dy}{dx} = ' + (sgn < 0 ? '-' : '') + '\\frac{' + (c3 === 1 ? '' : c3) + 'x}{y}$ with $y(0) = ' + a3 + '$.',
+        q: 'Solve $\\frac{dy}{dx} = ' + (sgn < 0 ? '-' : '') + '\\frac{' + (c3 === 1 ? '' : c3) + 'x}{y}$ with $y(0) = ' + (negY ? -a3 : a3) + '$.',
         a: { t: 'expr', v: ansP3, vars: ['x'] },
         steps: [
           'Separate: $y\\,dy = ' + cf(sgn * c3, 'x') + '\\,dx$.',
           'Integrate: $\\frac{y^{2}}{2} = ' + cf(Q(sgn * c3, 2), 'x^{2}') + ' + C$, so $y^{2} = ' + cf(sgn * c3, 'x^{2}') + ' + 2C$.',
           'At $x = 0$: $' + a3 * a3 + ' = 2C$. So $y^{2} = ' + T.terms([[sgn * c3, 'x^{2}'], [a3 * a3, '']]) + '$.',
-          'Since $y(0) > 0$, take the positive root: $y = \\sqrt{' + T.terms([[sgn * c3, 'x^{2}'], [a3 * a3, '']]) + '}$.'
+          negY ? 'Since $y(0) < 0$, take the negative root: $y = -\\sqrt{' + T.terms([[sgn * c3, 'x^{2}'], [a3 * a3, '']]) + '}$.' : 'Since $y(0) > 0$, take the positive root: $y = \\sqrt{' + T.terms([[sgn * c3, 'x^{2}'], [a3 * a3, '']]) + '}$.'
         ],
         hint: 'Multiply both sides by $y\\,dx$, then integrate.'
-      }, odeChk(ansP3, function (t, y) { return sgn * c3 * t / y; }, 'x', 0, a3));
+      }, odeChk(ansP3, function (t, y) { return sgn * c3 * t / y; }, 'x', 0, negY ? -a3 : a3));
     }
     if (shape === 'recip') {
-      var y04 = R.int(1, 4), k4 = R.pick([1, 2]); // y' = k x y^2 -> -1/y = k x^2/2 - 1/y0 -> y = 2 y0 / (2 - k y0 x^2)
+      var y04 = R.int(1, 8), k4 = R.pick([1, 2, 3, 4, 5].filter(function (k) { return k * y04 <= 8; })); // y' = k x y^2 -> -1/y = k x^2/2 - 1/y0 -> y = 2 y0 / (2 - k y0 x^2)
       var ansP4 = (2 * y04) + '/(2-' + k4 * y04 + '*x^2)';
       return done({
         q: 'Solve $\\frac{dy}{dx} = ' + cf(k4, 'x') + 'y^{2}$ with $y(0) = ' + y04 + '$.',
@@ -1845,8 +1894,23 @@
         hint: 'After integrating, add $C$ right away, then solve for $y$.'
       }, odeChk(ansP4, function (t, y) { return k4 * t * y * y; }, 'x', 0, y04));
     }
+    if (shape === 'expo' && R.coin()) { // y' = e^{kx - y}, y(0) = ln c -> e^y = (e^{kx} + kc - 1)/k
+      var ke = R.int(2, 4), ce = R.int(1, 6), Ce = Q(ke * ce - 1, ke), kxe = ke + 'x';
+      var ansPe = 'ln((e^(' + ke + '*x)+' + (ke * ce - 1) + ')/' + ke + ')';
+      return done({
+        q: 'Solve $\\frac{dy}{dx} = e^{' + kxe + ' - y}$ with $y(0) = ' + (ce === 1 ? '0' : '\\ln ' + ce) + '$.',
+        a: { t: 'expr', v: ansPe, vars: ['x'] },
+        steps: [
+          'Write $e^{' + kxe + ' - y} = e^{' + kxe + '}e^{-y}$ and separate: $e^{y}\\,dy = e^{' + kxe + '}\\,dx$.',
+          'Integrate: $e^{y} = \\frac{1}{' + ke + '}e^{' + kxe + '} + C$.',
+          'At $x = 0$: $' + ce + ' = \\frac{1}{' + ke + '} + C$, so $C = ' + tx(Ce) + '$.',
+          'So $e^{y} = \\frac{e^{' + kxe + '} + ' + (ke * ce - 1) + '}{' + ke + '}$. Take logs: $y = \\ln\\left(\\frac{e^{' + kxe + '} + ' + (ke * ce - 1) + '}{' + ke + '}\\right)$.'
+        ],
+        hint: 'Split $e^{' + kxe + ' - y}$ into a product first.'
+      }, odeChk(ansPe, function (t, y) { return Math.exp(ke * t - y); }, 'x', 0, Math.log(ce)));
+    }
     if (shape === 'expo') {
-      var c5 = R.pick([2, 3, 5]); // y' = e^{x - y}, y(0) = ln c5 -> e^y = e^x + c5 - 1
+      var c5 = R.pick([2, 3, 4, 5, 6, 7, 9, 10]); // y' = e^{x - y}, y(0) = ln c5 -> e^y = e^x + c5 - 1
       var ansP5 = 'ln(e^x+' + (c5 - 1) + ')';
       return done({
         q: 'Solve $\\frac{dy}{dx} = e^{x - y}$ with $y(0) = \\ln ' + c5 + '$.',
@@ -1860,7 +1924,16 @@
         hint: 'Split $e^{x - y}$ into a product first.'
       }, odeChk(ansP5, function (t, y) { return Math.exp(t - y); }, 'x', 0, Math.log(c5)));
     }
-    var k6 = R.int(1, 3); // y' = k (1 + y^2), y(0) = 0 -> tan(kx)
+    var k6 = R.int(1, 5); // y' = k (1 + y^2), y(0) = 0 -> tan(kx)
+    if (R.coin()) { // y' = k(a^2 + y^2), y(0) = 0 -> y = a tan(a k x)
+      var at = R.int(2, 4), kt = R.int(1, 2), akt = at * kt, ansPt = at + '*tan(' + akt + '*x)';
+      return done({
+        q: 'Solve $\\frac{dy}{dx} = ' + (kt === 1 ? '' : kt) + '(' + at * at + ' + y^{2})$ with $y(0) = 0$.',
+        a: { t: 'expr', v: ansPt, vars: ['x'] },
+        steps: ['Separate: $\\frac{dy}{' + at * at + ' + y^{2}} = ' + (kt === 1 ? '' : kt) + '\\,dx$.', 'Integrate: $\\frac{1}{' + at + '}\\arctan\\frac{y}{' + at + '} = ' + cf(kt, 'x') + ' + C$.', 'At $x = 0$: $C = 0$. So $\\arctan\\frac{y}{' + at + '} = ' + akt + 'x$ and $y = ' + at + '\\tan(' + akt + 'x)$ (on the interval around 0 where it is defined).'],
+        hint: 'Use $\\int \\frac{dy}{a^{2} + y^{2}} = \\frac{1}{a}\\arctan\\frac{y}{a}$.'
+      }, odeChk(ansPt, function (t, y) { return kt * (at * at + y * y); }, 'x', 0, 0));
+    }
     return done({
       q: 'Solve $\\frac{dy}{dx} = ' + (k6 === 1 ? '' : k6) + '(1 + y^{2})$ with $y(0) = 0$.',
       a: { t: 'expr', v: 'tan(' + (k6 === 1 ? 'x' : k6 + '*x') + ')', vars: ['x'] },
@@ -2067,8 +2140,23 @@
   });
 
   G('calc2.polar-area', function (R, ctx) {
-    var shape = by(ctx, R.pick(['circle', 'cardioid', 'limits']), R.pick(['rose', 'cardioid', 'spiral', 'limits']), R.pick(['between', 'loop', 'rose', 'spiral']));
-    var a = R.int(1, 4), aT = a === 1 ? '' : a;
+    var shape = by(ctx, R.pick(['circle', 'cardioid', 'limits']), R.pick(['rose', 'cardioid', 'spiral', 'limits']), R.pick(['between', 'loop', 'rose', 'spiral', 'rose', 'between']));
+    var a = R.int(1, 8), aT = a === 1 ? '' : a;
+    if (shape === 'limits' && R.coin()) shape = 'sector';
+    if (shape === 'sector') { // inside the circle r = a between two rays
+      var sd = R.pick([6, 4, 3]), sm = R.int(1, 2 * sd - 1), sAng = Q(sm, sd), As0 = Q(a * a, 2).mul(sAng);
+      return done({
+        q: 'Find the area of the region inside the circle $r = ' + a + '$ with $0 \\le \\theta \\le ' + kTex(sAng, '\\pi') + '$.',
+        a: { t: 'num', v: kPlain(As0, 'pi') },
+        steps: [
+          'Polar area: $A = \\frac{1}{2}\\int_{\\alpha}^{\\beta} r^{2}\\,d\\theta$. Here $r = ' + a + '$ is constant.',
+          D('A = \\frac{1}{2}\\int_{0}^{' + kTex(sAng, '\\pi') + '} ' + a * a + '\\,d\\theta = \\frac{' + a * a + '}{2}\\cdot ' + kTex(sAng, '\\pi')),
+          '$A = ' + kTex(As0, '\\pi') + '$, a sector of the disk, as $\\frac{1}{2}r^{2}\\theta$ predicts.'
+        ],
+        hint: 'Use $A = \\frac{1}{2}\\int r^{2}\\,d\\theta$.',
+        viz: { name: 'polar', opts: { r: String(a), t0: 0, t1: sm + '*pi/' + sd, theta: (sm / sd / 2).toFixed(3) + '*pi', rect: false } }
+      }, { int: '0.5*' + a * a, a: 0, b: sm * Math.PI / sd });
+    }
     if (shape === 'circle') {
       var fn = R.pick(['cos', 'sin']), A0 = Q(a * a, 4);
       return done({
@@ -2090,7 +2178,7 @@
       }, { int: '0.5*(' + a + '*(' + fP.replace(/theta/g, 'x') + '))^2', a: 0, b: 2 * Math.PI });
     }
     if (shape === 'limits') {
-      var n = R.pick([2, 3, 4, 5]), fr = R.pick(['cos', 'sin']), odd = n % 2 === 1, half = Q(1, 2 * n);
+      var n = R.pick([2, 3, 4, 5, 6, 7, 8]), fr = R.pick(['cos', 'sin']), odd = n % 2 === 1, half = Q(1, 2 * n);
       var right, wr;
       if (fr === 'cos') { right = '$-\\frac{\\pi}{' + 2 * n + '} \\le \\theta \\le \\frac{\\pi}{' + 2 * n + '}$'; wr = ['$0 \\le \\theta \\le \\frac{\\pi}{' + n + '}$', '$0 \\le \\theta \\le 2\\pi$', '$0 \\le \\theta \\le \\frac{\\pi}{' + 2 * n + '}$']; }
       else { right = '$0 \\le \\theta \\le \\frac{\\pi}{' + n + '}$'; wr = ['$-\\frac{\\pi}{' + 2 * n + '} \\le \\theta \\le \\frac{\\pi}{' + 2 * n + '}$', '$0 \\le \\theta \\le 2\\pi$', '$0 \\le \\theta \\le \\frac{\\pi}{' + 2 * n + '}$']; }
@@ -2103,7 +2191,7 @@
       }, null);
     }
     if (shape === 'rose') {
-      var n2 = R.pick([2, 3, 4, 5]), fr2 = R.pick(['cos', 'sin']), one = R.coin(), Ap = Q(a * a, 4 * n2), petals = n2 % 2 ? n2 : 2 * n2, Aall = Ap.mul(petals);
+      var n2 = R.pick([2, 3, 4, 5, 6]), fr2 = R.pick(['cos', 'sin']), one = R.coin(), Ap = Q(a * a, 4 * n2), petals = n2 % 2 ? n2 : 2 * n2, Aall = Ap.mul(petals);
       var ans = one ? Ap : Aall;
       return done({
         q: 'Find the area of ' + (one ? 'one petal' : 'the whole rose (all ' + petals + ' petals)') + ' of $r = ' + aT + '\\' + fr2 + '(' + n2 + '\\theta)$.',
@@ -2118,7 +2206,7 @@
       }, { int: '0.5*(' + a + '*' + fr2 + '(' + n2 + '*x))^2', a: 0, b: (one ? Math.PI / n2 : (n2 % 2 ? Math.PI : 2 * Math.PI)) });
     }
     if (shape === 'spiral') {
-      var k = R.int(1, 3), up = R.pick([['\\pi', 'pi', Q(1)], ['2\\pi', '2*pi', Q(8)], ['\\frac{\\pi}{2}', 'pi/2', Q(1, 8)]]), As = Q(k * k, 6).mul(up[2]);
+      var k = R.int(1, 5), up = R.pick([['\\pi', 'pi', Q(1)], ['2\\pi', '2*pi', Q(8)], ['\\frac{\\pi}{2}', 'pi/2', Q(1, 8)]]), As = Q(k * k, 6).mul(up[2]);
       return done({
         q: 'Find the area swept out by the spiral $r = ' + cf(k, '\\theta') + '$ for $0 \\le \\theta \\le ' + up[0] + '$.',
         a: { t: 'num', v: kPlain(As, 'pi^3') },
@@ -2128,7 +2216,7 @@
       }, { int: '0.5*(' + k + '*x)^2', a: 0, b: ML.evalPlain(up[1]) });
     }
     if (shape === 'loop') {
-      var kk = R.int(1, 3), Al = kk * kk;
+      var kk = R.int(1, 6), Al = kk * kk;
       return done({
         q: 'The limaçon $r = ' + (kk === 1 ? '' : kk) + '(1 + 2\\cos\\theta)$ has a small inner loop. Find the area inside the inner loop.',
         a: { t: 'num', v: Al + '*(pi-3*sqrt(3)/2)' },
@@ -2139,6 +2227,20 @@
     }
     // between: inside r = 3a sin(th), outside r = a(1 + sin th) -> a^2 pi
     var fb = R.pick(['sin', 'cos']);
+    if (R.coin()) { // inside r = 2a cos(th) (or sin), outside r = a -> a^2 (pi/3 + sqrt(3)/2)
+      var lim = fb === 'sin' ? ['\\frac{\\pi}{6}', '\\frac{5\\pi}{6}', Math.PI / 6, 5 * Math.PI / 6] : ['-\\frac{\\pi}{3}', '\\frac{\\pi}{3}', -Math.PI / 3, Math.PI / 3];
+      return done({
+        q: 'Find the area inside the circle $r = ' + 2 * a + '\\' + fb + '\\theta$ and outside the circle $r = ' + a + '$.',
+        a: { t: 'num', v: (a * a === 1 ? '' : a * a + '*') + '(pi/3+sqrt(3)/2)' },
+        steps: [
+          'The circles meet where $' + 2 * a + '\\' + fb + '\\theta = ' + a + '$, so $\\' + fb + '\\theta = \\frac{1}{2}$: $\\theta = ' + lim[0] + '$ and $' + lim[1] + '$.',
+          D('A = \\frac{1}{2}\\int_{' + lim[0] + '}^{' + lim[1] + '} \\left[' + 4 * a * a + '\\' + fb + '^{2}\\theta - ' + a * a + '\\right]d\\theta = ' + tx(Q(a * a, 2)) + '\\int_{' + lim[0] + '}^{' + lim[1] + '} \\left(' + (fb === 'sin' ? '1 - 2\\cos 2\\theta' : '1 + 2\\cos 2\\theta') + '\\right)d\\theta'),
+          'The interval has length $\\frac{2\\pi}{3}$, and $\\int 2\\cos 2\\theta\\,d\\theta = \\sin 2\\theta$ changes by ' + (fb === 'sin' ? '$-\\sqrt{3}$, which the minus sign turns into $+\\sqrt{3}$' : '$\\sqrt{3}$') + '.',
+          '$A = ' + tx(Q(a * a, 2)) + '\\left(\\frac{2\\pi}{3} + \\sqrt{3}\\right) = ' + (a * a === 1 ? '' : a * a) + '\\left(\\frac{\\pi}{3} + \\frac{\\sqrt{3}}{2}\\right)$.'
+        ],
+        hint: 'Find where the circles cross, then use $\\frac{1}{2}\\int (R^{2} - r^{2})\\,d\\theta$ between those angles.'
+      }, { int: '0.5*((' + 2 * a + '*' + fb + '(x))^2-' + a * a + ')', a: lim[2], b: lim[3] });
+    }
     return done({
       q: 'Find the area inside $r = ' + 3 * a + '\\' + fb + '\\theta$ and outside $r = ' + (a === 1 ? '1 + \\' + fb + '\\theta' : a + '(1 + \\' + fb + '\\theta)') + '$.',
       a: { t: 'num', v: kPlain(a * a, 'pi') },
@@ -2204,7 +2306,7 @@
         nolint: ['--', '+ -', '+ 0']
       }, { custom: function (p) { var th = ang * Math.PI / 2, h = 1e-6, rr = function (t) { return A + B * (tf === 'cos' ? Math.cos(t) : Math.sin(t)); }, X = function (t) { return rr(t) * Math.cos(t); }, Y = function (t) { return rr(t) * Math.sin(t); }; var w = (Y(th + h) - Y(th - h)) / (X(th + h) - X(th - h)); return Math.abs(w - m.toNumber()) < 1e-5 ? '' : 'polar slope ' + w; } });
     }
-    var fam2 = R.pick(['card', 'circle', 'sq', 'exp']), a = R.int(1, 4);
+    var fam2 = R.pick(['card', 'circle', 'sq', 'exp']), a = R.int(1, 8), fc = R.pick(['sin', 'cos']);
     if (fam2 === 'card') return done({
       q: 'Find the total length of the cardioid $r = ' + (a === 1 ? '' : a) + '(1 + \\cos\\theta)$.',
       a: { t: 'num', v: String(8 * a) },
@@ -2212,27 +2314,27 @@
       hint: 'Simplify $r^{2} + (r\')^{2}$ with the half-angle identity $1 + \\cos\\theta = 2\\cos^{2}\\frac{\\theta}{2}$.'
     }, { custom: function (p) { var s = 0, n = 4000; for (var i = 0; i < n; i++) { var t = (i + 0.5) / n * 2 * Math.PI; s += Math.hypot(a * (1 + Math.cos(t)), a * Math.sin(t)); } s *= 2 * Math.PI / n; return Math.abs(s - 8 * a) < 1e-4 ? '' : 'card ' + s; } });
     if (fam2 === 'circle') return done({
-      q: 'Find the length of the curve $r = ' + 2 * a + '\\sin\\theta$ for $0 \\le \\theta \\le \\pi$.',
+      q: 'Find the length of the curve $r = ' + 2 * a + '\\' + fc + '\\theta$ for $0 \\le \\theta \\le \\pi$.',
       a: { t: 'num', v: kPlain(2 * a, 'pi') },
-      steps: ['$r^{2} + (r\')^{2} = ' + 4 * a * a + '\\sin^{2}\\theta + ' + 4 * a * a + '\\cos^{2}\\theta = ' + 4 * a * a + '$.', '$L = \\int_0^{\\pi} ' + 2 * a + '\\,d\\theta = ' + kTex(2 * a, '\\pi') + '$.', 'Check: this is a circle of diameter $' + 2 * a + '$, whose circumference is $' + kTex(2 * a, '\\pi') + '$.'],
+      steps: ['$r^{2} + (r\')^{2} = ' + 4 * a * a + '\\' + fc + '^{2}\\theta + ' + 4 * a * a + '\\' + (fc === 'sin' ? 'cos' : 'sin') + '^{2}\\theta = ' + 4 * a * a + '$.', '$L = \\int_0^{\\pi} ' + 2 * a + '\\,d\\theta = ' + kTex(2 * a, '\\pi') + '$.', 'Check: this is a circle of diameter $' + 2 * a + '$, whose circumference is $' + kTex(2 * a, '\\pi') + '$.'],
       hint: 'Simplify $r^{2} + (r\')^{2}$ first.'
     }, null);
     if (fam2 === 'sq') {
-      var Tq = R.pick([[5, '\\sqrt{5}', 3], [12, '2\\sqrt{3}', 4], [21, '\\sqrt{21}', 5]]), L2 = Q(Tq[2] * Tq[2] * Tq[2] - 8, 3);
+      var Tq = R.pick([[5, '\\sqrt{5}', 3], [12, '2\\sqrt{3}', 4], [21, '\\sqrt{21}', 5]]), cs = R.int(1, 4), L1 = Q(Tq[2] * Tq[2] * Tq[2] - 8, 3), L2 = L1.mul(cs), csT = cs === 1 ? '' : String(cs);
       return done({
-        q: 'Find the length of $r = \\theta^{2}$ for $0 \\le \\theta \\le ' + Tq[1] + '$.',
+        q: 'Find the length of $r = ' + csT + '\\theta^{2}$ for $0 \\le \\theta \\le ' + Tq[1] + '$.',
         a: { t: 'num', v: L2.toPlain() },
-        steps: ['$r^{2} + (r\')^{2} = \\theta^{4} + 4\\theta^{2} = \\theta^{2}(\\theta^{2} + 4)$, so the root is $\\theta\\sqrt{\\theta^{2} + 4}$ for $\\theta \\ge 0$.', D('L = \\int_0^{' + Tq[1] + '}\\theta\\sqrt{\\theta^{2} + 4}\\,d\\theta = \\frac{1}{3}\\left[(\\theta^{2} + 4)^{3/2}\\right]_0^{' + Tq[1] + '}'), '$= \\frac{1}{3}\\left(' + (Tq[0] + 4) + '^{3/2} - 4^{3/2}\\right) = \\frac{1}{3}(' + Tq[2] * Tq[2] * Tq[2] + ' - 8) = ' + tx(L2) + '$.'],
+        steps: ['$r^{2} + (r\')^{2} = ' + (cs === 1 ? '' : cs * cs) + '(\\theta^{4} + 4\\theta^{2}) = ' + (cs === 1 ? '' : cs * cs) + '\\theta^{2}(\\theta^{2} + 4)$, so the root is $' + csT + '\\theta\\sqrt{\\theta^{2} + 4}$ for $\\theta \\ge 0$.', D('L = ' + csT + '\\int_0^{' + Tq[1] + '}\\theta\\sqrt{\\theta^{2} + 4}\\,d\\theta = ' + (cs === 1 ? '' : cs + '\\cdot ') + '\\frac{1}{3}\\left[(\\theta^{2} + 4)^{3/2}\\right]_0^{' + Tq[1] + '}'), '$= ' + (cs === 1 ? '' : cs + '\\cdot ') + '\\frac{1}{3}\\left(' + (Tq[0] + 4) + '^{3/2} - 4^{3/2}\\right) = ' + (cs === 1 ? '' : cs + '\\cdot ') + '\\frac{1}{3}(' + Tq[2] * Tq[2] * Tq[2] + ' - 8) = ' + tx(L2) + '$.'],
         hint: 'Factor $\\theta^{2}$ out of the root, then substitute $u = \\theta^{2} + 4$.'
-      }, { custom: function () { var B = Math.sqrt(Tq[0]), s = 0, n = 2000; for (var i = 0; i < n; i++) { var t = (i + 0.5) / n * B; s += Math.hypot(t * t, 2 * t); } s *= B / n; return Math.abs(s - L2.toNumber()) < 1e-4 ? '' : 'r=th^2 ' + s; } });
+      }, { custom: function () { var B = Math.sqrt(Tq[0]), s = 0, n = 2000; for (var i = 0; i < n; i++) { var t = (i + 0.5) / n * B; s += Math.hypot(cs * t * t, 2 * cs * t); } s *= B / n; return Math.abs(s - L2.toNumber()) < 1e-4 ? '' : 'r=th^2 ' + s; } });
     }
-    var kq = R.int(2, 5);
+    var kq = R.int(2, 9), jq = R.pick([1, 1, 1, 2, 3].filter(function (j) { return j < kq; })), lowT = jq === 1 ? '0' : '\\ln ' + jq;
     return done({
-      q: 'Find the length of the spiral $r = e^{\\theta}$ for $0 \\le \\theta \\le \\ln ' + kq + '$.',
-      a: { t: 'num', v: 'sqrt(2)*' + (kq - 1) },
-      steps: ['$r^{2} + (r\')^{2} = e^{2\\theta} + e^{2\\theta} = 2e^{2\\theta}$, so the root is $\\sqrt{2}e^{\\theta}$.', '$L = \\int_0^{\\ln ' + kq + '}\\sqrt{2}e^{\\theta}\\,d\\theta = \\sqrt{2}(' + kq + ' - 1) = ' + (kq - 1 === 1 ? '' : kq - 1) + '\\sqrt{2}$.'],
+      q: 'Find the length of the spiral $r = e^{\\theta}$ for $' + lowT + ' \\le \\theta \\le \\ln ' + kq + '$.',
+      a: { t: 'num', v: 'sqrt(2)*' + (kq - jq) },
+      steps: ['$r^{2} + (r\')^{2} = e^{2\\theta} + e^{2\\theta} = 2e^{2\\theta}$, so the root is $\\sqrt{2}e^{\\theta}$.', '$L = \\int_{' + lowT + '}^{\\ln ' + kq + '}\\sqrt{2}e^{\\theta}\\,d\\theta = \\sqrt{2}(' + kq + ' - ' + jq + ') = ' + (kq - jq === 1 ? '' : kq - jq) + '\\sqrt{2}$.'],
       hint: 'Here $r\' = r$, so $r^{2} + (r\')^{2} = 2r^{2}$.'
-    }, null);
+    }, { custom: function (p) { var s = 0, n = 2000, A0 = Math.log(jq), B0 = Math.log(kq); for (var i = 0; i < n; i++) { var t = A0 + (i + 0.5) / n * (B0 - A0); s += Math.hypot(Math.exp(t), Math.exp(t)); } s *= (B0 - A0) / n; return Math.abs(s - ML.evalPlain(p.a.v)) < 1e-5 ? '' : 'spiral ' + s; } });
   });
 
   // ================================================================ UNIT 5: SEQUENCES AND SERIES
@@ -2280,31 +2382,32 @@
       }, null);
     }
     if (shape === 'e') {
-      var k = R.nz(-3, 4), form = R.pick(['a', 'b']), m = R.int(1, 3);
-      var qT = form === 'a' ? '\\left(1 ' + (k > 0 ? '+' : '-') + ' \\frac{' + Math.abs(k) + '}{n}\\right)^{n}' : '\\left(1 + \\frac{1}{n}\\right)^{' + (m === 1 ? '' : m) + 'n}';
-      var ex = form === 'a' ? k : m;
+      var k = R.nz(-5, 6), form = 'a', m = by(ctx, 1, R.pick([1, 1, 2]), R.pick([1, 2, 3]));
+      var qT = '\\left(1 ' + (k > 0 ? '+' : '-') + ' \\frac{' + Math.abs(k) + '}{n}\\right)^{' + (m === 1 ? '' : m) + 'n}';
+      var ex = k * m;
       return done({
         q: 'Find $\\lim_{n\\to\\infty} ' + qT + '$.',
         a: { t: 'num', v: 'e^(' + ex + ')' },
-        steps: ['Use $\\lim_{n\\to\\infty}\\left(1 + \\frac{x}{n}\\right)^{n} = e^{x}$ (take $\\ln$ and use L\'Hôpital: $n\\ln\\left(1 + \\frac{x}{n}\\right) \\to x$).', form === 'a' ? 'Here $x = ' + k + '$, so the limit is $e^{' + k + '}$.' : 'Write it as $\\left[\\left(1 + \\frac{1}{n}\\right)^{n}\\right]^{' + m + '} \\to e^{' + m + '}$.'],
+        steps: ['Use $\\lim_{n\\to\\infty}\\left(1 + \\frac{x}{n}\\right)^{n} = e^{x}$ (take $\\ln$ and use L\'Hôpital: $n\\ln\\left(1 + \\frac{x}{n}\\right) \\to x$).', m === 1 ? 'Here $x = ' + k + '$, so the limit is $e^{' + k + '}$.' : 'Write it as $\\left[\\left(1 ' + (k > 0 ? '+' : '-') + ' \\frac{' + Math.abs(k) + '}{n}\\right)^{n}\\right]^{' + m + '} \\to \\left(e^{' + k + '}\\right)^{' + m + '} = e^{' + ex + '}$.'],
         hint: 'Compare with the limit that defines $e$.'
-      }, { custom: function (p) { var n = 1e7, v = form === 'a' ? Math.pow(1 + k / n, n) : Math.pow(1 + 1 / n, m * n); return Math.abs(v - Math.exp(ex)) < 1e-4 * Math.exp(ex) ? '' : 'e-limit'; } });
+      }, { custom: function (p) { var n = 1e7, v = Math.pow(1 + k / n, m * n); return Math.abs(v - Math.exp(ex)) < 1e-4 * Math.exp(ex) ? '' : 'e-limit'; } });
     }
     if (shape === 'root') {
-      var k2 = R.nz(-6, 6);
+      var k2 = R.nz(-8, 8), c2 = by(ctx, 1, R.pick([1, 1, 2]), R.pick([1, 2, 3])), n2T = c2 === 1 ? 'n^{2}' : c2 * c2 + 'n^{2}', cnT = cf(c2, 'n'), lim2 = Q(k2, 2 * c2);
       return done({
-        q: 'Find $\\lim_{n\\to\\infty}\\left(\\sqrt{n^{2} ' + (k2 > 0 ? '+ ' : '- ') + cf(Math.abs(k2), 'n') + '} - n\\right)$.',
-        a: { t: 'num', v: Q(k2, 2).toPlain() },
-        steps: ['Multiply and divide by the conjugate $\\sqrt{n^{2} ' + (k2 > 0 ? '+ ' : '- ') + cf(Math.abs(k2), 'n') + '} + n$.', 'The top becomes $(n^{2} ' + (k2 > 0 ? '+ ' : '- ') + cf(Math.abs(k2), 'n') + ') - n^{2} = ' + cf(k2, 'n') + '$.', 'Divide top and bottom by $n$: $\\frac{' + k2 + '}{\\sqrt{1 ' + (k2 > 0 ? '+ ' : '- ') + '\\frac{' + Math.abs(k2) + '}{n}} + 1} \\to \\frac{' + k2 + '}{2} = ' + tx(Q(k2, 2)) + '$.'],
+        q: 'Find $\\lim_{n\\to\\infty}\\left(\\sqrt{' + n2T + ' ' + (k2 > 0 ? '+ ' : '- ') + cf(Math.abs(k2), 'n') + '} - ' + cnT + '\\right)$.',
+        a: { t: 'num', v: lim2.toPlain() },
+        steps: ['Multiply and divide by the conjugate $\\sqrt{' + n2T + ' ' + (k2 > 0 ? '+ ' : '- ') + cf(Math.abs(k2), 'n') + '} + ' + cnT + '$.', 'The top becomes $(' + n2T + ' ' + (k2 > 0 ? '+ ' : '- ') + cf(Math.abs(k2), 'n') + ') - ' + n2T + ' = ' + cf(k2, 'n') + '$.', 'Divide top and bottom by $n$: $\\frac{' + k2 + '}{\\sqrt{' + c2 * c2 + ' ' + (k2 > 0 ? '+ ' : '- ') + '\\frac{' + Math.abs(k2) + '}{n}} + ' + c2 + '} \\to \\frac{' + k2 + '}{' + 2 * c2 + '} = ' + tx(lim2) + '$.'],
         hint: 'Rationalize with the conjugate.'
-      }, { custom: function () { var n = 1e6; return Math.abs(Math.sqrt(n * n + k2 * n) - n - k2 / 2) < 1e-4 ? '' : 'root limit'; } });
+      }, { custom: function () { var n = 1e6; return Math.abs(Math.sqrt(c2 * c2 * n * n + k2 * n) - c2 * n - lim2.toNumber()) < 1e-4 ? '' : 'root limit'; } });
     }
     if (shape === 'squeeze') {
-      var f = R.pick([['\\frac{\\sin n}{n}', 'sin'], ['\\frac{\\cos(' + R.int(2, 5) + 'n)}{n^{2}}', 'cos'], ['\\frac{(-1)^{n}}{n}', 'alt'], ['\\frac{' + R.int(2, 5) + ' + \\sin n}{n}', 'shift']]);
+      var sK = R.pick(['', '', '2', '3', '5']), sP = R.pick(['n', 'n', 'n^{2}', '\\sqrt{n}', 'n^{3}']);
+      var f = R.pick([['\\frac{' + sK + '\\sin n}{' + sP + '}', 'sin'], ['\\frac{' + sK + '\\cos(' + R.int(2, 9) + 'n)}{' + sP + '}', 'cos'], ['\\frac{(-1)^{n}' + (sK || '') + '}{' + sP + '}', 'alt'], ['\\frac{' + R.int(2, 9) + ' + \\' + R.pick(['sin', 'cos']) + ' n}{' + sP + '}', 'shift'], ['\\frac{\\sin^{2} n}{' + sP + '}', 'sq']]);
       return done({
         q: 'Find $\\lim_{n\\to\\infty} ' + f[0] + '$.' + note,
         a: { t: 'num', v: '0' },
-        steps: ['The top stays between two fixed numbers, while the bottom grows without bound.', 'So $-\\frac{M}{n} \\le a_n \\le \\frac{M}{n}$ for a constant $M$, and both bounds go to 0.', 'By the squeeze theorem, the limit is 0.'],
+        steps: ['The top stays between two fixed numbers, while the bottom grows without bound.', 'So $-\\frac{M}{' + sP + '} \\le a_n \\le \\frac{M}{' + sP + '}$ for a constant $M$, and both bounds go to 0.', 'By the squeeze theorem, the limit is 0.'],
         hint: 'Bound the numerator, then squeeze.'
       }, null);
     }
@@ -2376,15 +2479,22 @@
   });
 
   G('calc2.series-partial-sums', function (R, ctx) {
-    var shape = by(ctx, R.pick(['Sn', 'trap', 'Sn']), R.pick(['fromSn', 'Sn', 'term']), R.pick(['fromSn', 'term', 'trap']));
+    var shape = by(ctx, R.pick(['Sn', 'trap', 'Sn', 'Sn', 'Sn']), R.pick(['fromSn', 'Sn', 'term']), R.pick(['fromSn', 'term', 'trap']));
     if (shape === 'Sn') {
+      var K = R.int(1, 6), KT = String(K);
       var fams = [
-        { t: '\\frac{1}{n(n+1)}', f: function (n) { return Q(1, n * (n + 1)); }, p: '1/(n*(n+1))' },
-        { t: '\\frac{1}{2^{n}}', f: function (n) { return Q(1, Math.pow(2, n)); }, p: '1/2^n' },
+        { t: '\\frac{' + KT + '}{n(n+1)}', f: function (n) { return Q(K, n * (n + 1)); }, p: K + '/(n*(n+1))' },
+        { t: '\\frac{' + KT + '}{2^{n}}', f: function (n) { return Q(K, Math.pow(2, n)); }, p: K + '/2^n' },
         { t: '\\frac{(-1)^{n+1}}{n}', f: function (n) { return Q(n % 2 ? 1 : -1, n); }, p: '(-1)^(n+1)/n' },
         { t: '\\frac{1}{n^{2}}', f: function (n) { return Q(1, n * n); }, p: '1/n^2' },
-        { t: '\\frac{2}{3^{n}}', f: function (n) { return Q(2, Math.pow(3, n)); }, p: '2/3^n' }
-      ], F = R.pick(fams), N = R.int(3, 5), S = Q(0), parts = [];
+        { t: '\\frac{' + KT + '}{3^{n}}', f: function (n) { return Q(K, Math.pow(3, n)); }, p: K + '/3^n' },
+        { t: '\\frac{1}{n}', f: function (n) { return Q(1, n); }, p: '1/n' },
+        { t: '\\frac{n}{n + 1}', f: function (n) { return Q(n, n + 1); }, p: 'n/(n+1)' },
+        { t: '\\frac{' + KT + '}{n(n+2)}', f: function (n) { return Q(K, n * (n + 2)); }, p: K + '/(n*(n+2))' },
+        { t: '\\frac{(-1)^{n}}{' + (K + 1) + '^{n}}', f: function (n) { return Q(n % 2 ? -1 : 1, Math.pow(K + 1, n)); }, p: '(-1)^n/' + (K + 1) + '^n' },
+        { t: '(2n - 1)', f: function (n) { return Q(2 * n - 1); }, p: '2*n-1' },
+        { t: '\\frac{n}{2^{n}}', f: function (n) { return Q(n, Math.pow(2, n)); }, p: 'n/2^n' }
+      ], F = R.pick(fams), N = R.int(3, 6), S = Q(0), parts = [];
       for (var n = 1; n <= N; n++) { var t = F.f(n); S = S.add(t); parts.push(tx(t)); }
       return done({
         q: 'Find the partial sum $S_{' + N + '}$ of the series $' + SUM(1, F.t) + '$.',
@@ -2502,18 +2612,28 @@
   // a bank of sequences for the divergence test: [TeX, limit plain or 'DNE', explanation]
   G('calc2.divergence-test', function (R, ctx) {
     var shape = by(ctx, R.pick(['multi', 'trap']), 'multi', R.pick(['multi', 'multi', 'trap']));
-    var k = R.int(2, 5), c = R.int(1, 6);
+    var k = R.int(2, 9), c = R.int(1, 9);
     var bank = [
       ['\\frac{' + cf(k, 'n') + '}{' + cf(c, 'n') + ' + 1}', Q(k, c).toPlain(), 'Divide by $n$: $\\frac{' + k + '}{' + c + ' + 1/n} \\to ' + tx(Q(k, c)) + '$.'],
       ['\\frac{n^{2}}{' + cf(k, 'n^{2}') + ' - n}', Q(1, k).toPlain(), 'Divide by $n^{2}$: $\\frac{1}{' + k + ' - 1/n} \\to ' + tx(Q(1, k)) + '$.'],
-      ['\\cos\\frac{1}{n}', '1', '$\\frac{1}{n} \\to 0$ and cosine is continuous, so the terms go to $\\cos 0 = 1$.'],
+      ['\\cos\\frac{' + c + '}{n}', '1', '$\\frac{' + c + '}{n} \\to 0$ and cosine is continuous, so the terms go to $\\cos 0 = 1$.'],
       ['n\\sin\\frac{' + k + '}{n}', String(k), 'With $x = \\frac{' + k + '}{n} \\to 0$: $n\\sin\\frac{' + k + '}{n} = ' + k + '\\cdot\\frac{\\sin x}{x} \\to ' + k + '$.'],
       ['\\left(1 + \\frac{1}{n}\\right)^{n}', 'e', 'This is the limit that defines $e$.'],
-      ['(-1)^{n}\\frac{n}{n + 1}', 'DNE', 'The size $\\frac{n}{n + 1} \\to 1$ but the sign alternates, so the terms bounce between values near $1$ and $-1$: no limit.'],
+      ['(-1)^{n}\\frac{n}{n + ' + c + '}', 'DNE', 'The size $\\frac{n}{n + ' + c + '} \\to 1$ but the sign alternates, so the terms bounce between values near $1$ and $-1$: no limit.'],
       ['\\frac{' + c + '}{n}', '0', 'The top is fixed and the bottom grows: the terms go to 0.'],
       ['\\frac{1}{n^{2} + ' + k + '}', '0', 'The bottom grows without bound, so the terms go to 0.'],
       ['\\frac{1}{\\ln n}', '0', '$\\ln n \\to \\infty$, so the terms go to 0.'],
-      ['\\frac{' + cf(k, 'n') + '}{n^{2} + 1}', '0', 'Higher degree on the bottom: the terms go to 0.']
+      ['\\frac{' + cf(k, 'n') + '}{n^{2} + 1}', '0', 'Higher degree on the bottom: the terms go to 0.'],
+      ['\\left(1 + \\frac{' + k + '}{n}\\right)^{n}', 'e^(' + k + ')', 'This is $\\left(1 + \\frac{x}{n}\\right)^{n} \\to e^{x}$ with $x = ' + k + '$.'],
+      ['\\frac{' + k + '^{n}}{' + k + '^{n} + ' + c + '}', '1', 'Divide top and bottom by $' + k + '^{n}$: $\\frac{1}{1 + ' + c + '/' + k + '^{n}} \\to 1$.'],
+      ['\\sqrt[n]{' + (c + 1) + '}', '1', '$' + (c + 1) + '^{1/n} = e^{(\\ln ' + (c + 1) + ')/n} \\to e^{0} = 1$.'],
+      ['\\frac{' + cf(c, 'n') + '}{\\sqrt{n^{2} + ' + k + '}}', String(c), 'Divide top and bottom by $n$: $\\frac{' + c + '}{\\sqrt{1 + ' + k + '/n^{2}}} \\to ' + c + '$.'],
+      ['\\arctan(' + cf(k, 'n') + ')', 'pi/2', 'As $x \\to \\infty$, $\\arctan x \\to \\frac{\\pi}{2}$.'],
+      ['\\frac{n + ' + c + '}{' + cf(k, 'n') + '}', Q(1, k).toPlain(), 'Divide by $n$: $\\frac{1 + ' + c + '/n}{' + k + '} \\to ' + tx(Q(1, k)) + '$.'],
+      ['\\cos(n\\pi)', 'DNE', '$\\cos(n\\pi) = (-1)^{n}$ keeps switching between $1$ and $-1$: no limit.'],
+      ['\\ln\\frac{' + cf(k, 'n') + ' + ' + c + '}{n}', 'ln(' + k + ')', '$\\frac{' + cf(k, 'n') + ' + ' + c + '}{n} \\to ' + k + '$ and $\\ln$ is continuous, so the terms go to $\\ln ' + k + '$.'],
+      ['\\frac{' + c + '}{\\sqrt{n}}', '0', 'The top is fixed and $\\sqrt{n}$ grows: the terms go to 0.'],
+      ['\\frac{1}{' + k + '^{n}}', '0', 'The bottom grows without bound: the terms go to 0.']
     ];
     if (shape === 'trap') {
       var z = R.pick(bank.filter(function (b) { return b[1] === '0'; }));
@@ -2565,6 +2685,15 @@
         { s: '\\frac{1}{n^{4}}', lo: 2, I: '\\int_2^{\\infty}\\frac{dx}{x^{4}} = \\left[-\\frac{1}{3x^{3}}\\right]_2^{\\infty}', v: '1/24', vT: '\\frac{1}{24}', ip: '1/x^4', ia: 2 },
         { s: 'e^{-n}', lo: 1, I: '\\int_1^{\\infty} e^{-x}\\,dx = \\Big[-e^{-x}\\Big]_1^{\\infty}', v: '1/e', vT: '\\frac{1}{e}', ip: 'e^(-x)', ia: 1 }
       ]);
+      if (R.coin()) {
+        var pf = R.pick(['p', 'p', 'e', 'rat']);
+        if (pf === 'p') { var pk = R.int(2, 5), lk = R.int(1, 3), xk = pk === 2 ? 'x' : 'x^{' + (pk - 1) + '}', vk = Q(1, (pk - 1) * Math.pow(lk, pk - 1));
+          F2 = { s: '\\frac{1}{n^{' + pk + '}}', lo: lk, I: '\\int_' + lk + '^{\\infty}\\frac{dx}{x^{' + pk + '}} = \\left[-\\frac{1}{' + (pk === 2 ? '' : pk - 1) + xk + '}\\right]_' + lk + '^{\\infty}', v: vk.toPlain(), vT: tx(vk), ip: '1/x^' + pk, ia: lk }; }
+        else if (pf === 'e') { var ek = R.int(2, 5);
+          F2 = { s: 'e^{-' + ek + 'n}', lo: 1, I: '\\int_1^{\\infty} e^{-' + ek + 'x}\\,dx = \\left[-\\frac{e^{-' + ek + 'x}}{' + ek + '}\\right]_1^{\\infty}', v: '1/(' + ek + '*e^' + ek + ')', vT: '\\frac{1}{' + ek + 'e^{' + ek + '}}', ip: 'e^(-' + ek + '*x)', ia: 1 }; }
+        else { var ak = R.int(2, 8), vr = Q(1, 2 * (1 + ak));
+          F2 = { s: '\\frac{n}{(n^{2} + ' + ak + ')^{2}}', lo: 1, I: '\\int_1^{\\infty}\\frac{x\\,dx}{(x^{2} + ' + ak + ')^{2}} = \\left[-\\frac{1}{2(x^{2} + ' + ak + ')}\\right]_1^{\\infty}', v: vr.toPlain(), vT: tx(vr), ip: 'x/(x^2+' + ak + ')^2', ia: 1 }; }
+      }
       return done({
         q: 'To apply the integral test to $' + SUM(F2.lo, F2.s) + '$, evaluate the matching improper integral $\\int_{' + F2.lo + '}^{\\infty} f(x)\\,dx$.',
         a: { t: 'num', v: F2.v },
@@ -2573,7 +2702,7 @@
       }, { int: F2.ip, a: F2.ia, inf: true });
     }
     if (shape === 'lnp') {
-      var p3 = R.pick([Q(1, 2), Q(1), Q(2), Q(3, 2), Q(3)]), conv3 = p3.gt(1), p3T = tx(p3);
+      var p3 = R.pick([Q(1, 2), Q(1), Q(2), Q(3, 2), Q(3), Q(1, 3), Q(2, 3), Q(5, 2), Q(4), Q(5, 4)]), conv3 = p3.gt(1), p3T = tx(p3);
       return done({
         q: 'Does $' + SUM(2, '\\frac{1}{n(\\ln n)^{' + p3T + '}}') + '$ converge or diverge?',
         a: mc(conv3 ? 'Converges, by the integral test.' : 'Diverges, by the integral test.', [conv3 ? 'Diverges, by the integral test.' : 'Converges, by the integral test.', 'Converges, because it is a $p$-series with $p > 1$.', 'Diverges, because $\\ln n$ grows without bound.']),
@@ -2581,7 +2710,7 @@
         hint: 'Substitute $u = \\ln x$ in the integral.'
       }, null);
     }
-    var p4 = R.pick([2, 3, 4]), lowB = Q(1, p4 - 1), highB = Q(1).add(lowB), askHigh = R.coin();
+    var p4 = R.pick([2, 3, 4, 5, 6]), lowB = Q(1, p4 - 1), highB = Q(1).add(lowB), askHigh = R.coin();
     return done({
       q: 'The integral test gives $\\int_1^{\\infty}\\frac{dx}{x^{' + p4 + '}} \\le ' + SUM(1, '\\frac{1}{n^{' + p4 + '}}') + ' \\le a_1 + \\int_1^{\\infty}\\frac{dx}{x^{' + p4 + '}}$. Find the ' + (askHigh ? 'upper' : 'lower') + ' bound.',
       a: { t: 'num', v: (askHigh ? highB : lowB).toPlain() },
@@ -2715,11 +2844,11 @@
 
   G('calc2.ratio-root-tests', function (R, ctx) {
     var shape = by(ctx, 'ratio', R.pick(['ratio', 'root', 'ratio']), R.pick(['ratio', 'root', 'one']));
-    var c = R.int(2, 6), k = R.int(1, 3), nk = k === 1 ? 'n' : 'n^{' + k + '}', pk = k === 1 ? '' : '^{' + k + '}';
+    var c = R.int(2, 9), k = R.int(1, 4), nk = k === 1 ? 'n' : 'n^{' + k + '}', pk = k === 1 ? '' : '^{' + k + '}', dd = R.int(1, 3);
     var CONC = ['The series converges absolutely.', 'The series diverges.', 'The test is inconclusive.'];
     function ans(Ls, conc) { return { t: 'multi', parts: [{ label: '$L =$', a: { t: 'num', v: Ls } }, { label: 'Conclusion', a: { t: 'mc', choices: CONC.slice(), v: conc, keep: true } }] }; }
     if (shape === 'one') {
-      var F0 = R.pick([['\\frac{1}{n^{' + (k + 1) + '}}', 'converges ($p$-series, $p = ' + (k + 1) + '$)'], ['\\frac{1}{n}', 'diverges (harmonic)'], ['\\frac{n}{n^{2} + 1}', 'diverges (compare with $\\frac{1}{n}$)']]);
+      var F0 = R.pick([['\\frac{1}{n^{' + (k + 1) + '}}', 'converges ($p$-series, $p = ' + (k + 1) + '$)'], ['\\frac{1}{n}', 'diverges (harmonic)'], ['\\frac{n}{n^{2} + 1}', 'diverges (compare with $\\frac{1}{n}$)'], ['\\frac{1}{\\sqrt{n}}', 'diverges ($p$-series, $p = \\frac{1}{2}$)'], ['\\frac{n + ' + c + '}{n^{3}}', 'converges (compare with $\\frac{1}{n^{2}}$)'], ['\\frac{' + c + '}{n^{2} + ' + k + '}', 'converges (compare with $\\frac{1}{n^{2}}$)'], ['\\frac{1}{' + cf(c, 'n') + ' + ' + k + '}', 'diverges (compare with $\\frac{1}{n}$)']]);
       return done({
         q: 'Apply the ratio test to $' + SUM(1, F0[0]) + '$: find $L = \\lim\\left|\\frac{a_{n+1}}{a_n}\\right|$, then choose what the ratio test concludes.',
         a: ans('1', 2),
@@ -2754,7 +2883,11 @@
       { s: '\\frac{(n!)^{2}}{(2n)!}', L: '1/4', LT: '\\frac{1}{4}', r: '\\frac{a_{n+1}}{a_n} = \\frac{(n + 1)^{2}}{(2n + 2)(2n + 1)}', conc: 0 },
       { s: '\\frac{(2n)!}{(n!)^{2}}', L: '4', LT: '4', r: '\\frac{a_{n+1}}{a_n} = \\frac{(2n + 2)(2n + 1)}{(n + 1)^{2}}', conc: 1 },
       { s: '\\frac{n!}{n^{n}}', L: '1/e', LT: '\\frac{1}{e}', r: '\\frac{a_{n+1}}{a_n} = \\frac{(n + 1)!}{(n + 1)^{n+1}}\\cdot\\frac{n^{n}}{n!} = \\left(\\frac{n}{n + 1}\\right)^{n} = \\frac{1}{\\left(1 + \\frac{1}{n}\\right)^{n}}', conc: 0 },
-      { s: '\\frac{(-' + c + ')^{n}}{n!}', L: '0', LT: '0', r: '\\left|\\frac{a_{n+1}}{a_n}\\right| = \\frac{' + c + '}{n + 1}', conc: 0 }
+      { s: '\\frac{(-' + c + ')^{n}}{n!}', L: '0', LT: '0', r: '\\left|\\frac{a_{n+1}}{a_n}\\right| = \\frac{' + c + '}{n + 1}', conc: 0 },
+      { s: '\\frac{' + nk + '}{n!}', L: '0', LT: '0', r: '\\frac{a_{n+1}}{a_n} = \\left(\\frac{n + 1}{n}\\right)' + pk + '\\cdot\\frac{1}{n + 1}', conc: 0 },
+      { s: '\\frac{' + c + '^{n}}{(n + ' + dd + ')!}', L: '0', LT: '0', r: '\\frac{a_{n+1}}{a_n} = \\frac{' + c + '^{n+1}}{(n + ' + (dd + 1) + ')!}\\cdot\\frac{(n + ' + dd + ')!}{' + c + '^{n}} = \\frac{' + c + '}{n + ' + (dd + 1) + '}', conc: 0 },
+      { s: '\\frac{' + nk + '\\,' + c + '^{n}}{' + (c + dd) + '^{n}}', L: c + '/' + (c + dd), LT: '\\frac{' + c + '}{' + (c + dd) + '}', r: '\\frac{a_{n+1}}{a_n} = \\left(\\frac{n + 1}{n}\\right)' + pk + '\\cdot\\frac{' + c + '}{' + (c + dd) + '}', conc: 0 },
+      { s: '\\frac{' + (c + dd) + '^{n}}{' + nk + '\\,' + c + '^{n}}', L: (c + dd) + '/' + c, LT: '\\frac{' + (c + dd) + '}{' + c + '}', r: '\\frac{a_{n+1}}{a_n} = \\left(\\frac{n}{n + 1}\\right)' + pk + '\\cdot\\frac{' + (c + dd) + '}{' + c + '}', conc: 1 }
     ], F = R.pick(fams);
     return done({
       q: 'Apply the ratio test to $' + SUM(1, F.s) + '$: find $L = \\lim\\left|\\frac{a_{n+1}}{a_n}\\right|$ (type inf if it is infinite), then choose the conclusion.',
@@ -2800,10 +2933,10 @@
   G('calc2.series-estimates', function (R, ctx) {
     var shape = by(ctx, R.pick(['alt', 'geo']), R.pick(['int', 'geo', 'alt', 'intlow']), R.pick(['need', 'int', 'cmp']));
     if (shape === 'alt') {
-      var N = R.int(3, 8), fam = R.pick(['p1', 'p2', 'p3', 'fact', 'odd', 'three']), b, bT, sT;
+      var N = R.int(2, 10), fam = R.pick(['p1', 'p2', 'p3', 'fact', 'odd', 'three', 'three']), b, bT, sT, gb = R.int(2, 5);
       if (fam === 'fact') { b = Q(1, fact(N + 1)); sT = '\\frac{1}{n!}'; bT = '\\frac{1}{' + (N + 1) + '!}'; }
       else if (fam === 'odd') { b = Q(1, 2 * N + 3); sT = '\\frac{1}{2n + 1}'; bT = '\\frac{1}{2(' + (N + 1) + ') + 1}'; }
-      else if (fam === 'three') { b = Q(1, Math.pow(3, N + 1)); sT = '\\frac{1}{3^{n}}'; bT = '\\frac{1}{3^{' + (N + 1) + '}}'; }
+      else if (fam === 'three') { b = Q(1, Math.pow(gb, N + 1)); sT = '\\frac{1}{' + gb + '^{n}}'; bT = '\\frac{1}{' + gb + '^{' + (N + 1) + '}}'; }
       else { var p = +fam.slice(1); b = Q(1, Math.pow(N + 1, p)); sT = '\\frac{1}{n' + (p === 1 ? '' : '^{' + p + '}') + '}'; bT = '\\frac{1}{' + (N + 1) + (p === 1 ? '' : '^{' + p + '}') + '}'; }
       return done({
         q: 'Estimate $' + SUM(1, '(-1)^{n+1}' + sT) + '$ by $S_{' + N + '}$. Give the alternating series bound on the error, exactly.',
@@ -2813,7 +2946,7 @@
       }, null);
     }
     if (shape === 'int' || shape === 'intlow') {
-      var p2 = R.pick([2, 3, 4]), N2 = R.int(3, 10), up = shape === 'int', bnd = up ? Q(1, (p2 - 1) * Math.pow(N2, p2 - 1)) : Q(1, (p2 - 1) * Math.pow(N2 + 1, p2 - 1));
+      var p2 = R.pick([2, 3, 4, 5]), N2 = R.int(3, 12), up = shape === 'int', bnd = up ? Q(1, (p2 - 1) * Math.pow(N2, p2 - 1)) : Q(1, (p2 - 1) * Math.pow(N2 + 1, p2 - 1));
       return done({
         q: 'Let $R_{' + N2 + '} = S - S_{' + N2 + '}$ for $S = ' + SUM(1, '\\frac{1}{n^{' + p2 + '}}') + '$. Use the integral test to find ' + (up ? 'an upper' : 'a lower') + ' bound for $R_{' + N2 + '}$.',
         a: { t: 'num', v: bnd.toPlain() },
@@ -2822,24 +2955,24 @@
       }, { custom: function () { var t = nsum(function (n) { return 1 / Math.pow(n, p2); }, N2 + 1, 2e5) + 1 / ((p2 - 1) * Math.pow(2e5, p2 - 1)); return up ? (t <= bnd.toNumber() ? '' : 'upper fails') : (t >= bnd.toNumber() ? '' : 'lower fails'); } });
     }
     if (shape === 'geo') {
-      var rr = R.pick([Q(1, 2), Q(1, 3), Q(2, 3), Q(1, 4), Q(3, 4), Q(1, 5), Q(2, 5)]), N3 = R.int(2, 7), Rn = rr.pow(N3 + 1).div(Q(1).sub(rr));
+      var rr = R.pick([Q(1, 2), Q(1, 3), Q(2, 3), Q(1, 4), Q(3, 4), Q(1, 5), Q(2, 5), Q(3, 5), Q(-1, 2), Q(-1, 3)]), N3 = R.int(2, 9), Rn = rr.pow(N3 + 1).div(Q(1).sub(rr));
       return done({
         q: 'For $S = ' + SUM(1, powT(rr, 'n')) + '$, find the exact remainder $R_{' + N3 + '} = S - S_{' + N3 + '}$.',
         a: { t: 'num', v: Rn.toPlain() },
-        steps: ['The remainder is itself geometric: $R_{' + N3 + '} = ' + powT(rr, N3 + 1) + ' + ' + powT(rr, N3 + 2) + ' + \\cdots$.', 'First term $' + tx(rr.pow(N3 + 1)) + '$, ratio $' + tx(rr) + '$: $R_{' + N3 + '} = \\frac{' + tx(rr.pow(N3 + 1)) + '}{1 - ' + tx(rr) + '} = ' + tx(Rn) + '$.'],
+        steps: ['The remainder is itself geometric: $R_{' + N3 + '} = ' + powT(rr, N3 + 1) + ' + ' + powT(rr, N3 + 2) + ' + \\cdots$.', 'First term $' + tx(rr.pow(N3 + 1)) + '$, ratio $' + tx(rr) + '$: $R_{' + N3 + '} = \\frac{' + tx(rr.pow(N3 + 1)) + '}{1 - ' + tp(rr) + '} = ' + tx(Rn) + '$.'],
         hint: 'The tail of a geometric series is geometric.'
       }, null);
     }
     if (shape === 'cmp') {
-      var N4 = R.int(3, 8), bd = Q(1, Math.pow(2, N4));
+      var N4 = R.int(3, 8), cb = R.pick([2, 2, 3, 4]), cs = R.int(1, 3), bd = Q(1, (cb - 1) * Math.pow(cb, N4));
       return done({
-        q: 'For $S = ' + SUM(1, '\\frac{1}{2^{n} + 1}') + '$, use comparison with a geometric series to bound the remainder $R_{' + N4 + '} = S - S_{' + N4 + '}$.',
+        q: 'For $S = ' + SUM(1, '\\frac{1}{' + cb + '^{n} + ' + cs + '}') + '$, use comparison with a geometric series to bound the remainder $R_{' + N4 + '} = S - S_{' + N4 + '}$.',
         a: { t: 'num', v: bd.toPlain() },
-        steps: ['Each term satisfies $\\frac{1}{2^{n} + 1} < \\frac{1}{2^{n}}$.', 'So $R_{' + N4 + '} < \\sum_{n=' + (N4 + 1) + '}^{\\infty}\\frac{1}{2^{n}} = \\frac{1/2^{' + (N4 + 1) + '}}{1 - 1/2} = \\frac{1}{2^{' + N4 + '}}$.', 'Bound: $' + tx(bd) + '$.'],
+        steps: ['Each term satisfies $\\frac{1}{' + cb + '^{n} + ' + cs + '} < \\frac{1}{' + cb + '^{n}}$.', 'So $R_{' + N4 + '} < \\sum_{n=' + (N4 + 1) + '}^{\\infty}\\frac{1}{' + cb + '^{n}} = \\frac{1/' + cb + '^{' + (N4 + 1) + '}}{1 - 1/' + cb + '} = ' + (cb === 2 ? '\\frac{1}{2^{' + N4 + '}}' : '\\frac{1}{' + (cb - 1) + '\\cdot ' + cb + '^{' + N4 + '}}') + '$.', 'Bound: $' + tx(bd) + '$.'],
         hint: 'Bound the tail by the tail of $\\sum\\frac{1}{2^{n}}$.'
-      }, { custom: function () { var t = nsum(function (n) { return 1 / (Math.pow(2, n) + 1); }, N4 + 1, 200); return t < bd.toNumber() ? '' : 'cmp bound fails'; } });
+      }, { custom: function () { var t = nsum(function (n) { return 1 / (Math.pow(cb, n) + cs); }, N4 + 1, 200); return t < bd.toNumber() ? '' : 'cmp bound fails'; } });
     }
-    var p5 = R.pick([2, 3, 4]), tol = R.pick([Q(1, 100), Q(1, 1000), Q(1, 10000)]), Nn = 1;
+    var p5 = R.pick([2, 3, 4, 5]), tol = R.pick([Q(1, 50), Q(1, 100), Q(1, 200), Q(1, 500), Q(1, 1000), Q(1, 5000), Q(1, 10000)]), Nn = 1;
     while (Q(1, (p5 - 1) * Math.pow(Nn, p5 - 1)).gt(tol)) Nn++;
     return done({
       q: 'For $S = ' + SUM(1, '\\frac{1}{n^{' + p5 + '}}') + '$, the integral bound gives $R_N \\le \\frac{1}{' + (p5 - 1 === 1 ? '' : p5 - 1) + 'N^{' + (p5 - 1 === 1 ? '' : p5 - 1) + '}}$. What is the smallest $N$ for which this bound is at most $' + dec(tol) + '$?'.replace('N^{}', 'N'),
@@ -2972,7 +3105,7 @@
   });
 
   G('calc2.differentiate-integrate-series', function (R, ctx) {
-    var shape = by(ctx, R.pick(['ln', 'deriv']), R.pick(['ln', 'atan', 'deriv', 'terms']), R.pick(['sum', 'atan', 'terms', 'sum']));
+    var shape = by(ctx, R.pick(['ln', 'deriv']), R.pick(['ln', 'atan', 'deriv', 'terms']), R.pick(['sum', 'atan', 'terms', 'sum', 'sum', 'atan']));
     if (shape === 'ln') {
       var k = R.pick([1, 2, 3, -1, -2, Q(1, 2)]), kq = Qf(k), m = R.int(2, 6), mul = R.pick([1, 1, 2, 3, 6]), val = kq.pow(m).div(m).mul(m % 2 ? 1 : -1).mul(mul);
       var fT = (mul === 1 ? '' : mul) + (kq.eq(1) ? '\\ln(1 + x)' : kq.eq(-1) ? '\\ln(1 - x)' : '\\ln(1 ' + (kq.sign() > 0 ? '+ ' : '- ') + cf(kq.abs(), 'x') + ')');
@@ -2984,7 +3117,7 @@
       }, { custom: function (p) { var h = kq.toNumber(); return Math.abs(ML.evalPlain(p.a.v) - mul * Math.pow(-1, m + 1) * Math.pow(h, m) / m) < 1e-12 ? '' : 'ln coef'; } });
     }
     if (shape === 'atan') {
-      var k2 = R.pick([1, 2, 3, Q(1, 2)]), kq2 = Qf(k2), j = R.int(1, 3), pw = 2 * j + 1, val2 = kq2.pow(pw).div(pw).mul(j % 2 ? -1 : 1);
+      var k2 = R.pick([1, 2, 3, 4, Q(1, 2), Q(1, 3), -1, -2]), kq2 = Qf(k2), j = R.int(1, 4), pw = 2 * j + 1, val2 = kq2.pow(pw).div(pw).mul(j % 2 ? -1 : 1);
       return done({
         q: 'What is the coefficient of $x^{' + pw + '}$ in the Maclaurin series of $\\arctan' + (kq2.eq(1) ? ' x' : '(' + cf(kq2, 'x') + ')') + '$?',
         a: { t: 'num', v: val2.toPlain() },
@@ -3003,38 +3136,61 @@
       }, null);
     }
     if (shape === 'terms') {
-      var f4 = R.pick([
+      var tk = R.int(2, 5), f4 = R.pick([
         { t: '\\ln(1 + x^{2})', p: 'x^2-x^4/2+x^6/3', tt: 'x^{2} - \\frac{x^{4}}{2} + \\frac{x^{6}}{3}', s: 'Substitute $u = x^{2}$ into $\\ln(1 + u) = u - \\frac{u^{2}}{2} + \\frac{u^{3}}{3} - \\cdots$.', e: function (x) { return x * x - Math.pow(x, 4) / 2 + Math.pow(x, 6) / 3; } },
         { t: 'x\\ln(1 + x)', p: 'x^2-x^3/2+x^4/3', tt: 'x^{2} - \\frac{x^{3}}{2} + \\frac{x^{4}}{3}', s: 'Multiply $\\ln(1 + x) = x - \\frac{x^{2}}{2} + \\frac{x^{3}}{3} - \\cdots$ by $x$.', e: function (x) { return x * x - x * x * x / 2 + Math.pow(x, 4) / 3; } },
         { t: '\\arctan(x^{2})', p: 'x^2-x^6/3+x^10/5', tt: 'x^{2} - \\frac{x^{6}}{3} + \\frac{x^{10}}{5}', s: 'Substitute $u = x^{2}$ into $\\arctan u = u - \\frac{u^{3}}{3} + \\frac{u^{5}}{5} - \\cdots$.', e: function (x) { return x * x - Math.pow(x, 6) / 3 + Math.pow(x, 10) / 5; } },
         { t: '\\frac{1}{(1 + x)^{2}}', p: '1-2*x+3*x^2', tt: '1 - 2x + 3x^{2}', s: '$\\frac{1}{(1 + x)^{2}} = -\\frac{d}{dx}\\frac{1}{1 + x} = -\\frac{d}{dx}(1 - x + x^{2} - x^{3} + \\cdots) = 1 - 2x + 3x^{2} - \\cdots$.', e: function (x) { return 1 - 2 * x + 3 * x * x; } },
-        { t: '-\\ln(1 - x)', p: 'x+x^2/2+x^3/3', tt: 'x + \\frac{x^{2}}{2} + \\frac{x^{3}}{3}', s: 'Integrate $\\frac{1}{1 - x} = 1 + x + x^{2} + \\cdots$ from 0 to $x$.', e: function (x) { return x + x * x / 2 + x * x * x / 3; } }
+        { t: '-\\ln(1 - x)', p: 'x+x^2/2+x^3/3', tt: 'x + \\frac{x^{2}}{2} + \\frac{x^{3}}{3}', s: 'Integrate $\\frac{1}{1 - x} = 1 + x + x^{2} + \\cdots$ from 0 to $x$.', e: function (x) { return x + x * x / 2 + x * x * x / 3; } },
+        { t: '\\ln(1 + ' + tk + 'x)', p: tk + '*x-' + tk * tk + '*x^2/2+' + tk * tk * tk + '*x^3/3', tt: tk + 'x - ' + tx(Q(tk * tk, 2)) + 'x^{2} + ' + tx(Q(tk * tk * tk, 3)) + 'x^{3}', s: 'Substitute $u = ' + tk + 'x$ into $\\ln(1 + u) = u - \\frac{u^{2}}{2} + \\frac{u^{3}}{3} - \\cdots$.', e: function (x) { return tk * x - tk * tk * x * x / 2 + Math.pow(tk * x, 3) / 3; }, f: function (x) { return Math.log(1 + tk * x); }, np: 4, kk: tk },
+        { t: '\\arctan(' + tk + 'x)', p: tk + '*x-' + Math.pow(tk, 3) + '*x^3/3+' + Math.pow(tk, 5) + '*x^5/5', tt: tk + 'x - ' + tx(Q(Math.pow(tk, 3), 3)) + 'x^{3} + ' + tx(Q(Math.pow(tk, 5), 5)) + 'x^{5}', s: 'Substitute $u = ' + tk + 'x$ into $\\arctan u = u - \\frac{u^{3}}{3} + \\frac{u^{5}}{5} - \\cdots$.', e: function (x) { return tk * x - Math.pow(tk * x, 3) / 3 + Math.pow(tk * x, 5) / 5; }, f: function (x) { return Math.atan(tk * x); }, np: 7, kk: tk },
+        { t: 'x\\arctan x', p: 'x^2-x^4/3+x^6/5', tt: 'x^{2} - \\frac{x^{4}}{3} + \\frac{x^{6}}{5}', s: 'Multiply $\\arctan x = x - \\frac{x^{3}}{3} + \\frac{x^{5}}{5} - \\cdots$ by $x$.', e: function (x) { return x * x - Math.pow(x, 4) / 3 + Math.pow(x, 6) / 5; }, f: function (x) { return x * Math.atan(x); }, np: 8, kk: 1 },
+        { t: '\\frac{1}{(1 - ' + tk + 'x)^{2}}', p: '1+' + 2 * tk + '*x+' + 3 * tk * tk + '*x^2', tt: '1 + ' + 2 * tk + 'x + ' + 3 * tk * tk + 'x^{2}', s: 'Differentiate $\\frac{1}{1 - u} = 1 + u + u^{2} + \\cdots$ to get $\\frac{1}{(1 - u)^{2}} = 1 + 2u + 3u^{2} + \\cdots$, then put $u = ' + tk + 'x$.', e: function (x) { return 1 + 2 * tk * x + 3 * tk * tk * x * x; }, f: function (x) { return 1 / Math.pow(1 - tk * x, 2); }, np: 3, kk: tk }
       ]);
       return done({
         q: 'Find the first three nonzero terms of the Maclaurin series of $' + f4.t + '$. Enter their sum.',
         a: { t: 'expr', v: f4.p, vars: ['x'] },
         steps: [f4.s, 'First three nonzero terms: $' + f4.tt + '$.'],
         hint: 'Start from a series you know and substitute, multiply, differentiate or integrate.'
-      }, { custom: function (p) { return polyMatch(p.a.v, f4.e, [0.3, -0.6, 1.2]); } });
+      }, { custom: function (p) { var bad = polyMatch(p.a.v, f4.e, [0.3, -0.6, 1.2]); if (f4.f) [5e-4, -6e-4].forEach(function (x) { if (Math.abs(ML.evalPlain(p.a.v, { x: x }) - f4.f(x)) > Math.max(1e-13, 3 * Math.pow(f4.kk + 1, f4.np) * Math.pow(Math.abs(x), f4.np))) bad = 'near 0 ' + x; }); return bad; } });
     }
-    var f5 = R.pick(['n', 'inv', 'atan']);
-    if (f5 === 'n') {
-      var cc = R.int(2, 5), v5 = Q(cc, (cc - 1) * (cc - 1));
+    var f5 = R.pick(['n', 'inv', 'atan', 'alt']);
+    if (f5 === 'alt') {
+      var cb = R.int(2, 9), ca = R.pick([1, 1, 2, 3].filter(function (t) { return t < cb; })), aq = Q(ca, cb), ares = Q(cb + ca, cb);
       return done({
-        q: 'Find the sum $' + SUM(1, '\\frac{n}{' + cc + '^{n}}') + '$.',
+        q: 'Find the sum $' + SUM(1, ca === 1 ? '\\frac{(-1)^{n+1}}{n\\cdot ' + cb + '^{n}}' : '\\frac{(-1)^{n+1}\\,' + ca + '^{n}}{n\\cdot ' + cb + '^{n}}') + '$ exactly.',
+        a: { t: 'num', v: 'ln(' + ares.toPlain() + ')' },
+        steps: ['Integrate $\\frac{1}{1 + x} = 1 - x + x^{2} - \\cdots$: $\\ln(1 + x) = \\sum_{n=1}^{\\infty}\\frac{(-1)^{n+1}x^{n}}{n}$ for $|x| < 1$.', 'Put $x = ' + tx(aq) + '$: the sum is $\\ln\\left(1 + ' + tx(aq) + '\\right) = \\ln ' + tx(ares) + '$.'],
+        hint: 'Which known series has terms $\\frac{(-1)^{n+1}x^{n}}{n}$?'
+      }, { custom: function () { var s = nsum(function (n) { return Math.pow(-1, n + 1) * Math.pow(ca / cb, n) / n; }, 1, 600); return Math.abs(s - Math.log((cb + ca) / cb)) < 1e-9 ? '' : 'alt sum'; } });
+    }
+    if (f5 === 'n') {
+      var cc = R.int(2, 9), na = R.pick([1, 1, 2, 3].filter(function (t) { return t < cc; })), xq = Q(na, cc), v5 = xq.div(Q(1).sub(xq).pow(2));
+      var termT = na === 1 ? '\\frac{n}{' + cc + '^{n}}' : '\\frac{n\\cdot ' + na + '^{n}}{' + cc + '^{n}}';
+      return done({
+        q: 'Find the sum $' + SUM(1, termT) + '$.',
         a: { t: 'num', v: v5.toPlain() },
-        steps: ['Start with $\\sum_{n=0}^{\\infty}x^{n} = \\frac{1}{1 - x}$ for $|x| < 1$, differentiate, and multiply by $x$: $\\sum_{n=1}^{\\infty}n x^{n} = \\frac{x}{(1 - x)^{2}}$.', 'Put $x = \\frac{1}{' + cc + '}$, which is inside the interval of convergence: $\\frac{1/' + cc + '}{(1 - 1/' + cc + ')^{2}} = \\frac{1/' + cc + '}{' + tx(Q((cc - 1) * (cc - 1), cc * cc)) + '}$.', 'Sum: $' + tx(v5) + '$.'],
+        steps: ['Start with $\\sum_{n=0}^{\\infty}x^{n} = \\frac{1}{1 - x}$ for $|x| < 1$, differentiate, and multiply by $x$: $\\sum_{n=1}^{\\infty}n x^{n} = \\frac{x}{(1 - x)^{2}}$.', 'Put $x = ' + tx(xq) + '$, which is inside the interval of convergence: $\\frac{' + tx(xq) + '}{\\left(1 - ' + tx(xq) + '\\right)^{2}} = \\frac{' + tx(xq) + '}{' + tx(Q(1).sub(xq).pow(2)) + '}$.', 'Sum: $' + tx(v5) + '$.'],
         hint: 'Differentiate the geometric series, then choose $x$.'
-      }, { custom: function () { var s = nsum(function (n) { return n / Math.pow(cc, n); }, 1, 400); return Math.abs(s - v5.toNumber()) < 1e-9 ? '' : 'n sum'; } });
+      }, { custom: function () { var s = nsum(function (n) { return n * Math.pow(na / cc, n); }, 1, 600); return Math.abs(s - v5.toNumber()) < 1e-9 ? '' : 'n sum'; } });
     }
     if (f5 === 'inv') {
-      var c6 = R.int(2, 5);
+      var c6 = R.int(2, 9), ia = R.pick([1, 1, 2, 3].filter(function (t) { return t < c6; })), iq = Q(ia, c6), ires = Q(c6, c6 - ia);
       return done({
-        q: 'Find the sum $' + SUM(1, '\\frac{1}{n\\cdot ' + c6 + '^{n}}') + '$ exactly.',
-        a: { t: 'num', v: 'ln(' + Q(c6, c6 - 1).toPlain() + ')' },
-        steps: ['Integrate $\\frac{1}{1 - x} = \\sum x^{n}$: $-\\ln(1 - x) = \\sum_{n=1}^{\\infty}\\frac{x^{n}}{n}$ for $|x| < 1$.', 'Put $x = \\frac{1}{' + c6 + '}$: the sum is $-\\ln\\left(1 - \\frac{1}{' + c6 + '}\\right) = -\\ln' + tx(Q(c6 - 1, c6)) + '$.', 'That is $\\ln ' + tx(Q(c6, c6 - 1)) + '$.'],
+        q: 'Find the sum $' + SUM(1, ia === 1 ? '\\frac{1}{n\\cdot ' + c6 + '^{n}}' : '\\frac{' + ia + '^{n}}{n\\cdot ' + c6 + '^{n}}') + '$ exactly.',
+        a: { t: 'num', v: 'ln(' + ires.toPlain() + ')' },
+        steps: ['Integrate $\\frac{1}{1 - x} = \\sum x^{n}$: $-\\ln(1 - x) = \\sum_{n=1}^{\\infty}\\frac{x^{n}}{n}$ for $|x| < 1$.', 'Put $x = ' + tx(iq) + '$: the sum is $-\\ln\\left(1 - ' + tx(iq) + '\\right) = -\\ln' + tx(Q(c6 - ia, c6)) + '$.', 'That is $\\ln ' + tx(ires) + '$.'],
         hint: 'Which known series has terms $\\frac{x^{n}}{n}$?'
-      }, { custom: function () { var s = nsum(function (n) { return 1 / (n * Math.pow(c6, n)); }, 1, 400); return Math.abs(s - Math.log(c6 / (c6 - 1))) < 1e-9 ? '' : 'inv sum'; } });
+      }, { custom: function () { var s = nsum(function (n) { return Math.pow(ia / c6, n) / n; }, 1, 600); return Math.abs(s - Math.log(c6 / (c6 - ia))) < 1e-9 ? '' : 'inv sum'; } });
+    }
+    if (R.coin()) {
+      var aa = R.int(2, 9);
+      return done({
+        q: 'Find the exact sum $' + SUM(0, '\\frac{(-1)^{n}}{(2n + 1)\\,' + aa + '^{2n+1}}') + '$.',
+        a: { t: 'num', v: 'arctan(1/' + aa + ')' },
+        steps: ['$\\arctan x = \\sum_{n=0}^{\\infty}\\frac{(-1)^{n}x^{2n+1}}{2n + 1}$ for $|x| \\le 1$.', 'The terms match with $x = \\frac{1}{' + aa + '}$, since $x^{2n+1} = \\frac{1}{' + aa + '^{2n+1}}$.', 'Sum: $\\arctan\\frac{1}{' + aa + '}$.'],
+        hint: 'Which known series has odd powers divided by odd numbers, with alternating signs?'
+      }, { custom: function () { var s = nsum(function (n) { return Math.pow(-1, n) / ((2 * n + 1) * Math.pow(aa, 2 * n + 1)); }, 0, 200); return Math.abs(s - Math.atan(1 / aa)) < 1e-12 ? '' : 'atan a sum'; } });
     }
     return done({
       q: 'Use the series for $\\arctan x$ at $x = \\frac{1}{\\sqrt{3}}$ to find $' + SUM(0, '\\frac{(-1)^{n}}{(2n + 1)3^{n}}') + '$ exactly.',
@@ -3081,7 +3237,7 @@
       }, { custom: function (p) { var F = { ln1: 'ln(x)', inv1: '1/x', inv2: '1/x', cube: 'x^3', sin: 'sin(x)', cos: 'cos(x)' }[f], t = CAS.parse(F); for (var j = 0; j < m; j++) t = CAS.deriv(t, 'x'); var d = CAS.compile(t, ['x'])(a2); return Math.abs(d / fact(m) - ML.evalPlain(p.a.v)) < 1e-9 ? '' : 'taylor coef ' + d / fact(m); } });
     }
     if (shape === 'sincos') {
-      var k2 = R.int(1, 3), fn = R.pick(['sin', 'cos']), tt3 = [];
+      var k2 = R.int(1, 5), fn = R.pick(['sin', 'cos']), tt3 = [];
       if (fn === 'sin') [1, 3, 5].forEach(function (j, i) { tt3.push([Q(i % 2 ? -1 : 1).mul(Q(k2).pow(j)).div(fact(j)), j]); });
       else [0, 2, 4].forEach(function (j, i) { tt3.push([Q(i % 2 ? -1 : 1).mul(Q(k2).pow(j)).div(fact(j)), j]); });
       return done({
@@ -3091,17 +3247,27 @@
         hint: 'Write out the series for $\\' + fn + ' u$, then substitute.'
       }, { custom: function (p) { return polyMatch(p.a.v, function (x) { var s = 0; tt3.forEach(function (t) { s += t[0].toNumber() * Math.pow(x, t[1]); }); return s; }, [0.3, -0.8, 1.7]); } });
     }
-    var cf2 = R.pick(['sqrt4', 'sqrt9', 'inv1']);
-    if (cf2 === 'inv1') {
-      var tt4 = [[Q(1), 0], [Q(-1), 1], [Q(1), 2], [Q(-1), 3]];
+    var cf2 = R.pick(['sqrt', 'sqrt', 'inv1', 'inv1', 'ln1']);
+    var derivMatch = function (F, c0, deg) { return function (p) { var t = CAS.parse(F), co = []; for (var j = 0; j <= deg; j++) { co.push(CAS.compile(t, ['x'])(c0) / fact(j)); t = CAS.deriv(t, 'x'); } return polyMatch(p.a.v, function (x) { var s = 0; co.forEach(function (c, j) { s += c * Math.pow(x - c0, j); }); return s; }, [c0 - 0.4, c0 + 0.7, c0 + 1.3]); }; };
+    if (cf2 === 'ln1') {
+      var tt6 = [[Q(1), 1], [Q(-1, 2), 2], [Q(1, 3), 3]];
       return done({
-        q: 'Find the Taylor polynomial $T_3(x)$ of $f(x) = \\frac{1}{x}$ centered at $1$.',
-        a: { t: 'expr', v: tayP(tt4, 1), vars: ['x'] },
-        steps: ['$f(1) = 1$, $f\'(1) = -1$, $f\'\'(1) = 2$, $f\'\'\'(1) = -6$.', 'Divide by $0!, 1!, 2!, 3!$: coefficients $1, -1, 1, -1$.', '$T_3(x) = ' + tayT(tt4, 1) + '$.'],
-        hint: 'Compute $f$, $f\'$, $f\'\'$, $f\'\'\'$ at 1 and divide by factorials.'
-      }, { custom: function (p) { return polyMatch(p.a.v, function (x) { var u = x - 1; return 1 - u + u * u - u * u * u; }, [0.3, 1.8, 2.5]); } });
+        q: 'Find the Taylor polynomial $T_3(x)$ of $f(x) = \\ln x$ centered at $1$.',
+        a: { t: 'expr', v: tayP(tt6, 1), vars: ['x'] },
+        steps: ['$f(1) = 0$, $f\'(x) = \\frac{1}{x}$, $f\'\'(x) = -\\frac{1}{x^{2}}$, $f\'\'\'(x) = \\frac{2}{x^{3}}$, so $f\'(1) = 1$, $f\'\'(1) = -1$, $f\'\'\'(1) = 2$.', 'Divide by $1!, 2!, 3!$: coefficients $1, -\\frac{1}{2}, \\frac{1}{3}$.', '$T_3(x) = ' + tayT(tt6, 1) + '$.'],
+        hint: 'Compute the derivatives at 1 and divide by factorials.'
+      }, { custom: derivMatch('ln(x)', 1, 3) });
     }
-    var A = cf2 === 'sqrt4' ? 4 : 9, s0 = Math.sqrt(A), tt5 = [[Q(s0), 0], [Q(1, 2 * s0), 1], [Q(-1, 8 * s0 * s0 * s0), 2]];
+    if (cf2 === 'inv1') {
+      var cI = R.pick([1, 1, 2, 3, 4, 5]), tt4 = [0, 1, 2, 3].map(function (j) { return [Q(j % 2 ? -1 : 1, Math.pow(cI, j + 1)), j]; });
+      return done({
+        q: 'Find the Taylor polynomial $T_3(x)$ of $f(x) = \\frac{1}{x}$ centered at $' + cI + '$.',
+        a: { t: 'expr', v: tayP(tt4, cI), vars: ['x'] },
+        steps: ['$f(' + cI + ') = ' + tx(Q(1, cI)) + '$, $f\'(' + cI + ') = ' + tx(Q(-1, cI * cI)) + '$, $f\'\'(' + cI + ') = ' + tx(Q(2, Math.pow(cI, 3))) + '$, $f\'\'\'(' + cI + ') = ' + tx(Q(-6, Math.pow(cI, 4))) + '$.', 'Divide by $0!, 1!, 2!, 3!$: coefficients $' + tt4.map(function (t) { return tx(t[0]); }).join(', ') + '$.', '$T_3(x) = ' + tayT(tt4, cI) + '$.'],
+        hint: 'Compute $f$, $f\'$, $f\'\'$, $f\'\'\'$ at ' + cI + ' and divide by factorials.'
+      }, { custom: derivMatch('1/x', cI, 3) });
+    }
+    var A = R.pick([4, 9, 16, 25, 36, 49]), s0 = Math.sqrt(A), tt5 = [[Q(s0), 0], [Q(1, 2 * s0), 1], [Q(-1, 8 * s0 * s0 * s0), 2]];
     return done({
       q: 'Find the Taylor polynomial $T_2(x)$ of $f(x) = \\sqrt{x}$ centered at $' + A + '$.',
       a: { t: 'expr', v: tayP(tt5, A), vars: ['x'] },
@@ -3131,18 +3297,18 @@
       }, null);
     }
     if (shape === 'exp') {
-      var n3 = R.int(1, 7), x3 = R.pick([Q(1), Q(1, 2)]), Mv = x3.eq(1) ? 3 : 2, B3 = Q(Mv).mul(x3.pow(n3 + 1)).div(fact(n3 + 1));
+      var n3 = R.int(1, 8), x3 = R.pick([Q(1), Q(1, 2), Q(1, 3), Q(1, 4)]), Mv = x3.eq(1) ? 3 : 2, B3 = Q(Mv).mul(x3.pow(n3 + 1)).div(fact(n3 + 1));
       return done({
-        q: 'Approximate $' + (x3.eq(1) ? 'e' : '\\sqrt{e} = e^{1/2}') + '$ with the Taylor polynomial $T_{' + n3 + '}$ of $e^{x}$ at 0. Using $M = ' + Mv + '$ (since $e^{' + (x3.eq(1) ? '1' : '1/2') + '} < ' + Mv + '$), what bound does Taylor\'s inequality give on the error?',
+        q: 'Approximate $' + (x3.eq(1) ? 'e' : '\\sqrt' + (x3.d === 2n ? '' : '[' + x3.d + ']') + '{e} = e^{' + tx(x3).replace(/\\frac\{(\d+)\}\{(\d+)\}/, '$1/$2') + '}') + '$ with the Taylor polynomial $T_{' + n3 + '}$ of $e^{x}$ at 0. Using $M = ' + Mv + '$ (since $e^{' + (x3.eq(1) ? '1' : '1/' + x3.d) + '} < ' + Mv + '$), what bound does Taylor\'s inequality give on the error?',
         a: { t: 'num', v: B3.toPlain() },
-        steps: ['On $[0, ' + tx(x3) + ']$, $f^{(' + (n3 + 1) + ')}(t) = e^{t} \\le e^{' + (x3.eq(1) ? '1' : '1/2') + '} < ' + Mv + '$.', '$|R_{' + n3 + '}| \\le \\frac{' + Mv + '}{' + (n3 + 1) + '!}\\left(' + tx(x3) + '\\right)^{' + (n3 + 1) + '} = ' + tx(B3) + '$.'],
+        steps: ['On $[0, ' + tx(x3) + ']$, $f^{(' + (n3 + 1) + ')}(t) = e^{t} \\le e^{' + (x3.eq(1) ? '1' : '1/' + x3.d) + '} < ' + Mv + '$.', '$|R_{' + n3 + '}| \\le \\frac{' + Mv + '}{' + (n3 + 1) + '!}\\left(' + tx(x3) + '\\right)^{' + (n3 + 1) + '} = ' + tx(B3) + '$.'],
         hint: 'Use $\\frac{M|x|^{n+1}}{(n + 1)!}$ with the given $M$.'
       }, { custom: function () { var t = x3.toNumber(), s = 0; for (var j = 0; j <= n3; j++) s += Math.pow(t, j) / fact(j); return Math.abs(Math.exp(t) - s) <= B3.toNumber() ? '' : 'exp bound violated'; } });
     }
-    var fam = R.pick(['sin', 'e']), tol = R.pick([Q(1, 100), Q(1, 1000), Q(1, 10000), Q(1, 100000)]), Mv2 = fam === 'e' ? 3 : 1, nn = 0;
+    var fam = R.pick(['sin', 'e', 'cos']), tol = R.pick([Q(1, 50), Q(1, 100), Q(1, 500), Q(1, 1000), Q(1, 5000), Q(1, 10000), Q(1, 100000), Q(1, 1000000)]), Mv2 = fam === 'e' ? 3 : 1, nn = 0;
     while (Q(Mv2, fact(nn + 1)).gt(tol) || Q(Mv2, fact(nn + 1)).eq(tol)) nn++;
     return done({
-      q: 'What is the smallest $n$ for which Taylor\'s inequality guarantees that $T_n(1)$ approximates ' + (fam === 'e' ? '$e$ (from $e^{x}$ at 0, with $M = 3$)' : '$\\sin 1$ (from $\\sin x$ at 0, with $M = 1$)') + ' with error less than $' + dec(tol) + '$?',
+      q: 'What is the smallest $n$ for which Taylor\'s inequality guarantees that $T_n(1)$ approximates ' + (fam === 'e' ? '$e$ (from $e^{x}$ at 0, with $M = 3$)' : fam === 'cos' ? '$\\cos 1$ (from $\\cos x$ at 0, with $M = 1$)' : '$\\sin 1$ (from $\\sin x$ at 0, with $M = 1$)') + ' with error less than $' + dec(tol) + '$?',
       a: { t: 'num', v: String(nn), form: 'int' },
       steps: ['At $x = 1$ the bound is $\\frac{' + Mv2 + '}{(n + 1)!}$. We need it to be less than $' + dec(tol) + '$, that is $(n + 1)! > ' + tol.inv().mul(Mv2).toNumber() + '$.', '$' + nn + '! = ' + fact(nn) + '$ is not big enough, but $' + (nn + 1) + '! = ' + fact(nn + 1) + '$ is.', 'So $n + 1 = ' + (nn + 1) + '$: $n = ' + nn + '$.'],
       hint: 'Factorials grow fast: list them until one passes the target.'
@@ -3150,10 +3316,22 @@
   });
 
   G('calc2.known-series', function (R, ctx) {
-    var shape = by(ctx, R.pick(['sub', 'sub', 'coef']), R.pick(['coef', 'sum', 'sub']), R.pick(['sum', 'coef', 'sum']));
+    var shape = by(ctx, R.pick(['sub', 'sub', 'coef', 'coef']), R.pick(['coef', 'sum', 'sub']), R.pick(['sum', 'coef', 'sum']));
     if (shape === 'sub') {
-      var k = R.int(1, 3), fam = R.pick(['egauss', 'xe', 'x2cos', 'sinx2', 'cosrt', 'xsin', 'sinc', 'expm1']), tt, fT, st, ex;
-      if (fam === 'egauss') { var kk = R.pick([1, -1, 2, -2]); tt = [[Q(1), 0], [Q(kk), 2], [Q(kk * kk, 2), 4]]; fT = 'e^{' + cf(kk, 'x^{2}') + '}'; st = 'Substitute $u = ' + cf(kk, 'x^{2}') + '$ into $e^{u} = 1 + u + \\frac{u^{2}}{2!} + \\cdots$.'; ex = function (x) { return 1 + kk * x * x + kk * kk * Math.pow(x, 4) / 2; }; }
+      var k = R.int(1, 4), fam = R.pick(['egauss', 'xe', 'x2cos', 'sinx2', 'cosrt', 'xsin', 'sinc', 'expm1', 'ek', 'cosk', 'x2e', 'xcos', 'xeg']), tt, fT, st, ex, nf = null;
+      var ku = cf(k, 'x'), kT = k === 1 ? ' x' : '(' + k + 'x)';
+      if (fam === 'ek') { var ke = R.pick([1, 2, 3, 4, -1, -2, -3]); tt = [[Q(1), 0], [Q(ke), 1], [Q(ke * ke, 2), 2]]; fT = 'e^{' + cf(ke, 'x') + '}'; st = 'Substitute $u = ' + cf(ke, 'x') + '$ into $e^{u} = 1 + u + \\frac{u^{2}}{2!} + \\cdots$.'; nf = [function (x) { return Math.exp(ke * x); }, 3, ke]; }
+      else if (fam === 'cosk') { var kc = R.int(2, 5); tt = [[Q(1), 0], [Q(-kc * kc, 2), 2], [Q(Math.pow(kc, 4), 24), 4]]; fT = '\\cos(' + kc + 'x)'; st = 'Substitute $u = ' + kc + 'x$ into $\\cos u = 1 - \\frac{u^{2}}{2!} + \\frac{u^{4}}{4!} - \\cdots$.'; nf = [function (x) { return Math.cos(kc * x); }, 6, kc]; }
+      else if (fam === 'x2e') { tt = [[Q(1), 2], [Q(k), 3], [Q(k * k, 2), 4]]; fT = 'x^{2}e^{' + ku + '}'; st = 'Multiply $e^{' + ku + '} = 1 + ' + ku + ' + \\frac{(' + ku + ')^{2}}{2!} + \\cdots$ by $x^{2}$.'; nf = [function (x) { return x * x * Math.exp(k * x); }, 5, k]; }
+      else if (fam === 'xcos') { tt = [[Q(1), 1], [Q(-k * k, 2), 3], [Q(Math.pow(k, 4), 24), 5]]; fT = 'x\\cos' + kT; st = 'Multiply $\\cos u = 1 - \\frac{u^{2}}{2!} + \\frac{u^{4}}{4!} - \\cdots$ (with $u = ' + ku + '$) by $x$.'; nf = [function (x) { return x * Math.cos(k * x); }, 7, k]; }
+      else if (fam === 'xeg') { var kg = R.pick([1, -1, 2, -2]); tt = [[Q(1), 1], [Q(kg), 3], [Q(kg * kg, 2), 5]]; fT = 'xe^{' + cf(kg, 'x^{2}') + '}'; st = 'Substitute $u = ' + cf(kg, 'x^{2}') + '$ into $e^{u} = 1 + u + \\frac{u^{2}}{2!} + \\cdots$, then multiply by $x$.'; nf = [function (x) { return x * Math.exp(kg * x * x); }, 7, kg]; }
+      if (nf) return done({
+        q: 'Find the first three nonzero terms of the Maclaurin series of $' + fT + '$. Enter their sum.',
+        a: { t: 'expr', v: tayP(tt, 0), vars: ['x'] },
+        steps: [st, 'First three nonzero terms: $' + tayT(tt, 0) + '$.'],
+        hint: 'Start from a series you know and substitute, multiply or divide.'
+      }, { custom: function (p) { var bad = ''; [5e-4, -6e-4].forEach(function (x) { var d = Math.abs(ML.evalPlain(p.a.v, { x: x }) - nf[0](x)); if (d > Math.max(1e-13, 3 * Math.pow(Math.abs(nf[2]) + 1, nf[1]) * Math.pow(Math.abs(x), nf[1]))) bad = 'near 0 mismatch at ' + x + ': ' + d; }); return bad; } });
+      if (fam === 'egauss') { var kk = R.pick([1, -1, 2, -2, 3, -3]); tt = [[Q(1), 0], [Q(kk), 2], [Q(kk * kk, 2), 4]]; fT = 'e^{' + cf(kk, 'x^{2}') + '}'; st = 'Substitute $u = ' + cf(kk, 'x^{2}') + '$ into $e^{u} = 1 + u + \\frac{u^{2}}{2!} + \\cdots$.'; ex = function (x) { return 1 + kk * x * x + kk * kk * Math.pow(x, 4) / 2; }; }
       else if (fam === 'xe') { tt = [[Q(1), 1], [Q(k), 2], [Q(k * k, 2), 3]]; fT = 'xe^{' + cf(k, 'x') + '}'; st = 'Multiply $e^{' + cf(k, 'x') + '} = 1 + ' + cf(k, 'x') + ' + \\frac{(' + cf(k, 'x') + ')^{2}}{2!} + \\cdots$ by $x$.'; ex = function (x) { return x + k * x * x + k * k * x * x * x / 2; }; }
       else if (fam === 'x2cos') { tt = [[Q(1), 2], [Q(-k * k, 2), 4], [Q(Math.pow(k, 4), 24), 6]]; fT = 'x^{2}\\cos' + (k === 1 ? ' x' : '(' + k + 'x)'); st = 'Multiply $\\cos u = 1 - \\frac{u^{2}}{2!} + \\frac{u^{4}}{4!} - \\cdots$ (with $u = ' + cf(k, 'x') + '$) by $x^{2}$.'; ex = function (x) { return x * x - k * k * Math.pow(x, 4) / 2 + Math.pow(k, 4) * Math.pow(x, 6) / 24; }; }
       else if (fam === 'sinx2') { tt = [[Q(1), 2], [Q(-1, 6), 6], [Q(1, 120), 10]]; fT = '\\sin(x^{2})'; st = 'Substitute $u = x^{2}$ into $\\sin u = u - \\frac{u^{3}}{3!} + \\frac{u^{5}}{5!} - \\cdots$.'; ex = function (x) { return x * x - Math.pow(x, 6) / 6 + Math.pow(x, 10) / 120; }; }
@@ -3169,11 +3347,11 @@
       }, { custom: function (p) { return polyMatch(p.a.v, ex, [0.3, 0.8, 1.7]); } });
     }
     if (shape === 'coef') {
-      var j = R.int(1, 3), k2 = R.pick([1, 2, -1, 3, -2, Q(1, 2)]), m = j + R.int(2, 5), val = Qf(k2).pow(m - j).div(fact(m - j));
+      var j = R.int(1, 3), k2 = R.pick([1, 2, -1, 3, -2, Q(1, 2), 4, -3, Q(-1, 2), Q(1, 3)]), m = j + R.int(2, 5), val = Qf(k2).pow(m - j).div(fact(m - j));
       return done({
-        q: 'What is the coefficient of $x^{' + m + '}$ in the Maclaurin series of $' + (j === 1 ? 'x' : 'x^{2}') + 'e^{' + cf(k2, 'x') + '}$?',
+        q: 'What is the coefficient of $x^{' + m + '}$ in the Maclaurin series of $' + (j === 1 ? 'x' : 'x^{' + j + '}') + 'e^{' + cf(k2, 'x') + '}$?',
         a: { t: 'num', v: val.toPlain() },
-        steps: ['$e^{' + cf(k2, 'x') + '} = \\sum_{n=0}^{\\infty}\\frac{' + (k2 === 1 ? '' : T.pow(k2, 'n')) + 'x^{n}}{n!}$, so $' + (j === 1 ? 'x' : 'x^{2}') + 'e^{' + cf(k2, 'x') + '} = \\sum_{n=0}^{\\infty}\\frac{' + (k2 === 1 ? '' : T.pow(k2, 'n')) + 'x^{n+' + j + '}}{n!}$.', 'The power $x^{' + m + '}$ comes from $n = ' + (m - j) + '$: coefficient $\\frac{' + (k2 === 1 ? '1' : T.pow(k2, m - j)) + '}{' + (m - j) + '!} = ' + tx(val) + '$.'],
+        steps: ['$e^{' + cf(k2, 'x') + '} = \\sum_{n=0}^{\\infty}\\frac{' + (k2 === 1 ? '' : T.pow(k2, 'n')) + 'x^{n}}{n!}$, so $' + (j === 1 ? 'x' : 'x^{' + j + '}') + 'e^{' + cf(k2, 'x') + '} = \\sum_{n=0}^{\\infty}\\frac{' + (k2 === 1 ? '' : T.pow(k2, 'n')) + 'x^{n+' + j + '}}{n!}$.', 'The power $x^{' + m + '}$ comes from $n = ' + (m - j) + '$: coefficient $\\frac{' + (k2 === 1 ? '1' : T.pow(k2, m - j)) + '}{' + (m - j) + '!} = ' + tx(val) + '$.'],
         hint: 'Shift the index: which $n$ gives the power you want?'
       }, null);
     }
@@ -3184,25 +3362,38 @@
       { t: SUM(0, '\\frac{(-1)^{n}\\pi^{2n+1}}{2^{2n+1}(2n + 1)!}'), v: '1', vt: '1', s: 'This is $\\sin x = \\sum\\frac{(-1)^{n}x^{2n+1}}{(2n + 1)!}$ at $x = \\frac{\\pi}{2}$: $\\sin\\frac{\\pi}{2} = 1$.' },
       { t: SUM(1, '\\frac{1}{n\\,2^{n}}'), v: 'ln(2)', vt: '\\ln 2', s: 'This is $-\\ln(1 - x) = \\sum\\frac{x^{n}}{n}$ at $x = \\frac{1}{2}$: $-\\ln\\frac{1}{2} = \\ln 2$.' },
       { t: SUM(1, '\\frac{(-1)^{n+1}}{n\\,2^{n}}'), v: 'ln(3/2)', vt: '\\ln\\frac{3}{2}', s: 'This is $\\ln(1 + x) = \\sum\\frac{(-1)^{n+1}x^{n}}{n}$ at $x = \\frac{1}{2}$.' },
-      { t: SUM(0, '\\frac{(-K)^{n}}{n!}'), v: 'e^(-K)', vt: 'e^{-K}', s: 'This is $e^{x}$ at $x = -K$.' }
-    ]), K = R.int(2, 5), sb = function (s) { return s.replace(/\bK\b/g, String(K)); };
+      { t: SUM(0, '\\frac{(-K)^{n}}{n!}'), v: 'e^(-K)', vt: 'e^{-K}', s: 'This is $e^{x}$ at $x = -K$.' },
+      { t: SUM(0, '\\frac{(-1)^{n}K^{2n}}{(2n)!}'), v: 'cos(K)', vt: '\\cos K', s: 'This is $\\cos x = \\sum\\frac{(-1)^{n}x^{2n}}{(2n)!}$ at $x = K$.', f: function (n) { return Math.pow(-1, n) * Math.pow(K, 2 * n) / fact(2 * n); }, lo: 0 },
+      { t: SUM(0, '\\frac{(-1)^{n}K^{2n+1}}{(2n + 1)!}'), v: 'sin(K)', vt: '\\sin K', s: 'This is $\\sin x = \\sum\\frac{(-1)^{n}x^{2n+1}}{(2n + 1)!}$ at $x = K$.', f: function (n) { return Math.pow(-1, n) * Math.pow(K, 2 * n + 1) / fact(2 * n + 1); }, lo: 0 },
+      { t: SUM(1, '\\frac{K^{n}}{n!}'), v: 'e^K-1', vt: 'e^{K} - 1', s: 'This is $e^{x} = \\sum_{n=0}^{\\infty}\\frac{x^{n}}{n!}$ at $x = K$, without the $n = 0$ term (which is 1).', f: function (n) { return Math.pow(K, n) / fact(n); }, lo: 1 },
+      { t: SUM(0, '\\frac{1}{K^{n}\\,n!}'), v: 'e^(1/K)', vt: 'e^{1/K}', s: 'This is $e^{x} = \\sum\\frac{x^{n}}{n!}$ at $x = \\frac{1}{K}$.', f: function (n) { return 1 / (Math.pow(K, n) * fact(n)); }, lo: 0 },
+      { t: SUM(0, '\\frac{(-1)^{n}}{K^{n}\\,n!}'), v: 'e^(-1/K)', vt: 'e^{-1/K}', s: 'This is $e^{x}$ at $x = -\\frac{1}{K}$.', f: function (n) { return Math.pow(-1, n) / (Math.pow(K, n) * fact(n)); }, lo: 0 },
+      { t: SUM(1, '\\frac{1}{n\\,K^{n}}'), v: 'ln(K/J)', vt: '\\ln\\frac{K}{J}', s: 'This is $-\\ln(1 - x) = \\sum\\frac{x^{n}}{n}$ at $x = \\frac{1}{K}$: $-\\ln\\frac{J}{K} = \\ln\\frac{K}{J}$.', f: function (n) { return 1 / (n * Math.pow(K, n)); }, lo: 1 },
+      { t: SUM(1, '\\frac{(-1)^{n+1}}{n\\,K^{n}}'), v: 'ln(L/K)', vt: '\\ln\\frac{L}{K}', s: 'This is $\\ln(1 + x) = \\sum\\frac{(-1)^{n+1}x^{n}}{n}$ at $x = \\frac{1}{K}$: $\\ln\\left(1 + \\frac{1}{K}\\right) = \\ln\\frac{L}{K}$.', f: function (n) { return Math.pow(-1, n + 1) / (n * Math.pow(K, n)); }, lo: 1 }
+    ]), K = R.int(2, 9), sb = function (s) { return s.replace(/\bJ\b/g, String(K - 1)).replace(/\bL\b/g, String(K + 1)).replace(/\bK\b/g, String(K)); };
     return done({
       q: 'Find the exact sum $' + sb(S.t) + '$.',
       a: { t: 'num', v: sb(S.v) },
       steps: ['Match the pattern to a series you know: $e^{x}$, $\\sin x$, $\\cos x$, $\\ln(1 + x)$.', sb(S.s), 'Sum: $' + sb(S.vt) + '$.'],
       hint: 'Factorials suggest $e^{x}$, $\\sin x$ or $\\cos x$; a plain $n$ in the denominator suggests a logarithm.'
-    }, { custom: function (p) { var tf = sb(S.t), v = ML.evalPlain(p.a.v), s; if (/K\^\{n\}|\{K\}/.test(S.t) || /\(-K\)/.test(S.t)) { var kk = /-K/.test(S.t) ? -K : K; s = nsum(function (n) { return Math.pow(kk, n) / fact(n); }, 0, 60); } else if (/2\^\{n\}\}/.test(S.t) && /n\\,2/.test(S.t)) { var alt = /\(-1\)/.test(S.t); s = nsum(function (n) { return (alt ? Math.pow(-1, n + 1) : 1) / (n * Math.pow(2, n)); }, 1, 200); } else if (/\\pi\^\{2n\+1\}/.test(S.t)) s = nsum(function (n) { return Math.pow(-1, n) * Math.pow(Math.PI / 2, 2 * n + 1) / fact(2 * n + 1); }, 0, 30); else if (/3\^\{2n\}/.test(S.t)) s = nsum(function (n) { return Math.pow(-1, n) * Math.pow(Math.PI / 3, 2 * n) / fact(2 * n); }, 0, 30); else s = nsum(function (n) { return Math.pow(-1, n) * Math.pow(Math.PI, 2 * n) / fact(2 * n); }, 0, 30); return Math.abs(s - v) < 1e-9 ? '' : 'known sum ' + s + ' vs ' + v; } });
+    }, { custom: function (p) { var tf = sb(S.t), v = ML.evalPlain(p.a.v), s; if (S.f) s = nsum(S.f, S.lo, 70); else if (/K\^\{n\}|\{K\}/.test(S.t) || /\(-K\)/.test(S.t)) { var kk = /-K/.test(S.t) ? -K : K; s = nsum(function (n) { return Math.pow(kk, n) / fact(n); }, 0, 60); } else if (/2\^\{n\}\}/.test(S.t) && /n\\,2/.test(S.t)) { var alt = /\(-1\)/.test(S.t); s = nsum(function (n) { return (alt ? Math.pow(-1, n + 1) : 1) / (n * Math.pow(2, n)); }, 1, 200); } else if (/\\pi\^\{2n\+1\}/.test(S.t)) s = nsum(function (n) { return Math.pow(-1, n) * Math.pow(Math.PI / 2, 2 * n + 1) / fact(2 * n + 1); }, 0, 30); else if (/3\^\{2n\}/.test(S.t)) s = nsum(function (n) { return Math.pow(-1, n) * Math.pow(Math.PI / 3, 2 * n) / fact(2 * n); }, 0, 30); else s = nsum(function (n) { return Math.pow(-1, n) * Math.pow(Math.PI, 2 * n) / fact(2 * n); }, 0, 30); return Math.abs(s - v) < 1e-9 ? '' : 'known sum ' + s + ' vs ' + v; } });
   });
 
   G('calc2.binomial-series', function (R, ctx) {
-    var shape = by(ctx, R.pick(['coef', 'radius', 'coef']), R.pick(['terms', 'coef', 'approx']), R.pick(['shift', 'terms', 'approx']));
-    var ks = [Q(1, 2), Q(-1, 2), Q(1, 3), Q(-1, 3), Q(3, 2), Q(-2), Q(-3), Q(2, 3)];
+    var shape = by(ctx, R.pick(['coef', 'radius', 'coef']), R.pick(['terms', 'coef', 'approx']), R.pick(['shift', 'terms', 'approx', 'terms', 'approx']));
+    var ks = [Q(1, 2), Q(-1, 2), Q(1, 3), Q(-1, 3), Q(3, 2), Q(-2), Q(-3), Q(2, 3), Q(5, 2), Q(-3, 2), Q(1, 4), Q(-1, 4)];
     if (shape === 'coef') {
-      var k = R.pick(ks), m = R.pick([2, 3]), val = binom(k, m);
+      var k = R.pick(ks), m = R.pick([2, 3, 4]), val = binom(k, m), cb = R.pick([2, 3, -1, -2]);
+      if (R.coin()) return done({
+        q: 'What is the coefficient of $x^{' + m + '}$ in the binomial series for $(1 ' + (cb > 0 ? '+ ' : '- ') + cf(Math.abs(cb), 'x') + ')^{' + tx(k) + '}$?',
+        a: { t: 'num', v: val.mul(Q(cb).pow(m)).toPlain() },
+        steps: ['$(1 + u)^{k} = \\sum\\binom{k}{n}u^{n}$ with $u = ' + cf(cb, 'x') + '$, so the $x^{' + m + '}$ term is $\\binom{' + tx(k) + '}{' + m + '}' + T.pow(cb, m) + 'x^{' + m + '}$.', '$\\binom{' + tx(k) + '}{' + m + '} = \\frac{' + [0, 1, 2, 3].slice(0, m).map(function (i) { return T.p(k.sub(i)); }).join('\\cdot ') + '}{' + m + '!} = ' + tx(val) + '$.', 'Multiply by $' + T.pow(cb, m) + ' = ' + Math.pow(cb, m) + '$: the coefficient is $' + tx(val.mul(Q(cb).pow(m))) + '$.'],
+        hint: 'Find $\\binom{k}{n}$, then multiply by the $n$th power of the coefficient of $x$.'
+      }, { custom: function (p) { var kk = k.toNumber(), b = 1; for (var i = 0; i < m; i++) b *= (kk - i) / (i + 1); return Math.abs(ML.evalPlain(p.a.v) - b * Math.pow(cb, m)) < 1e-12 ? '' : 'coef'; } });
       return done({
         q: 'Find the binomial coefficient $\\binom{' + tx(k) + '}{' + m + '}$, the coefficient of $x^{' + m + '}$ in $(1 + x)^{' + tx(k) + '}$.',
         a: { t: 'num', v: val.toPlain() },
-        steps: ['$\\binom{k}{n} = \\frac{k(k - 1)\\cdots(k - n + 1)}{n!}$, which makes sense for any real $k$.', '$\\binom{' + tx(k) + '}{' + m + '} = \\frac{' + [0, 1, 2].slice(0, m).map(function (i) { return T.p(k.sub(i)); }).join('\\cdot ') + '}{' + m + '!}$.', '$= ' + tx(val) + '$.'],
+        steps: ['$\\binom{k}{n} = \\frac{k(k - 1)\\cdots(k - n + 1)}{n!}$, which makes sense for any real $k$.', '$\\binom{' + tx(k) + '}{' + m + '} = \\frac{' + [0, 1, 2, 3].slice(0, m).map(function (i) { return T.p(k.sub(i)); }).join('\\cdot ') + '}{' + m + '!}$.', '$= ' + tx(val) + '$.'],
         hint: 'Multiply $k$, $k - 1$, … ($n$ factors), then divide by $n!$.'
       }, null);
     }
@@ -3225,7 +3416,7 @@
       }, { custom: function (p) { return polyMatch(p.a.v, function (x) { return 1 + k3.toNumber() * c3 * x + k3.toNumber() * (k3.toNumber() - 1) / 2 * c3 * c3 * x * x; }, [0.3, -0.7, 1.4]); } });
     }
     if (shape === 'shift') {
-      var a4 = R.int(2, 4), f = R.pick(['sqrt', 'inv']), tt4, fT, st;
+      var a4 = R.int(2, 6), f = R.pick(['sqrt', 'inv']), tt4, fT, st;
       if (f === 'sqrt') { tt4 = [[Q(a4), 0], [Q(1, 2 * a4), 1], [Q(-1, 8 * a4 * a4 * a4), 2]]; fT = '\\sqrt{' + a4 * a4 + ' + x}'; st = '$\\sqrt{' + a4 * a4 + ' + x} = ' + a4 + '\\left(1 + \\frac{x}{' + a4 * a4 + '}\\right)^{1/2} = ' + a4 + '\\left(1 + \\frac{x}{' + 2 * a4 * a4 + '} - \\frac{x^{2}}{' + 8 * Math.pow(a4, 4) + '} + \\cdots\\right)$.'; }
       else { tt4 = [[Q(1, a4), 0], [Q(-1, a4 * a4), 1], [Q(1, a4 * a4 * a4), 2]]; fT = '\\frac{1}{' + a4 + ' + x}'; st = '$\\frac{1}{' + a4 + ' + x} = \\frac{1}{' + a4 + '}\\left(1 + \\frac{x}{' + a4 + '}\\right)^{-1} = \\frac{1}{' + a4 + '}\\left(1 - \\frac{x}{' + a4 + '} + \\frac{x^{2}}{' + a4 * a4 + '} - \\cdots\\right)$.'; }
       return done({
@@ -3235,7 +3426,7 @@
         hint: 'Pull the constant out first: $(a + x)^{k} = a^{k}\\left(1 + \\frac{x}{a}\\right)^{k}$.'
       }, { custom: function (p) { return polyMatch(p.a.v, function (x) { var s = 0; tt4.forEach(function (t) { s += t[0].toNumber() * Math.pow(x, t[1]); }); return s; }, [0.3, -0.7, 1.4]); } });
     }
-    var h = R.pick([Q(1, 10), Q(1, 5), Q(-1, 10), Q(1, 20), Q(-1, 5), Q(1, 4)]), k5 = R.pick([Q(1, 2), Q(1, 3), Q(-1, 2)]), approx = Q(1).add(k5.mul(h)).add(binom(k5, 2).mul(h.mul(h)));
+    var h = R.pick([Q(1, 10), Q(1, 5), Q(-1, 10), Q(1, 20), Q(-1, 5), Q(1, 4), Q(-1, 4), Q(3, 10), Q(-1, 20), Q(1, 50)]), k5 = R.pick([Q(1, 2), Q(1, 3), Q(-1, 2)]), approx = Q(1).add(k5.mul(h)).add(binom(k5, 2).mul(h.mul(h)));
     var rootT = k5.eq(Q(1, 2)) ? '\\sqrt{' + dec(Q(1).add(h)) + '}' : k5.eq(Q(1, 3)) ? '\\sqrt[3]{' + dec(Q(1).add(h)) + '}' : '\\frac{1}{\\sqrt{' + dec(Q(1).add(h)) + '}}';
     return done({
       q: 'Estimate $' + rootT + '$ with the first three terms of the binomial series for $(1 + x)^{' + tx(k5) + '}$. Give the exact value of the estimate.',
@@ -3246,7 +3437,7 @@
   });
 
   G('calc2.series-applications', function (R, ctx) {
-    var shape = by(ctx, R.pick(['limit', 'approx']), R.pick(['limit', 'integral', 'approx']), R.pick(['integral', 'limit', 'integral']));
+    var shape = by(ctx, R.pick(['limit', 'approx']), R.pick(['limit', 'integral', 'approx']), R.pick(['integral', 'limit', 'integral', 'limit']));
     if (shape === 'limit') {
       var k = R.int(1, 4), L = R.pick([
         { t: '\\frac{\\sin(Kx) - Kx}{x^{3}}', v: Q(-k * k * k, 6), s: '$\\sin(Kx) = Kx - \\frac{(Kx)^{3}}{6} + \\cdots$, so the top is $-\\frac{K^{3}x^{3}}{6} + (\\text{higher powers})$.', f: function (x) { return (Math.sin(k * x) - k * x) / (x * x * x); } },
@@ -3266,9 +3457,11 @@
       }, { custom: function () { var v = L.f(1e-3) / md, w = lv.toNumber(); return Math.abs(v - w) < 0.02 * Math.max(1, Math.abs(w)) ? '' : 'limit ' + v + ' vs ' + w; } });
     }
     if (shape === 'integral') {
-      var fam = R.pick(['gauss', 'sinx2', 'cosx2']), b = R.pick([Q(1, 2), Q(1), Q(1, 3), Q(1, 4), Q(2, 5), Q(3, 5)]), val, fT, st, f;
+      var fam = R.pick(['gauss', 'sinx2', 'cosx2', 'sinc', 'atanx2']), b = R.pick([Q(1, 2), Q(1), Q(1, 3), Q(1, 4), Q(2, 5), Q(3, 5), Q(1, 5), Q(3, 4), Q(2, 3), Q(1, 10), Q(4, 5)]), val, fT, st, f;
       var nextB;
-      if (fam === 'gauss') { val = b.sub(b.pow(3).div(3)).add(b.pow(5).div(10)); nextB = b.pow(7).div(42).toNumber(); fT = 'e^{-x^{2}}'; st = ['$e^{-x^{2}} = 1 - x^{2} + \\frac{x^{4}}{2} - \\cdots$.', 'Integrate term by term: $x - \\frac{x^{3}}{3} + \\frac{x^{5}}{10}$ from 0 to $' + tx(b) + '$.']; f = function (x) { return Math.exp(-x * x); }; }
+      if (fam === 'sinc') { val = b.sub(b.pow(3).div(18)).add(b.pow(5).div(600)); nextB = b.pow(7).div(35280).toNumber(); fT = '\\frac{\\sin x}{x}'; st = ['$\\frac{\\sin x}{x} = 1 - \\frac{x^{2}}{6} + \\frac{x^{4}}{120} - \\cdots$ (divide the sine series by $x$).', 'Integrate term by term: $x - \\frac{x^{3}}{18} + \\frac{x^{5}}{600}$ from 0 to $' + tx(b) + '$.']; f = function (x) { return Math.sin(x) / x; }; }
+      else if (fam === 'atanx2') { val = b.pow(3).div(3).sub(b.pow(7).div(21)).add(b.pow(11).div(55)); nextB = b.pow(15).div(105).toNumber(); fT = '\\arctan(x^{2})'; st = ['$\\arctan(x^{2}) = x^{2} - \\frac{x^{6}}{3} + \\frac{x^{10}}{5} - \\cdots$.', 'Integrate term by term: $\\frac{x^{3}}{3} - \\frac{x^{7}}{21} + \\frac{x^{11}}{55}$ from 0 to $' + tx(b) + '$.']; f = function (x) { return Math.atan(x * x); }; }
+      else if (fam === 'gauss') { val = b.sub(b.pow(3).div(3)).add(b.pow(5).div(10)); nextB = b.pow(7).div(42).toNumber(); fT = 'e^{-x^{2}}'; st = ['$e^{-x^{2}} = 1 - x^{2} + \\frac{x^{4}}{2} - \\cdots$.', 'Integrate term by term: $x - \\frac{x^{3}}{3} + \\frac{x^{5}}{10}$ from 0 to $' + tx(b) + '$.']; f = function (x) { return Math.exp(-x * x); }; }
       else if (fam === 'sinx2') { val = b.pow(3).div(3).sub(b.pow(7).div(42)).add(b.pow(11).div(1320)); nextB = b.pow(15).div(75600).toNumber(); fT = '\\sin(x^{2})'; st = ['$\\sin(x^{2}) = x^{2} - \\frac{x^{6}}{6} + \\frac{x^{10}}{120} - \\cdots$.', 'Integrate term by term: $\\frac{x^{3}}{3} - \\frac{x^{7}}{42} + \\frac{x^{11}}{1320}$ from 0 to $' + tx(b) + '$.']; f = function (x) { return Math.sin(x * x); }; }
       else { val = b.sub(b.pow(5).div(10)).add(b.pow(9).div(216)); nextB = b.pow(13).div(9360).toNumber(); fT = '\\cos(x^{2})'; st = ['$\\cos(x^{2}) = 1 - \\frac{x^{4}}{2} + \\frac{x^{8}}{24} - \\cdots$.', 'Integrate term by term: $x - \\frac{x^{5}}{10} + \\frac{x^{9}}{216}$ from 0 to $' + tx(b) + '$.']; f = function (x) { return Math.cos(x * x); }; }
       return done({

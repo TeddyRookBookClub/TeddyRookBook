@@ -1478,7 +1478,7 @@
 
   // ---------------------------------------------------------------- la.vector-spaces
   G('la.vector-spaces', function (R, ctx) {
-    var a = R.nz(-4, 4), b = R.nz(-4, 4), c = R.nz(-4, 4), d = R.nz(-6, 6), k = R.nz(2, 4), t = by(ctx, R.int(0, 5), R.int(0, 8), R.int(0, 10)), set, yes, st;
+    var a = R.nz(-7, 7), b = R.nz(-7, 7), c = R.nz(-7, 7), d = R.nz(-9, 9), k = R.nz(2, 6), t = by(ctx, R.int(0, 5), R.int(0, 8), R.int(0, 10)), set, yes, st;
     var plane = T.terms([[a, 'x'], [b, 'y'], [c, 'z']]);
     switch (t) {
       case 0: set = '\\{(x, y, z) : ' + plane + ' = 0\\}'; yes = true; st = ['Zero: $' + a + '(0) + ' + P(b) + '(0) + ' + P(c) + '(0) = 0$, so $\\mathbf{0}$ is in the set.', 'If $\\mathbf{u}$ and $\\mathbf{v}$ satisfy the equation, then so does $\\mathbf{u} + \\mathbf{v}$: its left side is the sum of two zeros. And $c\\mathbf{u}$ gives $c\\cdot 0 = 0$.', 'It is the null space of $\\left[\\,' + [a, b, c].join('\\ \\ ') + '\\,\\right]$, a plane through the origin: <b>a subspace</b>.']; break;
@@ -1878,7 +1878,7 @@
   function cplxTex(a, b) { a = q(a); b = q(b); return b.isZero() ? N(a) : (a.isZero() ? (b.sign() < 0 ? '-' : '') : N(a) + (b.sign() < 0 ? ' - ' : ' + ')) + (b.abs().eq(1) ? '' : b.abs().toTex()) + 'i'; }
   G('la.complex-eigenvalues', function (R, ctx) {
     var kind = by(ctx, R.pick(['rotscale', 'rotscale', 'general']), R.pick(['general', 'modulus', 'rotscale']), R.pick(['general', 'modulus', 'eigvec']));
-    var a = R.int(-4, 4), b = R.nz(1, 4);
+    var a = R.int(-7, 7), b = R.nz(1, 7);
     if (kind === 'rotscale' || kind === 'general') {
       var A = qm([[a, -b], [b, a]]);
       if (kind === 'general') { var t = 0; do { var Pm = unimod(R, 2, 3); A = mm(mm(Pm, qm([[a, -b], [b, a]])), inv(Pm)); } while (maxAbs(A) > 12 && ++t < 30); }
@@ -1888,7 +1888,7 @@
         hint: 'Use $\\lambda^{2} - (\\operatorname{tr} A)\\lambda + \\det A = 0$ and the quadratic formula.' }, { kind: 'eig', A: A, a: a, b: b });
     }
     if (kind === 'modulus') {
-      var pick = R.pick([[1, 1, 45], [1, -1, -45], [0, 1, 90], [-1, 1, 135], [0, -1, -90], [-1, -1, -135]]), k = R.pick([1, 2, 3]), aa = pick[0] * k, bb = pick[1] * k;
+      var pick = R.pick([[1, 1, 45], [1, -1, -45], [0, 1, 90], [-1, 1, 135], [0, -1, -90], [-1, -1, -135], [1, 0, 0], [-1, 0, 180]]), k = R.pick([1, 2, 3, 4, 5]), aa = pick[0] * k, bb = pick[1] * k;
       var A2 = qm([[aa, -bb], [bb, aa]]), r = sqrtQ(aa * aa + bb * bb);
       return test({ q: '$A = ' + tex(A2) + '$ has eigenvalues $' + cplxTex(aa, bb) + '$ and $' + cplxTex(aa, -bb) + '$. It acts as a rotation combined with a scaling. Find the scale factor $r$ and the rotation angle $\\varphi$ (in degrees, between $-180$ and $180$).',
         a: { t: 'multi', parts: [{ label: '$r =$', a: { t: 'num', v: r.plain } }, { label: '$\\varphi =$', a: aN(q(pick[2])) }] },
@@ -2285,7 +2285,7 @@
   G('la.svd', function (R, ctx) {
     var kind = by(ctx, R.pick(['AtA', 'sv']), R.pick(['sv', 'norm', 'trap']), R.pick(['sv', 'trap', 'rank']));
     if (kind === 'rank') {
-      var sig = R.sample([7, 5, 4, 3, 2, 9], R.int(2, 3)).sort(function (x, y) { return y - x; }), zerosN = R.int(1, 2), m = sig.length + zerosN + R.int(0, 2), n = sig.length + zerosN;
+      var sig = R.sample([7, 5, 4, 3, 2, 9, 6, 8, 10, 12], R.int(2, 3)).sort(function (x, y) { return y - x; }), zerosN = R.int(1, 2), m = sig.length + zerosN + R.int(0, 2), n = sig.length + zerosN;
       var list = sig.map(String).concat(new Array(zerosN).fill('0'));
       return test({ q: 'A $' + m + ' \\times ' + n + '$ matrix $A$ has singular values $' + list.join(', ') + '$. Find $\\operatorname{rank} A$ and $\\lVert A\\rVert$ (the largest value of $\\lVert A\\mathbf{x}\\rVert$ over unit vectors $\\mathbf{x}$).',
         a: { t: 'multi', parts: [{ label: 'Rank', a: aN(q(sig.length)) }, { label: '$\\lVert A\\rVert$', a: aN(q(sig[0])) }] },
@@ -2293,7 +2293,7 @@
         hint: 'Count the nonzero singular values; the biggest one is the norm.' }, { kind: 'rank', sig: sig });
     }
     if (kind === 'trap') {
-      var k = R.pick([1, 2, -2, 3, -1, 4]), A = qm([[1, k], [0, 1]]), AtA = mm(tr(A), A), ak = Math.abs(k), s4 = k * k + 4, tr0 = 2 + k * k;
+      var k = R.pick([1, 2, -2, 3, -1, 4, -3, 5, -4, 6]), A = qm([[1, k], [0, 1]]), AtA = mm(tr(A), A), ak = Math.abs(k), s4 = k * k + 4, tr0 = 2 + k * k;
       var rt = T.sqrt(s4), s1 = '(' + ak + '+sqrt(' + s4 + '))/2', s2 = '(sqrt(' + s4 + ')-' + ak + ')/2';
       var s1t = '\\dfrac{' + rt + ' + ' + ak + '}{2}', s2t = '\\dfrac{' + rt + ' - ' + ak + '}{2}';
       if (ak === 2) { s1t = T.sqrt(2) + ' + 1'; s2t = T.sqrt(2) + ' - 1'; } else if (ak === 4) { s1t = T.sqrt(5) + ' + 2'; s2t = T.sqrt(5) + ' - 2'; }
@@ -2481,3 +2481,133 @@
   // ==== neural-network thread (nn) end ====
 
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
+   generator still has few different problems at a level sometimes asks the same skill in another form, built only from
+   problems that generator made, so every answer is the generator's own:
+   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+     classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
+     checker rejects it;
+   - two at once: two different short questions of the topic, answered together.
+   Topics whose generator already varies a lot at a level are left as they are. Placed after the generators and
+   registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'la', VAR = {};
+  // how often another form is used: never when the topic's own generator already varies a lot at this level, up to
+  // half the time when it has few different questions (counted once per topic and level from 40 fixed seeds)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 37 ? 0 : VAR[key] >= 30 ? 0.3 : VAR[key] >= 20 ? 0.45 : 0.55;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
+  // a nearby wrong answer for a number or an expression, or null
+  function wrongFor(R, a) {
+    var v = String(ML.answerValue(a)), cands = [], m;
+    if (a.t === 'num') {
+      if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
+      else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
+      else if (/^-?\d+\.\d+$/.test(v)) { var x = +v, dp = v.split('.')[1].length, st = Math.pow(10, -Math.min(dp, 2)); cands = [x + st, x - st, -x, x * 10, x / 10].map(function (y) { return ML.util.numStr(ML.util.round(y, dp + 1)); }); }
+      else return null;
+    } else if (a.t === 'expr') {
+      if (v.length > 60) return null;
+      if (/ \+ /.test(v)) cands.push(v.replace(' + ', ' - '));
+      if (/ - /.test(v)) cands.push(v.replace(' - ', ' + '));
+      if ((m = /(^|[^\d.^])(\d+)(?![\d.])/.exec(v)) && !/\^$/.test(v.slice(0, m.index + m[1].length))) cands.push(v.slice(0, m.index) + m[1] + (+m[2] + 1) + v.slice(m.index + m[0].length));
+      if (!cands.length) return null;
+    } else return null;
+    var nv = function (s) { var mm = /^(-?\d+)\/(\d+)$/.exec(s); return mm ? mm[1] / mm[2] : /^-?\d+(\.\d+)?$/.test(s) ? +s : null; }, v0 = nv(v);
+    cands = R.shuffle(cands.filter(function (c, i, all) { var x = nv(c); return c !== v && all.indexOf(c) === i && (x === null || v0 === null || (Math.abs(x - v0) >= 0.01 * Math.max(Math.abs(v0), 1e-12) && (v0 <= 0 || x > 0) && (v0 <= 0 || v0 > 1 || x <= 1))); })); // a believable slip: the same sign, and at most 1 when the right answer is
+    for (var i = 0; i < cands.length; i++) if (okAns(a, cands[i]) === false) return cands[i];
+    return null;
+  }
+  function checkable(p) {
+    var a = p.a;
+    if (!a || p.unit || (a.form && a.form !== 'int' && a.form !== 'frac' && a.form !== 'simplest')) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bclassmate\b/i.test(txt(p.q))) return false;
+    if (a.t === 'num' || a.t === 'expr') return okAns(a, ML.answerValue(a)) === true;
+    if (a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    return true;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || ['mc', 'tf', 'num'].indexOf(p.a.t) < 0) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= 300 && !/<(table|svg|img|canvas|ol|ul)\b|\$\$|\\begin\{/i.test(p.q);
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), shown, good;
+    if (a.t === 'mc') {
+      var k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+      shown = a.choices[k]; good = a.choices[a.v];
+    } else {
+      good = ML.answerShow(a);
+      var w = right ? null : wrongFor(R, a);
+      if (!right && w === null) return null;
+      shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
+      if (!shown || /undefined|NaN/.test(shown)) return null;
+    }
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var out = { q: '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q + '</li><li>' + p2.q + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + (p.steps || [''])[0]].concat((p.steps || []).slice(1), ['Question 2: ' + (p2.steps || [''])[0]], (p2.steps || []).slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), mode = ctx && ctx.mode;
+      if (!p || !p.a || !ML.check || !ML.answerShow || !R.chance(share(id, base, ctx))) return p;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check', 'check');
+      if (pairable(p, true)) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = null;
+      try { out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base); } catch (e) { out = null; }
+      return out || p;
+    };
+    fn._forms = true;
+    fn._base = base; // the topic's own generator (for tests)
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

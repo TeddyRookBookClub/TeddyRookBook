@@ -2,6 +2,7 @@
 /* The Ladders: check a course's problem generators (a course of ANY ladder: Math, Physics, Chemistry, …).
 
    node scripts/math/check-gen.js <courseKey> [topicId] [-n 300] [-v] [--lenient] [--gen file.js] [--topics file.json]
+                                  [--json] [--sessions 50] [--cap 40] [--variety-only]
 
    Finds the course's ladder (data/ladders.yaml; data/<ladder>/courses.yaml), loads static/homeschool/calc/cas.js,
    static/math/core/{gen,tex,check}.js and static/<ladder>/gen/<courseKey>.js, reads data/<ladder>/topics/<courseKey>.json,
@@ -22,6 +23,14 @@
      - the canonical answer passes its own check, and an obviously wrong answer fails (num, expr and set)
      - at least 30% of the problems are distinct (the question, the answer and the picture together), and making one
        takes under 5 ms on average
+   VARIETY (how often practice would repeat itself without the learner's recent-problem memory, MathLadder.recent)
+     - distinct % per level (1, 2, 3; n/3 problems each): below 60% at a level is a warning (it doesn't fail the run)
+     - "first repeat": the median number of problems a simulated session draws (fresh random seeds, one level, the memory
+       off) before one comes back; --sessions sessions per level (default 50), each stopped at --cap draws (default 40;
+       "40+" = no repeat in 40). A topic whose levels all reach the cap rarely repeats even without the memory.
+     The line per topic shows "L1 82% · 40+" and so on. --json prints one JSON object (the course and a row per topic,
+     with levels: [{ level, made, distinct, pct, firstRepeat }]) instead of the text report, for audits
+     (scripts/math/variety-audit.js). --variety-only skips the text and answer checks (much faster; for audits).
    The ladder's visual kit (static/<ladder>/viz/<ladder>.js) is loaded too when it runs without a DOM (it is tried in a
    separate node sandbox first): the Logic kit's MathLadder.logic is then available to generators and to the 'prop'
    answer type, as on the ladder's pages. Kits that need a document are skipped; generators must not need them at load.
@@ -33,12 +42,16 @@
 var fs = require('fs'), path = require('path');
 var ROOT = path.resolve(__dirname, '..', '..');
 
-var args = process.argv.slice(2), opt = { n: 300, v: false, gen: null, topics: null, lenient: false }, pos = [];
+var args = process.argv.slice(2), opt = { n: 300, v: false, gen: null, topics: null, lenient: false, json: false, sessions: 50, cap: 40, vonly: false }, pos = [];
 for (var i = 0; i < args.length; i++) {
   var a = args[i];
   if (a === '-n') opt.n = Math.max(3, parseInt(args[++i], 10) || 300);
   else if (a === '-v' || a === '--verbose') opt.v = true;
   else if (a === '--lenient') opt.lenient = true;
+  else if (a === '--json') opt.json = true;
+  else if (a === '--variety-only') opt.vonly = true;
+  else if (a === '--sessions') opt.sessions = Math.max(1, parseInt(args[++i], 10) || 50);
+  else if (a === '--cap') opt.cap = Math.max(2, parseInt(args[++i], 10) || 40);
   else if (a === '--strict') opt.lenient = false; // the default now; kept so older commands still work
   else if (a === '--gen') opt.gen = path.resolve(args[++i]);
   else if (a === '--topics') opt.topics = path.resolve(args[++i]);
@@ -54,6 +67,8 @@ require(path.join(ROOT, 'static/math/core/gen.js'));
 require(path.join(ROOT, 'static/math/core/tex.js'));
 require(path.join(ROOT, 'static/math/core/check.js'));
 var ML = global.MathLadder;
+var JSON_OUT = { course: course, ladder: null, n: opt.n, sessions: opt.sessions, cap: opt.cap, topics: [] };
+if (opt.json) { var LOG = console.log; console.log = function () { }; } // the report is the JSON at the end
 
 // the course's ladder: the folder (data/<dir>/, static/<dir>/) whose courses.yaml lists it
 var LADDERS = (function () {
@@ -87,7 +102,7 @@ var genFile = opt.gen || path.join(ROOT, 'static', LADDER, 'gen', course + '.js'
 var topics;
 try { topics = JSON.parse(fs.readFileSync(topicsFile, 'utf8')).topics || []; }
 catch (e) { console.error('Cannot read ' + path.relative(process.cwd(), topicsFile) + ': ' + e.message); process.exit(2); }
-if (!fs.existsSync(genFile)) { console.log('not yet written: ' + course + ' (' + LADDER + ') has ' + topics.length + ' topics in its skill map and no generator file yet (' + path.relative(process.cwd(), genFile) + ').'); process.exit(0); }
+if (!fs.existsSync(genFile)) { if (opt.json) { JSON_OUT.ladder = LADDER; JSON_OUT.notWritten = true; JSON_OUT.count = topics.length; LOG(JSON.stringify(JSON_OUT)); process.exit(0); } console.log('not yet written: ' + course + ' (' + LADDER + ') has ' + topics.length + ' topics in its skill map and no generator file yet (' + path.relative(process.cwd(), genFile) + ').'); process.exit(0); }
 var GEN_SRC = fs.readFileSync(genFile, 'utf8');
 var LESSONS = (function () { try { return JSON.parse(fs.readFileSync(path.join(ROOT, 'data', LADDER, 'lessons', course + '.json'), 'utf8')); } catch (e) { return {}; } })();
 try { require(genFile); }
@@ -205,13 +220,14 @@ function wrongAnswer(a) {
 // ---------------------------------------------------------------- run
 var MODES = ['learn', 'review', 'quiz', 'place'];
 var ids = ML.genIds(), topicIds = topics.map(function (t) { return t.id; });
-var results = [], nOk = 0, nBad = 0, nMissing = 0, nWarn = 0, width = Math.min(46, Math.max.apply(null, topicIds.map(function (s) { return s.length; })) + 2);
+var results = [], nOk = 0, nBad = 0, nMissing = 0, nWarn = 0, nVar = 0, varTopics = [], width = Math.min(46, Math.max.apply(null, topicIds.map(function (s) { return s.length; })) + 2);
 console.log((LADDER === 'math' ? 'Math Ladder' : LADDER.charAt(0).toUpperCase() + LADDER.slice(1) + ' Ladder') + ' generators: ' + course + ' — ' + topics.length + ' topic' + (topics.length === 1 ? '' : 's') + ', ' + opt.n + ' problems each');
 var noLesson = topics.filter(function (t) { return !LESSONS[t.id]; }).length;
 topics.forEach(function (topic) {
   var id = topic.id;
-  if (!ML.hasGen(id)) { nMissing++; console.log('  --  ' + pad(id, width) + 'missing generator'); return; }
+  if (!ML.hasGen(id)) { nMissing++; JSON_OUT.topics.push({ id: id, missing: true }); console.log('  --  ' + pad(id, width) + 'missing generator'); return; }
   var issues = {}, count = 0, made = 0, seenQ = {}, distinct = 0, time = 0, vizWarn = {}, warns = {}, nw = 0, vizLater = {};
+  var lvMade = [0, 0, 0, 0], lvDistinct = [0, 0, 0, 0], lvSeen = [null, {}, {}, {}];
   function issue(kind, text, where) { if (!issues[kind]) issues[kind] = []; issues[kind].push(text + (where ? '  [' + where + ']' : '')); count++; }
   function warn(kind, text, where) { if (!warns[kind]) warns[kind] = []; warns[kind].push(text + (where ? '  [' + where + ']' : '')); nw++; }
   if (GEN_SRC.indexOf("'" + id + "'") < 0 && GEN_SRC.indexOf('"' + id + '"') < 0) issue('id not literal', 'register it with its full id as a string, G(\'' + id + '\', …), so pages can tell the topic is ready');
@@ -223,7 +239,9 @@ topics.forEach(function (topic) {
       try { p = ML.makeProblem(id, seed, ctx); }
       catch (e) { time += Number(process.hrtime.bigint() - t0) / 1e6; made++; issue('throws', (e && e.message || String(e)).replace(/^MathLadder: generator \S+ \([^)]*\): /, ''), where); continue; }
       time += Number(process.hrtime.bigint() - t0) / 1e6; made++;
-      var key = p.q + '|' + JSON.stringify(p.a) + '|' + JSON.stringify(p.viz || null); if (!seenQ[key]) { seenQ[key] = 1; distinct++; } // a different picture makes a different problem
+      var key = ML.recent.key(p); if (!seenQ[key]) { seenQ[key] = 1; distinct++; } // a different picture makes a different problem
+      lvMade[lv]++; if (!lvSeen[lv][key]) { lvSeen[lv][key] = 1; lvDistinct[lv]++; }
+      if (opt.vonly) continue;
       var nolint = Array.isArray(p.nolint) ? p.nolint : [];
       texts(p).forEach(function (pair) { lintText(pair[0], pair[1], nolint, function (k, t) { issue(k, t, where); }, function (k, t) { warn(k, t, where); }); });
       if (p.viz && !knownViz(p.viz.name)) { if (notBuiltViz(p.viz.name)) vizLater[p.viz.name] = 1; else vizWarn[p.viz.name] = 1; }
@@ -245,15 +263,26 @@ topics.forEach(function (topic) {
   }
   var avg = made ? time / made : 0, share = made ? distinct / made : 0;
   if (made && share < 0.3) issue('few distinct', Math.round(share * 100) + '% distinct (' + distinct + ' of ' + made + '); at least 30% needed');
+  var levels = [1, 2, 3].map(function (L) {
+    var pct = lvMade[L] ? lvDistinct[L] / lvMade[L] : 0, fr = firstRepeat(id, L);
+    return { level: L, made: lvMade[L], distinct: lvDistinct[L], pct: Math.round(pct * 1000) / 10, firstRepeat: fr };
+  });
+  var lowLv = levels.filter(function (x) { return x.made && x.pct < 60; });
+  if (lowLv.length) { nVar++; varTopics.push(id); }
+  var vline = levels.map(function (x) { return 'L' + x.level + ' ' + Math.round(x.pct) + '% · ' + (x.firstRepeat >= opt.cap ? opt.cap + '+' : x.firstRepeat); }).join('   ');
   if (avg > 5) issue('slow', 'average ' + avg.toFixed(2) + ' ms per problem; keep it under 5 ms');
   var stats = pad(made + '', 5) + pad(Math.round(share * 100) + '% distinct', 15) + pad(avg.toFixed(2) + ' ms', 9);
+  JSON_OUT.topics.push({ id: id, ok: !count, made: made, distinct: distinct, pct: made ? Math.round(share * 1000) / 10 : 0, ms: Math.round(avg * 1000) / 1000, levels: levels,
+    issues: Object.keys(issues).reduce(function (o, k) { o[k] = issues[k].length; return o; }, {}), warnings: nw });
+  function varLine() { console.log('        variety ' + vline + (lowLv.length ? '   warning: under 60% distinct at level ' + lowLv.map(function (x) { return x.level; }).join(', ') : '')); }
   var vw = Object.keys(vizWarn); var note = '';
   if (vw.length) issue('unknown viz', 'p.viz names no shared visual and none registered in static/' + LADDER + '/viz/' + course + '.js' + (LADDER === 'math' ? '' : ' or the ladder\'s kit') + ': ' + vw.join(', '));
   if (Object.keys(vizLater).length) warn('viz not built yet', 'the ladder\'s kit has no ' + Object.keys(vizLater).join(', ') + ' yet (the problem shows without its picture until it does)');
   function showWarns() { Object.keys(warns).forEach(function (k) { var list = warns[k]; nWarn += list.length; console.log('        warning ' + k + (list.length > 1 ? ' (×' + list.length + ')' : '') + ':'); list.slice(0, opt.v ? list.length : 1).forEach(function (t) { console.log('          ' + t); }); }); }
-  if (!count) { nOk++; console.log('  ok  ' + pad(id, width) + stats + note + (nw ? '  ' + nw + ' warning' + (nw === 1 ? '' : 's') : '')); showWarns(); return; }
+  if (!count) { nOk++; console.log('  ok  ' + pad(id, width) + stats + note + (nw ? '  ' + nw + ' warning' + (nw === 1 ? '' : 's') : '')); varLine(); showWarns(); return; }
   nBad++;
   console.log('  ✗   ' + pad(id, width) + stats + count + ' issue' + (count === 1 ? '' : 's') + note);
+  varLine();
   Object.keys(issues).forEach(function (k) {
     var list = issues[k];
     console.log('        ' + k + (list.length > 1 ? ' (×' + list.length + ')' : '') + ':');
@@ -264,7 +293,25 @@ topics.forEach(function (topic) {
 var extra = ids.filter(function (g) { return topicIds.indexOf(g) < 0 && g.indexOf(course + '.') === 0; });
 if (extra.length && !only) console.log('  note: generators with no topic in ' + path.basename(topicsFile) + ': ' + extra.join(', '));
 if (noLesson && !only) console.log('  note: ' + noLesson + ' of ' + topics.length + ' topics have no lesson yet in data/' + LADDER + '/lessons/' + course + '.json; they show "Being written" until both exist.');
+if (nVar) console.log('  variety: ' + nVar + ' of ' + topics.length + ' topics are under 60% distinct at some level (a warning; under 30% overall fails): ' + varTopics.slice(0, 12).join(', ') + (varTopics.length > 12 ? ', …' : ''));
+JSON_OUT.ladder = LADDER; JSON_OUT.pass = !(nBad || nMissing); JSON_OUT.ok = nOk; JSON_OUT.bad = nBad; JSON_OUT.missing = nMissing; JSON_OUT.varietyWarnings = nVar;
+if (opt.json) LOG(JSON.stringify(JSON_OUT));
 console.log((nBad || nMissing ? 'FAIL' : 'PASS') + ': ' + nOk + ' ok, ' + nBad + ' with problems, ' + nMissing + ' missing.' + (nWarn ? ' ' + nWarn + ' warning' + (nWarn === 1 ? '' : 's') + ' (--lenient: without it they count as problems).' : ''));
 process.exit(nBad || nMissing ? 1 : 0);
 
+// draws before the first repeat, median of opt.sessions simulated sessions at one level (no memory); opt.cap = "cap+"
+function firstRepeat(id, lv) {
+  var runs = [];
+  for (var s = 0; s < opt.sessions; s++) {
+    var seen = {}, k = 0;
+    for (; k < opt.cap; k++) {
+      var p; try { p = ML.makeProblem(id, 'fr' + s + '.' + k, { level: lv, mode: 'learn' }); } catch (e) { continue; }
+      var f = ML.recent.key(p); if (seen[f]) break; seen[f] = 1;
+    }
+    runs.push(k);
+  }
+  runs.sort(function (a, b) { return a - b; });
+  var m = runs.length >> 1;
+  return runs.length % 2 ? runs[m] : Math.floor((runs[m - 1] + runs[m]) / 2);
+}
 function pad(s, n) { s = String(s); return s.length >= n ? s + ' ' : s + ' '.repeat(n - s.length); }

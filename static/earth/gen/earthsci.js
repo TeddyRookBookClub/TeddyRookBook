@@ -403,7 +403,7 @@
       ], 'What fraction of the way around its orbit is the Moon?', { vk: 'mp-days', unit: 'days' });
     }
     function untilFull() {
-      var ago = R.pick([3, 5, 8, 10, 12, 20, 24]);
+      var ago = R.pick([3, 5, 8, 10, 12, 20, 24, 7, 9, 13, 15, 17, 21, 23]);
       return pr('A full moon happened ' + ago + ' days ago. The phases repeat every 29.5 days. In about how many days will the next full moon be?', { t: 'num', v: String(fix(29.5 - ago)), tol: 0.6 }, [
         'One full cycle is 29.5 days.',
         M('29.5 - ' + ago + ' = ' + N(fix(29.5 - ago))) + ' days.'
@@ -480,7 +480,7 @@
   G('earthsci.gravity-orbits', function (R, ctx) {
     var BOD = [['the Moon', 0.17], ['Mars', 0.38], ['Mercury', 0.38], ['Jupiter', 2.36], ['Neptune', 1.12], ['Venus', 0.9]];
     function weight() {
-      var b = R.pick(BOD), w = R.pick([300, 400, 450, 500, 550, 600, 650, 700, 800, 900]), thing = R.pick(['an astronaut in a spacesuit', 'a robot explorer', 'a student', 'a camera crate']);
+      var b = R.pick(BOD), w = R.pick([300, 400, 450, 500, 550, 600, 650, 700, 800, 900, 350]), thing = R.pick(['an astronaut in a spacesuit', 'a robot explorer', 'a student', 'a camera crate']);
       var x = w * b[1];
       return pr('Gravity at the surface of ' + b[0] + ' is about ' + N(b[1]) + ' times Earth\'s. If ' + thing + ' weighs ' + MQ(w, 'N') + ' on Earth, about how much would it weigh on ' + b[0] + '?', num(x, 0.02), [
         'Weight is the pull of gravity, so it scales with the strength of gravity.',
@@ -488,14 +488,14 @@
       ], 'Multiply the Earth weight by the gravity factor.', { vk: 'gr-weight', unit: 'N' });
     }
     function mass() {
-      var b = R.pick(BOD), m = R.pick([40, 45, 50, 55, 60, 80, 120, 200]);
+      var b = R.pick(BOD), m = R.pick([40, 45, 50, 55, 60, 80, 120, 200, 70, 90, 100, 150]);
       return pr('A backpack has a mass of ' + MQ(m, 'kg') + ' on Earth. Gravity on ' + b[0] + ' is about ' + N(b[1]) + ' times Earth\'s. What is its mass on ' + b[0] + '?', exact(m), [
         'Mass is the amount of matter in the backpack. Moving it doesn\'t add or remove any matter.',
         'Its weight changes, but its mass stays ' + MQ(m, 'kg') + '.'
       ], 'Is mass the same thing as weight?', { vk: 'gr-mass', unit: 'kg' });
     }
     function invSq() {
-      var k = R.pick([2, 3, 4, 5, 10]), back = ctx.level >= 3 && R.coin();
+      var k = R.pick([2, 3, 4, 5, 10, 6, 7, 8, 9]), back = ctx.level >= 3 && R.coin();
       if (back) return pr('A space probe moves away from a planet until the planet\'s pull on it is ' + M('\\tfrac{1}{' + k * k + '}') + ' as strong as at the start. How many times farther from the planet\'s center is it than it was at the start?', exact(k), [
         'Gravity weakens with the square of the distance.',
         'Which number squared is ' + (k * k) + '? ' + M(k + '^2 = ' + k * k) + ', so it is ' + k + ' times as far.'
@@ -625,7 +625,7 @@
 
   G('earthsci.solar-system-scale', function (R, ctx) {
     function au2km() {
-      var p = R.pick([['Mercury', 0.4], ['Venus', 0.7], ['Mars', 1.5], ['Ceres', 2.8], ['Jupiter', 5.2], ['Saturn', 9.6], ['Uranus', 19.2], ['Neptune', 30], ['Pluto', 39.5], ['a comet', R.pick([3, 4, 6, 12, 25])], ['an asteroid', R.pick([2.2, 2.5, 3.2])], ['a space probe', R.pick([50, 80, 120, 160])]]);
+      var p = R.pick([['Mercury', 0.4], ['Venus', 0.7], ['Mars', 1.5], ['Ceres', 2.8], ['Jupiter', 5.2], ['Saturn', 9.6], ['Uranus', 19.2], ['Neptune', 30], ['Pluto', 39.5], ['a comet', R.pick([3, 4, 6, 12, 25, 5, 9, 13, 19, 23])], ['an asteroid', R.pick([2.2, 2.5, 3.2])], ['a space probe', R.pick([50, 80, 120, 160, 60, 70, 100, 150])]]);
       var km = fix(p[1] * 150);
       return pr(cap(p[0]) + ' is about ' + MQ(p[1], 'AU') + ' from the Sun. If 1 AU is about 150 million km, about how many million kilometers is that?', num(km, 0.02), [
         'Multiply by 150 million km for each AU.',
@@ -633,21 +633,21 @@
       ], 'One AU is about 150 million km.', { vk: 'sc-au2km', unit: 'million km' });
     }
     function km2au() {
-      var au = R.pick([2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 20, 24, 30, 40, 50, 60]), km = au * 150;
+      var au = R.pick([2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 20, 24, 30, 40, 50, 60, 2.5, 3.5, 9, 25, 35]), km = au * 150;
       return pr('A space probe is ' + N(km) + ' million km from the Sun. If 1 AU is about 150 million km, how many AU is that?', num(au, 0.02), [
         'Divide by 150 million km per AU.',
         M(N(km) + ' \\div 150 = ' + N(au)) + ' AU.'
       ], 'How many 150s fit into the distance?', { vk: 'sc-km2au', unit: 'AU' });
     }
     function model() {
-      var s = R.pick([1, 2, 3, 4, 5, 6, 10, 12, 20, 25]), p = R.pick(PLAN.slice(1)), d = fix(p[1] * s);
+      var s = R.pick([1, 2, 3, 4, 5, 6, 10, 12, 20, 25, 7, 9, 11, 13, 15, 17, 19, 21, 23]), p = R.pick(PLAN.slice(1)), d = fix(p[1] * s);
       return pr('In a scale model on a field, 1 AU is ' + MQ(s, 'm') + '. ' + p[0] + ' is about ' + MQ(p[1], 'AU') + ' from the Sun. How far from the model Sun should it go?', num(d, 0.02), [
         'Every AU becomes ' + MQ(s, 'm') + '.',
         M(N(p[1]) + ' \\times ' + N(s) + ' = ' + N(d)) + ' m.'
       ], 'Multiply the distance in AU by the meters per AU.', { vk: 'sc-model', unit: 'm' });
     }
     function sizes() {
-      var e = R.pick([0.4, 0.5, 0.6, 0.8, 1, 1.2, 1.5, 2, 2.5, 3, 4, 5]), sun = fix(109 * e);
+      var e = R.pick([0.4, 0.5, 0.6, 0.8, 1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 0.7, 0.9, 3.5]), sun = fix(109 * e);
       return pr('The Sun is about 109 times as wide as Earth. In a model where Earth is a bead ' + MQ(e, 'cm') + ' wide, how wide is the model Sun?', num(sun, 0.02), [
         'Every width is scaled by the same factor, so the Sun stays 109 times as wide.',
         M('109 \\times ' + N(e) + ' = ' + N(sun)) + ' cm.'
@@ -785,7 +785,7 @@
       ], 'Start from the thin outer skin.', { vk: 'el-label', viz: { name: 'es-interior', opts: { mode: 'layers', letters: true, quiet: true, lock: true } }, idx: i });
     }
     function depth() {
-      var K = R.pick([[R.pick([10, 20, 30]), 0], [R.pick([100, 400, 700, 1000, 1500, 2000, 2500]), 1], [R.pick([3000, 3500, 4000, 4500, 5000]), 2], [R.pick([5300, 5600, 6000, 6300]), 3]]);
+      var K = R.pick([[R.pick([10, 20, 30]), 0], [R.pick([100, 400, 700, 1000, 1500, 2000, 2500, 120, 200, 250, 350, 600, 800, 1200]), 1], [R.pick([3000, 3500, 4000, 4500, 5000]), 2], [R.pick([5300, 5600, 6000, 6300]), 3]]);
       return pr('A wave probe reaches a depth of ' + MQ(K[0], 'km') + '. Which layer is it in? ' + BOUND, mc(LAY[K[1]], LAY.filter(function (x, j) { return j !== K[1]; })), [
         'Find the range that ' + MQ(K[0], 'km') + ' falls in.',
         'It is in the ' + LAY[K[1]].toLowerCase() + '.'
@@ -829,7 +829,7 @@
       ], 'Lithosphere = stiff; asthenosphere = soft.');
     }
     function mantlePart() {
-      var c = R.pick([7, 10, 30, 35, 40, 50]), l = R.pick([70, 80, 100, 120, 150, 180]);
+      var c = R.pick([7, 10, 30, 35, 40, 50]), l = R.pick([70, 80, 100, 120, 150, 180, 90]);
       if (l - c < 30) l = c + 60;
       return pr('In one place the crust is ' + MQ(c, 'km') + ' thick and the lithosphere is ' + MQ(l, 'km') + ' thick. How many kilometers of the lithosphere are mantle rock?', exact(l - c), [
         'The lithosphere is the crust plus the stiff top of the mantle.',
@@ -837,7 +837,7 @@
       ], 'Subtract the crust from the whole lithosphere.', { vk: 'la-sub', unit: 'km' });
     }
     function depth() {
-      var d = R.pick([20, 50, 80, 150, 200, 250, 300]), lith = d < 100, crust = d <= 35;
+      var d = R.pick([20, 50, 80, 150, 200, 250, 300, 25, 30, 40, 60, 70, 100, 120]), lith = d < 100, crust = d <= 35;
       var right = crust ? 'The crust, in the lithosphere' : lith ? 'The mantle, in the lithosphere' : 'The mantle, in the asthenosphere';
       return pr('Here the crust is 35 km thick, the lithosphere 100 km thick, and the asthenosphere reaches to 350 km. Rock ' + MQ(d, 'km') + ' down is in which layers?', mc(right, ['The crust, in the lithosphere', 'The mantle, in the lithosphere', 'The mantle, in the asthenosphere', 'The crust, in the asthenosphere'].filter(function (x) { return x !== right; })), [
         crust ? MQ(d, 'km') + ' is within the top 35 km: crust.' : MQ(d, 'km') + ' is below the 35 km crust: mantle.',
@@ -1046,8 +1046,8 @@
   G('earthsci.sedimentary-rocks', function (R, ctx) {
     function size() {
       var K = R.pick([
-        [R.pick([5, 10, 20, 40]), 'rounded', 'Conglomerate'], [R.pick([5, 10, 30]), 'sharp-edged', 'Breccia'],
-        [R.pick([0.1, 0.25, 0.5, 1, 1.5]), 'rounded', 'Sandstone'], [R.pick([0.01, 0.02, 0.03, 0.05]), 'tiny', 'Siltstone'], [R.pick([0.001, 0.002, 0.003]), 'microscopic', 'Shale']
+        [R.pick([5, 10, 20, 40, 7, 17, 29, 39]), 'rounded', 'Conglomerate'], [R.pick([5, 10, 30, 7, 19, 29]), 'sharp-edged', 'Breccia'],
+        [R.pick([0.1, 0.25, 0.5, 1, 1.5, 0.12, 0.2, 0.4, 0.8, 1.2]), 'rounded', 'Sandstone'], [R.pick([0.01, 0.02, 0.03, 0.05, 0.012, 0.015, 0.035, 0.04]), 'tiny', 'Siltstone'], [R.pick([0.001, 0.002, 0.003, 0.0012, 0.0015, 0.0025]), 'microscopic', 'Shale']
       ]);
       var all = ['Conglomerate', 'Breccia', 'Sandstone', 'Siltstone', 'Shale'];
       return pr('A sedimentary rock is made of ' + K[1] + ' grains about ' + MQ(K[0], 'mm') + ' across, cemented together. Using the grain-size table (gravel over 2 mm, sand 1/16 to 2 mm, silt 1/256 to 1/16 mm, clay under 1/256 mm), what is it?', mc(K[2], R.sample(all.filter(function (x) { return x !== K[2]; }), 3)), [
@@ -1217,7 +1217,7 @@
 
   G('earthsci.weathering-rates', function (R, ctx) {
     function oneCube() {
-      var s = R.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 12]);
+      var s = R.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 11]);
       return pr('What is the surface area of a cube of rock with edges ' + MQ(s, 'cm') + ' long?', exact(6 * s * s), [
         'A cube has 6 square faces.',
         'Each face: ' + M(s + ' \\times ' + s + ' = ' + s * s) + ' cm². All six: ' + M('6 \\times ' + s * s + ' = ' + 6 * s * s) + ' cm².'
@@ -1263,7 +1263,7 @@
       ], 'Think top to bottom: leaves, topsoil, subsoil, broken rock, bedrock.', { vk: 'concept' });
     }
     function part() {
-      var K = R.pick([['air', 25], ['water', 25], ['mineral grains', 45], ['organic matter (humus)', 5]]), v = R.pick([400, 800, 1000, 1200, 2000, 4000]);
+      var K = R.pick([['air', 25], ['water', 25], ['mineral grains', 45], ['organic matter (humus)', 5]]), v = R.pick([400, 800, 1000, 1200, 2000, 4000, 500, 600, 900, 1500, 3000, 3500]);
       var x = v * K[1] / 100;
       return pr('A garden soil sample is about 45% mineral grains, 5% organic matter, 25% water and 25% air, by volume. How many cubic centimeters of ' + K[0] + ' are in ' + MQ(v, 'cm³') + ' of this soil?', exact(x), [
         K[1] + '% means ' + K[1] + ' out of every 100.',
@@ -1562,7 +1562,7 @@
       return p;
     }
     function atoms() {
-      var n = R.int(1, 4), n0 = MA.pow(2, n) * R.pick([25, 30, 40, 50, 60, 75, 100, 125, 150, 200, 250, 300, 500]), k = n0 / MA.pow(2, n);
+      var n = R.int(1, 4), n0 = MA.pow(2, n) * R.pick([25, 30, 40, 50, 60, 75, 100, 125, 150, 200, 250, 300, 500, 35, 70, 80, 90, 120, 350, 400]), k = n0 / MA.pow(2, n);
       var chain = [n0]; for (var i = 0; i < n; i++) chain.push(chain[i] / 2);
       return pr('A rock crystal starts with ' + N(n0) + ' atoms of a radioactive parent. How many parent atoms are left after ' + n + ' half-li' + (n > 1 ? 'ves' : 'fe') + '?', exact(k), [
         'Halve once for each half-life: ' + M(chain.map(N).join(' \\to ')) + '.'
@@ -1584,7 +1584,7 @@
       ], 'Every daughter atom was once a parent atom.', { vk: 'hl-ratio', unit: I[2], dp: dp, h: I[1] });
     }
     function mass() {
-      var n = R.int(1, 4), t = fix(n * 5730), m0 = MA.pow(2, n) * R.pick([1, 2, 3, 5, 6, 10]), m = m0 / MA.pow(2, n);
+      var n = R.int(1, 4), t = fix(n * 5730), m0 = MA.pow(2, n) * R.pick([1, 2, 3, 5, 6, 10, 4, 7, 8, 9]), m = m0 / MA.pow(2, n);
       return pr('A sample holds ' + MQ(m0, 'μg') + ' of carbon-14 (half-life 5,730 years). How much carbon-14 is left after ' + N(t) + ' years?', exact(m), [
         'Number of half-lives: ' + M(N(t) + ' \\div 5{,}730 = ' + n) + '.',
         'Fraction left: ' + M('\\left(\\tfrac{1}{2}\\right)^{' + n + '} = \\tfrac{1}{' + MA.pow(2, n) + '}') + '; ' + M(N(m0) + ' \\times \\tfrac{1}{' + MA.pow(2, n) + '} = ' + N(m)) + ' μg.'
@@ -1849,21 +1849,21 @@
   G('earthsci.seismic-waves', function (R, ctx) {
     var SPD = 'Use 6 km/s for P waves and 3.5 km/s for S waves.';
     function arrive() {
-      var d = 42 * R.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30]), w = R.pick(['P', 'S']), t = w === 'P' ? d / 6 : d / 3.5;
+      var d = 42 * R.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30, 11, 13, 17, 19, 21, 23, 27, 29]), w = R.pick(['P', 'S']), t = w === 'P' ? d / 6 : d / 3.5;
       return pr('A seismometer is ' + MQ(d, 'km') + ' from an earthquake. ' + SPD + ' How many seconds after the quake does the ' + w + ' wave arrive?', num(t, 0.01), [
         'Time = distance ÷ speed.',
         M(N(d) + ' \\div ' + (w === 'P' ? 6 : 3.5) + ' = ' + N(fix(t))) + ' s.'
       ], 'Divide the distance by the wave\'s speed.', { vk: 'sw-t', unit: 's', d: d, w: w });
     }
     function gap() {
-      var d = 42 * R.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20]), tp = d / 6, ts = d / 3.5;
+      var d = 42 * R.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 11, 13, 14, 16, 17, 18, 19]), tp = d / 6, ts = d / 3.5;
       return pr('A seismometer is ' + MQ(d, 'km') + ' from an earthquake. ' + SPD + ' How many seconds after the P wave does the S wave arrive?', num(ts - tp, 0.01), [
         'P wave: ' + M(N(d) + ' \\div 6 = ' + N(fix(tp))) + ' s. S wave: ' + M(N(d) + ' \\div 3.5 = ' + N(fix(ts))) + ' s.',
         'Gap: ' + M(N(fix(ts)) + ' - ' + N(fix(tp)) + ' = ' + N(fix(ts - tp))) + ' s.'
       ], 'Find each arrival time, then subtract.', { vk: 'sw-gap', unit: 's', d: d });
     }
     function far() {
-      var g = R.pick([5, 10, 15, 20, 25, 30, 40, 50]), d = g * 8.4;
+      var g = R.pick([5, 10, 15, 20, 25, 30, 40, 50, 6, 7, 8, 9, 12, 35]), d = g * 8.4;
       return pr('With P waves at 6 km/s and S waves at 3.5 km/s, the S wave falls about 1 second behind for every 8.4 km traveled. A station records the S wave ' + MQ(g, 's') + ' after the P wave. About how far away was the earthquake?', num(d, 0.02), [
         'Each second of gap means about 8.4 km.',
         M(N(g) + ' \\times 8.4 = ' + N(fix(d))) + ' km.'
@@ -2071,21 +2071,21 @@
   // ===================== Unit 10: Water on Earth =====================
   G('earthsci.water-distribution', function (R, ctx) {
     function fresh() {
-      var T2 = R.pick([400, 800, 1000, 1200, 1600, 2000, 2400, 3000, 4000, 5000, 6000, 8000, 10000, 20000, 40000]), f = fix(T2 * 0.025);
+      var T2 = R.pick([400, 800, 1000, 1200, 1600, 2000, 2400, 3000, 4000, 5000, 6000, 8000, 10000, 20000, 40000, 500, 600, 700, 900, 1500, 2500, 3500, 7000, 9000, 12000, 15000, 25000, 30000, 35000]), f = fix(T2 * 0.025);
       return pr('In a model, all of Earth\'s water is ' + MQ(T2, 'L') + '. About 2.5% of Earth\'s water is fresh. How many liters of the model are fresh water?', num(f, 0.02), [
         '2.5% = 0.025.',
         M(N(T2) + ' \\times 0.025 = ' + N(f)) + ' L.'
       ], 'Find 2.5% of the total.', { vk: 'wd-fresh', unit: 'L', T: T2 });
     }
     function share() {
-      var K = R.pick([['ice caps and glaciers', 69], ['groundwater', 30]]), f = R.pick([10, 20, 25, 30, 40, 50, 60, 80, 100, 150, 200, 250, 300, 500]), x = fix(f * K[1] / 100);
+      var K = R.pick([['ice caps and glaciers', 69], ['groundwater', 30]]), f = R.pick([10, 20, 25, 30, 40, 50, 60, 80, 100, 150, 200, 250, 300, 500, 12, 15, 35, 70, 90, 120, 350, 400]), x = fix(f * K[1] / 100);
       return pr('A model holds ' + MQ(f, 'L') + ' of fresh water, shared out like Earth\'s fresh water. About ' + K[1] + '% of fresh water is in ' + K[0] + '. How many liters of the model is that?', num(x, 0.02), [
         K[1] + '% = ' + N(K[1] / 100) + '.',
         M(N(f) + ' \\times ' + N(K[1] / 100) + ' = ' + N(x)) + ' L.'
       ], 'Find ' + K[1] + '% of the fresh water.', { vk: 'wd-share', unit: 'L', f: f, p: K[1] });
     }
     function salt() {
-      var T2 = R.pick([100, 200, 300, 400, 500, 600, 800, 1000, 2000, 5000]), s = fix(T2 * 0.97);
+      var T2 = R.pick([100, 200, 300, 400, 500, 600, 800, 1000, 2000, 5000, 120, 150, 250, 700, 900, 1200, 1500, 3000, 3500, 4000]), s = fix(T2 * 0.97);
       return pr('About 97% of Earth\'s water is salt water. If Earth\'s water were ' + MQ(T2, 'L') + ', how many liters would be salty?', num(s, 0.02), [
         M(N(T2) + ' \\times 0.97 = ' + N(s)) + ' L.'
       ], 'Find 97% of the total.', { vk: 'wd-salt', unit: 'L', T: T2 });
@@ -2156,14 +2156,14 @@
 
   G('earthsci.groundwater', function (R, ctx) {
     function porosity() {
-      var Vt = R.pick([200, 400, 500, 800, 1000]), p = R.pick([10, 15, 20, 25, 30, 35, 40, 45, 50]), v = Vt * p / 100;
+      var Vt = R.pick([200, 400, 500, 800, 1000, 250, 300, 350, 700, 900]), p = R.pick([10, 15, 20, 25, 30, 35, 40, 45, 50, 12, 16, 22, 26, 32, 34, 38, 44, 48]), v = Vt * p / 100;
       return pr('A ' + MQ(Vt, 'cm³') + ' container of dry sediment can hold ' + MQ(v, 'cm³') + ' of water poured into its spaces. What is the porosity, as a percent?', { t: 'num', v: String(p), rtol: 0.01, pct: true }, [
         'Porosity = pore volume ÷ total volume.',
         M(N(v) + ' \\div ' + N(Vt) + ' = ' + N(p / 100)) + ', which is ' + p + '%.'
       ], 'Divide the water the spaces hold by the total volume.', { vk: 'gw-por', Vt: Vt, v: v });
     }
     function stored() {
-      var p = R.pick([20, 25, 30, 35, 40]), Vt = R.pick([10, 20, 50, 100, 1000]), v = fix(Vt * p / 100);
+      var p = R.pick([20, 25, 30, 35, 40, 21, 26, 31, 34, 39]), Vt = R.pick([10, 20, 50, 100, 1000, 12, 40, 120, 400, 900]), v = fix(Vt * p / 100);
       return pr('A block of sandstone below the water table has a volume of ' + MQ(Vt, 'm³') + ' and a porosity of ' + p + '%. How much water does it hold?', num(v, 0.01), [
         'Below the water table, all the pores are full of water.',
         M(N(Vt) + ' \\times ' + N(p / 100) + ' = ' + N(v)) + ' m³.'
@@ -2194,7 +2194,7 @@
   G('earthsci.air-composition', function (R, ctx) {
     var GAS = [['nitrogen', 78], ['oxygen', 21], ['argon', 0.9]];
     function part() {
-      var g = R.pick(GAS), V2 = R.pick([100, 200, 300, 500, 600, 800, 1000, 2000, 3000, 5000, 10000, 50000, 200000]), x = fix(V2 * g[1] / 100);
+      var g = R.pick(GAS), V2 = R.pick([100, 200, 300, 500, 600, 800, 1000, 2000, 3000, 5000, 10000, 50000, 200000, 120, 250, 700, 1200, 3500, 6000, 8000, 15000, 25000, 40000, 70000, 100000, 150000]), x = fix(V2 * g[1] / 100);
       return pr('Dry air is about 78% nitrogen, 21% oxygen and 0.9% argon. How many liters of ' + g[0] + ' are in ' + MQ(V2, 'L') + ' of dry air?', num(x, 0.02), [
         g[1] + '% = ' + N(g[1] / 100) + '.',
         M(N(V2) + ' \\times ' + N(g[1] / 100) + ' = ' + N(x)) + ' L.'
@@ -2283,7 +2283,7 @@
       ], 'Count the 5.5 km steps, and halve once for each.', { vk: 'ap-halve', unit: 'hPa', P0: P0, k: k });
     }
     function force() {
-      var a = R.pick([5, 10, 15, 20, 25, 30]), b = R.pick([10, 20, 30, 40, 50]), A = a * b, F = A * 10;
+      var a = R.pick([5, 10, 15, 20, 25, 30, 7, 11, 17, 19, 23, 29]), b = R.pick([10, 20, 30, 40, 50, 12, 22, 32, 38, 48]), A = a * b, F = A * 10;
       return pr('Air at sea level pushes with about 10 N on every square centimeter. How hard does it push on a ' + MQ(a, 'cm') + ' by ' + MQ(b, 'cm') + ' tabletop (from above)?', exact(F), [
         'Area: ' + M(a + ' \\times ' + b + ' = ' + N(A)) + ' cm².',
         'Force: ' + M(N(A) + ' \\times 10 = ' + N(F)) + ' N. Air under the table pushes up about as hard, so the table doesn\'t collapse.'
@@ -2636,7 +2636,7 @@
       ], 'Divide the increase by the starting amount.', { vk: 'ce-pct', b: b });
     }
     function decades() {
-      var base = R.pick([0.1, 0.2, 0.3, 0.4]), d = R.pick([0.1, 0.2, 0.3]);
+      var base = R.pick([0.1, 0.2, 0.3, 0.4, 0.12, 0.15, 0.25, 0.35]), d = R.pick([0.1, 0.2, 0.3, 0.12, 0.15, 0.25]);
       var A = [], B = []; for (var i = 0; i < 5; i++) { A.push(fix(base + R.int(-2, 2) / 10)); B.push(fix(base + d + R.int(-2, 2) / 10)); }
       var ma = fix(A.reduce(function (s, v) { return s + v; }, 0) / 5), mb = fix(B.reduce(function (s, v) { return s + v; }, 0) / 5), diff = fix(rnd(mb - ma, 2));
       return pr('Made-up yearly temperature differences from a long-term average (°C), five years in each group. Earlier years: ' + A.map(function (v) { return M(N(v)); }).join(', ') + '. Later years: ' + B.map(function (v) { return M(N(v)); }).join(', ') + '. How much warmer is the later group\'s mean than the earlier group\'s?', { t: 'num', v: String(diff), tol: 0.005 }, [
@@ -2716,7 +2716,7 @@
 
   G('earthsci.human-impact', function (R, ctx) {
     function total() {
-      var p = R.pick([2000, 5000, 10000, 20000, 50000, 100000]), u = R.pick([100, 150, 200, 250, 300, 400]), t = p * u;
+      var p = R.pick([2000, 5000, 10000, 20000, 50000, 100000, 2500, 4000, 9000, 25000, 60000, 90000]), u = R.pick([100, 150, 200, 250, 300, 400, 120, 350]), t = p * u;
       var p0 = pr('A town of ' + N(p) + ' people uses about ' + MQ(u, 'L') + ' of water per person each day. How many liters does the town use in a day?', exact(t), [
         'Total = people × use per person.',
         M(N(p) + ' \\times ' + N(u) + ' = ' + N(t)) + ' L.'
@@ -2725,14 +2725,14 @@
       return p0;
     }
     function per() {
-      var p = R.pick([4, 5, 8, 10, 20]), u = R.pick([2, 3, 4, 5, 6, 8, 10]), t = p * u;
+      var p = R.pick([4, 5, 8, 10, 20, 6, 11, 14, 16, 19]), u = R.pick([2, 3, 4, 5, 6, 8, 10, 7, 9]), t = p * u;
       return pr('A country of ' + p + ' million people uses ' + t + ' million tonnes of a resource a year. What is the use per person, in tonnes per year?', exact(u), [
         'Use per person = total ÷ people.',
         M(t + ' \\div ' + p + ' = ' + u) + ' tonnes per person per year.'
       ], 'Divide the total by the number of people.', { vk: 'hi-per', unit: 't', p: p, t: t });
     }
     function change() {
-      var a = R.pick([10, 20, 25, 50]), b = R.pick([10, 20, 25, 40, 50]), up = R.coin();
+      var a = R.pick([10, 20, 25, 50, 12, 26, 36, 48]), b = R.pick([10, 20, 25, 40, 50, 12, 22, 30, 38, 48]), up = R.coin();
       var fp = 1 + a / 100, fu = up ? 1 + b / 100 : 1 - b / 100, f = fix(fp * fu), pc = fix(rnd(f * 100, 2));
       return pr('A city\'s population grows by ' + a + '% while each person\'s energy use ' + (up ? 'also grows' : 'falls') + ' by ' + b + '%. The new total energy use is what percent of the old total?', { t: 'num', v: String(pc), rtol: 0.005, pct: true }, [
         'People × ' + N(fp) + '; use per person × ' + N(fu) + '.',
@@ -2758,3 +2758,131 @@
   });
 
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen"; Physics and Earth ladders): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - check a number: the question and a classmate's numeric answer, either the generator's own answer or that answer
+     off by a common slip (a factor of 2, 4 or 10), and "Is that right?" (Yes / No; not in placement);
+   - two at once: two different questions of the topic, answered together (short questions only, multiple-choice or
+     numeric, each keeping its own unit; at most one of them with a picture, which then comes first).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'earthsci', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function numable(p) { // a single numeric answer with a plain decimal value (not a fraction or an expression)
+    var a = p.a;
+    return !!a && a.t === 'num' && /^-?\d+(\.\d+)?(e-?\d+)?$/.test(String(a.v)) && +a.v !== 0 && isFinite(+a.v) &&
+      !(a.tol && a.tol >= Math.abs(+a.v) / 3) && !((a.rtol || 0) > 0.3); // a slip by a factor of 2 must fall outside the tolerance
+  }
+  function sig(v) { var m = String(v).replace(/e.*$/, '').replace(/^-?0*\.?0*/, '').replace('.', ''); return Math.min(6, Math.max(3, m.length)); }
+  function show(x, n) { // a number as the classmate would write it: 3 significant figures, scientific notation when large or small
+    var ax = Math.abs(x);
+    if (ax >= 1e5 || ax < 1e-3) { var e = Math.floor(Math.log10(ax)), m = Number((x / Math.pow(10, e)).toPrecision(n || 3)); if (Math.abs(m) >= 10) { m = m / 10; e++; } return '$' + m + ' \\times 10^{' + e + '}$'; }
+    var s = String(Number(x.toPrecision(n || 3)));
+    return '$' + (ax >= 1e4 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, '{,}') : s) + '$';
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = +a.v, n = sig(a.v), right = R.coin(), f = R.pick([2, 0.5, 10, 0.1, 4, 0.25]), shown = right ? v : v * f;
+    var who = 'A classmate worked it out and got', u = p.unit ? ' ' + p.unit : '';
+    var q = p.q + '<p>' + who + ': <b>' + show(shown, n) + u + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right.' : 'No. The answer is ' + show(v, n) + u + '; ' + (f > 1 ? 'the classmate\'s answer is ' + f + ' times too big.' : 'the classmate\'s answer is ' + Math.round(1 / f) + ' times too small.'))].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf' && !numable(p))) return false;
+    if (p.a.t !== 'num' && p.unit) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function part(l, x) { var o = { label: l, a: x.a }; if (x.unit) o.unit = x.unit; return o; }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [part('1.', p), part('2.', p2)] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (mode !== 'place' && numable(p)) forms.push('ncheck');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'ncheck' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

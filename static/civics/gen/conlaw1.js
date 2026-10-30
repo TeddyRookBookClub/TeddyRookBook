@@ -80,6 +80,31 @@
       steps: [it.why, 'In order: ' + it.order.map(function (t, k) { return LET.charAt(start.indexOf(k)) + ' (' + t + ')'; }).join(', then ') + '. So the answer is ' + ans + '.']
     };
   }
+  // ---- widen_civ2: questions about a topic's cases, from the kit's case table (MathLadder.civics.CASES; this file's XC if any)
+  var TRB_SKIP = ['clintonjones', 'clintonny', 'bushgore', 'boumediene', 'nixonus', 'roe', 'casey', 'bakke', 'grutter', 'gratz', 'chevron', 'lemon'];
+  function TRBcase(R, lv, keys) {
+    var C = (ML.civics && ML.civics.CASES) || {}, X = typeof XC !== 'undefined' ? XC : typeof EXTRA !== 'undefined' ? EXTRA : {};
+    function get(k) { if (TRB_SKIP.indexOf(k) >= 0) return null; if (typeof cs === 'function') { try { var z = cs(k); if (z) return z; } catch (e) { } } return C[k] || null; }
+    function ny2(k) { var c = get(k); return c.name + ' (' + c.year + ')'; }
+    var ok = keys.filter(function (k) { var c = get(k); return c && c.year <= 2020; });
+    var k = R.pick(ok), c = get(k), kinds = ['year', 'year'];
+    if (c.q) kinds.push('which', 'which');
+    if (c.holding && c.holding.length > 30 && lv >= 2) kinds.push('holding');
+    var kind = R.pick(kinds), all = Object.keys(C).concat(Object.keys(X)).filter(function (x) { var z = get(x); return x !== k && z && z.year <= 2020; });
+    var near = function (list) { var seen = {}; return list.filter(function (x) { if (seen[x]) return false; seen[x] = 1; return true; }); };
+    if (kind === 'year') {
+      var ys = near(all.map(function (x) { return String(get(x).year); }).filter(function (y) { return Math.abs(y - c.year) >= 3; }));
+      ys.sort(function (a, b) { return Math.abs(a - c.year) - Math.abs(b - c.year) || a - b; });
+      return { q: 'In what year was <i>' + c.name + '</i> decided?', a: String(c.year), w: ys.slice(0, 6), why: c.name + ' was decided in ' + c.year + (c.holding ? '. Holding: ' + c.holding : '.') };
+    }
+    var pool = near(keys.filter(function (x) { return x !== k && get(x) && get(x).year <= 2020; }).concat(all.filter(function (x) { return c.area && get(x).area === c.area; })).concat(all));
+    if (kind === 'which') {
+      var names = pool.filter(function (x) { return get(x).q !== c.q; }).slice(0, 6).map(ny2);
+      return { q: 'Which case asked this question? “' + c.q + '”', a: ny2(k), w: names, why: ny2(k) + ': ' + c.holding };
+    }
+    var hs = near(pool.filter(function (x) { var h = get(x).holding; return h && h.length > 30 && h !== c.holding; }).map(function (x) { return get(x).holding; })).slice(0, 5);
+    return { q: 'What did <i>' + c.name + '</i> (' + c.year + ') hold?', a: c.holding, w: hs, why: ny2(k) + ': ' + c.holding };
+  }
   function fromBank(mk, hint) {
     var bank = null;  // built on first use, so the kit's model (MathLadder.civics) is loaded by then
     return function (R, ctx) {
@@ -144,6 +169,11 @@
   ]; }, 'Ask what the argument rests on: words, history, design, precedent, consequences or values.'));
 
   G('conlaw1.originalism', fromBank(function () { return [
+    {"L":[1,2,3],"q":"Which Attorney General promoted originalism in the 1980s?","a":"Edwin Meese","w":["Robert Kennedy","Janet Reno","Griffin Bell","Edward Levi"],"why":"Attorney General Edwin Meese helped bring originalism into public debate in the 1980s."},
+    {"L":[1,2,3],"q":"Which scholar and judge was an early leader of originalism?","a":"Robert Bork","w":["David Strauss","William Brennan","Stephen Breyer","Oliver Wendell Holmes"],"why":"Robert Bork wrote about originalism in the 1970s and 1980s."},
+    {"L":[1,2,3],"q":"Along with Antonin Scalia, which justice is known as an originalist?","a":"Clarence Thomas","w":["William Brennan","Stephen Breyer","Earl Warren","Thurgood Marshall"],"why":"Justices Scalia and Thomas are the best-known originalists on the Court."},
+    {"L":[1,2,3],"q":"Originalism leans most on which kinds of argument?","a":"text and history","w":["precedent alone","consequences and policy","moral ideals","foreign law"],"why":"Originalism draws mainly on the textual and historical modalities."},
+    {"L":[1,2],"q":"Justice Scalia called his originalist approach the…","a":"\"lesser evil\"","w":["\"living document\"","\"active liberty\"","\"perfect method\"","\"common law\""],"why":"Scalia called it the \"lesser evil\" compared with judges applying their own values."},
     { L: [1, 2, 3], q: 'Most originalists today look for a provision\'s…', a: 'original public meaning when it was ratified', w: ['framers\' private intentions', 'meaning to readers today', 'specific results its framers expected'], why: 'Public-meaning originalism, the main version since the late 1980s, asks what an informed reader understood the words to mean at ratification.' },
     { L: [1, 2], q: 'According to originalists, how should the Constitution be changed when its fixed meaning no longer suits the country?', a: 'By amendment under Article V', w: ['By judges updating its meaning', 'By executive order', 'By a majority vote of the Senate'], why: 'Originalists argue that change belongs to the amendment process, which leaves the choice with the people.' },
     { L: [1, 2], q: 'Which justice was a leading advocate of originalism and textualism?', a: 'Antonin Scalia', w: ['William Brennan', 'Stephen Breyer', 'Oliver Wendell Holmes'], why: 'Justice Scalia (on the Court 1986–2016) was a leading originalist; Brennan and Breyer are associated with living constitutionalism, Holmes with pragmatism.' },
@@ -157,6 +187,11 @@
   ]; }, 'Public meaning, at the time of ratification.'));
 
   G('conlaw1.living-constitutionalism', fromBank(function () { return [
+    {"L":[1,2,3],"q":"Along with Stephen Breyer, which justice is named as an advocate of living constitutionalism?","a":"William Brennan","w":["Antonin Scalia","Clarence Thomas","Robert Bork","John Marshall"],"why":"Justices William Brennan and Stephen Breyer are leading examples."},
+    {"L":[1,2,3],"q":"Living constitutionalists say constitutional law has developed mostly through…","a":"precedent built case by case","w":["frequent amendments","presidential orders","state conventions","the Federalist Papers alone"],"why":"Advocates say principles are applied to new conditions mainly through precedent."},
+    {"L":[1,2,3],"q":"Which phrase is a broad term that living constitutionalists read as a principle?","a":"\"equal protection of the laws\"","w":["\"a Term of four Years\"","\"two Senators from each State\"","\"the Age of thirty five Years\""],"why":"Broad terms such as \"equal protection\" state principles; exact terms set fixed rules."},
+    {"L":[1,2,3],"q":"Which is an exact rule in the Constitution, not a broad principle?","a":"A President must be at least 35","w":["\"equal protection of the laws\"","\"unreasonable searches and seizures\"","\"due process of law\""],"why":"The age rule is exact; the others are written in broad terms."},
+    {"L":[1,2],"q":"David Strauss compares American constitutional law to…","a":"the common law","w":["a treaty","a contract among the states","a code of statutes","a royal charter"],"why":"Strauss argues judges reason from precedent, as in the common law."},
     { L: [1, 2, 3], q: 'Living constitutionalists hold that the Constitution\'s broad principles…', a: 'are applied to new conditions over time, mainly through precedent', w: ['have no authority over modern government', 'were fixed in their applications in 1788', 'may be changed only by amendment'], why: 'They accept the text\'s authority and read its broad phrases as principles whose application develops.' },
     { L: [1, 2], q: 'Which scholar described American constitutional law as working like the common law, in <i>The Living Constitution</i> (2010)?', a: 'David Strauss', w: ['Robert Bork', 'Philip Bobbitt', 'Edwin Meese'], why: 'David Strauss made the common-law argument; Bork and Meese were originalist advocates; Bobbitt described the modalities.' },
     { L: [1, 2], q: 'Which justice wrote <i>Active Liberty</i> (2005), a book associated with living constitutionalism?', a: 'Stephen Breyer', w: ['Clarence Thomas', 'Antonin Scalia', 'John Marshall'], why: 'Justice Breyer wrote <i>Active Liberty</i>.' },
@@ -215,6 +250,8 @@
   ]; }, 'Federal question or state question?'));
 
   G('conlaw1.jurisdiction-stripping', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['mccardle', 'marbury', 'martin', 'baker']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['mccardle', 'marbury', 'martin', 'baker']); } },
     { L: [1, 2, 3], q: 'Which words of Article III give Congress power over the Supreme Court\'s appellate jurisdiction?', a: '"with such Exceptions, and under such Regulations as the Congress shall make"', w: ['"necessary and proper"', '"the sole Power to try all Impeachments"', '"during good Behaviour"'], why: 'The Exceptions Clause, Article III, Section 2, Clause 2.' },
     { L: [1, 2], q: 'Which case accepted Congress\'s repeal of the Court\'s jurisdiction over a pending appeal?', a: ny('mccardle'), w: [ny('marbury'), ny('martin'), ny('baker')], why: 'In <i>Ex parte McCardle</i> (1869) the Court dismissed the appeal after Congress repealed the jurisdiction.' },
     { L: [1, 2], q: 'Does the Constitution require Congress to create lower federal courts?', a: 'No; it creates only the Supreme Court and lets Congress create inferior courts', w: ['Yes; it names thirteen circuit courts', 'Yes; one in each state', 'No; it forbids lower federal courts'], why: 'Article III: "one supreme Court, and in such inferior Courts as the Congress may from time to time ordain and establish."' },
@@ -228,6 +265,8 @@
   ]; }, 'Look at the Exceptions Clause and at what McCardle left open.'));
 
   G('conlaw1.constitutional-standing', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['flast', 'frothingham', 'lujan', 'hein']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['flast', 'frothingham', 'lujan', 'hein']); } },
     { L: [1, 2, 3], q: 'Does a federal taxpayer, as a taxpayer, generally have standing to challenge federal spending?', a: 'No (Frothingham v. Mellon, 1923)', w: ['Yes, always (Flast v. Cohen, 1968)', 'Yes, if the amount exceeds a million dollars', 'Only for military spending'], why: 'The general rule since <i>Frothingham</i>: a taxpayer\'s interest is shared with millions and too small and indeterminate.' },
     { L: [1, 2], q: 'Which case created a narrow exception allowing taxpayer suits?', a: ny('flast'), w: [ny('frothingham'), ny('lujan'), ny('hein')], why: '<i>Flast v. Cohen</i> (1968) allowed Establishment Clause challenges to congressional spending.' },
     { L: [1, 2, 3], q: 'What are the three parts of standing?', a: 'Injury in fact, causation, redressability', w: ['Notice, hearing, decision', 'Jurisdiction, venue, service', 'Facts, issue, holding'], why: 'From <i>Lujan v. Defenders of Wildlife</i> (1992): a concrete injury, fairly traceable to the defendant, that a court can redress.' },
@@ -296,6 +335,8 @@
   ]; }, 'End, means, and no prohibition.'));
 
   G('conlaw1.necessary-proper-today', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['comstock', 'mcculloch', 'nfib']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['comstock', 'mcculloch', 'nfib']); } },
     { L: [1, 2, 3], q: 'What did <i>United States v. Comstock</i> (2010) uphold?', a: 'Civil commitment of sexually dangerous federal prisoners after their sentences', w: ['A national bank', 'The individual health insurance mandate', 'A ban on guns near schools'], why: 'The Court held the commitment law a reasonable means connected to Congress\'s powers.' },
     { L: [1, 2], q: 'What was the vote in <i>Comstock</i>?', a: '7 to 2', w: ['5 to 4', '9 to 0', '6 to 3'], why: 'Justice Breyer wrote for five; Justices Kennedy and Alito concurred in the judgment; Justices Thomas and Scalia dissented.' },
     { L: [2, 3], q: 'In NFIB v. Sebelius, Chief Justice Roberts wrote that the individual mandate was not a valid exercise of the Necessary and Proper Clause because it was not…', a: '"proper"', w: ['"necessary"', '"commerce"', '"a tax"'], why: 'Even if necessary to the Act\'s reforms, it was not a "proper" means: it would let Congress create the commerce it regulates.' },
@@ -310,6 +351,8 @@
 
   /* ======================================================== Unit 4: The Commerce Power */
   G('conlaw1.gibbons', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['gibbons']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['gibbons']); } },
     { L: [1, 2, 3], q: 'What did <i>Gibbons v. Ogden</i> (1824) hold?', a: 'A federal coasting license overrode New York\'s steamboat monopoly', w: ['New York\'s monopoly was valid against federal law', 'Congress could not regulate navigation', 'States alone regulate commerce between states'], why: 'Commerce includes navigation, and a valid federal law overrides a conflicting state grant under the Supremacy Clause.' },
     { L: [1, 2], q: 'Complete Marshall\'s sentence: "Commerce, undoubtedly, is traffic, but it is something more: it is…"', a: 'intercourse', w: ['manufacturing', 'taxation', 'agriculture'], why: '"Commerce, undoubtedly, is traffic, but it is something more: it is intercourse."' },
     { L: [1, 2, 3], q: 'How did Marshall define "among" in "among the several States"?', a: 'Intermingled with', w: ['Between the borders of', 'Owned by', 'Approved by'], why: '"The word \'among\' means intermingled with," so commerce among the states may reach into a state\'s interior.' },
@@ -335,6 +378,8 @@
   ]; }, 'Production or commerce? Direct or indirect?'));
 
   G('conlaw1.commerce-1937', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['joneslaughlin', 'schechter', 'darby', 'carter', 'wickard']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['joneslaughlin', 'schechter', 'darby', 'carter', 'wickard']); } },
     { L: [1, 2, 3], q: 'Which 1937 case upheld the Wagner Act\'s reach to labor relations at a steel company?', a: ny('joneslaughlin'), w: [ny('schechter'), ny('darby'), ny('carter')], why: '<i>NLRB v. Jones & Laughlin Steel Corp.</i> (1937), 5 to 4, by Chief Justice Hughes.' },
     { L: [1, 2], q: 'Which case overruled <i>Hammer v. Dagenhart</i>?', a: ny('darby'), w: [ny('joneslaughlin'), ny('wickard'), ny('lopez')], why: '<i>United States v. Darby</i> (1941), unanimous, upholding the Fair Labor Standards Act.' },
     { L: [2, 3], q: 'What did <i>Darby</i> say about the Tenth Amendment?', a: 'It "states but a truism that all is retained which has not been surrendered"', w: ['It lists powers that belong only to the states', 'It bars federal wage laws', 'It was repealed by the Fourteenth Amendment'], why: 'Justice Stone called it a truism: it adds no limit beyond the enumeration of powers.' },
@@ -347,6 +392,8 @@
   ]; }, 'From production versus commerce to substantial effects.'));
 
   G('conlaw1.wickard', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['wickard', 'darby', 'raich', 'lopez']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['wickard', 'darby', 'raich', 'lopez']); } },
     { L: [1, 2, 3], q: 'What did Roscoe Filburn do with the wheat he grew over his quota?', a: 'Used it on his farm: seed, animal feed and flour', w: ['Sold it in another state', 'Exported it to Canada', 'Sold it to the federal government'], why: 'He never sold it. The aggregation principle, not a sale, brought it within the commerce power.' },
     { L: [1, 2], q: 'What principle did <i>Wickard v. Filburn</i> (1942) rely on?', a: 'Aggregation: the total effect of many similar activities', w: ['Direct versus indirect effects', 'The market participant exception', 'Dual federalism'], why: 'Filburn\'s share was trivial alone, but "taken together with that of many others similarly situated" it was far from trivial.' },
     { L: [2, 3], q: 'How did home-grown wheat affect interstate commerce, in the Court\'s view?', a: 'It replaced wheat that would otherwise be bought, lowering demand and price', w: ['It was shipped across state lines', 'It was taxed by other states', 'It competed with foreign imports only'], why: 'Home use supplies a need otherwise met by the market, so it affects national demand.' },
@@ -359,6 +406,8 @@
   ]; }, 'Add up everyone doing the same thing.'));
 
   G('conlaw1.civil-rights-commerce', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['heartofatlanta', 'mcclung', 'civilrightscases']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['heartofatlanta', 'mcclung', 'civilrightscases']); } },
     { L: [1, 2, 3], q: 'Under which power did the Court uphold Title II of the Civil Rights Act of 1964 (public accommodations)?', a: 'The Commerce Clause', w: ['The Fourteenth Amendment\'s Section 5 alone', 'The Tenth Amendment', 'The Taxing power'], why: 'Heart of Atlanta and McClung rested on the commerce power.' },
     { L: [1, 2], q: 'Which case involved a 216-room motel serving mostly out-of-state guests?', a: ny('heartofatlanta'), w: [ny('mcclung'), ny('civilrightscases'), ny('wickard')], why: '<i>Heart of Atlanta Motel v. United States</i> (1964).' },
     { L: [1, 2], q: 'Which case involved Ollie\'s Barbecue, a restaurant in Birmingham?', a: ny('mcclung'), w: [ny('heartofatlanta'), ny('lopez'), ny('raich')], why: '<i>Katzenbach v. McClung</i> (1964).' },
@@ -388,6 +437,8 @@
   ]; }, 'Channels are routes; instrumentalities are what moves; the third is substantial effects.'));
 
   G('conlaw1.morrison', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['morrison', 'lopez']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['morrison', 'lopez']); } },
     { L: [1, 2, 3], q: 'What did <i>United States v. Morrison</i> (2000) strike down?', a: 'The civil-remedy provision of the Violence Against Women Act', w: ['The entire Violence Against Women Act', 'The Gun-Free School Zones Act', 'The Civil Rights Act of 1964'], why: 'Only the civil remedy (a federal suit against attackers) was at issue and struck down.' },
     { L: [1, 2], q: 'What was the vote in <i>Morrison</i>?', a: '5 to 4', w: ['9 to 0', '6 to 3', '7 to 2'], why: 'Chief Justice Rehnquist wrote for five; Justice Souter dissented for four.' },
     { L: [2, 3], q: 'Under which two powers did the government defend the civil remedy?', a: 'The Commerce Clause and Section 5 of the Fourteenth Amendment', w: ['The Taxing and Spending Clauses', 'The Tenth and Eleventh Amendments', 'The Treaty power and the war power'], why: 'The Court rejected both.' },
@@ -399,6 +450,8 @@
   ]; }, 'Two powers: commerce and Section 5. Check each.'));
 
   G('conlaw1.raich', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['raich', 'wickard', 'lopez', 'morrison']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['raich', 'wickard', 'lopez', 'morrison']); } },
     { L: [1, 2, 3], q: 'What did <i>Gonzales v. Raich</i> (2005) hold?', a: 'Congress may apply federal drug law to marijuana grown at home for medical use under state law', w: ['California\'s medical marijuana law was unconstitutional', 'Congress may not regulate home-grown plants', 'States must enforce federal drug law'], why: 'Applying Wickard, the Court upheld the federal law as applied; it did not invalidate California\'s law.' },
     { L: [1, 2], q: 'What was the vote in <i>Raich</i>?', a: '6 to 3', w: ['5 to 4', '9 to 0', '7 to 2'], why: 'Justice Stevens wrote for the Court; Justice Scalia concurred in the judgment; O\'Connor, Rehnquist and Thomas dissented.' },
     { L: [1, 2, 3], q: 'Which earlier case did <i>Raich</i> rely on most?', a: ny('wickard'), w: [ny('lopez'), ny('morrison'), ny('gibbons')], why: 'Home-grown marijuana, like Filburn\'s wheat, affects a national market in the aggregate.' },
@@ -410,6 +463,8 @@
   ]; }, 'Economic activity within a comprehensive scheme.'));
 
   G('conlaw1.nfib-commerce', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['nfib', 'lopez', 'raich', 'wickard']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['nfib', 'lopez', 'raich', 'wickard']); } },
     { L: [1, 2, 3], q: 'In <i>NFIB v. Sebelius</i> (2012), what happened to the individual mandate?', a: 'Upheld as a tax, after five justices rejected the commerce argument', w: ['Struck down entirely', 'Upheld under the Commerce Clause', 'Upheld under the Spending Clause'], why: 'Five justices found the commerce power did not support it; five upheld it under the taxing power.' },
     { L: [1, 2], q: 'What distinction did five justices draw on the Commerce Clause?', a: 'Congress may regulate existing activity, not compel people to enter commerce', w: ['Direct versus indirect effects', 'Manufacturing versus commerce', 'Channels versus instrumentalities'], why: 'The activity-inactivity distinction: being uninsured is not activity.' },
     { L: [2, 3], q: 'Which justice was in both the commerce majority and the tax majority?', a: 'Chief Justice Roberts', w: ['Justice Ginsburg', 'Justice Scalia', 'Justice Kennedy'], why: 'Roberts joined the four joint dissenters on commerce and the four other justices on the tax.' },
@@ -425,6 +480,8 @@
     ['It is small compared with the cost of complying', 'tax'], ['It applies only to people who act knowingly', 'penalty'], ['It is collected by the IRS through the normal tax process', 'tax'],
     ['It is enforced by criminal prosecution', 'penalty'], ['It is expected to raise substantial revenue', 'tax'], ['It is so heavy that no one could reasonably choose to pay it instead of complying', 'penalty']];
   G('conlaw1.taxing-power', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['bailey', 'nfib', 'hammer', 'darby']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['bailey', 'nfib', 'hammer', 'darby']); } },
     { L: [1, 2, 3], q: 'What decides whether an exaction is a "tax" for constitutional purposes?', a: 'How it functions, not what Congress calls it', w: ['The label Congress uses', 'Whether the President signs it', 'Whether it is popular'], why: 'Courts look at function: NFIB treated a "penalty" as a tax; Bailey treated a "tax" as a penalty.' },
     { L: [1, 2], q: 'Which case held that the Child Labor Tax Law was a penalty, not a valid tax?', a: ny('bailey'), w: [ny('nfib'), ny('hammer'), ny('darby')], why: '<i>Bailey v. Drexel Furniture Co.</i> (1922), by Chief Justice Taft.' },
     { L: [1, 2, 3], q: 'May a valid tax also discourage the activity it taxes?', a: 'Yes, every tax affects behavior; that alone does not make it invalid', w: ['No, a tax must not affect behavior', 'Only if the states agree', 'Only taxes on imports may do so'], why: 'A tax that raises revenue is valid even if it also discourages conduct.' },
@@ -438,6 +495,8 @@
   ]; }, 'Size, scienter, who collects, and revenue.'));
 
   G('conlaw1.spending-power', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['helvering', 'butler', 'dole']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['helvering', 'butler', 'dole']); } },
     { L: [1, 2, 3], q: 'Whose view of the spending power did <i>United States v. Butler</i> (1936) adopt?', a: 'Hamilton\'s: spending is not limited to the other enumerated powers', w: ['Madison\'s: spending must carry out another enumerated power', 'Jefferson\'s: no spending without an amendment', 'Marshall\'s: only the states may spend'], why: 'Butler said the spending power "is not limited by the direct grants of legislative power found in the Constitution."' },
     { L: [1, 2, 3], q: 'Did <i>Butler</i> uphold the Agricultural Adjustment Act?', a: 'No; it struck the Act down on Tenth Amendment grounds', w: ['Yes, under the broad view of spending', 'Yes, under the Commerce Clause', 'It did not reach the question'], why: 'It accepted the broad spending view but held the program regulated agriculture, a reserved power.' },
     { L: [1, 2], q: 'Which case upheld Social Security\'s old-age benefits in 1937?', a: ny('helvering'), w: [ny('butler'), ny('bailey'), ny('dole')], why: '<i>Helvering v. Davis</i> (1937), by Justice Cardozo.' },
@@ -476,6 +535,8 @@
     ['A federal law bans an activity nationwide, overriding state laws that allow it.', 'preemption (valid if within a federal power)']];
   var CMDK = ['commandeering (invalid)', 'preemption (valid if within a federal power)', 'conditional spending (valid if it meets Dole)'];
   G('conlaw1.anti-commandeering', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['newyorkus', 'printz', 'murphy']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['newyorkus', 'printz', 'murphy']); } },
     { L: [1, 2, 3], gen: function (R) { var c = R.pick(CMD); return { q: 'Classify this federal action. ' + c[0], a: c[1], w: CMDK.filter(function (k) { return k !== c[1]; }), why: 'Orders to state governments are commandeering; rules for private parties preempt; money with strings is conditional spending. This one is ' + c[1] + '.' }; } },
     { L: [1, 2], q: 'Which case struck down the "take title" provision for radioactive waste?', a: ny('newyorkus'), w: [ny('printz'), ny('murphy'), ny('garcia')], why: '<i>New York v. United States</i> (1992), by Justice O\'Connor.' },
     { L: [1, 2], q: 'Which case held Congress may not order local sheriffs to run background checks?', a: ny('printz'), w: [ny('newyorkus'), ny('murphy'), ny('lopez')], why: '<i>Printz v. United States</i> (1997), 5 to 4, by Justice Scalia.' },
@@ -489,6 +550,8 @@
 
   /* ======================================================== Unit 6: Federalism and State Sovereignty */
   G('conlaw1.tenth-amendment-limits', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['garcia', 'nationalleague', 'printz', 'darby']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['garcia', 'nationalleague', 'printz', 'darby']); } },
     { L: [1, 2, 3], q: 'Which case overruled <i>National League of Cities v. Usery</i>?', a: ny('garcia'), w: [ny('printz'), ny('lopez'), ny('darby')], why: '<i>Garcia v. San Antonio Metropolitan Transit Authority</i> (1985), 5 to 4.' },
     { L: [1, 2], q: 'What test did <i>National League of Cities</i> (1976) use?', a: 'Whether federal law displaced states\' "traditional governmental functions"', w: ['Whether an activity is economic', 'Congruence and proportionality', 'Whether a condition is coercive'], why: 'It barred federal wage rules for state employees in areas of traditional governmental functions.' },
     { L: [1, 2, 3], q: 'Where did <i>Garcia</i> say states\' protection mainly lies?', a: 'In the political process and the structure of the federal government', w: ['In judicial review of "traditional" functions', 'In the Eleventh Amendment', 'In the President\'s veto'], why: 'States are represented in Congress; that structure, not a judicial test, is the main safeguard.' },
@@ -521,6 +584,8 @@
   ]; }, 'Who sues whom, for what, under which power?'));
 
   G('conlaw1.section-5-power', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['boerne', 'shelby', 'smith']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['boerne', 'shelby', 'smith']); } },
     { L: [1, 2, 3], q: 'What test did <i>City of Boerne v. Flores</i> (1997) set for laws under Section 5 of the Fourteenth Amendment?', a: 'Congruence and proportionality between the injury and the remedy', w: ['Rational basis', 'Strict scrutiny', 'Direct and indirect effects'], why: 'Section 5 laws must be remedial, with congruence and proportionality.' },
     { L: [1, 2], q: 'Which law did <i>Boerne</i> hold beyond Congress\'s Section 5 power as applied to the states?', a: 'The Religious Freedom Restoration Act', w: ['The Voting Rights Act', 'The Civil Rights Act of 1964', 'The Violence Against Women Act'], why: 'RFRA (1993) could not be applied to states; it still applies to the federal government.' },
     { L: [1, 2, 3], q: 'What did <i>Shelby County v. Holder</i> (2013) strike down?', a: 'The Voting Rights Act\'s coverage formula, Section 4(b)', w: ['The entire Voting Rights Act', 'Section 2 of the Voting Rights Act', 'The Fifteenth Amendment'], why: 'Only Section 4(b); Section 2 remains, and preclearance lies dormant without a formula.' },
@@ -561,6 +626,8 @@
     ['A state buys office paper only from in-state suppliers for its own agencies.', 'market participant: allowed']];
   var DCCK = ['discriminatory: virtually per se invalid', 'even-handed: Pike balancing', 'market participant: allowed'];
   G('conlaw1.dormant-discrimination', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['philadelphianj', 'pike', 'maine', 'unitedhaulers']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['philadelphianj', 'pike', 'maine', 'unitedhaulers']); } },
     { L: [1, 2, 3], gen: function (R) { var x = R.pick(DCC); return { q: 'How does the dormant Commerce Clause treat this state action? ' + x[0], a: x[1], w: DCCK.filter(function (k) { return k !== x[1]; }), why: 'First ask: is the state regulating or participating, and does it treat out-of-state interests differently? This one is ' + x[1] + '.' }; } },
     { L: [1, 2], q: 'Which case struck down New Jersey\'s ban on garbage from other states?', a: ny('philadelphianj'), w: [ny('pike'), ny('reeves'), ny('maine')], why: '<i>City of Philadelphia v. New Jersey</i> (1978), 7 to 2.' },
     { L: [1, 2, 3], q: 'What standard applies to a state law that discriminates against interstate commerce?', a: 'Virtually per se invalid unless no nondiscriminatory means can serve a legitimate local purpose', w: ['Rational basis review', 'Pike balancing', 'No review, because Congress is silent'], why: 'Discrimination gets a near-fatal test; Pike is for even-handed laws.' },
@@ -572,6 +639,8 @@
   ]; }, 'Does the law treat in-state and out-of-state interests differently?'));
 
   G('conlaw1.pike-balancing', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['pike', 'kassel', 'philadelphianj']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['pike', 'kassel', 'philadelphianj']); } },
     { L: [1, 2, 3], q: 'Under <i>Pike v. Bruce Church</i> (1970), when is an even-handed state law struck down?', a: 'When the burden on interstate commerce is clearly excessive in relation to the putative local benefits', w: ['Whenever it burdens interstate commerce at all', 'Only if it discriminates on its face', 'Never; even-handed laws are always valid'], why: 'That is the Pike balancing test.' },
     { L: [1, 2], q: 'What product was involved in <i>Pike v. Bruce Church</i>?', a: 'Cantaloupes', w: ['Garbage', 'Baitfish', 'Cement'], why: 'Arizona required Arizona cantaloupes to be packed in Arizona.' },
     { L: [2, 3], q: 'Which case struck down Iowa\'s ban on 65-foot double-trailer trucks under Pike balancing?', a: ny('kassel'), w: [ny('pike'), ny('philadelphianj'), ny('reeves')], why: '<i>Kassel v. Consolidated Freightways</i> (1981): the safety gain was slight and the burden on interstate trucking heavy.' },
@@ -583,6 +652,8 @@
   ]; }, 'Even-handed? Then weigh burden against benefit.'));
 
   G('conlaw1.market-participant', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['reeves', 'southcentral', 'philadelphianj']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['reeves', 'southcentral', 'philadelphianj']); } },
     { L: [1, 2, 3], q: 'Which case let South Dakota prefer in-state buyers for cement from its own plant?', a: ny('reeves'), w: [ny('southcentral'), ny('pike'), ny('philadelphianj')], why: '<i>Reeves, Inc. v. Stake</i> (1980), 5 to 4.' },
     { L: [1, 2], q: 'When does the market participant exception apply?', a: 'When a state acts as a buyer or seller rather than a regulator', w: ['When a state regulates any market', 'When Congress has passed a law', 'When a corporation sues'], why: 'A state in the market may choose its trading partners like a private business.' },
     { L: [2, 3], q: 'Why did Alaska\'s in-state processing requirement for timber fail in <i>South-Central Timber</i> (1984)?', a: 'It reached a downstream market in which Alaska was not a participant', w: ['Alaska could not sell timber at all', 'It was preempted by federal law', 'It discriminated against Alaska residents'], why: 'The exception covers the state\'s own dealings, not conditions on later private transactions.' },
@@ -593,6 +664,8 @@
   ]; }, 'Is the state acting in its own market, or controlling a different one?'));
 
   G('conlaw1.privileges-immunities-iv', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['toomer', 'baldwin', 'piper']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['toomer', 'baldwin', 'piper']); } },
     { L: [1, 2, 3], q: 'Whom does Article IV\'s Privileges and Immunities Clause protect?', a: 'Citizens of other states (individuals)', w: ['Corporations of other states', 'Foreign governments', 'Only residents of the state'], why: 'It protects citizens; corporations are not citizens for this purpose (Paul v. Virginia, 1869).' },
     { L: [1, 2], q: 'Which case struck down South Carolina\'s much higher shrimp-boat license fee for nonresidents?', a: ny('toomer'), w: [ny('baldwin'), ny('piper'), ny('reeves')], why: '<i>Toomer v. Witsell</i> (1948): 25 dollars for residents, 2,500 for nonresidents.' },
     { L: [2, 3], q: 'Which case UPHELD higher elk-hunting license fees for nonresidents?', a: ny('baldwin'), w: [ny('toomer'), ny('piper'), ny('philadelphianj')], why: '<i>Baldwin</i> (1978): recreational hunting is not a fundamental privilege.' },
@@ -614,6 +687,8 @@
     ['Congress considered and rejected giving the President a power, and the President exercises it anyway.', 2],
     ['A statute forbids a certain action, and the President orders it.', 2]];
   G('conlaw1.youngstown', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['youngstown', 'curtisswright', 'dames']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['youngstown', 'curtisswright', 'dames']); } },
     { L: [1, 2, 3], gen: function (R) { var z = R.pick(ZFACTS); return { q: 'In which of Justice Jackson\'s Youngstown zones does this action fall? ' + z[0], a: ZONES[z[1]], w: ZONES.filter(function (x, i) { return i !== z[1]; }), why: 'Ask what Congress has said: authorized (zone 1), silent (zone 2) or opposed (zone 3). This is ' + ZONES[z[1]] + '.' }; } },
     { L: [1, 2], q: 'Who wrote the opinion of the Court in <i>Youngstown Sheet & Tube Co. v. Sawyer</i>?', a: 'Justice Black', w: ['Justice Jackson', 'Chief Justice Vinson', 'Justice Frankfurter'], why: 'Black wrote for the Court; Jackson\'s three-zone framework was a concurrence; Vinson dissented.' },
     { L: [1, 2, 3], q: 'What did President Truman seize in 1952?', a: 'Most of the nation\'s steel mills', w: ['The railroads', 'The coal mines', 'The banks'], why: 'Executive Order 10340 directed the Secretary of Commerce to take possession of the steel mills during the Korean War.' },
@@ -638,6 +713,8 @@
   ]; }, 'Intelligible principle for delegation; clear authorization for major questions.'));
 
   G('conlaw1.legislative-veto', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['chadha', 'bowsher']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['chadha', 'bowsher']); } },
     { L: [1, 2, 3], q: 'What did <i>INS v. Chadha</i> (1983) strike down?', a: 'The one-house legislative veto', w: ['The presidential veto', 'The Line Item Veto Act', 'The filibuster'], why: 'Legislative action requires passage by both houses and presentment.' },
     { L: [1, 2], q: 'Which case struck down the Line Item Veto Act?', a: ny('clintonny'), w: [ny('chadha'), ny('bowsher'), ny('clintonjones')], why: '<i>Clinton v. City of New York</i> (1998), 6 to 3.' },
     { L: [1, 2, 3], q: 'What two requirements of Article I, Section 7 did Chadha enforce?', a: 'Bicameralism and presentment', w: ['Standing and ripeness', 'Advice and consent', 'Notice and hearing'], why: 'Passage by both houses, then presentment to the President.' },
@@ -657,6 +734,8 @@
     ['An administrative judge supervised and reviewable by a Senate-confirmed department head', 'an inferior officer']];
   var OFFK = ['an employee, not an officer', 'an inferior officer', 'a principal officer'];
   G('conlaw1.appointments', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['lucia', 'edmond', 'buckley', 'canning', 'morrisonolson']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['lucia', 'edmond', 'buckley', 'canning', 'morrisonolson']); } },
     { L: [1, 2, 3], gen: function (R) { var x = R.pick(OFFQ); return { q: 'Under the Appointments Clause, how is this position best classified? ' + x[0] + '.', a: x[1], w: OFFK.filter(function (k) { return k !== x[1]; }), why: 'Officers exercise significant authority; inferior officers are directed and supervised by Senate-confirmed officers. This is ' + x[1] + '.' }; } },
     { L: [1, 2], q: 'Who appoints principal officers of the United States?', a: 'The President, with the advice and consent of the Senate', w: ['Congress alone', 'The courts', 'The heads of departments'], why: 'Article II, Section 2, Clause 2.' },
     { L: [1, 2, 3], q: 'In whom may Congress vest the appointment of inferior officers?', a: 'The President alone, the courts of law, or the heads of departments', w: ['Only the Senate', 'Congressional committees', 'State governors'], why: 'The clause lists those three; Congress may not appoint officers itself (Buckley v. Valeo).' },
@@ -669,6 +748,8 @@
   ]; }, 'Significant authority? Then who supervises the officer?'));
 
   G('conlaw1.removal-power', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['seila', 'myers', 'humphreys', 'morrisonolson', 'wiener', 'freeenterprise']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['seila', 'myers', 'humphreys', 'morrisonolson', 'wiener', 'freeenterprise']); } },
     { L: [1, 2, 3], q: 'Which case refused to extend <i>Humphrey\'s Executor</i> to an agency led by a single director?', a: ny('seila'), w: [ny('myers'), ny('morrisonolson'), ny('wiener')], why: '<i>Seila Law v. CFPB</i> (2020), 5 to 4.' },
     { L: [1, 2], q: 'What did <i>Myers v. United States</i> (1926) hold?', a: 'The President may remove executive officers he appoints without Senate consent', w: ['Congress may require Senate consent to remove a postmaster', 'Commissioners may be removed only for cause', 'Officers serve for life'], why: 'Chief Justice Taft (himself a former President) wrote for the Court.' },
     { L: [1, 2, 3], q: 'What did <i>Humphrey\'s Executor</i> (1935) allow?', a: 'Limits on removing members of multi-member commissions like the FTC', w: ['Removal of any officer at will', 'Senate approval of all removals', 'Lifetime tenure for commissioners'], why: 'It upheld a for-cause limit for a "quasi-legislative" and "quasi-judicial" commission. The Court overruled this precedent in 2026.' },
@@ -683,6 +764,8 @@
   ]; }, 'What kind of officer, and how much executive power does it exercise?'));
 
   G('conlaw1.foreign-affairs', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['zivotofsky', 'curtisswright', 'dames', 'medellin', 'youngstown']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['zivotofsky', 'curtisswright', 'dames', 'medellin', 'youngstown']); } },
     { L: [1, 2, 3], q: 'Which case held that the power to recognize foreign governments belongs to the President alone?', a: ny('zivotofsky'), w: [ny('curtisswright'), ny('dames'), ny('medellin')], why: '<i>Zivotofsky v. Kerry</i> (2015), 6 to 3.' },
     { L: [1, 2], q: 'Which case called the President "the sole organ" of the federal government in international relations?', a: ny('curtisswright'), w: [ny('youngstown'), ny('zivotofsky'), ny('hamdi')], why: '<i>United States v. Curtiss-Wright</i> (1936), by Justice Sutherland.' },
     { L: [2, 3], q: 'Which case upheld executive agreements settling the Iran hostage claims?', a: ny('dames'), w: [ny('curtisswright'), ny('medellin'), ny('zivotofsky')], why: '<i>Dames & Moore v. Regan</i> (1981), relying on statutes and long congressional acquiescence.' },
@@ -694,6 +777,8 @@
   ]; }, 'Which branch does the Constitution give this specific power to?'));
 
   G('conlaw1.war-detention', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['hamdi', 'hamdan', 'exmilligan', 'prize', 'youngstown']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['hamdi', 'hamdan', 'exmilligan', 'prize', 'youngstown']); } },
     { L: [1, 2, 3], q: 'Which case held that a U.S. citizen held as an enemy combatant must receive notice and a fair chance to rebut before a neutral decisionmaker?', a: ny('hamdi'), w: [ny('hamdan'), ny('boumediene'), ny('exmilligan')], why: '<i>Hamdi v. Rumsfeld</i> (2004), Justice O\'Connor\'s plurality.' },
     { L: [1, 2], q: 'Which case extended the constitutional privilege of habeas corpus to detainees at Guantanamo Bay?', a: ny('boumediene'), w: [ny('hamdi'), ny('hamdan'), ny('prize')], why: '<i>Boumediene v. Bush</i> (2008), 5 to 4.' },
     { L: [1, 2], q: 'Which case upheld President Lincoln\'s blockade of Southern ports before Congress acted?', a: ny('prize'), w: [ny('exmilligan'), ny('youngstown'), ny('curtisswright')], why: '<i>The Prize Cases</i> (1863).' },
@@ -712,6 +797,8 @@
     ['A President removed by impeachment and conviction is later indicted in court for the same conduct', 'Allowed; the Constitution says the convicted party remains liable to indictment and trial (Article I, Section 3)']];
   var IMMK = IMM.map(function (x) { return x[1]; });
   G('conlaw1.privilege-immunity', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['nixon', 'fitzgerald']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['nixon', 'fitzgerald']); } },
     { L: [2, 3], gen: function (R) { var x = R.pick(IMM); return { q: 'What rule applies? ' + x[0] + '.', a: x[1], w: IMMK.filter(function (k) { return k !== x[1]; }), why: 'Sort by the kind of proceeding (civil or criminal) and the kind of act (official or unofficial). ' + x[1] + '.' }; } },
     { L: [1, 2, 3], q: 'What did <i>United States v. Nixon</i> (1974) hold about executive privilege?', a: 'It is real but qualified, and yields to a criminal trial\'s specific need for evidence', w: ['It is absolute', 'It does not exist', 'Only Congress may decide it'], why: 'The unanimous Court (8 to 0) ordered the tapes produced.' },
     { L: [1, 2], q: 'Which case allowed a civil suit against a sitting President over unofficial acts before taking office?', a: ny('clintonjones'), w: [ny('fitzgerald'), ny('nixon'), ny('clintonny')], why: '<i>Clinton v. Jones</i> (1997), 9 to 0.' },
@@ -729,6 +816,8 @@
   var PAIRS = { 'Strict scrutiny': ['compelling', 'narrowly tailored'], 'Intermediate scrutiny': ['important', 'substantially related'], 'Rational basis': ['legitimate', 'rationally related'] };
   function scrViz(tier) { var k = { 'Strict scrutiny': 'strict', 'Intermediate scrutiny': 'intermediate', 'Rational basis': 'rational' }[tier]; return { name: 'cv-scrutiny', opts: { mode: 'tiers', ask: k, quiet: true, interactive: false } }; }
   G('conlaw1.rational-basis', fromBank(function () { return [
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['leeoptical', 'carolene', 'cleburne', 'railwayexpress']); } },
+    { L: [1, 2, 3], gen: function (R, lv) { return TRBcase(R, lv, ['leeoptical', 'carolene', 'cleburne', 'railwayexpress']); } },
     { L: [1, 2, 3], q: 'Under rational basis review, a law is upheld if it is…', a: 'rationally related to a legitimate government interest', w: ['narrowly tailored to a compelling interest', 'substantially related to an important interest', 'the least restrictive means available'], why: 'Legitimate interest, rational relation.' },
     { L: [1, 2, 3], q: 'Under rational basis review, who bears the burden?', a: 'The challenger, who must negate every conceivable basis', w: ['The government, which must prove its actual purpose', 'The court, which must find a reason', 'Congress'], why: 'The law is presumed valid; any conceivable legitimate reason will do.' },
     { L: [1, 2], q: 'Which case upheld Oklahoma\'s rule that opticians need a prescription to replace lenses?', a: ny('leeoptical'), w: [ny('carolene'), ny('cleburne'), ny('craig')], why: '<i>Williamson v. Lee Optical</i> (1955).' },
@@ -773,3 +862,350 @@
 
   /* ======================================================== end */
 })(window.MathLadder);
+
+/* ---- widen_hum: more questions from the lesson's own tables -----------------------------------------------------
+   Each topic listed below also asks about the facts in its lesson's tables (copied here from the lesson, so the
+   answers are the lesson's own). Forms, by level:
+     match   "Which museum is in Turin?": the right cell and others from the same column (3 choices at level 1, 4 above)
+     pairs   lines "A → B": which pairing is right (level 2), or which one is wrong (level 3)
+     sort    a comparison table: which column does this cell describe (levels 1-2), or choose all for one column (level 3)
+   How often: about a third to a half of the draws, more when the topic's own questions are few at that level.
+   Generated by /tmp/work_widen_widen_hum/tabbuild.js from data/<ladder>/lessons/<course>.json. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var TABS = [{"k":"conlaw1.constitutional-precedent#3","h":["Overruled case","Overruled by","What changed"],"r":[["<i>Adkins v. Children's Hospital</i> (1923): minimum wage for women struck down","<i>West Coast Hotel Co. v. Parrish</i> (1937)","The end of the Lochner era; economic laws get deference"],["<i>Hammer v. Dagenhart</i> (1918): child-labor shipping ban struck down","<i>United States v. Darby</i> (1941)","A broader reading of the commerce power"],["<i>Plessy v. Ferguson</i> (1896): \"separate but equal\"","<i>Brown v. Board of Education</i> (1954) rejected it in public education; later cases ended it elsewhere","Separate facilities held inherently unequal"],["<i>National League of Cities v. Usery</i> (1976)","<i>Garcia v. San Antonio MTA</i> (1985)","Its \"traditional governmental functions\" test proved unworkable"],["<i>Abood v. Detroit Board of Education</i> (1977): public-sector agency fees","<i>Janus v. AFSCME</i> (2018), 5 to 4","The Court walked through the factors and found each favored overruling; the dissent stressed reliance"]],"cap":"A few of the many precedents the Court has overruled. The Constitution Annotated's 1992 edition already listed 204 overrulings, constitutional and statutory.","m":[[0,1,"Which later case overruled {a}?",0,"an overruled case with the case that overruled it"],[1,0,"Which earlier case did {a} overrule?",0,0,2]]},
+    {"k":"conlaw1.political-questions-conlaw#3","h":["Baker's markers (in summary)","In plain words"],"r":[["A textual commitment of the issue to another branch","The Constitution gives this decision to Congress or the President"],["No judicially discoverable and manageable standards","There is no legal test a court could apply"],["A policy decision of a kind not for courts","Deciding would require a non-judicial policy choice"],["Lack of respect due other branches; need to adhere to a political decision; risk of embarrassment from conflicting pronouncements","Prudential concerns about the Court's place among the branches"]],"cap":"The first two do most of the work in modern cases.","m":[[0,1,"One of Baker v. Carr's markers of a political question is: {a}. What does it mean in plain words?",0]]},
+    {"k":"conlaw1.commerce-narrow-era#1","h":["Case","Law","Result and reasoning"],"r":[["<i>United States v. E. C. Knight Co.</i> (1895), 8 to 1","Sherman Act applied to a sugar-refining trust controlling about 98 percent of U.S. refining","<b>Not reached.</b> Manufacturing is not commerce; its effect on commerce was only \"indirect.\" Justice Harlan dissented"],["<i>Champion v. Ames</i> (1903)","Federal ban on carrying lottery tickets across state lines","<b>Upheld.</b> Congress may prohibit the interstate movement of things it judges harmful"],["<i>Hammer v. Dagenhart</i> (1918), 5 to 4","Ban on interstate shipment of goods made with child labor (Keating-Owen Act, 1916)","<b>Struck down.</b> The goods were harmless; the law really regulated manufacturing, a state matter. Justice Holmes dissented"],["<i>Schechter Poultry Corp. v. United States</i> (1935), 9 to 0","National Industrial Recovery Act codes applied to a Brooklyn poultry business","<b>Struck down.</b> Local business with only indirect effects; also an unlawful delegation (see Nondelegation)"],["<i>Carter v. Carter Coal Co.</i> (1936)","Wage and hour rules for coal mining","<b>Struck down.</b> Mining is production, not commerce; effects on commerce were indirect"]],"cap":"The narrow era's leading cases.","m":[[1,0,"Which case of the narrow commerce era concerned this law: {a}?",0],[0,2,"What was the result in {a}?",0,0,2]]},
+    {"k":"conlaw1.lopez#3","h":["Lopez category","What it covers","Example"],"r":[["1. Channels of interstate commerce","The routes: highways, waterways, airways, and the movement along them","Barring stolen goods from being shipped across state lines"],["2. Instrumentalities of interstate commerce, and persons or things in it","The means of commerce: vehicles, planes, trains, and goods and people moving","Safety rules for interstate trucks"],["3. Activities that substantially affect interstate commerce","Activities with a substantial relation to commerce (economic activity may be aggregated)","Wickard's wheat; labor relations at a steel mill"]],"cap":"The three categories from Lopez.","m":[[1,0,"Which Lopez category covers this: {a}?",0,"a category with what it covers"],[2,0,"Under Lopez, which category does this example fall in: {a}?",0]]},
+    {"k":"conlaw1.conditional-spending#2","h":["Dole's limits on conditions","In plain words"],"r":[["1. General welfare","The spending must serve the general welfare (courts defer to Congress)"],["2. Unambiguous","States must know the condition when they accept the money"],["3. Related (germane)","The condition must relate to the federal interest in the program"],["4. No independent bar","The condition cannot require the state to do something unconstitutional"],["5. Not coercive","The pressure cannot turn into compulsion"]],"cap":"The test from South Dakota v. Dole (1987).","m":[[1,0,"Which of South Dakota v. Dole's limits on spending conditions is this: {a}?",0,"a limit with what it means"]]},
+    {"k":"conlaw1.sovereign-immunity#4","h":["Case","Holding"],"r":[["<i>Hans v. Louisiana</i> (1890)","A state's own citizen may not sue it in federal court without its consent"],["<i>Ex parte Young</i> (1908)","A suit for an injunction against a state <b>officer</b> to stop enforcing an unconstitutional law is allowed"],["<i>Fitzpatrick v. Bitzer</i> (1976)","Congress may abrogate state immunity when it enforces the Fourteenth Amendment (Section 5)"],["<i>Seminole Tribe of Florida v. Florida</i> (1996), 5 to 4","Congress may <b>not</b> abrogate state immunity using its Article I powers (overruling <i>Pennsylvania v. Union Gas</i>, 1989)"],["<i>Alden v. Maine</i> (1999)","States are also immune from private suits under federal law in their own courts"]],"cap":"The doctrine and its main exceptions.","m":[[1,0,"Which case held this: {a}?",0,"a case with its holding"],[0,1,"What did {a} hold?",0,0,2]]},
+    {"k":"conlaw1.preemption#2","h":["Kind","When it applies","Example"],"r":[["Express preemption","The federal statute says so in words","\"No State may impose labeling requirements different from these.\""],["Field preemption","Federal regulation is so pervasive, or the federal interest so dominant, that Congress left no room for states","Alien registration (Arizona v. United States, 2012)"],["Conflict: impossibility","It is impossible to comply with both federal and state law","Federal law requires a label; state law forbids it"],["Conflict: obstacle","State law stands as an obstacle to the full purposes of federal law","A state penalty scheme that upsets a balance Congress chose"]],"cap":"Express and implied preemption.","m":[[1,0,"Which kind of preemption applies when {a:l}?",0,"a kind with when it applies"],[2,0,"Which kind of preemption does this example show: {a}?",0,0,2]]},
+    {"k":"conlaw1.youngstown#3","h":["Zone","Situation","Presidential power"],"r":[["1","The President acts with express or implied authorization of Congress","\"At its maximum, for it includes all that he possesses in his own right plus all that Congress can delegate\""],["2","Congress has neither granted nor denied authority","A \"zone of twilight,\" where the President and Congress may share power; the outcome depends on the facts of the moment"],["3","The President acts against the express or implied will of Congress","\"At its lowest ebb\": only the President's own constitutional powers minus Congress's powers over the matter"]],"cap":"Justice Jackson's three zones (quotations from the concurrence).","m":[[1,0,"In Justice Jackson's Youngstown framework, which zone is this: {a}?",0,"a zone with its situation"],[2,0,"In Jackson's Youngstown framework, in which zone is presidential power like this: {a}?",0,0,2]]},
+    {"k":"conlaw1.nondelegation#2","h":["Case","Holding"],"r":[["<i>J. W. Hampton, Jr. & Co. v. United States</i> (1928)","A delegation is valid if Congress lays down an \"<b>intelligible principle</b>\" to guide the delegate (tariff adjustments upheld)"],["<i>Panama Refining Co. v. Ryan</i> (1935)","Struck down: a provision of the National Industrial Recovery Act gave the President power over oil shipments with no standard"],["<i>Schechter Poultry</i> (1935)","Struck down: NIRA codes of \"fair competition\" written largely by industry groups"],["<i>Mistretta v. United States</i> (1989), 8 to 1","Upheld the Sentencing Commission, which writes federal sentencing guidelines; Justice Scalia dissented"],["<i>Whitman v. American Trucking Associations</i> (2001), 9 to 0","Upheld the Clean Air Act's command to set air standards \"requisite to protect the public health\" (Justice Scalia)"],["<i>Gundy v. United States</i> (2019)","Upheld a delegation in a sex-offender registration law; Justice Gorsuch, joined by Chief Justice Roberts and Justice Thomas, dissented and urged a stricter test"]],"cap":"The nondelegation doctrine in six cases.","m":[[1,0,"Which nondelegation case held this: {a}?",0,"a case with its holding"]]},
+    {"k":"conlaw1.appointments#3","h":["Question","Rule","Case"],"r":[["Who is an \"officer\"?","Someone who holds a continuing position and exercises <b>significant authority</b> under federal law; ordinary employees are not officers","<i>Buckley v. Valeo</i> (1976): Congress could not appoint members of the Federal Election Commission. <i>Lucia v. SEC</i> (2018): SEC administrative law judges are officers"],["Who is \"inferior\"?","An officer whose work is <b>directed and supervised</b> by officers appointed by the President with Senate consent","<i>Edmond v. United States</i> (1997); <i>Morrison v. Olson</i> (1988) looked at removability, limited duties, jurisdiction and tenure"],["What is a \"recess\"?","A break long enough to count: a recess of <b>fewer than ten days</b> is presumptively too short","<i>NLRB v. Noel Canning</i> (2014): appointments during a three-day break were invalid"]],"cap":"The Appointments Clause in three questions.","m":[[0,1,"Under the Appointments Clause: {a} What is the rule?",0],[2,0,"Which question about appointments did this case answer: {a}?",0,0,2]]},
+    {"k":"conlaw1.heightened-scrutiny#1","h":["Tier","Interest","Fit","Burden","Typical result"],"r":[["Strict scrutiny","Compelling","Narrowly tailored (often: the least restrictive means)","The government","Laws usually fall"],["Intermediate scrutiny","Important","Substantially related","The government","Laws often fall; sex classifications need an \"exceedingly persuasive justification\""],["Rational basis","Legitimate","Rationally related","The challenger","Laws almost always stand"]],"cap":"The three tiers as pairs.","m":[[0,2,"What fit does {a} require?",0,"a tier with its required fit"],[0,1,"What kind of government interest does {a} require?",0],[4,0,"Which tier of review usually gives this result: {a}?",0,0,2]]}];
+  var FUNS = {};
+  function plain(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim(); }
+  function txt(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function low(s) { return txt(s).toLowerCase().replace(/[.;:,]+$/, ''); }
+  function big(x) { return String(x).replace(/<span class="(sc-b|eg-cop|eg-h)">/g, '<span class="$1" style="font-size:1.6em;line-height:1">'); }
+  function fill(t, x) { x = big(x); return t.replace('{a:l}', String(x).replace(/^[A-Z](?=[a-z])/, function (c) { return c.toLowerCase(); })).replace('{a}', x); }
+  function dot(s) { s = String(s); return /[.!?…"”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function sameRow(t, i, a) { return t.r.filter(function (r) { return low(r[a]) === low(t.r[i][a]); }); }
+  function partnerSteps(t, tp, right, shown) { // what each wrong choice goes with
+    var out = [];
+    shown.forEach(function (c) {
+      if (low(c) === low(right)) return;
+      var rows = t.r.filter(function (r) { return low(r[tp[1]]) === low(c); });
+      if (rows.length === 1 && txt(rows[0][tp[0]]).length <= 90) out.push(dot(c + ': that goes with ' + rows[0][tp[0]]));
+    });
+    return out.slice(0, 3);
+  }
+  // match: ask for column b from a cell of column a
+  function match(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][b]).length <= 130; });
+    if (!ok.length) return null;
+    var i = R.pick(ok), right = t.r[i][b], seen = {};
+    seen[low(right)] = 1;
+    var bad = {}; sameRow(t, i, a).forEach(function (r) { bad[low(r[b])] = 1; }); // never a choice that is also right
+    var pool = []; t.r.forEach(function (r) { var k = low(r[b]); if (r[b] && !seen[k] && !bad[k] && txt(r[b]).length <= 130) { seen[k] = 1; pool.push(r[b]); } });
+    var k = Math.min(L === 1 ? 3 : 4, pool.length + 1); if (k < 3) return null;
+    var wrongs = R.shuffle(pool).slice(0, k - 1), choices = [right].concat(wrongs);
+    return { q: fill(tp[2], t.r[i][a]), a: { t: 'mc', choices: choices, v: 0 },
+      steps: [dot(t.r[i][a] + ' → ' + right), ].concat(partnerSteps(t, tp, right, choices)),
+      hint: tp[3] || 'Think back to the lesson’s table' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 'm', a, b, i, txt(t.r[i][a])] };
+  }
+  // pairs: three or four lines "a → b"; one right (level 2) or one wrong (level 3)
+  function pairs(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][a]).length <= 70 && txt(t.r[i][b]).length <= 70; });
+    var uniq = {}; ok = ok.filter(function (i) { var k = low(t.r[i][a]); if (uniq[k]) return false; uniq[k] = 1; return true; });
+    var n = Math.min(4, ok.length); if (n < 3) return null;
+    var rows = R.shuffle(ok).slice(0, n), wrongOne = L >= 3, target = R.int(0, n - 1), lines = [], steps = [];
+    for (var j = 0; j < n; j++) {
+      var i = rows[j], right = wrongOne ? j !== target : j === target, ans = t.r[i][b];
+      if (!right) {
+        var good = {}; sameRow(t, i, a).forEach(function (r) { good[low(r[b])] = 1; });
+        var ws = []; t.r.forEach(function (r) { if (r[b] && !good[low(r[b])] && txt(r[b]).length <= 70 && ws.map(low).indexOf(low(r[b])) < 0) ws.push(r[b]); });
+        if (!ws.length) return null;
+        ans = R.pick(ws);
+      }
+      lines.push(t.r[i][a] + ' → ' + ans);
+      steps.push(dot(t.r[i][a] + ' → ' + t.r[i][b] + (right ? ': right' : ', not ' + ans)));
+    }
+    var what = tp[4] ? ' Each line pairs ' + tp[4] + '.' : '';
+    return { q: (wrongOne ? 'Exactly one of these pairings is <b>wrong</b>. Which one?' : 'Exactly one of these pairings is right. Which one?') + what,
+      a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own against what you learned.', wh: [t.k, wrongOne ? 'pw' : 'pr', a, b] };
+  }
+  // sort: which column of a comparison table does a cell belong to
+  function sortQ(R, t, L) {
+    var cols = t.h.map(function (_, j) { return j; }).filter(function (j) { return j >= (t.na ? 0 : 1) && txt(t.h[j]); });
+    if (cols.length < 2) return null;
+    var cells = [];
+    t.r.forEach(function (r, i) { cols.forEach(function (j) {
+      if (!r[j] || (!t.na && !txt(r[0]))) return;
+      var dup = cols.some(function (j2) { return j2 !== j && r[j2] && (low(r[j2]) === low(r[j]) || low(r[j2]).indexOf(low(r[j])) >= 0 || low(r[j]).indexOf(low(r[j2])) >= 0); });
+      if (!dup && txt(r[j]).length <= 140) cells.push([i, j]);
+    }); });
+    if (cells.length < 2) return null;
+    var heads = cols.map(function (j) { return t.h[j]; });
+    if (L >= 3 && cells.length >= 5) {
+      var j0 = R.pick(cols), pick = R.shuffle(cells).slice(0, Math.min(5, cells.length));
+      var hits = pick.filter(function (c) { return c[1] === j0; }).length;
+      if (hits >= 1 && hits < pick.length) {
+        var ch = pick.map(function (c) { return lab(t, c); });
+        var v = pick.map(function (c, k) { return c[1] === j0 ? k : -1; }).filter(function (k) { return k >= 0; });
+        return { q: fill(t.all, t.h[j0]), a: { t: 'mc', choices: ch, v: v },
+          steps: pick.map(function (c) { return dot(lab(t, c) + ' (' + t.h[c[1]] + ')'); }),
+          hint: 'Go through them one at a time.', wh: [t.k, 'sa', j0, pick] };
+      }
+    }
+    var c = R.pick(cells);
+    return { q: t.one + (t.na ? (/^["“]/.test(txt(t.r[c[0]][c[1]])) ? '<br>' + t.r[c[0]][c[1]] : '<br>“' + t.r[c[0]][c[1]] + '”') : '<br>' + asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]), a: { t: 'mc', choices: heads.slice(), v: cols.indexOf(c[1]) },
+      steps: t.na ? [dot('That is ' + t.h[c[1]].replace(/^./, function (x) { return x.toLowerCase(); }))] : [dot(txt(t.r[c[0]][0]) + ' for ' + t.h[c[1]] + ': ' + t.r[c[0]][c[1]])].concat(cols.filter(function (j) { return j !== c[1] && t.r[c[0]][j]; }).map(function (j) { return dot('For ' + t.h[j] + ': ' + t.r[c[0]][j]); })),
+      hint: 'Think back to the lesson’s comparison' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 's', c[0], c[1]] };
+  }
+  function asp(x) { return '<b>' + x + (/\?$/.test(txt(x)) ? '' : ':') + '</b> '; }
+  function lab(t, c) { return t.na ? t.r[c[0]][c[1]] : asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]; }
+  // extra bank items: { q, a, w: [wrong answers, more than are shown], s: [steps], h: hint, lv } or { q, tf: true|false, s, lv }
+  function extra(R, t, L) {
+    var its = t.x.filter(function (it) { return (it.lv || 1) <= L; }); if (!its.length) return null;
+    var it = R.pick(its), p;
+    if (it.f) { it = FUNS[it.f](R, L); if (!it) return null; }
+    if (it.num !== undefined) {
+      p = { q: it.q, a: { t: 'num', v: String(it.num) }, steps: it.s.slice() };
+      if (Number.isInteger(it.num) && !it.unit && !it.pct) p.a.form = 'int';
+      if (it.pct) p.a.pct = true;
+      if (it.tol != null) p.a.tol = it.tol;
+      if (it.unit) p.unit = it.unit;
+    }
+    else if (it.tf !== undefined) p = { q: it.q, a: { t: 'tf', v: it.tf }, steps: it.s.slice() };
+    else {
+      var k = Math.min(L === 1 ? 3 : 4, it.w.length + 1);
+      p = { q: it.q, a: { t: 'mc', choices: [it.a].concat(R.shuffle(it.w).slice(0, k - 1)), v: 0 }, steps: it.s.slice() };
+    }
+    p.hint = it.h || 'Think back to the lesson.';
+    p.wh = [t.k, 'x', its.indexOf(it) >= 0 ? t.x.indexOf(it) : -1];
+    return FUNS.__wrap ? FUNS.__wrap(p, L) : p;
+  }
+  function make(R, list, L) {
+    for (var tries = 0; tries < 8; tries++) {
+      var t = R.pick(list), p = null;
+      if (t.x) p = extra(R, t, L);
+      else if (t.one) p = sortQ(R, t, L);
+      else {
+        var tps = t.m.filter(function (tp) { return (tp[5] || 1) <= L; }); if (!tps.length) continue;
+        var tp = R.pick(tps);
+        p = L >= 2 && tp[4] && R.chance(0.35) ? pairs(R, t, tp, L) : match(R, t, tp, L);
+      }
+      if (p) {
+        // ladder pages show choices as plain text (only $…$ math is rendered), so choices carry no tags
+        if (p.a.t === 'mc') { p.a.choices = p.a.choices.map(plain); var seen = {}; if (p.a.choices.some(function (c) { var k = seen[c]; seen[c] = 1; return k; })) continue; }
+        p.nowiden = true; return p;
+      }
+    }
+    return null;
+  }
+  var BY = {}; TABS.forEach(function (t) { var id = t.k.split('#')[0].split('@')[0]; (BY[id] = BY[id] || []).push(t); });
+  var VAR = {};
+  function baseCount(id, base, L) { // different questions (ignoring the order of choices) from 40 fixed seeds
+    var key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        try { var p = base(ML.rand(id + '#whv#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; } } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  function extCount(id, L) { // different table questions from 40 fixed seeds
+    var key = id + '|x|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        var p = make(ML.rand(id + '#whx#' + s + '#' + L), BY[id], L); if (!p) continue;
+        var k = p.q + '|' + JSON.stringify(p.a.choices ? p.a.choices.slice().sort() : p.a.v);
+        if (!seen[k]) { seen[k] = 1; n++; }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  Object.keys(BY).forEach(function (id) {
+    var base = ML.getGen(id); if (!base || base._wh) return;
+    var fn = function (R, ctx) {
+      var L = (ctx && ctx.level) || 1, n = baseCount(id, base, L), x = extCount(id, L), share = Math.max(0.15, Math.min(0.5, x / (x + n + 1)));
+      if (R.chance(share)) { var p = make(R, BY[id], L); if (p) return p; }
+      return base(R, ctx);
+    };
+    fn._wh = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen_hum ---- */
+
+/* ---- widen: more forms of the same questions (so practice repeats less) ----------------------------------------
+   Every topic of this course keeps its own problems, and some draws are turned into other forms of the same skill,
+   built only from the topic's own problems (so their answers stay the ones the topic already checks):
+     check   "Ava chose X. Is Ava right?" (Yes or No) from a one-answer multiple-choice problem
+     pairs   two or three lines "question → answer"; which line is right (or, at level 3, which one is wrong)
+     tfpick  "Which sentence is true?" (or false) from three of the topic's true-or-false sentences
+   Questions whose answer depends on the other choices (first, best, most, not …) show the choices in the check form
+   and never go into pairs. Mix per level: CFG.mix[level] = [check, pairs, tfpick] shares; the rest stays as it was. */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var CFG = {"prefix":"conlaw1.","only":["modalities","originalism","living-constitutionalism","constitutional-precedent","marbury","review-of-states","jurisdiction-stripping","constitutional-standing","political-questions-conlaw","enumerated-powers","mcculloch","necessary-proper-today","gibbons","commerce-narrow-era","commerce-1937","wickard","civil-rights-commerce","lopez","morrison","raich","nfib-commerce","taxing-power","spending-power","conditional-spending","anti-commandeering","tenth-amendment-limits","sovereign-immunity","section-5-power","preemption","dormant-discrimination","pike-balancing","market-participant","privileges-immunities-iv","youngstown","nondelegation","legislative-veto","appointments","removal-power","foreign-affairs","war-detention","privilege-immunity","rational-basis","heightened-scrutiny","choosing-the-tier"]};
+  var NAMES = ['Ava', 'Ben', 'Cora', 'Dev', 'Eli', 'Finn', 'Gus', 'Hana', 'Ivy', 'Jude', 'Kai', 'Lena', 'Milo', 'Nora', 'Omar', 'Pia',
+    'Quinn', 'Rosa', 'Sam', 'Tess', 'Uma', 'Vic', 'Wren', 'Zoe', 'Ada', 'Leo', 'Mia', 'Theo', 'June', 'Max'];
+  var REL = /\b(first|last|earliest|latest|earlier|later|before|after|older|oldest|newer|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|look|read|here|example|examples|likely|probably|mainly|main|usually|typically|other|another|which one|each|order|then|next)\b|n['’]t\b/i;
+  // pairs judge each line on its own, so only questions whose answer depends on the other choices are left out
+  var RELP = /\b(first|last|earliest|latest|oldest|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|which one|other|another|rank|order|more|less|fewer)\b|n['’]t\b|\w+est\b/i;
+  var REF = /\b(this|these|those|shown|picture|map|table|chart|graph|diagram|passage|scene|story|above|below|here|following)\b/i;
+  var BADCH = /\b(all|none|both|neither) of\b|\b(above|below)\b|^(both|neither|all|none)\b|\bchoice\b|\boption\b/i;
+  function strip(s) { return String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function plainish(s) { return !/<(?!\/?(b|i|em|strong)\b)[^>]*>/.test(String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1')); }
+  function add(q, html) { // inside a read-aloud big span when there is one
+    var m = /<span class="[\w-]*big">/.exec(q);
+    if (m) { var k = q.lastIndexOf('</span>'); if (k > m.index) return q.slice(0, k) + '<br>' + html.replace(/<\/p>\s*<p[^>]*>/g, '<br>').replace(/<\/?p[^>]*>/g, '') + q.slice(k); }
+    return q + html;
+  }
+  function single(p) {
+    return p && p.a && p.a.t === 'mc' && !Array.isArray(p.a.v) && Array.isArray(p.a.choices) && p.a.choices.length >= 2 &&
+      !p.a.choices.some(function (c) { return BADCH.test(strip(c)); });
+  }
+  function hash(t) { var h = 7; for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return h; }
+  function nameFor(q, key) { // the same claim always gets the same name, so a name alone never makes a "new" problem
+    var t = strip(q), ok = NAMES.filter(function (n) { return t.indexOf(n) < 0 && String(key).indexOf(n) < 0; });
+    return (ok.length ? ok : NAMES)[hash(t + '|' + key) % (ok.length || NAMES.length)];
+  }
+  function dot(s) { s = String(s); return /[.!?…"”')\]]\s*(<\/b>)?$/.test(strip(s)) || /\$$/.test(s) ? s : s + '.'; }
+  function optList(ch) { return '<p class="wd-opts">The choices were:<br>' + ch.map(function (c) { return '• ' + c; }).join('<br>') + '</p>'; }
+  function copyP(p, q, a, steps) { var o = {}; for (var k in p) if (Object.prototype.hasOwnProperty.call(p, k)) o[k] = p[k]; o.q = q; o.a = a; o.steps = steps; delete o.choices; return o; }
+
+  // check: show one choice (the right one half the time) and ask whether it is right
+  function check(p, R) {
+    var ch = p.a.choices, v = p.a.v, idx = ch.map(function (_, i) { return i; }), others = idx.filter(function (i) { return i !== v; });
+    var i = R.chance(0.5) ? v : R.pick(others), ok = i === v, nm = nameFor(p.q, ch[i]), letters = ch.every(function (c) { return /^[A-Z]$/.test(String(c)); });
+    var stem = strip(p.q), html = '';
+    if (!letters && (REL.test(stem) || ch.length > 4 || CFG.listAll)) {
+      var shown = p.a.keep ? ch.slice() : R.shuffle(ch);
+      html += optList(shown);
+    }
+    html += '<p class="wd-check">' + nm + ' chose: <b>' + ch[i] + '</b>' + (/[.!?…"”]$/.test(strip(ch[i])) ? '' : '.') + ' Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes. ' + dot(ch[v]) + ' is the right answer.' : 'No. The right answer is: ' + dot(ch[v]);
+    if (ok) first = 'Yes, that is the right answer.';
+    return copyP(p, add(p.q, html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [first].concat(p.steps || []));
+  }
+  // check for "choose all": the whole list is shown, and one learner's picks; right only if exactly the right ones
+  function checkAll(p, R) {
+    var ch = p.a.choices, v = p.a.v.slice().sort(), n = ch.length, pick;
+    if (R.chance(0.45)) pick = v.slice();
+    else {
+      var t = 0; do { var j = R.int(0, n - 1), s = v.slice(), k = s.indexOf(j); if (k >= 0) s.splice(k, 1); else s.push(j); if (R.chance(0.3)) { var j2 = R.int(0, n - 1), k2 = s.indexOf(j2); if (k2 >= 0) s.splice(k2, 1); else s.push(j2); } pick = s.sort(); t++; }
+      while (t < 20 && (!pick.length || pick.join() === v.join()));
+      if (!pick.length || pick.join() === v.join()) return null;
+    }
+    var ok = pick.join() === v.join(), nm = nameFor(p.q, pick.join());
+    var html = optList(ch) + '<p class="wd-check">' + nm + ' chose ' +
+      (pick.length === 1 ? 'only: <b>' + ch[pick[0]] + '</b>' : 'these: <b>' + pick.map(function (i) { return ch[i]; }).join('</b>; <b>') + '</b>') + '. Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes, those are exactly the right ones.' : 'No. The right ones are: ' + v.map(function (i) { return ch[i]; }).join('; ');
+    return copyP(p, add(p.q.replace(/\s*(Choose|Select|Pick) (all|every)[^.?!<]*[.?!]?/i, ''), html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [dot(first)].concat(p.steps || []));
+  }
+
+  // items for pairs: one-answer questions that stand on their own (no picture, no passage, no "first/best/…")
+  function pairItem(p) {
+    if (!single(p) || p.viz) return null;
+    var max = CFG.maxStem || 120, maxA = CFG.maxAns || 70, a = strip(p.a.choices[p.a.v]), stem, group = '';
+    // "prompt<br><b>thing</b>" or "prompt<blockquote>thing</blockquote>": a line is "thing → answer", lines share the prompt
+    var q0 = p.q.replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1').trim();
+    var m = /^([^<]{6,140}?)\s*(?:<br>\s*<b>([^<]{3,140})<\/b>|<blockquote>([^<]{3,140})<\/blockquote>)\s*$/.exec(q0);
+    if (m) { group = m[1].trim(); stem = (m[2] || m[3]).trim(); if (RELP.test(group.replace(/\b(this|these)\b/gi, ''))) return null; }
+    else {
+      if (!plainish(p.q)) return null;
+      stem = strip(p.q); if (RELP.test(stem)) return null;
+    }
+    if (stem.length > max || stem.length < 3 || a.length > maxA || /^[A-Z]$/.test(a) || /\$/.test(stem + a + group)) return null;
+    var w = p.a.choices.filter(function (_, i) { return i !== p.a.v; }).map(strip).filter(function (x) { return x.length <= maxA && x !== a; });
+    if (!w.length) return null;
+    return { stem: stem.replace(/\s*(Choose one|Pick one)\.?$/i, ''), a: a, w: w, why: (p.steps || [])[0] || '', group: group };
+  }
+  function tfItem(p) {
+    if (!p || !p.a || p.a.t !== 'tf' || p.viz || !plainish(p.q)) return null;
+    var s = strip(p.q).replace(/^(True or false\?|True or false:)\s*/i, '').replace(/\s*(True or false\?|Is this true or false\?|Is it true or false\?)$/i, '').trim();
+    if (s.length < 8 || s.length > (CFG.maxStem || 120) + 20 || REF.test(s) || /\?$/.test(s) || /\$/.test(s)) return null;
+    return { s: s, v: p.a.v, why: (p.steps || [])[0] || '' };
+  }
+  function harvest(base, R, ctx, make, n, distinct) {
+    var out = [], keys = {};
+    for (var t = 0; t < 24 && out.length < n; t++) {
+      // at level 3, lines may come from level 2 questions too: three lines with one wrong is the harder form
+      var c2 = ctx && ctx.level >= 3 && (t % 2) ? Object.assign({}, ctx, { level: 2 }) : ctx;
+      var p; try { p = base(ML.rand(R.int(1, 2e9)), c2); } catch (e) { continue; }
+      var it = make(p); if (!it) continue;
+      if (out.length && it.group !== undefined && it.group !== out[0].group) continue;
+      var k = distinct(it); if (k.some(function (x) { return keys[x]; })) continue;
+      k.forEach(function (x) { keys[x] = 1; }); out.push(it);
+    }
+    return out;
+  }
+  function pairs(base, R, ctx, n, wrongOne) {
+    var its = harvest(base, R, ctx, pairItem, n, function (it) { return it.group ? ['s:' + it.stem] : ['s:' + it.stem, 'a:' + it.a]; });
+    if (its.length < n) return null;
+    var answers = its.map(function (it) { return it.a; }), used = {};
+    var target = R.int(0, n - 1), lines = [], steps = [];
+    for (var i = 0; i < n; i++) {
+      var it = its[i], right = wrongOne ? i !== target : i === target, ans = it.a;
+      if (!right) {
+        var ws = it.w.filter(function (x) { return (its[0].group || answers.indexOf(x) < 0) && !used[x]; });
+        if (!ws.length) return null;
+        ans = R.pick(ws); if (!its[0].group) used[ans] = 1;
+      }
+      lines.push(it.stem + ' → ' + ans); // plain text: ladder pages show choices as text
+      steps.push(it.group ? dot(it.stem) + ' Answer: ' + it.a + (right ? '.' : ', not ' + ans + '.') : it.stem + ' The answer is ' + it.a + (right ? '.' : ', not ' + ans + '.'));
+    }
+    var g = its[0].group, q = g ? '<p class="wd-group">The question for every line: <i>' + g + '</i></p>' + (wrongOne ? 'One line has the <b>wrong</b> answer. Which line is it?' : n === 2 ? 'Which line has the <b>right</b> answer?' : 'Only one line has the right answer. Which line is it?') : wrongOne ? 'Each line is a question and an answer. One answer is <b>wrong</b>. Which line is it?'
+      : (n === 2 ? 'Each line is a question and an answer. Which line has the <b>right</b> answer?' : 'Each line is a question and an answer. Only one answer is right. Which line is it?');
+    if (its[target].why) steps.push(its[target].why);
+    return { q: q, a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own. Does the answer fit the question?' };
+  }
+  function tfpick(base, R, ctx, wantFalse) {
+    var its = harvest(base, R, ctx, tfItem, 6, function (it) { return ['s:' + it.s]; });
+    var T = its.filter(function (x) { return x.v; }), F = its.filter(function (x) { return !x.v; });
+    var odd = wantFalse ? F : T, rest = wantFalse ? T : F;
+    if (!odd.length || rest.length < 2) return null;
+    var pick = [odd[0], rest[0], rest[1]], order = R.shuffle([0, 1, 2]), choices = order.map(function (i) { return pick[i].s; });
+    var steps = pick.map(function (x) { return x.s + ' ' + (x.v ? 'True.' : 'False.'); });
+    if (odd[0].why) steps.push(odd[0].why);
+    return { q: wantFalse ? 'Which sentence is <b>false</b>?' : 'Which sentence is <b>true</b>?', a: { t: 'mc', choices: choices, v: order.indexOf(0) }, steps: steps,
+      hint: 'Decide about each sentence on its own.' };
+  }
+  var MIX = CFG.mix || { 1: [0.38, 0.25, 0.04], 2: [0.27, 0.3, 0.1], 3: [0.17, 0.4, 0.15] };
+  function wrap(id, base) {
+    var fn = function (R, ctx) {
+      var lv = ctx && ctx.level || 1, p = base(R, ctx), m = MIX[lv] || MIX[3], r = R.next();
+      if (p.nowiden || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf') || (CFG.skip && CFG.skip.indexOf(id) >= 0)) return p; // typed answers stay as they are
+      var form = r < m[0] ? 0 : r < m[0] + m[1] ? 1 : r < m[0] + m[1] + m[2] ? 2 : -1;
+      if (form < 0) return p;
+      var tries = [form, (form + 1) % 3, (form + 2) % 3].filter(function (f) { return m[f] > 0; });
+      for (var t = 0; t < tries.length; t++) {
+        var f = tries[t], alt = null;
+        if (f === 0) alt = single(p) ? check(p, R) : (p.a && p.a.t === 'mc' && Array.isArray(p.a.v) && !p.viz ? checkAll(p, R) : null);
+        else if (f === 1) alt = pairs(base, R, ctx, lv === 1 ? 2 : 3, lv >= 3 && R.chance(0.6));
+        else alt = tfpick(base, R, ctx, R.chance(0.4));
+        if (alt) return alt;
+      }
+      return p;
+    };
+    fn.widened = true;
+    return fn;
+  }
+  ML.genIds().forEach(function (id) {
+    if (id.indexOf(CFG.prefix) !== 0 || (CFG.only && CFG.only.indexOf(id.slice(CFG.prefix.length)) < 0)) return;
+    var g = ML.getGen(id); if (g && !g.widened) ML.gen(id, wrap(id, g));
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen ---- */

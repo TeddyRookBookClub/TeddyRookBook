@@ -422,11 +422,11 @@
       return { q: 'List the elements of $' + Un(n) + '$.', a: setA(Ul), steps: ['$' + Un(n) + '$ holds the $k$ with $1 \\le k < ' + n + '$ and $\\gcd(k, ' + n + ') = 1$.', 'The prime factors of $' + n + '$ are $' + factorize(n).map(function (f) { return f[0]; }).join(', ') + '$; cross out every multiple of them.', '$' + Un(n) + ' = ' + setTex(Ul) + '$, with $\\varphi(' + n + ') = ' + Ul.length + '$ elements.'], hint: 'Keep the numbers below $' + n + '$ that share no factor with $' + n + '$.' };
     }
     if (shape === 'isunit') {
-      var n2 = R.pick([12, 14, 15, 18, 20, 21, 22, 25, 26]), a = R.int(2, n2 - 1), g = gcd(a, n2);
+      var n2 = R.pick([12, 14, 15, 18, 20, 21, 22, 25, 26, 27, 28, 30, 33, 35]), a = R.int(2, n2 - 1), g = gcd(a, n2);
       return { q: 'Is $' + a + '$ an element of $' + Un(n2) + '$?', a: tf(g === 1), steps: ['$' + a + '$ is in $' + Un(n2) + '$ exactly when $\\gcd(' + a + ', ' + n2 + ') = 1$.', '$\\gcd(' + a + ', ' + n2 + ') = ' + g + '$.', g === 1 ? 'So yes: $' + a + '$ has an inverse mod $' + n2 + '$ (it is $' + invMod(a, n2) + '$).' : 'So no: $' + a + '$ has no inverse mod $' + n2 + '$.'], hint: 'Compute $\\gcd(' + a + ', ' + n2 + ')$.' };
     }
     if (shape === 'addinv') {
-      var n3 = R.pick([6, 8, 9, 10, 12, 15]), a3 = R.int(1, n3 - 1);
+      var n3 = R.pick([6, 8, 9, 10, 12, 15, 14, 16, 18, 20, 21, 22, 24]), a3 = R.int(1, n3 - 1);
       return { q: 'In the group $' + Z(n3) + '$ (addition mod $' + n3 + '$), find the inverse of $' + a3 + '$.', a: num(mod(-a3, n3)), steps: ['The identity of $' + Z(n3) + '$ is $0$, so the inverse $y$ needs $' + a3 + ' + y \\equiv 0 \\pmod{' + n3 + '}$.', '$y = ' + n3 + ' - ' + a3 + ' = ' + mod(-a3, n3) + '$.'], hint: 'In $' + Z(n3) + '$ the operation is addition, so the inverse undoes adding $' + a3 + '$.' };
     }
     if (shape === 'inv') {
@@ -442,7 +442,7 @@
       return { q: 'How many elements does $' + Un(n6) + '$ have?', a: num(phi(n6)), steps: ['$|' + Un(n6) + '| = \\varphi(' + n6 + ')$.', '$' + n6 + ' = ' + f6.map(function (f) { return f[1] > 1 ? f[0] + '^{' + f[1] + '}' : f[0]; }).join(' \\cdot ') + '$, so $\\varphi(' + n6 + ') = ' + f6.map(function (f) { return (f[1] > 1 ? f[0] + '^{' + (f[1] - 1) + '}' : '') + (f[1] > 1 ? '(' + f[0] + ' - 1)' : '(' + f[0] + ' - 1)'); }).join(' \\cdot ').replace(/\^\{1\}/g, '') + ' = ' + phi(n6) + '$.'], hint: 'Use the prime factorization and $\\varphi(p^{k}) = p^{k-1}(p - 1)$.' };
     }
     // table: one missing entry of U(n)'s table
-    var n7 = R.pick([8, 10, 12, 15]), U7 = units(n7), a7 = R.pick(U7.slice(1)), b7 = R.pick(U7.slice(1));
+    var n7 = R.pick([8, 10, 12, 15, 14, 16, 18, 20, 21, 24]), U7 = units(n7), a7 = R.pick(U7.slice(1)), b7 = R.pick(U7.slice(1));
     return { q: 'In the Cayley table of $' + Un(n7) + '$, what is the entry in row $' + a7 + '$ and column $' + b7 + '$?', a: num(a7 * b7 % n7), steps: ['The operation of $' + Un(n7) + '$ is multiplication mod $' + n7 + '$.', '$' + a7 + ' \\cdot ' + b7 + ' = ' + (a7 * b7) + ' \\equiv ' + (a7 * b7 % n7) + ' \\pmod{' + n7 + '}$.'], hint: 'Multiply, then reduce mod $' + n7 + '$.' };
   });
 
@@ -506,11 +506,11 @@
   G('aa.element-order', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['zn', 'zn', 'un']), R.pick(['un', 'reduce', 'table', 'mat', 'zn']), R.pick(['mat', 'logic', 'un', 'matp', 'table']));
     if (shape === 'zn') {
-      var n = L === 1 ? R.pick([6, 8, 9, 10, 12]) : R.pick([14, 15, 16, 18, 20, 24, 30]), k = R.pick(range(2, n - 1).filter(function (x) { return L > 1 || ordAdd(x, n) <= 6; })), o = ordAdd(k, n);
+      var n = L === 1 ? R.pick([6, 8, 9, 10, 12, 14, 15, 16, 18, 20]) : R.pick([14, 15, 16, 18, 20, 24, 30, 21, 22, 26, 27, 28, 32, 36]), k = R.pick(range(2, n - 1).filter(function (x) { return L > 1 || ordAdd(x, n) <= 6; })), o = ordAdd(k, n);
       return { q: 'Find the order of $' + k + '$ in $' + Z(n) + '$.', a: num(o), steps: ['In $' + Z(n) + '$ the operation is addition, so look for the least $m \\ge 1$ with $m \\cdot ' + k + ' \\equiv 0 \\pmod{' + n + '}$.', o <= 8 ? 'Multiples: $' + range(1, o).map(function (m) { return (m * k % n); }).join(', ') + '$.' : '$m \\cdot ' + k + '$ is a multiple of $' + n + '$ first when $m \\cdot ' + k + ' = \\operatorname{lcm}(' + k + ', ' + n + ') = ' + lcm(k, n) + '$, so $m = ' + o + '$.', 'The order of $' + k + '$ is $' + o + '$.'], hint: 'Add $' + k + '$ to itself until you reach a multiple of $' + n + '$.' };
     }
     if (shape === 'un') {
-      var n2 = L === 1 ? R.pick([7, 9, 10, 11, 13]) : R.pick([15, 16, 17, 19, 20, 21, 24, 26, 28]), a = R.pick(units(n2).filter(function (x) { return x > 1; })), o2 = ordMul(a, n2), pw = [], x = 1;
+      var n2 = L === 1 ? R.pick([7, 9, 10, 11, 13, 14, 17, 18, 19]) : R.pick([15, 16, 17, 19, 20, 21, 24, 26, 28, 22, 23, 25, 27, 29, 31]), a = R.pick(units(n2).filter(function (x) { return x > 1; })), o2 = ordMul(a, n2), pw = [], x = 1;
       for (var i = 1; i <= o2; i++) { x = x * a % n2; pw.push(x); }
       return { q: 'Find the order of $' + a + '$ in $' + Un(n2) + '$.', a: num(o2), steps: ['The identity of $' + Un(n2) + '$ is $1$. List the powers of $' + a + '$ mod $' + n2 + '$ until you reach $1$.', pw.map(function (v, j) { return '$' + a + '^{' + (j + 1) + '} \\equiv ' + v + '$'; }).join(', ') + '.', 'The first power equal to $1$ is the ' + (o2) + (o2 === 1 ? 'st' : o2 === 2 ? 'nd' : o2 === 3 ? 'rd' : 'th') + ', so the order is $' + o2 + '$.'], hint: 'Multiply by $' + a + '$ each time and reduce mod $' + n2 + '$; stop at $1$.' };
     }
@@ -570,7 +570,7 @@
   G('aa.subgroups', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['zn', 'zn', 'inf']), R.pick(['un', 'inf', 'pick', 'zn']), R.pick(['span', 'order', 'pick', 'inf', 'un']));
     if (shape === 'zn') {
-      var n = R.pick(L === 1 ? [6, 8, 9, 10, 12] : [12, 15, 16, 18, 20]), H = candSubsetZn(R, n), Gr = gZ(n), ok = isSubgroup(Gr, H), wit = null, why;
+      var n = R.pick(L === 1 ? [6, 8, 9, 10, 12, 14, 15, 16] : [12, 15, 16, 18, 20, 21, 24]), H = candSubsetZn(R, n), Gr = gZ(n), ok = isSubgroup(Gr, H), wit = null, why;
       if (!ok) { if (H.indexOf(0) < 0) why = 'It does not contain the identity $0$.'; else { H.forEach(function (a) { H.forEach(function (b) { if (!wit && H.indexOf((a + b) % n) < 0) wit = [a, b]; }); }); why = 'It is not closed: $' + wit[0] + ' + ' + wit[1] + ' \\equiv ' + ((wit[0] + wit[1]) % n) + ' \\pmod{' + n + '}$ is missing.'; } }
       return { q: 'Is $H = ' + setTex(H) + '$ a subgroup of $' + Z(n) + '$?', a: tf(ok), steps: ['$H$ is finite, so it is a subgroup exactly when it is nonempty and closed under addition mod $' + n + '$ (inverses then come for free).', ok ? 'It contains $0$, and every sum of two elements of $H$ reduces to an element of $H$.' : why, ok ? 'So $H$ is a subgroup.' : 'So $H$ is not a subgroup.'], hint: 'Check for $0$, then add pairs of elements mod $' + n + '$.' };
     }
@@ -610,11 +610,11 @@
   G('aa.cyclic-groups', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['gens', 'span', 'span']), R.pick(['count', 'isgen', 'spanU', 'gens']), R.pick(['iscyc', 'smallest', 'prim', 'isgen']));
     if (shape === 'gens') {
-      var n = L === 1 ? R.pick([6, 8, 9, 10, 12]) : R.pick([14, 15, 16, 18, 20]), g = units(n);
+      var n = L === 1 ? R.pick([5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20]) : R.pick([14, 15, 16, 18, 20, 21, 22, 24, 25, 26, 28, 30]), g = units(n);
       return { q: 'List all generators of $' + Z(n) + '$.', a: setA(g), steps: ['$k$ generates $' + Z(n) + '$ exactly when its order is $' + n + '$, that is, when $\\gcd(k, ' + n + ') = 1$.', 'The numbers from $1$ to $' + (n - 1) + '$ coprime to $' + n + '$: $' + g.join(', ') + '$.', 'There are $\\varphi(' + n + ') = ' + g.length + '$ generators.'], hint: 'Which $k$ share no factor with $' + n + '$?' };
     }
     if (shape === 'span') {
-      var n2 = R.pick([8, 9, 10, 12, 15, 16, 18]), k = R.pick(range(2, n2 - 1).filter(function (x) { return gcd(x, n2) > 1; })), H = multiplesZ(k, n2);
+      var n2 = R.pick([8, 9, 10, 12, 15, 16, 18, 20, 21, 24, 25, 27, 28, 30]), k = R.pick(range(2, n2 - 1).filter(function (x) { return gcd(x, n2) > 1; })), H = multiplesZ(k, n2);
       var seq = []; for (var j = 1; j <= ordAdd(k, n2); j++) seq.push(j * k % n2);
       return { q: 'List the elements of the cyclic subgroup $' + gen(k) + '$ of $' + Z(n2) + '$.', a: setA(H), steps: ['$' + gen(k) + '$ holds the multiples of $' + k + '$ mod $' + n2 + '$: $' + seq.join(', ') + '$, and then they repeat.', 'So $' + gen(k) + ' = ' + setTex(H) + '$, a subgroup of order $' + H.length + '$.'], hint: 'Keep adding $' + k + '$ (mod $' + n2 + '$) until you return to $0$.' };
     }
@@ -631,7 +631,7 @@
       return { q: 'List the elements of $' + gen(a5) + '$ in $' + Un(n5) + '$.', a: setA(H5), steps: ['Take powers of $' + a5 + '$ mod $' + n5 + '$ until you reach $1$: $' + (function () { var x = 1, s = []; do { x = x * a5 % n5; s.push(x); } while (x !== 1); return s.join(', '); })() + '$.', 'So $' + gen(a5) + ' = ' + setTex(H5) + '$.'], hint: 'Multiply by $' + a5 + '$ each time, reducing mod $' + n5 + '$.' };
     }
     if (shape === 'iscyc') {
-      var n6 = R.pick([8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 25, 27]), cyc = isCyclicU(n6), f6 = phi(n6), gens6 = units(n6).filter(function (a) { return ordMul(a, n6) === f6; });
+      var n6 = R.pick([8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 25, 27, 22, 24, 26, 28, 30, 32, 33, 34, 35, 36, 49, 50]), cyc = isCyclicU(n6), f6 = phi(n6), gens6 = units(n6).filter(function (a) { return ordMul(a, n6) === f6; });
       var maxo = M.max.apply(null, units(n6).map(function (a) { return ordMul(a, n6); }));
       return { q: 'Is $' + Un(n6) + '$ cyclic?', a: tf(cyc), steps: ['$|' + Un(n6) + '| = \\varphi(' + n6 + ') = ' + f6 + '$, so $' + Un(n6) + '$ is cyclic exactly when some element has order $' + f6 + '$.', cyc ? '$' + gens6[0] + '$ has order $' + f6 + '$ (powers: $' + (function () { var x = 1, s = []; do { x = x * gens6[0] % n6; s.push(x); } while (x !== 1); return s.join(', '); })() + '$).' : 'Every element has order at most $' + maxo + '$ (for example ' + units(n6).slice(1, 4).map(function (a) { return '$|' + a + '| = ' + ordMul(a, n6) + '$'; }).join(', ') + ').', cyc ? 'So $' + Un(n6) + ' = ' + gen(gens6[0]) + '$ is cyclic.' : 'No element generates, so $' + Un(n6) + '$ is not cyclic.'], hint: 'Look for an element whose order equals $\\varphi(' + n6 + ')$.' };
     }
@@ -641,7 +641,7 @@
       return { q: 'Type the smallest $n > ' + m + '$ for which $' + Un('n') + '$ is <b>not</b> cyclic.', a: num(n7), steps: [skipped.length ? 'For $n = ' + skipped.join(', ') + '$ the group is cyclic: ' + skipped.slice(0, 4).map(function (k) { var g = units(k).filter(function (a) { return ordMul(a, k) === phi(k); })[0]; return '$' + Un(k) + ' = ' + gen(g) + '$'; }).join(', ') + (skipped.length > 4 ? ', …' : '') + '.' : 'Start testing at $n = ' + n7 + '$.', 'For $n = ' + n7 + '$: $|' + Un(n7) + '| = ' + phi(n7) + '$, but every element has order at most $' + M.max.apply(null, units(n7).map(function (a) { return ordMul(a, n7); })) + '$.', 'So the smallest such $n$ is $' + n7 + '$.'], hint: 'Test $n = ' + (m + 1) + ', ' + (m + 2) + ', \\dots$ in turn: is there an element of order $\\varphi(n)$?' };
     }
     // prim: the smallest generator of U(p)
-    var p = R.pick([5, 7, 11, 13, 17, 19, 23]), gs = units(p).filter(function (a) { return ordMul(a, p) === p - 1; });
+    var p = R.pick([5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43]), gs = units(p).filter(function (a) { return ordMul(a, p) === p - 1; });
     return { q: 'Find the smallest generator of $' + Un(p) + '$ (a primitive root mod $' + p + '$).', a: num(gs[0]), steps: ['$|' + Un(p) + '| = ' + (p - 1) + '$, so we need an element of order $' + (p - 1) + '$.', range(2, gs[0]).map(function (a) { return '$|' + a + '| = ' + ordMul(a, p) + '$'; }).join(', ') + '.', 'The first with order $' + (p - 1) + '$ is $' + gs[0] + '$.'], hint: 'Test $2, 3, 4, \\dots$: find each order (it divides $' + (p - 1) + '$).' };
   });
 
@@ -657,11 +657,11 @@
       return { q: 'How many elements of order $' + d + '$ does the cyclic group $' + Z(n2) + '$ have?', a: num(phi(d)), steps: ['$|k| = ' + n2 + '/\\gcd(' + n2 + ', k) = ' + d + '$ means $\\gcd(' + n2 + ', k) = ' + (n2 / d) + '$.', 'Those $k$ are $' + T.mono(n2 / d, 'j') + '$ with $\\gcd(j, ' + d + ') = 1$ and $1 \\le j < ' + d + '$: the generators of the subgroup of order $' + d + '$.', 'There are $\\varphi(' + d + ') = ' + phi(d) + '$ of them: $' + range(1, n2 - 1).filter(function (x) { return ordAdd(x, n2) === d; }).join(', ') + '$.'], hint: 'Elements of order $' + d + '$ are the generators of the unique subgroup of order $' + d + '$.' };
     }
     if (shape === 'list') {
-      var n3 = R.pick([12, 15, 16, 18, 20, 24]), d3 = R.pick(divisors(n3).filter(function (x) { return x > 2 && x < n3; })), ks = range(1, n3 - 1).filter(function (x) { return ordAdd(x, n3) === d3; });
+      var n3 = R.pick([12, 15, 16, 18, 20, 24, 28, 30, 36, 40, 42]), d3 = R.pick(divisors(n3).filter(function (x) { return x > 2 && x < n3; })), ks = range(1, n3 - 1).filter(function (x) { return ordAdd(x, n3) === d3; });
       return { q: 'List the elements of order $' + d3 + '$ in $' + Z(n3) + '$.', a: setA(ks), steps: ['$|k| = ' + d3 + '$ exactly when $\\gcd(' + n3 + ', k) = ' + (n3 / d3) + '$.', 'Those are $' + (n3 / d3) + 'j$ with $\\gcd(j, ' + d3 + ') = 1$: $' + ks.join(', ') + '$.', 'There are $\\varphi(' + d3 + ') = ' + ks.length + '$ of them.'], hint: 'Which $k$ have $\\gcd(' + n3 + ', k) = ' + (n3 / d3) + '$?' };
     }
     if (shape === 'same') {
-      var n4 = R.pick([12, 18, 20, 24, 30, 36]), i = R.int(2, n4 - 1), j = R.intNot(2, n4 - 1, [i]);
+      var n4 = R.pick([12, 18, 20, 24, 30, 36, 40, 42, 48, 60]), i = R.int(2, n4 - 1), j = R.intNot(2, n4 - 1, [i]);
       if (R.coin()) { var gi = gcd(n4, i), cands = range(2, n4 - 1).filter(function (x) { return x !== i && gcd(n4, x) === gi; }); if (cands.length) j = R.pick(cands); }
       var same = gcd(n4, i) === gcd(n4, j);
       return { q: 'Let $G = ' + gen('a') + '$ be cyclic of order $' + n4 + '$. Is $' + gen('a^{' + i + '}') + ' = ' + gen('a^{' + j + '}') + '$?', a: tf(same), steps: ['In a cyclic group of order $n$, $' + gen('a^{k}') + ' = ' + gen('a^{\\gcd(n, k)}') + '$, so two powers generate the same subgroup exactly when the gcds match.', '$\\gcd(' + n4 + ', ' + i + ') = ' + gcd(n4, i) + '$ and $\\gcd(' + n4 + ', ' + j + ') = ' + gcd(n4, j) + '$.', same ? 'They match: the subgroups are equal.' : 'They differ: the subgroups have orders $' + ordAdd(i, n4) + '$ and $' + ordAdd(j, n4) + '$, so they are different.'], hint: 'Compare $\\gcd(' + n4 + ', ' + i + ')$ with $\\gcd(' + n4 + ', ' + j + ')$.' };
@@ -674,11 +674,11 @@
   G('aa.subgroups-of-cyclic', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['bydiv', 'gcdgen', 'bydiv']), R.pick(['countsub', 'gcdgen', 'genset', 'bydiv']), R.pick(['genset', 'order', 'countsub', 'cnt2']));
     if (shape === 'bydiv') {
-      var n = L === 1 ? R.pick([12, 15, 16, 18, 20]) : R.pick([24, 30, 36, 40]), d = R.pick(divisors(n).filter(function (x) { return x > 1 && x < n && x <= 8; })), H = range(0, d - 1).map(function (j) { return j * n / d; });
+      var n = L === 1 ? R.pick([12, 15, 16, 18, 20, 21, 24, 28, 30, 36, 40]) : R.pick([24, 30, 36, 40, 42, 45, 48, 56, 60]), d = R.pick(divisors(n).filter(function (x) { return x > 1 && x < n && x <= 8; })), H = range(0, d - 1).map(function (j) { return j * n / d; });
       return { q: 'List the elements of the subgroup of order $' + d + '$ in $' + Z(n) + '$.', a: setA(H), steps: ['$' + Z(n) + '$ has exactly one subgroup of each order $d$ dividing $' + n + '$: $' + gen(n + '/d') + '$.', 'For $d = ' + d + '$ it is $' + gen(n / d) + ' = ' + setTex(H) + '$.'], hint: 'It is generated by $' + n + '/' + d + '$.' };
     }
     if (shape === 'gcdgen') {
-      var n2 = R.pick([12, 18, 20, 24, 30]), k = R.pick(range(2, n2 - 1).filter(function (x) { return gcd(x, n2) > 1 && gcd(x, n2) !== x; })), g = gcd(n2, k);
+      var n2 = R.pick([12, 18, 20, 24, 30, 16, 28, 36, 40, 42, 45, 48]), k = R.pick(range(2, n2 - 1).filter(function (x) { return gcd(x, n2) > 1 && gcd(x, n2) !== x; })), g = gcd(n2, k);
       return { q: 'In $' + Z(n2) + '$, the subgroup $' + gen(k) + '$ equals $' + gen('d') + '$ for exactly one divisor $d$ of $' + n2 + '$. Find $d$.', a: num(g), steps: ['$' + gen(k) + ' = ' + gen('\\gcd(' + n2 + ', ' + k + ')') + '$.', '$\\gcd(' + n2 + ', ' + k + ') = ' + g + '$, so $' + gen(k) + ' = ' + gen(g) + ' = ' + setTex(multiplesZ(k, n2)) + '$.'], hint: 'Compute $\\gcd(' + n2 + ', ' + k + ')$.' };
     }
     if (shape === 'countsub') {
@@ -700,7 +700,7 @@
   var NAMED = [['\\mathbb{Z}_{2} \\times \\mathbb{Z}_{2}', function () { return gZxZ(2, 2); }, 'Z2xZ2'], ['S_{3}', function () { return gS(3); }, 'S3'], ['D_{4}', function () { return gD(4); }, 'D4'], ['Q_{8}', gQ8, 'Q8'], ['\\mathbb{Z}_{2} \\times \\mathbb{Z}_{4}', function () { return gZxZ(2, 4); }, 'Z2xZ4'], ['D_{5}', function () { return gD(5); }, 'D5'], ['A_{4}', function () { return gA(4); }, 'A4']];
   G('aa.subgroup-lattice', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['contain', 'below', 'meet']), R.pick(['meet', 'join', 'contain', 'cover']), R.pick(['named', 'named2', 'cover', 'join']));
-    var n = R.pick(L === 1 ? [12, 18, 20] : [24, 30, 36, 40, 60]), ds = divisors(n).filter(function (d) { return d < n; });
+    var n = R.pick(L === 1 ? [12, 18, 20, 24, 28, 30, 36, 40, 42, 45] : [24, 30, 36, 40, 60, 48, 72, 84, 90, 100]), ds = divisors(n).filter(function (d) { return d < n; });
     var viz = { name: 'aa-lattice', opts: { group: 'Z', n: n, quiet: true } };
     if (shape === 'contain') {
       var a = R.pick(ds.filter(function (d) { return d > 1; })), above = divisors(a);
@@ -893,7 +893,7 @@
 
   G('aa.dihedral-groups', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['prod', 'inv', 'ord', 'prod']), R.pick(['word', 'prod', 'ord', 'count2']), R.pick(['word', 'perm', 'center', 'count2']));
-    var n = R.pick(L === 1 ? [4, 5, 6] : [5, 6, 7, 8]), els = dElems(n), viz = { name: 'aa-dihedral', opts: { n: n, quiet: true } };
+    var n = R.pick(L === 1 ? [3, 4, 5, 6] : [5, 6, 7, 8, 9, 10]), els = dElems(n), viz = { name: 'aa-dihedral', opts: { n: n, quiet: true } };
     var rel = 'Use $r^{' + n + '} = s^{2} = e$ and $sr^{k} = r^{-k}s$.';
     if (shape === 'prod') {
       var a = R.pick(els.slice(1)), b = R.pick(els.slice(1)), tries = 0; while (L > 1 && !a[1] && !b[1] && tries++ < 20) { a = R.pick(els.slice(1)); b = R.pick(els.slice(1)); }
@@ -944,7 +944,7 @@
   G('aa.cosets', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['zn', 'zn', 'count']), R.pick(['same', 'un', 's3', 'zn']), R.pick(['lr', 'dn', 's3', 'same']));
     if (shape === 'zn' || shape === 'count') {
-      var n = L === 1 ? R.pick([8, 9, 10, 12]) : R.pick([12, 15, 18, 20]), d = R.pick(divisors(n).filter(function (x) { return x > 1 && x < n; })), H = range(0, n / d - 1).map(function (k) { return k * d; });
+      var n = L === 1 ? R.pick([8, 9, 10, 12, 14, 15, 16, 18, 20]) : R.pick([12, 15, 18, 20, 21, 24, 28, 30]), d = R.pick(divisors(n).filter(function (x) { return x > 1 && x < n; })), H = range(0, n / d - 1).map(function (k) { return k * d; });
       if (shape === 'count') return { q: 'How many different cosets does $H = ' + gen(d) + '$ have in $' + Z(n) + '$?', a: num(d),
         steps: ['$H = ' + gen(d) + ' = ' + setTex(H) + '$ has $' + H.length + '$ elements.', 'The cosets are disjoint and each has $' + H.length + '$ elements, so there are $' + n + '/' + H.length + ' = ' + d + '$ of them: $0 + H, 1 + H, \\dots, ' + (d - 1) + ' + H$.'], hint: 'Cosets split the group into equal pieces of size $|H|$.' };
       var a = R.pick(range(1, n - 1).filter(function (x) { return x % d !== 0; })), C = sortN(H.map(function (h) { return (a + h) % n; }));
@@ -977,11 +977,11 @@
   G('aa.lagrange', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['possible', 'index', 'index']), R.pick(['notorder', 'tower', 'possible', 'meet']), R.pick(['converse', 'order', 'meet', 'tower']));
     if (shape === 'possible') {
-      var n = R.pick([12, 18, 20, 24, 28, 30, 36, 42]);
+      var n = R.pick([12, 18, 20, 24, 28, 30, 36, 42, 16, 32, 40, 48, 54, 56, 60, 63, 64, 66, 70, 72, 84, 90, 100]);
       return { q: 'A group $G$ has order $' + n + '$. List every number that could be the order of a subgroup of $G$ (as far as Lagrange\'s theorem allows).', a: setA(divisors(n)), steps: ['By Lagrange\'s theorem, $|H|$ divides $|G| = ' + n + '$.', 'The divisors of $' + n + '$: $' + divisors(n).join(', ') + '$.'], hint: 'Subgroup orders divide the group order.' };
     }
     if (shape === 'index') {
-      var n2 = R.pick([24, 36, 48, 60, 72, 120]), m = R.pick(divisors(n2).filter(function (x) { return x > 1 && x < n2; }));
+      var n2 = R.pick([24, 36, 48, 60, 72, 120, 32, 40, 54, 56, 64, 80, 84, 90, 96, 100, 144, 168]), m = R.pick(divisors(n2).filter(function (x) { return x > 1 && x < n2; }));
       return { q: '$|G| = ' + n2 + '$ and $H$ is a subgroup with $|H| = ' + m + '$. How many left cosets does $H$ have in $G$?', a: num(n2 / m), steps: ['The left cosets of $H$ are disjoint, each has $|H| = ' + m + '$ elements, and together they cover $G$.', 'So $[G : H] = |G|/|H| = ' + n2 + '/' + m + ' = ' + (n2 / m) + '$.'], hint: 'Count the pieces: $|G|$ divided by the size of each piece.' };
     }
     if (shape === 'notorder') {
@@ -1055,7 +1055,7 @@
       return { q: 'True or false: ' + it[0], a: tf(it[1]), steps: [it[2], it[1] ? 'True.' : 'False.'], hint: 'Test $gNg^{-1} = N$, or look for one conjugate that escapes.' };
     }
     if (shape === 'index2' || shape === 'test') {
-      var key = shape === 'index2' ? R.pick(['D4', 'D5', 'D6', 'S3']) : R.pick(L === 1 ? ['S3', 'D4'] : ['S3', 'D4', 'Q8', 'A4', 'D6']), Gr = grp(key), subs = allSubgroups(Gr).filter(function (H) { return H.length > 1 && H.length < Gr.n; });
+      var key = shape === 'index2' ? R.pick(['D4', 'D5', 'D6', 'S3']) : R.pick(L === 1 ? ['S3', 'D4', 'D5', 'Q8', 'D6'] : ['S3', 'D4', 'Q8', 'A4', 'D6', 'D5']), Gr = grp(key), subs = allSubgroups(Gr).filter(function (H) { return H.length > 1 && H.length < Gr.n; });
       var H = shape === 'index2' ? R.pick(subs.filter(function (K) { return Gr.n / K.length === 2; }).concat(subs.filter(function (K) { return K.length === 2; }))) : R.pick(subs), nor = isNormal(Gr, H), w = nor ? null : firstNonNormalWitness(Gr, H);
       return { q: 'Is $H = ' + setTexG(Gr, H) + '$ a normal subgroup of $' + SMALL[key][0] + '$?', a: tf(nor),
         steps: [Gr.n / H.length === 2 ? '$H$ has index $' + Gr.n + '/' + H.length + ' = 2$, and a subgroup of index $2$ is always normal.' : 'Check whether $gHg^{-1} = H$ for every $g$, or equivalently $gH = Hg$.', nor ? 'Every conjugate $ghg^{-1}$ lands back in $H$.' : 'Take $g = ' + Gr.tex(w[0]) + '$ and $h = ' + Gr.tex(w[1]) + '$: $ghg^{-1} = ' + Gr.tex(w[2]) + '$, which is not in $H$.', nor ? 'So $H$ is normal.' : 'So $H$ is not normal.'].filter(function (s, i) { return i !== 1 || !(Gr.n / H.length === 2); }), hint: 'Index 2? Then yes. Otherwise conjugate an element of $H$ by something outside $H$.' };
@@ -1119,7 +1119,7 @@
   G('aa.homomorphisms', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['image', 'ishom', 'facts']), R.pick(['ishomZ', 'count', 'image', 'facts']), R.pick(['possible', 'count', 'ishomZ', 'flaw']));
     if (shape === 'image') {
-      var m = R.pick([12, 15, 18, 20, 24]), n = R.pick([6, 8, 10, 12, 16, 18, 30]), cand = range(0, n - 1).filter(function (k) { return (m * k) % n === 0 && k > 0; });
+      var m = R.pick([12, 15, 18, 20, 24, 30, 36]), n = R.pick([6, 8, 10, 12, 16, 18, 30, 9, 14, 20, 24]), cand = range(0, n - 1).filter(function (k) { return (m * k) % n === 0 && k > 0; });
       if (!cand.length) { m = 12; n = 18; cand = [3, 6, 9, 12, 15]; }
       var k = R.pick(cand), x = R.int(2, m - 1);
       return { q: '$\\varphi: ' + Z(m) + ' \\to ' + Z(n) + '$ is a homomorphism with $\\varphi(1) = ' + k + '$. Find $\\varphi(' + x + ')$.', a: num(x * k % n),
@@ -1132,7 +1132,7 @@
       return { q: 'Is ' + it[0] + ' a homomorphism?', a: tf(it[1]), steps: ['Check $\\varphi(ab) = \\varphi(a)\\varphi(b)$, using each group\'s own operation on each side.', it[2], it[1] ? 'So it is a homomorphism.' : 'So it is not a homomorphism.'], hint: 'Try the identity: a homomorphism must send identity to identity.' };
     }
     if (shape === 'ishomZ') {
-      var m2 = R.pick([4, 6, 8, 9, 10, 12]), n2 = R.pick([4, 6, 8, 12, 15, 18]), k2 = R.int(2, n2 - 1), ok = (m2 * k2) % n2 === 0;
+      var m2 = R.pick([4, 6, 8, 9, 10, 12, 14, 15, 16]), n2 = R.pick([4, 6, 8, 12, 15, 18, 10, 20, 24]), k2 = R.int(2, n2 - 1), ok = (m2 * k2) % n2 === 0;
       if (R.coin()) { var good = range(2, n2 - 1).filter(function (k) { return (m2 * k) % n2 === 0; }); if (good.length) { k2 = R.pick(good); ok = true; } }
       return { q: 'Is $\\varphi: ' + Z(m2) + ' \\to ' + Z(n2) + '$, $\\varphi(x) = ' + k2 + 'x \\bmod ' + n2 + '$ a well-defined homomorphism?', a: tf(ok),
         steps: ['$x$ is only known mod $' + m2 + '$: $x$ and $x + ' + m2 + '$ are the same element, so we need $' + k2 + ' \\cdot ' + m2 + ' \\equiv 0 \\pmod{' + n2 + '}$. (Equivalently, the order of $\\varphi(1) = ' + k2 + '$ must divide $' + m2 + '$.)', '$' + k2 + ' \\cdot ' + m2 + ' = ' + (k2 * m2) + (ok ? '$ is a multiple of $' + n2 + '$.' : '$ is not a multiple of $' + n2 + '$: $\\varphi(0) = 0$ but $\\varphi(' + m2 + ') = ' + (k2 * m2 % n2) + '$, and $0 = ' + m2 + '$ in $' + Z(m2) + '$.'), ok ? 'Then $\\varphi(x + y) = ' + k2 + '(x + y) = \\varphi(x) + \\varphi(y)$, so it is a homomorphism.' : 'So the formula does not even define a function on $' + Z(m2) + '$.'], hint: 'Does $\\varphi$ give the same answer for $0$ and for $' + m2 + '$?' };
@@ -1240,7 +1240,7 @@
       var n2 = R.int(5, 40);
       return { q: 'Cayley\'s theorem shows that every group of order $' + n2 + '$ is isomorphic to a subgroup of $S_{m}$ for which $m$?', a: num(n2), steps: ['The group acts on its own $' + n2 + '$ elements by $x \\mapsto gx$.', 'Each $\\lambda_{g}$ is a permutation of those $' + n2 + '$ elements, and $g \\mapsto \\lambda_{g}$ is a one-to-one homomorphism.', 'So $G$ is isomorphic to a subgroup of $S_{' + n2 + '}$.'], hint: 'What set does $G$ permute?' };
     }
-    var N2 = R.pick([6, 8, 12, 16, 18, 20]), d2 = R.pick(divisors(N2).filter(function (x) { return x > 1; })), c = N2 / d2, even = ((d2 - 1) * c) % 2 === 0;
+    var N2 = R.pick([6, 8, 12, 16, 18, 20, 10, 14, 15, 24, 27, 30]), d2 = R.pick(divisors(N2).filter(function (x) { return x > 1; })), c = N2 / d2, even = ((d2 - 1) * c) % 2 === 0;
     return { q: 'In a group of order $' + N2 + '$, $g$ has order $' + d2 + '$. Is Cayley\'s permutation $\\lambda_{g}$ even or odd?', a: mcKeep(['Even', 'Odd'], even ? 0 : 1),
       steps: ['$\\lambda_{g}$ is a product of $' + N2 + '/' + d2 + ' = ' + c + '$ disjoint cycles of length $' + d2 + '$.', 'Each contributes $' + (d2 - 1) + '$ transpositions: $' + c + ' \\cdot ' + (d2 - 1) + ' = ' + (c * (d2 - 1)) + '$ in all.', even ? 'Even.' : 'Odd.'], hint: 'Find the cycle type of $\\lambda_{g}$ first.' };
   });
@@ -1256,17 +1256,17 @@
   G('aa.first-isomorphism', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['kersize', 'zn', 'kersize']), R.pick(['named', 'map', 'zn', 'kersize']), R.pick(['order', 'map', 'named']));
     if (shape === 'kersize') {
-      var h = R.pick([2, 3, 4, 5, 6]), k = R.pick([2, 3, 4, 6, 8]), ask = R.coin();
+      var h = R.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 12]), k = R.pick([2, 3, 4, 5, 6, 8, 10, 12]), ask = R.coin();
       return { q: ask ? '$\\varphi: G \\to H$ is a homomorphism <b>onto</b> $H$, with $|G| = ' + (h * k) + '$ and $|H| = ' + h + '$. How many elements does $\\ker\\varphi$ have?' : 'A homomorphism $\\varphi$ maps a group $G$ of order $' + (h * k) + '$ onto a group of order $' + h + '$. How many elements does the quotient $G/\\ker\\varphi$ have?', a: num(ask ? k : h),
         steps: ['First isomorphism theorem: $G/\\ker\\varphi \\cong \\operatorname{im}\\varphi = H$ (the map is onto).', 'So $|G|/|\\ker\\varphi| = |H| = ' + h + '$.', ask ? '$|\\ker\\varphi| = ' + (h * k) + '/' + h + ' = ' + k + '$.' : '$|G/\\ker\\varphi| = ' + h + '$.'], hint: 'Match $G/\\ker\\varphi$ with the image.' };
     }
     if (shape === 'zn') {
-      var n = R.pick([12, 18, 20, 24, 30]), d = R.pick(divisors(n).filter(function (x) { return x > 1 && x < n; }));
+      var n = R.pick([12, 18, 20, 24, 30, 16, 28, 36, 40, 42, 45, 48, 60]), d = R.pick(divisors(n).filter(function (x) { return x > 1 && x < n; }));
       return { q: '$' + Z(n) + '/' + gen(d) + ' \\cong \\mathbb{Z}_{m}$ for which $m$?', a: num(d),
         steps: ['$\\varphi: ' + Z(n) + ' \\to ' + Z(d) + '$, $x \\mapsto x \\bmod ' + d + '$, is a well-defined homomorphism (since $' + d + ' \\mid ' + n + '$) and onto.', 'Its kernel is the multiples of $' + d + '$: $' + gen(d) + '$.', 'So $' + Z(n) + '/' + gen(d) + ' \\cong ' + Z(d) + '$, and $m = ' + d + '$.'], hint: 'Reduce mod $' + d + '$.' };
     }
     if (shape === 'map') {
-      var m = R.pick([12, 18, 20, 24, 30]), n2 = R.pick([8, 9, 10, 12, 15, 16]), ks = range(1, n2 - 1).filter(function (x) { return (m * x) % n2 === 0; });
+      var m = R.pick([12, 18, 20, 24, 30, 36, 40, 42]), n2 = R.pick([8, 9, 10, 12, 15, 16, 14, 18, 20, 21]), ks = range(1, n2 - 1).filter(function (x) { return (m * x) % n2 === 0; });
       if (!ks.length) { m = 12; n2 = 9; ks = [3, 6]; }
       var k = R.pick(ks), im = ordAdd(k, n2);
       return { q: '$\\varphi: ' + Z(m) + ' \\to ' + Z(n2) + '$ is the homomorphism with $\\varphi(1) = ' + k + '$. By the first isomorphism theorem $' + Z(m) + '/\\ker\\varphi \\cong \\mathbb{Z}_{t}$. Find $|\\ker\\varphi|$.', a: num(m / im),
@@ -1338,12 +1338,12 @@
   G('aa.finite-abelian', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['countp', 'count', 'countp']), R.pick(['count', 'elem', 'which', 'countp']), R.pick(['which', 'elem', 'count', 'o2']));
     if (shape === 'countp') {
-      var p = R.pick([2, 3, 5]), a = R.int(2, L === 1 ? 4 : 6), parts = partitions(a);
+      var p = R.pick([2, 3, 5, 7, 11, 13]), a = R.int(2, L === 1 ? 5 : 6), parts = partitions(a);
       return { q: 'How many abelian groups of order $' + p + '^{' + a + '} = ' + M.pow(p, a) + '$ are there, up to isomorphism?', a: num(parts.length),
         steps: ['An abelian group of order $' + p + '^{' + a + '}$ is $\\mathbb{Z}_{' + p + '^{a_1}} \\times \\cdots \\times \\mathbb{Z}_{' + p + '^{a_k}}$ with $a_1 \\ge \\cdots \\ge a_k$ and $a_1 + \\cdots + a_k = ' + a + '$: one group for each partition of $' + a + '$.', 'Partitions of $' + a + '$: ' + parts.map(function (q) { return q.join(' + '); }).join(', ') + '.', 'So there are $' + parts.length + '$.'], hint: 'Count the ways to write $' + a + '$ as a sum of positive integers, ignoring order.' };
     }
     if (shape === 'count') {
-      var n = R.pick([24, 36, 48, 72, 100, 108, 144, 200, 360, 64, 81, 1000]), f = factorize(n);
+      var n = R.pick([24, 36, 48, 72, 100, 108, 144, 200, 360, 64, 81, 1000, 16, 32, 96, 128, 180, 216, 240, 288, 400, 500, 600, 720, 900, 30, 60, 90, 250, 256, 625, 343, 675, 1080, 392, 441]), f = factorize(n);
       return { q: 'How many abelian groups of order $' + n + '$ are there, up to isomorphism?', a: num(numAbelian(n)),
         steps: ['$' + n + ' = ' + f.map(function (x) { return x[1] > 1 ? x[0] + '^{' + x[1] + '}' : x[0]; }).join(' \\cdot ') + '$.', 'Choose the part for each prime separately: the number of partitions of each exponent: ' + f.map(function (x) { return 'p(' + x[1] + ') = ' + nPart(x[1]); }).map(function (s) { return '$' + s + '$'; }).join(', ') + '.', 'Multiply: $' + f.map(function (x) { return nPart(x[1]); }).join(' \\cdot ') + ' = ' + numAbelian(n) + '$.'], hint: 'Factor $' + n + '$ and count partitions of each exponent.' };
     }
@@ -1391,11 +1391,11 @@
         steps: ['Put both in invariant factor form; abelian groups are isomorphic exactly when these match.', 'Left: $' + prodTex(invFactors(A)) + '$. Right: $' + prodTex(invFactors(B)) + '$.', iso ? 'They match: isomorphic.' : 'They differ: not isomorphic.'], hint: 'Compare invariant factors (or elementary divisors).' };
     }
     if (shape === 'countord') {
-      var ns3 = R.pick([[2, 4], [4, 4], [2, 8], [3, 9], [2, 2, 4], [6, 6], [3, 3, 3]]), d3 = R.pick(divisors(lcmA(ns3)).filter(function (x) { return x > 1 && prodOrderCount(ns3, x) > 0; }));
+      var ns3 = R.pick([[2, 4], [4, 4], [2, 8], [3, 9], [2, 2, 4], [6, 6], [3, 3, 3], [2, 2, 2], [4, 8], [2, 6], [3, 6], [2, 4, 4], [9, 9], [5, 25]]), d3 = R.pick(divisors(lcmA(ns3)).filter(function (x) { return x > 1 && prodOrderCount(ns3, x) > 0; }));
       return { q: 'How many elements of order $' + d3 + '$ does $' + prodTex(ns3) + '$ have?', a: num(prodOrderCount(ns3, d3)),
         steps: ['Count elements with $' + d3 + 'x = 0$: in $\\mathbb{Z}_{n}$ there are $\\gcd(' + d3 + ', n)$ of them, so here $' + ns3.map(function (n) { return gcd(d3, n); }).join(' \\cdot ') + ' = ' + ns3.reduce(function (s, n) { return s * gcd(d3, n); }, 1) + '$.', 'Subtract those whose order is a proper divisor of $' + d3 + '$: ' + divisors(d3).filter(function (x) { return x < d3; }).map(function (x) { return 'order ' + x + ': ' + prodOrderCount(ns3, x); }).join(', ') + '.', 'Elements of order exactly $' + d3 + '$: $' + prodOrderCount(ns3, d3) + '$.'], hint: 'First count the $x$ with $' + d3 + 'x = 0$.' };
     }
-    var N = R.pick([24, 36, 48, 72, 54, 40, 100]), fN = factorize(N), all = [[]];
+    var N = R.pick([24, 36, 48, 72, 54, 40, 100, 16, 32, 80, 96, 108, 144, 200, 120, 180]), fN = factorize(N), all = [[]];
     fN.forEach(function (f) { var nx = []; partitions(f[1]).forEach(function (pt) { all.forEach(function (pre) { nx.push(pre.concat(pt.map(function (e) { return M.pow(f[0], e); }))); }); }); all = nx; });
     var goodL = invFactors(R.pick(all.filter(function (x) { return invFactors(x).length > 1; }).concat([all[all.length - 1]]))), fmt2 = function (x) { return '$' + prodTex(x) + '$'; };
     var w1 = goodL.slice().reverse(), w2 = goodL.slice(0, -1).concat([goodL[goodL.length - 1] * fN[0][0]]), w3 = (function () { var q = fN[fN.length - 1][0], x = goodL.slice(); if (x.length > 1 && x[x.length - 1] % q === 0) { x[0] *= q; x[x.length - 1] /= q; } return x; })();
@@ -1456,7 +1456,7 @@
         steps: ['Rotations carry vertex $1$ to every vertex, so the orbit has $' + n + '$ elements.', 'The stabilizer is $\\{e, s\\}$ ($s$ the reflection through vertex $1$).', '$|D_{' + n + '}| = ' + n + ' \\cdot 2 = ' + (2 * n) + '$.'], hint: 'How big is the orbit of a vertex?' };
     }
     if (shape === 'subsets') {
-      var n2 = R.int(5, 8), k = R.int(2, n2 - 2), C = U.nCr(n2, k), st = fact(n2) / C;
+      var n2 = R.int(5, 10), k = R.int(2, n2 - 2), C = U.nCr(n2, k), st = fact(n2) / C;
       return { q: '$S_{' + n2 + '}$ acts on the $' + k + '$-element subsets of $\\{1, \\dots, ' + n2 + '\\}$, and the stabilizer of one subset has $' + st + '$ elements. How many subsets are in its orbit?', a: num(C),
         steps: ['$|\\text{orbit}| = |S_{' + n2 + '}| / |\\text{stabilizer}| = ' + fact(n2) + '/' + st + ' = ' + C + '$.', 'Check: every ' + k + '-subset can be reached, and there are $\\binom{' + n2 + '}{' + k + '} = ' + C + '$ of them.'], hint: 'Divide $|S_{' + n2 + '}| = ' + n2 + '!$ by the stabilizer\'s size.' };
     }
@@ -1504,7 +1504,7 @@
   G('aa.burnside', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['fix', 'neck', 'square']), R.pick(['neck', 'square', 'squareD', 'flaw']), R.pick(['brace', 'cube', 'squareD', 'neck2']));
     if (shape === 'fix') {
-      var n = R.pick([4, 6, 8, 9, 10, 12]), k = R.pick([2, 3]), j = R.int(1, n - 1), g = gcd(n, j);
+      var n = R.pick([4, 5, 6, 7, 8, 9, 10, 12]), k = R.pick([2, 3, 4]), j = R.int(1, n - 1), g = gcd(n, j);
       return { q: 'A necklace has $' + n + '$ beads in a circle, each one of $' + k + '$ colors. How many colorings are fixed by the rotation by $' + j + '$ bead' + (j > 1 ? 's' : '') + '?', a: num(M.pow(k, g)), viz: { name: 'aa-burnside', opts: { shape: 'necklace', n: n, k: k, g: j, quiet: true } },
         steps: ['A coloring is fixed when every bead has the same color as the bead $' + j + '$ steps along.', 'The rotation splits the beads into $\\gcd(' + n + ', ' + j + ') = ' + g + '$ cycles of length $' + (n / g) + '$; each cycle must be one color.', 'So $' + k + '^{' + g + '} = ' + M.pow(k, g) + '$ colorings are fixed.'], hint: 'How many cycles does the rotation have on the beads?' };
     }
@@ -1514,21 +1514,21 @@
         steps: ['Burnside: the number of orbits is the average number of fixed colorings over the $' + n2 + '$ rotations.', 'Rotation by $j$ fixes $' + k2 + '^{\\gcd(' + n2 + ', j)}$ colorings: ' + range(0, n2 - 1).map(function (j) { return '$' + M.pow(k2, gcd(n2, j)) + '$'; }).join(', ') + '.', 'Average: $(' + range(0, n2 - 1).map(function (j) { return M.pow(k2, gcd(n2, j)); }).join(' + ') + ')/' + n2 + ' = ' + (tot * n2) + '/' + n2 + ' = ' + tot + '$.'], hint: 'Add up the fixed colorings of all rotations, then divide by $' + n2 + '$.' };
     }
     if (shape === 'brace') {
-      var n3 = R.int(4, 8), k3 = R.pick([2, 3]), tot3 = bracelets(n3, k3), refl = n3 % 2 ? n3 + ' reflections each fix $' + k3 + '^{' + ((n3 + 1) / 2) + '}$' : (n3 / 2) + ' reflections through two beads fix $' + k3 + '^{' + (n3 / 2 + 1) + '}$ each and ' + (n3 / 2) + ' through two gaps fix $' + k3 + '^{' + (n3 / 2) + '}$ each';
+      var n3 = R.int(3, 9), k3 = R.pick([2, 3, 4]), tot3 = bracelets(n3, k3), refl = n3 % 2 ? n3 + ' reflections each fix $' + k3 + '^{' + ((n3 + 1) / 2) + '}$' : (n3 / 2) + ' reflections through two beads fix $' + k3 + '^{' + (n3 / 2 + 1) + '}$ each and ' + (n3 / 2) + ' through two gaps fix $' + k3 + '^{' + (n3 / 2) + '}$ each';
       return { q: 'How many bracelets of $' + n3 + '$ beads can be made with $' + k3 + '$ colors, if rotations <b>and</b> flips count as the same (the group $D_{' + n3 + '}$)?', a: num(tot3), viz: { name: 'aa-burnside', opts: { shape: 'necklace', n: n3, k: k3, group: 'dihedral', quiet: true } },
         steps: ['Burnside over the $' + (2 * n3) + '$ elements of $D_{' + n3 + '}$.', 'Rotations fix $' + range(0, n3 - 1).map(function (j) { return M.pow(k3, gcd(n3, j)); }).join(' + ') + ' = ' + (necklaces(n3, k3) * n3) + '$ colorings in all.', 'Reflections: ' + refl + ', for $' + (tot3 * 2 * n3 - necklaces(n3, k3) * n3) + '$.', 'Average: $' + (tot3 * 2 * n3) + '/' + (2 * n3) + ' = ' + tot3 + '$.'], hint: 'Do the rotations as for necklaces, then count what each reflection fixes.' };
     }
     if (shape === 'square' || shape === 'squareD') {
-      var k4 = R.int(2, 6), dih = shape === 'squareD', rot = M.pow(k4, 4) + 2 * k4 + M.pow(k4, 2), ref = 2 * M.pow(k4, 3) + 2 * M.pow(k4, 2), tot4 = dih ? (rot + ref) / 8 : rot / 4;
+      var k4 = R.int(2, 12), dih = shape === 'squareD', rot = M.pow(k4, 4) + 2 * k4 + M.pow(k4, 2), ref = 2 * M.pow(k4, 3) + 2 * M.pow(k4, 2), tot4 = dih ? (rot + ref) / 8 : rot / 4;
       return { q: 'The four corners of a square are each colored with one of $' + k4 + '$ colors. How many colorings are there up to ' + (dih ? 'rotations and reflections (the group $D_{4}$)' : 'rotation') + '?', a: num(tot4), viz: { name: 'aa-burnside', opts: { shape: 'square', k: k4, group: dih ? 'dihedral' : 'rotation', quiet: true } },
         steps: ['Burnside: average the number of fixed colorings over the group.', 'Rotations: $e$ fixes $' + k4 + '^{4} = ' + M.pow(k4, 4) + '$; the quarter turns (one 4-cycle) fix $' + k4 + '$ each; the half turn (two 2-cycles) fixes $' + k4 + '^{2} = ' + (k4 * k4) + '$.'].concat(dih ? ['Reflections: the two diagonal mirrors (two fixed corners and a 2-cycle) fix $' + k4 + '^{3}$ each; the two side mirrors (two 2-cycles) fix $' + k4 + '^{2}$ each.'] : []).concat(['Average: $' + (dih ? rot + ref : rot) + '/' + (dih ? 8 : 4) + ' = ' + tot4 + '$.']), hint: 'For each symmetry, count its cycles on the corners; each cycle gets one color.' };
     }
     if (shape === 'cube') {
-      var k5 = R.int(2, 5), c = (M.pow(k5, 6) + 3 * M.pow(k5, 4) + 12 * M.pow(k5, 3) + 8 * M.pow(k5, 2)) / 24;
+      var k5 = R.int(2, 8), c = (M.pow(k5, 6) + 3 * M.pow(k5, 4) + 12 * M.pow(k5, 3) + 8 * M.pow(k5, 2)) / 24;
       return { q: 'The six faces of a cube are each painted one of $' + k5 + '$ colors. How many different cubes are there, up to rotation?', a: num(c),
         steps: ['The rotation group has $24$ elements. Count each kind by its cycles on the faces:', '$e$: $6$ cycles, fixes $' + k5 + '^{6}$. Quarter turns about face axes ($6$): $3$ cycles each. Half turns about face axes ($3$): $4$ cycles. Turns about vertex axes ($8$): $2$ cycles. Half turns about edge axes ($6$): $3$ cycles.', 'Sum: $' + k5 + '^{6} + 3 \\cdot ' + k5 + '^{4} + 12 \\cdot ' + k5 + '^{3} + 8 \\cdot ' + k5 + '^{2} = ' + (c * 24) + '$.', 'Average: $' + (c * 24) + '/24 = ' + c + '$.'], hint: 'Group the 24 rotations by axis type and count face cycles.' };
     }
-    var n6 = R.pick([4, 5, 6]), k6 = R.pick([2, 3]);
+    var n6 = R.pick([3, 4, 5, 6, 7]), k6 = R.pick([2, 3, 4]);
     return { q: 'To count necklaces of $' + n6 + '$ beads in $' + k6 + '$ colors up to rotation, a student divides the $' + k6 + '^{' + n6 + '} = ' + M.pow(k6, n6) + '$ colorings by the $' + n6 + '$ rotations. What is wrong?', a: mc('Some colorings are fixed by nontrivial rotations (like the one-color necklaces), so orbits have different sizes; Burnside\'s average of fixed points gives $' + necklaces(n6, k6) + '$.', ['Nothing is wrong; the answer is $' + M.pow(k6, n6) + '/' + n6 + '$.', 'It should multiply by $' + n6 + '$ instead of dividing.', 'It should divide by $' + n6 + '!$, the number of ways to arrange the beads.']),
       steps: ['Dividing by $|G|$ assumes every orbit has $|G|$ colorings, which fails when a coloring is fixed by some rotation.', 'Burnside handles this: $\\frac{1}{' + n6 + '}\\sum_{j} ' + k6 + '^{\\gcd(' + n6 + ', j)} = ' + necklaces(n6, k6) + '$.'], hint: 'Is every orbit the same size?' };
   });
@@ -1563,7 +1563,7 @@
   G('aa.rings', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['arith', 'facts', 'char']), R.pick(['matrix', 'units', 'char', 'facts']), R.pick(['idem', 'nil', 'units', 'matrix']));
     if (shape === 'arith') {
-      var n = R.pick([6, 8, 9, 10, 12]), a = R.int(2, n - 1), b = R.int(2, n - 1), c = R.int(1, n - 1), v = mod(a * b - c, n);
+      var n = R.pick([6, 8, 9, 10, 12, 14, 15, 16, 18, 20]), a = R.int(2, n - 1), b = R.int(2, n - 1), c = R.int(1, n - 1), v = mod(a * b - c, n);
       return { q: 'In the ring $' + Z(n) + '$, compute $' + a + ' \\cdot ' + b + ' - ' + c + '$.', a: num(v), steps: ['Work mod $' + n + '$: $' + a + ' \\cdot ' + b + ' = ' + (a * b) + ' \\equiv ' + (a * b % n) + '$.', '$' + (a * b % n) + ' - ' + c + ' = ' + (a * b % n - c) + ' \\equiv ' + v + ' \\pmod{' + n + '}$.'], hint: 'Multiply, subtract, then reduce mod $' + n + '$.' };
     }
     if (shape === 'facts') {
@@ -1573,7 +1573,7 @@
       return { q: 'True or false: ' + it[0], a: tf(it[1]), steps: [it[2], it[1] ? 'True.' : 'False.'], hint: 'Check the ring axioms one at a time, or find a single counterexample.', nolint: ['+ 0'] };
     }
     if (shape === 'char') {
-      var m = R.pick([2, 3, 4, 6, 8, 9, 10]), n2 = R.pick([3, 4, 5, 6, 9, 12, 15]), c2 = lcm(m, n2);
+      var m = R.pick([2, 3, 4, 6, 8, 9, 10, 12, 14, 15]), n2 = R.pick([3, 4, 5, 6, 9, 12, 15, 7, 8, 10, 20]), c2 = lcm(m, n2);
       return { q: 'What is the characteristic of the ring $' + Z(m) + ' \\times ' + Z(n2) + '$ (the least $k \\ge 1$ with $k \\cdot (1, 1) = (0, 0)$)?', a: num(c2), steps: ['$k(1, 1) = (k \\bmod ' + m + ', k \\bmod ' + n2 + ')$ is zero when $' + m + ' \\mid k$ and $' + n2 + ' \\mid k$.', 'The least such $k$ is $\\operatorname{lcm}(' + m + ', ' + n2 + ') = ' + c2 + '$.'], hint: 'The additive order of the identity $(1, 1)$.' };
     }
     if (shape === 'matrix') {
@@ -1584,12 +1584,12 @@
     }
     if (shape === 'units') {
       var kind = R.pick(['prod', 'prod', 'mat2']);
-      if (kind === 'prod') { var a = R.pick([4, 6, 8, 9, 10]), b = R.pick([3, 5, 7, 12]); return { q: 'How many units does the ring $' + Z(a) + ' \\times ' + Z(b) + '$ have?', a: num(phi(a) * phi(b)), steps: ['$(x, y)$ is a unit exactly when $x$ is a unit of $' + Z(a) + '$ and $y$ is a unit of $' + Z(b) + '$ (inverses work coordinate by coordinate).', 'That gives $\\varphi(' + a + ') \\cdot \\varphi(' + b + ') = ' + phi(a) + ' \\cdot ' + phi(b) + ' = ' + (phi(a) * phi(b)) + '$.'], hint: 'A pair is invertible when both coordinates are.' }; }
+      if (kind === 'prod') { var a = R.pick([4, 6, 8, 9, 10, 12, 14, 15]), b = R.pick([3, 5, 7, 12, 9, 11, 16]); return { q: 'How many units does the ring $' + Z(a) + ' \\times ' + Z(b) + '$ have?', a: num(phi(a) * phi(b)), steps: ['$(x, y)$ is a unit exactly when $x$ is a unit of $' + Z(a) + '$ and $y$ is a unit of $' + Z(b) + '$ (inverses work coordinate by coordinate).', 'That gives $\\varphi(' + a + ') \\cdot \\varphi(' + b + ') = ' + phi(a) + ' \\cdot ' + phi(b) + ' = ' + (phi(a) * phi(b)) + '$.'], hint: 'A pair is invertible when both coordinates are.' }; }
       var p = R.pick([2, 3]), cnt = (p * p - 1) * (p * p - p);
       return { q: 'How many units does the ring of $2 \\times 2$ matrices over $' + Z(p) + '$ have?', a: num(cnt), steps: ['A matrix over a field is a unit exactly when its columns are independent (determinant $\\ne 0$).', 'First column: any nonzero vector, $' + p + '^{2} - 1 = ' + (p * p - 1) + '$ choices. Second column: not a multiple of the first, $' + p + '^{2} - ' + p + ' = ' + (p * p - p) + '$ choices.', 'Total: $' + (p * p - 1) + ' \\cdot ' + (p * p - p) + ' = ' + cnt + '$.'], hint: 'Count invertible matrices column by column.' };
     }
     if (shape === 'idem') {
-      var n4 = R.pick([6, 10, 12, 15, 30, 18, 20]), E = idempotents(n4);
+      var n4 = R.pick([6, 10, 12, 15, 30, 18, 20, 14, 21, 22, 24, 28, 35, 36, 42]), E = idempotents(n4);
       return { q: 'List all idempotents of $' + Z(n4) + '$ (elements with $x^{2} = x$).', a: setA(E), steps: ['$x^{2} = x$ means $x(x - 1) \\equiv 0 \\pmod{' + n4 + '}$.', 'Test each $x$: ' + E.map(function (x) { return '$' + x + '^{2} = ' + (x * x) + ' \\equiv ' + (x * x % n4) + '$'; }).join(', ') + '.', 'So the idempotents are $' + setTex(E) + '$ (there are $2^{k}$, where $k$ is the number of primes dividing $' + n4 + '$).'], hint: 'Since $x$ and $x - 1$ share no factor, each prime power of $' + n4 + '$ must divide one of them.' };
     }
     var n5 = R.pick([8, 12, 16, 18, 24, 27, 36]), Nl = nilpotents(n5), rad = factorize(n5).reduce(function (s, f) { return s * f[0]; }, 1);
@@ -1598,8 +1598,13 @@
 
   G('aa.integral-domains', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['zd', 'field', 'zd']), R.pick(['solve', 'isid', 'field', 'zd']), R.pick(['solve', 'countzd', 'flaw', 'isid']));
+    if (shape === 'zd' && R.chance(0.45)) { // count them
+      var nc = R.pick(range(4, 60).filter(function (x) { return zeroDivs(x).length > 0; })), Zc = zeroDivs(nc), phc = nc - 1 - Zc.length;
+      return { q: 'How many zero divisors does $' + Z(nc) + '$ have?', a: { t: 'num', v: String(Zc.length) },
+        steps: ['A nonzero $a$ is a zero divisor in $' + Z(nc) + '$ exactly when $\\gcd(a, ' + nc + ') > 1$.', 'The nonzero elements with $\\gcd(a, ' + nc + ') = 1$ are the units; there are $\\varphi(' + nc + ') = ' + phc + '$ of them.', 'So the zero divisors number $' + (nc - 1) + ' - ' + phc + ' = ' + Zc.length + '$.'], hint: 'Count the nonzero elements that share a factor with $' + nc + '$.' };
+    }
     if (shape === 'zd') {
-      var n = R.pick([6, 8, 9, 10, 12, 14, 15]), Z0 = zeroDivs(n);
+      var n = R.pick([4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 22, 25, 26, 27]), Z0 = zeroDivs(n);
       return { q: 'List the zero divisors of $' + Z(n) + '$.', a: setA(Z0),
         steps: ['$a \\ne 0$ is a zero divisor when $ab \\equiv 0$ for some $b \\ne 0$; in $' + Z(n) + '$ that happens exactly when $\\gcd(a, ' + n + ') > 1$ (take $b = ' + n + '/\\gcd(a, ' + n + ')$).', 'So the zero divisors are $' + setTex(Z0) + '$.', 'For example, $' + Z0[0] + ' \\cdot ' + (n / gcd(Z0[0], n)) + ' = ' + (Z0[0] * n / gcd(Z0[0], n)) + ' \\equiv 0$.'], hint: 'Which nonzero $a$ share a factor with $' + n + '$?' };
     }
@@ -1636,7 +1641,7 @@
       return { q: 'In $\\mathbb{Z}$, the ideal $(' + a + ', ' + b + ') = \\{' + a + 'x + ' + b + 'y : x, y \\in \\mathbb{Z}\\}$ equals $(d)$ for which $d \\ge 0$?', a: num(g), steps: ['Every ideal of $\\mathbb{Z}$ is $(d)$, with $d$ its least positive element.', 'The combinations $' + a + 'x + ' + b + 'y$ are exactly the multiples of $\\gcd(' + a + ', ' + b + ')$ (Bézout).', 'So $d = ' + g + '$.'], hint: 'Bézout\'s identity.' };
     }
     if (shape === 'zn') {
-      var n = R.pick([12, 18, 20, 24, 30]), k = R.pick(range(2, n - 1).filter(function (x) { return gcd(x, n) !== x && gcd(x, n) > 1; }));
+      var n = R.pick([12, 18, 20, 24, 30, 16, 28, 36, 40, 42, 45]), k = R.pick(range(2, n - 1).filter(function (x) { return gcd(x, n) !== x && gcd(x, n) > 1; }));
       var I = multiplesZ(k, n);
       return { q: 'List the elements of the principal ideal $(' + k + ')$ in $' + Z(n) + '$.', a: setA(I), steps: ['$(' + k + ') = \\{' + k + 'r : r \\in ' + Z(n) + '\\}$.', 'Multiples of $' + k + '$ mod $' + n + '$ are the multiples of $\\gcd(' + k + ', ' + n + ') = ' + gcd(k, n) + '$: $(' + k + ') = (' + gcd(k, n) + ')$.', '$' + setTex(I) + '$.'], hint: 'Multiply $' + k + '$ by everything in $' + Z(n) + '$.' };
     }
@@ -1655,7 +1660,7 @@
       var a3 = R.pick([2, 3, 4, 6]), b3 = R.pick([3, 5, 6, 9, 10]);
       return { q: 'In $\\mathbb{Z}$, the product ideal $(' + a3 + ')(' + b3 + ')$ (all finite sums of products $xy$, $x \\in (' + a3 + ')$, $y \\in (' + b3 + ')$) equals $(d)$ for which $d$?', a: num(a3 * b3), steps: ['Each product $(' + a3 + 'm)(' + b3 + 'n) = ' + (a3 * b3) + 'mn$ is a multiple of $' + (a3 * b3) + '$, and $' + a3 + ' \\cdot ' + b3 + ' = ' + (a3 * b3) + '$ itself is one of them.', 'So $(' + a3 + ')(' + b3 + ') = (' + (a3 * b3) + ')$.' + (gcd(a3, b3) > 1 ? ' (Compare $(' + a3 + ') \\cap (' + b3 + ') = (' + lcm(a3, b3) + ')$, which is bigger.)' : '')], hint: 'Multiply the generators.' };
     }
-    var n2 = R.pick([12, 18, 20, 24, 30, 36, 60]);
+    var n2 = R.pick([12, 18, 20, 24, 30, 36, 60, 16, 28, 40, 42, 45, 48, 72, 84, 90, 100]);
     return { q: 'How many ideals does the ring $' + Z(n2) + '$ have?', a: num(divisors(n2).length),
       steps: ['Every ideal is an additive subgroup, and every additive subgroup $' + gen('d') + '$ of $' + Z(n2) + '$ absorbs multiplication, so ideals and subgroups agree here.', 'There is one for each divisor $d$ of $' + n2 + '$: $' + divisors(n2).join(', ') + '$.', 'So $' + divisors(n2).length + '$ ideals.'], hint: 'Ideals of $\\mathbb{Z}_{n}$ are the subgroups $(d)$ with $d \\mid n$.' };
   });
@@ -2045,3 +2050,133 @@
   });
 
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
+   generator still has few different problems at a level sometimes asks the same skill in another form, built only from
+   problems that generator made, so every answer is the generator's own:
+   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+     classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
+     checker rejects it;
+   - two at once: two different short questions of the topic, answered together.
+   Topics whose generator already varies a lot at a level are left as they are. Placed after the generators and
+   registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'aa', VAR = {};
+  // how often another form is used: never when the topic's own generator already varies a lot at this level, up to
+  // half the time when it has few different questions (counted once per topic and level from 40 fixed seeds)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 37 ? 0 : VAR[key] >= 30 ? 0.3 : VAR[key] >= 20 ? 0.45 : 0.55;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
+  // a nearby wrong answer for a number or an expression, or null
+  function wrongFor(R, a) {
+    var v = String(ML.answerValue(a)), cands = [], m;
+    if (a.t === 'num') {
+      if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
+      else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
+      else if (/^-?\d+\.\d+$/.test(v)) { var x = +v, dp = v.split('.')[1].length, st = Math.pow(10, -Math.min(dp, 2)); cands = [x + st, x - st, -x, x * 10, x / 10].map(function (y) { return ML.util.numStr(ML.util.round(y, dp + 1)); }); }
+      else return null;
+    } else if (a.t === 'expr') {
+      if (v.length > 60) return null;
+      if (/ \+ /.test(v)) cands.push(v.replace(' + ', ' - '));
+      if (/ - /.test(v)) cands.push(v.replace(' - ', ' + '));
+      if ((m = /(^|[^\d.^])(\d+)(?![\d.])/.exec(v)) && !/\^$/.test(v.slice(0, m.index + m[1].length))) cands.push(v.slice(0, m.index) + m[1] + (+m[2] + 1) + v.slice(m.index + m[0].length));
+      if (!cands.length) return null;
+    } else return null;
+    var nv = function (s) { var mm = /^(-?\d+)\/(\d+)$/.exec(s); return mm ? mm[1] / mm[2] : /^-?\d+(\.\d+)?$/.test(s) ? +s : null; }, v0 = nv(v);
+    cands = R.shuffle(cands.filter(function (c, i, all) { var x = nv(c); return c !== v && all.indexOf(c) === i && (x === null || v0 === null || (Math.abs(x - v0) >= 0.01 * Math.max(Math.abs(v0), 1e-12) && (v0 <= 0 || x > 0) && (v0 <= 0 || v0 > 1 || x <= 1))); })); // a believable slip: the same sign, and at most 1 when the right answer is
+    for (var i = 0; i < cands.length; i++) if (okAns(a, cands[i]) === false) return cands[i];
+    return null;
+  }
+  function checkable(p) {
+    var a = p.a;
+    if (!a || p.unit || (a.form && a.form !== 'int' && a.form !== 'frac' && a.form !== 'simplest')) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bclassmate\b/i.test(txt(p.q))) return false;
+    if (a.t === 'num' || a.t === 'expr') return okAns(a, ML.answerValue(a)) === true;
+    if (a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    return true;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || ['mc', 'tf', 'num'].indexOf(p.a.t) < 0) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= 300 && !/<(table|svg|img|canvas|ol|ul)\b|\$\$|\\begin\{/i.test(p.q);
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), shown, good;
+    if (a.t === 'mc') {
+      var k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+      shown = a.choices[k]; good = a.choices[a.v];
+    } else {
+      good = ML.answerShow(a);
+      var w = right ? null : wrongFor(R, a);
+      if (!right && w === null) return null;
+      shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
+      if (!shown || /undefined|NaN/.test(shown)) return null;
+    }
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var out = { q: '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q + '</li><li>' + p2.q + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + (p.steps || [''])[0]].concat((p.steps || []).slice(1), ['Question 2: ' + (p2.steps || [''])[0]], (p2.steps || []).slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), mode = ctx && ctx.mode;
+      if (!p || !p.a || !ML.check || !ML.answerShow || !R.chance(share(id, base, ctx))) return p;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check', 'check');
+      if (pairable(p, true)) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = null;
+      try { out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base); } catch (e) { out = null; }
+      return out || p;
+    };
+    fn._forms = true;
+    fn._base = base; // the topic's own generator (for tests)
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

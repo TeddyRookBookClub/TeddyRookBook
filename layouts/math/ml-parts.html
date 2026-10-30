@@ -83,7 +83,7 @@
 {{- end -}}
 
 {{- define "_partials/inline/ml-vizbase.html" -}}
-{{- $v := "adv" }}{{ if in (slice "k" "g1" "g2" "g3" "g4" "g5" "g6" "g7" "g8" "geo") . }}{{ $v = "basic" }}{{ end -}}
+{{- $v := "adv" }}{{ if in (slice "pk" "k" "g1" "g2" "g3" "g4" "g5" "g6" "g7" "g8" "geo") . }}{{ $v = "basic" }}{{ end -}}
 {{- $g := partialCached "inline/ml-graph.html" "graph" -}}
 {{- with index $g.C . }}{{ if ne .ladder "math" }}{{ $v = "" }}{{ end }}{{ end -}}
 {{- return $v -}}

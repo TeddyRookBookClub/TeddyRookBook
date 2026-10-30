@@ -590,7 +590,7 @@
   G('stat.transform-data', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, 'add', R.pick(['mult', 'add']), R.pick(['both', 'tf']));
     if (shape === 'add') {
-      var m = R.int(60, 85), s = R.int(4, 12), c = R.int(3, 10), md = m + R.int(-3, 3);
+      var m = R.int(40, 95), s = R.int(3, 15), c = R.int(2, 15), md = m + R.int(-4, 4);
       return {
         q: 'Quiz scores have mean ' + m + ', median ' + md + ' and standard deviation ' + s + '. The teacher adds ' + c + ' bonus points to every score. Find the new mean and the new standard deviation.',
         a: { t: 'multi', parts: [{ label: 'new mean $=$', a: num(m + c) }, { label: 'new standard deviation $=$', a: num(s) }] },
@@ -1042,16 +1042,16 @@
   G('stat.r-squared', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, 'r2', R.pick(['r', 'sse', 'r2']), R.pick(['meaning', 'sse', 'r']));
     if (shape === 'r2') {
-      var r = R.sign() * R.pick([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.85, 0.75]), r2 = Q.from(r).pow(2);
+      var r = R.sign() * R.pick([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.85, 0.75, 0.2, 0.1, 0.35, 0.45, 0.55, 0.65, 0.92, 0.98]), r2 = Q.from(r).pow(2);
       return {
-        q: 'A scatterplot of ' + R.pick(['crop yield against rainfall', 'sales against advertising spending', 'reaction time against hours awake', 'weight against height']) + ' has correlation $r = ' + ns(r) + '$. What percent of the variation in $y$ is explained by the least-squares line?',
+        q: 'A scatterplot of ' + R.pick(['crop yield against rainfall', 'sales against advertising spending', 'reaction time against hours awake', 'weight against height', 'test score against hours studied', 'ice cream sales against temperature', 'gas mileage against car weight', 'plant height against days of sunlight']) + ' has correlation $r = ' + ns(r) + '$. What percent of the variation in $y$ is explained by the least-squares line?',
         a: num(qv(r2.mul(100)), { pct: true }), unit: '%',
         steps: ['$r^2 = ' + T.p(ns(r)) + '^2 = ' + ns(r2.toNumber()) + '$.', 'As a percent: $' + pct(r2.mul(100).toNumber()) + '$ of the variation in y is explained by the linear relationship with x.' + (r < 0 ? ' (Squaring removes the sign.)' : '')],
         hint: 'Square r, then change it to a percent.'
       };
     }
     if (shape === 'r') {
-      var rr = R.pick([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]), sg = R.sign(), rq = Q.from(rr).pow(2);
+      var rr = R.pick([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.1, 0.2, 0.95]), sg = R.sign(), rq = Q.from(rr).pow(2);
       return {
         q: 'A least-squares line has $r^2 = ' + ns(rq.toNumber()) + '$, and its slope is ' + (sg > 0 ? 'positive' : 'negative') + '. What is $r$?',
         a: num(ns(sg * rr)),
@@ -1135,7 +1135,7 @@
       };
     }
     if (shape === 'predict') {
-      var k = R.int(1, 4), b = R.pick([0.1, 0.2, 0.25, 0.5]), x0 = R.pick([2, 4, 6, 8]), a = fix(k - b * x0);
+      var k = R.int(1, 5), b = R.pick([0.1, 0.2, 0.25, 0.5, 0.3, 0.4]), x0 = R.pick([2, 4, 6, 8, 10, 5, 3]), a = fix(k - b * x0);
       return {
         q: 'Data on ' + R.pick(['the number of users of an app against months since launch', 'a bacteria count against hours', 'the value of a collectible against years']) + ' were straightened by taking logs. The least-squares line is $\\log \\hat{y} = ' + ns(a) + T.signed(b) + 'x$ (base-10 log). Predict $y$ when $x = ' + x0 + '$.',
         a: num(M.pow(10, k)),
@@ -1606,7 +1606,7 @@
       };
     }
     if (shape === 'table') {
-      var indep = R.coin(), f = R.pick([[1, 4], [2, 5], [1, 3], [3, 5], [3, 10], [2, 3]]), r1 = f[1] * R.int(4, 12), r2 = f[1] * R.int(4, 12);
+      var indep = R.coin(), f = R.pick([[1, 4], [2, 5], [1, 3], [3, 5], [3, 10], [2, 3], [1, 2], [1, 5], [3, 4], [7, 10]]), r1 = f[1] * R.int(3, 15), r2 = f[1] * R.int(3, 15);
       var a = r1 * f[0] / f[1], b = r2 * f[0] / f[1];
       if (!indep) { var sh = R.pick([-1, 1]) * R.int(2, 4) * (f[1] === 3 ? 1 : 1); a += sh; if (a <= 0 || a >= r1) a -= 2 * sh; }
       var g = R.pick([['Wears glasses', 'No glasses', 'Left-handed', 'Right-handed'], ['Has a pet', 'No pet', 'Lives in a house', 'Lives in an apartment'], ['Likes math', 'Does not', 'Plays sports', 'Does not play sports']]);
@@ -1717,7 +1717,7 @@
   G('stat.permutations', function (R, ctx) {
     var L = lv(ctx), F = U.factorial, shape = by(ctx, R.pick(['line', 'podium']), R.pick(['podium', 'fixed', 'line']), R.pick(['word', 'code', 'together']));
     if (shape === 'line') {
-      var n = R.int(4, 7), what = R.pick([['books', 'arranged on a shelf'], ['runners', 'lined up at the start'], ['songs', 'put in order on a playlist'], ['photos', 'hung in a row']]);
+      var n = R.int(3, 10), what = R.pick([['books', 'arranged on a shelf'], ['runners', 'lined up at the start'], ['songs', 'put in order on a playlist'], ['photos', 'hung in a row'], ['students', 'lined up for a picture'], ['flower pots', 'set in a row on a sill'], ['cars', 'parked in a row'], ['speakers', 'scheduled one after another']]);
       return {
         q: 'In how many different orders can ' + n + ' different ' + what[0] + ' be ' + what[1] + '?',
         a: num(F(n), { form: 'int' }),
@@ -1726,7 +1726,7 @@
       };
     }
     if (shape === 'podium') {
-      var n2 = R.int(6, 12), r = R.int(2, 4), what2 = R.pick([['runners in a race', 'first, second' + (r > 2 ? ', third' : '') + (r > 3 ? ' and fourth place' : ' place'), 'places'], ['club members', 'a president, a vice president' + (r > 2 ? ', a secretary' : '') + (r > 3 ? ' and a treasurer' : ''), 'offices'], ['dogs in a show', 'the top ' + r + ' ribbons, in order', 'ribbons']]);
+      var n2 = R.int(5, 20), r = R.int(2, 4), what2 = R.pick([['runners in a race', 'first, second' + (r > 2 ? ', third' : '') + (r > 3 ? ' and fourth place' : ' place'), 'places'], ['club members', 'a president, a vice president' + (r > 2 ? ', a secretary' : '') + (r > 3 ? ' and a treasurer' : ''), 'offices'], ['dogs in a show', 'the top ' + r + ' ribbons, in order', 'ribbons']]);
       if (what2[0] === 'runners in a race' && r === 2) what2[1] = 'first and second place';
       if (what2[0] === 'club members' && r === 2) what2[1] = 'a president and a vice president';
       return {
@@ -1737,7 +1737,7 @@
       };
     }
     if (shape === 'fixed') {
-      var n3 = R.int(5, 7), nm = R.pick(['Ana', 'Ben', 'Chloe', 'Dev']);
+      var n3 = R.int(4, 9), nm = R.pick(['Ana', 'Ben', 'Chloe', 'Dev', 'Eli', 'Fay', 'Gus', 'Hana', 'Iris', 'Jon']);
       return {
         q: n3 + ' friends, including ' + nm + ', line up for a photo. In how many orders can they line up if ' + nm + ' must stand at the left end?',
         a: num(F(n3 - 1), { form: 'int' }),
@@ -1778,7 +1778,7 @@
   G('stat.combinations', function (R, ctx) {
     var L = lv(ctx), C = U.nCr, shape = by(ctx, 'basic', R.pick(['two', 'basic']), R.pick(['atleast', 'two', 'which']));
     if (shape === 'basic') {
-      var n = R.int(6, 12), r = R.int(2, 4), w = R.pick([['students', 'a committee of'], ['pizza toppings', 'a pizza with'], ['books', 'a stack to take on vacation with'], ['players', 'a team of']]);
+      var n = R.int(5, 20), r = R.int(2, 5), w = R.pick([['students', 'a committee of'], ['pizza toppings', 'a pizza with'], ['books', 'a stack to take on vacation with'], ['players', 'a team of']]);
       return {
         q: 'In how many ways can you choose ' + w[1] + ' ' + r + ' from ' + n + ' ' + w[0] + '? (Order does not matter.)',
         a: num(C(n, r), { form: 'int' }),
@@ -1787,7 +1787,7 @@
       };
     }
     if (shape === 'two') {
-      var a = R.int(5, 9), b = R.int(4, 8), x = R.int(1, 3), y = R.int(1, 3), g = R.pick([['juniors', 'seniors'], ['fiction books', 'nonfiction books'], ['red flowers', 'white flowers'], ['sopranos', 'altos']]);
+      var a = R.int(4, 12), b = R.int(4, 12), x = R.int(1, 4), y = R.int(1, 4), g = R.pick([['juniors', 'seniors'], ['fiction books', 'nonfiction books'], ['red flowers', 'white flowers'], ['sopranos', 'altos']]);
       return {
         q: 'A group has ' + a + ' ' + g[0] + ' and ' + b + ' ' + g[1] + '. In how many ways can you choose ' + x + ' ' + (x === 1 ? g[0].replace(/s$/, '').replace(/ie$/, 'y') : g[0]) + ' and ' + y + ' ' + (y === 1 ? g[1].replace(/s$/, '') : g[1]) + '?',
         a: num(C(a, x) * C(b, y), { form: 'int' }),
@@ -1796,7 +1796,7 @@
       };
     }
     if (shape === 'atleast') {
-      var n2 = R.int(8, 12), k = R.int(3, 5), r2 = R.int(3, 4);
+      var n2 = R.int(7, 15), k = R.int(2, 6), r2 = R.int(3, 5);
       return {
         q: 'A class of ' + n2 + ' includes ' + k + ' students who play chess. In how many ways can a team of ' + r2 + ' be chosen that includes <b>at least one</b> chess player?',
         a: num(C(n2, r2) - C(n2 - k, r2), { form: 'int' }),
@@ -1816,7 +1816,7 @@
   // ---------------------------------------------------------------- probability with counting
   G('stat.counting-probability', function (R, ctx) {
     var L = lv(ctx), C = U.nCr, shape = by(ctx, 'all', R.pick(['exact', 'all']), R.pick(['exact', 'cards', 'line']));
-    var a = R.int(4, 8), b = R.int(4, 8), n = a + b, r = R.int(2, 4), g = R.pick([['girls', 'boys', 'students', 'committee'], ['red', 'blue', 'marbles', 'handful'], ['juniors', 'seniors', 'club members', 'team']]);
+    var a = R.int(3, 12), b = R.int(3, 12), n = a + b, r = R.int(2, 5), g = R.pick([['girls', 'boys', 'students', 'committee'], ['red', 'blue', 'marbles', 'handful'], ['juniors', 'seniors', 'club members', 'team']]);
     if (shape === 'all') return {
       q: 'A group of ' + n + ' ' + g[2] + ' has ' + a + ' ' + g[0] + ' and ' + b + ' ' + g[1] + '. A ' + g[3] + ' of ' + r + ' is chosen at random. What is the probability that all ' + r + ' are ' + g[0] + '?',
       a: prob(C(a, r), C(n, r)),
@@ -2037,7 +2037,10 @@
   G('stat.binomial-distribution', function (R, ctx) {
     var L = lv(ctx), C = U.nCr, shape = by(ctx, 'coin', R.pick(['dec', 'meansd']), R.pick(['atleast1', 'atmost1', 'bins']));
     if (shape === 'coin') {
-      var kind = R.pick(['coin', 'die']), n = kind === 'coin' ? R.int(4, 6) : R.int(3, 4), p = kind === 'coin' ? Q(1, 2) : Q(1, 6), k = R.int(1, n - 1);
+      var kind = R.pick(['coin', 'die', 'spinner']), sp = R.pick([3, 4, 5, 8]), n = kind === 'coin' ? R.int(3, 10) : R.int(2, 6), p = kind === 'coin' ? Q(1, 2) : kind === 'die' ? Q(1, 6) : Q(1, sp), k = R.int(0, n);
+      if (kind === 'spinner') { var pr0 = Q(U.nCr(n, k)).mul(p.pow(k)).mul(Q(1).sub(p).pow(n - k));
+        return { q: 'A spinner has ' + sp + ' equal sections, one of them red. It is spun ' + n + ' times. What is the probability that it lands on red exactly ' + k + ' time' + (k === 1 ? '' : 's') + '? Give an exact fraction.', a: { t: 'num', v: pr0.toString() },
+          steps: ['Each spin lands on red with probability $' + p.toTex() + '$, and the spins are independent: a binomial count with $n = ' + n + '$ and $p = ' + p.toTex() + '$.', '$P(X = ' + k + ') = \\binom{' + n + '}{' + k + '}\\left(' + p.toTex() + '\\right)^{' + k + '}\\left(' + Q(1).sub(p).toTex() + '\\right)^{' + (n - k) + '} = ' + pr0.toTex() + '$.'], hint: 'Count the ways to choose which spins are red, then multiply by the probability of one such pattern.' }; }
       var pr = Q(C(n, k)).mul(p.pow(k)).mul(Q(1).sub(p).pow(n - k));
       var what = kind === 'coin' ? ['Flip a fair coin ' + n + ' times', 'heads'] : ['Roll a fair die ' + n + ' times', 'sixes'];
       return {
@@ -2048,7 +2051,7 @@
       };
     }
     if (shape === 'dec' || shape === 'atleast1' || shape === 'atmost1') {
-      var n2 = R.int(4, 6), p2 = R.pick([0.1, 0.2, 0.3, 0.4, 0.6, 0.7, 0.8]), q2 = fix(1 - p2), pq = Q.from(p2), qq2 = Q.from(q2), w = R.pick([['A basketball player makes each free throw', 'free throws', 'shots'], ['Each seed sprouts', 'seeds', 'seeds planted'], ['Each customer buys a drink', 'customers', 'customers']]);
+      var n2 = R.int(3, 6), p2 = R.pick([0.1, 0.2, 0.3, 0.4, 0.6, 0.7, 0.8, 0.5]), q2 = fix(1 - p2), pq = Q.from(p2), qq2 = Q.from(q2), w = R.pick([['A basketball player makes each free throw', 'free throws', 'shots'], ['Each seed sprouts', 'seeds', 'seeds planted'], ['Each customer buys a drink', 'customers', 'customers']]);
       var setup = w[0] + ' with probability $' + ns(p2) + '$, independently. Out of ' + n2 + ' ' + w[2] + ', let $X$ count the successes. ';
       if (shape === 'dec') {
         var k2 = R.int(1, n2 - 1), pr2 = Q(C(n2, k2)).mul(pq.pow(k2)).mul(qq2.pow(n2 - k2));
@@ -2107,7 +2110,7 @@
     var p = pp[0], qq0 = Q(1).sub(p), shape = by(ctx, 'first', R.pick(['mean', 'more', 'first']), R.pick(['within', 'more']));
     var setup = pp[1] + '. Each ' + pp[2] + ' succeeds with probability $p = ' + p.toTex() + '$, independently. Let $X$ be the number of the ' + pp[2] + ' on which the first success happens. ';
     if (shape === 'first') {
-      var k = R.int(2, 5), pr = qq0.pow(k - 1).mul(p);
+      var k = R.int(1, 8), pr = qq0.pow(k - 1).mul(p);
       return {
         q: setup + 'Find $P(X = ' + k + ')$.',
         a: prob(Number(pr.n), Number(pr.d)),
@@ -2121,7 +2124,7 @@
       steps: ['For a geometric variable, $E(X) = \\dfrac{1}{p}$.', '$\\dfrac{1}{' + p.toTex() + '} = ' + qv(p.inv()) + '$.', 'This makes sense: if a success happens $' + p.toTex() + '$ of the time, you wait about ' + qv(p.inv()) + ' tries on average.'],
       hint: 'The rarer the success, the longer the wait: E(X) = 1/p.'
     };
-    var k2 = R.int(2, 4);
+    var k2 = R.int(1, 7);
     if (shape === 'more') {
       var pm = qq0.pow(k2);
       return {
@@ -2144,7 +2147,7 @@
   G('stat.continuous-distributions', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, 'uniform', R.pick(['point', 'uniform', 'height']), R.pick(['triangle', 'point']));
     var w = R.pick([['A bus arrives at a random time', 'minutes from now', 'the waiting time'], ['A spinner\'s pointer stops at a random angle', 'degrees', 'the angle'], ['A random number generator picks a real number', '', 'the number']]);
-    var a = 0, b = R.pick([10, 20, 30, 40, 60]), unit = w[1];
+    var a = 0, b = R.pick([10, 20, 30, 40, 60, 15, 25, 50, 80, 100]), unit = w[1];
     if (w[1] === 'degrees') b = 360;
     if (shape === 'uniform') {
       var c = R.int(1, b / 5 - 1) * 5, d = R.int(c / 5 + 1, b / 5) * 5;
@@ -2195,7 +2198,7 @@
       };
     }
     if (shape === 'compare') {
-      var A = [R.pick([100, 200, 500]), R.pick([Q(1, 20), Q(1, 10), Q(1, 50)])], B = [R.pick([10, 20, 30]), R.pick([Q(1, 2), Q(1, 4), Q(2, 5)])];
+      var A = [R.pick([100, 200, 500, 300, 1000]), R.pick([Q(1, 20), Q(1, 10), Q(1, 50), Q(1, 25), Q(1, 100)])], B = [R.pick([10, 20, 30, 40, 50]), R.pick([Q(1, 2), Q(1, 4), Q(2, 5), Q(1, 5), Q(3, 4)])];
       var eA = A[1].mul(A[0]), eB = B[1].mul(B[0]);
       if (eA.eq(eB)) B[0] += 10, eB = B[1].mul(B[0]);
       return {
@@ -2206,7 +2209,7 @@
       };
     }
     if (shape === 'fair') {
-      var pr = [[Q(1, 10), R.pick([20, 30, 50])], [Q(3, 10), R.pick([2, 4, 5])]], fair = pr[0][0].mul(pr[0][1]).add(pr[1][0].mul(pr[1][1]));
+      var pr = [[Q(1, 10), R.pick([20, 30, 50, 40, 60, 100])], [Q(3, 10), R.pick([2, 4, 5, 3, 10])]], fair = pr[0][0].mul(pr[0][1]).add(pr[1][0].mul(pr[1][1]));
       return {
         q: 'A carnival game pays ' + money(pr[0][1]) + ' with probability $' + qv(pr[0][0]) + '$, pays ' + money(pr[1][1]) + ' with probability $' + qv(pr[1][0]) + '$, and otherwise pays nothing. What price to play would make the game fair (expected net gain of 0)?',
         a: num(qv(fair)),
@@ -2429,14 +2432,14 @@
   G('stat.margin-of-error', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, 'scale', R.pick(['size', 'scale']), R.pick(['double', 'size', 'level']));
     if (shape === 'scale') {
-      var k = R.pick([4, 9, 16, 4, 25]), E = M.sqrt(k) * R.pick([1, 1.5, 2, 2.5, 3]), n = R.pick([100, 200, 250, 400, 500]), dir = R.coin();
+      var k = R.pick([4, 9, 16, 4, 25, 36, 100]), E = M.sqrt(k) * R.pick([1, 1.5, 2, 2.5, 3, 4, 5]), n = R.pick([100, 200, 250, 400, 500, 300, 600, 1000]), dir = R.coin();
       if (dir) return {
         q: 'A poll of ' + n + ' people has a margin of error of $' + E + '$ percentage points. If the poll is repeated with ' + T.commas(k * n) + ' people (' + k + ' times as many), about what will the margin of error be?',
         a: num(fix(E / M.sqrt(k))), unit: 'points',
         steps: ['The margin of error is proportional to $\\dfrac{1}{\\sqrt{n}}$.', 'Multiplying n by ' + k + ' divides the margin of error by $\\sqrt{' + k + '} = ' + M.sqrt(k) + '$.', '$' + E + ' \\div ' + M.sqrt(k) + ' = ' + ns(fix(E / M.sqrt(k))) + '$ points.'],
         hint: 'n sits under a square root.'
       };
-      var f = R.pick([2, 3, 4]);
+      var f = R.pick([2, 3, 4, 5, 10]);
       return {
         q: 'To make the margin of error ' + ['', '', 'half', 'one third', 'one fourth'][f] + ' as large, by what factor must the sample size be multiplied?',
         a: num(f * f),
@@ -2445,7 +2448,7 @@
       };
     }
     if (shape === 'size') {
-      var lev = R.pick(LEVELS), zst = zstar(lev), E2 = R.pick(['0.02', '0.03', '0.04', '0.05']), guess = R.coin() ? '0.5' : R.pick(['0.2', '0.3', '0.1']);
+      var lev = R.pick(LEVELS), zst = zstar(lev), E2 = R.pick(['0.02', '0.03', '0.04', '0.05', '0.01', '0.025', '0.06']), guess = R.coin() ? '0.5' : R.pick(['0.2', '0.3', '0.1', '0.4', '0.6', '0.7']);
       var raw = Q.from(zst).div(Q.from(E2)).pow(2).mul(Q.from(guess)).mul(Q(1).sub(Q.from(guess))), need = raw.isInt() ? raw : raw.floor().add(1);
       return {
         q: 'How large a sample is needed to estimate a proportion within $\\pm' + E2 + '$ with ' + lev + '% confidence ($z^* = ' + zst + '$)? ' + (guess === '0.5' ? 'With no prior estimate, use $p^* = 0.5$.' : 'An earlier study suggests $p^* = ' + guess + '$.'),
@@ -2646,7 +2649,7 @@
       };
     }
     if (shape === 'nums') {
-      var a = R.pick(['0.05', '0.01', '0.10']), pw = R.pick(['0.80', '0.90', '0.75', '0.65']);
+      var a = R.pick(['0.05', '0.01', '0.10', '0.02']), pw = R.pick(['0.80', '0.90', '0.75', '0.65', '0.85', '0.70', '0.95', '0.60']);
       return {
         q: 'A test uses $\\alpha = ' + a + '$. For a particular true alternative, its power is $' + pw + '$. Find the probability of a Type I error (when $H_0$ is true) and of a Type II error (for that alternative).',
         a: { t: 'multi', parts: [{ label: '$P(\\text{Type I}) =$', a: num(a) }, { label: '$P(\\text{Type II}) =$', a: num(ns(fix(1 - Number(pw)))) }] },
@@ -2732,8 +2735,8 @@
       };
     }
     if (shape === 'twot') {
-      var tr = R.pick(TRIPLES.slice(0, 3)), n1 = R.pick([9, 16, 25]), n2 = R.pick([9, 16, 25]), s1 = tr[0] * M.sqrt(n1), s2 = tr[1] * M.sqrt(n2), se = tr[2];
-      var t = R.pick([0.8, 1.2, 1.6, 2, 2.4, 2.8, 3.2]), dm = fix(t * se), x2 = R.int(200, 400), x1 = fix(x2 + dm);
+      var tr = R.pick(TRIPLES.slice(0, 3)), n1 = R.pick([9, 16, 25, 36, 49]), n2 = R.pick([9, 16, 25, 36, 49]), s1 = tr[0] * M.sqrt(n1), s2 = tr[1] * M.sqrt(n2), se = tr[2];
+      var t = R.pick([0.8, 1.2, 1.6, 2, 2.4, 2.8, 3.2, 0.4, 3.6, 1, 1.4, 2.2]), dm = fix(t * se), x2 = R.int(100, 500), x1 = fix(x2 + dm);
       var g2 = R.pick([['Battery lifetimes (minutes) for two brands', 'Brand 1', 'Brand 2'], ['Weekly screen times (minutes) at two schools', 'School 1', 'School 2'], ['Delivery times (minutes) for two routes', 'Route 1', 'Route 2']]);
       return {
         q: g2[0] + ' are compared using independent random samples. ' + g2[1] + ': $n_1 = ' + n1 + '$, $\\bar{x}_1 = ' + ns(x1) + '$, $s_1 = ' + s1 + '$. ' + g2[2] + ': $n_2 = ' + n2 + '$, $\\bar{x}_2 = ' + x2 + '$, $s_2 = ' + s2 + '$. Find the standard error of $\\bar{x}_1 - \\bar{x}_2$ and the two-sample t statistic.',
@@ -2766,7 +2769,7 @@
       };
     }
     if (shape === 'stat' || shape === 'counts') {
-      var E2 = R.pick([[20, 20, 20, 20], [25, 25, 50], [30, 30, 40], [40, 40, 20], [50, 25, 25], [10, 20, 30, 40]]), O2, tries = 0;
+      var E2 = R.pick([[20, 20, 20, 20], [25, 25, 50], [30, 30, 40], [40, 40, 20], [50, 25, 25], [10, 20, 30, 40], [30, 30, 30], [15, 15, 15, 15], [20, 30, 50], [40, 60], [50, 50], [24, 24, 24, 24, 24]]), O2, tries = 0;
       do { O2 = E2.map(function (e) { return e + R.int(-8, 8); }); var dsum = sum(O2) - sum(E2); O2[O2.length - 1] -= dsum; tries++; } while (O2.some(function (o) { return o < 1; }) && tries < 20);
       var parts = O2.map(function (o, j) { return Q((o - E2[j]) * (o - E2[j]), E2[j]); }), X2 = parts.reduce(function (s, p) { return s.add(p); }, Q(0)), df = E2.length - 1;
       var tab = table(['Category'].concat(E2.map(function (_, j) { return String.fromCharCode(65 + j); })), [['Observed'].concat(O2.map(String)), ['Expected'].concat(E2.map(String))]);
@@ -2825,3 +2828,133 @@
 
 
 })(typeof window !== 'undefined' ? window.MathLadder : globalThis.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
+   generator still has few different problems at a level sometimes asks the same skill in another form, built only from
+   problems that generator made, so every answer is the generator's own:
+   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+     classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
+     checker rejects it;
+   - two at once: two different short questions of the topic, answered together.
+   Topics whose generator already varies a lot at a level are left as they are. Placed after the generators and
+   registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'stat', VAR = {};
+  // how often another form is used: never when the topic's own generator already varies a lot at this level, up to
+  // half the time when it has few different questions (counted once per topic and level from 40 fixed seeds)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 37 ? 0 : VAR[key] >= 30 ? 0.3 : VAR[key] >= 20 ? 0.45 : 0.55;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
+  // a nearby wrong answer for a number or an expression, or null
+  function wrongFor(R, a) {
+    var v = String(ML.answerValue(a)), cands = [], m;
+    if (a.t === 'num') {
+      if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
+      else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
+      else if (/^-?\d+\.\d+$/.test(v)) { var x = +v, dp = v.split('.')[1].length, st = Math.pow(10, -Math.min(dp, 2)); cands = [x + st, x - st, -x, x * 10, x / 10].map(function (y) { return ML.util.numStr(ML.util.round(y, dp + 1)); }); }
+      else return null;
+    } else if (a.t === 'expr') {
+      if (v.length > 60) return null;
+      if (/ \+ /.test(v)) cands.push(v.replace(' + ', ' - '));
+      if (/ - /.test(v)) cands.push(v.replace(' - ', ' + '));
+      if ((m = /(^|[^\d.^])(\d+)(?![\d.])/.exec(v)) && !/\^$/.test(v.slice(0, m.index + m[1].length))) cands.push(v.slice(0, m.index) + m[1] + (+m[2] + 1) + v.slice(m.index + m[0].length));
+      if (!cands.length) return null;
+    } else return null;
+    var nv = function (s) { var mm = /^(-?\d+)\/(\d+)$/.exec(s); return mm ? mm[1] / mm[2] : /^-?\d+(\.\d+)?$/.test(s) ? +s : null; }, v0 = nv(v);
+    cands = R.shuffle(cands.filter(function (c, i, all) { var x = nv(c); return c !== v && all.indexOf(c) === i && (x === null || v0 === null || (Math.abs(x - v0) >= 0.01 * Math.max(Math.abs(v0), 1e-12) && (v0 <= 0 || x > 0) && (v0 <= 0 || v0 > 1 || x <= 1))); })); // a believable slip: the same sign, and at most 1 when the right answer is
+    for (var i = 0; i < cands.length; i++) if (okAns(a, cands[i]) === false) return cands[i];
+    return null;
+  }
+  function checkable(p) {
+    var a = p.a;
+    if (!a || p.unit || (a.form && a.form !== 'int' && a.form !== 'frac' && a.form !== 'simplest')) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bclassmate\b/i.test(txt(p.q))) return false;
+    if (a.t === 'num' || a.t === 'expr') return okAns(a, ML.answerValue(a)) === true;
+    if (a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    return true;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || ['mc', 'tf', 'num'].indexOf(p.a.t) < 0) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= 300 && !/<(table|svg|img|canvas|ol|ul)\b|\$\$|\\begin\{/i.test(p.q);
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), shown, good;
+    if (a.t === 'mc') {
+      var k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+      shown = a.choices[k]; good = a.choices[a.v];
+    } else {
+      good = ML.answerShow(a);
+      var w = right ? null : wrongFor(R, a);
+      if (!right && w === null) return null;
+      shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
+      if (!shown || /undefined|NaN/.test(shown)) return null;
+    }
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var out = { q: '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q + '</li><li>' + p2.q + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + (p.steps || [''])[0]].concat((p.steps || []).slice(1), ['Question 2: ' + (p2.steps || [''])[0]], (p2.steps || []).slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), mode = ctx && ctx.mode;
+      if (!p || !p.a || !ML.check || !ML.answerShow || !R.chance(share(id, base, ctx))) return p;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check', 'check');
+      if (pairable(p, true)) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = null;
+      try { out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base); } catch (e) { out = null; }
+      return out || p;
+    };
+    fn._forms = true;
+    fn._base = base; // the topic's own generator (for tests)
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

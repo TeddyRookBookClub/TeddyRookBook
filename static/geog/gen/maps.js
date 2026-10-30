@@ -389,8 +389,11 @@
   /* ------------------------------------------------------------------ maps.using-a-compass */
   G('maps.using-a-compass', function (R, ctx) {
     var L = ctx.level || 1;
-    if (L === 1) return mcq('This is a compass. Which way does the needle point?', 'North', ['The way you are walking', 'Down to the ground'], { viz: { name: 'gg-compass', opts: { needle: true, quiet: true, interactive: false } },
+    if (L === 1 && R.coin()) return mcq('This is a compass. Which way does the needle point?', 'North', ['The way you are walking', 'Down to the ground'], { viz: { name: 'gg-compass', opts: { needle: true, quiet: true, interactive: false } },
       hint: 'A compass needle always swings to point the same way.', steps: ['A compass needle is a small magnet.', 'It swings around until it points north.'] });
+    if (L === 1) { var k0 = R.pick(PLACEK), who0 = R.pick(['Mia', 'Leo', 'Ana', 'Sam', 'Ruby', 'Omar']);
+      return mcq(who0 + ' holds a compass. The needle points toward ' + the(k0) + '. Which way is ' + the(k0) + '?', 'North', ['South', R.pick(['East', 'West'])], { hint: 'Which way does a compass needle always point?',
+        steps: ['A compass needle always points north.', 'It points toward ' + the(k0) + ', so ' + the(k0) + ' is north of ' + who0 + '.'] }); }
     if (R.chance(0.4)) {
       var k1 = R.pick(PLACEK), k2 = R.pick(PLACEK.filter(function (x) { return x !== k1; })), beh = R.coin();
       return beh ? mcq('Your compass needle points toward ' + the(k1) + '. ' + Cap(the(k2)) + ' is right behind you. Which way is ' + the(k2) + '?', 'South', [], { order: ['North', 'East', 'South', 'West'], hint: 'Behind you is the opposite of the way the needle points.',
@@ -572,11 +575,15 @@
   /* ------------------------------------------------------------------ maps.capital-city */
   G('maps.capital-city', function (R, ctx) {
     var L = ctx.level || 1, Gg = ML.geog;
-    if (L === 1) return mcq('The star shows the capital of the United States. What city is it?', 'Washington, D.C.', ['New York City', 'Los Angeles'], { viz: { name: 'gg-map', opts: { map: 'us', capitals: ['DC'], capLabels: false, color: 'plain', quiet: true, interactive: false } },
-      hint: 'The capital is where the country\'s government meets. It is named for the first President.', steps: ['The capital of the United States is Washington, D.C.', 'New York City is bigger, but it is not the capital.'] });
+    var BIGC = ['New York City', 'Los Angeles', 'Chicago', 'Houston', 'Philadelphia', 'Miami', 'Seattle', 'Boston', 'San Francisco', 'Dallas'];
+    if (L === 1) return mcq('The star shows the capital of the United States. What city is it?', 'Washington, D.C.', R.sample(BIGC, 2), { viz: { name: 'gg-map', opts: { map: 'us', capitals: ['DC'], capLabels: false, color: 'plain', quiet: true, interactive: false } },
+      hint: 'The capital is where the country\'s government meets. It is named for the first President.', steps: ['The capital of the United States is Washington, D.C.', 'Some cities, like New York City, are bigger, but the capital is Washington, D.C.'] });
     if (L === 2) return tfq(R.pick([['The biggest city in a country is always its capital.', false, 'New York City is the biggest city in the United States (about 8.8 million people in 2020), but the capital is Washington, D.C.'],
       ['Each of the 50 states has its own capital city.', true, 'A state\'s capital is where its government meets.'], ['The capital of the United States is Washington, D.C.', true, 'The country\'s government meets there.'],
-      ['New York City is the capital of the United States.', false, 'New York City is the biggest city, but the capital is Washington, D.C.']]), 'A capital is where the government meets. It is not always the biggest city.');
+      ['New York City is the capital of the United States.', false, 'New York City is the biggest city, but the capital is Washington, D.C.'],
+      ['A capital city is where a country\'s or a state\'s government meets.', true, 'That is what makes it the capital.'], ['Washington, D.C., is not part of any state.', true, 'It is a special district set aside for the country\'s government.'],
+      ['Los Angeles is the capital of the United States.', false, 'Los Angeles is a big city in California. The capital is Washington, D.C.'], ['A state\'s capital is always its biggest city.', false, 'New York City is the biggest city in New York, but the state capital is Albany.'],
+      ['On many maps, a star marks a capital city.', true, 'Check the map key: a star often means a capital.']]), 'A capital is where the government meets. It is not always the biggest city.');
     var s = R.pick(Gg.states()), nb = Gg.state(R.pick(s.nb.filter(function (x) { return x !== 'DC'; }).concat(['TX', 'NY', 'CA']).filter(function (x) { return x !== s.id; })));
     return mcq('The star shows the capital of ' + s.n + '. Which city is the capital?', s.cap, [s.city, nb.cap], { viz: { name: 'gg-map', opts: { map: 'us', highlight: [s.id], capitals: [s.id], capLabels: false, color: 'plain', quiet: true, interactive: false } },
       hint: 'A capital is not always the biggest or best-known city.', steps: ['The capital of ' + s.n + ' is ' + s.cap + '.', s.city + ' is a well-known city in ' + s.n + ', but it is not the capital.', nb.cap + ' is the capital of ' + nb.n + '.'] });
@@ -817,6 +824,7 @@
   var NOTCONT = ['France', 'Texas', 'Canada', 'Brazil', 'Japan', 'Egypt', 'Florida', 'China'];
   G('maps.continents', function (R, ctx) {
     var L = ctx.level || 1, all = ['Africa', 'Antarctica', 'Asia', 'Australia', 'Europe', 'North America', 'South America'];
+    if (L === 1 && R.coin()) { var r1 = R.pick(all); return mcq('Which of these is a continent?', r1, R.sample(NOTCONT, 2), { hint: 'A continent is a huge piece of land with many countries.', steps: [r1 + ' is one of the seven continents.', 'The other two are not continents: each is a country or a state.'] }); }
     if (L === 1) return mcq('How many continents are there?', '7', [], { order: ['5', '7', '50'], viz: { name: 'gg-globe', opts: { center: [20, 15], color: 'plain', quiet: true, interactive: false, buttons: false } },
       hint: 'Africa, Antarctica, Asia, Australia, Europe, North America, South America...', steps: ['The seven continents are Africa, Antarctica, Asia, Australia, Europe, North America and South America.'] });
     if (L === 2) {
@@ -893,10 +901,16 @@
   var CROSS = ['Africa', 'South America'], NOCROSS = ['Europe', 'North America', 'Antarctica', 'Australia'];
   G('maps.equator', function (R, ctx) {
     var L = ctx.level || 1, Gg = ML.geog;
+    if (L === 1 && R.coin()) { var c1 = R.pick(Gg.CITIES.filter(function (c) { return Math.abs(c.lat) > 12; })), n1 = c1.lat > 0;
+      return mcq('Is the dot north or south of the equator?', n1 ? 'North' : 'South', [], { order: ['North', 'South'], viz: { name: 'gg-map', opts: { color: 'plain', lines: ['equator'], points: [{ lon: c1.lon, lat: c1.lat, mark: '?' }], quiet: true, interactive: false, dots: false, disputedNote: false } },
+        hint: 'North is above the equator line on the map; south is below it.', steps: ['The dot is ' + (n1 ? 'above' : 'below') + ' the equator line.', 'So it is ' + (n1 ? 'north' : 'south') + ' of the equator. (The dot is ' + c1.n + '.)'] }); }
     if (L === 1) return mcq('What is the name of the imaginary line around the middle of Earth?', 'The equator', ['The North Pole', 'A river'], { viz: { name: 'gg-globe', opts: { center: [R.pick([-60, 20, 110]), 10], lines: ['equator'], lineLabels: false, color: 'plain', quiet: true, interactive: false, buttons: false } },
       hint: 'Its name sounds like "equal": it cuts Earth into two equal halves.', steps: ['The line around the middle of Earth is the equator.', 'It is halfway between the North Pole and the South Pole.'] });
     if (L === 2) return tfq(R.pick([['You could see the equator painted on the ground.', false, 'The equator is imaginary. Mapmakers draw it to help us find places.'], ['The equator is halfway between the North Pole and the South Pole.', true, 'It is the same distance from both poles.'],
-      ['The equator goes all the way around Earth.', true, 'It is about 25,000 miles (40,000 kilometers) around.'], ['The equator runs from the North Pole to the South Pole.', false, 'The equator goes around the middle of Earth, east and west. Lines from pole to pole are different lines.']]), 'The equator is an imaginary line around the middle of Earth.');
+      ['The equator goes all the way around Earth.', true, 'It is about 25,000 miles (40,000 kilometers) around.'], ['The equator runs from the North Pole to the South Pole.', false, 'The equator goes around the middle of Earth, east and west. Lines from pole to pole are different lines.'],
+      ['The equator cuts Earth into a northern half and a southern half.', true, 'North of it is the Northern Hemisphere; south of it is the Southern Hemisphere.'], ['The equator is at the top of the globe.', false, 'The equator is around the middle. The North Pole is at the top.'],
+      ['The equator crosses Africa.', true, 'It crosses the middle of Africa, and South America too.'], ['The equator crosses North America.', false, 'All of North America is north of the equator. The equator crosses South America and Africa.'],
+      ['The equator is closer to the North Pole than to the South Pole.', false, 'It is exactly halfway between the two poles.']]), 'The equator is an imaginary line around the middle of Earth.');
     if (R.coin()) { var right = R.pick(CROSS);
       return mcq('Which continent does the equator cross?', right, R.sample(NOCROSS, 2), { viz: { name: 'gg-map', opts: contMap({ lines: ['equator'] }) }, hint: 'Follow the equator line across the map.',
         steps: ['The equator crosses Africa and South America.', 'It does not cross ' + NOCROSS.join(', ').replace(/, (?=[^,]*$)/, ' or ') + '.'] }); }
@@ -940,9 +954,113 @@
         hint: 'Is it above or below the equator? Is it east or west of the line from pole to pole through London?',
         steps: [c[0] + ' is ' + (c[1] === 'N' ? 'north' : 'south') + ' of the equator: the ' + HW[c[1]] + ' Hemisphere.', 'It is ' + (c[2] === 'E' ? 'east' : 'west') + ' of the line through London: the ' + HW[c[2]] + ' Hemisphere.', 'Every place is in two hemispheres at once.'] });
     }
+    if (L === 1 && R.coin()) { var c1 = R.pick(ML.geog.CITIES.filter(function (c) { return Math.abs(c.lat) > 12; })), n1 = c1.lat > 0;
+      return mcq('Which half of Earth is the dot in?', n1 ? 'Northern Hemisphere' : 'Southern Hemisphere', [], { order: ['Northern Hemisphere', 'Southern Hemisphere'], viz: { name: 'gg-globe', opts: { center: [Math.round(c1.lon), 0], points: [{ lon: c1.lon, lat: c1.lat, mark: '?' }], lines: ['equator'], lineLabels: false, color: 'plain', quiet: true, interactive: false, buttons: false, label: 'A globe with the equator and one dot.' } },
+        hint: 'Is the dot above or below the equator?', steps: ['The dot is ' + (n1 ? 'above (north of)' : 'below (south of)') + ' the equator.', 'So it is in the ' + (n1 ? 'Northern' : 'Southern') + ' Hemisphere. (The dot is ' + c1.n + '.)'] }); }
     var h = L === 1 ? R.pick(['N', 'S']) : R.pick(['E', 'W']), ord = L === 1 ? ['Northern', 'Southern', 'Eastern'] : ['Eastern', 'Western', 'Northern'];
     return mcq('Which half of Earth is colored?', HW[h] + ' Hemisphere', [], { order: ord.map(function (x) { return x + ' Hemisphere'; }), viz: { name: 'gg-globe', opts: { center: [0, 0], hemi: h, lines: L === 1 ? ['equator'] : ['prime'], lineLabels: false, color: 'plain', quiet: true, interactive: false, buttons: false } },
       hint: L === 1 ? 'Is the colored half above or below the equator?' : 'Is the colored half to the right (east) or the left (west)?',
       steps: [L === 1 ? 'The equator cuts Earth into a northern half and a southern half.' : 'A line from the North Pole to the South Pole through London cuts Earth into an eastern half and a western half.', 'The colored half is the ' + HW[h] + ' Hemisphere.'] });
   });
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen"): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - two at once: two different questions of the topic, answered together (short questions only, at most one of them with
+     a picture, which then comes first; not in the courses for young children, whose answer box for two parts would
+     also show a keypad button they don't need).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'maps', YOUNG = true, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf')) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

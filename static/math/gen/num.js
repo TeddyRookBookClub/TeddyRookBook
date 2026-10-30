@@ -200,7 +200,7 @@
   G('num.binary-fractions', function (R, ctx) {
     var kind = lv(ctx, R.pick(['tobin', 'todec']), R.pick(['digits', 'terminates', 'tobin2', 'todec']), R.pick(['repeat', 'period', 'digits', 'terminates']));
     if (kind === 'tobin' || kind === 'tobin2') {
-      var k = kind === 'tobin' ? R.int(2, 4) : R.int(4, 5), m = R.int(1, Math.pow(2, k) - 1) | 1, x = Q(m, Math.pow(2, k)), w = kind === 'tobin2' ? R.int(1, 6) : 0;
+      var k = kind === 'tobin' ? R.int(1, 5) : R.int(4, 6), m = R.int(1, Math.pow(2, k) - 1) | 1, x = Q(m, Math.pow(2, k)), w = kind === 'tobin2' ? R.int(1, 12) : (R.chance(0.4) ? R.int(1, 9) : 0);
       var xb = toBin(x, 10), wb = w.toString(2), s = wb + '.' + xb.bits, total = x.add(w);
       return {
         q: 'Write $' + td(total) + '$ in base 2.',
@@ -210,7 +210,7 @@
       };
     }
     if (kind === 'todec') {
-      var n = R.int(3, 5), bits = '1'; for (var i = 1; i < n; i++) bits += R.int(0, 1); bits = bits.slice(0, n - 1) + '1'; if (R.coin()) bits = '0' + bits.slice(1);
+      var n = R.int(2, 7), bits = '1'; for (var i = 1; i < n; i++) bits += R.int(0, 1); bits = bits.slice(0, n - 1) + '1'; if (R.coin()) bits = '0' + bits.slice(1);
       var val = q(0); bits.split('').forEach(function (b, i) { if (b === '1') val = val.add(Q(1, Math.pow(2, i + 1))); });
       return {
         q: 'Write the binary number $0.' + bits + '_2$ as a decimal.',
@@ -220,7 +220,7 @@
       };
     }
     if (kind === 'digits') {
-      var d = R.pick(['0.1', '0.2', '0.3', '0.4', '0.6', '0.7', '0.9', '0.35', '0.45', '0.15', '0.85', '0.05']), xd = q(d), nb = 8, r = toBin(xd, nb);
+      var d = R.pick(['0.1', '0.2', '0.3', '0.4', '0.6', '0.7', '0.9', '0.35', '0.45', '0.15', '0.85', '0.05', '0.55', '0.65', '0.95', '0.8', '0.12', '0.24', '0.36', '0.48', '0.04', '0.08']), xd = q(d), nb = 8, r = toBin(xd, nb);
       return {
         q: 'Use repeated doubling to write $' + d + '$ in binary. Give the first ' + nb + ' binary digits after the point (cut off, not rounded), in the form 0.dddddddd.',
         a: txt(['0.' + r.bits, '.' + r.bits]),
@@ -241,7 +241,7 @@
       };
     }
     if (kind === 'repeat') {
-      var blk = R.pick(['01', '10', '011', '001', '110', '101', '0011', '0110', '1001', '0111', '1010']), L = blk.length, B = parseInt(blk, 2), fr = Q(B, Math.pow(2, L) - 1);
+      var blk = R.pick(['01', '10', '011', '001', '110', '101', '0011', '0110', '1001', '0111', '1010', '100', '010', '0001', '1000', '1100', '0101', '1011', '1101', '1110', '00011', '10101']), L = blk.length, B = parseInt(blk, 2), fr = Q(B, Math.pow(2, L) - 1);
       return {
         q: 'Write the repeating binary fraction $0.\\overline{' + blk + '}_2 = 0.' + [blk, blk, blk].join('\\,') + '\\ldots_2$ as a fraction in lowest terms.',
         a: num(fr, { form: 'frac' }),
@@ -250,7 +250,7 @@
       };
     }
     // period: length of the repeating block of 1/n in binary = the order of 2 mod the odd part of n
-    var nn = R.pick([3, 5, 7, 9, 10, 15, 20, 6, 12, 11, 13, 17]), odd = nn; while (odd % 2 === 0) odd /= 2;
+    var nn = R.pick([3, 5, 7, 9, 10, 15, 20, 6, 12, 11, 13, 17, 14, 18, 19, 21, 22, 24, 25, 28, 30, 31, 33, 40, 48, 50]), odd = nn; while (odd % 2 === 0) odd /= 2;
     var per = 1, p2 = 2 % odd; while (p2 !== 1) { p2 = (p2 * 2) % odd; per++; }
     var bin = toBin(Q(1, nn), per + 6).bits.replace(/(\d{4})(?=\d)/g, '$1\\,');
     return {
@@ -265,9 +265,9 @@
   // ---------------------------------------------------------------- num.floating-point
   G('num.floating-point', function (R, ctx) {
     var kind = lv(ctx, R.pick(['gap', 'eps', 'count']), R.pick(['round', 'round', 'gap', 'tf']), R.pick(['double', 'largest', 'relerr', 'tf']));
-    var p = R.int(2, 4), sys = 'a toy binary floating-point system that stores numbers as $\\pm(1.b_1 b_2' + (p > 2 ? ' \\ldots b_{' + p + '}' : '') + ')_2 \\times 2^{e}$ with $' + p + '$ fraction bits';
+    var p = R.int(2, 6), sys = 'a toy binary floating-point system that stores numbers as $\\pm(1.b_1 b_2' + (p > 2 ? ' \\ldots b_{' + p + '}' : '') + ')_2 \\times 2^{e}$ with $' + p + '$ fraction bits';
     if (kind === 'gap') {
-      var e = R.int(-2, 3), lo = q(2).pow(e), gap = lo.div(Math.pow(2, p));
+      var e = R.int(-4, 6), lo = q(2).pow(e), gap = lo.div(Math.pow(2, p));
       return {
         q: 'In ' + sys + ', what is the gap between neighboring floats in $[' + td(lo) + ', ' + td(lo.mul(2)) + ')$?',
         a: num(gap),
@@ -285,7 +285,7 @@
       };
     }
     if (kind === 'count') {
-      var e2 = R.int(-1, 4), c = Math.pow(2, p);
+      var e2 = R.int(-3, 6), c = Math.pow(2, p);
       return {
         q: 'How many floats does ' + sys + ' have in the interval $[' + td(q(2).pow(e2)) + ', ' + td(q(2).pow(e2 + 1)) + ')$?',
         a: num(c, { form: 'int' }),
@@ -313,7 +313,7 @@
       };
     }
     if (kind === 'largest') {
-      var em = R.int(2, 5), big = q(2).sub(Q(1, Math.pow(2, p))).mul(q(2).pow(em));
+      var em = R.int(1, 8), big = q(2).sub(Q(1, Math.pow(2, p))).mul(q(2).pow(em));
       return {
         q: 'In ' + sys + ' and exponents $e$ from $-2$ to $' + em + '$, what is the largest number it can store?',
         a: num(big),
@@ -424,7 +424,7 @@
   G('num.truncation-error', function (R, ctx) {
     var kind = lv(ctx, R.pick(['halve', 'order']), R.pick(['taylor', 'order', 'classify', 'halve']), R.pick(['terms', 'hfor', 'taylor', 'classify']));
     if (kind === 'halve') {
-      var p = R.pick([1, 2, 4]), E = q(R.pick([8, 16, 32, 48, 64, 80, 96])).div(pow10(R.int(3, 5))), fac = R.pick([2, 2, 10]), En = E.div(q(fac).pow(p));
+      var p = R.pick([1, 2, 3, 4]), E = q(R.pick([8, 16, 32, 48, 64, 80, 96, 24, 40, 56, 72, 88])).div(pow10(R.int(3, 6))), fac = R.pick([2, 2, 10, 4]), En = E.div(q(fac).pow(p));
       return {
         q: 'A method has truncation error of order $h^{' + p + '}$. With $h = 0.1$ its error is $' + td(E) + '$. Estimate the error with $h = ' + td(Q(1, 10 * fac)) + '$.',
         a: num(En),
@@ -449,7 +449,7 @@
         ['\\sin x', 'x', 3, 6, 'x^{3}/6'],
         ['e^{-x}', '1 - x + \\frac{x^{2}}{2}', 3, 6, 'x^{3}/6']
       ]);
-      var xv = R.pick([q('0.1'), q('0.2'), Q(1, 2), Q(1, 4), q('0.3')]), bound = xv.pow(F[2]).div(F[3]);
+      var xv = R.pick([q('0.1'), q('0.2'), Q(1, 2), Q(1, 4), q('0.3'), q('0.4'), Q(1, 3), q('0.05'), Q(1, 5)]), bound = xv.pow(F[2]).div(F[3]);
       return {
         q: 'The Taylor series of $' + F[0] + '$ at $0$ alternates, and its terms shrink, at $x = ' + td(xv) + '$. Stopping after $' + F[1] + '$ leaves a truncation error no bigger than the first term left out. Give that bound as an exact fraction.',
         a: num(bound),
@@ -458,7 +458,7 @@
       };
     }
     if (kind === 'terms') {
-      var m = R.int(3, 9), n = 0; while (q(2).div(U.factorial(n + 1)).ge(pow10(-m))) n++;
+      var m = R.int(2, 14), n = 0; while (q(2).div(U.factorial(n + 1)).ge(pow10(-m))) n++;
       return {
         q: 'Approximate $e = \\sum_{k=0}^{\\infty} \\frac{1}{k!}$ by stopping after the $\\frac{1}{n!}$ term. The truncation error is then less than $\\frac{2}{(n + 1)!}$. What is the smallest $n$ that guarantees an error below $10^{-' + m + '}$?',
         a: num(n, { form: 'int' }),
@@ -467,7 +467,7 @@
       };
     }
     if (kind === 'hfor') {
-      var p2 = R.pick([1, 2, 4]), fct = R.pick([2, 4, 5, 10]), h0 = q('0.1'), E0 = q(R.pick([2, 3, 4, 5, 8])).div(pow10(R.int(2, 3))), Et = E0.div(q(fct).pow(p2)), hn = h0.div(fct);
+      var p2 = R.pick([1, 2, 3, 4]), fct = R.pick([2, 4, 5, 10]), h0 = q(R.pick(['0.1', '0.2', '0.5'])), E0 = q(R.pick([2, 3, 4, 5, 6, 8, 9])).div(pow10(R.int(2, 4))), Et = E0.div(q(fct).pow(p2)), hn = h0.div(fct);
       return {
         q: 'A method has error about $Ch^{' + p2 + '}$. With $h = 0.1$ the error is $' + td(E0) + '$. What step size $h$ should bring the error down to $' + td(Et) + '$?',
         a: num(hn),
@@ -553,7 +553,7 @@
         steps: ['If $I_{n-1}$ is off by $\\delta_{n-1}$, then $1 - nI_{n-1}$ is off by $n\\delta_{n-1}$ in size: each step multiplies the error by $n$.', 'After ' + n + ' steps: $1 \\cdot 2 \\cdots ' + n + ' = ' + n + '! = ' + T.commas(U.factorial(n)) + '$.', 'The true $I_n$ shrink toward $0$, while the error grows like $n!$: the recurrence is unstable. Running it backward, $I_{n-1} = (1 - I_n)/n$, divides the error by $n$ each step instead.'],
         hint: 'Track how an error in I₀ changes in one step of the formula.', _d: { k: kind, n: n, v: U.factorial(n) }
       };
-      var a = R.pick([3, 4, 5, 10]), nn = R.int(4, 8), fac = Math.pow(a, nn);
+      var a = R.pick([2, 3, 4, 5, 6, 10]), nn = R.int(3, 9), fac = Math.pow(a, nn);
       return {
         q: 'A sequence is computed with $x_{n} = 1 - ' + a + 'x_{n-1}$. The stored $x_0$ has a rounding error $\\delta$. How many times larger is the resulting error in $x_{' + nn + '}$?',
         a: num(fac, { form: 'int' }),
@@ -562,7 +562,7 @@
       };
     }
     if (kind === 'quad' || kind === 'quadboth') {
-      var b = R.pick([50, 60, 70, 80, 90, 100, 120, 150, 200]), k = 4;
+      var b = R.pick([50, 60, 70, 80, 90, 100, 120, 150, 200, 40, 110, 130, 160, 180, 250, 300, 500, 1000]), k = 4;
       var b2 = fl(q(b * b), k), disc = fl(b2.sub(4), k), sq = flSqrt(disc, k);
       if (!sq) { b = 100; b2 = q(10000); disc = fl(q(9996), k); sq = flSqrt(disc, k); }
       var naive = fl(fl(q(b).sub(sq), k).div(2), k), den = fl(q(b).add(sq), k), stab = fl(q(2).div(den), k);
@@ -583,7 +583,7 @@
       };
     }
     if (kind === 'accuracy') {
-      var m = R.int(2, 12);
+      var m = R.int(2, 15);
       return {
         q: 'A backward stable algorithm (unit roundoff about $10^{-16}$) solves a problem whose condition number is about $10^{' + m + '}$. About how many correct significant digits should we expect in the answer?',
         a: num(16 - m, { form: 'int' }),
@@ -729,9 +729,9 @@
     var kind = lv(ctx, R.pick(['iterate', 'iterate', 'cycle']), R.pick(['which', 'iterate', 'gprime']), R.pick(['which', 'steps', 'gprime']));
     if (kind === 'iterate') {
       var t = R.pick(['babylon', 'golden', 'linear']), g, gt, x0, r;
-      if (t === 'babylon') { var a = R.pick([2, 3, 5, 6, 7, 10]); x0 = q(Math.round(Math.sqrt(a)) || 1); g = function (x) { return x.add(q(a).div(x)).div(2); }; gt = 'g(x) = \\frac{1}{2}\\left(x + \\frac{' + a + '}{x}\\right)'; r = '\\sqrt{' + a + '} \\approx ' + Math.sqrt(a).toFixed(6); }
+      if (t === 'babylon') { var a = R.pick([2, 3, 5, 6, 7, 10, 8, 11, 12, 13, 15, 17, 20]); x0 = q(Math.round(Math.sqrt(a)) || 1); g = function (x) { return x.add(q(a).div(x)).div(2); }; gt = 'g(x) = \\frac{1}{2}\\left(x + \\frac{' + a + '}{x}\\right)'; r = '\\sqrt{' + a + '} \\approx ' + Math.sqrt(a).toFixed(6); }
       else if (t === 'golden') { x0 = q(R.pick([1, 2])); g = function (x) { return q(1).add(q(1).div(x)); }; gt = 'g(x) = 1 + \\frac{1}{x}'; r = '\\frac{1 + \\sqrt{5}}{2} \\approx 1.618034'; }
-      else { var k = R.pick([2, 3, 4]), bb = R.int(2, 9); x0 = q(0); g = function (x) { return x.div(k).add(bb); }; gt = 'g(x) = \\frac{x}{' + k + '} + ' + bb; r = td(Q(bb * k, k - 1)); }
+      else { var k = R.pick([2, 3, 4, 5]), bb = R.int(1, 12); x0 = q(R.pick([0, 0, 1, 2]));  g = function (x) { return x.div(k).add(bb); }; gt = 'g(x) = \\frac{x}{' + k + '} + ' + bb; r = td(Q(bb * k, k - 1)); }
       var n = ctx.level === 1 ? 2 : 3, xs = [x0]; for (var i = 0; i < n; i++) xs.push(g(xs[i]));
       return {
         q: 'Run fixed-point iteration $x_{n+1} = g(x_n)$ with $' + gt + '$, starting from $x_0 = ' + td(x0) + '$. Find $x_{' + n + '}$ exactly.',
@@ -741,7 +741,7 @@
       };
     }
     if (kind === 'cycle') {
-      var aa = R.pick([2, 3, 5, 6, 8, 10]), z0 = R.pick([1, 2, 4, 5].filter(function (v) { return v * v !== aa; })), N = R.int(3, 8), xn = N % 2 ? Q(aa, z0) : q(z0);
+      var aa = R.pick([2, 3, 5, 6, 8, 10, 7, 11, 12, 15]), z0 = R.pick([1, 2, 3, 4, 5].filter(function (v) { return v * v !== aa; })), N = R.int(3, 8), xn = N % 2 ? Q(aa, z0) : q(z0);
       return {
         q: 'To solve $x^{2} = ' + aa + '$, someone rewrites it as $x = g(x) = \\frac{' + aa + '}{x}$ and iterates from $x_0 = ' + z0 + '$. What is $x_{' + N + '}$?',
         a: num(xn),
@@ -750,7 +750,7 @@
       };
     }
     if (kind === 'which') {
-      var rr = R.int(2, 6), c = rr * rr - rr;
+      var rr = R.int(2, 9), c = rr * rr - rr;
       var opts = [['g(x) = \\sqrt{x + ' + c + '}', true, '\\frac{1}{2\\sqrt{x + ' + c + '}}', Q(1, 2 * rr)], ['g(x) = 1 + \\frac{' + c + '}{x}', true, '-\\frac{' + c + '}{x^{2}}', Q(-c, rr * rr)], ['g(x) = x^{2} - ' + c, false, '2x', q(2 * rr)], ['g(x) = \\frac{' + c + '}{x - 1}', false, '-\\frac{' + c + '}{(x - 1)^{2}}', Q(-c, (rr - 1) * (rr - 1))]];
       var vs = []; opts.forEach(function (o, i) { if (o[1]) vs.push(i); });
       return {
@@ -765,7 +765,7 @@
         q: 'For $g(x) = \\frac{1}{2}\\left(x + \\frac{' + A + '}{x}\\right)$, the fixed point is $r = \\sqrt{' + A + '}$. Find $g\'(r)$.',
         a: num(0), steps: ['$g\'(x) = \\frac{1}{2}\\left(1 - \\frac{' + A + '}{x^{2}}\\right)$.', 'At $x = \\sqrt{' + A + '}$: $\\frac{1}{2}(1 - 1) = 0$.', 'Since $g\'(r) = 0$, the error shrinks faster than any fixed ratio: this iteration (Newton\'s method for $x^{2} = ' + A + '$) converges quadratically.'],
         hint: 'Differentiate, then put in x² = ' + A + '.', _d: { k: 'gprime', t: 'babylon', a: A, v: 0 } }; }
-      var r0 = R.int(2, 5), b0 = R.pick([3, 4, 5, 6, 8].filter(function (v) { return v !== r0; })), c0 = 2 * b0 * r0 - r0 * r0;
+      var r0 = R.int(2, 7), b0 = R.pick([3, 4, 5, 6, 8, 9, 10].filter(function (v) { return v !== r0; })), c0 = 2 * b0 * r0 - r0 * r0;
       var gp = Q(r0, b0);
       return {
         q: 'Fixed-point iteration uses $g(x) = \\frac{x^{2}' + cterm(c0) + '}{' + 2 * b0 + '}$, which has the fixed point $r = ' + r0 + '$. Find $g\'(r)$, and so decide what happens to the error near $r$.',
@@ -775,7 +775,7 @@
       };
     }
     // steps: error shrinks by about |g'(r)| = 1/K per step; steps to reduce it by 10^m
-    var K = R.pick([2, 3, 4, 5, 10]), m = R.int(3, 8), nK = 0; while (q(K).pow(nK).lt(pow10(m))) nK++;
+    var K = R.pick([2, 3, 4, 5, 10, 8, 6]), m = R.int(2, 12), nK = 0; while (q(K).pow(nK).lt(pow10(m))) nK++;
     return {
       q: 'Near its fixed point, an iteration has $|g\'(r)| = ' + tq(Q(1, K)) + '$, so each step multiplies the error by about $' + tq(Q(1, K)) + '$. About how many steps reduce the error by a factor of $10^{' + m + '}$?',
       a: num(nK, { form: 'int' }),
@@ -788,8 +788,8 @@
   G('num.convergence-order', function (R, ctx) {
     var kind = lv(ctx, R.pick(['estimate', 'kind']), R.pick(['estimate', 'linear', 'quad']), R.pick(['data', 'quad', 'estimate']));
     if (kind === 'estimate') {
-      var pat = R.pick([[1, 2, 3], [2, 3, 4], [1, 2, 4], [2, 4, 8], [3, 6, 12], [1, 3, 9], [2, 4, 7], [2, 5, 11], [1, 3, 6]]);
-      if (ctx.level === 1) pat = R.pick([[1, 2, 4], [2, 4, 8], [1, 2, 3], [1, 3, 9]]);
+      var pat = R.pick([[1, 2, 3], [2, 3, 4], [1, 2, 4], [2, 4, 8], [3, 6, 12], [1, 3, 9], [2, 4, 7], [2, 5, 11], [1, 3, 6], [3, 4, 5], [2, 6, 18], [1, 4, 16], [3, 5, 7], [2, 3, 5], [4, 8, 16]]);
+      if (ctx.level === 1) pat = R.pick([[1, 2, 4], [2, 4, 8], [1, 2, 3], [1, 3, 9], [2, 3, 4], [3, 6, 12], [1, 4, 16], [2, 6, 18], [3, 4, 5]]);
       var pp = Q(pat[2] - pat[1], pat[1] - pat[0]);
       return {
         q: 'Three successive errors of an iteration are $e_0 = 10^{-' + pat[0] + '}$, $e_1 = 10^{-' + pat[1] + '}$ and $e_2 = 10^{-' + pat[2] + '}$. Estimate the order $p$ with $$p \\approx \\frac{\\ln(e_2/e_1)}{\\ln(e_1/e_0)}.$$',
@@ -813,7 +813,7 @@
       };
     }
     if (kind === 'linear') {
-      var Cn, e0, n, en; for (var tr = 0; tr < 30; tr++) { Cn = R.pick([2, 4, 5, 10]); e0 = q(R.pick(['0.1', '0.5', '1', '0.2'])); n = R.int(3, 6); en = e0.div(q(Cn).pow(n)); if (tiny(en) || decStr(en).length <= 10) break; }
+      var Cn, e0, n, en; for (var tr = 0; tr < 30; tr++) { Cn = R.pick([2, 4, 5, 10, 8, 20]); e0 = q(R.pick(['0.1', '0.5', '1', '0.2', '0.4', '0.8'])); n = R.int(2, 7); en = e0.div(q(Cn).pow(n)); if (tiny(en) || decStr(en).length <= 10) break; }
       return {
         q: 'An iteration converges linearly with $e_{n+1} = ' + tq(Q(1, Cn)) + 'e_n$. If $e_0 = ' + td(e0) + '$, what is $e_{' + n + '}$?',
         a: num(en),
@@ -822,7 +822,7 @@
       };
     }
     if (kind === 'quad') {
-      var Cq = q(R.pick(['0.5', '1', '2', '3', '0.25'])), ee0 = pow10(-R.int(1, 3)), e1 = Cq.mul(ee0).mul(ee0), e2 = Cq.mul(e1).mul(e1);
+      var Cq = q(R.pick(['0.5', '1', '2', '3', '0.25', '4', '5', '0.2'])), ee0 = pow10(-R.int(1, 4)), e1 = Cq.mul(ee0).mul(ee0), e2 = Cq.mul(e1).mul(e1);
       return {
         q: 'Near a root, an iteration satisfies $e_{n+1} \\approx ' + (Cq.eq(1) ? '' : td(Cq)) + 'e_n^{2}$. If $e_0 = ' + td(ee0) + '$, estimate $e_2$.',
         a: num(e2, { rtol: 1e-9 }),
@@ -847,10 +847,10 @@
   G('num.newton-convergence', function (R, ctx) {
     var kind = lv(ctx, R.pick(['C', 'flat', 'C']), R.pick(['cycle', 'C', 'mult']), R.pick(['mult', 'cycle', 'mstep', 'C']));
     if (kind === 'C') {
-      var t = R.pick(['sq', 'cube']), r = R.int(2, 5), f, C, st;
+      var t = R.pick(['sq', 'cube']), r = R.int(2, 9), f, C, st;
       if (t === 'sq') { f = 'x^{2} - ' + r * r; C = Q(1, 2 * r); st = ['$f\'(x) = 2x$ and $f\'\'(x) = 2$, so $C = \\frac{2}{2 \\cdot 2(' + r + ')} = ' + tq(C) + '$.']; }
       else { f = 'x^{3} - ' + r * r * r; C = Q(1, r); st = ['$f\'(x) = 3x^{2}$ and $f\'\'(x) = 6x$, so $C = \\frac{6(' + r + ')}{2 \\cdot 3(' + r + ')^{2}} = ' + tq(C) + '$.']; }
-      var e = pow10(-R.int(2, 4)), e1 = C.mul(e).mul(e);
+      var e = pow10(-R.int(1, 5)), e1 = C.mul(e).mul(e);
       return {
         q: 'Newton\'s method on $f(x) = ' + f + '$ converges to $r = ' + r + '$ with $e_{n+1} \\approx Ce_n^{2}$, where $C = \\left|\\frac{f\'\'(r)}{2f\'(r)}\\right|$. If $e_n = ' + td(e) + '$, estimate $e_{n+1}$.',
         a: num(e1, { rtol: 1e-9 }),
@@ -859,7 +859,7 @@
       };
     }
     if (kind === 'flat') {
-      var c = R.pick([1, 2, 3]), x0 = R.pick([c, -c]);
+      var c = R.pick([1, 2, 3, 4, 5]), x0 = R.pick([c, -c]);
       return {
         q: 'Newton\'s method is started at $x_0 = ' + x0 + '$ for $f(x) = x^{3} - ' + 3 * c * c + 'x + 1$. What goes wrong?',
         a: mc('$f\'(' + x0 + ') = 0$: the tangent line is horizontal and never meets the $x$-axis', ['Nothing: it converges quadratically from there', 'The method converges to a root of $f\'$ instead', '$f(' + x0 + ') = 0$, so it stops at once']),
@@ -868,7 +868,7 @@
       };
     }
     if (kind === 'cycle') {
-      var cc = R.pick([1, 2, 3, -1, -2]), fc = 'x^{3} - ' + 2 * cc * cc + 'x ' + (cc > 0 ? '+ ' : '- ') + Math.abs(2 * cc * cc * cc);
+      var cc = R.pick([1, 2, 3, 4, -1, -2, -3]), fc = 'x^{3} - ' + 2 * cc * cc + 'x ' + (cc > 0 ? '+ ' : '- ') + Math.abs(2 * cc * cc * cc);
       return {
         q: 'Run Newton\'s method on $f(x) = ' + fc + '$ from $x_0 = 0$. Find $x_1$ and $x_2$.',
         a: multi([{ label: '$x_1 =$', a: num(cc) }, { label: '$x_2 =$', a: num(0) }]),
@@ -877,7 +877,7 @@
       };
     }
     if (kind === 'mult') {
-      var m = R.int(2, 4), ask = R.pick(['ratio', 'fix']);
+      var m = R.int(2, 7), ask = R.pick(['ratio', 'fix']);
       if (ask === 'ratio') return {
         q: 'Newton\'s method is used on a function with a root of multiplicity ' + m + ', such as $f(x) = (x - 1)^{' + m + '}$. Near the root, $e_{n+1}/e_n$ approaches what number?',
         a: num(Q(m - 1, m)),
@@ -892,7 +892,7 @@
       };
     }
     // mstep: one Newton step at a double root
-    var r2 = R.pick([-3, -2, -1, 1, 2, 3, 4]), d = R.pick([1, 2, Q(1, 2), 4]), x0m = q(r2).add(d), x1m = q(r2).add(q(d).div(2));
+    var r2 = R.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]), d = R.pick([1, 2, Q(1, 2), 4, 3, Q(3, 2)]), x0m = q(r2).add(d), x1m = q(r2).add(q(d).div(2));
     return {
       q: 'Take one step of Newton\'s method on $f(x) = ' + ptex([r2 * r2, -2 * r2, 1]) + '$ from $x_0 = ' + td(x0m) + '$. What is $x_1$?',
       a: num(x1m),
@@ -904,9 +904,10 @@
   // ---------------------------------------------------------------- num.secant-method
   function secPoly(R) {
     return R.pick([
-      function () { var c = R.pick([2, 3, 5, 6, 7, 10]), a = Math.floor(Math.sqrt(c)); return { c: [-c, 0, 1], x0: a, x1: a + 1, tex: 'x^{2} - ' + c }; },
-      function () { var c = R.pick([2, 3, 5, 9, 10]), a = Math.floor(Math.cbrt(c)); return { c: [-c, 0, 0, 1], x0: a, x1: a + 1, tex: 'x^{3} - ' + c }; },
+      function () { var c = R.pick([2, 3, 5, 6, 7, 10, 8, 11, 12, 13, 14, 15, 17, 18, 19, 20]), a = Math.floor(Math.sqrt(c)); return { c: [-c, 0, 1], x0: a, x1: a + 1, tex: 'x^{2} - ' + c }; },
+      function () { var c = R.pick([2, 3, 5, 9, 10, 4, 6, 7, 11, 12, 20, 25]), a = Math.floor(Math.cbrt(c)); return { c: [-c, 0, 0, 1], x0: a, x1: a + 1, tex: 'x^{3} - ' + c }; },
       function () { var c = R.pick([1, 3, 4, 5]); return { c: [-c, -1, 1], x0: 1, x1: 3, tex: 'x^{2} - x - ' + c }; },
+      function () { var c = R.pick([1, 2, 3, 4, 5, 6]); return { c: [-c, 1, 1], x0: 0, x1: 2 + (c > 3 ? 1 : 0), tex: 'x^{2} + x - ' + c }; },
       function () { return { c: [-1, 1, 0, 1], x0: 0, x1: 1, tex: 'x^{3} + x - 1' }; }
     ])();
   }
@@ -994,8 +995,8 @@
   G('num.operation-counts', function (R, ctx) {
     var kind = lv(ctx, R.pick(['scale', 'flops']), R.pick(['tri', 'scale', 'inverse', 'flops']), R.pick(['manyrhs', 'scale', 'tri']));
     if (kind === 'scale') {
-      var pr = ctx.level === 3 ? R.pick([[400, 1000], [200, 500], [600, 1200], [300, 1200], [1000, 3000]]) : R.pick([[500, 1000], [1000, 2000], [200, 800], [300, 900], [1000, 10000]]);
-      var t0 = q(R.pick(['0.2', '0.5', '0.8', '1.5', '2', '3'])), ratio = Q(pr[1], pr[0]), t1 = t0.mul(ratio.pow(3));
+      var pr = ctx.level === 3 ? R.pick([[400, 1000], [200, 500], [600, 1200], [300, 1200], [1000, 3000], [500, 1500], [800, 2000], [250, 1000]]) : R.pick([[500, 1000], [1000, 2000], [200, 800], [300, 900], [1000, 10000], [400, 800], [100, 300], [600, 1800], [2000, 4000]]);
+      var t0 = q(R.pick(['0.2', '0.5', '0.8', '1.5', '2', '3', '0.1', '0.4', '1', '2.5', '4'])), ratio = Q(pr[1], pr[0]), t1 = t0.mul(ratio.pow(3));
       return {
         q: 'Gaussian elimination on a dense $' + pr[0] + ' \\times ' + pr[0] + '$ system takes $' + td(t0) + '$ seconds on a computer. About how long should a $' + T.commas(pr[1]) + ' \\times ' + T.commas(pr[1]) + '$ system take?',
         a: num(t1, { rtol: 0.001 }),
@@ -1004,7 +1005,7 @@
       };
     }
     if (kind === 'flops') {
-      var n = R.pick([30, 60, 90, 150, 300, 600, 3000]), f = Q(2 * n * n * n, 3);
+      var n = R.pick([30, 60, 90, 150, 300, 600, 3000, 120, 210, 450, 900, 1200, 1500, 6000]), f = Q(2 * n * n * n, 3);
       return {
         q: 'Gaussian elimination (reducing $A$ to upper triangular form) on an $n \\times n$ matrix takes about $\\frac{2}{3}n^{3}$ floating-point operations. About how many is that for $n = ' + T.commas(n) + '$?',
         a: num(f, { rtol: 0.001 }),
@@ -1013,7 +1014,7 @@
       };
     }
     if (kind === 'tri') {
-      var m = R.pick([10, 50, 100, 200, 500, 1000]), both = R.coin();
+      var m = R.pick([10, 50, 100, 200, 500, 1000, 20, 30, 40, 250, 400, 2000]), both = R.coin();
       return {
         q: both ? 'After $PA = LU$ is known, solving $A\\mathbf{x} = \\mathbf{b}$ for a new $\\mathbf{b}$ takes one forward and one back substitution, each about $n^{2}$ operations. About how many operations is that for $n = ' + T.commas(m) + '$?' : 'Back substitution on an $n \\times n$ upper triangular system uses about $n^{2}$ operations. About how many is that for $n = ' + T.commas(m) + '$?',
         a: num((both ? 2 : 1) * m * m, { rtol: 0.001 }),
@@ -1028,7 +1029,7 @@
       hint: 'Compare the operation counts.', _d: { k: kind }
     };
     // manyrhs
-    var nn = R.pick([300, 600, 900, 1500, 3000]), k = R.pick([10, 50, 100, 200]), once = Q(2 * nn * nn * nn, 3).add(2 * k * nn * nn), redo = Q(2 * nn * nn * nn, 3).add(2 * nn * nn).mul(k);
+    var nn = R.pick([300, 600, 900, 1500, 3000, 1200, 2400, 6000]), k = R.pick([10, 50, 100, 200, 20, 25, 40]), once = Q(2 * nn * nn * nn, 3).add(2 * k * nn * nn), redo = Q(2 * nn * nn * nn, 3).add(2 * nn * nn).mul(k);
     var askRatio = R.coin();
     if (askRatio) { var rt = redo.div(once); return {
       q: 'A program must solve $A\\mathbf{x} = \\mathbf{b}$ for ' + k + ' different right sides, with $n = ' + T.commas(nn) + '$. Approach A redoes elimination for each $\\mathbf{b}$ (about $\\frac{2}{3}n^{3} + 2n^{2}$ each). Approach B factors $PA = LU$ once ($\\frac{2}{3}n^{3}$) and then does two triangular solves ($2n^{2}$) per $\\mathbf{b}$. About how many times faster is B? Round to the nearest whole number.',
@@ -1092,7 +1093,7 @@
       };
     }
     if (kind === 'digits') {
-      var m = R.pick([4, 5]), eps = pow10(-m), b1 = R.int(1, 4), b2 = b1 + R.int(1, 3), k = 3;
+      var m = R.pick([4, 5, 6]), eps = pow10(-m), b1 = R.int(1, 6), b2 = b1 + R.int(1, 4), k = 3;
       // without pivoting
       var mu = fl(q(1).div(eps), k), a22 = fl(q(1).sub(fl(mu, k)), k), bb2 = fl(q(b2).sub(fl(mu.mul(b1), k)), k), y0 = fl(bb2.div(a22), k), x0 = fl(fl(q(b1).sub(y0), k).div(eps), k);
       // with pivoting
@@ -1220,7 +1221,7 @@
       };
     }
     if (kind === 'residual') {
-      var m = R.int(2, 4), dl = pow10(-m), tt = R.pick([1, 2, 3, 5, 10]) * R.sign(), b2 = q(2).add(dl), xt = [q(1).add(tt), q(1).sub(tt)];
+      var m = R.int(2, 6), dl = pow10(-m), tt = R.pick([1, 2, 3, 4, 5, 6, 8, 10, 20]) * R.sign(), b2 = q(2).add(dl), xt = [q(1).add(tt), q(1).sub(tt)];
       var res = dl.mul(Math.abs(tt));
       return {
         q: 'The system $$\\begin{aligned} x + y &= 2 \\\\ x + ' + td(q(1).add(dl)) + 'y &= ' + td(b2) + ' \\end{aligned}$$ has the solution $(1, 1)$. Someone offers $\\tilde{\\mathbf{x}} = ' + texV(xt) + '$. Find the size of the residual, $\\lVert\\mathbf{b} - A\\tilde{\\mathbf{x}}\\rVert_\\infty$, and of the error, $\\lVert\\mathbf{x} - \\tilde{\\mathbf{x}}\\rVert_\\infty$.',
@@ -1230,7 +1231,7 @@
       };
     }
     // det: a small determinant does not mean ill-conditioned
-    var s = R.pick([q('0.1'), q('0.01'), q('0.001')]), n = R.pick([3, 5, 10]);
+    var s = R.pick([q('0.1'), q('0.01'), q('0.001'), q('0.5'), q('0.2'), q('0.0001')]), n = R.pick([2, 3, 4, 5, 8, 10, 20]);
     return {
       q: 'Let $A = ' + td(s) + 'I$, the $' + n + ' \\times ' + n + '$ identity matrix times $' + td(s) + '$. Its determinant is $' + td(s) + '^{' + n + '} = ' + td(s.pow(n)) + '$, which is tiny. What is $\\kappa_\\infty(A)$?',
       a: num(1, { form: 'int' }),
@@ -1505,7 +1506,7 @@
   G('num.runge-chebyshev', function (R, ctx) {
     var kind = lv(ctx, R.pick(['nodes', 'concept', 'omega', 'gap']), R.pick(['omega', 'mapped', 'need', 'gap', 'mapped']), R.pick(['omegaab', 'equal', 'mapped', 'omegaab', 'need']));
     if (kind === 'need') {
-      var mm = R.int(2, 7), wl = R.pick([1, 2, 2, 3]), nn = 1; while (nn < 200 && q(wl).div(2).pow(nn).div(q(2).pow(nn - 1)).gt(pow10(-mm))) nn++;
+      var mm = R.int(2, 10), wl = R.pick([1, 2, 2, 3, 4]), nn = 1; while (nn < 200 && q(wl).div(2).pow(nn).div(q(2).pow(nn - 1)).gt(pow10(-mm))) nn++;
       return {
         q: 'With $n$ Chebyshev nodes on ' + (wl === 2 ? '$[-1, 1]$, $\\max|\\omega(x)| = 2^{1-n}$' : 'an interval of length ' + wl + ', $\\max|\\omega(x)| = \\left(' + tq(Q(wl, 2)) + '\\right)^{n}2^{1-n}$') + '. What is the smallest $n$ that makes $\\max|\\omega| \\le 10^{-' + mm + '}$?',
         a: num(nn, { form: 'int' }),
@@ -1514,7 +1515,7 @@
       };
     }
     if (kind === 'gap') {
-      var mg = R.int(3, 12);
+      var mg = R.int(2, 20);
       return {
         q: 'The ' + mg + ' Chebyshev nodes on $[-1, 1]$ are $x_k = \\cos\\theta_k$ with $\\theta_k = \\frac{(2k + 1)\\pi}{' + 2 * mg + '}$, $k = 0, \\ldots, ' + (mg - 1) + '$. What is the spacing $\\theta_{k+1} - \\theta_k$ between neighboring angles? Give it in terms of $\\pi$.',
         a: num('pi/' + mg),
@@ -1700,7 +1701,7 @@
   G('num.step-size-tradeoff', function (R, ctx) {
     var kind = lv(ctx, R.pick(['roundoff', 'which', 'slope']), R.pick(['hopt', 'which', 'slope']), R.pick(['hcentral', 'hopt', 'which']));
     if (kind === 'roundoff') {
-      var k = R.int(6, 14), r = q(2).mul(pow10(-16 + k));
+      var k = R.int(4, 15), r = q(2).mul(pow10(-16 + k));
       return {
         q: 'In double precision each value of $f$ (about size 1) carries a rounding error up to $\\varepsilon \\approx 10^{-16}$. In the forward difference $\\frac{f(x + h) - f(x)}{h}$, those errors can add up to $\\frac{2\\varepsilon}{h}$. How big is that with $h = 10^{-' + k + '}$?',
         a: num(r, { rtol: 1e-9 }),
@@ -1709,7 +1710,7 @@
       };
     }
     if (kind === 'which') {
-      var ks = [2, 4, 6, 8, 10, 12], c0 = R.pick([2, 3, 4]), f = function (x) { return Math.pow(x, c0); };
+      var ks = [2, 4, 6, 8, 10, 12], c0 = R.pick([2, 3, 4, 5, 6]), f = function (x) { return Math.pow(x, c0); };
       var errs = ks.map(function (kk) { var h = Math.pow(10, -kk); return Math.abs((f(1 + h) - f(1)) / h - c0); });
       var best = 0; errs.forEach(function (e, i) { if (e < errs[best]) best = i; });
       return {
@@ -1729,7 +1730,7 @@
       };
     }
     if (kind === 'hopt') {
-      var M = R.pick([1, 4, 16, 100]), eps = q(1).div(pow10(16)), h = q(2).mul(Math.sqrt(1 / M)).mul(pow10(-8));
+      var M = R.pick([1, 4, 16, 100, 9, 25, 36, 64, 400, 10000]), eps = q(1).div(pow10(16)), h = q(2).mul(Math.sqrt(1 / M)).mul(pow10(-8));
       return {
         q: 'The total error of a forward difference is about $E(h) = \\frac{M}{2}h + \\frac{2\\varepsilon}{h}$, with $M = ' + M + '$ (a bound on $|f\'\'|$) and $\\varepsilon = 10^{-16}$. Which $h$ minimizes $E$?',
         a: num(h, { rtol: 0.001 }),
@@ -1737,7 +1738,7 @@
         hint: 'Set E′(h) = 0.', _d: { k: kind, M: M, v: h.toPlain() }
       };
     }
-    var Mc = R.pick([1, 3, 6, 10]), hc = Math.cbrt(3e-16 / Mc);
+    var Mc = R.pick([1, 3, 6, 10, 2, 4, 5, 8, 12, 30]), hc = Math.cbrt(3e-16 / Mc);
     return {
       q: 'For the central difference the total error is about $E(h) = \\frac{M}{6}h^{2} + \\frac{\\varepsilon}{h}$, with $M = ' + Mc + '$ and $\\varepsilon = 10^{-16}$. Find the $h$ that minimizes $E$, to 2 significant digits.',
       a: num(hc.toExponential(5), { rtol: 0.03 }),
@@ -2335,7 +2336,13 @@
   G('num.least-squares-qr', function (R, ctx) {
     var kind = lv(ctx, R.pick(['kappa', 'why']), R.pick(['qtb', 'solve', 'kappa']), R.pick(['solve', 'resid']));
     if (kind === 'kappa') {
-      var k = R.int(3, 8);
+      var k = R.int(2, 8), ask = R.pick(['lost', 'lost', 'kappa2', 'left']);
+      if (ask !== 'lost') return {
+        q: 'A least-squares problem has $\\kappa_2(A) = 10^{' + k + '}$. ' + (ask === 'kappa2' ? 'The normal equations use $A^{T}A$. What is $\\log_{10} \\kappa_2(A^{T}A)$?' : 'In double precision (about 16 significant digits), roughly how many correct digits can you still count on if you solve the normal equations $A^{T}A\\mathbf{x} = A^{T}\\mathbf{b}$?'),
+        a: num(ask === 'kappa2' ? 2 * k : 16 - 2 * k, { form: 'int' }),
+        steps: ['$\\kappa_2(A^{T}A) = \\kappa_2(A)^{2} = 10^{' + 2 * k + '}$.'].concat(ask === 'kappa2' ? ['So $\\log_{10} \\kappa_2(A^{T}A) = ' + 2 * k + '$.'] : ['Each factor of 10 in the condition number can cost about one digit: up to ' + 2 * k + ' of the 16.', 'About $16 - ' + 2 * k + ' = ' + (16 - 2 * k) + '$ digits are left. QR, which works with $A$ itself, keeps about ' + (16 - k) + '.']),
+        hint: 'Forming AᵀA squares the condition number.', _d: { k: kind, n: k }
+      };
       return {
         q: 'A least-squares problem has $\\kappa_2(A) = 10^{' + k + '}$. About how many significant digits can be lost to round-off (in double precision) if we solve the normal equations $A^{T}A\\mathbf{x} = A^{T}\\mathbf{b}$ instead of using QR?',
         a: num(2 * k, { form: 'int' }),
@@ -2584,3 +2591,133 @@
   });
 
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
+   generator still has few different problems at a level sometimes asks the same skill in another form, built only from
+   problems that generator made, so every answer is the generator's own:
+   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+     classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
+     checker rejects it;
+   - two at once: two different short questions of the topic, answered together.
+   Topics whose generator already varies a lot at a level are left as they are. Placed after the generators and
+   registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'num', VAR = {};
+  // how often another form is used: never when the topic's own generator already varies a lot at this level, up to
+  // half the time when it has few different questions (counted once per topic and level from 40 fixed seeds)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 37 ? 0 : VAR[key] >= 30 ? 0.3 : VAR[key] >= 20 ? 0.45 : 0.55;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
+  // a nearby wrong answer for a number or an expression, or null
+  function wrongFor(R, a) {
+    var v = String(ML.answerValue(a)), cands = [], m;
+    if (a.t === 'num') {
+      if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
+      else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
+      else if (/^-?\d+\.\d+$/.test(v)) { var x = +v, dp = v.split('.')[1].length, st = Math.pow(10, -Math.min(dp, 2)); cands = [x + st, x - st, -x, x * 10, x / 10].map(function (y) { return ML.util.numStr(ML.util.round(y, dp + 1)); }); }
+      else return null;
+    } else if (a.t === 'expr') {
+      if (v.length > 60) return null;
+      if (/ \+ /.test(v)) cands.push(v.replace(' + ', ' - '));
+      if (/ - /.test(v)) cands.push(v.replace(' - ', ' + '));
+      if ((m = /(^|[^\d.^])(\d+)(?![\d.])/.exec(v)) && !/\^$/.test(v.slice(0, m.index + m[1].length))) cands.push(v.slice(0, m.index) + m[1] + (+m[2] + 1) + v.slice(m.index + m[0].length));
+      if (!cands.length) return null;
+    } else return null;
+    var nv = function (s) { var mm = /^(-?\d+)\/(\d+)$/.exec(s); return mm ? mm[1] / mm[2] : /^-?\d+(\.\d+)?$/.test(s) ? +s : null; }, v0 = nv(v);
+    cands = R.shuffle(cands.filter(function (c, i, all) { var x = nv(c); return c !== v && all.indexOf(c) === i && (x === null || v0 === null || (Math.abs(x - v0) >= 0.01 * Math.max(Math.abs(v0), 1e-12) && (v0 <= 0 || x > 0) && (v0 <= 0 || v0 > 1 || x <= 1))); })); // a believable slip: the same sign, and at most 1 when the right answer is
+    for (var i = 0; i < cands.length; i++) if (okAns(a, cands[i]) === false) return cands[i];
+    return null;
+  }
+  function checkable(p) {
+    var a = p.a;
+    if (!a || p.unit || (a.form && a.form !== 'int' && a.form !== 'frac' && a.form !== 'simplest')) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bclassmate\b/i.test(txt(p.q))) return false;
+    if (a.t === 'num' || a.t === 'expr') return okAns(a, ML.answerValue(a)) === true;
+    if (a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    return true;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || ['mc', 'tf', 'num'].indexOf(p.a.t) < 0) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= 300 && !/<(table|svg|img|canvas|ol|ul)\b|\$\$|\\begin\{/i.test(p.q);
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), shown, good;
+    if (a.t === 'mc') {
+      var k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+      shown = a.choices[k]; good = a.choices[a.v];
+    } else {
+      good = ML.answerShow(a);
+      var w = right ? null : wrongFor(R, a);
+      if (!right && w === null) return null;
+      shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
+      if (!shown || /undefined|NaN/.test(shown)) return null;
+    }
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var out = { q: '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q + '</li><li>' + p2.q + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + (p.steps || [''])[0]].concat((p.steps || []).slice(1), ['Question 2: ' + (p2.steps || [''])[0]], (p2.steps || []).slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), mode = ctx && ctx.mode;
+      if (!p || !p.a || !ML.check || !ML.answerShow || !R.chance(share(id, base, ctx))) return p;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check', 'check');
+      if (pairable(p, true)) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = null;
+      try { out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base); } catch (e) { out = null; }
+      return out || p;
+    };
+    fn._forms = true;
+    fn._base = base; // the topic's own generator (for tests)
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

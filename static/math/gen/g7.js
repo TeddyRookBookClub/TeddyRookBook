@@ -902,7 +902,11 @@
     if (L === 1) { a = q(-R.int(1, 15)); b = q(R.int(1, 15)); if (R.coin()) { var t = a; a = b; b = t; } }
     else if (L === 2) { a = q(R.nz(-30, 30)); b = q(R.intNot(-30, 30, [0, a.num()])); }
     var dec3 = R.coin(), mx = L === 3 ? shower(dec3) : mxAll;
-    if (L === 3) { a = q(R.pick(dec3 ? ['-3.5', '-1.25', '2.75', '-7.5', '4.5'] : ['-2/3', '-5/4', '7/2', '-9/4', '5/6'])); b = q(R.pick(dec3 ? ['2.5', '-6.25', '-0.5', '5.5', '1.75'] : ['1/3', '3/4', '-1/2', '-11/4', '5/2'])); if (a.eq(b)) b = b.add(3); }
+    if (L === 3) { // one negative and one other number: quarters as decimals, or thirds, halves and quarters as fractions
+      if (dec3) { a = q(-R.int(1, 40)).div(4); b = q(R.intNot(-12, 40, [0])).div(4); }
+      else { var dn3 = R.pick([2, 3, 4, 6]), dn4 = R.pick([2, 3, 4]); a = q(-R.int(1, 3 * dn3)).div(dn3); b = q(R.intNot(-2 * dn4, 3 * dn4, [0])).div(dn4); if (a.isInt()) a = a.sub(q(1).div(dn3 === 2 ? 2 : 3)); }
+      if (R.coin()) { var t3 = a; a = b; b = t3; }
+      if (a.eq(b)) b = b.add(3); }
     var dist = a.sub(b).abs();
     var shape = R.pickW(['points', 'temp', 'elev'], BL(ctx, [3, 1, 1], [2, 1, 1], [3, 1, 1]));
     var qs;
@@ -1133,15 +1137,15 @@
 
   G('g7.fractions-to-decimals', function (R, ctx) {
     var L = lv(ctx);
-    var shape = R.pickW(['term', 'rep', 'round', 'which', 'neg'], BL(ctx, [5, 4, 0, 0, 0], [3, 3, 2, 2, 1], [2, 3, 2, 2, 2]));
+    var shape = R.pickW(['term', 'rep', 'round', 'which', 'neg'], BL(ctx, [5, 4, 0, 0, 2], [3, 3, 2, 2, 1], [2, 3, 2, 2, 2]));
     if (shape === 'term' || shape === 'neg') {
-      var d = R.pick(BL(ctx, [2, 4, 5, 8, 10, 20, 25], [8, 16, 20, 25, 40, 50], [8, 16, 32, 40, 80, 125])), n;
+      var d = R.pick(BL(ctx, [2, 4, 5, 8, 10, 20, 25, 50], [8, 16, 20, 25, 40, 50], [8, 16, 32, 40, 80, 125])), n;
       do { n = R.int(1, d * (shape === 'neg' ? 3 : 1) - 1); } while (U.gcd(n, d) !== 1 && d > 2);
       if (U.gcd(n, d) !== 1) n = 1;
       var v = q(n).div(d), neg = shape === 'neg';
       var e = expand(v.n, v.d);
       return {
-        q: 'Write $' + (neg ? '-' : '') + '\\frac{' + n + '}{' + d + '}$ as a decimal.',
+        q: R.pick(['Write $' + (neg ? '-' : '') + '\\frac{' + n + '}{' + d + '}$ as a decimal.', nm(R) + ' wants to type $' + (neg ? '-' : '') + '\\frac{' + n + '}{' + d + '}$ into a calculator as a decimal. What decimal is it?']),
         a: { t: 'num', v: (neg ? '-' : '') + dd(v), form: 'dec' },
         steps: ['A fraction is a division: $' + n + ' \\div ' + d + '$.', 'Divide until the remainder is $0$: $' + n + ' \\div ' + d + ' = ' + dd(v) + '$.', (neg ? 'Keep the negative sign: $-' + dd(v) + '$. ' : '') + 'The division ends, so this is a terminating decimal. (After simplifying, the denominator ' + d + ' has only 2s and 5s as prime factors.)'],
         hint: 'Divide the numerator by the denominator. Add zeros after the decimal point as you go.',
@@ -2331,6 +2335,13 @@
     if (shape === 'num2word') {
       var opts = [['0', 0], ['0.1', 1], ['\\frac{1}{8}', 1], ['0.2', 1], ['\\frac{1}{2}', 2], ['0.5', 2], ['50\\%', 2], ['0.85', 3], ['\\frac{9}{10}', 3], ['0.75', 3], ['1', 4], ['100\\%', 4], ['0.05', 1], ['95\\%', 3]];
       var o = R.pick(opts);
+      if (R.chance(0.6)) { // a fresh value: a decimal, a percent or a fraction, with its word from where it sits on the scale
+        var pv = R.pick([0, 1, 2, 2, 3, 3, 4]), num0, den0, form = R.pick(['dec', 'pct', 'frac']);
+        if (pv === 0) { num0 = 0; den0 = 1; } else if (pv === 4) { num0 = 1; den0 = 1; } else if (pv === 2 && R.chance(0.3)) { num0 = 1; den0 = 2; }
+        else { den0 = form === 'frac' ? R.pick([5, 6, 7, 8, 9, 10, 12]) : 20; num0 = pv === 1 ? R.int(1, Math.floor(den0 * 0.3)) : R.int(Math.ceil(den0 * 0.7), den0 - 1); }
+        var val0 = num0 / den0, txt0 = num0 === 0 ? '0' : num0 === den0 ? '1' : form === 'frac' ? '\\frac{' + num0 + '}{' + den0 + '}' : form === 'pct' ? Math.round(val0 * 100) + '\\%' : String(+val0.toFixed(2));
+        o = [txt0, num0 === 0 ? 0 : num0 === den0 ? 4 : 2 * num0 === den0 ? 2 : val0 < 0.5 ? 1 : 3];
+      }
       return {
         q: 'An event has a probability of $' + o[0] + '$. Which word describes it best?',
         a: mcFixed(LIKELY, o[1]),

@@ -990,7 +990,7 @@
         hint: 'Look for a purpose and a how (by, through, so that).',
         steps: [['It names devices but no purpose; every text uses devices.', 'It retells what the text is about; it makes no claim about how it works.', 'It takes a side on the subject instead of explaining the writer’s choices.', 'It names the writer’s purpose and how the strategies serve it.'][k], 'So: ' + lc(AT_FLAW[k])] };
     }
-    var wr = ctx.level === 1 ? [t.list] : [t.list, t.sum, t.arg];
+    var wr = ctx.level === 1 ? [t.list, t.sum] : [t.list, t.sum, t.arg];
     return { q: P('Which is the strongest thesis for a rhetorical analysis?'), a: mc(t.good, wr),
       hint: 'It should name the purpose and say how the strategies serve it.',
       steps: [Q(t.good) + ' names the writer, the purpose and the main strategies, and says how they work.', 'A list of devices, a summary or an argument about the topic is not an analysis thesis.'] };
@@ -1012,7 +1012,7 @@
     var shape = ML.byLevel(ctx, 'plan', R.pick(['topic', 'plan']), R.pick(['topic', 'order']));
     if (shape === 'plan') {
       var a = R.pick(AE);
-      return { q: P('You are writing a rhetorical analysis of ' + a.text + '. Which plan for the body paragraphs is best?'), a: mc(a.good, ctx.level === 1 ? [a.appeal] : [a.appeal, a.sum]),
+      return { q: P('You are writing a rhetorical analysis of ' + a.text + '. Which plan for the body paragraphs is best?'), a: mc(a.good, ctx.level === 1 ? [R.pick([a.appeal, a.sum])] : [a.appeal, a.sum]),
         hint: 'Follow the writer’s moves, not the three appeals.',
         steps: [Q(a.good) + ' follows the writer’s moves, so the essay can show how they build.', 'Organizing by appeal breaks the text apart; retelling is summary, not analysis.'] };
     }
@@ -1350,7 +1350,7 @@
         steps: ['The original ends on filler, the quietest possible ending.', Q(we[1]) + ' ends on the point.', 'Moving the filler to the front still wastes words; cut it.'] };
     }
     var e = R.pick(EMPH);
-    return { q: P('Which version puts the most emphasis on <b>' + e.key + '</b>?'), a: mc(e.r, ctx.level === 1 ? [e.w[0]] : e.w),
+    return { q: P('Which version puts the most emphasis on <b>' + e.key + '</b>?'), a: mc(e.r, ctx.level === 1 ? R.sample(e.w, 1) : e.w),
       hint: 'The end of a sentence is its most emphatic position.',
       steps: ['Strunk’s Rule 18: place the emphatic words of a sentence at the end.', Q(e.r) + ' ends on ' + e.key.replace(/ \(.*\)$/, '') + '.', 'The other versions end on something less important.'] };
   });
@@ -1586,9 +1586,110 @@
         hint: 'Look for a specific change in what the writer does or thinks.',
         steps: [Q(x.r) + ' names a specific, believable change.', 'The others are general sayings that could end anyone’s essay.'] };
     }
-    var o = R.pick(CE_OPEN);
-    return { q: P('Which opening is more promising for a college application essay?'), a: mc(o.r, [o.w]),
+    var o = R.pick(CE_OPEN), o2 = R.pick(CE_OPEN.filter(function (y) { return y !== o; }));
+    return { q: P('Which opening is the most promising for a college application essay?'), a: mc(o.r, [o.w, o2.w]),
       hint: 'A specific moment, or a list of qualities and achievements?',
-      steps: [Q(o.r) + ' starts with a specific moment the writer can reflect on.', Q(o.w) + ' lists achievements or claims qualities that the rest of the application already shows.'] };
+      steps: [Q(o.r) + ' starts with a specific moment the writer can reflect on.', 'The others list achievements or claim qualities that the rest of the application already shows.'] };
   });
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen"): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - two at once: two different questions of the topic, answered together (short questions only, at most one of them with
+     a picture, which then comes first; not in the courses for young children, whose answer box for two parts would
+     also show a keypad button they don't need).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'rhet', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf')) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

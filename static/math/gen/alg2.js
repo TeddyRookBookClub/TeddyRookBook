@@ -634,14 +634,14 @@
   G('alg2.imaginary-unit', function (R, ctx) {
     var kind = R.pick(L(ctx, ['root', 'pow', 'square'], ['root', 'pow', 'prod', 'root2'], ['prod', 'pow2', 'root2', 'prod']));
     if (kind === 'root' || kind === 'root2') {
-      var k = R.int(2, 12), m = kind === 'root2' ? R.pick([2, 3, 5, 6, 7]) : 1, n = k * k * m, neg = R.chance(0.25);
+      var k = R.int(2, kind === 'root2' ? 12 : 20), m = kind === 'root2' ? R.pick([2, 3, 5, 6, 7, 10, 11]) : 1, n = k * k * m, neg = R.chance(0.25);
       var v = (neg ? '-' : '') + (m === 1 ? k + 'i' : k + '*sqrt(' + m + ')*i'), tex = (neg ? '-' : '') + (m === 1 ? k + 'i' : k + '\\sqrt{' + m + '}\\,i');
       return { q: 'Simplify $' + (neg ? '-' : '') + '\\sqrt{-' + n + '}$.', a: { t: 'num', v: v, form: 'simplest' },
         steps: ['Split off $-1$: $\\sqrt{-' + n + '} = \\sqrt{' + n + '} \\cdot \\sqrt{-1} = \\sqrt{' + n + '}\\,i$.', m === 1 ? '$\\sqrt{' + n + '} = ' + k + '$.' : 'Simplify the root: $\\sqrt{' + n + '} = \\sqrt{' + (k * k) + ' \\cdot ' + m + '} = ' + k + '\\sqrt{' + m + '}$.', 'So the answer is $' + tex + '$.'],
         hint: 'Write $\\sqrt{-' + n + '}$ as $\\sqrt{' + n + '} \\cdot i$.', chk: { val: (neg ? '-' : '') + 'sqrt(-' + n + ')' } };
     }
     if (kind === 'pow' || kind === 'pow2') {
-      var e = R.int(kind === 'pow' ? 5 : 20, kind === 'pow' ? 30 : 150), rr = e % 4, val = ['1', 'i', '-1', '-i'][rr];
+      var e = R.int(kind === 'pow' ? 5 : 20, kind === 'pow' ? 99 : 250), rr = e % 4, val = ['1', 'i', '-1', '-i'][rr];
       if (kind === 'pow2' && R.coin()) { var e2 = R.int(3, 40), tot = e + e2, r2 = tot % 4, v2 = ['1', 'i', '-1', '-i'][r2];
         return { q: 'Simplify $i^{' + e + '} \\cdot i^{' + e2 + '}$.', a: { t: 'num', v: v2 },
           steps: ['Add exponents: $i^{' + e + '} \\cdot i^{' + e2 + '} = i^{' + tot + '}$.', 'Powers of $i$ repeat every 4: $i^{4} = 1$. Divide ' + tot + ' by 4: remainder ' + r2 + '.', '$i^{' + tot + '} = i^{' + r2 + '} = ' + ['1', 'i', '-1', '-i'][r2] + '$.'], hint: 'Combine into one power, then use $i^{4} = 1$.' };
@@ -651,7 +651,7 @@
         hint: 'Find the remainder when ' + e + ' is divided by 4.' };
     }
     if (kind === 'square') {
-      var b = R.int(2, 9), sg = R.pick([1, -1]);
+      var b = R.int(2, 15), sg = R.pick([1, -1]);
       return { q: 'Simplify $(' + (sg < 0 ? '-' : '') + b + 'i)^{2}$.', a: { t: 'num', v: String(-b * b) },
         steps: ['Square each factor: $(' + (sg < 0 ? '-' : '') + b + ')^{2} \\cdot i^{2} = ' + (b * b) + ' \\cdot i^{2}$.', 'Replace $i^{2}$ with $-1$: $' + (b * b) + '(-1) = ' + (-b * b) + '$.'], hint: 'Use $i^2 = -1$.' };
     }
@@ -716,7 +716,7 @@
         steps: ['Compute the discriminant: $b^{2} - 4ac = ' + T.p(B) + '^{2} - 4 \\cdot ' + T.p(A) + ' \\cdot ' + T.p(Cc) + ' = ' + D + '$.', D > 0 ? 'Positive: two real solutions.' : D === 0 ? 'Zero: one real (double) solution.' : 'Negative: its square root is imaginary, so there are two complex conjugate solutions.'],
         hint: 'Look at the sign of $b^2 - 4ac$.' };
     }
-    if (kind === 'pure') { var k = R.int(2, 10); a = R.pick([1, 1, 2, 3]); polyc = P([a * k * k, 0, a]);
+    if (kind === 'pure') { var k = R.int(2, 12); a = R.pick([1, 1, 2, 3, 4, 5]); polyc = P([a * k * k, 0, a]);
       return { q: 'Solve $' + ptex(polyc) + ' = 0$.', a: { t: 'set', v: [k + 'i', '-' + k + 'i'] },
         steps: [(a === 1 ? '' : 'Divide by ' + a + ': $x^{2} + ' + (k * k) + ' = 0$. ') + 'Subtract: $x^{2} = -' + (k * k) + '$.', 'Take square roots: $x = \\pm\\sqrt{-' + (k * k) + '} = \\pm ' + k + 'i$.'],
         hint: 'Isolate $x^2$, then take the square root of a negative number.', chk: { zero: pplain(polyc), n: 2 } };
@@ -739,7 +739,7 @@
         steps: ['Quadratic formula with $a = 1$, $b = ' + bh + '$, $c = ' + ch + '$: discriminant $' + T.p(bh) + '^{2} - 4(' + ch + ') = ' + (-Dn) + '$.', '$\\sqrt{' + (-Dn) + '} = ' + T.sqrt(Dn) + 'i$.', '$x = \\frac{' + (-bh) + ' \\pm ' + T.sqrt(Dn) + 'i}{2} = ' + qt(reQ) + ' \\pm ' + imT + 'i$.'],
         hint: 'Use the quadratic formula; the discriminant is negative.', chk: { zero: pplain(polyc), n: 2 } };
     }
-    p = R.int(-5, 5); qv = R.int(1, 5); a = kind === 'scaled' ? R.pick([2, 3, -1, -2]) : 1;
+    p = R.int(-7, 7); qv = R.int(1, 7); a = kind === 'scaled' ? R.pick([2, 3, -1, -2]) : 1;
     polyc = P([a * (p * p + qv * qv), -2 * a * p, a]);
     roots = [cplain(C(p, qv)), cplain(C(p, -qv))];
     var bq = -2 * a * p, cq = a * (p * p + qv * qv), Dd = bq * bq - 4 * a * cq;
@@ -1025,8 +1025,8 @@
   });
 
   G('alg2.sum-difference-cubes', function (R, ctx) {
-    var kind = R.pick(L(ctx, ['basic', 'basic', 'mid'], ['basic', 'coef', 'mid'], ['gcf', 'coef', 'two', 'gcf']));
-    var a = kind === 'basic' || kind === 'mid' && lvl(ctx) === 1 ? 1 : R.pick([2, 3, 4, 5]), b = R.int(1, 6); while (U.gcd(a, b) > 1) b++;
+    var kind = R.pick(L(ctx, ['basic', 'basic', 'mid'], ['basic', 'coef', 'mid', 'two'], ['gcf', 'coef', 'two', 'gcf']));
+    var a = (kind === 'basic' || kind === 'mid') && lvl(ctx) === 1 ? R.pick([1, 1, 1, 2, 3]) : kind === 'basic' ? R.pick([1, 1, 2, 3, 4, 5]) : R.pick([2, 3, 4, 5]), b = R.int(1, a === 1 ? 12 : 7); while (U.gcd(a, b) > 1) b++;
     var sum = R.coin(), sg = sum ? '+' : '-', s2 = sum ? -1 : 1, g = kind === 'gcf' ? R.pick([2, 3, 5]) : 1, two = kind === 'two', y = two ? 'y' : '';
     var A = a * a * a, B = b * b * b;
     var ax = T.mono(a, 'x'), by = two ? T.mono(b, 'y') : String(b);
@@ -1069,8 +1069,8 @@
         steps: ['Let $u = x^{2}$: $2u^{2}' + T.coef(-(m + 2 * nn), 'u', false) + T.signed(m * nn) + '$.', 'Factor the quadratic in $u$ (split the middle term using $ac = ' + (2 * m * nn) + '$): $(2u - ' + m + ')(u - ' + nn + ')$.', 'Put $x^{2}$ back: $(2x^{2} - ' + m + ')(x^{2} - ' + nn + ')$. Neither $' + m + '/2$ nor $' + nn + '$ is a perfect square, so this is complete over the integers.'],
         hint: 'Substitute $u = x^2$ and factor $2u^2 + bu + c$.', chk: { eqv: pplain(polyL) } };
     }
-    if (kind === 'both') { var s = R.sample([1, 4, 9, 16, 25], 2); u1 = s[0]; u2 = s[1]; }
-    else if (kind === 'one') { u1 = R.pick([1, 4, 9, 16]); u2 = -R.pick([1, 2, 3, 4, 5, 9]); }
+    if (kind === 'both') { var s = R.sample([1, 4, 9, 16, 25, 36, 49], 2); u1 = s[0]; u2 = s[1]; }
+    else if (kind === 'one') { u1 = R.pick([1, 4, 9, 16, 25, 36]); u2 = -R.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]); }
     else { u1 = R.pick([2, 3, 5, 6, 7]); u2 = R.pick([-1, -2, -3, -4, 10, 11]); if (u2 === u1) u2 = -5; }
     var polyQ = pmul(P([-u1, 0, 1]), P([-u2, 0, 1]));
     function part(u) { if (u > 0 && U.isSquare(u)) { var k = Math.round(Math.sqrt(u)); return { p: '(x-' + k + ')(x+' + k + ')', t: '(x - ' + k + ')(x + ' + k + ')', note: '$x^{2} - ' + u + '$ is a difference of squares' }; } return { p: '(x^2' + (u > 0 ? '-' + u : '+' + (-u)) + ')', t: '(x^{2}' + T.signed(-u) + ')', note: '$x^{2}' + T.signed(-u) + '$ does not factor over the integers' }; }
@@ -1249,15 +1249,21 @@
   });
 
   G('alg2.polynomial-identities', function (R, ctx) {
-    var kind = R.pick(L(ctx, ['triple', 'mental', 'missing'], ['triple', 'missing', 'tf', 'mental'], ['triple', 'tf', 'missing']));
-    if (kind === 'triple') { var x = R.int(2, 9), y = R.int(1, x - 1), A = x * x - y * y, B = 2 * x * y, Cc = x * x + y * y, s = [A, B].sort(function (u, v) { return u - v; });
+    var kind = R.pick(L(ctx, ['triple', 'mental', 'missing'], ['triple', 'missing', 'tf', 'mental'], ['triple', 'tf', 'missing', 'triple', 'missing']));
+    if (kind === 'triple') { var x = R.int(2, 12), y = R.int(1, x - 1), A = x * x - y * y, B = 2 * x * y, Cc = x * x + y * y, s = [A, B].sort(function (u, v) { return u - v; });
       return { q: 'The identity $(x^{2} + y^{2})^{2} = (x^{2} - y^{2})^{2} + (2xy)^{2}$ makes Pythagorean triples. Use $x = ' + x + '$ and $y = ' + y + '$. Give the triple $(a, b, c)$ with $a < b < c$.', a: { t: 'tuple', v: [String(s[0]), String(s[1]), String(Cc)] },
         steps: ['$x^{2} - y^{2} = ' + (x * x) + ' - ' + (y * y) + ' = ' + A + '$, $2xy = ' + B + '$, $x^{2} + y^{2} = ' + Cc + '$.', 'Check: $' + A + '^{2} + ' + B + '^{2} = ' + (A * A) + ' + ' + (B * B) + ' = ' + (Cc * Cc) + ' = ' + Cc + '^{2}$.', 'In order: $(' + s[0] + ', ' + s[1] + ', ' + Cc + ')$.'], hint: 'Compute $x^2 - y^2$, $2xy$ and $x^2 + y^2$.' }; }
-    if (kind === 'mental') { var c = R.pick([10, 20, 30, 40, 50, 60, 70, 80, 100]), d = R.int(1, 5), sq = R.coin(); var N = c + d;
+    if (kind === 'mental') { var c = R.pick([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 500]), d = R.int(1, 9), sq = R.coin(); var N = c + d;
       return sq ? { q: 'Use $(a + b)^{2} = a^{2} + 2ab + b^{2}$ to find $' + N + '^{2}$ without a calculator.', a: { t: 'num', v: String(N * N) },
         steps: ['$' + N + ' = ' + c + ' + ' + d + '$.', '$' + N + '^{2} = ' + c + '^{2} + 2(' + c + ')(' + d + ') + ' + d + '^{2} = ' + (c * c) + ' + ' + (2 * c * d) + ' + ' + (d * d) + ' = ' + (N * N) + '$.'], hint: 'Split ' + N + ' into ' + c + ' + ' + d + '.' }
         : { q: 'Use $(a + b)(a - b) = a^{2} - b^{2}$ to find $' + (c + d) + ' \\times ' + (c - d) + '$ without a calculator.', a: { t: 'num', v: String((c + d) * (c - d)) },
           steps: ['$(' + c + ' + ' + d + ')(' + c + ' - ' + d + ') = ' + c + '^{2} - ' + d + '^{2}$.', '$= ' + (c * c) + ' - ' + (d * d) + ' = ' + ((c + d) * (c - d)) + '$.'], hint: 'Both numbers are the same distance from ' + c + '.' }; }
+    if (kind === 'missing' && R.coin()) { var kq = R.int(2, 6), mt = R.int(0, 2), MM;
+      if (mt === 0) MM = ['(a + ' + kq + 'b)^{2} = a^{2} + \\square + ' + kq * kq + 'b^{2}', 2 * kq + '*a*b', 'Multiply $(a + ' + kq + 'b)(a + ' + kq + 'b)$: the two middle products are each $' + kq + 'ab$, so together $' + 2 * kq + 'ab$.'];
+      else if (mt === 1) MM = ['(' + kq + 'a - b)(' + kq + 'a + b) = ' + kq * kq + 'a^{2} - \\square', 'b^2', 'Difference of squares: $(' + kq + 'a)^{2} - b^{2} = ' + kq * kq + 'a^{2} - b^{2}$. The middle products $' + kq + 'ab$ and $-' + kq + 'ab$ cancel.'];
+      else MM = ['(a - ' + kq + 'b)^{2} = a^{2} - \\square + ' + kq * kq + 'b^{2}', 2 * kq + '*a*b', 'Multiply $(a - ' + kq + 'b)(a - ' + kq + 'b)$: the middle products are each $-' + kq + 'ab$, so the middle term is $-' + 2 * kq + 'ab$. The box holds $' + 2 * kq + 'ab$.'];
+      return { q: 'Fill in the box to make an identity (true for all values): $' + MM[0] + '$', a: { t: 'expr', v: MM[1], vars: ['a', 'b'] }, steps: [MM[2]], hint: 'Expand the side you know and compare.' };
+    }
     if (kind === 'missing') { var M = R.pick([
         ['(a + b)^{3} = a^{3} + 3a^{2}b + \\square + b^{3}', '3*a*b^2', 'Expand $(a + b)^{2}(a + b) = (a^{2} + 2ab + b^{2})(a + b)$; the $ab^{2}$ terms are $ab^{2} + 2ab^{2} = 3ab^{2}$.'],
         ['(a - b)^{3} = a^{3} - 3a^{2}b + \\square - b^{3}', '3*a*b^2', 'Replace $b$ with $-b$ in $(a + b)^{3}$: $3a(-b)^{2} = 3ab^{2}$.'],
@@ -1272,6 +1278,13 @@
       ]);
       return { q: 'Fill in the box to make an identity (true for all values): $' + M[0] + '$', a: { t: 'expr', v: M[1], vars: M[1].indexOf('c') >= 0 ? ['a', 'b', 'c', 'd'] : ['a', 'b'] }, steps: [M[2]], hint: 'Expand the side you know and compare.' }; }
     var TF = [['(x + y)^{2} = x^{2} + y^{2}', false, 'Try $x = y = 1$: the left side is 4, the right side is 2. It is missing $2xy$.'],
+      ['(x - y)^{2} = x^{2} - 2xy + y^{2}', true, 'Multiply $(x - y)(x - y)$: the two middle products are each $-xy$, giving $-2xy$.'],
+      ['(x + 2)^{2} = x^{2} + 4', false, 'Try $x = 1$: $9 \\ne 5$. The middle term $4x$ is missing.'],
+      ['x^{4} - 1 = (x - 1)(x + 1)(x^{2} + 1)', true, '$x^{4} - 1 = (x^{2} - 1)(x^{2} + 1)$, and $x^{2} - 1 = (x - 1)(x + 1)$.'],
+      ['(x - 1)(x^{2} + x + 1) = x^{3} - 1', true, 'Multiply out: $x^{3} + x^{2} + x - x^{2} - x - 1 = x^{3} - 1$.'],
+      ['(3x)^{2} = 3x^{2}', false, 'The square applies to the 3 too: $(3x)^{2} = 9x^{2}$.'],
+      ['(x + y)^{2} - (x - y)^{2} = 4xy', true, '$(x^{2} + 2xy + y^{2}) - (x^{2} - 2xy + y^{2}) = 4xy$.'],
+      ['x^{3} + 8 = (x + 2)(x^{2} - 2x + 4)', true, 'Sum of cubes with $a = x$ and $b = 2$: $(a + b)(a^{2} - ab + b^{2})$.'],
       ['(x + 1)^{3} - (x - 1)^{3} = 6x^{2} + 2', true, 'Expand: $$(x^{3} + 3x^{2} + 3x + 1) - (x^{3} - 3x^{2} + 3x - 1) = 6x^{2} + 2.$$'],
       ['x^{2} - y^{2} = (x - y)^{2}', false, 'Try $x = 2, y = 1$: $3 \\ne 1$. The correct factoring is $(x - y)(x + y)$.'],
       ['(x - y)(x^{2} + xy + y^{2}) = x^{3} - y^{3}', true, 'Multiply out: $x^{3} + x^{2}y + xy^{2} - x^{2}y - xy^{2} - y^{3} = x^{3} - y^{3}$.'],
@@ -1421,18 +1434,18 @@
       return { q: nf('Simplify $\\dfrac{\\frac{' + a + '}{x}' + T.signed(b) + '}{\\frac{' + c + '}{x}' + T.signed(d) + '}$.'), a: { t: 'expr', v: '(' + pplain(P([a, b])) + ')/(' + pplain(P([c, d])) + ')', vars: ['x'], form: 'simplified' },
         steps: ['The only denominator inside is $x$. Multiply the top and the bottom of the big fraction by $x$.', 'Top: $x\\left(\\frac{' + a + '}{x}' + T.signed(b) + '\\right) = ' + T.lin(b, 'x', a) + '$. Bottom: $' + T.lin(d, 'x', c) + '$.', 'Result: $\\frac{' + T.lin(b, 'x', a) + '}{' + T.lin(d, 'x', c) + '}$.'],
         hint: 'Multiply the numerator and denominator by $x$, the LCD of the small fractions.', chk: { eqv: '(' + a + '/x+(' + b + '))/(' + c + '/x+(' + d + '))' } }; }
-    if (kind === 't2') { var k = R.int(1, 6);
-      return { q: 'Simplify $\\dfrac{1 - \\frac{' + (k * k) + '}{x^{2}}}{1 + \\frac{' + k + '}{x}}$.', a: { t: 'expr', v: '(x-' + k + ')/x', vars: ['x'], form: 'simplified' },
-        steps: ['Multiply top and bottom by $x^{2}$, the LCD: $\\frac{x^{2} - ' + (k * k) + '}{x^{2} + ' + T.mono(k, 'x') + '}$.', 'Factor: $\\frac{(x - ' + k + ')(x + ' + k + ')}{x(x + ' + k + ')}$.', 'Cancel $(x + ' + k + ')$: $\\frac{x - ' + k + '}{x}$.'],
-        hint: 'Clear the small fractions by multiplying top and bottom by $x^2$.', chk: { eqv: '(1-' + (k * k) + '/x^2)/(1+' + k + '/x)' } }; }
-    if (kind === 't3') { var m = R.int(2, 9);
-      return { q: 'Simplify $\\dfrac{\\frac{1}{x} - \\frac{1}{' + m + '}}{x - ' + m + '}$.', a: { t: 'expr', v: '-1/(' + m + '*x)', vars: ['x'], form: 'simplified' },
-        steps: ['Combine the top: $\\frac{1}{x} - \\frac{1}{' + m + '} = \\frac{' + m + ' - x}{' + m + 'x}$.', 'Dividing by $x - ' + m + '$ is multiplying by $\\frac{1}{x - ' + m + '}$: $\\frac{' + m + ' - x}{' + m + 'x(x - ' + m + ')}$.', 'Since $' + m + ' - x = -(x - ' + m + ')$, cancel to get $-\\frac{1}{' + m + 'x}$.'],
-        hint: 'Write the top as a single fraction first, then watch for opposite factors.', chk: { eqv: '(1/x-1/' + m + ')/(x-' + m + ')' } }; }
-    var h = R.int(2, 5);
-    return { q: 'Simplify $\\dfrac{\\frac{1}{x + ' + h + '} - \\frac{1}{x}}{' + h + '}$.', a: { t: 'expr', v: '-1/(x*(x+' + h + '))', vars: ['x'], form: 'simplified' },
-      steps: ['Combine the top over $x(x + ' + h + ')$: $\\frac{x - (x + ' + h + ')}{x(x + ' + h + ')} = \\frac{-' + h + '}{x(x + ' + h + ')}$.', 'Divide by ' + h + ': $\\frac{-' + h + '}{' + h + 'x(x + ' + h + ')} = -\\frac{1}{x(x + ' + h + ')}$.'],
-      hint: 'Subtract the two small fractions first; be careful with $x - (x + ' + h + ')$.', chk: { eqv: '(1/(x+' + h + ')-1/x)/' + h } };
+    if (kind === 't2') { var k = R.int(1, 10), sp = R.coin(), s1 = sp ? '+' : '-', s2 = sp ? '-' : '+';
+      return { q: 'Simplify $\\dfrac{1 - \\frac{' + (k * k) + '}{x^{2}}}{1 ' + s1 + ' \\frac{' + k + '}{x}}$.', a: { t: 'expr', v: '(x' + s2 + k + ')/x', vars: ['x'], form: 'simplified' },
+        steps: ['Multiply top and bottom by $x^{2}$, the LCD: $\\frac{x^{2} - ' + (k * k) + '}{x^{2} ' + s1 + ' ' + T.mono(k, 'x') + '}$.', 'Factor: $\\frac{(x - ' + k + ')(x + ' + k + ')}{x(x ' + s1 + ' ' + k + ')}$.', 'Cancel $(x ' + s1 + ' ' + k + ')$: $\\frac{x ' + s2 + ' ' + k + '}{x}$.'],
+        hint: 'Clear the small fractions by multiplying top and bottom by $x^2$.', chk: { eqv: '(1-' + (k * k) + '/x^2)/(1' + s1 + k + '/x)' } }; }
+    if (kind === 't3') { var m = R.int(2, 12), nm = R.pick([1, 1, 2, 3, 5]), nmT = String(nm), mm = Q(-nm, m);
+      return { q: 'Simplify $\\dfrac{\\frac{' + nmT + '}{x} - \\frac{' + nmT + '}{' + m + '}}{x - ' + m + '}$.', a: { t: 'expr', v: '(' + mm.toPlain() + ')/x', vars: ['x'], form: 'simplified' },
+        steps: ['Combine the top: $\\frac{' + nmT + '}{x} - \\frac{' + nmT + '}{' + m + '} = \\frac{' + (nm === 1 ? '' : nm + '(') + m + ' - x' + (nm === 1 ? '' : ')') + '}{' + m + 'x}$.', 'Dividing by $x - ' + m + '$ is multiplying by $\\frac{1}{x - ' + m + '}$: $\\frac{' + (nm === 1 ? '' : nm + '(') + m + ' - x' + (nm === 1 ? '' : ')') + '}{' + m + 'x(x - ' + m + ')}$.', 'Since $' + m + ' - x = -(x - ' + m + ')$, cancel to get $-\\frac{' + nmT + '}{' + m + 'x}$' + (mm.den() !== m ? ' $= ' + qt(mm) + '\\cdot\\frac{1}{x}$' : '') + '.'],
+        hint: 'Write the top as a single fraction first, then watch for opposite factors.', chk: { eqv: '(' + nm + '/x-' + nm + '/' + m + ')/(x-' + m + ')' } }; }
+    var h = R.int(2, 9), nh = R.pick([1, 1, 2, 3, 4, 6]), nq = Q(nh, 1);
+    return { q: 'Simplify $\\dfrac{\\frac{' + nh + '}{x + ' + h + '} - \\frac{' + nh + '}{x}}{' + h + '}$.', a: { t: 'expr', v: '-' + nh + '/(x*(x+' + h + '))', vars: ['x'], form: 'simplified' },
+      steps: ['Combine the top over $x(x + ' + h + ')$: $\\frac{' + (nh === 1 ? '' : nh) + 'x - ' + (nh === 1 ? '' : nh) + '(x + ' + h + ')}{x(x + ' + h + ')} = \\frac{-' + nh * h + '}{x(x + ' + h + ')}$.', 'Divide by ' + h + ': $\\frac{-' + nh * h + '}{' + h + 'x(x + ' + h + ')} = -\\frac{' + nh + '}{x(x + ' + h + ')}$.'],
+      hint: 'Subtract the two small fractions first; be careful with the minus sign in front of the second numerator.', chk: { eqv: '(' + nh + '/(x+' + h + ')-' + nh + '/x)/' + h } };
   });
 
   G('alg2.rational-equations', function (R, ctx) {
@@ -1574,7 +1587,7 @@
   function rootTex(n, inside) { return n === 2 ? '\\sqrt{' + inside + '}' : '\\sqrt[' + n + ']{' + inside + '}'; }
   G('alg2.nth-roots', function (R, ctx) {
     var kind = R.pick(L(ctx, ['eval', 'eval', 'exp'], ['eval', 'solve', 'exp'], ['solve', 'exp', 'solve', 'eval']));
-    var C = [[3, 2], [3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [3, 10], [4, 2], [4, 3], [4, 4], [5, 2], [5, 3], [4, 5], [6, 2], [2, 11], [2, 12], [2, 13], [2, 15], [5, 4], [3, 9]];
+    var C = [[3, 2], [3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [3, 10], [4, 2], [4, 3], [4, 4], [5, 2], [5, 3], [4, 5], [6, 2], [2, 11], [2, 12], [2, 13], [2, 15], [5, 4], [3, 9], [2, 14], [2, 16], [2, 17], [2, 18], [2, 19], [2, 20], [2, 25], [3, 8], [3, 11], [3, 12], [4, 6], [4, 10], [5, 5], [6, 3], [7, 2], [3, 1], [4, 1], [5, 10], [3, 20], [2, 30]];
     var pc = R.pick(C), n = pc[0], b = pc[1], pw = Math.pow(b, n);
     if (kind === 'eval') { var neg = n % 2 === 1 && R.coin(), fracd = lvl(ctx) > 1 && R.chance(0.3) ? R.pick([2, 3]) : 1;
       var top = neg ? -pw : pw, val = Q(neg ? -b : b, fracd), inside = fracd === 1 ? String(top) : '\\frac{' + top + '}{' + Math.pow(fracd, n) + '}';
@@ -1582,7 +1595,7 @@
       return { q: 'Evaluate $' + rootTex(n, inside) + '$.', a: { t: 'num', v: val.toPlain() },
         steps: ['Look for the number whose ' + ord(n) + ' power is $' + inside + '$.', '$' + T.pow(T.p(qt(val)), n) + ' = ' + inside + '$' + (neg ? ' (an odd power keeps the negative sign)' : '') + '.', 'So $' + rootTex(n, inside) + ' = ' + qt(val) + '$.'],
         hint: 'Try small numbers: which one, raised to the ' + ord(n) + ' power, gives the inside?' }; }
-    if (kind === 'exp') { var pc2 = R.pick([[8, 3, 2], [27, 3, 2], [16, 4, 3], [32, 5, 2], [81, 4, 3], [125, 3, 2], [64, 3, 2], [64, 2, 3], [9, 2, 3], [4, 2, 5], [100, 2, 3], [16, 2, 3]]);
+    if (kind === 'exp') { var pc2 = R.pick([[8, 3, 2], [27, 3, 2], [16, 4, 3], [32, 5, 2], [81, 4, 3], [125, 3, 2], [64, 3, 2], [64, 2, 3], [9, 2, 3], [4, 2, 5], [100, 2, 3], [16, 2, 3], [1000, 3, 2], [36, 2, 3], [49, 2, 3], [25, 2, 3], [32, 5, 3], [243, 5, 2], [8, 3, 4], [16, 4, 5], [125, 3, 4], [27, 3, 4], [4, 2, 3], [8, 3, 5], [64, 6, 5], [216, 3, 2], [343, 3, 2], [81, 2, 3], [9, 2, 5], [1000, 3, 4]]);
       var base = pc2[0], den = pc2[1], num = pc2[2], r1 = Math.round(Math.pow(base, 1 / den)), negE = lvl(ctx) >= 2 && R.chance(0.35);
       var v = Q(Math.pow(r1, num)); if (negE) v = v.inv();
       return { q: 'Evaluate $' + base + '^{' + (negE ? '-' : '') + num + '/' + den + '}$.', a: { t: 'num', v: v.toPlain() },
@@ -1759,7 +1772,7 @@
       steps: ['$A = Pe^{rt}$ with $P = ' + P0 + '$, $r = ' + U.fix(r) + '$, $t = ' + t + '$.', '$A = ' + P0 + 'e^{' + rt + '} \\approx ' + T.money(dec(A, 2)) + '$.'], hint: 'Use $A = Pe^{rt}$.' };
   });
 
-  var LOGS = [[2, 2, 4], [2, 3, 8], [2, 4, 16], [2, 5, 32], [2, 6, 64], [3, 2, 9], [3, 3, 27], [3, 4, 81], [4, 2, 16], [4, 3, 64], [5, 2, 25], [5, 3, 125], [10, 2, 100], [10, 3, 1000], [10, 4, 10000], [6, 2, 36], [7, 2, 49]];
+  var LOGS = [[2, 2, 4], [2, 3, 8], [2, 4, 16], [2, 5, 32], [2, 6, 64], [3, 2, 9], [3, 3, 27], [3, 4, 81], [4, 2, 16], [4, 3, 64], [5, 2, 25], [5, 3, 125], [10, 2, 100], [10, 3, 1000], [10, 4, 10000], [6, 2, 36], [7, 2, 49], [2, 1, 2], [2, 7, 128], [2, 8, 256], [2, 10, 1024], [3, 1, 3], [3, 5, 243], [4, 4, 256], [5, 1, 5], [5, 4, 625], [6, 3, 216], [7, 3, 343], [8, 2, 64], [9, 2, 81], [9, 3, 729], [10, 1, 10], [10, 5, 100000], [10, 6, 1000000], [11, 2, 121], [12, 2, 144], [4, 1, 4], [8, 1, 8]];
   G('alg2.logarithms', function (R, ctx) {
     var kind = R.pick(L(ctx, ['basic', 'basic', 'mc'], ['basic', 'neg', 'frac', 'mc'], ['neg', 'frac', 'ln', 'frac']));
     var e = R.pick(LOGS), b = e[0], k = e[1], v = e[2];
@@ -1773,12 +1786,12 @@
       if (z) return { q: 'Evaluate $' + logb(b) + ' 1$.', a: { t: 'num', v: '0' }, steps: ['$' + b + '^{0} = 1$, so $' + logb(b) + ' 1 = 0$. (Every base works the same way.)'], hint: 'Any nonzero number to the power 0 is 1.' };
       return { q: 'Evaluate $' + logb(b) + ' \\frac{1}{' + v + '}$.', a: { t: 'num', v: String(-k) },
         steps: ['$\\frac{1}{' + v + '} = \\frac{1}{' + b + '^{' + k + '}} = ' + b + '^{-' + k + '}$.', 'So $' + logb(b) + ' \\frac{1}{' + v + '} = -' + k + '$.'], hint: 'A reciprocal is a negative power.' }; }
-    if (kind === 'frac') { var F = R.pick([[4, 2, '1/2', 2], [8, 2, '1/3', 2], [9, 3, '1/2', 3], [27, 3, '1/3', 3], [16, 2, '1/4', 2], [16, 4, '1/2', 2], [25, 5, '1/2', 5], [4, 8, '3/2', 2], [8, 4, '2/3', 2], [9, 27, '3/2', 3], [27, 9, '2/3', 3], [16, 8, '3/4', 2], [4, 32, '5/2', 2], [100, 10, '1/2', 10]]);
+    if (kind === 'frac') { var F = R.pick([[4, 2, '1/2', 2], [8, 2, '1/3', 2], [9, 3, '1/2', 3], [27, 3, '1/3', 3], [16, 2, '1/4', 2], [16, 4, '1/2', 2], [25, 5, '1/2', 5], [4, 8, '3/2', 2], [8, 4, '2/3', 2], [9, 27, '3/2', 3], [27, 9, '2/3', 3], [16, 8, '3/4', 2], [4, 32, '5/2', 2], [100, 10, '1/2', 10], [32, 2, '1/5', 2], [32, 4, '2/5', 2], [64, 2, '1/6', 2], [64, 4, '1/3', 2], [64, 8, '1/2', 2], [81, 3, '1/4', 3], [81, 9, '1/2', 3], [125, 5, '1/3', 5], [49, 7, '1/2', 7], [1000, 10, '1/3', 10], [8, 32, '5/3', 2], [16, 32, '5/4', 2], [27, 81, '4/3', 3], [125, 25, '2/3', 5], [36, 6, '1/2', 6], [216, 6, '1/3', 6], [343, 7, '1/3', 7], [32, 8, '3/5', 2]]);
       var cb = F[3], eA = Math.round(Math.log(F[0]) / Math.log(cb)), eB = Math.round(Math.log(F[1]) / Math.log(cb));
       return { q: 'Evaluate $\\log_{' + F[0] + '} ' + F[1] + '$.', a: { t: 'num', v: F[2] },
         steps: ['Write both numbers as powers of ' + cb + ': $' + F[0] + ' = ' + cb + '^{' + eA + '}$ and $' + F[1] + ' = ' + cb + '^{' + eB + '}$.', 'If $' + F[0] + '^{x} = ' + F[1] + '$, then $' + cb + '^{' + eA + 'x} = ' + cb + '^{' + eB + '}$, so $' + eA + 'x = ' + eB + '$ and $x = ' + qt(q(F[2])) + '$.', 'Check: $' + F[0] + '^{' + F[2] + '} = ' + F[1] + '$.'],
         hint: 'Write both numbers as powers of the same small base.', chk: { val: 'log(' + F[1] + ')/log(' + F[0] + ')' } }; }
-    var kk = R.intNot(-4, 7, [0, 1]); return { q: 'Evaluate $\\ln e^{' + kk + '}$.', a: { t: 'num', v: String(kk) },
+    var kk = R.intNot(-9, 12, [0, 1]); return { q: 'Evaluate $\\ln e^{' + kk + '}$.', a: { t: 'num', v: String(kk) },
       steps: ['$\\ln$ is $\\log_{e}$. It asks: $e$ to what power gives $e^{' + kk + '}$?', 'The answer is the exponent, $' + kk + '$.'], hint: '$\\ln$ undoes $e$ to a power.' };
   });
 
@@ -1801,14 +1814,19 @@
   G('alg2.log-properties', function (R, ctx) {
     var kind = R.pick(L(ctx, ['eval', 'pq', 'tf'], ['pq', 'eval', 'cond', 'tf'], ['pq', 'cond', 'pq', 'eval']));
     if (kind === 'pq') {
-      var e2 = R.int(0, 3), e3 = R.int(0, 2); if (e2 + e3 < 2) { e2 = 2; e3 = R.int(0, 1) ? 1 : e3; }
+      var PP = R.pick([[2, 3], [2, 3], [2, 5], [3, 5], [2, 7]]), P1 = PP[0], P2 = PP[1], e2 = R.int(0, P1 === 2 ? 3 : 2), e3 = R.int(0, 2); if (e2 + e3 < 2) { e2 = 2; e3 = R.int(0, 1) ? 1 : e3; }
       var form = R.pick(e2 && e3 ? ['prod', 'quot', lvl(ctx) === 3 ? 'sqrt' : 'prod'] : ['prod', lvl(ctx) === 3 ? 'sqrt' : 'prod']), ln = R.coin() ? '\\log_{b}' : '\\log';
-      var prod = Math.pow(2, e2) * Math.pow(3, e3), argT, exprP, ansT, st1;
-      if (form === 'quot') { argT = '\\frac{' + Math.pow(2, e2) + '}{' + Math.pow(3, e3) + '}'; exprP = mterm(e2, 'p') + '-' + mterm(e3, 'q'); ansT = T.terms([[e2, 'p'], [-e3, 'q']]); st1 = 'Quotient rule: $' + ln + ' ' + Math.pow(2, e2) + ' - ' + ln + ' ' + Math.pow(3, e3) + '$, and $' + Math.pow(2, e2) + ' = 2^{' + e2 + '}$, $' + Math.pow(3, e3) + ' = 3^{' + e3 + '}$.'; }
-      else { argT = form === 'sqrt' ? '\\sqrt{' + prod + '}' : String(prod); exprP = [e2 ? mterm(e2, 'p') : '', e3 ? mterm(e3, 'q') : ''].filter(Boolean).join('+'); if (form === 'sqrt') exprP = '(' + exprP + ')/2'; ansT = T.terms([[e2, 'p'], [e3, 'q']]); st1 = 'Factor: $' + prod + ' = ' + [e2 ? '2^{' + e2 + '}' : '', e3 ? '3^{' + e3 + '}' : ''].filter(Boolean).join(' \\cdot ') + '$. Product rule: add the logs of the factors.'; }
-      return { q: 'Let $' + ln + ' 2 = p$ and $' + ln + ' 3 = q$. Write $' + ln + ' ' + argT + '$ in terms of $p$ and $q$.', a: { t: 'expr', v: exprP, vars: ['p', 'q'] },
-        steps: [st1, 'Power rule: ' + [e2 ? '$' + ln + ' 2^{' + e2 + '} = ' + T.mono(e2, 'p') + '$' : '', e3 ? '$' + ln + ' 3^{' + e3 + '} = ' + T.mono(e3, 'q') + '$' : ''].filter(Boolean).join(' and ') + '. So $' + ln + ' ' + (form === 'sqrt' ? prod : argT) + ' = ' + ansT + '$.', form === 'sqrt' ? 'A square root is the power $\\frac{1}{2}$, so halve it: $\\frac{' + ansT + '}{2}$.' : 'Answer: $' + ansT + '$.'],
+      var prod = Math.pow(P1, e2) * Math.pow(P2, e3), argT, exprP, ansT, st1;
+      if (form === 'quot') { argT = '\\frac{' + Math.pow(P1, e2) + '}{' + Math.pow(P2, e3) + '}'; exprP = mterm(e2, 'p') + '-' + mterm(e3, 'q'); ansT = T.terms([[e2, 'p'], [-e3, 'q']]); st1 = 'Quotient rule: $' + ln + ' ' + Math.pow(P1, e2) + ' - ' + ln + ' ' + Math.pow(P2, e3) + '$, and $' + Math.pow(P1, e2) + ' = ' + P1 + '^{' + e2 + '}$, $' + Math.pow(P2, e3) + ' = ' + P2 + '^{' + e3 + '}$.'; }
+      else { argT = form === 'sqrt' ? '\\sqrt{' + prod + '}' : String(prod); exprP = [e2 ? mterm(e2, 'p') : '', e3 ? mterm(e3, 'q') : ''].filter(Boolean).join('+'); if (form === 'sqrt') exprP = '(' + exprP + ')/2'; ansT = T.terms([[e2, 'p'], [e3, 'q']]); st1 = 'Factor: $' + prod + ' = ' + [e2 ? P1 + '^{' + e2 + '}' : '', e3 ? P2 + '^{' + e3 + '}' : ''].filter(Boolean).join(' \\cdot ') + '$. Product rule: add the logs of the factors.'; }
+      return { q: 'Let $' + ln + ' ' + P1 + ' = p$ and $' + ln + ' ' + P2 + ' = q$. Write $' + ln + ' ' + argT + '$ in terms of $p$ and $q$.', a: { t: 'expr', v: exprP, vars: ['p', 'q'] },
+        steps: [st1, 'Power rule: ' + [e2 ? '$' + ln + ' ' + P1 + '^{' + e2 + '} = ' + T.mono(e2, 'p') + '$' : '', e3 ? '$' + ln + ' ' + P2 + '^{' + e3 + '} = ' + T.mono(e3, 'q') + '$' : ''].filter(Boolean).join(' and ') + '. So $' + ln + ' ' + (form === 'sqrt' ? prod : argT) + ' = ' + ansT + '$.', form === 'sqrt' ? 'A square root is the power $\\frac{1}{2}$, so halve it: $\\frac{' + ansT + '}{2}$.' : 'Answer: $' + ansT + '$.'],
         hint: 'Write the number using 2s and 3s, then use the product, quotient and power rules.'}; }
+    if (kind === 'eval' && R.coin()) { // log_b(B) + log_b(b^k / B) = k  or  log_b(B b^k) - log_b(B) = k
+      var bb = R.pick([2, 3, 5, 10]), kk = R.int(1, bb === 10 ? 3 : 4), BB = R.pick([3, 5, 6, 7, 11, 12].filter(function (z) { return z % bb; })), dif = R.coin(), lb = bb === 10 ? '\\log' : '\\log_{' + bb + '}', pw = Math.pow(bb, kk);
+      var gq = Q(pw, BB), exT = dif ? lb + ' ' + T.commas(BB * pw) + ' - ' + lb + ' ' + BB : lb + ' ' + BB + ' + ' + lb + ' ' + qt(gq);
+      return { q: 'Evaluate without a calculator: $' + exT + '$.', a: { t: 'num', v: String(kk) }, steps: ['Combine into a single logarithm using the properties.', '$' + (dif ? lb + '\\frac{' + T.commas(BB * pw) + '}{' + BB + '}' : lb + '\\left(' + BB + ' \\cdot ' + qt(gq) + '\\right)') + ' = ' + lb + ' ' + T.commas(pw) + ' = ' + kk + '$, since $' + bb + '^{' + kk + '} = ' + T.commas(pw) + '$.'], hint: 'Sums of logs are logs of products; differences are logs of quotients.', chk: { val: kk, eqv: dif ? 'log(' + BB * pw + ')/log(' + bb + ')-log(' + BB + ')/log(' + bb + ')' : 'log(' + BB + ')/log(' + bb + ')+log(' + pw + '/' + BB + ')/log(' + bb + ')' } };
+    }
     if (kind === 'eval') { var E = R.pick([
         ['\\log_{2} 40 - \\log_{2} 5', '3', '$\\log_{2} \\frac{40}{5} = \\log_{2} 8 = 3$.'], ['\\log_{3} 6 + \\log_{3} \\frac{9}{2}', '3', '$\\log_{3}\\left(6 \\cdot \\frac{9}{2}\\right) = \\log_{3} 27 = 3$.'],
         ['2\\log 5 + \\log 4', '2', '$\\log 5^{2} + \\log 4 = \\log(25 \\cdot 4) = \\log 100 = 2$.'], ['\\log_{6} 4 + \\log_{6} 9', '2', '$\\log_{6} 36 = 2$.'],
@@ -1821,7 +1839,13 @@
       var qx = a + '\\log x - \\log y ' + (sum ? '+ ' : '- ') + c + '\\log z';
       return { q: 'Write as a single logarithm: $' + qx + '$', a: mc(correct, [sum ? '$\\log(' + a + 'x - y + ' + c + 'z)$' : '$\\log(' + a + 'x - y - ' + c + 'z)$', sum ? '$\\log\\left(\\frac{' + a + 'x \\cdot ' + c + 'z}{y}\\right)$' : '$\\log\\left(\\frac{' + a + 'x}{' + c + 'yz}\\right)$', sum ? '$\\log\\left(\\frac{x^{' + a + '}}{y z^{' + c + '}}\\right)$' : '$\\log\\left(\\frac{x^{' + a + '}z^{' + c + '}}{y}\\right)$']),
         steps: ['Coefficients become exponents: $\\log x^{' + a + '} - \\log y ' + (sum ? '+' : '-') + ' \\log z^{' + c + '}$.', 'Added logs multiply; subtracted logs divide.', 'Result: ' + correct + '.'], hint: 'First move each coefficient up as an exponent.' }; }
-    var TF = [['\\log(a + b) = \\log a + \\log b', false, 'False. The product rule is $\\log(ab) = \\log a + \\log b$. With $a = b = 10$: $\\log 20 \\approx 1.3$, but $\\log 10 + \\log 10 = 2$.'],
+    var TF = [['\\log a - \\log b = \\log\\frac{a}{b}', true, 'True: dividing powers of 10 subtracts their exponents.'],
+      ['\\log(a - b) = \\log a - \\log b', false, 'False. The quotient rule is $\\log\\frac{a}{b} = \\log a - \\log b$. With $a = 20$, $b = 10$: $\\log 10 = 1$, but $\\log 20 - \\log 10 = \\log 2 \\approx 0.3$.'],
+      ['\\log \\sqrt{a} = \\frac{1}{2}\\log a', true, 'True: $\\sqrt{a} = a^{1/2}$, and the power rule brings down $\\frac{1}{2}$.'],
+      ['\\log(10a) = 1 + \\log a', true, 'True: $\\log(10a) = \\log 10 + \\log a = 1 + \\log a$.'],
+      ['\\log(a^{2}b) = 2\\log a \\cdot \\log b', false, 'False. $\\log(a^{2}b) = 2\\log a + \\log b$: a product inside becomes a sum outside.'],
+      ['3\\log a = \\log(3a)', false, 'False. $3\\log a = \\log a^{3}$. With $a = 10$: $3 \\ne \\log 30 \\approx 1.48$.'],
+      ['\\log(a + b) = \\log a + \\log b', false, 'False. The product rule is $\\log(ab) = \\log a + \\log b$. With $a = b = 10$: $\\log 20 \\approx 1.3$, but $\\log 10 + \\log 10 = 2$.'],
       ['\\log(ab) = \\log a + \\log b', true, 'True: multiplying powers of 10 adds their exponents.'], ['\\log(a^{3}) = 3\\log a', true, 'True: $a^{3} = a \\cdot a \\cdot a$, and each factor adds $\\log a$.'],
       ['(\\log a)^{2} = 2\\log a', false, 'False. $2\\log a = \\log a^{2}$, which is different from $(\\log a)^{2}$. Try $a = 1000$: $(\\log 1000)^{2} = 9$, but $2\\log 1000 = 6$.'],
       ['\\frac{\\log a}{\\log b} = \\log a - \\log b', false, 'False. The quotient rule is $\\log\\frac{a}{b} = \\log a - \\log b$. A quotient of logs is something else (change of base).'],
@@ -1832,7 +1856,9 @@
 
   G('alg2.change-of-base', function (R, ctx) {
     var kind = R.pick(L(ctx, ['exact', 'exact', 'approx'], ['exact', 'approx', 'formula'], ['approx', 'exact', 'formula', 'approx']));
-    if (kind === 'exact') { var E = R.pick([[8, 32, '5/3', 2, 3, 5], [4, 32, '5/2', 2, 2, 5], [9, 27, '3/2', 3, 2, 3], [27, 9, '2/3', 3, 3, 2], [16, 8, '3/4', 2, 4, 3], [8, 16, '4/3', 2, 3, 4], [25, 125, '3/2', 5, 2, 3], [4, '1/8', '-3/2', 2, 2, -3], [32, 4, '2/5', 2, 5, 2], [9, '1/27', '-3/2', 3, 2, -3]]);
+    if (kind === 'exact') { var E = R.pick([[8, 32, '5/3', 2, 3, 5], [4, 32, '5/2', 2, 2, 5], [9, 27, '3/2', 3, 2, 3], [27, 9, '2/3', 3, 3, 2], [16, 8, '3/4', 2, 4, 3], [8, 16, '4/3', 2, 3, 4], [25, 125, '3/2', 5, 2, 3], [4, '1/8', '-3/2', 2, 2, -3], [32, 4, '2/5', 2, 5, 2], [9, '1/27', '-3/2', 3, 2, -3],
+      [16, 32, '5/4', 2, 4, 5], [32, 16, '4/5', 2, 5, 4], [27, 81, '4/3', 3, 3, 4], [81, 27, '3/4', 3, 4, 3], [125, 25, '2/3', 5, 3, 2], [49, 343, '3/2', 7, 2, 3], [343, 49, '2/3', 7, 3, 2], [100, 1000, '3/2', 10, 2, 3], [1000, 100, '2/3', 10, 3, 2], [4, 64, '3', 2, 2, 6], [8, '1/4', '-2/3', 2, 3, -2], [16, '1/8', '-3/4', 2, 4, -3], [27, '1/9', '-2/3', 3, 3, -2], [4, 128, '7/2', 2, 2, 7], [8, 128, '7/3', 2, 3, 7], [36, 216, '3/2', 6, 2, 3], [64, 16, '2/3', 2, 6, 4], [64, 32, '5/6', 2, 6, 5]]);
+      if (typeof E[1] === 'number' && R.chance(0.35)) E = [E[0], '1/' + E[1], E[2].charAt(0) === '-' ? E[2].slice(1) : '-' + E[2], E[3], E[4], -E[5]];
       var argT = typeof E[1] === 'string' ? '\\frac{1}{' + E[1].split('/')[1] + '}' : String(E[1]);
       return { q: 'Evaluate $\\log_{' + E[0] + '} ' + argT + '$ exactly.', a: { t: 'num', v: E[2] },
         steps: ['Change to base ' + E[3] + ': $\\log_{' + E[0] + '} ' + argT + ' = \\frac{\\log_{' + E[3] + '} ' + argT + '}{\\log_{' + E[3] + '} ' + E[0] + '}$.', '$\\log_{' + E[3] + '} ' + argT + ' = ' + E[5] + '$ and $\\log_{' + E[3] + '} ' + E[0] + ' = ' + E[4] + '$.', 'So the value is $\\frac{' + E[5] + '}{' + E[4] + '} = ' + qt(q(E[2])) + '$.'],
@@ -1861,18 +1887,18 @@
   });
 
   G('alg2.log-scales', function (R, ctx) {
-    var kind = R.pick(L(ctx, ['ph', 'db'], ['ph', 'db', 'richter', 'dbup'], ['dbup', 'phval', 'ph', 'richter']));
-    if (kind === 'ph') { var SUBS = [['Lemon juice', 2], ['Vinegar', 3], ['Tomato juice', 4], ['Black coffee', 5], ['Pure water', 7], ['Seawater', 8], ['A baking soda solution', 9], ['Household ammonia', 11]], two = R.sample(SUBS, 2).sort(function (u, v) { return u[1] - v[1]; }), p1 = two[0][1], p2 = two[1][1], d = p2 - p1;
+    var kind = R.pick(L(ctx, ['ph', 'db', 'phval', 'richter'], ['ph', 'db', 'richter', 'dbup'], ['dbup', 'phval', 'ph', 'richter']));
+    if (kind === 'ph') { var SUBS = [['Lemon juice', 2], ['Vinegar', 3], ['Tomato juice', 4], ['Black coffee', 5], ['Pure water', 7], ['Seawater', 8], ['A baking soda solution', 9], ['Milk of magnesia', 10], ['Household ammonia', 11], ['Soapy water', 12]], two = R.sample(SUBS, 2).sort(function (u, v) { return u[1] - v[1]; }), p1 = two[0][1], p2 = two[1][1], d = p2 - p1;
       return { q: two[0][0] + ' has a pH of about ' + p1 + ', and ' + two[1][0].charAt(0).toLowerCase() + two[1][0].slice(1) + ' has a pH of about ' + p2 + '. About how many times more acidic is ' + two[0][0].charAt(0).toLowerCase() + two[0][0].slice(1) + ' (how many times greater is its $[H^{+}]$)?', a: { t: 'num', v: String(Math.pow(10, d)) },
         steps: ['$\\text{pH} = -\\log[H^{+}]$, so $[H^{+}] = 10^{-\\text{pH}}$.', 'Ratio: $\\frac{10^{-' + p1 + '}}{10^{-' + p2 + '}} = 10^{' + d + '} = ' + Math.pow(10, d) + '$.', 'Each step of 1 in pH is a factor of 10. A lower pH is more acidic.'], hint: 'Each pH unit is a factor of 10.' }; }
     if (kind === 'phval') { var k = R.int(2, 12); return { q: 'A solution has $[H^{+}] = 10^{-' + k + '}$ moles per liter. What is its pH, using $\\text{pH} = -\\log[H^{+}]$?', a: { t: 'num', v: String(k) },
       steps: ['$\\log 10^{-' + k + '} = -' + k + '$.', '$\\text{pH} = -(-' + k + ') = ' + k + '$.'], hint: '$\\log 10^{n} = n$.' }; }
-    if (kind === 'db') { var dd = R.pick([10, 20, 30, 40, 50, 60, 70]); return { q: 'Sound level is $L = 10\\log\\frac{I}{I_0}$ decibels. One sound is ' + dd + ' dB louder than another. How many times greater is its intensity $I$?', a: { t: 'num', v: String(Math.pow(10, dd / 10)) },
+    if (kind === 'db') { var dd = R.pick([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]); return { q: 'Sound level is $L = 10\\log\\frac{I}{I_0}$ decibels. One sound is ' + dd + ' dB louder than another. How many times greater is its intensity $I$?', a: { t: 'num', v: String(Math.pow(10, dd / 10)) },
       steps: ['A difference of ' + dd + ' dB means $10\\log\\frac{I_1}{I_2} = ' + dd + '$.', 'So $\\log\\frac{I_1}{I_2} = ' + (dd / 10) + '$ and $\\frac{I_1}{I_2} = 10^{' + (dd / 10) + '} = ' + Math.pow(10, dd / 10) + '$.'], hint: 'Every 10 dB is a factor of 10 in intensity.' }; }
-    if (kind === 'dbup') { var f = R.pick([10, 100, 1000, 10000, 100000]), L0 = R.pick([20, 30, 40, 50, 60, 70, 80]); var add = 10 * Math.log10(f);
+    if (kind === 'dbup') { var f = R.pick([10, 100, 1000, 10000, 100000, 1000000]), L0 = R.pick([10, 20, 30, 40, 50, 60, 70, 80, 90]); var add = 10 * Math.log10(f);
       return { q: 'A sound is ' + L0 + ' dB. Its intensity is multiplied by ' + f + '. What is the new level, using $L = 10\\log\\frac{I}{I_0}$?', a: { t: 'num', v: String(L0 + add) }, unit: 'dB',
         steps: ['Multiplying $I$ by ' + f + ' adds $10\\log ' + f + ' = 10 \\cdot ' + Math.log10(f) + ' = ' + add + '$ decibels (product rule).', 'New level: $' + L0 + ' + ' + add + ' = ' + (L0 + add) + '$ dB.'], hint: 'Multiplying inside a log adds outside.' }; }
-    var m1 = R.int(2, 6), dm = R.int(1, 3);
+    var m1 = R.int(1, 7), dm = R.int(1, 4);
     return { q: 'On the Richter scale, each whole number means 10 times the ground motion (amplitude). How many times larger is the amplitude of a magnitude ' + (m1 + dm) + ' earthquake than a magnitude ' + m1 + ' one?', a: { t: 'num', v: String(Math.pow(10, dm)) },
       steps: ['$M = \\log\\frac{A}{A_0}$, so a difference of ' + dm + ' means a ratio of $10^{' + dm + '}$.', '$10^{' + dm + '} = ' + Math.pow(10, dm) + '$.'], hint: 'Each unit is a factor of 10.' };
   });
@@ -1925,19 +1951,22 @@
 
   G('alg2.exponential-log-models', function (R, ctx) {
     var kind = R.pick(L(ctx, ['half', 'halftime', 'double'], ['half', 'halftime', 'decayk', 'double'], ['decayk', 'halflog', 'double', 'halftime']));
-    if (kind === 'half') { var A0 = R.pick([80, 160, 200, 320, 400, 640]), h = R.pick([5, 8, 10, 12, 30]), m = R.int(1, 4), t = h * m, A = A0 / Math.pow(2, m);
+    if (kind === 'half') { var A0 = R.pick([80, 160, 200, 320, 400, 640, 96, 48, 1000, 800, 240, 480]), h = R.pick([5, 8, 10, 12, 30, 6, 15, 20, 25, 40]), m = R.int(1, 4), t = h * m, A = A0 / Math.pow(2, m);
       return { q: 'A substance has a half-life of ' + h + ' years. A sample starts at ' + A0 + ' grams. How much is left after ' + t + ' years?', a: { t: 'num', v: String(A) }, unit: 'grams',
         steps: ['$A = A_0\\left(\\frac{1}{2}\\right)^{t/h}$.', '$\\frac{t}{h} = \\frac{' + t + '}{' + h + '} = ' + m + '$ half-lives.', '$A = ' + A0 + '\\left(\\frac{1}{2}\\right)^{' + m + '} = ' + A + '$ grams.'], hint: 'How many half-lives fit into ' + t + ' years?' }; }
-    if (kind === 'halftime') { var h2 = R.pick([3, 6, 8, 10, 20]), m2 = R.int(2, 5), frac = Math.pow(2, m2);
+    if (kind === 'halftime') { var h2 = R.pick([2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 24, 30]), m2 = R.int(2, 6), frac = Math.pow(2, m2);
       return { q: 'A medicine has a half-life of ' + h2 + ' hours. How long until only $\\frac{1}{' + frac + '}$ of a dose remains?', a: { t: 'num', v: String(h2 * m2) }, unit: 'hours',
         steps: ['$\\frac{1}{' + frac + '} = \\left(\\frac{1}{2}\\right)^{' + m2 + '}$, so ' + m2 + ' half-lives must pass.', '$' + m2 + ' \\cdot ' + h2 + ' = ' + (h2 * m2) + '$ hours.'], hint: 'Write the fraction as a power of $\\frac{1}{2}$.' }; }
-    if (kind === 'double') { var rp = R.pick([2, 3, 4, 5, 6, 7, 8, 10]), dt = Math.log(2) / (rp / 100);
+    if (kind === 'double' && R.chance(0.4)) { var rq = R.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 12]), mt = R.pick([3, 4, 10]), mw = { 3: 'triples', 4: 'quadruples', 10: 'grows to 10 times its starting value' }[mt], tq = Math.log(mt) / (rq / 100), rqT = U.fix(rq / 100);
+      return { q: 'An investment grows continuously at ' + rq + '% per year ($A = Pe^{' + rqT + 't}$). How many years until it ' + mw + '? Round to two decimal places.', a: { t: 'num', v: String(dec(tq, 2)), tol: 0.011 }, unit: 'years',
+        steps: ['Set $A = ' + mt + 'P$: $' + mt + 'P = Pe^{' + rqT + 't}$, so $e^{' + rqT + 't} = ' + mt + '$.', 'Take $\\ln$: $' + rqT + 't = \\ln ' + mt + '$.', '$t = \\frac{\\ln ' + mt + '}{' + rqT + '} \\approx ' + dec(tq, 2) + '$ years.'], hint: 'Set $A = ' + mt + 'P$, then take $\\ln$.', chk: { val: 'ln(' + mt + ')/' + (rq / 100), valTol: 0.006 } }; }
+    if (kind === 'double') { var rp = R.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12]), dt = Math.log(2) / (rp / 100);
       return { q: 'An investment grows continuously at ' + rp + '% per year ($A = Pe^{' + U.fix(rp / 100) + 't}$). How many years until it doubles? Round to two decimal places.', a: { t: 'num', v: String(dec(dt, 2)), tol: 0.011 }, unit: 'years',
         steps: ['Doubling: $2P = Pe^{' + U.fix(rp / 100) + 't}$, so $e^{' + U.fix(rp / 100) + 't} = 2$.', 'Take $\\ln$: $' + U.fix(rp / 100) + 't = \\ln 2$.', '$t = \\frac{\\ln 2}{' + U.fix(rp / 100) + '} \\approx ' + dec(dt, 2) + '$ years. (This is behind the "rule of 70": $70 \\div ' + rp + ' \\approx ' + dec(70 / rp, 1) + '$.)'], hint: 'Set $A = 2P$, then take $\\ln$.', chk: { val: 'ln(2)/' + (rp / 100), valTol: 0.006 } }; }
-    if (kind === 'decayk') { var h3 = R.pick([5, 10, 20, 25, 50]), k = Math.log(2) / h3;
+    if (kind === 'decayk') { var h3 = R.pick([5, 10, 20, 25, 50, 2, 4, 8, 12, 15, 30, 40, 100]), k = Math.log(2) / h3;
       return { q: 'A substance decays by $A = A_0e^{-kt}$ and has a half-life of ' + h3 + ' days. Find $k$. Round to four decimal places.', a: { t: 'num', v: String(dec(k, 4)), tol: 0.00011 },
         steps: ['At one half-life, $A = \\frac{1}{2}A_0$: $\\frac{1}{2} = e^{-' + h3 + 'k}$.', 'Take $\\ln$: $\\ln\\frac{1}{2} = -' + h3 + 'k$, and $\\ln\\frac{1}{2} = -\\ln 2$.', '$k = \\frac{\\ln 2}{' + h3 + '} \\approx ' + dec(k, 4) + '$.'], hint: 'Use $A = \\frac{1}{2}A_0$ when $t = ' + h3 + '$.', chk: { val: 'ln(2)/' + h3, valTol: 0.00006 } }; }
-    var h4 = R.pick([5, 10, 30]), pct = R.pick([10, 20, 25, 30, 40]), tt = h4 * Math.log(pct / 100) / Math.log(0.5);
+    var h4 = R.pick([5, 10, 20, 30, 40, 50, 100]), pct = R.pick([5, 10, 15, 20, 25, 30, 40, 60, 75, 80]), tt = h4 * Math.log(pct / 100) / Math.log(0.5);
     return { q: 'A substance has a half-life of ' + h4 + ' years. How long until ' + pct + '% of it remains? Round to two decimal places.', a: { t: 'num', v: String(dec(tt, 2)), tol: 0.011 }, unit: 'years',
       steps: ['$' + U.fix(pct / 100) + ' = \\left(\\frac{1}{2}\\right)^{t/' + h4 + '}$.', 'Take logs: $\\ln ' + U.fix(pct / 100) + ' = \\frac{t}{' + h4 + '}\\ln\\frac{1}{2}$.', '$t = ' + h4 + ' \\cdot \\frac{\\ln ' + U.fix(pct / 100) + '}{\\ln 0.5} \\approx ' + dec(tt, 2) + '$ years.'], hint: 'Set up $(\\frac{1}{2})^{t/h}$ equal to the fraction left, then take logs.' };
   });
@@ -2040,15 +2069,15 @@
 
   G('alg2.geometric-series', function (R, ctx) {
     var kind = R.pick(L(ctx, ['int', 'sigma', 'tf'], ['int', 'frac', 'sigma', 'tf'], ['frac', 'save', 'sigma', 'int']));
-    if (kind === 'int') { var a = R.int(1, 5), r = R.pick([2, 3, -2]), n = R.int(5, r === 3 ? 6 : 8), S = a * (1 - Math.pow(r, n)) / (1 - r);
+    if (kind === 'int') { var a = R.int(1, 9), r = R.pick([2, 3, -2, -3, 4]), n = R.int(4, Math.abs(r) >= 3 ? 6 : 8), S = a * (1 - Math.pow(r, n)) / (1 - r);
       return { q: 'Find the sum of the first ' + n + ' terms: $' + a + T.signed(a * r) + T.signed(a * r * r) + ' + \\cdots$', a: { t: 'num', v: String(S) },
         steps: ['Geometric with $a = ' + a + '$ and $r = ' + r + '$; we want $n = ' + n + '$ terms.', '$S_{' + n + '} = \\frac{a(1 - r^{n})}{1 - r} = \\frac{' + a + '(1 - ' + T.pow(T.p(r), n) + ')}{1 - ' + T.p(r) + '} = \\frac{' + a + '(' + (1 - Math.pow(r, n)) + ')}{' + (1 - r) + '} = ' + S + '$.'],
         hint: 'Use $S_n = \\frac{a(1 - r^n)}{1 - r}$ with $n$ = the number of terms.', chk: { val: String((function () { var s = 0, t = a; for (var i = 0; i < n; i++) { s += t; t *= r; } return s; })()) } }; }
-    if (kind === 'frac') { var a2 = R.pick([16, 32, 64, 81, 27]), r2 = a2 % 3 === 0 ? Q(1, 3) : Q(1, 2), n2 = R.int(4, 6), S2 = q(a2).mul(Q(1).sub(r2.pow(n2))).div(Q(1).sub(r2));
+    if (kind === 'frac') { var a2 = R.pick([16, 32, 64, 81, 27, 128, 243, 48, 96, 54, 162]), r2 = a2 % 3 === 0 ? Q(R.pick([1, 1, -1]), 3) : Q(R.pick([1, 1, -1]), 2), n2 = R.int(4, 6), S2 = q(a2).mul(Q(1).sub(r2.pow(n2))).div(Q(1).sub(r2));
       var terms = []; for (var i = 0; i < 3; i++) terms.push(qt(q(a2).mul(r2.pow(i))));
-      return { q: 'Find the sum of the first ' + n2 + ' terms: $' + terms.join(' + ') + ' + \\cdots$', a: { t: 'num', v: S2.toPlain() },
-        steps: ['$a = ' + a2 + '$, $r = ' + qt(r2) + '$, $n = ' + n2 + '$.', '$S_{' + n2 + '} = \\frac{' + a2 + '\\left(1 - \\left(' + qt(r2) + '\\right)^{' + n2 + '}\\right)}{1 - ' + qt(r2) + '} = ' + qt(S2) + '$.'], hint: 'Here $r = ' + qt(r2) + '$.' }; }
-    if (kind === 'sigma') { var a3 = R.int(1, 4), r3 = R.pick([2, 3]), n3 = R.int(4, 7), S3 = a3 * (Math.pow(r3, n3) - 1) / (r3 - 1);
+      return { q: 'Find the sum of the first ' + n2 + ' terms: $' + terms.map(function (tm, ti) { return ti === 0 ? tm : tm.charAt(0) === '-' ? ' - ' + tm.slice(1) : ' + ' + tm; }).join('') + (r2.sign() < 0 ? ' - \\cdots$' : ' + \\cdots$'), a: { t: 'num', v: S2.toPlain() },
+        steps: ['$a = ' + a2 + '$, $r = ' + qt(r2) + '$, $n = ' + n2 + '$.', '$S_{' + n2 + '} = \\frac{' + a2 + '\\left(1 - \\left(' + qt(r2) + '\\right)^{' + n2 + '}\\right)}{1 - ' + (r2.sign() < 0 ? '\\left(' + qt(r2) + '\\right)' : qt(r2)) + '} = ' + qt(S2) + '$.'], hint: 'Here $r = ' + qt(r2) + '$.' }; }
+    if (kind === 'sigma') { var a3 = R.int(1, 6), r3 = R.pick([2, 3, 4, 5]), n3 = R.int(3, r3 >= 4 ? 5 : 7), S3 = a3 * (Math.pow(r3, n3) - 1) / (r3 - 1);
       return { q: 'Evaluate $' + sumTex(1, n3, T.mono(a3, r3 + '^{k-1}')) + '$.', a: { t: 'num', v: String(S3) },
         steps: ['First term ($k = 1$): $' + a3 + '$. Ratio $' + r3 + '$. Number of terms: ' + n3 + '.', '$S = \\frac{' + a3 + '(' + r3 + '^{' + n3 + '} - 1)}{' + r3 + ' - 1} = ' + S3 + '$.'], hint: 'Read $a$, $r$ and $n$ from the sigma notation.' }; }
     if (kind === 'save') { var dep = R.pick([50, 100, 200]), rp = R.pick([3, 4, 5, 6]), yrs = R.pick([5, 10, 15]), i = rp / 100 / 12, N = 12 * yrs, FV = dep * (Math.pow(1 + i, N) - 1) / i;
@@ -2057,7 +2086,12 @@
     var TF = [['The formula $S_n = \\frac{a(1 - r^{n})}{1 - r}$ works when $r = 1$.', false, 'False: with $r = 1$ the denominator is 0. Every term equals $a$, so $S_n = na$.'],
       ['$2 + 6 + 18 + 54 + 162$ has $n = 5$ terms, so its sum is $\\frac{2(1 - 3^{5})}{1 - 3}$.', true, 'True: $\\frac{2(1 - 243)}{-2} = 242$, and $2 + 6 + 18 + 54 + 162 = 242$.'],
       ['$1 + 2 + 4 + \\cdots + 128$ has 7 terms.', false, 'False: $128 = 2^{7}$, and the powers run from $2^{0}$ to $2^{7}$: that is 8 terms.'],
-      ['$5 + 5 + 5 + 5$ is a geometric series with $r = 1$, and its sum is $20$.', true, 'True: each term is $5 \\cdot 1^{k}$, and $S = 4 \\cdot 5 = 20$.']];
+      ['$5 + 5 + 5 + 5$ is a geometric series with $r = 1$, and its sum is $20$.', true, 'True: each term is $5 \\cdot 1^{k}$, and $S = 4 \\cdot 5 = 20$.'],
+      ['$3 + 6 + 12 + 24$ has ratio $r = 3$.', false, 'False: each term is twice the one before, so $r = 2$. (The first term is 3.)'],
+      ['$1 + 3 + 9 + \\cdots + 81$ has 5 terms.', true, 'True: $81 = 3^{4}$, and the powers run from $3^{0}$ to $3^{4}$: 5 terms.'],
+      ['$4 - 8 + 16 - 32$ is geometric with $r = -2$, and its sum is $-20$.', true, 'True: $\\frac{4(1 - (-2)^{4})}{1 - (-2)} = \\frac{4(-15)}{3} = -20$.'],
+      ['$2 + 4 + 6 + 8$ is a geometric series.', false, 'False: the terms go up by adding 2, not by multiplying. It is arithmetic.'],
+      ['$10 + 5 + 2.5 + 1.25$ has ratio $r = \\frac{1}{2}$, and its sum is $18.75$.', true, 'True: $\\frac{10(1 - (1/2)^{4})}{1 - 1/2} = 20 \\cdot \\frac{15}{16} = 18.75$.']];
     var t = R.pick(TF);
     return { q: 'True or false: ' + t[0], a: { t: 'tf', v: t[1] }, steps: [t[2]], hint: 'Check $r$ and count the terms carefully.' };
   });
@@ -2245,3 +2279,133 @@
 
 // ---- 99-tail.js
 })(typeof window !== 'undefined' ? window.MathLadder : (typeof global !== 'undefined' ? global.MathLadder : null));
+
+/* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
+   generator still has few different problems at a level sometimes asks the same skill in another form, built only from
+   problems that generator made, so every answer is the generator's own:
+   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+     classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
+     checker rejects it;
+   - two at once: two different short questions of the topic, answered together.
+   Topics whose generator already varies a lot at a level are left as they are. Placed after the generators and
+   registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'alg2', VAR = {};
+  // how often another form is used: never when the topic's own generator already varies a lot at this level, up to
+  // half the time when it has few different questions (counted once per topic and level from 40 fixed seeds)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 37 ? 0 : VAR[key] >= 30 ? 0.3 : VAR[key] >= 20 ? 0.45 : 0.55;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
+  // a nearby wrong answer for a number or an expression, or null
+  function wrongFor(R, a) {
+    var v = String(ML.answerValue(a)), cands = [], m;
+    if (a.t === 'num') {
+      if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
+      else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
+      else if (/^-?\d+\.\d+$/.test(v)) { var x = +v, dp = v.split('.')[1].length, st = Math.pow(10, -Math.min(dp, 2)); cands = [x + st, x - st, -x, x * 10, x / 10].map(function (y) { return ML.util.numStr(ML.util.round(y, dp + 1)); }); }
+      else return null;
+    } else if (a.t === 'expr') {
+      if (v.length > 60) return null;
+      if (/ \+ /.test(v)) cands.push(v.replace(' + ', ' - '));
+      if (/ - /.test(v)) cands.push(v.replace(' - ', ' + '));
+      if ((m = /(^|[^\d.^])(\d+)(?![\d.])/.exec(v)) && !/\^$/.test(v.slice(0, m.index + m[1].length))) cands.push(v.slice(0, m.index) + m[1] + (+m[2] + 1) + v.slice(m.index + m[0].length));
+      if (!cands.length) return null;
+    } else return null;
+    var nv = function (s) { var mm = /^(-?\d+)\/(\d+)$/.exec(s); return mm ? mm[1] / mm[2] : /^-?\d+(\.\d+)?$/.test(s) ? +s : null; }, v0 = nv(v);
+    cands = R.shuffle(cands.filter(function (c, i, all) { var x = nv(c); return c !== v && all.indexOf(c) === i && (x === null || v0 === null || (Math.abs(x - v0) >= 0.01 * Math.max(Math.abs(v0), 1e-12) && (v0 <= 0 || x > 0) && (v0 <= 0 || v0 > 1 || x <= 1))); })); // a believable slip: the same sign, and at most 1 when the right answer is
+    for (var i = 0; i < cands.length; i++) if (okAns(a, cands[i]) === false) return cands[i];
+    return null;
+  }
+  function checkable(p) {
+    var a = p.a;
+    if (!a || p.unit || (a.form && a.form !== 'int' && a.form !== 'frac' && a.form !== 'simplest')) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bclassmate\b/i.test(txt(p.q))) return false;
+    if (a.t === 'num' || a.t === 'expr') return okAns(a, ML.answerValue(a)) === true;
+    if (a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    return true;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || ['mc', 'tf', 'num'].indexOf(p.a.t) < 0) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= 300 && !/<(table|svg|img|canvas|ol|ul)\b|\$\$|\\begin\{/i.test(p.q);
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), shown, good;
+    if (a.t === 'mc') {
+      var k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+      shown = a.choices[k]; good = a.choices[a.v];
+    } else {
+      good = ML.answerShow(a);
+      var w = right ? null : wrongFor(R, a);
+      if (!right && w === null) return null;
+      shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
+      if (!shown || /undefined|NaN/.test(shown)) return null;
+    }
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var out = { q: '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q + '</li><li>' + p2.q + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + (p.steps || [''])[0]].concat((p.steps || []).slice(1), ['Question 2: ' + (p2.steps || [''])[0]], (p2.steps || []).slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), mode = ctx && ctx.mode;
+      if (!p || !p.a || !ML.check || !ML.answerShow || !R.chance(share(id, base, ctx))) return p;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check', 'check');
+      if (pairable(p, true)) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = null;
+      try { out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base); } catch (e) { out = null; }
+      return out || p;
+    };
+    fn._forms = true;
+    fn._base = base; // the topic's own generator (for tests)
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

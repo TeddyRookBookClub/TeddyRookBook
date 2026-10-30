@@ -380,10 +380,14 @@
       var propParts = parts.filter(function (p) { return p.a && p.a.t === 'prop'; });
       if (propParts.length) pseudo = { t: 'prop', v: [].concat.apply([], propParts.map(function (p) { return Array.isArray(p.a.v) ? p.a.v : [p.a.v]; })) };
       if (parts.some(function (p) { return p.a && p.a.t === 'translit'; })) pseudo = { t: 'translit', v: '' };
+      // no keypad when every part is answered by choosing (choices, true/false, plain words)
+      var KP = { num: 1, expr: 1, eq: 1, set: 1, interval: 1, ineq: 1, formula: 1, tuple: 1, matrix: 1, prop: 1, translit: 1 };
+      if (parts.some(function (p) { return p.a && KP[p.a.t] && !(p.a.choices && p.a.choices.length); })) {
       var savedSpec = spec; spec = pseudo;
       var kpHolder = h('div', 'ml-in-tools'); wrap.appendChild(kpHolder);
       buildKeypad(kpHolder); if (toggle) kpHolder.insertBefore(toggle, kpHolder.firstChild);
       spec = savedSpec;
+      }
     } else {
       // single text box: num expr eq set interval ineq text formula prop
       var box = h('div', 'ml-in-main');

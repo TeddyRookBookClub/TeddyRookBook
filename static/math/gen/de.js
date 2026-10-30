@@ -880,8 +880,8 @@
   // ---------- de.population-harvesting ----------
   G('de.population-harvesting', function (R, ctx) {
     var kind = pickKind(R, ctx, ['maxH', 'eq0'], ['eqH', 'stab', 'maxH'], ['fate', 'effort', 'eqH']);
-    var K = R.pick([100, 1000, 200, 500]), r = R.pick([q(1, 2), q(1), q(2), q(1, 5)]), sc = K / 100;
-    var pair = R.pick([[10, 90], [20, 80], [30, 70], [40, 60], [25, 75]]), p1 = pair[0] * sc, p2 = pair[1] * sc, H = r.mul(p1 * p2).div(K);
+    var K = R.pick([100, 1000, 200, 500, 400, 600, 800, 2000]), r = R.pick([q(1, 2), q(1), q(2), q(1, 5), q(1, 4), q(3, 2), q(1, 10)]), sc = K / 100;
+    var pair = R.pick([[10, 90], [20, 80], [30, 70], [40, 60], [25, 75], [15, 85], [35, 65], [45, 55], [5, 95]]), p1 = pair[0] * sc, p2 = pair[1] * sc, H = r.mul(p1 * p2).div(K);
     var rT = r.eq(1) ? '' : r.toTex(), eqn = "P' = " + rT + 'P\\left(1 - \\frac{P}{' + K + '}\\right)';
     chk({ topic: 'de.population-harvesting', kind: 'harv', r: r.toNumber(), K: K, H: H.toNumber(), roots: [p1, p2] });
     var eqSteps = ['Equilibria: $' + rT + 'P\\left(1 - \\frac{P}{' + K + '}\\right) - ' + qd(H) + ' = 0$.', 'Multiply by $' + q(-K).div(r).toTex() + '$: $P^{2} - ' + K + 'P + ' + H.mul(K).div(r).toString() + ' = 0$, so $(P - ' + p1 + ')(P - ' + p2 + ') = 0$.', 'Equilibria: $P = ' + p1 + '$ and $P = ' + p2 + '$.'];
@@ -921,7 +921,7 @@
   });
 
   // ---------- de.motion-circuits ----------
-  var DRAG = [[2, 4], [5, 7], [10, 2], [1, '0.5'], [4, 8], [70, 14], [60, 12], [80, 16], [5, 14], [10, 7], [2, 7], [3, 6]];
+  var DRAG = [[2, 4], [5, 7], [10, 2], [1, '0.5'], [4, 8], [70, 14], [60, 12], [80, 16], [5, 14], [10, 7], [2, 7], [3, 6], [4, 2], [5, 2], [8, 4], [10, 5], [20, 4], [50, 10], [6, 3], [7, 14]];
   G('de.motion-circuits', function (R, ctx) {
     var kind = pickKind(R, ctx, ['vT', 'iss'], ['vt', 'qt', 'it'], ['half', 'qt', 'discharge', 'vt']);
     if (kind === 'vT' || kind === 'vt' || kind === 'half') {
@@ -940,7 +940,7 @@
         hint: 'Solve for $v(t)$ from rest, then set it equal to the fraction of $v_T$.' };
     }
     if (kind === 'iss' || kind === 'it') {
-      var Rr = R.pick([2, 4, 5, 10, 20]), Lh = R.pick([q(1), q(2), q('0.5'), q('0.1')]), E = R.pick([6, 10, 12, 20, 24]), iss = q(E, Rr), rt = q(Rr).div(Lh);
+      var Rr = R.pick([2, 4, 5, 10, 20, 8, 40, 50]), Lh = R.pick([q(1), q(2), q('0.5'), q('0.1'), q('0.2'), q(4)]), E = R.pick([6, 10, 12, 20, 24, 9, 40, 48]), iss = q(E, Rr), rt = q(Rr).div(Lh);
       var solI = lc([tm(iss), tm(iss.neg(), B.e(rt.neg()))]);
       chk({ topic: 'de.motion-circuits', kind: 'ode', ode: [Lh.toNumber(), Rr], g: E, ic: [0, 0], ans: solI.pl, dom: [0, 1] });
       var stp = ['Kirchhoff\'s voltage law: $' + T.coef(Lh, "i'") + T.coef(Rr, 'i', false) + ' = ' + E + '$ (the inductor drop $Li\'$ plus the resistor drop $Ri$ equals the battery voltage).', 'Steady state: $i\' = 0$ gives $i = \\frac{' + E + '}{' + Rr + '} = ' + qd(iss) + '$ A.'];
@@ -948,7 +948,7 @@
       return { q: 'An RL circuit has a ' + E + ' V battery, a ' + Rr + ' Ω resistor and a ' + qd(Lh) + ' H inductor, with $i(0) = 0$. Find the current $i(t)$ in amperes.', a: ex(solI.pl),
         steps: stp.concat(['Standard form: $i\'' + T.coef(rt, 'i', false) + ' = ' + qd(q(E).div(Lh)) + '$, so $i = ' + qd(iss) + ' + Ce^{' + kv(rt.neg()) + '}$.', '$i(0) = 0$ gives $C = ' + qd(iss.neg()) + '$: $i(t) = ' + solI.tex + '$.']), hint: 'Write $Li\' + Ri = E$, find the steady current, and fit the initial condition.' };
     }
-    var RC = R.pick([[10, '0.01'], [100, '0.001'], [20, '0.05'], [5, '0.02'], [50, '0.01'], [1000, '0.0002']]), Rv = RC[0], Cv = q(RC[1]), tau = Cv.mul(Rv), E2 = R.pick([6, 9, 12, 24]);
+    var RC = R.pick([[10, '0.01'], [100, '0.001'], [20, '0.05'], [5, '0.02'], [50, '0.01'], [1000, '0.0002'], [200, '0.005'], [40, '0.025'], [500, '0.002'], [25, '0.04']]), Rv = RC[0], Cv = q(RC[1]), tau = Cv.mul(Rv), E2 = R.pick([6, 9, 12, 24, 5, 10, 20, 48]);
     if (kind === 'qt') {
       var qss = Cv.mul(E2), solQ = lc([tm(qss), tm(qss.neg(), B.e(tau.inv().neg()))]);
       chk({ topic: 'de.motion-circuits', kind: 'ode', ode: [Rv, Cv.inv().toNumber()], g: E2, ic: [0, 0], ans: solQ.pl, dom: [0, 1] });
@@ -993,17 +993,17 @@
     lead = lead || 1; var o = { type: type, lead: lead };
     if (type === 'real') {
       var r1, r2;
-      if (lead === 1) { r1 = R.int(-5, 4); r2 = R.intNot(-5, 4, [r1, 0].concat(r1 === 0 ? [] : [])); if (r1 === 0 && r2 === 0) r2 = -2; }
+      if (lead === 1) { r1 = R.int(-7, 6); r2 = R.intNot(-7, 6, [r1, 0].concat(r1 === 0 ? [] : [])); if (r1 === 0 && r2 === 0) r2 = -2; }
       else { r1 = R.nz(-3, 3); var pnum = R.pick(lead === 2 ? [1, -1, 3, -3] : [1, -1, 2, -2]); r2 = q(pnum, lead); }
       o.r1 = q(r1); o.r2 = q(r2); var s = o.r1.add(o.r2), p = o.r1.mul(o.r2);
       o.cs = [q(lead), s.mul(lead).neg(), p.mul(lead)];
       o.f = [BF.exp(o.r1), BF.exp(o.r2)];
     } else if (type === 'rep') {
-      var r = lead === 1 ? R.nz(-4, 3) : lead === 4 ? q(R.pick([1, -1]), 2) : q(R.pick([1, -1]), 3);
+      var r = lead === 1 ? R.nz(-6, 5) : lead === 4 ? q(R.pick([1, -1]), 2) : q(R.pick([1, -1]), 3);
       o.r = q(r); o.cs = [q(lead), o.r.mul(-2 * lead), o.r.mul(o.r).mul(lead)];
       o.f = [BF.exp(o.r), BF.texp(o.r, 1)];
     } else {
-      var al = lead === 1 ? R.pick([-3, -2, -1, -1, 0, 1, -2]) : q(R.pick([-1, 1, -1]), 2), be = R.int(1, 4);
+      var al = lead === 1 ? R.pick([-4, -3, -2, -1, -1, 0, 1, 2, -2, 3]) : q(R.pick([-1, 1, -1, -3, 3]), 2), be = R.int(1, 6);
       o.al = q(al); o.be = q(be); o.cs = [q(lead), o.al.mul(-2 * lead), o.al.mul(o.al).add(o.be.mul(o.be)).mul(lead)];
       o.f = [BF.ecos(o.al, o.be), BF.esin(o.al, o.be)];
     }
@@ -1365,7 +1365,7 @@
     if (kind === 'u2') return { q: setup + " In variation of parameters, $y_p = u_1y_1 + u_2y_2$. Find $u_2'(t)$.", a: ex(o.u2.pl), steps: uSt, hint: "$u_2' = y_1g/W$, where $g$ is the right side in standard form." };
     if (kind === 'uu') return { q: setup + " In variation of parameters, $y_p = u_1y_1 + u_2y_2$. Find $u_1'(t)$ and $u_2'(t)$.", a: { t: 'multi', parts: [{ label: "$u_1'(t) =$", a: ex(o.u1.pl) }, { label: "$u_2'(t) =$", a: ex(o.u2.pl) }] }, steps: uSt.concat(['(These come from solving $u_1\'y_1 + u_2\'y_2 = 0$ and $u_1\'y_1\' + u_2\'y_2\' = g$.)']), hint: "Use $u_1' = -y_2g/W$ and $u_2' = y_1g/W$ with $g$ from the standard form." };
     // IVP
-    var c1 = q(R.int(-3, 3)), c2 = q(R.nz(-3, 3)), t0 = o.t0, y0, v0, sol;
+    var c1 = q(R.int(-5, 5)), c2 = q(R.nz(-5, 5)), t0 = o.t0, y0, v0, sol;
     if (o.f <= 2) { var w = q(o.lead[2]).num() === 1 ? 1 : 2; y0 = c1; v0 = c2.mul(w).add(o.yp0[1]); sol = joinSum(lc([tm(c1, B.cos(w)), tm(c2, B.sin(w))]), o.yp);
       chk({ topic: 'de.variation-of-parameters', kind: 'ivp', ode: o.lead, g: o.g[1], ic: [0, y0.toNumber(), v0.toNumber()], ans: sol.pl, dom: o.domN }); }
     else { y0 = c1.mul(o.iv[0][0]).add(c2.mul(o.iv[1][0])).add(o.ypv[0]); v0 = c1.mul(o.iv[0][1]).add(c2.mul(o.iv[1][1])).add(o.ypv[1]);
@@ -1424,7 +1424,7 @@
   // ---------- de.forced-resonance ----------
   G('de.forced-resonance', function (R, ctx) {
     var kind = pickKind(R, ctx, ['res', 'amp'], ['xp', 'amp', 'beats'], ['pure', 'beats', 'damp']);
-    var m = q(R.pick([1, 1, 2, '0.5'])), w0 = R.int(2, 5), k = m.mul(w0 * w0), w = R.intNot(1, 6, [w0]), F0 = R.pick([2, 3, 4, 6, 8, 10, 12]);
+    var m = q(R.pick([1, 1, 2, '0.5', 4, 3])), w0 = R.int(2, 8), k = m.mul(w0 * w0), w = R.intNot(1, 9, [w0]), F0 = R.pick([2, 3, 4, 6, 8, 10, 12, 5, 9, 15, 16, 20]);
     var eq = function (ww) { return T.coef(m, "x''") + ' + ' + qd(k) + 'x = ' + F0 + '\\cos ' + kv(ww); };
     if (kind === 'res') {
       chk({ topic: 'de.forced-resonance', kind: 'res', m: m.toNumber(), k: k.toNumber(), ans: w0 });
@@ -1610,14 +1610,14 @@
   G('de.laplace-definition', function (R, ctx) {
     var kind = pickKind(R, ctx, ['one', 'dom'], ['combo', 'combo', 'dom'], ['pulse', 'combo']);
     if (kind === 'dom') {
-      var a = R.nz(-5, 5), wh = R.pick(['exp', 'exp', 'cosh']);
+      var a = R.nz(-9, 9), wh = R.pick(['exp', 'exp', 'cosh']);
       return { q: 'For which values of $s$ does the integral $\\displaystyle\\int_0^{\\infty} e^{-st}' + (wh === 'exp' ? 'e^{' + kv(a) + '}' : '\\cosh ' + kv(Math.abs(a))) + '\\,dt$ converge?', a: { t: 'ineq', v: 's > ' + (wh === 'exp' ? a : Math.abs(a)) },
         steps: wh === 'exp' ? ['The integrand is $e^{(' + a + ' - s)t}$.', 'It decays to 0 (and the integral is finite) exactly when the exponent is negative: $' + a + ' - s < 0$.', 'So $s > ' + a + '$, and then the integral equals $\\frac{1}{s' + T.signed(-a) + '}$.']
           : ['$\\cosh ' + kv(Math.abs(a)) + ' = \\frac{1}{2}(e^{' + kv(Math.abs(a)) + '} + e^{' + kv(-Math.abs(a)) + '})$.', 'Both pieces must decay after multiplying by $e^{-st}$: $s > ' + Math.abs(a) + '$ and $s > ' + (-Math.abs(a)) + '$.', 'So $s > ' + Math.abs(a) + '$.'],
         hint: 'Combine the exponentials. When does $e^{kt}$ go to 0 as $t \\to \\infty$?' };
     }
     if (kind === 'one') {
-      var k1 = R.pick(['const', 'exp', 'pow', 'sin', 'cos']), c = R.nz(-5, 5), P = lap(R, k1, c);
+      var k1 = R.pick(['const', 'exp', 'pow', 'sin', 'cos']), c = R.nz(-9, 9), P = lap(R, k1, c);
       lapRec('de.laplace-definition', P.fP, P.F.spl, P.s0);
       return { q: 'Find $\\mathcal{L}\\{' + P.fT + '\\}$.', a: ex(P.F.spl, ['s']), steps: ['From the definition (or the table): $' + P.rule + '$.', 'Linearity lets the constant come out: $\\mathcal{L}\\{' + P.fT + '\\} = ' + P.F.stex + '$.'], hint: 'Use the table entry and pull the constant out front.' };
     }
@@ -1629,7 +1629,7 @@
       return { q: 'Find $\\mathcal{L}\\{' + fT + '\\}$.', a: ex(F.pl, ['s']), steps: ['The transform is linear: transform each term and add.'].concat(parts.map(function (p) { return '$\\mathcal{L}\\{' + p.fT + '\\} = ' + (p.F.neg ? '-' : '') + p.F.tex + '$ (from $' + p.rule + '$).'; }), ['Total: $' + F.tex + '$.']), hint: 'Transform term by term using the table.' };
     }
     // pulse / step from the definition
-    var Tt = R.int(1, 4), c2 = R.nz(-4, 5), which = R.pick(['pulse', 'late', 'pulse']), F2, fT2, fP2, st;
+    var Tt = R.int(1, 7), c2 = R.nz(-8, 9), which = R.pick(['pulse', 'late', 'pulse']), F2, fT2, fP2, st;
     if (which === 'pulse') { F2 = sSum([sTerm([c2], sDen('lin', 0)), sTerm([-c2], sDen('lin', 0), Tt)]); fT2 = '\\begin{cases} ' + c2 + ' & 0 \\le t < ' + Tt + ' \\\\ 0 & t \\ge ' + Tt + ' \\end{cases}'; fP2 = c2 + '*(1 - sign(t - ' + Tt + '))/2';
       st = ['$F(s) = \\int_0^{' + Tt + '} ' + T.coef(c2, 'e^{-st}') + '\\,dt$ (the integrand is 0 after $t = ' + Tt + '$).', '$= ' + T.coef(c2, '\\left[-\\frac{e^{-st}}{s}\\right]_0^{' + Tt + '}') + ' = ' + T.coef(c2, '\\frac{1 - e^{-' + kv(Tt, 's') + '}}{s}') + '$.', 'So $F(s) = ' + F2.tex + '$ (valid for every $s \\ne 0$).']; }
     else { F2 = sTerm([c2], sDen('lin', 0), Tt); F2 = { tex: (F2.neg ? '-' : '') + F2.tex, pl: (F2.neg ? '-' : '') + F2.pl }; fT2 = '\\begin{cases} 0 & 0 \\le t < ' + Tt + ' \\\\ ' + c2 + ' & t \\ge ' + Tt + ' \\end{cases}'; fP2 = c2 + '*(1 + sign(t - ' + Tt + '))/2';
@@ -1889,7 +1889,7 @@
         hint: 'No integration needed: multiply the two transforms.' };
     }
     // Volterra integral equations
-    var v = R.int(1, 4), A = R.nz(-3, 4), Bk = R.nz(-3, 3), w = R.int(1, 3), eqT, ans, st;
+    var v = R.int(1, 6), A = R.nz(-5, 6), Bk = R.nz(-5, 5), w = R.int(1, 5), eqT, ans, st;
     if (v === 1) { eqT = 'y(t) = ' + A + T.coef(Bk, '\\int_0^{t} y(\\tau)\\,d\\tau', false); ans = lc([tm(A, B.e(Bk))]); st = ['The integral is $1 * y$, with transform $\\frac{Y}{s}$.', 'Transform: $Y = \\frac{' + A + '}{s}' + T.coef(Bk, '\\frac{Y}{s}', false) + '$, so $Y\\left(1' + T.coef(-Bk, '\\frac{1}{s}', false) + '\\right) = \\frac{' + A + '}{s}$ and $Y = \\frac{' + A + '}{s' + T.signed(-Bk) + '}$.']; }
     else if (v === 2) { eqT = 'y(t) = ' + T.mono(A, 't') + ' - ' + (w * w === 1 ? '' : w * w) + '\\int_0^{t} (t - \\tau)y(\\tau)\\,d\\tau'; ans = lc([tm(q(A, w), B.sin(w))]); st = ['The integral is $t * y$, with transform $\\frac{Y}{s^{2}}$.', 'Transform: $Y = \\frac{' + A + '}{s^{2}} - ' + (w * w === 1 ? '' : w * w) + '\\frac{Y}{s^{2}}$, so $Y(s^{2} + ' + w * w + ') = ' + A + '$ and $Y = \\frac{' + A + '}{s^{2} + ' + w * w + '}$.']; }
     else if (v === 3) { eqT = 'y(t) = ' + A + ' + ' + (w * w === 1 ? '' : w * w) + '\\int_0^{t} (t - \\tau)y(\\tau)\\,d\\tau'; ans = lc([tm(A, B.cosh(w))]); st = ['The integral is $t * y$, with transform $\\frac{Y}{s^{2}}$.', 'Transform: $Y = \\frac{' + A + '}{s} + ' + (w * w === 1 ? '' : w * w) + '\\frac{Y}{s^{2}}$, so $Y = ' + fracT(A, 's', 's^{2} - ' + w * w) + '$.']; }
@@ -2016,7 +2016,7 @@
         steps: ['Trace $\\tau = ' + E.tr.toTex() + '$, determinant $\\Delta = ' + E.det.toTex() + '$, and $\\tau^{2} - 4\\Delta = ' + disc.toTex() + '$.', 'The eigenvalues are $\\lambda = \\frac{\\tau \\pm \\sqrt{\\tau^{2} - 4\\Delta}}{2}$: ' + (E.lam ? '$' + E.lam[0].toTex() + '$ and $' + E.lam[1].toTex() + '$.' : '$' + (E.al.isZero() ? '' : E.al.toTex() + ' ') + '\\pm ' + (E.be.eq(1) ? '' : E.be.toTex()) + 'i$.'), typeWhy(t)],
         hint: 'Compute the trace and determinant, then the eigenvalues.' };
     }
-    var ask = R.pick(['spiral sink', 'saddle', 'stable node (sink)']), b2 = R.pick([2, 4]), half = b2 / 2;
+    var ask = R.pick(['spiral sink', 'saddle', 'stable node (sink)']), b2 = R.pick([2, 4, 6, 8]), half = b2 / 2;
     // A = [[0, 1], [-k, -b]]: det = k, tr = -b, disc = b^2 - 4k
     var ans = ask === 'spiral sink' ? 'k > ' + half * half : ask === 'saddle' ? 'k < 0' : '0 < k < ' + half * half;
     chk({ topic: 'de.phase-portraits', kind: 'param', b: b2, ask: ask, ans: ans });
@@ -2084,27 +2084,27 @@
   G('de.matrix-exponential', function (R, ctx) {
     var kind = pickKind(R, ctx, ['diag', 'nil', 'trap'], ['jordan', 'rot', 'diag'], ['diagz', 'xt']);
     if (kind === 'trap') {
-      var a = R.nz(-3, 3), b = R.nz(-3, 3), A0 = [[q(a), q(b)], [q(0), q(a)]];
+      var a = R.nz(-5, 5), b = R.nz(-5, 5), A0 = [[q(a), q(b)], [q(0), q(a)]];
       return { q: 'True or false: for $A = ' + matTex(A0) + '$, $e^{At} = \\begin{bmatrix} e^{' + kv(a) + '} & e^{' + kv(b) + '} \\\\ 1 & e^{' + kv(a) + '} \\end{bmatrix}$ (exponentiating each entry).', a: tf(false),
         steps: ['$e^{At}$ is defined by the series $I + At + \\frac{(At)^{2}}{2!} + \\dots$, not entry by entry. (At $t = 0$ it must be $I$, but the matrix above has a 1 below the diagonal.)', 'Here $A = ' + T.coef(a, 'I') + ' + N$ with $N = ' + matTex([[0, b], [0, 0]]) + '$, $N^{2} = 0$, so $e^{At} = e^{' + kv(a) + '}(I + Nt) = ' + mExpTex([[B.e(a), lc([tm(b, B.mul(B.pow(1), B.e(a)))])], [{ tex: '0' }, B.e(a)]]) + '$. False.'],
         hint: 'What must $e^{At}$ equal at $t = 0$?' };
     }
     if (kind === 'diag' || kind === 'nil') {
-      if (kind === 'diag') { var p = R.nz(-4, 4), r = R.intNot(-4, 4, [p]), D2 = [[p, 0], [0, r]], ans = [[B.e(p), { tex: '0', pl: '0' }], [{ tex: '0', pl: '0' }, B.e(r)]];
+      if (kind === 'diag') { var p = R.nz(-7, 7), r = R.intNot(-7, 7, [p]), D2 = [[p, 0], [0, r]], ans = [[B.e(p), { tex: '0', pl: '0' }], [{ tex: '0', pl: '0' }, B.e(r)]];
         if (r === 0) ans[1][1] = { tex: '1', pl: '1' };
         chk({ topic: 'de.matrix-exponential', kind: 'expm', A: D2, ans: mExpPl(ans) });
         return { q: 'Find $e^{At}$ for $A = ' + matTex(D2) + '$.', a: { t: 'matrix', v: mExpPl(ans) }, steps: ['$A$ is diagonal, so every power $A^{k}$ is diagonal with entries $' + p + '^{k}$ and $' + r + '^{k}$.', 'The series $\\sum \\frac{(At)^{k}}{k!}$ sums each diagonal entry separately: $e^{' + kv(p) + '}$ and $e^{' + kv(r) + '}$.', '$e^{At} = ' + mExpTex(ans) + '$.'], hint: 'For a diagonal matrix, the exponential series works entry by entry on the diagonal.' }; }
-      var c = R.nz(-4, 4), Nn = [[0, c], [0, 0]], ansN = [[{ tex: '1', pl: '1' }, lc([tm(c, B.pow(1))])], [{ tex: '0', pl: '0' }, { tex: '1', pl: '1' }]];
+      var c = R.nz(-9, 9), Nn = [[0, c], [0, 0]], ansN = [[{ tex: '1', pl: '1' }, lc([tm(c, B.pow(1))])], [{ tex: '0', pl: '0' }, { tex: '1', pl: '1' }]];
       chk({ topic: 'de.matrix-exponential', kind: 'expm', A: Nn, ans: mExpPl(ansN) });
       return { q: 'Find $e^{At}$ for $A = ' + matTex(Nn) + '$.', a: { t: 'matrix', v: mExpPl(ansN) }, steps: ['$A^{2} = ' + matTex([[0, 0], [0, 0]]) + '$, so the series stops: $e^{At} = I + At$.', '$e^{At} = ' + mExpTex(ansN) + '$.'], hint: 'Compute $A^2$. When a power of $A$ is zero, the series is finite.' };
     }
     if (kind === 'jordan') {
-      var l = R.nz(-3, 3), b2 = R.nz(-3, 3), J = [[l, b2], [0, l]], el = B.e(l), ansJ = [[el, lc([tm(b2, B.mul(B.pow(1), el))])], [{ tex: '0', pl: '0' }, el]];
+      var l = R.nz(-5, 5), b2 = R.nz(-5, 5), J = [[l, b2], [0, l]], el = B.e(l), ansJ = [[el, lc([tm(b2, B.mul(B.pow(1), el))])], [{ tex: '0', pl: '0' }, el]];
       chk({ topic: 'de.matrix-exponential', kind: 'expm', A: J, ans: mExpPl(ansJ) });
       return { q: 'Find $e^{At}$ for $A = ' + matTex(J) + '$.', a: { t: 'matrix', v: mExpPl(ansJ) }, steps: ['Write $A = ' + T.coef(l, 'I') + ' + N$ with $N = ' + matTex([[0, b2], [0, 0]]) + '$; $N^{2} = 0$, and $' + T.coef(l, 'I') + '$ commutes with $N$.', 'So $e^{At} = e^{' + kv(l) + '}e^{Nt} = e^{' + kv(l) + '}(I + Nt)$.', '$e^{At} = ' + mExpTex(ansJ) + '$.'], hint: 'Split $A$ into $\\lambda I$ plus a matrix $N$ with $N^2 = 0$.' };
     }
     if (kind === 'rot') {
-      var bb = R.int(1, 4), sg = R.sign(), Ar = [[0, -sg * bb], [sg * bb, 0]], c0 = B.cos(bb), s0 = B.sin(bb), ansR = [[c0, lc([tm(-sg, s0)])], [lc([tm(sg, s0)]), c0]];
+      var bb = R.int(1, 7), sg = R.sign(), Ar = [[0, -sg * bb], [sg * bb, 0]], c0 = B.cos(bb), s0 = B.sin(bb), ansR = [[c0, lc([tm(-sg, s0)])], [lc([tm(sg, s0)]), c0]];
       chk({ topic: 'de.matrix-exponential', kind: 'expm', A: Ar, ans: mExpPl(ansR) });
       return { q: 'Find $e^{At}$ for $A = ' + matTex(Ar) + '$.', a: { t: 'matrix', v: mExpPl(ansR) }, steps: ['$A = ' + T.coef(sg * bb, 'J') + '$ with $J = ' + matTex([[0, -1], [1, 0]]) + '$ and $J^{2} = -I$, so the even powers give a cosine series and the odd powers a sine series.', '$e^{At} = I\\cos ' + kv(bb) + T.coef(sg, 'J\\sin ' + kv(bb), false) + '$ (a rotation by angle $' + T.mono(sg * bb, 't') + '$).', '$e^{At} = ' + mExpTex(ansR) + '$.'], hint: 'Sort the series into even and odd powers; $J^2 = -I$ turns them into $\\cos$ and $\\sin$.' };
     }
@@ -2176,7 +2176,7 @@
   G('de.predator-prey-pendulum', function (R, ctx) {
     var kind = pickKind(R, ctx, ['lvEq', 'pend'], ['lvJ', 'lvPeriod', 'lvEq'], ['damped', 'lvPeriod', 'pend']);
     if (kind.indexOf('lv') === 0) {
-      var xs = R.int(2, 6), ys = R.int(2, 6), b = R.pick([q(1, 2), q(1), q(1, 4), q(1, 10)]), d = R.pick([q(1, 2), q(1), q(1, 4), q(1, 10)]), a = b.mul(ys), c = d.mul(xs);
+      var xs = R.int(2, 12), ys = R.int(2, 12), b = R.pick([q(1, 2), q(1), q(1, 4), q(1, 10), q(1, 5), q(2)]), d = R.pick([q(1, 2), q(1), q(1, 4), q(1, 10), q(1, 5), q(2)]), a = b.mul(ys), c = d.mul(xs);
       if (kind === 'lvPeriod') { var pr = R.pick([[1, 4], [4, 1], [2, 2], [1, 1], [1, 9], [9, 1], [4, 4]]); a = q(pr[0]); c = q(pr[1]); b = a.div(ys); d = c.div(xs); }
       var tex = "x' = x(" + a.toTex() + T.coef(b.neg(), 'y', false) + "),\\quad y' = y(" + T.coef(c.neg(), '') + T.coef(d, 'x', false) + ')';
       var J = [[q(0), b.neg().mul(xs)], [d.mul(ys), q(0)]];
@@ -2196,7 +2196,7 @@
       return { q: 'A pendulum of length ' + Lp[0] + ' m obeys $\\theta\'\' + \\frac{g}{L}\\sin\\theta = 0$ with $g = 9.8$ m/s². For small swings, what is its period in seconds? (Exact, or to 2 decimal places.)', a: num('2pi/' + Lp[1], { tol: 0.006 }), unit: 's',
         steps: ['For small $\\theta$, $\\sin\\theta \\approx \\theta$ (this is the linearization at $(0, 0)$): $\\theta\'\' + \\frac{g}{L}\\theta = 0$.', '$\\omega = \\sqrt{g/L} = \\sqrt{9.8/' + Lp[0] + '} = ' + Lp[1] + '$ rad/s.', 'Period $= \\frac{2\\pi}{\\omega} = \\frac{2\\pi}{' + Lp[1] + '} \\approx ' + (2 * Math.PI / Lp[1]).toFixed(2) + '$ s.'], hint: 'Replace $\\sin\\theta$ by $\\theta$ and find $\\omega = \\sqrt{g/L}$.' };
     }
-    var w2 = R.int(1, 3), cdamp = R.pick([1, 2, 3, 5, 7]), at = R.pick(['0', 'pi']);
+    var w2 = R.int(1, 6), cdamp = R.pick([1, 2, 3, 5, 7, 4, 6, 9]), at = R.pick(['0', 'pi']);
     var Jd = at === '0' ? [[0, 1], [-w2 * w2, -cdamp]] : [[0, 1], [w2 * w2, -cdamp]], t = classify(Jd[0][0] + Jd[1][1], M2.det(Jd));
     chk({ topic: 'de.predator-prey-pendulum', kind: 'damped', w2: w2 * w2, c: cdamp, at: at, ans: t });
     return { q: 'A damped pendulum obeys $\\theta\' = \\omega,\\ \\omega\' = -' + (w2 * w2 === 1 ? '' : w2 * w2) + '\\sin\\theta - ' + (cdamp === 1 ? '' : cdamp) + '\\omega$. Classify the equilibrium $(' + (at === '0' ? '0' : '\\pi') + ', 0)$ (pendulum ' + (at === '0' ? 'hanging down' : 'balanced straight up') + ').', a: typeChoices(R, t),
@@ -2241,7 +2241,7 @@
       return { q: 'Rewrite $' + texS + '$ in the form $\\sum c_n\\,' + target + 'x^{n}$. What is $c_n$ (a polynomial in $n$)?', a: ex(ansE, ['n']), steps: st.concat(['Every sum in the equation must be shifted to the same power $x^{n}$ before coefficients can be matched.']), hint: 'Substitute a new index so the power of $x$ becomes $x^{n}$, and shift every $n$ in the term the same way.' };
     }
     if (kind === 'exp') {
-      var k = R.nz(-3, 3), a0 = R.nz(-3, 3), K = R.int(3, 4), a = [q(a0)]; for (var n = 0; n < K; n++) a.push(a[n].mul(k).div(n + 1));
+      var k = R.nz(-5, 5), a0 = R.nz(-6, 6), K = R.int(3, 5), a = [q(a0)]; for (var n = 0; n < K; n++) a.push(a[n].mul(k).div(n + 1));
       chk({ topic: 'de.series-solutions', kind: 'coef', P: [0], Q: [1], R: [-k], first: true, a0: a0, n: K, ans: a[K].toNumber() });
       return { q: "Substitute $y = \\sum_{n=0}^{\\infty} a_nx^{n}$ into $y' = " + T.mono(k, 'y') + '$. With $a_0 = ' + a0 + '$, find $a_' + K + '$.', a: num(a[K].toPlain()),
         steps: ["$y' = \\sum_{n=0}^{\\infty} (n + 1)a_{n+1}x^{n}$ (after shifting the index).", 'Match the $x^{n}$ coefficients: $(n + 1)a_{n+1} = ' + T.coef(k, 'a_n') + '$, so $a_{n+1} = ' + fracT(k, 'a_n', 'n + 1') + '$.', a.slice(1).map(function (v, i) { return '$a_' + (i + 1) + ' = ' + v.toTex() + '$'; }).join(', ') + '.', '(These are the Taylor coefficients of $' + T.coef(a0, 'e^{' + kv(k, 'x') + '}') + '$, the exact solution.)'],
@@ -2253,7 +2253,7 @@
       return { q: 'Substituting $y = \\sum a_nx^{n}$ into $' + F.tex + '$ gives a recurrence $a_{n+2} = c_n\\,a_n$. Find $c_n$.', a: ex(F.rec[1], ['n']),
         steps: ["$y'' = \\sum_{n=0}^{\\infty} (n + 2)(n + 1)a_{n+2}x^{n}$ after shifting the index by 2.", F.why, 'Solve for $a_{n+2}$: $c_n = ' + F.rec[0] + '$.'], hint: 'Write every sum with $x^n$, then set the total coefficient of $x^n$ to 0 and solve for $a_{n+2}$.' };
     }
-    var y0 = R.int(-2, 3), v0 = R.int(-2, 3); if (!y0 && !v0) y0 = 1;
+    var y0 = R.int(-4, 5), v0 = R.int(-4, 5); if (!y0 && !v0) y0 = 1;
     var N = R.pick([4, 5]), co = seriesCoef(F.P, F.Q, F.R, y0, v0, N);
     chk({ topic: 'de.series-solutions', kind: 'coef', P: F.P, Q: F.Q, R: F.R, a0: y0, a1: v0, n: N, ans: co[N].toNumber() });
     return { q: 'Find the coefficient of $x^{' + N + '}$ in the power series solution of $' + F.tex + '$ with $y(0) = ' + y0 + "$ and $y'(0) = " + v0 + '$.', a: num(co[N].toPlain()),
@@ -2264,9 +2264,9 @@
   // ---------- de.cauchy-euler ----------
   G('de.cauchy-euler', function (R, ctx) {
     var kind = pickKind(R, ctx, ['roots'], ['ivp', 'roots'], ['rep', 'cx', 'ivp']);
-    var c1 = R.nz(-3, 3), c2 = R.nz(-3, 3), a, b, eq, sol, y0, v0, st;
+    var c1 = R.nz(-5, 5), c2 = R.nz(-5, 5), a, b, eq, sol, y0, v0, st;
     if (kind === 'roots' || kind === 'ivp') {
-      var r1 = R.int(-3, 3), r2 = R.intNot(-3, 4, [r1]); a = 1 - r1 - r2; b = r1 * r2;
+      var r1 = R.int(-5, 5), r2 = R.intNot(-5, 6, [r1]); a = 1 - r1 - r2; b = r1 * r2;
       eq = "x^{2}y''" + T.coef(a, "xy'", false) + T.coef(b, 'y', false) + ' = 0';
       var ind = 'Try $y = x^{r}$: $x^{2}y\'\' = r(r - 1)x^{r}$ and $xy\' = rx^{r}$, so $r(r - 1)' + T.coef(a, 'r', false) + T.signed(b) + ' = 0$, that is, $' + charTex([1, a - 1, b]) + ' = 0$.';
       if (kind === 'roots') { chk({ topic: 'de.cauchy-euler', kind: 'roots', a: a, b: b, ans: [r1, r2] });
@@ -2274,11 +2274,11 @@
       sol = lc([tm(c1, B.pow(r1, 'x')), tm(c2, B.pow(r2, 'x'))]); y0 = c1 + c2; v0 = r1 * c1 + r2 * c2;
       st = [ind, 'Roots $r = ' + r1 + '$ and $r = ' + r2 + '$: $y = c_1' + tpw(r1, 'x') + ' + c_2' + tpw(r2, 'x') + '$.'.replace('c_1$', 'c_1$').replace('c_1 +', 'c_1 +'), '$y(1) = c_1 + c_2 = ' + y0 + "$ and $y'(1) = " + T.terms([[r1, 'c_1'], [r2, 'c_2']]) + ' = ' + v0 + '$, so $c_1 = ' + c1 + '$, $c_2 = ' + c2 + '$.', '$y = ' + sol.tex + '$.'];
     } else if (kind === 'rep') {
-      var r = R.nz(-2, 2); a = 1 - 2 * r; b = r * r; eq = "x^{2}y''" + T.coef(a, "xy'", false) + T.coef(b, 'y', false) + ' = 0';
+      var r = R.nz(-5, 5); a = 1 - 2 * r; b = r * r; eq = "x^{2}y''" + T.coef(a, "xy'", false) + T.coef(b, 'y', false) + ' = 0';
       sol = prodLc(B.pow(r, 'x'), [tm(c1), tm(c2, B.raw('\\ln x', 'ln(x)'))]); y0 = c1; v0 = r * c1 + c2;
       st = ['Try $y = x^{r}$: $' + charTex([1, a - 1, b]) + ' = (' + T.lin(1, 'r', -r) + ')^{2} = 0$, a repeated root $r = ' + r + '$.', 'The second solution is $' + tpw(r, 'x') + '\\ln x$: $y = ' + tpw(r, 'x') + '(c_1 + c_2\\ln x)$.', '$y(1) = c_1 = ' + y0 + "$; $y'(1) = " + T.coef(r, 'c_1') + ' + c_2 = ' + v0 + '$, so $c_2 = ' + c2 + '$.', '$y = ' + sol.tex + '$.'];
     } else {
-      var al = R.int(-2, 2), be = R.int(1, 3); a = 1 - 2 * al; b = al * al + be * be; eq = "x^{2}y''" + T.coef(a, "xy'", false) + T.coef(b, 'y', false) + ' = 0';
+      var al = R.int(-4, 4), be = R.int(1, 5); a = 1 - 2 * al; b = al * al + be * be; eq = "x^{2}y''" + T.coef(a, "xy'", false) + T.coef(b, 'y', false) + ' = 0';
       var lnT = function (f) { return { tex: '\\' + f + '(' + (be === 1 ? '' : be) + '\\ln x)', pl: f + '(' + be + ' ln(x))' }; };
       sol = prodLc(B.pow(al, 'x'), [tm(c1, lnT('cos')), tm(c2, lnT('sin'))]); y0 = c1; v0 = al * c1 + be * c2;
       st = ['Try $y = x^{r}$: $' + charTex([1, a - 1, b]) + ' = 0$ gives $r = ' + (al ? al + ' \\pm ' : '\\pm ') + (be === 1 ? '' : be) + 'i$.', 'Since $x^{i\\beta} = e^{i\\beta\\ln x} = \\cos(\\beta\\ln x) + i\\sin(\\beta\\ln x)$: $y = ' + tpw(al, 'x') + '\\left(c_1\\cos(' + (be === 1 ? '' : be) + '\\ln x) + c_2\\sin(' + (be === 1 ? '' : be) + '\\ln x)\\right)$.', '$y(1) = c_1 = ' + y0 + "$; $y'(1) = " + T.terms([[al, 'c_1'], [be, 'c_2']]) + ' = ' + v0 + '$, so $c_2 = ' + c2 + '$.', '$y = ' + sol.tex + '$.'];
@@ -2544,15 +2544,15 @@
   // ---------- de.wave-equation ----------
   G('de.wave-equation', function (R, ctx) {
     var kind = pickKind(R, ctx, ['period'], ['shape', 'shape', 'period'], ['vel', 'both']);
-    var c = R.pick([1, 2, 3]), c2 = c * c, pde = 'u_{tt} = ' + (c2 === 1 ? '' : c2) + 'u_{xx}';
+    var c = R.pick([1, 2, 3, 4, 5]), c2 = c * c, pde = 'u_{tt} = ' + (c2 === 1 ? '' : c2) + 'u_{xx}';
     if (kind === 'period') {
-      var Lr = R.pick([1, 2, 'pi']), n = R.int(1, 3), per = Lr === 'pi' ? q(2, n * c) : q(2 * Lr, n * c), perPl = Lr === 'pi' ? per.toPlain() + '*pi' : per.toPlain();
+      var Lr = R.pick([1, 2, 3, 4, 'pi']), n = R.int(1, 5), per = Lr === 'pi' ? q(2, n * c) : q(2 * Lr, n * c), perPl = Lr === 'pi' ? per.toPlain() + '*pi' : per.toPlain();
       chk({ topic: 'de.wave-equation', kind: 'period', c: c, L: Lnum(Lr), n: n, ans: +ML.evalPlain(perPl) });
       return { q: 'A string of length ' + (Lr === 'pi' ? '$\\pi$' : Lr) + ' with fixed ends obeys $' + pde + '$. What is the period of its mode $n = ' + n + '$ (shape $\\sin ' + modeArg(n, Lr) + '$)?', a: num(perPl, { tol: 0.001 }),
         steps: ['The mode $\\sin\\frac{n\\pi x}{L}$ oscillates in time like $\\cos\\frac{n\\pi c t}{L}$ (angular frequency $\\frac{n\\pi c}{L}$).', 'Period $= \\frac{2\\pi}{n\\pi c/L} = \\frac{2L}{nc} = \\frac{2\\cdot ' + Ltex(Lr) + '}{' + n + '\\cdot ' + c + '} = ' + (Lr === 'pi' ? T.coef(per, '\\pi') : per.toTex()) + '$.'],
         hint: 'Mode $n$ has angular frequency $n\\pi c/L$.' };
     }
-    var n1 = R.int(1, 4), A = R.nz(-4, 5), Bv = R.nz(-4, 4), n2 = R.intNot(1, 4, [n1]);
+    var n1 = R.int(1, 6), A = R.nz(-7, 8), Bv = R.nz(-7, 7), n2 = R.intNot(1, 6, [n1]);
     var f = kind === 'vel' ? { tex: '0', pl: '0' } : lc([tm(A, B.raw(sinT(n1), 'sin(' + n1 + 'x)'))]), gn = kind === 'both' ? n2 : n1;
     var g = kind === 'shape' ? { tex: '0', pl: '0' } : lc([tm(q(Bv).mul(gn * c), B.raw(sinT(gn), 'sin(' + gn + 'x)'))]);
     var terms = [];
@@ -2595,3 +2595,133 @@
 
 // ---- tail.js
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
+   generator still has few different problems at a level sometimes asks the same skill in another form, built only from
+   problems that generator made, so every answer is the generator's own:
+   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+     classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
+     checker rejects it;
+   - two at once: two different short questions of the topic, answered together.
+   Topics whose generator already varies a lot at a level are left as they are. Placed after the generators and
+   registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'de', VAR = {};
+  // how often another form is used: never when the topic's own generator already varies a lot at this level, up to
+  // half the time when it has few different questions (counted once per topic and level from 40 fixed seeds)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 37 ? 0 : VAR[key] >= 30 ? 0.3 : VAR[key] >= 20 ? 0.45 : 0.55;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
+  // a nearby wrong answer for a number or an expression, or null
+  function wrongFor(R, a) {
+    var v = String(ML.answerValue(a)), cands = [], m;
+    if (a.t === 'num') {
+      if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
+      else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
+      else if (/^-?\d+\.\d+$/.test(v)) { var x = +v, dp = v.split('.')[1].length, st = Math.pow(10, -Math.min(dp, 2)); cands = [x + st, x - st, -x, x * 10, x / 10].map(function (y) { return ML.util.numStr(ML.util.round(y, dp + 1)); }); }
+      else return null;
+    } else if (a.t === 'expr') {
+      if (v.length > 60) return null;
+      if (/ \+ /.test(v)) cands.push(v.replace(' + ', ' - '));
+      if (/ - /.test(v)) cands.push(v.replace(' - ', ' + '));
+      if ((m = /(^|[^\d.^])(\d+)(?![\d.])/.exec(v)) && !/\^$/.test(v.slice(0, m.index + m[1].length))) cands.push(v.slice(0, m.index) + m[1] + (+m[2] + 1) + v.slice(m.index + m[0].length));
+      if (!cands.length) return null;
+    } else return null;
+    var nv = function (s) { var mm = /^(-?\d+)\/(\d+)$/.exec(s); return mm ? mm[1] / mm[2] : /^-?\d+(\.\d+)?$/.test(s) ? +s : null; }, v0 = nv(v);
+    cands = R.shuffle(cands.filter(function (c, i, all) { var x = nv(c); return c !== v && all.indexOf(c) === i && (x === null || v0 === null || (Math.abs(x - v0) >= 0.01 * Math.max(Math.abs(v0), 1e-12) && (v0 <= 0 || x > 0) && (v0 <= 0 || v0 > 1 || x <= 1))); })); // a believable slip: the same sign, and at most 1 when the right answer is
+    for (var i = 0; i < cands.length; i++) if (okAns(a, cands[i]) === false) return cands[i];
+    return null;
+  }
+  function checkable(p) {
+    var a = p.a;
+    if (!a || p.unit || (a.form && a.form !== 'int' && a.form !== 'frac' && a.form !== 'simplest')) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bclassmate\b/i.test(txt(p.q))) return false;
+    if (a.t === 'num' || a.t === 'expr') return okAns(a, ML.answerValue(a)) === true;
+    if (a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    return true;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || ['mc', 'tf', 'num'].indexOf(p.a.t) < 0) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= 300 && !/<(table|svg|img|canvas|ol|ul)\b|\$\$|\\begin\{/i.test(p.q);
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), shown, good;
+    if (a.t === 'mc') {
+      var k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+      shown = a.choices[k]; good = a.choices[a.v];
+    } else {
+      good = ML.answerShow(a);
+      var w = right ? null : wrongFor(R, a);
+      if (!right && w === null) return null;
+      shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
+      if (!shown || /undefined|NaN/.test(shown)) return null;
+    }
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var out = { q: '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q + '</li><li>' + p2.q + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + (p.steps || [''])[0]].concat((p.steps || []).slice(1), ['Question 2: ' + (p2.steps || [''])[0]], (p2.steps || []).slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), mode = ctx && ctx.mode;
+      if (!p || !p.a || !ML.check || !ML.answerShow || !R.chance(share(id, base, ctx))) return p;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check', 'check');
+      if (pairable(p, true)) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = null;
+      try { out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base); } catch (e) { out = null; }
+      return out || p;
+    };
+    fn._forms = true;
+    fn._base = base; // the topic's own generator (for tests)
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

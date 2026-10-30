@@ -246,7 +246,15 @@
     ['{B} was late to school because the bus broke down.', 'exp', 'That {B} was late is known; the bus explains why.'],
     ['This bridge is safe for the school bus, because engineers tested it last month and it held three times the bus\'s weight.', 'arg', 'The safety of the bridge is the point to prove, and the test is the evidence.'],
     ['The bread rose because the yeast made bubbles of gas in the dough.', 'exp', 'That the bread rose is accepted; the passage explains the cause.'],
-    ['The {club} will probably need a bigger room, since forty students signed up this year.', 'arg', 'The need for a bigger room is a claim in doubt, supported by the sign-up numbers.']
+    ['The {club} will probably need a bigger room, since forty students signed up this year.', 'arg', 'The need for a bigger room is a claim in doubt, supported by the sign-up numbers.'],
+    ['The milk went sour because it was left out on the counter all night.', 'exp', 'Everyone agrees the milk is sour; the passage tells why.'],
+    ['The power went out on our street because a tree fell on the lines.', 'exp', 'The outage is a known fact; the fallen tree explains it.'],
+    ['Our tomatoes grew big this year because we watered them every morning.', 'exp', 'That the tomatoes grew big is accepted; the watering explains it.'],
+    ['The puddles are gone because the sun dried them up.', 'exp', 'No one doubts the puddles are gone; the passage gives the cause.'],
+    ['{A} should bring an umbrella today, because the forecast calls for afternoon rain.', 'arg', 'Whether {A} should bring an umbrella is a proposal in doubt, and the forecast is the reason offered.'],
+    ['Someone has been in the kitchen, because the cookie jar is empty and there are crumbs on the counter.', 'arg', 'That someone was in the kitchen is the point to prove; the crumbs and the empty jar are evidence.'],
+    ['The {club} ought to meet on {day}s, since that is the only day the art room is free.', 'arg', 'When the club should meet is in question, and a reason is given for one answer.'],
+    ['The {pet} is probably thirsty, since its water bowl has been empty all morning.', 'arg', 'Whether the {pet} is thirsty is in doubt; the empty bowl is offered as evidence.']
   ];
   G('informal.explanations', tidy(function (R, ctx) {
     var v = vars(R), shape = pickLevel(R, ctx, ['one'], ['one', 'job'], ['which', 'job', 'one']);
@@ -305,8 +313,8 @@
   }));
 
   // ---- indicator words
-  var CIND = ['therefore', 'so', 'thus', 'hence', 'consequently', 'it follows that', 'as a result', 'which shows that'];
-  var PIND = ['because', 'since', 'for', 'given that', 'as shown by', 'after all', 'seeing that', 'for the reason that'];
+  var CIND = ['therefore', 'so', 'thus', 'hence', 'consequently', 'it follows that', 'as a result', 'which shows that', 'accordingly', 'for this reason', 'we can conclude that', 'which means that'];
+  var PIND = ['because', 'since', 'for', 'given that', 'as shown by', 'after all', 'seeing that', 'for the reason that', 'as indicated by', 'in view of the fact that', 'the reason is that', 'inasmuch as'];
   var USES = [ // [sentence, word, indicator?, why]
     ['We have known each other since second grade.', 'since', false, '"Since" here is about time, not a reason.'],
     ['Since the store is closed, we will buy bread tomorrow.', 'since', true, '"Since the store is closed" gives the reason for buying bread tomorrow.'],
@@ -317,7 +325,13 @@
     ['The {club} has met every {day} since March.', 'since', false, '"Since March" tells when, not why.'],
     ['Since {B} has practiced every day, {B} is ready for the recital.', 'since', true, '"Since" gives the reason {B} is ready.'],
     ['Thank you so much for the gift!', 'so', false, '"So much" means "very much".'],
-    ['The {pet} is shivering, so we should bring it inside.', 'so', true, '"So" marks the conclusion: we should bring it inside.']
+    ['The {pet} is shivering, so we should bring it inside.', 'so', true, '"So" marks the conclusion: we should bring it inside.'],
+    ['{B} has been waiting since noon.', 'since', false, '"Since noon" tells when the waiting began, not why.'],
+    ['Since the gym is being painted, practice will be held outside.', 'since', true, '"Since the gym is being painted" gives the reason practice moves outside.'],
+    ['The soup was so hot that {A} waited to eat it.', 'so', false, '"So hot" means "very hot".'],
+    ['The {fruit} were on sale, so we bought a big bag.', 'so', true, '"So" introduces what followed from the sale: we bought a big bag.'],
+    ['{A} made a card for {B}.', 'for', false, '"For" tells who the card was meant for.'],
+    ['We should leave now, for the last train departs in ten minutes.', 'for', true, '"For" introduces the reason we should leave now.']
   ];
   var IND_ARGS = [ // [premise, conclusion]
     ['the road is icy', 'we should drive slowly'], ['the {club} needs more members', 'we should put up posters'],
@@ -326,7 +340,7 @@
     ['the library closes early on {day}s', '{B} should return the book on {day} morning']
   ];
   G('informal.indicator-words', tidy(function (R, ctx) {
-    var v = vars(R), shape = pickLevel(R, ctx, ['word'], ['find', 'word', 'use'], ['use', 'find']);
+    var v = vars(R), shape = pickLevel(R, ctx, ['word', 'find'], ['find', 'word', 'use'], ['use', 'find']);
     if (shape === 'word') {
       var isC = R.coin(), w = R.pick(isC ? CIND : PIND);
       return { q: 'In an argument, what does the word or phrase <b>' + w + '</b> usually mark?', a: keepMc(['A conclusion', 'A premise'], isC ? 0 : 1),
@@ -376,7 +390,13 @@
     ['The garden needs water.', 'It has not rained for two weeks.', 'The leaves are wilting.', 'convergent', 'Each fact alone suggests the garden is thirsty.'],
     ['The concert is sold out.', 'The hall holds 500 people.', '500 tickets have been sold.', 'linked', 'The number of seats only matters together with the number of tickets sold.'],
     ['We should cancel the picnic.', 'A thunderstorm is coming.', 'Half of the class is sick.', 'convergent', 'Either one by itself is a reason to cancel.'],
-    ['The key is in the kitchen.', 'The key is either in the kitchen or in the car.', 'The key is not in the car.', 'linked', 'The either-or premise needs the second premise to rule one choice out.']
+    ['The key is in the kitchen.', 'The key is either in the kitchen or in the car.', 'The key is not in the car.', 'linked', 'The either-or premise needs the second premise to rule one choice out.'],
+    ['{A} can ride the big roller coaster.', 'Riders must be at least 48 inches tall.', '{A} is 50 inches tall.', 'linked', 'The height rule says nothing about {A} without {A}\'s height, and the height means nothing without the rule.'],
+    ['The {club} meeting is in Room 12.', 'The {club} meets wherever Ms. Lee teaches.', 'Ms. Lee teaches in Room 12.', 'linked', 'Only together do the two premises point to Room 12.'],
+    ['The museum is free for {B} today.', 'The museum is free for students on {day}s.', 'Today is {day}, and {B} is a student.', 'linked', 'The rule and the facts about today and {B} work only as a pair.'],
+    ['We should eat at home tonight.', 'The fridge is full of leftovers.', 'The restaurant is closed for repairs.', 'convergent', 'Either fact alone is a reason to eat at home.'],
+    ['{B} will probably do well on the test.', '{B} studied every night this week.', '{B} got a perfect score on the practice test.', 'convergent', 'Each premise alone gives some reason to expect a good score.'],
+    ['The old bike should be fixed before the race.', 'Its brakes squeak.', 'Its chain keeps slipping.', 'convergent', 'Each problem alone is a reason to fix the bike.']
   ];
   G('informal.argument-maps', tidy(function (R, ctx) {
     var v = vars(R), shape = pickLevel(R, ctx, ['two'], ['two'], ['three', 'two']);
@@ -401,7 +421,11 @@
     [['The store closes at six.', 'It is already ten to six.'], 'So we can\'t get to the store before it closes.', ['We need milk for breakfast.'], 'So we should ask the neighbors for some milk.'],
     [['{A} scored the most goals this season.', 'The top scorer gets the golden boot.'], 'So {A} will get the golden boot.', ['Winners of the golden boot are invited to the banquet.'], 'So {A} will be invited to the banquet.'],
     [['The {pet} hasn\'t eaten since yesterday.', 'It is also hiding and sleeping all day.'], 'So the {pet} is probably sick.', ['Sick pets should see a vet soon.'], 'So we should take the {pet} to the vet.'],
-    [['The forecast shows heavy rain for {day}.', 'The field floods in heavy rain.'], 'So the field will likely be flooded on {day}.', ['A flooded field can\'t be used for games.'], 'So the {day} game should be moved.']
+    [['The forecast shows heavy rain for {day}.', 'The field floods in heavy rain.'], 'So the field will likely be flooded on {day}.', ['A flooded field can\'t be used for games.'], 'So the {day} game should be moved.'],
+    [['Every seat on the {day} bus is sold.', '{B} does not have a ticket yet.'], 'So {B} cannot ride the {day} bus.', ['The {day} bus is the only bus to {place} this week.'], 'So {B} will not get to {place} by bus this week.'],
+    [['The recipe needs three eggs.', 'We have only one egg.'], 'So we cannot make the recipe as written.', ['The store is closed until morning.'], 'So we should choose a different dessert tonight.'],
+    [['The {pet} chews anything left on the floor.', '{A}\'s new shoes are on the floor.'], 'So the {pet} may chew {A}\'s new shoes.', ['{A} wants to keep the shoes in good shape.'], 'So {A} should put the shoes away.'],
+    [['The library closes at five on {day}s.', 'Today is {day}, and it is already four thirty.'], 'So the library will close in half an hour.', ['The walk to the library takes forty minutes.'], 'So we cannot get there before it closes today.']
   ];
   G('informal.subarguments', tidy(function (R, ctx) {
     var v = vars(R), it = R.pick(CH), f = function (x) { return fill(x, v); };
@@ -624,12 +648,12 @@
 
   // ---- validity and truth together
   G('informal.validity-truth-combos', tidy(function (R, ctx) {
-    var shape = pickLevel(R, ctx, ['combo'], ['combo', 'parts'], ['parts', 'combo']);
+    var shape = pickLevel(R, ctx, ['combo', 'parts'], ['combo', 'parts'], ['parts', 'combo']);
     if (shape === 'combo') {
       var pT = R.coin(), cT = R.coin(), valid = R.coin();
       var desc = (pT ? 'all true premises' : 'at least one false premise') + ' and a ' + (cT ? 'true' : 'false') + ' conclusion';
       var possible = !(valid && pT && !cT);
-      return { q: 'Can a <b>' + (valid ? 'valid' : 'invalid') + '</b> argument have ' + desc + '?', a: keepMc(['Yes, that is possible', 'No, that is impossible'], possible ? 0 : 1),
+      return { q: 'Can ' + (valid ? 'a <b>valid' : 'an <b>invalid') + '</b> argument have ' + desc + '?', a: keepMc(['Yes, that is possible', 'No, that is impossible'], possible ? 0 : 1),
         steps: ['The only thing validity rules out is all true premises with a false conclusion.', possible ? (valid ? 'This mix is not that one, so a valid argument can have it.' : 'An invalid argument can have any mix of true and false statements.') : 'This is exactly that mix, so no valid argument can have it.'],
         hint: 'A valid argument can\'t have true premises and a false conclusion. Every other mix is possible.' };
     }
@@ -1196,11 +1220,17 @@
       ['{A}: Our coach said we have a lot of bright players.|{A}: So we should play the night game without any field lights.', 1, '"Bright" meant smart, not giving off light.'],
       ['{B} is a big fan of the {town} team.|A fan is a machine that blows air.|So {B} is a machine that blows air.', 1, '"Fan" means a supporter in the first line and a machine in the second.'],
       ['{C} sat on the bank all afternoon, watching the river.|Banks are where people keep their money.|So {C} sat where people keep their money.', 1, '"Bank" means the side of a river in the first line and a place for money in the second.'],
-      ['Nothing is better than a long vacation.|A cold sandwich is better than nothing.|So a cold sandwich is better than a long vacation.', 2, '"Nothing" means "no other thing" in the first line and "having nothing at all" in the second.']
+      ['Nothing is better than a long vacation.|A cold sandwich is better than nothing.|So a cold sandwich is better than a long vacation.', 2, '"Nothing" means "no other thing" in the first line and "having nothing at all" in the second.'],
+      ['{A} is a star on the soccer team.|Stars are giant balls of burning gas.|So {A} is a giant ball of burning gas.', 1, '"Star" means a top player in the first line and a sun in the second.'],
+      ['{B} bought a new mouse for the computer.|A mouse is a small furry animal.|So {B} bought a small furry animal.', 1, '"Mouse" means a computer tool in the first line and an animal in the second.'],
+      ['The school play was a hit.|Hitting people is wrong.|So the school play was wrong.', 1, '"Hit" means a success in the first line and a blow in the second.'],
+      ['Our teacher said the quiz would be a piece of cake.|Cake is something you eat.|So the quiz is something you eat.', 1, '"A piece of cake" means easy in the first line, but the second line treats it as food.']
     ],
     fair: [
       ['A feather weighs very little.|Things that weigh very little are easy to carry.|So a feather is easy to carry.', 'Every key word keeps one meaning through the argument.'],
-      ['Every chess match has a winner or ends in a draw.|Today\'s final is a chess match.|So it will have a winner or end in a draw.', '"Match" means a game in both premises.']
+      ['Every chess match has a winner or ends in a draw.|Today\'s final is a chess match.|So it will have a winner or end in a draw.', '"Match" means a game in both premises.'],
+      ['A bat is a flying mammal.|All mammals have hair.|So a bat has hair.', '"Bat" means the animal in every line.'],
+      ['{A} is the top scorer on the soccer team.|The top scorer gets the trophy.|So {A} gets the trophy.', '"Top scorer" means the same thing in both premises.']
     ]
   };
   FB.amph = {
@@ -1224,12 +1254,18 @@
       ['Each ingredient in the stew tastes good on its own.|So the stew will taste good.', 1, 'Good parts can make a bad mix. Taste does not simply add up.'],
       ['Every song on the album is short.|So the album is short.', 1, 'Many short songs can make a long album.'],
       ['Each part of the new machine is cheap.|So the whole machine is cheap.', 1, 'Costs add up. Hundreds of cheap parts can make an expensive machine.'],
-      ['Each student in the class is quiet.|So the class makes a quiet sound at recess, even all together.', 1, 'Many quiet voices together can be loud.']
+      ['Each student in the class is quiet.|So the class makes a quiet sound at recess, even all together.', 1, 'Many quiet voices together can be loud.'],
+      ['Each grain of sand weighs almost nothing.|So a truckload of sand weighs almost nothing.', 1, 'Weight adds up. Billions of grains make a heavy load.'],
+      ['Each sentence in the essay is well written.|So the essay is well organized.', 1, 'Good sentences can still be put in a confusing order.'],
+      ['Each raindrop is tiny.|So the storm was tiny.', 1, 'Countless tiny drops can make a huge storm.'],
+      ['Each musician in the band plays well alone.|So the band will sound good together.', 1, 'Playing well alone does not add up to playing well together.']
     ],
     fair: [
       ['Every brick in the wall is red.|So the wall is red.', 'Color is a property that carries over from parts to a whole made only of them.'],
       ['Every piece of the puzzle is made of wood.|So the puzzle is made of wood.', 'Being made of wood carries over: a whole made of wooden parts is wooden.'],
-      ['Every page of the book is printed in blue ink.|So the book is printed in blue ink.', 'Ink color carries over from each page to the whole book.']
+      ['Every page of the book is printed in blue ink.|So the book is printed in blue ink.', 'Ink color carries over from each page to the whole book.'],
+      ['Every tile on the floor is made of stone.|So the floor is made of stone.', 'What the parts are made of carries over to a whole made only of them.'],
+      ['Every slice of the pizza has cheese on it.|So the pizza has cheese on it.', 'If every slice has cheese, the whole pizza does too.']
     ]
   };
   FB.div = {
@@ -1239,12 +1275,18 @@
       ['The school is very large.|So every classroom in it is very large.', 1, 'A big school can have small rooms. Size of the whole does not pass to each part.'],
       ['The {club} won the state contest.|So {A}, a member, must be the best in the state.', 1, 'The prize went to the group\'s work together, not to each member alone.'],
       ['The machine is heavy.|So every part of it is heavy.', 1, 'A heavy machine can be made of many light parts.'],
-      ['The cake is sweet.|So the flour in it is sweet.', 1, 'The cake is sweet because of the sugar, not because every ingredient is sweet.']
+      ['The cake is sweet.|So the flour in it is sweet.', 1, 'The cake is sweet because of the sugar, not because every ingredient is sweet.'],
+      ['The {town} library has a huge collection.|So each shelf in it has a huge collection.', 1, 'A huge collection is spread over many shelves, each holding only part of it.'],
+      ['The {town} team is the best in the league.|So each player on it is the best player in the league.', 1, 'A team can be the best because its players work well together.'],
+      ['The choir is loud.|So each singer in the choir is loud.', 1, 'Many soft voices together can make a loud choir.'],
+      ['The truck is very expensive.|So each bolt in the truck is very expensive.', 1, 'An expensive truck can be built from many cheap parts.']
     ],
     fair: [
       ['The whole box of crayons is made of wax.|So each crayon in the box is made of wax.', 'Being made of wax is a property of what each part is made of, so it carries down.'],
       ['The whole fence is painted white.|So each board of the fence is painted white.', 'If all of the fence is white, each board is white too.'],
-      ['The entire jar of marbles is glass.|So each marble is glass.', 'The material of the whole jar of marbles is the material of each marble.']
+      ['The entire jar of marbles is glass.|So each marble is glass.', 'The material of the whole jar of marbles is the material of each marble.'],
+      ['The whole rope is made of cotton.|So each strand of the rope is made of cotton.', 'What the whole is made of is what each strand is made of.'],
+      ['Every part of the necklace is silver.|So each link of the necklace is silver.', 'A property of every part carries down to each link.']
     ]
   };
   FB.ac = {
@@ -1622,3 +1664,343 @@
 
 
 })(typeof window !== 'undefined' ? window.MathLadder : global.MathLadder);
+
+/* ---- widen_hum: more questions from the lesson's own tables -----------------------------------------------------
+   Each topic listed below also asks about the facts in its lesson's tables (copied here from the lesson, so the
+   answers are the lesson's own). Forms, by level:
+     match   "Which museum is in Turin?": the right cell and others from the same column (3 choices at level 1, 4 above)
+     pairs   lines "A → B": which pairing is right (level 2), or which one is wrong (level 3)
+     sort    a comparison table: which column does this cell describe (levels 1-2), or choose all for one column (level 3)
+   How often: about a third to a half of the draws, more when the topic's own questions are few at that level.
+   Generated by /tmp/work_widen_widen_hum/tabbuild.js from data/<ladder>/lessons/<course>.json. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var TABS = [{"k":"informal.causal-reasoning#3","h":["Pattern","Other explanation","Kind"],"r":[["Ice cream sales and sunburns rise together","Hot, sunny weather causes both","Common cause"],["Towns with more firefighters have more fires","More fires lead to hiring more firefighters","Reversed direction"],["The team won the day Kai wore green socks","Socks can't change a game","Coincidence"]],"cap":"Three other stories to check.","m":[[0,1,"Two things happen together: {a}. What is a better explanation?",0,"a pattern with another explanation"],[0,2,"What kind of causal mistake might this be: {a}?",0,0,2]]},
+    {"k":"informal.ambiguity-vagueness#3","h":["Sentence","Word","Kind"],"r":[["\"I found a bat under the porch.\"","bat","Ambiguous: an animal or a baseball bat"],["\"The team needs a tall player.\"","tall","Vague: no exact height where tall begins"],["\"Meet me at the bank.\"","bank","Ambiguous: a money bank or a riverbank"],["\"Bring a few snacks.\"","few","Vague: three? six?"]],"cap":"Two meanings versus a blurry edge.","m":[[0,2,"Which word makes this unclear, and how: {a}",0,"a sentence with its unclear word"],[0,1,"Which word makes this sentence unclear: {a}",0]]},
+    {"k":"informal.definition-rules#3","h":["Definition","Fault"],"r":[["A dog is an animal with four legs","Too broad: cats have four legs"],["A bird is an animal with feathers that can fly","Too narrow: penguins are birds"],["A teacher is a person who teaches","Circular"],["A circle is a shape that is not a square","Negative"],["Music is the language of the heart","Figurative"]],"cap":"One example of each fault.","m":[[0,1,"What is wrong with this definition: {a}",0,"a definition with its fault"]]},
+    {"k":"informal.explanations#3","h":["","Argument","Explanation"],"r":[["The main claim is…","in doubt","already accepted"],["The \"because\" part gives…","evidence","a cause or reason why"],["Its job is to…","convince","help you understand"]],"cap":"Two jobs for \"because\".","one":"Argument or explanation: which does this describe?","all":"Which of these describe an {a:l}? Choose all that apply."}];
+  var FUNS = {};
+  function plain(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim(); }
+  function txt(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function low(s) { return txt(s).toLowerCase().replace(/[.;:,]+$/, ''); }
+  function big(x) { return String(x).replace(/<span class="(sc-b|eg-cop|eg-h)">/g, '<span class="$1" style="font-size:1.6em;line-height:1">'); }
+  function fill(t, x) { x = big(x); return t.replace('{a:l}', String(x).replace(/^[A-Z](?=[a-z])/, function (c) { return c.toLowerCase(); })).replace('{a}', x); }
+  function dot(s) { s = String(s); return /[.!?…"”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function sameRow(t, i, a) { return t.r.filter(function (r) { return low(r[a]) === low(t.r[i][a]); }); }
+  function partnerSteps(t, tp, right, shown) { // what each wrong choice goes with
+    var out = [];
+    shown.forEach(function (c) {
+      if (low(c) === low(right)) return;
+      var rows = t.r.filter(function (r) { return low(r[tp[1]]) === low(c); });
+      if (rows.length === 1 && txt(rows[0][tp[0]]).length <= 90) out.push(dot(c + ': that goes with ' + rows[0][tp[0]]));
+    });
+    return out.slice(0, 3);
+  }
+  // match: ask for column b from a cell of column a
+  function match(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][b]).length <= 130; });
+    if (!ok.length) return null;
+    var i = R.pick(ok), right = t.r[i][b], seen = {};
+    seen[low(right)] = 1;
+    var bad = {}; sameRow(t, i, a).forEach(function (r) { bad[low(r[b])] = 1; }); // never a choice that is also right
+    var pool = []; t.r.forEach(function (r) { var k = low(r[b]); if (r[b] && !seen[k] && !bad[k] && txt(r[b]).length <= 130) { seen[k] = 1; pool.push(r[b]); } });
+    var k = Math.min(L === 1 ? 3 : 4, pool.length + 1); if (k < 3) return null;
+    var wrongs = R.shuffle(pool).slice(0, k - 1), choices = [right].concat(wrongs);
+    return { q: fill(tp[2], t.r[i][a]), a: { t: 'mc', choices: choices, v: 0 },
+      steps: [dot(t.r[i][a] + ' → ' + right), ].concat(partnerSteps(t, tp, right, choices)),
+      hint: tp[3] || 'Think back to the lesson’s table' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 'm', a, b, i, txt(t.r[i][a])] };
+  }
+  // pairs: three or four lines "a → b"; one right (level 2) or one wrong (level 3)
+  function pairs(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][a]).length <= 70 && txt(t.r[i][b]).length <= 70; });
+    var uniq = {}; ok = ok.filter(function (i) { var k = low(t.r[i][a]); if (uniq[k]) return false; uniq[k] = 1; return true; });
+    var n = Math.min(4, ok.length); if (n < 3) return null;
+    var rows = R.shuffle(ok).slice(0, n), wrongOne = L >= 3, target = R.int(0, n - 1), lines = [], steps = [];
+    for (var j = 0; j < n; j++) {
+      var i = rows[j], right = wrongOne ? j !== target : j === target, ans = t.r[i][b];
+      if (!right) {
+        var good = {}; sameRow(t, i, a).forEach(function (r) { good[low(r[b])] = 1; });
+        var ws = []; t.r.forEach(function (r) { if (r[b] && !good[low(r[b])] && txt(r[b]).length <= 70 && ws.map(low).indexOf(low(r[b])) < 0) ws.push(r[b]); });
+        if (!ws.length) return null;
+        ans = R.pick(ws);
+      }
+      lines.push(t.r[i][a] + ' → ' + ans);
+      steps.push(dot(t.r[i][a] + ' → ' + t.r[i][b] + (right ? ': right' : ', not ' + ans)));
+    }
+    var what = tp[4] ? ' Each line pairs ' + tp[4] + '.' : '';
+    return { q: (wrongOne ? 'Exactly one of these pairings is <b>wrong</b>. Which one?' : 'Exactly one of these pairings is right. Which one?') + what,
+      a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own against what you learned.', wh: [t.k, wrongOne ? 'pw' : 'pr', a, b] };
+  }
+  // sort: which column of a comparison table does a cell belong to
+  function sortQ(R, t, L) {
+    var cols = t.h.map(function (_, j) { return j; }).filter(function (j) { return j >= (t.na ? 0 : 1) && txt(t.h[j]); });
+    if (cols.length < 2) return null;
+    var cells = [];
+    t.r.forEach(function (r, i) { cols.forEach(function (j) {
+      if (!r[j] || (!t.na && !txt(r[0]))) return;
+      var dup = cols.some(function (j2) { return j2 !== j && r[j2] && (low(r[j2]) === low(r[j]) || low(r[j2]).indexOf(low(r[j])) >= 0 || low(r[j]).indexOf(low(r[j2])) >= 0); });
+      if (!dup && txt(r[j]).length <= 140) cells.push([i, j]);
+    }); });
+    if (cells.length < 2) return null;
+    var heads = cols.map(function (j) { return t.h[j]; });
+    if (L >= 3 && cells.length >= 5) {
+      var j0 = R.pick(cols), pick = R.shuffle(cells).slice(0, Math.min(5, cells.length));
+      var hits = pick.filter(function (c) { return c[1] === j0; }).length;
+      if (hits >= 1 && hits < pick.length) {
+        var ch = pick.map(function (c) { return lab(t, c); });
+        var v = pick.map(function (c, k) { return c[1] === j0 ? k : -1; }).filter(function (k) { return k >= 0; });
+        return { q: fill(t.all, t.h[j0]), a: { t: 'mc', choices: ch, v: v },
+          steps: pick.map(function (c) { return dot(lab(t, c) + ' (' + t.h[c[1]] + ')'); }),
+          hint: 'Go through them one at a time.', wh: [t.k, 'sa', j0, pick] };
+      }
+    }
+    var c = R.pick(cells);
+    return { q: t.one + (t.na ? (/^["“]/.test(txt(t.r[c[0]][c[1]])) ? '<br>' + t.r[c[0]][c[1]] : '<br>“' + t.r[c[0]][c[1]] + '”') : '<br>' + asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]), a: { t: 'mc', choices: heads.slice(), v: cols.indexOf(c[1]) },
+      steps: t.na ? [dot('That is ' + t.h[c[1]].replace(/^./, function (x) { return x.toLowerCase(); }))] : [dot(txt(t.r[c[0]][0]) + ' for ' + t.h[c[1]] + ': ' + t.r[c[0]][c[1]])].concat(cols.filter(function (j) { return j !== c[1] && t.r[c[0]][j]; }).map(function (j) { return dot('For ' + t.h[j] + ': ' + t.r[c[0]][j]); })),
+      hint: 'Think back to the lesson’s comparison' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 's', c[0], c[1]] };
+  }
+  function asp(x) { return '<b>' + x + (/\?$/.test(txt(x)) ? '' : ':') + '</b> '; }
+  function lab(t, c) { return t.na ? t.r[c[0]][c[1]] : asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]; }
+  // extra bank items: { q, a, w: [wrong answers, more than are shown], s: [steps], h: hint, lv } or { q, tf: true|false, s, lv }
+  function extra(R, t, L) {
+    var its = t.x.filter(function (it) { return (it.lv || 1) <= L; }); if (!its.length) return null;
+    var it = R.pick(its), p;
+    if (it.f) { it = FUNS[it.f](R, L); if (!it) return null; }
+    if (it.num !== undefined) {
+      p = { q: it.q, a: { t: 'num', v: String(it.num) }, steps: it.s.slice() };
+      if (Number.isInteger(it.num) && !it.unit && !it.pct) p.a.form = 'int';
+      if (it.pct) p.a.pct = true;
+      if (it.tol != null) p.a.tol = it.tol;
+      if (it.unit) p.unit = it.unit;
+    }
+    else if (it.tf !== undefined) p = { q: it.q, a: { t: 'tf', v: it.tf }, steps: it.s.slice() };
+    else {
+      var k = Math.min(L === 1 ? 3 : 4, it.w.length + 1);
+      p = { q: it.q, a: { t: 'mc', choices: [it.a].concat(R.shuffle(it.w).slice(0, k - 1)), v: 0 }, steps: it.s.slice() };
+    }
+    p.hint = it.h || 'Think back to the lesson.';
+    p.wh = [t.k, 'x', its.indexOf(it) >= 0 ? t.x.indexOf(it) : -1];
+    return FUNS.__wrap ? FUNS.__wrap(p, L) : p;
+  }
+  function make(R, list, L) {
+    for (var tries = 0; tries < 8; tries++) {
+      var t = R.pick(list), p = null;
+      if (t.x) p = extra(R, t, L);
+      else if (t.one) p = sortQ(R, t, L);
+      else {
+        var tps = t.m.filter(function (tp) { return (tp[5] || 1) <= L; }); if (!tps.length) continue;
+        var tp = R.pick(tps);
+        p = L >= 2 && tp[4] && R.chance(0.35) ? pairs(R, t, tp, L) : match(R, t, tp, L);
+      }
+      if (p) {
+        // ladder pages show choices as plain text (only $…$ math is rendered), so choices carry no tags
+        if (p.a.t === 'mc') { p.a.choices = p.a.choices.map(plain); var seen = {}; if (p.a.choices.some(function (c) { var k = seen[c]; seen[c] = 1; return k; })) continue; }
+        p.nowiden = true; return p;
+      }
+    }
+    return null;
+  }
+  var BY = {}; TABS.forEach(function (t) { var id = t.k.split('#')[0].split('@')[0]; (BY[id] = BY[id] || []).push(t); });
+  var VAR = {};
+  function baseCount(id, base, L) { // different questions (ignoring the order of choices) from 40 fixed seeds
+    var key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        try { var p = base(ML.rand(id + '#whv#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; } } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  function extCount(id, L) { // different table questions from 40 fixed seeds
+    var key = id + '|x|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        var p = make(ML.rand(id + '#whx#' + s + '#' + L), BY[id], L); if (!p) continue;
+        var k = p.q + '|' + JSON.stringify(p.a.choices ? p.a.choices.slice().sort() : p.a.v);
+        if (!seen[k]) { seen[k] = 1; n++; }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  Object.keys(BY).forEach(function (id) {
+    var base = ML.getGen(id); if (!base || base._wh) return;
+    var fn = function (R, ctx) {
+      var L = (ctx && ctx.level) || 1, n = baseCount(id, base, L), x = extCount(id, L), share = Math.max(0.15, Math.min(0.5, x / (x + n + 1)));
+      if (R.chance(share)) { var p = make(R, BY[id], L); if (p) return p; }
+      return base(R, ctx);
+    };
+    fn._wh = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen_hum ---- */
+
+/* ---- widen: more forms of the same questions (so practice repeats less) ----------------------------------------
+   Every topic of this course keeps its own problems, and some draws are turned into other forms of the same skill,
+   built only from the topic's own problems (so their answers stay the ones the topic already checks):
+     check   "Ava chose X. Is Ava right?" (Yes or No) from a one-answer multiple-choice problem
+     pairs   two or three lines "question → answer"; which line is right (or, at level 3, which one is wrong)
+     tfpick  "Which sentence is true?" (or false) from three of the topic's true-or-false sentences
+   Questions whose answer depends on the other choices (first, best, most, not …) show the choices in the check form
+   and never go into pairs. Mix per level: CFG.mix[level] = [check, pairs, tfpick] shares; the rest stays as it was. */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var CFG = {"prefix":"informal.","only":["statements","arguments","explanations","indicator-words","argument-maps","subarguments","unstated-premises","deductive-inductive","soundness","validity-truth-combos","inductive-strength","causal-reasoning","ambiguity-vagueness","kinds-of-definitions","definition-rules","loaded-language","fallacy-intro","appeal-to-popularity","appeal-to-authority","appeal-to-ignorance","false-dilemma","false-cause","slippery-slope","weak-analogy","suppressed-evidence","equivocation","amphiboly","composition","division","conditional-fallacies","objections"]};
+  var NAMES = ['Ava', 'Ben', 'Cora', 'Dev', 'Eli', 'Finn', 'Gus', 'Hana', 'Ivy', 'Jude', 'Kai', 'Lena', 'Milo', 'Nora', 'Omar', 'Pia',
+    'Quinn', 'Rosa', 'Sam', 'Tess', 'Uma', 'Vic', 'Wren', 'Zoe', 'Ada', 'Leo', 'Mia', 'Theo', 'June', 'Max'];
+  var REL = /\b(first|last|earliest|latest|earlier|later|before|after|older|oldest|newer|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|look|read|here|example|examples|likely|probably|mainly|main|usually|typically|other|another|which one|each|order|then|next)\b|n['’]t\b/i;
+  // pairs judge each line on its own, so only questions whose answer depends on the other choices are left out
+  var RELP = /\b(first|last|earliest|latest|oldest|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|which one|other|another|rank|order|more|less|fewer)\b|n['’]t\b|\w+est\b/i;
+  var REF = /\b(this|these|those|shown|picture|map|table|chart|graph|diagram|passage|scene|story|above|below|here|following)\b/i;
+  var BADCH = /\b(all|none|both|neither) of\b|\b(above|below)\b|^(both|neither|all|none)\b|\bchoice\b|\boption\b/i;
+  function strip(s) { return String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function plainish(s) { return !/<(?!\/?(b|i|em|strong)\b)[^>]*>/.test(String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1')); }
+  function add(q, html) { // inside a read-aloud big span when there is one
+    var m = /<span class="[\w-]*big">/.exec(q);
+    if (m) { var k = q.lastIndexOf('</span>'); if (k > m.index) return q.slice(0, k) + '<br>' + html.replace(/<\/p>\s*<p[^>]*>/g, '<br>').replace(/<\/?p[^>]*>/g, '') + q.slice(k); }
+    return q + html;
+  }
+  function single(p) {
+    return p && p.a && p.a.t === 'mc' && !Array.isArray(p.a.v) && Array.isArray(p.a.choices) && p.a.choices.length >= 2 &&
+      !p.a.choices.some(function (c) { return BADCH.test(strip(c)); });
+  }
+  function hash(t) { var h = 7; for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return h; }
+  function nameFor(q, key) { // the same claim always gets the same name, so a name alone never makes a "new" problem
+    var t = strip(q), ok = NAMES.filter(function (n) { return t.indexOf(n) < 0 && String(key).indexOf(n) < 0; });
+    return (ok.length ? ok : NAMES)[hash(t + '|' + key) % (ok.length || NAMES.length)];
+  }
+  function dot(s) { s = String(s); return /[.!?…"”')\]]\s*(<\/b>)?$/.test(strip(s)) || /\$$/.test(s) ? s : s + '.'; }
+  function optList(ch) { return '<p class="wd-opts">The choices were:<br>' + ch.map(function (c) { return '• ' + c; }).join('<br>') + '</p>'; }
+  function copyP(p, q, a, steps) { var o = {}; for (var k in p) if (Object.prototype.hasOwnProperty.call(p, k)) o[k] = p[k]; o.q = q; o.a = a; o.steps = steps; delete o.choices; return o; }
+
+  // check: show one choice (the right one half the time) and ask whether it is right
+  function check(p, R) {
+    var ch = p.a.choices, v = p.a.v, idx = ch.map(function (_, i) { return i; }), others = idx.filter(function (i) { return i !== v; });
+    var i = R.chance(0.5) ? v : R.pick(others), ok = i === v, nm = nameFor(p.q, ch[i]), letters = ch.every(function (c) { return /^[A-Z]$/.test(String(c)); });
+    var stem = strip(p.q), html = '';
+    if (!letters && (REL.test(stem) || ch.length > 4 || CFG.listAll)) {
+      var shown = p.a.keep ? ch.slice() : R.shuffle(ch);
+      html += optList(shown);
+    }
+    html += '<p class="wd-check">' + nm + ' chose: <b>' + ch[i] + '</b>' + (/[.!?…"”]$/.test(strip(ch[i])) ? '' : '.') + ' Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes. ' + dot(ch[v]) + ' is the right answer.' : 'No. The right answer is: ' + dot(ch[v]);
+    if (ok) first = 'Yes, that is the right answer.';
+    return copyP(p, add(p.q, html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [first].concat(p.steps || []));
+  }
+  // check for "choose all": the whole list is shown, and one learner's picks; right only if exactly the right ones
+  function checkAll(p, R) {
+    var ch = p.a.choices, v = p.a.v.slice().sort(), n = ch.length, pick;
+    if (R.chance(0.45)) pick = v.slice();
+    else {
+      var t = 0; do { var j = R.int(0, n - 1), s = v.slice(), k = s.indexOf(j); if (k >= 0) s.splice(k, 1); else s.push(j); if (R.chance(0.3)) { var j2 = R.int(0, n - 1), k2 = s.indexOf(j2); if (k2 >= 0) s.splice(k2, 1); else s.push(j2); } pick = s.sort(); t++; }
+      while (t < 20 && (!pick.length || pick.join() === v.join()));
+      if (!pick.length || pick.join() === v.join()) return null;
+    }
+    var ok = pick.join() === v.join(), nm = nameFor(p.q, pick.join());
+    var html = optList(ch) + '<p class="wd-check">' + nm + ' chose ' +
+      (pick.length === 1 ? 'only: <b>' + ch[pick[0]] + '</b>' : 'these: <b>' + pick.map(function (i) { return ch[i]; }).join('</b>; <b>') + '</b>') + '. Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes, those are exactly the right ones.' : 'No. The right ones are: ' + v.map(function (i) { return ch[i]; }).join('; ');
+    return copyP(p, add(p.q.replace(/\s*(Choose|Select|Pick) (all|every)[^.?!<]*[.?!]?/i, ''), html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [dot(first)].concat(p.steps || []));
+  }
+
+  // items for pairs: one-answer questions that stand on their own (no picture, no passage, no "first/best/…")
+  function pairItem(p) {
+    if (!single(p) || p.viz) return null;
+    var max = CFG.maxStem || 120, maxA = CFG.maxAns || 70, a = strip(p.a.choices[p.a.v]), stem, group = '';
+    // "prompt<br><b>thing</b>" or "prompt<blockquote>thing</blockquote>": a line is "thing → answer", lines share the prompt
+    var q0 = p.q.replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1').trim();
+    var m = /^([^<]{6,140}?)\s*(?:<br>\s*<b>([^<]{3,140})<\/b>|<blockquote>([^<]{3,140})<\/blockquote>)\s*$/.exec(q0);
+    if (m) { group = m[1].trim(); stem = (m[2] || m[3]).trim(); if (RELP.test(group.replace(/\b(this|these)\b/gi, ''))) return null; }
+    else {
+      if (!plainish(p.q)) return null;
+      stem = strip(p.q); if (RELP.test(stem)) return null;
+    }
+    if (stem.length > max || stem.length < 3 || a.length > maxA || /^[A-Z]$/.test(a) || /\$/.test(stem + a + group)) return null;
+    var w = p.a.choices.filter(function (_, i) { return i !== p.a.v; }).map(strip).filter(function (x) { return x.length <= maxA && x !== a; });
+    if (!w.length) return null;
+    return { stem: stem.replace(/\s*(Choose one|Pick one)\.?$/i, ''), a: a, w: w, why: (p.steps || [])[0] || '', group: group };
+  }
+  function tfItem(p) {
+    if (!p || !p.a || p.a.t !== 'tf' || p.viz || !plainish(p.q)) return null;
+    var s = strip(p.q).replace(/^(True or false\?|True or false:)\s*/i, '').replace(/\s*(True or false\?|Is this true or false\?|Is it true or false\?)$/i, '').trim();
+    if (s.length < 8 || s.length > (CFG.maxStem || 120) + 20 || REF.test(s) || /\?$/.test(s) || /\$/.test(s)) return null;
+    return { s: s, v: p.a.v, why: (p.steps || [])[0] || '' };
+  }
+  function harvest(base, R, ctx, make, n, distinct) {
+    var out = [], keys = {};
+    for (var t = 0; t < 24 && out.length < n; t++) {
+      // at level 3, lines may come from level 2 questions too: three lines with one wrong is the harder form
+      var c2 = ctx && ctx.level >= 3 && (t % 2) ? Object.assign({}, ctx, { level: 2 }) : ctx;
+      var p; try { p = base(ML.rand(R.int(1, 2e9)), c2); } catch (e) { continue; }
+      var it = make(p); if (!it) continue;
+      if (out.length && it.group !== undefined && it.group !== out[0].group) continue;
+      var k = distinct(it); if (k.some(function (x) { return keys[x]; })) continue;
+      k.forEach(function (x) { keys[x] = 1; }); out.push(it);
+    }
+    return out;
+  }
+  function pairs(base, R, ctx, n, wrongOne) {
+    var its = harvest(base, R, ctx, pairItem, n, function (it) { return it.group ? ['s:' + it.stem] : ['s:' + it.stem, 'a:' + it.a]; });
+    if (its.length < n) return null;
+    var answers = its.map(function (it) { return it.a; }), used = {};
+    var target = R.int(0, n - 1), lines = [], steps = [];
+    for (var i = 0; i < n; i++) {
+      var it = its[i], right = wrongOne ? i !== target : i === target, ans = it.a;
+      if (!right) {
+        var ws = it.w.filter(function (x) { return (its[0].group || answers.indexOf(x) < 0) && !used[x]; });
+        if (!ws.length) return null;
+        ans = R.pick(ws); if (!its[0].group) used[ans] = 1;
+      }
+      lines.push(it.stem + ' → ' + ans); // plain text: ladder pages show choices as text
+      steps.push(it.group ? dot(it.stem) + ' Answer: ' + it.a + (right ? '.' : ', not ' + ans + '.') : it.stem + ' The answer is ' + it.a + (right ? '.' : ', not ' + ans + '.'));
+    }
+    var g = its[0].group, q = g ? '<p class="wd-group">The question for every line: <i>' + g + '</i></p>' + (wrongOne ? 'One line has the <b>wrong</b> answer. Which line is it?' : n === 2 ? 'Which line has the <b>right</b> answer?' : 'Only one line has the right answer. Which line is it?') : wrongOne ? 'Each line is a question and an answer. One answer is <b>wrong</b>. Which line is it?'
+      : (n === 2 ? 'Each line is a question and an answer. Which line has the <b>right</b> answer?' : 'Each line is a question and an answer. Only one answer is right. Which line is it?');
+    if (its[target].why) steps.push(its[target].why);
+    return { q: q, a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own. Does the answer fit the question?' };
+  }
+  function tfpick(base, R, ctx, wantFalse) {
+    var its = harvest(base, R, ctx, tfItem, 6, function (it) { return ['s:' + it.s]; });
+    var T = its.filter(function (x) { return x.v; }), F = its.filter(function (x) { return !x.v; });
+    var odd = wantFalse ? F : T, rest = wantFalse ? T : F;
+    if (!odd.length || rest.length < 2) return null;
+    var pick = [odd[0], rest[0], rest[1]], order = R.shuffle([0, 1, 2]), choices = order.map(function (i) { return pick[i].s; });
+    var steps = pick.map(function (x) { return x.s + ' ' + (x.v ? 'True.' : 'False.'); });
+    if (odd[0].why) steps.push(odd[0].why);
+    return { q: wantFalse ? 'Which sentence is <b>false</b>?' : 'Which sentence is <b>true</b>?', a: { t: 'mc', choices: choices, v: order.indexOf(0) }, steps: steps,
+      hint: 'Decide about each sentence on its own.' };
+  }
+  var MIX = CFG.mix || { 1: [0.38, 0.25, 0.04], 2: [0.27, 0.3, 0.1], 3: [0.17, 0.4, 0.15] };
+  function wrap(id, base) {
+    var fn = function (R, ctx) {
+      var lv = ctx && ctx.level || 1, p = base(R, ctx), m = MIX[lv] || MIX[3], r = R.next();
+      if (p.nowiden || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf') || (CFG.skip && CFG.skip.indexOf(id) >= 0)) return p; // typed answers stay as they are
+      var form = r < m[0] ? 0 : r < m[0] + m[1] ? 1 : r < m[0] + m[1] + m[2] ? 2 : -1;
+      if (form < 0) return p;
+      var tries = [form, (form + 1) % 3, (form + 2) % 3].filter(function (f) { return m[f] > 0; });
+      for (var t = 0; t < tries.length; t++) {
+        var f = tries[t], alt = null;
+        if (f === 0) alt = single(p) ? check(p, R) : (p.a && p.a.t === 'mc' && Array.isArray(p.a.v) && !p.viz ? checkAll(p, R) : null);
+        else if (f === 1) alt = pairs(base, R, ctx, lv === 1 ? 2 : 3, lv >= 3 && R.chance(0.6));
+        else alt = tfpick(base, R, ctx, R.chance(0.4));
+        if (alt) return alt;
+      }
+      return p;
+    };
+    fn.widened = true;
+    return fn;
+  }
+  ML.genIds().forEach(function (id) {
+    if (id.indexOf(CFG.prefix) !== 0 || (CFG.only && CFG.only.indexOf(id.slice(CFG.prefix.length)) < 0)) return;
+    var g = ML.getGen(id); if (g && !g.widened) ML.gen(id, wrap(id, g));
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen ---- */

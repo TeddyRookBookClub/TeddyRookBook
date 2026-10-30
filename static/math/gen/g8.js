@@ -461,8 +461,13 @@
 
   G('g8.square-roots', function (R, ctx) {
     var kind = R.pick(by(ctx, ['root', 'root', 'area', 'mc', 'rev'], ['root', 'frac', 'dec', 'area', 'mc', 'neg'], ['frac', 'dec', 'sum', 'tf', 'root', 'neg']));
-    var k = R.int(2, by(ctx, 12, 15, 20)), n = k * k;
-    if (kind === 'root') return { q: 'Find $\\sqrt{' + n + '}$.', a: { t: 'num', v: String(k), form: 'simplest' },
+    var k = R.int(2, by(ctx, 15, 20, 25)), n = k * k;
+    if (R.chance(0.25)) {
+      var okS = R.coin(), shownS = okS ? k : R.pick([n / 2, 2 * k, k + 1, k - 1].filter(function (z) { return z !== k && z > 0 && z === Math.floor(z); })), whoS = R.pick(['Ava', 'Ben', 'Chen', 'Dara', 'Eli', 'Farah', 'Gus', 'Hana', 'Ivan', 'Jada', 'Kofi', 'Lena', 'Milo', 'Nia', 'Omar', 'Pia']);
+      return { q: whoS + ' says $\\sqrt{' + n + '} = ' + shownS + '$. Is that right?', a: { t: 'mc', choices: ['Yes', 'No'], v: okS ? 0 : 1, keep: true },
+        steps: ['Check by squaring: $' + shownS + ' \\times ' + shownS + ' = ' + shownS * shownS + '$.', okS ? 'That is ' + n + ', so yes.' : 'That is not ' + n + '. In fact $' + k + ' \\times ' + k + ' = ' + n + '$, so $\\sqrt{' + n + '} = ' + k + '$.' + (shownS === n / 2 ? ' (Halving is not the same as taking a square root.)' : '')], hint: 'Square the answer to check it.', chk: { t: 'val', a: 'sqrt(' + n + ')', v: String(k) } };
+    }
+    if (kind === 'root') return { q: R.pick(['Find $\\sqrt{' + n + '}$.', 'What positive number times itself makes ' + n + '? Find $\\sqrt{' + n + '}$.']), a: { t: 'num', v: String(k), form: 'simplest' },
       steps: ['Look for the number that times itself makes ' + n + '.', '$' + k + ' \\times ' + k + ' = ' + n + '$', 'So $\\sqrt{' + n + '} = ' + k + '$.'], hint: 'Which number squared is ' + n + '?', chk: { t: 'val', a: 'sqrt(' + n + ')', v: String(k) } };
     if (kind === 'area') {
       var ctxs = [['A square garden', 'square feet'], ['A square rug', 'square feet'], ['A square tile', 'square inches'], ['A square patio', 'square meters'], ['A square field', 'square yards']], cc = R.pick(ctxs), u = cc[1], what = cc[0];
@@ -505,12 +510,17 @@
 
   G('g8.cube-roots', function (R, ctx) {
     var kind = R.pick(by(ctx, ['root', 'root', 'vol', 'mc', 'rev'], ['root', 'neg', 'vol', 'mc', 'frac'], ['neg', 'frac', 'dec', 'cmp', 'vol']));
-    var k = R.int(2, by(ctx, 6, 10, 10)), n = k * k * k;
-    if (kind === 'root') return { q: 'Find $\\sqrt[3]{' + n + '}$.', a: { t: 'num', v: String(k), form: 'simplest' },
+    var k = R.int(2, by(ctx, 10, 12, 12)), n = k * k * k;
+    if (R.chance(0.25)) {
+      var okC = R.coin(), shownC = okC ? k : R.pick([n / 3, 3 * k, k + 1, k * k].filter(function (z) { return z !== k && z === Math.floor(z); })), whoC = R.pick(['Ava', 'Ben', 'Chen', 'Dara', 'Eli', 'Farah', 'Gus', 'Hana', 'Ivan', 'Jada', 'Kofi', 'Lena', 'Milo', 'Nia', 'Omar', 'Pia']);
+      return { q: whoC + ' says $\\sqrt[3]{' + n + '} = ' + shownC + '$. Is that right?', a: { t: 'mc', choices: ['Yes', 'No'], v: okC ? 0 : 1, keep: true },
+        steps: ['Check by cubing: $' + shownC + ' \\times ' + shownC + ' \\times ' + shownC + ' = ' + T.commas(shownC * shownC * shownC) + '$.', okC ? 'That is ' + n + ', so yes.' : 'That is not ' + n + '. In fact $' + k + ' \\times ' + k + ' \\times ' + k + ' = ' + n + '$, so $\\sqrt[3]{' + n + '} = ' + k + '$.' + (shownC === n / 3 ? ' (Dividing by 3 is not the same as taking a cube root.)' : '')], hint: 'Cube the answer to check it.', chk: { t: 'val', a: 'cbrt(' + n + ')', v: String(k) } };
+    }
+    if (kind === 'root') return { q: R.pick(['Find $\\sqrt[3]{' + n + '}$.', 'What number, used as a factor three times, makes ' + n + '? Find $\\sqrt[3]{' + n + '}$.']), a: { t: 'num', v: String(k), form: 'simplest' },
       steps: ['Look for the number that, used as a factor three times, makes ' + n + '.', '$' + k + ' \\times ' + k + ' \\times ' + k + ' = ' + n + '$', 'So $\\sqrt[3]{' + n + '} = ' + k + '$.'], hint: 'Which number cubed is ' + n + '?', chk: { t: 'val', a: n + '^(1/3)', v: String(k) } };
     if (kind === 'vol') {
       var u = R.pick(['cm', 'in', 'ft', 'm']);
-      return { q: 'A cube-shaped box has a volume of ' + n + ' cubic ' + { cm: 'centimeters', 'in': 'inches', ft: 'feet', m: 'meters' }[u] + '. How long is each edge?', a: { t: 'num', v: String(k), form: 'simplest' },
+      return { q: 'A cube-shaped ' + R.pick(['box', 'block', 'ice cube tray cell', 'storage bin', 'planter', 'gift box']) + ' has a volume of ' + n + ' cubic ' + { cm: 'centimeters', 'in': 'inches', ft: 'feet', m: 'meters' }[u] + '. How long is each edge?', a: { t: 'num', v: String(k), form: 'simplest' },
         steps: ['The volume of a cube is edge × edge × edge.', 'So the edge is the cube root of the volume: $\\sqrt[3]{' + n + '}$.', '$' + k + ' \\times ' + k + ' \\times ' + k + ' = ' + n + '$, so each edge is ' + k + ' ' + { cm: 'centimeters', 'in': 'inches', ft: 'feet', m: 'meters' }[u] + '.'], hint: 'Which number times itself times itself gives ' + n + '?', chk: { t: 'val', a: n + '^(1/3)', v: String(k) } };
     }
     if (kind === 'mc') {
@@ -544,7 +554,7 @@
 
   G('g8.solve-squares-cubes', function (R, ctx) {
     var kind = R.pick(by(ctx, ['sq', 'sq', 'cube', 'sq', 'cube'], ['sq', 'irr', 'none', 'coef', 'cube', 'shift'], ['frac', 'coef', 'cube2', 'shift', 'irr', 'none', 'zero']));
-    var v = R.pick(['x', 'x', 'y', 'n', 'm', 't']), k = R.int(2, by(ctx, 10, 12, 15)), sol, eq, steps, set;
+    var v = R.pick(['x', 'x', 'y', 'n', 'm', 't', 'a', 'k', 'p', 'w']), k = R.int(2, by(ctx, 15, 15, 15)), sol, eq, steps, set;
     if (kind === 'sq') {
       eq = pw(v, 2) + ' = ' + k * k; set = [String(k), String(-k)];
       steps = ['Both $' + k + '^{2} = ' + k * k + '$ and $(-' + k + ')^{2} = ' + k * k + '$ (a negative times a negative is positive).', 'So there are two solutions: $' + v + ' = ' + k + '$ or $' + v + ' = -' + k + '$, written $' + v + ' = \\pm ' + k + '$.'];
@@ -594,7 +604,13 @@
   });
 
   G('g8.repeating-decimals', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['one', 'one', 'two', 'two', 'nines'], ['two', 'delay', 'whole', 'mult', 'two', 'nines'], ['delay', 'three', 'whole', 'two', 'delay']));
+    var kind = R.pick(by(ctx, ['one', 'one', 'two', 'two', 'nines', 'pick', 'pick'], ['two', 'delay', 'whole', 'mult', 'two', 'nines'], ['delay', 'three', 'whole', 'two', 'delay']));
+    if (kind === 'pick') {
+      var two = R.coin(), dg = two ? R.intNot(10, 98, [33, 66]) : R.int(1, 8), den = two ? 99 : 9, fp = Q(dg, den), ds0 = two ? (dg < 10 ? '0' + dg : String(dg)) : String(dg);
+      var right = '$0.\\overline{' + ds0 + '}$', wrongs = ['$0.' + ds0 + '$', '$0.0\\overline{' + ds0 + '}$', '$' + ds0.charAt(0) + '.\\overline{' + (ds0.charAt(1) || '9') + '}$'];
+      return { q: 'Which decimal is equal to $\\frac{' + fp.num() + '}{' + fp.den() + '}$' + (fp.den() !== den ? ' (which is $\\frac{' + dg + '}{' + den + '}$)' : '') + '?', a: mcq(right, wrongs),
+        steps: ['A fraction with denominator ' + den + ' repeats its ' + (two ? 'two-digit' : 'one-digit') + ' numerator forever: $\\frac{1}{' + den + '} = 0.\\overline{' + (two ? '01' : '1') + '}$.', 'So $\\frac{' + dg + '}{' + den + '} = ' + dg + ' \\times 0.\\overline{' + (two ? '01' : '1') + '} = 0.\\overline{' + ds0 + '}$.', 'Check: $0.' + ds0 + '$ stops, so it is only $\\frac{' + dg + '}{' + (two ? 100 : 10) + '}$, not the same.'], hint: 'Divide the numerator by the denominator, or think of 1/' + den + '.', chk: { t: 'mc' } };
+    }
     if (kind === 'one') {
       var d = R.int(1, 8), f = Q(d, 9);
       return { q: 'Write $0.\\overline{' + d + '} = 0.' + rep(String(d), 4, '') + '\\ldots$ as a fraction in lowest terms.', a: { t: 'num', v: f.toPlain(), form: 'frac' },
@@ -1801,10 +1817,10 @@
   G('g8.pythagorean-theorem', function (R, ctx) {
     var kind = R.pick(by(ctx, ['hyp', 'hyp', 'leg', 'mc'], ['hyp', 'leg', 'exact', 'mc', 'leg'], ['exact', 'leg', 'exactleg', 'hyp', 'mc']));
     if (kind === 'hyp' || kind === 'leg') {
-      var t = triple(R, by(ctx, 26, 40, 50)), a = t[0], b = t[1], c = t[2];
-      if (kind === 'hyp') return { q: 'A right triangle has legs ' + a + ' and ' + b + '. How long is the hypotenuse?', a: { t: 'num', v: String(c) }, viz: rightTriViz(a, b, [String(a), '?', String(b)]),
+      var t = triple(R, by(ctx, 40, 50, 60)), a = t[0], b = t[1], c = t[2]; if (R.coin()) { var tb = a; a = b; b = tb; }
+      if (kind === 'hyp') return { q: R.pick(['A right triangle has legs ' + a + ' and ' + b + '. How long is the hypotenuse?', 'The two shorter sides of a right triangle are ' + a + ' cm and ' + b + ' cm. How long, in cm, is the hypotenuse?', 'A right triangle has legs of ' + a + ' and ' + b + ' units. Find the length of the side across from the right angle.']), a: { t: 'num', v: String(c) }, viz: rightTriViz(a, b, [String(a), '?', String(b)]),
         steps: ['The hypotenuse $c$ is the side across from the right angle. $a^{2} + b^{2} = c^{2}$.', '$' + a + '^{2} + ' + b + '^{2} = ' + a * a + ' + ' + b * b + ' = ' + c * c + '$', '$c = \\sqrt{' + c * c + '} = ' + c + '$'], hint: 'Square the legs, add, then take the square root.', chk: { t: 'pyth', legs: [a, b], hyp: c, ask: 'hyp' } };
-      return { q: 'A right triangle has a hypotenuse of ' + c + ' and one leg of ' + a + '. How long is the other leg?', a: { t: 'num', v: String(b) }, viz: rightTriViz(a, b, [String(a), String(c), '?']),
+      return { q: R.pick(['A right triangle has a hypotenuse of ' + c + ' and one leg of ' + a + '. How long is the other leg?', 'In a right triangle, the side across from the right angle is ' + c + ' units and one leg is ' + a + ' units. Find the other leg.']), a: { t: 'num', v: String(b) }, viz: rightTriViz(a, b, [String(a), String(c), '?']),
         steps: ['$a^{2} + b^{2} = c^{2}$, with $c = ' + c + '$ the hypotenuse.', '$' + a + '^{2} + b^{2} = ' + c + '^{2}$, so $b^{2} = ' + c * c + ' - ' + a * a + ' = ' + b * b + '$.', '$b = \\sqrt{' + b * b + '} = ' + b + '$'], hint: 'The hypotenuse is the longest side: subtract, don’t add.', chk: { t: 'pyth', legs: [a, b], hyp: c, ask: 'leg' } };
     }
     if (kind === 'exact' || kind === 'exactleg') {
@@ -1857,24 +1873,24 @@
   });
 
   G('g8.pythagorean-applications', function (R, ctx) {
-    var kind = R.pick(by(ctx, ['ladder', 'rect', 'walk'], ['ladder', 'rect', 'box', 'walk', 'tenth'], ['box', 'tenth', 'box', 'ladder', 'rect']));
+    var kind = R.pick(by(ctx, ['ladder', 'rect', 'walk'], ['ladder', 'rect', 'box', 'walk', 'tenth'], ['box', 'tenth', 'box', 'ladder', 'rect', 'walk', 'tenth']));
     if (kind === 'ladder') {
-      var t = triple(R, 30), base = Math.min(t[0], t[1]), up = Math.max(t[0], t[1]), askUp = R.coin();
+      var t = triple(R, 40), base = Math.min(t[0], t[1]), up = Math.max(t[0], t[1]), askUp = R.coin();
       return { q: askUp ? 'A ' + t[2] + '-foot ladder leans against a wall. Its foot is ' + base + ' feet from the wall. How high up the wall does it reach?' : 'A ladder reaches ' + up + ' feet up a wall, and its foot is ' + base + ' feet from the wall. How long is the ladder?', a: { t: 'num', v: String(askUp ? up : t[2]) }, unit: 'ft',
         viz: rightTriViz(base, up, [base + ' ft', askUp ? t[2] + ' ft' : '?', askUp ? '?' : up + ' ft']),
         steps: ['The wall, the ground and the ladder form a right triangle; the ladder is the hypotenuse.', askUp ? '$h^{2} = ' + t[2] + '^{2} - ' + base + '^{2} = ' + t[2] * t[2] + ' - ' + base * base + ' = ' + up * up + '$' : '$L^{2} = ' + base + '^{2} + ' + up + '^{2} = ' + (base * base + up * up) + '$', askUp ? '$h = \\sqrt{' + up * up + '} = ' + up + '$ feet' : '$L = \\sqrt{' + t[2] * t[2] + '} = ' + t[2] + '$ feet'], hint: 'Which side is the hypotenuse here?', chk: { t: 'pyth', legs: [base, up], hyp: t[2], ask: askUp ? 'leg' : 'hyp' } };
     }
     if (kind === 'rect' || kind === 'walk') {
       var t2 = triple(R, 50), w = t2[0], h = t2[1];
-      if (kind === 'walk') { var who = names(R)[0]; return { q: who + ' walks ' + w + ' blocks east and then ' + h + ' blocks north. How far is ' + who + ' from the start, in a straight line?', a: { t: 'num', v: String(t2[2]) }, unit: 'blocks',
-        steps: ['East and north meet at a right angle, so the straight-line distance is a hypotenuse.', '$d^{2} = ' + w + '^{2} + ' + h + '^{2} = ' + (w * w + h * h) + '$', '$d = ' + t2[2] + '$ blocks'], hint: 'Draw the path: it makes a right triangle.', chk: { t: 'pyth', legs: [w, h], hyp: t2[2], ask: 'hyp' } }; }
-      return { q: 'A rectangular screen is ' + Math.max(w, h) + ' inches wide and ' + Math.min(w, h) + ' inches tall. How long is its diagonal?', a: { t: 'num', v: String(t2[2]) }, unit: 'in',
+      if (kind === 'walk') { var who = names(R)[0], dirs = R.pick([['east', 'north'], ['west', 'north'], ['east', 'south'], ['west', 'south'], ['north', 'east'], ['south', 'west']]); return { q: who + ' ' + R.pick(['walks', 'bikes', 'jogs', 'skates']) + ' ' + w + ' blocks ' + dirs[0] + ' and then ' + h + ' blocks ' + dirs[1] + '. How far is ' + who + ' from the start, in a straight line?', a: { t: 'num', v: String(t2[2]) }, unit: 'blocks',
+        steps: [dirs[0].charAt(0).toUpperCase() + dirs[0].slice(1) + ' and ' + dirs[1] + ' meet at a right angle, so the straight-line distance is a hypotenuse.', '$d^{2} = ' + w + '^{2} + ' + h + '^{2} = ' + (w * w + h * h) + '$', '$d = ' + t2[2] + '$ blocks'], hint: 'Draw the path: it makes a right triangle.', chk: { t: 'pyth', legs: [w, h], hyp: t2[2], ask: 'hyp' } }; }
+      return { q: 'A rectangular ' + R.pick(['screen', 'picture frame', 'window', 'tabletop', 'poster', 'tablet']) + ' is ' + Math.max(w, h) + ' inches wide and ' + Math.min(w, h) + ' inches tall. How long is its diagonal?', a: { t: 'num', v: String(t2[2]) }, unit: 'in',
         steps: ['The diagonal splits the rectangle into two right triangles; the diagonal is the hypotenuse.', '$d^{2} = ' + w + '^{2} + ' + h + '^{2} = ' + (w * w + h * h) + '$', '$d = ' + t2[2] + '$ inches'], hint: 'The width and height are the legs.', chk: { t: 'pyth', legs: [w, h], hyp: t2[2], ask: 'hyp' } };
     }
     if (kind === 'box') {
-      var QD = [[1, 2, 2, 3], [2, 3, 6, 7], [1, 4, 8, 9], [4, 4, 7, 9], [2, 6, 9, 11], [6, 6, 7, 11], [3, 4, 12, 13], [2, 10, 11, 15], [2, 5, 14, 15], [8, 9, 12, 17]];
+      var QD = [[1, 2, 2, 3], [2, 3, 6, 7], [1, 4, 8, 9], [4, 4, 7, 9], [2, 6, 9, 11], [6, 6, 7, 11], [3, 4, 12, 13], [2, 10, 11, 15], [2, 5, 14, 15], [8, 9, 12, 17], [1, 12, 12, 17], [6, 10, 15, 19], [4, 5, 20, 21], [4, 8, 19, 21], [4, 13, 16, 21], [8, 11, 16, 21], [3, 6, 22, 23], [3, 14, 18, 23], [6, 13, 18, 23], [9, 12, 20, 25], [12, 15, 16, 25]];
       var qd = R.pick(QD), k = qd[3] <= 9 ? R.int(1, 2) : 1, L = qd[2] * k, W = qd[1] * k, H = qd[0] * k, D = qd[3] * k, fl = L * L + W * W;
-      return { q: 'A box is ' + L + ' in long, ' + W + ' in wide and ' + H + ' in tall. How long is the longest straight rod that fits inside, from one bottom corner to the opposite top corner?', a: { t: 'num', v: String(D) }, unit: 'in',
+      return { q: 'A ' + R.pick(['box', 'crate', 'storage bin', 'toolbox', 'shipping box']) + ' is ' + L + ' in long, ' + W + ' in wide and ' + H + ' in tall. How long is the longest straight ' + R.pick(['rod', 'stick', 'dowel', 'pole']) + ' that fits inside, from one bottom corner to the opposite top corner?', a: { t: 'num', v: String(D) }, unit: 'in',
         viz: { name: 'g8-solid', opts: { shape: 'box', l: L, w: W, h: H, diag: true, controls: false, readout: false }, label: 'A box with its floor diagonal and space diagonal' },
         steps: ['First the diagonal of the floor (dashed): $d^{2} = ' + L + '^{2} + ' + W + '^{2} = ' + fl + '$.', 'That floor diagonal and the height make a right triangle with the rod as hypotenuse: $D^{2} = d^{2} + ' + H + '^{2} = ' + fl + ' + ' + H * H + ' = ' + D * D + '$.', '$D = \\sqrt{' + D * D + '} = ' + D + '$ inches'], hint: 'Use the Pythagorean theorem twice: across the floor, then up.', chk: { t: 'num', v: 'sqrt(' + L + '^2+' + W + '^2+' + H + '^2)', why: 'space diagonal' } };
     }
@@ -1984,11 +2000,11 @@
 
   G('g8.volume-spheres', function (R, ctx) {
     var kind = R.pick(by(ctx, ['v', 'v', 'd', 'hemi'], ['v', 'd', 'hemi', 'rev', 'approx'], ['d', 'rev', 'combo', 'hemi', 'approx']));
-    var u = R.pick(UNITS), r = ctx.level === 1 ? R.pick([3, 6, 3, 6, 9]) : R.int(2, 9), V = Q(4 * r * r * r, 3);
+    var u = R.pick(UNITS), r = ctx.level === 1 ? (R.chance(0.6) ? R.pick([3, 6, 9, 12]) : R.int(2, 10)) : R.int(2, 12), V = Q(4 * r * r * r, 3);
     var st = ['$V = \\frac{4}{3} \\pi r^{3} = \\frac{4}{3} \\cdot \\pi \\cdot ' + r + '^{3} = \\frac{4}{3} \\cdot ' + r * r * r + '\\pi$', '$V = ' + piTex(V) + '$ ' + cu(u) + (V.isInt() ? '' : ' (about ' + U.numStr(U.round(V.toNumber() * Math.PI, 1)) + ')') + '.'];
     if (kind === 'v' || kind === 'd') {
       if (kind === 'd') st.unshift('The radius is half the diameter: $r = ' + 2 * r + ' \\div 2 = ' + r + '$.');
-      return { q: 'A sphere has a ' + (kind === 'd' ? 'diameter of ' + 2 * r : 'radius of ' + r) + ' ' + u + '. Find its volume in terms of $\\pi$.', a: piAns(V), viz: solidViz({ shape: 'sphere', r: r, diam: kind === 'd', unit: u }, 'A sphere with its measurement'), steps: st, hint: kind === 'd' ? 'Halve the diameter first. Then V = (4/3)πr³.' : 'V = (4/3)πr³: cube the radius first.', chk: { t: 'num', v: '4/3*pi*' + r + '^3', why: 'sphere' } };
+      return { q: R.pick(['A sphere', 'A ball', 'A globe', 'A round lantern', 'A gumball', 'A model planet', 'A snow globe', 'A bead']) + ' has a ' + (kind === 'd' ? 'diameter of ' + 2 * r : 'radius of ' + r) + ' ' + u + '. Find its volume in terms of $\\pi$.', a: piAns(V), viz: solidViz({ shape: 'sphere', r: r, diam: kind === 'd', unit: u }, 'A sphere with its measurement'), steps: st, hint: kind === 'd' ? 'Halve the diameter first. Then V = (4/3)πr³.' : 'V = (4/3)πr³: cube the radius first.', chk: { t: 'num', v: '4/3*pi*' + r + '^3', why: 'sphere' } };
     }
     if (kind === 'hemi') {
       var Hm = Q(2 * r * r * r, 3);

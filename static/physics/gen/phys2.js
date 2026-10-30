@@ -216,11 +216,11 @@
       hint: 'A machine without friction gives out the same work it takes in.', chk: { k: k, m: mass, h: hRise, ans: Wl } };
   });
 
-  var SOLIDS = [{ n: 'aluminum', rho: 2700 }, { n: 'granite', rho: 2700 }, { n: 'iron', rho: 7900 }, { n: 'brass', rho: 8500 }, { n: 'copper', rho: 8900 }, { n: 'lead', rho: 11300 }];
-  var FLOATERS = [{ n: 'pine', rho: 500 }, { n: 'oak', rho: 750 }, { n: 'ice', rho: 917 }, { n: 'cork', rho: 240 }, { n: 'maple', rho: 650 }, { n: 'a plastic (polyethylene)', rho: 950 }];
+  var SOLIDS = [{ n: 'aluminum', rho: 2700 }, { n: 'granite', rho: 2700 }, { n: 'iron', rho: 7900 }, { n: 'brass', rho: 8500 }, { n: 'copper', rho: 8900 }, { n: 'lead', rho: 11300 }, { n: 'zinc', rho: 7100 }, { n: 'silver', rho: 10500 }, { n: 'steel', rho: 7850 }, { n: 'glass', rho: 2500 }, { n: 'titanium', rho: 4500 }];
+  var FLOATERS = [{ n: 'pine', rho: 500 }, { n: 'oak', rho: 750 }, { n: 'ice', rho: 917 }, { n: 'cork', rho: 240 }, { n: 'maple', rho: 650 }, { n: 'a plastic (polyethylene)', rho: 950 }, { n: 'balsa', rho: 150 }, { n: 'cedar', rho: 380 }, { n: 'birch', rho: 670 }];
 
   G('phys2.buoyancy', function (R, ctx) {
-    var k = kind(R, ctx, ['force', 'fraction', 'concept'], ['force', 'apparent', 'fraction', 'concept'], ['apparent', 'density', 'raft', 'fraction']);
+    var k = kind(R, ctx, ['force', 'fraction', 'concept', 'apparent'], ['force', 'apparent', 'fraction', 'concept'], ['apparent', 'density', 'raft', 'fraction']);
     var fl = R.pick([{ n: 'fresh water', rho: 1000 }, { n: 'fresh water', rho: 1000 }, { n: 'seawater', rho: 1025 }]);
     var gtxt = '$g = ' + qx(GR, 'm/s2') + '$';
     if (k === 'concept') {
@@ -239,7 +239,7 @@
         hint: 'Which block is bigger?', chk: { k: k, ans: 0 } };
     }
     if (k === 'force') {
-      var VL = R.pick([0.50, 0.80, 1.2, 1.5, 2.0, 2.5, 4.0]), V = VL / 1000, Fb = fl.rho * V * GR;
+      var VL = R.pick([0.25, 0.40, 0.50, 0.60, 0.75, 0.80, 1.0, 1.2, 1.5, 1.8, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0]), V = VL / 1000, Fb = fl.rho * V * GR;
       return { q: 'A rock with a volume of $' + qx(VL, 'L') + '$ ($' + tn(V, 2) + '\\,\\text{m}^3$) rests fully under ' + fl.n + ' ($\\rho = ' + qx(fl.rho, 'kg/m3') + '$). What buoyant force does the water exert on it? (' + gtxt + ')', a: ans(Fb), unit: 'N',
         steps: ['Archimedes\' principle: the buoyant force equals the weight of the fluid pushed aside, $F_b = \\rho_{\\text{fluid}} V_{\\text{sub}} g$.',
           'The rock is fully under, so $V_{\\text{sub}} = ' + tn(V, 2) + '\\,\\text{m}^3$.',
@@ -248,7 +248,7 @@
         hint: 'Find the weight of $' + qx(VL, 'L') + '$ of ' + fl.n + '.', chk: { k: k, rho: fl.rho, V: V, ans: Fb } };
     }
     if (k === 'apparent') {
-      var S = R.pick(SOLIDS), VL2 = R.pick([0.20, 0.40, 0.50, 0.80, 1.0, 1.5]), V2 = VL2 / 1000, Wt = S.rho * V2 * GR, Fb2 = fl.rho * V2 * GR, Ra = Wt - Fb2;
+      var S = R.pick(SOLIDS), VL2 = R.pick([0.10, 0.20, 0.25, 0.30, 0.40, 0.50, 0.60, 0.80, 1.0, 1.2, 1.5, 2.0]), V2 = VL2 / 1000, Wt = S.rho * V2 * GR, Fb2 = fl.rho * V2 * GR, Ra = Wt - Fb2;
       return { q: 'A $' + qx(VL2, 'L') + '$ block of ' + S.n + ' ($' + qx(S.rho, 'kg/m3') + '$) hangs from a spring scale, fully under ' + fl.n + ' ($' + qx(fl.rho, 'kg/m3') + '$). What does the scale read? (' + gtxt + ')', a: ans(Ra), unit: 'N',
         viz: { name: 'ph-fluids', opts: { mode: 'buoyancy', objRho: S.rho, objV: V2, rho: fl.rho, t: 1, interactive: false, quiet: true } },
         steps: ['Weight: $W = \\rho_{\\text{block}} V g = ' + qp(S.rho, 'kg/m3') + '(' + tn(V2, 2) + '\\,\\text{m}^3)' + qp(GR, 'm/s2') + ' = ' + qt(Wt, 'N') + '$.',
@@ -266,7 +266,7 @@
         hint: 'The fraction under water is the ratio of the densities.', chk: { k: k, rho: fl.rho, rhoO: Fo.rho, ans: fr * 100 } };
     }
     if (k === 'density') {
-      var S2 = R.pick(SOLIDS.concat([{ n: 'mystery metal', rho: 7300 }, { n: 'mystery metal', rho: 4500 }])), m2 = R.pick([0.50, 0.80, 1.2, 1.5, 2.0]), Wa = rd(m2 * GR, 3), Ww = rd(Wa * (1 - 1000 / S2.rho), 3);
+      var S2 = R.pick(SOLIDS.concat([{ n: 'mystery metal', rho: 7300 }, { n: 'mystery metal', rho: 4500 }])), m2 = R.pick([0.30, 0.40, 0.50, 0.60, 0.80, 1.0, 1.2, 1.5, 2.0, 2.5, 3.0]), Wa = rd(m2 * GR, 3), Ww = rd(Wa * (1 - 1000 / S2.rho), 3);
       var dens = 1000 * Wa / (Wa - Ww);
       return { q: 'A metal sample weighs $' + qt(Wa, 'N') + '$ in air and $' + qt(Ww, 'N') + '$ when it hangs fully under fresh water ($' + qx(1000, 'kg/m3') + '$). What is the density of the metal? (' + gtxt + ')', a: ans(dens, { rtol: 0.03 }), unit: 'kg/m3',
         steps: ['The scale reading drops by the buoyant force: $F_b = ' + qt(Wa, 'N') + ' - ' + qt(Ww, 'N') + ' = ' + qt(Wa - Ww, 'N') + '$.',
@@ -276,7 +276,7 @@
         hint: 'The loss of weight in water tells you the volume.', chk: { k: k, Wa: Wa, Ww: Ww, ans: dens } };
     }
     // raft: the most extra load before it is fully under
-    var Rw = R.pick(FLOATERS.slice(0, 2).concat([{ n: 'pine', rho: 500 }, { n: 'foam', rho: 100 }])), Vr = R.pick([0.20, 0.30, 0.40, 0.50, 0.60, 0.80]), mx = (fl.rho - Rw.rho) * Vr;
+    var Rw = R.pick(FLOATERS.slice(0, 2).concat([{ n: 'pine', rho: 500 }, { n: 'foam', rho: 100 }])), Vr = R.pick([0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.60, 0.75, 0.80, 1.0]), mx = (fl.rho - Rw.rho) * Vr;
     return { q: 'A raft made of ' + Rw.n + ' (density $' + qx(Rw.rho, 'kg/m3') + '$) has a volume of $' + qx(Vr, 'm3') + '$ and floats in ' + fl.n + ' ($' + qx(fl.rho, 'kg/m3') + '$). What is the largest mass of cargo it can carry before its top reaches the water?', a: ans(mx), unit: 'kg',
       steps: ['When the raft is just fully under, the buoyant force is $\\rho_{\\text{fluid}} V g$, and it must hold up the raft plus the cargo: $\\rho_{\\text{fluid}} V g = (m_{\\text{raft}} + m_{\\text{cargo}}) g$.',
         'Cancel $g$: $m_{\\text{cargo}} = \\rho_{\\text{fluid}} V - \\rho_{\\text{raft}} V = (\\rho_{\\text{fluid}} - \\rho_{\\text{raft}}) V$.',
@@ -347,7 +347,7 @@
         hint: 'What net force does the water need to speed up as it enters the narrow part?', chk: { k: k, ans: 0 } };
     }
     if (k === 'torricelli') {
-      var h = R.pick([0.45, 0.80, 1.25, 1.8, 2.45, 3.2, 5.0]), v = sqrt(2 * GR * h);
+      var h = R.pick([0.20, 0.45, 0.60, 0.80, 1.0, 1.25, 1.5, 1.8, 2.0, 2.45, 3.0, 3.2, 4.0, 5.0]), v = sqrt(2 * GR * h);
       return { q: 'A large open tank of water has a small hole in its side, $' + qx(h, 'm') + '$ below the water surface. How fast does the water come out of the hole? ($g = ' + qx(GR, 'm/s2') + '$)', a: ans(v), unit: 'm/s',
         viz: { name: 'ph-fluids', opts: { mode: 'drain', h0: h, interactive: false, quiet: true } },
         steps: ['Compare the surface (point 1) with the hole (point 2). Both are open to the air, so $P_1 = P_2$. The tank is large, so the surface barely moves: $v_1 \\approx 0$.',
@@ -356,7 +356,7 @@
         hint: 'Both ends are at air pressure, and the surface is nearly still.', chk: { k: k, h: h, ans: v } };
     }
     if (k === 'horizontal') {
-      var P1 = R.pick([150, 180, 200, 220, 250, 300]), v1 = R.pick([1.0, 1.5, 2.0, 2.5, 3.0]), f = R.pick([2, 3]), v2 = v1 * f, P2 = P1 - 0.5 * rho * (v2 * v2 - v1 * v1) / 1000;
+      var P1 = R.pick([150, 160, 180, 200, 220, 240, 250, 280, 300, 320, 350, 400]), v1 = R.pick([0.5, 1.0, 1.2, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]), f = R.pick([2, 3]), v2 = v1 * f, P2 = P1 - 0.5 * rho * (v2 * v2 - v1 * v1) / 1000;
       return { q: 'Water flows through a level pipe at $' + qx(v1, 'm/s') + '$ with pressure $' + qx(P1, 'kPa') + '$. Farther on, the pipe narrows to $\\tfrac{1}{' + f + '}$ of its area. What is the pressure in the narrow part? ' + rtxt, a: ans(P2), unit: 'kPa',
         viz: { name: 'ph-fluids', opts: { mode: 'flow', v1: v1, A1: 0.012, A2: 0.012 / f, h2: 0, interactive: false, quiet: true } },
         steps: ['Continuity: $v_2 = v_1 \\dfrac{A_1}{A_2} = ' + f + ' \\times ' + qx(v1, 'm/s') + ' = ' + qt(v2, 'm/s') + '$.',
@@ -366,7 +366,7 @@
         hint: 'Find the new speed with continuity, then use Bernoulli with $h_1 = h_2$.', chk: { k: k, P1: P1, v1: v1, f: f, ans: P2 } };
     }
     if (k === 'height') {
-      var Pa = R.pick([200, 250, 300, 350]), dh = R.pick([3.0, 4.0, 5.0, 6.0, 8.0, 10]), Pb = Pa - rho * GR * dh / 1000;
+      var Pa = R.pick([200, 220, 250, 280, 300, 350, 400]), dh = R.pick([2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 10, 12]), Pb = Pa - rho * GR * dh / 1000;
       return { q: 'Water flows steadily up a pipe of constant diameter into the second floor of a house. The pressure at ground level is $' + qx(Pa, 'kPa') + '$. What is the pressure $' + qx(dh, 'm') + '$ higher up? ' + rtxt, a: ans(Pb), unit: 'kPa',
         steps: ['Same diameter, so by continuity the speed is the same at both points and the $\\tfrac{1}{2}\\rho v^2$ terms cancel.',
           'Bernoulli then gives $P_2 = P_1 - \\rho g (h_2 - h_1)$.',
@@ -375,7 +375,7 @@
         hint: 'With equal speeds, only the height term changes.', chk: { k: k, P1: Pa, dh: dh, ans: Pb } };
     }
     if (k === 'both') {
-      var P1b = R.pick([200, 250, 300]), v1b = R.pick([1.0, 1.5, 2.0]), fb = R.pick([2, 3]), hb = R.pick([1.0, 2.0, 3.0, 4.0]), v2b = v1b * fb, dyn = 0.5 * rho * (v2b * v2b - v1b * v1b), P2b = P1b - (dyn + rho * GR * hb) / 1000;
+      var P1b = R.pick([200, 220, 250, 280, 300, 350, 400]), v1b = R.pick([0.5, 1.0, 1.5, 2.0, 2.5]), fb = R.pick([2, 3]), hb = R.pick([1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0]), v2b = v1b * fb, dyn = 0.5 * rho * (v2b * v2b - v1b * v1b), P2b = P1b - (dyn + rho * GR * hb) / 1000;
       return { q: 'Water enters a pipe at $' + qx(v1b, 'm/s') + '$ and $' + qx(P1b, 'kPa') + '$. The pipe rises $' + qx(hb, 'm') + '$ and narrows to $\\tfrac{1}{' + fb + '}$ of its area. What is the pressure at the higher, narrow end? ' + rtxt, a: ans(P2b), unit: 'kPa',
         viz: { name: 'ph-fluids', opts: { mode: 'flow', v1: v1b, A1: 0.012, A2: 0.012 / fb, h2: Math.min(hb, 2), interactive: false, quiet: true } },
         steps: ['Continuity: $v_2 = ' + fb + ' \\times ' + qx(v1b, 'm/s') + ' = ' + qt(v2b, 'm/s') + '$.',
@@ -385,7 +385,7 @@
         hint: 'Find $v_2$ first; both the speed-up and the climb lower the pressure.', chk: { k: k, P1: P1b, v1: v1b, f: fb, h: hb, ans: P2b } };
     }
     // venturi: a measured pressure drop gives the speed
-    var fv = R.pick([2, 3]), vA = R.pick([1.0, 1.5, 2.0, 2.5, 3.0]), dP = rd(0.5 * rho * vA * vA * (fv * fv - 1), 3), vv = sqrt(2 * dP / (rho * (fv * fv - 1)));
+    var fv = R.pick([2, 3]), vA = R.pick([0.5, 1.0, 1.2, 1.5, 1.8, 2.0, 2.5, 3.0, 3.5, 4.0]), dP = rd(0.5 * rho * vA * vA * (fv * fv - 1), 3), vv = sqrt(2 * dP / (rho * (fv * fv - 1)));
     return { q: 'A Venturi meter is a level pipe whose throat has $\\tfrac{1}{' + fv + '}$ of the pipe\'s area. With water flowing, the pressure in the throat is $' + qt(dP, 'Pa') + '$ lower than in the wide pipe. How fast is the water moving in the wide pipe? ' + rtxt, a: ans(vv), unit: 'm/s',
       steps: ['Continuity: in the throat $v_2 = ' + fv + 'v_1$.',
         'Level pipe, so Bernoulli gives $P_1 - P_2 = \\tfrac{1}{2}\\rho (v_2^2 - v_1^2) = \\tfrac{1}{2}\\rho (' + (fv * fv) + ' - 1) v_1^2 = ' + tx(0.5 * (fv * fv - 1)) + '\\rho v_1^2$.',
@@ -463,7 +463,7 @@
   G('phys2.kinetic-theory', function (R, ctx) {
     var k = kind(R, ctx, ['avgK', 'ratioT', 'concept'], ['avgK', 'vrms', 'internal', 'concept', 'tempFromK'], ['vrms', 'ratioGas', 'internal', 'tempFromK', 'concept']);
     if (k === 'concept') {
-      var A = R.pick([GASES[0], GASES[1]]), B = R.pick([GASES[4], GASES[5]]), tc = R.pick([20, 25, 100]);
+      var A = R.pick([GASES[0], GASES[1]]), B = R.pick([GASES[4], GASES[5]]), tc = R.pick([20, 25, 100, 0, 10, 27, 37, 50]);
       if (R.coin()) return { q: 'A container holds a mix of ' + A.n + ' and ' + B.n + ' at $' + cdeg(tc) + '$. How do the average kinetic energies of their molecules compare?',
         a: mc('They are equal.', ['The ' + B.n + ' molecules have more, because they are heavier.', 'The ' + A.n + ' molecules have more, because they move faster.', 'It depends on how much of each gas there is.']),
         viz: { name: 'ph-gas', opts: { N: 60, T: TK(tc), masses: [1, 10], interactive: false, quiet: true } },
@@ -480,7 +480,7 @@
         hint: 'Equal $\\tfrac{1}{2}mv^2$ with a smaller $m$ means what about $v$?', chk: { k: k, v: 'v', ans: 0 } };
     }
     if (k === 'avgK') {
-      var t = R.pick([0, 20, 27, 100, 227, 727]), Kav = 1.5 * KB * TK(t);
+      var t = R.pick([0, 20, 27, 100, 227, 727, -40, 10, 37, 50, 127, 327, 500, 1000]), Kav = 1.5 * KB * TK(t);
       return { q: 'What is the average kinetic energy of a gas molecule at $' + cdeg(t) + '$? Use $k_B = 1.38 \\times 10^{-23}\\,\\text{J/K}$.', a: ans(Kav), unit: 'J',
         steps: ['Kinetic theory: $\\bar K = \\tfrac{3}{2}k_BT$ with $T$ in kelvins. $T = ' + kel(t) + '$.',
           '$\\bar K = \\tfrac{3}{2}(1.38 \\times 10^{-23}\\,\\text{J/K})(' + TK(t) + '\\,\\text{K}) = ' + qt(Kav, 'J') + '$.',
@@ -488,14 +488,14 @@
         hint: '$\\bar K = \\tfrac{3}{2}k_BT$, with $T$ in kelvins.', chk: { k: k, tc: t, ans: Kav } };
     }
     if (k === 'tempFromK') {
-      var T2 = R.pick([150, 200, 250, 300, 400, 500, 600, 800]), K2 = rd(1.5 * KB * T2, 3), Tb = 2 * K2 / (3 * KB);
+      var T2 = R.pick([150, 200, 250, 300, 400, 500, 600, 800, 100, 350, 450, 1000, 1200, 2000]), K2 = rd(1.5 * KB * T2, 3), Tb = 2 * K2 / (3 * KB);
       return { q: 'The molecules of a gas have an average kinetic energy of $' + qt(K2, 'J') + '$. What is the gas\'s temperature in kelvins? Use $k_B = 1.38 \\times 10^{-23}\\,\\text{J/K}$.', a: ans(Tb), unit: 'K',
         steps: ['$\\bar K = \\tfrac{3}{2}k_BT$, so $T = \\dfrac{2\\bar K}{3k_B}$.',
           '$T = \\dfrac{2(' + qt(K2, 'J') + ')}{3(1.38 \\times 10^{-23}\\,\\text{J/K})} = ' + qt(Tb, 'K') + '$.'],
         hint: 'Solve $\\bar K = \\tfrac{3}{2}k_BT$ for $T$.', chk: { k: k, K: K2, ans: Tb } };
     }
     if (k === 'vrms') {
-      var Gs = R.pick(GASES), t3 = R.pick([0, 20, 27, 100]), v = sqrt(3 * RG * TK(t3) / (Gs.M / 1000));
+      var Gs = R.pick(GASES), t3 = R.pick([0, 20, 27, 100, -20, 10, 25, 37, 50, 200]), v = sqrt(3 * RG * TK(t3) / (Gs.M / 1000));
       return { q: 'Find the rms speed of ' + Gs.n + ' molecules (molar mass $' + tx(Gs.M) + '\\,\\text{g/mol}$) at $' + cdeg(t3) + '$. Use ' + Rtxt + '.', a: ans(v), unit: 'm/s',
         steps: ['$\\tfrac{1}{2}m\\overline{v^2} = \\tfrac{3}{2}k_BT$ per molecule. Multiplying by Avogadro\'s number turns $m$ into the molar mass $M$ and $k_B$ into $R$: $v_{\\text{rms}} = \\sqrt{\\dfrac{3RT}{M}}$.',
           'Use SI units: $M = ' + tx(Gs.M) + '\\,\\text{g/mol} = ' + tn(Gs.M / 1000, 3) + '\\,\\text{kg/mol}$, $T = ' + kel(t3) + '$.',
@@ -503,7 +503,7 @@
         hint: 'Use $v_{\\text{rms}} = \\sqrt{3RT/M}$ with $M$ in kg/mol.', chk: { k: k, M: Gs.M, tc: t3, ans: v } };
     }
     if (k === 'ratioT') {
-      var f = R.pick([4, 9, 4]), T0 = R.pick([100, 150, 200, 250]), v0 = R.pick([300, 400, 500, 600, 800]), vn = v0 * sqrt(f);
+      var f = R.pick([4, 9, 4]), T0 = R.pick([100, 150, 200, 250, 120, 175, 300, 350]), v0 = R.pick([300, 400, 500, 600, 800, 250, 350, 450, 700, 900]), vn = v0 * sqrt(f);
       return { q: 'Helium atoms in a gas at $' + tx(T0) + '\\,\\text{K}$ have an rms speed of $' + qx(v0, 'm/s') + '$. The gas is heated to $' + tx(T0 * f) + '\\,\\text{K}$. What is the new rms speed?', a: ans(vn), unit: 'm/s',
         steps: ['$v_{\\text{rms}} = \\sqrt{3k_BT/m}$, so the speed grows as the square root of the kelvin temperature.',
           'The temperature went up by a factor of $' + tx(T0 * f) + '/' + tx(T0) + ' = ' + f + '$, so the speed goes up by $\\sqrt{' + f + '} = ' + sqrt(f) + '$.',
@@ -511,7 +511,7 @@
         hint: 'Speed goes as $\\sqrt{T}$.', chk: { k: k, T0: T0, T1: T0 * f, v0: v0, ans: vn } };
     }
     if (k === 'internal') {
-      var Mg = R.pick(['helium', 'neon', 'argon']), n = R.pick([0.50, 1.0, 1.5, 2.0, 3.0]), t5 = R.pick([0, 27, 77, 127]), Ui = 1.5 * n * RG * TK(t5);
+      var Mg = R.pick(['helium', 'neon', 'argon']), n = R.pick([0.50, 1.0, 1.5, 2.0, 3.0, 0.25, 0.75, 2.5, 4.0]), t5 = R.pick([0, 27, 77, 127, 20, 50, 100, 227]), Ui = 1.5 * n * RG * TK(t5);
       return { q: 'What is the internal energy of $' + tg(n) + '\\,\\text{mol}$ of ' + Mg + ' (a monatomic gas) at $' + cdeg(t5) + '$? Use ' + Rtxt + '.', a: ans(Ui), unit: 'J',
         steps: ['A monatomic gas stores its internal energy as the kinetic energy of its atoms: $U = N\\bar K = N \\cdot \\tfrac{3}{2}k_BT = \\tfrac{3}{2}nRT$.',
           '$T = ' + kel(t5) + '$.',
@@ -530,7 +530,7 @@
   var CICE = 2100, CW = 4186, CST = 2010, LF = 3.34e5, LV = 2.26e6;
   var wtxt = '$c_{\\text{ice}} = 2100\\,' + UT['J/kgK'] + '$, $c_{\\text{water}} = 4186\\,' + UT['J/kgK'] + '$, $L_f = 3.34 \\times 10^{5}\\,\\text{J/kg}$';
   G('phys2.latent-heat', function (R, ctx) {
-    var k = kind(R, ctx, ['melt', 'boil', 'concept'], ['iceToWater', 'melt', 'massMelted', 'boil', 'concept'], ['iceToWater', 'waterToSteam', 'mix', 'massMelted']);
+    var k = kind(R, ctx, ['melt', 'boil', 'concept', 'massMelted'], ['iceToWater', 'melt', 'massMelted', 'boil', 'concept'], ['iceToWater', 'waterToSteam', 'mix', 'massMelted']);
     if (k === 'concept') {
       if (R.coin()) return { q: 'Ice at $-20\\,^\\circ\\text{C}$ is heated steadily. While it is melting, what happens to its temperature?',
         a: mc('It stays at $0\\,^\\circ\\text{C}$ until all the ice has melted.', ['It keeps rising at the same rate as before.', 'It rises, but more slowly than before.', 'It drops a little, because melting uses energy.']),
@@ -547,7 +547,7 @@
         hint: 'Compute $mc\\Delta T$ and $mL_v$.', chk: { k: k, v: 'boil', ans: 0 } };
     }
     if (k === 'melt') {
-      var mg = R.pick([50, 100, 150, 200, 250, 400, 500]), Q = mg / 1000 * LF;
+      var mg = R.pick([20, 25, 40, 50, 75, 80, 100, 120, 150, 200, 250, 300, 400, 500, 750, 1000, 30, 35, 60, 70, 90, 350, 600, 700, 800, 900]), Q = mg / 1000 * LF;
       return { q: 'How much heat does it take to melt $' + tx(mg) + '\\,\\text{g}$ of ice that is already at $0\\,^\\circ\\text{C}$? Use $L_f = 3.34 \\times 10^{5}\\,\\text{J/kg}$.', a: ans(Q), unit: 'J',
         steps: ['At the melting point, all the heat goes into the change of state: $Q = mL_f$.',
           'Mass in kilograms: $m = ' + tx(mg) + '\\,\\text{g} = ' + tx(mg / 1000) + '\\,\\text{kg}$.',
@@ -555,21 +555,21 @@
         hint: 'Use $Q = mL_f$ with the mass in kilograms.', chk: { k: k, m: mg, ans: Q } };
     }
     if (k === 'boil') {
-      var mb = R.pick([0.10, 0.20, 0.25, 0.50, 1.5, 2.0]), Qb = mb * LV;
+      var mb = R.pick([0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.75, 1.0, 1.5, 2.0, 2.5, 0.06, 0.07, 0.08, 0.09, 0.12, 0.35, 0.6, 0.7, 0.8, 0.9, 1.2]), Qb = mb * LV;
       return { q: 'How much heat is needed to boil away $' + qx(mb, 'kg') + '$ of water that is already at $100\\,^\\circ\\text{C}$? Use $L_v = 2.26 \\times 10^{6}\\,\\text{J/kg}$.', a: ans(Qb), unit: 'J',
         steps: ['At the boiling point the temperature stays at $100\\,^\\circ\\text{C}$; the heat goes into the change of state: $Q = mL_v$.',
           '$Q = ' + qp(mb, 'kg') + '(2.26 \\times 10^{6}\\,\\text{J/kg}) = ' + qt(Qb, 'J') + '$.'],
         hint: 'Use $Q = mL_v$.', chk: { k: k, m: mb, ans: Qb } };
     }
     if (k === 'massMelted') {
-      var Qm = R.pick([16700, 33400, 50100, 66800, 100200, 167000]) * R.pick([1, 2]), mm = Qm / LF;
+      var Qm = R.pick([8350, 16700, 25050, 33400, 50100, 66800, 83500, 100200, 133600, 167000, 250500, 334000]) * R.pick([1, 2]), mm = Qm / LF;
       return { q: 'A block of ice at $0\\,^\\circ\\text{C}$ absorbs $' + qt(Qm, 'J') + '$ of heat. How many kilograms of it melt? Use $L_f = 3.34 \\times 10^{5}\\,\\text{J/kg}$. (Assume there is more ice than this heat can melt.)', a: ans(mm), unit: 'kg',
         steps: ['At $0\\,^\\circ\\text{C}$ all the heat goes into melting: $Q = mL_f$, so $m = Q/L_f$.',
           '$m = \\dfrac{' + qt(Qm, 'J') + '}{3.34 \\times 10^{5}\\,\\text{J/kg}} = ' + qt(mm, 'kg') + '$.'],
         hint: 'Solve $Q = mL_f$ for $m$.', chk: { k: k, Q: Qm, ans: mm } };
     }
     if (k === 'iceToWater') {
-      var m = R.pick([0.10, 0.20, 0.25, 0.50, 1.0]), T0 = -R.pick([5, 10, 15, 20, 30]), T1 = R.pick([10, 20, 25, 40, 50]);
+      var m = R.pick([0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.75, 1.0, 2.0, 0.06, 0.07, 0.08, 0.09, 0.12, 0.6, 0.7, 0.8, 0.9, 1.2, 1.5]), T0 = -R.pick([2, 4, 5, 8, 10, 15, 20, 25, 30, 6, 12, 14, 16, 18, 22, 24, 26, 28]), T1 = R.pick([5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 6, 7, 8, 9, 12, 70]);
       var q1 = m * CICE * (0 - T0), q2 = m * LF, q3 = m * CW * T1, Qt = q1 + q2 + q3;
       return { q: 'How much heat does it take to turn $' + qx(m, 'kg') + '$ of ice at $' + cdeg(T0) + '$ into water at $' + cdeg(T1) + '$? Use ' + wtxt + '.', a: ans(Qt), unit: 'J',
         viz: { name: 'ph-thermal', opts: { mode: 'heating-curve', m: m, T0: T0, T1: T1, q: 1, interactive: false, quiet: true } },
@@ -581,7 +581,7 @@
         hint: 'Add the heat for warming the ice, melting it and warming the water.', chk: { k: k, m: m, T0: T0, T1: T1, ans: Qt } };
     }
     if (k === 'waterToSteam') {
-      var ms = R.pick([0.10, 0.20, 0.25, 0.50]), Ts = R.pick([10, 20, 25, 40, 60]), qa = ms * CW * (100 - Ts), qb = ms * LV, Qs = qa + qb;
+      var ms = R.pick([0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.75, 1.0, 0.06, 0.07, 0.08, 0.09, 0.12, 0.35, 0.6, 0.7, 0.8, 0.9]), Ts = R.pick([0, 5, 10, 15, 20, 25, 30, 40, 50, 60, 80]), qa = ms * CW * (100 - Ts), qb = ms * LV, Qs = qa + qb;
       return { q: 'How much heat does it take to turn $' + qx(ms, 'kg') + '$ of water at $' + cdeg(Ts) + '$ completely into steam at $100\\,^\\circ\\text{C}$? Use $c_{\\text{water}} = 4186\\,' + UT['J/kgK'] + '$ and $L_v = 2.26 \\times 10^{6}\\,\\text{J/kg}$.', a: ans(Qs), unit: 'J',
         steps: ['Two stages: warm the water to $100\\,^\\circ\\text{C}$, then boil it.',
           'Warm: $Q_1 = (' + tg(ms) + ')(4186)(' + (100 - Ts) + ') = ' + qt(qa, 'J') + '$.',
@@ -590,7 +590,7 @@
         hint: 'Warm it to the boiling point, then add $mL_v$.', chk: { k: k, m: ms, T0: Ts, ans: Qs } };
     }
     // mix: an ice cube in warm water; all of it melts
-    var mi = R.pick([0.020, 0.030, 0.040, 0.050]), mw = R.pick([0.20, 0.25, 0.30, 0.40]), Tw = R.pick([40, 50, 60, 70]);
+    var mi = R.pick([0.010, 0.015, 0.020, 0.025, 0.030, 0.040, 0.050, 0.060, 0.012, 0.035]), mw = R.pick([0.20, 0.25, 0.30, 0.35, 0.40, 0.50]), Tw = R.pick([40, 45, 50, 55, 60, 65, 70, 80, 42, 46, 52, 56, 64, 68, 74, 78]);
     var Tf = (mw * CW * Tw - mi * LF) / ((mw + mi) * CW);
     if (Tf <= 2) { mi = 0.020; mw = 0.40; Tw = 60; Tf = (mw * CW * Tw - mi * LF) / ((mw + mi) * CW); }
     return { q: 'An ice cube of mass $' + qx(mi, 'kg') + '$ at $0\\,^\\circ\\text{C}$ is dropped into $' + qx(mw, 'kg') + '$ of water at $' + cdeg(Tw) + '$ in an insulated cup. All of the ice melts. What is the final temperature? Use $c_{\\text{water}} = 4186\\,' + UT['J/kgK'] + '$ and $L_f = 3.34 \\times 10^{5}\\,\\text{J/kg}$; ignore the cup.', a: ans(Tf, { rtol: 0.03 }), unit: '°C',
@@ -661,7 +661,7 @@
   });
 
   G('phys2.thermal-radiation', function (R, ctx) {
-    var k = kind(R, ctx, ['ratio', 'wien', 'concept'], ['ratio', 'power', 'wien', 'wienT', 'concept'], ['net', 'power', 'wienT', 'ratio']);
+    var k = kind(R, ctx, ['ratio', 'wien', 'concept', 'wienT'], ['ratio', 'power', 'wien', 'wienT', 'concept'], ['net', 'power', 'wienT', 'ratio']);
     var stxt = '$\\sigma = 5.67 \\times 10^{-8}\\,' + UT['W/m2K4'] + '$';
     if (k === 'concept') {
       return { q: 'Which of these objects give off thermal (electromagnetic) radiation: an ice cube at $0\\,^\\circ\\text{C}$, a cup of tea, a person, and a glowing stove element?',
@@ -673,7 +673,7 @@
         hint: 'Is there a temperature in $e\\sigma AT^4$ that gives zero, other than absolute zero?', chk: { k: k, ans: 0 } };
     }
     if (k === 'ratio') {
-      var useC = R.coin(), T1 = R.pick([200, 300, 400, 500]), f = R.pick([2, 3, 1.5]), T2 = T1 * f, F = Math.pow(f, 4);
+      var useC = R.coin(), T1 = R.pick([200, 250, 300, 350, 400, 450, 500, 600, 800]), f = R.pick([2, 3, 1.5, 2.5, 4]), T2 = T1 * f, F = Math.pow(f, 4);
       var t1s = useC ? cdeg(T1 - 273) : tx(T1) + '\\,\\text{K}', t2s = useC ? cdeg(T2 - 273) : tx(T2) + '\\,\\text{K}';
       return { q: 'An object at $' + t1s + '$ is heated to $' + t2s + '$. Its size and surface do not change. By what factor does the power it radiates increase?', a: ans(F, { n: 4, rtol: 0.01 }),
         steps: [(useC ? 'Use kelvins: $' + kel(T1 - 273) + '$ and $' + kel(T2 - 273) + '$. ' : '') + 'Radiated power goes as $T^4$: $\\dfrac{P_2}{P_1} = \\left(\\dfrac{T_2}{T_1}\\right)^4$.',
@@ -682,7 +682,7 @@
         hint: 'Power goes as the fourth power of the kelvin temperature.', chk: { k: k, T1: T1, T2: T2, ans: F } };
     }
     if (k === 'power') {
-      var e = R.pick([0.50, 0.80, 0.90, 0.95, 1.0]), A = R.pick([0.010, 0.020, 0.050, 0.10, 0.50]), T = R.pick([400, 500, 600, 800, 1000, 1200]), P = e * SIG * A * Math.pow(T, 4);
+      var e = R.pick([0.30, 0.50, 0.60, 0.70, 0.80, 0.85, 0.90, 0.95, 1.0]), A = R.pick([0.010, 0.020, 0.025, 0.030, 0.050, 0.10, 0.20, 0.25, 0.50, 1.0]), T = R.pick([350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1500]), P = e * SIG * A * Math.pow(T, 4);
       return { q: 'A hot plate has emissivity $' + tg(e) + '$, a surface area of $' + qx(A, 'm2') + '$ and a temperature of $' + tx(T) + '\\,\\text{K}$. How much power does it radiate? Use ' + stxt + '.', a: ans(P), unit: 'W',
         steps: ['Stefan–Boltzmann law: $P = e\\sigma A T^4$, with $T$ in kelvins.',
           '$T^4 = (' + T + ')^4 = ' + tn(Math.pow(T, 4), 3) + '\\,\\text{K}^4$.',
@@ -690,7 +690,7 @@
         hint: 'Use $P = e\\sigma AT^4$.', chk: { k: k, e: e, A: A, T: T, ans: P } };
     }
     if (k === 'wien') {
-      var obj = R.pick([{ n: 'the Sun\'s surface', T: 5772 }, { n: 'a red giant star\'s surface', T: 3500 }, { n: 'a hot blue star\'s surface', T: 12000 }, { n: 'a stove element', T: 1000 }, { n: 'your skin', T: 306 }, { n: 'a lamp filament', T: 2800 }]);
+      var obj = R.pick([{ n: 'the Sun\'s surface', T: 5772 }, { n: 'a red giant star\'s surface', T: 3500 }, { n: 'a hot blue star\'s surface', T: 12000 }, { n: 'a stove element', T: 1000 }, { n: 'your skin', T: 306 }, { n: 'a lamp filament', T: 2800 }, { n: 'the star Sirius A\'s surface', T: 9900 }, { n: 'molten lava', T: 1400 }]);
       var lm = WIEN / obj.T, nm = lm * 1e9;
       return { q: 'Treat ' + obj.n + ' as a blackbody at $' + tx(obj.T) + '\\,\\text{K}$. At what wavelength does its radiation peak? Use $\\lambda_{\\max}T = 2.898 \\times 10^{-3}\\,\\text{m}\\cdot\\text{K}$ and give the answer in nanometers.', a: ans(nm), unit: 'nm',
         viz: { name: 'ph-blackbody', opts: { T: [obj.T], interactive: false, quiet: true } },
@@ -700,7 +700,7 @@
         hint: 'Hotter objects peak at shorter wavelengths: $\\lambda_{\\max} = b/T$.', chk: { k: k, T: obj.T, ans: nm } };
     }
     if (k === 'wienT') {
-      var nm2 = R.pick([290, 350, 400, 450, 500, 580, 725, 966]), T3 = WIEN / (nm2 * 1e-9);
+      var nm2 = R.pick([250, 290, 300, 350, 380, 400, 420, 450, 500, 550, 580, 600, 650, 725, 800, 966, 1000, 2000, 10000]), T3 = WIEN / (nm2 * 1e-9);
       return { q: 'A star\'s light is brightest at a wavelength of $' + tx(nm2) + '\\,\\text{nm}$. Treating it as a blackbody, what is its surface temperature? Use $\\lambda_{\\max}T = 2.898 \\times 10^{-3}\\,\\text{m}\\cdot\\text{K}$.', a: ans(T3), unit: 'K',
         steps: ['Wien\'s law: $T = \\dfrac{2.898 \\times 10^{-3}\\,\\text{m}\\cdot\\text{K}}{\\lambda_{\\max}}$.',
           '$\\lambda_{\\max} = ' + tx(nm2) + '\\,\\text{nm} = ' + tn(nm2 * 1e-9, 3) + '\\,\\text{m}$.',
@@ -708,7 +708,7 @@
         hint: 'Solve $\\lambda_{\\max}T = b$ for $T$, with the wavelength in meters.', chk: { k: k, nm: nm2, ans: T3 } };
     }
     // net: a person in a cooler room
-    var Ab = R.pick([1.5, 1.6, 1.8, 2.0]), Ts = R.pick([306, 307, 308]), Te = R.pick([288, 290, 293, 295]), eb = 0.97, Pn = eb * SIG * Ab * (Math.pow(Ts, 4) - Math.pow(Te, 4));
+    var Ab = R.pick([1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.2]), Ts = R.pick([305, 306, 307, 308, 309]), Te = R.pick([285, 288, 290, 291, 293, 295, 297]), eb = 0.97, Pn = eb * SIG * Ab * (Math.pow(Ts, 4) - Math.pow(Te, 4));
     return { q: 'A person with $' + qx(Ab, 'm2') + '$ of exposed skin at $' + Ts + '\\,\\text{K}$ (emissivity $0.97$) stands in a room whose walls are at $' + Te + '\\,\\text{K}$. What is the net power the person loses by radiation? Use ' + stxt + '.', a: ans(Pn, { rtol: 0.03 }), unit: 'W',
       steps: ['The person radiates $e\\sigma A T_s^4$ and absorbs $e\\sigma A T_e^4$ from the walls, so the net loss is $P = e\\sigma A (T_s^4 - T_e^4)$.',
         '$T_s^4 - T_e^4 = ' + tn(Math.pow(Ts, 4), 4) + ' - ' + tn(Math.pow(Te, 4), 4) + ' = ' + tn(Math.pow(Ts, 4) - Math.pow(Te, 4), 3) + '\\,\\text{K}^4$.',
@@ -787,7 +787,7 @@
   G('phys2.first-law', function (R, ctx) {
     var k = kind(R, ctx, ['dU', 'dU', 'isothermal', 'concept'], ['dU', 'Q', 'W', 'concept', 'lab'], ['monatomic', 'Q', 'W', 'lab']);
     if (k === 'concept') {
-      var Qx = R.pick([150, 200, 300, 500]);
+      var Qx = R.pick([150, 200, 300, 500, 100, 250, 400, 600, 750, 1000]);
       return { q: 'An ideal gas absorbs $' + qx(Qx, 'J') + '$ of heat and, at the same time, does $' + qx(Qx, 'J') + '$ of work pushing a piston out. What happens to its temperature?',
         a: mc('It stays the same.', ['It rises, because heat was added.', 'It falls, because the gas did work.', 'It rises, because the gas expanded.']),
         steps: ['First law: $\\Delta U = Q + W$, with $W$ the work done on the gas. Here $Q = +' + Qx + '\\,\\text{J}$ and $W = -' + Qx + '\\,\\text{J}$.',
@@ -796,7 +796,7 @@
         hint: 'Find $\\Delta U$ first.', chk: { k: k, ans: 0 } };
     }
     if (k === 'dU') {
-      var Q = R.pick([100, 150, 200, 250, 400, 500, 600]) * (R.chance(0.75) ? 1 : -1), W = R.pick([50, 80, 100, 120, 200, 300]) * R.sign(), dU = Q + W;
+      var Q = R.pick([100, 150, 200, 250, 400, 500, 600, 120, 300, 350, 450, 800]) * (R.chance(0.75) ? 1 : -1), W = R.pick([50, 80, 100, 120, 200, 300, 40, 60, 150, 250, 400]) * R.sign(), dU = Q + W;
       return { q: 'A gas ' + qPhrase(Q) + ' while ' + wPhrase(W) + '. What is the change in the gas\'s internal energy?', a: ans(dU, { rtol: 0.005 }), unit: 'J',
         steps: ['First law: $\\Delta U = Q + W$, where $Q$ is the heat added to the gas and $W$ is the work done <b>on</b> it.',
           'Signs: $Q = ' + sJ(Q) + '$ (' + (Q > 0 ? 'heat in' : 'heat out') + '), $W = ' + sJ(W) + '$ (' + (W > 0 ? 'work done on the gas' : 'the gas does work, so the work done on it is negative') + ').',
@@ -804,7 +804,7 @@
         hint: 'Give $Q$ and $W$ their signs, then add.', chk: { k: k, Q: Q, W: W, ans: dU } };
     }
     if (k === 'Q') {
-      var dU2 = R.pick([-200, -100, 100, 150, 250, 300]), W2 = R.pick([-300, -200, -150, 100, 200]), Q2 = dU2 - W2;
+      var dU2 = R.pick([-200, -100, 100, 150, 250, 300, -250, -150, -50, 50, 200, 400]), W2 = R.pick([-300, -200, -150, 100, 200, -250, -100, -50, 50, 150, 300]), Q2 = dU2 - W2;
       return { q: 'The internal energy of a gas changes by $' + sJ(dU2) + '$ while ' + wPhrase(W2) + '. How much heat flows into the gas? (Negative means heat flows out.)', a: ans(Q2, { rtol: 0.005 }), unit: 'J',
         steps: ['$\\Delta U = Q + W$, so $Q = \\Delta U - W$, with $W$ the work done on the gas: $W = ' + sJ(W2) + '$.',
           '$Q = ' + tn(dU2, 3) + ' - ' + (W2 < 0 ? '(' + tn(W2, 3) + ')' : tn(W2, 3)) + ' = ' + sJ(Q2) + '$.',
@@ -812,7 +812,7 @@
         hint: 'Rearrange $\\Delta U = Q + W$; keep the sign of the work.', chk: { k: k, dU: dU2, W: W2, ans: Q2 } };
     }
     if (k === 'W') {
-      var Q3 = R.pick([200, 300, 400, 500, 800]), dU3 = R.pick([50, 100, 150, 250, -100]), W3 = dU3 - Q3;
+      var Q3 = R.pick([200, 300, 400, 500, 800, 250, 350, 600, 1000]), dU3 = R.pick([50, 100, 150, 250, -100, -200, -50, 200, 300]), W3 = dU3 - Q3;
       return { q: 'A gas absorbs $' + qx(Q3, 'J') + '$ of heat, and its internal energy changes by $' + sJ(dU3) + '$. How much work is done on the gas? (Negative means the gas does work on its surroundings.)', a: ans(W3, { rtol: 0.005 }), unit: 'J',
         steps: ['$\\Delta U = Q + W$, so $W = \\Delta U - Q$.',
           '$W = ' + tn(dU3, 3) + ' - ' + tn(Q3, 3) + ' = ' + sJ(W3) + '$.',
@@ -820,7 +820,7 @@
         hint: 'Rearrange $\\Delta U = Q + W$ for $W$.', chk: { k: k, Q: Q3, dU: dU3, ans: W3 } };
     }
     if (k === 'isothermal') {
-      var Q4 = R.pick([120, 200, 350, 450, 600]);
+      var Q4 = R.pick([120, 200, 350, 450, 600, 100, 150, 250, 300, 400, 500, 800]);
       return { q: 'An ideal gas expands slowly at constant temperature while absorbing $' + qx(Q4, 'J') + '$ of heat. How much work does the gas do on its surroundings?', a: ans(Q4, { rtol: 0.005 }), unit: 'J',
         viz: pv([[300, 2], [150, 4]], ['isothermal']),
         steps: ['An ideal gas\'s internal energy depends only on its temperature. Constant temperature means $\\Delta U = 0$.',
@@ -829,7 +829,7 @@
         hint: 'What is $\\Delta U$ for an ideal gas at constant temperature?', chk: { k: k, Q: Q4, ans: Q4 } };
     }
     if (k === 'lab') {
-      var Q5 = R.pick([300, 400, 500, 600]), Wby = R.pick([100, 150, 200, 250]), dU5 = Q5 - Wby;
+      var Q5 = R.pick([300, 400, 500, 600, 250, 350, 450, 800, 1000]), Wby = R.pick([100, 150, 200, 250, 50, 120, 180, 300]), dU5 = Q5 - Wby;
       return { q: 'The Science Lab writes the first law as $\\Delta U = Q - W_{\\text{by}}$, where $W_{\\text{by}}$ is the work done <b>by</b> the gas. A gas absorbs $' + qx(Q5, 'J') + '$ of heat and $W_{\\text{by}} = ' + qx(Wby, 'J') + '$. What is $\\Delta U$?', a: ans(dU5, { rtol: 0.005 }), unit: 'J',
         steps: ['Both forms say the same thing, because the work done on the gas is $W = -W_{\\text{by}}$.',
           'Lab form: $\\Delta U = Q - W_{\\text{by}} = ' + Q5 + ' - ' + Wby + ' = ' + dU5 + '\\,\\text{J}$.',
@@ -837,7 +837,7 @@
         hint: 'Work done by the gas is the negative of the work done on it.', chk: { k: k, Q: Q5, Wby: Wby, ans: dU5 } };
     }
     // monatomic: dU from n and dT, then Q
-    var n = R.pick([0.20, 0.50, 1.0, 2.0]), dT = R.pick([10, 20, 30, 40, 50]), Wm = -R.pick([50, 80, 100, 150, 200]), dUm = 1.5 * n * RG * dT, Qm = dUm - Wm;
+    var n = R.pick([0.20, 0.50, 1.0, 2.0, 0.10, 0.25, 1.5, 3.0]), dT = R.pick([10, 20, 30, 40, 50, 5, 15, 25, 60, 80, 100]), Wm = -R.pick([50, 80, 100, 150, 200, 20, 40, 60, 120, 250, 300]), dUm = 1.5 * n * RG * dT, Qm = dUm - Wm;
     return { q: '$' + tg(n) + '\\,\\text{mol}$ of helium (a monatomic ideal gas) warms by $' + dT + '\\,\\text{K}$ while it does $' + qx(-Wm, 'J') + '$ of work pushing a piston. How much heat was added? Use ' + Rtxt + '.', a: ans(Qm), unit: 'J',
       steps: ['For a monatomic ideal gas $U = \\tfrac{3}{2}nRT$, so $\\Delta U = \\tfrac{3}{2}nR\\Delta T = \\tfrac{3}{2}(' + tg(n) + ')(' + tx(RG) + ')(' + dT + ') = ' + qt(dUm, 'J') + '$.',
         'The gas does work, so the work done on it is $W = -' + (-Wm) + '\\,\\text{J}$.',
@@ -860,7 +860,7 @@
         hint: 'Match the fixed quantity to what drops out of $\\Delta U = Q + W$.', chk: { k: k, v: which[1], ans: 0 } };
     }
     if (k === 'isochoric') {
-      var n = R.pick([0.10, 0.20, 0.50, 1.0, 2.0]), dT = R.pick([10, 20, 25, 40, 50, 100]), Q = 1.5 * n * RG * dT;
+      var n = R.pick([0.10, 0.20, 0.50, 1.0, 2.0, 0.25, 0.30, 0.40, 0.75, 1.5, 3.0]), dT = R.pick([10, 20, 25, 40, 50, 100, 5, 15, 30, 60, 75, 80]), Q = 1.5 * n * RG * dT;
       return { q: 'How much heat is needed to warm $' + tg(n) + '\\,\\text{mol}$ of argon (a monatomic ideal gas) by $' + dT + '\\,\\text{K}$ in a sealed rigid container? Use ' + Rtxt + '.', a: ans(Q), unit: 'J',
         viz: pv([[100, 3], [130, 3]], ['isochoric']),
         steps: ['Rigid container: isochoric, so $W = 0$ and $Q = \\Delta U$.',
@@ -869,7 +869,7 @@
         hint: 'No work is done, so all the heat goes into internal energy.', chk: { k: k, n: n, dT: dT, ans: Q } };
     }
     if (k === 'isobaric') {
-      var P = R.pick([100, 150, 200, 300]), V1 = R.pick([1.0, 2.0, 3.0]), dV = R.pick([1.0, 2.0, 3.0, 4.0]), ask = R.pick(['Q', 'dU']);
+      var P = R.pick([100, 150, 200, 300, 50, 80, 120, 250, 400]), V1 = R.pick([1.0, 2.0, 3.0, 0.5, 1.5, 2.5, 4.0]), dV = R.pick([1.0, 2.0, 3.0, 4.0, 0.5, 1.5, 2.5, 5.0]), ask = R.pick(['Q', 'dU']);
       var W = -P * dV, dU = 1.5 * P * dV, Qb = dU - W;
       return { q: 'A monatomic ideal gas expands at a constant $' + qx(P, 'kPa') + '$ from $' + qx(V1, 'L') + '$ to $' + qx(V1 + dV, 'L') + '$. ' + (ask === 'Q' ? 'How much heat flows into it?' : 'By how much does its internal energy change?'), a: ans(ask === 'Q' ? Qb : dU, { rtol: 0.01 }), unit: 'J',
         viz: pv([[P, V1], [P, V1 + dV]], ['isobaric']),
@@ -879,7 +879,7 @@
         hint: 'For a monatomic gas, $\\Delta U = \\tfrac{3}{2}\\Delta(PV)$.', chk: { k: k, P: P, V1: V1, V2: V1 + dV, ask: ask === 'Q' ? 1 : 0, ans: ask === 'Q' ? Qb : dU } };
     }
     if (k === 'isothermal') {
-      var Wb = R.pick([150, 250, 400, 500, 800]), comp = R.coin();
+      var Wb = R.pick([150, 250, 400, 500, 800, 100, 200, 300, 600, 1000, 1200]), comp = R.coin();
       return { q: 'An ideal gas is ' + (comp ? 'compressed slowly at constant temperature; the surroundings do $' + qx(Wb, 'J') + '$ of work on it' : 'allowed to expand slowly at constant temperature, doing $' + qx(Wb, 'J') + '$ of work') + '. How much heat flows into the gas? (Negative means heat flows out.)', a: ans(comp ? -Wb : Wb, { rtol: 0.005 }), unit: 'J',
         viz: pv(comp ? [[150, 4], [300, 2]] : [[300, 2], [150, 4]], ['isothermal']),
         steps: ['Isothermal ideal gas: the temperature does not change, so $\\Delta U = 0$.',
@@ -888,7 +888,7 @@
         hint: 'At constant temperature an ideal gas has $\\Delta U = 0$.', chk: { k: k, W: Wb, ans: comp ? -Wb : Wb } };
     }
     if (k === 'adiabatic') {
-      var Wa = R.pick([100, 150, 200, 300, 450]), cmp = R.coin();
+      var Wa = R.pick([100, 150, 200, 300, 450, 50, 80, 120, 250, 350, 600]), cmp = R.coin();
       return { q: 'A gas in an insulated cylinder is ' + (cmp ? 'quickly compressed; $' + qx(Wa, 'J') + '$ of work is done on it' : 'allowed to expand, doing $' + qx(Wa, 'J') + '$ of work on a piston') + '. No heat flows. What is the change in its internal energy?', a: ans(cmp ? Wa : -Wa, { rtol: 0.005 }), unit: 'J',
         viz: pv(cmp ? [[100, 4], [317.5, 2]] : [[317.5, 2], [100, 4]], ['adiabatic']),
         steps: ['Adiabatic: $Q = 0$, so the first law gives $\\Delta U = W$ (the work done on the gas).',
@@ -897,7 +897,7 @@
         hint: 'With $Q = 0$, all the work goes into internal energy.', chk: { k: k, W: Wa, ans: cmp ? Wa : -Wa } };
     }
     // tempChange: isobaric heat input to a monatomic gas, find delta T
-    var n2 = R.pick([0.50, 1.0, 2.0]), Qi = R.pick([500, 831, 1000, 1500, 2000]), dT2 = Qi / (2.5 * n2 * RG);
+    var n2 = R.pick([0.50, 1.0, 2.0, 0.25, 0.75, 1.5, 3.0]), Qi = R.pick([500, 831, 1000, 1500, 2000, 250, 750, 1200, 2500, 3000]), dT2 = Qi / (2.5 * n2 * RG);
     return { q: '$' + qx(Qi, 'J') + '$ of heat flows into $' + tg(n2) + '\\,\\text{mol}$ of neon (a monatomic ideal gas) while it expands at constant pressure. By how much does its temperature rise? Use ' + Rtxt + '.', a: ans(dT2), unit: 'K',
       steps: ['At constant pressure, $W = -P\\Delta V = -nR\\Delta T$ (from $PV = nRT$), and $\\Delta U = \\tfrac{3}{2}nR\\Delta T$.',
         'First law: $Q = \\Delta U - W = \\tfrac{3}{2}nR\\Delta T + nR\\Delta T = \\tfrac{5}{2}nR\\Delta T$.',
@@ -963,7 +963,7 @@
         hint: 'Where does the exhaust heat $Q_C$ go, and can it be zero?', chk: { k: k, ans: 0 } };
     }
     if (k === 'eff') {
-      var QH = R.pick([1000, 1200, 1500, 2000, 2500, 4000]), e = R.pick([0.15, 0.20, 0.25, 0.30, 0.35, 0.40]), W = QH * e;
+      var QH = R.pick([500, 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000]), e = R.pick([0.10, 0.12, 0.15, 0.18, 0.20, 0.22, 0.25, 0.28, 0.30, 0.35, 0.40, 0.45]), W = QH * e;
       return { q: 'An engine takes in $' + qx(QH, 'J') + '$ of heat each cycle and does $' + qx(W, 'J') + '$ of work. What is its efficiency, as a percent?', a: pctAns(W / QH),
         viz: { name: 'ph-pv', opts: { mode: 'engine', states: [[200, 2], [200, 5], [80, 5], [80, 2]], path: ['isobaric', 'isochoric', 'isobaric', 'isochoric'], interactive: false, quiet: true } },
         steps: ['Efficiency is what you get (work) over what you pay for (heat in): $e = \\dfrac{W}{Q_H}$.',
@@ -972,21 +972,21 @@
         hint: '$e = W/Q_H$.', chk: { k: k, QH: QH, W: W, ans: W / QH * 100 } };
     }
     if (k === 'Qc') {
-      var QH2 = R.pick([800, 1000, 1500, 2000, 3000]), W2 = QH2 * R.pick([0.20, 0.25, 0.30, 0.40]), QC = QH2 - W2;
+      var QH2 = R.pick([500, 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 6000]), W2 = QH2 * R.pick([0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45]), QC = QH2 - W2;
       return { q: 'An engine absorbs $' + qx(QH2, 'J') + '$ of heat from its hot reservoir and does $' + qx(W2, 'J') + '$ of work per cycle. How much heat does it give off to the cold reservoir per cycle?', a: ans(QC, { rtol: 0.005 }), unit: 'J',
         steps: ['Around a cycle $\\Delta U = 0$, so energy in = energy out: $Q_H = W + Q_C$.',
           '$Q_C = Q_H - W = ' + tx(QH2) + ' - ' + tx(W2) + ' = ' + qt(QC, 'J') + '$.'],
         hint: 'Energy is conserved: $Q_H = W + Q_C$.', chk: { k: k, QH: QH2, W: W2, ans: QC } };
     }
     if (k === 'work') {
-      var e3 = R.pick([0.18, 0.22, 0.25, 0.30, 0.35, 0.45]), QH3 = R.pick([500, 1200, 2000, 5000, 8000]), W3 = e3 * QH3;
+      var e3 = R.pick([0.12, 0.15, 0.18, 0.22, 0.25, 0.28, 0.30, 0.32, 0.35, 0.40, 0.45]), QH3 = R.pick([500, 800, 1200, 1500, 2000, 3000, 5000, 8000, 10000]), W3 = e3 * QH3;
       return { q: 'An engine with an efficiency of $' + tx(e3 * 100) + '\\%$ takes in $' + qx(QH3, 'J') + '$ of heat. How much work does it do?', a: ans(W3, { rtol: 0.005 }), unit: 'J',
         steps: ['$e = W/Q_H$, so $W = eQ_H$.', '$W = (' + tx(e3) + ')(' + tx(QH3) + '\\,\\text{J}) = ' + qt(W3, 'J') + '$.',
           'The rest, $' + qt(QH3 - W3, 'J') + '$, is given off as heat.'],
         hint: 'Write the percent as a decimal and multiply.', chk: { k: k, e: e3 * 100, QH: QH3, ans: W3 } };
     }
     if (k === 'power') {
-      var Pout = R.pick([30, 45, 60, 90, 120]), e4 = R.pick([0.25, 0.30, 0.40]), Pin = Pout / e4;
+      var Pout = R.pick([15, 20, 30, 45, 60, 75, 90, 100, 120, 150, 200, 250]), e4 = R.pick([0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50]), Pin = Pout / e4;
       return { q: 'A car engine delivers $' + qx(Pout, 'kW') + '$ of mechanical power with an efficiency of $' + tx(e4 * 100) + '\\%$. At what rate does it take in heat from burning fuel?', a: ans(Pin), unit: 'kW',
         steps: ['Efficiency works for rates too: $e = \\dfrac{P_{\\text{out}}}{P_{\\text{in}}}$ (joules per second over joules per second).',
           '$P_{\\text{in}} = \\dfrac{P_{\\text{out}}}{e} = \\dfrac{' + qx(Pout, 'kW') + '}{' + tx(e4) + '} = ' + qt(Pin, 'kW') + '$.',
@@ -994,7 +994,7 @@
         hint: 'Divide the output power by the efficiency.', chk: { k: k, P: Pout, e: e4 * 100, ans: Pin } };
     }
     // exhaust rate
-    var Po = R.pick([20, 40, 60, 100, 500]), e5 = R.pick([0.20, 0.25, 0.33, 0.40]), Pex = Po / e5 - Po;
+    var Po = R.pick([10, 20, 30, 40, 60, 80, 100, 150, 200, 500, 1000]), e5 = R.pick([0.20, 0.25, 0.30, 0.33, 0.35, 0.40, 0.45, 0.50]), Pex = Po / e5 - Po;
     return { q: 'A power plant\'s engines produce $' + qx(Po, 'MW') + '$ of work at an efficiency of $' + tx(e5 * 100) + '\\%$. At what rate do they give off waste heat?', a: ans(Pex), unit: 'MW',
       steps: ['Heat input rate: $P_H = \\dfrac{P_{\\text{out}}}{e} = \\dfrac{' + Po + '}{' + tx(e5) + '} = ' + qt(Po / e5, 'MW') + '$.',
         'Energy per second is conserved: $P_C = P_H - P_{\\text{out}} = ' + tn(Po / e5, 3) + ' - ' + Po + ' = ' + qt(Pex, 'MW') + '$.',
@@ -1005,14 +1005,14 @@
   G('phys2.carnot-limit', function (R, ctx) {
     var k = kind(R, ctx, ['effK', 'effC', 'effC'], ['effC', 'maxW', 'claim', 'Tc'], ['claim', 'Tc', 'TH', 'maxW']);
     if (k === 'effK') {
-      var TH = R.pick([400, 500, 600, 800, 1000]), TC = R.pick([250, 300, 350]), e = 1 - TC / TH;
+      var TH = R.pick([400, 450, 500, 550, 600, 700, 800, 900, 1000, 1200, 1500]), TC = R.pick([250, 273, 280, 290, 300, 310]), e = 1 - TC / TH;
       return { q: 'What is the highest possible efficiency of an engine running between reservoirs at $' + TH + '\\,\\text{K}$ and $' + TC + '\\,\\text{K}$? Give a percent.', a: pctAns(e),
         steps: ['The Carnot limit: $e_{\\max} = 1 - \\dfrac{T_C}{T_H}$, with kelvin temperatures.',
           '$e_{\\max} = 1 - \\dfrac{' + TC + '}{' + TH + '} = ' + tn(e, 3) + ' = ' + pct(e) + '$.'],
         hint: 'Use $1 - T_C/T_H$.', chk: { k: k, TH: TH, TC: TC, ans: e * 100 } };
     }
     if (k === 'effC') {
-      var th = R.pick([127, 227, 327, 427, 527]), tc = R.pick([17, 20, 27, 37]), e2 = 1 - TK(tc) / TK(th);
+      var th = R.pick([127, 177, 227, 277, 327, 377, 427, 477, 527, 627]), tc = R.pick([0, 10, 15, 17, 20, 25, 27, 30, 37]), e2 = 1 - TK(tc) / TK(th);
       return { q: 'An engine runs between steam at $' + cdeg(th) + '$ and cooling water at $' + cdeg(tc) + '$. What is the highest efficiency it could have? Give a percent.', a: pctAns(e2),
         steps: ['The Carnot formula needs kelvins: $T_H = ' + kel(th) + '$, $T_C = ' + kel(tc) + '$.',
           '$e_{\\max} = 1 - \\dfrac{' + TK(tc) + '}{' + TK(th) + '} = ' + tn(e2, 3) + ' = ' + pct(e2) + '$.',
@@ -1020,7 +1020,7 @@
         hint: 'Convert both temperatures to kelvins first.', chk: { k: k, tH: th, tC: tc, ans: e2 * 100 } };
     }
     if (k === 'maxW') {
-      var TH3 = R.pick([500, 600, 750, 800]), TC3 = R.pick([300, 250]), QH = R.pick([1000, 2000, 3000, 4500]), Wm = QH * (1 - TC3 / TH3);
+      var TH3 = R.pick([450, 500, 550, 600, 700, 750, 800, 900, 1000]), TC3 = R.pick([300, 250, 280, 290]), QH = R.pick([1000, 1500, 2000, 2500, 3000, 4000, 4500, 5000, 6000]), Wm = QH * (1 - TC3 / TH3);
       return { q: 'An engine takes in $' + qx(QH, 'J') + '$ of heat from a reservoir at $' + TH3 + '\\,\\text{K}$ and rejects heat at $' + TC3 + '\\,\\text{K}$. What is the most work it could do with that heat?', a: ans(Wm), unit: 'J',
         steps: ['The best possible engine has the Carnot efficiency: $e = 1 - \\dfrac{' + TC3 + '}{' + TH3 + '} = ' + tn(1 - TC3 / TH3, 3) + '$.',
           '$W_{\\max} = eQ_H = (' + tn(1 - TC3 / TH3, 3) + ')(' + tx(QH) + '\\,\\text{J}) = ' + qt(Wm, 'J') + '$.',
@@ -1028,7 +1028,7 @@
         hint: 'Find the Carnot efficiency, then multiply by $Q_H$.', chk: { k: k, QH: QH, TH: TH3, TC: TC3, ans: Wm } };
     }
     if (k === 'claim') {
-      var th4 = R.pick([227, 327, 127]), tc4 = R.pick([27, 7]), emax = 1 - TK(tc4) / TK(th4), ecel = 1 - tc4 / th4, ok = R.coin();
+      var th4 = R.pick([227, 327, 127, 177, 277, 427, 527]), tc4 = R.pick([27, 7, 17, 37]), emax = 1 - TK(tc4) / TK(th4), ecel = 1 - tc4 / th4, ok = R.coin();
       var Lk = Math.round(emax * 100), Lc = Math.round(ecel * 100);
       var claim = ok ? Math.floor(emax * 100 / 5) * 5 - 5 : Math.min(Math.ceil(emax * 100 / 5) * 5 + 5, Math.floor(ecel * 100 / 5) * 5 - 5);
       var right = 'The limit is about ' + Lk + '%, so the claim is ' + (ok ? 'possible.' : 'impossible.');
@@ -1041,13 +1041,13 @@
         hint: 'Compute the Carnot limit with kelvins and compare.', chk: { k: k, ok: ok ? 1 : 0, emax: emax, claim: claim, ans: 0 } };
     }
     if (k === 'Tc') {
-      var TH5 = R.pick([500, 600, 800, 1000]), e5 = R.pick([0.40, 0.50, 0.60, 0.25]), Tc5 = TH5 * (1 - e5);
+      var TH5 = R.pick([400, 450, 500, 600, 750, 800, 900, 1000, 1200]), e5 = R.pick([0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.70]), Tc5 = TH5 * (1 - e5);
       return { q: 'A Carnot engine takes in heat at $' + TH5 + '\\,\\text{K}$. What must the temperature of its cold reservoir be for an efficiency of $' + tx(e5 * 100) + '\\%$? Answer in kelvins.', a: ans(Tc5, { rtol: 0.01 }), unit: 'K',
         steps: ['$e = 1 - \\dfrac{T_C}{T_H}$, so $T_C = T_H(1 - e)$.', '$T_C = (' + TH5 + '\\,\\text{K})(1 - ' + tx(e5) + ') = ' + qt(Tc5, 'K') + '$.'],
         hint: 'Solve $e = 1 - T_C/T_H$ for $T_C$.', chk: { k: k, TH: TH5, e: e5 * 100, ans: Tc5 } };
     }
     // TH in Celsius for a target efficiency with cold side in Celsius
-    var tc6 = R.pick([27, 7, 17]), e6 = R.pick([0.25, 0.40, 0.50, 0.60]), TH6 = TK(tc6) / (1 - e6), C6 = TH6 - 273;
+    var tc6 = R.pick([27, 7, 17, 0, 10, 20]), e6 = R.pick([0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60]), TH6 = TK(tc6) / (1 - e6), C6 = TH6 - 273;
     return { q: 'A Carnot engine gives off heat at $' + cdeg(tc6) + '$. How hot, in degrees Celsius, must its hot reservoir be for an efficiency of $' + tx(e6 * 100) + '\\%$?', a: ans(C6, { rtol: 0.01 }), unit: '°C',
       steps: ['$T_C = ' + kel(tc6) + '$.', '$e = 1 - \\dfrac{T_C}{T_H}$, so $T_H = \\dfrac{T_C}{1 - e} = \\dfrac{' + TK(tc6) + '}{' + tx(1 - e6) + '} = ' + qt(TH6, 'K') + '$.',
         'In Celsius: $' + tn(TH6, 3) + ' - 273 = ' + tn(C6, 3) + '\\,^\\circ\\text{C}$.'],
@@ -1057,7 +1057,7 @@
   G('phys2.refrigerators', function (R, ctx) {
     var k = kind(R, ctx, ['copF', 'Qh', 'concept'], ['copF', 'hpW', 'hpOutside', 'Qh', 'concept'], ['carnotCOP', 'hpOutside', 'hpW', 'copF']);
     if (k === 'concept') {
-      var c = R.pick([3, 4]);
+      var c = R.pick([2, 3, 4, 5]);
       return { q: 'A heat pump delivers ' + c + ' J of heat into a house for every 1 J of electrical work it uses. Does this break conservation of energy?',
         a: mc('No: it moves ' + (c - 1) + ' J of heat in from outside and adds the 1 J of work.', ['Yes: it makes ' + (c - 1) + ' J of energy from nothing.', 'No: the extra comes from the heat pump slowly using up its own internal energy.', 'Yes, but the second law allows it.']),
         viz: { name: 'ph-pv', opts: { mode: 'fridge', states: [[200, 2], [200, 5], [80, 5], [80, 2]], path: ['isobaric', 'isochoric', 'isobaric', 'isochoric'], interactive: false, quiet: true } },
@@ -1067,7 +1067,7 @@
         hint: 'Write the energy balance $Q_H = Q_C + W$.', chk: { k: k, ans: 0 } };
     }
     if (k === 'copF') {
-      var W = R.pick([100, 150, 200, 250]), cop = R.pick([2, 2.5, 3, 4, 5]), QC = W * cop;
+      var W = R.pick([50, 80, 100, 120, 150, 200, 250, 300, 400, 500]), cop = R.pick([1.5, 2, 2.5, 3, 3.5, 4, 5, 6]), QC = W * cop;
       return { q: 'Each cycle, a refrigerator removes $' + qx(QC, 'J') + '$ of heat from its inside using $' + qx(W, 'J') + '$ of electrical work. What is its coefficient of performance?', a: ans(QC / W, { rtol: 0.01 }),
         steps: ['For a refrigerator, what you want is the heat removed from the cold side: $\\text{COP} = \\dfrac{Q_C}{W}$.',
           '$\\text{COP} = \\dfrac{' + tx(QC) + '}{' + tx(W) + '} = ' + tx(cop) + '$.',
@@ -1075,7 +1075,7 @@
         hint: 'COP of a refrigerator $= Q_C/W$.', chk: { k: k, QC: QC, W: W, ans: QC / W } };
     }
     if (k === 'Qh') {
-      var QC2 = R.pick([300, 450, 600, 900, 1200]), W2 = R.pick([100, 150, 200, 300]), QH2 = QC2 + W2;
+      var QC2 = R.pick([200, 300, 400, 450, 500, 600, 750, 800, 900, 1200, 1500, 2000]), W2 = R.pick([50, 80, 100, 120, 150, 200, 250, 300, 400]), QH2 = QC2 + W2;
       return { q: 'A refrigerator removes $' + qx(QC2, 'J') + '$ of heat from the food compartment while using $' + qx(W2, 'J') + '$ of work. How much heat does it release into the kitchen?', a: ans(QH2, { rtol: 0.005 }), unit: 'J',
         steps: ['Over a cycle $\\Delta U = 0$, so all the energy that goes in comes out: $Q_H = Q_C + W$.',
           '$Q_H = ' + QC2 + ' + ' + W2 + ' = ' + qt(QH2, 'J') + '$.',
@@ -1083,21 +1083,21 @@
         hint: 'Both the removed heat and the work end up in the kitchen.', chk: { k: k, QC: QC2, W: W2, ans: QH2 } };
     }
     if (k === 'hpW') {
-      var QH3 = R.pick([6.0, 8.0, 9.0, 12, 15]), cop3 = R.pick([2.5, 3.0, 4.0]), W3 = QH3 / cop3;
+      var QH3 = R.pick([3.0, 4.0, 5.0, 6.0, 7.5, 8.0, 9.0, 10, 12, 15, 18, 20]), cop3 = R.pick([2.0, 2.5, 3.0, 3.5, 4.0, 5.0]), W3 = QH3 / cop3;
       return { q: 'A heat pump with a coefficient of performance (heating) of $' + tx(cop3) + '$ delivers $' + qx(QH3, 'kW') + '$ of heat to a house. How much electrical power does it use?', a: ans(W3), unit: 'kW',
         steps: ['For a heat pump, what you want is the heat delivered: $\\text{COP}_{\\text{heat}} = \\dfrac{Q_H}{W}$ (or, per second, heat rate over power).',
           '$W = \\dfrac{Q_H}{\\text{COP}} = \\dfrac{' + qx(QH3, 'kW') + '}{' + tx(cop3) + '} = ' + qt(W3, 'kW') + '$.'],
         hint: 'Divide the heat delivered by the COP.', chk: { k: k, QH: QH3, cop: cop3, ans: W3 } };
     }
     if (k === 'hpOutside') {
-      var Wp = R.pick([1.5, 2.0, 2.5, 3.0]), cop4 = R.pick([3.0, 3.5, 4.0]), QHp = Wp * cop4, QCp = QHp - Wp;
+      var Wp = R.pick([1.0, 1.2, 1.5, 1.8, 2.0, 2.5, 3.0, 4.0]), cop4 = R.pick([2.5, 3.0, 3.5, 4.0, 4.5, 5.0]), QHp = Wp * cop4, QCp = QHp - Wp;
       return { q: 'A heat pump uses $' + qx(Wp, 'kW') + '$ of electrical power and has a heating COP of $' + tx(cop4) + '$. At what rate does it draw heat from the cold outdoor air?', a: ans(QCp), unit: 'kW',
         steps: ['Heat delivered: $Q_H = \\text{COP} \\times W = ' + tx(cop4) + ' \\times ' + qx(Wp, 'kW') + ' = ' + qt(QHp, 'kW') + '$.',
           'Energy balance: $Q_C = Q_H - W = ' + tn(QHp, 3) + ' - ' + tg(Wp) + ' = ' + qt(QCp, 'kW') + '$.'],
         hint: 'Find the heat delivered, then subtract the work.', chk: { k: k, W: Wp, cop: cop4, ans: QCp } };
     }
     // carnot COP of a heat pump
-    var tin = R.pick([20, 22, 25]), tout = R.pick([-10, -5, 0, 5]), copC = TK(tin) / (tin - tout);
+    var tin = R.pick([18, 19, 20, 21, 22, 23, 24, 25]), tout = R.pick([-20, -15, -12, -10, -8, -5, -2, 0, 2, 5, 8, 10]), copC = TK(tin) / (tin - tout);
     return { q: 'What is the highest possible heating COP for a heat pump that keeps a house at $' + cdeg(tin) + '$ when it is $' + cdeg(tout) + '$ outside?', a: ans(copC),
       steps: ['For an ideal (Carnot) heat pump, $\\dfrac{Q_C}{Q_H} = \\dfrac{T_C}{T_H}$, so $\\text{COP}_{\\max} = \\dfrac{Q_H}{Q_H - Q_C} = \\dfrac{T_H}{T_H - T_C}$, with kelvins.',
         '$T_H = ' + kel(tin) + '$; the difference $T_H - T_C = ' + tin + ' - (' + tout + ') = ' + (tin - tout) + '\\,\\text{K}$ (a difference is the same in kelvins and Celsius degrees).',
@@ -1130,14 +1130,14 @@
         hint: 'Compare $Q/T$ for the colder ice and the warmer room.', chk: { k: k, v: v, ans: 0 } };
     }
     if (k === 'reservoir') {
-      var Q = R.pick([500, 600, 1000, 1200, 1500, 3000]), T = R.pick([250, 300, 400, 500, 600]), into = R.coin(), dS = (into ? 1 : -1) * Q / T;
+      var Q = R.pick([500, 600, 1000, 1200, 1500, 3000, 400, 800, 1800, 2000, 2400, 4000, 6000]), T = R.pick([250, 300, 400, 500, 600, 200, 273, 350, 450, 800]), into = R.coin(), dS = (into ? 1 : -1) * Q / T;
       return { q: 'A large reservoir at $' + T + '\\,\\text{K}$ ' + (into ? 'absorbs' : 'gives off') + ' $' + qx(Q, 'J') + '$ of heat while its temperature stays the same. What is its change in entropy? (Negative means a decrease.)', a: ans(dS, { rtol: 0.01 }), unit: 'J/K',
         steps: ['At constant temperature, $\\Delta S = \\dfrac{Q}{T}$, with $Q$ positive for heat in and $T$ in kelvins.',
           '$\\Delta S = \\dfrac{' + (into ? '' : '-') + tx(Q) + '\\,\\text{J}}{' + T + '\\,\\text{K}} = ' + qt(dS, 'J/K') + '$.'],
         hint: '$\\Delta S = Q/T$; heat leaving makes $Q$ negative.', chk: { k: k, Q: Q, T: T, ans: dS } };
     }
     if (k === 'flow') {
-      var Q2 = R.pick([600, 1200, 1800, 2400, 3000]), Th = R.pick([400, 500, 600, 800]), Tc = R.pick([200, 250, 300]), dSt = Q2 / Tc - Q2 / Th;
+      var Q2 = R.pick([600, 1200, 1800, 2400, 3000, 900, 1500, 2000, 3600, 4500]), Th = R.pick([400, 500, 600, 800, 450, 700, 900, 1000]), Tc = R.pick([200, 250, 300, 150, 273, 280]), dSt = Q2 / Tc - Q2 / Th;
       return { q: '$' + qx(Q2, 'J') + '$ of heat flows on its own from a reservoir at $' + Th + '\\,\\text{K}$ to one at $' + Tc + '\\,\\text{K}$. What is the total change in entropy?', a: ans(dSt), unit: 'J/K',
         viz: { name: 'ph-thermal', opts: { mode: 'entropy', Th: Th, Tc: Tc, Q: Q2, interactive: false, quiet: true } },
         steps: ['Hot reservoir: $\\Delta S_H = -\\dfrac{' + Q2 + '}{' + Th + '} = ' + qt(-Q2 / Th, 'J/K') + '$.',
@@ -1146,7 +1146,7 @@
         hint: 'Add $-Q/T_H$ and $+Q/T_C$.', chk: { k: k, Q: Q2, Th: Th, Tc: Tc, ans: dSt } };
     }
     if (k === 'phase') {
-      var boil = R.coin(), m = R.pick([0.10, 0.20, 0.25, 0.50, 1.0]), L = boil ? LV : LF, Tp = boil ? 373 : 273, dS2 = m * L / Tp;
+      var boil = R.coin(), m = R.pick([0.10, 0.20, 0.25, 0.50, 1.0, 0.05, 0.15, 0.30, 0.40, 0.75, 1.5, 2.0]), L = boil ? LV : LF, Tp = boil ? 373 : 273, dS2 = m * L / Tp;
       return { q: 'What is the entropy change of $' + qx(m, 'kg') + '$ of ' + (boil ? 'water as it boils into steam at $100\\,^\\circ\\text{C}$' : 'ice as it melts at $0\\,^\\circ\\text{C}$') + '? Use ' + (boil ? '$L_v = 2.26 \\times 10^{6}\\,\\text{J/kg}$' : '$L_f = 3.34 \\times 10^{5}\\,\\text{J/kg}$') + '.', a: ans(dS2), unit: 'J/K',
         steps: ['The ' + (boil ? 'boiling' : 'melting') + ' happens at a constant temperature, $T = ' + Tp + '\\,\\text{K}$, so $\\Delta S = Q/T$.',
           'Heat: $Q = mL = (' + tg(m) + ')(' + (boil ? '2.26 \\times 10^{6}' : '3.34 \\times 10^{5}') + ') = ' + qt(m * L, 'J') + '$.',
@@ -1154,7 +1154,7 @@
         hint: 'Find $Q = mL$, then divide by the kelvin temperature.', chk: { k: k, m: m, b: boil ? 1 : 0, ans: dS2 } };
     }
     // carnotQc: a reversible engine leaves total entropy unchanged
-    var QH = R.pick([1000, 1500, 2000, 3000]), TH = R.pick([500, 600, 800]), TC = R.pick([300, 200]), Qc = QH * TC / TH;
+    var QH = R.pick([1000, 1500, 2000, 3000, 800, 1200, 2500, 4000, 5000]), TH = R.pick([500, 600, 800, 400, 450, 750, 900, 1000]), TC = R.pick([300, 200, 250, 273, 280]), Qc = QH * TC / TH;
     return { q: 'A reversible (Carnot) engine takes $' + qx(QH, 'J') + '$ of heat from a reservoir at $' + TH + '\\,\\text{K}$ and gives off heat to a reservoir at $' + TC + '\\,\\text{K}$. The total entropy of the reservoirs does not change. How much heat does it give off each cycle?', a: ans(Qc, { rtol: 0.01 }), unit: 'J',
       steps: ['The engine itself returns to its starting state, so its entropy does not change. Total $\\Delta S = 0$ means $-\\dfrac{Q_H}{T_H} + \\dfrac{Q_C}{T_C} = 0$.',
         '$Q_C = Q_H \\dfrac{T_C}{T_H} = (' + tx(QH) + '\\,\\text{J})\\dfrac{' + TC + '}{' + TH + '} = ' + qt(Qc, 'J') + '$.',
@@ -1181,7 +1181,7 @@
         hint: 'Neutral means equal positive and negative charge, not no charge.', chk: { k: k, ans: 0 } };
     }
     if (k === 'count') {
-      var n = R.pick([2.5, 5.0, 7.5, 10, 12.5, 20, 25, 50]) * 1e10, neg = R.coin(), q = (neg ? -1 : 1) * n * QE, qn = q * 1e9;
+      var n = R.pick([2.5, 5.0, 7.5, 10, 12.5, 20, 25, 50, 1.5, 3.0, 4.0, 6.0, 8.0, 15, 30, 40]) * 1e10, neg = R.coin(), q = (neg ? -1 : 1) * n * QE, qn = q * 1e9;
       return { q: 'A plastic rod has a charge of $' + (qn > 0 ? '+' : '') + tn(qn, 2) + '\\,\\text{nC}$. How many electrons has it ' + (neg ? 'gained' : 'lost') + '? Use ' + etxt + '.', a: ans(n), unit: 'electrons',
         steps: ['Charge comes in whole multiples of $e$: $|q| = Ne$, so $N = |q|/e$.',
           '$|q| = ' + tn(abs(qn), 2) + '\\,\\text{nC} = ' + tn(abs(q), 2) + '\\,\\text{C}$.',
@@ -1189,7 +1189,7 @@
         hint: 'Divide the size of the charge by the charge of one electron.', chk: { k: k, q: qn, ans: n } };
     }
     if (k === 'charge') {
-      var N = R.pick([1.5, 2.0, 3.0, 4.0, 5.0, 6.0]) * Math.pow(10, R.pick([10, 11, 12])), gain = R.coin(), qq = (gain ? -1 : 1) * N * QE;
+      var N = R.pick([1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 2.5, 3.5, 7.5, 8.0]) * Math.pow(10, R.pick([10, 11, 12])), gain = R.coin(), qq = (gain ? -1 : 1) * N * QE;
       return { q: 'A wool sweater ' + (gain ? 'gains' : 'loses') + ' $' + tn(N, 2) + '$ electrons. What is its charge, in coulombs? (Give the sign.) Use ' + etxt + '.', a: ans(qq), unit: 'C',
         steps: ['Each electron carries $-e = -1.60 \\times 10^{-19}\\,\\text{C}$.',
           (gain ? 'Gaining electrons adds negative charge' : 'Losing electrons leaves an excess of positive charge') + ': $q = ' + (gain ? '-' : '+') + 'Ne$.',
@@ -1225,7 +1225,7 @@
         hint: 'Which charges does the rod push toward the ground connection?', chk: { k: k, v: rodNeg ? 'Positive' : 'Negative', ans: 0 } };
     }
     // quantized
-    var m = R.pick([2, 3, 4, 5, 6]), good = m * 1.6, bads = [(m + 0.5) * 1.6, m * 1.6 - 0.4, m + 0.5].map(function (x) { return U.fix(x); });
+    var m = R.pick([2, 3, 4, 5, 6, 7, 8, 9, 10]), good = m * 1.6, bads = [(m + 0.5) * 1.6, m * 1.6 - 0.4, m + 0.5].map(function (x) { return U.fix(x); });
     function sc(x) { return '$' + tn(x * 1e-19, 3) + '\\,\\text{C}$'; }
     return { q: 'Which of these could be the net charge on a small oil drop? ' + etxt,
       a: mc(sc(good), bads.map(sc)),
@@ -1354,7 +1354,7 @@
         hint: 'Is the charge positive or negative?', chk: { k: k, v: cap(el ? opp[dir] : dir), ans: 0 } };
     }
     if (k === 'point') {
-      var q = R.pick([1, 2, 3, 4, 5, 8, 10]) * R.sign(), rc = R.pick([5, 10, 15, 20, 30]), r = rc / 100, E = K_E * abs(q) * 1e-9 / (r * r);
+      var q = R.pick([1, 2, 3, 4, 5, 8, 10, 6, 12, 15, 20]) * R.sign(), rc = R.pick([5, 10, 15, 20, 30, 2, 3, 4, 8, 12, 25, 40, 50]), r = rc / 100, E = K_E * abs(q) * 1e-9 / (r * r);
       return { q: 'What is the size of the electric field $' + qx(rc, 'cm') + '$ from a point charge of $' + qs(q, 'nC') + '$? Which way does it point? (Enter the size.) Use ' + ktxt + '.', a: ans(E), unit: 'N/C',
         viz: ef([{ q: q, x: 0, y: 0 }], { view: Math.max(0.12, r * 1.4), test: { x: r, y: 0, q: 1 }, show: ['lines'] }),
         steps: ['$E = k\\dfrac{|q|}{r^2}$, with $q = ' + tx(abs(q)) + ' \\times 10^{-9}\\,\\text{C}$ and $r = ' + tg(r) + '\\,\\text{m}$.',
@@ -1363,7 +1363,7 @@
         hint: 'Use $E = k|q|/r^2$ with SI units.', chk: { k: k, q: q, r: rc, ans: E } };
     }
     if (k === 'force') {
-      var E2 = R.pick([200, 500, 800, 1200, 2000, 5000, 15000]), part = R.pick(['electron', 'proton', 'ion']), qq = part === 'ion' ? 2 * QE : QE, F = qq * E2;
+      var E2 = R.pick([200, 500, 800, 1200, 2000, 5000, 15000, 100, 300, 1000, 3000, 8000, 10000, 25000, 50000]), part = R.pick(['electron', 'proton', 'ion']), qq = part === 'ion' ? 2 * QE : QE, F = qq * E2;
       return { q: (part === 'ion' ? 'A doubly charged ion (charge $+2e$)' : 'A' + (part === 'electron' ? 'n electron' : ' proton')) + ' is in a uniform electric field of $' + qx(E2, 'N/C') + '$. What is the size of the electric force on it? Use ' + etxt + '.', a: ans(F), unit: 'N',
         steps: ['$F = |q|E$, by the definition of the field as force per coulomb.',
           '$F = (' + (part === 'ion' ? '2 \\times ' : '') + '1.60 \\times 10^{-19}\\,\\text{C})(' + qx(E2, 'N/C') + ') = ' + qt(F, 'N') + '$.',
@@ -1371,20 +1371,20 @@
         hint: 'Multiply the charge by the field.', chk: { k: k, E: E2, ans: F } };
     }
     if (k === 'fromForce') {
-      var qn = R.pick([2, 4, 5, 8]), Fn = R.pick([1.0, 2.0, 4.0, 6.0]) * 1e-6, E3 = Fn / (qn * 1e-9);
+      var qn = R.pick([2, 4, 5, 8, 1, 3, 6, 10]), Fn = R.pick([1.0, 2.0, 4.0, 6.0, 0.5, 1.5, 3.0, 5.0, 8.0]) * 1e-6, E3 = Fn / (qn * 1e-9);
       return { q: 'A $+' + tg(qn) + '\\,\\text{nC}$ test charge feels a force of $' + tn(Fn, 2) + '\\,\\text{N}$ at point P. What is the size of the electric field at P?', a: ans(E3), unit: 'N/C',
         steps: ['The field is the force per coulomb: $E = \\dfrac{F}{q}$.', '$E = \\dfrac{' + tn(Fn, 2) + '\\,\\text{N}}{' + qn + ' \\times 10^{-9}\\,\\text{C}} = ' + qt(E3, 'N/C') + '$.'],
         hint: 'Divide the force by the test charge.', chk: { k: k, q: qn, F: Fn, ans: E3 } };
     }
     if (k === 'charge') {
-      var E4 = R.pick([450, 900, 1800, 3600]), rc4 = R.pick([10, 20, 30]), q4 = E4 * Math.pow(rc4 / 100, 2) / K_E * 1e9;
+      var E4 = R.pick([450, 900, 1800, 3600, 225, 1350, 2700, 4500, 9000]), rc4 = R.pick([10, 20, 30, 5, 15, 25, 40]), q4 = E4 * Math.pow(rc4 / 100, 2) / K_E * 1e9;
       return { q: 'The electric field $' + qx(rc4, 'cm') + '$ from a small charged ball is $' + qx(E4, 'N/C') + '$, pointing toward the ball. What is the ball\'s charge, in nanocoulombs? (Give the sign.) Use ' + ktxt + '.', a: ans(-q4), unit: 'nC',
         steps: ['$E = k|q|/r^2$, so $|q| = \\dfrac{Er^2}{k} = \\dfrac{(' + E4 + ')(' + tg(rc4 / 100) + ')^2}{8.99 \\times 10^{9}} = ' + qt(q4 * 1e-9, 'C') + '$.',
           'The field points toward the ball, so the charge is negative: $q = -' + tn(q4, 3) + '\\,\\text{nC}$.'],
         hint: 'Solve $E = k|q|/r^2$ for $|q|$, then use the direction for the sign.', chk: { k: k, E: E4, r: rc4, ans: -q4 } };
     }
     // ratio
-    var E0 = R.pick([400, 900, 1600, 3600]), r1 = R.pick([10, 20, 30]), fr = R.pick([2, 3, 0.5]), r2 = r1 * fr, En = E0 / (fr * fr);
+    var E0 = R.pick([400, 900, 1600, 3600, 100, 200, 2500, 4900, 6400]), r1 = R.pick([10, 20, 30, 5, 15, 25, 40]), fr = R.pick([2, 3, 0.5, 4]), r2 = r1 * fr, En = E0 / (fr * fr);
     return { q: 'The electric field $' + qx(r1, 'cm') + '$ from a point charge is $' + qx(E0, 'N/C') + '$. What is the field $' + qx(r2, 'cm') + '$ from the same charge?', a: ans(En), unit: 'N/C',
       steps: ['$E = k|q|/r^2$: the field falls off as $1/r^2$.', 'The distance changes by a factor of $' + tx(fr) + '$, so the field changes by $1/' + tx(fr) + '^2 = 1/' + tx(fr * fr) + '$.',
         '$E = \\dfrac{' + E0 + '}{' + tx(fr * fr) + '} = ' + qt(En, 'N/C') + '$.'],
@@ -1458,14 +1458,14 @@
         hint: 'Check the sign of the charge.', chk: { k: k, v: ((el ? !up : up) ? 'Up' : 'Down'), ans: 0 } };
     }
     if (k === 'accel') {
-      var el2 = R.coin(), E = R.pick([200, 500, 1000, 2000, 5000, 20000]), a = QE * E / (el2 ? ME : MP);
+      var el2 = R.coin(), E = R.pick([200, 500, 1000, 2000, 5000, 20000, 100, 300, 800, 1500, 3000, 8000, 10000, 50000, 120, 250, 350, 600, 700, 1200, 2500, 4000, 6000, 9000, 12000, 25000, 30000, 40000]), a = QE * E / (el2 ? ME : MP);
       return { q: 'What is the size of the acceleration of ' + (el2 ? 'an electron ($m = 9.11 \\times 10^{-31}\\,\\text{kg}$)' : 'a proton ($m = 1.67 \\times 10^{-27}\\,\\text{kg}$)') + ' in a uniform electric field of $' + qx(E, 'N/C') + '$? Use ' + etxt + '; ignore gravity.', a: ans(a), unit: 'm/s2',
         steps: ['The force is $F = eE$, constant in a uniform field.', 'Newton\'s second law: $a = \\dfrac{eE}{m} = \\dfrac{(1.60 \\times 10^{-19})(' + E + ')}{' + (el2 ? '9.11 \\times 10^{-31}' : '1.67 \\times 10^{-27}') + '} = ' + qt(a, 'm/s2') + '$.',
           'That is enormous compared with $g$, which is why gravity can be ignored for ' + (el2 ? 'electrons' : 'protons') + ' in fields like this.'],
         hint: 'Find the force $eE$, then divide by the mass.', chk: { k: k, E: E, el: el2 ? 1 : 0, ans: a } };
     }
     if (k === 'speed') {
-      var E2 = R.pick([1000, 2000, 5000, 10000]), dcm = R.pick([1.0, 2.0, 4.0, 5.0]), d = dcm / 100, el3 = R.coin(), m = el3 ? ME : MP, v = sqrt(2 * QE * E2 * d / m);
+      var E2 = R.pick([1000, 2000, 5000, 10000, 500, 1500, 2500, 4000, 8000, 20000, 600, 700, 800, 1200, 3000, 3500, 6000, 9000, 12000, 15000]), dcm = R.pick([1.0, 2.0, 4.0, 5.0, 0.5, 1.5, 2.5, 3.0, 8.0, 0.6, 0.7, 0.8, 0.9, 1.2, 3.5, 6, 7]), d = dcm / 100, el3 = R.coin(), m = el3 ? ME : MP, v = sqrt(2 * QE * E2 * d / m);
       return { q: (el3 ? 'An electron' : 'A proton') + ' starts from rest and is accelerated across a $' + qx(dcm, 'cm') + '$ gap by a uniform field of $' + qx(E2, 'N/C') + '$. How fast is it moving at the end? Use ' + etxt + ' and ' + (el3 ? '$m_e = 9.11 \\times 10^{-31}\\,\\text{kg}$' : '$m_p = 1.67 \\times 10^{-27}\\,\\text{kg}$') + '.', a: ans(v), unit: 'm/s',
         steps: ['Constant acceleration: $a = \\dfrac{eE}{m} = ' + qt(QE * E2 / m, 'm/s2') + '$.',
           'From rest over a distance $d$: $v^2 = 2ad$, so $v = \\sqrt{2(' + tn(QE * E2 / m, 3) + ')(' + tg(d) + ')} = ' + qt(v, 'm/s') + '$.',
@@ -1473,21 +1473,21 @@
         hint: 'Find $a$, then use $v^2 = 2ad$.', chk: { k: k, E: E2, d: dcm, el: el3 ? 1 : 0, ans: v } };
     }
     if (k === 'balance') {
-      var n = R.pick([2, 3, 4, 5, 6, 8]), E3 = R.pick([2.0, 2.5, 4.0, 5.0]) * 1e4, mm = rd(n * QE * E3 / GR, 3), nn = mm * GR / (QE * E3);
+      var n = R.pick([2, 3, 4, 5, 6, 8, 1, 7, 10, 9]), E3 = R.pick([2.0, 2.5, 4.0, 5.0, 1.0, 1.5, 3.0, 6.0, 8.0, 1.2, 3.5, 7]) * 1e4, mm = rd(n * QE * E3 / GR, 3), nn = mm * GR / (QE * E3);
       return { q: 'In a Millikan-style experiment, an oil drop of mass $' + qt(mm, 'kg') + '$ hangs at rest between horizontal plates where the electric field is $' + qt(E3, 'N/C') + '$, pointing down. How many extra electrons does the drop carry? Use ' + etxt + ' and $g = 9.8\\,\\text{m/s}^2$.', a: { t: 'num', v: String(n), tol: 0.3 }, unit: 'electrons',
         steps: ['At rest, the upward electric force balances the weight: $|q|E = mg$.', '$|q| = \\dfrac{mg}{E} = \\dfrac{(' + tn(mm, 3) + ')(9.8)}{' + tn(E3, 2) + '} = ' + qt(mm * GR / E3, 'C') + '$.',
           'Number of electrons: $N = |q|/e = ' + tn(nn, 3) + ' \\approx ' + n + '$. (The field points down and the force is up, so the drop is negative, as extra electrons make it.)'],
         hint: 'Balance $qE$ against $mg$, then divide the charge by $e$.', chk: { k: k, m: mm, E: E3, ans: n } };
     }
     if (k === 'time') {
-      var L = R.pick([2.0, 4.0, 5.0]), v0 = R.pick([2.0, 4.0, 5.0]) * 1e6, E4 = R.pick([100, 200, 500]), t = L / 100 / v0, vy = QE * E4 / ME * t;
+      var L = R.pick([2.0, 4.0, 5.0, 1.0, 3.0]), v0 = R.pick([2.0, 4.0, 5.0, 3.0, 6.0, 8.0, 7]) * 1e6, E4 = R.pick([100, 200, 500, 50, 150, 300, 60, 70, 90, 120, 350, 400]), t = L / 100 / v0, vy = QE * E4 / ME * t;
       return { q: 'An electron enters the space between two parallel plates moving parallel to them at $' + qt(v0, 'm/s') + '$. The plates are $' + qx(L, 'cm') + '$ long, and the field between them is $' + qx(E4, 'N/C') + '$. How large is the electron\'s sideways (perpendicular) velocity when it leaves the plates? Use ' + etxt + ' and $m_e = 9.11 \\times 10^{-31}\\,\\text{kg}$.', a: ans(vy), unit: 'm/s',
         steps: ['Like a horizontally launched projectile: the speed along the plates stays $v_0$, so the time between the plates is $t = L/v_0 = \\dfrac{' + tg(L / 100) + '}{' + tn(v0, 2) + '} = ' + qt(t, 's') + '$.',
           'Sideways acceleration: $a = eE/m = ' + qt(QE * E4 / ME, 'm/s2') + '$.', 'Sideways velocity: $v_y = at = ' + qt(vy, 'm/s') + '$.'],
         hint: 'Find the time from the motion along the plates.', chk: { k: k, L: L, v0: v0, E: E4, ans: vy } };
     }
     // deflect
-    var L2 = R.pick([2.0, 3.0, 4.0, 5.0]), v1 = R.pick([2.0, 3.0, 4.0, 5.0]) * 1e6, E5 = R.pick([100, 200, 300, 500]), t2 = L2 / 100 / v1, y = 0.5 * QE * E5 / ME * t2 * t2 * 1000;
+    var L2 = R.pick([2.0, 3.0, 4.0, 5.0, 1.0, 2.5, 3.5, 1.2, 1.5]), v1 = R.pick([2.0, 3.0, 4.0, 5.0, 2.5, 3.5, 4.5, 6.0, 8.0, 7]) * 1e6, E5 = R.pick([100, 200, 300, 500, 50, 150, 250, 400, 60, 70, 80, 90, 120, 350]), t2 = L2 / 100 / v1, y = 0.5 * QE * E5 / ME * t2 * t2 * 1000;
     return { q: 'An electron moving at $' + qt(v1, 'm/s') + '$ enters a uniform field of $' + qx(E5, 'N/C') + '$ between parallel plates $' + qx(L2, 'cm') + '$ long, moving parallel to the plates. How far sideways, in millimeters, is it pushed by the time it leaves? Use ' + etxt + ' and $m_e = 9.11 \\times 10^{-31}\\,\\text{kg}$.', a: ans(y), unit: 'mm',
       viz: { name: 'ph-efield', opts: { mode: 'plates', particle: 'electron', V: E5 * 0.02, d: 0.02, L: L2 / 100, v0: v1, interactive: false, quiet: true, t: 1 } },
       steps: ['Time between the plates: $t = \\dfrac{L}{v_0} = \\dfrac{' + tg(L2 / 100) + '\\,\\text{m}}{' + tn(v1, 2) + '\\,\\text{m/s}} = ' + qt(t2, 's') + '$.',
@@ -1548,7 +1548,7 @@
   G('phys2.electric-potential', function (R, ctx) {
     var k = kind(R, ctx, ['point', 'energy', 'concept', 'U'], ['point', 'two', 'energy', 'speed', 'concept'], ['two', 'speed', 'energy', 'point']);
     if (k === 'concept') {
-      var el = R.coin(), va = R.pick([50, 100, 200]), vb = va + R.pick([50, 100, 150]);
+      var el = R.coin(), va = R.pick([50, 100, 200, 20, 30, 80, 150, 250, 300]), vb = va + R.pick([50, 100, 150, 20, 75, 200, 250]);
       var from = el ? va : vb, to = el ? vb : va, gain = abs(vb - va);
       return { q: (el ? 'An electron' : 'A proton') + ' moves, with only electric forces acting, from a point at $' + from + '\\,\\text{V}$ to a point at $' + to + '\\,\\text{V}$. What happens to its kinetic energy?',
         a: mc('It increases by ' + gain + ' eV.', ['It decreases by ' + gain + ' eV.', 'It increases by ' + (from + to) + ' eV.', 'It stays the same, because potential is not energy.']),
@@ -1558,7 +1558,7 @@
         hint: 'Use $\\Delta K = -q\\Delta V$ and keep the sign of the charge.', chk: { k: k, ans: 0 } };
     }
     if (k === 'point') {
-      var q = R.pick([1, 2, 3, 4, 5, 6, 8]) * R.sign(), rc = R.pick([5, 10, 15, 20, 30, 50]), V = K_E * q * 1e-9 / (rc / 100);
+      var q = R.pick([1, 2, 3, 4, 5, 6, 8, 10, 12]) * R.sign(), rc = R.pick([5, 10, 15, 20, 30, 50, 2, 4, 8, 12, 25, 40, 100]), V = K_E * q * 1e-9 / (rc / 100);
       return { q: 'What is the electric potential $' + qx(rc, 'cm') + '$ from a point charge of $' + qs(q, 'nC') + '$? (Take $V = 0$ far away; include the sign.) Use ' + ktxt + '.', a: ans(V), unit: 'V',
         steps: ['$V = k\\dfrac{q}{r}$, a scalar with the sign of the charge, and $1/r$, not $1/r^2$.',
           '$V = (8.99 \\times 10^{9})\\dfrac{' + tx(q) + ' \\times 10^{-9}}{' + tg(rc / 100) + '} = ' + qt(V, 'V') + '$.'],
@@ -1575,7 +1575,7 @@
         hint: 'Add $kq/r$ for each charge, signs included.', chk: { k: k, q1: q1, q2: q2, d: d, x: x, ans: Vt } };
     }
     if (k === 'energy') {
-      var dV = R.pick([50, 100, 250, 500, 1000, 2000, 5000]), part = R.pick(['an electron', 'a proton', 'an alpha particle (charge $+2e$)']), z = /alpha/.test(part) ? 2 : 1, K = z * QE * dV;
+      var dV = R.pick([50, 100, 250, 500, 1000, 2000, 5000, 10, 20, 200, 300, 1500, 3000, 10000]), part = R.pick(['an electron', 'a proton', 'an alpha particle (charge $+2e$)']), z = /alpha/.test(part) ? 2 : 1, K = z * QE * dV;
       return { q: 'Starting from rest, ' + part + ' is accelerated through a potential difference of $' + qx(dV, 'V') + '$. How much kinetic energy does it gain, in joules? Use ' + etxt + '.', a: ans(K), unit: 'J',
         steps: ['The electric force does work $|q|\\Delta V$, which becomes kinetic energy: $K = |q|\\Delta V$.',
           '$K = (' + (z === 2 ? '2 \\times ' : '') + '1.60 \\times 10^{-19}\\,\\text{C})(' + qx(dV, 'V') + ') = ' + qt(K, 'J') + '$.',
@@ -1583,13 +1583,13 @@
         hint: 'Kinetic energy gained $= |q|\\Delta V$.', chk: { k: k, V: dV, z: z, ans: K } };
     }
     if (k === 'U') {
-      var qu = R.pick([2, 3, 4, 5]) * R.sign(), Vu = R.pick([100, 200, 500, 1200]) * R.sign(), Uu = qu * 1e-6 * Vu;
+      var qu = R.pick([2, 3, 4, 5, 1, 6, 8, 10]) * R.sign(), Vu = R.pick([100, 200, 500, 1200, 50, 300, 800, 1500, 2000]) * R.sign(), Uu = qu * 1e-6 * Vu;
       return { q: 'A $' + qs(qu) + '$ charge sits at a point where the electric potential is $' + tx(Vu) + '\\,\\text{V}$. What is its electric potential energy? (Include the sign.)', a: ans(Uu), unit: 'J',
         steps: ['Potential is potential energy per coulomb, so $U = qV$.', '$U = (' + tx(qu) + ' \\times 10^{-6}\\,\\text{C})(' + tx(Vu) + '\\,\\text{V}) = ' + qt(Uu, 'J') + '$.'],
         hint: 'Multiply the charge by the potential, keeping both signs.', chk: { k: k, q: qu, V: Vu, ans: Uu } };
     }
     // speed of an electron after acceleration
-    var dV2 = R.pick([10, 50, 100, 200, 500, 1000]), v = sqrt(2 * QE * dV2 / ME);
+    var dV2 = R.pick([10, 50, 100, 200, 500, 1000, 5, 20, 25, 150, 250, 2000]), v = sqrt(2 * QE * dV2 / ME);
     return { q: 'An electron starts from rest and is accelerated through a potential difference of $' + qx(dV2, 'V') + '$. How fast is it moving then? Use ' + etxt + ' and $m_e = 9.11 \\times 10^{-31}\\,\\text{kg}$.', a: ans(v), unit: 'm/s',
       steps: ['Energy: $\\tfrac{1}{2}mv^2 = e\\Delta V$, so $v = \\sqrt{\\dfrac{2e\\Delta V}{m}}$.',
         '$v = \\sqrt{\\dfrac{2(1.60 \\times 10^{-19})(' + dV2 + ')}{9.11 \\times 10^{-31}}} = ' + qt(v, 'm/s') + '$.'],
@@ -1599,14 +1599,14 @@
   G('phys2.equipotentials', function (R, ctx) {
     var k = kind(R, ctx, ['plates', 'voltage', 'along'], ['plates', 'between', 'spacing', 'direction', 'zero'], ['between', 'spacing', 'zero', 'plates']);
     if (k === 'along') {
-      var Vq = R.pick([50, 100, 200]), qq = R.pick([2, 3, 5]);
+      var Vq = R.pick([50, 100, 200, 20, 40, 150, 300]), qq = R.pick([2, 3, 5, 4, 6, 10]);
       return { q: 'How much work does the electric field do on a $+' + tg(qq) + '\\,\\mu\\text{C}$ charge moved $5.0\\,\\text{cm}$ along an equipotential line at $' + Vq + '\\,\\text{V}$?', a: exact(0), unit: 'J',
         steps: ['The work done by the field is $W = -q\\Delta V$.', 'Along an equipotential, $V$ does not change, so $\\Delta V = 0$ and $W = 0$.',
           'That is why the field is always perpendicular to equipotentials: moving along one, the force has no component along the motion.'],
         hint: 'What is $\\Delta V$ along an equipotential?', chk: { k: k, ans: 0 } };
     }
     if (k === 'plates' || k === 'voltage') {
-      var V = R.pick([6.0, 9.0, 12, 24, 50, 100, 120, 500]), dmm = R.pick([1.0, 2.0, 4.0, 5.0, 10, 20]), E = V / (dmm / 1000);
+      var V = R.pick([6.0, 9.0, 12, 24, 50, 100, 120, 500, 1.5, 3.0, 5.0, 15, 30, 200, 1000]), dmm = R.pick([1.0, 2.0, 4.0, 5.0, 10, 20, 0.5, 3.0, 8.0, 15, 25, 50]), E = V / (dmm / 1000);
       if (k === 'voltage') return { q: 'The uniform field between two parallel plates $' + qx(dmm, 'mm') + '$ apart is $' + qt(E, 'V/m') + '$. What is the potential difference between the plates?', a: ans(V), unit: 'V',
         steps: ['In a uniform field, $\\Delta V = Ed$.', '$\\Delta V = (' + qt(E, 'V/m') + ')(' + tn(dmm / 1000, 2) + '\\,\\text{m}) = ' + qt(V, 'V') + '$.'],
         hint: 'Multiply the field by the separation in meters.', chk: { k: k, E: E, d: dmm, ans: V } };
@@ -1617,7 +1617,7 @@
         hint: 'Divide the voltage by the separation in meters.', chk: { k: k, V: V, d: dmm, ans: E } };
     }
     if (k === 'between') {
-      var V2 = R.pick([12, 24, 60, 100, 120]), d2 = R.pick([2.0, 3.0, 4.0, 6.0]), x = U.fix(R.pick([0.25, 0.5, 0.75]) * d2), Vx = V2 * x / d2;
+      var V2 = R.pick([12, 24, 60, 100, 120, 6, 9, 30, 50, 200]), d2 = R.pick([2.0, 3.0, 4.0, 6.0, 1.0, 5.0, 8.0, 10]), x = U.fix(R.pick([0.25, 0.5, 0.75]) * d2), Vx = V2 * x / d2;
       return { q: 'Two parallel plates are $' + qx(d2, 'cm') + '$ apart; the negative plate is at $0\\,\\text{V}$ and the positive plate at $' + qx(V2, 'V') + '$. What is the potential at a point $' + tg(x) + '\\,\\text{cm}$ from the negative plate?', a: ans(Vx), unit: 'V',
         steps: ['The field between the plates is uniform: $E = \\dfrac{' + V2 + '\\,\\text{V}}{' + tg(d2 / 100) + '\\,\\text{m}} = ' + qt(V2 / (d2 / 100), 'V/m') + '$.',
           'Moving away from the negative plate, against the field, the potential rises by $Ex$: $V = (' + tn(V2 / (d2 / 100), 3) + ')(' + tg(x / 100) + ') = ' + qt(Vx, 'V') + '$.',
@@ -1625,14 +1625,14 @@
         hint: 'The potential changes linearly across a uniform field.', chk: { k: k, V: V2, d: d2, x: x, ans: Vx } };
     }
     if (k === 'spacing') {
-      var dVs = R.pick([5, 10, 20, 50]), dx = R.pick([0.5, 1.0, 2.0, 4.0]), Es = dVs / (dx / 100);
+      var dVs = R.pick([5, 10, 20, 50, 2, 4, 15, 25, 40, 100]), dx = R.pick([0.5, 1.0, 2.0, 4.0, 0.25, 0.8, 1.5, 2.5, 5.0]), Es = dVs / (dx / 100);
       return { q: 'Neighboring equipotential lines in a region are drawn every $' + dVs + '\\,\\text{V}$ and are $' + qx(dx, 'cm') + '$ apart. What is the size of the electric field there?', a: ans(Es), unit: 'V/m',
         steps: ['The field\'s size is how fast the potential changes with distance across the equipotentials: $E = \\dfrac{\\Delta V}{\\Delta x}$.',
           '$E = \\dfrac{' + dVs + '\\,\\text{V}}{' + tn(dx / 100, 2) + '\\,\\text{m}} = ' + qt(Es, 'V/m') + '$.', 'Closer equipotentials mean a stronger field; the field points toward the lower values.'],
         hint: 'Divide the potential step by the spacing in meters.', chk: { k: k, dV: dVs, dx: dx, ans: Es } };
     }
     if (k === 'direction') {
-      var lo = R.pick([10, 20, 30]), hiLeft = R.coin();
+      var lo = R.pick([10, 20, 30, 5, 15, 25, 40, 50]), hiLeft = R.coin();
       return { q: 'Vertical equipotential lines are labeled, from left to right, $' + (hiLeft ? (lo + 30) + ', ' + (lo + 20) + ', ' + (lo + 10) + ', ' + lo : lo + ', ' + (lo + 10) + ', ' + (lo + 20) + ', ' + (lo + 30)) + '\\,\\text{V}$. Which way does the electric field point?',
         a: mc(hiLeft ? 'To the right' : 'To the left', [hiLeft ? 'To the left' : 'To the right', 'Up, along the lines', 'Down, along the lines']),
         steps: ['The field is perpendicular to the equipotentials, so it is horizontal here.', 'It points from high potential to low potential.',
@@ -1714,39 +1714,39 @@
         hint: 'Is the voltage $V$ the whole time the capacitor charges?', chk: { k: k, ans: 0 } };
     }
     if (k === 'CV') {
-      var C = R.pick([10, 47, 100, 220, 470, 1000]), V = R.pick([3.0, 5.0, 6.0, 9.0, 12, 24]), Uj = 0.5 * C * 1e-6 * V * V;
+      var C = R.pick([10, 47, 100, 220, 470, 1000, 1.0, 2.2, 4.7, 22, 33, 68, 330, 680, 2200]), V = R.pick([3.0, 5.0, 6.0, 9.0, 12, 24, 1.5, 4.5, 15, 18, 48, 50, 100]), Uj = 0.5 * C * 1e-6 * V * V;
       return { q: 'How much energy does a $' + qx(C, 'uF') + '$ capacitor store when it is charged to $' + qx(V, 'V') + '$? Give the answer in millijoules.', a: ans(Uj * 1000), unit: 'mJ',
         steps: ['$U = \\tfrac{1}{2}CV^2$.', '$U = \\tfrac{1}{2}(' + tx(C) + ' \\times 10^{-6}\\,\\text{F})(' + tg(V) + '\\,\\text{V})^2 = ' + qt(Uj, 'J') + ' = ' + qt(Uj * 1000, 'mJ') + '$.'],
         hint: 'Use $U = \\tfrac{1}{2}CV^2$ with $C$ in farads.', chk: { k: k, C: C, V: V, ans: Uj * 1000 } };
     }
     if (k === 'QV') {
-      var Q = R.pick([10, 20, 30, 50, 60, 120]), V2 = R.pick([5.0, 10, 20, 50, 100]), U2 = 0.5 * Q * 1e-6 * V2;
+      var Q = R.pick([10, 20, 30, 50, 60, 120, 5, 15, 25, 40, 80, 100, 200]), V2 = R.pick([5.0, 10, 20, 50, 100, 2.0, 15, 25, 30, 200]), U2 = 0.5 * Q * 1e-6 * V2;
       return { q: 'A capacitor holds $' + qx(Q, 'uC') + '$ of charge at $' + qx(V2, 'V') + '$. How much energy is stored, in millijoules?', a: ans(U2 * 1000), unit: 'mJ',
         viz: { name: 'ph-graph', opts: { pts: [[0, 0], [Q, V2]], domain: [0, Q * 1.15], range: [0, V2 * 1.2], xlab: 'charge q', xunit: 'μC', ylab: 'voltage V', yunit: 'V', tool: 'area', a: 0, b: Q, interactive: false, quiet: true } },
         steps: ['The stored energy is the area under the $V$–$q$ line, a triangle: $U = \\tfrac{1}{2}QV$.', '$U = \\tfrac{1}{2}(' + Q + ' \\times 10^{-6}\\,\\text{C})(' + tg(V2) + '\\,\\text{V}) = ' + qt(U2, 'J') + ' = ' + qt(U2 * 1000, 'mJ') + '$.'],
         hint: 'Half of charge times voltage.', chk: { k: k, Q: Q, V: V2, ans: U2 * 1000 } };
     }
     if (k === 'QC') {
-      var Q3 = R.pick([20, 50, 100, 200, 300]), C3 = R.pick([2.0, 5.0, 10, 25, 50]), U3 = Math.pow(Q3 * 1e-6, 2) / (2 * C3 * 1e-6);
+      var Q3 = R.pick([20, 50, 100, 200, 300, 10, 30, 40, 80, 150, 250, 400, 500]), C3 = R.pick([2.0, 5.0, 10, 25, 50, 1.0, 4.0, 8.0, 15, 20, 40, 100]), U3 = Math.pow(Q3 * 1e-6, 2) / (2 * C3 * 1e-6);
       return { q: 'A $' + qx(C3, 'uF') + '$ capacitor carries $' + qx(Q3, 'uC') + '$ of charge. How much energy does it store, in millijoules?', a: ans(U3 * 1000), unit: 'mJ',
         steps: ['With $Q$ and $C$ known, use $U = \\dfrac{Q^2}{2C}$ (from $U = \\tfrac{1}{2}QV$ with $V = Q/C$).',
           '$U = \\dfrac{(' + Q3 + ' \\times 10^{-6})^2}{2(' + tg(C3) + ' \\times 10^{-6})} = ' + qt(U3, 'J') + ' = ' + qt(U3 * 1000, 'mJ') + '$.'],
         hint: 'Use $Q^2/(2C)$.', chk: { k: k, Q: Q3, C: C3, ans: U3 * 1000 } };
     }
     if (k === 'scale') {
-      var U0 = R.pick([2.0, 5.0, 8.0, 12, 20]), f = R.pick([2, 3, 0.5]), Un = U0 * f * f;
+      var U0 = R.pick([2.0, 5.0, 8.0, 12, 20, 1.0, 3.0, 4.0, 6.0, 10, 15, 25, 50]), f = R.pick([2, 3, 0.5]), Un = U0 * f * f;
       return { q: 'A capacitor stores $' + qx(U0, 'mJ') + '$ when charged to some voltage. How much energy does it store if the voltage is ' + (f === 2 ? 'doubled' : f === 3 ? 'tripled' : 'halved') + '?', a: ans(Un), unit: 'mJ',
         steps: ['$U = \\tfrac{1}{2}CV^2$ with $C$ fixed, so $U$ grows as $V^2$.', 'The voltage changes by $' + tx(f) + '$, so the energy changes by $' + tx(f) + '^2 = ' + tx(f * f) + '$.', '$U = ' + qx(U0, 'mJ') + ' \\times ' + tx(f * f) + ' = ' + qt(Un, 'mJ') + '$.'],
         hint: 'Energy goes as the square of the voltage.', chk: { k: k, U0: U0, f: f, ans: Un } };
     }
     if (k === 'V') {
-      var C4 = R.pick([100, 200, 500, 1000]), U4 = R.pick([0.10, 0.25, 0.50, 1.0, 2.0]), V4 = sqrt(2 * U4 / (C4 * 1e-6));
+      var C4 = R.pick([100, 200, 500, 1000, 50, 150, 220, 330, 470, 2000]), U4 = R.pick([0.10, 0.25, 0.50, 1.0, 2.0, 0.05, 0.20, 0.40, 0.75, 1.5, 5.0]), V4 = sqrt(2 * U4 / (C4 * 1e-6));
       return { q: 'To what voltage must a $' + qx(C4, 'uF') + '$ capacitor be charged to store $' + qx(U4, 'J') + '$?', a: ans(V4), unit: 'V',
         steps: ['$U = \\tfrac{1}{2}CV^2$, so $V = \\sqrt{\\dfrac{2U}{C}}$.', '$V = \\sqrt{\\dfrac{2(' + tg(U4) + ')}{' + tx(C4) + ' \\times 10^{-6}}} = ' + qt(V4, 'V') + '$.'],
         hint: 'Solve $U = \\tfrac{1}{2}CV^2$ for $V$.', chk: { k: k, C: C4, U: U4, ans: V4 } };
     }
     // flash: energy then average power over a short discharge
-    var C5 = R.pick([100, 150, 200, 330]), V5 = R.pick([200, 300, 330]), tms = R.pick([1.0, 2.0, 5.0]), U5 = 0.5 * C5 * 1e-6 * V5 * V5, P5 = U5 / (tms / 1000);
+    var C5 = R.pick([100, 150, 200, 330, 120, 180, 250, 470]), V5 = R.pick([200, 300, 330, 250, 280, 350]), tms = R.pick([1.0, 2.0, 5.0, 0.5, 1.5, 3.0]), U5 = 0.5 * C5 * 1e-6 * V5 * V5, P5 = U5 / (tms / 1000);
     return { q: 'A camera flash charges a $' + qx(C5, 'uF') + '$ capacitor to $' + qx(V5, 'V') + '$ and then releases all its energy in $' + qx(tms, 'ms') + '$. What is the average power of the flash?', a: ans(P5), unit: 'W',
       steps: ['Energy stored: $U = \\tfrac{1}{2}CV^2 = \\tfrac{1}{2}(' + tx(C5) + ' \\times 10^{-6})(' + V5 + ')^2 = ' + qt(U5, 'J') + '$.',
         'Average power: $P = \\dfrac{U}{t} = \\dfrac{' + tn(U5, 3) + '\\,\\text{J}}{' + tn(tms / 1000, 2) + '\\,\\text{s}} = ' + qt(P5, 'W') + '$.', 'A capacitor can release its energy far faster than a battery can.'],
@@ -1763,7 +1763,7 @@
   G('phys2.current', function (R, ctx) {
     var k = kind(R, ctx, ['I', 'Q', 'concept'], ['I', 'Q', 'electrons', 'time', 'concept', 'direction'], ['electrons', 'time', 'Q', 'I']);
     if (k === 'concept') {
-      var I = R.pick([0.20, 0.25, 0.50, 0.75, 1.5]);
+      var I = R.pick([0.20, 0.25, 0.50, 0.75, 1.5, 0.10, 0.30, 0.40, 1.0, 2.0, 3.0]);
       return { q: 'A current of $' + qx(I, 'A') + '$ flows into a light bulb. How much current flows out of the bulb on the other side?', a: ans(I, { rtol: 0.001 }), unit: 'A',
         viz: cv('V(6) series(B1:12)', { show: ['current'] }),
         steps: ['Charge is conserved, and in a steady current it does not pile up anywhere: every coulomb that enters the bulb each second leaves it.',
@@ -1780,31 +1780,31 @@
         hint: 'Conventional current follows positive charge.', chk: { k: k, v: left ? 'right' : 'left', ans: 0 } };
     }
     if (k === 'I') {
-      var Q = R.pick([3.0, 6.0, 12, 15, 30, 45, 90]), t = R.pick([1.5, 2.0, 3.0, 5.0, 10, 30]), I2 = Q / t;
+      var Q = R.pick([3.0, 6.0, 12, 15, 30, 45, 90, 1.5, 4.5, 9.0, 18, 24, 60, 120]), t = R.pick([1.5, 2.0, 3.0, 5.0, 10, 30, 0.5, 1.0, 4.0, 6.0, 15, 20, 60]), I2 = Q / t;
       return { q: '$' + qx(Q, 'C') + '$ of charge passes a point in a wire in $' + qx(t, 's') + '$. What is the current?', a: ans(I2), unit: 'A',
         steps: ['Current is the charge per second: $I = \\dfrac{\\Delta Q}{\\Delta t}$.', '$I = \\dfrac{' + qx(Q, 'C') + '}{' + qx(t, 's') + '} = ' + qt(I2, 'A') + '$ ($1\\,\\text{A} = 1\\,\\text{C/s}$).'],
         hint: 'Divide the charge by the time.', chk: { k: k, Q: Q, t: t, ans: I2 } };
     }
     if (k === 'Q') {
-      var I3 = R.pick([0.20, 0.50, 1.5, 2.0, 3.0]), mins = R.pick([1, 2, 5, 10, 30]), Q3 = I3 * mins * 60;
+      var I3 = R.pick([0.20, 0.50, 1.5, 2.0, 3.0, 0.10, 0.25, 0.75, 1.0, 2.5, 4.0, 5.0]), mins = R.pick([1, 2, 5, 10, 30, 3, 4, 15, 20, 45, 60]), Q3 = I3 * mins * 60;
       return { q: 'A phone charger delivers a steady $' + qx(I3, 'A') + '$ for ' + U.plural(mins, 'minute') + '. How much charge flows?', a: ans(Q3), unit: 'C',
         steps: ['$\\Delta Q = I\\,\\Delta t$, with the time in seconds: $' + mins + ' \\times 60 = ' + (mins * 60) + '\\,\\text{s}$.', '$\\Delta Q = (' + qx(I3, 'A') + ')(' + (mins * 60) + '\\,\\text{s}) = ' + qt(Q3, 'C') + '$.'],
         hint: 'Convert minutes to seconds, then multiply by the current.', chk: { k: k, I: I3, t: mins, ans: Q3 } };
     }
     if (k === 'electrons') {
-      var I4 = R.pick([0.10, 0.50, 1.0, 2.0, 4.0]), t4 = R.pick([1.0, 2.0, 10, 60]), N = I4 * t4 / QE;
+      var I4 = R.pick([0.10, 0.50, 1.0, 2.0, 4.0, 0.020, 0.25, 0.75, 1.5, 3.0, 5.0]), t4 = R.pick([1.0, 2.0, 10, 60, 0.5, 5.0, 30, 120]), N = I4 * t4 / QE;
       return { q: 'A current of $' + qx(I4, 'A') + '$ flows for $' + qx(t4, 's') + '$. How many electrons pass any point in the wire? Use ' + etxt + '.', a: ans(N), unit: 'electrons',
         steps: ['Charge: $\\Delta Q = I\\,\\Delta t = (' + tg(I4) + ')(' + tg(t4) + ') = ' + qt(I4 * t4, 'C') + '$.', 'Electrons: $N = \\dfrac{\\Delta Q}{e} = \\dfrac{' + tn(I4 * t4, 3) + '}{1.60 \\times 10^{-19}} = ' + tn(N, 3) + '$.'],
         hint: 'Find the charge, then divide by the charge of one electron.', chk: { k: k, I: I4, t: t4, ans: N } };
     }
     // time
-    var Q5 = R.pick([60, 120, 300, 600, 1800, 3600]), I5 = R.pick([0.50, 1.0, 2.0, 5.0]), t5 = Q5 / I5;
+    var Q5 = R.pick([60, 120, 300, 600, 1800, 3600, 30, 90, 180, 240, 900, 1200, 7200]), I5 = R.pick([0.50, 1.0, 2.0, 5.0, 0.25, 1.5, 2.5, 3.0, 4.0, 10]), t5 = Q5 / I5;
     return { q: 'How long does it take a current of $' + qx(I5, 'A') + '$ to move $' + qx(Q5, 'C') + '$ of charge?', a: ans(t5), unit: 's',
       steps: ['$I = \\dfrac{\\Delta Q}{\\Delta t}$, so $\\Delta t = \\dfrac{\\Delta Q}{I}$.', '$\\Delta t = \\dfrac{' + qx(Q5, 'C') + '}{' + qx(I5, 'A') + '} = ' + qt(t5, 's') + '$.'],
       hint: 'Divide the charge by the current.', chk: { k: k, Q: Q5, I: I5, ans: t5 } };
   });
 
-  var RHO = [{ n: 'copper', r: 1.68e-8 }, { n: 'aluminum', r: 2.65e-8 }, { n: 'tungsten', r: 5.6e-8 }, { n: 'nichrome', r: 1.10e-6 }];
+  var RHO = [{ n: 'copper', r: 1.68e-8 }, { n: 'aluminum', r: 2.65e-8 }, { n: 'tungsten', r: 5.6e-8 }, { n: 'nichrome', r: 1.10e-6 }, { n: 'silver', r: 1.59e-8 }, { n: 'gold', r: 2.44e-8 }, { n: 'iron', r: 9.71e-8 }, { n: 'constantan', r: 4.9e-7 }];
   G('phys2.resistivity', function (R, ctx) {
     var k = kind(R, ctx, ['R', 'scale', 'concept'], ['R', 'diam', 'scale', 'concept'], ['diam', 'length', 'stretch', 'scale']);
     if (k === 'concept') {
@@ -1816,21 +1816,21 @@
         hint: 'Is $A$ on the top or the bottom of $\\rho L/A$?', chk: { k: k, ans: 0 } };
     }
     if (k === 'R') {
-      var M = R.pick(RHO), L = R.pick([2.0, 5.0, 10, 20, 50]), Amm = R.pick([0.50, 1.0, 1.5, 2.5]), Rr = M.r * L / (Amm * 1e-6);
+      var M = R.pick(RHO), L = R.pick([2.0, 5.0, 10, 20, 50, 0.5, 1.0, 3.0, 15, 25, 30, 100]), Amm = R.pick([0.50, 1.0, 1.5, 2.5, 0.25, 0.75, 2.0, 4.0, 6.0]), Rr = M.r * L / (Amm * 1e-6);
       return { q: (M.n === 'aluminum' ? 'An ' : 'A ') + M.n + ' wire ($\\rho = ' + tn(M.r, 3) + '\\,' + UT['Ohm m'] + '$) is $' + qx(L, 'm') + '$ long with a cross-sectional area of $' + qx(Amm, 'mm') + '^2$. What is its resistance?', a: ans(Rr), unit: 'Ω',
         steps: ['$R = \\rho\\dfrac{L}{A}$, with $A = ' + tg(Amm) + '\\,\\text{mm}^2 = ' + tn(Amm * 1e-6, 2) + '\\,\\text{m}^2$ ($1\\,\\text{mm}^2 = 10^{-6}\\,\\text{m}^2$).',
           '$R = (' + tn(M.r, 3) + ')\\dfrac{' + tg(L) + '}{' + tn(Amm * 1e-6, 2) + '} = ' + qt(Rr, 'Ohm') + '$.'],
         hint: 'Convert square millimeters to square meters first.', chk: { k: k, rho: M.r, L: L, A: Amm, ans: Rr } };
     }
     if (k === 'diam') {
-      var M2 = R.pick(RHO), L2 = R.pick([1.0, 2.0, 10, 25]), dmm = R.pick([0.20, 0.50, 1.0, 2.0]), A2 = PI * Math.pow(dmm / 2000, 2), R2 = M2.r * L2 / A2;
+      var M2 = R.pick(RHO), L2 = R.pick([1.0, 2.0, 10, 25, 0.5, 5.0, 15, 50]), dmm = R.pick([0.20, 0.50, 1.0, 2.0, 0.10, 0.25, 0.30, 0.40, 0.80, 1.5, 3.0]), A2 = PI * Math.pow(dmm / 2000, 2), R2 = M2.r * L2 / A2;
       return { q: (M2.n === 'aluminum' ? 'An ' : 'A ') + M2.n + ' wire ($\\rho = ' + tn(M2.r, 3) + '\\,' + UT['Ohm m'] + '$) is $' + qx(L2, 'm') + '$ long and $' + qx(dmm, 'mm') + '$ in diameter. What is its resistance?', a: ans(R2), unit: 'Ω',
         steps: ['Cross-section: $A = \\pi r^2 = \\pi(' + tn(dmm / 2000, 2) + '\\,\\text{m})^2 = ' + qt(A2, 'm2') + '$ (the radius is half the diameter).',
           '$R = \\rho\\dfrac{L}{A} = (' + tn(M2.r, 3) + ')\\dfrac{' + tg(L2) + '}{' + tn(A2, 3) + '} = ' + qt(R2, 'Ohm') + '$.'],
         hint: 'Find the area from the radius, which is half the diameter.', chk: { k: k, rho: M2.r, L: L2, d: dmm, ans: R2 } };
     }
     if (k === 'scale') {
-      var R0 = R.pick([2.0, 4.0, 6.0, 8.0, 12]), fL = R.pick([1, 2, 3]), fd = R.pick([1, 2, 0.5]);
+      var R0 = R.pick([2.0, 4.0, 6.0, 8.0, 12, 1.0, 3.0, 5.0, 10, 15, 20, 24]), fL = R.pick([1, 2, 3]), fd = R.pick([1, 2, 0.5]);
       if (fL === 1 && fd === 1) fd = 2;
       var Rn = R0 * fL / (fd * fd), ch = [];
       if (fL !== 1) ch.push((fL === 2 ? 'twice' : 'three times') + ' as long');
@@ -1842,13 +1842,13 @@
         hint: 'Longer means more resistance; thicker means less, by the square of the diameter.', chk: { k: k, R0: R0, fL: fL, fd: fd, ans: Rn } };
     }
     if (k === 'length') {
-      var Rt = R.pick([5.0, 10, 20, 24, 50]), dm = R.pick([0.30, 0.40, 0.50]), A3 = PI * Math.pow(dm / 2000, 2), L3 = Rt * A3 / 1.10e-6;
+      var Rt = R.pick([5.0, 10, 20, 24, 50, 2.0, 8.0, 12, 15, 30, 40, 100]), dm = R.pick([0.30, 0.40, 0.50, 0.20, 0.25, 0.35, 0.60]), A3 = PI * Math.pow(dm / 2000, 2), L3 = Rt * A3 / 1.10e-6;
       return { q: 'A heater element needs $' + ohm(Rt) + '$ of resistance. What length of nichrome wire ($\\rho = 1.10 \\times 10^{-6}\\,' + UT['Ohm m'] + '$) with a diameter of $' + qx(dm, 'mm') + '$ is needed?', a: ans(L3), unit: 'm',
         steps: ['Area: $A = \\pi(' + tn(dm / 2000, 2) + '\\,\\text{m})^2 = ' + qt(A3, 'm2') + '$.', 'Solve $R = \\rho L/A$ for $L$: $L = \\dfrac{RA}{\\rho} = \\dfrac{(' + tg(Rt) + ')(' + tn(A3, 3) + ')}{1.10 \\times 10^{-6}} = ' + qt(L3, 'm') + '$.'],
         hint: 'Rearrange $R = \\rho L/A$ for $L$.', chk: { k: k, R: Rt, d: dm, ans: L3 } };
     }
     // stretch: same volume, twice the length
-    var R4 = R.pick([2.0, 3.0, 5.0, 8.0]), f = R.pick([2, 3]), R5 = R4 * f * f;
+    var R4 = R.pick([2.0, 3.0, 5.0, 8.0, 1.0, 1.5, 4.0, 6.0, 10, 12]), f = R.pick([2, 3]), R5 = R4 * f * f;
     return { q: 'A $' + ohm(R4) + '$ wire is drawn out (stretched) to ' + (f === 2 ? 'twice' : 'three times') + ' its length. Its volume stays the same. What is its new resistance?', a: ans(R5), unit: 'Ω',
       steps: ['Same volume, $V = AL$: if $L$ grows by ' + f + ', the area must shrink by ' + f + '.', '$R = \\rho L/A$: the longer length multiplies $R$ by ' + f + ' and the smaller area multiplies it by ' + f + ' again.',
         '$R = ' + ohm(R4) + ' \\times ' + (f * f) + ' = ' + qt(R5, 'Ohm') + '$.'],
@@ -1858,7 +1858,7 @@
   G('phys2.resistor-power', function (R, ctx) {
     var k = kind(R, ctx, ['IR', 'VR', 'IV'], ['VR', 'rating', 'energy', 'compare'], ['compare', 'rating', 'energy', 'IR']);
     if (k === 'compare') {
-      var r1 = R.pick([2, 3, 4]), r2 = r1 * R.pick([2, 3]), ser = R.coin(), V = R.pick([6, 12, 24]);
+      var r1 = R.pick([2, 3, 4, 1, 5, 6]), r2 = r1 * R.pick([2, 3]), ser = R.coin(), V = R.pick([6, 12, 24, 3, 9, 18, 36]);
       return { q: 'A $' + ohm(r1) + '$ resistor and a $' + ohm(r2) + '$ resistor are connected in ' + (ser ? 'series' : 'parallel') + ' to a $' + qx(V, 'V') + '$ battery. Which resistor turns more electrical energy into heat each second?',
         a: mc(ser ? 'The ' + tg(r2) + ' Ω resistor' : 'The ' + tg(r1) + ' Ω resistor', [ser ? 'The ' + tg(r1) + ' Ω resistor' : 'The ' + tg(r2) + ' Ω resistor', 'Both the same', 'Neither: resistors in a circuit do not use power']),
         viz: cv('V(' + V + ') ' + (ser ? 'series(R1:' + r1 + ', R2:' + r2 + ')' : 'par(R1:' + r1 + ', R2:' + r2 + ')')),
@@ -1867,31 +1867,31 @@
         hint: ser ? 'What is the same for both resistors in series?' : 'What is the same for both resistors in parallel?', chk: { k: k, ser: ser ? 1 : 0, r1: r1, r2: r2, ans: 0 } };
     }
     if (k === 'IR') {
-      var I = R.pick([0.50, 1.5, 2.0, 2.5, 3.0]), Rr = R.pick([4.0, 8.0, 10, 20, 50]), P = I * I * Rr;
+      var I = R.pick([0.50, 1.5, 2.0, 2.5, 3.0, 0.20, 0.25, 0.75, 1.0, 1.2, 4.0, 5.0]), Rr = R.pick([4.0, 8.0, 10, 20, 50, 2.0, 5.0, 6.0, 12, 15, 25, 30, 40, 100]), P = I * I * Rr;
       return { q: 'A current of $' + qx(I, 'A') + '$ flows through a $' + ohm(Rr) + '$ resistor. At what rate does it turn electrical energy into heat?', a: ans(P), unit: 'W',
         steps: ['$P = IV$ and $V = IR$, so $P = I^2R$.', '$P = (' + qx(I, 'A') + ')^2(' + ohm(Rr) + ') = ' + qt(P, 'W') + '$.'],
         hint: 'Use $P = I^2R$.', chk: { k: k, I: I, R: Rr, ans: P } };
     }
     if (k === 'VR') {
-      var V2 = R.pick([6.0, 9.0, 12, 24, 120]), R2 = R.pick([3.0, 6.0, 12, 24, 48, 240]), P2 = V2 * V2 / R2;
+      var V2 = R.pick([6.0, 9.0, 12, 24, 120, 1.5, 3.0, 4.5, 5.0, 18, 36, 48]), R2 = R.pick([3.0, 6.0, 12, 24, 48, 240, 1.5, 2.0, 4.0, 8.0, 10, 16, 20, 100]), P2 = V2 * V2 / R2;
       return { q: 'A $' + ohm(R2) + '$ resistor is connected across $' + qx(V2, 'V') + '$. How much power does it use?', a: ans(P2), unit: 'W',
         steps: ['$P = IV$ and $I = V/R$, so $P = \\dfrac{V^2}{R}$.', '$P = \\dfrac{(' + tg(V2) + ')^2}{' + tg(R2) + '} = ' + qt(P2, 'W') + '$.'],
         hint: 'Use $P = V^2/R$.', chk: { k: k, V: V2, R: R2, ans: P2 } };
     }
     if (k === 'IV') {
-      var I3 = R.pick([0.25, 0.50, 1.2, 2.0]), V3 = R.pick([3.0, 6.0, 12, 120]), P3 = I3 * V3;
+      var I3 = R.pick([0.25, 0.50, 1.2, 2.0, 0.10, 0.20, 0.75, 1.0, 1.5, 3.0, 5.0]), V3 = R.pick([3.0, 6.0, 12, 120, 1.5, 4.5, 9.0, 24]), P3 = I3 * V3;
       return { q: 'A device draws $' + qx(I3, 'A') + '$ from a $' + qx(V3, 'V') + '$ supply. How much power does it use?', a: ans(P3), unit: 'W',
         steps: ['Each coulomb gives up $V$ joules, and $I$ coulombs pass each second, so $P = IV$.', '$P = (' + qx(I3, 'A') + ')(' + qx(V3, 'V') + ') = ' + qt(P3, 'W') + '$.'],
         hint: 'Power is current times voltage.', chk: { k: k, I: I3, V: V3, ans: P3 } };
     }
     if (k === 'rating') {
-      var Pw = R.pick([40, 60, 100, 600, 1200, 1500]), Vr = 120, ask = R.pick(['I', 'R']), Ir = Pw / Vr, Rr2 = Vr * Vr / Pw;
+      var Pw = R.pick([40, 60, 100, 600, 1200, 1500, 25, 75, 150, 300, 800, 900, 1000, 1800]), Vr = 120, ask = R.pick(['I', 'R']), Ir = Pw / Vr, Rr2 = Vr * Vr / Pw;
       return { q: 'A ' + (Pw >= 600 ? 'heater' : 'lamp') + ' is rated $' + qx(Pw, 'W') + '$ at $' + qx(Vr, 'V') + '$. ' + (ask === 'I' ? 'What current does it draw?' : 'What is its resistance when operating?'), a: ans(ask === 'I' ? Ir : Rr2), unit: ask === 'I' ? 'A' : 'Ω',
         steps: ask === 'I' ? ['$P = IV$, so $I = \\dfrac{P}{V} = \\dfrac{' + Pw + '}{' + Vr + '} = ' + qt(Ir, 'A') + '$.'] : ['$P = \\dfrac{V^2}{R}$, so $R = \\dfrac{V^2}{P} = \\dfrac{' + Vr + '^2}{' + Pw + '} = ' + qt(Rr2, 'Ohm') + '$.', 'A higher-power device at the same voltage has a <em>smaller</em> resistance.'],
         hint: ask === 'I' ? 'Use $P = IV$.' : 'Use $P = V^2/R$.', chk: { k: k, P: Pw, V: Vr, ask: ask === 'I' ? 1 : 0, ans: ask === 'I' ? Ir : Rr2 } };
     }
     // energy in kWh
-    var Pk = R.pick([60, 100, 500, 1000, 1500, 2000]), h = R.pick([2, 3, 5, 8, 10]), E = Pk * h / 1000;
+    var Pk = R.pick([60, 100, 500, 1000, 1500, 2000, 40, 75, 150, 200, 800, 1200, 3000]), h = R.pick([2, 3, 5, 8, 10, 1, 4, 6, 12, 24]), E = Pk * h / 1000;
     return { q: 'A $' + qx(Pk, 'W') + '$ appliance runs for ' + U.plural(h, 'hour') + '. How much energy does it use, in kilowatt-hours?', a: ans(E, { rtol: 0.005 }), unit: 'kWh',
       steps: ['Energy is power times time. In kilowatts and hours: $P = ' + tx(Pk / 1000) + '\\,\\text{kW}$.', '$E = (' + tx(Pk / 1000) + '\\,\\text{kW})(' + h + '\\,\\text{h}) = ' + qt(E, 'kWh') + '$.',
         'In joules: $1\\,\\text{kWh} = 3.6 \\times 10^{6}\\,\\text{J}$, so this is $' + tn(E * 3.6e6, 3) + '\\,\\text{J}$.'],
@@ -1940,7 +1940,7 @@
   });
 
   G('phys2.parallel-resistors', function (R, ctx) {
-    var k = kind(R, ctx, ['Req2', 'branch', 'concept'], ['Req2', 'total', 'Req3', 'identical', 'concept'], ['Req3', 'unknown', 'total', 'branch']);
+    var k = kind(R, ctx, ['Req2', 'branch', 'concept', 'identical'], ['Req2', 'total', 'Req3', 'identical', 'concept'], ['Req3', 'unknown', 'total', 'branch']);
     var pr = R.pick(PAIRS), a = pr[0], b = pr[1], Rp = par2(a, b), V = R.pick([6, 12, 24]);
     if (k === 'concept') {
       return { q: 'Two resistors are connected in parallel to a battery. A third resistor is added in parallel with them. What happens to the equivalent resistance and to the current from the battery?',
@@ -1971,7 +1971,7 @@
         hint: 'Add all three reciprocals, then take the reciprocal of the sum.', chk: { k: k, r1: tr[0], r2: tr[1], r3: tr[2], ans: R3 } };
     }
     if (k === 'identical') {
-      var n = R.pick([2, 3, 4, 5, 6]), r = R.pick([12, 30, 60, 120]), Rn = r / n;
+      var n = R.pick([2, 3, 4, 5, 6, 7, 8, 10]), r = R.pick([12, 30, 60, 120, 24, 48, 100, 240]), Rn = r / n;
       return { q: U.words(n).replace(/^./, function (c) { return c.toUpperCase(); }) + ' identical $' + ohm(r) + '$ resistors are connected in parallel. What is their equivalent resistance?', a: ans(Rn, { rtol: 0.005 }), unit: 'Ω',
         steps: ['$\\dfrac{1}{R_{\\text{eq}}} = ' + n + ' \\times \\dfrac{1}{' + r + '}$, so $R_{\\text{eq}} = \\dfrac{' + r + '}{' + n + '} = ' + qt(Rn, 'Ohm') + '$.', 'With $n$ equal paths, the current has $n$ times the room, so the resistance is $1/n$ as big.'],
         hint: 'For $n$ equal resistors in parallel, divide by $n$.', chk: { k: k, n: n, r: r, ans: Rn } };
@@ -2337,12 +2337,12 @@
   function qtex(p) { return p.q === 2 ? '3.20 \\times 10^{-19}' : '1.60 \\times 10^{-19}'; }
 
   G('phys2.magnetic-fields', function (R, ctx) {
-    var s = shape(R, ctx, ['conv', 'conv', 'concept'], ['conv', 'ratio', 'concept', 'concept'], ['ratio', 'concept', 'concept', 'gauss']);
+    var s = shape(R, ctx, ['conv', 'conv', 'concept'], ['conv', 'ratio', 'concept', 'gauss'], ['ratio', 'concept', 'concept', 'gauss']);
     if (s === 'conv') {
       var k = R.pick(['uT', 'mT', 'toMT', 'toUT']);
-      if (k === 'uT') { var b = R.pick([25, 30, 35, 42, 48, 50, 55, 60, 65]); return { q: 'Earth\'s field at one place is $' + b + '\\ \\mu\\text{T}$. Write it in teslas.', a: ans(b * 1e-6, 0.01), unit: 'T', steps: ['The prefix $\\mu$ (micro) means $10^{-6}$.', '$' + b + '\\ \\mu\\text{T} = ' + b + ' \\times 10^{-6}\\ \\text{T} = ' + tx(b * 1e-6, 2) + '\\ \\text{T}$.'], hint: 'Micro means a millionth.' }; }
-      if (k === 'mT') { var b2 = R.pick([2, 3.5, 5, 8, 12, 25, 40, 150, 350]); return { q: 'A small magnet makes a field of $' + b2 + '\\ \\text{mT}$ near its face. Write it in teslas.', a: ans(b2 * 1e-3, 0.01), unit: 'T', steps: ['The prefix m (milli) means $10^{-3}$.', '$' + b2 + '\\ \\text{mT} = ' + b2 + ' \\times 10^{-3}\\ \\text{T} = ' + tg(b2 * 1e-3) + '\\ \\text{T}$.'], hint: 'Milli means a thousandth.' }; }
-      if (k === 'toMT') { var b3 = R.pick([0.0025, 0.004, 0.012, 0.035, 0.08, 0.15, 0.6]); return { q: 'Write $' + tg(b3) + '\\ \\text{T}$ in millitesla.', a: ans(b3 * 1e3, 0.01), unit: 'mT', steps: ['$1\\ \\text{T} = 1000\\ \\text{mT}$.', '$' + tg(b3) + ' \\times 1000 = ' + tg(sig(b3 * 1e3, 6)) + '\\ \\text{mT}$.'], hint: 'Multiply by 1000.' }; }
+      if (k === 'uT') { var b = R.pick([25, 28, 30, 32, 35, 38, 40, 42, 45, 48, 50, 52, 55, 58, 60, 62, 65]); return { q: 'Earth\'s field at one place is $' + b + '\\ \\mu\\text{T}$. Write it in teslas.', a: ans(b * 1e-6, 0.01), unit: 'T', steps: ['The prefix $\\mu$ (micro) means $10^{-6}$.', '$' + b + '\\ \\mu\\text{T} = ' + b + ' \\times 10^{-6}\\ \\text{T} = ' + tx(b * 1e-6, 2) + '\\ \\text{T}$.'], hint: 'Micro means a millionth.' }; }
+      if (k === 'mT') { var b2 = R.pick([1.5, 2, 3.5, 5, 6, 8, 10, 12, 20, 25, 40, 60, 80, 150, 200, 350, 500]); return { q: 'A small magnet makes a field of $' + b2 + '\\ \\text{mT}$ near its face. Write it in teslas.', a: ans(b2 * 1e-3, 0.01), unit: 'T', steps: ['The prefix m (milli) means $10^{-3}$.', '$' + b2 + '\\ \\text{mT} = ' + b2 + ' \\times 10^{-3}\\ \\text{T} = ' + tg(b2 * 1e-3) + '\\ \\text{T}$.'], hint: 'Milli means a thousandth.' }; }
+      if (k === 'toMT') { var b3 = R.pick([0.0015, 0.0025, 0.004, 0.006, 0.012, 0.02, 0.035, 0.05, 0.08, 0.15, 0.25, 0.6, 0.9]); return { q: 'Write $' + tg(b3) + '\\ \\text{T}$ in millitesla.', a: ans(b3 * 1e3, 0.01), unit: 'mT', steps: ['$1\\ \\text{T} = 1000\\ \\text{mT}$.', '$' + tg(b3) + ' \\times 1000 = ' + tg(sig(b3 * 1e3, 6)) + '\\ \\text{mT}$.'], hint: 'Multiply by 1000.' }; }
       var b4 = R.pick([3.2e-5, 4.5e-5, 5.8e-5, 2.6e-5, 1.5e-4, 6.0e-6]); return { q: 'Write $' + tg(b4) + '\\ \\text{T}$ in microtesla.', a: ans(b4 * 1e6, 0.01), unit: 'μT', steps: ['$1\\ \\text{T} = 10^{6}\\ \\mu\\text{T}$.', '$' + tg(b4) + ' \\times 10^{6} = ' + tg(sig(b4 * 1e6, 6)) + '\\ \\mu\\text{T}$.'], hint: 'There are a million microtesla in a tesla.' };
     }
     if (s === 'ratio') {
@@ -2350,7 +2350,7 @@
       return { q: 'The field of ' + big[1] + ' is $' + tg(big[0]) + '\\ \\text{T}$. Earth\'s field there is $' + e + '\\ \\mu\\text{T}$. How many times stronger is the magnet\'s field?', a: ans(ratio, 0.02), steps: ['Same units first: $' + e + '\\ \\mu\\text{T} = ' + tg(e * 1e-6) + '\\ \\text{T}$.', '$$\\frac{' + tg(big[0]) + '}{' + tg(e * 1e-6) + '} = ' + tx(ratio) + '$$', 'The units cancel: about ' + commas(String(sig(ratio, 3))).replace(/\{,\}/g, ',') + ' times.'], hint: 'Put both fields in teslas, then divide.' };
     }
     if (s === 'gauss') {
-      var gs = R.pick([0.5, 0.45, 60, 100, 2500, 15000]), T = gs * 1e-4;
+      var gs = R.pick([0.3, 0.45, 0.5, 0.6, 5, 10, 60, 100, 250, 500, 1000, 2500, 5000, 15000, 20000]), T = gs * 1e-4;
       return { q: 'A field is $' + tg(gs) + '\\ \\text{G}$ (gauss). Write it in teslas. ($1\\ \\text{G} = 10^{-4}\\ \\text{T}$.)', a: ans(T, 0.01), unit: 'T', steps: ['Multiply by $10^{-4}$: $' + tg(gs) + ' \\times 10^{-4} = ' + tg(sig(T, 6)) + '\\ \\text{T}$.'], hint: 'One gauss is a ten-thousandth of a tesla.' };
     }
     var items = [
@@ -2634,7 +2634,7 @@
   });
 
 // =========================================================================================== unit 6: geometric optics
-  var MAT = [['water', 1.33], ['glass', 1.50], ['crown glass', 1.52], ['acrylic plastic', 1.49], ['ethanol', 1.36], ['diamond', 2.42], ['ice', 1.31], ['olive oil', 1.47]];
+  var MAT = [['water', 1.33], ['glass', 1.50], ['crown glass', 1.52], ['acrylic plastic', 1.49], ['ethanol', 1.36], ['diamond', 2.42], ['ice', 1.31], ['olive oil', 1.47], ['quartz', 1.54], ['sapphire', 1.77], ['cubic zirconia', 2.15], ['glycerin', 1.47], ['polycarbonate plastic', 1.59], ['flint glass', 1.62], ['rock salt', 1.54]];
   function Qf(n, d) { return ML.Q(n, d); }
   /* friendly mirror and lens cases: integer focal lengths and object distances with whole-number (or half) image distances */
   var CASES = (function () {
@@ -2674,12 +2674,12 @@
   var IMG_ALL = ['Real, inverted, smaller', 'Real, inverted, larger', 'Real, inverted, the same size', 'Virtual, upright, larger', 'Virtual, upright, smaller', 'Real, upright, larger', 'Virtual, inverted, smaller'];
 
   G('phys2.reflection', function (R, ctx) {
-    var s = shape(R, ctx, ['surface', 'image', 'concept'], ['surface', 'between', 'walk', 'mirror', 'concept'], ['between', 'walk', 'mirror', 'corner', 'concept']);
-    if (s === 'surface') { var a = R.pick([15, 20, 25, 30, 35, 40, 50, 55, 62, 70]); return { q: 'A ray of light strikes a flat mirror at $' + a + '^\\circ$ to the mirror\'s surface. What is the angle of reflection, measured from the normal?', a: ans(90 - a, 0.005), unit: '°', steps: ['Angles are measured from the normal, which is at $90^\\circ$ to the surface.', 'Angle of incidence: $90^\\circ - ' + a + '^\\circ = ' + (90 - a) + '^\\circ$.', 'Law of reflection: the angle of reflection is also $' + (90 - a) + '^\\circ$.'], hint: 'Convert the angle from the surface into an angle from the normal.' }; }
-    if (s === 'between') { var th = R.pick([20, 25, 30, 35, 40, 50, 55, 65]); return { q: 'Light hits a mirror at $' + th + '^\\circ$ from the normal. What is the angle between the incoming ray and the reflected ray?', a: ans(2 * th, 0.005), unit: '°', steps: ['The reflected ray is also $' + th + '^\\circ$ from the normal, on the other side.', 'Between them: $' + th + '^\\circ + ' + th + '^\\circ = ' + 2 * th + '^\\circ$.'], hint: 'Both rays make the same angle with the normal.' }; }
-    if (s === 'image') { var d = R.pick([0.50, 0.80, 1.2, 1.5, 2.0, 2.5, 3.0]); return { q: 'You stand $' + tg(d) + '\\ \\text{m}$ in front of a flat mirror. How far are you from your image?', a: ans(2 * d, 0.01), unit: 'm', steps: ['A plane mirror\'s image is as far behind the mirror as you are in front: $' + tg(d) + '\\ \\text{m}$.', 'Distance from you: $' + tg(d) + ' + ' + tg(d) + ' = ' + tg(2 * d) + '\\ \\text{m}$.'], hint: 'Where is the image?' }; }
-    if (s === 'walk') { var d0 = R.pick([3.0, 4.0, 5.0, 6.0]), v = R.pick([0.50, 1.0, 1.5]), t = R.pick([1, 2]), d1 = d0 - v * t; return { q: 'You stand $' + tg(d0) + '\\ \\text{m}$ from a flat mirror and walk straight toward it at $' + tg(v) + '\\ \\text{m/s}$ for ' + t + ' s. How far are you from your image now?', a: ans(2 * d1, 0.01), unit: 'm', steps: ['After ' + t + ' s you have moved $' + tg(v * t) + '\\ \\text{m}$, so you are $' + tg(d1) + '\\ \\text{m}$ from the mirror.', 'Your image is $' + tg(d1) + '\\ \\text{m}$ behind it.', 'Distance between you: $2 \\times ' + tg(d1) + ' = ' + tg(2 * d1) + '\\ \\text{m}$.'], hint: 'The image moves toward the mirror as you do.' }; }
-    if (s === 'mirror') { var H = R.pick([1.50, 1.60, 1.70, 1.76, 1.80, 1.90]), e = sig(H - R.pick([0.08, 0.10, 0.12]), 3), bot = R.coin(); return { q: 'A person $' + tg(H) + '\\ \\text{m}$ tall has eyes $' + tg(e) + '\\ \\text{m}$ above the floor. ' + (bot ? 'How high above the floor should the bottom edge of a wall mirror be so they can just see their feet?' : 'What is the shortest wall mirror in which they can see their whole body?'), a: ans(bot ? e / 2 : H / 2, 0.01), unit: 'm', steps: ['Light from a point reflects halfway between that point and the eye (equal angles).', 'Feet: the ray reflects at $' + tg(e) + '/2 = ' + tx(e / 2) + '\\ \\text{m}$ above the floor.', 'Top of the head: at $' + tg(e) + ' + (' + tg(H) + ' - ' + tg(e) + ')/2 = ' + tx(e + (H - e) / 2) + '\\ \\text{m}$.', bot ? 'So the bottom edge goes at $' + tx(e / 2) + '\\ \\text{m}$.' : 'Mirror height: $' + tx(e + (H - e) / 2) + ' - ' + tx(e / 2) + ' = ' + tx(H / 2) + '\\ \\text{m}$, half the height.'], hint: 'Each ray reflects halfway between the point it comes from and the eye.' }; }
+    var s = shape(R, ctx, ['surface', 'image', 'concept', 'between'], ['surface', 'between', 'walk', 'mirror', 'concept'], ['between', 'walk', 'mirror', 'corner', 'concept']);
+    if (s === 'surface') { var a = R.pick([15, 20, 25, 30, 35, 40, 50, 55, 62, 70, 10, 12, 18, 22, 28, 45, 48, 58, 65, 75, 80, 60]); return { q: 'A ray of light strikes a flat mirror at $' + a + '^\\circ$ to the mirror\'s surface. What is the angle of reflection, measured from the normal?', a: ans(90 - a, 0.005), unit: '°', steps: ['Angles are measured from the normal, which is at $90^\\circ$ to the surface.', 'Angle of incidence: $90^\\circ - ' + a + '^\\circ = ' + (90 - a) + '^\\circ$.', 'Law of reflection: the angle of reflection is also $' + (90 - a) + '^\\circ$.'], hint: 'Convert the angle from the surface into an angle from the normal.' }; }
+    if (s === 'between') { var th = R.pick([20, 25, 30, 35, 40, 50, 55, 65, 10, 15, 22, 28, 45, 60, 70, 75, 12]); return { q: 'Light hits a mirror at $' + th + '^\\circ$ from the normal. What is the angle between the incoming ray and the reflected ray?', a: ans(2 * th, 0.005), unit: '°', steps: ['The reflected ray is also $' + th + '^\\circ$ from the normal, on the other side.', 'Between them: $' + th + '^\\circ + ' + th + '^\\circ = ' + 2 * th + '^\\circ$.'], hint: 'Both rays make the same angle with the normal.' }; }
+    if (s === 'image') { var d = R.pick([0.50, 0.80, 1.2, 1.5, 2.0, 2.5, 3.0, 0.30, 0.40, 0.60, 0.75, 1.0, 1.8, 4.0, 5.0, 0.35, 0.7, 0.9, 3.5]); return { q: 'You stand $' + tg(d) + '\\ \\text{m}$ in front of a flat mirror. How far are you from your image?', a: ans(2 * d, 0.01), unit: 'm', steps: ['A plane mirror\'s image is as far behind the mirror as you are in front: $' + tg(d) + '\\ \\text{m}$.', 'Distance from you: $' + tg(d) + ' + ' + tg(d) + ' = ' + tg(2 * d) + '\\ \\text{m}$.'], hint: 'Where is the image?' }; }
+    if (s === 'walk') { var d0 = R.pick([3.0, 4.0, 5.0, 6.0]), v = R.pick([0.50, 1.0, 1.5, 0.6, 0.8, 1.2]), t = R.pick([1, 2]), d1 = d0 - v * t; return { q: 'You stand $' + tg(d0) + '\\ \\text{m}$ from a flat mirror and walk straight toward it at $' + tg(v) + '\\ \\text{m/s}$ for ' + t + ' s. How far are you from your image now?', a: ans(2 * d1, 0.01), unit: 'm', steps: ['After ' + t + ' s you have moved $' + tg(v * t) + '\\ \\text{m}$, so you are $' + tg(d1) + '\\ \\text{m}$ from the mirror.', 'Your image is $' + tg(d1) + '\\ \\text{m}$ behind it.', 'Distance between you: $2 \\times ' + tg(d1) + ' = ' + tg(2 * d1) + '\\ \\text{m}$.'], hint: 'The image moves toward the mirror as you do.' }; }
+    if (s === 'mirror') { var H = R.pick([1.50, 1.60, 1.70, 1.76, 1.80, 1.90]), e = sig(H - R.pick([0.08, 0.10, 0.12, 0.09]), 3), bot = R.coin(); return { q: 'A person $' + tg(H) + '\\ \\text{m}$ tall has eyes $' + tg(e) + '\\ \\text{m}$ above the floor. ' + (bot ? 'How high above the floor should the bottom edge of a wall mirror be so they can just see their feet?' : 'What is the shortest wall mirror in which they can see their whole body?'), a: ans(bot ? e / 2 : H / 2, 0.01), unit: 'm', steps: ['Light from a point reflects halfway between that point and the eye (equal angles).', 'Feet: the ray reflects at $' + tg(e) + '/2 = ' + tx(e / 2) + '\\ \\text{m}$ above the floor.', 'Top of the head: at $' + tg(e) + ' + (' + tg(H) + ' - ' + tg(e) + ')/2 = ' + tx(e + (H - e) / 2) + '\\ \\text{m}$.', bot ? 'So the bottom edge goes at $' + tx(e / 2) + '\\ \\text{m}$.' : 'Mirror height: $' + tx(e + (H - e) / 2) + ' - ' + tx(e / 2) + ' = ' + tx(H / 2) + '\\ \\text{m}$, half the height.'], hint: 'Each ray reflects halfway between the point it comes from and the eye.' }; }
     if (s === 'corner') { var t1 = R.pick([20, 25, 30, 35, 40, 50, 55, 60, 65, 70]); return { q: 'Two flat mirrors meet at a right angle. A ray hits the first mirror at $' + t1 + '^\\circ$ from that mirror\'s normal, reflects, and then hits the second mirror. What is its angle of incidence on the second mirror?', a: ans(90 - t1, 0.005), unit: '°', steps: ['After the first reflection the ray leaves at $' + t1 + '^\\circ$ from the first normal, which is $' + (90 - t1) + '^\\circ$ from the first mirror\'s surface.', 'The second mirror is at right angles to the first, so its normal is parallel to the first mirror\'s surface.', 'The ray meets the second normal at $90^\\circ - ' + t1 + '^\\circ = ' + (90 - t1) + '^\\circ$. It leaves heading straight back the way it came, which is how corner reflectors work.'], hint: 'Draw both normals; they are at right angles to each other.' }; }
     var it = R.pick([
       ['You see only down to your knees in a wall mirror. What happens if you step back from the mirror?', 'You still see down to your knees', ['You see more of yourself', 'You see less of yourself', 'You see your whole body once you are far enough back'], 'The ray from your knees reflects halfway between knees and eyes, at any distance. The part of the mirror you use, and what you see, stays the same.'],
@@ -2691,13 +2691,13 @@
   });
 
   G('phys2.index-of-refraction', function (R, ctx) {
-    var s = shape(R, ctx, ['speed', 'nfromv', 'concept'], ['speed', 'nfromv', 'lambda', 'freq', 'concept'], ['lambda', 'freq', 'time', 'nfromv', 'concept']), m = R.pick(MAT);
+    var s = shape(R, ctx, ['speed', 'nfromv', 'concept', 'lambda'], ['speed', 'nfromv', 'lambda', 'freq', 'concept'], ['lambda', 'freq', 'time', 'nfromv', 'concept']), m = R.pick(MAT);
     if (s === 'speed') { var v = C / m[1]; return { q: 'How fast does light travel in ' + m[0] + ', which has $n = ' + m[1].toFixed(2) + '$?', a: ans(v, 0.01), unit: 'm/s', steps: ['$v = \\dfrac{c}{n} = \\dfrac{3.00 \\times 10^{8}}{' + m[1].toFixed(2) + '}$.', '$v = ' + q(v, 'm/s') + '$.'], hint: 'n = c/v, so v = c/n.' }; }
     if (s === 'nfromv') { var vv = sig(C / m[1], 3); return { q: 'Light travels at $' + tx(vv) + '\\ \\text{m/s}$ in a clear material. What is its index of refraction?', a: ans(C / vv, 0.01), steps: ['$n = \\dfrac{c}{v} = \\dfrac{3.00 \\times 10^{8}}{' + tx(vv) + '}$.', '$n = ' + tx(C / vv) + '$.'], hint: 'n = c/v, a pure number.' }; }
-    var lam = R.pick([450, 480, 500, 520, 550, 589, 600, 633, 650, 700]);
+    var lam = R.pick([450, 480, 500, 520, 550, 589, 600, 633, 650, 700, 405, 532, 560, 580, 620, 680]);
     if (s === 'lambda') { var ln = lam / m[1]; return { q: 'Light with a wavelength of $' + lam + '\\ \\text{nm}$ in air enters ' + m[0] + ' ($n = ' + m[1].toFixed(2) + '$). What is its wavelength inside?', a: ans(ln, 0.01), unit: 'nm', steps: ['The frequency stays the same and the speed drops by $n$, so the wavelength drops by $n$.', '$\\lambda_n = \\dfrac{\\lambda}{n} = \\dfrac{' + lam + '}{' + m[1].toFixed(2) + '} = ' + q(ln, 'nm') + '$.'], hint: 'λ_n = λ/n.' }; }
     if (s === 'freq') { var f = C / (lam * 1e-9); return { q: 'Light of wavelength $' + lam + '\\ \\text{nm}$ in air passes into ' + m[0] + ' ($n = ' + m[1].toFixed(2) + '$). What is its frequency inside the ' + m[0] + '?', a: ans(f, 0.01), unit: 'Hz', steps: ['In air: $f = \\dfrac{c}{\\lambda} = \\dfrac{3.00 \\times 10^{8}}{' + lam + ' \\times 10^{-9}} = ' + q(f, 'Hz') + '$.', 'The frequency does not change at a boundary, so inside it is still $' + q(f, 'Hz') + '$.', '(The wavelength inside is $' + tx(lam / m[1]) + '\\ \\text{nm}$.)'], hint: 'What stays the same when light enters a new material?' }; }
-    if (s === 'time') { var d = R.pick([1.0, 2.0, 3.0, 5.0, 10]), t = d / 100 * m[1] / C; return { q: 'How long does light take to cross $' + tg(d) + '\\ \\text{cm}$ of ' + m[0] + ' ($n = ' + m[1].toFixed(2) + '$) straight through?', a: ans(t, 0.01), unit: 's', steps: ['Speed inside: $v = \\dfrac{c}{n} = ' + q(C / m[1], 'm/s') + '$.', '$t = \\dfrac{d}{v} = \\dfrac{' + tg(d / 100) + '}{' + tx(C / m[1]) + '} = ' + q(t, 's') + '$.'], hint: 'Find the speed inside first.' }; }
+    if (s === 'time') { var d = R.pick([1.0, 2.0, 3.0, 5.0, 10, 0.5, 1.5, 4.0, 20, 50, 100]), t = d / 100 * m[1] / C; return { q: 'How long does light take to cross $' + tg(d) + '\\ \\text{cm}$ of ' + m[0] + ' ($n = ' + m[1].toFixed(2) + '$) straight through?', a: ans(t, 0.01), unit: 's', steps: ['Speed inside: $v = \\dfrac{c}{n} = ' + q(C / m[1], 'm/s') + '$.', '$t = \\dfrac{d}{v} = \\dfrac{' + tg(d / 100) + '}{' + tx(C / m[1]) + '} = ' + q(t, 's') + '$.'], hint: 'Find the speed inside first.' }; }
     var it = R.pick([
       ['A red laser beam goes from air into water. What happens to its frequency?', 'It stays the same', ['It decreases, so the light looks orange', 'It increases', 'It drops by the factor n'], 'Crests leave the boundary as fast as they arrive, so the frequency (and the color) never changes. The speed and wavelength drop by $n$.'],
       ['Light goes from air into glass. Which change is correct?', 'Its speed and its wavelength both decrease', ['Its speed and its frequency both decrease', 'Its wavelength increases', 'Its frequency increases and its wavelength decreases'], 'In glass $v = c/n$ and $\\lambda_n = \\lambda/n$; the frequency is fixed by the source.'],
@@ -2725,7 +2725,7 @@
   });
 
   G('phys2.total-internal-reflection', function (R, ctx) {
-    var s = shape(R, ctx, ['crit', 'crit', 'concept'], ['crit', 'escape', 'nfrom', 'concept'], ['pair', 'escape', 'nfrom', 'fiber']);
+    var s = shape(R, ctx, ['crit', 'nfrom', 'concept', 'crit'], ['crit', 'escape', 'nfrom', 'concept'], ['pair', 'escape', 'nfrom', 'fiber']);
     var m = R.pick(MAT.filter(function (x) { return x[1] > 1.32; }));
     if (s === 'crit') { var tc = asind(1 / m[1]); return { q: 'Find the critical angle for light going from ' + m[0] + ' ($n = ' + m[1].toFixed(2) + '$) into air.', a: ans(tc, 0.01), unit: '°', steps: ['$\\sin\\theta_c = \\dfrac{n_2}{n_1} = \\dfrac{1.00}{' + m[1].toFixed(2) + '} = ' + tx(1 / m[1]) + '$.', '$\\theta_c = \\sin^{-1}(' + tx(1 / m[1]) + ') = ' + deg(tc) + '$.'], hint: 'sin θc = n₂/n₁, with n₁ the denser material.' }; }
     if (s === 'pair' || s === 'fiber') {
@@ -2733,7 +2733,7 @@
       return { q: s === 'fiber' ? 'An optical fiber has a core with $n = ' + p[0].toFixed(2) + '$ and a cladding with $n = ' + p[1].toFixed(2) + '$. What is the critical angle at the core–cladding boundary?' : 'Find the critical angle for light in ' + p[2] + ' ($n = ' + p[0].toFixed(2) + '$) meeting ' + p[3] + ' ($n = ' + p[1].toFixed(2) + '$).', a: ans(tc2, 0.01), unit: '°',
         steps: ['$\\sin\\theta_c = \\dfrac{n_2}{n_1} = \\dfrac{' + p[1].toFixed(2) + '}{' + p[0].toFixed(2) + '} = ' + tx(p[1] / p[0]) + '$.', '$\\theta_c = ' + deg(tc2) + '$.' + (s === 'fiber' ? ' Light that hits the wall at more than this stays trapped in the core.' : '')], hint: 'Use sin θc = n₂/n₁.' };
     }
-    if (s === 'nfrom') { var tc3 = R.pick([24.4, 30.0, 35.0, 40.0, 41.8, 45.0, 48.8]), n = 1 / sind(tc3); return { q: 'The critical angle for a clear gem in air is $' + tc3.toFixed(1) + '^\\circ$. What is the gem\'s index of refraction?', a: ans(n, 0.01), steps: ['$\\sin\\theta_c = \\dfrac{1.00}{n}$, so $n = \\dfrac{1}{\\sin\\theta_c}$.', '$n = \\dfrac{1}{\\sin ' + tc3.toFixed(1) + '^\\circ} = \\dfrac{1}{' + tx(sind(tc3)) + '} = ' + tx(n) + '$.'], hint: 'Solve sin θc = 1/n for n.' }; }
+    if (s === 'nfrom') { var tc3 = R.pick([20.0, 22.5, 24.4, 26.0, 28.0, 30.0, 32.0, 35.0, 37.0, 38.0, 40.0, 41.8, 43.0, 45.0, 48.8]), n = 1 / sind(tc3); return { q: 'The critical angle for a clear gem in air is $' + tc3.toFixed(1) + '^\\circ$. What is the gem\'s index of refraction?', a: ans(n, 0.01), steps: ['$\\sin\\theta_c = \\dfrac{1.00}{n}$, so $n = \\dfrac{1}{\\sin\\theta_c}$.', '$n = \\dfrac{1}{\\sin ' + tc3.toFixed(1) + '^\\circ} = \\dfrac{1}{' + tx(sind(tc3)) + '} = ' + tx(n) + '$.'], hint: 'Solve sin θc = 1/n for n.' }; }
     if (s === 'escape') {
       var tc4 = asind(1 / m[1]), off = R.pick([-12, -8, -5, 5, 8, 12]), th = M.round(tc4 + off), tir = th > tc4;
       return { q: 'Light inside ' + m[0] + ' ($n = ' + m[1].toFixed(2) + '$) hits the boundary with air at $' + th + '^\\circ$ from the normal. What happens?', a: mc(tir ? 'It is totally reflected back into the ' + m[0] : 'Part of it refracts out into the air', [tir ? 'Part of it refracts out into the air' : 'It is totally reflected back into the ' + m[0], 'It passes straight through without bending', 'It is all absorbed at the surface']),
@@ -2749,9 +2749,9 @@
   });
 
   function classify(R, ctx, lens) {
-    var conv = R.chance(ctx.level === 1 ? 0.85 : 0.75), f = R.pick([10, 12, 15, 20]), where, d;
-    if (conv) { where = R.pick(['beyond 2F', 'at 2F', 'between', 'at F', 'inside']); d = where === 'beyond 2F' ? R.pick([2.5, 3, 4]) * f : where === 'at 2F' ? 2 * f : where === 'between' ? R.pick([1.25, 1.5, 1.75]) * f : where === 'at F' ? f : R.pick([0.4, 0.5, 0.6]) * f; }
-    else { d = R.pick([0.5, 1, 1.5, 2, 3]) * f; f = -f; }
+    var conv = R.chance(ctx.level === 1 ? 0.85 : 0.75), f = R.pick([10, 12, 15, 20, 11, 14, 17, 19]), where, d;
+    if (conv) { where = R.pick(['beyond 2F', 'at 2F', 'between', 'at F', 'inside']); d = where === 'beyond 2F' ? R.pick([2.5, 3, 4, 3.5]) * f : where === 'at 2F' ? 2 * f : where === 'between' ? R.pick([1.25, 1.5, 1.75]) * f : where === 'at F' ? f : R.pick([0.4, 0.5, 0.6]) * f; }
+    else { d = R.pick([0.5, 1, 1.5, 2, 3, 0.6, 0.7, 0.8, 1.2, 2.5]) * f; f = -f; }
     d = sig(d, 6);
     return { f: f, d: d, di: d === f ? null : Qf(sig(f * d, 10), sig(d - f, 10)) };
   }
@@ -2762,7 +2762,7 @@
   }
   function diagramProblem(R, ctx, lens) {
     var s = shape(R, ctx, ['classify', 'classify', 'ray'], ['classify', 'ray', 'cover', 'fromR', 'where'], ['classify', 'where', 'ray', 'cover', 'fromR']);
-    if (s === 'fromR' && !lens) { var Rr = R.pick([16, 20, 24, 30, 36, 40, 50, 60]), cv = R.coin(); return { q: 'A ' + (cv ? 'concave' : 'convex') + ' mirror has a radius of curvature of $' + Rr + '\\ \\text{cm}$. What is its focal length, with the sign convention of this course?', a: ans(cv ? Rr / 2 : -Rr / 2, 0.005), unit: 'cm', steps: ['For a spherical mirror, $|f| = \\dfrac{R}{2} = ' + Rr / 2 + '\\ \\text{cm}$.', cv ? 'Concave: $f > 0$, so $f = ' + Rr / 2 + '\\ \\text{cm}$.' : 'Convex: $f < 0$, so $f = -' + Rr / 2 + '\\ \\text{cm}$.'], hint: 'f = R/2, with the sign set by the shape.' }; }
+    if (s === 'fromR' && !lens) { var Rr = R.pick([16, 20, 24, 30, 36, 40, 50, 60, 25, 35]), cv = R.coin(); return { q: 'A ' + (cv ? 'concave' : 'convex') + ' mirror has a radius of curvature of $' + Rr + '\\ \\text{cm}$. What is its focal length, with the sign convention of this course?', a: ans(cv ? Rr / 2 : -Rr / 2, 0.005), unit: 'cm', steps: ['For a spherical mirror, $|f| = \\dfrac{R}{2} = ' + Rr / 2 + '\\ \\text{cm}$.', cv ? 'Concave: $f > 0$, so $f = ' + Rr / 2 + '\\ \\text{cm}$.' : 'Convex: $f < 0$, so $f = -' + Rr / 2 + '\\ \\text{cm}$.'], hint: 'f = R/2, with the sign set by the shape.' }; }
     if (s === 'fromR' && lens) s = 'cover';
     if (s === 'cover') return { q: 'An object stands in front of a ' + (lens ? 'converging lens' : 'concave mirror') + ', which forms a sharp real image on a screen. Then the top half of the ' + (lens ? 'lens' : 'mirror') + ' is covered with black paper. What happens to the image?', a: mc('The whole image is still there, only dimmer', ['The top half of the image disappears', 'The bottom half of the image disappears', 'The image disappears completely']),
       viz: { name: 'ph-rays', opts: { element: lens ? 'converging' : 'concave', f: 10, dObj: 25, hObj: 4, block: 'top', interactive: false, quiet: true } },
@@ -2837,7 +2837,7 @@
 
   G('phys2.wave-graphs', function (R, ctx) {
     var s = shape(R, ctx, ['snapL', 'histT', 'snapA'], ['snapL', 'histT', 'snapV', 'histV', 'which', 'dir'], ['snapV', 'histV', 'dir', 'which', 'histF']);
-    var A = R.pick([1, 2, 3, 4]), lam = R.pick([2, 4, 6, 8]), Tp = R.pick([2, 4, 5, 8]);
+    var A = R.pick([1, 2, 3, 4]), lam = R.pick([2, 4, 6, 8, 3, 5, 7]), Tp = R.pick([2, 4, 5, 8, 3, 6, 7]);
     function graph(per, xl, yl, pts) { var o = { f: A + '*sin(2*pi*x/' + per + ')', xmin: 0, xmax: M.min(2 * per, 16), ymin: -(A + 1), ymax: A + 1, xlabel: xl, ylabel: yl, zoom: false, quiet: true }; if (pts) o.points = pts; return { name: 'graph', opts: o }; }
     if (s === 'which') {
       var hist = R.coin();
@@ -2851,12 +2851,12 @@
         steps: ['The wave moves to the ' + (right ? 'right' : 'left') + ', so the part of the wave just to P\'s ' + (right ? 'left' : 'right') + ' arrives at P next.', 'Just to P\'s ' + (right ? 'left' : 'right') + ', the wave is ' + (up ? 'higher' : 'lower') + ' than P.', 'So P is moving ' + (up ? 'up' : 'down') + '. The string itself only moves up and down; the shape moves sideways.'], hint: 'Which part of the wave reaches P next?' };
     }
     if (s === 'snapL' || s === 'snapA' || s === 'snapV') {
-      var vz = graph(lam, 'x (m)', 'y (cm)'), f = R.pick([0.5, 1.5, 2, 2.5, 3, 5]);
+      var vz = graph(lam, 'x (m)', 'y (cm)'), f = R.pick([0.5, 1.5, 2, 2.5, 3, 5, 0.6, 0.7, 0.9, 1, 3.5, 4]);
       if (s === 'snapA') return { q: 'The snapshot graph shows a wave on a string. What is its amplitude?', a: ans(A, 0.01), unit: 'cm', viz: vz, steps: ['The amplitude is the height of a crest above the center line ($y = 0$), not crest to trough.', '$A = ' + A + '\\ \\text{cm}$.'], hint: 'Measure from the center line.' };
       if (s === 'snapL') return { q: 'The snapshot graph shows a wave on a string at one instant. What is its wavelength?', a: ans(lam, 0.01), unit: 'm', viz: vz, steps: ['On a snapshot graph the horizontal axis is position.', 'Crests (or any two matching points) repeat every $' + lam + '\\ \\text{m}$, so $\\lambda = ' + lam + '\\ \\text{m}$.'], hint: 'Find the distance from one crest to the next.' };
       return { q: 'The snapshot graph shows a wave on a string. The source vibrates at $' + tg(f) + '\\ \\text{Hz}$. How fast does the wave travel?', a: ans(f * lam, 0.01), unit: 'm/s', viz: vz, steps: ['Read the wavelength from the snapshot: $\\lambda = ' + lam + '\\ \\text{m}$.', '$v = f\\lambda = (' + tg(f) + ')(' + lam + ') = ' + q(f * lam, 'm/s') + '$.'], hint: 'Read λ from the graph, then use v = fλ.' };
     }
-    var vh = graph(Tp, 't (s)', 'y (cm)'), lam2 = R.pick([0.5, 1.5, 2, 3, 4, 6]);
+    var vh = graph(Tp, 't (s)', 'y (cm)'), lam2 = R.pick([0.5, 1.5, 2, 3, 4, 6, 0.6, 0.8, 0.9, 1.2, 2.5, 5]);
     if (s === 'histT') return { q: 'The history graph shows how one point on a wave moves up and down. What is the period?', a: ans(Tp, 0.01), unit: 's', viz: vh, steps: ['On a history graph the horizontal axis is time.', 'The motion repeats every $' + Tp + '\\ \\text{s}$, so $T = ' + Tp + '\\ \\text{s}$.'], hint: 'Find the time from one crest to the next.' };
     if (s === 'histF') return { q: 'The history graph shows the motion of one point on a wave. What is the wave\'s frequency?', a: ans(1 / Tp, 0.01), unit: 'Hz', viz: vh, steps: ['Read the period: $T = ' + Tp + '\\ \\text{s}$.', '$f = \\dfrac{1}{T} = \\dfrac{1}{' + Tp + '} = ' + q(1 / Tp, 'Hz') + '$.'], hint: 'f = 1/T.' };
     return { q: 'The history graph shows one point on a wave whose wavelength is $' + tg(lam2) + '\\ \\text{m}$. How fast does the wave travel?', a: ans(lam2 / Tp, 0.01), unit: 'm/s', viz: vh, steps: ['Read the period from the history graph: $T = ' + Tp + '\\ \\text{s}$.', '$v = \\dfrac{\\lambda}{T} = \\dfrac{' + tg(lam2) + '}{' + Tp + '} = ' + q(lam2 / Tp, 'm/s') + '$.'], hint: 'The history graph gives the period, not the wavelength.' };
@@ -2885,12 +2885,12 @@
   });
 
   G('phys2.em-waves', function (R, ctx) {
-    var s = shape(R, ctx, ['lambda', 'freq', 'concept'], ['lambda', 'freq', 'B', 'time', 'band'], ['B', 'E', 'time', 'band', 'lambda']);
-    if (s === 'lambda') { var src = R.pick([['an FM station at', 88.5, 1e6, 'MHz'], ['an FM station at', 101.1, 1e6, 'MHz'], ['an AM station at', 880, 1e3, 'kHz'], ['an AM station at', 1200, 1e3, 'kHz'], ['a Wi-Fi router at', 2.4, 1e9, 'GHz'], ['a microwave oven at', 2.45, 1e9, 'GHz'], ['a Wi-Fi router at', 5.0, 1e9, 'GHz']]), f = src[1] * src[2]; return { q: 'Find the wavelength of the radio waves from ' + src[0] + ' $' + tg(src[1]) + '\\ \\text{' + src[3] + '}$.', a: ans(C / f, 0.01), unit: 'm', steps: ['$f = ' + tg(src[1]) + ' \\times 10^{' + M.round(M.log10(src[2])) + '}\\ \\text{Hz}$.', '$\\lambda = \\dfrac{c}{f} = \\dfrac{3.00 \\times 10^{8}}{' + tg(f) + '} = ' + q(C / f, 'm') + '$.'], hint: 'λ = c/f, with f in hertz.' }; }
-    if (s === 'freq') { var lam = R.pick([400, 450, 500, 550, 600, 650, 700]); return { q: 'Light has a wavelength of $' + lam + '\\ \\text{nm}$ in a vacuum. What is its frequency?', a: ans(C / (lam * 1e-9), 0.01), unit: 'Hz', steps: ['$\\lambda = ' + lam + ' \\times 10^{-9}\\ \\text{m}$.', '$f = \\dfrac{c}{\\lambda} = \\dfrac{3.00 \\times 10^{8}}{' + lam + ' \\times 10^{-9}} = ' + q(C / (lam * 1e-9), 'Hz') + '$.'], hint: 'f = c/λ, with λ in meters.' }; }
-    if (s === 'B' || s === 'E') { var E = R.pick([3.0, 6.0, 15, 30, 45, 60, 90, 150, 300]), B = E / C; if (s === 'B') return { q: 'An electromagnetic wave has an electric field amplitude of $' + tg(E) + '\\ \\text{V/m}$. What is its magnetic field amplitude?', a: ans(B, 0.01), unit: 'T', steps: ['In an EM wave, $E = cB$.', '$B = \\dfrac{E}{c} = \\dfrac{' + tg(E) + '}{3.00 \\times 10^{8}} = ' + q(B, 'T') + '$.'], hint: 'E = cB.' }; return { q: 'The magnetic field amplitude of a light wave is $' + tx(B) + '\\ \\text{T}$. What is its electric field amplitude?', a: ans(E, 0.01), unit: 'V/m', steps: ['$E = cB = (3.00 \\times 10^{8})(' + tx(B) + ')$.', '$E = ' + q(E, 'V/m') + '$.'], hint: 'E = cB.' }; }
-    if (s === 'time') { var d = R.pick([['the Sun to Earth', 1.50e11], ['the Moon to Earth', 3.84e8], ['a satellite $3.6 \\times 10^{7}\\ \\text{m}$ up to the ground', 3.6e7], ['Mars to Earth, at a distance of $7.8 \\times 10^{10}\\ \\text{m}$', 7.8e10]]); return { q: 'How long does light take to travel from ' + d[0] + '?' + (d[1] === 1.50e11 ? ' (Distance: $1.50 \\times 10^{11}\\ \\text{m}$.)' : d[1] === 3.84e8 ? ' (Distance: $3.84 \\times 10^{8}\\ \\text{m}$.)' : ''), a: ans(d[1] / C, 0.01), unit: 's', steps: ['$t = \\dfrac{d}{c} = \\dfrac{' + tg(d[1]) + '}{3.00 \\times 10^{8}}$.', '$t = ' + q(d[1] / C, 's') + '$.'], hint: 'Light travels at c = 3.00 × 10⁸ m/s.' }; }
-    if (s === 'band') { var bands = [['radio waves', [300, 3, 30], 'm'], ['microwaves', [12, 3, 1], 'cm'], ['infrared', [10, 50], 'μm'], ['visible light', [550, 480, 620], 'nm'], ['ultraviolet', [250, 300, 100], 'nm'], ['X-rays', [0.1, 1], 'nm']], bd = R.pick(bands), val = R.pick(bd[1]); return { q: 'An electromagnetic wave has a wavelength of $' + tg(val) + '\\ \\text{' + bd[2] + '}$. Which part of the spectrum is it in?', a: mc(bd[0].charAt(0).toUpperCase() + bd[0].slice(1), bands.filter(function (x) { return x !== bd; }).map(function (x) { return x[0].charAt(0).toUpperCase() + x[0].slice(1); })), steps: ['From long to short: radio (longer than about 1 m down to tens of cm), microwaves (about 1 mm to 1 m), infrared (about 700 nm to 1 mm), visible (about 400 to 700 nm), ultraviolet (about 10 to 400 nm), X-rays (about 0.01 to 10 nm), gamma rays (shorter).', '$' + tg(val) + '\\ \\text{' + bd[2] + '}$ falls in ' + bd[0] + '.'], hint: 'Visible light runs from about 400 to 700 nm.' }; }
+    var s = shape(R, ctx, ['lambda', 'freq', 'concept', 'time'], ['lambda', 'freq', 'B', 'time', 'band'], ['B', 'E', 'time', 'band', 'lambda']);
+    if (s === 'lambda') { var src = R.pick([['an FM station at', 88.5, 1e6, 'MHz'], ['an FM station at', 101.1, 1e6, 'MHz'], ['an AM station at', 880, 1e3, 'kHz'], ['an AM station at', 1200, 1e3, 'kHz'], ['a Wi-Fi router at', 2.4, 1e9, 'GHz'], ['a microwave oven at', 2.45, 1e9, 'GHz'], ['a Wi-Fi router at', 5.0, 1e9, 'GHz'], ['an FM station at', 92.3, 1e6, 'MHz'], ['an FM station at', 95.5, 1e6, 'MHz'], ['an FM station at', 104.7, 1e6, 'MHz'], ['an FM station at', 107.9, 1e6, 'MHz'], ['an AM station at', 540, 1e3, 'kHz'], ['an AM station at', 650, 1e3, 'kHz'], ['an AM station at', 1010, 1e3, 'kHz'], ['an AM station at', 1600, 1e3, 'kHz'], ['a cell phone at', 1.9, 1e9, 'GHz']]), f = src[1] * src[2]; return { q: 'Find the wavelength of the radio waves from ' + src[0] + ' $' + tg(src[1]) + '\\ \\text{' + src[3] + '}$.', a: ans(C / f, 0.01), unit: 'm', steps: ['$f = ' + tg(src[1]) + ' \\times 10^{' + M.round(M.log10(src[2])) + '}\\ \\text{Hz}$.', '$\\lambda = \\dfrac{c}{f} = \\dfrac{3.00 \\times 10^{8}}{' + tg(f) + '} = ' + q(C / f, 'm') + '$.'], hint: 'λ = c/f, with f in hertz.' }; }
+    if (s === 'freq') { var lam = R.pick([400, 450, 500, 550, 600, 650, 700, 380, 420, 480, 520, 532, 580, 620, 633, 680, 750]); return { q: 'Light has a wavelength of $' + lam + '\\ \\text{nm}$ in a vacuum. What is its frequency?', a: ans(C / (lam * 1e-9), 0.01), unit: 'Hz', steps: ['$\\lambda = ' + lam + ' \\times 10^{-9}\\ \\text{m}$.', '$f = \\dfrac{c}{\\lambda} = \\dfrac{3.00 \\times 10^{8}}{' + lam + ' \\times 10^{-9}} = ' + q(C / (lam * 1e-9), 'Hz') + '$.'], hint: 'f = c/λ, with λ in meters.' }; }
+    if (s === 'B' || s === 'E') { var E = R.pick([3.0, 6.0, 15, 30, 45, 60, 90, 150, 300, 1.0, 5.0, 10, 20, 75, 120, 200, 600, 1000, 1.2, 1.5, 2.5, 3.5, 4, 8, 9, 12, 35, 40, 70, 80, 100, 350, 400, 500, 800, 900]), B = E / C; if (s === 'B') return { q: 'An electromagnetic wave has an electric field amplitude of $' + tg(E) + '\\ \\text{V/m}$. What is its magnetic field amplitude?', a: ans(B, 0.01), unit: 'T', steps: ['In an EM wave, $E = cB$.', '$B = \\dfrac{E}{c} = \\dfrac{' + tg(E) + '}{3.00 \\times 10^{8}} = ' + q(B, 'T') + '$.'], hint: 'E = cB.' }; return { q: 'The magnetic field amplitude of a light wave is $' + tx(B) + '\\ \\text{T}$. What is its electric field amplitude?', a: ans(E, 0.01), unit: 'V/m', steps: ['$E = cB = (3.00 \\times 10^{8})(' + tx(B) + ')$.', '$E = ' + q(E, 'V/m') + '$.'], hint: 'E = cB.' }; }
+    if (s === 'time') { var d = R.pick([['the Sun to Earth', 1.50e11], ['the Moon to Earth', 3.84e8], ['a satellite $3.6 \\times 10^{7}\\ \\text{m}$ up to the ground', 3.6e7], ['Mars to Earth, at a distance of $7.8 \\times 10^{10}\\ \\text{m}$', 7.8e10], ['Venus to Earth, at a distance of $4.1 \\times 10^{10}\\ \\text{m}$', 4.1e10], ['Jupiter to Earth, at a distance of $6.3 \\times 10^{11}\\ \\text{m}$', 6.3e11], ['a satellite $2.0 \\times 10^{7}\\ \\text{m}$ up to the ground', 2.0e7], ['a space station $4.1 \\times 10^{5}\\ \\text{m}$ up to the ground', 4.1e5], ['Saturn to Earth, at a distance of $1.3 \\times 10^{12}\\ \\text{m}$', 1.3e12]]); return { q: 'How long does light take to travel from ' + d[0] + '?' + (d[1] === 1.50e11 ? ' (Distance: $1.50 \\times 10^{11}\\ \\text{m}$.)' : d[1] === 3.84e8 ? ' (Distance: $3.84 \\times 10^{8}\\ \\text{m}$.)' : ''), a: ans(d[1] / C, 0.01), unit: 's', steps: ['$t = \\dfrac{d}{c} = \\dfrac{' + tg(d[1]) + '}{3.00 \\times 10^{8}}$.', '$t = ' + q(d[1] / C, 's') + '$.'], hint: 'Light travels at c = 3.00 × 10⁸ m/s.' }; }
+    if (s === 'band') { var bands = [['radio waves', [300, 3, 30, 100, 1000, 10], 'm'], ['microwaves', [12, 3, 1, 5, 20], 'cm'], ['infrared', [10, 50, 2, 5, 100], 'μm'], ['visible light', [550, 480, 620, 450, 500, 580, 650], 'nm'], ['ultraviolet', [250, 300, 100, 200, 350], 'nm'], ['X-rays', [0.1, 1, 0.5, 5, 0.05], 'nm']], bd = R.pick(bands), val = R.pick(bd[1]); return { q: 'An electromagnetic wave has a wavelength of $' + tg(val) + '\\ \\text{' + bd[2] + '}$. Which part of the spectrum is it in?', a: mc(bd[0].charAt(0).toUpperCase() + bd[0].slice(1), bands.filter(function (x) { return x !== bd; }).map(function (x) { return x[0].charAt(0).toUpperCase() + x[0].slice(1); })), steps: ['From long to short: radio (longer than about 1 m down to tens of cm), microwaves (about 1 mm to 1 m), infrared (about 700 nm to 1 mm), visible (about 400 to 700 nm), ultraviolet (about 10 to 400 nm), X-rays (about 0.01 to 10 nm), gamma rays (shorter).', '$' + tg(val) + '\\ \\text{' + bd[2] + '}$ falls in ' + bd[0] + '.'], hint: 'Visible light runs from about 400 to 700 nm.' }; }
     var it = R.pick([
       ['Can light travel through a region with no air or matter at all?', 'Yes: its electric and magnetic fields keep each other going', ['No: like sound, it needs a medium', 'Only if the region is very small', 'Only radio waves can'], 'A changing magnetic field makes an electric field and vice versa, so the wave carries itself through empty space. Sunlight crosses about 150 million km of nearly empty space.'],
       ['Which statement about radio waves is correct?', 'They are electromagnetic waves that travel at the speed of light', ['They are a kind of very low sound', 'They need air to travel', 'They travel at the speed of sound'], 'Radio waves are light with long wavelengths; a radio turns them into sound with its speaker.'],
@@ -2901,7 +2901,7 @@
 
   G('phys2.polarization', function (R, ctx) {
     var s = shape(R, ctx, ['one', 'two', 'concept'], ['two', 'pol', 'three', 'concept'], ['three', 'angle', 'two', 'pol']);
-    var I0 = R.pick([40, 80, 100, 120, 200, 240, 400, 600, 800]), ang = R.pick(ctx.level === 3 ? [20, 30, 37, 45, 53, 60, 70] : [30, 45, 60]);
+    var I0 = R.pick([40, 80, 100, 120, 200, 240, 400, 600, 800, 50, 60, 150, 160, 300, 500]), ang = R.pick(ctx.level === 3 ? [20, 30, 37, 45, 53, 60, 70] : [20, 30, 37, 45, 53, 60, 70]);
     if (s === 'concept') {
       var it = R.pick([
         ['Which of these waves cannot be polarized?', 'Sound waves in air', ['Light from the Sun', 'Radio waves', 'Waves on a rope shaken sideways'], 'Polarization picks one sideways direction of wiggle. Sound in air is longitudinal (it wiggles along its travel), so it has no sideways direction to pick.'],
@@ -2914,21 +2914,21 @@
     if (s === 'one') return { q: 'Unpolarized light of intensity $' + I0 + '\\ \\text{W/m}^2$ passes through one polarizer. What intensity comes out?', a: ans(I0 / 2, 0.01), unit: 'W/m²', steps: ['An ideal polarizer passes half of unpolarized light.', '$I = \\frac{1}{2}(' + I0 + ') = ' + tg(I0 / 2) + '\\ \\text{W/m}^2$, now polarized along the filter\'s axis.'], hint: 'Unpolarized light loses half.' };
     if (s === 'two') { var I2 = I0 / 2 * c2(ang); return { q: 'Unpolarized light of intensity $' + I0 + '\\ \\text{W/m}^2$ passes through two polarizers whose axes are $' + ang + '^\\circ$ apart. What intensity comes out?', a: ans(I2, 0.01), unit: 'W/m²', steps: ['First polarizer: $I_1 = \\frac{1}{2}(' + I0 + ') = ' + tg(I0 / 2) + '\\ \\text{W/m}^2$.', 'Second: $I_2 = I_1\\cos^{2}' + ang + '^\\circ = ' + tg(I0 / 2) + '(' + tx(c2(ang)) + ') = ' + q(I2, 'W/m²') + '$.'], hint: 'Half through the first, then Malus\'s law.' }; }
     if (s === 'pol') { var Ip = I0 * c2(ang); return { q: 'Polarized light of intensity $' + I0 + '\\ \\text{W/m}^2$ meets a polarizer whose axis is $' + ang + '^\\circ$ from the light\'s polarization. What intensity gets through?', a: ans(Ip, 0.01), unit: 'W/m²', steps: ['Malus\'s law: $I = I_0\\cos^{2}\\theta$.', '$I = ' + I0 + '\\cos^{2}' + ang + '^\\circ = ' + I0 + '(' + tx(c2(ang)) + ') = ' + q(Ip, 'W/m²') + '$.'], hint: 'The light is already polarized, so no factor of one half.' }; }
-    if (s === 'three') { var a1 = R.pick([20, 30, 45, 60]), a2 = R.pick([60, 75, 90]); if (a2 <= a1) a2 = 90; var I1 = I0 / 2, Ia = I1 * c2(a1), Ib = Ia * c2(a2 - a1); return { q: 'Unpolarized light of intensity $' + I0 + '\\ \\text{W/m}^2$ passes through three polarizers with axes at $0^\\circ$, $' + a1 + '^\\circ$ and $' + a2 + '^\\circ$. What intensity comes out?', a: ans(Ib, 0.015), unit: 'W/m²', steps: ['After the first: $' + tg(I1) + '\\ \\text{W/m}^2$.', 'The second is $' + a1 + '^\\circ$ from the first: $' + tg(I1) + '\\cos^{2}' + a1 + '^\\circ = ' + q(Ia, 'W/m²') + '$.', 'The third is $' + (a2 - a1) + '^\\circ$ from the second: $' + tx(Ia) + '\\cos^{2}' + (a2 - a1) + '^\\circ = ' + q(Ib, 'W/m²') + '$.'], hint: 'Use the angle between neighboring filters each time.' }; }
-    var ratio = R.pick([0.25, 0.50, 0.75, 0.10, 0.90, 0.40]), th = acosd(M.sqrt(ratio));
+    if (s === 'three') { var a1 = R.pick([20, 30, 45, 60, 15, 25, 35, 40, 50]), a2 = R.pick([60, 75, 90, 70, 80]); if (a2 <= a1) a2 = 90; var I1 = I0 / 2, Ia = I1 * c2(a1), Ib = Ia * c2(a2 - a1); return { q: 'Unpolarized light of intensity $' + I0 + '\\ \\text{W/m}^2$ passes through three polarizers with axes at $0^\\circ$, $' + a1 + '^\\circ$ and $' + a2 + '^\\circ$. What intensity comes out?', a: ans(Ib, 0.015), unit: 'W/m²', steps: ['After the first: $' + tg(I1) + '\\ \\text{W/m}^2$.', 'The second is $' + a1 + '^\\circ$ from the first: $' + tg(I1) + '\\cos^{2}' + a1 + '^\\circ = ' + q(Ia, 'W/m²') + '$.', 'The third is $' + (a2 - a1) + '^\\circ$ from the second: $' + tx(Ia) + '\\cos^{2}' + (a2 - a1) + '^\\circ = ' + q(Ib, 'W/m²') + '$.'], hint: 'Use the angle between neighboring filters each time.' }; }
+    var ratio = R.pick([0.25, 0.50, 0.75, 0.10, 0.90, 0.40, 0.20, 0.30, 0.60, 0.80]), th = acosd(M.sqrt(ratio));
     return { q: 'Polarized light passes through a polarizer and comes out with $' + M.round(ratio * 100) + '\\%$ of its intensity. What angle is the polarizer\'s axis from the light\'s polarization (between $0^\\circ$ and $90^\\circ$)?', a: ans(th, 0.01), unit: '°', steps: ['$\\cos^{2}\\theta = ' + ratio.toFixed(2) + '$, so $\\cos\\theta = \\sqrt{' + ratio.toFixed(2) + '} = ' + tx(M.sqrt(ratio)) + '$.', '$\\theta = \\cos^{-1}(' + tx(M.sqrt(ratio)) + ') = ' + deg(th) + '$.'], hint: 'Solve I/I₀ = cos²θ for θ.' };
   });
 
   G('phys2.superposition', function (R, ctx) {
     var s = shape(R, ctx, ['pulses', 'pulses', 'after'], ['pulses', 'speakers', 'after', 'minpath'], ['speakers', 'minpath', 'pulses', 'energy']);
-    if (s === 'pulses') { var h1 = R.pick([2, 3, 4, 5, 6]), h2 = R.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4]); var sum = h1 + h2; return { q: 'A pulse $' + h1 + '\\ \\text{cm}$ high meets a pulse that is $' + M.abs(h2) + '\\ \\text{cm}$ ' + (h2 > 0 ? 'high' : 'deep (upside down)') + ', coming the other way. What is the displacement where their peaks overlap exactly?', a: { t: 'num', v: String(sum), rtol: 0.01 }, unit: 'cm', steps: ['Displacements add, with signs (up positive).', '$' + h1 + ' + (' + h2 + ') = ' + sum + '\\ \\text{cm}$.' + (sum === 0 ? ' The string is flat for an instant.' : '')], hint: 'Add the displacements with their signs.' }; }
+    if (s === 'pulses') { var h1 = R.pick([2, 3, 4, 5, 6, 1, 7, 8, 10]), h2 = R.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, -8, -6, 5, 6, 7]); var sum = h1 + h2; return { q: 'A pulse $' + h1 + '\\ \\text{cm}$ high meets a pulse that is $' + M.abs(h2) + '\\ \\text{cm}$ ' + (h2 > 0 ? 'high' : 'deep (upside down)') + ', coming the other way. What is the displacement where their peaks overlap exactly?', a: { t: 'num', v: String(sum), rtol: 0.01 }, unit: 'cm', steps: ['Displacements add, with signs (up positive).', '$' + h1 + ' + (' + h2 + ') = ' + sum + '\\ \\text{cm}$.' + (sum === 0 ? ' The string is flat for an instant.' : '')], hint: 'Add the displacements with their signs.' }; }
     if (s === 'after' || s === 'energy') {
       var it = s === 'after' ? ['Two pulses on a string pass through each other. What are they like after they separate?', 'Each has the same shape and size it had before', ['Each is smaller, because they lost energy meeting', 'They have swapped shapes', 'They have merged into one larger pulse']] : ['An upright pulse and an equal upside-down pulse meet, and for an instant the string is flat. Where is their energy at that instant?', 'In the motion of the string: it is moving fastest then', ['It has been destroyed', 'It was turned into heat and is gone for good', 'It is stored at the ends of the string']];
       return { q: it[0], a: mc(it[1], it[2]), steps: s === 'after' ? ['Superposition: where waves overlap, displacements add; each wave travels on unchanged.', 'So after they pass, each pulse looks exactly as before.'] : ['The string is flat but moving fast, so the energy is all kinetic for that instant.', 'A moment later the two pulses re-emerge unchanged.'], hint: 'Waves pass through each other.' };
     }
-    var lam = R.pick([0.50, 1.00, 2.00]), f = 343 / lam;
+    var lam = R.pick([0.50, 1.00, 2.00, 0.25, 0.40, 0.80, 1.25, 1.50]), f = 343 / lam;
     if (s === 'minpath') return { q: 'Two speakers play the same $' + tg(f) + '\\ \\text{Hz}$ tone in step. What is the smallest difference in distance to the two speakers that puts you at a quiet spot? (Sound travels at $343\\ \\text{m/s}$.)', a: ans(lam / 2, 0.01), unit: 'm', steps: ['$\\lambda = \\dfrac{v}{f} = \\dfrac{343}{' + tg(f) + '} = ' + tg(lam) + '\\ \\text{m}$.', 'Quiet (destructive) needs a path difference of half a wavelength: $\\dfrac{\\lambda}{2} = ' + tg(lam / 2) + '\\ \\text{m}$.'], hint: 'Crest meets trough when one path is half a wavelength longer.' };
-    var k = R.int(1, 6), d1 = R.pick([2.0, 2.5, 3.0, 4.0, 5.0]), d2 = sig(d1 + k * lam / 2, 6), loud = k % 2 === 0;
+    var k = R.int(1, 6), d1 = R.pick([2.0, 2.5, 3.0, 4.0, 5.0, 1.5, 3.5, 4.5, 6.0, 8.0]), d2 = sig(d1 + k * lam / 2, 6), loud = k % 2 === 0;
     return { q: 'Two speakers play the same $' + tg(f) + '\\ \\text{Hz}$ tone in step. You stand $' + tg(d1) + '\\ \\text{m}$ from one and $' + tg(d2) + '\\ \\text{m}$ from the other. Is the sound loud or quiet there? (Sound travels at $343\\ \\text{m/s}$.)', a: mc(loud ? 'Loud: constructive interference' : 'Quiet: destructive interference', [loud ? 'Quiet: destructive interference' : 'Loud: constructive interference', 'Neither: the waves do not interfere', 'Loud, because two speakers are always louder']),
       steps: ['$\\lambda = \\dfrac{343}{' + tg(f) + '} = ' + tg(lam) + '\\ \\text{m}$.', 'Path difference: $' + tg(d2) + ' - ' + tg(d1) + ' = ' + tg(sig(d2 - d1, 6)) + '\\ \\text{m} = ' + tg(k / 2) + '\\lambda$.', loud ? 'A whole number of wavelengths: crest meets crest, so it is loud.' : 'A half number of wavelengths: crest meets trough, so it is quiet.'], hint: 'Compare the path difference with the wavelength.' };
   });
@@ -2952,14 +2952,14 @@
   });
 
   G('phys2.standing-waves-pipes', function (R, ctx) {
-    var s = shape(R, ctx, ['open', 'closed'], ['open', 'closed', 'length', 'next', 'ratio'], ['identify', 'f1from', 'length', 'next', 'closedN']);
-    var Ls = R.pick([0.25, 0.30, 0.40, 0.50, 0.60, 0.75, 0.80, 1.0, 1.2, 1.5]), v = 343;
+    var s = shape(R, ctx, ['open', 'closed', 'length'], ['open', 'closed', 'length', 'next', 'ratio'], ['identify', 'f1from', 'length', 'next', 'closedN']);
+    var Ls = R.pick([0.25, 0.30, 0.40, 0.50, 0.60, 0.75, 0.80, 1.0, 1.2, 1.5, 0.15, 0.20, 0.35, 0.45, 0.55, 0.65, 0.70, 0.85, 0.90, 1.8, 2.0, 2.5, 3.0]), v = 343;
     if (s === 'open') { var n = R.int(1, 3), f = n * v / (2 * Ls); return { q: 'A pipe $' + tg(Ls) + '\\ \\text{m}$ long is open at both ends. Find the frequency of its ' + (n === 1 ? 'fundamental' : 'harmonic with $n = ' + n + '$') + '. (Sound travels at $343\\ \\text{m/s}$.)', a: ans(f, 0.01), unit: 'Hz', viz: { name: 'ph-wave', opts: { mode: 'standing-pipe', pipe: 'open', n: n, interactive: false, quiet: true } }, steps: ['Open at both ends: antinodes at both ends, so $f_n = \\dfrac{nv}{2L}$, any $n$.', '$f_' + n + ' = \\dfrac{' + n + '(343)}{2(' + tg(Ls) + ')} = ' + q(f, 'Hz') + '$.'], hint: 'An open pipe works like a string: f_n = nv/(2L).' }; }
     if (s === 'closed' || s === 'closedN') { var nn = s === 'closedN' ? R.pick([3, 5]) : 1, fc = nn * v / (4 * Ls); return { q: 'A pipe $' + tg(Ls) + '\\ \\text{m}$ long is closed at one end. Find the frequency of its ' + (nn === 1 ? 'fundamental' : (nn === 3 ? 'second' : 'third') + ' resonance (the harmonic with $n = ' + nn + '$)') + '. (Sound travels at $343\\ \\text{m/s}$.)', a: ans(fc, 0.01), unit: 'Hz', viz: { name: 'ph-wave', opts: { mode: 'standing-pipe', pipe: 'closed', n: nn, interactive: false, quiet: true } }, steps: ['Closed at one end: a node at the closed end and an antinode at the open end, so $L = n\\dfrac{\\lambda}{4}$ with $n$ odd.', '$f_' + nn + ' = \\dfrac{' + nn + '(343)}{4(' + tg(Ls) + ')} = ' + q(fc, 'Hz') + '$.'], hint: 'A closed pipe holds an odd number of quarter wavelengths.' }; }
-    if (s === 'length') { var closed = R.coin(), f1 = R.pick([131, 196, 220, 262, 294, 330, 440]), L = closed ? v / (4 * f1) : v / (2 * f1); return { q: 'How long must a pipe ' + (closed ? 'closed at one end' : 'open at both ends') + ' be to have a fundamental of $' + f1 + '\\ \\text{Hz}$? (Sound travels at $343\\ \\text{m/s}$.)', a: ans(L, 0.01), unit: 'm', steps: [closed ? 'Closed pipe: $f_1 = \\dfrac{v}{4L}$, so $L = \\dfrac{v}{4f_1}$.' : 'Open pipe: $f_1 = \\dfrac{v}{2L}$, so $L = \\dfrac{v}{2f_1}$.', '$L = \\dfrac{343}{' + (closed ? 4 : 2) + '(' + f1 + ')} = ' + q(L, 'm') + '$.'], hint: 'Solve the fundamental formula for L.' }; }
+    if (s === 'length') { var closed = R.coin(), f1 = R.pick([131, 196, 220, 262, 294, 330, 440, 110, 147, 165, 175, 247, 349, 392, 494, 523]), L = closed ? v / (4 * f1) : v / (2 * f1); return { q: 'How long must a pipe ' + (closed ? 'closed at one end' : 'open at both ends') + ' be to have a fundamental of $' + f1 + '\\ \\text{Hz}$? (Sound travels at $343\\ \\text{m/s}$.)', a: ans(L, 0.01), unit: 'm', steps: [closed ? 'Closed pipe: $f_1 = \\dfrac{v}{4L}$, so $L = \\dfrac{v}{4f_1}$.' : 'Open pipe: $f_1 = \\dfrac{v}{2L}$, so $L = \\dfrac{v}{2f_1}$.', '$L = \\dfrac{343}{' + (closed ? 4 : 2) + '(' + f1 + ')} = ' + q(L, 'm') + '$.'], hint: 'Solve the fundamental formula for L.' }; }
     if (s === 'next') { var cl = R.coin(), base = cl ? v / (4 * Ls) : v / (2 * Ls); return { q: 'A pipe ' + (cl ? 'closed at one end' : 'open at both ends') + ' has a fundamental of $' + tx(base) + '\\ \\text{Hz}$. What is the next higher frequency at which it resonates?', a: ans(cl ? 3 * base : 2 * base, 0.01), unit: 'Hz', steps: [cl ? 'A closed pipe has only odd harmonics: $f_1, 3f_1, 5f_1, \\dots$' : 'An open pipe has every harmonic: $f_1, 2f_1, 3f_1, \\dots$', 'Next: $' + (cl ? 3 : 2) + ' \\times ' + tx(base) + ' = ' + q(cl ? 3 * base : 2 * base, 'Hz') + '$.'], hint: cl ? 'Closed pipes skip the even harmonics.' : 'Open pipes have all harmonics.' }; }
     if (s === 'ratio') return { q: 'Two pipes have the same length. Pipe A is open at both ends; pipe B is closed at one end. How do their fundamental frequencies compare?', a: mc('A\'s fundamental is twice B\'s', ['They are the same', 'B\'s fundamental is twice A\'s', 'A\'s fundamental is four times B\'s']), steps: ['Open: $f_1 = \\dfrac{v}{2L}$. Closed: $f_1 = \\dfrac{v}{4L}$.', 'So the open pipe\'s fundamental is twice the closed pipe\'s: a closed pipe sounds an octave lower.'], hint: 'Compare v/(2L) with v/(4L).' };
-    var cl2 = R.coin(), f0 = R.pick([40, 50, 60, 70, 80, 100, 110]), k0 = cl2 ? R.pick([1, 3, 5]) : R.int(1, 4), list = cl2 ? [k0, k0 + 2, k0 + 4] : [k0, k0 + 1, k0 + 2], fr = list.map(function (k) { return k * f0; });
+    var cl2 = R.coin(), f0 = R.pick([40, 50, 60, 70, 80, 100, 110, 30, 45, 55, 65, 75, 90, 120, 150]), k0 = cl2 ? R.pick([1, 3, 5]) : R.int(1, 4), list = cl2 ? [k0, k0 + 2, k0 + 4] : [k0, k0 + 1, k0 + 2], fr = list.map(function (k) { return k * f0; });
     if (s === 'identify') return { q: 'A pipe resonates at $' + fr[0] + '$, $' + fr[1] + '$ and $' + fr[2] + '\\ \\text{Hz}$, with no resonances between them. Is it open at both ends or closed at one end?', a: mc(cl2 ? 'Closed at one end' : 'Open at both ends', [cl2 ? 'Open at both ends' : 'Closed at one end', 'It could be either', 'Neither: a pipe cannot resonate at these']),
       steps: ['Neighbors differ by $' + (fr[1] - fr[0]) + '\\ \\text{Hz}$.', cl2 ? 'The frequencies are odd multiples of $' + f0 + '\\ \\text{Hz}$ (' + list.join(', ') + '), half the spacing: only odd harmonics, so the pipe is closed at one end.' : 'The frequencies are whole-number multiples of the spacing, $' + f0 + '\\ \\text{Hz}$ (' + list.join(', ') + '): every harmonic, so the pipe is open at both ends.'], hint: 'Divide each frequency by the spacing between neighbors.' };
     return { q: 'A pipe resonates at $' + fr[0] + '$, $' + fr[1] + '$ and $' + fr[2] + '\\ \\text{Hz}$, with no resonances between them. What is its fundamental frequency?', a: ans(f0, 0.01), unit: 'Hz',
@@ -2967,13 +2967,13 @@
   });
 
   G('phys2.sound-intensity', function (R, ctx) {
-    var s = shape(R, ctx, ['beta', 'I', 'concept'], ['beta', 'I', 'ratio', 'sources', 'distance', 'concept'], ['beta', 'sources', 'distance', 'power', 'ratio']);
-    if (s === 'beta') { var m = ctx.level === 1 ? 1 : R.pick([1, 2, 3, 5]), e = R.int(-10, -3), I = m * M.pow(10, e), b = 10 * M.log10(I / I0); return { q: 'A sound has an intensity of $' + tg(I) + '\\ \\text{W/m}^2$. What is its sound level in decibels?', a: ans(b, 0.005), unit: 'dB', steps: ['$\\dfrac{I}{I_0} = \\dfrac{' + tg(I) + '}{10^{-12}} = ' + tg(sig(I / I0, 6)) + '$.', '$\\beta = 10\\log_{10}(' + tg(sig(I / I0, 6)) + ') = ' + q(b, 'dB') + '$.'], hint: 'β = 10 log(I/I₀) with I₀ = 10⁻¹² W/m².' }; }
-    if (s === 'I') { var bb = R.pick([30, 40, 50, 60, 65, 70, 80, 85, 90, 100]), Ii = I0 * M.pow(10, bb / 10); return { q: 'A sound has a level of $' + bb + '\\ \\text{dB}$. What is its intensity?', a: ans(Ii, 0.01), unit: 'W/m²', steps: ['$\\dfrac{I}{I_0} = 10^{\\beta/10} = 10^{' + bb / 10 + '}$.', '$I = (10^{-12})(10^{' + bb / 10 + '}) = ' + q(Ii, 'W/m²') + '$.'], hint: 'Undo the log: I = I₀ × 10^(β/10).' }; }
-    if (s === 'ratio') { var F = R.pick([10, 100, 1000, 2, 4, 1 / 10, 1 / 100]), d = 10 * M.log10(F); return { q: 'The intensity of a sound is ' + (F >= 1 ? 'multiplied by ' + F : 'divided by ' + M.round(1 / F)) + '. By how many decibels does its level change? (Give a negative number for a drop.)', a: ans(d, 0.01), unit: 'dB', steps: ['$\\Delta\\beta = 10\\log_{10}\\dfrac{I_2}{I_1} = 10\\log_{10}(' + (F >= 1 ? F : '\\frac{1}{' + M.round(1 / F) + '}') + ')$.', '$\\Delta\\beta = ' + q(d, 'dB') + '$.'], hint: 'Each factor of 10 in intensity is 10 dB.' }; }
-    if (s === 'sources') { var N = R.pick([2, 4, 10, 100]), b0 = R.pick([50, 60, 70, 80]), bn = b0 + 10 * M.log10(N); return { q: 'One machine makes a sound level of $' + b0 + '\\ \\text{dB}$ at your spot. What level do ' + N + ' identical machines make there, all running at once?', a: ans(bn, 0.005), unit: 'dB', steps: ['Intensities add: ' + N + ' machines give ' + N + ' times the intensity.', '$\\beta = ' + b0 + ' + 10\\log_{10}' + N + ' = ' + b0 + ' + ' + tx(10 * M.log10(N)) + ' = ' + q(bn, 'dB') + '$.'], hint: 'Add intensities, not decibels.' }; }
-    if (s === 'distance') { var r1 = R.pick([1.0, 2.0, 3.0, 5.0]), k = R.pick([2, 3, 4, 10]), b1 = R.pick([70, 80, 90, 100]), b2 = b1 - 20 * M.log10(k); return { q: 'A small source gives $' + b1 + '\\ \\text{dB}$ at $' + tg(r1) + '\\ \\text{m}$ away. Assuming the sound spreads evenly in all directions, what is the level at $' + tg(k * r1) + '\\ \\text{m}$?', a: ans(b2, 0.005), unit: 'dB', steps: [k + ' times as far: the intensity is $\\dfrac{1}{' + k + '^{2}} = \\dfrac{1}{' + k * k + '}$ as large.', '$\\Delta\\beta = 10\\log_{10}\\dfrac{1}{' + k * k + '} = ' + tx(-20 * M.log10(k)) + '\\ \\text{dB}$.', '$\\beta = ' + b1 + ' - ' + tx(20 * M.log10(k)) + ' = ' + q(b2, 'dB') + '$.'], hint: 'Intensity falls as 1/r².' }; }
-    if (s === 'power') { var r = R.pick([2.0, 3.0, 5.0, 10]), Ip = R.pick([1.0e-4, 2.0e-4, 5.0e-5, 1.0e-3, 4.0e-3]), P = Ip * 4 * PI * r * r; return { q: 'At $' + tg(r) + '\\ \\text{m}$ from a small speaker the sound intensity is $' + tg(Ip) + '\\ \\text{W/m}^2$. Assuming it spreads evenly in all directions, what sound power does the speaker put out?', a: ans(P, 0.01), unit: 'W', steps: ['The power spreads over a sphere of area $4\\pi r^{2}$.', '$$\\begin{aligned} P &= I(4\\pi r^{2}) = (' + tg(Ip) + ')(4\\pi)(' + tg(r) + ')^{2} \\\\ &= ' + q(P, 'W') + ' \\end{aligned}$$'], hint: 'P = I × 4πr².' }; }
+    var s = shape(R, ctx, ['beta', 'I', 'concept', 'ratio'], ['beta', 'I', 'ratio', 'sources', 'distance', 'concept'], ['beta', 'sources', 'distance', 'power', 'ratio']);
+    if (s === 'beta') { var m = ctx.level === 1 ? 1 : R.pick([1, 2, 3, 5, 4]), e = R.int(-10, -3), I = m * M.pow(10, e), b = 10 * M.log10(I / I0); return { q: 'A sound has an intensity of $' + tg(I) + '\\ \\text{W/m}^2$. What is its sound level in decibels?', a: ans(b, 0.005), unit: 'dB', steps: ['$\\dfrac{I}{I_0} = \\dfrac{' + tg(I) + '}{10^{-12}} = ' + tg(sig(I / I0, 6)) + '$.', '$\\beta = 10\\log_{10}(' + tg(sig(I / I0, 6)) + ') = ' + q(b, 'dB') + '$.'], hint: 'β = 10 log(I/I₀) with I₀ = 10⁻¹² W/m².' }; }
+    if (s === 'I') { var bb = R.pick([30, 40, 50, 60, 65, 70, 80, 85, 90, 100, 10, 20, 35, 45, 55, 75, 95, 110, 120, 12, 15, 25]), Ii = I0 * M.pow(10, bb / 10); return { q: 'A sound has a level of $' + bb + '\\ \\text{dB}$. What is its intensity?', a: ans(Ii, 0.01), unit: 'W/m²', steps: ['$\\dfrac{I}{I_0} = 10^{\\beta/10} = 10^{' + bb / 10 + '}$.', '$I = (10^{-12})(10^{' + bb / 10 + '}) = ' + q(Ii, 'W/m²') + '$.'], hint: 'Undo the log: I = I₀ × 10^(β/10).' }; }
+    if (s === 'ratio') { var F = R.pick([10, 100, 1000, 2, 4, 1 / 10, 1 / 100, 3, 5, 20, 50, 10000]), d = 10 * M.log10(F); return { q: 'The intensity of a sound is ' + (F >= 1 ? 'multiplied by ' + F : 'divided by ' + M.round(1 / F)) + '. By how many decibels does its level change? (Give a negative number for a drop.)', a: ans(d, 0.01), unit: 'dB', steps: ['$\\Delta\\beta = 10\\log_{10}\\dfrac{I_2}{I_1} = 10\\log_{10}(' + (F >= 1 ? F : '\\frac{1}{' + M.round(1 / F) + '}') + ')$.', '$\\Delta\\beta = ' + q(d, 'dB') + '$.'], hint: 'Each factor of 10 in intensity is 10 dB.' }; }
+    if (s === 'sources') { var N = R.pick([2, 4, 10, 100, 3, 5, 8, 20, 1000, 2.5, 7, 25, 40, 80, 150, 300, 600, 900]), b0 = R.pick([50, 60, 70, 80, 40, 45, 55, 65, 75, 85, 90]), bn = b0 + 10 * M.log10(N); return { q: 'One machine makes a sound level of $' + b0 + '\\ \\text{dB}$ at your spot. What level do ' + N + ' identical machines make there, all running at once?', a: ans(bn, 0.005), unit: 'dB', steps: ['Intensities add: ' + N + ' machines give ' + N + ' times the intensity.', '$\\beta = ' + b0 + ' + 10\\log_{10}' + N + ' = ' + b0 + ' + ' + tx(10 * M.log10(N)) + ' = ' + q(bn, 'dB') + '$.'], hint: 'Add intensities, not decibels.' }; }
+    if (s === 'distance') { var r1 = R.pick([1.0, 2.0, 3.0, 5.0, 0.5, 1.5, 4.0, 10, 0.6, 0.7, 0.9, 1.2, 3.5, 6, 8, 9]), k = R.pick([2, 3, 4, 10, 5, 8, 100, 2.5, 7, 12, 25, 40, 60, 90]), b1 = R.pick([70, 80, 90, 100, 60, 75, 85, 95, 110]), b2 = b1 - 20 * M.log10(k); return { q: 'A small source gives $' + b1 + '\\ \\text{dB}$ at $' + tg(r1) + '\\ \\text{m}$ away. Assuming the sound spreads evenly in all directions, what is the level at $' + tg(k * r1) + '\\ \\text{m}$?', a: ans(b2, 0.005), unit: 'dB', steps: [k + ' times as far: the intensity is $\\dfrac{1}{' + k + '^{2}} = \\dfrac{1}{' + k * k + '}$ as large.', '$\\Delta\\beta = 10\\log_{10}\\dfrac{1}{' + k * k + '} = ' + tx(-20 * M.log10(k)) + '\\ \\text{dB}$.', '$\\beta = ' + b1 + ' - ' + tx(20 * M.log10(k)) + ' = ' + q(b2, 'dB') + '$.'], hint: 'Intensity falls as 1/r².' }; }
+    if (s === 'power') { var r = R.pick([2.0, 3.0, 5.0, 10, 1.0, 1.5, 4.0, 8.0, 20, 1.2, 2.5, 3.5, 6, 7, 9, 12, 15]), Ip = R.pick([1.0e-4, 2.0e-4, 5.0e-5, 1.0e-3, 4.0e-3, 1.0e-5, 3.0e-4, 1.0e-2, 2.5e-3, 1.2e-05, 3e-05, 7e-05, 0.00012, 0.0004, 0.0008, 0.0015, 0.005, 0.009]), P = Ip * 4 * PI * r * r; return { q: 'At $' + tg(r) + '\\ \\text{m}$ from a small speaker the sound intensity is $' + tg(Ip) + '\\ \\text{W/m}^2$. Assuming it spreads evenly in all directions, what sound power does the speaker put out?', a: ans(P, 0.01), unit: 'W', steps: ['The power spreads over a sphere of area $4\\pi r^{2}$.', '$$\\begin{aligned} P &= I(4\\pi r^{2}) = (' + tg(Ip) + ')(4\\pi)(' + tg(r) + ')^{2} \\\\ &= ' + q(P, 'W') + ' \\end{aligned}$$'], hint: 'P = I × 4πr².' }; }
     var it = R.pick([
       ['A second, identical speaker is turned on beside the first, doubling the intensity. The level was $60\\ \\text{dB}$. What is it now?', 'About $63\\ \\text{dB}$', ['$120\\ \\text{dB}$', '$70\\ \\text{dB}$', '$60\\ \\text{dB}$'], 'Doubling $I$ adds $10\\log_{10}2 = 3.0\\ \\text{dB}$.'],
       ['A sound level of $0\\ \\text{dB}$ means…', 'an intensity of $I_0 = 10^{-12}\\ \\text{W/m}^2$, about the faintest sound people can hear', ['no sound at all', 'an intensity of $0\\ \\text{W/m}^2$', 'an intensity of $1\\ \\text{W/m}^2$'], '$\\beta = 10\\log_{10}(I/I_0) = 0$ when $I = I_0$; quieter sounds have negative levels.'],
@@ -3038,25 +3038,25 @@
 
   G('phys2.diffraction-grating', function (R, ctx) {
     var s = shape(R, ctx, ['d', 'angle'], ['d', 'angle', 'lambda', 'maxorder', 'concept'], ['angle', 'lambda', 'maxorder', 'sep']);
-    var N = R.pick([100, 200, 300, 400, 500, 600, 800, 1000, 1200]), d = 1e-3 / N, lam = R.pick([400, 434, 450, 486, 500, 550, 589, 600, 633, 656, 700]);
+    var N = R.pick([100, 200, 300, 400, 500, 600, 800, 1000, 1200, 120, 150, 250, 350, 700, 900]), d = 1e-3 / N, lam = R.pick([400, 434, 450, 486, 500, 550, 589, 600, 633, 656, 700]);
     var dtex = '$d = \\dfrac{1}{' + N + '}\\ \\text{mm} = ' + q(d, 'm') + '$.';
     if (s === 'd') return { q: 'A grating has $' + N + '$ lines per millimeter. What is the spacing $d$ between neighboring lines, in micrometers?', a: ans(d * 1e6, 0.01), unit: 'μm', steps: ['$d$ is the reciprocal of the number of lines per length.', dtex, 'That is $' + q(d * 1e6, 'μm') + '$.'], hint: 'd = 1/(lines per mm), in mm.' };
     if (s === 'concept') return { q: 'White light passes through a diffraction grating. In the first-order spectrum, which color is bent through the largest angle?', a: mc('Red', ['Violet', 'Green', 'All colors are bent the same amount']), steps: ['$\\sin\\theta = \\dfrac{m\\lambda}{d}$: the longest wavelength makes the largest angle.', 'Red has the longest visible wavelength, so it is bent the most. (A prism does the reverse, bending violet the most.)'], hint: 'Larger λ, larger angle.' };
     while (M.abs(d / (lam * 1e-9) - M.round(d / (lam * 1e-9))) < 0.02) lam += 25; // keep clear of a line at exactly 90°
     var maxm = M.floor(d / (lam * 1e-9));
     if (s === 'maxorder') { if (maxm < 1) { N = 600; d = 1e-3 / N; maxm = M.floor(d / (lam * 1e-9)); dtex = '$d = \\dfrac{1}{600}\\ \\text{mm} = ' + q(d, 'm') + '$.'; } return { q: 'Light of $' + lam + '\\ \\text{nm}$ falls on a grating with $' + N + '$ lines per millimeter. What is the highest order of bright line you can see?', a: exact(maxm), steps: [dtex, 'Since $\\sin\\theta \\le 1$: $m \\le \\dfrac{d}{\\lambda} = \\dfrac{' + tx(d) + '}{' + lam + ' \\times 10^{-9}} = ' + tx(d / (lam * 1e-9)) + '$.', 'The highest whole number is $m = ' + maxm + '$.'], hint: 'sin θ can be at most 1.' }; }
-    var N2 = N; if (maxm < 1 || lam * 1e-9 / d > 0.95) { N2 = R.pick([100, 200, 300, 400, 500, 600]); d = 1e-3 / N2; dtex = '$d = \\dfrac{1}{' + N2 + '}\\ \\text{mm} = ' + q(d, 'm') + '$.'; }
+    var N2 = N; if (maxm < 1 || lam * 1e-9 / d > 0.95) { N2 = R.pick([100, 200, 300, 400, 500, 600, 120, 150, 250, 350]); d = 1e-3 / N2; dtex = '$d = \\dfrac{1}{' + N2 + '}\\ \\text{mm} = ' + q(d, 'm') + '$.'; }
     var mo = 1; if (ctx.level >= 2 && 2 * lam * 1e-9 / d < 0.9 && R.coin()) mo = 2;
     var sn = mo * lam * 1e-9 / d, th = asind(sn);
     if (s === 'angle') return { q: 'Light of $' + lam + '\\ \\text{nm}$ falls on a grating with $' + N2 + '$ lines per millimeter. At what angle is the ' + (mo === 1 ? 'first' : 'second') + '-order bright line?', a: ans(th, 0.01), unit: '°', viz: { name: 'ph-interference', opts: { mode: 'grating', lambda: lam, lpmm: N2, interactive: false, quiet: true } }, steps: [dtex, '$\\sin\\theta = \\dfrac{' + mo + '\\lambda}{d} = \\dfrac{' + mo + '(' + lam + ' \\times 10^{-9})}{' + tx(d) + '} = ' + tx(sn) + '$.', '$\\theta = ' + deg(th) + '$.'], hint: 'Find d from the lines per millimeter first.' };
     if (s === 'lambda') { var thg = sig(th, 3), lr = d * sind(thg) / mo; return { q: 'A grating with $' + N2 + '$ lines per millimeter shows a ' + (mo === 1 ? 'first' : 'second') + '-order bright line at $' + tg(thg) + '^\\circ$. What is the wavelength, in nanometers?', a: ans(lr * 1e9, 0.01), unit: 'nm', steps: [dtex, '$\\lambda = \\dfrac{d\\sin\\theta}{m} = \\dfrac{(' + tx(d) + ')\\sin ' + tg(thg) + '^\\circ}{' + mo + '}$.', '$\\lambda = ' + q(lr, 'm') + ' = ' + q(lr * 1e9, 'nm') + '$.'], hint: 'Solve d sin θ = mλ for λ.' }; }
-    var l1 = R.pick([486, 500, 589]), l2 = l1 + R.pick([70, 100, 150]), N3 = R.pick([300, 400, 500, 600]), d3 = 1e-3 / N3, t1 = asind(l1 * 1e-9 / d3), t2 = asind(l2 * 1e-9 / d3);
+    var l1 = R.pick([486, 500, 589]), l2 = l1 + R.pick([70, 100, 150, 80, 90, 120]), N3 = R.pick([300, 400, 500, 600, 350]), d3 = 1e-3 / N3, t1 = asind(l1 * 1e-9 / d3), t2 = asind(l2 * 1e-9 / d3);
     return { q: 'Light containing $' + l1 + '\\ \\text{nm}$ and $' + l2 + '\\ \\text{nm}$ falls on a grating with $' + N3 + '$ lines per millimeter. How far apart, in degrees, are the two first-order lines?', a: ans(t2 - t1, 0.02), unit: '°', steps: ['$d = \\dfrac{1}{' + N3 + '}\\ \\text{mm} = ' + q(d3, 'm') + '$.', '$\\theta_1 = \\sin^{-1}\\dfrac{' + l1 + ' \\times 10^{-9}}{' + tx(d3) + '} = ' + deg(t1, 4) + '$ and $\\theta_2 = ' + deg(t2, 4) + '$.', 'Separation: $' + tx(t2, 4) + '^\\circ - ' + tx(t1, 4) + '^\\circ = ' + deg(t2 - t1) + '$.'], hint: 'Find each angle, then subtract.' };
   });
 
   G('phys2.thin-films', function (R, ctx) {
-    var s = shape(R, ctx, ['soap', 'flips', 'coating'], ['soap', 'coating', 'oil', 'flips', 'soapdark'], ['soap', 'coating', 'oil', 'which', 'coatbright', 'soapdark']);
-    var lam = R.pick([400, 420, 450, 480, 500, 520, 540, 550, 560, 580, 600, 620, 630, 650, 680, 700]);
+    var s = shape(R, ctx, ['soap', 'flips', 'coating', 'oil'], ['soap', 'coating', 'oil', 'flips', 'soapdark'], ['soap', 'coating', 'oil', 'which', 'coatbright', 'soapdark']);
+    var lam = R.int(80, 140) * 5;
     var cfg = s === 'oil' ? R.pick([[1.45, 'oil', 1.33, 'water'], [1.50, 'oil', 1.33, 'water'], [1.40, 'oil', 1.33, 'water'], [1.42, 'oil', 1.33, 'water'], [1.48, 'oil', 1.33, 'water']]) : s === 'coating' || s === 'coatbright' ? R.pick([[1.38, 'magnesium fluoride', 1.50, 'glass'], [1.38, 'magnesium fluoride', 1.52, 'crown glass'], [1.38, 'magnesium fluoride', 1.60, 'flint glass'], [1.38, 'magnesium fluoride', 1.70, 'dense flint glass']]) : [1.33, 'soap', 1.00, 'air'];
     var nf = cfg[0], nb = cfg[2], flips = (nf > 1.00 ? 1 : 0) + (nb > nf ? 1 : 0), one = flips === 1;
     var fl = ['Top surface: air ($1.00$) to ' + cfg[1] + ' ($' + nf.toFixed(2) + '$), low to high: a half-wave flip.', 'Bottom surface: ' + cfg[1] + ' ($' + nf.toFixed(2) + '$) to ' + cfg[3] + ' ($' + nb.toFixed(2) + '$): ' + (nb > nf ? 'low to high, another flip.' : 'high to low, no flip.'), one ? 'One flip in all, so the two reflected waves start half a wave apart.' : 'Two flips cancel, so the two reflected waves start in step.'];
@@ -3087,7 +3087,7 @@
 
 // =========================================================================================== unit 8: quantum physics and the nucleus
   G('phys2.photons', function (R, ctx) {
-    var s = shape(R, ctx, ['eV', 'eV', 'concept'], ['eV', 'J', 'lambda', 'freq', 'rate', 'concept'], ['J', 'lambda', 'rate', 'ratio', 'freq']);
+    var s = shape(R, ctx, ['eV', 'lambda', 'concept', 'freq'], ['eV', 'J', 'lambda', 'freq', 'rate', 'concept'], ['J', 'lambda', 'rate', 'ratio', 'freq']);
     var lam = R.pick([200, 220, 250, 280, 300, 350, 380, 400, 420, 450, 480, 500, 520, 550, 580, 600, 620, 650, 680, 700, 750, 800, 1000, 1500]), E = HC / lam;
     if (s === 'concept') {
       var it = R.pick([
@@ -3101,16 +3101,16 @@
     if (s === 'J') return { q: 'Find the energy of one photon of $' + lam + '\\ \\text{nm}$ light, in joules.', a: ans(E * QE, 0.015), unit: 'J', steps: ['$$E = \\frac{hc}{\\lambda} = \\frac{(6.63 \\times 10^{-34})(3.00 \\times 10^{8})}{' + lam + ' \\times 10^{-9}}$$', '$E = ' + q(HP * C / (lam * 1e-9), 'J') + '$ (that is $' + tx(E) + '\\ \\text{eV}$).'], hint: 'Use E = hc/λ with λ in meters.' };
     if (s === 'lambda') { var Eg = R.pick([1.2, 1.5, 1.6, 1.8, 2.0, 2.2, 2.5, 2.8, 3.0, 3.5, 4.0, 5.0, 6.0, 10, 50]), lr = HC / Eg; return { q: 'A photon carries $' + tg(Eg) + '\\ \\text{eV}$. What is its wavelength, in nanometers?', a: ans(lr, 0.01), unit: 'nm', steps: ['$\\lambda = \\dfrac{hc}{E} = \\dfrac{1240\\ \\text{eV·nm}}{' + tg(Eg) + '\\ \\text{eV}}$.', '$\\lambda = ' + q(lr, 'nm') + '$' + (lr >= 400 && lr <= 700 ? ', visible light.' : lr < 400 ? ', ultraviolet.' : ', infrared.')], hint: 'λ (nm) = 1240/E (eV).' }; }
     if (s === 'freq') { var Eg2 = R.pick([1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 6.0, 8.0, 10]), f = Eg2 * QE / HP; return { q: 'A photon has an energy of $' + tg(Eg2) + '\\ \\text{eV}$. What is its frequency?', a: ans(f, 0.015), unit: 'Hz', steps: ['In joules: $E = ' + tg(Eg2) + ' \\times 1.60 \\times 10^{-19} = ' + q(Eg2 * QE, 'J') + '$.', '$f = \\dfrac{E}{h} = \\dfrac{' + tx(Eg2 * QE) + '}{6.63 \\times 10^{-34}} = ' + q(f, 'Hz') + '$.'], hint: 'E = hf, with E in joules.' }; }
-    if (s === 'rate') { var P = R.pick([1.0, 2.0, 5.0, 0.50]), lr2 = R.pick([532, 650, 450, 405]), Ej = HP * C / (lr2 * 1e-9), N = P * 1e-3 / Ej; return { q: 'A laser pointer puts out $' + tg(P) + '\\ \\text{mW}$ of light at $' + lr2 + '\\ \\text{nm}$. How many photons does it emit each second?', a: ans(N, 0.015), unit: 'photons/s', steps: ['One photon: $$E = \\frac{hc}{\\lambda} = \\frac{(6.63 \\times 10^{-34})(3.00 \\times 10^{8})}{' + lr2 + ' \\times 10^{-9}} = ' + q(Ej, 'J') + '$$', 'Photons per second: $$N = \\frac{P}{E} = \\frac{' + tg(P * 1e-3) + '}{' + tx(Ej) + '} = ' + tx(N) + '$$'], hint: 'Divide the power (J/s) by the energy of one photon.' }; }
-    var l1 = R.pick([400, 450, 500]), l2 = R.pick([600, 700, 800, 1000]);
+    if (s === 'rate') { var P = R.pick([1.0, 2.0, 5.0, 0.50, 0.20, 1.5, 3.0, 4.0]), lr2 = R.pick([532, 650, 450, 405, 520, 635]), Ej = HP * C / (lr2 * 1e-9), N = P * 1e-3 / Ej; return { q: 'A laser pointer puts out $' + tg(P) + '\\ \\text{mW}$ of light at $' + lr2 + '\\ \\text{nm}$. How many photons does it emit each second?', a: ans(N, 0.015), unit: 'photons/s', steps: ['One photon: $$E = \\frac{hc}{\\lambda} = \\frac{(6.63 \\times 10^{-34})(3.00 \\times 10^{8})}{' + lr2 + ' \\times 10^{-9}} = ' + q(Ej, 'J') + '$$', 'Photons per second: $$N = \\frac{P}{E} = \\frac{' + tg(P * 1e-3) + '}{' + tx(Ej) + '} = ' + tx(N) + '$$'], hint: 'Divide the power (J/s) by the energy of one photon.' }; }
+    var l1 = R.pick([400, 450, 500, 350, 380, 420, 480]), l2 = R.pick([600, 700, 800, 1000, 550, 650, 750, 900, 1200]);
     return { q: 'How many times more energy does a $' + l1 + '\\ \\text{nm}$ photon carry than a $' + l2 + '\\ \\text{nm}$ photon?', a: ans(l2 / l1, 0.01), steps: ['$E = hc/\\lambda$, so energy is inversely proportional to wavelength.', '$\\dfrac{E_1}{E_2} = \\dfrac{\\lambda_2}{\\lambda_1} = \\dfrac{' + l2 + '}{' + l1 + '} = ' + tx(l2 / l1) + '$.'], hint: 'Shorter wavelength, more energy.' };
   });
 
-  var METALS = [['cesium', 2.14], ['potassium', 2.29], ['sodium', 2.36], ['calcium', 2.87], ['zinc', 4.3], ['copper', 4.7]];
+  var METALS = [['cesium', 2.14], ['potassium', 2.29], ['sodium', 2.36], ['calcium', 2.87], ['zinc', 4.3], ['copper', 4.7], ['lithium', 2.93], ['rubidium', 2.26], ['magnesium', 3.66], ['aluminum', 4.08]];
   G('phys2.photoelectric-effect', function (R, ctx) {
-    var s = shape(R, ctx, ['K', 'K', 'concept'], ['K', 'V', 'thresh', 'none', 'concept'], ['phi', 'speed', 'thresh', 'V', 'none', 'f0']);
+    var s = shape(R, ctx, ['K', 'K', 'concept', 'thresh'], ['K', 'V', 'thresh', 'none', 'concept'], ['phi', 'speed', 'thresh', 'V', 'none', 'f0']);
     var m = R.pick(METALS), phi = m[1], lam, E;
-    do { lam = R.pick(phi > 4 ? [150, 180, 200, 220, 250] : [250, 300, 350, 400, 450]); E = HC / lam; } while (E - phi < 0.2);
+    do { lam = R.pick(phi > 4 ? [120, 150, 160, 180, 190, 200, 210, 220, 240, 250] : [200, 220, 250, 280, 300, 320, 350, 380, 400, 420, 450]); E = HC / lam; } while (E - phi < 0.2);
     var K = E - phi, mtx = m[0] + ' ($\\phi = ' + tg(phi) + '\\ \\text{eV}$)';
     if (s === 'concept') {
       var it = R.pick([
@@ -3125,7 +3125,7 @@
     if (s === 'V') return { q: 'Light of $' + lam + '\\ \\text{nm}$ falls on ' + mtx + '. What stopping voltage turns back even the fastest electrons?', a: ans(K, 0.02), unit: 'V', steps: ['$E = \\dfrac{1240}{' + lam + '} = ' + q(E, 'eV') + '$, so $K_{\\max} = ' + tx(E) + ' - ' + tg(phi) + ' = ' + q(K, 'eV') + '$.', 'An electron crossing $V_s$ loses $eV_s$, so $V_s = ' + q(K, 'V') + '$ (the same number as $K_{\\max}$ in eV).'], hint: 'eV_s = K_max.' };
     if (s === 'thresh') return { q: 'What is the longest wavelength of light that can free electrons from ' + mtx + '?', a: ans(HC / phi, 0.01), unit: 'nm', steps: ['At the threshold the photon\'s whole energy just covers the work function: $\\dfrac{hc}{\\lambda_0} = \\phi$.', '$\\lambda_0 = \\dfrac{1240}{' + tg(phi) + '} = ' + q(HC / phi, 'nm') + '$. Longer wavelengths free no electrons, however bright.'], hint: 'Set the photon energy equal to φ.' };
     if (s === 'f0') { var f0 = phi * QE / HP; return { q: 'What is the threshold frequency for ' + mtx + '?', a: ans(f0, 0.015), unit: 'Hz', steps: ['$hf_0 = \\phi$, with $\\phi = ' + tg(phi) + ' \\times 1.60 \\times 10^{-19} = ' + q(phi * QE, 'J') + '$.', '$f_0 = \\dfrac{\\phi}{h} = \\dfrac{' + tx(phi * QE) + '}{6.63 \\times 10^{-34}} = ' + q(f0, 'Hz') + '$.'], hint: 'f₀ = φ/h, with φ in joules.' }; }
-    if (s === 'none') { var lamL = M.round(HC / phi * R.pick([1.15, 1.3, 1.5]) / 10) * 10, yes = R.coin(), lamU = yes ? lam : lamL, Eu = HC / lamU; return { q: 'Bright light of $' + lamU + '\\ \\text{nm}$ shines on ' + mtx + '. Are any electrons freed?', a: mc(Eu > phi ? 'Yes: each photon has more energy than the work function' : 'No: each photon has less energy than the work function', [Eu > phi ? 'No: each photon has less energy than the work function' : 'Yes: each photon has more energy than the work function', 'Yes, because the light is bright', 'Only after the light has shone for a while']), steps: ['Photon energy: $E = \\dfrac{1240}{' + lamU + '} = ' + q(Eu, 'eV') + '$.', Eu > phi ? '$' + tx(Eu) + ' > ' + tg(phi) + '$: electrons come out at once.' : '$' + tx(Eu) + ' < ' + tg(phi) + '$: no single photon can free an electron, so none come out, however bright the light.'], hint: 'Compare one photon\'s energy with φ.' }; }
+    if (s === 'none') { var lamL = M.round(HC / phi * R.pick([1.15, 1.3, 1.5, 1.2, 1.4, 2.0]) / 10) * 10, yes = R.coin(), lamU = yes ? lam : lamL, Eu = HC / lamU; return { q: 'Bright light of $' + lamU + '\\ \\text{nm}$ shines on ' + mtx + '. Are any electrons freed?', a: mc(Eu > phi ? 'Yes: each photon has more energy than the work function' : 'No: each photon has less energy than the work function', [Eu > phi ? 'No: each photon has less energy than the work function' : 'Yes: each photon has more energy than the work function', 'Yes, because the light is bright', 'Only after the light has shone for a while']), steps: ['Photon energy: $E = \\dfrac{1240}{' + lamU + '} = ' + q(Eu, 'eV') + '$.', Eu > phi ? '$' + tx(Eu) + ' > ' + tg(phi) + '$: electrons come out at once.' : '$' + tx(Eu) + ' < ' + tg(phi) + '$: no single photon can free an electron, so none come out, however bright the light.'], hint: 'Compare one photon\'s energy with φ.' }; }
     if (s === 'phi') { var Vs = sig(K, 2), phiR = E - Vs; return { q: 'Light of $' + lam + '\\ \\text{nm}$ frees electrons from a metal, and a stopping voltage of $' + tg(Vs) + '\\ \\text{V}$ stops them all. What is the metal\'s work function, in eV?', a: ans(phiR, 0.02), unit: 'eV', steps: ['$E = \\dfrac{1240}{' + lam + '} = ' + q(E, 'eV') + '$; $K_{\\max} = eV_s = ' + tg(Vs) + '\\ \\text{eV}$.', '$\\phi = E - K_{\\max} = ' + tx(E) + ' - ' + tg(Vs) + ' = ' + q(phiR, 'eV') + '$.'], hint: 'φ = hf − K_max.' }; }
     var v = M.sqrt(2 * K * QE / ME);
     return { q: 'Light of $' + lam + '\\ \\text{nm}$ falls on ' + mtx + '. How fast do the fastest electrons leave the metal?', a: ans(v, 0.02), unit: 'm/s', steps: ['$K_{\\max} = \\dfrac{1240}{' + lam + '} - ' + tg(phi) + ' = ' + q(K, 'eV') + ' = ' + q(K * QE, 'J') + '$.', '$$v = \\sqrt{\\frac{2K}{m}} = \\sqrt{\\frac{2(' + tx(K * QE) + ')}{9.11 \\times 10^{-31}}} = ' + q(v, 'm/s') + '$$'], hint: 'Find K_max in joules, then use K = ½mv².' };
@@ -3134,25 +3134,25 @@
   function En(n) { return -13.6 / (n * n); }
   G('phys2.bohr-model', function (R, ctx) {
     var s = shape(R, ctx, ['level', 'photon', 'lines', 'lambda', 'ion'], ['photon', 'lambda', 'lines', 'ion', 'absorb', 'generic'], ['lambda', 'generic', 'absorb', 'ion', 'series', 'lines']);
-    var nu = R.int(2, 6), nl = R.int(1, nu - 1), dE = En(nu) - En(nl);
-    if (s === 'level') { var n = R.int(1, 5); return { q: 'What is the energy of hydrogen\'s level $n = ' + n + '$, in eV?', a: ans(En(n), 0.01), unit: 'eV', steps: ['$E_n = -\\dfrac{13.6\\ \\text{eV}}{n^{2}}$.', '$E_' + n + ' = -\\dfrac{13.6}{' + n * n + '} = ' + q(En(n), 'eV') + '$.'], hint: 'E_n = −13.6 eV/n².' }; }
+    var nu = R.int(2, 8), nl = R.int(1, nu - 1), dE = En(nu) - En(nl);
+    if (s === 'level') { var n = R.int(1, 8); return { q: 'What is the energy of hydrogen\'s level $n = ' + n + '$, in eV?', a: ans(En(n), 0.01), unit: 'eV', steps: ['$E_n = -\\dfrac{13.6\\ \\text{eV}}{n^{2}}$.', '$E_' + n + ' = -\\dfrac{13.6}{' + n * n + '} = ' + q(En(n), 'eV') + '$.'], hint: 'E_n = −13.6 eV/n².' }; }
     if (s === 'photon' || s === 'lambda') {
       var st = ['$E_' + nu + ' = -\\dfrac{13.6}{' + nu * nu + '} = ' + q(En(nu), 'eV', 3) + '$ and $E_' + nl + ' = ' + q(En(nl), 'eV', 3) + '$.', '$E_{\\text{photon}} = E_' + nu + ' - E_' + nl + ' = ' + q(dE, 'eV') + '$.'];
       if (s === 'photon') return { q: 'A hydrogen atom jumps from $n = ' + nu + '$ to $n = ' + nl + '$. What energy does the emitted photon carry, in eV?', a: ans(dE, 0.01), unit: 'eV', viz: { name: 'ph-spectrum', opts: { mode: 'levels', transitions: [[nu, nl]], interactive: false, quiet: true } }, steps: st, hint: 'Upper level minus lower level.' };
       var lr = HC / dE;
       return { q: 'A hydrogen atom jumps from $n = ' + nu + '$ to $n = ' + nl + '$. What is the wavelength of the emitted light, in nanometers?', a: ans(lr, 0.01), unit: 'nm', steps: st.concat(['$\\lambda = \\dfrac{1240}{' + tx(dE) + '} = ' + q(lr, 'nm') + '$' + (lr >= 400 && lr <= 700 ? ', visible.' : lr < 400 ? ', ultraviolet.' : ', infrared.')]), hint: 'Find the energy difference, then λ = 1240/E.' };
     }
-    if (s === 'lines') { var nn = R.int(3, 6); return { q: 'Hydrogen atoms are excited to the level $n = ' + nn + '$. As they drop back down, by every possible route, how many different wavelengths of light can they emit?', a: exact(nn * (nn - 1) / 2), steps: ['Any jump from a higher level to a lower one makes a line, not only jumps to $n = 1$.', 'Count the pairs of levels among the ' + nn + ' levels: $\\dfrac{' + nn + ' \\times ' + (nn - 1) + '}{2} = ' + nn * (nn - 1) / 2 + '$.'], hint: 'Count every pair of levels from 1 to ' + nn + '.' }; }
-    if (s === 'ion') { var ni = R.int(1, 4); return { q: 'How much energy does it take to ionize a hydrogen atom whose electron is in the level $n = ' + ni + '$?', a: ans(13.6 / (ni * ni), 0.01), unit: 'eV', steps: ['Freeing the electron means raising it to $E = 0$.', '$E_' + ni + ' = -\\dfrac{13.6}{' + ni * ni + '} = ' + q(En(ni), 'eV', 3) + '$, so it takes $' + q(13.6 / (ni * ni), 'eV') + '$.'], hint: 'From E_n up to zero.' }; }
+    if (s === 'lines') { var nn = R.int(3, 9); return { q: 'Hydrogen atoms are excited to the level $n = ' + nn + '$. As they drop back down, by every possible route, how many different wavelengths of light can they emit?', a: exact(nn * (nn - 1) / 2), steps: ['Any jump from a higher level to a lower one makes a line, not only jumps to $n = 1$.', 'Count the pairs of levels among the ' + nn + ' levels: $\\dfrac{' + nn + ' \\times ' + (nn - 1) + '}{2} = ' + nn * (nn - 1) / 2 + '$.'], hint: 'Count every pair of levels from 1 to ' + nn + '.' }; }
+    if (s === 'ion') { var ni = R.int(1, 7); return { q: 'How much energy does it take to ionize a hydrogen atom whose electron is in the level $n = ' + ni + '$?', a: ans(13.6 / (ni * ni), 0.01), unit: 'eV', steps: ['Freeing the electron means raising it to $E = 0$.', '$E_' + ni + ' = -\\dfrac{13.6}{' + ni * ni + '} = ' + q(En(ni), 'eV', 3) + '$, so it takes $' + q(13.6 / (ni * ni), 'eV') + '$.'], hint: 'From E_n up to zero.' }; }
     if (s === 'absorb') {
-      var fits = R.pick([[2, '10.2'], [3, '12.09'], [4, '12.75']]), wrong = R.pick([5.0, 8.0, 11.0, 11.5, 12.4]), fs = fits[1];
+      var fits = R.pick([[2, '10.2'], [3, '12.09'], [4, '12.75']]), wrong = R.pick([5.0, 8.0, 11.0, 11.5, 12.4, 6.0, 9.0, 10.0, 12.0]), fs = fits[1];
       return { q: 'Hydrogen atoms in their ground state ($n = 1$) are struck by photons of ' + (R.coin() ? '$' + fs + '\\ \\text{eV}$ and $' + tg(wrong) + '\\ \\text{eV}$' : '$' + tg(wrong) + '\\ \\text{eV}$ and $' + fs + '\\ \\text{eV}$') + '. Which photons can be absorbed?', a: mc('Only the $' + fs + '\\ \\text{eV}$ photons', ['Only the $' + tg(wrong) + '\\ \\text{eV}$ photons', 'Both', 'Neither']),
         steps: ['From $n = 1$ the allowed jumps need exactly $E_n - E_1$: $10.2$, $12.1$, $12.75\\ \\text{eV}$, … (or $13.6\\ \\text{eV}$ or more to ionize).', '$' + fs + '\\ \\text{eV}$ matches the jump to $n = ' + fits[0] + '$; $' + tg(wrong) + '\\ \\text{eV}$ matches no jump and is too small to ionize, so it passes by.'], hint: 'An atom takes a whole photon only if it fits a jump exactly.' };
     }
     if (s === 'series') { var to = R.pick([1, 2, 3]); return { q: 'Hydrogen emits a line when its electron drops to $n = ' + to + '$ from a higher level. In which part of the spectrum do these lines fall?', a: mc(to === 1 ? 'Ultraviolet' : to === 2 ? 'Visible (and near ultraviolet)' : 'Infrared', ['Ultraviolet', 'Visible (and near ultraviolet)', 'Infrared', 'Radio'].filter(function (x) { return x !== (to === 1 ? 'Ultraviolet' : to === 2 ? 'Visible (and near ultraviolet)' : 'Infrared'); })),
       steps: ['Smallest jump in this series: from $n = ' + (to + 1) + '$: $' + q(En(to + 1) - En(to), 'eV') + '$, $\\lambda = ' + q(HC / (En(to + 1) - En(to)), 'nm') + '$.', 'Largest: from very high $n$: $' + q(13.6 / (to * to), 'eV') + '$, $\\lambda = ' + q(HC / (13.6 / (to * to)), 'nm') + '$.', to === 1 ? 'All shorter than 400 nm: ultraviolet (the Lyman series).' : to === 2 ? 'From 656 nm down to 365 nm: visible, ending in the near ultraviolet (the Balmer series).' : 'All longer than 700 nm: infrared (the Paschen series).'], hint: 'Find the smallest and largest photon energies in the series.' }; }
     // generic atom
-    var lv = R.pick([[-10.0, -6.0, -4.0, -1.0], [-8.0, -5.0, -3.0, -2.0], [-12.0, -7.0, -4.5, -2.0], [-9.0, -4.0, -2.5, -1.5]]), a = R.int(1, 3), b = R.int(0, a - 1), dE2 = lv[a] - lv[b], lr2 = HC / dE2;
+    var lv = R.pick([[-10.0, -6.0, -4.0, -1.0], [-8.0, -5.0, -3.0, -2.0], [-12.0, -7.0, -4.5, -2.0], [-9.0, -4.0, -2.5, -1.5], [-15.0, -9.0, -5.0, -2.0], [-7.0, -4.0, -2.0, -1.0], [-11.0, -6.5, -3.0, -1.5], [-6.0, -3.5, -2.0, -0.5]]), a = R.int(1, 3), b = R.int(0, a - 1), dE2 = lv[a] - lv[b], lr2 = HC / dE2;
     return { q: 'A made-up atom has energy levels at $' + lv.map(tg).join('$, $') + '\\ \\text{eV}$. An electron drops from the $' + tg(lv[a]) + '\\ \\text{eV}$ level to the $' + tg(lv[b]) + '\\ \\text{eV}$ level. What is the wavelength of the emitted photon, in nanometers?', a: ans(lr2, 0.01), unit: 'nm',
       viz: { name: 'ph-spectrum', opts: { mode: 'levels', levels: lv, transitions: [[a + 1, b + 1]], interactive: false, quiet: true } },
       steps: ['$E_{\\text{photon}} = ' + tg(lv[a]) + ' - (' + tg(lv[b]) + ') = ' + tg(sig(dE2, 6)) + '\\ \\text{eV}$.', '$\\lambda = \\dfrac{1240}{' + tg(sig(dE2, 6)) + '} = ' + q(lr2, 'nm') + '$.'], hint: 'Upper minus lower, then λ = 1240/E.' };
@@ -3168,7 +3168,7 @@
       var el = R.pick([['hydrogen', [410, 434, 486, 656]], ['sodium', [589, 590]], ['helium', [447, 502, 588, 668]], ['mercury', [405, 436, 546, 577]]]), lines = el[1].join(', ') + ' nm';
       return { q: 'Hot ' + el[0] + ' gas glows with bright lines at ' + lines + '. A cooler layer of ' + el[0] + ' gas lies in front of a star. Where can dark absorption lines from it appear?', a: mc('At the same wavelengths: ' + lines, ['At different wavelengths, between the bright lines', 'Everywhere except ' + lines, 'Nowhere: a gas cannot absorb light it emits']), steps: ['Absorption and emission use the same pairs of energy levels.', 'So a gas absorbs at exactly the wavelengths it emits (which of them show up depends on which levels its atoms sit in).'], hint: 'The same energy jumps go both ways.' };
     }
-    var lv = R.pick([[-10.0, -6.0, -4.0], [-8.0, -5.0, -2.5, -1.5], [-11.0, -6.0, -3.5, -2.0], [-9.0, -4.0, -2.5, -1.5], [-6.0, -3.0, -1.0]]), k = lv.length;
+    var lv = R.pick([[-10.0, -6.0, -4.0], [-8.0, -5.0, -2.5, -1.5], [-11.0, -6.0, -3.5, -2.0], [-9.0, -4.0, -2.5, -1.5], [-6.0, -3.0, -1.0], [-12.0, -8.0, -5.0, -3.0], [-7.0, -3.5, -1.5], [-10.0, -5.5, -2.0, -1.0]]), k = lv.length;
     if (s === 'count') return { q: 'An atom has ' + k + ' energy levels: $' + lv.map(tg).join('$, $') + '\\ \\text{eV}$. How many different photon energies can it emit as its electrons drop between these levels?', a: exact(k * (k - 1) / 2), viz: { name: 'ph-spectrum', opts: { mode: 'levels', levels: lv, transitions: [], interactive: false, quiet: true } }, steps: ['Every downward jump between two of the levels is a different line (these levels have no equal gaps).', 'Pairs of ' + k + ' levels: $\\dfrac{' + k + ' \\times ' + (k - 1) + '}{2} = ' + k * (k - 1) / 2 + '$.'], hint: 'Count every pair of levels.' };
     if (s === 'absorb') return { q: 'A cool gas of atoms with energy levels $' + lv.map(tg).join('$, $') + '\\ \\text{eV}$ has all its atoms in the lowest level. How many dark lines does it make in a continuous spectrum shining through it?', a: exact(k - 1), steps: ['Atoms in the lowest level can only absorb jumps that start there.', 'There is one such jump to each higher level: $' + (k - 1) + '$ lines. Jumps between upper levels need atoms already excited.'], hint: 'Absorption starts from the level the atoms are in.' };
     var pairs = []; for (var i = 1; i < k; i++) for (var j = 0; j < i; j++) pairs.push(lv[i] - lv[j]); var big = R.coin(), pick = big ? M.max.apply(null, pairs) : M.min.apply(null, pairs);
@@ -3176,11 +3176,11 @@
   });
 
   G('phys2.matter-waves', function (R, ctx) {
-    var s = shape(R, ctx, ['electron', 'electron', 'concept'], ['electron', 'proton', 'speed', 'voltage', 'ball', 'concept'], ['voltage', 'speed', 'ratio', 'ball', 'proton']);
+    var s = shape(R, ctx, ['electron', 'speed', 'concept', 'voltage'], ['electron', 'proton', 'speed', 'voltage', 'ball', 'concept'], ['voltage', 'speed', 'ratio', 'ball', 'proton']);
     if (s === 'concept') { var it = R.pick([['Electrons fired one at a time through two slits land as single dots. After many have arrived, what do the dots show?', 'An interference pattern of bright and dark bands', ['Two bright stripes, one behind each slit', 'An even spread with no pattern', 'One bright spot in the middle only'], 'Each electron arrives as a particle, but where it lands follows a wave pattern with $\\lambda = h/p$.'], ['Why does a thrown baseball not show wave behavior?', 'Its wavelength is far too small compared with anything it passes through', ['Only charged particles have wavelengths', 'It is moving too slowly to have a wavelength', 'Large objects have no momentum'], '$\\lambda = h/(mv)$ is about $10^{-34}\\ \\text{m}$ for a baseball, far smaller than any gap.']]); return { q: it[0], a: mc(it[1], it[2]), steps: [it[3]], hint: 'λ = h/p.' }; }
     if (s === 'electron' || s === 'proton') { var pe = s === 'electron', m = pe ? ME : MP, v = sci(R, [1.0, 1.2, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 6.0, 7.5, 8.0], pe ? R.int(5, 6) : R.int(3, 4)), lam = HP / (m * v); return { q: 'Find the de Broglie wavelength of ' + (pe ? 'an electron' : 'a proton') + ' moving at $' + tg(v) + '\\ \\text{m/s}$.', a: ans(lam, 0.015), unit: 'm', steps: ['$p = mv = (' + (pe ? '9.11 \\times 10^{-31}' : '1.67 \\times 10^{-27}') + ')(' + tg(v) + ') = ' + q(m * v, 'kg·m/s') + '$.', '$\\lambda = \\dfrac{h}{p} = \\dfrac{6.63 \\times 10^{-34}}{' + tx(m * v) + '} = ' + q(lam, 'm') + '$.'], hint: 'λ = h/(mv).' }; }
-    if (s === 'speed') { var lt = R.pick([0.050, 0.10, 0.15, 0.20, 0.25, 0.40, 0.50, 0.80, 1.0, 2.0]), vv = HP / (ME * lt * 1e-9); return { q: 'How fast must an electron move to have a wavelength of $' + tg(lt) + '\\ \\text{nm}$?', a: ans(vv, 0.015), unit: 'm/s', steps: ['$\\lambda = \\dfrac{h}{mv}$, so $v = \\dfrac{h}{m\\lambda}$.', '$$v = \\frac{6.63 \\times 10^{-34}}{(9.11 \\times 10^{-31})(' + tg(lt * 1e-9) + ')} = ' + q(vv, 'm/s') + '$$'], hint: 'Solve λ = h/(mv) for v.' }; }
-    if (s === 'voltage') { var V = R.pick([10, 20, 25, 40, 50, 75, 100, 150, 200, 250, 300, 400, 500, 1000]), K = QE * V, p = M.sqrt(2 * ME * K), l2 = HP / p; return { q: 'An electron is accelerated from rest through $' + V + '\\ \\text{V}$. What is its de Broglie wavelength?', a: ans(l2, 0.015), unit: 'm', steps: ['$K = eV = (1.60 \\times 10^{-19})(' + V + ') = ' + q(K, 'J') + '$.', '$$\\begin{aligned} p &= \\sqrt{2mK} \\\\ &= \\sqrt{2(9.11 \\times 10^{-31})(' + tx(K) + ')} \\\\ &= ' + q(p, 'kg·m/s') + ' \\end{aligned}$$', '$\\lambda = \\dfrac{h}{p} = ' + q(l2, 'm') + '$.'], hint: 'Find the momentum from K = p²/(2m).' }; }
+    if (s === 'speed') { var lt = R.pick([0.030, 0.040, 0.050, 0.060, 0.080, 0.10, 0.12, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.60, 0.80, 1.0, 1.2, 1.5, 2.0, 2.5, 3.0, 0.035, 0.07, 0.09, 0.35, 0.7, 0.9]), vv = HP / (ME * lt * 1e-9); return { q: 'How fast must an electron move to have a wavelength of $' + tg(lt) + '\\ \\text{nm}$?', a: ans(vv, 0.015), unit: 'm/s', steps: ['$\\lambda = \\dfrac{h}{mv}$, so $v = \\dfrac{h}{m\\lambda}$.', '$$v = \\frac{6.63 \\times 10^{-34}}{(9.11 \\times 10^{-31})(' + tg(lt * 1e-9) + ')} = ' + q(vv, 'm/s') + '$$'], hint: 'Solve λ = h/(mv) for v.' }; }
+    if (s === 'voltage') { var V = R.pick([5, 10, 15, 20, 25, 30, 40, 50, 60, 75, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 800, 1000, 2000, 6, 7, 8, 9, 12, 35, 70, 90, 350, 700, 900, 1200, 1500]), K = QE * V, p = M.sqrt(2 * ME * K), l2 = HP / p; return { q: 'An electron is accelerated from rest through $' + V + '\\ \\text{V}$. What is its de Broglie wavelength?', a: ans(l2, 0.015), unit: 'm', steps: ['$K = eV = (1.60 \\times 10^{-19})(' + V + ') = ' + q(K, 'J') + '$.', '$$\\begin{aligned} p &= \\sqrt{2mK} \\\\ &= \\sqrt{2(9.11 \\times 10^{-31})(' + tx(K) + ')} \\\\ &= ' + q(p, 'kg·m/s') + ' \\end{aligned}$$', '$\\lambda = \\dfrac{h}{p} = ' + q(l2, 'm') + '$.'], hint: 'Find the momentum from K = p²/(2m).' }; }
     if (s === 'ball') { var b = R.pick([['a $0.145\\ \\text{kg}$ baseball', 0.145, [30, 40]], ['a $0.057\\ \\text{kg}$ tennis ball', 0.057, [20, 50]], ['a $70\\ \\text{kg}$ runner', 70, [5, 8]]]), vb = R.pick(b[2]), lb = HP / (b[1] * vb); return { q: 'Find the de Broglie wavelength of ' + b[0] + ' moving at $' + vb + '\\ \\text{m/s}$.', a: ans(lb, 0.015), unit: 'm', steps: ['$\\lambda = \\dfrac{h}{mv} = \\dfrac{6.63 \\times 10^{-34}}{(' + tg(b[1]) + ')(' + vb + ')} = ' + q(lb, 'm') + '$.', 'Far smaller than a proton, which is why everyday objects never show wave behavior.'], hint: 'λ = h/(mv).' }; }
     var same = R.coin();
     return { q: 'An electron and a proton have the same ' + (same ? 'speed' : 'kinetic energy') + '. How many times longer is the electron\'s de Broglie wavelength? (Masses: $9.11 \\times 10^{-31}$ and $1.67 \\times 10^{-27}\\ \\text{kg}$.)', a: ans(same ? MP / ME : M.sqrt(MP / ME), 0.01), steps: same ? ['$\\lambda = \\dfrac{h}{mv}$: with the same $v$, $\\lambda$ is inversely proportional to $m$.', '$\\dfrac{\\lambda_e}{\\lambda_p} = \\dfrac{m_p}{m_e} = ' + tx(MP / ME) + '$.'] : ['Same $K$: $p = \\sqrt{2mK}$, so $p \\propto \\sqrt{m}$ and $\\lambda \\propto \\dfrac{1}{\\sqrt{m}}$.', '$\\dfrac{\\lambda_e}{\\lambda_p} = \\sqrt{\\dfrac{m_p}{m_e}} = \\sqrt{' + tx(MP / ME) + '} = ' + tx(M.sqrt(MP / ME)) + '$.'], hint: same ? 'λ = h/(mv).' : 'p = √(2mK).' };
@@ -3188,28 +3188,28 @@
 
   G('phys2.compton-scattering', function (R, ctx) {
     var s = shape(R, ctx, ['shift', 'final', 'concept'], ['shift', 'final', 'p', 'concept', 'angle'], ['final', 'angle', 'K', 'p', 'pE']);
-    var th = R.pick([30, 45, 60, 90, 120, 135, 150, 180]), dl = 2.43 * (1 - cosd(th)), l0 = R.pick([10.0, 20.0, 50.0, 71.0, 100]);
+    var th = R.pick([30, 45, 60, 90, 120, 135, 150, 180, 15, 20, 75, 100, 110, 160]), dl = 2.43 * (1 - cosd(th)), l0 = R.pick([10.0, 20.0, 50.0, 71.0, 100, 5.0, 15.0, 30.0, 40.0, 63.0, 80.0]);
     var st = ['$\\Delta\\lambda = \\dfrac{h}{m_e c}(1 - \\cos\\theta) = 2.43(1 - \\cos ' + th + '^\\circ)\\ \\text{pm}$.', '$\\cos ' + th + '^\\circ = ' + tx(cosd(th) + 0, 3).replace(/^-?0\.000$/, '0') + '$, so $\\Delta\\lambda = ' + q(dl, 'pm') + '$.'];
     if (th === 90) st[1] = '$\\cos 90^\\circ = 0$, so $\\Delta\\lambda = 2.43\\ \\text{pm}$.';
     if (s === 'concept') { var it = R.pick([['After an X-ray photon scatters off an electron, how does it differ from before?', 'Its wavelength is longer; its speed is still c', ['It moves more slowly than c', 'Its wavelength is shorter', 'Its frequency is higher'], 'The electron recoils with some energy, so the photon has less: lower frequency, longer wavelength. Every photon moves at $c$.'], ['At what scattering angle is the Compton shift largest?', '$180^\\circ$ (straight back)', ['$0^\\circ$ (straight ahead)', '$90^\\circ$', '$45^\\circ$'], '$1 - \\cos\\theta$ is largest, 2, at $180^\\circ$, giving $\\Delta\\lambda = 4.86\\ \\text{pm}$.'], ['What does Compton scattering show about photons?', 'They carry momentum, $p = h/\\lambda$', ['They have mass', 'They slow down in collisions', 'They carry no energy'], 'The photon and electron share momentum and energy like colliding particles.']]); return { q: it[0], a: mc(it[1], it[2]), steps: [it[3]], hint: 'Energy and momentum are shared in the collision.' }; }
     if (s === 'shift') return { q: 'An X-ray photon scatters off a free electron at $' + th + '^\\circ$. By how much does its wavelength increase, in picometers?', a: ans(dl, 0.01), unit: 'pm', viz: { name: 'ph-photon', opts: { mode: 'compton', lambda0: l0, theta: th, interactive: false, quiet: true } }, steps: st, hint: 'Δλ = 2.43 pm × (1 − cos θ).' };
     if (s === 'final') return { q: 'X-rays of wavelength $' + tg(l0) + '\\ \\text{pm}$ scatter off free electrons at $' + th + '^\\circ$. What is the scattered wavelength, in picometers?', a: ans(l0 + dl, 0.005), unit: 'pm', steps: st.concat(['$\\lambda\' = ' + tg(l0) + ' + ' + tx(dl) + ' = ' + q(l0 + dl, 'pm', 4) + '$.']), hint: 'Add the Compton shift.' };
-    if (s === 'angle') { var dlg = R.pick([0.50, 1.00, 1.22, 2.43, 3.00, 3.65, 4.00]), cth = 1 - dlg / 2.43, tha = acosd(cth); return { q: 'X-rays scattered off free electrons come out $' + tg(dlg) + '\\ \\text{pm}$ longer in wavelength. At what angle were they scattered?', a: ans(tha, 0.01), unit: '°', steps: ['$' + tg(dlg) + ' = 2.43(1 - \\cos\\theta)$, so $\\cos\\theta = 1 - \\dfrac{' + tg(dlg) + '}{2.43} = ' + tx(cth) + '$.', '$\\theta = \\cos^{-1}(' + tx(cth) + ') = ' + deg(tha) + '$.'], hint: 'Solve the Compton formula for cos θ.' }; }
-    if (s === 'p' || s === 'pE') { var lp = s === 'p' ? R.pick([400, 500, 600, 700]) : null, Ep = s === 'pE' ? R.pick([10, 20, 50, 100]) : null; if (s === 'p') return { q: 'What is the momentum of one photon of $' + lp + '\\ \\text{nm}$ light?', a: ans(HP / (lp * 1e-9), 0.015), unit: 'kg·m/s', steps: ['$p = \\dfrac{h}{\\lambda} = \\dfrac{6.63 \\times 10^{-34}}{' + lp + ' \\times 10^{-9}}$.', '$p = ' + q(HP / (lp * 1e-9), 'kg·m/s') + '$.'], hint: 'p = h/λ.' }; var Ej = Ep * 1e3 * QE; return { q: 'An X-ray photon carries $' + Ep + '\\ \\text{keV}$. What is its momentum?', a: ans(Ej / C, 0.015), unit: 'kg·m/s', steps: ['$E = ' + Ep + ' \\times 10^{3} \\times 1.60 \\times 10^{-19} = ' + q(Ej, 'J') + '$.', '$p = \\dfrac{E}{c} = \\dfrac{' + tx(Ej) + '}{3.00 \\times 10^{8}} = ' + q(Ej / C, 'kg·m/s') + '$.'], hint: 'For a photon, p = E/c.' }; }
+    if (s === 'angle') { var dlg = R.pick([0.50, 1.00, 1.22, 2.43, 3.00, 3.65, 4.00, 0.25, 0.75, 1.50, 2.00, 4.50]), cth = 1 - dlg / 2.43, tha = acosd(cth); return { q: 'X-rays scattered off free electrons come out $' + tg(dlg) + '\\ \\text{pm}$ longer in wavelength. At what angle were they scattered?', a: ans(tha, 0.01), unit: '°', steps: ['$' + tg(dlg) + ' = 2.43(1 - \\cos\\theta)$, so $\\cos\\theta = 1 - \\dfrac{' + tg(dlg) + '}{2.43} = ' + tx(cth) + '$.', '$\\theta = \\cos^{-1}(' + tx(cth) + ') = ' + deg(tha) + '$.'], hint: 'Solve the Compton formula for cos θ.' }; }
+    if (s === 'p' || s === 'pE') { var lp = s === 'p' ? R.pick([400, 450, 500, 550, 600, 650, 700]) : null, Ep = s === 'pE' ? R.pick([5, 10, 20, 30, 50, 80, 100, 200]) : null; if (s === 'p') return { q: 'What is the momentum of one photon of $' + lp + '\\ \\text{nm}$ light?', a: ans(HP / (lp * 1e-9), 0.015), unit: 'kg·m/s', steps: ['$p = \\dfrac{h}{\\lambda} = \\dfrac{6.63 \\times 10^{-34}}{' + lp + ' \\times 10^{-9}}$.', '$p = ' + q(HP / (lp * 1e-9), 'kg·m/s') + '$.'], hint: 'p = h/λ.' }; var Ej = Ep * 1e3 * QE; return { q: 'An X-ray photon carries $' + Ep + '\\ \\text{keV}$. What is its momentum?', a: ans(Ej / C, 0.015), unit: 'kg·m/s', steps: ['$E = ' + Ep + ' \\times 10^{3} \\times 1.60 \\times 10^{-19} = ' + q(Ej, 'J') + '$.', '$p = \\dfrac{E}{c} = \\dfrac{' + tx(Ej) + '}{3.00 \\times 10^{8}} = ' + q(Ej / C, 'kg·m/s') + '$.'], hint: 'For a photon, p = E/c.' }; }
     var E0 = 1.24e6 / l0, E1 = 1.24e6 / (l0 + dl), Ke = E0 - E1;
     return { q: 'X-rays of $' + tg(l0) + '\\ \\text{pm}$ scatter off a free electron at rest at $' + th + '^\\circ$. How much kinetic energy does the electron gain, in eV? (Use $hc = 1.24 \\times 10^{6}\\ \\text{eV·pm}$.)', a: ans(Ke, 0.03), unit: 'eV', steps: st.concat(['$\\lambda\' = ' + q(l0 + dl, 'pm', 4) + '$.', 'Before: $E = \\dfrac{1.24 \\times 10^{6}}{' + tg(l0) + '} = ' + q(E0, 'eV', 4) + '$. After: $E\' = ' + q(E1, 'eV', 4) + '$.', 'The electron gets the difference: $' + q(Ke, 'eV') + '$.']), hint: 'Energy lost by the photon = energy gained by the electron.' };
   });
 
-  var NUC = [['deuterium', '^{2}\\text{H}', 1, 1, 2.014102], ['tritium', '^{3}\\text{H}', 1, 2, 3.016049], ['helium-3', '^{3}\\text{He}', 2, 1, 3.016029], ['helium-4', '^{4}\\text{He}', 2, 2, 4.002603], ['lithium-6', '^{6}\\text{Li}', 3, 3, 6.015123], ['lithium-7', '^{7}\\text{Li}', 3, 4, 7.016003], ['carbon-12', '^{12}\\text{C}', 6, 6, 12.000000], ['nitrogen-14', '^{14}\\text{N}', 7, 7, 14.003074], ['oxygen-16', '^{16}\\text{O}', 8, 8, 15.994915], ['iron-56', '^{56}\\text{Fe}', 26, 30, 55.934936]];
+  var NUC = [['deuterium', '^{2}\\text{H}', 1, 1, 2.014102], ['tritium', '^{3}\\text{H}', 1, 2, 3.016049], ['helium-3', '^{3}\\text{He}', 2, 1, 3.016029], ['helium-4', '^{4}\\text{He}', 2, 2, 4.002603], ['lithium-6', '^{6}\\text{Li}', 3, 3, 6.015123], ['lithium-7', '^{7}\\text{Li}', 3, 4, 7.016003], ['carbon-12', '^{12}\\text{C}', 6, 6, 12.000000], ['nitrogen-14', '^{14}\\text{N}', 7, 7, 14.003074], ['oxygen-16', '^{16}\\text{O}', 8, 8, 15.994915], ['iron-56', '^{56}\\text{Fe}', 26, 30, 55.934936], ['beryllium-9', '^{9}\\text{Be}', 4, 5, 9.012183], ['boron-11', '^{11}\\text{B}', 5, 6, 11.009305], ['carbon-13', '^{13}\\text{C}', 6, 7, 13.003355], ['neon-20', '^{20}\\text{Ne}', 10, 10, 19.992440], ['magnesium-24', '^{24}\\text{Mg}', 12, 12, 23.985042], ['silicon-28', '^{28}\\text{Si}', 14, 14, 27.976927], ['lead-208', '^{208}\\text{Pb}', 82, 126, 207.976652], ['uranium-235', '^{235}\\text{U}', 92, 143, 235.043930]];
   var MH = 1.007825, MNU = 1.008665, UMEV = 931.5;
   G('phys2.mass-energy', function (R, ctx) {
-    var s = shape(R, ctx, ['E', 'mev', 'concept'], ['E', 'mev', 'binding', 'Q', 'concept', 'mfromE', 'fuel'], ['binding', 'perNucleon', 'Q', 'sun', 'mfromE', 'fuel']);
+    var s = shape(R, ctx, ['E', 'mev', 'concept', 'mfromE'], ['E', 'mev', 'binding', 'Q', 'concept', 'mfromE', 'fuel'], ['binding', 'perNucleon', 'Q', 'sun', 'mfromE', 'fuel']);
     if (s === 'concept') { var it = R.pick([['How does the mass of a helium-4 nucleus compare with the total mass of 2 separate protons and 2 separate neutrons?', 'It is less', ['It is more, because it holds the binding energy', 'It is exactly the same', 'It depends on the temperature'], 'Energy is released when the nucleus forms, so the nucleus has less energy, and so less mass ($E = mc^{2}$), than its separate parts.'], ['Which nuclei are the most tightly bound (largest binding energy per nucleon)?', 'Nuclei near iron and nickel', ['The lightest nuclei, like hydrogen', 'The heaviest nuclei, like uranium', 'All nuclei are bound equally tightly'], 'Binding energy per nucleon peaks near iron-56 (about $8.8\\ \\text{MeV}$). Fusing lighter nuclei or splitting heavier ones moves toward the peak and releases energy.']]); return { q: it[0], a: mc(it[1], it[2]), viz: { name: 'ph-nucleus', opts: { mode: 'binding', interactive: false, quiet: true } }, steps: [it[3]], hint: 'E = mc²: less energy means less mass.' }; }
-    if (s === 'E') { var mq = R.pick([1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 8.0]), mu = R.pick([['mg', 1e-6], ['g', 1e-3], ['kg', 1]]), mm = ['$' + tg(mq) + '\\ \\text{' + mu[0] + '}$', sig(mq * mu[1], 6)]; return { q: 'How much energy is equivalent to ' + mm[0] + ' of mass?', a: ans(mm[1] * C * C, 0.01), unit: 'J', steps: ['$E = mc^{2} = (' + tg(mm[1]) + ')(3.00 \\times 10^{8})^{2}$.', '$E = ' + q(mm[1] * C * C, 'J') + '$.'], hint: 'E = mc² with m in kilograms.' }; }
+    if (s === 'E') { var mq = R.pick([1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 8.0, 0.5, 6.0, 10, 20, 0.6, 0.7, 0.8, 0.9, 1.2, 3.5, 7, 9, 12, 15]), mu = R.pick([['mg', 1e-6], ['g', 1e-3], ['kg', 1]]), mm = ['$' + tg(mq) + '\\ \\text{' + mu[0] + '}$', sig(mq * mu[1], 6)]; return { q: 'How much energy is equivalent to ' + mm[0] + ' of mass?', a: ans(mm[1] * C * C, 0.01), unit: 'J', steps: ['$E = mc^{2} = (' + tg(mm[1]) + ')(3.00 \\times 10^{8})^{2}$.', '$E = ' + q(mm[1] * C * C, 'J') + '$.'], hint: 'E = mc² with m in kilograms.' }; }
     if (s === 'mev') { var dm = R.pick([0.00100, 0.00239, 0.00350, 0.00433, 0.00911, 0.0100, 0.0189, 0.0197, 0.0250, 0.0304, 0.0500, 0.100, 0.186, 0.215]); return { q: 'In a nuclear reaction, $' + tg(dm) + '\\ \\text{u}$ of mass disappears. How much energy is released, in MeV? ($1\\ \\text{u} = 931.5\\ \\text{MeV}/c^{2}$.)', a: ans(dm * UMEV, 0.01), unit: 'MeV', steps: ['Each atomic mass unit of mass is $931.5\\ \\text{MeV}$ of energy.', '$E = (' + tg(dm) + ')(931.5) = ' + q(dm * UMEV, 'MeV') + '$.'], hint: 'Multiply by 931.5 MeV per u.' }; }
     if (s === 'mfromE') { var Em = R.pick([2.2, 3.3, 4.0, 5.5, 8.5, 12.9, 17.6, 18.4, 28.3, 92.2, 200]); return { q: 'A nuclear reaction releases $' + tg(Em) + '\\ \\text{MeV}$. How much mass, in atomic mass units, disappears?', a: ans(Em / UMEV, 0.01), unit: 'u', steps: ['$1\\ \\text{u}$ of mass is $931.5\\ \\text{MeV}$ of energy.', '$\\Delta m = \\dfrac{' + tg(Em) + '}{931.5} = ' + q(Em / UMEV, 'u') + '$.'], hint: 'Divide by 931.5 MeV per u.' }; }
-    if (s === 'fuel') { var Ef = sig(R.pick([1.0, 2.0, 3.0, 4.5, 6.0, 9.0]) * M.pow(10, R.int(13, 16)), 6); return { q: 'A power plant releases $' + tg(Ef) + '\\ \\text{J}$ of energy. How much mass does that correspond to, in kilograms?', a: ans(Ef / (C * C), 0.01), unit: 'kg', steps: ['$m = \\dfrac{E}{c^{2}} = \\dfrac{' + tg(Ef) + '}{(3.00 \\times 10^{8})^{2}}$.', '$m = ' + q(Ef / (C * C), 'kg') + '$.'], hint: 'm = E/c².' }; }
-    if (s === 'sun') { var P = 3.83e26, rate = P / (C * C); return { q: 'The Sun gives off $3.83 \\times 10^{26}\\ \\text{W}$. How much mass does it convert to energy each second?', a: ans(rate, 0.01), unit: 'kg', steps: ['Each second it releases $3.83 \\times 10^{26}\\ \\text{J}$.', '$m = \\dfrac{E}{c^{2}} = \\dfrac{3.83 \\times 10^{26}}{(3.00 \\times 10^{8})^{2}} = ' + q(rate, 'kg') + '$, about 4 million tonnes every second.'], hint: 'm = E/c².' }; }
+    if (s === 'fuel') { var Ef = sig(R.pick([1.0, 2.0, 3.0, 4.5, 6.0, 9.0, 1.2, 1.5, 3.5, 4, 7, 8]) * M.pow(10, R.int(13, 16)), 6); return { q: 'A power plant releases $' + tg(Ef) + '\\ \\text{J}$ of energy. How much mass does that correspond to, in kilograms?', a: ans(Ef / (C * C), 0.01), unit: 'kg', steps: ['$m = \\dfrac{E}{c^{2}} = \\dfrac{' + tg(Ef) + '}{(3.00 \\times 10^{8})^{2}}$.', '$m = ' + q(Ef / (C * C), 'kg') + '$.'], hint: 'm = E/c².' }; }
+    if (s === 'sun') { var P = 3.83e26, rate = P / (C * C), per = R.pick([['each second', 1, 'second'], ['each second', 1, 'second'], ['each minute', 60, 'minute'], ['each hour', 3600, 'hour'], ['each day', 86400, 'day']]); if (per[1] > 1) return { q: 'The Sun gives off $3.83 \\times 10^{26}\\ \\text{W}$. How much mass does it convert to energy ' + per[0] + '?', a: ans(rate * per[1], 0.01), unit: 'kg', steps: ['Each second it releases $3.83 \\times 10^{26}\\ \\text{J}$, so it converts $m = \\dfrac{E}{c^{2}} = \\dfrac{3.83 \\times 10^{26}}{(3.00 \\times 10^{8})^{2}} = ' + q(rate, 'kg') + '$ each second.', 'One ' + per[2] + ' is $' + tg(per[1]) + '\\ \\text{s}$, so the mass is $' + q(rate, 'kg') + ' \\times ' + tg(per[1]) + ' = ' + q(rate * per[1], 'kg') + '$.'], hint: 'm = E/c² for one second, then multiply by the number of seconds.' }; return { q: 'The Sun gives off $3.83 \\times 10^{26}\\ \\text{W}$. How much mass does it convert to energy each second?', a: ans(rate, 0.01), unit: 'kg', steps: ['Each second it releases $3.83 \\times 10^{26}\\ \\text{J}$.', '$m = \\dfrac{E}{c^{2}} = \\dfrac{3.83 \\times 10^{26}}{(3.00 \\times 10^{8})^{2}} = ' + q(rate, 'kg') + '$, about 4 million tonnes every second.'], hint: 'm = E/c².' }; }
     if (s === 'Q') { var rx = R.pick([['^{2}\\text{H} + {}^{3}\\text{H} \\to {}^{4}\\text{He} + n', [2.014102, 3.016049], [4.002603, 1.008665]], ['^{2}\\text{H} + {}^{2}\\text{H} \\to {}^{3}\\text{He} + n', [2.014102, 2.014102], [3.016029, 1.008665]], ['^{2}\\text{H} + {}^{2}\\text{H} \\to {}^{3}\\text{H} + {}^{1}\\text{H}', [2.014102, 2.014102], [3.016049, 1.007825]], ['^{2}\\text{H} + {}^{3}\\text{He} \\to {}^{4}\\text{He} + {}^{1}\\text{H}', [2.014102, 3.016029], [4.002603, 1.007825]], ['^{1}\\text{H} + {}^{7}\\text{Li} \\to 2\\,{}^{4}\\text{He}', [1.007825, 7.016003], [4.002603, 4.002603]]]);
       var mb = rx[1][0] + rx[1][1], ma = rx[2][0] + rx[2][1], Qv = (mb - ma) * UMEV;
       return { q: 'Find the energy released in the reaction $' + rx[0] + '$. Masses (u): ' + rx[1].concat(rx[2]).map(function (x) { return '$' + x.toFixed(6) + '$'; }).join(', ') + ' (in the order written).', a: ans(Qv, 0.01), unit: 'MeV', steps: ['Before: $' + rx[1].map(function (x) { return x.toFixed(6); }).join(' + ') + ' = ' + mb.toFixed(6) + '\\ \\text{u}$.', 'After: $' + rx[2].map(function (x) { return x.toFixed(6); }).join(' + ') + ' = ' + ma.toFixed(6) + '\\ \\text{u}$.', 'Mass lost: $' + (mb - ma).toFixed(6) + '\\ \\text{u}$, so $Q = (' + (mb - ma).toFixed(6) + ')(931.5) = ' + q(Qv, 'MeV') + '$.'], hint: 'Mass before minus mass after, times 931.5 MeV/u.' }; }
@@ -3221,3 +3221,131 @@
   });
 
 })(typeof window !== 'undefined' ? window.MathLadder : globalThis.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen"; Physics and Earth ladders): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - check a number: the question and a classmate's numeric answer, either the generator's own answer or that answer
+     off by a common slip (a factor of 2, 4 or 10), and "Is that right?" (Yes / No; not in placement);
+   - two at once: two different questions of the topic, answered together (short questions only, multiple-choice or
+     numeric, each keeping its own unit; at most one of them with a picture, which then comes first).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'phys2', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function numable(p) { // a single numeric answer with a plain decimal value (not a fraction or an expression)
+    var a = p.a;
+    return !!a && a.t === 'num' && /^-?\d+(\.\d+)?(e-?\d+)?$/.test(String(a.v)) && +a.v !== 0 && isFinite(+a.v) &&
+      !(a.tol && a.tol >= Math.abs(+a.v) / 3) && !((a.rtol || 0) > 0.3); // a slip by a factor of 2 must fall outside the tolerance
+  }
+  function sig(v) { var m = String(v).replace(/e.*$/, '').replace(/^-?0*\.?0*/, '').replace('.', ''); return Math.min(6, Math.max(3, m.length)); }
+  function show(x, n) { // a number as the classmate would write it: 3 significant figures, scientific notation when large or small
+    var ax = Math.abs(x);
+    if (ax >= 1e5 || ax < 1e-3) { var e = Math.floor(Math.log10(ax)), m = Number((x / Math.pow(10, e)).toPrecision(n || 3)); if (Math.abs(m) >= 10) { m = m / 10; e++; } return '$' + m + ' \\times 10^{' + e + '}$'; }
+    var s = String(Number(x.toPrecision(n || 3)));
+    return '$' + (ax >= 1e4 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, '{,}') : s) + '$';
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = +a.v, n = sig(a.v), right = R.coin(), f = R.pick([2, 0.5, 10, 0.1, 4, 0.25]), shown = right ? v : v * f;
+    var who = 'A classmate worked it out and got', u = p.unit ? ' ' + p.unit : '';
+    var q = p.q + '<p>' + who + ': <b>' + show(shown, n) + u + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right.' : 'No. The answer is ' + show(v, n) + u + '; ' + (f > 1 ? 'the classmate\'s answer is ' + f + ' times too big.' : 'the classmate\'s answer is ' + Math.round(1 / f) + ' times too small.'))].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf' && !numable(p))) return false;
+    if (p.a.t !== 'num' && p.unit) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function part(l, x) { var o = { label: l, a: x.a }; if (x.unit) o.unit = x.unit; return o; }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [part('1.', p), part('2.', p2)] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (mode !== 'place' && numable(p)) forms.push('ncheck');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'ncheck' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

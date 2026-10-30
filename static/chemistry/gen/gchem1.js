@@ -59,6 +59,14 @@
 
   // ------------------------------------------------------------------ numbers
   function lv(ctx, a, b, c) { return ML.byLevel(ctx, a, b, c); }
+  /* variety helpers: "which one is …" and "choose all that are …" from one bank, so distractors combine */
+  function vOne(R, pool, ok, n) { var g = pool.filter(ok), b = pool.filter(function (x) { return !ok(x); }), r = R.pick(g), it = R.shuffle([r].concat(R.sample(b, n - 1))); return { items: it, v: it.indexOf(r), right: r }; }
+  function vAll(R, pool, ok, n) {
+    var g = pool.filter(ok), b = pool.filter(function (x) { return !ok(x); }), k = R.int(1, M.min(n - 1, g.length)); if (b.length < n - k) k = n - b.length;
+    var it = R.shuffle(R.sample(g, k).concat(R.sample(b, n - k)));
+    return { items: it, v: it.map(function (x, i) { return ok(x) ? i : -1; }).filter(function (i) { return i >= 0; }) };
+  }
+  function MCA(items, v) { return { t: 'mc', choices: items, v: v }; }
   function fix(x) { return Number(Number(x).toPrecision(12)) + 0; }
   function sgf(x, n) { // x rounded to n significant figures (a number)
     if (x === 0 || !isFinite(x)) return x; var sgn = x < 0 ? -1 : 1, a = M.abs(x), e = M.floor(M.log10(a)); var f = M.pow(10, n - 1 - e);
@@ -191,7 +199,7 @@
 
   // ================================================================== UNIT 1: COMPOSITION AND MASS SPECTRA
   var ENAME = { H: 'hydrogen', C: 'carbon', N: 'nitrogen', O: 'oxygen', S: 'sulfur', Fe: 'iron', Cu: 'copper', P: 'phosphorus', Cl: 'chlorine', Mn: 'manganese', Cr: 'chromium',
-    Na: 'sodium', K: 'potassium', Br: 'bromine', Ca: 'calcium', Mg: 'magnesium', Ag: 'silver', Li: 'lithium', B: 'boron', Ga: 'gallium', Rb: 'rubidium', Sb: 'antimony', Si: 'silicon', Ne: 'neon', Ir: 'iridium', Tl: 'thallium' };
+    Na: 'sodium', K: 'potassium', Br: 'bromine', Ca: 'calcium', Mg: 'magnesium', Ag: 'silver', Li: 'lithium', B: 'boron', Ga: 'gallium', Rb: 'rubidium', Sb: 'antimony', Si: 'silicon', Ne: 'neon', Ir: 'iridium', Tl: 'thallium' , Al: 'aluminum' , Sn: 'tin', Au: 'gold', Zn: 'zinc', Ni: 'nickel', Pb: 'lead', Ti: 'titanium', Co: 'cobalt', Hg: 'mercury', Pt: 'platinum', W: 'tungsten', V: 'vanadium', Mo: 'molybdenum' };
   // element pairs with several compounds: [X, Y, [[formula, atoms of X, atoms of Y], …]]
   var MP = [
     ['C', 'O', [['CO', 1, 1], ['CO2', 1, 2]]],
@@ -212,7 +220,7 @@
     if (shape === 'definite') {
       var cmp = R.pick([['MgO', 'Mg'], ['CaO', 'Ca'], ['Al2O3', 'Al'], ['NaCl', 'Na'], ['CO2', 'C'], ['SO3', 'S'], ['H2O', 'H'], ['Fe2O3', 'Fe'], ['CuO', 'Cu'], ['CaCl2', 'Cl']]);
       var fr0 = AM[cmp[1]] * parseF(cmp[0]).atoms[cmp[1]] / mm(cmp[0]);
-      var m1 = R.pick([5.00, 8.00, 10.0, 12.0, 15.0, 20.0, 25.0]), e1 = sgf(m1 * fr0, 3), m2 = R.pick([2.50, 4.00, 30.0, 40.0, 50.0, 60.0, 75.0]);
+      var m1 = R.int(4, 50) / 2, e1 = sgf(m1 * fr0, 3), m2 = R.int(5, 150) / 2;
       var e2 = m2 * e1 / m1;
       return P('A $' + qx(m1, 'g') + '$ sample of pure ' + F(cmp[0]) + ' contains $' + qx(e1, 'g') + '$ of ' + ENAME[cmp[1]] + '. How many grams of ' + ENAME[cmp[1]] + ' are in $' + qx(m2, 'g') + '$ of the same compound?',
         ans(e2, 0.01),
@@ -275,6 +283,11 @@
   G('gchem1.mass-spectra', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['pct', 'pct', 'concept'], ['pct', 'heights', 'reverse', 'concept'], ['heights', 'reverse', 'reverse', 'concept']));
     var el = R.pick(shape === 'reverse' ? ['B', 'Cl', 'Cu', 'Br', 'Ga', 'Li', 'Ag', 'Rb', 'Sb', 'Ir', 'Tl'] : Object.keys(ISO)), iso = ISO[el], name = ENAME[el];
+    if (shape !== 'reverse' && R.chance(0.5)) { // a made-up element: two or three isotopes, masses to 2 decimals, abundances that add to 100
+      var mA = R.int(20, 140) + R.int(-9, 9) / 100, three = shape === 'heights' && R.coin(), p1 = three ? R.int(40, 80) : R.int(12, 88) + R.int(0, 9) / 10, p2 = three ? R.int(5, 95 - p1) : rd(100 - p1, 1);
+      iso = [[rd(mA, 2), p1], [rd(mA + R.pick([1, 2]) + R.int(-4, 4) / 100, 2), p2]]; if (three) iso.push([rd(iso[1][0] + 1 + R.int(-3, 3) / 100, 2), 100 - p1 - p2]);
+      name = 'element X';
+    }
     if (shape === 'pct') {
       var avg = wavg(iso);
       return P(cap(name) + '\'s mass spectrum shows ' + iso.length + ' peaks: ' + lst(iso.map(function (i) { return '$' + gd(i[0], 2) + '\\ \\text{u}$ (' + gx(i[1]) + '% of the atoms)'; })) + '. Find the average atomic mass of ' + name + '.',
@@ -421,24 +434,26 @@
   // light sources: [description, wavelength in m]
   var LIGHTS = [['a red helium–neon laser', 633e-9], ['a green laser pointer', 532e-9], ['a blue LED', 450e-9], ['a violet Blu-ray laser', 405e-9], ['a yellow sodium street lamp', 589e-9], ['an infrared TV remote', 940e-9], ['an ultraviolet germicidal lamp', 254e-9], ['a red LED', 660e-9]];
   var WAVES = [['an FM radio station at 98.1 MHz', 98.1e6, 'm'], ['an FM radio station at 101.5 MHz', 101.5e6, 'm'], ['an AM radio station at 880 kHz', 880e3, 'm'], ['a microwave oven at 2.45 GHz', 2.45e9, 'cm'], ['a Wi-Fi router at 5.00 GHz', 5.00e9, 'cm'], ['a GPS satellite at 1.575 GHz', 1.575e9, 'cm']];
+  function randLight(R) { if (R.coin()) return R.pick(LIGHTS); var nm = R.int(25, 95) * 10; return ['light with a wavelength of ' + nm + ' nm', nm * 1e-9]; }
+  function randWave(R) { if (R.coin()) return R.pick(WAVES); if (R.coin()) { var f = R.int(881, 1079) / 10; return ['an FM radio station at ' + f + ' MHz', f * 1e6, 'm']; } var k = R.int(54, 170) * 10; return ['an AM radio station at ' + k + ' kHz', k * 1e3, 'm']; }
   function region(lam) { return lam < 1e-8 ? 'X-ray' : lam < 4e-7 ? 'ultraviolet' : lam <= 7e-7 ? 'visible' : lam < 1e-3 ? 'infrared' : lam < 0.3 ? 'microwave' : 'radio'; }
 
   G('gchem1.light-waves', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['nu', 'nu', 'lam', 'which'], ['nu', 'lam', 'radio', 'which'], ['lam', 'radio', 'region', 'nu']));
     if (shape === 'nu') {
-      var L = R.pick(LIGHTS), lam = L[1], nu = CL / lam;
+      var L = randLight(R), lam = L[1], nu = CL / lam;
       return P('Light from ' + L[0] + ' has a wavelength of $' + qg(lam * 1e9, 'nm') + '$. What is its frequency?', ans(nu, 0.01),
         ['Change to meters: $' + gx(lam * 1e9) + '\\ \\text{nm} = ' + qg(lam, 'm') + '$.', '$\\nu = \\dfrac{c}{\\lambda} = ' + dfr('3.00 \\times 10^{8}\\ \\text{m/s}', qg(lam, 'm')) + ' = ' + qx(nu, 'Hz') + '$.'],
         'Use $c = \\lambda\\nu$, with the wavelength in meters.', 'Hz', { k: 'nu', lam: lam });
     }
     if (shape === 'lam') {
-      var lam2 = R.pick([410, 434, 486, 500, 550, 600, 656, 700, 300, 250]) * 1e-9, nu2 = sgf(CL / lam2, 3), lamA = CL / nu2;
+      var lam2 = R.int(25, 80) * 10 * 1e-9, nu2 = sgf(CL / lam2, 3), lamA = CL / nu2;
       return P('A beam of light has a frequency of $' + qx(nu2, 'Hz') + '$. What is its wavelength in nanometers?', ans(lamA * 1e9, 0.01),
         ['$\\lambda = \\dfrac{c}{\\nu} = ' + dfr('3.00 \\times 10^{8}\\ \\text{m/s}', fx(nu2) + '\\ \\text{s}^{-1}') + ' = ' + qx(lamA, 'm') + '$.', 'In nanometers: $' + qx(lamA, 'm') + ' \\times ' + dfr('10^{9}\\ \\text{nm}', '1\\ \\text{m}') + ' = ' + qx(lamA * 1e9, 'nm') + '$ (' + region(lamA) + ').'],
         'Solve $c = \\lambda\\nu$ for $\\lambda$, then change meters to nanometers.', 'nm', { k: 'lam', nu: nu2 });
     }
     if (shape === 'radio') {
-      var W = R.pick(WAVES), lamR = CL / W[1], inCm = W[2] === 'cm';
+      var W = randWave(R), lamR = CL / W[1], inCm = W[2] === 'cm';
       return P('Find the wavelength of the waves from ' + W[0] + ', in ' + (inCm ? 'centimeters' : 'meters') + '.', ans(inCm ? lamR * 100 : lamR, 0.01),
         ['Write the frequency in hertz: $' + gx(W[1]) + '\\ \\text{s}^{-1}$.', '$\\lambda = \\dfrac{c}{\\nu} = ' + dfr('3.00 \\times 10^{8}\\ \\text{m/s}', gx(W[1]) + '\\ \\text{s}^{-1}') + ' = ' + qx(lamR, 'm') + '$' + (inCm ? ' $= ' + qx(lamR * 100, 'cm') + '$.' : '.')],
         'Use $c = \\lambda\\nu$. Mega means $10^{6}$, giga $10^{9}$, kilo $10^{3}$.', inCm ? 'cm' : 'm', { k: 'lam', nu: W[1], scale: inCm ? 100 : 1 });
@@ -451,7 +466,7 @@
         ['$\\lambda\\nu = c$ is the same for all light, so wavelength and frequency are inversely related.', 'The shorter wavelength (' + gx(hi[1] * 1e9) + ' nm) has the higher frequency; the longer one (' + gx(lo[1] * 1e9) + ' nm) has the lower frequency.'],
         'Longer wavelength means lower frequency.', null, { k: 'which' });
     }
-    var nuR = R.pick([3.0e19, 1.2e17, 1.5e15, 6.0e14, 3.0e13, 1.0e11, 2.0e9, 1.0e6]), lamQ = CL / nuR, reg = region(lamQ);
+    var nuR = R.int(11, 99) / 10 * M.pow(10, R.pick([6, 9, 11, 13, 14, 15, 17, 19])), lamQ = CL / nuR, reg = region(lamQ);
     var regs = ['X-ray', 'ultraviolet', 'visible', 'infrared', 'microwave', 'radio'];
     return P('Electromagnetic radiation has a frequency of $' + qg(nuR, 'Hz') + '$. Find its wavelength. In which region of the spectrum is it?',
       mc(reg, R.sample(regs.filter(function (r) { return r !== reg; }), 3)),
@@ -466,13 +481,13 @@
   G('gchem1.photons', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['E', 'E', 'Emol', 'concept'], ['Emol', 'lamE', 'threshold', 'KE', 'count', 'concept'], ['KE', 'count', 'threshold', 'lamE', 'concept']));
     if (shape === 'E' || shape === 'Emol') {
-      var L = R.pick(LIGHTS), lam = L[1], E = Eph(lam), mol = shape === 'Emol';
+      var L = randLight(R), lam = L[1], E = Eph(lam), mol = shape === 'Emol';
       return P('Find the energy of ' + (mol ? 'one mole of photons' : 'one photon') + ' of the light from ' + L[0] + ' ($\\lambda = ' + qg(lam * 1e9, 'nm') + '$)' + (mol ? ', in kJ/mol' : '') + '.', ans(mol ? E * NA / 1000 : E, 0.01),
         ['$E = \\dfrac{hc}{\\lambda} = ' + dfr('(6.626 \\times 10^{-34}\\ \\text{J·s})(3.00 \\times 10^{8}\\ \\text{m/s})', qg(lam, 'm')) + ' = ' + qx(E, 'J') + '$ per photon.'].concat(mol ? ['Per mole: $' + fx(E) + '\\ \\text{J} \\times 6.022 \\times 10^{23}\\ \\text{mol}^{-1} = ' + qx(E * NA, 'Jmol') + ' = ' + qx(E * NA / 1000, 'kJmol') + '$.'] : []),
         'Use $E = hc/\\lambda$ with $\\lambda$ in meters.', mol ? 'kJmol' : 'J', { k: 'E', lam: lam, mol: mol });
     }
     if (shape === 'lamE') {
-      var lamT = R.pick([300, 350, 420, 480, 520, 600, 680, 780]) * 1e-9, E2 = sgf(Eph(lamT), 3), lamA = HP * CL / E2;
+      var lamT = R.int(25, 80) * 10 * 1e-9, E2 = sgf(Eph(lamT), 3), lamA = HP * CL / E2;
       return P('A photon has an energy of $' + qx(E2, 'J') + '$. What is its wavelength in nanometers?', ans(lamA * 1e9, 0.01),
         ['$\\lambda = \\dfrac{hc}{E} = ' + dfr('(6.626 \\times 10^{-34})(3.00 \\times 10^{8})', fx(E2)) + ' = ' + qx(lamA, 'm') + ' = ' + qx(lamA * 1e9, 'nm') + '$ (' + region(lamA) + ').'],
         'Solve $E = hc/\\lambda$ for $\\lambda$.', 'nm', { k: 'lamE', E: E2 });
@@ -491,7 +506,7 @@
         'Kinetic energy = photon energy − work function.', 'J', { k: 'KE', lam: lamK, phi: phi });
     }
     if (shape === 'count') {
-      var L2 = R.pick(LIGHTS.slice(0, 6)), Ep = R.pick([1.00, 2.50, 5.00, 10.0]), unitE = R.pick([['mJ', 1e-3], ['J', 1]]), n = Ep * unitE[1] / Eph(L2[1]);
+      var L2 = randLight(R), Ep = R.pick([1.00, 2.50, 5.00, 10.0, 2.00, 4.00, 7.50, 1.50]), unitE = R.pick([['mJ', 1e-3], ['J', 1]]), n = Ep * unitE[1] / Eph(L2[1]);
       return P('A pulse of light from ' + L2[0] + ' ($\\lambda = ' + qg(L2[1] * 1e9, 'nm') + '$) delivers $' + qx(Ep, unitE[0] === 'mJ' ? 'mJ' : 'J') + '$ of energy. How many photons does it contain?', ans(n, 0.01),
         ['One photon: $E = \\dfrac{hc}{\\lambda} = ' + dfr('(6.626 \\times 10^{-34})(3.00 \\times 10^{8})', qg(L2[1], 'm')) + ' = ' + qx(Eph(L2[1]), 'J') + '$.', 'Number $= ' + dfr(qg(Ep * unitE[1], 'J'), qx(Eph(L2[1]), 'J')) + ' = ' + fx(n) + '$ photons.'],
         'Divide the total energy by the energy of one photon.', 'none', { k: 'count', lam: L2[1], Etot: Ep * unitE[1] });
@@ -514,11 +529,11 @@
 
   function Hlam(ni, nf) { return HP * CL / M.abs(RH * (1 / (nf * nf) - 1 / (ni * ni))); }
   function hdE(ni, nf) { return -RH * (1 / (nf * nf) - 1 / (ni * ni)); }
-  var SERIES = { 1: 'Lyman (ultraviolet)', 2: 'Balmer (visible)', 3: 'Paschen (infrared)' };
+  var SERIES = { 1: 'Lyman (ultraviolet)', 2: 'Balmer (visible)', 3: 'Paschen (infrared)', 4: 'Brackett (infrared)', 5: 'Pfund (infrared)' };
 
   G('gchem1.hydrogen-spectrum', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['emit', 'emit', 'dE', 'freq'], ['emit', 'absorb', 'dE', 'ionize', 'region', 'freq'], ['absorb', 'findn', 'emit', 'region', 'ionize', 'freq']));
-    var nf = R.pick(shape === 'findn' ? [2] : [1, 2, 2, 3, 4]), ni = nf + R.int(1, nf === 1 ? 4 : 4);
+    var shape = R.pick(lv(ctx, ['emit', 'emit', 'dE', 'freq', 'region', 'absorb'], ['emit', 'absorb', 'dE', 'ionize', 'region', 'freq'], ['absorb', 'findn', 'emit', 'region', 'ionize', 'freq']));
+    var nf = R.pick(shape === 'findn' ? [2] : [1, 2, 2, 3, 4, 5]), ni = nf + R.int(1, shape === 'findn' ? 4 : 6);
     if (shape === 'freq') { var dEf = M.abs(hdE(ni, nf)), nuF = dEf / HP, perMolF = ctx.level > 1 && R.coin();
       return P('A hydrogen atom\'s electron falls from $n = ' + ni + '$ to $n = ' + nf + '$. ' + (perMolF ? 'How much energy, in kJ, does one mole of such atoms release as light?' : 'What is the frequency of the emitted light?'), ans(perMolF ? dEf * NA / 1000 : nuF, 0.01),
         ['$|\\Delta E| = 2.18 \\times 10^{-18}\\left(\\dfrac{1}{' + nf + '^2} - \\dfrac{1}{' + ni + '^2}\\right) = ' + qx(dEf, 'J') + '$ per atom.', perMolF ? 'Per mole: $' + fx(dEf) + ' \\times 6.022 \\times 10^{23} = ' + qx(dEf * NA, 'Jmol') + ' = ' + qx(dEf * NA / 1000, 'kJ') + '$.' : '$\\nu = \\dfrac{E}{h} = ' + dfr(fx(dEf), '6.626 \\times 10^{-34}') + ' = ' + qx(nuF, 'Hz') + '$.'],
@@ -568,7 +583,7 @@
         ['Match the photon\'s energy to the size of the step: rotation needs a tiny fraction of a kJ/mol, vibration a few to tens of kJ/mol, electronic jumps hundreds.', cap(mv[0]) + ' photons are the right size for ' + mv[2] + '.'],
         'Compare the photon\'s energy per mole with rotation, vibration and electronic steps.', null, { k: 'what' });
     }
-    var lam = R.pick([0.5e-2, 1.0e-2, 3.0e-6, 5.0e-6, 10e-6, 15e-6, 650e-9, 500e-9, 400e-9, 300e-9, 254e-9, 200e-9, 121.6e-9]), Em = HP * CL * NA / lam / 1000;
+    var lam = R.coin() ? R.pick([0.5e-2, 1.0e-2, 3.0e-6, 5.0e-6, 10e-6, 15e-6, 650e-9, 500e-9, 400e-9, 300e-9, 254e-9, 200e-9, 121.6e-9]) : R.int(15, 90) * 10 * 1e-9, Em = HP * CL * NA / lam / 1000;
     var lamTex = lam >= 1e-3 ? qg(lam * 100, 'cm') : lam >= 1e-6 ? gx(lam * 1e6) + '\\ \\text{μm}' : qg(rd(lam * 1e9, 1), 'nm');
     var stE = '$E = \\dfrac{hcN_\\text{A}}{\\lambda} = ' + dfr('(6.626 \\times 10^{-34})(3.00 \\times 10^{8})(6.022 \\times 10^{23})', qg(lam, 'm')) + ' = ' + qx(Em * 1000, 'Jmol') + ' = ' + qx(Em, 'kJmol') + '$.';
     if (shape === 'Emol') return P('Find the energy of one mole of photons of wavelength $' + lamTex + '$ (' + region(lam) + '), in kJ/mol.', ans(Em, 0.01),
@@ -576,7 +591,7 @@
       'Use $E = hcN_\\text{A}/\\lambda$ with $\\lambda$ in meters, then divide by 1000.', 'kJmol', { k: 'Emol', lam: lam });
     var bd = R.pick(BOND);
     if (shape === 'enough') {
-      var lam3 = R.pick([200e-9, 250e-9, 300e-9, 350e-9, 400e-9, 450e-9, 500e-9, 600e-9, 700e-9, 1000e-9, 2000e-9]), E3 = HP * CL * NA / lam3 / 1000;
+      var lam3 = R.int(15, 200) * 10 * 1e-9, E3 = HP * CL * NA / lam3 / 1000;
       if (M.abs(E3 - bd[1]) / bd[1] < 0.04) lam3 = 200e-9, E3 = HP * CL * NA / lam3 / 1000;
       return P('The ' + bd[0] + ' bond energy is $' + qg(bd[1], 'kJmol') + '$. True or false: a photon of $' + qg(lam3 * 1e9, 'nm') + '$ light carries enough energy to break one ' + bd[0] + ' bond.', tf(E3 >= bd[1]),
         ['Per mole of photons: $E = \\dfrac{hcN_\\text{A}}{\\lambda} = ' + qx(E3, 'kJmol') + '$.', 'Compare with $' + qg(bd[1], 'kJmol') + '$: the photon carries ' + (E3 >= bd[1] ? 'more than enough' : 'too little') + ' energy.'],
@@ -590,8 +605,29 @@
 
   var LL = ['s', 'p', 'd', 'f'];
   G('gchem1.quantum-numbers', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['orbs', 'label', 'ml'], ['orbs', 'elec', 'allowed', 'label'], ['elec', 'allowed', 'elec2', 'shell']));
-    var n = R.int(2, 5), l = R.int(0, M.min(3, n - 1));
+    var shape = R.pick(lv(ctx, ['orbs', 'label', 'ml', 'nl', 'elec', 'shellorbs', 'lvals', 'claim'], ['orbs', 'elec', 'allowed', 'label', 'nl', 'claim'], ['elec', 'allowed', 'elec2', 'shell', 'claim']));
+    var n = R.int(2, 7), l = R.int(0, M.min(3, n - 1));
+    if (shape === 'shellorbs') { var ns = R.int(1, 5); return P('How many orbitals are in the $n = ' + ns + '$ shell (counting every subshell it has)?', exact(ns * ns),
+      ['Shell ' + ns + ' has $l = 0$ to $' + (ns - 1) + '$: ' + U.range(0, ns - 1).map(function (x) { return ns + 'spdfghi'[x]; }).join(', ') + '.', 'Orbitals: $' + U.range(0, ns - 1).map(function (x) { return 2 * x + 1; }).join(' + ') + ' = ' + ns * ns + '$, which is $n^2$.'],
+      'Each subshell has $2l + 1$ orbitals; add them up.', null, { k: 'shellorbs' }); }
+    if (shape === 'lvals') { var nv = R.int(1, 7); return P('How many different values can $l$ have when $n = ' + nv + '$?', exact(nv),
+      ['$l$ runs from $0$ to $n - 1 = ' + (nv - 1) + '$: ' + U.range(0, nv - 1).join(', ') + '.', 'That is $' + nv + '$ value' + (nv > 1 ? 's' : '') + ', one for each subshell of the shell.'],
+      '$l$ goes from 0 up to $n - 1$.', null, { k: 'lvals' }); }
+    if (shape === 'claim') { // check a classmate's count
+      var what = R.pick(ctx.level === 1 ? ['orbitals', 'electrons'] : ['orbitals', 'electrons', 'shell']), right, wrongs;
+      if (what === 'orbitals') { right = 2 * l + 1; wrongs = [2 * l, 2 * (2 * l + 1), l + 1].filter(function (x) { return x > 0 && x !== right; }); }
+      else if (what === 'electrons') { right = 2 * (2 * l + 1); wrongs = [2 * l + 1, 2 * l, 4 * l].filter(function (x) { return x > 0 && x !== right; }); }
+      else { n = R.int(1, 5); right = 2 * n * n; wrongs = [n * n, 2 * n, 8].filter(function (x) { return x !== right; }); }
+      var says = R.coin() ? right : R.pick(wrongs), lab = what === 'shell' ? 'the $n = ' + n + '$ shell' : 'the $' + n + LL[l] + '$ subshell', thing = what === 'orbitals' ? 'orbitals' : 'electrons';
+      return P('A classmate says ' + lab + (what === 'orbitals' ? ' has ' + says + ' orbitals' : ' can hold at most ' + says + ' electrons') + '. Is that right?', mcK(['Yes', 'No'], says === right ? 0 : 1),
+        [what === 'shell' ? 'Shell ' + n + ' has $n^2 = ' + n * n + '$ orbitals, two electrons each: $2n^2 = ' + right + '$.' : 'A ' + LL[l] + ' subshell has $l = ' + l + '$, so $2l + 1 = ' + (2 * l + 1) + '$ orbitals' + (what === 'electrons' ? ', two electrons each: $' + right + '$.' : '.'),
+          says === right ? 'So <b>yes</b>, ' + says + ' is right.' : 'So <b>no</b>: the answer is ' + right + ', not ' + says + '.'],
+        'Count the orbitals first: $2l + 1$ in a subshell, $n^2$ in a shell.', null, { k: 'claim' });
+    }
+    if (shape === 'nl') { // read n and l from a subshell label
+      return P('Give the values of $n$ and $l$ for the $' + n + LL[l] + '$ subshell.', { t: 'multi', parts: [{ label: '$n$', a: exact(n) }, { label: '$l$', a: exact(l) }] },
+        ['The number is $n$: ' + n + '.', 'The letter gives $l$: s, p, d, f mean $l = 0, 1, 2, 3$, so ' + LL[l] + ' means $l = ' + l + '$.'], 's, p, d, f are $l = 0, 1, 2, 3$.', null, { k: 'nl', n: n, l: l });
+    }
     if (shape === 'orbs') return P('How many orbitals are in the $' + n + LL[l] + '$ subshell?', exact(2 * l + 1),
       ['A ' + LL[l] + ' subshell has $l = ' + l + '$.', '$m_l$ runs from $-' + l + '$ to $+' + l + '$' + (l ? ': ' + U.range(-l, l).map(function (x) { return x; }).join(', ') : ': only 0') + '. That is $2l + 1 = ' + (2 * l + 1) + '$ values, one per orbital.'],
       'Count the values of $m_l$ from $-l$ to $+l$.', null, { k: 'orbs', l: l });
@@ -625,9 +661,9 @@
   });
 
   G('gchem1.orbital-diagrams', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['unp', 'unp', 'rule'], ['unp', 'magnet', 'rule', 'unp'], ['unpTM', 'rule', 'magnet', 'unpTM']));
+    var shape = R.pick(lv(ctx, ['unp', 'unp', 'rule', 'magnet'], ['unp', 'magnet', 'rule', 'unp'], ['unpTM', 'rule', 'magnet', 'unpTM']));
     if (shape === 'unp' || shape === 'unpTM' || shape === 'magnet') {
-      var Z = shape === 'unpTM' ? R.pick([21, 22, 23, 25, 26, 27, 28, 30, 32, 33, 34]) : R.pick([5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 20, 4, 10]);
+      var Z = shape === 'unpTM' ? R.pick([21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]) : R.chance(0.75) ? R.int(1, 20) : R.int(31, 36);
       var cfg = config(Z), u = unpaired(cfg), last = cfg[cfg.length - 1], open = cfg.filter(function (s) { return s[1] % subCap(s[0]) !== 0 || false; });
       var lastOpen = cfg.filter(function (s) { return s[1] < subCap(s[0]); });
       var st = ['Configuration of ' + ELN[Z] + ': $' + cfgTex(cfg, true) + '$.', lastOpen.length ? lastOpen.map(function (s) { return 'The ' + s[0] + ' subshell holds ' + s[1] + ' electron' + (s[1] > 1 ? 's' : '') + ' in ' + subCap(s[0]) / 2 + ' orbitals. By Hund\'s rule: $' + boxes(s[0], s[1]) + '$, so ' + unpairedIn(s[0], s[1]) + ' unpaired.'; }).join(' ') : 'Every subshell is full, so every electron is paired.'];
@@ -644,7 +680,16 @@
       { el: 'N', sub: '2p', arr: [1, 1, 1], rule: 'none: it is correct', why: 'One electron in each 2p orbital, spins parallel: correct.' },
       { el: 'F', sub: '2p', arr: [2, 2, 1], rule: 'none: it is correct', why: 'Five 2p electrons: two pairs and one single, correct.' },
       { el: 'O', sub: '2p', arr: [3, 1, 0], rule: 'Pauli\'s principle', why: 'An orbital holds at most two electrons, and they must have opposite spins.' },
-      { el: 'C', sub: '2p', arr: [4, 0, 0], rule: 'Pauli\'s principle', why: 'Two electrons in one orbital with the same spin share all four quantum numbers.' }
+      { el: 'C', sub: '2p', arr: [4, 0, 0], rule: 'Pauli\'s principle', why: 'Two electrons in one orbital with the same spin share all four quantum numbers.' },
+      { el: 'C', sub: '2p', arr: [2, 0, 0], rule: 'Hund\'s rule', why: 'Both 2p electrons share one orbital while two orbitals of the same energy are empty.' },
+      { el: 'C', sub: '2p', arr: [1, 1, 0], rule: 'none: it is correct', why: 'Two 2p electrons in separate orbitals with parallel spins: correct.' },
+      { el: 'O', sub: '2p', arr: [2, 1, 1], rule: 'none: it is correct', why: 'Four 2p electrons: one pair and two singles with parallel spins, correct.' },
+      { el: 'Ne', sub: '2p', arr: [2, 2, 2], rule: 'none: it is correct', why: 'Six 2p electrons fill all three orbitals in pairs: correct.' },
+      { el: 'N', sub: '2p', arr: [1, 1, -1], rule: 'Hund\'s rule', why: 'Unpaired electrons in orbitals of equal energy should have parallel spins.' },
+      { el: 'O', sub: '2p', arr: [2, 1, -1], rule: 'Hund\'s rule', why: 'The two unpaired 2p electrons should have parallel spins.' },
+      { el: 'F', sub: '2p', arr: [3, 2, 0], rule: 'Pauli\'s principle', why: 'An orbital holds at most two electrons, and they must have opposite spins.' },
+      { el: 'N', sub: '2p', arr: [4, 1, 0], rule: 'Pauli\'s principle', why: 'Two electrons in one orbital with the same spin share all four quantum numbers.' },
+      { el: 'O', sub: '2p', arr: [4, 1, 1], rule: 'Pauli\'s principle', why: 'Two electrons in one orbital with the same spin share all four quantum numbers.' }
     ];
     var cs = R.pick(cases), Zc = SYM.indexOf(cs.el), core = config(Zc).slice(0, -1);
     var tex = cs.arr.map(function (v) { return '\\boxed{' + (v === 2 ? '\\uparrow\\downarrow' : v === 1 ? '\\uparrow\\phantom{\\downarrow}' : v === -1 ? '\\downarrow\\phantom{\\uparrow}' : v === 3 ? '\\uparrow\\downarrow\\uparrow' : v === 4 ? '\\uparrow\\uparrow' : '\\phantom{\\uparrow\\downarrow}') + '}'; }).join('\\,');
@@ -742,9 +787,9 @@
   function shellOf(Z) { return Z <= 2 ? 1 : Z <= 10 ? 2 : Z <= 18 ? 3 : 4; }
 
   G('gchem1.coulombs-law-atoms', function (R, ctx) {
-    var shape = R.pick(lv(ctx, ['scale', 'scale', 'compare'], ['scale', 'compare', 'explain'], ['energy', 'scale', 'explain', 'compare']));
+    var shape = R.pick(lv(ctx, ['scale', 'scale', 'compare', 'scale'], ['scale', 'compare', 'explain', 'scale'], ['energy', 'scale', 'explain', 'compare']));
     if (shape === 'scale') {
-      var a = R.pick([1, 2, 3]), b = R.pick([1, 2]), c = R.pick([2, 3, 0.5]), en = ctx.level > 1 && R.coin();
+      var a = R.pick([1, 2, 3, 4]), b = R.pick([1, 2, 3]), c = R.pick([2, 3, 0.5, 4, 1.5]), en = ctx.level > 1 && R.coin();
       if (a === 1 && b === 1) a = 2;
       var cq = Q.from(c), ratio = Q(a * b).div(en ? cq : cq.mul(cq));
       var what = []; if (a > 1) what.push('one charge is multiplied by ' + a); if (b > 1) what.push('the other charge is multiplied by ' + b); what.push(c < 1 ? 'the distance is halved' : 'the distance is multiplied by ' + c);
@@ -1532,10 +1577,10 @@
       ['$C = k_\\text{H}P = (' + gx(g[1]) + ')(' + fx(P0) + ') = ' + qx(C, 'M') + '$.'].concat([P0 < 1 ? 'Only the gas\'s own partial pressure counts.' : 'More pressure pushes more gas into solution.']), '$C = k_\\text{H}P$.', 'M', { k: 'C', kH: g[1], P: P0 });
     if (shape === 'mg') return P('Using $k_\\text{H} = ' + qg(g[1], 'Matm') + '$ for ' + F(g[0]) + ' at $25^\\circ\\text{C}$, how many milligrams of ' + F(g[0]) + ' ($' + qm(g[2]) + '$) dissolve in $1.00\\ \\text{L}$ of water when its partial pressure is $' + qx(P0, 'atm') + '$?', ans(C * g[2] * 1000, 0.02),
       ['$C = k_\\text{H}P = (' + gx(g[1]) + ')(' + fx(P0) + ') = ' + qx(C, 'M') + '$.', 'Mass in 1.00 L: $' + fx(C) + ' \\times ' + gd(g[2], 2) + ' = ' + qx(C * g[2], 'g') + ' = ' + qx(C * g[2] * 1000, 'mg') + '$.'], 'Find mol/L first, then change to mg.', 'mg', { k: 'mg', kH: g[1], P: P0, M: g[2] });
-    if (shape === 'ratio') { var C1 = sgf(C, 2), P2 = rd(P0 * R.pick([0.5, 1.5, 2, 3, 0.25]), 3), C2 = C1 * P2 / P0;
+    if (shape === 'ratio') { var C1 = sgf(C, 2), P2 = rd(P0 * R.pick([0.5, 1.5, 2, 3, 0.25, 4, 2.5, 0.75, 5]), 3), C2 = C1 * P2 / P0;
       return P('At a certain temperature, $' + qx(C1, 'M', 2) + '$ of a gas dissolves in water when its pressure is $' + qx(P0, 'atm') + '$. What concentration dissolves at the same temperature when its pressure is $' + qx(P2, 'atm') + '$?', ans(C2, 0.01),
         ['Henry\'s law: $C$ is proportional to $P$, so $C_2 = C_1 \\times \\dfrac{P_2}{P_1}$.', '$C_2 = ' + fx(C1, 2) + ' \\times ' + dfr(fx(P2), fx(P0)) + ' = ' + qx(C2, 'M') + '$.'], 'Concentration scales with pressure.', 'M', { k: 'ratio', C1: C1, P1: P0, P2: P2 }); }
-    if (shape === 'P') { var Ct = sgf(g[1] * R.pick([0.5, 1, 2, 3]), 2), Pn = Ct / g[1];
+    if (shape === 'P') { var Ct = sgf(g[1] * R.pick([0.5, 1, 2, 3, 1.5, 2.5, 4, 0.25, 5]), 2), Pn = Ct / g[1];
       return P('What partial pressure of ' + F(g[0]) + ' is needed to dissolve $' + qx(Ct, 'M', 2) + '$ of it in water at $25^\\circ\\text{C}$? ($k_\\text{H} = ' + qg(g[1], 'Matm') + '$)', ans(Pn, 0.01),
         ['$P = \\dfrac{C}{k_\\text{H}} = ' + dfr(fx(Ct, 2), gx(g[1])) + ' = ' + qx(Pn, 'atm') + '$.'], 'Solve $C = k_\\text{H}P$ for $P$.', 'atm', { k: 'P', kH: g[1], C: Ct }); }
     if (shape === 'temp') { var tq = R.pick([['A bottle of soda is warmed from $5^\\circ\\text{C}$ to $30^\\circ\\text{C}$ (still sealed). What happens to the amount of $\\mathrm{CO_2}$ the liquid can hold?', 'It decreases.'], ['Water in a pond warms in summer. What happens to the amount of dissolved oxygen it can hold?', 'It decreases.'], ['Water from a warm tap is cooled in a refrigerator. What happens to the amount of air it can hold dissolved?', 'It increases.']]);
@@ -1583,6 +1628,7 @@
   G('gchem1.converting-concentrations', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['pctToMolal', 'pctToM'], ['pctToM', 'pctToMolal', 'MtoMolal'], ['MtoMolal', 'molalToPct', 'pctToM', 'molalToM']));
     var s = R.pick(shape === 'pctToM' || shape === 'MtoMolal' ? SOLD : SOLD.filter(function (x) { return x[2] <= 50; })), Ms = mm(s[0]), w = s[2] / 100, d = s[3], intro = 'A ' + s[1] + ' solution';
+    if (shape === 'pctToMolal' && R.chance(0.6)) { s = [s[0], s[1], R.int(2, 40)]; w = s[2] / 100; } // molality needs no density, so any percent works
     if (shape === 'pctToM') { var mSol = 1000 * d, mSo = w * mSol, n = mSo / Ms;
       return P(intro + ' is ' + fx(s[2], 3) + '% ' + F(s[0]) + ' by mass and has a density of $' + qg(d, 'gmL') + '$. Find its molarity (' + F(s[0]) + ' $' + qm(Ms) + '$).', ans(n, 0.01),
         ['Take $1.000\\ \\text{L}$: mass $= 1000\\ \\text{mL} \\times ' + gx(d) + '\\ \\text{g/mL} = ' + qx(mSol, 'g', 4) + '$ of solution.', 'Solute: $' + fx(w, 3) + ' \\times ' + fx(mSol, 4) + ' = ' + qx(mSo, 'g', 4) + '$, which is $' + dfr(fx(mSo, 4), mmx(Ms)) + ' = ' + qx(n, 'mol') + '$.', 'Molarity: $' + qx(n, 'M') + '$.'],
@@ -2237,7 +2283,7 @@
 
   G('gchem1.heating-curve-calculations', function (R, ctx) {
     var shape = R.pick(lv(ctx, ['melt', 'total', 'boil'], ['total', 'total', 'largest'], ['total', 'total', 'largest']));
-    var m = R.pick([10.0, 18.0, 25.0, 36.0, 50.0, 100]);
+    var m = R.chance(0.4) ? R.pick([10.0, 18.0, 25.0, 36.0, 50.0, 100]) : R.int(5, 150);
     if (shape === 'melt' || shape === 'boil') { var melt = shape === 'melt', n = m / 18.02, qk = n * (melt ? 6.01 : 40.7);
       return P('How much heat, in kJ, is needed to ' + (melt ? 'melt $' + qx(m, 'g') + '$ of ice at $0^\\circ\\text{C}$' : 'boil away $' + qx(m, 'g') + '$ of water at $100^\\circ\\text{C}$') + '? ($\\Delta H_\\text{' + (melt ? 'fus' : 'vap') + '} = ' + (melt ? '6.01' : '40.7') + '\\ \\text{kJ/mol}$, $18.02\\ \\text{g/mol}$)', ans(qk, 0.01),
         ['Moles: $' + dfr(fx(m), '18.02') + ' = ' + qx(n, 'mol', 4) + '$.', 'The temperature stays at $' + (melt ? 0 : 100) + '^\\circ\\text{C}$: $q = n\\Delta H = ' + fx(n, 4) + ' \\times ' + (melt ? '6.01' : '40.7') + ' = ' + qx(qk, 'kJ') + '$.'],
@@ -2415,3 +2461,357 @@
   ML.gchem1Helpers = { sfStr: sfStr, fx: fx, gx: gx, ft: ft, eqT: eqT, mm: mm, parseF: parseF, AM: AM, wideMath: wideMath,
     data: { HESS: HESS, HF: HF, FRX: FRX, BH: BH, BRX: BRX, RDX: RDX, NONRDX: NONRDX, PRECIP: PRECIP, OXN: OXN, FCS: FCS, OCT: OCT, V56: V56, HYB: HYB, SP: SP, BPD: BPD, BPPAIRS: BPPAIRS, IR: IR, SALT: SALT, BD: BD, COLL: COLL, VDWD: VDWD, HRX: HRX, TCE: TCE, RES: RES } };
 })(window.MathLadder);
+
+/* ---- More of the same skills (round 7, "widen"): larger fact banks ----
+   Topics whose levels had few different problems also draw from the banks below, built from the topic's own facts:
+   true or false; which statement is true (or false); sorting (which one is …, which is not, choose all, which group);
+   a term and its meaning, both ways; and the order of steps (what comes next, what comes first, put in order).
+   Every answer comes from the bank itself, so the right choice and the others can never disagree. Shares are per level:
+   the topic's own generator still makes the rest. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen) return;
+  var BK = {};
+  function T(id, o) { var b = BK[id] || (BK[id] = {}); Object.keys(o).forEach(function (k) { b[k] = k === 'share' || k === 'forms' ? Object.assign(b[k] || {}, o[k]) : o[k]; }); }
+  function cap(s) { s = String(s); return s.charAt(0).toUpperCase() + s.slice(1); }
+  function capI(s) { s = String(s); return /\s/.test(s) || s.length > 3 ? cap(s) : s; } // genotypes like tt stay as written
+  function low(s) { s = String(s); return /^[A-Z][a-z]/.test(s) && !/^(DNA|RNA|ATP|I )/.test(s) ? s.charAt(0).toLowerCase() + s.slice(1) : s; }
+  function dot(s) { s = String(s).replace(/\s+$/, ''); return /[.!?)]$/.test(s) ? s : s + '.'; }
+  function nodot(s) { return String(s).replace(/\.$/, ''); }
+  function fill(t, o) { return t.replace(/\{(\w)\}/g, function (_, k) { return o[k]; }); }
+  function MC(right, wrong) { return { t: 'mc', choices: [right].concat(wrong), v: 0 }; }
+  function TF(v) { return { t: 'mc', choices: ['True', 'False'], v: v ? 0 : 1, keep: true }; }
+  function LT(i) { return String.fromCharCode(65 + i); }
+  function uniq(a) { return a.filter(function (x, i) { return a.indexOf(x) === i; }); }
+
+  var FORMS = { 1: ['tf', 'tf1', 'one', 'cat', 'fwd', 'back', 'next'], 2: ['tf', 'tf1', 'one', 'not', 'cat', 'fwd', 'back', 'next', 'first'], 3: ['tf1', 'not', 'all', 'back', 'fwd', 'order', 'first', 'cat'] };
+  function can(o, f) {
+    var tf = o.tf || [], s = o.sort, pr = o.pair, sq = o.seq;
+    if (f === 'custom') return !!o.make;
+    if (f === 'tf') return tf.length > 0;
+    if (f === 'tf1') return tf.filter(function (x) { return x[1]; }).length >= 3 && tf.filter(function (x) { return !x[1]; }).length >= 3;
+    if (f === 'one' || f === 'not' || f === 'all' || f === 'cat') return !!s;
+    if (f === 'fwd' || f === 'back') return !!pr;
+    return !!sq;
+  }
+  function make(R, o, L) {
+    var forms = (o.forms && o.forms[L]) || FORMS[L];
+    forms = forms.filter(function (f) { return can(o, f); });
+    if (!forms.length) return null;
+    var f = R.pick(forms), p = null;
+    if (f === 'custom') p = o.make(R, L);
+    else if (f === 'tf' || f === 'tf1') p = mkTf(R, o, f);
+    else if (o.sort && (f === 'one' || f === 'not' || f === 'all' || f === 'cat')) p = mkSort(R, o.sort, f, L);
+    else if (f === 'fwd' || f === 'back') p = mkPair(R, o.pair, f);
+    else p = mkSeq(R, o.seq, f, L);
+    if (p && !p.hint) p.hint = o.hint || 'Think back to the lesson, then check each choice.';
+    return p;
+  }
+  function mkTf(R, o, f) {
+    var tf = o.tf;
+    if (f === 'tf') {
+      var t = R.pick(tf);
+      return { q: 'True or false: ' + dot(t[0]), a: TF(t[1]), steps: [t[2] ? dot(t[2]) : 'The statement is ' + (t[1] ? 'true.' : 'false.'), 'So the answer is <b>' + (t[1] ? 'true' : 'false') + '</b>.'] };
+    }
+    var wantTrue = R.coin(), good = tf.filter(function (x) { return x[1] === wantTrue; }), bad = tf.filter(function (x) { return x[1] !== wantTrue; });
+    var r = R.pick(good), ws = R.sample(bad, 3);
+    return { q: 'Which statement is <b>' + (wantTrue ? 'true' : 'false') + '</b>?', a: MC(dot(r[0]), ws.map(function (x) { return dot(x[0]); })),
+      steps: [(wantTrue ? 'True: ' : 'False: ') + dot(r[0]) + (r[2] ? ' ' + dot(r[2]) : '')].concat(ws.map(function (x) { return (wantTrue ? 'False: ' : 'True: ') + dot(x[0]) + (x[2] ? ' ' + dot(x[2]) : ''); })) };
+  }
+  function why(s, it) {
+    if (it[2]) return dot(cap(it[2]));
+    if (it[0].length <= 3) return it[0] + ': ' + low(s.cats[it[1]][2]) + '.';
+    if (/[.?!]$/.test(it[0])) return '“' + cap(it[0]) + '” ' + cap(s.cats[it[1]][2]) + '.';
+    return cap(dot(it[0] + ' ' + (s.be || 'is') + ' ' + s.cats[it[1]][0]));
+  }
+  function mkSort(R, s, f, L) {
+    var keys = Object.keys(s.cats), k = R.pick(keys.filter(function (c) { return s.items.some(function (x) { return x[1] === c; }); })), C = s.cats[k];
+    // names ("a frog") and descriptions ("It has no tubes for water.") are not mixed in one list of choices
+    var isD = function (x) { return /[.?!]$/.test(x[0]); }, names = s.items.filter(function (x) { return !isD(x); }), descs = s.items.filter(isD);
+    var useD = f !== 'cat' && (names.length < 6 || (descs.length >= 6 && R.coin())), pool = useD ? descs : names;
+    var inC = pool.filter(function (x) { return x[1] === k; }), outC = pool.filter(function (x) { return x[1] !== k; });
+    var verb1 = useD ? 'describes ' : (s.be === 'are' ? 'are ' : 'is '), verbN = useD ? 'describe ' : 'are ';
+    var lead = s.lead ? s.lead + ' ' : '';
+    if (f === 'cat') {
+      var it = R.pick(s.items), opts = keys.length > 4 ? [it[1]].concat(R.sample(keys.filter(function (c) { return c !== it[1]; }), 3)) : [it[1]].concat(keys.filter(function (c) { return c !== it[1]; }));
+      var a = { t: 'mc', choices: opts.map(function (c) { return cap(s.cats[c][2]); }), v: 0 };
+      if (keys.length <= 3) { a.choices = keys.map(function (c) { return cap(s.cats[c][2]); }); a.v = keys.indexOf(it[1]); a.keep = true; }
+      return { q: lead + fill(s.catq || 'Which group does this belong to? {x}', { x: dot(capI(it[0])) }), a: a, steps: [why(s, it), 'So the answer is <b>' + low(s.cats[it[1]][2]) + '</b>.'] };
+    }
+    if (f === 'one' && inC.length && outC.length >= 3) {
+      var r = R.pick(inC), w = R.sample(outC, 3);
+      return { q: lead + 'Which of these ' + verb1 + C[0] + '?', a: MC(capI(r[0]), w.map(function (x) { return capI(x[0]); })),
+        steps: [why(s, r)].concat(w.map(function (x) { return why(s, x); })) };
+    }
+    if (f === 'not' && inC.length >= 3 && outC.length) {
+      var r2 = R.pick(outC), w2 = R.sample(inC, 3);
+      return { q: lead + 'Three of these ' + verbN + C[1] + '. Which one ' + (useD ? 'does' : 'is') + ' <b>not</b>?', a: MC(capI(r2[0]), w2.map(function (x) { return capI(x[0]); })),
+        steps: [why(s, r2)].concat(w2.map(function (x) { return why(s, x); })) };
+    }
+    if (f === 'all' && inC.length >= 1 && outC.length >= 1) {
+      var n = M5(R, inC.length + outC.length), kk = R.int(Math.max(1, n - outC.length), Math.min(inC.length, n - 1)), items = R.shuffle(R.sample(inC, kk).concat(R.sample(outC, n - kk)));
+      return { q: lead + 'Choose <b>all</b> of these that ' + verbN + C[1] + '.', a: { t: 'mc', choices: items.map(function (x) { return capI(x[0]); }), v: items.map(function (x, i) { return x[1] === k ? i : -1; }).filter(function (i) { return i >= 0; }) },
+        steps: items.map(function (x) { return why(s, x); }) };
+    }
+    return mkSort(R, s, 'cat', L);
+  }
+  function M5(R, total) { return Math.min(total, R.pick([4, 5])); }
+  function mkPair(R, pr, f) {
+    var it = R.pick(pr.items), kx = f === 'fwd' ? 1 : 0, seen = {}, pool = pr.items.filter(function (x) { if (x === it || x[0] === it[0] || x[1] === it[1] || seen[x[kx]]) return false; seen[x[kx]] = 1; return true; }), others = R.sample(pool, Math.min(3, pool.length));
+    if (f === 'fwd') return { q: fill(pr.fwd, { t: it[0] }), a: MC(cap(it[1]), others.map(function (x) { return cap(x[1]); })), steps: [cap(it[0]) + ': ' + low(dot(it[1]))].concat(others.length ? ['The others: ' + others.map(function (x) { return low(nodot(x[1])) + ' (' + x[0] + ')'; }).join('; ') + '.'] : []) };
+    return { q: fill(pr.back, { d: low(nodot(it[1])) }), a: MC(cap(it[0]), others.map(function (x) { return cap(x[0]); })), steps: [cap(it[0]) + ': ' + low(dot(it[1]))].concat(others.length ? ['The others: ' + others.map(function (x) { return x[0] + ', ' + low(nodot(x[1])); }).join('; ') + '.'] : []) };
+  }
+  function mkSeq(R, sq, f, L) {
+    var lists = sq.lists || [sq], s = R.pick(lists), it = s.items, name = s.name;
+    if (f === 'next') {
+      var i = R.int(0, it.length - 2), w = R.sample(it.filter(function (x, j) { return j !== i + 1 && j !== i; }), Math.min(3, it.length - 2));
+      return { q: 'In ' + name + ', what comes right after this: ' + low(nodot(it[i])) + '?', a: MC(cap(it[i + 1]), w.map(cap)), steps: ['The order: ' + it.map(nodot).join(' → ') + '.', 'Right after ' + low(nodot(it[i])) + ' comes <b>' + low(nodot(it[i + 1])) + '</b>.'] };
+    }
+    var n = Math.min(it.length, L === 3 ? 4 : 3), idx = R.sample(it.map(function (_, j) { return j; }), n).sort(function (a, b) { return a - b; });
+    if (f === 'first') {
+      var last = R.coin() && L > 1, pickI = last ? idx[idx.length - 1] : idx[0];
+      return { q: 'In ' + name + ', which of these comes <b>' + (last ? 'last' : 'first') + '</b>?', a: MC(cap(it[pickI]), idx.filter(function (j) { return j !== pickI; }).map(function (j) { return cap(it[j]); })),
+        steps: ['The order: ' + idx.map(function (j) { return nodot(it[j]); }).join(' → ') + '.', 'So <b>' + low(nodot(it[pickI])) + '</b> comes ' + (last ? 'last' : 'first') + '.'] };
+    }
+    var shown = R.shuffle(idx.slice()), right = idx.map(function (j) { return LT(shown.indexOf(j)); }).join(''), wr = [], g = 0;
+    while (wr.length < 3 && g++ < 100) { var c = R.shuffle(right.split('')).join(''); if (c !== right && wr.indexOf(c) < 0) wr.push(c); }
+    return { q: 'Put these in order for ' + name + ':<br>' + shown.map(function (j, i) { return '<b>' + LT(i) + '</b>: ' + low(nodot(it[j])); }).join('<br>'), a: MC(right.split('').join(', '), wr.map(function (x) { return x.split('').join(', '); })),
+      steps: ['The order: ' + idx.map(function (j) { return LT(shown.indexOf(j)) + ' (' + low(nodot(it[j])) + ')'; }).join(' → ') + '.', 'So the answer is <b>' + right.split('').join(', ') + '</b>.'] };
+  }
+
+  /* ===== gchem1 ===== */
+  function cf(s) { var p = String(s).split('^'), b = p[0].replace(/([A-Za-z)\]])(\d+)/g, '$1_{$2}'); return '$\\mathrm{' + b + (p[1] ? '^{' + p[1] + '}' : '') + '}$'; }
+
+  T('gchem1.photoelectron-spectroscopy', { share: { 1: 0.35 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['In a photoelectron spectrum, the tallest peak belongs to the electrons with the highest binding energy', false, 'Height counts electrons, not energy'], ['The peak with the highest binding energy comes from the electrons closest to the nucleus', true],
+      ['The valence electrons give the peak with the lowest binding energy', true], ['Two peaks of equal height in one spectrum come from subshells with the same number of electrons', true], ['Each peak in a photoelectron spectrum stands for one subshell', true],
+      ['The 1s peak of sodium is at a higher binding energy than the 1s peak of lithium', true, 'Sodium has more protons pulling on its 1s electrons'], ['A 2p peak is three times as tall as a 2s peak in neon', true, 'Six 2p electrons against two 2s electrons'],
+      ['All the electrons of an atom have the same binding energy', false], ['Binding energy = photon energy − kinetic energy of the ejected electron', true], ['The 3s electrons of magnesium are held more tightly than its 2p electrons', false, 'The 3s electrons are farther out and easier to remove']] });
+
+  T('gchem1.resonance', { share: { 1: 0.45, 2: 0.45, 3: 0.45 },
+    sort: { cats: { r: ['drawn with resonance structures', 'species that need resonance structures', 'Has resonance'], n: ['described well by one Lewis structure', 'species with one Lewis structure', 'No resonance'] }, catq: 'Does this species need resonance structures to describe it? {x}', items: [
+      [cf('NO3^-'), 'r'], [cf('CO3^2-'), 'r'], [cf('O3'), 'r'], [cf('NO2^-'), 'r'], [cf('SO2'), 'r'], [cf('HCOO^-'), 'r'], [cf('CH3COO^-'), 'r'], [cf('C6H6') + ' (benzene)', 'r'], [cf('SO3'), 'r'], [cf('HCO3^-'), 'r'],
+      [cf('NH3'), 'n'], [cf('CH4'), 'n'], [cf('H2O'), 'n'], [cf('CCl4'), 'n'], [cf('HF'), 'n'], [cf('PCl3'), 'n'], [cf('CH3OH'), 'n'], [cf('NH4^+'), 'n'], [cf('H2S'), 'n'], [cf('C2H6'), 'n']] },
+    tf: [['A molecule flips rapidly between its resonance structures', false, 'The real molecule is one blend (hybrid) all the time'], ['In nitrate, all three N–O bonds have the same length', true], ['Resonance structures differ only in where electrons are placed, not atoms', true],
+      ['The average N–O bond order in nitrate is 4/3', true], ['In ozone, one O–O bond is single and the other is double at any moment', false, 'Both bonds are the same, with bond order 3/2'], ['Benzene\'s C–C bonds are all the same length', true],
+      ['Resonance spreads charge and makes an ion more stable', true], ['Resonance structures may move atoms to new positions', false, 'Only electrons move'], ['The average C–O bond order in carbonate is 4/3', true]] });
+
+  T('gchem1.gas-solubility', { share: { 3: 0.3 }, forms: { 3: ['tf1', 'tf'] },
+    tf: [['Gases dissolve less in warm water than in cold water', true], ['Henry\'s law says gas solubility is proportional to its partial pressure', true], ['Opening a soda lowers the CO₂ pressure, so CO₂ comes out of solution', true],
+      ['Like most solids, gases dissolve better in hot water than in cold water', false], ['Doubling the partial pressure of a gas doubles its solubility', true], ['Warm lakes hold less dissolved oxygen than cold lakes', true], ['Henry\'s law constant is the same for every gas', false]] });
+
+  T('gchem1.oxidation-numbers', { share: { 1: 0.45 }, forms: { 1: ['custom', 'custom', 'tf'] },
+    make: function (R) {
+      var X = R.pick([['ClO4^-', 'Cl', 7], ['ClO3^-', 'Cl', 5], ['ClO2^-', 'Cl', 3], ['ClO^-', 'Cl', 1], ['SO4^2-', 'S', 6], ['SO3^2-', 'S', 4], ['H2S', 'S', -2], ['NO3^-', 'N', 5], ['NO2^-', 'N', 3], ['NH4^+', 'N', -3], ['NH3', 'N', -3], ['N2O', 'N', 1], ['NO', 'N', 2], ['NO2', 'N', 4],
+        ['MnO4^-', 'Mn', 7], ['MnO2', 'Mn', 4], ['Cr2O7^2-', 'Cr', 6], ['CrO4^2-', 'Cr', 6], ['Fe2O3', 'Fe', 3], ['FeO', 'Fe', 2], ['CO2', 'C', 4], ['CO', 'C', 2], ['CH4', 'C', -4], ['H2O2', 'O', -1], ['PO4^3-', 'P', 5], ['HNO3', 'N', 5], ['H2SO4', 'S', 6], ['KMnO4', 'Mn', 7], ['Na2O2', 'O', -1], ['NaH', 'H', -1], ['OF2', 'O', 2], ['Cu2O', 'Cu', 1], ['SnCl4', 'Sn', 4], ['V2O5', 'V', 5]]);
+      return { q: 'What is the oxidation number of ' + X[1] + ' in ' + cf(X[0]) + '?', a: { t: 'num', v: String(X[2]) }, hint: 'The oxidation numbers add up to the charge of the species. O is usually −2, H usually +1.',
+        steps: ['The oxidation numbers must add up to the overall charge of ' + cf(X[0]) + '.', 'So ' + X[1] + ' is <b>' + (X[2] > 0 ? '+' : '') + X[2] + '</b>.'] };
+    },
+    tf: [['The oxidation number of an atom in a pure element is zero', true], ['In compounds, fluorine is always −1', true], ['Oxygen is −2 in almost all compounds, but −1 in peroxides', true], ['The oxidation numbers in a neutral compound add up to zero', true],
+      ['Hydrogen is −1 in metal hydrides such as NaH', true], ['In SO₄²⁻, every atom has an oxidation number of −2', false, 'Sulfur is +6']] });
+
+  T('gchem1.heating-curve-calculations', { share: { 1: 0.25 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['While ice melts at 0 °C, its temperature stays the same as heat is added', true], ['Boiling water takes more energy per gram than melting ice', true], ['On a heating curve, the flat parts are phase changes', true],
+      ['Heating liquid water from 0 °C to 100 °C takes more energy than boiling it all away', false, 'Boiling takes about five times as much'], ['q = mcΔT is used for the sloped parts of a heating curve', true], ['The temperature rises while a substance boils', false, 'It stays at the boiling point']] });
+
+  T('gchem1.hess-law', { share: { 3: 0.35 }, forms: { 3: ['tf1', 'tf'] },
+    tf: [['If an equation is reversed in a Hess\'s law calculation, its ΔH changes sign', true], ['If an equation is doubled, its ΔH stays the same', false, 'ΔH doubles too'], ['Hess\'s law works because enthalpy is a state function', true],
+      ['ΔH for a reaction depends on the path taken', false, 'It depends only on the start and end'], ['Halving an equation halves its ΔH', true], ['Equations can be added, and their ΔH values add too', true],
+      ['Intermediates that appear on both sides cancel when equations are added', true], ['Reversing an equation keeps the same ΔH', false]] });
+
+  T('gchem1.enthalpy-of-formation', { share: { 3: 0.4 }, forms: { 3: ['tf1', 'tf', 'one', 'not'] },
+    sort: { cats: { z: ['an element in its standard state (ΔH°f = 0)', 'elements in their standard states', 'Zero'], n: ['a substance whose ΔH°f is not zero', 'substances whose ΔH°f is not zero', 'Not zero'] }, items: [
+      [cf('O2(g)'), 'z'], [cf('H2(g)'), 'z'], [cf('N2(g)'), 'z'], [cf('Fe(s)'), 'z'], [cf('Cl2(g)'), 'z'], [cf('Br2(l)'), 'z'], [cf('C(graphite)'), 'z'], [cf('Na(s)'), 'z'], [cf('Hg(l)'), 'z'],
+      [cf('O3(g)'), 'n'], [cf('C(diamond)'), 'n'], [cf('Br2(g)'), 'n'], [cf('H2O(l)'), 'n'], [cf('CO2(g)'), 'n'], [cf('Na(g)'), 'n'], [cf('CH4(g)'), 'n'], [cf('O(g)'), 'n']] },
+    tf: [['ΔH°f of O₂(g) is zero', true], ['ΔH°f of O₃(g) is zero', false, 'Ozone is not the standard state of oxygen'], ['ΔH°rxn = Σ n ΔH°f(products) − Σ n ΔH°f(reactants)', true],
+      ['ΔH°f of H₂O(l) and of H₂O(g) are the same', false, 'They differ by the enthalpy of vaporization'], ['A negative ΔH°f means the compound is lower in enthalpy than its elements', true], ['ΔH°f of C(diamond) is zero', false, 'Graphite is the standard state of carbon']] });
+
+  T('gchem1.born-haber', { share: { 1: 0.3 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['Forming the solid lattice from gaseous ions releases a large amount of energy', true], ['Ionizing a metal atom releases energy', false, 'Ionization always takes energy'], ['Turning a solid metal into a gas takes energy (sublimation)', true],
+      ['Breaking the Cl–Cl bond takes energy', true], ['For NaCl, only half a mole of Cl₂ bonds must be broken per mole of NaCl', true], ['A Born–Haber cycle uses Hess\'s law', true],
+      ['Lattice energy is larger for ions with bigger charges', true], ['Adding an electron to a chlorine atom takes in energy', false, 'For chlorine it releases energy']] });
+
+  /* ---- more topics, so variety does not lean on the extra forms ---- */
+  T('gchem1.gas-solubility', { share: { 1: 0.45 }, forms: { 1: ['tf', 'tf1'] } });
+  T('gchem1.born-haber', { share: { 3: 0.35 }, forms: { 3: ['tf1', 'tf'] } });
+  T('gchem1.effective-nuclear-charge', { share: { 1: 0.45 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['Electrons in the same shell shield each other about as well as core electrons do', false, 'Same-shell electrons shield poorly'], ['Across a period, Zeff on the valence electrons increases', true], ['Down a group, the simple Zeff on the valence electrons stays about the same', true],
+      ['A potassium atom\'s valence electron feels the full charge of 19 protons', false, 'Its 18 core electrons hide nearly all of it'], ['Core electrons shield valence electrons well', true], ['Zeff ≈ Z − (core electrons) in the simple model', true],
+      ['Chlorine\'s valence electrons feel a larger Zeff than sodium\'s', true], ['A larger Zeff pulls valence electrons closer, making the atom smaller', true], ['Fluorine and chlorine have the same simple Zeff', true, 'Both are about 7'], ['Zeff decreases across a period', false]] });
+  T('gchem1.trend-exceptions', { share: { 1: 0.5 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['Oxygen has a lower first ionization energy than nitrogen', true], ['Boron has a lower first ionization energy than beryllium', true], ['Aluminum has a higher first ionization energy than magnesium', false], ['Sulfur has a lower first ionization energy than phosphorus', true],
+      ['Carbon has a higher first ionization energy than boron', true], ['Neon has the highest first ionization energy in period 2', true], ['Nitrogen\'s half-filled 2p subshell makes its electrons a little harder to remove', true], ['First ionization energy rises perfectly smoothly across every period', false, 'There are dips after groups 2 and 15'],
+      ['Magnesium has a higher first ionization energy than aluminum', true], ['Phosphorus has a lower first ionization energy than sulfur', false]] });
+  T('gchem1.metals-alloys', { share: { 1: 0.6 },
+    sort: { cats: { s: ['a substitutional alloy', 'substitutional alloys', 'Substitutional'], i: ['an interstitial alloy', 'interstitial alloys', 'Interstitial'] }, catq: 'Is this a substitutional or an interstitial alloy? {x}', items: [['brass (copper and zinc)', 's'], ['bronze (copper and tin)', 's'], ['sterling silver (silver and copper)', 's'], ['white gold (gold and nickel or palladium)', 's'], ['steel (iron with a little carbon)', 'i']] },
+    tf: [['In a metal, the electrons carry the current while the cations stay in their places', true], ['Metals are malleable because layers of cations can slide while the electron sea holds them together', true], ['Metals conduct electricity because their valence electrons are delocalized', true],
+      ['Alloys are always weaker than the pure metal', false, 'Many alloys are harder and stronger'], ['Adding small carbon atoms into the gaps of iron makes steel harder', true], ['In a substitutional alloy, atoms of similar size replace each other', true],
+      ['Metals are good conductors of heat', true], ['Metallic bonds are between pairs of atoms that share two electrons', false, 'The electrons are shared by the whole crystal'], ['Pure gold is soft, so jewelers often alloy it with other metals', true]] });
+  T('gchem1.separations', { share: { 3: 0.5 }, forms: { 3: ['tf1', 'tf', 'cat'] },
+    sort: { cats: { f: ['filtration', 'filtration', 'Filtration'], d: ['distillation', 'distillation', 'Distillation'], c: ['chromatography', 'chromatography', 'Chromatography'], e: ['evaporation', 'evaporation', 'Evaporation'] }, catq: 'Which method best separates this mixture? {x}', items: [
+      ['sand from water', 'f'], ['coffee grounds from brewed coffee', 'f'], ['chalk dust from water', 'f'], ['ethanol from water', 'd'], ['fresh water from seawater, collecting the water', 'd'], ['the dyes in a black marker', 'c'], ['the pigments in a spinach leaf', 'c'], ['salt from seawater, keeping the salt', 'e'], ['sugar from sugar water, keeping the sugar', 'e']] },
+    tf: [['In fractional distillation, the first vapor is richer in the component with the lower boiling point', true], ['Filtration separates dissolved salt from water', false, 'Dissolved particles pass through the filter'], ['In paper chromatography, a substance that sticks less to the paper travels farther', true],
+      ['Rf = distance moved by the substance ÷ distance moved by the solvent', true], ['Distillation separates liquids by differences in boiling point', true], ['An Rf value can be greater than 1', false]] });
+  T('gchem1.redox-reactions', { share: { 1: 0.5 }, forms: { 1: ['tf', 'tf1'] },
+    tf: [['Oxidation is loss of electrons', true], ['Reduction is gain of electrons', true], ['The substance that is oxidized is the reducing agent', true], ['The oxidizing agent is itself oxidized', false, 'It is reduced'], ['A neutralization reaction such as HCl + NaOH is a redox reaction', false, 'No oxidation numbers change'],
+      ['Combustion of methane is a redox reaction', true], ['In Zn + Cu²⁺ → Zn²⁺ + Cu, zinc is oxidized', true], ['In a redox reaction, electrons lost equal electrons gained', true], ['Precipitation reactions are always redox reactions', false], ['A metal reacting with an acid to give hydrogen gas is a redox reaction', true]] });
+
+  /* ---- auto shares: every level still under 60% on its own also draws from the bank (never lowers a share set above) ---- */
+  (function () { var up = function (id, s) { var b = BK[id], tf = (b && b.tf) || []; if (!b) return; if (!(b.sort || b.pair || b.yn || (tf.filter(function (x) { return x[1]; }).length >= 3 && tf.filter(function (x) { return !x[1]; }).length >= 3))) return; b.share = b.share || {}; Object.keys(s).forEach(function (L) { b.share[L] = Math.max(b.share[L] || 0, s[L]); }); };
+    up('gchem1.photoelectron-spectroscopy', { 1: 0.35 });
+    up('gchem1.effective-nuclear-charge', { 1: 0.35, 2: 0.35, 3: 0.35 });
+    up('gchem1.trend-exceptions', { 1: 0.35 });
+    up('gchem1.metals-alloys', { 1: 0.5, 2: 0.35, 3: 0.35 });
+    up('gchem1.separations', { 1: 0.35, 3: 0.35 });
+    up('gchem1.gas-solubility', { 1: 0.5, 3: 0.35 });
+    up('gchem1.oxidation-numbers', { 1: 0.35, 2: 0.35 });
+    up('gchem1.redox-reactions', { 2: 0.35 });
+    up('gchem1.hess-law', { 1: 0.35, 2: 0.5, 3: 0.35 });
+    up('gchem1.enthalpy-of-formation', { 1: 0.35, 3: 0.35 });
+    up('gchem1.born-haber', { 1: 0.5, 2: 0.35, 3: 0.5 });
+  })();
+
+  Object.keys(BK).forEach(function (id) {
+    var base = ML.getGen(id); if (!base) return;
+    ML.gen(id, function (R, ctx) {
+      var o = BK[id], L = (ctx && ctx.level) || 1, sh = o.share && o.share[L];
+      if (sh && R.chance(sh)) { var p = make(R, o, L); if (p) return p; }
+      return base(R, ctx);
+    });
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);
+
+
+/* ---- More forms of the same questions (round 7, "widen"): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - two at once: two different questions of the topic, answered together (short questions only, at most one of them with
+     a picture, which then comes first; not in the courses for young children, whose answer box for two parts would
+     also show a keypad button they don't need).
+   - check a number: a numeric question with a classmate's number, either the right one or a slip learners often make
+     (a power of ten, a factor of two, a lost minus sign, off by one), and "Is that right?" (Yes / No; not in placement).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'gchem1', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf')) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function numVal(a) { var s = String(a.v).replace(/\s/g, ''), m = /^(-?[\d.]+)\*10\^(-?\d+)$/.exec(s); return m ? +m[1] * Math.pow(10, +m[2]) : (/^-?\d*\.?\d+$/.test(s) ? +s : NaN); }
+  function sigOf(a) { var s = String(a.v).split('*')[0].replace(/^-/, '').replace('.', '').replace(/^0+/, ''); return Math.max(2, Math.min(4, s.length || 1)); }
+  function numTex(x, n) {
+    var y = Number(x.toPrecision(n)), e = y === 0 ? 0 : Math.floor(Math.log10(Math.abs(y)) + 1e-12);
+    if (e >= 6 || e <= -4) { var m = Number((y / Math.pow(10, e)).toPrecision(n)); return m.toFixed(Math.max(0, n - 1)) + ' \\times 10^{' + e + '}'; }
+    return y.toFixed(Math.max(0, n - 1 - e));
+  }
+  function numCheckable(p) {
+    var a = p.a; if (YOUNG || !a || a.t !== 'num' || a.form || a.frac) return false;
+    var v = numVal(a); return isFinite(v) && v !== 0 && txt(p.q).length <= 700;
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = numVal(a), exact = !a.rtol && Math.round(v) === v, n = sigOf(a), right = R.coin(), w;
+    var cands = exact ? [v + 1, v - 1, 2 * v, v + 2].filter(function (x) { return x !== v && (v < 0 || x >= 0); })
+      : [10, 0.1, 2, 0.5, 1000, 0.001].concat(v < 0 || /\bsign\b/i.test(txt(p.q)) ? [-1, -1, -1] : []).map(function (k) { return v * k; });
+    // a wrong value must really be wrong: it has to fail the problem's own answer check
+    cands = cands.filter(function (x) { try { return !ML.check(a, exact ? String(x) : numTex(x, n).replace(' \\times 10^{', 'e').replace('}', ''), { q: p.q, unit: p.unit }).ok; } catch (e) { return false; } });
+    if (!cands.length) return null;
+    w = R.pick(cands);
+    var unit = p.unit ? '&nbsp;' + p.unit : '', pc = a.pct && !p.unit ? '\\%' : '';
+    function vTex() { var s = String(a.v).replace(/\s/g, ''), m = /^(-?[\d.]+)\*10\^(-?\d+)$/.exec(s); return m ? m[1] + ' \\times 10^{' + m[2] + '}' : s; } // the answer exactly as the problem gives it
+    function tex(x) { return '$' + (x === v ? vTex() : exact ? String(x) : numTex(x, n)) + pc + '$' + unit; }
+    var shown = right ? v : w;
+    var out = { q: p.q + '<p>A classmate answered: <b>' + tex(shown) + '</b></p><p>Is that right?</p>', a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: (p.steps || []).concat([right ? 'So <b>yes</b>, the classmate is right.' : 'So <b>no</b>: the answer is ' + tex(v) + ', not ' + tex(shown) + '.']) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (mode !== 'place' && numCheckable(p)) forms.push('num');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'num' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

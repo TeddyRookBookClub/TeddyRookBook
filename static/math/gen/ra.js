@@ -69,7 +69,7 @@
   var EPS_DEC = ['0.1', '0.05', '0.02', '0.01', '0.005', '0.002', '0.001'];
   var EPS_FRAC = ['1/10', '1/20', '1/50', '1/100', '1/200', '1/1000'];
   function epsTex(e) { return /\//.test(String(e)) ? T.num(q(e)) : String(e); }
-  function epsPick(R, lvl) { return lvl === 1 ? R.pick(['0.1', '0.05', '0.01', '1/10', '1/100']) : lvl === 2 ? R.pick(['0.02', '0.01', '0.005', '1/50', '1/200']) : R.pick(['0.002', '0.001', '1/500', '1/1000', '0.0025']); }
+  function epsPick(R, lvl) { return lvl === 1 ? R.pick(['0.1', '0.05', '0.01', '1/10', '1/100', '0.2', '0.02', '1/20', '1/50', '0.04', '1/25', '0.08']) : lvl === 2 ? R.pick(['0.02', '0.01', '0.005', '1/50', '1/200', '0.004', '1/250', '0.008', '1/125', '0.0125', '1/80', '0.006']) : R.pick(['0.002', '0.001', '1/500', '1/1000', '0.0025', '0.0005', '1/2000', '0.0004', '1/400', '1/800', '0.0008', '0.0015']); }
   function E(e) { return '\\varepsilon = ' + epsTex(e); }
   // smallest n >= lo with test(n) true (test monotone: false … false true true …); exact tests only
   function firstN(test, lo, hi) { lo = lo || 1; hi = hi || 1e7; for (var n = lo; n <= hi; n++) if (test(n)) return n; throw new Error('firstN: none below ' + hi); }
@@ -571,17 +571,17 @@
   G('ra.limsup-liminf', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['both', 'both']), R.pick(['both', 'supvs', 'tail']), R.pick(['tail', 'supvs', 'conv']));
     var kd = shape === 'tail' ? 'alt' : R.pick(L === 1 ? ['alt', 'mod'] : ['alt', 'mod', 'half', 'cos']), S = {};
-    if (kd === 'alt') { var c = R.int(-2, 2), p = R.int(1, 3), qq = R.int(1, 4); S = { fj: c + '+(n%2?-1:1)*(' + p + '+' + qq + '/n)', tex: (c ? c + ' + ' : '') + '(-1)^{n}\\left(' + p + ' + \\frac{' + qq + '}{n}\\right)', ls: q(c + p), li: q(c - p), sup: q(c + p).add(Q(qq, 2)), inf: q(c - p - qq), why: 'Even $n$: $a_n = ' + T.num(c + p) + ' + \\frac{' + qq + '}{n}$, decreasing to $' + (c + p) + '$. Odd $n$: $a_n = ' + T.num(c - p) + ' - \\frac{' + qq + '}{n}$, increasing to $' + (c - p) + '$.', c: c, p: p, qq: qq }; }
-    else if (kd === 'mod') { var k = R.int(2, 4), d = R.int(1, 3); S = { fj: '(n%' + k + ')+' + d + '/n', tex: '(n \\bmod ' + k + ') + \\frac{' + d + '}{n}', ls: q(k - 1), li: q(0), sup: null, inf: q(0), why: 'The remainder cycles through $0, 1, \\ldots, ' + (k - 1) + '$, and $\\frac{' + d + '}{n} \\to 0$: the subsequential limits are $0, 1, \\ldots, ' + (k - 1) + '$.' };
+    if (kd === 'alt') { var c = R.int(-5, 5), p = R.int(1, 6), qq = R.int(1, 9); S = { fj: c + '+(n%2?-1:1)*(' + p + '+' + qq + '/n)', tex: (c ? c + ' + ' : '') + '(-1)^{n}\\left(' + p + ' + \\frac{' + qq + '}{n}\\right)', ls: q(c + p), li: q(c - p), sup: q(c + p).add(Q(qq, 2)), inf: q(c - p - qq), why: 'Even $n$: $a_n = ' + T.num(c + p) + ' + \\frac{' + qq + '}{n}$, decreasing to $' + (c + p) + '$. Odd $n$: $a_n = ' + T.num(c - p) + ' - \\frac{' + qq + '}{n}$, increasing to $' + (c - p) + '$.', c: c, p: p, qq: qq }; }
+    else if (kd === 'mod') { var k = R.int(2, 7), d = R.int(1, 6); S = { fj: '(n%' + k + ')+' + d + '/n', tex: '(n \\bmod ' + k + ') + \\frac{' + d + '}{n}', ls: q(k - 1), li: q(0), sup: null, inf: q(0), why: 'The remainder cycles through $0, 1, \\ldots, ' + (k - 1) + '$, and $\\frac{' + d + '}{n} \\to 0$: the subsequential limits are $0, 1, \\ldots, ' + (k - 1) + '$.' };
       var best = q(-1); for (var n = 1; n <= 40; n++) { var v = q(n % k).add(Q(d, n)); if (v.gt(best)) best = v; } S.sup = best; }
-    else if (kd === 'half') { var c2 = R.int(1, 3); S = { fj: '(1+(n%2?-1:1))*' + c2 + '*n/(n+1)', tex: '\\left(1 + (-1)^{n}\\right)\\frac{' + (c2 === 1 ? '' : c2) + 'n}{n + 1}', ls: q(2 * c2), li: q(0), sup: q(2 * c2), inf: q(0), why: 'Odd $n$ give $0$. Even $n$ give $\\frac{' + (2 * c2) + 'n}{n + 1}$, increasing toward $' + (2 * c2) + '$.' }; }
+    else if (kd === 'half') { var c2 = R.int(1, 7); S = { fj: '(1+(n%2?-1:1))*' + c2 + '*n/(n+1)', tex: '\\left(1 + (-1)^{n}\\right)\\frac{' + (c2 === 1 ? '' : c2) + 'n}{n + 1}', ls: q(2 * c2), li: q(0), sup: q(2 * c2), inf: q(0), why: 'Odd $n$ give $0$. Even $n$ give $\\frac{' + (2 * c2) + 'n}{n + 1}$, increasing toward $' + (2 * c2) + '$.' }; }
     else { S = { fj: 'Math.cos(n*Math.PI/2)*(1+1/n)', tex: '\\cos\\left(\\frac{n\\pi}{2}\\right)\\left(1 + \\frac{1}{n}\\right)', ls: q(1), li: q(-1), sup: q('5/4'), inf: q('-3/2'), why: 'The cosine cycles $0, -1, 0, 1$: $n = 4k$ give $1 + \\frac{1}{n} \\to 1$ (largest at $n = 4$: $\\frac{5}{4}$), $n = 4k + 2$ give $-(1 + \\frac{1}{n}) \\to -1$ (smallest at $n = 2$: $-\\frac{3}{2}$), odd $n$ give $0$.' }; }
     var intro = 'Let $a_n = ' + S.tex + '$ for $n \\ge 1$. ';
     if (shape === 'both') return { q: intro + 'Find $' + LIMSUP + ' a_n$ and $' + LIMINF + ' a_n$.', a: multi([part('$\\limsup a_n =$', num(S.ls.toPlain())), part('$\\liminf a_n =$', num(S.li.toPlain()))]),
       steps: [S.why, 'The largest subsequential limit is $\\limsup a_n = ' + T.num(S.ls) + '$; the smallest is $\\liminf a_n = ' + T.num(S.li) + '$.'], hint: 'Find the limit along each kind of $n$; the largest and smallest are the answers.', viz: kd === 'alt' && L === 1 ? { name: 'ra-epsband', opts: { f: (S.c ? S.c + '+' : '') + '(-1)^n*(' + S.p + '+' + S.qq + '/n)', mode: 'tails', nmax: 30, quiet: true, edit: false } } : undefined, data: { k: 'both', kind: kd, ls: S.ls.toPlain(), li: S.li.toPlain(), fj: S.fj } };
     if (shape === 'supvs') return { q: intro + 'Find $\\sup\\{a_n : n \\ge 1\\}$ and $' + LIMSUP + ' a_n$. (They are different numbers here.)', a: multi([part('$\\sup a_n =$', num(S.sup.toPlain())), part('$\\limsup a_n =$', num(S.ls.toPlain()))]),
       steps: [S.why, 'The supremum of all the terms is $' + T.num(S.sup) + '$' + (S.sup.eq(S.ls) ? '' : ', an early term') + '.', 'The lim sup ignores any finite number of terms: it is the limit of the tail suprema, $' + T.num(S.ls) + '$.'], hint: 'The sup looks at every term; the lim sup only at what happens far out.', data: { k: 'supvs', kind: kd, sup: S.sup.toPlain(), ls: S.ls.toPlain(), fj: S.fj } };
-    if (shape === 'tail') { var N = R.int(3, 12), ke = N % 2 ? N + 1 : N, ko = N % 2 ? N : N + 1, ts = q(S.c + S.p).add(Q(S.qq, ke)), ti = q(S.c - S.p).sub(Q(S.qq, ko));
+    if (shape === 'tail') { var N = R.int(3, 25), ke = N % 2 ? N + 1 : N, ko = N % 2 ? N : N + 1, ts = q(S.c + S.p).add(Q(S.qq, ke)), ti = q(S.c - S.p).sub(Q(S.qq, ko));
       return { q: intro + 'Find the tail supremum $s_{' + N + '} = \\sup\\{a_k : k \\ge ' + N + '\\}$ and the tail infimum $i_{' + N + '} = \\inf\\{a_k : k \\ge ' + N + '\\}$.', a: multi([part('$s_{' + N + '} =$', num(ts.toPlain())), part('$i_{' + N + '} =$', num(ti.toPlain()))]),
         steps: [S.why, 'From $k = ' + N + '$ on, the largest term is the first even one, $k = ' + ke + '$: $s_{' + N + '} = ' + T.num(S.c + S.p) + ' + \\frac{' + S.qq + '}{' + ke + '} = ' + T.num(ts) + '$.', 'The smallest is the first odd one, $k = ' + ko + '$: $i_{' + N + '} = ' + T.num(S.c - S.p) + ' - \\frac{' + S.qq + '}{' + ko + '} = ' + T.num(ti) + '$.', 'As $N \\to \\infty$, $s_N \\to ' + (S.c + S.p) + ' = \\limsup a_n$ and $i_N \\to ' + (S.c - S.p) + ' = \\liminf a_n$.'],
         hint: 'Which terms from $k = N$ on are biggest? Look at the first even and the first odd index.', data: { k: 'tail', c: S.c, p: S.p, qq: S.qq, N: N, s: ts.toPlain(), i: ti.toPlain() } }; }
@@ -613,14 +613,14 @@
   // ================================================================ Unit 3: Series
   // telescoping a_k = c / (k (k + d)) = (c/d)(1/k - 1/(k + d))
   function teleSeries(R) {
-    var c = R.int(1, 4), d = R.int(1, 2), S = q(c).div(d).mul(d === 1 ? 1 : Q(3, 2));
+    var c = R.int(1, 9), d = R.int(1, 2), S = q(c).div(d).mul(d === 1 ? 1 : Q(3, 2));
     return { c: c, d: d, tex: '\\frac{' + c + '}{k(k + ' + d + ')}', plain: c + '/(k*(k+' + d + '))', S: S,
       term: function (k) { return Q(c, k * (k + d)); }, tail: function (n) { var t = Q(0); for (var j = 1; j <= d; j++) t = t.add(Q(1, n + j)); return q(c).div(d).mul(t); },
       split: '\\frac{' + c + '}{k(k + ' + d + ')} = ' + (c === d ? '' : (d === 1 ? c : '\\frac{' + c + '}{' + d + '}')) + '\\left(\\frac{1}{k} - \\frac{1}{k + ' + d + '}\\right)' };
   }
   G('ra.series-cauchy', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['partial', 'partial', 'mc']), R.pick(['tailN', 'geoN', 'partial']), R.pick(['tailN', 'cauchyB', 'geoN']));
-    if (shape === 'partial') { var S = teleSeries(R), n = R.int(3, 8), sn = Q(0); for (var k = 1; k <= n; k++) sn = sn.add(S.term(k));
+    if (shape === 'partial') { var S = teleSeries(R), n = R.int(2, 12), sn = Q(0); for (var k = 1; k <= n; k++) sn = sn.add(S.term(k));
       return { q: 'Find the partial sum $s_{' + n + '} = \\sum_{k=1}^{' + n + '} ' + S.tex + '$.', a: num(sn.toPlain()),
         steps: ['Split: $' + S.split + '$.', 'The sum telescopes: everything cancels except $' + (S.d === 1 ? '\\frac{1}{1}' : '\\frac{1}{1} + \\frac{1}{2}') + '$ at the start and $' + (S.d === 1 ? '\\frac{1}{' + (n + 1) + '}' : '\\frac{1}{' + (n + 1) + '} + \\frac{1}{' + (n + 2) + '}') + '$ at the end.', '$s_{' + n + '} = ' + T.num(sn) + '$, and $s_n \\to ' + T.num(S.S) + '$, the sum of the series.'],
         hint: 'Use partial fractions and watch the terms cancel.', data: { k: 'partial', f: S.plain, n: n, v: sn.toPlain() } }; }
@@ -628,7 +628,7 @@
       return { q: 'The series $\\sum_{k=1}^{\\infty} ' + S2.tex + '$ has sum $S = ' + T.num(S2.S) + '$. For $' + E(e) + '$, find an $N$ such that $|S - s_n| < \\varepsilon$ for every $n \\ge N$. (Any $N$ that works is right.)', a: multi([part('$N =$', anyN(n0))]),
         steps: ['Telescoping gives $S - s_n = ' + (S2.d === 1 ? T.coef(S2.c, '\\frac{1}{n + 1}') : T.coef(T.num(Q(S2.c, 2)), '\\left(\\frac{1}{n + 1} + \\frac{1}{n + 2}\\right)')) + '$, which decreases as $n$ grows.', 'It first drops below $' + epsTex(e) + '$ at $n = ' + n0 + '$' + (n0 > 1 ? ' (at $n = ' + (n0 - 1) + '$ it is $' + T.num(S2.tail(n0 - 1)) + '$)' : '') + '.', 'So $N = ' + n0 + '$ works, and so does any larger $N$.'],
         hint: 'Write the tail $S - s_n$ as a formula in $n$.', data: { k: 'tailN', f: S2.plain, S: S2.S.toPlain(), e: qp(e), n0: n0 } }; }
-    if (shape === 'geoN') { var r = q(R.pick(['1/2', '1/3', '2/3', '1/4', '3/4'])), e2 = epsPick(R, L), eq2 = q(e2), Sg = r.div(q(1).sub(r)), n2 = firstNfast(function (n) { return r.pow(n + 1).div(q(1).sub(r)).lt(eq2); }, 1);
+    if (shape === 'geoN') { var r = q(R.pick(['1/2', '1/3', '2/3', '1/4', '3/4', '1/5', '2/5', '3/5', '4/5', '1/10'])), e2 = epsPick(R, L), eq2 = q(e2), Sg = r.div(q(1).sub(r)), n2 = firstNfast(function (n) { return r.pow(n + 1).div(q(1).sub(r)).lt(eq2); }, 1);
       return { q: 'The geometric series $\\sum_{k=1}^{\\infty} \\left(' + T.num(r) + '\\right)^{k}$ has sum $S = ' + T.num(Sg) + '$. For $' + E(e2) + '$, find an $N$ such that $|S - s_n| < \\varepsilon$ for every $n \\ge N$. (Any $N$ that works is right.)', a: multi([part('$N =$', anyN(n2))]),
         steps: ['The tail after $n$ terms is $S - s_n = \\sum_{k=n+1}^{\\infty} r^{k} = \\frac{r^{n+1}}{1 - r}$ with $r = ' + T.num(r) + '$.', 'It first drops below $' + epsTex(e2) + '$ at $n = ' + n2 + '$' + (n2 > 1 ? ' (at $n = ' + (n2 - 1) + '$ it is about $' + T.num(Number(r.pow(n2).div(q(1).sub(r)).toNumber().toPrecision(3))) + '$)' : '') + '.', 'So $N = ' + n2 + '$ works, and so does any larger $N$.'],
         hint: 'The tail of a geometric series is a geometric series too.', data: { k: 'geoN', r: r.toPlain(), e: qp(e2), n0: n2 } }; }
@@ -669,18 +669,18 @@
       steps: ['The triangle inequality bounds any block of $\\sum a_k$ by the same block of $\\sum |a_k|$.', 'So the partial sums of $\\sum a_k$ are Cauchy, hence converge (completeness).', '$a_k \\to 0$ alone would not be enough.'], hint: 'Which inequality compares $|a + b|$ with $|a| + |b|$?', data: { k: 'mc' } };
   });
 
-  var PS = [['2', '1/2', '\\frac{1}{2}'], ['3', '1/4', '\\frac{1}{4}'], ['1/2', 'sqrt(2)', '\\sqrt{2}'], ['3/2', 'sqrt(2)/2', '\\frac{\\sqrt{2}}{2}'], ['5/2', 'sqrt(2)/4', '\\frac{\\sqrt{2}}{4}'], ['1', '1', '1'], ['4', '1/8', '\\frac{1}{8}']];
+  var PS = [['2', '1/2', '\\frac{1}{2}'], ['3', '1/4', '\\frac{1}{4}'], ['1/2', 'sqrt(2)', '\\sqrt{2}'], ['3/2', 'sqrt(2)/2', '\\frac{\\sqrt{2}}{2}'], ['5/2', 'sqrt(2)/4', '\\frac{\\sqrt{2}}{4}'], ['1', '1', '1'], ['4', '1/8', '\\frac{1}{8}'], ['5', '1/16', '\\frac{1}{16}'], ['6', '1/32', '\\frac{1}{32}']];
   G('ra.condensation', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['ratio', 'ratio']), R.pick(['ratio', 'logterm', 'sum']), R.pick(['logterm', 'sum', 'hyp']));
-    if (shape === 'ratio') { var p = R.pick(PS), ptex = T.num(q(p[0])), conv = q(p[0]).gt(1), cc = R.int(1, 9), cn = String(cc);
+    if (shape === 'ratio') { var p = R.pick(PS), ptex = T.num(q(p[0])), conv = q(p[0]).gt(1), cc = R.int(1, 20), cn = String(cc);
       return { q: 'Apply the condensation test to $\\sum \\frac{' + cn + '}{n^{' + ptex + '}}$: the condensed series $\\sum 2^{k} a_{2^{k}}$ is geometric. Find its ratio, and decide whether $\\sum \\frac{' + cn + '}{n^{' + ptex + '}}$ converges.', a: multi([part('ratio $=$', num(p[1])), part('It converges:', tf(conv))]),
         steps: ['$2^{k} a_{2^{k}} = \\frac{' + (cc === 1 ? '' : cc + ' \\cdot ') + '2^{k}}{(2^{k})^{' + ptex + '}} = ' + (cc === 1 ? '' : cc) + '\\left(2^{1 - ' + ptex + '}\\right)^{k}$.', 'The ratio is $2^{1 - ' + ptex + '} = ' + p[2] + '$.', conv ? 'It is less than $1$, so the condensed series converges, and so does $\\sum \\frac{' + cn + '}{n^{' + ptex + '}}$.' : 'It is at least $1$, so the condensed series diverges, and so does $\\sum \\frac{' + cn + '}{n^{' + ptex + '}}$.'],
         hint: 'Substitute $n = 2^{k}$ and simplify the powers of $2$.', data: { k: 'ratio', p: p[0], r: p[1], c: cc } }; }
-    if (shape === 'logterm') { var pp = R.int(1, 5), conv2 = pp > 1, cl = R.int(1, 6);
+    if (shape === 'logterm') { var pp = R.int(1, 8), conv2 = pp > 1, cl = R.int(1, 9);
       return { q: 'Apply the condensation test to $\\sum_{n=2}^{\\infty} \\frac{' + cl + '}{n(\\ln n)' + (pp === 1 ? '' : '^{' + pp + '}') + '}$. Write the condensed term $2^{k} a_{2^{k}}$ as a formula in $k$ (for $k \\ge 1$).', a: expr(cl + '/((ln(2))^' + pp + '*k^' + pp + ')', ['k']),
         steps: ['$a_{2^{k}} = \\frac{' + cl + '}{2^{k} (\\ln 2^{k})' + (pp === 1 ? '' : '^{' + pp + '}') + '} = \\frac{' + cl + '}{2^{k} ' + (pp === 1 ? 'k \\ln 2' : '(k \\ln 2)^{' + pp + '}') + '}$.', 'Multiply by $2^{k}$: $2^{k} a_{2^{k}} = \\frac{' + cl + '}{' + (pp === 1 ? '(\\ln 2) k' : '(\\ln 2)^{' + pp + '} k^{' + pp + '}') + '}$.', 'This is a constant times a $p$-series with $p = ' + pp + '$, so the original series ' + (conv2 ? 'converges.' : 'diverges.')],
         hint: 'Use $\\ln(2^{k}) = k \\ln 2$.', data: { k: 'logterm', p: pp, c: cl } }; }
-    if (shape === 'sum') { var p3 = R.pick([2, 3, 4, 5]), c3 = R.int(1, 5), r3 = Q(1, M.pow(2, p3 - 1)), sum = q(c3).div(q(1).sub(r3));
+    if (shape === 'sum') { var p3 = R.pick([2, 3, 4, 5, 6]), c3 = R.int(1, 12), r3 = Q(1, M.pow(2, p3 - 1)), sum = q(c3).div(q(1).sub(r3));
       return { q: 'For a decreasing positive sequence, $\\sum_{n=1}^{\\infty} a_n \\le \\sum_{k=0}^{\\infty} 2^{k} a_{2^{k}}$ (each block $a_{2^{k}} + \\cdots + a_{2^{k+1} - 1}$ is at most $2^{k} a_{2^{k}}$). For $a_n = \\frac{' + c3 + '}{n^{' + p3 + '}}$, compute $\\sum_{k=0}^{\\infty} 2^{k} a_{2^{k}}$, an upper bound for $\\sum \\frac{' + c3 + '}{n^{' + p3 + '}}$.', a: num(sum.toPlain()),
         steps: ['$2^{k} a_{2^{k}} = ' + (c3 === 1 ? '' : c3 + ' \\cdot ') + '2^{k} \\cdot 2^{-' + p3 + 'k} = ' + (c3 === 1 ? '' : c3) + '\\left(' + T.num(r3) + '\\right)^{k}$.', 'Geometric from $k = 0$: $\\frac{' + c3 + '}{1 - ' + T.num(r3) + '} = ' + T.num(sum) + '$.', 'So $\\sum \\frac{' + c3 + '}{n^{' + p3 + '}} \\le ' + T.num(sum) + '$.' + (p3 === 2 && c3 === 1 ? ' (The true sum is $\\frac{\\pi^{2}}{6} \\approx 1.645$.)' : '')],
         hint: 'The condensed series is geometric; sum it from $k = 0$.', data: { k: 'sum', p: p3, c: c3, v: sum.toPlain() } }; }
@@ -695,15 +695,15 @@
       return { q: 'Let $a_k = \\left(' + pr[0][1] + '\\right)^{k}$ for even $k$ and $a_k = \\left(' + pr[1][1] + '\\right)^{k}$ for odd $k$. Find $' + '\\limsup_{k \\to \\infty}' + ' |a_k|^{1/k}$, and decide whether $\\sum a_k$ converges.', a: multi([part('$\\limsup |a_k|^{1/k} =$', num(mx.toPlain())), part('It converges:', tf(conv))]),
         steps: ['$|a_k|^{1/k}$ is $' + pr[0][1] + '$ for even $k$ and $' + pr[1][1] + '$ for odd $k$.', 'The lim sup is the larger: $' + T.num(mx) + '$.', conv ? 'It is less than $1$, so the series converges absolutely (root test).' : 'It is greater than $1$, so the terms do not go to $0$ and the series diverges.', 'The ratio test is no help here: the ratios $\\frac{a_{k+1}}{a_k}$ jump between very large and very small values.'],
         hint: 'Take the $k$th root of each kind of term.', data: { k: 'inter', c: c.toPlain(), d: d.toPlain() } }; }
-    if (shape === 'ratios') { var b = R.int(2, 7), b3 = Q(1, b * b * b);
+    if (shape === 'ratios') { var b = R.int(2, 12), b3 = Q(1, b * b * b);
       return { q: 'Let $a_k = ' + b + '^{-k + (-1)^{k}}$. Find $\\limsup \\frac{a_{k+1}}{a_k}$, $\\liminf \\frac{a_{k+1}}{a_k}$, and $\\lim |a_k|^{1/k}$.', a: multi([part('$\\limsup$ of ratios $=$', num(b)), part('$\\liminf$ of ratios $=$', num(b3.toPlain())), part('$\\lim |a_k|^{1/k} =$', num(Q(1, b).toPlain()))]),
         steps: ['For even $k$: $a_k = ' + b + '^{-k + 1}$ and $a_{k+1} = ' + b + '^{-k - 2}$, so the ratio is $' + b + '^{-3} = ' + T.num(b3) + '$.', 'For odd $k$: $a_k = ' + b + '^{-k - 1}$ and $a_{k+1} = ' + b + '^{-k}$, so the ratio is $' + b + '$.', 'The ratios alternate, so the ratio test is inconclusive ($\\limsup = ' + b + ' > 1$ but $\\liminf < 1$).', '$|a_k|^{1/k} = ' + b + '^{-1 + (-1)^{k}/k} \\to ' + T.num(Q(1, b)) + ' < 1$: the root test shows convergence.'],
         hint: 'Write out $a_k$ separately for even and odd $k$.', data: { k: 'ratios', b: b } }; }
     if (shape === 'kpow') { var kd = R.pick(['poly', 'poly', 'e']);
-      if (kd === 'poly') { var p = R.int(1, 8), rb = R.pick(BASES.slice(0, 8)), rr = q(rb[0]);
+      if (kd === 'poly') { var p = R.int(1, 12), rb = R.pick(BASES.slice(0, 8)), rr = q(rb[0]);
         return { q: 'Find $\\lim_{k \\to \\infty} |a_k|^{1/k}$ for $a_k = k^{' + p + '}\\left(' + rb[1] + '\\right)^{k}$. Does $\\sum a_k$ converge?', a: multi([part('limit $=$', num(rr.toPlain())), part('It converges:', tf(true))]),
           steps: ['$|a_k|^{1/k} = \\left(k^{1/k}\\right)^{' + p + '} \\cdot ' + rb[1] + '$.', '$k^{1/k} \\to 1$, so the limit is $' + rb[1] + '$.', 'It is less than $1$, so the series converges (absolutely).'], hint: 'Use $k^{1/k} \\to 1$.', data: { k: 'kpow', p: p, r: rr.toPlain() } }; }
-      var mm = R.int(1, 6);
+      var mm = R.int(1, 12);
       return { q: 'Find $\\lim_{k \\to \\infty} |a_k|^{1/k}$ for $a_k = \\left(\\frac{k}{k + ' + mm + '}\\right)^{k^{2}}$.', a: num('e^(-' + mm + ')'),
         steps: ['$|a_k|^{1/k} = \\left(\\frac{k}{k + ' + mm + '}\\right)^{k} = \\left(1 + \\frac{' + mm + '}{k}\\right)^{-k}$.', 'Since $\\left(1 + \\frac{' + mm + '}{k}\\right)^{k} \\to e^{' + mm + '}$, the limit is $e^{-' + mm + '}$.', 'It is less than $1$, so $\\sum a_k$ converges.'], hint: 'Use $\\left(1 + \\frac{c}{k}\\right)^{k} \\to e^{c}$.', data: { k: 'kpowe', m: mm } }; }
     return { q: 'For both $\\sum \\frac{1}{k}$ and $\\sum \\frac{1}{k^{2}}$, $\\lim |a_k|^{1/k} = 1$. What does the root test say about a series with $\\limsup |a_k|^{1/k} = 1$?', a: mc('Nothing: such a series may converge or diverge.', ['It diverges.', 'It converges conditionally.', 'It converges absolutely.']),
@@ -717,11 +717,11 @@
       return { q: 'For $S = \\sum_{k=1}^{\\infty} (-1)^{k+1} ' + it[0] + '$, the alternating series test bounds the error $|S - s_n|$ by $b_{n+1}$. Find an $n$ for which this bound guarantees $|S - s_n| < ' + epsTex(e) + '$. (Any $n$ that works is right.)', a: multi([part('$n =$', anyN(n0))]),
         steps: ['$b_k = ' + it[0] + '$ decreases to $0$, so $|S - s_n| < b_{n+1}$.', 'We need $b_{n+1} < ' + epsTex(e) + '$. The first time this holds is $n = ' + n0 + '$: $b_{' + (n0 + 1) + '} = ' + T.num(it[1](n0 + 1)) + '$' + (n0 > 1 ? ', while $b_{' + n0 + '} = ' + T.num(it[1](n0)) + '$ is not small enough' : '') + '.', 'So $n = ' + n0 + '$ terms are enough, and so is any larger $n$.'],
         hint: 'The error is less than the first term you leave out.', viz: L === 1 ? { name: 'seriespartial', opts: { a: '(-1)^(n+1)/(' + it[2].replace('k^2', 'n^2').replace('k^3', 'n^3').replace('2k-1', '2n-1') + ')', N: 6, view: 'walk', quiet: true } } : undefined, data: { k: 'nterms', b: it[2], e: qp(e), n0: n0 } }; }
-    if (shape === 'side') { var it2 = R.pick(ALT), n = R.int(3, 9), above = n % 2 === 1;
+    if (shape === 'side') { var it2 = R.pick(ALT), n = R.int(2, 20), above = n % 2 === 1;
       return { q: 'For $S = \\sum_{k=1}^{\\infty} (-1)^{k+1} ' + it2[0] + '$, is the partial sum $s_{' + n + '}$ above or below $S$?', a: mc(above ? 'above $S$' : 'below $S$', [above ? 'below $S$' : 'above $S$', 'equal to $S$']),
         steps: ['The partial sums zigzag: adding a positive term overshoots, adding a negative term undershoots, and $S$ is always between consecutive partial sums.', 'Term $' + n + '$ has sign $(-1)^{' + (n + 1) + '} = ' + (above ? '+1' : '-1') + '$, so $s_{' + n + '}$ ' + (above ? 'overshoots: it is above $S$.' : 'undershoots: it is below $S$.')],
         hint: 'Was the last term added positive or negative?', data: { k: 'side', n: n } }; }
-    if (shape === 'interval') { var it3 = R.pick([ALT[0], ALT[2], ALT[5]]), n3 = R.int(2, 4), s = Q(0); for (var k = 1; k <= n3 + 1; k++) { s = s.add(it3[1](k).mul(k % 2 ? 1 : -1)); if (k === n3) var sn = s; }
+    if (shape === 'interval') { var it3 = R.pick([ALT[0], ALT[2], ALT[5]]), n3 = R.int(2, 6), s = Q(0); for (var k = 1; k <= n3 + 1; k++) { s = s.add(it3[1](k).mul(k % 2 ? 1 : -1)); if (k === n3) var sn = s; }
       var lo = qmin(sn, s), hi = qmax(sn, s);
       return { q: 'For $S = \\sum_{k=1}^{\\infty} (-1)^{k+1} ' + it3[0] + '$, compute $s_{' + n3 + '}$ and $s_{' + (n3 + 1) + '}$ and give the open interval between them, which must contain $S$.', a: { t: 'interval', v: '(' + lo.toPlain() + ', ' + hi.toPlain() + ')' },
         steps: ['$s_{' + n3 + '} = ' + T.num(sn) + '$ and $s_{' + (n3 + 1) + '} = ' + T.num(s) + '$.', 'Since $b_k$ decreases, $S$ lies strictly between consecutive partial sums.', 'So $S \\in (' + T.num(lo) + ', ' + T.num(hi) + ')$.'],
@@ -735,11 +735,11 @@
   function rearr(p, qq, count) { var s = Q(0), od = 1, ev = 2, used = 0, terms = []; while (used < count) { for (var i = 0; i < p && used < count; i++) { s = s.add(Q(1, od)); terms.push(od === 1 ? '1' : '\\frac{1}{' + od + '}'); od += 2; used++; } for (var j = 0; j < qq && used < count; j++) { s = s.sub(Q(1, ev)); terms.push('-\\frac{1}{' + ev + '}'); ev += 2; used++; } } return { s: s, terms: terms }; }
   G('ra.rearrangements', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['partial', 'which', 'pq', 'abs']), R.pick(['pq', 'partial', 'greedy', 'abs']), R.pick(['pq', 'greedy', 'which']));
-    if (shape === 'abs') { var rr = q(R.pick(['1/2', '1/3', '2/3', '1/4', '3/4', '1/5', '2/5'])), pq3 = R.pick([[2, 1], [1, 2], [3, 1]]), Sabs = q(1).div(q(1).add(rr));
+    if (shape === 'abs') { var rr = q(R.pick(['1/2', '1/3', '2/3', '1/4', '3/4', '1/5', '2/5', '3/5', '4/5', '1/6', '5/6'])), pq3 = R.pick([[2, 1], [1, 2], [3, 1], [1, 3]]), Sabs = q(1).div(q(1).add(rr));
       return { q: 'The geometric series $1 - r + r^{2} - r^{3} + \\cdots$ with $r = ' + T.num(rr) + '$ converges absolutely to $\\frac{1}{1 + r}$. Its terms are rearranged: ' + plural(pq3[0], 'positive term') + ', then ' + plural(pq3[1], 'negative term') + ', repeating (each in its original order). What is the sum of the rearranged series?', a: num(Sabs.toPlain()),
         steps: ['$\\sum |a_k| = \\sum r^{k}$ converges, so the series converges absolutely.', 'Every rearrangement of an absolutely convergent series has the same sum.', 'So the sum is still $\\frac{1}{1 + ' + T.num(rr) + '} = ' + T.num(Sabs) + '$.'],
         hint: 'Is the convergence absolute?', data: { k: 'abs', r: rr.toPlain(), v: Sabs.toPlain() } }; }
-    if (shape === 'pq') { var p = R.int(1, 5), qq = R.intNot(1, 5, p);
+    if (shape === 'pq') { var p = R.int(1, 9), qq = R.intNot(1, 9, p);
       var v = p === 2 * qq ? '3/2*ln(2)' : qq === 2 * p ? 'ln(2)/2' : p === 4 * qq ? '2*ln(2)' : qq === 4 * p ? '0' : 'ln(2)+ln(' + p + '/' + qq + ')/2';
       return { q: 'Rearrange $1 - \\frac{1}{2} + \\frac{1}{3} - \\frac{1}{4} + \\cdots = \\ln 2$ by taking ' + plural(p, 'positive term') + ', then ' + plural(qq, 'negative term') + ', and repeating. Using the fact that this rearrangement converges to $\\ln 2 + \\frac{1}{2}\\ln\\frac{p}{q}$ ($p$ positive and $q$ negative terms per round), find its sum.', a: num(v),
         steps: ['Here $p = ' + p + '$ and $q = ' + qq + '$.', 'The sum is $\\ln 2 + \\frac{1}{2}\\ln\\frac{' + p + '}{' + qq + '}' + (v.indexOf('ln(2)+ln(') === 0 ? '' : ' = ' + tex(v)) + '$.', 'The positive terms alone diverge, and so do the negative terms: that is what lets a different order produce a different sum. (Reason: after $n$ rounds the sum is $H_{2pn} - \\frac{1}{2}H_{pn} - \\frac{1}{2}H_{qn}$ with $H_m \\approx \\ln m + \\gamma$.)'],
@@ -748,7 +748,7 @@
       return { q: 'Rearrange the alternating harmonic series by taking ' + plural(p2, 'positive term') + ', then ' + plural(q2, 'negative term') + ', and repeating: $' + rearr(p2, q2, 6).terms.join(' + ').replace(/\+ -/g, '- ') + ' + \\cdots$ Find the sum of the first ' + cnt + ' terms' + (exact ? ' (as a fraction).' : ', rounded to 3 decimal places.'), a: exact ? num(rr.s.toPlain()) : num(rr.s.toPlain(), { dp: 3 }),
         steps: ['The first ' + cnt + ' terms are $' + rr.terms.join(' + ').replace(/\+ -/g, '- ') + '$.', 'Their sum is ' + (exact ? '$' + T.num(rr.s) + ' \\approx ' + T.num(U.round(rr.s.toNumber(), 4)) + '$' : '$' + T.num(U.round(rr.s.toNumber(), 3)) + '$ to 3 places') + ', compared with $\\ln 2 \\approx 0.6931$ for the original order.', 'This rearrangement tends to $\\ln 2 + \\frac{1}{2}\\ln\\frac{' + p2 + '}{' + q2 + '} \\approx ' + T.num(U.round(M.log(2) + M.log(p2 / q2) / 2, 4)) + '$.'],
         hint: 'Write the terms in the new order and add them over a common denominator.', data: { k: 'partial', p: p2, q: q2, cnt: cnt, v: rr.s.toPlain() } }; }
-    if (shape === 'greedy') { var Tq = q(Q(R.int(21, 44), 20)), s = Q(0), m = 0; while (!s.gt(Tq)) { m++; s = s.add(Q(1, 2 * m - 1)); }
+    if (shape === 'greedy') { var Tq = q(Q(R.int(21, 60), 20)), s = Q(0), m = 0; while (!s.gt(Tq)) { m++; s = s.add(Q(1, 2 * m - 1)); }
       var neg = 0, s2 = s; while (!s2.lt(Tq)) { neg++; s2 = s2.sub(Q(1, 2 * neg)); }
       var parts = L === 3 ? [part('positive terms:', num(m)), part('then negative terms:', num(neg))] : [part('positive terms:', num(m))];
       return { q: 'Riemann\'s method rearranges $1 - \\frac{1}{2} + \\frac{1}{3} - \\cdots$ to add up to $' + T.num(Tq) + '$: take positive terms $1, \\frac{1}{3}, \\frac{1}{5}, \\ldots$ until the sum first exceeds $' + T.num(Tq) + '$, then negative terms $-\\frac{1}{2}, -\\frac{1}{4}, \\ldots$ until it first drops below, and so on. How many positive terms are used at the start' + (L === 3 ? ', and how many negative terms after them' : '') + '?', a: multi(parts),
@@ -845,9 +845,9 @@
         steps: ['$\\frac{1}{x_n} = 2\\pi n + ' + th[0] + '$, so $f(x_n) = ' + fn + '\\left(2\\pi n + ' + th[0] + '\\right) = ' + fn + '\\left(' + th[0] + '\\right) = ' + tex(v) + '$ for every $n$.', 'So $f(x_n) \\to ' + tex(v) + '$. Different choices of the angle give different limits along sequences tending to $0$, so no value of $f(0)$ makes $f$ continuous at $0$.'],
         hint: 'What is $\\frac{1}{x_n}$? The sine and cosine repeat every $2\\pi$.', data: { k: 'sin', th: th[0], fn: useSin ? 'sin' : 'cos', v: v } }; }
     if (shape === 'ratirr') { var kd = R.pick(['lin', 'quad', 'cube']), pT, qT, roots;
-      if (kd === 'lin') { var c = R.nz(-5, 5); pT = 'x'; qT = String(c); roots = [c]; var pj = 'x', qj = String(c); }
-      else if (kd === 'quad') { var r1 = R.int(-4, 4), r2 = R.intNot(-4, 4, r1); pT = 'x^{2}'; qT = T.lin(r1 + r2, 'x', -r1 * r2); roots = [r1, r2]; pj = 'x*x'; qj = (r1 + r2) + '*x-(' + (r1 * r2) + ')'; }
-      else { var k = R.pick([1, 4, 9]), rk = M.sqrt(k); pT = 'x^{3}'; qT = (k === 1 ? '' : k) + 'x'; roots = [0, rk, -rk]; pj = 'x*x*x'; qj = k + '*x'; }
+      if (kd === 'lin') { var c = R.nz(-9, 9); pT = 'x'; qT = String(c); roots = [c]; var pj = 'x', qj = String(c); }
+      else if (kd === 'quad') { var r1 = R.int(-6, 6), r2 = R.intNot(-6, 6, r1); pT = 'x^{2}'; qT = T.lin(r1 + r2, 'x', -r1 * r2); roots = [r1, r2]; pj = 'x*x'; qj = (r1 + r2) + '*x-(' + (r1 * r2) + ')'; }
+      else { var k = R.pick([1, 4, 9, 16, 25]), rk = M.sqrt(k); pT = 'x^{3}'; qT = (k === 1 ? '' : k) + 'x'; roots = [0, rk, -rk]; pj = 'x*x*x'; qj = k + '*x'; }
       return { q: 'Let $f(x) = ' + pT + '$ when $x$ is rational and $f(x) = ' + qT + '$ when $x$ is irrational. At which points is $f$ continuous? Give the set.', a: setA(roots),
         steps: ['Near any point there are rationals and irrationals, so sequences $x_n \\to a$ of each kind give $f(x_n) \\to ' + pT.replace('x', 'a') + '$ and $f(x_n) \\to ' + qT.replace(/x/g, 'a') + '$.', 'Continuity at $a$ needs these to agree: $' + pT.replace('x', 'a') + ' = ' + qT.replace(/x/g, 'a') + '$.', 'The solutions are $a = ' + roots.slice().sort(function (x, y) { return x - y; }).join(', ') + '$; at those points both pieces agree, and $f$ is continuous. Everywhere else it is not.'],
         hint: 'Approach $a$ along rationals and along irrationals. When do the limits agree?', data: { k: 'ratirr', kind: kd, roots: roots, pj: pj, qj: qj } }; }
@@ -858,7 +858,7 @@
       var atRat = R.coin(); return { q: 'Thomae\'s function is $f(\\frac{p}{q}) = \\frac{1}{q}$ in lowest terms and $0$ at irrationals. Is it continuous at $' + (atRat ? '\\frac{' + nu + '}{' + den + '}' : '\\sqrt{' + R.pick([2, 3, 5, 7]) + '}') + '$?', a: tf(!atRat),
         steps: atRat ? ['$f\\left(\\frac{' + nu + '}{' + den + '}\\right) = \\frac{1}{' + den + '}$, but irrationals $x_n \\to \\frac{' + nu + '}{' + den + '}$ give $f(x_n) = 0$.', 'The limits disagree, so $f$ is not continuous there: false.'] : ['$f = 0$ at an irrational point. Rationals very close to it must have large denominators, so $f$ is small near the point.', 'Every sequence $x_n \\to$ the point has $f(x_n) \\to 0$, so $f$ is continuous there: true.'],
         hint: 'Compare $f$ at the point with $f$ along nearby irrationals.', data: { k: 'tf' } }; }
-    if (shape === 'twoside') { var a2 = R.nz(-4, 4), k2 = R.pick([1, 2, 3]);
+    if (shape === 'twoside') { var a2 = R.nz(-8, 8), k2 = R.pick([1, 2, 3, 4, 5]);
       return { q: 'Let $f(x) = \\frac{' + (k2 === 1 ? '' : k2) + '(x^{2} - ' + (a2 * a2) + ')}{|x - ' + T.p(a2) + '|}$ for $x \\ne ' + a2 + '$. Find $\\lim f\\left(' + a2 + ' + \\frac{1}{n}\\right)$ and $\\lim f\\left(' + a2 + ' - \\frac{1}{n}\\right)$.', a: multi([part('from the right:', num(2 * k2 * a2)), part('from the left:', num(-2 * k2 * a2))]),
         steps: ['$f(x) = ' + (k2 === 1 ? '' : k2) + '(x + ' + T.p(a2) + ')\\frac{x - ' + T.p(a2) + '}{|x - ' + T.p(a2) + '|}$, and the fraction is $1$ to the right of $' + a2 + '$ and $-1$ to the left.', 'So $f(' + a2 + ' + \\frac{1}{n}) \\to ' + (2 * k2 * a2) + '$ and $f(' + a2 + ' - \\frac{1}{n}) \\to ' + (-2 * k2 * a2) + '$.', 'Two sequences tending to $' + a2 + '$ with different limits of $f$: no value of $f(' + a2 + ')$ makes $f$ continuous there.'],
         hint: 'What is $\\frac{x - a}{|x - a|}$ on each side?', data: { k: 'two', a: a2, k2: k2 } }; }
@@ -968,11 +968,11 @@
 
   G('ra.differentiability', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['ab', 'tf']), R.pick(['ab', 'onesided', 'tf']), R.pick(['ab', 'onesided', 'step']));
-    if (shape === 'ab') { var c = R.nz(-4, 4), cube = L === 3 && R.coin(), kk = cube ? 1 : R.int(1, 3), a = cube ? 3 * c * c : 2 * kk * c, b = cube ? -2 * c * c * c : -kk * c * c, f = cube ? 'x^{3}' : T.coef(kk, 'x^{2}');
+    if (shape === 'ab') { var c = R.nz(-7, 7), cube = L === 3 && R.coin(), kk = cube ? 1 : R.int(1, 5), a = cube ? 3 * c * c : 2 * kk * c, b = cube ? -2 * c * c * c : -kk * c * c, f = cube ? 'x^{3}' : T.coef(kk, 'x^{2}');
       return { q: 'Find $a$ and $b$ so that $f(x) = ' + f + '$ for $x \\le ' + c + '$, $f(x) = ax + b$ for $x > ' + c + '$ is differentiable at $' + c + '$.', a: multi([part('$a =$', num(a)), part('$b =$', num(b))]),
         steps: ['Differentiable implies continuous, so the pieces meet: $' + (cube ? c * c * c : kk * c * c) + ' = ' + T.coef(c, 'a') + ' + b$.', 'The one-sided derivatives must agree: the left one is $' + (cube ? '3x^{2}' : T.coef(2 * kk, 'x')) + '$ at $' + c + '$, which is $' + a + '$, and the right one is $a$. So $a = ' + a + '$.', 'Then $b = ' + (cube ? c * c * c : kk * c * c) + ' - ' + T.p(c * a) + ' = ' + b + '$. (The line $y = ' + T.lin(a, 'x', b) + '$ is the tangent line at $' + c + '$.)'],
         hint: 'Two conditions: the pieces meet, and their slopes match.', data: { k: 'ab', c: c, cube: cube, kk: kk, a: a, b: b } }; }
-    if (shape === 'onesided') { var cc = R.nz(-4, 4), d = R.intNot(-5, 5, cc), r = cc - d;
+    if (shape === 'onesided') { var cc = R.nz(-7, 7), d = R.intNot(-8, 8, cc), r = cc - d;
       return { q: 'Let $f(x) = |' + xm(cc) + '|\\,' + (d === 0 ? 'x' : '(' + xm(d) + ')') + '$. Find the right-hand and left-hand derivatives at $x = ' + cc + '$.', a: multi([part('right-hand:', num(r)), part('left-hand:', num(-r))]),
         steps: ['$\\frac{f(' + cc + ' + h) - f(' + cc + ')}{h} = \\frac{|h|}{h}(' + cc + ' + h' + (d < 0 ? ' + ' + (-d) : d === 0 ? '' : ' - ' + d) + ')$, since $f(' + cc + ') = 0$.', 'For $h > 0$ it tends to $' + r + '$; for $h < 0$ it tends to $' + (-r) + '$.', 'They differ, so $f$ is continuous but not differentiable at $' + cc + '$: a corner.'],
         hint: 'Factor out $|h|/h$, which is $1$ on the right and $-1$ on the left.', data: { k: 'one', c: cc, d: d, r: r } }; }
@@ -1031,11 +1031,11 @@
 
   G('ra.taylor-remainder', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['bound', 'c']), R.pick(['nexp', 'bound', 'c']), R.pick(['nexp', 'nln', 'which']));
-    if (shape === 'bound') { var fn = R.pick(['sin', 'cos']), x = q(R.pick(['1/2', '1/3', '1/10', '1/5', '1'])), n = R.int(2, 5), bd = x.pow(n + 1).div(fact(n + 1));
+    if (shape === 'bound') { var fn = R.pick(['sin', 'cos']), x = q(R.pick(['1/2', '1/3', '1/10', '1/5', '1', '1/4', '2/3', '3/4', '1/6'])), n = R.int(2, 6), bd = x.pow(n + 1).div(fact(n + 1));
       return { q: 'Bound the error when $\\' + fn + ' x$ is approximated by its Maclaurin polynomial $P_{' + n + '}$ at $x = ' + T.num(x) + '$, using $|f^{(' + (n + 1) + ')}(c)| \\le 1$. Give the bound $\\frac{|x|^{' + (n + 1) + '}}{' + (n + 1) + '!}$ as a fraction.', a: num(bd.toPlain()),
         steps: ['Taylor\'s theorem: $R_{' + n + '}(x) = \\frac{f^{(' + (n + 1) + ')}(c)}{' + (n + 1) + '!}x^{' + (n + 1) + '}$ for some $c$ between $0$ and $x$.', 'Every derivative of $\\' + fn + '$ is $\\pm\\sin$ or $\\pm\\cos$, so $|f^{(' + (n + 1) + ')}(c)| \\le 1$.', '$|R_{' + n + '}| \\le \\frac{(' + T.num(x) + ')^{' + (n + 1) + '}}{' + fact(n + 1) + '} = ' + T.num(bd) + '$.'],
         hint: 'Use the $(n + 1)$st power and $(n + 1)!$.', data: { k: 'bound', x: x.toPlain(), n: n, v: bd.toPlain() } }; }
-    if (shape === 'c') { var m = R.int(3, 6), xv = R.nz(-6, 6), c = Q(xv, m);
+    if (shape === 'c') { var m = R.int(2, 9), xv = R.nz(-9, 9), c = Q(xv, m);
       return { q: 'For $f(x) = x^{' + m + '}$ and its Maclaurin polynomial $P_{' + (m - 2) + '}$ (which is $0$), Taylor\'s theorem says $f(' + xv + ') = P_{' + (m - 2) + '}(' + xv + ') + \\frac{f^{(' + (m - 1) + ')}(c)}{' + (m - 1) + '!}(' + xv + ')^{' + (m - 1) + '}$ for some $c$ between $0$ and $' + xv + '$. Find $c$.', a: num(c.toPlain()),
         steps: ['$f^{(' + (m - 1) + ')}(x) = ' + fact(m) + 'x$, so the remainder is $\\frac{' + fact(m) + 'c}{' + fact(m - 1) + '}x^{' + (m - 1) + '} = ' + m + 'c\\,x^{' + (m - 1) + '}$.', 'Set it equal to $f(' + xv + ') = (' + xv + ')^{' + m + '}$: $' + m + 'c = ' + xv + '$.', 'So $c = ' + T.num(c) + '$, which is indeed between $0$ and $' + xv + '$.'],
         hint: 'Compute the $(n + 1)$st derivative of $x^{' + m + '}$.', data: { k: 'c', m: m, x: xv, c: c.toPlain() } }; }
@@ -1043,7 +1043,7 @@
       return { q: 'Approximate $e^{' + T.num(xv2) + '}$ by the Maclaurin polynomial $P_n$ of $e^{x}$. Using $e^{c} < ' + Mb + '$ for $0 \\le c \\le ' + T.num(xv2) + '$, the error is less than $\\frac{' + Mb + '\\,(' + T.num(xv2) + ')^{n+1}}{(n + 1)!}$. Find an $n$ that makes this bound less than $' + epsTex(e) + '$. (Any such $n$ is right.)', a: multi([part('$n =$', anyN(n0))]),
         steps: ['The bound shrinks as $n$ grows, since $(n + 1)!$ grows faster than any power.', 'It first drops below $' + epsTex(e) + '$ at $n = ' + n0 + '$: $\\frac{' + Mb + '(' + T.num(xv2) + ')^{' + (n0 + 1) + '}}{' + fact(n0 + 1) + '} = ' + T.num(q(Mb).mul(xv2.pow(n0 + 1)).div(fact(n0 + 1))) + '$.', 'So $n = ' + n0 + '$ works, and any larger $n$ does too.'],
         hint: 'Try $n = 1, 2, 3, \\ldots$ until the bound is small enough.', data: { k: 'nexp', x: xv2.toPlain(), Mb: Mb, e: eq.toPlain(), n0: n0 } }; }
-    if (shape === 'nln') { var e2 = epsPick(R, 2), eq2 = q(e2), x3 = q(R.pick(['1/2', '1/3', '1/4'])), n2 = firstN(function (n) { return x3.pow(n + 1).div(n + 1).lt(eq2); });
+    if (shape === 'nln') { var e2 = epsPick(R, 2), eq2 = q(e2), x3 = q(R.pick(['1/2', '1/3', '1/4', '1/5', '1/10', '2/5'])), n2 = firstN(function (n) { return x3.pow(n + 1).div(n + 1).lt(eq2); });
       return { q: 'For $f(x) = \\ln(1 + x)$, $|f^{(n+1)}(c)| = \\frac{n!}{(1 + c)^{n+1}} \\le n!$ for $c \\ge 0$, so the Maclaurin error at $x = ' + T.num(x3) + '$ is at most $\\frac{(' + T.num(x3) + ')^{n+1}}{n + 1}$. Find an $n$ that makes this less than $' + epsTex(e2) + '$. (Any such $n$ is right.)', a: multi([part('$n =$', anyN(n2))]),
         steps: ['$|R_n| \\le \\frac{n!}{(n + 1)!}x^{n+1} = \\frac{x^{n+1}}{n + 1}$.', 'At $x = ' + T.num(x3) + '$ it first drops below $' + epsTex(e2) + '$ at $n = ' + n2 + '$: $\\frac{(' + T.num(x3) + ')^{' + (n2 + 1) + '}}{' + (n2 + 1) + '} = ' + T.num(x3.pow(n2 + 1).div(n2 + 1)) + '$.', 'So $n = ' + n2 + '$ works, and so does any larger $n$.'],
         hint: 'Evaluate the bound for $n = 1, 2, 3, \\ldots$', data: { k: 'nln', x: x3.toPlain(), e: eq2.toPlain(), n0: n2 } }; }
@@ -1283,7 +1283,7 @@
     if (shape === 'deriv') return { q: '$f_n(x) = \\frac{\\sin(nx)}{n}$ converges uniformly to $0$ on $\\mathbb{R}$. What happens to the derivatives $f_n\'(x) = \\cos(nx)$?', a: mc('They do not converge to $0$ (at $x = 0$ they all equal $1$), so derivatives cannot be swapped with limits just because $f_n$ converges uniformly.', ['They converge uniformly to $0$, as uniform convergence guarantees.', 'They converge to $1$ everywhere.', 'They converge pointwise to $0$ everywhere.']),
       steps: ['$\\|f_n\\| = \\frac{1}{n} \\to 0$: uniform convergence of $f_n$.', 'But $f_n\'(0) = \\cos 0 = 1$ for every $n$, while the limit function $0$ has derivative $0$.', 'Swapping a limit with a derivative needs the derivatives $f_n\'$ to converge uniformly.'], hint: 'Evaluate $f_n\'(0)$.', data: { k: 'mc' } };
     var it = R.pick(shape === 'value' ? UL.filter(function (x) { return x.I; }) : UL);
-    if (shape === 'value') { var n = R.int(2, 30), v = it.I(n);
+    if (shape === 'value') { var n = R.int(2, 60), v = it.I(n);
       return { q: 'Let $f_n(x) = ' + it.tex + '$ on $[0, 1]$. Compute $\\int_0^1 f_{' + n + '}(x)\\,dx$.', a: num(v.toPlain()), steps: [it.why, 'At $n = ' + n + '$: $' + T.num(v) + '$.'], hint: 'Find the integral as a formula in $n$ first.', data: { k: 'value', f: it.plain, n: n, v: v.toPlain() } }; }
     if (shape === 'pair') return { q: 'Let $f_n(x) = ' + it.tex + '$ on $[0, 1]$. Find $' + LIMN + ' \\int_0^1 f_n(x)\\,dx$ and $\\int_0^1 \\left(' + LIMN + ' f_n(x)\\right) dx$.', a: multi([part('$\\lim \\int f_n =$', num(it.limI)), part('$\\int \\lim f_n =$', num(it.limF))]),
       steps: [it.why + ' As $n \\to \\infty$ this tends to $' + tex(it.limI) + '$.', it.pw, it.limI === it.limF ? 'Here the two agree.' + (it.uni ? ' Uniform convergence guarantees that.' : ' (They can agree without uniform convergence, but nothing guarantees it.)') : 'They differ: the convergence is not uniform (the graphs have a spike of growing height that slides toward $0$), so the limit and the integral cannot be swapped.'],
@@ -1318,7 +1318,7 @@
 
   G('ra.power-series-radius', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['std', 'std', 'mtest']), R.pick(['gaps', 'alt', 'std']), R.pick(['gaps', 'alt', 'interval']));
-    if (shape === 'std') { var kd = R.pick(['poly', 'poly', 'fact', 'nfact', 'n']), b = R.int(2, 9), p = R.int(1, 6), tx, v, why;
+    if (shape === 'std') { var kd = R.pick(['poly', 'poly', 'fact', 'nfact', 'n']), b = R.int(2, 12), p = R.int(1, 8), tx, v, why;
       if (kd === 'poly') { tx = '\\frac{n^{' + p + '}}{' + b + '^{n}}'; v = String(b); why = '$|c_n|^{1/n} = \\frac{(n^{1/n})^{' + p + '}}{' + b + '} \\to \\frac{1}{' + b + '}$, since $n^{1/n} \\to 1$.'; }
       else if (kd === 'n') { tx = '\\frac{1}{n \\cdot ' + b + '^{n}}'; v = String(b); why = '$|c_n|^{1/n} = \\frac{1}{n^{1/n} \\cdot ' + b + '} \\to \\frac{1}{' + b + '}$.'; }
       else if (kd === 'fact') { tx = '\\frac{1}{n!}'; v = 'inf'; why = 'The ratio $\\frac{|c_{n+1}|}{|c_n|} = \\frac{1}{n + 1} \\to 0$, so $|c_n|^{1/n} \\to 0$ as well; $R = \\infty$.'; }
@@ -1328,10 +1328,10 @@
     if (shape === 'gaps') { var a = R.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 16, 25, 36]), s = surd(Q(1, a));
       return { q: 'Find the radius of convergence of $\\sum_{n=0}^{\\infty} ' + a + '^{n} x^{2n}$. (The odd powers are missing, so the ratio test on the coefficients does not apply directly.)', a: num(s.plain),
         steps: ['As a series in $x$, $c_k = ' + a + '^{k/2}$ for even $k$ and $c_k = 0$ for odd $k$.', 'So $\\limsup |c_k|^{1/k} = ' + a + '^{1/2} = ' + surd(a).tex + '$, and $R = \\frac{1}{' + surd(a).tex + '} = ' + s.tex + '$.', 'Check: it is geometric in $' + a + 'x^{2}$, which converges when $' + a + 'x^{2} < 1$, that is, $|x| < ' + s.tex + '$.'], hint: 'Treat it as geometric in $' + a + 'x^{2}$, or use the lim sup of the $k$th roots.', data: { k: 'gaps', a: a, v: s.plain } }; }
-    if (shape === 'alt') { var pr = R.sample([2, 3, 4, 5, 6, 7], 2), pe = pr[0], po = pr[1], mx = M.max(pe, po);
+    if (shape === 'alt') { var pr = R.sample([2, 3, 4, 5, 6, 7, 8, 9, 10], 2), pe = pr[0], po = pr[1], mx = M.max(pe, po);
       return { q: 'Find the radius of convergence of $\\sum c_n x^{n}$ where $c_n = ' + pe + '^{n}$ for even $n$ and $c_n = ' + po + '^{n}$ for odd $n$.', a: num(Q(1, mx).toPlain()),
         steps: ['$|c_n|^{1/n}$ is $' + pe + '$ for even $n$ and $' + po + '$ for odd $n$.', 'So $\\limsup |c_n|^{1/n} = ' + mx + '$ (the ratios $\\frac{c_{n+1}}{c_n}$ jump around and have no limit).', 'So $R = \\frac{1}{' + mx + '}$.'], hint: 'The lim sup takes the larger of the two roots.', data: { k: 'alt', pe: pe, po: po } }; }
-    if (shape === 'interval') { var x0 = R.int(-3, 3), b2 = R.int(1, 4), lo = x0 - b2, hi = x0 + b2;
+    if (shape === 'interval') { var x0 = R.int(-6, 6), b2 = R.int(1, 7), lo = x0 - b2, hi = x0 + b2;
       return { q: 'Find the interval of convergence of $\\sum_{n=1}^{\\infty} \\frac{(' + xm(x0) + ')^{n}}{n \\cdot ' + b2 + '^{n}}$, including the endpoints that belong.'.replace('(x)^{n}', 'x^{n}').replace(' \\cdot 1^{n}', ''), a: { t: 'interval', v: '[' + lo + ', ' + hi + ')' },
         steps: ['$|c_n|^{1/n} = \\frac{1}{n^{1/n} \\cdot ' + b2 + '} \\to \\frac{1}{' + b2 + '}$, so $R = ' + b2 + '$ around the center $' + x0 + '$: it converges on $(' + lo + ', ' + hi + ')$.', 'At $x = ' + hi + '$: $\\sum \\frac{1}{n}$, the harmonic series, diverges.', 'At $x = ' + lo + '$: $\\sum \\frac{(-1)^{n}}{n}$ converges (alternating series test). So the interval is $[' + lo + ', ' + hi + ')$.'], hint: 'Find $R$, then test each endpoint separately.', data: { k: 'interval', x0: x0, b: b2 } }; }
     var r = q(R.pick(['1/2', '1/3', '1/4'])), rr = R.pick([q(1), q('1/2')]).mul(1), bound = rr.mul(r), sum = q(1).div(q(1).sub(bound));
@@ -1440,3 +1440,133 @@
 
 // ---- 99-tail.js
 })(typeof window !== 'undefined' ? window.MathLadder : this.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
+   generator still has few different problems at a level sometimes asks the same skill in another form, built only from
+   problems that generator made, so every answer is the generator's own:
+   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+     classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
+     checker rejects it;
+   - two at once: two different short questions of the topic, answered together.
+   Topics whose generator already varies a lot at a level are left as they are. Placed after the generators and
+   registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'ra', VAR = {};
+  // how often another form is used: never when the topic's own generator already varies a lot at this level, up to
+  // half the time when it has few different questions (counted once per topic and level from 40 fixed seeds)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 37 ? 0 : VAR[key] >= 30 ? 0.3 : VAR[key] >= 20 ? 0.45 : 0.55;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
+  // a nearby wrong answer for a number or an expression, or null
+  function wrongFor(R, a) {
+    var v = String(ML.answerValue(a)), cands = [], m;
+    if (a.t === 'num') {
+      if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
+      else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
+      else if (/^-?\d+\.\d+$/.test(v)) { var x = +v, dp = v.split('.')[1].length, st = Math.pow(10, -Math.min(dp, 2)); cands = [x + st, x - st, -x, x * 10, x / 10].map(function (y) { return ML.util.numStr(ML.util.round(y, dp + 1)); }); }
+      else return null;
+    } else if (a.t === 'expr') {
+      if (v.length > 60) return null;
+      if (/ \+ /.test(v)) cands.push(v.replace(' + ', ' - '));
+      if (/ - /.test(v)) cands.push(v.replace(' - ', ' + '));
+      if ((m = /(^|[^\d.^])(\d+)(?![\d.])/.exec(v)) && !/\^$/.test(v.slice(0, m.index + m[1].length))) cands.push(v.slice(0, m.index) + m[1] + (+m[2] + 1) + v.slice(m.index + m[0].length));
+      if (!cands.length) return null;
+    } else return null;
+    var nv = function (s) { var mm = /^(-?\d+)\/(\d+)$/.exec(s); return mm ? mm[1] / mm[2] : /^-?\d+(\.\d+)?$/.test(s) ? +s : null; }, v0 = nv(v);
+    cands = R.shuffle(cands.filter(function (c, i, all) { var x = nv(c); return c !== v && all.indexOf(c) === i && (x === null || v0 === null || (Math.abs(x - v0) >= 0.01 * Math.max(Math.abs(v0), 1e-12) && (v0 <= 0 || x > 0) && (v0 <= 0 || v0 > 1 || x <= 1))); })); // a believable slip: the same sign, and at most 1 when the right answer is
+    for (var i = 0; i < cands.length; i++) if (okAns(a, cands[i]) === false) return cands[i];
+    return null;
+  }
+  function checkable(p) {
+    var a = p.a;
+    if (!a || p.unit || (a.form && a.form !== 'int' && a.form !== 'frac' && a.form !== 'simplest')) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bclassmate\b/i.test(txt(p.q))) return false;
+    if (a.t === 'num' || a.t === 'expr') return okAns(a, ML.answerValue(a)) === true;
+    if (a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    return true;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || ['mc', 'tf', 'num'].indexOf(p.a.t) < 0) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= 300 && !/<(table|svg|img|canvas|ol|ul)\b|\$\$|\\begin\{/i.test(p.q);
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), shown, good;
+    if (a.t === 'mc') {
+      var k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+      shown = a.choices[k]; good = a.choices[a.v];
+    } else {
+      good = ML.answerShow(a);
+      var w = right ? null : wrongFor(R, a);
+      if (!right && w === null) return null;
+      shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
+      if (!shown || /undefined|NaN/.test(shown)) return null;
+    }
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var out = { q: '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q + '</li><li>' + p2.q + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + (p.steps || [''])[0]].concat((p.steps || []).slice(1), ['Question 2: ' + (p2.steps || [''])[0]], (p2.steps || []).slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), mode = ctx && ctx.mode;
+      if (!p || !p.a || !ML.check || !ML.answerShow || !R.chance(share(id, base, ctx))) return p;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check', 'check');
+      if (pairable(p, true)) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = null;
+      try { out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base); } catch (e) { out = null; }
+      return out || p;
+    };
+    fn._forms = true;
+    fn._base = base; // the topic's own generator (for tests)
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

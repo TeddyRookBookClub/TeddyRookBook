@@ -151,7 +151,7 @@
         'Divide the depth by the radius and multiply by 100.', { unit: '%', vf: { k: 'hole', d: dh } });
     }
     if (kind === 'model') {
-      var gr = R.pick([15, 20, 25, 30]), dh2 = 12.3, mm = dh2 / R_EARTH * gr * 10;
+      var gr = R.pick([15, 20, 25, 30, 16, 21, 24, 29]), dh2 = 12.3, mm = dh2 / R_EARTH * gr * 10;
       return P('A classroom globe has a radius of ' + gr + ' cm. Earth\'s radius is about 6,371 km, and the deepest hole ever drilled reached about 12.3 km. How deep would that hole be on the globe, in millimeters?', num(mm, 2, 0.03),
         ['Scale factor: the globe is $' + gr + '\\,\\text{cm}$ for $6,371\\,\\text{km}$.', 'Depth on the globe: $12.3 \\times \\dfrac{' + gr + '\\,\\text{cm}}{6,371} = ' + fd(mm / 10, 4) + '\\,\\text{cm}$.', 'In millimeters: about $' + fd(mm, 2) + '\\,\\text{mm}$, the thickness of about ' + M.round(mm / 0.1) + ' sheets of paper. Drilling has barely scratched the surface.'],
         'Find what fraction of the radius the hole is, then take that fraction of the globe\'s radius.', { unit: 'mm', vf: { k: 'model', g: gr, d: dh2 } });
@@ -232,7 +232,7 @@
     }
     var dens = kind === 'root' && ctx.level === 1 ? [RHO_C, RHO_M] : R.pick([[2.7, 3.3], [2.7, 3.3], [2.75, 3.3], [2.8, 3.3], [2.6, 3.25], [2.7, 3.24]]), rc = dens[0], rm = dens[1], fac = rc / (rm - rc);
     if (kind === 'root' || kind === 'height' || kind === 'total') {
-      var h = R.int(2, 12) / 2, root = h * fac, base = R.pick([30, 35, 40]);
+      var h = R.int(2, 12) / 2, root = h * fac, base = R.pick([30, 35, 40, 31, 36, 39]);
       var stp = ['Isostasy: columns of the same width press equally on the mantle below the deepest root, so the extra rock above sea level must be balanced by light crust pushing down into the dense mantle.',
         'The mountain\'s extra weight, $\\rho_c h$, equals the buoyancy lost in the root, $(\\rho_m - \\rho_c) r$: so $r = h \\dfrac{\\rho_c}{\\rho_m - \\rho_c}$.'];
       if (kind === 'root') return P('A mountain range stands ' + fd(h, 1) + ' km above the surrounding plains. The crust is ' + rc + ' g/cm³ and the mantle is ' + rm + ' g/cm³. If the range is in isostatic balance (Airy model), how deep a root of crust extends into the mantle below it?', num(root, 3, 0.01),
@@ -276,13 +276,13 @@
         'Find which interval the age falls in.', { vf: { k: 'polarity', ma: ma } });
     }
     if (kind === 'curie') {
-      var T0 = R.int(10, 20), g = R.pick([20, 25, 30, 35]), z = (580 - T0) / g;
+      var T0 = R.int(10, 20), g = R.pick([20, 25, 30, 35, 21, 26, 29, 34]), z = (580 - T0) / g;
       return P('Magnetite, the main magnetic mineral in rock, loses its magnetism above its Curie temperature of about 580 °C. With a surface temperature of ' + T0 + ' °C and a gradient of ' + g + ' °C per km, below what depth is the rock too hot to stay magnetized?', num(z, 3, 0.02),
         ['Warming needed: $580 - ' + T0 + ' = ' + (580 - T0) + '^\\circ\\text{C}$.', 'Depth: $\\dfrac{' + (580 - T0) + '}{' + g + '} \\approx ' + fd(z, 1) + '\\,\\text{km}$.', 'Below a few tens of kilometers no rock can hold a magnet, and the core is thousands of degrees hotter. So Earth\'s field is not a buried bar magnet: it is made by moving liquid iron in the outer core.'],
         'Find the depth where the temperature reaches 580 °C.', { unit: 'km', vf: { k: 'curie', T0: T0, g: g } });
     }
     if (kind === 'incl') {
-      var lat = R.pick([10, 15, 20, 25, 30, 35, 40, 45, 50, 60]), I = M.atan(2 * M.tan(lat * RAD)) * DEG;
+      var lat = R.pick([10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 12]), I = M.atan(2 * M.tan(lat * RAD)) * DEG;
       return P('In a field like a bar magnet\'s (a dipole), the magnetic inclination $I$ (the dip of the field lines below horizontal) and the latitude $\\lambda$ are related by $\\tan I = 2\\tan\\lambda$. What inclination would lava cooling at latitude $' + lat + '^\\circ$ record?', { t: 'num', v: ans(I, 3), tol: 0.5 },
         ['$\\tan I = 2\\tan ' + lat + '^\\circ = 2 \\times ' + fd(M.tan(lat * RAD), 4) + ' = ' + fd(2 * M.tan(lat * RAD), 4) + '$.', '$I = \\tan^{-1}(' + fd(2 * M.tan(lat * RAD), 4) + ') \\approx ' + fd(I, 1) + '^\\circ$.', 'Field lines are flat at the equator ($I = 0^\\circ$) and point straight down at the magnetic poles ($I = 90^\\circ$).'],
         'Find $2\\tan\\lambda$, then take the inverse tangent.', { unit: '°', vf: { k: 'incl', lat: lat } });
@@ -304,7 +304,7 @@
         ['Solve for the latitude: $\\tan\\lambda = \\dfrac{\\tan I}{2} = \\dfrac{\\tan ' + I2 + '^\\circ}{2} = \\dfrac{' + fd(M.tan(I2 * RAD), 4) + '}{2} = ' + fd(M.tan(I2 * RAD) / 2, 4) + '$.', '$\\lambda = \\tan^{-1}(' + fd(M.tan(I2 * RAD) / 2, 4) + ') \\approx ' + fd(lat2, 1) + '^\\circ$.', 'This paleolatitude is where the rock was when it cooled, which may be far from where it is today.'],
         'Divide $\\tan I$ by 2, then take the inverse tangent.', { unit: '°', vf: { k: 'lat', I: I2 } });
     }
-    var now = M.round(lat2) + R.pick([15, 20, 25, 30]), moved = (now - lat2) * 111;
+    var now = M.round(lat2) + R.pick([15, 20, 25, 30, 16, 21, 24, 29]), moved = (now - lat2) * 111;
     return P('Lava flows that are now at latitude $' + now + '^\\circ$ N record an inclination of $' + I2 + '^\\circ$ (pointing down, as in the Northern Hemisphere). Using $\\tan I = 2\\tan\\lambda$, about how many kilometers north has the land moved since the lava cooled? (One degree of latitude is about 111 km.)', num(moved, 2, 0.03),
       ['Paleolatitude: $\\tan\\lambda = \\dfrac{\\tan ' + I2 + '^\\circ}{2} = ' + fd(M.tan(I2 * RAD) / 2, 4) + '$, so $\\lambda \\approx ' + fd(lat2, 1) + '^\\circ$ N.', 'The land moved $' + now + ' - ' + fd(lat2, 1) + ' = ' + fd(now - lat2, 1) + '^\\circ$ north.', 'Distance: $' + fd(now - lat2, 1) + ' \\times 111 \\approx ' + T.commas(M.round(moved)) + '\\,\\text{km}$.'],
       'Find the paleolatitude first, then compare it with today\'s latitude.', { unit: 'km', vf: { k: 'moved', I: I2, now: now } });
@@ -820,12 +820,12 @@
     }
     if (kind === 'rate') {
       if (R.coin()) {
-        var r = R.pick([1, 1.5, 2, 2.5]), yrs = R.pick([80, 120, 150, 200, 250, 300]), loss = r * yrs / 100;
+        var r = R.pick([1, 1.5, 2, 2.5, 1.2]), yrs = R.pick([80, 120, 150, 200, 250, 300, 90, 100]), loss = r * yrs / 100;
         return P('In a rainy city, the surface of a marble gravestone dissolves away at about ' + fd(r, 1) + ' mm per century. How many millimeters will be lost after ' + yrs + ' years?', num(loss, 3, 0.01),
           ['Rate: $' + fd(r, 1) + '\\,\\text{mm per 100 years} = ' + fd(r / 100, 3) + '\\,\\text{mm per year}$.', 'Loss: $' + fd(r / 100, 3) + ' \\times ' + yrs + ' = ' + fd(loss, 2) + '\\,\\text{mm}$.', 'Old carved letters on marble grow blurry for this reason: calcite dissolves in slightly acidic rain.'],
           'Change the rate to millimeters per year first.', { unit: 'mm', vf: { k: 'rate', r: r, yrs: yrs } });
       }
-      var wr = R.pick([0.02, 0.04, 0.05, 0.1]), wid = R.pick([0.5, 1, 2, 3]), yr2 = wid * 1000 / wr;
+      var wr = R.pick([0.02, 0.04, 0.05, 0.1, 0.025, 0.035, 0.07, 0.09]), wid = R.pick([0.5, 1, 2, 3, 0.6, 0.8, 1.2, 2.5]), yr2 = wid * 1000 / wr;
       return P('Water flowing along a crack in limestone dissolves each wall at about ' + fd(wr, 2) + ' mm per year, so the crack widens by twice that each year. How many years until a hairline crack becomes a passage ' + fd(wid, 1) + ' m wide?', num(yr2 / 2, 3, 0.01),
         ['Widening per year: $2 \\times ' + fd(wr, 2) + ' = ' + fd(2 * wr, 2) + '\\,\\text{mm}$.', 'Width needed: $' + fd(wid, 1) + '\\,\\text{m} = ' + T.commas(wid * 1000) + '\\,\\text{mm}$.', 'Time: $' + T.commas(wid * 1000) + ' \\div ' + fd(2 * wr, 2) + ' = ' + T.commas(M.round(yr2 / 2)) + '$ years. Cave passages and sinkholes in karst country grow over thousands of years this way.'],
         'Both walls dissolve, so double the rate.', { unit: 'years', vf: { k: 'crack', wr: wr, wid: wid } });
@@ -931,7 +931,7 @@
         'Distance makes sand rounder, better sorted and richer in quartz.', { vf: { k: 'travel', ans: aFirst ? 'Y' : 'X' } });
     }
     if (kind === 'quartz') {
-      var n = R.pick([200, 250, 300, 400, 500]), q = M.round(n * R.pick([0.55, 0.62, 0.7, 0.78, 0.85, 0.92, 0.96])), pc = q / n * 100;
+      var n = R.pick([200, 250, 300, 400, 500, 350]), q = M.round(n * R.pick([0.55, 0.62, 0.7, 0.78, 0.85, 0.92, 0.96])), pc = q / n * 100;
       return P('A geologist counts ' + n + ' sand grains under a microscope and finds ' + q + ' quartz grains; the rest are feldspar and rock fragments. What percent of the grains are quartz?', pnum(pc, 3, 0.005),
         ['Percent quartz $= \\dfrac{' + q + '}{' + n + '} \\times 100 = ' + fd(pc, 1) + '\\%$.', pc >= 90 ? 'Over 90% quartz: a mature sand that has been weathered and moved for a long time (a quartz sandstone).' : 'Less than 90% quartz: an immature sand that still holds much feldspar or rock fragments, likely not far from its source.'],
         'Divide the quartz count by the total count.', { vf: { k: 'quartz', n: n, q: q } });
@@ -1046,19 +1046,19 @@
     var kind = by(ctx, R.pick(['P', 'P', 'stress']), R.pick(['P', 'depth', 'kbar', 'stress']), R.pick(['depth', 'kbar', 'PT', 'PT']));
     var rho = R.pick([2.6, 2.7, 2.7, 2.8, 2.9]);
     if (kind === 'P') {
-      var z = R.pick([1, 2, 3, 5, 8, 10, 15, 20]), Pm = rho * 1000 * GRAV * z * 1000 / 1e6;
+      var z = R.pick([1, 2, 3, 5, 8, 10, 15, 20, 4, 7, 9, 12, 13, 16, 17, 19]), Pm = rho * 1000 * GRAV * z * 1000 / 1e6;
       return P('Rock with a density of ' + fd(rho, 1) + ' g/cm³ (' + T.commas(rho * 1000) + ' kg/m³) lies ' + z + ' km deep. What is the pressure from the rock above it, in megapascals? (Use $P = \\rho g h$ with $g = 9.8\\,\\text{m/s}^2$.)', num(Pm, 3, 0.01),
         ['Depth in meters: $h = ' + T.commas(z * 1000) + '\\,\\text{m}$.', '$P = ' + T.commas(rho * 1000) + ' \\times 9.8 \\times ' + T.commas(z * 1000) + ' = ' + fx(Pm * 1e6, 3) + '\\,\\text{Pa}$.', 'That is $' + fd(Pm, 1) + '\\,\\text{MPa}$ (1 MPa = 1,000,000 Pa), about ' + T.commas(M.round(Pm * 1e6 / 101325)) + ' times the air pressure at sea level.'],
         'Use SI units: kg/m³, m/s² and m give pascals.', { unit: 'MPa', vf: { k: 'P', rho: rho, z: z } });
     }
     if (kind === 'depth' || kind === 'kbar') {
-      var Pv = kind === 'kbar' ? R.pick([2, 3, 4, 5, 6, 8, 10]) : R.pick([100, 200, 300, 500, 800]), Pmpa = kind === 'kbar' ? Pv * 100 : Pv, zz = Pmpa * 1e6 / (rho * 1000 * GRAV) / 1000;
+      var Pv = kind === 'kbar' ? R.pick([2, 3, 4, 5, 6, 8, 10, 7, 9]) : R.pick([100, 200, 300, 500, 800, 120, 250, 350, 400, 700]), Pmpa = kind === 'kbar' ? Pv * 100 : Pv, zz = Pmpa * 1e6 / (rho * 1000 * GRAV) / 1000;
       return P((kind === 'kbar' ? 'Mineral pairs in a schist show it formed at about ' + Pv + ' kilobars (1 kbar = 100 MPa).' : 'A metamorphic rock formed at a pressure of about ' + Pv + ' MPa.') + ' If the rock above it averaged ' + fd(rho, 1) + ' g/cm³, how deep was it buried, in kilometers? (Use $g = 9.8\\,\\text{m/s}^2$.)', num(zz, 3, 0.01),
         [(kind === 'kbar' ? '$' + Pv + '\\,\\text{kbar} = ' + Pmpa + '\\,\\text{MPa} = ' + fx(Pmpa * 1e6, 3) + '\\,\\text{Pa}$.' : '$' + Pv + '\\,\\text{MPa} = ' + fx(Pmpa * 1e6, 3) + '\\,\\text{Pa}$.'), 'Solve $P = \\rho g h$ for $h$: $h = \\dfrac{P}{\\rho g} = \\dfrac{' + fx(Pmpa * 1e6, 3) + '}{' + T.commas(rho * 1000) + ' \\times 9.8} = ' + T.commas(M.round(zz * 1000)) + '\\,\\text{m}$.', 'About $' + fd(zz, 1) + '\\,\\text{km}$ deep. Rocks like this reached the surface again only after the mountains above them were worn away.'],
         'Rearrange $P = \\rho g h$ for $h$, in SI units.', { unit: 'km', vf: { k: 'depth', rho: rho, P: Pmpa } });
     }
     if (kind === 'PT') {
-      var z2 = R.pick([5, 8, 10, 12, 15, 20]), T0 = R.int(10, 20), gr = R.pick([20, 25, 30]), Pm2 = rho * 1000 * GRAV * z2 * 1000 / 1e6, T2 = T0 + gr * z2;
+      var z2 = R.pick([5, 8, 10, 12, 15, 20, 6, 9, 13, 14, 17, 19]), T0 = R.int(10, 20), gr = R.pick([20, 25, 30, 21, 26, 29]), Pm2 = rho * 1000 * GRAV * z2 * 1000 / 1e6, T2 = T0 + gr * z2;
       return P('A layer of shale is buried ' + z2 + ' km deep, under rock averaging ' + fd(rho, 1) + ' g/cm³. The surface is ' + T0 + ' °C and the temperature rises ' + gr + ' °C per km. Find the pressure (MPa) and the temperature (°C) there.', { t: 'multi', parts: [{ label: 'Pressure', a: num(Pm2, 3, 0.01), unit: 'MPa' }, { label: 'Temperature', a: num(T2, 3, 0.01), unit: '°C' }] },
         ['Pressure: $P = \\rho g h = ' + T.commas(rho * 1000) + ' \\times 9.8 \\times ' + T.commas(z2 * 1000) + ' \\approx ' + fd(Pm2, 0) + '\\,\\text{MPa}$.', 'Temperature: $T = ' + T0 + ' + ' + gr + ' \\times ' + z2 + ' = ' + T2 + '^\\circ\\text{C}$.', T2 > 300 ? 'At ' + T2 + ' °C the clay minerals in shale start turning into micas: metamorphism has begun.' : 'Below about 200 to 300 °C, shale changes little; this is still the realm of burial and cementing.'],
         'Pressure from $\\rho g h$; temperature from the gradient.', { vf: { k: 'PT', rho: rho, z: z2, T0: T0, g: gr } });
@@ -1492,7 +1492,7 @@
   G('geology.radiometric-dating', function (R, ctx) {
     var kind = by(ctx, R.pick(['ratio', 'atoms', 'frac']), R.pick(['frac', 'ratio', 'dp', 'c14', 'atoms']), R.pick(['log', 'log', 'c14', 'dp']));
     if (kind === 'atoms') {
-      var N0 = R.pick([800, 1000, 1200, 1600, 2000, 2400, 3200, 4000, 6400, 8000]), nn = R.int(1, 4), left0 = N0 / M.pow(2, nn), askD = R.coin();
+      var N0 = R.pick([800, 1000, 1200, 1600, 2000, 2400, 3200, 4000, 6400, 8000, 900, 1500, 2500, 3000, 3500, 5000, 6000, 7000]), nn = R.int(1, 4), left0 = N0 / M.pow(2, nn), askD = R.coin();
       return P('A crystal starts with ' + T.commas(N0) + ' atoms of uranium-235 and no lead-207. How many ' + (askD ? 'lead-207 (daughter) atoms' : 'uranium-235 atoms') + ' does it hold after ' + nn + ' half-li' + (nn > 1 ? 'ves' : 'fe') + '?', exact(askD ? N0 - left0 : left0),
         ['Each half-life halves the parent: $' + T.commas(N0) + ' \\times \\left(\\tfrac12\\right)^{' + nn + '} = ' + T.commas(left0) + '$ uranium-235 atoms left.', askD ? 'Every atom that decayed became lead-207: $' + T.commas(N0) + ' - ' + T.commas(left0) + ' = ' + T.commas(N0 - left0) + '$.' : 'The other $' + T.commas(N0 - left0) + '$ atoms have become lead-207.', 'Notice the parent never runs out in a fixed time: it halves again and again. After 2 half-lives a quarter is still left, not none.'],
         'Halve the parent once for each half-life.', { vf: { k: 'atoms', N0: N0, n: nn, d: askD } });
@@ -1512,12 +1512,12 @@
         'Ratios of 1, 3, 7 and 15 mean 1, 2, 3 and 4 half-lives.', { unit: uName, vf: { k: 'age', n: n, hl: hl, div: uDiv } });
     }
     if (kind === 'c14') {
-      var yrs = R.pick([2000, 3000, 5000, 8000, 10000, 15000, 20000]), fr = M.pow(0.5, yrs / 5730);
+      var yrs = R.pick([2000, 3000, 5000, 8000, 10000, 15000, 20000, 2500, 3500, 4000, 6000, 7000, 9000, 12000]), fr = M.pow(0.5, yrs / 5730);
       return P('Carbon-14 has a half-life of 5,730 years. What percent of the original carbon-14 is left in a bone that is ' + T.commas(yrs) + ' years old?', pnum(fr * 100, 3, 0.02),
         ['Half-lives passed: $' + T.commas(yrs) + ' \\div 5,730 = ' + fd(yrs / 5730, 3) + '$.', 'Fraction left: $\\left(\\tfrac{1}{2}\\right)^{' + fd(yrs / 5730, 3) + '} = ' + fd(fr, 4) + '$.', 'About $' + fd(fr * 100, 1) + '\\%$ is left.'],
         'Count the half-lives, then raise 1/2 to that power.', { unit: '%', vf: { k: 'c14', yrs: yrs } });
     }
-    var c2 = R.pick([CLOCKS[2], CLOCKS[3], ['Rb-87', 'rubidium-87', 'strontium-87', 4.88e10, 'billion']]), dp = c2[0] === 'U-235' ? R.pick([0.25, 0.5, 0.8, 1.5, 2, 2.5, 4, 5, 6, 10, 12, 20]) : c2[0] === 'U-238' ? R.pick([0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6]) : R.pick([0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.04, 0.05]), t = c2[3] * M.log(1 + dp) / M.LN2 / 1e6;
+    var c2 = R.pick([CLOCKS[2], CLOCKS[3], ['Rb-87', 'rubidium-87', 'strontium-87', 4.88e10, 'billion']]), dp = c2[0] === 'U-235' ? R.pick([0.25, 0.5, 0.8, 1.5, 2, 2.5, 4, 5, 6, 10, 12, 20, 0.3, 0.35, 0.4, 0.7, 0.9, 1, 1.2, 3, 3.5, 8, 9, 15]) : c2[0] === 'U-238' ? R.pick([0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6]) : R.pick([0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.04, 0.05]), t = c2[3] * M.log(1 + dp) / M.LN2 / 1e6;
     return P((c2[0] === 'Rb-87' ? 'A mica crystal from an old granite' : 'A zircon crystal') + ' has a daughter-to-parent ratio of ' + fd(dp, 2) + ' for ' + c2[1] + ' → ' + c2[2] + ' (half-life ' + ageTx(c2[3], c2[4]) + '), with no daughter at the start. Use $t = t_{1/2}\\,\\log_2(1 + D/P)$. How old is it, in million years?', num(t, 3, 0.01),
       ['Parent left as a fraction of the original: $\\dfrac{P}{P + D} = \\dfrac{1}{1 + ' + fd(dp, 2) + '} = \\left(\\tfrac{1}{2}\\right)^{n}$.', 'So $n = \\log_2(' + fd(1 + dp, 2) + ') = \\dfrac{\\ln ' + fd(1 + dp, 2) + '}{\\ln 2} = ' + fd(M.log(1 + dp) / M.LN2, 3) + '$ half-lives.', 'Age $= ' + fd(M.log(1 + dp) / M.LN2, 3) + ' \\times ' + T.commas(c2[3] / 1e6) + '\\,\\text{million} \\approx ' + T.commas(M.round(t)) + '$ million years.'],
       'Find the number of half-lives with log base 2, then multiply by the half-life.', { unit: 'million years', vf: { k: 'log', dp: dp, hl: c2[3] } });
@@ -1619,7 +1619,7 @@
   var CHRON = [[0.77, 'the most recent reversal (normal to reversed, going back in time)'], [0.99, 'the start of the Jaramillo normal event'], [1.78, 'the end of the Olduvai normal event'], [2.58, 'the start of the Gauss normal period']];
   G('geology.magnetic-stripes', function (R, ctx) {
     var kind = by(ctx, R.pick(['half', 'full', 'why']), R.pick(['half', 'age', 'full', 'why']), R.pick(['half', 'age', 'ocean', 'full']));
-    var rate = R.pick([10, 12, 15, 20, 25, 30, 40, 50, 60, 75]);
+    var rate = R.pick([10, 12, 15, 20, 25, 30, 40, 50, 60, 75, 35, 70]);
     if (kind === 'half') {
       var c = R.pick(CHRON), d = rate * c[0];
       return P('Across a mid-ocean ridge, the stripe boundary that marks ' + c[1] + ', ' + c[0] + ' million years ago, lies ' + fd(d, 2) + ' km from the ridge crest. What is the half spreading rate, in millimeters per year?', num(rate, 3, 0.01),
@@ -1633,13 +1633,13 @@
         'Full rate = 2 × half rate.', { unit: 'mm/yr', vf: { k: ask ? 'full' : 'halfFromFull', r: rate } });
     }
     if (kind === 'age') {
-      var x = R.pick([50, 100, 150, 200, 300, 400, 600]), t = x / rate;
+      var x = R.pick([50, 100, 150, 200, 300, 400, 600, 60, 70, 80, 120, 250, 350, 500]), t = x / rate;
       return P('A ridge spreads at a half rate of ' + rate + ' mm per year. How old is the seafloor ' + x + ' km from the crest, in million years?', num(t, 3, 0.01),
         [rate + ' mm/yr is ' + rate + ' km per million years.', 'Age $= \\dfrac{' + x + '\\,\\text{km}}{' + rate + '\\,\\text{km per million years}} = ' + fd(t, 2) + '$ million years.', 'Seafloor gets older, colder and deeper the farther it is from the ridge.'],
         'Time = distance ÷ half rate.', { unit: 'million years', vf: { k: 'age', x: x, r: rate } });
     }
     if (kind === 'ocean') {
-      var full = R.pick([20, 25, 30, 40]), my = R.pick([100, 150, 180, 200]), w = full * my;
+      var full = R.pick([20, 25, 30, 40, 21, 27, 34, 39]), my = R.pick([100, 150, 180, 200, 120]), w = full * my;
       return P('An ocean basin has been opening at a full spreading rate of ' + full + ' mm per year for ' + my + ' million years. About how wide is it now, in kilometers?', num(w, 3, 0.01),
         [full + ' mm/yr = ' + full + ' km per million years.', 'Width $= ' + full + ' \\times ' + my + ' = ' + T.commas(w) + '\\,\\text{km}$.', 'The Atlantic, opening at a few centimeters a year since roughly 180 to 200 million years ago, is several thousand kilometers wide.'],
         'Width = full rate × time.', { unit: 'km', vf: { k: 'ocean', full: full, my: my } });
@@ -1724,25 +1724,25 @@
   G('geology.subduction-zones', function (R, ctx) {
     var kind = by(ctx, R.pick(['magma', 'dense', 'arc']), R.pick(['dip', 'arc', 'magma', 'quake']), R.pick(['dip', 'arc', 'quake', 'time']));
     if (kind === 'dip') {
-      var x = R.pick([100, 120, 150, 200, 250, 300]), z = R.pick([50, 80, 100, 150, 200, 250]), dip = M.atan(z / x) * DEG;
+      var x = R.pick([100, 120, 150, 200, 250, 300]), z = R.pick([50, 80, 100, 150, 200, 250, 60, 70, 90, 120]), dip = M.atan(z / x) * DEG;
       return P('Earthquakes along a sinking slab (a Wadati–Benioff zone) are ' + z + ' km deep at a point ' + x + ' km from the trench, measured horizontally. Assuming the slab dips at a constant angle from the trench, what is its dip angle?', { t: 'num', v: ans(dip, 3), tol: 0.5 },
         ['Draw the slab as the hypotenuse of a right triangle: ' + x + ' km across and ' + z + ' km down.', '$\\tan(\\text{dip}) = \\dfrac{' + z + '}{' + x + '} = ' + fd(z / x, 4) + '$.', 'Dip $= \\tan^{-1}(' + fd(z / x, 4) + ') \\approx ' + fd(dip, 1) + '^\\circ$.'],
         'Depth over horizontal distance is the tangent of the dip.', { unit: '°', viz: { name: 'es-boundary', opts: { type: 'ocean-continent', quakes: true, dip: M.round(dip), quiet: true, lock: true } }, vf: { k: 'dip', x: x, z: z } });
     }
     if (kind === 'arc') {
-      var dp = R.pick([20, 25, 30, 35, 40, 45, 50, 60]), dist = 100 / M.tan(dp * RAD);
+      var dp = R.pick([20, 25, 30, 35, 40, 45, 50, 60, 22, 26, 32, 36, 44, 48, 54, 58]), dist = 100 / M.tan(dp * RAD);
       return P('Arc volcanoes sit above the place where the sinking slab reaches about 100 km deep, where water driven out of it melts the mantle above. If a slab dips ' + dp + '° from the trench, about how far from the trench (horizontally) will the volcanoes be?', num(dist, 3, 0.01),
         ['$\\tan ' + dp + '^\\circ = \\dfrac{100}{x}$, so $x = \\dfrac{100}{\\tan ' + dp + '^\\circ} = \\dfrac{100}{' + fd(M.tan(dp * RAD), 4) + '}$.', '$x \\approx ' + fd(dist, 0) + '\\,\\text{km}$.', 'Gently dipping slabs put their volcanoes far inland; steep slabs put them close to the trench.'],
         'Distance = depth ÷ tan(dip).', { unit: 'km', viz: { name: 'es-boundary', opts: { type: 'ocean-continent', melt: true, dip: dp, quiet: true, lock: true } }, vf: { k: 'arc', dip: dp } });
     }
     if (kind === 'quake') {
-      var dp2 = R.pick([30, 40, 45, 50, 60]), x2 = R.pick([50, 100, 150, 200, 250]), z2 = x2 * M.tan(dp2 * RAD);
+      var dp2 = R.pick([30, 40, 45, 50, 60, 32, 38, 46, 52, 58]), x2 = R.pick([50, 100, 150, 200, 250, 60, 70, 80, 90, 120]), z2 = x2 * M.tan(dp2 * RAD);
       return P('A slab dips ' + dp2 + '° from the trench. How deep below a point ' + x2 + ' km inland from the trench will earthquakes in the slab be?', num(z2, 3, 0.01),
         ['Depth $= x \\tan(\\text{dip}) = ' + x2 + ' \\times \\tan ' + dp2 + '^\\circ = ' + x2 + ' \\times ' + fd(M.tan(dp2 * RAD), 4) + ' \\approx ' + fd(z2, 0) + '\\,\\text{km}$.', 'Earthquakes trace the cold slab down to as deep as about 700 km; the hot mantle around it flows instead of breaking.'],
         'Depth = horizontal distance × tan(dip).', { unit: 'km', vf: { k: 'quake', dip: dp2, x: x2 } });
     }
     if (kind === 'time') {
-      var len = R.pick([300, 500, 600, 800, 1000]), v = R.pick([30, 50, 60, 80, 100]), t = len / v;
+      var len = R.pick([300, 500, 600, 800, 1000, 350, 400, 700, 900]), v = R.pick([30, 50, 60, 80, 100, 35, 40, 70, 90]), t = len / v;
       return P('A slab has slid ' + len + ' km down into the mantle at a subduction zone where the plates converge at ' + v + ' mm per year. How many million years has subduction been going on?', num(t, 3, 0.01),
         [v + ' mm/yr = ' + v + ' km per million years.', 'Time $= ' + len + ' \\div ' + v + ' = ' + fd(t, 1) + '$ million years.'],
         'Time = length ÷ rate (mm/yr = km per million years).', { unit: 'million years', vf: { k: 'time', len: len, v: v } });
@@ -1759,19 +1759,19 @@
   G('geology.collisions-and-rifts', function (R, ctx) {
     var kind = by(ctx, R.pick(['example', 'buoy', 'thick']), R.pick(['thick', 'example', 'rift', 'buoy']), R.pick(['uplift', 'thick', 'rift', 'uplift']));
     if (kind === 'thick') {
-      var H0 = R.pick([30, 35, 40]), L0 = R.pick([300, 400, 500, 600]), f = R.pick([0.5, 0.6, 0.4, 0.75]), L = L0 * f, H = H0 / f;
+      var H0 = R.pick([30, 35, 40, 31, 36, 39]), L0 = R.pick([300, 400, 500, 600, 350]), f = R.pick([0.5, 0.6, 0.4, 0.75]), L = L0 * f, H = H0 / f;
       return P('In a continental collision, a belt of crust ' + L0 + ' km wide and ' + H0 + ' km thick is squeezed to ' + fd(L, 0) + ' km wide. If no rock is lost, how thick does the crust become?', num(H, 3, 0.01),
         ['In cross-section, area is conserved: width × thickness stays the same.', '$' + L0 + ' \\times ' + H0 + ' = ' + fd(L, 0) + ' \\times H$.', '$H = \\dfrac{' + T.commas(L0 * H0) + '}{' + fd(L, 0) + '} = ' + fd(H, 1) + '\\,\\text{km}$. Under Tibet the crust is about 70 km thick, about double normal.'],
         'Keep width × thickness the same.', { unit: 'km', vf: { k: 'thick', H0: H0, L0: L0, L: L } });
     }
     if (kind === 'uplift') {
-      var dH = R.pick([10, 15, 20, 25, 30, 35]), h = dH * (RHO_M - RHO_C) / RHO_M;
+      var dH = R.pick([10, 15, 20, 25, 30, 35, 12, 16, 22, 24, 28, 34]), h = dH * (RHO_M - RHO_C) / RHO_M;
       return P('Collision thickens a region\'s crust by ' + dH + ' km. In isostatic balance (crust 2.7 g/cm³, mantle 3.3 g/cm³), the extra crust splits into a part above the old surface ($h$) and a root below ($r = 4.5h$). How much higher does the surface stand?', num(h, 3, 0.01),
         ['The extra thickness is $h + r = h + 4.5h = 5.5h$.', '$5.5h = ' + dH + '$, so $h = ' + dH + ' \\div 5.5 = ' + fd(h, 2) + '\\,\\text{km}$.', 'Only about 18% of the thickening shows as height; the rest is root. That is how a doubled crust can hold up a plateau about 5 km high, like Tibet.'],
         'The extra thickness is the height plus the root, and the root is 4.5 times the height.', { unit: 'km', vf: { k: 'uplift', dH: dH } });
     }
     if (kind === 'rift') {
-      var H1 = R.pick([30, 35, 40]), beta = R.pick([1.5, 2, 2.5, 3, 4]);
+      var H1 = R.pick([30, 35, 40, 31, 36, 39]), beta = R.pick([1.5, 2, 2.5, 3, 4, 3.5]);
       return P('A continent is stretched in a rift until it is ' + fd(beta, 1) + ' times as wide as before (a stretching factor of ' + fd(beta, 1) + '). If the crust was ' + H1 + ' km thick and its volume stays the same, how thick is it now?', num(H1 / beta, 3, 0.01),
         ['Width × thickness stays the same in cross-section, so stretching by ' + fd(beta, 1) + ' thins by the same factor.', '$' + H1 + ' \\div ' + fd(beta, 1) + ' = ' + fd(H1 / beta, 1) + '\\,\\text{km}$.', 'Thinned crust sinks, so rifts become long valleys; stretch far enough and the continent splits and a new ocean floods in, as in the Red Sea.'],
         'Thickness × width stays the same.', { unit: 'km', vf: { k: 'rift', H: H1, b: beta } });
@@ -1793,7 +1793,7 @@
   G('geology.transform-faults', function (R, ctx) {
     var kind = by(ctx, R.pick(['active', 'active', 'fz']), R.pick(['sense', 'active', 'rate']), R.pick(['sense', 'sense', 'rate', 'offset']));
     if (kind === 'sense') {
-      var west = R.coin(), off = R.pick([40, 60, 80, 100, 150]);
+      var west = R.coin(), off = R.pick([40, 60, 80, 100, 150, 50, 70, 90, 120]);
       var right = west; // north segment offset to the west -> right-lateral (see the steps)
       return P('A mid-ocean ridge runs north–south and spreads east–west. Its northern segment is offset ' + off + ' km to the ' + (west ? 'west' : 'east') + ' of its southern segment, joined by an east–west transform fault. Standing on the south side of the transform, looking north across it, which way does the far side move?', mc(right ? 'To the right: right-lateral' : 'To the left: left-lateral', [right ? 'To the left: left-lateral' : 'To the right: right-lateral', 'It doesn\'t move; transform faults are inactive', 'Up and down: it is a normal fault']),
         ['On the active part of the transform, between the two ridge segments, the north side belongs to the plate on the ' + (west ? 'east' : 'west') + ' side of the northern segment, so it moves ' + (west ? 'east' : 'west') + '.', 'The south side belongs to the plate on the ' + (west ? 'west' : 'east') + ' side of the southern segment, so it moves ' + (west ? 'west' : 'east') + '.', 'Looking north from the south side, the far side moves ' + (west ? 'east, to your right: right-lateral' : 'west, to your left: left-lateral') + '.', 'Notice that the offset itself looks the opposite way: the slip comes from spreading, not from the ridge being dragged apart.'],
@@ -1803,7 +1803,7 @@
       ['Between the segments, the two sides of the fault belong to different plates moving in opposite directions: that part is active, with earthquakes.', 'Beyond the segments, both sides belong to the same plate and move together. The fracture zone there is just a scar, with no slip and few earthquakes.'],
       'On which part do the two sides belong to different plates?', { vf: { k: 'active' } });
     if (kind === 'rate') {
-      var h = R.pick([10, 15, 20, 25, 30, 40]);
+      var h = R.pick([10, 15, 20, 25, 30, 40, 12, 16, 22, 28, 34, 38]);
       return P('A ridge spreads at a half rate of ' + h + ' mm/yr on each side. How fast do the two sides of the active transform fault that offsets it slide past each other?', num(2 * h, 3, 0.005),
         ['Each side moves away from its own ridge segment at ' + h + ' mm/yr, in opposite directions.', 'So they slide past each other at the full rate: $2 \\times ' + h + ' = ' + (2 * h) + '\\,\\text{mm/yr}$.'],
         'Each side moves at the half rate, in opposite directions.', { unit: 'mm/yr', vf: { k: 'rate', h: h } });
@@ -1950,7 +1950,7 @@
   G('geology.moment-magnitude', function (R, ctx) {
     var kind = by(ctx, R.pick(['amp', 'energy', 'why']), R.pick(['energy', 'count', 'M0', 'amp']), R.pick(['mw', 'mw', 'M0', 'energy']));
     if (kind === 'amp' || kind === 'energy') {
-      var dM = kind === 'amp' ? R.int(1, 3) : R.pick([1, 2, 0.5, 3, 1.5]), m1 = R.int(3, 6), ratio = kind === 'amp' ? M.pow(10, dM) : M.pow(10, 1.5 * dM);
+      var dM = kind === 'amp' ? R.int(1, 3) : R.pick([1, 2, 0.5, 3, 1.5, 0.6, 0.7, 0.8, 1.2, 2.5]), m1 = R.int(3, 6), ratio = kind === 'amp' ? M.pow(10, dM) : M.pow(10, 1.5 * dM);
       return P('A magnitude ' + fd(m1 + dM, 1) + ' earthquake is compared with a magnitude ' + m1 + ' earthquake. About how many times ' + (kind === 'amp' ? 'larger are its seismic waves (on a seismogram at the same distance)' : 'more energy does it release') + '?', num(ratio, 3, 0.02),
         [kind === 'amp' ? 'Each step of 1 in magnitude means waves 10 times larger.' : 'Each step of 1 in magnitude means about $10^{1.5} \\approx 31.6$ times more energy.', 'Difference: ' + fd(dM, 1) + '.', 'Ratio $= 10^{' + (kind === 'amp' ? dM : fd(1.5 * dM, 2)) + '} \\approx ' + T.commas(rnd(ratio, 3)) + '$.'],
         kind === 'amp' ? 'Waves grow 10 times per magnitude step.' : 'Energy grows $10^{1.5}$ times per magnitude step.', { unit: 'times', vf: { k: kind, dM: dM } });
@@ -1961,7 +1961,7 @@
         ['Energy ratio $= 10^{1.5(' + b + ' - ' + a + ')} = 10^{' + fd(1.5 * (b - a), 1) + '} \\approx ' + T.commas(rnd(n, 3)) + '$.', 'So about ' + T.commas(rnd(n, 3)) + ' of the smaller quakes.'],
         'Use $10^{1.5 \\Delta M}$.', { vf: { k: 'count', a: a, b: b } });
     }
-    var Lk = R.pick([20, 40, 60, 100, 200, 400, 1000]), Wk = R.pick([10, 15, 20, 30, 50, 100]), D = R.pick([0.5, 1, 2, 3, 5, 8, 10]);
+    var Lk = R.pick([20, 40, 60, 100, 200, 400, 1000, 25, 50, 80, 150, 350, 600, 900]), Wk = R.pick([10, 15, 20, 30, 50, 100, 12, 25, 40, 60, 80, 90]), D = R.pick([0.5, 1, 2, 3, 5, 8, 10, 0.6, 0.8, 1.2, 2.5, 3.5, 6, 9]);
     if (Lk >= 400 && Wk < 50) Wk = 100; if (Lk <= 40 && D > 3) D = 1;
     var A = Lk * Wk, M0 = 3e10 * A * 1e6 * D, Mw = 2 / 3 * (M.log10(M0) - 9.1);
     var stepsM0 = ['Area: $A = ' + Lk + '\\,\\text{km} \\times ' + Wk + '\\,\\text{km} = ' + T.commas(A) + '\\,\\text{km}^2 = ' + fx(A * 1e6, 3) + '\\,\\text{m}^2$.', 'Seismic moment: $M_0 = \\mu A D = (3 \\times 10^{10})(' + fx(A * 1e6, 3) + ')(' + fd(D, 1) + ') = ' + fx(M0, 3) + '\\,\\text{N·m}$.'];
@@ -1980,7 +1980,7 @@
   G('geology.intensity', function (R, ctx) {
     var kind = by(ctx, R.pick(['which', 'which', 'many']), R.pick(['which', 'mmi', 'many', 'soft']), R.pick(['mmi', 'soft', 'which', 'mmi']));
     if (kind === 'which') {
-      var a = R.pick([10, 15, 20, 30]), b = a + R.pick([40, 60, 80, 120]), near = R.coin();
+      var a = R.pick([10, 15, 20, 30, 11, 17, 24, 29]), b = a + R.pick([40, 60, 80, 120, 50, 70, 90, 100]), near = R.coin();
       return P('One magnitude 6.5 earthquake shakes two towns built on the same kind of solid rock. Town A is ' + (near ? a : b) + ' km from the epicenter and town B is ' + (near ? b : a) + ' km away. Which town most likely has the higher intensity?', mcK(['Town A', 'Town B', 'Both the same, because an earthquake has one intensity', 'Neither; intensity depends only on magnitude'], near ? 0 : 1),
         ['Magnitude is one number for the whole earthquake; intensity describes shaking at each place.', 'Shaking weakens with distance as the waves spread out and lose energy.', 'So the closer town, ' + (near ? 'A' : 'B') + ', has the higher intensity.'],
         'Intensity is about shaking at a place.', { vf: { k: 'which', near: near } });
@@ -2007,19 +2007,19 @@
   G('geology.earthquake-odds', function (R, ctx) {
     var kind = by(ctx, R.pick(['easy', 'none', 'add']), R.pick(['atleast', 'T', 'add', 'atleast', 'none']), R.pick(['atleast', 'reverse', 'T', 'reverse']));
     if (kind === 'easy') {
-      var p = R.pick([10, 20, 25, 30, 40, 50]), n = R.pick([2, 3]), pr = 1 - M.pow(1 - p / 100, n);
+      var p = R.pick([10, 20, 25, 30, 40, 50, 12, 18, 26, 34, 42, 48]), n = R.pick([2, 3]), pr = 1 - M.pow(1 - p / 100, n);
       return P('A fault has a ' + p + '% chance of a large earthquake in any one year, and each year is independent of the others. What is the chance of at least one large earthquake in ' + n + ' years? (Give a percent.)', pnum(pr * 100, 3, 0.005),
         ['Chance of none in one year: $1 - ' + fd(p / 100, 2) + ' = ' + fd(1 - p / 100, 2) + '$.', 'Chance of none in ' + n + ' years: $' + fd(1 - p / 100, 2) + '^{' + n + '} = ' + fd(M.pow(1 - p / 100, n), 4) + '$.', 'Chance of at least one: $1 - ' + fd(M.pow(1 - p / 100, n), 4) + ' = ' + fd(pr, 4) + '$, or $' + fd(pr * 100, 1) + '\\%$. (Adding gives ' + (p * n) + '%, which is too much.)'],
         'Find the chance of none, then subtract from 1.', { unit: '%', vf: { k: 'atleast', p: p / 100, n: n } });
     }
     if (kind === 'none') {
-      var pN = R.pick([5, 10, 20, 25, 30, 40, 50]), nN = R.pick([2, 3, 4]), q0 = M.pow(1 - pN / 100, nN);
+      var pN = R.pick([5, 10, 20, 25, 30, 40, 50, 6, 7, 8, 9, 12, 15, 35]), nN = R.pick([2, 3, 4]), q0 = M.pow(1 - pN / 100, nN);
       return P('A volcano or fault has a ' + pN + '% chance of a major event in any one year, independent from year to year. What is the chance of no major event at all in ' + nN + ' years? (Give a percent.)', pnum(q0 * 100, 3, 0.005),
         ['Chance of no event in one year: $1 - ' + fd(pN / 100, 2) + ' = ' + fd(1 - pN / 100, 2) + '$.', 'For ' + nN + ' quiet years in a row, multiply: $' + fd(1 - pN / 100, 2) + '^{' + nN + '} = ' + fd(q0, 4) + '$, or $' + fd(q0 * 100, 2) + '\\%$.', 'So the chance of at least one is $' + fd(100 - q0 * 100, 2) + '\\%$.'],
         'Multiply the chance of a quiet year by itself once for each year.', { unit: '%', vf: { k: 'none', p: pN / 100, n: nN } });
     }
     if (kind === 'atleast' || kind === 'T') {
-      var T0 = kind === 'T' ? R.pick([25, 50, 100, 150, 200]) : null, p2 = kind === 'T' ? 1 / T0 : R.pick([0.01, 0.02, 0.03, 0.04, 0.05]), n2 = R.pick([10, 20, 30, 50]), pr2 = 1 - M.pow(1 - p2, n2);
+      var T0 = kind === 'T' ? R.pick([25, 50, 100, 150, 200, 30, 40, 70, 80, 120]) : null, p2 = kind === 'T' ? 1 / T0 : R.pick([0.01, 0.02, 0.03, 0.04, 0.05, 0.012, 0.015, 0.025, 0.035]), n2 = R.pick([10, 20, 30, 50, 12, 24, 38, 48]), pr2 = 1 - M.pow(1 - p2, n2);
       return P((kind === 'T' ? 'Large earthquakes on a fault come on average once every ' + T0 + ' years, so the chance in any one year is about $\\tfrac{1}{' + T0 + '}$.' : 'A fault has a ' + fd(p2 * 100, 0) + '% chance of a large earthquake in any one year.') + ' Treating each year as independent, what is the chance of at least one in the next ' + n2 + ' years? (Give a percent.)', pnum(pr2 * 100, 3, 0.01),
         ['Chance of none in a year: $1 - ' + fd(p2, 4) + ' = ' + fd(1 - p2, 4) + '$.', 'None in ' + n2 + ' years: $' + fd(1 - p2, 4) + '^{' + n2 + '} \\approx ' + fd(M.pow(1 - p2, n2), 4) + '$.', 'At least one: $1 - ' + fd(M.pow(1 - p2, n2), 4) + ' \\approx ' + fd(pr2, 3) + '$, about $' + fd(pr2 * 100, 1) + '\\%$.'],
         'Use $1 - (1 - p)^n$.', { unit: '%', vf: { k: 'atleast', p: p2, n: n2 } });
@@ -2143,7 +2143,7 @@
         'Where is the water fastest?', { vf: { k: 'bank', out: out } });
     }
     if (kind === 'sinu') {
-      var valley = R.pick([10, 12, 15, 20, 25, 40]), s = R.pick([1.1, 1.2, 1.4, 1.6, 1.8, 2.2]), chan = valley * s;
+      var valley = R.pick([10, 12, 15, 20, 25, 40, 14, 18, 24, 30, 34, 38]), s = R.pick([1.1, 1.2, 1.4, 1.6, 1.8, 2.2]), chan = valley * s;
       return P('A river\'s channel is ' + fd(chan, 1) + ' km long, but its valley runs only ' + valley + ' km between the same two points. What is its sinuosity (channel length ÷ valley length)?', num(s, 3, 0.01),
         ['$' + fd(chan, 1) + ' \\div ' + valley + ' = ' + fd(s, 2) + '$.', s >= 1.5 ? 'A sinuosity above about 1.5 is usually called meandering.' : 'Below about 1.5, the river is fairly straight or only gently winding.'],
         'Divide the channel length by the valley length.', { vf: { k: 'sinu', chan: chan, valley: valley } });
@@ -2155,7 +2155,7 @@
         'Did base level rise or fall?', { vf: { k: 'base' } });
     }
     if (kind === 'migrate') {
-      var r = R.pick([0.5, 1, 2, 2.5, 5]), dist = R.pick([50, 100, 200, 300]), y = dist / r;
+      var r = R.pick([0.5, 1, 2, 2.5, 5, 0.6, 0.8, 1.2, 3, 4]), dist = R.pick([50, 100, 200, 300, 60, 80, 120, 250]), y = dist / r;
       return P('The outer bank of a meander bend is wearing away at ' + fd(r, 1) + ' m per year. A road runs ' + dist + ' m from the bank. At that rate, how many years until the river reaches the road?', num(y, 3, 0.01),
         ['Time = distance ÷ rate.', '$' + dist + ' \\div ' + fd(r, 1) + ' = ' + T.commas(M.round(y)) + '$ years.', 'Meanders keep moving, so floodplains are restless places for roads and buildings.'],
         'Divide the distance by the yearly rate.', { unit: 'years', vf: { k: 'migrate', r: r, dist: dist } });
@@ -2183,7 +2183,7 @@
     }
     if (kind === 'rank') {
       var n = R.pick([9, 11, 14, 19, 24, 29, 39, 49]), m = R.int(1, 4), Tr = (n + 1) / m;
-      var seed = R.int(1, 1000), peaks = [], base = R.pick([200, 400, 600, 900]);
+      var seed = R.int(1, 1000), peaks = [], base = R.pick([200, 400, 600, 900, 250, 350, 500, 800]);
       for (var i = 0; i < M.min(n, 12); i++) peaks.push(M.round(base * (0.5 + R.next() * 1.5) / 10) * 10);
       var showTable = n <= 11, ranked = peaks.slice().sort(function (a, b) { return b - a; }), uniq = ranked.filter(function (x, j) { return ranked.indexOf(x) === j; }).length === ranked.length;
       if (showTable && !uniq) { peaks = peaks.map(function (x, j) { return x + j; }); ranked = peaks.slice().sort(function (a, b) { return b - a; }); }
@@ -2194,7 +2194,7 @@
         'Rank the peaks, then use $T = (n+1)/m$.', showTable ? { unit: 'years', viz: { name: 'es-chance', opts: { mode: 'record', data: peaks.map(function (v, j) { return { year: 2001 + j, value: v }; }), quiet: true, lock: true } }, vf: { k: 'rank', n: n, m: m, peaks: peaks } } : { unit: 'years', vf: { k: 'rank', n: n, m: m, peaks: null } });
     }
     if (kind === 'atleast') {
-      var T2 = R.pick([25, 50, 100, 200]), yrs = R.pick([10, 20, 30, 50]), pr = 1 - M.pow(1 - 1 / T2, yrs);
+      var T2 = R.pick([25, 50, 100, 200, 30, 60, 80, 150]), yrs = R.pick([10, 20, 30, 50, 12, 24, 38, 48]), pr = 1 - M.pow(1 - 1 / T2, yrs);
       return P('A house sits where the ' + T2 + '-year flood would reach. What is the chance it is flooded at least once during a ' + yrs + '-year mortgage, treating each year as independent? (Give a percent.)', pnum(pr * 100, 3, 0.01),
         ['Chance of no such flood in a year: $1 - \\tfrac{1}{' + T2 + '} = ' + fd(1 - 1 / T2, 3) + '$.', 'None in ' + yrs + ' years: $' + fd(1 - 1 / T2, 3) + '^{' + yrs + '} \\approx ' + fd(M.pow(1 - 1 / T2, yrs), 3) + '$.', 'At least one: $1 - ' + fd(M.pow(1 - 1 / T2, yrs), 3) + ' \\approx ' + fd(pr * 100, 1) + '\\%$.' + (T2 === 100 && yrs === 30 ? ' The USGS gives this example: about 26% over 30 years.' : '')],
         'Use $1 - (1 - 1/T)^n$.', { unit: '%', vf: { k: 'atleast', T: T2, n: yrs } });
@@ -2283,13 +2283,13 @@
         'Write both amounts in ppm, then divide.', { unit: 'times', vf: { k: 'factor', ppm: ppm, ab: mt[1] } });
     }
     if (kind === 'gold') {
-      var gpt = R.pick([1, 2, 3, 5, 8, 10]), f2 = gpt / 0.004;
+      var gpt = R.pick([1, 2, 3, 5, 8, 10, 4, 6, 7, 9]), f2 = gpt / 0.004;
       return P('Gold makes up only about 0.004 ppm of the crust (4 grams in every 1,000 tonnes). A gold mine works ore holding ' + gpt + ' grams per tonne. Since 1 gram per tonne is 1 ppm, how many times more concentrated than average crust is the ore?', num(f2, 3, 0.01),
         ['$' + gpt + '\\,\\text{g/t} = ' + gpt + '\\,\\text{ppm}$.', 'Factor $= ' + gpt + ' \\div 0.004 = ' + T.commas(f2) + '$.', 'Rare metals need the biggest concentration factors; hot water moving through cracks often does this, leaving gold in quartz veins.'],
         'Divide the ore\'s ppm by the crust\'s ppm.', { unit: 'times', vf: { k: 'factor', ppm: gpt, ab: 0.004 } });
     }
     if (kind === 'metal') {
-      var tons = R.pick([1000, 5000, 10000, 50000, 100000]), mt2 = R.pick(METALS.slice(0, 4)), g2 = R.pick(mt2[2]), metal = tons * g2 / 100;
+      var tons = R.pick([1000, 5000, 10000, 50000, 100000, 1200, 3500, 9000, 35000, 90000]), mt2 = R.pick(METALS.slice(0, 4)), g2 = R.pick(mt2[2]), metal = tons * g2 / 100;
       return P('A mine processes ' + T.commas(tons) + ' tonnes of ore that is ' + fd(g2, 1) + '% ' + mt2[0] + '. If all the metal is recovered, how many tonnes of ' + mt2[0] + ' does it produce?', num(metal, 3, 0.01),
         ['$' + fd(g2, 1) + '\\% = ' + fd(g2 / 100, 4) + '$ of the ore.', '$' + T.commas(tons) + ' \\times ' + fd(g2 / 100, 4) + ' = ' + T.commas(metal) + '\\,\\text{t}$.', 'The other ' + T.commas(tons - metal) + ' tonnes are waste rock (tailings), which is why mines leave such large piles behind.'],
         'Multiply the ore by the grade as a decimal.', { unit: 't', vf: { k: 'metal', tons: tons, g: g2 } });
@@ -2342,18 +2342,18 @@
 
   G('geology.resource-reserves', function (R, ctx) {
     var kind = by(ctx, R.pick(['rp', 'rp', 'def']), R.pick(['rp', 'change', 'def', 'myth']), R.pick(['grow', 'grow', 'change', 'rp']));
-    var Rv = R.pick([200, 300, 400, 500, 600, 800, 1000, 1200]), Pv = R.pick([10, 20, 25, 30, 40, 50]);
+    var Rv = R.pick([200, 300, 400, 500, 600, 800, 1000, 1200, 250, 350, 700, 900]), Pv = R.pick([10, 20, 25, 30, 40, 50, 12, 18, 26, 34, 42, 48]);
     if (kind === 'rp') return P('A country has reserves of ' + T.commas(Rv) + ' million tonnes of a mineral and produces ' + Pv + ' million tonnes a year. What is its reserves-to-production ratio, in years?', num(Rv / Pv, 3, 0.01),
       ['R/P $= ' + T.commas(Rv) + ' \\div ' + Pv + ' = ' + fd(Rv / Pv, 1) + '$ years.', 'This is a snapshot: how long today\'s reserves would last at today\'s rate. It is not the date the resource runs out, because reserves grow with new discoveries, better technology and higher prices, and shrink if prices fall.'],
       'Divide the reserves by the yearly production.', { unit: 'years', vf: { k: 'rp', R: Rv, P: Pv } });
     if (kind === 'change') {
-      var add = R.pick([100, 200, 300, 400]);
+      var add = R.pick([100, 200, 300, 400, 120, 150, 250, 350]);
       return P('Reserves of a metal are ' + T.commas(Rv) + ' million tonnes, used at ' + Pv + ' million tonnes a year. A rise in price makes ' + add + ' million tonnes of lower-grade deposits worth mining, so they become reserves too. What is the new reserves-to-production ratio, in years?', num((Rv + add) / Pv, 3, 0.01),
         ['New reserves: $' + T.commas(Rv) + ' + ' + add + ' = ' + T.commas(Rv + add) + '$ million tonnes.', 'R/P $= ' + T.commas(Rv + add) + ' \\div ' + Pv + ' = ' + fd((Rv + add) / Pv, 1) + '$ years, up from ' + fd(Rv / Pv, 1) + '. The rock in the ground did not change; what counts as a reserve did.'],
         'Add the new reserves, then divide by the production.', { unit: 'years', vf: { k: 'change', R: Rv + add, P: Pv } });
     }
     if (kind === 'grow') {
-      var r = R.pick([0.01, 0.02, 0.03, 0.04]), RP = R.pick([30, 40, 50, 60, 100]), n = M.log(1 + r * RP) / M.log(1 + r);
+      var r = R.pick([0.01, 0.02, 0.03, 0.04, 0.012, 0.015, 0.025, 0.035]), RP = R.pick([30, 40, 50, 60, 100, 35, 70, 80, 90]), n = M.log(1 + r * RP) / M.log(1 + r);
       return P('A resource has reserves equal to ' + RP + ' years of this year\'s production (R/P = ' + RP + '). If use grows ' + fd(r * 100, 0) + '% a year and no reserves are added, how many years would they last? Use $n = \\dfrac{\\ln(1 + r \\cdot R/P)}{\\ln(1 + r)}$, which comes from adding up the growing yearly use.', num(n, 3, 0.01),
         ['Total use over $n$ years grows like a savings account: $P(1 + (1+r) + (1+r)^2 + \\dots) = P\\dfrac{(1+r)^n - 1}{r}$.', 'Set it equal to the reserves $R$: $(1 + r)^n = 1 + r\\dfrac{R}{P} = 1 + ' + fd(r, 2) + ' \\times ' + RP + ' = ' + fd(1 + r * RP, 2) + '$.', '$n = \\dfrac{\\ln ' + fd(1 + r * RP, 2) + '}{\\ln ' + fd(1 + r, 2) + '} \\approx ' + fd(n, 1) + '$ years, less than the ' + RP + ' years the plain ratio suggests.', 'Growth in use shortens the time; new discoveries, recycling and substitutes lengthen it. Both matter.'],
         'Compute $1 + r \\cdot R/P$, take its natural log, and divide by $\\ln(1 + r)$.', { unit: 'years', vf: { k: 'grow', r: r, RP: RP } });
@@ -2372,3 +2372,131 @@
 
 // ---- 99_tail.js
 })(typeof window !== 'undefined' ? window.MathLadder : (typeof global !== 'undefined' ? global.MathLadder : undefined));
+
+/* ---- More forms of the same questions (round 7, "widen"; Physics and Earth ladders): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - check a number: the question and a classmate's numeric answer, either the generator's own answer or that answer
+     off by a common slip (a factor of 2, 4 or 10), and "Is that right?" (Yes / No; not in placement);
+   - two at once: two different questions of the topic, answered together (short questions only, multiple-choice or
+     numeric, each keeping its own unit; at most one of them with a picture, which then comes first).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'geology', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function numable(p) { // a single numeric answer with a plain decimal value (not a fraction or an expression)
+    var a = p.a;
+    return !!a && a.t === 'num' && /^-?\d+(\.\d+)?(e-?\d+)?$/.test(String(a.v)) && +a.v !== 0 && isFinite(+a.v) &&
+      !(a.tol && a.tol >= Math.abs(+a.v) / 3) && !((a.rtol || 0) > 0.3); // a slip by a factor of 2 must fall outside the tolerance
+  }
+  function sig(v) { var m = String(v).replace(/e.*$/, '').replace(/^-?0*\.?0*/, '').replace('.', ''); return Math.min(6, Math.max(3, m.length)); }
+  function show(x, n) { // a number as the classmate would write it: 3 significant figures, scientific notation when large or small
+    var ax = Math.abs(x);
+    if (ax >= 1e5 || ax < 1e-3) { var e = Math.floor(Math.log10(ax)), m = Number((x / Math.pow(10, e)).toPrecision(n || 3)); if (Math.abs(m) >= 10) { m = m / 10; e++; } return '$' + m + ' \\times 10^{' + e + '}$'; }
+    var s = String(Number(x.toPrecision(n || 3)));
+    return '$' + (ax >= 1e4 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, '{,}') : s) + '$';
+  }
+  function numCheckForm(R, p) {
+    var a = p.a, v = +a.v, n = sig(a.v), right = R.coin(), f = R.pick([2, 0.5, 10, 0.1, 4, 0.25]), shown = right ? v : v * f;
+    var who = 'A classmate worked it out and got', u = p.unit ? ' ' + p.unit : '';
+    var q = p.q + '<p>' + who + ': <b>' + show(shown, n) + u + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right.' : 'No. The answer is ' + show(v, n) + u + '; ' + (f > 1 ? 'the classmate\'s answer is ' + f + ' times too big.' : 'the classmate\'s answer is ' + Math.round(1 / f) + ' times too small.'))].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf' && !numable(p))) return false;
+    if (p.a.t !== 'num' && p.unit) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function part(l, x) { var o = { label: l, a: x.a }; if (x.unit) o.unit = x.unit; return o; }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [part('1.', p), part('2.', p2)] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (mode !== 'place' && numable(p)) forms.push('ncheck');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : f === 'ncheck' ? numCheckForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

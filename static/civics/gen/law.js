@@ -307,6 +307,11 @@
       fixed: ['Yes', 'No: diversity is not complete', 'No: the amount does not exceed \\$75,000', 'No: neither requirement is met'], why: steps };
   }
   G('law.jurisdiction', fromBank([
+    {"L":[1,2,3],"q":"Which kind of jurisdiction is a court's power over the type of case?","a":"subject-matter jurisdiction","w":["personal jurisdiction","appellate jurisdiction only","venue"],"why":"Subject-matter jurisdiction is about the kind of case; personal jurisdiction is about the defendant."},
+    {"L":[2,3],"q":"A citizen of Ohio sues another citizen of Ohio under a federal civil rights statute. May a federal court hear it?","a":"Yes, under federal-question jurisdiction","w":["No, because both parties are from Ohio","Only if the claim is over \\$75,000","Only if the state court agrees"],"why":"A claim arising under federal law needs no diversity and no minimum amount."},
+    {"L":[1,2,3],"q":"Two neighbors from the same state have a contract dispute under state law. Where is the case usually filed?","a":"in a state court","w":["in a federal district court","in the U.S. Supreme Court","in a federal court of appeals"],"why":"With no federal question and no diversity, federal courts have no jurisdiction."},
+    {"L":[3],"q":"Federal-question jurisdiction requires the parties to be citizens of different states.","tf":false,"why":"False: diversity needs different states; a federal question does not."},
+    {"L":[3],"q":"Diversity jurisdiction requires that no plaintiff share a state of citizenship with any defendant.","tf":true,"why":"True: the rule is complete diversity."},
     { L: [1, 2, 3], gen: divGen }, { L: [1, 2, 3], gen: divGen }, { L: [2, 3], gen: divGen },
     { L: [1, 2], q: 'What amount must a diversity case exceed to be heard in federal court?', a: '\\$75,000', w: ['\\$10,000', '\\$50,000', '\\$1,000,000'], why: '28 U.S.C. § 1332: more than \\$75,000, not counting interest and costs.' },
     { L: [1, 2], q: 'A claim arises under a federal statute. Which kind of federal jurisdiction fits?', a: 'federal-question jurisdiction', w: ['diversity jurisdiction', 'personal jurisdiction', 'no federal jurisdiction'], why: 'Federal courts hear cases arising under the Constitution, federal laws and treaties (28 U.S.C. § 1331).' },
@@ -489,6 +494,11 @@
     ['Quinn\'s dog, known to bite, was locked in a strong kennel when a burglar broke the lock and the dog bit him.', 'Distinguish: a material fact differs', 'Quinn did restrain the dog; the failure to restrain is missing.'],
     ['A shop owner knows her cat scratches customers and lets it roam the shop; it scratches a shopper.', 'Analogize: the material facts match', 'Knowledge of the cat\'s danger and failure to restrain it match the precedent\'s reason.']];
   G('law.analogical-reasoning', fromBank([
+    {"L":[1,2,3],"q":"Arguing that a new case is like a precedent in the ways that matter is called…","a":"analogizing","w":["distinguishing","overruling","reversing","dissenting"],"why":"Lawyers analogize to a precedent that helps them and distinguish one that hurts them."},
+    {"L":[1,2,3],"q":"What is a precedent?","a":"an earlier decision that guides later cases with similar facts","w":["a law passed by Congress","a jury's verdict in the same case","a rule made by an agency"],"why":"Courts follow precedent so that like cases are decided alike."},
+    {"L":[1,2,3],"q":"What does stare decisis mean?","a":"to stand by things decided","w":["let the buyer beware","the thing speaks for itself","friend of the court"],"why":"It is the principle of following precedent."},
+    {"L":[2,3],"q":"A precedent held a landlord liable for a broken stair he knew about. In a new case the landlord did not know and could not have known. What is the landlord's best argument?","a":"Distinguish: the precedent rested on the landlord's knowledge, which is missing here","w":["Both cases involve stairs, so they are the same","Precedents never apply to landlords","The tenant should have fixed the stair"],"why":"The material fact in the precedent was knowledge."},
+    {"L":[2,3],"q":"Which part of a precedent binds later courts?","a":"the holding: the rule needed to decide the case","w":["every remark in the opinion","the dissent","the summary at the top of the reporter"],"why":"Remarks not needed to decide the case (dicta) may persuade but do not bind."},
     { L: [1, 2, 3], gen: function (R) { var c = R.pick(NEWC); return { q: PREC + '<br>New case: ' + c[0] + ' Should a lawyer analogize to the precedent or distinguish it?', a: c[1], w: ['Analogize: the material facts match', 'Distinguish: a material fact differs', 'Neither: precedent never matters'].filter(function (x) { return x !== c[1]; }), why: c[2] }; } },
     { L: [1, 2, 3], gen: sortQ([['The owner knew the animal had hurt people before.', 0], ['The owner left the gate open.', 0], ['The animal was a dog.', 1], ['The bite happened on a Tuesday.', 1], ['The victim\'s name was Hale.', 1], ['The gate was painted green.', 1]], ['Material to the precedent\'s reason', 'Not material'], function (t) { return PREC + ' Is this fact material? <b>' + t + '</b>'; }) },
     { L: [1, 2], q: 'Arguing that a new case is unlike a precedent in a way that matters is called…', a: 'distinguishing', w: ['analogizing', 'overruling', 'affirming'], why: 'Distinguishing shows a material difference.' },
@@ -633,6 +643,13 @@
 
   var DEFY = [['Skidmore v. Swift & Co.', 1944], ['the Administrative Procedure Act', 1946], ['Chevron v. NRDC', 1984], ['United States v. Mead Corp.', 2001]];
   G('law.agency-deference', fromBank([
+    {"L":[1,2,3],"q":"Under Skidmore, which agency reading gets more weight?","a":"one with careful, consistent reasoning drawn from long experience","w":["a short letter that gives no reasons","one that contradicts the agency's earlier letters","one issued without any explanation"],"why":"Skidmore weight depends on thoroughness, consistency and expertise."},
+    {"L":[1,2,3],"q":"Under Chevron's step two, a court asked whether the agency's reading was…","a":"reasonable (permissible)","w":["the best possible reading","the reading Congress would choose today","the narrowest reading"],"why":"At step two a reasonable agency reading was upheld even if the court preferred another."},
+    {"L":[1,2,3],"q":"Which 1946 statute sets the basic rules for how federal agencies act and how courts review them?","a":"the Administrative Procedure Act","w":["the Judiciary Act","the Clean Air Act","the Civil Rights Act","the Federal Reserve Act"],"why":"The Administrative Procedure Act was passed in 1946."},
+    {"L":[1,2,3],"q":"What did supporters of Chevron say it respected?","a":"agency expertise and political accountability","w":["the power of state courts","the role of juries","the views of foreign courts"],"why":"Supporters pointed to expertise and to agencies answering to an elected President."},
+    {"L":[2,3],"q":"What did critics of Chevron say it did?","a":"let agencies, rather than courts, say what the law is","w":["gave juries too much power","took power from the states","ignored the text of the Constitution's preamble"],"why":"Critics said deciding what a statute means is the courts' job."},
+    {"L":[2,3],"q":"In United States v. Mead Corp. (2001), what weight did a tariff ruling letter get?","a":"Skidmore weight","w":["Chevron deference","no weight at all","the force of a statute"],"why":"Mead limited Chevron to readings carrying the force of law."},
+    {"L":[2,3],"q":"Which kind of agency action did Mead treat as carrying the force of law?","a":"notice-and-comment rulemaking","w":["tariff ruling letters","informal guidance letters","press releases"],"why":"Formal procedures like notice-and-comment showed Congress meant the agency to make law."},
     { L: [1, 2, 3], gen: function (R) { var d = R.pick(DEFY); return { q: 'In what year was <b>' + d[0] + '</b> decided or enacted?', num: d[1], why: 'Skidmore 1944; APA 1946; Chevron 1984; Mead 2001.', viz: { name: 'cv-timeline', opts: { events: DEFY.map(function (x) { return { year: x[1], label: x[0] === d[0] ? '?' : x[0] }; }), quiet: true, interactive: false } } }; } },
     { L: [1, 2], q: 'Under Chevron (1984), what did courts do when a statute was ambiguous and the agency\'s reading reasonable?', a: 'defer to the agency\'s reading', w: ['decide the best reading themselves', 'strike the statute down', 'send the question to Congress'], why: 'Chevron step two: accept a reasonable agency reading.' },
     { L: [1, 2], q: 'Under Skidmore v. Swift & Co. (1944), how much weight does an agency\'s reading of a statute get?', a: 'weight according to its thoroughness, consistency and power to persuade', w: ['none at all', 'controlling weight if reasonable', 'more weight than the statute\'s text'], why: 'Skidmore weight depends on the quality of the agency\'s reasoning.' },
@@ -648,6 +665,10 @@
   var SCH = [['Look at the ordinary meaning when the law was enacted.', 0], ['Statutes are compromises; go only as far as the words go.', 0], ['Only the text went through both houses and the President.', 0], ['Limit judges\' discretion by sticking to the words.', 0],
     ['Ask what problem Congress set out to solve.', 1], ['Committee reports are useful evidence of meaning.', 1], ['Avoid readings that defeat the statute\'s aims.', 1], ['Congress writes generally and relies on courts to carry out its goals.', 1]];
   G('law.interpretation-schools', fromBank([
+    {"L":[1,2,3],"q":"Which school is more willing to use legislative history, such as committee reports?","a":"purposivism","w":["textualism","neither; both forbid it"],"why":"Purposivists use legislative history to find a statute's purpose; textualists are skeptical of it."},
+    {"L":[1,2,3],"q":"Which justice is closely linked with modern textualism?","a":"Antonin Scalia","w":["Stephen Breyer","Earl Warren","William Brennan"],"why":"Justice Scalia was a leading textualist."},
+    {"L":[1,2,3],"q":"Which justice argued for purposive reading in his book Active Liberty?","a":"Stephen Breyer","w":["Antonin Scalia","John Marshall","Clarence Thomas"],"why":"Justice Breyer wrote Active Liberty (2005)."},
+    {"L":[1,2,3],"q":"Both textualists and purposivists begin with…","a":"the text of the statute","w":["the legislature's committee reports","the judge's own policy views","the dictionary of another country"],"why":"Both start with the words; they differ on what else to use."},
     { L: [1, 2, 3], gen: sortQ(SCH, ['Textualism', 'Purposivism'], function (t) { return 'Which school leans on this argument? <b>' + t + '</b>'; }) },
     { L: [1, 2], q: 'Which school treats the enacted words as the law and prizes predictability?', a: 'textualism', w: ['purposivism', 'legal realism', 'natural law'], why: 'Textualism: fidelity to the enacted words.' },
     { L: [1, 2], q: 'Which school prizes making statutes work as intended?', a: 'purposivism', w: ['textualism', 'originalism of the Constitution', 'positivism'], why: 'Purposivism reads words as means to the legislature\'s ends.' },
@@ -798,3 +819,362 @@
   ], 'Which statute gives the agency power, and what procedure did it follow?'));
 
 })(window.MathLadder);
+
+/* ---- widen_hum: more questions from the lesson's own tables -----------------------------------------------------
+   Each topic listed below also asks about the facts in its lesson's tables (copied here from the lesson, so the
+   answers are the lesson's own). Forms, by level:
+     match   "Which museum is in Turin?": the right cell and others from the same column (3 choices at level 1, 4 above)
+     pairs   lines "A → B": which pairing is right (level 2), or which one is wrong (level 3)
+     sort    a comparison table: which column does this cell describe (levels 1-2), or choose all for one column (level 3)
+   How often: about a third to a half of the draws, more when the topic's own questions are few at that level.
+   Generated by /tmp/work_widen_widen_hum/tabbuild.js from data/<ladder>/lessons/<course>.json. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var TABS = [{"k":"law.public-private-law#2","h":["Public law","What it covers"],"r":[["Constitutional law","the structure of government and the rights it must respect"],["Contracts","enforceable promises"],["Administrative law","how agencies make rules and decisions"],["Torts","civil wrongs that cause harm, such as negligence"],["Criminal law","offenses against the public, prosecuted by the government"],["Property","ownership and use of land and things"],["Tax law","what people owe the government"],["Family law","marriage, divorce, custody, adoption"]],"cap":"","m":[[1,0,"Which field of law covers {a}?",0,"what a field covers with the field of law"],[0,1,"What does {a} cover?",0,0,2]]},
+    {"k":"law.federal-court-structure#3","h":["Court","Number","What it does"],"r":[["District courts","94: 89 in the states, plus D.C., Puerto Rico, Guam, the Virgin Islands and the Northern Mariana Islands","trial courts: witnesses, evidence, juries; at least one in every state"],["Courts of appeals","13: the First through Eleventh Circuits, the D.C. Circuit and the Federal Circuit","hear appeals from district courts and some agencies, usually in panels of three judges"],["Supreme Court","1, with nine justices","hears appeals it chooses by writ of certiorari, plus a few cases in its original jurisdiction, such as suits between states"],["Specialized courts","for example the Court of International Trade and the Court of Federal Claims","trade cases; money claims against the United States"]],"cap":"","m":[[0,2,"What do the {a} do?",0],[2,0,"Which federal courts do this: {a}?",0]]},
+    {"k":"law.civil-case-path#3","h":["Stage","What happens"],"r":[["Pleadings","The plaintiff's <b>complaint</b> states the claims; the defendant files an <b>answer</b> admitting or denying them, or a <b>motion to dismiss</b>, for example for failure to state a claim: even if every fact alleged were true, the law gives no remedy"],["Discovery","Each side gets evidence from the other: documents, written questions (interrogatories) and depositions (questioning under oath)"],["Summary judgment","A party asks the judge to decide without trial because there is no genuine dispute about any material fact and it is entitled to judgment as a matter of law"],["Trial","A jury (or the judge, in a bench trial) hears evidence and decides the facts"],["Judgment and appeal","The court enters judgment; the loser may move for a new trial and may appeal"]],"cap":"","m":[[1,0,"In a civil case, which stage is this? {a}",0]]},
+    {"k":"law.dispositions#2","h":["Disposition","Meaning","What happens next"],"r":[["Affirmed","the lower court's judgment stands","the case is over at this level (the loser may seek further review)"],["Reversed","the lower court reached the wrong result","often with a remand to enter a new judgment or hold further proceedings"],["Vacated","the judgment is set aside, often because the lower court used the wrong legal standard","usually remanded to decide again under the right standard; the outcome may end up the same"],["Remanded","sent back to the lower court","the lower court acts under the appellate court's instructions"],["Modified","the judgment is changed in part","for example, damages reduced"]],"cap":"","m":[[0,1,"An appellate court's judgment says \"{a}.\" What does that mean?",0,"a disposition with its meaning"],[1,0,"Which disposition means this: {a}?",0],[2,0,"After which disposition does this usually happen: {a}?",0,0,2]]},
+    {"k":"law.textual-canons#1","h":["Canon","Meaning","Example"],"r":[["<i>Expressio unius est exclusio alterius</i>","listing some things implies the exclusion of others","\"Dogs, cats and rabbits may be kept\" suggests ferrets may not"],["<i>Ejusdem generis</i> (\"of the same kind\")","general words after a list of specific ones take the list's kind","\"cars, trucks, motorcycles and other vehicles\": vehicles like those, not airplanes"],["<i>Noscitur a sociis</i> (\"known by its companions\")","an unclear word takes meaning from its neighbors","in \"tacks, nails and staples,\" \"staples\" means fasteners, not basic foods"],["Rule against surplusage","read every word to do some work; avoid readings that make words pointless","if \"sell\" already covers \"give,\" why did the law say \"sell or give\"?"],["Whole-act rule; consistent usage","read a provision with the whole statute; the same word usually means the same thing throughout","\"employee\" in section 2 and section 9 means the same"]],"cap":"","m":[[1,0,"Which canon of interpretation says this: {a}?",0],[2,0,"Which canon does this example show? {a}",0,0,2]]},
+    {"k":"law.interpretation-schools#2","h":["","Textualism","Purposivism"],"r":[["What is the law?","the words that passed both houses and were signed","the words, understood as a reasonable means to the legislature's ends"],["Best evidence of meaning","text, structure, ordinary usage, canons","text, plus purpose and (for many) legislative history"],["Main virtue","predictable; limits judges' discretion; respects the lawmaking process","statutes work as intended; avoids results no one wanted"],["Main worry about the other","purposes are vague and let judges pick results","wooden readings defeat the law's aims and make Congress's job impossible"]],"cap":"","one":"Two schools of statutory interpretation, each as its advocates put it. Which one does this describe?","all":"Which of these describe {a}? Choose all that apply."},
+    {"k":"law.contracts-basics#4","h":["Remedy","Aim"],"r":[["Expectation damages","put the injured party where performance would have put them (the usual measure)"],["Reliance damages","repay what the injured party spent relying on the promise"],["Restitution","return a benefit the other party received"],["Specific performance","a court order to perform, used when money is not enough, as with a unique item or land"]],"cap":"","m":[[1,0,"Which contract remedy aims to do this: {a}?",0,"a remedy with its aim"],[0,1,"What is the aim of {a}?",0,0,2]]},
+    {"k":"law.torts-basics#2","h":["Kind","Fault required","Examples"],"r":[["Intentional torts","intent to do the act (or knowledge its result is substantially certain)","<b>battery</b> (harmful or offensive contact), <b>assault</b> (causing a reasonable fear of imminent contact), false imprisonment, trespass to land"],["Negligence","failure to use reasonable care","a driver who runs a red light; a store that ignores a spill"],["Strict liability","none: liability without fault","blasting; keeping wild animals; many claims for defective products"]],"cap":"","m":[[0,1,"What fault is required for {a}?",0,"a kind of tort with the fault it requires"],[2,0,"Which kind of tort do these examples show: {a}?",0]]},
+    {"k":"law.civil-vs-criminal#1","h":["","Criminal case","Civil case"],"r":[["Who brings it","the government (a prosecutor)","a private party, a business or a government (the plaintiff)"],["Case name","<i>State v. Smith</i>, <i>United States v. Smith</i>","<i>Jones v. Smith</i>"],["Standard of proof","<b>beyond a reasonable doubt</b>","usually a <b>preponderance of the evidence</b> (more likely than not)"],["Possible result","conviction and punishment: prison, fines, probation","a remedy: money damages, an order to do or stop doing something"],["A lawyer if you cannot pay","yes, for felonies and whenever a jail or prison sentence is imposed (<i>Gideon v. Wainwright</i>, 1963, and later cases)","generally no constitutional right"],["Double jeopardy","applies: no second prosecution for the same offense after acquittal","does not apply"]],"cap":"","one":"Criminal case or civil case: which does this describe?","all":"Which of these describe a {a}? Choose all that apply."},
+    {"k":"law.common-law#4","h":["","Common law tradition","Civil law tradition"],"r":[["Starting point","decided cases, plus statutes","a comprehensive code, plus statutes"],["Role of past decisions","formally binding (stare decisis)","influential, but formally the code governs"],["Judges' opinions","long, signed, with dissents","often shorter, focused on the code's articles"],["Where found","England, the United States (except Louisiana private law), Canada (except Quebec), Australia, India","France, Germany, Spain, most of Latin America, Japan, Quebec"]],"cap":"","one":"Which legal tradition does this describe?","all":"Which of these describe the {a}? Choose all that apply."},
+    {"k":"law.federal-and-state-law#x","x":[{"q":"Which clause of the Constitution makes a valid federal law override a conflicting state law?","a":"The Supremacy Clause","w":["The Commerce Clause","The Tenth Amendment","The Equal Protection Clause","The Due Process Clause","The Necessary and Proper Clause"],"s":["Under the Supremacy Clause, valid federal law is \"the supreme Law of the Land.\"","When federal law overrides state law, that is called preemption."]},{"q":"What is it called when a valid federal law overrides a state law?","a":"Preemption","w":["Judicial review","Nullification","Stare decisis","Ratification","Impeachment"],"s":["A federal law that displaces a state law preempts it.","It works only where there is a conflict or displacement."]},{"q":"Congress writes in a statute that state laws on the subject are displaced. Which kind of preemption is that?","a":"Express preemption","w":["Field preemption","Conflict preemption","No preemption: both laws apply","Dual sovereignty"],"s":["Congress said so in the statute itself.","That is express preemption."]},{"q":"Federal regulation of a subject is so complete that Congress left no room for the states. Which kind of preemption is that?","a":"Field preemption","w":["Express preemption","Conflict preemption","Dual sovereignty","No preemption: both laws apply"],"s":["Congress has occupied the whole field.","State laws in that field are displaced."]},{"q":"It is impossible to obey both a federal law and a state law. Which kind of preemption applies?","a":"Conflict preemption","w":["Field preemption","Express preemption","No preemption: both laws apply","Dual sovereignty"],"s":["When both cannot be obeyed, or the state law blocks the federal law's purposes, the state law gives way.","That is conflict preemption."]},{"lv":2,"f":"wage"},{"lv":2,"q":"Which kinds of law are mostly state law?","a":"Criminal law, family law, property, contracts and torts","w":["Treaties and foreign affairs","Immigration and naturalization","Patents and copyrights","Coining money and the post office"],"s":["The national government has only the powers the Constitution lists; the rest are reserved to the states.","So most everyday law is state law."]},{"lv":2,"q":"Who has the last word on what a state's own law means?","a":"That state's highest court","w":["The U.S. Supreme Court","Congress","The President","The state's governor"],"s":["Each state's highest court is the final judge of its own state law.","Federal courts decide questions of federal law."]},{"lv":3,"q":"The same act breaks a state law and a federal law. Can both the state and the nation prosecute it?","a":"Yes: as separate sovereigns, each may prosecute under its own law","w":["No: that is always double jeopardy","Only the federal government may prosecute","Only the state may prosecute","Only if the first trial ended in conviction"],"s":["This is the \"dual sovereignty\" rule.","The Supreme Court reaffirmed it in Gamble v. United States (2019)."]},{"lv":3,"q":"A federal law conflicts with a state law, but the federal law is outside Congress's powers. Which law governs?","a":"The state law, because only valid federal law prevails","w":["The federal law, because federal law always wins","Neither law","Whichever was passed first","Whichever is stricter"],"s":["Supremacy has built-in limits: the federal law must be valid.","An invalid federal law preempts nothing."]},{"tf":false,"q":"True or false: federal law beats state law in every case.","s":["Only valid federal law prevails, and only where it conflicts or occupies the field.","Where both can be obeyed and Congress did not displace state law, both apply."]},{"tf":true,"q":"True or false: a state constitution can protect rights more broadly than the federal Constitution.","s":["States may give more protection.","They may not take away federal rights."]}]},
+    {"k":"law.holding-dicta#x","x":[{"q":"What is the holding of a case?","a":"The rule of law necessary to decide the case on its facts","w":["Any statement the judge makes","The facts of the case","The dissent's main argument","A remark about other situations","The summary written by the court reporter"],"s":["The holding is the rule the decision needed.","Holdings bind later courts."]},{"q":"What does \"obiter dictum\" mean?","a":"Something said in passing","w":["Let the decision stand","The thing speaks for itself","Of the same kind","Known by its companions","For the court"],"s":["Dicta (singular: dictum) come from obiter dictum, \"something said in passing\".","They are statements not necessary to the decision."]},{"q":"How much weight do dicta have for later courts?","a":"They can persuade, but they do not bind","w":["They bind all later courts","They bind only lower courts","None at all: courts may not read them","They override the holding"],"s":["Only the holding binds.","Lower courts still give great weight to considered Supreme Court dicta."]},{"lv":2,"q":"What is Wambaugh's inversion test?","a":"Reverse the statement and ask whether the outcome would change","w":["Count how many judges joined the opinion","Check whether the statement is in a footnote","Ask whether the dissent agrees","Read the opinion backward"],"s":["If reversing a proposition would not change the result, it is probably dictum.","If it would, it is part of the holding."]},{"lv":2,"q":"A court decides that a marina owes paying customers reasonable care, and adds that \"the same result would likely follow for a night-time trespasser.\" What is the added remark?","a":"Dictum","w":["The holding","A dissent","A concurrence","The disposition"],"s":["No trespasser was before the court.","The remark was not needed to decide the case."]},{"lv":3,"q":"Footnote four of United States v. Carolene Products Co. (1938) suggested courts might look harder at laws aimed at \"discrete and insular minorities.\" Holding or dictum?","a":"Dictum, though later courts built on it","w":["The holding of the case","A dissent","A statute","A concurrence in the judgment"],"s":["The case upheld a federal ban on \"filled milk\" under a deferential test.","The footnote was not needed for that result."]},{"lv":3,"q":"Why should only the holding bind later courts?","a":"Other remarks were not tested by argument or needed for the result","w":["Judges are not allowed to write dicta","Dicta are always wrong","Holdings are shorter","The Constitution says so in Article III"],"s":["A court decides the dispute before it, after hearing both sides.","Treating untested remarks as law would decide cases never brought."]},{"tf":false,"q":"True or false: every sentence in a court's opinion is binding law.","s":["Only the holding binds.","Dicta can only persuade."]}]},
+    {"k":"law.plain-meaning#x","x":[{"q":"Where does every method of reading a statute begin?","a":"With the words of the statute","w":["With the legislators' private hopes","With the dictionary definition of each word alone","With newspaper reports","With the judge's own views"],"s":["Courts begin with the text.","They read it in its ordinary meaning, at the time it was enacted, in context."]},{"q":"In Nix v. Hedden (1893), were tomatoes fruits or vegetables under the tariff act?","a":"Vegetables: ordinary meaning governed","w":["Fruits: botanical meaning governed","Neither: they were not taxed","Both: they were taxed twice","The Court refused to decide"],"s":["The importer argued tomatoes are botanically fruits.","The Court held that in ordinary speech they are vegetables."]},{"q":"In McBoyle v. United States (1931), was an airplane a \"motor vehicle\" under the 1919 law?","a":"No: the Court held it was not a \"vehicle\" under that statute","w":["Yes: anything self-propelled is a vehicle","Yes: because it had a motor","The Court did not decide","Only if it was flown across state lines"],"s":["The law punished taking a stolen \"motor vehicle\" across state lines.","In ordinary speech of the time, \"vehicle\" meant something that runs on land."]},{"lv":2,"q":"What is a \"term of art\" in a statute?","a":"A word with a settled legal meaning, given that technical meaning","w":["A word about painting","A word the judge invents","A word with no meaning","A word in Latin"],"s":["Some words have settled legal meanings.","Courts give them those meanings."]},{"lv":2,"q":"The word \"bank\" appears in a law about rivers. Why does context matter?","a":"Words take meaning from their surroundings","w":["Context never matters in a statute","Every word must be read alone","Judges pick the meaning they like","Only the title of a law counts"],"s":["\"Bank\" means one thing in a banking act and another in a law about rivers.","Courts read words in the context of the whole statute."]},{"lv":2,"q":"Under the federal Dictionary Act, unless context shows otherwise, words in the singular include what?","a":"The plural","w":["Only the singular","Every synonym","The past tense","Words in other languages"],"s":["1 U.S.C. § 1 sets general rules of reading.","One of them: the singular includes the plural."]},{"lv":3,"q":"Why, on the textualist view, is the enacted text the law and not its authors' private hopes?","a":"Only the text passed both houses and was signed (or passed over a veto)","w":["Because authors' hopes are secret by law","Because judges cannot read committee reports","Because the President writes every statute","Because the Constitution forbids legislative history"],"s":["Under Article I, the text that passed is what became law.","Reading it as an ordinary reader would also gives fair notice."]},{"tf":false,"q":"True or false: textualism means reading each word alone, as in a dictionary.","s":["Textualists read words in context.","Definitions, neighboring words, structure and settled meanings all count."]}]},
+    {"k":"law.standing#x","x":[{"q":"Which of these is NOT one of the three elements of standing?","a":"A strong personal interest in the issue","w":["An injury in fact","Causation","Redressability"],"s":["The elements are injury in fact, causation and redressability.","Caring deeply about an issue is not an element."],"h":"Injury, cause, fix."},{"q":"Which case set out the three elements of standing?","a":"Lujan v. Defenders of Wildlife (1992)","w":["Marbury v. Madison (1803)","Baker v. Carr (1962)","Nix v. Hedden (1893)","McBoyle v. United States (1931)"],"s":["Lujan (1992) stated the three elements.","Injury in fact, causation and redressability."]},{"q":"What does \"redressability\" require?","a":"That a favorable ruling is likely to fix the injury","w":["That the injury is fairly traceable to the defendant","That the injury is concrete and imminent","That the plaintiff is a taxpayer","That the case is not moot"],"s":["Redressability asks whether the court can help.","Causation asks whether the defendant caused the injury."]},{"q":"What does \"causation\" require for standing?","a":"That the injury is fairly traceable to the defendant's conduct","w":["That a ruling is likely to fix the injury","That the plaintiff caused the injury","That the injury is shared by all citizens","That the defendant intended harm"],"s":["The plaintiff must be hurt by this defendant.","That link is causation."]},{"lv":2,"q":"What is a \"generalized grievance\"?","a":"A harm shared equally by every citizen, which does not give standing","w":["A harm to one person only","A complaint filed by a group","A grievance against a state","Any injury worth money"],"s":["An interest in the government obeying the law is shared by all.","Its remedy lies with voters and their representatives."]},{"lv":2,"q":"In Spokeo, Inc. v. Robins (2016), what did the Court hold about injury?","a":"It must be concrete as well as particularized","w":["Any procedural violation is enough","Only physical injuries count","Injury is no longer required","Only money losses count"],"s":["A bare procedural violation, divorced from real harm, is not enough.","The injury must be concrete."]},{"lv":3,"q":"Wildlife group members said they would return to foreign habitats \"someday.\" Why did they lack standing in Lujan?","a":"No imminent injury in fact","w":["No causation","The case was moot","It was a political question","They were not taxpayers"],"s":["\"Someday\" plans are not actual or imminent injury.","So the first element failed."]},{"tf":false,"q":"True or false: being a federal taxpayer, by itself, gives standing to challenge any federal spending.","s":["As a rule it does not.","The Court has recognized only a narrow exception for some religion-clause claims."]}]},
+    {"k":"law.political-question#x","x":[{"q":"Which case listed the factors for a political question?","a":"Baker v. Carr (1962)","w":["Lujan v. Defenders of Wildlife (1992)","Marbury v. Madison (1803)","Luther v. Borden (1849)","Powell v. McCormack (1969)"],"s":["Baker v. Carr listed six factors.","It also held that unequal state districts could be challenged in court."]},{"q":"The Constitution gives the Senate the \"sole Power to try\" impeachments. Can courts review how it holds a trial?","a":"No: Nixon v. United States (1993) held it a political question","w":["Yes: courts review every trial","Yes, but only the Supreme Court","Only if the House agrees","Only for judges, not presidents"],"s":["A federal judge removed by the Senate challenged its procedure.","The Court held the question was committed to the Senate."]},{"q":"Which of these is one of the Baker v. Carr factors?","a":"A lack of judicially manageable standards for resolving the issue","w":["The case involves an election","The case is about politics","The plaintiff is a politician","The case is popular in the news"],"s":["A key factor is the lack of legal standards to apply.","Another is a textual commitment of the issue to another branch."]},{"lv":2,"q":"In Luther v. Borden (1849), what did the Court leave to Congress and the President?","a":"Which of two rival governments of Rhode Island was legitimate","w":["Whether the House could exclude a member","How the Senate tries impeachments","Whether districts were equal in population","Whether a treaty was valid"],"s":["Two rival governments claimed Rhode Island.","The Court left the choice to the political branches."]},{"lv":2,"q":"In Powell v. McCormack (1969), what did the Court decide?","a":"Whether the House could exclude a member-elect who met the Constitution's qualifications","w":["That impeachment trials cannot be reviewed","That gerrymandering claims cannot be heard","Which Rhode Island government was legitimate","That taxpayers have standing"],"s":["The Court decided the question; it was not political.","The House could not exclude a member-elect who met the qualifications."]},{"lv":3,"q":"Since Rucho v. Common Cause (2019), where may claims of partisan gerrymandering still be brought?","a":"Under state law, or through Congress, but not in federal court","w":["Only in federal court","Nowhere at all","Only in the Supreme Court","Only before the Senate"],"s":["Rucho held such claims are political questions for federal courts.","State law and Congress remain possible routes."]},{"tf":false,"q":"True or false: any case about politics is a political question.","s":["Many politically charged cases are decided.","The doctrine is narrow and turns on the Baker factors."]}]},
+    {"k":"law.administrative-law-basics#x","x":[{"q":"Which law requires notice-and-comment rulemaking for most federal agency rules?","a":"The Administrative Procedure Act (1946)","w":["The Judiciary Act of 1789","The Dictionary Act","The Clean Air Act","The Federal Register Act of 1789"],"s":["The APA was signed June 11, 1946.","It sets fair procedures for agency action."]},{"q":"What three things do agencies do under powers granted by statutes?","a":"Make rules, adjudicate cases and enforce laws","w":["Pass statutes, veto bills and appoint judges","Ratify treaties, declare war and coin money","Elect officials, write constitutions and amend them","Only give advice"],"s":["Agencies make rules, decide cases and enforce.","All of it under authority Congress delegates."]},{"q":"Under the nondelegation doctrine, what must Congress give an agency?","a":"An \"intelligible principle\" to guide it","w":["A separate budget for every rule","A judge for every case","Permission from the states","A written constitution"],"s":["J.W. Hampton, Jr. & Co. v. United States (1928) stated the test.","Congress sets goals and a guiding principle; the agency fills in details."]},{"lv":2,"q":"Under the APA, a court may set aside agency action that is what?","a":"\"Arbitrary, capricious, an abuse of discretion, or otherwise not in accordance with law\"","w":["Unpopular with the public","More than ten years old","Written by an administrative law judge","Published in the Federal Register"],"s":["That is the APA's standard for review.","An agency must explain its action and respond to the evidence."]},{"lv":2,"q":"An agency posts guidance explaining how it reads a regulation, with no public comment. Is it invalid?","a":"No, but it does not bind the public like a legislative rule","w":["Yes: all agency documents need notice and comment","Yes: agencies may not explain their rules","No, and it binds exactly like a statute","Only if Congress approves it"],"s":["Interpretive rules and policy statements are exempt from notice and comment.","They do not have the force of law that legislative rules do."]},{"lv":3,"q":"An agency withdraws a safety rule with no reason given and no response to evidence that the rule saved lives. What will a court likely do?","a":"Set the withdrawal aside and send it back to the agency","w":["Uphold it, since agencies may do as they wish","Write a new rule itself","Order Congress to pass a law","Dismiss the case as a political question"],"s":["An unexplained action that ignores the record is arbitrary and capricious.","The court sets it aside and remands."]},{"tf":true,"q":"True or false: legislative rules made through proper procedures under a valid statute have the force of law.","s":["Such rules bind like a statute.","Violating them can bring fines or other penalties."]}]},
+    {"k":"law.federal-court-structure#x","x":[{"q":"How many federal district courts are there?","a":"94","w":["13","50","9","89"],"s":["There are 94 districts: 89 in the states, plus D.C., Puerto Rico, Guam, the Virgin Islands and the Northern Mariana Islands.","Every state has at least one."]},{"q":"How many federal courts of appeals are there?","a":"13","w":["94","9","11","50"],"s":["The First through Eleventh Circuits, the D.C. Circuit and the Federal Circuit.","11 + 2 = 13."]},{"q":"How many justices sit on the Supreme Court?","a":"Nine","w":["Seven","Eleven","Thirteen","Five"],"s":["There is one Supreme Court, with nine justices.","Congress sets the number by law."]},{"lv":2,"q":"How does most of the Supreme Court's caseload reach it?","a":"By writ of certiorari, in cases it chooses to hear","w":["Every appeal must be heard","By jury trial","By referral from Congress","By lottery"],"s":["The Court picks a small share of the petitions it receives.","It grants certiorari when four justices agree."]},{"lv":2,"q":"Which federal courts hear witnesses, take evidence and hold jury trials?","a":"The district courts","w":["The courts of appeals","The Supreme Court","The Federal Circuit","State supreme courts"],"s":["District courts are the trial courts.","Appellate courts review records; they do not hear witnesses."]},{"tf":false,"q":"True or false: federal courts of appeals hold new trials with witnesses.","s":["Courts of appeals review the record for legal error.","Trials happen in the district courts."]}]}];
+  var FUNS = {
+    wage: function (R) { // a state minimum above the federal floor: both can be obeyed, so the higher state wage applies
+      var st = R.pick([9, 10, 11, 12, 13, 14, 15, 16]), cents = R.pick([0, 50]), s = st + (cents ? '.50' : '.00');
+      return { q: 'The federal minimum wage is \\$7.25 an hour. A state sets its minimum at \\$' + s + '. An employer says federal law preempts the state law. Which wage must the employer pay in that state?', a: '\\$' + s, w: ['\\$7.25', 'The average of the two', 'Whichever the employer chooses'],
+        s: ['An employer can obey both laws by paying the higher wage, and the federal law sets only a floor.', 'So there is no conflict and no preemption: the state\'s \\$' + s + ' applies.'], h: 'Can a person obey both laws?' };
+    }
+  };
+  function plain(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim(); }
+  function txt(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function low(s) { return txt(s).toLowerCase().replace(/[.;:,]+$/, ''); }
+  function big(x) { return String(x).replace(/<span class="(sc-b|eg-cop|eg-h)">/g, '<span class="$1" style="font-size:1.6em;line-height:1">'); }
+  function fill(t, x) { x = big(x); return t.replace('{a:l}', String(x).replace(/^[A-Z](?=[a-z])/, function (c) { return c.toLowerCase(); })).replace('{a}', x); }
+  function dot(s) { s = String(s); return /[.!?…"”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function sameRow(t, i, a) { return t.r.filter(function (r) { return low(r[a]) === low(t.r[i][a]); }); }
+  function partnerSteps(t, tp, right, shown) { // what each wrong choice goes with
+    var out = [];
+    shown.forEach(function (c) {
+      if (low(c) === low(right)) return;
+      var rows = t.r.filter(function (r) { return low(r[tp[1]]) === low(c); });
+      if (rows.length === 1 && txt(rows[0][tp[0]]).length <= 90) out.push(dot(c + ': that goes with ' + rows[0][tp[0]]));
+    });
+    return out.slice(0, 3);
+  }
+  // match: ask for column b from a cell of column a
+  function match(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][b]).length <= 130; });
+    if (!ok.length) return null;
+    var i = R.pick(ok), right = t.r[i][b], seen = {};
+    seen[low(right)] = 1;
+    var bad = {}; sameRow(t, i, a).forEach(function (r) { bad[low(r[b])] = 1; }); // never a choice that is also right
+    var pool = []; t.r.forEach(function (r) { var k = low(r[b]); if (r[b] && !seen[k] && !bad[k] && txt(r[b]).length <= 130) { seen[k] = 1; pool.push(r[b]); } });
+    var k = Math.min(L === 1 ? 3 : 4, pool.length + 1); if (k < 3) return null;
+    var wrongs = R.shuffle(pool).slice(0, k - 1), choices = [right].concat(wrongs);
+    return { q: fill(tp[2], t.r[i][a]), a: { t: 'mc', choices: choices, v: 0 },
+      steps: [dot(t.r[i][a] + ' → ' + right), ].concat(partnerSteps(t, tp, right, choices)),
+      hint: tp[3] || 'Think back to the lesson’s table' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 'm', a, b, i, txt(t.r[i][a])] };
+  }
+  // pairs: three or four lines "a → b"; one right (level 2) or one wrong (level 3)
+  function pairs(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][a]).length <= 70 && txt(t.r[i][b]).length <= 70; });
+    var uniq = {}; ok = ok.filter(function (i) { var k = low(t.r[i][a]); if (uniq[k]) return false; uniq[k] = 1; return true; });
+    var n = Math.min(4, ok.length); if (n < 3) return null;
+    var rows = R.shuffle(ok).slice(0, n), wrongOne = L >= 3, target = R.int(0, n - 1), lines = [], steps = [];
+    for (var j = 0; j < n; j++) {
+      var i = rows[j], right = wrongOne ? j !== target : j === target, ans = t.r[i][b];
+      if (!right) {
+        var good = {}; sameRow(t, i, a).forEach(function (r) { good[low(r[b])] = 1; });
+        var ws = []; t.r.forEach(function (r) { if (r[b] && !good[low(r[b])] && txt(r[b]).length <= 70 && ws.map(low).indexOf(low(r[b])) < 0) ws.push(r[b]); });
+        if (!ws.length) return null;
+        ans = R.pick(ws);
+      }
+      lines.push(t.r[i][a] + ' → ' + ans);
+      steps.push(dot(t.r[i][a] + ' → ' + t.r[i][b] + (right ? ': right' : ', not ' + ans)));
+    }
+    var what = tp[4] ? ' Each line pairs ' + tp[4] + '.' : '';
+    return { q: (wrongOne ? 'Exactly one of these pairings is <b>wrong</b>. Which one?' : 'Exactly one of these pairings is right. Which one?') + what,
+      a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own against what you learned.', wh: [t.k, wrongOne ? 'pw' : 'pr', a, b] };
+  }
+  // sort: which column of a comparison table does a cell belong to
+  function sortQ(R, t, L) {
+    var cols = t.h.map(function (_, j) { return j; }).filter(function (j) { return j >= (t.na ? 0 : 1) && txt(t.h[j]); });
+    if (cols.length < 2) return null;
+    var cells = [];
+    t.r.forEach(function (r, i) { cols.forEach(function (j) {
+      if (!r[j] || (!t.na && !txt(r[0]))) return;
+      var dup = cols.some(function (j2) { return j2 !== j && r[j2] && (low(r[j2]) === low(r[j]) || low(r[j2]).indexOf(low(r[j])) >= 0 || low(r[j]).indexOf(low(r[j2])) >= 0); });
+      if (!dup && txt(r[j]).length <= 140) cells.push([i, j]);
+    }); });
+    if (cells.length < 2) return null;
+    var heads = cols.map(function (j) { return t.h[j]; });
+    if (L >= 3 && cells.length >= 5) {
+      var j0 = R.pick(cols), pick = R.shuffle(cells).slice(0, Math.min(5, cells.length));
+      var hits = pick.filter(function (c) { return c[1] === j0; }).length;
+      if (hits >= 1 && hits < pick.length) {
+        var ch = pick.map(function (c) { return lab(t, c); });
+        var v = pick.map(function (c, k) { return c[1] === j0 ? k : -1; }).filter(function (k) { return k >= 0; });
+        return { q: fill(t.all, t.h[j0]), a: { t: 'mc', choices: ch, v: v },
+          steps: pick.map(function (c) { return dot(lab(t, c) + ' (' + t.h[c[1]] + ')'); }),
+          hint: 'Go through them one at a time.', wh: [t.k, 'sa', j0, pick] };
+      }
+    }
+    var c = R.pick(cells);
+    return { q: t.one + (t.na ? (/^["“]/.test(txt(t.r[c[0]][c[1]])) ? '<br>' + t.r[c[0]][c[1]] : '<br>“' + t.r[c[0]][c[1]] + '”') : '<br>' + asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]), a: { t: 'mc', choices: heads.slice(), v: cols.indexOf(c[1]) },
+      steps: t.na ? [dot('That is ' + t.h[c[1]].replace(/^./, function (x) { return x.toLowerCase(); }))] : [dot(txt(t.r[c[0]][0]) + ' for ' + t.h[c[1]] + ': ' + t.r[c[0]][c[1]])].concat(cols.filter(function (j) { return j !== c[1] && t.r[c[0]][j]; }).map(function (j) { return dot('For ' + t.h[j] + ': ' + t.r[c[0]][j]); })),
+      hint: 'Think back to the lesson’s comparison' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 's', c[0], c[1]] };
+  }
+  function asp(x) { return '<b>' + x + (/\?$/.test(txt(x)) ? '' : ':') + '</b> '; }
+  function lab(t, c) { return t.na ? t.r[c[0]][c[1]] : asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]; }
+  // extra bank items: { q, a, w: [wrong answers, more than are shown], s: [steps], h: hint, lv } or { q, tf: true|false, s, lv }
+  function extra(R, t, L) {
+    var its = t.x.filter(function (it) { return (it.lv || 1) <= L; }); if (!its.length) return null;
+    var it = R.pick(its), p;
+    if (it.f) { it = FUNS[it.f](R, L); if (!it) return null; }
+    if (it.num !== undefined) {
+      p = { q: it.q, a: { t: 'num', v: String(it.num) }, steps: it.s.slice() };
+      if (Number.isInteger(it.num) && !it.unit && !it.pct) p.a.form = 'int';
+      if (it.pct) p.a.pct = true;
+      if (it.tol != null) p.a.tol = it.tol;
+      if (it.unit) p.unit = it.unit;
+    }
+    else if (it.tf !== undefined) p = { q: it.q, a: { t: 'tf', v: it.tf }, steps: it.s.slice() };
+    else {
+      var k = Math.min(L === 1 ? 3 : 4, it.w.length + 1);
+      p = { q: it.q, a: { t: 'mc', choices: [it.a].concat(R.shuffle(it.w).slice(0, k - 1)), v: 0 }, steps: it.s.slice() };
+    }
+    p.hint = it.h || 'Think back to the lesson.';
+    p.wh = [t.k, 'x', its.indexOf(it) >= 0 ? t.x.indexOf(it) : -1];
+    return FUNS.__wrap ? FUNS.__wrap(p, L) : p;
+  }
+  function make(R, list, L) {
+    for (var tries = 0; tries < 8; tries++) {
+      var t = R.pick(list), p = null;
+      if (t.x) p = extra(R, t, L);
+      else if (t.one) p = sortQ(R, t, L);
+      else {
+        var tps = t.m.filter(function (tp) { return (tp[5] || 1) <= L; }); if (!tps.length) continue;
+        var tp = R.pick(tps);
+        p = L >= 2 && tp[4] && R.chance(0.35) ? pairs(R, t, tp, L) : match(R, t, tp, L);
+      }
+      if (p) {
+        // ladder pages show choices as plain text (only $…$ math is rendered), so choices carry no tags
+        if (p.a.t === 'mc') { p.a.choices = p.a.choices.map(plain); var seen = {}; if (p.a.choices.some(function (c) { var k = seen[c]; seen[c] = 1; return k; })) continue; }
+        p.nowiden = true; return p;
+      }
+    }
+    return null;
+  }
+  var BY = {}; TABS.forEach(function (t) { var id = t.k.split('#')[0].split('@')[0]; (BY[id] = BY[id] || []).push(t); });
+  var VAR = {};
+  function baseCount(id, base, L) { // different questions (ignoring the order of choices) from 40 fixed seeds
+    var key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        try { var p = base(ML.rand(id + '#whv#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; } } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  function extCount(id, L) { // different table questions from 40 fixed seeds
+    var key = id + '|x|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        var p = make(ML.rand(id + '#whx#' + s + '#' + L), BY[id], L); if (!p) continue;
+        var k = p.q + '|' + JSON.stringify(p.a.choices ? p.a.choices.slice().sort() : p.a.v);
+        if (!seen[k]) { seen[k] = 1; n++; }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  Object.keys(BY).forEach(function (id) {
+    var base = ML.getGen(id); if (!base || base._wh) return;
+    var fn = function (R, ctx) {
+      var L = (ctx && ctx.level) || 1, n = baseCount(id, base, L), x = extCount(id, L), share = Math.max(0.15, Math.min(0.5, x / (x + n + 1)));
+      if (R.chance(share)) { var p = make(R, BY[id], L); if (p) return p; }
+      return base(R, ctx);
+    };
+    fn._wh = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen_hum ---- */
+
+/* ---- widen: more forms of the same questions (so practice repeats less) ----------------------------------------
+   Every topic of this course keeps its own problems, and some draws are turned into other forms of the same skill,
+   built only from the topic's own problems (so their answers stay the ones the topic already checks):
+     check   "Ava chose X. Is Ava right?" (Yes or No) from a one-answer multiple-choice problem
+     pairs   two or three lines "question → answer"; which line is right (or, at level 3, which one is wrong)
+     tfpick  "Which sentence is true?" (or false) from three of the topic's true-or-false sentences
+   Questions whose answer depends on the other choices (first, best, most, not …) show the choices in the check form
+   and never go into pairs. Mix per level: CFG.mix[level] = [check, pairs, tfpick] shares; the rest stays as it was. */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var CFG = {"prefix":"law.","only":["what-is-law","sources-of-law","federal-and-state-law","public-private-law","civil-vs-criminal","common-law","stare-decisis","binding-persuasive","holding-dicta","distinguish-overrule","federal-court-structure","state-court-structure","jurisdiction","trial-and-appeal","civil-case-path","criminal-case-path","case-names-parties","parts-of-opinion","case-brief","irac","dispositions","deductive-reasoning","analogical-reasoning","rules-standards","elements-tests","burdens-of-proof","plain-meaning","purposivism","legislative-history","textual-canons","substantive-canons","agency-deference","interpretation-schools","case-or-controversy","standing","ripeness-mootness","political-question","contracts-basics","torts-basics","criminal-law-basics","administrative-law-basics"]};
+  var NAMES = ['Ava', 'Ben', 'Cora', 'Dev', 'Eli', 'Finn', 'Gus', 'Hana', 'Ivy', 'Jude', 'Kai', 'Lena', 'Milo', 'Nora', 'Omar', 'Pia',
+    'Quinn', 'Rosa', 'Sam', 'Tess', 'Uma', 'Vic', 'Wren', 'Zoe', 'Ada', 'Leo', 'Mia', 'Theo', 'June', 'Max'];
+  var REL = /\b(first|last|earliest|latest|earlier|later|before|after|older|oldest|newer|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|look|read|here|example|examples|likely|probably|mainly|main|usually|typically|other|another|which one|each|order|then|next)\b|n['’]t\b/i;
+  // pairs judge each line on its own, so only questions whose answer depends on the other choices are left out
+  var RELP = /\b(first|last|earliest|latest|oldest|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|which one|other|another|rank|order|more|less|fewer)\b|n['’]t\b|\w+est\b/i;
+  var REF = /\b(this|these|those|shown|picture|map|table|chart|graph|diagram|passage|scene|story|above|below|here|following)\b/i;
+  var BADCH = /\b(all|none|both|neither) of\b|\b(above|below)\b|^(both|neither|all|none)\b|\bchoice\b|\boption\b/i;
+  function strip(s) { return String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function plainish(s) { return !/<(?!\/?(b|i|em|strong)\b)[^>]*>/.test(String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1')); }
+  function add(q, html) { // inside a read-aloud big span when there is one
+    var m = /<span class="[\w-]*big">/.exec(q);
+    if (m) { var k = q.lastIndexOf('</span>'); if (k > m.index) return q.slice(0, k) + '<br>' + html.replace(/<\/p>\s*<p[^>]*>/g, '<br>').replace(/<\/?p[^>]*>/g, '') + q.slice(k); }
+    return q + html;
+  }
+  function single(p) {
+    return p && p.a && p.a.t === 'mc' && !Array.isArray(p.a.v) && Array.isArray(p.a.choices) && p.a.choices.length >= 2 &&
+      !p.a.choices.some(function (c) { return BADCH.test(strip(c)); });
+  }
+  function hash(t) { var h = 7; for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return h; }
+  function nameFor(q, key) { // the same claim always gets the same name, so a name alone never makes a "new" problem
+    var t = strip(q), ok = NAMES.filter(function (n) { return t.indexOf(n) < 0 && String(key).indexOf(n) < 0; });
+    return (ok.length ? ok : NAMES)[hash(t + '|' + key) % (ok.length || NAMES.length)];
+  }
+  function dot(s) { s = String(s); return /[.!?…"”')\]]\s*(<\/b>)?$/.test(strip(s)) || /\$$/.test(s) ? s : s + '.'; }
+  function optList(ch) { return '<p class="wd-opts">The choices were:<br>' + ch.map(function (c) { return '• ' + c; }).join('<br>') + '</p>'; }
+  function copyP(p, q, a, steps) { var o = {}; for (var k in p) if (Object.prototype.hasOwnProperty.call(p, k)) o[k] = p[k]; o.q = q; o.a = a; o.steps = steps; delete o.choices; return o; }
+
+  // check: show one choice (the right one half the time) and ask whether it is right
+  function check(p, R) {
+    var ch = p.a.choices, v = p.a.v, idx = ch.map(function (_, i) { return i; }), others = idx.filter(function (i) { return i !== v; });
+    var i = R.chance(0.5) ? v : R.pick(others), ok = i === v, nm = nameFor(p.q, ch[i]), letters = ch.every(function (c) { return /^[A-Z]$/.test(String(c)); });
+    var stem = strip(p.q), html = '';
+    if (!letters && (REL.test(stem) || ch.length > 4 || CFG.listAll)) {
+      var shown = p.a.keep ? ch.slice() : R.shuffle(ch);
+      html += optList(shown);
+    }
+    html += '<p class="wd-check">' + nm + ' chose: <b>' + ch[i] + '</b>' + (/[.!?…"”]$/.test(strip(ch[i])) ? '' : '.') + ' Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes. ' + dot(ch[v]) + ' is the right answer.' : 'No. The right answer is: ' + dot(ch[v]);
+    if (ok) first = 'Yes, that is the right answer.';
+    return copyP(p, add(p.q, html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [first].concat(p.steps || []));
+  }
+  // check for "choose all": the whole list is shown, and one learner's picks; right only if exactly the right ones
+  function checkAll(p, R) {
+    var ch = p.a.choices, v = p.a.v.slice().sort(), n = ch.length, pick;
+    if (R.chance(0.45)) pick = v.slice();
+    else {
+      var t = 0; do { var j = R.int(0, n - 1), s = v.slice(), k = s.indexOf(j); if (k >= 0) s.splice(k, 1); else s.push(j); if (R.chance(0.3)) { var j2 = R.int(0, n - 1), k2 = s.indexOf(j2); if (k2 >= 0) s.splice(k2, 1); else s.push(j2); } pick = s.sort(); t++; }
+      while (t < 20 && (!pick.length || pick.join() === v.join()));
+      if (!pick.length || pick.join() === v.join()) return null;
+    }
+    var ok = pick.join() === v.join(), nm = nameFor(p.q, pick.join());
+    var html = optList(ch) + '<p class="wd-check">' + nm + ' chose ' +
+      (pick.length === 1 ? 'only: <b>' + ch[pick[0]] + '</b>' : 'these: <b>' + pick.map(function (i) { return ch[i]; }).join('</b>; <b>') + '</b>') + '. Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes, those are exactly the right ones.' : 'No. The right ones are: ' + v.map(function (i) { return ch[i]; }).join('; ');
+    return copyP(p, add(p.q.replace(/\s*(Choose|Select|Pick) (all|every)[^.?!<]*[.?!]?/i, ''), html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [dot(first)].concat(p.steps || []));
+  }
+
+  // items for pairs: one-answer questions that stand on their own (no picture, no passage, no "first/best/…")
+  function pairItem(p) {
+    if (!single(p) || p.viz) return null;
+    var max = CFG.maxStem || 120, maxA = CFG.maxAns || 70, a = strip(p.a.choices[p.a.v]), stem, group = '';
+    // "prompt<br><b>thing</b>" or "prompt<blockquote>thing</blockquote>": a line is "thing → answer", lines share the prompt
+    var q0 = p.q.replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1').trim();
+    var m = /^([^<]{6,140}?)\s*(?:<br>\s*<b>([^<]{3,140})<\/b>|<blockquote>([^<]{3,140})<\/blockquote>)\s*$/.exec(q0);
+    if (m) { group = m[1].trim(); stem = (m[2] || m[3]).trim(); if (RELP.test(group.replace(/\b(this|these)\b/gi, ''))) return null; }
+    else {
+      if (!plainish(p.q)) return null;
+      stem = strip(p.q); if (RELP.test(stem)) return null;
+    }
+    if (stem.length > max || stem.length < 3 || a.length > maxA || /^[A-Z]$/.test(a) || /\$/.test(stem + a + group)) return null;
+    var w = p.a.choices.filter(function (_, i) { return i !== p.a.v; }).map(strip).filter(function (x) { return x.length <= maxA && x !== a; });
+    if (!w.length) return null;
+    return { stem: stem.replace(/\s*(Choose one|Pick one)\.?$/i, ''), a: a, w: w, why: (p.steps || [])[0] || '', group: group };
+  }
+  function tfItem(p) {
+    if (!p || !p.a || p.a.t !== 'tf' || p.viz || !plainish(p.q)) return null;
+    var s = strip(p.q).replace(/^(True or false\?|True or false:)\s*/i, '').replace(/\s*(True or false\?|Is this true or false\?|Is it true or false\?)$/i, '').trim();
+    if (s.length < 8 || s.length > (CFG.maxStem || 120) + 20 || REF.test(s) || /\?$/.test(s) || /\$/.test(s)) return null;
+    return { s: s, v: p.a.v, why: (p.steps || [])[0] || '' };
+  }
+  function harvest(base, R, ctx, make, n, distinct) {
+    var out = [], keys = {};
+    for (var t = 0; t < 24 && out.length < n; t++) {
+      // at level 3, lines may come from level 2 questions too: three lines with one wrong is the harder form
+      var c2 = ctx && ctx.level >= 3 && (t % 2) ? Object.assign({}, ctx, { level: 2 }) : ctx;
+      var p; try { p = base(ML.rand(R.int(1, 2e9)), c2); } catch (e) { continue; }
+      var it = make(p); if (!it) continue;
+      if (out.length && it.group !== undefined && it.group !== out[0].group) continue;
+      var k = distinct(it); if (k.some(function (x) { return keys[x]; })) continue;
+      k.forEach(function (x) { keys[x] = 1; }); out.push(it);
+    }
+    return out;
+  }
+  function pairs(base, R, ctx, n, wrongOne) {
+    var its = harvest(base, R, ctx, pairItem, n, function (it) { return it.group ? ['s:' + it.stem] : ['s:' + it.stem, 'a:' + it.a]; });
+    if (its.length < n) return null;
+    var answers = its.map(function (it) { return it.a; }), used = {};
+    var target = R.int(0, n - 1), lines = [], steps = [];
+    for (var i = 0; i < n; i++) {
+      var it = its[i], right = wrongOne ? i !== target : i === target, ans = it.a;
+      if (!right) {
+        var ws = it.w.filter(function (x) { return (its[0].group || answers.indexOf(x) < 0) && !used[x]; });
+        if (!ws.length) return null;
+        ans = R.pick(ws); if (!its[0].group) used[ans] = 1;
+      }
+      lines.push(it.stem + ' → ' + ans); // plain text: ladder pages show choices as text
+      steps.push(it.group ? dot(it.stem) + ' Answer: ' + it.a + (right ? '.' : ', not ' + ans + '.') : it.stem + ' The answer is ' + it.a + (right ? '.' : ', not ' + ans + '.'));
+    }
+    var g = its[0].group, q = g ? '<p class="wd-group">The question for every line: <i>' + g + '</i></p>' + (wrongOne ? 'One line has the <b>wrong</b> answer. Which line is it?' : n === 2 ? 'Which line has the <b>right</b> answer?' : 'Only one line has the right answer. Which line is it?') : wrongOne ? 'Each line is a question and an answer. One answer is <b>wrong</b>. Which line is it?'
+      : (n === 2 ? 'Each line is a question and an answer. Which line has the <b>right</b> answer?' : 'Each line is a question and an answer. Only one answer is right. Which line is it?');
+    if (its[target].why) steps.push(its[target].why);
+    return { q: q, a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own. Does the answer fit the question?' };
+  }
+  function tfpick(base, R, ctx, wantFalse) {
+    var its = harvest(base, R, ctx, tfItem, 6, function (it) { return ['s:' + it.s]; });
+    var T = its.filter(function (x) { return x.v; }), F = its.filter(function (x) { return !x.v; });
+    var odd = wantFalse ? F : T, rest = wantFalse ? T : F;
+    if (!odd.length || rest.length < 2) return null;
+    var pick = [odd[0], rest[0], rest[1]], order = R.shuffle([0, 1, 2]), choices = order.map(function (i) { return pick[i].s; });
+    var steps = pick.map(function (x) { return x.s + ' ' + (x.v ? 'True.' : 'False.'); });
+    if (odd[0].why) steps.push(odd[0].why);
+    return { q: wantFalse ? 'Which sentence is <b>false</b>?' : 'Which sentence is <b>true</b>?', a: { t: 'mc', choices: choices, v: order.indexOf(0) }, steps: steps,
+      hint: 'Decide about each sentence on its own.' };
+  }
+  var MIX = CFG.mix || { 1: [0.38, 0.25, 0.04], 2: [0.27, 0.3, 0.1], 3: [0.17, 0.4, 0.15] };
+  function wrap(id, base) {
+    var fn = function (R, ctx) {
+      var lv = ctx && ctx.level || 1, p = base(R, ctx), m = MIX[lv] || MIX[3], r = R.next();
+      if (p.nowiden || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf') || (CFG.skip && CFG.skip.indexOf(id) >= 0)) return p; // typed answers stay as they are
+      var form = r < m[0] ? 0 : r < m[0] + m[1] ? 1 : r < m[0] + m[1] + m[2] ? 2 : -1;
+      if (form < 0) return p;
+      var tries = [form, (form + 1) % 3, (form + 2) % 3].filter(function (f) { return m[f] > 0; });
+      for (var t = 0; t < tries.length; t++) {
+        var f = tries[t], alt = null;
+        if (f === 0) alt = single(p) ? check(p, R) : (p.a && p.a.t === 'mc' && Array.isArray(p.a.v) && !p.viz ? checkAll(p, R) : null);
+        else if (f === 1) alt = pairs(base, R, ctx, lv === 1 ? 2 : 3, lv >= 3 && R.chance(0.6));
+        else alt = tfpick(base, R, ctx, R.chance(0.4));
+        if (alt) return alt;
+      }
+      return p;
+    };
+    fn.widened = true;
+    return fn;
+  }
+  ML.genIds().forEach(function (id) {
+    if (id.indexOf(CFG.prefix) !== 0 || (CFG.only && CFG.only.indexOf(id.slice(CFG.prefix.length)) < 0)) return;
+    var g = ML.getGen(id); if (g && !g.widened) ML.gen(id, wrap(id, g));
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen ---- */

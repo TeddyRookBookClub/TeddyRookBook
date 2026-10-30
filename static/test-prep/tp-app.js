@@ -452,7 +452,7 @@
         var lim = panel.querySelector('.tp-limit'), shw = panel.querySelector('.tp-timer-on');
         start.disabled = true; start.textContent = 'Making your set…';
         setTimeout(function () {
-          var set = TP.buildSet(test, st.parts, Date.now() % 1e9, { avail: avail });
+          var set = TP.buildSet(test, st.parts, Date.now() % 1e9, { avail: avail, fresh: true });
           start.disabled = false; start.textContent = 'Start the set';
           if (!set.items.length) { say('No problems could be made yet.'); return; }
           shell.hidden = true;
@@ -463,7 +463,7 @@
         b.addEventListener('click', function () {
           var a = areaOf(b.getAttribute('data-area')); if (!a) return;
           (function go() {
-            var set = TP.build(test, 10, Date.now() % 1e9, { area: a.key, avail: avail });
+            var set = TP.build(test, 10, Date.now() % 1e9, { area: a.key, avail: avail, fresh: true });
             shell.hidden = true;
             drill(run, { title: a.title, kicker: test.title + ' · practice by area', items: set.items, test: test, byTopic: true, record: !rec || rec.checked, tag: test.test, onClose: function () { back(b); }, again: go, againText: 'Ten more from this area', doneText: 'Back to the test page' });
           })();
@@ -483,7 +483,7 @@
         b.disabled = !n;
         if (!n) { b.title = 'Its topics are still being written'; return; }
         function go() {
-          var set = TP.build(test, 8, Date.now() % 1e9, { area: a.key, avail: avail, native: true });
+          var set = TP.build(test, 8, Date.now() % 1e9, { area: a.key, avail: avail, native: true, fresh: true });
           acts.hidden = true;
           var rec = D.getElementById('tp-record');
           drill(host, { title: a.title, kicker: data.title + ' · practice this unit', items: set.items, test: test, byTopic: true, record: !rec || rec.checked, tag: 'Unit ' + num,

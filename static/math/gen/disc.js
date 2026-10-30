@@ -209,13 +209,38 @@
 // ---- 01-logic.js
   // ================================================================ Unit 1: Logic
   // facts with a known truth value, for building compound statements
-  var FACTS_T = ['$6$ is even', '$3 < 7$', '$9$ is a perfect square', '$13$ is prime', '$5 \\cdot 4 = 20$', '$\\frac{1}{2} > \\frac{1}{3}$', '$2^{5} = 32$', '$0$ is an integer'];
-  var FACTS_F = ['$15$ is prime', '$8 < 2$', '$7$ is even', '$3^{2} = 6$', '$\\frac{1}{4} > \\frac{1}{2}$', '$10$ is odd', '$\\sqrt{16} = 8$', '$1$ is prime'];
+  var FACTS_T = ['$6$ is even', '$3 < 7$', '$9$ is a perfect square', '$13$ is prime', '$5 \\cdot 4 = 20$', '$\\frac{1}{2} > \\frac{1}{3}$', '$2^{5} = 32$', '$0$ is an integer',
+    '$17$ is prime', '$12$ is a multiple of $4$', '$-3 < 1$', '$7 \\cdot 8 = 56$', '$25$ is a perfect square', '$100$ is even', '$\\sqrt{49} = 7$', '$2^{3} = 8$', '$11 + 4 = 15$', '$\\frac{3}{4} = 0.75$'];
+  var FACTS_F = ['$15$ is prime', '$8 < 2$', '$7$ is even', '$3^{2} = 6$', '$\\frac{1}{4} > \\frac{1}{2}$', '$10$ is odd', '$\\sqrt{16} = 8$', '$1$ is prime',
+    '$21$ is prime', '$14$ is a multiple of $4$', '$-5 > 2$', '$6 \\cdot 7 = 48$', '$20$ is a perfect square', '$9$ is even', '$\\sqrt{36} = 7$', '$2^{4} = 8$', '$12 - 5 = 8$', '$\\frac{1}{3} = 0.3$'];
   function factsFor(R, vals) { var t = R.shuffle(FACTS_T), f = R.shuffle(FACTS_F), it = 0, jf = 0; return vals.map(function (v) { return v ? t[it++] : f[jf++]; }); }
   function defLetters(vs, facts) { return vs.map(function (v, i) { return '$' + v + '$: “' + facts[i] + '”'; }).join('; '); }
   var F2 = ['~P | Q', 'P & ~Q', '~(P & Q)', '~(P | Q)', '(P | Q) & ~P', '(P & Q) | ~Q', '~P & ~Q', 'P | ~Q', '~P | ~Q', '(P | Q) & ~(P & Q)', '~P & Q', '(P & ~Q) | (~P & Q)', '~(~P | Q)', '(P | Q) & Q', '~(P & ~Q)', '(~P | Q) & P'];
   var F3 = ['(P | Q) & ~R', 'P & (Q | R)', '(P & Q) | R', '~P | (Q & R)', 'P & ~(Q | R)', '(P | ~Q) & (Q | R)', '(P & ~R) | (Q & R)', '~(P & Q) & R', '(P | Q) & (P | R)', '~P & (Q | ~R)', '(P & Q) | (~P & R)', '~(P | Q) | R', 'P | (~Q & ~R)', '(P | R) & ~Q'];
   var C2 = ['P -> Q', 'Q -> P', '~P -> Q', 'P -> ~Q', 'P <-> Q', '~P <-> Q', '(P -> Q) & P', '(P -> Q) & ~Q', 'P -> (P & Q)', '(P | Q) -> Q', '~(P -> Q)', '(P -> Q) | (Q -> P)'];
+  // random formulas (round 7 widening): n connectives over the letters vs, every letter used, never a tautology or a
+  // contradiction, and no part joined to a copy of itself
+  function lneg(f) { f = lf(f); return f.o === 'not' ? f.a : { o: 'not', a: f }; }
+  function randF(R, vs, ops, n, need) {
+    for (var t = 0; t < 60; t++) {
+      var f = (function build(k) {
+        if (k === 0) { var v = { o: 'v', v: R.pick(vs) }; return R.chance(0.3) ? { o: 'not', a: v } : v; }
+        var l = R.int(0, k - 1), g = { o: R.pick(ops), a: build(l), b: build(k - 1 - l) };
+        return R.chance(0.15) ? { o: 'not', a: g } : g;
+      })(n);
+      if (lvars(f).length !== vs.length) continue;
+      if (need && lplain(f).indexOf(need) < 0) continue;
+      var twin = false, lit = function (g) { return g.o === 'v' ? g.v : g.o === 'not' && g.a.o === 'v' ? g.a.v : null; };
+      var chain = function (g, op, acc) { if (g.o === op) { chain(g.a, op, acc); chain(g.b, op, acc); } else acc.push(lplain(g)); return acc; };
+      (function walk(g) { if (g.o === 'v') return; if (g.b) { if (lplain(g.a) === lplain(g.b) || (lit(g.a) && lit(g.a) === lit(g.b))) twin = true;
+        if (g.o === 'and' || g.o === 'or') { var ls = chain(g, g.o, []); if (ls.some(function (x, i) { return ls.indexOf(x) !== i; })) twin = true; } }
+        walk(g.a); if (g.b) walk(g.b); })(f);
+      if (twin) continue;
+      var col = column(f, lsortVars(vs)); if (col.every(Boolean) || !col.some(Boolean)) continue;
+      return f;
+    }
+    return lparse(vs.join(need === '->' ? ' -> ' : ' & '));
+  }
   var C3 = ['(P & Q) -> R', 'P -> (Q | R)', '(P -> Q) & (Q -> R)', '(P | Q) -> R', 'P -> (Q -> R)', '(P -> Q) -> R', '(P <-> Q) | R', 'P <-> (Q & R)', '~R -> (P & Q)', '(P -> R) & (Q -> R)'];
 
   G('disc.propositions', function (R, ctx) {
@@ -261,11 +286,11 @@
   G('disc.truth-tables', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['rows', 'column', 'column', 'row']), R.pick(['count', 'column', 'row']), R.pick(['count', 'which', 'count']));
     if (shape === 'rows') {
-      var n = R.int(2, 5), fs3 = n === 3 ? R.pick(F3) : null;
+      var n = R.int(2, 6), fs3 = n <= 4 && R.chance(0.7) ? randF(R, 'PQRS'.slice(0, n).split(''), ['and', 'or', 'imp', 'iff'], n - 1 + R.int(0, 1)) : null;
       var q = fs3 ? 'How many rows does the truth table of $' + ltex(fs3) + '$ have?' : 'A compound statement uses ' + n + ' different letters. How many rows does its truth table need?';
-      return { q: q, a: num(M.pow(2, n)), steps: [(fs3 ? 'The letters are $P$, $Q$ and $R$: ' : '') + 'Each of the ' + n + ' letters can be true or false.', 'By the product rule there are $' + Array(n + 1).join('2 \\cdot ').slice(0, -7) + ' = 2^{' + n + '} = ' + M.pow(2, n) + '$ combinations, one row each.'], hint: 'Each letter has 2 choices, and the choices multiply.' };
+      return { q: q, a: num(M.pow(2, n)), steps: [(fs3 ? 'The letters are ' + lsortVars(lvars(fs3)).map(function (v) { return '$' + v + '$'; }).join(', ').replace(/, ([^,]*)$/, ' and $1') + ': ' : '') + 'Each of the ' + n + ' letters can be true or false.', 'By the product rule there are $' + Array(n + 1).join('2 \\cdot ').slice(0, -7) + ' = 2^{' + n + '} = ' + M.pow(2, n) + '$ combinations, one row each.'], hint: 'Each letter has 2 choices, and the choices multiply.' };
     }
-    var f = L === 3 ? R.pick(F3) : R.pick(F2), vs = lsortVars(lvars(f)), col = column(f, vs), rs = rows(vs);
+    var f = R.chance(0.3) ? (L === 3 ? R.pick(F3) : R.pick(F2)) : randF(R, L === 3 ? ['P', 'Q', 'R'] : ['P', 'Q'], ['and', 'or'], L === 1 ? 2 : L === 2 ? R.int(2, 3) : R.int(2, 3)), vs = lsortVars(lvars(f)), col = column(f, vs), rs = rows(vs);
     if (shape === 'column') {
       return { q: 'Fill in the last column of the truth table for $' + ltex(f) + '$. Type it top to bottom as T’s and F’s (like TFFT).', a: seqText(col.map(function (b) { return b ? 'T' : 'F'; })),
         viz: { name: 'disc-truth', opts: { expr: lplain(f), quiet: true, edit: false } },
@@ -284,8 +309,8 @@
         hint: 'List all ' + rs.length + ' rows in order, then evaluate the statement in each one.' };
     }
     // which formula has this column
-    var pool = ['P & Q', 'P | Q', '~P & Q', 'P & ~Q', '~P | Q', 'P | ~Q', '~(P & Q)', '~(P | Q)'], tgt = R.pick(pool), vs2 = ['P', 'Q'], c2 = column(tgt, vs2);
-    var others = pool.filter(function (x) { return !equivF(x, tgt); });
+    var pool = ['P & Q', 'P | Q', '~P & Q', 'P & ~Q', '~P | Q', 'P | ~Q', '~(P & Q)', '~(P | Q)'], tgt = R.chance(0.4) ? R.pick(pool) : randF(R, ['P', 'Q'], ['and', 'or', 'imp', 'iff'], R.int(1, 2)), vs2 = ['P', 'Q'], c2 = column(tgt, vs2);
+    var others = pool.concat(range(1, 6).map(function () { return randF(R, ['P', 'Q'], ['and', 'or', 'imp'], R.int(1, 2)); })).filter(function (x, i, a) { return !equivF(x, tgt) && a.slice(0, i).every(function (y) { return !equivF(x, y); }); });
     return { q: 'In the usual row order ($TT, TF, FT, FF$ for $P, Q$), which statement has the column $' + c2.map(TF).join('\\,') + '$?', a: mc('$' + ltex(tgt) + '$', R.sample(others, 3).map(function (x) { return '$' + ltex(x) + '$'; })),
       steps: rows(vs2).map(function (e, i) { return rowWords(e, vs2) + ': $' + ltex(tgt) + '$ is ' + tfWord(c2[i]) + '.'; }).concat(['That matches the column, so the answer is $' + ltex(tgt) + '$.']),
       hint: 'Look at the rows where the column says T. What do they have in common?' };
@@ -308,7 +333,15 @@
       var st = R.pick([['it is sunny on Saturday', 'Mia goes to the beach', 'it is sunny', 'it is not sunny', 'Mia goes to the beach', 'Mia does not go to the beach'],
         ['you finish your homework', 'you get a sticker', 'you finish', 'you do not finish', 'you get a sticker', 'you do not get a sticker'],
         ['the team wins', 'the coach buys pizza', 'the team wins', 'the team loses', 'the coach buys pizza', 'the coach does not buy pizza'],
-        ['you score at least $90$', 'you get an A', 'you score $92$', 'you score $85$', 'you get an A', 'you do not get an A']]);
+        ['you score at least $90$', 'you get an A', 'you score $92$', 'you score $85$', 'you get an A', 'you do not get an A'],
+        ['the library is open', 'Leo returns his book', 'the library is open', 'the library is closed', 'Leo returns his book', 'Leo does not return his book'],
+        ['you clean your room', 'you may go to the park', 'you clean your room', 'you do not clean your room', 'you go to the park', 'you do not go to the park'],
+        ['the river freezes', 'the town holds a skating day', 'the river freezes', 'the river does not freeze', 'the town holds a skating day', 'the town does not hold a skating day'],
+        ['Ana saves $\\$20$', 'she buys the kite', 'Ana saves $\\$20$', 'Ana saves only $\\$12$', 'she buys the kite', 'she does not buy the kite'],
+        ['the bus is late', 'Grandpa drives us', 'the bus is late', 'the bus is on time', 'Grandpa drives us', 'Grandpa does not drive us'],
+        ['you practice every day', 'you play in the recital', 'you practice every day', 'you skip some days', 'you play in the recital', 'you do not play in the recital'],
+        ['the garden gets rain this week', 'the tomatoes ripen', 'the garden gets rain', 'the garden gets no rain', 'the tomatoes ripen', 'the tomatoes do not ripen'],
+        ['you read ten books', 'you earn a bookmark', 'you read ten books', 'you read eight books', 'you earn a bookmark', 'you do not earn a bookmark']]);
       var ask = R.pick(['broken', 'kept']);
       if (ask === 'broken') return { q: 'A promise: “If ' + st[0] + ', then ' + st[1] + '.” In which situation is the promise <b>broken</b>?', a: mc(cap(st[2]) + ', and ' + st[5] + '.', [cap(st[3]) + ', and ' + st[4] + '.', cap(st[3]) + ', and ' + st[5] + '.', cap(st[2]) + ', and ' + st[4] + '.']),
         steps: ['A conditional $P \\to Q$ is false only when $P$ is true and $Q$ is false.', 'So the promise is broken only when ' + st[2] + ' and ' + st[5] + '.', 'When ' + st[3] + ', the promise was never tested, so it was not broken, whatever happens next.'], hint: 'The promise is only about what happens when the condition is met.' };
@@ -316,7 +349,7 @@
         steps: ['Here the hypothesis is false: ' + st[3] + '.', 'The promise says nothing about this case, so it was not broken. A conditional with a false hypothesis is true.'], hint: 'Ask: did the condition of the promise happen?' };
     }
     if (shape === 'row' || shape === 'count') {
-      var f = L === 3 ? R.pick(C3) : R.pick(C2), vs = lsortVars(lvars(f)), rs = rows(vs), col = column(f, vs);
+      var f = R.chance(0.35) ? (L === 3 ? R.pick(C3) : R.pick(C2)) : randF(R, L === 3 ? ['P', 'Q', 'R'] : ['P', 'Q'], ['imp', 'imp', 'and', 'or', 'iff'], L === 3 ? R.int(2, 3) : R.int(1, 2), '->'), vs = lsortVars(lvars(f)), rs = rows(vs), col = column(f, vs);
       if (shape === 'row') {
         var e = R.pick(rs), val2 = lev(f, e), steps = [];
         (function walk(g) { if (g.o === 'v') return; walk(g.a); if (g.b) walk(g.b); steps.push('$' + ltex(g) + '$ is ' + tfWord(lev(g, e)) + (g.o === 'imp' && !lev(g.a, e) ? ' (false hypothesis).' : g.o === 'imp' && !lev(g, e) ? ' (true hypothesis, false conclusion).' : '.')); })(lf(f));
@@ -328,7 +361,9 @@
         hint: 'For each arrow, look for a true left side with a false right side.' };
     }
     // "only if", "if", "sufficient", "necessary"
-    var sc = R.pick([['you can vote', 'you are registered'], ['the alarm sounds', 'there is smoke'], ['$n$ is divisible by $6$', '$n$ is divisible by $3$'], ['the shape is a square', 'the shape is a rectangle'], ['you may enter', 'you have a ticket']]);
+    var sc = R.pick([['you can vote', 'you are registered'], ['the alarm sounds', 'there is smoke'], ['$n$ is divisible by $6$', '$n$ is divisible by $3$'], ['the shape is a square', 'the shape is a rectangle'], ['you may enter', 'you have a ticket'],
+      ['the plant grows', 'it gets water'], ['you can check out books', 'you have a library card'], ['$n$ is divisible by $10$', '$n$ is even'], ['the lamp lights', 'it is plugged in'], ['the triangle is equilateral', 'the triangle is isosceles'],
+      ['you can ride the coaster', 'you are at least $48$ inches tall'], ['the cake rises', 'it has baking powder'], ['$x > 5$', '$x > 2$'], ['the team plays in the final', 'it wins the semifinal'], ['the bread is toasted', 'the toaster is on']]);
     var forms = [[cap(sc[0]) + ' only if ' + sc[1] + '.', 'P -> Q', '“$P$ only if $Q$” means $P$ cannot happen without $Q$: if $P$, then $Q$.', true],
       [cap(sc[1]) + ' if ' + sc[0] + '.', 'P -> Q', '“$Q$ if $P$” is “if $P$, then $Q$,” written in the other order.', true],
       ['$Q$ is a necessary condition for $P$.', 'P -> Q', 'A necessary condition must hold whenever $P$ holds: $P \\to Q$.', false],
@@ -346,9 +381,18 @@
     if (shape === 'demorgan' || shape === 'neg') {
       var pool = shape === 'neg' ? [['~(P -> Q)', ['P & ~Q'], ['~P -> ~Q', '~P & Q', '~P | ~Q', 'Q -> P']], ['~(P <-> Q)', ['P <-> ~Q'], ['~P <-> ~Q', '~P & ~Q', 'P & Q']], ['~(P -> ~Q)', ['P & Q'], ['~P -> Q', '~P & ~Q', 'P -> Q']]]
         : [['~(P & Q)', ['~P | ~Q'], ['~P & ~Q', '~P & Q', 'P | Q']], ['~(P | Q)', ['~P & ~Q'], ['~P | ~Q', 'P & Q', '~P | Q']], ['~(P & ~Q)', ['~P | Q'], ['~P & Q', '~P & ~Q', 'P | Q']], ['~(~P | Q)', ['P & ~Q'], ['P | ~Q', '~P & ~Q', 'P & Q']], ['~(P | ~Q)', ['~P & Q'], ['~P | Q', 'P & Q', '~P & ~Q']]];
-      var it = R.pick(pool), right = it[1][0], wr = it[2].filter(function (x) { return !equivF(x, it[0]); });
+      var it = R.pick(pool);
+      if (R.chance(0.7)) { // a fresh pair of letters, each maybe negated
+        var lt = R.sample(['P', 'Q', 'R', 'S'], 2).sort(), Aa = R.coin() ? lt[0] : '~' + lt[0], Bb = R.coin() ? lt[1] : '~' + lt[1];
+        var ngl = function (x) { return x.charAt(0) === '~' ? x.slice(1) : '~' + x; };
+        if (shape === 'demorgan') { var o1 = R.pick(['&', '|']), o2 = o1 === '&' ? '|' : '&'; it = ['~(' + Aa + ' ' + o1 + ' ' + Bb + ')', [ngl(Aa) + ' ' + o2 + ' ' + ngl(Bb)], [ngl(Aa) + ' ' + o1 + ' ' + ngl(Bb), Aa + ' ' + o2 + ' ' + Bb, ngl(Aa) + ' ' + o2 + ' ' + Bb, Aa + ' ' + o1 + ' ' + ngl(Bb)]]; }
+        else if (R.chance(0.65)) it = ['~(' + Aa + ' -> ' + Bb + ')', [Aa + ' & ' + ngl(Bb)], [ngl(Aa) + ' -> ' + ngl(Bb), ngl(Aa) + ' & ' + Bb, ngl(Aa) + ' | ' + ngl(Bb), Bb + ' -> ' + Aa, Aa + ' -> ' + ngl(Bb)]];
+        else it = ['~(' + Aa + ' <-> ' + Bb + ')', [Aa + ' <-> ' + ngl(Bb)], [Aa + ' <-> ' + Bb, ngl(Aa) + ' & ' + ngl(Bb), Aa + ' & ' + Bb, ngl(Aa) + ' -> ' + Bb]];
+      }
+      it[2] = R.shuffle(it[2]);
+      var right = it[1][0], wr = it[2].filter(function (x) { return !equivF(x, it[0]); });
       return { q: 'Which statement is logically equivalent to $' + ltex(it[0]) + '$?', a: mc('$' + ltex(right) + '$', wr.slice(0, 3).map(function (x) { return '$' + ltex(x) + '$'; })),
-        steps: shape === 'neg' ? ['$P \\to Q$ is false exactly when $P$ is true and $Q$ is false.', 'So its negation is true exactly then: $' + ltex(it[0]) + ' \\equiv ' + ltex(right) + '$.']
+        steps: shape === 'neg' ? [/<->/.test(it[0]) ? 'A biconditional is false exactly when its two sides differ, and $A \\leftrightarrow \\neg B$ is true exactly then.' : '$A \\to B$ is false exactly when $A$ is true and $B$ is false, so $\\neg(A \\to B) \\equiv A \\wedge \\neg B$.', 'A double negation cancels: $\\neg\\neg A \\equiv A$.', 'So $' + ltex(it[0]) + ' \\equiv ' + ltex(right) + '$.']
           : ['De Morgan: $\\neg(A \\wedge B) \\equiv \\neg A \\vee \\neg B$ and $\\neg(A \\vee B) \\equiv \\neg A \\wedge \\neg B$. The negation moves inside and the connective flips.', 'A double negation cancels: $\\neg\\neg A \\equiv A$.', 'So $' + ltex(it[0]) + ' \\equiv ' + ltex(right) + '$.'],
         hint: shape === 'neg' ? 'When is $P \\to Q$ false?' : 'Push the $\\neg$ inside and flip $\\wedge$ and $\\vee$.' };
     }
@@ -356,7 +400,19 @@
       var pairs = [['P -> Q', '~Q -> ~P'], ['P -> Q', 'Q -> P'], ['P -> Q', '~P -> ~Q'], ['P -> Q', '~P | Q'], ['~(P & Q)', '~P & ~Q'], ['~(P | Q)', '~P & ~Q'], ['P | (Q & R)', '(P | Q) & (P | R)'],
         ['P & (Q | R)', '(P & Q) | R'], ['P <-> Q', '(P -> Q) & (Q -> P)'], ['~(P -> Q)', '~P -> ~Q'], ['P -> (Q -> R)', '(P & Q) -> R'], ['(P -> Q) -> R', 'P -> (Q -> R)'], ['P -> (Q & R)', '(P -> Q) & (P -> R)'],
         ['(P | Q) -> R', '(P -> R) & (Q -> R)'], ['(P & Q) -> R', '(P -> R) & (Q -> R)'], ['P -> Q', 'P & ~Q'], ['P | Q', '~P -> Q'], ['P <-> Q', '~P <-> ~Q']];
-      var pr = R.pick(pairs), vs = lsortVars(lvars(pr[0]).concat(lvars(pr[1])).filter(function (v, i, a) { return a.indexOf(v) === i; })), rs = rows(vs);
+      var pr = R.pick(pairs);
+      if (R.chance(0.6)) { // a fresh statement and one rewrite of it: some rewrites keep the meaning, some do not
+        var lt2 = L === 3 && R.coin() ? ['P', 'Q', 'R'] : ['P', 'Q'], sub = function () { return lt2.length === 3 && R.coin() ? randF(R, R.sample(lt2, 2).sort(), ['and', 'or'], 1) : R.coin() ? { o: 'v', v: R.pick(lt2) } : { o: 'not', a: { o: 'v', v: R.pick(lt2) } }; };
+        for (var tt = 0; tt < 30; tt++) {
+          var Ax = sub(), Bx = sub(), op = R.pick(['imp', 'imp', 'and', 'or', 'iff']), g0 = { o: op, a: Ax, b: Bx };
+          if (lvars(g0).length < 2 || lplain(Ax) === lplain(Bx)) continue;
+          var rw = op === 'imp' ? R.pick([{ o: 'imp', a: lneg(Bx), b: lneg(Ax) }, { o: 'imp', a: Bx, b: Ax }, { o: 'imp', a: lneg(Ax), b: lneg(Bx) }, { o: 'or', a: lneg(Ax), b: Bx }, { o: 'and', a: Ax, b: lneg(Bx) }, { o: 'or', a: Ax, b: lneg(Bx) }])
+            : op === 'iff' ? R.pick([{ o: 'and', a: { o: 'imp', a: Ax, b: Bx }, b: { o: 'imp', a: Bx, b: Ax } }, { o: 'iff', a: lneg(Ax), b: lneg(Bx) }, { o: 'iff', a: Ax, b: lneg(Bx) }, { o: 'imp', a: Ax, b: Bx }])
+              : R.pick([{ o: 'not', a: { o: op === 'and' ? 'or' : 'and', a: lneg(Ax), b: lneg(Bx) } }, { o: 'not', a: { o: op, a: lneg(Ax), b: lneg(Bx) } }, { o: op, a: Bx, b: Ax }, { o: op === 'and' ? 'or' : 'and', a: Ax, b: Bx }]);
+          pr = R.coin() ? [g0, rw] : [rw, g0]; break;
+        }
+      }
+      var vs = lsortVars(lvars(pr[0]).concat(lvars(pr[1])).filter(function (v, i, a) { return a.indexOf(v) === i; })), rs = rows(vs);
       var c1 = column(pr[0], vs), c2 = column(pr[1], vs), diff = c1.filter(function (b, i) { return b !== c2[i]; }).length;
       var stp = ['Compare the two columns row by row (' + rs.length + ' rows).'].concat(rs.map(function (e, i) { return rowWords(e, vs) + ': ' + tfWord(c1[i]) + ' and ' + tfWord(c2[i]) + (c1[i] !== c2[i] ? ' <b>(differ)</b>' : '') + '.'; }));
       if (shape === 'differ') return { q: 'In how many rows of the truth table do $' + ltex(pr[0]) + '$ and $' + ltex(pr[1]) + '$ have different truth values? (Type $0$ if they are equivalent.)', a: num(diff), steps: stp.concat([diff ? 'They differ in ' + diff + ' row' + (diff === 1 ? '' : 's') + ', so they are not equivalent.' : 'They never differ, so they are equivalent.']), hint: 'Make one table with a column for each statement.' };
@@ -364,7 +420,12 @@
     }
     if (shape === 'english') {
       var s = R.pick([['the store is open', 'the lights are on', 'the store is not open', 'the lights are not on'], ['Sam is at home', 'Sam is asleep', 'Sam is not at home', 'Sam is not asleep'],
-        ['the number is even', 'the number is greater than $10$', 'the number is not even', 'the number is not greater than $10$'], ['the test is today', 'the test is hard', 'the test is not today', 'the test is not hard']]);
+        ['the number is even', 'the number is greater than $10$', 'the number is not even', 'the number is not greater than $10$'], ['the test is today', 'the test is hard', 'the test is not today', 'the test is not hard'],
+        ['the soup is hot', 'the bread is fresh', 'the soup is not hot', 'the bread is not fresh'], ['the gate is locked', 'the dog is inside', 'the gate is not locked', 'the dog is not inside'],
+        ['Nora plays the piano', 'Nora sings', 'Nora does not play the piano', 'Nora does not sing'], ['the train is full', 'the train is late', 'the train is not full', 'the train is not late'],
+        ['the shape has four sides', 'the shape has a right angle', 'the shape does not have four sides', 'the shape does not have a right angle'], ['the pool is open', 'the water is warm', 'the pool is not open', 'the water is not warm'],
+        ['the number is prime', 'the number is less than $20$', 'the number is not prime', 'the number is not less than $20$'], ['the window is open', 'the fan is on', 'the window is not open', 'the fan is not on'],
+        ['the road is icy', 'the bridge is closed', 'the road is not icy', 'the bridge is not closed'], ['Theo has a pencil', 'Theo has an eraser', 'Theo does not have a pencil', 'Theo does not have an eraser']]);
       var andCase = R.coin();
       var q2 = 'Which sentence means the same as “It is not true that ' + s[0] + (andCase ? ' and ' : ' or ') + s[1] + '”?';
       var right2 = andCase ? cap(s[2]) + ', or ' + s[3] + '.' : cap(s[2]) + ', and ' + s[3] + '.';
@@ -372,7 +433,12 @@
       return { q: q2, a: mc(right2, wr2), steps: ['Write it as $\\neg(P ' + (andCase ? '\\wedge' : '\\vee') + ' Q)$.', 'De Morgan: this is $\\neg P ' + (andCase ? '\\vee' : '\\wedge') + ' \\neg Q$. Negate each part and flip “' + (andCase ? 'and' : 'or') + '” to “' + (andCase ? 'or' : 'and') + '.”', 'So: “' + right2 + '”'], hint: 'Negate each part, and switch “and” with “or.”' };
     }
     var c = R.pick([['it rains', 'the ground is wet', 'it does not rain', 'the ground is not wet'], ['a shape is a square', 'it has four sides', 'a shape is not a square', 'it does not have four sides'],
-      ['you live in Paris', 'you live in France', 'you do not live in Paris', 'you do not live in France'], ['$n$ is divisible by $4$', '$n$ is even', '$n$ is not divisible by $4$', '$n$ is odd']]);
+      ['you live in Paris', 'you live in France', 'you do not live in Paris', 'you do not live in France'], ['$n$ is divisible by $4$', '$n$ is even', '$n$ is not divisible by $4$', '$n$ is odd'],
+      ['the milk is left out', 'it spoils', 'the milk is not left out', 'it does not spoil'], ['a number ends in $0$', 'it is divisible by $5$', 'a number does not end in $0$', 'it is not divisible by $5$'],
+      ['an animal is a robin', 'it is a bird', 'an animal is not a robin', 'it is not a bird'], ['the switch is on', 'the light glows', 'the switch is not on', 'the light does not glow'],
+      ['a triangle is equilateral', 'it is isosceles', 'a triangle is not equilateral', 'it is not isosceles'], ['you are in Ohio', 'you are in the United States', 'you are not in Ohio', 'you are not in the United States'],
+      ['$x > 7$', '$x > 3$', '$x \\le 7$', '$x \\le 3$'], ['the kettle whistles', 'the water is boiling', 'the kettle does not whistle', 'the water is not boiling'],
+      ['a shape is a rhombus', 'its four sides are equal', 'a shape is not a rhombus', 'its four sides are not all equal'], ['it is July', 'it is summer in Canada', 'it is not July', 'it is not summer in Canada']]);
     return { q: 'Which statement is logically equivalent to “If ' + c[0] + ', then ' + c[1] + '”?', a: mc('If ' + c[3] + ', then ' + c[2] + '.', ['If ' + c[1] + ', then ' + c[0] + '.', 'If ' + c[2] + ', then ' + c[3] + '.', cap(c[0]) + ', and ' + c[3] + '.']),
       steps: ['A conditional $P \\to Q$ is equivalent to its contrapositive $\\neg Q \\to \\neg P$.', 'The converse $Q \\to P$ and the inverse $\\neg P \\to \\neg Q$ are not equivalent to it.', 'So: “If ' + c[3] + ', then ' + c[2] + '.”'], hint: 'Swap the parts and negate both.' };
   });
@@ -420,7 +486,10 @@
   G('disc.negating-quantifiers', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['english', 'english', 'symbolic']), R.pick(['symbolic', 'english', 'witness']), R.pick(['witness', 'symbolic']));
     if (shape === 'english') {
-      var s = R.pick([['dog in the park', 'is on a leash', 'is not on a leash'], ['student', 'turned in the homework', 'did not turn in the homework'], ['prime number', 'is odd', 'is not odd'], ['bus today', 'was on time', 'was not on time'], ['light in the house', 'is off', 'is not off']]);
+      var s = R.pick([['dog in the park', 'is on a leash', 'is not on a leash'], ['student', 'turned in the homework', 'did not turn in the homework'], ['prime number', 'is odd', 'is not odd'], ['bus today', 'was on time', 'was not on time'], ['light in the house', 'is off', 'is not off'],
+        ['apple in the basket', 'is ripe', 'is not ripe'], ['player on the team', 'scored a goal', 'did not score a goal'], ['book on the shelf', 'has a dust jacket', 'does not have a dust jacket'], ['window in the school', 'is open', 'is not open'],
+        ['bird at the feeder', 'is a sparrow', 'is not a sparrow'], ['cookie in the jar', 'has raisins', 'does not have raisins'], ['square number', 'is even', 'is not even'], ['seat on the train', 'is taken', 'is not taken'],
+        ['plant in the garden', 'needs water', 'does not need water'], ['runner in the race', 'finished', 'did not finish'], ['door in the hall', 'is locked', 'is not locked']]);
       var kind = R.pick(['all', 'some', 'none']);
       if (kind === 'all') return { q: 'Which sentence is the negation of “Every ' + s[0] + ' ' + s[1] + '”?', a: mc('At least one ' + s[0] + ' ' + s[2] + '.', ['No ' + s[0] + ' ' + s[1] + '.', 'Every ' + s[0] + ' ' + s[2] + '.', 'At least one ' + s[0] + ' ' + s[1] + '.']),
         steps: ['The statement is $\\forall x\\, P(x)$. Its negation is $\\exists x\\, \\neg P(x)$.', 'To show “every one does” is false, you need just one that does not.', 'So: “At least one ' + s[0] + ' ' + s[2] + '.” “None do” is too strong: it is not the negation.'], hint: 'What would it take to prove the statement wrong?' };
@@ -438,8 +507,17 @@
         ['\\neg \\exists x\\, (x^{2} = 2)', '\\forall x\\, (x^{2} \\ne 2)', ['\\exists x\\, (x^{2} \\ne 2)', '\\forall x\\, (x^{2} = 2)', '\\exists x\\, (x^{2} = -2)']],
         ['\\neg \\forall x\\, (x > 0 \\to x^{2} > x)', '\\exists x\\, (x > 0 \\wedge x^{2} \\le x)', ['\\exists x\\, (x \\le 0 \\wedge x^{2} \\le x)', '\\forall x\\, (x > 0 \\to x^{2} \\le x)', '\\exists x\\, (x > 0 \\to x^{2} < x)']]];
       var it = R.pick(L === 1 ? pool.slice(0, 2) : pool);
+      if (L > 1 && R.chance(0.6)) { // the same patterns with fresh numbers
+        var na = R.int(1, 9), nb = R.int(2, 30), vx = R.pick(['x', 'n', 't']);
+        it = R.pick([
+          ['\\neg \\forall ' + vx + '\\, (' + vx + ' > ' + na + ' \\to ' + vx + '^{2} > ' + nb + ')', '\\exists ' + vx + '\\, (' + vx + ' > ' + na + ' \\wedge ' + vx + '^{2} \\le ' + nb + ')', ['\\exists ' + vx + '\\, (' + vx + ' \\le ' + na + ' \\wedge ' + vx + '^{2} \\le ' + nb + ')', '\\forall ' + vx + '\\, (' + vx + ' > ' + na + ' \\to ' + vx + '^{2} \\le ' + nb + ')', '\\exists ' + vx + '\\, (' + vx + ' > ' + na + ' \\to ' + vx + '^{2} < ' + nb + ')']],
+          ['\\neg \\exists ' + vx + '\\, (' + vx + ' + ' + na + ' = ' + nb + ')', '\\forall ' + vx + '\\, (' + vx + ' + ' + na + ' \\ne ' + nb + ')', ['\\exists ' + vx + '\\, (' + vx + ' + ' + na + ' \\ne ' + nb + ')', '\\forall ' + vx + '\\, (' + vx + ' + ' + na + ' = ' + nb + ')', '\\forall ' + vx + '\\, (' + vx + ' + ' + na + ' > ' + nb + ')']],
+          ['\\neg \\forall ' + vx + '\\, (' + (na + 1) + vx + ' \\ge ' + nb + ')', '\\exists ' + vx + '\\, (' + (na + 1) + vx + ' < ' + nb + ')', ['\\forall ' + vx + '\\, (' + (na + 1) + vx + ' < ' + nb + ')', '\\exists ' + vx + '\\, (' + (na + 1) + vx + ' \\le ' + nb + ')', '\\forall ' + vx + '\\, (' + (na + 1) + vx + ' \\le ' + nb + ')']],
+          ['\\neg \\exists ' + vx + '\\, (' + vx + ' < ' + na + ' \\wedge ' + vx + '^{2} > ' + nb + ')', '\\forall ' + vx + '\\, (' + vx + ' < ' + na + ' \\to ' + vx + '^{2} \\le ' + nb + ')', ['\\forall ' + vx + '\\, (' + vx + ' \\ge ' + na + ' \\wedge ' + vx + '^{2} \\le ' + nb + ')', '\\exists ' + vx + '\\, (' + vx + ' < ' + na + ' \\wedge ' + vx + '^{2} \\le ' + nb + ')', '\\forall ' + vx + '\\, (' + vx + ' < ' + na + ' \\wedge ' + vx + '^{2} > ' + nb + ')']],
+          ['\\neg \\forall ' + vx + '\\, (' + vx + ' \\ne ' + na + ' \\to ' + vx + '^{2} \\ne ' + nb + ')', '\\exists ' + vx + '\\, (' + vx + ' \\ne ' + na + ' \\wedge ' + vx + '^{2} = ' + nb + ')', ['\\exists ' + vx + '\\, (' + vx + ' = ' + na + ' \\wedge ' + vx + '^{2} = ' + nb + ')', '\\forall ' + vx + '\\, (' + vx + ' \\ne ' + na + ' \\to ' + vx + '^{2} = ' + nb + ')', '\\exists ' + vx + '\\, (' + vx + ' \\ne ' + na + ' \\to ' + vx + '^{2} = ' + nb + ')']]]);
+      }
       return { q: 'Which statement is equivalent to $' + it[0] + '$?', a: mc('$' + it[1] + '$', it[2].map(function (x) { return '$' + x + '$'; })),
-        steps: ['Move the $\\neg$ past the quantifier and switch it: $\\neg\\forall \\equiv \\exists\\neg$ and $\\neg\\exists \\equiv \\forall\\neg$.', /\\to/.test(it[0]) ? 'Then negate the inside: $\\neg(P \\to Q) \\equiv P \\wedge \\neg Q$.' : /wedge/.test(it[0]) ? 'Then negate the inside: $\\neg(P \\wedge Q) \\equiv \\neg P \\vee \\neg Q \\equiv P \\to \\neg Q$.' : 'Then negate the inside: the negation of $\\ge$ is $<$, and the negation of $=$ is $\\ne$.', 'Result: $' + it[1] + '$.'],
+        steps: ['Move the $\\neg$ past the quantifier and switch it: $\\neg\\forall \\equiv \\exists\\neg$ and $\\neg\\exists \\equiv \\forall\\neg$.', /\\to/.test(it[0]) ? 'Then negate the inside: $\\neg(P \\to Q) \\equiv P \\wedge \\neg Q$.' : /wedge/.test(it[0]) ? 'Then negate the inside: $\\neg(P \\wedge Q) \\equiv \\neg P \\vee \\neg Q \\equiv P \\to \\neg Q$.' : 'Then negate the inside: the negation of $\\ge$ is $<$, and the negation of $=$ is $\\ne$.'].concat(/\\to .*(\\ne|>)|wedge .*>/.test(it[0]) && !/P\(x\)/.test(it[0]) ? ['The negation of $>$ is $\\le$, and the negation of $\\ne$ is $=$.'] : [], ['Result: $' + it[1] + '$.']),
         hint: 'Switch the quantifier, then negate what is inside.' };
     }
     // witnesses of the negation over {1, …, k}
@@ -447,7 +525,10 @@
       ['$n^{2} + n + 1$ is prime', function (n) { return isPrime(n * n + n + 1); }, function (n) { return n * n + n + 1; }], ['$3n + 2$ is prime', function (n) { return isPrime(3 * n + 2); }, function (n) { return 3 * n + 2; }],
       ['$n! + 1$ is prime', function (n) { return isPrime(fact(n) + 1); }, function (n) { return fact(n) + 1; }], ['$4n + 1$ is prime', function (n) { return isPrime(4 * n + 1); }, function (n) { return 4 * n + 1; }],
       ['$n^{2} + 4$ is prime', function (n) { return isPrime(n * n + 4); }, function (n) { return n * n + 4; }]];
-    var fm = R.pick(fam), k = R.int(5, 7), Dn = range(1, k), bad = Dn.filter(function (n) { return !fm[1](n); });
+    var ca = R.pick([2, 4, 6, 8, 10, 12]), cb = R.pick([1, 3, 5, 7, 9, 11, 13].filter(function (b) { return U.gcd(ca, b) === 1; })), cc2 = R.pick([1, 3, 5, 7, 11, 13, 17]);
+    fam.push(['$' + T.lin(ca, 'n', cb) + '$ is prime', function (n) { return isPrime(ca * n + cb); }, function (n) { return ca * n + cb; }], ['$n^{2} + ' + cc2 + '$ is prime', function (n) { return isPrime(n * n + cc2); }, function (n) { return n * n + cc2; }],
+      ['$n^{2} + n + ' + cc2 + '$ is prime', function (n) { return isPrime(n * n + n + cc2); }, function (n) { return n * n + n + cc2; }]);
+    var fm = R.pick(fam), k = R.int(5, 7), d0 = R.chance(0.6) ? 1 : R.int(2, 6), Dn = range(d0, d0 + k - 1), bad = Dn.filter(function (n) { return !fm[1](n); });
     return { q: 'Let $D = ' + setTex(Dn) + '$ and consider “$\\forall n \\in D$, ' + fm[0] + '.” Its negation is “$\\exists n \\in D$ such that ' + fm[0].replace(/is prime/, 'is not prime') + '.” List every $n$ in $D$ that makes the negation true.', a: setA(bad),
       steps: ['Compute for each $n$: ' + Dn.map(function (n) { return '$n = ' + n + '$: $' + fm[2](n) + '$' + (fm[1](n) ? ' (prime)' : ' (<b>not prime</b>)'); }).join('; ') + '.', 'The witnesses are $' + setTex(bad) + '$. ' + (bad.length ? 'Any one of them shows the original “for all” statement is false.' : '')],
       hint: 'A witness for “there exists $n$ with … not prime” is an $n$ where the formula gives a composite number (or $1$).' };
@@ -471,9 +552,11 @@
         steps: ['$' + Q4[0] + '\\, P(x, y)$ says ' + Q4[2] + '.', 'Check: ' + why + '.', 'So the statement is ' + tfWord(val) + '.'], hint: 'Read the quantifiers left to right: the first one is chosen first.' };
     }
     if (shape === 'arith') {
-      var Ds = R.pick([[1, 2, 3, 4], [0, 1, 2, 3], [-1, 0, 1, 2], [1, 2, 3, 4, 5]]);
+      var Ds = R.pick([[1, 2, 3, 4], [0, 1, 2, 3], [-1, 0, 1, 2], [1, 2, 3, 4, 5], [2, 3, 4, 5], [0, 1, 2, 3, 4], [-2, -1, 0, 1, 2], [1, 2, 3], [0, 2, 4, 6], [1, 3, 5, 7]]);
       var preds = [['x + y = 5', function (x, y) { return x + y === 5; }], ['x < y', function (x, y) { return x < y; }], ['x \\le y', function (x, y) { return x <= y; }], ['x + y \\text{ is even}', function (x, y) { return (x + y) % 2 === 0; }],
-        ['xy = 0', function (x, y) { return x * y === 0; }], ['xy \\text{ is even}', function (x, y) { return (x * y) % 2 === 0; }], ['|x - y| = 1', function (x, y) { return M.abs(x - y) === 1; }], ['x \\ne y', function (x, y) { return x !== y; }]];
+        ['xy = 0', function (x, y) { return x * y === 0; }], ['xy \\text{ is even}', function (x, y) { return (x * y) % 2 === 0; }], ['|x - y| = 1', function (x, y) { return M.abs(x - y) === 1; }], ['x \\ne y', function (x, y) { return x !== y; }],
+        ['x \\ge y', function (x, y) { return x >= y; }], ['x + y > 3', function (x, y) { return x + y > 3; }], ['xy \\ge x', function (x, y) { return x * y >= x; }], ['x + y \\le 4', function (x, y) { return x + y <= 4; }],
+        ['y = x + 1', function (x, y) { return y === x + 1; }], ['|x - y| \\le 1', function (x, y) { return M.abs(x - y) <= 1; }], ['x - y \\text{ is odd}', function (x, y) { return M.abs(x - y) % 2 === 1; }], ['xy > 2', function (x, y) { return x * y > 2; }]];
       var pr = R.pick(preds), qi2 = R.int(0, 3), v2 = QS[qi2][1](Ds, pr[1]);
       var detail;
       if (qi2 === 0 || qi2 === 3) {
@@ -504,7 +587,12 @@
   G('disc.valid-arguments', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['name', 'valid']), R.pick(['name', 'conclude', 'valid']), R.pick(['conclude', 'counter', 'name']));
     var st = R.pick([['it snows', 'school is closed', 'it does not snow', 'school is not closed'], ['the battery is dead', 'the car will not start', 'the battery is not dead', 'the car starts'],
-      ['you water the plant', 'it grows', 'you do not water the plant', 'it does not grow'], ['$n$ is divisible by $6$', '$n$ is even', '$n$ is not divisible by $6$', '$n$ is odd']]);
+      ['you water the plant', 'it grows', 'you do not water the plant', 'it does not grow'], ['$n$ is divisible by $6$', '$n$ is even', '$n$ is not divisible by $6$', '$n$ is odd'],
+      ['the oven is hot', 'the bread bakes', 'the oven is not hot', 'the bread does not bake'], ['Ben practices', 'he plays well', 'Ben does not practice', 'he does not play well'],
+      ['the road is wet', 'it rained last night', 'the road is not wet', 'it did not rain last night'], ['a shape is a square', 'it has four right angles', 'a shape is not a square', 'it does not have four right angles'],
+      ['the store has flour', 'we bake a pie', 'the store has no flour', 'we do not bake a pie'], ['the kite catches the wind', 'it flies', 'the kite does not catch the wind', 'it does not fly'],
+      ['$n$ ends in $5$', '$n$ is divisible by $5$', '$n$ does not end in $5$', '$n$ is not divisible by $5$'], ['the alarm rings', 'Ruby wakes up', 'the alarm does not ring', 'Ruby does not wake up'],
+      ['the ice is thick', 'we can skate', 'the ice is not thick', 'we cannot skate'], ['the phone is charged', 'it turns on', 'the phone is not charged', 'it does not turn on']]);
     var forms = [['mp', 'Modus ponens', true, 'P', 'Q', 'If $P$ then $Q$; $P$; so $Q$.'], ['mt', 'Modus tollens', true, '~Q', '~P', 'If $P$ then $Q$; not $Q$; so not $P$.'],
       ['ac', 'Affirming the consequent', false, 'Q', 'P', 'If $P$ then $Q$; $Q$; so $P$.'], ['da', 'Denying the antecedent', false, '~P', '~Q', 'If $P$ then $Q$; not $P$; so not $Q$.']];
     function sayL(x) { return x === 'P' ? st[0] : x === 'Q' ? st[1] : x === '~P' ? st[2] : st[3]; }
@@ -521,10 +609,14 @@
     if (shape === 'conclude') {
       var pool = [[['P -> Q', 'Q -> R', '~R'], '~P', 'Two steps of modus tollens: not $R$ gives not $Q$, which gives not $P$.'], [['P | Q', '~P'], 'Q', 'Disjunctive syllogism: one of them is true, and it is not $P$.'],
         [['P -> Q', 'Q -> R', 'P'], 'R', 'Modus ponens twice: $P$ gives $Q$, which gives $R$.'], [['P | Q', 'P -> R', 'Q -> R'], 'R', 'Proof by cases: either way, $R$ follows.'],
-        [['P -> Q', '~Q | R', 'P'], 'R', '$P$ gives $Q$; then $\\neg Q \\vee R$ with $Q$ true leaves $R$.'], [['~P -> Q', '~Q'], 'P', 'Modus tollens: not $Q$ gives not (not $P$), that is, $P$.']];
+        [['P -> Q', '~Q | R', 'P'], 'R', '$P$ gives $Q$; then $\\neg Q \\vee R$ with $Q$ true leaves $R$.'], [['~P -> Q', '~Q'], 'P', 'Modus tollens: not $Q$ gives not (not $P$), that is, $P$.'],
+        [['P | Q', '~Q'], 'P', 'Disjunctive syllogism: one of them is true, and it is not $Q$.'], [['P -> R', 'Q -> R', '~R'], '~P & ~Q', 'Modus tollens twice: not $R$ gives not $P$ and not $Q$.'],
+        [['P & Q', 'Q -> R'], 'R', 'From $P \\wedge Q$ we get $Q$, and then modus ponens gives $R$.'], [['P -> ~Q', 'Q'], '~P', 'Modus tollens: $Q$ is true, so $\\neg Q$ is false, so $P$ is false.'],
+        [['~P | Q', 'P'], 'Q', '$\\neg P \\vee Q$ is $P \\to Q$, and $P$ is true, so $Q$.'], [['P -> Q', 'R -> ~Q', 'R'], '~P', '$R$ gives $\\neg Q$, and then modus tollens on $P \\to Q$ gives $\\neg P$.'],
+        [['Q -> R', 'P -> Q', '~R'], '~P', 'Two steps of modus tollens: not $R$ gives not $Q$, which gives not $P$.'], [['P | R', '~R', 'P -> Q'], 'Q', 'From $P \\vee R$ and not $R$ we get $P$, then $Q$.']];
       var it = R.pick(pool), entails = function (c) { var vs = ['P', 'Q', 'R']; return rows(vs).every(function (e) { return !it[0].every(function (p) { return lev(p, e); }) || lev(c, e); }); };
       if (!entails(it[1])) throw new Error('bad conclusion');
-      var cand = ['P', 'Q', 'R', '~P', '~Q', '~R', 'P & Q', '~P & R'].filter(function (c) { return !entails(c); });
+      var cand = ['P', 'Q', 'R', '~P', '~Q', '~R', 'P & Q', '~P & R', 'Q & R', '~Q & ~R', 'P | ~R'].filter(function (c) { return !entails(c); });
       return { q: 'Premises: $' + it[0].map(ltex).join('$, $') + '$. Which conclusion follows validly?', a: mc('$' + ltex(it[1]) + '$', R.sample(cand, 3).map(function (c) { return '$' + ltex(c) + '$'; })),
         steps: [it[2], 'The other choices can be false while all the premises are true, so they do not follow.'], hint: 'Chain the premises together, starting from the one that is a single letter or its negation.' };
     }
@@ -580,9 +672,20 @@
 
   G('disc.counterexamples', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['smallest', 'smallest', 'agree']), R.pick(['smallest', 'which', 'which']), R.pick(['tfce', 'smallest', 'which']));
+    var fresh = function (lvl) { // a claim with fresh numbers whose first failure is at n >= 2
+      for (var t = 0; t < 40; t++) {
+        var cl;
+        if (lvl === 1 || R.coin()) { var a = R.int(2, lvl === 1 ? 16 : 24), b = R.int(1, lvl === 1 ? 25 : 41); if (U.gcd(a, b) !== 1) continue; cl = { t: '$' + T.lin(a, 'n', b) + '$ is prime', f: function (n) { return isPrime(a * n + b); }, v: function (n) { return a * n + b; }, lv: 1 }; }
+        else { var bb = R.int(0, 5), cc = R.int(1, 41); cl = { t: '$' + T.poly([1, bb, cc], 'n') + '$ is prime', f: function (n) { return isPrime(n * n + bb * n + cc); }, v: function (n) { return n * n + bb * n + cc; }, lv: 2 }; }
+        var ff = firstFail(cl); if (ff && ff >= 2 && ff <= 40) return cl;
+      }
+      return null;
+    };
     if (shape === 'smallest' || shape === 'agree') {
       var pool = CLAIMS.filter(function (c) { return shape === 'agree' ? c.lv <= 2 && firstFail(c) > 3 : c.lv <= L; });
-      var c = R.pick(pool), n0 = firstFail(c), x = c.prime ? 'p' : 'n';
+      var c = R.pick(pool), fc = R.chance(0.8) ? fresh(L) : null;
+      if (fc && (shape !== 'agree' || firstFail(fc) > 3)) c = fc;
+      var n0 = firstFail(c), x = c.prime ? 'p' : 'n';
       var checks = []; for (var k = c.prime ? 2 : 1; k < n0; k++) { if (c.prime && !isPrime(k)) continue; checks.push(k); }
       var stp = [checks.length ? 'Check in order: ' + (checks.length > 8 ? 'every ' + (c.prime ? 'prime' : 'value') + ' below $' + n0 + '$ works (' + checks.slice(0, 4).map(function (k) { return '$' + x + ' = ' + k + '$'; }).join(', ') + ', …).' : checks.map(function (k) { var v = c.v(k); return '$' + x + ' = ' + k + '$' + (c.cmp || c.words ? ' works' : ': $' + v + '$ is prime'); }).join('; ') + '.') : 'Start with the first ' + (c.prime ? 'prime' : 'value') + '.', failWhy(c, n0)];
       if (shape === 'agree') return { q: 'Claim: ' + claimText(c) + '. A student checks ' + checks.slice(0, 3).map(function (k) { return '$' + x + ' = ' + k + '$'; }).join(', ') + ' and finds that it works each time. Does this prove the claim?',
@@ -606,13 +709,15 @@
     }
     // true or false, with the smallest counterexample
     var trues = [['$n^{2} + n$ is even', 'Either $n$ or $n + 1$ is even, so their product $n(n + 1) = n^{2} + n$ is even.'], ['$n^{3} - n$ is divisible by $6$', '$n^{3} - n = (n - 1)n(n + 1)$ is a product of three consecutive integers: one is even and one is a multiple of $3$.'],
-      ['$2^{n} \\ge n + 1$', 'It holds at $n = 1$, and each step doubles the left side but adds only $1$ to the right.'], ['$(n + 1)^{2} - n^{2}$ is odd', '$(n + 1)^{2} - n^{2} = 2n + 1$, which is odd.'], ['$n^{2} + n + 1$ is odd', '$n^{2} + n$ is even, so adding $1$ gives an odd number.']];
+      ['$2^{n} \\ge n + 1$', 'It holds at $n = 1$, and each step doubles the left side but adds only $1$ to the right.'], ['$(n + 1)^{2} - n^{2}$ is odd', '$(n + 1)^{2} - n^{2} = 2n + 1$, which is odd.'], ['$n^{2} + n + 1$ is odd', '$n^{2} + n$ is even, so adding $1$ gives an odd number.'],
+      ['$n^{2} - n$ is even', '$n^{2} - n = (n - 1)n$ is a product of two consecutive integers, so one factor is even.'], ['$n(n + 1)(n + 2)$ is divisible by $6$', 'Among three consecutive integers one is even and one is a multiple of $3$.'],
+      ['$n^{2} \\ge 2n - 1$', '$n^{2} - 2n + 1 = (n - 1)^{2} \\ge 0$.'], ['$3^{n} > n^{2}$', 'It holds for $n = 1, 2$, and each step triples the left side while the right side grows by less.'], ['$5n + 3$ is not divisible by $5$', '$5n + 3$ leaves remainder $3$ when divided by $5$.']];
     if (R.chance(0.35)) {
       var tr = R.pick(trues);
       return { q: 'True or false: for every positive integer $n$, ' + tr[0] + '. If it is false, give the smallest counterexample; if it is true, type $0$.', a: multi([part('The claim is', tf(true)), part('Smallest counterexample:', num(0))]),
         steps: ['It is true, so there is no counterexample.', tr[1], 'Answer: true, and $0$ in the second box.'], hint: 'Try a few values. If nothing fails, look for a reason.' };
     }
-    var c3 = R.pick(CLAIMS.filter(function (c) { return !c.prime && c.lv >= 2; })), n3 = firstFail(c3);
+    var c3 = (R.chance(0.6) && fresh(2)) || R.pick(CLAIMS.filter(function (c) { return !c.prime && c.lv >= 2; })), n3 = firstFail(c3);
     return { q: 'True or false: ' + claimText(c3) + '. If it is false, give the smallest counterexample; if it is true, type $0$.', a: multi([part('The claim is', tf(false)), part('Smallest counterexample:', num(n3))]),
       steps: ['Test $n = 1, 2, 3, \\ldots$ in order.', failWhy(c3, n3), 'So the claim is false, and the smallest counterexample is $n = ' + n3 + '$.'], hint: 'Test the values in order until one fails.' };
   });
@@ -620,9 +725,9 @@
   // m = c·a + r, n = c·b + s
   function residueWord(c, r) { return c === 2 ? (r ? 'odd' : 'even') : null; }
   G('disc.direct-proof', function (R, ctx) {
-    var L = lv(ctx), shape = by(ctx, R.pick(['fill', 'fill', 'first']), R.pick(['fill', 'flaw', 'first']), R.pick(['fill', 'compute', 'flaw']));
+    var L = lv(ctx), shape = by(ctx, R.pick(['fill', 'fill', 'first', 'compute', 'compute']), R.pick(['fill', 'flaw', 'first', 'compute']), R.pick(['fill', 'compute', 'flaw']));
     if (shape === 'fill') {
-      var c = L === 1 ? 2 : R.pick([2, 3, 4, 5]), r = R.int(L === 1 ? 0 : 1, c - 1), s = R.int(L === 1 ? 0 : 1, c - 1), op = L === 1 ? 'sum' : R.pick(['sum', 'prod', 'prod']);
+      var c = L === 1 ? R.pick([2, 2, 3, 4, 5]) : R.pick([2, 3, 4, 5, 6, 7]), r = R.int(L === 1 ? 0 : 1, c - 1), s = R.int(L === 1 ? 0 : 1, c - 1), op = L === 1 ? 'sum' : R.pick(['sum', 'prod', 'prod']);
       if (c === 2 && L > 1) { r = 1; s = R.int(0, 1); }
       var blank, rem, blankTex, why;
       if (op === 'sum') { var q0 = M.floor((r + s) / c); rem = (r + s) % c; blank = plainTerms([[1, 'a'], [1, 'b'], [q0, '']]); blankTex = blank; why = '$m + n = ' + T.terms([[c, 'a'], [c, 'b'], [r + s, '']]) + ' = ' + c + '(' + blankTex + ')' + (rem ? ' + ' + rem : '') + '$.'; }
@@ -635,10 +740,10 @@
         hint: (op === 'sum' ? 'Add the two expressions' : 'Expand the product') + ', then factor $' + c + '$ out of every term you can.' };
     }
     if (shape === 'compute') {
-      var a1 = R.pick([3, 5, 7, 9]), b1 = R.pick([1, 3, 5, 7, 9]), ev = R.coin();
+      var a1 = R.pick([3, 5, 7, 9, 11, 13, 15]), b1 = R.pick([1, 3, 5, 7, 9, 11, 13, 15, 17]), ev = R.coin();
       if (ev) { var blank2 = plainTerms([[a1, 'k'], [(a1 + b1) / 2, '']]); return { q: 'Claim: if $n$ is odd, then $' + T.lin(a1, 'n', b1) + '$ is even. Write $n = 2k + 1$. Then $' + T.lin(a1, 'n', b1) + ' = 2\\,' + BOX + '$. What goes in the box?', a: expr(blank2, ['k']),
         steps: ['Substitute: $' + a1 + '(2k + 1) + ' + b1 + ' = ' + (2 * a1) + 'k + ' + (a1 + b1) + '$.', 'Factor out $2$: $' + (2 * a1) + 'k + ' + (a1 + b1) + ' = 2(' + T.lin(a1, 'k', (a1 + b1) / 2) + ')$.', 'The box is $' + T.lin(a1, 'k', (a1 + b1) / 2) + '$, an integer, so the number is even.'], hint: 'Substitute $2k + 1$ for $n$ and expand.' }; }
-      var b2 = R.pick([2, 4, 6, 8]); var blank3 = plainTerms([[a1, 'k'], [(a1 + b2 - 1) / 2, '']]);
+      var b2 = R.pick([2, 4, 6, 8, 10, 12, 14, 16]); var blank3 = plainTerms([[a1, 'k'], [(a1 + b2 - 1) / 2, '']]);
       return { q: 'Claim: if $n$ is odd, then $' + T.lin(a1, 'n', b2) + '$ is odd. Write $n = 2k + 1$. Then $' + T.lin(a1, 'n', b2) + ' = 2\\,' + BOX + ' + 1$. What goes in the box?', a: expr(blank3, ['k']),
         steps: ['Substitute: $' + a1 + '(2k + 1) + ' + b2 + ' = ' + (2 * a1) + 'k + ' + (a1 + b2) + '$.', 'Split off $1$: $' + (2 * a1) + 'k + ' + (a1 + b2 - 1) + ' + 1 = 2(' + T.lin(a1, 'k', (a1 + b2 - 1) / 2) + ') + 1$.', 'The box is $' + T.lin(a1, 'k', (a1 + b2 - 1) / 2) + '$, so the number is odd.'], hint: 'Substitute $2k + 1$ for $n$, expand, and pull out a $2$.' };
     }
@@ -647,7 +752,12 @@
         ['if $m$ and $n$ are even, then $m + n$ is even', 'Suppose $m = 2a$ and $n = 2b$ for some integers $a$ and $b$.', ['Suppose $m = 2k$ and $n = 2k$ for some integer $k$.', 'Suppose $m + n$ is even.', 'Suppose $m = 2$ and $n = 4$.']],
         ['if $a \\mid b$ and $b \\mid c$, then $a \\mid c$ (here $a \\mid b$ means $b = ak$ for some integer $k$)', 'Suppose $b = ak$ and $c = bj$ for some integers $k$ and $j$.', ['Suppose $c = ak$ for some integer $k$.', 'Suppose $b = ak$ and $c = bk$ for the same integer $k$.', 'Suppose $a = 2$, $b = 4$ and $c = 8$.']],
         ['if $n$ is a multiple of $3$, then $n^{2}$ is a multiple of $9$', 'Suppose $n = 3k$ for some integer $k$.', ['Suppose $n^{2} = 9k$ for some integer $k$.', 'Suppose $n = 3$.', 'Suppose $n = 3k + 1$ for some integer $k$.']],
-        ['if $x$ and $y$ are rational, then $x + y$ is rational', 'Suppose $x = \\frac{a}{b}$ and $y = \\frac{c}{d}$ with integers $a, b, c, d$ and $b, d \\ne 0$.', ['Suppose $x + y = \\frac{a}{b}$.', 'Suppose $x = \\frac{a}{b}$ and $y = \\frac{a}{b}$.', 'Suppose $x = \\frac{1}{2}$ and $y = \\frac{1}{3}$.']]];
+        ['if $x$ and $y$ are rational, then $x + y$ is rational', 'Suppose $x = \\frac{a}{b}$ and $y = \\frac{c}{d}$ with integers $a, b, c, d$ and $b, d \\ne 0$.', ['Suppose $x + y = \\frac{a}{b}$.', 'Suppose $x = \\frac{a}{b}$ and $y = \\frac{a}{b}$.', 'Suppose $x = \\frac{1}{2}$ and $y = \\frac{1}{3}$.']],
+        ['if $n$ is even, then $n^{2}$ is even', 'Suppose $n$ is even, so $n = 2k$ for some integer $k$.', ['Suppose $n^{2}$ is even.', 'Suppose $n = 4$; then $n^{2} = 16$ is even.', 'Suppose $n$ is odd, so $n = 2k + 1$.']],
+        ['if $m$ and $n$ are odd, then $mn$ is odd', 'Suppose $m = 2a + 1$ and $n = 2b + 1$ for some integers $a$ and $b$.', ['Suppose $m = 2k + 1$ and $n = 2k + 1$ for some integer $k$.', 'Suppose $mn$ is odd.', 'Suppose $m = 3$ and $n = 5$.']],
+        ['if $a \\mid b$ and $a \\mid c$, then $a \\mid (b + c)$', 'Suppose $b = ak$ and $c = aj$ for some integers $k$ and $j$.', ['Suppose $b + c = ak$ for some integer $k$.', 'Suppose $b = ak$ and $c = ak$ for the same integer $k$.', 'Suppose $a = 3$, $b = 6$ and $c = 9$.']],
+        ['if $n$ is a multiple of $4$, then $n$ is even', 'Suppose $n = 4k$ for some integer $k$.', ['Suppose $n = 2k$ for some integer $k$.', 'Suppose $n = 8$.', 'Suppose $n$ is odd.']],
+        ['if $n$ is odd, then $n + 7$ is even', 'Suppose $n$ is odd, so $n = 2k + 1$ for some integer $k$.', ['Suppose $n + 7$ is even.', 'Suppose $n = 3$; then $n + 7 = 10$ is even.', 'Suppose $n = 2k$ for some integer $k$.']]];
       var it = R.pick(pool);
       return { q: 'Which line correctly begins a direct proof of this claim: ' + it[0] + '?', a: mc(it[1], it[2]),
         steps: ['A direct proof of “if $P$, then $Q$” assumes $P$ and rewrites it with a definition.', 'Each object gets its own letter, since the numbers may be different, and the letters stand for any value, not one example.', 'So it begins: ' + it[1]], hint: 'Start from the hypothesis, written with the definition, in full generality.' };
@@ -666,24 +776,39 @@
       ['If $mn$ is even, then $m$ is even or $n$ is even.', 'Assume $m$ and $n$ are both odd, and prove $mn$ is odd.', ['Assume $m$ is odd or $n$ is odd, and prove $mn$ is odd.', 'Assume $m$ is even or $n$ is even, and prove $mn$ is even.', 'Assume $mn$ is odd, and prove $m$ and $n$ are both odd.'], 'If $m$ and $n$ are both odd, then $mn$ is odd.'],
       ['If $x + y \\ge 10$, then $x \\ge 5$ or $y \\ge 5$.', 'Assume $x < 5$ and $y < 5$, and prove $x + y < 10$.', ['Assume $x < 5$ or $y < 5$, and prove $x + y < 10$.', 'Assume $x \\ge 5$ or $y \\ge 5$, and prove $x + y \\ge 10$.', 'Assume $x + y < 10$, and prove $x < 5$ and $y < 5$.'], 'If $x < 5$ and $y < 5$, then $x + y < 10$.'],
       ['If $n^{2}$ is not a multiple of $3$, then $n$ is not a multiple of $3$.', 'Assume $n$ is a multiple of $3$, and prove $n^{2}$ is a multiple of $3$.', ['Assume $n^{2}$ is a multiple of $3$, and prove $n$ is a multiple of $3$.', 'Assume $n$ is not a multiple of $3$, and prove $n^{2}$ is not a multiple of $3$.', 'Assume $n^{2}$ is not a multiple of $3$, and prove $n$ is a multiple of $3$.'], 'If $n$ is a multiple of $3$, then $n^{2}$ is a multiple of $3$.']];
+    function xtra() { // the same shapes with fresh numbers
+      var a = R.pick([3, 5, 7, 9, 11]), b = R.int(1, 12), s = R.int(4, 15), m = R.pick([3, 5, 7]), par = (a + b) % 2 ? 'odd' : 'even', npar = par === 'even' ? 'odd' : 'even';
+      var ex = '$' + T.lin(a, 'n', b) + '$';
+      return [['If ' + ex + ' is ' + npar + ', then $n$ is even.', 'Assume $n$ is odd, and prove ' + ex + ' is ' + par + '.', ['Assume $n$ is even, and prove ' + ex + ' is ' + npar + '.', 'Assume ' + ex + ' is ' + par + ', and prove $n$ is odd.', 'Assume ' + ex + ' is ' + npar + ', and prove $n$ is odd.'], 'If $n$ is odd, then ' + ex + ' is ' + par + '.'],
+        ['If $x + y \\ge ' + (2 * s) + '$, then $x \\ge ' + s + '$ or $y \\ge ' + s + '$.', 'Assume $x < ' + s + '$ and $y < ' + s + '$, and prove $x + y < ' + (2 * s) + '$.', ['Assume $x < ' + s + '$ or $y < ' + s + '$, and prove $x + y < ' + (2 * s) + '$.', 'Assume $x \\ge ' + s + '$ or $y \\ge ' + s + '$, and prove $x + y \\ge ' + (2 * s) + '$.', 'Assume $x + y < ' + (2 * s) + '$, and prove $x < ' + s + '$ and $y < ' + s + '$.'], 'If $x < ' + s + '$ and $y < ' + s + '$, then $x + y < ' + (2 * s) + '$.'],
+        ['If $n^{2}$ is not a multiple of $' + m + '$, then $n$ is not a multiple of $' + m + '$.', 'Assume $n$ is a multiple of $' + m + '$, and prove $n^{2}$ is a multiple of $' + m + '$.', ['Assume $n^{2}$ is a multiple of $' + m + '$, and prove $n$ is a multiple of $' + m + '$.', 'Assume $n$ is not a multiple of $' + m + '$, and prove $n^{2}$ is not a multiple of $' + m + '$.', 'Assume $n^{2}$ is not a multiple of $' + m + '$, and prove $n$ is a multiple of $' + m + '$.'], 'If $n$ is a multiple of $' + m + '$, then $n^{2}$ is a multiple of $' + m + '$.'],
+        ['If $xy > ' + (s * s) + '$, then $x > ' + s + '$ or $y > ' + s + '$ (for positive $x$ and $y$).', 'Assume $x \\le ' + s + '$ and $y \\le ' + s + '$, and prove $xy \\le ' + (s * s) + '$.', ['Assume $x \\le ' + s + '$ or $y \\le ' + s + '$, and prove $xy \\le ' + (s * s) + '$.', 'Assume $x > ' + s + '$ or $y > ' + s + '$, and prove $xy > ' + (s * s) + '$.', 'Assume $xy \\le ' + (s * s) + '$, and prove $x \\le ' + s + '$ and $y \\le ' + s + '$.'], 'If $x \\le ' + s + '$ and $y \\le ' + s + '$, then $xy \\le ' + (s * s) + '$.']];
+    }
     if (shape === 'setup') {
-      var it = R.pick(pool);
+      var it = R.pick(pool.concat(xtra()));
       return { q: 'To prove “' + it[0].replace(/\.$/, '') + '” by contrapositive, what do you assume and what do you prove?', a: mc(it[1], it[2]),
         steps: ['The contrapositive of $P \\to Q$ is $\\neg Q \\to \\neg P$, and it is logically equivalent.', 'Here it reads: “' + it[3] + '”', 'So: ' + it[1].charAt(0).toLowerCase() + it[1].slice(1)], hint: 'Negate both parts and swap them.' };
     }
     if (shape === 'english') {
-      var it2 = R.pick(pool);
+      var it2 = R.pick(pool.concat(xtra()));
       var wr = it2[2].map(function (w) { var m = /^Assume (.*), and prove (.*)\.$/.exec(w); return 'If ' + m[1] + ', then ' + m[2] + '.'; });
       return { q: 'Which statement is the contrapositive of “' + it2[0].replace(/\.$/, '') + '”?', a: mc(it2[3], wr), steps: ['Swap the two parts and negate each one: $\\neg Q \\to \\neg P$.', /or/.test(it2[0]) ? 'Negating an “or” gives an “and” (De Morgan).' : 'Negating “even” gives “odd,” and so on.', 'Result: “' + it2[3] + '”'], hint: 'Negate the conclusion; it becomes the new hypothesis.' };
     }
     if (shape === 'tf') {
       var facts = [['A conditional and its contrapositive are always both true or both false.', true, 'They are logically equivalent: their truth tables match.'], ['A conditional and its converse are always both true or both false.', false, '“If $n = 2$, then $n$ is even” is true, but its converse “if $n$ is even, then $n = 2$” is false.'],
         ['Proving “if $Q$, then $P$” also proves “if $P$, then $Q$.”', false, 'That is the converse, a different statement.'], ['Proving “if not $Q$, then not $P$” proves “if $P$, then $Q$.”', true, 'That is the contrapositive, which is equivalent.'],
-        ['The contrapositive of “if $P$, then $Q$” is “if not $P$, then not $Q$.”', false, '“If not $P$, then not $Q$” is the inverse. The contrapositive is “if not $Q$, then not $P$.”']];
+        ['The contrapositive of “if $P$, then $Q$” is “if not $P$, then not $Q$.”', false, '“If not $P$, then not $Q$” is the inverse. The contrapositive is “if not $Q$, then not $P$.”'],
+        ['The converse and the inverse of a conditional are logically equivalent to each other.', true, 'The inverse $\\neg P \\to \\neg Q$ is the contrapositive of the converse $Q \\to P$.'],
+        ['A proof by contrapositive of “if $P$, then $Q$” starts by assuming $Q$ is false.', true, 'It proves $\\neg Q \\to \\neg P$, so it assumes not $Q$ and shows not $P$.'],
+        ['A proof by contrapositive of “if $P$, then $Q$” starts by assuming $P$ is true.', false, 'That is how a direct proof starts. A contrapositive proof assumes not $Q$.'],
+        ['If a conditional is false, its contrapositive is false too.', true, 'They are equivalent, so they always have the same truth value.'],
+        ['If a conditional is true, its converse must be true too.', false, '“If $n = 4$, then $n$ is even” is true, but “if $n$ is even, then $n = 4$” is false.'],
+        ['The contrapositive of the contrapositive of a conditional is the original conditional.', true, 'Swapping and negating twice gives back $P \\to Q$ (the double negations cancel).']];
+      if (R.chance(0.5)) { var nk = R.int(2, 9) * 2, ok = R.coin(); facts = [[ok ? 'The contrapositive of “if $n = ' + nk + '$, then $n$ is even” is “if $n$ is odd, then $n \\ne ' + nk + '$.”' : 'The contrapositive of “if $n = ' + nk + '$, then $n$ is even” is “if $n \\ne ' + nk + '$, then $n$ is odd.”', ok, ok ? 'Swap the parts and negate both: not even is odd, and not $n = ' + nk + '$ is $n \\ne ' + nk + '$.' : 'That is the inverse. The contrapositive is “if $n$ is odd, then $n \\ne ' + nk + '$.”']]; }
       var f = R.pick(facts);
       return { q: 'True or false: ' + f[0], a: tf(f[1]), steps: [f[2]], hint: 'Compare $P \\to Q$, its converse $Q \\to P$ and its contrapositive $\\neg Q \\to \\neg P$.' };
     }
-    var a1 = R.pick([3, 5, 7]), odd = R.coin(), b1 = odd ? R.pick([1, 3, 5, 7]) : R.pick([2, 4, 6]);
+    var a1 = R.pick([3, 5, 7, 9, 11, 13]), odd = R.coin(), b1 = odd ? R.pick([1, 3, 5, 7, 9, 11, 13, 15]) : R.pick([2, 4, 6, 8, 10, 12, 14]);
     var claimC = odd ? 'if $' + T.lin(a1, 'n', b1) + '$ is odd, then $n$ is even' : 'if $' + T.lin(a1, 'n', b1) + '$ is even, then $n$ is even';
     var k0 = odd ? (a1 + b1) / 2 : (a1 + b1 - 1) / 2, bl = plainTerms([[a1, 'k'], [k0, '']]);
     return { q: 'To prove “' + claimC + '” by contrapositive, assume $n$ is odd: $n = 2k + 1$. Then $' + T.lin(a1, 'n', b1) + ' = 2\\,' + BOX + (odd ? '' : ' + 1') + '$. What goes in the box?', a: expr(bl, ['k']),
@@ -699,22 +824,32 @@
         ['$x^{2} \\ge 0$ for every real number $x$', ['$x > 0$', '$x < 0$'], '$x = 0$', ['$x \\ge 1$', '$-1 < x < 0$', '$x$ is irrational']],
         ['$n^{2} \\ge n$ for every integer $n$', ['$n \\ge 1$', '$n \\le -1$'], '$n = 0$', ['$n \\ge 2$', '$n$ is even', '$n = 1$']],
         ['$n^{3} - n$ is divisible by $3$ for every integer $n$', ['$n = 3k$', '$n = 3k + 1$'], '$n = 3k + 2$', ['$n = 3k + 3$', '$n = 3k - 3$', '$n = 6k$']]];
+      if (R.chance(0.6)) { // remainders modulo m: one case left out
+        var mm = R.pick([2, 3, 4, 5, 6]), gone = R.int(0, mm - 1), fq = R.pick([['n^{2}', function (x) { return x * x; }], ['n^{2} + n', function (x) { return x * x + x; }], ['n^{3}', function (x) { return x * x * x; }], ['n^{2} + 1', function (x) { return x * x + 1; }]]);
+        var rems = U.uniq(range(0, mm - 1).map(function (x) { return fq[1](x) % mm; }).map(String)).map(Number).sort(function (a, b) { return a - b; });
+        var fx = '$' + fq[0] + '$ leaves remainder ' + (rems.length === 1 ? '$' + rems[0] + '$' : rems.map(function (x) { return '$' + x + '$'; }).join(', ').replace(/, ([^,]*)$/, ' or $1')) + ' when divided by $' + mm + '$';
+        var cs = range(0, mm - 1).filter(function (r) { return r !== gone; }).map(function (r) { return '$n = ' + T.lin(mm, 'k', r) + '$'; });
+        var wrong = ['$n = ' + T.lin(mm, 'k', mm) + '$', '$n = ' + T.lin(mm + 1, 'k', gone) + '$', '$n = ' + T.lin(2 * mm, 'k', 0) + '$', '$n = ' + T.lin(mm, 'k', -1) + '$'].filter(function (w) { return w !== '$n = ' + T.lin(mm, 'k', gone) + '$'; });
+        if (gone === mm - 1) wrong = wrong.filter(function (w) { return w !== '$n = ' + T.lin(mm, 'k', -1) + '$'; });
+        pool = [[fx.replace(/^(.*)$/, '$1, for every integer $n$'), cs, '$n = ' + T.lin(mm, 'k', gone) + '$', R.sample(wrong, 3)]];
+      }
       var it = R.pick(pool);
       return { q: 'A proof that ' + it[0] + ' treats these cases: ' + it[1].join('; ') + '. Which case is missing?', a: mc(it[2].replace(/ \(n odd\)/, ''), it[3]),
         steps: ['The cases must cover every possibility.', 'Every number not covered by the listed cases falls under ' + it[2].replace(/ \(n odd\)/, '') + '.', 'The other choices are already covered, or do not fill the gap.'], hint: 'Find a value that none of the listed cases covers.' };
     }
     if (shape === 'fill') {
-      var c = L === 1 ? 2 : R.pick([3, 3, 4, 5]), r = R.int(1, c - 1), kind = L === 3 && c === 3 && R.coin() ? 'cube' : 'square';
-      var lin = [r, c], P2 = kind === 'cube' ? pAdd(pPow(lin, 3), pScale(lin, -1)) : pPow(lin, 2);
+      var c = L === 1 ? R.pick([2, 3]) : R.pick([3, 3, 4, 5, 6]), r = R.int(1, c - 1), kind = L === 3 && c === 3 && R.coin() ? 'cube' : R.pick(L === 1 ? ['square', 'square', 'sqp1'] : ['square', 'sqpn', 'sqp1', 'twice']);
+      var lin = [r, c], P2 = kind === 'cube' ? pAdd(pPow(lin, 3), pScale(lin, -1)) : kind === 'sqpn' ? pAdd(pPow(lin, 2), lin) : kind === 'sqp1' ? pAdd(pPow(lin, 2), [1]) : kind === 'twice' ? pScale(pPow(lin, 2), 2) : pPow(lin, 2);
       var rem = ((P2[0] % c) + c) % c, blank = pAdd(P2, [-rem]).map(function (x) { return x / c; });
-      var lhs = kind === 'cube' ? 'n^{3} - n' : 'n^{2}';
+      var lhs = { cube: 'n^{3} - n', sqpn: 'n^{2} + n', sqp1: 'n^{2} + 1', twice: '2n^{2}', square: 'n^{2}' }[kind];
       return { q: 'In the case $n = ' + T.lin(c, 'k', r) + '$, write $' + lhs + ' = ' + c + '\\,' + BOX + (rem ? ' + ' + rem : '') + '$. What polynomial in $k$ goes in the box?', a: expr(pPlain(blank, 'k'), ['k']),
-        steps: ['Expand: $' + (kind === 'cube' ? '(' + T.lin(c, 'k', r) + ')^{3} - (' + T.lin(c, 'k', r) + ')' : '(' + T.lin(c, 'k', r) + ')^{2}') + ' = ' + pTex(P2, 'k') + '$.',
+        steps: ['Expand: $' + (kind === 'cube' ? '(' + T.lin(c, 'k', r) + ')^{3} - (' + T.lin(c, 'k', r) + ')' : kind === 'sqpn' ? '(' + T.lin(c, 'k', r) + ')^{2} + (' + T.lin(c, 'k', r) + ')' : kind === 'sqp1' ? '(' + T.lin(c, 'k', r) + ')^{2} + 1' : kind === 'twice' ? '2(' + T.lin(c, 'k', r) + ')^{2}' : '(' + T.lin(c, 'k', r) + ')^{2}') + ' = ' + pTex(P2, 'k') + '$.',
           'Factor $' + c + '$ out of every term except the remainder $' + rem + '$: $' + pTex(P2, 'k') + ' = ' + c + '(' + pTex(blank, 'k') + ')' + (rem ? ' + ' + rem : '') + '$.', 'So in this case $' + lhs + '$ leaves remainder $' + rem + '$ when divided by $' + c + '$.'],
         hint: 'Expand, then pull $' + c + '$ out of all the terms with a $k$.' };
     }
     if (shape === 'remainders') {
-      var cc = R.pick([3, 4, 5, 6, 8]), f = R.pick([['n^{2}', function (x) { return x * x; }], ['n^{2}', function (x) { return x * x; }], ['n^{3}', function (x) { return x * x * x; }], ['n^{2} + n', function (x) { return x * x + x; }]]);
+      var cc = R.pick([3, 4, 5, 6, 7, 8, 9, 10, 12]), f = R.pick([['n^{2}', function (x) { return x * x; }], ['n^{2}', function (x) { return x * x; }], ['n^{3}', function (x) { return x * x * x; }], ['n^{2} + n', function (x) { return x * x + x; }],
+        ['n^{2} + 1', function (x) { return x * x + 1; }], ['2n^{2}', function (x) { return 2 * x * x; }], ['n^{4}', function (x) { return x * x * x * x; }], ['n^{3} - n', function (x) { return x * x * x - x; }], ['n^{2} + 2n', function (x) { return x * x + 2 * x; }]]);
       var res = range(0, cc - 1).map(function (x) { return f[1](x) % cc; }), set = U.uniq(res.map(String)).map(Number).sort(function (a, b) { return a - b; });
       return { q: 'What remainders can $' + f[0] + '$ leave when divided by $' + cc + '$, for an integer $n$? List every possible remainder.', a: setA(set),
         steps: ['Every integer is $' + cc + 'k + r$ with $r$ one of $' + range(0, cc - 1).join(', ') + '$, and $' + f[0] + '$ has the same remainder as it has for $n = r$. So there are ' + cc + ' cases.', range(0, cc - 1).map(function (x) { return '$r = ' + x + '$: ' + f[1](x) + ' → remainder $' + res[x] + '$'; }).join('; ') + '.', 'Possible remainders: $' + setTex(set) + '$.'],
@@ -734,7 +869,7 @@
   });
 
   G('disc.contradiction-proof', function (R, ctx) {
-    var L = lv(ctx), shape = by(ctx, R.pick(['assume', 'assume', 'rational']), R.pick(['assume', 'sqrt', 'rational']), R.pick(['sqrt', 'euclid', 'assume']));
+    var L = lv(ctx), shape = by(ctx, R.pick(['assume', 'assume', 'rational']), R.pick(['assume', 'sqrt', 'rational']), R.pick(['sqrt', 'euclid', 'assume', 'rational']));
     if (shape === 'assume') {
       var pool = [['$\\sqrt{3}$ is irrational.', 'Suppose $\\sqrt{3} = \\frac{a}{b}$ for integers $a$ and $b \\ne 0$, with the fraction in lowest terms.', ['Suppose $\\sqrt{3}$ is irrational.', 'Suppose $\\sqrt{3}$ is an integer.', 'Suppose $\\sqrt{3} = 1.732$.']],
         ['There is no largest even integer.', 'Suppose there is a largest even integer $N$.', ['Suppose there is no largest even integer.', 'Suppose every even integer is larger than $N$.', 'Suppose $N$ is odd.']],
@@ -742,19 +877,29 @@
         ['If $n^{2}$ is even, then $n$ is even.', 'Suppose $n^{2}$ is even and $n$ is odd.', ['Suppose $n^{2}$ is odd and $n$ is even.', 'Suppose $n^{2}$ is even and $n$ is even.', 'Suppose $n^{2}$ is odd.']],
         ['No integer is both even and odd.', 'Suppose some integer $n$ is both even and odd.', ['Suppose every integer is both even and odd.', 'Suppose $n$ is even.', 'Suppose no integer is even.']],
         ['For every integer $n$, $n^{2} + 2$ is not divisible by $4$.', 'Suppose there is an integer $n$ with $n^{2} + 2$ divisible by $4$.', ['Suppose $n^{2} + 2$ is divisible by $4$ for every integer $n$.', 'Suppose $n^{2} + 2$ is not divisible by $4$.', 'Suppose $n$ is even.']],
-        ['If $x$ is irrational, then $x + 1$ is irrational.', 'Suppose $x$ is irrational and $x + 1$ is rational.', ['Suppose $x$ is rational and $x + 1$ is irrational.', 'Suppose $x + 1$ is irrational.', 'Suppose $x$ and $x + 1$ are both rational.']]];
+        ['If $x$ is irrational, then $x + 1$ is irrational.', 'Suppose $x$ is irrational and $x + 1$ is rational.', ['Suppose $x$ is rational and $x + 1$ is irrational.', 'Suppose $x + 1$ is irrational.', 'Suppose $x$ and $x + 1$ are both rational.']],
+        ['There is no smallest positive rational number.', 'Suppose there is a smallest positive rational number $q$.', ['Suppose there is no smallest positive rational number.', 'Suppose every rational number is positive.', 'Suppose $q = \\frac{1}{2}$.']],
+        ['There is no largest prime number.', 'Suppose there is a largest prime number $p$.', ['Suppose there is no largest prime number.', 'Suppose every number is smaller than $p$.', 'Suppose $p = 97$.']],
+        ['If $n^{2}$ is odd, then $n$ is odd.', 'Suppose $n^{2}$ is odd and $n$ is even.', ['Suppose $n^{2}$ is even and $n$ is odd.', 'Suppose $n^{2}$ is odd and $n$ is odd.', 'Suppose $n$ is even.']]];
+      if (R.chance(0.5)) { var pp = R.pick([2, 3, 5, 6, 7, 10, 11, 13, 14, 15, 17, 19]), mm = R.pick([3, 5, 7, 9, 11]), nn = R.int(2, 9) * 2;
+        pool = [['$\\sqrt{' + pp + '}$ is irrational.', 'Suppose $\\sqrt{' + pp + '} = \\frac{a}{b}$ for integers $a$ and $b \\ne 0$, with the fraction in lowest terms.', ['Suppose $\\sqrt{' + pp + '}$ is irrational.', 'Suppose $\\sqrt{' + pp + '}$ is an integer.', 'Suppose $\\sqrt{' + pp + '} = ' + U.fix(M.sqrt(pp), 3) + '$.']],
+          ['For every integer $n$, $n^{2} + ' + nn + '$ is not a multiple of $4$.', 'Suppose there is an integer $n$ with $n^{2} + ' + nn + '$ a multiple of $4$.', ['Suppose $n^{2} + ' + nn + '$ is a multiple of $4$ for every integer $n$.', 'Suppose $n^{2} + ' + nn + '$ is not a multiple of $4$.', 'Suppose $n$ is odd.']],
+          ['If $' + mm + 'n$ is odd, then $n$ is odd.', 'Suppose $' + mm + 'n$ is odd and $n$ is even.', ['Suppose $' + mm + 'n$ is even and $n$ is odd.', 'Suppose $' + mm + 'n$ is odd and $n$ is odd.', 'Suppose $' + mm + 'n$ is even.']]];
+        if (nn % 4 === 0) pool.splice(1, 1); }
       var it = R.pick(pool);
       return { q: 'A proof by contradiction of this statement should start from which assumption?<br>“' + it[0] + '”', a: mc(it[1], it[2]),
         steps: ['A proof by contradiction assumes the exact negation of the statement and reasons to something impossible.', /^If/.test(it[0]) ? 'The negation of “if $P$, then $Q$” is “$P$ and not $Q$.”' : /every/.test(it[0]) || /For every/.test(it[0]) ? 'The negation of “for every” is “there is at least one.”' : 'Negate the whole claim.', 'So: ' + it[1]],
         hint: 'Write the exact negation of the whole statement.' };
     }
     if (shape === 'sqrt') {
-      var p = R.pick([2, 3, 5, 7]);
+      var p = R.pick([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]);
+      if (R.coin()) return { q: 'Proof that $\\sqrt{' + p + '}$ is irrational: suppose $\\sqrt{' + p + '} = \\frac{a}{b}$ with integers $a, b$, $b \\ne 0$, in lowest terms. Square both sides and clear the fraction. Then $a^{2}$ equals what, in terms of $b$?', a: expr(p + '*b^2', ['b']),
+        steps: ['Square: $' + p + ' = \\frac{a^{2}}{b^{2}}$.', 'Multiply by $b^{2}$: $a^{2} = ' + p + 'b^{2}$.', 'So $' + p + ' \\mid a^{2}$, and since $' + p + '$ is prime, $' + p + ' \\mid a$. The proof goes on to show $' + p + ' \\mid b$ as well, which contradicts “lowest terms.”'], hint: 'Square both sides, then multiply by $b^{2}$.' };
       return { q: 'Proof that $\\sqrt{' + p + '}$ is irrational: suppose $\\sqrt{' + p + '} = \\frac{a}{b}$ in lowest terms. Then $a^{2} = ' + p + 'b^{2}$, so $' + p + ' \\mid a^{2}$, and since $' + p + '$ is prime, $' + p + ' \\mid a$. Write $a = ' + p + 'c$. Then $b^{2}$ equals what, in terms of $c$?', a: expr(p + '*c^2', ['c']),
         steps: ['Substitute $a = ' + p + 'c$ into $a^{2} = ' + p + 'b^{2}$: $' + (p * p) + 'c^{2} = ' + p + 'b^{2}$.', 'Divide by $' + p + '$: $b^{2} = ' + p + 'c^{2}$.', 'So $' + p + ' \\mid b$ too. Then $' + p + '$ divides both $a$ and $b$, which contradicts “lowest terms.”'], hint: 'Substitute $a = ' + p + 'c$ into $a^{2} = ' + p + 'b^{2}$.' };
     }
     if (shape === 'rational') {
-      var qn = R.int(1, 9), qd = R.pick([2, 3, 4, 5, 6, 8]), rn = R.int(1, 9), rd = R.pick([2, 3, 4, 5, 6]);
+      var qn = R.int(1, 19), qd = R.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 12]), rn = R.int(1, 15), rd = R.pick([2, 3, 4, 5, 6, 7, 8, 9]);
       var qv = ML.Q(qn, qd), rv = ML.Q(rn, rd), x = qv.sub(rv);
       if (x.isZero()) { qn++; qv = ML.Q(qn, qd); x = qv.sub(rv); }
       return { q: 'To prove “a rational number plus an irrational number is irrational,” suppose $x$ is irrational, $r = ' + rv.toTex() + '$, and $x + r = ' + qv.toTex() + '$. Solve for $x$. (The answer shows why this is a contradiction.)', a: num(x.toString()),
@@ -787,33 +932,35 @@
     var L = lv(ctx), shape = by(ctx, R.pick(['size', 'list', 'size']), R.pick(['list', 'member', 'card']), R.pick(['member', 'card', 'member']));
     if (shape === 'size') {
       var k = R.int(1, 4);
-      if (k === 1) { var a = R.int(-5, 2), b = a + R.int(3, 9), lo = R.coin(), hi = R.coin(), n = b - a - 1 + (lo ? 1 : 0) + (hi ? 1 : 0);
+      if (k === 1) { var a = R.int(-15, 9), b = a + R.int(3, 16), lo = R.coin(), hi = R.coin(), n = b - a - 1 + (lo ? 1 : 0) + (hi ? 1 : 0);
         return { q: 'How many elements does $\\{x \\in \\mathbb{Z} : ' + a + ' ' + (lo ? '\\le' : '<') + ' x ' + (hi ? '\\le' : '<') + ' ' + b + '\\}$ have?', a: num(n),
           steps: ['The elements are the integers from $' + (lo ? a : a + 1) + '$ to $' + (hi ? b : b - 1) + '$.', 'Count them: $' + (hi ? b : b - 1) + ' - (' + (lo ? a : a + 1) + ') + 1 = ' + n + '$.'], hint: 'Check whether each end is included ($\\le$) or not ($<$).' }; }
-      if (k === 2) { var N = R.int(5, 50), m = M.floor(M.sqrt(N - 1)), cnt = 2 * m + 1;
+      if (k === 2) { var N = R.int(5, 170), m = M.floor(M.sqrt(N - 1)), cnt = 2 * m + 1;
         return { q: 'How many elements does $\\{x \\in \\mathbb{Z} : x^{2} < ' + N + '\\}$ have?', a: num(cnt), steps: ['$x^{2} < ' + N + '$ holds for $x = -' + m + ', \\ldots, ' + m + '$ (and $' + (m + 1) + '^{2} = ' + (m + 1) * (m + 1) + '$ is too big).', 'That is $' + m + '$ negative integers, $0$ and $' + m + '$ positive integers: $' + cnt + '$ elements.'], hint: 'Do not forget the negative integers and $0$.' }; }
-      if (k === 3) { var N3 = R.pick([12, 18, 20, 24, 28, 30, 36, 45]), d = U.factors(N3);
+      if (k === 3) { var N3 = R.pick([12, 18, 20, 24, 28, 30, 36, 45, 16, 40, 42, 48, 50, 54, 60, 63, 64, 72, 75, 80, 84, 90, 96, 100]), d = U.factors(N3);
         return { q: 'How many elements does $\\{x \\in \\mathbb{Z}^{+} : x \\mid ' + N3 + '\\}$ have? ($x \\mid ' + N3 + '$ means $x$ divides ' + N3 + '.)', a: num(d.length), steps: ['List the positive divisors: $' + d.join(', ') + '$.', 'There are $' + d.length + '$.'], hint: 'Pair divisors: $1 \\cdot ' + N3 + '$, $2 \\cdot \\ldots$' }; }
-      var D = range(-R.int(2, 3), R.int(2, 3)), sq = U.uniq(D.map(function (x) { return String(x * x); }));
+      var D = range(-R.int(1, 5), R.int(1, 5)), sq = U.uniq(D.map(function (x) { return String(x * x); }));
       return { q: 'How many elements does $\\{k^{2} : k \\in ' + setTex(D) + '\\}$ have?', a: num(sq.length), steps: ['Square each element: $' + D.map(function (x) { return x * x; }).join(', ') + '$.', 'A set lists each element once, so the set is $' + setTex(sortN(sq.map(Number))) + '$, with $' + sq.length + '$ elements.'], hint: 'Repeated values count only once in a set.' };
     }
     if (shape === 'list') {
       var t = R.int(1, 3);
-      if (t === 1) { var N2 = R.int(4, 20), r = M.floor(M.sqrt(N2)), el = range(-r, r);
+      if (t === 1) { var N2 = R.int(4, 60), r = M.floor(M.sqrt(N2)), el = range(-r, r);
         return { q: 'List the elements of $\\{x \\in \\mathbb{Z} : x^{2} \\le ' + N2 + '\\}$.', a: setA(el), steps: ['$x^{2} \\le ' + N2 + '$ means $|x| \\le \\sqrt{' + N2 + '}$, and $' + r + '^{2} = ' + r * r + ' \\le ' + N2 + ' < ' + (r + 1) * (r + 1) + '$.', 'So the set is $' + setTex(el) + '$.'], hint: 'Include negative values of $x$.' }; }
-      if (t === 2) { var N4 = R.pick([10, 12, 15, 16, 18, 20, 21, 28]), dv = U.factors(N4);
+      if (t === 2) { var N4 = R.pick([10, 12, 15, 16, 18, 20, 21, 28, 14, 22, 24, 26, 27, 30, 32, 33, 35, 36, 39, 40, 44, 45, 49, 50]), dv = U.factors(N4);
         return { q: 'List the elements of $\\{x \\in \\mathbb{Z}^{+} : x \\mid ' + N4 + '\\}$.', a: setA(dv), steps: ['These are the positive divisors of $' + N4 + '$.', 'Pairs: ' + dv.filter(function (x) { return x * x <= N4; }).map(function (x) { return '$' + x + ' \\cdot ' + N4 / x + '$'; }).join(', ') + '.', 'So the set is $' + setTex(dv) + '$.'], hint: 'Find the divisors in pairs.' }; }
-      var D2 = range(-R.int(1, 3), R.int(1, 3)), f = R.pick([['k^{2}', function (x) { return x * x; }], ['|k|', function (x) { return M.abs(x); }], ['k^{2} - 1', function (x) { return x * x - 1; }], ['2|k| + 1', function (x) { return 2 * M.abs(x) + 1; }]]);
+      var D2 = range(-R.int(1, 4), R.int(1, 4)), f = R.pick([['k^{2}', function (x) { return x * x; }], ['|k|', function (x) { return M.abs(x); }], ['k^{2} - 1', function (x) { return x * x - 1; }], ['2|k| + 1', function (x) { return 2 * M.abs(x) + 1; }],
+        ['k^{2} + 2', function (x) { return x * x + 2; }], ['3|k|', function (x) { return 3 * M.abs(x); }], ['|k| - 1', function (x) { return M.abs(x) - 1; }], ['k^{2} + k', function (x) { return x * x + x; }], ['2k^{2}', function (x) { return 2 * x * x; }]]);
       var vals = sortN(U.uniq(D2.map(function (x) { return String(f[1](x)); })).map(Number));
       return { q: 'List the elements of $\\{' + f[0] + ' : k \\in ' + setTex(D2) + '\\}$.', a: setA(vals), steps: ['Apply the rule to each $k$: ' + D2.map(function (x) { return '$' + f[1](x) + '$'; }).join(', ') + '.', 'Write each value once: $' + setTex(vals) + '$.'], hint: 'Compute the rule for every $k$, then drop repeats.' };
     }
-    var pool = [1, 2, 3, [], [1], [2, 3], [1, 2], [[]]], S;
+    var pool = [1, 2, 3, 4, 5, [], [1], [2], [3], [2, 3], [1, 2], [1, 3], [[]], [[1]], [4, 5], [1, [2]]], S;
     do { S = R.sample(pool, R.int(3, 4)); } while (sSize(S) !== S.length);
     var St = '\\{' + S.map(sTex).join(', ') + '\\}';
     if (shape === 'card') {
       var S2 = R.pick([[[], [[]]], [[], [[]], [[], [[]]]], [1, [1], [[1]]], [1, 2, [1, 2]], [[], 1, [1], [1, [1]]], [[1, 2], [2, 1], [1]], [0, [0], [], [[]]]]);
-      var st2 = '\\{' + S2.map(sTex).join(', ') + '\\}', sz = sSize(S2);
-      return { q: 'How many elements does $' + st2 + '$ have?', a: num(sz), steps: ['Count the items separated by commas at the outermost level; a set inside counts as one element.', sz < S2.length ? 'But $\\{1, 2\\}$ and $\\{2, 1\\}$ are the same set, so it is listed twice and counts once.' : 'All of them are different: ' + S2.map(function (e) { return '$' + sTex(e) + '$'; }).join(', ') + '.', 'So the set has $' + sz + '$ element' + (sz === 1 ? '' : 's') + '.'], hint: 'An element that is itself a set still counts as just one element.' };
+      if (R.chance(0.7)) { var ps = [0, 1, 2, 3, [], [1], [2], [0], [1, 2], [2, 1], [1, 3], [[]], [[1]], [1, [1]], [[], [1]], [2, 3], [3, 2]], k2 = R.int(3, 5); S2 = R.sample(ps, k2); }
+      var st2 = '\\{' + S2.map(sTex).join(', ') + '\\}', sz = sSize(S2), dupe = S2.filter(function (e, i) { return S2.slice(0, i).some(function (x) { return sCanon(x) === sCanon(e); }); })[0];
+      return { q: 'How many elements does $' + st2 + '$ have?', a: num(sz), steps: ['Count the items separated by commas at the outermost level; a set inside counts as one element.', sz < S2.length ? 'But $' + sTex(dupe) + '$ appears twice (order inside a set does not matter), so it counts once.' : 'All of them are different: ' + S2.map(function (e) { return '$' + sTex(e) + '$'; }).join(', ') + '.', 'So the set has $' + sz + '$ element' + (sz === 1 ? '' : 's') + '.'], hint: 'An element that is itself a set still counts as just one element.' };
     }
     var cand = [], ok;
     [1, 2, 3, [], [1], [2, 3], [1, 2], [[]], [[2, 3]], [[1]]].forEach(function (x) { cand.push(['in', x]); cand.push(['sub', x]); });
@@ -852,17 +999,19 @@
   });
 
   G('disc.power-sets-products', function (R, ctx) {
-    var L = lv(ctx), shape = by(ctx, R.pick(['power', 'product', 'power']), R.pick(['count', 'tf', 'count', 'pairs']), R.pick(['count', 'nested', 'pairs']));
+    var L = lv(ctx), shape = by(ctx, R.pick(['power', 'product', 'power']), R.pick(['count', 'tf', 'count', 'pairs']), R.pick(['count', 'nested', 'pairs', 'tf']));
     var letters = ['a', 'b', 'c', 'd', 'e', 'f'];
-    if (shape === 'power') { var n = R.int(2, 6), A = letters.slice(0, n);
+    if (shape === 'power') { var n = R.int(2, 7), A = R.pick([function () { return letters.slice(0, n); }, function () { return sortN(R.sample(range(0, 12), n)); }, function () { return R.sample(['a', 'b', 'c', 'd', 'e', 'x', 'y', 'z', 'p', 'q'], n).sort(); }])();
       return { q: 'How many subsets does $A = ' + setTex(A) + '$ have? That is, find $|\\mathcal{P}(A)|$.', a: num(M.pow(2, n)), steps: ['To build a subset, decide for each of the $' + n + '$ elements: in or out.', 'That is $2$ choices, $' + n + '$ times: $2^{' + n + '} = ' + M.pow(2, n) + '$, counting $\\varnothing$ and $A$ itself.'], hint: 'Each element is either in the subset or not.' }; }
     if (shape === 'product') {
-      var a = R.int(2, 6), b = R.int(2, 6), three = R.coin(), c = R.int(2, 4);
+      var a = R.int(2, 9), b = R.int(2, 9), three = R.coin(), c = R.int(2, 5);
       return { q: 'If $|A| = ' + a + '$, $|B| = ' + b + '$' + (three ? ' and $|C| = ' + c + '$' : '') + ', how many elements does $A \\times B' + (three ? ' \\times C' : '') + '$ have?', a: num(a * b * (three ? c : 1)),
         steps: ['An element is an ordered ' + (three ? 'triple $(a, b, c)$' : 'pair $(a, b)$') + ' with one entry from each set.', 'Product rule: $' + a + ' \\cdot ' + b + (three ? ' \\cdot ' + c : '') + ' = ' + a * b * (three ? c : 1) + '$.'], hint: 'Choose each coordinate independently.' };
     }
     if (shape === 'count') {
-      var n2 = R.int(4, 7), kinds = [['contain $1$', M.pow(2, n2 - 1), 'Put $1$ in, then decide freely for the other $' + (n2 - 1) + '$ elements: $2^{' + (n2 - 1) + '}$.'],
+      var n2 = R.int(4, 10), kx = R.int(2, M.min(4, n2 - 1)), kinds = [['contain neither $1$ nor $2$', M.pow(2, n2 - 2), 'Both are out; the other $' + (n2 - 2) + '$ are free: $2^{' + (n2 - 2) + '}$.'],
+        ['contain $1$ or $2$ (or both)', M.pow(2, n2) - M.pow(2, n2 - 2), 'All $2^{' + n2 + '}$ subsets minus the $2^{' + (n2 - 2) + '}$ that contain neither: $' + M.pow(2, n2) + ' - ' + M.pow(2, n2 - 2) + '$.'],
+        ['have exactly ' + kx + ' elements', C(n2, kx), 'Choose which ' + kx + ' elements: $' + binom(n2, kx) + ' = ' + C(n2, kx) + '$.'],['contain $1$', M.pow(2, n2 - 1), 'Put $1$ in, then decide freely for the other $' + (n2 - 1) + '$ elements: $2^{' + (n2 - 1) + '}$.'],
         ['contain $1$ but not $2$', M.pow(2, n2 - 2), '$1$ is in and $2$ is out; the other $' + (n2 - 2) + '$ elements are free: $2^{' + (n2 - 2) + '}$.'],
         ['contain both $1$ and $2$', M.pow(2, n2 - 2), 'Both are in; the other $' + (n2 - 2) + '$ are free: $2^{' + (n2 - 2) + '}$.'],
         ['are nonempty', M.pow(2, n2) - 1, 'All $2^{' + n2 + '}$ subsets except $\\varnothing$.'], ['have at most one element', n2 + 1, '$\\varnothing$ and the $' + n2 + '$ one-element subsets.'],
@@ -871,22 +1020,31 @@
       return { q: 'How many subsets of $' + setTex(range(1, n2)) + '$ ' + kd[0] + '?', a: num(kd[1]), steps: [kd[2], 'Answer: $' + kd[1] + '$.'], hint: 'Decide in or out for each element, with the rule fixing some of the decisions.' };
     }
     if (shape === 'pairs') {
-      var A2 = sortN(R.sample(range(1, 7), R.int(3, 4))), B2 = sortN(R.sample(range(1, 7), R.int(3, 4))), rel = R.pick([['a < b', function (x, y) { return x < y; }], ['a + b \\text{ is even}', function (x, y) { return (x + y) % 2 === 0; }], ['a = b', function (x, y) { return x === y; }], ['a + b > 7', function (x, y) { return x + y > 7; }]]);
+      var A2 = sortN(R.sample(range(1, 9), R.int(3, 4))), B2 = sortN(R.sample(range(1, 9), R.int(3, 4))), tg = R.int(6, 11), rel = R.pick([['a < b', function (x, y) { return x < y; }], ['a + b \\text{ is even}', function (x, y) { return (x + y) % 2 === 0; }], ['a = b', function (x, y) { return x === y; }], ['a + b > ' + tg, function (x, y) { return x + y > tg; }],
+        ['a > b', function (x, y) { return x > y; }], ['a \\mid b', function (x, y) { return y % x === 0; }], ['|a - b| = 1', function (x, y) { return M.abs(x - y) === 1; }], ['a + b = ' + tg, function (x, y) { return x + y === tg; }]]);
       var good = []; A2.forEach(function (x) { B2.forEach(function (y) { if (rel[1](x, y)) good.push([x, y]); }); });
       return { q: 'Let $A = ' + setTex(A2) + '$ and $B = ' + setTex(B2) + '$. How many ordered pairs $(a, b) \\in A \\times B$ have $' + rel[0] + '$?', a: num(good.length),
         steps: ['$A \\times B$ has $' + A2.length + ' \\cdot ' + B2.length + ' = ' + A2.length * B2.length + '$ pairs. Check each one.', good.length ? 'The pairs that work: $' + good.map(function (p) { return '(' + p[0] + ', ' + p[1] + ')'; }).join(', ') + '$.' : 'None of them work.', 'Count: $' + good.length + '$.'], hint: 'Go through $A$ one element at a time and pair it with each element of $B$.' };
     }
     if (shape === 'nested') {
       var t = R.int(1, 3);
-      if (t === 1) { var m = R.int(1, 2); return { q: 'Let $A = ' + setTex(letters.slice(0, m)) + '$. How many elements does $\\mathcal{P}(\\mathcal{P}(A))$ have?', a: num(M.pow(2, M.pow(2, m))), steps: ['$|\\mathcal{P}(A)| = 2^{' + m + '} = ' + M.pow(2, m) + '$.', 'So $|\\mathcal{P}(\\mathcal{P}(A))| = 2^{' + M.pow(2, m) + '} = ' + M.pow(2, M.pow(2, m)) + '$.'], hint: 'Apply $|\\mathcal{P}(X)| = 2^{|X|}$ twice.' }; }
-      if (t === 2) { var p = R.int(1, 2), q = R.int(2, 3); return { q: 'If $|A| = ' + p + '$ and $|B| = ' + q + '$, how many elements does $\\mathcal{P}(A \\times B)$ have?', a: num(M.pow(2, p * q)), steps: ['$|A \\times B| = ' + p + ' \\cdot ' + q + ' = ' + p * q + '$.', 'So $|\\mathcal{P}(A \\times B)| = 2^{' + p * q + '} = ' + M.pow(2, p * q) + '$.'], hint: 'First count $A \\times B$.' }; }
-      var r = R.int(2, 4); return { q: 'If $|A| = ' + r + '$, how many elements does $\\mathcal{P}(A) \\times A$ have?', a: num(r * M.pow(2, r)), steps: ['$|\\mathcal{P}(A)| = 2^{' + r + '} = ' + M.pow(2, r) + '$.', 'Product rule: $' + M.pow(2, r) + ' \\cdot ' + r + ' = ' + r * M.pow(2, r) + '$.'], hint: 'Count each factor, then multiply.' };
+      if (t === 1) { var m = R.int(0, 3); return { q: 'Let $A = ' + setTex(letters.slice(0, m)) + '$. How many elements does $\\mathcal{P}(\\mathcal{P}(A))$ have?', a: num(M.pow(2, M.pow(2, m))), steps: ['$|\\mathcal{P}(A)| = 2^{' + m + '} = ' + M.pow(2, m) + '$.', 'So $|\\mathcal{P}(\\mathcal{P}(A))| = 2^{' + M.pow(2, m) + '} = ' + M.pow(2, M.pow(2, m)) + '$.'], hint: 'Apply $|\\mathcal{P}(X)| = 2^{|X|}$ twice.' }; }
+      if (t === 2) { var p = R.int(1, 3), q = R.int(1, 4); if (p * q > 9) q = 2; return { q: 'If $|A| = ' + p + '$ and $|B| = ' + q + '$, how many elements does $\\mathcal{P}(A \\times B)$ have?', a: num(M.pow(2, p * q)), steps: ['$|A \\times B| = ' + p + ' \\cdot ' + q + ' = ' + p * q + '$.', 'So $|\\mathcal{P}(A \\times B)| = 2^{' + p * q + '} = ' + M.pow(2, p * q) + '$.'], hint: 'First count $A \\times B$.' }; }
+      var r = R.int(2, 8); return { q: 'If $|A| = ' + r + '$, how many elements does $\\mathcal{P}(A) \\times A$ have?', a: num(r * M.pow(2, r)), steps: ['$|\\mathcal{P}(A)| = 2^{' + r + '} = ' + M.pow(2, r) + '$.', 'Product rule: $' + M.pow(2, r) + ' \\cdot ' + r + ' = ' + r * M.pow(2, r) + '$.'], hint: 'Count each factor, then multiply.' };
     }
     var facts = [['(1, 2) = (2, 1)', false, 'Ordered pairs with different first entries are different.'], ['\\{1, 2\\} = \\{2, 1\\}', true, 'Sets ignore order.'], ['\\varnothing \\in \\mathcal{P}(\\{1, 2\\})', true, '$\\varnothing$ is a subset of $\\{1, 2\\}$, so it is an element of the power set.'],
       ['\\{1, 2\\} \\in \\mathcal{P}(\\{1, 2\\})', true, 'Every set is a subset of itself.'], ['1 \\in \\mathcal{P}(\\{1, 2\\})', false, 'The elements of $\\mathcal{P}(\\{1, 2\\})$ are sets: $\\varnothing, \\{1\\}, \\{2\\}, \\{1, 2\\}$. The number $1$ is not one of them.'],
       ['\\{1\\} \\in \\mathcal{P}(\\{1, 2\\})', true, '$\\{1\\}$ is a subset of $\\{1, 2\\}$.'], ['\\{1, 2\\} \\subseteq \\mathcal{P}(\\{1, 2\\})', false, 'That would need $1 \\in \\mathcal{P}(\\{1, 2\\})$, but the elements of the power set are sets.'],
       ['(2, 3) \\in \\{1, 2\\} \\times \\{3, 4\\}', true, '$2$ is in the first set and $3$ is in the second.'], ['(3, 2) \\in \\{1, 2\\} \\times \\{3, 4\\}', false, 'The first entry must come from $\\{1, 2\\}$, and $3$ does not.'], ['|\\{1, 2\\} \\times \\varnothing| = 0', true, 'There is no second entry to choose, so there are no pairs: $2 \\cdot 0 = 0$.']];
     var f = R.pick(facts);
+    if (R.chance(0.6)) { // membership in a product with fresh sets
+      var XA = sortN(R.sample(range(1, 7), R.int(2, 3))), XB = sortN(R.sample(range(1, 9), R.int(2, 3))), px = R.int(1, 7), py = R.int(1, 9), inP = XA.indexOf(px) >= 0 && XB.indexOf(py) >= 0;
+      f = R.pick([['(' + px + ', ' + py + ') \\in ' + setTex(XA) + ' \\times ' + setTex(XB), inP, inP ? '$' + px + '$ is in the first set and $' + py + '$ is in the second.' : (XA.indexOf(px) < 0 ? 'The first entry must come from $' + setTex(XA) + '$, and $' + px + '$ does not.' : 'The second entry must come from $' + setTex(XB) + '$, and $' + py + '$ does not.')],
+        ['|' + setTex(XA) + ' \\times ' + setTex(XB) + '| = ' + (XA.length * XB.length + (R.coin() ? 0 : R.pick([-1, 1]))), null, ''],
+        ['|\\mathcal{P}(' + setTex(XB) + ')| = ' + (R.coin() ? M.pow(2, XB.length) : 2 * XB.length), null, '']]);
+      if (f[1] === null && /times/.test(f[0])) { var cl = +f[0].split('= ')[1]; f[1] = cl === XA.length * XB.length; f[2] = 'There are $' + XA.length + ' \\cdot ' + XB.length + ' = ' + XA.length * XB.length + '$ ordered pairs.'; }
+      else if (f[1] === null) { var cp = +f[0].split('= ')[1]; f[1] = cp === M.pow(2, XB.length); f[2] = 'A set with $' + XB.length + '$ elements has $2^{' + XB.length + '} = ' + M.pow(2, XB.length) + '$ subsets.'; }
+    }
     return { q: 'True or false: $' + f[0] + '$', a: tf(f[1]), steps: [f[2]], hint: 'Order matters in a pair, not in a set. The elements of a power set are subsets.' };
   });
 
@@ -905,13 +1063,14 @@
         steps: ['A function needs exactly one arrow out of each element of $A$. Elements of $B$ may get any number of arrows.', kind === 'ok' ? 'Each of $' + A.join(', ') + '$ has exactly one output.' : kind === 'double' ? '$' + dup + '$ has two outputs.' : '$' + lost + '$ has no output.', 'So: ' + ch[v].replace(/\$/g, '$')], hint: 'Count the arrows leaving each element of $A$.' };
     }
     if (shape === 'range') {
-      var D = range(-R.int(1, 3), R.int(2, 4)), f = R.pick([['x^{2}', function (x) { return x * x; }], ['|x|', function (x) { return M.abs(x); }], ['x^{2} - 2x', function (x) { return x * x - 2 * x; }], ['\\lfloor x / 2 \\rfloor', function (x) { return M.floor(x / 2); }], ['3 - |x|', function (x) { return 3 - M.abs(x); }], ['2x + 1', function (x) { return 2 * x + 1; }]]);
+      var D = range(-R.int(1, 4), R.int(2, 5)), f = R.pick([['x^{2}', function (x) { return x * x; }], ['|x|', function (x) { return M.abs(x); }], ['x^{2} - 2x', function (x) { return x * x - 2 * x; }], ['\\lfloor x / 2 \\rfloor', function (x) { return M.floor(x / 2); }], ['3 - |x|', function (x) { return 3 - M.abs(x); }], ['2x + 1', function (x) { return 2 * x + 1; }],
+        ['x^{2} + 1', function (x) { return x * x + 1; }], ['|x - 1|', function (x) { return M.abs(x - 1); }], ['x^{2} + x', function (x) { return x * x + x; }], ['\\lceil x / 2 \\rceil', function (x) { return M.ceil(x / 2); }], ['5 - x', function (x) { return 5 - x; }], ['2|x|', function (x) { return 2 * M.abs(x); }]]);
       var outs = sortN(U.uniq(D.map(function (x) { return String(f[1](x)); })).map(Number));
       return { q: 'Let $f : ' + setTex(D) + ' \\to \\mathbb{Z}$ be $f(x) = ' + f[0] + '$. The codomain is $\\mathbb{Z}$. What is the range of $f$?', a: setA(outs),
         steps: ['The range is the set of outputs actually reached.', D.map(function (x) { return '$f(' + x + ') = ' + f[1](x) + '$'; }).join(', ') + '.', 'Range: $' + setTex(outs) + '$. It is much smaller than the codomain $\\mathbb{Z}$.'], hint: 'Compute $f(x)$ for every $x$ in the domain and collect the results.' };
     }
     if (shape === 'count') {
-      var m = R.int(2, 4), n = R.int(2, 4), fixed = L === 3 && R.coin();
+      var m = R.int(2, 6), n = R.int(2, 6), fixed = L === 3 && R.coin();
       return { q: 'How many functions are there from a set $A$ with $' + m + '$ elements to a set $B$ with $' + n + '$ elements' + (fixed ? ', if one particular element of $A$ must go to one particular element of $B$' : '') + '?', a: num(M.pow(n, fixed ? m - 1 : m)),
         steps: ['A function picks one output for each element of $A$, and the choices are independent.', fixed ? 'One element’s output is fixed, so the other $' + (m - 1) + '$ elements each have $' + n + '$ choices: $' + n + '^{' + (m - 1) + '} = ' + M.pow(n, m - 1) + '$.' : 'Each of the $' + m + '$ elements has $' + n + '$ choices: $' + n + '^{' + m + '} = ' + M.pow(n, m) + '$.'], hint: 'Count the choices of output for each input, then multiply.' };
     }
@@ -922,7 +1081,7 @@
     }
     var h = R.pick([['x^{2} + c', function (c) { return '[' + c + ', inf)'; }, 'The smallest value of $x^{2}$ is $0$, at $x = 0$, and it takes every larger value.'], ['-x^{2} + c', function (c) { return '(-inf, ' + c + ']'; }, 'The largest value of $-x^{2}$ is $0$, at $x = 0$, and it takes every smaller value.'],
       ['|x - 2| + c', function (c) { return '[' + c + ', inf)'; }, '$|x - 2| \\ge 0$, with $0$ at $x = 2$, and it takes every larger value.'], ['(x + 1)^{2} + c', function (c) { return '[' + c + ', inf)'; }, '$(x + 1)^{2} \\ge 0$, with $0$ at $x = -1$, and it takes every larger value.']]);
-    var c = R.nz(-6, 6), ft = h[0].replace('+ c', c < 0 ? '- ' + (-c) : '+ ' + c);
+    var c = R.nz(-15, 15), ft = h[0].replace('+ c', c < 0 ? '- ' + (-c) : '+ ' + c);
     return { q: 'Let $f : \\mathbb{R} \\to \\mathbb{R}$ be $f(x) = ' + ft + '$. The codomain is $\\mathbb{R}$. Give the range in interval notation.', a: { t: 'interval', v: h[1](c) },
       steps: [h[2], 'So the outputs are exactly the numbers in $' + h[1](c).replace('inf', '\\infty').replace('-\\infty', '-\\infty') + '$, a smaller set than the codomain $\\mathbb{R}$.'], hint: 'Find the smallest (or largest) output, then ask which values are reached.' };
   });
@@ -956,17 +1115,28 @@
     }
     if (shape === 'real') {
       var it = R.pick(REALF);
+      if (R.chance(0.6)) { // the same kinds of formulas with fresh numbers
+        var ka = R.pick([2, 3, 4, 5, -2, -3]), kb = R.nz(-9, 9), kc = R.int(1, 6), lin = T.lin(ka, 'x', kb);
+        it = R.pick([[lin, '\\mathbb{Z}', '\\mathbb{Z}', 1, 'Different inputs give different outputs, but every output is $' + kb + '$ more than a multiple of $' + M.abs(ka) + '$, so for example $' + (kb + 1) + '$ is never reached.'],
+          [lin, '\\mathbb{R}', '\\mathbb{R}', 0, 'Each real $y$ comes from exactly one input, $x = \\frac{y ' + (kb < 0 ? '+ ' + (-kb) : '- ' + kb) + '}{' + ka + '}$.'],
+          [T.lin(-1, 'x', kb), '\\mathbb{Z}', '\\mathbb{Z}', 0, 'Each integer $y$ comes from exactly one integer, $x = ' + (kb < 0 ? '-' + (-kb) + ' - y' : kb + ' - y') + '$.'],
+          ['(x - ' + kc + ')^{2}', '\\mathbb{R}', '\\mathbb{R}', 3, '$x = ' + (kc - 1) + '$ and $x = ' + (kc + 1) + '$ both give $1$, and no $x$ gives $-1$.'],
+          ['(x - ' + kc + ')^{2}', '[' + kc + ', \\infty)', '[0, \\infty)', 0, 'On $[' + kc + ', \\infty)$ each output $y \\ge 0$ comes from exactly one input, $x = ' + kc + ' + \\sqrt{y}$.'],
+          ['(x - ' + kc + ')^{2}', '\\mathbb{R}', '[0, \\infty)', 2, 'Every $y \\ge 0$ is reached, at $x = ' + kc + ' + \\sqrt{y}$, but $x = ' + (kc - 1) + '$ and $x = ' + (kc + 1) + '$ both give $1$.'],
+          ['e^{x} + ' + kc, '\\mathbb{R}', '(' + kc + ', \\infty)', 0, '$e^{x} + ' + kc + '$ is increasing and reaches every number above $' + kc + '$.'],
+          ['e^{x} + ' + kc, '\\mathbb{R}', '\\mathbb{R}', 1, '$e^{x} + ' + kc + '$ is increasing, so no two inputs collide, but it never reaches $' + kc + '$ or anything below it.']]);
+      }
       return { q: 'Classify $f(x) = ' + it[0] + '$ as a function from $' + it[1] + '$ to $' + it[2] + '$.', a: mcKeep(CLASSES, it[3]), steps: [it[4], 'So it is ' + CLASSES[it[3]].toLowerCase() + '. The same formula can change class when the domain or codomain changes.'], hint: 'Check for two inputs with the same output, then for an output in the codomain that is never reached.' };
     }
     if (shape === 'pigeon') {
-      var a = R.int(2, 6), b = R.int(2, 6); while (a === b) b = R.int(2, 6);
+      var a = R.int(2, 12), b = R.int(2, 12); while (a === b) b = R.int(2, 12);
       var askI = R.coin(), ans = askI ? a <= b : a >= b;
       return { q: 'True or false: a function from a set with $' + a + '$ elements to a set with $' + b + '$ elements can be ' + (askI ? 'one-to-one' : 'onto') + '.', a: tf(ans),
         steps: askI ? [ans ? 'There are enough outputs: send the $' + a + '$ inputs to $' + a + '$ different outputs.' : 'Only $' + b + '$ outputs are available for $' + a + '$ inputs, so two inputs must share an output (the pigeonhole principle).'] : [ans ? 'There are enough inputs to cover all $' + b + '$ outputs.' : 'The $' + a + '$ inputs reach at most $' + a + '$ outputs, fewer than $' + b + '$.'], hint: 'Compare the sizes of the two sets.' };
     }
     var t2 = R.int(1, 3);
-    if (t2 === 1) { var m2 = R.int(2, 4), n2 = m2 + R.int(0, 2); return { q: 'How many one-to-one functions are there from a set with $' + m2 + '$ elements to a set with $' + n2 + '$ elements?', a: num(P(n2, m2)), steps: ['The first input has $' + n2 + '$ choices, the next has $' + (n2 - 1) + '$ (it must avoid the first output), and so on.', '$' + range(n2 - m2 + 1, n2).reverse().join(' \\cdot ') + ' = ' + P(n2, m2) + '$.'], hint: 'Each new input must avoid the outputs already used.' }; }
-    var m3 = R.int(3, 5), k3 = t2 === 2 ? 2 : 3, onto = 0; for (var j = 0; j <= k3; j++) onto += (j % 2 ? -1 : 1) * C(k3, j) * M.pow(k3 - j, m3);
+    if (t2 === 1) { var m2 = R.int(2, 5), n2 = m2 + R.int(0, 3); return { q: 'How many one-to-one functions are there from a set with $' + m2 + '$ elements to a set with $' + n2 + '$ elements?', a: num(P(n2, m2)), steps: ['The first input has $' + n2 + '$ choices, the next has $' + (n2 - 1) + '$ (it must avoid the first output), and so on.', '$' + range(n2 - m2 + 1, n2).reverse().join(' \\cdot ') + ' = ' + P(n2, m2) + '$.'], hint: 'Each new input must avoid the outputs already used.' }; }
+    var m3 = R.int(3, 7), k3 = t2 === 2 ? 2 : 3, onto = 0; for (var j = 0; j <= k3; j++) onto += (j % 2 ? -1 : 1) * C(k3, j) * M.pow(k3 - j, m3);
     return { q: 'How many functions from a set with $' + m3 + '$ elements onto a set with $' + k3 + '$ elements are there?', a: num(onto),
       steps: k3 === 2 ? ['All functions: $2^{' + m3 + '} = ' + M.pow(2, m3) + '$.', 'Not onto means everything goes to one output: $2$ such functions.', 'Onto: $' + M.pow(2, m3) + ' - 2 = ' + onto + '$.'] : ['All functions: $3^{' + m3 + '} = ' + M.pow(3, m3) + '$.', 'Subtract those that miss a given output ($2^{' + m3 + '}$ each, $3$ outputs), then add back those that miss two outputs ($1$ each, $3$ pairs): inclusion–exclusion.', '$' + M.pow(3, m3) + ' - 3 \\cdot ' + M.pow(2, m3) + ' + 3 = ' + onto + '$.'], hint: 'Count all functions, then remove the ones that miss an output.' };
   });
@@ -1037,13 +1207,15 @@
   G('disc.relations', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['one', 'one', 'antisym']), R.pick(['props', 'rule', 'closure']), R.pick(['props', 'rule', 'count']));
     if (shape === 'one' || shape === 'props') {
-      var A = range(1, L === 1 ? 3 : R.int(3, 4)), Rl = randRel(R, A), ps = propSteps(A, Rl), names = ['reflexive', 'symmetric', 'antisymmetric', 'transitive'], vals = [ps.p.refl, ps.p.sym, ps.p.anti, ps.p.trans];
+      var A = range(1, L === 1 ? R.int(3, 4) : R.int(3, 5)), Rl = randRel(R, A), ps = propSteps(A, Rl), names = ['reflexive', 'symmetric', 'antisymmetric', 'transitive'], vals = [ps.p.refl, ps.p.sym, ps.p.anti, ps.p.trans];
       var qt = 'Let $A = ' + setTex(A) + '$ and $R = ' + pairsTex(Rl) + '$, a relation on $A$.';
       if (shape === 'one') { var i = R.int(0, 3); return { q: qt + ' Is $R$ ' + names[i] + '?', a: tf(vals[i]), viz: relViz(A, Rl), steps: [ps.steps[i]], hint: ['Look for a loop at every element.', 'For every arrow, look for the arrow going back.', 'Look for two different elements with arrows both ways.', 'For every two-step route $a \\to b \\to c$, look for the shortcut $a \\to c$.'][i] }; }
       return { q: qt + ' Which properties does $R$ have?', a: multi(names.map(function (nm, k) { return part(cap(nm) + '?', tf(vals[k])); })), viz: relViz(A, Rl), steps: ps.steps, hint: 'Check each property separately, with its definition.' };
     }
     if (shape === 'rule') {
-      var rl = R.pick(RULES), A2 = range(1, R.int(4, 6)), pr = []; A2.forEach(function (a) { A2.forEach(function (b) { if (rl[1](a, b)) pr.push([a, b]); }); });
+      var ck = R.int(2, 5), cs = R.int(4, 9), rl = R.pick(RULES.concat([['a \\equiv b \\pmod ' + ck, function (a, b) { return (a - b) % ck === 0; }], ['a + b \\le ' + cs, function (a, b) { return a + b <= cs; }], ['a \\ge b', function (a, b) { return a >= b; }],
+        ['|a - b| \\le 2', function (a, b) { return M.abs(a - b) <= 2; }], ['ab \\text{ is even}', function (a, b) { return (a * b) % 2 === 0; }], ['a \\mid b \\text{ or } b \\mid a', function (a, b) { return b % a === 0 || a % b === 0; }], ['b = a + 1', function (a, b) { return b === a + 1; }], ['a > b + 1', function (a, b) { return a > b + 1; }]])),
+        A2 = range(1, R.int(4, 6)), pr = []; A2.forEach(function (a) { A2.forEach(function (b) { if (rl[1](a, b)) pr.push([a, b]); }); });
       var ps2 = propSteps(A2, pr), nm2 = ['Reflexive?', 'Symmetric?', 'Antisymmetric?', 'Transitive?'];
       return { q: 'On $A = ' + setTex(A2) + '$, let $a\\,R\\,b$ mean $' + rl[0] + '$. Which properties does $R$ have?', a: multi(nm2.map(function (nm, k) { return part(nm, tf([ps2.p.refl, ps2.p.sym, ps2.p.anti, ps2.p.trans][k])); })),
         steps: ['$R$ has ' + pr.length + ' pairs.'].concat(ps2.steps), hint: 'Test the definitions on small examples from $A$, and look for a counterexample to each.' };
@@ -1060,11 +1232,19 @@
         ['The relation $\\{(1, 1), (2, 2)\\}$ on $\\{1, 2\\}$ is both symmetric and antisymmetric.', true, 'Every pair is its own reverse, and no two different elements are related at all.'],
         ['The relation $<$ on the integers is antisymmetric.', true, '$a < b$ and $b < a$ never happen together, so the condition is never violated.'],
         ['The relation $\\le$ on the integers is symmetric.', false, '$1 \\le 2$ but $2 \\not\\le 1$.'], ['Antisymmetric means the same as “not symmetric.”', false, 'Equality is both symmetric and antisymmetric; some relations are neither.'],
-        ['“Divides” on the positive integers is antisymmetric.', true, 'If $a \\mid b$ and $b \\mid a$ for positive integers, then $a = b$.']];
+        ['“Divides” on the positive integers is antisymmetric.', true, 'If $a \\mid b$ and $b \\mid a$ for positive integers, then $a = b$.'],
+        ['“Divides” on the nonzero integers is antisymmetric.', false, '$2 \\mid -2$ and $-2 \\mid 2$, but $2 \\ne -2$.'], ['The relation $\\ge$ on the integers is antisymmetric.', true, 'If $a \\ge b$ and $b \\ge a$, then $a = b$.'],
+        ['“Has the same birthday as” is antisymmetric.', false, 'Two different people can share a birthday, so they are related both ways.'], ['The empty relation on $\\{1, 2, 3\\}$ is antisymmetric.', true, 'There are no pairs at all, so nothing can break the rule.'],
+        ['“Is a proper subset of” is antisymmetric.', true, '$X \\subsetneq Y$ and $Y \\subsetneq X$ can never both hold.'], ['An antisymmetric relation can contain $(1, 1)$.', true, 'Antisymmetry only forbids two-way pairs between different elements; loops are allowed.']];
       var f = R.pick(facts);
+      if (R.chance(0.6)) { var An = range(1, R.int(3, 5)), Ra = randRel(R, An), pa = relProps(An, Ra);
+        f = ['The relation $' + pairsTex(Ra) + '$ on $' + setTex(An) + '$ is antisymmetric.', pa.anti, pa.anti ? 'No two different elements are related in both directions.' : '$(' + pa.badA[0][0] + ', ' + pa.badA[0][1] + ')$ and $(' + pa.badA[0][1] + ', ' + pa.badA[0][0] + ')$ are both in it, with $' + pa.badA[0][0] + ' \\ne ' + pa.badA[0][1] + '$.']; }
       return { q: 'True or false: ' + f[0], a: tf(f[1]), steps: [f[2]], hint: 'Antisymmetric: if $a\\,R\\,b$ and $b\\,R\\,a$, then $a = b$.' };
     }
-    var n = R.int(2, 4), k = R.pick(['all', 'refl', 'sym']), val = k === 'all' ? M.pow(2, n * n) : k === 'refl' ? M.pow(2, n * n - n) : M.pow(2, n * (n + 1) / 2);
+    var n = R.int(2, 5), k = R.pick(['all', 'refl', 'sym', 'rs', 'anti']), val = k === 'all' ? M.pow(2, n * n) : k === 'refl' ? M.pow(2, n * n - n) : k === 'sym' ? M.pow(2, n * (n + 1) / 2) : k === 'rs' ? M.pow(2, C(n, 2)) : M.pow(2, n) * M.pow(3, C(n, 2));
+    if (k === 'rs' || k === 'anti') return { q: 'How many ' + (k === 'rs' ? 'relations that are both reflexive and symmetric' : 'antisymmetric relations') + ' are there on a set with $' + n + '$ elements?', a: num(val),
+      steps: ['A relation is a subset of $A \\times A$: $' + n + '$ pairs $(a, a)$ and $' + C(n, 2) + '$ pairs of different elements $\\{a, b\\}$, each with two directions.', k === 'rs' ? 'Every $(a, a)$ must be in. For each $\\{a, b\\}$, take both directions or neither: $2^{' + C(n, 2) + '} = ' + commas(val) + '$.' : 'Each $(a, a)$ is free: $2^{' + n + '}$. For each $\\{a, b\\}$ take neither direction, only $(a, b)$, or only $(b, a)$: $3$ ways. Total $2^{' + n + '} \\cdot 3^{' + C(n, 2) + '} = ' + commas(val) + '$.'],
+      hint: 'Treat the loops and each pair of different elements separately.' };
     return { q: 'How many ' + (k === 'all' ? '' : k === 'refl' ? 'reflexive ' : 'symmetric ') + 'relations are there on a set with $' + n + '$ elements?', a: num(val),
       steps: ['A relation is a subset of $A \\times A$, which has $' + n + '^{2} = ' + n * n + '$ pairs.', k === 'all' ? 'Each pair is in or out: $2^{' + n * n + '} = ' + commas(val) + '$.' : k === 'refl' ? 'The $' + n + '$ pairs $(a, a)$ must be in; the other $' + (n * n - n) + '$ are free: $2^{' + (n * n - n) + '} = ' + commas(val) + '$.' : 'Choose freely the $' + n + '$ pairs $(a, a)$ and, for each of the $' + C(n, 2) + '$ pairs of different elements, both directions or neither: $2^{' + (n + C(n, 2)) + '} = ' + commas(val) + '$.'],
       hint: 'Decide in or out for each pair that is free to choose.' };
@@ -1090,7 +1270,7 @@
       return { q: 'An equivalence relation on $' + setTex(A) + '$ has classes $' + pt + '$. Is $(' + a + ', ' + b + ')$ in the relation?', a: tf(same), steps: ['Two elements are related exactly when they are in the same class.', same ? '$' + a + '$ and $' + b + '$ are in the same class.' : '$' + a + '$ and $' + b + '$ are in different classes.'], hint: 'Find the class of each element.' };
     }
     if (shape === 'which') {
-      var A4 = range(1, 4), cls4 = partitionOf(R, A4), rel4 = relOfPartition(cls4), kind = R.pick(['none', 'dropdiag', 'dropone', 'bridge', 'bridge2']);
+      var A4 = range(1, R.int(4, 5)), cls4 = partitionOf(R, A4), rel4 = relOfPartition(cls4), kind = R.pick(['none', 'dropdiag', 'dropone', 'bridge', 'bridge2']);
       var has = {}; rel4.forEach(function (p) { has[p[0] + ',' + p[1]] = 1; });
       if (kind === 'dropdiag') { var x = R.pick(A4); rel4 = rel4.filter(function (p) { return !(p[0] === x && p[1] === x); }); }
       if (kind === 'dropone') { var off = rel4.filter(function (p) { return p[0] !== p[1]; }); if (off.length) { var y = R.pick(off); rel4 = rel4.filter(function (p) { return p !== y; }); } }
@@ -1106,7 +1286,14 @@
       return { q: 'On the set of words $\\{\\text{' + words.join('}, \\text{') + '}\\}$, two words are related when they have ' + by2[0] + '. How many equivalence classes are there?', a: num(keys.length),
         steps: ['Each class collects the words with one value of the feature.', keys.map(function (kk) { return '“' + kk + '”: ' + words.filter(function (w) { return String(by2[1](w)) === kk; }).join(', '); }).join('; ') + '.', 'That is $' + keys.length + '$ classes.'], hint: 'Group the words by the feature and count the groups.' };
     }
-    var n = R.pick([3, 3, 4]);
+    var n = R.pick([2, 3, 3, 4, 4, 5]);
+    if (R.chance(0.45)) { var nn = R.int(3, 6), kk = R.int(2, nn - 1), S2 = function (a, b) { if (b === 0) return a === 0 ? 1 : 0; if (b > a) return 0; return b * S2(a - 1, b) + S2(a - 1, b - 1); };
+      return { q: 'How many equivalence relations on a set with $' + nn + '$ elements have exactly $' + kk + '$ equivalence classes?', a: num(S2(nn, kk)),
+        steps: ['An equivalence relation with $' + kk + '$ classes is the same as a partition into $' + kk + '$ nonempty blocks.', 'Build it element by element: the last element either joins one of the $' + kk + '$ blocks of a partition of the others, or forms a block alone. So $S(n, k) = k\\,S(n - 1, k) + S(n - 1, k - 1)$, with $S(n, 1) = S(n, n) = 1$.', 'This gives $S(' + nn + ', ' + kk + ') = ' + S2(nn, kk) + '$.'],
+        hint: 'Count partitions into exactly ' + kk + ' blocks: where does the last element go?' }; }
+    if (n === 2 || n === 5) return { q: 'How many different equivalence relations are there on a set with $' + n + '$ elements?', a: num(n === 2 ? 2 : 52),
+      steps: ['Equivalence relations match partitions one to one, so count the ways to split the set into nonempty classes.', n === 2 ? 'For $\\{1, 2\\}$: one class, or two singles. Total $2$.' : 'For $\\{1, 2, 3, 4, 5\\}$ by class sizes: $5$ ($1$); $4 + 1$ ($5$); $3 + 2$ ($10$); $3 + 1 + 1$ ($10$); $2 + 2 + 1$ ($15$); $2 + 1 + 1 + 1$ ($10$); five singles ($1$). Total $52$.'],
+      hint: 'Count partitions by the sizes of their classes.' };
     return { q: 'How many different equivalence relations are there on a set with $' + n + '$ elements?', a: num(n === 3 ? 5 : 15),
       steps: ['Equivalence relations match partitions one to one, so count the ways to split the set into nonempty classes.', n === 3 ? 'For $\\{1, 2, 3\\}$: one class ($1$ way); a pair and a single ($3$ ways); three singles ($1$ way). Total $5$.' : 'For $\\{1, 2, 3, 4\\}$: one class ($1$); three and one ($4$); two and two ($3$); two, one, one ($6$); four singles ($1$). Total $15$.'],
       hint: 'Count partitions by the sizes of their classes.' };
@@ -1115,7 +1302,7 @@
   function divides(a, b) { return b % a === 0; }
   function hasseEdges(S) { var e = []; S.forEach(function (a) { S.forEach(function (b) { if (a !== b && divides(a, b) && !S.some(function (c) { return c !== a && c !== b && divides(a, c) && divides(c, b); })) e.push([a, b]); }); }); return e; }
   G('disc.partial-orders', function (R, ctx) {
-    var L = lv(ctx), shape = by(ctx, R.pick(['comparable', 'minmax', 'lub']), R.pick(['minmax', 'hasse', 'topo', 'lub']), R.pick(['hasse', 'topo', 'subset']));
+    var L = lv(ctx), shape = by(ctx, R.pick(['comparable', 'minmax', 'lub']), R.pick(['minmax', 'hasse', 'topo', 'lub']), R.pick(['hasse', 'topo', 'subset', 'lub', 'hasse']));
     if (shape === 'comparable') {
       var a = R.int(2, 12), b = R.int(2, 30); while (a === b) b = R.int(2, 30);
       var comp = divides(a, b) || divides(b, a);
@@ -1131,19 +1318,24 @@
         hint: askMin ? 'Cross out every element that has a divisor in $S$.' : 'Cross out every element that divides something in $S$.' };
     }
     if (shape === 'lub') {
-      var n = R.pick([12, 18, 24, 30, 36, 60, 72]), D = U.factors(n), x = R.pick(D.slice(1, -1)), y = R.pick(D.slice(1, -1)); while (y === x) y = R.pick(D.slice(1, -1));
+      var n = R.pick([12, 18, 24, 30, 36, 60, 72, 20, 28, 40, 42, 48, 54, 84, 90, 96, 100, 120]), D = U.factors(n), x = R.pick(D.slice(1, -1)), y = R.pick(D.slice(1, -1)); while (y === x) y = R.pick(D.slice(1, -1));
       var up = R.coin(), val = up ? U.lcm(x, y) : U.gcd(x, y);
       return { q: 'In the divisors of $' + n + '$ ordered by “divides,” find the ' + (up ? 'least upper bound' : 'greatest lower bound') + ' of $' + x + '$ and $' + y + '$.', a: num(val),
         steps: [up ? 'An upper bound of $' + x + '$ and $' + y + '$ is a divisor of $' + n + '$ that both divide: a common multiple. The least one is divided by all the others.' : 'A lower bound is a divisor of both: a common divisor. The greatest one is divisible by all the others.', up ? 'That is $\\operatorname{lcm}(' + x + ', ' + y + ') = ' + val + '$.' : 'That is $\\gcd(' + x + ', ' + y + ') = ' + val + '$.'], hint: up ? 'Find the smallest common multiple.' : 'Find the largest common divisor.' };
     }
     if (shape === 'hasse') {
-      var n2 = R.pick([12, 18, 20, 24, 30, 36, 16, 28, 40]), D2 = U.factors(n2), he = hasseEdges(D2);
+      var n2 = R.pick([12, 18, 20, 24, 30, 36, 16, 28, 40, 8, 27, 32, 42, 44, 45, 50, 52, 54, 63, 66, 70, 75, 98, 100]), D2 = U.factors(n2), he = hasseEdges(D2);
+      if (R.coin()) { var om = U.primeFactors(n2).length;
+        return { q: 'In the divisors of $' + n2 + '$ under “divides,” how many elements does a longest chain have?', a: num(om + 1),
+          steps: ['The divisors are $' + D2.join(', ') + '$.', 'A chain climbs from $1$ to $' + n2 + '$, multiplying by one prime at each step; the longest chains use every prime factor separately: $' + n2 + ' = ' + U.primeFactors(n2).join(' \\cdot ') + '$.', 'That is $' + om + '$ steps, so $' + (om + 1) + '$ elements.'], hint: 'Count the prime factors of ' + n2 + ', with repeats.' }; }
       return { q: 'How many edges does the Hasse diagram of the divisors of $' + n2 + '$ under “divides” have?', a: num(he.length),
         steps: ['The divisors are $' + D2.join(', ') + '$.', 'Draw an edge from $a$ up to $b$ only when $a \\mid b$ and nothing lies strictly between them, that is, $b/a$ is prime.', 'Edges: ' + he.map(function (e) { return '$' + e[0] + ' - ' + e[1] + '$'; }).join(', ') + '.', 'That is $' + he.length + '$ edges.'], hint: 'Connect $a$ to $b$ when $b$ is $a$ times a prime.' };
     }
     if (shape === 'topo') {
-      var n3 = R.pick([12, 18, 20, 24, 30]), D3 = U.factors(n3), valid = function (ord) { return ord.every(function (a, i) { return ord.slice(0, i).every(function (b) { return !divides(a, b) || a === b; }); }); };
-      var good, tries = 0; do { good = R.shuffle(D3); tries++; } while ((!valid(good) || good.join() === D3.join()) && tries < 400);
+      var n3 = R.pick([12, 18, 20, 24, 30, 28, 42, 44, 45, 50, 52, 63, 66, 70, 75, 98]), D3 = U.factors(n3), valid = function (ord) { return ord.every(function (a, i) { return ord.slice(0, i).every(function (b) { return !divides(a, b) || a === b; }); }); };
+      var good, tries = 0; do { // a random order that respects divisibility: always take a random element with nothing left below it
+        var left = D3.slice(); good = []; while (left.length) { var mins = left.filter(function (a) { return !left.some(function (b) { return b !== a && divides(b, a); }); }), nx = R.pick(mins); good.push(nx); left.splice(left.indexOf(nx), 1); }
+        tries++; } while ((!valid(good) || good.join() === D3.join()) && tries < 40);
       if (!valid(good)) good = D3.slice();
       var bads = []; for (var t2 = 0; t2 < 300 && bads.length < 3; t2++) { var b2 = good.slice(), i = R.int(0, b2.length - 2), j = R.int(i + 1, b2.length - 1); var tmp = b2[i]; b2[i] = b2[j]; b2[j] = tmp; if (!valid(b2) && bads.every(function (x) { return x.join() !== b2.join(); })) bads.push(b2); }
       var fmt = function (o) { return o.join(', '); };
@@ -1152,7 +1344,7 @@
         steps: ['A valid order never lists a number before one of its divisors.', 'Check the correct list: every divisor of each number appears earlier.', 'The others fail: ' + badWhy.map(function (w, i) { return w ? 'in ' + fmt(bads[i]) + ', $' + w[1] + '$ comes before its divisor $' + w[0] + '$' : ''; }).filter(Boolean).join('; ') + '.'],
         hint: 'For each list, look for a number that appears before one of its divisors.' };
     }
-    var m = R.int(2, 4);
+    var m = R.int(2, 7);
     return { q: 'How many edges does the Hasse diagram of $\\mathcal{P}(S)$ under $\\subseteq$ have, when $|S| = ' + m + '$?', a: num(m * M.pow(2, m - 1)),
       steps: ['An edge joins $X$ to $Y$ when $Y$ is $X$ with one more element.', 'Each of the $2^{' + m + '}$ subsets has one edge up for each element it lacks; adding over all subsets counts each edge once.', 'Count by the element added: each of the $' + m + '$ elements can be added to the $2^{' + (m - 1) + '}$ subsets that lack it: $' + m + ' \\cdot 2^{' + (m - 1) + '} = ' + m * M.pow(2, m - 1) + '$.'],
       hint: 'An edge means “add one element.” Count edges by which element is added.' };
@@ -1173,39 +1365,55 @@
   G('disc.sum-product-rules', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['which', 'basic', 'basic']), R.pick(['basic', 'digits', 'which']), R.pick(['digits', 'routes', 'basic']));
     if (shape === 'which') {
-      var a = R.int(3, 9), b = R.int(3, 9), sum = R.coin(), st = R.pick([['pies', 'cakes', 'dessert'], ['novels', 'comic books', 'book to read'], ['soups', 'salads', 'starter'], ['bus routes', 'train routes', 'way to get downtown']]);
-      var q = sum ? 'A menu has ' + a + ' ' + st[0] + ' and ' + b + ' ' + st[1] + '. You choose one ' + st[2] + ': either one of the ' + st[0] + ' or one of the ' + st[1] + '. How many choices are there, and which rule gives it?'
-        : 'A menu has ' + a + ' ' + st[0] + ' and ' + b + ' ' + st[1] + '. You choose one of the ' + st[0] + ' <b>and</b> one of the ' + st[1] + '. How many choices are there, and which rule gives it?';
+      var a = R.int(2, 15), b = R.int(2, 15), sum = R.coin(), st = R.pick([['pies', 'cakes', 'dessert', 'A menu has'], ['novels', 'comic books', 'book to read', 'A shelf has'], ['soups', 'salads', 'starter', 'A menu has'], ['bus routes', 'train routes', 'way to get downtown', 'A city map shows'],
+        ['puzzles', 'board games', 'game to play', 'A game closet has'], ['fiction books', 'science books', 'book to borrow', 'A library cart has'], ['juices', 'teas', 'drink', 'A café lists'], ['art kits', 'model kits', 'kit to build', 'A craft store has'],
+        ['songs', 'poems', 'piece to perform', 'A recital list has'], ['muffins', 'bagels', 'breakfast item', 'A bakery case has'], ['trail maps', 'river maps', 'map to use', 'A ranger station has'], ['violin pieces', 'piano pieces', 'piece to practice', 'A music folder has']]);
+      var q = sum ? st[3] + ' ' + a + ' ' + st[0] + ' and ' + b + ' ' + st[1] + '. You choose one ' + st[2] + ': either one of the ' + st[0] + ' or one of the ' + st[1] + '. How many choices are there, and which rule gives it?'
+        : st[3] + ' ' + a + ' ' + st[0] + ' and ' + b + ' ' + st[1] + '. You choose one of the ' + st[0] + ' <b>and</b> one of the ' + st[1] + '. How many choices are there, and which rule gives it?';
       return { q: q, a: multi([part('Rule:', mcKeep(['Sum rule (add)', 'Product rule (multiply)'], sum ? 0 : 1)), part('Number of choices:', num(sum ? a + b : a * b))]),
         steps: sum ? ['The two kinds of choice are alternatives: you pick from one group or the other, never both.', 'Sum rule: $' + a + ' + ' + b + ' = ' + (a + b) + '$.'] : ['You make two choices one after another, and every first choice can go with every second choice.', 'Product rule: $' + a + ' \\cdot ' + b + ' = ' + a * b + '$.'],
         hint: 'Either/or: add. One, then the other: multiply.' };
     }
     if (shape === 'basic') {
       var t = R.int(1, L === 1 ? 3 : 5);
-      if (t === 1) { var s = R.int(3, 7), p = R.int(2, 5), h = R.int(2, 4); return { q: 'You own ' + s + ' shirts, ' + p + ' pairs of pants and ' + h + ' hats. An outfit is one of each. How many outfits are there?', a: num(s * p * h), steps: ['You choose a shirt, then pants, then a hat: three choices in a row.', 'Product rule: $' + s + ' \\cdot ' + p + ' \\cdot ' + h + ' = ' + s * p * h + '$.'], hint: 'Multiply the number of choices at each step.' }; }
-      if (t === 2) { var n = R.int(6, 15); return { q: 'A club with ' + n + ' members elects a president, a vice president and a treasurer, three different people. How many ways can this be done?', a: num(n * (n - 1) * (n - 2)), steps: ['President: $' + n + '$ choices. Vice president: $' + (n - 1) + '$ (anyone else). Treasurer: $' + (n - 2) + '$.', 'Product rule: $' + n + ' \\cdot ' + (n - 1) + ' \\cdot ' + (n - 2) + ' = ' + commas(n * (n - 1) * (n - 2)) + '$.'], hint: 'Each office has one fewer person to choose from.' }; }
-      if (t === 3) { var Lt = R.int(1, 3), D = R.int(1, 3), v = M.pow(26, Lt) * M.pow(10, D); return { q: 'A code is ' + plural(Lt, 'letter') + ' (A–Z) followed by ' + plural(D, 'digit') + ' (0–9). Repeats are allowed. How many codes are there?', a: num(v), steps: ['Each letter has $26$ choices and each digit $10$.', 'Product rule: $26^{' + Lt + '} \\cdot 10^{' + D + '} = ' + commas(v) + '$.'], hint: 'Multiply the choices for every position.' }; }
+      if (t === 1) { var s = R.int(3, 12), p = R.int(2, 8), h = R.int(2, 6); return { q: 'You own ' + s + ' shirts, ' + p + ' pairs of pants and ' + h + ' hats. An outfit is one of each. How many outfits are there?', a: num(s * p * h), steps: ['You choose a shirt, then pants, then a hat: three choices in a row.', 'Product rule: $' + s + ' \\cdot ' + p + ' \\cdot ' + h + ' = ' + s * p * h + '$.'], hint: 'Multiply the number of choices at each step.' }; }
+      if (t === 2) { var n = R.int(5, 30); return { q: 'A club with ' + n + ' members elects a president, a vice president and a treasurer, three different people. How many ways can this be done?', a: num(n * (n - 1) * (n - 2)), steps: ['President: $' + n + '$ choices. Vice president: $' + (n - 1) + '$ (anyone else). Treasurer: $' + (n - 2) + '$.', 'Product rule: $' + n + ' \\cdot ' + (n - 1) + ' \\cdot ' + (n - 2) + ' = ' + commas(n * (n - 1) * (n - 2)) + '$.'], hint: 'Each office has one fewer person to choose from.' }; }
+      if (t === 3) { var Lt = R.int(1, 4), D = R.int(1, 4), v = M.pow(26, Lt) * M.pow(10, D); return { q: 'A code is ' + plural(Lt, 'letter') + ' (A–Z) followed by ' + plural(D, 'digit') + ' (0–9). Repeats are allowed. How many codes are there?', a: num(v), steps: ['Each letter has $26$ choices and each digit $10$.', 'Product rule: $26^{' + Lt + '} \\cdot 10^{' + D + '} = ' + commas(v) + '$.'], hint: 'Multiply the choices for every position.' }; }
       if (t === 4) { var l1 = R.int(2, 3), l2 = l1 + 1, k = R.pick([2, 3, 10]); var tot = M.pow(k, l1) + M.pow(k, l2); return { q: 'A code uses only the symbols ' + (k === 2 ? '0 and 1' : k === 3 ? 'A, B and C' : '0–9') + ', with repeats allowed, and has length ' + l1 + ' or ' + l2 + '. How many codes are there?', a: num(tot), steps: ['Length ' + l1 + ': $' + k + '^{' + l1 + '} = ' + M.pow(k, l1) + '$. Length ' + l2 + ': $' + k + '^{' + l2 + '} = ' + commas(M.pow(k, l2)) + '$.', 'A code has one length or the other, never both, so add: $' + commas(tot) + '$.'], hint: 'Split by length (sum rule), then count each length (product rule).' }; }
       var pk = R.int(4, 9); return { q: 'A ' + pk + '-digit PIN uses the digits 0–9 with no digit repeated. How many PINs are there?', a: num(P(10, pk)), steps: ['The first digit has $10$ choices, the next $9$, and so on.', '$' + range(10 - pk + 1, 10).reverse().join(' \\cdot ') + ' = ' + commas(P(10, pk)) + '$.'], hint: 'Each new digit must avoid the ones already used.' };
     }
     if (shape === 'digits') {
-      var fam = R.pick(L === 3 ? DIGITS3 : DIGITS3.filter(function (f) { return !f[3]; })), cnt = count3(fam[1]);
+      var fam = R.pick(L === 3 ? DIGITS3 : DIGITS3.filter(function (f) { return !f[3]; }));
+      if (R.chance(0.65)) { // the same kinds with a fresh digit
+        var dd = R.int(1, 9), d0 = R.int(0, 9), ev = R.coin(), par = ev ? 'even' : 'odd', np = ev ? 5 : 5, lo = R.int(2, 7);
+        fam = R.pick([['have no digit equal to $' + dd + '$', function (d) { return d.indexOf(dd) < 0; }, 'First digit $8$ choices (not $0$ or $' + dd + '$), the others $9$ each: $8 \\cdot 9 \\cdot 9 = 648$.'],
+          ['have last digit $' + d0 + '$', function (d) { return d[2] === d0; }, 'First digit $9$ choices, middle $10$, last $1$: $9 \\cdot 10 \\cdot 1 = 90$.'],
+          ['have first digit $' + dd + '$ and an ' + par + ' last digit', function (d) { return d[0] === dd && d[2] % 2 === (ev ? 0 : 1); }, 'First digit $1$ choice, middle $10$, last $' + np + '$ (' + (ev ? '$0, 2, 4, 6, 8$' : '$1, 3, 5, 7, 9$') + '): $1 \\cdot 10 \\cdot 5 = 50$.'],
+          ['have every digit at least $' + lo + '$', function (d) { return d.every(function (x) { return x >= lo; }); }, 'Each digit is one of $' + lo + ', \\ldots, 9$: $' + (10 - lo) + '$ choices each, so $' + (10 - lo) + '^{3} = ' + M.pow(10 - lo, 3) + '$.'],
+          ['have all three digits ' + par, function (d) { return d.every(function (x) { return x % 2 === (ev ? 0 : 1); }); }, ev ? 'First digit $2, 4, 6, 8$ ($4$ choices, not $0$), the others $5$ each: $4 \\cdot 5 \\cdot 5 = 100$.' : 'Each digit has $5$ choices ($1, 3, 5, 7, 9$): $5 \\cdot 5 \\cdot 5 = 125$.'],
+          ['contain the digit $' + dd + '$ at least once', function (d) { return d.indexOf(dd) >= 0; }, 'Complement: $900$ three-digit numbers in all, and $8 \\cdot 9 \\cdot 9 = 648$ have no $' + dd + '$, so $900 - 648 = 252$.']]);
+      }
+      var cnt = count3(fam[1]);
       return { q: 'How many three-digit numbers (from 100 to 999) ' + fam[0] + '?', a: num(cnt), steps: ['Fill the hundreds, tens and ones digits; the hundreds digit cannot be $0$.', fam[2]], hint: 'Fill the most restricted digit first.' };
     }
-    var a2 = R.int(2, 5), b2 = R.int(2, 5), c2 = R.int(1, 4);
-    return { q: 'There are ' + a2 + ' roads from Ashby to Burton, ' + b2 + ' roads from Burton to Carlow, and ' + c2 + ' direct roads from Ashby to Carlow. How many routes go from Ashby to Carlow, if a route either goes through Burton or takes a direct road?', a: num(a2 * b2 + c2),
-      steps: ['Through Burton: a road to Burton, then a road to Carlow: $' + a2 + ' \\cdot ' + b2 + ' = ' + a2 * b2 + '$ (product rule).', 'Direct: $' + c2 + '$.', 'A route is one kind or the other: $' + a2 * b2 + ' + ' + c2 + ' = ' + (a2 * b2 + c2) + '$ (sum rule).'], hint: 'Split into the two kinds of route, count each, and add.' };
+    var a2 = R.int(2, 8), b2 = R.int(2, 8), c2 = R.int(1, 6), tw = R.pick([['Ashby', 'Burton', 'Carlow'], ['Elmwood', 'Fairview', 'Glenford'], ['Hilltop', 'Ivydale', 'Juniper'], ['Kestrel', 'Lakeside', 'Millbrook'], ['Northam', 'Oakridge', 'Pinecrest'], ['Riverton', 'Stonebridge', 'Thornbury']]);
+    return { q: 'There are ' + a2 + ' roads from ' + tw[0] + ' to ' + tw[1] + ', ' + b2 + ' roads from ' + tw[1] + ' to ' + tw[2] + ', and ' + c2 + ' direct road' + (c2 === 1 ? '' : 's') + ' from ' + tw[0] + ' to ' + tw[2] + '. How many routes go from ' + tw[0] + ' to ' + tw[2] + ', if a route either goes through ' + tw[1] + ' or takes a direct road?', a: num(a2 * b2 + c2),
+      steps: ['Through ' + tw[1] + ': a road to ' + tw[1] + ', then a road to ' + tw[2] + ': $' + a2 + ' \\cdot ' + b2 + ' = ' + a2 * b2 + '$ (product rule).', 'Direct: $' + c2 + '$.', 'A route is one kind or the other: $' + a2 * b2 + ' + ' + c2 + ' = ' + (a2 * b2 + c2) + '$ (sum rule).'], hint: 'Split into the two kinds of route, count each, and add.' };
   });
 
   G('disc.complement-counting', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['bits', 'dice', 'committee', 'committee', 'pin', 'vowel']), R.pick(['committee', 'pin', 'password', 'overcount']), R.pick(['overcount', 'bits2', 'vowel', 'committee']));
-    if (shape === 'bits') { var n = R.int(4, 14); return { q: 'How many bit strings of length ' + n + ' contain at least one 1?', a: num(M.pow(2, n) - 1), steps: ['All strings: $2^{' + n + '} = ' + M.pow(2, n) + '$.', 'The only string with no 1 is $' + Array(n + 1).join('0') + '$.', 'At least one 1: $' + M.pow(2, n) + ' - 1 = ' + (M.pow(2, n) - 1) + '$.'], hint: 'Count all strings, then subtract the ones with no 1.' }; }
-    if (shape === 'bits2') { var n2 = R.int(5, 10); return { q: 'How many bit strings of length ' + n2 + ' contain at least two 1s?', a: num(M.pow(2, n2) - 1 - n2), steps: ['All: $2^{' + n2 + '} = ' + M.pow(2, n2) + '$.', 'The complement is “fewer than two 1s”: no 1s ($1$ string) or exactly one 1 ($' + n2 + '$ strings).', 'At least two: $' + M.pow(2, n2) + ' - 1 - ' + n2 + ' = ' + (M.pow(2, n2) - 1 - n2) + '$.'], hint: 'The opposite of “at least two” is “zero or one.”' }; }
-    if (shape === 'dice') { var k = R.int(2, 4), dv = R.pick([['a 6', 5, 'not 6'], ['an even number', 3, 'odd'], ['a 1 or a 2', 4, 'from 3 to 6'], ['a number greater than 4', 4, 'at most 4']]); return { q: 'A die is rolled ' + k + ' times, and the sequence of results is recorded. How many sequences contain at least one roll that is ' + dv[0] + '?', a: num(M.pow(6, k) - M.pow(dv[1], k)), steps: ['All sequences: $6^{' + k + '} = ' + M.pow(6, k) + '$.', 'None of the rolls is ' + dv[0] + ' (every roll ' + dv[2] + '): each roll has $' + dv[1] + '$ choices, $' + dv[1] + '^{' + k + '} = ' + M.pow(dv[1], k) + '$.', 'At least one: $' + M.pow(6, k) + ' - ' + M.pow(dv[1], k) + ' = ' + (M.pow(6, k) - M.pow(dv[1], k)) + '$.'], hint: 'Subtract the sequences where it never happens.' }; }
-    if (shape === 'pin') { var l = R.int(3, 4); return { q: 'How many ' + l + '-digit PINs (digits 0–9) have at least one repeated digit?', a: num(M.pow(10, l) - P(10, l)), steps: ['All PINs: $10^{' + l + '} = ' + commas(M.pow(10, l)) + '$.', 'No repeated digit: $' + range(11 - l, 10).reverse().join(' \\cdot ') + ' = ' + commas(P(10, l)) + '$.', 'At least one repeat: $' + commas(M.pow(10, l)) + ' - ' + commas(P(10, l)) + ' = ' + commas(M.pow(10, l) - P(10, l)) + '$.'], hint: 'The opposite of “some digit repeats” is “all digits different.”' }; }
-    if (shape === 'password') { var l2 = R.int(2, 4); return { q: 'A password has ' + l2 + ' characters, each a letter (A–Z) or a digit (0–9). How many passwords contain at least one digit?', a: num(M.pow(36, l2) - M.pow(26, l2)), steps: ['All: $36^{' + l2 + '} = ' + commas(M.pow(36, l2)) + '$.', 'No digits (letters only): $26^{' + l2 + '} = ' + commas(M.pow(26, l2)) + '$.', 'At least one digit: $' + commas(M.pow(36, l2) - M.pow(26, l2)) + '$.'], hint: 'Subtract the passwords with no digit.' }; }
-    if (shape === 'vowel') { var l3 = R.int(2, 3); return { q: 'How many strings of ' + l3 + ' letters (A–Z, repeats allowed) contain at least one vowel (A, E, I, O, U)?', a: num(M.pow(26, l3) - M.pow(21, l3)), steps: ['All: $26^{' + l3 + '} = ' + commas(M.pow(26, l3)) + '$.', 'No vowels: $21^{' + l3 + '} = ' + commas(M.pow(21, l3)) + '$.', 'At least one vowel: $' + commas(M.pow(26, l3) - M.pow(21, l3)) + '$.'], hint: 'Count the strings with no vowels.' }; }
-    var w = R.int(3, 6), m = R.int(2, 5), kk = R.int(2, M.min(4, w + m - 1)), right = C(w + m, kk) - C(m, kk), wrong = w * C(w + m - 1, kk - 1);
+    if (shape === 'bits') { var n = R.int(3, 20); return { q: 'How many bit strings of length ' + n + ' contain at least one 1?', a: num(M.pow(2, n) - 1), steps: ['All strings: $2^{' + n + '} = ' + M.pow(2, n) + '$.', 'The only string with no 1 is $' + Array(n + 1).join('0') + '$.', 'At least one 1: $' + M.pow(2, n) + ' - 1 = ' + (M.pow(2, n) - 1) + '$.'], hint: 'Count all strings, then subtract the ones with no 1.' }; }
+    if (shape === 'bits2') { var n2 = R.int(4, 16); return { q: 'How many bit strings of length ' + n2 + ' contain at least two 1s?', a: num(M.pow(2, n2) - 1 - n2), steps: ['All: $2^{' + n2 + '} = ' + M.pow(2, n2) + '$.', 'The complement is “fewer than two 1s”: no 1s ($1$ string) or exactly one 1 ($' + n2 + '$ strings).', 'At least two: $' + M.pow(2, n2) + ' - 1 - ' + n2 + ' = ' + (M.pow(2, n2) - 1 - n2) + '$.'], hint: 'The opposite of “at least two” is “zero or one.”' }; }
+    if (shape === 'dice') { var k = R.int(2, 6), dv = R.pick([['a 6', 5, 'not 6'], ['an even number', 3, 'odd'], ['a 1 or a 2', 4, 'from 3 to 6'], ['a number greater than 4', 4, 'at most 4'], ['a 1', 5, 'not 1'], ['an odd number', 3, 'even'], ['a number less than 3', 4, 'at least 3'], ['a 5 or a 6', 4, 'from 1 to 4'], ['a multiple of 3', 4, 'not 3 or 6']]); return { q: 'A die is rolled ' + k + ' times, and the sequence of results is recorded. How many sequences contain at least one roll that is ' + dv[0] + '?', a: num(M.pow(6, k) - M.pow(dv[1], k)), steps: ['All sequences: $6^{' + k + '} = ' + M.pow(6, k) + '$.', 'None of the rolls is ' + dv[0] + ' (every roll ' + dv[2] + '): each roll has $' + dv[1] + '$ choices, $' + dv[1] + '^{' + k + '} = ' + M.pow(dv[1], k) + '$.', 'At least one: $' + M.pow(6, k) + ' - ' + M.pow(dv[1], k) + ' = ' + (M.pow(6, k) - M.pow(dv[1], k)) + '$.'], hint: 'Subtract the sequences where it never happens.' }; }
+    if (shape === 'pin') { var l = R.int(2, 6), dg = R.pick([[10, 'digits 0–9', 'PINs', 'PIN'], [10, 'digits 0–9', 'PINs', 'PIN'], [9, 'digits 1–9', 'lock codes', 'code'], [8, 'digits 1–8', 'keypad codes', 'code'], [6, 'the numbers 1–6 on a die', 'die-roll sequences', 'sequence'], [5, 'the buttons 1–5', 'lock codes', 'code']]), dd = dg[0];
+      if (l > dd) l = dd;
+      return { q: 'How many ' + l + '-' + (dd === 6 ? 'roll ' : 'digit ') + dg[2] + ' (' + dg[1] + ') have at least one repeated ' + (dd === 6 ? 'number' : 'digit') + '?', a: num(M.pow(dd, l) - P(dd, l)), steps: ['All ' + dg[2] + ': $' + dd + '^{' + l + '} = ' + commas(M.pow(dd, l)) + '$.', 'No repeat: $' + range(dd + 1 - l, dd).reverse().join(' \\cdot ') + ' = ' + commas(P(dd, l)) + '$.', 'At least one repeat: $' + commas(M.pow(dd, l)) + ' - ' + commas(P(dd, l)) + ' = ' + commas(M.pow(dd, l) - P(dd, l)) + '$.'], hint: 'The opposite of “something repeats” is “all different.”' }; }
+    if (shape === 'password') { var l2 = R.int(2, 6), wd = R.coin(), nn = wd ? 26 : 10;
+      return { q: 'A password has ' + l2 + ' characters, each a letter (A–Z) or a digit (0–9). How many passwords contain at least one ' + (wd ? 'digit' : 'letter') + '?', a: num(M.pow(36, l2) - M.pow(nn, l2)), steps: ['All: $36^{' + l2 + '} = ' + commas(M.pow(36, l2)) + '$.', (wd ? 'No digits (letters only): $26^{' : 'No letters (digits only): $10^{') + l2 + '} = ' + commas(M.pow(nn, l2)) + '$.', 'At least one ' + (wd ? 'digit' : 'letter') + ': $' + commas(M.pow(36, l2) - M.pow(nn, l2)) + '$.'], hint: 'Subtract the passwords with no ' + (wd ? 'digit' : 'letter') + '.' }; }
+    if (shape === 'vowel') { var l3 = R.int(2, 5), vw = R.pick([[5, 'vowel (A, E, I, O, U)', 'vowels'], [5, 'vowel (A, E, I, O, U)', 'vowels'], [3, 'letter from X, Y and Z', 'X, Y or Z'], [4, 'letter from A to D', 'A to D'], [2, 'Q or J', 'Q or J'], [6, 'letter from A to F', 'A to F']]), kv = 26 - vw[0];
+      return { q: 'How many strings of ' + l3 + ' letters (A–Z, repeats allowed) contain at least one ' + vw[1] + '?', a: num(M.pow(26, l3) - M.pow(kv, l3)), steps: ['All: $26^{' + l3 + '} = ' + commas(M.pow(26, l3)) + '$.', 'None from ' + vw[2] + ': $' + kv + '^{' + l3 + '} = ' + commas(M.pow(kv, l3)) + '$.', 'At least one: $' + commas(M.pow(26, l3)) + ' - ' + commas(M.pow(kv, l3)) + ' = ' + commas(M.pow(26, l3) - M.pow(kv, l3)) + '$.'], hint: 'Count the strings with none of them.' }; }
+    var w = R.int(3, 9), m = R.int(2, 8), kk = R.int(2, M.min(5, w + m - 1)), right = C(w + m, kk) - C(m, kk), wrong = w * C(w + m - 1, kk - 1);
     var grp = R.pick([['women', 'men', 'woman', 'committee', 'all-men'], ['seniors', 'juniors', 'senior', 'team', 'all-junior'], ['teachers', 'parents', 'teacher', 'panel', 'all-parent'], ['red marbles', 'blue marbles', 'red marble', 'handful', 'all-blue']]);
     if (shape === 'committee') return { q: 'A ' + grp[3] + ' of ' + kk + ' is chosen from ' + w + ' ' + grp[0] + ' and ' + m + ' ' + grp[1] + '. How many choices include at least one ' + grp[2] + '?', a: num(right),
       steps: ['All choices: $' + binom(w + m, kk) + ' = ' + C(w + m, kk) + '$.', 'Choices with no ' + grp[2] + ' (' + grp[4] + '): $' + binom(m, kk) + ' = ' + C(m, kk) + '$.', 'At least one ' + grp[2] + ': $' + C(w + m, kk) + ' - ' + C(m, kk) + ' = ' + right + '$.'], hint: 'Count all choices, then subtract the ' + grp[4] + ' ones.' };
@@ -1220,18 +1428,18 @@
   G('disc.inclusion-exclusion', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['div2', 'survey2']), R.pick(['div3', 'survey3', 'none3']), R.pick(['div3', 'reverse', 'none3']));
     if (shape === 'div2') {
-      var ab = R.pick([[2, 3], [3, 5], [2, 5], [4, 6], [3, 4], [6, 9], [2, 7]]), N = R.int(4, 20) * 10, a = ab[0], b = ab[1], l = lcm(a, b);
+      var ab = R.pick([[2, 3], [3, 5], [2, 5], [4, 6], [3, 4], [6, 9], [2, 7], [3, 7], [5, 7], [4, 10], [6, 8], [2, 9], [5, 6], [4, 9]]), N = R.int(4, 50) * 10, a = ab[0], b = ab[1], l = lcm(a, b);
       var ans = M.floor(N / a) + M.floor(N / b) - M.floor(N / l);
       return { q: 'How many integers from $1$ to $' + N + '$ are divisible by $' + a + '$ or by $' + b + '$?', a: num(ans),
         steps: ['Divisible by $' + a + '$: $\\lfloor ' + N + '/' + a + ' \\rfloor = ' + M.floor(N / a) + '$. By $' + b + '$: $' + M.floor(N / b) + '$.', 'Divisible by both means divisible by $\\operatorname{lcm}(' + a + ', ' + b + ') = ' + l + '$: $' + M.floor(N / l) + '$. These were counted twice.', '$' + M.floor(N / a) + ' + ' + M.floor(N / b) + ' - ' + M.floor(N / l) + ' = ' + ans + '$.'], hint: 'Add the two counts, then subtract the numbers counted twice.' };
     }
     if (shape === 'survey2') {
-      var A = R.int(15, 40), B = R.int(15, 40), AB = R.int(3, M.min(A, B) - 3), lang = R.pick([['French', 'Spanish', 'students'], ['soccer', 'basketball', 'children'], ['a cat', 'a dog', 'families']]);
+      var A = R.int(12, 60), B = R.int(12, 60), AB = R.int(3, M.min(A, B) - 3), lang = R.pick([['French', 'Spanish', 'students'], ['soccer', 'basketball', 'children'], ['a cat', 'a dog', 'families'], ['the piano', 'the violin', 'students'], ['chess', 'checkers', 'club members'], ['apples', 'pears', 'shoppers'], ['a bike', 'a scooter', 'children'], ['swimming', 'hiking', 'campers']]);
       return { q: 'In a group, ' + A + ' ' + lang[2] + ' ' + (lang[2] === 'families' ? 'have ' : 'take ') + lang[0] + ', ' + B + ' ' + (lang[2] === 'families' ? 'have ' : 'take ') + lang[1] + ', and ' + AB + ' ' + (lang[2] === 'families' ? 'have ' : 'take ') + 'both. How many ' + (lang[2] === 'families' ? 'have' : 'take') + ' at least one of the two?', a: num(A + B - AB),
         steps: ['$|A \\cup B| = |A| + |B| - |A \\cap B|$: the ' + AB + ' in both were counted twice.', '$' + A + ' + ' + B + ' - ' + AB + ' = ' + (A + B - AB) + '$.'], hint: 'Subtract the overlap once.' };
     }
     if (shape === 'div3' || shape === 'none3') {
-      var tri = R.pick(L === 3 ? [[2, 3, 5], [2, 3, 7], [3, 4, 5], [2, 5, 7], [4, 6, 10], [2, 3, 4]] : [[2, 3, 5], [2, 3, 7], [3, 5, 7], [2, 5, 7]]), N2 = R.pick([60, 100, 120, 150, 200, 210, 300]);
+      var tri = R.pick(L === 3 ? [[2, 3, 5], [2, 3, 7], [3, 4, 5], [2, 5, 7], [4, 6, 10], [2, 3, 4], [2, 4, 5], [3, 5, 6], [2, 3, 11], [4, 5, 6]] : [[2, 3, 5], [2, 3, 7], [3, 5, 7], [2, 5, 7], [2, 3, 11], [3, 5, 11], [2, 7, 11]]), N2 = R.pick([60, 100, 120, 150, 200, 210, 300, 250, 360, 400, 420, 500, 600, 1000]);
       var x = tri[0], y = tri[1], z = tri[2], f = function (d) { return M.floor(N2 / d); };
       var s1 = f(x) + f(y) + f(z), s2 = f(lcm(x, y)) + f(lcm(x, z)) + f(lcm(y, z)), s3 = f(lcm(lcm(x, y), z)), uni = s1 - s2 + s3;
       var none = shape === 'none3';
@@ -1239,7 +1447,7 @@
         steps: ['Singles: $' + f(x) + ' + ' + f(y) + ' + ' + f(z) + ' = ' + s1 + '$.', 'Pairs (use the lcm): $\\operatorname{lcm}$s are $' + lcm(x, y) + ', ' + lcm(x, z) + ', ' + lcm(y, z) + '$, giving $' + f(lcm(x, y)) + ' + ' + f(lcm(x, z)) + ' + ' + f(lcm(y, z)) + ' = ' + s2 + '$.', 'All three: $\\operatorname{lcm} = ' + lcm(lcm(x, y), z) + '$, giving $' + s3 + '$.', 'At least one: $' + s1 + ' - ' + s2 + ' + ' + s3 + ' = ' + uni + '$.' + (none ? ' None: $' + N2 + ' - ' + uni + ' = ' + (N2 - uni) + '$.' : '')],
         hint: 'Add the singles, subtract the pairs, add back the triple.' };
     }
-    var a3 = R.int(20, 40), b3 = R.int(20, 40), c3 = R.int(20, 40), ab3 = R.int(6, 12), ac3 = R.int(6, 12), bc3 = R.int(6, 12), abc3 = R.int(2, 5), uni3 = a3 + b3 + c3 - ab3 - ac3 - bc3 + abc3;
+    var a3 = R.int(20, 60), b3 = R.int(20, 60), c3 = R.int(20, 60), ab3 = R.int(6, 15), ac3 = R.int(6, 15), bc3 = R.int(6, 15), abc3 = R.int(1, 5), uni3 = a3 + b3 + c3 - ab3 - ac3 - bc3 + abc3;
     if (shape === 'survey3') return { q: 'In a survey, ' + a3 + ' people like apples, ' + b3 + ' like bananas and ' + c3 + ' like cherries. ' + ab3 + ' like apples and bananas, ' + ac3 + ' like apples and cherries, ' + bc3 + ' like bananas and cherries, and ' + abc3 + ' like all three. How many like at least one of the three?', a: num(uni3),
       steps: ['$|A \\cup B \\cup C| = |A| + |B| + |C| - |A \\cap B| - |A \\cap C| - |B \\cap C| + |A \\cap B \\cap C|$.', '$' + a3 + ' + ' + b3 + ' + ' + c3 + ' - ' + ab3 + ' - ' + ac3 + ' - ' + bc3 + ' + ' + abc3 + ' = ' + uni3 + '$.', 'The ' + abc3 + ' who like all three were added $3$ times and subtracted $3$ times, so they must be added back once.'], hint: 'Do not forget to add the triple overlap back.' };
     return { q: 'Sets $A$, $B$ and $C$ have $|A| = ' + a3 + '$, $|B| = ' + b3 + '$, $|C| = ' + c3 + '$, $|A \\cap B| = ' + ab3 + '$, $|A \\cap C| = ' + ac3 + '$, $|B \\cap C| = ' + bc3 + '$ and $|A \\cup B \\cup C| = ' + uni3 + '$. Find $|A \\cap B \\cap C|$.', a: num(abc3),
@@ -1252,7 +1460,9 @@
   G('disc.division-rule', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['word', 'multiset', 'table', 'multiset']), R.pick(['word', 'together', 'multiset']), R.pick(['word', 'apart', 'bracelet', 'pairs']));
     if (shape === 'word') {
-      var w = R.pick(L === 1 ? WORDS.slice(0, 15) : L === 2 ? WORDS.slice(0, 22) : WORDS.slice(11)), c = letterCounts(w), rep = Object.keys(c).filter(function (k) { return c[k] > 1; }), n = arrangements(w);
+      var WE = ['PUPPY', 'KAYAK', 'LLAMA', 'COCOA', 'HAPPY', 'LITTLE', 'KITTEN', 'CARROT', 'RABBIT', 'MAMMAL', 'SEESAW', 'TOMATO', 'POTATO', 'CHEESE', 'PUZZLE', 'MUFFIN', 'GIGGLE', 'BUBBLE', 'CANNON'],
+        WM = ['BANDANA', 'BOOKSHELF', 'PEPPERONI', 'CINNAMON', 'NONSENSE', 'PARALLEL', 'BALLERINA', 'RECOMMEND', 'CATERPILLAR', 'STRAWBERRY', 'HIPPOPOTAMUS', 'BUTTERFLY', 'GRASSHOPPER'];
+      var w = R.pick(L === 1 ? WORDS.slice(0, 15).concat(WE) : L === 2 ? WORDS.slice(0, 22).concat(WE, WM) : WORDS.slice(11).concat(WM)), c = letterCounts(w), rep = Object.keys(c).filter(function (k) { return c[k] > 1; }), n = arrangements(w);
       return { q: 'How many different arrangements of the letters of ' + w + ' are there?', a: num(n),
         steps: ['If all ' + w.length + ' letters were different, there would be $' + w.length + '!$ arrangements.', 'Repeated letters: ' + rep.map(function (k) { return k + ' appears ' + c[k] + ' times'; }).join(', ') + '. Swapping copies of the same letter gives the same word, so each word was counted ' + rep.map(function (k) { return c[k] + '!'; }).join(' · ') + ' times.', 'Division rule: $\\dfrac{' + w.length + '!}{' + rep.map(function (k) { return c[k] + '!'; }).join('\\,') + '} = ' + commas(n) + '$.'], hint: 'Divide $' + w.length + '!$ by a factorial for each repeated letter.' };
     }
@@ -1262,31 +1472,31 @@
       return { q: 'How many different strings can be made by arranging all the letters ' + s.split('').join(', ') + '?', a: num(v),
         steps: ['$' + n2 + '$ letters: ' + nm(lt[0], k1) + ', ' + nm(lt[1], k2) + ' and ' + nm(lt[2], k3) + '.', '$\\dfrac{' + n2 + '!}{' + k1 + '!\\,' + k2 + '!\\,' + k3 + '!} = ' + v + '$.'], hint: 'Divide by the orderings of each repeated letter.' };
     }
-    var p = R.int(4, 9), who = R.pick(['people', 'friends', 'guests', 'knights', 'students', 'players']), pr2 = R.pick([['Ana', 'Ben'], ['Kim', 'Leo'], ['Maya', 'Noah'], ['Sam', 'Tia'], ['Ravi', 'Uma']]);
+    var p = R.int(4, 11), who = R.pick(['people', 'friends', 'guests', 'knights', 'students', 'players', 'cousins', 'teammates', 'neighbors']), pr2 = R.pick([['Ana', 'Ben'], ['Kim', 'Leo'], ['Maya', 'Noah'], ['Sam', 'Tia'], ['Ravi', 'Uma'], ['Ivy', 'Jack'], ['Omar', 'Pia'], ['Rosa', 'Theo'], ['Zoe', 'Eli'], ['Lena', 'Max']]);
     if (shape === 'table') return { q: p + ' ' + who + ' sit around a round table. Two seatings are the same when everyone has the same left and right neighbors (one is a rotation of the other). How many different seatings are there?', a: num(fact(p - 1)),
       steps: ['In a row there would be $' + p + '! = ' + fact(p) + '$ orders.', 'Each round seating appears as $' + p + '$ rows, one for each rotation.', 'Division rule: $\\dfrac{' + p + '!}{' + p + '} = (' + p + ' - 1)! = ' + fact(p - 1) + '$.'], hint: 'Each seating is counted once for every rotation.' };
     if (shape === 'together') return { q: p + ' ' + who + ', including ' + pr2[0] + ' and ' + pr2[1] + ', sit around a round table (rotations count as the same seating). In how many seatings do ' + pr2[0] + ' and ' + pr2[1] + ' sit next to each other?', a: num(2 * fact(p - 2)),
       steps: ['Glue ' + pr2[0] + ' and ' + pr2[1] + ' into one block: now there are $' + (p - 1) + '$ units around the table, which gives $(' + (p - 1) + ' - 1)! = ' + fact(p - 2) + '$ seatings.', 'Inside the block they can sit in $2$ orders.', 'Total: $2 \\cdot ' + fact(p - 2) + ' = ' + 2 * fact(p - 2) + '$.'], hint: 'Treat the pair as one person, then double.' };
     if (shape === 'apart') return { q: p + ' ' + who + ', including ' + pr2[0] + ' and ' + pr2[1] + ', sit around a round table (rotations count as the same seating). In how many seatings are ' + pr2[0] + ' and ' + pr2[1] + ' <b>not</b> next to each other?', a: num(fact(p - 1) - 2 * fact(p - 2)),
       steps: ['All seatings: $(' + p + ' - 1)! = ' + fact(p - 1) + '$.', 'Next to each other: glue them into a block, $2 \\cdot (' + (p - 1) + ' - 1)! = ' + 2 * fact(p - 2) + '$.', 'Not next to each other: $' + fact(p - 1) + ' - ' + 2 * fact(p - 2) + ' = ' + (fact(p - 1) - 2 * fact(p - 2)) + '$.'], hint: 'Count the complement: seatings where they are together.' };
-    if (shape === 'bracelet') { var b = R.int(4, 7); return { q: b + ' different beads are put on a bracelet. Two bracelets are the same if one can be rotated or flipped over to match the other. How many different bracelets are there?', a: num(fact(b - 1) / 2),
+    if (shape === 'bracelet') { var b = R.int(3, 10); return { q: b + ' different beads are put on a bracelet. Two bracelets are the same if one can be rotated or flipped over to match the other. How many different bracelets are there?', a: num(fact(b - 1) / 2),
       steps: ['Around a circle with rotations counted as the same: $(' + b + ' - 1)! = ' + fact(b - 1) + '$.', 'Flipping the bracelet turns each arrangement into its mirror image, which is a different circular order. So each bracelet was counted twice.', '$\\dfrac{' + fact(b - 1) + '}{2} = ' + fact(b - 1) / 2 + '$.'], hint: 'Divide once for rotations and once more for flips.' }; }
-    var m = R.int(2, 4);
-    return { q: (2 * m) + ' students are split into ' + m + ' pairs to work on a project. The pairs are not labeled. In how many ways can this be done?', a: num(fact(2 * m) / (M.pow(2, m) * fact(m))),
-      steps: ['Line the students up ($' + (2 * m) + '!$ ways) and pair them off: 1st with 2nd, 3rd with 4th, and so on.', 'Swapping the two people in a pair ($2$ ways for each of $' + m + '$ pairs) or reordering the pairs ($' + m + '!$ ways) gives the same split.', '$\\dfrac{' + (2 * m) + '!}{2^{' + m + '} \\cdot ' + m + '!} = ' + fact(2 * m) / (M.pow(2, m) * fact(m)) + '$.'], hint: 'Count lineups, then divide by the orderings that give the same pairs.' };
+    var m = R.int(2, 7), wh = R.pick(['students', 'campers', 'dancers', 'players', 'scouts', 'friends']);
+    return { q: (2 * m) + ' ' + wh + ' are split into ' + m + ' pairs to work on a project. The pairs are not labeled. In how many ways can this be done?', a: num(fact(2 * m) / (M.pow(2, m) * fact(m))),
+      steps: ['Line the ' + wh + ' up ($' + (2 * m) + '!$ ways) and pair them off: 1st with 2nd, 3rd with 4th, and so on.', 'Swapping the two people in a pair ($2$ ways for each of $' + m + '$ pairs) or reordering the pairs ($' + m + '!$ ways) gives the same split.', '$\\dfrac{' + (2 * m) + '!}{2^{' + m + '} \\cdot ' + m + '!} = ' + fact(2 * m) / (M.pow(2, m) * fact(m)) + '$.'], hint: 'Count lineups, then divide by the orderings that give the same pairs.' };
   });
 
   G('disc.binomial-identities', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['pascal', 'rowsum', 'symmetry']), R.pick(['pascal', 'story', 'rowsum']), R.pick(['weighted', 'hockey', 'vandermonde', 'story']));
     if (shape === 'pascal') {
-      var n = R.int(6, 14), k = R.int(2, n - 2);
+      var n = R.int(5, 20), k = R.int(2, n - 2);
       return { q: 'Given $' + binom(n - 1, k - 1) + ' = ' + commas(C(n - 1, k - 1)) + '$ and $' + binom(n - 1, k) + ' = ' + commas(C(n - 1, k)) + '$, find $' + binom(n, k) + '$.', a: num(C(n, k)),
         steps: ['Pascal’s identity: $' + binom(n, k) + ' = ' + binom(n - 1, k - 1) + ' + ' + binom(n - 1, k) + '$.', 'Reason: a group of $' + k + '$ from $' + n + '$ people either includes one particular person (choose the other $' + (k - 1) + '$ from $' + (n - 1) + '$) or does not (choose all $' + k + '$ from $' + (n - 1) + '$).', '$' + commas(C(n - 1, k - 1)) + ' + ' + commas(C(n - 1, k)) + ' = ' + commas(C(n, k)) + '$.'], hint: 'Each entry of Pascal’s triangle is the sum of the two above it.' };
     }
-    if (shape === 'symmetry') { var n1 = R.int(10, 30), k1 = R.int(2, 3); return { q: 'Find $' + binom(n1, n1 - k1) + '$.', a: num(C(n1, k1)),
+    if (shape === 'symmetry') { var n1 = R.int(8, 60), k1 = R.int(2, n1 > 30 ? 3 : 4); return { q: 'Find $' + binom(n1, n1 - k1) + '$.', a: num(C(n1, k1)),
       steps: ['Choosing the $' + (n1 - k1) + '$ items to take is the same as choosing the $' + k1 + '$ to leave out: $' + binom(n1, n1 - k1) + ' = ' + binom(n1, k1) + '$.', '$' + binom(n1, k1) + ' = \\dfrac{' + range(n1 - k1 + 1, n1).reverse().join(' \\cdot ') + '}{' + k1 + '!} = ' + commas(C(n1, k1)) + '$.'], hint: 'Count the ones left out instead.' }; }
     if (shape === 'rowsum') {
-      var n2 = R.int(4, 10), t = R.int(1, 4);
+      var n2 = R.int(4, 16), t = R.int(1, 4);
       var forms = [[binom(n2, 0) + ' + ' + binom(n2, 1) + ' + \\cdots + ' + binom(n2, n2), M.pow(2, n2), 'Both sides count all subsets of an $' + n2 + '$-element set: by size on the left, by “in or out” for each element on the right. So the sum is $2^{' + n2 + '} = ' + M.pow(2, n2) + '$.'],
         [binom(n2, 1) + ' + ' + binom(n2, 2) + ' + \\cdots + ' + binom(n2, n2), M.pow(2, n2) - 1, 'This counts the nonempty subsets: all $2^{' + n2 + '}$ subsets except $\\varnothing$, so $' + (M.pow(2, n2) - 1) + '$.'],
         [binom(n2, 0) + ' - ' + binom(n2, 1) + ' + ' + binom(n2, 2) + ' - \\cdots ' + (n2 % 2 ? '- ' : '+ ') + binom(n2, n2), 0, 'Expand $(1 - 1)^{' + n2 + '}$ with the binomial theorem: the sum is $0^{' + n2 + '} = 0$. (Subsets of even size and of odd size are equally many.)'],
@@ -1301,12 +1511,12 @@
       var it = R.pick(st), others = st.filter(function (x) { return x !== it; }).map(function (x) { return x[1]; });
       return { q: 'Which identity does this counting argument prove? “' + it[0] + '”', a: mc(it[1], R.sample(others, 3)), steps: ['A combinatorial proof counts one set in two ways; the two counts must be equal.', 'This story gives ' + it[1] + '.'], hint: 'Write the count each way, and set them equal.' };
     }
-    if (shape === 'weighted') { var n3 = R.int(4, 9); return { q: 'Find $1 \\cdot ' + binom(n3, 1) + ' + 2 \\cdot ' + binom(n3, 2) + ' + \\cdots + ' + n3 + ' \\cdot ' + binom(n3, n3) + '$.', a: num(n3 * M.pow(2, n3 - 1)),
+    if (shape === 'weighted') { var n3 = R.int(3, 14); return { q: 'Find $1 \\cdot ' + binom(n3, 1) + ' + 2 \\cdot ' + binom(n3, 2) + ' + \\cdots + ' + n3 + ' \\cdot ' + binom(n3, n3) + '$.', a: num(n3 * M.pow(2, n3 - 1)),
       steps: ['$k\\binom{n}{k}$ counts committees of size $k$ with a chair. Summing over $k$ counts every committee with a chair, of any size.', 'Choose the chair first ($' + n3 + '$ ways), then any subset of the other $' + (n3 - 1) + '$ people ($2^{' + (n3 - 1) + '}$ ways).', 'Total: $' + n3 + ' \\cdot 2^{' + (n3 - 1) + '} = ' + n3 * M.pow(2, n3 - 1) + '$.'], hint: 'Pick the chair first.' }; }
-    if (shape === 'hockey') { var k4 = R.int(1, 3), n4 = R.int(k4 + 3, 10); var terms = range(k4, n4).map(function (i) { return binom(i, k4); });
+    if (shape === 'hockey') { var k4 = R.int(1, 4), n4 = R.int(k4 + 3, 14); var terms = range(k4, n4).map(function (i) { return binom(i, k4); });
       return { q: 'Find $' + terms.join(' + ') + '$.', a: num(C(n4 + 1, k4 + 1)),
         steps: ['Hockey-stick identity: $\\binom{' + k4 + '}{' + k4 + '} + \\binom{' + (k4 + 1) + '}{' + k4 + '} + \\cdots + \\binom{' + n4 + '}{' + k4 + '} = \\binom{' + (n4 + 1) + '}{' + (k4 + 1) + '}$.', 'Reason: to choose $' + (k4 + 1) + '$ numbers from $1, \\ldots, ' + (n4 + 1) + '$, split by the largest one chosen, $i + 1$: the other $' + k4 + '$ come from $1, \\ldots, i$, in $\\binom{i}{' + k4 + '}$ ways.', '$\\binom{' + (n4 + 1) + '}{' + (k4 + 1) + '} = ' + C(n4 + 1, k4 + 1) + '$.'], hint: 'Count subsets of size $' + (k4 + 1) + '$ by their largest element.' }; }
-    var m5 = R.int(2, 4), n5 = R.int(2, 5), k5 = R.int(2, M.min(4, m5 + n5 - 1)), js = range(M.max(0, k5 - n5), M.min(m5, k5));
+    var m5 = R.int(2, 6), n5 = R.int(2, 6), k5 = R.int(2, M.min(5, m5 + n5 - 1)), js = range(M.max(0, k5 - n5), M.min(m5, k5));
     return { q: 'Find $' + js.map(function (j) { return binom(m5, j) + binom(n5, k5 - j); }).join(' + ') + '$.', a: num(C(m5 + n5, k5)),
       steps: ['Each term counts groups of $' + k5 + '$ chosen from $' + m5 + '$ adults and $' + n5 + '$ children with exactly $j$ adults.', 'Adding over $j$ counts every group of $' + k5 + '$ from $' + (m5 + n5) + '$ people: $' + binom(m5 + n5, k5) + ' = ' + C(m5 + n5, k5) + '$ (Vandermonde’s identity).'], hint: 'What does the whole sum count?' };
   });
@@ -1314,12 +1524,14 @@
   function encViz(o) { return { name: 'disc-encode', opts: Object.assign({ mode: 'paths', quiet: true, counts: false, edit: false }, o) }; }
   G('disc.lattice-paths', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['grid', 'grid', 'strings']), R.pick(['through', 'grid', 'strings']), R.pick(['avoid', 'through2', 'three']));
-    var m = R.int(2, 6), n = R.int(2, 5);
-    if (shape === 'grid') return { q: 'How many shortest paths go from the bottom-left corner to the top-right corner of a grid ' + m + ' blocks wide and ' + n + ' blocks tall, moving only right (R) or up (U) along the lines?', a: num(C(m + n, n)), viz: encViz({ m: m, n: n }),
+    var m = R.int(2, 8), n = R.int(2, 7);
+    if (shape === 'grid') return { q: R.pick(['How many shortest paths go from the bottom-left corner to the top-right corner of a grid ' + m + ' blocks wide and ' + n + ' blocks tall, moving only right (R) or up (U) along the lines?',
+        'A robot on a grid ' + m + ' blocks wide and ' + n + ' blocks tall starts at the bottom-left corner and moves only right (R) or up (U) along the lines. How many different routes take it to the top-right corner?',
+        'In a town laid out as a grid of streets ' + m + ' blocks wide and ' + n + ' blocks tall, a walker goes from the bottom-left corner to the top-right corner, always heading right (R) or up (U). How many shortest routes are there?']), a: num(C(m + n, n)), viz: encViz({ m: m, n: n }),
       steps: ['Every shortest path is a string of ' + m + ' R’s and ' + n + ' U’s, in some order, and every such string is a path.', 'Choose which ' + n + ' of the ' + (m + n) + ' steps are U: $' + binom(m + n, n) + ' = ' + commas(C(m + n, n)) + '$.'], hint: 'Count steps, not squares: ' + m + ' rights and ' + n + ' ups.' };
-    if (shape === 'strings') { var len = R.int(5, 10), ones = R.int(2, len - 2); return { q: 'How many bit strings of length ' + len + ' have exactly ' + ones + ' ones?', a: num(C(len, ones)),
+    if (shape === 'strings') { var len = R.int(4, 16), ones = R.int(1, len - 1); return { q: 'How many bit strings of length ' + len + ' have exactly ' + ones + ' ones?', a: num(C(len, ones)),
       steps: ['Choose the ' + ones + ' positions of the ones; the rest are zeros.', '$' + binom(len, ones) + ' = ' + C(len, ones) + '$. (This is the same count as paths in a ' + (len - ones) + '-by-' + ones + ' grid: 1 = up, 0 = right.)'], hint: 'Choose the positions of the ones.' }; }
-    if (shape === 'three') { var a = R.int(1, 3), b = R.int(1, 3), c = R.int(1, 3), v = fact(a + b + c) / (fact(a) * fact(b) * fact(c));
+    if (shape === 'three') { var a = R.int(1, 4), b = R.int(1, 4), c = R.int(1, 4), v = fact(a + b + c) / (fact(a) * fact(b) * fact(c));
       return { q: 'In 3-D, how many shortest paths go from $(0, 0, 0)$ to $(' + a + ', ' + b + ', ' + c + ')$ using unit steps in the $x$, $y$ and $z$ directions?', a: num(v),
         steps: ['A path is a string of ' + a + ' x’s, ' + b + ' y’s and ' + c + ' z’s.', 'Arrange them: $\\dfrac{' + (a + b + c) + '!}{' + a + '!\\,' + b + '!\\,' + c + '!} = ' + v + '$.'], hint: 'Count arrangements of the letters x, y, z, with repeats.' }; }
     var px = R.int(1, m - 1), py = R.int(1, n - 1), to = C(px + py, py), from = C(m - px + n - py, n - py);
@@ -1327,7 +1539,7 @@
       steps: ['To the point: $' + binom(px + py, py) + ' = ' + to + '$ paths.', 'From the point to the corner: $' + binom(m - px + n - py, n - py) + ' = ' + from + '$ paths.', 'Every first half can go with every second half: multiply, $' + to + ' \\cdot ' + from + ' = ' + to * from + '$.'], hint: 'Count the two halves and multiply (do not add).' };
     if (shape === 'avoid') return { q: 'In a grid ' + m + ' blocks wide and ' + n + ' blocks tall, the point $(' + px + ', ' + py + ')$ is blocked. How many shortest paths from $(0, 0)$ to $(' + m + ', ' + n + ')$ avoid it?', a: num(C(m + n, n) - to * from), viz: encViz({ m: m, n: n, avoid: [[px, py]] }),
       steps: ['All paths: $' + binom(m + n, n) + ' = ' + C(m + n, n) + '$.', 'Through the blocked point: $' + to + ' \\cdot ' + from + ' = ' + to * from + '$.', 'Avoiding it: $' + C(m + n, n) + ' - ' + to * from + ' = ' + (C(m + n, n) - to * from) + '$.'], hint: 'Subtract the paths that go through the blocked point.' };
-    var mm = R.int(4, 6), nn = R.int(3, 5), x1 = R.int(1, 2), y1 = R.int(1, 2), x2 = R.int(x1 + 1, mm - 1), y2 = R.int(y1, nn - 1), s1 = C(x1 + y1, y1), s2 = C(x2 - x1 + y2 - y1, y2 - y1), s3 = C(mm - x2 + nn - y2, nn - y2);
+    var mm = R.int(4, 8), nn = R.int(3, 7), x1 = R.int(1, 2), y1 = R.int(1, 2), x2 = R.int(x1 + 1, mm - 1), y2 = R.int(y1, nn - 1), s1 = C(x1 + y1, y1), s2 = C(x2 - x1 + y2 - y1, y2 - y1), s3 = C(mm - x2 + nn - y2, nn - y2);
     return { q: 'In a grid ' + mm + ' blocks wide and ' + nn + ' blocks tall, how many shortest paths from $(0, 0)$ to $(' + mm + ', ' + nn + ')$ pass through both $(' + x1 + ', ' + y1 + ')$ and $(' + x2 + ', ' + y2 + ')$?', a: num(s1 * s2 * s3),
       steps: ['Leg 1, to $(' + x1 + ', ' + y1 + ')$: $' + s1 + '$. Leg 2, to $(' + x2 + ', ' + y2 + ')$: $' + binom(x2 - x1 + y2 - y1, y2 - y1) + ' = ' + s2 + '$. Leg 3, to the corner: $' + s3 + '$.', 'Multiply: $' + s1 + ' \\cdot ' + s2 + ' \\cdot ' + s3 + ' = ' + s1 * s2 * s3 + '$.'], hint: 'Break the trip into three legs.' };
   });
@@ -1335,24 +1547,24 @@
   G('disc.stars-and-bars', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['basic', 'equation', 'basic']), R.pick(['atleast1', 'mins', 'which']), R.pick(['mins', 'upper', 'which', 'atleast1']));
     var stories = [['identical cookies', 'children', 'given to'], ['identical balls', 'boxes', 'put into'], ['identical coins', 'piggy banks', 'dropped into'], ['identical stickers', 'notebooks', 'stuck on'], ['identical pencils', 'students', 'handed out to']];
-    if (shape === 'basic') { var n = R.int(4, 12), k = R.int(2, 5), s = R.pick(stories);
+    if (shape === 'basic') { var n = R.int(3, 20), k = R.int(2, 6), s = R.pick(stories);
       return { q: 'In how many ways can ' + n + ' ' + s[0] + ' be ' + s[2] + ' ' + k + ' different ' + s[1] + ' (some may get none)?', a: num(C(n + k - 1, k - 1)),
         steps: ['Write the ' + n + ' items as stars and use $' + (k - 1) + '$ bars to split them into ' + k + ' groups.', 'Each arrangement of ' + n + ' stars and ' + (k - 1) + ' bars is one way, so choose the bar positions among $' + (n + k - 1) + '$ spots.', '$' + binom(n + k - 1, k - 1) + ' = ' + commas(C(n + k - 1, k - 1)) + '$.'], hint: n + ' stars and ' + (k - 1) + ' bars.' }; }
-    if (shape === 'equation') { var n2 = R.int(5, 12), k2 = R.int(3, 4);
+    if (shape === 'equation') { var n2 = R.int(4, 20), k2 = R.int(2, 5);
       return { q: 'How many solutions in nonnegative integers does $' + range(1, k2).map(function (i) { return 'x_{' + i + '}'; }).join(' + ') + ' = ' + n2 + '$ have?', a: num(C(n2 + k2 - 1, k2 - 1)),
         steps: ['A solution splits ' + n2 + ' units among ' + k2 + ' variables: ' + n2 + ' stars and ' + (k2 - 1) + ' bars.', '$' + binom(n2 + k2 - 1, k2 - 1) + ' = ' + C(n2 + k2 - 1, k2 - 1) + '$.'], hint: 'Each $x_{i}$ is the number of stars in one group.' }; }
-    if (shape === 'atleast1') { var n3 = R.int(6, 14), k3 = R.int(3, 5), s3 = R.pick(stories);
+    if (shape === 'atleast1') { var n3 = R.int(6, 24), k3 = R.int(2, 6), s3 = R.pick(stories);
       return { q: 'In how many ways can ' + n3 + ' ' + s3[0] + ' be ' + s3[2] + ' ' + k3 + ' different ' + s3[1] + ' if each gets at least one?', a: num(C(n3 - 1, k3 - 1)),
         steps: ['Give one to each first: $' + n3 + ' - ' + k3 + ' = ' + (n3 - k3) + '$ remain, to share freely.', 'Stars and bars: $' + binom(n3 - k3 + k3 - 1, k3 - 1) + ' = ' + C(n3 - 1, k3 - 1) + '$.', '(Same as placing $' + (k3 - 1) + '$ bars in the $' + (n3 - 1) + '$ gaps between ' + n3 + ' stars.)'], hint: 'Hand out the required items first.' }; }
-    if (shape === 'mins') { var k4 = 3, mins = [R.int(0, 3), R.int(1, 3), R.int(0, 2)], need = sum(mins), n4 = need + R.int(3, 8), free = n4 - need;
+    if (shape === 'mins') { var k4 = 3, mins = [R.int(0, 4), R.int(1, 4), R.int(0, 3)], need = sum(mins), n4 = need + R.int(2, 12), free = n4 - need;
       return { q: 'How many solutions in integers does $x_{1} + x_{2} + x_{3} = ' + n4 + '$ have with $x_{1} \\ge ' + mins[0] + '$, $x_{2} \\ge ' + mins[1] + '$ and $x_{3} \\ge ' + mins[2] + '$?', a: num(C(free + 2, 2)),
         steps: ['Give the minimums first: $' + mins.join(' + ') + ' = ' + need + '$ units, leaving $' + free + '$.', 'Write $x_{i} = ' + '\\text{min}_{i} + y_{i}$ with $y_{i} \\ge 0$: then $y_{1} + y_{2} + y_{3} = ' + free + '$.', 'Stars and bars: $' + binom(free + 2, 2) + ' = ' + C(free + 2, 2) + '$.'], hint: 'Subtract the minimums, then count nonnegative solutions.' }; }
-    if (shape === 'upper') { var n5 = R.int(8, 14), c5 = R.int(2, 5), all = C(n5 + 2, 2), over = n5 - c5 - 1 >= 0 ? C(n5 - c5 - 1 + 2, 2) : 0, bf = 0;
+    if (shape === 'upper') { var n5 = R.int(6, 20), c5 = R.int(2, 8), all = C(n5 + 2, 2), over = n5 - c5 - 1 >= 0 ? C(n5 - c5 - 1 + 2, 2) : 0, bf = 0;
       for (var a = 0; a <= n5; a++) for (var b = 0; a + b <= n5; b++) if (a <= c5) bf++;
       if (bf !== all - over) throw new Error('stars upper mismatch');
       return { q: 'How many solutions in nonnegative integers does $x_{1} + x_{2} + x_{3} = ' + n5 + '$ have with $x_{1} \\le ' + c5 + '$?', a: num(all - over),
         steps: ['All nonnegative solutions: $' + binom(n5 + 2, 2) + ' = ' + all + '$.', 'Bad ones have $x_{1} \\ge ' + (c5 + 1) + '$: give $x_{1}$ those first, leaving $' + (n5 - c5 - 1) + '$: $' + binom(n5 - c5 - 1 + 2, 2) + ' = ' + over + '$.', 'Good: $' + all + ' - ' + over + ' = ' + (all - over) + '$.'], hint: 'Count all, then subtract those with $x_{1} \\ge ' + (c5 + 1) + '$.' }; }
-    var nb = R.int(4, 6), kb = R.int(2, 4), dist = R.coin();
+    var nb = R.int(3, 9), kb = R.int(2, 5), dist = R.coin();
     var q = dist ? 'In how many ways can ' + nb + ' <b>different</b> books be given to ' + kb + ' students (a student may get none)?' : 'In how many ways can ' + nb + ' <b>identical</b> books be given to ' + kb + ' students (a student may get none)?';
     var cands = ['$' + kb + '^{' + nb + '} = ' + M.pow(kb, nb) + '$', '$' + binom(nb + kb - 1, kb - 1) + ' = ' + C(nb + kb - 1, kb - 1) + '$', '$' + nb + '^{' + kb + '} = ' + M.pow(nb, kb) + '$', '$' + binom(nb, kb) + ' = ' + C(nb, kb) + '$'];
     var right = dist ? cands[0] : cands[1], rv = right.split('= ')[1];
@@ -1363,11 +1575,13 @@
 
   G('disc.pigeonhole', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['socks', 'atleast', 'socks']), R.pick(['kof', 'cards', 'atleast', 'specific']), R.pick(['specific', 'kof', 'sums', 'remainders']));
-    if (shape === 'socks') { var c = R.int(3, 7); return { q: 'A drawer holds plenty of socks in ' + c + ' colors. You pull socks out in the dark. How many must you pull to be sure of getting two of the same color?', a: num(c + 1),
-      steps: ['Worst case: the first ' + c + ' socks are all different colors, one of each.', 'The next sock must match one of them (pigeonhole: ' + (c + 1) + ' socks, ' + c + ' colors).', 'So ' + (c + 1) + ' socks guarantee a pair; ' + c + ' do not.'], hint: 'Imagine the worst luck possible, then take one more.' }; }
-    if (shape === 'kof') { var c2 = R.int(3, 6), k = R.int(3, 5); return { q: 'A bag holds plenty of marbles in ' + c2 + ' colors. How many must you draw, without looking, to be sure of getting ' + k + ' of the same color?', a: num(c2 * (k - 1) + 1),
+    if (shape === 'socks') { var c = R.int(2, 12), ob = R.pick([['A drawer holds plenty of socks', 'socks', 'pull', 'sock', 'in the dark'], ['A jar holds plenty of gumballs', 'gumballs', 'take', 'gumball', 'without looking'], ['A bin holds plenty of building blocks', 'blocks', 'grab', 'block', 'without looking'],
+        ['A box holds plenty of crayons', 'crayons', 'take', 'crayon', 'with your eyes closed'], ['A basket holds plenty of yarn balls', 'yarn balls', 'pull', 'yarn ball', 'without looking'], ['A bag holds plenty of buttons', 'buttons', 'draw', 'button', 'without looking']]);
+      return { q: ob[0] + ' in ' + c + ' colors. You ' + ob[2] + ' ' + ob[1] + ' out ' + ob[4] + '. How many must you ' + ob[2] + ' to be sure of getting two of the same color?', a: num(c + 1),
+      steps: ['Worst case: the first ' + c + ' ' + ob[1] + ' are all different colors, one of each.', 'The next ' + ob[3] + ' must match one of them (pigeonhole: ' + (c + 1) + ' ' + ob[1] + ', ' + c + ' colors).', 'So ' + (c + 1) + ' ' + ob[1] + ' guarantee a pair; ' + c + ' do not.'], hint: 'Imagine the worst luck possible, then take one more.' }; }
+    if (shape === 'kof') { var c2 = R.int(2, 10), k = R.int(3, 8); return { q: 'A bag holds plenty of marbles in ' + c2 + ' colors. How many must you draw, without looking, to be sure of getting ' + k + ' of the same color?', a: num(c2 * (k - 1) + 1),
       steps: ['Worst case: $' + (k - 1) + '$ of every color, $' + c2 + ' \\cdot ' + (k - 1) + ' = ' + c2 * (k - 1) + '$ marbles, with no color reaching ' + k + '.', 'One more marble makes some color reach ' + k + '.', 'Answer: $' + (c2 * (k - 1) + 1) + '$.'], hint: 'How many can you draw while every color stays below ' + k + '?' }; }
-    if (shape === 'cards') { var k3 = R.int(2, 5); return { q: 'How many cards must you draw from a standard 52-card deck (4 suits) to be sure of getting ' + k3 + ' cards of the same suit?', a: num(4 * (k3 - 1) + 1),
+    if (shape === 'cards') { var k3 = R.int(2, 13); return { q: 'How many cards must you draw from a standard 52-card deck (4 suits) to be sure of getting ' + k3 + ' cards of the same suit?', a: num(4 * (k3 - 1) + 1),
       steps: ['Worst case: $' + (k3 - 1) + '$ of each suit, $4 \\cdot ' + (k3 - 1) + ' = ' + 4 * (k3 - 1) + '$ cards.', 'One more card gives ' + k3 + ' of some suit: $' + (4 * (k3 - 1) + 1) + '$.'], hint: 'Fill each suit up to one below the goal.' }; }
     if (shape === 'atleast') { var nb = R.pick([7, 12, 30, 5, 10]), N = nb * R.int(2, 9) + R.int(1, nb - 1), what = { 7: ['people', 'were born on the same day of the week'], 12: ['people', 'were born in the same month'], 30: ['students', 'share the same score out of 30 points (scores 1 to 30)'], 5: ['letters', 'go into the same mailbox (5 mailboxes)'], 10: ['numbers', 'end in the same digit'] }[nb];
       return { q: 'Among ' + N + ' ' + what[0] + ', what is the largest number you can be sure ' + what[1] + '?', a: num(M.ceil(N / nb)),
@@ -1375,9 +1589,9 @@
     if (shape === 'specific') { var r = R.int(3, 8), b = R.int(2, 6), g = R.int(2, 6), want = R.int(2, M.min(3, b));
       return { q: 'A drawer holds ' + r + ' red, ' + b + ' blue and ' + g + ' green socks. How many must you pull out, without looking, to be sure of getting ' + want + ' blue socks?', a: num(r + g + want),
         steps: ['Worst case: you pull every red and green sock first, $' + r + ' + ' + g + ' = ' + (r + g) + '$ socks, with no blue.', 'Then you need ' + want + ' more, and they must be blue.', 'Answer: $' + (r + g) + ' + ' + want + ' = ' + (r + g + want) + '$.'], hint: 'The worst case takes all the other colors first.' }; }
-    if (shape === 'sums') { var n = R.int(4, 10); return { q: 'Numbers are chosen from $\\{1, 2, \\ldots, ' + 2 * n + '\\}$. How many must be chosen to be sure two of them add up to $' + (2 * n + 1) + '$?', a: num(n + 1),
+    if (shape === 'sums') { var n = R.int(3, 30); return { q: 'Numbers are chosen from $\\{1, 2, \\ldots, ' + 2 * n + '\\}$. How many must be chosen to be sure two of them add up to $' + (2 * n + 1) + '$?', a: num(n + 1),
       steps: ['Group the numbers into $' + n + '$ pairs that add to $' + (2 * n + 1) + '$: $\\{1, ' + 2 * n + '\\}, \\{2, ' + (2 * n - 1) + '\\}, \\ldots, \\{' + n + ', ' + (n + 1) + '\\}$.', 'You can pick one from each pair, $' + n + '$ numbers, with no matching sum.', 'With $' + (n + 1) + '$ numbers, two land in the same pair (pigeonhole).'], hint: 'Make the pairs the boxes.' }; }
-    var m = R.int(3, 9); return { q: 'How many integers must you choose to be sure that two of them leave the same remainder when divided by $' + m + '$?', a: num(m + 1),
+    var m = R.int(2, 25); return { q: 'How many integers must you choose to be sure that two of them leave the same remainder when divided by $' + m + '$?', a: num(m + 1),
       steps: ['There are $' + m + '$ possible remainders: $0, 1, \\ldots, ' + (m - 1) + '$.', 'With $' + m + '$ integers they could all differ; with $' + (m + 1) + '$, two must share a remainder.'], hint: 'The remainders are the boxes.' };
   });
 
@@ -1385,7 +1599,9 @@
   G('disc.derangements', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['dn', 'atleast', 'ie', 'dn', 'fixk']), R.pick(['dn', 'prob', 'exactk', 'atleast', 'rec']), R.pick(['exactk', 'prob', 'ie2', 'rec', 'dn']));
     var n = R.int(3, L === 1 ? 6 : 8), D = derange(n);
-    var CX = [['letters', 'envelopes', 'letter', 'in its own envelope'], ['friends in a gift swap', 'name cards drawn from a hat', 'friend', 'drawing their own name'], ['students', 'their old seats', 'student', 'in their old seat'], ['guests', 'checked hats handed back at random', 'guest', 'getting their own hat'], ['numbers $1, \\ldots, ' + n + '$', 'positions', 'number', 'in its own position']];
+    var CX = [['letters', 'envelopes', 'letter', 'in its own envelope'], ['friends in a gift swap', 'name cards drawn from a hat', 'friend', 'drawing their own name'], ['students', 'their old seats', 'student', 'in their old seat'], ['guests', 'checked hats handed back at random', 'guest', 'getting their own hat'], ['numbers $1, \\ldots, ' + n + '$', 'positions', 'number', 'in its own position'],
+      ['coats', 'their owners at random', 'coat', 'with its own owner'], ['team captains', 'jerseys handed out at random', 'captain', 'getting their own jersey'], ['children', 'lunch boxes handed back at random', 'child', 'getting their own lunch box'],
+      ['keys', 'locks', 'key', 'in its own lock'], ['puzzle pieces', 'slots', 'piece', 'in its own slot'], ['books', 'labeled spots on a shelf', 'book', 'in its own spot'], ['players', 'water bottles handed back at random', 'player', 'getting their own bottle']];
     var cx = R.pick(CX);
     var ieSteps = function (n0) { return '$D_{' + n0 + '} = ' + range(0, n0).map(function (k) { return (k ? (k % 2 ? ' - ' : ' + ') : '') + '\\binom{' + n0 + '}{' + k + '}' + (n0 - k) + '!'; }).join('') + ' = ' + range(0, n0).map(function (k) { return (k ? (k % 2 ? ' - ' : ' + ') : '') + C(n0, k) * fact(n0 - k); }).join('') + ' = ' + commas(derange(n0)) + '$.'; };
     var dseq = function (m) { return range(1, m).map(function (k) { return commas(derange(k)); }).join(', '); };
@@ -1395,8 +1611,8 @@
       steps: ['$D_{' + m + '} = ' + (m - 1) + '(' + commas(derange(m - 1)) + ' + ' + commas(derange(m - 2)) + ') = ' + (m - 1) + ' \\cdot ' + commas(derange(m - 1) + derange(m - 2)) + ' = ' + commas(derange(m)) + '$.', 'Check: $' + m + '!/e \\approx ' + commas(Math.round(fact(m) / Math.E)) + '$, and $D_{n}$ is always the whole number nearest $n!/e$.'], hint: 'Substitute into the recurrence.' }; }
     if (shape === 'atleast') return { q: 'There are $D_{' + n + '} = ' + D + '$ ways to match ' + n + ' ' + cx[0] + ' with ' + cx[1] + ' so that none is ' + cx[3].replace(/^in |^getting |^drawing /, function (w) { return w; }) + '. In how many matchings is <b>at least one</b> ' + cx[2] + ' ' + cx[3] + '?', a: num(fact(n) - D),
       steps: ['All matchings: $' + n + '! = ' + commas(fact(n)) + '$.', 'None in its own place: $D_{' + n + '} = ' + D + '$.', 'At least one: $' + commas(fact(n)) + ' - ' + D + ' = ' + commas(fact(n) - D) + '$.'], hint: 'Use the complement.' };
-    if (shape === 'ie' || shape === 'fixk') { var n2 = R.int(4, 9), k = shape === 'ie' ? 2 : R.int(1, 3), who = U.list(range(1, k).map(function (x) { return '$' + x + '$'; }));
-      return { q: 'How many arrangements of $1, 2, \\ldots, ' + n2 + '$ keep ' + (k === 1 ? '$1$' : 'each of ' + who) + ' in ' + (k === 1 ? 'its' : 'their') + ' own place' + (k === 1 ? '' : 's') + ' (others may or may not move)?', a: num(fact(n2 - k)), steps: ['Fix ' + (k === 1 ? 'it' : 'them') + '; the other $' + (n2 - k) + '$ numbers can go anywhere among the remaining places.', '$(' + n2 + ' - ' + k + ')! = ' + commas(fact(n2 - k)) + '$. This is one term in the inclusion–exclusion count of derangements.'], hint: 'Only the unfixed numbers move.' }; }
+    if (shape === 'ie' || shape === 'fixk') { var n2 = R.int(4, 9), k = shape === 'ie' ? 2 : R.int(1, 3), fx = sortN(R.chance(0.3) ? range(1, k) : R.sample(range(1, n2), k)), who = U.list(fx.map(function (x) { return '$' + x + '$'; }));
+      return { q: 'How many arrangements of $1, 2, \\ldots, ' + n2 + '$ keep ' + (k === 1 ? '$' + fx[0] + '$' : 'each of ' + who) + ' in ' + (k === 1 ? 'its' : 'their') + ' own place' + (k === 1 ? '' : 's') + ' (others may or may not move)?', a: num(fact(n2 - k)), steps: ['Fix ' + (k === 1 ? 'it' : 'them') + '; the other $' + (n2 - k) + '$ numbers can go anywhere among the remaining places.', '$(' + n2 + ' - ' + k + ')! = ' + commas(fact(n2 - k)) + '$. This is one term in the inclusion–exclusion count of derangements.'], hint: 'Only the unfixed numbers move.' }; }
     if (shape === 'ie2') { var k2 = R.int(1, 3), n3 = R.int(k2 + 2, 8);
       return { q: 'In the inclusion–exclusion count of derangements of $' + n3 + '$ items, what is the total for sets of exactly ' + k2 + ' fixed item' + (k2 > 1 ? 's' : '') + ', $\\binom{' + n3 + '}{' + k2 + '}(' + n3 + ' - ' + k2 + ')!$?', a: num(C(n3, k2) * fact(n3 - k2)),
         steps: ['Choose which ' + k2 + ' item' + (k2 > 1 ? 's are' : ' is') + ' fixed: $' + binom(n3, k2) + ' = ' + C(n3, k2) + '$.', 'Arrange the rest freely: $' + (n3 - k2) + '! = ' + commas(fact(n3 - k2)) + '$.', 'Product: $' + commas(C(n3, k2) * fact(n3 - k2)) + '$. (Notice it equals $' + n3 + '!/' + k2 + '!$.)'], hint: 'Choose the fixed items, then arrange the others.' }; }
@@ -1418,6 +1634,11 @@
     ['n^{2} > 4n + 5', function (n) { return n * n > 4 * n + 5; }], ['3^{n} > 2^{n} + 10', function (n) { return bpow(3, n) > bpow(2, n) + 10n; }],
     ['n! > 4^{n}', function (n) { return bfact(n) > bpow(4, n); }], ['2^{n} > n^{2} + 3', function (n) { return bpow(2, n) > BigInt(n * n + 3); }], ['3^{n} > n^{4}', function (n) { return bpow(3, n) > BigInt(n) ** 4n; }],
     ['2^{n} > 6n', function (n) { return bpow(2, n) > BigInt(6 * n); }], ['4^{n} > n^{4}', function (n) { return bpow(4, n) > BigInt(n) ** 4n; }], ['3^{n} > 4n', function (n) { return bpow(3, n) > BigInt(4 * n); }], ['n^{3} > 10n^{2} + 5', function (n) { return n * n * n > 10 * n * n + 5; }]];
+  function ineqs(R) { // the bank plus the same kinds with fresh numbers
+    var a = R.int(3, 30), b = R.int(2, 40), c = R.int(2, 6), e = R.int(2, 4);
+    return INEQ.concat([['2^{n} > ' + a + 'n', function (n) { return bpow(2, n) > BigInt(a * n); }], ['2^{n} > n^{2} + ' + b, function (n) { return bpow(2, n) > BigInt(n * n + b); }],
+      ['3^{n} > ' + c + 'n^{2}', function (n) { return bpow(3, n) > BigInt(c * n * n); }], ['n! > ' + e + '^{n}', function (n) { return bfact(n) > bpow(e, n); }], ['n^{2} > ' + c + 'n + ' + b, function (n) { return n * n > c * n + b; }]]);
+  }
   function ineqStart(f) { var N = 1; for (var n = 1; n <= 80; n++) if (!f(n)) N = n + 1; return N; }
   function ineqShow(tex, n) { return tex.replace(/n/g, '{' + n + '}'); }
   var GCDF = [['n^{3} - n', function (n) { return BigInt(n) ** 3n - BigInt(n); }], ['n^{5} - n', function (n) { return BigInt(n) ** 5n - BigInt(n); }], ['n(n + 1)(n + 2)', function (n) { return BigInt(n * (n + 1) * (n + 2)); }],
@@ -1429,51 +1650,52 @@
   function gcdAll(f) { var g = 0n; for (var n = 1; n <= 30; n++) g = bgcd(g, f(n)); return Number(g); }
 
   G('disc.induction-beyond-sums', function (R, ctx) {
-    var L = lv(ctx), shape = by(ctx, R.pick(['base', 'fails', 'step']), R.pick(['step', 'poly', 'base', 'fails']), R.pick(['gcd', 'ineqstep', 'poly', 'base']));
+    var L = lv(ctx), shape = by(ctx, R.pick(['base', 'fails', 'step']), R.pick(['step', 'poly', 'base', 'fails']), R.pick(['gcd', 'ineqstep', 'poly', 'base', 'fails', 'gcd']));
     if (shape === 'fails') {
-      var itf = R.pick(INEQ.filter(function (x) { return ineqStart(x[1]) > 2; })), Nf = ineqStart(itf[1]), fl = range(1, Nf - 1).filter(function (n) { return !itf[1](n); });
+      var itf = R.pick(ineqs(R).filter(function (x) { return ineqStart(x[1]) > 2 && ineqStart(x[1]) < 16; })), Nf = ineqStart(itf[1]), fl = range(1, Nf - 1).filter(function (n) { return !itf[1](n); });
       return { q: 'For which positive integers $n$ is $' + itf[0] + '$ <b>false</b>? List them all. (It is true for every $n \\ge ' + Nf + '$.)', a: setA(fl),
         steps: ['Only $n = 1, \\ldots, ' + (Nf - 1) + '$ need checking: ' + range(1, Nf - 1).map(function (n) { return '$n = ' + n + '$: ' + (itf[1](n) ? 'true' : '<b>false</b>'); }).join('; ') + '.', 'False for $n = ' + fl.join(', ') + '$. An induction proof of this inequality must start at $n = ' + Nf + '$.'], hint: 'Test each $n$ below ' + Nf + '.' };
     }
     if (shape === 'base') {
-      var it = R.pick(INEQ), N = ineqStart(it[1]), fails = range(1, N - 1).filter(function (n) { return !it[1](n); }), holds = range(1, N - 1).filter(function (n) { return it[1](n); });
+      var it = R.pick(ineqs(R).filter(function (x) { return ineqStart(x[1]) < 16; })), N = ineqStart(it[1]), fails = range(1, N - 1).filter(function (n) { return !it[1](n); }), holds = range(1, N - 1).filter(function (n) { return it[1](n); });
       return { q: 'What is the smallest positive integer $N$ such that $' + it[0] + '$ holds for every integer $n \\ge N$? (That $N$ is where an induction proof should start.)', a: num(N),
         steps: ['Test small values: ' + range(1, N).map(function (n) { return '$n = ' + n + '$: ' + (it[1](n) ? 'true' : '<b>false</b>'); }).join('; ') + '.', fails.length ? 'The last failure is at $n = ' + fails[fails.length - 1] + '$' + (holds.length ? ', even though it held at $n = ' + holds.join(', ') + '$' : '') + '.' : 'It never fails.', 'From $n = ' + N + '$ on, each step keeps it true (the left side grows faster), so $N = ' + N + '$.'],
         hint: 'Check $n = 1, 2, 3, \\ldots$ and find the last value where it fails.' };
     }
     if (shape === 'step') {
-      if (R.coin()) { var a = R.int(3, 20); return { q: 'To prove $' + (a - 1) + ' \\mid ' + a + '^{n} - 1$ for all $n \\ge 1$ by induction, the step writes $' + a + '^{k+1} - 1 = ' + a + '(' + a + '^{k} - 1) + c$. What is $c$?', a: num(a - 1),
+      if (R.coin()) { var a = R.int(3, 40); return { q: 'To prove $' + (a - 1) + ' \\mid ' + a + '^{n} - 1$ for all $n \\ge 1$ by induction, the step writes $' + a + '^{k+1} - 1 = ' + a + '(' + a + '^{k} - 1) + c$. What is $c$?', a: num(a - 1),
         steps: ['Expand: $' + a + '(' + a + '^{k} - 1) = ' + a + '^{k+1} - ' + a + '$.', 'So $' + a + '^{k+1} - 1 = ' + a + '(' + a + '^{k} - 1) + ' + (a - 1) + '$.', 'By the hypothesis $' + (a - 1) + '$ divides $' + a + '^{k} - 1$, and it divides $' + (a - 1) + '$, so it divides the sum.'], hint: 'Expand $' + a + '(' + a + '^{k} - 1)$ and compare.' }; }
-      var b = R.int(2, 7), a2 = b + R.int(2, 6);
+      var b = R.int(2, 12), a2 = b + R.int(2, 9);
       return { q: 'To prove $' + (a2 - b) + ' \\mid ' + a2 + '^{n} - ' + b + '^{n}$ by induction, the step writes $' + a2 + '^{k+1} - ' + b + '^{k+1} = ' + a2 + '(' + a2 + '^{k} - ' + b + '^{k}) + c \\cdot ' + b + '^{k}$. What is $c$?', a: num(a2 - b),
         steps: ['$' + a2 + '(' + a2 + '^{k} - ' + b + '^{k}) = ' + a2 + '^{k+1} - ' + a2 + ' \\cdot ' + b + '^{k}$.', 'To get $-' + b + '^{k+1} = -' + b + ' \\cdot ' + b + '^{k}$ we add $(' + a2 + ' - ' + b + ')' + b + '^{k}$, so $c = ' + (a2 - b) + '$.', 'Both parts are multiples of $' + (a2 - b) + '$: the first by the hypothesis, the second because of the factor $' + (a2 - b) + '$.'], hint: 'Expand $' + a2 + '(' + a2 + '^{k} - ' + b + '^{k})$ and see what is still missing.' };
     }
     if (shape === 'poly' && R.coin()) {
-      var c2 = R.pick([1, 3, 5, 7, -1, -3, 9]), q2 = (1 + c2) / 2, ft2 = T.terms([[1, 'n^{2}'], [c2, 'n']]), kt2 = T.terms([[1, 'k^{2}'], [c2, 'k']]), cs2 = c2 < 0 ? '- ' + (c2 === -1 ? '' : -c2) : '+ ' + (c2 === 1 ? '' : c2), k12 = '(k + 1)^{2} ' + cs2 + '(k + 1)';
+      var c2 = R.pick([1, 3, 5, 7, -1, -3, 9, 11, 13, 15, -5, -7, -9]), q2 = (1 + c2) / 2, ft2 = T.terms([[1, 'n^{2}'], [c2, 'n']]), kt2 = T.terms([[1, 'k^{2}'], [c2, 'k']]), cs2 = c2 < 0 ? '- ' + (c2 === -1 ? '' : -c2) : '+ ' + (c2 === 1 ? '' : c2), k12 = '(k + 1)^{2} ' + cs2 + '(k + 1)';
       return { q: 'To prove $2 \\mid ' + ft2 + '$ for all $n \\ge 1$ by induction, the step writes $' + k12 + ' = (' + kt2 + ') + 2\\,' + BOX + '$. What goes in the box?', a: expr(plainTerms([[1, 'k'], [q2, '']]), ['k']),
         steps: ['Expand: $' + k12 + ' = k^{2} + 2k + 1 ' + cs2 + 'k ' + (c2 < 0 ? '- ' + (-c2) : '+ ' + c2) + '$.', 'Subtract $' + kt2 + '$: the rest is $' + T.terms([[2, 'k'], [1 + c2, '']]) + ' = 2(' + T.lin(1, 'k', q2) + ')$.', 'So the $n = k + 1$ case is the $n = k$ case plus an even number.'], hint: 'Expand $(k + 1)^{2}$ and subtract the $n = k$ expression.' };
     }
     if (shape === 'poly') {
-      var c = R.pick([2, 5, 8, -1, 11, 14, -4]), q3 = (1 + c) / 3, ex = plainTerms([[1, 'k^2'], [1, 'k'], [q3, '']]), et = T.poly([1, 1, q3], 'k'), ft = T.terms([[1, 'n^{3}'], [c, 'n']]), kt = T.terms([[1, 'k^{3}'], [c, 'k']]), cs = c < 0 ? '- ' + (c === -1 ? '' : -c) : '+ ' + c, k1 = '(k + 1)^{3} ' + cs + '(k + 1)';
+      var c = R.pick([2, 5, 8, -1, 11, 14, -4, -7, 17, 20, 23, -10]), q3 = (1 + c) / 3, ex = plainTerms([[1, 'k^2'], [1, 'k'], [q3, '']]), et = T.poly([1, 1, q3], 'k'), ft = T.terms([[1, 'n^{3}'], [c, 'n']]), kt = T.terms([[1, 'k^{3}'], [c, 'k']]), cs = c < 0 ? '- ' + (c === -1 ? '' : -c) : '+ ' + c, k1 = '(k + 1)^{3} ' + cs + '(k + 1)';
       return { q: 'To prove $3 \\mid ' + ft + '$ for all $n \\ge 1$ by induction, the step writes $' + k1 + ' = (' + kt + ') + 3\\,' + BOX + '$. What polynomial in $k$ goes in the box?', a: expr(ex, ['k']),
         steps: ['Expand: $' + k1 + ' = k^{3} + 3k^{2} + 3k + 1 ' + cs + 'k ' + (c < 0 ? '- ' + (-c) : '+ ' + c) + '$.', 'Subtract $' + kt + '$: the rest is $' + T.terms([[3, 'k^{2}'], [3, 'k'], [1 + c, '']]) + ' = 3(' + et + ')$.', 'The hypothesis says $3$ divides $' + kt + '$, and $3$ divides $3(' + et + ')$, so $3$ divides the sum.'], hint: 'Expand $(k + 1)^{3}$ and subtract the $n = k$ expression.' };
     }
     if (shape === 'gcd') {
-      var g = R.pick(GCDF), d = gcdAll(g[1]);
+      var ga = R.int(2, 15), gb = R.int(1, ga - 1), gp = R.pick([3, 5, 7]), g = R.pick(GCDF.concat([[ga + '^{n} - 1', function (n) { return bpow(ga, n) - 1n; }], [ga + '^{n} - ' + gb + '^{n}', function (n) { return bpow(ga, n) - bpow(gb, n); }], [ga + '^{n} + ' + gb, function (n) { return bpow(ga, n) + BigInt(gb); }]])), d = gcdAll(g[1]);
       return { q: 'What is the largest integer that divides $' + g[0] + '$ for every positive integer $n$?', a: num(d),
         steps: ['Compute the first few values: ' + range(1, 4).map(function (n) { return '$' + commas(Number(g[1](n))) + '$'; }).join(', ') + '.', 'Any divisor of all of them divides their gcd, which is $' + d + '$.', 'And $' + d + '$ does divide every value; an induction proof (rewriting the case $n = k + 1$ with the case $n = k$) confirms it for all $n$.'], hint: 'Find the gcd of the first few values.' };
     }
-    var fam = R.pick([['2^{k} > k^{2}', 2, 2], ['3^{k} > k^{3}', 3, 3], ['2^{k} > k^{3}', 2, 3]]), base = fam[1], p = fam[2], K = 1;
+    var fam = R.pick([['2^{k} > k^{2}', 2, 2], ['3^{k} > k^{3}', 3, 3], ['2^{k} > k^{3}', 2, 3], ['2^{k} > k^{4}', 2, 4], ['3^{k} > k^{2}', 3, 2], ['4^{k} > k^{3}', 4, 3], ['3^{k} > k^{4}', 3, 4], ['2^{k} > k^{5}', 2, 5], ['5^{k} > k^{4}', 5, 4], ['4^{k} > k^{5}', 4, 5], ['3^{k} > k^{5}', 3, 5]]), base = fam[1], p = fam[2], K = 1;
     for (var k = 1; k <= 100; k++) if (base * M.pow(k, p) < M.pow(k + 1, p)) K = k + 1;
     return { q: 'In the step of an induction proof of $' + fam[0] + '$: $' + fam[0].split(' > ')[0].replace('k', '{k+1}') + ' = ' + base + ' \\cdot ' + fam[0].split(' > ')[0] + ' > ' + base + 'k^{' + p + '}$, and the proof needs $' + base + 'k^{' + p + '} \\ge (k + 1)^{' + p + '}$. What is the smallest positive integer $k$ from which this holds for every larger $k$ too?', a: num(K),
       steps: ['$' + base + 'k^{' + p + '} \\ge (k + 1)^{' + p + '}$ is the same as $\\left(1 + \\frac{1}{k}\\right)^{' + p + '} \\le ' + base + '$, which gets easier as $k$ grows.', range(1, K).map(function (k2) { return '$k = ' + k2 + '$: $' + base * M.pow(k2, p) + (base * M.pow(k2, p) >= M.pow(k2 + 1, p) ? ' \\ge ' : ' < ') + M.pow(k2 + 1, p) + '$'; }).join('; ') + '.', 'So it holds from $k = ' + K + '$ on. The base case of the whole proof must be at least this large and must itself be true.'], hint: 'Compare $' + base + 'k^{' + p + '}$ with $(k + 1)^{' + p + '}$ for small $k$.' };
   });
 
-  var STAMPS = [[3, 5], [3, 7], [4, 5], [4, 7], [5, 6], [3, 8], [5, 7], [4, 9], [3, 10], [5, 8]];
+  var STAMPS = [[3, 5], [3, 7], [4, 5], [4, 7], [5, 6], [3, 8], [5, 7], [4, 9], [3, 10], [5, 8], [2, 5], [2, 7], [2, 9], [3, 4], [3, 11], [4, 11], [5, 9], [6, 7], [7, 8], [5, 11], [3, 13], [7, 9], [4, 13], [6, 11], [2, 11], [3, 14], [7, 10], [5, 12]];
   function payable(a, b, n) { for (var x = 0; a * x <= n; x++) if ((n - a * x) % b === 0) return true; return false; }
-  G('disc.strong-induction', function (R, ctx) {
+  function strongInd(R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['pay', 'reach', 'howmany']), R.pick(['frob', 'basecases', 'chocolate']), R.pick(['basecases', 'frob', 'start']));
     var ab = R.pick(STAMPS), a = ab[0], b = ab[1], F = a * b - a - b, N = F + 1;
+    if ((shape === 'basecases' || shape === 'howmany') && R.coin()) { a = ab[1]; b = ab[0]; } // the step may add the larger stamp instead
     if (shape === 'pay') { var n = F + R.int(-4, 4); if (n < 1) n = F + 2;
       var ok = payable(a, b, n), way = null; for (var x = 0; a * x <= n; x++) if ((n - a * x) % b === 0) { way = [x, (n - a * x) / b]; break; }
       return { q: 'Can exactly ' + n + '¢ be paid using only ' + a + '¢ and ' + b + '¢ stamps?', a: tf(ok),
@@ -1494,13 +1716,21 @@
         steps: ['The step needs the case $n - ' + a + '$, so the first ' + a + ' amounts, $' + N + '$ to $' + (N + a - 1) + '$, have nothing to step from.', bc.map(function (m) { var w; for (var x = 0; a * x <= m; x++) if ((m - a * x) % b === 0) { w = [x, (m - a * x) / b]; break; } return '$' + m + ' = ' + a + ' \\cdot ' + w[0] + ' + ' + b + ' \\cdot ' + w[1] + '$'; }).join('; ') + '.', 'Base cases: $' + setTex(bc) + '$.'],
         hint: 'The step reaches back ' + a + '; list the first ' + a + ' amounts.' };
     }
-    if (shape === 'reach') { var rr = R.pick([[2, 'a_{n} = a_{n-1} + a_{n-2}'], [3, 'a_{n} = a_{n-1} + a_{n-3}'], [3, 'a_{n} = 2a_{n-2} + a_{n-3}'], [2, 'a_{n} = 3a_{n-1} - a_{n-2}'], [4, 'a_{n} = a_{n-2} + a_{n-4}']]);
+    if (shape === 'reach') { var rr = R.pick([[2, 'a_{n} = a_{n-1} + a_{n-2}'], [3, 'a_{n} = a_{n-1} + a_{n-3}'], [3, 'a_{n} = 2a_{n-2} + a_{n-3}'], [2, 'a_{n} = 3a_{n-1} - a_{n-2}'], [4, 'a_{n} = a_{n-2} + a_{n-4}'],
+        [3, 'a_{n} = a_{n-1} + a_{n-2} + a_{n-3}'], [2, 'a_{n} = a_{n-1} + 2a_{n-2}'], [5, 'a_{n} = a_{n-1} + a_{n-5}'], [4, 'a_{n} = 2a_{n-1} - a_{n-4}'], [3, 'a_{n} = a_{n-2} + 3a_{n-3}'], [2, 'a_{n} = 5a_{n-2}'], [4, 'a_{n} = a_{n-1} + a_{n-3} + a_{n-4}']]);
       return { q: 'A proof by strong induction about a sequence with $' + rr[1] + '$ uses the recurrence in its step. How many base cases does it need?', a: num(rr[0]),
         steps: ['The step for $a_{n}$ uses terms as far back as $a_{n-' + rr[0] + '}$.', 'So the first ' + rr[0] + ' terms cannot be reached by the step and must be checked directly.'], hint: 'Find the oldest term the recurrence uses.' }; }
-    if (shape === 'chocolate') { var r1 = R.int(2, 8), c1 = R.int(2, 8); return { q: 'A chocolate bar is a ' + r1 + '-by-' + c1 + ' grid of squares. A break splits one piece into two along a grid line. How many breaks does it take to separate all the squares?', a: num(r1 * c1 - 1),
+    if (shape === 'chocolate') { var r1 = R.int(2, 15), c1 = R.int(2, 15); return { q: 'A chocolate bar is a ' + r1 + '-by-' + c1 + ' grid of squares. A break splits one piece into two along a grid line. How many breaks does it take to separate all the squares?', a: num(r1 * c1 - 1),
       steps: ['Each break turns one piece into two, so it raises the number of pieces by exactly $1$.', 'We go from $1$ piece to $' + r1 * c1 + '$ pieces: $' + r1 * c1 + ' - 1 = ' + (r1 * c1 - 1) + '$ breaks, whatever order you break in.', '(A strong induction proof splits the bar into two smaller bars and uses the claim for both.)'], hint: 'What does each break do to the number of pieces?' }; }
     return { q: 'Every amount from some point on can be paid with ' + a + '¢ and ' + b + '¢ stamps. What is the smallest amount $N$ such that every amount $\\ge N$ can be paid?', a: num(N),
       steps: ['The largest amount that cannot be paid is $' + F + '$ (check: ' + F + '¢ is impossible).', 'The ' + a + ' amounts $' + N + '$ to $' + (N + a - 1) + '$ are all payable, and adding ' + a + '¢ stamps reaches every larger amount.', 'So $N = ' + N + '$.'], hint: 'Find the largest amount that is impossible.' };
+  }
+  G('disc.strong-induction', function (R, ctx) {
+    var p = strongInd(R, ctx), w = R.pick(['stamp', 'stamp', 'coin', 'token']);
+    if (w === 'stamp') return p;
+    function sw(t) { return String(t).replace(/stamps/g, w + 's').replace(/stamp/g, w); }
+    p.q = sw(p.q); p.steps = p.steps.map(sw); if (p.hint) p.hint = sw(p.hint);
+    return p;
   });
 
   var RECS = [
@@ -1516,7 +1746,16 @@
   function recVals(r, n) { var a = [null].concat(r.init); for (var i = r.init.length + 1; i <= n; i++) a[i] = r.step(a, i); return a; }
   G('disc.recurrence-models', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['value', 'value', 'start']), R.pick(['value', 'which', 'start']), R.pick(['which', 'value']));
-    var r = R.pick(RECS), k = r.init.length;
+    var r = R.pick(RECS);
+    if (R.chance(0.65)) { // the same kind of model with fresh sizes and colors: squares and long tiles, or steps of two sizes
+      var tm = R.int(2, 4), tc = R.int(1, 3), td = R.int(1, 3), stairs = tc === 1 && td === 1 && R.coin(), ini = [];
+      for (var ii = 1; ii <= tm; ii++) ini.push(M.pow(tc, ii) + (ii === tm ? td : 0));
+      var cf = function (c) { return c === 1 ? '' : String(c); };
+      r = { d: stairs ? 'ways to climb a staircase of $n$ steps taking either 1 step or ' + tm + ' steps at a time' : 'ways to tile a 1-by-$n$ strip with 1-by-1 squares' + (tc > 1 ? ' in ' + tc + ' colors' : '') + ' and 1-by-' + tm + ' tiles' + (td > 1 ? ' in ' + td + ' colors' : ''),
+        init: ini, step: function (a, n) { return tc * a[n - 1] + td * a[n - tm]; }, rec: 'a_{n} = ' + cf(tc) + 'a_{n-1} + ' + cf(td) + 'a_{n-' + tm + '}',
+        why: stairs ? 'The last move is 1 step (leaving $n - 1$) or ' + tm + ' steps (leaving $n - ' + tm + '$).' : 'The last tile is a square (' + (tc > 1 ? tc + ' colors, ' : '') + 'leaving $n - 1$) or a 1-by-' + tm + ' tile (' + (td > 1 ? td + ' colors, ' : '') + 'leaving $n - ' + tm + '$).' };
+    }
+    var k = r.init.length;
     if (shape === 'value') {
       var n = R.int(k + 3, M.min(10, k + 6)), a = recVals(r, n);
       return { q: 'Let $a_{n}$ be the number of ' + r.d + '. Find $a_{' + n + '}$.', a: num(a[n]),
@@ -1527,17 +1766,19 @@
         steps: ['List the small cases by hand.'].concat(r.init.map(function (v, i) { return '$a_{' + (i + 1) + '} = ' + v + '$.'; })).concat(['From there the recurrence $' + r.rec + '$ takes over.']), hint: 'Write out every case for the smallest values of $n$.' };
     }
     var all = U.uniq(RECS.map(function (x) { return x.rec; })), wr = all.filter(function (x) { return x !== r.rec; });
+    if (!RECS.some(function (x) { return x === r; })) { var sw = /a_\{n\} = (\d*)a_\{n-1\} \+ (\d*)a_\{n-(\d)\}/.exec(r.rec);
+      if (sw) wr = U.uniq([sw[1] !== sw[2] ? 'a_{n} = ' + sw[2] + 'a_{n-1} + ' + sw[1] + 'a_{n-' + sw[3] + '}' : null, 'a_{n} = ' + sw[1] + 'a_{n-1} + ' + sw[2] + 'a_{n-' + (+sw[3] === 2 ? 3 : 2) + '}', 'a_{n} = ' + sw[1] + 'a_{n-1} \\cdot ' + sw[2] + 'a_{n-' + sw[3] + '}'].filter(Boolean).concat(R.sample(wr, 3))).filter(function (x) { return x !== r.rec; }).slice(0, 5); }
     return { q: 'Let $a_{n}$ be the number of ' + r.d + '. Which recurrence does $a_{n}$ satisfy (for $n$ large enough)?', a: mc('$' + r.rec + '$', R.sample(wr, 3).map(function (x) { return '$' + x + '$'; })),
       steps: [r.why, 'Adding the cases (sum rule): $' + r.rec + '$.'], hint: 'Split by the last piece and add the cases.' };
   });
 
   G('disc.unrolling-recurrences', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['value', 'closed', 'value']), R.pick(['closed', 'check', 'closed']), R.pick(['closed', 'check']));
-    var A0 = R.int(0, 6), kind = R.pick(L === 1 ? ['arith', 'geom', 'affine'] : ['arith', 'geom', 'affine', 'affine', 'tri', 'sq', 'pow2', 'hanoi']);
+    var A0 = R.int(-4, 12), kind = R.pick(L === 1 ? ['arith', 'geom', 'affine'] : ['arith', 'geom', 'affine', 'affine', 'tri', 'sq', 'pow2', 'hanoi']);
     var rec, form, tex, unroll, start = 0, f;
-    if (kind === 'arith') { var d = R.nz(-5, 7); rec = 'a_{n} = a_{n-1} ' + (d < 0 ? '- ' + (-d) : '+ ' + d); form = plainTerms([[d, 'n'], [A0, '']]); tex = T.lin(d, 'n', A0); f = function (n) { return A0 + d * n; }; unroll = '$a_{n} = a_{n-2} + 2(' + d + ') = a_{n-3} + 3(' + d + ') = \\cdots = a_{0} + n(' + d + ')$.'; }
-    if (kind === 'geom') { var r = R.int(2, 5); A0 = R.int(1, 5); rec = 'a_{n} = ' + r + 'a_{n-1}'; form = plainTerms([[A0, r + '^n']]); tex = (A0 === 1 ? '' : A0 + ' \\cdot ') + r + '^{n}'; f = function (n) { return A0 * M.pow(r, n); }; unroll = '$a_{n} = ' + r + '^{2}a_{n-2} = ' + r + '^{3}a_{n-3} = \\cdots = ' + r + '^{n}a_{0}$.'; }
-    if (kind === 'affine') { var c = R.pick([2, 3]), dd = (c === 2 ? R.nz(-4, 5) : 2 * R.nz(-3, 3)), h = dd / (c - 1); rec = 'a_{n} = ' + c + 'a_{n-1} ' + (dd < 0 ? '- ' + (-dd) : '+ ' + dd); var K = A0 + h; form = plainTerms([[K, c + '^n'], [-h, '']]); tex = T.terms([[K, c + '^{n}'], [-h, '']]); f = function (n) { return K * M.pow(c, n) - h; };
+    if (kind === 'arith') { var d = R.nz(-9, 12); rec = 'a_{n} = a_{n-1} ' + (d < 0 ? '- ' + (-d) : '+ ' + d); form = plainTerms([[d, 'n'], [A0, '']]); tex = T.lin(d, 'n', A0); f = function (n) { return A0 + d * n; }; unroll = '$a_{n} = a_{n-2} + 2(' + d + ') = a_{n-3} + 3(' + d + ') = \\cdots = a_{0} + n(' + d + ')$.'; }
+    if (kind === 'geom') { var r = R.int(2, 7); A0 = R.nz(-5, 9); rec = 'a_{n} = ' + r + 'a_{n-1}'; form = plainTerms([[A0, r + '^n']]); tex = (A0 === 1 ? '' : A0 + ' \\cdot ') + r + '^{n}'; f = function (n) { return A0 * M.pow(r, n); }; unroll = '$a_{n} = ' + r + '^{2}a_{n-2} = ' + r + '^{3}a_{n-3} = \\cdots = ' + r + '^{n}a_{0}$.'; }
+    if (kind === 'affine') { var c = R.pick([2, 3, 4]), dd = (c - 1) * R.nz(-5, 6), h = dd / (c - 1); rec = 'a_{n} = ' + c + 'a_{n-1} ' + (dd < 0 ? '- ' + (-dd) : '+ ' + dd); var K = A0 + h; form = plainTerms([[K, c + '^n'], [-h, '']]); tex = T.terms([[K, c + '^{n}'], [-h, '']]); f = function (n) { return K * M.pow(c, n) - h; };
       var sd = dd < 0 ? ' - ' + (-dd) : ' + ' + dd; unroll = '$a_{n} = ' + c + '^{2}a_{n-2}' + sd + '(' + c + ' + 1) = \\cdots = ' + c + '^{n}a_{0}' + sd + '(' + c + '^{n-1} + \\cdots + ' + c + ' + 1) = ' + c + '^{n}a_{0}' + sd + ' \\cdot \\frac{' + c + '^{n} - 1}{' + (c - 1) + '}$ (a geometric series).'; }
     if (kind === 'tri') { rec = 'a_{n} = a_{n-1} + n'; form = plainTerms([[1, 'n*(n+1)/2'], [A0, '']]); tex = (A0 ? A0 + ' + ' : '') + '\\frac{n(n + 1)}{2}'; f = function (n) { return A0 + n * (n + 1) / 2; }; unroll = '$a_{n} = a_{0} + 1 + 2 + \\cdots + n = a_{0} + \\frac{n(n + 1)}{2}$.'; }
     if (kind === 'sq') { rec = 'a_{n} = a_{n-1} + 2n - 1'; form = plainTerms([[1, 'n^2'], [A0, '']]); tex = (A0 ? A0 + ' + ' : '') + 'n^{2}'; f = function (n) { return A0 + n * n; }; unroll = '$a_{n} = a_{0} + 1 + 3 + 5 + \\cdots + (2n - 1) = a_{0} + n^{2}$.'; }
@@ -1566,9 +1807,9 @@
   function powPlain(coef, r) { return [coef, (r < 0 ? '(' + r + ')' : String(r)) + '^n']; }
   G('disc.linear-recurrences', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['roots', 'char']), R.pick(['AB', 'closed', 'roots']), R.pick(['closed', 'value', 'AB']));
-    var r1, r2; do { r1 = R.int(-3, 5); r2 = R.int(-3, 5); } while (!r1 || !r2 || r1 === r2 || r1 === -r2 || (shape === 'closed' && (r1 < 0 || r2 < 0)) || (shape === 'closed' && (r1 === 1 || r2 === 1) && R.chance(0.5)));
+    var r1, r2; do { r1 = R.int(-5, 7); r2 = R.int(-5, 7); } while (!r1 || !r2 || r1 === r2 || r1 === -r2 || (shape === 'closed' && (r1 < 0 || r2 < 0)) || (shape === 'closed' && (r1 === 1 || r2 === 1) && R.chance(0.5)));
     if (r1 < r2) { var tt = r1; r1 = r2; r2 = tt; }
-    var c1 = r1 + r2, c2 = -r1 * r2, A = R.nz(-3, 3), B = R.nz(-3, 3), a0 = A + B, a1 = A * r1 + B * r2;
+    var c1 = r1 + r2, c2 = -r1 * r2, A = R.nz(-5, 5), B = R.nz(-5, 5), a0 = A + B, a1 = A * r1 + B * r2;
     var rt = recTex(c1, c2), given = 'a_{0} = ' + a0 + '$ and $a_{1} = ' + a1, closed = T.terms([powTerm(A, r1), powTerm(B, r2)]);
     var charLine = 'Try $a_{n} = r^{n}$: $r^{n} = ' + T.terms([[c1, 'r^{n-1}'], [c2, 'r^{n-2}']]) + '$. Divide by $r^{n-2}$: $' + charTex(c1, c2) + '$, that is $' + T.terms([[1, 'r^{2}'], [-c1, 'r'], [-c2, '']]) + ' = 0$.';
     var factLine = 'Factor: $(' + rMinus(r1) + ')(' + rMinus(r2) + ') = 0$, so $r = ' + r1 + '$ or $r = ' + r2 + '$.';
@@ -1592,10 +1833,12 @@
   });
 
   G('disc.repeated-root-recurrences', function (R, ctx) {
-    var L = lv(ctx), shape = by(ctx, R.pick(['root', 'root', 'why']), R.pick(['AB', 'why', 'AB']), R.pick(['closed', 'value', 'AB']));
-    var r0 = R.pick(shape === 'closed' ? [2, 3, 4] : [2, 3, -2, -3, 4]), c1 = 2 * r0, c2 = -r0 * r0, A = R.nz(-3, 4), B = R.nz(-3, 3), a0 = A, a1 = (A + B) * r0;
+    var L = lv(ctx), shape = by(ctx, R.pick(['root', 'root', 'why', 'why']), R.pick(['AB', 'why', 'AB']), R.pick(['closed', 'value', 'AB']));
+    var r0 = R.pick(shape === 'closed' ? [2, 3, 4, 5] : [2, 3, -2, -3, 4, 5, 6, -4, -5, 7]), c1 = 2 * r0, c2 = -r0 * r0, A = R.nz(-5, 6), B = R.nz(-5, 5), a0 = A, a1 = (A + B) * r0;
     var rt = recTex(c1, c2), given = 'a_{0} = ' + a0 + '$ and $a_{1} = ' + a1;
     var charL = 'Characteristic equation: $' + charTex(c1, c2) + '$, that is $r^{2} ' + (c1 > 0 ? '- ' + c1 : '+ ' + (-c1)) + 'r + ' + (-c2) + ' = (r ' + (r0 > 0 ? '- ' + r0 : '+ ' + (-r0)) + ')^{2} = 0$: a double root $r = ' + r0 + '$.';
+    if (shape === 'root' && R.coin()) { var ra = A, rb = B, rv = R.int(2, 4), seqv = [a0, a1]; for (var ri = 2; ri <= rv; ri++) seqv[ri] = c1 * seqv[ri - 1] + c2 * seqv[ri - 2];
+      return { q: 'Let $' + rt + '$ with $' + given + '$. Find $a_{' + rv + '}$.', a: num(seqv[rv]), steps: seqv.slice(2).map(function (x, i) { return '$a_{' + (i + 2) + '} = ' + c1 + ' \\cdot ' + T.p(seqv[i + 1]) + ' ' + (c2 < 0 ? '- ' + (-c2) : '+ ' + c2) + ' \\cdot ' + T.p(seqv[i]) + ' = ' + x + '$'; }).concat(['So $a_{' + rv + '} = ' + seqv[rv] + '$.']), hint: 'Use the recurrence one step at a time.' }; }
     if (shape === 'root') return { q: 'The characteristic equation of $' + rt + '$ has a double root. What is it?', a: num(r0), steps: [charL], hint: 'Write $' + T.terms([[1, 'r^{2}'], [-c1, 'r'], [-c2, '']]) + ' = 0$ and look for a perfect square.' };
     if (shape === 'why') return { q: 'For $' + rt + '$, a student writes $a_{n} = A \\cdot ' + T.p(r0) + '^{n} + B \\cdot ' + T.p(r0) + '^{n}$. Why can’t this fit $' + given + '$ in general?', a: mc('It equals $(A + B)' + T.p(r0) + '^{n}$, one constant, so it forces $a_{1} = ' + r0 + 'a_{0}$.', ['The roots should be added, not multiplied.', 'It only fails because $' + r0 + '$ is not prime.', 'It can fit; the student just needs more starting values.']),
       steps: ['$A \\cdot ' + T.p(r0) + '^{n} + B \\cdot ' + T.p(r0) + '^{n} = (A + B)' + T.p(r0) + '^{n}$ has only one free constant.', 'Here $a_{1} = ' + a1 + '$ but $' + r0 + 'a_{0} = ' + r0 * a0 + '$' + (a1 === r0 * a0 ? ' (they happen to agree here, but they do not in general)' : '') + '.', 'The fix: use $a_{n} = (A + Bn)' + T.p(r0) + '^{n}$; the second solution is $n' + T.p(r0) + '^{n}$.'], hint: 'Combine the two terms. How many constants are left?' };
@@ -1684,23 +1927,32 @@
 
   G('disc.special-graphs', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['edges', 'edges', 'degree']), R.pick(['edges', 'reverse', 'bip']), R.pick(['reverse', 'compare', 'bip']));
-    if (shape === 'edges') { var t = R.pick(['K', 'K', 'Kmn', 'C', 'P']), n = R.int(4, 15), m = R.int(2, 7), n2 = R.int(2, 7);
+    if (shape === 'edges') { var t = R.pick(['K', 'K', 'Kmn', 'C', 'P']), n = R.int(3, 30), m = R.int(1, 12), n2 = R.int(2, 12);
       if (t === 'K') return { q: 'How many edges does the complete graph $K_{' + n + '}$ have?', a: num(n * (n - 1) / 2), viz: n <= 7 ? gViz(completeG(n), { layout: 'circle' }) : undefined,
         steps: ['Each of the $' + n + '$ vertices has degree $' + (n - 1) + '$, so the degrees add to $' + n * (n - 1) + '$.', 'Each edge was counted from both ends: $\\frac{' + n + ' \\cdot ' + (n - 1) + '}{2} = ' + n * (n - 1) / 2 + '$. (Also $' + binom(n, 2) + '$: choose the two ends.)'], hint: 'Choose the two endpoints of an edge.' };
       if (t === 'Kmn') return { q: 'How many edges does the complete bipartite graph $K_{' + m + ',' + n2 + '}$ have?', a: num(m * n2), steps: ['Every one of the $' + m + '$ vertices on one side joins every one of the $' + n2 + '$ on the other, and no other edges exist.', '$' + m + ' \\cdot ' + n2 + ' = ' + m * n2 + '$.'], hint: 'Each edge joins one vertex from each side.' };
       if (t === 'C') return { q: 'How many edges does the cycle $C_{' + n + '}$ have?', a: num(n), steps: ['$C_{' + n + '}$ is $' + n + '$ vertices in a ring; each joins the next, and the last joins the first.', 'That is $' + n + '$ edges (every degree is $2$: $2 \\cdot ' + n + '/2 = ' + n + '$).'], hint: 'Count around the ring.' };
       return { q: 'How many edges does the path $P_{' + n + '}$ (with ' + n + ' vertices) have?', a: num(n - 1), steps: ['A path with $' + n + '$ vertices in a row has one edge between each neighboring pair.', 'That is $' + (n - 1) + '$ edges.'], hint: 'Count the gaps between consecutive vertices.' }; }
-    if (shape === 'degree') { var n3 = R.int(4, 12), a = R.int(2, 6), b = R.int(2, 6), useK = R.coin();
+    if (shape === 'degree') { var n3 = R.int(3, 25), a = R.int(1, 12), b = R.int(2, 12), useK = R.coin();
       return useK ? { q: 'What is the degree of each vertex of $K_{' + n3 + '}$?', a: num(n3 - 1), steps: ['In a complete graph every vertex is joined to every other vertex: $' + n3 + ' - 1 = ' + (n3 - 1) + '$.'], hint: 'Every other vertex is a neighbor.' }
         : { q: 'In $K_{' + a + ',' + b + '}$, what is the degree of a vertex on the side with ' + a + ' vertices?', a: num(b), steps: ['It is joined to every vertex on the other side, and to nothing on its own side.', 'Degree $' + b + '$.'], hint: 'Its neighbors are exactly the other side.' }; }
-    if (shape === 'reverse') { var n4 = R.int(5, 20), E = n4 * (n4 - 1) / 2; return { q: 'A complete graph $K_{n}$ has ' + E + ' edges. What is $n$?', a: num(n4),
+    if (shape === 'reverse') { var n4 = R.int(4, 40), E = n4 * (n4 - 1) / 2;
+      if (R.coin()) { var rp = R.int(2, 12), rq = R.int(2, 12), rk = R.pick(['C', 'Kmn', 'Kdeg']);
+        if (rk === 'C') return { q: 'A cycle $C_{n}$ has ' + (n4 + 3) + ' edges. How many vertices does it have?', a: num(n4 + 3), steps: ['In a cycle each vertex is joined to the next, and the last back to the first.', 'So it has as many edges as vertices: $' + (n4 + 3) + '$.'], hint: 'Walk around the cycle: one edge per vertex.' };
+        if (rk === 'Kmn') return { q: 'The complete bipartite graph $K_{' + rp + ',n}$ has ' + rp * rq + ' edges. What is $n$?', a: num(rq), steps: ['$K_{m,n}$ joins each of the $m$ vertices on one side to each of the $n$ on the other: $mn$ edges.', '$' + rp + 'n = ' + rp * rq + '$, so $n = ' + rq + '$.'], hint: 'Count the edges of $K_{m,n}$ first.' };
+        return { q: 'Every vertex of a complete graph $K_{n}$ has degree ' + (n4 - 1) + '. How many edges does it have?', a: num(E), steps: ['Each vertex is joined to the other $n - 1$, so $n - 1 = ' + (n4 - 1) + '$ and $n = ' + n4 + '$.', 'Edges: $\\frac{' + n4 + ' \\cdot ' + (n4 - 1) + '}{2} = ' + E + '$.'], hint: 'Find $n$ first, then count edges.' }; }
+      return { q: 'A complete graph $K_{n}$ has ' + E + ' edges. What is $n$?', a: num(n4),
       steps: ['$\\frac{n(n - 1)}{2} = ' + E + '$, so $n(n - 1) = ' + 2 * E + '$.', 'Two consecutive integers with product $' + 2 * E + '$: $' + n4 + ' \\cdot ' + (n4 - 1) + '$. So $n = ' + n4 + '$.'], hint: 'Solve $n(n - 1) = ' + 2 * E + '$.' }; }
-    if (shape === 'compare') { var n5 = R.int(5, 12); if (R.coin()) return { q: 'How many edges must be removed from $K_{' + n5 + '}$ to leave the cycle $C_{' + n5 + '}$ (on the same vertices)?', a: num(n5 * (n5 - 1) / 2 - n5),
+    if (shape === 'compare') { var n5 = R.int(4, 25); if (R.coin()) return { q: 'How many edges must be removed from $K_{' + n5 + '}$ to leave the cycle $C_{' + n5 + '}$ (on the same vertices)?', a: num(n5 * (n5 - 1) / 2 - n5),
       steps: ['$K_{' + n5 + '}$ has $\\frac{' + n5 + ' \\cdot ' + (n5 - 1) + '}{2} = ' + n5 * (n5 - 1) / 2 + '$ edges; $C_{' + n5 + '}$ keeps $' + n5 + '$.', 'Remove $' + n5 * (n5 - 1) / 2 + ' - ' + n5 + ' = ' + (n5 * (n5 - 1) / 2 - n5) + '$.'], hint: 'Subtract the edge counts.' };
-      var p = R.int(2, 5), q = R.int(2, 6); return { q: 'How many more edges does $K_{' + (p + q) + '}$ have than $K_{' + p + ',' + q + '}$?', a: num((p + q) * (p + q - 1) / 2 - p * q),
+      var p = R.int(1, 9), q = R.int(2, 10); return { q: 'How many more edges does $K_{' + (p + q) + '}$ have than $K_{' + p + ',' + q + '}$?', a: num((p + q) * (p + q - 1) / 2 - p * q),
         steps: ['$K_{' + (p + q) + '}$: $' + binom(p + q, 2) + ' = ' + (p + q) * (p + q - 1) / 2 + '$. $K_{' + p + ',' + q + '}$: $' + p + ' \\cdot ' + q + ' = ' + p * q + '$.', 'Difference $' + ((p + q) * (p + q - 1) / 2 - p * q) + '$: the edges inside each side, $' + binom(p, 2) + ' + ' + binom(q, 2) + '$.'], hint: 'The extra edges join two vertices on the same side.' }; }
     var it = R.pick([['C_{' + 4 + '}', true, 'Color the vertices alternately around the even cycle.'], ['C_{5}', false, 'An odd cycle cannot be two-colored: going around, colors must alternate, and the last vertex clashes with the first.'], ['C_{6}', true, 'Alternate colors around the even cycle.'], ['C_{7}', false, 'It is an odd cycle.'],
       ['K_{3}', false, 'It is a triangle, an odd cycle.'], ['K_{2,5}', true, 'Its two sides are the two parts.'], ['P_{6}', true, 'Alternate colors along the path.'], ['K_{4}', false, 'It contains triangles.']]);
+    var bn = R.int(3, 16), bm = R.int(1, 9), bk = R.int(2, 9);
+    if (R.chance(0.7)) it = R.pick([['C_{' + bn + '}', bn % 2 === 0, bn % 2 ? 'It is a cycle of odd length ' + bn + ', so two colors cannot alternate all the way around.' : 'Alternate colors around the even cycle.'],
+      ['K_{' + bn + '}', false, 'Any three of its vertices form a triangle, an odd cycle.'], ['K_{' + bm + ',' + bk + '}', true, 'Its two sides are the two parts; every edge goes between them.'],
+      ['P_{' + bn + '}', true, 'Alternate colors along the path.'], ['W_{' + bn + '}\\text{ (a cycle of ' + bn + ' with a hub joined to every vertex)}', false, 'The hub and two neighboring rim vertices form a triangle.']]);
     return { q: 'Is $' + it[0] + '$ bipartite?', a: tf(it[1]), steps: ['A graph is bipartite when its vertices split into two sides with every edge going between the sides.', it[2]], hint: 'Look for a cycle of odd length.' };
   });
 
@@ -1740,7 +1992,7 @@
   function imul(A, B) { return A.map(function (r) { return B[0].map(function (_, j) { return r.reduce(function (s, x, k) { return s + x * B[k][j]; }, 0); }); }); }
   G('disc.adjacency-matrices', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['walks2', 'degree', 'edges']), R.pick(['walks2', 'walks3', 'diag']), R.pick(['A2', 'walks3', 'triangles']));
-    var n = R.int(3, 4), g = gRandom(R, n, n === 3 ? R.int(2, 3) : R.int(3, 5), true), V = g.v, A = V.map(function (x) { return V.map(function (y) { return gHasEdge(g, x, y) ? 1 : 0; }); });
+    var n = L === 1 ? R.int(3, 5) : R.int(4, 5), g = gRandom(R, n, n === 3 ? R.int(2, 3) : n === 4 ? R.int(3, 5) : R.int(4, 7), true), V = g.v, A = V.map(function (x) { return V.map(function (y) { return gHasEdge(g, x, y) ? 1 : 0; }); });
     var A2 = imul(A, A), A3 = imul(A2, A), At = T.mat(A), lab = V.map(function (x, i) { return String(i + 1); });
     var intro = 'The adjacency matrix of a graph on vertices $' + range(1, n).join(', ') + '$ is $$A = ' + At + '$$';
     var i = R.int(0, n - 1), j = R.int(0, n - 1);
@@ -1830,14 +2082,14 @@
     var L = lv(ctx), shape = by(ctx, R.pick(['which', 'dirac', 'decide']), R.pick(['decide', 'dirac', 'kmn']), R.pick(['decide', 'count', 'kmn']));
     if (shape === 'which') { var it = R.pick([['A museum guard wants a route through the halls that walks every <b>hallway</b> exactly once.', 0], ['A tourist wants to visit every <b>city</b> on the map exactly once and return home.', 1], ['A snowplow must clear every <b>street</b> once without repeating a street.', 0], ['A traveling salesperson must stop at every <b>store</b> exactly once.', 1]]);
       return { q: it[0] + ' Which kind of route is that?', a: mcKeep(['An Euler path or circuit (every edge once)', 'A Hamilton path or cycle (every vertex once)'], it[1]), steps: [it[1] ? 'The places to visit are vertices, and each must be visited once: a Hamilton route.' : 'The things to cover are the connections (edges), each used once: an Euler route.'], hint: 'Are the things to cover the places or the connections?' }; }
-    if (shape === 'dirac') { var n = R.int(5, 12), dmin = R.int(2, n - 1), ok = dmin >= n / 2;
+    if (shape === 'dirac') { var n = R.int(4, 24), dmin = R.int(2, n - 1), ok = dmin >= n / 2;
       return { q: 'A simple graph has ' + n + ' vertices, and every vertex has degree at least ' + dmin + '. Does Dirac’s theorem guarantee a Hamilton cycle?', a: tf(ok), steps: ['Dirac: if $n \\ge 3$ and every degree is at least $n/2 = ' + (n / 2) + '$, there is a Hamilton cycle.', ok ? '$' + dmin + ' \\ge ' + n / 2 + '$, so yes.' : '$' + dmin + ' < ' + n / 2 + '$, so the theorem does not apply. That does not mean there is no Hamilton cycle; it means the theorem cannot promise one.'], hint: 'Compare the smallest degree with $n/2$.' }; }
-    if (shape === 'kmn') { var m = R.int(2, 5), n2 = R.int(2, 5), ok2 = m === n2;
+    if (shape === 'kmn') { var m = R.int(1, 9), n2 = R.int(2, 9), ok2 = m === n2;
       return { q: 'Does $K_{' + m + ',' + n2 + '}$ have a Hamilton cycle?', a: tf(ok2), steps: ['A cycle in a bipartite graph alternates sides, so it uses the same number of vertices from each side.', ok2 ? 'Both sides have $' + m + '$ vertices: alternate between them and return. Yes.' : 'The sides have $' + m + '$ and $' + n2 + '$ vertices, so a cycle cannot use all of them. No.'], hint: 'A cycle alternates between the two sides.' }; }
-    if (shape === 'count') { var n3 = R.int(4, 7); return { q: 'How many different Hamilton cycles does $K_{' + n3 + '}$ have? (A cycle is the same whatever its starting vertex and direction.)', a: num(fact(n3 - 1) / 2),
+    if (shape === 'count') { var n3 = R.int(3, 10); return { q: 'How many different Hamilton cycles does $K_{' + n3 + '}$ have? (A cycle is the same whatever its starting vertex and direction.)', a: num(fact(n3 - 1) / 2),
       steps: ['Fix the starting vertex; the other $' + (n3 - 1) + '$ can be visited in any order: $(' + n3 + ' - 1)! = ' + fact(n3 - 1) + '$.', 'Each cycle is counted twice, once in each direction: $' + fact(n3 - 1) / 2 + '$.'], hint: 'Fix a start, then divide by 2 for direction.' }; }
     var pool = [['petersen', PRESET.petersen], ['cube', PRESET.cube], ['K23', bipG(2, 3)], ['K33', bipG(3, 3)], ['wheel', wheelG(5)], ['bowtie', { v: ['A', 'B', 'C', 'D', 'E'], e: [['A', 'B'], ['B', 'C'], ['A', 'C'], ['C', 'D'], ['D', 'E'], ['C', 'E']] }]];
-    var g = R.chance(0.5) ? R.pick(pool)[1] : gRandom(R, R.int(5, 6), R.int(6, 8), true), hc = gHamCycle(g);
+    var g = R.chance(0.3) ? R.pick(pool)[1] : gRandom(R, R.int(5, 7), R.int(6, 10), true), hc = gHamCycle(g);
     var why;
     if (hc) why = 'One Hamilton cycle: $' + hc.concat([hc[0]]).join(' \\to ') + '$.';
     else if (g.v.length === 10) why = 'The Petersen graph has no Hamilton cycle (a known fact, checked by trying every route).';
@@ -1848,10 +2100,10 @@
 
   G('disc.trees', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['edges', 'istree', 'facts']), R.pick(['istree', 'forest', 'leaves']), R.pick(['leaves', 'istree', 'forest']));
-    if (shape === 'edges') { var n = R.int(5, 40), back = R.coin(); return back ? { q: 'A tree has ' + n + ' edges. How many vertices does it have?', a: num(n + 1), steps: ['A tree with $v$ vertices has $v - 1$ edges.', 'So $v = ' + n + ' + 1 = ' + (n + 1) + '$.'], hint: 'Edges are one fewer than vertices.' } : { q: 'How many edges does a tree with ' + n + ' vertices have?', a: num(n - 1), steps: ['Build the tree one vertex at a time: each new vertex joins with exactly one new edge.', 'So $' + n + ' - 1 = ' + (n - 1) + '$ edges.'], hint: 'Edges are one fewer than vertices.' }; }
-    if (shape === 'forest') { var n2 = R.int(8, 30), c = R.int(2, 5); return { q: 'A forest (a graph with no cycles) has ' + n2 + ' vertices and ' + c + ' connected components. How many edges does it have?', a: num(n2 - c), steps: ['Each component is a tree, with one fewer edge than vertices.', 'Adding over the ' + c + ' trees: $' + n2 + ' - ' + c + ' = ' + (n2 - c) + '$.'], hint: 'Lose one edge per component.' }; }
+    if (shape === 'edges') { var n = R.int(3, 120), back = R.coin(); return back ? { q: 'A tree has ' + n + ' edges. How many vertices does it have?', a: num(n + 1), steps: ['A tree with $v$ vertices has $v - 1$ edges.', 'So $v = ' + n + ' + 1 = ' + (n + 1) + '$.'], hint: 'Edges are one fewer than vertices.' } : { q: 'How many edges does a tree with ' + n + ' vertices have?', a: num(n - 1), steps: ['Build the tree one vertex at a time: each new vertex joins with exactly one new edge.', 'So $' + n + ' - 1 = ' + (n - 1) + '$ edges.'], hint: 'Edges are one fewer than vertices.' }; }
+    if (shape === 'forest') { var n2 = R.int(6, 60), c = R.int(2, 9); return { q: 'A forest (a graph with no cycles) has ' + n2 + ' vertices and ' + c + ' connected components. How many edges does it have?', a: num(n2 - c), steps: ['Each component is a tree, with one fewer edge than vertices.', 'Adding over the ' + c + ' trees: $' + n2 + ' - ' + c + ' = ' + (n2 - c) + '$.'], hint: 'Lose one edge per component.' }; }
     if (shape === 'istree') {
-      var nv = R.int(5, 7), g = randTree(R, nv), kind = R.pick(['tree', 'tree', 'cycle', 'trap']);
+      var nv = R.int(5, 8), g = randTree(R, nv), kind = R.pick(['tree', 'tree', 'cycle', 'trap']);
       if (kind === 'cycle') { var cand = []; g.v.forEach(function (a) { g.v.forEach(function (b) { if (a < b && !gHasEdge(g, a, b)) cand.push([a, b]); }); }); g.e.push(R.pick(cand)); }
       if (kind === 'trap') { var cand2 = [], tt = 0, e0; do { e0 = R.int(0, g.e.length - 1); var rest = { v: g.v, e: g.e.filter(function (x, i) { return i !== e0; }) }, comp = gComps(rest).filter(function (cc) { return cc.length >= 3; })[0]; cand2 = []; if (comp) comp.forEach(function (a) { comp.forEach(function (b) { if (a < b && !gHasEdge(rest, a, b)) cand2.push([a, b]); }); }); tt++; } while (!cand2.length && tt < 50);
         if (cand2.length) { g.e = g.e.filter(function (x, i) { return i !== e0; }); g.e.push(R.pick(cand2)); } else kind = 'tree'; }
@@ -1864,8 +2116,15 @@
       return { q: 'A tree has ' + parts.join(', ') + ', and every other vertex is a leaf (degree 1). How many leaves does it have?', a: num(Lf),
         steps: ['Let $\\ell$ be the number of leaves. Vertices: $v = ' + (n2v + n3 + n4 + n5) + ' + \\ell$, edges $v - 1$.', 'Handshake: the degrees add to $2(v - 1)$: $\\ell + ' + (2 * n2v + 3 * n3 + 4 * n4 + 5 * n5) + ' = 2(' + (n2v + n3 + n4 + n5) + ' + \\ell - 1)$.', 'Solve: $\\ell = ' + Lf + '$. (Shortcut: $\\ell = 2 + \\sum (d - 2)$ over vertices of degree $d \\ge 3$.)'], hint: 'Combine $e = v - 1$ with the handshake lemma.' }; }
     var facts = [['Adding one edge to a tree (between two of its vertices) creates exactly one cycle.', true, 'The two ends were already joined by a unique path; the new edge closes it into one cycle.'], ['Removing any edge from a tree disconnects it.', true, 'Each edge is the only path between its ends.'],
-      ['Every tree with at least 2 vertices has at least 2 leaves.', true, 'The two ends of a longest path must be leaves.'], ['Every graph with $n$ vertices and $n - 1$ edges is a tree.', false, 'A triangle plus a separate vertex has 4 vertices and 3 edges but is not connected.'], ['In a tree there is exactly one path between any two vertices.', true, 'Two different paths would create a cycle.']];
+      ['Every tree with at least 2 vertices has at least 2 leaves.', true, 'The two ends of a longest path must be leaves.'], ['Every graph with $n$ vertices and $n - 1$ edges is a tree.', false, 'A triangle plus a separate vertex has 4 vertices and 3 edges but is not connected.'], ['In a tree there is exactly one path between any two vertices.', true, 'Two different paths would create a cycle.'],
+      ['A connected graph with no cycles is a tree.', true, 'That is the definition of a tree.'], ['A tree can have a vertex of degree $0$.', false, 'Only the one-vertex tree has such a vertex; in a larger tree every vertex has an edge, since the tree is connected.'],
+      ['Every tree is bipartite.', true, 'A tree has no cycles at all, so it has no odd cycles; color by distance from any vertex, even or odd.'], ['A tree with $10$ vertices can have $10$ edges.', false, 'A tree with $v$ vertices has exactly $v - 1$ edges, here $9$.'],
+      ['Every connected graph contains a spanning tree.', true, 'Remove edges from cycles one at a time until no cycle is left; the graph stays connected.']];
     var f = R.pick(facts);
+    if (R.chance(0.5)) { var tv = R.int(4, 60), te = tv - 1 + R.pick([0, 0, -1, 1, 2]), tl = R.int(2, 9);
+      f = R.pick([['A tree with $' + tv + '$ vertices has $' + te + '$ edges.', te === tv - 1, 'A tree with $v$ vertices has exactly $v - 1 = ' + (tv - 1) + '$ edges.'],
+        ['A connected graph with $' + tv + '$ vertices and $' + te + '$ edges is a tree.', te === tv - 1, te === tv - 1 ? 'A connected graph with $v$ vertices and $v - 1$ edges has no cycles, so it is a tree.' : 'A tree with $' + tv + '$ vertices has exactly $' + (tv - 1) + '$ edges, not $' + te + '$.'],
+        ['A tree with a vertex of degree $' + tl + '$ has at least $' + tl + '$ leaves.', true, 'Start a path along each of the $' + tl + '$ edges at that vertex and keep going away from it; each path ends at a different leaf.']]); }
     return { q: 'True or false: ' + f[0], a: tf(f[1]), steps: [f[2]], hint: 'A tree is connected with no cycles.' };
   });
 
@@ -1911,9 +2170,9 @@
   G('disc.graph-coloring', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['chromatic', 'bipartite', 'chromatic']), R.pick(['chromatic', 'greedy', 'schedule']), R.pick(['greedy', 'chromatic', 'schedule']));
     if (shape === 'chromatic' || shape === 'bipartite') {
-      var fam = R.int(1, 6), g, nm = '';
-      if (fam === 1) { var n = R.int(4, 7); g = cycleG(n); nm = 'the cycle $C_{' + n + '}$'; } else if (fam === 2) { var n2 = R.int(4, 6); g = wheelG(n2); nm = 'a wheel: a cycle of ' + n2 + ' with a hub joined to all of them'; }
-      else if (fam === 3) { g = completeG(R.int(3, 5)); } else if (fam === 4) { g = bipG(R.int(2, 3), R.int(2, 3)); } else if (fam === 5 && L > 1) { g = PRESET.petersen; nm = 'the Petersen graph'; } else g = gRandom(R, 6, R.int(6, 9), true);
+      var fam = R.int(1, 8), g, nm = '';
+      if (fam === 1) { var n = R.int(3, 9); g = cycleG(n); nm = 'the cycle $C_{' + n + '}$'; } else if (fam === 2) { var n2 = R.int(3, 8); g = wheelG(n2); nm = 'a wheel: a cycle of ' + n2 + ' with a hub joined to all of them'; }
+      else if (fam === 3) { g = completeG(R.int(2, 6)); } else if (fam === 4) { g = bipG(R.int(1, 4), R.int(2, 4)); } else if (fam === 5 && L > 1) { g = PRESET.petersen; nm = 'the Petersen graph'; } else g = gRandom(R, 6, R.int(6, 9), true);
       var chi = gChromatic(g), oc = gOddCycle(g);
       if (shape === 'bipartite') return { q: 'Is the graph shown bipartite (can it be colored with two colors)? (Edges $' + gEdgeWords(g) + '$.)', a: tf(!oc), viz: gViz(g, g.v.length === 10 ? { graph: 'petersen' } : {}),
         steps: ['A graph can be two-colored exactly when it has no cycle of odd length.', oc ? 'It has an odd cycle, so two colors are not enough.' : 'Coloring by alternating along edges never clashes, so yes: ' + (function () { var s = {}, q = [g.v[0]]; s[g.v[0]] = 0; var adj = gAdj(g); while (q.length) { var x = q.shift(); adj[x].forEach(function (y) { if (s[y] === undefined) { s[y] = 1 - s[x]; q.push(y); } }); } g.v.forEach(function (v) { if (s[v] === undefined) s[v] = 0; }); return 'one side ' + g.v.filter(function (v) { return !s[v]; }).join(', ') + ', the other ' + g.v.filter(function (v) { return s[v]; }).join(', '); })() + '.'], hint: 'Look for a triangle or a 5-cycle.' };
@@ -1922,16 +2181,20 @@
           'A coloring with ' + chi + ' colors: ' + colorWords(g, chi) + '.', 'So the chromatic number is $' + chi + '$.'], hint: 'Find a lower bound (an odd cycle, a $K_{4}$) and a coloring that matches it.' };
     }
     if (shape === 'greedy') {
-      var k = R.int(3, 4), V = [], e = [], ord = [];
+      var k = R.int(3, 6), V = [], e = [], ord = [];
       for (var i = 0; i < k; i++) { V.push('A' + (i + 1)); V.push('B' + (i + 1)); }
       for (i = 0; i < k; i++) for (var j = 0; j < k; j++) if (i !== j) e.push(['A' + (i + 1), 'B' + (j + 1)]);
-      for (i = 0; i < k; i++) { ord.push('A' + (i + 1)); ord.push('B' + (i + 1)); }
+      var oo = R.pick(['pairs', 'sides', 'mixed', 'random', 'random']); // the order changes how many colors greedy uses
+      if (oo === 'pairs') for (i = 0; i < k; i++) { ord.push('A' + (i + 1)); ord.push('B' + (i + 1)); }
+      else if (oo === 'sides') { for (i = 0; i < k; i++) ord.push('A' + (i + 1)); for (i = 0; i < k; i++) ord.push('B' + (i + 1)); }
+      else if (oo === 'random') ord = R.shuffle(V);
+      else { var m0 = R.int(1, k - 1); for (i = 0; i < m0; i++) { ord.push('A' + (i + 1)); ord.push('B' + (i + 1)); } for (i = m0; i < k; i++) ord.push('A' + (i + 1)); for (i = m0; i < k; i++) ord.push('B' + (i + 1)); }
       var gg = { v: V, e: e }, col = gGreedy(gg, ord), used = U.uniq(V.map(function (v) { return String(col[v]); })).length;
       return { q: 'The graph has vertices $A_{1}, \\ldots, A_{' + k + '}$ and $B_{1}, \\ldots, B_{' + k + '}$, with $A_{i}$ joined to $B_{j}$ whenever $i \\ne j$. A greedy coloring visits the vertices in the order $' + ord.map(function (v) { return v[0] + '_{' + v.slice(1) + '}'; }).join(', ') + '$, giving each the lowest-numbered color not used by its colored neighbors. How many colors does it use?', a: num(used),
-        steps: ord.map(function (v) { return '$' + v[0] + '_{' + v.slice(1) + '}$ gets color ' + (col[v] + 1); }).concat(['It uses $' + used + '$ colors, but the graph is bipartite (all $A$’s one color, all $B$’s the other), so $2$ is enough. Greedy coloring depends on the order.']),
+        steps: ord.map(function (v) { return '$' + v[0] + '_{' + v.slice(1) + '}$ gets color ' + (col[v] + 1); }).concat([used > 2 ? 'It uses $' + used + '$ colors, but the graph is bipartite (all $A$’s one color, all $B$’s the other), so $2$ is enough. Greedy coloring depends on the order.' : 'It uses $2$ colors, the fewest possible for a graph with an edge. A different order could need more.']),
         hint: 'Work through the order, one vertex at a time.' };
     }
-    var courses = ['Art', 'Biology', 'Chemistry', 'Drama', 'Economics', 'French'], gs, chi2, t = 0;
+    var courses = R.sample(['Art', 'Biology', 'Chemistry', 'Drama', 'Economics', 'French', 'Geometry', 'History', 'Latin', 'Music', 'Physics', 'Spanish', 'Writing', 'Algebra'], 6).sort(), gs, chi2, t = 0;
     do { gs = gRandom(R, 6, R.int(6, 9), false); chi2 = gChromatic(gs); t++; } while (chi2 < 3 && t < 40);
     var nmOf = function (x) { return courses['ABCDEF'.indexOf(x)]; };
     return { q: 'Six exams must be scheduled. Two exams that share a student cannot be at the same time. Conflicts: ' + gs.e.map(function (e2) { return nmOf(e2[0]) + '–' + nmOf(e2[1]); }).join(', ') + '. What is the fewest number of time slots needed?', a: num(chi2),
@@ -1942,21 +2205,25 @@
   var POLY = [['tetrahedron', 4, 6, 4], ['cube', 8, 12, 6], ['octahedron', 6, 12, 8], ['dodecahedron', 20, 30, 12], ['icosahedron', 12, 30, 20], ['triangular prism', 6, 9, 5], ['square pyramid', 5, 8, 5], ['pentagonal prism', 10, 15, 7], ['hexagonal pyramid', 7, 12, 7]];
   G('disc.planar-graphs', function (R, ctx) {
     var L = lv(ctx), shape = by(ctx, R.pick(['faces', 'poly', 'edges']), R.pick(['bound', 'test', 'poly', 'Kn']), R.pick(['test', 'tri', 'bound', 'Kn']));
-    if (shape === 'faces' || shape === 'edges') { var v = R.int(5, 20), e = v - 1 + R.int(1, 2 * v - 6), f = e - v + 2;
+    if (shape === 'faces' || shape === 'edges') { var v = R.int(4, 40), e = v - 1 + R.int(1, 2 * v - 6), f = e - v + 2;
       if (shape === 'faces') return { q: 'A connected planar graph is drawn with ' + v + ' vertices and ' + e + ' edges and no crossings. How many faces does the drawing have (counting the outside region)?', a: num(f), steps: ['Euler’s formula: $v - e + f = 2$.', '$f = 2 - ' + v + ' + ' + e + ' = ' + f + '$, including the unbounded outside face.'], hint: 'Use $v - e + f = 2$.' };
       return { q: 'A connected planar drawing has ' + v + ' vertices and ' + f + ' faces (including the outside). How many edges does it have?', a: num(e), steps: ['$v - e + f = 2$, so $e = v + f - 2$.', '$e = ' + v + ' + ' + f + ' - 2 = ' + e + '$.'], hint: 'Rearrange Euler’s formula.' }; }
     if (shape === 'poly') { var p = R.pick(POLY), miss = R.int(1, 3), nm = ['', 'vertices', 'edges', 'faces'][miss];
       var given = [1, 2, 3].filter(function (i) { return i !== miss; }).map(function (i) { return p[i] + ' ' + ['', 'vertices', 'edges', 'faces'][i]; }).join(' and ');
       return { q: 'A ' + p[0] + ' has ' + given + '. How many ' + nm + ' does it have?', a: num(p[miss]), steps: ['A convex polyhedron flattens into a connected planar graph (look through one face), so $v - e + f = 2$.', 'Solve for the ' + nm + ': $' + p[miss] + '$. Check: $' + p[1] + ' - ' + p[2] + ' + ' + p[3] + ' = 2$.'], hint: 'Use $v - e + f = 2$.' }; }
-    if (shape === 'bound') { var v2 = R.int(4, 20), tri = R.coin(); return { q: 'What is the largest number of edges a simple planar graph with ' + v2 + ' vertices can have' + (tri ? '' : ' if it has no triangles (for example, if it is bipartite)') + '?', a: num(tri ? 3 * v2 - 6 : 2 * v2 - 4),
+    if (shape === 'bound') { var v2 = R.int(4, 50), tri = R.coin(); return { q: 'What is the largest number of edges a simple planar graph with ' + v2 + ' vertices can have' + (tri ? '' : ' if it has no triangles (for example, if it is bipartite)') + '?', a: num(tri ? 3 * v2 - 6 : 2 * v2 - 4),
       steps: tri ? ['Every face of a simple planar drawing has at least $3$ edges around it, and each edge borders at most $2$ faces: $3f \\le 2e$.', 'With $f = 2 - v + e$: $3(2 - v + e) \\le 2e$, so $e \\le 3v - 6 = ' + (3 * v2 - 6) + '$ (reached by a triangulation).'] : ['With no triangles, every face has at least $4$ edges: $4f \\le 2e$.', 'With $f = 2 - v + e$: $e \\le 2v - 4 = ' + (2 * v2 - 4) + '$.'], hint: 'Combine Euler’s formula with a count of edges around faces.' }; }
-    if (shape === 'test') { var v3 = R.int(5, 12), lim = 3 * v3 - 6, over = R.coin(), e3 = over ? lim + R.int(1, 5) : lim - R.int(0, 4); if (e3 > v3 * (v3 - 1) / 2) { e3 = v3 * (v3 - 1) / 2; over = e3 > lim; }
+    if (shape === 'test') { var v3 = R.int(5, 20), lim = 3 * v3 - 6, over = R.coin(), e3 = over ? lim + R.int(1, 5) : lim - R.int(0, 4); if (e3 > v3 * (v3 - 1) / 2) { e3 = v3 * (v3 - 1) / 2; over = e3 > lim; }
       return { q: 'A simple graph has ' + v3 + ' vertices and ' + e3 + ' edges. What can you conclude from the bound $e \\le 3v - 6$?', a: mcKeep(['It is not planar.', 'It is planar.', 'The bound does not decide whether it is planar.'], e3 > lim ? 0 : 2),
         steps: ['$3v - 6 = ' + lim + '$.', e3 > lim ? '$' + e3 + ' > ' + lim + '$, so the graph breaks a rule every simple planar graph obeys: it is not planar.' : '$' + e3 + ' \\le ' + lim + '$, so the test passes, but passing proves nothing: $K_{3,3}$ has $9 \\le 12$ edges and is not planar.'], hint: 'The bound can only rule graphs out.' }; }
-    if (shape === 'tri') { var v4 = R.int(5, 20); return { q: 'A simple connected planar graph with ' + v4 + ' vertices is drawn so that every face, including the outside one, is a triangle. How many faces are there?', a: num(2 * v4 - 4),
+    if (shape === 'tri') { var v4 = R.int(4, 50); return { q: 'A simple connected planar graph with ' + v4 + ' vertices is drawn so that every face, including the outside one, is a triangle. How many faces are there?', a: num(2 * v4 - 4),
       steps: ['Each face has 3 edges and each edge borders 2 faces: $3f = 2e$.', 'Euler: $v - e + f = 2$ with $e = \\frac{3f}{2}$ gives $v - \\frac{f}{2} = 2$, so $f = 2v - 4 = ' + (2 * v4 - 4) + '$ (and $e = 3v - 6 = ' + (3 * v4 - 6) + '$).'], hint: 'Use $3f = 2e$ together with Euler’s formula.' }; }
     var it = R.pick([['K_{4}', true, 'Draw it as a triangle with a point in the middle joined to all three corners.'], ['K_{5}', false, '$e = 10 > 3 \\cdot 5 - 6 = 9$.'], ['K_{3,3}', false, 'It has no triangles, so a planar drawing would need $e \\le 2v - 4 = 8$, but $e = 9$.'], ['K_{2,4}', true, 'Put the two special vertices on the left and right and the four others in a column between them.'], ['K_{6}', false, '$e = 15 > 3 \\cdot 6 - 6 = 12$.'], ['\\text{the cube graph } Q_{3}', true, 'Draw a square inside a square and join the matching corners.']]);
-    return { q: 'Is ' + (/text/.test(it[0]) ? 'the cube graph $Q_{3}$' : '$' + it[0] + '$') + ' planar?', a: tf(it[1]), steps: [it[2]], hint: 'Try to draw it without crossings, or use an edge bound.' };
+    if (R.chance(0.6)) { var pn = R.int(1, 9), pm = R.int(1, 7), pk = R.int(pm, 9);
+      it = R.pick([['K_{' + pn + '}', pn <= 4, pn <= 4 ? 'It has at most $4$ vertices and can be drawn without crossings (for $K_{4}$: a triangle with a point in the middle).' : 'It contains $K_{5}$, and $K_{5}$ has $e = 10 > 3 \\cdot 5 - 6 = 9$.'],
+        ['K_{' + pm + ',' + pk + '}', pm <= 2, pm <= 2 ? 'Put the ' + (pm === 1 ? 'single vertex' : 'two vertices of the small side') + ' on either side of a row of the other ' + pk + ' and join them: no crossings.' : 'It contains $K_{3,3}$, which has no triangles, so a planar drawing would need $e \\le 2v - 4 = 8$, but $e = 9$.'],
+        ['C_{' + (pn + 2) + '}', true, 'A cycle is drawn as a polygon.'], ['W_{' + (pn + 2) + '}\\text{, a cycle of ' + (pn + 2) + ' with a hub}', true, 'Draw the cycle as a polygon and put the hub in the middle.']]); }
+    return { q: 'Is ' + (/text/.test(it[0]) && !/^W/.test(it[0]) ? 'the cube graph $Q_{3}$' : '$' + it[0] + '$') + ' planar?', a: tf(it[1]), steps: [it[2]], hint: 'Try to draw it without crossings, or use an edge bound.' };
   });
 
 // ---- 99-tail.js

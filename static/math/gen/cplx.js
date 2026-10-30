@@ -293,8 +293,8 @@
     var kind = R.pick(L(ctx, ['toexp', 'torect', 'toexp'], ['toexp', 'torect', 'mul', 'quot'], ['pow', 'pow', 'mul', 'toexp']));
     if (kind === 'toexp') {
       var fam = lvl(ctx) === 1 ? R.pick(['ax', 'four', 'six']) : R.pick(['four', 'six', 'six']);
-      var k = fam === 'ax' ? R.pick(ANGAX) : fam === 'four' ? R.pick(lvl(ctx) === 1 ? [Q(1, 4), Q(3, 4)] : ANG4) : R.pick(lvl(ctx) === 1 ? [Q(1, 6), Q(1, 3)] : ANG6);
-      var m = R.int(1, 4), t = trigOf(k), x, y, rP, rT, ref;
+      var k = fam === 'ax' ? R.pick(ANGAX) : fam === 'four' ? R.pick(ANG4) : R.pick(lvl(ctx) === 1 ? [Q(1, 6), Q(1, 3), Q(2, 3), Q(5, 6), Q(-1, 6), Q(-1, 3)] : ANG6);
+      var m = R.int(1, 7), t = trigOf(k), x, y, rP, rT, ref;
       if (fam === 'four') { x = rad(m * Math.sign(qn(t.c.k))); y = rad(m * Math.sign(qn(t.s.k))); rP = radPlain(m, 2); rT = radTex(m, 2); ref = Q(1, 4); }
       else if (fam === 'six') { x = radMul(rad(2 * m), t.c); y = radMul(rad(2 * m), t.s); rP = String(2 * m); rT = rP; ref = t.s.n === 1 ? Q(1, 6) : Q(1, 3); }
       else { x = radMul(rad(m), t.c); y = radMul(rad(m), t.s); rP = String(m); rT = rP; ref = null; }
@@ -307,14 +307,14 @@
         steps: st, hint: 'Find the quadrant first, then the angle.', chk: { kind: kind, z: rcPlain(x, y), r: rP, k: qp(k) } };
     }
     if (kind === 'torect') {
-      var k2 = R.pick(ANG6.concat(ANG4)), r2 = R.pick([2, 4, 6, 3]), p2 = polarPt(r2, k2), t2 = trigOf(k2);
+      var k2 = R.pick(ANG6.concat(ANG4)), r2 = R.pick([2, 4, 6, 3, 5, 8, 10]), p2 = polarPt(r2, k2), t2 = trigOf(k2);
       return { q: 'Write $' + eiTex(r2, k2) + '$ in the form $a + bi$.',
         a: { t: 'num', v: rcPlain(p2.x, p2.y) },
         steps: ['Euler\'s formula: $re^{i\\theta} = r\\cos\\theta + ir\\sin\\theta$.', '$\\cos\\left(' + angTex(k2) + '\\right) = ' + radTex(t2.c.k, t2.c.n) + '$ and $\\sin\\left(' + angTex(k2) + '\\right) = ' + radTex(t2.s.k, t2.s.n) + '$.', 'Multiply by $' + r2 + '$: $' + rcTex(p2.x, p2.y) + '$.'],
         hint: 'Use $e^{i\\theta} = \\cos\\theta + i\\sin\\theta$.', chk: { kind: kind, r: r2, k: qp(k2), v: rcPlain(p2.x, p2.y) } };
     }
     if (kind === 'mul' || kind === 'quot') {
-      var famA = R.pick([ANG6, ANG4]).concat([Q(1, 2), Q(1)]), a1 = R.pick(famA), a2 = R.pick(famA), m1 = R.int(2, 6), m2 = R.int(2, 4);
+      var famA = R.pick([ANG6, ANG4]).concat([Q(1, 2), Q(1)]), a1 = R.pick(famA), a2 = R.pick(famA), m1 = R.int(2, 9), m2 = R.int(2, 6);
       var ks = kind === 'mul' ? princ(a1.add(a2)) : princ(a1.sub(a2)), rr = kind === 'mul' ? Q(m1 * m2) : Q(m1, m2);
       var res = { x: radMul(rad(rr), trigOf(ks).c), y: radMul(rad(rr), trigOf(ks).s) };
       var raw = kind === 'mul' ? a1.add(a2) : a1.sub(a2);
@@ -324,7 +324,7 @@
         hint: kind === 'mul' ? 'Lengths multiply; angles add.' : 'Lengths divide; angles subtract.', chk: { kind: kind, v: rcPlain(res.x, res.y), expr: kind === 'mul' ? m1 + '*e^(' + piPlain(a1) + '*i)*' + m2 + '*e^(' + piPlain(a2) + '*i)' : m1 + '*e^(' + piPlain(a1) + '*i)/(' + m2 + '*e^(' + piPlain(a2) + '*i))' } };
     }
     // powers by De Moivre: (1 ± i)^n, (±√3 ± i)^n, (1 ± √3 i)^n
-    var base = R.pick(['1+i', '1-i', 's3+i', 's3-i', '1+s3i', '-1+i']), n = R.int(4, lvl(ctx) === 3 ? 10 : 7);
+    var base = R.pick(['1+i', '1-i', 's3+i', 's3-i', '1+s3i', '-1+i']), n = R.int(3, lvl(ctx) === 3 ? 12 : 8);
     var info = { '1+i': [2, Q(1, 4), '1 + i'], '1-i': [2, Q(-1, 4), '1 - i'], '-1+i': [2, Q(3, 4), '-1 + i'], 's3+i': [4, Q(1, 6), '\\sqrt{3} + i'], 's3-i': [4, Q(-1, 6), '\\sqrt{3} - i'], '1+s3i': [4, Q(1, 3), '1 + \\sqrt{3}\\,i'] }[base];
     var mod2 = info[0], th = info[1], kk = princ(th.mul(n)), mod = Q(1); // |base|^n = (√mod2)^n
     var rn = mod2 === 4 ? rad(Math.pow(2, n), 1) : (n % 2 === 0 ? rad(Math.pow(2, n / 2), 1) : rad(Math.pow(2, (n - 1) / 2), 2));
@@ -337,7 +337,7 @@
 
   // ---- principal argument
   function latticeAt(R, k) { // a lattice-like point at angle kπ with an exact description: [x, y] radicals and TeX
-    var t = trigOf(k), m = R.int(1, 4), s3 = t.c.n === 3 || t.s.n === 3;
+    var t = trigOf(k), m = R.int(1, 7), s3 = t.c.n === 3 || t.s.n === 3;
     if (t.c.n === 2) return { x: rad(m * Math.sign(qn(t.c.k))), y: rad(m * Math.sign(qn(t.s.k))) };
     if (s3) return { x: radMul(rad(2 * m), t.c), y: radMul(rad(2 * m), t.s) };
     return { x: radMul(rad(m), t.c), y: radMul(rad(m), t.s) };
@@ -371,7 +371,7 @@
         hint: 'Reflect across the real axis. Watch the negative real axis.', chk: { kind: kind, z: rcPlain(p3.x, p3.y), inv: inv, v: qp(ans) } };
     }
     // Arg of a power
-    var k4 = R.pick([Q(3, 4), Q(2, 3), Q(5, 6), Q(-3, 4), Q(-2, 3), Q(1, 3), Q(-5, 6)]), n = R.int(2, 5), p4 = latticeAt(R, k4), raw = k4.mul(n), ka2 = princ(raw);
+    var k4 = R.pick([Q(3, 4), Q(2, 3), Q(5, 6), Q(-3, 4), Q(-2, 3), Q(1, 3), Q(-5, 6), Q(1, 4), Q(-1, 4), Q(1, 6), Q(-1, 6), Q(-1, 3)]), n = R.int(2, 8), p4 = latticeAt(R, k4), raw = k4.mul(n), ka2 = princ(raw);
     return { q: 'Let $z = ' + rcTex(p4.x, p4.y) + '$. Find $\\operatorname{Arg}\\left(z^{' + n + '}\\right)$.', a: { t: 'num', v: piPlain(ka2) },
       steps: ['$\\operatorname{Arg} z = ' + piTex(k4) + '$.', 'Powers multiply the angle: $' + n + ' \\cdot ' + piTex(k4) + ' = ' + piTex(raw) + '$ is an argument of $z^{' + n + '}$.', raw.eq(ka2) ? 'It lies in $(-\\pi, \\pi]$ already.' : 'Shift by a multiple of $2\\pi$ into $(-\\pi, \\pi]$: $' + piTex(ka2) + '$.'],
       hint: 'Multiply the angle by the power, then reduce.', chk: { kind: 'pow', z: rcPlain(p4.x, p4.y), n: n, v: qp(ka2) } };
@@ -530,13 +530,13 @@
   G('cplx.complex-limits', function (R, ctx) {
     var kind = R.pick(L(ctx, ['poly', 'removable', 'poly'], ['removable', 'path', 'path'], ['dne', 'contin', 'path', 'dne']));
     if (kind === 'poly') {
-      var p = P([zrand(R, -3, 3), zrand(R, -3, 3), Z(R.nz(-2, 2))]), z0 = zrand(R, -2, 2, true), w = pev(p, z0);
+      var p = P([zrand(R, -5, 5), zrand(R, -4, 4), Z(R.nz(-3, 3))]), z0 = zrand(R, -3, 3, true), w = pev(p, z0);
       return { q: 'Find $\\displaystyle\\lim_{z \\to ' + ztex(z0) + '} \\left(' + ptex(p) + '\\right)$.', a: { t: 'num', v: zplain(w) },
         steps: ['Polynomials are continuous, so the limit is the value at $' + ztex(z0) + '$.', '$(' + ztex(z0) + ')^2 = ' + ztex(zmul(z0, z0)) + '$; substituting gives $' + ztex(w) + '$.'],
         hint: 'Substitute: polynomials are continuous.', chk: { kind: kind, f: pplain(p), z: zplain(z0), v: zplain(w) } };
     }
     if (kind === 'removable' || kind === 'contin') {
-      var a = zrand(R, -3, 3, true), b = zrand(R, -3, 3), num = pmul(plin(a), plin(b)), val = zsub(a, b), shape = R.coin();
+      var a = zrand(R, -5, 5, true), b = zrand(R, -5, 5), num = pmul(plin(a), plin(b)), val = zsub(a, b), shape = R.coin();
       if (kind === 'contin') return { q: 'Let $f(z) = \\dfrac{' + ptex(num) + '}{' + zm(a) + '}$ for $z \\ne ' + ztex(a) + '$. What value should $f(' + ztex(a) + ')$ have to make $f$ continuous at $' + ztex(a) + '$?', a: { t: 'num', v: zplain(val) },
         steps: ['Factor the top: $' + ptex(num) + ' = (' + zm(a) + ')(' + zm(b) + ')$.', 'For $z \\ne ' + ztex(a) + '$, $f(z) = ' + zm(b) + '$, which tends to $' + ztex(a) + (zisz(b) ? '' : ' - ' + zpar(b)) + ' = ' + ztex(val) + '$.', 'Define $f(' + ztex(a) + ') = ' + ztex(val) + '$.'],
         hint: 'Factor and cancel, then take the limit.', chk: { kind: kind, f: '(' + pplain(num) + ')/(z-(' + zplain(a) + '))', a: zplain(a), v: zplain(val) } };
@@ -545,7 +545,7 @@
         hint: 'The top has the factor $' + zm(a) + '$.', chk: { kind: kind, f: '(' + pplain(num) + ')/(z-(' + zplain(a) + '))', a: zplain(a), v: zplain(val) } };
     }
     if (kind === 'path') {
-      var m = R.pick([1, 2, 3, -1, -2, Q(1, 2), Q(-1, 3)]), fq = R.pick(['zbar/z', 'z/zbar']); m = q(m);
+      var m = R.pick([1, 2, 3, 4, 5, -1, -2, -3, -4, Q(1, 2), Q(-1, 3), Q(2, 3), Q(-3, 2), Q(1, 3), Q(-1, 2), Q(3, 4)]), fq = R.pick(['zbar/z', 'z/zbar']); m = q(m);
       var one = Z(1, m), r = fq === 'zbar/z' ? zdiv(zconj(one), one) : zdiv(one, zconj(one));
       return { q: 'Let $f(z) = ' + (fq === 'zbar/z' ? '\\dfrac{\\overline{z}}{z}' : '\\dfrac{z}{\\overline{z}}') + '$. As $z \\to 0$ along the line $y = ' + T.mono(m, 'x') + '$, what value does $f(z)$ approach?', a: { t: 'num', v: zplain(r) },
         steps: ['On the line, $z = x + iy$ with $y = ' + T.mono(m, 'x') + '$, so $z = x(' + ztex(one) + ')$.', '$\\overline{z} = x(' + ztex(zconj(one)) + ')$; the $x$ cancels: $f = ' + (fq === 'zbar/z' ? '\\dfrac{' + ztex(zconj(one)) + '}{' + ztex(one) + '}' : '\\dfrac{' + ztex(one) + '}{' + ztex(zconj(one)) + '}') + ' = ' + ztex(r) + '$.', 'The value depends on the line ($1$ along the real axis), so $\\lim_{z \\to 0} f(z)$ does not exist.'],
@@ -614,11 +614,22 @@
   G('cplx.cauchy-riemann', function (R, ctx) {
     var kind = R.pick(L(ctx, ['coef', 'check', 'coef'], ['coef3', 'deriv', 'check'], ['where', 'deriv', 'coef3', 'where']));
     if (kind === 'coef') {
-      var a = R.nz(-4, 4), b = R.nz(-3, 3);
+      var a = R.nz(-8, 8), b = R.nz(-7, 7);
       return { q: 'For which constants $p$ and $q$ is $f = (x^2 - y^2' + T.coef(a, 'x', false) + ') + i(pxy + qy' + T.coef(b, '', false) + ')$ complex differentiable everywhere?',
         a: { t: 'multi', parts: [{ label: '$p =$', a: { t: 'num', v: '2' } }, { label: '$q =$', a: { t: 'num', v: String(a) } }] },
         steps: ['$u_x = 2x ' + (a < 0 ? '- ' + (-a) : '+ ' + a) + '$ and $v_y = px + q$: the first equation $u_x = v_y$ needs $p = 2$ and $q = ' + a + '$.', '$u_y = -2y$ and $v_x = py$: the second equation $u_y = -v_x$ needs $-2y = -py$, so $p = 2$ again.', 'With $p = 2$, $q = ' + a + '$ both equations hold everywhere (the partials are continuous): $f = z^2' + T.coef(a, 'z', false) + zcoef(Z(0, b), '', false) + '$.'],
         hint: 'Match $u_x$ with $v_y$, and $u_y$ with $-v_x$.', chk: { kind: kind, a: a } };
+    }
+    if (kind === 'coef3' && R.chance(0.8)) {
+      var ka = R.pick([1, 2, 3, 4, 5, -1, -2, -3]), cub = R.coin(), kt = ka === 1 ? '' : ka === -1 ? '-' : String(ka);
+      if (cub) return { q: 'For which constants $p$ and $q$ do $u = ' + kt + 'x^3 + pxy^2$ and $v = qx^2y ' + (ka < 0 ? '+ ' + (ka === -1 ? '' : -ka) : '- ' + (ka === 1 ? '' : ka)) + 'y^3$ satisfy the Cauchy–Riemann equations everywhere?',
+        a: { t: 'multi', parts: [{ label: '$p =$', a: { t: 'num', v: String(-3 * ka) } }, { label: '$q =$', a: { t: 'num', v: String(3 * ka) } }] },
+        steps: ['$u_x = ' + 3 * ka + 'x^2 + py^2$ and $v_y = qx^2 ' + (ka < 0 ? '+ ' + (-3 * ka) : '- ' + 3 * ka) + 'y^2$. Equal for all $x, y$: $q = ' + 3 * ka + '$ and $p = ' + (-3 * ka) + '$.', '$u_y = 2pxy$ and $v_x = 2qxy$. The second equation $u_y = -v_x$ needs $p = -q$, which these values satisfy.', 'Then $u + iv = ' + kt + 'z^3$.'],
+        hint: 'Compare the coefficients of $x^2$ and of $y^2$ in $u_x = v_y$.', chk: { kind: kind } };
+      return { q: 'For which constants $p$ and $q$ do $u = ' + kt + 'x^2 + py^2$ and $v = qxy$ satisfy the Cauchy–Riemann equations everywhere?',
+        a: { t: 'multi', parts: [{ label: '$p =$', a: { t: 'num', v: String(-ka) } }, { label: '$q =$', a: { t: 'num', v: String(2 * ka) } }] },
+        steps: ['$u_x = ' + 2 * ka + 'x$ and $v_y = qx$, so $q = ' + 2 * ka + '$.', '$u_y = 2py$ and $v_x = qy$. The second equation $u_y = -v_x$ needs $2p = -q$, so $p = ' + (-ka) + '$.', 'Then $u + iv = ' + kt + 'z^2$.'],
+        hint: 'Match $u_x$ with $v_y$, and $u_y$ with $-v_x$.', chk: { kind: kind } };
     }
     if (kind === 'coef3') {
       return { q: 'For which constants $p$ and $q$ do $u = x^3 + pxy^2$ and $v = qx^2y - y^3$ satisfy the Cauchy–Riemann equations everywhere?',
@@ -627,7 +638,7 @@
         hint: 'Compare the coefficients of $x^2$ and of $y^2$ in $u_x = v_y$.', chk: { kind: kind } };
     }
     if (kind === 'deriv') {
-      var p = P([zrand(R, -3, 3), zrand(R, -3, 3), Z(R.pick([1, -1, 2]))]), uv = xyParts(p), z0 = zrand(R, -2, 2, true), d = pev(pder(p), z0);
+      var p = P([zrand(R, -5, 5), zrand(R, -5, 5), Z(R.pick([1, -1, 2, -2, 3]))]), uv = xyParts(p), z0 = zrand(R, -3, 3, true), d = pev(pder(p), z0);
       var ux = {}, vx = {}; Object.keys(uv.u).forEach(function (k) { var ij = k.split(',').map(Number); if (ij[0]) ux[(ij[0] - 1) + ',' + ij[1]] = uv.u[k].mul(ij[0]); }); Object.keys(uv.v).forEach(function (k) { var ij = k.split(',').map(Number); if (ij[0]) vx[(ij[0] - 1) + ',' + ij[1]] = uv.v[k].mul(ij[0]); });
       return { q: 'The function $f = u + iv$ with $u = ' + xyTex(uv.u) + '$ and $v = ' + xyTex(uv.v) + '$ is analytic. Use $f\' = u_x + iv_x$ to find $f\'(' + ztex(z0) + ')$.', a: { t: 'num', v: zplain(d) },
         steps: ['$u_x = ' + xyTex(ux) + '$ and $v_x = ' + xyTex(vx) + '$.', 'At $x = ' + qt(z0.re) + '$, $y = ' + qt(z0.im) + '$: $u_x = ' + qt(d.re) + '$ and $v_x = ' + qt(d.im) + '$.', '$f\'(' + ztex(z0) + ') = ' + ztex(d) + '$.'],
@@ -645,7 +656,7 @@
         steps: [c[2]], hint: 'Compute the four partial derivatives and compare.', chk: { kind: kind } };
     }
     // where: f = a x^2 + i b y^2 is differentiable exactly on the line a x = b y
-    var a2 = R.nz(-3, 3), b2 = R.intNot(-3, 3, [0, a2]), plainEq = a2 + '*x = ' + b2 + '*y';
+    var a2 = R.nz(-7, 7), b2 = R.intNot(-7, 7, [0, a2]), plainEq = a2 + '*x = ' + b2 + '*y';
     return { q: 'Let $f = u + iv$ with $u = ' + T.mono(a2, 'x^2') + '$ and $v = ' + T.mono(b2, 'y^2') + '$. The Cauchy–Riemann equations hold only on a line. Give its equation.', a: { t: 'eq', v: plainEq },
       steps: ['$u = ' + T.mono(a2, 'x^2') + '$, $v = ' + T.mono(b2, 'y^2') + '$: $u_x = ' + T.mono(2 * a2, 'x') + '$, $v_y = ' + T.mono(2 * b2, 'y') + '$, and $u_y = 0 = -v_x$.', 'So the equations hold exactly where $' + T.mono(2 * a2, 'x') + ' = ' + T.mono(2 * b2, 'y') + '$, the line $' + T.mono(a2, 'x') + ' = ' + T.mono(b2, 'y') + '$.', '$f$ is complex differentiable at each point of that line, but analytic nowhere: a line contains no open disk.'],
       hint: 'Set $u_x = v_y$ and $u_y = -v_x$ and see what is left.', chk: { kind: kind, a: a2, b: b2, eq: plainEq } };
@@ -654,14 +665,14 @@
   G('cplx.analytic-functions', function (R, ctx) {
     var kind = R.pick(L(ctx, ['exclude', 'entire', 'exclude'], ['exclude2', 'quot', 'entire'], ['expzeros', 'exclude2', 'quot']));
     if (kind === 'exclude' || kind === 'exclude2') {
-      var rs; if (kind === 'exclude') { var b = R.int(1, 4); rs = [Z(0, b), Z(0, -b)]; } else if (R.coin()) { var p = R.nz(-3, 3), qq = R.int(1, 3); rs = [Z(p, qq), Z(p, -qq)]; } else { var n = R.int(1, 3); rs = [Z0, Z(n), Z(-n)]; }
-      var den = pfromRoots(rs), top = R.pick(['z + 1', 'e^{z}', 'z^{2} - 3', '\\sin z', '5']);
+      var rs; if (kind === 'exclude') { var b = R.int(1, 9); rs = [Z(0, b), Z(0, -b)]; } else if (R.coin()) { var p = R.nz(-5, 5), qq = R.int(1, 5); rs = [Z(p, qq), Z(p, -qq)]; } else { var n = R.int(1, 3); rs = [Z0, Z(n), Z(-n)]; }
+      var den = pfromRoots(rs), top = R.pick(['z + 1', 'e^{z}', 'z^{2} - 3', '\\sin z', '5', 'z - 2', '\\cos z', 'z^{3}', 'e^{2z}', '1']);
       return { q: 'At which points is $f(z) = \\dfrac{' + top + '}{' + ptex(den) + '}$ not analytic? List them.', a: { t: 'set', v: rs.map(zplain) },
         steps: ['The top is entire, and a quotient of analytic functions is analytic wherever the bottom is not zero.', 'Solve $' + ptex(den) + ' = 0$: ' + (rs.length === 2 ? 'the quadratic formula (or completing the square) gives' : 'factor out $z$:') + ' $z = ' + rs.map(ztex).join(',\\ ') + '$.', 'So $f$ fails to be analytic exactly at $' + rs.map(ztex).join(',\\ ') + '$.'],
         hint: 'Find the zeros of the denominator, including complex ones.', chk: { kind: kind, den: pplain(den), roots: rs.map(zplain) } };
     }
     if (kind === 'entire') {
-      var good = R.pick(['$z^{5} - iz + 2$', '$e^{z}\\cos z$', '$e^{z^{2}}$', '$\\sin(3z) + z$']), bad = ['$\\dfrac{1}{z^{2} + 1}$', '$\\overline{z}$', '$\\operatorname{Log} z$', '$\\dfrac{z}{e^{z} - 1}$', '$|z|$', '$\\tan z$'];
+      var good = R.pick(['$z^{5} - iz + 2$', '$e^{z}\\cos z$', '$e^{z^{2}}$', '$\\sin(3z) + z$', '$\\cosh z$', '$z^{2}e^{-z}$', '$\\cos(z^{2})$', '$3z^{4} + 2iz - 7$', '$e^{iz} + e^{-iz}$', '$\\sin z \\cos z$', '$z^{7}$', '$\\sinh(2z) - z^{3}$']), bad = ['$\\dfrac{1}{z^{2} + 1}$', '$\\overline{z}$', '$\\operatorname{Log} z$', '$\\dfrac{z}{e^{z} - 1}$', '$|z|$', '$\\tan z$'];
       return { q: 'A function is <b>entire</b> when it is analytic on the whole plane. Which of these is entire?', a: mcSpec(good, R.sample(bad, 3)),
         steps: ['Polynomials, $e^z$, $\\sin z$ and $\\cos z$ are entire, and so are their sums, products and compositions.', 'Quotients fail at the zeros of the bottom ($\\tan z = \\frac{\\sin z}{\\cos z}$ at the zeros of $\\cos z$), $\\operatorname{Log} z$ fails on its cut, and $\\overline{z}$, $|z|$ are not differentiable at all.', 'The entire one is ' + good + '.'],
         hint: 'Look for a quotient, a conjugate or a logarithm.', chk: { kind: kind } };
@@ -740,14 +751,14 @@
   G('cplx.complex-exponential', function (R, ctx) {
     var kind = R.pick(L(ctx, ['eval', 'mod', 'eval'], ['solve', 'eval', 'strip', 'mod'], ['solveK', 'strip', 'solve', 'negreal']));
     if (kind === 'eval') {
-      var a = R.pick(lvl(ctx) === 1 ? [1, 2, 3] : [2, 3, 4, 5]), k = R.pick(lvl(ctx) === 1 ? [Q(1), Q(1, 2), Q(-1, 2)] : ANG6.concat(ANG4, [Q(1)])), t = trigOf(k);
+      var a = R.pick(lvl(ctx) === 1 ? [1, 2, 3, 4, 5, 6] : [2, 3, 4, 5, 6, 7]), k = R.pick(lvl(ctx) === 1 ? [Q(1), Q(1, 2), Q(-1, 2)] : ANG6.concat(ANG4, [Q(1)])), t = trigOf(k);
       var x = radMul(rad(a), t.c), y = radMul(rad(a), t.s);
       return { q: 'Write $e^{\\ln ' + a + (k.sign() < 0 ? ' - ' + piTex(k.neg()) : ' + ' + piTex(k)) + ' i}$ in the form $a + bi$.', a: { t: 'num', v: rcPlain(x, y) },
         steps: ['$e^{x + iy} = e^x(\\cos y + i\\sin y)$.', '$e^{\\ln ' + a + '} = ' + a + '$, and $\\cos\\left(' + piTex(k) + '\\right) = ' + radTex(t.c.k, t.c.n) + '$, $\\sin\\left(' + piTex(k) + '\\right) = ' + radTex(t.s.k, t.s.n) + '$.', 'So the value is $' + a + '\\left(' + rcTex(t.c, t.s) + '\\right) = ' + rcTex(x, y) + '$.'],
         hint: 'Split $e^{x + iy} = e^x e^{iy}$.', chk: { kind: kind, z: 'ln(' + a + ')+' + piPlain(k) + '*i', v: rcPlain(x, y) } };
     }
     if (kind === 'mod') {
-      var x0 = R.nz(-4, 4), y0 = R.nz(-6, 6);
+      var x0 = R.nz(-9, 9), y0 = R.nz(-9, 9);
       return { q: 'Find $|e^{z}|$ and one value of $\\arg e^{z}$ for $z = ' + ztex(Z(x0, y0)) + '$.', a: { t: 'multi', parts: [{ label: '$|e^z| =$', a: { t: 'num', v: 'e^(' + x0 + ')' } }, { label: '$\\arg e^z =$', a: { t: 'num', v: String(y0) } }] },
         steps: ['$e^{x + iy} = e^x \\cdot e^{iy}$, and $|e^{iy}| = 1$.', 'So $|e^z| = e^x = e^{' + x0 + '}$ and an argument is $y = ' + y0 + '$ (radians; any $' + y0 + ' + 2\\pi k$ works too).'],
         hint: 'The real part sets the size; the imaginary part sets the angle.', chk: { kind: kind, x: x0, y: y0 } };
@@ -760,7 +771,7 @@
         hint: 'Match the modulus ($e^x$) and the angle ($y$, up to $2\\pi k$).', chk: { kind: kind, w: w.plain, lo: kk } };
     }
     if (kind === 'strip') {
-      var c = R.pick([1, -1]), top = R.int(2, 4), vals = [];
+      var c = R.pick([1, -1]), top = R.int(2, 6), vals = [];
       for (var j = -1; j <= 2 * top; j++) { var yy = c === 1 ? 2 * j : 2 * j + 1; if (yy >= 0 && yy < 2 * top) vals.push(yy); }
       return { q: 'Find all solutions of $e^{z} = ' + c + '$ with $0 \\le \\operatorname{Im} z < ' + piTex(2 * top) + '$.', a: { t: 'set', v: vals.map(function (y) { return y === 0 ? '0' : piPlain(y) + '*i'; }) },
         steps: ['$|e^z| = e^x = 1$, so $x = 0$.', '$e^{iy} = ' + c + '$ means $y = ' + (c === 1 ? '2\\pi k' : '\\pi + 2\\pi k') + '$.', 'In the strip: $z = ' + vals.map(function (y) { return y === 0 ? '0' : piTex(y) + ' i'; }).join(',\\ ') + '$.'],
@@ -778,7 +789,7 @@
   function shq(a) { a = q(a); return a.sub(a.inv()).div(2); }
   G('cplx.trig-hyperbolic', function (R, ctx) {
     var kind = R.pick(L(ctx, ['cosi', 'cosi', 'tf'], ['sinxy', 'cosxy', 'mod'], ['solve', 'sinxy', 'solve', 'mod']));
-    var a = R.pick([2, 3, 4, 5, Q(3, 2)]), aT = lnTex(a), aP = lnPlain(a);
+    var a = R.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, Q(3, 2), Q(5, 2), Q(4, 3), Q(5, 3), Q(7, 2)]), aT = lnTex(a), aP = lnPlain(a);
     if (kind === 'cosi') {
       var sinq = R.coin(), v = sinq ? shq(a) : chq(a);
       return { q: 'Compute $\\' + (sinq ? 'sin' : 'cos') + '(i' + aT + ')$.', a: { t: 'num', v: sinq ? '(' + qp(v) + ')*i' : qp(v) },
@@ -786,7 +797,7 @@
         hint: 'Use the exponential definitions with $z = iy$.', chk: { kind: kind, f: sinq ? 'sin' : 'cos', z: '0+i*' + aP, v: sinq ? '(' + qp(v) + ')*i' : qp(v) } };
     }
     if (kind === 'tf') {
-      var y = R.pick([2, 3, 4]), sv = shq(y);
+      var y = R.pick([2, 3, 4, 5, 6, 7, 8, Q(3, 2), Q(5, 2)]), sv = shq(y);
       return { q: 'True or false: $|\\sin z| \\le 1$ for every complex number $z$. Then find $|\\sin(i' + lnTex(y) + ')|$.',
         a: { t: 'multi', parts: [{ label: 'true or false:', a: { t: 'tf', v: false } }, { label: '$|\\sin(i' + lnTex(y) + ')| =$', a: { t: 'num', v: qp(sv) } }] },
         steps: ['$\\sin(iy) = i\\sinh y$, so $|\\sin(iy)| = |\\sinh y|$, which grows without bound.', 'With $y = ' + lnTex(y) + '$: $\\sinh y = \\frac{1}{2}\\left(' + y + ' - \\frac{1}{' + y + '}\\right) = ' + qt(sv) + '$' + (sv.gt(1) ? ', already more than 1.' : '.'), 'So the statement is false: the bound $|\\sin x| \\le 1$ holds only on the real line.'],
@@ -800,7 +811,7 @@
         hint: 'Expand with the sum formula, then use $\\cosh(\\ln a) = \\frac{a + 1/a}{2}$ and $\\sinh(\\ln a) = \\frac{a - 1/a}{2}$.', chk: { kind: kind, f: kind === 'sinxy' ? 'sin' : 'cos', z: piPlain(k) + '+i*' + aP, v: rcPlain(re, im) } };
     }
     if (kind === 'mod') {
-      var x0 = R.pick([Q(0), Q(1, 2), Q(1, 6), Q(1, 4)]), tt = trigOf(x0), sh2 = shq(a), m2 = radMul(tt.s, tt.s).k.add(sh2.mul(sh2));
+      var x0 = R.pick([Q(0), Q(1, 2), Q(1, 6), Q(1, 4), Q(1, 3), Q(3, 4), Q(2, 3), Q(5, 6)]), tt = trigOf(x0), sh2 = shq(a), m2 = radMul(tt.s, tt.s).k.add(sh2.mul(sh2));
       return { q: 'Use $|\\sin(x + iy)|^2 = \\sin^2 x + \\sinh^2 y$ to find $|\\sin z|^2$ for $z = ' + (x0.isZero() ? '' : piTex(x0) + ' + ') + 'i' + aT + '$.', a: { t: 'num', v: qp(m2) },
         steps: ['$\\sin^2\\left(' + piTex(x0) + '\\right) = ' + qt(radMul(tt.s, tt.s).k) + '$.', '$\\sinh(' + aT + ') = ' + qt(sh2) + '$, so $\\sinh^2 = ' + qt(sh2.mul(sh2)) + '$.', '$|\\sin z|^2 = ' + qt(m2) + '$.'],
         hint: 'Add the two squares.', chk: { kind: kind, z: piPlain(x0) + '+i*' + aP, v: qp(m2) } };
@@ -835,7 +846,7 @@
         hint: 'Only the arguments matter; check whether $\\operatorname{Arg} z + \\operatorname{Arg} w$ leaves $(-\\pi, \\pi]$.', chk: { kind: kind, z: A.plain, w: B.plain } };
     }
     if (kind === 'exp') {
-      var r = R.pick([1, 2, 3, 4]), k = R.pick(ANG6.concat(ANG4, [Q(1, 2), Q(-1, 2)])), t = trigOf(k), x = radMul(rad(r), t.c), y = radMul(rad(r), t.s);
+      var r = R.pick([1, 2, 3, 4, 5, 6, 7]), k = R.pick(ANG6.concat(ANG4, [Q(1, 2), Q(-1, 2), Q(1)])), t = trigOf(k), x = radMul(rad(r), t.c), y = radMul(rad(r), t.s);
       return { q: 'Solve $\\operatorname{Log} z = ' + (r === 1 ? '' : '\\ln ' + r + ' ') + (k.sign() < 0 ? '- ' + piTex(k.neg()) : (r === 1 ? '' : '+ ') + piTex(k)) + ' i$.', a: { t: 'num', v: rcPlain(x, y) },
         steps: ['$\\operatorname{Log} z = w$ means $z = e^{w}$ (the imaginary part $' + piTex(k) + '$ lies in $(-\\pi, \\pi]$, so it is a principal value).', '$z = ' + (r === 1 ? '' : 'e^{\\ln ' + r + '}') + 'e^{' + piTex(k) + ' i} = ' + (r === 1 ? '' : r) + '\\left(\\cos\\left(' + piTex(k) + '\\right) + i\\sin\\left(' + piTex(k) + '\\right)\\right)$.', '$z = ' + rcTex(x, y) + '$.'],
         hint: 'Exponentiate both sides.', chk: { kind: kind, w: (r === 1 ? '' : 'ln(' + r + ')+') + piPlain(k) + '*i', v: rcPlain(x, y) } };
@@ -851,13 +862,17 @@
   G('cplx.branch-cuts', function (R, ctx) {
     var kind = R.pick(L(ctx, ['jump', 'where', 'jump'], ['otherbranch', 'where', 'sqrtjump'], ['otherbranch', 'otherbranch', 'sqrtjump', 'jump']));
     if (kind === 'jump') {
-      var a = R.pick([2, 3, 4, 5, 6]);
+      var a = R.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 12]), sc = R.chance(0.6) ? R.nz(-6, 6) : 0;
+      if (sc) { var lg = '\\operatorname{Log}(z ' + (sc < 0 ? '+ ' + (-sc) : '- ' + sc) + ')';
+        return { q: 'Find the limits of $' + lg + '$ as $z \\to ' + (sc - a) + '$ from above (through $\\operatorname{Im} z > 0$) and from below.', a: { t: 'multi', parts: [{ label: 'from above:', a: { t: 'num', v: 'ln(' + a + ')+pi*i' } }, { label: 'from below:', a: { t: 'num', v: 'ln(' + a + ')-pi*i' } }] },
+          steps: ['Let $w = z ' + (sc < 0 ? '+ ' + (-sc) : '- ' + sc) + '$. As $z \\to ' + (sc - a) + '$, $w \\to -' + a + '$, and $w$ stays above or below the real axis together with $z$.', '$\\operatorname{Log} w = \\ln|w| + i\\operatorname{Arg} w$; $\\ln|w| \\to \\ln ' + a + '$, and $\\operatorname{Arg} w \\to \\pi$ from above, $-\\pi$ from below.', 'The limits are $\\ln ' + a + ' + \\pi i$ and $\\ln ' + a + ' - \\pi i$: the cut is the ray $z \\le ' + sc + '$.'],
+          hint: 'Shift first: put $w = z ' + (sc < 0 ? '+ ' + (-sc) : '- ' + sc) + '$.', chk: { kind: kind, a: a } }; }
       return { q: 'Find the limits of $\\operatorname{Log} z$ as $z \\to -' + a + '$ from above (through $\\operatorname{Im} z > 0$) and from below.', a: { t: 'multi', parts: [{ label: 'from above:', a: { t: 'num', v: 'ln(' + a + ')+pi*i' } }, { label: 'from below:', a: { t: 'num', v: 'ln(' + a + ')-pi*i' } }] },
         steps: ['$\\operatorname{Log} z = \\ln|z| + i\\operatorname{Arg} z$, and $\\ln|z| \\to \\ln ' + a + '$ either way.', 'From above, $\\operatorname{Arg} z \\to \\pi$; from below, $\\operatorname{Arg} z \\to -\\pi$.', 'The limits are $\\ln ' + a + ' + \\pi i$ and $\\ln ' + a + ' - \\pi i$: a jump of $2\\pi i$ across the cut, so $\\operatorname{Log}$ is not continuous (let alone analytic) on the negative real axis.'],
         hint: 'Follow $\\operatorname{Arg} z$ on each side of the negative real axis.', chk: { kind: kind, a: a } };
     }
     if (kind === 'where') {
-      var c = R.nz(-4, 4), m = R.pick([1, 2, 3]), shiftc = c * m; // Log(m z + c): cut where m z + c ≤ 0, i.e. z ≤ −c/m
+      var c = R.nz(-9, 9), m = R.pick([1, 2, 3, 4, 5]), shiftc = c * m; // Log(m z + c): cut where m z + c ≤ 0, i.e. z ≤ −c/m
       var e = Q(-c, m), correct = '$(-\\infty, ' + qt(e) + ']$ on the real axis', wrong = ['$[' + qt(e) + ', \\infty)$ on the real axis', '$(-\\infty, ' + qt(e.neg()) + ']$ on the real axis', 'the line $\\operatorname{Re} z = ' + qt(e) + '$', '$(-\\infty, 0]$ on the real axis'];
       return { q: 'Where is $\\operatorname{Log}(' + T.mono(m, 'z') + T.coef(c, '', false) + ')$ not analytic?', a: mcSpec(correct, wrong.filter(function (w) { return w !== correct; }).slice(0, 3)),
         steps: ['$\\operatorname{Log} w$ is analytic except where $w$ is a real number $\\le 0$ (its cut and $0$).', 'Here $w = ' + T.mono(m, 'z') + T.coef(c, '', false) + '$ is real and $\\le 0$ exactly when $z$ is real and $z \\le ' + qt(e) + '$.', 'So the bad set is the ray $(-\\infty, ' + qt(e) + ']$.'],
@@ -870,7 +885,7 @@
         steps: ['The value is $\\ln|z| + i\\theta$ with $\\theta$ the argument of $z$ that lies in $(' + piTex(br[0]) + ', ' + piTex(br[1]) + ']$.', '$\\ln|z| = ' + L1.tex + '$; the principal argument is $' + piTex(w.k) + '$' + (th.eq(w.k) ? ', which already lies in the interval.' : ', and adding a multiple of $2\\pi$ gives $\\theta = ' + piTex(th) + '$ in the interval.'), 'Value: $' + logTex(L1, th) + '$.'],
         hint: 'Choose the argument that lies in the stated interval.', chk: { kind: kind, z: w.plain, lo: qp(br[0]), v: logPlain(L1, th) } };
     }
-    var a2 = R.pick([2, 3, 4, 5]);
+    var a2 = R.pick([2, 3, 4, 5, 6, 7, 8, 9]);
     return { q: 'Find the limits of the principal square root $\\sqrt{z} = e^{\\frac{1}{2}\\operatorname{Log} z}$ as $z \\to -' + (a2 * a2) + '$ from above and from below.', a: { t: 'multi', parts: [{ label: 'from above:', a: { t: 'num', v: a2 + '*i' } }, { label: 'from below:', a: { t: 'num', v: '-' + a2 + '*i' } }] },
       steps: ['$\\sqrt{z} = \\sqrt{|z|}\\,e^{i\\operatorname{Arg}(z)/2}$.', 'From above, $\\operatorname{Arg} z \\to \\pi$: $' + a2 + 'e^{i\\pi/2} = ' + a2 + 'i$. From below, $\\operatorname{Arg} z \\to -\\pi$: $' + a2 + 'e^{-i\\pi/2} = -' + a2 + 'i$.', 'The principal square root jumps across the same cut as $\\operatorname{Log}$.'],
       hint: 'Halve the argument on each side of the cut.', chk: { kind: kind, a: a2 } };
@@ -879,14 +894,14 @@
   G('cplx.complex-powers', function (R, ctx) {
     var kind = R.pick(L(ctx, ['ii', 'count', 'root'], ['root', 'allk', 'ii'], ['ratpow', 'rule', 'allk', 'root']));
     if (kind === 'ii') {
-      var b = R.pick(['i', '-1', '-i']), n = R.pick([1, 2, 3, -1, -2]), arg = b === 'i' ? Q(1, 2) : b === '-1' ? Q(1) : Q(-1, 2), ex = arg.mul(-n);
+      var b = R.pick(['i', '-1', '-i']), n = R.pick([1, 2, 3, 4, -1, -2, -3, -4]), arg = b === 'i' ? Q(1, 2) : b === '-1' ? Q(1) : Q(-1, 2), ex = arg.mul(-n);
       var expT = n === 1 ? 'i' : n === -1 ? '-i' : n + 'i', baseT = b === 'i' ? 'i' : '(' + b + ')';
       return { q: 'Find the principal value of $' + baseT + '^{' + expT + '}$.', a: { t: 'num', v: 'e^(' + piPlain(ex) + ')' },
         steps: ['$z^c = e^{c\\operatorname{Log} z}$ for the principal value.', '$\\operatorname{Log}(' + b + ') = ' + piTex(arg) + ' i$, because $|' + b + '| = 1$.', '$c\\operatorname{Log} z = ' + expT + ' \\cdot ' + piTex(arg) + ' i = ' + piTex(ex) + '$ (using $i \\cdot i = -1$): a real number.', 'So the principal value is $e^{' + piTex(ex) + '}$, a positive real number.'],
         hint: 'Use $z^c = e^{c\\operatorname{Log} z}$.', chk: { kind: kind, expr: baseT + '^(' + n + '*i)', v: 'e^(' + piPlain(ex) + ')' } };
     }
     if (kind === 'count') {
-      var p = R.int(1, 7), qd = R.int(2, 9); while (U.gcd(p, qd) !== 1) p++;
+      var p = R.int(1, 11), qd = R.int(2, 12); while (U.gcd(p, qd) !== 1) p++;
       return { q: 'How many different values does $z^{' + p + '/' + qd + '}$ have for a fixed $z \\ne 0$?', a: { t: 'num', v: String(qd) },
         steps: ['$z^{' + p + '/' + qd + '} = e^{\\frac{' + p + '}{' + qd + '}(\\ln|z| + i\\operatorname{Arg} z + 2\\pi ik)}$.', 'Changing $k$ turns the value by $\\frac{' + (2 * p) + '\\pi}{' + qd + '}k$. Since $\\frac{' + p + '}{' + qd + '}$ is in lowest terms, the values repeat only when $k$ grows by $' + qd + '$.', 'So there are exactly $' + qd + '$ values.'],
         hint: 'A rational power $p/q$ in lowest terms has $q$ values.', chk: { kind: kind } };
@@ -902,7 +917,7 @@
         hint: 'Use $\\operatorname{Arg} z$, not the real-number root.', chk: { kind: kind, z: baseP + '^(' + pp + '/' + qq2 + ')', v: rcPlain(x, y) } };
     }
     if (kind === 'allk') {
-      var k = R.pick([1, -1, 2, -2, 3]), base = R.pick(['i', '-1', '-i']), th = base === 'i' ? Q(1, 2) : base === '-1' ? Q(1) : Q(-1, 2), ex2 = th.add(2 * k).neg(), bT = base === 'i' ? 'i' : '(' + base + ')';
+      var k = R.pick([1, -1, 2, -2, 3, -3, 4]), base = R.pick(['i', '-1', '-i']), th = base === 'i' ? Q(1, 2) : base === '-1' ? Q(1) : Q(-1, 2), ex2 = th.add(2 * k).neg(), bT = base === 'i' ? 'i' : '(' + base + ')';
       return { q: 'Every value of $' + bT + '^{i}$ is a real number. Find the value obtained with the argument $\\theta = ' + piTex(th.add(2 * k)) + '$ of $' + base + '$.', a: { t: 'num', v: 'e^(' + piPlain(ex2) + ')' },
         steps: ['$' + bT + '^{i} = e^{i\\log(' + base + ')}$ with $\\log(' + base + ') = i\\theta$ (since $|' + base + '| = 1$).', 'So $' + bT + '^{i} = e^{i \\cdot i\\theta} = e^{-\\theta}$.', 'With $\\theta = ' + piTex(th.add(2 * k)) + '$: $e^{' + piTex(ex2) + '}$.'],
         hint: 'Each choice of argument gives $e^{-\\theta}$.', chk: { kind: kind, v: 'e^(' + piPlain(ex2) + ')', th: qp(th.add(2 * k)) } };
@@ -911,7 +926,7 @@
     if (R.coin()) return { q: 'With principal values, compute $\\big((-1)(-1)\\big)^{1/2}$ and $(-1)^{1/2}(-1)^{1/2}$.', a: { t: 'multi', parts: [{ label: '$\\big((-1)(-1)\\big)^{1/2} =$', a: { t: 'num', v: '1' } }, { label: '$(-1)^{1/2}(-1)^{1/2} =$', a: { t: 'num', v: '-1' } }] },
       steps: ['$(-1)(-1) = 1$ and $1^{1/2} = e^{\\frac{1}{2}\\operatorname{Log} 1} = 1$.', '$(-1)^{1/2} = e^{\\frac{1}{2}\\pi i} = i$, so the product is $i \\cdot i = -1$.', 'They differ: the rule $(zw)^c = z^c w^c$ is not safe for principal values.'],
       hint: 'Use $\\operatorname{Log}(-1) = \\pi i$.', chk: { kind: 'rule1' } };
-    var m2 = R.pick([1, 4, 9]);
+    var m2 = R.pick([1, 4, 9, 16, 25, 36]);
     return { q: 'With principal values, compute $\\big((-' + (m2 === 1 ? '1' : m2) + ')^{2}\\big)^{1/2}$ and $(-' + (m2 === 1 ? '1' : m2) + ')^{2 \\cdot \\frac{1}{2}}$.', a: { t: 'multi', parts: [{ label: 'first:', a: { t: 'num', v: String(m2) } }, { label: 'second:', a: { t: 'num', v: String(-m2) } }] },
       steps: ['$(-' + m2 + ')^2 = ' + (m2 * m2) + '$, and the principal square root of $' + (m2 * m2) + '$ is $' + m2 + '$.', '$(-' + m2 + ')^{2 \\cdot \\frac{1}{2}} = (-' + m2 + ')^1 = -' + m2 + '$.', 'So $(z^a)^b = z^{ab}$ can fail too.'],
       hint: 'Work out the inside first in the first expression.', chk: { kind: 'rule2' } };
@@ -1006,7 +1021,7 @@
 
   G('cplx.ml-inequality', function (R, ctx) {
     var kind = R.pick(L(ctx, ['M', 'circle', 'seg'], ['circle', 'semi', 'seg'], ['semi', 'semi2', 'arcgrow', 'circle']));
-    var a = R.int(1, 4), Rr = a + R.int(1, 6);
+    var a = R.int(1, 6), Rr = a + R.int(1, 9);
     if (kind === 'M') {
       return { q: 'On the circle $|z| = ' + Rr + '$, find the upper bound $M$ for $\\left|\\dfrac{1}{z^2 + ' + a * a + '}\\right|$ that comes from $|z^2 + ' + a * a + '| \\ge |z|^2 - ' + a * a + '$.', a: { t: 'num', v: '1/' + (Rr * Rr - a * a) },
         steps: ['Reverse triangle inequality: $|z^2 + ' + a * a + '| \\ge |z^2| - ' + a * a + ' = ' + Rr * Rr + ' - ' + a * a + ' = ' + (Rr * Rr - a * a) + '$.', 'A bigger denominator means a smaller fraction, so $\\left|\\frac{1}{z^2 + ' + a * a + '}\\right| \\le \\frac{1}{' + (Rr * Rr - a * a) + '} = M$.', 'Using $|z^2 + ' + a * a + '| \\le ' + (Rr * Rr + a * a) + '$ instead would give a lower bound for the fraction, not an upper one.'],
@@ -1019,14 +1034,14 @@
         hint: '$L$ is the length of $C$; for $M$, bound the denominator from below.', chk: { kind: kind, a: a, R: Rr, v: piPlain(bound), f: sq ? '1/(z^2+' + a * a + ')^2' : '1/(z^2+' + a * a + ')' } };
     }
     if (kind === 'seg') {
-      var z1 = Z0, z2 = R.pick([Z(3, 4), Z(4, 3), Z(0, 2), Z(2), Z(-3, 4), Z(1, 1), Z(2, -2)]), m = znorm(z2), Ls = absPlain(z2), n = R.pick([2, 3]);
+      var z1 = Z0, z2 = R.pick([Z(3, 4), Z(4, 3), Z(0, 2), Z(2), Z(-3, 4), Z(1, 1), Z(2, -2), Z(5, 12), Z(12, 5), Z(6, 8), Z(-5, 12), Z(8, 6), Z(0, 3), Z(3), Z(-4, 3), Z(0, 5), Z(4)]), m = znorm(z2), Ls = absPlain(z2), n = R.pick([2, 3, 4]);
       var bound = n === 2 ? radPlain(m, m.num()) : qp(m.mul(m));
       return { q: 'Bound $\\left|\\displaystyle\\int_C z^{' + n + '}\\,dz\\right|$ with the ML inequality, where $C$ is the segment from $0$ to $' + ztex(z2) + '$. Give $M \\cdot L$.', a: { t: 'num', v: bound },
         steps: ['$L = |' + ztex(z2) + '| = ' + absTex(z2) + '$.', 'On the segment, $|z| \\le ' + absTex(z2) + '$, so $|z^{' + n + '}| \\le M = (' + absTex(z2) + ')^{' + n + '}$.', '$M \\cdot L = (' + absTex(z2) + ')^{' + (n + 1) + '} = ' + T.plain(bound) + '$. (The exact value is $\\left|\\frac{(' + ztex(z2) + ')^{' + (n + 1) + '}}{' + (n + 1) + '}\\right|$, smaller, as a bound should be.)'],
         hint: 'The largest $|z|$ on the segment is at its far end.', chk: { kind: kind, z: zplain(z2), n: n, v: bound } };
     }
     // the arc of ∫ dz/(z + a) does not vanish: bound πR/(R − a) → π
-    var Rb = R.pick([10, 20, 100]), ab = R.int(1, 3), bnd = Q(Rb, Rb - ab);
+    var Rb = R.pick([5, 10, 20, 50, 100, 1000]), ab = R.int(1, 4), bnd = Q(Rb, Rb - ab);
     return { q: 'For the upper half-circle $C_R$ of radius $R = ' + Rb + '$, the ML bound for $\\left|\\displaystyle\\int_{C_R} \\frac{dz}{z + ' + ab + '}\\right|$ is $\\frac{\\pi R}{R - ' + ab + '}$. Compute it for $R = ' + Rb + '$, and decide whether this bound tends to $0$ as $R \\to \\infty$.',
       a: { t: 'multi', parts: [{ label: 'bound:', a: { t: 'num', v: piPlain(bnd) } }, { label: 'tends to $0$?', a: { t: 'tf', v: false } }] },
       steps: ['$\\frac{\\pi \\cdot ' + Rb + '}{' + Rb + ' - ' + ab + '} = ' + piTex(bnd) + '$.', 'As $R \\to \\infty$, $\\frac{\\pi R}{R - ' + ab + '} \\to \\pi$, not $0$: the integrand only decays like $\\frac{1}{R}$, while the length grows like $R$.', 'That is why the residue method for $\\int_{-\\infty}^{\\infty}$ needs the denominator to be at least two degrees higher than the numerator.'],
@@ -1036,7 +1051,7 @@
   G('cplx.path-independence', function (R, ctx) {
     var kind = R.pick(L(ctx, ['poly', 'poly', 'inv2'], ['exp', 'inv2', 'loop', 'poly'], ['trig', 'loop', 'exp', 'halves']));
     if (kind === 'poly') {
-      var p = P([zrand(R, -2, 2), Z(R.int(-3, 3)), Z(R.pick([3, 6, -3]))]), Fp = pint(p), z1 = zrand(R, -2, 2), z2; do { z2 = zrand(R, -2, 2); } while (zeq(z1, z2));
+      var p = P([zrand(R, -4, 4), Z(R.int(-4, 4) * 2), Z(R.pick([3, 6, -3, -6, 9]))]), Fp = pint(p), z1 = zrand(R, -3, 3), z2; do { z2 = zrand(R, -3, 3); } while (zeq(z1, z2));
       var val = zsub(pev(Fp, z2), pev(Fp, z1));
       return { q: 'Compute $\\displaystyle\\int_C \\left(' + ptex(p) + '\\right)dz$ along any path $C$ from $' + ztex(z1) + '$ to $' + ztex(z2) + '$.', a: { t: 'num', v: zplain(val) },
         steps: ['A polynomial has an antiderivative on the whole plane: $F(z) = ' + ptex(Fp) + '$.', 'So the integral is $F(' + ztex(z2) + ') - F(' + ztex(z1) + ')$, the same for every path.', '$F(' + ztex(z2) + ') = ' + ztex(pev(Fp, z2)) + '$ and $F(' + ztex(z1) + ') = ' + ztex(pev(Fp, z1)) + '$; the difference is $' + ztex(val) + '$.'],
@@ -1057,19 +1072,19 @@
         hint: 'An antiderivative of $e^{az}$ is $\\frac{1}{a}e^{az}$.', chk: { kind: kind, f: 'e^(' + k + '*pi*z)', a: '0', b: zplain(Z(0, m)), v: outP } };
     }
     if (kind === 'trig') {
-      var a = R.pick([2, 3, 4]), useCos = R.coin(), ch = Q(a).add(Q(1, a)).div(2), sh = Q(a).sub(Q(1, a)).div(2), v3 = useCos ? Z(0, sh) : Z(Q(1).sub(ch));
+      var a = R.pick([2, 3, 4, 5, 6, 7, 8, 10]), useCos = R.coin(), ch = Q(a).add(Q(1, a)).div(2), sh = Q(a).sub(Q(1, a)).div(2), v3 = useCos ? Z(0, sh) : Z(Q(1).sub(ch));
       return { q: 'Compute $\\displaystyle\\int_C ' + (useCos ? '\\cos z' : '\\sin z') + '\\,dz$ along any path from $0$ to $i\\ln ' + a + '$.', a: { t: 'num', v: zplain(v3) },
         steps: ['Antiderivative: $' + (useCos ? '\\sin z' : '-\\cos z') + '$, entire.', useCos ? '$\\sin(i\\ln ' + a + ') - \\sin 0 = i\\sinh(\\ln ' + a + ') = i\\cdot\\frac{' + a + ' - 1/' + a + '}{2}$.' : '$-\\cos(i\\ln ' + a + ') + \\cos 0 = 1 - \\cosh(\\ln ' + a + ') = 1 - \\frac{' + a + ' + 1/' + a + '}{2}$.', 'The value is $' + ztex(v3) + '$.'],
         hint: 'Use $\\cos(iy) = \\cosh y$ and $\\sin(iy) = i\\sinh y$.', chk: { kind: kind, f: useCos ? 'cos(z)' : 'sin(z)', b: '0+i*ln(' + a + ')', v: zplain(v3) } };
     }
     if (kind === 'loop') {
-      var c = zrand(R, -1, 1), r = R.int(2, 3), inside = R.coin(), pt = inside ? c : zadd(c, Z(r + 2));
+      var c = zrand(R, -3, 3), r = R.int(1, 5), inside = R.coin(), pt = inside ? c : zadd(c, Z(r + R.int(1, 4)));
       return { q: 'Compute $\\displaystyle\\oint_C \\frac{dz}{' + zm(pt) + '}$ where $C$ is the circle $' + circTex(c, r) + '$, once counterclockwise.', a: { t: 'num', v: inside ? '2*pi*i' : '0' },
         steps: inside ? ['$\\frac{1}{' + zm(pt) + '}$ has no antiderivative on any region containing a loop around $' + ztex(pt) + '$: $\\log(' + zm(pt) + ')$ changes by $2\\pi i$ each time around.', 'Here $' + ztex(pt) + '$ is inside $C$, and the direct computation ($z - ' + zpar(pt) + ' = ' + co(r) + 'e^{it}$) gives $\\int_0^{2\\pi} i\\,dt = 2\\pi i$.'] : ['$' + ztex(pt) + '$ lies outside $C$ (its distance from $' + ztex(c) + '$ is more than $' + r + '$).', 'On a disk containing $C$ but not $' + ztex(pt) + '$, a branch of $\\log(' + zm(pt) + ')$ is an antiderivative, so the closed integral is $0$.'],
         hint: 'Is the point $' + ztex(pt) + '$ inside the loop?', chk: { kind: kind, c: zplain(c), r: r, a: zplain(pt), v: inside ? '2*pi*i' : '0' } };
     }
     // the two halves of a circle for 1/z (with Log as the wrong antiderivative)
-    var r6 = R.int(1, 4);
+    var r6 = R.int(1, 9);
     return { q: 'Compute $\\displaystyle\\oint_{|z| = ' + r6 + '} \\frac{dz}{z}$, once counterclockwise. (Someone claims the answer is $\\operatorname{Log}(' + r6 + ') - \\operatorname{Log}(' + r6 + ') = 0$.)', a: { t: 'num', v: '2*pi*i' },
       steps: ['$\\operatorname{Log} z$ is not an antiderivative along the whole circle: it jumps by $2\\pi i$ where the circle crosses the cut at $-' + r6 + '$.', 'Direct computation: $z = ' + co(r6) + 'e^{it}$, $\\frac{dz}{z} = i\\,dt$, so the integral is $\\int_0^{2\\pi} i\\,dt = 2\\pi i$.', 'The claim of $0$ is wrong; the jump of $\\operatorname{Log}$ across the cut is exactly the missing $2\\pi i$.'],
       hint: 'Parametrize; do not use $\\operatorname{Log}$ across its cut.', chk: { kind: kind, r: r6 } };
@@ -1185,20 +1200,20 @@
   G('cplx.cauchy-derivatives', function (R, ctx) {
     var kind = R.pick(L(ctx, ['exp0', 'poly', 'exp0'], ['poly', 'sin', 'order'], ['twopole', 'poly', 'sin', 'twopole']));
     if (kind === 'exp0') {
-      var k = R.pick([1, 2, 3, -1, -2]), n = R.int(1, 3), val = zmul(Z(0, 2), Z(Q(Math.pow(k, n), fact(n)))), Rr = R.int(1, 3);
+      var k = R.pick([1, 2, 3, 4, -1, -2, -3]), n = R.int(1, 4), val = zmul(Z(0, 2), Z(Q(Math.pow(k, n), fact(n)))), Rr = R.int(1, 5);
       return { q: 'Compute $\\displaystyle\\oint_{|z| = ' + Rr + '} \\frac{e^{' + (k === 1 ? '' : k === -1 ? '-' : k) + 'z}}{z^{' + (n + 1) + '}}\\,dz$.', a: { t: 'num', v: zpiPlain(val) },
         steps: ['Cauchy\'s formula for derivatives: $\\oint \\frac{f(z)}{(z - a)^{n + 1}}\\,dz = \\frac{2\\pi i}{n!}f^{(n)}(a)$. Here $a = 0$ and $n + 1 = ' + (n + 1) + '$, so $n = ' + n + '$.', '$f(z) = e^{' + (k === 1 ? '' : k === -1 ? '-' : k) + 'z}$ has $f^{(' + n + ')}(0) = ' + (k === 1 ? '' : T.p(k) + '^{' + n + '} = ') + Math.pow(k, n) + '$.', '$\\frac{2\\pi i}{' + fact(n) + '} \\cdot ' + T.p(Math.pow(k, n)) + ' = ' + zpiTex(val) + '$.'],
         hint: 'The power $n + 1$ in the denominator means the $n$th derivative.', chk: { kind: kind, f: 'e^(' + k + '*z)/z^' + (n + 1), c: '0', r: String(Rr), v: zpiPlain(val) } };
     }
     if (kind === 'poly') {
-      var p = P([Z(R.int(-3, 3)), Z(R.int(-3, 3)), Z(R.int(-3, 3)), Z(R.nz(-2, 2)), lvl(ctx) === 3 ? Z(R.int(-1, 1)) : Z0]), a = zrand(R, -1, 1), n2 = R.int(1, 3), sh = pshift(p, a), coef = sh[n2] || Z0, v2 = zmul(Z(0, 2), coef), C = { c: a, r: Q(R.int(1, 2)) };
+      var p = P([Z(R.int(-5, 5)), Z(R.int(-5, 5)), Z(R.int(-4, 4)), Z(R.nz(-3, 3)), lvl(ctx) === 3 ? Z(R.int(-2, 2)) : Z0]), a = zrand(R, -2, 2), n2 = R.int(1, 3), sh = pshift(p, a), coef = sh[n2] || Z0, v2 = zmul(Z(0, 2), coef), C = { c: a, r: Q(R.int(1, 2)) };
       var deriv = p; for (var j = 0; j < n2; j++) deriv = pder(deriv);
       return { q: 'Compute $\\displaystyle\\oint_C \\frac{' + ptex(p) + '}{(' + zm(a) + ')^{' + (n2 + 1) + '}}\\,dz$, where $C$ is $' + circTex(C.c, C.r) + '$.', a: { t: 'num', v: zpiPlain(v2) },
         steps: ['$n + 1 = ' + (n2 + 1) + '$, so this is $\\frac{2\\pi i}{' + n2 + '!}f^{(' + n2 + ')}(' + ztex(a) + ')$ with $f(z) = ' + ptex(p) + '$.', '$f^{(' + n2 + ')}(z) = ' + ptex(deriv) + '$, so $f^{(' + n2 + ')}(' + ztex(a) + ') = ' + ztex(pev(deriv, a)) + '$.', '$\\frac{2\\pi i}{' + fact(n2) + '} \\cdot ' + zpar(pev(deriv, a)) + ' = ' + zpiTex(v2) + '$.'],
         hint: 'Differentiate $n$ times, evaluate at the center, divide by $n!$.', chk: { kind: kind, f: '(' + pplain(p) + ')/(z-(' + zplain(a) + '))^' + (n2 + 1), c: zplain(a), r: qp(C.r), v: zpiPlain(v2) } };
     }
     if (kind === 'sin') {
-      var useSin = R.coin(), n3 = R.int(1, 5), d = useSin ? [0, 1, 0, -1][n3 % 4] : [1, 0, -1, 0][n3 % 4], v3 = zmul(Z(0, 2), Z(Q(d, fact(n3))));
+      var useSin = R.coin(), n3 = R.int(1, 7), d = useSin ? [0, 1, 0, -1][n3 % 4] : [1, 0, -1, 0][n3 % 4], v3 = zmul(Z(0, 2), Z(Q(d, fact(n3))));
       return { q: 'Compute $\\displaystyle\\oint_{|z| = 1} \\frac{\\' + (useSin ? 'sin' : 'cos') + ' z}{z^{' + (n3 + 1) + '}}\\,dz$.', a: { t: 'num', v: zpiPlain(v3) },
         steps: ['This is $\\frac{2\\pi i}{' + n3 + '!}f^{(' + n3 + ')}(0)$ with $f = \\' + (useSin ? 'sin' : 'cos') + '$.', 'The derivatives of $\\' + (useSin ? 'sin' : 'cos') + '$ at $0$ cycle through $' + (useSin ? '0, 1, 0, -1' : '1, 0, -1, 0') + '$ (starting with the function itself): $f^{(' + n3 + ')}(0) = ' + d + '$.', 'Result: $' + zpiTex(v3) + '$.'],
         hint: 'Find the $n$th derivative at $0$ from the cycle.', chk: { kind: kind, f: (useSin ? 'sin' : 'cos') + '(z)/z^' + (n3 + 1), c: '0', r: '1', v: zpiPlain(v3) } };
@@ -1211,7 +1226,7 @@
     }
     // f/((z − a)²(z − b)) around a only: the residue at a
     var a4 = zrand(R, -1, 1), b4; do { b4 = zrand(R, -3, 3); } while (dist2(a4, b4).lt(5));
-    var f4 = P([Z(R.int(-3, 3)), Z(R.nz(-3, 3))]), roots = [{ z: a4, m: 2 }, { z: b4, m: 1 }], res = resRat(f4, roots, a4).res, v5 = zmul(Z(0, 2), res);
+    var f4 = P([Z(R.int(-5, 5)), Z(R.nz(-4, 4))]), roots = [{ z: a4, m: 2 }, { z: b4, m: 1 }], res = resRat(f4, roots, a4).res, v5 = zmul(Z(0, 2), res);
     var g1 = zdiv(pev(pder(f4), a4), zsub(a4, b4)), g2 = zdiv(pev(f4, a4), zmul(zsub(a4, b4), zsub(a4, b4)));
     return { q: 'Compute $\\displaystyle\\oint_C \\frac{' + ptex(f4) + '}{(' + zm(a4) + ')^{2}(' + zm(b4) + ')}\\,dz$, where $C$ is $' + circTex(a4, Q(1)) + '$.', a: { t: 'num', v: zpiPlain(v5) },
       steps: ['Only $' + ztex(a4) + '$ is inside $C$. Write the integrand as $\\frac{g(z)}{(z - a)^2}$ with $g(z) = \\frac{' + ptex(f4) + '}{' + zm(b4) + '}$.', 'Cauchy\'s formula with $n = 1$: the integral is $2\\pi i\\,g\'(a)$, and $g\'(z) = \\frac{f\'(z)}{z - b} - \\frac{f(z)}{(z - b)^2}$.', 'At $a = ' + ztex(a4) + '$: $g\'(a) = ' + ztex(g1) + (zisz(g2) ? '' : ' - ' + zpar(g2)) + ' = ' + ztex(res) + '$.', 'The integral is $' + zpiTex(v5) + '$.'],
@@ -1263,7 +1278,7 @@
   G('cplx.maximum-modulus', function (R, ctx) {
     var kind = R.pick(L(ctx, ['linear', 'where', 'linear'], ['exp', 'poly', 'linear'], ['min', 'exp', 'poly', 'min']));
     if (kind === 'linear') {
-      var t = R.pick([[3, 4, 5], [4, 3, 5], [0, 2, 2], [2, 0, 2], [0, 3, 3], [6, 8, 10], [5, 12, 13], [1, 0, 1]]), s1 = R.sign(), s2 = R.sign(), a = Z(s1 * t[0], s2 * t[1]), Rr = R.int(1, 4), pt = zscale(Q(Rr, t[2]), a);
+      var t = R.pick([[3, 4, 5], [4, 3, 5], [0, 2, 2], [2, 0, 2], [0, 3, 3], [6, 8, 10], [5, 12, 13], [1, 0, 1], [12, 5, 13], [8, 6, 10], [0, 1, 1], [0, 4, 4], [4, 0, 4], [3, 0, 3], [0, 5, 5], [8, 15, 17], [15, 8, 17]]), s1 = R.sign(), s2 = R.sign(), a = Z(s1 * t[0], s2 * t[1]), Rr = R.int(1, 6), pt = zscale(Q(Rr, t[2]), a);
       return { q: 'Find the maximum of $|' + zm(zneg(a)) + '|$ on the closed disk $|z| \\le ' + Rr + '$, and the point where it happens.',
         a: { t: 'multi', parts: [{ label: 'maximum:', a: { t: 'num', v: String(Rr + t[2]) } }, { label: 'at $z =$', a: { t: 'num', v: zplain(pt) } }] },
         steps: ['$f(z) = z + ' + zpar(a) + '$ is analytic and nonconstant, so its largest modulus on the closed disk is on the circle $|z| = ' + Rr + '$.', '$|z + a| \\le |z| + |a| = ' + Rr + ' + ' + t[2] + '$, with equality when $z$ points the same way as $a$: $z = ' + Rr + '\\frac{a}{|a|} = ' + ztex(pt) + '$.', 'Maximum $' + (Rr + t[2]) + '$ at $z = ' + ztex(pt) + '$, on the boundary.'],
@@ -1275,18 +1290,18 @@
         hint: 'Interior points are ruled out.', chk: { kind: kind } };
     }
     if (kind === 'exp') {
-      var k = R.pick([Z(1), Z(-1), Z(0, 1), Z(0, -1), Z(2), Z(0, 2), Z(0, -3)]), Rr2 = R.int(1, 3), kab = Math.sqrt(qn(znorm(k))), pt2 = zscale(Q(Rr2, kab), zconj(k));
+      var k = R.pick([Z(1), Z(-1), Z(0, 1), Z(0, -1), Z(2), Z(0, 2), Z(0, -3), Z(3), Z(-2), Z(0, -2), Z(3, 4), Z(-4, 3), Z(4)]), Rr2 = R.int(1, 5), kab = Math.sqrt(qn(znorm(k))), pt2 = zscale(Q(Rr2, kab), zconj(k));
       return { q: 'Find the maximum of $|e^{' + zcoef(k, 'z') + '}|$ on the closed disk $|z| \\le ' + Rr2 + '$, and the point where it happens.', a: { t: 'multi', parts: [{ label: 'maximum:', a: { t: 'num', v: 'e^(' + kab * Rr2 + ')' } }, { label: 'at $z =$', a: { t: 'num', v: zplain(pt2) } }] },
         steps: ['$|e^{w}| = e^{\\operatorname{Re} w}$, so maximize $\\operatorname{Re}(' + zcoef(k, 'z') + ')$.', 'On the boundary $|z| = ' + Rr2 + '$ (where the maximum must be), $\\operatorname{Re}(' + zcoef(k, 'z') + ')$ is largest when $' + zcoef(k, 'z') + '$ points along the positive real axis: $z = ' + ztex(pt2) + '$, giving $' + kab * Rr2 + '$.', 'Maximum $e^{' + kab * Rr2 + '}$ at $z = ' + ztex(pt2) + '$.'],
         hint: 'Make $\\operatorname{Re}$ of the exponent as large as possible on the circle.', chk: { kind: kind, k: zplain(k), R: Rr2 } };
     }
     if (kind === 'poly') {
-      var t2 = R.pick([[3, 4, 5], [0, 2, 2], [2, 0, 2], [0, 3, 3], [4, 3, 5], [5, 12, 13]]), c = Z(R.sign() * t2[0], R.sign() * t2[1]), n = R.pick([2, 3]);
+      var t2 = R.pick([[3, 4, 5], [0, 2, 2], [2, 0, 2], [0, 3, 3], [4, 3, 5], [5, 12, 13], [12, 5, 13], [6, 8, 10], [0, 4, 4], [1, 0, 1], [0, 1, 1]]), c = Z(R.sign() * t2[0], R.sign() * t2[1]), n = R.pick([2, 3, 4]);
       return { q: 'Find the maximum of $|' + zm(zneg(c), 'z^{' + n + '}') + '|$ on the closed disk $|z| \\le 1$.', a: { t: 'num', v: String(1 + t2[2]) },
         steps: ['The maximum is on $|z| = 1$, where $|z^{' + n + '} + c| \\le 1 + |c| = 1 + ' + t2[2] + '$.', 'Equality needs $z^{' + n + '}$ to point the same way as $c$, which some $z$ with $|z| = 1$ does ($z^{' + n + '}$ covers the whole unit circle).', 'Maximum: $' + (1 + t2[2]) + '$.'],
         hint: 'Use the triangle inequality and check that equality can happen.', chk: { kind: kind, c: zplain(c), n: n } };
     }
-    var t3 = R.pick([[3, 4, 5], [0, 4, 4], [4, 0, 4], [0, 3, 3], [6, 8, 10]]), a3 = Z(R.sign() * t3[0], R.sign() * t3[1]), R3 = R.int(1, t3[2] + 1), mn = Math.max(0, t3[2] - R3);
+    var t3 = R.pick([[3, 4, 5], [0, 4, 4], [4, 0, 4], [0, 3, 3], [6, 8, 10], [4, 3, 5], [5, 12, 13], [0, 5, 5], [8, 6, 10], [2, 0, 2], [0, 6, 6]]), a3 = Z(R.sign() * t3[0], R.sign() * t3[1]), R3 = R.int(1, t3[2] + 1), mn = Math.max(0, t3[2] - R3);
     return { q: 'Find the minimum of $|' + zm(zneg(a3)) + '|$ on the closed disk $|z| \\le ' + R3 + '$.', a: { t: 'num', v: String(mn) },
       steps: mn > 0 ? ['$z + ' + zpar(a3) + '$ has its only zero at $' + ztex(zneg(a3)) + '$, at distance $' + t3[2] + ' > ' + R3 + '$: outside the disk.', 'A nonvanishing analytic function also takes its minimum modulus on the boundary (apply the maximum principle to $1/f$).', 'On $|z| = ' + R3 + '$: $|z + a| \\ge |a| - |z| = ' + t3[2] + ' - ' + R3 + ' = ' + mn + '$, reached at $z = -' + co(R3) + '\\frac{a}{|a|}$.'] : ['The zero $z = ' + ztex(zneg(a3)) + '$ has $|z| = ' + t3[2] + ' \\le ' + R3 + '$: it is in the disk.', 'So the minimum is $0$, reached at that point (inside, or on the edge). The minimum principle needs $f \\ne 0$.'],
       hint: 'Does $z + ' + zpar(a3) + '$ vanish in the disk?', chk: { kind: kind, a: zplain(a3), R: R3, v: mn } };
@@ -1305,22 +1320,22 @@
     }
     if (kind === 'ratio') {
       var cs = [[function (c, k) { return 'n^{' + k + '}\\frac{z^{n}}{' + c + '^{n}}'; }, function (c) { return String(c); }, 'the ratio $\\frac{(n + 1)^k}{n^k} \\to 1$, so only $' ], [function () { return '\\frac{z^{n}}{n!}'; }, function () { return 'inf'; }], [function () { return 'n!\\,z^{n}'; }, function () { return '0'; }], [function (c) { return '\\frac{z^{n}}{n^{2}\\,' + c + '^{n}}'; }, function (c) { return String(c); }], [function (c) { return c * c + '^{n} z^{2n}'; }, function (c) { return '1/' + c; }]];
-      var which = R.int(0, cs.length - 1), c = R.int(2, 5), k = R.int(1, 3), term = cs[which][0](c, k), ans = cs[which][1](c);
+      var which = R.int(0, cs.length - 1), c = R.int(2, 9), k = R.int(1, 4), term = cs[which][0](c, k), ans = cs[which][1](c);
       var st = which === 1 ? ['Ratio test: $\\left|\\frac{a_{n + 1}}{a_n}\\right| = \\frac{|z|}{n + 1} \\to 0 < 1$ for every $z$.', 'So the series converges everywhere: the radius is $\\infty$.'] : which === 2 ? ['Ratio test: $\\left|\\frac{a_{n + 1}}{a_n}\\right| = (n + 1)|z| \\to \\infty$ for every $z \\ne 0$.', 'So it converges only at $z = 0$: the radius is $0$.'] : which === 4 ? ['Write it as $\\sum (' + c * c + 'z^2)^n$, a geometric series in $' + c * c + 'z^2$.', 'It converges when $' + c * c + '|z|^2 < 1$, that is $|z| < \\frac{1}{' + c + '}$.'] : ['Ratio test: $\\left|\\frac{a_{n + 1}}{a_n}\\right| = ' + (which === 0 ? '\\left(\\frac{n + 1}{n}\\right)^{' + k + '}' : '\\left(\\frac{n}{n + 1}\\right)^{2}') + '\\frac{|z|}{' + c + '} \\to \\frac{|z|}{' + c + '}$.', 'It is less than 1 exactly when $|z| < ' + c + '$: the polynomial factor does not change the radius.'];
       return { q: 'Find the radius of convergence of $\\displaystyle\\sum_{n=' + (which === 0 || which === 3 ? 1 : 0) + '}^{\\infty} ' + term + '$. (Type inf for $\\infty$.)', a: { t: 'num', v: ans }, steps: st,
         hint: 'Use the ratio test on $|a_{n + 1}/a_n|$.', chk: { kind: kind, which: which, c: c, v: ans } };
     }
     if (kind === 'center') {
-      var a = zrand(R, -3, 3), b2 = R.pick(MODZ);
+      var a = zrand(R, -5, 5), b2 = R.pick(MODZ);
       return { q: 'Find the center and the radius of the disk of convergence of $\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(' + zm(a) + ')^{n}}{n\\,' + powTex(ztex(b2[0]), 'n') + '}$.', a: { t: 'multi', parts: [{ label: 'center:', a: { t: 'num', v: zplain(a) } }, { label: 'radius:', a: { t: 'num', v: String(b2[1]) } }] },
         steps: ['The series is in powers of $z - ' + zpar(a) + '$, so the center is $' + ztex(a) + '$.', 'Ratio test: $\\frac{n}{n + 1}\\cdot\\frac{|z - a|}{|' + ztex(b2[0]) + '|} \\to \\frac{|z - a|}{' + b2[1] + '}$, less than 1 when $|z - a| < ' + b2[1] + '$.', 'Radius $' + b2[1] + '$.'],
         hint: 'Read the center from $(z - a)^n$; the ratio test gives the radius.', chk: { kind: kind, a: zplain(a), r: b2[1] } };
     }
     if (kind === 'rational') {
       var opts = R.pick(['sq', 'two', 'quad']), rts, ftex;
-      if (opts === 'sq') { var b3 = R.int(1, 4); rts = [Z(0, b3), Z(0, -b3)]; ftex = '\\frac{1}{z^2 + ' + b3 * b3 + '}'; }
+      if (opts === 'sq') { var b3 = R.int(1, 9); rts = [Z(0, b3), Z(0, -b3)]; ftex = '\\frac{1}{z^2 + ' + b3 * b3 + '}'; }
       else if (opts === 'two') { var p1 = zrand(R, -3, 3, true), p2 = zrand(R, -3, 3); if (zisz(p2)) p2 = Z(3); rts = [p1, p2]; ftex = '\\frac{1}{(' + zm(p1) + ')(' + zm(p2) + ')}'; }
-      else { var pp = R.nz(-3, 3), qq = R.int(1, 3); rts = [Z(pp, qq), Z(pp, -qq)]; ftex = '\\frac{1}{' + ptex(pfromRoots(rts)) + '}'; }
+      else { var pp = R.nz(-5, 5), qq = R.int(1, 5); rts = [Z(pp, qq), Z(pp, -qq)]; ftex = '\\frac{1}{' + ptex(pfromRoots(rts)) + '}'; }
       var best = rts.reduce(function (m, z) { return znorm(z).lt(m) ? znorm(z) : m; }, znorm(rts[0]));
       return { q: 'Find the radius of convergence of the Maclaurin series (the power series about $0$) of $f(z) = ' + ftex + '$.', a: { t: 'num', v: radPlain(1, best.num()) },
         steps: ['The series about $0$ converges on the largest disk $|z| < R$ that avoids the singular points of $f$.', '$f$ is singular at $' + rts.map(ztex).join(',\\ ') + '$, at distances $' + rts.map(absTex).join(',\\ ') + '$ from $0$.', 'The nearest is at distance $' + radTex(1, best.num()) + '$, so $R = ' + radTex(1, best.num()) + '$' + (opts === 'sq' ? ', even though $f$ is perfectly smooth on the real line.' : '.')],
@@ -1457,19 +1472,19 @@
     var kind = R.pick(L(ctx, ['simple2', 'pz', 'simple2'], ['gh', 'unity', 'exp', 'simple2'], ['trig', 'gh', 'unity', 'exp']));
     if (kind === 'simple2') {
       var a = zrand(R, -2, 2), b; do { b = zrand(R, -2, 2); } while (zeq(a, b));
-      var c = Z(R.nz(-5, 5)), res = zdiv(c, zsub(a, b));
+      var c = Z(R.nz(-9, 9)), res = zdiv(c, zsub(a, b));
       return { q: 'Find $\\operatorname{Res}(f, ' + ztex(a) + ')$ for $f(z) = \\dfrac{' + qt(c.re) + '}{(' + zm(a) + ')(' + zm(b) + ')}$.', a: { t: 'num', v: zplain(res) },
         steps: ['$z = ' + ztex(a) + '$ is a simple pole (the other factor is not zero there).', 'At a simple pole, $\\operatorname{Res}(f, a) = \\lim_{z \\to a}(z - a)f(z) = \\frac{' + qt(c.re) + '}{' + ztex(a) + ' - ' + zpar(b) + '}$.', '$= \\frac{' + qt(c.re) + '}{' + ztex(zsub(a, b)) + '} = ' + ztex(res) + '$.'],
         hint: 'Cover up the factor $(' + zm(a) + ')$ and evaluate the rest at $' + ztex(a) + '$.', chk: { kind: kind, f: qp(c.re) + '/((z-(' + zplain(a) + '))*(z-(' + zplain(b) + ')))', a: zplain(a), v: zplain(res) } };
     }
     if (kind === 'pz') {
-      var p = P([Z(R.int(-3, 3)), Z(R.int(-3, 3)), Z(R.nz(-2, 2))]), a2 = zrand(R, -2, 2, true), r2 = pev(p, a2);
+      var p = P([Z(R.int(-5, 5)), Z(R.int(-5, 5)), Z(R.nz(-3, 3))]), a2 = zrand(R, -3, 3, true), r2 = pev(p, a2);
       return { q: 'Find the residue of $f(z) = \\dfrac{' + ptex(p) + '}{' + zm(a2) + '}$ at $z = ' + ztex(a2) + '$.', a: { t: 'num', v: zplain(r2) },
         steps: ['The top is a polynomial, so near $a = ' + ztex(a2) + '$ we have $f(z) = \\frac{p(a)}{z - a} + (\\text{a polynomial})$.', 'The residue is $p(' + ztex(a2) + ') = ' + ztex(r2) + '$.'],
         hint: 'Evaluate the numerator at the pole.', chk: { kind: kind, f: '(' + pplain(p) + ')/(z-(' + zplain(a2) + '))', a: zplain(a2), v: zplain(r2) } };
     }
     if (kind === 'gh') {
-      var bb = R.int(1, 3), cc = Z(R.int(-4, 4), R.int(-2, 2)), up = R.coin(), pole = Z(0, up ? bb : -bb), res2 = zdiv(zadd(pole, cc), zscale(2, pole));
+      var bb = R.int(1, 6), cc = Z(R.int(-6, 6), R.int(-4, 4)), up = R.coin(), pole = Z(0, up ? bb : -bb), res2 = zdiv(zadd(pole, cc), zscale(2, pole));
       return { q: 'Find the residue of $f(z) = \\dfrac{z' + (zisz(cc) ? '' : ' + ' + zpar(cc)) + '}{z^2 + ' + bb * bb + '}$ at $z = ' + ztex(pole) + '$.', a: { t: 'num', v: zplain(res2) },
         steps: ['With $f = \\frac{g}{h}$, $g(z) = z' + (zisz(cc) ? '' : ' + ' + zpar(cc)) + '$ and $h(z) = z^2 + ' + bb * bb + '$: $h(' + ztex(pole) + ') = 0$ and $h\'(z) = 2z \\ne 0$ there, so the pole is simple.', '$\\operatorname{Res} = \\frac{g(a)}{h\'(a)} = \\frac{' + ztex(zadd(pole, cc)) + '}{' + ztex(zscale(2, pole)) + '}$.', '$= ' + ztex(res2) + '$.'],
         hint: 'Use $g(a)/h\'(a)$ for a simple zero of the denominator.', chk: { kind: kind, f: '(z+(' + zplain(cc) + '))/(z^2+' + bb * bb + ')', a: zplain(pole), v: zplain(res2) } };
@@ -1491,7 +1506,7 @@
         steps: ['The denominator has a simple zero at $' + c[3] + '$, with derivative $2z$.', '$\\operatorname{Res} = \\frac{g(a)}{h\'(a)} = ' + c[5] + '$.'],
         hint: 'Use $g(a)/h\'(a)$.', chk: { kind: kind, f: c[6], a: c[2], v: c[4] } };
     }
-    var k2 = R.pick([1, 2, -1]), tab = [['\\cot z', k2 + '*pi', piTex(k2), '1', 'cos(z)/sin(z)', '$\\cot z = \\frac{\\cos z}{\\sin z}$, and $\\sin$ has a simple zero there with $\\sin\' = \\cos$: $\\frac{\\cos a}{\\cos a} = 1$.'],
+    var k2 = R.pick([1, 2, 3, -1, -2, -3]), tab = [['\\cot z', k2 + '*pi', piTex(k2), '1', 'cos(z)/sin(z)', '$\\cot z = \\frac{\\cos z}{\\sin z}$, and $\\sin$ has a simple zero there with $\\sin\' = \\cos$: $\\frac{\\cos a}{\\cos a} = 1$.'],
       ['\\frac{1}{\\sin z}', k2 + '*pi', piTex(k2), String(k2 % 2 ? -1 : 1), '1/sin(z)', '$\\frac{1}{\\cos(' + piTex(k2) + ')} = ' + (k2 % 2 ? -1 : 1) + '$.'],
       ['\\tan z', 'pi/2', '\\frac{\\pi}{2}', '-1', 'sin(z)/cos(z)', '$\\tan z = \\frac{\\sin z}{\\cos z}$, and $\\cos\' = -\\sin$: $\\frac{\\sin(\\pi/2)}{-\\sin(\\pi/2)} = -1$.'],
       ['\\frac{1}{e^{z} - 1}', 2 * k2 + '*pi*i', piTex(2 * k2) + ' i', '1', '1/(e^z-1)', 'The derivative of $e^z - 1$ is $e^z$, which equals $1$ at $' + piTex(2 * k2) + ' i$: residue $\\frac{1}{1} = 1$.'],
@@ -1572,7 +1587,7 @@
     var kind = R.pick(L(ctx, ['basic', 'basic', 'pole'], ['basic', 'pole', 'res', 'basic'], ['square', 'cosnum', 'basic', 'square']));
     var useNS = kind === 'basic' && lvl(ctx) >= 2 && R.chance(0.4), t = useNS ? R.pick(TRIGNS) : R.pick(TRIGAB), a = t[0], b = t[1], s2 = useNS ? t[2] : t[2] * t[2], sP = useNS ? 'sqrt(' + s2 + ')' : String(t[2]), sT = useNS ? '\\sqrt{' + s2 + '}' : String(t[2]);
     var trig = R.pick(['\\cos', '\\cos', '\\sin']), sign = R.pick(['+', '+', '-']);
-    var den = a + ' ' + sign + ' ' + co(b) + trig + '\\theta', cn = R.pick([1, 1, 2, 3]), cnT = cn === 1 ? 'd\\theta' : cn + '\\,d\\theta';
+    var den = a + ' ' + sign + ' ' + co(b) + trig + '\\theta', cn = R.pick([1, 1, 2, 3, 4, 5, 6]), cnT = cn === 1 ? 'd\\theta' : cn + '\\,d\\theta';
     if (kind === 'basic') {
       var ans = useNS ? 2 * cn + '*pi/sqrt(' + s2 + ')' : piPlain(Q(2 * cn, t[2]));
       return { q: 'Evaluate $\\displaystyle\\int_0^{2\\pi} \\frac{' + cnT + '}{' + den + '}$.', a: { t: 'num', v: ans },
@@ -1603,12 +1618,12 @@
 
   G('cplx.real-integrals-residues', function (R, ctx) {
     var kind = R.pick(L(ctx, ['one', 'shift', 'one'], ['two', 'poles', 'shift', 'res'], ['sq', 'two', 'x2sq', 'quart']));
-    var a = R.int(1, 4), b = R.intNot(1, 4, a), cn = R.pick([1, 1, 2, 3, 5]);
+    var a = R.int(1, 7), b = R.intNot(1, 7, a), cn = R.pick([1, 1, 2, 3, 4, 5, 6, 7]);
     if (kind === 'one') return { q: 'Evaluate $\\displaystyle\\int_{-\\infty}^{\\infty} \\frac{' + (cn === 1 ? 'dx' : cn + '\\,dx') + '}{x^2 + ' + a * a + '}$ with residues.', a: { t: 'num', v: piPlain(Q(cn, a)) },
       steps: ['Close the real line with a big upper half-circle; the arc contributes nothing as $R \\to \\infty$ (the degree of the bottom is 2 more than the top).', 'The only pole in the upper half-plane is $' + (a === 1 ? '' : a) + 'i$, with residue $\\frac{' + cn + '}{2 \\cdot ' + (a === 1 ? '' : a) + 'i}$.', '$2\\pi i \\cdot \\frac{' + cn + '}{' + 2 * a + 'i} = ' + piTex(Q(cn, a)) + '$.'],
       hint: 'Use only the pole in the upper half-plane.', chk: { kind: kind, f: cn + '/(x^2+' + a * a + ')', v: piPlain(Q(cn, a)) } };
     if (kind === 'shift') {
-      var p = R.nz(-3, 3), q2 = R.int(1, 3), c = p * p + q2 * q2;
+      var p = R.nz(-5, 5), q2 = R.int(1, 5), c = p * p + q2 * q2;
       return { q: 'Evaluate $\\displaystyle\\int_{-\\infty}^{\\infty} \\frac{' + (cn === 1 ? 'dx' : cn + '\\,dx') + '}{x^2 ' + (p > 0 ? '+ ' + 2 * p : '- ' + -2 * p) + 'x + ' + c + '}$.', a: { t: 'num', v: piPlain(Q(cn, q2)) },
         steps: ['The zeros of $x^2 ' + (p > 0 ? '+ ' : '- ') + Math.abs(2 * p) + 'x + ' + c + '$ are $' + ztex(Z(-p, q2)) + '$ and $' + ztex(Z(-p, -q2)) + '$; only $' + ztex(Z(-p, q2)) + '$ is in the upper half-plane.', 'Residue there: $\\frac{1}{2z + ' + T.p(2 * p) + '}\\Big|_{z = ' + ztex(Z(-p, q2)) + '} = \\frac{1}{' + (q2 * 2) + 'i}$.', '$2\\pi i \\cdot \\frac{1}{' + 2 * q2 + 'i} = ' + piTex(Q(1, q2)) + '$' + (cn === 1 ? '.' : ', times the constant ' + cn + ' on top: $' + piTex(Q(cn, q2)) + '$.')],
         hint: 'Find the root with positive imaginary part.', chk: { kind: kind, f: cn + '/(x^2+(' + 2 * p + ')*x+' + c + ')', v: piPlain(Q(cn, q2)) } };
@@ -1638,7 +1653,7 @@
 
   G('cplx.fourier-type-integrals', function (R, ctx) {
     var kind = R.pick(L(ctx, ['cos', 'cos', 'which'], ['xsin', 'res', 'cos', 'which'], ['shift', 'two', 'xsin', 'shift']));
-    var a = R.int(1, 3), k = R.int(1, 3);
+    var a = R.int(1, 6), k = R.int(1, 5);
     if (kind === 'cos') { var v = 'pi*e^(-' + k * a + ')/' + a;
       return { q: 'Evaluate $\\displaystyle\\int_{-\\infty}^{\\infty} \\frac{\\cos(' + T.mono(k, 'x') + ')}{x^2 + ' + a * a + '}\\,dx$.', a: { t: 'num', v: v },
         steps: ['Integrate $f(z) = \\frac{e^{' + T.mono(k, 'iz') + '}}{z^2 + ' + a * a + '}$ over the upper half-disk: $|e^{' + T.mono(k, 'iz') + '}| = e^{-' + (k === 1 ? '' : k) + 'y} \\le 1$ there, so the arc vanishes as $R \\to \\infty$.', 'The pole $' + (a === 1 ? '' : a) + 'i$ has residue $\\frac{e^{' + T.mono(k, 'i') + ' \\cdot ' + (a === 1 ? '' : a) + 'i}}{' + 2 * a + 'i} = \\frac{e^{-' + k * a + '}}{' + 2 * a + 'i}$.', '$2\\pi i \\cdot \\frac{e^{-' + k * a + '}}{' + 2 * a + 'i} = \\frac{\\pi e^{-' + k * a + '}}{' + a + '}$. It is real, and it equals the cosine integral (the real part); the sine part is $0$ by symmetry.'],
@@ -1657,7 +1672,7 @@
         hint: 'Which exponential stays small when $y > 0$?', chk: { kind: kind } };
     }
     if (kind === 'shift') {
-      var p = R.nz(-2, 2), q2 = R.int(1, 2), c = p * p + q2 * q2, useCos = R.coin(), ans = useCos ? 'pi/' + q2 + '*e^(-' + k * q2 + ')*cos(' + k * p + ')' : '-pi/' + q2 + '*e^(-' + k * q2 + ')*sin(' + k * p + ')';
+      var p = R.nz(-4, 4), q2 = R.int(1, 4), c = p * p + q2 * q2, useCos = R.coin(), ans = useCos ? 'pi/' + q2 + '*e^(-' + k * q2 + ')*cos(' + k * p + ')' : '-pi/' + q2 + '*e^(-' + k * q2 + ')*sin(' + k * p + ')';
       return { q: 'Evaluate $\\displaystyle\\int_{-\\infty}^{\\infty} \\frac{\\' + (useCos ? 'cos' : 'sin') + '(' + T.mono(k, 'x') + ')}{x^2 ' + (p > 0 ? '+ ' + 2 * p : '- ' + -2 * p) + 'x + ' + c + '}\\,dx$.', a: { t: 'num', v: ans },
         steps: ['The upper pole is $z_0 = ' + ztex(Z(-p, q2)) + '$. With $f = \\frac{e^{' + T.mono(k, 'iz') + '}}{z^2 ' + (p > 0 ? '+ ' : '- ') + Math.abs(2 * p) + 'z + ' + c + '}$: residue $\\frac{e^{' + T.mono(k, 'i') + 'z_0}}{2z_0 + ' + T.p(2 * p) + '} = \\frac{e^{' + T.mono(k, 'i') + '(' + ztex(Z(-p, q2)) + ')}}{' + 2 * q2 + 'i}$.', '$e^{' + T.mono(k, 'i') + '(' + ztex(Z(-p, q2)) + ')} = e^{-' + k * q2 + '}e^{' + T.mono(-k * p, 'i') + '}$, so $2\\pi i \\cdot \\text{Res} = \\frac{\\pi}{' + q2 + '}e^{-' + k * q2 + '}\\left(\\cos ' + k * p + ' ' + (k * p > 0 ? '-' : '+') + ' i\\sin ' + Math.abs(k * p) + '\\right)$.', 'The ' + (useCos ? 'real' : 'imaginary') + ' part: $' + (useCos ? '\\frac{\\pi}{' + q2 + '}e^{-' + k * q2 + '}\\cos ' + (k * p) : '-\\frac{\\pi}{' + q2 + '}e^{-' + k * q2 + '}\\sin ' + (k * p)) + '$' + (k * p < 0 ? ' (with $\\cos(-u) = \\cos u$, $\\sin(-u) = -\\sin u$).' : '.')],
         hint: 'Find the residue of $e^{ikz}/Q(z)$ at the upper pole, then take the real or imaginary part.', chk: { kind: kind, f: (useCos ? 'cos' : 'sin') + '(' + k + '*x)/(x^2+(' + 2 * p + ')*x+' + c + ')', v: ans } };
@@ -1729,7 +1744,7 @@
   G('cplx.conformal-maps', function (R, ctx) {
     var kind = R.pick(L(ctx, ['deriv', 'keep', 'deriv'], ['crit', 'angle', 'deriv', 'area'], ['crit', 'angle', 'area', 'deriv']));
     if (kind === 'deriv') {
-      var n = R.pick([2, 2, 3]), k = R.pick([Q(1, 4), Q(1, 6), Q(1, 3), Q(1, 2), Q(3, 4), Q(-1, 4), Q(2, 3), Q(0)]), m = R.int(1, 2), p = latticeAt(R, k);
+      var n = R.pick([2, 2, 3, 4]), k = R.pick([Q(1, 4), Q(1, 6), Q(1, 3), Q(1, 2), Q(3, 4), Q(-1, 4), Q(2, 3), Q(0), Q(5, 6), Q(-1, 3), Q(-1, 2), Q(1)]), m = R.int(1, 2), p = latticeAt(R, k);
       var mod2 = qn(radMul(p.x, p.x).k) + qn(radMul(p.y, p.y).k), argF = princ(k.mul(n - 1)), scale = n === 2 ? radNorm(2, mod2) : radNorm(3 * mod2, 1);
       var zT = rcTex(p.x, p.y);
       return { q: 'At $z_0 = ' + zT + '$, the map $f(z) = z^{' + n + '}$ turns tiny shapes by the angle $\\arg f\'(z_0)$ and scales them by $|f\'(z_0)|$. Find both (angle in $(-\\pi, \\pi]$).', a: { t: 'multi', parts: [{ label: 'angle:', a: { t: 'num', v: piPlain(argF) } }, { label: 'scale:', a: { t: 'num', v: radPlain(scale.k, scale.n) } }] },
@@ -1737,13 +1752,13 @@
         hint: 'Compute $f\'(z_0)$ and write it in polar form.', chk: { kind: kind, n: n, z: rcPlain(p.x, p.y) } };
     }
     if (kind === 'keep') {
-      var al = R.pick([Q(1, 6), Q(1, 4), Q(1, 3), Q(1, 2), Q(2, 3)]), f = R.pick(['e^{z}', 'z^{2} + 3z', '\\sin z', '\\frac{1}{z}']);
+      var al = R.pick([Q(1, 6), Q(1, 4), Q(1, 3), Q(1, 2), Q(2, 3), Q(3, 4), Q(5, 6), Q(1, 12), Q(1, 8)]), f = R.pick(['e^{z}', 'z^{2} + 3z', '\\sin z', '\\frac{1}{z}', '\\cos z', 'z^{3} - z', 'e^{2z}', 'z + \\frac{1}{z}']);
       return { q: 'Two smooth curves meet at $z_0$ at the angle $' + piTex(al) + '$. The map $f(z) = ' + f + '$ is analytic near $z_0$ with $f\'(z_0) \\ne 0$. At what angle do the image curves meet at $f(z_0)$?', a: { t: 'num', v: piPlain(al) },
         steps: ['Near $z_0$, $f(z) \\approx f(z_0) + f\'(z_0)(z - z_0)$: every direction is turned by the same angle $\\arg f\'(z_0)$.', 'Turning both tangent directions by the same amount keeps the angle between them (and its orientation).', 'So the image curves still meet at $' + piTex(al) + '$.'],
         hint: 'A conformal map turns all directions at a point by the same angle.', chk: { kind: kind } };
     }
     if (kind === 'crit') {
-      var w = zrand(R, -2, 2, R.coin()), w2 = zmul(w, w), cubic = R.coin();
+      var w = zrand(R, -4, 4, R.coin()), w2 = zmul(w, w), cubic = R.coin();
       if (cubic) return { q: 'Where does $f(z) = z^3 - ' + (zisReal(zscale(3, w2)) && zscale(3, w2).re.sign() > 0 ? qt(zscale(3, w2).re) : '(' + ztex(zscale(3, w2)) + ')') + 'z$ fail to be conformal? List the points.', a: { t: 'set', v: [zplain(w), zplain(zneg(w))] },
         steps: ['A nonconstant analytic map is conformal exactly where $f\'(z) \\ne 0$.', '$f\'(z) = 3z^2 - ' + zpar(zscale(3, w2)) + ' = 3(z^2 - ' + zpar(w2) + ')$.', '$z^2 = ' + ztex(w2) + '$ gives $z = \\pm(' + ztex(w) + ')$.'],
         hint: 'Solve $f\'(z) = 0$.', chk: { kind: kind, f: 'z^3-3*(' + zplain(w2) + ')*z', pts: [zplain(w), zplain(zneg(w))] } };
@@ -1758,7 +1773,7 @@
         steps: ['$f\'(0) = 0$, so $f$ is not conformal at $0$.', 'A ray $\\arg z = \\theta$ goes to the ray $\\arg w = ' + n2 + '\\theta$: every angle at $0$ is multiplied by $' + n2 + '$.', 'So the angle becomes $' + n2 + ' \\cdot ' + piTex(al2) + ' = ' + piTex(al2.mul(n2)) + '$.'],
         hint: 'Powers multiply arguments.', chk: { kind: kind } };
     }
-    var x0 = R.int(-2, 2), y0 = R.pick([1, 2, -1, 3]), useExp = R.coin();
+    var x0 = R.int(-5, 5), y0 = R.pick([1, 2, -1, 3, -2, 4, -3, 5]), useExp = R.coin();
     if (useExp) return { q: 'Near $z_0 = ' + ztex(Z(x0, y0)) + '$, by what factor does $f(z) = e^{z}$ multiply small areas? (The factor is $|f\'(z_0)|^2$.)', a: { t: 'num', v: 'e^(' + 2 * x0 + ')' },
       steps: ['Lengths are scaled by $|f\'(z_0)| = |e^{z_0}| = e^{' + x0 + '}$ in every direction.', 'Areas are scaled by the square: $e^{' + 2 * x0 + '}$.'],
       hint: 'A conformal map scales lengths by $|f\'|$, areas by $|f\'|^2$.', chk: { kind: kind, x: x0 } };
@@ -1844,7 +1859,7 @@
   G('cplx.standard-maps', function (R, ctx) {
     var kind = R.pick(L(ctx, ['power', 'cayley', 'power', 'inside'], ['strip', 'cayley', 'inside', 'invcayley'], ['chain', 'invcayley', 'strip', 'chain']));
     if (kind === 'power') {
-      var n = R.int(2, 6);
+      var n = R.int(2, 9);
       return { q: 'Which power $w = z^n$ maps the open sector $0 < \\arg z < ' + piTex(Q(1, n)) + '$ onto the upper half-plane?', a: { t: 'num', v: String(n) },
         steps: ['$z^n$ multiplies arguments by $n$ (and lengths go from $(0, \\infty)$ onto $(0, \\infty)$).', 'The sector\'s angles $0$ to $' + piTex(Q(1, n)) + '$ become $0$ to $\\pi$ exactly when $n = ' + n + '$.'],
         hint: 'Multiply the opening angle by $n$ to get $\\pi$.', chk: { kind: kind } };
@@ -1866,15 +1881,145 @@
         hint: 'Substitute and divide.', chk: { kind: kind, z: zplain(z0), v: zplain(w0) } };
     }
     if (kind === 'invcayley') {
-      var w1; do { w1 = Z(Q(R.int(-3, 3), 4), Q(R.int(-3, 3), 4)); } while (!znorm(w1).lt(1) || zeq(w1, Z1));
+      var w1; do { w1 = Z(Q(R.int(-5, 5), 6), Q(R.int(-5, 5), 6)); } while (!znorm(w1).lt(1) || zeq(w1, Z1));
       var z1 = zmul(ZI, zdiv(zadd(Z1, w1), zsub(Z1, w1)));
       return { q: 'The map $z = i\\dfrac{1 + w}{1 - w}$ sends the unit disk onto the upper half-plane. Find the image of $w = ' + ztex(w1) + '$.', a: { t: 'num', v: zplain(z1) },
         steps: ['$1 + w = ' + ztex(zadd(Z1, w1)) + '$ and $1 - w = ' + ztex(zsub(Z1, w1)) + '$; their quotient is $' + ztex(zdiv(zadd(Z1, w1), zsub(Z1, w1))) + '$.', 'Multiply by $i$: $z = ' + ztex(z1) + '$, with positive imaginary part, as expected.'],
         hint: 'Divide first, then multiply by $i$.', chk: { kind: kind, w: zplain(w1), v: zplain(z1) } };
     }
-    var a = R.int(1, 3), b = R.int(1, 3), zq = Z(a, b), sq = zmul(zq, zq), w2 = zdiv(zsub(sq, ZI), zadd(sq, ZI));
+    var a = R.int(1, 6), b = R.int(1, 6), zq = Z(a, b), sq = zmul(zq, zq), w2 = zdiv(zsub(sq, ZI), zadd(sq, ZI));
     return { q: 'The first quadrant is mapped onto the unit disk by first $\\zeta = z^2$ (onto the upper half-plane) and then $w = \\dfrac{\\zeta - i}{\\zeta + i}$. Where does $z = ' + ztex(zq) + '$ go?', a: { t: 'num', v: zplain(w2) },
       steps: ['$\\zeta = (' + ztex(zq) + ')^2 = ' + ztex(sq) + '$, in the upper half-plane.', '$w = \\frac{' + ztex(zsub(sq, ZI)) + '}{' + ztex(zadd(sq, ZI)) + '} = ' + ztex(w2) + '$.', 'Check: $|w|^2 = ' + qt(znorm(w2)) + ' < 1$.'],
       hint: 'Apply the two maps in order.', chk: { kind: kind, z: zplain(zq), v: zplain(w2) } };
   });
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
+   generator still has few different problems at a level sometimes asks the same skill in another form, built only from
+   problems that generator made, so every answer is the generator's own:
+   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+     classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
+     checker rejects it;
+   - two at once: two different short questions of the topic, answered together.
+   Topics whose generator already varies a lot at a level are left as they are. Placed after the generators and
+   registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'cplx', VAR = {};
+  // how often another form is used: never when the topic's own generator already varies a lot at this level, up to
+  // half the time when it has few different questions (counted once per topic and level from 40 fixed seeds)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 37 ? 0 : VAR[key] >= 30 ? 0.3 : VAR[key] >= 20 ? 0.45 : 0.55;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
+  // a nearby wrong answer for a number or an expression, or null
+  function wrongFor(R, a) {
+    var v = String(ML.answerValue(a)), cands = [], m;
+    if (a.t === 'num') {
+      if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
+      else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
+      else if (/^-?\d+\.\d+$/.test(v)) { var x = +v, dp = v.split('.')[1].length, st = Math.pow(10, -Math.min(dp, 2)); cands = [x + st, x - st, -x, x * 10, x / 10].map(function (y) { return ML.util.numStr(ML.util.round(y, dp + 1)); }); }
+      else return null;
+    } else if (a.t === 'expr') {
+      if (v.length > 60) return null;
+      if (/ \+ /.test(v)) cands.push(v.replace(' + ', ' - '));
+      if (/ - /.test(v)) cands.push(v.replace(' - ', ' + '));
+      if ((m = /(^|[^\d.^])(\d+)(?![\d.])/.exec(v)) && !/\^$/.test(v.slice(0, m.index + m[1].length))) cands.push(v.slice(0, m.index) + m[1] + (+m[2] + 1) + v.slice(m.index + m[0].length));
+      if (!cands.length) return null;
+    } else return null;
+    var nv = function (s) { var mm = /^(-?\d+)\/(\d+)$/.exec(s); return mm ? mm[1] / mm[2] : /^-?\d+(\.\d+)?$/.test(s) ? +s : null; }, v0 = nv(v);
+    cands = R.shuffle(cands.filter(function (c, i, all) { var x = nv(c); return c !== v && all.indexOf(c) === i && (x === null || v0 === null || (Math.abs(x - v0) >= 0.01 * Math.max(Math.abs(v0), 1e-12) && (v0 <= 0 || x > 0) && (v0 <= 0 || v0 > 1 || x <= 1))); })); // a believable slip: the same sign, and at most 1 when the right answer is
+    for (var i = 0; i < cands.length; i++) if (okAns(a, cands[i]) === false) return cands[i];
+    return null;
+  }
+  function checkable(p) {
+    var a = p.a;
+    if (!a || p.unit || (a.form && a.form !== 'int' && a.form !== 'frac' && a.form !== 'simplest')) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bclassmate\b/i.test(txt(p.q))) return false;
+    if (a.t === 'num' || a.t === 'expr') return okAns(a, ML.answerValue(a)) === true;
+    if (a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    return true;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || ['mc', 'tf', 'num'].indexOf(p.a.t) < 0) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= 300 && !/<(table|svg|img|canvas|ol|ul)\b|\$\$|\\begin\{/i.test(p.q);
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), shown, good;
+    if (a.t === 'mc') {
+      var k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+      shown = a.choices[k]; good = a.choices[a.v];
+    } else {
+      good = ML.answerShow(a);
+      var w = right ? null : wrongFor(R, a);
+      if (!right && w === null) return null;
+      shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
+      if (!shown || /undefined|NaN/.test(shown)) return null;
+    }
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var out = { q: '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q + '</li><li>' + p2.q + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + (p.steps || [''])[0]].concat((p.steps || []).slice(1), ['Question 2: ' + (p2.steps || [''])[0]], (p2.steps || []).slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), mode = ctx && ctx.mode;
+      if (!p || !p.a || !ML.check || !ML.answerShow || !R.chance(share(id, base, ctx))) return p;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check', 'check');
+      if (pairable(p, true)) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = null;
+      try { out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base); } catch (e) { out = null; }
+      return out || p;
+    };
+    fn._forms = true;
+    fn._base = base; // the topic's own generator (for tests)
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

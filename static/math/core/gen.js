@@ -11,6 +11,15 @@
    ML.loadCourse(key)             browser: load static/math/gen/<key>.js once; Promise -> true (loaded) or false (missing)
    ML.byLevel(ctx, a, b, c)       a at level 1, b at level 2, c at level 3 (b and c default to the one before)
 
+   RECENT-PROBLEM MEMORY  ML.recent  (practice doesn't repeat the problems a learner just saw; makeProblem itself is unchanged)
+   ML.recent.pick(id, draw, opts) a problem from draw(k) (k = 0, 1, …; return a problem or null), redrawn when it was shown
+                                  recently (in the topic's last 40, or this page visit); after 25 redraws (up to 100 while fast) the
+                                  least recently seen. Remembers the one it returns (opts.record false: it doesn't).
+   ML.recent.add(id, p)  .seen(id, p)  .age(id, p) (-1 or how many shown since)  .list(id)  .clear()  .size()  .off = true
+   ML.recent.key(p) / .fp(p)      the identity (question | answer spec | picture, as check-gen counts) / its short hash
+   ML.recent.create({ storage, key, per, cap })  a separate memory (tests; storage null: memory only)
+   Saved in localStorage 'trb-recent-v1' (per learner), at most 40 per topic and 3,000 in all (about 40 KB).
+
    RANDOM  R = ML.rand(seed)      (seed: number or string; mulberry32, fully reproducible)
    R.seed  R.next() -> [0, 1)
    R.int(lo, hi)                  integer in [lo, hi]           R.nz(lo, hi)        integer in [lo, hi], never 0
@@ -554,6 +563,110 @@
     p.id = id; p.seed = seed; p.level = ctx.level;
     return p;
   };
+
+  // ================= recent-problem memory (ML.recent) =================
+  // Practice remembers the last problems shown per topic, so the one just seen doesn't come straight back.
+  // Stored in localStorage 'trb-recent-v1' (per learner: profiles.js swaps trb-* keys):
+  //   { v: 1, n: <use counter>, t: { <topic id>: [<last use>, "fp fp fp …" (oldest first)] } }
+  // At most PER fingerprints per topic and CAP in all (the least recently used topics go first): about 40 KB at most.
+  // The fingerprint is a hash of key(p): the question, the answer spec and the picture, the identity check-gen counts.
+  var RKEY = 'trb-recent-v1', RPER = 40, RCAP = 3000, RTOPICS = 400, RTRIES = 25, RMAX = 100, RBUDGET = 20;
+  var FP_RE = /^[0-9a-z]{1,8}$/, RID_RE = /^[a-z0-9][\w-]{0,15}\.[\w.-]{1,80}$/i;
+  function probKey(p) { return p.q + '|' + JSON.stringify(p.a) + '|' + JSON.stringify(p.viz || null); }
+  function probFp(p) { return typeof p === 'string' ? p : hashStr(probKey(p)).toString(36); }
+  function nowMs() { try { return (root.performance && root.performance.now) ? root.performance.now() : Date.now(); } catch (e) { return Date.now(); } }
+  function makeRecent(o) {
+    o = o || {};
+    var key = o.key || RKEY, per = o.per || RPER, cap = o.cap || RCAP, maxTopics = o.topics || RTOPICS, sess = {}, mem = null;
+    function store() {
+      if (o.storage !== undefined) return o.storage;
+      try { return root.localStorage || null; } catch (e) { return null; }
+    }
+    function blank() { return { v: 1, n: 0, t: {} }; }
+    function clean(x) { // anything unreadable is dropped; a damaged save starts empty
+      if (!x || typeof x !== 'object' || Array.isArray(x) || x.v !== 1 || !x.t || typeof x.t !== 'object' || Array.isArray(x.t)) return blank();
+      var s = blank(); s.n = Number.isInteger(x.n) && x.n >= 0 ? x.n : 0;
+      Object.keys(x.t).forEach(function (id) {
+        var e = x.t[id]; if (!RID_RE.test(id) || !Array.isArray(e) || typeof e[1] !== 'string') return;
+        var fs = e[1].split(' ').filter(function (f, i, all) { return FP_RE.test(f) && all.lastIndexOf(f) === i; }).slice(-per);
+        if (fs.length) s.t[id] = [Number.isInteger(e[0]) && e[0] >= 0 ? Math.min(e[0], s.n) : 0, fs.join(' ')];
+      });
+      return s;
+    }
+    function load() { // read every time: another tab may have added problems
+      var st = store(), raw = null;
+      try { raw = st ? st.getItem(key) : null; } catch (e) { raw = null; }
+      if (raw === null || raw === undefined) return (mem = mem || blank());
+      try { mem = clean(JSON.parse(raw)); } catch (e) { mem = blank(); }
+      return mem;
+    }
+    function trim(s, total) { // the global cap: drop the least recently used topics' oldest problems first
+      var ids = Object.keys(s.t), n = 0;
+      ids.forEach(function (id) { n += s.t[id][1].split(' ').length; });
+      if (n <= total && ids.length <= maxTopics) return;
+      ids.sort(function (a, b) { return s.t[a][0] - s.t[b][0]; });
+      for (var i = 0; i < ids.length && (n > total || Object.keys(s.t).length > maxTopics); i++) {
+        var fs = s.t[ids[i]][1].split(' ');
+        if (Object.keys(s.t).length > maxTopics || fs.length <= n - total) { n -= fs.length; delete s.t[ids[i]]; }
+        else { var cut = n - total; s.t[ids[i]][1] = fs.slice(cut).join(' '); n -= cut; }
+      }
+    }
+    function save(s) {
+      mem = s; var st = store(); if (!st) return;
+      for (var k = 0; k < 3; k++) {
+        trim(s, k ? Math.floor(cap / (2 * k)) : cap);
+        try { st.setItem(key, JSON.stringify(s)); return; } catch (e) { /* full: keep less and try again */ }
+      }
+    }
+    function list(s, id) { var e = s.t[id]; return e ? e[1].split(' ') : []; }
+    // how many problems of this topic were shown since f (0 = the last one); -1 = not shown recently
+    function ageIn(s, id, f) {
+      var L = list(s, id), i = L.lastIndexOf(f);
+      if (i >= 0) return L.length - 1 - i;
+      var S = sess[id] || [], j = S.lastIndexOf(f);
+      return j >= 0 ? S.length - 1 - j : -1;
+    }
+    function add(id, p) {
+      var f = probFp(p), s = load();
+      if (!FP_RE.test(f)) return f;
+      var L = list(s, id).filter(function (x) { return x !== f; }); L.push(f);
+      s.n++; s.t[id] = [s.n, L.slice(-per).join(' ')];
+      var S = sess[id] = (sess[id] || []).filter(function (x) { return x !== f; }); S.push(f); if (S.length > 500) S.shift();
+      save(s); return f;
+    }
+    var R = {
+      KEY: key, PER: per, CAP: cap, key: probKey, fp: probFp, off: false,
+      seen: function (id, p) { return ageIn(load(), id, probFp(p)) >= 0; },
+      age: function (id, p) { return ageIn(load(), id, probFp(p)); },
+      add: function (id, p) { return add(id, p); },
+      list: function (id) { return list(load(), id).slice(); },
+      // draw(k) → a problem (or null; k = 0, 1, 2 …). Redraws up to 25 times (and up to 100, within about 20 ms, while every
+      // draw so far was a repeat) when the problem was shown recently; if every draw was, the least recently seen one is
+      // used. Never blocks: null only when draw gives nothing. opts.record false: don't remember it (the caller adds it).
+      pick: function (id, draw, opts) {
+        opts = opts || {};
+        var first = null, best = null, bestAge = -1, t0 = nowMs(), misses = 0, s = R.off ? null : load();
+        for (var k = 0; k < RMAX; k++) {
+          var p = null; try { p = draw(k); } catch (e) { p = null; }
+          if (!p) { if (++misses > 4) break; continue; }
+          if (!first) first = p;
+          if (!s) break; // memory switched off: the first problem
+          var a = ageIn(s, id, probFp(p));
+          if (a < 0) { best = p; bestAge = -1; break; }
+          if (a > bestAge) { best = p; bestAge = a; }
+          if (k + 1 >= RTRIES && nowMs() - t0 > RBUDGET) break;
+        }
+        var out = best || first;
+        if (out && opts.record !== false && !R.off) add(id, out);
+        return out;
+      },
+      clear: function () { sess = {}; mem = blank(); var st = store(); try { if (st) st.removeItem(key); } catch (e) { } },
+      size: function () { try { var st = store(), v = st && st.getItem(key); return v ? v.length : 0; } catch (e) { return 0; } },
+      create: makeRecent
+    };
+    return R;
+  }
+  ML.recent = makeRecent();
 
   // ================= loading course generator files (browser) =================
   var BASE = (function () {

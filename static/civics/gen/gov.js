@@ -254,6 +254,11 @@
     ['The powers to tax and to make all necessary and proper laws will swallow the states.', 'Anti-Federalist'], ['The House is too small to know the people or to resist bribery.', 'Anti-Federalist'],
     ['The plan aims "strongly at one consolidated government."', 'Anti-Federalist'], ['Federal judges, serving for life, will steadily enlarge national power.', 'Anti-Federalist']];
   G('gov.federalist-antifederalist', fromBank([
+    {"L":[1,2],"q":"Who wrote The Federalist essays?","a":"Alexander Hamilton, James Madison and John Jay","w":["Thomas Jefferson, John Adams and Benjamin Franklin","George Mason, Patrick Henry and Samuel Adams","George Washington, John Hancock and Paul Revere","Brutus, Cato and the Federal Farmer"],"why":"Hamilton, Madison and Jay wrote the 85 essays under the pen name Publius."},
+    {"L":[1,2,3],"q":"What did the Federalists want in 1787–1788?","a":"Ratification of the new Constitution","w":["A return to British rule","Keeping the Articles of Confederation unchanged","A separate country for each state","A king for the United States"],"why":"The Federalists supported ratifying the Constitution."},
+    {"L":[1,2,3],"q":"What did the Anti-Federalists fear the Constitution would create?","a":"A national government too powerful for the states and the people","w":["A government too weak to collect any taxes","A return to rule by Parliament","A country with no President","A union with no courts"],"why":"The Anti-Federalists feared a strong central government and wanted a bill of rights."},
+    {"L":[1,2],"q":"Why were The Federalist essays written?","a":"To persuade New Yorkers to ratify the Constitution","w":["To declare independence from Britain","To draft the Articles of Confederation","To argue for a king","To start a political party in 1800"],"why":"The essays first appeared in New York newspapers in 1787–1788 to win support for ratification."},
+    {"L":[1,2,3],"q":"Which side took its name from support for the new federal Constitution?","a":"The Federalists","w":["The Anti-Federalists","The Loyalists","The Whigs","The Sons of Liberty"],"why":"Supporters of the Constitution called themselves Federalists."},
     { L: [1, 2, 3], gen: function (R) { var x = R.pick(FA); return { q: 'Who would make this argument in 1787–1788? ' + x[0], a: x[1] + 's', w: [x[1] === 'Federalist' ? 'Anti-Federalists' : 'Federalists', 'Loyalists'], why: x[1] === 'Federalist' ? 'That is the Federalist case for the Constitution.' : 'That is an Anti-Federalist objection: fear of size, consolidation and distant power.' }; } },
     { L: [1, 2], q: 'What pen name did Hamilton, Madison and Jay use for The Federalist?', a: 'Publius', w: ['Brutus', 'Cato', 'Common Sense'], why: 'They signed all 85 essays "Publius." Brutus and Cato were Anti-Federalist pen names.' },
     { L: [1, 2], q: 'How many essays make up The Federalist?', num: 85, why: 'Eighty-five essays, published from October 1787 to May 1788.' },
@@ -274,6 +279,15 @@
     return { q: 'Put these states in the order they ratified the Constitution.', order: pick.map(function (s) { return s.name; }), why: pick.map(function (s) { return s.name + ' (' + s.admitted.slice(0, 4) + ', ' + CV().ordinal(s.order) + ')'; }).join('; ') + '.' };
   }
   G('gov.ratification-bill-of-rights', fromBank([
+    {"L":[1,2],"q":"What are the first ten amendments to the Constitution called?","a":"the Bill of Rights","w":["the Articles of Confederation","the Preamble","the Federalist Papers","the Declaration of Independence"],"why":"The first ten amendments, ratified in 1791, are the Bill of Rights."},
+    {"L":[1,2,3],"q":"Which side pressed hardest for adding a bill of rights?","a":"The Anti-Federalists","w":["The Federalists","The Loyalists","The British Parliament","The Continental Army"],"why":"Anti-Federalists objected that the Constitution had no bill of rights; Federalists promised amendments."},
+    {"L":[1,2],"q":"In what year did the ninth state ratify, so that the Constitution took effect?","a":"1788","w":["1776","1781","1791","1800"],"why":"New Hampshire became the ninth state on June 21, 1788."},
+    {"L":[1,2],"q":"In what year did the Constitutional Convention sign the Constitution?","a":"1787","w":["1776","1781","1789","1791"],"why":"The delegates signed it on September 17, 1787."},
+    {"L":[1,2,3],"q":"Which amendment protects freedom of speech, press and religion?","a":"the First Amendment","w":["the Second Amendment","the Fourth Amendment","the Fifth Amendment","the Tenth Amendment"],"why":"The First Amendment protects religion, speech, the press, assembly and petition."},
+    {"L":[1,2,3],"q":"Which amendment reserves powers not given to the United States to the states or the people?","a":"the Tenth Amendment","w":["the First Amendment","the Second Amendment","the Fourth Amendment","the Fifth Amendment"],"why":"The Tenth Amendment is the last in the Bill of Rights."},
+    {"L":[2,3],"q":"Which large state ratified in June 1788, just days after New Hampshire?","a":"Virginia","w":["New York","Rhode Island","North Carolina","Delaware"],"why":"Virginia ratified on June 25, 1788."},
+    {"L":[2,3],"q":"Which state ratified in July 1788, after The Federalist essays were written to persuade it?","a":"New York","w":["Virginia","Rhode Island","Georgia","Delaware"],"why":"New York ratified on July 26, 1788."},
+    {"L":[2,3],"q":"Which state at first refused to ratify and joined only in November 1789?","a":"North Carolina","w":["Rhode Island","Delaware","Georgia","Virginia"],"why":"North Carolina ratified on November 21, 1789; Rhode Island waited until May 1790."},
     { L: [1, 2], q: 'How many states had to ratify before the Constitution took effect (Article VII)?', num: 9, why: 'Article VII: the ratification of nine state conventions was enough among the states that ratified.' },
     { L: [1, 2], q: 'Which state ratified the Constitution first, on December 7, 1787?', a: 'Delaware', w: ['Virginia', 'Rhode Island', 'New York'], why: 'Delaware was first, which is why it is called "the First State."' },
     { L: [1, 2], q: 'When was the Bill of Rights ratified?', a: '1791', w: ['1776', '1787', '1865'], why: 'Ten of the twelve amendments Congress proposed in 1789 were ratified on December 15, 1791.' },
@@ -300,6 +314,12 @@
     return { q: 'Which article of the Constitution says this? "' + c.text + '"', a: names[c.article], w: Object.keys(names).filter(function (k) { return k !== c.article; }).map(function (k) { return names[k]; }), why: 'That is Article ' + c.article + (c.article === 'V' || c.article === 'VII' ? '' : ', Section ' + c.section) + ' (' + c.articleTitle + ': ' + c.sectionTitle + ').' };
   }
   G('gov.preamble', fromBank([
+    {"L":[1,2],"q":"What does the Preamble do?","a":"It states the purposes of the Constitution","w":["It lists the powers of Congress","It creates the Supreme Court","It names the first President","It lists the rights of citizens"],"why":"The Preamble states the goals; the articles grant the powers."},
+    {"L":[1,2,3],"q":"Which goal in the Preamble means keeping peace at home?","a":"insure domestic Tranquility","w":["provide for the common defence","establish Justice","promote the general Welfare","form a more perfect Union"],"why":"Domestic tranquility is peace and order within the country."},
+    {"L":[1,2,3],"q":"Which goal in the Preamble means protecting the nation from attack?","a":"provide for the common defence","w":["insure domestic Tranquility","establish Justice","promote the general Welfare","secure the Blessings of Liberty"],"why":"The common defence is protection against outside threats."},
+    {"L":[1,2,3],"q":"Which goal in the Preamble means a stronger union of the states than under the Articles of Confederation?","a":"form a more perfect Union","w":["insure domestic Tranquility","establish Justice","provide for the common defence","promote the general Welfare"],"why":"The framers wanted a better union than the Articles had given."},
+    {"L":[1,2,3],"q":"Which goal in the Preamble means protecting freedom for people now and in the future?","a":"secure the Blessings of Liberty","w":["establish Justice","insure domestic Tranquility","promote the general Welfare","provide for the common defence"],"why":"It secures liberty \"to ourselves and our Posterity.\""},
+    {"L":[1,2],"q":"Where in the Constitution is the Preamble?","a":"At the very beginning","w":["At the end of Article VII","In the Bill of Rights","After the Twenty-seventh Amendment","In Article III"],"why":"The Preamble is the opening sentence."},
     { L: [1, 2], q: 'What are the first three words of the Constitution?', text: ['We the People'], why: 'The Preamble begins "We the People of the United States."', viz: preambleViz },
     { L: [1, 2], q: 'The words "We the People" show that the government\'s authority comes from…', a: 'the people', w: ['the state governments', 'the King of Great Britain', 'the Supreme Court'], why: 'This idea is called popular sovereignty: the people ordain and establish the Constitution.' },
     { L: [1, 2, 3], gen: function (R) { var p = R.pick(PURPOSES), w = R.sample(['regulate commerce among the states', 'elect the President every four years', 'grant titles of nobility', 'create a national bank', 'abolish the states'], 3); return { q: 'Which of these is a goal stated in the Preamble?', a: p, w: w, why: '"' + p + '" is one of the Preamble\'s six goals.', viz: preambleViz }; } },
@@ -344,6 +364,12 @@
   ], 'Article II: treaties and appointments are shared with the Senate; pardons and the veto are not.'));
 
   G('gov.article-3', fromBank([
+    {"L":[1,2,3],"q":"What is the highest court in the United States?","a":"the Supreme Court","w":["a U.S. Court of Appeals","a U.S. District Court","the Senate","a state supreme court"],"why":"Article III creates \"one supreme Court.\""},
+    {"L":[1,2,3],"q":"Who nominates federal judges?","a":"the President","w":["the Senate","the Speaker of the House","the Chief Justice","the voters"],"why":"The President nominates, and the Senate confirms."},
+    {"L":[1,2,3],"q":"Who confirms the President's nominees for federal judge?","a":"the Senate","w":["the House of Representatives","the Supreme Court","the governors","the Cabinet"],"why":"Judges are appointed with the \"Advice and Consent\" of the Senate."},
+    {"L":[1,2],"q":"What does the judicial branch do?","a":"Decides cases and interprets the law","w":["Makes the laws","Carries out the laws","Collects taxes","Commands the military"],"why":"Article III gives the courts the judicial power to decide cases."},
+    {"L":[1,2],"q":"Who leads the Supreme Court?","a":"the Chief Justice","w":["the Vice President","the Attorney General","the Speaker of the House","the Senate Majority Leader"],"why":"The Chief Justice presides over the Court."},
+    {"L":[1,2,3],"q":"Which article of the Constitution defines treason?","a":"Article III","w":["Article I","Article II","Article IV","Article V","Article VI","Article VII"],"why":"Article III, Section 3 defines treason."},
     { L: [1, 2], q: 'Which branch does Article III create?', a: 'the judicial branch', w: ['the legislative branch', 'the executive branch', 'the state courts'], why: 'Article III vests "the judicial Power" in one Supreme Court and the lower courts Congress creates.' },
     { L: [1, 2], q: 'How many justices sit on the Supreme Court today?', num: 9, why: 'Nine: a Chief Justice and eight associate justices. Congress sets the number by law; it has been nine since 1869.' },
     { L: [1, 2], q: 'Federal judges hold office "during good Behaviour." What does that mean in practice?', a: 'They serve for life unless they resign or are impeached and removed', w: ['They serve ten-year terms', 'They must be reelected every six years', 'The President may fire them for any reason'], why: 'Life tenure, plus pay that cannot be cut, keeps judges independent.' },
@@ -359,6 +385,15 @@
   ], 'Article III: one Supreme Court, lower courts as Congress chooses, judges "during good Behaviour."'));
 
   G('gov.articles-4-to-7', fromBank([
+    {"L":[1,2,3],"q":"Which article deals with relations among the states?","a":"Article IV","w":["Article I","Article II","Article III","Article V","Article VI","Article VII"],"why":"Article IV covers full faith and credit, privileges and immunities, extradition and new states."},
+    {"L":[1,2,3],"q":"Which article explains how the Constitution itself would be ratified?","a":"Article VII","w":["Article I","Article II","Article III","Article IV","Article V","Article VI"],"why":"Article VII: conventions of nine states would be enough."},
+    {"L":[1,2,3],"q":"Under the Supremacy Clause, the Constitution, federal laws and treaties are…","a":"the supreme law of the land","w":["equal to the state constitutions","advice the states may ignore","binding only on Congress","valid only in wartime"],"why":"Article VI makes them \"the supreme Law of the Land.\""},
+    {"L":[1,2,3],"q":"A court judgment from one state is generally honored in another state because of which clause?","a":"the Full Faith and Credit Clause","w":["the Supremacy Clause","the Commerce Clause","the Necessary and Proper Clause","the Equal Protection Clause"],"why":"Article IV, Section 1: full faith and credit to the public acts, records and judicial proceedings of every other state."},
+    {"L":[1,2,3],"q":"Under Article IV, the United States guarantees every state…","a":"a republican form of government","w":["a seat on the Supreme Court","an equal number of House members","its own army","a state church"],"why":"Article IV, Section 4 is the Guarantee Clause."},
+    {"L":[1,2,3],"q":"Under Article VI, what must federal and state officials swear or affirm?","a":"to support the Constitution","w":["to obey the President","to join a political party","to put their state above the nation","to belong to a church"],"why":"Article VI requires an oath or affirmation to support the Constitution."},
+    {"L":[2,3],"q":"Under Article IV, who admits new states to the Union?","a":"Congress","w":["the President","the Supreme Court","the existing states, by vote","the governor of the new state"],"why":"Article IV, Section 3: new states may be admitted by Congress."},
+    {"L":[2,3],"q":"Under Article VI, what happened to debts the nation owed under the Articles of Confederation?","a":"They stayed valid under the Constitution","w":["They were canceled","They were split among the states","They were paid by Britain"],"why":"Article VI says all debts contracted before the Constitution stay as valid as under the Confederation."},
+    {"L":[2,3],"q":"Article V says no state may lose one thing by amendment without its consent. What is it?","a":"its equal vote in the Senate","w":["its number of House seats","the President's veto","its own courts","its electoral votes"],"why":"Equal suffrage in the Senate is protected in Article V."},
     { L: [1, 2, 3], gen: function (R) { return clauseQ(R, function (c) { return ['IV', 'V', 'VI', 'VII'].indexOf(c.article) >= 0 && c.id !== 'VI.1.1'; }); } },
     { L: [1, 2], q: 'Which article contains the Supremacy Clause?', text: artText('VI'), why: 'Article VI, Clause 2: the Constitution, federal laws made under it and treaties are "the supreme Law of the Land."', viz: { name: 'cv-doc', opts: { doc: 'supremacy', interactive: false } } },
     { L: [1, 2], q: 'Which article explains how to amend the Constitution?', text: artText('V'), why: 'Article V sets out the amendment process.' },
@@ -373,9 +408,18 @@
   ], 'IV: the states. V: amendments. VI: supremacy and oaths. VII: ratification.'));
 
   var BR = [['passes laws', 'legislative'], ['declares war', 'legislative'], ['approves the budget and appropriates money', 'legislative'], ['enforces federal laws', 'executive'], ['commands the armed forces', 'executive'],
-    ['negotiates treaties', 'executive'], ['decides cases and controversies under federal law', 'judicial'], ['interprets what a law means in a dispute', 'judicial'], ['decides whether a law is constitutional', 'judicial']];
+    ['negotiates treaties', 'executive'], ['decides cases and controversies under federal law', 'judicial'], ['interprets what a law means in a dispute', 'judicial'], ['decides whether a law is constitutional', 'judicial'],
+    ["vetoes bills","executive"], ["impeaches officials","legislative"], ["appoints ambassadors, with the Senate's consent","executive"], ["hears appeals from lower courts","judicial"]
+  ];
   var BRN = { legislative: 'legislative (Congress)', executive: 'executive (the President)', judicial: 'judicial (the courts)' };
   G('gov.separation-of-powers', fromBank([
+    {"L":[1,2,3],"q":"The idea that each branch can limit the others is called…","a":"checks and balances","w":["federalism","popular sovereignty","judicial restraint","the spoils system"],"why":"Checks and balances let each branch limit the others."},
+    {"L":[1,2],"q":"How many branches does the national government have?","num":3,"why":"Three: legislative, executive and judicial."},
+    {"L":[1,2],"q":"Which article creates the legislative branch?","a":"Article I","w":["Article II","Article III","Article IV","Article V","Article VI","Article VII"],"why":"Article I vests the legislative power in Congress."},
+    {"L":[1,2,3],"q":"How can Congress check the President's veto?","a":"By overriding it with a two-thirds vote in each house","w":["By a simple majority in the House","By asking the Supreme Court to sign the bill","By a vote of the governors","It cannot"],"why":"Two-thirds of each house can override a veto."},
+    {"L":[1,2,3],"q":"How can the President check Congress?","a":"By vetoing a bill","w":["By dissolving Congress","By removing members of Congress","By deciding court cases","By rewriting a bill after it passes"],"why":"The veto is the President's main check on Congress."},
+    {"L":[1,2,3],"q":"How can the courts check the other branches?","a":"By ruling that a law or action is unconstitutional","w":["By vetoing bills","By impeaching the President","By passing new laws","By confirming the Cabinet"],"why":"That power is judicial review."},
+    {"L":[2,3],"q":"Who can remove a federal judge from office?","a":"Congress, by impeachment and conviction","w":["the President, at any time","the Chief Justice","the governors","the voters, in a recall"],"why":"The House impeaches and the Senate tries; conviction removes."},
     { L: [1, 2, 3], gen: function (R) { var b = R.pick(BR); return { q: 'Which branch ' + b[0] + '?', a: BRN[b[1]], w: Object.keys(BRN).filter(function (k) { return k !== b[1]; }).map(function (k) { return BRN[k]; }).concat(['the states']), why: 'That job belongs to the ' + BRN[b[1]] + ' branch.', viz: { name: 'cv-branches', opts: { checks: [], quiet: true, interactive: false } } }; } },
     { L: [1, 2], q: 'Which thinker\'s idea is the separation of powers?', a: 'Montesquieu', w: ['Thomas Hobbes', 'King George III', 'John Jay'], why: 'Montesquieu: there is no liberty if the power of judging is not separated from the legislative and executive powers.' },
     { L: [1, 2], q: 'Which article creates the executive branch?', text: artText('II'), why: 'Article I: legislative; Article II: executive; Article III: judicial.' },
@@ -406,6 +450,16 @@
   ], 'Name the check, then the actor (who does it), then the target.'));
 
   G('gov.amending', fromBank([
+    {"L":[1,2,3],"q":"Which article explains how to amend the Constitution?","a":"Article V","w":["Article I","Article II","Article III","Article IV","Article VI","Article VII"],"why":"Article V sets out how amendments are proposed and ratified."},
+    {"L":[1,2],"q":"What is an amendment?","a":"A change or addition to the Constitution","w":["A law passed by a state","A decision of the Supreme Court","An order from the President","A treaty with another nation"],"why":"Amendments change or add to the Constitution."},
+    {"L":[1,2,3],"q":"What fraction of the states must ratify an amendment?","a":"three-fourths","w":["one-half","two-thirds","all of them","three-fifths"],"why":"Article V requires three-fourths of the states."},
+    {"L":[1,2,3],"q":"Which amendment ended slavery?","a":"the Thirteenth Amendment","w":["the Fourteenth Amendment","the Fifteenth Amendment","the Nineteenth Amendment","the Tenth Amendment"],"why":"The Thirteenth Amendment (1865) abolished slavery."},
+    {"L":[1,2,3],"q":"Which amendment protected women's right to vote, in 1920?","a":"the Nineteenth Amendment","w":["the Fifteenth Amendment","the Twenty-sixth Amendment","the Eighteenth Amendment","the Fourteenth Amendment"],"why":"The Nineteenth Amendment was ratified in 1920."},
+    {"L":[1,2,3],"q":"Which amendment lowered the voting age to 18, in 1971?","a":"the Twenty-sixth Amendment","w":["the Nineteenth Amendment","the Fifteenth Amendment","the Twenty-fourth Amendment","the Twenty-second Amendment"],"why":"The Twenty-sixth Amendment was ratified in 1971."},
+    {"L":[2,3],"q":"Which amendment repealed Prohibition?","a":"the Twenty-first Amendment","w":["the Eighteenth Amendment","the Nineteenth Amendment","the Twentieth Amendment","the Twenty-second Amendment"],"why":"The Twenty-first Amendment (1933) repealed the Eighteenth."},
+    {"L":[2,3],"q":"Which amendment limits a President to two elected terms?","a":"the Twenty-second Amendment","w":["the Twelfth Amendment","the Twentieth Amendment","the Twenty-fifth Amendment","the Seventeenth Amendment"],"why":"The Twenty-second Amendment was ratified in 1951."},
+    {"L":[2,3],"q":"Which amendment gave Congress the power to tax incomes without dividing the tax among the states by population?","a":"the Sixteenth Amendment","w":["the Seventeenth Amendment","the Tenth Amendment","the Fourteenth Amendment","the Twenty-fourth Amendment"],"why":"The Sixteenth Amendment was ratified in 1913."},
+    {"L":[2,3],"q":"Which amendment provides for senators to be elected directly by the voters?","a":"the Seventeenth Amendment","w":["the Sixteenth Amendment","the Twelfth Amendment","the Nineteenth Amendment","the Twenty-third Amendment"],"why":"The Seventeenth Amendment was ratified in 1913."},
     { L: [1, 2], q: 'How many amendments does the Constitution have?', num: 27, why: 'Twenty-seven; the last, on congressional pay, was ratified in 1992.' },
     { L: [1, 2], q: 'How many of the 50 states must ratify an amendment?', num: 38, why: 'Three-fourths of 50 is 37.5; round up to 38.', viz: { name: 'cv-amend', opts: { mode: 'process', quiet: true, interactive: false } } },
     { L: [1, 2], q: 'What vote in Congress proposes an amendment?', a: 'two-thirds of both houses', w: ['a simple majority of both houses', 'three-fourths of the Senate only', 'the President\'s signature'], why: 'Article V: two-thirds of both houses.' },
@@ -517,8 +571,17 @@
   var HS = [['How long is a term in the House of Representatives?', 2, 'Two years; every House seat is elected every two years.'], ['How long is a senator\'s term?', 6, 'Six years, with about one-third of the Senate elected every two years.'],
     ['What is the minimum age to serve in the House?', 25, 'At least 25 (Article I, Section 2).'], ['What is the minimum age to serve in the Senate?', 30, 'At least 30 (Article I, Section 3).'],
     ['How many years must a person have been a U.S. citizen to serve in the House?', 7, 'Seven years.'], ['How many years must a person have been a U.S. citizen to serve in the Senate?', 9, 'Nine years.'],
-    ['How many voting members does the House of Representatives have?', 435, '435, divided among the states by population.'], ['How many senators are there?', 100, 'Two from each of the 50 states.']];
+    ['How many voting members does the House of Representatives have?', 435, '435, divided among the states by population.'], ['How many senators are there?', 100, 'Two from each of the 50 states.'],
+    ["Every state has at least how many members of the House?",1,"At least one, however small its population."], ["How many senators does each state have?",2,"Two, whatever its population."]
+  ];
   G('gov.house-and-senate', fromBank([
+    {"L":[1,2,3],"q":"Which house has the sole power to impeach?","a":"the House of Representatives","w":["the Senate","the Supreme Court","the Cabinet"],"why":"The House impeaches; the Senate holds the trial."},
+    {"L":[1,2,3],"q":"Which house holds impeachment trials?","a":"the Senate","w":["the House of Representatives","the Supreme Court","a joint session of both houses"],"why":"The Senate tries impeachments; two-thirds are needed to convict."},
+    {"L":[1,2,3],"q":"Which house approves treaties, by a two-thirds vote?","a":"the Senate","w":["the House of Representatives","both houses, by majority","neither house"],"why":"Treaties need the consent of two-thirds of the senators present."},
+    {"L":[1,2,3],"q":"Who presides over the House of Representatives?","a":"the Speaker of the House","w":["the Vice President","the Chief Justice","the President pro tempore","the Senate Majority Leader"],"why":"The House chooses its Speaker."},
+    {"L":[1,2,3],"q":"Under the Constitution, who is the President of the Senate?","a":"the Vice President","w":["the Speaker of the House","the Chief Justice","the Senate Majority Leader","the Secretary of State"],"why":"The Vice President presides and votes only to break a tie."},
+    {"L":[1,2,3],"q":"Where must bills for raising revenue begin?","a":"in the House of Representatives","w":["in the Senate","in the White House","in either house"],"why":"Article I, Section 7: revenue bills originate in the House."},
+    {"L":[1,2],"q":"Congress is made of which two parts?","a":"the House of Representatives and the Senate","w":["the House and the Supreme Court","the Senate and the Cabinet","the President and the Senate"],"why":"Congress has two houses: it is bicameral."},
     { L: [1, 2, 3], gen: function (R) { var x = R.pick(HS); return { q: x[0], num: x[1], why: x[2], unit: /years|age/.test(x[0]) && x[1] < 40 ? 'years' : undefined, hint: 'House: 2-year terms, age 25, 7 years a citizen. Senate: 6, 30, 9.' }; } },
     { L: [1, 2, 3], gen: function (R) { var x = R.pick(HS); return { q: x[0], num: x[1], why: x[2], unit: /years|age/.test(x[0]) && x[1] < 40 ? 'years' : undefined, hint: 'House: 2-year terms, age 25, 7 years a citizen. Senate: 6, 30, 9.' }; } },
     { L: [2, 3], gen: function (R) { var s = R.pick(CV().STATES.filter(function (x) { return x.seats > 1; })); return { q: s.name + ' has ' + s.seats + ' seats in the House (after the 2020 census). How many members of Congress does it have in all?', num: s.seats + 2, why: s.seats + ' representatives + 2 senators = ' + (s.seats + 2) + '.' }; } },
@@ -611,6 +674,12 @@
     ['The President does nothing, and Congress adjourns before the ten days are up.', 'It dies (a pocket veto).']];
   var ENDS = ['It becomes law.', 'It becomes law without the President\'s signature.', 'It dies (the veto is sustained).', 'It dies (a pocket veto).', 'It goes to the Supreme Court for approval.'];
   G('gov.how-a-bill-becomes-law', fromBank([
+    {"L":[1,2,3],"q":"Who can introduce a bill in Congress?","a":"only a member of Congress","w":["only the President","any citizen, from the floor","only the Supreme Court","only a governor"],"why":"Only members introduce bills, though anyone may suggest one."},
+    {"L":[1,2,3],"q":"After a bill is introduced, where is it usually sent first?","a":"to a committee","w":["straight to the President","to the Supreme Court","to the states for ratification","to the voters"],"why":"Committees study bills, hold hearings and mark them up."},
+    {"L":[1,2,3],"q":"What must happen before a bill goes to the President?","a":"Both houses must pass the same version","w":["Only the House must pass it","Only the Senate must pass it","The Supreme Court must approve it","Three-fourths of the states must approve it"],"why":"Article I, Section 7: both houses pass it, then it goes to the President."},
+    {"L":[1,2],"q":"What is a veto?","a":"The President's rejection of a bill","w":["A vote to end debate","A court ruling against a law","A change to the Constitution","A vote to remove an official"],"why":"A veto sends the bill back to Congress with the President's objections."},
+    {"L":[2,3],"q":"What is a committee that settles the differences between the House and Senate versions of a bill called?","a":"a conference committee","w":["a standing committee","the Rules Committee","a grand jury","the Cabinet"],"why":"Members of both houses meet in a conference committee."},
+    {"L":[2,3],"q":"Congress adjourns, and the President does not sign a bill within ten days. What happens?","a":"The bill dies (a pocket veto)","w":["It becomes law automatically","It goes to the Supreme Court","It waits for the next President"],"why":"If Congress has adjourned, an unsigned bill does not become law."},
     { L: [1, 2, 3], gen: function (R) { var e = R.pick(END); return { q: 'Both houses pass a bill and send it to the President. ' + e[0] + ' What happens?', a: e[1], w: ENDS.filter(function (x) { return x !== e[1]; }), why: e[1] + ' (Article I, Section 7).', viz: { name: 'cv-bill', opts: { mode: 'show', brief: true, quiet: true, interactive: false } } }; } },
     { L: [1, 2, 3], gen: function (R) { var e = R.pick(END); return { q: 'Both houses pass a bill and send it to the President. ' + e[0] + ' What happens?', a: e[1], w: ENDS.filter(function (x) { return x !== e[1]; }), why: e[1] + ' (Article I, Section 7).' }; } },
     { L: [1, 2], q: 'How many days (Sundays excepted) does the President have to act on a bill?', num: 10, unit: 'days', why: 'Ten days, Sundays excepted.' },
@@ -624,6 +693,12 @@
   ], 'Same text through both houses, then sign, veto (override by two-thirds) or ten days: law if Congress sits, pocket veto if it has adjourned.'));
 
   G('gov.filibuster-rules', fromBank([
+    {"L":[1,2,3],"q":"What is a filibuster?","a":"Long debate or delay in the Senate to block a vote","w":["A vote to override a veto","A tax bill","A ruling by the Supreme Court","A presidential order"],"why":"A filibuster keeps a bill from coming to a vote."},
+    {"L":[1,2,3],"q":"In which chamber does the filibuster happen?","a":"the Senate","w":["the House of Representatives","the Supreme Court","the Electoral College"],"why":"Senate rules allow extended debate."},
+    {"L":[1,2,3],"q":"What is cloture?","a":"A vote to end debate","w":["A vote to start debate","A veto","A vote to adjourn for the year","A vote to impeach"],"why":"Cloture ends debate so a vote can be held."},
+    {"L":[1,2,3],"q":"Why are there no filibusters in the House?","a":"Its rules limit how long members may debate","w":["The Constitution bans them there","The Speaker votes on every bill","The House never debates bills"],"why":"With 435 members, the House sets strict time limits on debate."},
+    {"L":[2,3],"q":"What fraction of the full Senate must vote for cloture on most bills?","a":"three-fifths","w":["a simple majority","two-thirds","three-fourths"],"why":"Sixty of 100 senators is three-fifths."},
+    {"L":[2,3],"q":"Since the rule changes of 2013 and 2017, what vote ends debate on presidential nominations?","a":"a simple majority","w":["60 votes","two-thirds","three-fourths"],"why":"The Senate changed its rules for nominations in 2013 and for Supreme Court nominations in 2017."},
     { L: [1, 2], q: 'How many senators must vote for cloture to end a filibuster on most bills?', num: 60, why: 'Three-fifths of the senators chosen and sworn: 60 of 100.' },
     { L: [1, 2], q: 'Is the filibuster in the Constitution?', a: 'No; it comes from Senate rules, which the Senate can change', w: ['Yes, in Article I, Section 3', 'Yes, in the Bill of Rights', 'Yes, in Article V'], why: 'Article I, Section 5 lets each house make its rules; the filibuster and cloture are rules.' },
     { L: [1, 2], q: 'Which House committee sets the terms of debate and amendment for major bills?', a: 'the Rules Committee', w: ['the Ways and Means Committee', 'the Judiciary Committee', 'a conference committee'], why: 'The Rules Committee writes a "rule" for each major bill.' },
@@ -641,6 +716,11 @@
   var SPEND = [['Social Security benefits', 'mandatory'], ['Medicare', 'mandatory'], ['Medicaid payments to states', 'mandatory'], ['interest on the national debt', 'interest (owed on past borrowing)'],
     ['the defense budget', 'discretionary'], ['funding for national parks', 'discretionary'], ['NASA\'s budget', 'discretionary'], ['the FBI\'s budget', 'discretionary']];
   G('gov.budget-oversight', fromBank([
+    {"L":[1,2,3],"q":"Who sends Congress a budget proposal each year?","a":"the President","w":["the Supreme Court","the Speaker of the House","the governors","the Federal Reserve"],"why":"The President proposes; Congress decides."},
+    {"L":[1,2,3],"q":"What are the bills that set spending for agencies called?","a":"appropriations bills","w":["articles of impeachment","treaties","amendments","executive orders"],"why":"Appropriations bills fund the government."},
+    {"L":[1,2,3],"q":"When Congress holds hearings to check how an agency carries out the law, that is called…","a":"oversight","w":["judicial review","a filibuster","ratification","a referendum"],"why":"Oversight is how Congress watches the executive branch."},
+    {"L":[1,2,3],"q":"What is it called when the government spends more than it collects in a year?","a":"a deficit","w":["a surplus","a tariff","a quorum","an appropriation"],"why":"A yearly shortfall is a deficit."},
+    {"L":[1,2],"q":"What is the total the government owes from past borrowing called?","a":"the national debt","w":["the deficit","the surplus","the budget","the tax base"],"why":"Deficits add to the debt."},
     { L: [1, 2, 3], gen: function (R) { var x = R.pick(SPEND); return { q: 'Is ' + x[0] + ' mandatory spending, discretionary spending, or interest?', a: x[1], w: ['mandatory', 'discretionary', 'interest (owed on past borrowing)'].filter(function (y) { return y !== x[1]; }), why: { mandatory: 'Set by existing law for everyone who qualifies: mandatory.', discretionary: 'Set each year in appropriations bills: discretionary.', 'interest (owed on past borrowing)': 'Interest must be paid on what the government has borrowed.' }[x[1]] }; } },
     { L: [1, 2], q: 'Which branch has the "power of the purse"?', a: 'Congress', w: ['the President', 'the Supreme Court', 'the Federal Reserve'], why: 'Article I, Section 9: no money is spent except by appropriations made by law.' },
     { L: [1, 2], q: 'When does the federal fiscal year begin?', a: 'October 1', w: ['January 1', 'July 4', 'April 15'], why: 'It runs from October 1 to September 30.' },
@@ -861,6 +941,15 @@
   }
   var CIRC_WORD = { '1st': 'First', '2nd': 'Second', '3rd': 'Third', '4th': 'Fourth', '5th': 'Fifth', '6th': 'Sixth', '7th': 'Seventh', '8th': 'Eighth', '9th': 'Ninth', '10th': 'Tenth', '11th': 'Eleventh', 'D.C.': 'D.C.' };
   G('gov.federal-courts', fromBank([
+    {"L":[1,2,3],"q":"How many federal courts of appeals (circuits) are there in all?","a":"13","w":["9","50","94","3"],"why":"Twelve regional circuits plus the Federal Circuit make 13."},
+    {"L":[1,2,3],"q":"How long do federal judges serve?","a":"For life, during good behavior","w":["Four years","Six years","Ten years","Until age 65"],"why":"Article III judges hold office during good behavior."},
+    {"L":[1,2],"q":"Who nominates federal judges?","a":"the President","w":["the Senate","the Chief Justice","the voters","the House of Representatives"],"why":"The President nominates; the Senate confirms."},
+    {"L":[1,2,3],"q":"Who confirms federal judges?","a":"the Senate","w":["the House of Representatives","the Supreme Court","the President's Cabinet","the voters"],"why":"Judges take office after Senate confirmation."},
+    {"L":[1,2],"q":"What kind of court is a U.S. District Court?","a":"a trial court","w":["an appeals court","the highest court in the nation","a state court","a military court"],"why":"District courts hold trials with witnesses and juries."},
+    {"L":[1,2,3],"q":"In which city does the Supreme Court sit?","a":"Washington, D.C.","w":["New York City","Philadelphia","Boston","Chicago"],"why":"The Supreme Court meets in Washington, D.C."},
+    {"L":[1,2,3],"q":"Which federal courts decide appeals from the district courts?","a":"the U.S. Courts of Appeals","w":["the Supreme Court only","the state supreme courts","the Senate"],"why":"A losing party in a district court usually appeals to a court of appeals."},
+    {"L":[1,2,3],"q":"What is the lowest level of the federal courts?","a":"the U.S. District Courts","w":["the U.S. Courts of Appeals","the Supreme Court","the state supreme courts"],"why":"District courts, then the courts of appeals, then the Supreme Court."},
+    {"L":[2,3],"q":"What does a court of appeals mainly review?","a":"Whether the trial court applied the law correctly","w":["Brand-new witnesses and evidence","Which jurors to pick","The facts of a new crime","Election results"],"why":"Appeals courts review the record for legal errors; they do not hold new trials."},
     { L: [1, 2], q: 'How many justices sit on the Supreme Court?', num: 9, why: 'Nine: the Chief Justice and eight associate justices (since 1869).' },
     { L: [1, 2], q: 'In which kind of federal court do trials with witnesses and juries take place?', a: 'a U.S. District Court', w: ['a U.S. Court of Appeals', 'the Supreme Court', 'the Senate'], why: 'District courts are the federal trial courts.' },
     { L: [1, 2], q: 'Which article of the Constitution creates the judicial branch?', text: artText('III'), why: 'Article III: "one supreme Court" and the lower courts Congress creates.', hint: 'Article I is Congress and Article II the President.' },
@@ -883,6 +972,11 @@
 
   var SCP = ['A party loses in a court of appeals', 'The party files a petition for certiorari', 'Four justices vote to hear the case', 'Briefs are filed', 'Oral argument', 'The justices vote in conference', 'Opinions are announced'];
   G('gov.supreme-court-process', fromBank([
+    {"L":[1,2,3],"q":"A justice who agrees with the result but for different reasons writes…","a":"a concurring opinion","w":["a dissenting opinion","the majority opinion","a petition","a brief"],"why":"A concurrence agrees with the judgment, not all the reasoning."},
+    {"L":[1,2,3],"q":"A justice who disagrees with the Court's decision writes…","a":"a dissenting opinion","w":["a concurring opinion","the majority opinion","a petition","a brief"],"why":"A dissent explains why the justice would decide the other way."},
+    {"L":[1,2,3],"q":"What are the written arguments the parties file with the Court called?","a":"briefs","w":["verdicts","indictments","warrants","subpoenas"],"why":"Each side files a brief before oral argument."},
+    {"L":[1,2],"q":"What happens at oral argument?","a":"Lawyers answer the justices' questions about the case","w":["Witnesses testify before a jury","The justices vote in public","The parties choose which justices hear the case"],"why":"The Supreme Court hears no witnesses; lawyers argue and answer questions."},
+    {"L":[1,2],"q":"How many justices make a majority when all nine take part?","num":5,"why":"Five of nine is a majority."},
     { L: [1, 2], q: 'What is a petition asking the Supreme Court to hear a case called?', a: 'a petition for a writ of certiorari', w: ['an indictment', 'a veto', 'a subpoena'], why: 'Certiorari ("cert") is the order to send up the case record.' },
     { L: [1, 2, 3], gen: function (R) { var y = R.int(1, 7); return { q: y + ' of the nine justices vote to hear a case. Does the Court take it?', a: y >= 4 ? 'Yes' : 'No', w: [y >= 4 ? 'No' : 'Yes', 'Only if the Chief Justice agrees'], why: 'The rule of four: four votes grant certiorari. ' + y + (y >= 4 ? ' is enough.' : ' is not enough.') }; } },
     { L: [1, 2], q: 'How many justices must agree to hear a case?', num: 4, why: 'The rule of four.' },
@@ -899,6 +993,11 @@
   ], 'Four votes to hear a case; the majority opinion is the law.'));
 
   G('gov.judicial-review', fromBank([
+    {"L":[1,2,3],"q":"Which branch exercises judicial review?","a":"the judicial branch (the courts)","w":["the legislative branch","the executive branch","the state legislatures"],"why":"Courts decide whether laws conflict with the Constitution."},
+    {"L":[1,2,3],"q":"What happens to a law that a court finds unconstitutional?","a":"The court will not enforce it","w":["Congress must pass it again by two-thirds","The President must sign it again","It becomes an amendment","Nothing changes"],"why":"Courts refuse to apply a law that conflicts with the Constitution."},
+    {"L":[1,2],"q":"Who was William Marbury?","a":"A man named a justice of the peace who never received his commission","w":["the Chief Justice","the Secretary of State","the President in 1803","a senator from Virginia"],"why":"Marbury sued to get his commission delivered."},
+    {"L":[1,2,3],"q":"Who was Secretary of State in Marbury v. Madison?","a":"James Madison","w":["John Marshall","Thomas Jefferson","John Adams","Alexander Hamilton"],"why":"Madison, Jefferson's Secretary of State, held back the commission."},
+    {"L":[1,2,3],"q":"Which President appointed Marbury just before leaving office?","a":"John Adams","w":["Thomas Jefferson","George Washington","James Madison","Andrew Jackson"],"why":"Adams made \"midnight\" appointments in early 1801."},
     { L: [1, 2], q: 'Which case established judicial review?', a: 'Marbury v. Madison (1803)', w: ['McCulloch v. Maryland (1819)', 'Brown v. Board of Education (1954)', 'Gibbons v. Ogden (1824)'], why: 'Marbury v. Madison, 1803.' },
     { L: [1, 2, 3], q: 'Type the name of the case that established judicial review.', text: caseNames('Marbury v. Madison'), why: 'Marbury v. Madison (1803).' },
     { L: [1, 2], q: 'In what year was Marbury v. Madison decided?', num: 1803, why: '1803, under Chief Justice John Marshall.' },
@@ -1045,6 +1144,11 @@
   ], 'Is the government stopping publication (prior restraint) or is someone suing afterward?'));
 
   G('gov.second-amendment-civics', fromBank([
+    {"L":[1,2,3],"q":"In what year was the Second Amendment ratified?","a":"1791","w":["1776","1787","1868","1920"],"why":"It was ratified with the rest of the Bill of Rights in 1791."},
+    {"L":[1,2],"q":"The Second Amendment is part of…","a":"the Bill of Rights","w":["the original Article I","the Articles of Confederation","the Preamble","the Declaration of Independence"],"why":"It is the second of the first ten amendments."},
+    {"L":[1,2,3],"q":"In what year was District of Columbia v. Heller decided?","a":"2008","w":["1791","1939","1968","1996"],"why":"Heller was decided in 2008."},
+    {"L":[1,2,3],"q":"In what year was McDonald v. City of Chicago decided?","a":"2010","w":["1868","1939","2008","1996"],"why":"McDonald was decided in 2010."},
+    {"L":[1,2,3],"q":"Through which amendment did McDonald apply the Second Amendment to the states?","a":"the Fourteenth Amendment","w":["the Tenth Amendment","the First Amendment","the Fifth Amendment","the Ninth Amendment"],"why":"McDonald held the right incorporated through the Fourteenth Amendment's Due Process Clause."},
     { L: [1, 2], q: 'Which amendment protects the right to keep and bear arms?', a: 'the Second Amendment', w: ['the First Amendment', 'the Fourth Amendment', 'the Tenth Amendment'], why: 'The Second Amendment (1791).' },
     { L: [1, 2], q: 'Which case held that the Second Amendment protects an individual right to keep a handgun at home for self-defense?', a: 'District of Columbia v. Heller (2008)', w: ['McDonald v. City of Chicago (2010)', 'Gideon v. Wainwright (1963)', 'Mapp v. Ohio (1961)'], why: 'Heller, 2008, 5 to 4.' },
     { L: [1, 2, 3], q: 'Type the name of the 2010 case that applied the Second Amendment to states and cities.', text: ['McDonald v. City of Chicago', 'McDonald v. Chicago', 'McDonald v Chicago', 'McDonald v. City of Chicago (2010)', 'McDonald'], why: 'McDonald v. City of Chicago (2010).' },
@@ -1074,6 +1178,10 @@
   ], 'Mapp (search, 1961), Gideon (lawyer, 1963), Miranda (questioning, 1966).'));
 
   G('gov.privacy', fromBank([
+    {"L":[1,2,3],"q":"In what year was Griswold v. Connecticut decided?","a":"1965","w":["1791","1925","1973","2003"],"why":"Griswold was decided in 1965."},
+    {"L":[1,2,3],"q":"Which amendment protects against unreasonable searches and seizures?","a":"the Fourth Amendment","w":["the First Amendment","the Second Amendment","the Fifth Amendment","the Tenth Amendment"],"why":"The Fourth Amendment protects people, houses, papers and effects."},
+    {"L":[1,2,3],"q":"Which amendment protects a person from being forced to be a witness against himself or herself?","a":"the Fifth Amendment","w":["the Fourth Amendment","the First Amendment","the Ninth Amendment","the Tenth Amendment"],"why":"The Fifth Amendment protects against self-incrimination."},
+    {"L":[1,2,3],"q":"Which amendment bars quartering soldiers in private homes in peacetime without the owner's consent?","a":"the Third Amendment","w":["the Second Amendment","the Fourth Amendment","the Ninth Amendment","the Tenth Amendment"],"why":"The Third Amendment protects the home from quartering soldiers."},
     { L: [1, 2], q: 'Does the word "privacy" appear in the Constitution?', a: 'No', w: ['Yes, in the Fourth Amendment', 'Yes, in the Ninth Amendment'], why: 'It does not; privacy protections are drawn from the text, not stated in it.' },
     { L: [1, 2], q: 'Which amendment says that listing certain rights does not deny others retained by the people?', a: 'the Ninth Amendment', w: ['the Tenth Amendment', 'the Fourth Amendment', 'the First Amendment'], why: 'The Ninth Amendment.' },
     { L: [1, 2, 3], q: 'Which case struck down a state ban on married couples\' use of contraceptives?', a: 'Griswold v. Connecticut (1965)', w: ['Planned Parenthood v. Casey (1992)', 'Roe v. Wade (1973)', 'Washington v. Glucksberg (1997)'], why: 'Griswold (1965), 7 to 2.' },
@@ -1089,6 +1197,11 @@
   /* ======================================================== Unit 9: Civil Rights */
   var TIERS = [['race', 'strict scrutiny'], ['national origin', 'strict scrutiny'], ['sex', 'intermediate scrutiny'], ['age', 'rational basis review'], ['income', 'rational basis review'], ['the kind of business a person runs', 'rational basis review']];
   G('gov.equal-protection-civics', fromBank([
+    {"L":[1,2,3],"q":"In what year was the Fourteenth Amendment ratified?","a":"1868","w":["1791","1865","1870","1920"],"why":"It was ratified in 1868, after the Civil War."},
+    {"L":[1,2,3],"q":"In what year was Brown v. Board of Education decided?","a":"1954","w":["1896","1868","1964","1973"],"why":"Brown was decided on May 17, 1954."},
+    {"L":[1,2,3],"q":"In what year was Plessy v. Ferguson decided?","a":"1896","w":["1868","1954","1857","1920"],"why":"Plessy was decided in 1896."},
+    {"L":[1,2,3],"q":"Who was Chief Justice when Brown v. Board of Education was decided?","a":"Earl Warren","w":["John Marshall","Roger Taney","William Rehnquist","John Jay"],"why":"Chief Justice Earl Warren wrote the unanimous opinion."},
+    {"L":[2,3],"q":"Which lawyer argued Brown v. Board of Education for the NAACP and later became a Supreme Court justice?","a":"Thurgood Marshall","w":["Earl Warren","John Marshall","Oliver Wendell Holmes","Louis Brandeis"],"why":"Thurgood Marshall joined the Court in 1967."},
     { L: [1, 2], q: 'Which amendment contains the Equal Protection Clause?', a: 'the Fourteenth Amendment', w: ['the First Amendment', 'the Fifth Amendment', 'the Tenth Amendment'], why: 'The Fourteenth (1868): no state shall deny "the equal protection of the laws."' },
     { L: [1, 2], q: 'Which case allowed "separate but equal" facilities?', a: 'Plessy v. Ferguson (1896)', w: ['Brown v. Board of Education (1954)', 'Loving v. Virginia (1967)', 'Marbury v. Madison (1803)'], why: 'Plessy, 1896, 7 to 1.' },
     { L: [1, 2], q: 'Which case held that separate public schools are "inherently unequal"?', a: 'Brown v. Board of Education (1954)', w: ['Plessy v. Ferguson (1896)', 'Bolling v. Sharpe (1954)', 'Engel v. Vitale (1962)'], why: 'Brown, 1954, 9 to 0.' },
@@ -1156,6 +1269,11 @@
 
   /* ======================================================== Unit 10: Citizenship and Participation */
   G('gov.becoming-a-citizen', fromBank([
+    {"L":[1,2,3],"q":"What is the process of becoming a citizen after birth called?","a":"naturalization","w":["ratification","apportionment","incorporation","registration"],"why":"Naturalization makes a lawful permanent resident a citizen."},
+    {"L":[1,2,3],"q":"What do new citizens take at the end of naturalization?","a":"the Oath of Allegiance","w":["a driving test","the bar exam","the presidential oath of office","a census survey"],"why":"The oath ceremony completes naturalization."},
+    {"L":[1,2,3],"q":"Which two tests are part of the naturalization interview?","a":"English and civics","w":["math and science","history and art","driving and swimming","typing and spelling"],"why":"Applicants show basic English and knowledge of U.S. history and government."},
+    {"L":[1,2,3],"q":"A \"green card\" shows that a person is…","a":"a lawful permanent resident","w":["a U.S. citizen","a tourist","a federal employee","a registered voter"],"why":"Permanent residents can later apply to naturalize."},
+    {"L":[2,3],"q":"Which office can a naturalized citizen not hold?","a":"President","w":["senator","governor","member of the House","Supreme Court justice"],"why":"The President must be a natural born citizen (Article II)."},
     { L: [1, 2], q: 'What is the minimum age to apply for naturalization?', num: 18, unit: 'years', why: 'Applicants must be at least 18.' },
     { L: [1, 2], q: 'Generally, how many years must a permanent resident live in the U.S. before applying to naturalize?', num: 5, unit: 'years', why: 'Five years, or three if married to and living with a U.S. citizen.' },
     { L: [1, 2], q: 'How many years if the permanent resident is married to and living with a U.S. citizen?', num: 3, unit: 'years', why: 'Three years.' },
@@ -1189,6 +1307,10 @@
   ], 'Is there a penalty in law? Then it is a duty. If not, it is a right or a civic habit.'));
 
   G('gov.voting-and-turnout', fromBank([
+    {"L":[1,2,3],"q":"What is the minimum voting age in federal elections?","a":"18","w":["16","21","25","30"],"why":"The Twenty-sixth Amendment set it at 18."},
+    {"L":[1,2,3],"q":"Which amendment set the voting age at 18?","a":"the Twenty-sixth Amendment","w":["the Nineteenth Amendment","the Fifteenth Amendment","the Twenty-fourth Amendment","the Twenty-second Amendment"],"why":"It was ratified in 1971."},
+    {"L":[1,2,3],"q":"What is voter turnout?","a":"The share of eligible people who actually vote","w":["The number of candidates on the ballot","The number of states a candidate wins","The hours the polls are open"],"why":"Turnout compares voters to those eligible."},
+    {"L":[1,2],"q":"In most states, what must a citizen do before voting?","a":"Register to vote","w":["Pay a poll tax","Pass a reading test","Own property","Join a political party"],"why":"Every state but North Dakota uses voter registration; poll taxes are banned."},
     { L: [1, 2, 3], gen: function (R) { var e = R.pick([1000, 2000, 4000, 5000, 8000, 20000]), pct = R.pick([30, 35, 40, 45, 50, 55, 60, 65, 70, 75]), v = e * pct / 100; return { q: 'A town has ' + e.toLocaleString('en-US') + ' eligible voters, and ' + v.toLocaleString('en-US') + ' vote. What is the turnout, in percent?', num: pct, why: v.toLocaleString('en-US') + ' ÷ ' + e.toLocaleString('en-US') + ' = ' + pct / 100 + ', or ' + pct + ' percent.' }; } },
     { L: [1, 2], q: 'In which kind of election is turnout usually higher?', a: 'a presidential election', w: ['a midterm election', 'a local election on its own date'], why: 'Presidential races draw the most attention and voters.' },
     { L: [1, 2], q: 'Who may vote in federal elections?', a: 'citizens 18 and older who are registered (where required)', w: ['everyone living in the U.S.', 'citizens 21 and older only', 'only people who own property'], why: 'Citizens 18 and older, under state registration rules.' },
@@ -1275,6 +1397,18 @@
   ], 'Primary: picks a party\'s candidate. General election: picks the officeholder.'));
 
   G('gov.electoral-college', fromBank([
+    {"L":[1,2,3],"q":"Who formally elects the President?","a":"the electors of the Electoral College","w":["the House of Representatives","the Supreme Court","the state governors","the Senate"],"why":"Voters choose electors, and the electors vote for President."},
+    {"L":[1,2,3],"q":"How is a state's number of electors found?","a":"Its House seats plus its two senators","w":["Its population divided by a million","Ten for every state","Its House seats only","Its senators only"],"why":"Article II: electors equal the state's whole number in Congress."},
+    {"L":[1,2,3],"q":"Who chooses the President if no candidate wins a majority of electoral votes?","a":"the House of Representatives","w":["the Senate","the Supreme Court","the national popular vote","the governors"],"why":"Under the Twelfth Amendment, the House chooses, one vote per state delegation."},
+    {"L":[1,2],"q":"What is the Electoral College?","a":"the electors who formally choose the President and Vice President","w":["a college in Washington, D.C.","the Senate committee that runs elections","the group of governors"],"why":"The electors meet in their states in December to vote."},
+    {"L":[1,2,3],"q":"Which state has the most electoral votes?","a":"California","w":["Texas","Florida","New York","Pennsylvania"],"why":"California has the most House seats, so it has the most electors."},
+    {"L":[1,2,3],"q":"What is the fewest electoral votes a state can have?","a":"3","w":["1","2","4","5"],"why":"One House seat plus two senators makes three."},
+    {"L":[1,2,3],"q":"Which article of the Constitution sets up the Electoral College?","a":"Article II","w":["Article I","Article III","Article IV","Article V"],"why":"Article II, Section 1 describes the electors."},
+    {"L":[1,2,3],"q":"How often is a President elected?","a":"every four years","w":["every two years","every six years","every eight years"],"why":"Article II sets a four-year term."},
+    {"L":[1,2,3],"q":"When are presidential elections held?","a":"on the Tuesday after the first Monday in November","w":["on the first day of January","on July 4","on the first Monday in September"],"why":"Federal law sets Election Day on that Tuesday in November."},
+    {"L":[2,3],"q":"Where are the electoral votes counted?","a":"in a joint session of Congress","w":["in the Supreme Court","in each governor's office","in the White House"],"why":"The certificates are opened and counted before both houses in January."},
+    {"L":[2,3],"q":"Which amendment gave the District of Columbia electoral votes?","a":"the Twenty-third Amendment","w":["the Twelfth Amendment","the Twenty-second Amendment","the Nineteenth Amendment","the Twenty-sixth Amendment"],"why":"Ratified in 1961."},
+    {"L":[2,3],"q":"Which amendment has electors cast separate votes for President and Vice President?","a":"the Twelfth Amendment","w":["the Twenty-third Amendment","the Tenth Amendment","the Twenty-fifth Amendment","the Seventeenth Amendment"],"why":"Ratified in 1804, after the tie of 1800."},
     { L: [1, 2], q: 'How many electoral votes are there in all?', num: 538, why: '435 + 100 + 3 = 538.' },
     { L: [1, 2], q: 'How many electoral votes does a candidate need to win the presidency?', num: 270, why: 'A majority of 538 is 270.' },
     { L: [1, 2, 3], gen: function (R) { var s = R.pick(CV().STATES.filter(function (x) { return x.seats > 1; })); return { q: s.name + ' has ' + s.seats + ' House seats after the 2020 census. How many electoral votes does it have (2024 and 2028)?', num: s.ev, why: s.seats + ' House seats + 2 senators = ' + s.ev + '.', viz: { name: 'cv-map', opts: { mode: 'states', highlight: [s.ab], color: 'none', quiet: true, interactive: false } } }; } },
@@ -1307,6 +1441,10 @@
   ], 'Given to a candidate: limited. Spent independently: not limited, but disclosed.'));
 
   G('gov.congressional-elections', fromBank([
+    {"L":[1,2,3],"q":"A member of Congress who runs again for the seat he or she holds is called…","a":"an incumbent","w":["a delegate","an elector","a lobbyist","a caucus"],"why":"Incumbents hold the office now."},
+    {"L":[1,2,3],"q":"An election held halfway through a President's term is called…","a":"a midterm election","w":["a primary","a runoff","a recall","a caucus"],"why":"Midterms fall two years after a presidential election."},
+    {"L":[1,2],"q":"How often is each senator's seat on the ballot?","a":"every six years","w":["every two years","every four years","every eight years"],"why":"Senators serve six-year terms."},
+    {"L":[1,2,3],"q":"Every ten years, the count of the population used to divide House seats is called…","a":"the census","w":["the primary","the caucus","the Electoral College","the poll"],"why":"Article I requires a census every ten years."},
     { L: [1, 2, 3], gen: function (R) { var y = 2 * R.int(1003, 1014); var pres = y % 4 === 0; return { q: 'Was ' + y + ' a presidential election year or a midterm year?', a: pres ? 'a presidential election year' : 'a midterm year', w: [pres ? 'a midterm year' : 'a presidential election year', 'neither; no federal election was held'], why: 'Presidential elections fall in years divisible by 4. ' + y + (pres ? ' is.' : ' is not, so it was a midterm.') }; } },
     { L: [1, 2], q: 'How often are all House seats on the ballot?', a: 'every two years', w: ['every four years', 'every six years', 'only in presidential years'], why: 'House terms are two years.' },
     { L: [1, 2], q: 'About what share of House incumbents who run for reelection usually win?', a: 'more than 90 percent', w: ['about half', 'about 25 percent', 'less than 10 percent'], why: 'The incumbency advantage.' },
@@ -1321,8 +1459,14 @@
 
   /* ======================================================== Unit 12: State, Local and Tribal Government */
   var SL = [['issuing driver\'s licenses', 'state or local'], ['running public schools', 'state or local'], ['prosecuting most crimes, such as burglary', 'state or local'], ['setting marriage and divorce law', 'state or local'], ['running elections', 'state or local'],
-    ['printing money', 'national'], ['declaring war', 'national'], ['making treaties with other countries', 'national'], ['running the Postal Service', 'national']];
+    ['printing money', 'national'], ['declaring war', 'national'], ['making treaties with other countries', 'national'], ['running the Postal Service', 'national'],
+    ["setting speed limits on most roads","state or local"], ["collecting trash","state or local"], ["licensing doctors and lawyers","state or local"], ["issuing passports","national"], ["regulating trade with other countries","national"], ["running the national parks","national"]
+  ];
   G('gov.state-government', fromBank([
+    {"L":[1,2,3],"q":"What is a state's lawmaking body usually called?","a":"the state legislature","w":["Congress","the Cabinet","the city council","the state supreme court"],"why":"Every state has a legislature; 49 have two houses."},
+    {"L":[1,2,3],"q":"Every state has its own…","a":"constitution","w":["army","currency","embassies abroad","postal service"],"why":"Each state has its own constitution, government and courts."},
+    {"L":[1,2,3],"q":"Under the Tenth Amendment, powers not given to the national government belong to…","a":"the states or the people","w":["the President","the Supreme Court","foreign nations","the political parties"],"why":"The Tenth Amendment reserves those powers."},
+    {"L":[1,2],"q":"What is the highest court of most states called?","a":"the state supreme court","w":["the U.S. Supreme Court","the city court","the county board"],"why":"Most states call their top court the supreme court."},
     { L: [1, 2, 3], gen: function (R) { var x = R.pick(SL); return { q: 'Which level of government mainly handles ' + x[0] + '?', a: x[1] === 'national' ? 'the national government' : 'state and local governments', w: [x[1] === 'national' ? 'state and local governments' : 'the national government', 'tribal governments only'], why: x[0].charAt(0).toUpperCase() + x[0].slice(1) + ': ' + (x[1] === 'national' ? 'a national power.' : 'mostly state and local.') }; } },
     { L: [1, 2], q: 'What is the chief executive of a state called?', a: 'the governor', w: ['the mayor', 'the Speaker', 'the President'], why: 'Each state elects a governor.' },
     { L: [1, 2], q: 'Which state has a one-house (unicameral) legislature?', a: 'Nebraska', w: ['Texas', 'California', 'New York'], why: 'Nebraska, since 1937.' },
@@ -1350,8 +1494,12 @@
   ], 'Counties, cities, school districts, special districts; all get their powers from the state.'));
 
   var DD = [['Voters gather signatures to put a proposed law on the ballot.', 'an initiative'], ['Citizens petition to propose a state constitutional amendment.', 'an initiative'], ['The legislature sends a bond measure to the voters for approval.', 'a referendum'],
-    ['Voters approve or reject a law the legislature passed.', 'a referendum'], ['Voters sign petitions for a special election to remove the governor early.', 'a recall'], ['A city council member is removed by voters before her term ends.', 'a recall']];
+    ['Voters approve or reject a law the legislature passed.', 'a referendum'], ['Voters sign petitions for a special election to remove the governor early.', 'a recall'], ['A city council member is removed by voters before her term ends.', 'a recall'],
+    ["Voters sign petitions so that a law they wrote will appear on the ballot.","an initiative"], ["Voters petition to put a law the legislature just passed to a public vote.","a referendum"], ["Voters remove a mayor before the end of the term.","a recall"]
+  ];
   G('gov.direct-democracy', fromBank([
+    {"L":[1,2,3],"q":"Direct democracy means…","a":"citizens vote on laws or officials themselves","w":["representatives make every decision","judges write the laws","one ruler decides for everyone","only property owners vote"],"why":"Initiatives, referendums and recalls are forms of direct democracy."},
+    {"L":[1,2,3],"q":"Which tool lets voters remove an elected official before the term ends?","a":"a recall","w":["an initiative","a referendum","a filibuster"],"why":"A recall election can end an official's term early."},
     { L: [1, 2, 3], gen: function (R) { var x = R.pick(DD); return { q: x[0] + ' What is this?', a: x[1], w: ['an initiative', 'a referendum', 'a recall', 'a filibuster'].filter(function (y) { return y !== x[1]; }), why: 'That is ' + x[1] + '.' }; } },
     { L: [1, 2], q: 'Is there a national initiative or referendum in the United States?', a: 'No', w: ['Yes, every four years', 'Yes, for amendments only'], why: 'Federal laws are made only by Congress and the President.' },
     { L: [2, 3], q: 'Which state was the first to adopt the initiative and referendum, in 1898?', a: 'South Dakota', w: ['California', 'Massachusetts', 'Virginia'], why: 'South Dakota, during the Progressive Era.' },
@@ -1364,6 +1512,12 @@
   ], 'Initiative: voters start it. Referendum: voters approve or reject a measure. Recall: remove an official early.'));
 
   G('gov.tribal-government', fromBank([
+    {"L":[1,2,3],"q":"Which 1924 law made all Native Americans born in the United States citizens?","a":"the Indian Citizenship Act","w":["the Indian Removal Act","the Dawes Act","the Indian Reorganization Act","the Civil Rights Act"],"why":"The Indian Citizenship Act of 1924."},
+    {"L":[1,2,3],"q":"Which 1832 case held that Georgia's laws had no force within Cherokee lands?","a":"Worcester v. Georgia","w":["Marbury v. Madison","McCulloch v. Maryland","Gibbons v. Ogden","Dred Scott v. Sandford"],"why":"Worcester v. Georgia (1832): Cherokee lands were governed by treaty and federal law."},
+    {"L":[1,2,3],"q":"Chief Justice John Marshall described tribes in 1831 as…","a":"\"domestic dependent nations\"","w":["\"foreign states\"","\"parts of the states\"","\"territories of the Union\"","\"private clubs\""],"why":"Marshall used the phrase in 1831."},
+    {"L":[1,2,3],"q":"A dispute arises between two tribal members over a contract made on their reservation. Which court is most likely to hear it?","a":"a tribal court","w":["a state court","the U.S. Supreme Court","a city court","a foreign court"],"why":"Tribes run their own courts for disputes among members on their lands."},
+    {"L":[2,3],"q":"Which 1934 law ended allotment and encouraged tribes to write their own constitutions?","a":"the Indian Reorganization Act","w":["the Indian Removal Act","the Dawes Act","the Indian Citizenship Act"],"why":"The Indian Reorganization Act was passed in 1934."},
+    {"L":[1,2,3],"q":"Which clause of the Constitution lets Congress regulate commerce \"with the Indian Tribes\"?","a":"the Commerce Clause","w":["the Supremacy Clause","the Necessary and Proper Clause","the Equal Protection Clause"],"why":"Article I, Section 8 names foreign nations, the states and the Indian tribes."},
     { L: [1, 2], q: 'How many federally recognized tribes are there (as of 2026)?', num: 575, why: '575 federally recognized tribes on the federal government\'s January 2026 list.' },
     { L: [1, 2], q: 'Tribal nations are best described as:', a: 'sovereign nations with their own governments', w: ['parts of state governments', 'federal agencies', 'foreign countries'], why: 'They have a government-to-government relationship with the United States.' },
     { L: [1, 2, 3], q: 'Are members of federally recognized tribes U.S. citizens?', a: 'Yes; Native Americans born in the U.S. are citizens (Indian Citizenship Act of 1924)', w: ['No; they are citizens of their tribe only', 'Only if they leave the reservation'], why: 'They are citizens of their tribe, the U.S. and their state.' },
@@ -1426,7 +1580,7 @@
     var p = { steps: ['Official answers to question ' + it.n + ' of the USCIS 2025 civics test: ' + ctList(it) + (it.c ? ' (name ' + ['', 'one', 'two', 'three', 'four', 'five'][it.c] + ').' : '.'),
       'Any one official answer counts' + (it.c ? ', and the question asks for ' + ['', 'one', 'two', 'three', 'four', 'five'][it.c] + ' of them' : '') + '. The 2008 list and a mock interview are on the citizenship test practice page.'],
       hint: 'Think of the answers on the official list, not one that only sounds close.' };
-    var mode = it.only || (lv === 3 ? (it.tv ? 'text' : it.c ? 'all' : 'mc') : 'mc');
+    var mode = it.only || (lv === 3 && R.chance(0.6) ? (it.tv ? 'text' : it.c ? 'all' : 'mc') : 'mc');
     if (mode === 'text') { p.q = head + (it.c ? '' : '') + ' Type one answer.'; p.a = { t: 'text', v: it.tv }; return p; }
     if (mode === 'all') {
       var tr = R.sample(it.a, Math.min(it.a.length, it.n === 81 ? 4 : (it.c || 1) + 1)), fl = ctWrong(R, it, 2), opts = R.shuffle(tr.concat(fl));
@@ -1447,3 +1601,359 @@
   G('gov.civics-test-history', ctGen([1, 2]));
 
 })(window.MathLadder);
+
+/* ---- widen_hum: more questions from the lesson's own tables -----------------------------------------------------
+   Each topic listed below also asks about the facts in its lesson's tables (copied here from the lesson, so the
+   answers are the lesson's own). Forms, by level:
+     match   "Which museum is in Turin?": the right cell and others from the same column (3 choices at level 1, 4 above)
+     pairs   lines "A → B": which pairing is right (level 2), or which one is wrong (level 3)
+     sort    a comparison table: which column does this cell describe (levels 1-2), or choose all for one column (level 3)
+   How often: about a third to a half of the draws, more when the topic's own questions are few at that level.
+   Generated by /tmp/work_widen_widen_hum/tabbuild.js from data/<ladder>/lessons/<course>.json. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var TABS = [{"k":"gov.models-of-democracy#1","h":["Model","Who drives decisions","Where you see it"],"r":[["Participatory","Broad participation by ordinary citizens","Town meetings, ballot initiatives, local school boards, petitions and protests"],["Pluralist","Many groups compete for influence, and no one group wins every time","Interest groups lobbying Congress; groups organizing on every side of an issue"],["Elite","A small number of wealthy, well-educated or well-connected people and groups","The Electoral College; senators chosen by state legislatures until 1913; appointed judges"]],"cap":"","m":[[1,0,"Which model of democracy is this: {a}?",0,"a model with who drives decisions"],[2,0,"Which model of democracy do you see here: {a}?",0,0,2]]},
+    {"k":"gov.rule-of-law#2","h":["Rule-of-law idea","Where it is in the Constitution"],"r":[["No punishment for acts that were legal when done","No ex post facto laws (Article I, Sections 9 and 10)"],["No punishment of a person by a law instead of a trial","No bills of attainder (Article I, Sections 9 and 10)"],["No jailing without a reason a judge can review","The writ of habeas corpus (Article I, Section 9)"],["Fair procedures before the government takes life, liberty or property","Due process (Fifth and Fourteenth Amendments)"],["Officials bound by the Constitution","Oaths to support it (Article VI); the President must \"take Care that the Laws be faithfully executed\" (Article II)"]],"cap":"","m":[[0,1,"Where is this rule-of-law idea in the Constitution: {a}?",0],[1,0,"Which rule-of-law idea does this part of the Constitution protect: {a}?",0,0,2]]},
+    {"k":"gov.articles-weaknesses#2","h":["The Articles","What it meant"],"r":[["One house of Congress; each state one vote","Small and large states equal; no separate executive or national court system"],["No power to tax","Congress could only ask the states for money (requisitions), and they often paid little"],["No power to regulate trade between states","States taxed each other's goods; Congress could not make one trade policy"],["Laws acted on states, not people","No way to enforce a law on an individual"],["9 of 13 states for major laws; all 13 for amendments","Hard to act, nearly impossible to fix"]],"cap":"","m":[[0,1,"Under the Articles of Confederation: {a}. What did that mean?",0],[1,0,"Which feature of the Articles of Confederation led to this: {a}?",0,0,2]]},
+    {"k":"gov.article-2#1","h":["Section","What it does"],"r":[["1","Vests the executive power; four-year term; election by electors (the Electoral College); qualifications (natural-born citizen, 35, 14 years a resident); succession; pay; the oath"],["2","Commander in chief; written opinions from department heads; pardons for federal offenses (not impeachment); <b>treaties</b> with two-thirds of senators present; <b>appointments</b> with the Senate's advice and consent; recess appointments"],["3","State of the Union information; may convene Congress; receives ambassadors; \"shall take Care that the Laws be faithfully executed\""],["4","The President, Vice President and civil officers are removed on impeachment and conviction for \"Treason, Bribery, or other high Crimes and Misdemeanors\""]],"cap":"","m":[[1,0,"Which section of Article II does this: {a}?",0]]},
+    {"k":"gov.amending#2","h":["Step","Way 1 (always used)","Way 2"],"r":[["Propose","Two-thirds of both houses of Congress (290 of 435 and 67 of 100 when all members vote)","A national convention called by Congress on the application of two-thirds of the state legislatures (34 of 50); never used"],["Ratify","Three-fourths of the state legislatures (38 of 50)","Conventions in three-fourths of the states (38 of 50); used once, for the Twenty-first Amendment (1933)"]],"cap":"","one":"Which way of amending the Constitution does this describe?","all":"Which of these belong to {a}? Choose all that apply."},
+    {"k":"gov.interstate-relations#1","h":["Rule","Where","What it requires"],"r":[["Full Faith and Credit","Article IV, Section 1","Each state honors other states' public acts, records and court judgments: a court judgment won in one state can be enforced in another"],["Privileges and Immunities","Article IV, Section 2","A state may not discriminate against citizens of other states in fundamental matters, such as earning a living, owning property or using the courts"],["Extradition","Article IV, Section 2","A person charged with a crime who flees to another state is returned on demand; since Puerto Rico v. Branstad (1987), federal courts can order a governor to comply"],["Interstate compacts","Article I, Section 10","States may make agreements with each other, with Congress's consent, such as the Port Authority of New York and New Jersey (1921) and the Colorado River Compact (1922)"]],"cap":"","m":[[2,0,"Which rule between the states requires this: {a}?",0,"a rule with where it is"],[0,1,"Where in the Constitution is the rule of {a}?",0,0,2]]},
+    {"k":"gov.house-and-senate#1","h":["","House of Representatives","Senate"],"r":[["Members","435 voting members, by state population (plus six nonvoting members from D.C., Puerto Rico and four territories)","100: two per state"],["Term","2 years; all seats elected every two years","6 years; about one-third elected every two years"],["Minimum age","25","30"],["Citizenship","7 years a citizen","9 years a citizen"],["Residence","an inhabitant of the state (not required to live in the district)","an inhabitant of the state"],["Chosen by","the voters of a district","the voters of the whole state (by state legislatures until the Seventeenth Amendment, 1913)"],["Leader","the Speaker","the Vice President (President of the Senate); in practice, the majority leader"]],"cap":"","one":"House or Senate: which does this describe?","all":"Which of these describe the {a}? Choose all that apply."},
+    {"k":"gov.apportionment-redistricting#3","h":["Case","Year","Holding"],"r":[["Baker v. Carr","1962","Courts may hear claims that legislative districts are unequal; they are not \"political questions\" (6–2)"],["Wesberry v. Sanders","1964","Congressional districts in a state must be as nearly equal in population as practicable (6–3)"],["Reynolds v. Sims","1964","Both houses of a state legislature must have districts of equal population: \"one person, one vote\" (8–1)"],["Shaw v. Reno","1993","District lines drawn mainly on the basis of race face strict scrutiny (5–4)"],["Rucho v. Common Cause","2019","Claims of partisan gerrymandering are political questions that federal courts cannot decide (5–4); state courts and laws may still limit it"]],"cap":"","m":[[2,0,"Which Supreme Court case held this: {a}?",0,"a case with its year"],[0,1,"In what year was {a} decided?",0,0,2]]},
+    {"k":"gov.filibuster-rules#1","h":["","House","Senate"],"r":[["Debate","limited; the <b>Rules Committee</b> writes a \"rule\" for each major bill setting debate time and which amendments are allowed","unlimited unless the Senate votes to end it"],["Ending debate","by majority vote","<b>cloture</b>: three-fifths of senators (60 of 100) for most bills"],["Effect","the majority can pass bills quickly","a minority of 41 can block many bills by <b>filibuster</b>"]],"cap":"","one":"House or Senate: which does this describe?","all":"Which of these describe the {a}? Choose all that apply."},
+    {"k":"gov.president-qualifications#1","h":["Rule","Source"],"r":[["A \"natural born Citizen,\" at least <b>35</b>, and <b>14 years</b> a resident of the United States","Article II, Section 1, Clause 5"],["A four-year term","Article II, Section 1"],["No one may be <b>elected more than twice</b>; someone who served more than two years of another's term may be elected only once","Twenty-second Amendment (1951)"],["The Vice President becomes President if the President dies, resigns or is removed","Article II and the Twenty-fifth Amendment (1967), Section 1"],["A vacant vice presidency is filled by the President's nominee, confirmed by a majority of <b>both</b> houses","Twenty-fifth Amendment, Section 2"],["When the President cannot serve, the Vice President becomes <b>acting</b> President (declared by the President, or by the Vice President and a majority of the Cabinet)","Twenty-fifth Amendment, Sections 3 and 4"],["After the Vice President: the Speaker, the President pro tempore, then the Cabinet starting with the Secretary of State","Presidential Succession Act of 1947"]],"cap":"","m":[[0,1,"Where does this rule come from: {a}?",0]]},
+    {"k":"gov.war-powers#1","h":["War","Declared"],"r":[["War of 1812","1812 (Great Britain)"],["Mexican-American War","1846 (Mexico)"],["Spanish-American War","1898 (Spain)"],["World War I","1917 (Germany; Austria-Hungary)"],["World War II","1941–1942 (Japan, Germany, Italy, Bulgaria, Hungary, Romania)"]],"cap":"All eleven declarations of war, in five wars (U.S. Senate).","m":[[0,1,"When, and against whom, did Congress declare the {a}?",0,"a war with its declaration"],[1,0,"Which war was declared in {a}?",0]]},
+    {"k":"gov.federal-courts#1","h":["Level","How many","What it does"],"r":[["U.S. District Courts","94 (at least one in every state, plus D.C. and Puerto Rico and three territories)","Trial courts: witnesses testify, juries decide facts, one judge presides"],["U.S. Courts of Appeals","13: 12 regional circuits plus the Federal Circuit","Review trial records for legal errors, usually in panels of three judges; no new witnesses"],["Supreme Court of the United States","1 (nine justices)","Chooses a small number of cases, mostly to settle important questions of federal law"]],"cap":"","m":[[2,0,"Which federal courts do this: {a}?",0,"a level with how many there are"],[0,1,"How many {a} are there?",0,0,2]]},
+    {"k":"gov.supreme-court-process#3","h":["Opinion","Who writes it","Is it law?"],"r":[["Majority opinion","a justice in the majority; the Chief Justice assigns it when in the majority, otherwise the senior justice in the majority","Yes: its holding binds lower courts"],["Concurring opinion","a justice who agrees with the result but gives other or extra reasons","No, but it can shape later cases"],["Dissenting opinion","a justice who disagrees with the result","No, but a later Court may adopt its reasoning"]],"cap":"","m":[[1,0,"Which kind of Supreme Court opinion is written by {a}?",0,"an opinion with who writes it"],[0,2,"Is a {a:l} law?",0,0,2]]},
+    {"k":"gov.bill-of-rights-overview#1","h":["Amendment","What it protects"],"r":[["First","religion (no establishment, free exercise), speech, press, assembly, petition"],["Second","the right to keep and bear arms"],["Third","no soldiers quartered in homes in peacetime without the owner's consent"],["Fourth","no unreasonable searches and seizures; warrants need probable cause"],["Fifth","grand jury for serious federal crimes; no double jeopardy; no forced self-incrimination; due process; just compensation for property taken"],["Sixth","a speedy, public trial by an impartial jury; to know the charges; to confront and call witnesses; a lawyer"],["Seventh","a jury in federal civil suits over twenty dollars"],["Eighth","no excessive bail or fines; no cruel and unusual punishments"],["Ninth","listing some rights does not deny others kept by the people"],["Tenth","powers not given to the national government are reserved to the states or the people"]],"cap":"","m":[[1,0,"Which amendment in the Bill of Rights protects this: {a}?",0,"an amendment with what it protects"],[0,1,"What does the {a} Amendment protect?",0,0,2]]},
+    {"k":"gov.freedom-of-press#1","h":["Case","Question","Holding"],"r":[["Near v. Minnesota (1931), 5–4","May a state shut down a newspaper as a \"public nuisance\" for what it prints?","No: that is a prior restraint, presumed unconstitutional"],["New York Times Co. v. Sullivan (1964), 9–0","What must a public official prove to win a libel suit about his official conduct?","\"Actual malice\": that the statement was made knowing it was false or with reckless disregard of whether it was false"],["New York Times Co. v. United States (1971), 6–3","Could the government stop newspapers from printing the Pentagon Papers, a secret study of the Vietnam War?","No: the government did not meet the heavy burden needed to justify a prior restraint"]],"cap":"","m":[[1,0,"Which case asked this: {a}",0],[0,2,"What did the Court hold in {a}?",0,0,2]]},
+    {"k":"gov.voting-amendments#1","h":["Amendment","Ratified","What it did"],"r":[["Fifteenth","1870","The vote may not be denied \"on account of race, color, or previous condition of servitude.\""],["Seventeenth","1913","Senators are elected directly by the voters, not by state legislatures"],["Nineteenth","1920","The vote may not be denied \"on account of sex.\""],["Twenty-third","1961","The District of Columbia gets electors for President (three)"],["Twenty-fourth","1964","No poll tax in federal elections"],["Twenty-sixth","1971","Citizens 18 and older may not be denied the vote \"on account of age.\""]],"cap":"","m":[[2,0,"Which amendment did this: {a}",0,"an amendment with what it did"],[0,1,"In what year was the {a} Amendment ratified?",0,0,2]]},
+    {"k":"gov.majority-minority#1","h":["Protection","How it guards minorities"],"r":[["The Bill of Rights and the courts","Some rights cannot be voted away by ordinary laws; courts enforce them"],["Supermajority rules","Amendments, veto overrides, treaties and Senate cloture need more than a bare majority"],["Federalism","A group outvoted nationally may be a majority in its state or town"],["Separation of powers and the Senate","Different majorities, chosen in different ways, must agree before a law passes"],["A large, varied republic","Madison's argument in Federalist No. 10: many interests make a lasting unjust majority harder to form"]],"cap":"","m":[[1,0,"Which protection for minorities works this way: {a}",0]]},
+    {"k":"gov.political-parties#1","h":["What parties do","Example"],"r":[["Recruit and nominate candidates","primaries and conventions choose each party's nominee"],["Organize voters and campaigns","register voters, raise money, turn out supporters"],["Give voters a shortcut","a party label signals a candidate's general views"],["Organize the government","the majority party in each house picks its leaders and committee chairs"],["Serve as the loyal opposition","the party out of power criticizes and offers alternatives"]],"cap":"","m":[[1,0,"Which job of political parties does this example show: {a}?",0,"a job with an example"]]},
+    {"k":"gov.direct-democracy#1","h":["Tool","Who starts it","What happens"],"r":[["<b>Initiative</b>","voters, by petition (gathering a set number of signatures)","a proposed law or state constitutional amendment goes on the ballot, and voters decide; about half the states allow some form"],["<b>Referendum</b>","usually the legislature (or, in a \"popular referendum,\" voters petitioning against a new law)","voters approve or reject a measure the legislature passed or referred; many state constitutions require a referendum for amendments or bonds"],["<b>Recall</b>","voters, by petition","a special election may remove an official before the term ends; 19 states allow recall of state officials"]],"cap":"","m":[[2,0,"Which tool of direct democracy is this: {a}?",0,"a tool with who starts it"],[0,1,"Who starts a {a:l}?",0,0,2]]},
+    {"k":"gov.state-government#1","h":["","National government","A typical state"],"r":[["Founding law","the U.S. Constitution (seven articles and 27 amendments)","its own state constitution, usually much longer and amended far more often"],["Executive","the President","the <b>governor</b>, plus other elected officials such as an attorney general and secretary of state"],["Legislature","Congress: House and Senate","two houses in every state except <b>Nebraska</b>, which has had a one-house (unicameral), nonpartisan legislature since 1937"],["Courts","federal courts","state trial courts, appeals courts and a state supreme court"],["Veto","veto the whole bill only","most governors may also veto single spending items (the <b>line-item veto</b>)"]],"cap":"","one":"National government or a typical state: which does this describe?","all":"Which of these describe {a}? Choose all that apply."}];
+  var FUNS = {};
+  function plain(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim(); }
+  function txt(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function low(s) { return txt(s).toLowerCase().replace(/[.;:,]+$/, ''); }
+  function big(x) { return String(x).replace(/<span class="(sc-b|eg-cop|eg-h)">/g, '<span class="$1" style="font-size:1.6em;line-height:1">'); }
+  function fill(t, x) { x = big(x); return t.replace('{a:l}', String(x).replace(/^[A-Z](?=[a-z])/, function (c) { return c.toLowerCase(); })).replace('{a}', x); }
+  function dot(s) { s = String(s); return /[.!?…"”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function sameRow(t, i, a) { return t.r.filter(function (r) { return low(r[a]) === low(t.r[i][a]); }); }
+  function partnerSteps(t, tp, right, shown) { // what each wrong choice goes with
+    var out = [];
+    shown.forEach(function (c) {
+      if (low(c) === low(right)) return;
+      var rows = t.r.filter(function (r) { return low(r[tp[1]]) === low(c); });
+      if (rows.length === 1 && txt(rows[0][tp[0]]).length <= 90) out.push(dot(c + ': that goes with ' + rows[0][tp[0]]));
+    });
+    return out.slice(0, 3);
+  }
+  // match: ask for column b from a cell of column a
+  function match(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][b]).length <= 130; });
+    if (!ok.length) return null;
+    var i = R.pick(ok), right = t.r[i][b], seen = {};
+    seen[low(right)] = 1;
+    var bad = {}; sameRow(t, i, a).forEach(function (r) { bad[low(r[b])] = 1; }); // never a choice that is also right
+    var pool = []; t.r.forEach(function (r) { var k = low(r[b]); if (r[b] && !seen[k] && !bad[k] && txt(r[b]).length <= 130) { seen[k] = 1; pool.push(r[b]); } });
+    var k = Math.min(L === 1 ? 3 : 4, pool.length + 1); if (k < 3) return null;
+    var wrongs = R.shuffle(pool).slice(0, k - 1), choices = [right].concat(wrongs);
+    return { q: fill(tp[2], t.r[i][a]), a: { t: 'mc', choices: choices, v: 0 },
+      steps: [dot(t.r[i][a] + ' → ' + right), ].concat(partnerSteps(t, tp, right, choices)),
+      hint: tp[3] || 'Think back to the lesson’s table' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 'm', a, b, i, txt(t.r[i][a])] };
+  }
+  // pairs: three or four lines "a → b"; one right (level 2) or one wrong (level 3)
+  function pairs(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][a]).length <= 70 && txt(t.r[i][b]).length <= 70; });
+    var uniq = {}; ok = ok.filter(function (i) { var k = low(t.r[i][a]); if (uniq[k]) return false; uniq[k] = 1; return true; });
+    var n = Math.min(4, ok.length); if (n < 3) return null;
+    var rows = R.shuffle(ok).slice(0, n), wrongOne = L >= 3, target = R.int(0, n - 1), lines = [], steps = [];
+    for (var j = 0; j < n; j++) {
+      var i = rows[j], right = wrongOne ? j !== target : j === target, ans = t.r[i][b];
+      if (!right) {
+        var good = {}; sameRow(t, i, a).forEach(function (r) { good[low(r[b])] = 1; });
+        var ws = []; t.r.forEach(function (r) { if (r[b] && !good[low(r[b])] && txt(r[b]).length <= 70 && ws.map(low).indexOf(low(r[b])) < 0) ws.push(r[b]); });
+        if (!ws.length) return null;
+        ans = R.pick(ws);
+      }
+      lines.push(t.r[i][a] + ' → ' + ans);
+      steps.push(dot(t.r[i][a] + ' → ' + t.r[i][b] + (right ? ': right' : ', not ' + ans)));
+    }
+    var what = tp[4] ? ' Each line pairs ' + tp[4] + '.' : '';
+    return { q: (wrongOne ? 'Exactly one of these pairings is <b>wrong</b>. Which one?' : 'Exactly one of these pairings is right. Which one?') + what,
+      a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own against what you learned.', wh: [t.k, wrongOne ? 'pw' : 'pr', a, b] };
+  }
+  // sort: which column of a comparison table does a cell belong to
+  function sortQ(R, t, L) {
+    var cols = t.h.map(function (_, j) { return j; }).filter(function (j) { return j >= (t.na ? 0 : 1) && txt(t.h[j]); });
+    if (cols.length < 2) return null;
+    var cells = [];
+    t.r.forEach(function (r, i) { cols.forEach(function (j) {
+      if (!r[j] || (!t.na && !txt(r[0]))) return;
+      var dup = cols.some(function (j2) { return j2 !== j && r[j2] && (low(r[j2]) === low(r[j]) || low(r[j2]).indexOf(low(r[j])) >= 0 || low(r[j]).indexOf(low(r[j2])) >= 0); });
+      if (!dup && txt(r[j]).length <= 140) cells.push([i, j]);
+    }); });
+    if (cells.length < 2) return null;
+    var heads = cols.map(function (j) { return t.h[j]; });
+    if (L >= 3 && cells.length >= 5) {
+      var j0 = R.pick(cols), pick = R.shuffle(cells).slice(0, Math.min(5, cells.length));
+      var hits = pick.filter(function (c) { return c[1] === j0; }).length;
+      if (hits >= 1 && hits < pick.length) {
+        var ch = pick.map(function (c) { return lab(t, c); });
+        var v = pick.map(function (c, k) { return c[1] === j0 ? k : -1; }).filter(function (k) { return k >= 0; });
+        return { q: fill(t.all, t.h[j0]), a: { t: 'mc', choices: ch, v: v },
+          steps: pick.map(function (c) { return dot(lab(t, c) + ' (' + t.h[c[1]] + ')'); }),
+          hint: 'Go through them one at a time.', wh: [t.k, 'sa', j0, pick] };
+      }
+    }
+    var c = R.pick(cells);
+    return { q: t.one + (t.na ? (/^["“]/.test(txt(t.r[c[0]][c[1]])) ? '<br>' + t.r[c[0]][c[1]] : '<br>“' + t.r[c[0]][c[1]] + '”') : '<br>' + asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]), a: { t: 'mc', choices: heads.slice(), v: cols.indexOf(c[1]) },
+      steps: t.na ? [dot('That is ' + t.h[c[1]].replace(/^./, function (x) { return x.toLowerCase(); }))] : [dot(txt(t.r[c[0]][0]) + ' for ' + t.h[c[1]] + ': ' + t.r[c[0]][c[1]])].concat(cols.filter(function (j) { return j !== c[1] && t.r[c[0]][j]; }).map(function (j) { return dot('For ' + t.h[j] + ': ' + t.r[c[0]][j]); })),
+      hint: 'Think back to the lesson’s comparison' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 's', c[0], c[1]] };
+  }
+  function asp(x) { return '<b>' + x + (/\?$/.test(txt(x)) ? '' : ':') + '</b> '; }
+  function lab(t, c) { return t.na ? t.r[c[0]][c[1]] : asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]; }
+  // extra bank items: { q, a, w: [wrong answers, more than are shown], s: [steps], h: hint, lv } or { q, tf: true|false, s, lv }
+  function extra(R, t, L) {
+    var its = t.x.filter(function (it) { return (it.lv || 1) <= L; }); if (!its.length) return null;
+    var it = R.pick(its), p;
+    if (it.f) { it = FUNS[it.f](R, L); if (!it) return null; }
+    if (it.num !== undefined) {
+      p = { q: it.q, a: { t: 'num', v: String(it.num) }, steps: it.s.slice() };
+      if (Number.isInteger(it.num) && !it.unit && !it.pct) p.a.form = 'int';
+      if (it.pct) p.a.pct = true;
+      if (it.tol != null) p.a.tol = it.tol;
+      if (it.unit) p.unit = it.unit;
+    }
+    else if (it.tf !== undefined) p = { q: it.q, a: { t: 'tf', v: it.tf }, steps: it.s.slice() };
+    else {
+      var k = Math.min(L === 1 ? 3 : 4, it.w.length + 1);
+      p = { q: it.q, a: { t: 'mc', choices: [it.a].concat(R.shuffle(it.w).slice(0, k - 1)), v: 0 }, steps: it.s.slice() };
+    }
+    p.hint = it.h || 'Think back to the lesson.';
+    p.wh = [t.k, 'x', its.indexOf(it) >= 0 ? t.x.indexOf(it) : -1];
+    return FUNS.__wrap ? FUNS.__wrap(p, L) : p;
+  }
+  function make(R, list, L) {
+    for (var tries = 0; tries < 8; tries++) {
+      var t = R.pick(list), p = null;
+      if (t.x) p = extra(R, t, L);
+      else if (t.one) p = sortQ(R, t, L);
+      else {
+        var tps = t.m.filter(function (tp) { return (tp[5] || 1) <= L; }); if (!tps.length) continue;
+        var tp = R.pick(tps);
+        p = L >= 2 && tp[4] && R.chance(0.35) ? pairs(R, t, tp, L) : match(R, t, tp, L);
+      }
+      if (p) {
+        // ladder pages show choices as plain text (only $…$ math is rendered), so choices carry no tags
+        if (p.a.t === 'mc') { p.a.choices = p.a.choices.map(plain); var seen = {}; if (p.a.choices.some(function (c) { var k = seen[c]; seen[c] = 1; return k; })) continue; }
+        p.nowiden = true; return p;
+      }
+    }
+    return null;
+  }
+  var BY = {}; TABS.forEach(function (t) { var id = t.k.split('#')[0].split('@')[0]; (BY[id] = BY[id] || []).push(t); });
+  var VAR = {};
+  function baseCount(id, base, L) { // different questions (ignoring the order of choices) from 40 fixed seeds
+    var key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        try { var p = base(ML.rand(id + '#whv#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; } } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  function extCount(id, L) { // different table questions from 40 fixed seeds
+    var key = id + '|x|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        var p = make(ML.rand(id + '#whx#' + s + '#' + L), BY[id], L); if (!p) continue;
+        var k = p.q + '|' + JSON.stringify(p.a.choices ? p.a.choices.slice().sort() : p.a.v);
+        if (!seen[k]) { seen[k] = 1; n++; }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  Object.keys(BY).forEach(function (id) {
+    var base = ML.getGen(id); if (!base || base._wh) return;
+    var fn = function (R, ctx) {
+      var L = (ctx && ctx.level) || 1, n = baseCount(id, base, L), x = extCount(id, L), share = Math.max(0.15, Math.min(0.5, x / (x + n + 1)));
+      if (R.chance(share)) { var p = make(R, BY[id], L); if (p) return p; }
+      return base(R, ctx);
+    };
+    fn._wh = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen_hum ---- */
+
+/* ---- widen: more forms of the same questions (so practice repeats less) ----------------------------------------
+   Every topic of this course keeps its own problems, and some draws are turned into other forms of the same skill,
+   built only from the topic's own problems (so their answers stay the ones the topic already checks):
+     check   "Ava chose X. Is Ava right?" (Yes or No) from a one-answer multiple-choice problem
+     pairs   two or three lines "question → answer"; which line is right (or, at level 3, which one is wrong)
+     tfpick  "Which sentence is true?" (or false) from three of the topic's true-or-false sentences
+   Questions whose answer depends on the other choices (first, best, most, not …) show the choices in the check form
+   and never go into pairs. Mix per level: CFG.mix[level] = [check, pairs, tfpick] shares; the rest stays as it was. */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var CFG = {"prefix":"gov.","only":["purposes-of-government","forms-of-government","natural-rights-social-contract","models-of-democracy","rule-of-law","english-roots","declaration-ideas","articles-weaknesses","convention-compromises","federalist-antifederalist","ratification-bill-of-rights","preamble","article-1","article-2","article-3","articles-4-to-7","separation-of-powers","checks-and-balances","amending","federalism-basics","supremacy-necessary-proper","commerce-power-civics","fiscal-federalism","interstate-relations","house-and-senate","apportionment-redistricting","powers-of-congress","congressional-leadership","committees","how-a-bill-becomes-law","filibuster-rules","budget-oversight","representation","president-qualifications","formal-powers","informal-powers","bureaucracy","bureaucracy-accountability","impeachment","war-powers","federal-courts","supreme-court-process","judicial-review","judicial-appointments","judicial-philosophy","checks-on-courts","bill-of-rights-overview","selective-incorporation","freedom-of-religion","freedom-of-speech","freedom-of-press","second-amendment-civics","rights-of-accused","privacy","equal-protection-civics","civil-rights-acts","voting-amendments","majority-minority","becoming-a-citizen","rights-and-responsibilities","voting-and-turnout","political-socialization","public-opinion","interest-groups-media","political-parties","primaries-conventions","electoral-college","campaign-finance","congressional-elections","state-government","local-government","direct-democracy","tribal-government","civics-test-government","civics-test-history"]};
+  var NAMES = ['Ava', 'Ben', 'Cora', 'Dev', 'Eli', 'Finn', 'Gus', 'Hana', 'Ivy', 'Jude', 'Kai', 'Lena', 'Milo', 'Nora', 'Omar', 'Pia',
+    'Quinn', 'Rosa', 'Sam', 'Tess', 'Uma', 'Vic', 'Wren', 'Zoe', 'Ada', 'Leo', 'Mia', 'Theo', 'June', 'Max'];
+  var REL = /\b(first|last|earliest|latest|earlier|later|before|after|older|oldest|newer|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|look|read|here|example|examples|likely|probably|mainly|main|usually|typically|other|another|which one|each|order|then|next)\b|n['’]t\b/i;
+  // pairs judge each line on its own, so only questions whose answer depends on the other choices are left out
+  var RELP = /\b(first|last|earliest|latest|oldest|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|which one|other|another|rank|order|more|less|fewer)\b|n['’]t\b|\w+est\b/i;
+  var REF = /\b(this|these|those|shown|picture|map|table|chart|graph|diagram|passage|scene|story|above|below|here|following)\b/i;
+  var BADCH = /\b(all|none|both|neither) of\b|\b(above|below)\b|^(both|neither|all|none)\b|\bchoice\b|\boption\b/i;
+  function strip(s) { return String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function plainish(s) { return !/<(?!\/?(b|i|em|strong)\b)[^>]*>/.test(String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1')); }
+  function add(q, html) { // inside a read-aloud big span when there is one
+    var m = /<span class="[\w-]*big">/.exec(q);
+    if (m) { var k = q.lastIndexOf('</span>'); if (k > m.index) return q.slice(0, k) + '<br>' + html.replace(/<\/p>\s*<p[^>]*>/g, '<br>').replace(/<\/?p[^>]*>/g, '') + q.slice(k); }
+    return q + html;
+  }
+  function single(p) {
+    return p && p.a && p.a.t === 'mc' && !Array.isArray(p.a.v) && Array.isArray(p.a.choices) && p.a.choices.length >= 2 &&
+      !p.a.choices.some(function (c) { return BADCH.test(strip(c)); });
+  }
+  function hash(t) { var h = 7; for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return h; }
+  function nameFor(q, key) { // the same claim always gets the same name, so a name alone never makes a "new" problem
+    var t = strip(q), ok = NAMES.filter(function (n) { return t.indexOf(n) < 0 && String(key).indexOf(n) < 0; });
+    return (ok.length ? ok : NAMES)[hash(t + '|' + key) % (ok.length || NAMES.length)];
+  }
+  function dot(s) { s = String(s); return /[.!?…"”')\]]\s*(<\/b>)?$/.test(strip(s)) || /\$$/.test(s) ? s : s + '.'; }
+  function optList(ch) { return '<p class="wd-opts">The choices were:<br>' + ch.map(function (c) { return '• ' + c; }).join('<br>') + '</p>'; }
+  function copyP(p, q, a, steps) { var o = {}; for (var k in p) if (Object.prototype.hasOwnProperty.call(p, k)) o[k] = p[k]; o.q = q; o.a = a; o.steps = steps; delete o.choices; return o; }
+
+  // check: show one choice (the right one half the time) and ask whether it is right
+  function check(p, R) {
+    var ch = p.a.choices, v = p.a.v, idx = ch.map(function (_, i) { return i; }), others = idx.filter(function (i) { return i !== v; });
+    var i = R.chance(0.5) ? v : R.pick(others), ok = i === v, nm = nameFor(p.q, ch[i]), letters = ch.every(function (c) { return /^[A-Z]$/.test(String(c)); });
+    var stem = strip(p.q), html = '';
+    if (!letters && (REL.test(stem) || ch.length > 4 || CFG.listAll)) {
+      var shown = p.a.keep ? ch.slice() : R.shuffle(ch);
+      html += optList(shown);
+    }
+    html += '<p class="wd-check">' + nm + ' chose: <b>' + ch[i] + '</b>' + (/[.!?…"”]$/.test(strip(ch[i])) ? '' : '.') + ' Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes. ' + dot(ch[v]) + ' is the right answer.' : 'No. The right answer is: ' + dot(ch[v]);
+    if (ok) first = 'Yes, that is the right answer.';
+    return copyP(p, add(p.q, html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [first].concat(p.steps || []));
+  }
+  // check for "choose all": the whole list is shown, and one learner's picks; right only if exactly the right ones
+  function checkAll(p, R) {
+    var ch = p.a.choices, v = p.a.v.slice().sort(), n = ch.length, pick;
+    if (R.chance(0.45)) pick = v.slice();
+    else {
+      var t = 0; do { var j = R.int(0, n - 1), s = v.slice(), k = s.indexOf(j); if (k >= 0) s.splice(k, 1); else s.push(j); if (R.chance(0.3)) { var j2 = R.int(0, n - 1), k2 = s.indexOf(j2); if (k2 >= 0) s.splice(k2, 1); else s.push(j2); } pick = s.sort(); t++; }
+      while (t < 20 && (!pick.length || pick.join() === v.join()));
+      if (!pick.length || pick.join() === v.join()) return null;
+    }
+    var ok = pick.join() === v.join(), nm = nameFor(p.q, pick.join());
+    var html = optList(ch) + '<p class="wd-check">' + nm + ' chose ' +
+      (pick.length === 1 ? 'only: <b>' + ch[pick[0]] + '</b>' : 'these: <b>' + pick.map(function (i) { return ch[i]; }).join('</b>; <b>') + '</b>') + '. Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes, those are exactly the right ones.' : 'No. The right ones are: ' + v.map(function (i) { return ch[i]; }).join('; ');
+    return copyP(p, add(p.q.replace(/\s*(Choose|Select|Pick) (all|every)[^.?!<]*[.?!]?/i, ''), html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [dot(first)].concat(p.steps || []));
+  }
+
+  // items for pairs: one-answer questions that stand on their own (no picture, no passage, no "first/best/…")
+  function pairItem(p) {
+    if (!single(p) || p.viz) return null;
+    var max = CFG.maxStem || 120, maxA = CFG.maxAns || 70, a = strip(p.a.choices[p.a.v]), stem, group = '';
+    // "prompt<br><b>thing</b>" or "prompt<blockquote>thing</blockquote>": a line is "thing → answer", lines share the prompt
+    var q0 = p.q.replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1').trim();
+    var m = /^([^<]{6,140}?)\s*(?:<br>\s*<b>([^<]{3,140})<\/b>|<blockquote>([^<]{3,140})<\/blockquote>)\s*$/.exec(q0);
+    if (m) { group = m[1].trim(); stem = (m[2] || m[3]).trim(); if (RELP.test(group.replace(/\b(this|these)\b/gi, ''))) return null; }
+    else {
+      if (!plainish(p.q)) return null;
+      stem = strip(p.q); if (RELP.test(stem)) return null;
+    }
+    if (stem.length > max || stem.length < 3 || a.length > maxA || /^[A-Z]$/.test(a) || /\$/.test(stem + a + group)) return null;
+    var w = p.a.choices.filter(function (_, i) { return i !== p.a.v; }).map(strip).filter(function (x) { return x.length <= maxA && x !== a; });
+    if (!w.length) return null;
+    return { stem: stem.replace(/\s*(Choose one|Pick one)\.?$/i, ''), a: a, w: w, why: (p.steps || [])[0] || '', group: group };
+  }
+  function tfItem(p) {
+    if (!p || !p.a || p.a.t !== 'tf' || p.viz || !plainish(p.q)) return null;
+    var s = strip(p.q).replace(/^(True or false\?|True or false:)\s*/i, '').replace(/\s*(True or false\?|Is this true or false\?|Is it true or false\?)$/i, '').trim();
+    if (s.length < 8 || s.length > (CFG.maxStem || 120) + 20 || REF.test(s) || /\?$/.test(s) || /\$/.test(s)) return null;
+    return { s: s, v: p.a.v, why: (p.steps || [])[0] || '' };
+  }
+  function harvest(base, R, ctx, make, n, distinct) {
+    var out = [], keys = {};
+    for (var t = 0; t < 24 && out.length < n; t++) {
+      // at level 3, lines may come from level 2 questions too: three lines with one wrong is the harder form
+      var c2 = ctx && ctx.level >= 3 && (t % 2) ? Object.assign({}, ctx, { level: 2 }) : ctx;
+      var p; try { p = base(ML.rand(R.int(1, 2e9)), c2); } catch (e) { continue; }
+      var it = make(p); if (!it) continue;
+      if (out.length && it.group !== undefined && it.group !== out[0].group) continue;
+      var k = distinct(it); if (k.some(function (x) { return keys[x]; })) continue;
+      k.forEach(function (x) { keys[x] = 1; }); out.push(it);
+    }
+    return out;
+  }
+  function pairs(base, R, ctx, n, wrongOne) {
+    var its = harvest(base, R, ctx, pairItem, n, function (it) { return it.group ? ['s:' + it.stem] : ['s:' + it.stem, 'a:' + it.a]; });
+    if (its.length < n) return null;
+    var answers = its.map(function (it) { return it.a; }), used = {};
+    var target = R.int(0, n - 1), lines = [], steps = [];
+    for (var i = 0; i < n; i++) {
+      var it = its[i], right = wrongOne ? i !== target : i === target, ans = it.a;
+      if (!right) {
+        var ws = it.w.filter(function (x) { return (its[0].group || answers.indexOf(x) < 0) && !used[x]; });
+        if (!ws.length) return null;
+        ans = R.pick(ws); if (!its[0].group) used[ans] = 1;
+      }
+      lines.push(it.stem + ' → ' + ans); // plain text: ladder pages show choices as text
+      steps.push(it.group ? dot(it.stem) + ' Answer: ' + it.a + (right ? '.' : ', not ' + ans + '.') : it.stem + ' The answer is ' + it.a + (right ? '.' : ', not ' + ans + '.'));
+    }
+    var g = its[0].group, q = g ? '<p class="wd-group">The question for every line: <i>' + g + '</i></p>' + (wrongOne ? 'One line has the <b>wrong</b> answer. Which line is it?' : n === 2 ? 'Which line has the <b>right</b> answer?' : 'Only one line has the right answer. Which line is it?') : wrongOne ? 'Each line is a question and an answer. One answer is <b>wrong</b>. Which line is it?'
+      : (n === 2 ? 'Each line is a question and an answer. Which line has the <b>right</b> answer?' : 'Each line is a question and an answer. Only one answer is right. Which line is it?');
+    if (its[target].why) steps.push(its[target].why);
+    return { q: q, a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own. Does the answer fit the question?' };
+  }
+  function tfpick(base, R, ctx, wantFalse) {
+    var its = harvest(base, R, ctx, tfItem, 6, function (it) { return ['s:' + it.s]; });
+    var T = its.filter(function (x) { return x.v; }), F = its.filter(function (x) { return !x.v; });
+    var odd = wantFalse ? F : T, rest = wantFalse ? T : F;
+    if (!odd.length || rest.length < 2) return null;
+    var pick = [odd[0], rest[0], rest[1]], order = R.shuffle([0, 1, 2]), choices = order.map(function (i) { return pick[i].s; });
+    var steps = pick.map(function (x) { return x.s + ' ' + (x.v ? 'True.' : 'False.'); });
+    if (odd[0].why) steps.push(odd[0].why);
+    return { q: wantFalse ? 'Which sentence is <b>false</b>?' : 'Which sentence is <b>true</b>?', a: { t: 'mc', choices: choices, v: order.indexOf(0) }, steps: steps,
+      hint: 'Decide about each sentence on its own.' };
+  }
+  var MIX = CFG.mix || { 1: [0.38, 0.25, 0.04], 2: [0.27, 0.3, 0.1], 3: [0.17, 0.4, 0.15] };
+  function wrap(id, base) {
+    var fn = function (R, ctx) {
+      var lv = ctx && ctx.level || 1, p = base(R, ctx), m = MIX[lv] || MIX[3], r = R.next();
+      if (p.nowiden || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf') || (CFG.skip && CFG.skip.indexOf(id) >= 0)) return p; // typed answers stay as they are
+      var form = r < m[0] ? 0 : r < m[0] + m[1] ? 1 : r < m[0] + m[1] + m[2] ? 2 : -1;
+      if (form < 0) return p;
+      var tries = [form, (form + 1) % 3, (form + 2) % 3].filter(function (f) { return m[f] > 0; });
+      for (var t = 0; t < tries.length; t++) {
+        var f = tries[t], alt = null;
+        if (f === 0) alt = single(p) ? check(p, R) : (p.a && p.a.t === 'mc' && Array.isArray(p.a.v) && !p.viz ? checkAll(p, R) : null);
+        else if (f === 1) alt = pairs(base, R, ctx, lv === 1 ? 2 : 3, lv >= 3 && R.chance(0.6));
+        else alt = tfpick(base, R, ctx, R.chance(0.4));
+        if (alt) return alt;
+      }
+      return p;
+    };
+    fn.widened = true;
+    return fn;
+  }
+  ML.genIds().forEach(function (id) {
+    if (id.indexOf(CFG.prefix) !== 0 || (CFG.only && CFG.only.indexOf(id.slice(CFG.prefix.length)) < 0)) return;
+    var g = ML.getGen(id); if (g && !g.widened) ML.gen(id, wrap(id, g));
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen ---- */

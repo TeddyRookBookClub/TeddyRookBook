@@ -13,7 +13,7 @@
 
    Checks (contract: /tmp/briefs/mathladder_spec.md, sections 1, 3 and 6):
    courses.yaml   required fields; course keys unique across ALL ladders, slugs unique in a ladder; band and grade
-                  values (grade: K, 1 to 12, a range like 8–9, or College); "after" names earlier courses of the same
+                  values (grade: Pre-K, K, 1 to 12, a range like 8–9, or College); "after" names earlier courses of the same
                   ladder or courses of other ladders; course slugs do not clash with the app's own pages.
    topics/<key>   course field matches; units have key and title, are unique, and every unit is used; topics have
                   id, slug, unit, title, short, prereqs, xp, viz; id = "<course key>.<slug>"; slugs are lowercase
@@ -124,7 +124,7 @@ LADDERS.forEach(L => {
     if (c.slug && !SLUG.test(c.slug)) err(w, 'slug must be lowercase words joined by hyphens');
     if (RESERVED.has(c.slug)) err(w, 'slug ' + c.slug + ' clashes with an app page');
     if (c.band && !BANDS.has(c.band)) err(w, 'band must be one of ' + [...BANDS].join(', '));
-    if (c.grade && !/^((K|[1-9]|1[0-2])([–-](K|[1-9]|1[0-2]))?|College)$/.test(c.grade)) err(w, 'grade must be K, 1 to 12, a range like 8–9, or College');
+    if (c.grade && !/^((K|[1-9]|1[0-2])([–-](K|[1-9]|1[0-2]))?|Pre-K|College)$/.test(c.grade)) err(w, 'grade must be Pre-K, K, 1 to 12, a range like 8–9, or College');
     if (c.color && !/^#[0-9a-fA-F]{6}$/.test(c.color)) err(w, 'color must be #rrggbb');
   });
 });

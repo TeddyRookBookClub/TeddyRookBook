@@ -225,6 +225,12 @@
   ], 'Think about what each region\'s land and climate offered.'));
 
   G('ush1.native-societies', bank([
+    {"L":[1,2,3],"q":"Which culture built the great earthen mounds at Cahokia?","a":"the Mississippian culture","w":["the Ancestral Puebloans","the Aztecs","the Inca","the Haudenosaunee"],"why":"Cahokia was the largest city of the Mississippian culture."},
+    {"L":[1,2],"q":"The cliff dwellings of Mesa Verde are in which present-day state?","a":"Colorado","w":["New Mexico","Ohio","Illinois","Georgia"],"why":"Mesa Verde is in southwestern Colorado."},
+    {"L":[1,2],"q":"Chaco Canyon, with its great houses, is in which present-day state?","a":"New Mexico","w":["Colorado","Ohio","Illinois","Georgia"],"why":"Chaco Canyon is in northwestern New Mexico."},
+    {"L":[1,2,3],"q":"How many nations first formed the Haudenosaunee (Iroquois) Confederacy?","a":"five","w":["two","three","ten","twelve"],"why":"Five nations: the Mohawk, Oneida, Onondaga, Cayuga and Seneca."},
+    {"L":[1,2,3],"q":"Which crops, called the \"Three Sisters,\" did many Eastern peoples grow together?","a":"corn, beans and squash","w":["wheat, rice and barley","potatoes, cotton and tobacco","apples, oats and rye"],"why":"Corn, beans and squash grown together helped each other and fed many people."},
+    {"L":[2,3],"q":"Which nation joined the Haudenosaunee Confederacy in the 1700s as the sixth nation?","a":"the Tuscarora","w":["the Cherokee","the Lakota","the Wampanoag","the Powhatan"],"why":"The Tuscarora joined in the 1720s."},
     { L: [1, 2], q: 'Cahokia, the largest city of the Mississippian culture, stood near which present-day city?', a: 'St. Louis', w: ['Boston', 'Santa Fe', 'Seattle', 'Miami'], why: 'Cahokia lay in the Mississippi River valley, across the river from present-day St. Louis.' },
     { L: [2, 3], gen: function (R) { return mapPick(R, R.pick(['cahokia', 'mesaverde']), ['cahokia', 'mesaverde', 'staugustine', 'plymouth', 'santafe', 'jamestown'], { cahokia: 'Cahokia, the Mississippian city across the Mississippi from present-day St. Louis', mesaverde: 'Mesa Verde, the Ancestral Puebloan cliff dwellings in southwestern Colorado' }); } },
     { L: [1, 2], q: 'Who built the cliff dwellings at Mesa Verde and the great houses at Chaco Canyon?', a: 'The Ancestral Puebloans', w: ['The Haudenosaunee', 'The Spanish', 'The Mississippians of Cahokia'], why: 'The Ancestral Puebloans of the Four Corners region built them; today\'s Pueblo peoples are their descendants.' },
@@ -265,6 +271,13 @@
   ], 'Which hemisphere did it come from?'));
 
   G('ush1.spanish-empire', bank([
+    {"L":[1,2,3],"q":"In what year did Columbus first reach the Caribbean?","a":"1492","w":["1452","1513","1565","1607"],"why":"Columbus landed in the Bahamas in October 1492."},
+    {"L":[1,2,3],"q":"Who claimed Florida for Spain in 1513?","a":"Juan Ponce de León","w":["Hernán Cortés","Francisco Pizarro","Hernando de Soto","Francisco Vásquez de Coronado"],"why":"Ponce de León reached and named Florida in 1513."},
+    {"L":[1,2,3],"q":"Which Spanish explorer searched the Southwest for cities of gold from 1540 to 1542?","a":"Francisco Vásquez de Coronado","w":["Juan Ponce de León","Hernán Cortés","Francisco Pizarro","Bartolomé de las Casas"],"why":"Coronado led an expedition across the Southwest and the Great Plains."},
+    {"L":[1,2,3],"q":"Which Spanish priest spoke out against cruelty to Native people?","a":"Bartolomé de las Casas","w":["Hernán Cortés","Francisco Pizarro","Juan Ponce de León"],"why":"Las Casas wrote about the abuses he saw in the Caribbean."},
+    {"L":[1,2],"q":"What were Spanish missions?","a":"Religious settlements meant to convert Native people to Catholicism","w":["Forts built to keep the English out of Canada","Trading posts for fur","Schools for Spanish soldiers"],"why":"Missions spread across Florida, Texas, New Mexico and California."},
+    {"L":[2,3],"q":"In what year was St. Augustine, Florida, founded?","a":"1565","w":["1492","1607","1620","1513"],"why":"Pedro Menéndez de Avilés founded St. Augustine in 1565."},
+    {"L":[2,3],"q":"Which city in New Mexico, founded about 1610, is the oldest state capital in the United States?","a":"Santa Fe","w":["San Antonio","Los Angeles","St. Augustine","Tucson"],"why":"Santa Fe became the capital of Spanish New Mexico around 1610."},
     { L: [1, 2], q: 'Who led the Spanish conquest of the Aztec Empire?', a: 'Hernán Cortés', w: ['Francisco Pizarro', 'Christopher Columbus', 'John Smith', 'Juan de Oñate'], why: 'Cortés, with tens of thousands of Native allies, took the Aztec capital Tenochtitlan in 1521.' },
     { L: [1, 2], q: 'Who led the Spanish conquest of the Inca Empire?', a: 'Francisco Pizarro', w: ['Hernán Cortés', 'Bartolomé de las Casas', 'Pedro Menéndez de Avilés'], why: 'Pizarro captured the Inca ruler Atahualpa at Cajamarca in 1532.' },
     { L: [1, 2, 3], q: 'What was the oldest continuously occupied European-founded city in what is now the United States, founded by Spain in 1565?', a: 'St. Augustine, Florida', w: ['Jamestown, Virginia', 'Plymouth, Massachusetts', 'Santa Fe, New Mexico', 'New Amsterdam'], why: 'Pedro Menéndez de Avilés founded St. Augustine on September 8, 1565.' },
@@ -315,6 +328,13 @@
   ], 'Think Dutch New York and Quaker Pennsylvania.'));
 
   G('ush1.southern-colonies', bank([
+    {"L":[1,2,3],"q":"What was the first permanent English settlement in North America, founded in 1607?","a":"Jamestown","w":["Plymouth","St. Augustine","Roanoke","Boston"],"why":"Jamestown, Virginia, was founded in 1607."},
+    {"L":[1,2,3],"q":"Which crop became Virginia's great cash crop in the 1600s?","a":"tobacco","w":["cotton","rice","wheat","sugar"],"why":"John Rolfe grew a sweeter tobacco, and it became Virginia's chief export."},
+    {"L":[1,2,3],"q":"Who founded the colony of Georgia?","a":"James Oglethorpe","w":["Lord Baltimore","William Penn","John Smith","Roger Williams"],"why":"Oglethorpe and his fellow trustees founded Georgia in 1732–1733."},
+    {"L":[1,2,3],"q":"Who founded Maryland as a refuge for Catholics?","a":"Lord Baltimore (the Calvert family)","w":["William Penn","James Oglethorpe","Roger Williams","John Winthrop"],"why":"Cecil Calvert, Lord Baltimore, received the charter for Maryland."},
+    {"L":[1,2,3],"q":"What was Virginia's House of Burgesses, first held in 1619?","a":"the first elected assembly in the English colonies","w":["a court for trying pirates","a church council","the royal governor's mansion"],"why":"Its members were elected by the colonists."},
+    {"L":[1,2,3],"q":"What were indentured servants?","a":"Workers who agreed to labor for a set number of years in return for passage to America","w":["Enslaved people held for life","Royal officials sent from London","Soldiers paid by the colony"],"why":"Many early Virginia colonists came as indentured servants."},
+    {"L":[2,3],"q":"Which city was the main port of colonial South Carolina?","a":"Charles Town (Charleston)","w":["Savannah","Baltimore","Jamestown","Philadelphia"],"why":"Charles Town shipped the colony's rice and indigo."},
     { L: [1, 2], q: 'Which colony was founded in 1634 as a refuge for English Catholics?', a: 'Maryland', w: ['Pennsylvania', 'Georgia', 'Rhode Island', 'Virginia'], why: 'The Calvert family (Lords Baltimore) founded Maryland as a haven for Catholics.' },
     { L: [1, 2], q: 'Which was the last of the thirteen colonies, chartered in 1732?', a: 'Georgia', w: ['Pennsylvania', 'Maryland', 'North Carolina', 'New York'], why: 'Georgia was chartered in 1732 for trustees led by James Oglethorpe; Savannah was founded in 1733.' },
     { L: [1, 2, 3], q: 'Which two crops made South Carolina\'s planters rich?', a: 'Rice and indigo', w: ['Wheat and corn', 'Cotton and tobacco', 'Sugar and coffee'], why: 'Rice, and indigo for blue dye, grew on lowcountry plantations worked by enslaved Africans.' },
@@ -342,6 +362,10 @@
   ], 'Tie each region to its land, climate and settlers.'));
 
   G('ush1.colonial-slavery', bank([
+    {"L":[1,2,3],"q":"In what year did the first recorded Africans arrive in English Virginia?","a":"1619","w":["1492","1565","1700","1776"],"why":"In 1619 about twenty Africans were brought to Point Comfort, Virginia."},
+    {"L":[1,2,3],"q":"What were slave codes?","a":"Laws that took away the rights of enslaved people and gave owners power over them","w":["Laws that freed enslaved people after seven years","Rules that set wages for enslaved workers","Laws that let enslaved people vote"],"why":"Colonies passed slave codes in the late 1600s and 1700s."},
+    {"L":[1,2],"q":"Which crops did enslaved people grow on large plantations in the Southern colonies?","a":"tobacco, rice and indigo","w":["wheat, oats and rye","apples and maple syrup","potatoes and cranberries"],"why":"Tobacco in the Chesapeake; rice and indigo in South Carolina and Georgia."},
+    {"L":[2,3],"q":"Which colony had a Black majority for much of the 1700s?","a":"South Carolina","w":["Massachusetts","Pennsylvania","New York","Connecticut"],"why":"South Carolina's rice plantations relied on large numbers of enslaved Africans."},
     { L: [1, 2], q: 'What was the Middle Passage?', a: 'The voyage that carried enslaved Africans across the Atlantic to the Americas', w: ['A road from Virginia to Pennsylvania', 'A river route through the Middle colonies', 'A treaty between England and Spain'], why: 'Captives were chained below deck for weeks; between one and two in every ten died on the way.' },
     { L: [1, 2], q: 'In how many of the thirteen colonies was slavery legal?', a: 'All thirteen', w: ['Only the five Southern colonies', 'Only Virginia', 'None before 1776'], why: 'Slavery was legal in every colony; it was largest in the South.' },
     { L: [1, 2, 3], q: 'What was the Stono Rebellion (1739)?', a: 'A revolt of enslaved people in South Carolina who marched toward Spanish Florida', w: ['A tax protest in Boston', 'A war between Virginia and the Powhatan', 'A strike by indentured servants in Maryland'], why: 'About twenty enslaved men seized guns near the Stono River and marched south, gathering others, before the militia defeated them.' },
@@ -355,6 +379,11 @@
   ], 'Think about how the laws changed step by step.'));
 
   G('ush1.colonial-conflicts', bank([
+    {"L":[1,2,3],"q":"What did the English call the Wampanoag leader Metacom?","a":"King Philip","w":["King George","Powhatan","Pontiac","Tecumseh"],"why":"The war of 1675 to 1676 is named King Philip's War after him."},
+    {"L":[1,2,3],"q":"Who led the Pueblo Revolt of 1680?","a":"Popé","w":["Metacom","Pontiac","Tecumseh","Squanto"],"why":"Popé, a Tewa leader, organized the revolt."},
+    {"L":[1,2,3],"q":"In which colony did Bacon's Rebellion take place in 1676?","a":"Virginia","w":["Massachusetts","New Mexico","Pennsylvania","Georgia"],"why":"Nathaniel Bacon led the uprising against Governor Berkeley."},
+    {"L":[1,2,3],"q":"King Philip's War was fought mainly in which region?","a":"New England","w":["the Chesapeake","New Mexico","the Carolinas","the Ohio Valley"],"why":"It was fought across New England in 1675 and 1676."},
+    {"L":[1,2],"q":"Who led the 1676 uprising against Virginia's governor?","a":"Nathaniel Bacon","w":["William Berkeley","John Smith","Metacom","John Rolfe"],"why":"Bacon's Rebellion is named for him."},
     { L: [1, 2], q: 'Who led the Native coalition in King Philip\'s War (1675 to 1676)?', a: 'Metacom, a Wampanoag leader', w: ['Massasoit', 'Popé', 'Nathaniel Bacon', 'Opechancanough'], why: 'Metacom, son of Massasoit, was called "King Philip" by the English.' },
     { L: [1, 2], q: 'What did the Pueblo Revolt of 1680 achieve?', a: 'It drove the Spanish out of New Mexico for twelve years.', w: ['It ended the encomienda in Mexico.', 'It forced England out of Virginia.', 'It created the Haudenosaunee Confederacy.'], why: 'Led by Popé, the Pueblo peoples drove the Spanish from Santa Fe; Spain returned in 1692.' },
     { L: [1, 2, 3], q: 'Bacon\'s Rebellion (1676) was an uprising against whom?', a: 'Virginia\'s governor, William Berkeley', w: ['The Spanish in Florida', 'The Pequot nation', 'King George III'], why: 'Frontier settlers led by Nathaniel Bacon rose against Berkeley, who would not wage war on Native peoples to open land; they burned Jamestown.' },
@@ -367,6 +396,9 @@
   ], 'Name who fought whom, and why.'));
 
   G('ush1.mercantilism', bank([
+    {"L":[1,2,3],"q":"Under mercantilism, colonies supplied raw materials and bought…","a":"manufactured goods from the mother country","w":["goods only from other colonies","nothing at all from abroad","goods mainly from France and Spain"],"why":"Colonies were meant to supply raw materials and buy the home country's goods."},
+    {"L":[1,2,3],"q":"Mercantilists measured a nation's wealth mainly by its…","a":"gold and silver","w":["number of farms","population","railroads","factories"],"why":"They believed a nation grew rich by piling up gold and silver through trade."},
+    {"L":[1,2],"q":"How did many colonial merchants get around the Navigation Acts?","a":"By smuggling","w":["By building their own navy","By asking Parliament for a vote","By trading only with Britain"],"why":"Smuggling was common, especially of molasses from the French West Indies."},
     { L: [1, 2], q: 'Under mercantilism, what was the main purpose of colonies?', a: 'To make the mother country rich', w: ['To become independent nations', 'To trade freely with any country', 'To grow food only for themselves'], why: 'Colonies supplied raw materials and bought the mother country\'s goods, helping its balance of trade.' },
     { L: [1, 2, 3], q: 'What did the Navigation Acts (from 1651) require?', a: 'Colonial trade had to travel in English ships, and key goods could go only to England or its colonies.', w: ['Colonists could trade freely with any nation.', 'Colonists paid a tax on every newspaper.', 'All colonial ships had to be built in Spain.'], why: 'The acts kept trade and shipping profits inside the empire; "enumerated" goods such as tobacco could go only to England.' },
     { L: [1, 2], q: 'What is a favorable balance of trade?', a: 'Selling more to other countries than you buy from them', w: ['Buying more than you sell', 'Trading only with colonies', 'Charging no taxes on trade'], why: 'Mercantilists wanted exports to exceed imports, bringing gold and silver into the country.' },
@@ -400,6 +432,13 @@
   ], 'Think about assemblies and who voted the taxes.'));
   /* ===================================================================== Unit 4: The American Revolution */
   G('ush1.french-and-indian-war', bank([
+    {"L":[1,2,3],"q":"Which young Virginia officer fought in the first battles of the French and Indian War in 1754?","a":"George Washington","w":["Benjamin Franklin","Thomas Jefferson","Patrick Henry","John Adams"],"why":"Washington fought at Fort Necessity in 1754."},
+    {"L":[1,2,3],"q":"Which treaty ended the French and Indian War?","a":"the Treaty of Paris (1763)","w":["the Treaty of Ghent","the Treaty of Paris (1783)","the Treaty of Versailles","the Treaty of Guadalupe Hidalgo"],"why":"The Treaty of Paris of 1763 gave Britain Canada and the land east of the Mississippi."},
+    {"L":[1,2,3],"q":"Which side won the French and Indian War?","a":"Britain","w":["France","Spain","the Netherlands"],"why":"Britain won and took over France's lands in North America east of the Mississippi."},
+    {"L":[1,2,3],"q":"Which plan, proposed by Benjamin Franklin in 1754, called for the colonies to unite?","a":"the Albany Plan of Union","w":["the Virginia Plan","the Anaconda Plan","the Northwest Ordinance","the Olive Branch Petition"],"why":"The colonies did not adopt it, but it was an early idea of union."},
+    {"L":[1,2,3],"q":"Why did Britain start taxing the colonies after 1763?","a":"To help pay the large debt from the war","w":["To pay for a war with Mexico","To build railroads","To fund the Continental Army"],"why":"The war had doubled Britain's national debt."},
+    {"L":[2,3],"q":"Which French city did the British capture in 1759 in a key battle of the war?","a":"Quebec","w":["Montreal","New Orleans","Boston","Pittsburgh"],"why":"British forces under James Wolfe took Quebec in 1759."},
+    {"L":[2,3],"q":"Who led Native nations in a 1763 war against the British after the French and Indian War?","a":"Pontiac","w":["Metacom","Popé","Tecumseh","Sequoyah"],"why":"Pontiac, an Odawa leader, led the uprising known as Pontiac's War."},
     { L: [1, 2], q: 'Which two powers fought the French and Indian War (1754 to 1763) for control of North America?', a: 'Britain and France', w: ['Britain and Spain', 'France and the Haudenosaunee', 'The colonies and Britain', 'Spain and Portugal'], why: 'Britain and France, each with Native allies, fought for North America; in Europe it was part of the Seven Years\' War.' },
     { L: [1, 2, 3], q: 'What did the Proclamation of 1763 do?', a: 'It banned colonial settlement west of the Appalachian Mountains.', w: ['It taxed paper in the colonies.', 'It declared American independence.', 'It gave Canada back to France.'], why: 'King George III closed the western lands to settlers, partly to keep peace with Native nations after Pontiac\'s War.' },
     { L: [1, 2], q: 'Why is it called the "French and Indian War"?', a: 'British colonists named it for their enemies: the French and their Native allies.', w: ['It was fought between France and Native nations.', 'It was fought in India.', 'Only Native nations fought in it.'], why: 'The name comes from the British colonists\' enemies; many Native nations fought on both sides.' },
@@ -426,6 +465,12 @@
 
   var ROAD = [['Boston Massacre', 1770], ['Tea Act', 1773, 'May 1773'], ['Boston Tea Party', 1773.9, 'December 1773'], ['Coercive (Intolerable) Acts', 1774, 'spring 1774'], ['First Continental Congress', 1774.7, 'September 1774'], ['Lexington and Concord', 1775]];
   G('ush1.road-to-revolution', bank([
+    {"L":[1,2,3],"q":"Which 1765 law taxed newspapers, legal papers and playing cards?","a":"the Stamp Act","w":["the Sugar Act","the Tea Act","the Townshend Acts","the Quartering Act"],"why":"The Stamp Act required stamps on printed papers."},
+    {"L":[1,2,3],"q":"Which slogan summed up the colonists' complaint about British taxes?","a":"\"No taxation without representation\"","w":["\"Give me liberty or give me death\"","\"Remember the Alamo\"","\"Fifty-four forty or fight\""],"why":"Colonists had no members in Parliament, which taxed them."},
+    {"L":[1,2,3],"q":"What happened at the Boston Massacre on March 5, 1770?","a":"British soldiers fired into a crowd, killing five colonists","w":["Colonists dumped tea into the harbor","The first battle of the Revolution was fought","The Declaration of Independence was read aloud"],"why":"Five colonists died, including Crispus Attucks."},
+    {"L":[1,2,3],"q":"Which 1767 laws taxed glass, lead, paint, paper and tea?","a":"the Townshend Acts","w":["the Stamp Act","the Sugar Act","the Coercive Acts","the Navigation Acts"],"why":"The Townshend Acts taxed imported goods."},
+    {"L":[1,2,3],"q":"Which meeting of colonial delegates gathered in Philadelphia in 1774?","a":"the First Continental Congress","w":["the Constitutional Convention","the Albany Congress","the Second Continental Congress"],"why":"It met in September 1774 in response to the Coercive Acts."},
+    {"L":[2,3],"q":"Which secret group organized protests such as the Boston Tea Party?","a":"the Sons of Liberty","w":["the Minutemen","the Loyalists","the Federalists","the Committees of Safety"],"why":"The Sons of Liberty formed during the Stamp Act protests."},
     { L: [1, 2, 3], gen: function (R, lv) { return orderQ(R, lv === 1 ? ROAD.slice(0, 5) : ROAD, lv === 1 ? 3 : lv === 2 ? 4 : 5); } },
     { L: [1, 2], q: 'What happened at the Boston Tea Party (December 16, 1773)?', a: 'Colonists dumped 342 chests of East India Company tea into Boston Harbor.', w: ['British soldiers fired on a crowd.', 'Delegates from twelve colonies met in Philadelphia.', 'Colonists and British troops fought at Concord.'], why: 'Protesting the tea tax and the company\'s monopoly, colonists destroyed the tea.' },
     { L: [1, 2], q: 'What were the Coercive Acts of 1774, called the "Intolerable Acts" by colonists?', a: 'Laws punishing Massachusetts, including closing the port of Boston', w: ['Laws repealing all taxes', 'The first taxes on tea', 'Laws giving the colonies seats in Parliament'], why: 'Parliament closed Boston\'s port until the tea was paid for and tightened royal control of Massachusetts.' },
@@ -438,6 +483,11 @@
   ], 'Each step answered the one before.'));
 
   G('ush1.war-begins', bank([
+    {"L":[1,2,3],"q":"Who rode out to warn that British troops were coming on the night of April 18, 1775?","a":"Paul Revere and William Dawes","w":["George Washington and John Adams","Thomas Paine and Patrick Henry","Benedict Arnold and Ethan Allen"],"why":"Revere and Dawes rode to warn Lexington."},
+    {"L":[1,2,3],"q":"Which battle near Boston in June 1775 showed that colonists could stand against British regulars?","a":"Bunker Hill (Breed's Hill)","w":["Saratoga","Yorktown","Trenton","Brandywine"],"why":"The British took the hill but lost over a thousand men."},
+    {"L":[1,2,3],"q":"Who wrote most of the Declaration of Independence?","a":"Thomas Jefferson","w":["John Adams","Benjamin Franklin","George Washington","Thomas Paine"],"why":"Jefferson drafted it for a committee of five."},
+    {"L":[1,2,3],"q":"On what date did Congress approve the Declaration of Independence?","a":"July 4, 1776","w":["April 19, 1775","September 17, 1787","June 17, 1775","September 3, 1783"],"why":"Congress adopted the Declaration on July 4, 1776."},
+    {"L":[2,3],"q":"What was the Olive Branch Petition of 1775?","a":"A last appeal by Congress to King George III for peace","w":["A declaration of war on Britain","A plan for a new constitution","A treaty with France"],"why":"The king refused to read it."},
     { L: [1, 2], q: 'Where did the fighting of the American Revolution begin, on April 19, 1775?', a: 'Lexington and Concord, Massachusetts', w: ['Yorktown, Virginia', 'Saratoga, New York', 'Philadelphia, Pennsylvania', 'Trenton, New Jersey'], why: 'British troops marched to seize militia supplies at Concord; shots were fired at Lexington and Concord.' },
     { L: [1, 2], q: 'Whom did the Second Continental Congress name commander of the Continental Army in June 1775?', a: 'George Washington', w: ['Benjamin Franklin', 'John Adams', 'Thomas Jefferson'], why: 'Congress chose Washington, a Virginian with experience from the French and Indian War.' },
     { L: [1, 2, 3], q: 'What did Thomas Paine argue in Common Sense (January 1776)?', a: 'That the colonies should declare full independence from Britain', w: ['That the colonies should reconcile with the King', 'That the Stamp Act should be repealed', 'That Britain should tax the colonies more'], why: 'Paine attacked monarchy itself and argued "\'tis time to part."' },
@@ -463,6 +513,10 @@
   ], 'Theory, grievances, conclusion.'));
 
   G('ush1.loyalists-patriots', bank([
+    {"L":[1,2,3],"q":"What was a Patriot?","a":"A colonist who supported independence","w":["A colonist who stayed loyal to Britain","A British soldier","A German soldier hired by Britain"],"why":"Patriots supported the Revolution."},
+    {"L":[1,2,3],"q":"Where did many Loyalists go after the war?","a":"Canada and Britain","w":["Mexico","Spain","Louisiana"],"why":"Tens of thousands left, many for Canada."},
+    {"L":[1,2,3],"q":"What did many Patriots call Loyalists?","a":"Tories","w":["Whigs","Minutemen","Redcoats","Hessians"],"why":"Loyalists were often called Tories; Patriots were sometimes called Whigs."},
+    {"L":[2,3],"q":"Which Patriot leader's son, William, the royal governor of New Jersey, stayed a Loyalist?","a":"Benjamin Franklin","w":["John Adams","Samuel Adams","Patrick Henry","George Washington"],"why":"The war split even the Franklin family."},
     { L: [1, 2], q: 'What was a Loyalist?', a: 'A colonist who stayed loyal to Britain', w: ['A colonist who supported independence', 'A French soldier who fought for the Americans', 'A member of Parliament'], why: 'Loyalists (Tories) remained loyal to the King; Patriots supported independence.' },
     { L: [1, 2, 3], q: 'About what share of white colonists do historians estimate were Loyalists?', a: 'About 15 to 20 percent', w: ['Almost none', 'About 90 percent', 'Exactly half'], why: 'Historians estimate roughly 15 to 20 percent, with many others trying to stay neutral.' },
     { L: [1, 2], q: 'What did Dunmore\'s Proclamation (November 1775) offer?', a: 'Freedom to enslaved people of rebel owners who joined the British forces', w: ['Land to Patriots who left the army', 'An end to all taxes', 'Freedom to all enslaved people in America'], why: 'Lord Dunmore, Virginia\'s royal governor, offered freedom to those "appertaining to Rebels" who would bear arms for the King.' },
@@ -475,6 +529,11 @@
 
   var WAR = [['Battle of Trenton', 1776, 'December 1776'], ['Battle of Saratoga', 1777, 'October 1777'], ['Winter at Valley Forge', 1777.95, 'winter 1777 to 1778'], ['Treaty of Alliance with France', 1778.1, 'February 1778'], ['British capture Charleston', 1780], ['Battle of Cowpens', 1781.05, 'January 1781'], ['British surrender at Yorktown', 1781.8, 'October 1781']];
   G('ush1.revolutionary-war', bank([
+    {"L":[1,2,3],"q":"Which country became the most important ally of the United States in the Revolution?","a":"France","w":["Spain","the Netherlands","Russia","Prussia"],"why":"France signed a treaty of alliance in 1778."},
+    {"L":[1,2,3],"q":"Where did Washington win a surprise victory after crossing the Delaware River on December 26, 1776?","a":"Trenton, New Jersey","w":["Yorktown, Virginia","Saratoga, New York","Boston, Massachusetts","Charleston, South Carolina"],"why":"Washington attacked the Hessian garrison at Trenton."},
+    {"L":[1,2,3],"q":"Who were the Hessians?","a":"German soldiers hired by Britain","w":["French soldiers sent to help America","Colonists loyal to Britain","Native allies of the Patriots"],"why":"Many came from Hesse-Kassel."},
+    {"L":[1,2,3],"q":"Which French noble became a major general in the Continental Army?","a":"the Marquis de Lafayette","w":["Baron von Steuben","Lord Cornwallis","Count Rochambeau"],"why":"Lafayette joined the army in 1777 at age 19."},
+    {"L":[2,3],"q":"Which Prussian officer drilled the Continental Army at Valley Forge?","a":"Baron von Steuben","w":["the Marquis de Lafayette","Lord Cornwallis","John Burgoyne"],"why":"Von Steuben trained the army in the winter of 1777–1778."},
     { L: [1, 2], q: 'Which American victory in 1777 convinced France to join the war?', a: 'Saratoga', w: ['Yorktown', 'Lexington', 'Bunker Hill', 'Trenton'], why: 'Burgoyne\'s surrender at Saratoga (October 17, 1777) led to the Treaty of Alliance with France in February 1778.' },
     { L: [1, 2, 3], q: 'Where did the British army under Cornwallis surrender in October 1781?', a: 'Yorktown, Virginia', w: ['Saratoga, New York', 'Boston, Massachusetts', 'Charleston, South Carolina'], why: 'American and French forces besieged Yorktown while a French fleet blocked the sea; Cornwallis surrendered on October 19, 1781.' },
     { L: [1, 2], q: 'Where did the Continental Army spend the hard winter of 1777 to 1778?', a: 'Valley Forge, Pennsylvania', w: ['Yorktown, Virginia', 'Lexington, Massachusetts', 'Trenton, New Jersey'], why: 'At Valley Forge many soldiers died of disease, and von Steuben drilled the army.' },
@@ -487,6 +546,10 @@
   ], 'Survive, win key fights, and gain allies.'));
 
   G('ush1.treaty-of-paris-1783', bank([
+    {"L":[1,2,3],"q":"Which three Americans negotiated the Treaty of Paris (1783)?","a":"Benjamin Franklin, John Adams and John Jay","w":["George Washington, Thomas Jefferson and James Madison","Patrick Henry, Samuel Adams and John Hancock","Alexander Hamilton, James Monroe and Aaron Burr"],"why":"Franklin, Adams and Jay negotiated with Britain."},
+    {"L":[1,2],"q":"Which war did the Treaty of Paris of 1783 end?","a":"the American Revolutionary War","w":["the French and Indian War","the War of 1812","the Mexican-American War"],"why":"It ended the Revolution and recognized independence."},
+    {"L":[1,2],"q":"In which city was the treaty that ended the Revolutionary War signed?","a":"Paris","w":["London","Philadelphia","Ghent","Madrid"],"why":"It was signed in Paris on September 3, 1783."},
+    {"L":[2,3],"q":"Which country got Florida back from Britain in the treaties of 1783?","a":"Spain","w":["France","the United States","the Netherlands"],"why":"Britain returned Florida to Spain."},
     { L: [1, 2], gen: function (R, lv) { return lv === 1 ? { q: 'In what year did the Treaty of Paris end the Revolutionary War?', a: '1783', w: ['1776', '1781', '1763'], why: 'The treaty was signed on September 3, 1783.' } : yearQ(R, lv, 'In what year was the Treaty of Paris that ended the Revolutionary War signed?', 1783, 'It was signed on September 3, 1783, two years after Yorktown (1781).', [1, 2, 7, 20]); } },
     { L: [1, 2, 3], q: 'Which river became the western border of the United States in 1783?', a: 'The Mississippi River', w: ['The Ohio River', 'The Hudson River', 'The Rio Grande', 'The Missouri River'], why: 'Britain gave up the land as far west as the Mississippi.', viz: { name: 'cv-map', opts: { mode: 'territory', year: 1783, quiet: true, interactive: false } } },
     { L: [1, 2], q: 'What did Britain do in Article 1 of the Treaty of Paris (1783)?', a: 'Recognized the United States as free, sovereign and independent', w: ['Gave Canada to the United States', 'Kept control of the colonies\' trade', 'Returned Florida to France'], why: 'The King "acknowledges the said United States … to be free, sovereign and independent States."' },
@@ -499,6 +562,10 @@
   ], 'Yorktown was 1781; peace came two years later.'));
 
   G('ush1.revolution-changes', bank([
+    {"L":[1,2,3],"q":"What did many of the new state constitutions after 1776 include?","a":"a declaration or bill of rights","w":["a king or queen","an official national church","rule by Parliament"],"why":"Virginia's Declaration of Rights (1776) was an early example."},
+    {"L":[1,2,3],"q":"Who wrote to her husband asking Congress to \"remember the ladies\"?","a":"Abigail Adams","w":["Martha Washington","Dolley Madison","Elizabeth Cady Stanton","Mercy Otis Warren"],"why":"She wrote to John Adams in March 1776."},
+    {"L":[2,3],"q":"Which state ended slavery through court rulings in the 1780s?","a":"Massachusetts","w":["Virginia","South Carolina","Georgia","Maryland"],"why":"Court cases under the 1780 state constitution ended slavery there."},
+    {"L":[2,3],"q":"Which 1787 law banned slavery in the Northwest Territory?","a":"the Northwest Ordinance","w":["the Missouri Compromise","the Land Ordinance of 1785","the Articles of Confederation"],"why":"The ordinance barred slavery north of the Ohio River."},
     { L: [1, 2], q: 'Which state passed the first law to begin ending slavery, in 1780?', a: 'Pennsylvania', w: ['Virginia', 'South Carolina', 'Georgia', 'New York'], why: 'Pennsylvania\'s Gradual Abolition Act of March 1, 1780, was the first such law in the United States.' },
     { L: [1, 2, 3], q: 'What did Virginia\'s Statute for Religious Freedom (1786) do?', a: 'It ended forced support for any church and protected freedom of belief.', w: ['It made the Church of England Virginia\'s official church.', 'It banned all churches in Virginia.', 'It required everyone to attend church.'], why: 'Drafted by Jefferson and passed with Madison\'s help, it said no one could be forced to support or attend a church.' },
     { L: [1, 2], q: 'After the Revolution, could most American women vote?', a: 'No; voting stayed mostly limited to men who owned property.', w: ['Yes, in every state', 'Yes, but only in the South'], why: 'Voting remained mostly limited to men with property: an example of continuity.' },
@@ -627,6 +694,12 @@
   ], 'Remember the big weakness: Congress could ask the states for money but could not tax.'));
 
   G('ush1.northwest-ordinance', fromBank([
+    {"L":[1,2,3],"q":"Which present-day state was not formed from the Northwest Territory?","a":"Kentucky","w":["Ohio","Indiana","Illinois","Michigan","Wisconsin"],"why":"Ohio, Indiana, Illinois, Michigan, Wisconsin and part of Minnesota came from it; Kentucky lies south of the Ohio River."},
+    {"L":[1,2,3],"q":"How many square miles was a township under the Land Ordinance of 1785?","a":"36","w":["1","6","100","640"],"why":"Six miles by six miles makes 36 square miles, in 36 sections."},
+    {"L":[1,2,3],"q":"Under the Land Ordinance of 1785, one section of each township was set aside to support…","a":"public schools","w":["a church","an army fort","the governor","a railroad"],"why":"Section 16 of each township was reserved for schools."},
+    {"L":[1,2,3],"q":"Which was the first state formed from the Northwest Territory?","a":"Ohio","w":["Indiana","Illinois","Michigan","Wisconsin"],"why":"Ohio became a state in 1803."},
+    {"L":[1,2,3],"q":"Under which government were the Land Ordinance and the Northwest Ordinance passed?","a":"the Articles of Confederation","w":["the Constitution","the British Parliament","the State of Virginia"],"why":"Both were passed by the Confederation Congress."},
+    {"L":[2,3],"q":"How many free inhabitants did a territory need before it could ask to become a state?","a":"60,000","w":["5,000","20,000","100,000","1,000,000"],"why":"The Northwest Ordinance set 60,000 free inhabitants."},
     { L: [1, 2], q: 'The Land Ordinance of 1785 divided western land into townships of what shape and size?', a: 'Squares six miles on a side', w: ['Circles around each town', 'Strips along the rivers', 'Squares one hundred miles on a side'], why: 'Townships were six miles square, each cut into 36 sections of one square mile.' },
     { L: [1, 2], q: 'How did the Northwest Ordinance say new states would join the Union?', a: 'On an equal footing with the original states', w: ['As colonies of the original states', 'With half as many votes as the original states', 'Only if every original state agreed'], why: 'Article 5: new states are admitted "on an equal footing with the original States in all respects whatever."' },
     { L: [1, 2], q: 'What did the Northwest Ordinance do about slavery in the Northwest Territory?', a: 'It banned slavery there', w: ['It allowed slavery everywhere there', 'It let each settler decide', 'It said nothing about slavery'], why: 'Article 6: "There shall be neither slavery nor involuntary servitude in the said territory."' },
@@ -679,6 +752,10 @@
 
   var RAT = [['Delaware', 1], ['Pennsylvania', 2], ['New Jersey', 3], ['Georgia', 4], ['Connecticut', 5], ['Massachusetts', 6], ['Maryland', 7], ['South Carolina', 8], ['New Hampshire', 9], ['Virginia', 10], ['New York', 11], ['North Carolina', 12], ['Rhode Island', 13]];
   G('ush1.ratification-debate', fromBank([
+    {"L":[1,2,3],"q":"Who were the Anti-Federalists?","a":"Opponents of ratifying the Constitution as written","w":["Supporters of the new Constitution","Loyalists who wanted British rule","Members of the Supreme Court"],"why":"They feared a strong central government and wanted a bill of rights."},
+    {"L":[1,2,3],"q":"Which state was the first to ratify the Constitution?","a":"Delaware","w":["Virginia","Rhode Island","New York","Massachusetts"],"why":"Delaware ratified on December 7, 1787."},
+    {"L":[1,2,3],"q":"Which state was the last of the original thirteen to ratify?","a":"Rhode Island","w":["Delaware","North Carolina","New York","Georgia"],"why":"Rhode Island ratified in May 1790."},
+    {"L":[2,3],"q":"Which Virginian led the opposition to ratification at Virginia's convention?","a":"Patrick Henry","w":["James Madison","George Washington","John Marshall","Thomas Jefferson"],"why":"Patrick Henry argued against ratification in 1788."},
     { L: [1, 2], q: 'Who wrote The Federalist essays?', a: 'Alexander Hamilton, James Madison and John Jay', w: ['Thomas Jefferson and John Adams', 'Patrick Henry and George Mason', 'Benjamin Franklin alone'], why: 'They wrote 85 essays under the shared pen name "Publius."' },
     { L: [1, 2], q: 'What did the Anti-Federalists most want added to the Constitution?', a: 'A bill of rights', w: ['A king', 'A stronger President', 'An end to the Senate'], why: 'Mason\'s first objection: "There is no declaration of rights." Their push led to the Bill of Rights (1791).' },
     { L: [1, 2], q: 'What pen name did the authors of The Federalist share?', text: ['Publius'], why: 'All 85 essays were signed "Publius."' },
@@ -794,6 +871,9 @@
   ], 'Think about the Mississippi River and the port at its mouth.'));
 
   G('ush1.marshall-court', fromBank([
+    {"L":[1,2,3],"q":"In what year was Marbury v. Madison decided?","a":"1803","w":["1787","1819","1824","1857"],"why":"Marbury v. Madison was decided in 1803."},
+    {"L":[1,2,3],"q":"Which case held that a state may not tax the national bank?","a":"McCulloch v. Maryland","w":["Marbury v. Madison","Gibbons v. Ogden","Dred Scott v. Sandford"],"why":"McCulloch (1819): \"the power to tax involves the power to destroy.\""},
+    {"L":[1,2,3],"q":"Marshall's major rulings mostly strengthened…","a":"the national government and the Supreme Court","w":["the power of the states over the nation","the power of the President over Congress","the British Crown"],"why":"Marbury, McCulloch and Gibbons all built up national and judicial power."},
     { L: [1, 2], q: 'Which case established judicial review, the Court\'s power to refuse to enforce a law that conflicts with the Constitution?', a: 'Marbury v. Madison', w: ['McCulloch v. Maryland', 'Gibbons v. Ogden', 'Dred Scott v. Sandford'], why: 'Marbury v. Madison (1803).' },
     { L: [1, 2], q: 'Who was Chief Justice from 1801 to 1835?', a: 'John Marshall', w: ['John Jay', 'Roger Taney', 'Thomas Jefferson'], why: 'John Marshall, the longest-serving Chief Justice. Roger Taney followed him.' },
     { L: [1, 2], q: 'McCulloch v. Maryland (1819) upheld what?', a: 'A national bank chartered by Congress', w: ['A state monopoly on steamboats', 'A state law banning the bank', 'The Sedition Act'], why: 'Congress could charter the bank under the Necessary and Proper Clause, and Maryland could not tax it.' },
@@ -812,6 +892,11 @@
   ], 'Match the case to its subject: a judge\'s commission, a bank, or steamboats.'));
 
   G('ush1.war-of-1812', fromBank([
+    {"L":[1,2,3],"q":"Which American general won the Battle of New Orleans in January 1815?","a":"Andrew Jackson","w":["William Henry Harrison","Winfield Scott","Zachary Taylor","Ulysses S. Grant"],"why":"Jackson's victory came after the peace treaty was signed but before the news arrived."},
+    {"L":[1,2,3],"q":"Which song did Francis Scott Key write during the bombardment of Fort McHenry in 1814?","a":"\"The Star-Spangled Banner\"","w":["\"Yankee Doodle\"","\"America the Beautiful\"","\"My Country, 'Tis of Thee\""],"why":"It became the national anthem in 1931."},
+    {"L":[1,2,3],"q":"Who was President during the War of 1812?","a":"James Madison","w":["Thomas Jefferson","John Adams","James Monroe","Andrew Jackson"],"why":"Madison asked Congress to declare war in June 1812."},
+    {"L":[1,2,3],"q":"Which Shawnee leader built a confederacy to resist American expansion and allied with Britain?","a":"Tecumseh","w":["Pontiac","Metacom","Sequoyah","Black Hawk"],"why":"Tecumseh was killed at the Battle of the Thames in 1813."},
+    {"L":[2,3],"q":"Which American ship, nicknamed \"Old Ironsides,\" won fame in the war?","a":"the USS Constitution","w":["the USS Maine","the Monitor","the Mayflower"],"why":"The Constitution defeated several British ships."},
     { L: [1, 2], q: 'Which country did the United States fight in the War of 1812?', a: 'Britain', w: ['France', 'Spain', 'Mexico'], why: 'The U.S. declared war on Britain in June 1812.' },
     { L: [1, 2], q: 'What was impressment?', a: 'The British navy forcing sailors off American ships to serve', w: ['A tax on American tea', 'Paying soldiers with land', 'A ban on American cotton'], why: 'Impressment was one of the main causes of the war.' },
     { L: [1, 2], q: 'Which treaty ended the War of 1812?', a: 'The Treaty of Ghent', w: ['The Treaty of Paris', 'The Treaty of Guadalupe Hidalgo', 'The Jay Treaty'], why: 'Signed December 24, 1814, it restored the prewar borders.' },
@@ -880,6 +965,11 @@
   ], 'Ask "democracy for whom?" and think about Jackson\'s three big fights: the Bank, South Carolina and removal.'));
 
   G('ush1.indian-removal', fromBank([
+    {"L":[1,2,3],"q":"In what year was the Indian Removal Act passed?","a":"1830","w":["1803","1819","1848","1865"],"why":"Congress passed it in 1830."},
+    {"L":[1,2,3],"q":"Which five southeastern nations were forced west in the removals of the 1830s?","a":"the Cherokee, Chickasaw, Choctaw, Creek (Muscogee) and Seminole","w":["the Lakota, Cheyenne, Arapaho, Crow and Pawnee","the Mohawk, Oneida, Onondaga, Cayuga and Seneca","the Navajo, Apache, Hopi, Zuni and Ute"],"why":"All five were moved to Indian Territory."},
+    {"L":[1,2,3],"q":"Which 1832 case held that Georgia's laws had no force on Cherokee land?","a":"Worcester v. Georgia","w":["Marbury v. Madison","McCulloch v. Maryland","Gibbons v. Ogden"],"why":"Georgia ignored the ruling, and removal went ahead."},
+    {"L":[2,3],"q":"Which Cherokee leader fought removal in the courts and in Washington?","a":"John Ross","w":["Tecumseh","Osceola","Sequoyah","Black Hawk"],"why":"John Ross was principal chief of the Cherokee Nation."},
+    {"L":[2,3],"q":"Which nation resisted removal from Florida in long wars?","a":"the Seminole","w":["the Cherokee","the Chickasaw","the Shawnee"],"why":"The Second Seminole War lasted from 1835 to 1842."},
     { L: [1, 2], q: 'What did the Indian Removal Act (1830) do?', a: 'Let the President trade western land for Native nations\' land in the East', w: ['Gave Native Americans U.S. citizenship', 'Protected Native land in Georgia forever', 'Ended all treaties with Native nations'], why: 'Signed May 28, 1830, it led to the forced removal of the southeastern nations.' },
     { L: [1, 2], q: 'What was the Trail of Tears?', a: 'The forced removal of the Cherokee to Indian Territory in 1838 and 1839', w: ['A trade route to Santa Fe', 'The path of Lewis and Clark', 'A route of the Underground Railroad'], why: 'About 16,000 Cherokee were forced west; thousands died.' },
     { L: [1, 2], q: 'Where were the southeastern nations forced to go?', a: 'Indian Territory, west of the Mississippi (later Oklahoma)', w: ['Canada', 'Florida', 'California'], why: 'Indian Territory later became most of Oklahoma.' },
@@ -931,6 +1021,10 @@
   ], 'Separate those who wanted slavery ended now from those who wanted only to stop its spread.'));
 
   G('ush1.seneca-falls', fromBank([
+    {"L":[1,2,3],"q":"In what year was the Seneca Falls Convention held?","a":"1848","w":["1776","1820","1865","1920"],"why":"It met on July 19 and 20, 1848."},
+    {"L":[1,2,3],"q":"The Declaration of Sentiments was modeled on…","a":"the Declaration of Independence","w":["the Constitution","the Bill of Rights","the Mayflower Compact"],"why":"It begins, \"We hold these truths to be self-evident: that all men and women are created equal.\""},
+    {"L":[1,2,3],"q":"Which demand at Seneca Falls was the most debated?","a":"the right to vote","w":["the right to own property","the right to attend college","the right to speak in public"],"why":"The voting resolution passed narrowly."},
+    {"L":[1,2,3],"q":"Which reformer worked with Elizabeth Cady Stanton for decades for woman suffrage?","a":"Susan B. Anthony","w":["Lucretia Mott","Sojourner Truth","Dolley Madison","Abigail Adams"],"why":"Stanton and Anthony met in 1851."},
     { L: [1, 2], q: 'Where was the first women\'s rights convention held in 1848?', a: 'Seneca Falls, New York', w: ['Philadelphia, Pennsylvania', 'Boston, Massachusetts', 'Washington, D.C.'], why: 'July 19 and 20, 1848, at Seneca Falls.' },
     { L: [1, 2], q: 'Which document did the Seneca Falls Convention adopt?', a: 'The Declaration of Sentiments', w: ['The Declaration of Independence', 'The Bill of Rights', 'The Monroe Doctrine'], why: 'Written mainly by Elizabeth Cady Stanton, it was modeled on the Declaration of Independence.' },
     { L: [1, 2], q: 'Which two women organized the Seneca Falls Convention?', a: 'Elizabeth Cady Stanton and Lucretia Mott', w: ['Harriet Tubman and Sojourner Truth', 'Dorothea Dix and Clara Barton', 'Susan B. Anthony and Harriet Beecher Stowe'], why: 'Stanton and Mott, with other local women. Anthony joined the movement a few years later.' },
@@ -1125,6 +1219,11 @@
   var U8L = [['First Bull Run', 1861], ['Antietam', 1862], ['Gettysburg', 1863], ['Atlanta falls', 1864], ['Appomattox', 1865], ['Reconstruction Acts', 1867], ['Johnson impeached', 1868], ['Fifteenth Amendment', 1870], ['Panic of 1873', 1873], ['Compromise of 1877', 1877]];
 
   G('ush1.two-sides', fromBank([
+    {"L":[1,2,3],"q":"Who was President of the Confederacy?","a":"Jefferson Davis","w":["Robert E. Lee","Abraham Lincoln","Stonewall Jackson","Alexander Stephens"],"why":"Jefferson Davis led the Confederate government."},
+    {"L":[1,2,3],"q":"Who was President of the United States during the Civil War?","a":"Abraham Lincoln","w":["Jefferson Davis","Andrew Johnson","Ulysses S. Grant","James Buchanan"],"why":"Lincoln took office in March 1861."},
+    {"L":[1,2,3],"q":"Where were the first shots of the Civil War fired, in April 1861?","a":"Fort Sumter, South Carolina","w":["Gettysburg, Pennsylvania","Bull Run, Virginia","Antietam, Maryland","Vicksburg, Mississippi"],"why":"Confederate guns fired on Fort Sumter on April 12, 1861."},
+    {"L":[1,2,3],"q":"What was the capital of the Confederacy for most of the war?","a":"Richmond, Virginia","w":["Atlanta, Georgia","Charleston, South Carolina","Montgomery, Alabama","New Orleans, Louisiana"],"why":"The capital moved from Montgomery to Richmond in 1861."},
+    {"L":[2,3],"q":"Which slave states stayed in the Union?","a":"Delaware, Maryland, Kentucky and Missouri","w":["Virginia, Georgia, Texas and Alabama","Ohio, Indiana, Illinois and Iowa","Tennessee, Arkansas, Florida and Louisiana"],"why":"These were the border states."},
     { L: [1, 2], q: 'Which side had more factories and railroads in 1861?', a: 'The Union', w: ['The Confederacy', 'They had about the same'], why: 'The North had about 90 percent of manufacturing and more than twice the railroad mileage.' },
     { L: [1, 2], q: 'What was the Anaconda Plan?', a: 'A Union plan to blockade the Southern coast and seize the Mississippi River', w: ['A Confederate plan to capture Washington', 'A plan to buy Cuba', 'A treaty with Britain'], why: 'General Winfield Scott\'s plan aimed to squeeze the South like a snake.' },
     { L: [1, 2], q: 'Who commanded the Confederacy\'s most famous army, the Army of Northern Virginia?', a: 'Robert E. Lee', w: ['Ulysses S. Grant', 'William T. Sherman', 'Winfield Scott'], why: 'Lee took command in 1862 and surrendered at Appomattox in 1865.' },
@@ -1142,6 +1241,11 @@
   ], 'Compare what each side had with what each side needed to do.'));
 
   G('ush1.civil-war-battles', fromBank([
+    {"L":[1,2,3],"q":"Which general captured Vicksburg in July 1863?","a":"Ulysses S. Grant","w":["George McClellan","William T. Sherman","Robert E. Lee","George Meade"],"why":"Vicksburg surrendered to Grant on July 4, 1863."},
+    {"L":[1,2,3],"q":"Which battle in July 1861 was the first major battle of the war?","a":"First Bull Run (First Manassas)","w":["Gettysburg","Antietam","Shiloh","Fredericksburg"],"why":"The Confederates won at Bull Run on July 21, 1861."},
+    {"L":[1,2,3],"q":"Which Union general led the \"March to the Sea\" through Georgia in 1864?","a":"William T. Sherman","w":["Ulysses S. Grant","George McClellan","Ambrose Burnside","George Meade"],"why":"Sherman marched from Atlanta to Savannah."},
+    {"L":[2,3],"q":"Which battle in Tennessee in April 1862 shocked both sides with its losses?","a":"Shiloh","w":["Antietam","Gettysburg","Chancellorsville","Bull Run"],"why":"More than 23,000 men were killed, wounded or missing at Shiloh."},
+    {"L":[2,3],"q":"Which city did Sherman capture in September 1864?","a":"Atlanta","w":["Richmond","Vicksburg","Charleston","New Orleans"],"why":"The fall of Atlanta boosted Northern morale."},
     { L: [1, 2], q: 'Where did Lee surrender to Grant in April 1865?', a: 'Appomattox Court House, Virginia', w: ['Gettysburg, Pennsylvania', 'Fort Sumter, South Carolina', 'Vicksburg, Mississippi'], why: 'April 9, 1865, at Appomattox Court House.' },
     { L: [1, 2], q: 'Which battle, in July 1863, turned back Lee\'s invasion of the North?', a: 'Gettysburg', w: ['Bull Run', 'Antietam', 'Appomattox'], why: 'Gettysburg, Pennsylvania, July 1 to 3, 1863.' },
     { L: [1, 2], q: 'Which battle of September 17, 1862, was the bloodiest single day in American history?', a: 'Antietam', w: ['Gettysburg', 'Bull Run', 'Fort Sumter'], why: 'About 23,000 men were killed, wounded or missing in one day.' },
@@ -1195,6 +1299,12 @@
   ], 'Think of the war as a giant job: find soldiers, find money, keep the country going.'));
 
   G('ush1.gettysburg-address', fromBank([
+    {"L":[1,2,3],"q":"In which state is Gettysburg?","a":"Pennsylvania","w":["Virginia","Maryland","Ohio","New York"],"why":"Gettysburg is in southern Pennsylvania."},
+    {"L":[1,2,3],"q":"What are the first words of the Gettysburg Address?","a":"\"Four score and seven years ago\"","w":["\"We hold these truths to be self-evident\"","\"We the People\"","\"With malice toward none\""],"why":"Lincoln began, \"Four score and seven years ago our fathers brought forth on this continent, a new nation.\""},
+    {"L":[1,2,3],"q":"Lincoln said the nation shall have \"a new birth of\"…","a":"freedom","w":["money","industry","land"],"why":"\"…that this nation, under God, shall have a new birth of freedom.\""},
+    {"L":[1,2,3],"q":"Lincoln hoped that \"government of the people, by the people, for the people, shall not…\"","a":"\"perish from the earth\"","w":["\"be taxed again\"","\"meet in Washington\"","\"forget this day\""],"why":"Those are the closing words of the address."},
+    {"L":[1,2,3],"q":"\"Four score and seven years\" before 1863 points back to which year and document?","a":"1776 and the Declaration of Independence","w":["1787 and the Constitution","1791 and the Bill of Rights","1803 and the Louisiana Purchase"],"why":"1863 minus 87 is 1776."},
+    {"L":[2,3],"q":"Who gave the long main speech at Gettysburg before Lincoln spoke?","a":"Edward Everett","w":["Frederick Douglass","Daniel Webster","William Seward"],"why":"Everett spoke for about two hours."},
     { L: [1, 2], q: 'When did Lincoln give the Gettysburg Address?', a: 'November 19, 1863', w: ['July 4, 1863', 'January 1, 1863', 'April 14, 1865'], why: 'At the dedication of the cemetery, four and a half months after the battle.' },
     { L: [1, 2], q: 'About how long did the Gettysburg Address take to deliver?', a: 'About two minutes', w: ['About two hours', 'About twenty minutes', 'About a whole day'], why: 'About 272 words. Edward Everett, before him, spoke for about two hours.' },
     { L: [1, 2], q: 'Why was the Gettysburg Address given?', a: 'To dedicate a cemetery for Union soldiers', w: ['To announce the end of the war', 'To begin Lincoln\'s second term', 'To free enslaved people'], why: 'The Soldiers\' National Cemetery at Gettysburg was dedicated that day.' },
@@ -1280,3 +1390,345 @@
   ], 'A right on paper is not the same as a right enforced. What wore down the enforcement?'));
 
 })(window.MathLadder);
+
+/* ---- widen_hum: more questions from the lesson's own tables -----------------------------------------------------
+   Each topic listed below also asks about the facts in its lesson's tables (copied here from the lesson, so the
+   answers are the lesson's own). Forms, by level:
+     match   "Which museum is in Turin?": the right cell and others from the same column (3 choices at level 1, 4 above)
+     pairs   lines "A → B": which pairing is right (level 2), or which one is wrong (level 3)
+     sort    a comparison table: which column does this cell describe (levels 1-2), or choose all for one column (level 3)
+   How often: about a third to a half of the draws, more when the topic's own questions are few at that level.
+   Generated by /tmp/work_widen_widen_hum/tabbuild.js from data/<ladder>/lessons/<course>.json. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var TABS = [{"k":"ush1.dates-and-periods#3","h":["Years","Spoken as","Century"],"r":[["1401–1500","the 1400s","15th century"],["1501–1600","the 1500s","16th century"],["1601–1700","the 1600s","17th century"],["1701–1800","the 1700s","18th century"],["1801–1900","the 1800s","19th century"]],"cap":"Centuries in this course, with strict start and end years.","m":[[0,2,"Which century is {a}?",0,"years with their century"],[0,1,"How do we say the years {a}?",0],[2,0,"Which years make up the {a}?",0,0,2]]},
+    {"k":"ush1.native-cultures-1491#3","h":["Region","Land","Ways of life (examples)"],"r":[["Southwest","Dry, hot; few rivers","Maize, beans and squash with irrigation canals (the Hohokam dug canals from the Salt and Gila Rivers); adobe and stone towns (Ancestral Puebloans)"],["Great Plains","Grassland","Bison hunted on foot, with dogs pulling loads on a travois; farming villages of earth lodges along the rivers"],["Pacific Northwest","Rainy coast, big forests","Salmon, shellfish and whales; cedar plank houses and canoes; wealth shown in gift-giving feasts (the potlatch)"],["Eastern Woodlands","Forests, rivers, rain","The \"Three Sisters\" (maize, beans, squash), hunting and fishing; villages of longhouses or wigwams"]],"cap":"Four regions in 1491. Each was home to many different nations.","m":[[1,0,"Which region of North America had this land: {a}?",0,"a region with its land"],[2,0,"In which region did people live this way around 1491: {a}?",0,0,2]]},
+    {"k":"ush1.middle-colonies#7","h":["Colony","Began","Notes"],"r":[["New York","1624 (Dutch); English 1664","Fur trade, port of New York"],["New Jersey","1664","Given by the Duke of York to two proprietors"],["Pennsylvania","1681","Penn's Quaker colony; Philadelphia"],["Delaware","1638 (Swedish)","Later part of Penn's grant"]],"cap":"","m":[[0,1,"When did {a} begin as a colony?",0,"a colony with when it began"],[2,0,"Which middle colony is this: {a}?",0,0,2]]},
+    {"k":"ush1.colonial-self-government#3","h":["Type of colony","Who chose the governor","Examples"],"r":[["Royal","The king","Virginia (after 1624), New York"],["Proprietary","The proprietor (owner)","Pennsylvania, Maryland"],["Charter","The colonists themselves","Connecticut, Rhode Island"]],"cap":"Three kinds of colonial government.","m":[[0,1,"In a {a:l} colony, who chose the governor?",0,"a type of colony with who chose its governor"],[2,0,"What type of colony were these: {a}?",0,0,2]]},
+    {"k":"ush1.revolution-changes#3","h":["What changed","What stayed the same"],"r":[["Written state constitutions; Virginia's Declaration of Rights (June 1776)","Most states let only men who owned property vote"],["Pennsylvania's Gradual Abolition Act (1780); Massachusetts courts ended slavery in the 1780s","Slavery continued and grew in the Southern states"],["Virginia's Statute for Religious Freedom (1786) ended forced support for a church","Some New England states kept tax support for churches for decades"],["Women's role as \"republican mothers\" raised the value of girls' education","Married women still could not own property in their own names in most states"]],"cap":"Change and continuity after the Revolution.","one":"After the Revolution, did this change or stay the same?","all":"Which of these belong under \"{a}\"? Choose all that apply.","na":1},
+    {"k":"ush1.two-sides#4","h":["","Union (loyal states)","Confederacy"],"r":[["Free population, 1860","about 22 million","about 5.5 million"],["Enslaved population","about 430,000 (border states)","about 3.5 million"],["Railroad mileage, 1860","about 22,000 miles","about 9,500 miles"],["Share of manufacturing","about 90 percent","about 10 percent"]],"cap":"Rounded figures from the 1860 census, as historians report them.","one":"Union or Confederacy: which does this describe, at the start of the Civil War?","all":"Which of these describe the {a}? Choose all that apply."}];
+  var FUNS = {};
+  function plain(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim(); }
+  function txt(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function low(s) { return txt(s).toLowerCase().replace(/[.;:,]+$/, ''); }
+  function big(x) { return String(x).replace(/<span class="(sc-b|eg-cop|eg-h)">/g, '<span class="$1" style="font-size:1.6em;line-height:1">'); }
+  function fill(t, x) { x = big(x); return t.replace('{a:l}', String(x).replace(/^[A-Z](?=[a-z])/, function (c) { return c.toLowerCase(); })).replace('{a}', x); }
+  function dot(s) { s = String(s); return /[.!?…"”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function sameRow(t, i, a) { return t.r.filter(function (r) { return low(r[a]) === low(t.r[i][a]); }); }
+  function partnerSteps(t, tp, right, shown) { // what each wrong choice goes with
+    var out = [];
+    shown.forEach(function (c) {
+      if (low(c) === low(right)) return;
+      var rows = t.r.filter(function (r) { return low(r[tp[1]]) === low(c); });
+      if (rows.length === 1 && txt(rows[0][tp[0]]).length <= 90) out.push(dot(c + ': that goes with ' + rows[0][tp[0]]));
+    });
+    return out.slice(0, 3);
+  }
+  // match: ask for column b from a cell of column a
+  function match(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][b]).length <= 130; });
+    if (!ok.length) return null;
+    var i = R.pick(ok), right = t.r[i][b], seen = {};
+    seen[low(right)] = 1;
+    var bad = {}; sameRow(t, i, a).forEach(function (r) { bad[low(r[b])] = 1; }); // never a choice that is also right
+    var pool = []; t.r.forEach(function (r) { var k = low(r[b]); if (r[b] && !seen[k] && !bad[k] && txt(r[b]).length <= 130) { seen[k] = 1; pool.push(r[b]); } });
+    var k = Math.min(L === 1 ? 3 : 4, pool.length + 1); if (k < 3) return null;
+    var wrongs = R.shuffle(pool).slice(0, k - 1), choices = [right].concat(wrongs);
+    return { q: fill(tp[2], t.r[i][a]), a: { t: 'mc', choices: choices, v: 0 },
+      steps: [dot(t.r[i][a] + ' → ' + right), ].concat(partnerSteps(t, tp, right, choices)),
+      hint: tp[3] || 'Think back to the lesson’s table' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 'm', a, b, i, txt(t.r[i][a])] };
+  }
+  // pairs: three or four lines "a → b"; one right (level 2) or one wrong (level 3)
+  function pairs(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][a]).length <= 70 && txt(t.r[i][b]).length <= 70; });
+    var uniq = {}; ok = ok.filter(function (i) { var k = low(t.r[i][a]); if (uniq[k]) return false; uniq[k] = 1; return true; });
+    var n = Math.min(4, ok.length); if (n < 3) return null;
+    var rows = R.shuffle(ok).slice(0, n), wrongOne = L >= 3, target = R.int(0, n - 1), lines = [], steps = [];
+    for (var j = 0; j < n; j++) {
+      var i = rows[j], right = wrongOne ? j !== target : j === target, ans = t.r[i][b];
+      if (!right) {
+        var good = {}; sameRow(t, i, a).forEach(function (r) { good[low(r[b])] = 1; });
+        var ws = []; t.r.forEach(function (r) { if (r[b] && !good[low(r[b])] && txt(r[b]).length <= 70 && ws.map(low).indexOf(low(r[b])) < 0) ws.push(r[b]); });
+        if (!ws.length) return null;
+        ans = R.pick(ws);
+      }
+      lines.push(t.r[i][a] + ' → ' + ans);
+      steps.push(dot(t.r[i][a] + ' → ' + t.r[i][b] + (right ? ': right' : ', not ' + ans)));
+    }
+    var what = tp[4] ? ' Each line pairs ' + tp[4] + '.' : '';
+    return { q: (wrongOne ? 'Exactly one of these pairings is <b>wrong</b>. Which one?' : 'Exactly one of these pairings is right. Which one?') + what,
+      a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own against what you learned.', wh: [t.k, wrongOne ? 'pw' : 'pr', a, b] };
+  }
+  // sort: which column of a comparison table does a cell belong to
+  function sortQ(R, t, L) {
+    var cols = t.h.map(function (_, j) { return j; }).filter(function (j) { return j >= (t.na ? 0 : 1) && txt(t.h[j]); });
+    if (cols.length < 2) return null;
+    var cells = [];
+    t.r.forEach(function (r, i) { cols.forEach(function (j) {
+      if (!r[j] || (!t.na && !txt(r[0]))) return;
+      var dup = cols.some(function (j2) { return j2 !== j && r[j2] && (low(r[j2]) === low(r[j]) || low(r[j2]).indexOf(low(r[j])) >= 0 || low(r[j]).indexOf(low(r[j2])) >= 0); });
+      if (!dup && txt(r[j]).length <= 140) cells.push([i, j]);
+    }); });
+    if (cells.length < 2) return null;
+    var heads = cols.map(function (j) { return t.h[j]; });
+    if (L >= 3 && cells.length >= 5) {
+      var j0 = R.pick(cols), pick = R.shuffle(cells).slice(0, Math.min(5, cells.length));
+      var hits = pick.filter(function (c) { return c[1] === j0; }).length;
+      if (hits >= 1 && hits < pick.length) {
+        var ch = pick.map(function (c) { return lab(t, c); });
+        var v = pick.map(function (c, k) { return c[1] === j0 ? k : -1; }).filter(function (k) { return k >= 0; });
+        return { q: fill(t.all, t.h[j0]), a: { t: 'mc', choices: ch, v: v },
+          steps: pick.map(function (c) { return dot(lab(t, c) + ' (' + t.h[c[1]] + ')'); }),
+          hint: 'Go through them one at a time.', wh: [t.k, 'sa', j0, pick] };
+      }
+    }
+    var c = R.pick(cells);
+    return { q: t.one + (t.na ? (/^["“]/.test(txt(t.r[c[0]][c[1]])) ? '<br>' + t.r[c[0]][c[1]] : '<br>“' + t.r[c[0]][c[1]] + '”') : '<br>' + asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]), a: { t: 'mc', choices: heads.slice(), v: cols.indexOf(c[1]) },
+      steps: t.na ? [dot('That is ' + t.h[c[1]].replace(/^./, function (x) { return x.toLowerCase(); }))] : [dot(txt(t.r[c[0]][0]) + ' for ' + t.h[c[1]] + ': ' + t.r[c[0]][c[1]])].concat(cols.filter(function (j) { return j !== c[1] && t.r[c[0]][j]; }).map(function (j) { return dot('For ' + t.h[j] + ': ' + t.r[c[0]][j]); })),
+      hint: 'Think back to the lesson’s comparison' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 's', c[0], c[1]] };
+  }
+  function asp(x) { return '<b>' + x + (/\?$/.test(txt(x)) ? '' : ':') + '</b> '; }
+  function lab(t, c) { return t.na ? t.r[c[0]][c[1]] : asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]; }
+  // extra bank items: { q, a, w: [wrong answers, more than are shown], s: [steps], h: hint, lv } or { q, tf: true|false, s, lv }
+  function extra(R, t, L) {
+    var its = t.x.filter(function (it) { return (it.lv || 1) <= L; }); if (!its.length) return null;
+    var it = R.pick(its), p;
+    if (it.f) { it = FUNS[it.f](R, L); if (!it) return null; }
+    if (it.num !== undefined) {
+      p = { q: it.q, a: { t: 'num', v: String(it.num) }, steps: it.s.slice() };
+      if (Number.isInteger(it.num) && !it.unit && !it.pct) p.a.form = 'int';
+      if (it.pct) p.a.pct = true;
+      if (it.tol != null) p.a.tol = it.tol;
+      if (it.unit) p.unit = it.unit;
+    }
+    else if (it.tf !== undefined) p = { q: it.q, a: { t: 'tf', v: it.tf }, steps: it.s.slice() };
+    else {
+      var k = Math.min(L === 1 ? 3 : 4, it.w.length + 1);
+      p = { q: it.q, a: { t: 'mc', choices: [it.a].concat(R.shuffle(it.w).slice(0, k - 1)), v: 0 }, steps: it.s.slice() };
+    }
+    p.hint = it.h || 'Think back to the lesson.';
+    p.wh = [t.k, 'x', its.indexOf(it) >= 0 ? t.x.indexOf(it) : -1];
+    return FUNS.__wrap ? FUNS.__wrap(p, L) : p;
+  }
+  function make(R, list, L) {
+    for (var tries = 0; tries < 8; tries++) {
+      var t = R.pick(list), p = null;
+      if (t.x) p = extra(R, t, L);
+      else if (t.one) p = sortQ(R, t, L);
+      else {
+        var tps = t.m.filter(function (tp) { return (tp[5] || 1) <= L; }); if (!tps.length) continue;
+        var tp = R.pick(tps);
+        p = L >= 2 && tp[4] && R.chance(0.35) ? pairs(R, t, tp, L) : match(R, t, tp, L);
+      }
+      if (p) {
+        // ladder pages show choices as plain text (only $…$ math is rendered), so choices carry no tags
+        if (p.a.t === 'mc') { p.a.choices = p.a.choices.map(plain); var seen = {}; if (p.a.choices.some(function (c) { var k = seen[c]; seen[c] = 1; return k; })) continue; }
+        p.nowiden = true; return p;
+      }
+    }
+    return null;
+  }
+  var BY = {}; TABS.forEach(function (t) { var id = t.k.split('#')[0].split('@')[0]; (BY[id] = BY[id] || []).push(t); });
+  var VAR = {};
+  function baseCount(id, base, L) { // different questions (ignoring the order of choices) from 40 fixed seeds
+    var key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        try { var p = base(ML.rand(id + '#whv#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; } } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  function extCount(id, L) { // different table questions from 40 fixed seeds
+    var key = id + '|x|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        var p = make(ML.rand(id + '#whx#' + s + '#' + L), BY[id], L); if (!p) continue;
+        var k = p.q + '|' + JSON.stringify(p.a.choices ? p.a.choices.slice().sort() : p.a.v);
+        if (!seen[k]) { seen[k] = 1; n++; }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  Object.keys(BY).forEach(function (id) {
+    var base = ML.getGen(id); if (!base || base._wh) return;
+    var fn = function (R, ctx) {
+      var L = (ctx && ctx.level) || 1, n = baseCount(id, base, L), x = extCount(id, L), share = Math.max(0.15, Math.min(0.5, x / (x + n + 1)));
+      if (R.chance(share)) { var p = make(R, BY[id], L); if (p) return p; }
+      return base(R, ctx);
+    };
+    fn._wh = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen_hum ---- */
+
+/* ---- widen: more forms of the same questions (so practice repeats less) ----------------------------------------
+   Every topic of this course keeps its own problems, and some draws are turned into other forms of the same skill,
+   built only from the topic's own problems (so their answers stay the ones the topic already checks):
+     check   "Ava chose X. Is Ava right?" (Yes or No) from a one-answer multiple-choice problem
+     pairs   two or three lines "question → answer"; which line is right (or, at level 3, which one is wrong)
+     tfpick  "Which sentence is true?" (or false) from three of the topic's true-or-false sentences
+   Questions whose answer depends on the other choices (first, best, most, not …) show the choices in the check form
+   and never go into pairs. Mix per level: CFG.mix[level] = [check, pairs, tfpick] shares; the rest stays as it was. */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var CFG = {"prefix":"ush1.","only":["primary-secondary","sourcing-hipp","dates-and-periods","cause-and-effect","peopling-americas","native-cultures-1491","native-societies","european-exploration","columbian-exchange","spanish-empire","jamestown-virginia","new-england","middle-colonies","southern-colonies","comparing-regions","colonial-slavery","colonial-conflicts","mercantilism","awakening-enlightenment","colonial-self-government","french-and-indian-war","taxes-and-protest","road-to-revolution","war-begins","declaration-of-independence","loyalists-patriots","revolutionary-war","treaty-of-paris-1783","revolution-changes","articles-of-confederation","northwest-ordinance","shays-rebellion","constitutional-convention","ratification-debate","bill-of-rights-1791","washington-presidency","first-parties","adams-and-1800","jefferson-louisiana","marshall-court","war-of-1812","monroe-years","market-revolution","jacksonian-democracy","indian-removal","second-great-awakening","abolition","seneca-falls","manifest-destiny","mexican-american-war","gold-rush-immigration","compromise-of-1850","kansas-nebraska","dred-scott","lincoln-and-1860","secession","two-sides","civil-war-battles","emancipation","home-fronts","gettysburg-address","presidential-reconstruction","congressional-reconstruction","reconstruction-amendments","end-of-reconstruction"]};
+  var NAMES = ['Ava', 'Ben', 'Cora', 'Dev', 'Eli', 'Finn', 'Gus', 'Hana', 'Ivy', 'Jude', 'Kai', 'Lena', 'Milo', 'Nora', 'Omar', 'Pia',
+    'Quinn', 'Rosa', 'Sam', 'Tess', 'Uma', 'Vic', 'Wren', 'Zoe', 'Ada', 'Leo', 'Mia', 'Theo', 'June', 'Max'];
+  var REL = /\b(first|last|earliest|latest|earlier|later|before|after|older|oldest|newer|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|look|read|here|example|examples|likely|probably|mainly|main|usually|typically|other|another|which one|each|order|then|next)\b|n['’]t\b/i;
+  // pairs judge each line on its own, so only questions whose answer depends on the other choices are left out
+  var RELP = /\b(first|last|earliest|latest|oldest|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|which one|other|another|rank|order|more|less|fewer)\b|n['’]t\b|\w+est\b/i;
+  var REF = /\b(this|these|those|shown|picture|map|table|chart|graph|diagram|passage|scene|story|above|below|here|following)\b/i;
+  var BADCH = /\b(all|none|both|neither) of\b|\b(above|below)\b|^(both|neither|all|none)\b|\bchoice\b|\boption\b/i;
+  function strip(s) { return String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function plainish(s) { return !/<(?!\/?(b|i|em|strong)\b)[^>]*>/.test(String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1')); }
+  function add(q, html) { // inside a read-aloud big span when there is one
+    var m = /<span class="[\w-]*big">/.exec(q);
+    if (m) { var k = q.lastIndexOf('</span>'); if (k > m.index) return q.slice(0, k) + '<br>' + html.replace(/<\/p>\s*<p[^>]*>/g, '<br>').replace(/<\/?p[^>]*>/g, '') + q.slice(k); }
+    return q + html;
+  }
+  function single(p) {
+    return p && p.a && p.a.t === 'mc' && !Array.isArray(p.a.v) && Array.isArray(p.a.choices) && p.a.choices.length >= 2 &&
+      !p.a.choices.some(function (c) { return BADCH.test(strip(c)); });
+  }
+  function hash(t) { var h = 7; for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return h; }
+  function nameFor(q, key) { // the same claim always gets the same name, so a name alone never makes a "new" problem
+    var t = strip(q), ok = NAMES.filter(function (n) { return t.indexOf(n) < 0 && String(key).indexOf(n) < 0; });
+    return (ok.length ? ok : NAMES)[hash(t + '|' + key) % (ok.length || NAMES.length)];
+  }
+  function dot(s) { s = String(s); return /[.!?…"”')\]]\s*(<\/b>)?$/.test(strip(s)) || /\$$/.test(s) ? s : s + '.'; }
+  function optList(ch) { return '<p class="wd-opts">The choices were:<br>' + ch.map(function (c) { return '• ' + c; }).join('<br>') + '</p>'; }
+  function copyP(p, q, a, steps) { var o = {}; for (var k in p) if (Object.prototype.hasOwnProperty.call(p, k)) o[k] = p[k]; o.q = q; o.a = a; o.steps = steps; delete o.choices; return o; }
+
+  // check: show one choice (the right one half the time) and ask whether it is right
+  function check(p, R) {
+    var ch = p.a.choices, v = p.a.v, idx = ch.map(function (_, i) { return i; }), others = idx.filter(function (i) { return i !== v; });
+    var i = R.chance(0.5) ? v : R.pick(others), ok = i === v, nm = nameFor(p.q, ch[i]), letters = ch.every(function (c) { return /^[A-Z]$/.test(String(c)); });
+    var stem = strip(p.q), html = '';
+    if (!letters && (REL.test(stem) || ch.length > 4 || CFG.listAll)) {
+      var shown = p.a.keep ? ch.slice() : R.shuffle(ch);
+      html += optList(shown);
+    }
+    html += '<p class="wd-check">' + nm + ' chose: <b>' + ch[i] + '</b>' + (/[.!?…"”]$/.test(strip(ch[i])) ? '' : '.') + ' Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes. ' + dot(ch[v]) + ' is the right answer.' : 'No. The right answer is: ' + dot(ch[v]);
+    if (ok) first = 'Yes, that is the right answer.';
+    return copyP(p, add(p.q, html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [first].concat(p.steps || []));
+  }
+  // check for "choose all": the whole list is shown, and one learner's picks; right only if exactly the right ones
+  function checkAll(p, R) {
+    var ch = p.a.choices, v = p.a.v.slice().sort(), n = ch.length, pick;
+    if (R.chance(0.45)) pick = v.slice();
+    else {
+      var t = 0; do { var j = R.int(0, n - 1), s = v.slice(), k = s.indexOf(j); if (k >= 0) s.splice(k, 1); else s.push(j); if (R.chance(0.3)) { var j2 = R.int(0, n - 1), k2 = s.indexOf(j2); if (k2 >= 0) s.splice(k2, 1); else s.push(j2); } pick = s.sort(); t++; }
+      while (t < 20 && (!pick.length || pick.join() === v.join()));
+      if (!pick.length || pick.join() === v.join()) return null;
+    }
+    var ok = pick.join() === v.join(), nm = nameFor(p.q, pick.join());
+    var html = optList(ch) + '<p class="wd-check">' + nm + ' chose ' +
+      (pick.length === 1 ? 'only: <b>' + ch[pick[0]] + '</b>' : 'these: <b>' + pick.map(function (i) { return ch[i]; }).join('</b>; <b>') + '</b>') + '. Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes, those are exactly the right ones.' : 'No. The right ones are: ' + v.map(function (i) { return ch[i]; }).join('; ');
+    return copyP(p, add(p.q.replace(/\s*(Choose|Select|Pick) (all|every)[^.?!<]*[.?!]?/i, ''), html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [dot(first)].concat(p.steps || []));
+  }
+
+  // items for pairs: one-answer questions that stand on their own (no picture, no passage, no "first/best/…")
+  function pairItem(p) {
+    if (!single(p) || p.viz) return null;
+    var max = CFG.maxStem || 120, maxA = CFG.maxAns || 70, a = strip(p.a.choices[p.a.v]), stem, group = '';
+    // "prompt<br><b>thing</b>" or "prompt<blockquote>thing</blockquote>": a line is "thing → answer", lines share the prompt
+    var q0 = p.q.replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1').trim();
+    var m = /^([^<]{6,140}?)\s*(?:<br>\s*<b>([^<]{3,140})<\/b>|<blockquote>([^<]{3,140})<\/blockquote>)\s*$/.exec(q0);
+    if (m) { group = m[1].trim(); stem = (m[2] || m[3]).trim(); if (RELP.test(group.replace(/\b(this|these)\b/gi, ''))) return null; }
+    else {
+      if (!plainish(p.q)) return null;
+      stem = strip(p.q); if (RELP.test(stem)) return null;
+    }
+    if (stem.length > max || stem.length < 3 || a.length > maxA || /^[A-Z]$/.test(a) || /\$/.test(stem + a + group)) return null;
+    var w = p.a.choices.filter(function (_, i) { return i !== p.a.v; }).map(strip).filter(function (x) { return x.length <= maxA && x !== a; });
+    if (!w.length) return null;
+    return { stem: stem.replace(/\s*(Choose one|Pick one)\.?$/i, ''), a: a, w: w, why: (p.steps || [])[0] || '', group: group };
+  }
+  function tfItem(p) {
+    if (!p || !p.a || p.a.t !== 'tf' || p.viz || !plainish(p.q)) return null;
+    var s = strip(p.q).replace(/^(True or false\?|True or false:)\s*/i, '').replace(/\s*(True or false\?|Is this true or false\?|Is it true or false\?)$/i, '').trim();
+    if (s.length < 8 || s.length > (CFG.maxStem || 120) + 20 || REF.test(s) || /\?$/.test(s) || /\$/.test(s)) return null;
+    return { s: s, v: p.a.v, why: (p.steps || [])[0] || '' };
+  }
+  function harvest(base, R, ctx, make, n, distinct) {
+    var out = [], keys = {};
+    for (var t = 0; t < 24 && out.length < n; t++) {
+      // at level 3, lines may come from level 2 questions too: three lines with one wrong is the harder form
+      var c2 = ctx && ctx.level >= 3 && (t % 2) ? Object.assign({}, ctx, { level: 2 }) : ctx;
+      var p; try { p = base(ML.rand(R.int(1, 2e9)), c2); } catch (e) { continue; }
+      var it = make(p); if (!it) continue;
+      if (out.length && it.group !== undefined && it.group !== out[0].group) continue;
+      var k = distinct(it); if (k.some(function (x) { return keys[x]; })) continue;
+      k.forEach(function (x) { keys[x] = 1; }); out.push(it);
+    }
+    return out;
+  }
+  function pairs(base, R, ctx, n, wrongOne) {
+    var its = harvest(base, R, ctx, pairItem, n, function (it) { return it.group ? ['s:' + it.stem] : ['s:' + it.stem, 'a:' + it.a]; });
+    if (its.length < n) return null;
+    var answers = its.map(function (it) { return it.a; }), used = {};
+    var target = R.int(0, n - 1), lines = [], steps = [];
+    for (var i = 0; i < n; i++) {
+      var it = its[i], right = wrongOne ? i !== target : i === target, ans = it.a;
+      if (!right) {
+        var ws = it.w.filter(function (x) { return (its[0].group || answers.indexOf(x) < 0) && !used[x]; });
+        if (!ws.length) return null;
+        ans = R.pick(ws); if (!its[0].group) used[ans] = 1;
+      }
+      lines.push(it.stem + ' → ' + ans); // plain text: ladder pages show choices as text
+      steps.push(it.group ? dot(it.stem) + ' Answer: ' + it.a + (right ? '.' : ', not ' + ans + '.') : it.stem + ' The answer is ' + it.a + (right ? '.' : ', not ' + ans + '.'));
+    }
+    var g = its[0].group, q = g ? '<p class="wd-group">The question for every line: <i>' + g + '</i></p>' + (wrongOne ? 'One line has the <b>wrong</b> answer. Which line is it?' : n === 2 ? 'Which line has the <b>right</b> answer?' : 'Only one line has the right answer. Which line is it?') : wrongOne ? 'Each line is a question and an answer. One answer is <b>wrong</b>. Which line is it?'
+      : (n === 2 ? 'Each line is a question and an answer. Which line has the <b>right</b> answer?' : 'Each line is a question and an answer. Only one answer is right. Which line is it?');
+    if (its[target].why) steps.push(its[target].why);
+    return { q: q, a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own. Does the answer fit the question?' };
+  }
+  function tfpick(base, R, ctx, wantFalse) {
+    var its = harvest(base, R, ctx, tfItem, 6, function (it) { return ['s:' + it.s]; });
+    var T = its.filter(function (x) { return x.v; }), F = its.filter(function (x) { return !x.v; });
+    var odd = wantFalse ? F : T, rest = wantFalse ? T : F;
+    if (!odd.length || rest.length < 2) return null;
+    var pick = [odd[0], rest[0], rest[1]], order = R.shuffle([0, 1, 2]), choices = order.map(function (i) { return pick[i].s; });
+    var steps = pick.map(function (x) { return x.s + ' ' + (x.v ? 'True.' : 'False.'); });
+    if (odd[0].why) steps.push(odd[0].why);
+    return { q: wantFalse ? 'Which sentence is <b>false</b>?' : 'Which sentence is <b>true</b>?', a: { t: 'mc', choices: choices, v: order.indexOf(0) }, steps: steps,
+      hint: 'Decide about each sentence on its own.' };
+  }
+  var MIX = CFG.mix || { 1: [0.38, 0.25, 0.04], 2: [0.27, 0.3, 0.1], 3: [0.17, 0.4, 0.15] };
+  function wrap(id, base) {
+    var fn = function (R, ctx) {
+      var lv = ctx && ctx.level || 1, p = base(R, ctx), m = MIX[lv] || MIX[3], r = R.next();
+      if (p.nowiden || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf') || (CFG.skip && CFG.skip.indexOf(id) >= 0)) return p; // typed answers stay as they are
+      var form = r < m[0] ? 0 : r < m[0] + m[1] ? 1 : r < m[0] + m[1] + m[2] ? 2 : -1;
+      if (form < 0) return p;
+      var tries = [form, (form + 1) % 3, (form + 2) % 3].filter(function (f) { return m[f] > 0; });
+      for (var t = 0; t < tries.length; t++) {
+        var f = tries[t], alt = null;
+        if (f === 0) alt = single(p) ? check(p, R) : (p.a && p.a.t === 'mc' && Array.isArray(p.a.v) && !p.viz ? checkAll(p, R) : null);
+        else if (f === 1) alt = pairs(base, R, ctx, lv === 1 ? 2 : 3, lv >= 3 && R.chance(0.6));
+        else alt = tfpick(base, R, ctx, R.chance(0.4));
+        if (alt) return alt;
+      }
+      return p;
+    };
+    fn.widened = true;
+    return fn;
+  }
+  ML.genIds().forEach(function (id) {
+    if (id.indexOf(CFG.prefix) !== 0 || (CFG.only && CFG.only.indexOf(id.slice(CFG.prefix.length)) < 0)) return;
+    var g = ML.getGen(id); if (g && !g.widened) ML.gen(id, wrap(id, g));
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen ---- */

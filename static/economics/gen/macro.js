@@ -121,7 +121,22 @@
     ['Unemployment benefits paid to laid-off workers', 'fin', 'A transfer payment: no good or service is bought.'],
     ['A parent cooking dinner for the family at home', 'non', 'No market transaction, so GDP leaves it out.'],
     ['Mowing your own lawn on Saturday', 'non', 'Unpaid work at home is not a market transaction.'],
-    ['Sneakers made in a U.S.-owned factory in Vietnam', 'abr', 'Produced in Vietnam, so they count in Vietnam’s GDP, not in U.S. GDP.']
+    ['Sneakers made in a U.S.-owned factory in Vietnam', 'abr', 'Produced in Vietnam, so they count in Vietnam’s GDP, not in U.S. GDP.'],
+    ['A pizza a family buys at a restaurant in Denver', 'in', 'A final good (a meal served) produced in the U.S. this year.'],
+    ['A new laptop made in Texas this year and sold to a student', 'in', 'A final good produced in the U.S. this year.'],
+    ['A piano lesson a child takes from a paid teacher', 'in', 'A final service, bought in the market and produced this year.'],
+    ['A town buys a new fire truck built this year in Wisconsin', 'in', 'Government purchases of newly produced goods count.'],
+    ['Lumber a builder buys to frame a new house', 'int', 'The lumber’s value is already inside the price of the new house.'],
+    ['Cocoa beans a candy maker buys to make chocolate bars', 'int', 'The cocoa is counted in the price of the chocolate bars.'],
+    ['Paint an auto body shop buys to repaint customers’ cars', 'int', 'The paint is used up in the shop’s service, whose price includes it.'],
+    ['A 1960s guitar sold at a garage sale', 'old', 'The guitar was produced, and counted, decades ago.'],
+    ['A used textbook a student buys from another student', 'old', 'The book was produced, and counted, when it was new.'],
+    ['A gift of \\$100 from a grandparent to a grandchild', 'fin', 'A gift is a transfer: nothing is produced in return.'],
+    ['Money a family deposits in a savings account', 'fin', 'Saving moves money into a bank; nothing new is produced.'],
+    ['Painting your own bedroom on a weekend', 'non', 'Unpaid work at home is not a market transaction.'],
+    ['A neighbor watching your dog for free as a favor', 'non', 'No payment, no market transaction, so GDP leaves it out.'],
+    ['Coffee grown and roasted in Colombia this year', 'abr', 'Produced in Colombia, so it counts in Colombia’s GDP, not in U.S. GDP.'],
+    ['Phones assembled in China for a U.S. company', 'abr', 'Produced in China, so they count in China’s GDP; GDP counts where things are made.']
   ];
   var GDP_TRICKY = [
     ['A dealer’s \\$600 commission for selling a used car', 'in', 'The dealer’s service of selling the car was produced this year; the used car itself is not counted.'],
@@ -138,7 +153,7 @@
         var it = R.pick(L >= 3 ? GDP_TRICKY.concat(GDP_ITEMS) : GDP_ITEMS), yes = it[1] === 'in';
         return tf('True or false: this is counted in this year’s U.S. GDP. ' + it[0] + '.', yes, [(yes ? 'True. ' : 'False. ') + it[2], 'GDP is the market value of all final goods and services produced within a country in a given period.'], 'Check each word of the definition: market value, final, produced this period, within the country.');
       }, 2],
-      [2, function () {
+      [1, function () {
         var it = R.pick(L >= 3 ? GDP_TRICKY.concat(GDP_ITEMS) : GDP_ITEMS), right = GDP_REASON[it[1]];
         var wr = R.shuffle(Object.keys(GDP_REASON).map(function (k) { return GDP_REASON[k]; }).filter(function (x) { return x !== right; }));
         return mc('How does GDP treat this? ' + it[0] + '.', right, wr, [it[2], 'GDP is the market value of all final goods and services produced within a country in a given period.'], 'Was something new produced, in this country, this year, and sold to its final user?');
@@ -233,7 +248,7 @@
   G('macro.gdp-limits', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
-        var per = R.pick([20000, 25000, 30000, 40000, 50000, 60000, 80000]), pop = R.pick([5, 8, 10, 20, 25, 40, 50, 60, 80]), Y = per * pop * 1e6;
+        var per = R.int(2, 18) * 5000, pop = R.pick([2, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60, 80]), Y = per * pop * 1e6;
         var yTxt = Y >= 1e12 ? tn(Y / 1e12) : bn(Y / 1e9), e = Math.floor(Math.log10(Y) + 1e-9), m = U.fix(Y / Math.pow(10, e)), pe = Math.floor(Math.log10(pop * 1e6) + 1e-9), pm = U.fix(pop * 1e6 / Math.pow(10, pe));
         return num('A country’s GDP is ' + yTxt + ' and its population is ' + cm(pop) + ' million. What is its GDP per person, in dollars?', per,
           ['GDP per person = GDP ÷ population.', 'In scientific notation: $GDP = ' + T.num(m) + ' \\times 10^{' + e + '}$ dollars and population $= ' + T.num(pm) + ' \\times 10^{' + pe + '}$ people.', '$\\dfrac{' + T.num(m) + '}{' + T.num(pm) + '} \\times 10^{' + e + ' - ' + pe + '} = ' + T.num(U.fix(m / pm)) + ' \\times 10^{' + (e - pe) + '} = ' + cm(per) + '$ dollars per person.'], 'Divide GDP by the number of people. Watch the powers of ten: a trillion is 10^12 and a million is 10^6.', { unit: 'dollars' });
@@ -313,7 +328,7 @@
   G('macro.gdp-deflator', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
-        var Rl = R.pick([400, 500, 800, 1000, 1200, 2000]), D = R.pick([104, 105, 108, 110, 112, 115, 120, 125]), N = Rl * D / 100;
+        var Rl = R.int(3, 30) * 100, D = R.int(101, 130), N = Rl * D / 100;
         return num('Nominal GDP is ' + bn(N) + ' and real GDP is ' + bn(Rl) + '. What is the GDP deflator?', D,
           ['GDP deflator $= \\dfrac{\\text{nominal GDP}}{\\text{real GDP}} \\times 100$.', '$\\dfrac{' + cm(N) + '}{' + cm(Rl) + '} \\times 100 = ' + T.num(U.fix(N / Rl)) + ' \\times 100 = ' + D + '$.', 'Prices are ' + (D - 100) + '% higher than in the base year.'], 'Nominal on top, real on the bottom, then times 100.');
       }],
@@ -381,9 +396,11 @@
   G('macro.unemployment-rate', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
-        var LF = R.pick([80, 100, 120, 150, 160, 200, 250]), u = R.pick([4, 5, 6, 8, 10, 12]), Un = LF * u / 100, E = LF - Un;
-        return num(cm(E) + ' million people are employed and ' + cm(Un) + ' million are unemployed. What is the unemployment rate?', u,
-          ['Labor force $= ' + cm(E) + ' + ' + cm(Un) + ' = ' + LF + '$ million.', 'Unemployment rate $= \\dfrac{\\text{unemployed}}{\\text{labor force}} \\times 100 = \\dfrac{' + cm(Un) + '}{' + LF + '} \\times 100 = ' + u + '\\%$.'], 'Divide the unemployed by the labor force (employed + unemployed).', { pct: true });
+        var LF, u, t = 0; do { LF = R.int(5, 90) * 10; u = R.int(3, 15); t++; } while ((LF * u) % 100 && t < 60);
+        if ((LF * u) % 100) { LF = 100; u = R.int(3, 12); }
+        var Un = LF * u / 100, E = LF - Un, unit = R.pick(['million', 'million', 'thousand']);
+        return num(cm(E) + ' ' + unit + ' people are employed and ' + cm(Un) + ' ' + unit + ' are unemployed. What is the unemployment rate?', u,
+          ['Labor force $= ' + cm(E) + ' + ' + cm(Un) + ' = ' + LF + '$ ' + unit + '.', 'Unemployment rate $= \\dfrac{\\text{unemployed}}{\\text{labor force}} \\times 100 = \\dfrac{' + cm(Un) + '}{' + LF + '} \\times 100 = ' + u + '\\%$.'], 'Divide the unemployed by the labor force (employed + unemployed).', { pct: true });
       }],
       [2, function () {
         var LF = R.pick([100, 120, 150, 160, 200]), u = R.pick([4, 5, 6, 8, 10]), Un = LF * u / 100, E = LF - Un, out = R.pick([50, 60, 80, 100]), pop = LF + out;
@@ -485,7 +502,9 @@
   G('macro.inflation-rate', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
-        var a = R.pick([100, 110, 120, 125, 150, 160, 200, 250]), g = R.pick([2, 3, 4, 5, 6, 8, 10]), b = U.fix(a * (1 + g / 100));
+        var a, g, t = 0; do { a = R.int(20, 60) * 5; g = R.int(1, 12); t++; } while ((a * g) % 10 && t < 60);
+        if ((a * g) % 10) { a = 100; g = R.int(1, 12); }
+        var b = U.fix(a * (1 + g / 100));
         return num('The consumer price index rose from ' + T.num(a) + ' to ' + T.num(b) + ' in one year. What was the inflation rate?', g,
           ['Inflation rate $= \\dfrac{\\text{new} - \\text{old}}{\\text{old}} \\times 100$.', '$\\dfrac{' + T.num(b) + ' - ' + T.num(a) + '}{' + T.num(a) + '} \\times 100 = \\dfrac{' + T.num(U.fix(b - a)) + '}{' + T.num(a) + '} \\times 100 = ' + g + '\\%$.'], 'Percent change: divide the change by the starting value.', { pct: true });
       }],
@@ -513,7 +532,7 @@
   G('macro.real-values', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
-        var ix = R.pick([110, 120, 125, 150, 160, 200]), real = R.pick([20, 30, 40, 50, 60, 80]) * 1000, nom = real * ix / 100;
+        var ix = R.int(21, 50) * 5, real = R.int(18, 90) * 1000, nom = real * ix / 100;
         return num('A worker earns ' + $(nom) + ' this year. The price index is ' + ix + ' (base year = 100). What is the salary in base-year dollars?', real,
           ['Real value $= \\dfrac{\\text{nominal value}}{\\text{index}/100}$.', '$\\dfrac{' + cm(nom) + '}{' + T.num(ix / 100) + '} = ' + cm(real) + '$ dollars.', 'Prices are ' + (ix - 100) + '% higher than in the base year, so each dollar buys less.'], 'Divide by the index over 100; do not multiply.', { unit: 'dollars' });
       }],
@@ -685,12 +704,14 @@
   G('macro.mpc-mps', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
-        var mpc = R.pick(MPCS), dY = R.pick([100, 200, 400, 500, 1000]), dC = U.fix(mpc * dY);
+        var mpc = R.pick([0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]), dY = R.int(1, 30) * 100, dC = U.fix(mpc * dY);
         return num('When a household’s income rises by ' + $(dY) + ', its spending rises by ' + $(dC) + '. What is its marginal propensity to consume (MPC)?', mpc,
           ['MPC $= \\dfrac{\\Delta C}{\\Delta Y}$: the share of each extra dollar of income that is spent.', '$\\dfrac{' + T.num(dC) + '}{' + T.num(dY) + '} = ' + T.num(mpc) + '$.'], 'Change in spending over change in income.');
       }],
       [1, function () {
-        var mpc = R.pick([0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]);
+        var mpc = R.pick([0.55, 0.6, 0.65, 0.7, 0.72, 0.75, 0.78, 0.8, 0.82, 0.85, 0.88, 0.9, 0.92, 0.95]), back = R.coin();
+        if (back) return num('The MPS is ' + T.num(U.fix(1 - mpc)) + '. What is the marginal propensity to consume (MPC)?', mpc,
+          ['Each extra dollar of income is either spent or saved, so MPC + MPS = 1.', 'MPC $= 1 - ' + T.num(U.fix(1 - mpc)) + ' = ' + T.num(mpc) + '$.'], 'Spent plus saved is the whole dollar.');
         return num('The MPC is ' + T.num(mpc) + '. What is the marginal propensity to save (MPS)?', U.fix(1 - mpc),
           ['Each extra dollar of income is either spent or saved, so MPC + MPS = 1.', 'MPS $= 1 - ' + T.num(mpc) + ' = ' + T.num(U.fix(1 - mpc)) + '$.'], 'Spent plus saved is the whole dollar.');
       }],
@@ -712,7 +733,13 @@
   G('macro.spending-multiplier', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
-        var mpc = R.pick(MPCS);
+        var mpc = R.pick([0.5, 0.6, 0.75, 0.8, 0.875, 0.9, 0.95]), mps = U.fix(1 - mpc), form = R.int(0, 3), k = kOf(mpc);
+        if (form === 1) return num('The marginal propensity to save is ' + T.num(mps) + '. What is the spending multiplier?', k,
+          ['Spending multiplier $= \\dfrac{1}{MPS}$.', '$\\dfrac{1}{' + T.num(mps) + '} = ' + T.num(k) + '$.'], 'One over the MPS.');
+        if (form === 2) return num('The spending multiplier is ' + T.num(k) + '. What is the marginal propensity to consume (MPC)?', mpc,
+          ['Work backward: multiplier $= \\dfrac{1}{MPS}$, so $MPS = \\dfrac{1}{' + T.num(k) + '} = ' + T.num(mps) + '$.', '$MPC = 1 - MPS = 1 - ' + T.num(mps) + ' = ' + T.num(mpc) + '$.'], 'First find the MPS from the multiplier.');
+        if (form === 3) return num('The spending multiplier is ' + T.num(k) + '. What is the marginal propensity to save (MPS)?', mps,
+          ['Multiplier $= \\dfrac{1}{MPS}$, so $MPS = \\dfrac{1}{' + T.num(k) + '} = ' + T.num(mps) + '$.'], 'Turn the multiplier formula around.');
         return num('The marginal propensity to consume is ' + T.num(mpc) + '. What is the spending multiplier?', kOf(mpc),
           ['Spending multiplier $= \\dfrac{1}{1 - MPC} = \\dfrac{1}{MPS}$.', '$\\dfrac{1}{1 - ' + T.num(mpc) + '} = \\dfrac{1}{' + T.num(U.fix(1 - mpc)) + '} = ' + T.num(kOf(mpc)) + '$.'], 'Divide 1 by the MPS, not by the MPC.');
       }],
@@ -746,7 +773,7 @@
           ['Tax multiplier $= -\\dfrac{MPC}{MPS} = -\\dfrac{' + T.num(mpc) + '}{' + T.num(U.fix(1 - mpc)) + '} = -' + T.num(tm) + '$.', 'It is one smaller in size than the spending multiplier ($' + T.num(kOf(mpc)) + '$), because the first round of a tax change is only MPC times the tax.'], 'MPC over MPS, with a minus sign.');
       }],
       [1, function () {
-        var mpc = R.pick(MPCS), dT = R.pick([10, 15, 20, 25, 30, 40, 50, 60, 80, 100, 120, 150, 200]), up = R.coin(), tm = U.fix(mpc / (1 - mpc)), dY = U.fix((up ? -1 : 1) * tm * dT);
+        var mpc = R.pick(MPCS), dT = R.int(2, 40) * 5, up = R.coin(), tm = U.fix(mpc / (1 - mpc)), dY = U.fix((up ? -1 : 1) * tm * dT);
         return num('The MPC is ' + T.num(mpc) + '. Taxes are ' + (up ? 'raised' : 'cut') + ' by ' + bn(dT) + '. With the price level unchanged, by how much does real GDP change, in billions of dollars? (Negative for a fall.)', dY,
           ['Tax multiplier $= -\\dfrac{' + T.num(mpc) + '}{' + T.num(U.fix(1 - mpc)) + '} = -' + T.num(tm) + '$.', 'Change in taxes: $\\Delta T = ' + (up ? '' : '-') + dT + '$.', '$\\Delta GDP = -' + T.num(tm) + ' \\times ' + T.p(up ? dT : -dT) + ' = ' + T.num(dY) + '$ billion dollars.', up ? 'A tax increase lowers spending and GDP.' : 'Households spend ' + T.num(mpc) + ' of the tax cut in the first round and save the rest, so the effect is smaller than a spending increase of the same size.'], 'Use MPC/MPS, not 1/MPS, and watch the direction.', { unit: UB, viz: up ? null : { name: 'ec-multiplier', opts: { mode: 'tax', first: dT, mpc: mpc, rounds: 10, quiet: true, interactive: false } } });
       }],
@@ -926,7 +953,14 @@
   G('macro.self-adjustment', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
-        var rec = R.coin(), right = rec ? 'Nominal wages fall, SRAS shifts right, and output returns to full employment at a lower price level' : 'Nominal wages rise, SRAS shifts left, and output returns to full employment at a higher price level';
+        var rec = R.coin(), part = R.int(0, 4), gapTxt = 'The economy is in ' + (rec ? 'a recessionary' : 'an inflationary') + ' gap, and the government and central bank do nothing. ';
+        var vz = { viz: { name: 'ec-adas', opts: { mode: 'adjust', start: rec ? 'recession' : 'inflation', step: 1, quiet: true, interactive: false } } };
+        var why = [rec ? 'With output below potential, unemployment is high, so over time nominal wages and other input prices fall.' : 'With output above potential, labor is scarce, so over time nominal wages and other input prices rise.', 'Changing costs shift SRAS ' + (rec ? 'right' : 'left') + ' until it meets AD on LRAS, at full-employment output and a ' + (rec ? 'lower' : 'higher') + ' price level.'];
+        if (part === 1) return mc(gapTxt + 'Over time, what happens to nominal wages?', rec ? 'They fall' : 'They rise', rec ? ['They rise', 'They stay the same forever'] : ['They fall', 'They stay the same forever'], why, 'Is labor scarce or plentiful in this gap?', vz);
+        if (part === 2) return mc(gapTxt + 'Which curve shifts as the economy corrects itself?', rec ? 'SRAS shifts right' : 'SRAS shifts left', rec ? ['SRAS shifts left', 'LRAS shifts left', 'AD shifts right'] : ['SRAS shifts right', 'LRAS shifts right', 'AD shifts left'], why, 'Self-correction works through wages and SRAS.', vz);
+        if (part === 3) return mc(gapTxt + 'In the long run, where does the price level end up, compared with today?', rec ? 'Lower' : 'Higher', rec ? ['Higher', 'The same'] : ['Lower', 'The same'], why, 'Follow SRAS to its new crossing with AD.', vz);
+        if (part === 4) return mc(gapTxt + 'In the long run, where does real GDP end up?', 'At full-employment (potential) output', [rec ? 'Below potential, where it is now' : 'Above potential, where it is now', 'At zero growth forever', rec ? 'Far above potential' : 'Far below potential'], why, 'The long-run equilibrium is on LRAS.', vz);
+        var right = rec ? 'Nominal wages fall, SRAS shifts right, and output returns to full employment at a lower price level' : 'Nominal wages rise, SRAS shifts left, and output returns to full employment at a higher price level';
         return mc('The economy is in ' + (rec ? 'a recessionary' : 'an inflationary') + ' gap, and the government and central bank do nothing. What happens in the long run?', right,
           [rec ? 'Nominal wages rise, SRAS shifts left, and output returns to full employment at a higher price level' : 'Nominal wages fall, SRAS shifts right, and output returns to full employment at a lower price level', rec ? 'LRAS shifts left to meet the lower output' : 'LRAS shifts right to meet the higher output', rec ? 'AD shifts right by itself until the gap closes' : 'AD shifts left by itself until the gap closes'],
           [rec ? 'With output below potential, unemployment is high, so over time nominal wages and other input prices fall.' : 'With output above potential, labor is scarce, so over time nominal wages and other input prices rise.', 'Changing costs shift SRAS ' + (rec ? 'right' : 'left') + ' until it meets AD on LRAS.', 'LRAS does not move: the economy’s capacity has not changed.'], 'Self-correction works through wages and SRAS.', { viz: { name: 'ec-adas', opts: { mode: 'adjust', start: rec ? 'recession' : 'inflation', step: 1, quiet: true, interactive: false } } });
@@ -983,8 +1017,8 @@
   });
 
   function fiscalNums(R) { // MPC with spending multiplier k and tax multiplier m; gap divisible by both
-    var mpc = R.pick([0.5, 0.75, 0.8, 0.9]), k = kOf(mpc), m = U.fix(mpc / (1 - mpc));
-    var unit = { 0.5: 2, 0.75: 12, 0.8: 20, 0.9: 90 }[mpc], gap = unit * R.pick(mpc === 0.9 ? [1, 2, 3, 4, 5, 10] : mpc === 0.75 ? [2, 3, 4, 5, 10, 15, 20, 25] : mpc === 0.8 ? [2, 3, 4, 5, 6, 8, 10, 15] : [10, 20, 30, 40, 50, 60, 80, 100]);
+    var mpc = R.pick([0.5, 0.6, 0.75, 0.8, 0.9]), k = kOf(mpc), m = U.fix(mpc / (1 - mpc));
+    var unit = { 0.5: 2, 0.6: 15, 0.75: 12, 0.8: 20, 0.9: 90 }[mpc], gap = unit * (mpc === 0.9 ? R.int(1, 10) : mpc === 0.75 ? R.int(2, 25) : mpc === 0.8 ? R.int(2, 15) : mpc === 0.6 ? R.int(2, 20) : R.int(2, 50) * 5);
     return { mpc: mpc, k: k, m: m, gap: gap };
   }
   G('macro.fiscal-policy-size', function (R, ctx) {
@@ -1017,7 +1051,7 @@
   function brMarg(br, x) { var m = 0; br.forEach(function (b) { if (x >= b[0]) m = b[1]; }); return m; }
   function brText(br) { return br.map(function (b, i) { var hi = i + 1 < br.length ? br[i + 1][0] : null; return (b[1] * 100) + '% on income ' + (hi == null ? 'above ' + $(b[0]) : (b[0] ? 'from ' + $(b[0]) + ' ' : 'up to ') + (b[0] ? 'to ' : '') + $(hi)); }).join('; '); }
   G('macro.tax-structures', function (R, ctx) {
-    var br = R.pick(BRK), x = R.pick([25000, 35000, 45000, 50000, 70000, 90000, 120000]);
+    var br = R.pick(BRK), x = R.int(5, 30) * 5000;
     var slices = br.map(function (b, i) { var lo = b[0], hi = i + 1 < br.length ? br[i + 1][0] : Infinity, amt = Math.max(0, Math.min(x, hi) - lo); return { lo: lo, hi: hi, r: b[1], amt: amt, tax: U.fix(amt * b[1]) }; }).filter(function (s) { return s.amt > 0; });
     var tax = brTax(br, x), stp = slices.map(function (s) { return '$' + T.num(s.r * 100) + '\\%$ of ' + $(s.amt) + ' (income ' + (s.lo ? 'above ' + $(s.lo) : 'up to ' + $(Math.min(x, s.hi))) + (s.lo && s.hi < Infinity && x > s.hi ? ' up to ' + $(s.hi) : '') + ') $= ' + cm(s.tax) + '$'; });
     var vz = { name: 'ec-taxbrackets', opts: { brackets: br, income: x, max: Math.max(150000, x * 1.2), quiet: true, interactive: false } };
@@ -1092,7 +1126,7 @@
   G('macro.deficits-debt', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
-        var Tx = R.pick([3000, 3500, 4000, 4500]), Sp = Tx + R.pick([-200, 300, 500, 800, 1000]), d = Sp - Tx;
+        var Tx = R.int(20, 50) * 100, Sp = Tx + R.pick([-1, 1, 1, 1]) * R.int(1, 24) * 50, d = Sp - Tx;
         return num('A government collects ' + bn(Tx) + ' in revenue and spends ' + bn(Sp) + ' (purchases, transfers and interest) in a year. What is its budget balance, in billions of dollars? (Negative for a deficit, positive for a surplus.)', -d,
           ['Budget balance = revenue − spending.', '$' + Tx + ' - ' + Sp + ' = ' + (-d) + '$ billion dollars: ' + (d > 0 ? 'a deficit of ' + d + ' billion.' : 'a surplus of ' + (-d) + ' billion.')], 'Revenue minus spending.', { unit: UB });
       }],
@@ -1109,7 +1143,7 @@
           ['The deficit is a flow (one year’s shortfall); the debt is a stock (the total owed).', 'A smaller deficit still adds to the debt, just less than before. The debt falls only with a surplus.'], 'Is there still a shortfall this year?');
       }],
       [3, function () {
-        var Y = R.pick([20000, 25000, 30000]), r = R.pick([40, 60, 80, 100, 120]), D = Y * r / 100;
+        var Y = R.int(10, 40) * 1000, r = R.int(6, 30) * 5, D = Y * r / 100;
         return num('The national debt is ' + bn(D) + ' and GDP is ' + bn(Y) + '. What is the debt-to-GDP ratio, as a percent?', r,
           ['Debt-to-GDP $= \\dfrac{\\text{debt}}{\\text{GDP}} \\times 100$.', '$\\dfrac{' + cm(D) + '}{' + cm(Y) + '} \\times 100 = ' + r + '\\%$.', 'Comparing the debt with the size of the economy shows how heavy it is to carry.'], 'Divide the debt by GDP.', { pct: true });
       }],
@@ -1128,7 +1162,7 @@
   G('macro.financial-assets', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
-        var F = R.pick([1000, 2000, 5000, 10000, 20000]), cr = R.pick([1.5, 2, 2.5, 3, 4, 4.5, 5, 6, 8]), C = U.fix(F * cr / 100);
+        var F = R.pick([1000, 2000, 5000, 10000, 20000]), cr = R.int(2, 18) / 2, C = U.fix(F * cr / 100);
         return num('A bond with a face value of ' + $(F) + ' has a coupon rate of ' + cr + '%. How much interest does it pay each year, in dollars?', C,
           ['Coupon payment = face value × coupon rate.', '$' + cm(F) + ' \\times ' + T.num(cr / 100) + ' = ' + cm(C) + '$ dollars a year, fixed for the life of the bond.'], 'Take the coupon rate of the face value.', { unit: 'dollars' });
       }],
@@ -1163,7 +1197,7 @@
   G('macro.real-interest-rate', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
-        var i = R.pick([3, 3.5, 4, 4.5, 5, 6, 7, 8, 10, 12]), p = R.pick([1, 1.5, 2, 2.5, 3, 4]), r = U.fix(i - p);
+        var i = R.int(6, 24) / 2, p = R.int(1, Math.min(10, 2 * i - 2)) / 2, r = U.fix(i - p);
         return num('A savings account pays ' + i + '% interest, and inflation is ' + p + '%. About what is the real interest rate?', r,
           ['Real interest rate ≈ nominal interest rate − inflation rate.', '$' + i + '\\% - ' + p + '\\% = ' + r + '\\%$.', 'Your money grows ' + i + '%, but prices grow ' + p + '%, so your buying power grows only about ' + r + '%.'], 'Subtract inflation from the nominal rate.', { pct: true, tol: 0.35 });
       }],
@@ -1242,7 +1276,13 @@
     ['Retail money market mutual fund balances', 'In M2 but not M1'],
     ['Shares of stock', 'In neither'],
     ['Government bonds held by a family', 'In neither'],
-    ['The unused credit limit on a credit card', 'In neither']
+    ['The unused credit limit on a credit card', 'In neither'],
+    ['A \\$20 bill in your wallet', 'In M1 (and so also in M2)'],
+    ['Coins saved in a piggy bank at home', 'In M1 (and so also in M2)'],
+    ['A money market deposit account at a bank (a kind of savings deposit)', 'In M1 (and so also in M2)'],
+    ['A \\$5,000 six-month certificate of deposit (CD)', 'In M2 but not M1'],
+    ['A family’s house', 'In neither'],
+    ['Shares of a stock mutual fund', 'In neither']
   ];
   G('macro.money-supply-measures', function (R, ctx) {
     var cur = R.pick([2000, 2200, 2300, 2500]), dd = R.pick([3000, 4000, 5000]), sav = R.pick([9000, 10000, 12000]), td = R.pick([500, 800, 1000]), mmf = R.pick([1000, 1200, 1500]), st = R.pick([20000, 30000, 40000]), cl = R.pick([4000, 5000]);
@@ -1308,7 +1348,7 @@
           ['Money multiplier $= \\dfrac{1}{\\text{reserve ratio}} = \\dfrac{1}{' + T.num(rr) + '} = ' + T.num(mm) + '$.'], 'One over the reserve ratio.');
       }],
       [1, function () {
-        var D = R.pick([1000, 2000, 4000, 5000, 8000, 10000, 20000]), ER = U.fix(D * (1 - rr));
+        var D = R.int(1, 40) * 1000, ER = U.fix(D * (1 - rr));
         return num('With a reserve requirement of ' + T.num(rr * 100) + '%, a customer deposits ' + $(D) + ' in cash in a bank that had no excess reserves. How much can this bank lend out, at most, in dollars?', ER,
           ['The bank must keep $' + T.num(rr) + ' \\times ' + cm(D) + ' = ' + cm(U.fix(rr * D)) + '$ as required reserves.', 'It can lend its excess reserves: $' + cm(D) + ' - ' + cm(U.fix(rr * D)) + ' = ' + cm(ER) + '$ dollars.', 'One bank can lend only its excess reserves; the multiplier is about the whole banking system.'], 'A single bank lends its excess reserves.', { unit: 'dollars' });
       }],
@@ -1338,12 +1378,21 @@
   var MMEV = [
     ['The central bank buys government bonds.', 'MS', 1], ['The central bank sells government bonds.', 'MS', -1],
     ['The price level rises, so people need more money for their purchases.', 'MD', 1], ['Real GDP falls, so people make fewer purchases.', 'MD', -1],
-    ['Real GDP rises, so people make more purchases.', 'MD', 1], ['The price level falls.', 'MD', -1]
+    ['Real GDP rises, so people make more purchases.', 'MD', 1], ['The price level falls.', 'MD', -1],
+    ['The central bank lowers the reserve requirement.', 'MS', 1], ['The central bank raises the reserve requirement.', 'MS', -1],
+    ['The central bank lowers the discount rate, and banks borrow more reserves.', 'MS', 1], ['The central bank raises the discount rate, and banks borrow fewer reserves.', 'MS', -1],
+    ['Holiday shopping season arrives, and people want more money on hand for purchases.', 'MD', 1],
+    ['Paying by card becomes easier, so people carry less money for everyday purchases.', 'MD', -1]
   ];
   G('macro.money-market', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
         var it = R.pick(MMEV), up = (it[1] === 'MS' ? -it[2] : it[2]) > 0, right = up ? 'The nominal interest rate rises' : 'The nominal interest rate falls';
+        if (R.chance(0.45)) { // the same event: which curve moves, and which way
+          var cv = (it[1] === 'MS' ? 'Money supply' : 'Money demand') + ' shifts ' + (it[2] > 0 ? 'right' : 'left');
+          return mc(it[0] + ' What happens in the money market?', cv, others(['Money supply shifts right', 'Money supply shifts left', 'Money demand shifts right', 'Money demand shifts left'], cv),
+            [it[1] === 'MS' ? 'The central bank’s actions change the quantity of money, so the vertical money supply curve moves ' + (it[2] > 0 ? 'right.' : 'left.') : 'Prices and real GDP change how much money people want to hold, so money demand moves ' + (it[2] > 0 ? 'right.' : 'left.'), 'So the nominal interest rate ' + (up ? 'rises.' : 'falls.')], 'Is it the central bank, or the public’s wish to hold money?', { keep: true });
+        }
         return mc(it[0] + ' What happens to the nominal interest rate in the money market?', right, others(['The nominal interest rate rises', 'The nominal interest rate falls', 'The nominal interest rate does not change'], right),
           [it[1] === 'MS' ? 'The vertical money supply shifts ' + (it[2] > 0 ? 'right' : 'left') + '. People move along money demand until they hold the new amount, which takes a ' + (up ? 'higher' : 'lower') + ' rate.' : 'Money demand shifts ' + (it[2] > 0 ? 'right' : 'left') + '. With the money supply fixed by the central bank, the rate ' + (up ? 'rises' : 'falls') + '.'], 'Which curve shifts, and which way?', { keep: true, viz: { name: 'ec-moneymarket', opts: { quiet: true, interactive: false } } });
       }],
@@ -1545,7 +1594,13 @@
     ['Oil prices jump (a negative supply shock).', 'The SRPC shifts up and to the right'],
     ['People come to expect higher inflation.', 'The SRPC shifts up and to the right'],
     ['A fall in energy prices lowers firms’ costs.', 'The SRPC shifts down and to the left'],
-    ['People come to expect lower inflation.', 'The SRPC shifts down and to the left']
+    ['People come to expect lower inflation.', 'The SRPC shifts down and to the left'],
+    ['Consumer confidence rises, and households spend more.', 'A movement up and to the left along the SRPC'],
+    ['A tax cut leaves households more to spend, and they spend it.', 'A movement up and to the left along the SRPC'],
+    ['Exports fall because major trading partners are in recession.', 'A movement down and to the right along the SRPC'],
+    ['Businesses cut back on investment because they expect weak sales.', 'A movement down and to the right along the SRPC'],
+    ['A drought raises food and input costs across the economy (a negative supply shock).', 'The SRPC shifts up and to the right'],
+    ['New technology lowers production costs across many industries (a positive supply shock).', 'The SRPC shifts down and to the left']
   ];
   G('macro.short-run-phillips', function (R, ctx) {
     return choose(R, ctx, [
@@ -1556,6 +1611,11 @@
       }],
       [1, function () {
         var it = R.pick(PCEV);
+        if (R.chance(0.4)) { // the same event: a movement along the curve, or a shift of it?
+          var mv = /movement/.test(it[1]) ? 'A movement along the SRPC' : 'A shift of the SRPC';
+          return mc(it[0] + ' Is this a movement along the short-run Phillips curve (SRPC) or a shift of it?', mv, others(['A movement along the SRPC', 'A shift of the SRPC'], mv),
+            [/movement/.test(it[1]) ? 'A change in aggregate demand moves the economy along SRAS, and so along the SRPC.' : 'Supply shocks and changes in expected inflation shift the SRPC itself.'], 'Demand changes move along the curve; supply shocks and expectations shift it.', { keep: true });
+        }
         return mc(it[0] + ' What happens on the short-run Phillips curve (SRPC)?', it[1], others(['A movement up and to the left along the SRPC', 'A movement down and to the right along the SRPC', 'The SRPC shifts up and to the right', 'The SRPC shifts down and to the left'], it[1]),
           [/movement/.test(it[1]) ? 'A shift of AD moves the economy along SRAS, and so along the SRPC: ' + (/up/.test(it[1]) ? 'more output, lower unemployment, higher inflation.' : 'less output, higher unemployment, lower inflation.') : 'Supply shocks and changes in expected inflation shift the SRPC itself: ' + (/up/.test(it[1]) ? 'higher inflation at every unemployment rate.' : 'lower inflation at every unemployment rate.')], 'Demand changes move along the curve; supply shocks and expectations shift it.', { keep: true, viz: { name: 'ec-phillips', opts: { mode: 'short', quiet: true, interactive: false } } });
       }],
@@ -1576,6 +1636,12 @@
   G('macro.long-run-phillips', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
+        var lr = R.int(0, 5), vzl = { viz: { name: 'ec-phillips', opts: { mode: 'long', step: 5, quiet: true, interactive: false } } };
+        if (lr === 1) return mc('What is the shape of the long-run Phillips curve?', 'A vertical line at the natural rate of unemployment', ['A downward-sloping curve, like the short-run curve', 'A horizontal line at the expected inflation rate', 'An upward-sloping line'], ['In the long run, unemployment returns to the natural rate whatever the inflation rate, so the curve is vertical there.'], 'In the long run, does inflation change unemployment?');
+        if (lr === 2) return mc('In the long run, can a government keep unemployment below its natural rate by accepting higher inflation?', 'No: once people expect the higher inflation, unemployment returns to the natural rate', ['Yes, as long as inflation stays high', 'Yes, but only if inflation is falling', 'No, because inflation always lowers the natural rate'], ['Surprise inflation can lower unemployment only for a while. Expectations catch up, the SRPC shifts up, and unemployment goes back to the natural rate.'], 'What happens when expectations catch up?');
+        if (lr === 3) return mc('The natural rate of unemployment falls (for example, job matching improves). What happens to the long-run Phillips curve?', 'It shifts left', ['It shifts right', 'It does not move', 'It becomes horizontal'], ['The long-run curve sits at the natural rate of unemployment, so a lower natural rate moves it left.'], 'Where does the long-run curve sit?');
+        if (lr === 4) return mc('The natural rate of unemployment rises. What happens to the long-run Phillips curve?', 'It shifts right', ['It shifts left', 'It does not move', 'It becomes horizontal'], ['The long-run curve sits at the natural rate of unemployment, so a higher natural rate moves it right.'], 'Where does the long-run curve sit?');
+        if (lr === 5) return mc('Expected inflation rises from 2% to 4%, and the natural rate of unemployment does not change. What happens to the long-run Phillips curve?', 'It does not move', ['It shifts right', 'It shifts left', 'It shifts up by 2 points'], ['Expected inflation shifts the short-run curve. The long-run curve stays at the natural rate of unemployment.'], 'Which curve do expectations shift?', vzl);
         var right = 'Unemployment returns to the natural rate, and inflation stays higher';
         return mc('The government keeps pushing aggregate demand up, year after year, to hold unemployment below its natural rate. Once people come to expect the higher inflation, what happens if it stops?', right,
           ['Unemployment stays low for good, and inflation returns to its old level', 'Unemployment and inflation both return to their old levels', 'Unemployment rises above the natural rate forever'],
@@ -1602,7 +1668,7 @@
   G('macro.quantity-theory', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
-        var M = R.pick([2000, 4000, 5000, 6000]), V = R.pick([2, 3, 4, 5]), PY = M * V;
+        var M = R.int(10, 80) * 100, V = R.int(2, 9), PY = M * V;
         return num('The money supply is ' + bn(M) + ' and nominal GDP ($P \\times Y$) is ' + bn(PY) + '. What is the velocity of money?', V,
           ['From $MV = PY$: $V = \\dfrac{PY}{M}$.', '$V = \\dfrac{' + cm(PY) + '}{' + cm(M) + '} = ' + V + '$: each dollar is spent on final goods and services ' + V + ' times a year on average.'], 'Velocity is nominal GDP divided by the money supply.');
       }],
@@ -1635,6 +1701,16 @@
   G('macro.crowding-out', function (R, ctx) {
     return choose(R, ctx, [
       [1, function () {
+        var more = R.chance(0.65), part = R.int(0, 3);
+        if (part > 0 || !more) {
+          var ev = more ? 'The government borrows more to pay for a larger budget deficit.' : 'The government cuts its budget deficit, so it borrows less.';
+          var why = [more ? 'The government competes with firms for the available saving, so demand for loanable funds shifts right and the real interest rate rises.' : 'With less government borrowing, demand for loanable funds shifts left and the real interest rate falls.', more ? 'At the higher rate, firms borrow less for investment: crowding out.' : 'At the lower rate, firms borrow more for investment (sometimes called crowding in).'];
+          var vz = { viz: { name: 'ec-loanable', opts: { quiet: true, interactive: false } } };
+          if (part === 2) return mc(ev + ' In the loanable funds model, what happens to the real interest rate?', more ? 'It rises' : 'It falls', more ? ['It falls', 'It does not change'] : ['It rises', 'It does not change'], why, 'Is the government borrowing more or less?', vz);
+          if (part === 3) return mc(ev + ' What happens to private investment spending?', more ? 'It falls' : 'It rises', more ? ['It rises', 'It does not change'] : ['It falls', 'It does not change'], why, 'Follow the real interest rate to investment.', vz);
+          return mc(ev + ' Using the loanable funds model in which the government is a borrower, what happens?', more ? 'Demand for loanable funds increases, and the real interest rate rises' : 'Demand for loanable funds decreases, and the real interest rate falls',
+            more ? ['Supply of loanable funds increases, and the real interest rate falls', 'Demand for loanable funds decreases, and the real interest rate falls'] : ['Demand for loanable funds increases, and the real interest rate rises', 'Supply of loanable funds decreases, and the real interest rate rises'], why, 'Is the government borrowing more or less?', vz);
+        }
         var right = 'Demand for loanable funds increases, and the real interest rate rises';
         return mc('The government borrows to pay for a larger budget deficit. Using the loanable funds model in which the government is a borrower, what happens?', right,
           ['Supply of loanable funds increases, and the real interest rate falls', 'Demand for loanable funds decreases, and the real interest rate falls', 'Nothing changes, because the government borrows from itself'],
@@ -1746,7 +1822,7 @@
           ['Doubling time ≈ $\\dfrac{70}{' + T.num(g) + '} = ' + T.num(U.fix(70 / g)) + '$ years.', 'Growing ' + f + ' times means ' + k + ' doublings ($2^{' + k + '} = ' + f + '$): $' + k + ' \\times ' + T.num(U.fix(70 / g)) + ' = ' + T.num(t) + '$ years.'], 'How many doublings make it ' + f + ' times as large?', { unit: 'years' });
       }],
       [1, function () {
-        var P = R.pick([1000, 2000, 5000, 10000, 20000, 40000]), g = R.pick([2, 5, 7, 10]), d = U.fix(70 / g), n = R.pick([1, 2, 3]), yrs = U.fix(d * n), v = P * Math.pow(2, n);
+        var P = R.int(1, 40) * 1000, g = R.pick([2, 3.5, 5, 7, 10, 14]), d = U.fix(70 / g), n = R.pick([1, 2, 3]), yrs = U.fix(d * n), v = P * Math.pow(2, n);
         return num('Income per person is ' + $(P) + ' and grows ' + g + '% a year. Using the rule of 70, about what will it be after ' + T.num(yrs) + ' years, in dollars?', v,
           ['Doubling time ≈ $\\dfrac{70}{' + g + '} = ' + T.num(d) + '$ years, so ' + T.num(yrs) + ' years is ' + n + ' doubling' + (n > 1 ? 's' : '') + '.', '$' + cm(P) + ' \\times 2^{' + n + '} = ' + cm(v) + '$ dollars.'], 'Count the doublings.', { unit: 'dollars' });
       }],
@@ -2018,7 +2094,15 @@
           ['U.S.: $' + cm(amt) + ' \\times ' + T.num((home ? r2 : r1) / 100) + ' = ' + cm(U.fix(amt * (home ? r2 : r1) / 100)) + '$; Europe: $' + cm(amt) + ' \\times ' + T.num((home ? r1 : r2) / 100) + ' = ' + cm(U.fix(amt * (home ? r1 : r2) / 100)) + '$.', 'Difference: ' + $(diff) + ' a year. Savers move funds toward the higher return, so financial capital flows ' + (home ? 'into the United States, raising demand for dollars.' : 'toward Europe, raising the supply of dollars as savers swap them for euros.')], 'Work out the interest each choice pays.', { unit: 'dollars' });
       }],
       [1, function () {
-        var up = R.coin();
+        var up = R.coin(), part = R.int(0, 3);
+        if (part > 0) {
+          var cause = R.coin() ? 'The real interest rate in the United States ' + (up ? 'rises' : 'falls') + ' compared with other countries.' : 'Investors around the world come to see U.S. assets as ' + (up ? 'safer' : 'riskier') + ' than before, with returns unchanged.';
+          var why = [up ? 'U.S. assets become more attractive, so foreign savers buy them. To buy them, they first buy dollars.' : 'U.S. assets become less attractive, so savers move funds abroad and sell dollars for foreign currency.', 'Demand for dollars ' + (up ? 'rises' : 'falls') + ', so the dollar ' + (up ? 'appreciates' : 'depreciates') + '.'];
+          var vzf = { keep: true, viz: { name: 'ec-forex', opts: { quiet: true, interactive: false } } };
+          if (part === 1) return mc(cause + ' Which way does financial capital flow?', up ? 'Into the United States' : 'Out of the United States', up ? ['Out of the United States', 'It does not move'] : ['Into the United States', 'It does not move'], why, 'Where do savers want to put their money?', vzf);
+          if (part === 2) return mc(cause + ' What happens to the value of the dollar?', up ? 'It appreciates' : 'It depreciates', up ? ['It depreciates', 'It does not change'] : ['It appreciates', 'It does not change'], why, 'Follow the demand for dollars.', vzf);
+          return mc(cause + ' What happens to the demand for dollars in the foreign exchange market?', up ? 'It increases' : 'It decreases', up ? ['It decreases', 'It does not change'] : ['It increases', 'It does not change'], why, 'To buy U.S. assets, investors need dollars.', vzf);
+        }
         var right = up ? 'Foreign financial capital flows in, demand for dollars rises, and the dollar appreciates' : 'Financial capital flows out, demand for dollars falls, and the dollar depreciates';
         return mc('The real interest rate in the United States ' + (up ? 'rises' : 'falls') + ' compared with other countries. What happens?', right,
           [up ? 'Borrowing costs more, so the dollar depreciates' : 'Borrowing costs less, so the dollar appreciates', up ? 'Foreign capital flows out, and the dollar depreciates' : 'Foreign capital flows in, and the dollar appreciates', 'Nothing: interest rates do not affect exchange rates'],
@@ -2045,7 +2129,7 @@
   });
 
   G('macro.saving-investment-identity', function (R, ctx) {
-    var sp = R.pick([1800, 2000, 2400, 3000]), tg = -R.pick([200, 400, 600, 800]), inv = R.pick([1800, 2000, 2200, 2600]), nx = sp + tg - inv;
+    var sp = R.int(16, 32) * 100, tg = -R.int(1, 8) * 100, inv = R.int(16, 28) * 100, nx = sp + tg - inv;
     var vz = { name: 'ec-loanable', opts: { mode: 'identity', values: { sp: sp / 100, tg: tg / 100, i: inv / 100 }, quiet: true, interactive: false } };
     return choose(R, ctx, [
       [1, function () {
@@ -2074,3 +2158,443 @@
   });
 
 })(window.MathLadder);
+
+/* ---- widen_hum: more questions from the lesson's own tables -----------------------------------------------------
+   Each topic listed below also asks about the facts in its lesson's tables (copied here from the lesson, so the
+   answers are the lesson's own). Forms, by level:
+     match   "Which museum is in Turin?": the right cell and others from the same column (3 choices at level 1, 4 above)
+     pairs   lines "A → B": which pairing is right (level 2), or which one is wrong (level 3)
+     sort    a comparison table: which column does this cell describe (levels 1-2), or choose all for one column (level 3)
+   How often: about a third to a half of the draws, more when the topic's own questions are few at that level.
+   Generated by /tmp/work_widen_widen_hum/tabbuild.js from data/<ladder>/lessons/<course>.json. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var TABS = [{"k":"macro.types-unemployment#x","x":[{"f":"unemp"},{"f":"unemp"},{"q":"A worker's job will not come back even when spending recovers, because the work is now done by machines. What kind of unemployment is this?","a":"Structural","w":["Frictional","Cyclical","Not unemployment at all"],"s":["Ask: would this job return if spending recovered? No.","So it is structural."]},{"q":"Which kinds of unemployment make up the natural rate?","a":"Frictional and structural","w":["Cyclical only","Frictional and cyclical","All three kinds"],"s":["Natural rate = frictional + structural.","At full employment, cyclical unemployment is zero."]},{"q":"What does \"full employment\" mean?","a":"Unemployment equals the natural rate, with no cyclical unemployment","w":["Unemployment is 0%","Everyone has two jobs","Unemployment is above the natural rate"],"s":["Some frictional and structural unemployment is normal.","Full employment means only cyclical unemployment is gone."]},{"lv":2,"q":"Why is some frictional unemployment normal and even healthy?","a":"It means people are searching for better matches","w":["It means the economy is in a recession","It means wages are too high","It means machines replaced workers"],"s":["People quit to find better jobs, and graduates look for first jobs.","Searching takes time."]},{"tf":false,"q":"True or false: a strong economy brings structural unemployment down to zero.","s":["Structural unemployment does not go away when the economy is strong.","It may need retraining or moving."]}]},
+    {"k":"macro.gdp-deflator#x","x":[{"f":"deflator"},{"f":"deflator"},{"q":"In the base year, what is the GDP deflator?","a":"100","w":["0","1","1,000"],"s":["In the base year, nominal and real GDP are equal.","So the deflator is exactly 100."]},{"q":"The GDP deflator is 115. What does it mean?","a":"Prices of the economy's output are 15% higher than in the base year","w":["Real GDP is \\$115 billion","Output is 15% higher than in the base year","Prices are 115% lower than in the base year"],"s":["Subtract 100 to get the percent change in prices since the base year."]},{"lv":2,"tf":true,"q":"True or false: in years after the base year, when prices have risen, nominal GDP is bigger than real GDP.","s":["Nominal GDP uses current prices; real GDP uses base-year prices.","If prices rose, nominal is bigger, and the deflator is above 100."]}]},
+    {"k":"macro.price-index#x","x":[{"f":"index"},{"f":"infl"},{"q":"Which agency publishes the consumer price index (CPI)?","a":"The Bureau of Labor Statistics","w":["The Federal Reserve","Congress","The Treasury Department"],"s":["The CPI comes from the Bureau of Labor Statistics.","It uses a basket bought by urban households."]},{"q":"An index of 120 means what?","a":"The same basket costs 20% more than in the base period","w":["The basket costs \\$120","Prices fell by 20%","The basket is 120 items"],"s":["Subtract 100 from the index to get the percent change since the base period.","An index has no dollar units."]},{"lv":2,"q":"Why does a price index hold the basket fixed?","a":"So that only price changes can change its cost","w":["So that it measures changes in quantity","Because people never change what they buy","To make the index equal \\$100"],"s":["With a fixed basket, the index measures price changes alone."]}]},
+    {"k":"macro.tax-multiplier#x","x":[{"f":"taxm"},{"f":"taxm"},{"q":"With an MPC of 0.8, what is the tax multiplier?","a":"−4","w":["−5","5","4"],"s":["Tax multiplier = −MPC ÷ MPS = −0.8 ÷ 0.2 = −4.","Its size is one less than the spending multiplier, 5."]},{"q":"With an MPC of 0.75, what is the tax multiplier?","a":"−3","w":["−4","4","3"],"s":["−0.75 ÷ 0.25 = −3.","The spending multiplier would be 4."]},{"q":"With an MPC of 0.9, what is the tax multiplier?","a":"−9","w":["−10","10","9"],"s":["−0.9 ÷ 0.1 = −9.","The spending multiplier would be 10."]},{"lv":2,"q":"Why is the tax multiplier smaller in size than the spending multiplier?","a":"Households save part of a tax cut before any spending happens","w":["Taxes are always smaller than spending","The government saves part of its purchases","Tax cuts raise interest rates"],"s":["With MPC 0.8, a \\$100 tax cut starts with only \\$80 of spending.","After that the rounds are the same."]},{"lv":2,"q":"What is the balanced-budget multiplier: a change in G matched by an equal change in taxes?","a":"1","w":["0","The same as the spending multiplier","−1"],"s":["The spending multiplier and the tax multiplier differ by exactly one.","So an equal rise in G and taxes raises GDP by the same amount: a multiplier of 1."]}]},
+    {"k":"macro.money-supply-measures#x","x":[{"f":"money"},{"f":"money"},{"f":"money"}]},
+    {"k":"macro.bank-balance-sheets#x","x":[{"f":"reserves"},{"f":"reserves"},{"q":"To a bank, what is a customer's deposit?","a":"A liability: money the bank owes the depositor","w":["An asset the bank owns","Owners' equity","A loan the bank made"],"s":["The bank owes the depositor the money on demand.","The matching asset is the cash or reserves it holds."]},{"q":"On a bank's balance sheet, assets always equal what?","a":"Liabilities plus owners' equity","w":["Deposits only","Loans plus reserves","Zero"],"s":["Assets = liabilities + owners' equity.","That is why a T-account balances."]},{"lv":2,"q":"A customer deposits \\$100 in cash. What happens to the bank's T-account?","a":"Reserves (an asset) and deposits (a liability) both rise by \\$100","w":["Only assets rise by \\$100","Loans rise and deposits fall","Owners' equity rises by \\$100"],"s":["The cash is a new reserve: an asset.","The bank owes the customer \\$100: a liability."]}]},
+    {"k":"macro.money-creation#x","x":[{"f":"mmult"},{"f":"mmult"},{"q":"With a reserve requirement of 10%, what is the simple money multiplier?","a":"10","w":["0.1","1","100"],"s":["Money multiplier = 1 ÷ reserve ratio = 1 ÷ 0.1 = 10."]},{"q":"With a reserve requirement of 25%, what is the simple money multiplier?","a":"4","w":["0.25","25","2.5"],"s":["1 ÷ 0.25 = 4."]}]},
+    {"k":"macro.real-interest-rate#x","x":[{"f":"rir"},{"f":"rir"},{"f":"rir"}]},
+    {"k":"macro.deficits-debt#x","x":[{"f":"debt"},{"f":"debt"},{"q":"What is the difference between the deficit and the debt?","a":"The deficit is one year's shortfall; the debt is the total owed","w":["They are the same thing","The debt is one year's shortfall; the deficit is the total owed","The deficit is what other countries owe us"],"s":["The deficit is a flow, per year.","The debt is a stock: the running total."]}]},
+    {"k":"macro.financial-assets#x","x":[{"f":"bondpv"},{"f":"bondpv"},{"q":"What is a bond?","a":"A loan to a government or company, which pays fixed interest and the face value at maturity","w":["A share of ownership in a company","A kind of bank deposit insured by the government","Money printed by the central bank"],"s":["A bond is a loan.","A stock is a share of ownership."]},{"q":"What is a stock?","a":"A share of ownership in a company","w":["A loan to a company","A government promise to pay","A savings deposit"],"s":["Buying stock makes you a part owner.","Buying a bond makes you a lender."]},{"q":"Market interest rates fall. What happens to the prices of existing bonds?","a":"They rise","w":["They fall","They stay at face value","They become zero"],"s":["Old bonds pay fixed coupons.","When new bonds pay less, old ones become worth more."]},{"lv":2,"q":"Your bond pays 5% on \\$1,000. New bonds now pay 7%. Why will no one pay \\$1,000 for yours?","a":"For \\$1,000 they could get \\$70 a year from a new bond instead of \\$50","w":["Bonds lose value every year by law","Your bond is now a stock","The 7% is paid only to banks"],"s":["Your bond's price must drop until its \\$50 a year is as good a deal as a new bond."]}]},
+    {"k":"macro.balance-of-payments#x","x":[{"f":"ca"},{"f":"fa"},{"q":"An American buys shares of a German company. In which U.S. account is this recorded?","a":"Financial account","w":["Current account","Not recorded: it is not a trade"],"s":["Purchases of assets across borders go in the financial account."]},{"q":"An American family sends money to relatives abroad. In which U.S. account is this recorded?","a":"Current account","w":["Financial account","Not recorded: it is not a trade"],"s":["Transfers, like money sent home to family, are in the current account."]},{"q":"A U.S. company sells software to a buyer in Japan. In which U.S. account is this recorded?","a":"Current account","w":["Financial account","Not recorded: it is not a trade"],"s":["Trade in goods and services is in the current account."]},{"q":"A Canadian firm buys an office building in Chicago. In which U.S. account is this recorded?","a":"Financial account","w":["Current account","Not recorded: it is not a trade"],"s":["Buying real assets across borders goes in the financial account."]},{"lv":2,"q":"If Americans buy \\$100 more goods from abroad than they sell, what usually happens to those extra dollars?","a":"Foreigners use them to buy U.S. assets, a financial account surplus","w":["They disappear from the economy","The Federal Reserve burns them","They are always spent on U.S. goods the same year"],"s":["A current account deficit is matched by a financial account surplus."]}]},
+    {"k":"macro.fed-tools#x","x":[{"q":"To fight a recession, what does the central bank do with government bonds?","a":"Buy them","w":["Sell them","Print more of them","Nothing: bonds are fiscal policy"],"s":["Buying bonds adds reserves and money: expansionary."]},{"q":"To fight inflation, what does the central bank do with government bonds?","a":"Sell them","w":["Buy them","Give them away","Nothing: bonds are fiscal policy"],"s":["Selling bonds drains reserves: contractionary."]},{"q":"To fight a recession, what does the central bank do with the discount rate?","a":"Lower it","w":["Raise it","Leave it, since only Congress can change it","Set it equal to the inflation rate"],"s":["A lower discount rate makes it cheaper for banks to borrow reserves."]},{"q":"To fight inflation, what does the central bank do with the discount rate?","a":"Raise it","w":["Lower it","Leave it, since only Congress can change it","Set it to zero"],"s":["A higher discount rate makes borrowing reserves dearer: contractionary."]},{"q":"To fight a recession, what does the central bank do with the reserve requirement?","a":"Lower it","w":["Raise it","Abolish all banks","Nothing: it is fiscal policy"],"s":["A lower requirement turns required reserves into excess reserves banks can lend."]},{"q":"To fight inflation, what does the central bank do with the interest it pays on reserve balances?","a":"Raise it","w":["Lower it","Pay it to households","Nothing: it does not matter"],"s":["A higher IORB makes keeping money at the Fed more attractive than lending it.","That pulls short-term rates up: contractionary."]},{"q":"What is the discount rate?","a":"The rate the central bank charges banks for loans","w":["The rate banks pay savers","The tax rate on bonds","The rate of inflation"],"s":["The discount rate is what the Fed charges banks."]},{"lv":2,"q":"How does the Fed pay for bonds it buys from a bank?","a":"By adding reserves to the bank's account at the Fed","w":["With tax money","By borrowing from Congress","With gold"],"s":["The Fed creates new reserves to pay.","So \"buy\" means more money."]}]},
+    {"k":"macro.monetary-policy#x","x":[{"q":"Put the chain of expansionary monetary policy in order.","a":"Buy bonds → interest rates fall → investment rises → AD shifts right","w":["Buy bonds → interest rates rise → investment falls → AD shifts left","Interest rates fall → buy bonds → AD shifts right → investment rises","AD shifts right → investment rises → interest rates fall → buy bonds"],"s":["Start in the money market and end with AD."]},{"q":"Contractionary monetary policy raises interest rates. What happens to investment?","a":"It falls","w":["It rises","It does not change","It doubles"],"s":["Higher rates make borrowing for new factories and homes dearer."]},{"q":"Expansionary monetary policy shifts AD right. What happens to real GDP and unemployment in the short run?","a":"Real GDP rises; unemployment falls","w":["Real GDP falls; unemployment rises","Both rise","Both fall"],"s":["More spending means more output and more hiring."]},{"lv":2,"q":"Which interest rate does the Fed set directly?","a":"A short-term policy rate; other rates respond","w":["Every interest rate, mortgage rates included","Only mortgage rates","Only credit card rates"],"s":["The Fed sets a short-term policy rate.","Other rates, such as mortgage rates, respond to it."]},{"lv":2,"q":"In the monetary policy chain, which two links are shifts of curves?","a":"The money supply in the money market, and AD","w":["Money demand and investment demand","Investment demand and SRAS","LRAS and the money supply"],"s":["The money supply shifts, and AD shifts.","The others are movements along curves."]}]},
+    {"k":"macro.crowding-out#x","x":[{"q":"The government borrows more. What happens to the demand for loanable funds?","a":"It rises","w":["It falls","It does not change","The supply rises instead"],"s":["Government borrowing adds to demand for loanable funds."]},{"q":"The government borrows more. What happens to the real interest rate?","a":"It rises","w":["It falls","It stays the same","It becomes zero"],"s":["More demand for a limited pool of saving pushes the rate up."]},{"q":"What is crowding out?","a":"Higher interest rates from government borrowing reduce private investment","w":["Too many people in a city","Imports replacing domestic goods","The Fed buying too many bonds"],"s":["At the higher rate, some private projects no longer pay."]},{"lv":2,"q":"Why might crowding out be small in a deep recession?","a":"With idle resources and weak demand for loans, rates may rise little","w":["Because the government cannot borrow in a recession","Because saving falls to zero","Because investment always rises in a recession"],"s":["Near full employment, borrowing competes harder for scarce saving.","The size of crowding out in practice is debated."]}]},
+    {"k":"macro.growth-policy#x","x":[{"q":"Funding basic research shifts which curve?","a":"LRAS to the right","w":["AD only","LRAS to the left","Neither"],"s":["Research adds new ideas: more capacity to produce."]},{"q":"A one-time tax rebate spent on consumer goods shifts which curve?","a":"AD only, for a while","w":["LRAS to the right","LRAS to the left","The PPC outward"],"s":["It raises demand but leaves the economy with the same machines, skills and ideas."]},{"q":"Which of these raises potential output?","a":"Better schooling and job training","w":["A one-time gift card for every family","Printing more money","A higher price level"],"s":["Human capital adds to the economy's capacity: LRAS shifts right."]},{"q":"Building a new port does what?","a":"Raises AD while it is built, and LRAS once it is finished","w":["Only raises AD","Only lowers LRAS","Nothing at all"],"s":["The construction spending raises AD now.","The finished port lets firms produce and ship more later."]},{"lv":2,"q":"What do economists debate about growth policy?","a":"Which particular policies deliver growth best, and at what cost","w":["Whether capital and skills matter at all","Whether real GDP can ever grow","Whether technology exists"],"s":["Economists broadly agree on the sources of growth.","They debate which policies deliver them best."]}]},
+    {"k":"macro.capital-flows#x","x":[{"q":"U.S. real interest rates rise compared with other countries. What happens to the dollar?","a":"It appreciates","w":["It depreciates","It does not change","It is replaced"],"s":["Foreign savers want U.S. assets and must buy dollars first."]},{"q":"A country's real interest rate falls. Which way does financial capital flow?","a":"Out of the country","w":["Into the country","Nowhere","Only into its stock market"],"s":["Savers look for better returns elsewhere.","The currency depreciates."]},{"q":"Foreign savers want to buy U.S. bonds. What must they buy first?","a":"Dollars","w":["Euros","Gold","U.S. goods"],"s":["To buy U.S. assets, they need dollars.","So demand for dollars rises."]},{"lv":2,"q":"A capital inflow adds to which part of the loanable funds market?","a":"The supply of loanable funds","w":["The demand for loanable funds","Neither","The money supply set by the Fed"],"s":["Foreign saving adds to supply.","That keeps the rate from rising as much as it otherwise would."]},{"lv":3,"q":"Put the classic chain in order for a U.S. budget deficit.","a":"Real rate rises → capital flows in → dollar appreciates → net exports fall","w":["Dollar appreciates → real rate rises → net exports rise → capital flows out","Capital flows out → dollar depreciates → net exports rise → real rate falls","Net exports fall → real rate rises → capital flows in → dollar depreciates"],"s":["The government borrows more, so the real rate rises.","Foreign capital flows in, the dollar appreciates, and net exports fall."]}]},
+    {"k":"macro.business-cycle#x","x":[{"q":"Which phase of the business cycle is the high point?","a":"Peak","w":["Trough","Expansion","Contraction"],"s":["The four phases: expansion, peak, contraction, trough."]},{"q":"Which phase of the business cycle is the low point?","a":"Trough","w":["Peak","Expansion","Contraction"],"s":["The trough is the low point, before expansion begins again."]},{"q":"Real GDP grew 3% last year and 1% this year. Which phase is the economy in?","a":"Expansion: real GDP is still rising","w":["Contraction","A recession","Trough"],"s":["Slower growth is still growth.","A contraction means real GDP is falling."]},{"q":"Real GDP is falling. Which phase is this?","a":"Contraction","w":["Expansion","Peak","Trough"],"s":["A contraction is a fall in real GDP.","A large, lasting one is a recession."]},{"lv":2,"q":"What is potential output?","a":"What the economy can produce with its resources fully employed","w":["The most it could ever produce","Last year's real GDP","Nominal GDP"],"s":["Output can run above potential for a while, with overtime and extra shifts."]}]},
+    {"k":"macro.ad-as-equilibrium#x","x":[{"q":"Short-run equilibrium output is to the left of LRAS. What kind of gap is this?","a":"A recessionary gap","w":["An inflationary gap","No gap","A trade gap"],"s":["Left of LRAS means less output and more unemployment."]},{"q":"Short-run equilibrium output is to the right of LRAS. What kind of gap is this?","a":"An inflationary gap","w":["A recessionary gap","No gap","A budget gap"],"s":["Right of LRAS means overheating: output above potential."]},{"q":"Where is long-run equilibrium?","a":"Where AD, SRAS and LRAS all meet","w":["Where AD meets SRAS anywhere","Where LRAS meets the price axis","Where AD is vertical"],"s":["In the long run, all three curves meet."]},{"lv":2,"q":"In an inflationary gap, how does unemployment compare with the natural rate?","a":"It is below the natural rate","w":["It is above the natural rate","It equals the natural rate","It is zero"],"s":["Firms run overtime and labor is scarce."]},{"lv":2,"q":"In a recessionary gap, how does unemployment compare with the natural rate?","a":"It is above the natural rate","w":["It is below the natural rate","It equals the natural rate","It is zero"],"s":["Workers are idle; cyclical unemployment is high."]}]},
+    {"k":"macro.policy-mix#x","x":[{"q":"Fiscal expansion and monetary expansion together. What happens to real GDP?","a":"It rises","w":["It falls","Indeterminate","It stays the same"],"s":["Both shift AD right, so output rises for sure."]},{"q":"Fiscal expansion and monetary expansion together. What happens to the interest rate?","a":"Indeterminate: one pushes it up, the other down","w":["It rises","It falls","It stays the same for sure"],"s":["Fiscal expansion tends to raise rates; monetary expansion lowers them.","Without sizes, the direction is indeterminate."]},{"q":"Fiscal contraction and monetary contraction together. What happens to the price level?","a":"It falls (or rises less)","w":["It rises","Indeterminate","It doubles"],"s":["Both shift AD left, so the price level falls."]},{"lv":2,"q":"Fiscal contraction with monetary expansion. What happens to the interest rate?","a":"It falls","w":["It rises","Indeterminate","It stays the same"],"s":["Fiscal contraction tends to lower rates; monetary expansion lowers them too.","Both push the same way."]},{"lv":2,"q":"Fiscal expansion with monetary contraction. What happens to the interest rate?","a":"It rises","w":["It falls","Indeterminate","It stays the same"],"s":["Both push the interest rate up.","But real GDP is indeterminate."]},{"lv":2,"q":"Fiscal expansion with monetary contraction. What happens to real GDP?","a":"Indeterminate: it depends on which effect is larger","w":["It rises","It falls","It stays the same for sure"],"s":["One shifts AD right, the other left."]}]},
+    {"k":"macro.costs-of-inflation#x","x":[{"q":"Unexpected inflation helps whom?","a":"Borrowers","w":["Lenders","People with fixed incomes","Savers holding cash"],"s":["The dollars repaid buy less than planned, so the borrower gains."]},{"q":"What are menu costs?","a":"The costs of changing posted prices","w":["The price of meals out","Costs of holding less cash","Taxes on food"],"s":["Reprinting menus and price tags takes time and money."]},{"q":"What are shoe-leather costs?","a":"The effort spent holding less cash","w":["The cost of new shoes","The cost of changing prices","Higher taxes"],"s":["When inflation is high, people make extra trips to the bank to hold less cash."]},{"lv":2,"q":"Wages rise 4% and prices rise 4%. What happens to a worker's buying power?","a":"It stays about the same","w":["It falls by 4%","It rises by 8%","It falls by 8%"],"s":["Real income depends on wages compared with prices."]}]}];
+  var FUNS = {
+    unemp: function (R) { // natural rate = frictional + structural; actual = natural + cyclical (lesson: Types of Unemployment)
+      var f = R.int(8, 30) / 10, s = R.int(10, 35) / 10, c = R.int(0, 40) / 10, nat = Math.round((f + s) * 10) / 10, act = Math.round((nat + c) * 10) / 10, k = R.int(0, 2);
+      if (k === 0) return { q: 'Frictional unemployment is ' + f + '% and structural unemployment is ' + s + '%. What is the natural rate of unemployment?', num: nat, pct: true, tol: 0.05,
+        s: ['Natural rate = frictional + structural.', f + '% + ' + s + '% = ' + nat + '%.'], h: 'Cyclical unemployment is not part of the natural rate.' };
+      if (k === 1) return { q: 'Frictional unemployment is ' + f + '%, structural unemployment is ' + s + '% and cyclical unemployment is ' + c + '%. What is the actual unemployment rate?', num: act, pct: true, tol: 0.05,
+        s: ['Actual rate = frictional + structural + cyclical.', f + '% + ' + s + '% + ' + c + '% = ' + act + '%.'], h: 'Add all three kinds.' };
+      return { q: 'The unemployment rate is ' + act + '%. The natural rate is ' + nat + '%. What is the cyclical unemployment rate?', num: c, pct: true, tol: 0.05,
+        s: ['Cyclical = actual − natural.', act + '% − ' + nat + '% = ' + c + '%.'], h: 'Take away the natural rate.' };
+    },
+    deflator: function (R) { // deflator = nominal / real × 100
+      var real = R.int(4, 60) * 100, d = R.int(90, 140), nom = real * d / 100, k = R.int(0, 1);
+      if (k === 0) return { q: 'Nominal GDP is \\$' + nom.toLocaleString('en-US') + ' billion and real GDP is \\$' + real.toLocaleString('en-US') + ' billion. What is the GDP deflator?', num: d,
+        s: ['GDP deflator = nominal GDP ÷ real GDP × 100.', nom.toLocaleString('en-US') + ' ÷ ' + real.toLocaleString('en-US') + ' × 100 = ' + d + '.'], h: 'Nominal over real, times 100.' };
+      return { q: 'Nominal GDP is \\$' + nom.toLocaleString('en-US') + ' billion and the GDP deflator is ' + d + '. What is real GDP, in billions of dollars?', num: real, unit: 'billion',
+        s: ['Real GDP = nominal GDP ÷ (deflator ÷ 100).', nom.toLocaleString('en-US') + ' ÷ ' + (d / 100) + ' = ' + real.toLocaleString('en-US') + '.'], h: 'Divide nominal GDP by the deflator over 100.' };
+    },
+    index: function (R) { // index = cost now / cost in base × 100; percent change from the index
+      var base = R.int(4, 40) * 25, g = R.int(-4, 40), now = base * (100 + g) / 100;
+      if (now !== Math.round(now * 100) / 100 || g === 0) { g = 20; now = base * 1.2; }
+      var ix = 100 + g, k = R.int(0, 1);
+      if (k === 0) return { q: 'A fixed basket of goods cost \\$' + base.toLocaleString('en-US') + ' in the base year and costs \\$' + T2(now) + ' this year. What is the price index this year?', num: ix,
+        s: ['Index = cost this year ÷ cost in the base year × 100.', T2(now) + ' ÷ ' + base + ' × 100 = ' + ix + '.'], h: 'This year over the base year, times 100.' };
+      return { q: 'The price index is ' + ix + ' (base year = 100). By what percent have prices changed since the base year? (Use a negative number for a fall.)', num: g, pct: true,
+        s: ['Percent change since the base year = index − 100.', ix + ' − 100 = ' + g + '%.'], h: 'Subtract 100.' };
+      function T2(x) { return Number.isInteger(x) ? x.toLocaleString('en-US') : x.toFixed(2); }
+    },
+    infl: function (R) { // inflation between two index values, chosen so the rate is a whole number
+      var a = R.pick([100, 110, 120, 125, 150, 160, 200, 250]), g = R.int(1, 12), b = a * (100 + g) / 100;
+      if (b !== Math.round(b * 10) / 10) { a = 200; b = 200 + 2 * g; }
+      return { q: 'The CPI was ' + a + ' last year and is ' + b + ' this year. What was the inflation rate?', num: g, pct: true, tol: 0.05,
+        s: ['Inflation rate = (new − old) ÷ old × 100.', '(' + b + ' − ' + a + ') ÷ ' + a + ' × 100 = ' + g + '%.'], h: 'Change divided by the starting value.' };
+    },
+    taxm: function (R) { // tax multiplier −MPC/MPS
+      var mpc = R.pick([0.5, 0.6, 0.75, 0.8, 0.9]), tm = Math.round(mpc / (1 - mpc) * 100) / 100, dT = R.int(2, 50) * 4, cut = R.coin(), dY = Math.round(tm * dT * 100) / 100 * (cut ? 1 : -1);
+      return { q: 'The MPC is ' + mpc + '. The government ' + (cut ? 'cuts' : 'raises') + ' taxes by \\$' + dT + ' billion. By how much does real GDP change, in billions of dollars, if the price level does not change? (Use a negative number for a fall.)', num: dY, unit: 'billion',
+        s: ['Tax multiplier = −MPC ÷ MPS = −' + mpc + ' ÷ ' + Math.round((1 - mpc) * 100) / 100 + ' = −' + tm + '.', 'Change in GDP = ' + (cut ? '' : '−') + tm + ' × ' + dT + ' = ' + (dY < 0 ? '−' + (-dY) : dY) + ' billion.'], h: 'Find MPC ÷ MPS, then mind the sign.' };
+    },
+    money: function (R) { // M1 and M2 under the Fed's definitions since May 2020
+      var cur = R.int(15, 30) * 100, dd = R.int(20, 60) * 100, sav = R.int(80, 130) * 100, td = R.int(4, 15) * 100, mmf = R.int(8, 20) * 100, st = R.int(20, 40) * 1000, m2 = R.coin();
+      var M1 = cur + dd + sav, M2 = M1 + td + mmf, f = function (x) { return x.toLocaleString('en-US'); };
+      return { q: 'In billions of dollars: currency held by the public ' + f(cur) + '; checking deposits ' + f(dd) + '; savings deposits ' + f(sav) + '; small time deposits ' + f(td) + '; retail money market funds ' + f(mmf) + '; stocks held by households ' + f(st) + '. Using the Federal Reserve’s current definitions, what is ' + (m2 ? 'M2' : 'M1') + ', in billions of dollars?', num: m2 ? M2 : M1, unit: 'billion',
+        s: ['M1 = currency + checking deposits + savings deposits = ' + f(M1) + '.', m2 ? 'M2 = M1 + small time deposits + retail money market funds = ' + f(M2) + '.' : 'Time deposits and money market funds are in M2 only; stocks are in neither.'], h: m2 ? 'M2 is M1 plus the less liquid kinds.' : 'Only the most liquid kinds count in M1.' };
+    },
+    reserves: function (R) { // required and excess reserves
+      var rr = R.pick([5, 10, 12.5, 20, 25]), D = R.int(4, 80) * 1000, req = D * rr / 100, Rv = req + R.int(1, 20) * 500, ask = R.coin();
+      return ask ? { q: 'A bank has \\$' + D.toLocaleString('en-US') + ' of demand deposits. The reserve requirement is ' + rr + '%. What are its required reserves, in dollars?', num: req, unit: 'dollars',
+          s: ['Required reserves = reserve ratio × deposits.', rr + '% × ' + D.toLocaleString('en-US') + ' = ' + req.toLocaleString('en-US') + '.'], h: 'Take the reserve ratio of the deposits.' }
+        : { q: 'A bank holds \\$' + Rv.toLocaleString('en-US') + ' in reserves against \\$' + D.toLocaleString('en-US') + ' of demand deposits. The reserve requirement is ' + rr + '%. What are its excess reserves, in dollars?', num: Rv - req, unit: 'dollars',
+          s: ['Required reserves = ' + rr + '% × ' + D.toLocaleString('en-US') + ' = ' + req.toLocaleString('en-US') + '.', 'Excess = ' + Rv.toLocaleString('en-US') + ' − ' + req.toLocaleString('en-US') + ' = ' + (Rv - req).toLocaleString('en-US') + '.'], h: 'Find the required reserves first.' };
+    },
+    mmult: function (R) { // simple money multiplier 1/rr on excess reserves
+      var rr = R.pick([5, 10, 20, 25]), ER = R.int(1, 60) * 1000, dM = ER * 100 / rr;
+      return { q: 'The reserve requirement is ' + rr + '%. The banking system gets \\$' + ER.toLocaleString('en-US') + ' of new excess reserves. With the simple money multiplier, what is the most the money supply can grow, in dollars?', num: dM, unit: 'dollars',
+        s: ['Money multiplier = 1 ÷ ' + (rr / 100) + ' = ' + (100 / rr) + '.', ER.toLocaleString('en-US') + ' × ' + (100 / rr) + ' = ' + dM.toLocaleString('en-US') + '.'], h: 'Multiply the excess reserves by 1 ÷ the reserve ratio.' };
+    },
+    ca: function (R) { // current account = trade balance + net income + net transfers
+      var X = R.int(12, 32) * 100, M = X + R.int(-4, 10) * 50, inc = R.int(-3, 6) * 25, tr = -R.int(1, 6) * 25, CA = X - M + inc + tr;
+      var sg = function (x) { return (x < 0 ? '−' : '+') + Math.abs(x); };
+      return { q: 'In billions of dollars: exports of goods and services ' + X.toLocaleString('en-US') + ', imports of goods and services ' + M.toLocaleString('en-US') + ', net income from investments abroad ' + sg(inc) + ', net transfers ' + sg(tr) + '. What is the current account balance, in billions of dollars?', num: CA, unit: 'billion',
+        s: ['Trade balance = ' + X + ' − ' + M + ' = ' + (X - M < 0 ? '−' + (M - X) : X - M) + '.', 'Current account = ' + (X - M < 0 ? '−' + (M - X) : X - M) + ' ' + sg(inc) + ' ' + sg(tr) + ' = ' + (CA < 0 ? '−' + (-CA) : CA) + '.'], h: 'Add the trade balance, net income and net transfers.' };
+    },
+    fa: function (R) { // the financial account offsets the current account (no capital account, no discrepancy)
+      var ca = R.int(-30, 30) * 25; if (ca === 0) ca = -250;
+      return { q: 'A country\'s current account balance is ' + (ca < 0 ? '−' : '') + '\\$' + Math.abs(ca) + ' billion. Its capital account is zero and there is no statistical discrepancy. What is its financial account balance, in billions of dollars? (Use the course\'s convention: a net inflow of foreign capital is a surplus.)', num: -ca, unit: 'billion',
+        s: ['Current account + capital account + financial account = 0.', 'So the financial account = ' + (ca < 0 ? '+' + (-ca) : '−' + ca) + '.'], h: 'The accounts must offset each other.' };
+    },
+    rir: function (R) { // real ≈ nominal − inflation, any of the three
+      var r = R.int(-4, 12) / 2, p = R.int(1, 16) / 2, i = r + p, k = R.int(0, 2), m = function (x) { return x < 0 ? '−' + (-x) : String(x); };
+      if (i <= 0) { i = p + 2; r = 2; }
+      if (k === 0) return { q: 'A loan charges a nominal interest rate of ' + i + '% and inflation is ' + p + '%. About what is the real interest rate? (Use a negative number if it is below zero.)', num: r, pct: true, tol: 0.05, s: ['Real ≈ nominal − inflation.', i + '% − ' + p + '% = ' + m(r) + '%.'], h: 'Subtract inflation.' };
+      if (k === 1) return { q: 'A lender wants a real return of ' + m(r) + '% and expects inflation of ' + p + '%. About what nominal interest rate should it charge?', num: i, pct: true, tol: 0.05, s: ['Nominal ≈ real + expected inflation.', m(r) + '% + ' + p + '% = ' + i + '%.'], h: 'Add expected inflation.' };
+      return { q: 'A bond pays a nominal rate of ' + i + '%, and its real rate turned out to be about ' + m(r) + '%. About what was inflation?', num: p, pct: true, tol: 0.05, s: ['Inflation ≈ nominal − real.', i + '% − (' + m(r) + '%) = ' + p + '%.'], h: 'Nominal minus real.' };
+    },
+    bondpv: function (R) { // a one-year payment A is worth A/(1+r) today
+      var r = R.pick([2, 4, 5, 8, 10, 20, 25]), P = R.int(4, 40) * 25, A = P * (100 + r) / 100;
+      return { q: 'A bond pays \\$' + A.toLocaleString('en-US') + ' one year from now and nothing else. The market interest rate is ' + r + '%. What is its price today, in dollars?', num: P, unit: 'dollars',
+        s: ['Price = payment ÷ (1 + r).', A.toLocaleString('en-US') + ' ÷ ' + (1 + r / 100) + ' = ' + P.toLocaleString('en-US') + '.'], h: 'Divide by 1 plus the interest rate.' };
+    },
+    debt: function (R) { // the debt as a running total
+      var D0 = R.int(40, 160) * 100, a = R.int(2, 16) * 50, b = R.int(-4, 16) * 50; if (b === 0) b = 100;
+      return { q: 'The national debt is \\$' + D0.toLocaleString('en-US') + ' billion. This year the government runs a deficit of \\$' + a + ' billion; next year it runs ' + (b < 0 ? 'a surplus' : 'a deficit') + ' of \\$' + Math.abs(b) + ' billion. What will the debt be after both years, in billions of dollars?', num: D0 + a + b, unit: 'billion',
+        s: ['Each deficit adds to the debt; a surplus subtracts.', D0 + ' + ' + a + (b < 0 ? ' − ' + (-b) : ' + ' + b) + ' = ' + (D0 + a + b) + '.'], h: 'Keep a running total.' };
+    }
+  };
+  function plain(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim(); }
+  function txt(s) { return String(s).replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function low(s) { return txt(s).toLowerCase().replace(/[.;:,]+$/, ''); }
+  function big(x) { return String(x).replace(/<span class="(sc-b|eg-cop|eg-h)">/g, '<span class="$1" style="font-size:1.6em;line-height:1">'); }
+  function fill(t, x) { x = big(x); return t.replace('{a:l}', String(x).replace(/^[A-Z](?=[a-z])/, function (c) { return c.toLowerCase(); })).replace('{a}', x); }
+  function dot(s) { s = String(s); return /[.!?…"”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function sameRow(t, i, a) { return t.r.filter(function (r) { return low(r[a]) === low(t.r[i][a]); }); }
+  function partnerSteps(t, tp, right, shown) { // what each wrong choice goes with
+    var out = [];
+    shown.forEach(function (c) {
+      if (low(c) === low(right)) return;
+      var rows = t.r.filter(function (r) { return low(r[tp[1]]) === low(c); });
+      if (rows.length === 1 && txt(rows[0][tp[0]]).length <= 90) out.push(dot(c + ': that goes with ' + rows[0][tp[0]]));
+    });
+    return out.slice(0, 3);
+  }
+  // match: ask for column b from a cell of column a
+  function match(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][b]).length <= 130; });
+    if (!ok.length) return null;
+    var i = R.pick(ok), right = t.r[i][b], seen = {};
+    seen[low(right)] = 1;
+    var bad = {}; sameRow(t, i, a).forEach(function (r) { bad[low(r[b])] = 1; }); // never a choice that is also right
+    var pool = []; t.r.forEach(function (r) { var k = low(r[b]); if (r[b] && !seen[k] && !bad[k] && txt(r[b]).length <= 130) { seen[k] = 1; pool.push(r[b]); } });
+    var k = Math.min(L === 1 ? 3 : 4, pool.length + 1); if (k < 3) return null;
+    var wrongs = R.shuffle(pool).slice(0, k - 1), choices = [right].concat(wrongs);
+    return { q: fill(tp[2], t.r[i][a]), a: { t: 'mc', choices: choices, v: 0 },
+      steps: [dot(t.r[i][a] + ' → ' + right), ].concat(partnerSteps(t, tp, right, choices)),
+      hint: tp[3] || 'Think back to the lesson’s table' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 'm', a, b, i, txt(t.r[i][a])] };
+  }
+  // pairs: three or four lines "a → b"; one right (level 2) or one wrong (level 3)
+  function pairs(R, t, tp, L) {
+    var a = tp[0], b = tp[1], ok = t.r.map(function (_, i) { return i; }).filter(function (i) { return t.r[i][a] && t.r[i][b] && txt(t.r[i][a]).length <= 70 && txt(t.r[i][b]).length <= 70; });
+    var uniq = {}; ok = ok.filter(function (i) { var k = low(t.r[i][a]); if (uniq[k]) return false; uniq[k] = 1; return true; });
+    var n = Math.min(4, ok.length); if (n < 3) return null;
+    var rows = R.shuffle(ok).slice(0, n), wrongOne = L >= 3, target = R.int(0, n - 1), lines = [], steps = [];
+    for (var j = 0; j < n; j++) {
+      var i = rows[j], right = wrongOne ? j !== target : j === target, ans = t.r[i][b];
+      if (!right) {
+        var good = {}; sameRow(t, i, a).forEach(function (r) { good[low(r[b])] = 1; });
+        var ws = []; t.r.forEach(function (r) { if (r[b] && !good[low(r[b])] && txt(r[b]).length <= 70 && ws.map(low).indexOf(low(r[b])) < 0) ws.push(r[b]); });
+        if (!ws.length) return null;
+        ans = R.pick(ws);
+      }
+      lines.push(t.r[i][a] + ' → ' + ans);
+      steps.push(dot(t.r[i][a] + ' → ' + t.r[i][b] + (right ? ': right' : ', not ' + ans)));
+    }
+    var what = tp[4] ? ' Each line pairs ' + tp[4] + '.' : '';
+    return { q: (wrongOne ? 'Exactly one of these pairings is <b>wrong</b>. Which one?' : 'Exactly one of these pairings is right. Which one?') + what,
+      a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own against what you learned.', wh: [t.k, wrongOne ? 'pw' : 'pr', a, b] };
+  }
+  // sort: which column of a comparison table does a cell belong to
+  function sortQ(R, t, L) {
+    var cols = t.h.map(function (_, j) { return j; }).filter(function (j) { return j >= (t.na ? 0 : 1) && txt(t.h[j]); });
+    if (cols.length < 2) return null;
+    var cells = [];
+    t.r.forEach(function (r, i) { cols.forEach(function (j) {
+      if (!r[j] || (!t.na && !txt(r[0]))) return;
+      var dup = cols.some(function (j2) { return j2 !== j && r[j2] && (low(r[j2]) === low(r[j]) || low(r[j2]).indexOf(low(r[j])) >= 0 || low(r[j]).indexOf(low(r[j2])) >= 0); });
+      if (!dup && txt(r[j]).length <= 140) cells.push([i, j]);
+    }); });
+    if (cells.length < 2) return null;
+    var heads = cols.map(function (j) { return t.h[j]; });
+    if (L >= 3 && cells.length >= 5) {
+      var j0 = R.pick(cols), pick = R.shuffle(cells).slice(0, Math.min(5, cells.length));
+      var hits = pick.filter(function (c) { return c[1] === j0; }).length;
+      if (hits >= 1 && hits < pick.length) {
+        var ch = pick.map(function (c) { return lab(t, c); });
+        var v = pick.map(function (c, k) { return c[1] === j0 ? k : -1; }).filter(function (k) { return k >= 0; });
+        return { q: fill(t.all, t.h[j0]), a: { t: 'mc', choices: ch, v: v },
+          steps: pick.map(function (c) { return dot(lab(t, c) + ' (' + t.h[c[1]] + ')'); }),
+          hint: 'Go through them one at a time.', wh: [t.k, 'sa', j0, pick] };
+      }
+    }
+    var c = R.pick(cells);
+    return { q: t.one + (t.na ? (/^["“]/.test(txt(t.r[c[0]][c[1]])) ? '<br>' + t.r[c[0]][c[1]] : '<br>“' + t.r[c[0]][c[1]] + '”') : '<br>' + asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]), a: { t: 'mc', choices: heads.slice(), v: cols.indexOf(c[1]) },
+      steps: t.na ? [dot('That is ' + t.h[c[1]].replace(/^./, function (x) { return x.toLowerCase(); }))] : [dot(txt(t.r[c[0]][0]) + ' for ' + t.h[c[1]] + ': ' + t.r[c[0]][c[1]])].concat(cols.filter(function (j) { return j !== c[1] && t.r[c[0]][j]; }).map(function (j) { return dot('For ' + t.h[j] + ': ' + t.r[c[0]][j]); })),
+      hint: 'Think back to the lesson’s comparison' + (t.cap ? ' (' + t.cap.replace(/\.$/, '') + ')' : '') + '.', wh: [t.k, 's', c[0], c[1]] };
+  }
+  function asp(x) { return '<b>' + x + (/\?$/.test(txt(x)) ? '' : ':') + '</b> '; }
+  function lab(t, c) { return t.na ? t.r[c[0]][c[1]] : asp(t.r[c[0]][0]) + t.r[c[0]][c[1]]; }
+  // extra bank items: { q, a, w: [wrong answers, more than are shown], s: [steps], h: hint, lv } or { q, tf: true|false, s, lv }
+  function extra(R, t, L) {
+    var its = t.x.filter(function (it) { return (it.lv || 1) <= L; }); if (!its.length) return null;
+    var it = R.pick(its), p;
+    if (it.f) { it = FUNS[it.f](R, L); if (!it) return null; }
+    if (it.num !== undefined) {
+      p = { q: it.q, a: { t: 'num', v: String(it.num) }, steps: it.s.slice() };
+      if (Number.isInteger(it.num) && !it.unit && !it.pct) p.a.form = 'int';
+      if (it.pct) p.a.pct = true;
+      if (it.tol != null) p.a.tol = it.tol;
+      if (it.unit) p.unit = it.unit;
+    }
+    else if (it.tf !== undefined) p = { q: it.q, a: { t: 'tf', v: it.tf }, steps: it.s.slice() };
+    else {
+      var k = Math.min(L === 1 ? 3 : 4, it.w.length + 1);
+      p = { q: it.q, a: { t: 'mc', choices: [it.a].concat(R.shuffle(it.w).slice(0, k - 1)), v: 0 }, steps: it.s.slice() };
+    }
+    p.hint = it.h || 'Think back to the lesson.';
+    p.wh = [t.k, 'x', its.indexOf(it) >= 0 ? t.x.indexOf(it) : -1];
+    return FUNS.__wrap ? FUNS.__wrap(p, L) : p;
+  }
+  function make(R, list, L) {
+    for (var tries = 0; tries < 8; tries++) {
+      var t = R.pick(list), p = null;
+      if (t.x) p = extra(R, t, L);
+      else if (t.one) p = sortQ(R, t, L);
+      else {
+        var tps = t.m.filter(function (tp) { return (tp[5] || 1) <= L; }); if (!tps.length) continue;
+        var tp = R.pick(tps);
+        p = L >= 2 && tp[4] && R.chance(0.35) ? pairs(R, t, tp, L) : match(R, t, tp, L);
+      }
+      if (p) {
+        // ladder pages show choices as plain text (only $…$ math is rendered), so choices carry no tags
+        if (p.a.t === 'mc') { p.a.choices = p.a.choices.map(plain); var seen = {}; if (p.a.choices.some(function (c) { var k = seen[c]; seen[c] = 1; return k; })) continue; }
+        p.nowiden = true; return p;
+      }
+    }
+    return null;
+  }
+  var BY = {}; TABS.forEach(function (t) { var id = t.k.split('#')[0].split('@')[0]; (BY[id] = BY[id] || []).push(t); });
+  var VAR = {};
+  function baseCount(id, base, L) { // different questions (ignoring the order of choices) from 40 fixed seeds
+    var key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        try { var p = base(ML.rand(id + '#whv#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; } } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  function extCount(id, L) { // different table questions from 40 fixed seeds
+    var key = id + '|x|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 24; s++) {
+        var p = make(ML.rand(id + '#whx#' + s + '#' + L), BY[id], L); if (!p) continue;
+        var k = p.q + '|' + JSON.stringify(p.a.choices ? p.a.choices.slice().sort() : p.a.v);
+        if (!seen[k]) { seen[k] = 1; n++; }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key];
+  }
+  Object.keys(BY).forEach(function (id) {
+    var base = ML.getGen(id); if (!base || base._wh) return;
+    var fn = function (R, ctx) {
+      var L = (ctx && ctx.level) || 1, n = baseCount(id, base, L), x = extCount(id, L), share = Math.max(0.15, Math.min(0.5, x / (x + n + 1)));
+      if (R.chance(share)) { var p = make(R, BY[id], L); if (p) return p; }
+      return base(R, ctx);
+    };
+    fn._wh = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen_hum ---- */
+
+/* ---- widen: more forms of the same questions (so practice repeats less) ----------------------------------------
+   Every topic of this course keeps its own problems, and some draws are turned into other forms of the same skill,
+   built only from the topic's own problems (so their answers stay the ones the topic already checks):
+     check   "Ava chose X. Is Ava right?" (Yes or No) from a one-answer multiple-choice problem
+     pairs   two or three lines "question → answer"; which line is right (or, at level 3, which one is wrong)
+     tfpick  "Which sentence is true?" (or false) from three of the topic's true-or-false sentences
+   Questions whose answer depends on the other choices (first, best, most, not …) show the choices in the check form
+   and never go into pairs. Mix per level: CFG.mix[level] = [check, pairs, tfpick] shares; the rest stays as it was. */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var CFG = {"prefix":"macro.","only":["circular-flow","gdp-definition","gdp-limits","gdp-deflator","labor-force","unemployment-rate","types-unemployment","price-index","inflation-rate","real-values","costs-of-inflation","business-cycle","aggregate-demand","ad-shifters","mpc-mps","spending-multiplier","tax-multiplier","sras","lras","ad-as-equilibrium","ad-as-shocks","self-adjustment","fiscal-policy","fiscal-policy-size","tax-structures","automatic-stabilizers","deficits-debt","financial-assets","real-interest-rate","money-functions","money-supply-measures","bank-balance-sheets","money-creation","money-market","fed-tools","ample-reserves","monetary-policy","loanable-funds","policy-mix","short-run-phillips","long-run-phillips","quantity-theory","crowding-out","schools-of-thought","productivity","rule-of-70","growth-policy","balance-of-payments","exchange-rates","forex-market","forex-shifts","net-exports-exchange","capital-flows","saving-investment-identity"]};
+  var NAMES = ['Ava', 'Ben', 'Cora', 'Dev', 'Eli', 'Finn', 'Gus', 'Hana', 'Ivy', 'Jude', 'Kai', 'Lena', 'Milo', 'Nora', 'Omar', 'Pia',
+    'Quinn', 'Rosa', 'Sam', 'Tess', 'Uma', 'Vic', 'Wren', 'Zoe', 'Ada', 'Leo', 'Mia', 'Theo', 'June', 'Max'];
+  var REL = /\b(first|last|earliest|latest|earlier|later|before|after|older|oldest|newer|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|look|read|here|example|examples|likely|probably|mainly|main|usually|typically|other|another|which one|each|order|then|next)\b|n['’]t\b/i;
+  // pairs judge each line on its own, so only questions whose answer depends on the other choices are left out
+  var RELP = /\b(first|last|earliest|latest|oldest|newest|most|least|largest|smallest|biggest|best|better|worse|worst|closest|nearest|farthest|longest|shortest|highest|lowest|odd|not|except|different|same|these|this|those|following|below|above|shown|picture|pictures|map|table|chart|graph|diagram|passage|scene|story|which one|other|another|rank|order|more|less|fewer)\b|n['’]t\b|\w+est\b/i;
+  var REF = /\b(this|these|those|shown|picture|map|table|chart|graph|diagram|passage|scene|story|above|below|here|following)\b/i;
+  var BADCH = /\b(all|none|both|neither) of\b|\b(above|below)\b|^(both|neither|all|none)\b|\bchoice\b|\boption\b/i;
+  function strip(s) { return String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function plainish(s) { return !/<(?!\/?(b|i|em|strong)\b)[^>]*>/.test(String(s).replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1')); }
+  function add(q, html) { // inside a read-aloud big span when there is one
+    var m = /<span class="[\w-]*big">/.exec(q);
+    if (m) { var k = q.lastIndexOf('</span>'); if (k > m.index) return q.slice(0, k) + '<br>' + html.replace(/<\/p>\s*<p[^>]*>/g, '<br>').replace(/<\/?p[^>]*>/g, '') + q.slice(k); }
+    return q + html;
+  }
+  function single(p) {
+    return p && p.a && p.a.t === 'mc' && !Array.isArray(p.a.v) && Array.isArray(p.a.choices) && p.a.choices.length >= 2 &&
+      !p.a.choices.some(function (c) { return BADCH.test(strip(c)); });
+  }
+  function hash(t) { var h = 7; for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return h; }
+  function nameFor(q, key) { // the same claim always gets the same name, so a name alone never makes a "new" problem
+    var t = strip(q), ok = NAMES.filter(function (n) { return t.indexOf(n) < 0 && String(key).indexOf(n) < 0; });
+    return (ok.length ? ok : NAMES)[hash(t + '|' + key) % (ok.length || NAMES.length)];
+  }
+  function dot(s) { s = String(s); return /[.!?…"”')\]]\s*(<\/b>)?$/.test(strip(s)) || /\$$/.test(s) ? s : s + '.'; }
+  function optList(ch) { return '<p class="wd-opts">The choices were:<br>' + ch.map(function (c) { return '• ' + c; }).join('<br>') + '</p>'; }
+  function copyP(p, q, a, steps) { var o = {}; for (var k in p) if (Object.prototype.hasOwnProperty.call(p, k)) o[k] = p[k]; o.q = q; o.a = a; o.steps = steps; delete o.choices; return o; }
+
+  // check: show one choice (the right one half the time) and ask whether it is right
+  function check(p, R) {
+    var ch = p.a.choices, v = p.a.v, idx = ch.map(function (_, i) { return i; }), others = idx.filter(function (i) { return i !== v; });
+    var i = R.chance(0.5) ? v : R.pick(others), ok = i === v, nm = nameFor(p.q, ch[i]), letters = ch.every(function (c) { return /^[A-Z]$/.test(String(c)); });
+    var stem = strip(p.q), html = '';
+    if (!letters && (REL.test(stem) || ch.length > 4 || CFG.listAll)) {
+      var shown = p.a.keep ? ch.slice() : R.shuffle(ch);
+      html += optList(shown);
+    }
+    html += '<p class="wd-check">' + nm + ' chose: <b>' + ch[i] + '</b>' + (/[.!?…"”]$/.test(strip(ch[i])) ? '' : '.') + ' Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes. ' + dot(ch[v]) + ' is the right answer.' : 'No. The right answer is: ' + dot(ch[v]);
+    if (ok) first = 'Yes, that is the right answer.';
+    return copyP(p, add(p.q, html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [first].concat(p.steps || []));
+  }
+  // check for "choose all": the whole list is shown, and one learner's picks; right only if exactly the right ones
+  function checkAll(p, R) {
+    var ch = p.a.choices, v = p.a.v.slice().sort(), n = ch.length, pick;
+    if (R.chance(0.45)) pick = v.slice();
+    else {
+      var t = 0; do { var j = R.int(0, n - 1), s = v.slice(), k = s.indexOf(j); if (k >= 0) s.splice(k, 1); else s.push(j); if (R.chance(0.3)) { var j2 = R.int(0, n - 1), k2 = s.indexOf(j2); if (k2 >= 0) s.splice(k2, 1); else s.push(j2); } pick = s.sort(); t++; }
+      while (t < 20 && (!pick.length || pick.join() === v.join()));
+      if (!pick.length || pick.join() === v.join()) return null;
+    }
+    var ok = pick.join() === v.join(), nm = nameFor(p.q, pick.join());
+    var html = optList(ch) + '<p class="wd-check">' + nm + ' chose ' +
+      (pick.length === 1 ? 'only: <b>' + ch[pick[0]] + '</b>' : 'these: <b>' + pick.map(function (i) { return ch[i]; }).join('</b>; <b>') + '</b>') + '. Is ' + nm + ' right?</p>';
+    var first = ok ? 'Yes, those are exactly the right ones.' : 'No. The right ones are: ' + v.map(function (i) { return ch[i]; }).join('; ');
+    return copyP(p, add(p.q.replace(/\s*(Choose|Select|Pick) (all|every)[^.?!<]*[.?!]?/i, ''), html), { t: 'mc', choices: ['Yes', 'No'], v: ok ? 0 : 1, keep: true }, [dot(first)].concat(p.steps || []));
+  }
+
+  // items for pairs: one-answer questions that stand on their own (no picture, no passage, no "first/best/…")
+  function pairItem(p) {
+    if (!single(p) || p.viz) return null;
+    var max = CFG.maxStem || 120, maxA = CFG.maxAns || 70, a = strip(p.a.choices[p.a.v]), stem, group = '';
+    // "prompt<br><b>thing</b>" or "prompt<blockquote>thing</blockquote>": a line is "thing → answer", lines share the prompt
+    var q0 = p.q.replace(/<p class="[\w-]*readme">[\s\S]*?<\/p>/g, '').replace(/<span class="[\w-]*big">([\s\S]*)<\/span>/, '$1').trim();
+    var m = /^([^<]{6,140}?)\s*(?:<br>\s*<b>([^<]{3,140})<\/b>|<blockquote>([^<]{3,140})<\/blockquote>)\s*$/.exec(q0);
+    if (m) { group = m[1].trim(); stem = (m[2] || m[3]).trim(); if (RELP.test(group.replace(/\b(this|these)\b/gi, ''))) return null; }
+    else {
+      if (!plainish(p.q)) return null;
+      stem = strip(p.q); if (RELP.test(stem)) return null;
+    }
+    if (stem.length > max || stem.length < 3 || a.length > maxA || /^[A-Z]$/.test(a) || /\$/.test(stem + a + group)) return null;
+    var w = p.a.choices.filter(function (_, i) { return i !== p.a.v; }).map(strip).filter(function (x) { return x.length <= maxA && x !== a; });
+    if (!w.length) return null;
+    return { stem: stem.replace(/\s*(Choose one|Pick one)\.?$/i, ''), a: a, w: w, why: (p.steps || [])[0] || '', group: group };
+  }
+  function tfItem(p) {
+    if (!p || !p.a || p.a.t !== 'tf' || p.viz || !plainish(p.q)) return null;
+    var s = strip(p.q).replace(/^(True or false\?|True or false:)\s*/i, '').replace(/\s*(True or false\?|Is this true or false\?|Is it true or false\?)$/i, '').trim();
+    if (s.length < 8 || s.length > (CFG.maxStem || 120) + 20 || REF.test(s) || /\?$/.test(s) || /\$/.test(s)) return null;
+    return { s: s, v: p.a.v, why: (p.steps || [])[0] || '' };
+  }
+  function harvest(base, R, ctx, make, n, distinct) {
+    var out = [], keys = {};
+    for (var t = 0; t < 24 && out.length < n; t++) {
+      // at level 3, lines may come from level 2 questions too: three lines with one wrong is the harder form
+      var c2 = ctx && ctx.level >= 3 && (t % 2) ? Object.assign({}, ctx, { level: 2 }) : ctx;
+      var p; try { p = base(ML.rand(R.int(1, 2e9)), c2); } catch (e) { continue; }
+      var it = make(p); if (!it) continue;
+      if (out.length && it.group !== undefined && it.group !== out[0].group) continue;
+      var k = distinct(it); if (k.some(function (x) { return keys[x]; })) continue;
+      k.forEach(function (x) { keys[x] = 1; }); out.push(it);
+    }
+    return out;
+  }
+  function pairs(base, R, ctx, n, wrongOne) {
+    var its = harvest(base, R, ctx, pairItem, n, function (it) { return it.group ? ['s:' + it.stem] : ['s:' + it.stem, 'a:' + it.a]; });
+    if (its.length < n) return null;
+    var answers = its.map(function (it) { return it.a; }), used = {};
+    var target = R.int(0, n - 1), lines = [], steps = [];
+    for (var i = 0; i < n; i++) {
+      var it = its[i], right = wrongOne ? i !== target : i === target, ans = it.a;
+      if (!right) {
+        var ws = it.w.filter(function (x) { return (its[0].group || answers.indexOf(x) < 0) && !used[x]; });
+        if (!ws.length) return null;
+        ans = R.pick(ws); if (!its[0].group) used[ans] = 1;
+      }
+      lines.push(it.stem + ' → ' + ans); // plain text: ladder pages show choices as text
+      steps.push(it.group ? dot(it.stem) + ' Answer: ' + it.a + (right ? '.' : ', not ' + ans + '.') : it.stem + ' The answer is ' + it.a + (right ? '.' : ', not ' + ans + '.'));
+    }
+    var g = its[0].group, q = g ? '<p class="wd-group">The question for every line: <i>' + g + '</i></p>' + (wrongOne ? 'One line has the <b>wrong</b> answer. Which line is it?' : n === 2 ? 'Which line has the <b>right</b> answer?' : 'Only one line has the right answer. Which line is it?') : wrongOne ? 'Each line is a question and an answer. One answer is <b>wrong</b>. Which line is it?'
+      : (n === 2 ? 'Each line is a question and an answer. Which line has the <b>right</b> answer?' : 'Each line is a question and an answer. Only one answer is right. Which line is it?');
+    if (its[target].why) steps.push(its[target].why);
+    return { q: q, a: { t: 'mc', choices: lines, v: target }, steps: steps, hint: 'Check each line on its own. Does the answer fit the question?' };
+  }
+  function tfpick(base, R, ctx, wantFalse) {
+    var its = harvest(base, R, ctx, tfItem, 6, function (it) { return ['s:' + it.s]; });
+    var T = its.filter(function (x) { return x.v; }), F = its.filter(function (x) { return !x.v; });
+    var odd = wantFalse ? F : T, rest = wantFalse ? T : F;
+    if (!odd.length || rest.length < 2) return null;
+    var pick = [odd[0], rest[0], rest[1]], order = R.shuffle([0, 1, 2]), choices = order.map(function (i) { return pick[i].s; });
+    var steps = pick.map(function (x) { return x.s + ' ' + (x.v ? 'True.' : 'False.'); });
+    if (odd[0].why) steps.push(odd[0].why);
+    return { q: wantFalse ? 'Which sentence is <b>false</b>?' : 'Which sentence is <b>true</b>?', a: { t: 'mc', choices: choices, v: order.indexOf(0) }, steps: steps,
+      hint: 'Decide about each sentence on its own.' };
+  }
+  var MIX = CFG.mix || { 1: [0.38, 0.25, 0.04], 2: [0.27, 0.3, 0.1], 3: [0.17, 0.4, 0.15] };
+  function wrap(id, base) {
+    var fn = function (R, ctx) {
+      var lv = ctx && ctx.level || 1, p = base(R, ctx), m = MIX[lv] || MIX[3], r = R.next();
+      if (p.nowiden || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf') || (CFG.skip && CFG.skip.indexOf(id) >= 0)) return p; // typed answers stay as they are
+      var form = r < m[0] ? 0 : r < m[0] + m[1] ? 1 : r < m[0] + m[1] + m[2] ? 2 : -1;
+      if (form < 0) return p;
+      var tries = [form, (form + 1) % 3, (form + 2) % 3].filter(function (f) { return m[f] > 0; });
+      for (var t = 0; t < tries.length; t++) {
+        var f = tries[t], alt = null;
+        if (f === 0) alt = single(p) ? check(p, R) : (p.a && p.a.t === 'mc' && Array.isArray(p.a.v) && !p.viz ? checkAll(p, R) : null);
+        else if (f === 1) alt = pairs(base, R, ctx, lv === 1 ? 2 : 3, lv >= 3 && R.chance(0.6));
+        else alt = tfpick(base, R, ctx, R.chance(0.4));
+        if (alt) return alt;
+      }
+      return p;
+    };
+    fn.widened = true;
+    return fn;
+  }
+  ML.genIds().forEach(function (id) {
+    if (id.indexOf(CFG.prefix) !== 0 || (CFG.only && CFG.only.indexOf(id.slice(CFG.prefix.length)) < 0)) return;
+    var g = ML.getGen(id); if (g && !g.widened) ML.gen(id, wrap(id, g));
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : undefined);
+/* ---- end widen ---- */

@@ -23,7 +23,7 @@
   <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ $base }}">{{ $L.short }}</a> <span aria-hidden="true">›</span> <span>{{ $c.title }}</span></nav>
   <header class="mlp-chero">
     <span class="mlp-chero-icon" aria-hidden="true">{{ $c.icon }}</span>
-    <p class="mlp-eyebrow">{{ $L.title }} · {{ $c.band }}{{ if ne (string $c.grade) "College" }} · {{ if eq (string $c.grade) "K" }}Kindergarten{{ else }}Grade {{ $c.grade }}{{ end }}{{ end }}</p>
+    <p class="mlp-eyebrow">{{ $L.title }} · {{ $c.band }}{{ if ne (string $c.grade) "College" }} · {{ if eq (string $c.grade) "K" }}Kindergarten{{ else if eq (string $c.grade) "Pre-K" }}Pre-K, ages 3 to 5{{ else }}Grade {{ $c.grade }}{{ end }}{{ end }}</p>
     <h1>{{ $c.title }}</h1>
     <p class="mlp-chero-blurb">{{ $c.blurb }}</p>
     <div class="mlp-chero-row">
@@ -150,7 +150,7 @@
             {{- $nr := (index $g.C $c.key).r | default 0 }}
             <li class="mlp-rung-li"><a class="mlp-rung{{ if and $nt (not $nr) }} writing{{ end }}" href="{{ printf "%s/%s/" $L.slug $c.slug | relURL }}" data-course="{{ $c.key }}" data-n="{{ $nt }}" data-r="{{ $nr }}" style="--c:{{ $c.color }}">
               <span class="mlp-rung-icon" aria-hidden="true">{{ $c.icon }}</span>
-              <span class="mlp-rung-main"><b>{{ $c.title }}</b><small>{{ if not (or (in $c.title "Grade") (in $c.title "Kindergarten")) }}{{ if eq (string $c.grade) "College" }}College · {{ else }}Grade {{ $c.grade }} · {{ end }}{{ end }}{{ if $nt }}{{ $nt }} topics{{ if not $nr }} · being written{{ else if lt $nr $nt }} · {{ $nr }} ready{{ end }}{{ else }}coming soon{{ end }}</small></span>
+              <span class="mlp-rung-main"><b>{{ $c.title }}</b><small>{{ if eq (string $c.grade) "Pre-K" }}Ages 3 to 5 · {{ else if not (or (in $c.title "Grade") (in $c.title "Kindergarten")) }}{{ if eq (string $c.grade) "College" }}College · {{ else }}Grade {{ $c.grade }} · {{ end }}{{ end }}{{ if $nt }}{{ $nt }} topics{{ if not $nr }} · being written{{ else if lt $nr $nt }} · {{ $nr }} ready{{ end }}{{ else }}coming soon{{ end }}</small></span>
               <span class="mlp-rung-prog"><span class="mlp-rung-bar"><b style="width:0"></b></span><small data-pct></small></span>
               <span class="mlp-here" hidden>You are here</span>
             </a></li>

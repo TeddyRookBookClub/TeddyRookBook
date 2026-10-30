@@ -362,7 +362,7 @@
     var shape = by(ctx, 'match', 'match', R.pick(['needed', 'mine', 'match']));
     function noMatch(n, d) { var p = Q(1); for (var i = 0; i < n; i++) p = p.mul(q(d - i, d)); return p; }
     if (shape === 'needed') {
-      var d = R.pick([7, 10, 12, 20, 30, 365]), n = 1, pr = Q(1), hist = [];
+      var d = R.pick([7, 10, 12, 20, 30, 365, 6, 8, 15, 24, 31, 52, 100]), n = 1, pr = Q(1), hist = [];
       while (pr.gt(q(1, 2))) { pr = pr.mul(q(d - n, d)); n++; hist.push([n, pr]); }
       var last = hist[hist.length - 1], prev = hist[hist.length - 2];
       return chk({
@@ -561,7 +561,7 @@
       }, { kind: 'pair', pa: qp(pa), pb: qp(pb), pab: qp(pab) });
     }
     if (shape === 'disjoint') {
-      var p1 = R.int(1, 5) / 10, p2 = R.int(1, 4) / 10;
+      var p1 = R.int(1, 6) / 10, p2 = R.int(1, 4) / 10;
       return chk({
         q: 'Events A and B are mutually exclusive (they cannot both happen), with $P(A) = ' + num(p1) + '$ and $P(B) = ' + num(p2) + '$. (a) Find $P(A \\cap B)$. (b) True or false: A and B are independent.',
         a: { t: 'multi', parts: [{ label: '(a)', a: ex(0) }, { label: '(b)', a: { t: 'tf', v: false } }] },
@@ -721,11 +721,11 @@
     var shape = by(ctx, R.pick(['faces', 'cards']), R.pick(['fixed', 'pairs', 'distinct', 'runs']), R.pick(['empty', 'adjacent', 'pairs', 'distinct']));
     var v, qq, st, data;
     if (shape === 'faces') {
-      var n = R.pick([12, 18, 24, 30, 36, 60, 10, 20]), f = R.pick([['a six', q(1, 6)], ['a 5 or a 6', q(1, 3)], ['an even number', q(1, 2)], ['a number less than 3', q(1, 3)]]);
+      var n = R.pick([12, 18, 24, 30, 36, 60, 10, 20, 42, 48, 72, 90, 120]), f = R.pick([['a six', q(1, 6)], ['a 5 or a 6', q(1, 3)], ['an even number', q(1, 2)], ['a number less than 3', q(1, 3)], ['a one', q(1, 6)], ['an odd number', q(1, 2)], ['a number greater than 2', q(2, 3)], ['a 1, 2 or 3', q(1, 2)]]);
       v = f[1].mul(n); qq = 'Roll a fair die ' + n + ' times. What is the expected number of rolls that show ' + f[0] + '?';
       st = ['Let $I_k = 1$ if roll $k$ shows ' + f[0] + ', and 0 otherwise. Then the count is $X = I_1 + \\cdots + I_{' + n + '}$.', 'Each $E[I_k] = P(\\text{roll } k \\text{ shows ' + f[0] + '}) = ' + qt(f[1]) + '$.', 'By linearity, $E[X] = ' + n + ' \\cdot ' + qt(f[1]) + ' = ' + qt(v) + '$.']; data = { kind: 'faces', n: n, p: qp(f[1]) };
     } else if (shape === 'cards') {
-      var k = R.int(3, 13), c = R.pick([['hearts', 13], ['aces', 4], ['face cards (J, Q, K)', 12], ['red cards', 26]]);
+      var k = R.int(2, 20), c = R.pick([['hearts', 13], ['aces', 4], ['face cards (J, Q, K)', 12], ['red cards', 26], ['spades', 13], ['kings', 4], ['black cards', 26], ['clubs', 13]]);
       v = q(k * c[1], 52); qq = 'Deal ' + k + ' cards from a well-shuffled 52-card deck (without replacement). What is the expected number of ' + c[0] + ' among them?';
       st = ['Let $I_j = 1$ if card $j$ of the deal is one of the ' + c[0] + '. The draws are dependent, but linearity does not care.', 'Each single card is equally likely to be any of the 52, so $E[I_j] = \\frac{' + c[1] + '}{52}$.', '$E[X] = ' + k + ' \\cdot \\frac{' + c[1] + '}{52} = ' + qt(v) + '$.']; data = { kind: 'cards', k: k, c: c[1] };
     } else if (shape === 'fixed') {
@@ -790,18 +790,18 @@
       hint: 'Without replacement: count subsets. With replacement: independent trials with p = K/N.' }, { kind: 'compare', N: N, K: K, n: n, k: k });
   });
 
-  var PS = [q(1, 2), q(1, 3), q(2, 3), q(1, 4), q(3, 4), q(2, 5), q(3, 5), q(1, 5), q(1, 6)];
+  var PS = [q(1, 2), q(1, 3), q(2, 3), q(1, 4), q(3, 4), q(2, 5), q(3, 5), q(1, 5), q(1, 6), q(4, 5), q(5, 6), q(1, 10), q(3, 10), q(7, 10)];
   G('prob.negative-binomial', function (R, ctx) {
     var shape = by(ctx, 'coin', R.pick(['general', 'moments']), R.pick(['series', 'bybefore', 'general']));
     if (shape === 'coin' || shape === 'general') {
-      var p = shape === 'coin' ? q(1, 2) : R.pick(PS.slice(1)), r = R.int(2, 3), k = R.int(r + 1, r + 4), qq2 = Q(1).sub(p), v = Cq(k - 1, r - 1).mul(p.pow(r)).mul(qq2.pow(k - r));
+      var p = shape === 'coin' ? q(1, 2) : R.pick(PS.slice(1)), r = R.int(2, shape === 'coin' ? 5 : 3), k = R.int(r, r + (shape === 'coin' ? 6 : 4)), qq2 = Q(1).sub(p), v = Cq(k - 1, r - 1).mul(p.pow(r)).mul(qq2.pow(k - r));
       var ctxT = shape === 'coin' ? 'Flip a fair coin until the ' + U.ordinal(r) + ' head appears.' : R.pick(['A basketball player makes each free throw with probability $' + qt(p) + '$, independently, and shoots until the ' + U.ordinal(r) + ' make.', 'Each call a salesperson makes ends in a sale with probability $' + qt(p) + '$, independently. They keep calling until the ' + U.ordinal(r) + ' sale.']);
       return chk({ q: ctxT + ' What is the probability that exactly ' + k + ' ' + (shape === 'coin' ? 'flips' : /throw/.test(ctxT) ? 'shots' : 'calls') + ' are needed?', a: ex(v),
         steps: ['Trial ' + k + ' must be the ' + U.ordinal(r) + ' success, so the first ' + (k - 1) + ' trials hold exactly ' + (r - 1) + ' success' + (r - 1 === 1 ? '' : 'es') + ', in any order: $\\binom{' + (k - 1) + '}{' + (r - 1) + '} = ' + Cq(k - 1, r - 1).toPlain() + '$ ways.', 'Each such sequence has probability $p^{' + r + '}(1 - p)^{' + (k - r) + '}$ with $p = ' + qt(p) + '$.', '$P(X = ' + k + ') = ' + Cq(k - 1, r - 1).toPlain() + ' \\cdot ' + T.pow(qt(p), r) + ' \\cdot ' + T.pow(qt(qq2), k - r) + ' = ' + qt(v) + '$.'],
         hint: 'The last trial is the final success; arrange the other successes among the earlier trials.' }, { kind: 'pmf', p: qp(p), r: r, k: k });
     }
     if (shape === 'moments') {
-      var p2 = R.pick(PS), r2 = R.int(2, 5), mean = Q(r2).div(p2), vr = Q(r2).mul(Q(1).sub(p2)).div(p2.pow(2));
+      var p2 = R.pick(PS), r2 = R.int(2, 9), mean = Q(r2).div(p2), vr = Q(r2).mul(Q(1).sub(p2)).div(p2.pow(2));
       return chk({ q: (p2.eq(q(1, 6)) ? 'Roll a fair die until the ' + U.ordinal(r2) + ' six, and let $X$ be the number of rolls.' : 'Independent trials each succeed with probability $' + qt(p2) + '$. Let $X$ be the number of trials needed for the ' + U.ordinal(r2) + ' success.') + ' Find $E[X]$ and $\\operatorname{Var}(X)$.',
         a: { t: 'multi', parts: [{ label: '$E[X] =$', a: ex(mean) }, { label: '$\\operatorname{Var}(X) =$', a: ex(vr) }] },
         steps: ['$X$ is a sum of ' + r2 + ' independent geometric waits (trials to the 1st success, then from there to the 2nd, and so on), each with mean $\\frac{1}{p}$ and variance $\\frac{1 - p}{p^{2}}$.', '$E[X] = \\frac{r}{p} = ' + r2 + ' \\div ' + qt(p2) + ' = ' + qt(mean) + '$.', 'Independent pieces: variances add, $\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^{2}} = ' + qt(vr) + '$.'],
@@ -822,7 +822,7 @@
       hint: 'The rth success by trial m means at least r successes in m trials.' }, { kind: 'bybefore', p: qp(p4), r: r4, m: m });
   });
 
-  var LAMS = [1, 2, 3, 4, 0.5, 1.5, 2.5];
+  var LAMS = [1, 2, 3, 4, 0.5, 1.5, 2.5, 5, 6, 3.5, 0.2, 0.8];
   function lamP(L) { L = Q.from(L); return shortDec(L) || '(' + L.toPlain() + ')'; }
   function lamT(L) { L = Q.from(L); return shortDec(L) || qt(L); }
   function poisExpr(k, lam) { var L = Q.from(lam), c = L.pow(k).div(Q(factB(k))); return { plain: (c.eq(1) ? '' : c.toPlain() + '*') + 'e^(-' + lamP(L) + ')', tex: (c.eq(1) ? '' : qt(c)) + 'e^{-' + lamT(L) + '}', val: c.toNumber() * M.exp(-L.toNumber()) }; }
@@ -836,7 +836,7 @@
         hint: 'Use e^(−λ) λ^k / k!.' }, { kind: 'pmf', lam: lam, k: k });
     }
     if (shape === 'window' || shape === 'atleast1' || shape === 'atmost2') {
-      var rate = R.pick([2, 3, 4, 6, 1.5]), unit = R.pick([['per hour', 'minutes', 60], ['per day', 'hours', 24], ['per minute', 'seconds', 60]]), frac = R.pick([q(1, 2), q(1, 3), q(3, 2), q(2, 3), q(1, 4), Q(2)]);
+      var rate = R.pick([2, 3, 4, 6, 1.5, 5, 8, 10, 12]), unit = R.pick([['per hour', 'minutes', 60], ['per day', 'hours', 24], ['per minute', 'seconds', 60]]), frac = R.pick([q(1, 2), q(1, 3), q(3, 2), q(2, 3), q(1, 4), Q(2)]);
       var len = frac.mul(unit[2]); if (!len.isInt()) { frac = q(1, 2); len = frac.mul(unit[2]); }
       var m = Q.from(rate).mul(frac); if (m.gt(6)) { frac = q(1, 2); len = frac.mul(unit[2]); m = Q.from(rate).mul(frac); }
       var mNum = m.toNumber(), mT = lamT(m), mP = lamP(m), v, steps2;
@@ -925,11 +925,11 @@
   // polynomial densities on [0, b]: { poly (array of Q), b, tex }
   function densFam(R, kinds) {
     var kind = R.pick(kinds || ['power', 'power', 'ramp', 'tent', 'affine', 'ramp2']), b, poly, raw, c;
-    if (kind === 'power') { var k = R.int(1, 3); b = R.pick(k === 3 ? [1, 2] : [1, 2, 3, 4]); c = q(k + 1, M.pow(b, k + 1)); raw = pmono(1, k); poly = pmono(c, k); return { kind: kind, k: k, b: b, c: c, raw: raw, poly: poly }; }
-    if (kind === 'ramp') { b = R.pick([1, 2, 3, 4, 5, 6]); c = q(2, b * b); raw = P([b, -1]); poly = pscale(raw, c); return { kind: kind, b: b, c: c, raw: raw, poly: poly }; }
-    if (kind === 'ramp2') { b = R.pick([1, 2, 3]); c = q(3, b * b * b); raw = P([b * b, -2 * b, 1]); poly = pscale(raw, c); return { kind: kind, b: b, c: c, raw: raw, poly: poly }; }
-    if (kind === 'affine') { var a0 = R.pick([1, 2, 3]); b = 1; c = q(2, 2 * a0 + 1); raw = P([a0, 1]); poly = pscale(raw, c); return { kind: kind, a0: a0, b: b, c: c, raw: raw, poly: poly }; }
-    b = R.pick([1, 2, 3]); c = q(6, b * b * b); raw = P([0, b, -1]); poly = pscale(raw, c); return { kind: 'tent', b: b, c: c, raw: raw, poly: poly };
+    if (kind === 'power') { var k = R.int(1, 3); b = R.pick(k === 3 ? [1, 2, 3] : [1, 2, 3, 4, 5, 6]); c = q(k + 1, M.pow(b, k + 1)); raw = pmono(1, k); poly = pmono(c, k); return { kind: kind, k: k, b: b, c: c, raw: raw, poly: poly }; }
+    if (kind === 'ramp') { b = R.pick([1, 2, 3, 4, 5, 6, 8, 10]); c = q(2, b * b); raw = P([b, -1]); poly = pscale(raw, c); return { kind: kind, b: b, c: c, raw: raw, poly: poly }; }
+    if (kind === 'ramp2') { b = R.pick([1, 2, 3, 4]); c = q(3, b * b * b); raw = P([b * b, -2 * b, 1]); poly = pscale(raw, c); return { kind: kind, b: b, c: c, raw: raw, poly: poly }; }
+    if (kind === 'affine') { var a0 = R.pick([1, 2, 3, 4, 5]); b = 1; c = q(2, 2 * a0 + 1); raw = P([a0, 1]); poly = pscale(raw, c); return { kind: kind, a0: a0, b: b, c: c, raw: raw, poly: poly }; }
+    b = R.pick([1, 2, 3, 4]); c = q(6, b * b * b); raw = P([0, b, -1]); poly = pscale(raw, c); return { kind: 'tent', b: b, c: c, raw: raw, poly: poly };
   }
   function rawTex(Df) { return Df.kind === 'power' ? (Df.k === 1 ? 'x' : 'x^{' + Df.k + '}') : Df.kind === 'ramp' ? '(' + Df.b + ' - x)' : Df.kind === 'ramp2' ? '(' + Df.b + ' - x)^{2}' : Df.kind === 'affine' ? '(x + ' + Df.a0 + ')' : 'x(' + Df.b + ' - x)'; }
   function densTex(Df, withC) { // f(x) = … on [0, b], 0 otherwise
@@ -956,7 +956,7 @@
         hint: 'Integrate the density between the limits.' }, { kind: 'prob', poly: D2.poly.map(qp), lo: qp(lo), hi: qp(hiC) });
     }
     if (shape === 'tall') {
-      var kk = R.pick([2, 4, 5, 8, 10]), w = q(1, kk), x0 = q(1, 2 * kk), right = R.pick(['zero', 'half']);
+      var kk = R.pick([2, 4, 5, 8, 10, 3, 6, 20]), w = q(1, kk), x0 = q(1, 2 * kk), right = R.pick(['zero', 'half']);
       var correct = right === 'zero' ? '$P(X = ' + qt(x0) + ') = 0$' : '$P(X \\le ' + qt(x0) + ') = \\frac{1}{2}$';
       var wrongs = ['$P(X = ' + qt(x0) + ') = ' + kk + '$', 'This is not a density, because $f(x) = ' + kk + '$ is more than 1', '$P(X \\le ' + qt(x0) + ') = ' + kk + ' \\cdot ' + qt(x0) + ' \\cdot ' + kk + '$', right === 'zero' ? '$P(X \\le ' + qt(x0) + ') = ' + qt(x0) + '$' : '$P(X = ' + qt(x0) + ') = ' + qt(w) + '$'];
       return chk({ q: '$X$ is uniform on $\\left[0, ' + qt(w) + '\\right]$, so its density is $f(x) = ' + kk + '$ there (and 0 elsewhere). Which statement is true?', a: mc(correct, R.sample(wrongs, 3)),
@@ -975,8 +975,8 @@
   G('prob.continuous-cdf', function (R, ctx) {
     var shape = by(ctx, 'F', R.pick(['pct', 'median', 'fromF']), R.pick(['tri', 'triF', 'steps']));
     if (shape === 'F' || shape === 'pct' || shape === 'median') {
-      var k = shape === 'F' ? R.int(1, 3) : R.int(1, 2), b = R.pick(k === 3 ? [1, 2] : [1, 2, 3, 4, 5]), c = q(k + 1, M.pow(b, k + 1)), Df = { kind: 'power', k: k, b: b, c: c, raw: pmono(1, k), poly: pmono(c, k) };
-      if (shape === 'F' && R.chance(0.4)) { var br = R.pick([1, 2, 3, 4, 5, 6]), Dr = { kind: 'ramp', b: br, c: q(2, br * br), raw: P([br, -1]) }; Dr.poly = pscale(Dr.raw, Dr.c); var Frp = pint(Dr.poly);
+      var k = shape === 'F' ? R.int(1, 3) : R.int(1, 2), b = R.pick(k === 3 ? [1, 2, 3] : [1, 2, 3, 4, 5, 6, 8, 10]), c = q(k + 1, M.pow(b, k + 1)), Df = { kind: 'power', k: k, b: b, c: c, raw: pmono(1, k), poly: pmono(c, k) };
+      if (shape === 'F' && R.chance(0.4)) { var br = R.pick([1, 2, 3, 4, 5, 6, 8, 10]), Dr = { kind: 'ramp', b: br, c: q(2, br * br), raw: P([br, -1]) }; Dr.poly = pscale(Dr.raw, Dr.c); var Frp = pint(Dr.poly);
         return chk({ q: '$X$ has this density. Find its CDF $F(x)$ for $0 \\le x \\le ' + br + '$.' + densTex(Dr), a: { t: 'expr', v: pplain(Frp), vars: ['x'] },
           steps: ['$F(x) = \\int_{0}^{x} f(t)\\,dt$, since the density is 0 below 0.', '$F(x) = \\int_{0}^{x} ' + qt(Dr.c) + '(' + br + ' - t)\\,dt = ' + ptex(Frp) + '$.', 'Check: $F(0) = 0$ and $F(' + br + ') = 1$.'],
           hint: 'Integrate the density from 0 up to x.' }, { kind: 'Framp', b: br }); }
@@ -1029,7 +1029,7 @@
 
   G('prob.continuous-expectation', function (R, ctx) {
     var shape = by(ctx, 'mean', R.pick(['var', 'var', 'unif']), R.pick(['recip', 'cube', 'expo', 'shift2']));
-    if (shape === 'unif') { var a = R.int(-3, 4), b = a + R.int(2, 8), v0 = q((b - a) * (b - a), 12), askSD = false;
+    if (shape === 'unif') { var a = R.int(-9, 12), b = a + R.int(1, 15), v0 = q((b - a) * (b - a), 12), askSD = false;
       return chk(nl({ q: '$X$ is uniform on $[' + a + ', ' + b + ']$. Find $\\operatorname{Var}(X)$.', a: ex(v0),
         steps: ['$f(x) = \\frac{1}{' + (b - a) + '}$ on $[' + a + ', ' + b + ']$, and $E[X] = ' + num((a + b) / 2) + '$, the midpoint.', '$E[X^{2}] = \\int_{' + a + '}^{' + b + '} \\frac{x^{2}}{' + (b - a) + '}\\,dx = \\frac{' + b + '^{3} - ' + par(a) + '^{3}}{3 \\cdot ' + (b - a) + '} = ' + qt(q(b * b * b - a * a * a, 3 * (b - a))) + '$.', '$\\operatorname{Var}(X) = ' + qt(q(b * b * b - a * a * a, 3 * (b - a))) + ' - ' + par(num((a + b) / 2)) + '^{2} = ' + qt(v0) + '$, which is $\\frac{(b - a)^{2}}{12}$.'],
         hint: 'Use E[X²] − (E[X])², or the formula (b − a)²/12.' }), { kind: 'unif', a: a, b: b }); }
@@ -1066,7 +1066,7 @@
   ];
   G('prob.exponential', function (R, ctx) {
     var shape = by(ctx, R.pick(['more', 'less']), R.pick(['memory', 'between', 'median']), R.pick(['outlast', 'frommedian', 'moments']));
-    var E = R.pick(EXPO), m = R.pick(E.ms), setup = E.s.replace('{m}', m), r = R.pick([q(1, 2), Q(1), q(3, 2), Q(2), q(1, 4), q(1, 5)]), t = r.mul(m), rT = lamP(r), rTex = lamT(r);
+    var E = R.pick(EXPO), m = R.pick(E.ms), setup = E.s.replace('{m}', m), r = R.pick([q(1, 2), Q(1), q(3, 2), Q(2), q(1, 4), q(1, 5), Q(3), q(1, 3), q(2, 3), q(5, 2)]), t = r.mul(m), rT = lamP(r), rTex = lamT(r);
     if (shape === 'more' || shape === 'less') {
       var more = shape === 'more';
       return chk({ q: setup + ' What is the probability that it ' + (E.u === 'hours' ? (more ? 'lasts more than ' : 'fails within ') : (more ? 'takes more than ' : 'takes at most ')) + t.toPlain() + ' ' + E.u + '? (Exact, or a decimal to 3 places.)', a: tol(more ? 'e^(-' + rT + ')' : '1-e^(-' + rT + ')'),
@@ -1132,11 +1132,21 @@
     var shape = by(ctx, 'linear', 'unif', R.pick(['twoone', 'twoone', 'unif']));
     if (shape === 'linear') {
       var base = R.pick([{ t: '2x', p: P([0, 2]) }, { t: '3x^{2}', p: P([0, 0, 3]) }, { t: '1', p: P([1]) }, { t: '2(1 - x)', p: P([2, -2]) }, { t: '4x^{3}', p: P([0, 0, 0, 4]) }]);
-      var a = R.pick([2, 3, 4, -2, -3, 5, 10]), b = R.int(-5, 6), lo = M.min(b, a + b), hi = M.max(b, a + b);
+      var a = R.pick([2, 3, 4, -2, -3, 5, 10, 6, -4, -5, 8]), b = R.int(-9, 9), lo = M.min(b, a + b), hi = M.max(b, a + b);
       var y0 = Q(lo).add(q((hi - lo) * R.int(1, 3), 4)), x0 = y0.sub(b).div(a), v = peval(base.p, x0).div(M.abs(a)), ym = b === 0 ? 'y' : 'y ' + (b > 0 ? '- ' + b : '+ ' + (-b));
       return chk({ q: '$X$ has density $f_X(x) = ' + base.t + '$ for $0 \\le x \\le 1$ (and 0 otherwise). Let $Y = ' + T.lin(a, 'X', b) + '$. Find $f_Y(' + qt(y0) + ')$.', a: ex(v),
         steps: ['$Y$ runs over $[' + lo + ', ' + hi + ']$. Through the CDF: $F_Y(y) = P(' + T.lin(a, 'X', b) + ' \\le y) = ' + (a > 0 ? 'F_X\\left(\\frac{' + ym + '}{' + a + '}\\right)' : '1 - F_X\\left(\\frac{' + ym + '}{' + a + '}\\right)') + '$' + (a < 0 ? ' (dividing by a negative flips the inequality).' : '.'), 'Differentiate with the chain rule: $f_Y(y) = f_X\\left(\\frac{' + ym + '}{' + a + '}\\right) \\cdot \\frac{1}{' + M.abs(a) + '}$. The factor $\\frac{1}{' + M.abs(a) + '}$ keeps the total area 1.', 'At $y = ' + qt(y0) + '$: $x = ' + qt(x0) + '$ and $f_Y = ' + qt(peval(base.p, x0)) + ' \\cdot \\frac{1}{' + M.abs(a) + '} = ' + qt(v) + '$.'],
         hint: 'Write F_Y in terms of F_X, then differentiate; do not forget the 1/|a|.' }, { kind: 'linear', base: base.p.map(qp), a: a, b: b, y: qp(y0) });
+    }
+    if (shape === 'unif' && R.chance(0.7)) { // the same method with fresh numbers: a linear map or a power
+      var ta = R.pick([2, 3, 4, 5, -2, -3, -4, 6, 8, 10, -5]), tb = R.nz(-9, 9), tn = R.int(2, 6), lin = R.chance(0.8);
+      if (lin) { var lo2 = M.min(tb, ta + tb), hi2 = M.max(tb, ta + tb), yt = 'Y = ' + T.lin(ta, 'X', tb);
+        return chk({ q: '$X$ is uniform on $[0, 1]$, and $' + yt + '$. Find the density $f_Y(y)$ for $' + lo2 + ' < y < ' + hi2 + '$.', a: { t: 'expr', v: '1/' + M.abs(ta), vars: ['y'] },
+          steps: ['Work through the CDF: write $F_Y(y) = P(Y \\le y)$ as a statement about $X$, then differentiate.', ta > 0 ? '$F_Y(y) = P\\left(X \\le \\frac{y ' + (tb < 0 ? '+ ' + (-tb) : '- ' + tb) + '}{' + ta + '}\\right) = \\frac{y ' + (tb < 0 ? '+ ' + (-tb) : '- ' + tb) + '}{' + ta + '}$.' : '$F_Y(y) = P\\left(X \\ge \\frac{y ' + (tb < 0 ? '+ ' + (-tb) : '- ' + tb) + '}{' + ta + '}\\right) = 1 - \\frac{y ' + (tb < 0 ? '+ ' + (-tb) : '- ' + tb) + '}{' + ta + '}$.', '$f_Y(y) = \\frac{1}{' + M.abs(ta) + '}$: still uniform, on an interval of length $' + M.abs(ta) + '$.'],
+          hint: 'Start from F_Y(y) = P(Y ≤ y) and solve the inequality for X.' }, { kind: 'unif', g: yt, v: '1/' + M.abs(ta) }); }
+      return chk({ q: '$X$ is uniform on $[0, 1]$, and $Y = X^{' + tn + '}$. Find the density $f_Y(y)$ for $0 < y < 1$.', a: { t: 'expr', v: '1/(' + tn + '*y^(' + (tn - 1) + '/' + tn + '))', vars: ['y'] },
+        steps: ['$F_Y(y) = P(X^{' + tn + '} \\le y) = P(X \\le y^{1/' + tn + '}) = y^{1/' + tn + '}$ for $0 < y < 1$.', '$f_Y(y) = \\frac{1}{' + tn + '}y^{1/' + tn + ' - 1} = \\dfrac{1}{' + tn + 'y^{' + (tn - 1) + '/' + tn + '}}$.'],
+        hint: 'Start from F_Y(y) = P(Y ≤ y) and solve the inequality for X.' }, { kind: 'unif', g: 'X^' + tn, v: '1/(' + tn + '*y^(' + (tn - 1) + '/' + tn + '))' });
     }
     if (shape === 'unif') {
       var C = R.pick([
@@ -1154,7 +1164,7 @@
     if (R.coin()) return chk({ q: '$X$ is uniform on $[-1, 1]$, and $Y = X^{2}$. Find the density $f_Y(y)$ for $0 < y < 1$.', a: { t: 'expr', v: '1/(2*sqrt(y))', vars: ['y'] },
       steps: ['Two values of $X$ give each $y$: $\\pm\\sqrt{y}$. Through the CDF: $F_Y(y) = P(-\\sqrt{y} \\le X \\le \\sqrt{y}) = \\dfrac{2\\sqrt{y}}{2} = \\sqrt{y}$.', '$f_Y(y) = \\dfrac{1}{2\\sqrt{y}}$.', 'Check by the strip rule: each of the two preimages contributes $\\dfrac{f_X(\\pm\\sqrt{y})}{|2x|} = \\dfrac{1/2}{2\\sqrt{y}}$, and together they give $\\dfrac{1}{2\\sqrt{y}}$.'],
       hint: 'Both √y and −√y square to y.' }, { kind: 'sym' });
-    var y0s = R.pick([q(1, 4), q(1, 9), q(4, 9), q(9, 4), q(16, 9), q(9, 16), q(25, 16)]), r = y0s.num(), sq2 = { 1: 1, 4: 2, 9: 3, 16: 4, 25: 5 }, rt = q(sq2[y0s.num()], sq2[y0s.den()]), two = rt.lt(1);
+    var y0s = R.pick([q(1, 4), q(1, 9), q(4, 9), q(9, 4), q(16, 9), q(9, 16), q(25, 16), q(1, 16), q(9, 25), q(16, 25), q(36, 25), q(49, 16), q(64, 25), q(1, 25), q(4, 25), q(49, 36), q(25, 36)]), r = y0s.num(), sq2 = { 1: 1, 4: 2, 9: 3, 16: 4, 25: 5, 36: 6, 49: 7, 64: 8 }, rt = q(sq2[y0s.num()], sq2[y0s.den()]), two = rt.lt(1);
     var v2 = two ? Q(2).mul(q(1, 3)).div(rt.mul(2)) : q(1, 3).div(rt.mul(2));
     return chk({ q: '$X$ is uniform on $[-1, 2]$, and $Y = X^{2}$. Find $f_Y(' + qt(y0s) + ')$.', a: ex(v2),
       steps: ['$f_X = \\frac{1}{3}$ on $[-1, 2]$. The values of $x$ with $x^{2} = ' + qt(y0s) + '$ are $\\pm' + qt(rt) + '$; ' + (two ? 'both lie in $[-1, 2]$.' : 'only $' + qt(rt) + '$ lies in $[-1, 2]$.'), 'Each preimage contributes $\\dfrac{f_X(x)}{|g\'(x)|} = \\dfrac{1/3}{2 \\cdot ' + qt(rt) + '}$.', 'So $f_Y(' + qt(y0s) + ') = ' + (two ? '2 \\cdot ' : '') + '\\dfrac{1/3}{' + qt(rt.mul(2)) + '} = ' + qt(v2) + '$.' + (two ? '' : ' (Above $y = 1$ only positive $x$ can produce $y$, so the density drops.)')],
@@ -1301,11 +1311,13 @@
   });
 
   // joint polynomial densities: square [0,1]² or triangle 0 < x < y < 1
-  var JSQ = [[[1, 1, 0], [1, 0, 1]], [[1, 1, 1]], [[1, 2, 0], [1, 0, 2]], [[1, 1, 0], [2, 0, 1]], [[1, 1, 2]], [[1, 2, 1]], [[1, 0, 0], [1, 1, 1]]];
-  var JTR = [[[1, 0, 0]], [[1, 1, 0]], [[1, 0, 1]], [[1, 1, 1]], [[1, 1, 0], [1, 0, 1]]];
+  var JSQ = [[[1, 1, 0], [1, 0, 1]], [[1, 1, 1]], [[1, 2, 0], [1, 0, 2]], [[1, 1, 0], [2, 0, 1]], [[1, 1, 2]], [[1, 2, 1]], [[1, 0, 0], [1, 1, 1]],
+    [[1, 2, 2]], [[2, 1, 0], [1, 0, 1]], [[1, 1, 0], [3, 0, 1]], [[1, 0, 0], [1, 1, 0]], [[1, 0, 0], [1, 0, 2]], [[1, 2, 0], [1, 1, 1]], [[1, 0, 2], [1, 1, 1]], [[1, 3, 0], [1, 0, 1]], [[2, 0, 0], [1, 1, 1]], [[1, 1, 3]]];
+  var JTR = [[[1, 0, 0]], [[1, 1, 0]], [[1, 0, 1]], [[1, 1, 1]], [[1, 1, 0], [1, 0, 1]], [[1, 0, 2]], [[1, 2, 0]], [[1, 1, 2]], [[1, 0, 0], [1, 0, 1]], [[1, 0, 0], [1, 1, 0]], [[1, 0, 3]]];
   function jdens(R, sup) {
     sup = sup || R.pick(['square', 'square', 'triangle']);
-    var raw = P2(R.pick(sup === 'square' ? JSQ : JTR)), tot = sup === 'square' ? p2int(raw, 0, 1, P([0]), P([1])) : p2int(raw, 0, 1, P([0, 1]), P([1]));
+    var tm = R.pick(sup === 'square' ? JSQ : JTR); if (tm.length > 1 && R.chance(0.6)) tm = tm.map(function (t2, i) { return [i ? t2[0] * R.int(1, 4) : t2[0], t2[1], t2[2]]; }); // fresh weights
+    var raw = P2(tm), tot = sup === 'square' ? p2int(raw, 0, 1, P([0]), P([1])) : p2int(raw, 0, 1, P([0, 1]), P([1]));
     var c = tot.inv(); return { sup: sup, raw: raw, c: c, f: p2scale(raw, c) };
   }
   function supTex(sup) { return sup === 'square' ? '0 \\le x \\le 1,\\ 0 \\le y \\le 1' : '0 \\le x \\le y \\le 1'; }
@@ -1322,7 +1334,7 @@
   function limTex(pt) { return '\\int_{' + qt(pt[0]) + '}^{' + qt(pt[1]) + '} \\int_{' + ptex(P(pt[2])) + '}^{' + ptex(P(pt[3])) + '}'; }
   G('prob.joint-densities', function (R, ctx) {
     var shape = by(ctx, 'const', 'rect', R.pick(['event', 'event', 'expo']));
-    if (shape === 'expo') { var l1 = R.int(1, 4), l2 = R.intNot(1, 5, l1), v0 = q(l1, l1 + l2);
+    if (shape === 'expo') { var l1 = R.int(1, 8), l2 = R.intNot(1, 9, l1), v0 = q(l1, l1 + l2);
       return chk({ q: '$X$ and $Y$ have joint density $f(x, y) = ' + (l1 * l2 === 1 ? '' : l1 * l2) + 'e^{-' + (l1 === 1 ? '' : l1) + 'x - ' + (l2 === 1 ? '' : l2) + 'y}$ for $x, y > 0$. Find $P(X < Y)$.', a: ex(v0),
         steps: ['Region: $0 < x < y$. Integrate $y$ from $x$ to $\\infty$ first: $\\int_{x}^{\\infty} ' + (l1 * l2 === 1 ? '' : l1 * l2) + 'e^{-' + (l1 === 1 ? '' : l1) + 'x - ' + (l2 === 1 ? '' : l2) + 'y}\\,dy = ' + (l1 === 1 ? '' : l1) + 'e^{-' + (l1 + l2) + 'x}$.', 'Then $\\int_{0}^{\\infty} ' + (l1 === 1 ? '' : l1) + 'e^{-' + (l1 + l2) + 'x}\\,dx = \\frac{' + l1 + '}{' + (l1 + l2) + '}$.', 'So $P(X < Y) = ' + qt(v0) + '$: with rates ' + l1 + ' and ' + l2 + ', the one with the larger rate tends to come first.'],
         hint: 'Integrate over 0 < x < y, inner integral in y from x to ∞.' }, { kind: 'expo', l1: l1, l2: l2 }); }
@@ -1331,7 +1343,7 @@
       return chk({ q: '$X$ and $Y$ have the joint density' + jdTex(Jd, false) + ' Find the constant $c$.', a: ex(Jd.c),
         steps: ['The total volume under a joint density is 1: $\\iint c\\,(' + p2tex(Jd.raw) + ')\\,dA = 1$ over ' + (Jd.sup === 'square' ? 'the unit square.' : 'the triangle, where $y$ runs from $x$ to 1.'), (Jd.sup === 'square' ? '$\\int_{0}^{1}\\int_{0}^{1} ' : '$\\int_{0}^{1}\\int_{x}^{1} ') + '(' + p2tex(Jd.raw) + ')\\,dy\\,dx = ' + qt(tot) + '$.', 'So $c = ' + qt(Jd.c) + '$.'],
         hint: 'Set the double integral over the support equal to 1.' }, { kind: 'const', sup: Jd.sup, raw: Object.keys(Jd.raw).map(function (k) { return [k, qp(Jd.raw[k])]; }) }); }
-    if (shape === 'rect') { var a = R.pick([q(1, 2), q(1, 3), q(2, 3), q(1, 4), q(3, 4)]), b = R.pick([q(1, 2), q(1, 3), q(2, 3), Q(1)]), v = p2int(Jd.f, 0, a, P([0]), P([b]));
+    if (shape === 'rect') { var a = R.pick([q(1, 2), q(1, 3), q(2, 3), q(1, 4), q(3, 4), q(1, 5), q(2, 5), q(3, 5), q(4, 5)]), b = R.pick([q(1, 2), q(1, 3), q(2, 3), Q(1), q(1, 4), q(3, 4), q(2, 5)]), v = p2int(Jd.f, 0, a, P([0]), P([b]));
       return chk({ q: '$X$ and $Y$ have the joint density' + jdTex(Jd) + ' Find $P\\left(X \\le ' + qt(a) + ',\\ Y \\le ' + qt(b) + '\\right)$.', a: ex(v),
         steps: ['The event is the rectangle $0 \\le x \\le ' + qt(a) + '$, $0 \\le y \\le ' + qt(b) + '$, which lies inside the support.', '$P = \\int_{0}^{' + qt(a) + '}\\int_{0}^{' + qt(b) + '} (' + p2tex(Jd.f) + ')\\,dy\\,dx = ' + qt(v) + '$.'],
         hint: 'Integrate the density over the rectangle.' }, { kind: 'rect', f: Object.keys(Jd.f).map(function (k) { return [k, qp(Jd.f[k])]; }), a: qp(a), b: qp(b) }); }
@@ -1358,7 +1370,7 @@
       return chk({ q: '$X$ and $Y$ have the joint density' + jdTex(Jd) + ' Find the marginal density $f_' + (isX ? 'X(x)' : 'Y(y)') + '$ for $0 \\le ' + v + ' \\le 1$.', a: { t: 'expr', v: pplain(poly, v), vars: [v] },
         steps: ['Integrate out the other variable: $f_' + (isX ? 'X(x) = \\int f(x, y)\\,dy' : 'Y(y) = \\int f(x, y)\\,dx') + '$, over the values where $f > 0$ ' + (sq ? '(here 0 to 1).' : (isX ? '(here $y$ from $x$ to 1, which depends on $x$).' : '(here $x$ from 0 to $y$).')), '$f_' + (isX ? 'X(x) = \\int_{' + (sq ? '0' : 'x') + '}^{1}' : 'Y(y) = \\int_{0}^{' + (sq ? '1' : 'y') + '}') + ' (' + p2tex(Jd.f) + ')\\,d' + (isX ? 'y' : 'x') + ' = ' + ptex(poly, v) + '$.', 'Check: $\\int_{0}^{1} f_' + (isX ? 'X' : 'Y') + ' = ' + qt(pdef(poly, 0, 1)) + '$.'],
         hint: 'Integrate the joint density over the other variable, with limits from the support.' }, { kind: shape, sup: Jd.sup, f: Object.keys(Jd.f).map(function (k) { return [k, qp(Jd.f[k])]; }) }); }
-    var x0 = R.pick([q(1, 4), q(1, 3), q(1, 2)]), y0 = sq ? R.pick([q(1, 4), q(1, 2), q(3, 4), q(2, 3)]) : x0.add(Q(1).sub(x0).mul(R.pick([q(1, 4), q(1, 2), q(3, 4)])));
+    var x0 = R.pick([q(1, 4), q(1, 3), q(1, 2), q(1, 5), q(2, 5), q(1, 6)]), y0 = sq ? R.pick([q(1, 4), q(1, 2), q(3, 4), q(2, 3), q(1, 3), q(1, 5), q(4, 5)]) : x0.add(Q(1).sub(x0).mul(R.pick([q(1, 4), q(1, 2), q(3, 4)])));
     var fxv = peval(fX, x0), cv = p2eval(Jd.f, x0, y0).div(fxv);
     return chk({ q: '$X$ and $Y$ have the joint density' + jdTex(Jd) + ' Find the conditional density value $f_{Y \\mid X}\\left(' + qt(y0) + ' \\mid ' + qt(x0) + '\\right)$.', a: ex(cv),
       steps: ['$f_{Y \\mid X}(y \\mid x) = \\dfrac{f(x, y)}{f_X(x)}$: the slice at $x$, rescaled to have area 1.', '$f_X(x) = ' + ptex(fX) + '$, so $f_X\\left(' + qt(x0) + '\\right) = ' + qt(fxv) + '$.', '$f\\left(' + qt(x0) + ', ' + qt(y0) + '\\right) = ' + qt(p2eval(Jd.f, x0, y0)) + '$, so the conditional density is $\\dfrac{' + qt(p2eval(Jd.f, x0, y0)) + '}{' + qt(fxv) + '} = ' + qt(cv) + '$.'],
@@ -1427,15 +1439,15 @@
       return chk(nl({ q: '$X$ and $Y$ are independent with these pmfs. Find $P(X + Y = ' + s + ')$.' + pmfTable(X.xs, X.ps, 'X') + pmfTable(Y.xs, Y.ps, 'Y'), a: ex(v),
         steps: ['$X + Y = ' + s + '$ happens through the splits ' + terms.map(function (t) { return '$(' + t[0] + ', ' + (s - t[0]) + ')$'; }).join(', ') + ', which are disjoint.', 'By independence each split multiplies: ' + terms.map(function (t) { return '$' + qt(t[1]) + ' \\cdot ' + qt(t[2]) + '$'; }).join(', ') + '.', '$P(X + Y = ' + s + ') = \\sum_k P(X = k)P(Y = ' + s + ' - k) = ' + qt(v) + '$.'],
         hint: 'Add over every way to split the total, multiplying the two probabilities in each split.' }), { kind: 'pmf', px: X.ps.map(qp), py: Y.ps.map(qp), s: s }); }
-    if (shape === 'dice') { var a = R.pick([4, 6, 8]), b = R.pick([4, 6, 10]), s2 = R.int(4, a + b - 2), ways = 0; for (var i = 1; i <= a; i++) if (s2 - i >= 1 && s2 - i <= b) ways++;
+    if (shape === 'dice') { var a = R.pick([4, 6, 8, 10, 12, 20]), b = R.pick([4, 6, 8, 10, 12]), s2 = R.int(3, a + b - 1), ways = 0; for (var i = 1; i <= a; i++) if (s2 - i >= 1 && s2 - i <= b) ways++;
       return chk({ q: 'Roll a fair ' + a + '-sided die and a fair ' + b + '-sided die. What is the probability that the sum is ' + s2 + '?', a: ex(q(ways, a * b)),
         steps: ['Each of the $' + a + ' \\cdot ' + b + ' = ' + a * b + '$ pairs is equally likely, with probability $\\frac{1}{' + a * b + '}$.', 'Count the pairs $(k, ' + s2 + ' - k)$ with $1 \\le k \\le ' + a + '$ and $1 \\le ' + s2 + ' - k \\le ' + b + '$: ' + ways + ' of them.', '$P = \\frac{' + ways + '}{' + a * b + '}' + (gcd(ways, a * b) > 1 ? ' = ' + qt(q(ways, a * b)) : '') + '$. (Adding the two pmfs instead would give a "distribution" that adds to 2.)'],
         hint: 'Count the pairs that make the sum.' }, { kind: 'dice', a: a, b: b, s: s2 }); }
-    if (shape === 'poisson') { var l1 = R.pick([0.5, 1, 1.5, 2]), l2 = R.pick([0.5, 1, 1.5, 2, 2.5]), L = Q.from(l1).add(Q.from(l2)), kk = pickK(R, L, 4), E = poisExpr(kk, L);
+    if (shape === 'poisson') { var l1 = R.pick([0.5, 1, 1.5, 2, 3, 0.2]), l2 = R.pick([0.5, 1, 1.5, 2, 2.5, 3, 0.8]), L = Q.from(l1).add(Q.from(l2)), kk = pickK(R, L, 4), E = poisExpr(kk, L);
       return chk({ q: 'Two independent machines break down at random: the numbers of breakdowns in a week are Poisson with means $' + num(l1) + '$ and $' + num(l2) + '$. Find the probability of exactly ' + kk + ' breakdowns in total. (Exact, or a decimal to 3 places.)', a: tol(E.plain),
         steps: ['The sum of independent Poisson variables is Poisson with the means added: convolve the pmfs, and the binomial theorem collapses the sum.', '$\\lambda = ' + num(l1) + ' + ' + num(l2) + ' = ' + lamT(L) + '$.', '$P(X + Y = ' + kk + ') = e^{-' + lamT(L) + '}\\dfrac{' + par(lamT(L)) + '^{' + kk + '}}{' + kk + '!} \\approx ' + E.val.toFixed(4) + '$.'],
         hint: 'Independent Poissons add to a Poisson.' }, { kind: 'poisson', l1: l1, l2: l2, k: kk }); }
-    if (shape === 'binom') { var n1 = R.int(2, 5), n2 = R.int(2, 5), p = R.pick([q(1, 2), q(1, 3), q(1, 4), q(2, 3)]), k3 = R.int(1, n1 + n2 - 1), v3 = Cq(n1 + n2, k3).mul(p.pow(k3)).mul(Q(1).sub(p).pow(n1 + n2 - k3));
+    if (shape === 'binom') { var n1 = R.int(2, 7), n2 = R.int(2, 7), p = R.pick([q(1, 2), q(1, 3), q(1, 4), q(2, 3), q(3, 4), q(1, 5), q(2, 5)]), k3 = R.int(1, n1 + n2 - 1), v3 = Cq(n1 + n2, k3).mul(p.pow(k3)).mul(Q(1).sub(p).pow(n1 + n2 - k3));
       return chk({ q: '$X$ is binomial with $n = ' + n1 + '$ and $p = ' + qt(p) + '$; $Y$ is binomial with $n = ' + n2 + '$ and the same $p$, independent of $X$. Find $P(X + Y = ' + k3 + ')$.', a: ex(v3),
         steps: ['$X$ counts successes in ' + n1 + ' trials and $Y$ in ' + n2 + ' more, all independent with the same $p$, so $X + Y$ counts successes in ' + (n1 + n2) + ' trials: binomial with $n = ' + (n1 + n2) + '$.', '$P(X + Y = ' + k3 + ') = \\binom{' + (n1 + n2) + '}{' + k3 + '}' + T.pow(qt(p), k3) + T.pow(qt(Q(1).sub(p)), n1 + n2 - k3) + ' = ' + qt(v3) + '$.'],
         hint: 'Same p: the trials just pool together.' }, { kind: 'binom', n1: n1, n2: n2, p: qp(p), k: k3 }); }
@@ -1460,7 +1472,7 @@
       return chk(nl({ q: 'The table gives the joint pmf of $X$ and $Y$.' + jointTab(J.xs, J.ys, J.cells) + 'Find $E[X \\mid Y = ' + J.ys[i] + ']$.', a: ex(cm),
         steps: ['Within the row $Y = ' + J.ys[i] + '$ (total $' + qt(my[i]) + '$), the conditional pmf of $X$ is each cell divided by $' + qt(my[i]) + '$.', '$E[X \\mid Y = ' + J.ys[i] + '] = \\dfrac{' + J.xs.map(function (x, j) { return x + ' \\cdot ' + qt(J.cells[i][j]); }).join(' + ') + '}{' + qt(my[i]) + '} = ' + qt(cm) + '$.'],
         hint: 'Average X within the row, using the row total as the denominator.' }), { kind: 'table', J: jplain(J), i: i }); }
-    if (shape === 'coins' || shape === 'dice') { var sides = R.pick([4, 6, 8]), EN = q(sides + 1, 2), each = shape === 'coins' ? q(1, 2) : q(7, 2), v = EN.mul(each);
+    if (shape === 'coins' || shape === 'dice') { var sides = R.pick([4, 6, 8, 10, 12, 20]), EN = q(sides + 1, 2), each = shape === 'coins' ? q(1, 2) : q(7, 2), v = EN.mul(each);
       return chk({ q: 'Roll a fair ' + sides + '-sided die to get a number $N$. Then ' + (shape === 'coins' ? 'flip a fair coin $N$ times. Find the expected number of heads.' : 'roll a fair six-sided die $N$ times and add the results. Find the expected total.'), a: ex(v),
         steps: ['Condition on $N$: given $N = n$, the expected ' + (shape === 'coins' ? 'number of heads is $\\frac{n}{2}$' : 'total is $\\frac{7}{2}n$') + '. So $E[X \\mid N] = ' + qt(each) + 'N$.', 'Average over $N$ (the tower rule): $E[X] = E[E[X \\mid N]] = ' + qt(each) + 'E[N]$.', '$E[N] = \\frac{' + (sides + 1) + '}{2}$, so $E[X] = ' + qt(each) + ' \\cdot ' + qt(EN) + ' = ' + qt(v) + '$.'],
         hint: 'Find E[X | N] first, then average it over N.' }, { kind: shape, sides: sides }); }
@@ -1468,7 +1480,7 @@
       return chk({ q: 'A bag has two coins: coin A lands heads with probability $' + qt(pA) + '$ and coin B with probability $' + qt(pB) + '$. You pick coin A with probability $' + qt(w) + '$ (otherwise B) and flip the chosen coin ' + n + ' times. Find the expected number of heads.', a: ex(v2),
         steps: ['Given coin A, expect $' + n + ' \\cdot ' + qt(pA) + ' = ' + qt(pA.mul(n)) + '$ heads; given coin B, $' + n + ' \\cdot ' + qt(pB) + ' = ' + qt(pB.mul(n)) + '$.', 'Weight by how likely each coin is: $E[X] = ' + qt(w) + ' \\cdot ' + qt(pA.mul(n)) + ' + ' + qt(Q(1).sub(w)) + ' \\cdot ' + qt(pB.mul(n)) + ' = ' + qt(v2) + '$.'],
         hint: 'Average the two conditional means with weights.' }, { kind: 'coinpick', pA: qp(pA), pB: qp(pB), w: qp(w), n: n }); }
-    var sh, mu; do { sh = [R.int(2, 6) * 10, R.int(1, 4) * 10]; sh.push(100 - sh[0] - sh[1]); } while (sh[2] < 10); mu = [R.int(20, 60), R.int(20, 60), R.int(20, 60)];
+    var sh, mu; do { sh = [R.int(2, 14) * 5, R.int(2, 10) * 5]; sh.push(100 - sh[0] - sh[1]); } while (sh[2] < 10); mu = [R.int(15, 90), R.int(15, 90), R.int(15, 90)];
     var tot = sumQ(sh.map(function (s, i) { return q(s * mu[i], 100); }));
     var Cx = R.pick([['A school has three grades', 'students', 'the mean commute', 'minutes'], ['A store has three branches', 'sales', 'the mean sale', 'dollars'], ['A farm has three fields', 'plants', 'the mean height', 'cm']]);
     if (shape === 'groups') return chk({ q: Cx[0] + ': ' + sh.map(function (s, i) { return 'group ' + (i + 1) + ' has ' + s + '% of the ' + Cx[1] + ', with ' + Cx[2] + ' ' + mu[i] + ' ' + Cx[3]; }).join('; ') + '. Find ' + Cx[2] + ' over all the ' + Cx[1] + '.', a: ex(tot),
@@ -1481,19 +1493,19 @@
 
   G('prob.min-max', function (R, ctx) {
     var shape = by(ctx, R.pick(['dicemax', 'dicemin']), R.pick(['maxeq', 'unif', 'expmean']), R.pick(['emax', 'expfirst', 'exptail']));
-    if (shape === 'dicemax' || shape === 'dicemin') { var n = R.int(2, 4), k = R.int(2, 5), mx = shape === 'dicemax', v = mx ? q(k, 6).pow(n) : q(7 - k, 6).pow(n);
+    if (shape === 'dicemax' || shape === 'dicemin') { var n = R.int(2, 6), k = R.int(1, 5), mx = shape === 'dicemax', v = mx ? q(k, 6).pow(n) : q(7 - k, 6).pow(n);
       return chk({ q: 'Roll ' + n + ' fair dice. What is the probability that the ' + (mx ? 'largest number is at most ' + k : 'smallest number is at least ' + k) + '?', a: ex(v),
         steps: [(mx ? 'The largest is at most ' + k + ' exactly when every die is at most ' + k : 'The smallest is at least ' + k + ' exactly when every die is at least ' + k) + '.', 'Each die does that with probability $\\frac{' + (mx ? k : 7 - k) + '}{6}$, independently.', '$P = \\left(\\frac{' + (mx ? k : 7 - k) + '}{6}\\right)^{' + n + '} = ' + qt(v) + '$. (Not $' + n + ' \\cdot \\frac{' + (mx ? k : 7 - k) + '}{6}$, which can exceed 1.)'],
         hint: 'Turn the statement about the max (or min) into a statement about every die.' }, { kind: shape, n: n, k: k }); }
-    if (shape === 'maxeq') { var n2 = R.int(2, 3), k2 = R.int(2, 6), v2 = q(k2, 6).pow(n2).sub(q(k2 - 1, 6).pow(n2));
+    if (shape === 'maxeq') { var n2 = R.int(2, 5), k2 = R.int(1, 6), v2 = q(k2, 6).pow(n2).sub(q(k2 - 1, 6).pow(n2));
       return chk({ q: 'Roll ' + n2 + ' fair dice. What is the probability that the largest number is exactly ' + k2 + '?', a: ex(v2),
         steps: ['$P(\\max = ' + k2 + ') = P(\\max \\le ' + k2 + ') - P(\\max \\le ' + (k2 - 1) + ')$.', '$= \\left(\\frac{' + k2 + '}{6}\\right)^{' + n2 + '} - \\left(\\frac{' + (k2 - 1) + '}{6}\\right)^{' + n2 + '} = ' + qt(v2) + '$.'],
         hint: 'Subtract two "at most" probabilities.' }, { kind: 'maxeq', n: n2, k: k2 }); }
-    if (shape === 'unif') { var n3 = R.int(2, 5), c = R.pick([q(1, 2), q(1, 3), q(2, 3), q(3, 4), q(1, 4), q(4, 5)]), mx2 = R.coin(), v3 = mx2 ? c.pow(n3) : Q(1).sub(c).pow(n3);
+    if (shape === 'unif') { var n3 = R.int(2, 8), c = R.pick([q(1, 2), q(1, 3), q(2, 3), q(3, 4), q(1, 4), q(4, 5), q(1, 5), q(2, 5), q(3, 5), q(9, 10)]), mx2 = R.coin(), v3 = mx2 ? c.pow(n3) : Q(1).sub(c).pow(n3);
       return chk({ q: n3 + ' numbers are chosen independently and uniformly from $[0, 1]$. What is the probability that ' + (mx2 ? 'the largest is at most $' + qt(c) + '$' : 'the smallest is greater than $' + qt(c) + '$') + '?', a: ex(v3),
         steps: [(mx2 ? 'The largest is at most $' + qt(c) + '$ when all of them are: each with probability $' + qt(c) + '$.' : 'The smallest is greater than $' + qt(c) + '$ when all of them are: each with probability $1 - ' + qt(c) + ' = ' + qt(Q(1).sub(c)) + '$.'), 'Independent, so multiply: $' + T.pow(qt(mx2 ? c : Q(1).sub(c)), n3) + ' = ' + qt(v3) + '$.'],
         hint: mx2 ? 'P(max ≤ c) = P(all ≤ c).' : 'P(min > c) = P(all > c).' }, { kind: 'unif', n: n3, c: qp(c), max: mx2 }); }
-    var means = R.sample([2, 3, 4, 5, 6, 10, 12, 15, 20], R.int(2, 3)), rates = means.map(function (m) { return q(1, m); }), L = sumQ(rates);
+    var means = R.sample([2, 3, 4, 5, 6, 10, 12, 15, 20, 8, 24, 30, 60], R.int(2, 4)), rates = means.map(function (m) { return q(1, m); }), L = sumQ(rates);
     if (shape === 'expmean') return chk({ q: 'A machine has ' + means.length + ' parts with independent exponential lifetimes, with means ' + U.list(means.map(function (m) { return m + ' years'; })) + '. The machine stops when the first part fails. Find the expected time until it stops, in years.', a: ex(L.inv()),
       steps: ['The machine\'s lifetime is the minimum: $P(\\min > t) = \\prod e^{-\\lambda_i t} = e^{-(\\lambda_1 + \\cdots)t}$, an exponential with the rates added.', 'Rates: ' + rates.map(function (r) { return '$' + qt(r) + '$'; }).join(', ') + ' per year; total $' + qt(L) + '$.', 'Mean $= \\frac{1}{' + qt(L) + '} = ' + qt(L.inv()) + '$ years.'],
       hint: 'Add the rates (not the means).' }, { kind: 'expmean', means: means });
@@ -1522,12 +1534,12 @@
         hint: 'Divide the mean by the threshold.' }, { kind: 'markov', mu: mu, a: a });
     }
     if (shape === 'cheb') {
-      var mu2 = R.int(20, 80), sd = R.int(2, 6), c = sd * R.pick([2, 3, 4]) + R.pick([0, sd]) , within = R.coin(), b = q(sd * sd, c * c);
+      var mu2 = R.int(20, 200), sd = R.int(2, 12), c = sd * R.pick([2, 3, 4, 5]) + R.pick([0, sd]) , within = R.coin(), b = q(sd * sd, c * c);
       return chk({ q: 'A random variable has mean $' + mu2 + '$ and standard deviation $' + sd + '$. Use Chebyshev\'s inequality to find ' + (within ? 'a lower bound for $P(' + (mu2 - c) + ' < X < ' + (mu2 + c) + ')$.' : 'an upper bound for $P(\\lvert X - ' + mu2 + '\\rvert \\ge ' + c + ')$.'), a: ex(within ? Q(1).sub(b) : b),
         steps: ['Chebyshev: $P(\\lvert X - \\mu \\rvert \\ge c) \\le \\dfrac{\\sigma^{2}}{c^{2}}$ (Markov\'s inequality applied to $(X - \\mu)^{2}$).', '$P(\\lvert X - ' + mu2 + '\\rvert \\ge ' + c + ') \\le \\dfrac{' + sd * sd + '}{' + c * c + '} = ' + qt(b) + '$.'].concat(within ? ['The interval $(' + (mu2 - c) + ', ' + (mu2 + c) + ')$ is the complement, so its probability is at least $1 - ' + qt(b) + ' = ' + qt(Q(1).sub(b)) + '$.'] : []),
         hint: 'Use σ²/c² with c the distance from the mean.' }, { kind: 'cheb', sd: sd, c: c, within: within });
     }
-    if (shape === 'ksd') { var k = R.pick([q(3, 2), Q(2), q(5, 2), Q(3), Q(4), q(5, 4)]), lb = Q(1).sub(k.pow(-2));
+    if (shape === 'ksd') { var k = R.pick([q(3, 2), Q(2), q(5, 2), Q(3), Q(4), q(5, 4), Q(5), q(4, 3), q(5, 3), Q(10)]), lb = Q(1).sub(k.pow(-2));
       return chk({ q: 'Whatever the distribution, at least what fraction of its probability lies within $' + qt(k) + '$ standard deviations of the mean? (Use Chebyshev\'s inequality.)', a: ex(lb),
         steps: ['$P(\\lvert X - \\mu \\rvert \\ge k\\sigma) \\le \\dfrac{\\sigma^{2}}{k^{2}\\sigma^{2}} = \\dfrac{1}{k^{2}}$.', 'With $k = ' + qt(k) + '$: at most $' + qt(k.pow(-2)) + '$ lies outside, so at least $1 - ' + qt(k.pow(-2)) + ' = ' + qt(lb) + '$ lies within.', 'For a normal distribution the true share is much higher; Chebyshev must hold for every distribution, so it is cautious.'],
         hint: 'At most 1/k² lies k or more standard deviations away.' }, { kind: 'ksd', k: qp(k) }); }
@@ -1543,11 +1555,11 @@
 
   G('prob.law-large-numbers', function (R, ctx) {
     var shape = by(ctx, 'sdmean', 'chebmean', R.pick(['nneeded', 'coin', 'fallacy']));
-    if (shape === 'sdmean') { var n = R.pick([4, 9, 16, 25, 36, 49, 64, 100]), sd = R.int(2, 12), askV = R.coin(), v = askV ? q(sd * sd, n) : q(sd, M.sqrt(n));
+    if (shape === 'sdmean') { var n = R.pick([4, 9, 16, 25, 36, 49, 64, 100, 81, 144, 400]), sd = R.int(2, 20), askV = R.coin(), v = askV ? q(sd * sd, n) : q(sd, M.sqrt(n));
       return chk({ q: 'Each of $' + n + '$ independent measurements has standard deviation $' + sd + '$. Find ' + (askV ? 'the variance' : 'the standard deviation') + ' of their average $\\bar{X}$.', a: ex(v),
         steps: ['$\\bar{X} = \\frac{1}{n}(X_1 + \\cdots + X_n)$. The variances of independent terms add: $\\operatorname{Var}(X_1 + \\cdots + X_n) = n\\sigma^{2}$.', 'Dividing by $n$ divides the variance by $n^{2}$: $\\operatorname{Var}(\\bar{X}) = \\dfrac{\\sigma^{2}}{n} = \\dfrac{' + sd * sd + '}{' + n + '}' + (askV ? ' = ' + qt(v) : '') + '$.'].concat(askV ? [] : ['$\\operatorname{SD}(\\bar{X}) = \\dfrac{\\sigma}{\\sqrt{n}} = \\dfrac{' + sd + '}{' + M.sqrt(n) + '} = ' + qt(v) + '$.']),
         hint: 'Var of the average is σ²/n.' }, { kind: 'sdmean', n: n, sd: sd, askV: askV }); }
-    if (shape === 'chebmean') { var sd2 = R.int(2, 10), n2 = R.pick([25, 50, 100, 200, 400]), eps = R.pick([1, 2, q(1, 2)]), b = Q(sd2 * sd2).div(Q(n2).mul(Q.from(eps).pow(2)));
+    if (shape === 'chebmean') { var sd2 = R.int(2, 15), n2 = R.pick([25, 50, 100, 200, 400, 500, 1000]), eps = R.pick([1, 2, q(1, 2), 3, 5]), b = Q(sd2 * sd2).div(Q(n2).mul(Q.from(eps).pow(2)));
       if (b.gt(1)) { n2 = 400; b = Q(sd2 * sd2).div(Q(n2).mul(Q.from(eps).pow(2))); }
       return chk({ q: 'Independent observations have mean $\\mu$ and standard deviation $' + sd2 + '$. For the average $\\bar{X}$ of $' + n2 + '$ of them, use Chebyshev\'s inequality to bound $P(\\lvert \\bar{X} - \\mu \\rvert \\ge ' + qt(Q.from(eps)) + ')$.', a: ex(b),
         steps: ['$\\operatorname{Var}(\\bar{X}) = \\dfrac{\\sigma^{2}}{n} = \\dfrac{' + sd2 * sd2 + '}{' + n2 + '}$.', 'Chebyshev: $P(\\lvert \\bar{X} - \\mu \\rvert \\ge \\varepsilon) \\le \\dfrac{\\operatorname{Var}(\\bar{X})}{\\varepsilon^{2}} = \\dfrac{' + sd2 * sd2 + '}{' + n2 + ' \\cdot ' + par(qt(Q.from(eps))) + '^{2}} = ' + qt(b) + '$.', 'As $n$ grows this bound goes to 0: the weak law of large numbers.'],
@@ -1560,7 +1572,7 @@
       return chk({ q: 'Flip a fair coin $n$ times and let $\\hat{p}$ be the fraction of heads. By Chebyshev\'s inequality, how large must $n$ be to guarantee $P(\\lvert \\hat{p} - \\frac{1}{2}\\rvert \\ge ' + qt(e) + ') \\le ' + qt(d) + '$? Give the smallest such $n$.', a: { t: 'num', v: String(nm), form: 'int' },
         steps: ['$\\hat{p}$ is the average of $n$ indicators with variance $\\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$, so $\\operatorname{Var}(\\hat{p}) = \\frac{1}{4n}$.', 'Chebyshev: $P(\\lvert \\hat{p} - \\frac{1}{2}\\rvert \\ge ' + qt(e) + ') \\le \\dfrac{1}{4n \\cdot ' + par(qt(e)) + '^{2}} = \\dfrac{' + qt(Q(1).div(e.pow(2).mul(4))) + '}{n}$.', 'Need $\\dfrac{' + qt(Q(1).div(e.pow(2).mul(4))) + '}{n} \\le ' + qt(d) + '$: $n \\ge ' + qt(nreq) + '$, so $n = ' + nm + '$.'],
         hint: 'Var of the fraction of heads is 1/(4n).' }, { kind: 'coin', e: qp(e), d: qp(d) }); }
-    var streak = R.int(5, 10);
+    var streak = R.int(4, 15);
     return chk({ q: 'A fair coin has landed heads ' + streak + ' times in a row. Which statement is true?', a: mc('The next flip is heads with probability $\\frac{1}{2}$; over many more flips the early streak gets swamped, not corrected', ['Tails is now more likely, so that the fraction of heads can return to $\\frac{1}{2}$', 'Heads is now more likely, because the coin is on a streak', 'The law of large numbers says the next ' + streak + ' flips will include more tails']),
       steps: ['The flips are independent, so the next one is heads with probability $\\frac{1}{2}$, whatever came before.', 'The law of large numbers is about averages: after $n$ more flips the fraction of heads is $\\dfrac{' + streak + ' + H_n}{' + streak + ' + n}$, and $H_n \\approx \\frac{n}{2}$. The ' + streak + ' extra heads stay, but they matter less and less as $n$ grows.'],
       hint: 'Do the coin\'s past flips change its next flip?' }, { kind: 'fallacy' });
@@ -1716,7 +1728,7 @@
 
   G('prob.first-step-analysis', function (R, ctx) {
     var shape = by(ctx, R.pick(['ruin', 'simple']), R.pick(['ruinT', 'chain']), R.pick(['unfair', 'pattern', 'chainT']));
-    if (shape === 'ruin' || shape === 'ruinT') { var N = R.int(3, 8), k = R.int(1, N - 1), T2 = shape === 'ruinT';
+    if (shape === 'ruin' || shape === 'ruinT') { var N = R.int(3, 15), k = R.int(1, N - 1), T2 = shape === 'ruinT';
       var v = T2 ? Q(k * (N - k)) : q(k, N);
       return chk({ q: 'A gambler has \\$' + k + ' and bets \\$1 at a time on fair coin flips, winning or losing \\$1 each time. She stops when she reaches \\$' + N + ' or goes broke. ' + (T2 ? 'What is the expected number of bets until she stops?' : 'What is the probability that she reaches \\$' + N + '?'), a: ex(v),
         viz: { name: 'prob-markov', opts: { P: ruinP(N, q(1, 2)), names: Array.from({ length: N + 1 }, function (_, i) { return '$' + i; }), mode: 'diagram', layout: 'line', quiet: true, edit: false, matrix: false, label: 'The chain of the gambler\'s fortune, 0 to ' + N + ' dollars' } },
@@ -1727,7 +1739,7 @@
       return chk({ q: 'A robot in room M moves to room A with probability $' + qt(pa) + '$, to room B with probability $' + qt(pb) + '$, and otherwise stays in M for another round, independently each round. Rooms A and B lock behind it. What is the probability that it ends up in room A?', a: ex(v2),
         steps: ['Let $h$ be the chance of ending in A, starting from M. Condition on the first round: $h = ' + qt(pa) + ' \\cdot 1 + ' + qt(pb) + ' \\cdot 0 + ' + qt(stay) + 'h$.', '$' + qt(Q(1).sub(stay)) + 'h = ' + qt(pa) + '$, so $h = ' + qt(v2) + '$.', 'The rounds spent waiting do not matter: it is the share of A among the two ways out, $\\frac{' + qt(pa) + '}{' + qt(pa) + ' + ' + qt(pb) + '}$.'],
         hint: 'Condition on the first round; staying puts you back where you started.' }, { kind: 'simple', pa: qp(pa), pb: qp(pb) }); }
-    if (shape === 'unfair') { var p = R.pick([q(2, 3), q(1, 3), q(3, 5), q(2, 5), q(3, 4), q(1, 4)]), N2 = R.int(3, 5), k2 = R.int(1, N2 - 1), r = Q(1).sub(p).div(p), v3 = Q(1).sub(r.pow(k2)).div(Q(1).sub(r.pow(N2)));
+    if (shape === 'unfair') { var p = R.pick([q(2, 3), q(1, 3), q(3, 5), q(2, 5), q(3, 4), q(1, 4)]), N2 = R.int(3, 7), k2 = R.int(1, N2 - 1), r = Q(1).sub(p).div(p), v3 = Q(1).sub(r.pow(k2)).div(Q(1).sub(r.pow(N2)));
       return chk({ q: 'A player starts with ' + k2 + ' chips and plays rounds that win 1 chip with probability $' + qt(p) + '$ and lose 1 chip otherwise, independently. Play stops at ' + N2 + ' chips or at 0. What is the probability of reaching ' + N2 + ' chips?', a: ex(v3),
         steps: ['Let $h_i$ be the chance of reaching ' + N2 + ' from $i$ chips: $h_0 = 0$, $h_{' + N2 + '} = 1$, and $h_i = ' + qt(p) + 'h_{i + 1} + ' + qt(Q(1).sub(p)) + 'h_{i - 1}$.', 'Rearranged, $h_{i + 1} - h_i = r(h_i - h_{i - 1})$ with $r = \\frac{q}{p} = ' + qt(r) + '$: the gaps grow (or shrink) by the factor $r$, so $h_i = \\dfrac{1 - r^{i}}{1 - r^{' + N2 + '}}$.', '$h_{' + k2 + '} = \\dfrac{1 - ' + par(qt(r)) + '^{' + k2 + '}}{1 - ' + par(qt(r)) + '^{' + N2 + '}} = ' + qt(v3) + '$.'],
         hint: 'Write h_i from the first round, then look at the differences h_(i+1) − h_i.' }, { kind: 'unfair', p: qp(p), N: N2, k: k2 }); }
@@ -1780,3 +1792,133 @@
 
 
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
+   generator still has few different problems at a level sometimes asks the same skill in another form, built only from
+   problems that generator made, so every answer is the generator's own:
+   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+     classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
+     checker rejects it;
+   - two at once: two different short questions of the topic, answered together.
+   Topics whose generator already varies a lot at a level are left as they are. Placed after the generators and
+   registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'prob', VAR = {};
+  // how often another form is used: never when the topic's own generator already varies a lot at this level, up to
+  // half the time when it has few different questions (counted once per topic and level from 40 fixed seeds)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 37 ? 0 : VAR[key] >= 30 ? 0.3 : VAR[key] >= 20 ? 0.45 : 0.55;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
+  // a nearby wrong answer for a number or an expression, or null
+  function wrongFor(R, a) {
+    var v = String(ML.answerValue(a)), cands = [], m;
+    if (a.t === 'num') {
+      if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
+      else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
+      else if (/^-?\d+\.\d+$/.test(v)) { var x = +v, dp = v.split('.')[1].length, st = Math.pow(10, -Math.min(dp, 2)); cands = [x + st, x - st, -x, x * 10, x / 10].map(function (y) { return ML.util.numStr(ML.util.round(y, dp + 1)); }); }
+      else return null;
+    } else if (a.t === 'expr') {
+      if (v.length > 60) return null;
+      if (/ \+ /.test(v)) cands.push(v.replace(' + ', ' - '));
+      if (/ - /.test(v)) cands.push(v.replace(' - ', ' + '));
+      if ((m = /(^|[^\d.^])(\d+)(?![\d.])/.exec(v)) && !/\^$/.test(v.slice(0, m.index + m[1].length))) cands.push(v.slice(0, m.index) + m[1] + (+m[2] + 1) + v.slice(m.index + m[0].length));
+      if (!cands.length) return null;
+    } else return null;
+    var nv = function (s) { var mm = /^(-?\d+)\/(\d+)$/.exec(s); return mm ? mm[1] / mm[2] : /^-?\d+(\.\d+)?$/.test(s) ? +s : null; }, v0 = nv(v);
+    cands = R.shuffle(cands.filter(function (c, i, all) { var x = nv(c); return c !== v && all.indexOf(c) === i && (x === null || v0 === null || (Math.abs(x - v0) >= 0.01 * Math.max(Math.abs(v0), 1e-12) && (v0 <= 0 || x > 0) && (v0 <= 0 || v0 > 1 || x <= 1))); })); // a believable slip: the same sign, and at most 1 when the right answer is
+    for (var i = 0; i < cands.length; i++) if (okAns(a, cands[i]) === false) return cands[i];
+    return null;
+  }
+  function checkable(p) {
+    var a = p.a;
+    if (!a || p.unit || (a.form && a.form !== 'int' && a.form !== 'frac' && a.form !== 'simplest')) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bclassmate\b/i.test(txt(p.q))) return false;
+    if (a.t === 'num' || a.t === 'expr') return okAns(a, ML.answerValue(a)) === true;
+    if (a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    return true;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || ['mc', 'tf', 'num'].indexOf(p.a.t) < 0) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= 300 && !/<(table|svg|img|canvas|ol|ul)\b|\$\$|\\begin\{/i.test(p.q);
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), shown, good;
+    if (a.t === 'mc') {
+      var k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+      shown = a.choices[k]; good = a.choices[a.v];
+    } else {
+      good = ML.answerShow(a);
+      var w = right ? null : wrongFor(R, a);
+      if (!right && w === null) return null;
+      shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
+      if (!shown || /undefined|NaN/.test(shown)) return null;
+    }
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var out = { q: '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q + '</li><li>' + p2.q + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + (p.steps || [''])[0]].concat((p.steps || []).slice(1), ['Question 2: ' + (p2.steps || [''])[0]], (p2.steps || []).slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), mode = ctx && ctx.mode;
+      if (!p || !p.a || !ML.check || !ML.answerShow || !R.chance(share(id, base, ctx))) return p;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check', 'check');
+      if (pairable(p, true)) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = null;
+      try { out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base); } catch (e) { out = null; }
+      return out || p;
+    };
+    fn._forms = true;
+    fn._base = base; // the topic's own generator (for tests)
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);

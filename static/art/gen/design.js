@@ -444,7 +444,10 @@
         [t === 'warm' ? 'Reds, oranges and yellows, the colors of fire and sun, read warm.' : 'Greens, blues and violets, the colors of water and shade, read cool.'], 'Fire and sun, or water and shade?', swatches([hex(k)]));
     }
     if (L === 2) {
-      var C = R.pick([{ m: 'violet', cool: 'blue', warm: 'red' }, { m: 'green', cool: 'blue', warm: 'yellow' }, { m: 'red-violet', cool: 'violet', warm: 'red' }, { m: 'yellow-green', cool: 'green', warm: 'yellow' }]);
+      // a middle hue between a cooler neighbor (toward blue) and a warmer one (toward red-orange) on the painter's wheel
+      var C = R.pick([{ m: 'violet', cool: ['blue', 'blue-green'], warm: ['red', 'red-orange', 'orange'] }, { m: 'green', cool: ['blue', 'blue-green'], warm: ['yellow', 'yellow-orange', 'orange'] },
+        { m: 'red-violet', cool: ['violet', 'blue-violet', 'blue'], warm: ['red', 'red-orange'] }, { m: 'yellow-green', cool: ['green', 'blue-green'], warm: ['yellow', 'yellow-orange'] }]);
+      C = { m: C.m, cool: R.pick(C.cool), warm: R.pick(C.warm) };
       var swap = R.coin(), pairs = swap ? [[hex(C.warm), hex(C.m)], [hex(C.cool), hex(C.m)]] : [[hex(C.cool), hex(C.m)], [hex(C.warm), hex(C.m)]], right = swap ? 1 : 0;
       return P('The same ' + hueName(C.m) + ' square sits on ' + (swap ? hueName(C.warm) + ' (A) and on ' + hueName(C.cool) + ' (B)' : hueName(C.cool) + ' (A) and on ' + hueName(C.warm) + ' (B)') + '. In which panel does it look <b>warmer</b>?', mc(['A', 'B'], right, true),
         ['Temperature is relative: a color looks warmer next to a cooler neighbor.', cap(hueName(C.cool)) + ' is cooler than ' + hueName(C.m) + ', so beside it the ' + hueName(C.m) + ' shows its warm side.', 'So panel ' + letter(right) + '.'], 'Next to which neighbor does the square seem warmer by comparison?',
@@ -981,7 +984,7 @@
         { name: 'design-text', opts: { pairs: ord, quiet: true, interactive: false, text: R.pick(['Can you read this?', 'Open daily 9 to 5', 'Art class at noon']) } });
     }
     if (L === 2) {
-      var L1 = R.pick([1, 0.8, 0.6, 0.45]), L2 = R.pick([0, 0.05, 0.1, 0.15, 0.2]), ratio = (L1 + 0.05) / (L2 + 0.05), r1 = Math.round(ratio * 10) / 10;
+      var L1 = R.pick([1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.45, 0.4]), L2 = R.pick([0, 0.02, 0.05, 0.08, 0.1, 0.12, 0.15, 0.2]), ratio = (L1 + 0.05) / (L2 + 0.05), r1 = Math.round(ratio * 10) / 10;
       return { q: 'Text and background have relative luminances $L_1 = ' + L1 + '$ (the lighter) and $L_2 = ' + L2 + '$ (the darker). Find the contrast ratio $\\frac{L_1 + 0.05}{L_2 + 0.05}$, to one decimal place.', a: { t: 'num', v: String(r1), tol: 0.051 },
         steps: ['$L_1 + 0.05 = ' + (Math.round((L1 + 0.05) * 100) / 100) + '$ and $L_2 + 0.05 = ' + (Math.round((L2 + 0.05) * 100) / 100) + '$.', 'Divide: $' + (Math.round((L1 + 0.05) * 100) / 100) + ' \\div ' + (Math.round((L2 + 0.05) * 100) / 100) + ' \\approx ' + r1 + '$.', 'The contrast ratio is about ' + r1 + ' to 1' + (ratio >= 4.5 ? ', which meets the 4.5 to 1 guideline for normal text.' : ratio >= 3 ? ', enough only for large text (3 to 1).' : ', too low for text.')],
         hint: 'Add 0.05 to each, then divide the larger by the smaller.' };
@@ -994,3 +997,104 @@
       { name: 'design-text', opts: { pairs: [pr], large: large, quiet: true, interactive: false, text: large ? 'Big Sale Today' : 'Doors open at seven tonight' } });
   });
 })(window.MathLadder);
+
+/* ---- More forms of the same questions (round 7, "widen"): every topic of this course keeps its own generator above and
+   sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
+   generator's own:
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+     placement, where a guess is too easy; only for single-answer questions with three or more choices);
+   - two at once: two different questions of the topic, answered together (short questions only, at most one of them with
+     a picture, which then comes first; not in the courses for young children, whose answer box for two parts would
+     also show a keypad button they don't need).
+   Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
+(function (ML) {
+  'use strict';
+  if (!ML || !ML.gen || !ML.getGen || !ML.rand) return;
+  var COURSE = 'design', YOUNG = false, VAR = {};
+  // how often another form is used: a quarter of the time when the topic's own generator already varies a lot at this
+  // level, up to half the time when it has few different questions
+  // (counted once per topic and level from 40 fixed seeds, ignoring the order of the choices)
+  function share(id, base, ctx) {
+    var L = (ctx && ctx.level) || 1, key = id + '|' + L;
+    if (VAR[key] === undefined) {
+      var seen = {}, n = 0;
+      for (var s = 1; s <= 40; s++) {
+        try {
+          var p = base(ML.rand(id + '#variety#' + s + '#' + L), { level: L, mode: 'learn' }), a = p.a || {};
+          var k = p.q + '|' + JSON.stringify(a.choices ? a.choices.slice().sort() : a.v) + '|' + JSON.stringify(p.viz || null);
+          if (!seen[k]) { seen[k] = 1; n++; }
+        } catch (e) { }
+      }
+      VAR[key] = n;
+    }
+    return VAR[key] >= 36 ? 0.25 : VAR[key] >= 25 ? 0.4 : 0.5;
+  }
+  function txt(s) { return String(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var YN = /^(yes|no|true|false|right|wrong|correct|incorrect|not sure)\b/i;
+  function checkable(p) {
+    var a = p.a;
+    if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
+    if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
+    if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    return !p.unit;
+  }
+  function pairable(p, vizOk) {
+    if ((p.viz && !vizOk) || p.unit || !p.a || (p.a.t !== 'mc' && p.a.t !== 'tf')) return false;
+    if (p.a.t === 'mc' && (!Array.isArray(p.a.choices) || (!p.viz && p.a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })))) return false;
+    return txt(p.q).length <= (YOUNG ? 240 : 480) && !/<(table|svg|img|canvas|ol|ul)\b/i.test(p.q) && !(YOUNG && /<blockquote\b/i.test(p.q));
+  }
+  function sameQ(p, p2) { // the same question, even with its choices in another order
+    function k(x) { var a = x.a; return txt(x.q) + '|' + (a.t === 'mc' ? a.choices.slice().sort().join('|') + '|' + (Array.isArray(a.v) ? a.v.map(function (i) { return a.choices[i]; }).sort().join('|') : a.choices[a.v]) : JSON.stringify(a.v)); }
+    return k(p) === k(p2);
+  }
+  function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
+  function listed(q) { return /\b(these|those|the following|below|the choices|the options|one of them)\b/i.test(txt(q)); }
+  function checkForm(R, p) {
+    var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
+    var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
+    var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
+      hint: p.hint || 'Work it out yourself first, then compare.',
+      steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };
+    if (p.viz) out.viz = p.viz;
+    if (p.nolint) out.nolint = p.nolint;
+    return out;
+  }
+  function pairForm(R, id, ctx, p, base) {
+    for (var t = 0; t < 6; t++) {
+      var R2 = ML.rand(id + '#pair#' + R.int(0, 999999999)), p2;
+      try { p2 = base(R2, ctx); } catch (e) { return null; }
+      if (p2 && p2.a && p2.a.t === 'mc' && !p2.a.choices && Array.isArray(p2.choices)) p2.a.choices = p2.choices;
+      if (!p2 || !pairable(p2, !p.viz) || sameQ(p, p2)) continue;
+      if (p2.viz) { var t2 = p; p = p2; p2 = t2; } // the question with the picture comes first
+      var RM = /<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, rm = (p.q.match(RM) || p2.q.match(RM) || [''])[0];
+      var out = { q: rm + '<p>Answer both questions.</p><ol class="ml-two"><li>' + p.q.replace(RM, '') + '</li><li>' + p2.q.replace(RM, '') + '</li></ol>',
+        a: { t: 'multi', parts: [{ label: '1.', a: p.a }, { label: '2.', a: p2.a }] },
+        hint: 'Take them one at a time.',
+        steps: ['Question 1: ' + p.steps[0]].concat(p.steps.slice(1), ['Question 2: ' + p2.steps[0]], p2.steps.slice(1)) };
+      var nl = [].concat(p.nolint || [], p2.nolint || []); if (nl.length) out.nolint = nl;
+      if (p.viz) out.viz = p.viz;
+      return out;
+    }
+    return null;
+  }
+  ML.genIds().filter(function (id) { return id.indexOf(COURSE + '.') === 0; }).forEach(function (id) {
+    var base = ML.getGen(id);
+    if (!base || base._forms) return;
+    var fn = function (R, ctx) {
+      var p = base(R, ctx), L = (ctx && ctx.level) || 1, mode = ctx && ctx.mode;
+      if (!p || !p.a || !R.chance(share(id, base, ctx))) return p;
+      if (p.a.t === 'mc' && !p.a.choices && Array.isArray(p.choices)) p.a.choices = p.choices;
+      var forms = [];
+      if (mode !== 'place' && checkable(p)) forms.push('check');
+      if (pairable(p, true) && !YOUNG) forms.push('pair');
+      if (!forms.length) return p;
+      var f = R.pick(forms), out = f === 'check' ? checkForm(R, p) : pairForm(R, id, ctx, p, base);
+      return out || p;
+    };
+    fn._forms = true;
+    ML.gen(id, fn);
+  });
+})(typeof window !== 'undefined' ? window.MathLadder : null);
