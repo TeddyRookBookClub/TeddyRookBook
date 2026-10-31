@@ -149,6 +149,7 @@
     function save() {
       trimXP();
       try { if (store) store.setItem(KEY, JSON.stringify(S)); broken = false; } catch (e) { /* full or blocked: keep going in memory */ }
+      if (!opt.storage) { try { if (W.TRB && W.TRB.markActivity) W.TRB.markActivity(); } catch (e) { } } // a session for the backup reminder (js/backup.js)
       emit();
     }
     function emit() { fns.slice().forEach(function (f) { try { f(S); } catch (e) { if (W.console) W.console.error(e); } }); }

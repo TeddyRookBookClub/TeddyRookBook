@@ -20,6 +20,7 @@
     var e = load(slug);
     fn(e);
     try { var all = readAll(); all[slug] = e; W.localStorage.setItem(KEY, JSON.stringify(all)); } catch (x) { }
+    try { if (W.TRB && W.TRB.markActivity) W.TRB.markActivity(); } catch (e) { } // a session for the backup reminder (js/backup.js)
     return e;
   }
   // pure: add a finished session to an entry

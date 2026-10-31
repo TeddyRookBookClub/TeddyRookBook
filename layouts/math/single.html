@@ -135,6 +135,7 @@
     </div>
   </section>
 
+  {{ partial "report/link.html" (printf "%s topic" $L.title) }}
   <nav class="mlp-pn" aria-label="Previous and next topic">
     {{ with $prev }}<a class="mlp-pn-prev" href="{{ printf "%s/%s/%s/" $L.slug $c.slug .slug | relURL }}"><small>Previous topic</small><span>← {{ .title }}</span></a>{{ else }}<span></span>{{ end }}
     {{ with $nextT }}<a class="mlp-pn-next" href="{{ printf "%s/%s/%s/" $L.slug $c.slug .slug | relURL }}"><small>Next topic</small><span>{{ .title }} →</span></a>{{ end }}

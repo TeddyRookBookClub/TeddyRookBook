@@ -1,0 +1,4 @@
+{{- /* "Report a problem" (static/js/report.js), with its setting from data/report.yaml. Used by extend_head.html and the embed head. */ -}}
+{{- $r := site.Data.report | default dict -}}
+{{- $cfg := dict "channel" ($r.channel | default "x") "x_handle" ($r.x_handle | default "teddyrookbook") "x_id" (printf "%v" ($r.x_id | default "")) "email" ($r.email | default "") -}}
+<script src="{{ "js/report.js" | relURL }}?v={{ (os.Stat "static/js/report.js").ModTime.Unix }}" data-report="{{ $cfg | jsonify }}" defer></script>

@@ -36,7 +36,7 @@
     <div class="dev-cards">
     {{- range $i, $e := $E.embeds }}
       {{- $src := printf "%s%s" (strings.TrimPrefix "/" $e.path | absURL) (cond (ne $e.query "") (printf "?%s" $e.query) "") -}}
-      {{- $snip := printf "<iframe src=\"%s\" title=\"%s from Teddy Rook Book\" width=\"100%%\" height=\"%d\" style=\"border:0;max-width:900px\" loading=\"lazy\"></iframe>" $src $e.title (int $e.height) -}}
+      {{- $snip := printf "<iframe src=\"%s\" title=\"%s from Teddy Rook Book\" width=\"100%%\" height=\"%d\" style=\"border:0;max-width:900px\" loading=\"lazy\" allow=\"clipboard-write\"></iframe>" $src $e.title (int $e.height) -}}
       {{- $prev := printf "%s%spreview=1" $src (cond (ne $e.query "") "&" "?") }}
       <article class="dev-card" id="embed-{{ $e.key }}">
         <div class="dev-card-text">
@@ -106,6 +106,7 @@
       <div><dt>As-is, with no support.</dt><dd>This is a one-person project. Everything here comes as-is, with no guarantees and no promise of help, fixes or notice of changes. There are no versions to track and no support line. Test it on your site, and keep a copy of the toolkit you rely on.</dd></div>
     </dl>
     <p class="dev-note">To share a note or a broken link, Teddy Rook is on X as <a href="https://x.com/teddyrookbook" rel="noopener">@teddyrookbook</a>. Replies aren’t promised.</p>
+    <p class="dev-note">Every embed, practice problem and page has a small “Report a problem” link. It gathers the details (the page, and for a problem the topic, question and answers) for your visitor to copy and send{{ if eq (site.Data.report.channel | default "x") "email" }}{{ with site.Data.report.email }} by email{{ end }}{{ else }} in a direct message on X{{ end }}. Nothing is sent by the embed itself. The snippets above include <code>allow="clipboard-write"</code> so the Copy button works inside your frame; without it, the details are selected for copying by hand.</p>
   </section>
 
   <section class="dev-sec" id="licenses" aria-labelledby="lic-h">

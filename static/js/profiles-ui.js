@@ -1,6 +1,6 @@
 /* Learner profiles: the header chip and its menu, the add/edit dialog, files and save codes.
    Loaded by profiles.js only when profiles are in use (or on /progress/). Nothing here talks to a server.
-   window.TRBProfilesUI = { openAdd, openEdit(id), switchTo(id), saveFile(ids, family), openFile(), copyCode(id),
+   window.TRBProfilesUI = { openAdd, openEdit(id), switchTo(id), saveFile(ids, family), openFile(), openRestore(), previewRestore(obj), copyCode(id),
                             loadCode(text) → Promise, toast(text), onChange(fn) } */
 (function (W, D) {
   'use strict';
@@ -36,6 +36,7 @@
     '.trb-pf-icons span{display:grid;place-items:center;width:2.2rem;height:2.2rem;border:1.5px solid var(--border);border-radius:9px;font-size:1.25rem;background:var(--entry)}' +
     '.trb-pf-icons input:checked+span{border-color:#00562f;box-shadow:0 0 0 2px #00562f inset}.trb-pf-icons input:focus-visible+span{outline:2px solid #d8b860;outline-offset:2px}' +
     '[data-theme=dark] .trb-pf-icons input:checked+span{border-color:#6cc79a;box-shadow:0 0 0 2px #6cc79a inset}' +
+    '.trb-pf-rl{margin:.2rem 0 .5rem;padding-left:1.1rem;line-height:1.6}.trb-pf-rl .note{font-size:.85rem}' +
     '.trb-pf-dlg .chk{display:flex;gap:.45rem;align-items:center;margin:.6rem 0}.trb-pf-dlg .note{font-size:.85rem;color:var(--secondary);margin:.3rem 0}' +
     '.trb-pf-btns{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem}.trb-pf-btns button{font:inherit;font-size:.92rem;padding:.42rem .9rem;border-radius:9px;border:1px solid var(--border);background:var(--entry);color:var(--primary);cursor:pointer}' +
     '.trb-pf-btns .pri{background:#004225;border-color:#004225;color:#fff;font-weight:600}.trb-pf-btns .del{margin-left:auto;color:#a3352a;border-color:#d9a79f}[data-theme=dark] .trb-pf-btns .del{color:#f0a49a;border-color:#7a3a33}' +
@@ -69,7 +70,85 @@
     var o = PF.exportData(ids, !!family), one = ids && ids.length === 1 ? PF.get(ids[0]) : null;
     if (!o.profiles.length) return;
     download(one ? 'teddy-rook-' + slug(one.name) + '.json' : 'teddy-rook-family-' + o.saved.slice(0, 10) + '.json', JSON.stringify(o));
-    toast(one ? 'Saved ' + one.name + ' to a file.' : 'Saved ' + o.profiles.length + ' learners to one file.');
+    toast(one ? 'Saved ' + one.name + ' to a file.' : 'Saved ' + o.profiles.length + ' learner' + (o.profiles.length === 1 ? '' : 's') + ' to one file.');
+    if (family && W.TRB && W.TRB.backupSaved) W.TRB.backupSaved(); // a family file is a backup: the reminder count starts again
+  }
+
+  // ---------- restore from a backup file: show what is in it, then add its learners or replace everything ----------
+  var KEEP = ['trb-fs', 'trb-units', 'trb-backup-v1']; // device settings that "Replace everything" leaves alone
+  var PLAN_NAMES = { 'trb-planner-v1': 'the lesson planner', 'trb-family-v1': 'Family Study', 'trb-meals-v1': 'the meal planner', 'trb-garden-v1': 'the garden planner' };
+  // any Teddy Rook Book file → the family-file shape (an older one-learner progress file keeps its planner and plans too)
+  function asFamily(o, name) {
+    if (!o || o.site !== 'teddyrookbook.com') return null;
+    if (o.kind === 'trb-profiles' && Array.isArray(o.profiles)) return o;
+    if (!o.data || typeof o.data !== 'object') return null;
+    var data = {}, shared = {};
+    for (var k in o.data) if (Object.prototype.hasOwnProperty.call(o.data, k) && typeof o.data[k] === 'string') {
+      if (PF.isProfileKey(k)) data[k] = o.data[k]; else if (k.indexOf('trb-') === 0 && k !== PF.REG && k !== 'trb-backup-v1') shared[k] = o.data[k];
+    }
+    return { site: o.site, kind: 'trb-profiles', v: 1, saved: o.saved, profiles: [{ name: name || 'Me', age: '', icon: '', data: data }], shared: shared, old: true };
+  }
+  function day(iso) { var d = new Date(iso); return isNaN(d) ? 'an unknown date' : d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }); }
+  function wipe() { // everything but the device settings; returns what was there, to put back if the restore fails
+    var back = {}, ks = [];
+    try { for (var i = 0; i < W.localStorage.length; i++) ks.push(W.localStorage.key(i)); } catch (e) { }
+    ks.forEach(function (k) { if (k && (k.indexOf('trb-') === 0 || PF.isProfileKey(k)) && KEEP.indexOf(k) < 0) { try { back[k] = W.localStorage.getItem(k); W.localStorage.removeItem(k); } catch (e) { } } });
+    return back;
+  }
+  function unwipe(back) { wipe(); for (var k in back) if (back[k] != null) { try { W.localStorage.setItem(k, back[k]); } catch (e) { } } }
+  function restore(o, mode, withShared) {
+    var fresh = !PF.on() && !PF.hasProgress(), back = null;
+    if (mode === 'replace') { back = wipe(); fresh = true; }
+    var r = PF.importData(o, { replace: function () { return false; }, shared: function () { return !!withShared; }, firstName: 'Me' });
+    if (!r.ok) { if (back) unwipe(back); return r; }
+    // a browser with no work of its own: drop the empty "Me" that the first import made, so the file's first learner is active
+    var first = PF.list()[0];
+    if (fresh && first && first.id === 'p1' && PF.list().length > 1) PF.remove('p1');
+    if (W.TRB && W.TRB.backupSaved) W.TRB.backupSaved(Math.min(Date.now(), Date.parse(o.saved) || Date.now()));
+    r.reload = true; return r;
+  }
+  function previewRestore(raw) {
+    var o = raw && raw.site === 'teddyrookbook.com' ? raw : null, fam = asFamily(o, 'Me');
+    if (!fam || !fam.profiles.length) { toast(why({ ok: false, why: 'file' })); return; }
+    var plans = Object.keys(fam.shared || {}).filter(function (k) { return PLAN_NAMES[k]; });
+    var here = plans.filter(function (k) { try { return W.localStorage.getItem(k) != null; } catch (e) { return false; } });
+    var rows = fam.profiles.map(function (p) {
+      var n = p && p.data && typeof p.data === 'object' ? Object.keys(p.data).filter(PF.isProfileKey).length : 0;
+      return '<li><span aria-hidden="true">' + esc(p.icon || '🙂') + '</span> <b>' + esc(PF.label({ name: String(p.name || 'Learner').slice(0, 30), age: p.age })) + '</b> <span class="note">(' + (n ? n + ' saved item' + (n === 1 ? '' : 's') : 'no progress yet') + ')</span></li>';
+    }).join('');
+    var body = '<p class="note">This file was saved on <b>' + esc(day(fam.saved)) + '</b>. Nothing in this browser changes until you choose below.</p>' +
+      (fam.old ? '<label class="f"><span>An older file for one learner. Name for this learner</span><input type="text" name="nm" maxlength="30" value="Me" autocomplete="off"></label>' : '<p style="margin:.4rem 0 .2rem"><b>Learners in the file</b></p>') +
+      '<ul class="trb-pf-rl">' + rows + '</ul>' +
+      (plans.length ? '<p class="note">It also holds ' + plans.map(function (k) { return PLAN_NAMES[k]; }).join(', ') + '.</p>' +
+        '<label class="chk"><input type="checkbox" name="sh"' + (here.length ? '' : ' checked') + '> When adding, load those too' + (here.length ? ' (they replace the ones here)' : '') + '</label>' : '') +
+      '<p class="note"><b>Add these learners</b> keeps everyone already here and adds the learners from the file. <b>Replace everything</b> clears this browser’s progress first and puts back exactly what is in the file.</p>';
+    function nameIt(f) { if (fam.old) { var v = fv(f, 'nm').value.trim() || 'Me'; fam.profiles[0].name = v; } }
+    function finish(r) {
+      if (!r.ok) { toast(why(r)); return; }
+      closeDlg(); var n = r.added.length;
+      toast('Restored ' + n + ' learner' + (n === 1 ? '' : 's') + (r.shared ? ' and the plans' : '') + '. Reloading…');
+      setTimeout(function () { W.location.reload(); }, 900);
+    }
+    dialog('Restore from a backup file', body, [
+      ['Add these learners', 'pri', function (f) { nameIt(f); var sh = f.querySelector('input[name=sh]'); finish(restore(fam, 'add', sh && sh.checked)); }],
+      ['Replace everything', 'del', function (f) {
+        nameIt(f);
+        if (!W.confirm('Replace everything in this browser with the file? All progress here now, for every learner, and the planner and household plans are removed first. This can’t be undone. (Save a backup of this browser first if you might want it.)')) return;
+        finish(restore(fam, 'replace', true));
+      }],
+      ['Cancel']]);
+  }
+  var rpicker = null;
+  function openRestore() {
+    if (!rpicker) {
+      rpicker = el('input'); rpicker.type = 'file'; rpicker.accept = '.json,application/json'; rpicker.hidden = true; D.body.appendChild(rpicker);
+      rpicker.addEventListener('change', function () {
+        var f = rpicker.files[0]; if (!f) return;
+        f.text().then(function (t) { var o = null; try { o = JSON.parse(t); } catch (e) { } previewRestore(o); })
+          .catch(function () { toast('That file couldn’t be read.'); }).then(function () { rpicker.value = ''; });
+      });
+    }
+    rpicker.click();
   }
   function importObj(o) {
     var act = PF.active(), many = o && o.kind === 'trb-profiles' && Array.isArray(o.profiles) ? o.profiles.length : 1;
@@ -215,6 +294,7 @@
       (list.length > 1 ? '<button type="button" role="menuitem" data-a="all" tabindex="-1"><span class="ic" aria-hidden="true">⬇</span>Save all learners to one file</button>' : '') +
       '<button type="button" role="menuitem" data-a="open" tabindex="-1"><span class="ic" aria-hidden="true">⬆</span>Open a learner file</button>' +
       '<button type="button" role="menuitem" data-a="code" tabindex="-1"><span class="ic" aria-hidden="true">📋</span>Copy a save code</button><hr>' +
+      (PF.hasProgress() ? '' : '<button type="button" role="menuitem" data-a="restore" tabindex="-1"><span class="ic" aria-hidden="true">⤴</span>Moving to a new device? Restore a backup</button>') +
       '<a role="menuitem" href="/progress/" tabindex="-1"><span class="ic" aria-hidden="true">📈</span>My Progress</a>';
   }
   function mount() {
@@ -237,6 +317,7 @@
       else if (a === 'all') saveFile(null, true);
       else if (a === 'open') openFile();
       else if (a === 'code') copyCode(act.id);
+      else if (a === 'restore') openRestore();
     });
     menu.addEventListener('keydown', function (e) {
       var it = items(), i = it.indexOf(D.activeElement);
@@ -259,7 +340,7 @@
     if (m) toast(m === 'full' ? 'Couldn’t switch learners: ' + FULL : 'Couldn’t switch learners. Nothing was changed.');
     else if (hi) { var a = PF.active(); if (a && a.name === hi) toast('Now learning as ' + PF.label(a) + '.'); }
   }
-  W.TRBProfilesUI = { openAdd: openAdd, openEdit: openEdit, switchTo: switchTo, saveFile: saveFile, openFile: openFile, copyCode: copyCode, loadCode: loadCode, toast: toast, why: why, refresh: changed,
+  W.TRBProfilesUI = { openAdd: openAdd, openEdit: openEdit, switchTo: switchTo, saveFile: saveFile, openFile: openFile, openRestore: openRestore, previewRestore: previewRestore, copyCode: copyCode, loadCode: loadCode, toast: toast, why: why, refresh: changed,
     onChange: function (f) { subs.push(f); } };
   if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', start); else start();
   try { W.dispatchEvent(new Event('trb-profiles-ui')); } catch (e) { }

@@ -26,6 +26,8 @@
      trb-meals-v1        the meal planner (a household plan)        trb-meals-setup  its setup panel open or closed
      trb-garden-v1       the garden planner (a household plan)
      trb-art-gallery     the art gallery's filter                   trb-daily-bank, trb-daily-cross  Daily Word Puzzle display
+     trb-backup-v1       backup reminders (static/js/backup.js): last family backup file, sessions since, snooze. Covers the
+                         whole family, so it is device-wide; never written into a file or read back from one
    Not trb- and not swapped (device preferences): pref-theme (light/dark), mk-* (markets dashboards),
    teut-en, teut-speed (game settings). The search box and the video "more" links store nothing.
    EXTRA (per learner although not trb-): tt-v1 (Time Thief cases).
@@ -39,6 +41,7 @@
      requestSwitch(id)    sets pending; the caller reloads the page       switchNow(id)  swaps at once (load time, tests)
      snapshot(id)         { key: string } of that learner's saves         getKey(id, k)  setKey(id, k, v)  per-learner read/write
      exportData(ids, withShared)  importData(obj, { replace: fn(name) → bool, name })   isProfileKey(k)   size()
+     hasProgress()        true when this browser holds work worth a backup (any learner's saves, or a household plan)
      create(storage)      a separate instance (tests)
    Every storage call is wrapped in try/catch. A full storage gives { ok: false, why: 'full' } and nothing is half-written. */
 (function (root, factory) {
@@ -51,13 +54,16 @@
   }
 })(this, function () {
   'use strict';
-  var REG = 'trb-profiles-v1';
+  var REG = 'trb-profiles-v1', BK = 'trb-backup-v1';
   var SHARED = ['trb-profiles-v1', 'trb-fs', 'trb-units', 'trb-planner-v1', 'trb-planner-days', 'trb-placement-v1',
-    'trb-family-v1', 'trb-meals-v1', 'trb-meals-setup', 'trb-garden-v1', 'trb-art-gallery', 'trb-daily-bank', 'trb-daily-cross'];
+    'trb-family-v1', 'trb-meals-v1', 'trb-meals-setup', 'trb-garden-v1', 'trb-art-gallery', 'trb-daily-bank', 'trb-daily-cross', 'trb-backup-v1'];
   var EXTRA = ['tt-v1'];
   var ICONS = ['🦊', '🐻', '🦉', '🐢', '🐬', '🦁', '🐝', '🐧', '🦋', '🐞', '🌻', '🚀', '⭐', '📚', '🎨', '🧩'];
   function isProfileKey(k) { k = String(k); return (k.indexOf('trb-') === 0 && SHARED.indexOf(k) < 0) || EXTRA.indexOf(k) >= 0; }
   function isFull(e) { return !!e && (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED' || e.code === 22 || e.code === 1014 || /quota/i.test(e.message || '')); }
+  // work worth keeping: not a settings key, not an empty save (a ladder save with no topics yet)
+  var PLANS = ['trb-planner-v1', 'trb-family-v1', 'trb-meals-v1', 'trb-garden-v1'];
+  function worth(k, v) { return typeof v === 'string' && v.length >= 24 && !/-(prefs|sound|setup|speed|en)$/.test(k) && !(k === 'trb-math-v1' && /"t":\{\}/.test(v)); }
   function own(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
   function clean(s, n) { return String(s == null ? '' : s).replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, n); }
 
@@ -179,12 +185,17 @@
         r.slots[id] = r.slots[id] || {}; if (v == null) delete r.slots[id][k]; else r.slots[id][k] = String(v);
         return save(r);
       },
+      hasProgress: function () {
+        var r = load(), slots = r ? Object.keys(r.slots).map(function (id) { return strings(r.slots[id]); }) : [];
+        return liveKeys().some(function (k) { return worth(k, sget(k)); }) || PLANS.some(function (k) { return worth(k, sget(k)); }) ||
+          slots.some(function (o) { return Object.keys(o).some(function (k) { return worth(k, o[k]); }); });
+      },
       size: function () { var n = 0; keys().forEach(function (k) { n += k.length + (sget(k) || '').length; }); return n * 2; },
       exportData: function (ids, withShared) {
         var r = load(), out = { site: 'teddyrookbook.com', kind: 'trb-profiles', v: 1, saved: new Date().toISOString(), profiles: [] };
         var list = r ? r.list : [{ id: '', name: 'Me', age: '', icon: '' }];
         list.forEach(function (p) { if (!ids || ids.indexOf(p.id) >= 0) out.profiles.push({ name: p.name, age: p.age || '', icon: p.icon || '', data: api.snapshot(p.id) }); });
-        if (withShared) { out.shared = {}; keys().forEach(function (k) { if (k !== REG && k.indexOf('trb-') === 0 && !isProfileKey(k)) { var v = sget(k); if (v != null) out.shared[k] = v; } }); }
+        if (withShared) { out.shared = {}; keys().forEach(function (k) { if (k !== REG && k !== BK && k.indexOf('trb-') === 0 && !isProfileKey(k)) { var v = sget(k); if (v != null) out.shared[k] = v; } }); }
         return out;
       },
       // import learners from a file object. A learner whose name is already here: replaced if opt.replace(name) says so,
@@ -212,7 +223,7 @@
         }
         var sh = 0;
         if (o.shared && typeof o.shared === 'object' && opt.shared && opt.shared()) {
-          for (var k in o.shared) if (own(o.shared, k) && typeof o.shared[k] === 'string' && k !== REG && k.indexOf('trb-') === 0 && !isProfileKey(k)) {
+          for (var k in o.shared) if (own(o.shared, k) && typeof o.shared[k] === 'string' && k !== REG && k !== BK && k.indexOf('trb-') === 0 && !isProfileKey(k)) {
             try { sset(k, o.shared[k]); sh++; } catch (e) { return { ok: false, why: isFull(e) ? 'full' : 'error', added: added, replaced: replaced }; }
           }
         }

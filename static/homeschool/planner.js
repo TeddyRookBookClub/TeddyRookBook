@@ -81,7 +81,7 @@
   if (fromHash) { try { var hp = JSON.parse(decodeURIComponent(escape(atob(fromHash[1].replace(/-/g, '+').replace(/_/g, '/'))))); if (valid(hp)) st = fix(hp); } catch (e) { } }
   if (!st) st = fresh();
   var saveT = 0;
-  function save() { clearTimeout(saveT); saveT = setTimeout(function () { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } digest(); }, 250); }
+  function save() { clearTimeout(saveT); saveT = setTimeout(function () { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } digest(); try { if (W.TRB && W.TRB.markActivity) W.TRB.markActivity(); } catch (e) { } }, 250); }
   function done(ki) { // lessons done for child ki: from the learner the child is linked to, else from this browser's saves
     var d = {}; try { var h = JSON.parse(rd(ki, HS) || 'null'); d = (h && h.done) || {}; } catch (e) { }
     // lessons finished elsewhere on the site count too: ladder topics passed (trb-math-v1) and music chapters read (trb-music-read-v1)

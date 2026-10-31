@@ -62,7 +62,7 @@
   // ---------- storage (every key starts with trb- so learner profiles can swap them) ----------
   var KEY = { prefs: 'trb-fest-prefs', stars: 'trb-fest-stars', auto: function (g) { return 'trb-fest-auto-' + g; }, slot: function (n) { return 'trb-fest-slot-' + n; } };
   function lsGet(k) { try { return W.localStorage.getItem(k); } catch (e) { return null; } }
-  function lsSet(k, v) { try { W.localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+  function lsSet(k, v) { try { W.localStorage.setItem(k, v); if (k !== KEY.prefs && W.TRB && W.TRB.markActivity) W.TRB.markActivity(); return true; } catch (e) { return false; } } // markActivity: the backup reminder (js/backup.js)
   function lsDel(k) { try { W.localStorage.removeItem(k); } catch (e) { } }
   (function moveOldKeys() { // saves from before the trb- keys
     ['greece', 'rome'].forEach(function (s) { var o = lsGet('panegyris-v1-' + s); if (o != null) { if (lsGet(KEY.auto(s)) == null) lsSet(KEY.auto(s), o); lsDel('panegyris-v1-' + s); } });

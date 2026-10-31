@@ -178,6 +178,11 @@
     fb.setAttribute('aria-live', 'polite'); fb.setAttribute('role', 'status');
     body.appendChild(qEl); body.appendChild(vizHost); body.appendChild(ansEl); body.appendChild(hintEl); body.appendChild(acts); body.appendChild(fb); body.appendChild(steps); body.appendChild(after);
     card.appendChild(top); card.appendChild(body); xpEl.setAttribute('aria-hidden', 'true');
+    // "Report a problem" (static/js/report.js; the row stays hidden by CSS on pages without it): this problem's details
+    var rep = el('div', 'mlp-report-row'), bRep = btn('Report a problem', '', function () {
+      var R = W.TRB && W.TRB.report; if (R && R.open && p) R.open({ kind: 'Practice problem', problem: reportInfo() });
+    });
+    bRep.className = 'trb-report'; bRep.setAttribute('aria-label', 'Report a problem with this question'); rep.appendChild(bRep); card.appendChild(rep);
     host.innerHTML = ''; host.appendChild(card);
 
     var bCheck = btn('Check', 'pri', check), bHint = btn('Show a hint', 'ghost', showHint), bSkip = btn(card0 ? 'Skip' : 'I haven’t learned this', 'ghost', function () { if (!answered) record(false, true); });
@@ -239,6 +244,7 @@
 
     function render(id) {
       curId = id; answered = false; hinted = false; p = make(id); card.mlpProblem = p; // (tests read the problem here)
+      rep.style.display = p ? '' : 'none';
       qEl.innerHTML = ''; vizHost.innerHTML = ''; ansEl.innerHTML = ''; acts.innerHTML = ''; fb.innerHTML = ''; fb.className = 'mlp-fb'; steps.innerHTML = ''; after.innerHTML = ''; hintEl.hidden = true; hintEl.innerHTML = '';
       card.classList.remove('is-right', 'is-wrong');
       setMeta(); paintProgress();
@@ -262,6 +268,12 @@
       if (mode === 'try') { bSteps.hidden = false; acts.appendChild(bSteps); }
       if ((o.autofocus !== false || shown > 0) && box && box.focus) setTimeout(function () { try { if (!isOffscreen()) box.focus(); } catch (e) { } }, 30);
       shown++; t0 = Date.now();
+    }
+    function txt(h) { try { return (new DOMParser().parseFromString(String(h == null ? '' : h), 'text/html').body.textContent || '').replace(/\s+/g, ' ').trim(); } catch (e) { return String(h || ''); } }
+    function reportInfo() { // only the problem itself: no names, no progress (report.js reads only these fields too)
+      var L = answered ? log[log.length - 1] : null, show = answered && fbOn && mode !== 'quiz' && mode !== 'place';
+      return { topic: curId, topicTitle: topicTitle(curId), level: p.level, seed: p.seed, mode: card0 ? (o.genMode || 'quiz') : mode === 'try' ? 'learn' : mode,
+        question: txt(p.q), answered: !!L, given: L ? (L.skipped ? 'skipped' : txt(yours(L))) : '', expected: show ? txt(fmtAnswer(p.a)) : '' };
     }
     function isOffscreen() { var r = card.getBoundingClientRect(); return r.top > W.innerHeight || r.bottom < 0; }
     function showHint() { if (!p || !p.hint || answered) return; hinted = true; hintEl.hidden = false; hintEl.innerHTML = '<b>Hint.</b> ' + p.hint; typeset(hintEl); bHint.disabled = true; }
@@ -367,6 +379,7 @@
     }
     function finish(extra) {
       if (done) return; done = true;
+      rep.remove();
       var sum = Object.assign({ mode: mode, right: right, total: log.length, xp: xpSum, log: log, ms: log.reduce(function (s, L) { return s + (L.ms || 0); }, 0) }, extra || {});
       if (mode === 'quiz') { if (E) E.checkpointDone(); quizSummary(sum); }
       else if (mode === 'review') reviewSummary(sum);

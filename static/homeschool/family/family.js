@@ -27,7 +27,9 @@
   function readJSON(k) { try { return JSON.parse(W.localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
   var S = readJSON(KEY); if (!S || !Array.isArray(S.units)) S = { v: 1, cur: '', units: [] };
   function rec() { return S.units.filter(function (u) { return u.id === S.cur; })[0]; }
-  function save() { try { W.localStorage.setItem(KEY, JSON.stringify(S)); return true; } catch (e) { msg('This browser’s storage is full or turned off, so the unit can’t be saved here. Use “Save unit file”.'); return false; } }
+  // "Report a problem" (static/js/report.js) adds which unit is open: its theme and seed, never the children
+  (W.TRB = W.TRB || {}).reportContext = function () { var r = rec(), u = r && UNITS[r.key]; return u ? { 'Unit': u.title, 'Unit seed': r.seed, 'Weeks': r.weeks } : null; };
+  function save() { try { W.localStorage.setItem(KEY, JSON.stringify(S)); try { if (W.TRB && W.TRB.markActivity) W.TRB.markActivity(); } catch (x) { } return true; } catch (e) { msg('This browser’s storage is full or turned off, so the unit can’t be saved here. Use “Save unit file”.'); return false; } }
   function plannerKids() { var p = readJSON(PLAN); return p && Array.isArray(p.kids) ? p.kids.map(function (k) { return { name: k.name, age: +k.age || 7, pid: k.pid || '' }; }) : []; }
   var PF = W.TRBProfiles && W.TRBProfiles.on && W.TRBProfiles.on() ? W.TRBProfiles : null;
   function learnerKids() { return PF ? PF.list().map(function (p) { return { name: p.name, age: +p.age || 7, pid: p.id }; }) : []; }

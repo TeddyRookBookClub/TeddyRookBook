@@ -16,6 +16,7 @@
     if (eng && (!e.e || e.e.length > eng.length + 30)) e.e = eng;
     e.g[game] = (e.g[game] || 0) + 1; e.n++; e.t = Date.now();
     write(d);
+    try { if (W.TRB && W.TRB.markActivity) W.TRB.markActivity(); } catch (e) { } // a session for the backup reminder (js/backup.js)
   }
   function all() { var d = read(); return Object.keys(d.w).map(function (k) { return d.w[k]; }).sort(function (a, b) { return b.t - a.t; }); }
   function clear(game) {

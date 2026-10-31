@@ -45,10 +45,26 @@ table.pg-tab{width:100%;border-collapse:collapse;font-size:.95rem;display:table}
 [data-theme="dark"] .pf-code summary,[data-theme="dark"] .pf-how summary{color:#6cc79a}
 #pf-code-in{width:100%;box-sizing:border-box;font:12px/1.35 ui-monospace,monospace;padding:.45rem;border:1px solid var(--border);border-radius:9px;background:var(--theme);color:var(--primary);margin-top:.3rem}
 .pf-warn{border-left:4px solid #b8963e;padding:.5rem .7rem;background:var(--theme);border-radius:8px}
+.bk-fresh{margin:-.4rem 0 1rem;font-weight:600}
+.bk-fresh a{color:#00562f}
+[data-theme="dark"] .bk-fresh a{color:#6cc79a}
+#backup{border-left:4px solid #b8963e}
 </style>
 <div class="pg" id="pg">
   <h1>{{ .Title }}</h1>
   <p class="pg-lead">Everything here is kept in this browser on this device; nothing is sent anywhere. To carry it to another phone or computer, save it to a file below and load the file there.</p>
+  <p class="bk-fresh" id="bk-fresh" hidden><a href="#backup" id="bk-fresh-a">Moving to a new device? Restore a backup</a></p>
+
+  <section class="pg-card" id="backup" aria-labelledby="bk-h">
+    <h2 id="bk-h">Backups</h2>
+    <p class="pg-note">A backup is one small file with every learner’s progress and your plans. When you save it, it goes to your Downloads folder (on an iPhone or iPad, the Files app). To move it to another device, email it to yourself, put it in a cloud drive, or send it with AirDrop. Then open this page on the new device and choose “Restore from a backup file”. Now and then the site will offer to save a backup for you.</p>
+    <div class="pg-bar">
+      <button type="button" class="pg-btn pri" id="bk-save">⬇ Save a backup file</button>
+      <button type="button" class="pg-btn" id="bk-restore">⤴ Restore from a backup file</button>
+      <span class="pg-msg" id="bk-msg" aria-live="polite"></span>
+    </div>
+    <p class="pg-note" id="bk-last"></p>
+  </section>
 
   <section class="pg-card" id="pf" aria-labelledby="pf-h">
     <h2 id="pf-h">Learners</h2>
@@ -183,6 +199,22 @@ table.pg-tab{width:100%;border-collapse:collapse;font-size:.95rem;display:table}
   $('#pf-code-go').onclick = whenUI(function (u) {
     u.loadCode($('#pf-code-in').value).then(function (r) { $('#pf-msg').textContent = r.ok ? 'Loaded.' : r.msg; if (r.ok) $('#pf-code-in').value = ''; });
   });
+  /* Backups: the whole family in one file (the same file as "Save the whole family"), and a restore that shows the file first */
+  function backups() {
+    var has = PF && PF.hasProgress && PF.hasProgress();
+    $('#bk-fresh').hidden = !!has || !PF || PF.damaged();
+    var st = W.TRB && W.TRB.backup ? W.TRB.backup.state() : null;
+    $('#bk-last').textContent = st && st.last ? 'Last backup file saved from this browser: ' + new Date(st.last).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) + '.' : '';
+  }
+  $('#bk-save').onclick = whenUI(function (u) {
+    if (!PF.hasProgress() && !W.confirm('There is no progress in this browser yet. Save a backup file anyway?')) return;
+    u.saveFile(null, true); $('#bk-msg').textContent = 'Saved. Keep the file somewhere safe.'; backups();
+  });
+  $('#bk-restore').onclick = whenUI(function (u) { u.openRestore(); });
+  $('#bk-fresh-a').onclick = function (e) { e.preventDefault(); $('#backup').scrollIntoView({ block: 'start' }); if (UI()) UI().openRestore(); else $('#bk-restore').focus(); };
+  W.addEventListener('trb-profiles-ui', function () { UI().onChange(backups); });
+  if (UI()) UI().onChange(backups);
+  if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', backups); else backups();
   W.addEventListener('trb-profiles-ui', function () { UI().onChange(learners); });
   if (UI()) UI().onChange(learners);
   function msg(t) { $('#pg-msg').textContent = t; setTimeout(function () { if ($('#pg-msg').textContent === t) $('#pg-msg').textContent = ''; }, 5000); }
@@ -193,6 +225,7 @@ table.pg-tab{width:100%;border-collapse:collapse;font-size:.95rem;display:table}
     a.href = URL.createObjectURL(blob); a.download = 'teddy-rook-book-progress-' + new Date().toISOString().slice(0, 10) + '.json';
     D.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
     msg('Saved ' + Object.keys(o.data).length + ' items.');
+    if (PF && !PF.on() && W.TRB && W.TRB.backupSaved) W.TRB.backupSaved(); // with no learner profiles this file holds everything
   };
   $('#pg-load').onchange = function () {
     var f = this.files[0]; if (!f) return; var self = this;

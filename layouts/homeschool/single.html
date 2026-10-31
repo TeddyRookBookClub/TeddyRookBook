@@ -54,6 +54,7 @@
     <label class="hs-check"><input type="checkbox" id="hs-done"> Mark this lesson done</label>
   </div>
 
+  {{ partial "report/link.html" "Homeschool lesson" }}
   <nav class="hs-pn">
     {{ if gt $n 1 }}<a href="{{ printf "%slesson-%d/" $base (sub $n 1) }}">← Lesson {{ sub $n 1 }}</a>{{ else }}<span></span>{{ end }}
     <a href="{{ $base }}">All lessons</a>

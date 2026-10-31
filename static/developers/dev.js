@@ -54,7 +54,7 @@
     return 'Practice: ' + (o ? o.textContent : '') + ' (Teddy Rook Book)';
   }
   function make() {
-    out.value = '<iframe src="' + esc(src(false)) + '" title="' + esc(title()) + '" width="100%" height="' + sH.value + '" style="border:0;max-width:900px" loading="lazy"></iframe>';
+    out.value = '<iframe src="' + esc(src(false)) + '" title="' + esc(title()) + '" width="100%" height="' + sH.value + '" style="border:0;max-width:900px" loading="lazy" allow="clipboard-write"></iframe>';
     var box = $('b-prevbox'); if (!box.hidden) preview();
   }
   function preview() {

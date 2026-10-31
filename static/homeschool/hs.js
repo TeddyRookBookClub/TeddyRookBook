@@ -4,7 +4,7 @@
   var KEY = 'trb-homeschool-v1';
   var st = { done: {} };
   try { var sv = JSON.parse(W.localStorage.getItem(KEY) || 'null'); if (sv && sv.done) st = sv; } catch (e) { }
-  function save() { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } }
+  function save() { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } try { if (W.TRB && W.TRB.markActivity) W.TRB.markActivity(); } catch (e) { } }
   function doneSet(course) { return st.done[course] || (st.done[course] = {}); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function body(text) { // the same markup as the hs-body partial

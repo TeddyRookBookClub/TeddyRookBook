@@ -99,6 +99,7 @@
   {{ end }}
 
   {{ with $c.paperback }}<p class="hs-small">There's also <a href="{{ . }}" target="_blank" rel="noopener sponsored">a paperback edition on Amazon</a>, with the alphabet chart printed on the back cover.</p>{{ end }}
+  {{ partial "report/link.html" "Homeschool lesson" }}
 </div>
 <script src="{{ "homeschool/simple.js" | relURL }}?v={{ (os.Stat "static/homeschool/simple.js").ModTime.Unix }}" defer></script>
 <script src="{{ "homeschool/ar.js" | relURL }}?v={{ (os.Stat "static/homeschool/ar.js").ModTime.Unix }}" defer></script>
