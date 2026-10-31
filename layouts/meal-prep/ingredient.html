@@ -1,0 +1,110 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/ingredients.css" | relURL }}?v={{ (os.Stat "static/meal-prep/ingredients.css").ModTime.Unix }}">
+{{- /* One "Use it up" page, from data/meals/ingredients.yaml; recipes ranked by partial meal-prep/ing-uses.html */ -}}
+{{ $m := site.Data.meals }}{{ $Y := $m.ingredients }}
+{{ $e := index (where $Y.ingredients "id" .Params.ingredient) 0 }}
+{{ $grp := index (where $Y.groups "id" $e.group) 0 }}
+{{ $cat := partialCached "meal-prep/catdict.html" "c" }}
+{{ $all := partialCached "meal-prep/recipes-all.html" "r" }}
+{{ $byR := dict }}{{ range $all }}{{ $byR = merge $byR (dict .id .) }}{{ end }}
+{{ $uses := sort (index (partialCached "meal-prep/ing-uses.html" "u") $e.id) "share" "desc" }}
+{{ $main := slice }}{{ range $uses }}{{ $main = $main | append .id }}{{ end }}
+{{- /* recipes with a smaller amount (or only optional), listed after the main ones */ -}}
+{{ $more := slice }}{{ range $all }}{{ $r := . }}{{ if not (in $main $r.id) }}{{ $hit := false }}{{ range $r.ingredients }}{{ if in $e.items .item }}{{ $hit = true }}{{ end }}{{ end }}{{ if $hit }}{{ $more = $more | append $r.id }}{{ end }}{{ end }}{{ end }}
+{{ $lc := lower $e.name }}
+<div class="hs mp" id="mp-ing">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Use it up" "u" "meal-prep/ingredients/") (dict "t" $e.name)) }}
+  <header class="hs-hero mp-hero mi-hero">
+    <p class="hs-eyebrow">Use it up · {{ $grp.name }}</p>
+    <h1><span aria-hidden="true">{{ $e.emoji }}</span> {{ $e.name }}</h1>
+    <p>Have extra {{ $lc }}? Here’s how to choose, store and prep {{ $lc }}, plus {{ with len $main }}{{ . }} family {{ cond (eq . 1) "recipe" "recipes" }} to use it all up, best matches first{{ else }}the family recipes it goes into{{ end }}.</p>
+    <div class="mp-cta hs-noprint"><a class="hs-btn" href="#mi-recipes">🍽 See the recipes</a><a class="hs-btn ghost" href="{{ "meal-prep/ingredients/" | relURL }}#mi-pick">🧺 Pick a few things you have</a></div>
+  </header>
+
+  <div class="mp-r mi-r">
+    <div>
+      <section class="mp-box" aria-labelledby="mi-ch"><h2 id="mi-ch">🛒 Choosing it</h2><p>{{ $e.choose }}</p>{{ with $e.seasons }}<p class="hs-small"><b>Best season:</b> {{ . }} Timing varies by region.</p>{{ end }}</section>
+      <section class="mp-box" aria-labelledby="mi-sh"><h2 id="mi-sh">🧊 Storing it</h2>
+        {{ with $e.store }}
+        <dl class="mi-store">
+          {{ with .counter }}<dt>Counter</dt><dd>{{ . }}</dd>{{ end }}
+          {{ with .pantry }}<dt>Pantry</dt><dd>{{ . }}</dd>{{ end }}
+          {{ with .fridge }}<dt>Fridge</dt><dd>{{ . }}</dd>{{ end }}
+          {{ with .freezer }}<dt>Freezer</dt><dd>{{ . }}</dd>{{ end }}
+        </dl>
+        {{ with .tip }}<p class="mp-tip">{{ . }}</p>{{ end }}
+        <p class="hs-small">Keep the fridge at 40°F or below and the freezer at 0°F. Freezer times are for best quality; food kept frozen at 0°F stays safe. When in doubt, throw it out.{{ with .src }} Times from {{ $n := slice }}{{ range . }}{{ with index (where $Y.sources "id" .) 0 }}{{ $n = $n | append (printf "<a href=\"%s\" rel=\"noopener\">%s</a>" .url (index (split .publisher " (") 0)) }}{{ end }}{{ end }}{{ delimit $n ", " " and " | safeHTML }}.{{ end }}</p>
+        {{ end }}
+      </section>
+      <section class="mp-box" aria-labelledby="mi-ph"><h2 id="mi-ph">🔪 Prepping it</h2><p>{{ $e.prep }}</p></section>
+
+      {{- /* from scratch: scratch recipes that make one of its items, and ones that use it */ -}}
+      {{ $mk := slice }}{{ $usein := slice }}
+      {{ range $m.scratch.recipes }}{{ $s := . }}{{ $makes := false }}{{ range .makes }}{{ if in $e.items .item }}{{ $makes = true }}{{ end }}{{ end }}{{ if $makes }}{{ $mk = $mk | append $s }}{{ else }}{{ $u := false }}{{ range .ingredients }}{{ if and (in $e.items .item) (not .optional) }}{{ $u = true }}{{ end }}{{ end }}{{ if $u }}{{ $usein = $usein | append $s }}{{ end }}{{ end }}{{ end }}
+      {{ if or $mk $usein }}
+      <section class="mp-box" aria-labelledby="mi-sch"><h2 id="mi-sch">🥣 Make it from scratch</h2>
+        {{ with $mk }}<p class="mp-glinks">{{ range . }}<a class="mp-glink" href="{{ printf "meal-prep/scratch/%s/" .id | relURL }}"><span aria-hidden="true">{{ .emoji }}</span> {{ .name }}</a>{{ end }}</p>{{ end }}
+        {{ with $usein }}<p class="hs-small">{{ if $mk }}It also goes into{{ else }}Homemade staples that use {{ $lc }}{{ end }}:</p><p class="mp-glinks">{{ range first 8 . }}<a class="mp-glink" href="{{ printf "meal-prep/scratch/%s/" .id | relURL }}"><span aria-hidden="true">{{ .emoji }}</span> {{ .name }}</a>{{ end }}</p>{{ end }}
+      </section>
+      {{ end }}
+
+      {{- /* grow it: data/meals/garden-map.json */ -}}
+      {{ $grow := slice }}{{ with index $m "garden-map" }}{{ range .items }}{{ if in $e.items .item }}{{ $k := .crop | default .animal }}{{ if and $k (not (in $grow $k)) }}{{ $grow = $grow | append $k }}{{ end }}{{ end }}{{ end }}{{ end }}
+      {{ with $grow }}
+      {{ $crops := slice }}{{ $names := slice }}{{ $hens := false }}{{ $bees := false }}
+      {{ range . }}{{ $k := . }}{{ if eq $k "hens" }}{{ $hens = true }}{{ $names = $names | append "backyard hens" }}{{ else if eq $k "bees" }}{{ $bees = true }}{{ $names = $names | append "honeybees" }}{{ else }}{{ $crops = $crops | append $k }}{{ range site.Data.garden.crops.crops }}{{ if eq .k $k }}{{ $names = $names | append (lower (replaceRE ` \(.*\)$` "" .n)) }}{{ end }}{{ end }}{{ end }}{{ end }}
+      <section class="mp-box" aria-labelledby="mi-gh"><h2 id="mi-gh">🌱 Grow it</h2>
+        <p>You can grow your own: {{ delimit $names ", " " and " }}. The Food Garden Planner shows how much to plant for your family and when it comes in.</p>
+        <p class="mp-glinks">{{ with $crops }}<a class="mp-glink" href="{{ "garden/" | relURL }}?crops={{ delimit . "," }}&amp;mode=only&amp;from=meals">🌱 Plan a garden with {{ if eq (len .) 1 }}it{{ else }}them{{ end }} →</a>{{ end }}{{ if $hens }}<a class="mp-glink" href="{{ "garden/" | relURL }}?hens=on&amp;from=meals">🐔 Keep hens for eggs →</a>{{ end }}{{ if $bees }}<a class="mp-glink" href="{{ "garden/" | relURL }}?bees=on&amp;from=meals">🐝 Keep bees →</a>{{ end }}</p>
+      </section>
+      {{ end }}
+
+      {{- /* nutrition per 100 g of its main catalog item */ -}}
+      {{ $it := index $cat (index $e.items 0) }}
+      {{ with $it }}{{ with .nutrition }}{{ $n := . }}
+      <section class="mp-box" aria-labelledby="mi-nh"><h2 id="mi-nh">📊 Nutrition per 100 g</h2>
+        <p class="hs-small">{{ $it.name }}{{ with $it.edible }}, the part you eat{{ end }}. 100 g is about 3 1/2 ounces.</p>
+        <table class="mi-nut">
+          <tbody>
+          {{ range $m.meta.nutrients }}{{ if in (slice "kcal" "protein" "fat" "satfat" "carb" "fiber" "sugars" "sodium" "calcium" "iron" "potassium") .id }}{{ $v := index $n .id }}{{ if ne $v nil }}
+          <tr{{ if in (slice "satfat" "fiber" "sugars") .id }} class="sub"{{ end }}><th scope="row">{{ .name }}</th><td>{{ if ge $v 10.0 }}{{ lang.FormatNumber 0 $v }}{{ else }}{{ lang.FormatNumber 1 $v }}{{ end }} {{ .unit }}</td><td class="dv">{{ with .dv }}{{ lang.FormatNumber 0 (mul 100 (div $v .)) }}%{{ end }}</td></tr>
+          {{ end }}{{ end }}{{ end }}
+          </tbody>
+        </table>
+        <p class="hs-small">% Daily Value for adults (FDA). From {{ $n.src | default "USDA FoodData Central" }}.</p>
+      </section>
+      {{ end }}{{ end }}
+    </div>
+
+    <div>
+      <section class="mp-box mi-recs" id="mi-recipes" aria-labelledby="mi-rh">
+        <h2 id="mi-rh">🍽 Recipes that use it up</h2>
+        <div class="mp-chips hs-noprint" role="group" aria-label="Show only">
+          <button type="button" class="mp-chipf" data-f="quick" aria-pressed="false">⚡ Quick</button><button type="button" class="mp-chipf" data-f="kid-friendly" aria-pressed="false">🧒 Kid-friendly</button><button type="button" class="mp-chipf" data-f="vegetarian" aria-pressed="false">🥕 Vegetarian</button>
+        </div>
+        <p class="hs-small" id="mi-count" aria-live="polite">{{ len $main }} {{ cond (eq (len $main) 1) "recipe" "recipes" }}, the ones that use the most {{ $lc }} first.</p>
+        <ol class="mi-list">
+          {{ range $uses }}{{ $r := index $byR .id }}{{ partial "meal-prep/ing-rcard.html" (dict "r" $r "share" .share) }}{{ end }}
+        </ol>
+        {{ with $more }}
+        <h3 class="mi-moreh">With a smaller amount</h3>
+        <ol class="mi-list mi-more">
+          {{ range . }}{{ partial "meal-prep/ing-rcard.html" (dict "r" (index $byR .) "share" -1) }}{{ end }}
+        </ol>
+        {{ end }}
+        <p class="mp-empty" id="mi-none" hidden>None of these match. Clear a filter to see them all.</p>
+        {{ if lt (len $main) 5 }}<p class="hs-small">More {{ $lc }} recipes are on the way.</p>{{ end }}
+        <p class="hs-small hs-noprint">Plan them into your week in the <a href="{{ "meal-prep/plan/" | relURL }}">meal planner</a>, or find recipes for two or three things at once with the <a href="{{ "meal-prep/ingredients/" | relURL }}#mi-pick">“What can I make?” picker</a>.</p>
+      </section>
+      {{ $sib := where $Y.ingredients "group" $e.group }}
+      <section class="mp-box hs-noprint" aria-labelledby="mi-oh"><h2 id="mi-oh">More {{ lower $grp.name }}</h2>
+        <p class="mp-glinks">{{ range $sib }}{{ if ne .id $e.id }}<a class="mp-glink" href="{{ printf "meal-prep/ingredients/%s/" .id | relURL }}"><span aria-hidden="true">{{ .emoji }}</span> {{ .name }}</a>{{ end }}{{ end }}<a class="mp-glink" href="{{ "meal-prep/ingredients/" | relURL }}"><b>All ingredients →</b></a></p>
+      </section>
+    </div>
+  </div>
+  <p class="hs-small">Storage times and buying tips are general guides from the sources below; follow any date or instructions on the package. Cook meat, poultry, fish and eggs to the USDA safe temperatures in each recipe.</p>
+</div>
+<script src="{{ "meal-prep/ingredients.js" | relURL }}?v={{ (os.Stat "static/meal-prep/ingredients.js").ModTime.Unix }}" defer></script>
+{{ end }}

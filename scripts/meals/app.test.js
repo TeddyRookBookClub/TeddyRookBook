@@ -330,7 +330,7 @@ eq(pdS.steps.filter(function (s) { return s.sg && s.sg.bg; }).length, 1, 'coolin
 // ---------- the real data, if it is there ----------
 var dir = path.join(ROOT, 'data', 'meals');
 if (fs.existsSync(path.join(dir, 'recipes.json')) && fs.existsSync(path.join(dir, 'catalog.json'))) {
-  var real = M.norm({ catalog: JSON.parse(fs.readFileSync(path.join(dir, 'catalog.json'), 'utf8')), recipes: JSON.parse(fs.readFileSync(path.join(dir, 'recipes.json'), 'utf8')) });
+  var real = M.norm({ catalog: JSON.parse(fs.readFileSync(path.join(dir, 'catalog.json'), 'utf8')), recipes: { recipes: require('./load-recipes').loadRecipes(path.join(dir, '..', '..')).recipes } });
   var ids = Object.keys(real.recipes), bad = [];
   ids.forEach(function (id) {
     var r = real.recipes[id];

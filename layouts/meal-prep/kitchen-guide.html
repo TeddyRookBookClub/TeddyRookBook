@@ -1,0 +1,73 @@
+{{ define "main" }}
+{{- /* A Kitchen know-how guide, from data/meals/kitchen/<.Params.guide>.json (written by a script). Section fields: id, h,
+   p[] (markdown; "> " starts a quote), steps[], list[], table{cols,rows,note}, cards[{h,p,list}], tip, warn, links[{t,u,d}],
+   src[] (ids in the guide's sources). An "age" section (the kids guide) carries tasks, words, tools (ids in tools.json, drawn small),
+   knife, recipes (ids in data/meals/recipes.json, linked to their pages), math and table (links), measure and setting. */ -}}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/kitchen/kitchen.css" | relURL }}?v={{ (os.Stat "static/meal-prep/kitchen/kitchen.css").ModTime.Unix }}">
+{{ $K := site.Data.meals.kitchen }}
+{{ $g := index $K .Params.guide }}
+{{ .Store.Set "trbOwnSources" true }}
+{{ $srcs := dict }}{{ range $i, $s := $g.sources }}{{ $srcs = merge $srcs (dict $s.id (add $i 1)) }}{{ end }}
+{{ $tools := dict }}{{ range $K.tools.groups }}{{ range .tools }}{{ $tools = merge $tools (dict .id .) }}{{ end }}{{ end }}
+{{ $recPages := where site.RegularPages "Params.recipe" "!=" nil }}
+{{ $recData := dict }}{{ range site.Data.meals.recipes.recipes }}{{ $recData = merge $recData (dict .id .) }}{{ end }}
+<div class="hs mp kx">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Kitchen know-how" "u" "meal-prep/kitchen/") (dict "t" $g.title)) }}
+  <header class="hs-hero mp-hero">
+    <p class="hs-eyebrow">Meal Prep · Kitchen know-how</p>
+    <h1><span aria-hidden="true">{{ $g.icon }}</span> {{ $g.title }}</h1>
+    {{ with $g.summary }}<p>{{ . }}</p>{{ end }}
+  </header>
+  <article class="mp-guide">
+    {{ if gt (len $g.sections) 3 }}<nav class="mp-toc hs-noprint" aria-label="On this page">{{ range $g.sections }}<a href="#{{ .id }}">{{ .h }}</a>{{ end }}</nav>{{ end }}
+    {{ range $g.sections }}
+    <section id="{{ .id }}">
+      <h2>{{ .h }}</h2>
+      {{ with .age }}
+      <div class="k-age">
+        <p><span aria-hidden="true">{{ .emoji }}</span> {{ .intro }}</p>
+        <div class="k-agegrid">
+          <div><h3>Jobs to try, with a grown-up</h3><ul>{{ range .tasks }}<li>{{ . }}</li>{{ end }}</ul></div>
+          <div>
+            <h3>Kitchen words</h3><ul class="k-words">{{ range .words }}<li>{{ . }}</li>{{ end }}</ul>
+            <h3>Tools to know</h3>
+            <ul class="k-minitools">{{ range .tools }}{{ with index $tools . }}<li><a href="{{ printf "meal-prep/kitchen/tools/#tool-%s" .id | relURL }}"><svg class="k-pic" viewBox="0 0 120 80" aria-hidden="true">{{ .svg | safeHTML }}</svg>{{ .name }}</a></li>{{ end }}{{ end }}</ul>
+            <h3>Knife skills</h3><p>{{ .knife }}</p>
+          </div>
+        </div>
+        <h3>First recipes</h3>
+        <ul class="k-recs">{{ range .recipes }}{{ $r := index $recData . }}{{ $pg := index (where $recPages "Params.recipe" .) 0 }}{{ if and $r $pg }}<li><a href="{{ $pg.RelPermalink }}"><span aria-hidden="true">{{ $r.emoji }}</span> {{ $r.name }}</a></li>{{ end }}{{ end }}</ul>
+        <div class="k-agegrid">
+          <div><h3>Measuring practice</h3><p>{{ .measure }}</p><ul>{{ range .math }}<li><a href="{{ .u | relURL }}">{{ .t }}</a> <small>(Math Ladder)</small></li>{{ end }}</ul></div>
+          <div><h3>At the table</h3><p>{{ .setting }}</p><ul>{{ range .table }}<li><a href="{{ .u | relURL }}">{{ .t }}</a> <small>(Etiquette Ladder)</small></li>{{ end }}</ul></div>
+        </div>
+      </div>
+      {{ end }}
+      {{ range .p }}{{ if hasPrefix . "> " }}<blockquote class="mp-quote">{{ strings.TrimPrefix "> " . | markdownify }}</blockquote>{{ else }}<p>{{ . | markdownify }}</p>{{ end }}{{ end }}
+      {{ with .steps }}<ol class="k-steps">{{ range . }}<li>{{ . | markdownify }}</li>{{ end }}</ol>{{ end }}
+      {{ with .list }}<ul>{{ range . }}<li>{{ . | markdownify }}</li>{{ end }}</ul>{{ end }}
+      {{ with .cards }}<div class="k-cards">{{ range . }}<div class="k-card"><h3>{{ .h }}</h3>{{ with .p }}<p>{{ . | markdownify }}</p>{{ end }}{{ with .list }}<ul>{{ range . }}<li>{{ . | markdownify }}</li>{{ end }}</ul>{{ end }}</div>{{ end }}</div>{{ end }}
+      {{ with .table }}
+      <div class="mp-tablewrap"><table>{{ with .note }}<caption>{{ . | markdownify }}</caption>{{ end }}<thead><tr>{{ range .cols }}<th scope="col">{{ . }}</th>{{ end }}</tr></thead><tbody>{{ range .rows }}<tr>{{ range $i, $c := . }}{{ if eq $i 0 }}<th scope="row">{{ $c | markdownify }}</th>{{ else }}<td>{{ $c | markdownify }}</td>{{ end }}{{ end }}</tr>{{ end }}</tbody></table></div>
+      {{ end }}
+      {{ with .tip }}<p class="k-tip">{{ . | markdownify }}</p>{{ end }}
+      {{ with .warn }}<p class="mp-warn" role="note">{{ . | markdownify }}</p>{{ end }}
+      {{ with .links }}<ul class="k-links">{{ range . }}<li><a href="{{ .u | relURL }}">{{ .t }}</a>{{ with .d }} <span>· {{ . }}</span>{{ end }}</li>{{ end }}</ul>{{ end }}
+      {{ with .src }}<p class="mp-src">Sources: {{ range $i, $id := . }}{{ if $i }}, {{ end }}<a href="#src-{{ $id }}">[{{ index $srcs $id }}]</a>{{ end }}</p>{{ end }}
+    </section>
+    {{ end }}
+    {{ with $g.sources }}
+    <section id="sources">
+      <h2>Sources</h2>
+      <ol class="mp-src">{{ range . }}<li id="src-{{ .id }}"><a href="{{ .url }}" rel="noopener">{{ .title }}</a>{{ with .publisher }}, {{ . }}{{ end }}{{ with .date }} ({{ . }}){{ end }}{{ with .accessed }}. Accessed {{ . }}{{ end }}.</li>{{ end }}</ol>
+    </section>
+    {{ end }}
+    {{ with $g.updated }}<p class="hs-small">Updated {{ . }}. These pages share widely accepted advice from the sources listed; for a health condition, ask your doctor.</p>{{ end }}
+  </article>
+  <nav class="hs-sec hs-note hs-noprint" aria-label="More kitchen know-how">
+    <p>More: {{ range site.Data.meals.kitchen.pages }}{{ if ne .key $g.key }}<a href="{{ .u | relURL }}">{{ .t }}</a> · {{ end }}{{ end }}<a href="{{ "meal-prep/" | relURL }}">Meal Prep</a></p>
+  </nav>
+</div>
+{{ end }}

@@ -68,7 +68,7 @@
         {{ with $s.old_way }}<div class="mp-tip"><b>📜 The old way</b>{{ . }}</div>{{ end }}
       </section>
       {{ $mk := slice }}{{ range $s.makes }}{{ $mk = $mk | append .item }}{{ end }}
-      {{ $used := slice }}{{ range $m.recipes.recipes }}{{ $r := . }}{{ $hit := false }}{{ range .ingredients }}{{ if in $mk .item }}{{ $hit = true }}{{ end }}{{ end }}{{ if $hit }}{{ $used = $used | append $r }}{{ end }}{{ end }}
+      {{ $used := slice }}{{ range partialCached "meal-prep/recipes-all.html" "r" }}{{ $r := . }}{{ $hit := false }}{{ range .ingredients }}{{ if in $mk .item }}{{ $hit = true }}{{ end }}{{ end }}{{ if $hit }}{{ $used = $used | append $r }}{{ end }}{{ end }}
       {{ with $used }}
       <section class="mp-box hs-noprint" style="margin-top:1rem"><h2>Use it in</h2><p class="mp-glinks">{{ range . }}<a class="mp-glink" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}">{{ .emoji }} {{ .name }}</a>{{ end }}</p></section>
       {{ end }}

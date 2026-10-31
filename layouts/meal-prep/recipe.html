@@ -2,7 +2,7 @@
 {{ partial "hs-head.html" . }}
 <link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
 {{ $m := site.Data.meals }}{{ $id := .Params.recipe }}
-{{ $r := index (where $m.recipes.recipes "id" $id) 0 }}
+{{ $all := partialCached "meal-prep/recipes-all.html" "r" }}{{ $r := index (where $all "id" $id) 0 }}
 {{ $cat := partialCached "meal-prep/catdict.html" "c" }}
 {{ $src := partial "meal-prep/data.html" . }}
 {{ $alname := dict }}{{ range $m.meta.allergens }}{{ $alname = merge $alname (dict .id (.name | default .id)) }}{{ end }}
@@ -76,7 +76,7 @@
         {{ with $r.swaps }}{{ range $k, $v := . }}{{ if $v }}<div class="mp-tip"><b>{{ cond (eq $k "gluten_free") "Gluten-free" (cond (eq $k "dairy_free") "Dairy-free" (cond (eq $k "meatless") "Meatless" (replace $k "_" " " | strings.FirstUpper))) }} swap</b>{{ $v }}</div>{{ end }}{{ end }}{{ end }}
       </section>
       {{ with $r.pairs }}
-      <section class="mp-box hs-noprint" style="margin-top:1rem"><h2>Goes well with</h2><p class="mp-glinks">{{ range . }}{{ with index (where $m.recipes.recipes "id" .) 0 }}<a class="mp-glink" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}">{{ .emoji }} {{ .name }}</a>{{ end }}{{ end }}</p></section>
+      <section class="mp-box hs-noprint" style="margin-top:1rem"><h2>Goes well with</h2><p class="mp-glinks">{{ range . }}{{ with index (where $all "id" .) 0 }}<a class="mp-glink" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}">{{ .emoji }} {{ .name }}</a>{{ end }}{{ end }}</p></section>
       {{ end }}
       {{ $gl := slice }}{{ range $r.guides }}{{ with partial "meal-prep/guidelink.html" . }}{{ $gl = $gl | append . }}{{ end }}{{ end }}
       {{ with $gl }}

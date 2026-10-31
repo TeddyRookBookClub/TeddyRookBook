@@ -1,0 +1,13 @@
+{{- /* A recipe row on a "Use it up" page. Context: dict r (recipe), share (ingredient's share of the recipe's weight; -1 = a smaller amount) */ -}}
+{{- $r := .r }}{{ $sh := .share -}}
+{{- with $r -}}
+{{- $veg := or (eq .protein "vegetarian") (in (.diet | default slice) "vegetarian") -}}
+{{- $tags := .tags | default slice }}{{ if $veg }}{{ $tags = $tags | append "vegetarian" }}{{ end -}}
+<li class="mi-rec" data-tags="{{ delimit $tags " " }}" data-min="{{ with .times }}{{ .total }}{{ end }}">
+  <a class="mp-rcard" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}">
+    <span class="mp-emo" aria-hidden="true">{{ .emoji }}</span>
+    <span><b>{{ .name }}</b><small>{{ with .times }}{{ partial "meal-prep/mins.html" .total }} · {{ end }}serves {{ .servings }} · {{ delimit (.meal | default slice) ", " }}</small>
+    <small class="mi-tags">{{ if ge $sh 0.0 }}<span class="mi-c mi-c{{ cond (ge $sh 0.25) 3 (cond (ge $sh 0.1) 2 1) }}">{{ cond (ge $sh 0.25) "Star ingredient" (cond (ge $sh 0.1) "A main ingredient" "Part of the mix") }}</span>{{ end }}{{ if in $tags "quick" }}<span>⚡ quick</span>{{ end }}{{ if in $tags "kid-friendly" }}<span>🧒 kid-friendly</span>{{ end }}{{ if $veg }}<span>🥕 vegetarian</span>{{ end }}</small></span>
+  </a>
+</li>
+{{- end -}}

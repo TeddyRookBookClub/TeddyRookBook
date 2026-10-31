@@ -36,7 +36,7 @@
   {{- $sc := slice -}}{{- with $m.scratch }}{{ range .recipes -}}
     {{- $sc = $sc | append (dict "id" .id "name" .name "emoji" .emoji "kind" .kind "group" .group "summary" .summary "yield" .yield "makes" .makes "batch" .batch "ingredients" .ingredients "stages" .stages "plan" .plan "times" .times "keeps" .keeps "nutrition" .nutrition) -}}
   {{- end }}{{ end -}}
-  {{- $d := dict "meta" $m.meta "catalog" (dict "items" $items) "recipes" $m.recipes "guides" $guides "recipeBase" ("meal-prep/recipes/" | relURL) "scratchBase" ("meal-prep/scratch/" | relURL) "gardenURL" ("garden/" | relURL) "scratch" (dict "recipes" $sc) "gardenMap" $gm "gardenCrops" $crops "gardenAnimals" $an -}}
+  {{- $d := dict "meta" $m.meta "catalog" (dict "items" $items) "recipes" (dict "recipes" (partialCached "meal-prep/recipes-all.html" "r")) "guides" $guides "recipeBase" ("meal-prep/recipes/" | relURL) "scratchBase" ("meal-prep/scratch/" | relURL) "gardenURL" ("garden/" | relURL) "scratch" (dict "recipes" $sc) "gardenMap" $gm "gardenCrops" $crops "gardenAnimals" $an -}}
   {{- $r := resources.FromString "meal-prep/meals-data.json" ($d | jsonify) | fingerprint "md5" -}}
   {{- $url = $r.RelPermalink -}}
 {{- end -}}

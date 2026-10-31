@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
 <link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
-{{ $m := site.Data.meals }}{{ $rs := slice }}{{ with $m }}{{ with .recipes }}{{ $rs = .recipes }}{{ end }}{{ end }}
+{{ $m := site.Data.meals }}{{ $rs := partialCached "meal-prep/recipes-all.html" "r" }}
 <div class="hs mp" id="mp-recipes">
   {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Recipes")) }}
   <header class="hs-hero mp-hero">

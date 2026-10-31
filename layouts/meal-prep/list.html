@@ -1,19 +1,52 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
 <link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
-{{ $m := site.Data.meals }}{{ $rs := slice }}{{ with $m }}{{ with .recipes }}{{ $rs = .recipes }}{{ end }}{{ end }}
+<link rel="stylesheet" href="{{ "meal-prep/ingredients.css" | relURL }}?v={{ (os.Stat "static/meal-prep/ingredients.css").ModTime.Unix }}">
+{{ $m := site.Data.meals }}{{ $rs := partialCached "meal-prep/recipes-all.html" "r" }}
 <div class="hs mp" id="mp-hub">
   {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep")) }}
   <header class="hs-hero mp-hero">
     <p class="hs-eyebrow">Miscellaneous · For families</p>
     <h1>Meal Prep</h1>
-    <p>Plan a week, or up to a month, of family meals. Every recipe scales to the people at your table, the shopping list adds itself up by store aisle, and you can print it, save it as a PDF or picture, or copy it to your phone.</p>
+    <p>Everything for feeding a family in one place: plan a week or a month of meals, use up what’s in the fridge, find a recipe, make staples from scratch, grow your own, and learn your way around the kitchen. Recipes scale to the people at your table, and the shopping list adds itself up by store aisle.</p>
     <div class="mp-cta"><a class="hs-btn big" href="{{ "meal-prep/plan/" | relURL }}">📅 Start a meal plan</a><a class="hs-btn big ghost" href="{{ "meal-prep/recipes/" | relURL }}">📖 Browse {{ with $rs }}{{ len . }} {{ end }}recipes</a></div>
   </header>
   <p class="mp-resume" id="mp-resume" hidden></p>
 
+  {{ $I := $m.ingredients }}{{ $nI := 0 }}{{ with $I }}{{ $nI = len .ingredients }}{{ end }}
+  <section class="mh-ask" aria-labelledby="mh-askh">
+    <h2 id="mh-askh">Start here: what are you looking for?</h2>
+    <p class="hs-small">Pick the card that fits. Every part links to the others, so you can start anywhere.</p>
+    <div class="mh-cards">
+      <div class="mh-card"><h3><span class="mh-emo" aria-hidden="true">📅</span><a href="{{ "meal-prep/plan/" | relURL }}">Plan a week or a month</a></h3>
+        <p>Put meals on a calendar, scale them to your household, cook once and eat twice, and get one shopping list.</p>
+        <p class="mh-links"><a href="{{ "meal-prep/plan/" | relURL }}">Open the planner →</a></p></div>
+      <div class="mh-card"><h3><span class="mh-emo" aria-hidden="true">🧺</span><a href="{{ "meal-prep/ingredients/" | relURL }}">Use up an ingredient</a></h3>
+        <p>Too much chicken, zucchini or yogurt? {{ with $nI }}{{ . }} everyday foods, each{{ else }}Each ingredient{{ end }} with how to store and prep it and recipes that use it up.</p>
+        <p class="mh-links"><a href="{{ "meal-prep/ingredients/" | relURL }}#mi-pick">What can I make with…?</a>{{ with $I }}{{ range where .ingredients "id" "in" (slice "chicken" "ground-beef" "bananas" "zucchini") }}<a href="{{ printf "meal-prep/ingredients/%s/" .id | relURL }}">{{ .name }}</a>{{ end }}{{ end }}</p></div>
+      <div class="mh-card"><h3><span class="mh-emo" aria-hidden="true">📖</span><a href="{{ "meal-prep/recipes/" | relURL }}">Find a recipe</a></h3>
+        <p>{{ len $rs }} family recipes you can search and filter: quick, budget, kid-friendly, freezer meals and more.</p>
+        <p class="mh-links"><a href="{{ "meal-prep/recipes/" | relURL }}#dinner">Dinners</a><a href="{{ "meal-prep/recipes/" | relURL }}#breakfast">Breakfasts</a><a href="{{ "meal-prep/recipes/" | relURL }}#lunch">Lunches</a><a href="{{ "meal-prep/recipes/" | relURL }}">All recipes →</a></p></div>
+      <div class="mh-card"><h3><span class="mh-emo" aria-hidden="true">🥣</span><a href="{{ "meal-prep/scratch/" | relURL }}">Make it from scratch</a></h3>
+        <p>Bread, tortillas, pasta, butter, yogurt, stock and sauces, scaled to what your meal plan needs.</p>
+        <p class="mh-links"><a href="{{ "meal-prep/scratch/" | relURL }}">See the from-scratch recipes →</a></p></div>
+      <div class="mh-card"><h3><span class="mh-emo" aria-hidden="true">🌱</span><a href="{{ "garden/" | relURL }}">Grow your own</a></h3>
+        <p>See how much garden a year of your meals would take, and when each crop comes in, in the Food Garden Planner.</p>
+        <p class="mh-links"><a href="{{ "garden/" | relURL }}">Open the garden planner →</a></p></div>
+      <div class="mh-card"><h3><span class="mh-emo" aria-hidden="true">🍳</span><a href="{{ "meal-prep/kitchen/" | relURL }}">Learn the kitchen</a></h3>
+        <p>Kitchen tools and what they’re for, caring for cast iron and other cookware, cleaning, and cooking skills for every age.</p>
+        <p class="mh-links"><a href="{{ "meal-prep/kitchen/" | relURL }}">Kitchen guides →</a></p></div>
+      <div class="mh-card"><h3><span class="mh-emo" aria-hidden="true">📚</span><a href="{{ "meal-prep/guides/" | relURL }}">Food guides</a></h3>
+        <p>Short, sourced answers about cooking fats, cinnamon, food safety and what to check on the foods you buy.</p>
+        <p class="mh-links">{{ with $m.guides }}{{ range $k, $g := . }}<a href="{{ printf "meal-prep/guides/%s/" $g.key | relURL }}">{{ $g.title }}</a>{{ end }}{{ end }}</p></div>
+      <div class="mh-card"><h3><span class="mh-emo" aria-hidden="true">🖨</span><a href="{{ "meal-prep/print/" | relURL }}">Print and shop</a></h3>
+        <p>Print the week, the shopping list by store section, recipe cards and a kids’ dinner chart, or save them as a PDF.</p>
+        <p class="mh-links"><a href="{{ "meal-prep/print/" | relURL }}">Print your plan →</a><a href="{{ "meal-prep/plan/" | relURL }}">Shopping list in the planner</a></p></div>
+    </div>
+  </section>
+
   <section class="hs-sec">
-    <h2>What it does</h2>
+    <h2>What the planner does</h2>
     <div class="mp-feats">
       <div class="mp-feat"><span class="big" aria-hidden="true">📅</span><h3>One week to a month</h3><p>Pick a start date and a length. Turn breakfast, lunch, dinner and snacks on or off. Drag meals around, copy a day or a week, swap days, or shuffle with rules like “no repeats this week” and “quick dinners on practice nights.”</p></div>
       <div class="mp-feat"><span class="big" aria-hidden="true">👨‍👩‍👧‍👦</span><h3>Scales to your family</h3><p>Count adults, teens, children and toddlers, each with an adjustable portion size. Add guests to one meal. Recipes scale with sensible rounding: whole eggs, whole cans, quarter pounds.</p></div>
@@ -44,7 +77,7 @@
 
   {{ with $m }}{{ with .guides }}
   <section class="hs-sec">
-    <h2>Kitchen guides</h2>
+    <h2>Food guides</h2>
     <p>Short, sourced answers to questions that come up while cooking and shopping, kept to what the evidence supports.</p>
     <div class="mp-rgrid">
       {{ range $k, $g := . }}

@@ -1,0 +1,1530 @@
+# The "Use it up" ingredients for /meal-prep/ingredients/: about 120 of the most common whole foods a U.S. family buys.
+# Each maps to one or more catalog ids (data/meals/catalog.json); the pages, the picker and scripts/meals/coverage.js
+# count the recipes that use any of them. Storage times come from the sources listed below.
+# FORMAT: block YAML with every value written as JSON (quoted strings, ["flow", "lists"]), so the Node scripts
+# can read it without a YAML library. Keep that style when you edit: two-space indents, one key per line.
+version: 1
+groups:
+  - id: "meats"
+    name: "Meats and poultry"
+    emoji: "🥩"
+  - id: "seafood"
+    name: "Fish and seafood"
+    emoji: "🐟"
+  - id: "dairy-eggs"
+    name: "Eggs and dairy"
+    emoji: "🥚"
+  - id: "vegetables"
+    name: "Vegetables"
+    emoji: "🥦"
+  - id: "fruits"
+    name: "Fruits"
+    emoji: "🍎"
+  - id: "grains"
+    name: "Grains, rice and pasta"
+    emoji: "🍚"
+  - id: "legumes"
+    name: "Beans, lentils and legumes"
+    emoji: "🫘"
+  - id: "nuts-seeds"
+    name: "Nuts and seeds"
+    emoji: "🥜"
+  - id: "herbs"
+    name: "Herbs and aromatics"
+    emoji: "🌿"
+sources:
+  - id: "fsg"
+    title: "Cold Food Storage Chart"
+    publisher: "FoodSafety.gov (U.S. Department of Health and Human Services, with USDA FSIS)"
+    url: "https://www.foodsafety.gov/print/pdf/node/15?id=foo-"
+  - id: "rutgers"
+    title: "Home Storage of Foods: Refrigerator and Freezer Storage (Bulletin E340, 2012)"
+    publisher: "Rutgers Cooperative Extension"
+    url: "https://www.ksre.ksu.edu/humannutrition/foodstorage-documents/Homestorageof%20foodsNewJersey2012fs340.pdf"
+  - id: "tamu"
+    title: "Safe Home Food Storage (B-5031)"
+    publisher: "Texas Agricultural Extension Service, Texas A&M University System"
+    url: "https://webarchive.library.unt.edu/eot2008/20090116024741/http:/www.uga.edu/nchfp/how/store/texas_storage.pdf"
+  - id: "ucanr"
+    title: "Storing Fresh Fruits and Vegetables for Better Taste (Publication 21590)"
+    publisher: "University of California Agriculture and Natural Resources"
+    url: "https://ucanr.edu/sites/default/files/2011-07/115275.pdf"
+  - id: "fda-seafood"
+    title: "Selecting and Serving Fresh and Frozen Seafood Safely"
+    publisher: "U.S. Food and Drug Administration"
+    url: "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-fresh-and-frozen-seafood-safely"
+  - id: "ndsu"
+    title: "What's in Your Home Food Pantry? (FN1706)"
+    publisher: "NDSU Extension"
+    url: "https://www.ndsu.edu/agriculture/sites/default/files/2024-08/fn1706.pdf"
+  - id: "msu"
+    title: "Buy Fresh Fruits and Vegetables in Season! (P3144)"
+    publisher: "Mississippi State University Extension"
+    url: "https://accessibility.extension.msstate.edu/publications/buy-fresh-fruits-and-vegetables-season"
+  - id: "fdc"
+    title: "FoodData Central"
+    publisher: "U.S. Department of Agriculture, Agricultural Research Service"
+    url: "https://fdc.nal.usda.gov/"
+ingredients:
+  - id: "ground-beef"
+    name: "Ground beef"
+    group: "meats"
+    emoji: "🍔"
+    items: ["ground-beef-80", "ground-beef-85", "ground-beef-90", "ground-beef-93"]
+    choose: "Look for bright red meat (the inside can be darker; that is normal) and a package that is cold, tight and not leaking. The label tells you the lean-to-fat ratio: 80/20 for juicy burgers, 90/10 or leaner for sauces and casseroles."
+    store:
+      fridge: "1 to 2 days raw"
+      freezer: "3 to 4 months for best quality"
+      tip: "Freeze it flat in a zip-top bag so it thaws fast in the fridge."
+      src: ["fsg"]
+    prep: "Brown it in a hot skillet, breaking it up, then drain the fat if the recipe says so. Cook ground beef to 160°F."
+  - id: "beef-steak"
+    name: "Beef steak"
+    group: "meats"
+    emoji: "🥩"
+    items: ["sirloin-steak", "flank-steak", "ribeye-steak", "cube-steak"]
+    choose: "Choose firm, red steaks with fine white marbling and no gray or sticky spots. Thicker steaks are easier to cook without overdoing them."
+    store:
+      fridge: "3 to 5 days raw"
+      freezer: "4 to 12 months for best quality"
+      src: ["fsg"]
+    prep: "Pat dry, season and sear in a very hot pan or on the grill. Cook to 145°F and rest 3 minutes. Slice flank steak thinly across the grain."
+  - id: "beef-roast"
+    name: "Beef roast and stew meat"
+    group: "meats"
+    emoji: "🍖"
+    items: ["chuck-roast", "stew-beef", "brisket", "beef-roast-round", "short-ribs", "beef-soup-bones"]
+    choose: "Chuck and brisket have more marbling and turn tender with long, slow cooking; round roasts are leaner. Pick pieces of even thickness."
+    store:
+      fridge: "3 to 5 days raw"
+      freezer: "4 to 12 months for best quality"
+      src: ["fsg"]
+    prep: "Brown it first for flavor, then braise low and slow in a covered pot, oven or slow cooker until fork-tender."
+  - id: "chicken"
+    name: "Chicken"
+    group: "meats"
+    emoji: "🍗"
+    items: ["chicken-breast", "chicken-thighs", "chicken-thighs-bone-in", "chicken-drumsticks", "chicken-wings", "chicken-tenders", "whole-chicken", "rotisserie-chicken", "canned-chicken"]
+    choose: "Look for pink, plump meat with no off smell, in a cold package without tears. Thighs and drumsticks stay juicier; breasts cook fastest."
+    store:
+      fridge: "1 to 2 days raw (pieces or whole)"
+      freezer: "9 months for pieces, 1 year whole"
+      tip: "Keep raw chicken on the bottom shelf in a dish so juices can't drip onto other food."
+      src: ["fsg"]
+    prep: "Don't rinse raw chicken; it spreads germs around the sink. Pat dry, season and cook to 165°F in the thickest part."
+  - id: "ground-turkey"
+    name: "Ground turkey and chicken"
+    group: "meats"
+    emoji: "🦃"
+    items: ["ground-turkey", "ground-chicken"]
+    choose: "Check the label for the lean-to-fat ratio; 93/7 is a good everyday choice. The package should be cold and sealed."
+    store:
+      fridge: "1 to 2 days raw"
+      freezer: "3 to 4 months for best quality"
+      src: ["fsg"]
+    prep: "It's leaner than beef, so add a little oil to the pan and season well. Cook ground poultry to 165°F."
+  - id: "turkey"
+    name: "Turkey breast"
+    group: "meats"
+    emoji: "🦃"
+    items: ["turkey-breast"]
+    choose: "Choose a breast with smooth, unbroken skin and a cold, sealed wrapper."
+    store:
+      fridge: "1 to 2 days raw"
+      freezer: "9 months for best quality"
+      tip: "Thaw a frozen turkey breast in the fridge; allow about a day for every 4 to 5 pounds."
+      src: ["fsg"]
+    prep: "Roast until the thickest part reads 165°F, then rest before slicing. Leftover turkey keeps 3 to 4 days in the fridge."
+  - id: "pork-chops"
+    name: "Pork chops and tenderloin"
+    group: "meats"
+    emoji: "🐖"
+    items: ["pork-chops", "pork-chops-bone-in", "pork-tenderloin"]
+    choose: "Look for pinkish-red meat with firm white fat. Chops about 1 inch thick stay juicier than thin ones."
+    store:
+      fridge: "3 to 5 days raw"
+      freezer: "4 to 12 months for best quality"
+      src: ["fsg"]
+    prep: "Sear, then finish over lower heat or in the oven. Cook to 145°F and rest 3 minutes; a little pink is fine at that temperature."
+  - id: "pork-roast"
+    name: "Pork roast and ribs"
+    group: "meats"
+    emoji: "🐷"
+    items: ["pork-shoulder", "pork-loin-roast", "pork-ribs"]
+    choose: "Shoulder (also called Boston butt) has more marbling for pulled pork; loin roasts are leaner and slice neatly."
+    store:
+      fridge: "3 to 5 days raw"
+      freezer: "4 to 12 months for best quality"
+      src: ["fsg"]
+    prep: "Roast loin to 145°F with a 3-minute rest. Cook shoulder and ribs low and slow, well past that, until tender enough to pull apart."
+  - id: "ground-pork"
+    name: "Ground pork"
+    group: "meats"
+    emoji: "🥟"
+    items: ["ground-pork"]
+    choose: "Choose pale pink meat in a cold, sealed package."
+    store:
+      fridge: "1 to 2 days raw"
+      freezer: "3 to 4 months for best quality"
+      src: ["fsg"]
+    prep: "Brown and drain like ground beef. Cook ground pork to 160°F."
+  - id: "sausage"
+    name: "Sausage"
+    group: "meats"
+    emoji: "🌭"
+    items: ["italian-sausage", "breakfast-sausage", "smoked-sausage", "chicken-sausage"]
+    choose: "Fresh (raw) sausage must be cooked through; smoked sausage is already cooked and only needs heating. The label tells you which."
+    store:
+      fridge: "1 to 2 days raw; 1 week fully cooked (smoked)"
+      freezer: "1 to 2 months for best quality"
+      src: ["fsg"]
+    prep: "Brown links in a skillet or bake them, or remove the casing and crumble. Cook raw pork or beef sausage to 160°F and poultry sausage to 165°F."
+  - id: "bacon"
+    name: "Bacon"
+    group: "meats"
+    emoji: "🥓"
+    items: ["bacon", "turkey-bacon"]
+    choose: "Look for slices with an even mix of meat and fat in a sealed package, well before the date."
+    store:
+      fridge: "1 week"
+      freezer: "1 month for best quality"
+      src: ["fsg"]
+    prep: "Bake on a sheet pan at 400°F for 15 to 20 minutes for flat, even strips with less splatter. Save a spoonful of drippings for cooking greens."
+  - id: "ham"
+    name: "Ham"
+    group: "meats"
+    emoji: "🍖"
+    items: ["ham-steak", "spiral-ham", "deli-ham"]
+    choose: "Most ham sold is fully cooked; the label says so. Spiral-cut ham is sliced for you."
+    store:
+      fridge: "3 to 5 days for slices, half or spiral-cut; 1 week whole"
+      freezer: "1 to 2 months for best quality"
+      src: ["fsg"]
+    prep: "Fully cooked ham only needs warming; reheat it to 140°F (or 165°F for leftovers). Save the bone for bean soup."
+  - id: "lamb"
+    name: "Lamb"
+    group: "meats"
+    emoji: "🐑"
+    items: ["ground-lamb", "lamb-chops"]
+    choose: "Look for pinkish-red meat with firm, white fat."
+    store:
+      fridge: "1 to 2 days ground; 3 to 5 days chops"
+      freezer: "3 to 4 months ground; 4 to 12 months chops"
+      src: ["fsg"]
+    prep: "Cook chops to 145°F with a 3-minute rest and ground lamb to 160°F. Lamb pairs well with garlic, rosemary, mint and lemon."
+  - id: "salmon"
+    name: "Salmon"
+    group: "seafood"
+    emoji: "🐟"
+    items: ["salmon", "canned-salmon"]
+    choose: "Fresh fish should smell mild, not fishy or sour, and the flesh should be firm. Frozen fillets are a fine choice and often a better buy."
+    store:
+      fridge: "1 to 2 days fresh, at 40°F or below"
+      freezer: "2 to 3 months for best quality"
+      pantry: "Canned: until the date on the can"
+      tip: "Thaw frozen fish in the fridge overnight."
+      src: ["fda-seafood", "fsg"]
+    prep: "Bake, broil or pan-sear until the flesh separates easily with a fork and reaches 145°F."
+  - id: "white-fish"
+    name: "White fish (cod, tilapia, catfish)"
+    group: "seafood"
+    emoji: "🐠"
+    items: ["cod", "tilapia", "catfish", "fish-sticks"]
+    choose: "Look for firm, moist fillets that smell fresh and mild. These mild fish swap for one another in most recipes."
+    store:
+      fridge: "1 to 2 days fresh, at 40°F or below"
+      freezer: "6 to 8 months for lean fish like cod; 2 to 3 months for catfish"
+      src: ["fda-seafood", "fsg"]
+    prep: "Season simply and bake, pan-fry or broil. Thin fillets cook in under 10 minutes; they're done at 145°F, when the flesh flakes."
+  - id: "tuna"
+    name: "Canned tuna"
+    group: "seafood"
+    emoji: "🥫"
+    items: ["canned-tuna"]
+    choose: "Choose cans with no dents along the seams, bulges or rust. Tuna packed in water is leaner; oil-packed is richer."
+    store:
+      fridge: "3 to 4 days once made into tuna salad"
+      freezer: "Tuna salad doesn't freeze well"
+      pantry: "Unopened: until the date on the can"
+      src: ["fsg"]
+    prep: "Drain well, flake with a fork and mix with dressing, or stir into pasta and casseroles."
+  - id: "shrimp"
+    name: "Shrimp"
+    group: "seafood"
+    emoji: "🍤"
+    items: ["shrimp", "frozen-shrimp"]
+    choose: "Raw shrimp should look clear and pearly with little or no smell. Most shrimp is sold frozen, which keeps it at its best."
+    store:
+      fridge: "Raw: cook within 2 days of buying, kept at 40°F or below"
+      freezer: "6 to 18 months"
+      src: ["fda-seafood", "fsg"]
+    prep: "Thaw in the fridge or in a bag under cold running water. Shrimp cook in 2 to 3 minutes and are done when firm, pink and opaque."
+  - id: "eggs"
+    name: "Eggs"
+    group: "dairy-eggs"
+    emoji: "🥚"
+    items: ["eggs", "pasteurized-eggs", "egg-whites"]
+    choose: "Open the carton and check that no eggs are cracked or dirty. Buy them before the date on the carton."
+    store:
+      fridge: "3 to 5 weeks in the shell, in the carton"
+      freezer: "Not in the shell; beaten whole eggs keep about 12 months"
+      tip: "Hard-cooked eggs keep 1 week in the fridge."
+      src: ["fsg", "rutgers"]
+    prep: "Cook eggs until the whites and yolks are firm, and dishes with eggs to 160°F."
+  - id: "milk"
+    name: "Milk"
+    group: "dairy-eggs"
+    emoji: "🥛"
+    items: ["whole-milk", "milk-2", "milk-1", "skim-milk"]
+    choose: "Pick the coldest carton from the back of the case, with the latest date."
+    store:
+      fridge: "About 1 week after opening"
+      freezer: "1 month (it may separate; shake it well and use it for cooking)"
+      src: ["rutgers"]
+    prep: "Warm milk gently and stir so it doesn't scorch. Extra milk goes into oatmeal, pancakes, soups, puddings and white sauce."
+  - id: "butter"
+    name: "Butter"
+    group: "dairy-eggs"
+    emoji: "🧈"
+    items: ["butter", "unsalted-butter"]
+    choose: "Salted is fine for spreading and most cooking; unsalted lets you control the salt in baking."
+    store:
+      fridge: "1 to 3 months"
+      freezer: "6 to 9 months"
+      src: ["rutgers"]
+    prep: "Soften it on the counter for baking, or cut it cold into flour for biscuits and pie crust."
+  - id: "cheddar"
+    name: "Cheddar and other firm cheeses"
+    group: "dairy-eggs"
+    emoji: "🧀"
+    items: ["cheddar", "cheddar-block", "colby-jack", "monterey-jack", "mexican-cheese", "swiss"]
+    choose: "Blocks cost less than shredded and melt more smoothly; shred your own. Sharp cheddar gives more flavor for the amount."
+    store:
+      fridge: "Blocks: 6 months unopened, 3 to 4 months opened; shredded: 1 month"
+      freezer: "Up to 6 months (it gets crumbly; use it for cooking)"
+      src: ["rutgers"]
+    prep: "Shred it cold. Melt it over low heat so it doesn't turn oily."
+  - id: "mozzarella"
+    name: "Mozzarella"
+    group: "dairy-eggs"
+    emoji: "🍕"
+    items: ["mozzarella", "fresh-mozzarella", "string-cheese", "italian-cheese"]
+    choose: "Low-moisture mozzarella melts best for pizza and baked pasta; fresh mozzarella in water is for salads and sandwiches."
+    store:
+      fridge: "Shredded: about 1 month after opening; fresh: by the package date"
+      freezer: "Shredded: 3 to 4 months"
+      src: ["rutgers"]
+    prep: "Shred or slice it cold. Add it near the end of baking so it melts without browning too much."
+  - id: "parmesan"
+    name: "Parmesan"
+    group: "dairy-eggs"
+    emoji: "🧀"
+    items: ["parmesan", "parmesan-wedge"]
+    choose: "A wedge keeps longer and tastes stronger than pre-grated cheese, so a little goes a long way."
+    store:
+      fridge: "Wedge: 6 months unopened, 3 to 4 months opened"
+      freezer: "Up to 6 months"
+      tip: "Save the rind and simmer it in soups and sauces."
+      src: ["rutgers"]
+    prep: "Grate it finely just before using."
+  - id: "cream-cheese"
+    name: "Cream cheese"
+    group: "dairy-eggs"
+    emoji: "🥯"
+    items: ["cream-cheese"]
+    choose: "Bricks work best for baking and dips; tubs spread more easily."
+    store:
+      fridge: "About 2 weeks after opening"
+      freezer: "Not recommended (it turns grainy)"
+      src: ["rutgers"]
+    prep: "Let it soften on the counter for 30 minutes so it mixes in without lumps."
+  - id: "sour-cream"
+    name: "Sour cream"
+    group: "dairy-eggs"
+    emoji: "🥣"
+    items: ["sour-cream"]
+    choose: "Check the date and pick a container with an unbroken seal."
+    store:
+      fridge: "1 to 3 weeks after opening"
+      freezer: "Not recommended"
+      src: ["rutgers"]
+    prep: "Stir it into hot dishes off the heat so it doesn't curdle. Plain yogurt is a good swap."
+  - id: "yogurt"
+    name: "Yogurt"
+    group: "dairy-eggs"
+    emoji: "🥄"
+    items: ["plain-yogurt", "greek-yogurt", "vanilla-yogurt"]
+    choose: "Plain yogurt is the most useful for cooking; Greek yogurt is thicker and higher in protein."
+    store:
+      fridge: "7 to 14 days"
+      freezer: "1 to 2 months (best in smoothies after)"
+      src: ["rutgers"]
+    prep: "Use it in smoothies, parfaits, marinades, dips and baking."
+  - id: "cottage-cheese"
+    name: "Cottage cheese"
+    group: "dairy-eggs"
+    emoji: "🥣"
+    items: ["cottage-cheese"]
+    choose: "Small or large curd works the same in recipes; check the date."
+    store:
+      fridge: "About 1 week after opening"
+      freezer: "Not recommended"
+      src: ["rutgers"]
+    prep: "Eat it with fruit, blend it smooth for dips, or use it in place of ricotta in lasagna."
+  - id: "ricotta"
+    name: "Ricotta"
+    group: "dairy-eggs"
+    emoji: "🍝"
+    items: ["ricotta"]
+    choose: "Whole-milk ricotta is creamier; part-skim is lighter. Both work in baked pasta."
+    store:
+      fridge: "About 1 week after opening"
+      freezer: "Not recommended"
+      src: ["rutgers"]
+    prep: "Mix with egg and Parmesan for lasagna and stuffed shells, or spoon onto toast with fruit."
+  - id: "heavy-cream"
+    name: "Cream and half-and-half"
+    group: "dairy-eggs"
+    emoji: "🥛"
+    items: ["heavy-cream", "half-and-half"]
+    choose: "Heavy cream whips and doesn't curdle easily in sauces; half-and-half is lighter, for coffee and soups."
+    store:
+      fridge: "About 10 days after opening"
+      freezer: "Not recommended"
+      src: ["rutgers"]
+    prep: "Add cream to sauces and soups over low heat. Whip cold cream in a cold bowl."
+  - id: "buttermilk"
+    name: "Buttermilk"
+    group: "dairy-eggs"
+    emoji: "🥞"
+    items: ["buttermilk"]
+    choose: "Look for cultured buttermilk with a date well ahead."
+    store:
+      fridge: "1 to 2 weeks"
+      freezer: "3 months (thaw in the fridge and shake well; best for baking)"
+      src: ["rutgers"]
+    prep: "Use it in pancakes, biscuits, cornbread, chicken marinades and ranch dressing."
+  - id: "feta"
+    name: "Feta"
+    group: "dairy-eggs"
+    emoji: "🧀"
+    items: ["feta"]
+    choose: "Blocks in brine stay moister and taste better than pre-crumbled feta."
+    store:
+      fridge: "By the package date; keep a block covered in its brine once opened"
+      src: []
+    prep: "Crumble it over salads, eggs, roasted vegetables and grain bowls. It's salty, so taste before adding more salt."
+  - id: "potatoes"
+    name: "Potatoes"
+    group: "vegetables"
+    emoji: "🥔"
+    items: ["russet-potato", "yukon-potato", "red-potato", "baby-potatoes", "frozen-hash-browns"]
+    choose: "Choose firm potatoes without sprouts, soft spots or green patches. Russets bake and mash fluffy; red and gold potatoes hold their shape in salads and soups."
+    store:
+      freezer: "Raw potatoes don't freeze well; cooked mashed potatoes do"
+      pantry: "About 1 week in a cool, dark, dry place away from sun; longer somewhere cooler"
+      tip: "Cut away any green parts or sprouts before cooking."
+      src: ["tamu", "rutgers"]
+    prep: "Scrub well. Peel or not, cut into even pieces, and start in cold, salted water for boiling."
+    seasons: "Harvested in summer and fall; stored potatoes are sold all year."
+  - id: "sweet-potatoes"
+    name: "Sweet potatoes"
+    group: "vegetables"
+    emoji: "🍠"
+    items: ["sweet-potato", "frozen-sweet-potato-fries"]
+    choose: "Pick firm, smooth sweet potatoes without soft ends or cracks."
+    store:
+      pantry: "2 to 3 weeks in a cool, dry place; don't refrigerate raw (it causes off-flavors and a hard core)"
+      src: ["tamu", "ucanr"]
+    prep: "Bake whole until soft, or peel, cube and roast at 425°F until browned."
+    seasons: "Fall harvest; stored ones are sold all year."
+  - id: "carrots"
+    name: "Carrots"
+    group: "vegetables"
+    emoji: "🥕"
+    items: ["carrot", "baby-carrots", "frozen-peas-carrots"]
+    choose: "Look for firm, bright orange carrots without cracks or limp ends. Twist off any green tops before storing."
+    store:
+      fridge: "About 2 weeks in a bag in the crisper"
+      freezer: "12 months (blanch first)"
+      src: ["rutgers"]
+    prep: "Peel or scrub, then slice, dice or shred. Roast with a little oil at 425°F until sweet and browned."
+    seasons: "Spring and fall; sold all year."
+  - id: "celery"
+    name: "Celery"
+    group: "vegetables"
+    emoji: "🥬"
+    items: ["celery"]
+    choose: "Choose crisp, tight bunches with fresh-looking leaves."
+    store:
+      fridge: "1 to 2 weeks, wrapped"
+      freezer: "10 to 12 months for cooking (it goes soft)"
+      src: ["rutgers"]
+    prep: "Rinse between the stalks. Dice with onion and carrot as a base for soups and stews; use the leaves too."
+  - id: "bell-peppers"
+    name: "Bell peppers"
+    group: "vegetables"
+    emoji: "🫑"
+    items: ["green-bell-pepper", "red-bell-pepper", "yellow-bell-pepper", "frozen-peppers-onions"]
+    choose: "Pick glossy, firm peppers that feel heavy for their size. Red and yellow are sweeter than green."
+    store:
+      fridge: "About 1 week"
+      freezer: "6 to 8 months, sliced (for cooking)"
+      src: ["rutgers"]
+    prep: "Cut off the top, pull out the core and seeds, and slice into strips or dice."
+    seasons: "Summer into fall."
+  - id: "chile-peppers"
+    name: "Jalapeños and other chiles"
+    group: "vegetables"
+    emoji: "🌶️"
+    items: ["jalapeno", "poblano", "serrano", "anaheim", "green-chiles"]
+    choose: "Choose firm, shiny chiles. Most of the heat is in the ribs and seeds."
+    store:
+      fridge: "About 2 weeks"
+      freezer: "12 months"
+      src: ["rutgers"]
+    prep: "Wear gloves or wash your hands well after cutting hot chiles, and keep your hands away from your eyes. Remove the seeds and ribs for less heat."
+    seasons: "Summer into fall."
+  - id: "tomatoes"
+    name: "Tomatoes"
+    group: "vegetables"
+    emoji: "🍅"
+    items: ["tomato", "roma-tomato", "cherry-tomatoes"]
+    choose: "Choose tomatoes that are heavy, fragrant and give slightly when pressed. Romas are meatier for sauces."
+    store:
+      fridge: "2 to 3 days once fully ripe or cut"
+      freezer: "12 months for cooking"
+      counter: "Ripen on the counter, out of the sun; they lose flavor in the fridge"
+      src: ["ucanr", "rutgers"]
+    prep: "Core and slice with a serrated or sharp knife. Halve cherry tomatoes for little kids."
+    seasons: "Summer into early fall."
+  - id: "canned-tomatoes"
+    name: "Canned tomatoes"
+    group: "vegetables"
+    emoji: "🥫"
+    items: ["diced-tomatoes", "crushed-tomatoes", "whole-tomatoes", "tomato-sauce", "tomato-paste", "diced-tomatoes-chiles"]
+    choose: "Choose cans with no dents on the seams, bulges or rust. Crushed for smooth sauce, diced for chunky chili and soup."
+    store:
+      fridge: "Opened: move to a covered container and use within about a week"
+      freezer: "Leftover tomato paste freezes well in spoonfuls"
+      pantry: "Unopened: about 12 months"
+      src: ["tamu"]
+    prep: "Simmer at least 10 to 15 minutes to mellow the tinny taste. A pinch of sugar can soften sharp acidity."
+  - id: "lettuce"
+    name: "Lettuce and salad greens"
+    group: "vegetables"
+    emoji: "🥗"
+    items: ["romaine", "iceberg", "green-leaf-lettuce", "salad-mix", "arugula"]
+    choose: "Look for crisp leaves with no slimy or brown edges. Check the bottom of salad-mix boxes for wet leaves."
+    store:
+      fridge: "A few days for tender greens; a week or more for romaine and iceberg heads; in the crisper"
+      tip: "Wrap washed, dried leaves in a paper towel inside a bag."
+      src: ["ucanr"]
+    prep: "Rinse under running water just before eating and spin or pat dry so dressing clings."
+    seasons: "Spring and fall."
+  - id: "spinach"
+    name: "Spinach"
+    group: "vegetables"
+    emoji: "🍃"
+    items: ["spinach", "frozen-spinach"]
+    choose: "Choose bright green leaves with no yellowing or slime."
+    store:
+      fridge: "1 to 2 days for best quality"
+      freezer: "10 to 12 months (blanch first), or buy frozen"
+      src: ["rutgers"]
+    prep: "A big pile cooks down to a little. Stir handfuls into soups, eggs, pasta and smoothies."
+    seasons: "Spring and fall."
+  - id: "kale"
+    name: "Kale"
+    group: "vegetables"
+    emoji: "🥬"
+    items: ["kale"]
+    choose: "Pick firm, deeply colored leaves with no wilting or yellow."
+    store:
+      fridge: "1 to 2 days for best quality, wrapped"
+      freezer: "10 to 12 months (blanch first)"
+      src: ["rutgers"]
+    prep: "Strip the leaves off the tough stems. Rub raw kale with dressing to soften it, or sauté, or bake into chips."
+    seasons: "Cool seasons: fall through spring."
+  - id: "cabbage"
+    name: "Cabbage"
+    group: "vegetables"
+    emoji: "🥬"
+    items: ["cabbage", "red-cabbage", "coleslaw-mix"]
+    choose: "Choose heads that feel heavy and tight, with crisp outer leaves."
+    store:
+      fridge: "1 to 2 weeks whole"
+      freezer: "Best frozen in cooked dishes"
+      src: ["rutgers"]
+    prep: "Quarter, cut out the core, and slice thin for slaw, or cut wedges to roast or simmer."
+    seasons: "Spring and fall; stores well all winter."
+  - id: "broccoli"
+    name: "Broccoli"
+    group: "vegetables"
+    emoji: "🥦"
+    items: ["broccoli", "frozen-broccoli"]
+    choose: "Look for tight, dark green florets and firm stalks with no yellow."
+    store:
+      fridge: "About 4 days"
+      freezer: "12 months (blanch first), or buy frozen"
+      src: ["rutgers"]
+    prep: "Cut into florets; peel and slice the stems, which are good to eat. Roast at 425°F or steam until bright green and just tender."
+    seasons: "Spring and fall."
+  - id: "cauliflower"
+    name: "Cauliflower"
+    group: "vegetables"
+    emoji: "🥦"
+    items: ["cauliflower", "frozen-cauliflower-rice"]
+    choose: "Choose a heavy, creamy-white head with tight florets and fresh green leaves."
+    store:
+      fridge: "About 5 days"
+      freezer: "12 months (blanch first)"
+      src: ["rutgers"]
+    prep: "Cut into florets and roast until browned, or steam and mash."
+    seasons: "Spring and fall."
+  - id: "brussels-sprouts"
+    name: "Brussels sprouts"
+    group: "vegetables"
+    emoji: "🥬"
+    items: ["brussels-sprouts"]
+    choose: "Pick small, firm, bright green sprouts with tight leaves."
+    store:
+      fridge: "3 to 5 days"
+      freezer: "12 months (blanch first)"
+      src: ["rutgers"]
+    prep: "Trim the stem end and halve. Roast cut side down at 425°F until crisp and brown."
+    seasons: "Fall and winter."
+  - id: "zucchini"
+    name: "Zucchini and summer squash"
+    group: "vegetables"
+    emoji: "🥒"
+    items: ["zucchini", "yellow-squash"]
+    choose: "Small to medium squash with glossy skin are more tender and less seedy."
+    store:
+      fridge: "4 to 5 days"
+      freezer: "12 months, shredded, for baking"
+      src: ["rutgers"]
+    prep: "No need to peel. Slice and sauté, grill, or shred into muffins and breads (squeeze out the water)."
+    seasons: "Summer."
+  - id: "winter-squash"
+    name: "Butternut and other winter squash"
+    group: "vegetables"
+    emoji: "🎃"
+    items: ["butternut-squash", "acorn-squash", "spaghetti-squash"]
+    choose: "Choose squash that feels heavy, with a hard, dull rind and a dry stem."
+    store:
+      freezer: "12 months cooked"
+      pantry: "Up to about 6 months whole in a cool, dry place; don't refrigerate whole squash"
+      src: ["tamu", "rutgers"]
+    prep: "Use a heavy knife on a cutting board that doesn't slip; microwaving the whole squash for 2 to 3 minutes softens the rind. Scoop the seeds and roast."
+    seasons: "Fall and winter."
+  - id: "pumpkin"
+    name: "Pumpkin"
+    group: "vegetables"
+    emoji: "🎃"
+    items: ["pumpkin", "pumpkin-puree"]
+    choose: "Small \"pie\" or \"sugar\" pumpkins are best for cooking. Canned pumpkin purée is plain pumpkin; pumpkin pie filling is sweetened and spiced."
+    store:
+      fridge: "Opened purée: about a week, covered"
+      freezer: "Purée: 12 months"
+      pantry: "Whole: weeks to months in a cool, dry place; canned: about 12 months unopened"
+      src: ["tamu"]
+    prep: "Halve, scoop and roast cut side down until soft, then scoop and mash. Leftover purée goes into oatmeal, pancakes, muffins and chili."
+    seasons: "Fall."
+  - id: "cucumbers"
+    name: "Cucumbers"
+    group: "vegetables"
+    emoji: "🥒"
+    items: ["cucumber"]
+    choose: "Choose firm cucumbers with no soft spots or yellowing."
+    store:
+      fridge: "About 1 week"
+      freezer: "Not recommended"
+      src: ["rutgers"]
+    prep: "Peel if the skin is waxed or thick. Slice for salads, snacks and quick pickles."
+    seasons: "Summer."
+  - id: "mushrooms"
+    name: "Mushrooms"
+    group: "vegetables"
+    emoji: "🍄"
+    items: ["mushrooms", "cremini"]
+    choose: "Look for firm, dry mushrooms with closed caps and no slime."
+    store:
+      fridge: "3 to 7 days, in a paper bag or their package"
+      freezer: "10 to 12 months, cooked first"
+      src: ["rutgers"]
+    prep: "Wipe or rinse quickly just before cooking. Sauté in a hot pan without crowding so they brown instead of steam."
+  - id: "corn"
+    name: "Corn"
+    group: "vegetables"
+    emoji: "🌽"
+    items: ["corn-on-cob", "frozen-corn", "canned-corn"]
+    choose: "Fresh ears should have green, snug husks and moist, brown silk. Frozen corn is a good buy all year."
+    store:
+      fridge: "1 to 2 days fresh, in the husk; it loses sweetness quickly"
+      freezer: "8 to 12 months (blanch first)"
+      src: ["rutgers"]
+    prep: "Husk and boil 3 to 5 minutes, or grill. Cut kernels off the cob into a wide bowl."
+    seasons: "Summer."
+  - id: "green-beans"
+    name: "Green beans"
+    group: "vegetables"
+    emoji: "🫛"
+    items: ["green-beans", "frozen-green-beans", "canned-green-beans"]
+    choose: "Choose slim, crisp beans that snap when bent."
+    store:
+      fridge: "3 to 5 days"
+      freezer: "8 months (blanch first)"
+      src: ["rutgers"]
+    prep: "Snap off the stem ends. Steam or boil until bright green, or roast at 425°F."
+    seasons: "Summer into fall."
+  - id: "asparagus"
+    name: "Asparagus"
+    group: "vegetables"
+    emoji: "🌱"
+    items: ["asparagus"]
+    choose: "Look for firm, straight spears with tight, closed tips."
+    store:
+      fridge: "3 to 4 days; stand the stems in an inch of water, or wrap the ends in a damp towel"
+      freezer: "12 months (blanch first)"
+      src: ["rutgers"]
+    prep: "Snap or cut off the woody ends. Roast at 425°F for 10 to 12 minutes."
+    seasons: "Spring."
+  - id: "peas"
+    name: "Peas"
+    group: "vegetables"
+    emoji: "🫛"
+    items: ["frozen-peas", "snap-peas"]
+    choose: "Frozen peas are picked and frozen at their sweetest, so they're often better than fresh. Snap peas should be crisp and bright."
+    store:
+      fridge: "1 to 2 days fresh"
+      freezer: "12 months"
+      src: ["rutgers"]
+    prep: "Add frozen peas in the last few minutes of cooking. Eat snap peas raw or stir-fry them briefly."
+    seasons: "Spring."
+  - id: "eggplant"
+    name: "Eggplant"
+    group: "vegetables"
+    emoji: "🍆"
+    items: ["eggplant"]
+    choose: "Choose glossy, firm eggplant that feels heavy for its size."
+    store:
+      fridge: "3 to 4 days"
+      freezer: "12 months, cooked"
+      src: ["rutgers"]
+    prep: "Slice or cube, salt for 30 minutes if you like, pat dry, then roast or pan-fry until creamy."
+    seasons: "Summer."
+  - id: "beets"
+    name: "Beets"
+    group: "vegetables"
+    emoji: "🟣"
+    items: ["beets"]
+    choose: "Pick firm, smooth beets; small and medium ones are most tender."
+    store:
+      fridge: "About 3 weeks (cut off the greens and store them apart)"
+      freezer: "12 months, cooked"
+      src: ["rutgers"]
+    prep: "Roast whole, wrapped in foil, until tender, then rub off the skins. Beet juice stains, so use an old towel."
+    seasons: "Fall; stores well into winter."
+  - id: "radishes"
+    name: "Radishes"
+    group: "vegetables"
+    emoji: "🔴"
+    items: ["radishes"]
+    choose: "Choose firm, smooth radishes; any leaves should look fresh."
+    store:
+      fridge: "About 2 weeks with the tops removed"
+      freezer: "Not recommended"
+      src: ["rutgers"]
+    prep: "Slice thin for salads and tacos, or roast halves until mellow."
+    seasons: "Spring and fall."
+  - id: "collard-greens"
+    name: "Collards and chard"
+    group: "vegetables"
+    emoji: "🥬"
+    items: ["collards", "swiss-chard"]
+    choose: "Look for crisp, dark leaves without yellowing or holes."
+    store:
+      fridge: "1 to 2 days for best quality"
+      freezer: "10 to 12 months (blanch first)"
+      src: ["rutgers"]
+    prep: "Wash well in a big bowl of water. Strip out tough stems, slice the leaves, and simmer or sauté until tender."
+    seasons: "Cool seasons: fall through spring."
+  - id: "okra"
+    name: "Okra"
+    group: "vegetables"
+    emoji: "🫛"
+    items: ["okra"]
+    choose: "Choose small, bright green pods (under 4 inches) that snap easily."
+    store:
+      fridge: "3 to 4 days, dry"
+      freezer: "12 months (blanch first)"
+      src: ["rutgers"]
+    prep: "Keep it dry until cooking. Roast or pan-fry whole or sliced; it thickens gumbo and stews."
+    seasons: "Summer."
+  - id: "bok-choy"
+    name: "Bok choy"
+    group: "vegetables"
+    emoji: "🥬"
+    items: ["bok-choy"]
+    choose: "Pick firm white stalks and bright green leaves."
+    store:
+      fridge: "1 to 3 days"
+      freezer: "12 months (blanch first)"
+      src: ["rutgers"]
+    prep: "Rinse between the stalks. Halve baby bok choy, or slice and stir-fry stems first, then leaves."
+    seasons: "Cool seasons."
+  - id: "avocado"
+    name: "Avocados"
+    group: "vegetables"
+    emoji: "🥑"
+    items: ["avocado"]
+    choose: "A ripe avocado yields to gentle pressure. Buy firm ones to ripen at home over a few days."
+    store:
+      fridge: "3 to 5 days once ripe"
+      freezer: "Not recommended whole; mashed avocado can be frozen for dips"
+      counter: "Ripen on the counter"
+      src: ["rutgers"]
+    prep: "Halve around the pit, twist apart and scoop. Lemon or lime juice slows browning."
+  - id: "apples"
+    name: "Apples"
+    group: "fruits"
+    emoji: "🍎"
+    items: ["apple", "applesauce"]
+    choose: "Choose firm apples with no bruises. Crisp, tart apples (like Granny Smith) bake well; sweeter ones are great raw."
+    store:
+      fridge: "About 1 month to 6 weeks in the crisper"
+      freezer: "12 months, cooked or sliced"
+      src: ["rutgers", "tamu"]
+    prep: "Wash and slice; dip in lemon water to keep slices from browning in lunchboxes."
+    seasons: "Late summer and fall; stored apples are sold all year."
+  - id: "bananas"
+    name: "Bananas"
+    group: "fruits"
+    emoji: "🍌"
+    items: ["banana"]
+    choose: "Buy some yellow and some green so they ripen through the week."
+    store:
+      freezer: "Peeled, in a bag, up to about 12 months"
+      counter: "On the counter; the cold turns the skin black and stops them sweetening"
+      src: ["ucanr", "rutgers"]
+    prep: "Spotty bananas are perfect for banana bread, pancakes, oatmeal and smoothies. Freeze them peeled and in chunks."
+  - id: "oranges"
+    name: "Oranges and clementines"
+    group: "fruits"
+    emoji: "🍊"
+    items: ["orange", "clementine", "mandarin-oranges"]
+    choose: "Pick fruit that feels heavy for its size, with firm, glossy skin."
+    store:
+      fridge: "2 to 8 weeks"
+      freezer: "3 to 4 months (sections or juice)"
+      counter: "A few days on the counter"
+      src: ["rutgers"]
+    prep: "Zest before you peel. Segments are easy lunchbox fruit."
+    seasons: "Winter."
+  - id: "lemons"
+    name: "Lemons"
+    group: "fruits"
+    emoji: "🍋"
+    items: ["lemon", "lemon-juice"]
+    choose: "Choose heavy lemons with thin, smooth skin; they're juicier."
+    store:
+      fridge: "2 to 8 weeks"
+      freezer: "3 to 4 months (juice in ice cube trays)"
+      src: ["rutgers"]
+    prep: "Roll on the counter before squeezing to get more juice. Zest only the yellow part."
+    seasons: "Winter, but sold all year."
+  - id: "limes"
+    name: "Limes"
+    group: "fruits"
+    emoji: "🍈"
+    items: ["lime", "lime-juice"]
+    choose: "Pick limes that feel heavy and give slightly when squeezed."
+    store:
+      fridge: "2 to 8 weeks"
+      freezer: "3 to 4 months (juice)"
+      src: ["rutgers"]
+    prep: "Squeeze over tacos, rice, soups and fruit; a little zest adds a lot."
+  - id: "grapes"
+    name: "Grapes"
+    group: "fruits"
+    emoji: "🍇"
+    items: ["grapes"]
+    choose: "Look for plump grapes firmly attached to green stems."
+    store:
+      fridge: "About 1 week, unwashed"
+      freezer: "1 month, as a frozen snack"
+      src: ["rutgers"]
+    prep: "Wash just before eating. Cut grapes in quarters lengthwise for young children."
+    seasons: "Late summer and fall."
+  - id: "strawberries"
+    name: "Strawberries"
+    group: "fruits"
+    emoji: "🍓"
+    items: ["strawberries", "frozen-strawberries"]
+    choose: "Choose bright red, fragrant berries with green caps and no mold."
+    store:
+      fridge: "1 to 2 days for best quality, unwashed"
+      freezer: "12 months"
+      src: ["rutgers"]
+    prep: "Rinse just before eating, then hull. Soft ones go into smoothies, sauces and jam."
+    seasons: "Spring."
+  - id: "blueberries"
+    name: "Blueberries"
+    group: "fruits"
+    emoji: "🫐"
+    items: ["blueberries", "frozen-blueberries"]
+    choose: "Look for firm, dusty-blue berries with no juice stains in the box."
+    store:
+      fridge: "1 to 2 days for best quality (often longer), unwashed"
+      freezer: "12 months"
+      src: ["rutgers"]
+    prep: "Rinse just before using. Toss frozen berries in batter straight from the freezer so they don't bleed."
+    seasons: "Summer."
+  - id: "raspberries"
+    name: "Raspberries"
+    group: "fruits"
+    emoji: "🍓"
+    items: ["raspberries", "frozen-mixed-berries"]
+    choose: "Check the bottom of the box for crushed or moldy berries."
+    store:
+      fridge: "1 to 2 days, unwashed"
+      freezer: "12 months"
+      src: ["rutgers"]
+    prep: "Rinse gently just before eating. They are fragile, so add them last."
+    seasons: "Summer."
+  - id: "blackberries"
+    name: "Blackberries"
+    group: "fruits"
+    emoji: "🫐"
+    items: ["blackberries"]
+    choose: "Choose plump, shiny, deep black berries."
+    store:
+      fridge: "1 to 2 days, unwashed"
+      freezer: "12 months"
+      src: ["rutgers"]
+    prep: "Rinse gently just before eating. Great in cobblers, oatmeal and yogurt."
+    seasons: "Early to mid summer."
+  - id: "pears"
+    name: "Pears"
+    group: "fruits"
+    emoji: "🍐"
+    items: ["pear"]
+    choose: "Pears ripen off the tree. Press near the stem: when it gives a little, it's ripe."
+    store:
+      fridge: "1 to 4 days once ripe"
+      freezer: "12 months, cooked"
+      counter: "Ripen on the counter"
+      src: ["ucanr", "rutgers"]
+    prep: "Slice for snacks and salads or bake with cinnamon."
+    seasons: "Late summer through fall."
+  - id: "peaches"
+    name: "Peaches and nectarines"
+    group: "fruits"
+    emoji: "🍑"
+    items: ["peach", "nectarine", "canned-peaches"]
+    choose: "Ripe ones smell sweet and give slightly. Skip any with green near the stem."
+    store:
+      fridge: "3 to 4 days once ripe"
+      freezer: "12 months, sliced"
+      counter: "Ripen on the counter"
+      src: ["rutgers"]
+    prep: "Slice around the pit. Grill, bake into cobbler, or eat over yogurt."
+    seasons: "Summer."
+  - id: "plums"
+    name: "Plums"
+    group: "fruits"
+    emoji: "🟣"
+    items: ["plum"]
+    choose: "Choose plump plums that give slightly at the tip."
+    store:
+      fridge: "About 3 days once ripe"
+      freezer: "12 months, pitted"
+      counter: "Ripen on the counter"
+      src: ["rutgers"]
+    prep: "Halve and pit. Eat fresh, roast, or bake into a crisp."
+    seasons: "Mid to late summer."
+  - id: "cherries"
+    name: "Cherries"
+    group: "fruits"
+    emoji: "🍒"
+    items: ["cherries"]
+    choose: "Look for firm, shiny cherries with green stems."
+    store:
+      fridge: "About 1 week, unwashed"
+      freezer: "12 months, pitted"
+      src: ["rutgers"]
+    prep: "Pit before serving to young children. A paper clip or straw pushes pits out."
+    seasons: "Early summer."
+  - id: "melon"
+    name: "Cantaloupe and honeydew"
+    group: "fruits"
+    emoji: "🍈"
+    items: ["cantaloupe", "honeydew"]
+    choose: "A ripe melon smells sweet at the stem end and feels heavy."
+    store:
+      fridge: "3 to 4 days cut, covered"
+      freezer: "12 months, cubed (for smoothies)"
+      src: ["rutgers", "ucanr"]
+    prep: "Scrub the rind before cutting so germs on the outside aren't carried inside by the knife. Refrigerate cut melon."
+    seasons: "Summer."
+  - id: "watermelon"
+    name: "Watermelon"
+    group: "fruits"
+    emoji: "🍉"
+    items: ["watermelon"]
+    choose: "Pick a heavy melon with a creamy-yellow patch where it rested on the ground."
+    store:
+      fridge: "Cut: 3 to 4 days, covered"
+      counter: "Whole: room temperature (more than 3 days in the fridge dulls the flavor)"
+      src: ["ucanr", "rutgers"]
+    prep: "Scrub the rind, then cut into wedges or cubes. Refrigerate cut melon."
+    seasons: "Summer."
+  - id: "pineapple"
+    name: "Pineapple"
+    group: "fruits"
+    emoji: "🍍"
+    items: ["pineapple", "canned-pineapple"]
+    choose: "Choose a heavy pineapple that smells sweet at the base."
+    store:
+      fridge: "3 to 5 days"
+      freezer: "12 months, cut"
+      src: ["rutgers"]
+    prep: "Cut off the top and bottom, slice away the skin, and cut the fruit from the woody core."
+  - id: "mango"
+    name: "Mangoes"
+    group: "fruits"
+    emoji: "🥭"
+    items: ["mango", "frozen-mango"]
+    choose: "A ripe mango gives slightly and smells fruity at the stem. Color isn't a good guide."
+    store:
+      fridge: "2 to 3 days once ripe"
+      freezer: "12 months, cubed"
+      counter: "Ripen on the counter"
+      src: ["rutgers"]
+    prep: "Slice the cheeks off the flat pit, score in a grid, and scoop."
+  - id: "kiwi"
+    name: "Kiwi"
+    group: "fruits"
+    emoji: "🥝"
+    items: ["kiwi"]
+    choose: "Ripe kiwi gives slightly when pressed."
+    store:
+      fridge: "1 to 2 days once ripe (longer when firm)"
+      freezer: "12 months, sliced"
+      counter: "Ripen on the counter"
+      src: ["rutgers"]
+    prep: "Halve and scoop with a spoon, or peel and slice."
+  - id: "grapefruit"
+    name: "Grapefruit"
+    group: "fruits"
+    emoji: "🍊"
+    items: ["grapefruit"]
+    choose: "Choose heavy fruit with smooth, thin skin."
+    store:
+      fridge: "2 to 8 weeks"
+      freezer: "3 to 4 months, sectioned"
+      src: ["rutgers"]
+    prep: "Halve and section with a small knife. Grapefruit can interact with some medicines; check the label or ask a pharmacist."
+    seasons: "Winter."
+  - id: "cranberries"
+    name: "Cranberries"
+    group: "fruits"
+    emoji: "🔴"
+    items: ["cranberries", "dried-cranberries", "cranberry-sauce"]
+    choose: "Fresh berries should be firm and bounce; toss soft ones."
+    store:
+      fridge: "Several weeks fresh"
+      freezer: "12 months; use straight from frozen"
+      src: ["rutgers"]
+    prep: "Simmer with sugar and water until they pop for sauce, or bake into muffins and breads."
+    seasons: "Fall."
+  - id: "raisins"
+    name: "Raisins and dried fruit"
+    group: "fruits"
+    emoji: "🍇"
+    items: ["raisins", "dates", "dried-apricots"]
+    choose: "Choose soft, moist dried fruit in a sealed package."
+    store:
+      fridge: "Longer in the fridge"
+      pantry: "Several months sealed in a cool, dry place"
+      src: []
+    prep: "Plump raisins in warm water before baking. Add to oatmeal, trail mix, muffins and salads."
+  - id: "white-rice"
+    name: "White rice"
+    group: "grains"
+    emoji: "🍚"
+    items: ["white-rice", "jasmine-rice", "instant-rice", "arborio-rice"]
+    choose: "Long-grain rice cooks up fluffy; jasmine is fragrant; short-grain is stickier."
+    store:
+      fridge: "Cooked: 3 to 4 days, like other leftovers"
+      freezer: "Cooked rice freezes well in portions"
+      pantry: "About 2 years dry, sealed"
+      tip: "Cool cooked rice quickly and refrigerate it within 2 hours."
+      src: ["tamu", "fsg"]
+    prep: "Rinse, then simmer covered (about 1 part rice to 1 1/2 to 2 parts water) for 15 to 20 minutes and rest 5. Day-old rice makes the best fried rice."
+  - id: "brown-rice"
+    name: "Brown rice"
+    group: "grains"
+    emoji: "🍚"
+    items: ["brown-rice", "wild-rice"]
+    choose: "Buy from a store with good turnover; the bran's oils can go stale."
+    store:
+      fridge: "Cooked: 3 to 4 days, like other leftovers"
+      freezer: "Cooked rice freezes well in portions"
+      pantry: "About 1 year dry, sealed"
+      src: ["tamu", "fsg"]
+    prep: "Simmer covered for about 40 to 45 minutes. Cook a big batch and freeze it in portions."
+  - id: "pasta"
+    name: "Pasta"
+    group: "grains"
+    emoji: "🍝"
+    items: ["spaghetti", "penne", "elbow-macaroni", "rotini", "lasagna-noodles", "whole-wheat-pasta", "gf-pasta", "orzo"]
+    choose: "Dried pasta keeps a long time. Pick shapes to match the sauce: long for smooth sauces, short tubes for chunky ones."
+    store:
+      fridge: "Cooked: 3 to 4 days, like other leftovers"
+      freezer: "Cooked, in sauce: 1 to 2 months"
+      pantry: "1 to 2 years dry"
+      src: ["tamu", "fsg"]
+    prep: "Boil in plenty of salted water, stirring at first. Save a cup of pasta water to loosen the sauce."
+  - id: "egg-noodles"
+    name: "Egg noodles"
+    group: "grains"
+    emoji: "🍜"
+    items: ["egg-noodles"]
+    choose: "Wide noodles for stroganoff and casseroles; fine ones for soup."
+    store:
+      fridge: "Cooked: 3 to 4 days, like other leftovers"
+      pantry: "1 to 2 years dry"
+      src: ["tamu"]
+    prep: "Boil 6 to 8 minutes. For soup, cook them separately or add just before serving so they don't soak up the broth."
+  - id: "oats"
+    name: "Oats"
+    group: "grains"
+    emoji: "🥣"
+    items: ["rolled-oats", "quick-oats", "steel-cut-oats"]
+    choose: "Rolled oats are the all-purpose kind. Quick oats cook faster; steel-cut are chewier and take about 30 minutes."
+    store:
+      pantry: "About 12 months, sealed"
+      src: ["tamu"]
+    prep: "Simmer with milk or water, or soak overnight in the fridge. Use in cookies, muffins, granola and meatloaf."
+  - id: "quinoa"
+    name: "Quinoa"
+    group: "grains"
+    emoji: "🌾"
+    items: ["quinoa"]
+    choose: "White quinoa is mildest; red and black are chewier."
+    store:
+      fridge: "Cooked: 3 to 4 days, like other leftovers"
+      pantry: "Sealed, in a cool, dry place"
+      src: ["fsg"]
+    prep: "Rinse well to remove the bitter coating. Simmer 1 part quinoa to 2 parts water for 15 minutes, then rest 5."
+  - id: "couscous"
+    name: "Couscous"
+    group: "grains"
+    emoji: "🌾"
+    items: ["couscous"]
+    choose: "Regular couscous is tiny pasta that cooks in 5 minutes; pearl couscous is larger and chewier."
+    store:
+      fridge: "Cooked: 3 to 4 days, like other leftovers"
+      pantry: "Sealed, in a cool, dry place"
+      src: ["fsg"]
+    prep: "Pour boiling broth or water over it, cover for 5 minutes, then fluff with a fork."
+  - id: "barley"
+    name: "Barley"
+    group: "grains"
+    emoji: "🌾"
+    items: ["barley", "bulgur"]
+    choose: "Pearl barley cooks faster than hulled barley."
+    store:
+      fridge: "Cooked: 3 to 4 days, like other leftovers"
+      pantry: "Sealed, in a cool, dry place"
+      src: ["fsg"]
+    prep: "Simmer about 30 to 40 minutes, or add straight to soups and stews."
+  - id: "cornmeal"
+    name: "Cornmeal and grits"
+    group: "grains"
+    emoji: "🌽"
+    items: ["cornmeal", "grits", "masa-harina"]
+    choose: "Fine cornmeal for cornbread; coarse for polenta and grits."
+    store:
+      pantry: "6 to 12 months, sealed"
+      src: ["tamu"]
+    prep: "Whisk slowly into simmering liquid to avoid lumps. Bake into cornbread or muffins."
+  - id: "flour"
+    name: "Flour"
+    group: "grains"
+    emoji: "🌾"
+    items: ["flour", "whole-wheat-flour", "bread-flour", "self-rising-flour"]
+    choose: "All-purpose flour does most jobs. Whole wheat adds flavor and fiber; bread flour makes chewier loaves."
+    store:
+      fridge: "Whole wheat lasts longer in the fridge or freezer"
+      pantry: "6 to 8 months in a sealed container"
+      tip: "Don't eat raw flour or raw dough; flour is a raw food until it's baked."
+      src: ["tamu", "ndsu"]
+    prep: "Spoon flour into the cup and level it off instead of scooping, for accurate baking."
+  - id: "bread"
+    name: "Bread"
+    group: "grains"
+    emoji: "🍞"
+    items: ["white-bread", "wheat-bread", "french-bread", "sourdough", "italian-bread", "hamburger-buns", "dinner-rolls"]
+    choose: "Squeeze gently: it should spring back. Check the date."
+    store:
+      freezer: "2 to 3 months"
+      pantry: "3 to 5 days in its bag"
+      tip: "The fridge makes bread stale faster; freeze what you won't eat soon."
+      src: ["tamu", "rutgers"]
+    prep: "Stale bread makes French toast, bread pudding, croutons, stuffing and breadcrumbs. Toast slices straight from the freezer."
+  - id: "tortillas"
+    name: "Tortillas"
+    group: "grains"
+    emoji: "🌮"
+    items: ["flour-tortillas", "large-flour-tortillas", "corn-tortillas", "whole-wheat-tortillas"]
+    choose: "Flour tortillas are soft and fold easily; corn tortillas are for tacos and enchiladas."
+    store:
+      fridge: "About 2 weeks"
+      freezer: "Several months, with paper between them"
+      src: ["tamu"]
+    prep: "Warm in a dry skillet or wrapped in a damp towel in the microwave so they don't crack."
+  - id: "black-beans"
+    name: "Black beans"
+    group: "legumes"
+    emoji: "🫘"
+    items: ["black-beans", "dried-black-beans"]
+    choose: "Canned beans are fast; dried beans cost less per serving."
+    store:
+      fridge: "Cooked or opened: move to a covered container and use within 3 to 4 days"
+      freezer: "Cooked beans freeze well in their liquid"
+      pantry: "Canned: about 12 months unopened; dried: 6 to 12 months in a sealed container (older beans take longer to cook)"
+      src: ["tamu", "fsg"]
+    prep: "Rinse canned beans to remove extra salt. Dried beans: soak overnight, drain, then boil hard for at least 30 minutes and simmer until tender."
+  - id: "pinto-beans"
+    name: "Pinto beans"
+    group: "legumes"
+    emoji: "🫘"
+    items: ["pinto-beans", "dried-pinto-beans", "refried-beans", "refried-beans-veg"]
+    choose: "Look for whole, unbroken dried beans without dust or holes."
+    store:
+      fridge: "Cooked or opened: move to a covered container and use within 3 to 4 days"
+      freezer: "Cooked beans freeze well in their liquid"
+      pantry: "Canned: about 12 months unopened; dried: 6 to 12 months in a sealed container (older beans take longer to cook)"
+      src: ["tamu", "fsg"]
+    prep: "Rinse canned beans to remove extra salt. Dried beans: soak overnight, drain, then boil hard for at least 30 minutes and simmer until tender. Mash for refried beans."
+  - id: "kidney-beans"
+    name: "Kidney beans"
+    group: "legumes"
+    emoji: "🫘"
+    items: ["kidney-beans", "dried-kidney-beans"]
+    choose: "Dark or light red kidney beans work the same in chili."
+    store:
+      fridge: "Cooked or opened: move to a covered container and use within 3 to 4 days"
+      freezer: "Cooked beans freeze well in their liquid"
+      pantry: "Canned: about 12 months unopened; dried: 6 to 12 months in a sealed container (older beans take longer to cook)"
+      src: ["tamu", "fsg"]
+    prep: "Rinse canned beans. Raw or undercooked kidney beans can make you sick: soak dried beans, then boil them hard for at least 30 minutes; slow cookers alone don't get them hot enough."
+  - id: "chickpeas"
+    name: "Chickpeas"
+    group: "legumes"
+    emoji: "🧆"
+    items: ["chickpeas"]
+    choose: "Also called garbanzo beans."
+    store:
+      fridge: "Cooked or opened: move to a covered container and use within 3 to 4 days"
+      freezer: "Cooked beans freeze well in their liquid"
+      pantry: "Canned: about 12 months unopened; dried: 6 to 12 months in a sealed container (older beans take longer to cook)"
+      src: ["tamu", "fsg"]
+    prep: "Rinse and pat dry, then roast at 425°F until crunchy, blend into hummus, or simmer in curries and soups."
+  - id: "white-beans"
+    name: "White beans"
+    group: "legumes"
+    emoji: "🫘"
+    items: ["white-beans"]
+    choose: "Cannellini, great northern and navy beans swap for one another."
+    store:
+      fridge: "Cooked or opened: move to a covered container and use within 3 to 4 days"
+      freezer: "Cooked beans freeze well in their liquid"
+      pantry: "Canned: about 12 months unopened; dried: 6 to 12 months in a sealed container (older beans take longer to cook)"
+      src: ["tamu", "fsg"]
+    prep: "Rinse and add to soups, chili, pasta and greens; mash with garlic for a dip."
+  - id: "lentils"
+    name: "Lentils"
+    group: "legumes"
+    emoji: "🟤"
+    items: ["lentils"]
+    choose: "Brown and green lentils hold their shape; red lentils cook down soft."
+    store:
+      fridge: "Cooked: 3 to 4 days, like other leftovers"
+      freezer: "Cooked lentils freeze well"
+      pantry: "Sealed, in a cool, dry place, like dried beans"
+      src: ["fsg"]
+    prep: "No soaking needed. Pick out any small stones, rinse, and simmer 20 to 30 minutes."
+  - id: "split-peas"
+    name: "Split peas"
+    group: "legumes"
+    emoji: "🟢"
+    items: ["split-peas"]
+    choose: "Green and yellow split peas cook the same way."
+    store:
+      fridge: "Cooked: 3 to 4 days, like other leftovers"
+      pantry: "Sealed, in a cool, dry place, like dried beans"
+      src: ["fsg"]
+    prep: "No soaking needed. Rinse and simmer about 45 minutes to an hour until they fall apart into soup."
+  - id: "edamame"
+    name: "Edamame"
+    group: "legumes"
+    emoji: "🫛"
+    items: ["frozen-edamame"]
+    choose: "Buy frozen, shelled or in the pod."
+    store:
+      fridge: "Cooked: 3 to 4 days, like other leftovers"
+      freezer: "Keep frozen until using"
+      src: ["fsg"]
+    prep: "Boil or microwave 3 to 5 minutes and salt lightly. Toss shelled edamame into stir-fries, salads and rice."
+  - id: "tofu"
+    name: "Tofu"
+    group: "legumes"
+    emoji: "🧊"
+    items: ["tofu"]
+    choose: "Extra-firm holds its shape for stir-fries and baking; silken blends into smoothies and sauces."
+    store:
+      fridge: "By the package date; once opened, cover with fresh water and use within a few days"
+      freezer: "Freezing makes it chewier, which many cooks like"
+      src: []
+    prep: "Drain and press between towels for 15 minutes, cut into cubes, then bake or pan-fry until golden."
+  - id: "peanuts"
+    name: "Peanuts and peanut butter"
+    group: "nuts-seeds"
+    emoji: "🥜"
+    items: ["peanut-butter", "peanuts"]
+    choose: "Natural peanut butter (just peanuts and salt) separates; stir it well."
+    store:
+      pantry: "Peanut butter: 6 to 9 months unopened, 2 to 3 months opened; natural kinds keep better in the fridge"
+      src: ["tamu"]
+    prep: "Spread thinly for little kids. Use in sauces, smoothies, oatmeal and cookies. Peanuts are a major allergen."
+  - id: "almonds"
+    name: "Almonds"
+    group: "nuts-seeds"
+    emoji: "🌰"
+    items: ["almonds", "almond-butter", "almond-flour"]
+    choose: "Buy raw or roasted, whole, sliced or slivered."
+    store:
+      fridge: "6 months or more"
+      freezer: "About 1 year"
+      pantry: "3 to 4 months in a cool, dry cabinet"
+      tip: "Nuts taste bitter or like paint when they go rancid; toss them."
+      src: ["rutgers"]
+    prep: "Toast in a dry skillet over medium heat, stirring, for 3 to 5 minutes until fragrant. Whole nuts are a choking risk for young children; chop them finely or use nut butter thinly spread."
+  - id: "walnuts"
+    name: "Walnuts"
+    group: "nuts-seeds"
+    emoji: "🌰"
+    items: ["walnuts"]
+    choose: "Walnuts go stale fastest of the common nuts; keep them cold."
+    store:
+      fridge: "6 months or more"
+      freezer: "About 1 year"
+      pantry: "3 to 4 months in a cool, dry cabinet"
+      tip: "Nuts taste bitter or like paint when they go rancid; toss them."
+      src: ["rutgers"]
+    prep: "Toast in a dry skillet over medium heat, stirring, for 3 to 5 minutes until fragrant. Whole nuts are a choking risk for young children; chop them finely or use nut butter thinly spread."
+  - id: "pecans"
+    name: "Pecans"
+    group: "nuts-seeds"
+    emoji: "🌰"
+    items: ["pecans"]
+    choose: "Look for plump, evenly colored halves."
+    store:
+      fridge: "6 months or more"
+      freezer: "About 1 year"
+      pantry: "3 to 4 months in a cool, dry cabinet"
+      tip: "Nuts taste bitter or like paint when they go rancid; toss them."
+      src: ["rutgers"]
+    prep: "Toast in a dry skillet over medium heat, stirring, for 3 to 5 minutes until fragrant. Whole nuts are a choking risk for young children; chop them finely or use nut butter thinly spread."
+  - id: "cashews"
+    name: "Cashews"
+    group: "nuts-seeds"
+    emoji: "🌰"
+    items: ["cashews"]
+    choose: "Raw cashews blend into creamy sauces; roasted ones are for snacking."
+    store:
+      fridge: "6 months or more"
+      freezer: "About 1 year"
+      pantry: "3 to 4 months in a cool, dry cabinet"
+      tip: "Nuts taste bitter or like paint when they go rancid; toss them."
+      src: ["rutgers"]
+    prep: "Toast in a dry skillet over medium heat, stirring, for 3 to 5 minutes until fragrant. Whole nuts are a choking risk for young children; chop them finely or use nut butter thinly spread."
+  - id: "sunflower-seeds"
+    name: "Sunflower seeds"
+    group: "nuts-seeds"
+    emoji: "🌻"
+    items: ["sunflower-seeds", "sunflower-butter"]
+    choose: "Shelled seeds are easiest for cooking. Sunflower butter is a common swap in nut-free schools."
+    store:
+      fridge: "Refrigerate or freeze to keep them fresh longer"
+      pantry: "A cool, dry place for a few months"
+      src: ["ndsu"]
+    prep: "Toast lightly and sprinkle on salads, oatmeal and yogurt, or bake into granola and bread."
+  - id: "pumpkin-seeds"
+    name: "Pumpkin seeds"
+    group: "nuts-seeds"
+    emoji: "🎃"
+    items: ["pumpkin-seeds"]
+    choose: "Hulled green pumpkin seeds are also called pepitas."
+    store:
+      fridge: "Refrigerate or freeze to keep them fresh longer"
+      pantry: "A cool, dry place for a few months"
+      src: ["ndsu"]
+    prep: "Toast in a dry skillet until they puff and pop. Save seeds from a carving pumpkin, rinse, dry and roast."
+  - id: "sesame"
+    name: "Sesame seeds and tahini"
+    group: "nuts-seeds"
+    emoji: "⚪"
+    items: ["sesame-seeds", "tahini"]
+    choose: "Tahini is ground sesame paste; stir it well. Sesame is a major allergen."
+    store:
+      fridge: "Refrigerate or freeze to keep them fresh longer"
+      pantry: "A cool, dry place for a few months"
+      src: ["ndsu"]
+    prep: "Toast seeds briefly; they burn fast. Tahini goes into hummus, dressings and sauces."
+  - id: "chia-seeds"
+    name: "Chia seeds"
+    group: "nuts-seeds"
+    emoji: "⚫"
+    items: ["chia-seeds"]
+    choose: "Black and white chia are the same inside."
+    store:
+      fridge: "Refrigerate or freeze to keep them fresh longer"
+      pantry: "A cool, dry place"
+      src: ["ndsu"]
+    prep: "Stir into liquid and wait 15 minutes to thicken into pudding, or add to oatmeal, smoothies and jam."
+  - id: "flaxseed"
+    name: "Flaxseed"
+    group: "nuts-seeds"
+    emoji: "🟫"
+    items: ["flaxseed"]
+    choose: "Ground flaxseed is easier to digest than whole seeds."
+    store:
+      fridge: "Ground flax: refrigerate or freeze; it goes stale faster"
+      pantry: "Whole seeds: a cool, dry place"
+      src: ["ndsu"]
+    prep: "Stir into oatmeal, smoothies and muffins. 1 tablespoon ground flax plus 3 tablespoons water stands in for 1 egg in many baked goods."
+  - id: "onions"
+    name: "Onions"
+    group: "herbs"
+    emoji: "🧅"
+    items: ["onion", "sweet-onion", "red-onion"]
+    choose: "Pick firm, dry onions with papery skins and no sprouts or soft spots. Yellow onions are all-purpose; red are mild raw."
+    store:
+      fridge: "Cut: covered, a few days"
+      freezer: "Chopped onion freezes well for cooking"
+      pantry: "2 to 4 weeks in a cool, dry, airy place"
+      src: ["tamu", "rutgers"]
+    prep: "Cut in half through the root, peel, then slice or dice with the flat side down. Cook slowly to sweeten."
+  - id: "green-onions"
+    name: "Green onions"
+    group: "herbs"
+    emoji: "🌱"
+    items: ["green-onions", "chives"]
+    choose: "Choose bright green tops and firm white ends."
+    store:
+      fridge: "1 to 2 weeks"
+      freezer: "3 to 6 months, sliced"
+      src: ["rutgers"]
+    prep: "Slice the white and green parts. Add the whites early and the greens at the end."
+  - id: "garlic"
+    name: "Garlic"
+    group: "herbs"
+    emoji: "🧄"
+    items: ["garlic", "minced-garlic-jar"]
+    choose: "Heads should be firm and heavy with tight, dry skin."
+    store:
+      fridge: "Jarred minced garlic: refrigerate after opening"
+      pantry: "Whole heads: months in a cool, dry, airy place"
+      src: ["tamu", "ndsu"]
+    prep: "Crush a clove under the flat of a knife to loosen the skin. Add it to hot oil for 30 seconds; it burns quickly."
+  - id: "ginger"
+    name: "Fresh ginger"
+    group: "herbs"
+    emoji: "🫚"
+    items: ["ginger"]
+    choose: "Choose firm, smooth pieces that snap cleanly."
+    store:
+      fridge: "Several weeks, wrapped"
+      freezer: "Months; grate it straight from frozen"
+      src: []
+    prep: "Scrape off the skin with a spoon, then grate or mince."
+  - id: "shallots"
+    name: "Shallots and leeks"
+    group: "herbs"
+    emoji: "🧅"
+    items: ["shallot", "leek"]
+    choose: "Shallots should be firm and dry; leeks should have crisp white stalks."
+    store:
+      fridge: "Leeks: about 1 week"
+      freezer: "Leeks: 3 to 6 months"
+      pantry: "Shallots: a cool, dry place, like onions"
+      src: ["rutgers"]
+    prep: "Leeks hide grit: slice, then swish in a bowl of water and lift out. Mince shallots for dressings and sauces."
+  - id: "cilantro"
+    name: "Cilantro"
+    group: "herbs"
+    emoji: "🌿"
+    items: ["cilantro"]
+    choose: "Pick a bright green bunch with no slimy or yellow leaves."
+    store:
+      fridge: "1 to 3 days for best quality; stand the stems in a glass of water"
+      src: ["rutgers"]
+    prep: "Rinse and dry. The tender stems are full of flavor; chop them with the leaves."
+  - id: "parsley"
+    name: "Parsley"
+    group: "herbs"
+    emoji: "🌿"
+    items: ["parsley"]
+    choose: "Flat-leaf parsley has more flavor; curly is milder."
+    store:
+      fridge: "A few days or more, stems in water or wrapped in a damp towel"
+      src: ["rutgers"]
+    prep: "Rinse, dry well, and chop. Stir into dishes at the end for fresh flavor."
+  - id: "basil"
+    name: "Basil"
+    group: "herbs"
+    emoji: "🌿"
+    items: ["basil", "pesto"]
+    choose: "Look for perky, bright leaves with no dark spots."
+    store:
+      counter: "Stems in a glass of water, out of the sun, for a day or two; cold darkens the leaves"
+      src: []
+    prep: "Tear or slice just before using. Blend extra into pesto and freeze it."
+    seasons: "Summer."
+  - id: "dill"
+    name: "Dill"
+    group: "herbs"
+    emoji: "🌿"
+    items: ["dill"]
+    choose: "Choose feathery, bright green fronds."
+    store:
+      fridge: "A few days, wrapped in a damp towel in a bag"
+      src: []
+    prep: "Snip with scissors. Great with fish, potatoes, cucumbers, eggs and yogurt sauces."
+    seasons: "Late spring and summer."
+  - id: "rosemary"
+    name: "Rosemary and thyme"
+    group: "herbs"
+    emoji: "🌿"
+    items: ["rosemary", "thyme"]
+    choose: "Woody herbs should look fresh and green, not dry."
+    store:
+      fridge: "About 1 to 2 weeks, wrapped in a damp towel in a bag"
+      src: []
+    prep: "Strip leaves off the stems by pulling against the grain. Use with roasts, potatoes, chicken and beans."
+  - id: "mint"
+    name: "Mint"
+    group: "herbs"
+    emoji: "🌿"
+    items: ["mint"]
+    choose: "Pick bright leaves with no black spots."
+    store:
+      fridge: "A few days, wrapped in a damp towel in a bag"
+      src: []
+    prep: "Tear into fruit salads, water and yogurt, or chop into peas and lamb."
+    seasons: "Summer."

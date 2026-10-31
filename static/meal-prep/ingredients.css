@@ -1,0 +1,50 @@
+/* Meal Prep: the "Use it up" pages (/meal-prep/ingredients/) and the hub's "What are you looking for?" cards.
+   Builds on meals.css and the .hs colors from homeschool/hs.css. */
+.mi-hero::after{content:"🥕🍗🍋"!important}
+.mi-r{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+.mi-store{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:.35rem .8rem;margin:.2rem 0 .7rem}
+.mi-store dt{font-weight:700;color:var(--g)}
+.mi-store dd{margin:0}
+.mi-nut{display:table;width:100%;border-collapse:collapse;font-size:.93rem}
+.mi-nut th,.mi-nut td{padding:.28rem .3rem;border-bottom:1px solid var(--line);text-align:left;font-weight:400}
+.mi-nut th{font-weight:600}
+.mi-nut tr.sub th{padding-left:1.1rem;font-weight:400}
+.mi-nut td{text-align:right;white-space:nowrap}
+.mi-nut td.dv{color:var(--muted);width:3.2rem}
+.mi-list{list-style:none;margin:.5rem 0;padding:0;display:grid;gap:.5rem}
+.mi-list .mp-rcard{width:100%}
+.mi-rec[hidden],.mi-list[hidden],.mi-moreh[hidden]{display:none}
+.mi-moreh{font-size:.95rem;margin:1rem 0 .2rem;color:var(--muted)}
+.mi-tags{display:flex!important;flex-wrap:wrap;gap:.25rem;margin-top:.3rem!important}
+.mi-tags span{border:1px solid var(--line);border-radius:999px;padding:0 .45rem;font-size:.74rem;background:var(--paper)}
+.mi-tags .mi-c3{background:#00562f;color:#fff;border-color:#00562f}
+.mi-tags .mi-c2{border-color:#b8963e;color:var(--ink)}
+html[data-theme="dark"] .mi-tags .mi-c3{background:#6cc79a;color:#0f1a14;border-color:#6cc79a}
+.mi-pick{border-left:4px solid var(--gold)}
+.mi-picks{display:flex;flex-wrap:wrap;gap:.6rem;align-items:flex-end;margin:.4rem 0 .6rem}
+.mi-pl{display:flex;flex-direction:column;gap:.2rem;flex:1 1 13rem;min-width:0;font-size:.85rem;color:var(--muted);font-weight:600}
+.mi-pl select{width:100%}
+.mi-jump{margin:.4rem 0 .8rem}
+.mi-grp{margin:1.1rem 0}
+.mi-grp h3{margin:.2rem 0 .3rem}
+.mi-grp[hidden],.mi-card[hidden]{display:none}
+.mi-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.5rem}
+@media (max-width:520px){.mi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.mi-card{padding:.5rem .55rem;gap:.4rem}.mi-card b{font-size:.92rem}}
+.mi-card{align-items:center}
+.mi-card .mp-emo{font-size:1.5rem}
+@media (max-width:820px){.mi-r{grid-template-columns:minmax(0,1fr)}}
+
+/* the hub: "What are you looking for?" */
+.mh-ask{margin:1.2rem 0 1.6rem}
+.mh-ask>h2{margin-bottom:.2rem}
+.mh-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.8rem;margin:.7rem 0}
+.mh-card{display:flex;flex-direction:column;gap:.35rem;background:var(--card);border:1px solid var(--line);border-top:4px solid #00562f;border-radius:14px;padding:.85rem 1rem .9rem;min-width:0}
+html:not([data-theme="dark"]) .mh-card{border-left:1.5px solid #9dbba9;border-right:1.5px solid #9dbba9;border-bottom:1.5px solid #9dbba9}
+html[data-theme="dark"] .mh-card{border-top-color:#6cc79a}
+.mh-card h3{margin:0;font-size:1.08rem;display:flex;gap:.45rem;align-items:center}
+.mh-card h3 a{color:var(--g);text-decoration:none;box-shadow:none}
+.mh-card h3 a:hover{text-decoration:underline}
+.mh-card .mh-emo{font-size:1.5rem;line-height:1}
+.mh-card p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.45}
+.mh-card .mh-links{display:flex;flex-wrap:wrap;gap:.3rem .7rem;margin-top:auto;padding-top:.3rem;font-size:.88rem}
+.mh-card .mh-links a{white-space:nowrap}

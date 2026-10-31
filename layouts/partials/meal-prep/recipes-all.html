@@ -1,0 +1,11 @@
+{{- /* Every built-in recipe as one list: data/meals/recipes.json first, then each data/meals/recipes/<group>.json
+   (same schema, {recipes:[…]}), files in name order. Call with partialCached "meal-prep/recipes-all.html" "r".
+   Hugo merges the folder into site.Data.meals.recipes next to the file's own keys (version, note, recipes). */ -}}
+{{- $all := slice -}}
+{{- with site.Data.meals -}}{{- with .recipes -}}
+  {{- range .recipes }}{{ $all = $all | append . }}{{ end -}}
+  {{- range $k, $v := . -}}
+    {{- if and (reflect.IsMap $v) (isset $v "recipes") -}}{{- range $v.recipes }}{{ $all = $all | append . }}{{ end -}}{{- end -}}
+  {{- end -}}
+{{- end -}}{{- end -}}
+{{- return $all -}}

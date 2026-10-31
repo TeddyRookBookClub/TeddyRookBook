@@ -1,6 +1,6 @@
-{{/* One page per recipe, from data/meals/recipes.json */}}
-{{ with site.Data.meals }}{{ with .recipes }}
-  {{ range .recipes }}
+{{/* One page per recipe, from data/meals/recipes.json and data/meals/recipes/*.json */}}
+{{ with partialCached "meal-prep/recipes-all.html" "r" }}
+  {{ range . }}
     {{ $.AddPage (dict
       "kind" "page"
       "path" .id
@@ -10,4 +10,4 @@
       "dates" (dict "date" (time.AsTime "2026-10-25"))
     ) }}
   {{ end }}
-{{ end }}{{ end }}
+{{ end }}

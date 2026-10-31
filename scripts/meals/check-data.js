@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 // Checks the Meal Prep data in data/meals/: schema, recipe ingredients in the catalog, units convertible,
 // derived fields, guides and sources, nutrition present and per-serving totals sane.
-// Usage: node scripts/meals/check-data.js [--allow-pending] [--totals] [site_dir]
+// Recipes come from recipes.json and every data/meals/recipes/<group>.json; ids must be unique across all of them.
+// Usage: node scripts/meals/check-data.js [--allow-pending] [--totals] [--strict] [site_dir]
 //   --allow-pending  nutrition not fetched yet is a warning instead of an error
 //   --totals         print per-serving nutrition for every recipe
+//   --strict         ingredient coverage under 5 recipes (scripts/meals/coverage.js) is an error, not a warning
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -21,7 +23,8 @@ const warn = m => warnings.push(m);
 
 const meta = load('meta.json');
 const catalog = load('catalog.json').items;
-const recipes = load('recipes.json').recipes;
+const RL = require('./load-recipes').loadRecipes(SITE);
+const recipes = RL.recipes; // recipes.json plus data/meals/recipes/<group>.json
 const guides = {};
 for (const f of fs.readdirSync(D('guides')).filter(f => f.endsWith('.json'))) {
   const g = JSON.parse(fs.readFileSync(D('guides/' + f), 'utf8'));
@@ -115,7 +118,8 @@ for (const it of catalog) {
 
 // ---------- recipes ----------
 const T = meta.tags;
-const rIds = new Set();
+const rIds = new Map();
+for (const m of RL.problems) err('recipe files: ' + m);
 const SAFE_TEMPS = new Set([140, 145, 160, 165]);
 const BANNED = /\b(genuinely|honestly|straightforward|book club)\b/i;
 const BRANDS = /\b(Velveeta|Rotel|Ro-Tel|Bisquick|Crisco|Pam|Kraft|Heinz|Hellmann|Morton|Diamond Crystal|Old Bay|Tabasco|Cheerios|Quaker|Pillsbury|Jell-O|Nutella|Sriracha|Frank's|Lawry|McCormick|Philadelphia|Ritz|Goldfish|Cool Whip|Spam|Ragu|Prego|Kikkoman|Hidden Valley|Lipton|Campbell)\b/i;
@@ -123,8 +127,8 @@ const totals = [];
 for (const r of recipes) {
   const w = `recipe ${r.id}`;
   if (!ID_RE.test(r.id || '')) err(`${w}: bad id`);
-  if (rIds.has(r.id)) err(`${w}: duplicate id`);
-  rIds.add(r.id);
+  if (rIds.has(r.id)) err(`${w}: duplicate id (in ${rIds.get(r.id)} and ${r._file})`);
+  rIds.set(r.id, r._file);
   for (const k of ['name', 'emoji', 'summary', 'serving_size']) if (!r[k]) err(`${w}: missing ${k}`);
   if (!(Number.isInteger(r.servings) && r.servings > 0 && r.servings <= 24)) err(`${w}: bad servings`);
   for (const m of r.meal) if (!T.meal.includes(m)) err(`${w}: bad meal ${m}`);
@@ -331,9 +335,21 @@ if (fs.existsSync(gmPath)) {
   console.log(`garden-map: ${gm.items.length} items, ${Object.keys(gm.crops).length} crops`);
 }
 
+// ---------- ingredient coverage (data/meals/ingredients.yaml; scripts/meals/coverage.js) ----------
+if (fs.existsSync(D('ingredients.yaml'))) {
+  const STRICT = args.includes('--strict');
+  try {
+    const C = require('./coverage').coverage(SITE);
+    for (const m of C.problems) err('ingredients.yaml: ' + m);
+    const low = C.rows.filter(x => x.n < C.MIN);
+    for (const x of low) (STRICT ? err : warn)(`coverage: ${x.id} has ${x.n} of ${C.MIN} recipes`);
+    console.log(`ingredients: ${C.rows.length}, with ${C.MIN}+ recipes: ${C.rows.length - low.length}, under ${C.MIN}: ${low.length} (node scripts/meals/coverage.js for the list)`);
+  } catch (e) { err('coverage check failed: ' + e.message); }
+}
+
 // ---------- report ----------
 const pending = catalog.filter(i => !i.nutrition).length;
-console.log(`catalog: ${catalog.length} items (${pending} without nutrition), recipes: ${recipes.length}, guides: ${Object.keys(guides).length}`);
+console.log(`catalog: ${catalog.length} items (${pending} without nutrition), recipes: ${recipes.length} (${RL.files.filter(f => f.count).map(f => f.file + ' ' + f.count).join(', ')}), guides: ${Object.keys(guides).length}`);
 if (SHOW_TOTALS) for (const [id, g, s] of totals) console.log(`  ${id.padEnd(30)} ${g.toFixed(0).padStart(4)} g  ${s.kcal.toFixed(0).padStart(4)} kcal  P ${s.protein.toFixed(0)}  F ${s.fat.toFixed(0)}  C ${s.carb.toFixed(0)}  Na ${s.sodium.toFixed(0)} mg`);
 const shownWarn = warnings.length > 40 ? warnings.slice(0, 40).concat([`... and ${warnings.length - 40} more warnings`]) : warnings;
 for (const m of shownWarn) console.log('warn: ' + m);

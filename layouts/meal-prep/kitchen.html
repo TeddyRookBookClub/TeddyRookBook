@@ -1,0 +1,33 @@
+{{ define "main" }}
+{{- /* Kitchen know-how hub (/meal-prep/kitchen/): one card per page in data/meals/kitchen/pages.json, each with a drawing from tools.json. */ -}}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/kitchen/kitchen.css" | relURL }}?v={{ (os.Stat "static/meal-prep/kitchen/kitchen.css").ModTime.Unix }}">
+{{ $K := site.Data.meals.kitchen }}
+{{ $tools := dict }}{{ range $K.tools.groups }}{{ range .tools }}{{ $tools = merge $tools (dict .id .) }}{{ end }}{{ end }}
+<div class="hs mp kx">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Kitchen know-how")) }}
+  <header class="hs-hero mp-hero">
+    <p class="hs-eyebrow">Meal Prep</p>
+    <h1><span aria-hidden="true">🧑‍🍳</span> Kitchen Know-How</h1>
+    <p>Everything around the cooking: what the tools are and how to care for them, seasoning cast iron, keeping the kitchen clean, food safety at home, and how children can help at every age. Each page lists its sources.</p>
+  </header>
+  <h2 class="hs-sec">What are you looking for?</h2>
+  <ul class="k-hub">
+    {{ range $K.pages }}
+    <li><a href="{{ .u | relURL }}">{{ with index $tools .pic }}<span class="k-ico"><svg class="k-pic" viewBox="0 0 120 80" aria-hidden="true">{{ .svg | safeHTML }}</svg></span>{{ end }}<span><span class="k-q">{{ .q }}</span><b>{{ .t }}</b><small>{{ .d }}</small></span></a></li>
+    {{ end }}
+  </ul>
+  <section class="hs-sec hs-note">
+    <h2>Quick answers</h2>
+    <ul>
+      <li>Fridge at <b>40°F or below</b>, freezer at <b>0°F or below</b>. <a href="{{ "meal-prep/kitchen/food-safety/#cold" | relURL }}">More</a></li>
+      <li>Refrigerate leftovers within <b>2 hours</b> and eat them within <b>3 to 4 days</b>. <a href="{{ "meal-prep/kitchen/food-safety/#keeps" | relURL }}">How long food keeps</a></li>
+      <li>A little dish soap is fine on seasoned cast iron. Dry it right away and wipe on a thin coat of oil. <a href="{{ "meal-prep/kitchen/cookware/#everyday" | relURL }}">Cast iron care</a></li>
+      <li><b>Never mix bleach</b> with ammonia, vinegar or any other cleaner. <a href="{{ "meal-prep/kitchen/cleaning/#bleach" | relURL }}">Using bleach safely</a></li>
+      <li>3 teaspoons = 1 tablespoon; 16 tablespoons = 1 cup. <a href="{{ "meal-prep/kitchen/know-how/#measure" | relURL }}">Measurements</a></li>
+    </ul>
+    <p>Safe cooking temperatures are in <a href="{{ "meal-prep/guides/food-safety/" | relURL }}">Food Safety Basics</a>, and more guides are in <a href="{{ "meal-prep/guides/" | relURL }}">Kitchen guides</a>.</p>
+  </section>
+</div>
+{{ end }}

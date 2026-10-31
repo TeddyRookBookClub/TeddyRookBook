@@ -1,0 +1,68 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/ingredients.css" | relURL }}?v={{ (os.Stat "static/meal-prep/ingredients.css").ModTime.Unix }}">
+{{- /* /meal-prep/ingredients/: every "Use it up" ingredient by group, a search, and the "What can I make with…?" picker */ -}}
+{{ $m := site.Data.meals }}{{ $Y := $m.ingredients }}
+{{ $all := partialCached "meal-prep/recipes-all.html" "r" }}
+{{ $U := partialCached "meal-prep/ing-uses.html" "u" }}
+{{ $cat := partialCached "meal-prep/catdict.html" "c" }}
+{{- /* picker data: recipes {n name, e emoji, u url, t tags} and uses per ingredient {r recipe index, s share in thousandths} */ -}}
+{{ $ri := dict }}{{ $rl := slice }}{{ range $i, $r := $all }}{{ $ri = merge $ri (dict $r.id $i) }}{{ $t := $r.tags | default slice }}{{ if or (eq $r.protein "vegetarian") (in ($r.diet | default slice) "vegetarian") }}{{ $t = $t | append "vegetarian" }}{{ end }}{{ $rl = $rl | append (dict "n" $r.name "e" $r.emoji "u" (printf "meal-prep/recipes/%s/" $r.id | relURL) "t" (delimit $t " ")) }}{{ end }}
+{{ $pu := dict }}{{ range $Y.ingredients }}{{ $l := slice }}{{ range index $U .id }}{{ $l = $l | append (dict "r" (index $ri .id) "s" (math.Round (mul 1000 .share))) }}{{ end }}{{ $pu = merge $pu (dict .id $l) }}{{ end }}
+{{ $ings := slice }}{{ range $Y.ingredients }}{{ $ings = $ings | append (dict "id" .id "n" .name) }}{{ end }}
+<div class="hs mp" id="mp-ings">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Use it up")) }}
+  <header class="hs-hero mp-hero mi-hero">
+    <p class="hs-eyebrow">Meal Prep · Use it up</p>
+    <h1>Use it up</h1>
+    <p>Bought too much, or the garden came in all at once? Pick an ingredient to see how to choose it, keep it and prep it, and family recipes that use a good amount of it. {{ len $Y.ingredients }} everyday foods, from chicken and rice to zucchini and yogurt.</p>
+    <div class="mp-cta hs-noprint"><a class="hs-btn big" href="#mi-pick">🧺 What can I make with…?</a></div>
+  </header>
+
+  <section class="mp-box mi-pick hs-noprint" id="mi-pick" aria-labelledby="mi-pickh">
+    <h2 id="mi-pickh">🧺 What can I make with…?</h2>
+    <p>Choose up to three things you have. You’ll get the recipes that use the most of them.</p>
+    <div class="mi-picks">
+      {{ range seq 3 }}
+      <label class="mi-pl"><span>{{ cond (eq . 1) "I have" "and" }}</span>
+        <select data-pick="{{ . }}" aria-label="Ingredient {{ . }}"><option value="">{{ cond (eq . 1) "Choose an ingredient" "(optional)" }}</option>{{ range $Y.groups }}{{ $g := .id }}<optgroup label="{{ .name }}">{{ range where $Y.ingredients "group" $g }}<option value="{{ .id }}">{{ .name }}</option>{{ end }}</optgroup>{{ end }}</select>
+      </label>
+      {{ end }}
+      <button type="button" class="hs-btn ghost" id="mi-clear" hidden>Clear</button>
+    </div>
+    <div class="mp-chips" role="group" aria-label="Show only">
+      <button type="button" class="mp-chipf" data-pf="quick" aria-pressed="false">⚡ Quick</button><button type="button" class="mp-chipf" data-pf="kid-friendly" aria-pressed="false">🧒 Kid-friendly</button><button type="button" class="mp-chipf" data-pf="vegetarian" aria-pressed="false">🥕 Vegetarian</button>
+    </div>
+    <p class="hs-small" id="mi-pcount" aria-live="polite"></p>
+    <ol class="mi-list" id="mi-pout"></ol>
+    <noscript><p class="hs-small">The picker needs JavaScript. Every ingredient below has its own list of recipes.</p></noscript>
+  </section>
+  <script type="application/json" id="mi-data">{{ dict "ings" $ings "recipes" $rl "uses" $pu | jsonify | safeJS }}</script>
+
+  <section class="hs-sec" aria-labelledby="mi-allh">
+    <h2 id="mi-allh">Find an ingredient</h2>
+    <div class="mp-filterbar hs-noprint"><input type="search" id="mi-q" placeholder="Search: chicken, zucchini, rice…" aria-label="Search ingredients"></div>
+    <p class="hs-small" id="mi-qcount" aria-live="polite"></p>
+    <nav class="mp-glinks mi-jump hs-noprint" aria-label="Groups">{{ range $Y.groups }}<a class="mp-glink" href="#g-{{ .id }}"><span aria-hidden="true">{{ .emoji }}</span> {{ .name }}</a>{{ end }}</nav>
+    {{ range $Y.groups }}{{ $g := . }}
+    <div class="mi-grp" id="g-{{ .id }}">
+      <h3>{{ .emoji }} {{ .name }}</h3>
+      <div class="mp-rgrid mi-grid">
+        {{ range where $Y.ingredients "group" $g.id }}{{ $n := len (index $U .id) }}
+        {{ $al := slice }}{{ range .items }}{{ with index $cat . }}{{ $al = $al | append (lower .name) }}{{ range .aliases }}{{ $al = $al | append (lower .) }}{{ end }}{{ end }}{{ end }}
+        <a class="mp-rcard mi-card" href="{{ printf "meal-prep/ingredients/%s/" .id | relURL }}" data-q="{{ lower .name }} {{ delimit $al " " }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ $n }} {{ cond (eq $n 1) "recipe" "recipes" }}</small></span></a>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+    <p class="mp-empty" id="mi-qnone" hidden>No ingredient matches. Try a shorter word, or <a href="{{ "meal-prep/recipes/" | relURL }}">search the recipes</a>.</p>
+  </section>
+
+  <section class="hs-sec hs-note">
+    <h2>How the recipes are picked</h2>
+    <p>A recipe counts for an ingredient when it uses a real amount of it, not just a garnish or a pinch: at least about 1 ounce (30 g), or a little less for herbs, garlic, nuts and seeds. On each page the recipes where the ingredient makes up more of the dish come first. Storage times come from USDA, FDA and university extension guides, listed on each page.</p>
+  </section>
+</div>
+<script src="{{ "meal-prep/ingredients.js" | relURL }}?v={{ (os.Stat "static/meal-prep/ingredients.js").ModTime.Unix }}" defer></script>
+{{ end }}

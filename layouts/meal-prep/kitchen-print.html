@@ -1,0 +1,66 @@
+{{ define "main" }}
+{{- /* Kitchen printables (/meal-prep/kitchen/print/): four cards built from the kitchen data (cleaning routines, kids' jobs and the
+   measurements table) plus the cast iron card in data/meals/kitchen/print.json and the temperatures from data/meals/guides/food-safety.json.
+   "Print this card" (kitchen.js) sets body[data-kprint] so print CSS shows only that card; "Print all" prints one card per page. */ -}}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/kitchen/kitchen.css" | relURL }}?v={{ (os.Stat "static/meal-prep/kitchen/kitchen.css").ModTime.Unix }}">
+{{ $K := site.Data.meals.kitchen }}{{ $P := $K.print }}
+{{ $routines := index (where $K.cleaning.sections "id" "routines") 0 }}
+{{ $measure := index (where (index $K "know-how").sections "id" "measure") 0 }}
+{{ $temps := index site.Data.meals.guides "food-safety" }}
+{{ $ttab := (index (where $temps.sections "id" "temperatures") 0).table }}
+<div class="hs mp kx">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Kitchen know-how" "u" "meal-prep/kitchen/") (dict "t" "Printables")) }}
+  <header class="hs-hero mp-hero">
+    <p class="hs-eyebrow">Meal Prep · Kitchen know-how</p>
+    <h1><span aria-hidden="true">🖨️</span> Kitchen Printables</h1>
+    <p>Four cards for the fridge or a cabinet door. Print one, or print all four, one to a page. In the print window you can also choose “Save as PDF.”</p>
+  </header>
+  <div class="k-pbar hs-noprint"><button type="button" class="k-gbtn2" data-kprint="all">🖨️ Print all four</button></div>
+
+  <section class="k-pcard" id="k-clean" aria-labelledby="k-clean-h">
+    <header><h2 id="k-clean-h">🧽 Kitchen cleaning schedule</h2><button type="button" class="k-gbtn2 hs-noprint" data-kprint="k-clean">Print this card</button></header>
+    <div class="k-pcols">
+      {{ range $routines.cards }}<div><h3>{{ .h }}</h3><table><tbody>{{ range .list }}<tr><td style="width:1.6rem"><span class="k-box" aria-hidden="true"></span></td><td>{{ . }}</td></tr>{{ end }}</tbody></table></div>{{ end }}
+    </div>
+    <p><b>Never mix bleach</b> with ammonia, vinegar or any other cleaner. Clean first, then sanitize. Keep cleaners out of reach of children.</p>
+    <p class="k-pfoot">Teddy Rook Book · teddyrookbook.com/meal-prep/kitchen/cleaning/ · Sources: CDC, USDA, UF/IFAS and N.C. Cooperative Extension, EPA.</p>
+  </section>
+
+  <section class="k-pcard" id="k-iron" aria-labelledby="k-iron-h">
+    <header><h2 id="k-iron-h">🍳 Cast iron care card</h2><button type="button" class="k-gbtn2 hs-noprint" data-kprint="k-iron">Print this card</button></header>
+    <div class="k-pcols">
+      <div><h3>After every use</h3><ol>{{ range $P.castiron.every }}<li>{{ . }}</li>{{ end }}</ol></div>
+      <div><h3>Seasoning in the oven</h3><ol>{{ range $P.castiron.season }}<li>{{ . }}</li>{{ end }}</ol></div>
+      <div><h3>Rusty pan?</h3><ol>{{ range $P.castiron.rust }}<li>{{ . }}</li>{{ end }}</ol></div>
+      <div><h3>Remember</h3><ul>{{ range $P.castiron.remember }}<li>{{ . }}</li>{{ end }}</ul></div>
+    </div>
+    <p class="k-pfoot">Teddy Rook Book · teddyrookbook.com/meal-prep/kitchen/cookware/ · Sources: {{ delimit $P.castiron.src ", " }}.</p>
+  </section>
+
+  <section class="k-pcard" id="k-kids" aria-labelledby="k-kids-h">
+    <header><h2 id="k-kids-h">🧑‍🍳 Kids’ kitchen jobs by age</h2><button type="button" class="k-gbtn2 hs-noprint" data-kprint="k-kids">Print this card</button></header>
+    <p>Always with a grown-up in the kitchen. Wash hands first, hair back, handles turned in, oven mitts on.</p>
+    <div class="k-pcols">
+      {{ range $K.kids.sections }}{{ if .age }}{{ $a := .age }}<div><h3><span aria-hidden="true">{{ $a.emoji }}</span> {{ .h }}</h3><ul>{{ range first $P.kids_n $a.tasks }}<li>{{ . }}</li>{{ end }}</ul></div>{{ end }}{{ end }}
+    </div>
+    <p class="k-pfoot">Teddy Rook Book · teddyrookbook.com/meal-prep/kitchen/kids/ · Sources: Academy of Nutrition and Dietetics, University of Illinois Extension, UConn Extension 4-H.</p>
+  </section>
+
+  <section class="k-pcard" id="k-measure" aria-labelledby="k-measure-h">
+    <header><h2 id="k-measure-h">📏 Kitchen measurements</h2><button type="button" class="k-gbtn2 hs-noprint" data-kprint="k-measure">Print this card</button></header>
+    <div class="k-pcols">
+      <div><table><thead><tr>{{ range $measure.table.cols }}<th scope="col">{{ . }}</th>{{ end }}</tr></thead><tbody>{{ range $measure.table.rows }}<tr>{{ range $i, $c := . }}{{ if eq $i 0 }}<th scope="row">{{ $c }}</th>{{ else }}<td>{{ $c }}</td>{{ end }}{{ end }}</tr>{{ end }}</tbody></table></div>
+      <div>
+        <h3>Short forms</h3><p>t or tsp = teaspoon · T or Tbsp = tablespoon · c = cup · oz = ounce · lb = pound · g = gram · mL = milliliter</p>
+        <h3>Safe cooking temperatures</h3>
+        <table><tbody>{{ range $ttab.rows }}<tr><th scope="row">{{ index . 0 }}</th><td>{{ index . 1 }}{{ with index . 2 }}, rest {{ . }}{{ end }}</td></tr>{{ end }}</tbody></table>
+        <p>Fridge 40°F or below · Freezer 0°F or below · Refrigerate within 2 hours</p>
+      </div>
+    </div>
+    <p class="k-pfoot">Teddy Rook Book · teddyrookbook.com/meal-prep/kitchen/know-how/ · Sources: NIST; USDA Food Safety and Inspection Service.</p>
+  </section>
+</div>
+<script src="{{ "meal-prep/kitchen/kitchen.js" | relURL }}?v={{ (os.Stat "static/meal-prep/kitchen/kitchen.js").ModTime.Unix }}" defer></script>
+{{ end }}

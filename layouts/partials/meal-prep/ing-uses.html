@@ -1,0 +1,40 @@
+{{- /* For each ingredient in data/meals/ingredients.yaml, the recipes that use it as a meaningful ingredient, with its share
+   of the recipe's weight (how central it is). Same rules as scripts/meals/coverage.js: not optional, not "to taste",
+   not a garnish, and at least 30 g in the recipe (5 g for herbs and aromatics, 15 g for nuts and seeds).
+   Returns dict: ingredient id -> slice of dict {id, share}, unsorted. Call with partialCached "meal-prep/ing-uses.html" "u". */ -}}
+{{- $m := site.Data.meals -}}
+{{- $uses := dict -}}
+{{- with $m.ingredients -}}
+{{- $cat := partialCached "meal-prep/catdict.html" "c" -}}
+{{- $MASS := $m.meta.units.mass }}{{ $VOL := $m.meta.units.volume }}{{ $CUP := index $VOL "cup" -}}
+{{- $itemTo := dict }}{{ $min := dict -}}
+{{- range .ingredients -}}{{- $e := . -}}
+  {{- $min = merge $min (dict .id (cond (eq .group "herbs") 5.0 (cond (eq .group "nuts-seeds") 15.0 30.0))) -}}
+  {{- $uses = merge $uses (dict .id slice) -}}
+  {{- range .items }}{{ if not (isset $itemTo .) }}{{ $itemTo = merge $itemTo (dict . $e.id) }}{{ end }}{{ end -}}
+{{- end -}}
+{{- range partialCached "meal-prep/recipes-all.html" "r" -}}{{- $r := . -}}
+  {{- $total := 0.0 }}{{ $per := dict -}}
+  {{- range .ingredients -}}{{- $i := . -}}
+    {{- with index $cat $i.item -}}{{- $it := . -}}
+      {{- $u := $i.unit }}{{ $a := float ($i.amount | default 0) }}{{ $g := -1.0 -}}
+      {{- if isset $MASS $u }}{{ $g = mul $a (index $MASS $u) -}}
+      {{- else if isset $VOL $u }}{{ with $it.g_per_cup }}{{ $g = div (mul $a (mul (index $VOL $u) .)) $CUP }}{{ end -}}
+      {{- else if and $it.counts (isset $it.counts $u) }}{{ $g = mul $a (index $it.counts $u) }}{{ end -}}
+      {{- if ge $g 0.0 -}}
+        {{- if and (not $i.optional) (ne $i.in_nutrition false) }}{{ $total = add $total $g }}{{ end -}}
+        {{- $k := index $itemTo $i.item -}}
+        {{- if and $k (not $i.optional) (not $i.to_taste) (not (findRE `(?i)garnish` ($i.group | default ""))) (not (findRE `(?i)garnish` ($i.prep | default ""))) -}}
+          {{- $per = merge $per (dict $k (add (index $per $k | default 0.0) $g)) -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- range $k, $g := $per -}}
+    {{- if ge $g (index $min $k) -}}
+      {{- $uses = merge $uses (dict $k ((index $uses $k) | append (dict "id" $r.id "share" (cond (gt $total 0.0) (div $g $total) 0.0)))) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- end -}}
+{{- return $uses -}}

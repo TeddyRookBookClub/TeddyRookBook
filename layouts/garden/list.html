@@ -10,7 +10,7 @@
   {{ range $k, $v := .crops }}{{ $mealCrops = $mealCrops | append $k }}{{ end }}
   {{ $seen := dict }}
   {{ with site.Data.meals.scratch }}{{ range .recipes }}{{ $r := . }}{{ range .ingredients }}{{ if not .optional }}{{ with index $by .item }}{{ $k := . }}{{ $key := printf "%s|s|%s" $k $r.id }}{{ if not (index $seen $key) }}{{ $seen = merge $seen (dict $key true) }}{{ $cook = merge $cook (dict $k ((index $cook $k | default slice) | append (dict "s" 1 "u" (printf "meal-prep/scratch/%s/" $r.id | relURL) "n" $r.name "e" $r.emoji))) }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
-  {{ range site.Data.meals.recipes.recipes }}{{ $r := . }}{{ range .ingredients }}{{ if not .optional }}{{ with index $by .item }}{{ $k := . }}{{ $key := printf "%s|r|%s" $k $r.id }}{{ if not (index $seen $key) }}{{ $seen = merge $seen (dict $key true) }}{{ $cook = merge $cook (dict $k ((index $cook $k | default slice) | append (dict "u" (printf "meal-prep/recipes/%s/" $r.id | relURL) "n" $r.name "e" $r.emoji))) }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
+  {{ range partialCached "meal-prep/recipes-all.html" "r" }}{{ $r := . }}{{ range .ingredients }}{{ if not .optional }}{{ with index $by .item }}{{ $k := . }}{{ $key := printf "%s|r|%s" $k $r.id }}{{ if not (index $seen $key) }}{{ $seen = merge $seen (dict $key true) }}{{ $cook = merge $cook (dict $k ((index $cook $k | default slice) | append (dict "u" (printf "meal-prep/recipes/%s/" $r.id | relURL) "n" $r.name "e" $r.emoji))) }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
 {{ end }}
 <div class="hs gd" id="gd" data-units data-meals="{{ "meal-prep/plan/" | relURL }}">
   <nav class="hs-crumbs"><a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> › Food Garden Planner</nav>

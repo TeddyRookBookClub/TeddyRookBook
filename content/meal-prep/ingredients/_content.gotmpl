@@ -1,0 +1,16 @@
+{{/* One "Use it up" page per ingredient, from data/meals/ingredients.yaml */}}
+{{ with site.Data.meals.ingredients }}
+  {{ $src := dict }}{{ range .sources }}{{ $src = merge $src (dict .id .) }}{{ end }}
+  {{ range .ingredients }}
+    {{ $cr := slice }}
+    {{ range .store.src }}{{ with index $src . }}{{ $cr = $cr | append (dict "name" (printf "%s, %s" .title .publisher) "url" .url "what" "how long it keeps") }}{{ end }}{{ end }}
+    {{ $.AddPage (dict
+      "kind" "page"
+      "path" .id
+      "title" (printf "%s: how to use it up" .name)
+      "layout" "ingredient"
+      "params" (dict "ingredient" .id "credits" $cr "description" (printf "Extra %s? How to choose, store and prep it, family recipes that use it up, from-scratch and grow-it links, and nutrition per 100 g." (lower .name)))
+      "dates" (dict "date" (time.AsTime "2026-10-30"))
+    ) }}
+  {{ end }}
+{{ end }}

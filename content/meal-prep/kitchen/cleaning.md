@@ -1,0 +1,31 @@
+---
+title: "Keeping the Kitchen Clean"
+description: "Daily, weekly and monthly kitchen routines; the difference between cleaning and sanitizing; how to use bleach safely; and how to care for dishcloths, sponges, the fridge, oven, microwave, dishwasher, sink and drains, with tips to keep pests out."
+layout: kitchen-guide
+guide: cleaning
+credits:
+  - name: "Centers for Disease Control and Prevention"
+    url: "https://www.cdc.gov/hygiene/about/when-and-how-to-clean-and-disinfect-your-home.html"
+    what: "sources for this page, listed in full above"
+  - name: "UF/IFAS Extension"
+    url: "https://blogs.ifas.ufl.edu/global/?p=7499"
+    what: "sources for this page, listed in full above"
+  - name: "USDA Food Safety and Inspection Service"
+    url: "https://www.fsis.usda.gov/sites/default/files/media_file/2020-12/Kitchen-Companion.pdf"
+    what: "sources for this page, listed in full above"
+  - name: "USDA Agricultural Research Service"
+    url: "https://www.ars.usda.gov/news-events/news/research-news/2007/best-ways-to-clean-kitchen-sponges/"
+    what: "sources for this page, listed in full above"
+  - name: "N.C. Cooperative Extension, Brunswick County"
+    url: "https://brunswick.ces.ncsu.edu/news/clean-out-your-refrigerator/"
+    what: "sources for this page, listed in full above"
+  - name: "University of Maine Cooperative Extension"
+    url: "https://extension.umaine.edu/publications/?p=33734"
+    what: "sources for this page, listed in full above"
+  - name: "U.S. Environmental Protection Agency"
+    url: "https://www.epa.gov/sites/default/files/2014-01/documents/preventpest.pdf"
+    what: "sources for this page, listed in full above"
+  - name: "Washington State Department of Health"
+    url: "https://doh.wa.gov/community-and-environment/contaminants/bleach-mixing-dangers"
+    what: "sources for this page, listed in full above"
+---

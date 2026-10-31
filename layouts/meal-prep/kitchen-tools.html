@@ -1,0 +1,63 @@
+{{ define "main" }}
+{{- /* What's in the Kitchen: the tool guide, from data/meals/kitchen/tools.json (written by a script; each tool carries its own
+   inline drawing, viewBox 0 0 120 80, classes in static/meal-prep/kitchen/kitchen.css), plus the "Name that tool" matching game
+   (static/meal-prep/kitchen/kitchen.js; it uses the tools marked kid). */ -}}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/kitchen/kitchen.css" | relURL }}?v={{ (os.Stat "static/meal-prep/kitchen/kitchen.css").ModTime.Unix }}">
+{{ $d := site.Data.meals.kitchen.tools }}
+{{ .Store.Set "trbOwnSources" true }}
+{{ $srcs := dict }}{{ range $i, $s := $d.sources }}{{ $srcs = merge $srcs (dict $s.id (add $i 1)) }}{{ end }}
+<div class="hs mp kx">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Kitchen know-how" "u" "meal-prep/kitchen/") (dict "t" $d.title)) }}
+  <header class="hs-hero mp-hero">
+    <p class="hs-eyebrow">Meal Prep · Kitchen know-how</p>
+    <h1><span aria-hidden="true">{{ $d.icon }}</span> {{ $d.title }}</h1>
+    <p>{{ $d.summary }}</p>
+  </header>
+  <nav class="k-jump" aria-label="Kinds of tools">{{ range $d.groups }}<a href="#{{ .id }}">{{ .h }}</a>{{ end }}<a href="#game">🎲 Name that tool</a></nav>
+  {{ range $d.groups }}
+  <section class="k-grp" id="{{ .id }}" aria-labelledby="{{ .id }}-h">
+    <h2 id="{{ .id }}-h">{{ .h }}</h2>
+    {{ with .intro }}<p>{{ . }}</p>{{ end }}
+    <ul class="k-tools">
+      {{ range .tools }}
+      <li class="k-tool" id="tool-{{ .id }}"{{ if .kid }} data-kid{{ end }}>
+        <div class="k-picbox"><svg class="k-pic" viewBox="0 0 120 80" role="img" aria-label="{{ .alt }}">{{ .svg | safeHTML }}</svg></div>
+        <h3>{{ .name }}</h3>
+        <dl><dt>What it is</dt><dd>{{ .what }}</dd><dt>What it’s for</dt><dd>{{ .for }}</dd><dt>Clean and care</dt><dd>{{ .care }}</dd></dl>
+        {{ with .src }}<p class="k-cite">Sources: {{ range $i, $id := . }}{{ if $i }}, {{ end }}<a href="#src-{{ $id }}">[{{ index $srcs $id }}]</a>{{ end }}</p>{{ end }}
+      </li>
+      {{ end }}
+    </ul>
+  </section>
+  {{ end }}
+  <p class="hs-small">More on care: <a href="{{ "meal-prep/kitchen/cookware/" | relURL }}">cast iron and cookware care</a> · <a href="{{ "meal-prep/kitchen/cleaning/" | relURL }}">keeping the kitchen clean</a>. Every appliance’s manual has the cleaning steps and limits for that model.</p>
+
+  <section class="k-game" id="game" aria-labelledby="game-h">
+    <h2 id="game-h">🎲 Name that tool</h2>
+    <p>A matching game for young cooks. Pick a picture, then pick its name. Can you match them all?</p>
+    <noscript><p class="mp-note">This game needs JavaScript. The pictures and names are all in the guide above.</p></noscript>
+    <div id="k-game" hidden>
+      <div class="k-gbar">
+        <span>Matched: <b class="k-gscore" id="k-gscore">0</b></span>
+        <label>How many <select id="k-gsize"><option value="3">3</option><option value="4" selected>4</option><option value="6">6</option></select></label>
+        <label><input type="checkbox" id="k-gsay"> Read names aloud</label>
+        <button type="button" class="k-gbtn2" id="k-gagain">New tools</button>
+      </div>
+      <div class="k-gboard">
+        <div class="k-gcol" id="k-gpics" role="group" aria-labelledby="k-gpics-h"><h3 id="k-gpics-h">Pictures</h3></div>
+        <div class="k-gcol" id="k-gnames" role="group" aria-labelledby="k-gnames-h"><h3 id="k-gnames-h">Names</h3></div>
+      </div>
+      <p class="k-gmsg" id="k-gmsg" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="mp-guide" id="sources" aria-labelledby="sources-h">
+    <h2 id="sources-h">Sources</h2>
+    <ol class="mp-src">{{ range $d.sources }}<li id="src-{{ .id }}"><a href="{{ .url }}" rel="noopener">{{ .title }}</a>{{ with .publisher }}, {{ . }}{{ end }}{{ with .date }} ({{ . }}){{ end }}{{ with .accessed }}. Accessed {{ . }}{{ end }}.</li>{{ end }}</ol>
+    <p class="hs-small">{{ $d.note }} Updated {{ $d.updated }}.</p>
+  </section>
+</div>
+<script src="{{ "meal-prep/kitchen/kitchen.js" | relURL }}?v={{ (os.Stat "static/meal-prep/kitchen/kitchen.js").ModTime.Unix }}" defer></script>
+{{ end }}
