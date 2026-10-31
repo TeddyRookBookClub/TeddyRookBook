@@ -1,0 +1,8 @@
+{{- /* Memory challenges: one page per list file, data/memory/lists/<slug>.yaml -> /memory/challenges/<slug>/
+   (layouts/memchal/single.html; the engine is static/memory/challenges/engine.js). A new YAML file makes a new page. */ -}}
+{{- $L := (index $.Site.Data "memory" | default dict).lists | default dict -}}
+{{- range $slug, $l := $L -}}
+  {{- $n := len ($l.items | default slice) -}}
+  {{- $desc := printf "%s: learn it by heart. %d items, ages %s. Study in chunks with spaced review on day 1, 3, 7 and 21, recall in order, match, fill the gaps, race the clock or write it from a blank page. Free memory challenge at Teddy Rook Book." $l.title $n ($l.ages | default "all") -}}
+  {{- $.AddPage (dict "path" $slug "kind" "page" "type" "memchal" "layout" "single" "title" $l.title "description" $desc "params" (dict "list" $slug "group" $l.group)) -}}
+{{- end -}}

@@ -1,0 +1,33 @@
+slug: "math-formulas-shapes"
+title: "Math formulas, level 1: shapes and solids"
+group: "math"
+ages: "9+"
+count_note: "12 formulas from elementary and middle school. Letters: l length, w width, s side, b base, h height, r radius, d diameter. Typed answers can use ^ for powers and * for times, like l*w or s^2."
+intro: "Perimeter, area and volume come up everywhere: painting a wall, fencing a garden, filling a fish tank. Each formula is short, and each one makes sense once you see where it comes from."
+technique: "Don't memorize these as strings of letters; rebuild them from a picture. Area of a rectangle is rows times columns of unit squares (l x w). A triangle is half a rectangle, so one-half b h. A parallelogram is a rectangle with one end slid over, so b h. Volume stacks area in layers. Draw each shape with its formula beside it (picture plus words), then recall it on a blank page and check."
+order_matters: false
+main: "name"
+fields:
+  - { key: name, label: "Formula for" }
+  - { key: formula, label: "Formula" }
+  - { key: vars, label: "Letters stand for" }
+show: [name, formula, vars]
+prompts:
+  - { ask: formula, from: [name] }
+  - { ask: name, from: [formula] }
+items:
+  - { name: "Perimeter of a rectangle", formula: "P = 2l + 2w", vars: "l = length, w = width", chunk: "Rectangles and squares", hook: "Walk all the way around: two lengths and two widths.", accept: { formula: ["2l+2w", "2(l+w)", "P=2l+2w", "2l + 2w"] } }
+  - { name: "Area of a rectangle", formula: "A = lw", vars: "l = length, w = width", chunk: "Rectangles and squares", hook: "Rows times columns of little squares.", accept: { formula: ["lw", "l*w", "l x w", "A=lw", "length times width"] } }
+  - { name: "Perimeter of a square", formula: "P = 4s", vars: "s = side", chunk: "Rectangles and squares", hook: "Four equal sides.", accept: { formula: ["4s", "P=4s"] } }
+  - { name: "Area of a square", formula: "A = s²", vars: "s = side", chunk: "Rectangles and squares", hook: "Side times side: that is why we call s² \"s squared.\"", accept: { formula: ["s^2", "s2", "A=s^2", "s*s"] } }
+  - { name: "Area of a triangle", formula: "A = ½bh", vars: "b = base, h = height", chunk: "Triangles and four-sided shapes", hook: "Half of a rectangle with the same base and height.", accept: { formula: ["1/2bh", "1/2 b h", "bh/2", "0.5bh", "(1/2)bh", "A=1/2bh"] } }
+  - { name: "Angles of a triangle", formula: "A + B + C = 180°", vars: "A, B, C = the three angles", chunk: "Triangles and four-sided shapes", hook: "Tear off the three corners and they line up into a straight line.", accept: { formula: ["180", "180 degrees", "A+B+C=180"] } }
+  - { name: "Area of a parallelogram", formula: "A = bh", vars: "b = base, h = height", chunk: "Triangles and four-sided shapes", hook: "Slide the slanted end over and it becomes a rectangle.", accept: { formula: ["bh", "b*h", "A=bh"] } }
+  - { name: "Area of a trapezoid", formula: "A = ½h(b + B)", vars: "b and B = the two parallel sides, h = height", chunk: "Triangles and four-sided shapes", hook: "Average the two bases, then times the height.", accept: { formula: ["1/2h(b+B)", "1/2 h (b + B)", "h(b+B)/2", "(b+B)h/2", "1/2(B+b)h", "A=1/2h(b+B)"] } }
+  - { name: "Circumference of a circle", formula: "C = 2πr", vars: "r = radius (or C = πd, with d = diameter)", chunk: "Circles", hook: "Pi is how many diameters fit around a circle: a little more than 3.", accept: { formula: ["2pir", "2 pi r", "pi d", "pid", "C=2pir", "C = pi d"] } }
+  - { name: "Area of a circle", formula: "A = πr²", vars: "r = radius", chunk: "Circles", hook: "\"Pie are square\": area always has a square in it.", accept: { formula: ["pir^2", "pi r^2", "pi r squared", "A=pir^2"] } }
+  - { name: "Volume of a rectangular box", formula: "V = lwh", vars: "l = length, w = width, h = height", chunk: "Volume", hook: "Floor area times how many layers high.", accept: { formula: ["lwh", "l*w*h", "V=lwh", "length times width times height"] } }
+  - { name: "Volume of a cube", formula: "V = s³", vars: "s = side", chunk: "Volume", hook: "Side times side times side: that is why s³ is \"s cubed.\"", accept: { formula: ["s^3", "s3", "V=s^3", "s*s*s"] } }
+sources:
+  - { name: "OpenStax Prealgebra 2e, Appendix C: Geometric Formulas", url: "https://openstax.org/books/prealgebra-2e/pages/c-geometric-formulas" }
+updated: 2026-10-30

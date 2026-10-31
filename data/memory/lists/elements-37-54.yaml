@@ -1,0 +1,46 @@
+slug: "elements-37-54"
+title: "Elements 37-54: period 5"
+group: "science"
+ages: "12+"
+count_note: "18 elements, all in period 5."
+intro: "Row five brings silver, tin and iodine, and some metals you may know from jewelry and electronics. Every element in this list is in period 5."
+technique: "The same three chunks as row four: two s-block metals, ten transition metals, six p-block elements. Link each element to the one above it in row four (silver under copper, cadmium under zinc), since elements in a group act alike. Ag (argentum), Sn (stannum) and Sb (stibium) come from Latin, so give each a picture: a silver coin, a tin can, an old eye-makeup pot for stibium."
+order_matters: true
+main: "name"
+fields:
+  - { key: z, label: "Atomic number" }
+  - { key: symbol, label: "Symbol" }
+  - { key: name, label: "Element" }
+  - { key: group, label: "Group" }
+show: [z, symbol, name, group]
+prompts:
+  - { ask: symbol, from: [name] }
+  - { ask: name, from: [symbol] }
+  - { ask: name, from: [z] }
+  - { ask: z, from: [name] }
+  - { ask: group, from: [name] }
+  - { ask: name, from: [group] }
+items:
+  - { z: 37, symbol: "Rb", name: "Rubidium", group: "1", chunk: "s-block: groups 1-2", hook: "From the Latin rubidus, deep red, the color of its spectral lines." }
+  - { z: 38, symbol: "Sr", name: "Strontium", group: "2", chunk: "s-block: groups 1-2", hook: "From Strontian, a village in Scotland where its mineral was found." }
+  - { z: 39, symbol: "Y", name: "Yttrium", group: "3", chunk: "Transition metals: groups 3-12", hook: "From Ytterby, a village in Sweden." }
+  - { z: 40, symbol: "Zr", name: "Zirconium", group: "4", chunk: "Transition metals: groups 3-12", hook: "From zircon, the mineral (possibly from the Persian zargun, gold-colored)." }
+  - { z: 41, symbol: "Nb", name: "Niobium", group: "5", chunk: "Transition metals: groups 3-12", hook: "From Niobe, daughter of Tantalus in Greek myth, because it is so similar to tantalum." }
+  - { z: 42, symbol: "Mo", name: "Molybdenum", group: "6", chunk: "Transition metals: groups 3-12", hook: "From the Greek molybdos, lead, because its ore was confused with lead ore." }
+  - { z: 43, symbol: "Tc", name: "Technetium", group: "7", chunk: "Transition metals: groups 3-12", hook: "From the Greek technetos, artificial; it was the first element made by people." }
+  - { z: 44, symbol: "Ru", name: "Ruthenium", group: "8", chunk: "Transition metals: groups 3-12", hook: "From Ruthenia, the Latin name for a region including Russia." }
+  - { z: 45, symbol: "Rh", name: "Rhodium", group: "9", chunk: "Transition metals: groups 3-12", hook: "From the Greek rhodon, rose, for the rose color of its salts." }
+  - { z: 46, symbol: "Pd", name: "Palladium", group: "10", chunk: "Transition metals: groups 3-12", hook: "From Pallas, an asteroid discovered in 1802 and named for the Greek goddess Pallas Athena." }
+  - { z: 47, symbol: "Ag", name: "Silver", group: "11", chunk: "Transition metals: groups 3-12", hook: "From the Anglo-Saxon seolfor; the symbol Ag comes from the Latin argentum." }
+  - { z: 48, symbol: "Cd", name: "Cadmium", group: "12", chunk: "Transition metals: groups 3-12", hook: "From the Latin cadmia, an old name for zinc ore (calamine)." }
+  - { z: 49, symbol: "In", name: "Indium", group: "13", chunk: "p-block: groups 13-18", hook: "From indigo, the color of its brightest spectral line." }
+  - { z: 50, symbol: "Sn", name: "Tin", group: "14", chunk: "p-block: groups 13-18", hook: "From the Anglo-Saxon tin; the symbol Sn comes from the Latin stannum." }
+  - { z: 51, symbol: "Sb", name: "Antimony", group: "15", chunk: "p-block: groups 13-18", hook: "The origin of \"antimony\" is uncertain; the symbol Sb comes from the Latin stibium." }
+  - { z: 52, symbol: "Te", name: "Tellurium", group: "16", chunk: "p-block: groups 13-18", hook: "From the Latin tellus, Earth." }
+  - { z: 53, symbol: "I", name: "Iodine", group: "17", chunk: "p-block: groups 13-18", hook: "From the Greek iodes, violet, the color of its vapor." }
+  - { z: 54, symbol: "Xe", name: "Xenon", group: "18", chunk: "p-block: groups 13-18", hook: "From the Greek xenos, stranger." }
+sources:
+  - { name: "Teddy Rook Book periodic table data (data/elements/elements.json; IUPAC/CIAAW and NIST)", url: "/science/periodic-table/" }
+  - { name: "PubChem (NIH): Periodic Table of Elements, with standard state", url: "https://pubchem.ncbi.nlm.nih.gov/periodic-table/pdf/Periodic_Table_of_Elements_w_Standard_State_PubChem.pdf" }
+  - { name: "PubChem (NIH): IUPAC Periodic Table of the Elements and Isotopes", url: "https://pubchem.ncbi.nlm.nih.gov/source/24616" }
+updated: 2026-10-30

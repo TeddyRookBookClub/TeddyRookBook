@@ -1,0 +1,90 @@
+{{ define "main" }}
+{{- /* /memory/challenges/: every list in data/memory/lists, grouped, with count, ages and the learner's progress
+   (static/memory/challenges/engine.js fills progress and "due today" from localStorage trb-memory-v1). */ -}}
+{{- $L := (index site.Data "memory" | default dict).lists | default dict -}}
+{{- $order := slice "science" "history" "civics" "geography" "math" "language" "scripture" "everyday" -}}
+{{- $names := dict "science" "Science" "history" "History" "civics" "Civics" "geography" "Geography" "math" "Math" "language" "Language" "scripture" "Scripture" "everyday" "Everyday" -}}
+{{- $css := "memory/challenges/engine.css" -}}
+<link rel="stylesheet" href="{{ $css | relURL }}?v={{ (os.Stat (printf "static/%s" $css)).ModTime.Unix }}">
+<article class="mc mc-index">
+<nav class="mc-crumbs" aria-label="Breadcrumb"><a href="{{ "memory/" | relURL }}">Memory</a> › <span>Challenges</span></nav>
+<header class="mc-head">
+  <h1>{{ .Title }}</h1>
+  <p class="mc-intro">Pick a list worth knowing by heart. Each one works the same way, the way the infographic <a href="{{ "infographics/remember-it-on-purpose/" | relURL }}">Remember It on Purpose</a> lays out: <span class="mc-e">Encode</span> a few items at a time and make them vivid, <span class="mc-s">Space</span> the reviews out on day 1, 3, 7 and 21, and <span class="mc-r">Retrieve</span> them from your head instead of rereading. Progress stays on this device, for whoever is signed in as the learner. No streaks, no scolding: come back when you can.</p>
+</header>
+
+<section class="mc-due" id="mc-due" hidden aria-live="polite"></section>
+
+<section class="mc-special">
+  <h2>Trainers</h2>
+  <div class="mc-grid">
+    <a class="mc-card mc-card-big" href="{{ "memory/challenges/deck-of-cards/" | relURL }}" data-best="deck"><span class="mc-ico" aria-hidden="true">🂡</span><b>Deck of cards</b><span>Memorize a shuffled deck (or 10, 20 or 26 cards), then rebuild the order. PAO and journey help.</span><em class="mc-prog"></em></a>
+    <a class="mc-card mc-card-big" href="{{ "memory/challenges/pi/" | relURL }}" data-best="pi"><span class="mc-ico" aria-hidden="true">π</span><b>Digits of pi</b><span>The first 1,000 digits in chunks, typed back with live checking. Also e to 100 decimals.</span><em class="mc-prog"></em></a>
+    <a class="mc-card mc-card-big" href="{{ "memory/games/" | relURL }}"><span class="mc-ico" aria-hidden="true">🏛️</span><b>Memory games</b><span>Memory Palace Builder, Chunk It, Story Chain, Card Pairs and a daily warm-up.</span></a>
+  </div>
+</section>
+
+{{- range $g := $order }}
+  {{- $in := slice }}{{ range $slug, $l := $L }}{{ if eq $l.group $g }}{{ $in = $in | append (dict "slug" $slug "l" $l "t" $l.title) }}{{ end }}{{ end }}
+  {{- with $in }}
+<section class="mc-group" id="{{ $g }}">
+  <h2>{{ index $names $g }}</h2>
+  <div class="mc-grid">
+    {{- range sort . "t" }}{{ $l := .l }}
+    <a class="mc-card" href="{{ printf "memory/challenges/%s/" .slug | relURL }}" data-slug="{{ .slug }}" data-n="{{ len $l.items }}">
+      <b>{{ $l.title }}</b>
+      <span class="mc-meta">{{ len $l.items }} items · ages {{ $l.ages }}</span>
+      {{- with $l.count_note }}<span class="mc-cn">{{ index (split . ". ") 0 | strings.TrimSuffix "." }}.</span>{{ end }}
+      <span class="mc-bar" aria-hidden="true"><i></i></span><em class="mc-prog">Not started</em>
+    </a>
+    {{- end }}
+  </div>
+</section>
+  {{- end }}
+{{- end }}
+
+<section class="mc-more">
+  <h2>More ways to practice</h2>
+  <ul>
+    <li><a href="{{ "memory/" | relURL }}">The Memory Ladder</a>: short lessons on how memory works and the six techniques, from first principles.</li>
+    <li><a href="{{ "vocabulary/flashcards/" | relURL }}">Vocabulary flashcards</a> and <a href="{{ "languages/flashcards/" | relURL }}">language flashcards</a>, with spaced review.</li>
+    <li><a href="{{ "games/brain-games/" | relURL }}">Brain Games</a>: Mosaic Memory, Coin Match, Numbers in Order and more.</li>
+  </ul>
+  <p class="mc-small">Each list is printable from its page: a study sheet and a blank practice sheet.</p>
+</section>
+</article>
+<script src="{{ "memory/challenges/core.js" | relURL }}?v={{ (os.Stat "static/memory/challenges/core.js").ModTime.Unix }}"></script>
+<script>
+(function () {
+  var M = window.TRBMem; if (!M) return;
+  var o = M.load(), today = M.today(), due = [];
+  var titles = {};
+  document.querySelectorAll('.mc-card[data-slug]').forEach(function (a) {
+    var slug = a.dataset.slug, n = +a.dataset.n || 1, S = o.lists[slug];
+    titles[slug] = a.querySelector('b').textContent;
+    if (!S || !S.c) return;
+    var learned = 0, kept = 0, d = 0;
+    Object.keys(S.c).forEach(function (k) {
+      var p = k.split('-'), len = Math.max(0, Math.min(n, +p[1]) - +p[0]), st = S.c[k];
+      if (!st) return; learned += len; if (st.s >= M.OFF.length) kept += len; if (M.isDue(st, today)) d++;
+    });
+    if (!learned && !(S.best && Object.keys(S.best).length)) return;
+    var pct = Math.min(100, Math.round(100 * learned / n));
+    a.querySelector('.mc-bar i').style.width = pct + '%';
+    a.querySelector('.mc-prog').textContent = learned + ' of ' + n + ' learned' + (kept ? ' · ' + kept + ' kept' : '') + (d ? ' · review due' : '');
+    if (d) { a.classList.add('is-due'); due.push({ slug: slug, n: d, href: a.getAttribute('href') }); }
+  });
+  var deck = o.best && o.best['deck:52'], pi = o.best && o.best['pi:pi'];
+  var dc = document.querySelector('[data-best="deck"] .mc-prog'), pc = document.querySelector('[data-best="pi"] .mc-prog');
+  if (dc && o.best) { var parts = []; ['10', '20', '26', '52'].forEach(function (k) { var b = o.best['deck:' + k]; if (b != null) parts.push(k + ' cards: ' + M.fmtTime(b)); }); if (parts.length) dc.textContent = 'Best: ' + parts.join(' · '); }
+  if (pc && pi) pc.textContent = 'Best: ' + pi + ' digits of pi';
+  var box = document.getElementById('mc-due');
+  if (due.length) {
+    box.hidden = false;
+    box.innerHTML = '<h2>Due today</h2><p>These chunks are ready for their next review. A quick recall now keeps them from fading.</p><ul></ul><p class="mc-small">Or do them all at once in the <a href="' + {{ "memory/games/warm-up/" | relURL }} + '">daily warm-up</a>.</p>';
+    var ul = box.querySelector('ul');
+    due.forEach(function (x) { var li = document.createElement('li'), a = document.createElement('a'); a.href = x.href + '#learn'; a.textContent = titles[x.slug]; li.appendChild(a); li.appendChild(document.createTextNode(' · ' + x.n + (x.n > 1 ? ' chunks' : ' chunk'))); ul.appendChild(li); });
+  }
+})();
+</script>
+{{ end }}

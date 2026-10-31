@@ -1,0 +1,50 @@
+# Memory challenge list (format: /memory/challenges/ engine; checked by scripts/memory/check-lists.js)
+slug: world-wars-history
+title: "Major wars in world history, 499 BC to AD 1988"
+group: history
+ages: "10+"
+count_note: "20 wars, from the Greco-Persian Wars to the Iran–Iraq War, with dates and the main sides only. Dates are the standard ones; where historians give other dates, the item's note says so. America's own wars have their own list. The list stops at wars that ended by about 2000."
+intro: "A few wars show up again and again in history books, because they changed who ruled, where borders ran and how people lived afterward. Knowing their dates and sides gives the long story of the world a set of fixed points, from ancient Greece to the twentieth century."
+technique: "Chunk by age: the ancient world (five wars, all BC), the Middle Ages (three), the early modern era (three), the 1800s (three) and the 1900s (six). Learn one age at a time and put the wars in order before learning the dates. For BC dates, remember that the numbers count down toward AD 1: the Greco-Persian Wars (499 BC) came before the Punic Wars (264 BC). Give each war a picture in its own room of a memory palace, and come back on day 1, 3, 7 and 21."
+order_matters: true
+main: war
+fields:
+  - { key: n, label: "No." }
+  - { key: war, label: "War" }
+  - { key: years, label: "Years" }
+  - { key: sides, label: "Main sides" }
+show: [war, years, sides]
+prompts:
+  - { ask: years, from: [war] }
+  - { ask: war, from: [years] }
+  - { ask: war, from: [sides] }
+  - { ask: sides, from: [war] }
+items:
+  - { n: 1, war: "Greco-Persian Wars", years: "499–449 BC", sides: "Greek city-states, led by Athens and Sparta, against the Persian Empire", chunk: "The ancient world", hook: "The battles of Marathon (490 BC) and Thermopylae (480 BC) belong to this war.", accept: { war: ["Persian Wars", "Greco Persian Wars"] } }
+  - { n: 2, war: "Peloponnesian War", years: "431–404 BC", sides: "Athens and its Delian League against Sparta and its Peloponnesian League", chunk: "The ancient world", hook: "Named for the Peloponnese, the peninsula where Sparta stood. The historian Thucydides lived through it and wrote its history.", accept: { war: ["The Peloponnesian War"] } }
+  - { n: 3, war: "Conquests of Alexander the Great", years: "334–323 BC", sides: "Macedon and its Greek allies against the Persian Empire", chunk: "The ancient world", note: "Alexander became king in 336 BC, crossed into Asia in 334 BC and died in 323 BC.", hook: "Eleven years, from the crossing into Asia to Alexander's death at 32.", accept: { war: ["Wars of Alexander the Great", "Alexander's conquests"] } }
+  - { n: 4, war: "Punic Wars", years: "264–146 BC", sides: "Rome against Carthage", chunk: "The ancient world", hook: "Three wars. In the second, Hannibal led an army with elephants across the Alps (218 BC).", accept: { war: ["The Punic Wars"] } }
+  - { n: 5, war: "Gallic Wars", years: "58–50 BC", sides: "The Roman Republic, led by Julius Caesar, against the tribes of Gaul", chunk: "The ancient world", hook: "Caesar wrote his own account of it; Gaul is roughly today's France and Belgium.", accept: { war: ["The Gallic Wars", "Caesar's Gallic Wars"] } }
+  - { n: 6, war: "The Crusades", years: "1096–1291", sides: "Armies from Christian Western Europe against Muslim states in the Near East", chunk: "The Middle Ages", note: "Pope Urban II called for the First Crusade in 1095, and its armies set out in 1096. The usual end date is 1291, when the last crusader stronghold in the Holy Land, Acre, fell.", accept: { war: ["Crusades"] } }
+  - { n: 7, war: "Hundred Years' War", years: "1337–1453", sides: "England against France", chunk: "The Middle Ages", hook: "It lasted 116 years, a little more than its name. Joan of Arc led French troops in 1429.", accept: { war: ["Hundred Years War", "100 Years' War", "100 Years War"] } }
+  - { n: 8, war: "Wars of the Roses", years: "1455–1487", sides: "The House of Lancaster (the red rose) against the House of York (the white rose), for the English throne", chunk: "The Middle Ages", note: "Some histories end it in 1485, when Henry Tudor won at Bosworth and became Henry VII.", accept: { war: ["War of the Roses", "The Wars of the Roses"] } }
+  - { n: 9, war: "Thirty Years' War", years: "1618–1648", sides: "Protestant German states, Sweden and later Catholic France against the Habsburg Holy Roman Emperor, Spain and the Catholic League", chunk: "The early modern era", hook: "Thirty years exactly: 1618 to 1648, ended by the Peace of Westphalia.", accept: { war: ["Thirty Years War", "30 Years' War", "30 Years War"] } }
+  - { n: 10, war: "English Civil War", years: "1642–1651", sides: "Royalists (supporters of King Charles I) against Parliamentarians", chunk: "The early modern era", hook: "Cavaliers against Roundheads, as people nicknamed the two sides.", accept: { war: ["The English Civil War", "English Civil Wars"] } }
+  - { n: 11, war: "Seven Years' War", years: "1756–1763", sides: "Great Britain, Prussia and their allies against France, Austria, Russia and their allies", chunk: "The early modern era", note: "In North America the fighting began in 1754 and is called the French and Indian War.", accept: { war: ["Seven Years War", "7 Years' War", "7 Years War"] } }
+  - { n: 12, war: "Napoleonic Wars", years: "1803–1815", sides: "France under Napoleon against changing coalitions of Britain, Austria, Prussia, Russia and others", chunk: "The 1800s", hook: "They ended at Waterloo in 1815.", accept: { war: ["The Napoleonic Wars"] } }
+  - { n: 13, war: "Crimean War", years: "1853–1856", sides: "Russia against the Ottoman Empire, Britain, France and Sardinia", chunk: "The 1800s", hook: "Florence Nightingale nursed wounded soldiers in this war, by lamplight.", accept: { war: ["The Crimean War"] } }
+  - { n: 14, war: "Franco-Prussian War", years: "1870–1871", sides: "France against Prussia and the other German states", chunk: "The 1800s", hook: "It ended with the German states united into one German Empire, in 1871.", accept: { war: ["Franco Prussian War"] } }
+  - { n: 15, war: "World War I", years: "1914–1918", sides: "The Allies (France, Britain, Russia, Italy, the United States and others) against the Central Powers (Germany, Austria-Hungary, the Ottoman Empire and Bulgaria)", chunk: "The 1900s", hook: "The armistice came on the eleventh hour of the eleventh day of the eleventh month, 1918.", accept: { war: ["World War 1", "WWI", "WW1", "First World War", "The Great War"] } }
+  - { n: 16, war: "Russian Civil War", years: "1917–1922", sides: "The Reds (the Bolsheviks) against the Whites (their opponents)", chunk: "The 1900s", note: "It began after the Bolsheviks took power in November 1917 and ended with their victory in 1922; fighting in some outlying areas went on into 1923.", accept: { war: ["The Russian Civil War"] } }
+  - { n: 17, war: "Spanish Civil War", years: "1936–1939", sides: "Republicans (supporters of the Second Spanish Republic) against Nationalists (led by Francisco Franco)", chunk: "The 1900s", accept: { war: ["The Spanish Civil War"] } }
+  - { n: 18, war: "World War II", years: "1939–1945", sides: "The Allies (Britain, the Soviet Union, the United States, China, France and others) against the Axis (Germany, Italy, Japan and others)", chunk: "The 1900s", hook: "It began in Europe in September 1939 and ended in September 1945.", accept: { war: ["World War 2", "WWII", "WW2", "Second World War"] } }
+  - { n: 19, war: "Korean War", years: "1950–1953", sides: "South Korea and United Nations forces led by the United States against North Korea and China", chunk: "The 1900s", note: "An armistice stopped the fighting in 1953; no peace treaty was signed.", accept: { war: ["The Korean War"] } }
+  - { n: 20, war: "Iran–Iraq War", years: "1980–1988", sides: "Iraq against Iran", chunk: "The 1900s", hook: "Eight years of war, from 1980 to 1988.", accept: { war: ["Iran-Iraq War", "Iran Iraq War"] } }
+sources:
+  - { name: "Grokipedia: List of conflicts in Europe", url: "https://grokipedia.com/page/List_of_conflicts_in_Europe" }
+  - { name: "Grokipedia: Timeline of wars", url: "https://grokipedia.com/page/Timeline_of_wars" }
+  - { name: "Grokipedia: List of wars involving France", url: "https://grokipedia.com/page/List_of_wars_involving_France" }
+  - { name: "Grokipedia: List of wars involving Russia", url: "https://grokipedia.com/page/List_of_wars_involving_Russia" }
+  - { name: "Grokipedia: Spanish Civil War", url: "https://grokipedia.com/page/Spanish_Civil_War" }
+  - { name: "Grokipedia: List of wars involving Iraq", url: "https://grokipedia.com/page/List_of_wars_involving_Iraq" }
+updated: 2026-10-31

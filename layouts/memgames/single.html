@@ -1,0 +1,20 @@
+{{ define "main" }}
+{{- /* One memory game (content/memory/games/<game>.md, param game); static/memory/games/games.js draws it into #mg.
+   The warm-up also reads every challenge list from a JSON file built here. */ -}}
+{{- $lists := "" -}}
+{{- if eq .Params.game "warm-up" -}}
+  {{- $L := (index site.Data "memory" | default dict).lists | default dict -}}
+  {{- $out := slice }}{{ range $slug, $l := $L }}{{ $out = $out | append (dict "slug" $slug "title" $l.title "fields" $l.fields "prompts" $l.prompts "main" $l.main "order_matters" $l.order_matters "items" $l.items) }}{{ end -}}
+  {{- $lists = (resources.FromString "memory/challenges/lists.json" ($out | jsonify)).RelPermalink -}}
+{{- end -}}
+<link rel="stylesheet" href="{{ "memory/challenges/engine.css" | relURL }}?v={{ (os.Stat "static/memory/challenges/engine.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "memory/games/games.css" | relURL }}?v={{ (os.Stat "static/memory/games/games.css").ModTime.Unix }}">
+<article class="mc mg-page">
+<nav class="mc-crumbs" aria-label="Breadcrumb"><a href="{{ "memory/" | relURL }}">Memory</a> › <a href="{{ "memory/games/" | relURL }}">Games</a> › <span>{{ .Title }}</span></nav>
+<header class="mc-head"><h1>{{ .Title }}</h1><p class="mc-intro">{{ .Description }}</p></header>
+<div id="mg" class="mg" data-game="{{ .Params.game }}"{{ with $lists }} data-lists="{{ . }}"{{ end }} data-challenges="{{ "memory/challenges/" | relURL }}" aria-live="polite"><noscript>This game needs JavaScript.</noscript></div>
+<p class="mc-small mg-foot">More: <a href="{{ "memory/games/" | relURL }}">all memory games</a> · <a href="{{ "memory/challenges/" | relURL }}">memory challenges</a> · <a href="{{ "games/brain-games/" | relURL }}">Brain Games</a>.</p>
+</article>
+<script src="{{ "memory/challenges/core.js" | relURL }}?v={{ (os.Stat "static/memory/challenges/core.js").ModTime.Unix }}"></script>
+<script src="{{ "memory/games/games.js" | relURL }}?v={{ (os.Stat "static/memory/games/games.js").ModTime.Unix }}"></script>
+{{ end }}

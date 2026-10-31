@@ -1,0 +1,37 @@
+slug: "metric-prefixes"
+title: "Metric prefixes, from tera to pico"
+group: "math"
+ages: "10+"
+count_note: "The 12 most used of the 24 SI prefixes. NIST also lists larger ones (peta to quetta) and smaller ones (femto to quecto). Capital and small letters matter: M is mega, m is milli. NIST spells the prefix for ten \"deka\"; some countries write \"deca.\""
+intro: "Every metric unit uses the same set of prefixes, so learning these twelve unlocks meters, grams, liters, watts and bytes all at once. Each step is a power of ten, which is what makes the metric system easy to convert."
+technique: "Build from first principles: each prefix means 'times ten to some power.' From kilo down to milli the steps go one power of ten at a time (kilo, hecto, deka, base, deci, centi, milli: \"Kind Hippos Dance Barefoot During Chilly Mornings\"), and outside that range they jump three powers at a time (mega, giga, tera; micro, nano, pico). Chunk them that way: the big jumps, the small steps, the tiny jumps."
+order_matters: true
+main: "name"
+fields:
+  - { key: name, label: "Prefix" }
+  - { key: symbol, label: "Symbol" }
+  - { key: factor, label: "Power of ten" }
+  - { key: number, label: "As a number" }
+show: [name, symbol, factor, number]
+prompts:
+  - { ask: name, from: [factor] }
+  - { ask: name, from: [symbol] }
+  - { ask: number, from: [name] }
+  - { ask: name, from: [number] }
+items:
+  - { name: "tera", symbol: "T", factor: "10^12", number: "1,000,000,000,000", chunk: "Big jumps of 1,000", hook: "Greek teras, \"monster\": a monstrously big number.", accept: { factor: ["1012", "10 to the 12"], number: ["1000000000000"] } }
+  - { name: "giga", symbol: "G", factor: "10^9", number: "1,000,000,000", chunk: "Big jumps of 1,000", hook: "Greek gigas, \"giant\": a gigabyte is about a billion bytes.", accept: { factor: ["109", "10 to the 9"], number: ["1000000000"] } }
+  - { name: "mega", symbol: "M", factor: "10^6", number: "1,000,000", chunk: "Big jumps of 1,000", hook: "Greek megas, \"great\": a megaphone makes your voice great.", accept: { factor: ["106", "10 to the 6"], number: ["1000000"] } }
+  - { name: "kilo", symbol: "k", factor: "10^3", number: "1,000", chunk: "Steps of ten", hook: "A kilometer is a thousand meters, about a 12-minute walk.", accept: { factor: ["103", "10 to the 3"], number: ["1000"] } }
+  - { name: "hecto", symbol: "h", factor: "10^2", number: "100", chunk: "Steps of ten", hook: "From the Greek for a hundred.", accept: { factor: ["102", "10 to the 2"] } }
+  - { name: "deka", symbol: "da", factor: "10^1", number: "10", chunk: "Steps of ten", hook: "From the Greek deka, ten, as in decade.", accept: { factor: ["101", "10 to the 1"], name: ["deca"] } }
+  - { name: "deci", symbol: "d", factor: "10^-1", number: "0.1", chunk: "Steps of ten", hook: "Latin decimus, a tenth, as in decimal.", accept: { factor: ["10-1", "10 to the -1"] } }
+  - { name: "centi", symbol: "c", factor: "10^-2", number: "0.01", chunk: "Steps of ten", hook: "Latin centum, a hundred: a cent is a hundredth of a dollar.", accept: { factor: ["10-2", "10 to the -2"] } }
+  - { name: "milli", symbol: "m", factor: "10^-3", number: "0.001", chunk: "Steps of ten", hook: "Latin mille, a thousand: a millimeter is a thousandth of a meter.", accept: { factor: ["10-3", "10 to the -3"] } }
+  - { name: "micro", symbol: "μ", factor: "10^-6", number: "0.000001", chunk: "Tiny jumps of 1,000", hook: "Greek mikros, small, as in microscope.", accept: { factor: ["10-6", "10 to the -6"] } }
+  - { name: "nano", symbol: "n", factor: "10^-9", number: "0.000000001", chunk: "Tiny jumps of 1,000", hook: "Greek nanos, dwarf: a nanometer is far too small to see.", accept: { factor: ["10-9", "10 to the -9"] } }
+  - { name: "pico", symbol: "p", factor: "10^-12", number: "0.000000000001", chunk: "Tiny jumps of 1,000", hook: "A trillionth: a pinch of a pinch of a pinch.", accept: { factor: ["10-12", "10 to the -12"] } }
+sources:
+  - { name: "NIST: Metric (SI) Prefixes", url: "https://www.nist.gov/node/428761" }
+  - { name: "NIST Handbook 44 (2024), Appendix C: General Tables of Units of Measurement", url: "https://www.nist.gov/document/nist-hb-44-2024-appendix-c-general-tables-units-measurement" }
+updated: 2026-10-30

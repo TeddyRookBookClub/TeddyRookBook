@@ -1,0 +1,33 @@
+# Memory challenge list (format: /memory/challenges/ engine; checked by scripts/memory/check-lists.js)
+# A text for word-by-word recitation: each item is one phrase, in order. recite: true marks it for the engine.
+slug: preamble
+title: "The Preamble to the Constitution"
+group: civics
+ages: "7+"
+count_note: "One sentence of 52 words, split into 9 phrases to learn. The text and its spelling (\"defence\", \"insure\") and capitals follow the National Archives transcription of the signed Constitution of 1787; \"defense\" is accepted when typing."
+intro: "The Preamble is the opening sentence of the Constitution. It says who is acting (we the people), why (six goals), and what they are doing (making a Constitution). It is short enough to learn in a week and is a classic first piece of memory work."
+technique: "Narrate it first: say it aloud, then say in your own words what each goal means. Then chunk it. The six goals in the middle are the hard part, so give them a first-letter chain, U J T D W L (Union, Justice, Tranquility, defence, Welfare, Liberty), and a picture each: a knot tying states together, a balance scale, a sleeping cat, a shield, a full dinner table, a torch. Learn three phrases at a time, recite with the page covered, and check. Come back on day 1, 3, 7 and 21."
+order_matters: true
+recite: true
+main: line
+fields:
+  - { key: n, label: "No." }
+  - { key: line, label: "Phrase" }
+show: [n, line]
+prompts:
+  - { ask: line, from: [n] }
+  - { ask: n, from: [line] }
+items:
+  - { n: 1, line: "We the People of the United States,", hook: "Who is speaking: the people, not the states or a king." }
+  - { n: 2, line: "in Order to form a more perfect Union,", hook: "Goal 1, Union: a knot tying thirteen states closer together." }
+  - { n: 3, line: "establish Justice,", hook: "Goal 2, Justice: a balance scale." }
+  - { n: 4, line: "insure domestic Tranquility,", hook: "Goal 3, Tranquility: peace at home, a cat asleep by the fire." }
+  - { n: 5, line: "provide for the common defence,", hook: "Goal 4, defence: a shield. The old spelling has a c.", accept: ["provide for the common defense"] }
+  - { n: 6, line: "promote the general Welfare,", hook: "Goal 5, Welfare: a full dinner table for everyone." }
+  - { n: 7, line: "and secure the Blessings of Liberty to ourselves and our Posterity,", hook: "Goal 6, Liberty, for us and for our posterity, the people who come after us: a torch passed to a child." }
+  - { n: 8, line: "do ordain and establish this Constitution", hook: "What they do: ordain and establish, two words for setting it up." }
+  - { n: 9, line: "for the United States of America.", hook: "The last words name the country." }
+sources:
+  - { name: "National Archives: The Constitution of the United States, a transcription", url: "https://www.archives.gov/founding-docs/constitution-transcript" }
+  - { name: "National Archives: The Constitution of the United States (the document and its history)", url: "https://www.archives.gov/founding-docs/constitution" }
+updated: 2026-10-31

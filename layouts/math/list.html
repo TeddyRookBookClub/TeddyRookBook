@@ -132,6 +132,27 @@
   </section>
   {{- end }}
 
+  {{- /* optional, per ladder (data/ladders.yaml): feature = one card near the top (e.g. an infographic the ladder pairs with);
+     sections = extra hub sections, each { url, icon, title, text, button } (e.g. the Memory Ladder's Challenges and Games) */ -}}
+  {{- with $L.feature }}
+  <section class="mlp-continue mlp-feature" aria-labelledby="mlp-feat-h">
+    {{ with .img }}<a class="mlp-feat-img" href="{{ $L.feature.url | relURL }}" tabindex="-1" aria-hidden="true"><img src="{{ . | relURL }}" alt="" width="96" height="120" loading="lazy" decoding="async"></a>{{ end }}
+    <div><h2 id="mlp-feat-h">{{ .title }}</h2><p>{{ .text }}</p></div>
+    <div class="mlp-acts"><a class="mlp-btn pri" href="{{ .url | relURL }}">{{ .button | default "See the infographic" }}</a></div>
+  </section>
+  {{- end }}
+  {{- with $L.sections }}
+  <div class="mlp-xsecs">
+    {{- range $i, $s := . }}
+    <section class="mlp-card-s mlp-xsec" aria-labelledby="mlp-xsec-{{ $i }}">
+      <h2 id="mlp-xsec-{{ $i }}"><span aria-hidden="true">{{ $s.icon }}</span> {{ $s.title }}</h2>
+      <p>{{ $s.text }}</p>
+      <div class="mlp-acts"><a class="mlp-btn" href="{{ $s.url | relURL }}">{{ $s.button | default $s.title }}</a></div>
+    </section>
+    {{- end }}
+  </div>
+  {{- end }}
+
   <div class="mlp-hub-grid">
     <section class="mlp-ladder-wrap" aria-labelledby="mlp-ladder-h">
       <h2 id="mlp-ladder-h">The ladder</h2>

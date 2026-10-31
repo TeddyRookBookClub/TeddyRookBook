@@ -1,0 +1,48 @@
+# Memory challenge list (format: /memory/challenges/ engine; checked by scripts/memory/check-lists.js)
+slug: nato-phonetic-alphabet
+title: "The NATO phonetic alphabet"
+group: everyday
+ages: "7+"
+count_note: "26 code words, one for each letter, with NATO's official spellings: Alfa and Juliett are spelled that way on purpose, so that speakers of many languages say them correctly. The FAA writes X-ray as Xray. Alpha, Juliet, Xray and Whisky are accepted when typing. It took effect in NATO on March 1, 1956, and is also used in aviation, at sea and on the radio."
+intro: "When a letter is said over a phone or a radio, B, D, P and V can sound the same. The phonetic alphabet gives each letter a word that can't be mistaken. It is handy for spelling a name or a booking code, and it is used every day by pilots, sailors and emergency services."
+technique: "Twenty-six words is about five chunks of five. Most words start with their own letter, so the letter is the cue and the word is the picture: picture each one as you say it (a bravo crowd cheering, a foxtrot dancer, a golf ball, a hotel, a kilo of flour, a lime from Lima). Link the words of a chunk into a short story: Alfa and Bravo watch Charlie fish in the Delta, and hear an Echo. Spell your own name out loud with it every day, then try street signs and license plates. Come back on day 1, 3, 7 and 21."
+order_matters: true
+main: word
+fields:
+  - { key: letter, label: "Letter" }
+  - { key: word, label: "Code word" }
+show: [letter, word]
+prompts:
+  - { ask: word, from: [letter] }
+  - { ask: letter, from: [word] }
+items:
+  - { letter: "A", word: "Alfa", chunk: "A to E", hook: "Spelled with an f, so it is said \"AL-fah\" in every language.", accept: ["Alpha"] }
+  - { letter: "B", word: "Bravo", chunk: "A to E", hook: "A crowd shouting \"Bravo!\"" }
+  - { letter: "C", word: "Charlie", chunk: "A to E" }
+  - { letter: "D", word: "Delta", chunk: "A to E", hook: "A river delta, the shape of the Greek letter Δ." }
+  - { letter: "E", word: "Echo", chunk: "A to E", hook: "Shout it into a canyon: echo, echo." }
+  - { letter: "F", word: "Foxtrot", chunk: "F to J", hook: "A dance, the foxtrot." }
+  - { letter: "G", word: "Golf", chunk: "F to J" }
+  - { letter: "H", word: "Hotel", chunk: "F to J" }
+  - { letter: "I", word: "India", chunk: "F to J" }
+  - { letter: "J", word: "Juliett", chunk: "F to J", hook: "Two t's on purpose, so French speakers don't drop the final t.", accept: ["Juliet"] }
+  - { letter: "K", word: "Kilo", chunk: "K to O", hook: "A kilo, a kilogram of flour." }
+  - { letter: "L", word: "Lima", chunk: "K to O", hook: "Lima, the capital of Peru. It is said \"LEE-mah\"." }
+  - { letter: "M", word: "Mike", chunk: "K to O", hook: "A microphone, a mike, for the radio operator." }
+  - { letter: "N", word: "November", chunk: "K to O", hook: "The only month in the alphabet." }
+  - { letter: "O", word: "Oscar", chunk: "K to O" }
+  - { letter: "P", word: "Papa", chunk: "P to T" }
+  - { letter: "Q", word: "Quebec", chunk: "P to T", hook: "Quebec, the Canadian province and city. It is said \"keh-BECK\"." }
+  - { letter: "R", word: "Romeo", chunk: "P to T", hook: "Romeo and Juliett are both in the alphabet: R and J." }
+  - { letter: "S", word: "Sierra", chunk: "P to T", hook: "A sierra is a mountain range, like the Sierra Nevada." }
+  - { letter: "T", word: "Tango", chunk: "P to T", hook: "A second dance, after Foxtrot." }
+  - { letter: "U", word: "Uniform", chunk: "U to Z" }
+  - { letter: "V", word: "Victor", chunk: "U to Z", hook: "The victor holds up a V for victory." }
+  - { letter: "W", word: "Whiskey", chunk: "U to Z", accept: ["Whisky"] }
+  - { letter: "X", word: "X-ray", chunk: "U to Z", hook: "An X-ray picture of a hand.", accept: ["Xray", "X ray"] }
+  - { letter: "Y", word: "Yankee", chunk: "U to Z" }
+  - { letter: "Z", word: "Zulu", chunk: "U to Z", hook: "The last letter. Pilots say \"Zulu time\" for Coordinated Universal Time (UTC), the clock the world's time zones are set from." }
+sources:
+  - { name: "NATO: The NATO Phonetic Alphabet", url: "https://www.nato.int/en/about-us/nato-history/history-by-theme/symbols-of-nato/nato-phonetic-alphabet" }
+  - { name: "Federal Aviation Administration: Aeronautical Information Manual, paragraph 4-2-7 (the phonetic alphabet)", url: "https://www.faa.gov/air_traffic/publications/atpubs/aim/aim0402.html" }
+updated: 2026-10-31

@@ -1,0 +1,40 @@
+slug: "cloud-types"
+title: "The ten main cloud types"
+group: "science"
+ages: "8+"
+count_note: "The ten genera of the WMO International Cloud Atlas. Heights are for the middle latitudes: clouds sit lower near the poles and higher in the tropics. Nimbostratus is a middle cloud that usually spreads into the levels above and below; cumulus and cumulonimbus have low bases but can tower into the middle and high levels. Some weather services draw the lines a little differently (Australia's Bureau of Meteorology uses about 2.5 km and 6 km)."
+intro: "Every cloud in the sky belongs to one of ten families, and their names are built from just four Latin words. Learn the ten and a glance upward tells you something about the weather on the way."
+technique: "Build from the parts first: cirrus (curl of hair, high and icy), cumulus (heap), stratus (spread out, a layer) and nimbus (rain cloud), plus alto for the middle level. Then each name is a small sum you can work out, which is far easier than ten separate facts. Chunk by level (three high, three middle, four low), and pair each name with a quick sketch: picture plus words is dual coding. Best of all, step outside and name the clouds you see."
+order_matters: false
+main: "name"
+fields:
+  - { key: name, label: "Cloud" }
+  - { key: abbr, label: "Symbol" }
+  - { key: level, label: "Level" }
+  - { key: height, label: "Usual base height" }
+  - { key: looks, label: "What it looks like" }
+show: [name, abbr, level, height, looks]
+prompts:
+  - { ask: name, from: [looks] }
+  - { ask: level, from: [name] }
+  - { ask: abbr, from: [name] }
+  - { ask: name, from: [abbr] }
+  - { ask: looks, from: [name] }
+items:
+  - { name: "Cirrus", abbr: "Ci", level: "High", height: "About 5-13 km (16,500-45,000 ft)", looks: "Thin white wisps, strands or hooks of ice crystals, like brush strokes across the sky.", chunk: "High clouds", hook: "Latin cirrus means a curl or lock of hair: picture the sky with wispy white hair." }
+  - { name: "Cirrocumulus", abbr: "Cc", level: "High", height: "About 5-13 km (16,500-45,000 ft)", looks: "Tiny white grains or ripples in rows, with no shading; each bit looks smaller than your little finger held at arm's length.", chunk: "High clouds", hook: "Cirro (hair-high) + cumulus (heap): tiny heaps up where the cirrus lives, like fish scales." }
+  - { name: "Cirrostratus", abbr: "Cs", level: "High", height: "About 5-13 km (16,500-45,000 ft)", looks: "A thin, milky veil over much of the sky that often makes a ring of light (a halo) around the Sun or Moon.", chunk: "High clouds", hook: "Cirro + stratus (spread out): a thin icy sheet spread high up, wearing a halo." }
+  - { name: "Altocumulus", abbr: "Ac", level: "Middle", height: "About 2-7 km (6,500-23,000 ft)", looks: "White or gray patches, rolls or rows with some shading; each piece about one to three fingers wide at arm's length.", chunk: "Middle clouds", hook: "Alto (from Latin altus, high) + cumulus: heaps in the middle of the sky, like a flock of sheep." }
+  - { name: "Altostratus", abbr: "As", level: "Middle", height: "About 2-7 km (6,500-23,000 ft)", looks: "A gray or bluish sheet; the Sun shows dimly, as if through frosted glass, with no halo.", chunk: "Middle clouds", hook: "Alto + stratus: a middle-level sheet that turns the Sun into a dim, blurry coin." }
+  - { name: "Nimbostratus", abbr: "Ns", level: "Middle", height: "About 2-7 km (6,500-23,000 ft)", looks: "A thick, dark gray layer that hides the Sun and brings steady rain or snow.", chunk: "Middle clouds", hook: "Latin nimbus means rain cloud: a rain-sheet that settles in for the whole day." }
+  - { name: "Stratocumulus", abbr: "Sc", level: "Low", height: "Surface to about 2 km (6,500 ft)", looks: "Low gray or white lumps and rolls with darker parts, each wider than three fingers at arm's length, often with gaps of blue.", chunk: "Low clouds", hook: "Strato + cumulus: lumpy heaps spread into a low blanket, like a quilt with patches." }
+  - { name: "Stratus", abbr: "St", level: "Low", height: "Surface to about 2 km (6,500 ft)", looks: "A flat, even gray layer, like fog that has lifted off the ground; it may bring drizzle.", chunk: "Low clouds", hook: "Stratus (spread out): a flat gray lid on the sky. Fog is stratus at ground level." }
+  - { name: "Cumulus", abbr: "Cu", level: "Low", height: "Surface to about 2 km (6,500 ft)", looks: "Puffy, separate heaps with flat bases and bright, rounded tops, like cotton balls or cauliflower.", chunk: "Low clouds", hook: "Latin cumulus means heap (as in \"accumulate\"): fair-weather heaps of cotton." }
+  - { name: "Cumulonimbus", abbr: "Cb", level: "Low", height: "Surface to about 2 km (6,500 ft)", looks: "A huge, towering storm cloud, often with a flat anvil-shaped top, bringing thunder, lightning, heavy showers and sometimes hail.", chunk: "Low clouds", hook: "Cumulus + nimbus: a heap that grew into a rain-and-thunder tower." }
+sources:
+  - { name: "WMO International Cloud Atlas: levels (étages) and approximate heights", url: "https://cloudatlas.wmo.int/en/some-useful-concepts-levels.html" }
+  - { name: "WMO International Cloud Atlas: Altocumulus (definition)", url: "https://cloudatlas.wmo.int/en/altocumulus-ac.html" }
+  - { name: "WMO International Cloud Atlas: useful concepts (genera and abbreviations)", url: "https://cloudatlas.wmo.int:443/en/useful-concepts.html" }
+  - { name: "Hong Kong Observatory: The classification and nomenclature of clouds", url: "https://www.hko.gov.hk/en/education/weather/clouds/00099-the-classification-and-nomenclature-of-clouds-1.html" }
+  - { name: "Australian Bureau of Meteorology: Cloud types", url: "https://www.bom.gov.au/weather-services/about/cloud/cloud-types.shtml" }
+updated: 2026-10-30

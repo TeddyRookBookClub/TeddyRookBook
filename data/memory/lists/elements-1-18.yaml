@@ -1,0 +1,47 @@
+slug: "elements-1-18"
+title: "Elements 1-18: the first three rows of the periodic table"
+group: "science"
+ages: "9+"
+count_note: "18 elements, periods 1 to 3. Hydrogen sits in group 1 on most tables, though it is not a metal."
+intro: "The first eighteen elements are the ones you meet most: the air you breathe, the water you drink, the salt on the table and the sand on the beach. Learn these and the shape of the whole periodic table starts to make sense."
+technique: "Eighteen is too many to hold at once, so take it a row at a time: row 1 has two elements, rows 2 and 3 have eight each, and the engine splits each row into two chunks of four. Picture each row as a shelf in your kitchen, and put a vivid object for each element on it, left to right (a balloon for helium, a battery for lithium, a diamond for carbon). Say the symbols out loud as you walk the shelf, then look away and rebuild it."
+order_matters: true
+main: "name"
+fields:
+  - { key: z, label: "Atomic number" }
+  - { key: symbol, label: "Symbol" }
+  - { key: name, label: "Element" }
+  - { key: group, label: "Group" }
+  - { key: period, label: "Period" }
+show: [z, symbol, name, group, period]
+prompts:
+  - { ask: symbol, from: [name] }
+  - { ask: name, from: [symbol] }
+  - { ask: name, from: [z] }
+  - { ask: z, from: [name] }
+  - { ask: group, from: [name] }
+  - { ask: period, from: [name] }
+items:
+  - { z: 1, symbol: "H", name: "Hydrogen", group: "1", period: 1, chunk: "Period 1", hook: "From the Greek hydro (water) and genes (forming), because it burns to make water." }
+  - { z: 2, symbol: "He", name: "Helium", group: "18", period: 1, chunk: "Period 1", hook: "From the Greek helios, the Sun, where it was first detected." }
+  - { z: 3, symbol: "Li", name: "Lithium", group: "1", period: 2, chunk: "Period 2", hook: "From the Greek lithos, stone, because it was found in a mineral rather than in plants." }
+  - { z: 4, symbol: "Be", name: "Beryllium", group: "2", period: 2, chunk: "Period 2", hook: "From beryl, the gemstone mineral it was found in." }
+  - { z: 5, symbol: "B", name: "Boron", group: "13", period: 2, chunk: "Period 2", hook: "From borax, the mineral it was isolated from (from the Arabic buraq)." }
+  - { z: 6, symbol: "C", name: "Carbon", group: "14", period: 2, chunk: "Period 2", hook: "From the Latin carbo, charcoal." }
+  - { z: 7, symbol: "N", name: "Nitrogen", group: "15", period: 2, chunk: "Period 2", hook: "From the Greek nitron (saltpeter or soda) and genes (forming), since it is part of saltpeter." }
+  - { z: 8, symbol: "O", name: "Oxygen", group: "16", period: 2, chunk: "Period 2", hook: "From the Greek oxys (sharp or acid) and genes (forming); Lavoisier wrongly thought all acids contain it." }
+  - { z: 9, symbol: "F", name: "Fluorine", group: "17", period: 2, chunk: "Period 2", hook: "From the mineral fluorite (Latin fluere, to flow), which was used to help metal ores melt." }
+  - { z: 10, symbol: "Ne", name: "Neon", group: "18", period: 2, chunk: "Period 2", hook: "From the Greek neos, new." }
+  - { z: 11, symbol: "Na", name: "Sodium", group: "1", period: 3, chunk: "Period 3", hook: "From soda; the symbol Na comes from the Latin natrium." }
+  - { z: 12, symbol: "Mg", name: "Magnesium", group: "2", period: 3, chunk: "Period 3", hook: "From Magnesia, a district in Greece where its minerals were found." }
+  - { z: 13, symbol: "Al", name: "Aluminum", group: "13", period: 3, chunk: "Period 3", hook: "From alum, a salt used in dyeing (Latin alumen); Americans say aluminum, most others say aluminium.", accept: { name: ["Aluminium"] } }
+  - { z: 14, symbol: "Si", name: "Silicon", group: "14", period: 3, chunk: "Period 3", hook: "From the Latin silex (flint)." }
+  - { z: 15, symbol: "P", name: "Phosphorus", group: "15", period: 3, chunk: "Period 3", hook: "From the Greek phosphoros, light-bearer, because white phosphorus glows in the dark." }
+  - { z: 16, symbol: "S", name: "Sulfur", group: "16", period: 3, chunk: "Period 3", hook: "From the Latin sulpur.", accept: { name: ["Sulphur"] } }
+  - { z: 17, symbol: "Cl", name: "Chlorine", group: "17", period: 3, chunk: "Period 3", hook: "From the Greek chloros, pale green, the color of the gas." }
+  - { z: 18, symbol: "Ar", name: "Argon", group: "18", period: 3, chunk: "Period 3", hook: "From the Greek argos, lazy or idle, because it does not react." }
+sources:
+  - { name: "Teddy Rook Book periodic table data (data/elements/elements.json; IUPAC/CIAAW and NIST)", url: "/science/periodic-table/" }
+  - { name: "PubChem (NIH): Periodic Table of Elements, with standard state", url: "https://pubchem.ncbi.nlm.nih.gov/periodic-table/pdf/Periodic_Table_of_Elements_w_Standard_State_PubChem.pdf" }
+  - { name: "PubChem (NIH): IUPAC Periodic Table of the Elements and Isotopes", url: "https://pubchem.ncbi.nlm.nih.gov/source/24616" }
+updated: 2026-10-30

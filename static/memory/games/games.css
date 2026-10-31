@@ -1,0 +1,56 @@
+/* Memory games (mg-), on top of static/memory/challenges/engine.css */
+.mg{--mg-sky:#dcefff;--mg-wall:#fbf3e4;--mg-label:#5a4a3a;min-height:14rem}
+[data-theme="dark"] .mg{--mg-sky:#1a2c3a;--mg-wall:#e9dfcc;--mg-label:#5a4a3a}
+.mg-hub .mc-more li{margin:.3rem 0;line-height:1.5}
+.mg-hub .mc-more a,.mg-foot a,.mg a{color:var(--mc-g)}
+.mg-emoji{font-size:2rem;line-height:1;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+/* palace */
+.mg-housewrap{max-width:640px;margin:.4rem auto}
+.mg-house{width:100%;height:auto;display:block;border-radius:10px}
+.mg-stop .mg-dot{fill:#fff;stroke:#b8963e;stroke-width:2}
+.mg-stop .mg-dott{fill:#3a2f22;font-weight:700;font-family:system-ui,sans-serif}
+.mg-stop.is-click{cursor:pointer}
+.mg-stop.is-click:hover .mg-dot,.mg-stop:focus .mg-dot{fill:#fbf3dc;stroke:#00562f;stroke-width:3}
+.mg-stop:focus{outline:none}
+.mg-stop.is-active .mg-dot{fill:#ffe9a8;stroke:#00562f;stroke-width:3}
+.mg-next,.mg-vivid{display:flex;align-items:center;gap:.7rem;background:var(--mc-card);border:1.5px solid var(--mc-gold);border-radius:12px;padding:.6rem .9rem;margin:.4rem 0;flex-wrap:wrap}
+.mg-vivid p{margin:0;flex:1 1 14rem;line-height:1.5}
+.mg-vivid .mg-emoji{font-size:3rem}
+.mg-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(5.2rem,1fr));gap:.45rem;margin:.5rem 0}
+.mg-tile{font:inherit;display:flex;flex-direction:column;align-items:center;gap:.2rem;padding:.5rem .2rem;border-radius:10px;border:1.5px solid var(--mc-bd);background:var(--mc-card);color:var(--mc-tx);cursor:pointer;min-height:4.6rem}
+.mg-tile small{font-size:.75rem;color:var(--mc-dim);text-align:center}
+.mg-tile:hover{border-color:var(--mc-g)}
+.mg-tile:disabled{opacity:.35;cursor:default}
+.mg-tile.is-ok{border-color:var(--mc-ok);background:var(--mc-okbg)}
+.mg-tile.is-no{border-color:var(--mc-no);background:var(--mc-nobg)}
+.mg-tile:focus-visible,.mg-pc:focus-visible,.mg-gap:focus-visible{outline:3px solid var(--mc-gold);outline-offset:2px}
+/* chunk it */
+.mg-timer{height:6px;border-radius:3px;background:var(--mc-bd);overflow:hidden;margin:.4rem 0 .8rem}
+.mg-timer i{display:block;height:100%;width:100%;background:var(--mc-gold);transform-origin:left;animation:mg-shrink linear forwards}
+@keyframes mg-shrink{to{transform:scaleX(0)}}
+@media (prefers-reduced-motion:reduce){.mg-timer i{animation:none}}
+.mg-digits{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0;margin:.6rem 0;font-family:ui-monospace,Menlo,Consolas,monospace}
+.mg-d{font-size:clamp(1.5rem,7vw,2.3rem);font-weight:700;padding:0 .02em;color:var(--mc-tx)}
+.mg-gap{width:18px;height:2.6rem;border:0;background:transparent;cursor:pointer;position:relative;padding:0;margin:0 -2px}
+.mg-gap::after{content:"";position:absolute;left:50%;top:20%;bottom:20%;width:2px;margin-left:-1px;background:var(--mc-bd);border-radius:1px}
+.mg-gap.is-cut{width:26px}
+.mg-gap.is-cut::after{background:var(--mc-gold);width:4px;margin-left:-2px;top:5%;bottom:5%}
+@media (max-width:520px){.mg-gap{width:14px}.mg-gap.is-cut{width:20px}}
+.mg-in{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.3rem;letter-spacing:.06em}
+/* story chain */
+.mg-link{display:flex;align-items:center;gap:.6rem;justify-content:center;margin:.6rem 0;flex-wrap:wrap}
+.mg-card{display:flex;flex-direction:column;align-items:center;gap:.3rem;border:1.5px solid var(--mc-bd);border-radius:12px;background:var(--mc-card);padding:.7rem 1rem;min-width:7rem}
+.mg-card .mg-emoji{font-size:3rem}
+.mg-arrow{font-size:1.8rem;color:var(--mc-gold)}
+.mg-strip{display:flex;flex-wrap:wrap;gap:.3rem;padding-left:1.4rem;margin:.4rem 0;min-height:1.6rem}
+.mg-strip li{font-size:.88rem;margin-right:1.2rem}
+/* card pairs */
+.mg-pairs{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:.45rem;max-width:560px;margin:.6rem auto}
+.mg-pc{font:inherit;aspect-ratio:3/4;border-radius:10px;border:2px solid #00562f;cursor:pointer;padding:.2rem;min-width:0;
+  background:repeating-linear-gradient(45deg,#00562f 0 6px,#004225 6px 12px);color:var(--mc-tx)}
+.mg-pc .mg-face{display:none}
+.mg-pc.is-up,.mg-pc.is-done{background:var(--mc-card)}
+.mg-pc.is-up .mg-face,.mg-pc.is-done .mg-face{display:flex;align-items:center;justify-content:center;height:100%}
+.mg-pc.is-done{border-color:var(--mc-ok);background:var(--mc-okbg);cursor:default}
+.mg-pc b{font-size:clamp(.72rem,3vw,.95rem);overflow-wrap:anywhere;line-height:1.15}
+.mg-pc .mg-emoji{font-size:clamp(1.6rem,7vw,2.4rem)}

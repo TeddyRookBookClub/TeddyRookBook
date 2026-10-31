@@ -1,0 +1,44 @@
+slug: "cognitive-biases"
+title: "Common thinking traps (cognitive biases)"
+group: "science"
+ages: "12+"
+count_note: "12 biases with long research records. Each item names the researchers who first described or tested it. How strong each effect is varies with the situation, and researchers still debate the details; for the fundamental attribution error, for example, the effect is weaker in some cultures. Popular lists name hundreds of biases; this one keeps to well-studied ones."
+intro: "Everyone's mind takes shortcuts, and most of the time they serve us well. These twelve are the places where the shortcuts lead us wrong in predictable ways. Knowing their names makes them easier to catch, in yourself first."
+technique: "Encode each bias with your own example: after reading the everyday one, think of a time it happened to you and say it out loud. A personal story is far stickier than a definition. Chunk them by what they bend (judging numbers, looking ahead and back, beliefs and choices, judging people). Then practice retrieval in real life: name a bias when you see it in an ad or a story."
+order_matters: false
+main: "name"
+fields:
+  - { key: name, label: "Bias" }
+  - { key: means, label: "What it is" }
+  - { key: example, label: "Everyday example" }
+  - { key: who, label: "First described by" }
+show: [name, means, example, who]
+prompts:
+  - { ask: name, from: [means] }
+  - { ask: name, from: [example] }
+  - { ask: means, from: [name] }
+items:
+  - { name: "Anchoring", means: "Leaning too hard on the first number you hear when you make an estimate.", example: "A jacket tagged \"was $120, now $60\" feels like a deal, even if $60 is what it usually costs.", who: "Tversky and Kahneman, 1974", chunk: "Judging numbers", accept: { name: ["anchoring effect", "anchoring bias"] } }
+  - { name: "Availability heuristic", means: "Judging how common or likely something is by how easily examples come to mind.", example: "After a news story about a plane crash, flying feels riskier than driving, though per mile driving is far more dangerous.", who: "Tversky and Kahneman, 1973 and 1974", chunk: "Judging numbers", accept: { name: ["availability", "availability bias"] } }
+  - { name: "Gambler's fallacy", means: "Believing that a chance event is \"due\" because it hasn't happened in a while.", example: "After five heads in a row, feeling sure the next flip will be tails. A fair coin is still 50-50 every time.", who: "Described by Tversky and Kahneman (1971) as part of the \"law of small numbers\"", chunk: "Judging numbers", accept: { name: ["gamblers fallacy"] } }
+  - { name: "Planning fallacy", means: "Expecting your own task to take less time than it will, even when similar tasks ran long before.", example: "Planning to finish a school project in one evening when the last three took a week each.", who: "Kahneman and Tversky, 1979; Buehler, Griffin and Ross, 1994", chunk: "Looking ahead and back" }
+  - { name: "Optimism bias", means: "Believing good things are more likely, and bad things less likely, to happen to you than to other people.", example: "Expecting your old car will keep running fine, though you know cars that age often break down.", who: "Weinstein, 1980", chunk: "Looking ahead and back", accept: { name: ["unrealistic optimism"] } }
+  - { name: "Hindsight bias", means: "Feeling, once you know how something turned out, that you knew it all along.", example: "After the game: \"I knew they would lose.\" Before it, you weren't sure at all.", who: "Fischhoff, 1975", chunk: "Looking ahead and back", accept: { name: ["knew it all along effect"] } }
+  - { name: "Confirmation bias", means: "Noticing, believing and remembering the facts that fit what you already think, and passing over the ones that don't.", example: "A fan who thinks a lucky shirt helps remembers the wins in that shirt and forgets the losses.", who: "Wason, 1960; reviewed by Nickerson, 1998", chunk: "Beliefs and choices" }
+  - { name: "Framing effect", means: "Choosing differently when the same facts are worded as a gain or as a loss.", example: "Ground beef labeled \"90% lean\" sounds better than \"10% fat,\" though it is the same meat.", who: "Tversky and Kahneman, 1981", chunk: "Beliefs and choices", accept: { name: ["framing"] } }
+  - { name: "Loss aversion", means: "Feeling a loss more strongly than a gain of the same size.", example: "Losing a $10 bill stings more than finding one feels good.", who: "Kahneman and Tversky, 1979 (prospect theory)", chunk: "Beliefs and choices" }
+  - { name: "Status quo bias", means: "Preferring to keep things as they are, even when a change would serve you better.", example: "Staying on the same phone plan for years without checking whether a cheaper one fits.", who: "Samuelson and Zeckhauser, 1988", chunk: "Beliefs and choices" }
+  - { name: "Halo effect", means: "Letting one good impression of a person color how you judge their other, unrelated qualities.", example: "Assuming a friendly, well-dressed stranger must also be smart and honest.", who: "Thorndike, 1920", chunk: "Judging people" }
+  - { name: "Fundamental attribution error", means: "Explaining other people's actions by their character while overlooking their situation.", example: "Deciding the driver who cut you off is rude, when they might be rushing to the hospital.", who: "Named by Ross, 1977; Jones and Harris, 1967", chunk: "Judging people", accept: { name: ["correspondence bias"] } }
+sources:
+  - { name: "Grokipedia: List of cognitive biases", url: "https://grokipedia.com/page/List_of_cognitive_biases" }
+  - { name: "Grokipedia: List of psychological effects", url: "https://grokipedia.com/page/List_of_psychological_effects" }
+  - { name: "Grokipedia: Anchoring effect", url: "https://grokipedia.com/page/Anchoring_effect" }
+  - { name: "Grokipedia: Hindsight bias", url: "https://grokipedia.com/page/Hindsight_bias" }
+  - { name: "Grokipedia: Planning fallacy", url: "https://grokipedia.com/page/Planning_fallacy" }
+  - { name: "Grokipedia: Framing effect (psychology)", url: "https://grokipedia.com/page/Framing_effect_(psychology)" }
+  - { name: "Grokipedia: Fundamental attribution error", url: "https://grokipedia.com/page/Fundamental_attribution_error" }
+  - { name: "Grokipedia: Status quo bias", url: "https://grokipedia.com/page/Status_quo_bias" }
+  - { name: "Grokipedia: Optimism bias", url: "https://grokipedia.com/page/Optimism_bias" }
+  - { name: "Grokipedia: Law of averages (gambler's fallacy)", url: "https://grokipedia.com/page/Law_of_averages" }
+updated: 2026-10-30

@@ -1,0 +1,50 @@
+slug: "greek-alphabet"
+title: "The Greek alphabet"
+group: "language"
+ages: "8+"
+count_note: "24 letters, the standard alphabet since Athens adopted the Ionic letters in 403/402 BC. Sigma has a second small form, ς, used at the end of a word. English letters are the usual way of spelling each one in our alphabet."
+intro: "The Greek letters turn up all over: in math (π, Σ, θ), science (α, β and γ rays, μ for micro), college names and the roots of thousands of English words. The alphabet itself is named for its first two letters."
+technique: "Many letters look like ours (A, B, E, Z, I, K, M, N, O, T), so start by sorting: the look-alikes, the false friends that look like ours but sound different (H is the vowel eta, P is r, X is ch), and the new shapes (Γ, Δ, Θ, Λ, Ξ, Π, Σ, Φ, Ψ, Ω). Then learn the order in chunks of five or so, saying the names in rhythm as a chant. Write each letter by hand as you say it: the motion, the picture and the sound together make a strong memory."
+order_matters: true
+main: "name"
+fields:
+  - { key: n, label: "Order" }
+  - { key: upper, label: "Capital" }
+  - { key: lower, label: "Small" }
+  - { key: name, label: "Name" }
+  - { key: latin, label: "English letters" }
+show: [n, upper, lower, name, latin]
+prompts:
+  - { ask: name, from: [upper] }
+  - { ask: name, from: [lower] }
+  - { ask: name, from: [n] }
+  - { ask: n, from: [name] }
+  - { ask: latin, from: [name] }
+items:
+  - { n: 1, upper: "Α", lower: "α", name: "Alpha", latin: "a", hook: "The first letter: \"alphabet\" is alpha + beta." }
+  - { n: 2, upper: "Β", lower: "β", name: "Beta", latin: "b", hook: "The second letter, and the \"bet\" in alphabet." }
+  - { n: 3, upper: "Γ", lower: "γ", name: "Gamma", latin: "g", hook: "The capital looks like a signpost bent at the top: Γ for \"go this way.\"" }
+  - { n: 4, upper: "Δ", lower: "δ", name: "Delta", latin: "d", hook: "A triangle, like the triangle-shaped delta where a river meets the sea." }
+  - { n: 5, upper: "Ε", lower: "ε", name: "Epsilon", latin: "e", hook: "E-psilon means \"plain e.\"" }
+  - { n: 6, upper: "Ζ", lower: "ζ", name: "Zeta", latin: "z", hook: "The capital is just our Z." }
+  - { n: 7, upper: "Η", lower: "η", name: "Eta", latin: "ē", hook: "Looks like our H, but in Greek it is a vowel, written ē in English letters." }
+  - { n: 8, upper: "Θ", lower: "θ", name: "Theta", latin: "th", hook: "An O with a bar across it, written th, as in \"theater.\"" }
+  - { n: 9, upper: "Ι", lower: "ι", name: "Iota", latin: "i", hook: "The smallest letter, which gives us \"not one iota.\"" }
+  - { n: 10, upper: "Κ", lower: "κ", name: "Kappa", latin: "k", hook: "Our K with a cap." }
+  - { n: 11, upper: "Λ", lower: "λ", name: "Lambda", latin: "l", hook: "The capital is a tent, an upside-down V: lean-to Lambda.", accept: { name: ["Lamda"] } }
+  - { n: 12, upper: "Μ", lower: "μ", name: "Mu", latin: "m", hook: "Says \"moo\"; it is the micro- sign in science.", accept: { name: ["My"] } }
+  - { n: 13, upper: "Ν", lower: "ν", name: "Nu", latin: "n", hook: "The small letter looks like a v, but it is n: \"new.\"", accept: { name: ["Ny"] } }
+  - { n: 14, upper: "Ξ", lower: "ξ", name: "Xi", latin: "x", hook: "Three stacked bars; it says \"ks,\" like the end of \"box.\"" }
+  - { n: 15, upper: "Ο", lower: "ο", name: "Omicron", latin: "o", hook: "O-micron means \"small o.\"", accept: { name: ["Omikron"] } }
+  - { n: 16, upper: "Π", lower: "π", name: "Pi", latin: "p", hook: "The famous 3.14159...: a doorway with two posts." }
+  - { n: 17, upper: "Ρ", lower: "ρ", name: "Rho", latin: "r", hook: "Looks like our P, but it is r, written rh at the start of words like \"rhino.\"" }
+  - { n: 18, upper: "Σ", lower: "σ, ς", name: "Sigma", latin: "s", hook: "Capital Σ means \"add them up\" in math; at the end of a word small sigma is written ς." }
+  - { n: 19, upper: "Τ", lower: "τ", name: "Tau", latin: "t", hook: "Our T." }
+  - { n: 20, upper: "Υ", lower: "υ", name: "Upsilon", latin: "y (or u)", hook: "U-psilon means \"plain u.\"", accept: { name: ["Ypsilon"] } }
+  - { n: 21, upper: "Φ", lower: "φ", name: "Phi", latin: "ph", hook: "An O with a pole through it, written ph, as in \"phone.\"" }
+  - { n: 22, upper: "Χ", lower: "χ", name: "Chi", latin: "ch (or kh)", hook: "Looks like X, but it is written ch, as in \"chorus.\"", accept: { name: ["Khi"] } }
+  - { n: 23, upper: "Ψ", lower: "ψ", name: "Psi", latin: "ps", hook: "A trident: the \"ps\" in psychology." }
+  - { n: 24, upper: "Ω", lower: "ω", name: "Omega", latin: "ō", hook: "O-mega means \"big o.\" It is the last letter, so \"from alpha to omega\" means from start to finish." }
+sources:
+  - { name: "Grokipedia: Greek alphabet", url: "https://grokipedia.com/page/Greek_alphabet" }
+updated: 2026-10-30

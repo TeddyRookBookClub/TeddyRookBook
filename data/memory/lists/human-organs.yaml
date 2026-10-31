@@ -1,0 +1,48 @@
+slug: "human-organs"
+title: "Major organs of the human body and what they do"
+group: "science"
+ages: "8+"
+count_note: "16 major organs and organ pairs. Lists of organs differ in what they count (bones, muscles, eyes and blood vessels are organs too); this one covers the main organs of the head, chest and belly, plus the skin."
+intro: "Knowing where your organs are and what each one does makes sense of how food, air and blood move through you. It is the first map every doctor, nurse and biology student learns."
+technique: "Your own body is a ready-made memory palace. Walk it from top to bottom: brain, then the thyroid and esophagus in the neck, the heart and lungs in the chest, the five organs of the upper belly, the kidneys at the back, the intestines and bladder low down, and the skin wrapped around it all. Touch each spot as you name it and say its job in a few words. Chunking by region keeps each stop to five or fewer."
+order_matters: false
+main: "organ"
+fields:
+  - { key: organ, label: "Organ" }
+  - { key: system, label: "Body system" }
+  - { key: job, label: "What it does" }
+show: [organ, system, job]
+prompts:
+  - { ask: organ, from: [job] }
+  - { ask: job, from: [organ] }
+  - { ask: system, from: [organ] }
+  - { ask: organ, from: [system, job] }
+items:
+  - { organ: "Brain", system: "Nervous", job: "Takes in signals from the senses, thinks and remembers, and sends commands to the muscles and glands.", chunk: "Head and neck", hook: "The control tower at the top of the house." }
+  - { organ: "Thyroid", system: "Endocrine", job: "A gland in the neck that makes hormones, using iodine from food, that help set how fast the body uses energy.", chunk: "Head and neck", hook: "Shaped like a butterfly resting on your windpipe: a butterfly that sets your pace.", accept: { organ: ["thyroid gland"] } }
+  - { organ: "Esophagus", system: "Digestive", job: "A muscular tube that squeezes swallowed food down to the stomach.", chunk: "Head and neck", hook: "A water slide from your mouth to your stomach, but the walls do the pushing.", accept: { organ: ["oesophagus", "food pipe", "gullet"] } }
+  - { organ: "Heart", system: "Circulatory", job: "A muscle that pumps blood through the blood vessels to every part of the body, day and night.", chunk: "Chest", hook: "A pump the size of a fist that never takes a day off." }
+  - { organ: "Lungs", system: "Respiratory", job: "Bring in oxygen from the air and pass it into the blood, and carry carbon dioxide back out.", chunk: "Chest", hook: "Two sponges that trade stale air for fresh with every breath.", accept: { organ: ["lung"] } }
+  - { organ: "Liver", system: "Digestive", job: "Makes bile for digesting fats, stores nutrients, and cleans harmful substances out of the blood.", chunk: "Upper belly", hook: "The largest organ inside the body: a busy factory and filter." }
+  - { organ: "Gallbladder", system: "Digestive", job: "Stores bile from the liver and squeezes it into the small intestine when you eat.", chunk: "Upper belly", hook: "A small storage bag tucked under the liver, waiting for dinner.", accept: { organ: ["gall bladder"] } }
+  - { organ: "Stomach", system: "Digestive", job: "Churns food with acid and enzymes that start breaking down proteins, then lets it into the small intestine a little at a time.", chunk: "Upper belly", hook: "A cement mixer with a gate at the bottom." }
+  - { organ: "Spleen", system: "Lymphatic (immune)", job: "Filters the blood, removes worn-out red blood cells, and helps fight germs.", chunk: "Upper belly", hook: "A filter and recycling center for old blood cells." }
+  - { organ: "Pancreas", system: "Digestive and endocrine", job: "Sends digestive juices to the small intestine, and makes insulin and glucagon to keep blood sugar steady.", chunk: "Upper belly", hook: "Two jobs: a juice maker for digestion and a sugar thermostat." }
+  - { organ: "Adrenal glands", system: "Endocrine", job: "Small glands on top of the kidneys that make hormones such as adrenaline (epinephrine) and cortisol.", chunk: "Back of the belly", hook: "Two little hats on the kidneys that sound the alarm when you are startled.", accept: { organ: ["adrenals", "adrenal gland"] } }
+  - { organ: "Kidneys", system: "Urinary", job: "Filter waste and extra water out of the blood to make urine, and keep the body's salt and water in balance.", chunk: "Back of the belly", hook: "Two bean-shaped filters, one on each side of your back.", accept: { organ: ["kidney"] } }
+  - { organ: "Small intestine", system: "Digestive", job: "Finishes breaking down food and absorbs most of its nutrients into the blood.", chunk: "Lower belly", hook: "A long, folded hallway where food is finally taken in.", accept: { organ: ["small bowel"] } }
+  - { organ: "Large intestine", system: "Digestive", job: "Absorbs water and forms what is left into waste; helpful bacteria there make vitamin K.", chunk: "Lower belly", hook: "The drying room at the end of the line.", accept: { organ: ["colon", "large bowel"] } }
+  - { organ: "Urinary bladder", system: "Urinary", job: "A stretchy bag that stores urine until you go to the bathroom.", chunk: "Lower belly", hook: "A balloon that fills slowly and empties all at once.", accept: { organ: ["bladder"] } }
+  - { organ: "Skin", system: "Integumentary", job: "Covers and protects the body, helps keep its temperature steady, and senses touch, heat and pain.", chunk: "All over", hook: "The body's largest organ: a raincoat, a thermostat and a touch screen." }
+sources:
+  - { name: "NIDDK (NIH): Your Digestive System and How It Works", url: "https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works" }
+  - { name: "NCI SEER Training: Accessory organs (liver, gallbladder, pancreas)", url: "https://training.seer.cancer.gov/anatomy/digestive/regions/accessory.html" }
+  - { name: "NCI SEER Training: Spleen", url: "https://training.seer.cancer.gov/anatomy/lymphatic/components/spleen.html" }
+  - { name: "NCI SEER Training: Introduction to the Urinary System", url: "https://training.seer.cancer.gov/anatomy/urinary/" }
+  - { name: "NCI SEER Training: Thyroid and parathyroid glands", url: "https://training.seer.cancer.gov/anatomy/endocrine/glands/thyroid.html" }
+  - { name: "NCI SEER Training: Adrenal gland", url: "https://training.seer.cancer.gov/anatomy/endocrine/glands/adrenal.html" }
+  - { name: "NCI SEER Training: Introduction to the Respiratory System", url: "https://training.seer.cancer.gov/anatomy/respiratory/" }
+  - { name: "NCI SEER Training: Introduction to the Cardiovascular System", url: "https://training.seer.cancer.gov/anatomy/cardiovascular/" }
+  - { name: "NCI SEER Training: Introduction to the Nervous System", url: "https://training.seer.cancer.gov/anatomy/nervous/" }
+  - { name: "NCI SEER Training: Anatomy of the Skin", url: "https://training.seer.cancer.gov/melanoma/anatomy/" }
+updated: 2026-10-30

@@ -1,0 +1,29 @@
+{{ define "main" }}
+{{- /* /memory/games/: the memory games hub (pages in content/memory/games/, one engine: static/memory/games/games.js). */ -}}
+<link rel="stylesheet" href="{{ "memory/challenges/engine.css" | relURL }}?v={{ (os.Stat "static/memory/challenges/engine.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "memory/games/games.css" | relURL }}?v={{ (os.Stat "static/memory/games/games.css").ModTime.Unix }}">
+<article class="mc mg-hub">
+<nav class="mc-crumbs" aria-label="Breadcrumb"><a href="{{ "memory/" | relURL }}">Memory</a> › <span>Games</span></nav>
+<header class="mc-head">
+  <h1>{{ .Title }}</h1>
+  <p class="mc-intro">Short games, each built on one technique from the infographic <a href="{{ "infographics/remember-it-on-purpose/" | relURL }}">Remember It on Purpose</a>. Play one, then notice the trick behind it: that is the part you keep.</p>
+</header>
+<div class="mc-grid">
+{{- range .Pages.ByWeight }}
+  <a class="mc-card mc-card-big" href="{{ .RelPermalink }}"><span class="mc-ico" aria-hidden="true">{{ .Params.icon }}</span><b>{{ .Title }}</b><span>{{ .Description }}</span></a>
+{{- end }}
+</div>
+<section class="mc-more">
+  <h2>The technique in each game</h2>
+  <ul>
+    <li><b>Memory Palace Builder</b>: the memory palace (method of loci). A place you know holds things in order.</li>
+    <li><b>Chunk It</b>: chunking. A few meaningful groups beat many loose digits.</li>
+    <li><b>Story Chain</b>: the link method, a kind of mnemonic. Each picture leads to the next.</li>
+    <li><b>Card Pairs</b>: picture plus words, with spaced review. Two paths to the same memory, and misses come back sooner.</li>
+    <li><b>Daily Memory Warm-up</b>: retrieval and spacing. Your own lists, on schedule.</li>
+  </ul>
+  <h2>More memory games</h2>
+  <p>The <a href="{{ "games/brain-games/" | relURL }}">Brain Games</a> train short-term and working memory in Greek and Roman dress: <a href="{{ "games/mosaic-memory/" | relURL }}">Mosaic Memory</a>, <a href="{{ "games/coin-match/" | relURL }}">Coin Match</a>, <a href="{{ "games/numbers-in-order/" | relURL }}">Numbers in Order</a> and more. For lists worth knowing by heart, see the <a href="{{ "memory/challenges/" | relURL }}">memory challenges</a>; for how it all works, the <a href="{{ "memory/" | relURL }}">Memory Ladder</a>.</p>
+</section>
+</article>
+{{ end }}

@@ -1,0 +1,46 @@
+slug: "elements-19-36"
+title: "Elements 19-36: period 4"
+group: "science"
+ages: "11+"
+count_note: "18 elements, all in period 4."
+intro: "Row four holds the first transition metals, the everyday metals of tools, coins and wires: iron, copper, zinc, nickel. Every element in this list is in period 4."
+technique: "Learn the row in three chunks that match the table's shape: the two s-block metals (K, Ca), the ten transition metals (Sc to Zn), then the six p-block elements (Ga to Kr). For the ten metals, a memory palace works well: ten spots along a workbench, each with its metal doing a job. Watch the odd symbols: K is potassium (Latin kalium) and Fe is iron (Latin ferrum)."
+order_matters: true
+main: "name"
+fields:
+  - { key: z, label: "Atomic number" }
+  - { key: symbol, label: "Symbol" }
+  - { key: name, label: "Element" }
+  - { key: group, label: "Group" }
+show: [z, symbol, name, group]
+prompts:
+  - { ask: symbol, from: [name] }
+  - { ask: name, from: [symbol] }
+  - { ask: name, from: [z] }
+  - { ask: z, from: [name] }
+  - { ask: group, from: [name] }
+  - { ask: name, from: [group] }
+items:
+  - { z: 19, symbol: "K", name: "Potassium", group: "1", chunk: "s-block: groups 1-2", hook: "From potash (pot ashes); the symbol K comes from the Latin kalium." }
+  - { z: 20, symbol: "Ca", name: "Calcium", group: "2", chunk: "s-block: groups 1-2", hook: "From the Latin calx, lime." }
+  - { z: 21, symbol: "Sc", name: "Scandium", group: "3", chunk: "Transition metals: groups 3-12", hook: "From the Latin Scandia, Scandinavia." }
+  - { z: 22, symbol: "Ti", name: "Titanium", group: "4", chunk: "Transition metals: groups 3-12", hook: "From the Titans of Greek myth." }
+  - { z: 23, symbol: "V", name: "Vanadium", group: "5", chunk: "Transition metals: groups 3-12", hook: "From Vanadís, a name of the Norse goddess Freyja, for its many colorful compounds." }
+  - { z: 24, symbol: "Cr", name: "Chromium", group: "6", chunk: "Transition metals: groups 3-12", hook: "From the Greek chroma, color, for its brightly colored compounds." }
+  - { z: 25, symbol: "Mn", name: "Manganese", group: "7", chunk: "Transition metals: groups 3-12", hook: "From magnesia, via Latin and Italian (the ore came from the Magnesia region)." }
+  - { z: 26, symbol: "Fe", name: "Iron", group: "8", chunk: "Transition metals: groups 3-12", hook: "From the Anglo-Saxon iren; the symbol Fe comes from the Latin ferrum." }
+  - { z: 27, symbol: "Co", name: "Cobalt", group: "9", chunk: "Transition metals: groups 3-12", hook: "From the German Kobold, a goblin; miners blamed goblins for troublesome ores." }
+  - { z: 28, symbol: "Ni", name: "Nickel", group: "10", chunk: "Transition metals: groups 3-12", hook: "From the German Kupfernickel, \"copper demon.\"" }
+  - { z: 29, symbol: "Cu", name: "Copper", group: "11", chunk: "Transition metals: groups 3-12", hook: "From the Latin cuprum, after the island of Cyprus, an ancient source." }
+  - { z: 30, symbol: "Zn", name: "Zinc", group: "12", chunk: "Transition metals: groups 3-12", hook: "From the German Zink, perhaps from Zinke (prong), for the shape of its crystals." }
+  - { z: 31, symbol: "Ga", name: "Gallium", group: "13", chunk: "p-block: groups 13-18", hook: "From the Latin Gallia, France." }
+  - { z: 32, symbol: "Ge", name: "Germanium", group: "14", chunk: "p-block: groups 13-18", hook: "From the Latin Germania, Germany." }
+  - { z: 33, symbol: "As", name: "Arsenic", group: "15", chunk: "p-block: groups 13-18", hook: "From the Greek arsenikon, the yellow mineral orpiment." }
+  - { z: 34, symbol: "Se", name: "Selenium", group: "16", chunk: "p-block: groups 13-18", hook: "From the Greek selene, the Moon (it resembles tellurium, named for Earth)." }
+  - { z: 35, symbol: "Br", name: "Bromine", group: "17", chunk: "p-block: groups 13-18", hook: "From the Greek bromos, stench, for its sharp smell." }
+  - { z: 36, symbol: "Kr", name: "Krypton", group: "18", chunk: "p-block: groups 13-18", hook: "From the Greek kryptos, hidden." }
+sources:
+  - { name: "Teddy Rook Book periodic table data (data/elements/elements.json; IUPAC/CIAAW and NIST)", url: "/science/periodic-table/" }
+  - { name: "PubChem (NIH): Periodic Table of Elements, with standard state", url: "https://pubchem.ncbi.nlm.nih.gov/periodic-table/pdf/Periodic_Table_of_Elements_w_Standard_State_PubChem.pdf" }
+  - { name: "PubChem (NIH): IUPAC Periodic Table of the Elements and Isotopes", url: "https://pubchem.ncbi.nlm.nih.gov/source/24616" }
+updated: 2026-10-30

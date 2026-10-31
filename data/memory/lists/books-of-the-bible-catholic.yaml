@@ -1,0 +1,99 @@
+slug: books-of-the-bible-catholic
+title: "Books of the Bible (73-book Catholic canon)"
+group: scripture
+ages: "6+"
+count_note: "73 books: 46 in the Old Testament and 27 in the New, in the order and with the names used by the United States Conference of Catholic Bishops. Protestant Bibles have 66 books (see the companion list), and the Orthodox churches' canons include a few more (such as 1 Esdras, 3 Maccabees, the Prayer of Manasseh and Psalm 151). The seven books found here but not in Protestant Bibles, called the deuterocanonical books, are Tobit, Judith, 1 and 2 Maccabees, Wisdom, Sirach and Baruch; Esther and Daniel are also longer. Each is marked in the study table."
+intro: "Knowing the books in order makes it quick to find a passage, and it shows how the Bible is laid out: the Pentateuch, the historical books, the wisdom books and the prophets, then the Gospels and letters."
+technique: "Seventy-three names is a long list, so chunk it by section: the Pentateuch, the historical books, the wisdom books, the prophets, then the New Testament. Long sections are split into groups of about five. Sing each section to a tune you know; the rhythm carries the order, and the sections give you a map when a name slips."
+order_matters: true
+main: book
+fields:
+  - { key: n, label: "No." }
+  - { key: book, label: "Book" }
+  - { key: testament, label: "Testament" }
+  - { key: section, label: "Section" }
+show: [n, book, section]
+prompts:
+  - { ask: book, from: [n] }
+  - { ask: n, from: [book] }
+  - { ask: section, from: [book] }
+  - { ask: testament, from: [book] }
+items:
+  - {n: 1, book: "Genesis", testament: "Old", section: "Pentateuch", chunk: "Pentateuch", hook: "Genesis means 'origin' in Greek: the book of beginnings." }
+  - {n: 2, book: "Exodus", testament: "Old", section: "Pentateuch", chunk: "Pentateuch", hook: "Exodus means 'the way out': the road out of Egypt." }
+  - {n: 3, book: "Leviticus", testament: "Old", section: "Pentateuch", chunk: "Pentateuch" }
+  - {n: 4, book: "Numbers", testament: "Old", section: "Pentateuch", chunk: "Pentateuch" }
+  - {n: 5, book: "Deuteronomy", testament: "Old", section: "Pentateuch", chunk: "Pentateuch", hook: "Deuteronomy means 'second law' in Greek: the law told a second time." }
+  - {n: 6, book: "Joshua", testament: "Old", section: "Historical books", chunk: "Historical books" }
+  - {n: 7, book: "Judges", testament: "Old", section: "Historical books", chunk: "Historical books" }
+  - {n: 8, book: "Ruth", testament: "Old", section: "Historical books", chunk: "Historical books" }
+  - {n: 9, book: "1 Samuel", testament: "Old", section: "Historical books", chunk: "Historical books" }
+  - {n: 10, book: "2 Samuel", testament: "Old", section: "Historical books", chunk: "Historical books" }
+  - {n: 11, book: "1 Kings", testament: "Old", section: "Historical books", chunk: "Historical books" }
+  - {n: 12, book: "2 Kings", testament: "Old", section: "Historical books", chunk: "Historical books" }
+  - {n: 13, book: "1 Chronicles", testament: "Old", section: "Historical books", chunk: "Historical books" }
+  - {n: 14, book: "2 Chronicles", testament: "Old", section: "Historical books", chunk: "Historical books" }
+  - {n: 15, book: "Ezra", testament: "Old", section: "Historical books", chunk: "Historical books" }
+  - {n: 16, book: "Nehemiah", testament: "Old", section: "Historical books", chunk: "Historical books" }
+  - {n: 17, book: "Tobit", testament: "Old", section: "Historical books", chunk: "Historical books", note: "One of the seven deuterocanonical books, in Catholic and Orthodox Bibles. Protestant Bibles leave it out or print it in a separate section called the Apocrypha." }
+  - {n: 18, book: "Judith", testament: "Old", section: "Historical books", chunk: "Historical books", note: "One of the seven deuterocanonical books, in Catholic and Orthodox Bibles. Protestant Bibles leave it out or print it in a separate section called the Apocrypha." }
+  - {n: 19, book: "Esther", testament: "Old", section: "Historical books", chunk: "Historical books", note: "Catholic Bibles include Greek additions to Esther, such as prayers of Mordecai and Esther." }
+  - {n: 20, book: "1 Maccabees", testament: "Old", section: "Historical books", chunk: "Historical books", note: "One of the seven deuterocanonical books, in Catholic and Orthodox Bibles. Protestant Bibles leave it out or print it in a separate section called the Apocrypha." }
+  - {n: 21, book: "2 Maccabees", testament: "Old", section: "Historical books", chunk: "Historical books", note: "One of the seven deuterocanonical books, in Catholic and Orthodox Bibles. Protestant Bibles leave it out or print it in a separate section called the Apocrypha." }
+  - {n: 22, book: "Job", testament: "Old", section: "Wisdom books", chunk: "Wisdom books" }
+  - {n: 23, book: "Psalms", testament: "Old", section: "Wisdom books", chunk: "Wisdom books", accept: ["Psalm"], hook: "The longest book: 150 psalms, a songbook." }
+  - {n: 24, book: "Proverbs", testament: "Old", section: "Wisdom books", chunk: "Wisdom books" }
+  - {n: 25, book: "Ecclesiastes", testament: "Old", section: "Wisdom books", chunk: "Wisdom books" }
+  - {n: 26, book: "Song of Songs", testament: "Old", section: "Wisdom books", chunk: "Wisdom books", accept: ["Song of Solomon", "Canticles"] }
+  - {n: 27, book: "Wisdom", testament: "Old", section: "Wisdom books", chunk: "Wisdom books", note: "One of the seven deuterocanonical books, in Catholic and Orthodox Bibles. Protestant Bibles leave it out or print it in a separate section called the Apocrypha.", accept: ["Wisdom of Solomon"] }
+  - {n: 28, book: "Sirach", testament: "Old", section: "Wisdom books", chunk: "Wisdom books", note: "One of the seven deuterocanonical books, in Catholic and Orthodox Bibles. Protestant Bibles leave it out or print it in a separate section called the Apocrypha.", accept: ["Ecclesiasticus"] }
+  - {n: 29, book: "Isaiah", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 30, book: "Jeremiah", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 31, book: "Lamentations", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 32, book: "Baruch", testament: "Old", section: "Prophetic books", chunk: "Prophetic books", note: "One of the seven deuterocanonical books, in Catholic and Orthodox Bibles. Protestant Bibles leave it out or print it in a separate section called the Apocrypha." }
+  - {n: 33, book: "Ezekiel", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 34, book: "Daniel", testament: "Old", section: "Prophetic books", chunk: "Prophetic books", note: "Catholic Bibles include Greek additions to Daniel: the Prayer of Azariah and Song of the Three Young Men, Susanna, and Bel and the Dragon." }
+  - {n: 35, book: "Hosea", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 36, book: "Joel", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 37, book: "Amos", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 38, book: "Obadiah", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 39, book: "Jonah", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 40, book: "Micah", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 41, book: "Nahum", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 42, book: "Habakkuk", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 43, book: "Zephaniah", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 44, book: "Haggai", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 45, book: "Zechariah", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 46, book: "Malachi", testament: "Old", section: "Prophetic books", chunk: "Prophetic books" }
+  - {n: 47, book: "Matthew", testament: "New", section: "Gospels and Acts", chunk: "Gospels and Acts" }
+  - {n: 48, book: "Mark", testament: "New", section: "Gospels and Acts", chunk: "Gospels and Acts" }
+  - {n: 49, book: "Luke", testament: "New", section: "Gospels and Acts", chunk: "Gospels and Acts" }
+  - {n: 50, book: "John", testament: "New", section: "Gospels and Acts", chunk: "Gospels and Acts" }
+  - {n: 51, book: "Acts of the Apostles", testament: "New", section: "Gospels and Acts", chunk: "Gospels and Acts", accept: ["Acts"] }
+  - {n: 52, book: "Romans", testament: "New", section: "Paul's letters", chunk: "Paul's letters" }
+  - {n: 53, book: "1 Corinthians", testament: "New", section: "Paul's letters", chunk: "Paul's letters" }
+  - {n: 54, book: "2 Corinthians", testament: "New", section: "Paul's letters", chunk: "Paul's letters" }
+  - {n: 55, book: "Galatians", testament: "New", section: "Paul's letters", chunk: "Paul's letters" }
+  - {n: 56, book: "Ephesians", testament: "New", section: "Paul's letters", chunk: "Paul's letters" }
+  - {n: 57, book: "Philippians", testament: "New", section: "Paul's letters", chunk: "Paul's letters" }
+  - {n: 58, book: "Colossians", testament: "New", section: "Paul's letters", chunk: "Paul's letters" }
+  - {n: 59, book: "1 Thessalonians", testament: "New", section: "Paul's letters", chunk: "Paul's letters" }
+  - {n: 60, book: "2 Thessalonians", testament: "New", section: "Paul's letters", chunk: "Paul's letters" }
+  - {n: 61, book: "1 Timothy", testament: "New", section: "Paul's letters", chunk: "Paul's letters" }
+  - {n: 62, book: "2 Timothy", testament: "New", section: "Paul's letters", chunk: "Paul's letters" }
+  - {n: 63, book: "Titus", testament: "New", section: "Paul's letters", chunk: "Paul's letters" }
+  - {n: 64, book: "Philemon", testament: "New", section: "Paul's letters", chunk: "Paul's letters" }
+  - {n: 65, book: "Hebrews", testament: "New", section: "Other letters and Revelation", chunk: "Other letters and Revelation" }
+  - {n: 66, book: "James", testament: "New", section: "Other letters and Revelation", chunk: "Other letters and Revelation" }
+  - {n: 67, book: "1 Peter", testament: "New", section: "Other letters and Revelation", chunk: "Other letters and Revelation" }
+  - {n: 68, book: "2 Peter", testament: "New", section: "Other letters and Revelation", chunk: "Other letters and Revelation" }
+  - {n: 69, book: "1 John", testament: "New", section: "Other letters and Revelation", chunk: "Other letters and Revelation" }
+  - {n: 70, book: "2 John", testament: "New", section: "Other letters and Revelation", chunk: "Other letters and Revelation" }
+  - {n: 71, book: "3 John", testament: "New", section: "Other letters and Revelation", chunk: "Other letters and Revelation" }
+  - {n: 72, book: "Jude", testament: "New", section: "Other letters and Revelation", chunk: "Other letters and Revelation", hook: "A one-chapter letter, just before the last book." }
+  - {n: 73, book: "Revelation", testament: "New", section: "Other letters and Revelation", chunk: "Other letters and Revelation", hook: "The last book: the end of the shelf." }
+sources:
+  - { name: "United States Conference of Catholic Bishops: Books of the Bible", url: "https://bible.usccb.org/bible" }
+  - { name: "Grokipedia: Deuterocanonical books", url: "https://grokipedia.com/page/Deuterocanonical_books" }
+  - { name: "Grokipedia: Biblical canon", url: "https://grokipedia.com/page/Biblical_canon" }
+updated: 2026-10-31

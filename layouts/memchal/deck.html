@@ -1,0 +1,35 @@
+{{ define "main" }}
+{{- /* Deck of cards trainer: static/memory/challenges/deck.js (needs core.js and cards.js). Help links point at the
+   Memory Systems course (data/memory/courses.yaml memsys, slug memory-systems). */ -}}
+{{- $sys := "memory/memory-systems/" -}}
+{{- with site.Data.memory.courses }}{{ range . }}{{ if eq .key "memsys" }}{{ $sys = printf "memory/%s/" .slug }}{{ end }}{{ end }}{{ end -}}
+<link rel="stylesheet" href="{{ "memory/challenges/engine.css" | relURL }}?v={{ (os.Stat "static/memory/challenges/engine.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "memory/challenges/trainers.css" | relURL }}?v={{ (os.Stat "static/memory/challenges/trainers.css").ModTime.Unix }}">
+<article class="mc mc-deck">
+<nav class="mc-crumbs" aria-label="Breadcrumb"><a href="{{ "memory/" | relURL }}">Memory</a> › <a href="{{ "memory/challenges/" | relURL }}">Challenges</a> › <span>Deck of cards</span></nav>
+<header class="mc-head">
+  <h1>{{ .Title }}</h1>
+  <p class="mc-intro">Look through a shuffled deck, then rebuild the order from memory. Start with 10 cards. Each card needs a picture of its own, so the work is <span class="mc-e">Encode</span>: turn cards into people, actions and objects, and set them along a route you know. Then <span class="mc-r">Retrieve</span>: walk the route and read the cards back.</p>
+</header>
+<div id="dk" class="dk" aria-live="polite"><noscript>The trainer needs JavaScript.</noscript></div>
+
+<details class="mc-help" id="help">
+  <summary>How to memorize cards: a code, a journey, and PAO</summary>
+  <div class="mc-helpbody">
+    <h2>1. Give every card a picture</h2>
+    <p>A card like the seven of clubs is hard to hold on its own. A picture is easy. Memorizers give each of the 52 cards a fixed image, chosen once and reused. One common way builds the code from sounds: the suit gives the first sound and the rank the second, using the Major System's sounds for digits. Another way uses people you know: the king of hearts is your grandfather, the queen of spades a teacher. Make the list yourself, write it down, and drill it until each card brings its picture at once.</p>
+    <h2>2. Put the pictures on a journey</h2>
+    <p>Choose a route you know well: your front door, the mat, the hall mirror, the stairs, and so on. Place the first picture at the first stop, the second at the next, and make each one do something odd or loud there. To recall, walk the route in your head and see what is at each stop. This is the memory palace from the infographic, used on a bigger scale.</p>
+    <h2>3. PAO: three cards in one picture</h2>
+    <p>With PAO (person, action, object) each card has a person, an action and an object. Take the cards in threes: the first card's person does the second card's action with the third card's object. One picture holds three cards, so a full deck needs 18 stops (17 groups of three and one left over) instead of 52. Use the <em>Three at a time</em> view to practice it. PAO takes weeks to set up, so start with one picture per card and a short journey.</p>
+    <h2>Start small</h2>
+    <p>Begin with 10 cards and one picture per card. When you can recall 10 without a mistake, move to 20, then a half deck. Retrieval practice and spacing apply here too: try yesterday's deck code again before a new one.</p>
+    <p class="mc-small">Learn the tools step by step in the Memory Systems course: <a href="{{ printf "%scard-codes/" $sys | relURL }}">a code for every card</a>, <a href="{{ printf "%spao/" $sys | relURL }}">person, action, object</a>, <a href="{{ printf "%sjourneys/" $sys | relURL }}">building a long journey</a>, <a href="{{ printf "%smajor-sounds/" $sys | relURL }}">the Major System's sounds</a> and <a href="{{ printf "%scompetitions/" $sys | relURL }}">how memory sports work</a>.</p>
+  </div>
+</details>
+<p class="mc-small">Keys: space or → for the next card, ← back, Enter to recall. The deck code in the link deals the same order on any device. Bests stay on this device. More: <a href="{{ "memory/challenges/" | relURL }}">all memory challenges</a> · <a href="{{ "memory/games/" | relURL }}">memory games</a> · <a href="{{ "memory/challenges/pi/" | relURL }}">digits of pi</a>.</p>
+</article>
+<script src="{{ "memory/challenges/core.js" | relURL }}?v={{ (os.Stat "static/memory/challenges/core.js").ModTime.Unix }}"></script>
+<script src="{{ "memory/challenges/cards.js" | relURL }}?v={{ (os.Stat "static/memory/challenges/cards.js").ModTime.Unix }}"></script>
+<script src="{{ "memory/challenges/deck.js" | relURL }}?v={{ (os.Stat "static/memory/challenges/deck.js").ModTime.Unix }}"></script>
+{{ end }}

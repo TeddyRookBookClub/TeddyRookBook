@@ -1,0 +1,51 @@
+slug: "scientific-laws"
+title: "Famous laws of science"
+group: "science"
+ages: "12+"
+count_note: "22 laws. Many were found by more than one person; the item notes say who else, and the matching accepts the other names. Years are when the law was first stated or published."
+intro: "A scientific law is a short statement of something nature always does, tested again and again. These are the ones that turn up in every physics and chemistry class, and knowing who found them, and when, ties science to history."
+technique: "Encode the meaning before the name: for each law, picture the everyday scene in the hook and say the law in your own words (narration). Then hang it on a timeline, chunked by century, so the people line up in order: Archimedes alone in the ancient world, then Kepler, Boyle, Hooke and Newton in the 1600s, and so on. Retrieve it by explaining one law a day to someone else."
+order_matters: false
+main: "law"
+fields:
+  - { key: law, label: "Law" }
+  - { key: who, label: "Who" }
+  - { key: year, label: "Year" }
+  - { key: says, label: "What it says" }
+show: [law, who, year, says]
+prompts:
+  - { ask: law, from: [says] }
+  - { ask: who, from: [law] }
+  - { ask: year, from: [law] }
+  - { ask: says, from: [law] }
+items:
+  - { law: "Archimedes' principle", who: "Archimedes", year: "c. 250 BC", says: "Anything in water or another fluid is pushed up by a force equal to the weight of the fluid it pushes aside.", chunk: "Before 1700", hook: "Archimedes is said to have shouted \"Eureka!\" (\"I have found it!\"), a story told long after his time.", accept: { year: ["250 BC", "250"] } }
+  - { law: "Kepler's first law", who: "Johannes Kepler", year: "1609", says: "Each planet travels around the Sun in an ellipse (a stretched circle), with the Sun at one focus, a little off center.", chunk: "Before 1700" }
+  - { law: "Kepler's second law", who: "Johannes Kepler", year: "1609", says: "A line from the Sun to a planet sweeps out equal areas in equal times, so a planet moves faster when it is nearer the Sun.", chunk: "Before 1700" }
+  - { law: "Kepler's third law", who: "Johannes Kepler", year: "1619", says: "The farther a planet is from the Sun, the longer its year: the square of its year is proportional to the cube of its average distance.", chunk: "Before 1700" }
+  - { law: "Snell's law (refraction)", who: "Willebrord Snellius", year: "1621", says: "When light passes from one clear material into another, it bends by an amount set by how much each material slows it.", chunk: "Before 1700", note: "Ibn Sahl described the same rule in about AD 984. Snellius did not publish it; René Descartes published it in 1637.", accept: { who: ["Snell", "Snellius", "Ibn Sahl"] } }
+  - { law: "Boyle's law", who: "Robert Boyle", year: "1662", says: "At a steady temperature, squeeze a gas into half the space and its pressure doubles: pressure times volume stays the same.", chunk: "Before 1700", hook: "Picture squeezing a balloon: less room, more push back.", note: "Richard Towneley and Henry Power found the same relation about a year earlier, and Edme Mariotte independently in 1676.", accept: { who: ["Boyle"] } }
+  - { law: "Hooke's law", who: "Robert Hooke", year: "1678", says: "A spring stretches in proportion to the force pulling it, as long as it is not stretched too far.", chunk: "Before 1700", hook: "Hooke first published it in 1676 as a scrambled Latin puzzle, then gave the answer in 1678: \"ut tensio, sic vis\" (as the stretch, so the force).", accept: { who: ["Hooke"] } }
+  - { law: "Newton's first law of motion", who: "Isaac Newton", year: "1687", says: "An object stays still, or keeps moving in a straight line at the same speed, unless a force acts on it.", chunk: "Before 1700", hook: "A hockey puck glides on and on across smooth ice.", accept: { who: ["Newton"] } }
+  - { law: "Newton's second law of motion", who: "Isaac Newton", year: "1687", says: "Force equals mass times acceleration (F = ma): the same push speeds up a light object more than a heavy one.", chunk: "Before 1700", hook: "Push an empty shopping cart, then a full one.", accept: { who: ["Newton"] } }
+  - { law: "Newton's third law of motion", who: "Isaac Newton", year: "1687", says: "When one object pushes on another, the second pushes back just as hard in the opposite direction.", chunk: "Before 1700", hook: "A rocket pushes gas down; the gas pushes the rocket up.", accept: { who: ["Newton"] } }
+  - { law: "Newton's law of universal gravitation", who: "Isaac Newton", year: "1687", says: "Every mass pulls on every other mass, more strongly for bigger masses and more weakly with distance (one over the distance squared).", chunk: "Before 1700", hook: "The same pull that drops an apple keeps the Moon in orbit.", accept: { who: ["Newton"] } }
+  - { law: "Bernoulli's principle", who: "Daniel Bernoulli", year: "1738", says: "Where a moving fluid speeds up, its pressure drops.", chunk: "The 1700s", hook: "Blow across the top of a strip of paper and it rises.", note: "Published in his book Hydrodynamica.", accept: { who: ["Bernoulli"] } }
+  - { law: "Coulomb's law", who: "Charles-Augustin de Coulomb", year: "1785", says: "Electric charges push apart if alike and pull together if opposite, with a force that weakens with the square of the distance.", chunk: "The 1700s", accept: { who: ["Coulomb"] } }
+  - { law: "Charles's law", who: "Jacques Charles", year: "1787", says: "At a steady pressure, a gas expands as it warms: its volume is proportional to its absolute temperature.", chunk: "The 1700s", hook: "A hot-air balloon: Charles was a balloonist too.", note: "Charles did the work around 1787 but did not publish it; Joseph Louis Gay-Lussac published the law in 1802 and credited him.", accept: { who: ["Charles"] } }
+  - { law: "Law of conservation of mass", who: "Antoine Lavoisier", year: "1789", says: "In a chemical reaction, matter is not created or destroyed: the total mass stays the same.", chunk: "The 1700s", hook: "Burn a log in a sealed jar and the jar weighs the same afterward.", note: "Mikhail Lomonosov showed the same idea decades earlier, but his work was less known. Lavoisier stated it in his 1789 textbook.", accept: { who: ["Lavoisier"] } }
+  - { law: "Avogadro's law", who: "Amedeo Avogadro", year: "1811", says: "Equal volumes of gases, at the same temperature and pressure, hold the same number of molecules.", chunk: "The 1800s", note: "André-Marie Ampère reached nearly the same idea in 1814.", accept: { who: ["Avogadro"] } }
+  - { law: "Ohm's law", who: "Georg Simon Ohm", year: "1827", says: "The current through a wire equals the voltage across it divided by its resistance (I = V / R).", chunk: "The 1800s", hook: "Water in a hose: more pressure, more flow; a narrower hose, less flow.", accept: { who: ["Ohm"] } }
+  - { law: "Faraday's law of induction", who: "Michael Faraday", year: "1831", says: "A changing magnetic field through a loop of wire makes an electric current flow in the wire.", chunk: "The 1800s", hook: "Generators in power plants work this way.", accept: { who: ["Faraday"] } }
+  - { law: "Law of conservation of energy (first law of thermodynamics)", who: "Hermann von Helmholtz", year: "1847", says: "Energy is never created or destroyed; it only changes from one form to another.", chunk: "The 1800s", note: "Built on work by Julius Robert von Mayer (1842) and James Prescott Joule (1840s); Rudolf Clausius wrote it as the first law of thermodynamics in 1850.", accept: { who: ["Helmholtz", "Joule", "Mayer"] } }
+  - { law: "Second law of thermodynamics", who: "Rudolf Clausius", year: "1850", says: "Heat flows on its own from hot to cold, never from cold to hot; some energy always spreads out as unusable heat.", chunk: "The 1800s", hook: "A hot cup of cocoa always cools to room temperature; it never heats itself up.", note: "Lord Kelvin gave another form of it in 1851, building on Sadi Carnot (1824).", accept: { who: ["Clausius", "Kelvin", "Lord Kelvin"] } }
+  - { law: "Mendel's laws of inheritance", who: "Gregor Mendel", year: "1865", says: "Each parent passes on one of its two copies of each gene, by chance; genes for different traits are often passed on independently.", chunk: "The 1800s", hook: "Mendel worked it out by growing and counting thousands of pea plants.", note: "Presented in 1865 and published in 1866; mostly overlooked until 1900.", accept: { who: ["Mendel"] } }
+  - { law: "Hubble-Lemaître law", who: "Edwin Hubble", year: "1929", says: "Distant galaxies are moving away from us, and the farther away a galaxy is, the faster it is moving away.", chunk: "The 1900s", hook: "Raisins in rising bread dough all move apart, and the far ones move apart fastest.", note: "Georges Lemaître proposed it in 1927; Hubble published the observations in 1929. The International Astronomical Union recommended the name Hubble-Lemaître law in 2018.", accept: { who: ["Hubble", "Lemaitre", "Georges Lemaitre"] } }
+sources:
+  - { name: "Grokipedia: List of scientific laws named after people", url: "https://grokipedia.com/page/List_of_scientific_laws_named_after_people" }
+  - { name: "Grokipedia: Timeline of fundamental physics discoveries", url: "https://grokipedia.com/page/Timeline_of_fundamental_physics_discoveries" }
+  - { name: "Grokipedia: Timeline of thermodynamics", url: "https://grokipedia.com/page/Timeline_of_thermodynamics" }
+  - { name: "Grokipedia: Snell's law", url: "https://grokipedia.com/page/Snell's_law" }
+  - { name: "Grokipedia: List of examples of Stigler's law (Hubble-Lemaître, Avogadro, Boyle)", url: "https://grokipedia.com/page/List_of_examples_of_Stigler's_law" }
+  - { name: "Grokipedia: Antoine Lavoisier", url: "https://grokipedia.com/page/Antoine_Lavoisier" }
+updated: 2026-10-30

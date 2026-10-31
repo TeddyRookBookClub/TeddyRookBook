@@ -1,0 +1,33 @@
+slug: planets
+title: "The planets, in order from the Sun"
+group: science
+ages: "5+"
+count_note: "Eight planets. Since 2006 the International Astronomical Union counts Pluto as a dwarf planet, not a planet."
+intro: "Eight names in order is a good first list. It is short enough to learn in one sitting, and it opens the door to the rest of the night sky: which worlds are rocky, which are giants, and how far the Sun's family reaches."
+technique: "Eight items is about two chunks of four, and the planets split that way on their own: four small rocky planets, then four giants. Learn the inner four, then the outer four. A first-letter sentence (a mnemonic) holds the order: My Very Eager Mouse Jumped Straight Up Nightly. Try making your own sentence, since a silly picture you made yourself sticks best."
+order_matters: true
+main: name
+fields:
+  - { key: n, label: "From the Sun" }
+  - { key: name, label: "Planet" }
+  - { key: kind, label: "Kind" }
+  - { key: fact, label: "Remember it by" }
+show: [n, name, kind, fact]
+prompts:
+  - { ask: name, from: [n] }
+  - { ask: n, from: [name] }
+  - { ask: kind, from: [name] }
+  - { ask: name, from: [fact] }
+items:
+  - { n: 1, name: "Mercury", kind: "rocky", fact: "Smallest planet, and closest to the Sun", chunk: "Inner, rocky planets", hook: "A tiny speedy messenger running laps right next to the Sun." }
+  - { n: 2, name: "Venus", kind: "rocky", fact: "Hottest planet, under thick clouds", chunk: "Inner, rocky planets", hook: "A greenhouse wrapped in a heavy blanket of clouds." }
+  - { n: 3, name: "Earth", kind: "rocky", fact: "The only world known to have life", chunk: "Inner, rocky planets", hook: "Home: your own front door." }
+  - { n: 4, name: "Mars", kind: "rocky", fact: "The red planet, colored by iron oxide (rust) in its dust", chunk: "Inner, rocky planets", hook: "A rusty red bike left out in the rain." }
+  - { n: 5, name: "Jupiter", kind: "gas giant", fact: "Largest planet, with the Great Red Spot storm", chunk: "Outer giants", hook: "A giant with one red eye that never blinks." }
+  - { n: 6, name: "Saturn", kind: "gas giant", fact: "Famous for its bright rings of ice and rock", chunk: "Outer giants", hook: "A planet wearing a hula hoop." }
+  - { n: 7, name: "Uranus", kind: "ice giant", fact: "Spins tipped on its side", chunk: "Outer giants", hook: "A ball rolling along on its side." }
+  - { n: 8, name: "Neptune", kind: "ice giant", fact: "Farthest planet, with the fastest winds", chunk: "Outer giants", hook: "A deep blue sea with the wind howling over it." }
+sources:
+  - { name: "NASA Science: About the Planets", url: "https://science.nasa.gov/solar-system/planets/" }
+  - { name: "NASA JPL Solar System Dynamics: Planets", url: "https://ssd.jpl.nasa.gov/planets/" }
+updated: 2026-10-30

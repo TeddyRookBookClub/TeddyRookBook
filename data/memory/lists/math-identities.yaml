@@ -1,0 +1,38 @@
+slug: "math-identities"
+title: "Math formulas, level 3: identities and rules"
+group: "math"
+ages: "14+"
+count_note: "15 rules from algebra, trigonometry and logarithms. Exponent rules assume the base is not zero where dividing. Typed answers can use ^ for powers."
+intro: "Identities are statements that are true for every value of the letters. They are the tools for simplifying and solving in algebra, trigonometry and beyond, and they show up on every high school and college entrance test."
+technique: "Each rule has a reason you can check with small numbers: try a = 3 and b = 2 in (a + b)² and see why the middle term 2ab must be there. Checking with numbers is retrieval practice and proof at once. Chunk by family (special products, exponents, trigonometry, logarithms), and notice that the log rules are the exponent rules in disguise."
+order_matters: false
+main: "name"
+fields:
+  - { key: name, label: "Formula for" }
+  - { key: formula, label: "Formula" }
+  - { key: vars, label: "Letters stand for" }
+show: [name, formula, vars]
+prompts:
+  - { ask: formula, from: [name] }
+  - { ask: name, from: [formula] }
+items:
+  - { name: "Square of a sum", formula: "(a + b)² = a² + 2ab + b²", vars: "any numbers a and b", chunk: "Special products", hook: "Draw a square with sides a + b: it splits into a², b² and two ab rectangles.", accept: { formula: ["a^2+2ab+b^2"] } }
+  - { name: "Square of a difference", formula: "(a − b)² = a² − 2ab + b²", vars: "any numbers a and b", chunk: "Special products", hook: "Same as the sum, with the middle sign flipped.", accept: { formula: ["a^2-2ab+b^2"] } }
+  - { name: "Difference of squares", formula: "(a − b)(a + b) = a² − b²", vars: "any numbers a and b", chunk: "Special products", hook: "The middle terms cancel: +ab and −ab.", accept: { formula: ["a^2-b^2"] } }
+  - { name: "Product of powers", formula: "aᵐ · aⁿ = aᵐ⁺ⁿ", vars: "a = base, m and n = exponents", chunk: "Exponents", hook: "Multiply, add the exponents: 2² · 2³ = 2⁵.", accept: { formula: ["a^(m+n)", "a^m*a^n=a^(m+n)"] } }
+  - { name: "Quotient of powers", formula: "aᵐ / aⁿ = aᵐ⁻ⁿ", vars: "a = base (not 0), m and n = exponents", chunk: "Exponents", hook: "Divide, subtract the exponents.", accept: { formula: ["a^(m-n)"] } }
+  - { name: "Power of a power", formula: "(aᵐ)ⁿ = aᵐⁿ", vars: "a = base, m and n = exponents", chunk: "Exponents", hook: "Power of a power: multiply the exponents.", accept: { formula: ["a^(mn)", "a^(m*n)"] } }
+  - { name: "Zero exponent", formula: "a⁰ = 1", vars: "a = any base except 0", chunk: "Exponents", hook: "Count down: 2³ = 8, 2² = 4, 2¹ = 2, so 2⁰ = 1.", accept: { formula: ["1", "a^0=1"] } }
+  - { name: "Negative exponent", formula: "a⁻ⁿ = 1 / aⁿ", vars: "a = base (not 0), n = exponent", chunk: "Exponents", hook: "Keep counting down past zero: 2⁻¹ = ½.", accept: { formula: ["1/a^n", "a^-n=1/a^n"] } }
+  - { name: "Pythagorean identity", formula: "sin²θ + cos²θ = 1", vars: "θ = any angle", chunk: "Trigonometry", hook: "The Pythagorean theorem on a circle of radius 1.", accept: { formula: ["sin^2+cos^2=1", "sin^2x+cos^2x=1"] } }
+  - { name: "Tangent as a quotient", formula: "tan θ = sin θ / cos θ", vars: "θ = any angle where cos θ ≠ 0", chunk: "Trigonometry", hook: "Tangent is the slope: rise (sine) over run (cosine).", accept: { formula: ["sin/cos", "tan=sin/cos"] } }
+  - { name: "Double-angle formula for sine", formula: "sin 2θ = 2 sin θ cos θ", vars: "θ = any angle", chunk: "Trigonometry", accept: { formula: ["2sinxcosx", "2 sin cos"] } }
+  - { name: "Double-angle formula for cosine", formula: "cos 2θ = cos²θ − sin²θ", vars: "θ = any angle (also 1 − 2sin²θ or 2cos²θ − 1)", chunk: "Trigonometry", accept: { formula: ["cos^2-sin^2", "1-2sin^2", "2cos^2-1"] } }
+  - { name: "Product rule for logarithms", formula: "log_b(MN) = log_b(M) + log_b(N)", vars: "b = base, M and N = positive numbers", chunk: "Logarithms", hook: "Logs turn multiplying into adding, like exponents do.", accept: { formula: ["logM+logN", "log(M)+log(N)"] } }
+  - { name: "Quotient rule for logarithms", formula: "log_b(M/N) = log_b(M) − log_b(N)", vars: "b = base, M and N = positive numbers", chunk: "Logarithms", hook: "Dividing becomes subtracting.", accept: { formula: ["logM-logN", "log(M)-log(N)"] } }
+  - { name: "Power rule for logarithms", formula: "log_b(Mⁿ) = n · log_b(M)", vars: "b = base, M = a positive number, n = any number", chunk: "Logarithms", hook: "The exponent walks out to the front.", accept: { formula: ["nlogM", "n log M", "n*log(M)"] } }
+sources:
+  - { name: "OpenStax Intermediate Algebra 2e, Chapter 5 Key Concepts", url: "https://openstax.org/books/intermediate-algebra-2e/pages/5-key-concepts" }
+  - { name: "OpenStax Algebra and Trigonometry, Chapter 9 Key Equations", url: "https://openstax.org/books/algebra-and-trigonometry/pages/9-key-equations" }
+  - { name: "OpenStax College Algebra, Chapter 6 Key Equations", url: "https://openstax.org/books/college-algebra/pages/6-key-equations" }
+updated: 2026-10-30

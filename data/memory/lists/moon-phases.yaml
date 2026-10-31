@@ -1,0 +1,32 @@
+slug: "moon-phases"
+title: "The phases of the Moon, in order"
+group: "science"
+ages: "6+"
+count_note: "Eight phases in a cycle of about 29.5 days. Left and right are as seen from the Northern Hemisphere; from the Southern Hemisphere the picture is flipped. \"Third quarter\" and \"last quarter\" are the same phase."
+intro: "The Moon does not change shape. Half of it is always lit by the Sun, and as it circles Earth we see more or less of that lit half. Learn the eight names and you can tell, just by looking, whether the Moon is growing or shrinking and when it will be full."
+technique: "Start from the idea, not the words: a ball lit from one side, seen from different angles. Try it with a lamp and an orange. Then learn two word pairs: waxing means growing, waning means shrinking; crescent is less than half, gibbous is more than half. The eight names now build themselves in two chunks of four. In the Northern Hemisphere, D-O-C helps: a growing Moon is lit on the right like a D, full is an O, and a shrinking Moon is lit on the left like a C."
+order_matters: true
+main: "name"
+fields:
+  - { key: n, label: "Order" }
+  - { key: name, label: "Phase" }
+  - { key: looks, label: "How it looks (Northern Hemisphere)" }
+  - { key: when, label: "When to see it" }
+show: [n, name, looks, when]
+prompts:
+  - { ask: name, from: [n] }
+  - { ask: n, from: [name] }
+  - { ask: name, from: [looks] }
+  - { ask: looks, from: [name] }
+items:
+  - { n: 1, name: "New Moon", looks: "Dark: the lit side faces away from Earth", when: "Rises and sets with the Sun, so we cannot see it.", chunk: "Growing (waxing)", accept: { name: ["New"] } }
+  - { n: 2, name: "Waxing crescent", looks: "A thin sliver on the right, growing each night", when: "Seen in the west in the evening, after sunset.", chunk: "Growing (waxing)", hook: "The first evening sliver after New Moon: look for it low in the west just after sunset." }
+  - { n: 3, name: "First quarter", looks: "Right half lit", when: "Rises around midday; high in the evening sky.", chunk: "Growing (waxing)" }
+  - { n: 4, name: "Waxing gibbous", looks: "More than half lit, still growing", when: "Rises in the afternoon, sets before sunrise.", chunk: "Growing (waxing)" }
+  - { n: 5, name: "Full Moon", looks: "Whole face lit", when: "Rises around sunset and sets around sunrise.", chunk: "Shrinking (waning)", accept: { name: ["Full"] }, hook: "Full Moon is opposite the Sun, so it rises as the Sun sets." }
+  - { n: 6, name: "Waning gibbous", looks: "More than half lit, shrinking from the right", when: "Rises after sunset, sets in the morning.", chunk: "Shrinking (waning)" }
+  - { n: 7, name: "Third quarter", looks: "Left half lit", when: "Rises around midnight; seen in the morning sky.", chunk: "Shrinking (waning)", accept: { name: ["Last quarter"] } }
+  - { n: 8, name: "Waning crescent", looks: "A thin sliver on the left, shrinking", when: "Rises before dawn; seen in the east in the morning.", chunk: "Shrinking (waning)" }
+sources:
+  - { name: "NASA Science: Moon Phases", url: "https://science.nasa.gov/moon/moon-phases/" }
+updated: 2026-10-30

@@ -1,0 +1,39 @@
+# Memory challenge list (format: /memory/challenges/ engine; checked by scripts/memory/check-lists.js)
+slug: continents-and-oceans
+title: "The seven continents and five oceans"
+group: geography
+ages: "5+"
+count_note: "7 continents and 5 oceans, each in order of size, largest first. This is the seven-continent model taught in American schools; some countries teach six (joining Europe and Asia, or North and South America) or five. NOAA names five oceans, all parts of one connected global ocean; the Southern Ocean, around Antarctica, is the newest to be named."
+intro: "The continents and oceans are the first map most children learn: the big pieces of land and the big bodies of water. Knowing them in order of size gives a sense of scale, and every later map lesson builds on it."
+technique: "Twelve names is two small chunks: seven continents and five oceans. Learn each in order of size, biggest first, with a first-letter sentence: All Animals Need Some Antarctic Exercise Always, for Asia, Africa, North America, South America, Antarctica, Europe, Australia; and Polar Animals Imagine Snowy Adventures, for Pacific, Atlantic, Indian, Southern, Arctic. Then point to each one on a globe or a map as you say it: picture plus words. Recall with the map covered, and come back on day 1, 3, 7 and 21."
+order_matters: true
+main: name
+fields:
+  - { key: n, label: "No." }
+  - { key: name, label: "Name" }
+  - { key: kind, label: "Continent or ocean" }
+  - { key: rank, label: "Size rank" }
+show: [kind, rank, name]
+prompts:
+  - { ask: name, from: [kind, rank] }
+  - { ask: rank, from: [name] }
+  - { ask: kind, from: [name] }
+items:
+  - { n: 1, name: "Asia", kind: "Continent", rank: "1st (largest)", chunk: "Continents", hook: "The largest continent and the one where the most people live." }
+  - { n: 2, name: "Africa", kind: "Continent", rank: "2nd", chunk: "Continents", hook: "The equator runs across the middle of Africa, and the Nile flows north through it to the Mediterranean." }
+  - { n: 3, name: "North America", kind: "Continent", rank: "3rd", chunk: "Continents", hook: "Our home continent: Canada, the United States, Mexico, Central America and the Caribbean." }
+  - { n: 4, name: "South America", kind: "Continent", rank: "4th", chunk: "Continents", hook: "Home of the Amazon rain forest and the Andes mountains." }
+  - { n: 5, name: "Antarctica", kind: "Continent", rank: "5th", chunk: "Continents", hook: "The coldest continent, covered in ice, with no permanent residents; scientists live there for a season." }
+  - { n: 6, name: "Europe", kind: "Continent", rank: "6th", chunk: "Continents", hook: "Small, but packed with more than forty countries." }
+  - { n: 7, name: "Australia", kind: "Continent", rank: "7th (smallest)", chunk: "Continents", hook: "The smallest continent; the country of Australia covers most of it. It is sometimes taught as part of Oceania.", accept: { name: ["Oceania", "Australia and Oceania"] } }
+  - { n: 8, name: "Pacific Ocean", kind: "Ocean", rank: "1st (largest)", chunk: "Oceans", hook: "The Pacific covers about 166 million square kilometers (64 million square miles), more than all the land on Earth put together.", accept: { name: ["Pacific"] } }
+  - { n: 9, name: "Atlantic Ocean", kind: "Ocean", rank: "2nd", chunk: "Oceans", hook: "The ocean between the Americas and Europe and Africa: the one the Pilgrims crossed.", accept: { name: ["Atlantic"] } }
+  - { n: 10, name: "Indian Ocean", kind: "Ocean", rank: "3rd", chunk: "Oceans", hook: "Named for India, which juts into it from the north.", accept: { name: ["Indian"] } }
+  - { n: 11, name: "Southern Ocean", kind: "Ocean", rank: "4th", chunk: "Oceans", hook: "The ring of cold water around Antarctica.", accept: { name: ["Southern", "Antarctic Ocean"] } }
+  - { n: 12, name: "Arctic Ocean", kind: "Ocean", rank: "5th (smallest)", chunk: "Oceans", hook: "The smallest ocean, around the North Pole, much of it covered by sea ice.", accept: { name: ["Arctic"] } }
+sources:
+  - { name: "NOAA National Ocean Service: How many oceans are there?", url: "https://oceanservice.noaa.gov/facts/howmanyoceans.html" }
+  - { name: "NOAA JetStream: The Ocean (the sizes of the major oceans)", url: "https://www.noaa.gov/jetstream/ocean" }
+  - { name: "Grokipedia: Continent (areas and the different continent models)", url: "https://grokipedia.com/page/Continent" }
+  - { name: "National Geographic Education: Continent", url: "https://www.nationalgeographic.org/encyclopedia/Continent/" }
+updated: 2026-10-31

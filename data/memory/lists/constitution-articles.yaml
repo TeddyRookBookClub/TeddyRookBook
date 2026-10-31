@@ -1,0 +1,34 @@
+# Memory challenge list (format: /memory/challenges/ engine; checked by scripts/memory/check-lists.js)
+slug: constitution-articles
+title: "The seven articles of the U.S. Constitution"
+group: civics
+ages: "9+"
+count_note: "7 articles. Articles I to IV are divided into sections (10, 4, 3 and 4); Articles V to VII are short and have none. The 27 amendments came later and have their own list."
+intro: "The Constitution has only seven articles, and each has one job. Once you know which article does what, the whole document has a map: the three branches first, then the states, then how to change it, how it stands above other laws, and how it came into force."
+technique: "Seven things fit in a short list, so learn all seven as one chunk. A first-letter sentence helps hold the order: Lively Eagles Jump Over Steep Stony Ridges, for Legislative, Executive, Judicial, the States, Amendments (changing it), Supreme law, Ratification. Then build pictures on a memory palace route: a busy hall of lawmakers at the front door, a desk with a presidential seal in the hall, a judge's gavel on the stairs, fifty state flags in the kitchen, a pencil and eraser in the dining room, a crown on the top shelf, and nine signatures on the back door. Recall it by walking the route, and come back on day 1, 3, 7 and 21."
+order_matters: true
+main: title
+fields:
+  - { key: n, label: "No." }
+  - { key: article, label: "Article" }
+  - { key: title, label: "Subject" }
+  - { key: covers, label: "What it covers" }
+show: [article, title, covers]
+prompts:
+  - { ask: title, from: [article] }
+  - { ask: article, from: [title] }
+  - { ask: title, from: [covers] }
+  - { ask: article, from: [covers] }
+items:
+  - { n: 1, article: "I", title: "The Legislative Branch", covers: "Congress: the House and the Senate, who may serve, how members are chosen, the powers of Congress and how a bill becomes a law.", hook: "The longest article, with ten sections. Congress makes the laws.", accept: { title: ["Legislative", "Legislative branch", "Congress"], article: ["1", "Article I", "Article 1"] } }
+  - { n: 2, article: "II", title: "The Executive Branch", covers: "The President and Vice President: the term of office, election by the Electoral College, who may serve, the President's powers and duties, and removal by impeachment.", hook: "The President carries out the laws.", accept: { title: ["Executive", "Executive branch", "President", "The President"], article: ["2", "Article II", "Article 2"] } }
+  - { n: 3, article: "III", title: "The Judicial Branch", covers: "The Supreme Court and the lower federal courts, the kinds of cases they hear, trial by jury, and the definition of treason.", hook: "The courts decide cases under the law.", accept: { title: ["Judicial", "Judicial branch", "The courts", "Courts", "Supreme Court"], article: ["3", "Article III", "Article 3"] } }
+  - { n: 4, article: "IV", title: "The States", covers: "How the states treat each other: respecting each other's laws and court records, the rights of citizens who travel, returning people who flee justice, admitting new states, and the promise of a republican form of government.", accept: { title: ["States", "The states and each other", "Relations among the states"], article: ["4", "Article IV", "Article 4"] } }
+  - { n: 5, article: "V", title: "Amendments", covers: "How to change the Constitution: two ways to propose an amendment and two ways to ratify one.", hook: "Five fingers to hold the pencil that writes an amendment.", accept: { title: ["Amendment", "Amending", "Amending the Constitution", "Amendment process"], article: ["5", "Article V", "Article 5"] } }
+  - { n: 6, article: "VI", title: "Supreme Law", covers: "The Constitution and federal laws and treaties are the supreme law of the land; debts from before the Constitution stay valid; officials take an oath to support the Constitution; no religious test for public office.", accept: { title: ["Supremacy", "Supreme law of the land", "Debts, supremacy, oaths", "Debts, Supremacy, Oaths"], article: ["6", "Article VI", "Article 6"] } }
+  - { n: 7, article: "VII", title: "Ratification", covers: "The Constitution would take effect once nine of the thirteen states ratified it.", hook: "Nine states needed; New Hampshire was the ninth, in June 1788.", accept: { title: ["Ratifying", "Ratification of the Constitution"], article: ["7", "Article VII", "Article 7"] } }
+sources:
+  - { name: "National Archives: The Constitution of the United States, a transcription", url: "https://www.archives.gov/founding-docs/constitution-transcript" }
+  - { name: "Constitution Annotated (Library of Congress): literal print of the Constitution", url: "https://constitution.congress.gov/static/files/Literal_Print_of_Constitution_MCT_1.9.26.pdf" }
+  - { name: "Teddy Rook Book civics kit: the Constitution navigator", url: "/american-history/" }
+updated: 2026-10-31

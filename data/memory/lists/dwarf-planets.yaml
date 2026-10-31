@@ -1,0 +1,31 @@
+slug: "dwarf-planets"
+title: "The dwarf planets, in order from the Sun"
+group: "science"
+ages: "8+"
+count_note: "The five dwarf planets the International Astronomical Union recognizes. Astronomers think there are many more far out in the Kuiper Belt and beyond that have not been confirmed."
+intro: "In 2006 astronomers created a new group, the dwarf planets, for round worlds that orbit the Sun but have not cleared their path of other objects. Pluto is the most famous; one sits in the asteroid belt and the rest are far beyond Neptune."
+technique: "Five fits in one chunk. Make a first-letter sentence for the order (C, P, H, M, E), for example \"Curious Penguins Hike Many Evenings,\" or better, one of your own. Then give each a picture from its fact: a cereal bowl for Ceres, a heart for Pluto, a spinning football for Haumea, and a goddess with a single moon for Eris."
+order_matters: true
+main: "name"
+fields:
+  - { key: n, label: "From the Sun" }
+  - { key: name, label: "Dwarf planet" }
+  - { key: where, label: "Where it orbits" }
+  - { key: fact, label: "Remember it by" }
+show: [n, name, where, fact]
+prompts:
+  - { ask: name, from: [n] }
+  - { ask: n, from: [name] }
+  - { ask: where, from: [name] }
+  - { ask: name, from: [fact] }
+items:
+  - { n: 1, name: "Ceres", where: "Asteroid belt, between Mars and Jupiter", fact: "The first dwarf planet visited by a spacecraft (NASA's Dawn)", hook: "Named for the Roman goddess of grain, which gives us the word \"cereal.\"" }
+  - { n: 2, name: "Pluto", where: "Kuiper Belt, beyond Neptune", fact: "Found in 1930; called a planet until 2006; visited by New Horizons in 2015", hook: "New Horizons photographed a pale heart-shaped plain on its surface." }
+  - { n: 3, name: "Haumea", where: "Kuiper Belt, beyond Neptune", fact: "Spins so fast it is stretched into a football shape", hook: "A football spinning end over end." }
+  - { n: 4, name: "Makemake", where: "Kuiper Belt, beyond Neptune", fact: "Found in 2005; has one known moon", hook: "Say it \"MAH-kay-MAH-kay\"; named for a creator god of the people of Rapa Nui (Easter Island)." }
+  - { n: 5, name: "Eris", where: "Scattered disk, beyond the Kuiper Belt", fact: "About the size of Pluto; its discovery led to the 2006 decision", hook: "Named for the Greek goddess of strife: her discovery stirred up the argument over what counts as a planet." }
+sources:
+  - { name: "NASA Science: Pluto and Dwarf Planets", url: "https://science.nasa.gov/dwarf-planets/" }
+  - { name: "NASA Science: Makemake", url: "https://science.nasa.gov/dwarf-planets/makemake/" }
+  - { name: "NASA Science: Ceres", url: "https://science.nasa.gov/dwarf-planets/ceres/" }
+updated: 2026-10-30

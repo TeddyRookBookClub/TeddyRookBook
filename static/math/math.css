@@ -531,3 +531,10 @@ html[data-theme="dark"] .mlp-coming .mlp-tbanner-icon{color:var(--lcd,var(--g))}
   .mlp-xp-float.go{animation:none!important;opacity:1}
 }
 @media print{.mlp-practice,.mlp-ex-bar,.mlp-hero-btns{display:none}.mlp-ex-steps li[hidden]{display:list-item!important}.mlp-ex-a[hidden]{display:block!important}}
+/* optional hub extras from data/ladders.yaml: feature (a card near the top) and sections (extra hub sections) */
+.mlp-feature{border-left-color:var(--lc,var(--gold))}
+.mlp-feat-img{display:block;width:96px;height:120px;border-radius:10px;overflow:hidden;border:1px solid var(--line);flex:none}
+.mlp-feat-img img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+.mlp-xsecs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:0 0 1.6rem}
+.mlp-xsec{margin:0}.mlp-xsec h2{margin:0 0 .35rem}.mlp-xsec p{margin:0;line-height:1.5}
+@media (max-width:640px){.mlp-feat-img{width:72px;height:90px}.mlp-xsecs{grid-template-columns:1fr}}

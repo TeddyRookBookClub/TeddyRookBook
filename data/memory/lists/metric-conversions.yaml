@@ -1,0 +1,36 @@
+slug: "metric-conversions"
+title: "Exact metric conversions"
+group: "math"
+ages: "11+"
+count_note: "12 conversions. All are exact. The inch, foot, yard, mile and pound have been defined in metric units since 1959; the others follow from them, so the long decimals are exact, not rounded. NIST gives the temperature rules as exact."
+intro: "When a recipe, a science lab or a trip abroad switches between inches and centimeters or pounds and kilograms, these are the numbers behind every conversion chart. Most of them grow out of just two: the inch (2.54 cm) and the pound (0.45359237 kg)."
+technique: "Learn the two roots first, the inch and the pound, and derive the rest: a foot is 12 inches, so 12 x 2.54 = 30.48 cm. Working it out once is a strong encoding step, and it turns ten facts into two facts plus reasoning. Then use rounded versions for everyday sense (a mile is about 1.6 km, a kilogram about 2.2 pounds) and the exact ones when it matters. Chunk as length, weight, volume, temperature."
+order_matters: false
+main: "value"
+fields:
+  - { key: unit, label: "Start with" }
+  - { key: value, label: "equals" }
+  - { key: into, label: "in" }
+  - { key: exact, label: "Exact?" }
+show: [unit, value, into, exact]
+prompts:
+  - { ask: value, from: [unit, into] }
+  - { ask: into, from: [unit, value] }
+  - { ask: unit, from: [value, into] }
+items:
+  - { unit: "1 inch", value: "2.54", into: "centimeters", exact: "Exact by definition", hook: "The anchor: the foot, yard and mile conversions all grow from this one number.", accept: { value: ["2.54 cm"] }, chunk: "Length" }
+  - { unit: "1 foot", value: "0.3048", into: "meters", exact: "Exact (12 x 2.54 cm)", hook: "A foot is 30.48 cm, a bit under a third of a meter.", accept: { value: ["30.48 cm", ".3048"] }, chunk: "Length" }
+  - { unit: "1 yard", value: "0.9144", into: "meters", exact: "Exact (36 x 2.54 cm)", hook: "A yard is a little less than a meter.", accept: { value: ["91.44 cm", ".9144"] }, chunk: "Length" }
+  - { unit: "1 mile", value: "1.609344", into: "kilometers", exact: "Exact (5,280 x 0.3048 m)", hook: "About 1.6 km: a 5K race is a little over 3 miles.", accept: { value: ["1609.344 m", "1.609 344"] }, chunk: "Length" }
+  - { unit: "1 nautical mile", value: "1,852", into: "meters", exact: "Exact by definition", hook: "Used at sea and in the air.", accept: { value: ["1852"] }, chunk: "Length" }
+  - { unit: "1 pound", value: "0.45359237", into: "kilograms", exact: "Exact by definition", hook: "About 0.45 kg, so a kilogram is about 2.2 pounds.", accept: { value: ["453.59237 g", ".45359237", "0.453 592 37"] }, chunk: "Weight" }
+  - { unit: "1 ounce (weight)", value: "28.349523125", into: "grams", exact: "Exact (1/16 pound)", hook: "About 28 grams, roughly the weight of a slice of bread.", accept: { value: ["28.349 523 125"] }, chunk: "Weight" }
+  - { unit: "1 U.S. gallon", value: "3.785411784", into: "liters", exact: "Exact (231 cubic inches)", hook: "About 3.8 liters.", accept: { value: ["3.785 411 784"] }, chunk: "Volume" }
+  - { unit: "1 U.S. fluid ounce", value: "29.5735295625", into: "milliliters", exact: "Exact (1/128 gallon)", hook: "About 30 mL, two tablespoons.", accept: { value: ["29.573 529 562 5"] }, chunk: "Volume" }
+  - { unit: "1 liter", value: "1,000", into: "cubic centimeters", exact: "Exact by definition", hook: "A liter is a box 10 cm on each side.", accept: { value: ["1000"] }, chunk: "Volume" }
+  - { unit: "°F to °C", value: "subtract 32, then divide by 1.8", into: "degrees Celsius", exact: "Exact", hook: "Undo the Celsius-to-Fahrenheit steps backward: Fahrenheit is Celsius times 1.8, plus 32.", accept: { value: ["(F - 32) / 1.8", "(F-32)/1.8", "subtract 32 divide by 1.8", "(F - 32) x 5/9"] }, chunk: "Temperature" }
+  - { unit: "°C to K", value: "add 273.15", into: "kelvins", exact: "Exact", hook: "The same size of degree, starting at absolute zero.", accept: { value: ["+273.15", "C + 273.15"] }, chunk: "Temperature" }
+sources:
+  - { name: "NIST Handbook 44 (2024), Appendix C: General Tables of Units of Measurement", url: "https://www.nist.gov/document/nist-hb-44-2024-appendix-c-general-tables-units-measurement" }
+  - { name: "NIST: Approximate Conversions from U.S. Customary Measures to Metric (temperature: exact)", url: "https://www.nist.gov/pml/owm/metric-si/unit-conversion/approximate-conversions-us-customary-measures-metric" }
+updated: 2026-10-30

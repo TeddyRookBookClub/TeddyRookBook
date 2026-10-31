@@ -1,0 +1,77 @@
+{{ define "main" }}
+{{- /* One memory challenge list (data/memory/lists/<slug>.yaml, page made by content/memory/challenges/_content.gotmpl).
+   The study table, blank practice sheet and sources are plain HTML (they print and work without scripts);
+   static/memory/challenges/engine.js adds the modes. */ -}}
+{{- $slug := .Params.list -}}
+{{- $L := index site.Data.memory.lists $slug -}}
+{{- $F := dict }}{{ range $L.fields }}{{ $F = merge $F (dict (printf "%v" .key) .label) }}{{ end -}}
+{{- /* keys are stringified: YAML reads a bare n (and y, no, on ...) as true/false, and Hugo then stores item keys as "false" */ -}}
+{{- $show := slice }}{{ range ($L.show | default (apply $L.fields "index" "." "key")) }}{{ $show = $show | append (printf "%v" .) }}{{ end -}}
+{{- $cue := "" }}{{ with index ($L.prompts | default slice) 0 }}{{ with .from }}{{ $cue = printf "%v" (index . 0) }}{{ end }}{{ end -}}
+{{- $n := len $L.items -}}
+{{- $groups := dict "science" "Science" "history" "History" "civics" "Civics" "geography" "Geography" "math" "Math" "language" "Language" "scripture" "Scripture" "everyday" "Everyday" -}}
+{{- $css := "memory/challenges/engine.css" -}}
+<link rel="stylesheet" href="{{ $css | relURL }}?v={{ (os.Stat (printf "static/%s" $css)).ModTime.Unix }}">
+<article class="mc mc-page" data-slug="{{ $slug }}">
+<nav class="mc-crumbs" aria-label="Breadcrumb"><a href="{{ "memory/" | relURL }}">Memory</a> › <a href="{{ "memory/challenges/" | relURL }}">Challenges</a> › <span>{{ index $groups $L.group | default $L.group }}</span></nav>
+<header class="mc-head">
+  <h1>{{ $L.title }}</h1>
+  <p class="mc-meta"><span>{{ $n }} items</span> · <span>Ages {{ $L.ages }}</span>{{ if $L.order_matters }} · <span>In order</span>{{ end }}</p>
+  {{- with $L.count_note }}<p class="mc-note">{{ . }}</p>{{ end }}
+  <p class="mc-intro">{{ $L.intro }}</p>
+  <div class="mc-how"><b>How to learn it</b><p>{{ $L.technique }}</p><p class="mc-sys"><span class="mc-e">Encode</span> make it vivid → <span class="mc-s">Space</span> bring it back on day 1, 3, 7, 21 → <span class="mc-r">Retrieve</span> pull it from your head. From the infographic <a href="{{ "infographics/remember-it-on-purpose/" | relURL }}">Remember It on Purpose</a>.</p></div>
+</header>
+
+<div class="mc-tabs" role="tablist" aria-label="Ways to practice" id="mc-tabs" hidden>
+  {{- if $L.recite }}<button type="button" role="tab" data-mode="recite">Recite</button>{{ end }}
+  <button type="button" role="tab" data-mode="study">Study</button>
+  <button type="button" role="tab" data-mode="learn">Learn in chunks</button>
+  {{- if $L.order_matters }}<button type="button" role="tab" data-mode="recall">Recall in order</button>{{ end }}
+  <button type="button" role="tab" data-mode="match">Match</button>
+  <button type="button" role="tab" data-mode="gaps">Fill the gaps</button>
+  <button type="button" role="tab" data-mode="timed">Timed</button>
+  <button type="button" role="tab" data-mode="blank">Blank page</button>
+  <button type="button" role="tab" data-mode="schedule">Schedule</button>
+  <button type="button" role="tab" data-mode="print">Print</button>
+</div>
+<div id="mc-app" class="mc-app" aria-live="polite"></div>
+
+<section class="mc-sheet mc-sheet-study" id="mc-study">
+  <h2 class="mc-print-only">{{ $L.title }}</h2>
+  <div class="mc-cover" id="mc-cover" hidden></div>
+  <div class="mc-tablewrap"><table class="mc-table">
+    <thead><tr>{{ range $show }}<th scope="col">{{ index $F . }}</th>{{ end }}</tr></thead>
+    <tbody>
+    {{- range $i, $it := $L.items }}
+      <tr data-i="{{ $i }}"{{ if $it.note }} class="has-note"{{ end }}>{{ range $k := $show }}<td data-k="{{ $k }}">{{ index $it $k }}</td>{{ end }}</tr>
+      {{- with $it.note }}<tr class="mc-noterow"><td colspan="{{ len $show }}">Note: {{ . }}</td></tr>{{ end }}
+    {{- end }}
+    </tbody>
+  </table></div>
+  <p class="mc-print-only mc-print-foot">{{ $L.technique }} · teddyrookbook.com{{ .RelPermalink }}</p>
+</section>
+
+<section class="mc-sheet mc-sheet-blank" aria-hidden="true">
+  <h2>{{ $L.title }}: practice sheet</h2>
+  <p>Name: ______________________ &nbsp; Date: ____________ &nbsp; Score: ____ / {{ $n }}</p>
+  <table class="mc-table mc-blank">
+    <thead><tr>{{ range $show }}<th scope="col">{{ index $F . }}</th>{{ end }}</tr></thead>
+    <tbody>
+    {{- range $i, $it := $L.items }}
+      <tr>{{ range $k := $show }}<td>{{ if eq $k $cue }}{{ index $it $k }}{{ else }}&nbsp;{{ end }}</td>{{ end }}</tr>
+    {{- end }}
+    </tbody>
+  </table>
+  <p class="mc-print-foot">Write from memory, then check against the study sheet. Mark the misses and review those first next time. · teddyrookbook.com{{ .RelPermalink }}</p>
+</section>
+
+<section class="mc-sources">
+  <h2>Sources</h2>
+  <ul>{{ range $L.sources }}<li><a href="{{ if hasPrefix .url "/" }}{{ .url | relURL }}{{ else }}{{ .url }}{{ end }}"{{ if not (hasPrefix .url "/") }} rel="noopener"{{ end }}>{{ .name }}</a></li>{{ end }}</ul>
+  <p class="mc-small">Checked {{ with $L.updated }}{{ (time.AsTime .).Format "January 2, 2006" }}{{ end }}. Progress is kept on this device only (per learner). More lists: <a href="{{ "memory/challenges/" | relURL }}">all memory challenges</a> · <a href="{{ "memory/games/" | relURL }}">memory games</a>.</p>
+</section>
+</article>
+<script type="application/json" id="mc-data">{{ $L | jsonify | safeJS }}</script>
+<script src="{{ "memory/challenges/core.js" | relURL }}?v={{ (os.Stat "static/memory/challenges/core.js").ModTime.Unix }}"></script>
+<script src="{{ "memory/challenges/engine.js" | relURL }}?v={{ (os.Stat "static/memory/challenges/engine.js").ModTime.Unix }}"></script>
+{{ end }}

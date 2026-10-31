@@ -1,0 +1,35 @@
+# Memory challenge list (format: /memory/challenges/ engine; checked by scripts/memory/check-lists.js)
+slug: roman-numerals
+title: "Roman numerals"
+group: math
+ages: "7+"
+count_note: "13 symbols: the 7 letters (I, V, X, L, C, D, M) and the 6 standard subtraction pairs (IV, IX, XL, XC, CD, CM), in order of value. With these 13 you can write any number from 1 to 3,999."
+intro: "Roman numerals still turn up on clocks, in book chapters, after kings' and queens' names, on cornerstones and in the credits of old films. Thirteen symbols are all you need to read and write them."
+technique: "Learn the seven letters first as one chunk, with a first-letter sentence for the order: I Value Xylophones Like Cows Dig Milk (1, 5, 10, 50, 100, 500, 1,000). Notice the pattern: each step is times 5, then times 2 (1, 5, 10, 50, 100, 500, 1,000). Then learn the six pairs, which follow one rule: a smaller letter before a bigger one is subtracted, and only I, X and C are used that way, each before the next two letters up (IV and IX, XL and XC, CD and CM). To write a number, take the biggest symbol that fits, write it, subtract, and repeat: 2026 is M M (2,000), X X (20), V I (6), so MMXXVI. Practice on dates and clock faces, and come back on day 1, 3, 7 and 21."
+order_matters: true
+main: symbol
+fields:
+  - { key: symbol, label: "Numeral" }
+  - { key: value, label: "Value" }
+show: [symbol, value]
+prompts:
+  - { ask: value, from: [symbol] }
+  - { ask: symbol, from: [value] }
+items:
+  - { symbol: "I", value: 1, chunk: "Small", hook: "One finger held up." }
+  - { symbol: "IV", value: 4, chunk: "Small", hook: "One before five: 5 − 1 = 4. Many clock faces show 4 as IIII instead." }
+  - { symbol: "V", value: 5, chunk: "Small", hook: "Picture a hand with the thumb stretched out: the gap makes a V, and a hand has five fingers." }
+  - { symbol: "IX", value: 9, chunk: "Small", hook: "One before ten: 10 − 1 = 9." }
+  - { symbol: "X", value: 10, chunk: "Tens", hook: "Picture two V's touching point to point: 5 + 5 = 10." }
+  - { symbol: "XL", value: 40, chunk: "Tens", hook: "Ten before fifty: 50 − 10 = 40." }
+  - { symbol: "L", value: 50, chunk: "Tens", hook: "Lots of Lollipops: L is fifty, half of a hundred." }
+  - { symbol: "XC", value: 90, chunk: "Tens", hook: "Ten before a hundred: 100 − 10 = 90." }
+  - { symbol: "C", value: 100, chunk: "Hundreds", hook: "C for centum, Latin for a hundred: a century is a hundred years, and a cent is a hundredth of a dollar." }
+  - { symbol: "CD", value: 400, chunk: "Hundreds", hook: "A hundred before five hundred: 500 − 100 = 400." }
+  - { symbol: "D", value: 500, chunk: "Hundreds", hook: "D is half of a thousand, and it comes just before M in the order." }
+  - { symbol: "CM", value: 900, chunk: "Hundreds", hook: "A hundred before a thousand: 1,000 − 100 = 900." }
+  - { symbol: "M", value: 1000, chunk: "Hundreds", hook: "M for mille, Latin for a thousand: a millipede is named for its many legs, and a millennium is a thousand years.", accept: { value: ["1,000"] } }
+sources:
+  - { name: "Grokipedia: Roman numerals", url: "https://grokipedia.com/page/Roman_numerals" }
+  - { name: "Encyclopaedia Britannica: Roman numerals", url: "https://www.britannica.com/topic/Roman-numerals" }
+updated: 2026-10-31

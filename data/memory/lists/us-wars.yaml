@@ -1,0 +1,39 @@
+# Memory challenge list (format: /memory/challenges/ engine; checked by scripts/memory/check-lists.js)
+slug: us-wars
+title: "Major wars in U.S. history, 1754 to 1991"
+group: history
+ages: "10+"
+count_note: "11 wars, from the French and Indian War to the Gulf War, with dates and the main sides only. Historians date some wars differently: the Vietnam War is often given as 1955 to 1975, while U.S. combat troops served there from 1965 to 1973 and the Department of Veterans Affairs counts the war from 1964. The list stops at wars that ended by about 2000."
+intro: "Wars are turning points in a nation's story, and their dates are anchors for everything around them: inventions, presidents, new states. This list gives only the dates and who was on each side, so the rest of history has something to hang on."
+technique: "Chunk by century. The 1700s (two wars, both about who would rule North America), the 1800s (four), and the 1900s (five). Learn one century at a time, then recall the order before the dates. A number hook makes the years stick: 1812 is in the war's own name, and the Civil War's 1861 to 1865 starts with Lincoln's inauguration year. Tie each war to a picture in a memory palace, and come back on day 1, 3, 7 and 21."
+order_matters: true
+main: war
+fields:
+  - { key: n, label: "No." }
+  - { key: war, label: "War" }
+  - { key: years, label: "Years" }
+  - { key: sides, label: "Main sides" }
+show: [war, years, sides]
+prompts:
+  - { ask: years, from: [war] }
+  - { ask: war, from: [years] }
+  - { ask: war, from: [sides] }
+  - { ask: sides, from: [war] }
+items:
+  - { n: 1, war: "French and Indian War", years: "1754–1763", sides: "Great Britain and its American colonies against France, with Native American nations allied on both sides", chunk: "The 1700s", note: "The North American part of the Seven Years' War (1756–1763). It was fought before the United States existed.", hook: "Named for Britain's two opponents: the French and their Native American allies. A young George Washington served in it." }
+  - { n: 2, war: "American Revolutionary War", years: "1775–1783", sides: "The Thirteen Colonies (the United States from 1776), with France, Spain and the Dutch Republic, against Great Britain", chunk: "The 1700s", note: "Fighting began at Lexington and Concord in April 1775; the Treaty of Paris ended the war in September 1783.", hook: "It started a year before the Declaration of Independence (1776) and ended two years after the victory at Yorktown (1781).", accept: { war: ["Revolutionary War", "American Revolution", "War of Independence"] } }
+  - { n: 3, war: "War of 1812", years: "1812–1815", sides: "The United States against Great Britain and its Native American allies", chunk: "The 1800s", hook: "The war wears its start year in its name. \"The Star-Spangled Banner\" was written during it, in 1814.", accept: { war: ["The War of 1812"] } }
+  - { n: 4, war: "Mexican–American War", years: "1846–1848", sides: "The United States against Mexico", chunk: "The 1800s", hook: "Two years, and the map grew: California and most of the Southwest came to the United States in the peace treaty of 1848.", accept: { war: ["Mexican-American War", "Mexican War", "U.S.-Mexican War"] } }
+  - { n: 5, war: "Civil War", years: "1861–1865", sides: "The Union (the United States) against the Confederacy (eleven Southern states that declared they had left the Union)", chunk: "The 1800s", hook: "It began a few weeks after Lincoln took office in 1861 and ended in April 1865, days before his death.", accept: { war: ["American Civil War", "The Civil War", "War Between the States"] } }
+  - { n: 6, war: "Spanish–American War", years: "1898", sides: "The United States against Spain", chunk: "The 1800s", note: "The fighting lasted from April to August 1898, and the peace treaty was signed that December. The Department of Veterans Affairs counts service through 1902, including the fighting that followed in the Philippines.", hook: "A short war at the very end of the century: 1898.", accept: { war: ["Spanish-American War"] } }
+  - { n: 7, war: "World War I", years: "1914–1918", sides: "The Allies (France, Britain, Russia, Italy, the United States and others) against the Central Powers (Germany, Austria-Hungary, the Ottoman Empire and Bulgaria)", chunk: "The 1900s", note: "The United States entered in April 1917. The fighting ended with the armistice of November 11, 1918, now Veterans Day.", hook: "The eleventh hour of the eleventh day of the eleventh month: the armistice, November 11, 1918.", accept: { war: ["World War 1", "WWI", "WW1", "First World War", "The Great War"] } }
+  - { n: 8, war: "World War II", years: "1939–1945", sides: "The Allies (Britain, the Soviet Union, the United States, China, France and others) against the Axis (Germany, Italy, Japan and others)", chunk: "The 1900s", note: "The United States entered after the attack on Pearl Harbor, December 7, 1941. The war ended in Europe in May 1945 and in the Pacific in September 1945.", accept: { war: ["World War 2", "WWII", "WW2", "Second World War"] } }
+  - { n: 9, war: "Korean War", years: "1950–1953", sides: "South Korea and United Nations forces led by the United States against North Korea and China", chunk: "The 1900s", note: "An armistice stopped the fighting on July 27, 1953; no peace treaty was signed.", hook: "Three years, 1950 to 1953, right at the start of the second half of the century.", accept: { war: ["The Korean War"] } }
+  - { n: 10, war: "Vietnam War", years: "1955–1975", sides: "South Vietnam and the United States against North Vietnam and the Viet Cong", chunk: "The 1900s", note: "Start dates differ: 1955 is common, U.S. combat troops served from 1965 to 1973, and the Department of Veterans Affairs counts the war from 1964. The war ended with the fall of Saigon on April 30, 1975.", accept: { war: ["The Vietnam War", "Viet Nam War"] } }
+  - { n: 11, war: "Gulf War", years: "1990–1991", sides: "A coalition of 35 nations led by the United States against Iraq, after Iraq invaded Kuwait", chunk: "The 1900s", note: "Iraq invaded Kuwait on August 2, 1990. The coalition's air campaign (Operation Desert Storm) began in January 1991, and Kuwait was freed by February 28, 1991.", accept: { war: ["Persian Gulf War", "The Gulf War", "Desert Storm", "First Gulf War"] } }
+sources:
+  - { name: "U.S. Department of Veterans Affairs: America's Wars", url: "https://department.va.gov/americas-wars/" }
+  - { name: "Grokipedia: List of wars involving the United States", url: "https://grokipedia.com/page/List_of_wars_involving_the_United_States" }
+  - { name: "Grokipedia: List of wars involving Iraq", url: "https://grokipedia.com/page/List_of_wars_involving_Iraq" }
+  - { name: "Grokipedia: List of wars involving France (the Seven Years' War and the world wars)", url: "https://grokipedia.com/page/List_of_wars_involving_France" }
+updated: 2026-10-31

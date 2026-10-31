@@ -1,0 +1,37 @@
+slug: "brightest-stars"
+title: "The ten brightest stars in the night sky"
+group: "science"
+ages: "9+"
+count_note: "The ten brightest stars after the Sun, by apparent magnitude (smaller and negative numbers are brighter). Alpha Centauri's two main stars look like one point and are counted together. Betelgeuse varies a lot; in some years it drops below Hadar, Altair and others, and some lists rank it lower. Magnitudes differ by a few hundredths between catalogs."
+intro: "These ten stars are the easiest to find on a clear night and anchor the constellations around them. Learn them and the sky becomes a map you can read, season by season."
+technique: "Order by brightness is the hard part, so chunk: the big three (Sirius, Canopus, Alpha Centauri), then the next four, then the last three. Hang each star on its constellation, and the constellation on a picture: two dogs (Sirius, Procyon), a hunter with a blue foot and a red shoulder (Rigel, Betelgeuse). Then go outside: finding Sirius below Orion's belt once is worth ten flashcards."
+order_matters: true
+main: "name"
+fields:
+  - { key: n, label: "Rank" }
+  - { key: name, label: "Star" }
+  - { key: con, label: "Constellation" }
+  - { key: mag, label: "Magnitude" }
+  - { key: find, label: "How to remember or find it" }
+  - { key: season, label: "Best seen (from the U.S.)" }
+show: [n, name, con, mag, find, season]
+prompts:
+  - { ask: name, from: [n] }
+  - { ask: con, from: [name] }
+  - { ask: name, from: [con, find] }
+  - { ask: n, from: [name] }
+items:
+  - { n: 1, name: "Sirius", con: "Canis Major (the Great Dog)", mag: "-1.46", find: "The \"Dog Star,\" by far the brightest; follow Orion's belt down and to the left to find it.", season: "Winter", chunk: "The big three", accept: { con: ["Canis Major"] } }
+  - { n: 2, name: "Canopus", con: "Carina (the Keel)", mag: "-0.72", find: "Low in the far south; seen only from the southern United States and farther south.", season: "Southern sky", chunk: "The big three", accept: { con: ["Carina"] } }
+  - { n: 3, name: "Alpha Centauri", con: "Centaurus (the Centaur)", mag: "-0.27", find: "The nearest star system to the Sun, about 4.4 light-years away; seen from the Southern Hemisphere.", season: "Southern sky", chunk: "The big three", accept: { name: ["Rigil Kentaurus", "Rigil Kent", "Alpha Cen"] } }
+  - { n: 4, name: "Arcturus", con: "Boötes (the Herdsman)", mag: "-0.05", find: "Follow the arc of the Big Dipper's handle to \"arc to Arcturus.\"", season: "Spring and summer", chunk: "The next four", accept: { con: ["Boötes"] } }
+  - { n: 5, name: "Vega", con: "Lyra (the Lyre)", mag: "0.03", find: "A blue-white corner of the Summer Triangle, high overhead on summer nights.", season: "Summer", chunk: "The next four", accept: { con: ["Lyra"] } }
+  - { n: 6, name: "Capella", con: "Auriga (the Charioteer)", mag: "0.08", find: "A yellow star nearly overhead on winter evenings.", season: "Winter", chunk: "The next four", accept: { con: ["Auriga"] } }
+  - { n: 7, name: "Rigel", con: "Orion (the Hunter)", mag: "0.12", find: "Orion's bright blue-white foot.", season: "Winter", chunk: "The next four", accept: { con: ["Orion"] } }
+  - { n: 8, name: "Procyon", con: "Canis Minor (the Little Dog)", mag: "0.34", find: "Its name means \"before the dog\": it rises just before Sirius.", season: "Winter", chunk: "The last three", accept: { con: ["Canis Minor"] } }
+  - { n: 9, name: "Achernar", con: "Eridanus (the River)", mag: "0.46", find: "At the far southern end of the long river constellation; best seen from the Southern Hemisphere.", season: "Southern sky", chunk: "The last three", accept: { con: ["Eridanus"] } }
+  - { n: 10, name: "Betelgeuse", con: "Orion (the Hunter)", mag: "0.50 (varies)", find: "Orion's red shoulder, a huge star whose brightness changes.", season: "Winter", chunk: "The last three", accept: { con: ["Orion"] } }
+sources:
+  - { name: "Grokipedia: List of brightest stars", url: "https://grokipedia.com/page/List_of_brightest_stars" }
+  - { name: "Windows to the Universe (NESTA): Star statistics", url: "https://mail.windows2universe.org/the_universe/star_stats.html" }
+updated: 2026-10-30

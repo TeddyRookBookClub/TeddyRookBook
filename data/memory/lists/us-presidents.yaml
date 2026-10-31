@@ -1,0 +1,78 @@
+# Memory challenge list (format: /memory/challenges/ engine; checked by scripts/memory/check-lists.js)
+# Optional extras the engine understands:
+#   item `chunk`: a label; neighboring items with the same label are learned together (big groups are split, singles merged)
+#   item `accept`: extra spellings for typed answers of the item's main field (or a map {field: [...]})
+#   list `main`: the field "Recall in order" and "Blank page" ask for (default: the first prompt's `ask`)
+slug: us-presidents
+title: "Presidents of the United States, in order"
+group: history
+ages: "8+"
+count_note: "47 presidencies, 45 people. Grover Cleveland served two terms that were not back to back, so he is the 22nd and the 24th president, and Donald Trump is the 45th and the 47th. This is the standard count: each presidency gets its own number, so a person who returns after a break gets a new one."
+intro: "Knowing the presidents in order gives American history a backbone. Each name becomes a hook to hang events on: wars, inventions, new states. It is a classic memory-work list, and it is long enough to show why chunking and spaced review matter."
+technique: "Chunk first. Forty-seven names is far more than the four or so things the mind holds at once, so the list is split by era into groups of four to six. Learn one group, recall it with the book closed, then add the next. Old groups come back on day 1, 3, 7 and 21. For a stronger hook, walk a memory palace: Washington washing the front door, Adams with an apple in his throat on the mat, and so on, one picture per stop."
+order_matters: true
+main: name
+fields:
+  - { key: n, label: "No." }
+  - { key: name, label: "President" }
+  - { key: years, label: "Years in office" }
+show: [n, name, years]
+prompts:
+  - { ask: name, from: [n] }
+  - { ask: n, from: [name] }
+  - { ask: name, from: [years] }
+  - { ask: years, from: [name] }
+items:
+  - { n: 1, name: "George Washington", years: "1789–1797", chunk: "Founding era", hook: "Picture him washing the front door of your memory house: Wash-ington starts the walk." }
+  - { n: 2, name: "John Adams", years: "1797–1801", chunk: "Founding era", hook: "An apple stuck in a throat: Adam's apple, for Adams." }
+  - { n: 3, name: "Thomas Jefferson", years: "1801–1809", chunk: "Founding era", hook: "He wrote the Declaration of Independence: see a giant quill writing on the mirror." }
+  - { n: 4, name: "James Madison", years: "1809–1817", chunk: "Founding era", hook: "Called the Father of the Constitution: a mad son hugging a big parchment." }
+  - { n: 5, name: "James Monroe", years: "1817–1825", chunk: "Founding era", hook: "The Monroe Doctrine: a doorman telling ships from Europe to stay out of the Americas." }
+  - { n: 6, name: "John Quincy Adams", years: "1825–1829", chunk: "Founding era", hook: "John Adams's son: a small apple next to the big one.", accept: ["J. Q. Adams", "JQ Adams"] }
+  - { n: 7, name: "Andrew Jackson", years: "1829–1837", chunk: "Jackson to Buchanan", hook: "He is on the twenty-dollar bill: a jack-in-the-box popping out of a $20." }
+  - { n: 8, name: "Martin Van Buren", years: "1837–1841", chunk: "Jackson to Buchanan", hook: "A van full of burning buns (Van Buren) parked behind Jackson." }
+  - { n: 9, name: "William Henry Harrison", years: "1841", chunk: "Jackson to Buchanan", hook: "He served about a month, the shortest presidency: a hairy son who stays only a moment." }
+  - { n: 10, name: "John Tyler", years: "1841–1845", chunk: "Jackson to Buchanan", hook: "The first vice president to take over: a tiler finishing the floor Harrison started." }
+  - { n: 11, name: "James K. Polk", years: "1845–1849", chunk: "Jackson to Buchanan", hook: "Polk pokes the map, and it stretches west to the Pacific." }
+  - { n: 12, name: "Zachary Taylor", years: "1849–1850", chunk: "Jackson to Buchanan", hook: "A tailor measuring a general for his uniform." }
+  - { n: 13, name: "Millard Fillmore", years: "1850–1853", chunk: "Jackson to Buchanan", hook: "Fill more: a mill pouring flour until the room fills up." }
+  - { n: 14, name: "Franklin Pierce", years: "1853–1857", chunk: "Jackson to Buchanan", hook: "A frank pierce: an earring stud in a hot dog." }
+  - { n: 15, name: "James Buchanan", years: "1857–1861", chunk: "Jackson to Buchanan", hook: "A blue cannon (Bu-chanan) aimed at nothing, just before the Civil War." }
+  - { n: 16, name: "Abraham Lincoln", years: "1861–1865", chunk: "Civil War and Reconstruction", hook: "The tall stovepipe hat, and the Gettysburg Address read aloud." }
+  - { n: 17, name: "Andrew Johnson", years: "1865–1869", chunk: "Civil War and Reconstruction", hook: "A second Andrew (after Andrew Jackson) took over when Lincoln died: two Andrews, one at each end of this stretch." }
+  - { n: 18, name: "Ulysses S. Grant", years: "1869–1877", chunk: "Civil War and Reconstruction", hook: "The Union's top general: a grant of a medal on a general's coat." }
+  - { n: 19, name: "Rutherford B. Hayes", years: "1877–1881", chunk: "Civil War and Reconstruction", hook: "A haze of hay drifting across the room." }
+  - { n: 20, name: "James A. Garfield", years: "1881", chunk: "Civil War and Reconstruction", hook: "A car-field: cars parked in a field of grass." }
+  - { n: 21, name: "Chester A. Arthur", years: "1881–1885", chunk: "Civil War and Reconstruction", hook: "A treasure chest (Chester) with King Arthur's sword in it." }
+  - { n: 22, name: "Grover Cleveland", years: "1885–1889", chunk: "Gilded Age and Progressive Era", hook: "A cleaver cutting the list in two: Cleveland comes before and after Benjamin Harrison." }
+  - { n: 23, name: "Benjamin Harrison", years: "1889–1893", chunk: "Gilded Age and Progressive Era", hook: "William Henry Harrison's grandson: the hairy son is back, now a grandson." }
+  - { n: 24, name: "Grover Cleveland", years: "1893–1897", chunk: "Gilded Age and Progressive Era", hook: "Cleveland again: the cleaver comes down a second time." }
+  - { n: 25, name: "William McKinley", years: "1897–1901", chunk: "Gilded Age and Progressive Era", hook: "A key to a kingdom: Mc-KEY-nley." }
+  - { n: 26, name: "Theodore Roosevelt", years: "1901–1909", chunk: "Gilded Age and Progressive Era", hook: "The teddy bear was named for him.", accept: ["Teddy Roosevelt"] }
+  - { n: 27, name: "William Howard Taft", years: "1909–1913", chunk: "Gilded Age and Progressive Era", hook: "Later chief justice too: a judge's robe made of taffy." }
+  - { n: 28, name: "Woodrow Wilson", years: "1913–1921", chunk: "World wars and the Depression", hook: "A wooden row of boats sailing to World War I." }
+  - { n: 29, name: "Warren G. Harding", years: "1921–1923", chunk: "World wars and the Depression", hook: "A rabbit warren with a hard ding of a bell." }
+  - { n: 30, name: "Calvin Coolidge", years: "1923–1929", chunk: "World wars and the Depression", hook: "Known for saying little: a cool ledge where nobody talks." }
+  - { n: 31, name: "Herbert Hoover", years: "1929–1933", chunk: "World wars and the Depression", hook: "Hoover Dam is named for him: a vacuum cleaner on top of a dam." }
+  - { n: 32, name: "Franklin D. Roosevelt", years: "1933–1945", chunk: "World wars and the Depression", hook: "Elected four times, the only president to serve more than two terms.", accept: ["FDR", "Franklin Delano Roosevelt"] }
+  - { n: 33, name: "Harry S. Truman", years: "1945–1953", chunk: "World wars and the Depression", hook: "A true man holding a sign: The buck stops here.", accept: ["Harry Truman"] }
+  - { n: 34, name: "Dwight D. Eisenhower", years: "1953–1961", chunk: "The Cold War", hook: "Ike, the general of D-Day: eyes on a tower.", accept: ["Ike", "Dwight Eisenhower"] }
+  - { n: 35, name: "John F. Kennedy", years: "1961–1963", chunk: "The Cold War", hook: "He set the goal of landing on the Moon: a rocket on a candy bar.", accept: ["JFK"] }
+  - { n: 36, name: "Lyndon B. Johnson", years: "1963–1969", chunk: "The Cold War", hook: "He signed the Civil Rights Act of 1964: a long pen signing a long scroll. People called him by his initials, LBJ.", accept: ["LBJ", "Lyndon Johnson"] }
+  - { n: 37, name: "Richard Nixon", years: "1969–1974", chunk: "The Cold War", hook: "He visited China in 1972: a Great Wall on the stairs." }
+  - { n: 38, name: "Gerald Ford", years: "1974–1977", chunk: "The Cold War", hook: "A Ford car parked in the hall. He is the only president who was never elected president or vice president." }
+  - { n: 39, name: "Jimmy Carter", years: "1977–1981", chunk: "The Cold War", hook: "A peanut farmer: a cart of peanuts.", accept: ["James Carter", "James Earl Carter", "James Earl Carter Jr."] }
+  - { n: 40, name: "Ronald Reagan", years: "1981–1989", chunk: "The Cold War", hook: "A movie actor before politics: a ray-gun on a film set." }
+  - { n: 41, name: "George H. W. Bush", years: "1989–1993", chunk: "1989 to today", hook: "Father of the 43rd president. Two father-and-son pairs: John Adams (2) and John Quincy Adams (6), George H. W. Bush (41) and George W. Bush (43).", accept: ["George Herbert Walker Bush", "George Bush", "George H. Bush"] }
+  - { n: 42, name: "Bill Clinton", years: "1993–2001", chunk: "1989 to today", accept: ["William Clinton", "William J. Clinton", "William Jefferson Clinton"] }
+  - { n: 43, name: "George W. Bush", years: "2001–2009", chunk: "1989 to today", hook: "Son of the 41st president: 41 and 43, with Clinton (42) between them.", accept: ["George Bush"] }
+  - { n: 44, name: "Barack Obama", years: "2009–2017", chunk: "1989 to today" }
+  - { n: 45, name: "Donald Trump", years: "2017–2021", chunk: "1989 to today", hook: "The second president, after Cleveland, to serve two terms that were not back to back: 45th and 47th, with 46 between.", accept: ["Donald J. Trump"] }
+  - { n: 46, name: "Joe Biden", years: "2021–2025", chunk: "1989 to today", hook: "The middle of the 45–46–47 sandwich, like Benjamin Harrison at 23 between Cleveland's two terms.", accept: ["Joseph Biden", "Joseph R. Biden"] }
+  - { n: 47, name: "Donald Trump", years: "2025–", chunk: "1989 to today", hook: "45 and 47 sit on either side of 46, the same pattern as Cleveland at 22 and 24.", accept: ["Donald J. Trump"] }
+sources:
+  - { name: "U.S. Senate, Joint Congressional Committee on Inaugural Ceremonies: Past Inaugural Ceremonies", url: "https://www.inaugural.senate.gov/past-inaugural-ceremonies" }
+  - { name: "Library of Congress: Chronological List of Presidents, First Spouses, and Vice Presidents", url: "https://guides.loc.gov/presidents-portraits/chronological" }
+  - { name: "Grokipedia: List of presidents of the United States", url: "https://grokipedia.com/page/List_of_presidents_of_the_United_States" }
+  - { name: "Teddy Rook Book civics kit, president list (White House history)", url: "/american-history/" }
+updated: 2026-10-31

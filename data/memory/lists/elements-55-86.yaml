@@ -1,0 +1,59 @@
+slug: "elements-55-86"
+title: "Elements 55-86: period 6, with the lanthanides"
+group: "science"
+ages: "13+"
+count_note: "32 elements, all in period 6. Ce to Lu sit in the f-block, which has no group number. Most tables put lanthanum (57) and actinium (89) in group 3, as ours does; some put lutetium (71) and lawrencium (103) there instead. IUPAC has not settled the question."
+intro: "Row six holds gold, platinum, mercury and lead, and the fifteen lanthanides that are tucked below the main table. Every element in this list is in period 6."
+technique: "This row is long (32 elements), so the chunks matter. Learn the two s-block metals, then the lanthanides in three chunks of five, then the transition metals, then the p-block. A story chain helps with the lanthanides: link each name to the next in one silly scene. Au (aurum), Hg (hydrargyros, liquid silver), Pb (plumbum) and W (wolfram) are the odd symbols to drill."
+order_matters: true
+main: "name"
+fields:
+  - { key: z, label: "Atomic number" }
+  - { key: symbol, label: "Symbol" }
+  - { key: name, label: "Element" }
+  - { key: group, label: "Group" }
+show: [z, symbol, name, group]
+prompts:
+  - { ask: symbol, from: [name] }
+  - { ask: name, from: [symbol] }
+  - { ask: name, from: [z] }
+  - { ask: z, from: [name] }
+  - { ask: group, from: [name] }
+items:
+  - { z: 55, symbol: "Cs", name: "Cesium", group: "1", chunk: "s-block: groups 1-2", hook: "From the Latin caesius, sky blue, for its two blue spectral lines.", accept: { name: ["Caesium"] } }
+  - { z: 56, symbol: "Ba", name: "Barium", group: "2", chunk: "s-block: groups 1-2", hook: "From the Greek barys, heavy, because its mineral barite is unusually dense." }
+  - { z: 57, symbol: "La", name: "Lanthanum", group: "3", chunk: "The lanthanides (57-71)", hook: "From the Greek lanthanein, to lie hidden." }
+  - { z: 58, symbol: "Ce", name: "Cerium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From the dwarf planet Ceres, discovered two years earlier.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 59, symbol: "Pr", name: "Praseodymium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From the Greek prasios didymos, green twin, for its green salts.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 60, symbol: "Nd", name: "Neodymium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From the Greek neos didymos, new twin.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 61, symbol: "Pm", name: "Promethium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From Prometheus, who stole fire from the gods in Greek myth.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 62, symbol: "Sm", name: "Samarium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From samarskite, a mineral named for Russian mining official Vasili Samarsky-Bykhovets.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 63, symbol: "Eu", name: "Europium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From the continent of Europe.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 64, symbol: "Gd", name: "Gadolinium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From the mineral gadolinite, named for the Finnish chemist Johan Gadolin.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 65, symbol: "Tb", name: "Terbium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From Ytterby, a village in Sweden.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 66, symbol: "Dy", name: "Dysprosium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From the Greek dysprositos, hard to get at.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 67, symbol: "Ho", name: "Holmium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From Holmia, the Latin name for Stockholm.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 68, symbol: "Er", name: "Erbium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From Ytterby, a village in Sweden.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 69, symbol: "Tm", name: "Thulium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From Thule, a mythical land in the far north.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 70, symbol: "Yb", name: "Ytterbium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From Ytterby, a village in Sweden.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 71, symbol: "Lu", name: "Lutetium", group: "f-block", chunk: "The lanthanides (57-71)", hook: "From Lutetia, the Roman name for Paris.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 72, symbol: "Hf", name: "Hafnium", group: "4", chunk: "Transition metals: groups 3-12", hook: "From Hafnia, the Latin name for Copenhagen." }
+  - { z: 73, symbol: "Ta", name: "Tantalum", group: "5", chunk: "Transition metals: groups 3-12", hook: "From Tantalus of Greek myth, because its oxide can sit in acid without absorbing it, just as Tantalus could not drink the water around him." }
+  - { z: 74, symbol: "W", name: "Tungsten", group: "6", chunk: "Transition metals: groups 3-12", hook: "From the Swedish tung sten, heavy stone; the symbol W comes from wolfram." }
+  - { z: 75, symbol: "Re", name: "Rhenium", group: "7", chunk: "Transition metals: groups 3-12", hook: "From the Latin Rhenus, the Rhine River." }
+  - { z: 76, symbol: "Os", name: "Osmium", group: "8", chunk: "Transition metals: groups 3-12", hook: "From the Greek osme, smell, for the sharp odor of its oxide." }
+  - { z: 77, symbol: "Ir", name: "Iridium", group: "9", chunk: "Transition metals: groups 3-12", hook: "From the Greek iris, rainbow, for its colorful salts." }
+  - { z: 78, symbol: "Pt", name: "Platinum", group: "10", chunk: "Transition metals: groups 3-12", hook: "From the Spanish platina, little silver." }
+  - { z: 79, symbol: "Au", name: "Gold", group: "11", chunk: "Transition metals: groups 3-12", hook: "From the Old English gold; the symbol Au comes from the Latin aurum." }
+  - { z: 80, symbol: "Hg", name: "Mercury", group: "12", chunk: "Transition metals: groups 3-12", hook: "From the planet and Roman god Mercury; the symbol Hg comes from the Greek hydrargyros, liquid silver." }
+  - { z: 81, symbol: "Tl", name: "Thallium", group: "13", chunk: "p-block: groups 13-18", hook: "From the Greek thallos, a green shoot or twig, for its green spectral line." }
+  - { z: 82, symbol: "Pb", name: "Lead", group: "14", chunk: "p-block: groups 13-18", hook: "From the Anglo-Saxon lead; the symbol Pb comes from the Latin plumbum." }
+  - { z: 83, symbol: "Bi", name: "Bismuth", group: "15", chunk: "p-block: groups 13-18", hook: "From the old German wismut, possibly \"white mass.\"" }
+  - { z: 84, symbol: "Po", name: "Polonium", group: "16", chunk: "p-block: groups 13-18", hook: "From Poland, Marie Curie's homeland." }
+  - { z: 85, symbol: "At", name: "Astatine", group: "17", chunk: "p-block: groups 13-18", hook: "From the Greek astatos, unstable." }
+  - { z: 86, symbol: "Rn", name: "Radon", group: "18", chunk: "p-block: groups 13-18", hook: "From radium, because it was found as a gas given off by radium." }
+sources:
+  - { name: "Teddy Rook Book periodic table data (data/elements/elements.json; IUPAC/CIAAW and NIST)", url: "/science/periodic-table/" }
+  - { name: "PubChem (NIH): Periodic Table of Elements, with standard state", url: "https://pubchem.ncbi.nlm.nih.gov/periodic-table/pdf/Periodic_Table_of_Elements_w_Standard_State_PubChem.pdf" }
+  - { name: "PubChem (NIH): IUPAC Periodic Table of the Elements and Isotopes", url: "https://pubchem.ncbi.nlm.nih.gov/source/24616" }
+updated: 2026-10-30

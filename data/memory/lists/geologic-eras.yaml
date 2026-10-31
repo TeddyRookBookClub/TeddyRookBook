@@ -1,0 +1,35 @@
+slug: "geologic-eras"
+title: "The eras of geologic time"
+group: "science"
+ages: "12+"
+count_note: "Ten eras in three eons (the Hadean has none). Start dates are from the International Commission on Stratigraphy chart, version 2024/12, in millions of years ago (Ma). Older charts and textbooks give slightly different numbers, because the dates are refined as rocks are re-dated. Precambrian boundaries such as 2,500, 1,600 and 1,000 Ma are set by agreed round numbers, not by a layer of rock."
+intro: "Eras are the second level of the time scale. Most people know the last three (Paleozoic, Mesozoic, Cenozoic); the seven older ones fill in the long, quiet stretch when life was small."
+technique: "The names follow one pattern, so learn the pattern, not ten words: Eo (dawn), Paleo (old), Meso (middle), Neo (new), attached to the eon's name. The Archean gets all four, the Proterozoic gets three (no Eo), and the Phanerozoic's three use -zoic alone. Chunk by eon, and anchor the last three with pictures: a trilobite, a dinosaur, a mammoth."
+order_matters: true
+main: "name"
+fields:
+  - { key: n, label: "Order" }
+  - { key: name, label: "Era" }
+  - { key: eon, label: "Eon" }
+  - { key: ma, label: "Began (million years ago)" }
+show: [n, name, eon, ma]
+prompts:
+  - { ask: name, from: [n] }
+  - { ask: eon, from: [name] }
+  - { ask: ma, from: [name] }
+  - { ask: name, from: [ma] }
+items:
+  - { n: 1, name: "Eoarchean", eon: "Archean", ma: "4031", chunk: "Archean eon", hook: "Eo- means dawn: the dawn of the Archean, with the oldest known rocks.", accept: { ma: ["4000"] } }
+  - { n: 2, name: "Paleoarchean", eon: "Archean", ma: "3600", chunk: "Archean eon", hook: "Paleo- means old. Stromatolites, mounds built by microbes, are among the oldest signs of life." }
+  - { n: 3, name: "Mesoarchean", eon: "Archean", ma: "3200", chunk: "Archean eon", hook: "Meso- means middle." }
+  - { n: 4, name: "Neoarchean", eon: "Archean", ma: "2800", chunk: "Archean eon", hook: "Neo- means new: the last era of the Archean." }
+  - { n: 5, name: "Paleoproterozoic", eon: "Proterozoic", ma: "2500", chunk: "Proterozoic eon", hook: "Old Proterozoic: oxygen begins to build up in the air." }
+  - { n: 6, name: "Mesoproterozoic", eon: "Proterozoic", ma: "1600", chunk: "Proterozoic eon", hook: "Middle Proterozoic." }
+  - { n: 7, name: "Neoproterozoic", eon: "Proterozoic", ma: "1000", chunk: "Proterozoic eon", hook: "New Proterozoic: \"snowball Earth\" ice ages and the first many-celled animals." }
+  - { n: 8, name: "Paleozoic", eon: "Phanerozoic", ma: "538.8", chunk: "Phanerozoic eon", hook: "Paleozoic means \"old life\": trilobites, fish, the first forests.", accept: { ma: ["539", "541"] } }
+  - { n: 9, name: "Mesozoic", eon: "Phanerozoic", ma: "251.902", chunk: "Phanerozoic eon", hook: "Mesozoic means \"middle life\": the age of dinosaurs.", accept: { ma: ["252", "251.9", "251"] } }
+  - { n: 10, name: "Cenozoic", eon: "Phanerozoic", ma: "66.0", chunk: "Phanerozoic eon", hook: "Cenozoic means \"new life\": the age of mammals, including us.", accept: { ma: ["66"] } }
+sources:
+  - { name: "International Commission on Stratigraphy: International Chronostratigraphic Chart v2024/12", url: "https://stratigraphy.org/ICSchart/ChronostratChart2024-12.pdf" }
+  - { name: "U.S. Geological Survey: Divisions of Geologic Time (Fact Sheet 2018-3054)", url: "https://pubs.usgs.gov/publication/fs20183054" }
+updated: 2026-10-30

@@ -1,0 +1,30 @@
+slug: "geologic-eons"
+title: "The four eons of Earth's history"
+group: "science"
+ages: "10+"
+count_note: "Four eons. Start dates are from the International Commission on Stratigraphy chart, version 2024/12, in millions of years ago (Ma). Older charts and textbooks give slightly different numbers, because the dates are refined as rocks are re-dated. The Hadean has no formal lower boundary; 4,567 Ma is about the age of the solar system. The first three eons together are often called the Precambrian, an informal name."
+intro: "Earth is about 4.5 billion years old, and geologists split that long story into four huge chapters called eons. Knowing them gives you a frame for everything else: fossils, mountains, and how short human history is."
+technique: "Four items fit in working memory at once, so learn them as one chunk. The names tell the story if you know their Greek roots: Hades (fiery start), archaios (ancient), proteros + zoe (earlier life), phaneros + zoe (visible life). Make it a four-panel comic: a fiery ball, a rock with a speck of life, green slime and bubbles of oxygen, then a busy sea of creatures."
+order_matters: true
+main: "name"
+fields:
+  - { key: n, label: "Order" }
+  - { key: name, label: "Eon" }
+  - { key: ma, label: "Began (million years ago)" }
+  - { key: meaning, label: "Name means" }
+  - { key: events, label: "What happened" }
+show: [n, name, ma, meaning, events]
+prompts:
+  - { ask: name, from: [n] }
+  - { ask: ma, from: [name] }
+  - { ask: name, from: [events] }
+  - { ask: name, from: [meaning] }
+items:
+  - { n: 1, name: "Hadean", ma: "4567", meaning: "From Hades, the Greek underworld: a hot, young Earth with no lasting rocks.", events: "Earth forms; the Moon forms from a giant impact; few rocks survive from this time.", accept: { ma: ["4567", "4600", "4.6 billion"] } }
+  - { n: 2, name: "Archean", ma: "4031", meaning: "From the Greek for \"beginning\" or \"ancient.\"", events: "The oldest rocks; the first simple, single-celled life.", accept: { ma: ["4031", "4000", "4 billion"] } }
+  - { n: 3, name: "Proterozoic", ma: "2500", meaning: "Greek for \"earlier life.\"", events: "Oxygen builds up in the air; cells with a nucleus appear; the first many-celled life near the end.", accept: { ma: ["2500", "2.5 billion"] } }
+  - { n: 4, name: "Phanerozoic", ma: "538.8", meaning: "Greek for \"visible life.\"", events: "Animals with shells and skeletons spread, then fish, land plants, dinosaurs, mammals and people.", accept: { ma: ["538.8", "539", "541"] } }
+sources:
+  - { name: "International Commission on Stratigraphy: International Chronostratigraphic Chart v2024/12", url: "https://stratigraphy.org/ICSchart/ChronostratChart2024-12.pdf" }
+  - { name: "U.S. Geological Survey: Divisions of Geologic Time (Fact Sheet 2018-3054)", url: "https://pubs.usgs.gov/publication/fs20183054" }
+updated: 2026-10-30

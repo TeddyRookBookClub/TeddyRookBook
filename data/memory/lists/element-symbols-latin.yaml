@@ -1,0 +1,36 @@
+slug: "element-symbols-latin"
+title: "Element symbols that come from old names"
+group: "science"
+ages: "10+"
+count_note: "11 elements. Ten symbols come from Latin (one, Hg, by way of Greek); W comes from the German and Swedish \"wolfram.\""
+intro: "Most element symbols match their English names: O for oxygen, C for carbon. A few do not, because they come from the old Latin names that chemists used when the symbols were set in the 1800s. These eleven trip people up, so they are worth learning on their own."
+technique: "These are pairs (symbol and name) that don't look alike, which is exactly where a mnemonic earns its keep. Make each pair into one vivid picture that holds both, like the hooks below, then test yourself from both sides: symbol to name and name to symbol. Saying the old name out loud (\"aurum\") is the bridge between the two."
+order_matters: false
+main: "name"
+fields:
+  - { key: symbol, label: "Symbol" }
+  - { key: name, label: "Element" }
+  - { key: source, label: "Old name" }
+  - { key: z, label: "Atomic number" }
+show: [symbol, name, source, z]
+prompts:
+  - { ask: name, from: [symbol] }
+  - { ask: symbol, from: [name] }
+  - { ask: source, from: [name] }
+  - { ask: name, from: [source] }
+items:
+  - { symbol: "Na", name: "Sodium", source: "natrium", z: 11, hook: "Na: picture a salt shaker labeled \"NAtrium\" sprinkling a sodium spark." }
+  - { symbol: "K", name: "Potassium", source: "kalium", z: 19, hook: "K: a bunch of bananas (rich in potassium) shaped like a giant letter K." }
+  - { symbol: "Fe", name: "Iron", source: "ferrum", z: 26, hook: "Fe: a blacksmith shouting \"FEe-fi-fo-fum!\" as he hammers iron." }
+  - { symbol: "Cu", name: "Copper", source: "cuprum", z: 29, hook: "Cu: a copper penny with a \"C-U later\" note on it." }
+  - { symbol: "Ag", name: "Silver", source: "argentum", z: 47, hook: "Ag: \"Ah, Gee!\" says a pirate, opening a chest of silver." }
+  - { symbol: "Sn", name: "Tin", source: "stannum", z: 50, hook: "Sn: a tin can full of Snacks." }
+  - { symbol: "Sb", name: "Antimony", source: "stibium", z: 51, hook: "Sb: Stibium, a dark powder once used as eye makeup." }
+  - { symbol: "Au", name: "Gold", source: "aurum", z: 79, hook: "Au: \"Ay, you!\" shouts a miner who just found gold." }
+  - { symbol: "Hg", name: "Mercury", source: "hydrargyrum", z: 80, hook: "Hg: a drop of mercury rolling like a tiny Huge Glob of silver.", note: "From the Greek hydrargyros, \"liquid silver,\" through Latin." }
+  - { symbol: "Pb", name: "Lead", source: "plumbum", z: 82, hook: "Pb: a lead weight on a Plumber's line (plumbum gives us \"plumb\" and \"plumber\")." }
+  - { symbol: "W", name: "Tungsten", source: "wolfram", z: 74, hook: "W: tungsten filament glowing in an old light bulb, bent into a W.", note: "Not Latin: wolfram is the old German and Swedish name for the metal and its ore." }
+sources:
+  - { name: "Teddy Rook Book periodic table data (data/elements/elements.json; IUPAC/CIAAW and NIST)", url: "/science/periodic-table/" }
+  - { name: "PubChem (NIH): Periodic Table of Elements, with standard state", url: "https://pubchem.ncbi.nlm.nih.gov/periodic-table/pdf/Periodic_Table_of_Elements_w_Standard_State_PubChem.pdf" }
+updated: 2026-10-30

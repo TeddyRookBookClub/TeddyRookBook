@@ -1,0 +1,34 @@
+{{ define "main" }}
+{{- /* Digits trainer: static/memory/challenges/pi.js with data/memory/digits.json. */ -}}
+{{- $D := site.Data.memory.digits -}}
+{{- $sys := "memory/memory-systems/" -}}
+{{- with site.Data.memory.courses }}{{ range . }}{{ if eq .key "memsys" }}{{ $sys = printf "memory/%s/" .slug }}{{ end }}{{ end }}{{ end -}}
+<link rel="stylesheet" href="{{ "memory/challenges/engine.css" | relURL }}?v={{ (os.Stat "static/memory/challenges/engine.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "memory/challenges/trainers.css" | relURL }}?v={{ (os.Stat "static/memory/challenges/trainers.css").ModTime.Unix }}">
+<article class="mc mc-pi">
+<nav class="mc-crumbs" aria-label="Breadcrumb"><a href="{{ "memory/" | relURL }}">Memory</a> › <a href="{{ "memory/challenges/" | relURL }}">Challenges</a> › <span>Digits of pi</span></nav>
+<header class="mc-head">
+  <h1>{{ .Title }}</h1>
+  <p class="mc-intro">Pi is the distance around any circle divided by the distance across it. Its decimals never end and never settle into a repeating pattern, which makes them a classic memory challenge. A long string of digits is the plainest case of chunking from the infographic: <b>14159265</b> is eight things to hold, but <b>1415 · 9265</b> is two.</p>
+</header>
+<div id="pi" class="pi" aria-live="polite"><noscript><p>The trainer needs JavaScript. Here are the first 100 decimals: {{ substr $D.pi.digits 0 1 }}.{{ substr $D.pi.digits 1 100 }}</p></noscript></div>
+
+<details class="mc-help">
+  <summary>Using the Major System for digits</summary>
+  <div class="mc-helpbody">
+    <p>Digits are hard to picture, so the Major System turns each digit into a consonant sound: 0 is s or z, 1 is t or d, 2 is n, 3 is m, 4 is r, 5 is l, 6 is j, sh, ch or soft g, 7 is k or hard g, 8 is f or v, and 9 is p or b. Vowels and w, h and y are free fillers, and it is the sound that counts, not the spelling. So 14 is t-r, a <em>tire</em>, and 15 is t-l, a <em>tail</em>: a tire with a tail. Put each picture at a stop on a journey, and the digits come back in order.</p>
+    <p>The words shown here are one possible list. Your own words will stick better, so swap in any word whose sounds fit. Learn the system step by step in the Memory Systems course: <a href="{{ printf "%smajor-sounds/" $sys | relURL }}">the ten sounds</a>, <a href="{{ printf "%smajor-rules/" $sys | relURL }}">sounds, not spelling</a>, <a href="{{ printf "%smajor-list/" $sys | relURL }}">your 00 to 99 list</a> and <a href="{{ printf "%slong-numbers/" $sys | relURL }}">long numbers</a>.</p>
+  </div>
+</details>
+
+<section class="mc-sources">
+  <h2>Sources</h2>
+  <ul>{{ range $k, $c := $D }}{{ if not (hasPrefix $k "_") }}{{ range $c.sources }}<li>{{ $c.label }}: <a href="{{ .url }}" rel="noopener">{{ .name }}</a></li>{{ end }}{{ end }}{{ end }}</ul>
+  <p class="mc-small">{{ $D.pi.note }} {{ $D.e.note }}</p>
+  <p class="mc-small">More: <a href="{{ "memory/challenges/" | relURL }}">all memory challenges</a> · <a href="{{ "memory/games/chunk-it/" | relURL }}">Chunk It game</a> · <a href="{{ "memory/challenges/deck-of-cards/" | relURL }}">deck of cards</a>.</p>
+</section>
+</article>
+<script type="application/json" id="pi-data">{{ dict "pi" (dict "label" $D.pi.label "digits" $D.pi.digits "decimals" $D.pi.decimals "note" $D.pi.note) "e" (dict "label" $D.e.label "digits" $D.e.digits "decimals" $D.e.decimals "note" $D.e.note) | jsonify | safeJS }}</script>
+<script src="{{ "memory/challenges/core.js" | relURL }}?v={{ (os.Stat "static/memory/challenges/core.js").ModTime.Unix }}"></script>
+<script src="{{ "memory/challenges/pi.js" | relURL }}?v={{ (os.Stat "static/memory/challenges/pi.js").ModTime.Unix }}"></script>
+{{ end }}

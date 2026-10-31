@@ -1,0 +1,39 @@
+slug: "geologic-periods"
+title: "The periods of the last 539 million years"
+group: "science"
+ages: "10+"
+count_note: "Twelve periods of the Phanerozoic eon, oldest first. Start dates are from the International Commission on Stratigraphy chart, version 2024/12, in millions of years ago (Ma). Older charts and textbooks give slightly different numbers, because the dates are refined as rocks are re-dated. For example, the Cretaceous used to start about 145 Ma and the Ordovician 485.4 Ma; the matching accepts both. In the United States the Carboniferous is often split into the Mississippian and Pennsylvanian. \"Tertiary\" is an older name for the Paleogene and Neogene together."
+intro: "These twelve periods are the story of complex life, from the first animals with shells to today. They are the names you see in museums, on fossil labels and in dinosaur books."
+technique: "Use a first-letter sentence for the order: \"Cows Often Sit Down Calmly; Perhaps To Just Chew Peacefully, Not Quickly.\" Then chunk by era: six Paleozoic periods (old life), three Mesozoic (dinosaurs), three Cenozoic (mammals). Give each period one picture from the 'what lived' column and place them along a long hallway, oldest by the front door. Learn the order first; add the start dates once the order is solid."
+order_matters: true
+main: "name"
+fields:
+  - { key: n, label: "Order" }
+  - { key: name, label: "Period" }
+  - { key: era, label: "Era" }
+  - { key: ma, label: "Began (million years ago)" }
+  - { key: life, label: "What lived and happened" }
+show: [n, name, era, ma, life]
+prompts:
+  - { ask: name, from: [n] }
+  - { ask: era, from: [name] }
+  - { ask: ma, from: [name] }
+  - { ask: name, from: [life] }
+  - { ask: name, from: [ma] }
+items:
+  - { n: 1, name: "Cambrian", era: "Paleozoic", ma: "538.8", life: "Many animal groups appear in the fossil record within a few tens of millions of years (the \"Cambrian explosion\").", chunk: "Paleozoic era", accept: { ma: ["539", "541"] }, hook: "Sentence word: \"Cows.\"" }
+  - { n: 2, name: "Ordovician", era: "Paleozoic", ma: "486.85", life: "Sea life spreads; the first simple plants reach land; it ends in a mass extinction.", chunk: "Paleozoic era", accept: { ma: ["486.9", "487", "485.4", "485"] }, hook: "Sentence word: \"Often.\"" }
+  - { n: 3, name: "Silurian", era: "Paleozoic", ma: "443.1", life: "Small plants with veins grow on land; fish with jaws spread.", chunk: "Paleozoic era", accept: { ma: ["443", "443.8", "444"] }, hook: "Sentence word: \"Sit.\"" }
+  - { n: 4, name: "Devonian", era: "Paleozoic", ma: "419.62", life: "The \"Age of Fishes\"; the first forests; the first four-legged animals near the end.", chunk: "Paleozoic era", accept: { ma: ["419.6", "420", "419.2", "419"] }, hook: "Sentence word: \"Down.\"" }
+  - { n: 5, name: "Carboniferous", era: "Paleozoic", ma: "358.86", life: "Vast swamp forests later became coal; giant insects; the first reptiles.", chunk: "Paleozoic era", accept: { ma: ["358.9", "359"] }, hook: "Sentence word: \"Calmly.\"" }
+  - { n: 6, name: "Permian", era: "Paleozoic", ma: "298.9", life: "Land animals spread across one giant continent, Pangaea; it ends in the largest mass extinction known.", chunk: "Paleozoic era", accept: { ma: ["299"] }, hook: "Sentence word: \"Perhaps.\"" }
+  - { n: 7, name: "Triassic", era: "Mesozoic", ma: "251.902", life: "Life recovers; the first dinosaurs and the first mammal relatives appear.", chunk: "Mesozoic era", accept: { ma: ["252", "251.9", "251"] }, hook: "Sentence word: \"To.\"" }
+  - { n: 8, name: "Jurassic", era: "Mesozoic", ma: "201.4", life: "Giant long-necked dinosaurs; the first birds.", chunk: "Mesozoic era", accept: { ma: ["201", "201.3"] }, hook: "Sentence word: \"Just.\"" }
+  - { n: 9, name: "Cretaceous", era: "Mesozoic", ma: "143.1", life: "Flowering plants spread; it ends 66 million years ago with an asteroid impact and the end of the non-bird dinosaurs.", chunk: "Mesozoic era", accept: { ma: ["143", "145", "145.0"] }, hook: "Sentence word: \"Chew.\"" }
+  - { n: 10, name: "Paleogene", era: "Cenozoic", ma: "66.0", life: "Mammals spread and grow larger in the empty world the dinosaurs left.", chunk: "Cenozoic era", accept: { ma: ["66"] }, hook: "Sentence word: \"Peacefully.\"" }
+  - { n: 11, name: "Neogene", era: "Cenozoic", ma: "23.04", life: "Grasslands spread; the earliest human relatives appear in Africa.", chunk: "Cenozoic era", accept: { ma: ["23", "23.03"] }, hook: "Sentence word: \"Not.\"" }
+  - { n: 12, name: "Quaternary", era: "Cenozoic", ma: "2.58", life: "Ice ages come and go; mammoths roam; modern humans appear and spread across the world.", chunk: "Cenozoic era", accept: { ma: ["2.6", "2.588"] }, hook: "Sentence word: \"Quickly.\"" }
+sources:
+  - { name: "International Commission on Stratigraphy: International Chronostratigraphic Chart v2024/12", url: "https://stratigraphy.org/ICSchart/ChronostratChart2024-12.pdf" }
+  - { name: "U.S. Geological Survey: Divisions of Geologic Time (Fact Sheet 2018-3054)", url: "https://pubs.usgs.gov/publication/fs20183054" }
+updated: 2026-10-30

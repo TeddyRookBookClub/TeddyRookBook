@@ -1,0 +1,35 @@
+slug: "math-formulas-algebra-geometry"
+title: "Math formulas, level 2: algebra and geometry"
+group: "math"
+ages: "12+"
+count_note: "12 formulas from middle and high school. Typed answers can use ^ for powers, sqrt for a square root and pi for π."
+intro: "These are the workhorse formulas of algebra and geometry classes: right triangles, lines on a graph, the quadratic formula, and the volumes of round solids."
+technique: "Tie each formula to the one it grows from. The distance formula is the Pythagorean theorem on a graph. Slope is rise over run, and the two line equations are slope rearranged. The cone is one third of a cylinder with the same base and height. Learn the parents first, then derive the children once by hand: working it out is the strongest way to encode it. Sing the quadratic formula to a tune you know."
+order_matters: false
+main: "name"
+fields:
+  - { key: name, label: "Formula for" }
+  - { key: formula, label: "Formula" }
+  - { key: vars, label: "Letters stand for" }
+show: [name, formula, vars]
+prompts:
+  - { ask: formula, from: [name] }
+  - { ask: name, from: [formula] }
+items:
+  - { name: "Pythagorean theorem", formula: "a² + b² = c²", vars: "a, b = the legs of a right triangle, c = the hypotenuse (longest side)", chunk: "Triangles and distance", hook: "A 3-4-5 triangle: 9 + 16 = 25.", accept: { formula: ["a^2+b^2=c^2", "a2+b2=c2"] } }
+  - { name: "Distance between two points", formula: "d = √((x₂ − x₁)² + (y₂ − y₁)²)", vars: "(x₁, y₁) and (x₂, y₂) = the two points", chunk: "Triangles and distance", hook: "The Pythagorean theorem drawn on a graph.", accept: { formula: ["sqrt((x2-x1)^2+(y2-y1)^2)", "d=sqrt((x2-x1)^2+(y2-y1)^2)"] } }
+  - { name: "Midpoint of a segment", formula: "((x₁ + x₂)/2, (y₁ + y₂)/2)", vars: "(x₁, y₁) and (x₂, y₂) = the endpoints", chunk: "Triangles and distance", hook: "Average the x's, average the y's.", accept: { formula: ["((x1+x2)/2, (y1+y2)/2)"] } }
+  - { name: "Slope of a line", formula: "m = (y₂ − y₁) / (x₂ − x₁)", vars: "(x₁, y₁) and (x₂, y₂) = two points on the line", chunk: "Lines", hook: "Rise over run: how far up for each step across.", accept: { formula: ["(y2-y1)/(x2-x1)", "m=(y2-y1)/(x2-x1)", "rise over run"] } }
+  - { name: "Slope-intercept form of a line", formula: "y = mx + b", vars: "m = slope, b = where the line crosses the y-axis", chunk: "Lines", hook: "b is where you begin; m is how you move.", accept: { formula: ["y=mx+b"] } }
+  - { name: "Point-slope form of a line", formula: "y − y₁ = m(x − x₁)", vars: "m = slope, (x₁, y₁) = a point on the line", chunk: "Lines", hook: "Slope formula with both sides multiplied by (x − x₁).", accept: { formula: ["y-y1=m(x-x1)"] } }
+  - { name: "Quadratic formula", formula: "x = (−b ± √(b² − 4ac)) / 2a", vars: "solves ax² + bx + c = 0", chunk: "Quadratics", hook: "Many students sing it to \"Pop Goes the Weasel.\"", accept: { formula: ["(-b+-sqrt(b^2-4ac))/2a", "x=(-b+-sqrt(b^2-4ac))/(2a)", "(-b±sqrt(b^2-4ac))/(2a)"] } }
+  - { name: "Equation of a circle", formula: "(x − h)² + (y − k)² = r²", vars: "(h, k) = the center, r = radius", chunk: "Quadratics", hook: "The distance formula again: every point is r away from the center.", accept: { formula: ["(x-h)^2+(y-k)^2=r^2"] } }
+  - { name: "Volume of a cylinder", formula: "V = πr²h", vars: "r = radius, h = height", chunk: "Round solids", hook: "A stack of circles: circle area times height.", accept: { formula: ["pir^2h", "pi r^2 h", "V=pir^2h"] } }
+  - { name: "Volume of a cone", formula: "V = ⅓πr²h", vars: "r = radius of the base, h = height", chunk: "Round solids", hook: "Three cones of water fill the matching cylinder.", accept: { formula: ["1/3pir^2h", "(1/3)pir^2h", "pir^2h/3", "V=1/3pir^2h"] } }
+  - { name: "Volume of a sphere", formula: "V = ⁴⁄₃πr³", vars: "r = radius", chunk: "Round solids", hook: "Cubed, because volume is three-dimensional.", accept: { formula: ["4/3pir^3", "(4/3)pir^3", "4/3 pi r^3", "V=4/3pir^3"] } }
+  - { name: "Surface area of a sphere", formula: "SA = 4πr²", vars: "r = radius", chunk: "Round solids", hook: "Exactly four circles' worth of area, a fact Archimedes found.", accept: { formula: ["4pir^2", "4 pi r^2", "SA=4pir^2"] } }
+sources:
+  - { name: "OpenStax Prealgebra 2e, Appendix C: Geometric Formulas", url: "https://openstax.org/books/prealgebra-2e/pages/c-geometric-formulas" }
+  - { name: "OpenStax Algebra and Trigonometry 2e, Chapter 2 Key Equations", url: "https://openstax.org/books/algebra-and-trigonometry-2e/pages/2-key-equations" }
+  - { name: "OpenStax Intermediate Algebra 2e, 11.1 Distance and Midpoint Formulas; Circles", url: "https://openstax.org/books/intermediate-algebra-2e/pages/11-1-distance-and-midpoint-formulas-circles" }
+updated: 2026-10-30

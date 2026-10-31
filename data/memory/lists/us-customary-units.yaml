@@ -1,0 +1,38 @@
+slug: "us-customary-units"
+title: "U.S. customary units: how many in one?"
+group: "everyday"
+ages: "8+"
+count_note: "15 facts, all exact by definition (NIST Handbook 44). Ounces here are avoirdupois weight ounces and U.S. fluid ounces of volume, which are different units. The mile and the gallon each appear twice, in two different units. The U.S. ton is the short ton; the British long ton is 2,240 pounds."
+intro: "Recipes, road signs, lumber and gas pumps in the United States all use these units. Knowing how they nest inside each other lets you double a recipe, measure a room or read a map without reaching for a calculator."
+technique: "Learn each family as one chain, since the units nest: teaspoon, tablespoon, fluid ounce, cup, pint, quart, gallon (3, 2, 8, 2, 2, 4). Draw it once as nesting boxes, a big G with four Qs inside, two Ps in each Q and two Cs in each P: picture plus words. Then length (12, 3, 5,280), weight (16, 2,000) and area (43,560, 640). Say each fact as a sentence, \"one gallon is four quarts,\" and quiz yourself both ways."
+order_matters: false
+main: "unit"
+fields:
+  - { key: unit, label: "One..." }
+  - { key: count, label: "equals" }
+  - { key: small, label: "of these" }
+  - { key: kind, label: "Kind" }
+show: [unit, count, small, kind]
+prompts:
+  - { ask: count, from: [unit, small] }
+  - { ask: small, from: [unit, count] }
+  - { ask: unit, from: [count, small] }
+items:
+  - { unit: "foot", count: "12", small: "inches", kind: "Length", chunk: "Length", hook: "A foot-long ruler has 12 inch marks.", accept: { count: ["12 inches"] } }
+  - { unit: "yard", count: "3", small: "feet", kind: "Length", chunk: "Length", hook: "A yardstick is three rulers end to end.", accept: { count: ["3 feet"] } }
+  - { unit: "mile", count: "5,280", small: "feet", kind: "Length", chunk: "Length", hook: "Say \"five tomatoes\" fast: five-to-ma-toes, 5-2-8-0.", accept: { count: ["5280", "5280 feet"] } }
+  - { unit: "mile", count: "1,760", small: "yards", kind: "Length", chunk: "Length", hook: "1,760 is 5,280 divided by 3.", accept: { count: ["1760", "1760 yards"] } }
+  - { unit: "tablespoon", count: "3", small: "teaspoons", kind: "Kitchen volume", chunk: "Kitchen volume", hook: "Three little spoons fill one big spoon.", accept: { count: ["3 teaspoons"] } }
+  - { unit: "fluid ounce", count: "2", small: "tablespoons", kind: "Kitchen volume", chunk: "Kitchen volume", hook: "Two big spoons make an ounce.", accept: { count: ["2 tablespoons"] } }
+  - { unit: "cup", count: "8", small: "fluid ounces", kind: "Kitchen volume", chunk: "Kitchen volume", hook: "A cup is 8 ounces: think of a figure-8 cup handle.", accept: { count: ["8 fluid ounces", "8 ounces"] } }
+  - { unit: "pint", count: "2", small: "cups", kind: "Kitchen volume", chunk: "Kitchen volume", hook: "Two cups pour into one pint: picture two mugs filling a tall glass.", accept: { count: ["2 cups"] } }
+  - { unit: "quart", count: "2", small: "pints", kind: "Kitchen volume", chunk: "Kitchen volume", hook: "A quart is a quarter of a gallon.", accept: { count: ["2 pints"] } }
+  - { unit: "gallon", count: "4", small: "quarts", kind: "Kitchen volume", chunk: "Kitchen volume", hook: "Four quarts in a gallon, as four quarters in a dollar.", accept: { count: ["4 quarts"] } }
+  - { unit: "gallon", count: "231", small: "cubic inches", kind: "Kitchen volume", chunk: "Kitchen volume", hook: "The official size of a U.S. gallon.", accept: { count: ["231 cubic inches"] } }
+  - { unit: "pound", count: "16", small: "ounces", kind: "Weight", chunk: "Weight", hook: "Sixteen ounces in a pound: one ounce for each of the sixteen candles on a \"sweet sixteen\" cake.", accept: { count: ["16 ounces"] } }
+  - { unit: "short ton", count: "2,000", small: "pounds", kind: "Weight", chunk: "Weight", hook: "A U.S. ton is two thousand pounds.", accept: { count: ["2000", "2000 pounds"] } }
+  - { unit: "acre", count: "43,560", small: "square feet", kind: "Area", chunk: "Area", hook: "Picture a square plot about 209 feet on each side: that is one acre.", accept: { count: ["43560", "43560 square feet"] } }
+  - { unit: "square mile", count: "640", small: "acres", kind: "Area", chunk: "Area", hook: "A square mile holds 640 acres.", accept: { count: ["640 acres"] } }
+sources:
+  - { name: "NIST Handbook 44 (2024), Appendix C: General Tables of Units of Measurement", url: "https://www.nist.gov/document/nist-hb-44-2024-appendix-c-general-tables-units-measurement" }
+updated: 2026-10-30

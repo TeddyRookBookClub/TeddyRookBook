@@ -1,0 +1,47 @@
+# Memory challenge list (format: /memory/challenges/ engine; checked by scripts/memory/check-lists.js)
+# A text for word-by-word recitation: each item is one phrase, in order. recite: true marks it for the engine.
+slug: gettysburg-address
+title: "The Gettysburg Address"
+group: history
+ages: "10+"
+count_note: "About 270 words in three paragraphs, split into 20 phrases to learn. Five copies in Lincoln's hand survive, and their wording differs a little; this is the Bliss copy (1864), the last he wrote, the only one he signed and dated, and the text carved in the Lincoln Memorial. When typing, \"battlefield\" and \"cannot\" are accepted."
+intro: "Abraham Lincoln gave this short speech on November 19, 1863, at the dedication of the Soldiers' National Cemetery at Gettysburg, Pennsylvania, four and a half months after the battle there. It takes about two minutes to say and is one of the most famous speeches in American history, which makes it a classic piece of memory work."
+technique: "Narrate it first: read it aloud and say what each paragraph does. The first looks back to 1776, the second looks at the battlefield, and the third looks ahead. Those three are your big chunks. Inside each, learn three or four phrases at a time and recite with the page covered. Lincoln built the speech on patterns that help memory: three in a row (dedicate, consecrate, hallow; of the people, by the people, for the people) and pairs (living and dead; say here, did here). Picture each phrase on a walk across the field, and come back on day 1, 3, 7 and 21."
+order_matters: true
+recite: true
+main: line
+fields:
+  - { key: n, label: "No." }
+  - { key: line, label: "Phrase" }
+  - { key: part, label: "Paragraph" }
+show: [n, line, part]
+prompts:
+  - { ask: line, from: [n] }
+  - { ask: n, from: [line] }
+  - { ask: part, from: [line] }
+items:
+  - { n: 1, line: "Four score and seven years ago our fathers brought forth on this continent, a new nation,", part: "1. The founding", chunk: "1. The founding", hook: "A score is 20, so four score and seven is 87 years: 1863 minus 87 is 1776, the Declaration of Independence." }
+  - { n: 2, line: "conceived in Liberty, and dedicated to the proposition that all men are created equal.", part: "1. The founding", chunk: "1. The founding", hook: "Lincoln echoes the Declaration's words: all men are created equal." }
+  - { n: 3, line: "Now we are engaged in a great civil war,", part: "2. The battlefield", chunk: "2. The battlefield" }
+  - { n: 4, line: "testing whether that nation, or any nation so conceived and so dedicated, can long endure.", part: "2. The battlefield", chunk: "2. The battlefield", hook: "Conceived and dedicated come back from line 2." }
+  - { n: 5, line: "We are met on a great battle-field of that war.", part: "2. The battlefield", chunk: "2. The battlefield", accept: ["We are met on a great battlefield of that war."] }
+  - { n: 6, line: "We have come to dedicate a portion of that field,", part: "2. The battlefield", chunk: "2. The battlefield", hook: "From the whole battlefield to a portion of the field: the camera zooms in." }
+  - { n: 7, line: "as a final resting place for those who here gave their lives that that nation might live.", part: "2. The battlefield", chunk: "2. The battlefield", hook: "Gave their lives so the nation might live: two opposite words in one line." }
+  - { n: 8, line: "It is altogether fitting and proper that we should do this.", part: "2. The battlefield", chunk: "2. The battlefield" }
+  - { n: 9, line: "But, in a larger sense, we can not dedicate—we can not consecrate—we can not hallow—this ground.", part: "3. The task ahead", chunk: "3a. What we cannot do", hook: "Three in a row, each a little holier: dedicate, consecrate, hallow.", accept: ["But, in a larger sense, we cannot dedicate, we cannot consecrate, we cannot hallow this ground."] }
+  - { n: 10, line: "The brave men, living and dead, who struggled here, have consecrated it,", part: "3. The task ahead", chunk: "3a. What we cannot do" }
+  - { n: 11, line: "far above our poor power to add or detract.", part: "3. The task ahead", chunk: "3a. What we cannot do", hook: "Power, poor: two p's side by side, and add or detract, a plus and a minus." }
+  - { n: 12, line: "The world will little note, nor long remember what we say here,", part: "3. The task ahead", chunk: "3a. What we cannot do" }
+  - { n: 13, line: "but it can never forget what they did here.", part: "3. The task ahead", chunk: "3a. What we cannot do", hook: "A pair: what we say here, what they did here." }
+  - { n: 14, line: "It is for us the living, rather, to be dedicated here to the unfinished work", part: "3. The task ahead", chunk: "3b. Our task" }
+  - { n: 15, line: "which they who fought here have thus far so nobly advanced.", part: "3. The task ahead", chunk: "3b. Our task" }
+  - { n: 16, line: "It is rather for us to be here dedicated to the great task remaining before us—", part: "3. The task ahead", chunk: "3b. Our task", hook: "The unfinished work becomes the great task, and four \"that\" phrases follow, each starting with a dash." }
+  - { n: 17, line: "that from these honored dead we take increased devotion to that cause for which they gave the last full measure of devotion—", part: "3. The task ahead", chunk: "3c. Four resolves" }
+  - { n: 18, line: "that we here highly resolve that these dead shall not have died in vain—", part: "3. The task ahead", chunk: "3c. Four resolves" }
+  - { n: 19, line: "that this nation, under God, shall have a new birth of freedom—", part: "3. The task ahead", chunk: "3c. Four resolves", hook: "A new birth: the speech began with a nation brought forth, and it ends with that nation born again in freedom." }
+  - { n: 20, line: "and that government of the people, by the people, for the people, shall not perish from the earth.", part: "3. The task ahead", chunk: "3c. Four resolves", hook: "Three in a row to finish: of, by, for the people." }
+sources:
+  - { name: "Abraham Lincoln Online: The Gettysburg Address (the Bliss copy and the other versions)", url: "https://abrahamlincolnonline.org/lincoln/speeches/gettysburg.htm" }
+  - { name: "Library of Congress, Abraham Lincoln Papers: Alexander Bliss to John G. Nicolay, March 7, 1864 (autograph copy of the Gettysburg Address)", url: "https://www.loc.gov/item/mal4277200" }
+  - { name: "American Battlefield Trust: Versions of the Gettysburg Address", url: "https://www.battlefields.org/learn/articles/versions-gettysburg-address" }
+updated: 2026-10-31

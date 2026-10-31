@@ -1,0 +1,59 @@
+slug: "elements-87-118"
+title: "Elements 87-118: period 7, with the actinides"
+group: "science"
+ages: "13+"
+count_note: "32 elements, all in period 7. Th to Lr sit in the f-block, which has no group number. Most tables put lanthanum (57) and actinium (89) in group 3, as ours does; some put lutetium (71) and lawrencium (103) there instead. IUPAC has not settled the question. Elements beyond about 100 have been made only a few atoms at a time."
+intro: "Row seven finishes the table: radium and uranium, the actinides, and the heavy elements made in laboratories, the last of them named in 2016. Every element in this list is in period 7."
+technique: "Many of these names honor places and people (americium, californium, einsteinium, curium, nobelium), so build a picture for each: a map pin, a portrait, a city skyline. The actinides run in the same order as the lanthanides above them, so learn them side by side. Chunks of five, reviewed on the 1-3-7-21 schedule, keep the long tail from slipping."
+order_matters: true
+main: "name"
+fields:
+  - { key: z, label: "Atomic number" }
+  - { key: symbol, label: "Symbol" }
+  - { key: name, label: "Element" }
+  - { key: group, label: "Group" }
+show: [z, symbol, name, group]
+prompts:
+  - { ask: symbol, from: [name] }
+  - { ask: name, from: [symbol] }
+  - { ask: name, from: [z] }
+  - { ask: z, from: [name] }
+  - { ask: group, from: [name] }
+items:
+  - { z: 87, symbol: "Fr", name: "Francium", group: "1", chunk: "s-block: groups 1-2", hook: "From France, the discoverer's home country." }
+  - { z: 88, symbol: "Ra", name: "Radium", group: "2", chunk: "s-block: groups 1-2", hook: "From the Latin radius, ray." }
+  - { z: 89, symbol: "Ac", name: "Actinium", group: "3", chunk: "The actinides (89-103)", hook: "From the Greek aktis, ray or beam." }
+  - { z: 90, symbol: "Th", name: "Thorium", group: "f-block", chunk: "The actinides (89-103)", hook: "From Thor, the Norse god of thunder.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 91, symbol: "Pa", name: "Protactinium", group: "f-block", chunk: "The actinides (89-103)", hook: "From the Greek protos (first) plus actinium, because it decays into actinium.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 92, symbol: "U", name: "Uranium", group: "f-block", chunk: "The actinides (89-103)", hook: "From the planet Uranus, discovered eight years earlier.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 93, symbol: "Np", name: "Neptunium", group: "f-block", chunk: "The actinides (89-103)", hook: "From the planet Neptune, the next planet beyond Uranus.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 94, symbol: "Pu", name: "Plutonium", group: "f-block", chunk: "The actinides (89-103)", hook: "From the dwarf planet Pluto, following Uranus and Neptune.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 95, symbol: "Am", name: "Americium", group: "f-block", chunk: "The actinides (89-103)", hook: "From the Americas, by analogy with europium above it in the table.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 96, symbol: "Cm", name: "Curium", group: "f-block", chunk: "The actinides (89-103)", hook: "From Marie and Pierre Curie.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 97, symbol: "Bk", name: "Berkelium", group: "f-block", chunk: "The actinides (89-103)", hook: "From Berkeley, California, home of the lab where it was made.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 98, symbol: "Cf", name: "Californium", group: "f-block", chunk: "The actinides (89-103)", hook: "From California, the state and the university.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 99, symbol: "Es", name: "Einsteinium", group: "f-block", chunk: "The actinides (89-103)", hook: "From Albert Einstein.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 100, symbol: "Fm", name: "Fermium", group: "f-block", chunk: "The actinides (89-103)", hook: "From Enrico Fermi.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 101, symbol: "Md", name: "Mendelevium", group: "f-block", chunk: "The actinides (89-103)", hook: "From Dmitri Mendeleev, who created the periodic table.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 102, symbol: "No", name: "Nobelium", group: "f-block", chunk: "The actinides (89-103)", hook: "From Alfred Nobel, founder of the Nobel Prizes.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 103, symbol: "Lr", name: "Lawrencium", group: "f-block", chunk: "The actinides (89-103)", hook: "From Ernest Lawrence, inventor of the cyclotron.", accept: { group: ["f block", "none", "no group", "no group number"] } }
+  - { z: 104, symbol: "Rf", name: "Rutherfordium", group: "4", chunk: "Transition metals: groups 3-12", hook: "From Ernest Rutherford, who discovered the atomic nucleus." }
+  - { z: 105, symbol: "Db", name: "Dubnium", group: "5", chunk: "Transition metals: groups 3-12", hook: "From Dubna, the Russian town where the Joint Institute for Nuclear Research is located." }
+  - { z: 106, symbol: "Sg", name: "Seaborgium", group: "6", chunk: "Transition metals: groups 3-12", hook: "From Glenn Seaborg, who helped discover ten elements." }
+  - { z: 107, symbol: "Bh", name: "Bohrium", group: "7", chunk: "Transition metals: groups 3-12", hook: "From Niels Bohr, a founder of atomic physics." }
+  - { z: 108, symbol: "Hs", name: "Hassium", group: "8", chunk: "Transition metals: groups 3-12", hook: "From Hassia, the Latin name for the German state of Hesse." }
+  - { z: 109, symbol: "Mt", name: "Meitnerium", group: "9", chunk: "Transition metals: groups 3-12", hook: "From Lise Meitner, an Austrian-Swedish physicist who studied radioactivity and the atomic nucleus." }
+  - { z: 110, symbol: "Ds", name: "Darmstadtium", group: "10", chunk: "Transition metals: groups 3-12", hook: "From Darmstadt, the German city where it was made." }
+  - { z: 111, symbol: "Rg", name: "Roentgenium", group: "11", chunk: "Transition metals: groups 3-12", hook: "From Wilhelm Röntgen, who discovered X-rays." }
+  - { z: 112, symbol: "Cn", name: "Copernicium", group: "12", chunk: "Transition metals: groups 3-12", hook: "From Nicolaus Copernicus, who placed the Sun at the center of the solar system." }
+  - { z: 113, symbol: "Nh", name: "Nihonium", group: "13", chunk: "p-block: groups 13-18", hook: "From Nihon, a Japanese name for Japan." }
+  - { z: 114, symbol: "Fl", name: "Flerovium", group: "14", chunk: "p-block: groups 13-18", hook: "From the Flerov Laboratory of Nuclear Reactions in Dubna, named for physicist Georgy Flerov." }
+  - { z: 115, symbol: "Mc", name: "Moscovium", group: "15", chunk: "p-block: groups 13-18", hook: "From the Moscow region, where Dubna is located." }
+  - { z: 116, symbol: "Lv", name: "Livermorium", group: "16", chunk: "p-block: groups 13-18", hook: "From Lawrence Livermore National Laboratory in Livermore, California." }
+  - { z: 117, symbol: "Ts", name: "Tennessine", group: "17", chunk: "p-block: groups 13-18", hook: "From Tennessee, home of Oak Ridge National Laboratory and Vanderbilt University." }
+  - { z: 118, symbol: "Og", name: "Oganesson", group: "18", chunk: "p-block: groups 13-18", hook: "From Yuri Oganessian, a leader in the search for superheavy elements." }
+sources:
+  - { name: "Teddy Rook Book periodic table data (data/elements/elements.json; IUPAC/CIAAW and NIST)", url: "/science/periodic-table/" }
+  - { name: "PubChem (NIH): Periodic Table of Elements, with standard state", url: "https://pubchem.ncbi.nlm.nih.gov/periodic-table/pdf/Periodic_Table_of_Elements_w_Standard_State_PubChem.pdf" }
+  - { name: "PubChem (NIH): IUPAC Periodic Table of the Elements and Isotopes", url: "https://pubchem.ncbi.nlm.nih.gov/source/24616" }
+updated: 2026-10-30
