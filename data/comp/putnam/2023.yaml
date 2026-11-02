@@ -107,7 +107,52 @@ problems:
     topic: "Parity game on chosen-number fixed points"
     areas: [combinatorics]
     difficulty: 5
-    status: coming
+    answer: "Every $n$: Bob wins by choosing the parity of $n$ itself"
+    hints:
+      - 'Small cases suggest Bob should name the parity of $n$. Try to prove more: whoever wants that parity can get it, no matter who moves first.'
+      - 'Partway through, an unchosen number smaller than the current turn can never become a fixed point. Keep track of how many such "dead" numbers there are, and of how many turns in a row, starting now, still have their own number available.'
+    solution: |
+      **Key idea:** describe a position mid-game by three numbers: the turns left, the dead numbers (too small to ever be fixed), and the run of upcoming turns whose own numbers are still free. A short table then says, for every position, whether the next player can choose the parity of the remaining fixed points or one parity is locked in. The start is locked to the parity of $n$, so Bob names that parity.
+
+      Call turn $k$ a *fixed point* if the number $k$ is chosen on turn $k$. We show Bob wins for every $n$ by choosing "odd" when $n$ is odd and "even" when $n$ is even.
+
+      **Positions.** Before turn $t$, let $m=n-t+1$ be the number of turns left. An unchosen number below $t$ is *dead*: its turn has passed. An unchosen number $\ge t$ is *live*. Renumber the remaining turns and the live numbers by subtracting $t-1$, so the current turn is turn $1$ and live number $i$ belongs to turn $i$. A position is then a set $L\subseteq\{1,\dots,m\}$ of live numbers together with $d=m-|L|$ dead numbers. Let $r$ be the largest $k$ with $1,2,\dots,k$ all in $L$ (so $r=0$ if $1\notin L$). Only the parity of the fixed points still to come matters.
+
+      A move is one of three kinds:
+      - **take $1$** (if $1\in L$): a fixed point;
+      - **take a dead number** (if $d\ge1$): no fixed point;
+      - **take a live $x\ge2$**: no fixed point.
+
+      In the last two kinds, if $1$ was live it becomes dead. In all three, the next position has $m-1$ turns, and the numbers shift down by one.
+
+      Call a position **locked to $e$** if whichever player wants the remaining fixed points to have parity $e$ can force it, no matter who moves next. Call it **open** if the player about to move can force either parity, whichever they choose.
+
+      **Claim.**
+      1. If $d=0$: locked to $m \bmod 2$.
+      2. If $d=1$: open when $m$ is even, locked to $0$ when $m$ is odd.
+      3. If $d\ge2$: open when $r$ is odd, locked to $0$ when $r$ is even.
+
+      At the start $d=0$ and $m=n$, so the game is locked to the parity of $n$, and Bob wins by naming it.
+
+      **How to check a position.** Suppose every position one move away is open or locked. Say a move *secures* $e$ if it leads to a position locked to $e'$ and the move's own fixed point (0 or 1) plus $e'$ has parity $e$. A move into an open position secures nothing, since the opponent then picks the parity. So the mover can force parity $e$ exactly when some move secures $e$. Hence a position is open if moves secure both parities, and locked to $e$ if moves secure $e$ and nothing secures $1-e$. We prove the claim by induction on $m$. The base case $m=0$ is locked to $0$, and it has $d=0$.
+
+      **Case $d=0$** ($L$ is everything, $r=m$). Taking $1$ leads to $d=0$ with $m-1$ turns, locked to $m-1$; it secures $1+(m-1)\equiv m$. Taking $x\ge2$ kills $1$ and leads to $d=1$ with $m-1$ turns. If $m$ is odd, that position is open and secures nothing. If $m$ is even, it is locked to $0$ and secures $0\equiv m$. Either way only $m \bmod 2$ is secured.
+
+      **Case $d=1$, $1\notin L$** ($L=\{2,\dots,m\}$). Taking the dead number leads to $d=0$ with $m-1$ turns, securing $m-1$. Taking a live $x$ leads to $d=1$ with $m-1$ turns: open if $m$ is odd, locked to $0$ if $m$ is even. For $m$ even, the moves secure $1$ and $0$, so the position is open. For $m$ odd, only $0$ is secured.
+
+      **Case $d=1$, $1\in L$** (one missing live number $h\ge2$). Taking $1$, or taking the dead number, leads to $d=1$ with $m-1$ turns. If $m$ is even, those positions are locked to $0$, so taking $1$ secures $1$ and the dead number secures $0$: open. If $m$ is odd (so $m\ge3$), those positions are open and secure nothing. A live $x\notin\{1,h\}$ leads to $d=2$ with run $\min(h,x)-2$. It secures $0$ when that run is even and nothing otherwise. Choosing $x=2$ (or any $x$ if $h=2$) makes the run $0$. So only $0$ is secured: locked to $0$.
+
+      **Case $d\ge2$, $r=0$.** No move makes a fixed point, and every next position has at least one dead number, so nothing is locked to $1$ (that needs $d=0$). Nothing secures $1$. To secure $0$: if $2\in L$, take $x=2$. If $2\notin L$ but $L\neq\varnothing$, take any live $x$. Either way the next position has $d\ge2$ and run $0$, so it is locked to $0$. If $L=\varnothing$, take a dead number. The result has no live numbers and $d-1$ dead ones, which is locked to $0$ by case 3 (run $0$) or by case 2 ($d-1=m-1=1$ is odd).
+
+      **Case $d\ge2$, $r$ odd.** Taking $1$ and taking a dead number lead to the same position: $d$ is unchanged and the run is $r-1$, which is even, so it is locked to $0$. The first move secures $1$, the second secures $0$: open.
+
+      **Case $d\ge2$, $r\ge2$ even.** Taking $1$ or a dead number leads to run $r-1$, odd, which is open. A live $x$ leads to $d+1$ dead numbers with run $r-1$ if $x>r$ (open), or run $x-2$ if $x\le r$. Taking $x=2$ gives run $0$, locked to $0$. Every next position has $d\ge2$, so nothing secures $1$: locked to $0$.
+
+      This covers every position and proves the claim. $\blacksquare$
+
+      In the actual game, Bob's winning moves come straight from the case list. For instance, when $n$ is odd and Alice fixes $1$, on each turn $2k$ Bob takes $2k+1$ if it is still free, and otherwise any number except $2k$. Then Alice gets no more fixed points, Bob makes none, and the total is $1$.
+    checked: "script: full game search for n ≤ 11 (Bob wins with the parity of n); the claim checked against exact search for every live set with m ≤ 11 turns left, with either player to move"
+    status: ready
 
   - id: B1
     topic: "Sliding coins on a grid: counting reachable positions"
@@ -228,4 +273,33 @@ problems:
     topic: "Determinant of a matrix counting linear representations"
     areas: [linear-algebra, combinatorics]
     difficulty: 5
-    status: coming
+    answer: '$\det S=(-1)^{h-1}\cdot 2h$, where $h=\lceil n/2\rceil$'
+    hints:
+      - 'Sort the solutions by the value $x=ai$. This writes $S$ as a product of an $n\times(n+1)$ and an $(n+1)\times n$ matrix of zeros and ones that record divisibility.'
+      - 'Use the Cauchy–Binet formula. Each maximal minor that you need is one coordinate of the vector $u$ with $Zu=(1,\dots,1)^T$, where $Z_{i,x}=1$ exactly when $i\mid x$.'
+    solution: |
+      **Key idea:** counting the solutions by the value of $ai$ factors $S$ through divisibility matrices. Cauchy–Binet then turns the determinant into a short sum, and each term is read off from one easy linear system.
+
+      **Step 1: factor $S$.** A pair $(a,b)$ is fixed by $x=ai$, a multiple of $i$ in $[0,n]$ for which $j\mid n-x$; then $b=(n-x)/j\ge0$. So
+      $$s(i,j)=\sum_{x=0}^{n}[\,i\mid x\,]\,[\,j\mid n-x\,],$$
+      where $[\cdot]$ is $1$ for true and $0$ for false (and every $i$ divides $0$). Let $A$ be the $n\times(n+1)$ matrix with $A_{i,x}=[i\mid x]$, columns $x=0,\dots,n$, and $B$ the $(n+1)\times n$ matrix with $B_{x,j}=[j\mid n-x]=A_{j,\,n-x}$. Then $S=AB$.
+
+      **Step 2: Cauchy–Binet.** Let $a_t$ be the determinant of $A$ with column $t$ removed. Removing row $t$ from $B$ leaves the transpose of $A$-without-column-$(n-t)$, with its $n$ rows in reverse order. Reversing $n$ rows multiplies a determinant by $\varepsilon=(-1)^{n(n-1)/2}$. So
+      $$\det S=\varepsilon\sum_{t=0}^{n}a_t\,a_{n-t}.$$
+
+      **Step 3: the minors.** Column $0$ of $A$ is all ones. The other columns form $Z$, with $Z_{i,x}=[i\mid x]$ for $1\le i,x\le n$. It is upper triangular with ones on the diagonal (a divisor is never bigger than the number), so $\det Z=1$ and $a_0=1$. For $t\ge1$, slide the ones column past columns $1,\dots,t-1$ ($t-1$ swaps) into the empty slot. The result is $Z$ with column $t$ replaced by $\mathbf 1=(1,\dots,1)^T$. By Cramer's rule,
+      $$a_t=(-1)^{t-1}u_t,\qquad\text{where } Zu=\mathbf 1 .$$
+
+      **Step 4: what we know about $u$.** Row $i$ of $Zu=\mathbf 1$ says that the sum of $u_x$ over the multiples $x\le n$ of $i$ is $1$.
+      - If $t>n/2$, the only multiple of $t$ up to $n$ is $t$, so $u_t=1$.
+      - If $n$ is even, row $n/2$ gives $u_{n/2}+u_n=1$, so $u_{n/2}=0$.
+      - Row $1$ gives $u_1+\dots+u_n=1$.
+
+      There are $n-\lfloor n/2\rfloor=h$ indices above $n/2$, where $h=\lceil n/2\rceil$. So the last two facts give $\sum_{1\le s<n/2}u_s=1-h$.
+
+      **Step 5: add up.** The terms $t=0$ and $t=n$ each equal $a_n=(-1)^{n-1}u_n=(-1)^{n-1}$. For $1\le t\le n-1$, $a_ta_{n-t}=(-1)^{n}u_tu_{n-t}$. If $t\ne n/2$, exactly one of $t,n-t$ is above $n/2$, and that factor is $1$. So each $s<n/2$ shows up twice (as $t=s$ and $t=n-s$), and the middle term $t=n/2$, if there is one, is $u_{n/2}^2=0$. Hence
+      $$\sum_{t=0}^{n}a_ta_{n-t}=2(-1)^{n-1}+2(-1)^{n}(1-h)=(-1)^{n-1}\,2h .$$
+
+      **Step 6: the sign.** $\det S=(-1)^{n(n-1)/2+n-1}\,2h$. For $n=2h-1$ the exponent is $(2h-1)(h-1)+2h-2$, which has the parity of $h-1$. For $n=2h$ it is $h(2h-1)+2h-1$, which has the parity of $h+1$. Either way $\det S=(-1)^{h-1}\,2h$. For $n=5$ this gives $6$, and the sequence for $n=1,2,3,\dots$ is $2,2,-4,-4,6,6,-8,-8,\dots$
+    checked: "script: exact determinants for n ≤ 40 match the formula; for each n the script also checks S = AB, the facts about u, the minors a_t and the Cauchy–Binet sum"
+    status: ready

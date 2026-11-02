@@ -232,7 +232,35 @@ problems:
     topic: "Counting pairs of chains bounded by a common top"
     areas: [combinatorics, algebra]
     difficulty: 5
-    status: coming
+    hints:
+      - 'Fix $z$ first. The count becomes $\sum_{z=1}^{n}M_k(z)M_m(z)$, where $M_r(z)=\binom{z+r-1}{r}$ counts weakly increasing $r$-term sequences from $\{1,\dots,z\}$.'
+      - 'Do not expand in powers of $z$. Instead, find a recursion in $k$ whose coefficients are positive numbers and whose extra term is a product of two $M$’s evaluated at $n$.'
+    solution: |
+      **Key idea:** a polynomial like $M_r(n)=\frac{n(n+1)\cdots(n+r-1)}{r!}$ has nonnegative coefficients, and so do sums and products of such polynomials with positive weights. We find a recursion in $k$ that builds the count from these pieces using only positive weights.
+
+      **Setup.** Write $M_r(z)=\binom{z+r-1}{r}$ with $M_0=1$. This is the number of weakly increasing sequences of length $r$ with entries in $\{1,\dots,z\}$. As a polynomial, $M_r(z)=z(z+1)\cdots(z+r-1)/r!$, a product of factors $z+c$ with $c\ge0$, so its coefficients are nonnegative. Once $z$ is chosen, the two sequences are independent, so with $m$ fixed,
+      $$f(n)=F_k(n):=\sum_{z=1}^{n}M_k(z)\,M_m(z).$$
+
+      **Three facts about $M$** (for integers $n\ge1$):
+      1. Pascal: $M_r(n)-M_r(n-1)=M_{r-1}(n)$ for $r\ge1$. (A sequence from $\{1,\dots,n\}$ either avoids $n$, or ends in $n$ and the rest is a sequence of length $r-1$.)
+      2. $M_{m+1}(n)=\dfrac{n+m}{m+1}M_m(n)$, and so by fact 1, $M_{m+1}(n-1)=\dfrac{n-1}{m+1}M_m(n)$.
+      3. $(n+k-1)\,M_{k-1}(n)=k\,M_k(n)$.
+
+      **The recursion.** For $k\ge1$ and every integer $n\ge0$,
+      $$(k+m+1)\,F_k(n)=k\,F_{k-1}(n)+(m+1)\,M_{m+1}(n)\,M_k(n).$$
+      Both sides are $0$ at $n=0$, so it is enough to check that both sides grow by the same amount from $n-1$ to $n$. The left side minus $kF_{k-1}$ grows by $M_m(n)\big[(k+m+1)M_k(n)-kM_{k-1}(n)\big]$. For the last term, facts 1 and 2 give
+      $$(m+1)\big[M_{m+1}(n)M_k(n)-M_{m+1}(n-1)M_k(n-1)\big]=M_m(n)\big[(n+m)M_k(n)-(n-1)\big(M_k(n)-M_{k-1}(n)\big)\big],$$
+      which is $M_m(n)\big[(m+1)M_k(n)+(n-1)M_{k-1}(n)\big]$. By fact 3, $(n-1)M_{k-1}(n)=kM_k(n)-kM_{k-1}(n)$, and the two increments agree.
+
+      **Induction on $k$.** For $k=0$ the sum is the hockey-stick sum $\sum_{z\le n}\binom{z+m-1}{m}=\binom{n+m}{m+1}=M_{m+1}(n)$, a polynomial with nonnegative coefficients. If $F_{k-1}(n)$ agrees for all $n\ge1$ with such a polynomial, the recursion writes $F_k(n)$ as
+      $$F_k(n)=\frac{k}{k+m+1}F_{k-1}(n)+\frac{m+1}{k+m+1}M_{m+1}(n)M_k(n),$$
+      a positive combination of polynomials with nonnegative coefficients. So $f(n)$ is such a polynomial for every $k\ge0$.
+
+      **Closed form.** Unrolling the recursion gives
+      $$\binom{k+m+1}{k}f(n)=M_{m+1}(n)\sum_{a=0}^{k}\binom{m+a}{a}M_a(n).$$
+      For example, with $k=m=1$ this is $3f(n)=\frac{n(n+1)}2(1+2n)$, the familiar $1^2+2^2+\dots+n^2$.
+    checked: "script: brute-force counts for k, m ≤ 4, n ≤ 6 match the sum over z; the recursion and the closed form hold exactly for k, m ≤ 8 and n < 30; sympy confirms nonnegative coefficients for k, m ≤ 8"
+    status: ready
 
   - id: B6
     topic: "Growth of a lacunary series near the unit circle"

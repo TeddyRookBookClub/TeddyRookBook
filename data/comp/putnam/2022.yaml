@@ -100,7 +100,44 @@ problems:
     topic: "Domino-placing game on a long strip"
     areas: [combinatorics]
     difficulty: 5
-    status: coming
+    answer: "$290$"
+    hints:
+      - 'Record a position as the list of lengths of the uncovered blocks. A tile turns a block of length $L\ge2$ into blocks $a,b\ge0$ with $a+b=L-2$. Work out the value of a single block for small $L$ (a short program helps) and look at the pattern modulo $7$.'
+      - 'Most block lengths behave like a fixed number of leftover squares. A few are worth one more if Alice plays in them first and one less if Bob does. Guess a formula for the value of any list of blocks and prove it by induction on the number of moves left.'
+    solution: |
+      **Key idea:** give each uncovered block a score that depends only on its length mod $7$. Most blocks are worth a fixed number of leftover squares. Blocks of length $\equiv4$ or $6\pmod 7$ are *switches*: one more square for Alice if she gets to play there first, one less if Bob does. This gives the exact value of every position, and the whole strip, $2022\equiv6\pmod7$, is a single switch.
+
+      **Positions.** At any moment the uncovered squares form maximal runs of consecutive squares; call them *blocks*. Placing a tile inside a block of length $L\ge2$ leaves two blocks of lengths $a,b\ge0$ with $a+b=L-2$. Blocks of length $0$ or $1$ are never touched again. The game ends when every block has length at most $1$, and the final count is the number of blocks of length $1$. Blocks never interact, so a position is just a list of lengths.
+
+      **The score.** Write $L=7q+r$ with $0\le r\le6$ and set
+      $$m(L)=q+\mu_r,\qquad(\mu_0,\mu_1,\mu_2,\mu_3,\mu_4,\mu_5,\mu_6)=(0,1,0,1,1,1,1).$$
+      Call $L$ a *switch* if $r=4$ or $r=6$. For a position with block lengths $L_1,\dots,L_k$, let $M=\sum_i m(L_i)$ and let $s$ be the number of switches among the $L_i$. Write $[P]$ for $1$ if $P$ is true and $0$ otherwise.
+
+      **Theorem.** With best play from a given position, the final number of uncovered squares is
+      $$M+[s\text{ odd}]\ \text{ if Alice moves next},\qquad M-[s\text{ odd}]\ \text{ if Bob moves next}.$$
+      At the start there is one block, $2022=7\cdot288+6$. It is a switch with $m=289$, and Alice moves first, so the answer is $289+1=290$.
+
+      **Lemma (one move).** Say a move replaces a block $L$ by blocks $a,b$, and let $\Delta=m(a)+m(b)-m(L)$. Then either $\Delta=0$ and an even number of the three lengths $a,b,L$ are switches, or $\Delta=\pm1$ and an odd number of them are.
+
+      *Proof.* Adding $7$ to $a$ adds $7$ to $L$. That raises both $m(a)$ and $m(L)$ by $1$ and changes neither one's switch status. The same holds for $b$, so it is enough to check $0\le a,b\le6$, where $L=a+b+2\le14$. Here is $\Delta$ for each pair (row $a$, column $b$):
+      $$\begin{array}{c|ccccccc} & 0&1&2&3&4&5&6\\ \hline 0&0&0&-1&0&0&0&-1\\ 1&0&+1&0&+1&+1&0&+1\\ 2&-1&0&-1&0&-1&0&-1\\ 3&0&+1&0&0&+1&0&0\\ 4&0&+1&-1&+1&0&0&0\\ 5&0&0&0&0&0&0&0\\ 6&-1&+1&-1&0&0&0&0\end{array}$$
+      For example, $a=1,b=3$ gives $L=6$ and $\Delta=1+1-1=1$, and only $L$ is a switch. In every cell, $\Delta\ne0$ exactly when an odd number of $a,b,L$ have residue $4$ or $6$. (Each of the $28$ cells with $a\le b$ takes one line to check; we also checked all $a,b<200$ by computer.) $\square$
+
+      So every move either keeps $M$ and the parity of $s$, or changes $M$ by $1$ and flips the parity of $s$.
+
+      **Proof of the theorem,** by induction on the number of moves left. When no move is possible, every block has length $0$ or $1$. Then $m(0)=0$, $m(1)=1$, $s=0$, and $M$ is the count of uncovered squares, as claimed.
+
+      Now let Alice move. After a move with change $\Delta$ and new switch count $s'$, the induction hypothesis (Bob to move) says the result is $M+\Delta-[s'\text{ odd}]$.
+      - *She can't do better than $M+[s\text{ odd}]$.* If $\Delta=0$, then $s'\equiv s$ and the result is $M-[s\text{ odd}]$. If $\Delta=\pm1$, the parity flips, so $[s\text{ odd}]+[s'\text{ odd}]=1$ and the result is at most $M+1-[s'\text{ odd}]=M+[s\text{ odd}]$.
+      - *She can reach it.* If some block is a switch, she plays in it leaving a single square at one end ($a=1$). For $r=4$ the other piece has residue $1$; for $r=6$ it has residue $3$. The table gives $\Delta=+1$ in both cases, and the result is $M+1-[s'\text{ odd}]=M+[s\text{ odd}]$. If there is no switch ($s=0$), she makes a move with $\Delta=0$ (see below), and the result is $M=M+[s\text{ odd}]$.
+
+      Bob's case is the mirror image. The result after his move is $M+\Delta+[s'\text{ odd}]$, which is at least $M-[s\text{ odd}]$ by the same two cases. He reaches it as follows. In a switch with $r=4$, he places his tile against one end ($a=0$, other piece residue $2$); with $r=6$, he leaves two squares at one end ($a=2$, other piece residue $2$). Both give $\Delta=-1$. With no switch, he makes a $\Delta=0$ move.
+
+      A $\Delta=0$ move exists in any block of length $L\ge2$ that is not a switch. For $r\in\{0,2,3,5\}$, put the tile against an end (row $0$ of the table). For $r=1$, where $L\ge8$, leave one square at an end (cell $a=1$, $b\equiv5$). This finishes the induction. $\blacksquare$
+
+      In plain terms: Alice's good moves leave a single square at the end of a block, and Bob's mostly put his tile right against an end.
+    checked: "script: exact game search over every list of blocks with total length ≤ 40 (37,337 positions, both players to move) matches the formula; the one-move lemma checked for all a, b < 200; a single strip of n squares checked up to n = 60"
+    status: ready
 
   - id: A6
     topic: "Intervals with equal odd-power length sums"
@@ -266,4 +303,44 @@ problems:
     topic: "A functional equation for positive continuous functions"
     areas: [analysis, algebra]
     difficulty: 5
-    status: coming
+    answer: '$f(x)=\dfrac{1}{1+cx}$ for a constant $c\ge0$'
+    hints:
+      - 'If $f(y)=1+\frac yx$, then $xf(y)=x+y$, and two terms of the equation cancel. Use this to show that $f$ never exceeds $1$ unless $f\equiv1$.'
+      - 'Once $0<f<1$, compare $f(yf(x))$ with $f(x+y)$ to get monotonicity. Then fix $x$ and let $y\to\infty$.'
+    solution: |
+      **Key idea:** a choice of $y$ that makes $xf(y)=x+y$ cancels two terms. That rules out values above $1$ unless $f\equiv1$. Once $0<f<1$, the equation forces $f$ to decrease, and letting one variable run off to infinity pins down $f$ exactly.
+
+      Write $P(x,y)$ for the equation at $(x,y)$.
+
+      **These work.** For $f(x)=\frac1{1+cx}$ with $c\ge0$,
+      $$f(xf(y))=\frac{1+cy}{1+cx+cy},\qquad f(xf(y))+f(yf(x))=\frac{2+cx+cy}{1+cx+cy}=1+f(x+y).$$
+
+      **Step 1: where $f=1$.** Let $Z=\{t>0: f(t)=1\}$. It is closed in $(0,\infty)$ because $f$ is continuous. For $a,b\in Z$, $P(a,b)$ reads $1+1=1+f(a+b)$, so $a+b\in Z$.
+
+      **Step 2: the cancelling trick.** If $f(y)=1+\frac yx$, then $xf(y)=x+y$, and $P(x,y)$ leaves $f(yf(x))=1$. In particular, if $f(a)>1$ for some $a$, take $y=a$ and $x=\frac{a}{f(a)-1}$: then $af(x)\in Z$, so $Z$ is not empty.
+
+      **Step 3: if $Z$ is not empty, then $f\equiv1$.**
+      - If $Z$ has arbitrarily small elements: for $z\in Z$, all multiples $nz$ are in $Z$, and they come within $z$ of every number $t\ge z$. So $Z$ is dense, and being closed it is all of $(0,\infty)$.
+      - Otherwise $z_0=\min Z>0$ exists. On $(0,z_0)$, $f\ne1$, so either $f<1$ there or $f>1$ there.
+      - If $f<1$ on $(0,z_0)$: take $0<x<z_0$ and $y=z_0-x$. Then $xf(y)<x<z_0$ and $yf(x)<y<z_0$, so the left side of $P(x,y)$ is less than $2$, while the right side is $1+f(z_0)=2$. Contradiction.
+      - If $f>1$ on $(0,z_0)$: fix $y_1\in(0,z_0)$ and choose $n$ with $x=nz_0>\frac{y_1}{f(y_1)-1}$. Then $x\in Z$. The continuous function $y\mapsto f(y)-1-\frac yx$ is positive at $y_1$ and equals $-\frac{z_0}{x}<0$ at $z_0$, so it vanishes at some $y\in(y_1,z_0)$. By Step 2, $f(yf(x))=1$. But $f(x)=1$, so $f(y)=1$ with $y<z_0$. Contradiction.
+
+      So from now on suppose $f\not\equiv1$. Then $Z$ is empty, and by Step 2, $f\le1$. Hence $0<f<1$ everywhere.
+
+      **Step 4: $\limsup_{t\to0^+}f(t)=1$.** Call this limsup $B\le1$. If $B=0$, then $f(t)\to0$, and letting $x\to0$ in $P(x,y)$ gives $0+0=1+f(y)$, which is impossible. If $0<B<1$, take $x_n\to0$ with $f(x_n)\to B$. Along a subsequence, $f(x_nf(y))\to\mu$ for some $\mu\le B$, so $P(x_n,y)$ gives in the limit
+      $$f(By)=1+f(y)-\mu\ge f(y)+(1-B).$$
+      Replacing $y$ by $y/B$ repeatedly, $f(y/B^k)\le f(y)-k(1-B)$, which is negative for large $k$. Contradiction. So $B=1$.
+
+      **Step 5: $f$ is strictly decreasing.** Since $f(xf(y))<1$, $P(x,y)$ gives $f(yf(x))>f(x+y)$ for all $x,y>0$. Now take any $0<v<u$. The function $k(x)=(u-x)f(x)$ on $(0,u)$ is continuous, tends to $0$ as $x\to u$, and has limsup $u\cdot B=u$ as $x\to0$. So $k(x)=v$ for some $x$. With $y=u-x$ we get $yf(x)=v$ and $x+y=u$, so $f(v)>f(u)$. As a result, $f(t)\to1$ as $t\to0^+$.
+
+      **Step 6: behavior at infinity.** Let $L=\lim_{t\to\infty}f(t)<1$. If $L>0$, then $xf(x)\ge Lx\to\infty$, and $P(x,x)$, which says $2f(xf(x))=1+f(2x)$, gives $2L=1+L$ in the limit. That is impossible, so $L=0$. Then $f$ maps $(0,\infty)$ onto $(0,1)$, decreasing, with a continuous inverse. From $P(x,x)$, $f(xf(x))\to\frac12$, so $xf(x)\to\kappa$, where $\kappa$ is the point with $f(\kappa)=\frac12$.
+
+      **Step 7: the exact form.** Let $g(x)=\frac1{f(x)}-1>0$ and $\psi(s)=1-f(s)$. Rewrite $P(x,y)$ and multiply by $y$:
+      $$y\,\psi\big(xf(y)\big)=y\,f\big(yf(x)\big)-y\,f(x+y).$$
+      Fix $x$ and let $y\to\infty$. By Step 6, $y\,f(x+y)\to\kappa$, and $y f(yf(x))=\frac{t f(t)}{f(x)}$ with $t=yf(x)\to\infty$, so it tends to $\frac{\kappa}{f(x)}$. The right side therefore tends to $\kappa\,g(x)$. On the left, put $s=xf(y)$. Then $y=\frac{x\,yf(y)}{s}$, so the left side is $x\,yf(y)\cdot\frac{\psi(s)}{s}$, and $yf(y)\to\kappa$. Hence
+      $$\frac{\psi(s)}{s}\longrightarrow\frac{g(x)}{x}\quad\text{as } y\to\infty .$$
+      As $y$ increases to $\infty$, $s=xf(y)$ decreases continuously to $0$. So the limit $\ell=\lim_{s\to0^+}\psi(s)/s$ exists, and $g(x)/x=\ell$ for every $x$. It does not depend on $x$. So $g(x)=\ell x$ with $\ell>0$, and $f(x)=\frac1{1+\ell x}$.
+
+      Together with $f\equiv1$ (the case $c=0$), the solutions are exactly $f(x)=\frac1{1+cx}$ with $c\ge0$.
+    checked: "script: exact rational check that 1/(1+cx) satisfies the equation for c = 0, 1/3, 1, 7/2, 50 at 300 random points each; other decreasing functions (1/(1+x²), e^(−x), 1/(1+x)²) fail; numerical check of the Step 7 limit y·(1−f(xf(y))) → κ·g(x); every step re-derived by hand"
+    status: ready

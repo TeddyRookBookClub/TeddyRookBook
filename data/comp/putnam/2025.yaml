@@ -93,7 +93,33 @@ problems:
     topic: "Which up-down patterns allow the most permutations?"
     areas: [combinatorics]
     difficulty: 5
-    status: coming
+    answer: "Exactly the two alternating sequences, $(+1,-1,+1,\\dots)$ and $(-1,+1,-1,\\dots)$"
+    hints:
+      - 'Choose $n$ random numbers in $[0,1]$. Their ranking is a random permutation, so $f(s)$ is $n!$ times a volume.'
+      - 'Suppose two neighboring signs are equal. Cut the chain at the shared point and flip every sign after it. Which of the two counts is bigger?'
+    solution: |
+      **Key idea:** if two neighboring signs of $s$ are equal, flipping every sign after the first of the two gives a strictly larger count. The flip removes that equal pair and creates no new one. So a sequence with an equal pair is never best, and only alternating sequences are left.
+
+      **Step 1: a volume.** Pick $x_1,\dots,x_n$ independently and uniformly in $[0,1]$. With probability $1$ they are distinct, and their ranking is a uniformly random permutation of $\{1,\dots,n\}$. Each condition $s_i(x_{i+1}-x_i)>0$ depends only on that ranking. So
+      $$f(s)=n!\,V(s),$$
+      where $V(s)$ is the volume of the set of points of $[0,1]^n$ whose coordinates follow the signs of $s$.
+
+      **Step 2: end densities.** For a sign word $w$ of length $m-1$, let $P_w(y)$ be the volume of the set of $(x_1,\dots,x_{m-1})$ that follow $w$ once we put $x_m=y$. Then $P_\varnothing=1$ and
+      $$P_{w+}(y)=\int_0^y P_w(t)\,dt,\qquad P_{w-}(y)=\int_y^1 P_w(t)\,dt .$$
+      By induction each $P_w$ is a positive continuous function on $(0,1)$: it is an integral of a positive function over an interval of positive length. So $P_{w+}$ is strictly increasing and $P_{w-}$ is strictly decreasing.
+
+      **Step 3: cut at a repeated sign.** Suppose $s_i=s_{i+1}$. Cut the chain at $x_{i+1}=y$. The left piece $x_1,\dots,x_{i+1}$ follows $s_1,\dots,s_i$, with end density $L(y)=P_{(s_1,\dots,s_i)}(y)$. The right piece $x_{i+1},\dots,x_n$, read backward from $x_n$, follows the word $w'=(-s_{n-1},\dots,-s_{i+1})$, with end density $R(y)=P_{w'}(y)$. Once $y$ is fixed, the two pieces use separate variables, so
+      $$V(s)=\int_0^1 L(y)\,R(y)\,dy .$$
+      Now let $s'$ be $s$ with the signs $s_{i+1},\dots,s_{n-1}$ all flipped. The map $x_j\mapsto 1-x_j$ on the right piece (including $x_{i+1}$) turns its old conditions into the new ones. So the new right density is $R(1-y)$, and
+      $$V(s')=\int_0^1 L(y)\,R(1-y)\,dy .$$
+
+      **Step 4: compare.** Replacing every $x_j$ by $1-x_j$ swaps $s$ with $-s$ and does not change $f$, so we may assume $s_i=s_{i+1}=+1$. Then $L$ ends with a $+$, so it is strictly increasing. The last letter of $w'$ is $-s_{i+1}=-1$, so $R$ is strictly decreasing. Put $h(y)=R(1-y)-R(y)$. Then $h(1-y)=-h(y)$, and $h(y)>0$ for $y>\tfrac12$. Substituting $y\mapsto 1-y$ on $[0,\tfrac12]$,
+      $$V(s')-V(s)=\int_0^1 L\,h\,dy=\int_{1/2}^{1}\big(L(y)-L(1-y)\big)\,h(y)\,dy>0,$$
+      since both factors are positive for $y\in(\tfrac12,1)$. So $f(s')>f(s)$.
+
+      **Step 5: finish.** Flipping a whole tail keeps every neighbor pair inside the tail equal or unequal as before. So $s'$ has exactly one fewer equal neighbor pair than $s$. Hence any $s$ with an equal neighbor pair is beaten, and a maximum (there are finitely many sequences) can only sit at an alternating sequence. There are two of them, and the map $a_j\mapsto n+1-a_j$ shows they have the same count, so both are maximal. For $n=2$ that means both sequences. (The maximal values $1,2,5,16,61,272,\dots$ are the Euler zigzag numbers.)
+    checked: "script: computed f(s) for every sign sequence, n = 2 to 14, by dynamic programming; the maximizers are exactly the two alternating sequences. Also checked the volume formula and the cut-and-flip inequality exactly with sympy polynomials for every repeated pair, n ≤ 8"
+    status: ready
 
   - id: A6
     topic: "2-adic behavior of a quadratic recursion"
@@ -239,4 +265,36 @@ problems:
     topic: "Fastest-growing exponent for a self-referential difference inequality"
     areas: [analysis, number-theory]
     difficulty: 5
-    status: coming
+    answer: "$r=\\tfrac14$"
+    hints:
+      - 'Try $g(n)=n^a$. Compare the exponent of the difference with the exponent of the other side. Which $a$ is best?'
+      - 'For $r>\tfrac14$, turn a bound $g(n)\ge cn^a$ into a bound with exponent $1+ra^2$, and repeat. Then use the inequality again to bound $g(g(n))$ from above.'
+    solution: |
+      **Key idea:** if $g$ grew like $n^a$, the difference would grow like $n^{a-1}$ and the other side like $n^{ra^2}$. We need $a-1\ge ra^2$, which has a solution only when $r\le\frac14$ (best at $a=2$). For $r>\frac14$ we make this rigorous: lower bounds feed on themselves until $g$ beats every power of $n$, and that clashes with an upper bound the inequality also gives.
+
+      **An example for $r=\frac14$.** Take $g(n)=n^2$. Then $g(n+1)-g(n)=2n+1$ and $g(g(n))^{1/4}=(n^4)^{1/4}=n$, and $2n+1\ge n$.
+
+      **No example for $r>\frac14$.** Suppose $g$ works for some $r>\frac14$.
+
+      *Step 1: $g$ is increasing and $g(n)\ge n$.* The right side is positive, so each difference is a positive integer, at least $1$. With $g(1)\ge1$ this gives $g(n)\ge n$.
+
+      *Step 2: raising the exponent.* Suppose $g(n)\ge c\,n^a$ for all $n$, with $c>0$ and $a\ge1$. Using this bound at the point $g(n)$, and then again at $n$,
+      $$g(g(n))\ge c\,g(n)^a\ge c^{1+a}n^{a^2},\qquad\text{so}\qquad g(k+1)-g(k)\ge c_1k^{b}$$
+      with $b=ra^2>0$ and $c_1=c^{r(1+a)}$. Summing over $k<n$ and comparing the sum with an integral,
+      $$g(n)\ge c_1\int_0^{n-1}x^b\,dx=\frac{c_1(n-1)^{b+1}}{b+1}\ge\frac{c_1}{2^{b+1}(b+1)}\,n^{b+1}\qquad(n\ge2),$$
+      and $g(1)\ge1$. So $g(n)\ge c'n^{1+ra^2}$ for all $n$, where $c'>0$ is the smaller of $1$ and $\frac{c_1}{2^{b+1}(b+1)}$.
+
+      *Step 3: the exponents grow without bound.* Start with $a_0=1$ (Step 1) and set $a_{k+1}=1+ra_k^2$. Then
+      $$a_{k+1}-a_k=r\Big(a_k-\frac1{2r}\Big)^2+1-\frac1{4r}\ \ge\ 1-\frac1{4r}>0,$$
+      a fixed positive step. So after finitely many rounds of Step 2 we get $g(n)\ge c\,n^A$ for all $n$ with some $A>1/r^2$ and $c>0$.
+
+      *Step 4: an upper bound.* The inequality gives $g(g(m))^r\le g(m+1)-g(m)<g(m+1)$, so
+      $$g(g(m))<g(m+1)^{1/r}\qquad\text{for every }m.$$
+      Since $A>1$, we have $g(n-1)\ge n+1$ for all large $n$. Then $g(n+1)\le g(g(n-1))<g(n)^{1/r}$ (use $m=n-1$). Using $m=n$ as well,
+      $$g(g(n))<g(n+1)^{1/r}<g(n)^{1/r^2}.$$
+
+      *Step 5: the clash.* Step 3 at the point $g(n)$ gives $g(g(n))\ge c\,g(n)^A$. With Step 4, $c\,g(n)^{A-1/r^2}<1$ for all large $n$. But $A-1/r^2>0$ and $g(n)\ge n$ grows without bound, so this fails for large $n$. So no $g$ works when $r>\frac14$.
+
+      Together with the example, the largest constant is $r=\frac14$.
+    checked: "script: checked g(n) = n^2 against the inequality for n < 10^6 at r = 1/4; iterated a -> 1 + r a^2 for r = 0.2501, 0.26, 0.3, 0.5 (it passes 1/r^2 after 312, 29, 12 and 4 rounds) and for r = 1/4 (it creeps up to the fixed point 2, matching the example)"
+    status: ready

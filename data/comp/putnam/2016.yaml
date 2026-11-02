@@ -130,7 +130,34 @@ problems:
     areas: [analysis]
     difficulty: 5
     answer: "$C=\\tfrac56$"
-    status: coming
+    hints:
+      - "Simpson's rule $\\int_a^b Q=\\frac{b-a}{6}\\big(Q(a)+4Q(\\frac{a+b}2)+Q(b)\\big)$ is exact for every polynomial of degree at most 3."
+      - "Cut $[0,1]$ at the roots of $P$. On each piece $|P|$ is a cubic that keeps one sign and is zero at an end of the piece."
+    solution: |
+      **Key idea:** Simpson's rule has no error for cubics. If a cubic keeps one sign on an interval and is zero at one end, Simpson's rule has only two terms left to bound, so the cubic's average is at most $\frac56$ of its maximum. The roots of $P$ cut $[0,1]$ into pieces of exactly this kind.
+
+      Throughout, let $M=\max_{[0,1]}|P|$.
+
+      **Step 1: Simpson's rule is exact for cubics.** For any polynomial $Q$ of degree at most 3 and any interval $[a,b]$,
+      $$\int_a^b Q(x)\,dx=\frac{b-a}{6}\Big(Q(a)+4\,Q\big(\tfrac{a+b}{2}\big)+Q(b)\Big).$$
+      Both sides are linear in $Q$, so it is enough to check $Q=1,\,t,\,t^2,\,t^3$ with $t=x-\frac{a+b}2$ and $h=\frac{b-a}2$. For $1$ and $t^2$, both sides are $2h$ and $\frac{2h^3}{3}$. For $t$ and $t^3$, both sides are $0$ by symmetry.
+
+      **Step 2: a one-sign lemma.** Suppose $Q$ has degree at most 3, $Q\ge0$ on $[a,b]$, and $Q$ is zero at $a$ or at $b$. Let $m=\max_{[a,b]}Q$. In Simpson's rule one end term is $0$, and the other two terms are at most $m$. So
+      $$\int_a^b Q\le\frac{b-a}{6}(0+4m+m)=\frac56(b-a)\,m.$$
+
+      **Step 3: cut at the roots.** $P$ has degree 3, so it has finitely many roots in $[0,1]$, and by assumption at least one. List them as $r_1<\dots<r_k$. They cut $[0,1]$ into the pieces
+      $$[0,r_1],\ [r_1,r_2],\ \dots,\ [r_k,1]$$
+      (a piece may have length $0$ if $r_1=0$ or $r_k=1$). Every piece has a root of $P$ at one of its ends or both. Inside a piece, $P$ has no roots, so by the intermediate value theorem it keeps one sign there. So on each piece, $|P|$ equals $P$ or $-P$, a polynomial of degree 3 that is $\ge0$ and zero at an end. Step 2 gives
+      $$\int_{\text{piece}}|P|\le\frac56\,(\text{length of piece})\cdot M.$$
+      The lengths add up to $1$, so $\int_0^1|P|\le\frac56M$. Therefore $C=\frac56$ works.
+
+      **Step 4: nothing smaller works.** Look at when Step 2 is tight: the zero is at one end, and $Q$ equals its maximum at both the midpoint and the other end. Try
+      $$P(x)=1-x(2x-1)^2=-4x^3+4x^2-x+1 .$$
+      It is a real cubic with $P(1)=0$. On $[0,1]$ we have $0\le x(2x-1)^2\le1$, so $0\le P\le1$, and $P(0)=1$. So $M=1$. Also
+      $$\int_0^1 P=1-\int_0^1(4x^3-4x^2+x)\,dx=1-\Big(1-\tfrac43+\tfrac12\Big)=\tfrac56 .$$
+      Equality holds, so no constant below $\frac56$ works. The smallest constant is $C=\frac56$.
+    checked: "script: Simpson exactness for a general cubic (sympy); the example's integral 5/6 and maximum 1 computed exactly; 200,000 random cubics with a root in [0,1] (including endpoint roots) never exceed 5/6; a numerical optimizer also finds 5/6, at this example"
+    status: ready
 
   - id: B1
     topic: "Series: a telescoping recursive sequence"

@@ -282,4 +282,32 @@ problems:
     topic: "Number theory: signs from a Beatty sequence"
     areas: [number-theory]
     difficulty: 5
-    status: coming
+    hints:
+      - 'Group the terms into runs on which the floor stays the same. With $\beta=\sqrt2+1=2+(\sqrt2-1)$, every run has $2$ or $3$ terms.'
+      - 'Add up the runs with alternating signs. The runs of length $3$ sit at positions $\lfloor i\beta\rfloor$, and their signs copy the original sequence.'
+    solution: |
+      **Key idea:** cut the sum into runs where the sign stays the same. The running total at the end of a run is (up to adding $2$) the same kind of sum, taken to a much smaller index. So strong induction finishes the proof.
+
+      **Notation.** Let $\alpha=\sqrt2-1$ and $\beta=\frac1\alpha=\sqrt2+1=2+\alpha$. Write $\varepsilon_k=(-1)^{\lfloor k\alpha\rfloor}$ and $S(n)=\sum_{k=1}^{n}\varepsilon_k$, with $S(0)=0$. We prove $S(n)\ge0$ for every $n\ge0$.
+
+      **Runs.** For $j\ge0$, let $R_j$ be the set of $k\ge1$ with $\lfloor k\alpha\rfloor=j$. Now $j\le k\alpha<j+1$ means $j\beta\le k<(j+1)\beta$, and $\beta$ is irrational, so
+      $$R_j=\{\lfloor j\beta\rfloor+1,\ \dots,\ \lfloor (j+1)\beta\rfloor\}$$
+      (for $j=0$ this is $\{1,2\}$). Every term in $R_j$ equals $(-1)^j$, so $S$ moves in one direction across a run. Since $\beta=2+\alpha$, the run has
+      $$|R_j|=\lfloor (j+1)\beta\rfloor-\lfloor j\beta\rfloor=2+e_j,\qquad e_j=\lfloor (j+1)\alpha\rfloor-\lfloor j\alpha\rfloor\in\{0,1\}$$
+      terms.
+
+      **The total at the end of a run.** Let $T_m=S(\lfloor (m+1)\beta\rfloor)$, the value of $S$ when run $R_m$ ends. Then
+      $$T_m=\sum_{j=0}^{m}(-1)^j\,(2+e_j).$$
+      The $2$'s contribute $2$ if $m$ is even and $0$ if $m$ is odd. For the $e_j$: $e_j=1$ exactly when some integer $i\ge1$ lies strictly between $j\alpha$ and $(j+1)\alpha$, that is, when $j<i\beta<j+1$, or $j=\lfloor i\beta\rfloor$. So each $i\ge1$ marks exactly one $j$ with $e_j=1$. That $j$ is at most $m$ exactly when $i\beta<m+1$, i.e. $i\le\lfloor (m+1)\alpha\rfloor$. Its sign is
+      $$(-1)^{\lfloor i\beta\rfloor}=(-1)^{2i+\lfloor i\alpha\rfloor}=\varepsilon_i .$$
+      Adding up,
+      $$T_m=2\,[m\text{ even}]+S\big(\lfloor (m+1)\alpha\rfloor\big).$$
+
+      **Induction.** Suppose $S(n')\ge0$ for all $n'<n$, and let $n\ge1$ lie in run $R_m$. If $m=0$, then $S(n)\in\{1,2\}$. If $m\ge1$, then $S(n)$ lies between $T_{m-1}$ and $T_m$, because $S$ is monotone across $R_m$. By the formula,
+      $$T_{m-1}\ge S(\lfloor m\alpha\rfloor),\qquad T_m\ge S(\lfloor (m+1)\alpha\rfloor).$$
+      Both indices are smaller than $n$: they are at most $(m+1)\alpha$, while $n\ge\lfloor m\beta\rfloor+1>m\beta$, and $m\beta-(m+1)\alpha=2m-\alpha>0$. So both are $\ge0$ by the induction hypothesis, and $S(n)\ge0$. $\blacksquare$
+
+      **Remark.** The bound is sharp: the computation shows $S(n)=0$ for $n=4,24,28,140,144,\dots$. These are the run ends where $m$ is odd and the smaller sum is $0$ too.
+    viz: putnam-2020-b6
+    checked: "script: exact integer floors; S(n) ≥ 0 for all n ≤ 2,000,000 (minimum 0), and the run-end formula T_m = 2[m even] + S(⌊(m+1)α⌋) holds for all 828,427 complete runs"
+    status: ready

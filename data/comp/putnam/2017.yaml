@@ -233,7 +233,46 @@ problems:
     areas: [geometry]
     difficulty: 4
     answer: "$(a,b,c)=(9,8,7)$"
-    status: coming
+    hints:
+      - "Such a line cuts off a small triangle at one vertex. If it meets the two sides from that vertex at distances $x$ and $y$, the two conditions say that $x+y$ and $xy$ are fixed numbers. So $x$ and $y$ are the roots of a quadratic."
+      - "Check each vertex. Evaluating the quadratic at the side lengths tells you where its roots lie. Only one vertex can give a variable count."
+    solution: |
+      **Key idea:** both conditions turn into "$x+y$ and $xy$ are fixed" for the two cut lengths at a vertex, so the cuts come from the roots of one quadratic per vertex. Signs of that quadratic at the side lengths show that the vertices give $0$, $1$, and $0$, $1$ or $2$ lines. Exactly two lines means a double root, which becomes a Diophantine equation.
+
+      Let the side lengths be $a>b>c$, with opposite vertices $A,B,C$, and let $s=\frac{a+b+c}2$.
+
+      **Step 1: the quadratic at a vertex.** A line that splits the triangle into two regions meets the boundary in two points. So it cuts off a small triangle at one vertex $V$. (A line through a vertex is included, with one cut point at another vertex.) Let the two sides at $V$ have lengths $p,q$, the opposite side $r$, and let the cuts be at distances $x\in[0,p]$ and $y\in[0,q]$ from $V$.
+      - Equal areas: $\frac12xy\sin V=\frac12\cdot\frac12pq\sin V$, so $xy=\frac{pq}2$.
+      - Equal perimeters: the two boundaries share the cut segment, so $x+y=2s-(x+y)$, which gives $x+y=s$.
+
+      So $x,y$ are the two roots of $f(t)=t^2-st+\frac{pq}2$, in some order. A short computation gives
+      $$f(p)=\frac{p(p-r)}2,\qquad f(q)=\frac{q(q-r)}2 .$$
+      Each root of $f$, placed on a side, gives a line, provided it is at most the length of the side it is placed on.
+
+      **Step 2: vertex $A$ gives none.** Here $\{p,q\}=\{b,c\}$ and $r=a$. Both $f(b)$ and $f(c)$ are negative, so the roots $u<v$ satisfy $u<c<b<v$. Whichever of $x,y$ equals $v$ is longer than its side. So there is no line.
+
+      **Step 3: vertex $B$ gives exactly one.** Here the sides are $a$ (for $x$) and $c$ (for $y$), and $r=b$. Now $f(c)<0<f(a)$, so the roots are real and $u<c<v<a$. The only valid choice is $y=u$, $x=v$, with both cut points strictly inside their sides. So there is exactly one line.
+
+      **Step 4: vertex $C$ gives $0$, $1$ or $2$.** Here the sides are $a$ and $b$, and $r=c$, so $f(a)>0$ and $f(b)>0$. There are three cases.
+      - If $f$ has no real roots, there is no line.
+      - Otherwise, $b$ lies outside $[u,v]$. If $b<u$, the root placed on side $b$ is too long, so there is no line.
+      - If $b>v$, then both roots are less than $b<a$, and both orders work. That gives two lines when $u\neq v$, and one line when $u=v$.
+
+      The case $b>v$ happens exactly when $b>\frac s2$, the midpoint of the roots. The cut points are then strictly inside sides $a$ and $b$.
+
+      Lines from different vertices meet different pairs of sides at interior points, so they are distinct. (A line meets the boundary only twice.) The total is therefore $1$, $2$ or $3$. It is exactly $2$ precisely when $f$ has a double root at $C$ and $b>\frac s2$:
+      $$s^2=2ab\quad\text{and}\quad a+c<3b .$$
+
+      **Step 5: the smallest integer case.** Let $n=a+b+c$. Then $s^2=2ab$ means $n^2=8ab$, so $8\mid n^2$. That forces $4\mid n$, so write $n=4m$. Then $ab=2m^2$ and $c=4m-a-b$.
+
+      The triangle inequality $a<b+c$ becomes $a<2m$. Then $b=\frac{2m^2}{a}>m$, which also gives $a+c=4m-b<3b$. So we need a factorization $ab=2m^2$ with $m<b<a<2m$, plus the checks $c>0$ and $b>c$.
+      - $m\le5$: no such factorization. For $m=1,2$ there is no room. For $m=3$ the only candidate is $b=4$, and $4\nmid18$. For $m=4$, neither $5$ nor $6$ divides $32$. For $m=5$, none of $6,7,8$ divides $50$.
+      - $m=6$: $72=9\cdot8$ with $6<8<9<12$. Then $c=24-17=7$.
+      - $m\ge7$: $a>b>m$ forces $a\ge9$, with $a=9$ only for $m=7$, $b=8$. But $9\cdot8\ne98$.
+
+      So the least possible $a$ is $9$, and the triple is $(9,8,7)$. Check it: $9<8+7$, $s=12$, $s^2=144=2\cdot9\cdot8$, and $b=8>6=\frac s2$. The double root is $x=y=6$, cut from the vertex between the sides $9$ and $8$. Together with the line from Step 3, this triangle has exactly two lines.
+    checked: "script: for 25 random triangles, counting directions where the area-halving line also halves the perimeter matched the vertex-by-vertex rule; for 9-8-7 the count is one crossing plus one tangency (|difference| about 1e-8), and it becomes 3 or 1 when c moves to 7.05 or 6.95; exhaustive search over a<60 gives (9,8,7) first"
+    status: ready
 
   - id: B6
     topic: "Counting: distinct tuples with a weighted sum mod a prime"
