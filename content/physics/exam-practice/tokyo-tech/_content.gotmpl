@@ -1,0 +1,11 @@
+{{- /* Tokyo Tech physics guide: one page per file, data/comp/tokyo-tech/physics-<year>.yaml ->
+   /physics/exam-practice/tokyo-tech/<year>/ (layouts/comp/ctyear.html with params.contest tokyo-tech). */ -}}
+{{- $Y := (index ($.Site.Data.comp | default dict) "tokyo-tech") | default dict -}}
+{{- range $k, $y := $Y -}}
+  {{- if hasPrefix $k "physics-" -}}
+  {{- $slug := strings.TrimPrefix "physics-" $k -}}
+  {{- $t := printf "Tokyo Tech Physics %v" $y.year -}}
+  {{- $desc := printf "%s: our own solutions (not official) to the physics paper of the Tokyo Institute of Technology's general entrance exam, now set by the Institute of Science Tokyo, with animations and a link to the official problems." $t -}}
+  {{- $.AddPage (dict "path" $slug "kind" "page" "type" "comp" "layout" "ctyear" "title" $t "description" $desc "params" (dict "file" $k "contest" "tokyo-tech")) -}}
+  {{- end -}}
+{{- end -}}

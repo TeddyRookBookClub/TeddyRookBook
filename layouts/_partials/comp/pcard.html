@@ -9,7 +9,7 @@
     <p class="cp-tags">{{ with $x.day }}<span class="cp-tag cp-tday">Day {{ . }}</span>{{ end }}{{ range $x.areas }}<span class="cp-tag">{{ index $A . | default . }}</span>{{ end }}{{ with $x.difficulty }}<span class="cp-diff" title="Difficulty {{ . }} of 5, our estimate"><span class="cp-sr">Difficulty </span>{{ range seq 5 }}<i{{ if le . $x.difficulty }} class="on"{{ end }} aria-hidden="true"></i>{{ end }}<span class="cp-sr"> {{ . }} of 5</span></span>{{ end }}</p>
   </header>
   <div class="cp-acts">
-    <a class="cp-btn" href="{{ .pdf }}" rel="noopener">Open the problem (PDF)<span class="cp-sr">, {{ .year }} {{ $x.id }}, {{ .where | default "on the archive site" }}</span></a>
+    <a class="cp-btn" href="{{ .pdf }}" rel="noopener">Open the problem (PDF{{ with .lang }}, {{ . }}{{ end }})<span class="cp-sr">, {{ .year }} {{ $x.id }}, {{ .where | default "on the archive site" }}</span></a>
     {{- if $ready }}
     {{- with $x.hints }}<button type="button" class="cp-btn" data-hint="{{ $uid }}-hints" aria-controls="{{ $uid }}-hints" aria-expanded="false">Show hints</button>{{ end }}
     <button type="button" class="cp-btn pri" data-reveal="{{ $uid }}-sol" aria-controls="{{ $uid }}-sol" aria-expanded="false">Show our solution</button>

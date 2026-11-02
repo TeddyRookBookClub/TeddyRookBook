@@ -1,0 +1,151 @@
+year: 2014
+date: "October 22 – November 3, 2014"
+total: 11
+links:
+  problems: https://www.math.u-szeged.hu/~mmaroti/schweitzer/schweitzer-2014-eng.pdf
+  archive: https://www.math.u-szeged.hu/~mmaroti/schweitzer/
+problems:
+  - id: P2
+    topic: "Analysis: overlapping intervals and the lengths of their unions"
+    areas: [analysis, combinatorics]
+    difficulty: 2
+    hints:
+      - |
+        For two intervals that meet, compare $1/|I\cup J|$ with $|I\cap J|/(|I|\,|J|)$.
+      - |
+        The new double sum is $\int_0^1 g^2$ for a natural function $g$. What is $\int_0^1 g$?
+    solution: |
+      **How we read the sum.** It runs over ordered pairs $(i,j)$, and $i=j$ is allowed, since an interval meets itself. This is the reading under which the bound is sharp: if every interval is all of $[0,1]$, each of the $k^2$ pairs contributes exactly $1$.
+
+      **Step 1: two intervals.** Let $I=[a,b]$ and $J=[c,d]$ meet, with $a\le c$. (Whether endpoints are included changes no lengths.) If $J\subseteq I$, then $|I\cup J|=|I|$ and $|I\cap J|=|J|$, so $|I|\,|J|=|I\cup J|\,|I\cap J|$. Otherwise $a\le c\le b\le d$, and
+      $$|I|\,|J|-|I\cup J|\,|I\cap J|=(b-a)(d-c)-(d-a)(b-c)=(d-b)(c-a)\ge 0 .$$
+      So in every case, for intervals that meet,
+      $$\frac{1}{|I\cup J|}\ \ge\ \frac{|I\cap J|}{|I|\,|J|}.$$
+      For intervals that don't meet, the right side is $0$.
+
+      **Step 2: a square appears.** Put $g(x)=\sum_i \mathbf 1_{I_i}(x)/|I_i|$ for $x\in[0,1]$. Since $|I_i\cap I_j|=\int_0^1 \mathbf 1_{I_i}\mathbf 1_{I_j}\,dx$, Step 1 gives
+      $$\sum_{I_i\cap I_j\neq\emptyset}\frac{1}{|I_i\cup I_j|}\ \ge\ \sum_{i,j}\frac{|I_i\cap I_j|}{|I_i|\,|I_j|}=\int_0^1 g(x)^2\,dx .$$
+
+      **Step 3: Cauchy–Schwarz.** On an interval of length $1$, $\int_0^1 g^2\ge\big(\int_0^1 g\big)^2$. Each term of $g$ integrates to $1$, so $\int_0^1 g=k$, and the sum is at least $k^2$.
+    checked: "script: 200,000 random families of up to 8 intervals; the sum minus $k^2$ was never negative"
+    status: ready
+
+  - id: P4
+    topic: "Number theory: how fast ordered factorizations pile up"
+    areas: [number-theory, combinatorics, analysis]
+    difficulty: 3
+    hints:
+      - |
+        Sort the sequences for all numbers up to $x$ by their first entry $d$. What remains is a sequence for a number up to $x/d$.
+      - |
+        For (a), prove $F(x)\le 2x^{\alpha}$ by induction, where $F(x)=\sum_{k\le x}f(k)$. For (b), count the orderings of one long, well-chosen list of factors.
+    solution: |
+      Write $F(x)=\sum_{k\le x}f(k)$ for real $x\ge1$. The defining property of $\alpha$ says $\sum_{d\ge2}d^{-\alpha}=1$. Since $\zeta(2)=\pi^2/6<2$, we have $1<\alpha<2$.
+
+      **(a) A recursion.** A sequence counted by $f(k)$ with $k>1$ begins with some $d\ge2$, and the rest of it is a sequence counted by $f(k/d)$. Summing over $k\le x$,
+      $$F(x)=1+\sum_{2\le d\le x}F(x/d)\qquad(x\ge 1).$$
+
+      **(a) Induction.** We show $F(x)\le 2x^{\alpha}$ for all $x\ge1$, by induction over the ranges $[2^m,2^{m+1})$. For $1\le x<2$, $F(x)=1$. In general, every $x/d$ above is at most $x/2$, so by the induction hypothesis
+      $$F(x)\le 1+2x^{\alpha}\sum_{2\le d\le x}d^{-\alpha}=1+2x^{\alpha}\Big(1-\sum_{d>x}d^{-\alpha}\Big).$$
+      The tail starts at $d=\lfloor x\rfloor+1\le x+1$, so comparing with an integral,
+      $$2x^{\alpha}\sum_{d>x}d^{-\alpha}\ \ge\ \frac{2x^{\alpha}(x+1)^{1-\alpha}}{\alpha-1}=\frac{2x}{\alpha-1}\Big(\frac{x}{x+1}\Big)^{\alpha-1}\ \ge\ \frac{2\cdot 2^{1-\alpha}}{\alpha-1}=\frac{2^{2-\alpha}}{\alpha-1}>1,$$
+      because $2^{2-\alpha}>1>\alpha-1$. Hence $F(x)\le 2x^{\alpha}$, which proves (a).
+
+      **(b) Many orderings of one list.** Fix $\varepsilon>0$. For $D\ge2$ let $\beta_D$ solve $\sum_{d=2}^{D}d^{-\beta_D}=1$. These finite sums increase to $\sum_{d\ge2}d^{-s}$ as $D$ grows, so $\beta_D$ increases to $\alpha$. Choose $D$ with $\beta_D>\alpha-\varepsilon$, and set $w_d=d^{-\beta_D}$, so the $w_d$ add up to $1$.
+
+      For a large integer $K$ let $k_d=\lfloor Kw_d\rfloor$, let $m=\sum_d k_d$, and let $n=\prod_d d^{\,k_d}$. Every arrangement of the list containing $k_d$ copies of each $d$ is a different sequence with product $n$, so
+      $$f(n)\ \ge\ \frac{m!}{\prod_d k_d!}.$$
+      By Stirling's formula, with $D$ fixed and $K\to\infty$,
+      $$\log\frac{m!}{\prod_d k_d!}=K\sum_d w_d\log\frac1{w_d}+O(\log K)=K\beta_D\sum_d w_d\log d+O(\log K),$$
+      using $\log(1/w_d)=\beta_D\log d$. Also $\log n=K\sum_d w_d\log d+O(1)$. So $\log f(n)/\log n\to\beta_D$, and for all large $K$ we get $f(n)\ge n^{\alpha-\varepsilon}$ with $n$ as large as we like.
+
+      If $f(n)\le Cn^{\beta}$ held for some $\beta<\alpha$, take $\varepsilon=(\alpha-\beta)/2$: then $n^{\alpha-\varepsilon}\le Cn^{\beta}$ for arbitrarily large $n$, which is false. This proves (b).
+    checked: 'script: computed $f(n)$ for all $n\le 10^6$; $F(n)/n^{\alpha}$ stays near $0.32$, with $\alpha\approx1.72865$'
+    status: ready
+
+  - id: P5
+    topic: "Number theory: irreducible elements of an imaginary quadratic ring"
+    areas: [number-theory, algebra]
+    difficulty: 2
+    hints:
+      - |
+        Every nonzero element is a unit times a product of irreducibles. Compare the sum of $1/|\beta|^2$ over all nonzero $\beta$ in the ring with a product over irreducibles.
+      - |
+        The ring is a lattice in the plane. Count its points in the ring-shaped region $2^j\le|\beta|<2^{j+1}$.
+    solution: |
+      Let $R=\mathbb Z[\alpha]$ and $N(\beta)=|\beta|^2=\beta\bar\beta$.
+
+      **Basic facts.** Since $\alpha$ is not real, $1$ and $\alpha$ are independent over $\mathbb R$, so $R$ is a lattice in $\mathbb C$. The conjugate is $\bar\alpha=(\alpha+\bar\alpha)-\alpha$, and the trace $\alpha+\bar\alpha$ is an integer, so $\bar\alpha\in R$. Hence $R$ is closed under conjugation, and $N(\beta)$ is a positive integer for $\beta\ne0$. If $N(\beta)=1$, then $\beta\bar\beta=1$ with $\bar\beta\in R$, so $\beta$ is a unit; and units have norm $1$. So every nonzero non-unit has $N\ge2$. By induction on $N$, every nonzero non-unit is a product of irreducibles. The units are lattice points on the unit circle, so there are finitely many, say $u$ of them.
+
+      **Suppose the sum converged.** Pick one irreducible from each class of elements differing by a unit factor, and call this set $P'$. If $\sum_{p\in P}1/|p|^2<\infty$, then also $\sum_{p\in P'}1/N(p)<\infty$. Since every $1/N(p)\le\tfrac12$, the product
+      $$\Pi=\prod_{p\in P'}\Big(1-\frac1{N(p)}\Big)^{-1}$$
+      converges. Expanding it, $\Pi$ is the sum, over all finite multisets $\{p_1,\dots,p_r\}$ from $P'$, of $1/\big(N(p_1)\cdots N(p_r)\big)$. Every nonzero $\beta$ can be written as $\varepsilon p_1\cdots p_r$ with $\varepsilon$ a unit and the $p_i\in P'$, and different $\beta$ need different (unit, multiset) pairs. Since $N$ is multiplicative,
+      $$\sum_{\beta\ne0}\frac1{|\beta|^2}\ \le\ u\,\Pi<\infty .$$
+
+      **But that sum diverges.** If a fundamental parallelogram of the lattice has area $A$, a disc of radius $\rho$ holds about $\pi\rho^2/A$ lattice points. So the region $2^j\le|\beta|<2^{j+1}$ holds about $3\pi\cdot4^j/A$ points for large $j$, each contributing at least $4^{-j-1}$. Every such region adds at least a fixed positive amount, so $\sum_{\beta\ne0}1/|\beta|^2=\infty$. This contradiction shows $\sum_{p\in P}1/|p|^2=\infty$.
+    status: ready
+
+  - id: P8
+    topic: "Analysis: power series tails versus low-degree polynomials"
+    areas: [analysis]
+    difficulty: 2
+    answer: "$2^{1-2n}$, attained by $f(x)=x^n$"
+    hints:
+      - |
+        First settle $f(x)=x^n$. This is the classical problem behind Chebyshev polynomials, moved to $[0,1]$.
+      - |
+        The $n$-th divided difference at the $n+1$ extreme points of the Chebyshev polynomial kills every polynomial of degree below $n$. What does it give for $x^k$ with $k\ge n$?
+    viz: schw-2014-p8
+    solution: |
+      For a continuous $g$ on $[0,1]$, let $E(g)$ be the smallest possible value of $\max_{[0,1]}|g-p|$ over polynomials $p$ of degree below $n$.
+
+      **Step 1: the power $x^n$.** Let $T_n$ be the Chebyshev polynomial, $T_n(\cos\theta)=\cos n\theta$, with leading coefficient $2^{n-1}$. Then
+      $$Q(x)=\frac{T_n(2x-1)}{2^{2n-1}}$$
+      has leading term $x^n$, so $p_0(x)=x^n-Q(x)$ has degree below $n$, and $\max_{[0,1]}|x^n-p_0|=\max|Q|=2^{1-2n}$. At the $n+1$ points $t_j=\tfrac12\big(1-\cos\tfrac{j\pi}{n}\big)$, $j=0,\dots,n$ (increasing from $t_0=0$ to $t_n=1$), $Q$ takes the values $(-1)^{n-j}2^{1-2n}$.
+
+      **Step 2: a weighting that ignores low degrees.** For a function $g$ let
+      $$\Lambda(g)=\sum_{j=0}^{n}\frac{g(t_j)}{\omega_j},\qquad \omega_j=\prod_{i\neq j}(t_j-t_i).$$
+      This is the $n$-th divided difference of $g$ at the nodes $t_j$. Standard facts: $\Lambda(p)=0$ when $\deg p<n$, and $\Lambda(x^k)=h_{k-n}(t_0,\dots,t_n)$ for $k\ge n$, the sum of all monomials of degree $k-n$ in the nodes. (Both follow from the divided difference of $1/(1-zx)$, which is $z^n/\prod_j(1-zt_j)$.) The sign of $\omega_j$ is $(-1)^{n-j}$, so
+      $$1=\Lambda(x^n)=\Lambda(Q)=2^{1-2n}\sum_j\frac{1}{|\omega_j|},\qquad\text{that is,}\qquad \sum_j\frac1{|\omega_j|}=2^{2n-1}.$$
+      Hence for any $g$ and any $p$ of degree below $n$,
+      $$|\Lambda(g)|=|\Lambda(g-p)|\le 2^{2n-1}\max_{[0,1]}|g-p|,\qquad\text{so}\qquad E(g)\ge 2^{1-2n}|\Lambda(g)|.$$
+
+      **Step 3: every allowed $f$.** The nodes lie in $[0,1]$ and $t_n=1$, so $h_{k-n}(t_0,\dots,t_n)\ge t_n^{\,k-n}=1$. The series $f=\sum_{k\ge n}c_kx^k$ converges uniformly on $[0,1]$, so
+      $$\Lambda(f)=\sum_k c_k\Lambda(x^k)\ \ge\ \sum_k c_k=1,$$
+      and $E(f)\ge 2^{1-2n}$. Step 1 shows that $f=x^n$ with $p=p_0$ attains this. So the distance is $2^{1-2n}$.
+    checked: "script: linear programming on a 2,001-point grid for $n=1,2,3$ gives $2^{1-2n}$ for $x^n$ and larger values for higher powers and for mixtures"
+    status: ready
+
+  - id: P11
+    topic: "Probability: a random sine sum settles into the Cauchy law"
+    areas: [probability, analysis]
+    difficulty: 3
+    hints:
+      - |
+        Sum the sines in closed form. One piece is $\cot(\pi U)$; the other contains a fast-spinning cosine.
+      - |
+        For large $n$ the fast angle acts like a uniform angle independent of $U$. Then compute the law of the limit by hand, pairing each angle with the opposite one.
+    viz: schw-2014-p11
+    solution: |
+      **Step 1: closed form.** For $\theta$ not a multiple of $2\pi$, the product formula $2\sin\frac\theta2\sin k\theta=\cos(k-\tfrac12)\theta-\cos(k+\tfrac12)\theta$ telescopes:
+      $$2\sin\tfrac\theta2\sum_{k=1}^n\sin k\theta=\cos\tfrac\theta2-\cos\big(n+\tfrac12\big)\theta .$$
+      With $\theta=2\pi U$ (and $0<U<1$ almost surely),
+      $$S_n=\frac{\cos\pi U-\cos\big((2n+1)\pi U\big)}{\sin\pi U}.$$
+
+      **Step 2: the fast angle decouples.** Let $W_n=\tfrac{(2n+1)U}{2}$ modulo $1$, and $\Psi(u,w)=\dfrac{\cos\pi u-\cos2\pi w}{\sin\pi u}$, so that $S_n=\Psi(U,W_n)$. Let $W$ be uniform on $[0,1)$ and independent of $U$. We claim $\mathbb E\,h(S_n)\to\mathbb E\,h(\Psi(U,W))$ for every bounded continuous $h$.
+
+      Fix $\delta>0$. The event $U\notin[\delta,1-\delta]$ changes both sides by at most $2\delta\sup|h|$. On $[\delta,1-\delta]\times(\text{circle})$ the function $h\circ\Psi$ is continuous, so it is uniformly within any $\varepsilon$ of a finite sum $\sum_m g_m(u)e^{2\pi i mw}$ with continuous $g_m$. For such a sum,
+      $$\mathbb E\big[g_m(U)e^{2\pi i mW_n}\big]=\int_\delta^{1-\delta}g_m(u)\,e^{\pi i m(2n+1)u}\,du\ \longrightarrow\ 0\qquad(m\neq0)$$
+      by the Riemann–Lebesgue lemma, while the $m=0$ term is the same for $W_n$ and for $W$. This proves the claim, so $S_n$ converges in distribution to $X=\Psi(U,W)$.
+
+      **Step 3: $X$ is standard Cauchy.** Condition on $W$ and write $c=\cos2\pi W$, $\sigma^2=1-c^2$. Put $t=\tan\frac{\pi U}{2}$, which ranges over $(0,\infty)$ with $P(t>t_0)=\tfrac2\pi\arctan(1/t_0)$. Using $\cos\pi U=\frac{1-t^2}{1+t^2}$ and $\sin\pi U=\frac{2t}{1+t^2}$,
+      $$X=\frac{(1-c)-(1+c)t^2}{2t},$$
+      which decreases in $t$. So $X\le x$ exactly when $t$ is at least the positive root of $(1+c)t^2+2xt-(1-c)=0$, whose reciprocal is $\dfrac{x+R}{1-c}$ with $R=\sqrt{x^2+\sigma^2}$. Hence, given $W$,
+      $$P(X\le x\mid W)=\frac2\pi\arctan\frac{x+R}{1-c}.$$
+      Differentiating in $x$ (a short computation, using $(1-c)(1+c)=\sigma^2$) gives the conditional density
+      $$\frac{\sigma^2}{\pi R\,(R+xc)} .$$
+      Now average over $W$. Replacing $W$ by $W+\tfrac12$ flips the sign of $c$ and keeps $\sigma$ and $R$, so we may average each value with its partner:
+      $$\frac12\Big(\frac{1}{R(R+xc)}+\frac{1}{R(R-xc)}\Big)=\frac{1}{R^2-x^2c^2}=\frac{1}{\sigma^2(1+x^2)},$$
+      because $R^2-x^2c^2=x^2(1-c^2)+\sigma^2=\sigma^2(1+x^2)$. The factor $\sigma^2$ cancels, and the density of $X$ is $\dfrac{1}{\pi(1+x^2)}$: the standard Cauchy law.
+    checked: "simulation: 400,000 samples at $n=50$ and $n=500$; deciles and quartiles match the Cauchy law to about two decimals"
+    status: ready

@@ -1,0 +1,48 @@
+year: 2017
+date: "October 20 – October 30, 2017"
+total: 10
+language: Hungarian
+links:
+  problems: https://www.math.u-szeged.hu/~mmaroti/schweitzer/schweitzer-2017.pdf
+  archive: https://www.math.u-szeged.hu/~mmaroti/schweitzer/
+problems:
+  - id: P8
+    topic: "Probability: binary digits that secretly drive a random walk"
+    areas: [probability]
+    difficulty: 1
+    answer: "No."
+    hints:
+      - |
+        Pick $x$ at random in $[0,1)$. What is the joint law of the signs $(-1)^{x_0+\dots+x_j}$, $j=0,1,2,\dots$?
+      - |
+        A simple random walk spreads out: for each fixed $M$, the chance that it ends within $M$ of $0$ tends to $0$.
+    solution: |
+      **Step 1: the hidden walk.** Choose $x$ uniformly in $[0,1)$. Its binary digits $x_0,x_1,\dots$ are independent fair bits (the dyadic rationals have measure zero, so their convention doesn't matter). Let $\varepsilon_j=(-1)^{x_0+\dots+x_j}$. Then $\varepsilon_0=\pm1$ with equal chances, and $\varepsilon_j=\varepsilon_{j-1}\cdot(-1)^{x_j}$ where $x_j$ is independent of all earlier digits. So the signs $\varepsilon_0,\varepsilon_1,\dots$ are independent fair $\pm1$ signs, and $f_n(x)=\varepsilon_0+\dots+\varepsilon_{n-1}$ is a simple random walk after $n$ steps; call it $S_n$.
+
+      **Step 2: the walk spreads out.** Every single value has probability $P(S_n=k)\le\binom{n}{\lfloor n/2\rfloor}2^{-n}$, which is of order $1/\sqrt n$ by Stirling's formula. So for each fixed $M$,
+      $$P(|S_n|\le M)\le(2M+1)\binom{n}{\lfloor n/2\rfloor}2^{-n}\ \longrightarrow\ 0 .$$
+
+      **Step 3: no such $\varphi$.** Let $\varphi\ge0$ with $\varphi(t)\to\infty$. Given any $B$, choose $M$ with $\varphi(t)\ge B$ for $t>M$. Then
+      $$\int_0^1\varphi(|f_n(x)|)\,dx=\mathbb E\,\varphi(|S_n|)\ \ge\ B\,P(|S_n|>M)\ \longrightarrow\ B .$$
+      So the supremum over $n$ is at least $B$ for every $B$: it is infinite. No such function exists.
+    checked: "script: for all $2^{12}$ digit strings of length 12, the 12 signs take each of the $2^{12}$ sign patterns exactly once"
+    status: ready
+
+  - id: P10
+    topic: "Probability: base-16 digits, a smooth sum and a Cantor dust"
+    areas: [probability, analysis]
+    difficulty: 1
+    answer: "$Y_1+2Y_2+4Y_3+8Y_4$ is absolutely continuous (it is uniform on $[0,1]$); $Y_1+4Y_3$ is not."
+    hints:
+      - |
+        Write each $Y_i$ in base 16; its digits are $0$ or $1$. What are the base-16 digits of each combination, and can there be carries?
+      - |
+        In the second sum only four digits occur. Cover its possible values by short intervals.
+    solution: |
+      Write $Y_i=\sum_{k\ge1}X_{i,k}16^{-k}$ with all $X_{i,k}$ independent fair bits.
+
+      **The first sum.** $Z=Y_1+2Y_2+4Y_3+8Y_4=\sum_k D_k16^{-k}$ with $D_k=X_{1,k}+2X_{2,k}+4X_{3,k}+8X_{4,k}$. This is the number with binary digits $X_{4,k}X_{3,k}X_{2,k}X_{1,k}$, so $D_k$ is uniform on $\{0,1,\dots,15\}$, independently over $k$. A number whose base-16 digits are independent and uniform is uniform on $[0,1]$: the chance of any given first $m$ digits is $16^{-m}$, the length of the matching interval. So $Z$ has density $1$ on $[0,1]$ and is absolutely continuous.
+
+      **The second sum.** $Z'=Y_1+4Y_3=\sum_kE_k16^{-k}$ with $E_k=X_{1,k}+4X_{3,k}\in\{0,1,4,5\}$. No carries occur. So $Z'$ always lies in the set $C$ of numbers $\sum_ke_k16^{-k}$ with every $e_k\in\{0,1,4,5\}$. Once the first $m$ digits are fixed, the rest adds at most $\sum_{k>m}5\cdot16^{-k}=\tfrac13\,16^{-m}$. So $C$ is covered by $4^m$ intervals of length $\tfrac13\,16^{-m}$, of total length $\tfrac13\,4^{-m}\to0$. Thus $C$ has measure zero while $P(Z'\in C)=1$, so $Z'$ is not absolutely continuous. (It has no atoms either: it is a singular continuous law, spread over a Cantor-like dust.)
+    checked: "script: enumerated the first two base-16 digits; the first sum takes all 256 patterns equally often, the second only 16"
+    status: ready

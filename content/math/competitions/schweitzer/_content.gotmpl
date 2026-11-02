@@ -1,0 +1,8 @@
+{{- /* Schweitzer selection: one page per year file, data/comp/schweitzer/<year>.yaml -> /math/competitions/schweitzer/<year>/
+   (layouts/comp/pyear.html with contest "schweitzer"). Only problems we solved completely are listed (a selection). */ -}}
+{{- $Y := (index ($.Site.Data.comp | default dict) "schweitzer") | default dict -}}
+{{- range $k, $y := $Y -}}
+  {{- $n := len ($y.problems | default slice) -}}
+  {{- $desc := printf "Schweitzer Competition %v: our own solutions (not official) to a selection of %d of the %v problems, with hints, and links to the official problem sheet." $y.year $n $y.total -}}
+  {{- $.AddPage (dict "path" (string $k) "kind" "page" "type" "comp" "layout" "pyear" "title" (printf "Schweitzer %v" $y.year) "description" $desc "params" (dict "year" (string $k) "contest" "schweitzer")) -}}
+{{- end -}}

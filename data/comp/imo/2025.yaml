@@ -183,12 +183,70 @@ problems:
     areas: [combinatorics]
     difficulty: 5
     answer: '$2112$'
-    checked: "script: exhaustive search over every permutation for n ≤ 7 gives a minimum of n + ⌈2√n⌉ − 3; an explicit tiling for n = 2025 = 45² uses 2025 + 90 − 3 = 2112 tiles"
-    # imoH2 notes (lower bound not yet proved, so the solution stays hidden):
-    # - Construction: holes at row 45i+j, column 45j+44−i (0 ≤ i,j ≤ 44); (k−1)² squares of side k
-    #   below holes, plus strips; checked by script for k ≤ 45 to give k² + 2k − 3 tiles.
-    # - Exact identity: T = (n−1) + #(tiles whose top side touches no hole); same for each side.
-    # - Verified by brute force for n ≤ 7 (all permutations): T ≥ n + LIS + LDS − 3, and for n ≤ 5 over
-    #   every tiling: (1 + #free-top tiles touching a hole on the left)·(1 + #tiles with free top and
-    #   free left) ≥ n. Either statement would give T ≥ n + 2√n − 3; neither is proved yet.
-    status: coming
+    hints:
+      - 'If the smallest rectangle containing two squares also contains an uncovered square, the two squares lie in different tiles. Look for many covered squares, every two of which are separated like this. Good candidates are the squares right next to the uncovered ones.'
+      - 'Pick one uncovered square $x$ that lies on a long increasing run of uncovered squares and on a long decreasing run. Around $x$, use left or right neighbors and upper or lower neighbors depending on the quadrant. Counting the runs gives at least $n+2\sqrt n-3$ tiles.'
+      - 'For the construction, think of the classic tiling of the plane by large squares and small squares. Here the large squares are $45\times45$ and the small ones are the uncovered squares.'
+    solution: |
+      **Key idea:** the uncovered squares form a permutation. Next to them sit covered squares that must lie in pairwise different tiles. Choosing them around one well-placed uncovered square gives $n+a+b-3$ of them, where $a$ and $b$ are the lengths of an increasing and a decreasing run of uncovered squares through it, and a counting argument makes $a+b\ge2\sqrt n$. A tilted pattern of $45\times45$ squares shows the bound is reached.
+
+      Let $n=2025=k^2$ with $k=45$, and number the rows (top to bottom) and columns (left to right) from $0$ to $n-1$. Call the uncovered squares **holes**. There is one in each row and each column, and every other square is covered. We show the least number of tiles is $n+2k-3=2112$.
+
+      **Part 1: at least 2112 tiles.**
+
+      **A separation test.** For two squares $X$ and $Y$, let $\mathrm{box}(X,Y)$ be the smallest rectangle of squares containing both. A tile containing $X$ and $Y$ contains their box. So if the box contains a hole, then $X$ and $Y$ are different squares in different tiles. Hence a set of squares in which every two have a hole in their box needs at least that many tiles.
+
+      **Neighbors.** For a hole $h$ in row $r_h$ and column $c_h$, write $L_h,R_h,U_h,D_h$ for the squares just left of, right of, above and below it. When they exist, they are covered, since a row or column holds only one hole. We call $L,R,U,D$ the **side** of the neighbor.
+
+      **Lemma.** Let $X$ be a neighbor of the hole $h$ and $Y$ a neighbor of the hole $g$. Then $\mathrm{box}(X,Y)$ contains $h$, unless $Y$ lies *strictly* on the side of $h$ where $X$ is. For $X=L_h$ that means $Y$ is in a column $<c_h$; for $X=U_h$, a row $<r_h$; and so on.
+
+      *Proof for $X=L_h$* (the other sides are the same, turned). The box contains row $r_h$ because $X$ is in it. Its columns run from column $c_h-1$ to the column of $Y$, so they include $c_h$ unless $Y$ is in a column $<c_h$. $\square$
+
+      So the box of $X$ and $Y$ misses both holes only if $Y$ is strictly on $X$'s side of $h$ **and** $X$ is strictly on $Y$'s side of $g$. Call such a pair an **escape**. Checking the cases:
+      - Two neighbors of the same hole never escape: a neighbor on another side of $h$ is in $h$'s row or column, so it is not strictly on $X$'s side.
+      - Two neighbors on the same side never escape. For $L_h$ and $L_g$ it would need $c_g-1<c_h$ and $c_h-1<c_g$, so $c_g=c_h$.
+      - $L_h,R_g$ escape only if $g$ is left of $h$; and $U_h,D_g$ only if $g$ is above $h$.
+      - $L_h,U_g$ escape only if $g$ is below and to the left of $h$; and $L_h,D_g$ only if $g$ is above and to the left of $h$.
+      - $R_h,U_g$ escape only if $g$ is below and to the right of $h$; and $R_h,D_g$ only if $g$ is above and to the right of $h$.
+
+      (For example, for $L_h,U_g$: $Y=U_g$ must be left of column $c_h$, so $c_g<c_h$, and $X=L_h$ must be above row $r_g$, so $r_h<r_g$.)
+
+      **Runs.** An **increasing run** is a list of holes, each below and to the right of the one before; a **decreasing run** goes below and to the left. Two holes of an increasing run are never placed one below-left of the other, and two holes of a decreasing run are never placed one below-right of the other.
+
+      **The chosen squares.** Fix a hole $x$ in row $r_0$ and column $c_0$, an increasing run $I$ through $x$ with $a$ holes, and a decreasing run $J$ through $x$ with $b$ holes. Every other hole lies in one of the four quadrants around $x$: up-left, up-right, down-left, down-right. The holes of $I$ other than $x$ lie in the up-left and down-right quadrants; those of $J$ lie in the up-right and down-left quadrants. Choose neighbors as follows.
+      - At $x$: all four sides.
+      - At a hole $h$ in the up-left quadrant: side $L$ if some hole of $I$ in this quadrant lies weakly above and weakly to the right of $h$ (it may be $h$ itself), and side $U$ otherwise. Holes of $I$ get side $U$ as well, so they get both.
+      - Up-right quadrant, sides $R$ and $U$: side $R$ if some hole of $J$ in the quadrant is weakly above and weakly left of $h$, side $U$ otherwise; holes of $J$ get both.
+      - Down-left quadrant, sides $L$ and $D$: side $L$ if some hole of $J$ in the quadrant is weakly below and weakly right of $h$, side $D$ otherwise; holes of $J$ get both.
+      - Down-right quadrant, sides $R$ and $D$: side $R$ if some hole of $I$ in the quadrant is weakly below and weakly left of $h$, side $D$ otherwise; holes of $I$ get both.
+
+      That is $4+(n-1)+(a-1)+(b-1)=n+a+b+1$ choices. Note that side $L$ is used only at holes in columns $\le c_0$, side $R$ only in columns $\ge c_0$, side $U$ only in rows $\le r_0$, and side $D$ only in rows $\ge r_0$.
+
+      **No escapes.** Same hole and same side are covered above.
+      - $L_h,R_g$ would need $c_g<c_h$, but $c_h\le c_0\le c_g$. In the same way $U_h,D_g$ is impossible.
+      - $L_h,U_g$ would need $g$ below-left of $h$. Then $r_h<r_g\le r_0$ and $c_g<c_h\le c_0$, so $h$ and $g$ are both in the up-left quadrant. Since $h$ has side $L$, some hole $z$ of $I$ there is weakly above-right of $h$, so strictly above-right of $g$. Then $g$ also has side $L$, and it has side $U$ only because it belongs to $I$. But then $z$ and $g$ are two holes of $I$ with $g$ below-left of $z$, which is impossible.
+      - $L_h,D_g$ ($g$ above-left), $R_h,U_g$ ($g$ below-right) and $R_h,D_g$ ($g$ above-right) work the same way, in the down-left, up-right and down-right quadrants, using that a decreasing run has no pair placed below-right and an increasing run no pair placed below-left.
+
+      **The grid edge.** A chosen side names no square only when it points off the grid, such as side $L$ at the hole in column $0$. There is one hole next to each of the four edges, so at most $4$ choices are lost. The remaining at least $n+a+b-3$ squares have a hole in the box of every two, so
+      $$\#\text{tiles}\ \ge\ n+a+b-3 .$$
+
+      **A good choice of $x$.** Let $I$ be a longest increasing run, with $a$ holes. For each hole $y$, let $\ell(y)$ be the length of the longest increasing run ending at $y$. If $y'$ is below-right of $y$, then $\ell(y')\ge\ell(y)+1$. So holes with the same value of $\ell$ form a decreasing run. The values lie between $1$ and $a$, so some value $m$ is taken by at least $n/a$ holes. Let $J$ be those holes, so $b=|J|\ge n/a$. The $m$-th hole of $I$ has $\ell=m$: at least $m$ because of the first $m$ holes of $I$, and not more, or the rest of $I$ would extend a longer run past length $a$. So the $m$-th hole of $I$ lies on both $I$ and $J$, and we take it as $x$. Then
+      $$a+b\ \ge\ a+\frac na\ \ge\ 2\sqrt n=90,$$
+      and every placement needs at least $2025+90-3=2112$ tiles.
+
+      **Part 2: a placement with 2112 tiles.**
+
+      **The holes.** Put a hole at row $ki+j$, column $kj+(k-1-i)$, for $0\le i,j\le k-1$. The row determines the pair $(i,j)$, and so does the column (it determines $j$ and $k-1-i$). So there is exactly one hole in each row and each column.
+
+      **The whole plane.** For any square $(r,c)$ of the infinite plane, let $\varphi(r,c)$ be the remainder of $c-kr$ modulo $k^2+1$. Our holes have $c-kr=(k-1)-(k^2+1)i$, so $\varphi=k-1$. In the plane, call **every** square with $\varphi=k-1$ a hole. A row of the grid has $k^2<k^2+1$ squares, so their values of $\varphi$ are all different, and the grid gets no new holes.
+
+      Below each hole $(r,c)$ of the plane, place the $k\times k$ square of rows $r+1,\dots,r+k$ and columns $c,\dots,c+k-1$. A square $p$ lies in the block of the hole $p-(t,s)$, for offsets $1\le t\le k$ and $0\le s\le k-1$. Since $\varphi$ is additive, $p-(t,s)$ is a hole exactly when $\varphi(p)-(k-1)\equiv s-kt$. The $k^2$ numbers $s-kt$ are the consecutive integers $-k^2,\dots,-1$, which hit every nonzero remainder modulo $k^2+1$ exactly once. So a non-hole $p$ lies in exactly one block, and a hole in none. The blocks tile the plane around the holes. Cutting them along the edge of the grid gives rectangles, one for each block that meets the grid, covering exactly the non-hole squares of the grid.
+
+      **Counting the blocks that meet the grid.** Blocks lie below and to the right of their holes.
+      - Holes in the grid: each block meets the grid, except for the hole in the last row. That gives $n-1$ blocks.
+      - Holes above the grid: their blocks meet the grid only by crossing row $0$. Each block meets row $0$ in $k$ consecutive columns, cut at the grid's edge. The hole of row $0$ is in column $k-1$. To its right, the run containing column $k$ starts at column $k$, and the columns $k,\dots,k^2-1$ split into exactly $k-1$ runs of $k$. To its left, columns $0,\dots,k-2$ lie in one more run. None of these $k$ blocks belongs to a hole in the grid, since those blocks start in row $1$ or lower. That gives $k$ blocks.
+      - Holes to the left of the grid, in rows $\ge0$: their blocks meet column $0$ below row $0$. The hole of column $0$ is in row $k(k-1)$, and below it lies that hole's own block. Above it, rows $0,\dots,k(k-1)-1$ split into $k-1$ runs of $k$. The top run is a block already counted (it meets row $0$). The other $k-2$ runs are blocks of holes to the left of the grid. That gives $k-2$ blocks.
+
+      Blocks of holes below or to the right of the grid miss it. In total there are $(n-1)+k+(k-2)=n+2k-3=2112$ tiles, and each row and column has exactly one uncovered square.
+    checked: "script: the lower-bound squares were built and checked (a hole in the box of every pair, count at least n + a + b − 3, a + b ≥ 2√n) for every permutation with n ≤ 7 and 3000 random ones with n ≤ 40; exhaustive search for n ≤ 7 gives a minimum of n + ⌈2√n⌉ − 3; the block tiling was checked cell by cell for k ≤ 45 and has k² + 2k − 3 tiles (2112 at k = 45)"
+    status: ready

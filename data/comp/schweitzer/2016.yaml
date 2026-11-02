@@ -1,0 +1,57 @@
+year: 2016
+date: "October 24 – November 2, 2016"
+total: 10
+links:
+  problems: https://www.math.u-szeged.hu/~mmaroti/schweitzer/schweitzer-2016-eng.pdf
+  archive: https://www.math.u-szeged.hu/~mmaroti/schweitzer/
+problems:
+  - id: P9
+    topic: "Probability: weights at most one, and a symmetry trick"
+    areas: [probability, geometry]
+    difficulty: 2
+    hints:
+      - |
+        Take $d+2$ independent points with law $\pi$. Is one of them always inside the region built from the other $d+1$?
+      - |
+        Any $d+2$ points in $\mathbb R^d$ satisfy an affine dependence. Look at the coefficient of largest absolute value.
+    viz: schw-2016-p9
+    solution: |
+      Write $S(p_0,\dots,p_d)$ for the set of affine combinations of the $p_i$ whose coefficients are all at most $1$. In the plane, for three points in general position, it is the triangle with vertices $p_i+p_j-p_k$: twice the size of the triangle $p_0p_1p_2$, turned upside down around its centroid.
+
+      **Step 1: a fact about any $d+2$ points.** Let $q_0,\dots,q_{d+1}\in\mathbb R^d$. The $d+2$ vectors $(q_i,1)\in\mathbb R^{d+1}$ are linearly dependent, so there are numbers $\beta_i$, not all zero, with
+      $$\sum_i\beta_iq_i=0,\qquad \sum_i\beta_i=0 .$$
+      Choose $k$ with $|\beta_k|$ largest; then $\beta_k\ne0$. Solving for $q_k$,
+      $$q_k=\sum_{j\ne k}\gamma_jq_j,\qquad \gamma_j=-\frac{\beta_j}{\beta_k}.$$
+      The $\gamma_j$ add up to $-(-\beta_k)/\beta_k=1$, and each $\gamma_j\le|\beta_j|/|\beta_k|\le1$. So $q_k$ lies in $S$ of the other $d+1$ points. **Some point is always caught by the others.**
+
+      **Step 2: symmetry.** Now let $q_0,\dots,q_{d+1}$ be independent with law $\pi$, and let $E_k$ be the event that $q_k$ lies in $S$ of the others. By Step 1, at least one $E_k$ happens, so
+      $$\sum_{k=0}^{d+1}P(E_k)\ \ge\ 1 .$$
+      Conditioning on the other $d+1$ points (they are independent of $q_k$), $P(E_k)=\mathbb E\,\pi\big(S(\text{the others})\big)$, and the others are $d+1$ independent points with law $\pi$. So every $P(E_k)$ equals $\mathbb E\,\pi(S(p_0,\dots,p_d))$, and $(d+2)\,\mathbb E\,\pi(S(p_0,\dots,p_d))\ge1$.
+    checked: "simulation in the plane, 40,000 trials each for Gaussian, uniform-square and skewed laws: about $0.25$ every time, as the bound $1/(d+2)=1/4$ allows"
+    status: ready
+
+  - id: P10
+    topic: "Probability: spreading random points on a sphere to maximize distance"
+    areas: [probability, geometry, analysis]
+    difficulty: 3
+    answer: "The uniform distribution, and only it; the largest expected distance is $4/3$."
+    hints:
+      - |
+        For unit vectors, $|x-y|=\sqrt{2-2\,x\cdot y}$. Expand $\sqrt{2-2t}$ in Legendre polynomials and look at the signs of the coefficients.
+      - |
+        By the addition theorem for spherical harmonics, $\mathbb E\,P_n(X\cdot Y)$ is a sum of squares, so it is never negative.
+    solution: |
+      **Step 1: a Legendre expansion.** Let $g(t)=\sqrt{2-2t}$ on $[-1,1]$ and $c_n=\frac{2n+1}2\int_{-1}^1g\,P_n\,dt$. With Rodrigues' formula $P_n=\frac1{2^nn!}\frac{d^n}{dt^n}(t^2-1)^n$, integrate by parts $n$ times. The boundary terms vanish (near $t=1$ each is of size $(1-t)^{3/2}$), and
+      $$\int_{-1}^1gP_n\,dt=\frac1{2^nn!}\int_{-1}^1g^{(n)}(t)\,(1-t^2)^n\,dt .$$
+      For $n\ge1$, $g^{(n)}(t)=-\sqrt2\,\frac{(2n-3)!!}{2^n}(1-t)^{1/2-n}$ is negative, and the remaining Beta integral gives
+      $$c_0=\frac43,\qquad c_n=-\frac{4}{(2n-1)(2n+3)}\quad(n\ge1).$$
+      Since $\frac{4}{(2n-1)(2n+3)}=\frac1{2n-1}-\frac1{2n+3}$, the sum $\sum_{n\ge1}|c_n|$ telescopes to $1+\frac13=\frac43$. As $|P_n|\le1$, the series $\sum c_nP_n$ converges uniformly, and so it equals $g$ (it equals $g$ in the mean-square sense already).
+
+      **Step 2: a sign from spherical harmonics.** The addition theorem says $P_n(x\cdot y)=\frac{4\pi}{2n+1}\sum_m Y_{nm}(x)\overline{Y_{nm}(y)}$, with $Y_{nm}$ an orthonormal basis of the spherical harmonics of degree $n$. For independent $X,Y$ with the same law $\mu$,
+      $$\mathbb E\,P_n(X\cdot Y)=\frac{4\pi}{2n+1}\sum_m\big|\mathbb E\,Y_{nm}(X)\big|^2\ \ge0 .$$
+
+      **Step 3: compare.** By uniform convergence,
+      $$\mathbb E|X-Y|=\sum_{n\ge0}c_n\,\mathbb E\,P_n(X\cdot Y)=\frac43-\sum_{n\ge1}|c_n|\,\mathbb E\,P_n(X\cdot Y)\ \le\ \frac43 .$$
+      Equality holds exactly when $\mathbb E\,Y_{nm}(X)=0$ for all $n\ge1$ and all $m$, that is, when $\int h\,d\mu$ agrees with the uniform average for every spherical harmonic $h$. Spherical harmonics span a dense set of continuous functions on the sphere, so this happens only for the uniform distribution. For it, $X\cdot Y$ is uniform on $[-1,1]$ (Archimedes' hat-box theorem), and indeed $\frac12\int_{-1}^1\sqrt{2-2t}\,dt=\frac43$.
+    checked: 'symbolic: the Legendre coefficients for $n\le6$ match $-4/((2n-1)(2n+3))$, and $c_0=4/3$'
+    status: ready

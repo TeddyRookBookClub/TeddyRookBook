@@ -1,0 +1,20 @@
+{{- /* /connections/: the mini-pictures for the 15 Venn regions, keyed by region id. Each is SVG drawn in a 48×48 box
+   centered on 0,0 (stroke: currentColor). Our own drawings. Returns a dict id -> SVG markup (no outer <svg>). */ -}}
+{{- $i := dict
+ "music" `<path d="M-9 12a5 4 -20 1 1 -1 -3V-12l18 -5V7"/><path d="M8 7a5 4 -20 1 1 -1 -3"/><path d="M-10 -7l18 -5"/>`
+ "math" `<path d="M-14 -9H14M-7 -9V14M6 -9V10q0 4 5 3"/><circle cx="0" cy="-17" r="2.4" class="cx-if"/>`
+ "patterns" `<circle r="16"/><circle cx="0" cy="-8" r="8"/><circle cx="6.9" cy="-4" r="8"/><circle cx="6.9" cy="4" r="8"/><circle cx="0" cy="8" r="8"/><circle cx="-6.9" cy="4" r="8"/><circle cx="-6.9" cy="-4" r="8"/>`
+ "chemistry" `<path d="M-5 -17h10M-3 -17V-5L-14 13q-1.5 3 2 3h24q3.5 0 2 -3L3 -5V-17"/><path d="M-9 5h18" class="cx-ith"/><circle cx="-2" cy="9" r="1.8" class="cx-if"/><circle cx="4" cy="11" r="1.4" class="cx-if"/>`
+ "music-math" `<path d="M-20 6H20"/><path d="M-20 1v10M20 1v10M4 1v10" class="cx-ith"/><path d="M-20 6q12 -14 24 0q8 10 16 0" class="cx-ith"/><text x="-6" y="-8">3:2</text>`
+ "music-patterns" `<rect x="-16" y="-16" width="32" height="32" rx="2"/><path d="M-16 -16Q0 0 16 -16M-16 16Q0 0 16 16M-16 -16Q0 0 -16 16M16 -16Q0 0 16 16" class="cx-ith"/>`
+ "music-chemistry" `<path d="M-20 4h40M-20 12h40M-20 4v8M-15 4v8M-10 4v8M-5 4v8M0 4v8M5 4v8M10 4v8M15 4v8M20 4v8" class="cx-ith"/><path d="M-17.5 2Q0 -22 17.5 2"/><text x="-3" y="-10">8</text>`
+ "math-patterns" `<path d="M-18 -10h36M-18 0h36M-18 10h36M-18 -10l10 20M-8 -10l10 20M2 -10l10 20M-8 10l10 -20M2 10l10 -20M12 10l6 -12M-18 10l10 -20"/>`
+ "math-chemistry" `<circle r="3" class="cx-if"/><circle r="9"/><circle r="17"/><circle cx="9" cy="0" r="1.8" class="cx-if"/><circle cx="-9" cy="0" r="1.8" class="cx-if"/><circle cx="0" cy="-17" r="1.8" class="cx-if"/><circle cx="12" cy="12" r="1.8" class="cx-if"/><circle cx="-17" cy="0" r="1.8" class="cx-if"/><circle cx="-12" cy="12" r="1.8" class="cx-if"/>`
+ "patterns-chemistry" `<g transform="rotate(0)"><path d="M0 0V-19M0 -12l-5 -5M0 -12l5 -5M0 -6l-4 -3M0 -6l4 -3"/></g><g transform="rotate(60)"><path d="M0 0V-19M0 -12l-5 -5M0 -12l5 -5M0 -6l-4 -3M0 -6l4 -3"/></g><g transform="rotate(120)"><path d="M0 0V-19M0 -12l-5 -5M0 -12l5 -5M0 -6l-4 -3M0 -6l4 -3"/></g><g transform="rotate(180)"><path d="M0 0V-19M0 -12l-5 -5M0 -12l5 -5M0 -6l-4 -3M0 -6l4 -3"/></g><g transform="rotate(240)"><path d="M0 0V-19M0 -12l-5 -5M0 -12l5 -5M0 -6l-4 -3M0 -6l4 -3"/></g><g transform="rotate(300)"><path d="M0 0V-19M0 -12l-5 -5M0 -12l5 -5M0 -6l-4 -3M0 -6l4 -3"/></g>`
+ "music-math-patterns" `<path d="M-20 0q5 -14 10 0t10 0t10 0t10 0" class="cx-ith"/><path d="M-20 0q2.5 -7 5 0t5 0t5 0t5 0t5 0t5 0t5 0t5 0" class="cx-ith"/><path d="M-20 4q4 -20 9 -3q3 9 6 -1q3 -9 7 0q3 10 7 -1q4 -12 11 5"/>`
+ "music-math-chemistry" `<rect x="-20" y="-12" width="40" height="24" rx="2"/><path d="M14 -12v24M4 -12v24M-1 -12v24M-4 -12v24M-6 -12v24" class="cx-ith"/>`
+ "music-patterns-chemistry" `<path d="M0 0C-9 -6 -9 -20 0 -20S9 -6 0 0M0 0C-9 6 -9 20 0 20S9 6 0 0"/><path d="M-18 0H18" class="cx-ith"/>`
+ "math-patterns-chemistry" `<path d="M0 -17L14.7 -8.5V8.5L0 17L-14.7 8.5V-8.5Z"/><circle r="8.5"/>`
+ "all-four" `<circle r="18"/><circle r="8.5" class="cx-ith"/><path d="M-18 0H18" class="cx-ith"/><path d="M-12 -7q0 -5 4 -5M8 7q4 0 4 5"/>`
+-}}
+{{- return $i -}}

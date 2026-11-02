@@ -83,6 +83,12 @@
       <a class="ml-bct" href="{{ .RelPermalink }}"><span class="ml-ic" aria-hidden="true">{{ .Params.icon | default "🥁" }}</span><b>{{ .LinkTitle }}</b></a>
       <p>{{ .Description }}</p>
     </div>{{ end }}
+    {{- /* front matter sections: [{url, icon, title, text}] (extra cards, e.g. /connections/) */ -}}
+    {{- range .Params.sections }}
+    <div class="ml-bc">
+      <a class="ml-bct" href="{{ .url | relURL }}"><span class="ml-ic" aria-hidden="true">{{ .icon }}</span><b>{{ .title }}</b></a>
+      <p>{{ .text }}</p>
+    </div>{{ end }}
   </div>
   </section>
 

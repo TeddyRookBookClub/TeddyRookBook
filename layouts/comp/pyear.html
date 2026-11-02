@@ -13,16 +13,16 @@
   <nav class="cp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <a href="{{ "math/competitions/" | relURL }}">Competitions</a> <span aria-hidden="true">›</span> <a href="{{ $K.base | relURL }}">{{ $K.name }}</a> <span aria-hidden="true">›</span> <span>{{ $y.year }}</span></nav>
   <header class="cp-head">
     <h1>{{ .Title }}</h1>
-    <p class="cp-meta">{{ with $y.edition }}The {{ . }}{{ $K.editionSuffix }}{{ end }}{{ with $y.date }}{{ if $y.edition }}, {{ end }}{{ . }}{{ end }}{{ if or $y.edition $y.date }} · {{ end }}{{ $n }} of {{ len ($y.problems | default slice) }} solutions ready</p>
+    <p class="cp-meta">{{ with $y.edition }}The {{ . }}{{ $K.editionSuffix }}{{ end }}{{ with $y.date }}{{ if $y.edition }}, {{ end }}{{ . }}{{ end }}{{ if or $y.edition $y.date }} · {{ end }}{{ if $K.selection }}A selection: {{ $n }} of the {{ $y.total }} problems{{ else }}{{ $n }} of {{ len ($y.problems | default slice) }} solutions ready{{ end }}</p>
   </header>
   <div class="cp-legal" role="note">
-    <p><b>Read the problems at the official link.</b> The {{ $y.year }} {{ $K.name }} problems are © {{ $K.owner }}, so we don't reproduce them here. <a href="{{ $pdf }}" rel="noopener">Open the {{ $y.year }} problems (PDF)</a>{{ with $y.links.archive }} from <a href="{{ . }}" rel="noopener">{{ $K.archiveName }}</a>{{ end }}.</p>
+    <p><b>Read the problems at the official link.</b> The {{ $y.year }} {{ $K.name }} problems are © {{ $K.owner }}, so we don't reproduce them here. <a href="{{ $pdf }}" rel="noopener">Open the {{ $y.year }} problems (PDF{{ with $y.language }}, in {{ . }}{{ end }})</a>{{ with $y.links.archive }} from <a href="{{ . }}" rel="noopener">{{ $K.archiveName }}</a>{{ end }}.</p>
     <p>The topic labels, hints and solutions below are our own, written from scratch: <b>our solutions, not official ones</b>. If you spot a mistake, please use “Report a problem” at the bottom of the page.</p>
   </div>
   {{ with $y.note }}<div class="cp-md cp-ynote">{{ partial "comp/md.html" (dict "s" . "p" $) }}</div>{{ end }}
   <div class="cp-cards">
   {{- range $y.problems }}
-  {{ partial "comp/pcard.html" (dict "p" $ "x" . "year" $y.year "pdf" $pdf "where" $K.where) }}
+  {{ partial "comp/pcard.html" (dict "p" $ "x" . "year" $y.year "pdf" $pdf "where" $K.where "lang" $y.language) }}
   {{- end }}
   </div>
   <nav class="cp-pn" aria-label="Other years">

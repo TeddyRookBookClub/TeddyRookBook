@@ -1,0 +1,80 @@
+year: 2023
+date: "October 27 – November 6, 2023"
+total: 11
+language: Hungarian
+links:
+  problems: https://www.math.u-szeged.hu/~mmaroti/schweitzer/schweitzer-2023.pdf
+  archive: https://www.math.u-szeged.hu/~mmaroti/schweitzer/
+problems:
+  - id: P5
+    topic: "Algebra: counting word maps with fixed constants in a group"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$|G:Z(G)|$, the index of the center"
+    hints:
+      - |
+        Put $b_i=a_0a_1\cdots a_{i-1}$ and $c=a_0a_1\cdots a_n$. Rewrite the product as a product of conjugates of the $x_i$, followed by $c$.
+      - |
+        Set every $x_j=1$ except one, and read off what the function remembers.
+    solution: |
+      **Step 1: rewrite.** For given constants $a_0,\dots,a_n$, let $b_i=a_0a_1\cdots a_{i-1}$ for $i=1,\dots,n$ and $c=a_0a_1\cdots a_n$. Since $b_i^{-1}b_{i+1}=a_i$ and $b_n^{-1}c=a_n$, the product telescopes:
+      $$a_0x_1a_1x_2\cdots x_na_n=\big(b_1x_1b_1^{-1}\big)\big(b_2x_2b_2^{-1}\big)\cdots\big(b_nx_nb_n^{-1}\big)\,c .$$
+      The change from $(a_0,\dots,a_n)$ to $(b_1,\dots,b_n,c)$ is a bijection of $G^{n+1}$, so every choice of $b$'s and $c$ occurs.
+
+      **Step 2: what the function remembers.** Putting all $x_j=1$ gives $c$. Putting all $x_j=1$ except $x_i$ gives $x\mapsto b_ixb_i^{-1}c$, so the function determines the inner automorphism $x\mapsto b_ixb_i^{-1}$, that is, the coset $b_iZ(G)$. Conversely, $c$ and these cosets determine the function, by Step 1. So the distinct functions correspond to the choices of $c\in G$ and of $n$ cosets of $Z(G)$:
+      $$t_n(G)=|G|\cdot|G:Z(G)|^{\,n}.$$
+
+      **Step 3: the limit.** $\sqrt[n]{t_n(G)}=|G|^{1/n}\,|G:Z(G)|\to|G:Z(G)|$.
+    checked: 'script: brute force for the symmetric group $S_3$ and the dihedral group of order 8, with $n=1,2$, matches $|G|\cdot|G:Z(G)|^n$'
+    status: ready
+
+  - id: P9
+    topic: "Analysis: steep polynomials inside a closed finite-codimension subspace"
+    areas: [analysis]
+    difficulty: 2
+    hints:
+      - |
+        Without the subspace, Chebyshev polynomials do it: $|T_N|\le1$ on $[-1,1]$, while the slope of $T_N$ at $0$ is $\pm N$ for odd $N$.
+      - |
+        Suppose the slope at $0$ were bounded on the unit ball of polynomials in $V$. Split any polynomial into a part in $V$ plus a correction from a fixed finite set, and get a bound for all polynomials.
+    solution: |
+      Let $\mathcal P$ be the space of polynomials with the sup norm on $[-1,1]$, and $\ell(p)=p'(0)$.
+
+      **Step 1: $\ell$ is unbounded on $\mathcal P$.** The Chebyshev polynomial $T_N(\cos\theta)=\cos N\theta$ has $|T_N|\le1$ on $[-1,1]$, and $T_N'(\cos\theta)=N\sin N\theta/\sin\theta$. At $\theta=\pi/2$ this gives $T_N'(0)=\pm N$ for odd $N$.
+
+      **Step 2: describe $V$ by finitely many functionals.** Since $V$ is closed with finite codimension, the quotient by $V$ is a finite-dimensional normed space, and composing with a basis of its dual gives continuous linear functionals $\varphi_1,\dots,\varphi_m$ with $V=\bigcap_i\ker\varphi_i$. Let $W=V\cap\mathcal P$. Among the restrictions $\varphi_i|_{\mathcal P}$ choose a maximal linearly independent subfamily $\psi_1,\dots,\psi_r$, and polynomials $q_1,\dots,q_r$ with $\psi_i(q_j)=1$ if $i=j$ and $0$ otherwise. Then $W=\bigcap_j\ker\psi_j$, and for every $p\in\mathcal P$,
+      $$p-\Pi p\in W,\qquad \Pi p=\sum_j\psi_j(p)\,q_j,\qquad \|\Pi p\|\le C\|p\|.$$
+
+      **Step 3: $\ell$ is unbounded on $W$.** If $|\ell(w)|\le M\|w\|$ for all $w\in W$, then for every polynomial $p$,
+      $$|\ell(p)|\le|\ell(p-\Pi p)|+|\ell(\Pi p)|\le M(1+C)\|p\|+\sum_j|\psi_j(p)|\,|q_j'(0)|\le C'\|p\|,$$
+      so $\ell$ would be bounded on $\mathcal P$, against Step 1. Hence some $w\in W$ has $|w'(0)|>2023\,\|w\|$. Scale it to norm $1$ and change its sign if needed: the result is a polynomial in $V$ of norm at most $1$ whose derivative at $0$ exceeds $2023$.
+    status: ready
+
+  - id: P11
+    topic: "Probability: random points and the tightest triangle around them"
+    areas: [probability, geometry]
+    difficulty: 3
+    answer: '$\dfrac{(2n-1)(n-1)}{(2n+1)(n+1)}$'
+    hints:
+      - |
+        For a triangle, the intersection of all its translates that contain the points is the triangle cut out by the three support lines of the points parallel to the sides.
+      - |
+        Use barycentric coordinates. A uniform point of the triangle has coordinates $(\lambda_1,\lambda_2,\lambda_3)$ uniform on the simplex, and the area depends only on the three coordinatewise minima.
+      - |
+        The chance that all three minima are at least $a$, $b$, $c$ is $(1-a-b-c)^{2n}$.
+    viz: schw-2023-p11
+    solution: |
+      **Step 1: the shape of $K_n$.** Write $K=\{y:\ u_i\cdot y\le\beta_i,\ i=1,2,3\}$ with unit outer normals $u_i$. For an equilateral triangle, $u_1+u_2+u_3=0$. The translate by $t$ is $\{u_i\cdot y\le\beta_i+u_i\cdot t\}$. Let $h_i$ be the largest value of $u_i\cdot x$ over the chosen points. A translate contains the points exactly when $s_i=\beta_i+u_i\cdot t\ge h_i$ for each $i$. The numbers $s_i$ always add up to $\sum\beta_i$, and every triple with that sum comes from some $t$. A point $y$ lies in all such translates exactly when $u_i\cdot y\le h_i$ for each $i$ (for the forward direction, use a translate with $s_i=h_i$ and the other two $s_j$ large). So
+      $$K_n=\{y:\ u_i\cdot y\le h_i\},$$
+      the triangle formed by the three support lines parallel to the sides: a scaled copy of $K$.
+
+      **Step 2: its area.** Let $H$ be the height of $K$. For $y\in K$, the distances to the three sides add up to $H$, so $\lambda_i(y)=(\beta_i-u_i\cdot y)/H$ are barycentric coordinates. Let $m_i$ be the smallest $\lambda_i$ among the points. Then $h_i=\beta_i-Hm_i$, and the same distance-sum argument shows that $K_n$ has height $H(1-m_1-m_2-m_3)$. Areas scale with the square, so
+      $$\operatorname{area}(K_n)=(1-m_1-m_2-m_3)^2 .$$
+
+      **Step 3: the minima.** A uniform point has $(\lambda_1,\lambda_2,\lambda_3)$ uniform on the simplex, and $P(\lambda_1\ge a,\lambda_2\ge b,\lambda_3\ge c)=(1-a-b-c)^2$ (a smaller similar triangle). With $n$ independent points,
+      $$P(m_1\ge a,\ m_2\ge b,\ m_3\ge c)=(1-a-b-c)^{2n}.$$
+      For $n\ge2$, differentiating once in each of $a,b,c$ gives the joint density $2n(2n-1)(2n-2)(1-\sigma)^{2n-3}$, with $\sigma=a+b+c\le1$. The part of the octant where $a+b+c$ lies between $\sigma$ and $\sigma+d\sigma$ has volume $\frac{\sigma^2}2\,d\sigma$. So, with a Beta integral,
+      $$\mathbb E\,\operatorname{area}(K_n)=2n(2n-1)(2n-2)\int_0^1(1-\sigma)^{2n-1}\frac{\sigma^2}2\,d\sigma=\frac{2n(2n-1)(2n-2)\,(2n-1)!}{(2n+2)!}=\frac{(2n-1)(n-1)}{(2n+1)(n+1)} .$$
+      For $n=1$ the formula gives $0$, which is right: $K_1$ is a single point. For $n=2$ it gives $\frac15$, and it tends to $1$ as $n$ grows.
+    checked: "Monte Carlo, 200,000 trials each for $n=2,3,5$: $0.2001$, $0.3576$, $0.5455$, against $0.2$, $0.3571$, $0.5455$"
+    status: ready

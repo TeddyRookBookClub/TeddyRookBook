@@ -1,0 +1,98 @@
+year: 2022
+date: "October 28 – November 7, 2022"
+total: 10
+links:
+  problems: https://www.math.u-szeged.hu/~mmaroti/schweitzer/schweitzer-2022-eng.pdf
+  archive: https://www.math.u-szeged.hu/~mmaroti/schweitzer/
+problems:
+  - id: P2
+    topic: "Linear algebra: matrices adding to the identity, with singular weightings"
+    areas: [linear-algebra, algebra]
+    difficulty: 2
+    hints:
+      - |
+        Treat $\det\big(\sum_i\alpha_iA_i\big)$ as a polynomial in $\alpha_1,\dots,\alpha_n$. What is its degree, and which factors must it have?
+      - |
+        For (b), set every coefficient to $1$ except one, which you call $t$, and look at eigenvalues.
+    solution: |
+      **(a)** Let $D(\alpha)=\det\big(\sum_i\alpha_iA_i\big)$. It is a homogeneous polynomial of degree $n$ in $\alpha_1,\dots,\alpha_n$ (or zero). By hypothesis it vanishes whenever $\alpha_i=0$. Write $D=\alpha_iQ+R$ with $R$ free of $\alpha_i$; then $R$ vanishes for all real values of the other variables, so $R=0$ and $\alpha_i\mid D$. The $\alpha_i$ are distinct prime elements of the polynomial ring, so $\alpha_1\alpha_2\cdots\alpha_n\mid D$. Comparing degrees, $D=c\,\alpha_1\cdots\alpha_n$, and at $\alpha=(1,\dots,1)$ we get $c=\det I=1$. So
+      $$\det\Big(\sum_i\alpha_iA_i\Big)=\alpha_1\alpha_2\cdots\alpha_n,$$
+      which is nonzero when every $\alpha_i\ne0$.
+
+      **(b)** Fix $i$, take $\alpha_i=t$ and all other coefficients $1$. The matrix is $I+(t-1)A_i$, and by (a)
+      $$\det\big(I+(t-1)A_i\big)=t\qquad\text{for all }t.$$
+      If $A_i$ is symmetric, its eigenvalues $\lambda_1,\dots,\lambda_n$ are real and the determinant is $\prod_k\big(1+(t-1)\lambda_k\big)$. This polynomial in $t$ has degree equal to the number of nonzero $\lambda_k$, so exactly one eigenvalue $\lambda$ is nonzero, and $1+(t-1)\lambda=t$ forces $\lambda=1$. A symmetric matrix is diagonalizable, so its rank is the number of nonzero eigenvalues: $\operatorname{rank}A_i=1$.
+
+      (Symmetry matters in (b): without it, the eigenvalue count says nothing about nilpotent parts.)
+    status: ready
+
+  - id: P4
+    topic: "Number theory: the smallest positive moment of integer polynomials"
+    areas: [number-theory, analysis]
+    difficulty: 3
+    answer: '$-\tfrac53$'
+    hints:
+      - |
+        Only coefficients $c_k$ with $k\equiv n\pmod 2$ matter, and each contributes a multiple of $2/(n+k+1)$. Which denominators occur?
+      - |
+        The smallest positive integer combination of $1/m_1,\dots,1/m_r$ is $1/\operatorname{lcm}(m_1,\dots,m_r)$.
+      - |
+        Decide which primes $p>\sqrt{2n+1}$ divide some odd number between $n+1$ and $2n+1$. Then use the prime number theorem.
+    solution: |
+      **Step 1: which values occur.** For $f=\sum_kc_kx^k$, the integral of $x^{n+k}$ over $[-1,1]$ is $\frac2{n+k+1}$ when $n+k$ is even and $0$ otherwise. So the value is $\sum c_k\frac{2}{n+k+1}$ over $k\equiv n\pmod2$, and $m=n+k+1$ runs over **the odd numbers from $n+1$ to $2n+1$**. Let $L_n$ be their least common multiple.
+
+      **Step 2: the smallest positive value is $2/L_n$.** Integer combinations of the numbers $2/m$ are $\frac2{L_n}$ times integer combinations of the numbers $L_n/m$. These have greatest common divisor $1$: for each prime $p\mid L_n$, some $m$ carries the full power of $p$, and then $p\nmid L_n/m$. So the possible values are exactly $\frac2{L_n}\mathbb Z$, and $\alpha_n=2/L_n$. (The degree can be kept exactly $n$: adding $(2n+1)s$ to $c_n$ and subtracting $m's$ from another coefficient $c_{k'}$, with $m'=n+k'+1$, leaves the value unchanged, so $c_n\ne0$ can be arranged.)
+
+      **Step 3: which primes divide $L_n$.** Primes $p\le\sqrt{2n+1}$ together contribute at most $\pi(\sqrt{2n+1})\log(2n+1)=o(n)$ to $\log L_n$, and $p=2$ never divides an odd $m$. An odd prime $p>\sqrt{2n+1}$ divides $L_n$ at most once, and does so exactly when some odd multiple $jp$ lies in $[n+1,2n+1]$:
+      - if $n<p\le2n+1$, take $j=1$: **yes**;
+      - if $\frac{2n+1}3<p\le n$: $p$ itself is too small and $3p$ too big: **no**;
+      - if $p\le\frac{2n+1}3$: the windows $\big[\frac{n+1}j,\frac{2n+1}j\big]$ for odd $j=3,5,7,\dots$ overlap one another (as $\frac{n+1}{j}\le\frac{2n+1}{j+2}$ when $j\ge3$ and $n\ge2$), and they march down toward $0$, so one of them contains $p$: **yes**.
+
+      **Step 4: count.** With Chebyshev's function $\theta(x)=\sum_{p\le x}\log p$,
+      $$\log L_n=\theta\Big(\tfrac{2n+1}{3}\Big)+\theta(2n+1)-\theta(n)+o(n).$$
+      By the prime number theorem $\theta(x)\sim x$, so $\log L_n\sim\frac{2n}3+2n-n=\frac{5n}3$. Therefore
+      $$\frac{\log\alpha_n}{n}=\frac{\log2-\log L_n}{n}\ \longrightarrow\ -\frac53 .$$
+    checked: 'script: $\alpha_n=2/L_n$ agrees with a brute-force search over small coefficients for $n\le5$; $\log L_n/n$ is $1.6613$, $1.6658$, $1.6671$, $1.6669$ at $n=10^4,10^5,10^6,4\cdot10^6$'
+    status: ready
+
+  - id: P5
+    topic: "Topology: disjoint segments chosen on every line of the plane"
+    areas: [topology, geometry]
+    difficulty: 3
+    answer: "No."
+    hints:
+      - |
+        Lines form a two-dimensional space (direction and offset). Use the Baire category theorem there.
+      - |
+        Measure position along each line from the foot of the perpendicular from the origin. For some rationals $a<b$, the lines whose segment covers the positions $[a,b]$ are dense in an open set of lines.
+      - |
+        Two nearby lines with different directions, crossing at a point whose position is inside $(a,b)$ on both, would have overlapping segments.
+    solution: |
+      Suppose every line $\ell$ carries a nondegenerate segment $s(\ell)$, and these segments are pairwise disjoint.
+
+      **Coordinates on lines.** Leave out the horizontal lines; every other line is $\ell(\theta,r)=\{x:\ x\cdot(\cos\theta,\sin\theta)=r\}$ for exactly one $\theta\in(0,\pi)$ and $r\in\mathbb R$. So these lines form a space $\Lambda\cong(0,\pi)\times\mathbb R$, which is a Baire space. On $\ell(\theta,r)$, the point with position $\tau$ is $r(\cos\theta,\sin\theta)+\tau(-\sin\theta,\cos\theta)$. Each segment $s(\ell)$ is a set of positions $[u,v]$ with $u<v$.
+
+      **Baire.** For rationals $a<b$, let $\Lambda_{a,b}$ be the set of lines in $\Lambda$ whose segment covers the positions $[a,b]$. Every line belongs to some $\Lambda_{a,b}$, and there are countably many of these sets. By the Baire category theorem, some $\Lambda_{a,b}$ is dense in a nonempty open set $\mathcal U\subseteq\Lambda$.
+
+      **Two crossing lines.** Take $\ell_0\in\mathcal U$ and the point $X$ of $\ell_0$ at position $\frac{a+b}2$. Tilting $\ell_0$ slightly about $X$ in the two directions gives two different lines $\ell_1,\ell_2\in\mathcal U$ through $X$, and on each of them $X$ has position close to $\frac{a+b}2$, so inside $(a,b)$. Non-parallel lines cross at a point that depends continuously on the two lines, and so do its positions on each. Hence there are neighborhoods $\mathcal V_1\ni\ell_1$ and $\mathcal V_2\ni\ell_2$ such that for every $\ell\in\mathcal V_1$ and $\ell'\in\mathcal V_2$, the crossing point of $\ell$ and $\ell'$ has position in $(a,b)$ on both lines. By density, pick $\ell\in\Lambda_{a,b}\cap\mathcal V_1$ and $\ell'\in\Lambda_{a,b}\cap\mathcal V_2$ (different lines, if the neighborhoods are small). Their crossing point lies on both $s(\ell)$ and $s(\ell')$, a contradiction.
+
+      So no such choice of segments exists.
+    checked: "by proof; no computation applies"
+    status: ready
+
+  - id: P9
+    topic: "Analysis: an arc of positive length generates the plane"
+    areas: [analysis, geometry]
+    difficulty: 2
+    hints:
+      - |
+        If a set $E$ has positive area, Steinhaus' theorem says $E-E$ contains a disc around $0$.
+      - |
+        Add two points of the arc. Where the tangents at the two points are not parallel, the sum map is locally a smooth change of variables.
+    solution: |
+      Let $A\subseteq S$ be the Borel subset of positive length on a circle of radius $\rho$ and center $z$, and let $G$ be the subgroup of $(\mathbb R^2,+)$ generated by $S$.
+
+      **Step 1: $A+A$ has positive area.** Parametrize the circle by $\gamma(\varphi)=z+\rho(\cos\varphi,\sin\varphi)$, so $A=\gamma(A')$ with $A'$ a Borel set of angles of positive length. The sum map $\Sigma(\varphi,\psi)=\gamma(\varphi)+\gamma(\psi)$ has Jacobian determinant $\det[\gamma'(\varphi),\gamma'(\psi)]=\rho^2\sin(\psi-\varphi)$, which vanishes only on the lines $\psi-\varphi\in\pi\mathbb Z$, a set of zero area. So $A'\times A'$ minus those lines has positive area. Near each of its points, $\Sigma$ is a $C^1$ diffeomorphism (inverse function theorem); countably many such neighborhoods cover it, so in one of them we find a compact $K\subseteq A'\times A'$ of positive area on which $\Sigma$ is a diffeomorphism. By the change of variables formula, $\Sigma(K)$ has area $\int_K\rho^2|\sin(\psi-\varphi)|>0$, and $\Sigma(K)\subseteq A+A\subseteq G$.
+
+      **Step 2: Steinhaus.** For a set $E$ of positive area, $E-E$ contains a disc around $0$. With $E=\Sigma(K)$, we get a disc $B(0,\varepsilon)\subseteq E-E\subseteq G$. Every vector $v$ is $N$ times a vector of length below $\varepsilon$, so $v\in G$. Thus $G=\mathbb R^2$: $S$ generates the group.
+    status: ready

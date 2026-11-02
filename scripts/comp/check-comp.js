@@ -2,12 +2,23 @@
 /* Checks the competition data (formats: layouts/comp/ and the header of static/comp/comp.js).
      data/comp/putnam/<year>.yaml                     Putnam solutions guide
      data/comp/imo/<year>.yaml                        IMO solutions guide (ids P1-P6, `day` 1 for P1-P3, 2 for P4-P6)
+     data/comp/schweitzer/<year>.yaml                 Schweitzer selection: Putnam format, ids P1-P12, `total` (size of the
+                                                      year's set), optional `language`, links on the approved Szeged host,
+                                                      every listed problem ready (areas may include topology)
      data/comp/common-test/physics-<year>[-makeup].yaml  Common Test physics guide
+     data/comp/tokyo-tech/physics-<year>.yaml         Tokyo Tech (Institute of Science Tokyo) physics guide: same format, but
+                                                      links.problems on admissions.isct.ac.jp, links.page required,
+                                                      no answer key (answers are our results), main exam only
      data/comp/original/math/<id>.yaml                original math challenges
+     data/comp/tripos/<file>.yaml                     Cambridge Mathematical Tripos papers and collections (public domain):
+                                                      kind paper|collection, full `statement`s allowed, but every problem
+                                                      must carry a scan source published before 1900 (layouts/comp/tpaper.html)
    Checks: required fields, unique ids, status values, areas, difficulty, viz files exist (static/comp/viz/<id>.js),
    links are https, topic labels at most 10 words, challenge answers parse and choice answers are in range,
    and a copyright guard: a solution (or hint) must not contain a run of 12 or more words that also appears in a
-   `topic` or `problem` field of ANOTHER file (a sign that a statement was copied into a solution).
+   `topic` or `problem` field of ANOTHER file (a sign that a statement was copied into a solution). A `statement`
+   field (a full problem statement) is allowed only in the Tripos files, which are exempt as public domain: each
+   must name its archive.org scan and a publication year before 1900, or it is an error.
    Usage: node scripts/comp/check-comp.js [site root]   Exit code 1 on errors. Needs python3 with PyYAML. */
 'use strict';
 const fs = require('fs'), path = require('path'), vm = require('vm'), cp = require('child_process');
@@ -66,6 +77,8 @@ const IMO_AREAS = new Set(['algebra', 'combinatorics', 'geometry', 'number-theor
 const GUIDES = {
   putnam: { idRe: /^[AB][1-6]$/, idMsg: 'A1-A6 or B1-B6', areas: AREAS },
   imo: { idRe: /^P[1-6]$/, idMsg: 'P1-P6', areas: IMO_AREAS, day: true },
+  // Schweitzer: a selection (only problems we solved), so every problem must be ready; `total` = problems in that year's set
+  schweitzer: { idRe: /^P([1-9]|1[0-2])$/, idMsg: 'P1-P12', areas: new Set([...AREAS, 'topology']), selection: true },
 };
 const gcount = {};
 let pf = [];
@@ -78,11 +91,20 @@ for (const f of gf) {
   https(f, 'links.problems', y.links && y.links.problems, true);
   https(f, 'links.archive', y.links && y.links.archive, false);
   if (gk === 'imo' && y.links && y.links.problems && !/^https:\/\/www\.imo-official\.org\//.test(y.links.problems)) err(f, 'links.problems must be on www.imo-official.org');
+  if (gk === 'schweitzer') {
+    ['problems', 'archive'].forEach(k => { const u = y.links && y.links[k]; if (!u || !/^https:\/\/www\.math\.u-szeged\.hu\/~mmaroti\/schweitzer\//.test(u)) err(f, 'links.' + k + ' must be on the approved host www.math.u-szeged.hu/~mmaroti/schweitzer/'); });
+    if (!Number.isInteger(y.total) || y.total < 1) err(f, 'total (number of problems in the year\'s set) must be a positive integer');
+    if (y.language != null && !['Hungarian', 'English'].includes(y.language)) err(f, 'language must be Hungarian or English');
+  }
   if (!Array.isArray(y.problems) || !y.problems.length) { err(f, 'problems: missing or empty'); continue; }
   const seen = new Set();
   y.problems.forEach((p, i) => {
     const w = 'problem ' + (p && p.id || '#' + (i + 1));
     if (!p || !G.idRe.test(String(p.id))) err(f, w + ': id must be ' + G.idMsg);
+    if (G.selection && p) {
+      if (p.status !== 'ready') err(f, w + ': a selection lists only finished problems (status ready; leave the problem out instead of `coming`)');
+      if (Number.isInteger(y.total) && +String(p.id).slice(1) > y.total) err(f, w + ': id is beyond total ' + y.total);
+    }
     if (G.day && p && G.idRe.test(String(p.id))) { const d = +String(p.id).slice(1) <= 3 ? 1 : 2; if (p.day !== d) err(f, w + ': day must be ' + d); }
     if (seen.has(p.id)) err(f, w + ': duplicate id'); seen.add(p.id);
     topic(f, w, p.topic);
@@ -103,9 +125,10 @@ for (const f of gf) {
 }
 }
 
-// ------------------------------------------------------------------ Common Test
-const cf = list(D('common-test')), CY = loadYaml(cf);
+// ------------------------------------------------------------------ Common Test and Tokyo Tech (same format)
+const ctf = list(D('common-test')), ttf = list(D('tokyo-tech')), cf = ctf.concat(ttf), CY = loadYaml(cf);
 for (const f of cf) {
+  const tt = ttf.includes(f);
   const y = CY[f], base = path.basename(f).replace(/\.ya?ml$/, '');
   if (!y || y.__error__) { err(f, 'YAML does not parse: ' + (y && y.__error__)); continue; }
   const m = /^physics-(\d{4})(-makeup)?$/.exec(base);
@@ -115,7 +138,12 @@ for (const f of cf) {
   if (!['main', 'makeup'].includes(ex)) err(f, 'exam must be main or makeup');
   if ((ex === 'makeup') !== !!m[2]) err(f, 'exam: ' + ex + ' does not match the file name');
   https(f, 'links.problems', y.links && y.links.problems, true);
-  https(f, 'links.answers', y.links && y.links.answers, true);
+  if (tt) {
+    https(f, 'links.page', y.links && y.links.page, true);
+    https(f, 'links.intent', y.links && y.links.intent, false);
+    if (ex !== 'main') err(f, 'Tokyo Tech: exam must be main');
+    ['problems', 'page', 'intent'].forEach(k => { const u = y.links && y.links[k]; if (u && !/^https:\/\/(admissions\.isct\.ac\.jp|www\.isct\.ac\.jp|admissions\.titech\.ac\.jp|www\.titech\.ac\.jp)\//.test(u)) err(f, 'links.' + k + ' must be an official Institute of Science Tokyo / Tokyo Tech URL'); });
+  } else https(f, 'links.answers', y.links && y.links.answers, true);
   if (!Array.isArray(y.questions) || !y.questions.length) { err(f, 'questions: missing or empty'); continue; }
   const qs = new Set(), ps = new Set();
   y.questions.forEach((q, i) => {
@@ -179,6 +207,73 @@ for (const f of of) {
   addT(f, 'src', 'title', c.title); addT(f, 'src', 'problem', c.problem); addT(f, 'sol', 'solution', c.solution); (c.hints || []).forEach((h, j) => addT(f, 'sol', 'hint ' + (j + 1), h));
 }
 
+// ------------------------------------------------------------------ Cambridge Mathematical Tripos (public domain)
+const TRIPOS_AREAS = new Set(['algebra', 'number-theory', 'combinatorics', 'geometry', 'conics', 'trigonometry', 'calculus', 'probability', 'mechanics', 'optics', 'hydrostatics', 'astronomy']);
+const tf = list(D('tripos')), TY = loadYaml(tf), tslugs = new Set();
+const pre1900 = (v) => { const m = /(1[0-9]{3})/.exec(String(v == null ? '' : v)); return m && +m[1] < 1900 ? +m[1] : 0; };
+function tsource(f, w, s) {
+  if (!s || typeof s !== 'object') return err(f, w + ': missing source');
+  if (!/^[A-Za-z0-9._-]+$/.test(String(s.item || ''))) err(f, w + ': source.item must be an archive.org identifier');
+  if (!isStr(s.title)) err(f, w + ': source.title is required');
+  if (!pre1900(s.published)) err(f, w + ': copyright guard: source.published must give a year before 1900 (public domain), got "' + s.published + '"');
+}
+for (const f of tf) {
+  const y = TY[f], base = path.basename(f).replace(/\.ya?ml$/, '');
+  if (!y || y.__error__) { err(f, 'YAML does not parse: ' + (y && y.__error__)); continue; }
+  if (!['paper', 'collection'].includes(y.kind)) err(f, 'kind must be paper or collection');
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(String(y.slug))) err(f, 'slug must use lowercase letters, digits and hyphens');
+  if (tslugs.has(y.slug)) err(f, 'duplicate slug'); tslugs.add(y.slug);
+  if (!isStr(y.title)) err(f, 'title is required');
+  if (y.kind === 'paper') {
+    if (!pre1900(y.year)) err(f, 'copyright guard: year must be before 1900');
+    if (!isStr(y.date)) err(f, 'date is required (day and hours of the paper, from the scan)');
+    tsource(f, 'source', y.source);
+    if (y.source && !Number.isInteger(y.source.leaf)) err(f, 'source.leaf (archive.org page index) must be an integer');
+    if (y.source && !y.source.pages) err(f, 'source.pages is required');
+  } else if (y.kind === 'collection') {
+    if (!y.sources || typeof y.sources !== 'object') err(f, 'sources: missing');
+    else Object.entries(y.sources).forEach(([k, s]) => tsource(f, 'sources.' + k, s));
+  }
+  if (!Array.isArray(y.problems) || !y.problems.length) { err(f, 'problems: missing or empty'); continue; }
+  const seen = new Set();
+  y.problems.forEach((p, i) => {
+    const w = 'problem ' + (p && p.id || '#' + (i + 1));
+    if (!p || !/^[a-z0-9][a-z0-9-]*$/.test(String(p.id))) err(f, w + ': id must use lowercase letters, digits and hyphens');
+    if (seen.has(p.id)) err(f, w + ': duplicate id'); seen.add(p.id);
+    topic(f, w, p.topic);
+    if (!isStr(p.statement)) err(f, w + ': statement is required (the transcribed problem)');
+    if (y.kind === 'collection') {
+      if (!pre1900(p.year)) err(f, w + ': copyright guard: year must be before 1900');
+      if (!y.sources || !y.sources[p.src]) err(f, w + ': src must name one of the file\'s sources');
+      if (!Number.isInteger(p.leaf)) err(f, w + ': leaf (archive.org page index) must be an integer');
+      ['paper', 'number', 'page'].forEach(k => { if (p[k] == null || p[k] === '') err(f, w + ': ' + k + ' is required (from the scan)'); });
+    }
+    if (!STATUS.has(p.status)) err(f, w + ': status must be ready or coming');
+    if (p.areas != null) { if (!Array.isArray(p.areas)) err(f, w + ': areas must be a list'); else p.areas.forEach(a => { if (!TRIPOS_AREAS.has(a)) err(f, w + ': unknown area "' + a + '"'); }); }
+    if (p.difficulty != null && !(Number.isInteger(p.difficulty) && p.difficulty >= 1 && p.difficulty <= 5)) err(f, w + ': difficulty must be 1-5');
+    if (p.status === 'ready') {
+      if (!isStr(p.solution)) err(f, w + ': ready but no solution');
+      if (!p.areas || !p.areas.length) err(f, w + ': ready but no areas');
+      if (p.difficulty == null) err(f, w + ': ready but no difficulty');
+      if (p.answer != null && !isStr(p.checked)) warn(f, w + ': has an answer but no `checked`');
+    }
+    if (p.hints != null && (!Array.isArray(p.hints) || p.hints.length > 3)) err(f, w + ': hints must be a list of at most 3');
+    viz(f, w, p.viz);
+    ['statement', 'solution', 'answer', 'topic', 'note'].forEach(k => texBalanced(f, w + ' ' + k, p[k])); (p.hints || []).forEach((h, j) => texBalanced(f, w + ' hint ' + (j + 1), h));
+    // statements are public domain (exempt from the guard); our solutions are still checked against other files
+    addT(f, 'src', w + ' topic', p.topic); addT(f, 'sol', w + ' solution', p.solution); (p.hints || []).forEach((h, j) => addT(f, 'sol', w + ' hint ' + (j + 1), h));
+  });
+}
+// a full `statement` anywhere else is a copyright error: only the Tripos (published before 1900) may carry one
+{
+  const others = [];
+  const walk = d => { if (!fs.existsSync(d)) return; for (const e of fs.readdirSync(d, { withFileTypes: true })) { const q = path.join(d, e.name); if (e.isDirectory()) { if (q !== D('tripos')) walk(q); } else if (/\.ya?ml$/.test(e.name)) others.push(q); } };
+  walk(D());
+  const OY2 = loadYaml(others);
+  const has = o => o && typeof o === 'object' && (Array.isArray(o) ? o.some(has) : Object.keys(o).some(k => k === 'statement' || has(o[k])));
+  for (const f of others) if (has(OY2[f])) err(f, 'copyright guard: a `statement` field is allowed only in data/comp/tripos/ (public domain, before 1900)');
+}
+
 // ------------------------------------------------------------------ copyright guard
 const N = 12;
 const toks = s => s.toLowerCase().replace(/\$\$[\s\S]*?\$\$|\$[^$]*\$/g, ' ').replace(/[^a-z0-9'\s-]+/g, ' ').split(/\s+/).filter(Boolean);
@@ -195,8 +290,8 @@ for (const t of texts) if (t.kind === 'sol') {
   }
 }
 
-const n = pf.length + cf.length + of.length;
+const n = pf.length + cf.length + of.length + tf.length;
 warns.forEach(w => console.log('warning: ' + w));
 errs.forEach(e => console.log('ERROR: ' + e));
-console.log(`check-comp: ${n} files (${gcount.putnam} Putnam, ${gcount.imo} IMO, ${cf.length} Common Test, ${of.length} challenges), ${errs.length} errors, ${warns.length} warnings`);
+console.log(`check-comp: ${n} files (${gcount.putnam} Putnam, ${gcount.imo} IMO, ${gcount.schweitzer} Schweitzer, ${ctf.length} Common Test, ${ttf.length} Tokyo Tech, ${of.length} challenges, ${tf.length} Tripos), ${errs.length} errors, ${warns.length} warnings`);
 process.exit(errs.length ? 1 : 0);

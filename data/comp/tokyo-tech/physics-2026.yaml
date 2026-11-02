@@ -1,0 +1,393 @@
+year: 2026
+exam: main
+links:
+  problems: https://admissions.isct.ac.jp/plugins/cms/component_download_file.php?type=1&pageId=3119&contentsId=&contentsDataId=&prevId=&key=1727811130143945971f4860b75b5b94.pdf&fileName=02_R8%E7%89%A9%E7%90%86-%E5%95%8F%E9%A1%8C
+  intent: https://admissions.isct.ac.jp/plugins/cms/component_download_file.php?type=1&pageId=3119&contentsId=&contentsDataId=&prevId=&key=f52201e22823eb3dac6ce25d42354ca2.pdf&fileName=%E3%80%90%E7%89%A9%E7%90%86%E3%80%91R8%E4%B8%80%E8%88%AC%E9%81%B8%E6%8A%9C%E5%87%BA%E9%A1%8C%E6%84%8F%E5%9B%B3
+  page: https://admissions.isct.ac.jp/ja/013/undergraduate/examination-questions
+note: |
+  The paper for entry in April 2026 (令和8年度 一般選抜 前期日程, 理工学系), set by the Institute of Science Tokyo for its science and engineering side, the former Tokyo Tech. Three big questions, 120 minutes. Part numbers follow the paper's letters: "1-c" means big question 1, part (c). Every result below is our own derivation; the university publishes no answer key.
+questions:
+  - id: "1"
+    topic: "Mechanics: a spring slung between two parallel rails"
+    parts:
+      - id: "1-a"
+        topic: "Speed at the crossing point, by energy"
+        answer: '$V_0=\sqrt{\dfrac{k}{m}\left[9h^2-2(\sqrt{10}-1)\,hl\right]}$'
+        hints:
+          - 'The rails are frictionless and the rail forces do no work along the motion, so only spring energy and kinetic energy trade.'
+          - 'Find the spring length at the start and at the crossing point.'
+        solution: |
+          **Key idea:** the only force doing work along the rail is the spring, so the block's kinetic energy is the drop in spring energy.
+
+          With one block fixed and the other a distance $x$ along the rails from it, the spring runs on a slant. Its length is the hypotenuse
+          $$s(x)=\sqrt{x^2+h^2}.$$
+          The stored energy is $U=\tfrac12 k\,(s-l)^2$. Since $h>l$, the spring is stretched at every point.
+
+          - At the start, $x=3h$, so $s=\sqrt{10}\,h$.
+          - Right across from the fixed block, $x=0$, so $s=h$, the shortest it can be.
+
+          Energy conservation gives
+          $$\tfrac12 mV_0^2=\tfrac12k\left[(\sqrt{10}\,h-l)^2-(h-l)^2\right]=\tfrac12k\left[9h^2-2(\sqrt{10}-1)hl\right].$$
+          So
+          $$V_0=\sqrt{\frac{k}{m}\left[9h^2-2(\sqrt{10}-1)\,hl\right]}.$$
+          The bracket is positive because $l<h$, as it must be.
+        viz: tt-2026-1
+        checked: "script: numerical integration of the motion (h = 1, l = 0.6, A = 3h) matches to 10 digits"
+        status: ready
+      - id: "1-b"
+        topic: "Force along the rail at any position"
+        answer: '$F_x=-k\,x_P\left(1-\dfrac{l}{\sqrt{x_P^{\,2}+h^2}}\right)$'
+        hints:
+          - 'The spring force points along the spring. Only its component along the rail moves the block.'
+        solution: |
+          **Key idea:** take the spring tension and keep only the part of it that points along the rail.
+
+          With the fixed block at the origin and the moving one at $x_P$, the spring has length $s=\sqrt{x_P^2+h^2}$ and pulls with tension $k(s-l)$ along its own line. That line makes a slope whose along-the-rail share is $x_P/s$, pointing back toward the fixed block. So
+          $$F_x=-k(s-l)\,\frac{x_P}{s}=-k\,x_P\left(1-\frac{l}{\sqrt{x_P^2+h^2}}\right).$$
+          It always points toward $x_P=0$, and it vanishes there. The sideways part of the tension is taken up by the rail.
+        checked: "by hand; the same force drives the simulation used in 1-a"
+        status: ready
+      - id: "1-c"
+        topic: "Small swings become simple harmonic motion"
+        answer: '$F_x\approx-k\left(1-\dfrac{l}{h}\right)x_P$, so $T=2\pi\sqrt{\dfrac{mh}{k(h-l)}}$'
+        hints:
+          - 'When $|x_P|\ll h$, the spring length is $h$ plus something of order $x_P^2$.'
+        solution: |
+          **Key idea:** for small $x_P$, the spring length barely changes, so the tension is nearly constant and only the angle changes. That gives a force proportional to $x_P$.
+
+          Write the factor in the force as
+          $$\frac{l}{\sqrt{x_P^2+h^2}}=\frac{l}{h}\left(1+\frac{x_P^2}{h^2}\right)^{-1/2}\approx\frac{l}{h}\left(1-\frac{x_P^2}{2h^2}\right).$$
+          The correction is of order $x_P^2$, so to first order in $x_P$,
+          $$F_x\approx-k\left(1-\frac{l}{h}\right)x_P.$$
+          This is a linear restoring force with an effective spring constant $k_{\text{eff}}=k(h-l)/h$, which is positive since $h>l$. The block does simple harmonic motion with period
+          $$T=2\pi\sqrt{\frac{m}{k_{\text{eff}}}}=2\pi\sqrt{\frac{mh}{k(h-l)}}.$$
+          Notice that when $l$ is close to $h$ the spring is nearly slack at the middle, the restoring force is weak, and the period grows long.
+        checked: "script: simulated period at amplitude 0.01h agrees with the formula to 3·10⁻⁵"
+        status: ready
+      - id: "1-d"
+        topic: "Squeezing past a compressed middle: least starting spread"
+        answer: '$B_0=\sqrt{l(l-h)}$'
+        hints:
+          - 'Both blocks start at rest, so the center of mass stays put and they move as mirror images.'
+          - 'Now $h<l$: at the crossing point the spring is compressed, so there is an energy hill to climb.'
+        solution: |
+          **Key idea:** with $h<l$, the spring is compressed when the blocks pass each other. That makes an energy hill at zero separation. The blocks get over it only if they start with more spring energy than the top of the hill.
+
+          **Symmetry.** No outside force acts along the rails, and the blocks start at rest with equal masses. So total momentum stays zero, and the blocks always sit at mirror positions, $x_P=-x_Q$. Let the separation along the rails be $D=x_P-x_Q$, which starts at $2B$.
+
+          **The energy landscape.** The spring energy depends only on $D$:
+          $$U(D)=\tfrac12k\left(\sqrt{D^2+h^2}-l\right)^2.$$
+          It is zero at $D=\pm\sqrt{l^2-h^2}$, where the spring has its natural length. Between those points it rises to a hill at $D=0$, of height
+          $$U(0)=\tfrac12k\,(l-h)^2.$$
+
+          **Getting over.** Starting from rest, the blocks can reach $D=0$ and go through (so the order of the blocks swaps) only if $U(2B)>U(0)$, with the spring stretched at the start:
+          $$\sqrt{4B^2+h^2}-l>l-h\quad\Longleftrightarrow\quad 4B^2+h^2>(2l-h)^2\quad\Longleftrightarrow\quad B^2>l(l-h).$$
+          A start between the two zero points can never work, because there the spring energy is already below the hill. So
+          $$B_0=\sqrt{l(l-h)}.$$
+        checked: "script: simulation with h = 0.6, l = 1; B = 0.99 B₀ never crosses, B = 1.01 B₀ crosses"
+        status: ready
+      - id: "1-e"
+        topic: "When the stopped block starts moving"
+        answer: '$x_1=-\sqrt{l^2-h^2}$, $V_1=\sqrt{\dfrac{k}{m}}\left(\sqrt{C^2+h^2}-l\right)$'
+        hints:
+          - 'Which way does the spring push the held block while it is stretched? While it is compressed?'
+        solution: |
+          **Key idea:** the stopper can only push, so the held block stays put as long as the spring pulls it toward the stopper. It starts to move the moment the spring passes its natural length and begins to push instead.
+
+          **While stretched.** The free block is to the left, at negative $x_Q$. A stretched spring pulls the held block toward it, to the left, into the stopper. So the held block stays at $x_P=0$, and only the free block moves.
+
+          **The switch.** Once the spring is shorter than $l$, it pushes the held block to the right, away from the stopper. That happens when
+          $$\sqrt{x_Q^2+h^2}=l\quad\Longrightarrow\quad x_1=-\sqrt{l^2-h^2}.$$
+
+          **Speed.** Up to that moment, all the spring's initial energy has gone into the moving block, and the spring energy is now zero:
+          $$\tfrac12mV_1^2=\tfrac12k\left(\sqrt{C^2+h^2}-l\right)^2\quad\Longrightarrow\quad V_1=\sqrt{\frac{k}{m}}\left(\sqrt{C^2+h^2}-l\right).$$
+        checked: "script: simulation with l = 1, h = 0.5 gives the predicted position and speed"
+        status: ready
+      - id: "1-f"
+        topic: "Speed needed to overtake: relative energy over the hill"
+        answer: '$V_2=(l-h)\sqrt{\dfrac{2k}{m}}$'
+        hints:
+          - 'After both blocks are free, momentum is conserved. Split the kinetic energy into center-of-mass motion and relative motion.'
+          - 'Only the relative part can be spent climbing the energy hill.'
+        solution: |
+          **Key idea:** once both blocks move, the center-of-mass motion carries kinetic energy that can never turn into spring energy. Only the energy of relative motion can climb the hill at zero separation.
+
+          **After release.** At the moment of 1-e, the moving block has speed $V_1$, the other is at rest, and the spring is at its natural length. From then on the push on the front block is to the right, so it never returns to the stopper. With no outside force along the rails, momentum is conserved.
+
+          **Split the energy.** For two equal masses with velocities $v_1, v_2$,
+          $$\tfrac12mv_1^2+\tfrac12mv_2^2=\tfrac12(2m)\left(\tfrac{v_1+v_2}{2}\right)^2+\tfrac12\cdot\tfrac{m}{2}\,(v_1-v_2)^2.$$
+          The first term stays fixed. The second, the relative kinetic energy, starts at $\tfrac14mV_1^2$.
+
+          **The hill.** As in 1-d, the spring energy rises from $0$ (natural length) to $\tfrac12k(l-h)^2$ when the blocks are side by side. The rear block gets past only if
+          $$\tfrac14mV_1^2>\tfrac12k(l-h)^2\quad\Longleftrightarrow\quad V_1>(l-h)\sqrt{\frac{2k}{m}}.$$
+          So $V_2=(l-h)\sqrt{2k/m}$. Without the momentum split, you would get the wrong answer $\sqrt{k/m}\,(l-h)$, which forgets the energy locked in the motion of the pair as a whole.
+        checked: "script: simulation; overtaking happens just above and fails just below V₂"
+        status: ready
+      - id: "1-g"
+        topic: "Least initial pull for overtaking, with a set ratio"
+        answer: '$C_0=\dfrac{l}{2}\sqrt{5+4\sqrt2}$ (with $h=l/2$)'
+        hints:
+          - 'Combine the speed from 1-e with the threshold from 1-f.'
+        solution: |
+          **Key idea:** chain the two previous results: the start position fixes $V_1$, and $V_1$ must beat $V_2$.
+
+          Here the paper fixes $h$ as a multiple of $l$, namely $h=l/2$. Then $l-h=l/2$.
+
+          From 1-e and 1-f, overtaking needs
+          $$\sqrt{\frac km}\left(\sqrt{C^2+h^2}-l\right)>(l-h)\sqrt{\frac{2k}{m}}\quad\Longleftrightarrow\quad\sqrt{C^2+h^2}>l+\sqrt2\,(l-h).$$
+          With $h=l/2$, the right side is $l\left(1+\tfrac{\sqrt2}{2}\right)$. Squaring,
+          $$C^2>l^2\left[\left(1+\tfrac{\sqrt2}{2}\right)^2-\tfrac14\right]=l^2\left(\tfrac54+\sqrt2\right).$$
+          So
+          $$C_0=l\sqrt{\tfrac54+\sqrt2}=\frac l2\sqrt{5+4\sqrt2}\approx1.63\,l.$$
+        checked: "script: full simulation with h = l/2; C = 0.99 C₀ fails and C = 1.01 C₀ overtakes"
+        status: ready
+  - id: "2"
+    topic: "Circuits: pumping an LC circuit by moving capacitor plates"
+    parts:
+      - id: "2-a"
+        topic: "Current in terms of the change in charge"
+        status: coming
+      - id: "2-b"
+        topic: "Matching voltage, current and energy graphs"
+        status: coming
+      - id: "2-c"
+        topic: "First moment the current stops"
+        answer: '$t=\dfrac{\pi}{2}\sqrt{LC}$'
+        hints:
+          - 'An LC circuit swings with angular frequency $\omega=1/\sqrt{LC}$. How much of a cycle is it from zero charge to zero current?'
+        solution: |
+          **Key idea:** charge and current in an LC circuit are a quarter cycle apart. When one is zero, the other is at its peak.
+
+          With the gap at $d$, the circuit oscillates with
+          $$\omega_0=\frac{1}{\sqrt{LC}},\qquad T_0=2\pi\sqrt{LC}.$$
+          At $t=0$ the charge is zero, so the current is at its largest. The current next falls to zero a quarter period later, when all the energy is back in the capacitor:
+          $$t=\frac{T_0}{4}=\frac{\pi}{2}\sqrt{LC}.$$
+        checked: "script: numerical integration of the circuit"
+        status: ready
+      - id: "2-d"
+        topic: "Widening the gap at full charge"
+        answer: 'max $V_S=aV$; $Q=0$ again $\dfrac{\pi}{2}\sqrt{\dfrac{LC}{a}}$ after the change'
+        hints:
+          - 'The change is instant, so the charge on the plates stays the same.'
+          - 'Capacitance goes as one over the gap.'
+        solution: |
+          **Key idea:** a quick change of gap keeps the charge but changes the capacitance. Here the current is zero, so the charge is at its peak, $|Q|=CV$.
+
+          **New capacitance.** A parallel-plate capacitance is inversely proportional to the gap, so a gap of $ad$ gives $C/a$.
+
+          **Voltage.** With the same charge $CV$ on a capacitance $C/a$, the voltage is
+          $$|V_S|=\frac{CV}{C/a}=aV.$$
+          From here the circuit oscillates with no further losses, so the voltage swings between $-aV$ and $+aV$. Its maximum is $aV$.
+
+          **Timing.** The new angular frequency is $1/\sqrt{L\,C/a}$. Starting at full charge, the charge reaches zero a quarter period later:
+          $$\Delta t=\frac{\pi}{2}\sqrt{\frac{LC}{a}},$$
+          which is the time $t=\tfrac{\pi}{2}\sqrt{LC}\left(1+\tfrac{1}{\sqrt a}\right)$ on the clock that started at $t=0$.
+
+          **Energy check.** The capacitor energy jumps from $\tfrac12CV^2$ to $\tfrac12(C/a)(aV)^2=a\cdot\tfrac12CV^2$. For $a>1$, the work comes from whoever pulls the plates apart against their attraction.
+        checked: "script: numerical integration with the gap change as an event"
+        status: ready
+      - id: "2-e"
+        topic: "Changing the gap again at zero charge"
+        answer: 'max $V_S=V\sqrt{ab}$, max $I=V\sqrt{\dfrac{aC}{L}}$'
+        hints:
+          - 'With no charge on the plates, there is no force between them. Does moving them cost any energy?'
+        solution: |
+          **Key idea:** at zero charge, all the energy is in the coil. Moving the plates then changes nothing about the energy; it only changes how that energy will be shared out later.
+
+          After 2-d, the total energy is $E_1=a\cdot\tfrac12CV^2$. When the charge is zero, it is all in the coil, and the plates carry no charge, so the gap change to $bd$ costs no work. The energy is still $E_1$.
+
+          **Largest current.** When all of $E_1$ is in the coil,
+          $$\tfrac12LI_{\max}^2=\tfrac12aCV^2\quad\Longrightarrow\quad I_{\max}=V\sqrt{\frac{aC}{L}}.$$
+
+          **Largest voltage.** The capacitance is now $C/b$. When all of $E_1$ is in it,
+          $$\tfrac12\cdot\frac{C}{b}\,V_{\max}^2=\tfrac12aCV^2\quad\Longrightarrow\quad V_{\max}=V\sqrt{ab}.$$
+        checked: "script: numerical integration (a = 2, b = 1 and other values)"
+        status: ready
+      - id: "2-f"
+        topic: "Many rounds of pumping: final voltage and growth condition"
+        answer: 'max $V_S=V\sqrt{a^N b^{\,2-N}}$; it exceeds $V$ exactly when $a^N b^{\,2-N}>1$'
+        hints:
+          - 'At zero current, a gap change multiplies the energy by (new gap)/(old gap). At zero charge, it changes nothing.'
+        solution: |
+          **Key idea:** this is parametric pumping, like a child on a swing. The energy changes only at the moments of full charge, and each time it is multiplied by the ratio of the gaps.
+
+          **The energy rule.** At full charge $Q_m$, the energy is $Q_m^2/(2C')$, and $1/C'$ is proportional to the gap. Holding $Q_m$ fixed, a gap change multiplies the energy by (new gap)/(old gap). At zero charge, it does nothing (2-e).
+
+          **Bookkeeping.** Each "widen" step happens at full charge, and each "reset" step at zero charge.
+          - The first widen goes from $d$ to $ad$: a factor $a$.
+          - Each later widen goes from $bd$ to $ad$: a factor $a/b$.
+          - The resets cost nothing.
+
+          After $N$ of each, the energy is
+          $$E_N=\tfrac12CV^2\cdot a\left(\frac ab\right)^{N-1}=\tfrac12CV^2\,a^Nb^{\,1-N}.$$
+
+          **Largest voltage.** The final gap is $bd$, so the capacitance is $C/b$:
+          $$\tfrac12\frac Cb V_{\max}^2=E_N\quad\Longrightarrow\quad V_{\max}=V\sqrt{a^N\,b^{\,2-N}}.$$
+          This exceeds $V$ exactly when $a^N b^{\,2-N}>1$. For example, with $N=1$ this reads $ab>1$, matching 2-e.
+        viz: tt-2026-2
+        checked: "script: numerical integration for (a, b, N) = (2, 1, 1), (2, 1, 2), (1.5, 0.7, 3), (2, 3, 2)"
+        status: ready
+      - id: "2-g"
+        topic: "Energy gained when the gap doubles each round"
+        answer: '$\Delta E=(2^N-1)\cdot\tfrac12CV^2$'
+        hints:
+          - 'Use the energy formula from 2-f with $a=2$, $b=1$.'
+        solution: |
+          **Key idea:** with $b=1$, each reset returns the gap to $d$, and every widen doubles the energy.
+
+          From 2-f, $E_N=\tfrac12CV^2\,a^Nb^{\,1-N}=2^N\cdot\tfrac12CV^2$. At $t=0$ the energy was $\tfrac12CV^2$, so
+          $$\Delta E=(2^N-1)\cdot\tfrac12CV^2.$$
+          The gain is the work done pulling the charged plates apart, against their attraction, each time the charge peaks. Pushing them back together costs nothing, because it is done when they carry no charge.
+        checked: "script: numerical integration, a = 2, b = 1, N = 1 and 2"
+        status: ready
+      - id: "2-h"
+        topic: "Changing the gap only at zero current"
+        answer: 'max $V_S=bV$, max $I=V\sqrt{\dfrac{bC}{L}}$'
+        hints:
+          - 'At zero current, the charge on the plates is always $CV$. Why?'
+        solution: |
+          **Key idea:** if every gap change happens at full charge, the peak charge never changes. The energy then just follows the latest gap, so all the earlier steps cancel out.
+
+          **The peak charge stays $CV$.** Between changes, the circuit oscillates and returns to the same peak charge at each zero of the current. At a change, the charge doesn't move. So every peak has $|Q|=CV$.
+
+          **Energy.** At a peak, the energy is $Q^2/(2C')$ with $C'=C\cdot d/(\text{gap})$. After the last step, the gap is $bd$:
+          $$E=\frac{(CV)^2}{2\,C/b}=b\cdot\tfrac12CV^2.$$
+          The widen and narrow steps cancel in pairs; only the final gap matters.
+
+          **Maxima.** The largest voltage is at a peak of charge: $V_{\max}=\dfrac{CV}{C/b}=bV$. The largest current has all the energy in the coil:
+          $$\tfrac12LI_{\max}^2=\tfrac12bCV^2\quad\Longrightarrow\quad I_{\max}=V\sqrt{\frac{bC}{L}}.$$
+        checked: "script: numerical integration for several (a, b, N)"
+        status: ready
+      - id: "2-i"
+        topic: "Net energy change for that schedule"
+        answer: '$\Delta E=0$'
+        hints:
+          - 'Use 2-h with $b=1$.'
+        solution: |
+          **Key idea:** from 2-h, the energy at the end depends only on the final gap.
+
+          With $b=1$, the final gap is back to $d$, so the energy is $\tfrac12CV^2$, the same as at $t=0$:
+          $$\Delta E=0.$$
+          Physically, the work done pulling the plates apart at one peak is returned when they are pushed back together at the next peak, since the charge, and so the force between the plates, is the same both times. Compare 2-g, where the narrowing happens at zero charge, so no work is returned and energy builds up.
+        checked: "script: numerical integration (energy change below 10⁻⁶ of the total)"
+        status: ready
+  - id: "3"
+    topic: "Heat: a cycle with condensing vapor"
+    parts:
+      - id: "3-a"
+        topic: "Total amount and liquid amount after compression"
+        answer: '$n=\dfrac{p_0V_1}{RT_0}$, $n_l=\dfrac{p_0(V_1-V_2)}{RT_0}$'
+        hints:
+          - 'While liquid and vapor coexist at a fixed temperature, the vapor pressure stays at the saturated value.'
+        solution: |
+          **Key idea:** at a fixed temperature, vapor that sits on its own liquid always has the saturated pressure $p_0$. Squeezing it doesn't raise the pressure; it turns vapor into liquid.
+
+          **Total amount.** At the start, everything is vapor at $p_0$, $V_1$, $T_0$:
+          $$n=\frac{p_0V_1}{RT_0}.$$
+
+          **Liquid amount.** After compression to $V_2$ at $T_0$, the vapor still has pressure $p_0$, and the liquid takes up no volume, so the vapor amount is $p_0V_2/(RT_0)$. The rest is liquid:
+          $$n_l=n-\frac{p_0V_2}{RT_0}=\frac{p_0(V_1-V_2)}{RT_0}.$$
+        checked: "by hand (ideal gas law)"
+        status: ready
+      - id: "3-b"
+        topic: "Work done on the vapor during compression"
+        answer: '$W_{12}=p_0(V_1-V_2)$'
+        solution: |
+          **Key idea:** the pressure is constant at $p_0$ the whole way, so the work is pressure times volume change.
+
+          Since the pressure stays at $p_0$ while the volume shrinks from $V_1$ to $V_2$,
+          $$W_{12}=p_0(V_1-V_2)=n_lRT_0.$$
+          The second form uses 3-a. It is a handy way to remember it: each mole that condenses has $RT_0$ of work done on it.
+        checked: "by hand"
+        status: ready
+      - id: "3-c"
+        topic: "Internal energy change when vapor condenses"
+        answer: '$\Delta U_{12}=p_0(V_1-V_2)-n_lL=-n_l(L-RT_0)$'
+        hints:
+          - 'Use the first law. How much heat leaves when $n_l$ moles condense?'
+        solution: |
+          **Key idea:** first law, $\Delta U=W_{\text{on}}+Q_{\text{in}}$. Condensing $n_l$ moles at constant temperature releases heat $n_lL$ to the thermostat.
+
+          The vapor that stays vapor doesn't change its internal energy, since its temperature is unchanged. All the change comes from the part that condenses. It gives off heat $n_lL$, so $Q_{\text{in}}=-n_lL$. Then
+          $$\Delta U_{12}=W_{12}+Q_{\text{in}}=p_0(V_1-V_2)-n_lL=-n_l\,(L-RT_0).$$
+          Each condensed mole loses $L-RT_0$ of internal energy. The latent heat $L$ is a bit more than the internal energy change, because the outside also does $RT_0$ of work per mole squeezing the vapor into a liquid.
+        checked: "by hand (first law); the cycle balance in 3-h confirms it"
+        status: ready
+      - id: "3-d"
+        topic: "Heat to boil everything and warm the vapor"
+        answer: '$Q_{23}=nC_V\Delta T+n_lL-p_0(V_1-V_2)$'
+        hints:
+          - 'At fixed volume, heat equals the change in internal energy. Compare states 2 and 3 through state 1.'
+        solution: |
+          **Key idea:** at fixed volume there is no work, so the heat equals the change in internal energy. Find that change by going around through state 1, where everything is vapor.
+
+          Internal energy depends only on the state, so
+          $$U_3-U_2=(U_3-U_1)-(U_2-U_1).$$
+          - From state 1 to state 3, all of it is ideal vapor going from $T_0$ to $T_0+\Delta T$: $U_3-U_1=nC_V\Delta T$.
+          - From state 1 to state 2 is the change from 3-c: $U_2-U_1=p_0(V_1-V_2)-n_lL$.
+
+          So
+          $$Q_{23}=nC_V\Delta T+n_lL-p_0(V_1-V_2)=nC_V\Delta T+n_l\,(L-RT_0).$$
+          This is the energy to boil the liquid at fixed volume, plus the energy to warm all the vapor.
+        checked: "by hand; the cycle balance in 3-h confirms it"
+        status: ready
+      - id: "3-e"
+        topic: "Placing the four states on a pressure-volume diagram"
+        status: coming
+      - id: "3-f"
+        topic: "Temperature after the adiabatic expansion"
+        answer: '$T_4=(T_0+\Delta T)\left(\dfrac{V_2}{V_1}\right)^{\gamma-1}$'
+        hints:
+          - 'Combine $pV^\gamma=$ constant with $pV=nRT$.'
+        solution: |
+          **Key idea:** for an adiabatic change of an ideal gas, $pV^\gamma$ is fixed; with the gas law, that means $TV^{\gamma-1}$ is fixed.
+
+          Divide $pV^\gamma=\text{const}$ by $pV=nRT$ to get $TV^{\gamma-1}=\text{const}$. From state 3 to state 4,
+          $$T_4V_1^{\gamma-1}=(T_0+\Delta T)\,V_2^{\gamma-1}\quad\Longrightarrow\quad T_4=(T_0+\Delta T)\left(\frac{V_2}{V_1}\right)^{\gamma-1},$$
+          with $\gamma=(C_V+R)/C_V$. Since $V_2<V_1$, the vapor cools as it expands.
+        checked: "by hand; exact check with the numbers of 3-h"
+        status: ready
+      - id: "3-g"
+        topic: "Net work over the cycle"
+        answer: '$W=nC_V\,(T_0+\Delta T-T_4)-p_0(V_1-V_2)$'
+        hints:
+          - 'Two legs are at fixed volume and do no work.'
+        solution: |
+          **Key idea:** add up the work leg by leg. Only the compression and the adiabatic expansion move the piston.
+
+          - **1 → 2:** the vapor is compressed at $p_0$, so it does work $-p_0(V_1-V_2)$.
+          - **2 → 3:** fixed volume, no work.
+          - **3 → 4:** adiabatic, so the work done equals the drop in internal energy, $nC_V\,(T_0+\Delta T-T_4)$.
+          - **4 → 1:** fixed volume, no work.
+
+          Total work done by the vapor:
+          $$W=nC_V\,(T_0+\Delta T-T_4)-p_0(V_1-V_2).$$
+        checked: "by hand; matches heat in minus heat out in 3-h"
+        status: ready
+      - id: "3-h"
+        topic: "Efficiency of the cycle with given numbers"
+        answer: '$e=\dfrac{2}{29}\approx0.069$'
+        hints:
+          - 'Heat flows in only during the fixed-volume heating, so $e=W/Q_{23}$.'
+          - 'Measure every energy in units of $nRT_0$.'
+        solution: |
+          **Key idea:** heat comes in only on the leg 2 → 3. The other legs give heat out: condensing on 1 → 2, and cooling on 4 → 1. So $e=W/Q_{23}$.
+
+          **The numbers.** We use the values the paper gives: $L=18RT_0$, $C_V=3R$ (so $\gamma=4/3$), a liquid share $n_l/n=19/27$, and $\Delta T=\tfrac23T_0$. In units of $nRT_0$:
+          - From 3-a, $V_2/V_1=1-n_l/n=8/27$.
+          - So $T_4=\tfrac53T_0\left(\tfrac{8}{27}\right)^{1/3}=\tfrac53\cdot\tfrac23\,T_0=\tfrac{10}{9}T_0$.
+          - $p_0(V_1-V_2)=n_lRT_0=\tfrac{19}{27}$.
+
+          **Work** (3-g):
+          $$W=3\left(\tfrac53-\tfrac{10}{9}\right)-\tfrac{19}{27}=\tfrac53-\tfrac{19}{27}=\tfrac{26}{27}.$$
+
+          **Heat in** (3-d):
+          $$Q_{23}=3\cdot\tfrac23+\tfrac{19}{27}(18-1)=2+\tfrac{323}{27}=\tfrac{377}{27}.$$
+
+          **Efficiency:**
+          $$e=\frac{26}{377}=\frac{2}{29}\approx0.069.$$
+
+          **Check.** Heat out is $n_lL=\tfrac{342}{27}$ on 1 → 2, plus $nC_V(T_4-T_0)=\tfrac{9}{27}$ on 4 → 1, for $\tfrac{351}{27}$ in all. Then $\tfrac{377}{27}-\tfrac{351}{27}=\tfrac{26}{27}=W$, as energy conservation requires. The efficiency is low because most of the heat goes into boiling the liquid, and it all comes back out as the vapor condenses.
+        viz: tt-2026-3
+        checked: "script: exact fractions (Python Fraction); the heat balance closes"
+        status: ready

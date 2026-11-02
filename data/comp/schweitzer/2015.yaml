@@ -1,0 +1,36 @@
+year: 2015
+date: "October 22 – November 2, 2015"
+total: 11
+language: Hungarian
+links:
+  problems: https://www.math.u-szeged.hu/~mmaroti/schweitzer/schweitzer-2015.pdf
+  archive: https://www.math.u-szeged.hu/~mmaroti/schweitzer/
+problems:
+  - id: P8
+    topic: "Analysis: arithmetic and geometric means in a functional equation"
+    areas: [analysis]
+    difficulty: 2
+    hints:
+      - |
+        If $f$ is not constant, the pairs $(x,y)$ with $f(x)\ne f(y)$ form a nonempty open set. Send each such pair to its two means and use the inverse function theorem.
+      - |
+        You get an interval on which $f$ is constant. Take a maximal one, and push it past each end with a well-chosen pair.
+    solution: |
+      Constant functions clearly work. Suppose $f$ is continuous on $(0,\infty)$ and not constant. Write $A=\frac{x+y}2$ and $G=\sqrt{xy}$. The equation says: for every pair, $f(x)=f(y)$ or $f(A)=f(G)$.
+
+      **Step 1: $f$ is constant on some interval.** The set $U=\{(x,y):x<y,\ f(x)\ne f(y)\}$ is open and nonempty. The map $(x,y)\mapsto(A,G)$ is smooth, with Jacobian determinant
+      $$\tfrac14\Big(\sqrt{x/y}-\sqrt{y/x}\Big)\neq0\qquad(x\ne y),$$
+      so the image of $U$ contains an open set, and hence a small box $I\times J$ where $I$ and $J$ are disjoint open intervals. For $a\in I$ and $g\in J$ we get $f(a)=f(g)$. Fixing $g$ shows $f$ is constant on $I$; fixing $a$ shows it is constant on $J$, with the same value.
+
+      **Step 2: a maximal interval.** Let $(p,q)$ be the union of all open intervals containing $I$ on which $f$ is constant; call the constant $c$. We show $(p,q)=(0,\infty)$, a contradiction.
+
+      *Right end.* Suppose $q<\infty$. By continuity $f(q)=c$, and by maximality there are points $y>q$, as close to $q$ as we like, with $f(y)\neq c$. Take one with $y<2q-p$ and $y<q^2/p$ (the second condition is empty if $p=0$). For every $x$ in $(p,\,q^2/y]$, which is a nonempty part of $(p,q)$, we have $f(x)=c\neq f(y)$, so $f(A)=f(G)$. Here $p<\sqrt{py}<G\le q$, so $f(G)=c$, and therefore $f(A)=c$. As $x$ runs over $(p,q^2/y]$, $A$ runs over
+      $$\Big(\frac{p+y}2,\ \frac{q^2/y+y}2\Big].$$
+      The left end is below $q$ because $y<2q-p$, and the right end is above $q$ by the AM–GM inequality, since $q^2/y\neq y$. So $f=c$ on an open interval reaching past $q$, against maximality.
+
+      *Left end.* Suppose $p>0$. Now take $y<p$ close to $p$ with $f(y)\ne c$, with $y>2p-q$ and $y>p^2/q$. For every $x\in[2p-y,\,q)$ (inside $(p,q)$ as $y<p$) we have $f(x)\neq f(y)$, and $A$ lies in $[p,\frac{q+y}2)\subset[p,q)$, so $f(A)=c$, and therefore $f(G)=c$. As $x$ runs over $[2p-y,q)$, $G$ runs over
+      $$\Big[\sqrt{(2p-y)y},\ \sqrt{qy}\Big).$$
+      The left end is below $p$ by AM–GM, and the right end is above $p$ because $y>p^2/q$. Again $f=c$ beyond the end of $(p,q)$, against maximality.
+
+      So $(p,q)=(0,\infty)$ and $f$ is constant after all. Hence the only continuous solutions are the constants.
+    status: ready

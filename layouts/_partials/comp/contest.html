@@ -2,6 +2,19 @@
    every contest by parameter. Argument: the contest key ("putnam" or "imo"; set as `contest` in the page params,
    default "putnam"). Data lives in data/comp/<key>/<year>.yaml; pages at /<base><year>/. */ -}}
 {{- $C := dict
+  "tripos" (dict
+    "key" "tripos" "name" "Tripos" "base" "math/competitions/tripos/" "crumb" "Cambridge Tripos"
+    "owner" "nobody: the papers were printed before 1900 and are in the public domain"
+    "intro" "From the 1700s until 1909, Cambridge ranked its mathematics graduates in one list, best first, by a long written examination called the Mathematical Tripos. Here are two complete papers from the 1800s to take against the clock, and forty standout problems, all in the examiners' own words, with our own hints and solutions."
+    "legal" `<b>About these pages.</b> The problems were printed between 1821 and 1879 and are in the public domain. We transcribe them faithfully from scans at the <a href="https://archive.org/" rel="noopener">Internet Archive</a>, changing only the notation where modern typesetting needs it, and we name the scan for every problem. The hints, notes and solutions are our own work, not the examiners' published solutions.`
+    "archive" "https://archive.org/" "archiveName" "the Internet Archive" "where" "at the Internet Archive" "editionSuffix" "")
+  "schweitzer" (dict
+    "key" "schweitzer" "name" "Schweitzer" "base" "math/competitions/schweitzer/" "selection" true
+    "owner" "the János Bolyai Mathematical Society"
+    "intro" `The Miklós Schweitzer Memorial Competition is a contest for university students in Hungary, held each fall since 1949 by the János Bolyai Mathematical Society. It is named for Miklós Schweitzer (1923–1945), a gifted young mathematician who was killed in the last months of the Second World War. Competitors get about ten days for ten or so problems set by research mathematicians, across analysis, algebra, number theory, combinatorics, probability, geometry and topology. They may look things up in books, but may not ask anyone for help. <b>This page is a selection:</b> from each year we include only the problems we could solve completely and check, with a link to the official problem, a topic label, hints and our own solution. The problem sets are hosted on <a href="https://www.math.u-szeged.hu/~mmaroti/schweitzer/" rel="noopener">Miklós Maróti's Schweitzer page</a> at the University of Szeged, and results are posted on the <a href="https://www.bolyai.hu/versenyek-schweitzer-miklos-emlekverseny/" rel="noopener">Bolyai Society's competition page</a>. <a href="https://en.wikipedia.org/wiki/Mikl%C3%B3s_Schweitzer_Competition" rel="noopener">Read more about the competition</a>.`
+    "legal" `<b>About these pages.</b> The Schweitzer problems are © the János Bolyai Mathematical Society. We don't copy or translate them: read each one at the official link, in the committee's problem sheets hosted on <a href="https://www.math.u-szeged.hu/~mmaroti/schweitzer/" rel="noopener">Miklós Maróti's page</a> at the University of Szeged. Some years are in Hungarian only. The topic labels, hints and solutions are our own work, written from scratch. They are not official solutions.`
+    "archive" "https://www.math.u-szeged.hu/~mmaroti/schweitzer/" "archiveName" "the University of Szeged page"
+    "where" "on the University of Szeged page" "editionSuffix" "")
   "putnam" (dict
     "key" "putnam" "name" "Putnam" "base" "math/competitions/putnam/"
     "owner" "the Mathematical Association of America"
@@ -16,5 +29,13 @@
     "legal" `<b>About these pages.</b> The IMO problems are © the International Mathematical Olympiad. We don't copy them: read each one at the official link, on the <a href="https://www.imo-official.org/problems.aspx" rel="noopener">IMO's official site</a>, which has the problems of every year in many languages. The hints and solutions are our own work, written from scratch. They are not official solutions.`
     "archive" "https://www.imo-official.org/problems.aspx" "archiveName" "the IMO's official site"
     "where" "on the IMO's official site" "editionSuffix" " IMO")
+  "common-test" (dict
+    "key" "common-test" "data" "common-test" "base" "physics/exam-practice/common-test/" "crumb" "Common Test"
+    "intro" `The University Entrance Common Test (大学入学共通テスト) is Japan's national exam for entering university. It is taken each January, and it replaced the older National Center Test in 2021. Physics (物理) is one of the science papers. Every answer is a number marked on a multiple-choice mark sheet, and the questions come in groups, each built around a diagram or an experiment. A makeup exam (追試験) is held about a week later for students who could not sit the main one. <a href="https://en.wikipedia.org/wiki/Common_Test_for_University_Admissions" rel="noopener">Read more about the test</a>.`
+    "main" "Main exam" "mainJa" "Main exam (本試験)" "qfmt" "第%s問" "ansLabel" "Answer (official key)")
+  "tokyo-tech" (dict
+    "key" "tokyo-tech" "data" "tokyo-tech" "base" "physics/exam-practice/tokyo-tech/" "crumb" "Tokyo Tech"
+    "intro" `The Tokyo Institute of Technology (東京工業大学, Tokyo Tech) was one of Japan's leading universities of science and engineering. On October 1, 2024, it <a href="https://www.msl.iir.isct.ac.jp/?p=1142" rel="noopener">merged with Tokyo Medical and Dental University</a> to form the Institute of Science Tokyo (東京科学大学, Science Tokyo). Its science and engineering side, listed by the university as <a href="https://admissions.isct.ac.jp/ja/013/undergraduate/examination-questions" rel="noopener">理工学系 (旧・東京工業大学)</a>, still sets its own written entrance exam. The physics paper has three big questions (大問) in 120 minutes. Nothing is multiple choice: you write out each result as a formula or a number, and each big question tells one long story, step by step. The university posts only its most recent paper online, so this guide starts with 2026 and will add each new year as it appears.`
+    "main" "General exam, first stage" "mainJa" "General exam, first stage (一般選抜 前期日程)" "qfmt" "大問 %s" "ansLabel" "Our result")
 -}}
 {{- return (index $C (. | default "putnam")) | default (index $C "putnam") -}}

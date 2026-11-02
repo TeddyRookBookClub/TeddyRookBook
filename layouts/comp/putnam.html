@@ -12,7 +12,7 @@
   <nav class="cp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <a href="{{ "math/competitions/" | relURL }}">Competitions</a> <span aria-hidden="true">›</span> <span>{{ $K.name }}</span></nav>
   <header class="cp-head">
     <h1>{{ .Title }}</h1>
-    <p class="cp-intro">{{ $K.intro }}</p>
+    <p class="cp-intro">{{ $K.intro | safeHTML }}</p>
   </header>
   <div class="cp-legal" role="note">
     <p>{{ $K.legal | safeHTML }}</p>
@@ -24,7 +24,7 @@
     <ul class="cp-years">
       {{- range $keys }}{{ $y := index $Y . }}
       {{- $n := 0 }}{{ range $y.problems }}{{ if eq .status "ready" }}{{ $n = add $n 1 }}{{ end }}{{ end }}
-      <li><a href="{{ printf "%s%s/" $K.base . | relURL }}"><b>{{ $y.year }}</b><small>{{ with $y.edition }}{{ . }}{{ $K.editionSuffix }} · {{ end }}{{ $n }} of {{ len ($y.problems | default slice) }} {{ cond (eq $n 1) "solution" "solutions" }} ready</small></a></li>
+      <li><a href="{{ printf "%s%s/" $K.base . | relURL }}"><b>{{ $y.year }}</b><small>{{ with $y.edition }}{{ . }}{{ $K.editionSuffix }} · {{ end }}{{ if $K.selection }}{{ $n }} of the {{ $y.total }} problems{{ with $y.language }} · in {{ . }}{{ end }}{{ else }}{{ $n }} of {{ len ($y.problems | default slice) }} {{ cond (eq $n 1) "solution" "solutions" }} ready{{ end }}</small></a></li>
       {{- end }}
     </ul>
     {{- else }}<p>The first years are being written.</p>{{ end }}

@@ -1,5 +1,13 @@
-{{- /* What the Common Test is, and the copyright note. Argument: (dict "links" links-map or nil). */ -}}
+{{- /* What the Common Test is, and the copyright note. Argument: (dict "links" links-map or nil "cx" contest settings or nil).
+   With cx.key "tokyo-tech", the note for the Tokyo Tech (Institute of Science Tokyo) physics guide instead. */ -}}
+{{- if and .cx (eq .cx.key "tokyo-tech") }}
+<div class="cp-legal" role="note">
+  <p><b>About these pages.</b> The entrance exam problems are © the Institute of Science Tokyo (東京科学大学) and other rights holders, so we don't reproduce their problems or figures here. {{ with .links }}{{ with .problems }}<a href="{{ . }}" rel="noopener">Open the official problems</a>{{ end }}{{ with .intent }} and the university's <a href="{{ . }}" rel="noopener">statement of aims (出題の意図)</a>{{ end }} (in Japanese), then come back for our solution.{{ else }}Each year links to the official problems on the university's <a href="https://admissions.isct.ac.jp/ja/013/undergraduate/examination-questions" rel="noopener">past exam page</a> (in Japanese).{{ end }}</p>
+  <p>The university does not publish model answers. The topic labels, solutions and results here are our own, worked out from scratch: <b>our solutions, not official ones</b>. Parts that depend on the paper's own figure or answer choices, or that we are not yet sure of, are marked "Solution coming".</p>
+</div>
+{{- else }}
 <div class="cp-legal" role="note">
   <p><b>About these pages.</b> The Common Test problems are © the National Center for University Entrance Examinations (大学入試センター, DNC) and other rights holders, so we don't reproduce their problems or figures here. {{ with .links }}{{ with .problems }}<a href="{{ . }}" rel="noopener">Open the official problems</a>{{ end }}{{ with .answers }}{{ if $.links.problems }} and the <a href="{{ . }}" rel="noopener">official answer key</a>{{ else }}<a href="{{ . }}" rel="noopener">Open the official answer key</a>{{ end }}{{ end }} (in Japanese), then come back for our solution.{{ else }}Each year links to the official problems and answer key on the <a href="https://www.dnc.ac.jp/" rel="noopener">DNC website</a> (in Japanese).{{ end }}</p>
   <p>The topic labels and solutions are our own, written from scratch: <b>our solutions, not official ones</b>. Answers are the numbers from the official answer key.</p>
 </div>
+{{- end }}

@@ -1,0 +1,74 @@
+year: 2019
+date: "October 25 – November 4, 2019"
+total: 10
+links:
+  problems: https://www.math.u-szeged.hu/~mmaroti/schweitzer/schweitzer-2019-eng.pdf
+  archive: https://www.math.u-szeged.hu/~mmaroti/schweitzer/
+problems:
+  - id: P5
+    topic: "Geometry: halfspaces cutting out a convex body, with margin"
+    areas: [geometry, analysis]
+    difficulty: 2
+    hints:
+      - |
+        Fix balls $B(c,r)\subseteq S\subseteq B(c,R)$. Any $\alpha<r/R$ will do.
+      - |
+        If every halfspace nearly reaches the outside point $P$, each one contains a cone from the small ball toward a point near $P$. Find a point outside $S$ that lies in all of these cones.
+    solution: |
+      Since $S$ is compact with nonempty interior, choose a point $c$ and radii $0<r\le R$ with $B(c,r)\subseteq S\subseteq B(c,R)$. We show that any $\alpha<r/R$ works.
+
+      Let $P$ be a point; if $P\in S$ there is nothing to prove. So let $d=\operatorname{dist}(P,S)>0$, and suppose, for contradiction, that $\operatorname{dist}(P,H_i)<\alpha d$ for every $i$.
+
+      **A test point.** Choose $s\in(0,1)$ with $\dfrac{s}{1-s}=\dfrac{\alpha d}{r}$, and let $Y=(1-s)P+sc$, a point on the segment from $P$ toward the center.
+
+      **$Y$ lies in every $H_i$.** Each $H_i$ contains $S$, hence the ball $B(c,r)$, and it contains a point $P_i$ with $|P-P_i|<\alpha d$. Write
+      $$Y=(1-s)P_i+s\Big(c+\tfrac{1-s}{s}(P-P_i)\Big).$$
+      The second point is within $\frac{1-s}{s}\alpha d=r$ of $c$, so it lies in $B(c,r)\subseteq H_i$. As $H_i$ is convex, $Y\in H_i$. Therefore $Y\in\bigcap_iH_i=S$.
+
+      **But $Y$ is outside $S$.** If $Y\in S$, then $d\le|P-Y|=s\,|P-c|$. The nearest point of $S$ to $P$ lies within $R$ of $c$, so $|P-c|\le d+R$, and
+      $$d\le s(d+R)\ \Longrightarrow\ d\le\frac{s}{1-s}R=\frac{\alpha dR}{r}\ \Longrightarrow\ r\le\alpha R,$$
+      which contradicts $\alpha<r/R$. So some $H_i$ has $\operatorname{dist}(P,H_i)\ge\alpha\operatorname{dist}(P,S)$.
+    status: ready
+
+  - id: P7
+    topic: "Complex analysis: critical points inside a one-piece level curve"
+    areas: [analysis, topology]
+    difficulty: 2
+    hints:
+      - |
+        Show first that the inside of the curve is exactly the set where $|P|<1$, and that every zero of $P$ is there.
+      - |
+        On the inside, $P$ is a proper map onto the unit disc. The Riemann–Hurwitz formula counts its critical points.
+    solution: |
+      Let $n=\deg P$. A constant $P$ cannot give a Jordan curve, and for $n=1$ there are no critical points, so let $n\ge2$. By the Jordan curve theorem, the complement of $L$ has two components: a bounded inside $\Omega$ and an unbounded outside $E$.
+
+      **Step 1: $\Omega$ is exactly where $|P|<1$.** Neither component meets $L$, so $|P|\ne1$ on each, and each is connected; hence $|P|<1$ on all of it or $|P|>1$ on all of it. On $E$, $|P|\to\infty$ at infinity, so $|P|>1$ there. If also $|P|>1$ on $\Omega$, then $P$ would have no zeros at all (a zero is not on $L$ either). So $|P|<1$ on $\Omega$, and all $n$ zeros of $P$ lie in $\Omega$.
+
+      **Step 2: a proper map.** $P$ maps $\Omega$ into the unit disc $D$. If points of $\Omega$ leave every compact subset of $\Omega$, they approach $L$ (as $\Omega$ is bounded), so $|P|\to1$ along them. Thus $P:\Omega\to D$ is proper. A proper nonconstant holomorphic map has a degree: every point of $D$ has the same number of preimages, counted with multiplicity. Counting the preimages of $0$, the degree is $n$.
+
+      **Step 3: Riemann–Hurwitz.** For a proper holomorphic map of degree $n$ between plane domains, $\chi(\Omega)=n\,\chi(D)-b$, where $b$ is the number of critical points in $\Omega$ counted with multiplicity. The inside of a Jordan curve is simply connected, so $\chi(\Omega)=\chi(D)=1$ and $b=n-1$. But $P'$ has only $n-1$ zeros in the whole plane, counted with multiplicity. Hence all of them lie in $\Omega$, the interior of $L$.
+    status: ready
+
+  - id: P8
+    topic: "Analysis: integrable differences force an integrable function"
+    areas: [analysis]
+    difficulty: 2
+    hints:
+      - |
+        The shifts $t\in[-1,1]$ with $\int_{-2}^{2}|f(x+t)-f(x)|\,dx\le N$ form a measurable set, and for some $N$ it has positive measure.
+      - |
+        Steinhaus: $E-E$ contains an interval around $0$. Then average the differences over small shifts and choose a good base point.
+    solution: |
+      The hypothesis doesn't change if we translate $f$, so it is enough to show that $f$ is integrable on some interval around $0$.
+
+      **Step 1: many good shifts.** The function $(x,t)\mapsto f(x+t)-f(x)$ is measurable on the plane. By Tonelli's theorem, $\Phi(t)=\int_{-2}^{2}|f(x+t)-f(x)|\,dx$ is a measurable function of $t$, finite for every $t$ by hypothesis. The sets $E_N=\{t\in[-1,1]:\Phi(t)\le N\}$ increase to $[-1,1]$, so some $E=E_N$ has positive measure. By Steinhaus' theorem, $E-E$ contains an interval $(-\delta,\delta)$.
+
+      **Step 2: all small shifts are good.** Let $s=t-t'$ with $t,t'\in E$. For every $x$,
+      $$f(x+s)-f(x)=\big[f(x-t'+t)-f(x-t')\big]-\big[f(x)-f(x-t')\big].$$
+      For $x\in[-1,1]$, the point $x-t'$ lies in $[-2,2]$, so
+      $$\int_{-1}^{1}|f(x+s)-f(x)|\,dx\le\Phi(t)+\Phi(t')\le2N\qquad(|s|<\delta).$$
+
+      **Step 3: a good base point.** Integrate over $s\in(0,\delta)$ and swap the integrals:
+      $$\int_{-1}^{1}\Big(\int_0^\delta|f(x+s)-f(x)|\,ds\Big)dx\le2N\delta .$$
+      So for almost every $x_0\in[-1,1]$ the inner integral is finite, and since $f(x_0)$ is a real number, $\int_{x_0}^{x_0+\delta}|f|<\infty$. The same argument with $s\in(-\delta,0)$ gives $\int_{x_0-\delta}^{x_0}|f|<\infty$ for almost every $x_0$. Pick one $x_0$ with $|x_0|<\delta/2$ that is good for both. Then $f$ is integrable on $(x_0-\delta,x_0+\delta)$, which contains $(-\delta/2,\delta/2)$.
+    status: ready

@@ -1,0 +1,155 @@
+{{ define "main" }}
+{{- /* /connections/: "Where Music, Patterns, Math and Chemistry Meet". A four-ellipse Venn diagram (all 15 regions) as the hero;
+   each region opens its section below. Conventions for writers and builders: see the comment at the top of
+   static/connections/core.js and content/connections/_index.md.
+   - Regions: content/connections/<id>.md (headless: never rendered on their own), ordered by weight. Front matter: title,
+     short (2-3 words shown inside the diagram), sets [music math patterns chemistry], teaser (one sentence),
+     golinks [{url, title?, why?}], credits [{name, url, what, licence}].
+   - Body: markdown with TeX in $…$; ### for each explainer; a paragraph that is only [[viz:<id>]] or [[viz:<id>|caption]]
+     becomes an interactive figure that loads static/connections/v/<id>.js when it scrolls into view; a blockquote is a
+     callout ("Myth vs fact", "This is art"). */ -}}
+{{ partial "inline/ml-css.html" "math/core/core.css" }}
+{{ partial "inline/ml-css.html" "connections/cx.css" }}
+{{ partial "inline/ml-js.html" "math/core/tex.js" }}
+{{ partial "inline/ml-js.html" "connections/core.js" }}
+{{- $icons := partial "connections/icons.html" . -}}
+{{- $S := slice
+  (dict "k" "music" "name" "Music" "bit" 1 "cx" 350 "cy" 530 "rot" 45 "lx" 82 "ly" 236)
+  (dict "k" "math" "name" "Math" "bit" 2 "cx" 500 "cy" 430 "rot" 45 "lx" 222 "ly" 150)
+  (dict "k" "patterns" "name" "Patterns" "bit" 4 "cx" 500 "cy" 430 "rot" -45 "lx" 778 "ly" 150)
+  (dict "k" "chemistry" "name" "Chemistry" "bit" 8 "cx" 650 "cy" 530 "rot" -45 "lx" 918 "ly" 236) -}}
+{{- $SN := dict "music" "Music" "math" "Math" "patterns" "Patterns" "chemistry" "Chemistry" -}}
+{{- /* label point (x, y) and room (r) inside each region, found by a distance transform of the diagram */ -}}
+{{- $G := dict
+  "music" (slice 160 428 92) "math" (slice 342 212 68) "patterns" (slice 658 212 68) "chemistry" (slice 840 428 92)
+  "music-math" (slice 270 308 54) "music-patterns" (slice 294 612 75) "music-chemistry" (slice 500 746 69)
+  "math-patterns" (slice 500 282 87) "math-chemistry" (slice 706 612 75) "patterns-chemistry" (slice 730 308 54)
+  "music-math-patterns" (slice 374 408 92) "music-math-chemistry" (slice 594 666 42) "music-patterns-chemistry" (slice 406 666 42)
+  "math-patterns-chemistry" (slice 626 408 92) "all-four" (slice 500 560 101) -}}
+{{- $regs := sort .RegularPages "Weight" -}}
+{{- $groups := slice (slice 1 "One subject") (slice 2 "Where two meet") (slice 3 "Where three meet") (slice 4 "All four") -}}
+<article class="cx" data-cx-base="{{ "connections/v/" | relURL }}">
+  <header class="cx-head">
+    <p class="cx-eyebrow">Music · Math · Patterns · Chemistry</p>
+    <h1>{{ .Title }}</h1>
+    <div class="cx-intro">{{ .Content }}</div>
+  </header>
+
+  <section class="cx-hero" aria-label="The diagram">
+    <div class="cx-venn-wrap">
+      <svg class="cx-venn" viewBox="0 96 1000 734" role="group" aria-labelledby="cx-venn-t" focusable="false">
+        <title id="cx-venn-t">Four overlapping ovals for music, math, patterns and chemistry. Each of the 15 regions opens a section below.</title>
+        <defs>
+          {{- range $i, $s := $S }}
+          <clipPath id="cx-c{{ $i }}"><ellipse cx="{{ $s.cx }}" cy="{{ $s.cy }}" rx="350" ry="200" transform="rotate({{ $s.rot }} {{ $s.cx }} {{ $s.cy }})"/></clipPath>
+          <mask id="cx-m{{ $i }}" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="1000"><rect x="0" y="0" width="1000" height="1000" fill="#fff"/><ellipse cx="{{ $s.cx }}" cy="{{ $s.cy }}" rx="350" ry="200" transform="rotate({{ $s.rot }} {{ $s.cx }} {{ $s.cy }})" fill="#000"/></mask>
+          {{- end }}
+        </defs>
+        <g class="cx-fills" aria-hidden="true">
+          {{- range $S }}<ellipse class="cx-e cx-e-{{ .k }}" cx="{{ .cx }}" cy="{{ .cy }}" rx="350" ry="200" transform="rotate({{ .rot }} {{ .cx }} {{ .cy }})"/>{{ end }}
+        </g>
+        <g class="cx-rgs" aria-hidden="true">
+          {{- range $regs }}{{ $id := .File.ContentBaseName }}{{ $in := .Params.sets | default slice }}
+          {{- $open := "" }}{{ $close := "" }}
+          {{- range $i, $s := $S }}{{ if in $in $s.k }}{{ $open = printf `%s<g clip-path="url(#cx-c%d)">` $open $i }}{{ else }}{{ $open = printf `%s<g mask="url(#cx-m%d)">` $open $i }}{{ end }}{{ $close = printf "%s</g>" $close }}{{ end }}
+          <g class="cx-rg" data-r="{{ $id }}">{{ safeHTML $open }}<rect x="0" y="96" width="1000" height="734"/>{{ safeHTML $close }}</g>
+          {{- end }}
+        </g>
+        <g class="cx-lines" aria-hidden="true">
+          {{- range $S }}<ellipse class="cx-o cx-o-{{ .k }}" cx="{{ .cx }}" cy="{{ .cy }}" rx="350" ry="200" transform="rotate({{ .rot }} {{ .cx }} {{ .cy }})"/>{{ end }}
+        </g>
+        <g class="cx-setl" aria-hidden="true">
+          {{- range $S }}<text class="cx-sl cx-sl-{{ .k }}" x="{{ .lx }}" y="{{ .ly }}">{{ .name }}</text>{{ end }}
+        </g>
+        <g class="cx-pins">
+          {{- range $regs }}{{ $pg := . }}{{ $id := .File.ContentBaseName }}{{ with index $G $id }}{{ $g := . }}
+          {{- $r := index $g 2 }}{{ $sc := div (float $r) 44.0 }}{{ if gt $sc 1.4 }}{{ $sc = 1.4 }}{{ end }}{{ if lt $sc 0.95 }}{{ $sc = 0.95 }}{{ end }}
+          <a href="#r-{{ $id }}" class="cx-pin{{ if lt $r 60 }} cx-pin-sm{{ end }}" data-r="{{ $id }}" transform="translate({{ index $g 0 }} {{ index $g 1 }})" aria-label="{{ range $k, $s := $pg.Params.sets }}{{ if $k }} and {{ end }}{{ index $SN $s }}{{ end }}: {{ $pg.Title }}">
+            <circle class="cx-pin-bg" r="{{ mul 24 $sc }}"/>
+            <g class="cx-ic" transform="scale({{ mul 0.78 $sc }})">{{ safeHTML (index $icons $id | default "") }}</g>
+            {{- with $pg.Params.short }}<text class="cx-pin-t" y="{{ add (mul 24 $sc) 17 }}">{{ . }}</text>{{ end }}
+          </a>
+          {{- end }}{{ end }}
+        </g>
+      </svg>
+    </div>
+    <div class="cx-panel" aria-live="polite">
+      <p class="cx-panel-hint">Tap or click any region of the diagram, or tab to it with the keyboard, to see where those subjects meet.</p>
+      <div class="cx-panel-body" hidden></div>
+    </div>
+  </section>
+
+  <div class="cx-sound" role="group" aria-label="Sound">
+    <span class="cx-sound-ic" aria-hidden="true">🔊</span>
+    <label for="cx-vol">Volume</label>
+    <input id="cx-vol" type="range" min="0" max="100" value="50">
+    <button type="button" class="cx-btn cx-stop">Stop all sound</button>
+    <span class="cx-sound-note">Nothing plays until you press a play button.</span>
+  </div>
+
+  <nav class="cx-index" aria-labelledby="cx-index-h">
+    <h2 id="cx-index-h">All 15 regions</h2>
+    {{- range $groups }}{{ $n := index . 0 }}{{ $gt := index . 1 }}
+    {{- $in := slice }}{{ range $regs }}{{ if eq (len (.Params.sets | default slice)) $n }}{{ $in = $in | append . }}{{ end }}{{ end }}
+    {{- with $in }}
+    <div class="cx-ig">
+      <h3>{{ $gt }}</h3>
+      <ul>
+        {{- range $in }}{{ $id := .File.ContentBaseName }}
+        <li><a href="#r-{{ $id }}" data-r="{{ $id }}"><svg class="cx-mini" viewBox="-24 -24 48 48" aria-hidden="true" focusable="false">{{ safeHTML (index $icons $id | default "") }}</svg><span class="cx-dots" aria-hidden="true">{{ range .Params.sets }}<i class="cx-d cx-d-{{ . }}"></i>{{ end }}</span><span class="cx-il">{{ range $k, $s := .Params.sets }}{{ if $k }} + {{ end }}{{ index $SN $s }}{{ end }}</span><span class="cx-is">{{ .Title }}</span></a></li>
+        {{- end }}
+      </ul>
+    </div>
+    {{- end }}{{ end }}
+    <p class="cx-tools"><button type="button" class="cx-btn" data-cx-all="1">Open all</button> <button type="button" class="cx-btn" data-cx-all="0">Close all</button></p>
+  </nav>
+
+  <div class="cx-regions">
+    {{- range $regs }}{{ $id := .File.ContentBaseName }}{{ $p := . }}
+    {{- $h := partial "comp/md.html" (dict "s" .RawContent "p" .) | string -}}
+    {{- range findRESubmatch `<p>\[\[viz:([a-z0-9-]+)(?:\|([^\]<]*))?\]\]</p>` $h -}}
+      {{- $vid := index . 1 }}{{ $f := printf "static/connections/v/%s.js" $vid -}}
+      {{- $src := printf "connections/v/%s.js" $vid | relURL }}{{ if fileExists $f }}{{ $src = printf "%s?v=%d" $src (os.Stat $f).ModTime.Unix }}{{ else }}{{ warnf "connections %s: missing %s" $id $f }}{{ end -}}
+      {{- $fig := printf `<figure class="cx-viz" data-viz="%s" data-src="%s"><div class="cx-stage"></div><div class="cx-bar"></div><p class="cx-live cx-sr" aria-live="polite"></p>%s<noscript><p class="cx-err">This picture needs JavaScript. The text around it does not.</p></noscript></figure>` $vid $src (cond (ne (index . 2) "") (printf `<figcaption>%s</figcaption>` (index . 2)) "") -}}
+      {{- $h = replace $h (index . 0) $fig -}}
+    {{- end }}
+    <section class="cx-region" id="r-{{ $id }}" data-r="{{ $id }}" data-sets="{{ delimit (.Params.sets | default slice) " " }}" aria-labelledby="r-{{ $id }}-h">
+      <h2 class="cx-rh" id="r-{{ $id }}-h"><button type="button" class="cx-rbtn" aria-expanded="true" aria-controls="r-{{ $id }}-p">
+        <svg class="cx-mini" viewBox="-24 -24 48 48" aria-hidden="true" focusable="false">{{ safeHTML (index $icons $id | default "") }}</svg>
+        <span class="cx-rt"><span class="cx-rsets">{{ range $k, $s := .Params.sets }}{{ if $k }}<span aria-hidden="true"> ∩ </span><span class="cx-sr"> and </span>{{ end }}<span class="cx-rs cx-rs-{{ $s }}">{{ index $SN $s }}</span>{{ end }}</span>
+        <span class="cx-rtt">{{ .Title }}</span></span><span class="cx-chev" aria-hidden="true"></span></button></h2>
+      <div class="cx-rpanel" id="r-{{ $id }}-p">
+        {{- with .Params.teaser }}<p class="cx-teaser">{{ . | markdownify }}</p>{{ end }}
+        <div class="cx-rbody" data-tex>{{ safeHTML $h }}</div>
+        {{- with .Params.golinks }}
+        <div class="cx-deeper">
+          <h3>Go deeper</h3>
+          <ul>
+            {{- range . }}{{ $u := .url }}{{ $t := .title }}
+            {{- if not $t }}{{ with site.GetPage (strings.TrimSuffix "/" (index (split $u "#") 0)) }}{{ $t = .Title }}{{ else }}{{ warnf "connections %s: link %s not found" $id $u }}{{ end }}{{ end }}
+            <li><a href="{{ $u | relURL }}">{{ $t | default $u }}</a>{{ with .why }}<span class="cx-why">: {{ . }}</span>{{ end }}</li>
+            {{- end }}
+          </ul>
+        </div>
+        {{- end }}
+      </div>
+    </section>
+    {{- end }}
+  </div>
+
+  {{- /* Sources and credits: the page's own, then each region's, in one block (the page sets credits: false so the
+     site-wide block does not repeat it; check-credits looks for the class trb-cr). */ -}}
+  <aside class="trb-cr cx-cr" aria-label="Sources and credits">
+    <h2 class="trb-cr-h">Sources and credits</h2>
+    {{- with .Params.sources }}
+    <ul>{{ range . }}<li>{{ if .url }}<a href="{{ .url }}" rel="noopener">{{ .name }}</a>{{ else }}<b>{{ .name }}</b>{{ end }}{{ with .what }}: {{ . }}{{ end }}{{ with .licence }} <span class="trb-cr-lic">({{ . }})</span>{{ end }}</li>{{ end }}</ul>
+    {{- end }}
+    {{- range $regs }}{{ if .Params.credits }}
+    <details class="cx-cr-r"><summary>{{ .Title }}</summary>
+      <ul>{{ range .Params.credits }}<li>{{ if .url }}<a href="{{ .url }}" rel="noopener">{{ .name }}</a>{{ else }}<b>{{ .name }}</b>{{ end }}{{ with .what }}: {{ . }}{{ end }}{{ with .licence }} <span class="trb-cr-lic">({{ . }})</span>{{ end }}</li>{{ end }}</ul>
+    </details>
+    {{- end }}{{ end }}
+    <p class="trb-cr-all">Every source and licence the site uses is on the <a href="{{ "credits/" | relURL }}">Credits page</a>.</p>
+  </aside>
+</article>
+{{ end }}

@@ -1,0 +1,44 @@
+{{- /* One Tripos problem card (layouts/comp/tpaper.html). Argument: (dict "p" page "x" problem "f" the data file "fk" its key).
+   Shows the public-domain statement, a note on old words, the scan it came from, hints and our solution. A paper's
+   problems take their source from the file; a collection's from `src` (a key of the file's `sources`). */ -}}
+{{- $p := .p }}{{ $x := .x }}{{ $f := .f -}}
+{{- $A := dict "algebra" "Algebra" "number-theory" "Number theory" "combinatorics" "Counting" "geometry" "Geometry" "conics" "Conics" "trigonometry" "Trigonometry" "calculus" "Calculus" "probability" "Probability" "mechanics" "Mechanics" "optics" "Optics" "hydrostatics" "Fluids and heat" "astronomy" "Astronomy" -}}
+{{- $paper := eq $f.kind "paper" -}}
+{{- $src := cond $paper $f.source (index ($f.sources | default dict) ($x.src | default "")) | default dict -}}
+{{- $leaf := cond $paper $f.source.leaf $x.leaf -}}
+{{- $page := cond $paper $f.source.pages $x.page -}}
+{{- $year := cond $paper $f.year $x.year -}}
+{{- $uid := printf "t%s-%s" (.fk | urlize) ($x.id | urlize) -}}
+{{- $ready := eq ($x.status | default "coming") "ready" -}}
+<article class="cp-card tp-card{{ if not $ready }} cp-coming{{ end }}" id="{{ $x.id | urlize }}" aria-labelledby="{{ $uid }}-h" data-areas="{{ delimit ($x.areas | default slice) " " }}" data-diff="{{ $x.difficulty }}" data-ready="{{ cond $ready 1 0 }}">
+  <header class="cp-card-h">
+    <h2 id="{{ $uid }}-h"><span class="cp-id">{{ if $paper }}{{ $x.label | default $x.id }}{{ else }}{{ $x.year }}{{ end }}</span> <span class="cp-topic">{{ partial "comp/md.html" (dict "s" $x.topic "inline" true) }}</span></h2>
+    <p class="cp-tags">{{ range $x.areas }}<span class="cp-tag">{{ index $A . | default . }}</span>{{ end }}{{ with $x.difficulty }}<span class="cp-diff" title="Difficulty {{ . }} of 5, our estimate"><span class="cp-sr">Difficulty </span>{{ range seq 5 }}<i{{ if le . $x.difficulty }} class="on"{{ end }} aria-hidden="true"></i>{{ end }}<span class="cp-sr"> {{ . }} of 5</span></span>{{ end }}</p>
+  </header>
+  <div class="tp-stmt cp-md" data-tex>
+    <p class="tp-num" aria-hidden="true">{{ $x.label | default $x.number | default $x.id }}.</p>
+    {{ partial "comp/md.html" (dict "s" $x.statement "p" $p) }}
+  </div>
+  <p class="tp-src">{{ if $paper }}{{ with $x.setter }}Set by Mr {{ . }}. {{ end }}{{ else }}{{ $x.year }}, {{ $x.paper }}, problem {{ $x.number }}. {{ end }}Scan: <a href="https://archive.org/details/{{ $src.item }}/page/n{{ $leaf }}/mode/1up" rel="noopener">{{ if $paper }}{{ $f.source.title | truncate 60 }}{{ else }}<cite>{{ $src.title | truncate 70 }}</cite>{{ end }}, p. {{ $page }}</a>.</p>
+  {{- with $x.note }}
+  <aside class="tp-note cp-md" data-tex><b>Words and conventions.</b> {{ partial "comp/md.html" (dict "s" . "inline" true) }}</aside>
+  {{- end }}
+  <div class="cp-acts">
+    {{- if $ready }}
+    {{- with $x.hints }}<button type="button" class="cp-btn" data-hint="{{ $uid }}-hints" aria-controls="{{ $uid }}-hints" aria-expanded="false">Show hints</button>{{ end }}
+    <button type="button" class="cp-btn pri" data-reveal="{{ $uid }}-sol" aria-controls="{{ $uid }}-sol" aria-expanded="false">Show our solution</button>
+    {{- else }}<span class="cp-soon">Our solution is being written</span>{{ end }}
+  </div>
+  {{- if $ready }}
+  {{- with $x.hints }}
+  <ol class="cp-hints" id="{{ $uid }}-hints" hidden>{{ range $i, $h := . }}<li hidden><b>Hint {{ add $i 1 }}.</b> {{ partial "comp/md.html" (dict "s" $h "inline" true) }}</li>{{ end }}</ol>
+  {{- end }}
+  <section class="cp-sol" id="{{ $uid }}-sol" hidden aria-label="Our solution to {{ if $paper }}problem {{ $x.label | default $x.id }}{{ else }}the {{ $x.year }} problem{{ end }}">
+    <p class="cp-sol-lbl">Our solution</p>
+    {{ with $x.answer }}<p class="cp-ans"><b>Answer:</b> {{ partial "comp/md.html" (dict "s" . "inline" true) }}</p>{{ end }}
+    {{ partial "comp/viz.html" $x.viz }}
+    <div class="cp-md">{{ partial "comp/md.html" (dict "s" $x.solution "p" $p) }}</div>
+    {{ with $x.checked }}<p class="cp-small">How we checked it: {{ . }}</p>{{ end }}
+  </section>
+  {{- end }}
+</article>

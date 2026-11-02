@@ -5,6 +5,8 @@
 {{- $C := site.Data.comp | default dict -}}
 {{- $Y := index $C "common-test" | default dict -}}
 {{- $ny := 0 }}{{ $nr := 0 }}{{ range $k, $y := $Y }}{{ if hasPrefix $k "physics-" }}{{ $ny = add $ny 1 }}{{ range $y.questions }}{{ range .parts }}{{ if eq .status "ready" }}{{ $nr = add $nr 1 }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end -}}
+{{- $TT := index $C "tokyo-tech" | default dict -}}
+{{- $ty := 0 }}{{ $tr := 0 }}{{ range $k, $y := $TT }}{{ if hasPrefix $k "physics-" }}{{ $ty = add $ty 1 }}{{ range $y.questions }}{{ range .parts }}{{ if eq .status "ready" }}{{ $tr = add $tr 1 }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end -}}
 {{- $pc := index (where (site.Data.physics.courses | default slice) "slug" "exam-challenge") 0 -}}
 {{- $nt := 0 }}{{ with $pc }}{{ with index (site.Data.physics.topics | default dict) .key }}{{ $nt = len (.topics | default slice) }}{{ end }}{{ end -}}
 <article class="cp cp-hub cp-phys">
@@ -12,7 +14,7 @@
   <header class="cp-head">
     <p class="cp-eyebrow">Physics Ladder · For fun, and hard</p>
     <h1>{{ .Title }}</h1>
-    <p class="cp-intro">Exam problems in physics come with a diagram, a few numbers and a chain of small questions, each one leading to the next. They test whether you can pick the right law and use it cleanly. Here you can practice on our own problems in that style, and read our step-by-step solutions to a famous national exam.</p>
+    <p class="cp-intro">Exam problems in physics come with a diagram, a few numbers and a chain of small questions, each one leading to the next. They test whether you can pick the right law and use it cleanly. Here you can practice on our own problems in that style, and read our step-by-step solutions to real entrance exams from Japan.</p>
   </header>
   <div class="cp-grid2">
     <section class="cp-panel" aria-labelledby="cp-h-och">
@@ -31,6 +33,14 @@
       <p class="cp-small">{{ if $nr }}{{ $nr }} solutions ready across {{ $ny }} {{ cond (eq $ny 1) "paper" "papers" }}. {{ end }}The problems are © the National Center for University Entrance Examinations; we link to them and write our own solutions.</p>
       <p><a class="cp-btn pri" href="{{ "physics/exam-practice/common-test/" | relURL }}">Open the guide</a></p>
     </section>
+    {{- if $ty }}
+    <section class="cp-panel" aria-labelledby="cp-h-tt">
+      <h2 id="cp-h-tt"><span aria-hidden="true">🗼</span> Tokyo Tech solutions guide</h2>
+      <p>The Tokyo Institute of Technology, now part of the Institute of Science Tokyo, sets its own entrance exam. Its physics paper has three long questions, and every result is written out by hand: no multiple choice.</p>
+      <p class="cp-small">{{ if $tr }}{{ $tr }} solutions ready across {{ $ty }} {{ cond (eq $ty 1) "paper" "papers" }}. {{ end }}The problems are © the Institute of Science Tokyo; we link to them and write our own solutions.</p>
+      <p><a class="cp-btn pri" href="{{ "physics/exam-practice/tokyo-tech/" | relURL }}">Open the guide</a></p>
+    </section>
+    {{- end }}
   </div>
   <aside class="cp-note">
     <p><b>Need the basics first?</b> The <a href="{{ "physics/" | relURL }}">Physics Ladder</a> builds mechanics, waves, heat, electricity and modern physics from first principles, with the math you need from the Math Ladder.</p>

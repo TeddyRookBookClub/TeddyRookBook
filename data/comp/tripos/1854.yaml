@@ -1,0 +1,490 @@
+# Cambridge Mathematical Tripos, 1854: the Problems paper of Thursday afternoon, January 5 (public domain).
+# Statements transcribed from the scan named in `source`; notation modernized only where TeX needs it.
+# Hints, notes and solutions are our own. Format: layouts/comp/tpaper.html and scripts/comp/check-comp.js.
+kind: paper
+slug: "1854"
+title: "The 1854 Problems paper"
+year: 1854
+date: "Thursday, January 5, 1854, 1 to 4 p.m."
+paper: "Problems (the afternoon of the third day)"
+examiners: "Set by the Moderators, W. Walton (Trinity College) and C. F. Mackenzie (Caius College), and the Examiners."
+minutes: 180
+intro: |
+  The problems paper from the third afternoon of the 1854 Tripos, the year Edward Routh came first and James Clerk
+  Maxwell second. Twenty-one problems in three hours: pick the ones you like and see how far you get.
+source:
+  item: solutionsofprobl00mackuoft
+  title: "Solutions of the Problems and Riders Proposed in the Senate-House Examination for 1854, by the Moderators and Examiners, with an Appendix Containing the Examination Papers in Full"
+  published: "Cambridge: Macmillan and Co., 1854"
+  pages: "200–202 (appendix)"
+  leaf: 211
+  scans: "University of Toronto Libraries copy, digitized by the Internet Archive"
+problems:
+  - id: "1"
+    topic: 'Geometry: when a cut-off line touches the circle'
+    areas: [geometry]
+    difficulty: 2
+    statement: |
+      $ABD$, $ACE$ are two straight lines touching a circle in $B$ and $C$, and, if $DE$ be joined, $DE$ is equal to $BD$ and $CE$ together; shew that $DE$ touches the circle.
+    note: '“Shew” is the old spelling of “show.” The names $ABD$ and $ACE$ tell you the order of the points: $D$ lies beyond $B$, and $E$ beyond $C$.'
+    hints:
+      - 'If a circle sits inside a triangle and touches all three sides, the two tangent lengths from each corner are equal.'
+      - 'Compare the tangent length from $A$ to our circle with the tangent length from $A$ to the incircle of triangle $ADE$.'
+    solution: |
+      Let $t = AB = AC$ be the length of the tangents from $A$ to our circle.
+
+      **A fact about any incircle.** Take a triangle $ADE$ and its incircle. From each corner the two tangents to the incircle are equal; call them $x$ from $A$, $y$ from $D$ and $z$ from $E$. Then $AD = x + y$, $AE = x + z$ and $DE = y + z$, so
+      $$x = \frac{AD + AE - DE}{2}.$$
+
+      **Two circles in the same corner.** Both our circle and the incircle of $ADE$ touch the lines $AD$ and $AE$ on the inside of the angle at $A$. Such a circle has its center on the bisector of that angle, and it is fixed once we know the tangent length from $A$. So the two circles are the same circle exactly when $t = x$, that is, when
+      $$2t = AD + AE - DE.$$
+
+      Since $D$ lies beyond $B$ and $E$ beyond $C$, we have $AD = t + BD$ and $AE = t + CE$. The condition becomes
+      $$DE = BD + CE.$$
+
+      That is exactly what we are told. So our circle is the incircle of triangle $ADE$, and in particular it touches $DE$. (The argument also runs the other way: if $DE$ touches the circle, then $DE = BD + CE$.)
+    status: ready
+  - id: "2"
+    topic: 'Algebra: harmonic progression on a line'
+    areas: [algebra]
+    difficulty: 1
+    statement: |
+      $O$, $A$, $B$, $C$, are four points arranged in order in a straight line, so that $OA$, $OB$, $OC$, form an harmonic progression. Prove that, $A$ and $C$ being stationary, if $O$ move towards $A$, $B$ will also move towards $A$.
+    note: 'Three numbers are in **harmonic progression** when their reciprocals are in arithmetic progression.'
+    hints:
+      - 'Write $OA = x$ and $AC = c$, and find $AB$ in terms of $x$ and $c$.'
+    solution: |
+      Let $OA = x$ and $AC = c$, so $OC = x + c$. Harmonic progression means
+      $$\frac{2}{OB} = \frac{1}{x} + \frac{1}{x+c}, \qquad\text{so}\qquad OB = \frac{2x(x+c)}{2x+c}.$$
+      Then
+      $$AB = OB - x = \frac{2x^2 + 2xc - 2x^2 - xc}{2x+c} = \frac{xc}{2x+c} = \frac{c}{2 + c/x}.$$
+      When $O$ moves towards $A$, the distance $x$ shrinks, so $c/x$ grows, so $AB$ shrinks. With $A$ fixed, that means $B$ moves towards $A$.
+    checked: "script: AB computed for several values of OA"
+    status: ready
+  - id: "3"
+    topic: 'Algebra: geometric progressions with powers'
+    areas: [algebra, number-theory]
+    difficulty: 2
+    statement: |
+      If $a$, $b$, $c$, be positive integers, and $a^{\frac{2}{b}}$, $b^{\frac{1}{ac}}$, $c^{\frac{2}{b}}$ be in geometrical progression, shew that $a^{\frac{2}{b^n}}$, $b^{\frac{1}{a^n c^n}}$, $c^{\frac{2}{b^n}}$, are also in geometrical progression.
+    note: 'The paper does not say so, but $n$ is meant to be any positive integer.'
+    hints:
+      - 'Three positive numbers are in geometric progression when the square of the middle one equals the product of the other two. Take logarithms.'
+      - 'The function $t \ln t$ is increasing for $t \ge 1$.'
+    solution: |
+      Three positive numbers $p, q, r$ are in geometric progression when $q^2 = pr$.
+
+      **What the first condition says.** Here it reads $b^{2/(ac)} = (ac)^{2/b}$. Take logarithms and multiply by $abc/2$:
+      $$b \ln b = ac \ln(ac).$$
+      The function $t \ln t$ is strictly increasing for $t \ge 1$ (its derivative $\ln t + 1$ is positive there). Both $b$ and $ac$ are positive integers, so they are at least $1$, and the equation forces
+      $$b = ac.$$
+      This is where we need integers: for fractions, two different numbers below $1/e$ can give the same $t \ln t$.
+
+      **The second condition.** We need $b^{2/(a^n c^n)} = (ac)^{2/b^n}$. With $b = ac$, the left side is $b^{2/b^n}$ and so is the right side. So the three numbers are in geometric progression for every $n$.
+    checked: "script: all a, c up to 7 and b up to 59; the first condition holds only when b = ac, and then the second holds for n = 1, 2, 3"
+    status: ready
+  - id: "4"
+    topic: 'Number theory: last digits of powers of three'
+    areas: [number-theory]
+    difficulty: 1
+    statement: |
+      If either of the two quantities $1 + 3^m$, $1 + 3^{m+4r}$, is a multiple of $10$, prove that the other is also a multiple of $10$, $m$ and $r$ being positive integers.
+    hints:
+      - 'Work out $3^4$.'
+    solution: |
+      Since $3^4 = 81 = 80 + 1$, every power $3^{4r} = 81^r$ leaves remainder $1$ on division by $10$ (a product of numbers ending in $1$ ends in $1$). So
+      $$3^{m+4r} - 3^m = 3^m\,(3^{4r} - 1)$$
+      is a multiple of $10$. The two quantities $1 + 3^m$ and $1 + 3^{m+4r}$ differ by this multiple of $10$, so if one is a multiple of $10$, so is the other.
+    checked: "script: m up to 29 and r up to 5"
+    status: ready
+  - id: "5"
+    topic: 'Trigonometry: two tangent equations'
+    areas: [trigonometry, algebra]
+    difficulty: 3
+    statement: |
+      Find the value of $\tan\alpha$ or $\tan\beta$ from the equations
+      $$\tan(\alpha+\beta) = \tan\alpha\cot\beta + \cot\alpha\tan\beta,$$
+      $$\tan(\alpha-\beta) = \tan\alpha\cot\beta - \cot\alpha\tan\beta.$$
+    hints:
+      - 'Put $x = \tan\alpha$, $y = \tan\beta$ and write both sides as fractions in $x$ and $y$.'
+      - 'The second equation has a factor $x - y$ on both sides.'
+    answer: '$\tan\alpha = \tan\beta = \dfrac{-1 \pm \sqrt5}{2}$'
+    solution: |
+      Let $x = \tan\alpha$ and $y = \tan\beta$ (neither can be $0$, or the cotangents would not exist). The equations become
+      $$\frac{x+y}{1-xy} = \frac{x^2+y^2}{xy}, \qquad \frac{x-y}{1+xy} = \frac{x^2-y^2}{xy}.$$
+
+      **The second equation.** Its right side is $\dfrac{(x-y)(x+y)}{xy}$. So either $x = y$, or, cancelling $x - y$,
+      $$xy = (x+y)(1+xy).$$
+
+      **Case $x = y$.** The second equation holds ($0 = 0$). The first becomes $\dfrac{2x}{1-x^2} = 2$, that is $x^2 + x - 1 = 0$, so
+      $$x = \frac{-1 \pm \sqrt5}{2}.$$
+      Neither value makes $1 - x^2$ zero, so both work.
+
+      **Case $xy = (x+y)(1+xy)$.** Write $s = x + y$ and $p = xy$. Then $s = \dfrac{p}{1+p}$. The first equation, cleared of fractions, is $ps = (s^2 - 2p)(1-p)$. Substituting $s$ and dividing by $p$ gives, after a little algebra,
+      $$p^3 - p - 1 = 0.$$
+      Its only real root is $p \approx 1.3247$, which gives $s \approx 0.5698$. But then $s^2 - 4p < 0$, so $x$ and $y$, the roots of $t^2 - st + p = 0$, are not real. This case gives nothing.
+
+      So $\tan\alpha = \tan\beta = \tfrac12(-1 \pm \sqrt5)$, that is, about $0.618$ or $-1.618$. (The angles are equal, so $\tan(\alpha-\beta) = 0$, and $\tan 2\alpha = 2$.)
+    checked: "script: both roots satisfy the equations; the other case has s² − 4p < 0"
+    status: ready
+  - id: "6"
+    topic: 'Trigonometry: least sum of squared tangents'
+    areas: [trigonometry]
+    difficulty: 2
+    statement: |
+      If $A + B + C = 90^\circ$, shew that the least value of
+      $$\tan^2 A + \tan^2 B + \tan^2 C$$
+      is $1$.
+    hints:
+      - 'When $A + B + C = 90^\circ$, what is $\tan A\tan B + \tan B\tan C + \tan C\tan A$?'
+      - 'For any numbers, $x^2 + y^2 + z^2 \ge xy + yz + zx$.'
+    solution: |
+      Let $x = \tan A$, $y = \tan B$, $z = \tan C$.
+
+      **An identity.** Since $A + B = 90^\circ - C$, we have $\tan(A+B) = \cot C$, so
+      $$\frac{x+y}{1-xy} = \frac1z, \qquad\text{that is}\qquad xy + yz + zx = 1.$$
+
+      **An inequality.** For any real numbers,
+      $$x^2 + y^2 + z^2 - (xy+yz+zx) = \tfrac12\big[(x-y)^2 + (y-z)^2 + (z-x)^2\big] \ge 0.$$
+      So $\tan^2A + \tan^2B + \tan^2C \ge 1$, with equality when $x = y = z$, that is, $A = B = C = 30^\circ$, where each $\tan^2$ is $\tfrac13$. The least value is $1$.
+    checked: "script: grid search over A and B"
+    status: ready
+  - id: "7"
+    topic: 'Conics: three lines meeting on the minor axis'
+    areas: [conics, geometry]
+    difficulty: 4
+    statement: |
+      Lines, drawn through $Y$, $Z$, at right angles to the major axis of an ellipse, cut the circles, of which $SP$, $HP$ are diameters, in $I$, $J$ respectively. Prove that $IS$, $JH$, $BC$, produced indefinitely, intersect each other in a single point.
+    note: 'The letters follow the textbooks of the day: $S$ and $H$ are the foci, $C$ the center, $B$ an end of the minor axis (so $BC$ is the minor axis), $P$ a point of the ellipse, and $Y$, $Z$ the feet of the perpendiculars from $S$ and $H$ to the tangent at $P$.'
+    hints:
+      - '$Y$ lies on the circle with diameter $SP$, because $\angle SYP$ is a right angle. So $S$, $Y$, $I$, $P$ are on one circle.'
+      - 'Angles in the same segment: the angle $SI$ makes with $SP$ equals the angle $YI$ makes with $YP$.'
+      - 'The tangent at $P$ makes equal angles with $PS$ and $PH$.'
+    solution: |
+      We use angles between lines, measured with a sign and up to multiples of $180^\circ$. Write $[\ell]$ for the angle a line $\ell$ makes with the major axis.
+
+      **Step 1: the line $SI$.** Since $\angle SYP = 90^\circ$, the point $Y$ is on the circle with diameter $SP$, and so is $I$. For four points on a circle, the chord $IP$ is seen at the same angle from $S$ and from $Y$:
+      $$[SI] - [SP] = [YI] - [YP].$$
+      Here $YI$ is perpendicular to the major axis, so $[YI] = 90^\circ$, and $YP$ is the tangent $t$ at $P$. So
+      $$[SI] = [SP] + 90^\circ - [t].$$
+      In the same way, using the circle on $HP$,
+      $$[HJ] = [HP] + 90^\circ - [t].$$
+
+      **Step 2: add.** The tangent at an ellipse makes equal angles with the two focal radii, so the lines $PS$ and $PH$ are mirror images in the tangent: $[SP] + [HP] = 2[t]$. Adding the two lines above,
+      $$[SI] + [HJ] = 2[t] + 180^\circ - 2[t] = 180^\circ \equiv 0.$$
+      So $[HJ] = -[SI]$.
+
+      **Step 3: a reflection.** Reflect the figure in the minor axis. This swaps $H$ and $S$ and turns a line at angle $\theta$ into a line at angle $-\theta$. So it carries the line $HJ$ to the line through $S$ at angle $-[HJ] = [SI]$, which is the line $SI$ itself.
+
+      Two lines that are mirror images in the minor axis meet on the minor axis (or are both parallel to it). So $IS$, $JH$ and $BC$ pass through one point.
+    checked: "script: 20 random ellipses and points P; IS and JH always cross on the minor axis"
+    status: ready
+  - id: "8"
+    topic: 'Conics: area of the triangle on a chord of contact'
+    areas: [conics]
+    difficulty: 3
+    statement: |
+      From any point $T$, two tangents are drawn to a given ellipse, the points of contact being $Q$, $Q'$: $CQ$, $CQ'$, $QQ'$, $CT$, are joined; $V$ is the intersection of $QQ'$, $CT$. Prove that the area of the rectilinear triangle $QCQ'$ varies inversely as
+      $$\left(\frac{CV}{TV}\right)^{\frac12} + \left(\frac{TV}{CV}\right)^{\frac12}.$$
+    note: '“Rectilinear” just means a triangle with straight sides. $C$ is the center of the ellipse. “Varies inversely as” means the area is a constant divided by this expression.'
+    hints:
+      - 'Squash the ellipse into a circle. Areas all scale by the same factor, and ratios of lengths along one line don''t change.'
+      - 'In a unit circle with $CT = d$, the chord of contact is at distance $1/d$ from the center.'
+    solution: |
+      **Reduce to a circle.** Stretch the plane in one direction so that the ellipse becomes a circle of radius $1$ (a stretch of this kind turns tangents into tangents). It multiplies every area by the same constant, and it keeps the ratio $CV : TV$, since $C$, $V$, $T$ stay on one line. So it is enough to prove that in a unit circle the area of $QCQ'$ is *equal* to
+      $$\frac{1}{\sqrt{CV/TV} + \sqrt{TV/CV}}.$$
+
+      **The circle.** Let $CT = d > 1$. The radius $CQ$ is perpendicular to the tangent $TQ$, and $QV$ is perpendicular to $CT$. In the right triangle $CQT$, $CV = CQ^2/CT = 1/d$, so
+      $$TV = d - \frac1d = \frac{d^2-1}{d}, \qquad QV = \sqrt{1 - \frac1{d^2}} = \frac{\sqrt{d^2-1}}{d}.$$
+      The triangle $QCQ'$ has base $QQ' = 2\,QV$ and height $CV$, so its area is
+      $$CV \cdot QV = \frac{\sqrt{d^2-1}}{d^2}.$$
+
+      **The expression.** Put $k = d^2 - 1$. Then $CV/TV = 1/k$ and
+      $$\sqrt{\frac{CV}{TV}} + \sqrt{\frac{TV}{CV}} = \frac{1}{\sqrt k} + \sqrt k = \frac{1+k}{\sqrt k} = \frac{d^2}{\sqrt{d^2-1}},$$
+      whose reciprocal is the area. For the ellipse with semi-axes $a$, $b$, the area is therefore $ab$ divided by the expression.
+    status: ready
+  - id: "9"
+    topic: 'Statics: a bent wire hung from two corners'
+    areas: [mechanics]
+    difficulty: 2
+    statement: |
+      A piece of uniform wire is bent into three sides of a square $ABCD$, of which the side $AD$ is wanting; shew that, if it be hung up by the two points $A$ and $B$ successively, the angle between the two positions of $BC$ is $\tan^{-1} 18$.
+    note: '“Wanting” means missing. A body hung freely from a point comes to rest with its center of gravity straight below that point.'
+    hints:
+      - 'Find the center of gravity $G$ of the three sides.'
+      - 'Hung from $A$, the line $AG$ is vertical; hung from $B$, the line $BG$ is. The wire turns through the angle $AGB$.'
+    solution: |
+      Put the square on axes with side $1$: $B = (0,0)$, $C = (1,0)$, $D = (1,1)$, $A = (0,1)$. The three sides have equal weight, with midpoints $(0,\tfrac12)$, $(\tfrac12,0)$, $(1,\tfrac12)$, so the center of gravity is
+      $$G = \left(\tfrac12, \tfrac13\right).$$
+
+      Hung from $A$, the wire hangs with $AG$ vertical; hung from $B$, with $BG$ vertical. Going from one position to the other, the whole wire (and so $BC$) turns through the angle between the lines $GA$ and $GB$.
+
+      From $G$, the vectors to $A$ and $B$ are $(-\tfrac12, \tfrac23)$ and $(-\tfrac12, -\tfrac13)$. The tangent of the angle between them is cross product over dot product:
+      $$\tan\theta = \frac{\tfrac16 + \tfrac13}{\tfrac14 - \tfrac29} = \frac{1/2}{1/36} = 18.$$
+      So $BC$ turns through $\tan^{-1} 18$, a little under $87^\circ$.
+    checked: "script: exact arithmetic"
+    viz: tp-1854-9
+    status: ready
+  - id: "10"
+    topic: 'Statics: center of gravity on a circle'
+    areas: [mechanics, geometry]
+    difficulty: 2
+    statement: |
+      A weight of given magnitude moves along the circumference of a circle, in which are fixed also two other weights: prove that the locus of the centre of gravity of the three weights is a circle. If the immoveable weights be varied in magnitude, their sum being constant, prove that the corresponding circular loci intercept equal portions of the chord joining the two immoveable weights.
+    note: 'A **locus** is the path traced by a moving point.'
+    hints:
+      - 'Write the center of gravity as a weighted average of position vectors.'
+      - 'The distance of a weighted average of points from a line is the weighted average of their distances.'
+    solution: |
+      Let the circle have center $O$ and radius $R$, the fixed weights $m_1$, $m_2$ sit at $A$ and $B$, and the moving weight $m$ sit at $P$. With $M = m_1 + m_2 + m$, the center of gravity is
+      $$G = \frac{m_1 A + m_2 B + m P}{M} = K + \frac{m}{M}(P - O), \qquad K = \frac{m_1 A + m_2 B + m\,O}{M}.$$
+      As $P$ runs round the circle, $P - O$ runs over all vectors of length $R$, so $G$ runs round the circle with center $K$ and radius $\rho = mR/M$.
+
+      **The second part.** Keep $m_1 + m_2$ fixed, so $M$ and $\rho$ stay the same. Let $d$ be the distance from $O$ to the chord $AB$. Points $A$ and $B$ are on the chord, so the distance of $K$ from the line $AB$ is
+      $$\frac{m_1\cdot 0 + m_2 \cdot 0 + m\,d}{M} = \frac{m d}{M},$$
+      which does not depend on how the total is split between $m_1$ and $m_2$. A circle of radius $\rho$ whose center is at distance $h$ from a line cuts off a piece of length $2\sqrt{\rho^2 - h^2}$. Both $\rho$ and $h$ are fixed, so every one of these circles cuts off the same length on the line $AB$.
+    status: ready
+  - id: "11"
+    topic: 'Dynamics: one bounce back to the start'
+    areas: [mechanics]
+    difficulty: 3
+    statement: |
+      A ball of elasticity $e$ is projected from a point in an inclined plane, and, after once impinging upon the inclined plane, rebounds to its point of projection: prove that, $\alpha$ being the inclination of the inclined plane to the horizon, and $\beta$ that of the direction of projection to the inclined plane,
+      $$\cot\alpha\,.\cot\beta = 1 + e.$$
+    note: '“Elasticity $e$” is what we now call the coefficient of restitution: at a bounce the speed across the plane is multiplied by $e$, and the speed along the smooth plane is unchanged. “Impinging” means striking.'
+    hints:
+      - 'Use axes along and across the plane. Gravity has components $g\sin\alpha$ down the slope and $g\cos\alpha$ into the plane.'
+      - 'The time of the second flight is $e$ times the time of the first.'
+    solution: |
+      Take $x$ up the slope and $y$ out of the plane. Gravity gives accelerations $-g\sin\alpha$ along $x$ and $-g\cos\alpha$ along $y$. Let the speed of projection be $u$.
+
+      **First flight.** Across the plane the ball starts with $u\sin\beta$, so it lands after
+      $$T = \frac{2u\sin\beta}{g\cos\alpha},$$
+      arriving with cross-speed $u\sin\beta$ and slope-speed $u\cos\beta - g\sin\alpha\,T$.
+
+      **The bounce and second flight.** The cross-speed becomes $e u\sin\beta$, so the second flight lasts $eT$. The slope-speed carries on.
+
+      **Back to the start.** Along the slope the acceleration is the same constant $-g\sin\alpha$ for the whole time $(1+e)T$, and the slope-velocity never jumps. So the position along the slope after both flights is
+      $$u\cos\beta\,(1+e)T - \tfrac12 g\sin\alpha\,(1+e)^2T^2.$$
+      Setting this to zero:
+      $$u\cos\beta = \tfrac12 g\sin\alpha\,(1+e)\,T = (1+e)\,\frac{u\sin\alpha\sin\beta}{\cos\alpha}.$$
+      Divide by $u\sin\alpha\sin\beta$: $\cot\alpha\cot\beta = 1 + e$.
+    checked: "script: simulated both flights with the angle given by the formula; the ball returns to within 10⁻¹²"
+    viz: tp-1854-11
+    status: ready
+  - id: "12"
+    topic: 'Dynamics: two shots in the same direction'
+    areas: [mechanics]
+    difficulty: 1
+    statement: |
+      Two heavy bodies are projected from the same point at the same instant in the same direction, with different velocities; find the direction of the line joining them at any subsequent time.
+    note: 'A “heavy body” is simply one with weight: it moves under gravity. The air is ignored.'
+    hints:
+      - 'Gravity pulls both bodies down by the same amount in the same time.'
+    answer: 'Always parallel to the direction of projection'
+    solution: |
+      Let the direction of projection be the unit vector $\mathbf d$ and the speeds $u_1$, $u_2$. After time $t$ the positions are
+      $$u_1 t\,\mathbf d - \tfrac12 g t^2\,\mathbf k \quad\text{and}\quad u_2 t\,\mathbf d - \tfrac12 g t^2\,\mathbf k,$$
+      where $\mathbf k$ points straight up. Their difference is $(u_1 - u_2)t\,\mathbf d$. So the line joining them always points along the direction of projection, and its length grows steadily.
+    checked: "algebra: the difference of the two positions"
+    status: ready
+  - id: "13"
+    topic: 'Dynamics: three balls colliding at once'
+    areas: [mechanics]
+    difficulty: 4
+    statement: |
+      Three equal and perfectly elastic balls $A$, $B$, $C$ move with equal velocities towards the same point, in directions equally inclined to each other; suppose first, that they impinge upon each other, at the same instant; secondly, that $B$ and $C$ impinge on each other, and immediately afterwards simultaneously on $A$; and thirdly, that $B$ and $C$ impinge simultaneously on $A$ just before touching each other; and let $V_1 V_2 V_3$ be the velocities of $A$ after impact on these suppositions respectively: shew that
+      $$V_2 = \tfrac15 V_1, \quad\text{and that}\quad V_3 = \tfrac75 V_1.$$
+    note: '“Perfectly elastic” means no kinetic energy is lost. The balls are smooth, so each push acts along the line of centers. “Equally inclined” directions are $120^\circ$ apart.'
+    hints:
+      - 'In case 1, symmetry sends each ball straight back with its old speed.'
+      - 'When $B$ and $C$ strike $A$ together, their centers and $A$''s form an equilateral triangle. Use one unknown impulse $J$ for each contact, then conservation of energy.'
+    solution: |
+      Let the masses be $1$ and the common speed $v$. Let $A$ move along $+y$, so $B$ and $C$ come from the upper right and upper left with velocities $(\mp\tfrac{\sqrt3}{2}v, -\tfrac12 v)$.
+
+      **Case 1.** By symmetry each ball is pushed straight back and, with no energy lost, leaves with speed $v$. So $V_1 = v$.
+
+      **The common step.** When $B$ and $C$ touch $A$ together and touch each other (or nearly), the three centers form an equilateral triangle, and the lines from $A$ to $B$ and to $C$ point along $\mathbf n_B = (\tfrac12, \tfrac{\sqrt3}{2})$ and $\mathbf n_C = (-\tfrac12, \tfrac{\sqrt3}{2})$. By symmetry $B$ receives an impulse $J\mathbf n_B$, $C$ receives $J\mathbf n_C$, and $A$ receives the opposite of their sum, $(0, -\sqrt3 J)$. Energy fixes $J$.
+
+      **Case 2.** First $B$ and $C$ meet each other. Their line of centers is horizontal, so they swap horizontal velocities: $B$ now has $(\tfrac{\sqrt3}{2}v, -\tfrac12v)$ and $C$ the mirror image. After the blow on $A$,
+      $$\text{energy: } (v - \sqrt3 J)^2 + 2\left|\left(\tfrac{\sqrt3}{2}v + \tfrac12J,\ -\tfrac12v + \tfrac{\sqrt3}{2}J\right)\right|^2 = 3v^2,$$
+      which simplifies to $5J^2 - 2\sqrt3\,vJ = 0$. So $J = \tfrac{2\sqrt3}{5}v$ and $A$ leaves with $v - \sqrt3J = -\tfrac15 v$. So $V_2 = \tfrac15 V_1$.
+
+      **Case 3.** Now $B$ and $C$ still have their original velocities $(-\tfrac{\sqrt3}{2}v, -\tfrac12v)$ and its mirror image. The same energy equation becomes $5J^2 - 4\sqrt3\,vJ = 0$, so $J = \tfrac{4\sqrt3}{5}v$ and $A$ leaves with $v - \sqrt3J = -\tfrac75v$. So $V_3 = \tfrac75 V_1$.
+
+      In every case $A$ is thrown back the way it came. (For three balls touching at once, "perfectly elastic" is taken, as the problem intends, to mean that the symmetric impulses conserve energy.)
+    checked: "script: solved the energy equations numerically for both cases"
+    status: ready
+  - id: "14"
+    topic: 'Orbits: angular speeds at four points of an ellipse'
+    areas: [mechanics, conics]
+    difficulty: 3
+    statement: |
+      $CP$, $CD$, are two conjugate semidiameters of an ellipse described by a body about a centre of force in the focus $S$: $PP'$, $DD'$, chords of the ellipse parallel to the major axis. Prove that, $\alpha$, $\alpha'$, $\beta$, $\beta'$, being the angular velocities of the body about $S$ at $P$, $P'$, $D$, $D'$, respectively,
+      $$\frac{1}{(\alpha\alpha')^{\frac12}} + \frac{1}{(\beta\beta')^{\frac12}} = \text{a constant quantity.}$$
+    note: 'Two semidiameters are **conjugate** when each is parallel to the tangent at the end of the other; for the ellipse $x = a\cos\theta$, $y = b\sin\theta$, they belong to parameters $\theta$ and $\theta + 90^\circ$.'
+    hints:
+      - 'Kepler''s second law: $r^2\omega = h$ is the same at every point of the orbit.'
+      - 'With $S$ at $(-ae, 0)$, the focal distance of the point with abscissa $x$ is $a + ex$.'
+    solution: |
+      Put the ellipse as $x^2/a^2 + y^2/b^2 = 1$ with eccentricity $e$ and $S = (-ae, 0)$. The distance from $S$ to a point of the ellipse with abscissa $x$ is $a + ex$.
+
+      **Angular speed.** Equal areas in equal times means $r^2\omega = h$, a constant. So $\omega = h/r^2$.
+
+      **The pair $P$, $P'$.** The chord $PP'$ is parallel to the major axis, so $P'$ is the mirror image of $P$ in the minor axis. If $P$ has abscissa $x_P$, then $P'$ has $-x_P$, and
+      $$\frac{1}{\sqrt{\alpha\alpha'}} = \frac{r_P\, r_{P'}}{h} = \frac{(a + e x_P)(a - e x_P)}{h} = \frac{a^2 - e^2x_P^2}{h}.$$
+      In the same way $\dfrac{1}{\sqrt{\beta\beta'}} = \dfrac{a^2 - e^2x_D^2}{h}$.
+
+      **Conjugate semidiameters.** If $P = (a\cos\theta, b\sin\theta)$ then $D = (-a\sin\theta, b\cos\theta)$, so $x_P^2 + x_D^2 = a^2$. Adding,
+      $$\frac{1}{\sqrt{\alpha\alpha'}} + \frac{1}{\sqrt{\beta\beta'}} = \frac{2a^2 - e^2a^2}{h} = \frac{a^2(2 - e^2)}{h},$$
+      which is the same for every pair of conjugate semidiameters.
+    checked: "script: random ellipses and angles"
+    status: ready
+  - id: "15"
+    topic: 'Orbits: one ellipse, either focus'
+    areas: [mechanics, conics]
+    difficulty: 3
+    statement: |
+      Supposing the velocity of a body in a given elliptic orbit to be the same at a certain point, whether it describe the orbit in a time $t$ about one focus, or in a time $t'$ about the other, prove that, $2a$ being the major axis, the focal distances of the point are equal to
+      $$\frac{2at'}{t+t'}, \quad \frac{2at}{t+t'}.$$
+    note: 'To “describe an orbit about a focus” means to travel round it under an attraction to that focus, following the inverse-square law.'
+    hints:
+      - 'For an inverse-square orbit, $v^2 = \mu\left(\frac2r - \frac1a\right)$ and the period is $2\pi a^{3/2}/\sqrt\mu$.'
+      - 'The two focal distances add up to $2a$.'
+    solution: |
+      For an ellipse of semi-major axis $a$ described about a focus under an inverse-square attraction of strength $\mu$, the speed at distance $r$ from that focus is given by $v^2 = \mu\left(\frac2r - \frac1a\right)$, and the period is $2\pi a^{3/2}/\sqrt{\mu}$. So $\mu = 4\pi^2a^3/T^2$.
+
+      Let the point be at distances $r$ and $r'$ from the two foci, with $r + r' = 2a$. Note that
+      $$\frac2r - \frac1a = \frac{2a - r}{ar} = \frac{r'}{ar}.$$
+      Equal speeds about the two foci, with periods $t$ and $t'$, means
+      $$\frac{4\pi^2a^3}{t^2}\cdot\frac{r'}{ar} = \frac{4\pi^2a^3}{t'^2}\cdot\frac{r}{ar'}, \qquad\text{so}\qquad r'^2t'^2 = r^2t^2, \qquad rt = r't'.$$
+      With $r + r' = 2a$ this gives $r = \dfrac{2at'}{t+t'}$ and $r' = \dfrac{2at}{t+t'}$.
+    checked: "script: equal speeds at the computed distances"
+    status: ready
+  - id: "16"
+    topic: 'Optics: where two candle shadows point'
+    areas: [optics, geometry]
+    difficulty: 1
+    statement: |
+      Three candles are placed in a room, and the two shorter being lighted throw shadows of the third upon the ceiling; if the directions of these shadows be produced, where will they meet?
+    hints:
+      - 'The shadow of the tall candle cast by one flame lies in the vertical plane through that flame and the tall candle.'
+    answer: 'At the point of the ceiling directly above the third candle'
+    solution: |
+      Treat each flame as a point of light and the third candle as a vertical stick that rises above both flames.
+
+      Take one flame, $L$. Every light ray that grazes the stick lies in the vertical plane through $L$ and the stick. So the shadow on the ceiling lies along the line where this vertical plane meets the ceiling. That line passes through the point $K$ of the ceiling straight above the stick, because $K$ is in the plane too.
+
+      The same holds for the other flame. So both shadow lines, produced, pass through $K$: they meet at the point of the ceiling directly above the third candle. (If the two flames and the candle stand in one vertical plane, the shadows lie along one line.)
+    checked: "geometry: the vertical plane through each flame contains the point above the candle"
+    status: ready
+  - id: "17"
+    topic: 'Optics: two rays bouncing inside a circular mirror'
+    areas: [optics, geometry]
+    difficulty: 3
+    statement: |
+      Within a reflecting circle on the same side of the centre are two parallel rays, one dividing the circumference into arcs which are as $3$ to $1$, the other dividing it into arcs which are as $8$ to $1$; find the least value of $n$ such that, after each ray has suffered $n$ reflections, they may be again parallel.
+    hints:
+      - 'After each reflection a ray inside a circle makes a chord just as long as the one before, so it cuts off the same arc.'
+      - 'Each reflection turns the ray''s direction through the angle of the arc it cuts off.'
+    answer: '$n = 18$ (the rays first point the same way again after $36$)'
+    solution: |
+      **One ray.** A ray along a chord that cuts off a small arc of angle $\gamma$ (measured at the center) hits the circle and reflects into another chord of the same length, cutting off the next arc of angle $\gamma$. The chord from the point at angle $\theta_1$ to the point at angle $\theta_2$ points in the direction $\tfrac12(\theta_1 + \theta_2) + 90^\circ$. Moving on by one arc adds $\gamma$ to both ends, so each reflection turns the ray through exactly $\gamma$.
+
+      **Our two rays.** The first divides the circle in the ratio $3:1$, so its small arc is $\tfrac14 \cdot 360^\circ = 90^\circ$. The second divides it $8:1$, so its small arc is $\tfrac19\cdot 360^\circ = 40^\circ$. Both rays lie on the same side of the center and point the same way, so they turn in the same sense. After $n$ reflections their directions differ by
+      $$n(90^\circ - 40^\circ) = 50n^\circ.$$
+
+      **Parallel again.** The lines are parallel when $50n$ is a multiple of $180$, that is, when $5n$ is a multiple of $18$. The least such $n$ is $18$. At that moment the rays point in opposite directions ($50 \times 18 = 900 = 5 \times 180$). If "parallel" must mean pointing the same way, we need $50n$ to be a multiple of $360$, and the answer is $36$.
+    checked: "script: traced both rays through 40 reflections; directions first parallel at 18 and first equal at 36"
+    viz: tp-1854-17
+    status: ready
+  - id: "18"
+    topic: 'Hydrostatics: center of pressure beside an asymptote'
+    areas: [hydrostatics, conics]
+    difficulty: 3
+    statement: |
+      One asymptote of an hyperbola lies in the surface of a fluid; find the depth of the centre of pressure of the area included between the immersed asymptote, the curve, and two given horizontal lines in the plane of the hyperbola.
+    note: 'The **center of pressure** is the point where the total force of the fluid on a flat surface can be taken to act. Pressure in a still liquid grows in proportion to depth.'
+    hints:
+      - 'Use the asymptotes as (slanting) axes; then the hyperbola is $XY = \text{constant}$.'
+      - 'Find how the width of the region, measured along horizontal lines, depends on the depth.'
+    answer: 'Halfway between the depths of the two lines: $\tfrac12(z_1 + z_2)$'
+    solution: |
+      The plane of the hyperbola is vertical (it holds a horizontal asymptote and the depth direction). Use the two asymptotes as axes: $X$ along the one in the surface, $Y$ along the immersed one. In these slanting axes the hyperbola is $XY = k$.
+
+      A horizontal line is parallel to the surface asymptote, so it is a line $Y = \text{const}$, and its depth is $z = Y\sin\phi$, where $\phi$ is the angle between the asymptotes. Along that line the region runs from the immersed asymptote ($X = 0$) to the curve ($X = k/Y$), a width proportional to $1/z$. So a thin strip at depth $z$ has area proportional to $dz/z$.
+
+      The pressure there is proportional to $z$, so the strip carries a force proportional to $z \cdot dz/z = dz$: the same for every strip. The force is spread evenly over the depths from $z_1$ to $z_2$, and its center is at the middle:
+      $$\bar z = \frac{\int_{z_1}^{z_2} z\,dz}{\int_{z_1}^{z_2} dz} = \frac{z_1 + z_2}{2}.$$
+    checked: "script: numerical integration"
+    status: ready
+  - id: "19"
+    topic: 'Hydrostatics: thrust on a cone at three tilts'
+    areas: [hydrostatics]
+    difficulty: 3
+    statement: |
+      A cone is totally immersed in a fluid, the depth of the centre of its base being given. Prove that, $P$, $P'$, $P''$, being the resultant pressures on its convex surface, when the sines of the inclination of its axis to the horizon are $s$, $s'$, $s''$, respectively,
+      $$P^2(s' - s'') + P'^2(s'' - s) + P''^2(s - s') = 0.$$
+    note: '“Resultant pressure” is the total force of the fluid on the curved surface, added as vectors.'
+    hints:
+      - 'The force on the whole closed surface is the buoyancy, straight up.'
+      - 'Subtract the force on the flat base. Its size does not change when the cone tilts, because the depth of the base''s center is fixed.'
+    solution: |
+      **The forces.** The total force of the fluid on the cone's closed surface is the buoyancy: a force $W = \rho g V$ straight up. The force on the flat base is $Q = \rho g h A$, where $h$ is the given depth of the base's center and $A$ the area of the base; it acts along the axis, pushing in. Neither $W$ nor $Q$ changes as the cone tilts.
+
+      So the force on the curved surface is $\mathbf F = W\mathbf k - Q\mathbf a$, where $\mathbf k$ points up and $\mathbf a$ is the unit vector along the axis from the base towards the vertex. Then
+      $$F^2 = W^2 + Q^2 - 2WQ\,(\mathbf k\cdot\mathbf a).$$
+      Here $\mathbf k\cdot\mathbf a$ is the sine of the inclination of the axis to the horizon, taken positive when the vertex is above the base and negative when below. So $F^2 = \lambda + \mu s$ for constants $\lambda$, $\mu$.
+
+      **The identity.** With $P^2 = \lambda + \mu s$ and so on,
+      $$\sum P^2 (s' - s'') = \lambda\sum(s'-s'') + \mu\sum s(s'-s'') = 0 + 0,$$
+      because $(s'-s'') + (s''-s) + (s-s') = 0$ and $s s' - s s'' + s' s'' - s' s + s'' s - s'' s' = 0$.
+    status: ready
+  - id: "20"
+    topic: 'Optics: light from a disk through a rectangular hole'
+    areas: [optics, geometry]
+    difficulty: 3
+    statement: |
+      Light emanating from a luminous circular disk, placed horizontally on the ceiling of a room, passes through a rectangular aperture in the floor: ascertain the form and area of the luminous patch on the floor of the room below.
+
+      Shew that neither the shape nor the area of the patch will be affected by any movement of the disk along the ceiling.
+    hints:
+      - 'Follow one ray from a point $L$ of the disk through a point $Q$ of the opening. Where does it land?'
+      - 'The patch is made of all points $(1+k)Q - kL$. That is a scaled rectangle swept around by a scaled disk.'
+    answer: 'A rectangle with rounded corners; area $(1+k)^2ab + 2kr(1+k)(a+b) + \pi k^2r^2$'
+    solution: |
+      Let the floor with the opening be the plane at height $0$, the ceiling at height $H$ above it, and the lower floor at depth $D$ below it. Put $k = D/H$. Let the opening be an $a$ by $b$ rectangle and the disk have radius $r$.
+
+      **Where a ray lands.** A ray from a point $L$ of the disk through a point $Q$ of the opening goes on for $D/H = k$ times the distance it has come, so it lands at
+      $$X = Q + k(Q - L) = (1+k)\,Q - k\,L$$
+      (thinking of points as horizontal position vectors).
+
+      **The patch.** As $Q$ runs over the opening, $(1+k)Q$ runs over a rectangle with sides $(1+k)a$ and $(1+k)b$. As $L$ runs over the disk, $-kL$ runs over a disk of radius $kr$. The patch is every sum of the two: the rectangle with a disk of radius $kr$ swept around it. That is a rectangle with rounded corners: the big rectangle, four strips of width $kr$ along its sides, and four quarter-circles of radius $kr$ at the corners. Its area is
+      $$(1+k)^2ab + 2kr(1+k)(a+b) + \pi k^2 r^2.$$
+
+      **Moving the disk.** Sliding the disk along the ceiling by a vector $\mathbf w$ changes every $X$ by $-k\mathbf w$. The whole patch slides without changing shape or area.
+    viz: tp-1854-20
+    checked: "script: random rays from disk to opening all land in the rounded rectangle; Monte Carlo area agrees to 0.1%"
+    status: ready
+  - id: "21"
+    topic: 'Astronomy: noon shadows at three latitudes'
+    areas: [astronomy, trigonometry]
+    difficulty: 3
+    statement: |
+      If $c_1$, $c_2$, $c_3$, be the lengths of the meridian shadows of three equal vertical gnomons, on the same day, at three different places on the same meridian, prove that the latitudes $\lambda_1$, $\lambda_2$, $\lambda_3$, of the places are connected together by the equation
+      $$c_1\cdot\frac{(c_2-c_3)^2}{\tan(\lambda_2-\lambda_3)} + c_2\cdot\frac{(c_3-c_1)^2}{\tan(\lambda_3-\lambda_1)} + c_3\cdot\frac{(c_1-c_2)^2}{\tan(\lambda_1-\lambda_2)} = 0.$$
+    note: 'A **gnomon** is the upright stick of a sundial. The **meridian shadow** is its shadow at noon. Shadows pointing north and south count with opposite signs.'
+    hints:
+      - 'At noon the Sun''s angle from the vertical at latitude $\lambda$ is $\lambda - \delta$, where $\delta$ is the Sun''s declination that day.'
+      - 'So $c_i = h\tan(\lambda_i - \delta)$. Use the formula for $\tan$ of a difference.'
+    solution: |
+      Let the gnomons have height $h$ and let $\delta$ be the Sun's declination on that day. At local noon the Sun is in the meridian, at angle $\lambda - \delta$ from the vertical, so the noon shadow has (signed) length $c = h\tan(\lambda - \delta)$.
+
+      Write $\theta_i = \lambda_i - \delta$ and $t_i = \tan\theta_i$, so $c_i = ht_i$. Since $\lambda_2 - \lambda_3 = \theta_2 - \theta_3$,
+      $$\tan(\lambda_2 - \lambda_3) = \frac{t_2 - t_3}{1 + t_2t_3}.$$
+      So the first term is
+      $$ht_1\cdot\frac{h^2(t_2-t_3)^2(1+t_2t_3)}{t_2-t_3} = h^3\,t_1(t_2-t_3)(1+t_2t_3) = h^3\big[t_1(t_2 - t_3) + t_1t_2t_3(t_2 - t_3)\big].$$
+      The other two terms are the same with the indices moved round. Adding all three,
+      $$h^3\Big[\big(t_1t_2 - t_1t_3 + t_2t_3 - t_2t_1 + t_3t_1 - t_3t_2\big) + t_1t_2t_3\big((t_2-t_3) + (t_3-t_1) + (t_1-t_2)\big)\Big] = 0.$$
+    checked: "script: random latitudes and declinations"
+    status: ready

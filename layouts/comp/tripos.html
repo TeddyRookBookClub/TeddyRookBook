@@ -1,0 +1,74 @@
+{{ define "main" }}
+{{- /* /math/competitions/tripos/: what the Tripos was (every fact linked to its source), the two papers, the standout
+   problems, and a table of every problem. Data: data/comp/tripos/*.yaml. */ -}}
+{{- $K := partial "comp/contest.html" "tripos" -}}
+{{ partial "comp/head.html" . }}
+{{ partial "inline/ml-css.html" "comp/tripos.css" }}
+{{ partial "inline/ml-js.html" "comp/tripos.js" }}
+{{- $T := (index (site.Data.comp | default dict) "tripos") | default dict -}}
+{{- $g := "https://grokipedia.com/page/" -}}
+<article class="cp tp tp-hub">
+  <nav class="cp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <a href="{{ "math/competitions/" | relURL }}">Competitions</a> <span aria-hidden="true">›</span> <span>{{ $K.crumb }}</span></nav>
+  <header class="cp-head">
+    <p class="cp-eyebrow">Math Ladder · Real exams from the 1800s</p>
+    <h1>{{ .Title }}</h1>
+    <p class="cp-intro">{{ $K.intro }}</p>
+  </header>
+  <div class="cp-legal" role="note"><p>{{ $K.legal | safeHTML }}</p></div>
+
+  <div class="cp-grid2">
+  {{- range $k, $f := $T }}{{ if eq $f.kind "paper" }}
+    {{- $n := 0 }}{{ range $f.problems }}{{ if eq .status "ready" }}{{ $n = add $n 1 }}{{ end }}{{ end }}
+    <section class="cp-panel" aria-labelledby="tp-h-{{ $f.slug }}">
+      <h2 id="tp-h-{{ $f.slug }}"><span aria-hidden="true">⏱️</span> {{ $f.title }}</h2>
+      <p class="cp-small">{{ $f.date }}</p>
+      <div class="cp-md">{{ partial "comp/md.html" (dict "s" $f.intro "p" $) }}</div>
+      <p class="cp-small">{{ len $f.problems }} problems · 3 hours · {{ $n }} solutions ready</p>
+      <p><a class="cp-btn pri" href="{{ printf "%s%s/" $K.base $f.slug | relURL }}">Take the {{ $f.year }} paper</a></p>
+    </section>
+  {{- end }}{{ end }}
+  {{- range $k, $f := $T }}{{ if eq $f.kind "collection" }}
+    <section class="cp-panel" aria-labelledby="tp-h-{{ $f.slug }}">
+      <h2 id="tp-h-{{ $f.slug }}"><span aria-hidden="true">⭐</span> {{ $f.title }}</h2>
+      <div class="cp-md">{{ partial "comp/md.html" (dict "s" $f.intro "p" $) }}</div>
+      <p><a class="cp-btn pri" href="{{ printf "%s%s/" $K.base $f.slug | relURL }}">Browse the problems</a></p>
+    </section>
+  {{- end }}{{ end }}
+  </div>
+
+  <section class="tp-history" aria-labelledby="tp-h-hist">
+    <h2 id="tp-h-hist">What the Tripos was</h2>
+    <p>The Mathematical Tripos grew out of the Senate House Examination, the test every Cambridge student took for a Bachelor of Arts degree. It took the name “Mathematical Tripos” after a Classical Tripos was added in 1824 (<a href="{{ $g }}Mathematical_Tripos" rel="noopener">Grokipedia</a>). The papers you see here say “Senate-House” on their title pages for that reason.</p>
+    <p>What made it famous was the list. The examiners ranked every successful candidate in order of merit, best first. The first class were the <b>Wranglers</b>, the second the Senior Optimes, the third the Junior Optimes (<a href="{{ $g }}Wrangler_(University_of_Cambridge)" rel="noopener">Grokipedia</a>). The top name of all was the <b>Senior Wrangler</b>. Lists were published from the 1700s until 1909, when the order of merit was abolished (<a href="{{ $g }}Senior_Wrangler" rel="noopener">Grokipedia</a>).</p>
+    <p>The student at the very bottom of the honors list, the last of the Junior Optimes, received the <b>wooden spoon</b>: a joke prize, often a real carved and inscribed spoon. The custom ended with the order of merit in 1909 (<a href="{{ $g }}Wooden_spoon_(award)" rel="noopener">Grokipedia</a>), but the phrase lives on for whoever finishes last.</p>
+    <h3>Coaches</h3>
+    <p>Ambitious students hired private <b>coaches</b> who drilled them in problems like these, hour after hour. William Hopkins was called the “senior wrangler maker”: by 1849 nearly 200 of his pupils had become Wranglers, seventeen of them Senior Wranglers, among them William Thomson (later Lord Kelvin), George Stokes and James Clerk Maxwell (<a href="{{ $g }}William_Hopkins" rel="noopener">Grokipedia</a>). Edward Routh, Senior Wrangler in 1854, coached from 1855 to 1888; about 480 of his pupils became Wranglers and 28 Senior Wranglers (<a href="{{ $g }}Edward_Routh" rel="noopener">Grokipedia</a>). One of the problems on the 1878 paper here is now called Routh's theorem.</p>
+    <h3>Famous second places</h3>
+    <p>Coming first was not everything. <b>James Clerk Maxwell</b>, whose equations describe light, electricity and magnetism, was Second Wrangler in 1854, just behind Routh (<a href="{{ $g }}James_Clerk_Maxwell" rel="noopener">Grokipedia</a>). You can sit the third-day problems paper of that year below. <b>William Thomson, Lord Kelvin</b>, was Second Wrangler in 1845 and won the first Smith's Prize, a separate prize examination (<a href="{{ $g }}Lord_Kelvin" rel="noopener">Grokipedia</a>).</p>
+    <h3>Philippa Fawcett, 1890</h3>
+    <p>Women were allowed to sit the Tripos papers from 1881, but they were not placed in the official list and could not take degrees (<a href="{{ $g }}Mathematical_Tripos" rel="noopener">Grokipedia</a>). In 1890 <b>Philippa Fawcett</b> of Newnham College scored the highest marks of anyone. She could not be named Senior Wrangler, so the result was announced as “above the Senior Wrangler” (<a href="{{ $g }}Philippa_Fawcett" rel="noopener">Grokipedia</a>). Women were not granted full Cambridge degrees until 1948 (<a href="{{ $g }}Senior_Wrangler" rel="noopener">Grokipedia</a>).</p>
+    <h3>How to read these problems</h3>
+    <p>The examiners wrote in the English of their day: “shew” for show, “centre” for center, “a heavy body” for anything with weight, “a particle is projected” for something thrown. Each problem has a short note where the words or conventions are old. The physics in them is ordinary Newtonian mechanics, optics and gravity, still correct for balls, pulleys and light at everyday scales. We left out problems that rely on theories now abandoned.</p>
+  </section>
+
+  <section aria-labelledby="tp-h-all" class="cp-allp">
+    <h2 id="tp-h-all">Every problem</h2>
+    <div class="cp-tablewrap">
+    <table class="cp-table">
+      <thead><tr><th scope="col">Problem</th><th scope="col">Topic</th><th scope="col"><abbr title="Difficulty, 1 to 5, our estimate">Level</abbr></th><th scope="col">Solution</th></tr></thead>
+      <tbody>
+      {{- range $k, $f := $T }}{{ range $f.problems }}
+      <tr>
+        <td><a href="{{ printf "%s%s/#%s" $K.base $f.slug (.id | urlize) | relURL }}">{{ if eq $f.kind "paper" }}{{ $f.year }} paper, {{ .label | default .id }}{{ else }}{{ .year }}{{ end }}</a></td>
+        <td>{{ partial "comp/md.html" (dict "s" .topic "inline" true) }}</td>
+        <td>{{ .difficulty }}</td>
+        <td>{{ if eq .status "ready" }}Ready{{ else }}Coming{{ end }}</td>
+      </tr>
+      {{- end }}{{ end }}
+      </tbody>
+    </table>
+    </div>
+  </section>
+  <p class="cp-small"><a href="{{ "math/competitions/" | relURL }}">All competition pages</a></p>
+</article>
+{{ end }}

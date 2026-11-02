@@ -34,6 +34,20 @@
       <p class="cp-small">{{ if $nir }}{{ $nir }} solutions ready across {{ $niy }} {{ cond (eq $niy 1) "year" "years" }}. {{ end }}The problems are © the International Mathematical Olympiad; we link to them and write our own solutions.</p>
       <p><a class="cp-btn pri" href="{{ "math/competitions/imo/" | relURL }}">Open the guide</a></p>
     </section>
+    {{- $TP := index $C "tripos" | default dict }}{{ $ntp := 0 }}{{ range $TP }}{{ range .problems }}{{ $ntp = add $ntp 1 }}{{ end }}{{ end }}
+    <section class="cp-panel" aria-labelledby="cp-h-tripos">
+      <h2 id="cp-h-tripos"><span aria-hidden="true">🎓</span> The Cambridge Tripos, 1800s</h2>
+      <p>Real exam problems from the Cambridge Mathematical Tripos, the test that ranked Maxwell and Kelvin, in the examiners' own words. Take a complete paper against the clock, or browse standout problems on projectiles, pulleys, mirrors and chance.</p>
+      <p class="cp-small">{{ if $ntp }}{{ $ntp }} problems. {{ end }}Public domain, transcribed from scans; the solutions are our own.</p>
+      <p><a class="cp-btn pri" href="{{ "math/competitions/tripos/" | relURL }}">Open the Tripos</a></p>
+    </section>
+    {{- $SW := index $C "schweitzer" | default dict }}{{ $nsw := 0 }}{{ $nsy := 0 }}{{ range $SW }}{{ $nsy = add $nsy 1 }}{{ range .problems }}{{ $nsw = add $nsw 1 }}{{ end }}{{ end }}
+    <section class="cp-panel" aria-labelledby="cp-h-schw">
+      <h2 id="cp-h-schw"><span aria-hidden="true">🇭🇺</span> Schweitzer Competition: a selection</h2>
+      <p>Hungary's Miklós Schweitzer Memorial Competition gives university students about ten days for research-level problems. We picked the ones we could solve completely and check, from analysis and algebra to probability and topology.</p>
+      <p class="cp-small">{{ if $nsw }}{{ $nsw }} problems from {{ $nsy }} {{ cond (eq $nsy 1) "year" "years" }}. {{ end }}The problems are © the János Bolyai Mathematical Society; we link to them and write our own solutions.</p>
+      <p><a class="cp-btn pri" href="{{ "math/competitions/schweitzer/" | relURL }}">Open the selection</a></p>
+    </section>
   </div>
   <aside class="cp-note">
     <p><b>New to proofs?</b> Contest problems usually ask you to prove something. The Math Ladder's <a href="{{ "math/" | relURL }}">courses</a> build the tools first, from algebra through discrete math and analysis.</p>

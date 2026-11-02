@@ -1,0 +1,28 @@
+/* Tripos pages (layouts/comp/tripos.html, tpaper.html, _partials/comp/tcard.html): prefix tp-. Light and dark.
+   Print: html[data-tp-print="paper"] prints the problems only, as an exam paper; "full" adds hints and solutions. */
+.tp-stmt{background:var(--cp-legal);border-left:4px solid var(--cp-gold);border-radius:8px;padding:.5rem .9rem;margin:.7rem 0 .4rem;font-family:Georgia,"Times New Roman",serif;font-size:1.03rem;line-height:1.6}
+.tp-stmt p{margin:.35rem 0}
+.tp-num{display:none}
+.tp-src{font-size:.82rem;color:var(--cp-dim);margin:.2rem 0 .4rem}
+.tp-note{font-size:.9rem;background:var(--cp-soft);border-radius:8px;padding:.35rem .7rem;margin:.4rem 0}
+.tp-take{background:var(--cp-soft);border-radius:12px;padding:.6rem 1rem;margin:1rem 0}
+.tp-take h2{margin-top:.2rem}
+.tp-clock{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.tp-time{font:700 1.6rem/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;min-width:6.5ch;color:var(--cp-g)}
+.tp-taking .tp-clock{position:sticky;top:.4rem;z-index:5;background:var(--cp-card);border:1px solid var(--cp-bd);border-radius:10px;padding:.35rem .6rem}
+.tp-taking .tp-card .cp-acts{display:none}
+.tp-over .tp-time{color:var(--cp-no)}
+.tp-printhead{display:none}
+.tp-history p{line-height:1.65}
+.tp-history h3{margin:1rem 0 .3rem}
+.tp-card[hidden]{display:none}
+@media print{
+  html[data-tp-print] header.header,html[data-tp-print] footer,html[data-tp-print] .footer,html[data-tp-print] nav:not(.cp-crumbs),html[data-tp-print] .tp-noprint,html[data-tp-print] .cp-crumbs{display:none!important}
+  html[data-tp-print] .tp-printhead{display:block;font-size:.85rem;margin:0 0 .6rem}
+  html[data-tp-print] .tp-stmt{background:none;border:0;padding:0;font-size:11.5pt}
+  html[data-tp-print] .tp-card{border:0;padding:.2rem 0;break-inside:avoid}
+  html[data-tp-print="paper"] .tp-card .cp-card-h,html[data-tp-print="paper"] .tp-note,html[data-tp-print="paper"] .tp-src,html[data-tp-print="paper"] .cp .cp-sol,html[data-tp-print="paper"] .cp .cp-hints,html[data-tp-print="paper"] .cp-legal,html[data-tp-print="paper"] .cp-intro,html[data-tp-print="paper"] .cp-meta{display:none!important}
+  html[data-tp-print="paper"] .tp-num{display:block;float:left;font-weight:700;margin:0 .5rem 0 0}
+  html[data-tp-print="paper"] .cp-cards{gap:.2rem}
+  html[data-tp-print="full"] .cp-viz{display:none}
+}

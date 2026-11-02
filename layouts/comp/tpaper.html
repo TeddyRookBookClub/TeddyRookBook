@@ -1,0 +1,66 @@
+{{ define "main" }}
+{{- /* A Tripos paper or collection: data/comp/tripos/<file>.yaml (page param `tfile`), made by
+   content/math/competitions/tripos/_content.gotmpl. A paper gets "take the paper" mode: a timer and print buttons
+   (static/comp/tripos.js; print styles in static/comp/tripos.css). */ -}}
+{{- $K := partial "comp/contest.html" "tripos" -}}
+{{ partial "comp/head.html" . }}
+{{ partial "inline/ml-css.html" "comp/tripos.css" }}
+{{ partial "inline/ml-js.html" "comp/tripos.js" }}
+{{- $T := (index (site.Data.comp | default dict) "tripos") | default dict -}}
+{{- $fk := .Params.tfile }}{{ $f := index $T $fk -}}
+{{- $paper := eq $f.kind "paper" -}}
+{{- $n := 0 }}{{ range $f.problems }}{{ if eq .status "ready" }}{{ $n = add $n 1 }}{{ end }}{{ end -}}
+{{- $A := dict "algebra" "Algebra" "number-theory" "Number theory" "combinatorics" "Counting" "geometry" "Geometry" "conics" "Conics" "trigonometry" "Trigonometry" "calculus" "Calculus" "probability" "Probability" "mechanics" "Mechanics" "optics" "Optics" "hydrostatics" "Fluids and heat" "astronomy" "Astronomy" -}}
+{{- $used := dict }}{{ range $f.problems }}{{ range .areas }}{{ $used = merge $used (dict . true) }}{{ end }}{{ end -}}
+<article class="cp tp{{ if $paper }} tp-paper{{ end }}" data-tp="{{ $f.slug }}"{{ with $f.minutes }} data-minutes="{{ . }}"{{ end }}>
+  <nav class="cp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <a href="{{ "math/competitions/" | relURL }}">Competitions</a> <span aria-hidden="true">›</span> <a href="{{ $K.base | relURL }}">{{ $K.crumb }}</a> <span aria-hidden="true">›</span> <span>{{ if $paper }}{{ $f.year }}{{ else }}Problems{{ end }}</span></nav>
+  <header class="cp-head">
+    <p class="cp-eyebrow">Cambridge Mathematical Tripos{{ if $paper }} · {{ $f.year }}{{ else }} · 1801–1860{{ end }}</p>
+    <h1>{{ .Title }}</h1>
+    {{- if $paper }}
+    <p class="cp-meta">{{ $f.date }} · {{ $f.paper }}</p>
+    <p class="cp-meta">{{ $f.examiners }}</p>
+    {{- end }}
+    <div class="cp-intro cp-md">{{ partial "comp/md.html" (dict "s" $f.intro "p" .) }}</div>
+  </header>
+  <div class="cp-legal tp-noprint" role="note">
+    <p>{{ $K.legal | safeHTML }}</p>
+    {{- if $paper }}
+    <p><b>The scan.</b> <a href="https://archive.org/details/{{ $f.source.item }}/page/n{{ $f.source.leaf }}/mode/1up" rel="noopener"><cite>{{ $f.source.title }}</cite></a> ({{ $f.source.published }}), pages {{ $f.source.pages }}. {{ $f.source.scans }}.</p>
+    {{- else }}
+    <p><b>The scans.</b> {{ range $i, $s := $f.sources }}<a href="https://archive.org/details/{{ $s.item }}" rel="noopener"><cite>{{ $s.title | truncate 80 }}</cite></a> ({{ $s.published }}). {{ end }}Each problem links to its page.</p>
+    {{- end }}
+  </div>
+  {{- if $paper }}
+  <section class="tp-take tp-noprint" aria-labelledby="tp-h-take">
+    <h2 id="tp-h-take">Take this paper</h2>
+    <p>The candidates had three hours, pen and paper, and no notes. Start the clock, work on paper, and leave the hints and solutions closed until time is up. Your clock keeps running if you close the page.</p>
+    <div class="tp-clock" role="group" aria-label="Exam clock">
+      <output class="tp-time" aria-live="off">3:00:00</output>
+      <button type="button" class="cp-btn pri" data-tp-start>Start the clock</button>
+      <button type="button" class="cp-btn" data-tp-stop hidden>Stop and show the solutions</button>
+      <button type="button" class="cp-btn" data-tp-print="paper">Print the paper</button>
+      <button type="button" class="cp-btn" data-tp-print="full">Print with our solutions</button>
+    </div>
+    <p class="cp-small tp-status" aria-live="polite"></p>
+  </section>
+  {{- else }}
+  <form class="cp-filter tp-noprint" data-tp-filter aria-label="Filter the problems">
+    <label>Topic <select name="area"><option value="">All topics</option>{{ range $k, $v := $A }}{{ if index $used $k }}<option value="{{ $k }}">{{ $v }}</option>{{ end }}{{ end }}</select></label>
+    <label>Difficulty <select name="diff"><option value="">Any</option>{{ range seq 5 }}<option value="{{ . }}">{{ . }} of 5</option>{{ end }}</select></label>
+    <output class="cp-small" aria-live="polite"></output>
+  </form>
+  {{- end }}
+  <p class="tp-printhead" aria-hidden="true">{{ if $paper }}Cambridge Mathematical Tripos, {{ strings.TrimSuffix "." $f.date }}. {{ $f.paper }}. Time allowed: three hours.{{ else }}Cambridge Mathematical Tripos: standout problems, 1801–1860.{{ end }} Transcribed by Teddy Rook Book from public-domain scans at the Internet Archive.</p>
+  <div class="cp-cards">
+  {{- range $f.problems }}
+  {{ partial "comp/tcard.html" (dict "p" $ "x" . "f" $f "fk" $fk) }}
+  {{- end }}
+  </div>
+  <p class="cp-small tp-noprint">{{ $n }} of {{ len $f.problems }} solutions ready. If you spot a slip in a transcription or a solution, please use “Report a problem” at the bottom of the page.</p>
+  <nav class="cp-pn tp-noprint" aria-label="More Tripos pages">
+    {{- range $k, $o := $T }}{{ if ne $k $fk }}<a href="{{ printf "%s%s/" $K.base $o.slug | relURL }}">{{ $o.title }}</a>{{ end }}{{ end }}
+    <a href="{{ $K.base | relURL }}">About the Tripos</a>
+  </nav>
+</article>
+{{ end }}

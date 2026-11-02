@@ -1,6 +1,7 @@
 /* Citizenship test practice (/american-history/citizenship-test/).
    Reads the official USCIS lists from #us-data (data/civics/uscis/2025.json and 2008.json, rendered by layouts/uscis/practice.html).
-   Study cards by section, a mock interview (20 or 10 questions at random, stops once passed or failed, read aloud on request,
+   The "All questions" view (search, 65/20 filter, open/close "The idea behind it", print with or without the ideas),
+   study cards by section, a mock interview (20 or 10 questions at random, stops once passed or failed, read aloud on request,
    typed or self-marked answers) and the version choice. Progress is kept in localStorage 'trb-uscis-v1' (this browser only):
    { v: '2025'|'2008', known: { '2025': { '12': 1 (knew it) | 0 (still learning) }, '2008': {...} }, mocks: [ { v, d, r, w, n, pass, s } ] } */
 (function () {
@@ -96,6 +97,8 @@
       var a = el('a', null, 'uscis.gov/citizenship/testupdates'); a.href = 'https://www.uscis.gov/citizenship/testupdates'; w.appendChild(a); w.appendChild(document.createTextNode('.'));
       box.appendChild(w);
     }
+    var idea = document.querySelector('#q' + V + '-' + q.n + ' > .us-idea'); // "The idea behind it", rendered in the full list
+    if (idea) { var c = idea.cloneNode(true); c.open = false; box.appendChild(c); }
     return box;
   }
 
@@ -270,12 +273,47 @@
   });
   function setVersion(v) {
     V = v === '2008' ? '2008' : '2025'; S.v = V; save(); root.setAttribute('data-v', V);
-    [].forEach.call(root.querySelectorAll('input[name=us-v]'), function (r) { r.checked = r.value === V; });
+    [].forEach.call(root.querySelectorAll('input[name=us-v],input[name=us-v2]'), function (r) { r.checked = r.value === V; });
     [].forEach.call(root.querySelectorAll('.us-full'), function (f) { f.hidden = f.getAttribute('data-ver') !== V; });
-    fillSections(); shuffled = false; pick(); rules(); showHist();
+    fillSections(); shuffled = false; pick(); rules(); showHist(); filter();
     M = null; $('us-mock-start').hidden = false; $('us-mock-run').hidden = true; $('us-mock-end').hidden = true;
   }
-  [].forEach.call(root.querySelectorAll('input[name=us-v]'), function (r) { r.addEventListener('change', function () { if (r.checked) setVersion(r.value); }); });
-  $('us-print').addEventListener('click', function () { window.print(); });
+  [].forEach.call(root.querySelectorAll('input[name=us-v],input[name=us-v2]'), function (r) { r.addEventListener('change', function () { if (r.checked) setVersion(r.value); }); });
+
+  // ---------------------------------------------------------------- the "All questions" view: search, 65/20 filter, ideas, print
+  var qIn = $('us-q'), onlyStar = $('us-only-star'), timer = null;
+  function norm(s) { return plain(s).toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function filter() {
+    var full = root.querySelector('.us-full[data-ver="' + V + '"]'); if (!full) return;
+    var words = norm(qIn.value).split(' ').filter(Boolean), star = onlyStar.checked, shown = 0, num = /^\d+$/.test(qIn.value.trim()) ? qIn.value.trim() : null;
+    [].forEach.call(full.querySelectorAll('.us-ql > li'), function (li) {
+      if (!li._t) li._t = ' ' + norm(li.textContent) + ' ';
+      var ok = (!star || li.hasAttribute('data-star')) && (num ? li.value === +num || li._t.indexOf(' ' + num + ' ') >= 0 : words.every(function (w) { return li._t.indexOf(w) >= 0; }));
+      li.hidden = !ok; if (ok) shown++;
+    });
+    [].forEach.call(full.querySelectorAll('.us-part,.us-sec'), function (b) { b.hidden = !b.querySelector('.us-ql > li:not([hidden])'); });
+    full.querySelector('.us-none').hidden = shown > 0;
+    var all = full.querySelectorAll('.us-ql > li').length;
+    $('us-fcount').textContent = shown === all ? 'Showing all ' + all + ' questions of the ' + V + ' version.' : 'Showing ' + shown + ' of ' + all + ' questions.';
+    if (words.length && shown) [].forEach.call(full.querySelectorAll('.us-ql > li:not([hidden]) > .us-idea'), function (d) { if (d.textContent.toLowerCase().indexOf(words[0]) >= 0) d.open = true; });
+  }
+  qIn.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(filter, 150); });
+  qIn.addEventListener('keydown', function (e) { if (e.key === 'Escape') { qIn.value = ''; filter(); } });
+  onlyStar.addEventListener('change', filter);
+  function openAll(on) { [].forEach.call(root.querySelectorAll('.us-full[data-ver="' + V + '"] .us-idea'), function (d) { d.open = on; }); }
+  $('us-open-all').addEventListener('click', function () { openAll(true); });
+  $('us-close-all').addEventListener('click', function () { openAll(false); });
+  var pIdeas = $('us-print-ideas'), wasOpen = null;
+  pIdeas.addEventListener('change', function () { root.classList.toggle('us-pi', pIdeas.checked); });
+  window.addEventListener('beforeprint', function () {
+    if (!pIdeas.checked) return;
+    wasOpen = [].map.call(root.querySelectorAll('.us-idea'), function (d) { var o = d.open; d.open = true; return o; });
+  });
+  window.addEventListener('afterprint', function () {
+    if (!wasOpen) return;
+    [].forEach.call(root.querySelectorAll('.us-idea'), function (d, i) { d.open = wasOpen[i]; }); wasOpen = null;
+  });
+  $('us-print').addEventListener('click', function () { setTab('us-t-list'); window.print(); });
+  $('us-ftools').hidden = false;
   setVersion(V);
 })();

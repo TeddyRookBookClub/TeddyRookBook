@@ -1,0 +1,30 @@
+year: 2021
+date: "October 22 – November 2, 2021"
+total: 10
+language: Hungarian
+links:
+  problems: https://www.math.u-szeged.hu/~mmaroti/schweitzer/schweitzer-2021.pdf
+  archive: https://www.math.u-szeged.hu/~mmaroti/schweitzer/
+problems:
+  - id: P9
+    topic: "Probability: two players guessing the same random subset"
+    areas: [probability, combinatorics, analysis]
+    difficulty: 2
+    hints:
+      - |
+        Write $p_k$ as an average of $1/\binom kj$. The two end terms, $j=0$ and $j=k$, give the main part $2/(k+1)$.
+      - |
+        Use $\dfrac{1}{(k+1)\binom kj}=\displaystyle\int_0^1t^j(1-t)^{k-j}\,dt$ and add up geometric series under the integral.
+    solution: |
+      **Step 1: a formula.** Once the common size $j$ is drawn, the two players pick the same set with chance $1/\binom kj$. So
+      $$p_k=\frac1{k+1}\sum_{j=0}^{k}\frac1{\binom kj}=\frac2{k+1}+r_k,\qquad r_k=\frac1{k+1}\sum_{j=1}^{k-1}\frac1{\binom kj},$$
+      with $r_1=0$.
+
+      **Step 2: the extra terms add up to exactly $1$.** The Beta integral gives $\int_0^1t^j(1-t)^{k-j}\,dt=\dfrac{j!\,(k-j)!}{(k+1)!}=\dfrac{1}{(k+1)\binom kj}$. So $r_k=\sum_{j=1}^{k-1}\int_0^1t^j(1-t)^{k-j}\,dt$. Sum over all $k\ge2$ and write $i=k-j\ge1$. All terms are positive, so we may swap sum and integral:
+      $$\sum_{k\ge2}r_k=\int_0^1\Big(\sum_{j\ge1}t^j\Big)\Big(\sum_{i\ge1}(1-t)^i\Big)dt=\int_0^1\frac{t}{1-t}\cdot\frac{1-t}{t}\,dt=1 .$$
+
+      **Step 3: assemble.** With $H_m=1+\frac12+\dots+\frac1m$,
+      $$\sum_{k=1}^np_k=2\big(H_{n+1}-1\big)+1-\sum_{k>n}r_k .$$
+      The tail of a convergent series tends to $0$, and $H_{n+1}=\log n+\gamma+o(1)$. So the sum is $2\log n+2\gamma-1+o(1)$.
+    checked: "script: exact sums for $n=10,100,1000,3000$; the error term is $0.073$, $0.0098$, $0.0010$, $0.00033$, shrinking like $1/n$"
+    status: ready

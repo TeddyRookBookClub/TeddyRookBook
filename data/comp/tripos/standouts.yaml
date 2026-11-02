@@ -1,0 +1,1078 @@
+# Forty standout problems from the Cambridge Senate-House examination (the Mathematical Tripos), 1801–1860.
+# Public domain. Each problem names its year, paper, number and the scan it was transcribed from (`src`, a key of
+# `sources`, with the printed page and the archive.org leaf). Hints, notes and solutions are our own.
+# Format: layouts/comp/tpaper.html and scripts/comp/check-comp.js.
+kind: collection
+slug: problems
+title: "Forty standout Tripos problems"
+intro: |
+  Forty problems picked from Tripos papers set between 1801 and 1860, chosen because they are still fun today and
+  because most of them move: projectiles, pulleys, rolling balls, billiard tables, mirrors and rainbows. The words are
+  the examiners' own. The hints, notes and solutions are ours.
+sources:
+  cp1821:
+    item: cambridgeproblem00cambuoft
+    title: "Cambridge Problems: being a collection of the printed questions proposed to the candidates for the degree of Bachelor of Arts at the general examinations from 1801 to 1820 inclusive"
+    published: "Cambridge: J. Deighton, 1821"
+  cp1831:
+    item: cambridgeproblem02cambuoft
+    title: "Cambridge Problems proposed by the Moderators to the candidates for mathematical honors at the general examinations from 1821 to 1830 inclusive"
+    published: "Cambridge: J. Hall, 1831"
+  sh1854:
+    item: solutionsofprobl00mackuoft
+    title: "Solutions of the Problems and Riders Proposed in the Senate-House Examination for 1854 (appendix: the examination papers in full)"
+    published: "Cambridge: Macmillan and Co., 1854"
+  sh1860:
+    item: cambridgesenateh00routuoft
+    title: "Cambridge Senate-House Problems and Riders for the Year 1860, with solutions, by H. W. Watson and E. J. Routh"
+    published: "Cambridge: Macmillan and Co., 1860"
+problems:
+  # ------------------------------------------------------------------ 1801-1820
+  - id: 1801-ace
+    year: 1801
+    paper: "Morning Problems, Mr Hornbuckle (first and second classes)"
+    number: "11"
+    src: cp1821
+    page: "2"
+    leaf: 9
+    topic: 'Probability: one die twice, or two dice once'
+    areas: [probability]
+    difficulty: 1
+    statement: |
+      Compare the chances of throwing an ace in two trials with one die, and in one trial with two.
+    note: 'An **ace** is a one.'
+    hints:
+      - 'Find the chance of throwing *no* ace, then subtract from $1$.'
+    answer: 'They are equal: each is $\tfrac{11}{36}$'
+    solution: |
+      In two throws of one die, the chance of no ace is $\tfrac56\cdot\tfrac56 = \tfrac{25}{36}$, so the chance of at least one ace is $\tfrac{11}{36}$.
+
+      With two dice thrown once, each die is a one with chance $\tfrac16$, independently. The chance that neither is a one is again $\tfrac{25}{36}$, so the chance of an ace is again $\tfrac{11}{36}$.
+
+      The chances are equal. That makes sense: throwing one die twice and throwing two dice once are the same experiment, just done at different times.
+    checked: "script: exact fractions"
+    status: ready
+  - id: 1801-incline
+    year: 1801
+    paper: "Morning Problems, Mr Hornbuckle (first and second classes)"
+    number: "9"
+    src: cp1821
+    page: "2"
+    leaf: 9
+    topic: 'Projectiles: the gentlest throw to the foot of a slope'
+    areas: [mechanics]
+    difficulty: 3
+    statement: |
+      A body is projected from the top of a given inclined plane. Required the direction of projection in which the least velocity will bring it to the bottom of the plane. Required also this velocity.
+    hints:
+      - 'The target is at distance $L$ (the length of the plane), at angle $\alpha$ below the horizontal. Write the speed needed for a launch angle $\phi$.'
+      - 'Minimize $\cos\phi\,\sin(\phi + \alpha)$.'
+    answer: 'Aim at $45^\circ - \tfrac12\alpha$ above the horizontal (halfway between the upward vertical and the plane); least speed $\sqrt{gL(1 - \sin\alpha)}$'
+    solution: |
+      Let the plane have length $L$ and inclination $\alpha$. From the top, the bottom is at horizontal distance $x = L\cos\alpha$ and depth $L\sin\alpha$.
+
+      **Speed for a given angle.** Launch at speed $v$ and angle $\phi$ above the horizontal. The path is $y = x\tan\phi - \dfrac{gx^2}{2v^2\cos^2\phi}$, and it must pass through $y = -L\sin\alpha$ at $x = L\cos\alpha$. Solving for $v^2$:
+      $$v^2 = \frac{gL\cos^2\alpha}{2\cos\phi\,(\cos\alpha\sin\phi + \sin\alpha\cos\phi)} = \frac{gL\cos^2\alpha}{2\cos\phi\sin(\phi + \alpha)}.$$
+
+      **Make the denominator largest.** $2\cos\phi\sin(\phi+\alpha) = \sin(2\phi + \alpha) + \sin\alpha$, which is largest when $2\phi + \alpha = 90^\circ$, that is, $\phi = 45^\circ - \tfrac12\alpha$. Then
+      $$v^2 = \frac{gL\cos^2\alpha}{1 + \sin\alpha} = gL(1 - \sin\alpha).$$
+      The best direction bisects the angle between the upward vertical and the line from the top down to the bottom. (On level ground, $\alpha = 0$, this is the familiar $45^\circ$.)
+    checked: "script: searched all launch angles numerically"
+    viz: tp-s-incline
+    status: ready
+  - id: 1801-tower
+    year: 1801
+    paper: "Evening Problems, Mr Walker"
+    number: "3"
+    src: cp1821
+    page: "7"
+    leaf: 14
+    topic: 'Projectiles: a tower found from a five-second flight'
+    areas: [mechanics]
+    difficulty: 1
+    statement: |
+      A body, projected from the top of a tower at an angle of $45^\circ$ above the horizontal direction, fell in $5''$ at a dist. from the bottom of the tower equal to its altitude: find that alt. in feet.
+    note: '$5''''$ means five seconds. Feet and the old value $g \approx 32.2$ feet per second per second fit the problem.'
+    hints:
+      - 'At $45^\circ$ the horizontal and upward parts of the velocity are equal; call each $w$.'
+    answer: '$h = \tfrac{25}{4}g \approx 201$ feet'
+    solution: |
+      Let the height be $h$ and let each component of the launch velocity be $w$ (they are equal at $45^\circ$). In $5$ seconds:
+
+      - sideways: $5w = h$;
+      - up and down: the body ends $h$ below where it started, so $-h = 5w - \tfrac12 g\cdot 25$.
+
+      Substituting $5w = h$ gives $-h = h - \tfrac{25}{2}g$, so $h = \tfrac{25}{4}g$. With $g = 32.2$ ft/s², the tower is about $201$ feet high.
+    checked: "arithmetic"
+    status: ready
+  - id: 1802-tower-range
+    year: 1802
+    paper: "Morning Problems, Mr Dealtry (first and second classes)"
+    number: "7"
+    src: cp1821
+    page: "29"
+    leaf: 36
+    topic: 'Projectiles: the farthest throw from a tower'
+    areas: [mechanics, calculus]
+    difficulty: 3
+    statement: |
+      In what direction must a body be projected from the top of a given tower with a given velocity, so that it may fall upon the horizontal plane at the greatest distance possible from the bottom of the tower?
+    hints:
+      - 'Use energy: the body lands with speed $V = \sqrt{v^2 + 2gh}$.'
+      - 'For the longest throw, the launch and landing directions are at right angles.'
+    answer: '$\tan\theta = \dfrac{v}{\sqrt{v^2 + 2gh}}$; the greatest range is $\dfrac{v}{g}\sqrt{v^2 + 2gh}$'
+    solution: |
+      Let the tower have height $h$ and the speed be $v$. Launch at angle $\theta$; let $t$ be the time of flight and $R$ the range.
+
+      **A vector picture.** The landing velocity is $\mathbf V = \mathbf v + \mathbf g t$, and $|\mathbf V|^2 = v^2 + 2gh$ by energy. The area of the triangle with sides $\mathbf v$ and $\mathbf g t$ (drawn from one point) is
+      $$\tfrac12|\mathbf v \times \mathbf g t| = \tfrac12 g t\,v\cos\theta = \tfrac12 gR.$$
+      The same triangle also has sides $\mathbf v$ and $\mathbf V$, so its area is $\tfrac12 vV\sin\gamma$, where $\gamma$ is the angle between launch and landing directions. So
+      $$R = \frac{vV\sin\gamma}{g} \le \frac{vV}{g},$$
+      with equality when the launch and landing directions are perpendicular.
+
+      **The best angle.** Let the body land at angle $\theta'$ below the horizontal. Perpendicular launch and landing directions mean $\theta + \theta' = 90^\circ$. The horizontal part of the velocity never changes, so $v\cos\theta = V\cos\theta' = V\sin\theta$:
+      $$\tan\theta = \frac vV = \frac{v}{\sqrt{v^2 + 2gh}}, \qquad R_{\max} = \frac{v}{g}\sqrt{v^2 + 2gh}.$$
+      With $h = 0$ this gives $45^\circ$; from a tower the best angle is lower.
+    checked: "script: searched all angles numerically"
+    viz: tp-s-tower
+    status: ready
+  - id: 1806-pendulum
+    year: 1806
+    paper: "Second Evening, Mr J. Brown (first, second, third and fourth classes)"
+    number: "1"
+    src: cp1821
+    page: "108"
+    leaf: 115
+    topic: 'Gravity: a pendulum clock on a mountain'
+    areas: [mechanics]
+    difficulty: 2
+    statement: |
+      A pendulum, which kept true time at the earth's surface, when carried to the top of a mountain lost $n$ seconds a day; What was the height of the mountain?
+    hints:
+      - 'The period of a pendulum is proportional to $1/\sqrt g$, and $g$ falls off as $1/(\text{distance from the Earth''s center})^2$.'
+    answer: '$h = \dfrac{nR}{86400 - n} \approx \dfrac{nR}{86400}$, about $240n$ feet'
+    solution: |
+      Let $R$ be the Earth's radius and $h$ the height. Gravity at distance $d$ from the center is proportional to $1/d^2$, so $\sqrt g$ is proportional to $1/d$, and the period of the pendulum, proportional to $1/\sqrt g$, is proportional to $d$.
+
+      So on the mountain each swing takes $\frac{R+h}{R}$ times as long, and in a true day the clock counts only $\frac{R}{R+h}$ of the $86400$ seconds. It loses
+      $$n = 86400\cdot\frac{h}{R+h}, \qquad\text{so}\qquad h = \frac{nR}{86400 - n} \approx \frac{nR}{86400}.$$
+      With $R \approx 3960$ miles (about $20.9$ million feet), each second lost per day means about $240$ feet of height. (This ignores the pull of the mountain itself, which makes the real loss a little smaller.)
+    checked: "script: ticks counted per day for the computed height"
+    status: ready
+  - id: 1806-greatest-area
+    year: 1806
+    paper: "First Afternoon, Mr J. Brown (third, fourth, fifth and sixth classes)"
+    number: "23"
+    src: cp1821
+    page: "99"
+    leaf: 106
+    topic: 'Projectiles: the arch that encloses the most area'
+    areas: [mechanics, calculus]
+    difficulty: 2
+    statement: |
+      At what angle must a body be projected with a given velocity, that the area of the parabola described may be a maximum?
+    note: 'The area meant is the region between the path and the level ground.'
+    hints:
+      - 'The area under a parabolic arch is $\tfrac23\times$ base $\times$ height.'
+    answer: '$60^\circ$'
+    solution: |
+      At speed $v$ and angle $\theta$, the range is $\dfrac{v^2\sin2\theta}{g}$ and the greatest height $\dfrac{v^2\sin^2\theta}{2g}$. The area under a parabolic arch is two-thirds of base times height, so
+      $$A = \frac23\cdot\frac{v^2\sin2\theta}{g}\cdot\frac{v^2\sin^2\theta}{2g} = \frac{2v^4}{3g^2}\sin^3\theta\cos\theta.$$
+      Differentiate $\sin^3\theta\cos\theta$: $3\sin^2\theta\cos^2\theta - \sin^4\theta = \sin^2\theta(3\cos^2\theta - \sin^2\theta)$. This is zero when $\tan^2\theta = 3$, so the area is greatest at $\theta = 60^\circ$ — steeper than the $45^\circ$ that gives the longest range.
+    checked: "script: grid search over the angle"
+    viz: tp-s-area
+    status: ready
+  - id: 1807-four-lives
+    year: 1807
+    paper: "First Morning, Mr D'Oyly, Monday, January 19, 1807"
+    number: "11"
+    src: cp1821
+    page: "115"
+    leaf: 122
+    topic: 'Probability: two deaths among four people'
+    areas: [probability]
+    difficulty: 1
+    statement: |
+      There are $4$ individuals, of such an age, that, according to the tables of mortality, it is just an even chance whether each will be alive at the end of a year. What is the probability that two of them will die in that time?
+    hints:
+      - 'Each person is a fair coin. How many of the $16$ outcomes have exactly two deaths?'
+    answer: '$\tfrac38$ for exactly two (and $\tfrac{11}{16}$ for at least two)'
+    solution: |
+      Each of the four lives or dies with chance $\tfrac12$, independently, so the $2^4 = 16$ patterns are equally likely. Exactly two deaths can happen in $\binom42 = 6$ ways, so the chance is $\tfrac{6}{16} = \tfrac38$.
+
+      If "two of them will die" is read as "at least two," add the cases of three deaths ($4$ ways) and four deaths ($1$ way): $\tfrac{11}{16}$.
+    checked: "script: exact fractions"
+    status: ready
+  - id: 1807-tower-horizontal
+    year: 1807
+    paper: "First Afternoon, Mr Woodhouse (third and fourth classes)"
+    number: "17"
+    src: cp1821
+    page: "117–118"
+    leaf: 124
+    topic: 'Projectiles: thrown level from a tower'
+    areas: [mechanics]
+    difficulty: 1
+    statement: |
+      Let a body be projected from the top of a tower horizontally, with a velocity acquired in falling down a space equal to the height of the tower. At what distance from the base of the tower will it strike the horizon?
+    note: '“The horizon” here means the level ground. “The velocity acquired in falling down a space $h$” is $\sqrt{2gh}$.'
+    answer: 'Twice the height of the tower'
+    solution: |
+      Let the height be $h$. The speed is $\sqrt{2gh}$, and the time to fall $h$ is $\sqrt{2h/g}$. Moving sideways at constant speed for that time, the body travels
+      $$\sqrt{2gh}\cdot\sqrt{\frac{2h}{g}} = 2h.$$
+      It lands at twice the height of the tower from its base, whatever $g$ is.
+    checked: "algebra"
+    status: ready
+  - id: 1807-atwood
+    year: 1807
+    paper: "Morning Problems, Mr D'Oyly (third, fourth, fifth and sixth classes)"
+    number: "8"
+    src: cp1821
+    page: "126"
+    leaf: 133
+    topic: 'Pulleys: one ounce tips the balance'
+    areas: [mechanics]
+    difficulty: 2
+    statement: |
+      Two bodies, $P$ and $Q$, each $1$ lb. in weight, balance on a single pulley. An ounce weight is added to $P$. How long is it in descending through $12$ feet? and what velocity does it acquire?
+    note: 'There are $16$ ounces in a pound. Take the pulley and string as light and smooth.'
+    hints:
+      - 'The pull of one ounce has to move all $33$ ounces.'
+    answer: 'About $5$ seconds, reaching about $4.8$ feet per second'
+    solution: |
+      Count in ounces: the moving masses total $16 + 16 + 1 = 33$, and the unbalanced pull is the weight of $1$ ounce. So the acceleration is
+      $$a = \frac{g}{33} \approx \frac{32.2}{33} \approx 0.976 \text{ ft/s}^2.$$
+      To fall $12$ feet from rest takes $t = \sqrt{2\cdot 12/a} = \sqrt{792/g} \approx 4.96$ seconds, and the speed then is $at = \sqrt{2a\cdot12} \approx 4.84$ feet per second. This slow, measurable fall is the idea behind Atwood's machine, built to study gravity at a manageable speed.
+    checked: "script: g = 32.2 ft/s²"
+    viz: tp-s-atwood
+    status: ready
+  - id: 1808-pulley-axis
+    year: 1808
+    paper: "Evening Problems, Mr Woodhouse"
+    number: "6"
+    src: cp1821
+    page: "140–141"
+    leaf: 147
+    topic: 'Pulleys: the load on the axle'
+    areas: [mechanics]
+    difficulty: 2
+    statement: |
+      If a power $P$ descending vertically by means of a string passing over a fixed pulley, elevates a weight $W$, what will be the pressure sustained by the axis of the pulley?
+    note: 'A **power** is a weight used to drive a machine. Take the pulley and string as light and smooth.'
+    hints:
+      - 'Find the tension $T$ in the string first. The axle holds up $2T$, not $P + W$.'
+    answer: '$\dfrac{4PW}{P + W}$, less than $P + W$'
+    solution: |
+      Let $T$ be the tension and $a$ the acceleration (masses $P/g$ and $W/g$). For each weight:
+      $$\frac Pg a = P - T, \qquad \frac Wg a = T - W.$$
+      Adding gives $a = g\dfrac{P - W}{P + W}$, and then $T = \dfrac{2PW}{P+W}$.
+
+      Both strands pull down on the pulley with tension $T$, so the axle bears
+      $$2T = \frac{4PW}{P + W}.$$
+      This is less than $P + W$ unless $P = W$, since $(P + W)^2 - 4PW = (P - W)^2$. The weights are accelerating, so they do not lean their full weight on the axle.
+    checked: "script: equations of motion for sample weights"
+    status: ready
+  - id: 1808-three-dice
+    year: 1808
+    paper: "Evening Problems, Mr Woodhouse"
+    number: "10"
+    src: cp1821
+    page: "141"
+    leaf: 148
+    topic: 'Probability: ten against five with three dice'
+    areas: [probability, combinatorics]
+    difficulty: 1
+    statement: |
+      With three dice in one throw, compare the chance of throwing the number $10$ with the chance of throwing the number $5$.
+    hints:
+      - 'Count ordered throws. For a total of $5$, list them.'
+    answer: '$27 : 6$, that is $9 : 2$'
+    solution: |
+      There are $6^3 = 216$ equally likely ordered throws.
+
+      **Total 5.** The sets of numbers are $\{1,1,3\}$ and $\{1,2,2\}$, each in $3$ orders: $6$ throws.
+
+      **Total 10.** The sets are $\{1,3,6\}$, $\{1,4,5\}$, $\{2,3,5\}$ ($6$ orders each), and $\{2,2,6\}$, $\{2,4,4\}$, $\{3,3,4\}$ ($3$ orders each): $18 + 9 = 27$ throws.
+
+      So the chances are $\tfrac{27}{216}$ and $\tfrac{6}{216}$, in the ratio $27 : 6 = 9 : 2$.
+    checked: "script: all 216 throws"
+    status: ready
+  - id: 1809-vessel
+    year: 1809
+    paper: "Tuesday Morning Problems, Mr Brown"
+    number: "7"
+    src: cp1821
+    page: "166"
+    leaf: 173
+    topic: 'Calculus: the most economical open can'
+    areas: [calculus]
+    difficulty: 1
+    statement: |
+      Determine the ratio of the diameter and altitude of a cylindrical vessel open at the top, which shall contain a given quantity under the least possible internal superficies.
+    note: '**Superficies** means surface area.'
+    answer: 'Diameter : altitude $= 2 : 1$'
+    solution: |
+      Let the radius be $r$ and the height $h$, with fixed volume $V = \pi r^2h$. The inside surface (base and side, no lid) is
+      $$S = \pi r^2 + 2\pi rh = \pi r^2 + \frac{2V}{r}.$$
+      Then $\dfrac{dS}{dr} = 2\pi r - \dfrac{2V}{r^2}$, which is zero when $V = \pi r^3$, that is, $h = r$. Since $S$ grows without bound as $r \to 0$ and as $r \to \infty$, this is the least surface. The diameter is twice the height.
+    checked: "script: numerical minimum of the surface"
+    status: ready
+  - id: 1811-cushions
+    year: 1811
+    paper: "Mr Jephson's paper (third and fourth classes)"
+    number: "8"
+    src: cp1821
+    page: "202"
+    leaf: 209
+    topic: 'Billiards: a two-cushion shot into the corner'
+    areas: [geometry, mechanics]
+    difficulty: 2
+    statement: |
+      Two balls $A$ and $B$ are placed on a billiard-table; in what direction must $A$, which is perfectly elastic, be struck, that it may hit $B$ after impinging upon two adjacent sides of the table?
+    note: 'For a perfectly elastic ball (and no spin), a bounce off a cushion is like a reflection in a mirror.'
+    hints:
+      - 'Reflect $B$ in one side, then reflect that image in the other side.'
+      - 'Two reflections in perpendicular lines make a half-turn about the point where they meet.'
+    answer: 'Aim at the point opposite $B$ through the corner, $2O - B$'
+    solution: |
+      **Unfolding.** Each bounce reverses the component of velocity across the cushion, which is exactly what a mirror does. So instead of bouncing, imagine the ball going straight on into a reflected copy of the table. A path $A \to$ first side $\to$ second side $\to B$ becomes a straight line from $A$ to the image of $B$ reflected in the second side and then in the first.
+
+      **The corner.** The two sides are perpendicular and meet at a corner $O$. Reflecting in two perpendicular lines through $O$ is a half-turn about $O$: it sends $B$ to the point $B^*$ with $O$ the midpoint of $BB^*$.
+
+      So strike $A$ straight towards $B^*$. (The order of the sides doesn't matter, and after both bounces the ball travels exactly opposite to its first direction.) This works when the straight line from $A$ to $B^*$ really crosses the two cushions near that corner.
+    viz: tp-s-cushions
+    checked: "script: traced a ball bouncing off two cushions; it hits B"
+    status: ready
+  - id: 1815-elliptic-table
+    year: 1815
+    paper: "Monday Afternoon, Mr Hustler (fifth and sixth classes)"
+    number: "12"
+    src: cp1821
+    page: "294–295"
+    leaf: 301
+    topic: 'Billiards: an elliptic table struck from a focus'
+    areas: [conics]
+    difficulty: 2
+    statement: |
+      If a billiard-table be in the form of an ellipse, and a perfectly elastic ball be struck from either focus in any direction, it will return after two reflections from the curve to the same point.
+    hints:
+      - 'At any point of an ellipse, the lines to the two foci make equal angles with the tangent.'
+    solution: |
+      Let the foci be $S$ and $H$, and let $P$ be any point of the ellipse. The tangent at $P$ makes equal angles with $PS$ and $PH$. (One proof: for points $X$ on the tangent line, $SX + XH$ is least at $X = P$, since every other point of the line is outside the ellipse where this sum is bigger; and the shortest path from $S$ to a line and on to $H$ makes equal angles with the line.)
+
+      A perfectly elastic ball bounces like light off a mirror, with equal angles to the tangent. So a ball struck from $S$ that hits the cushion at $P$ bounces off towards $H$. It passes through $H$, hits the cushion again at some point $Q$, and by the same property bounces back towards $S$. After two reflections it is back at its starting point.
+    viz: tp-s-ellipse
+    status: ready
+  # ------------------------------------------------------------------ 1821-1830
+  - id: 1821-radix
+    year: 1821
+    paper: "Monday Morning, Mr Chevallier (first and second classes)"
+    number: "1"
+    src: cp1831
+    page: "1"
+    leaf: 6
+    topic: 'Number bases: 803 in disguise'
+    areas: [algebra, number-theory]
+    difficulty: 1
+    statement: |
+      The number $803$ expressed in a different scale of notation becomes $30203$; required the radix of the scale.
+    note: 'The **radix** is the base of the number system. We write numbers in base ten.'
+    answer: '$4$'
+    solution: |
+      In base $b$, the digits $30203$ mean $3b^4 + 0b^3 + 2b^2 + 0b + 3$. So
+      $$3b^4 + 2b^2 + 3 = 803, \qquad 3b^4 + 2b^2 - 800 = 0.$$
+      This is a quadratic in $b^2$: $b^2 = \dfrac{-2 + \sqrt{4 + 9600}}{6} = \dfrac{-2 + 98}{6} = 16$, so $b = 4$. Check: $3\cdot256 + 2\cdot16 + 3 = 803$. (The digit $3$ is allowed in base $4$.)
+    checked: "arithmetic"
+    status: ready
+  - id: 1821-clepsydra
+    year: 1821
+    paper: "Monday Morning, Mr Chevallier (first and second classes)"
+    number: "4"
+    src: cp1831
+    page: "1"
+    leaf: 6
+    topic: 'Water clock: a bowl whose level falls evenly'
+    areas: [hydrostatics, calculus]
+    difficulty: 2
+    statement: |
+      A clepsydra is constructed to mark equal portions of time, in the form of a paraboloid having its vertex downwards, the equation to the generating curve being $y^4 = ax$. How must the scale on the axis be graduated?
+    note: 'A **clepsydra** is a water clock that keeps time as water runs out through a small hole at the bottom. Here $x$ is measured up the vertical axis and $y$ is the radius at height $x$. We use Torricelli''s law: water leaves a small hole at the speed $\sqrt{2gx}$ it would gain falling from the surface.'
+    hints:
+      - 'At height $x$ the water surface is a circle of area $\pi y^2 = \pi\sqrt{ax}$.'
+    answer: 'In equal divisions: the surface falls at a steady rate'
+    solution: |
+      When the water stands at height $x$, its surface is a circle of radius $y = (ax)^{1/4}$, with area $\pi y^2 = \pi\sqrt a\,\sqrt x$.
+
+      Water leaves through a hole of small area $\sigma$ at speed $\sqrt{2gx}$, so the volume falls at the rate $\sigma\sqrt{2gx}$. The same volume leaves the top layer, so
+      $$\pi\sqrt a\,\sqrt x\,\frac{dx}{dt} = -\sigma\sqrt{2g}\,\sqrt x, \qquad \frac{dx}{dt} = -\frac{\sigma\sqrt{2g}}{\pi\sqrt a}.$$
+      The $\sqrt x$ cancels: the level falls at a constant speed. So the scale on the axis is graduated in equal parts, each part marking the same time. That is the point of the shape: in a plain cylinder the level would fall fast at first and slowly at the end.
+    viz: tp-s-clepsydra
+    checked: "script: simulated the outflow; the level falls at a constant rate"
+    status: ready
+  - id: 1824-mirror-path
+    year: 1824
+    paper: "Monday Morning, Mr Hughes"
+    number: "4"
+    src: cp1831
+    page: "52"
+    leaf: 57
+    topic: 'Optics: a reflected path of fixed length'
+    areas: [optics, geometry]
+    difficulty: 2
+    statement: |
+      A ray of light proceeding from a moveable point is reflected by a fixed plane mirror to a given point; find the locus of the first point when the path of the ray is of given length.
+    hints:
+      - 'Reflect the given point in the mirror.'
+    answer: 'An arc of the circle centered at the mirror image of the given point, with radius equal to the given length'
+    solution: |
+      Let $B$ be the given point and $B'$ its image in the mirror. For any point $M$ of the mirror, $MB = MB'$. A ray from $X$ that reflects at $M$ and reaches $B$ has the same length as the path $X \to M \to B'$. The law of reflection (equal angles) says exactly that $X$, $M$, $B'$ are in a straight line, so the path length is $XB'$.
+
+      So the path has length $\ell$ exactly when $XB' = \ell$. The locus is the part of the circle with center $B'$ and radius $\ell$ that lies in front of the mirror (with the line $XB'$ crossing the mirror itself).
+    checked: "script: path lengths for points on the circle"
+    status: ready
+  - id: 1825-slide-roll
+    year: 1825
+    paper: "Tuesday Morning, Mr Warren"
+    number: "7"
+    src: cp1831
+    page: "78"
+    leaf: 83
+    topic: 'Rolling: sliding sphere against rolling sphere'
+    areas: [mechanics]
+    difficulty: 2
+    statement: |
+      Compare the time in which a sphere slides down an inclined plane with the time in which it rolls down the same plane.
+    note: 'Sliding means on a smooth plane; rolling means on a rough one, without slipping. A solid sphere of mass $m$ and radius $r$ has moment of inertia $\tfrac25mr^2$ about a diameter.'
+    hints:
+      - 'Some of the work done by gravity goes into spinning the rolling ball.'
+    answer: 'As $\sqrt5 : \sqrt7$; the sliding sphere wins'
+    solution: |
+      **Sliding.** On a smooth plane of inclination $\alpha$ the acceleration is $g\sin\alpha$.
+
+      **Rolling.** Let friction $F$ act up the slope. Then $ma = mg\sin\alpha - F$, and the turning effect of friction spins the ball: $Fr = \tfrac25mr^2\cdot\dfrac ar$, so $F = \tfrac25ma$. Together, $\tfrac75ma = mg\sin\alpha$, so $a = \tfrac57g\sin\alpha$.
+
+      **Times.** From rest over a distance $L$, $t = \sqrt{2L/a}$, so time is proportional to $1/\sqrt a$:
+      $$\frac{t_{\text{slide}}}{t_{\text{roll}}} = \sqrt{\frac57} = \frac{\sqrt5}{\sqrt7} \approx 0.845.$$
+    viz: tp-s-slide-roll
+    checked: "script: the two accelerations"
+    status: ready
+  - id: 1827-rolling-parabola
+    year: 1827
+    paper: "Monday Afternoon, Mr Coddington"
+    number: "2"
+    src: cp1831
+    page: "107"
+    leaf: 112
+    topic: 'Rolling curves: a parabola rolling on its twin'
+    areas: [conics, geometry]
+    difficulty: 4
+    statement: |
+      What are the lines traced by the vertex and the focus of a parabola rolling on another equal to it, the vertices coinciding in one position?
+    hints:
+      - 'When an equal curve rolls on its mirror image, at every moment the rolling curve is the reflection of the fixed one in their common tangent.'
+      - 'Where does the reflection of the focus in a tangent land?'
+    answer: 'The focus traces the directrix of the fixed parabola; the vertex traces a cissoid of Diocles, $y^2(2a + x) = -x^3$'
+    solution: |
+      Fix the parabola $y^2 = 4ax$, with vertex $A$ at the origin, focus $S = (a, 0)$ and directrix $x = -a$.
+
+      **The rolling copy is a mirror image.** At the start the two parabolas touch at their vertices, mirror images of each other in the common tangent there. Rolling without slipping means the arcs measured from the two vertices to the point of contact are always equal. So the contact point is the same point of the curve on both, and the rolling parabola is always the reflection of the fixed one in the common tangent at the contact point $P$. Its focus and vertex are the reflections of $S$ and $A$ in that tangent.
+
+      **The focus.** Let $M$ be the foot of the perpendicular from $P$ to the directrix. Then $PS = PM$ (the defining property of the parabola), and the tangent at $P$ bisects the angle $SPM$ (the reflecting property). So the tangent is the perpendicular bisector of $SM$, and the reflection of $S$ is $M$, on the directrix. The rolling focus slides along the directrix of the fixed parabola.
+
+      **The vertex.** Take $P = (at^2, 2at)$, where the tangent is $x - ty + at^2 = 0$. Reflecting the origin in this line gives
+      $$\left(-\frac{2at^2}{1+t^2},\ \frac{2at^3}{1+t^2}\right).$$
+      Writing $X$, $Y$ for these coordinates, one checks $Y^2(2a + X) = -X^3$. This is the **cissoid of Diocles**, with its cusp at $A$ and the asymptote $x = -2a$.
+    checked: "script: reflections computed for several t"
+    viz: tp-s-rolling-parabola
+    status: ready
+  - id: 1828-ladder
+    year: 1828
+    paper: "Evening Problems, Mr Whewell"
+    number: "4"
+    src: cp1831
+    page: "123"
+    leaf: 128
+    topic: 'Statics: a ladder against a sloping bank'
+    areas: [mechanics]
+    difficulty: 2
+    statement: |
+      A ladder of uniform thickness rests with its lower end on a horizontal plane, and its upper end on a slope inclined $60^\circ$ to the horizon. The ladder makes an angle of $30^\circ$ with the horizon; find the force which must act horizontally at the foot to prevent sliding.
+    note: 'We take both surfaces as smooth, so each pushes straight out from its surface. The slope faces the ladder, rising away from its foot.'
+    hints:
+      - 'Take moments about the foot of the ladder.'
+    answer: '$\tfrac{\sqrt3}{4}W \approx 0.43W$, pushing the foot towards the slope'
+    solution: |
+      Let the ladder have weight $W$ and length $2l$, with the foot at the origin. Three forces besides the push $F$ act: the weight $W$ at the middle, the upward reaction $R$ of the ground, and the reaction $N$ of the slope, perpendicular to the slope, so at $60^\circ$ to the vertical and leaning back towards the foot.
+
+      **Moments about the foot.** The top is at $(2l\cos30^\circ, 2l\sin30^\circ)$ and $N = N(-\sin60^\circ, \cos60^\circ)$. Its moment is
+      $$2lN(\cos30^\circ\cos60^\circ + \sin30^\circ\sin60^\circ) = 2lN\cos30^\circ,$$
+      and the weight's moment the other way is $Wl\cos30^\circ$. So $N = \tfrac12W$.
+
+      **Horizontal forces.** The slope pushes the top back with horizontal force $N\sin60^\circ$, so the foot needs
+      $$F = \tfrac12W\cdot\frac{\sqrt3}{2} = \frac{\sqrt3}{4}W \approx 0.433\,W$$
+      towards the slope.
+    checked: "script: moments checked numerically"
+    status: ready
+  - id: 1828-dice
+    year: 1828
+    paper: "Evening Problems, Mr Whewell"
+    number: "17"
+    src: cp1831
+    page: "125"
+    leaf: 130
+    topic: 'Probability: six, twelve and eighteen dice'
+    areas: [probability]
+    difficulty: 2
+    statement: |
+      $A$ throws $6$ dice, $B$ throws $12$, $C$ throws $18$. Compare the chances of $A$ throwing one six, $B$ two sixes and $C$ three sixes.
+    note: 'Read “one six” as “at least one six,” and so on.'
+    hints:
+      - 'Use the complement: the chance of fewer sixes than needed.'
+    answer: 'About $0.665$, $0.619$ and $0.597$: $A$ has the best chance'
+    solution: |
+      Each die shows a six with chance $\tfrac16$. The number of sixes among $n$ dice is binomial.
+
+      $$P(A) = 1 - \left(\tfrac56\right)^6 \approx 0.6651,$$
+      $$P(B) = 1 - \left(\tfrac56\right)^{12} - 12\cdot\tfrac16\left(\tfrac56\right)^{11} \approx 0.6187,$$
+      $$P(C) = 1 - \left(\tfrac56\right)^{18} - 18\cdot\tfrac16\left(\tfrac56\right)^{17} - \binom{18}{2}\left(\tfrac16\right)^2\left(\tfrac56\right)^{16} \approx 0.5973.$$
+      Each player expects the same proportion of sixes, but $A$ does best. With more dice the count of sixes clusters more tightly around its average, and needing the full average (or more) gets harder.
+    checked: "script: binomial sums"
+    status: ready
+  - id: 1829-roof
+    year: 1829
+    paper: "Evening Problems, Mr Bowstead"
+    number: "9"
+    src: cp1831
+    page: "160"
+    leaf: 165
+    topic: 'Rolling: a ball rolls off a roof'
+    areas: [mechanics]
+    difficulty: 3
+    statement: |
+      The heights of the ridge and eaves of a house are $H$ and $h$, and the roof is inclined at $30^\circ$ to the horizon. Find where a sphere *rolling* down the roof from the ridge will strike the ground, and also the time of descent from the eaves.
+    note: 'The **ridge** is the top of the roof and the **eaves** its lower edge. Take a small solid sphere starting from rest. Its spin does not change its flight once it leaves the roof (air is ignored).'
+    hints:
+      - 'A rolling solid sphere accelerates at $\tfrac57 g\sin\alpha$.'
+      - 'It leaves the eaves moving at $30^\circ$ below the horizontal.'
+    answer: 'It leaves with $v^2 = \tfrac{10}{7}g(H - h)$, lands after $t = \dfrac{\sqrt{v^2/4 + 2gh} - v/2}{g}$, at $\tfrac{\sqrt3}{2}vt$ beyond the eaves'
+    solution: |
+      **Down the roof.** A rolling solid sphere accelerates at $\tfrac57g\sin30^\circ = \tfrac{5}{14}g$ (see the 1825 problem on sliding and rolling). The roof is $2(H - h)$ long, so at the eaves
+      $$v^2 = 2\cdot\tfrac5{14}g\cdot2(H-h) = \tfrac{10}{7}g(H - h).$$
+
+      **The fall.** It leaves at $30^\circ$ below the horizontal, with downward speed $\tfrac12v$ and sideways speed $\tfrac{\sqrt3}2v$, from height $h$. The time $t$ to the ground solves $h = \tfrac12vt + \tfrac12gt^2$:
+      $$t = \frac{\sqrt{\tfrac14v^2 + 2gh} - \tfrac12v}{g}.$$
+      It lands $\tfrac{\sqrt3}{2}vt$ beyond the eaves (horizontally).
+
+      **Example.** With $H = 40$ ft, $h = 30$ ft and $g = 32$ ft/s²: $v \approx 21.4$ ft/s, $t \approx 1.08$ s, landing about $19.9$ ft out from the wall.
+    checked: "script: the example"
+    viz: tp-s-roof
+    status: ready
+  - id: 1830-urns
+    year: 1830
+    paper: "Evening Problems, Mr King"
+    number: "13"
+    src: cp1831
+    page: "191"
+    leaf: 196
+    topic: 'Probability: swapping balls between two urns'
+    areas: [probability]
+    difficulty: 2
+    statement: |
+      There are two urns $A$ and $B$, the former containing three white and the latter three black balls: a ball is taken from each at the same time and put into the other, and this operation is repeated three times; what is the probability that $A$ will contain three black and $B$ three white balls?
+    hints:
+      - 'Track $k$, the number of black balls in $A$. Every swap can raise $k$ by at most one.'
+    answer: '$\tfrac{4}{81}$'
+    solution: |
+      Let $k$ be the number of black balls in $A$; then $B$ holds $3 - k$ black and $k$ white. A swap raises $k$ by one when it takes a white ball from $A$ (chance $\tfrac{3-k}{3}$) and a black ball from $B$ (chance $\tfrac{3-k}{3}$).
+
+      To reach $k = 3$ in three swaps, every swap must raise $k$:
+      - from $k = 0$: chance $1\cdot 1 = 1$;
+      - from $k = 1$: chance $\tfrac23\cdot\tfrac23 = \tfrac49$;
+      - from $k = 2$: chance $\tfrac13\cdot\tfrac13 = \tfrac19$.
+
+      Multiplying, the probability is $\tfrac{4}{81} \approx 0.049$.
+    checked: "script: exact chain and a simulation of 200,000 runs"
+    status: ready
+  - id: 1830-mirrors
+    year: 1830
+    paper: "Friday Afternoon"
+    number: "9"
+    src: cp1831
+    page: "179"
+    leaf: 184
+    topic: 'Optics: the images between two mirrors'
+    areas: [optics, geometry]
+    difficulty: 3
+    statement: |
+      Having given the position of an object placed between two plane mirrors inclined to each other at a given angle, find the number and positions of the images.
+    hints:
+      - 'All the images lie on one circle: the one through the object, centered on the line where the mirrors meet.'
+      - 'Follow the light that reflects first in one mirror, then the other, and so on. Stop when an image falls behind the next mirror.'
+    answer: '$\left\lceil\dfrac{180^\circ - \phi}{\theta}\right\rceil + \left\lceil\dfrac{180^\circ - (\theta - \phi)}{\theta}\right\rceil$ images (one fewer if the last two coincide); for $\theta = 360^\circ/m$ with $m$ even, $m - 1$'
+    solution: |
+      Look down the line where the mirrors meet, a point $O$. Measure angles from the first mirror: it lies along $0^\circ$, the second along $\theta$, and the object at angle $\phi$, with $0 < \phi < \theta$.
+
+      **Positions.** Reflecting in the first mirror sends angle $\psi$ to $-\psi$; reflecting in the second sends it to $2\theta - \psi$. Reflections keep distances from $O$, so every image lies on the circle through the object with center $O$. Starting with the first mirror, the images are at
+      $$-\phi,\quad 2\theta + \phi,\quad -(2\theta + \phi),\quad 4\theta + \phi,\ \dots$$
+      and starting with the second mirror they are at $2\theta - \phi,\ -2\theta + \phi,\ 4\theta - \phi, \dots$. Each new image is formed only if the previous one lies in front of the mirror that reflects it.
+
+      **How many.** The images of each chain move round the circle in steps of $\theta$ (in angular distance from the nearer mirror), and a chain stops once an image passes into the region behind both mirrors. Counting the steps gives
+      $$\left\lceil\frac{180^\circ - \phi}{\theta}\right\rceil \text{ images in the first chain}, \qquad \left\lceil\frac{180^\circ - (\theta - \phi)}{\theta}\right\rceil \text{ in the second},$$
+      and if the two chains end at the same point it is one image, not two.
+
+      **Examples.** At $90^\circ$ you see $3$ images, at $60^\circ$ you see $5$, and whenever $360^\circ/\theta = m$ is an even whole number you see $m - 1$, wherever the object is. That is how a kaleidoscope makes a perfect pattern. For $m$ odd you see $m - 1$ if the object is on the bisector of the angle and $m$ otherwise.
+    checked: "script: traced the reflections for ten angles and forty object positions each; the count formula matched every time"
+    viz: tp-s-mirrors
+    status: ready
+  - id: 1830-rainbow
+    year: 1830
+    paper: "Tuesday Afternoon"
+    number: "6"
+    src: cp1831
+    page: "205"
+    leaf: 210
+    topic: 'Optics: the refractive index from a rainbow'
+    areas: [optics]
+    difficulty: 3
+    statement: |
+      Having given the radius of the arc of any colour in the primary rainbow, find the index of refraction, for that colour, out of air into water.
+    note: 'The **radius** of the rainbow is the angle between the rainbow and the point straight opposite the Sun, about $42^\circ$ for red.'
+    hints:
+      - 'In the primary bow, light enters a drop, reflects once inside, and leaves. Its total deviation is $180^\circ + 2i - 4r$, where $i$ and $r$ are the angles of incidence and refraction.'
+      - 'The bow is where the deviation is least. Show that this happens when $\tan i = 2\tan r$.'
+    answer: 'Solve $2t^3 - 3kt^2 - k = 0$ for $t = \tan r$, with $k = \tan\tfrac\rho2$; then $i = 2r - \tfrac\rho2$ and $\mu = \sin i/\sin r$. For $\rho = 42^\circ$, $\mu \approx 1.333$.'
+    solution: |
+      **Deviation.** A ray meets a spherical drop at incidence $i$ and bends to $r$, with $\sin i = \mu\sin r$. It turns through $i - r$ entering, $180^\circ - 2r$ at the reflection inside, and $i - r$ leaving: $D = 180^\circ + 2i - 4r$. The rainbow sits where $D$ is least, because the rays bunch up there.
+
+      **Least deviation.** Differentiating $\sin i = \mu\sin r$ gives $\cos i\,di = \mu\cos r\,dr$. At the least deviation $dD = 2di - 4dr = 0$, so $di = 2dr$ and $2\cos i = \mu\cos r$. Dividing $\sin i = \mu\sin r$ by this:
+      $$\tan i = 2\tan r.$$
+
+      **The radius.** The bow is seen at angle $\rho = 180^\circ - D = 4r - 2i$ from the point opposite the Sun. So $i = 2r - \tfrac\rho2$, and $\tan(2r - \tfrac\rho2) = 2\tan r$. With $t = \tan r$ and $k = \tan\tfrac\rho2$, expanding the left side and clearing fractions gives
+      $$2t^3 - 3kt^2 - k = 0.$$
+      This cubic has one positive root. From it, $r = \tan^{-1}t$, $i = 2r - \tfrac\rho2$ and $\mu = \sin i/\sin r$.
+
+      **Red light.** For $\rho = 42^\circ$: $t \approx 0.845$, $r \approx 40.2^\circ$, $i \approx 59.4^\circ$, and $\mu \approx 1.333$, the refractive index of water. A check: least deviation also requires $\cos^2 i = \tfrac13(\mu^2 - 1)$, and these numbers satisfy it.
+    checked: "script: solved the cubic for 42° and checked cos² i = (μ² − 1)/3"
+    viz: tp-s-rainbow
+    status: ready
+  # ------------------------------------------------------------------ 1854
+  - id: 1854-planes
+    year: 1854
+    paper: "Problems, Wednesday, January 18, 9½ to 12½"
+    number: "1"
+    src: sh1854
+    page: "211"
+    leaf: 222
+    topic: 'Counting: planes through points in space'
+    areas: [combinatorics, geometry]
+    difficulty: 1
+    statement: |
+      There are $n$ points in space, of which $p$ are in one plane, and there is no other plane which contains more than three of them; how many planes are there, each of which contains three of the points?
+    answer: '$\dbinom n3 - \dbinom p3 + 1$'
+    solution: |
+      Any three of the points that are not in a line fix a plane. Count the triples: there are $\binom n3$. A plane containing exactly three of the points comes from exactly one triple. The special plane contains $\binom p3$ triples but is only one plane. So the number of planes is
+      $$\binom n3 - \binom p3 + 1.$$
+      (We take it, as intended, that no three of the points are in a straight line.)
+    checked: "script: counted planes through random points for three cases"
+    status: ready
+  - id: 1854-coins
+    year: 1854
+    paper: "Problems, Wednesday, January 18, 9½ to 12½"
+    number: "2"
+    src: sh1854
+    page: "211"
+    leaf: 222
+    topic: 'Expectation: what are the four coins worth?'
+    areas: [probability]
+    difficulty: 1
+    statement: |
+      A bag contains nine coins, five are sovereigns, the other four are equal to each other in value; find what this value must be, in order that the expectation of receiving two coins at random out of the bag may be worth twenty-four shillings.
+    note: 'A **sovereign** was a gold coin worth $20$ shillings. The **expectation** is the average value.'
+    hints:
+      - 'Each of the two coins drawn is worth, on average, the average coin in the bag.'
+    answer: '$2$ shillings each (a florin)'
+    solution: |
+      Each coin drawn, taken alone, is equally likely to be any of the nine coins, so its expected value is the average value in the bag. With the four coins worth $x$ shillings each, that average is $\dfrac{5\cdot20 + 4x}{9}$. For two coins,
+      $$2\cdot\frac{100 + 4x}{9} = 24 \quad\Longrightarrow\quad 100 + 4x = 108 \quad\Longrightarrow\quad x = 2.$$
+      The other coins are worth $2$ shillings each: florins.
+    checked: "exact arithmetic"
+    status: ready
+  - id: 1854-broken-rod
+    year: 1854
+    paper: "Problems, Wednesday, January 18, 9½ to 12½"
+    number: "7"
+    src: sh1854
+    page: "212"
+    leaf: 223
+    topic: 'Probability: can the broken rod make a triangle?'
+    areas: [probability, calculus]
+    difficulty: 3
+    statement: |
+      A rod is marked at random at two points, and then divided into three parts at those points; shew that the probability of its being possible to form a triangle with the pieces is $\tfrac14$.
+
+      Again: a piece is cut off the end of a rod, and the remainder is cut into two pieces at random; shew that the probability of its being possible to form a triangle with the pieces is in this case $\log_e 2 - \tfrac12$.
+    hints:
+      - 'Three pieces make a triangle when each is shorter than half the rod.'
+      - 'For the second part, condition on the length $x$ of the first piece.'
+    solution: |
+      Take the rod to have length $1$. Three lengths adding to $1$ make a triangle exactly when each is less than $\tfrac12$ (each side must be shorter than the other two together).
+
+      **First part.** Let the marks be at $u$ and $w$, chosen independently and uniformly, so the point $(u, w)$ is uniform in the unit square. Take $u < w$ (half the square; the other half is the same by symmetry). The pieces are $u$, $w - u$, $1 - w$, and we need
+      $$u < \tfrac12, \qquad w > \tfrac12, \qquad w - u < \tfrac12.$$
+      In the triangle $0 < u < w < 1$ (area $\tfrac12$) these cut out a small triangle with corners $(0, \tfrac12)$, $(\tfrac12, \tfrac12)$, $(\tfrac12, 1)$, of area $\tfrac18$. The probability is $\tfrac18 \big/ \tfrac12 = \tfrac14$.
+
+      **Second part.** Let the first piece have length $x$, uniform on $(0, 1)$, and cut the rest at a uniform fraction $y$: the pieces are $x$, $(1-x)y$, $(1-x)(1-y)$. We need $x < \tfrac12$, and then $(1-x)y < \tfrac12$ and $(1-x)(1-y) < \tfrac12$, that is,
+      $$1 - \frac{1}{2(1-x)} < y < \frac{1}{2(1-x)},$$
+      an interval of length $\dfrac{1}{1-x} - 1$. So the probability is
+      $$\int_0^{1/2}\left(\frac{1}{1-x} - 1\right)dx = \ln 2 - \frac12 \approx 0.193.$$
+    checked: "script: 400,000 random rods for each part"
+    viz: tp-s-stick
+    status: ready
+  - id: 1854-halfway
+    year: 1854
+    paper: "Problems, Wednesday, January 18, 9½ to 12½"
+    number: "9"
+    src: sh1854
+    page: "212"
+    leaf: 223
+    topic: 'Geometry: half way to A, B, C forever'
+    areas: [geometry]
+    difficulty: 3
+    statement: |
+      $A$, $B$, $C$ are three fixed points, and $P$ a point which moves first half way to $A$, then half way to $B$, then half way to $C$, then half way to $A$ again, and so on for ever; shew that from whatever position $P$ start, its path approximates to the perimeter of a certain triangle whose area is one-seventh of the area of the triangle $ABC$.
+    hints:
+      - 'Each move halves the distance between two copies of $P$ started from different places. So all paths come together.'
+      - 'Look for three points $X_A$, $X_B$, $X_C$ that the moves cycle through exactly.'
+    solution: |
+      **Everything settles down.** A move "half way to $A$" is $P \mapsto \tfrac12(P + A)$. If two starting points differ by a vector $\mathbf d$, after one move they differ by $\tfrac12\mathbf d$. So whatever the start, after many moves the path is as close as we like to the path from any other start.
+
+      **The limiting cycle.** Look for points $X_A$, $X_B$, $X_C$ (the places reached just after moving towards $A$, $B$, $C$) with
+      $$X_A = \tfrac12(X_C + A), \quad X_B = \tfrac12(X_A + B), \quad X_C = \tfrac12(X_B + C).$$
+      Substituting round the cycle, $X_A = \tfrac12A + \tfrac14C + \tfrac18B + \tfrac18X_A$, so
+      $$X_A = \frac{4A + B + 2C}{7}, \quad X_B = \frac{2A + 4B + C}{7}, \quad X_C = \frac{A + 2B + 4C}{7}.$$
+      Every path approaches the triangle $X_AX_BX_C$, going round its perimeter.
+
+      **Its area.** The area of a triangle whose corners are these weighted averages of $A$, $B$, $C$ is the determinant of the weights times the area of $ABC$:
+      $$\frac{1}{7^3}\det\begin{pmatrix}4&1&2\\2&4&1\\1&2&4\end{pmatrix} = \frac{49}{343} = \frac17.$$
+    checked: "script: iterated 300 moves from a far start; area ratio 1/7 to 10⁻¹²"
+    viz: tp-s-halfway
+    status: ready
+  - id: 1854-table
+    year: 1854
+    paper: "Problems, Wednesday, January 18, 9½ to 12½"
+    number: "16"
+    src: sh1854
+    page: "213"
+    leaf: 224
+    topic: 'Projectiles: up a ramp and off the top'
+    areas: [mechanics, calculus]
+    difficulty: 3
+    statement: |
+      An inclined plane is fixed on a table, and from the foot of it a body is projected upwards along the plane with the velocity due to the height $h$; after passing over the top of the plane the body strikes the table at a distance $z$ from the foot of the plane; shew that, if the length of the plane be $l$, and $\alpha$ its inclination to the horizon be less than $\tfrac14\pi$, the greatest value of $z$ for given values of $h$ and $\alpha$ is $\dfrac{h}{\sin\alpha\cos\alpha}$, and corresponds to the value $l = 2h\dfrac{\cot2\alpha}{\cos\alpha}$.
+    note: '“The velocity due to the height $h$” is $\sqrt{2gh}$, the speed gained falling through $h$. The plane is smooth.'
+    hints:
+      - 'At the top, the speed is $\sqrt{2g(h - l\sin\alpha)}$ and the body flies off along the plane. Its flight is part of the parabola it would follow if launched from the foot at angle $\alpha$ with the full speed.'
+    solution: |
+      Let $H = l\sin\alpha$ be the height of the top, and write $s = \sin\alpha$, $c = \cos\alpha$.
+
+      **Leaving the top.** The plane is smooth, so at the top the speed is $u$ with $u^2 = 2g(h - H)$, and the body flies off in the direction of the plane, at angle $\alpha$ above the horizontal, from height $H$.
+
+      **The flight.** Its horizontal run $X$ before landing solves $\dfrac{gX^2}{2u^2c^2} - X\dfrac sc - H = 0$. Taking the positive root and using $u^2/g = 2(h-H)$,
+      $$X = 2c\left[(h-H)s + \sqrt{(h-H)(hs^2 + Hc^2)}\right].$$
+      (Inside the square root, $(h-H)^2s^2 + H(h-H) = (h-H)(hs^2 + Hc^2)$.)
+
+      **The distance from the foot.** The top is $H\cot\alpha$ from the foot, so $z = Hc/s + X$, and
+      $$\frac zc = H\,\frac{\cos2\alpha}{s} + 2hs + 2\sqrt{(h-H)(hs^2 + Hc^2)},$$
+      using $\tfrac1s - 2s = \tfrac{\cos2\alpha}{s}$. The square root of a positive product of two linear factors with opposite slopes is a concave function, so $z$ is greatest where its derivative in $H$ vanishes:
+      $$\frac{\cos2\alpha}{s} + \frac{h\cos2\alpha - 2Hc^2}{\sqrt{(h-H)(hs^2 + Hc^2)}} = 0.$$
+
+      **The best plane.** Try $H = h\cos2\alpha/c^2$. Then $h - H = hs^2/c^2$ and $hs^2 + Hc^2 = hc^2$, so the square root is $hs$, and the derivative is $\frac{\cos2\alpha}{s} - \frac{h\cos2\alpha}{hs} = 0$. This $H$ is positive only when $\alpha < 45^\circ$, which is why the problem needs that. The length of the plane is
+      $$l = \frac Hs = \frac{h\cos2\alpha}{sc^2} = 2h\,\frac{\cot2\alpha}{\cos\alpha},$$
+      since $\sin2\alpha = 2sc$.
+
+      **The greatest distance.** Putting this back, $\dfrac zc = \dfrac{h\cos^22\alpha}{c^2s} + 4hs$, so
+      $$z = \frac{h\left(\cos^22\alpha + 4s^2c^2\right)}{sc} = \frac{h\left(\cos^22\alpha + \sin^22\alpha\right)}{sc} = \frac{h}{\sin\alpha\cos\alpha}.$$
+    checked: "script: searched all lengths l for h = 1, α = 0.5; greatest z and the best l agree with the formulas to 10⁻⁴"
+    status: ready
+  - id: 1854-two-ways
+    year: 1854
+    paper: "Problems, Tuesday, January 17, 9 to 12"
+    number: "13"
+    src: sh1854
+    page: "208"
+    leaf: 219
+    topic: 'Projectiles: the two aims that hit the same mark'
+    areas: [mechanics]
+    difficulty: 3
+    statement: |
+      There are generally two directions in which a projectile may be projected with given velocity from a point $A$, so as to pass through another point $B$; shew that one of these directions is inclined to the vertical at the same angle that the other is inclined to the line $AB$. Hence shew that the locus of points, for which a given sight must be used in firing with a given charge of powder, is the surface generated by the revolution, about the vertical, of the path of the bullet obtained by aiming at the zenith with the given sight, and with the given charge of powder.
+    note: 'A gun''s **sight** sets the angle between the barrel and your line of sight to the target; the **charge of powder** sets the speed. The **zenith** is the point straight overhead.'
+    hints:
+      - 'With $T = \tan\phi$, the condition to hit $B$ is a quadratic in $T$. Find $\tan(\phi_1 + \phi_2)$ from the sum and product of its roots.'
+    solution: |
+      Let $B$ be at distance $R$ from $A$ along a line at elevation $\theta$, so $x = R\cos\theta$, $y = R\sin\theta$. Launch at speed $v$ and elevation $\phi$, with $T = \tan\phi$ and $k = \dfrac{gx^2}{2v^2}$.
+
+      **The two directions.** Passing through $B$ means $y = xT - k(1 + T^2)$, or $kT^2 - xT + (k + y) = 0$. Its two roots satisfy $T_1 + T_2 = \dfrac xk$ and $T_1T_2 = 1 + \dfrac yk$, so
+      $$\tan(\phi_1 + \phi_2) = \frac{T_1 + T_2}{1 - T_1T_2} = \frac{x/k}{-y/k} = -\cot\theta = \tan(90^\circ + \theta).$$
+      So $\phi_1 + \phi_2 = 90^\circ + \theta$. Then the angle between the first direction and the vertical is $90^\circ - \phi_1 = \phi_2 - \theta$, which is the angle between the second direction and the line $AB$.
+
+      **The sight.** A sight setting fixes the angle $\delta$ between the barrel and the line of sight $AB$. If $B$ is hit with the barrel at angle $\delta$ to $AB$, then by the first part the other possible aim makes angle $\delta$ with the vertical. So $B$ lies on the path of a bullet fired at angle $\delta$ from the vertical, which is the path you get by sighting straight up at the zenith with that sight. The direction around the vertical can be anything, so the points form the surface swept out when that path is spun about the vertical through $A$. And each step reverses, so every point of that surface needs that sight.
+    checked: "script: solved for both angles for a sample target"
+    viz: tp-s-two-ways
+    status: ready
+  - id: 1854-ring-bead
+    year: 1854
+    paper: "Problems, Tuesday, January 17, 9 to 12"
+    number: "20"
+    src: sh1854
+    page: "209"
+    leaf: 220
+    topic: 'Oscillations: a bead in a ring that can slide'
+    areas: [mechanics]
+    difficulty: 4
+    statement: |
+      A thin hollow ring, of which the plane is vertical, and which contains a bead, is placed upon a smooth horizontal plane: prove that the bead, having been placed near the lowest point of the ring, will oscillate isochronously with a perfect pendulum the length of which is equal to
+      $$\frac{\mu a}{m + \mu},$$
+      $a$ being the radius of the ring, $\mu$ its mass, and $m$ the mass of the bead.
+    note: '“Oscillate isochronously with” means swing with the same period as. A **perfect pendulum** is a point weight on a light string. The bead moves without friction inside the ring.'
+    hints:
+      - 'Nothing pushes the system sideways, so its center of mass does not move sideways.'
+      - 'Write the kinetic and potential energy for a small angle $\theta$ of the bead from the bottom.'
+    solution: |
+      Let the ring's center move sideways by $X$ and the bead sit at angle $\theta$ from the bottom, small.
+
+      **Momentum.** The smooth plane pushes only upward, so the total sideways momentum stays zero: $\mu\dot X + m(\dot X + a\dot\theta) = 0$ (to first order), giving $\dot X = -\dfrac{ma}{m + \mu}\dot\theta$. The bead's sideways speed is then $\dot X + a\dot\theta = \dfrac{\mu a}{m+\mu}\dot\theta$.
+
+      **Energy.** For small $\theta$,
+      $$\text{KE} = \tfrac12\mu\dot X^2 + \tfrac12m(\dot X + a\dot\theta)^2 = \tfrac12\,\frac{m\mu a^2}{m + \mu}\,\dot\theta^2, \qquad \text{PE} = \tfrac12mga\,\theta^2.$$
+      This is simple harmonic motion with
+      $$\omega^2 = \frac{mga}{m\mu a^2/(m+\mu)} = \frac{g(m + \mu)}{\mu a}.$$
+      A pendulum of length $L$ has $\omega^2 = g/L$, so $L = \dfrac{\mu a}{m + \mu}$. A very heavy ring ($\mu \gg m$) gives $L = a$, the ordinary bead in a fixed ring; a light ring swings much faster.
+    checked: "script: integrated the full equations of motion; the period matches to 10⁻³"
+    viz: tp-s-ring
+    status: ready
+  - id: 1854-chord
+    year: 1854
+    paper: "Problems, Thursday, January 19, 9 to 12"
+    number: "1"
+    src: sh1854
+    page: "216"
+    leaf: 227
+    topic: 'Geometry: a big circle touching two small ones'
+    areas: [geometry]
+    difficulty: 2
+    statement: |
+      Two circles of radii $r$, $r'$, touch a straight line at the same point on opposite sides: a circle, of which the radius is $R$ and of which the straight line is a chord, touches both the former circles. Prove that the length of the chord is equal to
+      $$\frac{4R}{\left(\dfrac{r}{r'}\right)^{\frac12} + \left(\dfrac{r'}{r}\right)^{\frac12}}.$$
+    hints:
+      - 'Put the line on the $x$-axis and the common point at the origin. The small circles are inside the big one, touching it.'
+    solution: |
+      Put the line along the $x$-axis, the common point of contact at the origin, and the small circles' centers at $(0, r)$ and $(0, -r')$. Let the big circle have center $(h, k)$. Its half-chord on the $x$-axis is $\sqrt{R^2 - k^2}$.
+
+      The small circles lie inside the big one and touch it, so the distances between centers are $R - r$ and $R - r'$:
+      $$h^2 + (k - r)^2 = (R - r)^2, \qquad h^2 + (k + r')^2 = (R - r')^2.$$
+      Expanding, $h^2 + k^2 = R^2 - 2r(R - k)$ and $h^2 + k^2 = R^2 - 2r'(R + k)$. So $r(R - k) = r'(R + k)$, which gives
+      $$k = R\,\frac{r - r'}{r + r'}, \qquad R^2 - k^2 = R^2\,\frac{4rr'}{(r + r')^2}.$$
+      The chord is $2\sqrt{R^2 - k^2} = \dfrac{4R\sqrt{rr'}}{r + r'}$. Dividing top and bottom by $\sqrt{rr'}$ gives the stated form.
+    checked: "script: a sample case"
+    status: ready
+  # ------------------------------------------------------------------ 1860
+  - id: 1860-hyperbola
+    year: 1860
+    paper: "Problems, Thursday, January 5, 9 to 12"
+    number: "4"
+    src: sh1860
+    page: "166"
+    leaf: 177
+    topic: 'Conics: an isosceles triangle on an asymptote'
+    areas: [conics]
+    difficulty: 3
+    statement: |
+      If the tangent at any point $P$ of an hyperbola cut an asymptote in $T$, and if $SP$ cut the same asymptote in $Q$, then $SQ = QT$.
+    note: '$S$ is a focus of the hyperbola (either one works).'
+    hints:
+      - 'Use $P = (a\sec\phi, b\tan\phi)$ and the asymptote $y = \tfrac ba x$. Find $T$ and $Q$.'
+    hints:
+      - 'Name the points of the asymptote by $\lambda$: the point $(a\lambda, b\lambda)$ is at distance $c\lambda$ from the center, where $c = \sqrt{a^2+b^2}$.'
+      - 'Use the cosine rule for $SQ$, and find $\lambda$ for $T$ and for $Q$ with $P = (a\sec\phi, b\tan\phi)$.'
+    solution: |
+      Take $\dfrac{x^2}{a^2} - \dfrac{y^2}{b^2} = 1$ with center $C$, let $c = \sqrt{a^2+b^2}$, so the focus is $S = (c, 0)$, and use the asymptote $y = \tfrac bax$. Its point $(a\lambda, b\lambda)$ is at distance $c\lambda$ from $C$, and the asymptote makes an angle with $CS$ whose cosine is $a/c$. Let $P = (a\sec\phi, b\tan\phi)$, and write $\sigma = \sin\phi$, $\kappa = \cos\phi$.
+
+      **The point $T$.** The tangent at $P$ is $\dfrac{x\sec\phi}{a} - \dfrac{y\tan\phi}{b} = 1$. On the asymptote this gives $\lambda(\sec\phi - \tan\phi) = 1$, so
+      $$\lambda_T = \frac{\kappa}{1 - \sigma}, \qquad \lambda_T^2 - 1 = \frac{\kappa^2 - (1-\sigma)^2}{(1-\sigma)^2} = \frac{2\sigma}{1-\sigma}.$$
+
+      **The point $Q$.** $(a\lambda, b\lambda)$ is on the line $SP$ when $(a\lambda - c)\,b\tan\phi = b\lambda\,(a\sec\phi - c)$. Solving and multiplying through by $\kappa$,
+      $$\lambda_Q = \frac{c\,\sigma}{c\kappa - a + a\sigma}.$$
+
+      **Compare the lengths.** By the cosine rule in triangle $SCQ$, $SQ^2 = c^2\left(\lambda_Q^2 - \tfrac{2a}{c}\lambda_Q + 1\right)$, and $QT^2 = c^2(\lambda_T - \lambda_Q)^2$. So
+      $$\frac{SQ^2 - QT^2}{c^2} = 2\lambda_Q\left(\lambda_T - \frac ac\right) - (\lambda_T^2 - 1).$$
+      Now $\lambda_T - \dfrac ac = \dfrac{c\kappa - a + a\sigma}{c(1-\sigma)}$, so $2\lambda_Q\left(\lambda_T - \frac ac\right) = \dfrac{2\sigma}{1-\sigma} = \lambda_T^2 - 1$. The difference is zero: $SQ = QT$. For the other focus, replace $c$ by $-c$ throughout; the same lines go through.
+    checked: "script: both foci and four points on a sample hyperbola; SQ = QT to 10⁻⁹; computer algebra for λ_Q"
+    status: ready
+  - id: 1860-sum-products
+    year: 1860
+    paper: "Problems, Thursday, January 5, 9 to 12"
+    number: "5"
+    src: sh1860
+    page: "166"
+    leaf: 177
+    topic: 'Algebra: adding all products of two numbers'
+    areas: [algebra]
+    difficulty: 1
+    statement: |
+      Prove that the sum of the products of the first $n$ natural numbers taken two and two together is
+      $$\frac{(n-1)\,n\,(n+1)(3n+2)}{24}.$$
+    hints:
+      - 'Square $1 + 2 + \cdots + n$.'
+    solution: |
+      Squaring the sum $1 + 2 + \cdots + n$ gives every square once and every product of two different numbers twice:
+      $$\Big(\sum_{i=1}^n i\Big)^2 = \sum_{i=1}^n i^2 + 2\sum_{i<j} ij.$$
+      So
+      $$\sum_{i<j} ij = \frac12\left[\frac{n^2(n+1)^2}{4} - \frac{n(n+1)(2n+1)}{6}\right] = \frac{n(n+1)\big[3n(n+1) - 2(2n+1)\big]}{24} = \frac{n(n+1)(3n^2 - n - 2)}{24},$$
+      and $3n^2 - n - 2 = (n - 1)(3n + 2)$.
+    checked: "script: n up to 39"
+    status: ready
+  - id: 1860-escribed
+    year: 1860
+    paper: "Problems, Thursday, January 5, 9 to 12"
+    number: "6"
+    src: sh1860
+    page: "166"
+    leaf: 177
+    topic: 'Geometry: the excenters lie outside the circumcircle'
+    areas: [geometry]
+    difficulty: 3
+    statement: |
+      The centres of the escribed circles of a triangle must lie without the circumscribing circle, and cannot be equidistant from it unless the triangle be equilateral.
+    note: 'An **escribed circle** touches one side of the triangle and the other two sides extended. Its center is an **excenter**.'
+    hints:
+      - 'Let the bisector from $A$ meet the circumcircle again at $M$. Then $M$ is equally far from $B$, $C$, the incenter $I$ and the excenter $I_a$.'
+      - 'Compute the power of $I_a$ with respect to the circumcircle: $I_aM\cdot I_aA$.'
+    solution: |
+      Let $I$ be the incenter, $I_a$ the excenter opposite $A$, $r_a$ its radius, and $O$, $R$ the circumcenter and circumradius.
+
+      **A key point.** The bisector of angle $A$ passes through $I$ and $I_a$ and meets the circumcircle again at $M$, the middle of arc $BC$. We know $MB = MC = MI$ (see the 1878 paper, problem 1). The bisectors $BI$ and $BI_a$ of the inside and outside angles at $B$ are perpendicular, so the circle on $II_a$ as diameter passes through $B$, and its center, the midpoint of $II_a$, is equally far from $I$ and $B$. Only one point of the line $II_a$ is equally far from $I$ and $B$, and $M$ is such a point. So $M$ is the midpoint of $II_a$, and $MI_a = MI = MB$.
+
+      **Power of $I_a$.** Along the line, the order is $A$, $I$, $M$, $I_a$. The power of $I_a$ with respect to the circumcircle is
+      $$OI_a^2 - R^2 = I_aM\cdot I_aA.$$
+      Now $I_aM = MB = 2R\sin\tfrac A2$ (a chord facing an angle $\tfrac A2$ at the circumference) and $I_aA = r_a/\sin\tfrac A2$ (from the right triangle formed by $A$, $I_a$ and the point where the excircle touches $AB$ extended). So
+      $$OI_a^2 = R^2 + 2Rr_a > R^2.$$
+      Every excenter lies outside the circumcircle.
+
+      **Equal distances.** The distance from $I_a$ to the circle is $OI_a - R = \sqrt{R^2 + 2Rr_a} - R$, which increases with $r_a$. So the three excenters are equally far from the circle only if $r_a = r_b = r_c$. Since $r_a = \dfrac{\Delta}{s - a}$ (area over semiperimeter minus the side), this means $s - a = s - b = s - c$, so $a = b = c$.
+    checked: "script: OI_a² = R² + 2R r_a on a sample triangle"
+    status: ready
+  - id: 1860-equilateral
+    year: 1860
+    paper: "Problems, Thursday, January 5, 9 to 12"
+    number: "vii"
+    src: sh1860
+    page: "166"
+    leaf: 177
+    topic: 'Geometry: reciprocals of perpendiculars to a tangent'
+    areas: [geometry, trigonometry]
+    difficulty: 3
+    statement: |
+      If perpendiculars be drawn from the angles of an equilateral triangle upon any tangent to the inscribed circle, prove that the sum of the reciprocals of those perpendiculars which fall upon the same side of the tangent is equal to the reciprocal of that perpendicular which falls upon the opposite side.
+    note: 'The **angles** of a triangle here means its corners.'
+    hints:
+      - 'Use signed distances from the tangent line. Take the incircle of radius $1$; the corners are at distance $2$ from the center.'
+      - 'The three numbers $1 - 2\cos\psi_k$, with $\psi_k$ spaced $120^\circ$ apart, are the roots of a cubic with no $x$ term.'
+    solution: |
+      Take the incircle to have radius $1$ and center $O$; then the corners are at distance $2$ from $O$, at angles $120^\circ$ apart. A tangent line has a unit normal $\mathbf n$ with the line at $\mathbf n\cdot X = 1$. The signed distance of a corner at angle $\psi$ from $\mathbf n$ is
+      $$d = 1 - 2\cos\psi,$$
+      positive on the same side as $O$. The claim is that $\dfrac1{d_1} + \dfrac1{d_2} + \dfrac1{d_3} = 0$, with exactly one $d$ negative.
+
+      **A cubic.** With $\psi_k = \psi + 120^\circ k$, the numbers $c = \cos\psi_k$ are the three roots of $4c^3 - 3c = \cos3\psi$. Put $c = \tfrac12(1 - d)$:
+      $$\tfrac12(1-d)^3 - \tfrac32(1-d) = \cos3\psi \quad\Longrightarrow\quad d^3 - 3d^2 + 2 + 2\cos3\psi = 0.$$
+      This cubic has no term in $d$, and for a cubic $d^3 + pd^2 + qd + s$ the reciprocals of the roots add to $-q/s$. So $\sum 1/d_k = 0$.
+
+      **Signs.** The product of the roots is $-(2 + 2\cos3\psi) < 0$ (when no corner is on the tangent), so an odd number of them are negative, and they cannot all be negative since the line touches the incircle between the corners. So one corner lies on the far side, and the reciprocals of the other two add up to the reciprocal of its distance.
+    checked: "script: four tangent directions"
+    status: ready
+  - id: 1860-chords
+    year: 1860
+    paper: "Problems, Thursday, January 5, 9 to 12"
+    number: "12"
+    src: sh1860
+    page: "167"
+    leaf: 178
+    topic: 'Central forces: chords all taking the same time'
+    areas: [mechanics, geometry]
+    difficulty: 3
+    statement: |
+      If a particle slide along a chord of a circle under the action of a centre of force varying as the distance, the time will be the same for all chords provided they terminate at either extremity of the diameter through the centre of force.
+    note: 'The particle starts from rest at one end of a smooth chord and is pulled towards a fixed point $O$ inside the circle with a force proportional to its distance from $O$.'
+    hints:
+      - 'Along a straight wire, a force proportional to distance from $O$ gives simple harmonic motion about the foot $N$ of the perpendicular from $O$ to the wire.'
+      - 'Let $D$, $E$ be the ends of the diameter through $O$. For a chord $DA$, the angle $DAE$ is a right angle, so $ON$ is parallel to $EA$.'
+    solution: |
+      Let the force be $k^2$ times the distance, towards $O$.
+
+      **Motion on one chord.** Let $N$ be the foot of the perpendicular from $O$ to the chord. The force splits into a part along $ON$, which the chord holds back, and a part along the chord, equal to $k^2$ times the distance from $N$. So the particle does simple harmonic motion about $N$ with angular frequency $k$, whatever the chord: starting from rest at distance $s_0$ from $N$, it is at distance $s_0\cos kt$ (on the same side) at time $t$.
+
+      **Chords through $D$.** Let $DE$ be the diameter through $O$ and $DA$ a chord. The angle $DAE$ is a right angle (angle in a semicircle), so $ON \perp DA$ means $ON \parallel EA$. By similar triangles,
+      $$\frac{DN}{NA} = \frac{DO}{OE},$$
+      the same for every such chord.
+
+      **The time.** Starting from rest at the end farther from $N$ — say $D$, if $DO \ge OE$ — the particle reaches $A$ when $\cos kt = -\dfrac{NA}{ND} = -\dfrac{OE}{DO}$, so
+      $$t = \frac1k\cos^{-1}\left(-\frac{OE}{DO}\right),$$
+      the same for all chords from $D$. The same holds for the chords from $E$.
+    checked: "script: four chords from D; times equal to 10⁻⁹"
+    viz: tp-s-chords
+    status: ready
+  - id: 1860-ray
+    year: 1860
+    paper: "Problems, Thursday, January 5, 9 to 12"
+    number: "xv"
+    src: sh1860
+    page: "167"
+    leaf: 178
+    topic: 'Optics: a light ray that bends into a circle'
+    areas: [optics]
+    difficulty: 3
+    statement: |
+      A ray of light passes through a medium of which the refractive index at any point is inversely proportional to the distance of that point from a certain plane. Prove that the path of the ray is a circular arc of which the centre is in the above-mentioned plane.
+    hints:
+      - 'Think of the medium as many thin layers parallel to the plane. Snell''s law says $\mu\cos\theta$ stays the same, where $\theta$ is the angle the ray makes with the layers.'
+    solution: |
+      Let $y$ be the distance from the plane, so $\mu = c/y$, and let $\theta$ be the angle between the ray and the plane (in the plane of the ray). The medium is layered parallel to the plane, so by Snell's law, layer after layer, $\mu\cos\theta$ is constant:
+      $$\frac{\cos\theta}{y} = \text{constant}, \qquad\text{so}\qquad y = \rho\cos\theta$$
+      for some constant $\rho$.
+
+      **A circle does exactly this.** On a circle of radius $\rho$ with center in the plane ($y = 0$), the point at height $y$ has its radius at angle $\beta$ to the plane with $y = \rho\sin\beta$, and the tangent there is perpendicular to the radius, so it makes the angle $\theta = 90^\circ - \beta$ with the plane. Then $y = \rho\cos\theta$.
+
+      The ray's direction is fixed by its height through $y = \rho\cos\theta$, and the circle through the starting point with center in the plane and the right direction obeys the same rule. So the ray follows that circle. (Such a medium is a model of the hyperbolic plane, the Poincaré half-plane, where these arcs play the part of straight lines.)
+    checked: "script: traced a ray numerically; it stays on one circle centered on the plane"
+    viz: tp-s-ray
+    status: ready
+  - id: 1860-bead
+    year: 1860
+    paper: "Problems, Thursday, January 5, 9 to 12"
+    number: "16"
+    src: sh1860
+    page: "167"
+    leaf: 178
+    topic: 'Central forces: a bead pressing evenly on its wire'
+    areas: [mechanics]
+    difficulty: 3
+    statement: |
+      A small bead is projected with any velocity along a circular wire under the action of a force varying inversely as the fifth power of the distance from a centre of force situated in the circumference. Prove that the pressure on the wire is constant.
+    note: '**Pressure** here is the push between bead and wire. The wire is smooth, and gravity is ignored.'
+    hints:
+      - 'If $O$ is the center of force and $C$ the center of the circle, triangle $OCP$ is isosceles. So $OP = 2a\cos\psi$, where $\psi$ is the angle at $P$.'
+      - 'Use energy for the speed, and resolve the force towards $C$.'
+    solution: |
+      Let the circle have center $C$ and radius $a$, the center of force $O$ be on the circle, and the bead (mass $1$) be at $P$ with $OP = r$. The force is $\mu/r^5$ towards $O$.
+
+      **Speed.** The potential energy is $-\dfrac{\mu}{4r^4}$, so energy conservation gives $v^2 = 2E + \dfrac{\mu}{2r^4}$ for a constant $E$.
+
+      **Geometry.** $CO = CP = a$, so triangle $OCP$ is isosceles; with $\psi$ the angle $OPC$, we have $r = 2a\cos\psi$. The part of the force pointing towards $C$ is
+      $$\frac{\mu}{r^5}\cos\psi = \frac{\mu}{r^5}\cdot\frac{r}{2a} = \frac{\mu}{2ar^4}.$$
+
+      **The push of the wire.** Moving on a circle needs a total force $v^2/a$ towards the center. With $N$ the push of the wire towards $C$,
+      $$N + \frac{\mu}{2ar^4} = \frac{v^2}{a} = \frac{2E}{a} + \frac{\mu}{2ar^4}, \qquad N = \frac{2E}{a},$$
+      a constant. The pull of the force and the need for more speed cancel exactly.
+    checked: "script: four positions on the circle give the same N"
+    viz: tp-s-bead
+    status: ready

@@ -7,6 +7,8 @@ icon: "🎵"
 layout: hub
 scripts: [audio, keyboard, "music/lessons/core.js", "music/lessons/widgets.js"]
 styles: ["music/lessons/lessons.css"]
+sections:
+  - { url: "/connections/", icon: "🔷", title: "Where Music, Patterns, Math and Chemistry Meet", text: "Why some notes blend, the circle of fifths as a clock, rhythms from Euclid, sand that draws sound on a ringing plate, and how an atom is like a drum." }
 need:
   - title: "An instrument, or just this screen"
     text: "A piano or keyboard, a guitar, a ukulele or a 5-string banjo. No instrument yet? The keys and strings on the screen play in every lesson and song, with a mouse, a touch screen or your keyboard."

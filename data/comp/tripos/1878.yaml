@@ -1,0 +1,668 @@
+# Cambridge Mathematical Tripos, 1878: the "Easy Problems" paper of Wednesday morning, January 2 (public domain).
+# Statements transcribed from the scan named in `source`; notation modernized only where TeX needs it.
+# `label` is the number as printed: Arabic numbers were set by Mr Prior, Roman numbers by Mr Glaisher.
+# Hints, notes and solutions are our own. Format: layouts/comp/tpaper.html and scripts/comp/check-comp.js.
+kind: paper
+slug: "1878"
+title: "The 1878 Easy Problems paper"
+year: 1878
+date: "Wednesday, January 2, 1878, 9 a.m. to 12"
+paper: "Easy Problems in all the three days' subjects (the morning of the third day)"
+examiners: 'Set by the two Moderators: J. W. L. Glaisher (Trinity College), who set the problems with Roman numbers, and C. H. Prior (Pembroke College), who set those with Arabic numbers.'
+minutes: 180
+intro: |
+  The examiners called this paper "Easy Problems." It covers the subjects of the first three days of the 1878 Tripos:
+  geometry and conics, algebra and trigonometry, statics and dynamics, hydrostatics, optics and astronomy. "Easy" is
+  relative: twenty-two problems in three hours.
+source:
+  item: solutionsofcambr00glaiuoft
+  title: "Solutions of the Cambridge Senate-House Problems and Riders for the Year 1878, edited by J. W. L. Glaisher"
+  published: "London: Macmillan and Co., 1879"
+  pages: "29–46"
+  leaf: 42
+  scans: "University of Toronto Libraries copy, digitized by the Internet Archive"
+problems:
+  - id: "1"
+    label: "1"
+    setter: Prior
+    topic: 'Geometry: the incenter and the circle through B, O, C'
+    areas: [geometry]
+    difficulty: 2
+    statement: |
+      $ABC$ is a triangle, and $O$ the centre of its inscribed circle. Shew that $AO$ passes through the centre of the circle described round $BOC$.
+    hints:
+      - 'Let $AO$ meet the circle round $ABC$ again at $M$. Compare the angles $MBO$ and $MOB$.'
+    solution: |
+      Let the angles of the triangle be $A$, $B$, $C$, and let the line $AO$ (which bisects the angle at $A$) meet the circle round $ABC$ again at $M$.
+
+      **Angle at $B$.** The angles $MBC$ and $MAC$ stand on the same arc $MC$, so $\angle MBC = \tfrac12A$. Since $BO$ bisects the angle at $B$, $\angle OBC = \tfrac12B$. So
+      $$\angle MBO = \tfrac12 A + \tfrac12 B.$$
+
+      **Angle at $O$.** The angle $MOB$ is an exterior angle of triangle $ABO$, so it equals the sum of the two opposite interior angles:
+      $$\angle MOB = \angle OAB + \angle OBA = \tfrac12A + \tfrac12B.$$
+
+      So triangle $MBO$ has two equal angles, and $MB = MO$. In the same way $MC = MO$. The point $M$ is equally far from $B$, $O$ and $C$, so it is the center of the circle through them, and it lies on $AO$.
+    checked: "script: a sample triangle"
+    status: ready
+  - id: "2"
+    label: "2"
+    setter: Prior
+    topic: 'Number theory: families moving between three towns'
+    areas: [number-theory]
+    difficulty: 2
+    statement: |
+      Between three towns $A$, $B$, $C$ there is a continual migration of families, so that the number of families in each town is unaltered, while the whole number of families migrating at any specified time is always even. Shew that, if by the end of any time an even number of families have left $A$ for $B$, then by the end of the same time the number of families that have left $B$ for $A$ is also even.
+    hints:
+      - 'Let $n_{AB}$ be the number of families that left $A$ for $B$, and so on. Each town gains as many as it loses.'
+      - 'Look at everything that touches town $A$: families leaving it and families arriving. Is that number even or odd?'
+    solution: |
+      Let $n_{AB}$ be the number of families that have left $A$ for $B$ by the end of the time, and define the other five numbers the same way.
+
+      **Each town balances.** Town $A$ loses $n_{AB} + n_{AC}$ families and gains $n_{BA} + n_{CA}$, and its size is unchanged, so these are equal. Then
+      $$n_{AB} + n_{AC} + n_{BA} + n_{CA} = 2(n_{BA} + n_{CA})$$
+      is even. In words: the moves that touch town $A$ are even in number.
+
+      **Subtract from the total.** All six numbers add up to an even total. Taking away the moves that touch $A$ leaves the moves between $B$ and $C$:
+      $$n_{BC} + n_{CB} \text{ is even.}$$
+      The same argument with town $C$ in place of $A$ shows that $n_{AB} + n_{BA}$ is even.
+
+      So $n_{AB}$ and $n_{BA}$ are both even or both odd. If $n_{AB}$ is even, so is $n_{BA}$.
+    status: ready
+  - id: "3"
+    label: "iii"
+    setter: Glaisher
+    topic: 'Algebra: two cube-root numbers with three equal combinations'
+    areas: [algebra]
+    difficulty: 3
+    statement: |
+      If
+      $$a = \frac13\left\{\left(\frac{23 + \sqrt{513}}{4}\right)^{\frac13} + \left(\frac{23 - \sqrt{513}}{4}\right)^{\frac13} - 1\right\},$$
+      $$b = \frac{2}{81}\left\{\left(\frac{23 + \sqrt{513}}{4}\right)^{\frac13} + \left(\frac{23 - \sqrt{513}}{4}\right)^{\frac13} - 1\right\}^4,$$
+      shew that the difference of $a$ and $b$, the quotient of $b$ divided by $a$, and the sum of the squares of $a$ and $b$ are all equal.
+    hints:
+      - 'Notice that $b = 2a^4$.'
+      - 'Let $u$ be the sum of the two cube roots. The cube roots multiply to $1$, so $u^3 = \tfrac{23}{2} + 3u$. Turn this into an equation for $a$.'
+    solution: |
+      Let $u$ be the sum of the two cube roots, so $3a = u - 1$ and $b = \tfrac{2}{81}(3a)^4 = 2a^4$.
+
+      **An equation for $a$.** The two numbers under the cube roots add to $\tfrac{23}{2}$ and multiply to $\tfrac{529 - 513}{16} = 1$, so the cube roots multiply to $1$. Cubing a sum $u = p + q$ gives $u^3 = p^3 + q^3 + 3pq(p+q)$, so
+      $$u^3 = \tfrac{23}{2} + 3u.$$
+      Put $u = 3a + 1$: $27a^3 + 27a^2 + 9a + 1 = \tfrac{23}{2} + 9a + 3$, which is
+      $$a^3 + a^2 = \tfrac12. \tag{1}$$
+
+      **First pair.** With $b = 2a^4$, we have $b/a = 2a^3$ and $a - b = a - 2a^4 = a(1 - 2a^3)$. By (1), $1 - 2a^3 = 2a^2$, so $a - b = 2a^3 = b/a$.
+
+      **Second pair.** We need $a^2 + 4a^8 = 2a^3$. Use (1) to lower powers: $a^3 = \tfrac12 - a^2$, then
+      $$a^4 = \tfrac12a - \tfrac12 + a^2, \qquad a^6 = (a^3)^2 = \tfrac14 - a^2 + a^4 = \tfrac12a - \tfrac14,$$
+      $$a^8 = a^2\cdot a^6 = \tfrac12a^3 - \tfrac14a^2 = \tfrac14 - \tfrac34a^2.$$
+      So $a^2 + 4a^8 = a^2 + 1 - 3a^2 = 1 - 2a^2 = 2a^3$, using (1) once more. All three quantities equal $2a^3 \approx 0.3611$.
+    checked: "script: all three agree to 10⁻¹²"
+    status: ready
+  - id: "4"
+    label: "4"
+    setter: Prior
+    topic: 'Algebra: a product of two cyclic sums equals nine'
+    areas: [algebra]
+    difficulty: 2
+    statement: |
+      If $x + y + z = 0$, shew that
+      $$\left\{\frac{y-z}{x} + \frac{z-x}{y} + \frac{x-y}{z}\right\}\left\{\frac{x}{y-z} + \frac{y}{z-x} + \frac{z}{x-y}\right\} = 9.$$
+    hints:
+      - 'Put each brace over a common denominator. Let $D = (x-y)(y-z)(z-x)$.'
+      - 'When $x + y + z = 0$, you have $x^3 + y^3 + z^3 = 3xyz$.'
+    solution: |
+      Let $D = (x-y)(y-z)(z-x)$.
+
+      **First brace.** Over the common denominator $xyz$ it is $\dfrac{yz(y-z) + zx(z-x) + xy(x-y)}{xyz}$. The numerator vanishes when any two of $x, y, z$ are equal, so it is a multiple of $D$; comparing one term (try $x = 0$, $y = 1$, $z = 2$) shows it equals $-D$. So the first brace is $-D/(xyz)$.
+
+      **Second brace.** Over the common denominator $D$ it is $\dfrac{\sum x(z-x)(x-y)}{D}$. Now use $y + z = -x$:
+      $$x(z-x)(x-y) = x\big(xz + xy - x^2 - yz\big) = x\big(-x^2 - x^2 - yz\big) = -2x^3 - xyz.$$
+      Adding the three such terms and using $x^3 + y^3 + z^3 = 3xyz$ gives $-6xyz - 3xyz = -9xyz$. So the second brace is $-9xyz/D$.
+
+      **Product.** $\left(-\dfrac{D}{xyz}\right)\left(-\dfrac{9xyz}{D}\right) = 9.$
+    checked: "script: random x, y with z = −x − y"
+    status: ready
+  - id: "5"
+    label: "5"
+    setter: Prior
+    topic: 'Algebra: six unknowns, six quadratic equations'
+    areas: [algebra]
+    difficulty: 3
+    statement: |
+      Find the real roots of the equations:
+      $$x^2 + z'^2 + y'^2 = a^2, \qquad y'z' + x'(y + z) = bc,$$
+      $$z'^2 + y^2 + x'^2 = b^2, \qquad z'x' + y'(z + x) = ca,$$
+      $$y'^2 + x'^2 + z^2 = c^2, \qquad x'y' + z'(x + y) = ab.$$
+    note: 'Here $x$, $y$, $z$, $x''$, $y''$, $z''$ are six unknowns; the dashes are labels, not derivatives. We take $a$, $b$, $c$ positive.'
+    hints:
+      - 'Look at the vectors $(z'', y, x'')$ and $(y'', x'', z)$. What are their lengths, and what is their dot product?'
+      - 'Equality in the Cauchy–Schwarz inequality forces two vectors to be parallel.'
+    answer: '$x = \dfrac{a^2}{k},\ y = \dfrac{b^2}{k},\ z = \dfrac{c^2}{k},\ x'' = \dfrac{bc}{k},\ y'' = \dfrac{ca}{k},\ z'' = \dfrac{ab}{k}$, with $k = \pm\sqrt{a^2+b^2+c^2}$'
+    solution: |
+      **Pair the equations as vectors.** Let $\mathbf u = (z', y, x')$ and $\mathbf v = (y', x', z)$. The second and third equations on the left say $|\mathbf u| = b$ and $|\mathbf v| = c$, and the first on the right says $\mathbf u\cdot\mathbf v = y'z' + yx' + x'z = bc$. By the Cauchy–Schwarz inequality $\mathbf u\cdot\mathbf v \le |\mathbf u||\mathbf v|$, with equality only when one vector is a positive multiple of the other. So $\mathbf u = \tfrac bc\,\mathbf v$:
+      $$z' = \tfrac bc\,y', \qquad y = \tfrac bc\,x', \qquad x' = \tfrac bc\,z.$$
+      The other two pairs work the same way: $(x', z, y') = \tfrac ca\,(z', y', x)$ and $(y', x, z') = \tfrac ab\,(x', z', y)$, so
+      $$z = \tfrac ca\,y', \qquad y' = \tfrac ca\,x, \qquad x = \tfrac ab\,z', \qquad z' = \tfrac ab\,y.$$
+
+      **Everything in terms of $x'$.** From these, $y = \tfrac bc x'$, $y' = \tfrac ab x'$, $z' = \tfrac bc y' = \tfrac ac x'$, $z = \tfrac ca y' = \tfrac cb x'$ and $x = \tfrac ab z' = \tfrac{a^2}{bc}x'$. Put $x' = bc/k$; then
+      $$x = \frac{a^2}{k},\quad y = \frac{b^2}{k},\quad z = \frac{c^2}{k},\quad x' = \frac{bc}{k},\quad y' = \frac{ca}{k},\quad z' = \frac{ab}{k}.$$
+
+      **Find $k$.** The first equation gives $\dfrac{a^4 + a^2b^2 + a^2c^2}{k^2} = a^2$, so $k^2 = a^2 + b^2 + c^2$. Every equation is unchanged if all six unknowns change sign, so $k = \pm\sqrt{a^2+b^2+c^2}$ gives the two real solutions, and the argument shows there are no others.
+    checked: "script: substituted the solution into all six equations"
+    status: ready
+  - id: "6"
+    label: "vi"
+    setter: Glaisher
+    topic: 'Analysis: alternating means that converge to a formula for π'
+    areas: [calculus, trigonometry]
+    difficulty: 3
+    statement: |
+      If $a$ and $b$ be positive quantities, and if $a_1 = \frac12(a + b)$, $b_1 = (a_1b)^{\frac12}$, $a_2 = \frac12(a_1 + b_1)$, $b_2 = (a_2b_1)^{\frac12}$ and so on, shew that
+      $$a_\infty = b_\infty = \frac{(b^2 - a^2)^{\frac12}}{\cos^{-1}\dfrac ab}.$$
+      Shew that the value of $\pi$ may be calculated by means of this theorem.
+    note: 'The formula needs $a < b$. $\cos^{-1}$ is the inverse cosine, written $\arccos$ today.'
+    hints:
+      - 'Write $a = b\cos\phi$. Then $a_1 = b\cos^2\tfrac\phi2$. Keep going.'
+      - 'The product $\cos\tfrac\phi2\cos\tfrac\phi4\cdots\cos\tfrac{\phi}{2^n}$ telescopes if you multiply by $\sin\tfrac{\phi}{2^n}$.'
+    solution: |
+      Since $0 < a < b$, write $a = b\cos\phi$ with $0 < \phi < \tfrac\pi2$.
+
+      **The pattern.** Using $1 + \cos\phi = 2\cos^2\tfrac\phi2$:
+      $$a_1 = \tfrac12 b(1 + \cos\phi) = b\cos^2\tfrac\phi2, \qquad b_1 = \sqrt{a_1 b} = b\cos\tfrac\phi2.$$
+      Then $a_2 = \tfrac12 b\cos\tfrac\phi2\,(1 + \cos\tfrac\phi2) = b\cos\tfrac\phi2\cos^2\tfrac\phi4$ and $b_2 = b\cos\tfrac\phi2\cos\tfrac\phi4$. In general, by induction,
+      $$b_n = b\,\cos\tfrac\phi2\cos\tfrac\phi4\cdots\cos\tfrac\phi{2^n}, \qquad a_n = b_n\cos\tfrac{\phi}{2^n}.$$
+
+      **The limit.** Repeatedly using $\sin 2\theta = 2\sin\theta\cos\theta$,
+      $$\cos\tfrac\phi2\cos\tfrac\phi4\cdots\cos\tfrac\phi{2^n} = \frac{\sin\phi}{2^n\sin(\phi/2^n)}.$$
+      As $n\to\infty$, $2^n\sin(\phi/2^n) \to \phi$, so $b_n \to \dfrac{b\sin\phi}{\phi}$, and $a_n$ has the same limit because $\cos(\phi/2^n) \to 1$. Finally $b\sin\phi = \sqrt{b^2 - a^2}$ and $\phi = \cos^{-1}(a/b)$, which is the formula.
+
+      **Computing $\pi$.** Take $a = 0$, $b = 1$ (the steps still make sense, with $\phi = \tfrac\pi2$). The limit is $\dfrac{1}{\pi/2} = \dfrac2\pi$. So run the iteration from $0$ and $1$ and take $2$ divided by the limit. The error shrinks by about a factor of $4$ at each step, so twenty steps already give $\pi$ to about twelve decimal places.
+    checked: "script: iteration from (0.6, 1.7) and from (0, 1) agrees with the formula to 10⁻¹²"
+    viz: tp-1878-6
+    status: ready
+  - id: "7"
+    label: "vii"
+    setter: Glaisher
+    topic: 'Geometry: the triangle cut out by three cevians'
+    areas: [geometry]
+    difficulty: 4
+    statement: |
+      In the sides $BC$, $CA$, $AB$ of a triangle three points $A'$, $B'$, $C'$ are taken such that
+      $$BA' : A'C = p_1 : q_1, \quad CB' : B'A = p_2 : q_2, \quad AC' : C'B = p_3 : q_3;$$
+      shew that if $BB'$ and $CC'$, $CC'$ and $AA'$, $AA'$ and $BB'$ intersect in $A''$, $B''$, $C''$; then the area of the triangle $A''B''C''$ is to the area of the triangle $ABC$ as
+      $$(p_1p_2p_3 - q_1q_2q_3)^2 : (p_2p_3 + q_2q_3 + p_2q_3)(p_3p_1 + q_3q_1 + p_3q_1)(p_1p_2 + q_1q_2 + p_1q_2).$$
+    note: 'This is the result now called Routh''s theorem. Edward Routh put it in his *Treatise on Analytical Statics* (1891), but this 1878 problem is its earliest known printed appearance ([Wikipedia](https://en.wikipedia.org/wiki/Routh%27s_theorem)).'
+    hints:
+      - 'Describe every point as a weighted average $xA + yB + zC$ with $x + y + z = 1$ (barycentric coordinates).'
+      - 'A triangle whose corners have barycentric coordinate rows $r_1, r_2, r_3$ has area $|\det(r_1, r_2, r_3)|$ times the area of $ABC$.'
+    solution: |
+      **Coordinates.** Write each point as $xA + yB + zC$ with $x + y + z = 1$, and record it as $(x, y, z)$; any multiple of the triple names the same point. Then
+      $$A' \sim (0,\ q_1,\ p_1), \qquad B' \sim (p_2,\ 0,\ q_2), \qquad C' \sim (q_3,\ p_3,\ 0).$$
+      (For instance $A' = \frac{q_1B + p_1C}{p_1 + q_1}$, which divides $BC$ in the ratio $p_1 : q_1$.)
+
+      **The three lines.** A point $(x, y, z)$ is on $AA'$ when $y : z = q_1 : p_1$, on $BB'$ when $x : z = p_2 : q_2$, and on $CC'$ when $x : y = q_3 : p_3$.
+
+      **The three crossings.** Solving these in pairs,
+      $$A'' \sim (p_2q_3,\ p_2p_3,\ q_2q_3), \quad B'' \sim (q_1q_3,\ p_3q_1,\ p_3p_1), \quad C'' \sim (p_1p_2,\ q_1q_2,\ p_1q_2).$$
+      The sums of these triples are exactly the three factors in the denominator of the claimed ratio: $p_2p_3 + q_2q_3 + p_2q_3$, and so on.
+
+      **The area.** Divide each triple by its sum to get true coordinates. Since the map from $(x, y, z)$ to the point $xA + yB + zC$ is linear, the area of $A''B''C''$ is the absolute value of the determinant of the three normalized rows, times the area of $ABC$. The determinant of the unnormalized rows works out to
+      $$\det\begin{pmatrix} p_2q_3 & p_2p_3 & q_2q_3 \\ q_1q_3 & p_3q_1 & p_1p_3 \\ p_1p_2 & q_1q_2 & p_1q_2 \end{pmatrix} = (p_1p_2p_3 - q_1q_2q_3)^2,$$
+      and dividing the rows by their sums gives the stated ratio. (When $p_1p_2p_3 = q_1q_2q_3$ the three lines meet in a point, which is Ceva's theorem.)
+    checked: "script: computer algebra for the determinant; random triangles and ratios agree to 10⁻⁹"
+    status: ready
+  - id: "8"
+    label: "viii"
+    setter: Glaisher
+    topic: 'Conics: focal chords of a parabola'
+    areas: [conics]
+    difficulty: 3
+    statement: |
+      If $PQ$ be a focal chord of a parabola, and $R$ any point on the diameter through $Q$; shew that the focal chord parallel to $PR = \dfrac{PR^2}{PQ}$.
+    note: 'A **focal chord** passes through the focus. A **diameter** of a parabola is a line parallel to its axis.'
+    hints:
+      - 'Use $y^2 = 4ax$ and the points $(at^2, 2at)$. A focal chord at angle $\theta$ to the axis has length $4a/\sin^2\theta$.'
+      - '$P$ and $R$ differ in height by the same amount as $P$ and $Q$.'
+    solution: |
+      Take the parabola $y^2 = 4ax$ with focus $(a, 0)$, and write points as $(at^2, 2at)$.
+
+      **Focal chords.** A line through the focus at angle $\theta$ to the axis meets the parabola at distances $\dfrac{2a}{1\mp\cos\theta}$ from the focus (the polar equation from the focus), so its length is
+      $$\frac{2a}{1-\cos\theta} + \frac{2a}{1+\cos\theta} = \frac{4a}{\sin^2\theta}.$$
+      If a chord of length $L$ rises by $h$, then $\sin\theta = h/L$, so the focal chord in that direction has length $\dfrac{4aL^2}{h^2}$.
+
+      **Apply it twice.** Let $P = (ap^2, 2ap)$ and $Q = (aq^2, 2aq)$. The point $R$ is on the line through $Q$ parallel to the axis, so $R$ has the same height $2aq$ as $Q$. Both $PQ$ and $PR$ rise by $h = 2a(q - p)$.
+
+      $PQ$ is itself a focal chord, so $PQ = \dfrac{4a\,PQ^2}{h^2}$, which gives $PQ = \dfrac{h^2}{4a}$. The focal chord parallel to $PR$ has length
+      $$\frac{4a\,PR^2}{h^2} = \frac{PR^2}{PQ}.$$
+    checked: "script: a sample parabola and point"
+    status: ready
+  - id: "9"
+    label: "ix"
+    setter: Glaisher
+    topic: 'Conics: tangent lengths, semidiameters and focal distances'
+    areas: [conics]
+    difficulty: 4
+    statement: |
+      If $OP$, $OQ$ are two tangents to an ellipse, and $CP'$, $CQ'$ the parallel semidiameters, shew that
+      $$OP\,.\,OQ + CP'\,.\,CQ' = OS\,.\,OH,$$
+      $S$, $H$ being the foci.
+    note: '$C$ is the center. A **semidiameter** is a segment from the center to the curve.'
+    hints:
+      - 'Let the points of contact have eccentric angles $m + d$ and $m - d$. Then $O = \left(\dfrac{a\cos m}{\cos d}, \dfrac{b\sin m}{\cos d}\right)$.'
+      - 'Show $OP = \tan d\cdot CP''$. Then show $OS^2\cos^2 d = SP\cdot SQ$.'
+      - 'Each semidiameter satisfies $CP''^2 = a^2 - a^2e^2\cos^2\phi$, which is $SP\cdot HP$.'
+    solution: |
+      Use the ellipse $x = a\cos\phi$, $y = b\sin\phi$ with eccentricity $e$, foci $S = (ae, 0)$ and $H = (-ae, 0)$, and recall that the point at eccentric angle $\phi$ is at distance $a(1 \mp e\cos\phi)$ from $S$ and $H$.
+
+      **Where $O$ is.** Let $P$ and $Q$ have eccentric angles $m + d$ and $m - d$. The tangent at $\phi$ is $\frac xa\cos\phi + \frac yb\sin\phi = 1$, and the point $O = \left(\frac{a\cos m}{\cos d}, \frac{b\sin m}{\cos d}\right)$ is on both tangents, because $\cos(\phi - m) = \cos d$ for $\phi = m \pm d$.
+
+      **Tangent lengths.** The tangent at $P$ points along $(-a\sin\phi, b\cos\phi)$, and the semidiameter parallel to it ends at the point of angle $\phi + 90^\circ$, so $CP'^2 = a^2\sin^2\phi + b^2\cos^2\phi$. A short computation with $\phi = m + d$ gives
+      $$O - P = \tan d\,\big(a\sin\phi,\ -b\cos\phi\big), \qquad\text{so}\qquad OP = |\tan d|\;CP'.$$
+      Likewise $OQ = |\tan d|\,CQ'$. Hence
+      $$OP\cdot OQ + CP'\cdot CQ' = (1 + \tan^2 d)\,CP'\cdot CQ' = \frac{CP'\cdot CQ'}{\cos^2 d}.$$
+
+      **Semidiameters and focal distances.** Since $b^2 = a^2(1 - e^2)$,
+      $$CP'^2 = a^2 - a^2e^2\cos^2\phi = a(1 - e\cos\phi)\cdot a(1 + e\cos\phi) = SP\cdot HP.$$
+      So $CP'\cdot CQ' = \sqrt{SP\cdot SQ\cdot HP\cdot HQ}$.
+
+      **The focal distances of $O$.** Expanding,
+      $$OS^2\cos^2 d = (a\cos m - ae\cos d)^2 + b^2\sin^2 m = a^2\big[1 - 2e\cos m\cos d + e^2(\cos^2 d - \sin^2 m)\big],$$
+      $$SP\cdot SQ = a^2\big(1 - e\cos(m+d)\big)\big(1 - e\cos(m-d)\big) = a^2\big[1 - 2e\cos m\cos d + e^2(\cos^2 m - \sin^2 d)\big].$$
+      These agree, because $\cos^2 d - \sin^2 m = \cos^2 m - \sin^2 d$. So $OS^2\cos^2 d = SP\cdot SQ$, and in the same way $OH^2\cos^2 d = HP\cdot HQ$.
+
+      **Put together.** $OS\cdot OH\cos^2 d = \sqrt{SP\cdot SQ\cdot HP\cdot HQ} = CP'\cdot CQ'$, so
+      $$OP\cdot OQ + CP'\cdot CQ' = \frac{CP'\cdot CQ'}{\cos^2 d} = OS\cdot OH.$$
+    checked: "script: four outside points O on a sample ellipse; both sides agree to 10⁻⁹"
+    status: ready
+  - id: "10"
+    label: "10"
+    setter: Prior
+    topic: 'Statics: a hinged rhombus resting on two pegs'
+    areas: [mechanics]
+    difficulty: 4
+    statement: |
+      A rhombus is formed of four rods of length $a$, hinged together. Two opposite rods are supported in a vertical plane by two smooth pegs, which are separated by an horizontal distance $h$ and vertical distance $k$. Shew that the product of the horizontal distances of either peg from the ends of the nearer unsupported rod is $\frac14(k^2 - 2ah + h^2)$, and that there is no bending moment round a point in either supported rod, whose distance from its supporting peg is three times the shorter of the distances of that peg from an unsupported rod.
+    note: 'The **bending moment** at a point of a rod is the turning effect, about that point, of all the forces on one side of it.'
+    hints:
+      - 'The pegs are smooth and the two supported rods are parallel, so both reactions are perpendicular to the same line. Together they hold up the weight. What does that say about the rods?'
+      - 'Show that each peg carries half the weight. Then moments for the whole frame about its centre place the two pegs symmetrically about that centre.'
+    solution: |
+      **The shape.** A smooth peg pushes at right angles to its rod. The supported rods are parallel, so the two reactions are parallel, and together they balance the weight. So they are vertical, and the supported rods are horizontal. Call the upper supported rod $AB$, resting on the peg $P$ just beneath it, and the lower one $DC$, resting on the peg $Q$; the unsupported rods are $DA$ and $CB$. Take $D$ as origin, $x$ across and $y$ up:
+      $$D=(0,0),\quad C=(a,0),\quad A=(d,k),\quad B=(a+d,k),\qquad d^2+k^2=a^2 ,$$
+      since the gap between the horizontal rods is the vertical distance $k$ between the pegs. Let $W$ be the weight of each rod and let $Q=(q,0)$.
+
+      **Each peg carries $2W$.** Let rod $DA$ push rod $AB$ at $A$ with force $(X_A,Y_A)$, and rod $CB$ push it at $B$ with $(X_B,Y_B)$. For rod $AB$, horizontally $X_A+X_B=0$, and vertically $Y_A+Y_B+R_P=W$. Rod $DA$ feels $(-X_A,-Y_A)$ at $A$; taking moments about $D$,
+      $$kX_A-dY_A-\tfrac12Wd=0,$$
+      and in the same way, for rod $CB$ about $C$, $kX_B-dY_B-\tfrac12Wd=0$. Adding, and using $X_A+X_B=0$, gives $Y_A+Y_B=-W$ (the rhombus is not a square, so $d\ne0$). Hence $R_P=2W$, and so $R_Q=4W-2W=2W$.
+
+      **The pegs are symmetric about the centre.** Let $O$ be the centre of the rhombus. The weights of opposite rods act at points symmetric about $O$, so their moments about $O$ cancel. The two equal reactions must then have cancelling moments too: $P$ and $Q$ are equally far from $O$ horizontally, on opposite sides. So $x_P+x_Q=a+d$.
+
+      **The product.** Name the pegs so that $P$ is the one to the right, $x_P-x_Q=h$. Then
+      $$q=x_Q=\tfrac12(a+d-h),$$
+      which is left of $O$, so the unsupported rod on $Q$'s side is $DA$, with ends at horizontal positions $0$ and $d$. The product of the horizontal distances, counted with sign (negative if $Q$ lies horizontally between the ends), is
+      $$q\,(q-d)=\tfrac14\big((a-h)+d\big)\big((a-h)-d\big)=\tfrac14\big((a-h)^2-d^2\big)=\tfrac14\big(k^2-2ah+h^2\big),$$
+      using $d^2=a^2-k^2$. A half turn about $O$ maps the frame to itself and swaps $P$ with $Q$ and $DA$ with $CB$, so the same holds for $P$.
+
+      **Bending moment.** For rod $DC$, let $Y_D$ and $Y_C$ be the vertical forces on it at $D$ and $C$. Vertically $Y_D+Y_C+2W=W$, and moments about $D$ give $aY_C+2Wq-\tfrac12Wa=0$. So
+      $$Y_C=\tfrac12W-\frac{2Wq}{a},\qquad Y_D=-\frac{W(3a-4q)}{2a}.$$
+      Take a point of the rod at distance $x>q$ from $D$, and add the moments about it of the forces on the piece between $D$ and the point. Horizontal forces act along the rod and give nothing. An upward force $F$ at position $x_F$ gives $(x_F-x)F$, so the bending moment is
+      $$-xY_D+\frac{Wx^2}{2a}+2W(q-x)=\frac{W}{2a}\big(x^2-ax-4qx+4aq\big)=\frac{W}{2a}\,(x-a)(x-4q).$$
+      It vanishes at $x=4q$, the point at distance $3q$ beyond the peg. Here $q$ is the distance from the peg to $D$, where the unsupported rod $DA$ is hinged. When $q$ is the shorter of the peg's two distances to the hinges $D$ and $C$ (measured along the rod), this is the stated point, and it lies on the rod when $q\le\tfrac14a$. If the peg is nearer $C$, the same work from the other end puts the point at distance $3(a-q)$ beyond the peg, toward $D$. The upper rod follows by the half turn about $O$.
+    checked: "script: the twelve equilibrium equations of the four rods solved symbolically (each peg carries 2W, pegs symmetric about the centre); product formula and the zero of the bending moment checked numerically for several shapes"
+    status: ready
+  - id: "11"
+    label: "xi"
+    setter: Glaisher
+    topic: 'Statics: an ellipse balanced on an equal ellipse'
+    areas: [mechanics, conics]
+    difficulty: 4
+    statement: |
+      An elliptic lamina of eccentricity $e$ rests upon a perfectly rough equal and similar lamina, the two bodies being symmetrically situated with respect to their common tangent at the point of contact. If $\alpha$ be the inclination of the major axis of the fixed ellipse to the horizon, and $\theta$ be the inclination, measured in the same direction, of the major axis of the moving ellipse in a position of equilibrium, then
+      $$\sin\tfrac12(\theta + \alpha) = e^2\sin\theta\cos\tfrac12(\theta - \alpha).$$
+    note: 'A **lamina** is a thin flat plate. “Perfectly rough” means it cannot slip.'
+    hints:
+      - 'On a perfectly rough support, a body balances when its centre of gravity is vertically above the point of contact.'
+      - 'The moving ellipse is the mirror image of the fixed one in the common tangent, so its centre is the mirror image of the fixed centre. Work in axes along the fixed ellipse.'
+    solution: |
+      **The condition.** The moving lamina touches the fixed one at a single point $T$. Friction can supply any force along the tangent, so the only condition is that the weight, acting at the centre $G$ of the moving ellipse, has no moment about $T$: the line $TG$ is vertical.
+
+      **Axes.** Use axes along the major and minor axes of the fixed ellipse, centre $O$:
+      $$\frac{x^2}{A^2}+\frac{y^2}{B^2}=1,\qquad B^2=A^2(1-e^2).$$
+      The major axis rises at the angle $\alpha$ above the horizon, so in these axes the upward vertical has direction $(\sin\alpha,\cos\alpha)$.
+
+      **The point of contact.** Let the common tangent have direction $\mathbf t=(\cos\psi,\sin\psi)$ and normal $\mathbf n=(-\sin\psi,\cos\psi)$. The point of the ellipse where the tangent has this direction is
+      $$T=\lambda\,(-A^2\sin\psi,\ B^2\cos\psi),\qquad \lambda=\big(A^2\sin^2\psi+B^2\cos^2\psi\big)^{-1/2},$$
+      since the normal there is along $(x/A^2,\,y/B^2)=\lambda(-\sin\psi,\cos\psi)$. Then
+      $$T\cdot\mathbf n=\frac1\lambda,\qquad T\cdot\mathbf t=-\lambda(A^2-B^2)\sin\psi\cos\psi=-\lambda A^2e^2\sin\psi\cos\psi .$$
+
+      **The moving ellipse.** It is the mirror image of the fixed one in the tangent line. Its centre is the image of $O$, namely $G=2(T\cdot\mathbf n)\,\mathbf n$. Its major axis is the image of a line at angle $0$ in a line at angle $\psi$, so it lies at angle $2\psi$ in our axes, which is $\alpha+2\psi$ above the horizon. So $\theta=\alpha+2\psi$, that is, $\psi=\tfrac12(\theta-\alpha)$.
+
+      **$TG$ vertical.** We have $G-T=-(T\cdot\mathbf t)\,\mathbf t+(T\cdot\mathbf n)\,\mathbf n$. The vertical has components $\sin(\alpha+\psi)$ along $\mathbf t$ and $\cos(\alpha+\psi)$ along $\mathbf n$. The two are parallel when
+      $$(T\cdot\mathbf t)\cos(\alpha+\psi)+(T\cdot\mathbf n)\sin(\alpha+\psi)=0 .$$
+      Multiply by $\lambda$, and note $\lambda^2A^2=\dfrac{1}{\sin^2\psi+(1-e^2)\cos^2\psi}=\dfrac1{1-e^2\cos^2\psi}$:
+      $$\sin(\alpha+\psi)\,(1-e^2\cos^2\psi)=e^2\sin\psi\cos\psi\cos(\alpha+\psi),$$
+      $$\sin(\alpha+\psi)=e^2\cos\psi\big(\cos\psi\sin(\alpha+\psi)+\sin\psi\cos(\alpha+\psi)\big)=e^2\cos\psi\,\sin(\alpha+2\psi).$$
+      With $\psi=\tfrac12(\theta-\alpha)$ we have $\alpha+\psi=\tfrac12(\theta+\alpha)$ and $\alpha+2\psi=\theta$, so
+      $$\sin\tfrac12(\theta+\alpha)=e^2\sin\theta\cos\tfrac12(\theta-\alpha).$$
+    checked: "script: for random ellipses and angles, the positions where TG is vertical were found numerically and satisfy the relation to 10⁻¹²"
+    status: ready
+  - id: "12"
+    label: "12"
+    setter: Prior
+    topic: 'Statics: a cube held against a rough wall'
+    areas: [mechanics]
+    difficulty: 5
+    statement: |
+      A cube with two faces horizontal is pressed against a rough vertical wall by two strings in vertical planes perpendicular to the wall which are attached to the ends of a rod which forms the upper edge of the face furthest from the wall, and passing over pullies in the same horizontal line in the wall support equal weights. If the coefficient of friction be $\tan\beta$ ($\beta > \frac14\pi$), where $\tan 3\beta + \tan\beta = 2$, and if the ratio of the weight of the cube to each of the supporting weights be $4\sin\beta$, shew that, in the two limiting positions of equilibrium, the directions of the slant portions of the strings are inclined to each other at an angle $4\beta - \pi$.
+    hints:
+      - 'The figure is symmetric, so work in a cross-section: a square against the wall, pulled at its far top corner by a single string with twice the tension.'
+      - 'Write the three equations of equilibrium with the string at angle $\chi$ above the horizontal. Limiting friction gives $\sin(\chi+\beta)=\sin2\beta$.'
+    solution: |
+      **A flat picture.** Everything is symmetric about the vertical plane midway between the strings, so work in the cross-section: a square of side $s$ with one side against the wall. Let $w$ be each hanging weight. The pulleys are smooth, so each string has tension $w$, and together they pull the far top corner $E$ with force $2w$. The cube weighs $4w\sin\beta$ and its weight acts at the centre. Let the slant strings run from $E$ toward the wall at the angle $\chi$ above the horizontal ($\chi<0$ if the pulleys are below $E$). The wall pushes with a normal force $R$ at some point of the contact face, a depth $\delta$ below the top edge with $0\le\delta\le s$, and with friction $F$, counted upward.
+
+      **Equilibrium.**
+      - Across: $R=2w\cos\chi$.
+      - Up: $F=4w\sin\beta-2w\sin\chi$.
+      - Moments about the point where $R$ acts (friction acts along the wall, through that point): $2w\,(s\sin\chi+\delta\cos\chi)=4w\sin\beta\cdot\tfrac12s$, so
+      $$\delta=s\,\frac{\sin\beta-\sin\chi}{\cos\chi}.$$
+
+      **Friction.** With $\mu=\tan\beta$, the condition $F\le\mu R$ reads $2\sin\beta-\sin\chi\le\tan\beta\cos\chi$. Multiplying by $\cos\beta$, this is
+      $$\sin(\chi+\beta)\ \ge\ \sin2\beta .$$
+      Because $\tfrac14\pi<\beta<\tfrac12\pi$, the angle $2\beta$ lies between $\tfrac12\pi$ and $\pi$, so this holds exactly when $\pi-2\beta\le\chi+\beta\le2\beta$, that is,
+      $$\pi-3\beta\ \le\ \chi\ \le\ \beta .$$
+      (The other condition, $F\ge-\mu R$, always holds: it reads $\sin(\chi-\beta)\le\sin2\beta$, and $\sin(\chi-\beta)<\cos\beta<2\sin\beta\cos\beta$.)
+
+      **The wall reaction stays on the face.** We need $0\le\delta\le s$. The first part is $\chi\le\beta$. At $\chi=\beta$, $\delta=0$: the reaction is at the top edge. At $\chi=\pi-3\beta$, we have $\sin\chi=\sin3\beta$ and $\cos\chi=-\cos3\beta$, so $\delta=s$ exactly when $\sin3\beta-\sin\beta=\cos3\beta$, that is, $2\sin\beta\cos2\beta=\cos3\beta$. The given condition says the same thing:
+      $$\tan3\beta+\tan\beta=2\iff\sin4\beta=2\cos3\beta\cos\beta\iff\sin2\beta\cos2\beta=\cos3\beta\cos\beta\iff2\sin\beta\cos2\beta=\cos3\beta .$$
+      So at the lower end the reaction is exactly at the bottom edge. (The condition gives $\beta\approx62.1^\circ$, so $\pi-3\beta\approx-6.3^\circ$.) In between, $\delta\le s$ means $\sin\beta\le\sin\chi+\cos\chi=\sqrt2\sin(\chi+\tfrac14\pi)$. The right side is concave on this range, so it is smallest at an end, and it holds at both ends.
+
+      **The two limits.** So the cube rests exactly when $\pi-3\beta\le\chi\le\beta$. Raising or lowering the cube changes $\chi$ steadily, so the two limiting positions have the slant strings at $\chi=\beta$ above the horizontal and at $\chi=\pi-3\beta$, which is $3\beta-\pi$ below it. In both the cube is on the point of slipping down. The angle between the two directions is
+      $$\beta-(\pi-3\beta)=4\beta-\pi .$$
+    checked: "script: with β from tan 3β + tan β = 2, the cube was moved through all heights and every equilibrium condition tested; the string angles of the resting positions run from −6.32° to 62.11°, a spread of 68.43° = 4β − π"
+    status: ready
+  - id: "13"
+    label: "13"
+    setter: Prior
+    topic: 'Dynamics: a moving platform that tracks a projectile'
+    areas: [mechanics]
+    difficulty: 2
+    statement: |
+      A particle is projected from a platform with velocity $V$ and elevation $\beta$. On the platform is a telescope, fixed at elevation $\alpha$. The platform moves horizontally in the plane of the particle's motion, so as to keep the particle always in the centre of the field of view of the telescope. Shew that the original velocity of the platform must be $V\dfrac{\sin(\alpha - \beta)}{\sin\alpha}$, and its acceleration $g\cot\alpha$.
+    note: '“Elevation” is the angle above the horizontal. $V$ is the particle''s speed as seen from the ground.'
+    hints:
+      - 'The particle must always be on the line through the telescope at angle $\alpha$. Write the platform''s position $X(t)$ from that.'
+    solution: |
+      Measure from the starting point. The particle is at
+      $$x = Vt\cos\beta, \qquad y = Vt\sin\beta - \tfrac12gt^2.$$
+      The telescope sits at $(X, 0)$ and points at elevation $\alpha$, so the particle stays in view exactly when $y = (x - X)\tan\alpha$, that is,
+      $$X = x - y\cot\alpha = Vt(\cos\beta - \sin\beta\cot\alpha) + \tfrac12 g t^2\cot\alpha.$$
+      Differentiating, the platform's velocity at the start is
+      $$V(\cos\beta - \sin\beta\cot\alpha) = V\,\frac{\sin\alpha\cos\beta - \cos\alpha\sin\beta}{\sin\alpha} = V\frac{\sin(\alpha - \beta)}{\sin\alpha},$$
+      and its acceleration is the constant $g\cot\alpha$.
+    checked: "script: numerical derivatives of X(t)"
+    viz: tp-1878-13
+    status: ready
+  - id: "14"
+    label: "xiv"
+    setter: Glaisher
+    topic: 'Dynamics: two projectiles fired the same way'
+    areas: [mechanics]
+    difficulty: 4
+    statement: |
+      Two bodies are projected from the point $A$ in the same direction with velocities $v_1$ and $v_2$. $P$ and $Q$ are any two points on their respective trajectories, and $PM$, $QN$ the perpendiculars upon the horizontal plane through $A$. If $AM$, $AN$, be denoted by $a_1$, $a_2$, and the angles $PAM$, $QAN$ by $\alpha_1$, $\alpha_2$, then
+      $$gv_1^4a_2^2\frac{\cos\alpha_2}{\cos\alpha_1} + gv_2^4a_1^2\frac{\cos\alpha_1}{\cos\alpha_2} = 2v_1^2v_2^2\left\{ga_1a_2\cos(\alpha_2 - \alpha_1) + (v_2^2a_1 - v_1^2a_2)\sin(\alpha_2 - \alpha_1)\right\}.$$
+    note: 'The angles $\alpha_1$, $\alpha_2$ are the elevations of $P$ and $Q$ as seen from $A$. The point of the identity: the unknown angle of projection has been eliminated.'
+    hints:
+      - 'Let $T$ be the tangent of the angle of projection. Each point gives a quadratic equation in $T$.'
+      - 'The two quadratics share the root $T$. Eliminate it.'
+    solution: |
+      Let the common angle of projection be $i$ and $T = \tan i$. Write $k_j = \dfrac{ga_j}{2v_j^2}$ and $t_j = \tan\alpha_j$.
+
+      **Two quadratics.** A projectile with speed $v$ reaches horizontal distance $a$ at height $a\tan i - \dfrac{ga^2}{2v^2\cos^2 i}$. For $P$ that height is $a_1t_1$. Dividing by $a_1$ and using $\sec^2 i = 1 + T^2$:
+      $$k_1T^2 - T + (k_1 + t_1) = 0, \qquad k_2T^2 - T + (k_2 + t_2) = 0.$$
+
+      **Eliminate $T$.** Subtracting gives $(k_1 - k_2)T^2 = (t_2 - t_1) + (k_2 - k_1)$. Taking $k_2$ times the first minus $k_1$ times the second gives $(k_1 - k_2)T = k_1t_2 - k_2t_1$. Squaring the second and using the first:
+      $$(k_1t_2 - k_2t_1)^2 + (k_1 - k_2)^2 = (k_1 - k_2)(t_2 - t_1).$$
+
+      **Back to angles.** The left side is $k_1^2(1 + t_2^2) + k_2^2(1 + t_1^2) - 2k_1k_2(1 + t_1t_2)$. Multiply the whole equation by $\cos^2\alpha_1\cos^2\alpha_2$, using $(1 + t_2^2)\cos^2\alpha_2 = 1$, $(1 + t_1t_2)\cos\alpha_1\cos\alpha_2 = \cos(\alpha_2 - \alpha_1)$ and $(t_2 - t_1)\cos\alpha_1\cos\alpha_2 = \sin(\alpha_2 - \alpha_1)$. Then divide by $\cos\alpha_1\cos\alpha_2$:
+      $$k_1^2\frac{\cos\alpha_1}{\cos\alpha_2} + k_2^2\frac{\cos\alpha_2}{\cos\alpha_1} = 2k_1k_2\cos(\alpha_2 - \alpha_1) + (k_1 - k_2)\sin(\alpha_2 - \alpha_1).$$
+      Finally put back $k_j = ga_j/(2v_j^2)$ and multiply by $4v_1^4v_2^4/g$. The terms become exactly those of the stated identity.
+    checked: "script: a sample pair of trajectories; both sides agree to 10⁻⁶ relative"
+    status: ready
+  - id: "15"
+    label: "15"
+    setter: Prior
+    topic: 'Dynamics: buckets that lift a chain of balls'
+    areas: [mechanics]
+    difficulty: 4
+    statement: |
+      Two buckets $P$, $Q$ hang at the ends of a light string which passes over a smooth fixed pulley. Above each bucket is a fixed point from which hangs a light string supporting very small balls of mass $m$ at equal intervals $a$. Initially, the lowest ball of the string above $P$ is just touching the base of $P$, while a number of balls of the string above $Q$ are coiled upon the base of $Q$, so that $Q$ descends and at the first instant of the motion one ball is lifted from its base. Find the acceleration of the system after $r$ balls have been lifted off $Q$.
+
+      Shew that when the square of the mean velocity throughout a complete interval from ball to ball is to $ga$ as the difference between the total descending and total ascending masses in that interval is to $m$, the velocity at the end of the interval is approximately the same as it was at the beginning.
+    hints:
+      - 'A ball resting in a bucket moves with it; a ball hanging from its string is at rest. Each time the buckets move a distance $a$, $Q$ loses a ball and $P$ gains one.'
+      - 'When $P$ picks up a ball, momentum along the string is shared, so the speed drops by the fraction $m/M$ of the moving mass $M$. Compare this drop with the gain over one interval.'
+    solution: |
+      **Who carries what.** Let the buckets have masses $M_P$ and $M_Q$, and let $n$ balls be in $Q$ at the start. A ball resting in a bucket moves with it; a ball hanging from its string is at rest and plays no part. The balls hang at intervals $a$, so each time the buckets move a distance $a$, one more ball is lifted out of $Q$ and, at the same moment, $P$ reaches its next ball and carries it up. At the first instant one ball leaves $Q$ and $P$ takes up the ball it was touching. So after $r$ balls have been lifted off $Q$, $Q$ holds $n-r$ balls and $P$ holds $r$.
+
+      **The acceleration.** The moving mass is $M=M_P+M_Q+nm$, the same in every interval, and the driving force is the difference of the two weights. So, counting the acceleration positive when $Q$ descends,
+      $$f_r=g\,\frac{M_Q-M_P+(n-2r)m}{M_P+M_Q+nm}.$$
+
+      **The jerks.** At the end of each interval two things happen at once. A ball is snatched out of $Q$ by its string and stopped; it simply leaves the base, and does not act on the rest. And $P$ strikes a ball at rest and carries it on. The string over the pulley makes this a one-line impact, so momentum along the motion is shared: a speed $v$ just before becomes
+      $$v'=\frac{(M-m)\,v}{M}=v\Big(1-\frac mM\Big)$$
+      just after. (To first order in $m/M$, which is all we use, the result does not depend on how the two events are timed.)
+
+      **One interval.** Let $D$ and $A$ be the total descending and ascending masses during an interval, so $f=g(D-A)/M$. Let the speed be $u$ at the start (just after a jerk) and $v$ at the end (just before the next jerk). Then $v^2-u^2=2fa$, and the mean velocity over the interval, for uniform acceleration, is $\bar w=\tfrac12(u+v)$. So
+      $$v-u=\frac{2fa}{u+v}=\frac{fa}{\bar w}=\frac{ga\,(D-A)}{M\bar w}.$$
+      The condition in the problem is $\bar w^2:ga=(D-A):m$, that is, $ga(D-A)=m\bar w^2$. Then
+      $$v-u=\frac mM\,\bar w .$$
+      The jerk then takes away $\dfrac mM\,v$. So the speed just after the jerk, where the next interval begins, is
+      $$v'=u+\frac mM(\bar w-v)=u-\frac mM\cdot\frac{v-u}{2}=u-\frac12\Big(\frac mM\Big)^2\bar w .$$
+      The gain during the interval and the loss at the jerk are each about $\frac mM$ of the speed, and they cancel. What is left is only $\tfrac12(m/M)^2$ of it. So the velocity at the end of the interval is approximately the same as at the beginning, and the motion settles into a steady rhythm.
+    checked: "script: one interval simulated with the stated mean-velocity condition for several mass ratios; the net change of speed is −½(m/M)² of the mean speed, against a gain of about m/M during the interval"
+    status: ready
+  - id: "16"
+    label: "xvi"
+    setter: Glaisher
+    topic: 'Orbits: the period under a strange central force'
+    areas: [mechanics, conics]
+    difficulty: 5
+    statement: |
+      Prove that the periodic time of a body describing an elliptic orbit under an attraction to a fixed point $O$ within the ellipse is $\dfrac{2\pi p_0^{\frac32}}{\sqrt\mu}$, where $p_0$ is the perpendicular from the centre of the ellipse on the polar of $O$; assuming the acceleration of the body at distance $r$ from $O$ to be $\dfrac{\mu r}{p^3}$, where $p$ is the perpendicular from the body on the polar of $O$.
+    note: 'The **polar** of a point with respect to a conic is a line defined from the conic; for a focus it is the directrix.'
+    hints:
+      - 'Put the centre at the origin, write the ellipse as $x=a\cos E$, $y=b\sin E$, and let $O=(x_0,y_0)$. The polar of $O$ is $xx_0/a^2+yy_0/b^2=1$.'
+      - 'The force is central, so twice the rate of sweeping area about $O$ is a constant $h$. Find $\dot E$ from this, then differentiate twice to get the acceleration.'
+    solution: |
+      **Setup.** Take the centre $C$ of the ellipse as origin, with semi-axes $a$ and $b$, so a point of the ellipse is $(a\cos E,\ b\sin E)$. Let $O=(x_0,y_0)$, inside the ellipse. The polar of $O$ is the line $xx_0/a^2+yy_0/b^2=1$. Put $N=\sqrt{x_0^2/a^4+y_0^2/b^4}$. The distance of a point $(x,y)$ on the centre's side of the polar is
+      $$p=\frac{1-xx_0/a^2-yy_0/b^2}{N},\qquad\text{so}\qquad p_0=\frac1N .$$
+      On the ellipse, write $u=1-\dfrac{x_0}{a}\cos E-\dfrac{y_0}{b}\sin E=\dfrac p{p_0}$. It is positive: by Cauchy–Schwarz, $\frac{x_0}{a}\cos E+\frac{y_0}{b}\sin E\le\sqrt{x_0^2/a^2+y_0^2/b^2}<1$.
+
+      **The speed of $E$.** The force points to $O$, so twice the rate at which the radius from $O$ sweeps area is a constant $h$:
+      $$(x-x_0)\dot y-(y-y_0)\dot x=h .$$
+      With $\dot x=-a\sin E\,\dot E$ and $\dot y=b\cos E\,\dot E$ the left side is $ab\,\dot E\,(1-\tfrac{x_0}{a}\cos E-\tfrac{y_0}{b}\sin E)=ab\,u\,\dot E$. So
+      $$\dot E=\frac ku,\qquad k=\frac h{ab}.$$
+
+      **The acceleration.** Let $u'=du/dE=\frac{x_0}{a}\sin E-\frac{y_0}{b}\cos E$. Then $\ddot E=-\dfrac{k u'\dot E}{u^2}=-\dfrac{k^2u'}{u^3}$, and
+      $$\ddot x=-a\cos E\,\dot E^2-a\sin E\,\ddot E=\frac{k^2a}{u^3}\big(-u\cos E+u'\sin E\big)=\frac{k^2a}{u^3}\Big(\frac{x_0}{a}-\cos E\Big)=-\frac{k^2}{u^3}(x-x_0).$$
+      In the same way $\ddot y=-\dfrac{k^2}{u^3}(y-y_0)$. So the acceleration points to $O$ and has size
+      $$\frac{k^2r}{u^3}=\frac{h^2p_0^3}{a^2b^2}\cdot\frac r{p^3}.$$
+
+      **The period.** This must equal $\mu r/p^3$, so $h^2p_0^3=\mu a^2b^2$, and $h=ab\sqrt\mu\,/\,p_0^{3/2}$. The area $\pi ab$ is swept at the rate $\tfrac12h$, so the period is
+      $$\frac{\pi ab}{\tfrac12h}=\frac{2\pi p_0^{3/2}}{\sqrt\mu}.$$
+
+      **A check.** If $O$ is a focus, its polar is the directrix and $p=r/e$, so the law is $\mu e^3/r^2$, the inverse square law. Here $p_0=a/e$, and the period is $2\pi a^{3/2}/\sqrt{\mu e^3}$, which is Kepler's law for that strength.
+    checked: "script: integrating the motion under μr/p³ from a point of an ellipse, with the speed found above, keeps the body on the ellipse (to 10⁻¹¹) and brings it back to its start after exactly 2πp₀^{3/2}/√μ"
+    status: ready
+  - id: "17"
+    label: "xvii"
+    setter: Glaisher
+    topic: 'Hydrostatics: equal thrusts on the sectors of a semicircle'
+    areas: [hydrostatics, geometry]
+    difficulty: 2
+    statement: |
+      A semicircle is immersed vertically in liquid with the diameter in the surface; shew how to divide it into any number of sectors, such that the pressure on each is the same.
+    note: '“Pressure” here means the total force of the liquid on a sector.'
+    hints:
+      - 'Find the force on the sector between the angles $\theta_1$ and $\theta_2$, measured from the surface.'
+    solution: |
+      Let the radius be $r$ and measure angles at the center from the surface. A point at distance $s$ from the center and angle $\theta$ is at depth $s\sin\theta$, where the pressure is $\rho g s\sin\theta$. So the force on the sector between $\theta_1$ and $\theta_2$ is
+      $$\rho g\int_{\theta_1}^{\theta_2}\int_0^r s\sin\theta\; s\,ds\,d\theta = \frac{\rho g r^3}{3}\,(\cos\theta_1 - \cos\theta_2).$$
+      So the force depends only on the change in $r\cos\theta$, which is the position of the edge of the sector when you drop it straight onto the diameter.
+
+      **Construction.** Divide the diameter into $n$ equal parts. Through the points of division draw lines perpendicular to the diameter, meeting the semicircle. Join these points of the arc to the center. The $n$ sectors carry equal forces, since each gives the same change in $r\cos\theta$. (The sectors near the ends of the diameter, close to the surface, come out wider than those in the middle.)
+    checked: "script: numerical integration of the force on a sector"
+    viz: tp-1878-17
+    status: ready
+  - id: "18"
+    label: "18"
+    setter: Prior
+    topic: 'Hydrostatics: two plates and some water in a ring tube'
+    areas: [hydrostatics]
+    difficulty: 4
+    statement: |
+      A fixed vertical circular tube full of air has within it two diaphragms of weight $w_1$, $w_2$ which fit the tube closely, and are originally in contact with one another. They are separated by water being forced into the tube through a small hole which is closed when the weight of water forced in is $w_3$. Shew that in the position of stable equilibrium the line joining the weight $w_1$ to the centre of the tube is inclined to the horizon at the angle
+      $$\tan^{-1}\frac{w_1\gamma + w_2\gamma\cos\gamma + w_3\sin\gamma}{w_3(1 - \cos\gamma) + w_2\gamma\sin\gamma},$$
+      where $\gamma$ is the angle subtended at the centre of the tube by the water.
+    note: 'A **diaphragm** here is a thin sliding plate that seals the tube.'
+    hints:
+      - 'Water does not compress, so the two diaphragms and the water between them move round the tube as one piece, always spanning the angle $\gamma$.'
+      - 'The air on the other side keeps its volume, so it does no work as the piece moves. Take moments about the centre of the tube for the weights alone.'
+    solution: |
+      **One degree of freedom.** Water does not compress, so the diaphragm $w_1$, the water and the diaphragm $w_2$ move round the tube together, the water filling an arc of angle $\gamma$. The air fills the rest of the tube, one connected space whose volume does not change, so its pressure is the same everywhere and stays fixed.
+
+      **Moments about the centre.** Let the tube have radius $a$ and centre $O$. Measure angles at $O$ from a horizontal radius, anticlockwise, and let $w_1$ sit at angle $\phi$, the water fill the arc from $\phi$ to $\phi+\gamma$, and $w_2$ sit at $\phi+\gamma$. Look at the piece made of the diaphragms and the water, and take moments about the axis of the tube through $O$:
+      - The air pushes the two diaphragms with equal forces along the tube, in opposite senses, at the same distance $a$ from the axis. Their moments cancel.
+      - The smooth walls of the tube push at right angles to the tube's direction, so they have no moment about the axis.
+
+      So the weights alone have no moment about $O$. A weight acting at horizontal position $X$ has moment proportional to $X$. The water's centre of gravity is at horizontal position $\dfrac a\gamma\int_\phi^{\phi+\gamma}\cos t\,dt=\dfrac a\gamma\big(\sin(\phi+\gamma)-\sin\phi\big)$. Hence
+      $$w_1\cos\phi+w_2\cos(\phi+\gamma)+\frac{w_3}{\gamma}\big(\sin(\phi+\gamma)-\sin\phi\big)=0 .$$
+      Multiply by $\gamma$ and expand:
+      $$\cos\phi\,\big(w_1\gamma+w_2\gamma\cos\gamma+w_3\sin\gamma\big)=\sin\phi\,\big(w_3(1-\cos\gamma)+w_2\gamma\sin\gamma\big),$$
+      $$\tan\phi=\frac{w_1\gamma+w_2\gamma\cos\gamma+w_3\sin\gamma}{w_3(1-\cos\gamma)+w_2\gamma\sin\gamma}.$$
+      The radius to $w_1$ makes the angle $\phi$ with the horizontal, so this is the stated inclination.
+
+      **Which position is stable.** Write the equation as $A\cos\phi=B\sin\phi$. The height of the centre of gravity of the piece is proportional to
+      $$V(\phi)=w_1\sin\phi+w_2\sin(\phi+\gamma)+\frac{w_3}{\gamma}\big(\cos\phi-\cos(\phi+\gamma)\big)=\frac1\gamma\big(A\sin\phi+B\cos\phi\big),$$
+      and the equation above is $V'(\phi)=0$. Since $V$ is a sine curve in $\phi$, it has one lowest and one highest position, half a turn apart. Both give the same line through $O$, at the angle found. The stable one is the lowest, where $\sin\phi=-A/\sqrt{A^2+B^2}$ and $\cos\phi=-B/\sqrt{A^2+B^2}$.
+    checked: "script: the lowest position found by direct search for random weights and angles matches the formula"
+    status: ready
+  - id: "19"
+    label: "xix"
+    setter: Glaisher
+    topic: 'Heat: measuring the density of a vapour'
+    areas: [hydrostatics]
+    difficulty: 2
+    statement: |
+      In order to determine the vapour-density of a liquid, a small quantity of the liquid is sealed up in a thin bulb of glass and weighed. The bulb and its contents are then placed in a glass tube full of mercury, which is inverted in a bath of mercury. The tube is graduated so as to shew the volume measured from the closed end. The upper end of the tube is now warmed so that the bulb bursts, and the whole of the liquid is evaporated, and becomes vapour above the mercury. Obtain a formula for the vapour-density of the liquid in terms of $m$, the weight of the evaporated liquid, $v$ the volume of the vapour, $t$ the temperature of the vapour, $b$ the height of the barometer in the room, $h$ the height of the mercury, over which the vapour is, above that in the bath, and $e$ the pressure of the vapour of mercury for the temperature $t$.
+    note: '**Vapour density** meant the density of the vapour compared with the density of air at the same temperature and pressure. Heights of mercury measure pressure, as on a barometer.'
+    hints:
+      - 'The pressure inside the tube above the mercury is the barometer reading less the raised column $h$. Part of that pressure is due to mercury vapour.'
+      - 'Air at $0^\circ$C and a pressure of $760$ mm of mercury has a density of about $0.001293$ grams per cubic centimetre. Use the gas laws to correct it.'
+    answer: '$\dfrac{m}{0.001293\,v}\cdot\dfrac{273 + t}{273}\cdot\dfrac{760}{b - h - e}$ (with $m$ in grams, $v$ in cm³, $t$ in °C, and $b$, $h$, $e$ in mm of mercury)'
+    solution: |
+      **Pressure of the vapour.** The total pressure in the space above the mercury balances the atmosphere minus the column of mercury raised in the tube: $b - h$, in millimetres of mercury. Some of it comes from the mercury's own vapour, $e$. So the vapour of our liquid has pressure
+      $$p = b - h - e.$$
+
+      **Air under the same conditions.** Air at $0^\circ$C and $760$ mm has density $0.001293$ g/cm³. By Boyle's law density is proportional to pressure, and by Charles's law, at fixed pressure, inversely proportional to the absolute temperature, $273 + t$. So air at temperature $t$ and pressure $p$ has density
+      $$0.001293\cdot\frac{p}{760}\cdot\frac{273}{273 + t}.$$
+
+      **The ratio.** The vapour has density $m/v$. Dividing,
+      $$\text{vapour density} = \frac{m}{0.001293\,v}\cdot\frac{273+t}{273}\cdot\frac{760}{b - h - e}.$$
+      The factor $\frac{273+t}{273}$ is often written $1 + 0.00366\,t$. (We ignore the small expansions of the glass and of the mercury column with heat; a careful experimenter corrects for them.)
+    checked: "algebra with the gas laws"
+    status: ready
+  - id: "20"
+    label: "xx"
+    setter: Glaisher
+    topic: 'Optics: parallel rays reflected in a parabola'
+    areas: [optics, conics]
+    difficulty: 4
+    statement: |
+      Any two parallel rays are incident upon the surface of a reflecting parabola. Give a geometrical construction for finding the point of intersection of the reflected rays; and employ the result to find the point in which any reflected ray cuts the caustic by reflexion of a parabola, the incident rays being all inclined to the axis at a given angle.
+    note: 'A **caustic** is the bright curve that reflected rays crowd onto, like the curve of light inside a teacup.'
+    hints:
+      - 'Reflection in the tangent at $P$ swaps the line through $P$ parallel to the axis with the line $PS$ to the focus. It also swaps the incident ray with the reflected ray.'
+      - 'So each reflected ray makes a fixed angle with the line to the focus. Two lines through $P_1$ and $P_2$ that make equal angles with $P_1S$ and $P_2S$ meet on a circle through $S$.'
+    solution: |
+      Let $S$ be the focus, and let all the incident rays make the angle $\psi$ with the axis.
+
+      **A fixed angle at the focus.** At a point $P$ of the parabola, the tangent makes equal angles with $PS$ and with the line through $P$ parallel to the axis (that is why rays along the axis reflect through $S$). So reflection in the tangent swaps those two lines. By the law of reflection it also swaps the incident line and the reflected line. A reflection keeps the size of angles but reverses their sense. So the reflected ray at $P$ makes the angle $\psi$ with $PS$, turned the opposite way from the incident ray's turn from the axis. This holds at every point of incidence.
+
+      **Two rays: the construction.** Let the two rays strike at $P_1$ and $P_2$, and let the reflected rays $r_1$ and $r_2$ meet at $X$. Measure angles between lines with sign, up to multiples of $180^\circ$. Then
+      $$\angle(r_1,r_2)=\angle(r_1,P_1S)+\angle(P_1S,P_2S)+\angle(P_2S,r_2)=\angle(P_1S,P_2S),$$
+      because the first and last terms are equal and opposite. So the lines $XP_1$, $XP_2$ make the same angle as $SP_1$, $SP_2$, and $X$ lies on the circle through $S$, $P_1$ and $P_2$.
+
+      *Construction:* draw the circle through $S$, $P_1$, $P_2$. At $P_1$ draw the line that makes the angle $\psi$ with $P_1S$, turned the opposite way from the incident ray's turn from the axis; this is the reflected ray. It meets the circle again at the required point $X$.
+
+      **The caustic.** Let $P_2$ slide toward $P_1=P$. The circle through $S$, $P_1$, $P_2$ becomes the circle through $S$ that touches the parabola at $P$. The meeting point of two neighboring reflected rays becomes the point where the reflected ray at $P$ touches the caustic (the caustic is the envelope of the reflected rays). So:
+
+      *The reflected ray at $P$ touches the caustic where it meets again the circle through $S$ that touches the parabola at $P$.*
+
+      **How far along the ray.** In a circle of radius $\rho$, a chord from $P$ making the angle $\epsilon$ with the tangent at $P$ has length $2\rho\sin\epsilon$ (the angle between tangent and chord equals the angle in the opposite segment). The chord $PS$ makes with the tangent the angle $\chi$ between the tangent and the axis. The chord $PX$ makes with the tangent the angle $\epsilon$ between the tangent and the reflected ray, which by the law of reflection is also the angle between the tangent and the incident ray. So
+      $$PX=SP\,\frac{\sin\epsilon}{\sin\chi}.$$
+      For the parabola $y^2=4ax$, at the point $(at^2,2at)$ the tangent has slope $1/t$, so $\sin\chi=1/\sqrt{1+t^2}$, and $SP=a(1+t^2)$. So $\sin\chi=\sqrt{a/SP}$ and
+      $$PX=\frac{SP^{3/2}\sin\epsilon}{\sqrt a}.$$
+      For rays parallel to the axis, $\epsilon=\chi$ and $PX=PS$: every reflected ray passes through the focus, and the caustic shrinks to that point, as it should.
+    checked: "script: for several angles and points, the envelope point of the reflected rays (from neighboring rays) agrees with the circle construction and with PX = SP·sin ε / sin χ; for two separated rays, the meeting point lies on the circle through S, P₁, P₂"
+    status: ready
+  - id: "21"
+    label: "21"
+    setter: Prior
+    topic: 'Optics: a point of light seen through a glass ball'
+    areas: [optics]
+    difficulty: 3
+    statement: |
+      $A$ and $B$ are fixed points, $A$ being a luminous point and $B$ the nearest point of a glass sphere with refractive index $\mu$. $C$ a point on $BA$ produced is the image of $A$ as seen by an eye on $AB$ produced beyond the sphere. Shew that $AC$ is least when the radius of the sphere is $\dfrac{3\mu - 2}{2 - \mu}\,AB$.
+    note: 'Use the usual small-angle (paraxial) formulas for refraction at a sphere. The result needs $\mu < 2$, as for ordinary glass.'
+    hints:
+      - 'Refract twice: into the sphere at $B$, and out again at the far side.'
+      - 'The answer is neatest in terms of $w = AB + r$, the distance from $A$ to the center.'
+    solution: |
+      Let $AB = u$ and the radius be $r$. Measure distances along the line, positive in the direction the light travels (from $A$ towards the sphere), from the surface where the refraction happens. For refraction from index $n_1$ to $n_2$ at a surface of radius $R$, the image distance $v$ of an object at distance $s$ satisfies
+      $$\frac{n_2}{v} - \frac{n_1}{s} = \frac{n_2 - n_1}{R}.$$
+
+      **First surface** ($s = -u$, $R = r$, from $1$ to $\mu$): $\dfrac{\mu}{v_1} = \dfrac{\mu - 1}{r} - \dfrac1u$.
+
+      **Second surface** (a distance $2r$ further on; $s = v_1 - 2r$, $R = -r$, from $\mu$ to $1$): $\dfrac1{v_2} = \dfrac{\mu - 1}{r} + \dfrac{\mu}{v_1 - 2r}$.
+
+      Working these out, the final image $C$ lies on $BA$ produced (beyond $A$) when $(2-\mu)(u + r) > \mu u$, at distance
+      $$AC = \frac{2(\mu - 1)\,w^2}{(2 - \mu)\,w - \mu u}, \qquad w = u + r.$$
+
+      **Minimize.** As a function of $w$, the derivative of $\dfrac{w^2}{\alpha w - \beta}$ is $\dfrac{w(\alpha w - 2\beta)}{(\alpha w - \beta)^2}$, which is zero at $w = 2\beta/\alpha$, where the quotient changes from falling to rising. Here $\alpha = 2 - \mu$ and $\beta = \mu u$, so the least $AC$ comes at
+      $$u + r = \frac{2\mu u}{2 - \mu}, \qquad r = \frac{2\mu - (2-\mu)}{2-\mu}\,u = \frac{3\mu - 2}{2 - \mu}\,AB.$$
+      For glass with $\mu = 1.5$ that is a sphere of radius $5\,AB$.
+    checked: "script: computer algebra for AC; a numerical search over r agrees for μ = 1.5"
+    status: ready
+  - id: "22"
+    label: "22"
+    setter: Prior
+    topic: 'Astronomy: when Venus looks equally bright'
+    areas: [astronomy, trigonometry]
+    difficulty: 4
+    statement: |
+      If the Earth be supposed at rest, shew that Venus will have the same apparent brightness at both points of her orbit which have the elongation
+      $$\cos^{-1}\frac{v + \sqrt{2e^2 - v^2}}{2e},$$
+      where $e$, $v$ are the distances of the Earth and Venus respectively from the Sun.
+
+      Hence shew that there are positions of Venus in her orbit besides inferior and superior conjunction at which her apparent brightness is a maximum or minimum.
+    note: 'The **elongation** is the angle between Venus and the Sun as seen from the Earth. The intended model: brightness is proportional to the lit part of the visible disk divided by the square of the distance, as for a smooth ball lit by the Sun. (Real brightness also depends on how the clouds of Venus scatter light, so this is a first approximation.)'
+    hints:
+      - 'At a given elongation $\varepsilon$ there are two positions, at distances $\Delta_1$, $\Delta_2$ from the Earth with $\Delta_1 + \Delta_2 = 2e\cos\varepsilon$ and $\Delta_1\Delta_2 = e^2 - v^2$.'
+      - 'The lit fraction of the disk is $\tfrac12(1 + \cos\psi)$, where $\psi$ is the angle at Venus between the Sun and the Earth.'
+    solution: |
+      Let Venus be at distance $\Delta$ from the Earth, and let $\psi$ be the angle Sun–Venus–Earth. The lit fraction of the visible disk is $\tfrac12(1 + \cos\psi)$, so in this model the brightness is proportional to $(1 + \cos\psi)/\Delta^2$.
+
+      **Brightness in terms of $\Delta$.** By the cosine rule in the triangle Sun–Venus–Earth, $\cos\psi = \dfrac{v^2 + \Delta^2 - e^2}{2v\Delta}$, so
+      $$1 + \cos\psi = \frac{(v + \Delta)^2 - e^2}{2v\Delta}, \qquad \text{brightness} \propto f(\Delta) = \frac{\Delta^2 + 2v\Delta - p}{\Delta^3},$$
+      where $p = e^2 - v^2$. In terms of $x = 1/\Delta$, $f = x + 2vx^2 - px^3$.
+
+      **Two positions at one elongation.** By the cosine rule at the Earth, the distances at elongation $\varepsilon$ solve $\Delta^2 - 2e\cos\varepsilon\,\Delta + p = 0$. Let $s = \Delta_1 + \Delta_2 = 2e\cos\varepsilon$; also $\Delta_1\Delta_2 = p$. With $x_j = 1/\Delta_j$ we have $x_1 + x_2 = s/p$ and $x_1x_2 = 1/p$.
+
+      **Equal brightness.** $f(x_1) - f(x_2) = (x_1 - x_2)\big[1 + 2v(x_1 + x_2) - p(x_1^2 + x_1x_2 + x_2^2)\big]$. For distinct positions the bracket must vanish. Using $x_1^2 + x_1x_2 + x_2^2 = (x_1+x_2)^2 - x_1x_2 = s^2/p^2 - 1/p$:
+      $$1 + \frac{2vs}{p} - \frac{s^2}{p} + 1 = 0 \quad\Longleftrightarrow\quad s^2 - 2vs - 2p = 0.$$
+      The positive root is $s = v + \sqrt{v^2 + 2p} = v + \sqrt{2e^2 - v^2}$, so $\cos\varepsilon = s/(2e)$, as stated.
+
+      **Maxima and minima.** At this elongation the nearer and farther positions have equal brightness. They lie on the same side of the Sun, so as Venus moves from one to the other, the distance $\Delta$ changes steadily from $\Delta_1$ to $\Delta_2$ and no conjunction comes in between. The brightness $f(\Delta)$ is a smooth function with equal values at the two ends, so by Rolle's theorem its derivative vanishes somewhere in between. That is a maximum or minimum of brightness at a point that is not a conjunction. For the real orbits ($v \approx 0.72e$) this elongation is about $14^\circ$, well inside Venus's greatest elongation of about $46^\circ$.
+    checked: "script: located the two positions at this elongation numerically; brightnesses agree"
+    status: ready
