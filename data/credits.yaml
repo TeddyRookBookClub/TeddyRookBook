@@ -139,6 +139,36 @@ sections:
       - name: Institute of Science Tokyo (formerly Tokyo Institute of Technology), past entrance exam problems
         url: https://admissions.isct.ac.jp/ja/013/undergraduate/examination-questions
         what: the general entrance exam physics paper and its statement of aims (出題の意図), linked, not reproduced. The papers are © the Institute of Science Tokyo; the solutions and diagrams on this site are our own, not official
+  # ---- Earth & Space: Mapping the Ocean Floor with Gravity. The maps are our own renderings of the published grids
+  #      (scripts/ocean/make-tiles.py); NASA's video is linked, not copied.
+  - prefix: /earth-and-space/ocean-floor-gravity/
+    title: Mapping the Ocean Floor with Gravity
+    items:
+      - name: NASA/JPL-Caltech and CNES, SWOT (Surface Water and Ocean Topography) mission
+        url: https://swot.jpl.nasa.gov/
+        what: the satellite whose measurements the gravity maps come from, with the Canadian Space Agency and the UK Space Agency
+      - name: Scripps Institution of Oceanography, UC San Diego (David Sandwell, Yao Yu), SWOT gravity grids, version SWOT_06
+        url: https://topex.ucsd.edu/pub/global_grav_1min_SWOT/
+        what: the vertical gravity gradient and gravity anomaly grids the maps on this page are drawn from. The maps, profiles and animation are our own renderings of the published data
+      - name: Yu, Y., Sandwell, D. T., & Dibarboure, G. (2024). Abyssal marine tectonics from the SWOT mission. Science, 386(6727), 1251–1256
+        url: https://doi.org/10.1126/science.ads4472
+        what: the study behind the SWOT seafloor map, cited as the data's authors ask
+      - name: Sandwell, D. T., Harper, H., Tozer, B., & Smith, W. H. (2021). Gravity field recovery from geodetic altimeter missions. Advances in Space Research, 68(2), 1059–1072
+        url: https://doi.org/10.1016/j.asr.2019.09.011
+        what: the method behind the gravity grids, cited as the data's authors ask
+      - name: NASA Scientific Visualization Studio, "Surface Water and Ocean Topography (SWOT) Vertical Gravity Gradient" (2025), visualizer Greg Shirah (NASA/GSFC), scientists David Sandwell and Yao Yu
+        url: https://svs.gsfc.nasa.gov/5519
+        what: the video that inspired this page; linked, not copied
+      - name: IGPP vertical gravity gradient V33 (Sandwell et al.), served by the Generic Mapping Tools as @earth_vgg
+        url: https://www.generic-mapping-tools.org/remote-datasets/earth-vgg.html
+        what: the older map in the before-and-after comparison. Cite Sandwell et al. (2021, above) and Pavlis, N. K., Holmes, S. A., Kenyon, S. C., & Factor, J. K. (2012), The development and evaluation of the Earth Gravitational Model 2008 (EGM2008), Journal of Geophysical Research, 117, B04406, doi:10.1029/2011JB008916
+      - name: NASA Jet Propulsion Laboratory, "Next-Generation Water Satellite Maps Seafloor From Space" (March 19, 2025)
+        url: https://www.jpl.nasa.gov/news/next-generation-water-satellite-maps-seafloor-from-space/
+        what: facts about SWOT, seamounts, abyssal hills and seafloor mapping
+      - name: Natural Earth
+        url: https://www.naturalearthdata.com/
+        what: the land and Antarctic ice-shelf outlines used to mask the maps
+        licence: public domain
   # ---- Home page: the verse of the day and the word of the day
   - prefix: /
     exact: true

@@ -1,0 +1,137 @@
+{{ define "main" }}
+{{- /* /earth-and-space/ocean-floor-gravity/: "Mapping the Ocean Floor with Gravity" (content/earth-and-space/ocean-floor-gravity.md).
+   Front matter: eyebrow, lede, tour [{id, title, text}] (ids = regions in static/earth/ocean-floor/manifest.json),
+   profiles [{name, a: [lon, lat], b: [lon, lat]}]. Body: markdown; a paragraph that is only [[of:how]] or [[of:compare]]
+   becomes the animation or the before-and-after swipe.
+   Scripts and data: static/earth/ocean-floor/ (of.js = map, profile, swipe; how.js = animation; of.css; tiles/, compare/,
+   manifest.json, all made by scripts/ocean/make-tiles.py). Credits: data/credits.yaml (prefix /earth-and-space/ocean-floor-gravity/). */ -}}
+{{ partial "inline/ml-css.html" "earth/ocean-floor/of.css" }}
+{{ partial "inline/ml-js.html" "earth/ocean-floor/of.js" }}
+{{ partial "inline/ml-js.html" "earth/ocean-floor/how.js" }}
+{{- $cfg := dict "tour" (.Params.tour | default slice) "profiles" (.Params.profiles | default slice) -}}
+{{- $how := `<figure class="of-how" aria-labelledby="of-how-cap">
+  <div class="of-how-grid">
+    <canvas class="of-how-side" role="img" aria-label="Side view: the SWOT satellite above the sea. Its radar measures two strips of sea surface, one on each side. Below one strip, a seamount on the seafloor pulls the water toward it, and the sea surface bulges up over it."></canvas>
+    <canvas class="of-how-top" role="img" aria-label="Top view: as the satellite moves along its track, its two strips sweep across the sea and record the height of the surface, revealing a round bump over the seamount."></canvas>
+    <canvas class="of-how-chart" role="img" aria-label="Three curves across the seamount: the sea surface height, the gravity anomaly and the gravity gradient. All three peak right above it; the gradient is the narrowest and dips below zero on both sides."></canvas>
+  </div>
+  <div class="of-how-ctl">
+    <label for="of-how-h">Seamount height</label>
+    <input type="range" id="of-how-h" class="of-how-h" min="200" max="3500" step="100" value="1000">
+    <output class="of-how-hout" for="of-how-h">1,000 m</output>
+    <button type="button" class="of-btn of-how-play" aria-pressed="false">Pause</button>
+  </div>
+  <p class="of-how-sum" aria-live="polite"></p>
+  <ol class="of-how-steps">
+    <li><b>Mass pulls water.</b> Rock is denser than water, so a seamount adds mass. Its gravity pulls the nearby water toward it, and the sea surface bulges up over it, by a few centimeters for a seamount a kilometer tall.</li>
+    <li><b>The satellite measures the surface.</b> SWOT's two antennas, 10 meters apart, catch the same radar echoes. Comparing them gives the height of the sea along two strips about 50 km wide, one on each side of its track, to within about a centimeter. Over many passes, the bumps add up into a map.</li>
+    <li><b>Slope and curvature give gravity.</b> Where the sea surface tilts, gravity is pulling sideways. The tilt in every direction gives the gravity anomaly. How sharply the surface curves gives the gravity gradient: it equals normal gravity times that curvature, so a small, sharp bump shows up clearly.</li>
+    <li><b>Eötvös, the unit.</b> One Eötvös (1 E) is 10⁻⁹ per second squared: gravity changing by one billionth of a meter per second squared for every meter you move up or down. Change the height above and watch the peak: it grows fast with size.</li>
+  </ol>
+  <figcaption id="of-how-cap">A simplified model, not a survey: the seamount is a cone four times as wide as it is tall, treated as one lump of extra mass (rock 2,800 kg/m³, seawater 1,030 kg/m³) in water 4,000 m deep. Real seamounts are often partly supported by the bending plate beneath them and buried in sediment, which makes their signals weaker.</figcaption>
+</figure>` -}}
+{{- $cmp := `<figure class="of-cmp" aria-labelledby="of-cmp-cap">
+  <div class="of-cmp-tabs" role="group" aria-label="Choose a place">
+    <button type="button" class="of-btn" data-cmp="seamounts" aria-pressed="true">Small seamounts</button>
+    <button type="button" class="of-btn" data-cmp="hills" aria-pressed="false">Abyssal hills</button>
+  </div>
+  <div class="of-cmp-stage">
+    <canvas class="of-cmp-v33" role="img" aria-label="The older gravity gradient map, V33, from satellites that look straight down"></canvas>
+    <canvas class="of-cmp-swot" role="img" aria-label="The SWOT gravity gradient map of the same place, at the same scale, with sharper seamounts and hills"></canvas>
+    <div class="of-cmp-line" aria-hidden="true"><span></span></div>
+    <span class="of-cmp-lab of-cmp-lab-a" aria-hidden="true">Older map (V33)</span>
+    <span class="of-cmp-lab of-cmp-lab-b" aria-hidden="true">SWOT</span>
+    <span class="of-cmp-scale" aria-hidden="true"></span>
+  </div>
+  <label class="of-cmp-rl"><span class="of-sr">Swipe between the older map and SWOT</span>
+    <input type="range" class="of-cmp-range" min="0" max="100" value="50"></label>
+  <figcaption id="of-cmp-cap"><b>Before and after.</b> Drag the slider. Left: V33, the older map, made from 30 years of satellites that measure only straight down. Right: SWOT, version 06. Same place, same scale, same colors. Look for the small seamounts and the grain of the abyssal hills. <span class="of-cmp-where"></span></figcaption>
+</figure>` -}}
+{{- $body := .Content -}}
+{{- $body = replace $body "<p>[[of:how]]</p>" $how -}}
+{{- $body = replace $body "<p>[[of:compare]]</p>" $cmp -}}
+<article class="of" data-base="{{ "earth/ocean-floor/" | relURL }}">
+  <nav class="of-crumbs" aria-label="Breadcrumbs"><a href="{{ "earth-and-space/" | relURL }}">Earth &amp; Space</a> <span aria-hidden="true">›</span> <span>{{ .Title }}</span></nav>
+  <header class="of-head">
+    {{ with .Params.eyebrow }}<p class="of-eyebrow">{{ . }}</p>{{ end }}
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.lede }}<p class="of-lede">{{ . }}</p>{{ end }}
+  </header>
+
+  <section class="of-explorer" aria-labelledby="of-map-h">
+    <h2 id="of-map-h" class="of-map-h">Explore the gravity map</h2>
+    <div class="of-bar">
+      <div class="of-seg" role="group" aria-label="Map layer">
+        <button type="button" class="of-btn" data-layer="vgg" aria-pressed="true">Gravity gradient</button>
+        <button type="button" class="of-btn" data-layer="grav" aria-pressed="false">Gravity anomaly</button>
+      </div>
+      <div class="of-seg" role="group" aria-label="Colors">
+        <button type="button" class="of-btn" data-scale="relief" aria-pressed="true">Relief</button>
+        <button type="button" class="of-btn" data-scale="diverging" aria-pressed="false">Diverging</button>
+      </div>
+      <label class="of-conl">Contrast <input type="range" class="of-con" min="10" max="200" step="5" value="60"> <output class="of-con-out">±60 E</output></label>
+    </div>
+    <div class="of-bar of-bar2">
+      <button type="button" class="of-btn of-pri of-tourbtn">▶ Take the tour</button>
+      <button type="button" class="of-btn of-drawbtn" aria-pressed="false">Draw a profile</button>
+      <button type="button" class="of-btn of-reset">Whole world</button>
+    </div>
+    <div class="of-mapwrap">
+      <canvas class="of-map" tabindex="0" role="application" aria-roledescription="map" aria-label="Gravity map of the world's oceans. Drag or use the arrow keys to move, the mouse wheel, pinch or the plus and minus keys to zoom. The place and value under the pointer show below the map."></canvas>
+      <div class="of-zoom"><button type="button" class="of-zin" aria-label="Zoom in">+</button><button type="button" class="of-zout" aria-label="Zoom out">−</button></div>
+      <div class="of-scale" aria-hidden="true"></div>
+      <div class="of-tour" hidden>
+        <p class="of-tour-n"></p>
+        <h3 class="of-tour-h" tabindex="-1"></h3>
+        <p class="of-tour-p"></p>
+        <div class="of-tour-acts">
+          <button type="button" class="of-btn of-tour-prev">‹ Back</button>
+          <button type="button" class="of-btn of-pri of-tour-next">Next ›</button>
+          <button type="button" class="of-btn of-tour-x" aria-label="End the tour">✕</button>
+        </div>
+      </div>
+      <noscript><p class="of-nojs">The map needs JavaScript. The text below does not.</p></noscript>
+    </div>
+    <p class="of-read" aria-live="polite"></p>
+    <p class="of-status" aria-live="polite"></p>
+    <div class="of-legend">
+      <span class="of-leg-lo"></span>
+      <span class="of-leg-bar"><canvas class="of-leg-cv" aria-hidden="true"></canvas><span class="of-leg-mid"></span></span>
+      <span class="of-leg-hi"></span>
+      <span class="of-leg-land"><i aria-hidden="true"></i> land and ice shelves</span>
+    </div>
+    <div class="of-regions">
+      <p class="of-regions-h">Featured regions, in full detail:</p>
+      <ul>
+        {{- range $i, $s := .Params.tour }}
+        <li><button type="button" class="of-reg" data-r="{{ $s.id }}" data-i="{{ $i }}" aria-current="false"><span aria-hidden="true">{{ add $i 1 }}</span> {{ $s.title }}</button></li>
+        {{- end }}
+      </ul>
+      <p class="of-small">Elsewhere the map shows a coarser world view, with land and ice shelves in tan. The dashed boxes mark the featured regions.</p>
+    </div>
+    <div class="of-prof" hidden>
+      <div class="of-prof-head">
+        <h3>Profile from A to B</h3>
+        <button type="button" class="of-btn of-prof-x">Clear</button>
+      </div>
+      <p class="of-key"><span class="of-key-g">━ gravity gradient (E, left)</span> <span class="of-key-y">━ gravity anomaly (mGal, right)</span></p>
+      <canvas class="of-prof-cv" role="img" aria-label="Chart of the gravity gradient and gravity anomaly along the line; the summary below gives the numbers"></canvas>
+      <p class="of-prof-read" aria-live="off"></p>
+      <p class="of-prof-sum" aria-live="polite"></p>
+    </div>
+    <div class="of-presets">
+      <p class="of-regions-h">Or try a ready-made profile:</p>
+      <ul>
+        {{- range $i, $p := .Params.profiles }}
+        <li><button type="button" class="of-btn of-preset" data-i="{{ $i }}">{{ $p.name }}</button></li>
+        {{- end }}
+      </ul>
+    </div>
+    <script type="application/json" id="of-cfg">{{ $cfg | jsonify | safeJS }}</script>
+  </section>
+
+  <div class="of-body">
+    {{ $body | safeHTML }}
+  </div>
+</article>
+{{ end }}

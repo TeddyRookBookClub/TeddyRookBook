@@ -140,3 +140,18 @@ html[data-theme="dark"] .ladder .lad-eq,html[data-theme="dark"] .ladder .lad-eq2
 @media (min-width:901px){.tiles-4>.tile:last-child:nth-child(odd){grid-column:1/-1;flex-direction:row}
 .tiles-4>.tile:last-child:nth-child(odd) .tile-vis{flex:0 0 46%;height:210px;border-bottom:0;border-right:1px solid var(--line)}
 .tiles-4>.tile:last-child:nth-child(odd) .tile-body{align-self:center}}
+
+/* What's new on the home page: the four newest entries from data/whatsnew.yaml */
+.wn-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.8rem}
+.wn-card{display:flex;flex-direction:column;gap:.35rem;padding:.85rem .95rem;border:1px solid var(--border);border-top:3px solid #b8963e;border-radius:10px;background:var(--entry);color:var(--primary);box-shadow:none;text-decoration:none;min-width:0}
+.wn-card:hover,.wn-card:focus-visible{border-color:#004225;border-top-color:#b8963e}
+.wn-card b{font:700 1rem/1.3 Georgia,serif;color:#004225}
+.wn-meta{font:600 .78rem system-ui;color:var(--secondary)}
+.wn-kind{display:inline-block;font:600 10.5px system-ui;text-transform:uppercase;letter-spacing:.04em;color:#fff;background:#004225;border-radius:5px;padding:2px 6px;margin-right:.3rem}
+.wn-text{font-size:.88rem;line-height:1.45;color:var(--secondary)}
+html[data-theme="dark"] .wn-card b{color:#6cc79a}
+html[data-theme="dark"] .wn-card:hover,html[data-theme="dark"] .wn-card:focus-visible{border-color:#6cc79a;border-top-color:#b8963e}
+html[data-theme="dark"] .wn-kind{background:#00562f}
+@media (max-width:900px){.wn-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.wn-cards{grid-template-columns:1fr}}
+@media (max-width:520px){.wn-card:nth-child(n+4){display:none}}
