@@ -1,0 +1,43 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-rook-climb
+title: The rook that avoids the diagonal
+tier: 1
+order: 10
+areas:
+- combinatorics
+problem: |
+  A rook sits in the bottom-left corner of a $5\times5$ board and wants to reach the top-right corner.
+  Each move goes either right or up, by one or more squares. The rook may pass over a square, but it may
+  never **stop** on one of the three squares of the main diagonal that lie strictly between the two corners.
+
+  A route is the list of squares where the rook stops. How many routes are there?
+check:
+  type: number
+  answer: '370'
+answer: '$370$'
+hints:
+- 'Count routes to every square, not just the last one. Start with the squares near the start.'
+- 'The last move into a square comes from somewhere to its left in the same row, or from somewhere below it in the same column.'
+- 'So the count for a square is the sum of all counts to its left in its row plus all counts below it in its column. Put $0$ on the forbidden squares.'
+solution: |
+  Give the squares coordinates $(x,y)$ with $0\le x,y\le 4$, starting at $(0,0)$. Let $f(x,y)$ be the number of routes
+  from the start that end by stopping at $(x,y)$. The last move into $(x,y)$ starts at some $(x',y)$ with $x'<x$ or at some
+  $(x,y')$ with $y'<y$. So
+
+  $$f(x,y)=\sum_{x'<x} f(x',y)+\sum_{y'<y} f(x,y'),$$
+
+  with $f(0,0)=1$, and $f(1,1)=f(2,2)=f(3,3)=0$ because the rook may not stop there.
+
+  Fill in the table row by row, from the bottom. Here it is with the top row first:
+
+  $$\begin{array}{|c|c|c|c|c|}\hline 8&20&50&107&\mathbf{370}\\ \hline 4&8&17&0&107\\ \hline 2&3&0&17&50\\ \hline 1&0&3&8&20\\ \hline 1&1&2&4&8\\ \hline\end{array}$$
+
+  The bottom row is $1,1,2,4,8$: along a single row, a route to the $k$-th square is a way to cut $k$ steps into moves,
+  and there are $2^{k-1}$ of those. The table is symmetric across the diagonal, as it should be, since swapping "right"
+  and "up" swaps the two halves of the board. The corner gets $107+50+20+8$ from its column plus the same from its row:
+  $2\cdot 185=370$.
+
+  The idea to keep: when you count paths, count them to **every** point and let the numbers build on each other.
+viz: cm-rook-climb
+checked: 'script: dynamic programming over the board, and a second count by recursion'
+status: ready

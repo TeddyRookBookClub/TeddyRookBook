@@ -1,0 +1,231 @@
+year: 2023
+edition: 84th
+date: "December 2, 2023"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2023.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Second derivative of a product of cosines"
+    areas: [calculus]
+    difficulty: 1
+    answer: "$n=18$"
+    hints:
+      - 'Since $f_n(0)=1$ and $f_n''(0)=0$, the second derivative of $f_n$ at $0$ equals that of $\ln f_n$.'
+    solution: |
+      **Key idea:** take logarithms; each factor $\cos kx$ contributes $-k^2$ to the second derivative at $0$.
+
+      Near $0$, $f_n>0$ and $\ln f_n=\sum_{k=1}^n\ln\cos kx$. Since $(\ln f)''=\frac{f''}{f}-\big(\frac{f'}{f}\big)^2$, $f_n(0)=1$ and $f_n'(0)=0$ (each $\ln\cos kx$ has derivative $-k\tan kx$, which is $0$ at $0$), we get
+      $$f_n''(0)=(\ln f_n)''(0)=\sum_{k=1}^n\big(-k^2\sec^2 kx\big)\Big|_{x=0}=-\frac{n(n+1)(2n+1)}{6}.$$
+      For $n=17$ this is $-1785$, and for $n=18$ it is $-2109$. So the smallest $n$ with $|f_n''(0)|>2023$ is $18$.
+    checked: "symbolic: sympy gives f''(0) = −1785 for n = 17 and −2109 for n = 18"
+    status: ready
+
+  - id: A2
+    topic: "A monic polynomial matching reciprocal points"
+    areas: [algebra]
+    difficulty: 2
+    answer: '$x=\pm\dfrac{1}{n!}$'
+    hints:
+      - 'Let $q(y)=y^2p(y)-1$. Which roots does it have, and what is its degree?'
+      - '$q$ has no $y^1$ term and $q(0)=-1$.'
+    solution: |
+      **Key idea:** $q(y)=y^2p(y)-1$ is monic of degree $2n+2$ and vanishes at all $\pm\frac1k$, so it is that product times a monic quadratic. Two coefficients of $q$ that we know fix the quadratic.
+
+      $p(1/x)=x^2$ means $q(1/x)=0$. We know $q(\pm\frac1k)=0$ for $k=1,\dots,n$, and $q$ is monic of degree $2n+2$, so
+      $$q(y)=(y^2+ay+b)\prod_{k=1}^n\Big(y^2-\frac1{k^2}\Big).$$
+      The product is even with constant term $\prod(-\frac1{k^2})=\frac{(-1)^n}{(n!)^2}=\frac1{(n!)^2}$, since $n$ is even. In $q=y^2p(y)-1$, the coefficient of $y$ is $0$ and the constant term is $-1$. Comparing: $a/(n!)^2=0$, so $a=0$; and $b/(n!)^2=-1$, so $b=-(n!)^2$.
+
+      The other roots of $q$ are $y=\pm n!$, which differ from all $\pm\frac1k$. So the other solutions are $x=1/y=\pm\frac1{n!}$.
+    checked: "symbolic: solved for p when n = 2 and n = 4; the extra solutions are ±1/2 and ±1/24"
+    status: ready
+
+  - id: A3
+    topic: "How soon can a function controlled by its partner vanish?"
+    areas: [analysis]
+    difficulty: 3
+    answer: '$r=\dfrac\pi2$'
+    hints:
+      - '$f=\cos x$, $g=\sin x$ shows $\frac\pi2$ is possible.'
+      - 'Before $f$ first vanishes, compare $f$ with $v(x)=\int_0^x|f|$ and track the angle of the point $(f,v)$.'
+    solution: |
+      **Key idea:** before $f$ first hits $0$, the point $(f,v)$, where $v=\int_0^x f$, turns with angular speed at most $1$. It has to turn by $\frac\pi2$, so this takes time at least $\frac\pi2$.
+
+      **$\frac\pi2$ is reached.** $f=\cos$, $g=\sin$: $|f'|=|g|$, $|g'|=|f|$, $f(0)=1$, $g(0)=0$, $f(\frac\pi2)=0$.
+
+      **Nothing smaller.** Let $r$ be the first zero of $f$ (it exists by assumption and $r>0$), so $f>0$ on $[0,r)$. Put $v(x)=\int_0^xf$ on $[0,r]$. Then $v'=f\ge0$, and
+      $$|g(x)|=\Big|\int_0^xg'\Big|\le\int_0^x|f|=v(x),\qquad\text{so}\qquad f'\ge-|g|\ge-v .$$
+      The point $(f,v)$ is never the origin on $[0,r]$: $f>0$ before $r$, and $v(r)>0$. Write $f=R\cos\theta$, $v=R\sin\theta$ with $\theta$ continuous, $\theta(0)=0$. Then
+      $$\theta'=\frac{f\,v'-v\,f'}{f^2+v^2}=\frac{f^2-v f'}{f^2+v^2}\le\frac{f^2+v^2}{f^2+v^2}=1,$$
+      using $-vf'\le v^2$ (as $v\ge0$ and $f'\ge-v$). At $x=r$ we have $f=0$, $v>0$, so $\theta(r)=\frac\pi2$ (the angle stays in $[0,\frac\pi2]$ while $f,v\ge0$). By the mean value theorem, $\frac\pi2=\theta(r)-\theta(0)\le r$.
+    viz: putnam-2023-a3
+    checked: "proof; the example cos/sin meets every condition with r = π/2"
+    status: ready
+
+  - id: A4
+    topic: "Integer combinations of icosahedron vertices are dense"
+    areas: [geometry, number-theory]
+    difficulty: 2
+    hints:
+      - 'Use the coordinates $(0,\pm1,\pm\phi)$ and their cyclic shifts, with $\phi$ the golden ratio.'
+      - 'Find integer combinations giving $(0,0,2)$ and $(0,0,2\phi)$.'
+    solution: |
+      **Key idea:** the integer combinations contain two vectors on each axis whose length ratio is the irrational golden ratio, so on each axis they come arbitrarily close to every point.
+
+      Up to a rotation and a common scale factor (which do not affect density), the twelve vertices are the cyclic shifts of $(0,\pm1,\pm\phi)$, where $\phi=\frac{1+\sqrt5}2$. Let $\Lambda$ be the set of integer combinations of them. Then $\Lambda$ contains
+      $$(0,1,\phi)-(0,1,-\phi)=(0,0,2\phi),\qquad(\phi,0,1)+(-\phi,0,1)=(0,0,2).$$
+      Since $\phi$ is irrational, the numbers $2a+2b\phi$ ($a,b\in\mathbb Z$) are dense in $\mathbb R$ (a subgroup of $\mathbb R$ that is not cyclic is dense). So $\Lambda$ meets every interval of the $z$-axis, and by the cyclic symmetry, of the $x$- and $y$-axes too.
+
+      Given $v=(v_1,v_2,v_3)$ and $\varepsilon>0$, pick points of $\Lambda$ on the three axes within $\varepsilon/3$ of $(v_1,0,0)$, $(0,v_2,0)$, $(0,0,v_3)$. Their sum is in $\Lambda$ and within $\varepsilon$ of $v$.
+    checked: "proof only (no final value to check)"
+    status: ready
+
+  - id: A5
+    topic: "Roots of a sum weighted by ternary digits"
+    areas: [algebra, combinatorics]
+    difficulty: 4
+    answer: '$z=-\dfrac{3^{1010}-1}{2}$ and $z=-\dfrac{3^{1010}-1}{2}\pm\dfrac{\sqrt{9^{1010}-1}}{4}\,i$'
+    hints:
+      - 'The weights $(-2)^{f(k)}$ have generating function $\prod_{j<1010}(1-t^{3^j})^2$.'
+      - 'Put $t=e^{s}$. The sum is $2023!$ times a coefficient of $e^{zs}\prod(1-e^{3^js})^2$, which starts at $s^{2020}$.'
+    solution: |
+      **Key idea:** with $t=e^s$, the weights give a product that vanishes to order $2020$ at $s=0$. The sum then only depends on three more terms, and it is a cubic in $z$ with explicit roots.
+
+      Let $m=1010$ and $w(k)=(-2)^{f(k)}$. Each base-3 digit contributes a factor $1-2t^{3^j}+t^{2\cdot3^j}$, so
+      $$\sum_{k<3^m}w(k)\,t^k=\prod_{j=0}^{m-1}\big(1-t^{3^j}\big)^2 .$$
+      Hence, with $a_j=3^j$,
+      $$F(s):=\sum_k w(k)e^{(z+k)s}=e^{zs}\prod_{j}\big(1-e^{a_js}\big)^2,$$
+      and our sum is $F^{(2023)}(0)=2023!\,[s^{2023}]F$. Use $e^u-1=u\,e^{u/2}\,\frac{\sinh(u/2)}{u/2}$:
+      $$F(s)=\Big(\prod_ja_j^2\Big)s^{2m}\,e^{ws}\,H(s),\qquad w=z+\sum_ja_j=z+\frac{3^m-1}{2},$$
+      where $H(s)=\prod_j\Big(\frac{\sinh(a_js/2)}{a_js/2}\Big)^2=1+\frac{\sum a_j^2}{12}s^2+O(s^4)$ is even. Since $2023=2m+3$, we need $[s^3]$ of $e^{ws}H$:
+      $$\frac{w^3}{6}+\frac{\sum_ja_j^2}{12}\,w .$$
+      So the sum vanishes exactly when $w=0$ or $w^2=-\frac12\sum_ja_j^2=-\frac{9^m-1}{16}$. That gives the three values in the answer.
+    checked: "symbolic: for m = 1, 2, 3 (exponent 2m + 3) sympy finds exactly the three predicted roots"
+    status: ready
+
+  - id: A6
+    topic: "Parity game on chosen-number fixed points"
+    areas: [combinatorics]
+    difficulty: 5
+    status: coming
+
+  - id: B1
+    topic: "Sliding coins on a grid: counting reachable positions"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: '$\dbinom{m+n-2}{m-1}$'
+    hints:
+      - 'Can a coin ever move twice?'
+      - 'The set of coins that have moved is closed under going down or right inside the starting block.'
+    solution: |
+      **Key idea:** every coin moves at most once, and the set of moved coins is a "staircase" in the starting block. Every staircase can be reached, and staircases in an $(m-1)\times(n-1)$ block are counted by lattice paths.
+
+      Call the starting cells (with $i\le m-1$, $j\le n-1$) the *block*. For a set $M$ of block cells, let $C(M)$ be the position where the coins from cells in $M$ have moved one step diagonally and the rest have not moved. Call $M$ *closed* if $(i,j)\in M$ implies $(i+1,j)$ and $(i,j+1)$ are in $M$ whenever those are block cells.
+
+      **Claim.** From $C(M)$ with $M$ closed, the legal moves are exactly: move the coin of a cell $(i,j)\notin M$ whose block neighbors $(i+1,j)$, $(i,j+1)$, $(i+1,j+1)$ all lie in $M$. The result is $C(M\cup\{(i,j)\})$, again closed.
+
+      *Unmoved coins.* The cell $(i+1,j+1)$ is empty only if its own coin has moved (or it is outside the block). The cell $(i+1,j)$ is empty only if its coin has moved and the coin from $(i,j-1)$ has not landed there; the second condition holds automatically, since $(i,j-1)\in M$ would force $(i,j)\in M$. The cell $(i,j+1)$ is similar. This gives the rule in the claim.
+
+      *Moved coins never move again.* A moved coin from $(i,j)$ sits at $(i+1,j+1)$. If that is still a block cell, it is in $M$, so $(i+1,j)\in M$ too, and the coin from $(i+1,j)$ sits at $(i+2,j+1)$, which blocks the move.
+
+      **Counting.** Starting from $M=\varnothing$, every closed set can be built one cell at a time (add cells from the bottom-right corner outward), so every $C(M)$ with $M$ closed is reachable, and nothing else is. Different closed sets give different positions: on each diagonal, $M$ is a final segment, and the position of the single gap on that diagonal shows its length. Closed sets in an $(m-1)\times(n-1)$ block correspond to monotone lattice paths along their boundary, and there are $\binom{(m-1)+(n-1)}{m-1}$ of them.
+    checked: "script: breadth-first search over all reachable positions for m, n ≤ 5 matches the binomial coefficient"
+    status: ready
+
+  - id: B2
+    topic: "Fewest binary ones in a multiple of 2023"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$3$"
+    hints:
+      - '$2023=7\cdot17^2$. Look at powers of $2$ modulo $7$.'
+      - 'Two ones would need $2^a\equiv-1\pmod7$.'
+    solution: |
+      **Key idea:** powers of $2$ modulo $7$ are only $1,2,4$, which rules out one or two binary ones. A search finds a multiple with three.
+
+      **One 1.** $2023n=2^a$ is impossible, since $2023$ is odd and larger than $1$.
+
+      **Two 1s.** $2023n=2^a+2^b=2^b(2^{a-b}+1)$ with $a>b$ would need $7\mid2^c+1$ for $c=a-b\ge1$. But $2^c\bmod 7$ cycles through $2,4,1$, never $6$. Impossible.
+
+      **Three 1s.** $2^{77}+2^{16}+1$ is divisible by $2023$ (one can check $2^{77}\equiv-2^{16}-1$ modulo $7$ and modulo $289$ by repeated squaring). So $n=(2^{77}+2^{16}+1)/2023$ gives $k(n)=3$.
+    checked: "script: 2^77 + 2^16 + 1 ≡ 0 (mod 2023); no c < 2000 has 2^c ≡ −1 (mod 2023)"
+    status: ready
+
+  - id: B3
+    topic: "Expected longest zigzag subsequence of random numbers"
+    areas: [probability, combinatorics]
+    difficulty: 3
+    answer: '$\dfrac{2n+2}{3}$'
+    hints:
+      - 'Show the answer equals $2$ plus the number of interior positions that are local maxima or minima.'
+      - 'Each interior position is a local extreme with probability $\frac23$.'
+    solution: |
+      **Key idea:** the longest zigzag subsequence uses the two endpoints and every interior peak and valley, and no zigzag can be longer. Each interior point is a peak or valley with probability $\frac23$.
+
+      With probability $1$ all $X_i$ are distinct. Call an index $i$ with $2\le i\le n-1$ a *turn* if $X_i$ is larger than both neighbors (a peak) or smaller than both (a valley). Let $t$ be the number of turns. We show $a=t+2$ (for $n\ge2$).
+
+      **At least $t+2$.** Peaks and valleys alternate along the sequence (between two peaks the minimum is a valley). Take $X_1$, the turns in order, and $X_n$. Between consecutive chosen indices the sequence is monotone, and the direction switches at each turn. So this subsequence is zigzag.
+
+      **At most $t+2$.** Let $X_{i_1},\dots,X_{i_k}$ be zigzag. For $2\le j\le k-1$, the term $X_{i_j}$ is above both neighbors in the subsequence (or below both). In the first case, the maximum of $X$ on $[i_{j-1},i_{j+1}]$ is at an index strictly inside, and it is a peak of the full sequence; similarly for the second case with a valley. Two indices $j$ of the same type give peaks in the disjoint open intervals $(i_{j-1},i_{j+1})$, and indices of opposite type give a peak and a valley. So these $k-2$ turns are distinct, and $k-2\le t$.
+
+      **Expectation.** For an interior $i$, among three distinct values the middle position is the largest or smallest with probability $\frac23$. So
+      $$E[a]=2+\frac23(n-2)=\frac{2n+2}{3}.$$
+    viz: putnam-2023-b3
+    checked: "exact: averaged the longest zigzag over all orderings for n = 2 to 7; equals (2n + 2)/3"
+    status: ready
+
+  - id: B4
+    topic: "Optimizing a piecewise-accelerating function to reach 2023"
+    areas: [calculus, analysis]
+    difficulty: 3
+    answer: "$29$"
+    hints:
+      - 'On each piece, $f$ starts with slope $0$ and grows by $\frac{c}{2}L^2$ where $c$ is that piece''s second derivative and $L$ its length.'
+      - 'For a fixed total time, the gain is a convex function of the piece lengths, so it is largest at a corner of the allowed region.'
+    solution: |
+      **Key idea:** the total gain is a convex function of the piece lengths, so for a fixed total time it is largest when all but one piece have their minimum length $1$. That reduces the problem to one variable.
+
+      Let $L_k=t_{k+1}-t_k\ge1$ for $0\le k\le n-1$, and let $L\ge0$ be the time spent after $t_n$. On a piece with second derivative $c$ that starts with slope $0$, $f$ rises by $\frac c2(\text{length})^2$. So the value reached at time $t_0+T$, with $T=\sum L_k+L$, is
+      $$\frac12+\frac12V,\qquad V=\sum_{k=0}^{n-1}(k+1)L_k^2+(n+1)L^2 .$$
+      Since $f$ is increasing, we need the least $T$ for which some choice gives $V=4045$. (If the target is hit before $t_n$, drop the later jumps; that is a choice with smaller $n$.)
+
+      **Reduction.** For fixed $n$ and $T\ge n$, $V$ is convex on the simplex $\{L_k\ge1,\ L\ge0,\ \sum L_k+L=T\}$, so its maximum is at a vertex: all variables at their lower bounds except one. If the free one is $L$, then $V=g(n,T):=\frac{n(n+1)}{2}+(n+1)(T-n)^2$. If it is some $L_j$, then $L=0$ and a direct comparison shows $V\le g(j,T)$: with $a=T-n+1\ge1$ and $r=n-1-j$,
+      $$g(j,T)-V=(j+1)\big[(a+r)^2-a^2\big]-\sum_{i=1}^{r}(j+1+i)\ge(j+1)r(r+2)-r(j+1)-\tfrac{r(r+1)}2\ge0 .$$
+      So the most that can be reached by time $T$ is $\max_n g(n,T)$, and this increases with $T$.
+
+      **The numbers.** At $T=29$: $g(9,29)=45+10\cdot20^2=4045$ exactly, and checking $n=0,\dots,28$ shows $g(n,29)\le4045$ for all of them. So no $T<29$ works, and $T=29$ does: take $n=9$, $t_k=t_0+k$, and $20$ more units after $t_9$. Then $f(t_0+29)=\frac12+\frac{45}{2}+\frac{10\cdot400}{2}=2023$.
+    checked: "script: g(n, 29) ≤ 4045 for all n, with equality only at n = 9; minimizing n + sqrt((4045 − n(n+1)/2)/(n+1)) over n gives 29"
+    status: ready
+
+  - id: B5
+    topic: "Square roots of multiplication permutations modulo n"
+    areas: [number-theory, combinatorics]
+    difficulty: 4
+    answer: '$n=1$ and all $n\equiv2\pmod 4$'
+    hints:
+      - 'A permutation is a square only if, for each even length, it has an even number of cycles of that length.'
+      - 'Elements $k$ with $\gcd(k,n)=n/e$ form cycles of length equal to the order of $m$ modulo $e$.'
+    solution: |
+      **Key idea:** for $n=2n'$ with $n'$ odd, the Chinese remainder theorem splits multiplication by $m$ into two identical copies, which can be interleaved into a square root. For other $n$, a good choice of $m$ produces an odd number of cycles of some even length, which a square cannot have.
+
+      Think of $\{1,\dots,n\}$ as $\mathbb Z/n$ and let $\sigma_m(k)=mk$.
+
+      **Squares have paired even cycles.** If $\pi$ is a permutation, a cycle of $\pi$ of odd length $L$ becomes one cycle of length $L$ in $\pi^2$, and a cycle of even length $2\ell$ splits into two cycles of length $\ell$. So in $\pi^2$, cycles of any even length come in pairs.
+
+      **Cycle structure of $\sigma_m$.** The elements with $\gcd(k,n)=n/e$ are $k=(n/e)u$ with $u$ a unit modulo $e$, and $\sigma_m$ acts on them as $u\mapsto mu$ modulo $e$. So they form $\varphi(e)/\operatorname{ord}_e(m)$ cycles of length $\operatorname{ord}_e(m)$, for each divisor $e$ of $n$.
+
+      **$n$ odd, $n>1$, fails.** Let $p^a\,\|\,n$, $n=p^an'$. Choose $m$ with $m$ a primitive root modulo $p^a$ and $m\equiv1\pmod{n'}$. For $e=p^be'$ with $e'\mid n'$, the order of $m$ modulo $e$ is $\varphi(p^b)$. These lengths are distinct for different $b$ and even for $b\ge1$. The cycles of length $\varphi(p^a)$ come from $b=a$, and their number is $\sum_{e'\mid n'}\varphi(e')=n'$, which is odd.
+
+      **$4\mid n$ fails.** Write $n=2^an'$ with $a\ge2$, $n'$ odd, and choose $m\equiv-1\pmod{2^a}$, $m\equiv1\pmod{n'}$. For $e=2^be'$ the order is $2$ when $b\ge2$ and $1$ otherwise. The number of $2$-cycles is
+      $$\sum_{b=2}^{a}\sum_{e'\mid n'}\frac{\varphi(2^be')}{2}=n'\sum_{b=2}^a2^{b-2}=n'(2^{a-1}-1),$$
+      which is odd.
+
+      **$n=2n'$, $n'$ odd, works.** By the Chinese remainder theorem, $k\leftrightarrow(k\bmod2,\ k\bmod n')$. Since $m$ is odd, $\sigma_m$ is $(\varepsilon,x)\mapsto(\varepsilon,mx)$. Define $\pi(0,x)=(1,x)$ and $\pi(1,x)=(0,mx)$. Then $\pi^2(0,x)=(0,mx)$ and $\pi^2(1,x)=\pi(0,mx)=(1,mx)$, so $\pi^2=\sigma_m$. And $n=1$ is trivial.
+    checked: "script: tested every m for n < 200; exactly n = 1 and n ≡ 2 (mod 4) work"
+    status: ready
+
+  - id: B6
+    topic: "Determinant of a matrix counting linear representations"
+    areas: [linear-algebra, combinatorics]
+    difficulty: 5
+    status: coming

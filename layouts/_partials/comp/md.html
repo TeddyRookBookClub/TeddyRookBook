@@ -1,0 +1,17 @@
+{{- /* Competition pages: markdown + TeX -> HTML. Argument: (dict "s" string "p" page "inline" bool).
+   TeX in $…$ and $$…$$ is protected from markdown (tokens), then put back as escaped text; static/comp/comp.js
+   typesets it in the browser with the ladders' renderer (static/math/core/tex.js). \$ is a literal dollar sign. */ -}}
+{{- $s := .s | default "" | string -}}
+{{- $s = replace $s `\$` "zqdolqz" -}}
+{{- $toks := slice -}}
+{{- range findRE `\$\$[\s\S]+?\$\$` $s -}}
+  {{- $t := printf "zqm%dqz" (len $toks) -}}{{- $s = replace $s . $t -}}{{- $toks = $toks | append (dict "t" $t "v" .) -}}
+{{- end -}}
+{{- range findRE `\$[^$]+?\$` $s -}}
+  {{- $t := printf "zqm%dqz" (len $toks) -}}{{- $s = replace $s . $t -}}{{- $toks = $toks | append (dict "t" $t "v" .) -}}
+{{- end -}}
+{{- $h := "" -}}
+{{- if .inline }}{{ $h = $s | markdownify | string }}{{ else }}{{ $h = .p.RenderString (dict "display" "block") $s | string }}{{ end -}}
+{{- range $toks }}{{ $h = replace $h .t (htmlEscape .v) }}{{ end -}}
+{{- $h = replace $h "zqdolqz" `\$` -}}
+{{- return ($h | safeHTML) -}}

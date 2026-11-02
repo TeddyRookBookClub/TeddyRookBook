@@ -1,0 +1,34 @@
+{{ define "main" }}
+{{- /* /math/competitions/: the hub for the Math Ladder's competition pages (content/math/competitions/_index.md). */ -}}
+{{ partial "comp/head.html" . }}
+{{- $C := site.Data.comp | default dict -}}
+{{- $Y := index $C "putnam" | default dict -}}
+{{- $O := (index (index $C "original" | default dict) "math") | default dict -}}
+{{- $ny := 0 }}{{ $nr := 0 }}{{ range $Y }}{{ $ny = add $ny 1 }}{{ range .problems }}{{ if eq .status "ready" }}{{ $nr = add $nr 1 }}{{ end }}{{ end }}{{ end -}}
+{{- $nc := 0 }}{{ range $O }}{{ if eq .status "ready" }}{{ $nc = add $nc 1 }}{{ end }}{{ end -}}
+<article class="cp cp-hub">
+  <nav class="cp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <span>Competitions</span></nav>
+  <header class="cp-head">
+    <p class="cp-eyebrow">Math Ladder · For fun, and hard</p>
+    <h1>{{ .Title }}</h1>
+    <p class="cp-intro">Contest problems are short to state and slow to solve. They reward a fresh idea more than a long calculation. Take your time: a good problem can keep you company for days. Every solution here is written step by step, with hints first if you want a nudge instead of the whole answer.</p>
+  </header>
+  <div class="cp-grid2">
+    <section class="cp-panel" aria-labelledby="cp-h-chal">
+      <h2 id="cp-h-chal"><span aria-hidden="true">🏆</span> Original challenges</h2>
+      <p>Our own problems, written in the style of the Putnam, from warm-ups to very hard. Type in your answer and we check it; for a proof, read our solution and mark it done when you've proved it.</p>
+      <p class="cp-small">{{ if $nc }}{{ $nc }} {{ cond (eq $nc 1) "problem" "problems" }} ready. {{ end }}Your progress saves in this browser.</p>
+      <p><a class="cp-btn pri" href="{{ "math/competitions/challenge/" | relURL }}">Try the challenges</a></p>
+    </section>
+    <section class="cp-panel" aria-labelledby="cp-h-put">
+      <h2 id="cp-h-put"><span aria-hidden="true">📜</span> Putnam solutions guide</h2>
+      <p>The William Lowell Putnam Mathematical Competition is a contest for college students in the United States and Canada, held each year in early December: twelve problems in two sessions of three hours. Read a problem at the official link, try it, then come back for a hint or our full solution.</p>
+      <p class="cp-small">{{ if $nr }}{{ $nr }} solutions ready across {{ $ny }} {{ cond (eq $ny 1) "year" "years" }}. {{ end }}The problems are © the Mathematical Association of America; we link to them and write our own solutions.</p>
+      <p><a class="cp-btn pri" href="{{ "math/competitions/putnam/" | relURL }}">Open the guide</a></p>
+    </section>
+  </div>
+  <aside class="cp-note">
+    <p><b>New to proofs?</b> Contest problems usually ask you to prove something. The Math Ladder's <a href="{{ "math/" | relURL }}">courses</a> build the tools first, from algebra through discrete math and analysis.</p>
+  </aside>
+</article>
+{{ end }}

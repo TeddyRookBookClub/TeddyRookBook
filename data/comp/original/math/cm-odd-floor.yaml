@@ -1,0 +1,38 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-odd-floor
+title: How often is the floor odd?
+tier: 3
+order: 40
+areas:
+- analysis
+- number-theory
+problem: |
+  For a positive integer $n$, let $c(n)$ be the number of $k\in\{1,\dots,n\}$ for which $\left\lfloor\dfrac{2n}{k}\right\rfloor$ is
+  **odd**. Find $\displaystyle\lim_{n\to\infty}\frac{c(n)}{n}$.
+check:
+  type: number
+  answer: 2ln(2)-1
+  label: Your answer (you can type ln)
+answer: '$2\ln2-1\approx0.3863$'
+hints:
+- '$\lfloor 2y\rfloor$ is odd exactly when the fractional part of $y$ is at least $\tfrac12$.'
+- 'With $x=k/n$, $c(n)/n$ is a Riemann sum for a function of $x$ on $(0,1]$.'
+- 'That function is $1$ when $1/x$ falls in $[m+\tfrac12,m+1)$ for some integer $m$. Add up the lengths of those intervals of $x$.'
+solution: |
+  **Rewrite.** Write $y=n/k$. Then $\lfloor2y\rfloor$ is odd exactly when $\{y\}\ge\tfrac12$, where $\{y\}$ is the
+  fractional part. So $c(n)/n=\frac1n\sum_{k=1}^n g(k/n)$ with
+  $$g(x)=\begin{cases}1&\text{if }\{1/x\}\ge\tfrac12,\\0&\text{otherwise.}\end{cases}$$
+
+  **Riemann sum.** On $[\delta,1]$, $g$ is bounded with finitely many jumps, so it is Riemann integrable there and the part of
+  the sum with $k\ge\delta n$ tends to $\int_\delta^1g$. The rest of the sum has at most $\delta n+1$ terms, each at most
+  $\tfrac1n$, and $\int_0^\delta g\le\delta$. Letting $\delta\to0$, the limit is $\int_0^1g(x)\,dx$.
+
+  **The integral.** $g(x)=1$ when $1/x\in[m+\tfrac12,\,m+1)$ for an integer $m\ge1$, that is, when
+  $x\in\big(\tfrac1{m+1},\tfrac2{2m+1}\big]$. These intervals have total length
+  $$\sum_{m\ge1}\Big(\frac2{2m+1}-\frac2{2m+2}\Big)=2\Big(\frac13-\frac14+\frac15-\frac16+\cdots\Big)=2\Big(\ln2-1+\frac12\Big)=2\ln2-1,$$
+  using $1-\tfrac12+\tfrac13-\cdots=\ln2$.
+
+  So $c(n)/n\to2\ln2-1\approx0.3863$. The plot shows $c(n)/n$ settling toward that line.
+viz: cm-odd-floor
+checked: 'script: c(n)/n at n = 10^6 is 0.38623, limit 0.38629'
+status: ready

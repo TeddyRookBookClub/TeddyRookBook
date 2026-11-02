@@ -1,0 +1,40 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-steiner-ellipse
+title: The smallest ellipse through three corners
+tier: 3
+order: 70
+areas:
+- geometry
+problem: |
+  Find the smallest possible area of an ellipse that passes through all three vertices of a right triangle with legs $3$
+  and $4$.
+check:
+  type: number
+  answer: 8pi/sqrt(3)
+  label: Your answer (you can type pi and sqrt)
+answer: '$\dfrac{8\pi}{\sqrt3}=\dfrac{8\sqrt3\,\pi}{3}\approx14.51$'
+hints:
+- Affine maps send ellipses to ellipses and multiply every area by the same factor.
+- So the ratio (ellipse area)/(triangle area) does not change under an affine map. Map the ellipse to a circle.
+- 'Among triangles inscribed in a circle, which has the largest area?'
+solution: |
+  **Affine invariance.** An invertible affine map $\phi$ sends ellipses to ellipses, and multiplies all areas by the same
+  number $|\det\phi|$. So the ratio
+  $$\frac{\text{area of an ellipse }E}{\text{area of a triangle }T\text{ inscribed in }E}$$
+  does not change when we apply $\phi$ to both.
+
+  **Lower bound.** Given any ellipse $E$ through the vertices of our triangle $T$, choose $\phi$ that maps $E$ onto a circle
+  of radius $\rho$. Then $\phi(T)$ is a triangle inscribed in that circle, and the largest such triangle is equilateral, with
+  area $\tfrac{3\sqrt3}4\rho^2$. So
+  $$\frac{\operatorname{area}E}{\operatorname{area}T}=\frac{\pi\rho^2}{\operatorname{area}\phi(T)}\ \ge\ \frac{\pi\rho^2}{\tfrac{3\sqrt3}4\rho^2}=\frac{4\pi}{3\sqrt3}.$$
+
+  **Equality.** Map an equilateral triangle onto $T$ by an affine map; its circumcircle goes to an ellipse through the
+  vertices of $T$ with exactly this ratio.
+
+  The area of $T$ is $6$, so the smallest area is $\dfrac{4\pi}{3\sqrt3}\cdot6=\dfrac{8\pi}{\sqrt3}\approx14.51$.
+
+  **Known result:** the minimizer is the **Steiner circumellipse**, centered at the centroid. The animation slides an
+  equilateral triangle and its circle smoothly into the $3$-$4$-$5$ triangle and its ellipse.
+viz: cm-steiner-ellipse
+checked: 'script: grid search over ellipse centers, minimum 14.517 against 14.510 (grid step limits accuracy)'
+status: ready

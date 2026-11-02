@@ -1,0 +1,242 @@
+year: 2025
+edition: 86th
+date: "December 6, 2025"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2025.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Iterating a fraction map: eventually coprime numerators"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'Follow the difference $D_k=m_k-n_k$. How does it change in one step?'
+      - 'Look at the odd part of $D_k$.'
+    solution: |
+      **Key idea:** the odd part of $m_k-n_k$ never grows and shrinks by a factor of at least $3$ every time the gcd is bigger than $1$. A positive integer can only shrink finitely often.
+
+      Let $d_k=\gcd(2m_k+1,\,2n_k+1)$, which is odd. By definition $m_{k+1}=\frac{2m_k+1}{d_k}$ and $n_{k+1}=\frac{2n_k+1}{d_k}$. Let $D_k=m_k-n_k$. It is never $0$: if $m_k\ne n_k$ then $\frac{2m_k+1}{2n_k+1}\ne1$, so $m_{k+1}\ne n_{k+1}$. And
+      $$D_{k+1}=\frac{2D_k}{d_k}.$$
+      Since $d_k$ is odd and divides $2D_k$ (it divides $(2m_k+1)-(2n_k+1)$), it divides $D_k$. Let $\omega_k$ be the odd part of $|D_k|$. The factor $2$ does not change the odd part, so
+      $$\omega_{k+1}=\frac{\omega_k}{d_k}.$$
+      So $\omega_k$ is a non-increasing sequence of positive integers, and it drops by a factor of at least $3$ whenever $d_k>1$. That can happen only finitely many times. Hence $d_k=1$ for all but finitely many $k$.
+    checked: "script: iterated 200 steps from several starting pairs; the gcd is 1 except at a few early steps"
+    status: ready
+
+  - id: A2
+    topic: "Best parabola bounds for the sine on one arch"
+    areas: [calculus, analysis]
+    difficulty: 2
+    answer: '$a=\dfrac1\pi$, $b=\dfrac4{\pi^2}$'
+    hints:
+      - 'Look at $\frac{\sin x}{x(\pi-x)}$ near $0$ and at $\frac\pi2$.'
+      - 'Prove each inequality on $[0,\frac\pi2]$ by splitting where the second derivative changes sign.'
+    solution: |
+      **Key idea:** the ratio $\frac{\sin x}{x(\pi-x)}$ tends to $\frac1\pi$ at the ends and equals $\frac4{\pi^2}$ in the middle. Both inequalities follow from convexity on two subintervals.
+
+      Both sides are symmetric under $x\mapsto\pi-x$, so it is enough to work on $[0,\frac\pi2]$.
+
+      **Upper bound with $b=\frac4{\pi^2}$.** Let $u(x)=\frac4{\pi^2}x(\pi-x)-\sin x$. Then $u(0)=u(\frac\pi2)=0$, $u'(\frac\pi2)=0$, and $u''=\sin x-\frac8{\pi^2}$, which is negative on $[0,x_0)$ and positive on $(x_0,\frac\pi2]$, where $\sin x_0=\frac8{\pi^2}$. On $[x_0,\frac\pi2]$, $u$ is convex with $u'(\frac\pi2)=0$, so $u'\le0$ there and $u\ge u(\frac\pi2)=0$. On $[0,x_0]$, $u$ is concave with $u(0)=0$ and $u(x_0)\ge0$, so $u\ge0$ (a concave function lies above its chord).
+
+      **Lower bound with $a=\frac1\pi$.** Let $w(x)=\sin x-\frac1\pi x(\pi-x)$. Then $w(0)=0$, $w'(0)=1-1=0$, $w(\frac\pi2)=1-\frac\pi4>0$, and $w''=\frac2\pi-\sin x$, positive on $[0,x_1)$ and negative on $(x_1,\frac\pi2]$, where $\sin x_1=\frac2\pi$. On $[0,x_1]$, $w$ is convex with $w(0)=w'(0)=0$, so $w\ge0$. On $[x_1,\frac\pi2]$, $w$ is concave with nonnegative values at both ends, so $w\ge0$.
+
+      **Optimality.** At $x=\frac\pi2$, $\sin x=\frac4{\pi^2}x(\pi-x)$, so no smaller $b$ works. As $x\to0^+$, $\frac{\sin x}{x(\pi-x)}\to\frac1\pi$, so no larger $a$ works.
+    checked: "numeric: the ratio sin x/(x(π − x)) on a fine grid has minimum → 1/π at the ends and maximum 4/π² at π/2"
+    status: ready
+
+  - id: A3
+    topic: "Game: walking on ternary strings without revisiting"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: "Bob wins for every $n$"
+    hints:
+      - 'Think of the strings as points of a $3\times3\times\dots\times3$ grid. Can you pair up every point except the all-zero string with a neighbor?'
+      - 'If such a pairing exists, Bob always answers with the partner of Alice''s point.'
+    solution: |
+      **Key idea:** the grid graph on $\{0,1,2\}^n$ has a matching that covers every vertex except the starting string. Bob always moves to the partner of the point Alice just reached.
+
+      **The matching.** For $n=1$, pair $1$ with $2$; the string $0$ is left out. For $n>1$, split strings by their first digit. Among strings starting with $0$, use the matching for $n-1$ on the rest of the digits; it leaves out only $00\cdots0$. Pair every string $1v$ with $2v$. These pairs differ in one digit by $1$, so they are legal moves, and every string except $00\cdots0$ is covered exactly once.
+
+      **Bob's strategy.** Whenever Alice moves to a string $u$, Bob moves to its partner $M(u)$. We check this is always legal:
+      - $u$ is not the start (the start has been seen), so $u$ has a partner, and $M(u)$ differs from $u$ in one digit by $1$.
+      - $M(u)$ is new. After each of Bob's moves, the strings seen so far are the start plus complete pairs. If $M(u)$ had been seen, its partner $u$ would have been seen too, but Alice just reached $u$ for the first time.
+
+      So Bob always has a move. The game is finite (each string appears at most once), so someone eventually cannot move, and it is never Bob. Alice loses.
+    viz: putnam-2025-a3
+    checked: "script: full game-tree search confirms Bob wins for n = 1 and 2"
+    status: ready
+
+  - id: A4
+    topic: "Smallest matrices whose commuting pattern is a cycle"
+    areas: [linear-algebra]
+    difficulty: 3
+    answer: "$k=3$"
+    hints:
+      - 'For $2\times2$ matrices, a non-scalar matrix commutes only with $\alpha I+\beta A$.'
+      - 'For $k=3$, try rank-one matrices $u_iv_i^{T}$ with $v_i$ perpendicular to the neighbors'' $u$''s.'
+    solution: |
+      **Key idea:** for $2\times2$ matrices, "commutes with" is transitive among non-scalar matrices, but a cycle needs non-transitive commuting. In size $3$, rank-one matrices built from points on a circle give exactly the cycle pattern.
+
+      **$k\le2$ fails.** For $k=1$ everything commutes. Let $k=2$. No $A_i$ is scalar, since each fails to commute with some $A_j$ (e.g. $A_1$ with $A_3$). For a non-scalar $2\times2$ matrix $A$, the matrices commuting with $A$ are exactly $\alpha I+\beta A$. So if $A$ and $B$ are non-scalar and commute, then $\operatorname{span}(I,B)=\operatorname{span}(I,A)$. Commuting is then transitive on non-scalar matrices, so $A_1A_2=A_2A_1$ and $A_2A_3=A_3A_2$ would give $A_1A_3=A_3A_1$. But $|1-3|=2$ is not allowed.
+
+      **$k=3$ works.** Indices are taken modulo $2025$. Pick distinct angles $\theta_i$ and let $u_i=(\cos\theta_i,\sin\theta_i,1)$. Any three distinct $u_i$ are linearly independent, because three distinct points of a circle in the plane $z=1$ are never collinear. Let
+      $$v_i=u_{i-1}\times u_{i+1},\qquad A_i=u_iv_i^{T}.$$
+      Then $A_iA_j=(v_i\cdot u_j)\,u_iv_j^{T}$ and $A_jA_i=(v_j\cdot u_i)\,u_jv_i^{T}$.
+      - If $j=i\pm1$: $v_i\cdot u_j=0$ and $v_j\cdot u_i=0$ (each $v$ is perpendicular to its neighbors' $u$), so both products are $0$.
+      - Otherwise ($j\ne i$, not neighbors): $v_i\cdot u_j=\det(u_{i-1},u_{i+1},u_j)\ne0$. Since $u_i$ and $u_j$ are not parallel, the rank-one matrices $u_iv_j^{T}$ and $u_jv_i^{T}$ have different column spaces, so they are linearly independent and $A_iA_j\ne A_jA_i$.
+
+      So $A_i$ and $A_j$ commute exactly when $|i-j|\in\{0,1,2024\}$, and the minimum is $k=3$.
+    checked: "numeric: built the 2025 matrices with random angles; spot-checked thousands of pairs, plus all pairs for cycles of length 7 and 25"
+    status: ready
+
+  - id: A5
+    topic: "Which up-down patterns allow the most permutations?"
+    areas: [combinatorics]
+    difficulty: 5
+    status: coming
+
+  - id: A6
+    topic: "2-adic behavior of a quadratic recursion"
+    areas: [number-theory]
+    difficulty: 4
+    hints:
+      - 'From $f(x)-f(y)=(x-y)\big(2(x+y)+1\big)$, the $2$-adic valuation of $b_{n+N}-b_n$ does not depend on $n$.'
+      - 'Write $b_{2N}-b_N=b_N\prod_{n<N}\big(1+4b_n+2D_n\big)$ with $D_n=b_{n+N}-b_n$.'
+    solution: |
+      **Key idea:** differences of the sequence along a fixed shift multiply by odd factors, so their $2$-adic size is constant. This turns $b_{2N}-2b_N$ into $b_N$ times (a product minus $1$), and the product is controlled by a squaring argument.
+
+      Let $f(x)=2x^2+x+1$, so $b_{n+1}=f(b_n)$ and $f(x)-f(y)=(x-y)\big(2(x+y)+1\big)$. Write $v$ for the $2$-adic valuation. Fix $N=2^k$ and let $D_n=b_{n+N}-b_n$. Then
+      $$D_{n+1}=D_n\big(2(b_{n+N}+b_n)+1\big)=D_n\big(1+4b_n+2D_n\big),$$
+      and the factor is odd. So $v(D_n)=v(D_0)=v(b_N)$ for all $n$, and
+      $$b_{2N}-b_N=D_N=b_N\,Q,\qquad Q=\prod_{n=0}^{N-1}\big(1+4b_n+2D_n\big).$$
+
+      **Step 1: $v(b_{2^k})=k+1$ for $k\ge1$.** We have $b_2=4$. If $v(b_N)=j\ge1$, every $2D_n$ is divisible by $4$, so $Q\equiv1\pmod4$ and $b_{2N}=b_N(1+Q)$ with $1+Q\equiv2\pmod4$. So $v(b_{2N})=j+1$.
+
+      **Step 2: the product $P_k=\prod_{n<2^k}(1+4b_n)$ satisfies $v(P_k-1)=k+1$.** For $k=1$, $P_1=(1+0)(1+4)=5$. For the step, $1+4b_{n+N}=1+4b_n+4D_n$ with $v(4D_n)=k+3$, so
+      $$P_{k+1}=P_k\prod_{n<N}(1+4b_{n+N})\equiv P_k^2\pmod{2^{k+3}}.$$
+      If $P_k=1+2^{k+1}t$ with $t$ odd, then $P_k^2=1+2^{k+2}t+2^{2k+2}t^2\equiv1+2^{k+2}\pmod{2^{k+3}}$ (as $2k+2\ge k+3$). So $v(P_{k+1}-1)=k+2$.
+
+      **Conclusion.** Since $v(2D_n)=k+2$, each factor of $Q$ is congruent to $1+4b_n$ modulo $2^{k+2}$, so $Q\equiv P_k\equiv1+2^{k+1}\pmod{2^{k+2}}$ and $v(Q-1)=k+1$. Then
+      $$b_{2N}-2b_N=b_N(Q-1),\qquad v\big(b_{2^{k+1}}-2b_{2^k}\big)=(k+1)+(k+1)=2k+2 .$$
+      So $2^{2k+2}$ divides it and $2^{2k+3}$ does not.
+    checked: "script: computed b_n modulo 2^200 up to n = 128; the valuation of b_(2^(k+1)) − 2b_(2^k) is exactly 2k + 2 for k = 1 to 5"
+    status: ready
+
+  - id: B1
+    topic: "Two-colored plane closed under circumcenters"
+    areas: [geometry, combinatorics]
+    difficulty: 2
+    hints:
+      - 'If a point $P$ is red, how many green points can a circle centered at $P$ contain?'
+      - 'Take a green $Q$ and two red points. Find a circle around $Q$ through three red points.'
+    solution: |
+      **Key idea:** a circle centered at a point of one color has at most two points of the other color. Two big circles around red points are then almost all red, and a circle around a green point can be made to cross them in four red points.
+
+      **Observation.** Three distinct points on a circle are never collinear, and their circumcenter is the circle's center. So if $P$ is red, every circle centered at $P$ contains at most two green points (three would force $P$ to be green). The same holds with the colors swapped.
+
+      Suppose both colors occur. The plane is infinite, so one color, say red, has at least two points $P\ne P'$; let $Q$ be green.
+
+      Choose $t$ larger than $|PQ|+|P'Q|$. The circles $C=C(P,t)$ and $C'=C(P',t)$ each contain at most two green points, and $C\cap C'$ has at most two points. For $s$ close to $t$ (precisely, $|s-t|<\min(|PQ|,|P'Q|)$), the circle $C(Q,s)$ crosses $C$ in two points and $C'$ in two points. Choose such an $s$ that also avoids the finitely many distances from $Q$ to the green points of $C$ and $C'$ and to the points of $C\cap C'$.
+
+      Then $C(Q,s)$ contains four distinct points, all red. Any three of them have circumcenter $Q$, so $Q$ is red. Contradiction. Hence the whole plane has one color.
+    checked: "proof only (no final value to check)"
+    status: ready
+
+  - id: B2
+    topic: "Centroids of a region and of its solid of revolution"
+    areas: [calculus, analysis]
+    difficulty: 1
+    hints:
+      - '$x_1=\frac{\int xf}{\int f}$ and $x_2=\frac{\int xf^2}{\int f^2}$.'
+      - 'Integrate $(x-y)\big(f(x)-f(y)\big)f(x)f(y)$ over the unit square.'
+    solution: |
+      **Key idea:** $x_2-x_1$ has the sign of a symmetric double integral that is positive because $f$ is increasing (a Chebyshev-type argument).
+
+      By the definitions, the region's centroid has $x_1=\frac{\int_0^1xf}{\int_0^1f}$, and the solid (cross-section area $\pi f(x)^2$) has $x_2=\frac{\int_0^1xf^2}{\int_0^1f^2}$. So $x_1<x_2$ means
+      $$\int xf^2\int f>\int xf\int f^2 .$$
+      Consider
+      $$J=\int_0^1\!\!\int_0^1(x-y)\big(f(x)-f(y)\big)f(x)f(y)\,dx\,dy .$$
+      Expanding into four terms and using the symmetry $x\leftrightarrow y$,
+      $$J=2\Big(\int xf^2\int f-\int xf\int f^2\Big).$$
+      Since $f$ is strictly increasing, $(x-y)(f(x)-f(y))>0$ for $x\ne y$. Also $f(x)>f(0)\ge0$ for $x>0$. So the integrand is positive on the square except on a set of area $0$, and it is continuous, hence $J>0$. This gives $x_1<x_2$.
+    viz: putnam-2025-b2
+    checked: "numeric: three sample functions (x² + 0.1, e^(3x), x^0.3) all give x₁ < x₂"
+    status: ready
+
+  - id: B3
+    topic: "Sets closed under divisors of a difference of powers"
+    areas: [number-theory]
+    difficulty: 3
+    answer: "Yes"
+    hints:
+      - '$2025^n-15^n=15^n(135^n-1)$, and $1\in S$.'
+      - 'Prove by induction on $c$ (coprime to $15$): $S$ contains arbitrarily large multiples of $\operatorname{ord}_c(135)$.'
+    solution: |
+      **Key idea:** a number $3^\alpha5^\beta c$ with $\gcd(c,15)=1$ divides $15^n(135^n-1)$ once $n$ is large and a multiple of the order of $135$ modulo $c$. That order is smaller than $c$, so strong induction on $c$ supplies such an $n$ in $S$.
+
+      Write $g(n)=2025^n-15^n=15^n(135^n-1)$. Every divisor of $g(n)$, $n\in S$, lies in $S$. Since $S\ne\varnothing$, $1\in S$; then $g(1)=2010$ gives $15\in S$. For $c$ coprime to $15$ (hence to $135$), let $L_c=\operatorname{ord}_c(135)$, with $L_1=1$.
+
+      **Claim.** For every $c\ge1$ coprime to $15$ and every bound $B$, some $n\in S$ has $n\ge B$ and $L_c\mid n$.
+
+      *Case $c=1$.* If $n\in S$ then $15^n\mid g(n)$, so $15^n\in S$ and $15^n>n$. Starting from $15$, $S$ has arbitrarily large elements.
+
+      *Case $c>1$.* Then $L_c\le\varphi(c)<c$. Write $L_c=3^\alpha5^\beta c'$ with $\gcd(c',15)=1$, so $c'<c$. By induction there is $x\in S$ with $x\ge\max(\alpha,\beta,B)$ and $L_{c'}\mid x$. Then $c'\mid135^x-1$, and $c'$ is coprime to $15^x$, so $y=15^xc'$ divides $g(x)$ and lies in $S$. Since $x\ge\alpha,\beta$, the number $y$ is a multiple of $3^\alpha5^\beta c'=L_c$, and $y\ge15^x>B$.
+
+      **Every $m$ is in $S$.** Write $m=3^a5^bc$ with $\gcd(c,15)=1$. Take $n\in S$ with $L_c\mid n$ and $n\ge\max(a,b)$. Then $3^a5^b\mid15^n$ and $c\mid135^n-1$, and these are coprime, so $m\mid g(n)$ and $m\in S$.
+    checked: "proof only (no final value to check)"
+    status: ready
+
+  - id: B4
+    topic: "Sum versus support of a slowly rising staircase matrix"
+    areas: [combinatorics, algebra]
+    difficulty: 4
+    hints:
+      - 'Let $U_t$ be the set of cells with entry at least $t$, so $S=\sum_t|U_t|$ and $N=|U_1|$.'
+      - 'Show $|U_{t+1}|\le\frac{n-t}{n-t+2}\,|U_t|$ by a charging argument.'
+    solution: |
+      **Key idea:** the level sets $U_t=\{a_{ij}\ge t\}$ are staircase shapes inside shrinking triangles, and each one is at most a fixed fraction of the one before. Multiplying the fractions gives $|U_t|$ and summing gives the bound.
+
+      **Shapes.** Entries do not decrease going down or right, so each $U_t$ is closed under moving down or right. Going left along row $i$, an entry drops by at most $1$ per step and reaches $0$ by column $n-i$ (for $i=n$, use $a_{n1}\le a_{n-1,1}+1=1$). So $a_{ij}\le i+j-n$, and $U_t\subseteq\{i+j\ge n+t\}$. Flip coordinates, $p=n+1-i$, $q=n+1-j$: then $U_t$ becomes a Young diagram $\lambda$ (closed under decreasing $p$ or $q$) inside the staircase $\{p+q\le m+1\}$ with $m=n+1-t$.
+
+      **One level to the next.** If $a_{ij}\ge t+1$, then $a_{i-1,j}\ge t$ and $a_{i,j-1}\ge t$ (and $i,j\ge2$, since first-row and first-column entries are at most $1$). In flipped coordinates, every cell of $U_{t+1}$ is a cell $(p,q)$ of $\lambda$ with $(p+1,q)$ and $(p,q+1)$ also in $\lambda$. Call the set of such cells $\mu$.
+
+      **Lemma.** For a Young diagram $\lambda$ inside $\{p+q\le m+1\}$, $(m+1)|\mu|\le(m-1)|\lambda|$.
+
+      *Proof.* Let $\rho=\lambda\setminus\mu$: the cells that end their row or end their column. Each cell of $\mu$ sends one token to the last cell of its row and one to the last cell of its column; both are in $\rho$. A cell of $\rho$ at $(p,q)$ that ends its row receives at most $q-1$ tokens from its row; if it also ends its column it receives at most $p-1$ more. In every case it receives at most $p+q-2\le m-1$ tokens. So $2|\mu|\le(m-1)|\rho|=(m-1)(|\lambda|-|\mu|)$, which rearranges to the lemma.
+
+      **Adding up.** With $m=n+1-t$ the lemma gives $|U_{t+1}|\le\frac{n-t}{n-t+2}|U_t|$. Multiplying for $t=1,\dots,t'-1$ (the product telescopes),
+      $$|U_{t'}|\le N\cdot\frac{(n-t'+2)(n-t'+1)}{(n+1)n}.$$
+      Since all entries are at most $n$,
+      $$S=\sum_{t=1}^{n}|U_t|\le\frac{N}{n(n+1)}\sum_{u=1}^{n}u(u+1)=\frac{N}{n(n+1)}\cdot\frac{n(n+1)(n+2)}{3}=\frac{(n+2)N}{3}.$$
+      (Equality holds when $a_{ij}=\max(0,i+j-n)$.)
+    checked: "script: every valid matrix for n = 2 to 5 satisfies the bound (maximum of S − (n + 2)N/3 is 0); the lemma checked for all diagrams with m ≤ 10"
+    status: ready
+
+  - id: B5
+    topic: "Descents in the sequence of modular inverses"
+    areas: [number-theory, combinatorics]
+    difficulty: 3
+    hints:
+      - 'If $x=I(k)$, then $I(k+1)\equiv\frac{x}{1+x}=1-\frac1{1+x}$.'
+      - 'Show a descent at $k$ means $m+I(m)\ge p+3$ for $m=x+1$, then pair $m$ with $p-m$.'
+    solution: |
+      **Key idea:** a descent at $k$ is the same as $m+I(m)\ge p+3$ for one specific $m$. The pairing $m\leftrightarrow p-m$ matches these with $m+I(m)\le p-3$, and only a handful of $m$ fall in between. So about half the positions are descents.
+
+      **Rewriting a descent.** Let $1\le k\le p-2$ and $x=I(k)$; then $x\ne p-1$ because $I(p-1)=p-1$. Modulo $p$,
+      $$I(k+1)\equiv\frac{1}{1/x+1}=\frac{x}{1+x}=1-\frac{1}{x+1}\equiv p+1-I(x+1).$$
+      Since $2\le x+1\le p-1$, we have $2\le I(x+1)\le p-1$, so $p+1-I(x+1)$ lies in $[2,p-1]$ and is exactly $I(k+1)$. So, with $m=x+1$,
+      $$I(k+1)<I(k)\iff p+1-I(m)<m-1\iff m+I(m)\ge p+3 .$$
+      As $k$ runs over $1,\dots,p-2$, $x$ runs over $1,\dots,p-2$ and $m$ over $2,\dots,p-1$. Since $1+I(1)=2$, the number of descents is
+      $$\Delta=\#\{m\in[1,p-1]:\ m+I(m)\ge p+3\}.$$
+
+      **Pairing.** Because $I(p-m)=p-I(m)$, the map $m\mapsto p-m$ turns $m+I(m)=s$ into $2p-s$. So it matches the $m$ with $m+I(m)\ge p+3$ with those with $m+I(m)\le p-3$. Every remaining $m$ has $m+I(m)=p+j$ with $|j|\le2$, i.e. $m^2-jm+1\equiv0\pmod p$, and each of these five quadratics has at most two roots. So at most $10$ values of $m$ remain, and
+      $$2\Delta\ge(p-1)-10,\qquad \Delta\ge\frac{p-11}{2}.$$
+      For $p>18$ this exceeds $\frac p4-1$. For $p=5,7,11,13,17$ a direct count gives $\Delta=1,1,5,3,7$, each above $\frac p4-1$.
+    checked: "script: counted descents for all primes below 60 and for 101 and 1009; always 2Δ + E = p − 1 with E ≤ 10, and Δ > p/4 − 1"
+    status: ready
+
+  - id: B6
+    topic: "Fastest-growing exponent for a self-referential difference inequality"
+    areas: [analysis, number-theory]
+    difficulty: 5
+    status: coming

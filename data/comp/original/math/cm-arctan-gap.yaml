@@ -1,0 +1,31 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-arctan-gap
+title: The gap between two arctangents
+tier: 2
+order: 20
+areas:
+- analysis
+- calculus
+problem: |
+  Evaluate
+  $$\int_0^{\infty}\frac{\arctan(3x)-\arctan(x)}{x}\,dx.$$
+check:
+  type: number
+  answer: 'pi/2*ln(3)'
+  label: Your answer (you can type pi and ln)
+answer: '$\dfrac{\pi}{2}\ln3\approx1.7257$'
+hints:
+- Neither piece converges alone. Keep them together.
+- 'Write the difference as an integral: $\arctan(3x)-\arctan(x)=\displaystyle\int_1^3\frac{x}{1+t^2x^2}\,dt$.'
+- 'Swap the order of integration. The inner integral in $x$ is a standard one.'
+solution: |
+  For fixed $x>0$, differentiate $\arctan(tx)$ in $t$: $\frac{\partial}{\partial t}\arctan(tx)=\frac{x}{1+t^2x^2}$. So
+  $$\frac{\arctan(3x)-\arctan(x)}{x}=\int_1^3\frac{dt}{1+t^2x^2}.$$
+  Everything is positive, so we may swap the integrals (Tonelli's theorem):
+  $$\int_0^\infty\!\!\int_1^3\frac{dt\,dx}{1+t^2x^2}=\int_1^3\left[\frac{\arctan(tx)}{t}\right]_{x=0}^{\infty}dt=\int_1^3\frac{\pi}{2t}\,dt=\frac\pi2\ln3.$$
+
+  **Known result.** This is a case of **Frullani's integral**: if $f$ is continuous with limits $f(0)$ and $f(\infty)$,
+  then $\int_0^\infty\frac{f(ax)-f(bx)}{x}dx=\big(f(\infty)-f(0)\big)\ln\frac ab$. Here $f=\arctan$, $a=3$, $b=1$, and
+  $f(\infty)-f(0)=\frac\pi2$.
+checked: 'script: numerical integration with x = e^t, 40,000 steps, agrees to 8 digits'
+status: ready

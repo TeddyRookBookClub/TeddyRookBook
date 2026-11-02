@@ -1,0 +1,40 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-tetra-colors
+title: Two-colored edges of a tetrahedron
+tier: 3
+order: 30
+areas:
+- combinatorics
+- algebra
+problem: |
+  Each of the $6$ edges of a regular tetrahedron is painted red or blue. Two paintings count as the same if a rotation of
+  the tetrahedron carries one to the other. How many different paintings are there?
+check:
+  type: number
+  answer: '12'
+answer: '$12$'
+hints:
+- 'Use Burnside''s lemma: the number of patterns is the average number of paintings fixed by a rotation.'
+- 'The rotation group has $12$ elements. Sort them into the identity, rotations about an axis through a vertex, and half-turns about an axis through two edge midpoints.'
+- A rotation fixes a painting exactly when every cycle of edges it creates is one color.
+solution: |
+  **Burnside's lemma.** The number of different paintings equals the average, over all rotations $g$, of the number of
+  paintings that $g$ leaves unchanged. A painting is unchanged by $g$ exactly when every cycle of edges under $g$ has one
+  color, so $g$ fixes $2^{c(g)}$ paintings, where $c(g)$ is its number of edge cycles.
+
+  **The $12$ rotations.**
+
+  * The identity: $6$ cycles, $2^6=64$.
+  * Turns by $\pm120^\circ$ about an axis through a vertex and the center of the opposite face: $8$ of them. They cycle the three
+    edges at the vertex and the three edges of the opposite face: $2$ cycles, $2^2=4$ each.
+  * Half-turns about an axis through the midpoints of two opposite edges: $3$ of them. They fix those two edges and swap
+    the other four in two pairs: $4$ cycles, $2^4=16$ each.
+
+  $$\frac{64+8\cdot4+3\cdot16}{12}=\frac{144}{12}=12.$$
+
+  **A surprise.** A painting is a graph on the $4$ vertices (the red edges), and there are only $11$ graphs on $4$ vertices
+  up to relabeling. Relabeling allows reflections, but rotations alone do not. One graph splits in two: the **path with
+  three edges**. Its only symmetries, doing nothing and reversing it, are both rotations of the
+  tetrahedron. So no reflection maps that painting to itself, and its mirror image is a different painting.
+checked: 'script: all 64 paintings sorted into orbits under the 12 even permutations'
+status: ready

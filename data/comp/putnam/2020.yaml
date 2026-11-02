@@ -1,0 +1,285 @@
+year: 2020
+edition: 81st
+date: "February 20, 2021"
+note: "The 2020 competition was postponed because of the pandemic. It was held on February 20, 2021, in an unofficial format."
+links:
+  problems: https://kskedlaya.org/putnam-archive/2020.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Number theory: repunits followed by zeros, divisible by 2020"
+    areas: [number-theory]
+    difficulty: 1
+    answer: "$508536$"
+    hints:
+      - "Such a number is $R_a\\cdot10^b$, where $R_a=11\\cdots1$ has $a$ ones."
+      - "Handle $20$ and $101$ separately. What is the order of $10$ modulo $101$?"
+    solution: |
+      **Key idea:** split $2020=20\cdot101$. The zeros take care of $20$, the ones take care of $101$, and $10$ has order $4$ mod $101$.
+
+      Such an $N$ is $R_a\cdot10^b$ with $a\ge1$ ones and $b\ge0$ zeros, where $R_a=\frac{10^a-1}9$ and $a+b\le2020$.
+
+      **The factor $20$.** $R_a$ is odd and ends in $1$, so it is prime to $2$ and $5$. So $20\mid N$ exactly when $20\mid10^b$, i.e. $b\ge2$.
+
+      **The factor $101$.** $101$ is prime and does not divide $9$, so $101\mid R_a$ exactly when $10^a\equiv1\pmod{101}$. Since $10^2=100\equiv-1$, the order of $10$ is $4$. So the condition is $4\mid a$.
+
+      **Counting.** For $a=4t$ with $1\le t\le504$, $b$ ranges over $2,\dots,2020-4t$, which is $2019-4t$ choices. (For $t=505$ there is no room.) The total is
+      $$\sum_{t=1}^{504}(2019-4t)=504\cdot2019-4\cdot\frac{504\cdot505}{2}=1017576-509040=508536 .$$
+    checked: "script: the divisibility rule was checked for a < 40, b < 10, and the count recomputed directly"
+    status: ready
+
+  - id: A2
+    topic: "Combinatorial identity: a coin-flipping race"
+    areas: [combinatorics, probability]
+    difficulty: 2
+    answer: "$4^k$"
+    hints:
+      - "Divide by $2^{2k+1}$. Each term then looks like the chance of a certain finish in a race of coin flips."
+      - "Flip a fair coin until one side has come up $k+1$ times."
+    solution: |
+      **Key idea:** after scaling, the sum is the probability that heads wins a race to $k+1$, which is $\frac12$ by symmetry.
+
+      Flip a fair coin until heads or tails has appeared $k+1$ times. Heads wins with exactly $j$ tails ($0\le j\le k$) when the last flip is the $(k+1)$-th head and the first $k+j$ flips contain $k$ heads and $j$ tails. That has probability
+      $$\binom{k+j}{j}\frac{1}{2^{k+j+1}}.$$
+      By symmetry heads wins with probability $\frac12$, so
+      $$\sum_{j=0}^{k}\binom{k+j}{j}\frac1{2^{k+j+1}}=\frac12 .$$
+      Multiplying by $2^{2k+1}$,
+      $$\sum_{j=0}^k2^{k-j}\binom{k+j}{j}=4^k .$$
+    checked: "script: exact check of the identity for k ≤ 29"
+    status: ready
+
+  - id: A3
+    topic: "Series: iterating sine slowly"
+    areas: [analysis]
+    difficulty: 2
+    answer: "It diverges"
+    hints:
+      - "Look at how $1/a_n^2$ changes from one step to the next."
+      - "Show $\\frac1{\\sin^2x}-\\frac1{x^2}$ is bounded for $0<x\\le1$."
+    solution: |
+      **Key idea:** $1/a_n^2$ grows by a bounded amount each step, so $a_n^2$ is at least of order $1/n$, and the harmonic series diverges.
+
+      We have $a_1=1$, and $0<a_n\le1$ for $n\ge1$, since $\sin$ maps $(0,1]$ into $(0,1]$.
+
+      **A bounded step.** For $0<x\le1$, $x-\frac{x^3}{6}\le\sin x\le x$. So
+      $$\frac1{\sin^2x}-\frac1{x^2}=\frac{(x-\sin x)(x+\sin x)}{x^2\sin^2x}\le\frac{\frac{x^3}6\cdot2x}{x^2\cdot\frac{25}{36}x^2}=\frac{12}{25}<1,$$
+      using $\sin x\ge x-\frac{x^3}6\ge\frac56x$ when $x\le1$.
+
+      **Growth.** So $\frac1{a_{n+1}^2}<\frac1{a_n^2}+1$, and by induction $\frac1{a_n^2}<1+(n-1)=n$ for $n\ge2$ (with equality at $n=1$). Hence $a_n^2\ge\frac1n$, and
+      $$\sum_{n\ge1}a_n^2\ \ge\ \sum_{n\ge1}\frac1n=\infty .$$
+      The series diverges. (In fact $a_n^2\sim\frac3n$.)
+    checked: "script: iterated 10^6 steps; n·a_n^2/3 → 1.0000, partial sums keep growing like ln n"
+    status: ready
+
+  - id: A4
+    topic: "Probability: random blackening on a strip, expected leftovers"
+    areas: [probability, combinatorics]
+    difficulty: 3
+    answer: "$\\dfrac1e$"
+    hints:
+      - "Ignore moves that change nothing. A useful move picks a pair of adjacent white squares, uniformly, and blackens one of them."
+      - "Runs of white squares then evolve on their own. Find a recursion for the expected leftover $w(L)$ of a run of length $L$, and guess a closed form."
+    solution: |
+      **Key idea:** only moves that blacken a square matter, and each run of white squares evolves on its own. That gives a recursion with the closed form $w(L)=(L+1)\sum_{k=0}^{L+1}\frac{(-1)^k}{k!}$, from which the limit $\frac1e$ follows.
+
+      **Reducing the process.** A move picks a white square $s$ (out of $W$) and a direction. It does something only if the neighbor $t$ in that direction is white. Each ordered pair $(s,t)$ of adjacent white squares is chosen with the same probability $\frac{1}{2W}$. So, conditioned on doing something, the move blackens the second square of a uniformly random ordered adjacent white pair. Within a maximal run of $L$ white squares there are $2(L-1)$ such pairs. An end square of the run is the target of one pair, and an inner square of two. Different runs never interact, so each run ends up in the same way as if it were alone.
+
+      **Recursion.** Let $w(L)$ be the expected number of white squares left from a run of length $L$. Then $w(0)=0$, $w(1)=1$, and for $L\ge2$, blackening an end leaves a run of $L-1$, while blackening square $i$ splits the run into lengths $i-1$ and $L-i$:
+      $$w(L)=\frac{2}{2(L-1)}\,w(L-1)+\frac{2}{2(L-1)}\sum_{i=2}^{L-1}\big(w(i-1)+w(L-i)\big)=\frac{1}{L-1}\Big(w(L-1)+2\sum_{m=1}^{L-2}w(m)\Big).$$
+      Subtracting this identity for $L$ and for $L-1$ (with $L\ge3$) simplifies to
+      $$w(L)-w(L-1)=\frac{w(L-2)}{L-1}.$$
+
+      **Closed form.** Let $e_m=\sum_{k=0}^m\frac{(-1)^k}{k!}$. We claim $w(L)=(L+1)\,e_{L+1}$. It holds for $L=0,1,2$ (values $0,1,1$). For the step, write $w(L)-w(L-1)=(L+1)e_{L+1}-Le_L$, which equals
+      $$e_{L+1}+L\big(e_{L+1}-e_L\big)=e_{L+1}+\frac{L(-1)^{L+1}}{(L+1)!}.$$
+      Since $e_{L+1}-e_{L-1}=\frac{(-1)^L}{L!}+\frac{(-1)^{L+1}}{(L+1)!}$, this equals
+      $$e_{L-1}+\frac{(-1)^L}{L!}+\frac{(L+1)(-1)^{L+1}}{(L+1)!}=e_{L-1}=\frac{w(L-2)}{L-1},$$
+      matching the recursion. So $w(N)=(N+1)e_{N+1}$, and
+      $$\lim_{N\to\infty}\frac{w(N)}{N}=\lim_{N\to\infty}e_{N+1}=\frac1e .$$
+    viz: putnam-2020-a4
+    checked: "script: the recursion and the closed form agree exactly for N ≤ 30; a simulation for N = 8 gives 3.309 vs 3.311 predicted"
+    status: ready
+
+  - id: A5
+    topic: "Fibonacci representations: the last number with exactly 2020"
+    areas: [combinatorics, number-theory]
+    difficulty: 4
+    answer: "$n=F_{4040}-1$"
+    hints:
+      - "For $F_m\\le n<F_{m+1}$, every representation uses exactly one of $F_m$, $F_{m-1}$. Turn this into a recursion for $a_n$."
+      - "Complementing a set of indices $\\le m-2$ sends a sum $s$ to $F_m-1-s$."
+    solution: |
+      **Key idea:** a two-term recursion shows $a_{F_j-1}=\lceil j/2\rceil$, and that $a_n\ge\lfloor m/2\rfloor+1$ whenever $F_m\le n<F_{m+1}$. So the last $n$ with $a_n=2020$ is $F_{4040}-1$.
+
+      Here $a_0=1$ (the empty set). We use $F_1+F_2+\dots+F_j=F_{j+2}-1$, which is easy by induction.
+
+      **Recursion.** Let $m\ge2$ and $F_m\le n<F_{m+1}$. A representation of $n$ cannot use an index $\ge m+1$. It cannot avoid both $m$ and $m-1$, since indices $\le m-2$ add up to at most $F_m-1<n$. It cannot use both, since $F_m+F_{m-1}=F_{m+1}>n$.
+      - Using index $m$: the rest represents $x=n-F_m<F_{m-1}$, which automatically uses only indices $\le m-2$. That gives $a_x$ ways.
+      - Using index $m-1$: the rest represents $n-F_{m-1}$ with indices $\le m-2$. Complementing within $\{1,\dots,m-2\}$ matches these with representations of $y=F_m-1-(n-F_{m-1})=F_{m+1}-1-n$ using indices $\le m-2$. Since $y\le F_{m-1}-1$, that is all representations of $y$: $a_y$ ways.
+
+      So $a_n=a_x+a_y$, with $x+y=F_{m-1}-1$.
+
+      **Values at $F_j-1$.** Taking $n=F_{m+1}-1$ gives $y=0$ and $a_{F_{m+1}-1}=a_{F_{m-1}-1}+1$. With $a_{F_1-1}=a_{F_2-1}=a_0=1$, induction gives $a_{F_j-1}=\lceil j/2\rceil$. In particular $a_{F_{4040}-1}=2020$.
+
+      **Lower bound.** Claim: if $F_m\le n<F_{m+1}$ with $m\ge2$, then $a_n\ge\lfloor m/2\rfloor+1$. For $m=2,3,4$ check directly: $a_1=a_2=2$ and $a_3=a_4=3$. For $m\ge5$ use $a_n=a_x+a_y$:
+      - If $x=0$ or $y=0$, the other one is $F_{m-1}-1$, and $a_n=1+\lceil\frac{m-1}2\rceil=\lfloor\frac m2\rfloor+1$.
+      - If $x,y\ge1$, then by induction each is at least $2$. Also $\max(x,y)\ge\frac{F_{m-1}-1}{2}\ge F_{m-3}$, since $F_{m-1}-2F_{m-3}=F_{m-4}\ge1$. By induction, the larger one has $a\ge\lfloor\frac{m-3}2\rfloor+1$. So $a_n\ge\lfloor\frac{m-3}2\rfloor+3\ge\lfloor\frac m2\rfloor+1$.
+
+      **Conclusion.** Every $n\ge F_{4040}$ lies in some $[F_m,F_{m+1})$ with $m\ge4040$, so $a_n\ge2021$. Together with $a_{F_{4040}-1}=2020$, the largest $n$ with $a_n=2020$ is $F_{4040}-1$.
+    checked: "script: computed a_n for n ≤ F_26; the recursion, the lower bound and 'largest n with a_n = k is F_{2k} − 1' hold for all k ≤ 11"
+    status: ready
+
+  - id: A6
+    topic: "Fourier series: Fejér means of a square wave"
+    areas: [analysis]
+    difficulty: 4
+    answer: "$M=\\dfrac\\pi4$"
+    hints:
+      - "Find a function whose Fourier sine series is $\\sum\\frac{\\sin((2n+1)x)}{2n+1}$."
+      - "Compare the weights $\\frac{N+1/2-n}{N+1}$ with the Fejér factors $1-\\frac{j}{K+1}$."
+    solution: |
+      **Key idea:** $f_N$ is exactly a Fejér mean of the square wave with height $\frac\pi4$. Fejér means never exceed the function's bounds, and they converge where the function is continuous.
+
+      **The square wave.** Let $s(x)=\frac\pi4$ on $(0,\pi)$ and $-\frac\pi4$ on $(-\pi,0)$, extended with period $2\pi$. It is odd, and its sine coefficients are
+      $$b_j=\frac2\pi\int_0^\pi\frac\pi4\sin(jx)\,dx=\frac{1-\cos(j\pi)}{2j},$$
+      which is $\frac1j$ for odd $j$ and $0$ for even $j$.
+
+      **Fejér means.** The $K$-th Fejér mean of $s$ is
+      $$\sigma_K(x)=\sum_{j=1}^{K}\Big(1-\frac{j}{K+1}\Big)b_j\sin(jx)=(s*\Phi_K)(x),$$
+      where $\Phi_K\ge0$ is the Fejér kernel, with average value $1$. Take $K=2N+1$ and $j=2n+1$:
+      $$1-\frac{2n+1}{2N+2}=\frac{N+\frac12-n}{N+1},$$
+      which is exactly the weight in $f_N$. So $f_N=\sigma_{2N+1}$.
+
+      **Bound.** Since $\Phi_K\ge0$ has average $1$ and $|s|\le\frac\pi4$, every Fejér mean satisfies $|\sigma_K|\le\frac\pi4$. So $f_N(x)\le\frac\pi4$ for all $N$ and $x$.
+
+      **Sharp.** $s$ is continuous at $x=\frac\pi2$, so by Fejér's theorem $f_N(\frac\pi2)\to s(\frac\pi2)=\frac\pi4$. No smaller constant works, and $M=\frac\pi4$.
+    checked: "script: max of f_N on a fine grid is 0.6667, 0.7440, 0.7735, 0.7829 for N = 1, 5, 20, 100, rising toward π/4 = 0.7854"
+    status: ready
+
+  - id: B1
+    topic: "Number theory: Thue–Morse signs kill low powers"
+    areas: [number-theory, combinatorics]
+    difficulty: 2
+    answer: "$1990$"
+    hints:
+      - "Over a block $0\\le r<2^m$, the signed sum of any polynomial of degree $<m$ is $0$."
+      - "Split $[0,2020]$ into binary blocks; only a few terms survive."
+    solution: |
+      **Key idea:** binary digit-sum signs make every polynomial of low degree sum to zero over a long enough aligned binary block. So only the last few terms matter.
+
+      **Lemma.** If $P$ has degree $<m$, then $\sum_{r=0}^{2^m-1}(-1)^{d(r)}P(r)=0$. *Proof by induction on $m$.* Pair $r=2s$ with $r=2s+1$. Since $d(2s+1)=d(2s)+1$ and $d(2s)=d(s)$, the sum equals $\sum_{s=0}^{2^{m-1}-1}(-1)^{d(s)}\big(P(2s)-P(2s+1)\big)$, and $P(2s)-P(2s+1)$ has degree $<m-1$. For $m=1$, $P$ is constant and $P(0)-P(1)=0$.
+
+      **Blocks.** In binary, $2020=11111100100_2$. Split $0\le k\le2020$ into
+      $$[0,1024),\ [1024,1536),\ [1536,1792),\ [1792,1920),\ [1920,1984),\ [1984,2016),\ [2016,2020),\ \{2020\}.$$
+      A block $[a,a+2^m)$ with $2^m\mid a$ has $(-1)^{d(a+r)}=(-1)^{d(a)}(-1)^{d(r)}$, and $(a+r)^3$ has degree $3$ in $r$. So the blocks of size $\ge16$ (all except the last two pieces) contribute $0$. The $k=0$ term is also $0$.
+
+      **What is left.** The digit sums of $2016,2017,2018,2019,2020$ are $6,7,7,8,7$, so
+      $$S=2016^3-2017^3-2018^3+2019^3-2020^3 .$$
+      Mod $2020$ these numbers are $-4,-3,-2,-1,0$:
+      $$S\equiv-64+27+8-1-0=-30\equiv1990\pmod{2020}.$$
+    checked: "script: direct summation gives S mod 2020 = 1990"
+    status: ready
+
+  - id: B2
+    topic: "Games: moving pegs right, a pairing strategy"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: "Alice wins unless $n$ and $k$ are both even"
+    hints:
+      - "Pair up the holes $(1,2),(3,4),\\dots$. Show that \"every pair full or empty\" can be kept by the player who just moved."
+      - "A hole at the far left that is empty, or at the far right that is full, never changes again."
+    solution: |
+      **Key idea:** pair the holes two by two. If every pair is full or empty, the player who just moved can always restore that after any reply. Alice's first move can create such a position unless $n$ and $k$ are both even.
+
+      Number the holes $1,\dots,n$ from the left. Every move increases the sum of peg positions, so the game ends.
+
+      **Pairing lemma.** Suppose a block of consecutive holes is split into consecutive pairs, all other holes never change, and every pair is either full or empty, with the opponent to move. The opponent must move a peg out of some full pair $A$ into a vacant hole further right. That hole lies in an empty pair $B$ to the right of $A$. Reply by moving $A$'s other peg into the other hole of $B$, which is also to the right. Now $A$ is empty and $B$ is full again. So the player using this rule always has a move, and since the game ends, the opponent is the one who gets stuck.
+
+      Two kinds of holes never change: hole $1$ once it is empty (nothing moves left), and hole $n$ once it is full (that peg cannot move, and nothing can enter it).
+
+      **$n$ and $k$ both even.** Pair $(1,2),(3,4),\dots,(n-1,n)$. The starting pegs fill the first $k/2$ pairs, and Alice moves first. By the lemma, Bob wins.
+
+      **Otherwise Alice wins, with this first move:**
+      - $n$ odd, $k$ even: move the peg from hole $1$ to hole $k+1$. Pegs now fill $(2,3),\dots,(k,k+1)$, hole $1$ is empty for good, and $(2,3),\dots,(n-1,n)$ pairs the rest.
+      - $n$ odd, $k$ odd: move the peg from hole $k$ to hole $n$. Pegs fill $(1,2),\dots,(k-2,k-1)$, hole $n$ is full for good, and $(1,2),\dots,(n-2,n-1)$ pairs the rest.
+      - $n$ even, $k$ odd: move the peg from hole $1$ to hole $n$. Pegs fill $(2,3),\dots,(k-1,k)$, hole $1$ is empty and hole $n$ is full for good, and $(2,3),\dots,(n-2,n-1)$ pairs the rest.
+
+      In each case Bob faces a position covered by the lemma, so Alice wins. (When $k=1$ some of these lists of full pairs are empty; the argument is the same.)
+    viz: putnam-2020-b2
+    checked: "script: solved the game exactly for all n ≤ 10; Alice loses exactly when n and k are both even, and the first moves above are winning"
+    status: ready
+
+  - id: B3
+    topic: "Probability: shrinking intervals and a Poisson count"
+    areas: [probability]
+    difficulty: 2
+    answer: "$1-\\ln\\delta$"
+    hints:
+      - "Take $-\\ln$ of the points: the steps become independent exponential variables."
+      - "Or set up $E(x)$, the expected remaining steps from $x$, as an integral equation."
+    solution: |
+      **Key idea:** after taking logarithms, the process is a Poisson process, and $Z$ is one more than the number of its points in an interval of length $-\ln\delta$.
+
+      Write $x_n=U_1U_2\cdots U_n$ with independent uniform $U_i$ on $(0,1)$. Then $-\ln U_i$ are independent with the exponential distribution of mean $1$, and
+      $$-\ln x_n=E_1+\dots+E_n$$
+      are the arrival times of a Poisson process of rate $1$. Let $\ell=-\ln\delta>0$. Now $Z$ is the first $n$ with $-\ln x_n>\ell$, so $Z=1+(\text{number of arrivals in }[0,\ell])$. The number of arrivals is Poisson with mean $\ell$, so
+      $$\mathbb E[Z]=1+\ell=1-\ln\delta .$$
+
+      **A check without Poisson processes.** For $x\ge\delta$ let $E(x)$ be the expected number of further steps until a value below $\delta$ appears, starting from $x$. One step lands below $\delta$ with probability $\frac\delta x$; otherwise it lands uniformly in $[\delta,x]$. So
+      $$E(x)=1+\frac1x\int_\delta^xE(t)\,dt .$$
+      The function $E(x)=1+\ln\frac x\delta$ satisfies this, since $\frac1x\int_\delta^x\big(1+\ln\frac t\delta\big)dt=\ln\frac{x}{\delta}$. At $x=1$ we again get $1-\ln\delta$.
+    checked: "script: simulation with δ = 0.5, 0.1, 0.01 gives 1.695, 3.300, 5.602 (formula 1.693, 3.303, 5.605)"
+    status: ready
+
+  - id: B4
+    topic: "Lattice paths: averaging over cyclic rotations"
+    areas: [combinatorics, probability]
+    difficulty: 3
+    answer: "$M(2020)=\\dfrac{1}{4040}$"
+    hints:
+      - "Rotate the step sequence of a path cyclically. How do the heights change?"
+      - "Sum $\\frac1{q}$ over all $2n$ rotations of a single path."
+    solution: |
+      **Key idea:** for a single path, the $2n$ cyclic rotations have values of $1/q$ that add up to exactly $1$. Averaging over all paths then gives $M(n)=\frac1{2n}$ for any base, not just $3$.
+
+      A path in $V_n$ is a cyclic sequence of $2n$ steps $\pm1$ adding to $0$, with heights $s_0=0,s_1,\dots,s_{2n}=0$. Note $q(v)=\sum_{j=0}^{2n-1}3^{s_j}$, counting $s_0$ as the $1$.
+
+      **Rotating.** For $0\le r<2n$, let $v^{(r)}$ start with step $r+1$ and continue cyclically. Its heights are $s_{j+r}-s_r$ (indices mod $2n$, which is fine because $s_{2n}=0$). So
+      $$q(v^{(r)})=\sum_{j=0}^{2n-1}3^{s_{j+r}-s_r}=3^{-s_r}\,Q,\qquad Q=\sum_{j=0}^{2n-1}3^{s_j}.$$
+      Therefore
+      $$\sum_{r=0}^{2n-1}\frac1{q(v^{(r)})}=\frac{1}{Q}\sum_{r=0}^{2n-1}3^{s_r}=1 .$$
+
+      **Averaging.** Sum this over all $v\in V_n$: the total is $|V_n|$. For each fixed $r$, $v\mapsto v^{(r)}$ is a bijection of $V_n$, so the same total also equals $2n\sum_{v}\frac1{q(v)}$. Hence
+      $$M(n)=\frac{1}{|V_n|}\sum_{v\in V_n}\frac1{q(v)}=\frac1{2n},\qquad M(2020)=\frac1{4040}.$$
+    checked: "script: exact rational averages for n = 1…8 equal 1/(2n)"
+    status: ready
+
+  - id: B5
+    topic: "Complex numbers: inversion turns the unit circle into a line"
+    areas: [algebra, geometry]
+    difficulty: 4
+    hints:
+      - "Set $w_j=1-z_j$ and expand. The expression becomes $e_2-e_3+e_4$ in the $w_j$."
+      - "Each $w_j$ lies on the circle $|w-1|=1$, which passes through $0$. Where does $1/w_j$ lie?"
+    solution: |
+      **Key idea:** after the shift $w=1-z$ and the inversion $v=1/w$, every point lands on the vertical line $\operatorname{Re}v=\frac12$, and the expression becomes a quadratic in the $v_j$ that cannot vanish.
+
+      **Shift.** Let $w_j=1-z_j\ne0$, and let $e_k$ be the elementary symmetric polynomials of $w_1,\dots,w_4$. Expanding $\prod(1-w_j)$,
+      $$3-\sum z_j+\prod z_j=3-(4-e_1)+(1-e_1+e_2-e_3+e_4)=e_2-e_3+e_4 .$$
+
+      **Inversion.** $|z_j|=1$ means $|w_j-1|=1$, i.e. $w_j\bar w_j=w_j+\bar w_j$. Dividing by $w_j\bar w_j$ gives $\frac1{w_j}+\frac1{\bar w_j}=1$, so $v_j=\frac{1}{w_j}$ has real part $\frac12$. Write $v_j=\frac12+it_j$ with $t_j$ real.
+
+      Divide the expression by $e_4=w_1w_2w_3w_4\ne0$. Since $\frac{e_2}{e_4}=\sum_{j<k}v_jv_k$ and $\frac{e_3}{e_4}=\sum v_j$,
+      $$\frac{e_2-e_3+e_4}{e_4}=\sum_{j<k}v_jv_k-\sum_jv_j+1 .$$
+      Let $T=\sum t_j$ and $\tau=\sum_{j<k}t_jt_k$. Then $\sum v_j=2+iT$, and
+      $$\sum_{j<k}v_jv_k=6\cdot\tfrac14+\tfrac i2\cdot3T-\tau,$$
+      because each $t_j$ appears in three pairs. So the quotient is
+      $$\Big(\tfrac12-\tau\Big)+\tfrac{i}{2}T .$$
+      For this to vanish we need $T=0$ and $\tau=\frac12$. But $T=0$ gives $\tau=\frac{T^2-\sum t_j^2}{2}=-\frac12\sum t_j^2\le0$. So the expression is never $0$.
+    checked: "script: 200000 random choices of z_1…z_4 never gave a value of the expression closer to 0 than 0.004"
+    status: ready
+
+  - id: B6
+    topic: "Number theory: signs from a Beatty sequence"
+    areas: [number-theory]
+    difficulty: 5
+    status: coming

@@ -1,0 +1,266 @@
+year: 1992
+edition: 53rd
+date: "December 5, 1992"
+note: "Problem A6 is the one in the 3Blue1Brown video [\"The hardest problem on the hardest test\"](https://www.youtube.com/watch?v=OkmNXy7er84). Our write-up below uses the same central trick, in our own words, with our own animation."
+links:
+  problems: https://kskedlaya.org/putnam-archive/1992.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Functional equations: an involution on the integers"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - "Apply $f$ to both sides of the second condition and use the first."
+      - "You should get $f(n+2)=f(n)-2$. Now you only need two starting values."
+    solution: |
+      **Key idea:** applying $f$ to the second condition turns it into the simple shift rule $f(n+2)=f(n)-2$.
+
+      **It works.** For $f(n)=1-n$: $f(f(n))=1-(1-n)=n$; $f(f(n+2)+2)=f(1-n)=n$; and $f(0)=1$.
+
+      **It is the only one.** Apply $f$ to both sides of $f(f(n+2)+2)=n$. Since $f(f(y))=y$ for every $y$, the left side becomes $f(n+2)+2$:
+      $$f(n+2)+2=f(n),\qquad\text{i.e.}\qquad f(n+2)=f(n)-2 \text{ for all } n .$$
+      So $f$ is determined by $f(0)$ and $f(1)$, going both up and down in steps of $2$. We have $f(0)=1$ and $f(1)=f(f(0))=0$. These match $1-n$, so $f(n)=1-n$ for every integer $n$.
+    checked: "proof only; the conditions were checked for f(n) = 1 − n"
+    status: ready
+
+  - id: A2
+    topic: "Calculus: a binomial coefficient times a logarithmic derivative"
+    areas: [calculus, combinatorics]
+    difficulty: 2
+    answer: "$1992$"
+    hints:
+      - "Write $C(-y-1)$ as a product. The signs cancel."
+      - "The sum $\\sum\\frac1{y+k}$ is the derivative of $\\ln$ of that product."
+    solution: |
+      **Key idea:** the integrand is the derivative of a product, so the integral is just the change in that product from $y=0$ to $y=1$.
+
+      The coefficient of $x^{n}$ in $(1+x)^\alpha$ is $\frac{\alpha(\alpha-1)\cdots(\alpha-n+1)}{n!}$. With $n=1992$ and $\alpha=-y-1$, each of the $1992$ factors is negative, and the signs cancel:
+      $$C(-y-1)=\frac{(y+1)(y+2)\cdots(y+1992)}{1992!}=\frac{\Pi(y)}{1992!}.$$
+      Now $\sum_{k=1}^{1992}\frac{1}{y+k}=\frac{\Pi'(y)}{\Pi(y)}$, so the integrand is $\frac{\Pi'(y)}{1992!}$ and
+      $$\int_0^1\frac{\Pi'(y)}{1992!}\,dy=\frac{\Pi(1)-\Pi(0)}{1992!}=\frac{1993!-1992!}{1992!}=1993-1=1992 .$$
+    checked: "script: the same integral with 1992 replaced by 3, 7, 15 evaluates numerically to 3, 7, 15"
+    status: ready
+
+  - id: A3
+    topic: "Diophantine equations: sums of squares versus products"
+    areas: [number-theory]
+    difficulty: 3
+    answer: "Solutions exist only for even $m$: $(n,x,y)=\\big(m+1,\\,2^{m/2},\\,2^{m/2}\\big)$"
+    hints:
+      - "Factor out $g=\\gcd(x,y)$. What does coprimality say about $a^2+b^2$ and $ab$?"
+      - "Once $x=y$, the equation is about powers of $2$."
+    solution: |
+      **Key idea:** after removing the gcd, the coprime parts must both be $1$, so $x=y$. Then everything is a power of $2$, and $\gcd(n,m)=1$ forces $n=m+1$.
+
+      **First, $x=y$.** Let $g=\gcd(x,y)$, $x=ga$, $y=gb$ with $\gcd(a,b)=1$. The left side is at least $2^m>1$, so $xy>1$. Since $xy<x^2+y^2$, the equation then forces $n>m$. Dividing by $g^{2m}$,
+      $$(a^2+b^2)^m=g^{2(n-m)}(ab)^n .$$
+      Any prime dividing $ab$ divides exactly one of $a,b$, so it does not divide $a^2+b^2$. But $ab$ divides the left side. Hence $ab=1$, so $a=b=1$ and $x=y$.
+
+      **Then powers of $2$.** With $x=y$: $(2x^2)^m=x^{2n}$, i.e. $x^{2(n-m)}=2^m$. So $x=2^t$ with $t\ge1$ and $2t(n-m)=m$. Let $d=n-m$. Then $d\mid m$, so $\gcd(n,m)=\gcd(m+d,m)=d$. Since $\gcd(n,m)=1$, $d=1$. That gives $m=2t$ (so $m$ is even), $n=m+1$ and $x=y=2^{m/2}$.
+
+      **Check.** $(2\cdot2^m)^m=2^{m(m+1)}=(2^m)^{m+1}$, and $\gcd(m+1,m)=1$. For odd $m$ there are no solutions.
+    checked: "script: brute force for m ≤ 6, x, y < 200, n < 30 finds only (3,2,2), (5,4,4), (7,8,8) for m = 2, 4, 6"
+    status: ready
+
+  - id: A4
+    topic: "Analysis: smooth functions fixed by values on 1/n"
+    areas: [analysis, calculus]
+    difficulty: 2
+    answer: "$f^{(k)}(0)=0$ for odd $k$, and $f^{(2j)}(0)=(-1)^j(2j)!$"
+    hints:
+      - "Which simple function has the given values at $x=\\frac1n$?"
+      - "A smooth function with zeros piling up at $0$ has every derivative $0$ there (Rolle's theorem)."
+    solution: |
+      **Key idea:** $f$ agrees with $\frac{1}{1+x^2}$ on a sequence tending to $0$. Rolle's theorem then forces all derivatives at $0$ to agree.
+
+      Note $\frac{n^2}{n^2+1}=\frac{1}{1+(1/n)^2}$. So with $g(x)=\frac{1}{1+x^2}$, the smooth function $h=f-g$ vanishes at every $\frac1n$.
+
+      **All derivatives of $h$ vanish at $0$.** The zeros $\frac1n$ decrease to $0$. Between consecutive zeros of $h$, Rolle's theorem gives a zero of $h'$. So $h'$ has zeros decreasing to $0$, then $h''$ does, and so on. By continuity each $h^{(k)}(0)=0$ (and $h(0)=0$ too).
+
+      **Derivatives of $g$.** Near $0$, $g(x)=\sum_{j\ge0}(-1)^jx^{2j}$, so $g^{(2j)}(0)=(-1)^j(2j)!$ and the odd derivatives are $0$. Therefore
+      $$f^{(k)}(0)=g^{(k)}(0)=\begin{cases}0,&k\text{ odd},\\(-1)^{k/2}\,k!,&k\text{ even}.\end{cases}$$
+    checked: "proof; the series coefficients of 1/(1+x²) were checked"
+    status: ready
+
+  - id: A5
+    topic: "Combinatorics on words: the Thue–Morse sequence has no cubes"
+    areas: [combinatorics]
+    difficulty: 4
+    hints:
+      - "Use $t_{2i}=t_i$ and $t_{2i+1}=1-t_i$. Show first there are no three equal terms in a row."
+      - "If the block length $m$ is odd, you get a long stretch where neighbors always differ. If $m$ is even, halve everything."
+    solution: |
+      **Key idea:** an odd block length forces a long alternating stretch, which is impossible. An even block length can be halved, so infinite descent finishes the proof.
+
+      Let $t_i$ be the parity of the number of $1$s in the binary form of $i$, for $i\ge0$. Then $t_{2i}=t_i$ and $t_{2i+1}=1-t_i$. In particular $t_{2i}\ne t_{2i+1}$ for every $i$. We prove the stronger statement for all $k\ge0$: there is no block $t_k,\dots,t_{k+3m-1}$ with $t_j=t_{j+m}$ for $k\le j\le k+2m-1$. Suppose one exists, and choose one with $m$ as small as possible.
+
+      **No three equal in a row.** Three consecutive positions always contain a pair $2i,2i+1$, whose values differ. This rules out $m=1$.
+
+      **$m$ odd, $m\ge3$.** Take an even position $2i$ with $k\le2i$ and $2i+1\le k+2m-1$. Then $t_{2i+m}=t_{2i}\ne t_{2i+1}=t_{2i+m+1}$, and $2i+m$ is odd. So neighbors differ at every odd position $q$ with $k+m\le q\le k+3m-2$. Neighbors at even positions always differ. So throughout the stretch from $k+m$ to $k+3m-1$, of length $2m\ge6$, consecutive terms alternate. Such a stretch contains five consecutive positions starting at an even one, $2l,\dots,2l+4$, and alternation gives $t_{2l}=t_{2l+2}=t_{2l+4}$, that is, $t_l=t_{l+1}=t_{l+2}$. That is three equal in a row, a contradiction.
+
+      **$m$ even, $m=2m'$.** If $k=2k'$ is even, use the even positions $j=k+2i$ for $0\le i<m$: $t_{k'+i}=t_{2(k'+i)}=t_{2(k'+i)+m}=t_{k'+i+m'}$. That is a forbidden block with parameters $(k',m')$. If $k=2k'+1$ is odd, use $j=k+2i+1$ for $0\le i<m$ in the same way to get the parameters $(k'+1,m')$. Either way the block length shrinks to $m'<m$, contradicting minimality.
+
+      Hence no such $k$ and $m$ exist.
+    checked: "script: searched the first 4000 terms for repeated triple blocks of every length below 300; none"
+    status: ready
+
+  - id: A6
+    topic: "Probability: random points on a sphere"
+    areas: [probability, geometry]
+    difficulty: 3
+    answer: "$\\dfrac18$"
+    hints:
+      - "Choosing a random point is the same as choosing a random line through the center and then one of its two ends by a coin flip."
+      - "Fix the fourth point and three lines. Of the $8$ ways to pick ends, how many give a tetrahedron around the center?"
+    solution: |
+      **Key idea:** pick three random lines through the center first, and the ends later. For any fixed choice of lines (and fourth point), exactly one of the $8$ choices of ends works.
+
+      **Re-describing the random points.** A uniform point on the sphere can be produced in two stages: pick a uniform random line through the center, then pick one of its two endpoints with a fair coin. So we may choose $P_4$ and three random lines with unit directions $u_1,u_2,u_3$, and then set $P_i=\varepsilon_iu_i$ with independent random signs $\varepsilon_i=\pm1$.
+
+      **When is the center inside?** With probability $1$ the four points are in general position. Then the center $O$ (the origin) is inside the tetrahedron exactly when
+      $$O=\lambda_1P_1+\lambda_2P_2+\lambda_3P_3+\lambda_4P_4\quad\text{with all }\lambda_i>0$$
+      (the weights can be scaled to add up to $1$). Also with probability $1$, $u_1,u_2,u_3$ form a basis, so $-P_4=c_1u_1+c_2u_2+c_3u_3$ for unique numbers $c_i$, all nonzero.
+
+      Scale so that $\lambda_4=1$. The condition becomes $\sum\lambda_i\varepsilon_iu_i=\sum c_iu_i$, so $\lambda_i\varepsilon_i=c_i$. We need $\lambda_i>0$, so $\varepsilon_i$ must equal the sign of $c_i$. Exactly one of the $8$ sign patterns $(\varepsilon_1,\varepsilon_2,\varepsilon_3)$ does this.
+
+      **Conclusion.** For every fixed choice of $P_4$ and the three lines, the chance over the coin flips is $\frac18$. Averaging over the lines and $P_4$, the probability is $\frac18$.
+
+      This is the problem in the 3Blue1Brown video ["The hardest problem on the hardest test"](https://www.youtube.com/watch?v=OkmNXy7er84). The same idea in the plane gives $\frac14$ for a triangle around the center of a circle.
+    viz: putnam-1992-a6
+    checked: "script: Monte Carlo with 400000 random tetrahedra gives 0.1254"
+    status: ready
+
+  - id: B1
+    topic: "Combinatorics: fewest distinct pairwise averages"
+    areas: [combinatorics]
+    difficulty: 1
+    answer: "$2n-3$"
+    hints:
+      - "Sort the numbers and list averages that are surely different."
+      - "An arithmetic progression is the natural example."
+    solution: |
+      **Key idea:** sorting gives a chain of $2n-3$ strictly increasing averages, and an arithmetic progression has no others.
+
+      Sort $s_1<s_2<\dots<s_n$. The chain
+      $$\frac{s_1+s_2}{2}<\frac{s_1+s_3}2<\dots<\frac{s_1+s_n}2<\frac{s_2+s_n}2<\frac{s_3+s_n}{2}<\dots<\frac{s_{n-1}+s_n}{2}$$
+      is strictly increasing (each step replaces one number by a larger one). It has $(n-1)+(n-2)=2n-3$ terms, so $|A_S|\ge2n-3$.
+
+      For $S=\{1,2,\dots,n\}$ the averages are $\frac{i+j}{2}$ with $i<j$. The sum $i+j$ takes only the values $3,4,\dots,2n-1$, which is $2n-3$ values. So the minimum is $2n-3$.
+    checked: "script: brute force over subsets of {0,…,13} for n = 2…6 gives 1, 3, 5, 7, 9"
+    status: ready
+
+  - id: B2
+    topic: "Polynomials: factoring a four-term sum"
+    areas: [combinatorics, algebra]
+    difficulty: 1
+    hints:
+      - "Factor $1+x+x^2+x^3$."
+    solution: |
+      **Key idea:** $1+x+x^2+x^3=(1+x)(1+x^2)$.
+
+      So $(1+x+x^2+x^3)^n=(1+x^2)^n(1+x)^n$. A term $x^k$ in the product comes from $x^{2j}$ in the first factor, with coefficient $\binom nj$, times $x^{k-2j}$ in the second, with coefficient $\binom{n}{k-2j}$. Adding over $j$,
+      $$Q(n,k)=\sum_{j}\binom nj\binom{n}{k-2j},$$
+      where terms with $k-2j<0$ or $k-2j>n$ are zero. That is exactly the stated sum over $0\le j\le k$.
+    checked: "proof only; no numeric answer"
+    status: ready
+
+  - id: B3
+    topic: "Dynamics: where a quadratic iteration converges"
+    areas: [analysis]
+    difficulty: 3
+    answer: "$4+\\pi$"
+    hints:
+      - "For fixed $y$, study $g(a)=\\frac{a^2+y^2}{2}$ on $[0,\\infty)$. Where are its fixed points?"
+      - "Convergence happens exactly when $a_1$ is at most the larger fixed point."
+    solution: |
+      **Key idea:** for fixed $y$, the map $g(a)=\frac{a^2+y^2}2$ has fixed points $1\pm\sqrt{1-y^2}$. The sequence converges exactly when it starts at or below the larger one.
+
+      Fix $y$ and let $g(a)=\frac{a^2+y^2}{2}$. Then $a_1=g(x)\ge0$, and $g$ is increasing on $[0,\infty)$. Also
+      $$g(a)-a=\frac{(a-1)^2-(1-y^2)}{2}.$$
+      **If $|y|>1$:** $g(a)-a\ge\frac{y^2-1}2>0$ always, so the sequence increases by at least a fixed amount and diverges.
+
+      **If $|y|\le1$:** the fixed points are $r=1-\sqrt{1-y^2}$ and $R=1+\sqrt{1-y^2}$. On $[0,r]$, $a\le g(a)\le g(r)=r$, so the sequence rises and converges to $r$. On $(r,R)$, $r<g(a)<a$, so it falls and converges to $r$. At $R$ it stays. For $a>R$, $g(a)-a>0$ and it grows with $a$, so the sequence increases without bound.
+
+      Since $a_1=g(x)$, $g$ increases with $|x|$, and $g(R)=R$, the sequence converges exactly when $|x|\le R=1+\sqrt{1-y^2}$.
+
+      **Area.** The region is $|y|\le1$, $|x|\le1+\sqrt{1-y^2}$. It is a $2\times2$ square ($|x|\le1$) plus two half-disks of radius $1$:
+      $$\text{Area}=\int_{-1}^{1}2\big(1+\sqrt{1-y^2}\big)\,dy=4+\pi .$$
+    viz: putnam-1992-b3
+    checked: "script: Monte Carlo over [−3,3]² (60000 points, 3000 iterations each) gives 7.2 ± 0.06 against 4 + π = 7.14; the boundary analysis is exact"
+    status: ready
+
+  - id: B4
+    topic: "Rational functions: high derivatives and cancelling leading terms"
+    areas: [algebra, calculus]
+    difficulty: 3
+    answer: "$3984$"
+    hints:
+      - "Use partial fractions: only the parts $\\frac Ax+\\frac B{x-1}+\\frac C{x+1}$ survive $1992$ derivatives."
+      - "Write the result over $(x^3-x)^{1993}$ and see how many top coefficients of the numerator can cancel."
+    solution: |
+      **Key idea:** after $1992$ derivatives only the three simple poles matter. Choosing their residues cancels the top two coefficients of the numerator, but never the third.
+
+      **Partial fractions.** Since $\deg p<1992$, we can write $\frac{p(x)}{x^3-x}=q(x)+\frac Ax+\frac B{x-1}+\frac C{x+1}$, where $\deg q\le1988$. Here $A=-p(0)$, $B=\frac{p(1)}2$, $C=\frac{p(-1)}2$, all nonzero because $p$ shares no factor with $x^3-x$. The $1992$-th derivative kills $q$, and $\frac{d^{1992}}{dx^{1992}}\frac{1}{x-a}=\frac{1992!}{(x-a)^{1993}}$. So
+      $$\frac{f}{g}=\frac{1992!\,N(x)}{(x^3-x)^{1993}},\qquad N=A(x^2-1)^{1993}+Bx^{1993}(x+1)^{1993}+Cx^{1993}(x-1)^{1993}.$$
+      $N$ is nonzero at $0$ and $\pm1$, so this fraction is in lowest terms. Any $f$ in such a representation is a multiple of $N$. So we must minimize $\deg N$.
+
+      **Top coefficients.** In $N$:
+      - the coefficient of $x^{3986}$ is $A+B+C$;
+      - the coefficient of $x^{3985}$ is $1993(B-C)$, because $(x^2-1)^{1993}$ has only even powers;
+      - if $B=C$ and $A=-2B$, the coefficient of $x^{3984}$ is $-1993A+2B\binom{1993}{2}=2B\big(1993+\binom{1993}{2}\big)\ne0$.
+
+      So $\deg N\ge3984$. Equality holds for $A=-2$, $B=C=1$, which comes from
+      $$p(x)=A(x^2-1)+Bx(x+1)+Cx(x-1)=2,$$
+      a nonzero constant with no common factor with $x^3-x$. The smallest possible degree of $f$ is $3984$.
+    checked: "script: the same question with 1992 replaced by 3, 4, 5 (small p checked with sympy) gives minimum degree 6, 8, 10, twice the order"
+    status: ready
+
+  - id: B5
+    topic: "Determinants: a diagonal plus all-ones matrix"
+    areas: [linear-algebra]
+    difficulty: 2
+    answer: "No: $D_n/n!$ is the harmonic number $H_n$, which is unbounded"
+    hints:
+      - "The matrix is $J+\\operatorname{diag}(2,3,\\dots,n)$, where $J$ is all ones."
+      - "Use $\\det(D+uv^T)=\\det D\\,(1+v^TD^{-1}u)$."
+    solution: |
+      **Key idea:** the matrix is a diagonal matrix plus a rank-one matrix, so the matrix determinant lemma computes it in one line.
+
+      The $(n-1)\times(n-1)$ matrix is $\operatorname{diag}(2,3,\dots,n)+\mathbf 1\mathbf 1^T$. For an invertible diagonal $D=\operatorname{diag}(d_i)$, the matrix determinant lemma gives
+      $$\det(D+\mathbf1\mathbf1^T)=\det D\Big(1+\sum_i\frac1{d_i}\Big).$$
+      Here $\det D=2\cdot3\cdots n=n!$ and $\sum\frac1{d_i}=\frac12+\dots+\frac1n$. So
+      $$\frac{D_n}{n!}=1+\frac12+\frac13+\dots+\frac1n=H_n ,$$
+      which grows without bound (like $\ln n$). The set is not bounded.
+    checked: "script: numerical determinants for n = 5, 10, 50 equal n!·H_n"
+    status: ready
+
+  - id: B6
+    topic: "Linear algebra: commuting-or-anticommuting matrix families"
+    areas: [linear-algebra, algebra]
+    difficulty: 4
+    hints:
+      - "Show $0\\notin\\mathcal M$, $-I\\notin\\mathcal M$, and that $A$ and $-A$ are never both in $\\mathcal M$. Then show $A^2=\\pm I$ for $A\\in\\mathcal M$."
+      - "Prove the matrices are linearly independent: take a shortest linear relation, move it so that $I$ appears, then conjugate by a matrix that anticommutes with another term."
+    solution: |
+      **Key idea:** every matrix in $\mathcal M$ squares to $\pm I$, and conjugating a shortest linear relation by an anticommuting element produces a shorter one. So $\mathcal M$ is linearly independent in the $n^2$-dimensional space of matrices.
+
+      Number the conditions (i)–(iv) as in the problem.
+
+      **Basic facts.**
+      - $0\notin\mathcal M$: otherwise (ii) with $A=B=0$ puts both $0$ and $-0$ in $\mathcal M$, which (ii) forbids.
+      - $A$ and $-A$ are never both in $\mathcal M$: (ii) with $I$ and $A$ says exactly one of $A$, $-A$ is in $\mathcal M$. In particular $-I\notin\mathcal M$.
+
+      **$A^2=\pm I$.** Let $A\in\mathcal M$. By (ii), $C=\pm A^2\in\mathcal M$. If $C\ne I$, (iv) gives $B\in\mathcal M$ with $CB=-BC$. But $AB=\pm BA$ by (iii), so $A^2B=BA^2$, i.e. $CB=BC$. Then $CB=0$, and by (ii) $0$ or $-0$ is in $\mathcal M$, which is impossible. So $C=I$, $A^2=\pm I$, and every $A\in\mathcal M$ is invertible with $A^{-1}=\pm A$.
+
+      **Linear independence.** Suppose some distinct $A_1,\dots,A_r\in\mathcal M$ satisfy $\sum c_iA_i=0$ with all $c_i\ne0$, and take $r$ as small as possible. Then $r\ge2$, because $A_1\ne0$.
+
+      *Move $I$ into the relation.* Multiply on the left by $A_1^{-1}=\pm A_1$. By (ii) each $A_1A_i=\delta_iB_i$ with $B_i\in\mathcal M$ and $\delta_i=\pm1$. Here $B_1=I$, since $A_1^2=\pm I$ and $-I\notin\mathcal M$. The $B_i$ are distinct: $B_i=B_j$ would give $A_i=\pm A_j$, which is ruled out. So we get a relation $\sum c_i'B_i=0$ of the same length $r$, with $B_1=I$ and all $c_i'\ne0$.
+
+      *Shorten it.* Since $B_2\ne I$, (iv) gives $E\in\mathcal M$ with $EB_2=-B_2E$. Conjugate the relation by the invertible $E$. By (iii), $E^{-1}B_iE=\sigma_iB_i$ with $\sigma_i=\pm1$, where $\sigma_1=1$ and $\sigma_2=-1$. Adding the conjugated relation to the original,
+      $$\sum_i c_i'(1+\sigma_i)B_i=0 .$$
+      The coefficient of $B_1$ is $2c_1'\ne0$, and the coefficient of $B_2$ is $0$. This is a nontrivial relation among fewer than $r$ elements of $\mathcal M$, contradicting minimality.
+
+      So any finite subset of $\mathcal M$ is linearly independent in the $n^2$-dimensional space of real $n\times n$ matrices. Hence $\mathcal M$ has at most $n^2$ elements.
+    checked: "proof; script check that for n = 2 the four matrices I, X, Z, XZ (swap and sign matrices) meet all four conditions, so n² is reached"
+    status: ready

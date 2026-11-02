@@ -1,0 +1,38 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-rsk-box
+title: Permutations that fit in a box
+tier: 4
+order: 120
+areas:
+- combinatorics
+problem: |
+  How many permutations of $1,2,\dots,12$ have **no increasing subsequence of length $4$** and **no decreasing subsequence of
+  length $5$**? (A subsequence need not be made of neighboring entries.)
+check:
+  type: number
+  answer: '213444'
+answer: '$462^2=213444$'
+hints:
+- 'Erdős–Szekeres: a permutation of more than $ab$ numbers has an increasing subsequence of length $a+1$ or a decreasing one of length $b+1$. Here $12=3\cdot4$ is the edge case.'
+- 'The Robinson–Schensted correspondence matches permutations of $n$ with pairs of standard Young tableaux of the same shape. Schensted: the first row is the longest increasing subsequence, and the number of rows is the longest decreasing one.'
+- 'Which shapes with $12$ cells have at most $3$ columns and at most $4$ rows? Then use the hook length formula.'
+solution: |
+  **The correspondence.** The Robinson–Schensted correspondence is a bijection between permutations of $\{1,\dots,n\}$ and
+  pairs $(P,Q)$ of standard Young tableaux of the same shape $\lambda$ with $n$ cells. Schensted's theorem (1961) says the length of
+  the first row of $\lambda$ is the longest increasing subsequence, and the number of rows is the longest decreasing
+  subsequence.
+
+  **The shape.** We need at most $3$ cells in each row and at most $4$ rows, with $12$ cells in all. Only the full
+  $4\times3$ rectangle $\lambda=(3,3,3,3)$ fits. So the answer is $f_\lambda^2$, where $f_\lambda$ is the number of standard
+  Young tableaux of that shape.
+
+  **Hook lengths.** By the Frame–Robinson–Thrall hook length formula, $f_\lambda=\dfrac{12!}{\prod\text{hooks}}$. In the
+  $4\times3$ rectangle the hooks, row by row, are
+  $$6,5,4;\quad 5,4,3;\quad 4,3,2;\quad 3,2,1,$$
+  with product $120\cdot60\cdot24\cdot6=1036800$. So $f_\lambda=\dfrac{479001600}{1036800}=462$, and the answer is
+  $$462^2=213444.$$
+
+  **Edge cases.** With $13$ numbers there would be none at all (Erdős–Szekeres). A smaller case to test the method: permutations of
+  $1..6$ with no increasing subsequence of length $4$ and no decreasing one of length $3$ correspond to the $2\times3$ rectangle, $f=5$, so $25$.
+checked: 'script: depth-first enumeration of all 12-permutations with pruning finds 213444 (and 0 for n = 13, 25 for the small case)'
+status: ready

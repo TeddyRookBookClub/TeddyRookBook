@@ -1,0 +1,34 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-cube-root-matrix
+title: Matrices whose cube is the identity
+tier: 2
+order: 120
+areas:
+- linear-algebra
+problem: |
+  $A$ is a real $4\times4$ matrix with $A^3=I$ and $A\ne I$. Find the **sum of all possible values** of the trace of $A$.
+check:
+  type: number
+  answer: '-1'
+answer: '$-1$ (the possible traces are $1$ and $-2$)'
+hints:
+- 'The polynomial $x^3-1$ has three different roots. What does that say about diagonalizing $A$ over $\mathbb C$?'
+- 'The eigenvalues are among $1,\omega,\bar\omega$, where $\omega=e^{2\pi i/3}$. Since $A$ is real, $\omega$ and $\bar\omega$ come in pairs.'
+solution: |
+  Since $A^3=I$, the minimal polynomial of $A$ divides $x^3-1=(x-1)(x-\omega)(x-\bar\omega)$, which has distinct roots. So
+  $A$ is diagonalizable over $\mathbb C$, with eigenvalues in $\{1,\omega,\bar\omega\}$.
+
+  $A$ is real, so its characteristic polynomial is real, and $\omega$ and $\bar\omega$ have the same multiplicity $m$. The
+  eigenvalue $1$ has multiplicity $4-2m$.
+
+  * $m=0$: all eigenvalues are $1$, and a diagonalizable matrix with only the eigenvalue $1$ is $I$. Not allowed.
+  * $m=1$: trace $2+\omega+\bar\omega=2-1=1$.
+  * $m=2$: trace $2(\omega+\bar\omega)=-2$.
+
+  Both happen. Let $R=\begin{pmatrix}0&-1\\1&-1\end{pmatrix}$, a matrix with $R^3=I$ and trace $-1$ (it is similar to a
+  rotation by $120^\circ$). The block matrices $\operatorname{diag}(1,1,R)$ and $\operatorname{diag}(R,R)$ have traces $1$ and
+  $-2$.
+
+  The sum of the possible traces is $1+(-2)=-1$.
+checked: 'script: R^3 = I verified; eigenvalue cases enumerated'
+status: ready

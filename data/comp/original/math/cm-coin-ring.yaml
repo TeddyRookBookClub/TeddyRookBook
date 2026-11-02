@@ -1,0 +1,39 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-coin-ring
+title: Flipping coins in threes around a ring
+tier: 2
+order: 50
+areas:
+- combinatorics
+- algebra
+problem: |
+  $n$ coins lie in a circle, all heads up. A move is to choose three **neighboring** coins and flip all three.
+  For how many values of $n$ with $3\le n\le 20$ is it possible to reach a position with **exactly one** coin tails up?
+check:
+  type: number
+  answer: '12'
+answer: '$12$ (exactly the $n$ that are not multiples of $3$)'
+hints:
+- 'The order of the moves does not matter, and doing the same move twice undoes it.'
+- 'Two overlapping moves, at positions $i$ and $i+1$, flip just the coins $i$ and $i+3$.'
+- 'When $3\mid n$, color the coins in three colors by position mod $3$. What does each move do to the number of tails of each color?'
+solution: |
+  Number the coins $0,\dots,n-1$ around the circle. Let $T_i$ be the move that flips coins $i,i+1,i+2$ (mod $n$).
+  Flipping is adding $1$ modulo $2$, so the result of a set of moves depends only on how many times each $T_i$ is used,
+  modulo $2$.
+
+  **If $3\mid n$: impossible (an invariant).** Color coin $j$ by $j\bmod 3$. Each class has $n/3$ coins, and every move
+  flips exactly one coin of each color. So the three counts of tails change parity together. At the start all three counts
+  are $0$. A position with exactly one tail has counts with parities $1,0,0$ in some order, which never happens.
+
+  **If $3\nmid n$: possible.** Doing $T_i$ then $T_{i+1}$ flips only coins $i$ and $i+3$. Chaining these, we can flip any
+  two coins $a$ and $a+3k$. Since $\gcd(3,n)=1$, the multiples of $3$ reach every residue mod $n$, so we can flip **any
+  two** coins. Now do $T_0$ (coins $0,1,2$ become tails) and then flip the pair $1,2$ back. Only coin $0$ is tails.
+
+  So the good $n$ are the ones not divisible by $3$. From $3$ to $20$ there are $18$ values, six of them multiples of
+  $3$, leaving $12$.
+
+  **Idea used:** an invariant to show something is impossible, and a construction to show the rest is possible.
+viz: cm-coin-ring
+checked: 'script: linear algebra over GF(2) for every n from 3 to 20'
+status: ready

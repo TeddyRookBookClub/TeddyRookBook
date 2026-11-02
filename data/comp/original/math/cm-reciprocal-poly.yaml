@@ -1,0 +1,31 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-reciprocal-poly
+title: A polynomial that imitates 1/x
+tier: 1
+order: 100
+areas:
+- algebra
+problem: |
+  $P$ is a polynomial of degree at most $4$ with $P(k)=\dfrac1k$ for $k=1,2,3,4,5$. Find $P(0)$.
+check:
+  type: number
+  answer: 137/60
+answer: '$\tfrac{137}{60}$'
+hints:
+- 'The polynomial $xP(x)-1$ has five roots you know.'
+- 'So $xP(x)-1=c(x-1)(x-2)(x-3)(x-4)(x-5)$. Put $x=0$ to find $c$.'
+- '$P(0)$ is the coefficient of $x$ in $xP(x)-1$.'
+solution: |
+  Let $Q(x)=xP(x)-1$. It has degree at most $5$ and vanishes at $x=1,2,3,4,5$, so
+  $$Q(x)=c\,(x-1)(x-2)(x-3)(x-4)(x-5).$$
+  At $x=0$: $Q(0)=-1$ and the right side is $c\cdot(-120)$, so $c=\tfrac1{120}$.
+
+  Since $Q(x)=xP(x)-1$, the coefficient of $x$ in $Q$ is $P(0)$. In the product $(x-1)\cdots(x-5)$ the coefficient of
+  $x$ is the sum of all products of four of the numbers $1,\dots,5$:
+  $$120\Big(\tfrac11+\tfrac12+\tfrac13+\tfrac14+\tfrac15\Big)=274.$$
+  So $P(0)=\tfrac{274}{120}=\tfrac{137}{60}$.
+
+  Notice $\tfrac{137}{60}=1+\tfrac12+\tfrac13+\tfrac14+\tfrac15$. The polynomial can't follow $1/x$ to its pole at
+  $0$, and it lands on the harmonic number instead.
+checked: 'script: exact Lagrange interpolation with fractions'
+status: ready

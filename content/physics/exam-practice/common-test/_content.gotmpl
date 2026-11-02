@@ -1,0 +1,12 @@
+{{- /* Common Test physics guide: one page per file, data/comp/common-test/physics-<year>[-makeup].yaml ->
+   /physics/exam-practice/common-test/<year>[-makeup]/ (layouts/comp/ctyear.html). */ -}}
+{{- $Y := (index ($.Site.Data.comp | default dict) "common-test") | default dict -}}
+{{- range $k, $y := $Y -}}
+  {{- if hasPrefix $k "physics-" -}}
+  {{- $slug := strings.TrimPrefix "physics-" $k -}}
+  {{- $mk := eq ($y.exam | default "main") "makeup" -}}
+  {{- $t := printf "Common Test Physics %v%s" $y.year (cond $mk " (makeup exam)" "") -}}
+  {{- $desc := printf "%s: our own solutions (not official) to the physics paper of Japan's University Entrance Common Test, with animations, and links to the official problems and answer key." $t -}}
+  {{- $.AddPage (dict "path" $slug "kind" "page" "type" "comp" "layout" "ctyear" "title" $t "description" $desc "params" (dict "file" $k)) -}}
+  {{- end -}}
+{{- end -}}

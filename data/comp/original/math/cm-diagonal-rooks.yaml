@@ -1,0 +1,39 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-diagonal-rooks
+title: Rooks that stay off both diagonals
+tier: 2
+order: 100
+areas:
+- combinatorics
+problem: |
+  In how many ways can $8$ rooks be placed on an $8\times8$ board so that no two attack each other and **no rook stands on
+  either of the two long diagonals**?
+check:
+  type: number
+  answer: '4752'
+answer: '$4752$'
+hints:
+- 'A placement of $8$ non-attacking rooks is a permutation $\sigma$: the rook in row $i$ is in column $\sigma(i)$.'
+- 'Use inclusion and exclusion over the forbidden squares. You need $r_k$, the number of ways to put $k$ non-attacking rooks on forbidden squares.'
+- 'The forbidden squares split into four separate $2\times2$ blocks: rows $\{i,9-i\}$ with columns $\{i,9-i\}$.'
+solution: |
+  A non-attacking placement is a permutation $\sigma$ of $\{1,\dots,8\}$, and we need $\sigma(i)\ne i$ and $\sigma(i)\ne9-i$
+  for every $i$.
+
+  **Inclusion and exclusion.** Let $r_k$ be the number of ways to put $k$ non-attacking rooks on forbidden squares. The
+  standard rook-polynomial count is
+  $$N=\sum_{k=0}^{8}(-1)^k\,r_k\,(8-k)!.$$
+  (Each placement on forbidden squares can be completed in $(8-k)!$ ways, and the signs cancel the overcounting.)
+
+  **Blocks.** The forbidden squares in rows $i$ and $9-i$ are exactly the four squares where those rows meet columns $i$ and
+  $9-i$. For $i=1,2,3,4$ this gives four full $2\times2$ blocks, and different blocks share no row or column. A full
+  $2\times2$ block holds $0$, $1$ or $2$ non-attacking rooks in $1$, $4$, $2$ ways, so
+  $$\sum_k r_kx^k=(1+4x+2x^2)^4=1+16x+104x^2+352x^3+664x^4+704x^5+416x^6+128x^7+16x^8.$$
+
+  **Sum.**
+  $$N=40320-80640+74880-42240+15936-4224+832-128+16=4752.$$
+
+  **Known tool:** rook polynomials (Kaplansky and Riordan, 1946), which turn "avoid these squares" into a polynomial
+  that multiplies across independent blocks.
+checked: 'script: all 40,320 permutations tested'
+status: ready

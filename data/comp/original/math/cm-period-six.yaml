@@ -1,0 +1,33 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-period-six
+title: Fractions that repeat every six digits
+tier: 3
+order: 80
+areas:
+- number-theory
+problem: |
+  For how many positive integers $n$ is the decimal expansion of $\dfrac1n$ **purely periodic** (it repeats from the first
+  digit after the point) with smallest period exactly $6$? For example, $\tfrac17=0.\overline{142857}$ counts.
+check:
+  type: number
+  answer: '53'
+answer: '$53$'
+hints:
+- 'A purely periodic decimal with a block of length $k$ is a fraction $\dfrac{m}{10^k-1}$.'
+- 'So $\tfrac1n$ repeats with a block of length $k$ exactly when $n\mid10^k-1$. The smallest period divides $6$ exactly when $n\mid999999$.'
+- '$999999=3^3\cdot7\cdot11\cdot13\cdot37$. Remove the $n$ whose period is $1$, $2$ or $3$.'
+solution: |
+  **Periods.** If $\tfrac1n=0.\overline{d_1\dots d_k}$, then $\tfrac1n=\dfrac{D}{10^k-1}$ with $D=d_1\dots d_k$, so
+  $n\mid10^k-1$. Conversely, if $n\mid10^k-1$, then $\tfrac1n=\dfrac{(10^k-1)/n}{10^k-1}$ repeats with a block of length $k$.
+  So the blocks that work are exactly the $k$ with $10^k\equiv1\pmod n$, and the smallest period is the order of $10$
+  modulo $n$.
+
+  **Count.** The smallest period is exactly $6$ when $n\mid10^6-1$ but $n\nmid10^1-1,10^2-1,10^3-1$. Since
+  $9\mid99$, it is enough to exclude divisors of $99$ and of $999$.
+
+  * $999999=3^3\cdot7\cdot11\cdot13\cdot37$ has $4\cdot2\cdot2\cdot2\cdot2=64$ divisors.
+  * $999=3^3\cdot37$ has $8$ divisors and $99=3^2\cdot11$ has $6$. They share the $3$ divisors of $\gcd(999,99)=9$.
+
+  By inclusion and exclusion, $64-(8+6-3)=53$.
+checked: 'script: every n below 2,000,000 coprime to 10 tested for order 6'
+status: ready

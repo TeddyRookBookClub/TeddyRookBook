@@ -1,0 +1,37 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-divisor-blend
+title: Mixing two divisor functions
+tier: 4
+order: 20
+areas:
+- number-theory
+problem: |
+  Let $\varphi$ be Euler's totient function and $\tau(m)$ the number of positive divisors of $m$. Compute
+  $$\sum_{d\mid720}\varphi(d)\,\tau\!\left(\frac{720}{d}\right).$$
+check:
+  type: number
+  answer: '2418'
+answer: '$\sigma(720)=2418$'
+hints:
+- 'A sum $\sum_{d\mid n}f(d)g(n/d)$ is a Dirichlet convolution $f*g$. Convolution is associative and commutative.'
+- '$\tau=1*1$, where $1$ is the function that is always $1$.'
+- 'Gauss''s identity says $\varphi*1$ is the identity function $n\mapsto n$.'
+solution: |
+  **Dirichlet convolution.** For functions on the positive integers, define $(f*g)(n)=\sum_{d\mid n}f(d)g(n/d)$. This product
+  is commutative and associative: $(f*g*h)(n)$ is the sum of $f(a)g(b)h(c)$ over all $abc=n$, in any grouping.
+
+  Let $\mathbf 1$ be the constant function $1$ and $\mathrm{id}(n)=n$. Then
+
+  * $\tau=\mathbf 1*\mathbf 1$ (each divisor counted once);
+  * $\varphi*\mathbf 1=\mathrm{id}$ (Gauss: $\sum_{d\mid n}\varphi(d)=n$);
+  * $\mathrm{id}*\mathbf 1=\sigma$, the sum of divisors.
+
+  So
+  $$\varphi*\tau=\varphi*\mathbf 1*\mathbf 1=\mathrm{id}*\mathbf 1=\sigma.$$
+
+  **Evaluate.** $720=2^4\cdot3^2\cdot5$ and $\sigma$ is multiplicative:
+  $$\sigma(720)=(1+2+4+8+16)(1+3+9)(1+5)=31\cdot13\cdot6=2418.$$
+
+  The sum has $30$ terms; the convolution view turns it into one line.
+checked: 'script: the 30-term sum computed directly'
+status: ready

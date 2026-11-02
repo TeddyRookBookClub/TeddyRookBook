@@ -1,0 +1,5 @@
+{{- /* What the Common Test is, and the copyright note. Argument: (dict "links" links-map or nil). */ -}}
+<div class="cp-legal" role="note">
+  <p><b>About these pages.</b> The Common Test problems are © the National Center for University Entrance Examinations (大学入試センター, DNC) and other rights holders, so we don't reproduce their problems or figures here. {{ with .links }}{{ with .problems }}<a href="{{ . }}" rel="noopener">Open the official problems</a>{{ end }}{{ with .answers }}{{ if $.links.problems }} and the <a href="{{ . }}" rel="noopener">official answer key</a>{{ else }}<a href="{{ . }}" rel="noopener">Open the official answer key</a>{{ end }}{{ end }} (in Japanese), then come back for our solution.{{ else }}Each year links to the official problems and answer key on the <a href="https://www.dnc.ac.jp/" rel="noopener">DNC website</a> (in Japanese).{{ end }}</p>
+  <p>The topic labels and solutions are our own, written from scratch: <b>our solutions, not official ones</b>. Answers are the numbers from the official answer key.</p>
+</div>

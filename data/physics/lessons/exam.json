@@ -1,0 +1,930 @@
+{
+ "exam.cliff-throw": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You met sideways throws in <a href=\"/physics/physics-1/projectile-horizontal/\">Horizontal Launches</a> and angled ones in <a href=\"/physics/physics-1/projectile-angled/\">Launches at an Angle</a>. An exam problem strings the pieces together: first the time in the air, then the distance, then the speed or direction at landing. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "Split the motion. Sideways, no force: $x = (v_0\\cos\\theta)\\,t$. Up and down, acceleration $g$: $y = (v_0\\sin\\theta)\\,t - \\tfrac{1}{2}gt^2$. The two share only the time $t$. For the landing speed, energy is quickest: $$v = \\sqrt{v_0^2 + 2gh},$$ whatever the launch angle."
+   },
+   {
+    "t": "viz",
+    "name": "exam-cliff-throw",
+    "opts": {
+     "h": 45,
+     "v": 15,
+     "ang": 0
+    },
+    "cap": "The blue arrow (sideways speed) never changes; the red arrow (vertical speed) grows by $9.8\\ \\text{m/s}$ every second."
+   },
+   {
+    "t": "ex",
+    "title": "A stone from a cliff",
+    "q": "A stone is thrown horizontally at $15\\ \\text{m/s}$ from a cliff $45\\ \\text{m}$ above the sea. Find (1) the time in the air, (2) how far out it lands and (3) its speed at the water.",
+    "steps": [
+     "(1) Vertically it starts from rest: $45 = \\tfrac{1}{2}(9.8)t^2$, so $t = \\sqrt{90/9.8} = 3.03\\ \\text{s}$.",
+     "(2) Sideways the speed stays $15\\ \\text{m/s}$: $x = 15(3.03) = 45.5\\ \\text{m}$.",
+     "(3) Energy: $v = \\sqrt{15^2 + 2(9.8)(45)} = \\sqrt{1107} = 33.3\\ \\text{m/s}$."
+    ],
+    "a": "$3.03\\ \\text{s}$, $45.5\\ \\text{m}$, $33.3\\ \\text{m/s}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using the whole launch speed in the vertical equation for an angled throw. Only $v_0\\sin\\theta$ is vertical. Check: a throw straight sideways ($\\theta = 0$) must take the same time to fall as a dropped stone."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters on kinematics, energy and momentum"
+   }
+  ]
+ },
+ "exam.wall-shot": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A ball launched toward a wall, a net or a fence asks two things at once: <em>when</em> does it get there, and <em>where</em> is it then? The sideways motion answers the first, the vertical motion the second. Builds on <a href=\"/physics/physics-1/projectile-angled/\">Launches at an Angle</a>. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "$$t = \\frac{d}{v_0\\cos\\theta}, \\qquad y = (v_0\\sin\\theta)t - \\tfrac{1}{2}gt^2, \\qquad v_y = v_0\\sin\\theta - gt.$$ The sign of $v_y$ says whether the ball is still rising ($+$) or already falling ($-$). The top of the flight is at $H_{\\max} = \\dfrac{(v_0\\sin\\theta)^2}{2g}$."
+   },
+   {
+    "t": "viz",
+    "name": "exam-wall-shot",
+    "opts": {
+     "v": 20,
+     "ang": 40,
+     "d": 18,
+     "H": 4
+    },
+    "cap": "The wall's distance fixes the time; the height formula then says where the ball is at that moment."
+   },
+   {
+    "t": "ex",
+    "title": "Over the wall",
+    "q": "A ball is kicked at $20\\ \\text{m/s}$, $40^\\circ$ above level ground, toward a wall $18\\ \\text{m}$ away. Find (1) when it reaches the wall, (2) its height there and (3) whether it is rising or falling.",
+    "steps": [
+     "(1) $v_x = 20\\cos 40^\\circ = 15.3\\ \\text{m/s}$, so $t = 18/15.3 = 1.17\\ \\text{s}$.",
+     "(2) $v_0\\sin\\theta = 12.9\\ \\text{m/s}$; $y = 12.9(1.17) - 4.9(1.17)^2 = 8.34\\ \\text{m}$.",
+     "(3) $v_y = 12.9 - 9.8(1.17) = 1.34\\ \\text{m/s}$: positive, still rising."
+    ],
+    "a": "$1.17\\ \\text{s}$, $8.34\\ \\text{m}$, rising"
+   },
+   {
+    "t": "mistake",
+    "html": "Assuming the ball must still be rising at the wall, or at its peak there. Work out $v_y$ and look at its sign; the peak is at $t = v_0\\sin\\theta/g$, which may come before or after the wall."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters on kinematics, energy and momentum"
+   }
+  ]
+ },
+ "exam.cart-collision": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Two stages, two laws. During a quick collision the outside forces are small, so <a href=\"/physics/physics-1/momentum-conservation/\">momentum is conserved</a>. After it, on a smooth ramp, <a href=\"/physics/physics-1/energy-conservation/\">energy is conserved</a>. The trap is to use energy across the collision itself. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "Sticking collision: $$m_1v = (m_1 + m_2)V.$$ Kinetic energy is lost: the fraction lost is $\\dfrac{m_2}{m_1 + m_2}$ when $m_2$ starts at rest. After the collision: $\\tfrac{1}{2}V^2 = gh$, so $h = \\dfrac{V^2}{2g}$."
+   },
+   {
+    "t": "viz",
+    "name": "exam-cart-collision",
+    "opts": {
+     "m1": 0.6,
+     "m2": 0.4,
+     "v": 3,
+     "kind": "carts"
+    },
+    "cap": "Momentum carries the pair through the collision; energy carries it up the ramp."
+   },
+   {
+    "t": "ex",
+    "title": "Carts on a track",
+    "q": "Cart A ($0.6\\ \\text{kg}$, $3.0\\ \\text{m/s}$) locks onto cart B ($0.4\\ \\text{kg}$, at rest). Find (1) their speed, (2) the kinetic energy lost and (3) how high they roll up a smooth ramp.",
+    "steps": [
+     "(1) $V = \\dfrac{(0.6)(3.0)}{1.0} = 1.80\\ \\text{m/s}$.",
+     "(2) $K_0 = \\tfrac{1}{2}(0.6)(3.0)^2 = 2.70\\ \\text{J}$ and $K_1 = \\tfrac{1}{2}(1.0)(1.80)^2 = 1.62\\ \\text{J}$, so $1.08\\ \\text{J}$ is lost (40%, which is $m_2/(m_1+m_2)$).",
+     "(3) $h = \\dfrac{(1.80)^2}{2(9.8)} = 0.165\\ \\text{m}$."
+    ],
+    "a": "$1.80\\ \\text{m/s}$, $1.08\\ \\text{J}$, $0.165\\ \\text{m}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using $\\tfrac{1}{2}m_1v^2 = (m_1 + m_2)gh$ straight from the start. That ignores the energy lost when the carts stick, so the height comes out too large. Check: an answer above $v^2/2g$ is impossible."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters on kinematics, energy and momentum"
+   }
+  ]
+ },
+ "exam.loop-track": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A loop puts two ideas together: energy gives the speed at the top, and the circle's force equation from <a href=\"/physics/physics-1/vertical-circles/\">Vertical Circles</a> gives how hard the track pushes. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "Energy from the release height to the top of the loop ($2r$ up): $$mgh = mg(2r) + \\tfrac{1}{2}mv^2.$$ At the top both the push $N$ and gravity point down, to the center: $$N + mg = \\frac{mv^2}{r}.$$ Just making it round means $N = 0$, which needs $h = \\tfrac{5}{2}r$."
+   },
+   {
+    "t": "viz",
+    "name": "exam-loop-track",
+    "opts": {
+     "h": 1.4,
+     "r": 0.4
+    },
+    "cap": "The object is slowest at the top of the loop. There the track and gravity both pull it toward the center."
+   },
+   {
+    "t": "ex",
+    "title": "A block around a loop",
+    "q": "A $0.2\\ \\text{kg}$ block is released from $1.4\\ \\text{m}$ on a smooth track with a loop of radius $0.4\\ \\text{m}$. Find (1) its speed at the top and (2) the track's push there.",
+    "steps": [
+     "(1) $v = \\sqrt{2(9.8)(1.4 - 0.8)} = 3.43\\ \\text{m/s}$.",
+     "(2) $N = \\dfrac{(0.2)(11.8)}{0.4} - (0.2)(9.8) = 3.92\\ \\text{N}$."
+    ],
+    "a": "$3.43\\ \\text{m/s}$, $3.92\\ \\text{N}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Writing $N - mg = mv^2/r$ at the top, as if the track pushed up. At the top of a loop the track is above the object and pushes down. Check: with $N = 0$ the equation must reduce to $mg = mv^2/r$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters on kinematics, energy and momentum"
+   }
+  ]
+ },
+ "exam.conical-pendulum": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A ball on a string, swung in a level circle, is a neat test of <a href=\"/physics/physics-1/forces-at-angles/\">forces at angles</a> and <a href=\"/physics/physics-1/centripetal-force/\">centripetal force</a>. The tension does two jobs at once. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "With the string at $\\theta$ from the vertical and $r = L\\sin\\theta$: $$T\\cos\\theta = mg, \\qquad T\\sin\\theta = \\frac{mv^2}{r}.$$ Dividing: $\\tan\\theta = \\dfrac{v^2}{gr}$. The period is $2\\pi\\sqrt{L\\cos\\theta/g}$, with no mass in it."
+   },
+   {
+    "t": "viz",
+    "name": "exam-conical-pendulum",
+    "opts": {
+     "L": 1.0,
+     "ang": 35
+    },
+    "cap": "The tension's vertical part holds the ball up; its sideways part points to the center of the circle."
+   },
+   {
+    "t": "ex",
+    "title": "A ball on a cord",
+    "q": "A $0.3\\ \\text{kg}$ ball on a $1.0\\ \\text{m}$ cord circles with the cord at $35^\\circ$ from the vertical. Find (1) the tension and (2) the speed.",
+    "steps": [
+     "(1) $T = \\dfrac{(0.3)(9.8)}{\\cos 35^\\circ} = 3.59\\ \\text{N}$.",
+     "(2) $r = 1.0\\sin 35^\\circ = 0.574\\ \\text{m}$; $v = \\sqrt{(9.8)(0.574)\\tan 35^\\circ} = 1.98\\ \\text{m/s}$."
+    ],
+    "a": "$3.59\\ \\text{N}$, $1.98\\ \\text{m/s}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using the string length as the radius. The ball circles the vertical line under the pivot, so $r = L\\sin\\theta$. Check: at a tiny angle the radius should be nearly zero."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters on kinematics, energy and momentum"
+   }
+  ]
+ },
+ "exam.spring-oscillator": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A block on a spring is the model oscillator. Exam questions chain the period from <a href=\"/physics/physics-1/spring-oscillator-period/\">Period of a Mass on a Spring</a> with the energy ideas of <a href=\"/physics/physics-1/shm-energy/\">Energy in Simple Harmonic Motion</a>, then ask about timing. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "$$T = 2\\pi\\sqrt{\\frac{m}{k}}, \\qquad \\omega = \\sqrt{\\frac{k}{m}}, \\qquad v_{\\max} = A\\omega, \\qquad a_{\\max} = \\frac{kA}{m}.$$ Released from $x = A$: $x = A\\cos(\\omega t)$. The rest point comes after $T/4$; halfway ($x = A/2$) after $T/6$, because the block starts slowly."
+   },
+   {
+    "t": "viz",
+    "name": "exam-spring-oscillator",
+    "opts": {
+     "m": 0.5,
+     "k": 50,
+     "A": 0.08
+    },
+    "cap": "The trace below the block shows its position as time runs down the page. One full wave is one period."
+   },
+   {
+    "t": "ex",
+    "title": "Pull and let go",
+    "q": "A $0.5\\ \\text{kg}$ block on a $50\\ \\text{N/m}$ spring is pulled $8\\ \\text{cm}$ and released. Find (1) the period and (2) the greatest speed.",
+    "steps": [
+     "(1) $T = 2\\pi\\sqrt{0.5/50} = 0.628\\ \\text{s}$.",
+     "(2) $\\omega = \\sqrt{50/0.5} = 10.0\\ \\text{rad/s}$, so $v_{\\max} = (0.08)(10.0) = 0.800\\ \\text{m/s}$."
+    ],
+    "a": "$0.628\\ \\text{s}$, $0.800\\ \\text{m/s}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a bigger pull gives a longer period. $T = 2\\pi\\sqrt{m/k}$ has no amplitude in it: a bigger swing is covered faster. Check with the formula before trusting your instinct."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters on kinematics, energy and momentum"
+   }
+  ]
+ },
+ "exam.rough-ramp-spring": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Energy bookkeeping in three stops: the top of the ramp, the bottom, and the spring at full squeeze. Friction is the one thing that takes energy out, as in <a href=\"/physics/physics-1/friction-energy/\">Friction and Energy</a>. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "On a ramp the normal force is $mg\\cos\\theta$, so friction does $|W_f| = \\mu mg\\cos\\theta\\cdot L$. Then $$\\tfrac{1}{2}mv^2 = mgL\\sin\\theta - |W_f|$$ at the bottom, and on a smooth floor $\\tfrac{1}{2}kx^2 = \\tfrac{1}{2}mv^2$."
+   },
+   {
+    "t": "viz",
+    "name": "exam-rough-ramp-spring",
+    "opts": {
+     "ang": 30,
+     "L": 3,
+     "mu": 0.2
+    },
+    "cap": "Friction pulls up the slope while the crate slides down; the smooth floor and spring lose nothing."
+   },
+   {
+    "t": "ex",
+    "title": "A crate into a spring",
+    "q": "A $2.0\\ \\text{kg}$ crate slides $3.0\\ \\text{m}$ down a $30^\\circ$ ramp ($\\mu = 0.2$), then into a $400\\ \\text{N/m}$ spring on a smooth floor. Find (1) the work done by friction, (2) the speed at the bottom and (3) the squeeze.",
+    "steps": [
+     "(1) $|W_f| = (0.2)(2.0)(9.8)\\cos 30^\\circ(3.0) = 10.2\\ \\text{J}$.",
+     "(2) $\\tfrac{1}{2}mv^2 = (2.0)(9.8)(3.0)\\sin 30^\\circ - 10.2 = 19.2\\ \\text{J}$, so $v = 4.38\\ \\text{m/s}$.",
+     "(3) $x = \\sqrt{2(19.2)/400} = 0.310\\ \\text{m}$."
+    ],
+    "a": "$10.2\\ \\text{J}$, $4.38\\ \\text{m/s}$, $0.310\\ \\text{m}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using $\\mu mg$ for friction on a slope. The ramp only presses back with $mg\\cos\\theta$. Check: on a vertical wall ($\\theta = 90^\\circ$) there would be no normal force at all."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters on kinematics, energy and momentum"
+   }
+  ]
+ },
+ "exam.piston-gas": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A free piston keeps the gas pressure fixed, so heating it is a constant-pressure process from <a href=\"/physics/physics-2/pv-work/\">Work Done by a Gas</a>. The first step is always a force balance on the piston. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "$$p = p_0 + \\frac{Mg}{A}, \\qquad \\frac{V_2}{V_1} = \\frac{T_2}{T_1}\\ (\\text{constant } p), \\qquad W = p\\,\\Delta V.$$ For a monatomic ideal gas at constant pressure, $Q = \\tfrac{5}{2}p\\,\\Delta V$ (that is $\\Delta U = \\tfrac{3}{2}p\\,\\Delta V$ plus the work)."
+   },
+   {
+    "t": "viz",
+    "name": "exam-piston-gas",
+    "opts": {
+     "T1": 300,
+     "T2": 400
+    },
+    "cap": "The piston stays balanced the whole time, so the pressure never changes; the gas just takes up more room."
+   },
+   {
+    "t": "ex",
+    "title": "Warming the gas",
+    "q": "A $40\\ \\text{kg}$ piston of area $0.02\\ \\text{m}^2$ sits $30\\ \\text{cm}$ above the base, with outside air at $1.0 \\times 10^5\\ \\text{Pa}$. The gas warms from $300\\ \\text{K}$ to $400\\ \\text{K}$. Find (1) the pressure, (2) the new height, (3) the work.",
+    "steps": [
+     "(1) $p = 1.0 \\times 10^5 + \\dfrac{(40)(9.8)}{0.02} = 120000\\ \\text{Pa}$.",
+     "(2) $h_2 = 30 \\cdot \\dfrac{400}{300} = 40\\ \\text{cm}$.",
+     "(3) $W = (120000)(0.02)(0.10) = 239\\ \\text{J}$."
+    ],
+    "a": "$120000\\ \\text{Pa}$, $40\\ \\text{cm}$, $239\\ \\text{J}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Leaving out the air pressure on top: $p = Mg/A$ alone. The atmosphere pushes down on the piston too. Check: with a massless piston the gas would still be at air pressure, not zero."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 13 to 15 on gases and thermodynamics"
+   }
+  ]
+ },
+ "exam.pv-cycle": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "An engine cycle on a $p$–$V$ graph turns into geometry: the work is an area, and each leg's heat comes from the first law of <a href=\"/physics/physics-2/first-law/\">The First Law of Thermodynamics</a>. The efficiency of <a href=\"/physics/physics-2/heat-engines/\">Heat Engines</a> then uses only the heat taken in. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "Net work $W$ = the area inside the loop (positive when it runs clockwise). For a monatomic ideal gas $U = \\tfrac{3}{2}pV$, so constant volume: $Q = \\tfrac{3}{2}V\\,\\Delta p$; constant pressure: $Q = \\tfrac{5}{2}p\\,\\Delta V$. $$e = \\frac{W}{Q_{\\text{in}}}.$$"
+   },
+   {
+    "t": "viz",
+    "name": "exam-pv-cycle",
+    "opts": {
+     "shape": "rect",
+     "p1": 100000.0,
+     "p2": 300000.0,
+     "V1": 0.002,
+     "V2": 0.005
+    },
+    "cap": "The point runs clockwise round the loop: the gas does more work expanding at high pressure than is done on it at low pressure."
+   },
+   {
+    "t": "ex",
+    "title": "A rectangular cycle",
+    "q": "A monatomic gas goes A ($1 \\times 10^5\\ \\text{Pa}$, $2 \\times 10^{-3}\\ \\text{m}^3$) → B ($3 \\times 10^5\\ \\text{Pa}$, same volume) → C (same pressure, $5 \\times 10^{-3}\\ \\text{m}^3$) → D → A. Find (1) the net work, (2) the heat taken in and (3) the efficiency.",
+    "steps": [
+     "(1) $W = (2 \\times 10^5)(3 \\times 10^{-3}) = 600\\ \\text{J}$.",
+     "(2) A → B: $\\tfrac{3}{2}(2 \\times 10^{-3})(2 \\times 10^5) = 600\\ \\text{J}$. B → C: $\\tfrac{5}{2}(3 \\times 10^5)(3 \\times 10^{-3}) = 2250\\ \\text{J}$. In all, $2850\\ \\text{J}$.",
+     "(3) $e = 600/2850 = 0.211$, about $21.1\\%$."
+    ],
+    "a": "$600\\ \\text{J}$, $2850\\ \\text{J}$, about $21.1\\%$"
+   },
+   {
+    "t": "mistake",
+    "html": "Dividing the work by all the heat that crosses the boundary, in and out. Efficiency compares the work with the heat you pay for, $Q_{\\text{in}}$. Check: $e$ must come out below 1."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 13 to 15 on gases and thermodynamics"
+   }
+  ]
+ },
+ "exam.two-speakers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Two speakers playing the same note in step make a pattern of loud and quiet spots, as in <a href=\"/physics/physics-2/superposition/\">Superposition</a>. What matters at a spot is how much farther one speaker is than the other. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "Path difference $\\Delta = |L_2 - L_1|$ and $\\lambda = v/f$. $$\\text{loud: } \\Delta = m\\lambda, \\qquad \\text{quiet: } \\Delta = (m + \\tfrac{1}{2})\\lambda.$$ The lowest frequency that makes a spot quiet has $\\Delta = \\lambda/2$, so $f = v/(2\\Delta)$."
+   },
+   {
+    "t": "viz",
+    "name": "exam-two-speakers",
+    "opts": {
+     "s": 3,
+     "x": 4
+    },
+    "cap": "Blue and purple rings are the waves from each speaker. Where crest meets crest the sound is loud."
+   },
+   {
+    "t": "ex",
+    "title": "Loud or quiet?",
+    "q": "Speakers $3\\ \\text{m}$ apart; a listener $4\\ \\text{m}$ straight out from one of them. Sound travels at $340\\ \\text{m/s}$. Find (1) the path difference and (2) the lowest frequency that is quiet there.",
+    "steps": [
+     "(1) The far speaker is $\\sqrt{3^2 + 4^2} = 5\\ \\text{m}$ away, so $\\Delta = 1\\ \\text{m}$.",
+     "(2) $\\lambda = 2\\Delta = 2\\ \\text{m}$, so $f = 340/2 = 170\\ \\text{Hz}$."
+    ],
+    "a": "$1\\ \\text{m}$, $170\\ \\text{Hz}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Comparing a single distance with the wavelength. A spot $5\\ \\text{m}$ from one speaker tells you nothing alone; only the difference between the two paths decides how the waves meet."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 16 and 17 on waves and sound"
+   }
+  ]
+ },
+ "exam.doppler-wall": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A wall turns one Doppler problem into two: first the wall hears a moving source, then it sends that sound back as a still source. Builds on <a href=\"/physics/physics-2/doppler/\">The Doppler Effect</a>. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "$$f' = f\\,\\frac{v \\pm v_o}{v \\mp v_s}$$ (upper signs when moving toward each other). A source moving toward a wall at $u$: the wall gets $f\\,\\dfrac{v}{v - u}$. A listener moving toward the wall at $u$ hears the echo raised again by $\\dfrac{v + u}{v}$. Beats: the difference of two frequencies."
+   },
+   {
+    "t": "viz",
+    "name": "exam-doppler-wall",
+    "opts": {
+     "u": 20,
+     "mode": "driver"
+    },
+    "cap": "Ahead of the vehicle the rings bunch up; behind, they spread. Purple rings are the echo from the cliff."
+   },
+   {
+    "t": "ex",
+    "title": "The driver's echo",
+    "q": "A $500\\ \\text{Hz}$ siren drives at $20\\ \\text{m/s}$ toward a cliff ($v = 340\\ \\text{m/s}$). Find (1) the frequency at the cliff and (2) the echo the driver hears.",
+    "steps": [
+     "(1) $500 \\cdot \\dfrac{340}{320} = 531.2\\ \\text{Hz}$.",
+     "(2) $531.2 \\cdot \\dfrac{360}{340} = 562.5\\ \\text{Hz}$, so the driver hears $62.5\\ \\text{Hz}$ of beats against the siren."
+    ],
+    "a": "$531.2\\ \\text{Hz}$, $562.5\\ \\text{Hz}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Putting the source's speed in the numerator. A moving source changes the spacing of the waves, $v \\mp v_s$ in the denominator; a moving listener changes how fast they meet the waves, $v \\pm v_o$ on top. Check: approaching must raise the pitch."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 16 and 17 on waves and sound"
+   }
+  ]
+ },
+ "exam.string-pulley": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The classic string-and-pulley setup ties the wave speed of <a href=\"/physics/physics-2/wave-speed-medium/\">Wave Speed in a Medium</a> to the loops of <a href=\"/physics/physics-2/standing-waves-strings/\">Standing Waves on Strings</a>. The hanging mass sets the tension. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "$$T = Mg, \\qquad v = \\sqrt{\\frac{T}{\\mu}}, \\qquad L = n\\frac{\\lambda}{2}, \\qquad f = \\frac{v}{\\lambda} = \\frac{nv}{2L}.$$ At a fixed frequency, $n \\propto 1/v \\propto 1/\\sqrt{M}$."
+   },
+   {
+    "t": "viz",
+    "name": "exam-string-pulley",
+    "opts": {
+     "n": 3
+    },
+    "cap": "Each loop is half a wavelength; the dots are the nodes, which never move."
+   },
+   {
+    "t": "ex",
+    "title": "Three loops",
+    "q": "A string with $\\mu = 2.0\\ \\text{g/m}$ runs $1.2\\ \\text{m}$ to a pulley holding $1.0\\ \\text{kg}$ and shows 3 loops. Find (1) the wave speed and (2) the frequency.",
+    "steps": [
+     "(1) $v = \\sqrt{(1.0)(9.8)/0.002} = 70.0\\ \\text{m/s}$.",
+     "(2) $\\lambda = 2(1.2)/3 = 0.8\\ \\text{m}$, so $f = 70.0/0.8 = 87.5\\ \\text{Hz}$."
+    ],
+    "a": "$70.0\\ \\text{m/s}$, $87.5\\ \\text{Hz}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Treating speed as proportional to tension. It goes as the square root: 4 times the hanging mass only doubles the speed. Check units: $\\sqrt{\\text{N}/(\\text{kg/m})} = \\text{m/s}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 16 and 17 on waves and sound"
+   }
+  ]
+ },
+ "exam.convex-lens": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Lens problems chain the <a href=\"/physics/physics-2/thin-lens-equation/\">thin lens equation</a> with the size and kind of image, then move the object and ask what changes. A ray diagram from <a href=\"/physics/physics-2/lens-ray-diagrams/\">Lens Ray Diagrams</a> is the quickest check. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "$$\\frac{1}{d_o} + \\frac{1}{d_i} = \\frac{1}{f}, \\qquad m = -\\frac{d_i}{d_o}.$$ Object beyond $f$: real, inverted image on the far side ($d_i > 0$). Object inside $f$: virtual, upright, enlarged image on the same side ($d_i < 0$)."
+   },
+   {
+    "t": "viz",
+    "name": "exam-convex-lens",
+    "opts": {
+     "f": 12,
+     "d": 20,
+     "h": 2
+    },
+    "cap": "Three easy rays: parallel then through F; straight through the center; through F then parallel. Where they meet is the image."
+   },
+   {
+    "t": "ex",
+    "title": "A candle and a screen",
+    "q": "A $2\\ \\text{cm}$ flame is $20\\ \\text{cm}$ from a lens with $f = 12\\ \\text{cm}$. Find (1) the image distance and (2) the image height.",
+    "steps": [
+     "(1) $\\dfrac{1}{d_i} = \\dfrac{1}{12} - \\dfrac{1}{20} = \\dfrac{1}{30}$, so $d_i = 30\\ \\text{cm}$.",
+     "(2) $m = -30/20 = -1.5$: the image is $3\\ \\text{cm}$ tall and upside down."
+    ],
+    "a": "$30\\ \\text{cm}$, $3\\ \\text{cm}$ (inverted)"
+   },
+   {
+    "t": "mistake",
+    "html": "Getting a negative $d_i$ and calling it a mistake. A negative image distance means a virtual image on the object's side, as in a magnifying glass. Check with a ray diagram."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 25 to 27 on optics"
+   }
+  ]
+ },
+ "exam.pool-light": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A lamp under water lights up only a round patch of the surface. The edge of that patch is set by the critical angle of <a href=\"/physics/physics-2/total-internal-reflection/\">Total Internal Reflection</a>; inside it, <a href=\"/physics/physics-2/snells-law/\">Snell's law</a> bends each ray as it leaves. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "Angles are measured from the normal (here the vertical). $$n_1\\sin\\theta_1 = n_2\\sin\\theta_2, \\qquad \\sin\\theta_c = \\frac{1}{n}, \\qquad r = D\\tan\\theta_c.$$ With flat layers in between, $n\\sin\\theta$ is the same in every layer."
+   },
+   {
+    "t": "viz",
+    "name": "exam-pool-light",
+    "opts": {
+     "n": 1.33,
+     "D": 2.0,
+     "a1": 30
+    },
+    "cap": "Orange rays escape, bending away from the vertical. Gray rays meet the surface beyond the critical angle and reflect back down."
+   },
+   {
+    "t": "ex",
+    "title": "The bright circle",
+    "q": "A lamp lies at the bottom of a pool $2.0\\ \\text{m}$ deep ($n = 1.33$). Find (1) the critical angle and (2) the radius of the bright circle.",
+    "steps": [
+     "(1) $\\sin\\theta_c = 1/1.33$, so $\\theta_c = 48.8^\\circ$.",
+     "(2) $r = 2.0\\tan 48.8^\\circ = 2.28\\ \\text{m}$."
+    ],
+    "a": "$48.8^\\circ$, $2.28\\ \\text{m}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Measuring angles from the surface. Snell's law uses angles from the normal. Check: a ray going straight up (0° from the normal) passes through without bending."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 25 to 27 on optics"
+   }
+  ]
+ },
+ "exam.double-slit": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Young's two slits turn a wavelength far too small to see into fringes millimeters apart, as in <a href=\"/physics/physics-2/double-slit/\">Double-Slit Interference</a>. Exam problems then change one thing (the light, the slits, the medium) and ask what moves. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "Bright fringes: $d\\sin\\theta = m\\lambda$. For small angles, $$y_m = m\\frac{\\lambda L}{d}, \\qquad \\Delta y = \\frac{\\lambda L}{d}.$$ Dark fringes sit halfway between. In a medium of index $n$ the wavelength, and so the spacing, is divided by $n$."
+   },
+   {
+    "t": "viz",
+    "name": "exam-double-slit",
+    "opts": {
+     "lam": 600,
+     "d": 0.3,
+     "L": 1.5
+    },
+    "cap": "Each slit sends out its own circular waves. On the screen they add up to bright bands and cancel to dark ones."
+   },
+   {
+    "t": "ex",
+    "title": "Fringe spacing",
+    "q": "Light of $600\\ \\text{nm}$ passes slits $0.30\\ \\text{mm}$ apart onto a screen $1.5\\ \\text{m}$ away. Find (1) the fringe spacing and (2) the distance to the second dark fringe.",
+    "steps": [
+     "(1) $\\Delta y = \\dfrac{(600 \\times 10^{-9})(1.5)}{0.30 \\times 10^{-3}} = 3.00\\ \\text{mm}$.",
+     "(2) The second dark fringe is at $1.5\\,\\Delta y = 4.50\\ \\text{mm}$."
+    ],
+    "a": "$3.00\\ \\text{mm}$, $4.50\\ \\text{mm}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Counting dark fringes like bright ones: the first dark fringe is at $\\tfrac{1}{2}\\Delta y$, not $\\Delta y$. Check: there is a bright fringe at the center, so dark ones must be offset from it."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 25 to 27 on optics"
+   }
+  ]
+ },
+ "exam.capacitor-circuit": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A capacitor in a circuit behaves in two simple ways at the two ends of time, which is all most exam questions need. The in-between is the <a href=\"/physics/physics-2/rc-circuits/\">RC circuit</a> curve. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "Just after switching on, an <b>uncharged</b> capacitor has no voltage: treat it as a wire. Long after, a <b>full</b> capacitor passes no current: treat it as a break. Then $$Q = CV_C, \\qquad U = \\tfrac{1}{2}CV_C^2,$$ with $V_C$ the voltage of whatever sits beside it."
+   },
+   {
+    "t": "viz",
+    "name": "exam-capacitor-circuit",
+    "opts": {
+     "E": 12,
+     "R1": 20,
+     "R2": 40,
+     "C": 50
+    },
+    "cap": "At first the moving charges go into the capacitor; as it fills, they switch over to R₂."
+   },
+   {
+    "t": "ex",
+    "title": "Before and after",
+    "q": "A $12\\ \\text{V}$ battery, a switch and $R_1 = 20\\ \\Omega$ are in series with $R_2 = 40\\ \\Omega$ and an uncharged $50\\ \\mu\\text{F}$ capacitor in parallel. Find (1) the current at the start, (2) the current long after, (3) the capacitor's charge.",
+    "steps": [
+     "(1) The capacitor shorts $R_2$: $I_0 = 12/20 = 0.6\\ \\text{A}$.",
+     "(2) No current into the full capacitor: $I = 12/60 = 0.2\\ \\text{A}$.",
+     "(3) $V_C = (0.2)(40) = 8\\ \\text{V}$, so $Q = (50 \\times 10^{-6})(8) = 400\\ \\mu\\text{C}$."
+    ],
+    "a": "$0.6\\ \\text{A}$, $0.2\\ \\text{A}$, $400\\ \\mu\\text{C}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking current flows steadily through a capacitor. Charge piles up on its plates, but none crosses the gap; once full, its branch carries nothing. Check: in steady state, the circuit without the capacitor branch must give the same currents."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 18 to 23 on electricity and magnetism"
+   }
+  ]
+ },
+ "exam.deflecting-plates": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A charge crossing a <a href=\"/physics/physics-2/uniform-field/\">uniform field</a> moves exactly like a ball thrown sideways under gravity: steady along the plates, accelerated across them. The same splitting as <a href=\"/physics/physics-1/projectile-horizontal/\">Horizontal Launches</a> works. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "$$E = \\frac{V}{d}, \\qquad a = \\frac{qE}{m}, \\qquad t = \\frac{\\ell}{v_0}, \\qquad y = \\tfrac{1}{2}at^2.$$ An electron is pulled toward the positive plate; gravity is far too weak to matter."
+   },
+   {
+    "t": "viz",
+    "name": "exam-deflecting-plates",
+    "opts": {
+     "top": true,
+     "len": 4,
+     "d": 2,
+     "V": 100
+    },
+    "cap": "Between the plates the path is a parabola; after them it is a straight line."
+   },
+   {
+    "t": "ex",
+    "title": "An electron beam",
+    "q": "An electron at $2.0 \\times 10^7\\ \\text{m/s}$ enters plates $4.0\\ \\text{cm}$ long, $2.0\\ \\text{cm}$ apart, with $100\\ \\text{V}$ across them. Find (1) the field, (2) the time inside and (3) the deflection.",
+    "steps": [
+     "(1) $E = 100/0.020 = 5000\\ \\text{V/m}$.",
+     "(2) $t = 0.040/(2.0 \\times 10^7) = 2.0 \\times 10^{-9}\\ \\text{s}$.",
+     "(3) $a = (1.6 \\times 10^{-19})(5000)/(9.11 \\times 10^{-31}) = 8.78 \\times 10^{14}\\ \\text{m/s}^2$; $y = \\tfrac{1}{2}a t^2 = 1.76\\ \\text{mm}$."
+    ],
+    "a": "$5000\\ \\text{V/m}$, $2.0\\ \\text{ns}$, $1.76\\ \\text{mm}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using $V$ where $E$ belongs. The field is volts per meter: divide by the gap in meters. Check units: $qE$ must come out in newtons."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 18 to 23 on electricity and magnetism"
+   }
+  ]
+ },
+ "exam.mass-spectrometer": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A mass spectrometer sorts atoms by mass in two steps: a voltage gives every ion the same energy, then a magnetic field bends each into a circle, as in <a href=\"/physics/physics-2/charged-particle-circles/\">Charged Particles in Circles</a>. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "$$qV = \\tfrac{1}{2}mv^2, \\qquad qvB = \\frac{mv^2}{r} \\ \\Rightarrow\\ r = \\frac{mv}{qB} = \\frac{1}{B}\\sqrt{\\frac{2mV}{q}}.$$ So $r \\propto \\sqrt{m}$ for ions sped up by the same voltage, and the time for a half circle is $\\pi m/(qB)$."
+   },
+   {
+    "t": "viz",
+    "name": "exam-mass-spectrometer",
+    "opts": {
+     "V": 1000,
+     "B": 0.2
+    },
+    "cap": "The plates speed the ion up; inside the field the force is always at right angles to the motion, so it bends the path into a circle without changing the speed."
+   },
+   {
+    "t": "ex",
+    "title": "Neon ions",
+    "q": "Singly charged neon-20 ions ($20\\ \\text{u}$) are sped up through $1000\\ \\text{V}$ and enter a $0.20\\ \\text{T}$ field. Find (1) their speed and (2) the radius.",
+    "steps": [
+     "(1) $m = 20(1.66 \\times 10^{-27}) = 3.32 \\times 10^{-26}\\ \\text{kg}$; $v = \\sqrt{2(1.6 \\times 10^{-19})(1000)/m} = 9.82 \\times 10^{4}\\ \\text{m/s}$.",
+     "(2) $r = \\dfrac{mv}{qB} = 10.2\\ \\text{cm}$."
+    ],
+    "a": "$9.82 \\times 10^4\\ \\text{m/s}$, $10.2\\ \\text{cm}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Saying a heavier ion's radius grows in proportion to its mass. The heavier ion also leaves the voltage slower, so $r$ grows only as $\\sqrt{m}$. Check: substitute $v$ before comparing."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 18 to 23 on electricity and magnetism"
+   }
+  ]
+ },
+ "exam.sliding-rod": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A rod sliding on rails is the simplest generator. It joins <a href=\"/physics/physics-2/motional-emf/\">Motional emf</a>, Ohm's law and the <a href=\"/physics/physics-2/force-on-wire/\">force on a current</a>, with <a href=\"/physics/physics-2/lenzs-law/\">Lenz's law</a> deciding every direction. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "$$\\varepsilon = BLv, \\qquad I = \\frac{\\varepsilon}{R}, \\qquad F = ILB = \\frac{B^2L^2v}{R}.$$ The magnetic force always opposes the motion, so something must keep pulling; its power $Fv$ equals the heating $I^2R$. With a steady pull $F$, the rod settles at $v_t = FR/(B^2L^2)$."
+   },
+   {
+    "t": "viz",
+    "name": "exam-sliding-rod",
+    "opts": {
+     "into": true,
+     "right": true
+    },
+    "cap": "As the rod moves right the loop's area grows. The red dots show the induced current, and the red arrow the force that opposes the motion."
+   },
+   {
+    "t": "ex",
+    "title": "Pulling the rod",
+    "q": "A rod $0.40\\ \\text{m}$ long slides at $3.0\\ \\text{m/s}$ on rails joined by $2.0\\ \\Omega$, in a $0.50\\ \\text{T}$ field. Find (1) the emf, (2) the current and (3) the pulling force needed.",
+    "steps": [
+     "(1) $\\varepsilon = (0.50)(0.40)(3.0) = 0.600\\ \\text{V}$.",
+     "(2) $I = 0.600/2.0 = 0.300\\ \\text{A}$.",
+     "(3) $F = (0.300)(0.40)(0.50) = 0.0600\\ \\text{N}$."
+    ],
+    "a": "$0.600\\ \\text{V}$, $0.300\\ \\text{A}$, $0.0600\\ \\text{N}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Getting the current's direction backward. The induced current must push back on the rod; if your current would speed the rod up, energy would come from nowhere. Check with $F = IL \\times B$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 18 to 23 on electricity and magnetism"
+   }
+  ]
+ },
+ "exam.photoelectric": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The photoelectric effect shows light arriving in packets. Each electron gets the energy of one photon, as in <a href=\"/physics/physics-2/photoelectric-effect/\">The Photoelectric Effect</a>; what is left after the work function becomes its kinetic energy. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "$$E = hf = \\frac{hc}{\\lambda}, \\quad hc = 1240\\ \\text{eV·nm}; \\qquad K_{\\max} = E - \\phi; \\qquad eV_s = K_{\\max}.$$ Brighter light means more photons, so more electrons, but not faster ones."
+   },
+   {
+    "t": "viz",
+    "name": "exam-photoelectric",
+    "opts": {
+     "lam": 300
+    },
+    "cap": "Each wavy packet is one photon. The slowing voltage turns the electrons back; only those with enough energy reach the collector."
+   },
+   {
+    "t": "ex",
+    "title": "Ultraviolet on potassium",
+    "q": "Light of $300\\ \\text{nm}$ falls on potassium ($\\phi = 2.3\\ \\text{eV}$). Find (1) the photon energy, (2) $K_{\\max}$ and (3) the stopping voltage.",
+    "steps": [
+     "(1) $E = 1240/300 = 4.13\\ \\text{eV}$.",
+     "(2) $K_{\\max} = 4.13 - 2.3 = 1.83\\ \\text{eV}$.",
+     "(3) $V_s = 1.83\\ \\text{V}$."
+    ],
+    "a": "$4.13\\ \\text{eV}$, $1.83\\ \\text{eV}$, $1.83\\ \\text{V}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Expecting brighter light to give faster electrons. The energy each electron gets depends only on the photon, so on the wavelength. Check: below the threshold frequency, no brightness gets any electron out."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 29 and 30 on the quantum and the atom"
+   }
+  ]
+ },
+ "exam.hydrogen-levels": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Hydrogen's light comes from jumps between fixed energy levels, as in <a href=\"/physics/physics-2/bohr-model/\">The Bohr Model</a>. Each jump gives out (or takes in) one photon, so each pair of levels gives one line in the <a href=\"/physics/physics-2/spectra/\">spectrum</a>. Each problem here is one short scene and a chain of questions. Answer them in order: each later question uses what you found before, so a slip early on carries through. Keep full precision between steps and round only at the end."
+   },
+   {
+    "t": "key",
+    "html": "$$E_n = -\\frac{13.6\\ \\text{eV}}{n^2}, \\qquad E_{\\text{photon}} = E_{\\text{upper}} - E_{\\text{lower}}, \\qquad \\lambda = \\frac{1240\\ \\text{eV·nm}}{E_{\\text{photon}}}.$$ Visible light runs from about 400 to 700 nm. Atoms excited to level $N$ can give $N(N - 1)/2$ different lines."
+   },
+   {
+    "t": "viz",
+    "name": "exam-hydrogen-levels",
+    "opts": {
+     "nu": 3,
+     "nl": 2
+    },
+    "cap": "The electron drops from level 3 to level 2 and gives out a red photon: the brightest visible line of hydrogen."
+   },
+   {
+    "t": "ex",
+    "title": "From 3 to 2",
+    "q": "Find the energy and wavelength of the photon from hydrogen's $n = 3 \\to 2$ jump.",
+    "steps": [
+     "$E_3 = -1.51\\ \\text{eV}$, $E_2 = -3.40\\ \\text{eV}$, so $E = 1.89\\ \\text{eV}$.",
+     "$\\lambda = 1240/1.89 = 656\\ \\text{nm}$: red, visible light."
+    ],
+    "a": "$1.89\\ \\text{eV}$, $656\\ \\text{nm}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using one level's energy as the photon's energy. The photon carries the <em>difference</em> between two levels. Check: a jump between neighboring high levels must give a small energy, and a long wavelength."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e (Rice University), chapters 29 and 30 on the quantum and the atom"
+   }
+  ]
+ }
+}

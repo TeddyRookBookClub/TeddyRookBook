@@ -1,0 +1,282 @@
+year: 2019
+edition: 80th
+date: "December 7, 2019"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2019.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Number theory: values of a classic cubic form"
+    areas: [number-theory, algebra]
+    difficulty: 1
+    answer: "All nonnegative integers not congruent to $3$ or $6$ modulo $9$"
+    hints:
+      - "Factor the expression: one factor is $A+B+C$."
+      - "If $3$ divides the value, show that $9$ does."
+    solution: |
+      **Key idea:** factor as $(A+B+C)\cdot Q$. Small triples realize every allowed value, and a divisibility argument rules out the rest.
+
+      The standard factorization is
+      $$A^3+B^3+C^3-3ABC=(A+B+C)\,Q,\qquad Q=A^2+B^2+C^2-AB-BC-CA=\tfrac12\big[(A-B)^2+(B-C)^2+(C-A)^2\big].$$
+      In particular the value is never negative.
+
+      **Reaching values.** For $n\ge0$:
+      - $(n+1,n,n)$: $A+B+C=3n+1$ and $Q=1$, giving $3n+1$;
+      - $(n+1,n+1,n)$: $A+B+C=3n+2$ and $Q=1$, giving $3n+2$;
+      - $(n+1,n,n-1)$ for $n\ge1$: $A+B+C=3n$ and $Q=\frac12(1+1+4)=3$, giving $9n$. Also $(0,0,0)$ gives $0$.
+
+      So every integer $\ge0$ that is not a multiple of $3$, and every multiple of $9$, occurs.
+
+      **Excluding $3,6\pmod9$.** Note $Q=(A+B+C)^2-3(AB+BC+CA)$. Suppose $3$ divides the value. If $3\mid A+B+C$, then $3\mid Q$ as well, so $9$ divides the product. If $3\nmid A+B+C$, then $3\mid Q$ would force $3\mid(A+B+C)^2$, which is false. So a value divisible by $3$ is divisible by $9$.
+    checked: "script: all triples with entries below 110 give exactly the values below 300 not ≡ 3, 6 (mod 9)"
+    status: ready
+
+  - id: A2
+    topic: "Triangle geometry: incenter, centroid and a half-angle"
+    areas: [geometry]
+    difficulty: 2
+    answer: "$\\alpha=\\dfrac{\\pi}{2}$"
+    hints:
+      - "Parallel to $AB$ means $I$ and $G$ are equally far from line $AB$. Express both distances using the area."
+      - "You should get $a+b=2c$. Turn it into a statement about $\\tan\\frac\\alpha2\\tan\\frac\\beta2$."
+    solution: |
+      **Key idea:** equal heights above $AB$ give $a+b=2c$, and that side condition becomes $\tan\frac\alpha2\tan\frac\beta2=\frac13$.
+
+      Let $a,b,c$ be the sides opposite $A,B,C$, let $\Delta$ be the area, and let $\gamma$ be the angle at $C$. The distance from $I$ to $AB$ is the inradius $r=\frac{2\Delta}{a+b+c}$. The distance from $G$ to $AB$ is one third of the height from $C$, i.e. $\frac13\cdot\frac{2\Delta}{c}$. Since $IG\parallel AB$ and both points are on the same side of $AB$, these are equal:
+      $$a+b+c=3c\quad\Longrightarrow\quad a+b=2c .$$
+      By the law of sines, $\sin\alpha+\sin\beta=2\sin\gamma$. Write both sides with half-angles, using $\sin\frac{\alpha+\beta}2=\cos\frac\gamma2$ and $\cos\frac{\alpha+\beta}{2}=\sin\frac\gamma2$:
+      $$2\cos\tfrac\gamma2\cos\tfrac{\alpha-\beta}2=4\sin\tfrac\gamma2\cos\tfrac\gamma2\ \Longrightarrow\ \cos\tfrac{\alpha-\beta}2=2\cos\tfrac{\alpha+\beta}2 .$$
+      Expanding both cosines,
+      $$\cos\tfrac\alpha2\cos\tfrac\beta2+\sin\tfrac\alpha2\sin\tfrac\beta2=2\cos\tfrac\alpha2\cos\tfrac\beta2-2\sin\tfrac\alpha2\sin\tfrac\beta2,$$
+      so $\tan\frac\alpha2\tan\frac\beta2=\frac13$. Since $\tan\frac\beta2=\frac13$, we get $\tan\frac\alpha2=1$ and $\alpha=\frac\pi2$.
+
+      (Check: such a triangle exists. Here $\beta=2\arctan\frac13$ is acute, and $\gamma=\frac\pi2-\beta>0$.)
+    checked: "script: built the triangle with these angles; I and G are at the same height (0.25) above AB"
+    status: ready
+
+  - id: A3
+    topic: "Polynomials: average root size with increasing coefficients"
+    areas: [algebra, analysis]
+    difficulty: 3
+    answer: "$M=2019^{-1/2019}$"
+    hints:
+      - "The product of the root sizes is $|b_0/b_{2019}|$. Compare the average with the geometric mean."
+      - "For equality you want all roots on one circle. Try coefficients in geometric progression."
+    solution: |
+      **Key idea:** AM-GM bounds the average root size by the geometric mean, which is fixed by $b_0/b_{2019}$. Coefficients in geometric progression make every root the same size.
+
+      **Lower bound.** By Vieta, $|z_1z_2\cdots z_{2019}|=\frac{|b_0|}{|b_{2019}|}\ge\frac{1}{2019}$, since $b_0\ge1$ and $b_{2019}\le2019$. By AM-GM,
+      $$\mu=\frac{|z_1|+\dots+|z_{2019}|}{2019}\ \ge\ \big(|z_1|\cdots|z_{2019}|\big)^{1/2019}\ \ge\ 2019^{-1/2019}.$$
+
+      **Attained.** Let $c=2019^{1/2019}>1$ and $b_k=c^k$. Then $b_0=1<b_1<\dots<b_{2019}=2019$. With $w=cz$,
+      $$P(z)=\sum_{k=0}^{2019}(cz)^k=\frac{w^{2020}-1}{w-1}.$$
+      Its roots are the $2020$-th roots of unity other than $1$, all with $|w|=1$. So every root has $|z|=\frac1c$, and $\mu=2019^{-1/2019}$.
+
+      Hence the largest constant is $M=2019^{-1/2019}$.
+    checked: "script: computed the roots of the extremal polynomial (mean 0.996238 = 2019^(−1/2019)); random admissible coefficients give larger means"
+    status: ready
+
+  - id: A4
+    topic: "Analysis: functions with zero average on unit spheres"
+    areas: [analysis, calculus]
+    difficulty: 3
+    answer: "No"
+    hints:
+      - "Look for a function of $z$ alone."
+      - "On a sphere, area is spread evenly in the height coordinate (Archimedes)."
+    solution: |
+      **Key idea:** a function of height alone integrates over a sphere like a one-variable integral, so we can choose a frequency that makes it vanish.
+
+      **Archimedes' fact.** On a sphere of radius $1$, the area between two horizontal planes at heights $z_0+s$ and $z_0+t$ (inside the sphere) is $2\pi(t-s)$. So for a sphere $S$ centered at height $z_0$ and any continuous $\phi$,
+      $$\int_S\phi(z)\,dA=2\pi\int_{-1}^{1}\phi(z_0+t)\,dt .$$
+
+      **The example.** Take $f(x,y,z)=\sin(\pi z)$, which is continuous and not identically zero. For any unit sphere centered at height $z_0$,
+      $$\int_S f\,dA=2\pi\int_{-1}^1\sin(\pi z_0+\pi t)\,dt=2\pi\Big(\sin(\pi z_0)\int_{-1}^1\cos(\pi t)\,dt+\cos(\pi z_0)\int_{-1}^1\sin(\pi t)\,dt\Big)=0,$$
+      since $\int_{-1}^1\cos(\pi t)\,dt=\frac{2\sin\pi}{\pi}=0$ and the sine integral vanishes by oddness.
+
+      So the answer is no: $f$ need not be identically zero.
+    checked: "script: Monte Carlo averages of sin(πz) over random unit spheres are about 0 (within 0.0013)"
+    status: ready
+
+  - id: A5
+    topic: "Finite fields: multiplicity of the root 1"
+    areas: [algebra, number-theory]
+    difficulty: 4
+    answer: "$n=\\dfrac{p-1}{2}$"
+    hints:
+      - "Use the operator $\\theta=x\\frac{d}{dx}$. It sends $\\sum a_kx^k$ to $\\sum ka_kx^k$."
+      - "Recall $\\sum_{k=1}^{p-1}k^m\\equiv0\\pmod p$ unless $p-1\\mid m$, in which case it is $-1$."
+    solution: |
+      **Key idea:** test divisibility by $(x-1)^n$ with the operator $\theta=x\frac{d}{dx}$. At $x=1$, $\theta^jq$ becomes a power sum mod $p$, and those are easy.
+
+      **A divisibility test.** Let $\theta=x\frac{d}{dx}$ act on polynomials over $\mathbb F_p$. Claim: for $n\le p$, $(x-1)^n\mid q$ exactly when $(\theta^jq)(1)=0$ for $j=0,1,\dots,n-1$.
+
+      To see this, expand $q=\sum_i e_i(x-1)^i$. Applying $\theta$ to a polynomial divisible by $(x-1)^i$ gives one divisible by $(x-1)^{i-1}$. So $(\theta^j(x-1)^i)(1)=0$ for $j<i$. Also $(\theta^i(x-1)^i)(1)=i!$, the only surviving term coming from differentiating $(x-1)^i$ down to a constant. So the values $(\theta^jq)(1)$ for $j<n$ are a triangular combination of $e_0,\dots,e_{n-1}$ with diagonal entries $j!$. These are nonzero in $\mathbb F_p$ for $j<p$. So the values all vanish exactly when $e_0=\dots=e_{n-1}=0$, i.e. when $(x-1)^n\mid q$.
+
+      **The power sums.** Here $(\theta^jq)(1)=\sum_{k=1}^{p-1}k^j a_k=\sum_{k=1}^{p-1}k^{\,j+\frac{p-1}2}$ in $\mathbb F_p$. Take a generator $\rho$ of $\mathbb F_p^\times$. Then $\sum_{k=1}^{p-1}k^m=\sum_{i=0}^{p-2}\rho^{im}$, which is $-1$ if $(p-1)\mid m$ and $0$ otherwise (a geometric series). For $0\le j\le\frac{p-3}2$, the exponent $j+\frac{p-1}2$ lies strictly between $0$ and $p-1$, so the sum is $0$. For $j=\frac{p-1}2$ the exponent is $p-1$, and the sum is $-1\ne0$.
+
+      So $(x-1)^n\mid q$ for $n=\frac{p-1}2$ but not for $n=\frac{p+1}2$. Both are at most $p$, so the test applies. The answer is $\frac{p-1}{2}$.
+    checked: "script: computed the exact multiplicity for every odd prime p ≤ 23; always (p−1)/2"
+    status: ready
+
+  - id: A6
+    topic: "Analysis: flatness at zero versus second-derivative growth"
+    areas: [analysis, calculus]
+    difficulty: 4
+    hints:
+      - "Assume $x^r|g''(x)|\\le K$ near $0$, and show $g'(x)\\to0$."
+      - "Use Taylor's theorem from $x$ to $x+h$ with a step $h$ of size about $\\delta x^r$."
+    solution: |
+      **Key idea:** if $x^r|g''|$ stays bounded, Taylor's theorem with a step of length about $\delta x^r$ squeezes $g'(x)$ between two small quantities.
+
+      Suppose $\limsup_{x\to0^+}x^r|g''(x)|<\infty$. Then there are $K$ and $x_0\in(0,\frac12)$ with $|g''(t)|\le Kt^{-r}$ for $0<t<2x_0$. We show $g'(x)\to0$.
+
+      Fix $\delta\in(0,1]$. For $0<x<x_0$ let $h=\delta x^r$. Since $r>1$ and $x<1$, we have $0<h\le x$, so $[x,x+h]\subset(0,2x_0)$. Taylor's theorem with the Lagrange remainder (which only needs $g''$ to exist) gives some $\xi\in(x,x+h)$ with
+      $$g(x+h)=g(x)+h\,g'(x)+\tfrac{h^2}{2}g''(\xi).$$
+      Hence
+      $$|g'(x)|\le\frac{|g(x+h)|+|g(x)|}{h}+\frac h2|g''(\xi)|\le\frac{|g(x+h)|+|g(x)|}{\delta x^r}+\frac{\delta x^r}{2}\cdot\frac{K}{x^r}.$$
+      Since $g(t)=o(t^r)$ and $x+h\le2x$, the numerator is $o(x^r)$, so the first term tends to $0$ as $x\to0^+$. Therefore
+      $$\limsup_{x\to0^+}|g'(x)|\le\frac{K\delta}{2}.$$
+      As $\delta$ was arbitrary, $g'(x)\to0$. So if the second alternative fails, the first one holds.
+    checked: "proof only; no numeric answer"
+    status: ready
+
+  - id: B1
+    topic: "Lattice geometry: squares among points on dyadic circles"
+    areas: [combinatorics, geometry]
+    difficulty: 2
+    answer: "$5n+1$"
+    hints:
+      - "Each circle $x^2+y^2=2^k$ has exactly four lattice points. Why?"
+      - "For a square with center $c$ and half-diagonal $w$, opposite vertices satisfy $|c+w|^2+|c-w|^2=2(|c|^2+|w|^2)$. Sums of two powers of $2$ are rarely equal."
+    solution: |
+      **Key idea:** the point set is tiny (four points per circle, plus the origin). An identity for squares shows that the only squares are the four-point circles themselves and squares with a corner at the origin.
+
+      **The points.** If $x^2+y^2=2^k$ with $k\ge2$, then $x$ and $y$ are both even (squares are $0$ or $1$ mod $4$), and halving gives $2^{k-2}$. The base cases $2^0$ and $2^1$ give $(\pm1,0),(0,\pm1)$ and $(\pm1,\pm1)$. So circle $k$ contains exactly four lattice points: $2^{k/2}$ times the axis unit vectors ($k$ even), or $2^{(k-1)/2}(\pm1,\pm1)$ ($k$ odd). These four points form a square centered at the origin. That gives $n+1$ squares.
+
+      **Squares with a vertex at the origin.** List such a square counterclockwise as $0,\,v,\,v+iv,\,iv$ (complex notation). It is determined by $v$. If $|v|^2=2^k$, then $iv$ is on the same circle and $|v+iv|^2=2^{k+1}$, and $(1+i)v$ is again one of the listed points. So we need $k+1\le n$: four choices of $v$ for each $k=0,\dots,n-1$, giving $4n$ squares.
+
+      **No other squares.** Suppose a square avoids the origin. Write its vertices as $c+w,\ c+iw,\ c-w,\ c-iw$. Their squared lengths $N_1,N_2,N_3,N_4$ are powers of $2$, and
+      $$N_1+N_3=2(|c|^2+|w|^2)=N_2+N_4 .$$
+      A sum of two powers of $2$ determines the pair (binary expansion), so $\{N_1,N_3\}=\{N_2,N_4\}$. Hence two adjacent vertices $P,Q$ lie on the same circle, of radius $\rho$. Then the line through the origin perpendicular to $PQ$ is a symmetry axis of the square. Let $h\ge0$ be the distance from the origin to line $PQ$ and $s$ the side. Since $P,Q$ are two of the four points on their circle, either $s^2=2\rho^2$ and $h^2=\rho^2/2$, or $s=2\rho$ and $h=0$. The other two vertices lie on the parallel line at distance $|h\pm s|$, offset $s/2$ from the axis.
+      - If $s^2=2\rho^2$: the squared distance is $(h+s)^2+\frac{s^2}{4}=5\rho^2$, which is not a power of $2$; or $(s-h)^2+\frac{s^2}4=\rho^2$, which is the circle square.
+      - If $s=2\rho$: the squared distance is $4\rho^2+\rho^2=5\rho^2$, again impossible.
+
+      Total: $(n+1)+4n=5n+1$.
+    viz: putnam-2019-b1
+    checked: "script: brute-force count of squares for n = 0…5 gives 1, 6, 11, 16, 21, 26"
+    status: ready
+
+  - id: B2
+    topic: "Trigonometric sums: a telescoping identity"
+    areas: [analysis]
+    difficulty: 2
+    answer: "$\\dfrac{8}{\\pi^3}$"
+    hints:
+      - "Use $\\cos^2u-\\cos^2v=\\sin(v+u)\\sin(v-u)$ with consecutive angles."
+      - "Each term becomes a difference of secant squares."
+    solution: |
+      **Key idea:** the numerator is a difference of squared cosines in disguise, so each term is a difference of $\sec^2$ values and the sum telescopes.
+
+      Let $u_k=\frac{k\pi}{2n}$. The identity $\cos^2u-\cos^2v=\sin(v+u)\sin(v-u)$ with $u=u_{k-1}$, $v=u_k$ gives
+      $$\sin\frac{(2k-1)\pi}{2n}=\frac{\cos^2u_{k-1}-\cos^2u_k}{\sin\frac{\pi}{2n}} .$$
+      Dividing by $\cos^2u_{k-1}\cos^2u_k$, the $k$-th term is
+      $$\frac{\sec^2u_k-\sec^2u_{k-1}}{\sin\frac\pi{2n}} .$$
+      Summing over $k=1,\dots,n-1$ telescopes:
+      $$a_n=\frac{\sec^2u_{n-1}-1}{\sin\frac\pi{2n}}=\frac{\csc^2\frac{\pi}{2n}-1}{\sin\frac\pi{2n}},$$
+      because $\cos u_{n-1}=\cos(\frac\pi2-\frac\pi{2n})=\sin\frac{\pi}{2n}$. As $n\to\infty$, $\sin\frac\pi{2n}\sim\frac{\pi}{2n}$, so $a_n\sim\big(\frac{2n}{\pi}\big)^3$ and
+      $$\lim_{n\to\infty}\frac{a_n}{n^3}=\frac8{\pi^3}.$$
+    checked: "script: a_n/n^3 at n = 10^4 is 0.2580123 ≈ 8/π^3"
+    status: ready
+
+  - id: B3
+    topic: "Linear algebra: a reflection times an orthogonal matrix"
+    areas: [linear-algebra]
+    difficulty: 2
+    hints:
+      - "You want $x\\ne0$ with $Qx=Px$, since $P^2=I$."
+      - "Try $x=(Q-I)^{-1}u$ and use $|Qx|=|x|$."
+    solution: |
+      **Key idea:** pick $x$ with $Qx=x+u$; preserving length forces $u^Tx=-\frac12$, and that makes $Px=Qx$.
+
+      Since $P=I-2uu^T$ is a reflection, $P^2=I$. So $PQx=x$ is the same as $Qx=Px$.
+
+      Because $1$ is not an eigenvalue of $Q$, the matrix $Q-I$ is invertible. Let $x=(Q-I)^{-1}u$, which is nonzero because $u\ne0$. Then $Qx=x+u$. Since $Q$ is orthogonal, $|Qx|^2=|x|^2$:
+      $$|x|^2+2u^Tx+u^Tu=|x|^2\ \Longrightarrow\ u^Tx=-\tfrac12 .$$
+      Hence
+      $$Px=x-2u\,(u^Tx)=x+u=Qx,$$
+      and so $PQx=P^2x=x$. Thus $1$ is an eigenvalue of $PQ$.
+    checked: "script: random orthogonal Q without eigenvalue 1 (n = 4, 5); PQx = x to 1e−15"
+    status: ready
+
+  - id: B4
+    topic: "PDEs: two equations pin down the mixed partial"
+    areas: [analysis, calculus]
+    difficulty: 3
+    answer: "$m(f)=2\\ln2-\\tfrac12$"
+    hints:
+      - "Substitute $x=e^s$, $y=e^t$. Then $xf_x$ is $\\partial_s$ and $x^2f_{xx}=\\partial_s^2-\\partial_s$."
+      - "The expression in $m(f)$ is a double integral of $f_{xy}$ over a unit square."
+    solution: |
+      **Key idea:** in logarithmic coordinates the two equations combine to give the mixed partial $f_{xy}$ outright. The quantity in $m(f)$ is its integral over a unit square.
+
+      Let $x=e^s$, $y=e^t$ and $F(s,t)=f(e^s,e^t)$. Then $F_s=xf_x$, $F_{ss}=x^2f_{xx}+xf_x$, and $F_{st}=xyf_{xy}$, and the same with $t,y$. The equations become
+      $$F_s+F_t=(s+t)e^{s+t},\qquad F_{ss}+F_{tt}-(F_s+F_t)=e^{s+t}.$$
+      Differentiate the first equation with respect to $s$ and to $t$ and add:
+      $$F_{ss}+2F_{st}+F_{tt}=2(1+s+t)e^{s+t}.$$
+      The second equation says $F_{ss}+F_{tt}=(1+s+t)e^{s+t}$. Subtracting, $2F_{st}=(1+s+t)e^{s+t}$. Back in $x,y$:
+      $$f_{xy}=\frac{1+\ln x+\ln y}{2}.$$
+      Since $f$ is $C^2$,
+      $$f(s{+}1,s{+}1)-f(s{+}1,s)-f(s,s{+}1)+f(s,s)=\int_s^{s+1}\!\!\int_s^{s+1}f_{xy}\,dx\,dy=\frac12+\int_s^{s+1}\ln x\,dx .$$
+      This increases with $s$, so the minimum over $s\ge1$ is at $s=1$:
+      $$m(f)=\tfrac12+(2\ln2-1)=2\ln2-\tfrac12,$$
+      the same for every $f$ in the family. (The family is not empty: $f=\frac12(xy\ln(xy)-xy)$ satisfies both equations.)
+    checked: "sympy: the sample f satisfies both equations, and the difference at s = 1 equals 2 ln 2 − 1/2 = 0.88629"
+    status: ready
+
+  - id: B5
+    topic: "Interpolation: Fibonacci numbers and finite differences"
+    areas: [algebra, combinatorics]
+    difficulty: 3
+    answer: "$p(2019)=F_{2019}-F_{1010}$"
+    hints:
+      - "Use Binet's formula; $F_{2n+1}$ is a combination of $(\\varphi^2)^n$ and $(\\psi^2)^n$."
+      - "The polynomial of degree $\\le N$ agreeing with $c^n$ at $n=0,\\dots,N$ is $\\sum_{j\\le N}\\binom nj(c-1)^j$."
+    solution: |
+      **Key idea:** interpolate each Binet term $c^n$ by its truncated binomial expansion. The missing tail at $n=N+1$ is just one term, and $\varphi^2-1=\varphi$ makes it a Fibonacci number.
+
+      Write $x=2n+1$, so we need the polynomial $q(n)=p(2n+1)$ of degree $1008$ that equals $F_{2n+1}$ for $n=0,\dots,1008$, evaluated at $n=1009$.
+
+      **Interpolating $c^n$.** For any number $c$, $c^n=\sum_{j=0}^{n}\binom nj(c-1)^j$. The polynomial $Q_c(n)=\sum_{j=0}^{N}\binom nj(c-1)^j$ has degree $\le N$ in $n$ and agrees with $c^n$ for $n=0,\dots,N$ (the omitted terms have $\binom nj=0$). At $n=N+1$ only the last term is missing:
+      $$Q_c(N+1)=c^{N+1}-(c-1)^{N+1}.$$
+
+      **Binet.** With $\varphi=\frac{1+\sqrt5}2$ and $\psi=\frac{1-\sqrt5}2$,
+      $$F_{2n+1}=\frac{\varphi\,(\varphi^2)^n-\psi\,(\psi^2)^n}{\sqrt5}.$$
+      By uniqueness of interpolation, $q(n)=\frac{1}{\sqrt5}\big(\varphi Q_{\varphi^2}(n)-\psi Q_{\psi^2}(n)\big)$ with $N=1008$. Since $\varphi^2-1=\varphi$ and $\psi^2-1=\psi$,
+      $$q(1009)=\frac{\varphi(\varphi^{2018}-\varphi^{1009})-\psi(\psi^{2018}-\psi^{1009})}{\sqrt5}=F_{2019}-F_{1010}.$$
+      So $j=2019$ and $k=1010$.
+    checked: "script: exact Newton forward differences of F_1, F_3, …, F_2017 give p(2019) = F_2019 − F_1010"
+    status: ready
+
+  - id: B6
+    topic: "Lattices: perfect codes in every dimension"
+    areas: [combinatorics, number-theory]
+    difficulty: 3
+    answer: "Every $n\\ge1$"
+    hints:
+      - "In one dimension, every third point works. In two dimensions, think of a knight-like pattern mod $5$."
+      - "Use the weighted sum $\\sum i\\,x_i$ modulo $2n+1$."
+    solution: |
+      **Key idea:** a single linear congruence mod $2n+1$ works, because the $2n$ neighbors of a point change $\sum i\,x_i$ by $\pm1,\pm2,\dots,\pm n$, which are all the nonzero residues, each once.
+
+      For $p=(x_1,\dots,x_n)\in\mathbb Z^n$ let $\sigma(p)=x_1+2x_2+\dots+nx_n \bmod (2n+1)$, and let
+      $$S=\{p:\ \sigma(p)=0\}.$$
+      Moving to a neighbor changes one coordinate $x_i$ by $\pm1$, so it changes $\sigma$ by $\pm i$. As $i$ runs over $1,\dots,n$ and the sign over $\pm$, the changes $\pm1,\dots,\pm n$ are exactly the $2n$ nonzero residues mod $2n+1$, each once.
+
+      - If $p\in S$, every neighbor has $\sigma\ne0$, so no neighbor is in $S$.
+      - If $p\notin S$ with $\sigma(p)=r\ne0$, exactly one neighbor has change $\equiv-r$, so exactly one neighbor is in $S$.
+
+      So such a set exists for every $n\ge1$.
+    viz: putnam-2019-b6
+    checked: "script: verified both conditions on a window of Z^n for n = 1…4"
+    status: ready

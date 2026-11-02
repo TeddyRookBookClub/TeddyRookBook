@@ -1,0 +1,284 @@
+year: 2016
+edition: 77th
+date: "December 3, 2016"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2016.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Number theory: derivatives of integer polynomials and factorials"
+    areas: [number-theory, algebra]
+    difficulty: 1
+    answer: "$j = 8$"
+    hints:
+      - "Differentiate $x^i$ exactly $j$ times. What factor appears in front?"
+      - "Factor $2016$ into primes and look for the first factorial that contains it."
+    solution: |
+      **Key idea:** every $j$-th derivative of an integer polynomial at an integer is a multiple of $j!$, and $x^j$ shows that nothing better is true.
+
+      Differentiating $x^i$ a total of $j$ times gives $\frac{i!}{(i-j)!}x^{i-j} = j!\binom{i}{j}x^{i-j}$ (and $0$ when $i<j$). So for $p(x)=\sum a_i x^i$ with integer $a_i$ and an integer $k$,
+      $$p^{(j)}(k) = j!\sum_{i\ge j} a_i\binom{i}{j}k^{i-j},$$
+      which is $j!$ times an integer. Hence if $2016 \mid j!$, the property holds.
+
+      Conversely, the polynomial $p(x)=x^j$ has $p^{(j)}(k)=j!$ for every $k$, so the property forces $2016\mid j!$.
+
+      Now $2016 = 2^5\cdot 3^2\cdot 7$. A factorial divisible by $7$ needs $j\ge 7$. But $7! = 5040 = 2^4\cdot 3^2\cdot 5\cdot 7$ has only four factors of $2$, so $7!$ fails. Then $8! = 2^7\cdot 3^2\cdot 5\cdot 7$ works. The answer is $j=8$.
+    checked: "script: smallest j with 2016 | j! is 8"
+    status: ready
+
+  - id: A2
+    topic: "Asymptotics: comparing two binomial coefficients"
+    areas: [combinatorics, analysis]
+    difficulty: 2
+    answer: "$\\dfrac{3+\\sqrt5}{2}$"
+    hints:
+      - "Write the ratio of the two binomial coefficients as a simple rational function of $m$ and $n$."
+      - "The condition becomes a quadratic inequality in $m$; its larger root grows like a constant times $n$."
+    solution: |
+      **Key idea:** the ratio of the two binomial coefficients is a rational function, so the inequality is a quadratic in $m$.
+
+      When $m \ge n+1$ both coefficients are positive, and cancelling factorials gives
+      $$\frac{\binom{m}{n-1}}{\binom{m-1}{n}} = \frac{m!\,n!\,(m-1-n)!}{(n-1)!\,(m-n+1)!\,(m-1)!} = \frac{mn}{(m-n+1)(m-n)}.$$
+      So for $m\ge n+1$ the inequality holds exactly when $mn > (m-n)(m-n+1)$, which expands to
+      $$q(m) := m^2-(3n-1)m+(n^2-n) < 0 .$$
+      The quadratic $q$ is negative exactly between its roots
+      $$r_\pm(n) = \frac{(3n-1)\pm\sqrt{5n^2-2n+1}}{2}.$$
+      For large $n$ we have $r_-(n) < n+1 < r_+(n)$ (indeed $r_-\approx 0.38n$ and $r_+\approx 2.62n$), so every integer $m$ with $n+1\le m<r_+$ satisfies the inequality, and no integer $m\ge r_+$ does. Therefore $M(n)$ is the largest integer below $r_+(n)$, and
+      $$r_+(n)-1 \le M(n) < r_+(n).$$
+      Dividing by $n$,
+      $$\lim_{n\to\infty}\frac{M(n)}{n} = \lim_{n\to\infty}\frac{r_+(n)}{n} = \frac{3+\sqrt5}{2}.$$
+      (It is the larger root of $x^2-3x+1=0$, which is what you get from $x=(x-1)^2$ when you set $m\approx xn$.)
+    checked: "script: computed M(n)/n for n up to 3000; it approaches 2.6180"
+    status: ready
+
+  - id: A3
+    topic: "Functional equation: a three-cycle and arctangent integrals"
+    areas: [analysis, calculus]
+    difficulty: 2
+    answer: "$\\dfrac{3\\pi}{8}$"
+    hints:
+      - "Apply the map $x\\mapsto 1-\\tfrac1x$ three times. Where do you end up?"
+      - "With three equations in three unknown values, solve for $f(x)$, then integrate each arctangent term separately."
+    solution: |
+      **Key idea:** the substitution $x\mapsto 1-\frac1x$ has order three, so the equation can be solved for $f$ exactly.
+
+      Let $T(x)=1-\frac1x$. For $x\ne 0,1$ we get $T(x)=\frac{x-1}{x}$, $T(T(x)) = \frac{1}{1-x}$, and $T(T(T(x)))=x$. Write $y=T(x)$ and $z=T(y)$. Using the given relation at $x$, $y$ and $z$:
+      $$f(x)+f(y)=\arctan x,\qquad f(y)+f(z)=\arctan y,\qquad f(z)+f(x)=\arctan z.$$
+      Adding the first and third and subtracting the second,
+      $$f(x)=\tfrac12\Big(\arctan x-\arctan\big(1-\tfrac1x\big)+\arctan\tfrac{1}{1-x}\Big)\qquad (x\ne0,1).$$
+      Now integrate each piece over $(0,1)$.
+
+      - $\int_0^1\arctan x\,dx = \frac{\pi}{4}-\frac{\ln 2}{2}$ (integrate by parts).
+      - With $u=1-x$: $\int_0^1 \arctan\frac{1}{1-x}\,dx=\int_0^1\arctan\frac1u\,du=\int_0^1\big(\frac\pi2-\arctan u\big)du=\frac\pi4+\frac{\ln2}{2}$.
+      - For $0<x<1$, $1-\frac1x=-\frac{1-x}{x}$. Let $I=\int_0^1\arctan\frac{1-x}{x}\,dx$. The swap $x\leftrightarrow1-x$ shows $I=\int_0^1\arctan\frac{x}{1-x}\,dx$. Since $\arctan t+\arctan\frac1t=\frac\pi2$ for $t>0$, adding the two forms gives $2I=\frac\pi2$, so $I=\frac\pi4$. Hence $\int_0^1\arctan(1-\frac1x)\,dx=-\frac\pi4$.
+
+      Putting it together:
+      $$\int_0^1 f(x)\,dx=\tfrac12\Big(\tfrac\pi4-\tfrac{\ln2}2+\tfrac\pi4+\tfrac\pi4+\tfrac{\ln2}2\Big)=\frac{3\pi}{8}.$$
+    checked: "script: numerical integration of the solved f gives 1.178097 = 3π/8; the functional equation was checked at sample points"
+    status: ready
+
+  - id: A4
+    topic: "Tiling: odd rectangle with trominoes and skew tetrominoes"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: "$mn$ tiles"
+    hints:
+      - "Mark the cells whose row and column numbers are both odd. How many marked cells can one tile cover?"
+      - "For the construction, find a way to tile a strip two cells wide with as few tiles as the marked cells in it, then build up from a small base case."
+    solution: |
+      **Key idea:** a coloring gives the lower bound $mn$; a $7\times7$ base tiling plus two-wide strips gives the matching construction.
+
+      **Lower bound.** Number rows and columns from $1$. Call a cell *marked* if its row and column are both odd. The region has $m$ odd rows and $n$ odd columns, so there are $mn$ marked cells. The three-cell L tile fits inside a $2\times2$ box, which has only one cell with both coordinates odd. Turn the four-cell skew tile so that it lies in two consecutive rows (otherwise swap the roles of rows and columns). In each of its rows it uses two consecutive columns, so it meets at most one odd row and, within it, at most one odd column. So every tile covers at most one marked cell, and at least $mn$ tiles are needed.
+
+      **Construction.** (The picture shows our tilings.)
+
+      *A strip.* A strip $2$ cells wide and $2m-1$ cells long can be tiled with exactly $m$ tiles. Put an L at one end covering both cells of the first row and one cell of the second. Then lay skew tiles in a staircase. Each one covers two cells in one column and the next two cells in the other column, and it moves both columns forward by two. After $m-2$ skew tiles, the three cells left at the far end form an L. That is $2+(m-2)=m$ tiles.
+
+      *Base case.* The $7\times 7$ square ($m=n=4$) can be tiled with $16$ tiles: fifteen L's and one skew tile, as in the picture. (Area check: $15\cdot3+4=49$.)
+
+      *Growing.* Adding a strip of width $2$ along a side of length $2m-1$ turns a $(2m-1)\times(2n-1)$ tiling with $mn$ tiles into a $(2m-1)\times(2n+1)$ tiling with $mn+m=m(n+1)$ tiles. The same works in the other direction. Starting from $7\times7$ we reach every $(2m-1)\times(2n-1)$ with $m,n\ge4$ using exactly $mn$ tiles.
+
+      So the minimum is $mn$.
+    viz: putnam-2016-a4
+    checked: "script: backtracking search found a 16-tile tiling of the 7×7 square (shown); the strip pattern and the counting bound were checked by hand"
+    status: ready
+
+  - id: A5
+    topic: "Group theory: words in alternating generators"
+    areas: [algebra]
+    difficulty: 3
+    hints:
+      - "Group the word into blocks $g^{\\pm1}h^{\\pm1}$. The question is which elements are products of such blocks, and how many blocks are needed."
+      - "In a finite group, a shortest product never repeats a partial product."
+    solution: |
+      **Key idea:** the blocks $g^{\pm1}h^{\pm1}$ already generate $G$ because $g$ has odd order, and a shortest product in a finite group has at most $|G|$ factors.
+
+      Let $T=\{gh,\ gh^{-1},\ g^{-1}h,\ g^{-1}h^{-1}\}$. A word of the required shape with $r$ blocks is exactly a product $t_1t_2\cdots t_r$ with every $t_i\in T$. So we must show two things: every element of $G$ is such a product, and $r\le|G|$ blocks are enough.
+
+      **Step 1: products of blocks give all of $G$.** In a finite group, the products of elements of $T$ (with at least one factor) form a subgroup $H$. It is closed under products, and the inverse of $t$ is $t^{k-1}$ where $k$ is the order of $t$. Now
+      $$(gh)(g^{-1}h)^{-1} = gh\,h^{-1}g = g^2 \in H.$$
+      Since $g$ has odd order $2s+1$, we get $g = g^{2s+2}=(g^2)^{s+1}\in H$. Then $h = g^{-1}(gh)\in H$. As $g$ and $h$ generate $G$, $H=G$.
+
+      **Step 2: few blocks suffice.** Take $x\in G$ and write it as $t_1\cdots t_r$ with $r\ge1$ as small as possible. Look at the partial products $p_i=t_1\cdots t_i$ for $i=1,\dots,r$. If $p_i=p_j$ with $i<j$, then $t_{i+1}\cdots t_j=e$, and deleting those factors gives a shorter product for $x$ that still has at least one factor. This contradicts minimality. So the $r$ partial products are distinct elements of $G$, and $r\le|G|$.
+
+      Together these give the required form with $1\le r\le |G|$ and all exponents in $\{-1,1\}$. (The identity is covered too: it is $t^k$ for any $t\in T$ of order $k$, and the same shortening argument applies.)
+    checked: "proof only; no numeric answer"
+    status: ready
+
+  - id: A6
+    topic: "Inequality: integral versus maximum of a cubic"
+    areas: [analysis]
+    difficulty: 5
+    answer: "$C=\\tfrac56$"
+    status: coming
+
+  - id: B1
+    topic: "Series: a telescoping recursive sequence"
+    areas: [analysis]
+    difficulty: 1
+    answer: "$e-1$"
+    hints:
+      - "Exponentiate the recursion. What does it say about $e^{x_n}-e^{x_{n+1}}$?"
+      - "Show the terms stay positive and decrease, then find their limit."
+    solution: |
+      **Key idea:** after exponentiating, each term is a difference of consecutive values of $e^{x_n}$, so the series telescopes.
+
+      The recursion says $e^{x_{n+1}} = e^{x_n}-x_n$, that is,
+      $$x_n = e^{x_n}-e^{x_{n+1}}.$$
+      So the partial sums telescope:
+      $$x_0+x_1+\dots+x_N = e^{x_0}-e^{x_{N+1}} = e - e^{x_{N+1}}.$$
+      It remains to find $\lim x_n$.
+
+      *Positivity.* For $t>0$ we have $e^t>1+t$, so $e^t-t>1$ and $\ln(e^t-t)>0$. Since $x_0=1>0$, induction gives $x_n>0$ for all $n$ (and the logarithm is always defined).
+
+      *Monotonicity.* $e^{x_{n+1}}=e^{x_n}-x_n<e^{x_n}$, so $x_{n+1}<x_n$.
+
+      A decreasing sequence of positive numbers has a limit $L\ge0$. Letting $n\to\infty$ in $e^{x_{n+1}}=e^{x_n}-x_n$ gives $e^L=e^L-L$, so $L=0$. Hence $e^{x_{N+1}}\to1$, the series converges, and its sum is $e-1$.
+    checked: "script: summed the sequence numerically; total 1.7182818 = e − 1"
+    status: ready
+
+  - id: B2
+    topic: "Counting: numbers near perfect squares, growth rate"
+    areas: [number-theory, analysis]
+    difficulty: 2
+    answer: "$\\alpha=\\tfrac34,\\ \\beta=\\tfrac43$"
+    hints:
+      - "Which integers have $k^2$ as their nearest square? Count the good ones in that window."
+      - "Sum $\\lfloor\\sqrt k\\rfloor$ up to $K$; it grows like $\\tfrac23K^{3/2}$."
+    solution: |
+      **Key idea:** split the integers into windows around each square $k^2$; window $k$ holds about $1+2\sqrt k$ good numbers.
+
+      The midpoint between $(k-1)^2$ and $k^2$ is $k^2-k+\frac12$, and the midpoint between $k^2$ and $(k+1)^2$ is $k^2+k+\frac12$. Neither is an integer. So the integers whose nearest square is $k^2$ are exactly those in the window
+      $$W_k=[\,k^2-k+1,\ k^2+k\,],$$
+      and these windows ($k\ge1$) cover the positive integers without overlap. In $W_k$ the distance $d=|n-k^2|$ runs over $1,\dots,k-1$ below $k^2$ and over $1,\dots,k$ above it. The number $n$ is good exactly when $d$ is a perfect square ($d=0$ means $n$ is itself a square). So $W_k$ contains exactly
+      $$c_k=1+\lfloor\sqrt{k-1}\rfloor+\lfloor\sqrt k\rfloor$$
+      good numbers: $k^2$ itself, then one for each square $j^2\le k-1$ below and one for each square $j^2\le k$ above. (For $k=2$ the window is $3,4,5,6$ and $c_2=3$; only $6$ is left out.)
+
+      Hence, with $A(K)=\sum_{k=1}^{K}c_k$, we have $S(K^2+K)=A(K)$. Since $\sqrt k-2<\lfloor\sqrt{k-1}\rfloor,\lfloor\sqrt k\rfloor\le\sqrt k$ and $\sum_{k\le K}\sqrt k = \frac23K^{3/2}+O(K^{1/2})$,
+      $$A(K)=\tfrac43K^{3/2}+O(K).$$
+      For general $N\ge2$, let $K=\lfloor\sqrt N\rfloor$. Then $(K-1)^2+(K-1) < N < (K+1)^2+(K+1)$, and since $S$ is increasing,
+      $$A(K-1)\le S(N)\le A(K+1).$$
+      Both bounds are $\frac43K^{3/2}+O(K)$, and $K^{3/2}/N^{3/4}\to1$. Therefore
+      $$\lim_{N\to\infty}\frac{S(N)}{N^{3/4}}=\frac43 ,$$
+      so $\alpha=\frac34$ and $\beta=\frac43$. Any other exponent gives a limit of $0$ or $\infty$, so these constants are the only ones.
+    checked: "script: counted good numbers up to 10^7; S(N)/N^(3/4) = 1.33340"
+    status: ready
+
+  - id: B3
+    topic: "Geometry: covering points with a bounded triangle"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - "Pick three points of the set that make a triangle of largest area."
+      - "No point can be farther from a side line than the opposite vertex is. What region does that describe?"
+    solution: |
+      **Key idea:** take the largest triangle in the set; the triangle twice its size, turned upside down, contains every point.
+
+      If all points lie on one line (or there are fewer than three), any triangle of area $4$ containing the segment they span will do. Otherwise, since $S$ is finite, choose $A,B,C\in S$ so that triangle $ABC$ has the largest possible area $\Delta$. Then $0<\Delta\le1$.
+
+      Take any $P\in S$. Triangle $PBC$ has area at most $\Delta$, so $P$ is no farther from line $BC$ than $A$ is. In other words, $P$ lies in the strip between the two lines parallel to $BC$ at the distance of $A$, one on each side. The same holds for the other two sides.
+
+      The three lines through $A$, $B$, $C$ parallel to the opposite sides bound a triangle $A'B'C'$. Its medial triangle is $ABC$, so its area is $4\Delta$. The intersection of the three strips is exactly this triangle (each strip is bounded on one side by a side line of $A'B'C'$, and on the far side by a line that does not cut it). So every point of $S$ lies in triangle $A'B'C'$, whose area is $4\Delta\le4$.
+
+      If $4\Delta<4$, enlarge: scale $A'B'C'$ about one of its interior points by the factor $1/\sqrt{\Delta}\ge1$. The bigger triangle still contains the smaller one and has area exactly $4$.
+    checked: "proof only; no numeric answer"
+    status: ready
+
+  - id: B4
+    topic: "Probability: expected determinant of a skew-symmetric matrix"
+    areas: [probability, linear-algebra]
+    difficulty: 3
+    answer: "$\\dfrac{(2n)!}{4^n\\,n!} = \\dfrac{1\\cdot3\\cdot5\\cdots(2n-1)}{2^n}$"
+    hints:
+      - "The matrix $A-A^t$ is skew-symmetric, and its determinant is the square of its Pfaffian."
+      - "Expand the square of the Pfaffian over pairs of perfect matchings. Which pairs survive taking expectations?"
+    solution: |
+      **Key idea:** write the determinant as the square of a Pfaffian; after taking expectations only "diagonal" terms survive.
+
+      Let $B=A-A^t$. It is skew-symmetric, and for $i<j$ its entry $b_{ij}=a_{ij}-a_{ji}$ is $1$ or $-1$ with probability $\frac14$ each, and $0$ with probability $\frac12$. These entries are independent for different pairs $i<j$, with
+      $$\mathbb E[b_{ij}]=0,\qquad \mathbb E[b_{ij}^2]=\tfrac12 .$$
+      For a $2n\times2n$ skew-symmetric matrix, $\det B=\operatorname{Pf}(B)^2$, where
+      $$\operatorname{Pf}(B)=\sum_{\mu}\varepsilon(\mu)\prod_{\{i<j\}\in\mu}b_{ij}.$$
+      The sum runs over the perfect matchings $\mu$ of $\{1,\dots,2n\}$, and $\varepsilon(\mu)=\pm1$ is a sign. Squaring,
+      $$\det B=\sum_{\mu,\nu}\varepsilon(\mu)\varepsilon(\nu)\prod_{e\in\mu}b_e\prod_{e\in\nu}b_e .$$
+      Take the expectation of one term. If $\mu\ne\nu$, some pair $e$ lies in exactly one of them, so $b_e$ appears to the first power. By independence the expectation contains the factor $\mathbb E[b_e]=0$. If $\mu=\nu$, the term is $\prod_{e\in\mu}b_e^2$, with expectation $(\frac12)^n$, and the signs square to $1$.
+
+      So $\mathbb E[\det B]$ equals $2^{-n}$ times the number of perfect matchings of $2n$ points. That number is $(2n-1)(2n-3)\cdots3\cdot1=\frac{(2n)!}{2^n n!}$. The answer is
+      $$\mathbb E[\det(A-A^t)]=\frac{(2n)!}{4^n\,n!}.$$
+    checked: "script: exact enumeration of all 0/1 matrices for n = 1, 2 gives 1/2 and 3/4"
+    status: ready
+
+  - id: B5
+    topic: "Functional inequality: maps respecting power intervals"
+    areas: [analysis]
+    difficulty: 4
+    answer: "$f(x)=x^c$ for a constant $c>0$"
+    hints:
+      - "Take $\\ln\\ln$ of everything. The condition becomes a statement about steps of size between $\\ln 2$ and $\\ln 3$."
+      - "Look at $p(u)=G(u)-u$. The two extreme step sizes say $p$ cannot drop over steps of $\\ln2$ or rise over steps of $\\ln3$. Since $\\ln2/\\ln3$ is irrational, combine them."
+    solution: |
+      **Key idea:** a double logarithm turns the condition into "steps of length between $a=\ln2$ and $b=\ln3$ change $G$ by an amount in $[a,b]$". Irrationality of $a/b$ then forces $G(u)=u+\text{const}$.
+
+      **Check.** If $f(x)=x^c$ with $c>0$, then $f$ maps $(1,\infty)$ to itself, and $x^2\le y\le x^3$ gives $x^{2c}\le y^c\le x^{3c}$. So these work.
+
+      **Change of variables.** For $x>1$ put $x=e^{e^u}$ with $u\in\mathbb R$, and define $G(u)=\ln\ln f(e^{e^u})$ (allowed since $f>1$). For $y=e^{e^v}$, the condition $x^2\le y\le x^3$ means $a\le v-u\le b$. Likewise $f(x)^2\le f(y)\le f(x)^3$ means $a\le G(v)-G(u)\le b$. So the hypothesis says:
+      $$\text{if } d\in[a,b], \text{ then } G(u+d)-G(u)\in[a,b]\ \text{ for all } u.$$
+      Let $p(u)=G(u)-u$. Then for $d\in[a,b]$,
+      $$a-d\ \le\ p(u+d)-p(u)\ \le\ b-d. \qquad (*)$$
+
+      **Step 1.** With $d=a$, $(*)$ gives $p(u+a)\ge p(u)$. With $d=b$ it gives $p(u+b)\le p(u)$, that is, $p(u-b)\ge p(u)$. Repeating, $p(u+ka-jb)\ge p(u)$ for all integers $k,j\ge0$ and all $u$.
+
+      **Step 2: density.** The set $D=\{ka-jb: k,j\ge0\}$ is dense in $\mathbb R$. Indeed, $a/b$ is irrational ($2^q=3^r$ has no solution in positive integers), so the multiples $ka$ for $k\ge K$ fill every interval densely modulo $b$, for every $K$. Given an open interval $I$, pick $k$ so large that $ka$ exceeds $I$ and $ka$ lands in $I$ modulo $b$. Then subtracting the right multiple $jb$ with $j\ge0$ puts $ka-jb$ in $I$.
+
+      **Step 3.** Fix $u$, $t$ and a small $\varepsilon>0$ (less than $b-a$). By density there is $d\in[a,a+\varepsilon]$ with $t-d\in D$. Using $(*)$ and Step 1,
+      $$p(u+t)=p\big((u+t-d)+d\big)\ \ge\ p(u+t-d)+a-d\ \ge\ p(u)-\varepsilon .$$
+      Since $\varepsilon$ is arbitrary, $p(u+t)\ge p(u)$ for all $u$ and $t$. Applying this with $u+t$ in place of $u$ and $-t$ in place of $t$ gives the reverse inequality. So $p$ is a constant $\gamma$.
+
+      **Back to $f$.** $G(u)=u+\gamma$ means $\ln f(x)=e^{\gamma}\ln x$, that is, $f(x)=x^c$ with $c=e^\gamma>0$.
+    checked: "proof; the family x^c was checked against the condition symbolically"
+    status: ready
+
+  - id: B6
+    topic: "Series: a double sum that telescopes by halving"
+    areas: [analysis]
+    difficulty: 4
+    answer: "$1$"
+    hints:
+      - "Name the inner sum $F(k)$. How are $F(k)$ and $F(2k)$ related?"
+      - "Write the alternating sign as \"all terms minus twice the even terms\". Check absolute convergence first."
+    solution: |
+      **Key idea:** the inner sum $F(k)=\sum_{n\ge0}\frac{1}{k2^n+1}$ satisfies $F(k)-F(2k)=\frac{1}{k+1}$, and splitting the sign into odd and even $k$ makes everything telescope.
+
+      Define $F(x)=\sum_{n\ge0}\frac{1}{x\,2^n+1}$ for $x>0$. The sum we want is $\sum_{k\ge1}(-1)^{k-1}\frac{F(k)}{k}$.
+
+      **Absolute convergence.** $F(k)\le\sum_n \frac{1}{k2^n}=\frac2k$, so $\big|\frac{F(k)}{k}\big|\le\frac{2}{k^2}$. Every series below converges absolutely, so we may regroup freely.
+
+      **The halving relation.** Dropping the $n=0$ term,
+      $$F(k)-F(2k)=\sum_{n\ge0}\frac{1}{k2^n+1}-\sum_{n\ge1}\frac{1}{k2^{n}+1}=\frac{1}{k+1}.$$
+
+      **Splitting the sign.** $(-1)^{k-1}$ is $+1$ for odd $k$ and $-1$ for even $k$, so it equals $1$ minus $2$ on even $k$:
+      $$\sum_{k\ge1}(-1)^{k-1}\frac{F(k)}{k}=\sum_{k\ge1}\frac{F(k)}{k}-2\sum_{j\ge1}\frac{F(2j)}{2j}=\sum_{k\ge1}\frac{F(k)-F(2k)}{k}.$$
+      By the halving relation, this is
+      $$\sum_{k\ge1}\frac{1}{k(k+1)}=\sum_{k\ge1}\Big(\frac1k-\frac1{k+1}\Big)=1.$$
+    checked: "script: direct numerical sum (k ≤ 200000) gives 0.99999999997"
+    status: ready

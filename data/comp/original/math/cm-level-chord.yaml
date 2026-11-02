@@ -1,0 +1,47 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-level-chord
+title: A level stretch on any round trip
+tier: 4
+order: 90
+areas:
+- analysis
+problem: |
+  A hiking trail starts and ends at sea level. Its height is a continuous function $f$ on $[0,1]$ (in miles along the trail)
+  with $f(0)=f(1)=0$. A **level stretch** of length $h$ is an $x$ with $f(x+h)=f(x)$.
+
+  For which of the lengths $\tfrac12,\ \tfrac25,\ \tfrac13,\ \tfrac3{10},\ \tfrac14$ is a level stretch **guaranteed**, for every
+  such trail?
+check:
+  type: choice
+  choices:
+  - 'only $\tfrac12$'
+  - '$\tfrac12$, $\tfrac13$ and $\tfrac14$, and no others'
+  - '$\tfrac12$ and $\tfrac25$, and no others'
+  - all five
+  - none of them
+  answer: 2
+answer: 'Exactly $\tfrac12$, $\tfrac13$ and $\tfrac14$: the lengths $\tfrac1m$'
+hints:
+- 'For $h=\tfrac12$, look at $g(x)=f(x+\tfrac12)-f(x)$ at $x=0$ and $x=\tfrac12$.'
+- 'For $h=\tfrac1m$, add $g(0)+g(\tfrac1m)+\dots+g(\tfrac{m-1}m)$.'
+- 'For other $h$, try $f(x)=\sin^2(\pi x/h)-x\sin^2(\pi/h)$.'
+solution: |
+  **Lengths $1/m$ always work.** Let $h=\tfrac1m$ and $g(x)=f(x+h)-f(x)$ on $[0,1-h]$. The sum telescopes:
+  $$g(0)+g(h)+g(2h)+\dots+g((m-1)h)=f(1)-f(0)=0.$$
+  So some term is $\ge0$ and some term is $\le0$. By the intermediate value theorem, $g$ has a zero between them: a level
+  stretch of length $\tfrac1m$.
+
+  **Other lengths can fail.** Let $0<h<1$ with $1/h$ not an integer, and set
+  $$f(x)=\sin^2\!\Big(\frac{\pi x}h\Big)-x\,\sin^2\!\Big(\frac\pi h\Big).$$
+  Then $f(0)=0$ and $f(1)=\sin^2(\pi/h)-\sin^2(\pi/h)=0$. The first part has period $h$, so
+  $$f(x+h)-f(x)=-h\,\sin^2\!\Big(\frac\pi h\Big),$$
+  which is never $0$, because $\pi/h$ is not a multiple of $\pi$. For $h=\tfrac25$ and $h=\tfrac3{10}$, $1/h$ is $2.5$ and
+  $3.\overline3$, so these trails have no level stretch of that length.
+
+  So the guaranteed lengths are exactly $\tfrac12$, $\tfrac13$ and $\tfrac14$.
+
+  **Known result:** Paul Lévy's **universal chord theorem** (1934): the guaranteed lengths are exactly $\tfrac1m$. The picture
+  lets you slide a chord of fixed length along a trail and watch for a level spot.
+viz: cm-level-chord
+checked: 'script: the counterexample checked numerically for h = 2/5 and 3/10'
+status: ready

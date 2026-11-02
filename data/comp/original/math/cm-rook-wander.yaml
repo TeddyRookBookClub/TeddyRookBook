@@ -1,0 +1,42 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-rook-wander
+title: A rook that wanders at random
+tier: 2
+order: 110
+areas:
+- probability
+problem: |
+  A rook starts on a1 of an empty chessboard. At each step it makes one of its $14$ legal moves, chosen uniformly at random.
+  What is the expected number of moves until it first reaches h8?
+check:
+  type: number
+  answer: '70'
+answer: '$70$'
+hints:
+- 'You don''t need 64 unknowns. What matters is whether the rook shares a row or a column with h8.'
+- 'Three states: on h8; on the 8th rank or the h-file (but not h8); neither.'
+- 'From a square in neither line, exactly $2$ of the $14$ moves reach a line through h8.'
+solution: |
+  Group the squares by how they relate to h8:
+
+  * **A:** on the 8th rank or the h-file, but not h8 ($14$ squares);
+  * **B:** on neither ($49$ squares, including a1).
+
+  **Moves from B.** Of the $7$ moves along its row, one lands on the h-file; of the $7$ along its column, one lands on the
+  8th rank. So $B\to A$ with probability $\tfrac2{14}=\tfrac17$, and otherwise it stays in $B$.
+
+  **Moves from A.** Say the rook is on the 8th rank. Of its $7$ row moves, one reaches h8 and six stay on the 8th rank
+  (state A). All $7$ column moves leave the 8th rank and the column is not h, so they go to B. So from A: h8 with
+  probability $\tfrac1{14}$, A with $\tfrac6{14}$, B with $\tfrac12$.
+
+  **Equations.** With $E_A,E_B$ the expected remaining moves,
+  $$E_B=1+\tfrac17E_A+\tfrac67E_B,\qquad E_A=1+\tfrac37E_A+\tfrac12E_B.$$
+  The first gives $E_B=7+E_A$. Putting this into the second: $\tfrac47E_A=\tfrac92+\tfrac12E_A$, so $E_A=63$ and
+  $E_B=70$.
+
+  Starting at a1, which is in B, the answer is $70$. Compare: the expected time for a random walk on this board to **return**
+  to h8 is $64$ (Kac's lemma: one over the share of time the walk spends there, which is $\tfrac1{64}$ since every
+  square has the same number of moves).
+viz: cm-rook-wander
+checked: 'script: 100,000 simulated walks average 70.0'
+status: ready

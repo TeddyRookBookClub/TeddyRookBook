@@ -1,0 +1,34 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-corner-tetra
+title: A ball in a corner of space
+tier: 2
+order: 90
+areas:
+- geometry
+problem: |
+  A tetrahedron has vertices $(0,0,0)$, $(1,0,0)$, $(0,2,0)$ and $(0,0,3)$. Find the radius of the sphere inscribed in it
+  (the sphere that touches all four faces).
+check:
+  type: number
+  answer: 1/3
+answer: '$\tfrac13$'
+hints:
+- The volume is easy. So are three of the four face areas.
+- 'Cut the tetrahedron into four pyramids with apex at the center of the sphere. Each has height $r$.'
+- 'Or: the center is $(r,r,r)$. Find its distance to the slanted face $6x+3y+2z=6$.'
+solution: |
+  **Volume and areas.** The volume is $\tfrac16\cdot1\cdot2\cdot3=1$. The faces on the coordinate planes have areas
+  $\tfrac12\cdot1\cdot2=1$, $\tfrac12\cdot1\cdot3=\tfrac32$ and $\tfrac12\cdot2\cdot3=3$. The slanted face has area
+  $\tfrac12\big|(-1,2,0)\times(-1,0,3)\big|=\tfrac12|(6,3,2)|=\tfrac72$. The total is $S=9$.
+
+  **Four pyramids.** Joining the center to the four faces cuts the solid into pyramids of height $r$, so
+  $V=\tfrac13rS$ and $r=\dfrac{3V}{S}=\dfrac39=\dfrac13$.
+
+  **A second way.** The center is at distance $r$ from the three coordinate planes, so it is $(r,r,r)$. The slanted face
+  lies on $6x+3y+2z=6$, whose normal $(6,3,2)$ has length $7$. The distance condition is
+  $\dfrac{6-11r}{7}=r$, so $r=\tfrac13$.
+
+  The neat face area $\tfrac72$ comes from a 3D Pythagorean theorem (de Gua's theorem): the square of the slanted area equals
+  the sum of the squares of the other three, $1+\tfrac94+9=\tfrac{49}4$.
+checked: 'script: cross product and distance formula recomputed'
+status: ready

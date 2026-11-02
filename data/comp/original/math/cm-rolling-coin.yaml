@@ -1,0 +1,38 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-rolling-coin
+title: A coin rolls around a square
+tier: 1
+order: 80
+areas:
+- geometry
+problem: |
+  A disk of radius $1$ rolls all the way around the **outside** of a square with side $2$, always touching the square.
+  Find the area of the region the disk covers during the trip (not counting the square itself).
+check:
+  type: number
+  answer: 16+4pi
+  label: Your answer (you can type pi)
+answer: '$16+4\pi\approx 28.57$'
+hints:
+- Follow the center of the disk. How far is it from the square at every moment?
+- 'A point outside the square gets covered exactly when it is within distance $2$ of the square. Why?'
+- Split that region into pieces along the sides and pieces at the corners.
+solution: |
+  The center of the disk always stays at distance exactly $1$ from the square: it slides parallel to a side, then swings
+  around a corner on a quarter circle of radius $1$.
+
+  **Which points get covered?** Every point of the disk is within $1$ of the center, so within $2$ of the square.
+  Conversely, take a point $P$ outside the square at distance $d\le 2$, and let $Q$ be the nearest point of the square.
+  At some moment the center sits at the point $C$ that is $1$ unit from $Q$ in the direction of $P$. (On a side, $C$ is on the perpendicular through $Q$; at a corner, the disk swings through every direction.) Then
+  $|PC|=|d-1|\le1$, so $P$ is covered.
+
+  So the swept region is everything outside the square within distance $2$ of it:
+
+  * four $2\times2$ rectangles along the sides, area $16$;
+  * four quarter disks of radius $2$ at the corners, which form one full disk, area $4\pi$.
+
+  Total: $16+4\pi\approx 28.57$. In general, for a convex shape with perimeter $L$ and a disk of radius $r$, the region
+  within $2r$ has area $2rL+4\pi r^2$ (a case of **Steiner's formula** for parallel bodies).
+viz: cm-rolling-coin
+checked: 'script: Monte Carlo area estimate 28.58 vs 28.566'
+status: ready

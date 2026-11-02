@@ -1,0 +1,35 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-power-fixed-points
+title: Fixed points of a power of a shuffle
+tier: 3
+order: 90
+areas:
+- probability
+- combinatorics
+problem: |
+  A permutation $\sigma$ of $\{1,2,\dots,10\}$ is chosen uniformly at random. Find the expected number of fixed points of
+  $\sigma^{12}$ (the permutation applied twelve times).
+check:
+  type: number
+  answer: '5'
+answer: '$5$'
+hints:
+- 'An element is fixed by $\sigma^{12}$ exactly when the length of its cycle divides $12$.'
+- 'Use linearity of expectation, one element at a time.'
+- 'The length of the cycle containing $1$ is uniformly distributed on $\{1,\dots,10\}$.'
+solution: |
+  **Fixed points of a power.** Applying $\sigma$ moves each element around its cycle. An element in a cycle of length $d$
+  returns after $12$ steps exactly when $d\mid12$.
+
+  **The cycle of one element.** The cycle containing $1$ has length $d$ when $\sigma(1),\sigma^2(1),\dots,\sigma^{d-1}(1)$
+  are new elements and then $\sigma^{d}(1)=1$. Building $\sigma$ one value at a time, that has probability
+  $$\frac{9}{10}\cdot\frac{8}{9}\cdots\frac{10-d+1}{10-d+2}\cdot\frac1{10-d+1}=\frac1{10}.$$
+  So the cycle length is uniform on $\{1,\dots,10\}$, and the same holds for every element.
+
+  **Linearity.** The divisors of $12$ up to $10$ are $1,2,3,4,6$, five of the ten possible lengths. Each element is fixed by
+  $\sigma^{12}$ with probability $\tfrac5{10}$, so the expected number of fixed points is $10\cdot\tfrac5{10}=5$.
+
+  In general, the expected number of fixed points of $\sigma^k$ for a random permutation of $n$ elements is the number of
+  divisors of $k$ that are at most $n$.
+checked: 'script: exact average over all 5040 permutations of 7 elements; 200,000 random permutations of 10 average 4.996'
+status: ready

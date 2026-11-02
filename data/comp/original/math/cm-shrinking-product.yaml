@@ -1,0 +1,37 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-shrinking-product
+title: Multiply until the product drops below one half
+tier: 4
+order: 60
+areas:
+- probability
+- analysis
+problem: |
+  Numbers $U_1,U_2,\dots$ are chosen independently and uniformly from $[0,1]$. Let $N$ be the first $n$ for which
+  $U_1U_2\cdots U_n<\tfrac12$. Find $\mathbb E[N]$.
+check:
+  type: number
+  answer: 1+ln(2)
+  label: Your answer (you can type ln)
+answer: '$1+\ln2\approx1.693$'
+hints:
+- 'Take logarithms: $E_i=-\ln U_i$. What is the distribution of $E_i$?'
+- '$\mathbb E[N]=\sum_{n\ge0}\Pr(N>n)$, and $N>n$ means $E_1+\dots+E_n\le\ln2$.'
+- Sums of independent exponential waiting times are the arrival times of a Poisson process.
+solution: |
+  **Logs.** Let $E_i=-\ln U_i$. Then $\Pr(E_i>t)=\Pr(U_i<e^{-t})=e^{-t}$, so the $E_i$ are independent exponential
+  variables with mean $1$. The product is below $\tfrac12$ exactly when $E_1+\dots+E_n>\ln2$. Write $t=\ln2$ and
+  $S_n=E_1+\dots+E_n$.
+
+  **Poisson process.** Points placed at $S_1<S_2<\cdots$ on the line form a Poisson process of rate $1$: independent exponential
+  gaps. Then $N-1$ is the number of points in $[0,t]$, which has a Poisson distribution with mean $t$. So
+  $$\mathbb E[N]=1+t=1+\ln2\approx1.693.$$
+
+  **Without the Poisson process.** The density of $S_n$ is $\frac{s^{n-1}e^{-s}}{(n-1)!}$, and integrating by parts gives
+  $\Pr(S_n\le t)=\sum_{k\ge n}e^{-t}\frac{t^k}{k!}$. Then
+  $$\mathbb E[N]=\sum_{n\ge0}\Pr(N>n)=\sum_{n\ge0}\Pr(S_n\le t)=\sum_{k\ge0}(k+1)e^{-t}\frac{t^k}{k!}=t+1.$$
+
+  The same reasoning with the threshold $e^{-t}$ in place of $\tfrac12$ gives $1+t$. A cousin: if you add uniform numbers
+  until the **sum** passes $1$, the expected count is $e$.
+checked: 'script: 400,000 simulated runs average 1.692'
+status: ready

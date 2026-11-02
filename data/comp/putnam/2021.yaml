@@ -1,0 +1,288 @@
+year: 2021
+edition: 82nd
+date: "December 4, 2021"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2021.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Lattice hops of length 5 toward a far point"
+    areas: [number-theory, combinatorics]
+    difficulty: 1
+    answer: "$578$ hops"
+    hints:
+      - 'List the twelve possible hops. How much can one hop raise $x+y$?'
+      - 'Look at the parity of $x+y$ after each hop.'
+    solution: |
+      **Key idea:** one hop raises $x+y$ by at most $7$, and a parity count forces an even number of hops.
+
+      The integer vectors of length $5$ are $(\pm5,0)$, $(0,\pm5)$, $(\pm3,\pm4)$ and $(\pm4,\pm3)$. For each of them the change in $x+y$ is at most $3+4=7$.
+
+      **Lower bound.** To reach $(2021,2021)$, the sum $x+y$ must grow from $0$ to $4042$. Since $4042/7\approx577.4$, at least $578$ hops are needed.
+
+      **Construction.** Use $288$ hops of $(3,4)$, $288$ hops of $(4,3)$, one hop of $(5,0)$ and one hop of $(0,5)$. The total is
+      $$288\cdot(3,4)+288\cdot(4,3)+(5,0)+(0,5)=(2016+5,\ 2016+5)=(2021,2021),$$
+      using $288+288+2=578$ hops. The order does not matter, since every point along the way has integer coordinates.
+
+      (Parity gives a second check: every hop changes $x+y$ by an odd amount, so the number of hops must be even, and $578$ is even.)
+    checked: "script: listed the 12 hops and summed the construction to (2021, 2021)"
+    status: ready
+
+  - id: A2
+    topic: "A limit of a power expression as the exponent vanishes"
+    areas: [analysis, calculus]
+    difficulty: 1
+    answer: "$e$"
+    hints:
+      - 'Take logarithms. The inside tends to $1$ as $r\to0$, so you get a derivative.'
+      - 'Then $g(x)=\dfrac{(x+1)^{x+1}}{x^x}$.'
+    solution: |
+      **Key idea:** the base tends to $1$ while the exponent $1/r$ blows up, so the limit is $e$ raised to a derivative.
+
+      Fix $x>0$ and put $h(r)=(x+1)^{r+1}-x^{r+1}$. Then $h(0)=1$, and
+      $$h'(r)=(x+1)^{r+1}\ln(x+1)-x^{r+1}\ln x,\qquad h'(0)=(x+1)\ln(x+1)-x\ln x .$$
+      Now
+      $$\ln g(x)=\lim_{r\to0}\frac{\ln h(r)-\ln h(0)}{r}=\frac{h'(0)}{h(0)}=(x+1)\ln(x+1)-x\ln x,$$
+      because this is the derivative of $\ln h$ at $0$. Hence
+      $$g(x)=\frac{(x+1)^{x+1}}{x^x},\qquad \frac{g(x)}{x}=\frac{x+1}{x}\Big(1+\frac1x\Big)^{x}.$$
+      As $x\to\infty$ the first factor tends to $1$ and the second to $e$. So the limit is $e$.
+    checked: "numeric: high-precision evaluation at x = 10^6 with r = 10^-20 gives 2.71828…"
+    status: ready
+
+  - id: A3
+    topic: "Integer regular tetrahedra inscribed in a sphere"
+    areas: [geometry, number-theory, linear-algebra]
+    difficulty: 3
+    answer: "$N=3m^2$ for positive integers $m$"
+    hints:
+      - 'The center of the sphere is the centroid, so the four position vectors add to $0$.'
+      - 'Show that $v_1+v_2$, $v_1+v_3$, $v_1+v_4$ are pairwise orthogonal integer vectors of equal length.'
+    solution: |
+      **Key idea:** sums of pairs of vertices give three orthogonal integer vectors of equal length, and a determinant forces that length to be an integer.
+
+      **These values work.** The points $(m,m,m)$, $(m,-m,-m)$, $(-m,m,-m)$, $(-m,-m,m)$ are pairwise at distance $2\sqrt2\,m$, so they form a regular tetrahedron, and each lies on $x^2+y^2+z^2=3m^2$.
+
+      **Only these values work.** Let $v_1,\dots,v_4$ be integer vertices on the sphere $|v|^2=N$. The center of the sphere is the circumcenter of the tetrahedron, which for a regular tetrahedron is its centroid; so $v_1+v_2+v_3+v_4=0$. All edges are equal, and $|v_i-v_j|^2=2N-2\,v_i\cdot v_j$, so all dot products $v_i\cdot v_j$ ($i\ne j$) share one value $d$. From $0=|v_1+\dots+v_4|^2=4N+12d$ we get $d=-N/3$.
+
+      Set $a=v_1+v_2$, $b=v_1+v_3$, $c=v_1+v_4$. Then
+      $$a\cdot b=N+3d=0,$$
+      and in the same way $a\cdot c=b\cdot c=0$, while $|a|^2=2N+2d=\tfrac43N$ (and the same for $b,c$). Write $L^2=\tfrac43N$.
+
+      Let $M$ be the integer matrix with rows $a,b,c$. Then $MM^{T}=L^2 I$, so $(\det M)^2=L^6$ and $L^3=|\det M|$ is an integer. Also $L^2=|a|^2$ is an integer. So $L=L^3/L^2$ is rational, and a rational number whose square is an integer is itself an integer.
+
+      Finally $N=\tfrac34L^2$ is an integer, so $4\mid 3L^2$, which means $L$ is even. With $L=2m$ we get $N=3m^2$.
+    checked: "script: brute-force search for integer regular tetrahedra on spheres with N < 80 finds exactly N = 3, 12, 27, 48, 75"
+    status: ready
+
+  - id: A4
+    topic: "A plane integral that collapses onto an annulus"
+    areas: [analysis, calculus]
+    difficulty: 4
+    answer: '$\dfrac{\sqrt2}{2}\,\pi\ln 2$'
+    hints:
+      - 'In the first term rotate by $45^\circ$: then $x^4+6x^2y^2+y^4=2(u^4+v^4)$.'
+      - 'After scaling, both terms become the same integrand over two different disks.'
+    solution: |
+      **Key idea:** after a rotation and two scalings, both terms are the same function integrated over disks of radii $2^{1/4}R$ and $2^{-1/4}R$. So $I(R)$ is an integral over an annulus whose shape does not change as $R$ grows.
+
+      **First term.** Rotate: $x=\frac{u+v}{\sqrt2}$, $y=\frac{u-v}{\sqrt2}$. Then $x^2+y^2=u^2+v^2$, $2x^2=u^2+v^2+2uv$, and
+      $$x^4+6x^2y^2+y^4=(x^2+y^2)^2+4x^2y^2=(u^2+v^2)^2+(u^2-v^2)^2=2(u^4+v^4).$$
+      The term $2uv$ is odd in $v$ and integrates to $0$ over a disk. Now scale $(u,v)=2^{-1/4}(s,t)$ and write $\rho^2=s^2+t^2$. The first integral becomes
+      $$\frac1{\sqrt2}\iint_{\rho\le 2^{1/4}R}\frac{1+\rho^2/\sqrt2}{1+s^4+t^4}\,ds\,dt .$$
+
+      **Second term.** By the symmetry $x\leftrightarrow y$ of the region and the denominator, we may replace $y^2$ by $\frac12(x^2+y^2)$. Scale $(x,y)=2^{1/4}(s,t)$: the denominator becomes $2(1+s^4+t^4)$, the area element gains $\sqrt2$, and $\frac12(x^2+y^2)=\rho^2/\sqrt2$. The second integral becomes
+      $$\frac1{\sqrt2}\iint_{\rho\le 2^{-1/4}R}\frac{1+\rho^2/\sqrt2}{1+s^4+t^4}\,ds\,dt .$$
+
+      **The difference.** So
+      $$I(R)=\frac1{\sqrt2}\iint_{2^{-1/4}R\le\rho\le2^{1/4}R}\frac{1+\rho^2/\sqrt2}{1+\rho^4c(\theta)}\,ds\,dt,\qquad c(\theta)=\cos^4\theta+\sin^4\theta\ge\tfrac12 .$$
+      The part with the $1$ in the numerator is at most $\iint 2/\rho^4$ over the annulus, which tends to $0$. In the main part, replacing $1+\rho^4c$ by $\rho^4c$ changes the integrand by at most $\rho^2/(\rho^8c^2)$, which also integrates to something that tends to $0$. What remains is
+      $$\frac12\int_0^{2\pi}\frac{d\theta}{c(\theta)}\int_{2^{-1/4}R}^{2^{1/4}R}\frac{d\rho}{\rho}=\frac12\cdot\frac{\ln2}{2}\int_0^{2\pi}\frac{d\theta}{c(\theta)} ,$$
+      which no longer depends on $R$. Since $c(\theta)=1-\frac12\sin^22\theta=\frac{3+\cos4\theta}{4}$, and $\int\frac{d\phi}{3+\cos\phi}=\frac{2\pi}{\sqrt8}$ over each period of length $2\pi$, the substitution $\phi=4\theta$ gives
+      $$\int_0^{2\pi}\frac{4\,d\theta}{3+\cos4\theta}=\frac{8\pi}{2\sqrt2}=2\sqrt2\,\pi .$$
+      So the limit exists and equals $\frac{\ln2}{4}\cdot2\sqrt2\,\pi=\frac{\sqrt2}{2}\pi\ln2\approx1.5398$.
+    checked: "numeric: adaptive quadrature of I(400) gives 1.53980, against (√2/2)π ln 2 = 1.53979"
+    status: ready
+
+  - id: A5
+    topic: "Power sums of units modulo 43 times 47"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "All $j\\ge0$ that are multiples of neither $42$ nor $46$"
+    hints:
+      - '$2021=43\cdot47$. Work modulo each prime separately.'
+      - 'Modulo a prime $p$, the sum $1^j+2^j+\dots+(p-1)^j$ is $-1$ if $p-1\mid j$ and $0$ otherwise.'
+    solution: |
+      **Key idea:** by the Chinese remainder theorem the set $A$ looks, modulo $43$, like $46$ copies of the nonzero residues. Then a standard power-sum fact finishes it.
+
+      **Modulo 43.** An integer in $[1,2021]$ is determined by its residues modulo $43$ and $47$, and it lies in $A$ exactly when both residues are nonzero. So as $n$ runs over $A$, its residue modulo $43$ takes each nonzero value exactly $46$ times. Hence
+      $$S(j)\equiv46\sum_{a=1}^{42}a^j\pmod{43}.$$
+
+      **The power-sum fact.** Let $p$ be prime and $g$ a primitive root. If $p-1\mid j$, every term $a^j$ is $1$ and the sum is $p-1\equiv-1$. Otherwise $g^j\ne1$, and multiplying the sum by $g^j$ only permutes its terms, so $(g^j-1)\sum a^j\equiv0$, which forces $\sum a^j\equiv0$.
+
+      Since $46\not\equiv0\pmod{43}$, we get $43\mid S(j)$ exactly when $42\nmid j$. The same argument with the roles of $43$ and $47$ swapped gives $47\mid S(j)$ exactly when $46\nmid j$.
+
+      So $2021\mid S(j)$ if and only if $j$ is a multiple of neither $42$ nor $46$. (For $j=0$, $S(0)=42\cdot46$, which is not a multiple, as the rule says.)
+    checked: "script: computed S(j) mod 2021 for 0 ≤ j < 500 and matched the rule"
+    status: ready
+
+  - id: A6
+    topic: "Reducible 0–1 polynomials and composite values at 2"
+    areas: [algebra, number-theory]
+    difficulty: 4
+    answer: "Yes, $P(2)$ must be composite"
+    hints:
+      - 'Show every complex root $z$ of a polynomial with $0,1$ coefficients has $\operatorname{Re} z<\tfrac32$.'
+      - 'Then each root is closer to $1$ than to $2$, so $|Q(2)|>|Q(1)|\ge1$ for each factor $Q$.'
+    solution: |
+      **Key idea:** all roots of $P$ lie to the left of the line $\operatorname{Re}z=\frac32$, so each root is nearer to $1$ than to $2$. For any factor $Q$ this gives $|Q(2)|>|Q(1)|$, and $Q(1)\ne0$.
+
+      **Lemma.** If $P(x)=x^n+a_{n-1}x^{n-1}+\dots+a_0$ with every $a_i\in\{0,1\}$, then each root $z$ has $\operatorname{Re}z<\frac32$.
+
+      Suppose $\operatorname{Re}z\ge\frac32$; then $|z|\ge\frac32$. Divide by $z^n$:
+      $$\frac{P(z)}{z^n}=1+\frac{a_{n-1}}{z}+\frac{a_{n-2}}{z^2}+\sum_{k\ge3}\frac{a_{n-k}}{z^k}.$$
+      - If $|\arg z|<\frac\pi4$, then $1/z$ and $1/z^2$ have positive real part, so the first three terms have real part at least $1$. The rest has absolute value less than $\sum_{k\ge3}|z|^{-k}$, which is $\frac{1}{|z|^2(|z|-1)}$, and this is at most $\frac{1}{(9/4)(1/2)}=\frac89$. So $P(z)\ne0$.
+      - If $|\arg z|\ge\frac\pi4$, then $|z|\ge\frac32\sqrt2>2$. Now $1+a_{n-1}/z$ has real part at least $1$ (because $\operatorname{Re}(1/z)>0$), and the rest is less than $\sum_{k\ge2}|z|^{-k}$, which is $\frac{1}{|z|(|z|-1)}<\frac12$. Again $P(z)\ne0$.
+
+      **The main step.** Suppose $P=QR$ with $Q,R$ nonconstant integer polynomials. Write $Q(x)=c\prod_i(x-z_i)$; its roots $z_i$ are roots of $P$. Since $\operatorname{Re}z_i<\frac32$, the point $z_i$ is strictly closer to $1$ than to $2$, so $|2-z_i|>|1-z_i|$. Multiplying,
+      $$|Q(2)|=|c|\prod|2-z_i|>|c|\prod|1-z_i|=|Q(1)|.$$
+      Now $P(1)$ is the number of nonzero coefficients, at least $1$, so $Q(1)$ is a nonzero integer and $|Q(1)|\ge1$. Hence $|Q(2)|\ge2$, and likewise $|R(2)|\ge2$. Since $P(2)=Q(2)R(2)$, the value $P(2)$ is composite.
+    checked: "numeric: roots of 20,000 random 0–1 polynomials up to degree 25 all have real part below 1.14"
+    status: ready
+
+  - id: B1
+    topic: "Probability: a randomly dropped square avoids grid corners"
+    areas: [probability, geometry]
+    difficulty: 2
+    answer: '$2-\dfrac6\pi$'
+    hints:
+      - 'Fix the angle $\theta\in[0,\frac\pi2)$. The square avoids all corners exactly when its center avoids the union of the squares of the same shape centered at the corners.'
+      - 'Those squares overlap only with their left/right and up/down neighbors.'
+    solution: |
+      **Key idea:** for a fixed angle, the bad region is a union of translated squares of total area $1$ per cell. The good probability equals the area where neighboring translates overlap.
+
+      Let $S_\theta$ be the unit square centered at the origin and turned by $\theta\in[0,\frac\pi2)$. The dropped square, centered at $c$, covers a corner $p\in\mathbb Z^2$ exactly when $c\in p+S_\theta$ (the square is symmetric about its center). Work in one unit cell of the plane.
+
+      The translates $p+S_\theta$ each have area $1$, and there is one per cell. If $N(c)$ counts the translates covering $c$, then $\int_{\text{cell}}N=1$, so
+      $$\text{(uncovered area)}=\int_{\text{cell}}(N-1)_+ .$$
+      In the square's own frame, the shift $(1,0)$ becomes $(\cos\theta,-\sin\theta)$. Two unit squares with parallel sides, offset by $(a,b)$ with $|a|,|b|<1$, overlap in area $(1-|a|)(1-|b|)$. So the overlap with the right neighbor is $(1-\cos\theta)(1-\sin\theta)$, and the same holds for the upper neighbor. For the diagonal shifts $(1,\pm1)$ the offsets have a component $\cos\theta+\sin\theta\ge1$, so there is no overlap. No point lies in three translates, since three lattice points cannot pairwise differ by $(\pm1,0)$ or $(0,\pm1)$.
+
+      Each cell owns two such overlaps, so for fixed $\theta$ the probability of avoiding every corner is $2(1-\cos\theta)(1-\sin\theta)$. Averaging over $\theta$,
+      $$\frac2\pi\int_0^{\pi/2}2(1-\cos\theta-\sin\theta+\sin\theta\cos\theta)\,d\theta=\frac4\pi\Big(\frac\pi2-2+\frac12\Big)=2-\frac6\pi\approx0.0901 .$$
+    viz: putnam-2021-b1
+    checked: "simulation: 400,000 random drops give 0.0902, against 2 − 6/π = 0.0901"
+    status: ready
+
+  - id: B2
+    topic: "Inequality: weighted geometric means of a summable sequence"
+    areas: [analysis, algebra]
+    difficulty: 3
+    answer: '$\dfrac23$'
+    hints:
+      - 'Apply AM–GM to the numbers $4a_1,\,4^2a_2,\,\dots,\,4^na_n$.'
+      - 'Swap the order of summation. Each $a_k$ ends up with the coefficient $\frac23$.'
+    solution: |
+      **Key idea:** put weights $4^k$ inside the geometric mean. Then AM–GM and a swap of sums bound $S$ by $\frac23\sum a_k$, and the bound is reached by a geometric sequence.
+
+      **Upper bound.** By AM–GM,
+      $$(a_1\cdots a_n)^{1/n}=\frac{(4a_1\cdot4^2a_2\cdots4^na_n)^{1/n}}{(4^{1+2+\dots+n})^{1/n}}\le\frac{1}{2^{n+1}}\cdot\frac1n\sum_{k=1}^n4^ka_k ,$$
+      because $(4^{n(n+1)/2})^{1/n}=2^{n+1}$. So
+      $$S\le\sum_{n\ge1}\frac{1}{2^{2n+1}}\sum_{k\le n}4^ka_k=\sum_{k\ge1}4^ka_k\sum_{n\ge k}\frac{1}{2\cdot4^{n}}=\sum_k4^ka_k\cdot\frac{4^{-k}}{2}\cdot\frac43=\frac23\sum_ka_k=\frac23 .$$
+      Swapping the sums is fine because every term is nonnegative.
+
+      **Equality.** Take $a_k=3\cdot4^{-k}$, so $\sum a_k=1$ and every $4^ka_k$ equals $3$ (equality in AM–GM). Directly, $(a_1\cdots a_n)^{1/n}=3\cdot4^{-(n+1)/2}=3/2^{n+1}$ and
+      $$S=\sum_n\frac{n}{2^n}\cdot\frac{3}{2^{n+1}}=\frac32\sum_n\frac{n}{4^n}=\frac32\cdot\frac49=\frac23 .$$
+      So the maximum is $\frac23$.
+    checked: "numeric: the sum for a_k = 3·4^(-k), truncated at 80 terms, is 0.666666…"
+    status: ready
+
+  - id: B3
+    topic: "Rotation derivative integrated over a moving disk"
+    areas: [analysis, calculus]
+    difficulty: 2
+    answer: "True: such a circle always exists"
+    hints:
+      - 'In polar coordinates, $yh_x-xh_y=-\partial h/\partial\theta$.'
+      - 'Rotate the disk around the origin and look at $\int h$ over it as a function of the angle.'
+    solution: |
+      **Key idea:** $\rho$ is minus the derivative of $h$ along rotation about the origin. So $\iint\rho$ over a disk is the rate of change of $\iint h$ as the disk is rotated, and a periodic function has a critical point.
+
+      For $x$ in the plane let $R_\phi$ be rotation by $\phi$ about the origin. The chain rule gives
+      $$\frac{d}{d\phi}h(R_\phi x)\Big|_{\phi=0}=\nabla h(x)\cdot(-x_2,x_1)=-\rho(x).$$
+      Fix a disk $D_0$ of radius $r$ whose center is at distance $d$ from the origin, and let $D_\phi=R_\phi D_0$ (same radius, center still at distance $d$). Define
+      $$F(\phi)=\iint_{D_\phi}h=\iint_{D_0}h(R_\phi x)\,dx .$$
+      Since $\nabla h$ is continuous, we can differentiate under the integral:
+      $$F'(\phi)=\iint_{D_0}\frac{d}{d\phi}h(R_\phi x)\,dx=-\iint_{D_\phi}\rho .$$
+      $F$ is differentiable and $2\pi$-periodic, so it has a maximum, where $F'=0$. The circle bounding that $D_\phi$ has radius $r$, center at distance $d$, and $\iint\rho=0$ over its interior. (The argument never uses $d>r$.)
+    checked: "proof only (no final value to check)"
+    status: ready
+
+  - id: B4
+    topic: "Fibonacci moduli: a product of self-powers"
+    areas: [number-theory]
+    difficulty: 4
+    hints:
+      - 'If $F_m$ is composite, show the product is $0$ modulo $F_m$.'
+      - 'If $F_m=p$ is prime, pair $k$ with $p-k$ to get $R_m^2\equiv-1$. Compare with Cassini: $F_{m-1}^2\equiv-1$.'
+    solution: |
+      **Key idea:** for composite $F_m$ the product is $0$; for prime $F_m$ its square is $-1$, and so is $F_{m-1}^2$. So the remainder is $F_{m-1}$ or $F_m-F_{m-1}=F_{m-2}$.
+
+      Write $N=F_m$ and $P=\prod_{k=1}^{N-1}k^k$.
+
+      **$N$ composite.** Let $q^e$ be the exact power of a prime $q$ dividing $N$. If $q^e<N$, the factor $k=q^e$ contributes $(q^e)^{q^e}$, divisible by $q^e$. If $N=q^e$ with $e\ge2$, the factor $k=q^{e-1}$ contributes $q$ to the power $(e-1)q^{e-1}\ge e$. Either way $q^e\mid P$, so $N\mid P$ and $R_m=0=F_0$.
+
+      **$N=p$ prime.** For $m=3,4$ we have $p=2,3$ and directly $P\equiv1=F_1$. Now let $m\ge5$. Then $m$ is odd: if $m=2b$ with $b\ge3$, then $F_b$ divides $F_m$ and $1<F_b<F_m$, so $F_m$ would be composite. (This uses the standard fact $F_a\mid F_{ab}$.)
+
+      Reindexing $k\to p-k$ shows $P=\prod_k(p-k)^{p-k}$. Multiply this by the original product:
+      $$P^2=\prod_{k=1}^{p-1}k^k(p-k)^{p-k}\equiv\prod_k(-1)^{p-k}k^{p}\equiv(-1)^{p(p-1)/2}\,(p-1)!\equiv-(-1)^{p(p-1)/2}\pmod p,$$
+      using $k^p\equiv k$ (Fermat) and $(p-1)!\equiv-1$ (Wilson).
+
+      Cassini's identity $F_{m-2}F_m-F_{m-1}^2=(-1)^{m-1}$ gives $F_{m-1}^2\equiv(-1)^m=-1\pmod p$ for odd $m$. So $-1$ is a square modulo $p$, which means $p\equiv1\pmod4$; then $p(p-1)/2$ is even and $P^2\equiv-1\equiv F_{m-1}^2$.
+
+      Since $p$ is prime, $P\equiv\pm F_{m-1}$. The remainder is therefore $F_{m-1}$ or $p-F_{m-1}=F_{m-2}$. Both are Fibonacci numbers.
+    checked: "script: computed the remainder for 3 ≤ m ≤ 25; it is 0 for composite F_m and F_(m−1) or F_(m−2) for prime F_m"
+    status: ready
+
+  - id: B5
+    topic: "Matrices with every principal minor odd"
+    areas: [linear-algebra, combinatorics]
+    difficulty: 4
+    hints:
+      - 'Work modulo $2$ and draw an arrow $i\to j$ whenever $i\ne j$ and $a_{ij}$ is odd.'
+      - 'A directed cycle with no shortcuts gives a principal minor that is even.'
+    solution: |
+      **Key idea:** modulo $2$, "very odd" means the diagonal is all $1$ and the arrow graph has no directed cycle. Then the matrix is, after reordering, unit upper triangular, and so are its powers.
+
+      Only parities matter, since the determinant mod $2$ depends only on the entries mod $2$, and $A^k\bmod2=(A\bmod2)^k$. Let $B=A\bmod2$, and let $G$ be the directed graph on $\{1,\dots,n\}$ with an arrow $i\to j$ when $i\ne j$ and $b_{ij}=1$.
+
+      **Claim.** $B$ is very odd if and only if every $b_{ii}=1$ and $G$ has no directed cycle.
+
+      *If $G$ has a cycle.* Take a shortest directed cycle $v_1\to v_2\to\dots\to v_\ell\to v_1$ ($\ell\ge2$) and let $S$ be its vertex set. There is no other arrow inside $S$: an arrow $v_i\to v_j$ with $v_j$ not the next vertex would close a shorter cycle. So the submatrix on $S$ is $I$ plus the matrix of the cycle (if the diagonal is $1$). In its determinant expansion, a permutation $\sigma$ of $S$ counts only if each $\sigma(v)$ is $v$ or its successor. If one vertex moves to its successor, that successor cannot stay fixed, so it moves too, and so on around the cycle. Hence exactly two permutations count, and the determinant is $1+1\equiv0$. Not very odd.
+
+      *If $G$ is acyclic and the diagonal is $1$.* Number the vertices so that every arrow goes from a smaller to a larger label (a topological order). Every principal submatrix is then upper triangular with $1$s on the diagonal, so its determinant is $1$.
+
+      **Conclusion.** If $A$ is very odd, then $PBP^{T}=U$ for a permutation matrix $P$ and a unit upper triangular $U$. So $PB^kP^{T}=U^k$, which is again unit upper triangular. Its principal submatrices are unit upper triangular, and a simultaneous reordering of rows and columns does not change principal minors. So $B^k$, and hence $A^k$, is very odd.
+    checked: "script: all 2^16 binary 4×4 matrices; the 543 very odd ones stay very odd for powers 2 to 5"
+    status: ready
+
+  - id: B6
+    topic: "Probability: repeated median-of-three trimming"
+    areas: [probability, analysis]
+    difficulty: 3
+    hints:
+      - 'The final number is a median of three, applied $2021$ times to independent uniforms. If one level has distribution function $F$, the next has $3F^2-2F^3$.'
+      - 'Near $\frac12$ this map stretches distances from $\frac12$ by at most a factor $\frac32$.'
+    solution: |
+      **Key idea:** each trimming level applies $g(p)=3p^2-2p^3$ to the distribution function. Distances from $\frac12$ grow by at most a factor $\frac32$ per level, so $X$ cannot be too concentrated at $\frac12$.
+
+      The groups at each trimming step are disjoint, so the numbers at every level are independent and identically distributed. If one level has continuous distribution function $F$, a median of three has distribution function $g(F)$ with $g(p)=3p^2-2p^3$ (at least two of the three are $\le t$). Starting from $F(t)=t$, after $n=2021$ levels $X$ has distribution function $G=g^{(n)}$.
+
+      Measure distance from the middle: for $0\le s\le\frac12$,
+      $$g\big(\tfrac12-s\big)=\tfrac12-h(s),\qquad h(s)=\tfrac32s-2s^3\le\tfrac32s .$$
+      By induction, $G(\frac12-s)=\frac12-h^{(n)}(s)\ge\frac12-(\frac32)^ns$. (We need $h(t)\le\frac32t$ for $t\ge0$ and that $h$ maps $[0,\frac12]$ into itself.)
+
+      By symmetry, $P(|X-\frac12|>s)=2G(\frac12-s)$. So
+      $$\mu=\int_0^{1/2}P\big(|X-\tfrac12|>s\big)\,ds\ \ge\ 2\int_0^{s_0}\Big(\frac12-\big(\tfrac32\big)^ns\Big)ds,\qquad s_0=\tfrac12\big(\tfrac23\big)^n .$$
+      The last integral is the area of a triangle with legs $\frac12$ and $s_0$, which is $\frac18(\frac23)^n$. Hence $\mu\ge\frac14(\frac23)^{2021}$.
+    viz: putnam-2021-b6
+    checked: "exact: for 1 to 5 levels, computed μ by integrating the iterated polynomial; it exceeds (1/4)(2/3)^n each time"
+    status: ready

@@ -1,0 +1,372 @@
+year: 2026
+exam: main
+links:
+  problems: https://www.dnc.ac.jp/albums/abm.php?d=2144&f=abm00017552.pdf&n=2026_ol_23_butsuri.pdf
+  answers: https://www.dnc.ac.jp/albums/abm.php?d=797&f=abm00006049.pdf&n=R8_%E3%80%90%E7%89%A9%E7%90%86%E3%80%91%E7%99%BA%E8%A1%A8%E7%94%A8%E6%AD%A3%E8%A7%A3.pdf
+note: |
+  The January 2026 paper (令和8年度 本試験). Part numbers follow the paper: "2-2" means 第2問, 問2. Where one part has two answer boxes, the answer lists both box numbers.
+questions:
+  - id: "1"
+    topic: "Short questions: Doppler, circuits, balloons, Compton, gases"
+    parts:
+      - id: "1-1"
+        topic: "Doppler effect: an approaching siren"
+        answer: "5"
+        hints:
+          - 'The first sound starts where the siren was switched on and travels at 340 m/s.'
+          - 'For a source moving toward you, $f\,'' = f\,\dfrac{V}{V - v_s}$.'
+        solution: |
+          **Key idea:** the delay depends only on where the first sound was made. The pitch shift for an approaching source is $V/(V - v_s)$.
+
+          **Delay.** The first bit of sound leaves the starting point 720 m away and travels at 340 m/s. The ambulance's own motion does not speed up the sound:
+          $$t = \frac{720}{340} \approx 2.1\ \text{s}.$$
+
+          **Pitch.** The source moves toward the listener at $v_s = 20$ m/s, so the waves in front of it are squeezed together:
+          $$f' = f\,\frac{340}{340-20} = f\times\frac{340}{320} = 1.0625\,f.$$
+          The 960 Hz tone becomes $960\times1.0625 = 1020$ Hz. As a check, the 770 Hz tone becomes about $818 \approx 820$ Hz, which matches the other value given.
+
+          (2.1 s, 1020 Hz) is choice 5.
+        viz: ct-2026-1-1
+        checked: "script: 720/340 and 960·340/320"
+        status: ready
+      - id: "1-2"
+        topic: "Brightest lamp with DC, then with AC"
+        answer: "Box 2: 1 · Box 3: 4"
+        hints:
+          - 'With steady DC, a capacitor blocks current and an ideal coil acts like a wire.'
+          - 'In series, a coil and a capacitor of equal reactance cancel each other.'
+        solution: |
+          **Key idea:** the two holders sit in series with the lamp. The lamp is brightest when the two parts together oppose the current least.
+
+          **DC (box 2).** After a while, a steady current flows.
+          - A capacitor in series blocks DC completely, so the lamp would go dark.
+          - An ideal coil has no resistance for steady current. It behaves like a wire.
+          - A resistor cuts the current.
+
+          The least opposition is wire + coil, with zero extra resistance: choice 1.
+
+          **AC (box 3).** Each part now has an opposition of the same size $X$ (resistance $R = X$, $X_L = X$, $X_C = X$). In series, the coil and capacitor voltages are exactly opposite in phase, so their reactances subtract:
+          $$Z_{LC} = |X_L - X_C| = 0.$$
+          That is resonance. The pair acts like a short circuit, while every other pair adds some opposition (wire + coil gives $X$, wire + resistor gives $R$, and so on). So the coil and capacitor together make the lamp brightest: choice 4.
+        checked: "by hand (series impedance)"
+        status: ready
+      - id: "1-3"
+        topic: "Balloons in a turning bus: effective gravity"
+        answer: "2"
+        hints:
+          - 'In the bus frame, add a fictitious force opposite to the bus acceleration.'
+          - 'A helium balloon leans the opposite way from a hanging weight.'
+        solution: |
+          **Key idea:** inside an accelerating vehicle, things behave as if gravity were tilted. "Effective down" is $\vec g - \vec a$. Heavy things hang along it, and buoyant things rise against it.
+
+          **Check with the speeding-up case.** The bus accelerates forward, so effective gravity tilts backward. The carbon dioxide balloon (denser than air) hangs back. The helium balloon (lighter than air) is pushed up against effective gravity, so it leans forward. This matches the picture taken from the side.
+
+          **Left turn at steady speed.** The acceleration is centripetal, toward the center of the curve: to the left. Effective gravity tilts to the **right** (outward). So:
+          - the carbon dioxide balloon swings out to the right below the hand;
+          - the helium balloon leans in to the left above the hand.
+
+          The two strings form one slanted line through the hand, top leaning left and bottom swinging right, as seen from behind. That is choice 2.
+        checked: "by hand (effective gravity)"
+        status: ready
+      - id: "1-4"
+        topic: "Compton scattering: wavelength shift and recoil angle"
+        answer: "2"
+        hints:
+          - 'The electron gains kinetic energy. Where does that energy come from?'
+          - 'At $\theta = 90^\circ$, the photon momentum components are simple.'
+        solution: |
+          **Key idea:** the electron takes away some energy, so the photon's energy $hc/\lambda$ drops and its wavelength grows. Momentum sets the recoil direction.
+
+          **Wavelength.** The electron starts at rest and ends up moving, so it gains kinetic energy. The X-ray photon supplies that energy, so $hc/\lambda' < hc/\lambda$, which means $\lambda' > \lambda$. The scattered wavelength is **larger**.
+
+          **Recoil angle at $\theta = 90^\circ$.** The scattered photon goes straight along $+y$. Momentum balance:
+          - along $x$: $\dfrac{h}{\lambda} = mv\cos\varphi$
+          - along $y$: $0 = \dfrac{h}{\lambda'} - mv\sin\varphi$
+
+          Divide the second by the first:
+          $$\tan\varphi = \frac{\lambda}{\lambda'} \approx 1 \quad\Longrightarrow\quad \varphi \approx 45^\circ.$$
+          (Larger, 45°) is choice 2. The electron recoils halfway between the two photon directions, because the incoming and outgoing photons carry about the same momentum.
+        checked: "script: arctan(1) = 45°"
+        status: ready
+      - id: "1-5"
+        topic: "Two gases with equal p and V, different T"
+        answer: "1"
+        hints:
+          - 'Equal $p$ and $V$ means equal $nRT$.'
+          - 'Write $n\,v_{\rm rms}$ in terms of $T$ and see whether it is fixed.'
+        solution: |
+          **Key idea:** the ideal gas law fixes $nT = pV/R$. So anything that depends only on $nT$ is equal, and anything else differs.
+
+          - **Internal energy.** For a monatomic gas, $U = \tfrac32 nRT = \tfrac32 pV$. Equal $p$ and $V$ give equal $U$. **Equal.**
+          - **Average kinetic energy per molecule**, $\tfrac32 k_BT$. It depends on $T$ alone, and the temperatures differ. **Not equal.**
+          - **$v_\text{rms}$ times the number of moles.** $v_\text{rms} = \sqrt{3RT/M}$ and $n = pV/(RT)$, so
+            $$n\,v_\text{rms} = \frac{pV}{RT}\sqrt{\frac{3RT}{M}} \propto \frac{1}{\sqrt T}.$$
+            Different temperatures give different values. **Not equal.**
+
+          Only the first is equal: choice 1. The hotter gas has fewer molecules, but each has more energy, and the two effects cancel exactly in $U$.
+        checked: "script: compared at T = 300 K and 600 K"
+        status: ready
+  - id: "2"
+    topic: "Collisions: a block hits a spring-linked pair"
+    parts:
+      - id: "2-1"
+        topic: "Energy lost in a bounce off a wall"
+        answer: "4"
+        hints:
+          - 'The rebound speed is $e$ times the incoming speed.'
+        solution: |
+          **Key idea:** the rebound speed is $e v_0$, so the kinetic energy is scaled by $e^2$.
+
+          Before: $\tfrac12 m v_0^2$. After: the speed is $e v_0$, so the energy is $\tfrac12 m e^2 v_0^2$. The loss is
+          $$\Delta E = \tfrac12 m v_0^2\,(1 - e^2).$$
+          That is choice 4. Check: $e = 1$ gives no loss, and $e = 0$ (a dead stop) loses everything.
+        checked: "by hand"
+        status: ready
+      - id: "2-2"
+        topic: "Elastic collision with a block at rest"
+        answer: "Box 8: 3 · Box 9: 2"
+        hints:
+          - 'Use momentum conservation together with $e = 1$ (equal speeds of approach and separation).'
+        solution: |
+          **Key idea:** for an elastic head-on collision, use momentum together with "relative speed is reversed" ($e=1$). This is easier than using energy directly.
+
+          $$m v_0 = m v + M V_1, \qquad V_1 - v = v_0.$$
+
+          Put $V_1 = v + v_0$ into the first equation: $m v_0 = m v + M v + M v_0$, so
+          $$v = \frac{m - M}{m + M}\,v_0, \qquad V_1 = \frac{2m}{m+M}\,v_0.$$
+          Box 8 is choice 3 and box 9 is choice 2.
+
+          Checks: equal masses give $v = 0$ and $V_1 = v_0$ (the blocks swap speeds). A light $m$ bounces back, since $v < 0$.
+        checked: "script: sympy solved momentum + energy"
+        status: ready
+      - id: "2-3"
+        topic: "Effective restitution for a spring-linked pair"
+        answer: "6"
+        hints:
+          - 'Right after the hit, only $B_1$ moves. The pair shares that momentum.'
+          - "Restitution compares the speed of separation with the speed of approach."
+        solution: |
+          **Key idea:** treat $B_1$–spring–$B_2$ as one body of mass $2M$ moving at its center-of-mass speed $V$. The hit gave $B$ momentum but tied some energy up in internal motion.
+
+          Right after the impact, $B_1$ moves at $V_1$ and $B_2$ is still at rest, so $B$'s momentum is $MV_1$. Its velocity is
+          $$V = \frac{MV_1}{2M} = \frac{V_1}{2} = \frac{m}{m+M}\,v_0.$$
+          Afterward, no outside horizontal force acts on $B$, so $V$ stays the same.
+
+          The coefficient of restitution between A and B is (speed of separation)/(speed of approach):
+          $$e = \frac{V - v}{v_0} = \frac{m - (m - M)}{m+M} = \frac{M}{m+M} < 1.$$
+          So the blank is $(V - v)/v_0$, and its value is **less than 1**: choice 6. The single collision with $B_1$ was elastic, but seen as a collision with the whole of B it looks inelastic. Energy has gone into the spring's internal oscillation.
+        checked: "script: sympy, e = M/(m+M)"
+        status: ready
+      - id: "2-4"
+        topic: "Energy of the pair and maximum spring stretch"
+        answer: "6"
+        hints:
+          - 'Right after the impact, all of B''s energy is in $B_1$, which moves at $2V$.'
+          - 'At maximum stretch, both blocks move at the common speed $V$.'
+        solution: |
+          **Key idea:** B's energy is center-of-mass energy plus internal energy. At maximum stretch, the internal energy is all in the spring.
+
+          **B's energy right after the hit.** Only $B_1$ moves, at $V_1 = 2V$, and the spring is at its natural length:
+          $$E_B = \tfrac12 M (2V)^2 = 2MV^2.$$
+
+          **At maximum stretch.** The blocks move at the same velocity. Momentum is conserved, so that common velocity is $V$. Their kinetic energy is $\tfrac12(2M)V^2 = MV^2$. The rest is in the spring:
+          $$\tfrac12 k x_\text{max}^2 = 2MV^2 - MV^2 = MV^2 \quad\Longrightarrow\quad x_\text{max} = V\sqrt{\frac{2M}{k}}.$$
+          ($2MV^2$, $\sqrt{2M/k}\,V$) is choice 6.
+
+          Half of B's energy goes into the motion of the pair as a whole. The other half sloshes between the spring and the relative motion of the blocks.
+        viz: ct-2026-2-4
+        checked: "script: sympy energy balance"
+        status: ready
+  - id: "3"
+    topic: "Heat engine cycle and circular–plane wave interference"
+    parts:
+      - id: "3-1"
+        topic: "Heat absorbed in a constant-pressure expansion"
+        answer: "5"
+        hints:
+          - 'At constant pressure, a monatomic gas takes in $Q = \tfrac52\,p\,\Delta V$.'
+        solution: |
+          **Key idea:** at constant pressure, $Q = \Delta U + W = \tfrac32 p\Delta V + p\Delta V = \tfrac52 p\,\Delta V$ for a monatomic gas.
+
+          A→B is at $p = 10p_0$, with the volume going from $V_0$ to $10V_0$, so $\Delta V = 9V_0$:
+          - work by the gas: $W = 10p_0 \times 9V_0 = 90\,p_0V_0$;
+          - change in internal energy: $\Delta U = \tfrac32\,p\,\Delta V = 135\,p_0V_0$;
+          - heat in: $Q = 225\,p_0V_0$.
+
+          That is choice 5.
+        checked: "script: 2.5 × 10 × 9"
+        status: ready
+      - id: "3-2"
+        topic: "Estimating cycle work with staircases"
+        answer: "4"
+        hints:
+          - 'Count grid cells inside each staircase loop. Each cell is $p_0V_0$.'
+        solution: |
+          **Key idea:** the work in a cycle is the area it encloses. Two staircase loops trap the true area between them, and their average is a good estimate.
+
+          Each grid square is $p_0 \times V_0$. Count area column by column, as the height from the staircase up to the top edge at $10p_0$.
+
+          **Inner staircase** (inside the curve): columns from $2V_0$ to $3V_0$, $3V_0$ to $4V_0$, $4V_0$ to $5V_0$, and $5V_0$ to $10V_0$ have heights $5, 6, 7, 8$:
+          $$5 + 6 + 7 + 5\times 8 = 58.$$
+
+          **Outer staircase** (outside the curve): columns from $V_0$ to $2V_0$, $2V_0$ to $3V_0$, $3V_0$ to $5V_0$, and $5V_0$ to $10V_0$ have heights $5, 7, 8, 9$:
+          $$5 + 7 + 2\times 8 + 5\times 9 = 73.$$
+
+          The average is $(58 + 73)/2 = \tfrac{131}{2} = 65.5$, so $W \approx \tfrac{131}{2}\,p_0V_0$: choice 4.
+
+          The exact value is $90 - 10\ln 10 \approx 67.0$ (the isothermal leg gives back $nRT\ln 10 = 10p_0V_0\ln10$), so the estimate is good to about 2%.
+        checked: "script: both staircase areas and the exact integral"
+        status: ready
+      - id: "3-3"
+        topic: "Heat released and engine efficiency"
+        answer: "3"
+        hints:
+          - 'Over a full cycle, $\Delta U = 0$, so heat in minus heat out equals work.'
+        solution: |
+          **Key idea:** over one cycle the gas returns to its start, so $\Delta U = 0$. The net heat taken in equals the net work done.
+
+          The gas takes in heat only on A→B. (On B→C it cools at fixed volume, and on C→A it is squeezed at fixed temperature. Both give heat away.) If $Q$ goes in and $Q_\text{out}$ comes out, then
+          $$Q - Q_\text{out} = W \quad\Longrightarrow\quad Q_\text{out} = Q - W.$$
+          The efficiency is useful work over heat supplied:
+          $$\eta = \frac{W}{Q}.$$
+          ($Q - W$, $W/Q$) is choice 3. With the numbers above, $\eta \approx 65.5/225 \approx 0.29$.
+        checked: "by hand"
+        status: ready
+      - id: "3-4"
+        topic: "Condition for reinforcement: circular plus plane wave"
+        answer: "3"
+        hints:
+          - 'How far has each wave traveled from its source to P?'
+          - 'The plane wave travels straight along $-x$ from the line $x = L$.'
+        solution: |
+          **Key idea:** two waves that leave their sources in step reinforce where their travel distances differ by a whole number of wavelengths.
+
+          - The circular wave starts at O. Its path to P is the straight-line distance $\sqrt{X^2 + Y^2}$.
+          - The plane wave starts on the line $x = L$ and moves toward $-x$. Its wavefronts are parallel to that line, so the distance it travels to reach P is just $L - X$. The value of $Y$ does not matter.
+
+          Both start in phase with the same wavelength, so reinforcement needs
+          $$(L - X) - \sqrt{X^2 + Y^2} = m\lambda, \quad m = 0, \pm1, \pm2, \dots$$
+          That is choice 3. For each fixed $m$, this curve is a parabola with its focus at O.
+        checked: "by hand (path lengths)"
+        status: ready
+      - id: "3-5"
+        topic: "Counting bright points along the axis"
+        answer: "4"
+        hints:
+          - 'On the $x$ axis, $\sqrt{X^2+Y^2} = X$.'
+        solution: |
+          **Key idea:** on the axis the condition becomes $L - 2x = m\lambda$, so the bright points are evenly spaced, $\lambda/2$ apart.
+
+          With $Y = 0$ and $x > 0$, the condition is $(L - x) - x = m\lambda$, so
+          $$x = \frac{L - m\lambda}{2} = \frac{(11 - m)\lambda}{2}.$$
+          We need $0.2\lambda < x < 10.8\lambda$, that is, $0.4 < 11 - m < 21.6$. The integers $11 - m = 1, 2, \dots, 21$ all work: that makes **21** points, at $x = 0.5\lambda, 1.0\lambda, \dots, 10.5\lambda$.
+
+          That is choice 4. It is a standing-wave pattern between two waves meeting head-on, so the spacing is half a wavelength.
+        checked: "script: counted integer m"
+        status: ready
+      - id: "3-6"
+        topic: "Where does a moving interference crest go?"
+        answer: "2"
+        hints:
+          - 'In one period, each circle grows by $\lambda$ and each straight line shifts $\lambda$ to the left.'
+        solution: |
+          **Key idea:** a reinforced crest is where a circular crest meets a straight crest. Follow both crests for one period.
+
+          At Q, a circular crest and a straight crest cross. After one period $T$:
+          - every circular crest has grown outward by one wavelength, so its place is taken by the next circle out;
+          - every straight crest has moved one wavelength to the left (the plane wave travels toward $-x$), so its place is taken by the next line to the left.
+
+          So the crest that was at Q is now where the **next circle out** meets the **next line to the left**. On the drawing, that crossing is point イ. Between those two times, the crest slides smoothly along the parabola $(L - x) - r = \text{constant}$ from the last part. It does not pass any other marked point first.
+
+          A trap: オ is on the next circle out but on the *same* straight crest. That would need the plane wave to stand still. イ is choice 2.
+        viz: ct-2026-3-6
+        checked: "by hand (crest bookkeeping; drawn in the viz)"
+        status: ready
+  - id: "4"
+    topic: "Charged particles: electric deflector and magnetic turn"
+    parts:
+      - id: "4-1"
+        topic: "Plate voltage and which plate is higher"
+        answer: "3"
+        hints:
+          - 'Once the plates are charged, does any current flow through the resistor?'
+          - 'The negative particle is pushed back toward the plate it entered through.'
+        solution: |
+          **Key idea:** the plates are like a capacitor. Once charged, no steady current flows, so the resistor has no voltage across it.
+
+          **Voltage.** With no current, there is no drop across the resistor, so the plates get the full source voltage. A uniform field between plates a distance $d$ apart means the voltage is exactly $Ed$.
+
+          **Which plate is higher.** The particle enters through plate B, arcs into the gap, and comes back to B. So the force on it points toward B. For a negative charge, the force is opposite to $\vec E$, so $\vec E$ points from B toward A. A field points from high to low potential, so **B is higher** than A.
+
+          ($Ed$, higher) is choice 3.
+        checked: "by hand"
+        status: ready
+      - id: "4-2"
+        topic: "Work done by the electric force"
+        answer: "7"
+        hints:
+          - 'Compare the speed going in with the speed coming out.'
+        solution: |
+          **Key idea:** the work–energy theorem: zero change in kinetic energy means zero total work.
+
+          The particle enters and leaves with the same speed $v_0$, and only the electric force acts. So the electric force did **zero** net work: choice 7.
+
+          Another way to see it: the particle leaves through the same plate it entered, so it ends at the same potential it started from. The work is $q\,\Delta V = 0$. The field does negative work on the way in and gives it back on the way out.
+        checked: "by hand"
+        status: ready
+      - id: "4-3"
+        topic: "Field strength from the range of a 45° launch"
+        answer: "3"
+        hints:
+          - 'This is projectile motion with acceleration $eE/m$ in place of $g$.'
+          - 'The range for a 45° launch is $v_0^2/a$.'
+        solution: |
+          **Key idea:** a constant force gives projectile motion. The 45° range formula with $g$ replaced by $a = eE/m$ gives the answer.
+
+          Inside the plates, the particle has a constant acceleration $a = eE/m$ pointing back toward B. It moves exactly like a ball thrown at $45^\circ$ under "gravity" $a$.
+
+          - Time to come back: $t = \dfrac{2v_0\sin45^\circ}{a}$.
+          - Distance along the plate: $L = v_0\cos45^\circ \cdot t = \dfrac{2v_0^2\sin45^\circ\cos45^\circ}{a} = \dfrac{v_0^2}{a}$.
+
+          So
+          $$L = \frac{m v_0^2}{eE} \quad\Longrightarrow\quad E = \frac{m v_0^2}{eL}.$$
+          That is choice 3.
+        viz: ct-2026-4-3
+        checked: "script: numerical trajectory matches L = v0²/a"
+        status: ready
+      - id: "4-4"
+        topic: "Force direction and field direction in the magnet"
+        answer: "8"
+        hints:
+          - 'In uniform circular motion, the force points to the center.'
+          - 'For a negative charge, $\vec F = -e\,\vec v\times\vec B$.'
+        solution: |
+          **Key idea:** the magnetic force supplies the centripetal force, so at the bottom of the arc it points straight up toward the center. Then work out $\vec B$ from $\vec F = -e\,\vec v\times\vec B$.
+
+          **Force direction.** The path is a half circle dipping into the field region, and Q is its lowest point. The center of the circle is straight above Q, so the force there points up: arrow d.
+
+          **Field direction.** At Q the particle moves sideways, from the P side toward the R side. Take that as $+x$, with up as $+y$ and out of the page as $+z$. We need $-e\,(\hat x\times\vec B)$ to point along $+y$, so $\hat x\times\vec B$ must point along $-y$. Since $\hat x\times\hat z = -\hat y$, $\vec B$ points along $+z$: **out of the page** (from the back of the page to the front).
+
+          (d, back to front) is choice 8.
+        checked: "by hand (cross product)"
+        status: ready
+      - id: "4-5"
+        topic: "Mass dependence of the semicircle size"
+        answer: "1"
+        hints:
+          - 'Following the same path in the electric field fixes $mv^2$, not $v$.'
+          - 'The radius in a magnetic field is $r = mv/(eB)$.'
+        solution: |
+          **Key idea:** the same path through the plates means the same $mv^2$. Then the magnetic radius $mv/(eB) = \sqrt{m\cdot mv^2}/(eB)$ grows like $\sqrt m$.
+
+          **Electric part.** From 4-3, the range is $L = \dfrac{m v^2}{eE}$. With $L$, $e$ and $E$ unchanged, the new particle needs the same value of $mv^2$:
+          $$m' v'^2 = m v_0^2.$$
+          (Same kinetic energy, so the lighter particle goes faster.)
+
+          **Magnetic part.** The particle enters at right angles to the boundary, so it makes a half circle, and $PR = 2r$ with
+          $$r = \frac{mv}{eB} = \frac{\sqrt{m\,(mv^2)}}{eB}.$$
+          With $mv^2$ the same for both, $r \propto \sqrt m$, so
+          $$\frac{PR'}{PR} = \sqrt{\frac{m'}{m}}.$$
+          That is choice 1. This is the idea behind a mass spectrometer: ions given the same energy land at spots that depend on $\sqrt m$.
+        checked: "by hand; ratio checked numerically"
+        status: ready

@@ -1,0 +1,41 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-digit-double
+title: Doubling without changing the digit sum
+tier: 2
+order: 40
+areas:
+- number-theory
+- combinatorics
+problem: |
+  Let $s(n)$ be the sum of the decimal digits of $n$. How many integers $n$ with $1\le n\le 10^4$ satisfy $s(2n)=s(n)$?
+check:
+  type: number
+  answer: '791'
+answer: '$791$'
+hints:
+- 'Double $n$ digit by digit. Which digits produce a carry?'
+- 'Each carry lowers the digit sum by $9$ compared with $2s(n)$. So $s(2n)=2s(n)-9c$, where $c$ is the number of digits of $n$ that are $5$ or more.'
+- 'The condition becomes $s(n)=9c$. Count four-digit strings (leading zeros allowed) by the value of $c$.'
+solution: |
+  **Carries.** Doubling a digit $d$ gives $2d$. A carry goes to the next place exactly when $d\ge5$. An incoming carry
+  never causes a new one, since $2d+1\le9$ for $d\le4$ and $2d+1-10\le9$ for $d\ge5$. Each carry turns $10$ in one place
+  into $1$ in the next, losing $9$ from the digit sum. So
+  $$s(2n)=2s(n)-9c(n),$$
+  where $c(n)$ is the number of digits of $n$ that are at least $5$. The condition $s(2n)=s(n)$ becomes $s(n)=9c(n)$.
+
+  **Counting.** The number $10^4$ fails, so write every other $n$ as a string of four digits with leading zeros. Call a
+  digit *big* if it is $\ge5$ and *small* otherwise. We need digit sum $9c$ with exactly $c$ big digits.
+  Write each big digit as $5+x$ with $0\le x\le4$; then we need **four values in $0..4$ with sum $9c-5c=4c$**, once
+  the places of the big digits are chosen.
+
+  * $c=0$: sum $0$, only $0000$, which is not allowed.
+  * $c=1$: $4$ places, and four values in $0..4$ with sum $4$: $\binom73=35$ ways. Total $140$.
+  * $c=2$: $\binom42=6$ placements, and four values in $0..4$ with sum $8$: the middle coefficient of
+    $(1+t+t^2+t^3+t^4)^4$, which is $85$. Total $510$.
+  * $c=3$: replacing every digit $d$ by $9-d$ swaps big and small and changes digit sum $9c$ to $36-9c$, so this case
+    matches $c=1$: $140$.
+  * $c=4$: sum $36$, only $9999$.
+
+  Total: $140+510+140+1=791$.
+checked: 'script: all n up to 10^4 tested; case counts 140, 510, 140, 1 confirmed'
+status: ready

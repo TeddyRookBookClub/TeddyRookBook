@@ -1,0 +1,32 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-factorial-squares
+title: When is a factorial plus 24 a square?
+tier: 1
+order: 20
+areas:
+- number-theory
+problem: |
+  Find every positive integer $n$ for which $n!+24$ is a perfect square. Enter the **sum** of all such $n$.
+check:
+  type: number
+  answer: '6'
+  label: The sum of all such n
+answer: '$n=1$ and $n=5$, so the sum is $6$'
+hints:
+- 'Try $n=1,2,\dots,7$ by hand. Two of them work.'
+- 'Once $n$ is large, $n!$ is divisible by many small numbers. Look at the squares modulo one of them.'
+- 'Squares modulo $7$ can only be $0,1,2,4$.'
+solution: |
+  Small cases first: $1!+24=25=5^2$ works, $2!+24=26$, $3!+24=30$ and $4!+24=48$ do not, $5!+24=144=12^2$ works,
+  and $6!+24=744$ lies between $27^2=729$ and $28^2=784$.
+
+  For $n\ge 7$, the factorial $n!$ is divisible by $7$, so $n!+24\equiv 24\equiv 3\pmod 7$.
+  The squares modulo $7$ are $0^2,1^2,\dots,6^2\equiv 0,1,4,2,2,4,1$. The residue $3$ is not among them,
+  so $n!+24$ is never a square for $n\ge7$.
+
+  The answers are $n=1$ and $n=5$, with sum $6$.
+
+  Why $7$? We wanted a modulus $m$ that divides $n!$ from some point on and for which $24$ is not a square modulo $m$.
+  Modulo $5$ it fails ($24\equiv 4$ is a square), and modulo $7$ it works.
+checked: 'script: n up to 40 checked directly; the mod 7 argument covers the rest'
+status: ready

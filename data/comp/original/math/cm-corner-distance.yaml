@@ -1,0 +1,37 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-corner-distance
+title: How far to the nearest corner?
+tier: 2
+order: 60
+areas:
+- probability
+- calculus
+problem: |
+  A point is chosen uniformly at random in a unit square. Find the expected distance from the point to the **nearest
+  corner** of the square.
+check:
+  type: number
+  answer: (sqrt(2)+ln(1+sqrt(2)))/6
+  label: 'Your answer (exact, like sqrt(2)/3, or a decimal to 6 places)'
+  tolerance: 1.0e-06
+answer: '$\dfrac{\sqrt2+\ln(1+\sqrt2)}{6}\approx0.38260$'
+hints:
+- 'The two midlines split the square into four small squares. In each one, which corner is nearest?'
+- 'So the answer is the average distance from a corner of a square of side $\tfrac12$ to a random point in it. Scale to side $1$.'
+- 'Use polar coordinates on half of the square, $0\le\theta\le\pi/4$, where $r$ runs up to $\sec\theta$.'
+solution: |
+  **Reduce.** The two midlines cut the square into four squares of side $\tfrac12$, and in each the nearest corner of the big
+  square is the corner of the small square it shares. By symmetry, the answer is the average distance from a corner of a
+  square of side $\tfrac12$ to a random point in it. Distances scale with size, so this is half of
+  $$D=\int_0^1\!\!\int_0^1\sqrt{x^2+y^2}\,dx\,dy,$$
+  the average distance from a corner of the unit square.
+
+  **Compute $D$.** By symmetry across the diagonal, use the triangle $0\le y\le x\le1$ twice. In polar coordinates it is
+  $0\le\theta\le\pi/4$, $0\le r\le\sec\theta$:
+  $$D=2\int_0^{\pi/4}\!\!\int_0^{\sec\theta}r\cdot r\,dr\,d\theta=\frac23\int_0^{\pi/4}\sec^3\theta\,d\theta.$$
+  The standard antiderivative $\int\sec^3\theta\,d\theta=\tfrac12\big(\sec\theta\tan\theta+\ln|\sec\theta+\tan\theta|\big)$
+  gives $\tfrac12\big(\sqrt2+\ln(1+\sqrt2)\big)$ at $\pi/4$. So $D=\frac13\big(\sqrt2+\ln(1+\sqrt2)\big)$, and the answer is
+  $$\frac D2=\frac{\sqrt2+\ln(1+\sqrt2)}{6}\approx0.38260.$$
+viz: cm-corner-distance
+checked: 'script: Monte Carlo with 10^6 points gives 0.38266'
+status: ready

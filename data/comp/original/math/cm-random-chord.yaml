@@ -1,0 +1,36 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-random-chord
+title: A chord through a random point
+tier: 3
+order: 120
+areas:
+- probability
+- geometry
+problem: |
+  A point is chosen uniformly at random inside a disk of radius $1$, and a line through it is drawn in a uniformly random
+  direction. Find the expected length of the chord the line cuts from the disk.
+check:
+  type: number
+  answer: 16/(3pi)
+  label: Your answer (you can type pi)
+answer: '$\dfrac{16}{3\pi}\approx1.698$'
+hints:
+- 'By symmetry, you may fix the direction: say the line is horizontal.'
+- 'Then the chord depends only on the height $y$ of the point. What is the density of $y$?'
+- 'The density of $y$ is proportional to the chord length itself.'
+solution: |
+  Rotating the picture does not change the distribution of the point, so we may assume the line is horizontal.
+
+  If the point is at height $y$, the chord has length $L(y)=2\sqrt{1-y^2}$. For a point uniform in the disk, the height $y$
+  has density proportional to the width of the disk at that height, which is $L(y)$ again:
+  $$f(y)=\frac{L(y)}{\pi},\qquad -1\le y\le1.$$
+  So
+  $$\mathbb E[L]=\int_{-1}^{1}L(y)\,\frac{L(y)}{\pi}\,dy=\frac4\pi\int_{-1}^{1}(1-y^2)\,dy=\frac4\pi\cdot\frac43=\frac{16}{3\pi}\approx1.698.$$
+
+  **Why longer than you might guess.** If you pick the height uniformly instead, the average chord is $\tfrac\pi2\approx1.571$.
+  A random point is more likely to sit on a long chord than a short one, so long chords are over-represented. This
+  "length-biased" sampling is the same effect that makes the gap between buses seem long when you arrive at a random time:
+  you are more likely to land in a long gap.
+viz: cm-random-chord
+checked: 'script: 10^6 random points and directions give 1.6979'
+status: ready

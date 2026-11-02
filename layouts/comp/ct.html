@@ -1,0 +1,26 @@
+{{ define "main" }}
+{{- /* /physics/exam-practice/common-test/: every paper in data/comp/common-test/physics-*.yaml, newest first. */ -}}
+{{ partial "comp/head.html" . }}
+{{- $Y := (index (site.Data.comp | default dict) "common-test") | default dict -}}
+{{- $all := slice }}{{ range $k, $y := $Y }}{{ if hasPrefix $k "physics-" }}{{ $all = $all | append (dict "s" (printf "%v-%d" $y.year (cond (eq ($y.exam | default "main") "makeup") 0 1)) "k" $k "y" $y) }}{{ end }}{{ end }}{{ $all = sort $all "s" "desc" -}}
+<article class="cp cp-list cp-phys">
+  <nav class="cp-crumbs" aria-label="Breadcrumbs"><a href="{{ "physics/" | relURL }}">Physics</a> <span aria-hidden="true">›</span> <a href="{{ "physics/exam-practice/" | relURL }}">Exam practice</a> <span aria-hidden="true">›</span> <span>Common Test</span></nav>
+  <header class="cp-head">
+    <h1>{{ .Title }}</h1>
+    <p class="cp-intro">The University Entrance Common Test (大学入学共通テスト) is Japan's national exam for entering university. It is taken each January, and it replaced the older National Center Test in 2021. Physics (物理) is one of the science papers. Every answer is a number marked on a multiple-choice mark sheet, and the questions come in groups, each built around a diagram or an experiment. A makeup exam (追試験) is held about a week later for students who could not sit the main one. <a href="https://en.wikipedia.org/wiki/Common_Test_for_University_Admissions" rel="noopener">Read more about the test</a>.</p>
+  </header>
+  {{ partial "comp/ct-about.html" (dict "links" nil) }}
+  <section aria-labelledby="cp-h-papers">
+    <h2 id="cp-h-papers">Papers</h2>
+    {{- if $all }}
+    <ul class="cp-years">
+      {{- range $all }}{{ $y := .y }}{{ $slug := strings.TrimPrefix "physics-" .k }}
+      {{- $n := 0 }}{{ $t := 0 }}{{ range $y.questions }}{{ range .parts }}{{ $t = add $t 1 }}{{ if eq .status "ready" }}{{ $n = add $n 1 }}{{ end }}{{ end }}{{ end }}
+      <li><a href="{{ printf "physics/exam-practice/common-test/%s/" $slug | relURL }}"><b>{{ $y.year }}</b><small>{{ if eq ($y.exam | default "main") "makeup" }}Makeup exam{{ else }}Main exam{{ end }} · {{ $n }} of {{ $t }} {{ cond (eq $n 1) "solution" "solutions" }} ready</small></a></li>
+      {{- end }}
+    </ul>
+    {{- else }}<p>The first papers are being written.</p>{{ end }}
+  </section>
+  <p class="cp-small"><a href="{{ "physics/exam-practice/" | relURL }}">All exam practice</a></p>
+</article>
+{{ end }}

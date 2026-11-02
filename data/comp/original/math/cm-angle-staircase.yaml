@@ -1,0 +1,34 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-angle-staircase
+title: A staircase of small angles
+tier: 3
+order: 10
+areas:
+- analysis
+- algebra
+problem: |
+  Evaluate
+  $$\sum_{n=1}^{\infty}\arctan\frac{4n}{n^4-n^2+4}.$$
+check:
+  type: number
+  answer: pi/2
+  label: Your answer (you can type pi)
+answer: '$\dfrac\pi2$'
+hints:
+- 'Look for a telescoping sum: $\arctan a-\arctan b=\arctan\dfrac{a-b}{1+ab}$ when $a,b\ge0$.'
+- 'You want $a_n-a_{n-1}$ to be a multiple of $n$ and $1+a_na_{n-1}$ to be a multiple of $n^4-n^2+4$.'
+- 'Try the triangular numbers $a_n=\tfrac{n(n+1)}2$.'
+solution: |
+  Let $t_n=\tfrac{n(n+1)}2$, the triangular numbers, with $t_0=0$. Then
+  $$t_n-t_{n-1}=n,\qquad 1+t_nt_{n-1}=1+\frac{n^2(n^2-1)}4=\frac{n^4-n^2+4}4.$$
+  So
+  $$\frac{4n}{n^4-n^2+4}=\frac{t_n-t_{n-1}}{1+t_nt_{n-1}}.$$
+  For $a,b\ge0$, the difference $\arctan a-\arctan b$ lies in $(-\tfrac\pi2,\tfrac\pi2)$ and its tangent is
+  $\frac{a-b}{1+ab}$, so it equals $\arctan\frac{a-b}{1+ab}$. Hence each term is $\arctan t_n-\arctan t_{n-1}$, and
+  $$\sum_{n=1}^{N}=\arctan t_N-\arctan t_0=\arctan\frac{N(N+1)}2\ \longrightarrow\ \frac\pi2.$$
+
+  **Picture.** Draw the points $(1,t_n)$. The $n$-th term is the angle between the rays to $(1,t_{n-1})$ and $(1,t_n)$.
+  The rays climb toward the vertical, so the angles add up to a right angle.
+viz: cm-angle-staircase
+checked: 'script: 10^6 terms summed, error 2e-12'
+status: ready

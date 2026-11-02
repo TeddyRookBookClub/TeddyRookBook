@@ -1,0 +1,269 @@
+year: 2022
+edition: 83rd
+date: "December 3, 2022"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2022.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Lines meeting a logarithmic curve exactly once"
+    areas: [calculus, analysis]
+    difficulty: 2
+    answer: '$(0,0)$; every $(a,b)$ with $|a|\ge1$; and, for $0<|a|<1$, $b<\ln(1+r_-^2)-|a|r_-$ or $b>\ln(1+r_+^2)-|a|r_+$, where $r_\pm=\frac{1\pm\sqrt{1-a^2}}{|a|}$'
+    hints:
+      - 'Study $f(x)=\ln(1+x^2)-ax-b$. Its derivative involves $\frac{2x}{1+x^2}$, which lies in $[-1,1]$.'
+      - 'For $0<a<1$, $f$ goes down, up, then down. When does it cross zero only once?'
+    solution: |
+      **Key idea:** count zeros of $f(x)=\ln(1+x^2)-ax-b$ from the shape of its graph. Everything depends on how $a$ compares with the range $[-1,1]$ of $\frac{2x}{1+x^2}$.
+
+      We have $f'(x)=\frac{2x}{1+x^2}-a$, and $\left|\frac{2x}{1+x^2}\right|\le1$ with equality only at $x=\pm1$. Also $\ln(1+x^2)$ grows more slowly than any line, so for $a\ne0$, $f(x)\to\pm\infty$ with opposite signs at the two ends.
+
+      **$|a|\ge1$.** $f'$ has one sign everywhere, vanishing at most at one point, so $f$ is strictly monotone. Its end values have opposite signs, so there is exactly one zero, for every $b$.
+
+      **$a=0$.** $\ln(1+x^2)=b$ has one solution for $b=0$, two for $b>0$, none for $b<0$. Only $(0,0)$ works.
+
+      **$0<a<1$.** $f'(x)=0$ means $ax^2-2x+a=0$, with roots $0<r_-<r_+$ as in the answer. So $f$ decreases on $(-\infty,r_-]$ from $+\infty$, increases on $[r_-,r_+]$, and decreases on $[r_+,\infty)$ to $-\infty$. There is exactly one zero when the local minimum is positive (the only zero is after $r_+$) or the local maximum is negative (the only zero is before $r_-$). If $f(r_-)\le0\le f(r_+)$, there are at least two zeros. So the condition is $f(r_-)>0$ or $f(r_+)<0$, which is $b<\ln(1+r_-^2)-ar_-$ or $b>\ln(1+r_+^2)-ar_+$.
+
+      **$-1<a<0$.** Replacing $x$ by $-x$ turns the line $y=ax+b$ into $y=-ax+b$ and leaves the curve unchanged. So $(a,b)$ works exactly when $(|a|,b)$ does.
+    checked: "script: for 100,000 random (a, b) with 0 < |a| < 1, counted sign changes on the monotone pieces; matched the rule every time"
+    status: ready
+
+  - id: A2
+    topic: "Negative coefficients in the square of a polynomial"
+    areas: [algebra]
+    difficulty: 3
+    answer: "$2n-2$"
+    hints:
+      - 'The top and bottom coefficients of $p^2$ are squares. Suppose all the others are negative.'
+      - 'Normalize $p(0)=1$ and compare $p$ with the power series of $\sqrt{1-U}$.'
+    solution: |
+      **Key idea:** if all $2n-1$ middle coefficients were negative, then $p$ would be the square root of $1-U$ to high order, with $U$ having positive coefficients. Such a square root has negative coefficients in every degree up to $2n-1$, which a degree-$n$ polynomial cannot have.
+
+      Write $q=p^2=\sum_{k=0}^{2n}c_kx^k$ with $p=\sum a_ix^i$. Then $c_{2n}=a_n^2>0$ and $c_0=a_0^2\ge0$, so at most $2n-1$ coefficients are negative.
+
+      **$2n-1$ is impossible.** Suppose $c_1,\dots,c_{2n-1}<0$. Then $c_1=2a_0a_1\ne0$, so $a_0\ne0$. Dividing $p$ by $a_0$ multiplies every $c_k$ by $a_0^{-2}>0$, so we may assume $a_0=1$. Then
+      $$q=1-U+c_{2n}x^{2n},\qquad U=\sum_{k=1}^{2n-1}|c_k|x^k ,$$
+      where $U$ has positive coefficients. As formal power series, $p$ is the square root of $q$ with constant term $1$, and it is determined by $q$ one degree at a time; so modulo $x^{2n}$, $p$ agrees with
+      $$\sqrt{1-U}=1-\tfrac12U-\tfrac18U^2-\tfrac1{16}U^3-\cdots=1-\sum_{j\ge1}\beta_jU^j,\qquad\beta_j>0 .$$
+      Each $U^j$ has nonnegative coefficients, and $U$ itself has positive coefficient in every degree $1,\dots,2n-1$. So $\sqrt{1-U}$ has a strictly negative coefficient in every degree $1,\dots,2n-1$. But $p$ has degree $n$, so its coefficient of $x^{n+1}$ is $0$, and $n+1\le2n-1$ for $n\ge2$. Contradiction.
+
+      **$2n-2$ is possible.** Take
+      $$p(x)=1-\varepsilon(x+x^2+\dots+x^{n-1})+x^n,\qquad \varepsilon=\tfrac1n .$$
+      For $1\le k\le n-1$, the coefficient of $x^k$ in $p^2$ is $-2\varepsilon+(k-1)\varepsilon^2<0$. For $n+1\le k\le2n-1$, it is $-2\varepsilon$ plus at most $(n-2)\varepsilon^2$, also negative. That is $2(n-1)=2n-2$ negative coefficients (the coefficient of $x^n$ is positive).
+    checked: "script: the example has exactly 2n − 2 negative coefficients in its square for 2 ≤ n ≤ 11; random search for n ≤ 6 never beats 2n − 2"
+    status: ready
+
+  - id: A3
+    topic: "Counting periodic sequences of a five-cycle recurrence"
+    areas: [number-theory, combinatorics]
+    difficulty: 3
+    hints:
+      - 'Compute the first few terms from $a_1=x$, $a_2=y$. What is $a_6$?'
+      - 'Shifting a sequence by one step is a map of order dividing $5$ on the set of valid starting pairs.'
+    solution: |
+      **Key idea:** the recurrence is periodic with period $5$. So shifting the sequence acts on valid sequences with orbits of size $1$ or $5$, and the fixed points are the solutions of $x^2=x+1$.
+
+      Each term is $a_{n+2}=(1+a_{n+1})/a_n$, so a sequence is fixed by $(a_1,a_2)=(x,y)$, as long as no term is $0$. Computing,
+      $$a_3=\frac{1+y}{x},\quad a_4=\frac{1+x+y}{xy},\quad a_5=\frac{1+x}{y},\quad a_6=x,\quad a_7=y,$$
+      so the sequence repeats with period $5$. It is valid exactly when $x$, $y$, $1+x$, $1+y$, $1+x+y$ are all nonzero modulo $p$; then all terms are nonzero and every step is defined. So $f(p)$ is the number of valid pairs.
+
+      The shift $T(a_1,a_2,\dots)=(a_2,a_3,\dots)$ maps valid sequences to valid sequences, and $T^5$ is the identity. Each orbit has size dividing $5$, so size $1$ or $5$. Hence
+      $$f(p)\equiv\#\{\text{fixed points of }T\}\pmod5 .$$
+      A fixed point is a constant sequence $a_n=x$, which needs $x^2=1+x$. These are valid: $x=0$ and $x=-1$ do not satisfy $x^2=x+1$, and $1+2x=0$ would give $x=-\frac12$ and then $\frac14=\frac12$, impossible for $p>5$.
+
+      The quadratic $x^2-x-1$ has discriminant $5$, which is nonzero modulo $p$. So it has either $0$ or $2$ roots. Therefore $f(p)\equiv0$ or $2\pmod5$.
+    viz: putnam-2022-a3
+    checked: "script: counted valid pairs for primes 7 to 31; residues mod 5 were 0 or 2, matching the number of roots of x² − x − 1"
+    status: ready
+
+  - id: A4
+    topic: "Probability: weighted sum until the first rise"
+    areas: [probability]
+    difficulty: 2
+    answer: '$2\sqrt e-3$'
+    hints:
+      - 'Write $S=\sum_i X_i2^{-i}\,[k\ge i]$ and use linearity.'
+      - 'The event $k\ge i$ means $X_1>X_2>\dots>X_i$.'
+    solution: |
+      **Key idea:** by linearity we only need $E[X_i;\,X_1>\dots>X_i]$, which is a beta integral equal to $\frac1{(i+1)!}$.
+
+      The term $X_i/2^i$ appears in $S$ exactly when $k\ge i$, that is, when there is no rise among $X_1,\dots,X_i$, i.e. $X_1>X_2>\dots>X_i$ (ties have probability $0$). So
+      $$E[S]=\sum_{i\ge1}2^{-i}\,E\big[X_i\,;\,X_1>\dots>X_i\big].$$
+      Condition on $X_i=x$. The other $i-1$ values must all exceed $x$ (probability $(1-x)^{i-1}$) and be in decreasing order (probability $\frac1{(i-1)!}$). Hence
+      $$E\big[X_i;\,X_1>\dots>X_i\big]=\int_0^1x\,\frac{(1-x)^{i-1}}{(i-1)!}\,dx=\frac{1}{(i-1)!}\cdot\frac{1!\,(i-1)!}{(i+1)!}=\frac1{(i+1)!}.$$
+      Therefore
+      $$E[S]=\sum_{i\ge1}\frac{2^{-i}}{(i+1)!}=2\sum_{j\ge2}\frac{(1/2)^j}{j!}=2\Big(e^{1/2}-1-\frac12\Big)=2\sqrt e-3\approx0.2974 .$$
+    checked: "exact series 0.297443; simulation of 200,000 runs gives 0.298 (within sampling error)"
+    status: ready
+
+  - id: A5
+    topic: "Domino-placing game on a long strip"
+    areas: [combinatorics]
+    difficulty: 5
+    status: coming
+
+  - id: A6
+    topic: "Intervals with equal odd-power length sums"
+    areas: [analysis, algebra]
+    difficulty: 5
+    answer: "$m=n$"
+    hints:
+      - 'Rewrite the sum as $(2k-1)\int_U t^{2k-2}\,dt$ and substitute $s=t^2$.'
+      - 'For a construction, try the points $\cos\frac{j\pi}{2n+1}$, $j=1,\dots,2n$.'
+    solution: |
+      **Key idea:** the conditions say a certain step function in $s=t^2$ is orthogonal to all polynomials of degree below $m$. Such a function must change sign at least $m$ times, but $2n$ endpoints allow at most $n$ sign changes. Equally spaced cosines reach $m=n$.
+
+      Let $U=\bigcup_i[x_{2i-1},x_{2i}]\subset(-1,1)$. Then $\sum_i\big(x_{2i}^{2k-1}-x_{2i-1}^{2k-1}\big)=(2k-1)\int_Ut^{2k-2}\,dt$.
+
+      **Upper bound $m\le n$.** Substitute $s=t^2$ on the positive and negative parts of $U$:
+      $$\int_Ut^{2k-2}dt=\int_0^1s^{k-1}\frac{c(s)}{2\sqrt s}\,ds,\qquad c(s)=[\sqrt s\in U]+[-\sqrt s\in U]\in\{0,1,2\}.$$
+      Since $(2k-1)\int_0^1s^{k-1}\frac{ds}{2\sqrt s}=1$, the condition for $k$ becomes
+      $$\int_0^1s^{k-1}\,\nu(s)\,ds=0,\qquad \nu(s)=\frac{c(s)-1}{2\sqrt s}.$$
+      If this holds for $k=1,\dots,m$, then $\int\nu q=0$ for every polynomial $q$ of degree below $m$. Now $\nu$ is not zero almost everywhere: near $s=1$ both $\pm\sqrt s$ lie outside $U$, so $c=0$ there. If $\nu$ changed sign at only $j<m$ points $s_1,\dots,s_j$, then $q=\prod(s-s_i)$ would make $\nu q$ of one sign and not zero, so $\int\nu q\ne0$. Hence $\nu$ changes sign at least $m$ times.
+
+      The function $c$ jumps only at the squares of the $2n$ endpoints, and each endpoint changes $c$ by $1$. A sign change of $c-1$ means going from $c=0$ to $c=2$ or back, which uses up at least two endpoints. So there are at most $n$ sign changes, and $m\le n$.
+
+      **Construction with $m=n$.** Let $\theta=\frac{\pi}{2n+1}$ and $z_j=\cos j\theta$ for $j=1,\dots,2n$. These decrease from near $1$ to near $-1$. Take $x_1=z_{2n}<x_2=z_{2n-1}<\dots<x_{2n}=z_1$. Then the sum for exponent $p=2k-1$ is $\sum_{j=1}^{2n}(-1)^{j+1}z_j^p$.
+
+      For odd $q$ with $1\le q\le2n-1$, $e^{iq\theta}\ne-1$, and a geometric sum gives
+      $$\sum_{j=0}^{2n}(-1)^j\cos(jq\theta)=\operatorname{Re}\frac{1-(-e^{iq\theta})^{2n+1}}{1+e^{iq\theta}}=0,$$
+      because $(-1)^{2n+1}e^{iq\pi}=1$. So $\sum_{j=1}^{2n}(-1)^{j+1}\cos(jq\theta)=1$. For odd $p\le2n-1$, the power $\cos^px$ is $2^{1-p}\sum_{q}\binom{p}{(p-q)/2}\cos qx$ over odd $q\le p$, and these binomial coefficients add up to $2^{p-1}$. Hence
+      $$\sum_{j=1}^{2n}(-1)^{j+1}z_j^{\,p}=2^{1-p}\sum_q\binom{p}{(p-q)/2}=1$$
+      for $p=1,3,\dots,2n-1$, that is, for $k=1,\dots,n$. So $m=n$.
+    viz: putnam-2022-a6
+    checked: "numeric: the cosine construction gives sums equal to 1 (to 1e-12) for k ≤ n and not for k = n + 1, n ≤ 8"
+    status: ready
+
+  - id: B1
+    topic: "Exponential of an integer polynomial: no zero coefficients"
+    areas: [algebra, number-theory]
+    difficulty: 2
+    hints:
+      - 'Differentiate: $(e^P)''=P''e^P$ gives a recursion for the coefficients.'
+      - 'Show $k!\,b_k$ is an odd integer.'
+    solution: |
+      **Key idea:** the numbers $c_k=k!\,b_k$ are integers, and modulo $2$ they satisfy $c_{k+1}\equiv a_1c_k$. So they are all odd.
+
+      Comparing coefficients of $x^k$ in $(e^{P})'=P'\,e^{P}$ gives
+      $$(k+1)b_{k+1}=\sum_{j=1}^{n}j\,a_j\,b_{k+1-j}\qquad(b_i=0\text{ for }i<0).$$
+      Multiply by $k!$ and put $c_k=k!\,b_k$:
+      $$c_{k+1}=\sum_{j=1}^{n}j\,a_j\cdot k(k-1)\cdots(k-j+2)\cdot c_{k+1-j}.$$
+      Here $k(k-1)\cdots(k-j+2)=k!/(k+1-j)!$ is a product of $j-1$ consecutive integers. Since $c_0=b_0=1$, induction shows every $c_k$ is an integer.
+
+      Look modulo $2$. The $j=1$ term is $a_1c_k$. For $j\ge2$, the factor $j\cdot k(k-1)\cdots(k-j+2)$ is even: if $j$ is even, $j$ is; if $j\ge3$ is odd, the product has at least two consecutive integers. So
+      $$c_{k+1}\equiv a_1c_k\equiv c_k\pmod2 ,$$
+      since $a_1$ is odd. With $c_0=1$, every $c_k$ is odd, hence nonzero, and $b_k=c_k/k!\ne0$.
+    checked: "script: for random integer P with odd a_1, k!·b_k is odd for k < 14"
+    status: ready
+
+  - id: B2
+    topic: "Finite sets closed under the cross product"
+    areas: [linear-algebra, geometry]
+    difficulty: 2
+    answer: "$n=1$ and $n=7$"
+    hints:
+      - 'If $v$ is in $S$ and $x\perp v$, then $v\times(v\times x)=-|v|^2x$.'
+      - 'Show all nonzero vectors in $S$ are unit vectors, pairwise parallel or perpendicular.'
+    solution: |
+      **Key idea:** crossing repeatedly with a fixed $v\in S$ scales lengths by $|v|$, so finiteness forces $|v|=1$. Then all cross products of unit vectors in $S$ have length $0$ or $1$, which pins $S$ down to a coordinate frame.
+
+      **Examples.** $S=\{0\}$ works ($n=1$). So does $S=\{0,\pm e_1,\pm e_2,\pm e_3\}$ ($n=7$): products of these are $0$ or $\pm e_i$, and each element arises, e.g. $0=e_1\times e_1$ and $\pm e_3=\pm e_1\times e_2$.
+
+      **Nothing else.** Let $S$ be finite with $S=\{v\times w\}$, and $S\ne\{0\}$. Then $0=v\times v\in S$. If all nonzero vectors of $S$ were parallel, all cross products would be $0$. So $S$ has two nonparallel nonzero vectors, and every nonzero $v\in S$ is nonparallel to at least one $w\in S$.
+
+      *Lengths are $1$.* Given such $v,w$, let $x_0=v\times w\ne0$, which is perpendicular to $v$, and $x_{k+1}=v\times x_k$. All $x_k$ lie in $S$, stay perpendicular to $v$, and have $|x_{k+1}|=|v|\,|x_k|$. A finite set cannot contain vectors of lengths $|v|^k|x_0|$ for all $k$ unless $|v|=1$.
+
+      *Angles are $0$, $90^\circ$ or $180^\circ$.* For unit $v,w\in S$, the vector $v\times w\in S$ has length $|\sin\angle(v,w)|\in\{0,1\}$.
+
+      So the nonzero vectors of $S$ are unit vectors along at most three mutually perpendicular lines. If $u,w\in S$ are perpendicular, then $u\times w$ is a unit vector along the third line, and crossing with $u$ turns vectors in the plane perpendicular to $u$ by $90^\circ$, which produces $\pm w$ and $\pm(u\times w)$. Doing the same with $w$ produces $\pm u$. So $S=\{0,\pm e_1,\pm e_2,\pm e_3\}$ for some orthonormal frame, and $n=7$.
+    checked: "proof; the 7-element example was checked by computing all 49 products"
+    status: ready
+
+  - id: B3
+    topic: "Recoloring the positive reals by same-color distances"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: "Yes. After at most two recolorings every number is red"
+    hints:
+      - 'If $d$ is blue after one step, then every two points at distance $d$ had different colors. What does that say about $2d$ and about sums and differences of blue numbers?'
+      - 'Suppose some $t$ is still blue after the second step. Look at $t/2$ and $3t/2$.'
+    solution: |
+      **Key idea:** after one recoloring, the blue set $B$ contains no sum or difference of two of its elements. If some $t$ were blue after the next step, colors would alternate along steps of $t$, and $t/2$ or $3t/2$ would break that rule.
+
+      Call the colorings $c_0$ (given), $c_1$, $c_2$. A number $d$ is blue in $c_1$ when $c_0(x+d)\ne c_0(x)$ for all $x>0$.
+
+      **Rules for $B$, the blue set of $c_1$.** Let $d,e\in B$. Then $c_0(x+d)\ne c_0(x)$ and $c_0(x+d+e)\ne c_0(x+d)$, so with two colors $c_0(x+d+e)=c_0(x)$: so $d+e\notin B$ (including $d=e$, so $2d\notin B$). If $d>e$, then $c_0(x+d)$ and $c_0(x+e)$ both differ from $c_0(x)$, so they are equal and $d-e\notin B$.
+
+      **The second step.** If $B$ is empty, $c_1$ is all red and every distance is a same-color distance, so $c_2$ is all red. Suppose instead some $t>0$ is blue in $c_2$. Then $c_1(x+t)\ne c_1(x)$ for all $x$, so $c_1(x+2t)=c_1(x)$: the coloring $c_1$ flips along steps of $t$ and repeats after $2t$.
+
+      Here $B$ is not empty (otherwise $c_2$ would be all red). Take $d\in B$. Then $d+2t\in B$, and their difference $2t$ is not in $B$. By the flipping, $3t\in B$, and by the repetition, $t\in B$.
+
+      Now look at $t/2$. If $t/2\in B$, then $t/2+t/2=t$ would not be in $B$; but $t\in B$. If $t/2\notin B$, then by flipping $3t/2\in B$, so $3t/2+3t/2=3t\notin B$; but $3t\in B$. Either way we get a contradiction.
+
+      So no number is blue in $c_2$: after at most two recolorings everything is red, and it stays red.
+    checked: "proof only (no final value to check)"
+    status: ready
+
+  - id: B4
+    topic: "Cyclic sequences whose consecutive triples are progressions"
+    areas: [combinatorics, number-theory]
+    difficulty: 4
+    answer: "The multiples of $3$ that are at least $9$"
+    hints:
+      - 'Let $d_i=x_{i+1}-x_i$. A triple is a progression exactly when $d_{i+1}/d_i$ is $1$, $-2$ or $-\frac12$.'
+      - 'Modulo $3$, both $-2$ and $-\frac12$ act like $1$.'
+    solution: |
+      **Key idea:** in terms of the gaps $d_i$, each condition says consecutive gaps have ratio $1$, $-2$ or $-\frac12$, and the gaps add to $0$. Modulo $3$ all gaps agree, which forces $3\mid n$. A short case check rules out $n=6$, and an explicit pattern works for $n=3k\ge9$.
+
+      Indices are cyclic. Put $d_i=x_{i+1}-x_i$, nonzero since the $x_i$ are distinct, with $\sum d_i=0$. Shift so $x_i=0$: the triple is $0,\,d_i,\,d_i+d_{i+1}$. It is a progression when one entry is the average of the other two, which gives $d_{i+1}=d_i$, $d_{i+1}=-2d_i$, or $d_{i+1}=-\frac12d_i$.
+
+      **$3\mid n$.** Scale so $d_1$ is a large power of $2$; then every $d_i$ is $\pm$ a power of $2$, an integer. Since $-2\equiv1$ and, when $d_i=-2d_{i+1}$, also $d_{i+1}\equiv d_i\pmod3$, all $d_i$ are congruent to $d_1\not\equiv0\pmod 3$. Then $0=\sum d_i\equiv nd_1$, so $3\mid n$.
+
+      **$n=6$ fails.** Group equal consecutive gaps into blocks. Neighboring blocks have ratio $-2$ or $-\frac12$, so signs alternate and the number of blocks is even; one block is impossible because the sum would not be $0$. Up to scaling, rotation, reflection and sign:
+      - *Two blocks* $1,-2$: lengths $4,2$; the walk $0,1,2,3,4,2$ repeats $2$.
+      - *Four blocks* $1,-2,1,-2$: lengths $(L_1,1,L_3,1)$ with $L_1+L_3=4$; each case revisits a point (for example $0,1,-1,0$).
+      - *Four blocks* $1,-2,4,-2$: lengths $(2,1,1,2)$ or $(2,2,1,1)$; both walks return to $0$ early.
+      - *Six blocks* $d_i=(-1)^i2^{h_i}$, where $h$ moves by $\pm1$ each step and returns. Of the four cyclic shapes, only $h=(0,1,2,1,0,1)$ has $\sum d_i=0$, and its walk $0,1,-1,3,1,\dots$ repeats $1$.
+
+      So $n=6$ is impossible. (A computer search over all ratio patterns confirms there is no solution for $4\le n\le8$.)
+
+      **$n=3k$, $k\ge3$, works.** Use the gaps
+      $$\underbrace{2,\dots,2}_{2k-3},\ -1,\ 2,\ \underbrace{-4,\dots,-4}_{k-1},\ 2,\ -1 .$$
+      Consecutive ratios are $1,-\frac12,-2,-2,1,-\frac12,-\frac12,-2$, all allowed (the last ratio wraps around). The sum is $2(2k-3)-1+2-4(k-1)+2-1=0$. Starting at $0$, the points are the even numbers $0,2,\dots,4k-6$, then $4k-7$ and $4k-5$, then $4k-9,4k-13,\dots,-1$ (all $\equiv3\pmod4$ and below $4k-5$), then $1$. These $3k$ numbers are distinct because $4k-7\equiv1\pmod 4$ differs from $1$ when $k\ge3$.
+    checked: "script: exhaustive search over gap ratios for n ≤ 9 and 12 (none for n = 4 to 8); the general pattern verified distinct for k = 3 to 50"
+    status: ready
+
+  - id: B5
+    topic: "Probability: when zero is the likeliest weighted sum"
+    areas: [probability, analysis]
+    difficulty: 4
+    answer: '$0\le p\le\frac14$'
+    hints:
+      - 'Use characteristic functions: $E[e^{i\theta X}]=1-2p+2p\cos\theta$.'
+      - 'For $p>\frac14$, try $a_1=1$ and $a_2=\dots=a_n=2$ with $b=1$.'
+    solution: |
+      **Key idea:** for $p\le\frac14$ each characteristic function is nonnegative, which makes $0$ the most likely value. For $p>\frac14$, one odd weight and many weights $2$ make $1$ more likely than $0$.
+
+      Let $\varphi(\theta)=1-2p+2p\cos\theta$, the characteristic function of each $X_i$. By Fourier inversion on the integers,
+      $$P(b,a_1,\dots,a_n)=\frac1{2\pi}\int_{-\pi}^{\pi}e^{-ib\theta}\prod_{i}\varphi(a_i\theta)\,d\theta .$$
+
+      **$p\le\frac14$ works.** Then $\varphi\ge1-4p\ge0$, so the product is nonnegative and
+      $$P(b,\dots)\le\frac1{2\pi}\int\prod_i\varphi(a_i\theta)\,d\theta=P(0,\dots).$$
+
+      **$p>\frac13$ fails.** With $n=1$, $a_1=1$: $P(0)=1-2p<p=P(1)$.
+
+      **$\frac14<p\le\frac13$ fails.** Take $a_1=1$, $a_2=\dots=a_{m+1}=2$, $b=1$, and let $T=X_2+\dots+X_{m+1}$, $u=P(T=0)$, $v=P(T=1)$. The sum is $X_1+2T$. It is $0$ only when $X_1=0,T=0$, and $1$ when $X_1=1,T=0$ or $X_1=-1,T=1$. So
+      $$P(0)-P(1)=(1-2p)u-pu-pv=(1-3p)u-pv ,$$
+      which is negative once $v/u>\frac{1-3p}{p}$. Since $p>\frac14$, the right side is less than $1$. So it is enough to show $v/u\to1$ as $m\to\infty$ through even values.
+
+      For even $m$, $\varphi^m\ge0$, and $u-v=\frac1{2\pi}\int(1-\cos\theta)\varphi^m$, $u=\frac1{2\pi}\int\varphi^m$. Fix $\delta>0$. On $|\theta|<\delta$, $1-\cos\theta\le\delta^2/2$. Off it, $|\varphi|\le\rho<1$ for some $\rho$ (because $p>0$ and $-1<1-4p<0$), so that part of $\int(1-\cos\theta)\varphi^m$ is at most $4\pi\rho^m$. Meanwhile, on $|\theta|<1/\sqrt m$ we have $\varphi\ge1-p\theta^2\ge1-p/m$, so $\int\varphi^m\ge\frac{2}{\sqrt m}(1-\frac pm)^m\ge\frac{c}{\sqrt m}$ for a constant $c>0$. Therefore
+      $$\frac{u-v}{u}\le\frac{\delta^2}{2}+\frac{4\pi\rho^m\sqrt m}{c}\longrightarrow\frac{\delta^2}{2}.$$
+      As $\delta$ is arbitrary, $v/u\to1$.
+    checked: "script: exact distributions; for p = 1/4, P(0) ≥ P(b) in 300 random cases; for p = 0.26 with m = 10 to 200 weights 2, P(0) < P(1)"
+    status: ready
+
+  - id: B6
+    topic: "A functional equation for positive continuous functions"
+    areas: [analysis, algebra]
+    difficulty: 5
+    status: coming

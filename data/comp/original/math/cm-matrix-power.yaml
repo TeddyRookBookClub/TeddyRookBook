@@ -1,0 +1,28 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-matrix-power
+title: The tenth power of a small matrix
+tier: 1
+order: 120
+areas:
+- linear-algebra
+problem: |
+  Let $A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$. Find the sum of the four entries of $A^{10}$.
+check:
+  type: number
+  answer: '118098'
+answer: '$2\cdot3^{10}=118098$'
+hints:
+- 'The sum of all entries of a matrix $M$ is $u^{T}Mu$ with $u=(1,1)$.'
+- 'What does $A$ do to $u$?'
+solution: |
+  For any $2\times2$ matrix $M$, the sum of its entries is $u^{T}Mu$ with $u=\begin{pmatrix}1\\1\end{pmatrix}$.
+
+  Now $Au=\begin{pmatrix}3\\3\end{pmatrix}=3u$, so $u$ is an eigenvector with eigenvalue $3$, and $A^{10}u=3^{10}u$.
+  Therefore
+  $$u^{T}A^{10}u=3^{10}\,u^{T}u=2\cdot3^{10}=118098.$$
+
+  The picture shows $A$ acting on the plane: the direction $(1,1)$ is stretched by $3$, the direction $(1,-1)$ is left
+  alone (eigenvalue $1$). That is why $A^{10}=\tfrac12\begin{pmatrix}3^{10}+1&3^{10}-1\\3^{10}-1&3^{10}+1\end{pmatrix}$.
+viz: cm-matrix-power
+checked: 'script: exact integer matrix power'
+status: ready

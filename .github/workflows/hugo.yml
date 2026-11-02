@@ -47,6 +47,12 @@ jobs:
       - name: Check embeds
         run: node scripts/embed/check-embeds.js public
 
+      # Competition problems (data/comp/): required fields, links, viz files, and the copyright guard.
+      - name: Check competition data
+        run: |
+          python3 -c 'import yaml' 2>/dev/null || pip install pyyaml
+          node scripts/comp/check-comp.js
+
       # Lists every file of each section with a fingerprint, for /offline/ and the download kit's updater.
       - name: Offline manifests
         run: node scripts/offline/build-manifests.js public

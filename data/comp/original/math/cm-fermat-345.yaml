@@ -1,0 +1,42 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-fermat-345
+title: The shortest network to three corners
+tier: 4
+order: 10
+areas:
+- geometry
+problem: |
+  $ABC$ is a right triangle with legs $AB=4$ and $AC=3$. For a point $P$ in the plane, let $S(P)=PA+PB+PC$. Find the
+  smallest possible value of $S(P)$.
+check:
+  type: number
+  answer: sqrt(25+12sqrt(3))
+answer: '$\sqrt{25+12\sqrt3}\approx6.766$'
+hints:
+- 'Rotate part of the picture by $60^\circ$ about $A$. What happens to $PA$?'
+- 'If $P''$ is the image of $P$, then triangle $APP''$ is equilateral, so $PA=PP''$.'
+- 'Turn the sum into a broken path from $B$ to a fixed point, and use the law of cosines once.'
+solution: |
+  **Rotate.** Let $\rho$ be the rotation by $60^\circ$ about $A$, turning away from $B$, and let $P'=\rho(P)$ and
+  $C'=\rho(C)$. Then:
+
+  * $AP=AP'$ with a $60^\circ$ angle between them, so triangle $APP'$ is equilateral and $PA=PP'$;
+  * rotations keep lengths, so $PC=P'C'$.
+
+  Hence
+  $$S(P)=BP+PP'+P'C'\ \ge\ BC',$$
+  since a broken path from $B$ to $C'$ is at least as long as the straight segment. The point $C'$ is fixed: it is the apex
+  of the equilateral triangle built outward on $AC$.
+
+  **Equality.** It holds when $B,P,P',C'$ lie on one line in that order. This happens at the point $P$ that sees each side
+  at $120^\circ$, which exists inside the triangle because all its angles are below $120^\circ$.
+
+  **Compute.** The angle $\angle BAC'=90^\circ+60^\circ=150^\circ$, $AB=4$ and $AC'=AC=3$. By the law of cosines,
+  $$BC'^2=16+9-2\cdot4\cdot3\cos150^\circ=25+12\sqrt3.$$
+  So the minimum is $\sqrt{25+12\sqrt3}\approx6.766$.
+
+  **Known result:** this is the **Fermat point** (or Torricelli point), the classic answer to "shortest road network joining three
+  towns." The picture shows the rotation and the straightened path.
+viz: cm-fermat-345
+checked: 'script: Weiszfeld iteration finds the minimum 6.7664326, matching the formula'
+status: ready

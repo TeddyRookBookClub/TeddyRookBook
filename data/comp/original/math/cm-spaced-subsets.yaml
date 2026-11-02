@@ -1,0 +1,33 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-spaced-subsets
+title: Subsets with breathing room
+tier: 1
+order: 90
+areas:
+- combinatorics
+problem: |
+  How many subsets of $\{1,2,\dots,12\}$ (including the empty set) contain no two numbers that differ by $1$ or by $2$?
+check:
+  type: number
+  answer: '129'
+answer: '$129$'
+hints:
+- 'Let $f(n)$ be the answer for $\{1,\dots,n\}$. Work out $f(1)$, $f(2)$, $f(3)$ by hand.'
+- 'Either $n$ is in the subset or it is not. If it is, which numbers are ruled out?'
+- '$f(n)=f(n-1)+f(n-3)$.'
+solution: |
+  Let $f(n)$ count the good subsets of $\{1,\dots,n\}$, with $f(0)=1$ (just the empty set).
+
+  * If $n$ is **not** in the subset, the rest is any good subset of $\{1,\dots,n-1\}$: $f(n-1)$ ways.
+  * If $n$ **is** in it, then $n-1$ and $n-2$ are not, and the rest is any good subset of $\{1,\dots,n-3\}$:
+    $f(n-3)$ ways.
+
+  So $f(n)=f(n-1)+f(n-3)$ for $n\ge3$, with $f(0)=1$, $f(1)=2$, $f(2)=3$. Then
+
+  $$1,\ 2,\ 3,\ 4,\ 6,\ 9,\ 13,\ 19,\ 28,\ 41,\ 60,\ 88,\ 129.$$
+
+  The last entry is $f(12)=129$.
+
+  The same split, "is the last element in or out?", gives the Fibonacci numbers when only differences of $1$ are banned.
+checked: 'script: all 4096 subsets tested'
+status: ready

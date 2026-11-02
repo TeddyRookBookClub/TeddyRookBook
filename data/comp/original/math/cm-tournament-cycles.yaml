@@ -1,0 +1,37 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-tournament-cycles
+title: As many upsets as possible
+tier: 4
+order: 70
+areas:
+- combinatorics
+problem: |
+  Ten players play a round-robin tournament: every pair plays once, and there are no ties. A **cyclic triple** is a set of
+  three players $A,B,C$ with $A$ beating $B$, $B$ beating $C$ and $C$ beating $A$. What is the largest possible number of
+  cyclic triples?
+check:
+  type: number
+  answer: '40'
+answer: '$40$'
+hints:
+- 'Count the triples that are **not** cyclic. Each has exactly one player who beat both others.'
+- 'A player with $w$ wins is the top of $\binom w2$ non-cyclic triples.'
+- 'The total number of wins is fixed. When is $\sum\binom{w_i}{2}$ smallest?'
+solution: |
+  **Counting the other triples.** In a triple that is not cyclic, one player beat the other two, and that player is unique.
+  A player with $w$ wins is the winner of exactly $\binom w2$ such triples (choose two of the players he beat). So
+  $$\#\text{cyclic}=\binom{10}3-\sum_{i=1}^{10}\binom{w_i}2=120-\sum_i\binom{w_i}2,$$
+  where $w_i$ are the win totals, with $\sum w_i=\binom{10}2=45$.
+
+  **Make the sum small.** $\binom w2$ is convex in $w$: if $w_i\ge w_j+2$, moving one unit from $w_i$ to $w_j$ lowers the sum by
+  $w_i-1-w_j>0$. So among integer lists with sum $45$, the minimum is at the most even one: five $4$'s and five $5$'s, giving
+  $5\cdot6+5\cdot10=80$. Hence at most $120-80=40$ cyclic triples.
+
+  **A tournament that reaches it.** Seat players $0,\dots,8$ around a circle, and let each beat the next four going
+  clockwise. Each of them has $4$ wins. Add player $9$, who beats $0,1,2,3$ and loses to $4,\dots,8$. Now $0,1,2,3$ and $9$
+  have $4$ wins and $4,\dots,8$ have $5$. By the formula, this tournament has exactly $40$ cyclic triples.
+
+  **Known result:** Kendall and Babington Smith (1940) found this maximum for every $n$: $\frac{n^3-n}{24}$ for odd $n$ and
+  $\frac{n^3-4n}{24}$ for even $n$.
+checked: 'script: brute force over all tournaments for n = 5, 6; the construction for n = 10 counted directly'
+status: ready

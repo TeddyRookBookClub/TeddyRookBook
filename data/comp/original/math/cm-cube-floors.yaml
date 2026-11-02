@@ -1,0 +1,34 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-cube-floors
+title: Floors of cubes modulo a prime
+tier: 4
+order: 50
+areas:
+- number-theory
+problem: |
+  The number $p=2027$ is prime. Compute
+  $$\sum_{k=1}^{2026}\left\lfloor\frac{k^3}{2027}\right\rfloor.$$
+check:
+  type: number
+  answer: '2080043550'
+answer: '$\dfrac{(p-1)(p-2)(p+1)}{4}=2080043550$'
+hints:
+- 'Write $\lfloor k^3/p\rfloor=\dfrac{k^3-r_k}{p}$, where $r_k$ is the remainder of $k^3$ mod $p$.'
+- 'The sum of the cubes is easy. The hard part is $\sum r_k$.'
+- 'Note $3\nmid p-1$. Then $k\mapsto k^3$ is a one-to-one map on the nonzero remainders mod $p$.'
+solution: |
+  Let $r_k\in\{0,\dots,p-1\}$ be the remainder of $k^3$ modulo $p$. Then
+  $$\sum_{k=1}^{p-1}\left\lfloor\frac{k^3}{p}\right\rfloor=\frac1p\Big(\sum_{k=1}^{p-1}k^3-\sum_{k=1}^{p-1}r_k\Big).$$
+
+  **Cubing permutes the remainders.** Here $p-1=2026=2\cdot1013$ is not divisible by $3$, so there is a $u$ with
+  $3u\equiv1\pmod{p-1}$. By Fermat's little theorem, $(k^3)^u=k^{3u}\equiv k\pmod p$ for $p\nmid k$. So cubing has an inverse on
+  the nonzero remainders, and $r_1,\dots,r_{p-1}$ are $1,\dots,p-1$ in some order. Their sum is $\tfrac{p(p-1)}2$.
+
+  **Finish.** $\sum_{k=1}^{p-1}k^3=\left(\tfrac{p(p-1)}2\right)^2$, so the sum is
+  $$\frac{p(p-1)^2}{4}-\frac{p-1}{2}=\frac{(p-1)\big(p(p-1)-2\big)}4=\frac{(p-1)(p-2)(p+1)}4.$$
+  With $p=2027$: $\dfrac{2026\cdot2025\cdot2028}{4}=2080043550$.
+
+  If $3\mid p-1$, cubing is three-to-one on the nonzero remainders, and the remainders are no longer spread evenly; the
+  neat formula breaks down.
+checked: 'script: the 2026-term sum computed with exact integers'
+status: ready

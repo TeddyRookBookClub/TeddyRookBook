@@ -1,0 +1,74 @@
+{{ define "main" }}
+{{- /* /math/competitions/challenge/: the original challenge set, one file per problem in data/comp/original/math/<id>.yaml
+   (format: scripts/comp/check-comp.js header). Checking and progress (localStorage trb-compchal-v1): static/comp/comp.js. */ -}}
+{{ partial "comp/head.html" . }}
+{{- $O := (index (index (site.Data.comp | default dict) "original" | default dict) "math") | default dict -}}
+{{- $A := partial "comp/areas.html" "x" -}}
+{{- $tiers := slice (dict "n" 1 "t" "Warm-up" "s" "A good first contest problem: one clear idea.") (dict "n" 2 "t" "Contender" "s" "Like an early Putnam problem (A1, B1, A2, B2).") (dict "n" 3 "t" "Hard" "s" "Like a middle Putnam problem: two ideas, or one well hidden.") (dict "n" 4 "t" "Very hard" "s" "Like the last problems of a session (A5, A6, B5, B6).") -}}
+{{- $all := slice }}{{ range $k, $c := $O }}{{ $all = $all | append (dict "k" (printf "%d-%05d-%s" (int ($c.tier | default 1)) (int ($c.order | default 999)) ($c.id | default $k)) "c" $c) }}{{ end }}{{ $all = sort $all "k" -}}
+{{- $nr := 0 }}{{ range $all }}{{ if eq .c.status "ready" }}{{ $nr = add $nr 1 }}{{ end }}{{ end -}}
+<article class="cp cp-chal" id="cp-chal" data-store="trb-compchal-v1">
+  <nav class="cp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <a href="{{ "math/competitions/" | relURL }}">Competitions</a> <span aria-hidden="true">›</span> <span>Challenges</span></nav>
+  <header class="cp-head">
+    <h1>{{ .Title }}</h1>
+    <p class="cp-intro">Our own problems, new ones written for this page, in the style of the Putnam. Work on paper first. When you have an answer, type it in and we check it. For a proof, compare yours with our solution and mark it proved. Hints come one at a time, so take only what you need.</p>
+    {{ if $nr }}<p class="cp-prog" id="cp-prog" aria-live="polite"><span data-solved>0</span> of {{ $nr }} solved</p>{{ end }}
+  </header>
+  {{- with .Content }}<section class="cp-note cp-md cp-approach" data-tex aria-label="How to approach hard problems">{{ . }}</section>{{ end }}
+  {{- if not $all }}<p class="cp-note">The first challenge problems are being written. Meanwhile, try the <a href="{{ "math/competitions/putnam/" | relURL }}">Putnam solutions guide</a>.</p>{{ end }}
+  {{- range $tiers }}{{ $t := . }}
+  {{- $in := slice }}{{ range $all }}{{ if eq (int (.c.tier | default 1)) $t.n }}{{ $in = $in | append .c }}{{ end }}{{ end }}
+  {{- with $in }}
+  <section class="cp-tier" aria-labelledby="cp-tier-{{ $t.n }}">
+    <h2 id="cp-tier-{{ $t.n }}">{{ $t.t }}</h2>
+    <p class="cp-small">{{ $t.s }}</p>
+    <div class="cp-cards">
+    {{- range . }}{{ $x := . }}{{ $uid := printf "c-%s" .id }}
+    {{- $ready := eq (.status | default "coming") "ready" }}
+    <article class="cp-card{{ if not $ready }} cp-coming{{ end }}" id="{{ .id }}" data-cid="{{ .id }}" aria-labelledby="{{ $uid }}-h">
+      <header class="cp-card-h">
+        <h3 id="{{ $uid }}-h">{{ partial "comp/md.html" (dict "s" .title "inline" true) }} <span class="cp-done" data-done hidden>✓ <span class="cp-sr">solved</span></span></h3>
+        <p class="cp-tags">{{ range .areas }}<span class="cp-tag">{{ index $A . | default . }}</span>{{ end }}</p>
+      </header>
+      {{- if $ready }}
+      <div class="cp-md cp-problem" data-tex>{{ partial "comp/md.html" (dict "s" .problem "p" $) }}</div>
+      {{- $ck := .check | default dict }}{{ $ty := $ck.type | default "proof" }}
+      {{- if eq $ty "choice" }}
+      <form class="cp-check" data-type="choice" data-answer="{{ $ck.answer }}">
+        <fieldset><legend>Choose one</legend>
+        {{- range $i, $ch := $ck.choices }}<label class="cp-choice" data-tex><input type="radio" name="{{ $uid }}-ch" value="{{ add $i 1 }}"> <span>{{ partial "comp/md.html" (dict "s" $ch "inline" true) }}</span></label>{{ end }}
+        </fieldset>
+        <button type="submit" class="cp-btn pri">Check my answer</button>
+        <p class="cp-fb" aria-live="polite"></p>
+      </form>
+      {{- else if or (eq $ty "number") (eq $ty "expression") }}
+      <form class="cp-check" data-type="{{ $ty }}" data-answer="{{ $ck.answer }}"{{ with $ck.vars }} data-vars="{{ delimit . "," }}"{{ end }}{{ with $ck.tolerance }} data-tol="{{ . }}"{{ end }}{{ with $ck.domain }} data-domain="{{ delimit . "," }}"{{ end }}>
+        <label for="{{ $uid }}-in">{{ $ck.label | default (cond (eq $ty "number") "Your answer (a number, like 12, 3/4 or sqrt(2))" (printf "Your answer, in terms of %s" (delimit ($ck.vars | default (slice "n")) ", "))) }}</label>
+        <span class="cp-inrow"><input id="{{ $uid }}-in" type="text" inputmode="text" autocomplete="off" spellcheck="false" autocapitalize="off"><button type="submit" class="cp-btn pri">Check my answer</button></span>
+        <p class="cp-fb" aria-live="polite"></p>
+      </form>
+      {{- else }}
+      <div class="cp-check" data-type="proof"><p class="cp-small">This one asks for a proof. Write yours, then compare it with our solution.</p><button type="button" class="cp-btn" data-proved aria-pressed="false">I proved it</button></div>
+      {{- end }}
+      <div class="cp-acts">
+        {{- with .hints }}<button type="button" class="cp-btn" data-hint="{{ $uid }}-hints" aria-controls="{{ $uid }}-hints" aria-expanded="false">Show hints</button>{{ end }}
+        <button type="button" class="cp-btn" data-reveal="{{ $uid }}-sol" aria-controls="{{ $uid }}-sol" aria-expanded="false">Show our solution</button>
+      </div>
+      {{- with .hints }}<ol class="cp-hints" id="{{ $uid }}-hints" hidden>{{ range $i, $h := . }}<li hidden><b>Hint {{ add $i 1 }}.</b> {{ partial "comp/md.html" (dict "s" $h "inline" true) }}</li>{{ end }}</ol>{{ end }}
+      <section class="cp-sol" id="{{ $uid }}-sol" hidden aria-label="Solution">
+        <p class="cp-sol-lbl">Solution</p>
+        {{ with .answer }}<p class="cp-ans"><b>Answer:</b> {{ partial "comp/md.html" (dict "s" . "inline" true) }}</p>{{ end }}
+        {{ partial "comp/viz.html" .viz }}
+        <div class="cp-md">{{ partial "comp/md.html" (dict "s" .solution "p" $) }}</div>
+      </section>
+      {{- else }}
+      <p class="cp-soon">Being written</p>
+      {{- end }}
+    </article>
+    {{- end }}
+    </div>
+  </section>
+  {{- end }}{{ end }}
+  <p class="cp-small">Progress saves in this browser for the current learner. <a href="{{ "math/competitions/putnam/" | relURL }}">Putnam solutions guide</a> · <a href="{{ "math/competitions/" | relURL }}">All competition pages</a></p>
+</article>
+{{ end }}

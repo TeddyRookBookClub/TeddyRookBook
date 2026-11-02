@@ -1,0 +1,40 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-wide-angle
+title: A wide angle on a circle
+tier: 1
+order: 40
+areas:
+- probability
+- geometry
+problem: |
+  Three points are chosen independently and uniformly at random on a circle. What is the probability that the
+  triangle they form has an angle **larger than $120^\circ$**?
+check:
+  type: number
+  answer: 1/3
+answer: '$\tfrac13$'
+hints:
+- An angle inscribed in a circle is half of the arc it cuts off (the arc that does not contain its vertex).
+- 'So an angle of more than $120^\circ$ means one of the three arcs between neighboring points is more than $240^\circ$. Turn that around: all three points fit in an arc of $120^\circ$.'
+- 'For each point, ask whether the other two land in the $120^\circ$ arc that starts at it and runs clockwise.'
+solution: |
+  Measure arcs as fractions of the whole circle. The three points cut the circle into three arcs. The angle at a vertex
+  is half of the opposite arc (the arc not containing that vertex), measured in degrees. So some angle exceeds
+  $120^\circ$ exactly when some arc exceeds $240^\circ$, that is, $\tfrac23$ of the circle. That happens exactly when
+  the three points lie inside an arc of length $\tfrac13$.
+
+  Now count. For a point $P$, let $E_P$ be the event "the other two points lie in the arc of length $\tfrac13$ that
+  starts at $P$ and runs clockwise." Each of the other points lands there with probability $\tfrac13$, independently,
+  so $\Pr(E_P)=\tfrac19$.
+
+  If the three points fit in an arc of length $\tfrac13$, exactly one of them is the first one going clockwise inside
+  that arc, so exactly one event $E_P$ happens. (Two events can't both happen: that would put each of two points within
+  $\tfrac13$ clockwise of the other, a total of less than $\tfrac23$ around the full circle.) So the events are disjoint and
+
+  $$\Pr=3\cdot\tfrac19=\tfrac13.$$
+
+  The same argument shows that $n$ random points fit in an arc of length $t\le\tfrac12$ with probability $n\,t^{\,n-1}$.
+  With $t=\tfrac12$ and $n=3$ it gives the well-known $\tfrac34$ chance of an obtuse triangle.
+viz: cm-wide-angle
+checked: 'script: Monte Carlo with 400,000 triangles gives 0.334'
+status: ready

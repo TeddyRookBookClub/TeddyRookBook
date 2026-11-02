@@ -1,0 +1,33 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-slow-decay
+title: A sequence that creeps to zero
+tier: 2
+order: 80
+areas:
+- analysis
+problem: |
+  Let $x_0=1$ and $x_{n+1}=\dfrac{x_n}{1+x_n^2}$ for $n\ge0$. Find $\displaystyle\lim_{n\to\infty}\sqrt n\,x_n$.
+check:
+  type: number
+  answer: sqrt(2)/2
+answer: '$\dfrac{\sqrt2}{2}$'
+hints:
+- 'First show $x_n\to0$.'
+- 'Look at $1/x_n^2$ instead of $x_n$. How much does it grow at each step?'
+- '$\dfrac1{x_{n+1}^2}=\dfrac1{x_n^2}+2+x_n^2$.'
+solution: |
+  The terms are positive and decreasing, so they have a limit $L\ge0$ with $L=L/(1+L^2)$, which forces $L=0$.
+
+  Square and flip the recursion:
+  $$\frac1{x_{n+1}^2}=\frac{(1+x_n^2)^2}{x_n^2}=\frac1{x_n^2}+2+x_n^2.$$
+  Adding these for $k=0,\dots,n-1$:
+  $$\frac1{x_n^2}=1+2n+\sum_{k=0}^{n-1}x_k^2.$$
+  Since $x_k^2\to0$, the average $\frac1n\sum_{k<n}x_k^2\to0$ (an average of terms that tend to $0$ tends to $0$). So
+  $\dfrac1{n\,x_n^2}\to2$, and
+  $$\sqrt n\,x_n\to\frac1{\sqrt2}=\frac{\sqrt2}2.$$
+
+  **Method to keep:** for a sequence that shrinks like $x_{n+1}=x_n-x_n^3+\cdots$, look at $1/x_n^2$, which grows by
+  about a constant each step. The plot shows how slowly $\sqrt n\,x_n$ settles.
+viz: cm-slow-decay
+checked: 'script: 10^7 iterations give 0.7071066 against 0.7071068'
+status: ready

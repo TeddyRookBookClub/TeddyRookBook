@@ -1,0 +1,47 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-sphere-hull
+title: Surrounding the center of a sphere
+tier: 4
+order: 110
+areas:
+- probability
+- geometry
+problem: |
+  Points are chosen one at a time, independently and uniformly at random on the surface of a sphere. You stop as soon as
+  the center of the sphere lies inside the convex hull of the points chosen so far. What is the expected number of points?
+check:
+  type: number
+  answer: '7'
+answer: '$7$'
+hints:
+- 'Warm up on a circle: stop when the center is inside the polygon of the points. There the answer is $5$.'
+- 'The center is **outside** the hull of $n$ points exactly when all of them lie in one open hemisphere. Find $p_n$, the chance of that.'
+- 'Pair each point with its opposite point. Of the $2^n$ ways to choose one from each pair, how many lie in a hemisphere? Count the regions that $n$ great circles cut the sphere into.'
+solution: |
+  **Reduce to hemispheres.** With probability $1$ the points are in general position. The center lies outside the hull of
+  $P_1,\dots,P_n$ exactly when some plane through the center has all the points strictly on one side, that is, when all the
+  points lie in an open hemisphere. Let $p_n$ be that probability. Then $\Pr(N>n)=p_n$, with $p_0=1$, and
+  $$\mathbb E[N]=\sum_{n\ge0}\Pr(N>n)=1+\sum_{n\ge1}p_n.$$
+
+  **The sign trick.** Replacing any $P_i$ by $-P_i$ does not change the joint distribution. So $p_n$ is the expected
+  fraction of the $2^n$ sign choices $(\varepsilon_1P_1,\dots,\varepsilon_nP_n)$ that lie in an open hemisphere.
+
+  A sign choice lies in the open hemisphere centered at $v$ exactly when $\varepsilon_i\,(v\cdot P_i)>0$ for all $i$. The great
+  circles $v\cdot P_i=0$ cut the sphere into regions, and on each region the signs of $v\cdot P_i$ are constant. So the good sign
+  choices match the regions one to one.
+
+  **Count regions.** One great circle makes $2$ regions. The $n$-th circle meets each earlier one in $2$ points, so it is cut
+  into $2(n-1)$ arcs, and each arc splits a region in two. So $R_n=2+2(1+2+\dots+(n-1))=n^2-n+2$, and
+  $$p_n=\frac{n^2-n+2}{2^n}.$$
+  (This gives $p_1=p_2=p_3=1$ and $p_4=\tfrac78$: four points surround the center with probability $\tfrac18$.)
+
+  **Sum.** Using $\sum_{n\ge0}\frac{n(n-1)}{2^n}=4$ and $\sum_{n\ge0}\frac2{2^n}=4$,
+  $$\mathbb E[N]=1+\Big(\sum_{n\ge0}\frac{n^2-n+2}{2^n}-2\Big)=1+(8-2)=7.$$
+
+  On a circle the same steps give $p_n=\frac{2n}{2^n}$ and $\mathbb E[N]=5$, which the animation simulates.
+
+  **Known results:** the $\tfrac18$ for four points is Putnam 1992 A6, the subject of 3Blue1Brown's video *The hardest problem
+  on the hardest test*. The general formula for $p_n$ in any dimension is due to J. G. Wendel (1962).
+viz: cm-sphere-hull
+checked: 'script: 20,000 simulated runs on the sphere average 6.99; 50,000 on the circle average 5.00'
+status: ready

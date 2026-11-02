@@ -1,0 +1,30 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-gcd-determinant
+title: A determinant made of gcds
+tier: 3
+order: 50
+areas:
+- linear-algebra
+- number-theory
+problem: |
+  Let $M$ be the $10\times10$ matrix with entries $M_{ij}=\gcd(i,j)$ for $1\le i,j\le10$. Find $\det M$.
+check:
+  type: number
+  answer: '18432'
+answer: '$\varphi(1)\varphi(2)\cdots\varphi(10)=18432$'
+hints:
+- 'Gauss: $\sum_{d\mid m}\varphi(d)=m$, where $\varphi$ is Euler''s totient.'
+- 'So $\gcd(i,j)=\sum_{d\mid i,\ d\mid j}\varphi(d)$. Write that as a product of three matrices.'
+- One factor is triangular with ones on the diagonal.
+solution: |
+  **Gauss's identity.** For every $m$, $\sum_{d\mid m}\varphi(d)=m$. Apply it to $m=\gcd(i,j)$: the divisors of
+  $\gcd(i,j)$ are the common divisors of $i$ and $j$, so
+  $$\gcd(i,j)=\sum_{d=1}^{10}E_{id}\,\varphi(d)\,E_{jd},\qquad E_{id}=\begin{cases}1&d\mid i\\0&\text{otherwise.}\end{cases}$$
+
+  So $M=E\,D\,E^{T}$ with $D=\operatorname{diag}(\varphi(1),\dots,\varphi(10))$. The matrix $E$ is lower triangular
+  (a divisor of $i$ is at most $i$) with ones on the diagonal, so $\det E=1$ and
+  $$\det M=\prod_{d=1}^{10}\varphi(d)=1\cdot1\cdot2\cdot2\cdot4\cdot2\cdot6\cdot4\cdot6\cdot4=18432.$$
+
+  **Known result:** this is **Smith's determinant** (H. J. S. Smith, 1876): $\det[\gcd(i,j)]_{i,j\le n}=\prod_{d\le n}\varphi(d)$.
+checked: 'script: exact determinant with fractions'
+status: ready

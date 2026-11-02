@@ -1,0 +1,33 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-lucky-seven-total
+title: Rolling until the total is a multiple of 7
+tier: 1
+order: 110
+areas:
+- probability
+problem: |
+  You roll a fair six-sided die again and again, keeping a running total. You stop as soon as the total is a multiple
+  of $7$. What is the expected number of rolls?
+check:
+  type: number
+  answer: '7'
+answer: '$7$'
+hints:
+- 'Only the total modulo $7$ matters.'
+- Can the first roll ever make you stop?
+- 'If the total is not a multiple of $7$, how many faces of the die would make it one?'
+solution: |
+  Track the total modulo $7$. After the first roll the total is $1,\dots,6$, never a multiple of $7$, so you never stop
+  on the first roll.
+
+  After that, suppose the total is $\equiv r\pmod 7$ with $r\ne0$. Exactly one face, namely $7-r$, makes the new total a
+  multiple of $7$. So **every** later roll ends the game with probability exactly $\tfrac16$, no matter what happened
+  before.
+
+  The number of rolls after the first is therefore geometric with success chance $\tfrac16$, with mean $6$. Adding the
+  first roll, the expected number of rolls is $1+6=7$.
+
+  The answer would still be $7$ if the die were replaced by any fair spinner that never lands on a multiple of $7$
+  and has one face for each nonzero remainder.
+checked: 'script: 200,000 simulated games average 6.99'
+status: ready

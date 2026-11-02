@@ -1,0 +1,36 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-pascal-sevens
+title: 'Row 2026 of Pascal''s triangle, mod 7'
+tier: 3
+order: 20
+areas:
+- number-theory
+- combinatorics
+problem: |
+  How many of the $2027$ numbers $\binom{2026}{0},\binom{2026}{1},\dots,\binom{2026}{2026}$ are **not** divisible by $7$?
+check:
+  type: number
+  answer: '504'
+answer: '$504$'
+hints:
+- 'Write $2026$ in base $7$.'
+- 'Lucas''s theorem: modulo a prime $p$, $\binom nk$ is the product of $\binom{n_i}{k_i}$ over the base-$p$ digits.'
+- 'A digit factor $\binom{n_i}{k_i}$ is nonzero mod $7$ exactly when $k_i\le n_i$.'
+solution: |
+  **Base 7.** $2026=5\cdot343+6\cdot49+2\cdot7+3$, so $2026=(5623)_7$.
+
+  **Lucas's theorem** (Édouard Lucas, 1878). If $n=(n_r\dots n_0)_p$ and $k=(k_r\dots k_0)_p$ in base $p$, then
+  $$\binom nk\equiv\prod_i\binom{n_i}{k_i}\pmod p.$$
+  A factor is $0$ when $k_i>n_i$. Otherwise it is $\frac{n_i!}{k_i!(n_i-k_i)!}$ with $n_i<7$, and no factorial below
+  $7!$ contains the prime $7$, so the factor is not divisible by $7$.
+
+  So $\binom{2026}{k}$ is not divisible by $7$ exactly when every base-7 digit of $k$ is at most the matching digit of
+  $2026$. The choices are $0..5$, $0..6$, $0..2$, $0..3$:
+  $$6\cdot7\cdot3\cdot4=504.$$
+
+  **Picture.** Color Pascal's triangle by whether entries are divisible by $7$, and a pattern of triangles inside triangles
+  appears. Lucas's theorem explains it: the rows $0..6$ form a small triangle, and every block of $7$ rows repeats it,
+  scaled up.
+viz: cm-pascal-sevens
+checked: 'script: row 2026 built modulo 7 and counted'
+status: ready

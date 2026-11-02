@@ -1,0 +1,353 @@
+year: 2024
+exam: main
+links:
+  problems: https://www.dnc.ac.jp/albums/abm.php?d=666&f=abm00004704.pdf&n=2024_or_28_butsuri.pdf
+  answers: https://www.dnc.ac.jp/albums/abm.php?d=661&f=abm00004302.pdf&n=R6_%E7%89%A9%E7%90%86_%E6%9C%AC%E8%A9%A6%E9%A8%93%E3%81%AE%E6%AD%A3%E8%A7%A3.pdf
+note: |
+  The January 2024 paper (令和6年度 本試験). Part numbers follow the paper: "2-3" means 第2問, 問3. Where one part has two answer boxes, the answer lists both box numbers.
+questions:
+  - id: "1"
+    topic: "Short questions: torque, gas energy, optics, fields, nuclei"
+    parts:
+      - id: "1-1"
+        topic: "Statics: when does a leaning plate start to tip?"
+        answer: "5"
+        hints:
+          - 'The plate is about to turn about the corner that touches the wall. Take torques about that corner.'
+          - 'At the tipping point the floor pushes only at that corner, so the floor force has no torque about it.'
+        solution: |
+          **Key idea:** right at the tipping point, the only torques about the pivot corner are from the push $F$ and from gravity.
+
+          Put the pivot at the corner touching the wall. As $F$ grows, the plate tries to swing about that corner, and the other bottom corner lifts off the floor. At the moment it is about to lift, the floor's push is concentrated at the pivot, so neither the floor force nor the wall force has any torque about it.
+
+          - The push $F$ is horizontal and acts at the top corner, a height $L$ above the floor. Its lever arm about the pivot is $L$, so its torque is $FL$.
+          - Gravity $Mg$ acts at the center of mass. That point is $L/3$ from the vertical edge, so it is $L - L/3 = 2L/3$ from the pivot horizontally. Its torque is $Mg\cdot\tfrac{2L}{3}$, turning the other way.
+
+          The plate stays put as long as gravity's torque wins:
+
+          $$FL \le \tfrac{2}{3}MgL \quad\Longrightarrow\quad F_{\max} = \tfrac{2}{3}Mg.$$
+
+          That is choice 5.
+        viz: ct-2024-1-1
+        checked: "script: torque balance solved in sympy"
+        status: ready
+      - id: "1-2"
+        topic: "Kinetic theory: particle energy at the Sun's core"
+        answer: "Box 2: 5 · Box 3: 3"
+        hints:
+          - 'For a monatomic ideal gas, the average kinetic energy per particle depends only on temperature.'
+        solution: |
+          **Key idea:** the mean kinetic energy of one particle in a monatomic ideal gas is $\tfrac32 k_B T$. Mass does not appear.
+
+          **Box 2.** Compare a helium nucleus in the core with a helium atom in room-temperature air. The ratio of energies is just the ratio of temperatures:
+          $$\frac{1.5\times10^{7}\ \text{K}}{300\ \text{K}} = 5\times10^{4} = 50000.$$
+          That is choice 5.
+
+          **Box 3.** Hydrogen and helium nuclei in the core share the same temperature. Since $\tfrac32 k_B T$ does not care about mass, their average kinetic energies are equal: the ratio is $1$, choice 3. (The lighter hydrogen nuclei move faster, but they carry the same energy on average.)
+        checked: "script: ratio computed"
+        status: ready
+      - id: "1-3"
+        topic: "Optics: total internal reflection through a glass layer"
+        answer: "4"
+        hints:
+          - 'The product $n\sin\theta$ is the same in every layer.'
+          - 'Total reflection can only happen when light goes from a higher index to a lower one.'
+        solution: |
+          **Key idea:** across parallel layers, $n\sin\theta$ stays the same, so the glass drops out of the condition.
+
+          Snell's law at each flat boundary keeps the quantity $n\sin\theta$ the same:
+          $$n\sin\theta = n'\sin\theta' = n''\sin\theta''.$$
+
+          **Where can light be trapped?** Going from water into glass, the index *rises* ($n' > n$). Light bends toward the normal and can always get through, so there is no total reflection there. Going from glass into air, the index *falls*, so that is the only boundary where total reflection can happen.
+
+          **The critical angle.** Light leaves into air only if $\sin\theta'' \le 1$. With $n'' = 1$, that means $n\sin\theta \le 1$. The light stops coming out when
+          $$\sin\theta_C = \frac{1}{n}.$$
+
+          The glass index $n'$ cancels out. The glass layer changes the path, but not the critical angle measured in the water. So the answer is "glass and air" with $1/n$: choice 4.
+        checked: "by hand (Snell's law chain)"
+        status: ready
+      - id: "1-4"
+        topic: "Magnetism: field direction from a particle's path"
+        answer: "7"
+        hints:
+          - 'The magnetic force is perpendicular to both the velocity and the field.'
+          - 'When is the magnetic force zero?'
+        solution: |
+          **Key idea:** the force $q\vec v\times\vec B$ is perpendicular to $\vec B$, and it vanishes when $\vec v \parallel \vec B$.
+
+          **Circular motion in the $xy$ plane.** The velocity and the force (which points to the center) both lie in the $xy$ plane. The force is perpendicular to $\vec B$. For a uniform field, the circle lies in the plane perpendicular to $\vec B$, so $\vec B$ must point along the $z$ axis.
+
+          **Straight-line motion along $x$.** With gravity ignored, the particle goes straight only if there is no force at all. The magnetic force is zero exactly when the velocity is parallel to the field. So $\vec B$ is along the $x$ axis.
+
+          The pair ($z$, $x$) is choice 7.
+        checked: "by hand"
+        status: ready
+      - id: "1-5"
+        topic: "Nuclear: mass defect and half-life"
+        answer: "7"
+        hints:
+          - 'Compare the total mass before the reaction with the mass after.'
+          - 'How many halvings take you to one-sixteenth?'
+        solution: |
+          **Key idea:** if mass goes down, the missing mass comes out as energy. And $1/16 = (1/2)^4$.
+
+          **Energy.** Before the reaction, the proton and the carbon-12 nucleus total
+          $$1.0073 + 11.9967 = 13.0040\ \text{u}.$$
+          The nitrogen-13 nucleus has 13.0019 u. The mass dropped by 0.0021 u, so energy was released, about $0.0021\times 931\ \text{MeV} \approx 2\ \text{MeV}$. This does not depend on how fast the proton was going. The proton's kinetic energy only adds to whatever is released.
+
+          **Half-life.** After $k$ half-lives, the fraction left is $(1/2)^k$. One-sixteenth is $(1/2)^4$, so 40 minutes is 4 half-lives, and the half-life is 10 minutes.
+
+          "Released" with 10 minutes is choice 7.
+        checked: "script: mass sum and log2(16)"
+        status: ready
+  - id: "2"
+    topic: "Fluids and momentum: a water bottle rocket"
+    parts:
+      - id: "2-1"
+        topic: "Continuity: nozzle speed versus water-level speed"
+        answer: "6"
+        hints:
+          - 'Water leaving through the nozzle in a short time forms a thin cylinder.'
+        solution: |
+          **Key idea:** water is incompressible, so the volume that leaves the nozzle equals the volume by which the water inside drops.
+
+          In a short time $\Delta t$, the water that leaves forms a cylinder with cross-section $s$ and length $u\,\Delta t$:
+          $$\Delta V = s\,u\,\Delta t.$$
+          In the same time, the surface inside the wide bottle falls by $u_0\,\Delta t$, which uncovers a volume $S_0 u_0\,\Delta t$. Setting these equal gives
+          $$u_0 = \frac{s}{S_0}\,u.$$
+          A narrow nozzle (small $s$) makes the inside surface creep down slowly. That is choice 6.
+        checked: "by hand"
+        status: ready
+      - id: "2-2"
+        topic: "Mass and work for a small slug of water"
+        answer: "Box 8: 2 · Box 9: 1"
+        hints:
+          - 'Work done by a gas at constant pressure is pressure times volume change.'
+        solution: |
+          **Key idea:** mass is density times volume, and a gas at steady pressure does work $p\,\Delta V$.
+
+          - **Mass.** The water that leaves has volume $\Delta V$ and density $\rho_0$, so $\Delta m = \rho_0\,\Delta V$ (choice 2).
+          - **Work.** As the water leaves, the compressed air expands into the space it left behind, an extra volume $\Delta V$. Over the short interval its pressure is about constant at $p$, so the air does work $W' = p\,\Delta V$ (choice 1). The work is positive because the gas expands.
+        checked: "by hand"
+        status: ready
+      - id: "2-3"
+        topic: "Energy: jet speed from pressure"
+        answer: "9"
+        hints:
+          - 'The work done by the air ends up as the motion of the water that was pushed out.'
+        solution: |
+          **Key idea:** with no friction, the air's work all turns into the kinetic energy of the water jet.
+
+          Set the kinetic energy of the escaping water equal to the work done by the air:
+          $$\tfrac12\,\Delta m\,u^2 = W' \quad\Longrightarrow\quad u = \sqrt{\frac{2W'}{\Delta m}}.$$
+          So the blanks are "kinetic energy" and $\sqrt{2W'/\Delta m}$, choice 9.
+
+          With the last part, $W' = p\,\Delta V$ and $\Delta m = \rho_0\,\Delta V$, so
+          $$u = \sqrt{\frac{2p}{\rho_0}}.$$
+          This is the same speed Bernoulli's equation gives for a jet driven by pressure $p$.
+        checked: "script: sympy solve"
+        status: ready
+      - id: "2-4"
+        topic: "Momentum conservation for the launched rocket"
+        answer: "4"
+        hints:
+          - 'Before release, nothing moves. What is the total momentum?'
+          - 'Take upward as positive. Which way does the jet go?'
+        solution: |
+          **Key idea:** the total momentum of rocket plus ejected water stays at zero.
+
+          Before release, everything is at rest, so the total momentum is $0$. With no outside forces in the model (gravity is ignored for this step), the total stays $0$ after $\Delta t$.
+
+          Take upward as positive. The rocket (mass about $M$) moves up with speed $\Delta v$, so its momentum is $+M\,\Delta v$. The water slug (mass $\Delta m$) shoots down at speed $u$, so its momentum is $-\Delta m\,u$. Then
+          $$M\,\Delta v - \Delta m\,u = 0.$$
+          That is choice 4. Notice that momentum, not kinetic energy, is what stays the same here. The air's push turns stored energy into motion, so kinetic energy is not conserved.
+        viz: ct-2024-2-4
+        checked: "by hand"
+        status: ready
+      - id: "2-5"
+        topic: "Thrust versus weight: can it lift off?"
+        answer: "4"
+        hints:
+          - 'Force equals change in momentum divided by time.'
+        solution: |
+          **Key idea:** the thrust is the rate at which the rocket gains momentum, $M\,\Delta v/\Delta t$.
+
+          The water pushes on the rocket with an average force equal to the rocket's momentum change per unit time:
+          $$F_\text{thrust} = \frac{M\,\Delta v}{\Delta t}.$$
+          The rocket rises only if this beats its weight:
+          $$\frac{M\,\Delta v}{\Delta t} > Mg \quad\Longleftrightarrow\quad \Delta v > g\,\Delta t.$$
+          That is choice 4. It says the rocket must gain speed faster than free fall would take it away.
+
+          A nice check: by the last part, $M\,\Delta v = \Delta m\,u$, so $F_\text{thrust} = \rho_0 s u^2 = 2ps$. The thrust is twice the pressure times the nozzle area.
+        checked: "script: thrust = 2ps in sympy"
+        status: ready
+  - id: "3"
+    topic: "Waves: standing waves on a driven wire"
+    parts:
+      - id: "3-1"
+        topic: "Force on a current in a magnet's field"
+        answer: "5"
+        hints:
+          - 'The force on a current is perpendicular to both the wire and the field.'
+          - 'Where is the driving force applied, and what happens to the string there?'
+        solution: |
+          **Key idea:** $\vec F = I\vec L\times\vec B$, so the force is perpendicular to both the current and the field.
+
+          The current runs along the wire ($x$ direction). The magnet's field points along $y$. The force is perpendicular to both, so it is along the $z$ axis, and it flips back and forth as the AC current reverses.
+
+          This push acts at the middle of the string. A spot that is shaken hard cannot be a node, which never moves. It is an antinode.
+
+          ($z$ axis, antinode) is choice 5.
+        checked: "by hand (right-hand rule)"
+        status: ready
+      - id: "3-2"
+        topic: "Wavelength of a standing wave with three loops"
+        answer: "3"
+        hints:
+          - 'Each loop between two nodes is half a wavelength long.'
+        solution: |
+          **Key idea:** one loop is $\lambda/2$.
+
+          Both ends of the string are fixed, so they are nodes. A standing wave with $n$ antinodes has $n$ loops between the ends, and each loop is half a wavelength:
+          $$n\cdot\frac{\lambda}{2} = L \quad\Longrightarrow\quad \lambda = \frac{2L}{n}.$$
+          For three loops, $\lambda = 2L/3$, choice 3.
+        viz: ct-2024-3-2
+        checked: "by hand"
+        status: ready
+      - id: "3-3"
+        topic: "Reading the slope of frequency versus loop number"
+        answer: "2"
+        hints:
+          - 'Combine $v = f\lambda$ with the wavelength from the last part.'
+        solution: |
+          **Key idea:** $f_n = v/\lambda_n = n\,\dfrac{v}{2L}$, a straight line through the origin.
+
+          With $\lambda_n = 2L/n$ and $v = f\lambda$,
+          $$f_n = \frac{v}{\lambda_n} = \frac{v}{2L}\,n.$$
+          Plotting $f_n$ against $n$ gives a line through the origin with slope $v/(2L)$. Since $L$ is fixed, the slope is proportional to the wave speed $v$ on the string. That is choice 2. The phase, the amplitude and the current do not set the frequencies.
+        checked: "by hand"
+        status: ready
+      - id: "3-4"
+        topic: "Finding a power law from four graphs"
+        answer: "2"
+        hints:
+          - 'Look for the graph whose points line up on a straight line through the origin.'
+        solution: |
+          **Key idea:** if $f_3 \propto X$, then the plot of $f_3$ against $X$ is a straight line *through the origin*.
+
+          Go through the four graphs:
+          - Against $S$, the points curve and the line through them misses the origin.
+          - Against $1/S$, $f_3$ falls as the variable grows, so it cannot be proportional to it.
+          - Against $S^2$, the points bend over.
+          - Against $\sqrt S$, the points sit on a straight line that heads toward the origin.
+
+          So $f_3 \propto \sqrt S$, choice 2. This matches the theory, $v = \sqrt{S/\mu}$, since $f$ is proportional to $v$.
+        checked: "by hand (graph reading)"
+        status: ready
+      - id: "3-5"
+        topic: "How frequency depends on wire thickness"
+        answer: "4"
+        hints:
+          - 'Doubling the diameter roughly halves each frequency in the table.'
+        solution: |
+          **Key idea:** check whether $d\cdot f$ stays about the same.
+
+          Multiply each frequency by its diameter (in mm):
+
+          | | $d=0.1$ | $d=0.2$ | $d=0.3$ |
+          |---|---|---|---|
+          | $d f_1$ | 2.94 | 2.98 | 2.85 |
+          | $d f_3$ | 8.98 | 8.86 | 8.64 |
+          | $d f_5$ | 14.65 | 14.78 | 14.22 |
+
+          Each row is about constant, so $f_n \propto 1/d$, choice 4.
+
+          **Why.** For a wire of one material, the mass per length is $\mu \propto d^2$ (the cross-section area). So $v = \sqrt{S/\mu} \propto 1/d$, and $f$ follows $v$. Together with the last part, this is the experimental route to $v = \sqrt{S/\mu}$.
+        checked: "script: products d·f computed from the data"
+        status: ready
+  - id: "4"
+    topic: "Electric potential: a dipole and conducting paper"
+    parts:
+      - id: "4-1"
+        topic: "Equipotential pattern of a plus–minus charge pair"
+        answer: "2"
+        hints:
+          - 'What is the potential on the line halfway between equal and opposite charges?'
+          - 'Equal steps in potential crowd together where the field is strong.'
+        solution: |
+          **Key idea:** $V = kq\left(\dfrac1{r_+} - \dfrac1{r_-}\right)$. It is zero on the perpendicular bisector and grows steeply near each charge.
+
+          Three features pick out the right picture:
+          1. **Near each charge** the potential behaves like a single point charge, so the equipotentials are small closed loops around it. They are crowded, because the potential changes fast there.
+          2. **On the perpendicular bisector**, each point is the same distance from both charges, so the two terms cancel and $V = 0$. That bisector is a single straight equipotential line.
+          3. **Farther from the charges**, the field gets weaker, so lines drawn at equal steps of potential spread apart. The curves wrap around each charge and get wider and flatter as they approach the middle line.
+
+          The picture with loops around each charge, one straight line down the middle, and widening gaps is choice 2. Straight parallel lines would mean a uniform field, which two point charges cannot make.
+        viz: ct-2024-4-1
+        checked: "script: V=0 on the bisector (sympy); pattern drawn numerically in the viz"
+        status: ready
+      - id: "4-2"
+        topic: "True statements about field lines and equipotentials"
+        answer: "5"
+        hints:
+          - 'Think about the dipole picture from the last part. Are its equipotentials evenly spaced?'
+        solution: |
+          **Key idea:** field lines show strength by their density and cross equipotentials at right angles. Equal spacing only happens in a uniform field.
+
+          - **Field lines are denser where the field is stronger.** True. That is how field-line diagrams show strength.
+          - **Neighboring equipotentials are always the same distance apart.** False. For equal steps $\Delta V$, the spacing is about $\Delta V/E$, so it shrinks where the field is strong. Around the dipole, the lines bunch up near the charges.
+          - **Field lines and equipotentials meet at right angles.** True. Moving along an equipotential takes no work, so the field has no component along it.
+
+          The first and third are true: choice 5.
+        checked: "by hand"
+        status: ready
+      - id: "4-3"
+        topic: "Current direction near the edge of conducting paper"
+        answer: "1"
+        hints:
+          - 'The field is always perpendicular to the equipotentials.'
+          - "In a conductor, current flows the same way as the field (Ohm's law)."
+        solution: |
+          **Key idea:** the field crosses equipotentials at right angles, and the current density follows the field, $\vec J = \vec E/\rho$.
+
+          Near an edge, the measured equipotentials meet the edge at right angles. The field is perpendicular to the equipotentials, so near the edge the field runs **parallel** to the edge.
+
+          In an ordinary conductor, Ohm's law says the current flows in the **same** direction as the field. So near the edge the current also runs **parallel** to the edge. It has to: charge cannot flow out through the edge of the paper.
+
+          (parallel, same, parallel) is choice 1.
+        checked: "by hand"
+        status: ready
+      - id: "4-4"
+        topic: "Field strength from a potential graph"
+        answer: "6"
+        hints:
+          - 'The field strength is the slope of the potential-versus-position graph.'
+          - 'Mind the units: mV and mm.'
+        solution: |
+          **Key idea:** $E = \left|\dfrac{\Delta V}{\Delta x}\right|$, the slope of the $V$–$x$ graph.
+
+          Near $x = 0$, the points rise by about $0.1$ mV for every $15$ mm. For example, the potential goes from 0 mV at $x=0$ to 0.1 mV near $x = 15$ mm. So
+          $$E \approx \frac{0.1\times10^{-3}\ \text{V}}{15\times10^{-3}\ \text{m}} \approx 6.7\times10^{-3}\ \text{V/m}.$$
+          The closest choice is $7\times10^{-3}$ V/m, choice 6.
+
+          Don't drop the units: mV over mm is $10^{-3}/10^{-3}$, so the slope in mV/mm is the same number in V/m.
+        checked: "script: slope from graph points"
+        status: ready
+      - id: "4-5"
+        topic: "Resistivity from field and current"
+        answer: "1"
+        hints:
+          - 'Think of a thin slice of the paper as a tiny resistor of length $\Delta x$.'
+        solution: |
+          **Key idea:** for a short piece of length $\Delta x$, the voltage is $E\,\Delta x$ and the resistance is $\rho\,\Delta x/S$.
+
+          Take a thin slab of the paper of thickness $\Delta x$ around $x = 0$, with cross-section $S$.
+          - The voltage across it is $\Delta V = E\,\Delta x$.
+          - Its resistance is $R = \rho\,\dfrac{\Delta x}{S}$.
+          - Ohm's law, $\Delta V = IR$, gives $E\,\Delta x = I\rho\,\dfrac{\Delta x}{S}$.
+
+          The $\Delta x$ cancels:
+          $$\rho = \frac{SE}{I}.$$
+          That is choice 1. It is the same as the local form of Ohm's law, $J = I/S = E/\rho$.
+        checked: "by hand (dimensional check: ohm·m)"
+        status: ready

@@ -1,0 +1,375 @@
+{
+ "course": "exam",
+ "units": [
+  {
+   "key": "mechanics",
+   "title": "Mechanics",
+   "blurb": "Throws, collisions, loops, circles and springs, each problem a chain of two to four linked questions."
+  },
+  {
+   "key": "heat",
+   "title": "Heat and Gases",
+   "blurb": "A gas under a piston and a gas running an engine cycle: the gas law, work, heat and efficiency."
+  },
+  {
+   "key": "waves",
+   "title": "Waves and Sound",
+   "blurb": "Two speakers in step, a siren near a wall and a string over a pulley: path difference, the Doppler effect and standing waves."
+  },
+  {
+   "key": "optics",
+   "title": "Light and Optics",
+   "blurb": "A convex lens, a lamp under water and light through two slits."
+  },
+  {
+   "key": "em",
+   "title": "Electricity and Magnetism",
+   "blurb": "A capacitor in a circuit, beams bent by electric and magnetic fields, and a rod sliding on rails."
+  },
+  {
+   "key": "atoms",
+   "title": "Atoms and Light",
+   "blurb": "Light knocking electrons out of a metal, and hydrogen atoms jumping between energy levels."
+  }
+ ],
+ "topics": [
+  {
+   "id": "exam.cliff-throw",
+   "slug": "cliff-throw",
+   "unit": "mechanics",
+   "title": "A Ball Thrown From a Cliff",
+   "short": "Split the flight into a steady sideways part and a falling part, then use energy for the landing speed.",
+   "prereqs": [
+    "phys1.projectile-horizontal",
+    "phys1.projectile-angled",
+    "phys1.energy-conservation"
+   ],
+   "xp": 3,
+   "trouble": "Students use the full launch speed in the vertical equation instead of its vertical component.",
+   "viz": [
+    "exam-cliff-throw"
+   ]
+  },
+  {
+   "id": "exam.wall-shot",
+   "slug": "wall-shot",
+   "unit": "mechanics",
+   "title": "A Kick Over a Wall",
+   "short": "Find when the ball reaches the wall from the sideways motion, then its height and direction at that moment.",
+   "prereqs": [
+    "phys1.projectile-angled"
+   ],
+   "xp": 3,
+   "trouble": "Students assume a ball at a wall must still be rising, without checking the sign of the vertical velocity.",
+   "viz": [
+    "exam-wall-shot"
+   ]
+  },
+  {
+   "id": "exam.cart-collision",
+   "slug": "cart-collision",
+   "unit": "mechanics",
+   "title": "A Collision, Then a Ramp",
+   "short": "Momentum through the collision, energy after it: the carts stick, lose kinetic energy, then climb a ramp.",
+   "prereqs": [
+    "phys1.inelastic-collisions",
+    "phys1.energy-conservation"
+   ],
+   "xp": 3,
+   "trouble": "Students use energy conservation across a sticking collision, where kinetic energy is lost.",
+   "viz": [
+    "exam-cart-collision"
+   ]
+  },
+  {
+   "id": "exam.loop-track",
+   "slug": "loop-track",
+   "unit": "mechanics",
+   "title": "Around a Loop",
+   "short": "Energy gives the speed at the top of a loop; the circle's force equation gives the push of the track.",
+   "prereqs": [
+    "phys1.vertical-circles",
+    "phys1.energy-conservation"
+   ],
+   "xp": 3,
+   "trouble": "Students treat the normal force at the top of a loop as pointing up, or leave out gravity in the centripetal sum.",
+   "viz": [
+    "exam-loop-track"
+   ]
+  },
+  {
+   "id": "exam.conical-pendulum",
+   "slug": "conical-pendulum",
+   "unit": "mechanics",
+   "title": "A Ball Swinging in a Circle",
+   "short": "A ball on a string sweeps a cone: the tension's vertical part holds it up, its sideways part turns it.",
+   "prereqs": [
+    "phys1.centripetal-force",
+    "phys1.forces-at-angles"
+   ],
+   "xp": 3,
+   "trouble": "Students use the string length as the radius of the circle instead of L sin θ.",
+   "viz": [
+    "exam-conical-pendulum"
+   ]
+  },
+  {
+   "id": "exam.spring-oscillator",
+   "slug": "spring-oscillator",
+   "unit": "mechanics",
+   "title": "A Block on a Spring",
+   "short": "Period, top speed and timing for a block oscillating on a spring.",
+   "prereqs": [
+    "phys1.spring-oscillator-period",
+    "phys1.shm-energy"
+   ],
+   "xp": 3,
+   "trouble": "Students think a bigger amplitude makes the period longer.",
+   "viz": [
+    "exam-spring-oscillator"
+   ]
+  },
+  {
+   "id": "exam.rough-ramp-spring",
+   "slug": "rough-ramp-spring",
+   "unit": "mechanics",
+   "title": "Down a Rough Ramp Into a Spring",
+   "short": "Friction takes energy on the ramp; what is left squeezes a spring.",
+   "prereqs": [
+    "phys1.friction-energy",
+    "phys1.spring-potential-energy",
+    "phys1.friction-on-inclines"
+   ],
+   "xp": 3,
+   "trouble": "Students use mg instead of mg cos θ for the normal force on the ramp.",
+   "viz": [
+    "exam-rough-ramp-spring"
+   ]
+  },
+  {
+   "id": "exam.piston-gas",
+   "slug": "piston-gas",
+   "unit": "heat",
+   "title": "Gas Under a Weighted Piston",
+   "short": "Balance the piston to find the gas pressure, then heat the gas at that pressure.",
+   "prereqs": [
+    "phys2.ideal-gas-law",
+    "phys2.pv-work",
+    "phys2.first-law"
+   ],
+   "xp": 3,
+   "trouble": "Students forget the air pressure above the piston and use only Mg/A.",
+   "viz": [
+    "exam-piston-gas"
+   ]
+  },
+  {
+   "id": "exam.pv-cycle",
+   "slug": "pv-cycle",
+   "unit": "heat",
+   "title": "A Gas Engine Cycle",
+   "short": "Work as the area of a cycle, heat taken in on each leg, and the engine's efficiency.",
+   "prereqs": [
+    "phys2.thermo-cycles",
+    "phys2.first-law",
+    "phys2.heat-engines"
+   ],
+   "xp": 3,
+   "trouble": "Students divide the work by all the heat exchanged, including heat given out.",
+   "viz": [
+    "exam-pv-cycle"
+   ]
+  },
+  {
+   "id": "exam.two-speakers",
+   "slug": "two-speakers",
+   "unit": "waves",
+   "title": "Two Speakers in Step",
+   "short": "Path difference decides loud or quiet; then find the frequencies that make a spot quiet.",
+   "prereqs": [
+    "phys2.superposition",
+    "phys2.wave-speed-medium"
+   ],
+   "xp": 3,
+   "trouble": "Students compare the distances themselves instead of their difference.",
+   "viz": [
+    "exam-two-speakers"
+   ]
+  },
+  {
+   "id": "exam.doppler-wall",
+   "slug": "doppler-wall",
+   "unit": "waves",
+   "title": "A Siren Near a Wall",
+   "short": "A moving siren, its echo from a wall, and the beats between them.",
+   "prereqs": [
+    "phys2.doppler"
+   ],
+   "xp": 3,
+   "trouble": "Students put the source's speed on the wrong side of the formula, or forget the wall re-sends the frequency it receives.",
+   "viz": [
+    "exam-doppler-wall"
+   ]
+  },
+  {
+   "id": "exam.string-pulley",
+   "slug": "string-pulley",
+   "unit": "waves",
+   "title": "A String Over a Pulley",
+   "short": "A hanging mass sets the wave speed; the length and the number of loops set the frequency.",
+   "prereqs": [
+    "phys2.standing-waves-strings",
+    "phys2.wave-speed-medium"
+   ],
+   "xp": 3,
+   "trouble": "Students think the wave speed is proportional to the tension rather than its square root.",
+   "viz": [
+    "exam-string-pulley"
+   ]
+  },
+  {
+   "id": "exam.convex-lens",
+   "slug": "convex-lens",
+   "unit": "optics",
+   "title": "An Object and a Convex Lens",
+   "short": "The lens equation, the image's size and kind, and what happens when the object moves.",
+   "prereqs": [
+    "phys2.thin-lens-equation",
+    "phys2.lens-ray-diagrams"
+   ],
+   "xp": 3,
+   "trouble": "Students flip the sign of the image distance or mix up real and virtual images.",
+   "viz": [
+    "exam-convex-lens"
+   ]
+  },
+  {
+   "id": "exam.pool-light",
+   "slug": "pool-light",
+   "unit": "optics",
+   "title": "A Lamp at the Bottom of a Pool",
+   "short": "Snell's law out of the water, the critical angle, and the bright circle on the surface.",
+   "prereqs": [
+    "phys2.snells-law",
+    "phys2.total-internal-reflection"
+   ],
+   "xp": 3,
+   "trouble": "Students measure angles from the surface instead of from the normal.",
+   "viz": [
+    "exam-pool-light"
+   ]
+  },
+  {
+   "id": "exam.double-slit",
+   "slug": "double-slit",
+   "unit": "optics",
+   "title": "Light Through Two Slits",
+   "short": "Fringe spacing, where the bright and dark fringes fall, and how the pattern changes.",
+   "prereqs": [
+    "phys2.double-slit"
+   ],
+   "xp": 3,
+   "trouble": "Students count dark fringes like bright ones, missing the half wavelength.",
+   "viz": [
+    "exam-double-slit"
+   ]
+  },
+  {
+   "id": "exam.capacitor-circuit",
+   "slug": "capacitor-circuit",
+   "unit": "em",
+   "title": "A Circuit With a Capacitor",
+   "short": "An uncharged capacitor acts like a wire; a full one passes no current.",
+   "prereqs": [
+    "phys2.rc-circuits",
+    "phys2.capacitor-energy",
+    "phys2.combination-circuits"
+   ],
+   "xp": 3,
+   "trouble": "Students think current flows through a fully charged capacitor.",
+   "viz": [
+    "exam-capacitor-circuit"
+   ]
+  },
+  {
+   "id": "exam.deflecting-plates",
+   "slug": "deflecting-plates",
+   "unit": "em",
+   "title": "A Beam Between Charged Plates",
+   "short": "A charge crossing a uniform field moves like a projectile: steady across, accelerated sideways.",
+   "prereqs": [
+    "phys2.uniform-field",
+    "phys1.projectile-horizontal"
+   ],
+   "xp": 3,
+   "trouble": "Students use the voltage itself as the field, forgetting to divide by the plate gap.",
+   "viz": [
+    "exam-deflecting-plates"
+   ]
+  },
+  {
+   "id": "exam.mass-spectrometer",
+   "slug": "mass-spectrometer",
+   "unit": "em",
+   "title": "A Particle Bent by a Magnetic Field",
+   "short": "A voltage speeds an ion up; a magnetic field bends it into a half circle that sorts by mass.",
+   "prereqs": [
+    "phys2.charged-particle-circles",
+    "phys2.electric-potential"
+   ],
+   "xp": 3,
+   "trouble": "Students think the radius grows in proportion to the mass, forgetting the speed depends on mass too.",
+   "viz": [
+    "exam-mass-spectrometer"
+   ]
+  },
+  {
+   "id": "exam.sliding-rod",
+   "slug": "sliding-rod",
+   "unit": "em",
+   "title": "A Rod Sliding on Rails",
+   "short": "A moving rod makes an emf, the current feels a force, and someone has to keep pulling.",
+   "prereqs": [
+    "phys2.motional-emf",
+    "phys2.force-on-wire",
+    "phys2.lenzs-law"
+   ],
+   "xp": 3,
+   "trouble": "Students get the current's direction backward: the induced current always opposes the motion.",
+   "viz": [
+    "exam-sliding-rod"
+   ]
+  },
+  {
+   "id": "exam.photoelectric",
+   "slug": "photoelectric",
+   "unit": "atoms",
+   "title": "Light on a Metal Plate",
+   "short": "Photon energy, the fastest electrons and the stopping voltage.",
+   "prereqs": [
+    "phys2.photoelectric-effect"
+   ],
+   "xp": 3,
+   "trouble": "Students think brighter light gives faster electrons.",
+   "viz": [
+    "exam-photoelectric"
+   ]
+  },
+  {
+   "id": "exam.hydrogen-levels",
+   "slug": "hydrogen-levels",
+   "unit": "atoms",
+   "title": "Jumps Between Energy Levels",
+   "short": "Level energies, the photon from a jump, its wavelength and how many lines a gas can give.",
+   "prereqs": [
+    "phys2.bohr-model",
+    "phys2.spectra"
+   ],
+   "xp": 3,
+   "trouble": "Students use the energy of one level instead of the difference between two.",
+   "viz": [
+    "exam-hydrogen-levels"
+   ]
+  }
+ ]
+}

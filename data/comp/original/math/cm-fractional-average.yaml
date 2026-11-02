@@ -1,0 +1,38 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-fractional-average
+title: The average leftover of a division
+tier: 4
+order: 80
+areas:
+- analysis
+- number-theory
+problem: |
+  For a positive integer $n$, divide $n$ by each $k=1,2,\dots,n$ and look at the remainder as a fraction of $k$. Find
+  $$\lim_{n\to\infty}\frac1n\sum_{k=1}^{n}\frac{n\bmod k}{k}.$$
+  Give a decimal to four places; the exact answer involves a famous constant.
+check:
+  type: number
+  answer: '0.42278433509846713'
+  tolerance: 0.0001
+  label: Your answer (a decimal to four places)
+answer: '$1-\gamma\approx0.4228$, where $\gamma\approx0.5772$ is the Euler–Mascheroni constant'
+hints:
+- '$\dfrac{n\bmod k}{k}$ is the fractional part $\{n/k\}$.'
+- 'So the average is a Riemann sum for $\{1/x\}$ on $(0,1]$, but that function wiggles wildly near $0$. Explain why that is harmless.'
+- 'Substitute $u=1/x$ and integrate over each interval $[m,m+1)$.'
+solution: |
+  **Riemann sum.** $\dfrac{n\bmod k}{k}=\left\{\dfrac nk\right\}=g\!\left(\dfrac kn\right)$ with $g(x)=\{1/x\}$, so the expression is
+  $\frac1n\sum_{k=1}^ng(k/n)$. The function $g$ takes values in $[0,1)$. On $[\delta,1]$ it has finitely many jumps, so it is
+  Riemann integrable there; the terms with $k<\delta n$ contribute at most $\delta+\tfrac1n$, and $\int_0^\delta g\le\delta$.
+  Letting $\delta\to0$, the limit is
+  $$\int_0^1\{1/x\}\,dx=\int_1^\infty\frac{\{u\}}{u^2}\,du.$$
+
+  **The integral.** On $[m,m+1)$, $\{u\}=u-m$, and
+  $$\int_m^{m+1}\frac{u-m}{u^2}\,du=\ln\frac{m+1}{m}-m\Big(\frac1m-\frac1{m+1}\Big)=\ln\frac{m+1}m-\frac1{m+1}.$$
+  Summing $m=1,\dots,M$:
+  $$\ln(M+1)-\Big(\frac12+\frac13+\cdots+\frac1{M+1}\Big)=1-\big(H_{M+1}-\ln(M+1)\big)\ \longrightarrow\ 1-\gamma,$$
+  where $H_n-\ln n\to\gamma$ is the definition of the **Euler–Mascheroni constant**.
+
+  So the limit is $1-\gamma\approx0.4228$: on average the remainder is a bit less than half of the divisor.
+checked: 'script: n = 10^6 gives 0.42269, limit 0.42278'
+status: ready

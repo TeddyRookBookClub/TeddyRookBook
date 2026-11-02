@@ -1,0 +1,400 @@
+year: 2025
+exam: main
+links:
+  problems: https://www.dnc.ac.jp/albums/abm.php?d=771&f=abm00005964.pdf&n=2025_op_39_butsuri.pdf
+  answers: https://www.dnc.ac.jp/albums/abm.php?d=740&f=abm00005162.pdf&n=R7_%E3%80%90%E7%89%A9%E7%90%86%E3%80%91%E6%9C%AC%E8%A9%A6%E9%A8%93%E3%81%AE%E6%AD%A3%E8%A7%A3.pdf
+note: |
+  The January 2025 paper (令和7年度 本試験), the first one written for Japan's new high-school course of study. Part numbers follow the paper: "3-4" means 第3問, 問4. Where one part has two answer boxes, the answer lists both box numbers.
+questions:
+  - id: "1"
+    topic: "Short questions: gas law, gravity, forces, fields, matter waves"
+    parts:
+      - id: "1-1"
+        topic: "Combined gas law: a sealed syringe carried downhill"
+        answer: "4"
+        hints:
+          - 'The amount of air in the sealed syringe does not change, so $pV/T$ stays the same.'
+          - 'The piston slides freely, so the inside pressure always matches the outside.'
+        solution: |
+          **Key idea:** a fixed amount of ideal gas keeps $pV/T$ the same, and a free piston keeps the inside pressure equal to the air outside.
+
+          At the summit the trapped air has pressure $P_0$, volume $V$ and temperature $T_0$. At the foot it has pressure $P_1$ (the piston moves until inside and outside match), volume $V - \Delta V$ and temperature $T_1$ (the syringe passes heat, so it matches its surroundings).
+
+          $$\frac{P_0 V}{T_0} = \frac{P_1 (V-\Delta V)}{T_1}
+          \quad\Longrightarrow\quad
+          P_0 = \frac{P_1 (V-\Delta V)\,T_0}{V\,T_1}.$$
+
+          That is choice 4. Sanity check: the air shrank on the way down, so the summit pressure should come out lower than $P_1$ (unless the temperature change is large), and the factor $(V-\Delta V)/V < 1$ does that.
+        checked: "script: sympy solve"
+        status: ready
+      - id: "1-2"
+        topic: "Weighing the Earth with g, R and G"
+        answer: "9"
+        hints:
+          - 'Set the weight $mg$ equal to the gravitational pull $GMm/R^2$.'
+        solution: |
+          **Key idea:** at the surface, weight and Newton's gravitational force are the same force.
+
+          $$mg = \frac{GMm}{R^2} \quad\Longrightarrow\quad M = \frac{gR^2}{G}.$$
+
+          Now put in the numbers:
+          $$M = \frac{9.8 \times (6.4\times10^{6})^2}{6.7\times10^{-11}} = \frac{9.8\times 4.1\times10^{13}}{6.7\times10^{-11}} \approx 6\times10^{24}\ \text{kg}.$$
+
+          $M = gR^2/G$ with about $6\times10^{24}$ kg is choice 9. Quick check: the units of $gR^2/G$ are $(\text{m/s}^2)(\text{m}^2)/(\text{N·m}^2/\text{kg}^2) = \text{kg}$.
+        checked: "script: 5.99e24 kg"
+        status: ready
+      - id: "1-3"
+        topic: "Statics: replacing three forces with one"
+        answer: "4"
+        hints:
+          - 'First add the forces as vectors. Then match the torque about the center.'
+          - 'Forces whose lines pass through the center have no torque about it.'
+        solution: |
+          **Key idea:** one force can stand in for several if it has the same vector sum *and* the same torque about any point. Use the center O.
+
+          **Vector sum.** Measure angles from the direction O→P. The two forces of size $2F$ point at $30^\circ$ and $150^\circ$. Their components along OP are $2F\cos30^\circ + 2F\cos150^\circ = 0$. Their components perpendicular to OP add: $2F\sin30^\circ + 2F\sin150^\circ = 2F$. So together they give $2F$ perpendicular to OP, on the opposite side from the force at P. The force at P is $F$ the other way. The total is $F$, perpendicular to OP, pointing opposite to the force at P.
+
+          **Torque about O.** The two big forces act along lines through O, so their torque is zero. The force at P has size $F$ and lever arm $L$, so the total torque is $FL$, in the sense set by the force at P.
+
+          **Where does the single force go?** It has size $F$ and points opposite to the force at P, but it must give the *same* turning sense as the force at P. A reversed force gives the same turning only on the other side of O. With $F\cdot x = F\cdot L$, the force acts on the line through O, at distance $L$ from O, on the side opposite P. That is choice 4.
+        checked: "script: vector sum and torque checked numerically"
+        status: ready
+      - id: "1-4"
+        topic: "Velocity selector: which exit speed is largest?"
+        answer: "2"
+        hints:
+          - 'A magnetic force never does work.'
+          - 'With only the electric field, which way does the electron drift, compared with the force on it?'
+        solution: |
+          **Key idea:** a magnetic force is always perpendicular to the velocity, so it never changes speed. An electric force can.
+
+          - **Both fields on.** The electron goes straight, so the electric and magnetic forces cancel. The magnetic force does no work. The electric force is perpendicular to the straight path, so it does no work either. The speed stays at the entry speed: $v_1 = v_0$.
+          - **Magnetic field only.** The path curves, but the magnetic force does no work, so $v_3 = v_0$.
+          - **Electric field only.** The electron starts with no velocity along the field. The electric force then pulls it sideways, and it drifts in the direction of that force. Positive work is done, so it speeds up: $v_2 > v_0$.
+
+          So $v_2 > v_3 = v_1$, choice 2.
+        viz: ct-2025-1-4
+        checked: "by hand (work–energy)"
+        status: ready
+      - id: "1-5"
+        topic: "Electron diffraction: de Broglie wavelength and Bragg's law"
+        answer: "5"
+        hints:
+          - "Bragg's condition: the extra path between neighboring planes is $2d\\sin\\theta$."
+          - 'The smallest angle goes with the first order, $n = 1$.'
+        solution: |
+          **Key idea:** $\lambda = h/(mv)$, and the first Bragg peak has $2d\sin\theta_0 = \lambda$.
+
+          The de Broglie wavelength comes from the momentum $p = mv$:
+          $$\lambda = \frac{h}{mv}.$$
+          Waves bouncing off neighboring planes travel paths that differ by $2d\sin\theta$. They reinforce when that difference is a whole number of wavelengths, $2d\sin\theta = n\lambda$. The smallest angle that works is $n = 1$:
+          $$2d\sin\theta_0 = \frac{h}{mv} \quad\Longrightarrow\quad d = \frac{h}{2mv\sin\theta_0}.$$
+          Both blanks together give choice 5.
+        checked: "by hand"
+        status: ready
+  - id: "2"
+    topic: "Mechanics: measuring a pendulum's period precisely"
+    parts:
+      - id: "2-1"
+        topic: "Restoring force on a pendulum bob"
+        answer: "2"
+        hints:
+          - 'Split gravity into a part along the string and a part along the arc.'
+        solution: |
+          **Key idea:** only the part of gravity along the arc drives the motion.
+
+          The string's pull is perpendicular to the arc, so it does nothing along it. Gravity $mg$ has a part $mg\sin\theta$ along the arc, pointing back toward the bottom. With $s$ and $\theta$ positive on the same side,
+          $$F = -mg\sin\theta \approx -mg\theta.$$
+          That is choice 2. Using $s = L\theta$, this is $F = -\dfrac{mg}{L}\,s$, a spring-like force with "spring constant" $mg/L$.
+        checked: "by hand"
+        status: ready
+      - id: "2-2"
+        topic: "Simple harmonic motion: phase and angular frequency"
+        answer: "1"
+        hints:
+          - 'At $t=0$ the bob is at the center moving toward positive $s$.'
+          - 'For a force $-Ks$, the angular frequency is $\sqrt{K/m}$.'
+        solution: |
+          **Key idea:** the force $-\dfrac{mg}{L}s$ gives simple harmonic motion with $\omega = \sqrt{g/L}$.
+
+          From the last part, $m\ddot s = -\dfrac{mg}{L}s$, so the angular frequency is
+          $$\omega = \sqrt{\frac{g}{L}}.$$
+
+          At $t = 0$ the bob passes the lowest point heading toward positive $s$. So $s(0) = 0$ and $s$ is increasing: that is a sine, not a cosine.
+          $$s = L\theta_0 \sin\omega t.$$
+          The amplitude is $L\theta_0$. This is choice 1. (The options with $2\pi$ would give the frequency in hertz, not the angular frequency.)
+        checked: "by hand"
+        status: ready
+      - id: "2-3"
+        topic: "Timing error over many swings"
+        answer: "5"
+        hints:
+          - 'The whole extra time $\Delta t$ gets divided by $N$.'
+        solution: |
+          **Key idea:** timing $N$ swings and dividing by $N$ also divides the stopwatch error by $N$.
+
+          If the true time for $N$ swings is $NT$, the measured time is $NT + \Delta t$. Then
+          $$T_N = \frac{NT + \Delta t}{N} = T + \frac{\Delta t}{N}.$$
+          The estimate is **too large** by $\Delta t/N$. For a fixed reaction-time error $\Delta t$, a larger $N$ makes this error **smaller**. That is why people time 10 or 20 swings, not one.
+
+          ($\Delta t/N$, larger, smaller) is choice 5.
+        checked: "by hand"
+        status: ready
+      - id: "2-4"
+        topic: "Reading the period from a light-gate signal"
+        answer: "3"
+        hints:
+          - 'How many times per full swing does the string pass the lowest point?'
+        solution: |
+          **Key idea:** the string blocks the beam each time it passes the bottom, and that happens twice per period.
+
+          In one full period the bob goes from the bottom out to one side, back through the bottom, out to the other side, and back to the bottom. It crosses the lowest point twice, once going each way.
+
+          So each dip on the oscilloscope marks half a period. One full period spans **two** gaps between dips, for example from the first dip to the third. That is the arrow in choice 3.
+
+          A common slip is to read one gap as the period. That would make $T$ half as long, and the value of $g$ from $T = 2\pi\sqrt{L/g}$ four times too large.
+        viz: ct-2025-2-4
+        checked: "by hand"
+        status: ready
+      - id: "2-5"
+        topic: "Effect of Earth's spin on g at the equator"
+        answer: "1"
+        hints:
+          - 'At the equator, the bob moves in a circle of radius $R$ once a day.'
+          - 'The centrifugal force points away from the axis, against gravity there.'
+        solution: |
+          **Key idea:** in the rotating frame, a centrifugal force $m\omega_0^2 R$ pushes outward at the equator, partly cancelling gravity. At the poles it is zero.
+
+          At the equator the bob rides a circle of radius $R$ with angular speed $\omega_0$. In Earth's frame, there is an outward centrifugal force
+          $$f = m\,\omega_0^2 R.$$
+
+          At the poles the distance from the axis is zero, so $f = 0$ and the measured value is the plain gravitational one, $g_p$. At the equator, the outward $f$ points straight up, opposite gravity, so the measured weight is smaller by $f$:
+          $$g_e = g_p - \frac{f}{m}.$$
+          ($\omega_0^2 R$, $g_p - f/m$) is choice 1. For Earth, $\omega_0^2R \approx 0.034$ m/s², about 0.3% of $g$.
+        checked: "by hand (numbers: ω0 = 7.29e-5 s^-1, R = 6.4e6 m)"
+        status: ready
+  - id: "3"
+    topic: "Thermodynamics and wave interference"
+    parts:
+      - id: "3-1"
+        topic: "Work done by a gas on a two-step path"
+        answer: "8"
+        hints:
+          - 'No volume change, no work. At constant pressure, work is $p\,\Delta V$.'
+          - 'Use $pV = nRT$ at state A to rewrite $pV$ in terms of $T_A$.'
+        solution: |
+          **Key idea:** add $p\,\Delta V$ for each step, then use state A to change $pV$ into $nRT_A$.
+
+          Read the states off the graph: A is at $(2V, 2p)$, B at $(2V, p)$, C at $(V, p)$.
+          - **A→B** has constant volume, so the gas does no work.
+          - **B→C** is at constant pressure $p$ while the volume falls from $2V$ to $V$. The work done by the gas is $p(V - 2V) = -pV$. It is negative, because the gas is squeezed.
+
+          At A, $(2p)(2V) = nRT_A$, so $pV = \tfrac14 nRT_A$. The total work done by the gas is
+          $$W = -\tfrac14\,nRT_A,$$
+          choice 8.
+        checked: "script: computed from the state coordinates"
+        status: ready
+      - id: "3-2"
+        topic: "Sketching temperature against volume"
+        answer: "2"
+        hints:
+          - 'At fixed volume, $T \propto p$. At fixed pressure, $T \propto V$.'
+        solution: |
+          **Key idea:** $T = pV/(nR)$, so at constant volume the point moves straight down, and at constant pressure it moves along a line through the origin.
+
+          - **A→B:** the volume stays at $2V$ while the pressure halves, so $T$ drops from $T_A$ to $T_A/2$. On a $T$–$V$ graph this is a vertical drop.
+          - **B→C:** the pressure stays at $p$, so $T = (p/nR)\,V$ is proportional to $V$. The point slides down a straight line aimed at the origin, from $(2V, T_A/2)$ to $(V, T_A/4)$.
+
+          A vertical drop, then a straight slanted segment that would pass through the origin if you extended it: choice 2.
+        checked: "by hand"
+        status: ready
+      - id: "3-3"
+        topic: "Same endpoints, different paths: comparing heat"
+        answer: "8"
+        hints:
+          - 'Internal energy depends only on the state, not the path.'
+          - 'Work is the area under the path on a $p$–$V$ graph.'
+        solution: |
+          **Key idea:** both processes start at C and end at A, so $\Delta U$ is the same. Heat then follows the work: $Q = \Delta U + W$.
+
+          **Internal energy.** For an ideal gas, $U$ depends only on temperature, which is set by the state. Both processes go from C to A, so $\Delta U_\text{I} = \Delta U_\text{II}$.
+
+          **Work.** Work by the gas is the area under the path (moving to the right counts positive).
+          - Process I goes C→B at pressure $p$ (area $pV$), then B→A at fixed volume (no area). So $W_\text{I} = pV$.
+          - Process II rises along a curve from C to A that bulges *above* the corner path, so it encloses more area: $W_\text{II} > pV$.
+
+          So $W_\text{I} < W_\text{II}$. By the first law, $Q = \Delta U + W$, so process II takes in more heat. That is choice 8.
+        checked: "by hand (area comparison)"
+        status: ready
+      - id: "3-4"
+        topic: "Reading frequency and amplitude from a graph"
+        answer: "5"
+        hints:
+          - 'Measure the time between two neighboring peaks.'
+        solution: |
+          **Key idea:** the time between two peaks is the period $T$, and $f = 1/T$. The height of a peak is the amplitude.
+
+          On the graph, two neighboring maxima are $0.2$ s apart, so
+          $$f = \frac{1}{0.2\ \text{s}} = 5\ \text{Hz}.$$
+          The curve swings between $+2$ cm and $-2$ cm, so the amplitude at P is $2$ cm. That is choice 5.
+
+          Notice the amplitude at P is not the source amplitude $a_0$. A circular wave spreads out, so it is weaker far from the source.
+        checked: "script: period 0.2 s"
+        status: ready
+      - id: "3-5"
+        topic: "Superposition: subtracting one wave from the total"
+        answer: "2"
+        hints:
+          - 'The total displacement is the sum, so $y_{PB} = y_P - y_{PA}$.'
+          - 'Compare where the total and $y_{PA}$ have their peaks.'
+        solution: |
+          **Key idea:** superposition means $y_P = y_{PA} + y_{PB}$. Solve for the missing wave: $y_{PB} = y_P - y_{PA}$.
+
+          From the two graphs:
+          - $y_{PA}$ has amplitude 2 cm.
+          - $y_P$ has amplitude 0.5 cm, and its peaks line up with the peaks of $y_{PA}$. The two are in step.
+
+          Both are sine waves at the same frequency and in phase, so $y_P = \tfrac14\,y_{PA}$. Then
+          $$y_{PB} = y_P - y_{PA} = -\tfrac34\,y_{PA}.$$
+          So $y_{PB}$ has amplitude 1.5 cm and is exactly **opposite** in phase to $y_{PA}$: it is at a trough when $y_{PA}$ is at a peak. That is the graph in choice 2.
+
+          The two waves at P mostly cancel. P is near a point of destructive interference, so the total is small.
+        viz: ct-2025-3-5
+        checked: "by hand (point-by-point subtraction of the graphs)"
+        status: ready
+      - id: "3-6"
+        topic: "Two-source interference: time and path differences"
+        answer: "5"
+        hints:
+          - 'Reinforcement needs $f\,|t_{PA}-t_{PB}|$ to be a whole number.'
+          - 'Path difference equals speed times time difference.'
+        solution: |
+          **Key idea:** the waves reinforce when their arrival times differ by a whole number of periods. The path difference is the wave speed times that time.
+
+          With $f = 8.0$ Hz, the period is $T = 1/8 = 0.125$ s. Reinforcement needs
+          $$|t_{PA} - t_{PB}| = k\,T = 0.125\,k \quad (k = 0, 1, 2, \dots).$$
+          Of the offered times, $0.20$ s and $0.80$ s are not multiples of $0.125$ s ($1.6T$ and $6.4T$). Only $0.50$ s $= 4T$ works.
+
+          Both waves travel at $4.0$ m/s, so the path difference is
+          $$|AP - BP| = v\,|t_{PA} - t_{PB}| = 4.0 \times 0.50 = 2.0\ \text{m}.$$
+          That is $4\lambda$ with $\lambda = v/f = 0.50$ m, as it should be. (0.50 s, 2.0 m) is choice 5.
+        checked: "script: tested all nine options"
+        status: ready
+  - id: "4"
+    topic: "Electromagnetic induction: a sliding rod with C or L"
+    parts:
+      - id: "4-1"
+        topic: "Motional EMF and current direction"
+        answer: "6"
+        hints:
+          - 'Find the force on a positive charge in the rod: $q\vec v\times\vec B$.'
+        solution: |
+          **Key idea:** a rod of length $l$ moving at $v$ across a field $B$ has EMF $vBl$. Its direction comes from the force $q\vec v\times\vec B$ on charges in the rod.
+
+          **Size.** In time $\Delta t$ the rod sweeps an area $l\,v\,\Delta t$, so the flux changes at the rate $Blv$:
+          $$V_1 = vBl.$$
+
+          **Direction.** Take the rod moving to the right, with the field pointing up out of the page. For a positive charge in the rod, $\vec v\times\vec B$ (right × out of page) points down the page, from the end b toward the end a. So positive charge is pushed from b to a inside the rod. When S closes, current flows **b → a** in the rod.
+
+          ($vBl$, b→a) is choice 6.
+        checked: "by hand (right-hand rule)"
+        status: ready
+      - id: "4-2"
+        topic: "Force needed to keep the rod moving (RC circuit)"
+        answer: "1"
+        hints:
+          - 'The rod acts like a battery of EMF $vBl$ charging a capacitor through a resistor.'
+          - 'The force needed equals the magnetic force $IBl$.'
+        solution: |
+          **Key idea:** the rod is a steady battery charging a capacitor through a resistor. The current dies away exponentially, and the force tracks the current.
+
+          At steady speed, the outside force must cancel the magnetic drag on the current: $F = IBl$.
+
+          The loop is a battery (EMF $V_1$), a resistor $R$ and a capacitor $C$ in series:
+          - Just after S closes, the capacitor is empty, so $I = V_1/R$, the largest value.
+          - As charge builds up, the capacitor voltage $q/C$ pushes back, and $I = (V_1 - q/C)/R$ shrinks.
+          - In the end the capacitor reaches $V_1$ and the current stops.
+
+          The current, and so $F$, starts at its maximum and decays smoothly toward zero as $e^{-t/RC}$. That is graph 1.
+        viz: ct-2025-4-2
+        checked: "script: numerical RC simulation"
+        status: ready
+      - id: "4-3"
+        topic: "Energy bookkeeping while charging a capacitor"
+        answer: "Box 19: 4 · Box 20: 2"
+        hints:
+          - 'The outside work goes two places: heat in the resistor and energy stored in the capacitor.'
+          - 'The rod pushes charge $Q = CV_1$ through a fixed EMF $V_1$.'
+        solution: |
+          **Key idea:** the outside work becomes heat plus stored energy. The work is $QV_1$, the stored energy is only half of that, and the other half is heat.
+
+          **Box 19.** The rod's speed does not change, so its kinetic energy is constant. All the outside work goes either to Joule heat or into the capacitor: $W = J + U$, which is $W - J - U = 0$ (choice 4).
+
+          **Box 20.** The rod works like a battery with fixed EMF $V_1$. It pushes the final charge $Q = CV_1$ around the loop, so
+          $$W = QV_1 = CV_1^2.$$
+          The capacitor ends up storing $U = \tfrac12 CV_1^2$. So
+          $$J = W - U = \tfrac12 CV_1^2,$$
+          choice 2.
+
+          Half the energy is lost as heat whatever the value of $R$. A larger $R$ makes the charging slower, but the heat comes out the same.
+        checked: "script: RC simulation, J matches CV^2/2"
+        status: ready
+      - id: "4-4"
+        topic: "Capacitor discharges through a resting rod"
+        answer: "6"
+        hints:
+          - 'Work out which plate became positive while charging.'
+          - 'Then apply $\vec F = I\vec l\times\vec B$ to the rod.'
+        solution: |
+          **Key idea:** the discharge current goes through the rod the opposite way from the charging current, so the magnetic force on the rod also reverses.
+
+          **Which plate is positive?** While charging, current came out of the rod at end a. It went around the circuit to the capacitor and charged the plate on that side positive.
+
+          **Discharge.** Now the rod is still, so it is just a wire. When S closes, the capacitor pushes current out of its positive plate, back around the circuit and into the rod at a. So the current in the rod flows **a → b**, opposite to before.
+
+          **Force.** While charging, the force on the current (b→a) pointed left, opposing the motion. With the current reversed, the force $I\vec l\times\vec B$ points **right**, so the rod starts moving to the right. This is the rod acting as a simple motor.
+
+          (a→b, starts moving right) is choice 6.
+        checked: "by hand"
+        status: ready
+      - id: "4-5"
+        topic: "Coil EMF after a long time"
+        answer: "7"
+        hints:
+          - 'A coil only makes an EMF when its current is changing.'
+        solution: |
+          **Key idea:** a coil's EMF is $L\,dI/dt$. Once the current stops changing, the coil's EMF is zero.
+
+          With a coil in place of the capacitor, the current rises from zero and levels off at $I = V_2/R = vBl/R$. After a long time it is steady, so
+          $$\text{EMF}_\text{coil} = L\frac{dI}{dt} = 0.$$
+          That is choice 7. In the end the coil acts like a plain wire, and the whole motional EMF drops across the resistor.
+        checked: "by hand"
+        status: ready
+      - id: "4-6"
+        topic: "Force versus time with a coil in the circuit"
+        answer: "2"
+        hints:
+          - 'Again, $F = IBl$. Look at the shape of the current graph.'
+        solution: |
+          **Key idea:** the force needed is $F = IBl$, so $F$ has the same shape as the current.
+
+          The current graph starts at zero (a coil does not allow a sudden jump) and rises steeply at first. It then bends over and levels off at $vBl/R$.
+
+          The needed force follows it: zero at first, rising, then leveling off at $F = \dfrac{vB^2l^2}{R}$. That is graph 2. It is the mirror image of the capacitor case, where the force started high and died away.
+        checked: "by hand"
+        status: ready
+      - id: "4-7"
+        topic: "Inductance from the initial slope"
+        answer: "4"
+        hints:
+          - 'At the instant S closes, the current is zero, so there is no drop across the resistor.'
+        solution: |
+          **Key idea:** at $t = 0$, the resistor carries no current, so the whole EMF sits across the coil: $V_2 = L\,(dI/dt)_{t=0}$.
+
+          Around the loop, $V_2 = IR + L\dfrac{dI}{dt}$. At $t=0$, $I=0$, so
+          $$V_2 = L\,a \quad\Longrightarrow\quad L = \frac{V_2}{a},$$
+          where $a$ is the slope of the tangent at $t=0$. That is choice 4.
+
+          A larger $L$ means a gentler initial slope: the coil fights the change harder.
+        checked: "script: I(t) = (V/R)(1 - e^{-Rt/L}) has slope V/L at t = 0"
+        status: ready

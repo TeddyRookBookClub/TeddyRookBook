@@ -1,0 +1,59 @@
+{{ define "main" }}
+{{- /* /math/competitions/putnam/: every year file (newest first) with its count of ready solutions, and a table of
+   every problem across all years that filters by area and difficulty (static/comp/comp.js). */ -}}
+{{ partial "comp/head.html" . }}
+{{- $Y := (index (site.Data.comp | default dict) "putnam") | default dict -}}
+{{- $A := partial "comp/areas.html" "x" -}}
+{{- $keys := slice }}{{ range $k, $_ := $Y }}{{ $keys = $keys | append (string $k) }}{{ end }}{{ $keys = sort $keys "value" "desc" -}}
+{{- $used := dict }}{{ range $Y }}{{ range .problems }}{{ range .areas }}{{ $used = merge $used (dict . true) }}{{ end }}{{ end }}{{ end -}}
+<article class="cp cp-list">
+  <nav class="cp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <a href="{{ "math/competitions/" | relURL }}">Competitions</a> <span aria-hidden="true">›</span> <span>Putnam</span></nav>
+  <header class="cp-head">
+    <h1>{{ .Title }}</h1>
+    <p class="cp-intro">Each December, college students in the United States and Canada sit the William Lowell Putnam Mathematical Competition: problems A1 to A6 in the morning and B1 to B6 in the afternoon, three hours each, with the later problems usually the hardest. Here, year by year, are short topic labels, a link to each official problem, and our own solutions.</p>
+  </header>
+  <div class="cp-legal" role="note">
+    <p><b>About these pages.</b> The Putnam problems are © the Mathematical Association of America. We don't copy them: read each one at the official link, on Kiran Kedlaya's <a href="https://kskedlaya.org/putnam-archive/" rel="noopener">Putnam Archive</a>, which hosts them with the MAA's permission. The hints and solutions are our own work, written from scratch. They are not official solutions.</p>
+  </div>
+
+  <section aria-labelledby="cp-h-years">
+    <h2 id="cp-h-years">Years</h2>
+    {{- if $keys }}
+    <ul class="cp-years">
+      {{- range $keys }}{{ $y := index $Y . }}
+      {{- $n := 0 }}{{ range $y.problems }}{{ if eq .status "ready" }}{{ $n = add $n 1 }}{{ end }}{{ end }}
+      <li><a href="{{ printf "math/competitions/putnam/%s/" . | relURL }}"><b>{{ $y.year }}</b><small>{{ with $y.edition }}{{ . }} Putnam · {{ end }}{{ $n }} of {{ len ($y.problems | default slice) }} {{ cond (eq $n 1) "solution" "solutions" }} ready</small></a></li>
+      {{- end }}
+    </ul>
+    {{- else }}<p>The first years are being written.</p>{{ end }}
+  </section>
+
+  <section aria-labelledby="cp-h-all" class="cp-allp">
+    <h2 id="cp-h-all">Every problem</h2>
+    <form class="cp-filter" data-filter="cp-ptable" aria-label="Filter the problems">
+      <label>Area <select name="area"><option value="">All areas</option>{{ range $k, $v := $A }}{{ if index $used $k }}<option value="{{ $k }}">{{ $v }}</option>{{ end }}{{ end }}</select></label>
+      <label>Difficulty <select name="diff"><option value="">Any</option>{{ range seq 5 }}<option value="{{ . }}">{{ . }} of 5</option>{{ end }}</select></label>
+      <label class="cp-chk"><input type="checkbox" name="ready"> Solutions ready only</label>
+      <output class="cp-small" aria-live="polite"></output>
+    </form>
+    <div class="cp-tablewrap">
+    <table class="cp-table" id="cp-ptable">
+      <thead><tr><th scope="col">Problem</th><th scope="col">Topic</th><th scope="col">Area</th><th scope="col"><abbr title="Difficulty, 1 to 5, our estimate">Level</abbr></th><th scope="col">Solution</th></tr></thead>
+      <tbody>
+      {{- range $keys }}{{ $yk := . }}{{ $y := index $Y . }}
+      {{- range $y.problems }}
+      <tr data-areas="{{ delimit (.areas | default slice) " " }}" data-diff="{{ .difficulty }}" data-ready="{{ cond (eq .status "ready") 1 0 }}">
+        <td><a href="{{ printf "math/competitions/putnam/%s/#%s" $yk (.id | lower) | relURL }}">{{ $y.year }} {{ .id }}</a></td>
+        <td>{{ partial "comp/md.html" (dict "s" .topic "inline" true) }}</td>
+        <td>{{ range $i, $a := .areas }}{{ if $i }}, {{ end }}{{ index $A $a | default $a }}{{ end }}</td>
+        <td>{{ .difficulty }}</td>
+        <td>{{ if eq .status "ready" }}Ready{{ else }}Coming{{ end }}</td>
+      </tr>
+      {{- end }}{{ end }}
+      </tbody>
+    </table>
+    </div>
+  </section>
+  <p class="cp-small"><a href="{{ "math/competitions/challenge/" | relURL }}">Try our original challenge problems</a> · <a href="{{ "math/competitions/" | relURL }}">All competition pages</a></p>
+</article>
+{{ end }}

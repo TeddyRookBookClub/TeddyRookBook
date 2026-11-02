@@ -1,0 +1,37 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-heptagon-product
+title: A product around the heptagon
+tier: 4
+order: 30
+areas:
+- algebra
+problem: |
+  Let $\omega=e^{2\pi i/7}$. Compute
+  $$\prod_{k=1}^{6}\left(\omega^{2k}-\omega^{k}+2\right).$$
+check:
+  type: number
+  answer: '71'
+answer: '$71$'
+hints:
+- 'The factors are $f(\omega^k)$ with $f(x)=x^2-x+2=(x-\alpha)(x-\beta)$.'
+- 'A product $\prod_{k=1}^{6}(z-\omega^k)$ is $\dfrac{z^7-1}{z-1}$.'
+- 'You need $\alpha^7+\beta^7$. Use $s_n=\alpha^n+\beta^n$ and the recursion $s_n=s_{n-1}-2s_{n-2}$.'
+solution: |
+  **Factor.** Let $f(x)=x^2-x+2=(x-\alpha)(x-\beta)$, so $\alpha+\beta=1$ and $\alpha\beta=2$. The product is
+  $$\prod_{k=1}^6(\omega^k-\alpha)(\omega^k-\beta)=\prod_{k=1}^6(\alpha-\omega^k)\cdot\prod_{k=1}^6(\beta-\omega^k)$$
+  (six sign changes in each). Since the $\omega^k$, $k=1..6$, are the roots of $\frac{z^7-1}{z-1}=z^6+\cdots+1$,
+  $$\prod_{k=1}^6(z-\omega^k)=\frac{z^7-1}{z-1}.$$
+  So the product is
+  $$\frac{(\alpha^7-1)(\beta^7-1)}{(\alpha-1)(\beta-1)}.$$
+
+  **The denominator.** $(\alpha-1)(\beta-1)=f(1)=2$.
+
+  **The numerator.** $(\alpha^7-1)(\beta^7-1)=(\alpha\beta)^7-(\alpha^7+\beta^7)+1$. With $s_n=\alpha^n+\beta^n$, each root
+  satisfies $x^2=x-2$, so $s_n=s_{n-1}-2s_{n-2}$, with $s_0=2$, $s_1=1$:
+  $$s_2=-3,\ s_3=-5,\ s_4=1,\ s_5=11,\ s_6=9,\ s_7=-13.$$
+  So the numerator is $128+13+1=142$, and the product is $\dfrac{142}{2}=71$.
+
+  **Idea used:** a product of $f$ over all roots of one polynomial is a product of the other polynomial over the roots of
+  $f$ (a resultant). It turns a product over six complex numbers into two values.
+checked: 'script: the product computed in complex floating point, 71 to 13 digits'
+status: ready

@@ -1,0 +1,33 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-e-correction
+title: The next term after e
+tier: 2
+order: 10
+areas:
+- analysis
+- calculus
+problem: |
+  It is well known that $\left(1+\frac1n\right)^n\to e$, and that the error is about $-\dfrac{e}{2n}$. Find
+  $$\lim_{n\to\infty} n^2\left[\left(1+\frac1n\right)^n-e+\frac{e}{2n}\right].$$
+check:
+  type: number
+  answer: '11*e/24'
+  label: Your answer (you can type e)
+answer: '$\dfrac{11e}{24}\approx1.2459$'
+hints:
+- 'Write $\left(1+\frac1n\right)^n=\exp\!\big(n\ln(1+\tfrac1n)\big)$.'
+- 'Expand $\ln(1+x)=x-\tfrac{x^2}2+\tfrac{x^3}3-\cdots$ with $x=1/n$, then expand the exponential.'
+- 'Keep every term down to $1/n^2$. The square of $-\tfrac1{2n}$ matters.'
+solution: |
+  With $x=1/n$,
+  $$n\ln(1+x)=\frac{x-\tfrac{x^2}{2}+\tfrac{x^3}{3}-\cdots}{x}=1-\frac x2+\frac{x^2}3+O(x^3).$$
+  So $\left(1+\frac1n\right)^n=e\cdot\exp(u)$ with $u=-\frac x2+\frac{x^2}3+O(x^3)$. Since $e^u=1+u+\frac{u^2}2+O(u^3)$,
+  $$e^u=1-\frac x2+\frac{x^2}3+\frac{x^2}8+O(x^3)=1-\frac x2+\frac{11}{24}x^2+O(x^3).$$
+  Hence
+  $$\left(1+\frac1n\right)^n-e+\frac e{2n}=\frac{11e}{24n^2}+O\!\left(\frac1{n^3}\right),$$
+  and the limit is $\dfrac{11e}{24}\approx 1.2459$.
+
+  **Check with numbers.** For $n=10^6$, high-precision arithmetic gives $n^2[\cdots]\approx1.2458792$, against
+  $11e/24\approx1.2458792$.
+checked: 'script: 60-digit decimal arithmetic at n = 10^6 and 10^8'
+status: ready

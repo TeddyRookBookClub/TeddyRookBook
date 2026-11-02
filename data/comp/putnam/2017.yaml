@@ -1,0 +1,264 @@
+year: 2017
+edition: 78th
+date: "December 2, 2017"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2017.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Number theory: closure rules with squares and residues"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$1$ and the multiples of $5$"
+    hints:
+      - "Combine the two rules: from $n$ you get $(n+5)^2$, and then a square root."
+      - "Work modulo $5$. Which residues can ever appear? Once a residue class contains one member, does it contain all large members?"
+    solution: |
+      **Key idea:** the two rules together let you add $5$, so everything reduces to residues mod $5$; the multiples of $5$ and the number $1$ can never be reached.
+
+      **What is excluded.** Let $T$ be the set of positive integers that are not multiples of $5$, with $1$ removed. Then $2\in T$. If $n^2\in T$ then $n\in T$: $n$ is not a multiple of $5$, and $n\ne1$ because $1^2=1\notin T$. If $n\in T$ then $(n+5)^2\in T$: it is not a multiple of $5$, and it exceeds $1$. So $T$ obeys all three rules. Since $S$ is the smallest such set, $S\subseteq T$, and none of $1,5,10,15,\dots$ is in $S$.
+
+      **Everything else is included.**
+
+      *Adding $5$.* If $n\in S$ then $(n+5)^2\in S$, and so $n+5\in S$ by the square-root rule. So $S$ is closed under adding $5$.
+
+      *A large number $\equiv1 \pmod 5$.* From $2$ we get $49\in S$. From $49$ we get $54^2=2916\in S$, and $2916\equiv1\pmod5$. By adding $5$ repeatedly, every integer $N\ge2916$ with $N\equiv1\pmod5$ lies in $S$.
+
+      *Back down by square roots.* Let $n\ge2$ with $5\nmid n$. By Fermat's little theorem $n^4\equiv1\pmod5$, so $n^{2^j}\equiv1\pmod5$ for all $j\ge2$. Choose $j\ge2$ with $n^{2^j}\ge2916$. Then $n^{2^j}\in S$, and taking square roots $j$ times shows $n\in S$.
+
+      So the integers not in $S$ are exactly $1$ and the multiples of $5$.
+    checked: "proof; a bounded closure search agrees on the small cases it can reach"
+    status: ready
+
+  - id: A2
+    topic: "Polynomials: a nonlinear recursion that is secretly linear"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - "Compute the first few terms. Do they satisfy a simple linear recursion?"
+      - "For the linear sequence, show that $P_{n-1}^2-P_nP_{n-2}$ never changes."
+    solution: |
+      **Key idea:** the polynomials follow the linear rule $P_n=xP_{n-1}-P_{n-2}$, and a conserved quantity shows that this linear sequence also obeys the given rule.
+
+      Define integer polynomials by $P_0=1$, $P_1=x$, and $P_n=xP_{n-1}-P_{n-2}$ for $n\ge2$. We show $Q_n=P_n$ for all $n$, which proves the claim.
+
+      **A conserved quantity.** Let $D_n=P_n^2-P_{n+1}P_{n-1}$ for $n\ge1$. Using $P_{n+1}=xP_n-P_{n-1}$,
+      $$D_n=P_n^2-xP_nP_{n-1}+P_{n-1}^2=P_n\,(P_n-xP_{n-1})+P_{n-1}^2=-P_nP_{n-2}+P_{n-1}^2=D_{n-1}.$$
+      And $D_1=x^2-(x^2-1)\cdot1=1$. So $D_n=1$ for all $n\ge1$, which says
+      $$P_{n-1}^2-1=P_nP_{n-2}\qquad(n\ge2).$$
+
+      **Induction.** $Q_0=P_0$ and $Q_1=P_1$. Suppose $Q_{n-1}=P_{n-1}$ and $Q_{n-2}=P_{n-2}$. Then
+      $$Q_n=\frac{P_{n-1}^2-1}{P_{n-2}}=\frac{P_nP_{n-2}}{P_{n-2}}=P_n ,$$
+      as rational functions. $P_{n-2}$ is not the zero polynomial, since its leading term is $x^{n-2}$ by induction. So every $Q_n$ is the integer polynomial $P_n$.
+    checked: "script: computed Q_n symbolically for n ≤ 9; all equal x·Q_{n-1} − Q_{n-2}"
+    status: ready
+
+  - id: A3
+    topic: "Integrals: ratios of powers grow without bound"
+    areas: [analysis]
+    difficulty: 2
+    hints:
+      - "Write everything in terms of $r=f/g$. The equal integrals say $\\int g\\,(r-1)=0$."
+      - "Subtract that zero from $I_{n+1}-I_n$ and look at the sign of the integrand."
+    solution: |
+      **Key idea:** with $r=f/g$, the difference $I_{n+1}-I_n$ becomes an integral of $g\,(r^{n+1}-1)(r-1)$, which is never negative.
+
+      Let $r=f/g$, a positive continuous function on $[a,b]$. Then $I_n=\int_a^b g\,r^{n+1}$, and the hypothesis $\int f=\int g$ reads $\int_a^b g\,(r-1)=0$.
+
+      **Increasing.** We have
+      $$I_{n+1}-I_n=\int_a^b g\,r^{n+1}(r-1)=\int_a^b g\,(r^{n+1}-1)(r-1),$$
+      where we subtracted $\int g\,(r-1)=0$. For a positive number $r$, the factors $r^{n+1}-1$ and $r-1$ have the same sign, so the integrand is $\ge0$. Since $f\ne g$, $r\ne1$ at some point, and by continuity on a whole interval, where the integrand is strictly positive. Hence $I_{n+1}>I_n$.
+
+      **Unbounded.** Since $\int g(r-1)=0$ and $r-1$ is not identically zero, $r-1$ must be positive somewhere. By continuity there are $\delta>0$ and an interval $[c,d]$ with $r\ge1+\delta$ on it. Let $m=\min g>0$. Then
+      $$I_n\ \ge\ \int_c^d g\,r^{n+1}\ \ge\ m\,(d-c)\,(1+\delta)^{n+1}\ \longrightarrow\ \infty .$$
+    checked: "proof only; no numeric answer"
+    status: ready
+
+  - id: A4
+    topic: "Combinatorics: splitting a class into equal-average halves"
+    areas: [combinatorics]
+    difficulty: 3
+    hints:
+      - "First check that half the total score is an integer."
+      - "Start with the $N$ lowest scores and raise the group's total one point at a time by swapping."
+    solution: |
+      **Key idea:** start from the weakest half and raise its total by exactly one point per swap; because every score from $0$ to $10$ occurs, such a swap is always available until the target is reached.
+
+      The total is $T=7.4\cdot2N=\frac{74N}{5}$. It is an integer and $\gcd(74,5)=1$, so $5\mid N$ and the target $T/2=\frac{37N}{5}$ is an integer. A group of $N$ students with sum $T/2$ has average $7.4$, and so does the other group. So we need a group of $N$ students with sum exactly $T/2$.
+
+      Start with a group $X$ made of $N$ students with the lowest scores. Its sum is at most $T/2$.
+
+      **Claim.** If $X$ has $N$ students and sum $<T/2$, then some $x\in X$ and some $y\notin X$ have $\operatorname{score}(y)=\operatorname{score}(x)+1$.
+
+      Suppose not. Let $v$ be the lowest score in $X$. Then no student outside $X$ scores $v+1$. So every student scoring $v+1$ is in $X$, and there is at least one, since every score occurs (when $v<10$). Applying the same reasoning to $v+1$, all students scoring $v+2$ are in $X$, and so on up to $10$. So every student outside $X$ scores at most $v$, and every student in $X$ scores at least $v$. Both groups have $N$ students, so the sum of $X$ is at least the sum of the rest, i.e. at least $T/2$. That is a contradiction.
+
+      So while the sum is below $T/2$, swapping such $x$ and $y$ keeps the group size at $N$ and raises the sum by exactly $1$. Repeating, the sum reaches $T/2$ exactly.
+    checked: "proof only; no numeric answer"
+    status: ready
+
+  - id: A5
+    topic: "Probability: a card game and cycles of permutations"
+    areas: [probability, combinatorics]
+    difficulty: 4
+    hints:
+      - "Find the generating function of the number of draws. It factors as a product of $(x+m-1)/m$."
+      - "Use cube roots of unity to pick out draw counts in each residue class mod 3, and follow the angle of $\\prod(\\omega+m-1)$."
+    solution: |
+      **Key idea:** the number of draws has generating function $\prod_{m=1}^n\frac{x+m-1}{m}$. Each player's chance is controlled by the angle of this product at a cube root of unity, and that angle grows slowly without bound.
+
+      **Generating function.** Let $K$ be the number of draws with $n$ cards, and $E_n(x)=\mathbb E[x^K]$, with $E_0=1$. The first card is uniform on $1,\dots,n$; if it is $j$, the game goes on with the deck $1,\dots,j-1$ (and ends if $j=1$). So
+      $$E_n(x)=\frac{x}{n}\sum_{j=1}^{n}E_{j-1}(x).$$
+      Subtracting the same relation for $n-1$ gives $nE_n-(n-1)E_{n-1}=xE_{n-1}$, that is,
+      $$E_n(x)=E_{n-1}(x)\,\frac{x+n-1}{n}=\prod_{m=1}^{n}\frac{x+m-1}{m}.$$
+
+      **Who wins.** A wins when $K\equiv1$, B when $K\equiv2$, and C when $K\equiv0 \pmod 3$. Let $\omega=e^{2\pi i/3}$. Filtering with roots of unity, and using $E_n(1)=1$ and $E_n(\bar\omega)=\overline{E_n(\omega)}$,
+      $$P(K\equiv r)=\tfrac13\sum_{j=0}^{2}\omega^{-jr}E_n(\omega^j)=\tfrac13+\tfrac23\operatorname{Re}\big(\omega^{-r}E_n(\omega)\big).$$
+      Write $E_n(\omega)=R_ne^{i\theta_n}$ with $R_n>0$ (no factor vanishes). The three chances are
+      $$\tfrac13+\tfrac23R_n\cos\big(\theta_n-\tfrac{2\pi r}{3}\big),\qquad r=1\ (\text{A}),\ r=2\ (\text{B}),\ r=0\ (\text{C}).$$
+      So the leader is the player whose direction $\frac{2\pi r}{3}$ is closest to $\theta_n$.
+
+      **The angle wanders around.** $\theta_n$ is the sum of the arguments of $\omega+m-1$ for $m=1,\dots,n$ (taken mod $2\pi$). For $m\ge2$, $\omega+m-1=(m-\tfrac32)+\tfrac{\sqrt3}{2}i$ has argument in $(0,\pi)$, roughly $\frac{\sqrt3}{2m}$ for large $m$. These steps are positive, tend to $0$, and have a divergent sum (like the harmonic series). So $\theta_n$ increases without bound, in smaller and smaller steps. It therefore passes within any small distance of $0$, $\frac{2\pi}3$ and $\frac{4\pi}{3}$ (mod $2\pi$) infinitely often. Whenever $\theta_n$ is within $\frac\pi3$ of a player's direction, that player has the strictly highest chance. Hence each of A, B, C leads for arbitrarily large $n$.
+    viz: putnam-2017-a5
+    checked: "script: exact probabilities from the product formula match a simulation (n = 6); the leader changes A→B→C→A as n grows"
+    status: ready
+
+  - id: A6
+    topic: "Coloring: icosahedron edges, counting with arithmetic mod 3"
+    areas: [combinatorics, linear-algebra]
+    difficulty: 4
+    answer: "$2^{20}\\cdot3^{10}=61{,}917{,}364{,}224$"
+    hints:
+      - "Call the colors $0,1,2$ in $\\mathbb Z/3$. When is the sum of three colors divisible by $3$?"
+      - "The condition becomes \"a linear map takes a nonzero value on every face\". Show the map from edges to faces is onto."
+    solution: |
+      **Key idea:** with colors in $\mathbb Z/3$, a face is good exactly when the sum of its three edge colors is nonzero. So we count solutions of a linear system over $\mathbb F_3$.
+
+      **Translating the condition.** Name the colors $0,1,2$. Three colors $a,b,c$ have $a+b+c\equiv0\pmod3$ exactly when they are all equal ($3a\equiv0$) or all different ($0+1+2=3$). If exactly two are equal, say $a,a,b$ with $b\ne a$, then $2a+b\equiv0$ would force $b\equiv a$. So a face is good exactly when its color sum is nonzero mod $3$.
+
+      **A linear map.** Let $L:\mathbb F_3^{30}\to\mathbb F_3^{20}$ send an edge coloring to the list of the $20$ face sums. We want the number of colorings $c$ with every coordinate of $L(c)$ nonzero.
+
+      **$L$ is onto.** If not, some nonzero vector $w\in\mathbb F_3^{20}$ (a weight on faces) is orthogonal to the image. That means: for each edge, the weights of its two faces add to $0$, i.e. $w_F=-w_{F'}$ for adjacent faces. Around any vertex of the icosahedron, five faces form a cycle of adjacent faces. Going once around, $w_F=(-1)^5w_F=-w_F$, so $2w_F=0$ and $w_F=0$ in $\mathbb F_3$. Every face touches a vertex, so $w=0$. This contradiction shows $L$ has rank $20$.
+
+      **Counting.** Since $L$ is onto, every target vector has exactly $3^{30-20}=3^{10}$ preimages. The targets with all $20$ coordinates nonzero number $2^{20}$. So the count is
+      $$2^{20}\cdot3^{10}=61{,}917{,}364{,}224 .$$
+    checked: "script: the face-edge matrix has rank 20 mod 3; the same method on a tetrahedron predicts 144, which brute force confirms"
+    status: ready
+
+  - id: B1
+    topic: "Geometry: lines, homotheties and parallelism"
+    areas: [geometry]
+    difficulty: 1
+    hints:
+      - "The condition says that a scaled copy of $L_1$, centered at $P$, meets $L_2$."
+      - "For the converse, try the easiest scale factor."
+    solution: |
+      **Key idea:** the points $A_2$ with $\overrightarrow{PA_2}=\lambda\overrightarrow{PA_1}$, $A_1\in L_1$, form the image of $L_1$ under a scaling about $P$, which is a line parallel to $L_1$.
+
+      For fixed $\lambda\ne0$ and $P$, let $h$ be the scaling with center $P$ and ratio $\lambda$. Then $A_2=h(A_1)$. So suitable points exist exactly when the line $h(L_1)$ meets $L_2$. A scaling sends a line to a parallel line (or the same line).
+
+      **If $L_1$ and $L_2$ intersect.** They are not parallel. Then $h(L_1)$, being parallel to $L_1$, is not parallel to $L_2$, so it meets $L_2$. The points exist for every $\lambda\ne0$ and every $P$.
+
+      **If they do not intersect.** They are distinct and parallel. Take $\lambda=1$ and any $P$ off both lines. Then $h$ is the identity, $h(L_1)=L_1$ does not meet $L_2$, and the condition fails.
+
+      So the condition holds for all $\lambda$ and $P$ exactly when the lines intersect.
+    checked: "proof only; no numeric answer"
+    status: ready
+
+  - id: B2
+    topic: "Number theory: sums of consecutive integers and odd divisors"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$a=16$"
+    hints:
+      - "Write $2N=k(2a+k-1)$. The two factors have opposite parity."
+      - "Representations with $k>1$ match the odd divisors of $N$ other than $1$."
+    solution: |
+      **Key idea:** representations of $N$ as sums of consecutive positive integers correspond to odd divisors of $N$. Having only one nontrivial representation forces $N=2^e\cdot2017$.
+
+      **The correspondence.** $N=a+(a+1)+\dots+(a+k-1)$ with $a\ge1$ means $2N=k\,(2a+k-1)$. Here $k<2a+k-1$, and the two factors have opposite parity. Conversely, write $2N=uv$ with $u<v$ of opposite parity. Then $k=u$, $a=\frac{v-u+1}{2}$ gives a representation. Such factorizations match the odd divisors $d$ of $N$: put the odd part $d$ and the even part $2N/d$ in increasing order. The divisor $d=1$ gives $k=1$. So the number of representations with $k>1$ equals the number of odd divisors of $N$ minus one.
+
+      **The condition.** Only $k=2017$ works, so $N$ has exactly two odd divisors, $1$ and an odd prime $p$. So $N=2^e p$. That prime gives $k=\min(p,\,2^{e+1})$, which must equal $2017$. A power of $2$ is never $2017$, so $p=2017$ and $2^{e+1}>2017$, i.e. $e\ge10$.
+
+      **The smallest $a$.** With $k=2017$, $N=2017a+\frac{2017\cdot2016}{2}=2017(a+1008)$. So $a+1008=2^e$ with $e\ge10$. The smallest choice is $e=10$, giving $a=1024-1008=16$.
+    checked: "script: searched a = 1, 2, …; a = 16 is the first whose sum has 2017 as its only k > 1"
+    status: ready
+
+  - id: B3
+    topic: "Power series with 0/1 coefficients: an irrationality proof"
+    areas: [number-theory, analysis]
+    difficulty: 3
+    hints:
+      - "If $f(1/2)$ were rational, its binary digits $c_i$ would repeat from some point on."
+      - "Then $f(x)(1-x^p)$ is a polynomial. Plug in $x=2/3$, clear denominators, and compare parities."
+    solution: |
+      **Key idea:** a rational value at $\tfrac12$ makes the coefficients eventually periodic, so $f$ is a polynomial over $1-x^p$. A parity check at $x=\tfrac23$ then fails.
+
+      Suppose $f(\tfrac12)=\sum c_i2^{-i}$ is rational. This sum is a binary expansion. Every binary expansion of a rational number repeats from some point (dyadic rationals end in all $0$s or all $1$s). So there are $m\ge0$ and $p\ge1$ with $c_{i+p}=c_i$ for all $i\ge m$.
+
+      Then the coefficients of $(1-x^p)f(x)$ are $c_i-c_{i-p}$, which vanish for $i\ge m+p$. So
+      $$(1-x^p)f(x)=A(x)=\sum_{i=0}^{D-1}a_ix^i,\qquad a_i\in\mathbb Z,\ D=m+p\ge p .$$
+      At $x=\frac23$ (inside the radius of convergence) this gives $A(\frac23)=\frac32\big(1-(\frac23)^p\big)$. Multiply by $2\cdot3^{D-1}$:
+      $$2\sum_{i=0}^{D-1}a_i\,2^i\,3^{D-1-i}=3^{D}-2^p\,3^{D-p}.$$
+      All exponents are nonnegative because $D\ge p$. The left side is even. On the right, $3^D$ is odd and $2^p3^{D-p}$ is even, so the right side is odd. This contradiction shows $f(\frac12)$ is irrational.
+    checked: "proof only; no numeric answer"
+    status: ready
+
+  - id: B4
+    topic: "Series: logarithms with a period-four pattern"
+    areas: [analysis]
+    difficulty: 3
+    answer: "$(\\ln 2)^2$"
+    hints:
+      - "Write the coefficient pattern $3,-1,-1,-1$ (on $n=2,3,4,5$, then repeating) using $(-1)^n$ plus a correction on even $n$."
+      - "The even terms bring in $\\ln(2m)=\\ln2+\\ln m$."
+    solution: |
+      **Key idea:** split the coefficient pattern into an alternating part and a part on even indices; most of it cancels and $\ln 2\cdot\ln2$ is left over.
+
+      The series is $\sum_{n\ge2}c_n\frac{\ln n}{n}$, where $c_n=3$ if $n\equiv2\pmod4$ and $c_n=-1$ otherwise. Check that
+      $$c_n=(-1)^n-2\,[n\text{ even}]\,(-1)^{n/2}.$$
+      For $n$ odd this gives $-1$. For $n=2m$ it gives $1-2(-1)^m$: that is $3$ for odd $m$ ($n\equiv2$) and $-1$ for even $m$ ($n\equiv0$).
+
+      Take partial sums up to $n=4K+1$, which ends a block of the original series. Then
+      $$\sum_{n=2}^{4K+1}c_n\frac{\ln n}{n}=\sum_{n=2}^{4K+1}(-1)^n\frac{\ln n}{n}-\sum_{m=1}^{2K}(-1)^m\frac{\ln(2m)}{m},$$
+      and the last sum equals $\ln2\sum_{m=1}^{2K}\frac{(-1)^m}{m}+\sum_{m=1}^{2K}(-1)^m\frac{\ln m}{m}$.
+
+      Each series $\sum(-1)^n\frac{\ln n}{n}$ and $\sum\frac{(-1)^m}{m}$ converges (alternating, with terms decreasing to $0$ from $n=3$ on). Call the first $L$. Letting $K\to\infty$,
+      $$L-\big(\ln2\cdot(-\ln2)+L\big)=(\ln2)^2,$$
+      using $\sum_{m\ge1}\frac{(-1)^m}{m}=-\ln2$. The partial sums inside a block differ from these by terms tending to $0$, so the whole series converges to $(\ln2)^2$.
+    checked: "script: numerical sum over 2·10^6 blocks gives 0.480450 = (ln 2)^2"
+    status: ready
+
+  - id: B5
+    topic: "Geometry: lines halving area and perimeter of triangles"
+    areas: [geometry]
+    difficulty: 4
+    answer: "$(a,b,c)=(9,8,7)$"
+    status: coming
+
+  - id: B6
+    topic: "Counting: distinct tuples with a weighted sum mod a prime"
+    areas: [combinatorics, number-theory]
+    difficulty: 5
+    answer: "$\\dfrac{2016!}{1953!}-63!\\cdot2016$"
+    hints:
+      - "Think of the entries as distinct residues mod $p=2017$, and count with characters: average $\\omega^{t\\cdot(\\text{sum})}$ over $t$."
+      - "Sums over distinct tuples can be expanded over set partitions (inclusion-exclusion). For $t\\ne0$, only one partition survives."
+    solution: |
+      **Key idea:** count with roots of unity. To handle the distinctness, expand over set partitions. The coefficients $1,1,2,\dots,63$ add up to exactly $2017$, so only the one-block partition survives.
+
+      Let $p=2017$. The numbers $1,\dots,2017$ form a full set of residues mod $p$, so we count injective maps $x:\{0,\dots,63\}\to\mathbb Z_p$ with $\sum c_ix_i\equiv0$, where $c=(1,1,2,3,\dots,63)$. Note $\sum c_i=1+\frac{63\cdot64}{2}=2017$.
+
+      **Roots of unity.** With $\zeta=e^{2\pi i/p}$, the count is
+      $$N=\frac1p\sum_{t\in\mathbb Z_p}\ \sum_{x\ \text{injective}}\ \zeta^{\,t\sum_ic_ix_i}.$$
+      The $t=0$ term counts all injective maps: $\frac{p!}{(p-64)!}$.
+
+      **Sums over injective maps.** For any functions $g_i$, inclusion-exclusion over which coordinates coincide gives
+      $$\sum_{x\ \text{injective}}\prod_i g_i(x_i)=\sum_{\pi}\mu(\pi)\prod_{B\in\pi}\Big(\sum_{y\in\mathbb Z_p}\prod_{i\in B}g_i(y)\Big).$$
+      Here $\pi$ runs over set partitions of the $64$ indices, each block $B$ means "all coordinates in $B$ are equal", and $\mu(\pi)=\prod_{B}(-1)^{|B|-1}(|B|-1)!$. This is Möbius inversion on the lattice of set partitions.
+
+      Take $g_i(y)=\zeta^{tc_iy}$ with $t\ne0$. The inner sum is $\sum_y\zeta^{t(\sum_{i\in B}c_i)y}$, which is $p$ if $\sum_{i\in B}c_i\equiv0\pmod p$ and $0$ otherwise. Every $c_i$ lies between $1$ and $63$, and all of them add to $2017$. So a block sum is divisible by $2017$ only if the block is everything. Only the one-block partition survives, with $\mu=(-1)^{63}\,63!=-63!$. So each $t\ne0$ contributes $-63!\cdot p$.
+
+      **Total.**
+      $$N=\frac1p\Big(\frac{p!}{(p-64)!}-(p-1)\cdot63!\cdot p\Big)=\frac{2016!}{1953!}-2016\cdot63!.$$
+    checked: "script: the same formula, P(p,k+1)/p + (p−1)·(−1)^k·k!, matches brute force for p = 7, k = 3 (84) and p = 11, k = 4 (5280)"
+    status: ready

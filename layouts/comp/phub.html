@@ -1,0 +1,39 @@
+{{ define "main" }}
+{{- /* /physics/exam-practice/: the Physics Ladder's hub for exam-style problems. The original challenges are a Physics
+   Ladder course with slug exam-challenge (data/physics/courses.yaml, built separately); the Common Test guide is ours. */ -}}
+{{ partial "comp/head.html" . }}
+{{- $C := site.Data.comp | default dict -}}
+{{- $Y := index $C "common-test" | default dict -}}
+{{- $ny := 0 }}{{ $nr := 0 }}{{ range $k, $y := $Y }}{{ if hasPrefix $k "physics-" }}{{ $ny = add $ny 1 }}{{ range $y.questions }}{{ range .parts }}{{ if eq .status "ready" }}{{ $nr = add $nr 1 }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end -}}
+{{- $pc := index (where (site.Data.physics.courses | default slice) "slug" "exam-challenge") 0 -}}
+{{- $nt := 0 }}{{ with $pc }}{{ with index (site.Data.physics.topics | default dict) .key }}{{ $nt = len (.topics | default slice) }}{{ end }}{{ end -}}
+<article class="cp cp-hub cp-phys">
+  <nav class="cp-crumbs" aria-label="Breadcrumbs"><a href="{{ "physics/" | relURL }}">Physics</a> <span aria-hidden="true">›</span> <span>Exam practice</span></nav>
+  <header class="cp-head">
+    <p class="cp-eyebrow">Physics Ladder · For fun, and hard</p>
+    <h1>{{ .Title }}</h1>
+    <p class="cp-intro">Exam problems in physics come with a diagram, a few numbers and a chain of small questions, each one leading to the next. They test whether you can pick the right law and use it cleanly. Here you can practice on our own problems in that style, and read our step-by-step solutions to a famous national exam.</p>
+  </header>
+  <div class="cp-grid2">
+    <section class="cp-panel" aria-labelledby="cp-h-och">
+      <h2 id="cp-h-och"><span aria-hidden="true">🏆</span> Original challenges</h2>
+      <p>Our own exam-style problems, with diagrams, answers that are checked as you go, hints and full solutions with animations. They work like the other Physics Ladder topics, so your progress and reviews carry over.</p>
+      {{- with $pc }}
+      <p class="cp-small">{{ if $nt }}{{ $nt }} topics. {{ end }}Part of the Physics Ladder.</p>
+      <p><a class="cp-btn pri" href="{{ "physics/exam-challenge/" | relURL }}">Try the challenges</a></p>
+      {{- else }}
+      <p class="cp-soon">Coming soon</p>
+      {{- end }}
+    </section>
+    <section class="cp-panel" aria-labelledby="cp-h-ct">
+      <h2 id="cp-h-ct"><span aria-hidden="true">🗾</span> Common Test solutions guide</h2>
+      <p>Japan's University Entrance Common Test (大学入学共通テスト) is the national exam for university entrance, taken each January. Its physics paper is known for clear diagrams and careful step-by-step questions, answered on a multiple-choice mark sheet.</p>
+      <p class="cp-small">{{ if $nr }}{{ $nr }} solutions ready across {{ $ny }} {{ cond (eq $ny 1) "paper" "papers" }}. {{ end }}The problems are © the National Center for University Entrance Examinations; we link to them and write our own solutions.</p>
+      <p><a class="cp-btn pri" href="{{ "physics/exam-practice/common-test/" | relURL }}">Open the guide</a></p>
+    </section>
+  </div>
+  <aside class="cp-note">
+    <p><b>Need the basics first?</b> The <a href="{{ "physics/" | relURL }}">Physics Ladder</a> builds mechanics, waves, heat, electricity and modern physics from first principles, with the math you need from the Math Ladder.</p>
+  </aside>
+</article>
+{{ end }}

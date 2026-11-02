@@ -1,0 +1,46 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-rook-loops
+title: Rook walks that come home
+tier: 2
+order: 30
+areas:
+- linear-algebra
+- combinatorics
+problem: |
+  On an empty $8\times8$ chessboard, a **rook walk** of length $k$ is a sequence of $k$ rook moves (each move goes any
+  nonzero number of squares along a row or a column). How many rook walks of length $4$ start and end at the corner
+  square a1? (They may visit a1 along the way.)
+check:
+  type: number
+  answer: '896'
+answer: '$896$'
+hints:
+- 'Let $A$ be the $64\times64$ matrix with $A_{uv}=1$ when a rook can move from $u$ to $v$. The answer is an entry of $A^4$.'
+- 'Every square looks the same to a rook (swap rows and columns around), so all diagonal entries of $A^4$ are equal. Find the trace instead.'
+- 'A rook move changes the row or the column. So $A=B\otimes I+I\otimes B$, where $B$ is the $8\times8$ all-ones matrix minus $I$.'
+solution: |
+  Let $A$ be the adjacency matrix of rook moves on the 64 squares. The number of walks of length $4$ from $u$ to $v$ is
+  $(A^4)_{uv}$.
+
+  **All squares look alike.** Any permutation of the rows and any permutation of the columns maps rook moves to rook
+  moves, and these can send any square to any other. So every diagonal entry of $A^4$ is the same, and the answer is
+  $\operatorname{tr}(A^4)/64$.
+
+  **Eigenvalues.** A move either keeps the column and changes the row, or the reverse. With $B=J-I$ (the $8\times8$
+  all-ones matrix minus the identity), $A=B\otimes I+I\otimes B$. The eigenvalues of $B$ are $7$ (once) and $-1$ (seven
+  times), and the eigenvalues of $A$ are all sums $\beta+\beta'$:
+
+  * $14$, once;
+  * $7+(-1)=6$, $2\cdot7=14$ times;
+  * $-2$, $49$ times.
+
+  So
+  $$\operatorname{tr}(A^4)=14^4+14\cdot6^4+49\cdot2^4=38416+18144+784=57344,$$
+  and the answer is $57344/64=896$.
+
+  **A check for length 3.** The same method gives $\operatorname{tr}(A^3)/64=(2744+3024-392)/64=84$. Directly: a
+  closed walk of length $3$ is a triangle through a1, and a triangle of rook moves must lie in one row or one column. There
+  are $\binom72$ pairs of other squares in the row and the same in the column, $42$ triangles, each walked in $2$
+  directions: $84$.
+checked: 'script: brute-force walk counting on the 64-square board'
+status: ready

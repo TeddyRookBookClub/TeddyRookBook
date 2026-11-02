@@ -1,0 +1,38 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-distance-matrix
+title: How far apart are i and j?
+tier: 3
+order: 100
+areas:
+- linear-algebra
+problem: |
+  Let $D$ be the $10\times10$ matrix with entries $D_{ij}=|i-j|$ for $1\le i,j\le10$. Find $\det D$.
+check:
+  type: number
+  answer: '-2304'
+answer: '$-9\cdot2^8=-2304$'
+hints:
+- 'Subtract each row from the row above it. The differences $|i-j|-|i+1-j|$ are all $\pm1$.'
+- Then subtract neighboring new rows again. Most of them become a single nonzero entry.
+- 'You should end up with $2^{n-2}$ times a $2\times2$ determinant, up to sign.'
+solution: |
+  Work with general $n$; rows are $\rho_1,\dots,\rho_n$ with $\rho_i=(|i-1|,\dots,|i-n|)$.
+
+  **Step 1.** For $i=1,\dots,n-1$, replace $\rho_i$ by $\sigma_i=\rho_i-\rho_{i+1}$ (using the original rows; this does not
+  change the determinant). The entries are $|i-j|-|i+1-j|$, which is $-1$ for $j\le i$ and $+1$ for $j>i$:
+  $$\sigma_i=(\underbrace{-1,\dots,-1}_{i},+1,\dots,+1).$$
+
+  **Step 2.** For $i=2,\dots,n-1$, replace $\sigma_i$ by $\sigma_i-\sigma_{i-1}$ (again using the original $\sigma$'s). That
+  leaves $-2$ in position $i$ and zeros elsewhere. The rows are now
+  $$\sigma_1=(-1,1,\dots,1),\qquad -2e_2,\ \dots,\ -2e_{n-1},\qquad \rho_n=(n-1,n-2,\dots,1,0).$$
+
+  **Step 3.** Use the rows $-2e_i$ to clear columns $2,\dots,n-1$ from the first and last rows. What is left in columns $1$
+  and $n$ is $\begin{pmatrix}-1&1\\n-1&0\end{pmatrix}$, with determinant $-(n-1)$. So
+  $$\det D=(-2)^{n-2}\cdot\big(-(n-1)\big)=(-1)^{n-1}(n-1)\,2^{n-2}.$$
+
+  For $n=10$: $-9\cdot256=-2304$.
+
+  **Known result:** Graham and Pollak (1971) showed that the distance matrix of **any** tree on $n$ vertices has this same
+  determinant. Our matrix is the distance matrix of a path.
+checked: 'script: exact determinant with fractions; formula checked for n = 2..12'
+status: ready

@@ -1,0 +1,29 @@
+{{- /* One Putnam problem card. Argument: (dict "p" page "x" problem "year" year "pdf" problem-PDF url). */ -}}
+{{- $p := .p }}{{ $x := .x }}{{ $A := partial "comp/areas.html" "x" -}}
+{{- $uid := printf "p%v-%s" .year ($x.id | lower) -}}
+{{- $ready := eq ($x.status | default "coming") "ready" -}}
+<article class="cp-card{{ if not $ready }} cp-coming{{ end }}" id="{{ $x.id | lower }}" aria-labelledby="{{ $uid }}-h" data-areas="{{ delimit ($x.areas | default slice) " " }}" data-diff="{{ $x.difficulty }}">
+  <header class="cp-card-h">
+    <h2 id="{{ $uid }}-h"><span class="cp-id">{{ $x.id }}</span> <span class="cp-topic">{{ partial "comp/md.html" (dict "s" $x.topic "inline" true) }}</span></h2>
+    <p class="cp-tags">{{ range $x.areas }}<span class="cp-tag">{{ index $A . | default . }}</span>{{ end }}{{ with $x.difficulty }}<span class="cp-diff" title="Difficulty {{ . }} of 5, our estimate"><span class="cp-sr">Difficulty </span>{{ range seq 5 }}<i{{ if le . $x.difficulty }} class="on"{{ end }} aria-hidden="true"></i>{{ end }}<span class="cp-sr"> {{ . }} of 5</span></span>{{ end }}</p>
+  </header>
+  <div class="cp-acts">
+    <a class="cp-btn" href="{{ .pdf }}" rel="noopener">Open the problem (PDF)<span class="cp-sr">, {{ .year }} {{ $x.id }}, on the archive site</span></a>
+    {{- if $ready }}
+    {{- with $x.hints }}<button type="button" class="cp-btn" data-hint="{{ $uid }}-hints" aria-controls="{{ $uid }}-hints" aria-expanded="false">Show hints</button>{{ end }}
+    <button type="button" class="cp-btn pri" data-reveal="{{ $uid }}-sol" aria-controls="{{ $uid }}-sol" aria-expanded="false">Show our solution</button>
+    {{- else }}<span class="cp-soon">Solution coming</span>{{ end }}
+  </div>
+  {{- if $ready }}
+  {{- with $x.hints }}
+  <ol class="cp-hints" id="{{ $uid }}-hints" hidden>{{ range $i, $h := . }}<li hidden><b>Hint {{ add $i 1 }}.</b> {{ partial "comp/md.html" (dict "s" $h "inline" true) }}</li>{{ end }}</ol>
+  {{- end }}
+  <section class="cp-sol" id="{{ $uid }}-sol" hidden aria-label="Our solution to {{ $x.id }}">
+    <p class="cp-sol-lbl">Our solution (not official)</p>
+    {{ with $x.answer }}<p class="cp-ans"><b>Answer:</b> {{ partial "comp/md.html" (dict "s" . "inline" true) }}</p>{{ end }}
+    {{ partial "comp/viz.html" $x.viz }}
+    <div class="cp-md">{{ partial "comp/md.html" (dict "s" $x.solution "p" $p) }}</div>
+    {{ with $x.checked }}<p class="cp-small">How we checked it: {{ . }}</p>{{ end }}
+  </section>
+  {{- end }}
+</article>

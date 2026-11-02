@@ -1,0 +1,35 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-pascal-inverse
+title: The trace of an inverse Pascal matrix
+tier: 4
+order: 100
+areas:
+- linear-algebra
+- combinatorics
+problem: |
+  Let $P$ be the $6\times6$ matrix with entries $P_{ij}=\binom{i+j}{i}$ for $0\le i,j\le5$ (so its first row and column are all
+  ones). Find the trace of $P^{-1}$.
+check:
+  type: number
+  answer: '351'
+answer: '$\sum_{m=0}^{5}\binom{2m}{m}=351$'
+hints:
+- 'Show that $P=LL^{T}$ where $L_{ik}=\binom ik$ is the lower-triangular Pascal matrix. Vandermonde''s identity is the key.'
+- 'The inverse of $L$ has entries $(-1)^{i-k}\binom ik$.'
+- 'For any matrix $X$, $\operatorname{tr}(X^{T}X)$ is the sum of the squares of its entries.'
+solution: |
+  **Factor.** Let $L_{ik}=\binom ik$ for $0\le i,k\le5$, a lower-triangular matrix with ones on the diagonal. Then
+  $$(LL^{T})_{ij}=\sum_k\binom ik\binom jk=\sum_k\binom ik\binom j{j-k}=\binom{i+j}{j}$$
+  by Vandermonde's identity (choose $j$ people from $i$ women and $j$ men, sorted by how many women). So $P=LL^{T}$.
+
+  **Invert $L$.** Let $M_{ik}=(-1)^{i-k}\binom ik$. Then
+  $$(LM)_{ik}=\sum_j\binom ij\binom jk(-1)^{j-k}=\binom ik\sum_{j}\binom{i-k}{j-k}(-1)^{j-k}=\binom ik\,(1-1)^{i-k},$$
+  which is $1$ if $i=k$ and $0$ otherwise. So $L^{-1}=M$.
+
+  **Trace.** $P^{-1}=(L^{T})^{-1}L^{-1}=M^{T}M$, and $\operatorname{tr}(M^{T}M)$ is the sum of the squares of the entries of $M$:
+  $$\operatorname{tr}P^{-1}=\sum_{i=0}^{5}\sum_{k=0}^{i}\binom ik^2=\sum_{i=0}^5\binom{2i}{i}=1+2+6+20+70+252=351,$$
+  using $\sum_k\binom ik^2=\binom{2i}i$ (Vandermonde again).
+
+  Since $\det P=(\det L)^2=1$, the inverse has integer entries; the trace adds up central binomial coefficients.
+checked: 'script: exact inverse with fractions'
+status: ready

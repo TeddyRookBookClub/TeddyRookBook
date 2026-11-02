@@ -1,0 +1,34 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-squares-over-threes
+title: Squares over powers of three
+tier: 1
+order: 60
+areas:
+- analysis
+problem: |
+  Find the exact value of
+  $$\sum_{n=1}^{\infty}\frac{n^2}{3^n}=\frac13+\frac49+\frac9{27}+\frac{16}{81}+\cdots$$
+check:
+  type: number
+  answer: 3/2
+answer: '$\tfrac32$'
+hints:
+- 'Do the easier sums first: $\sum 1/3^n$ and $\sum n/3^n$.'
+- 'If $S=\sum a_n/3^n$, then $S-\tfrac13S=\sum (a_n-a_{n-1})/3^n$. Shifting turns $n^2$ into something simpler.'
+- '$n^2-(n-1)^2=2n-1$.'
+solution: |
+  Write $S_0=\sum_{n\ge1}3^{-n}=\tfrac12$, $S_1=\sum n\,3^{-n}$ and $S_2=\sum n^2\,3^{-n}$. All three series converge,
+  since the terms shrink faster than $(\tfrac12)^n$ eventually.
+
+  **The shift trick.** For a sequence with $a_0=0$,
+  $$\Big(1-\tfrac13\Big)\sum_{n\ge1}\frac{a_n}{3^n}=\sum_{n\ge1}\frac{a_n}{3^n}-\sum_{n\ge1}\frac{a_{n-1}}{3^{n}}=\sum_{n\ge1}\frac{a_n-a_{n-1}}{3^n}.$$
+
+  With $a_n=n$, the differences are all $1$: $\tfrac23S_1=S_0=\tfrac12$, so $S_1=\tfrac34$.
+
+  With $a_n=n^2$, the differences are $2n-1$: $\tfrac23S_2=2S_1-S_0=\tfrac32-\tfrac12=1$, so $S_2=\tfrac32$.
+
+  The picture shows the partial sums climbing toward $1.5$. The same trick works for any polynomial on top:
+  each shift lowers the degree by one.
+viz: cm-squares-over-threes
+checked: 'script: exact partial sums with fractions, 200 terms'
+status: ready

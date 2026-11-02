@@ -1,0 +1,47 @@
+{{ define "main" }}
+{{- /* One Common Test physics paper (data/comp/common-test/physics-<year>[-makeup].yaml; page made by
+   content/physics/exam-practice/common-test/_content.gotmpl). */ -}}
+{{ partial "comp/head.html" . }}
+{{- $Y := (index (site.Data.comp | default dict) "common-test") | default dict -}}
+{{- $y := index $Y .Params.file -}}
+{{- $mk := eq ($y.exam | default "main") "makeup" -}}
+{{- $n := 0 }}{{ $t := 0 }}{{ range $y.questions }}{{ range .parts }}{{ $t = add $t 1 }}{{ if eq .status "ready" }}{{ $n = add $n 1 }}{{ end }}{{ end }}{{ end -}}
+<article class="cp cp-year cp-phys">
+  <nav class="cp-crumbs" aria-label="Breadcrumbs"><a href="{{ "physics/" | relURL }}">Physics</a> <span aria-hidden="true">›</span> <a href="{{ "physics/exam-practice/" | relURL }}">Exam practice</a> <span aria-hidden="true">›</span> <a href="{{ "physics/exam-practice/common-test/" | relURL }}">Common Test</a> <span aria-hidden="true">›</span> <span>{{ $y.year }}{{ if $mk }} makeup{{ end }}</span></nav>
+  <header class="cp-head">
+    <h1>{{ .Title }}</h1>
+    <p class="cp-meta">{{ if $mk }}Makeup exam (追試験){{ else }}Main exam (本試験){{ end }} · {{ $n }} of {{ $t }} solutions ready</p>
+  </header>
+  {{ partial "comp/ct-about.html" (dict "links" $y.links) }}
+  {{ with $y.note }}<div class="cp-md cp-ynote">{{ partial "comp/md.html" (dict "s" . "p" $) }}</div>{{ end }}
+  {{- range $y.questions }}{{ $q := . }}
+  <section class="cp-q" id="q{{ .id }}" aria-labelledby="q{{ .id }}-h">
+    <h2 id="q{{ .id }}-h"><span class="cp-id">Question {{ .id }}</span> <span class="cp-topic">{{ partial "comp/md.html" (dict "s" .topic "inline" true) }}</span></h2>
+    <p class="cp-small">第{{ .id }}問{{ with $y.links.problems }} · <a href="{{ . }}" rel="noopener">Open the problems</a>{{ end }}</p>
+    <div class="cp-cards">
+    {{- range .parts }}{{ $uid := printf "ct-%s" .id }}{{ $ready := eq (.status | default "coming") "ready" }}
+    <article class="cp-card{{ if not $ready }} cp-coming{{ end }}" id="p{{ .id }}" aria-labelledby="{{ $uid }}-h">
+      <header class="cp-card-h"><h3 id="{{ $uid }}-h"><span class="cp-id">{{ .id }}</span> <span class="cp-topic">{{ partial "comp/md.html" (dict "s" .topic "inline" true) }}</span></h3></header>
+      <div class="cp-acts">
+        {{- if $ready }}
+        {{- with .hints }}<button type="button" class="cp-btn" data-hint="{{ $uid }}-hints" aria-controls="{{ $uid }}-hints" aria-expanded="false">Show hints</button>{{ end }}
+        <button type="button" class="cp-btn pri" data-reveal="{{ $uid }}-sol" aria-controls="{{ $uid }}-sol" aria-expanded="false">Show our solution</button>
+        {{- else }}<span class="cp-soon">Solution coming</span>{{ end }}
+      </div>
+      {{- if $ready }}
+      {{- with .hints }}<ol class="cp-hints" id="{{ $uid }}-hints" hidden>{{ range $i, $h := . }}<li hidden><b>Hint {{ add $i 1 }}.</b> {{ partial "comp/md.html" (dict "s" $h "inline" true) }}</li>{{ end }}</ol>{{ end }}
+      <section class="cp-sol" id="{{ $uid }}-sol" hidden aria-label="Our solution to {{ .id }}">
+        <p class="cp-sol-lbl">Our solution (not official)</p>
+        {{ with .answer }}<p class="cp-ans"><b>Answer (official key):</b> {{ . }}</p>{{ end }}
+        {{ partial "comp/viz.html" .viz }}
+        <div class="cp-md">{{ partial "comp/md.html" (dict "s" .solution "p" $) }}</div>
+      </section>
+      {{- end }}
+    </article>
+    {{- end }}
+    </div>
+  </section>
+  {{- end }}
+  <p class="cp-small"><a href="{{ "physics/exam-practice/common-test/" | relURL }}">All papers</a> · <a href="{{ "physics/exam-practice/" | relURL }}">Exam practice</a></p>
+</article>
+{{ end }}

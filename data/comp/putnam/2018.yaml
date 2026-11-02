@@ -1,0 +1,285 @@
+year: 2018
+edition: 79th
+date: "December 1, 2018"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2018.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Number theory: unit fractions and a factoring trick"
+    areas: [number-theory]
+    difficulty: 1
+    answer: "$(673,1358114),\\ (674,340033),\\ (1009,2018)$ and the three reversed pairs"
+    hints:
+      - "Clear denominators and complete the product: the equation becomes $(3a-2018)(3b-2018)=2018^2$."
+      - "Both factors are $\\equiv1\\pmod 3$. Which divisors of $2^2\\cdot1009^2$ are?"
+    solution: |
+      **Key idea:** "Simon's trick" turns the equation into a factorization of $2018^2$, and a congruence mod $3$ picks out the usable divisors.
+
+      Multiply out: $2018(a+b)=3ab$, so $9ab-3\cdot2018a-3\cdot2018b=0$, and
+      $$(3a-2018)(3b-2018)=2018^2=2^2\cdot1009^2 .$$
+      **No negative factors.** If both factors were negative, each would lie in $(-2018,0)$, since $3a-2018>-2018$. Then their product would be less than $2018^2$. So both are positive divisors $d$ and $e=2018^2/d$.
+
+      **Residues.** $3a-2018\equiv-2018\equiv1\pmod3$. Since $1009\equiv1$ and $2\equiv2\pmod3$, a divisor $2^i1009^j$ is $\equiv1$ exactly when $i$ is even. So $d\in\{1,\,4,\,1009,\,4036,\,1009^2,\,4\cdot1009^2\}$, and $e$ is then automatically of the same kind.
+
+      **Solve.** $a=\frac{2018+d}{3}$ and $b=\frac{2018+e}{3}$:
+      - $d=1$, $e=4\cdot1009^2=4072324$: $(a,b)=(673,\,1358114)$;
+      - $d=4$, $e=1009^2=1018081$: $(a,b)=(674,\,340033)$;
+      - $d=1009$, $e=4036$: $(a,b)=(1009,\,2018)$;
+
+      and the other three choices of $d$ give the same pairs reversed.
+    checked: "script: searched every a up to 3·10^6; exactly these six pairs"
+    status: ready
+
+  - id: A2
+    topic: "Linear algebra: the intersecting-subsets matrix"
+    areas: [linear-algebra, combinatorics]
+    difficulty: 3
+    answer: "$1$ if $n=1$, and $-1$ if $n\\ge2$"
+    hints:
+      - "Look instead at the \"disjointness\" matrix over all subsets, including the empty set. It is a Kronecker power of a $2\\times2$ matrix."
+      - "Row operations with the empty set's row relate that matrix to $-M$."
+    solution: |
+      **Key idea:** the disjointness matrix over all $2^n$ subsets is a tensor power of $\begin{pmatrix}1&1\\1&0\end{pmatrix}$. Bordering $M$ with the empty set connects the two determinants.
+
+      Simultaneous reorderings of rows and columns do not change a determinant, so the order of the subsets does not matter.
+
+      **The full disjointness matrix.** Index rows and columns by all subsets of $\{1,\dots,n\}$, and let $D_{ST}=1$ if $S\cap T=\varnothing$, else $0$. Disjointness holds element by element: for each $k$, not both sets contain $k$. So $D=K^{\otimes n}$ with $K=\begin{pmatrix}1&1\\1&0\end{pmatrix}$, indexed by "absent/present". Since $\det K=-1$ and $\det(X\otimes Y)=(\det X)^{b}(\det Y)^{a}$ for an $a\times a$ matrix $X$ and a $b\times b$ matrix $Y$, induction gives
+      $$\det D=(-1)^{\,n2^{n-1}},$$
+      which is $-1$ for $n=1$ and $+1$ for $n\ge2$.
+
+      **Bordering.** Put the empty set first. Its row and column in $D$ are all ones, because the empty set is disjoint from everything. Let $D'$ be the block for nonempty sets. Then $M=J-D'$, where $J$ is all ones. Subtract the first row of $D$ from every other row. The first column becomes $(1,0,\dots,0)^T$, and the lower right block becomes $D'-J=-M$. Expanding along the first column,
+      $$\det D=\det(-M)=(-1)^{2^n-1}\det M=-\det M .$$
+      So $\det M=-\det D$, which is $1$ for $n=1$ and $-1$ for $n\ge2$.
+    checked: "script: exact determinants for n = 1, 2, 3, 4 are 1, −1, −1, −1"
+    status: ready
+
+  - id: A3
+    topic: "Optimization: sums of cubes with zero sum"
+    areas: [algebra, analysis]
+    difficulty: 3
+    answer: "$\\dfrac{480}{49}$"
+    hints:
+      - "Use $\\cos3x=4\\cos^3x-3\\cos x$. You are maximizing $4\\sum c_i^3$ with $\\sum c_i=0$ and $|c_i|\\le1$."
+      - "$t^3$ is convex for $t\\ge0$ and concave for $t\\le0$. Use this to push a maximizer into a simple shape."
+    solution: |
+      **Key idea:** with $c_i=\cos x_i$ the problem is to maximize $\sum c_i^3$ over $[-1,1]^{10}$ with $\sum c_i=0$. Convexity arguments force a maximizer to have $k$ ones and all other values equal.
+
+      Since $\cos3x=4\cos^3x-3\cos x$ and $\sum\cos x_i=0$, we have $\sum\cos3x_i=4\sum c_i^3$. Every list $c_i\in[-1,1]$ with sum $0$ comes from some $x_i$. The set of such lists is compact, so a maximizer of $\Phi=\sum c_i^3$ exists. Take one.
+
+      **(i) At most one value in $(0,1)$.** If $0<s\le r<1$ both occur, replace them by $r+\varepsilon$ and $s-\varepsilon$ (small $\varepsilon>0$). The change is $3\varepsilon(r^2-s^2)+3\varepsilon^2(r+s)>0$, a contradiction.
+
+      **(ii) All values $\le0$ are equal.** On $[-1,0]$, $t^3$ is strictly concave. So replacing two different values $u,v\le0$ by their average strictly increases $\Phi$.
+
+      So a maximizer has $k$ ones, possibly one value $s\in(0,1)$, and the remaining values all equal to some $-w\le0$.
+
+      **Without the middle value:** $k$ ones and $10-k$ copies of $-\frac{k}{10-k}$ (allowed when $k\le5$). Then
+      $$\Phi=k-\frac{k^3}{(10-k)^2}.$$
+      For $k=0,1,2,3,4,5$ this is $0,\ \frac{80}{81},\ \frac{15}{8},\ \frac{120}{49},\ \frac{20}{9},\ 0$. The largest is $\frac{120}{49}$, at $k=3$.
+
+      **With a middle value $s$:** $k$ ones, $s$, and $9-k$ copies of $-\frac{k+s}{9-k}$. As a function of $s$,
+      $$\Phi(s)=k+s^3-\frac{(k+s)^3}{(9-k)^2}.$$
+      At a critical point $s^2=\frac{(k+s)^2}{(9-k)^2}$, i.e. $s=\frac{k+s}{9-k}$. There
+      $$\Phi''=6s-\frac{6(k+s)}{(9-k)^2}=6s\Big(1-\frac1{9-k}\Big)\ge0 ,$$
+      so any interior critical point is a minimum, and $\Phi$ is largest at an end of the allowed range of $s$. At $s=1$ we are back in the first case (with $k+1$ ones). At $s=0$ the configuration is improved by (ii). So nothing beats $\frac{120}{49}$.
+
+      The value is attained by three $c_i=1$ ($x_i=0$) and seven $c_i=-\frac37$ ($x_i=\arccos(-\frac37)$), whose sum is $3-7\cdot\frac37=0$. The maximum of $\sum\cos3x_i$ is $4\cdot\frac{120}{49}=\frac{480}{49}$.
+    viz: putnam-2018-a3
+    checked: "script: 300 random-start constrained optimizations reach 9.7959 = 480/49 and never more"
+    status: ready
+
+  - id: A4
+    topic: "Group theory: Euclid's algorithm on a balanced word"
+    areas: [algebra, number-theory]
+    difficulty: 4
+    hints:
+      - "If $m\\ge n$, every exponent is at least $\\lfloor m/n\\rfloor$. Absorb that many $h$'s into $g$."
+      - "If $m<n$, rewrite the word using the two letters $g$ and $gh$. After inverting and rotating, it has the same shape with smaller parameters."
+    solution: |
+      **Key idea:** run the Euclidean algorithm on $(m,n)$. Each step rewrites the relation as one of the same shape for new elements $g',h'$ with smaller parameters, and $g'$, $h'$ commute exactly when $g$, $h$ do.
+
+      Call the relation $R(g,h;m,n)$: $\ gh^{a_1}gh^{a_2}\cdots gh^{a_n}=e$ with $a_k=\lfloor\frac{mk}{n}\rfloor-\lfloor\frac{m(k-1)}{n}\rfloor$. We prove by strong induction on $m+n$ that $R(g,h;m,n)$ with $\gcd(m,n)=1$ forces $gh=hg$.
+
+      **Case $n=1$.** The relation is $gh^m=e$, so $g=h^{-m}$ commutes with $h$.
+
+      **Case $m\ge n\ge2$.** Write $m=qn+m'$ with $0\le m'<n$. Since $\gcd(m,n)=1$ and $n\ge2$, $m'\ge1$. As $\lfloor\frac{mk}n\rfloor=qk+\lfloor\frac{m'k}{n}\rfloor$, each $a_k$ equals $q+a_k'$, where $a'_k$ are the exponents for $(m',n)$. With $g'=gh^q$ the relation becomes $R(g',h;m',n)$. Here $m'+n<m+n$, and $g'h=hg'$ exactly when $gh=hg$.
+
+      **Case $1\le m<n$.** Now each $a_k\in\{0,1\}$. Put $x=g$ and $y=gh$. The word is a product of $n$ letters, $y$ where $a_k=1$ and $x$ where $a_k=0$. Now $a_k=1$ exactly when some integer $j$ satisfies $\frac{m(k-1)}{n}<j\le\frac{mk}{n}$, i.e. $k=\lceil\frac{jn}{m}\rceil$. So the $y$'s sit at positions $k_j=\lceil\frac{jn}m\rceil$, $j=1,\dots,m$, and $k_m=n$. Grouping each $y$ with the $x$'s that follow it cyclically, the run after the $j$-th $y$ has length
+      $$c_j=\Big\lceil\frac{(j+1)n}{m}\Big\rceil-\Big\lceil\frac{jn}{m}\Big\rceil-1=\Big\lceil\frac{(j+1)p}{m}\Big\rceil-\Big\lceil\frac{jp}{m}\Big\rceil,\qquad p=n-m .$$
+      Using $\lceil\frac{jp}{m}\rceil=p-\lfloor\frac{(m-j)p}{m}\rfloor$, this is $c_j=b_{m-j}$, where $b_i=\lfloor\frac{ip}{m}\rfloor-\lfloor\frac{(i-1)p}{m}\rfloor$ are the exponents for $(p,m)$ (indices mod $m$). So, up to a cyclic rotation, the word is $y\,x^{b_{m-1}}\,y\,x^{b_{m-2}}\cdots y\,x^{b_0}$, with the blocks in reverse order.
+
+      A rotation of a word equal to $e$ is a conjugate of it, so it also equals $e$. Take the inverse of the word, which reverses the order of the blocks, and rotate once more:
+      $$Y X^{b_1}\,YX^{b_2}\cdots YX^{b_m}=e,\qquad Y=y^{-1},\ X=x^{-1}.$$
+      This is $R(Y,X;\,n-m,\,m)$ with $\gcd(n-m,m)=1$ and $(n-m)+m<m+n$. By induction $XY=YX$, so $xy=yx$, that is, $g\cdot gh=gh\cdot g$, which gives $gh=hg$.
+
+      The parameters shrink at every step, so the induction ends at the case $n=1$.
+    checked: "script: verified the invert-and-rotate identity on words for every coprime m < n < 60"
+    status: ready
+
+  - id: A5
+    topic: "Analysis: a smooth function must have a negative derivative"
+    areas: [analysis, calculus]
+    difficulty: 3
+    hints:
+      - "Assume every derivative is $\\ge0$ everywhere. What does $f$ look like on $(-\\infty,0]$?"
+      - "Use Taylor's formula with integral remainder at $0$, once for $f(1)$ and once for $f(2)$, and compare the weights."
+    solution: |
+      **Key idea:** if all derivatives were nonnegative, $f$ would vanish to all orders at $0$. Then Taylor's remainder makes $f(2)\ge2^{n-1}f(1)$ for every $n$, which is impossible.
+
+      Suppose, for contradiction, that $f^{(n)}(x)\ge0$ for all $n\ge1$ and all $x$.
+
+      **Flat at $0$.** Since $f'\ge0$, $f$ is nondecreasing. For $x\le0$ this gives $0\le f(x)\le f(0)=0$. So $f\equiv0$ on $(-\infty,0]$, and every derivative is $0$ there. By continuity of the derivatives, $f^{(k)}(0)=0$ for all $k$.
+
+      **Taylor at $0$.** For every $n\ge1$ and $x>0$,
+      $$f(x)=\int_0^x f^{(n)}(t)\,\frac{(x-t)^{n-1}}{(n-1)!}\,dt .$$
+      For $0\le t\le1$ we have $2-t\ge2(1-t)$, so $(2-t)^{n-1}\ge2^{n-1}(1-t)^{n-1}$. The integrands are nonnegative, so
+      $$f(2)\ \ge\ \int_0^1 f^{(n)}(t)\frac{(2-t)^{n-1}}{(n-1)!}\,dt\ \ge\ 2^{n-1}\int_0^1 f^{(n)}(t)\frac{(1-t)^{n-1}}{(n-1)!}\,dt=2^{n-1}f(1)=2^{n-1}.$$
+      This holds for every $n$, yet $f(2)$ is a fixed number. Contradiction. So some derivative is negative somewhere.
+    checked: "proof only; no numeric answer"
+    status: ready
+
+  - id: A6
+    topic: "Geometry: rational squared distances force rational area ratios"
+    areas: [geometry, algebra]
+    difficulty: 3
+    hints:
+      - "Put $A$ at the origin. Dot products of the vectors to $B$, $C$, $D$ are rational."
+      - "In the plane, the product of two cross products is a $2\\times2$ determinant of dot products."
+    solution: |
+      **Key idea:** areas come from 2D cross products; a product of two cross products is a combination of dot products, and those are rational.
+
+      Let $u=\overrightarrow{AB}$, $v=\overrightarrow{AC}$, $w=\overrightarrow{AD}$. Each dot product is rational, for example
+      $$u\cdot v=\tfrac12\big(|u|^2+|v|^2-|u-v|^2\big)=\tfrac12\big(AB^2+AC^2-BC^2\big).$$
+      Similarly $u\cdot w$, $v\cdot w$ and $u\cdot u$ are rational.
+
+      For plane vectors let $p\times q=p_1q_2-p_2q_1$. Then $\operatorname{area}(ABC)=\frac12|u\times v|$ and $\operatorname{area}(ABD)=\frac12|u\times w|$. Expanding in coordinates proves the identity
+      $$(u\times v)(u\times w)=(u\cdot u)(v\cdot w)-(u\cdot w)(v\cdot u).$$
+      So $(u\times v)(u\times w)$ is rational. The special case $v=w$ shows $(u\times w)^2$ is rational. It is nonzero, because $A$, $B$, $D$ are not on a line. Hence
+      $$\frac{\operatorname{area}(ABC)}{\operatorname{area}(ABD)}=\left|\frac{(u\times v)(u\times w)}{(u\times w)^2}\right|$$
+      is rational.
+    checked: "proof only; the identity was checked by expanding coordinates"
+    status: ready
+
+  - id: B1
+    topic: "Combinatorics: removing a vector to allow a balanced split"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: "$v=(1,b)$ with $b$ even, $0\\le b\\le100$"
+    hints:
+      - "Parity of the coordinate sums gives a necessary condition right away."
+      - "The set is symmetric about $(1,50)$. Pair each vector with its mirror image, then fix the small imbalance with one swap."
+    solution: |
+      **Key idea:** parity rules out everything except $(1,\text{even})$. For those, pairing each vector with its mirror image through $(1,50)$ almost balances the split, and a single swap finishes it.
+
+      **Necessary.** $P$ has $303$ vectors with coordinate sums $\sum a=303$ and $\sum b=3\cdot5050=15150$. After removing $v=(a,b)$, both sums must be even, so $a=1$ and $b$ is even.
+
+      **Sufficient.** Call $p'=(2,100)-p$ the mirror of $p$. The map $p\mapsto p'$ maps $P$ to itself, and $(1,50)$ is its only fixed vector. A pair $\{p,p'\}$ has sum $(2,100)$. Each half must contain $151$ vectors with sum $\big(151,\ \frac{15150-b}{2}\big)$.
+
+      *Case $b\ne50$.* Remove $(1,b)$. The leftover vectors are $(1,50)$, $(1,100-b)$, and $150$ mirror pairs. Put $(1,50)$ and $75$ pairs in group $X$, and $(1,100-b)$ and the other $75$ pairs in group $Y$. Then $X$ has sum $(151,7550)$ and $Y$ has sum $(151,7600-b)$. Let $d=\frac{50-b}{2}$, a nonzero integer with $|d|\le25$. Choose the pairs so that $(0,j)$ is in $X$ and $(0,j+d)$ is in $Y$, where $j=0$ if $d>0$ and $j=100$ if $d<0$. These lie in different pairs, since the mirror of $(0,j)$ is $(2,100-j)$. Swap them. Sizes and first coordinates do not change, and $X$ gains $d$ in the second coordinate while $Y$ loses $d$. Both become $7550+d=7600-b-d$.
+
+      *Case $b=50$.* The $302$ leftover vectors form $151$ mirror pairs. Put $(1,49)$ and $75$ other pairs in $X$, and $(1,51)$ and the remaining $75$ pairs in $Y$. The sums are $(151,7549)$ and $(151,7551)$. Arrange for the pair of $(0,0)$ to be in $X$ and the pair of $(0,1)$ to be in $Y$, then swap $(0,0)$ and $(0,1)$. Both sums become $(151,7550)$.
+    checked: "script: dynamic programming over all 303 choices of v; exactly the 51 vectors (1, even) allow a split"
+    status: ready
+
+  - id: B2
+    topic: "Complex analysis: a polynomial with no roots in the disk"
+    areas: [algebra, analysis]
+    difficulty: 2
+    hints:
+      - "Multiply $f_n(z)$ by $1-z$ and simplify."
+      - "When can $z+z^2+\\dots+z^n$ have absolute value $n$ with $|z|\\le1$?"
+    solution: |
+      **Key idea:** multiplying by $1-z$ collapses the coefficients to $n-z-z^2-\dots-z^n$, and the triangle inequality finishes it.
+
+      A short computation gives
+      $$(1-z)f_n(z)=n-(z+z^2+\dots+z^n).$$
+      Suppose $f_n(z)=0$ with $|z|\le1$. Then $z+z^2+\dots+z^n=n$. But each term has $|z^k|\le1$, so the left side has absolute value at most $n$. Equality in the triangle inequality, with total exactly $n$, forces every term to be $1$. In particular $z=1$. However, $f_n(1)=n+(n-1)+\dots+1=\frac{n(n+1)}{2}\ne0$. So $f_n$ has no roots with $|z|\le1$.
+    checked: "proof only; no numeric answer"
+    status: ready
+
+  - id: B3
+    topic: "Number theory: towers of powers of two"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$n=4,\\ 16,\\ 65536,\\ 2^{256}$"
+    hints:
+      - "The first condition makes $n$ a power of $2$."
+      - "Use $2^a-1\\mid2^b-1\\iff a\\mid b$, twice."
+    solution: |
+      **Key idea:** each condition pushes the exponent into the same form, which leads to towers $n=2^{2^{2^j}}$.
+
+      We use the standard fact that, for $a\ge1$, $2^a-1$ divides $2^b-1$ exactly when $a\mid b$.
+
+      **Condition 1.** $n\mid2^n$ means $n$ has no odd prime factor, so $n=2^m$. Also $n=1$ fails condition 2 ($0$ does not divide $1$), and $n=2$ fails condition 3 ($0$ does not divide $2$). So $m\ge2$.
+
+      **Condition 2.** $2^m-1\mid2^{2^m}-1$ holds exactly when $m\mid2^m$, i.e. $m=2^k$ with $k\ge1$.
+
+      **Condition 3.** $n-2=2(2^{m-1}-1)$ and $2^n-2=2(2^{n-1}-1)$, so the condition is $2^{m-1}-1\mid2^{n-1}-1$, i.e. $m-1\mid n-1$. Now $m-1=2^k-1$ and $n-1=2^{m}-1=2^{2^k}-1$. By the fact again, this holds exactly when $k\mid2^k$, i.e. $k=2^j$ with $j\ge0$.
+
+      So $n=2^{2^{2^j}}$. For $j=0,1,2,3$ we get $n=4,\ 16,\ 65536,\ 2^{256}\approx1.16\cdot10^{77}$, all below $10^{100}$. The next one, $2^{65536}$, is far too big. All four satisfy the conditions, since each step above was an equivalence.
+    checked: "script: brute force up to 10^5 finds 4, 16, 65536; 2^256 checked with modular arithmetic"
+    status: ready
+
+  - id: B4
+    topic: "Recursions: Chebyshev polynomials at Fibonacci indices"
+    areas: [algebra, number-theory]
+    difficulty: 3
+    hints:
+      - "Try $a=\\cos t$. The rule looks like $2\\cos A\\cos B=\\cos(A+B)+\\cos(A-B)$."
+      - "Show $x_n=T_{F_n}(a)$, where $T_k$ is the Chebyshev polynomial and $F_n$ the Fibonacci numbers. The roots of $T_k$ are explicit."
+    solution: |
+      **Key idea:** the sequence is $x_n=T_{F_n}(a)$, with Chebyshev polynomials at Fibonacci indices. A zero pins $a$ to $\cos$ of a rational multiple of $\pi$, and then Fibonacci numbers mod a fixed number repeat.
+
+      Let $T_k$ be the Chebyshev polynomials, $T_k(\cos t)=\cos(kt)$. They satisfy $2T_jT_k=T_{j+k}+T_{|j-k|}$ (a polynomial identity, since it holds for all $a=\cos t\in[-1,1]$). Let $F_0=0$, $F_1=F_2=1$, $F_{n+1}=F_n+F_{n-1}$.
+
+      **Claim:** $x_n=T_{F_n}(a)$. This holds for $n=0,1,2$: $T_0=1$ and $T_1(a)=a$. If it holds up to $n$ (with $n\ge2$), then
+      $$x_{n+1}=2T_{F_n}T_{F_{n-1}}-T_{F_{n-2}}=T_{F_n+F_{n-1}}+T_{F_n-F_{n-1}}-T_{F_{n-2}}=T_{F_{n+1}},$$
+      because $F_n-F_{n-1}=F_{n-2}$.
+
+      **A zero.** Suppose $x_n=0$, so $T_N(a)=0$ with $N=F_n\ge1$. All $N$ roots of $T_N$ are the real numbers $\cos\frac{(2i+1)\pi}{2N}$. So $a=\cos t$ with $t=\frac{(2i+1)\pi}{2N}$. Then for every $k$,
+      $$x_k=\cos(F_k t),$$
+      and this depends only on $F_k$ modulo $4N$, because $4N\,t$ is a multiple of $2\pi$.
+
+      **Periodicity.** Modulo $4N$, the pair $(F_k,F_{k+1})$ takes finitely many values, so some pair repeats. The step $(F_k,F_{k+1})\mapsto(F_{k+1},F_k+F_{k+1})$ can be run backward, so the sequence of pairs is purely periodic from $k=0$. Hence $F_k\bmod 4N$ is periodic, and so is $x_k$.
+    checked: "script: for a = cos(π/(2N)) with N = 3, 5, 8 the sequence hits 0 and repeats as predicted"
+    status: ready
+
+  - id: B5
+    topic: "Calculus: a positive-definite Jacobian forces injectivity"
+    areas: [analysis, linear-algebra]
+    difficulty: 3
+    hints:
+      - "Suppose $f(p)=f(q)$ and integrate along the segment from $p$ to $q$."
+      - "Dot the result with $d=q-p$. The hypothesis is that a certain quadratic form is positive definite."
+    solution: |
+      **Key idea:** the hypothesis says the symmetric part of the Jacobian is positive definite. Integrating $d\cdot J d$ along a segment then rules out $f(p)=f(q)$.
+
+      Let $J$ be the Jacobian matrix, with entries $J_{ij}=\frac{\partial f_i}{\partial x_j}$. For a vector $d=(d_1,d_2)$,
+      $$d\cdot Jd=\frac{\partial f_1}{\partial x_1}d_1^2+\Big(\frac{\partial f_1}{\partial x_2}+\frac{\partial f_2}{\partial x_1}\Big)d_1d_2+\frac{\partial f_2}{\partial x_2}d_2^2 .$$
+      This quadratic form has positive first coefficient. Its discriminant condition, $\frac{\partial f_1}{\partial x_1}\frac{\partial f_2}{\partial x_2}-\frac14\big(\frac{\partial f_1}{\partial x_2}+\frac{\partial f_2}{\partial x_1}\big)^2>0$, is exactly the hypothesis. So it is positive definite: $d\cdot Jd>0$ for every $d\ne0$, at every point.
+
+      Suppose $f(p)=f(q)$ with $d=q-p\ne0$. The partial derivatives are continuous, so the chain rule and the fundamental theorem of calculus give
+      $$0=d\cdot\big(f(q)-f(p)\big)=\int_0^1 d\cdot J(p+td)\,d\ dt>0 .$$
+      Contradiction, so $f$ is one-to-one.
+    checked: "proof only; no numeric answer"
+    status: ready
+
+  - id: B6
+    topic: "Counting: a generating-function bound on sequences"
+    areas: [combinatorics, analysis]
+    difficulty: 3
+    hints:
+      - "The count is a coefficient of a power of a polynomial."
+      - "A coefficient of a series with nonnegative coefficients is at most the series' value at $x$ divided by $x^{k}$. Try $x=\\tfrac12$."
+    solution: |
+      **Key idea:** bound one coefficient by the value of the whole generating function at a well-chosen point.
+
+      Let $P(x)=x+x^2+x^3+x^4+x^5+x^6+x^{10}$. Expanding $P(x)^{2018}$, each sequence in $S$ contributes one term $x^{3860}$. So $|S|$ is the coefficient of $x^{3860}$ in $P(x)^{2018}$.
+
+      All coefficients are nonnegative, so for any $x>0$
+      $$|S|\,x^{3860}\le P(x)^{2018},\qquad\text{i.e.}\qquad |S|\le\frac{P(x)^{2018}}{x^{3860}}.$$
+      Take $x=\frac12$:
+      $$P(\tfrac12)=\tfrac12+\tfrac14+\tfrac18+\tfrac1{16}+\tfrac1{32}+\tfrac1{64}+\tfrac1{1024}=\tfrac{63}{64}+\tfrac1{1024}=\tfrac{1009}{1024}=\tfrac{2018}{2048}.$$
+      Therefore $|S|\le2^{3860}\big(\frac{2018}{2048}\big)^{2018}$.
+    checked: "arithmetic of P(1/2) checked exactly"
+    status: ready

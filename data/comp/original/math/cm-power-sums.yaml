@@ -1,0 +1,33 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-power-sums
+title: Fourth powers from three clues
+tier: 1
+order: 50
+areas:
+- algebra
+problem: |
+  Real numbers $a,b,c$ satisfy
+  $$a+b+c=6,\qquad a^2+b^2+c^2=18,\qquad abc=4.$$
+  Find $a^4+b^4+c^4$.
+check:
+  type: number
+  answer: '258'
+answer: '$258$'
+hints:
+- 'From the first two clues, find $ab+bc+ca$.'
+- 'Now you know all three symmetric functions, so you know the cubic whose roots are $a,b,c$.'
+- Try to factor that cubic. A small whole number is a root.
+solution: |
+  Squaring the first clue, $36=(a+b+c)^2=18+2(ab+bc+ca)$, so $ab+bc+ca=9$.
+
+  By Vieta's formulas, $a,b,c$ are the roots of
+  $$t^3-6t^2+9t-4=0.$$
+  Trying $t=1$ gives $1-6+9-4=0$, and dividing out gives $t^3-6t^2+9t-4=(t-1)^2(t-4)$.
+  So the numbers are $1,1,4$ in some order, and
+  $$a^4+b^4+c^4=1+1+256=258.$$
+
+  **Without factoring.** Newton's identities give power sums from the symmetric functions. With $p_k=a^k+b^k+c^k$,
+  $e_1=6$, $e_2=9$, $e_3=4$:
+  $$p_3=e_1p_2-e_2p_1+3e_3=108-54+12=66,\qquad p_4=e_1p_3-e_2p_2+e_3p_1=396-162+24=258.$$
+checked: 'script: roots 1, 1, 4 substituted; Newton identities recomputed'
+status: ready

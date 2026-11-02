@@ -1,0 +1,41 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-fair-stick
+title: A stick broken into fair pieces
+tier: 3
+order: 60
+areas:
+- probability
+- geometry
+problem: |
+  A stick of length $1$ is broken at two points chosen independently and uniformly along it. What is the probability that
+  **no piece is more than twice as long as another**?
+check:
+  type: number
+  answer: 1/10
+answer: '$\tfrac1{10}$'
+hints:
+- 'The three lengths $(a,b,c)$ are spread uniformly over the triangle $a+b+c=1$, $a,b,c\ge0$.'
+- 'Sort the pieces: shortest $s$, middle $m$, longest $\ell$. The condition is just $\ell\le2s$.'
+- 'Draw the region in the $(s,m)$-plane. It is a small triangle; find its corners.'
+solution: |
+  **The model.** Breaking at two uniform points gives lengths $(a,b,c)$ that are uniformly distributed on the triangle
+  $\{a+b+c=1,\ a,b,c\ge0\}$. (The two break points, sorted, are uniform on a triangle in the plane, and the lengths are a
+  linear function of them.) The six orderings of $(a,b,c)$ are equally likely, so the sorted lengths $s\le m\le\ell$ are
+  uniform on one sixth of it.
+
+  **Coordinates.** Use $(s,m)$, with $\ell=1-s-m$. The sorted region is $0\le s\le m\le\frac{1-s}2$, a triangle with corners
+  $(0,0)$, $(0,\tfrac12)$, $(\tfrac13,\tfrac13)$ and area $\tfrac1{12}$.
+
+  **The condition.** "No piece more than twice another" means $\ell\le2s$, that is, $m\ge1-3s$. Inside the sorted region this
+  cuts out the triangle bounded by $m=s$, $m=1-3s$ and $m=\tfrac{1-s}2$. Its corners are
+  $$\big(\tfrac14,\tfrac14\big),\quad\big(\tfrac13,\tfrac13\big),\quad\big(\tfrac15,\tfrac25\big),$$
+  and its area is
+  $$\tfrac12\left|\det\begin{pmatrix}\tfrac1{12}&\tfrac1{12}\\-\tfrac1{20}&\tfrac3{20}\end{pmatrix}\right|=\tfrac12\cdot\tfrac{1}{60}=\tfrac1{120}.$$
+
+  **Answer.** $\dfrac{1/120}{1/12}=\dfrac1{10}$.
+
+  The picture shows the triangle of all breaks, with the six small "fair" triangles around its center (one for each
+  ordering), and random breaks landing in them about one time in ten.
+viz: cm-fair-stick
+checked: 'script: 10^6 simulated breaks give 0.0996'
+status: ready

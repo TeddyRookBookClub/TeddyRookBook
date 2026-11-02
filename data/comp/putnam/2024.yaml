@@ -1,0 +1,259 @@
+year: 2024
+edition: 85th
+date: "December 7, 2024"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2024.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "When can twice, thrice and four times powers balance?"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$n=1$ only"
+    hints:
+      - 'For $n=1$ try small numbers.'
+      - 'For $n=2$ work modulo $3$; for $n\ge3$ work with powers of $2$. Both lead to infinite descent.'
+    solution: |
+      **Key idea:** for $n=1$ there is a small solution. For $n=2$ every variable must be divisible by $3$, and for $n\ge3$ every variable must be even; either way a smaller solution appears, which is impossible.
+
+      **$n=1$.** $2\cdot1+3\cdot2=8=4\cdot2$.
+
+      **$n=2$.** Suppose $2a^2+3b^2=4c^2$ with positive integers, and choose a solution with $a$ smallest. Modulo $3$: $2a^2\equiv c^2$. Squares are $0$ or $1$ modulo $3$, and $2a^2$ is $0$ or $2$, so both sides are $0$: $3\mid a$ and $3\mid c$. Then $9$ divides $4c^2-2a^2=3b^2$, so $3\mid b$. Dividing by $3$ gives a solution with smaller $a$.
+
+      **$n\ge3$.** Suppose $2a^n+3b^n=4c^n$ with $a$ smallest. Then $3b^n$ is even, so $b=2b'$. Dividing by $2$: $a^n+3\cdot2^{n-1}b'^n=2c^n$, so $a$ is even, $a=2a'$. Dividing by $2$ again: $2^{n-1}a'^n+3\cdot2^{n-2}b'^n=c^n$. The left side is even (as $n\ge3$), so $c=2c'$, and dividing by $2^{n-2}$:
+      $$2a'^n+3b'^n=4c'^n,$$
+      a solution with $a'<a$. Contradiction.
+    checked: "script: no solutions with a, b, c < 40 for n = 2, 3, 4; for n = 1, (1, 2, 2) works"
+    status: ready
+
+  - id: A2
+    topic: "Polynomials whose second iterate is divisible by a square"
+    areas: [algebra]
+    difficulty: 2
+    answer: '$p(x)=x+c$ and $p(x)=-x+c$ for any real $c$'
+    hints:
+      - 'Write $p(p(x))-x=\big(p(p(x))-p(x)\big)+\big(p(x)-x\big)$ and factor out $p(x)-x$.'
+      - 'Modulo $p(x)-x$, you may replace $p(x)$ by $x$.'
+    solution: |
+      **Key idea:** $p(p(x))-x$ always has the factor $p(x)-x$, and the other factor is congruent to $p'(x)+1$ modulo $p(x)-x$. So the condition becomes "$p(x)-x$ divides $p'(x)+1$", and degrees settle it.
+
+      Let $D(x,y)=\frac{p(y)-p(x)}{y-x}$, a polynomial with $D(x,x)=p'(x)$. With $y=p(x)$,
+      $$p(p(x))-x=\big(p(p(x))-p(x)\big)+\big(p(x)-x\big)=\big(p(x)-x\big)\big(D(x,p(x))+1\big).$$
+      If $p(x)=x$, the condition holds. Otherwise the condition is that $p(x)-x$ divides $D(x,p(x))+1$. Since $D(x,y)-D(x,x)$ is divisible by $y-x$, we have $D(x,p(x))\equiv D(x,x)=p'(x)$ modulo $p(x)-x$. So the condition is
+      $$p(x)-x\ \text{ divides }\ p'(x)+1 .$$
+      - If $\deg p\ge2$, then $p(x)-x$ has degree $\deg p$, larger than $\deg(p'+1)$, and $p'+1\ne0$. Impossible.
+      - If $p=c$ is constant, $c-x$ (degree $1$) cannot divide $1$.
+      - If $p=ax+b$ with $a\ne0$: for $a=1$, $p-x=b$ is a nonzero constant (or $p=x$) and divides anything. For $a\ne1$, $p-x$ has degree $1$ and must divide the constant $a+1$, so $a=-1$.
+
+      So the answer is $p(x)=x+c$ and $p(x)=-x+c$. (Check: for $p=-x+c$, $p(p(x))=x$ and the left side is $0$.)
+    checked: "symbolic: the remainder of p(p(x)) − x by (p(x) − x)² is 0 for x + c and −x + c, and nonzero for sample quadratics"
+    status: ready
+
+  - id: A3
+    topic: "Probability inside random three-row standard tableaux"
+    areas: [combinatorics, probability]
+    difficulty: 3
+    answer: "Yes"
+    hints:
+      - 'The largest entry is always in the last cell. Where can the second largest be?'
+      - 'Count with the hook length formula.'
+    solution: |
+      **Key idea:** compare the two cells next to the last corner. Which one holds the second largest entry has probability $\frac{2N-2}{3N-1}$ by the hook length formula, and for $N=2024$ that is between $\frac13$ and $\frac23$.
+
+      The maps $T$ in $S$ are exactly the standard Young tableaux of the $3\times N$ rectangle, $N=2024$ (rows increase to the right, columns increase downward). The entry $3N$ must be in the cell $(3,N)$. Removing it leaves a tableau of shape $\lambda=(N,N,N-1)$, whose largest entry $3N-1$ is in one of the two corners $(2,N)$ or $(3,N-1)$.
+
+      Take $(a,b)=(2,N)$ and $(c,d)=(3,N-1)$. Then $T(2,N)<T(3,N-1)$ exactly when $3N-1$ sits at $(3,N-1)$, and those tableaux correspond to tableaux of shape $\mu=(N,N,N-2)$. So the fraction is $f^\mu/f^\lambda$, where $f$ counts standard tableaux.
+
+      By the hook length formula $f^\nu=|\nu|!/\prod(\text{hooks})$,
+      $$\frac{f^\mu}{f^\lambda}=\frac{1}{3N-1}\cdot\frac{\prod\text{hooks}(\lambda)}{\prod\text{hooks}(\mu)} .$$
+      Only the hooks in row $3$ and column $N-1$ change. In $\lambda$, row $3$ has hooks $N-1,N-2,\dots,1$ and column $N-1$ has hooks $4,3$ above it; in $\mu$, row $3$ has hooks $N-2,\dots,1$ and column $N-1$ has $3,2$. The ratio of products is $(N-1)\cdot\frac{4\cdot3}{3\cdot2}=2(N-1)$. So
+      $$\frac{f^\mu}{f^\lambda}=\frac{2N-2}{3N-1}=\frac{4046}{6071}\approx0.6664,$$
+      which is at least $\frac13$ and at most $\frac23$ (because $3\cdot4046=12138<12142=2\cdot6071$).
+    checked: "script: hook-length ratio equals (2N − 2)/(3N − 1) for N = 3 to 2024; brute force over all tableaux for N = 3, 4 confirms 1/2 and 6/11"
+    status: ready
+
+  - id: A4
+    topic: "Geometric sequences that rearrange into arithmetic ones mod p"
+    areas: [number-theory]
+    difficulty: 3
+    answer: "$p=7$"
+    hints:
+      - 'The progression has $p-4$ distinct terms, so for $p>7$ the number $a$ is a primitive root.'
+      - 'Then the four missing residues $0,a^{-1},a^{-2},a^{-3}$ form a progression too.'
+    solution: |
+      **Key idea:** for $p>7$, the set $\{1,a,\dots,a^{p-5}\}$ misses exactly four residues, $0,x,x^2,x^3$ with $x=a^{-1}$, and these four must form an arithmetic progression. A short case check shows that only happens for $p\le7$.
+
+      **$p=7$ works:** $a=3$, $r=1$, since $\{1,3,9\}\equiv\{1,2,3\}$, which is $1,2,3$ in order.
+
+      **$p>7$ fails.** Since $1\le r\le p-1$, the $p-4$ terms of the progression are distinct. So $1,a,\dots,a^{p-5}$ are distinct and the order of $a$ is at least $p-4>\frac{p-1}{2}$; as it divides $p-1$, it equals $p-1$. The set is then all nonzero residues except $a^{p-4},a^{p-3},a^{p-2}$, that is $x^3,x^2,x$ with $x=a^{-1}$.
+
+      The complement of an arithmetic progression $b,b+r,\dots,b+(p-5)r$ in $\mathbb Z/p$ is the progression $b+(p-4)r,\dots,b+(p-1)r$. So $\{0,x,x^2,x^3\}$ is a $4$-term progression, and dividing by $x$, so is $\{0,1,x,x^2\}$ (four distinct elements).
+
+      A $4$-term progression $c,c+d,c+2d,c+3d$ splits into an outer pair and an inner pair with the same sum, whose differences are $\pm3d$ and $\pm d$. Try the three ways to pair $\{0,1,x,x^2\}$:
+      - $\{0,1\},\{x,x^2\}$: $x^2+x=1$ and $x^2-x=1-2x\in\{\pm3,\pm\frac13\}$, so $x\in\{-1,2,\frac13,\frac23\}$. Putting these into $x^2+x=1$ gives $0=1$, $6=1$, $4=9$, $10=9$, which need $p\mid1$ or $p\mid5$.
+      - $\{0,x\},\{1,x^2\}$: $x^2-x+1=0$ and $x^2-1=x-2$; then $x-2=\pm3x$ or $x=\pm3(x-2)$, so $x\in\{-1,\frac12,3,\frac32\}$. These make $x^2-x+1$ equal to $3,\frac34,7,\frac74$, which need $p\in\{3,7\}$.
+      - $\{0,x^2\},\{1,x\}$: $x^2=x+1$ and $x+1=\pm3(x-1)$ or $x-1=\pm3(x+1)$, so $x\in\{2,\frac12,-2,-\frac12\}$. These make $x^2-x-1$ equal to $1,-\frac54,5,-\frac14$, which need $p\mid5$ or $p\mid1$.
+
+      None of these is possible for a prime $p>7$.
+    checked: "script: searched all a and r for primes 7 ≤ p < 120; only p = 7 works"
+    status: ready
+
+  - id: A5
+    topic: "Probability: random chords avoiding an off-center disk"
+    areas: [probability, geometry, analysis]
+    difficulty: 4
+    answer: "$r=0$"
+    hints:
+      - 'Fix $P$. The chord meets the disk when $Q$ is in an arc whose angle is $4\arcsin(1/|P-c|)$, where $c$ is the disk''s center.'
+      - 'The function $\arcsin(1/|x|)$ is subharmonic for $|x|>1$.'
+    solution: |
+      **Key idea:** the probability is the average over $P\in\Omega$ of $\frac2\pi\arcsin\frac1{|P-c|}$. That function of $P-c$ has positive Laplacian, so its average over a circle grows as the center moves away from the middle.
+
+      **The probability.** Let $c=(r,0)$ and fix $P$ on $\Omega$, at distance $\delta=|P-c|\ge1$ from $c$. The two tangent lines from $P$ to $\Delta$ make the angle $2\arcsin(1/\delta)$, and the chord $PQ$ meets $\Delta$ exactly when $Q$ lies on the arc between their second intersections with $\Omega$. By the inscribed angle theorem, that arc has central angle $4\arcsin(1/\delta)$. So
+      $$\operatorname{Prob}(r)=\frac2\pi\cdot\frac1{2\pi}\int_0^{2\pi}H(P_\theta-c)\,d\theta,\qquad H(x)=\arcsin\frac1{|x|} .$$
+
+      **Subharmonicity.** For a radial function $h(\delta)$ in the plane, $\Delta H=h''+h'/\delta$. With $h=\arcsin(1/\delta)$,
+      $$h'=-\frac{1}{\delta\sqrt{\delta^2-1}},\qquad h''=\frac{2\delta^2-1}{\delta^2(\delta^2-1)^{3/2}},\qquad \Delta H=\frac{1}{(\delta^2-1)^{3/2}}>0 .$$
+
+      **Monotonicity.** Let $\Phi(c)=\frac1{2\pi}\int H(P_\theta-c)\,d\theta$ for $|c|<8$ (then every $|P-c|>1$). By symmetry $\Phi$ depends only on $\rho=|c|$, and $\Delta\Phi$ is the average of $\Delta H>0$, so $\Delta\Phi>0$. For a radial function, $\Delta\Phi=\frac1\rho(\rho\Phi'(\rho))'$. So $\rho\Phi'(\rho)$ is strictly increasing on $[0,8)$ and equals $0$ at $\rho=0$; hence $\Phi'>0$ for $0<\rho<8$. By continuity $\Phi$ is strictly increasing on $[0,8]$.
+
+      So the probability is smallest exactly at $r=0$ (where it is $\frac2\pi\arcsin\frac19\approx0.0709$).
+    viz: putnam-2024-a5
+    checked: "numeric: integrated the formula at r = 0, 1, 4, 8 (0.0709, 0.0711, 0.0749, 0.1080); simulation at r = 0 and 4 agrees"
+    status: ready
+
+  - id: A6
+    topic: "Hankel determinant of a quadratic generating function"
+    areas: [linear-algebra, combinatorics, algebra]
+    difficulty: 4
+    answer: '$10^{n(n-1)/2}$'
+    hints:
+      - 'Let $g=\sum_kc_{k+1}x^k$. Show $g=1+3xg+2xg^2$.'
+      - 'Find a continued fraction $g=\cfrac{1}{1-5x-10x^2K}$ with $K=\cfrac{1}{1-7x-10x^2K}$.'
+    solution: |
+      **Key idea:** the shifted series has a Jacobi continued fraction with every $\lambda_k=10$. A standard theorem then gives the Hankel determinants as $\prod\lambda_k^{\,n-k}=10^{n(n-1)/2}$.
+
+      Let $f=\sum c_kx^k$. From $4f-1+3x=-\sqrt{1-14x+9x^2}$, squaring gives $16f^2-8(1-3x)f+8x=0$, i.e. $f=x+3xf+2f^2$. Here $c_0=0$, $c_1=1$. With $f=xg$, $g=\sum_{k\ge0}c_{k+1}x^k$:
+      $$g=1+3xg+2xg^2 .$$
+      The matrix in the problem is the Hankel matrix $(g_{i+j})_{0\le i,j\le n-1}$ of $g$.
+
+      **The continued fraction.** Put $K=\frac{g-1}{5x}$, a power series with constant term $1$ (since $g=1+5x+\dots$). Let $u=g-1=5xK$. The relation for $g$ reads $u=5x+7xu+2xu^2$, which is the same as $u(1-7x)-2xu^2=5x$. Dividing by $5x$:
+      $$K(1-7x)-10x^2K^2=1,\qquad\text{i.e.}\qquad K=\cfrac{1}{1-7x-10x^2K}.$$
+      Also $1/g=1-3x-2xg=1-5x-2x(g-1)=1-5x-10x^2K$. So
+      $$g=\cfrac{1}{1-5x-\cfrac{10x^2}{1-7x-\cfrac{10x^2}{1-7x-\cdots}}}.$$
+
+      **Hankel determinants.** For a series $G=\cfrac{1}{1-\beta_0x-\cfrac{\lambda_1x^2}{1-\beta_1x-\cfrac{\lambda_2x^2}{\ddots}}}$, the $n\times n$ Hankel determinant is $\prod_{k=1}^{n-1}\lambda_k^{\,n-k}$ (Heilermann's formula; equivalently $H_n(G)=\lambda_1^{\,n-1}H_{n-1}(\text{tail})$). With every $\lambda_k=10$,
+      $$\det A=10^{(n-1)+(n-2)+\dots+1}=10^{n(n-1)/2}.$$
+    checked: "symbolic: series expansion and exact determinants for n = 1 to 8 give 10^(n(n−1)/2)"
+    status: ready
+
+  - id: B1
+    topic: "Choosing a permutation of cells with consecutive labels"
+    areas: [combinatorics]
+    difficulty: 1
+    answer: '$n$ odd and $k=\frac{n+1}{2}$'
+    hints:
+      - 'Add up the selected numbers in two ways.'
+    solution: |
+      **Key idea:** adding the chosen entries forces $k=\frac{n+1}2$; for odd $n$ a "shift by half" permutation works.
+
+      **Necessity.** A choice of $n$ cells with no two in a row or column is a permutation $\sigma$, with entries $i+\sigma(i)-k$. Their sum is $n(n+1)-nk$. If they are $1,\dots,n$, the sum is $\frac{n(n+1)}2$, so $k=\frac{n+1}2$, and $n$ must be odd.
+
+      **Sufficiency.** Let $n=2m+1$, $k=m+1$, and
+      $$\sigma(i)=\begin{cases}i+m+1,& 1\le i\le m,\\ i-m,& m+1\le i\le2m+1.\end{cases}$$
+      This is a permutation (values $m+2,\dots,2m+1$ and $1,\dots,m+1$). The sums $i+\sigma(i)$ are $m+3,m+5,\dots,3m+1$ from the first part and $m+2,m+4,\dots,3m+2$ from the second, together all of $m+2,\dots,3m+2$. Subtracting $k=m+1$ gives exactly $1,\dots,n$.
+    checked: "script: brute force over all permutations for n ≤ 7 and all k"
+    status: ready
+
+  - id: B2
+    topic: "Partner quadrilaterals and congruence classes"
+    areas: [geometry]
+    difficulty: 3
+    answer: "No"
+    hints:
+      - 'What does a partner move do to the four side lengths and to the area?'
+      - 'With the sides fixed in order, the area pins down the diagonal up to two choices.'
+    solution: |
+      **Key idea:** a partner move only rearranges the side lengths and keeps the area. With given sides in a given order, a convex quadrilateral of a given area has at most two shapes, so a partner sequence can visit only finitely many congruence classes.
+
+      **What a move keeps.** Reflection in the perpendicular bisector of $AC$ swaps $A$ and $C$, so $AE=CD$, $CE=AD$, and triangle $ACE$ is congruent to triangle $CAD$. It also keeps $E$ on the same side of line $AC$ as $D$. So $ABCE$ has the same four side lengths as $ABCD$ (two of them swapped) and the same area $\operatorname{area}(ABC)+\operatorname{area}(ACD)$.
+
+      In a sequence of partners, every quadrilateral therefore has the same multiset of side lengths $\{s_1,s_2,s_3,s_4\}$ and the same area $K>0$.
+
+      **Finitely many shapes.** Fix an order of the sides, $AB=a$, $BC=b$, $CD=c$, $DA=d$. The quadrilateral is determined up to congruence by the diagonal $e=AC$ (two triangles with known sides, on opposite sides of $AC$). By Heron's formula, $P_1(u)=16\,\operatorname{area}(ABC)^2$ and $P_2(u)=16\,\operatorname{area}(ACD)^2$ with $u=e^2$ and
+      $$P_1=-u^2+2(a^2+b^2)u-(a^2-b^2)^2,\qquad P_2=-u^2+2(c^2+d^2)u-(c^2-d^2)^2 .$$
+      The area condition $\sqrt{P_1}+\sqrt{P_2}=4K$ implies, after squaring twice,
+      $$256K^4-32K^2(P_1+P_2)+(P_1-P_2)^2=0 .$$
+      Here $P_1-P_2$ is linear in $u$ and $P_1+P_2=-2u^2+\dots$, so the left side is a quadratic in $u$ with leading coefficient $64K^2+4\big((a^2+b^2)-(c^2+d^2)\big)^2>0$. It has at most two roots. So each of the $24$ orders gives at most two congruence classes, at most $48$ in all.
+
+      An infinite sequence with no two members congruent would need infinitely many classes. So no such sequence exists.
+    checked: "proof; the quadratic's leading coefficient was confirmed by symbolic expansion"
+    status: ready
+
+  - id: B3
+    topic: "Gaps between consecutive solutions of tan x = x"
+    areas: [analysis, calculus]
+    difficulty: 2
+    hints:
+      - 'Write $r_n=n\pi+\theta_n$ with $\theta_n=\arctan r_n\in(0,\frac\pi2)$.'
+      - 'Then the quantity is $\arctan r_{n+1}-\arctan r_n$. Use $\arctan b-\arctan a=\arctan\frac{b-a}{1+ab}$.'
+    solution: |
+      **Key idea:** subtracting $n\pi$ from each root leaves $\arctan r_n$, so the gap minus $\pi$ is a difference of two arctangents of large numbers.
+
+      **Where the roots are.** On $(0,\frac\pi2)$, $\tan x>x$, so there is no root there. On each interval $(n\pi-\frac\pi2,n\pi+\frac\pi2)$ with $n\ge1$, the function $\tan x-x$ has derivative $\tan^2x\ge0$ (zero only at $x=n\pi$), so it is strictly increasing from $-\infty$ to $+\infty$; it has exactly one root, and since its value at $n\pi$ is $-n\pi<0$, the root lies in $(n\pi,n\pi+\frac\pi2)$. So $r_n=n\pi+\theta_n$ with $\theta_n\in(0,\frac\pi2)$ and $\tan\theta_n=\tan r_n=r_n$, i.e. $\theta_n=\arctan r_n$.
+
+      **The estimate.** Let $\delta=r_{n+1}-r_n-\pi=\theta_{n+1}-\theta_n=\arctan r_{n+1}-\arctan r_n$. Since $r_{n+1}>r_n$, $\delta>0$. For $0<a<b$,
+      $$\arctan b-\arctan a=\arctan\frac{b-a}{1+ab}<\frac{b-a}{1+ab}.$$
+      With $b-a=\pi+\delta$: $\delta(1+r_nr_{n+1})<\pi+\delta$, so $\delta\,r_nr_{n+1}<\pi$. Since $r_n>n\pi$ and $r_{n+1}>(n+1)\pi$,
+      $$\delta<\frac{\pi}{n(n+1)\pi^2}=\frac{1}{(n^2+n)\pi}.$$
+    checked: "numeric: computed r_1 to r_8 to 40 digits; both inequalities hold for n = 1 to 7"
+    status: ready
+
+  - id: B4
+    topic: "Expected position of a walk drifting toward the middle"
+    areas: [probability]
+    difficulty: 2
+    answer: '$\dfrac{1-e^{-2}}{2}$'
+    hints:
+      - 'Compute $E[a_{n,k+1}\mid a_{n,k}]$. It is linear in $a_{n,k}$.'
+    solution: |
+      **Key idea:** the expected next step is a linear function of the current value, so the expectation follows a simple linear recursion.
+
+      Given $a_{n,k}=a$, the walk goes up with probability $\frac{n-a}{n}$ and down with probability $\frac{a-1}{n}$. So
+      $$E[a_{n,k+1}\mid a_{n,k}=a]=a+\frac{n-a}{n}-\frac{a-1}{n}=\Big(1-\frac2n\Big)a+\frac{n+1}{n}.$$
+      Let $e_k=E[a_{n,k}]$. Then $e_{k+1}=(1-\frac2n)e_k+\frac{n+1}n$, whose fixed point is $\frac{n+1}2$. Since $e_0=1$,
+      $$e_k-\frac{n+1}{2}=\Big(1-\frac2n\Big)^k\Big(1-\frac{n+1}{2}\Big),\qquad E(n)=\frac{n+1}2-\frac{n-1}2\Big(1-\frac2n\Big)^n .$$
+      Dividing by $n$ and using $(1-\frac2n)^n\to e^{-2}$, the limit is $\frac12-\frac12e^{-2}$.
+    viz: putnam-2024-b4
+    checked: "exact: dynamic programming with fractions for n = 5, 10, 60 matches the closed form; n = 10^6 gives 0.432333"
+    status: ready
+
+  - id: B5
+    topic: "Counting pairs of chains bounded by a common top"
+    areas: [combinatorics, algebra]
+    difficulty: 5
+    status: coming
+
+  - id: B6
+    topic: "Growth of a lacunary series near the unit circle"
+    areas: [analysis]
+    difficulty: 4
+    answer: '$c=-\dfrac12$'
+    hints:
+      - 'Put $x=e^{-t}$. The exponent is $2n-n^2t=\frac1t-t\big(n-\frac1t\big)^2$, a Gaussian bump of width about $t^{-1/2}$.'
+      - 'Check that $\frac1t-\frac1{1-x}\to-\frac12$.'
+    solution: |
+      **Key idea:** the terms form a Gaussian bump around $n\approx1/t$ of width about $t^{-1/2}$. So $F_a(x)\approx t^{-a-1/2}e^{1/t}$, and the factor $e^{-1/(1-x)}$ cancels $e^{1/t}$ up to a bounded factor.
+
+      Let $s=1-x$ and $t=-\ln x=s+\frac{s^2}2+\dots$. Then $\frac1t=\frac1s-\frac12+O(s)$, so $E:=e^{1/t-1/s}\to e^{-1/2}$. Also
+      $$F_a(x)\,e^{-1/s}=E\sum_{n\ge1}n^a\,e^{-t(n-1/t)^2}.$$
+
+      **$a>-\frac12$: the limit is $\infty$.** Keep only the integers $n\in[\frac1t,\frac1t+t^{-1/2}]$; for small $t$ there are at least $\frac12t^{-1/2}$ of them. For each, $t(n-\frac1t)^2\le1$, and $n^a\ge\kappa\,t^{-a}$ with $\kappa=\min(1,2^a)$ (since $\frac1t\le n\le\frac2t$). So the sum is at least $\frac{\kappa}{2e}\,t^{-a-1/2}\to\infty$, while $E\to e^{-1/2}$.
+
+      **$a<-\frac12$: the limit is $0$.** Here $a<0$. Split the sum.
+      - $n>\frac1{2t}$: $n^a<(2t)^{-a}$, and $\sum_ne^{-t(n-1/t)^2}\le1+\int e^{-tu^2}du=1+\sqrt{\pi/t}$. This part is $O(t^{-a}\cdot t^{-1/2})=O(t^{-a-1/2})\to0$.
+      - $n\le\frac1{2t}$: there $2n-n^2t\le\frac{3}{4t}$ (the quadratic increases up to $n=\frac1t$), and $n^a\le1$. This part of $F_a(x)e^{-1/s}$ is at most $\frac{1}{2t}e^{3/(4t)-1/s}$, and since $\frac1t-\frac1s$ is bounded, the exponent behaves like $-\frac1{4s}$. So it tends to $0$.
+
+      Hence $c=-\frac12$. (At $a=-\frac12$ the expression tends to $\sqrt{\pi}\,e^{-1/2}\approx1.075$.)
+    checked: "numeric: evaluated F_a(x)e^(−1/(1−x)) for x = 1 − 10^(−k), k ≤ 4; it decreases for a = −0.7, grows for a = −0.3, and settles near 1.075 for a = −0.5"
+    status: ready

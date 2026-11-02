@@ -1,0 +1,32 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-repunit-41
+title: Strings of ones and the number 41
+tier: 1
+order: 70
+areas:
+- number-theory
+problem: |
+  Consider the numbers $1, 11, 111, 1111,\dots$, up to the number written with $2026$ ones.
+  How many of them are divisible by $41$?
+check:
+  type: number
+  answer: '405'
+answer: '$405$'
+hints:
+- 'The number with $k$ ones is $(10^k-1)/9$.'
+- 'Since $41$ does not divide $9$, the question is when $41$ divides $10^k-1$.'
+- 'Compute $10^k$ modulo $41$ for small $k$. Look at $99999$.'
+solution: |
+  Let $R_k$ be the number with $k$ ones, so $R_k=\dfrac{10^k-1}{9}$. Because $\gcd(9,41)=1$, we have
+  $41\mid R_k$ exactly when $41\mid 10^k-1$, that is, when $10^k\equiv1\pmod{41}$.
+
+  Now $99999=41\cdot 2439$, so $10^5\equiv 1\pmod{41}$, while $10\not\equiv1$. The order of $10$ modulo $41$ divides
+  $5$ and is not $1$, so it is exactly $5$. Hence $10^k\equiv1\pmod{41}$ exactly when $5\mid k$.
+
+  So $R_k$ is divisible by $41$ exactly when $k$ is a multiple of $5$. Among $k=1,\dots,2026$ there are
+  $\lfloor 2026/5\rfloor=405$ of these. (The first is $11111=41\cdot271$.)
+
+  **Idea used:** the order of a number modulo a prime. If $a^d\equiv1$ for the smallest such $d$, then
+  $a^k\equiv1$ exactly when $d\mid k$.
+checked: 'script: all 2026 repunits tested with exact integers'
+status: ready

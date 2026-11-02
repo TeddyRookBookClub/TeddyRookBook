@@ -1,0 +1,43 @@
+# Original Teddy Rook Book challenge problem (our own; not from any contest).
+id: cm-hthth
+title: Waiting for a pattern of coin flips
+tier: 4
+order: 40
+areas:
+- probability
+problem: |
+  A fair coin is flipped until the pattern $\mathrm{HTHTH}$ appears as five consecutive flips. What is the expected number of
+  flips?
+check:
+  type: number
+  answer: '42'
+answer: '$42$'
+hints:
+- 'A pattern that overlaps itself takes longer to appear than one that doesn''t. Which beginnings of HTHTH are also endings of it?'
+- 'Picture a fair casino. Before each flip, a new gambler arrives with $1$ dollar and bets it all on "the next flip is H", then lets everything ride on T, H, T, H in turn.'
+- 'When HTHTH first appears, add up what the gamblers still hold. In a fair game the expected total paid in equals the expected total held.'
+solution: |
+  **A fair casino.** Before each flip a new gambler arrives with one dollar. Gambler $j$ (who arrives before flip $j$) bets everything
+  on flip $j$ being H, at fair odds (double or nothing). If he wins, he bets his two dollars on flip $j+1$ being T, and so on through
+  the pattern H, T, H, T, H. He leaves when he loses, or when he has completed the pattern.
+
+  Let $N$ be the flip on which HTHTH first appears, and stop everything then.
+
+  **Paid in.** Exactly $N$ gamblers have arrived, so the casino has received $N$ dollars.
+
+  **Held at the end.** A gambler still holds money only if every flip since he arrived matched the start of the pattern.
+  So the last $\ell$ flips must equal the first $\ell$ letters of HTHTH, while the last $\ell$ flips are also the last $\ell$
+  letters of HTHTH. The lengths where the beginning equals the ending are
+  $$\ell=5\ (\mathrm{HTHTH}),\qquad \ell=3\ (\mathrm{HTH}),\qquad \ell=1\ (\mathrm{H}),$$
+  holding $2^5$, $2^3$ and $2^1$ dollars. The total is always $32+8+2=42$ dollars.
+
+  **Fairness.** Every bet is fair, so the casino's net gain $N-42$ has expected value $0$. (The optional stopping theorem applies:
+  $N$ has finite mean, since each block of five flips is HTHTH with probability $\tfrac1{32}$, and the net gain changes by a
+  bounded amount per flip.) So $\mathbb E[N]=42$.
+
+  **Known result:** this "casino" or martingale argument is due to S.-Y. R. Li (1980); J. H. Conway found the same
+  overlap rule earlier. Compare HHHTT, which has no self-overlap: its expected wait is just $2^5=32$.
+
+  **Check by states.** Solving the five linear equations for "how much of the pattern have I matched" also gives $42$.
+checked: 'script: exact solution of the 5-state linear system gives 42; simulation agrees'
+status: ready
