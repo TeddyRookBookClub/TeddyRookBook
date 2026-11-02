@@ -17,6 +17,16 @@
 
   The installable web app (/sw.js, /offline/) and the download kit's updater both compare
   these hashes with the ones they saved, and fetch only files that changed.
+
+  What a section leaves out (config.json):
+  - "exclude": files that are never in any manifest (build noise like /sitemap.xml, /tags/).
+  - "onlineOnly": whole menu sections that need a connection; listed as "online only".
+  - "onlineOnlyFiles": { "<path prefix>": "why" } for files that ARE part of a saved section's pages
+    but are left out of every download because they are big and the page works without them
+    (it falls back to something coarser). Matched by path prefix, like "exclude"; these files
+    never enter a section, even through the folder expansion below. Example: the worldwide
+    zoom 4-5 ocean floor tiles, /earth/ocean-floor/tiles-world/ (the map shows the z0-3 world
+    tiles instead). A page that uses such files must cope with them missing offline.
 */
 'use strict';
 const fs = require('fs');
@@ -61,7 +71,9 @@ const files = new Map(); // '/math/index.html' -> {size}
 })(PUB, '');
 for (const f of [...files.keys()]) if (f.startsWith('/offline/manifests/')) files.delete(f);
 
+const ONLINE_FILES = Object.keys(CFG.onlineOnlyFiles || {});
 function excluded(f) {
+  if (ONLINE_FILES.some(x => f.startsWith(x))) return true;     // online-only files (see the header)
   return CFG.exclude.some(x => x.startsWith('*') ? f.endsWith(x.slice(1)) : (x.endsWith('/') ? f.startsWith(x) : f === x));
 }
 const isPage = f => /\.html?$/i.test(f);
@@ -203,4 +215,6 @@ const all = new Set(core); let total = 0;
 for (const id of Object.keys(index.sections)) { if (index.sections[id].online) continue; for (const x of JSON.parse(fs.readFileSync(path.join(OUT, id + '.json'))).files) all.add('/' + x[0]); }
 for (const f of all) total += files.get(f).size;
 console.log('Offline manifests: core ' + mb(cm.bytes) + ', ' + Object.keys(index.sections).length + ' sections, everything together ' + mb(total) + ' in ' + all.size + ' files -> ' + path.relative(process.cwd(), OUT));
+{ let n = 0, b = 0; for (const [f, e] of files) if (ONLINE_FILES.some(x => f.startsWith(x))) { n++; b += e.size; }
+  if (n) console.log('Left out as online only (onlineOnlyFiles): ' + n + ' files, ' + mb(b)); }
 if (process.env.VERBOSE) for (const [id, e] of Object.entries(index.sections)) console.log('  ' + id.padEnd(28) + (e.online ? 'online only' : mb(e.bytes).padStart(10) + String(e.files).padStart(7) + ' files'));

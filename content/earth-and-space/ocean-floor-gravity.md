@@ -93,7 +93,7 @@ NASA's Scientific Visualization Studio made a striking flyover of the SWOT gravi
 
 ## About these maps
 
-The maps, profiles and animation on this page are our own renderings, made from the published gravity grids. We cut the grids into small tiles that store the data values, not pictures, and your browser colors them. The world view is coarse, and eight featured regions have full detail. The values you see when you hover have been rounded slightly, by less than 1 E for small values.
+The maps, profiles and animation on this page are our own renderings, made from the published gravity grids. We cut the grids into small tiles that store the data values, not pictures, and your browser colors them. The whole ocean is shown with detail down to about 5 kilometers, and eight featured regions have extra detail, down to about 2.5 kilometers. If you save this page for use offline, the finer worldwide tiles stay online; offline, the map shows a coarser world view, and the featured regions keep their extra detail. The values you see when you hover have been rounded slightly, by less than 1 E for small values.
 
 - **SWOT gravity, version SWOT_06** (September 2026): vertical gravity gradient and free-air gravity anomaly, from the [Scripps Institution of Oceanography data folder](https://topex.ucsd.edu/pub/global_grav_1min_SWOT/). It uses three years of SWOT data.
 - **The older map, V33**: the IGPP vertical gravity gradient, version 33, from nadir altimeters only, as served by the [Generic Mapping Tools](https://www.generic-mapping-tools.org/remote-datasets/earth-vgg.html).

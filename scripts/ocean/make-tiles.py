@@ -7,10 +7,19 @@ What it makes (in static/earth/ocean-floor/, see OUT below):
                                   0 = land or no data; 1..255 = a value, companded with asinh (see encode()) so small
                                   values keep about 0.7 E of precision and big ones still fit. The page colors them in
                                   the browser (static/earth/ocean-floor/of.js decodes them with the same formula).
+                                  tiles/ holds the whole world at z0..GLOBAL_ZMAX and the featured regions at
+                                  REGION_ZMIN..their zmax (z6 for VGG). These are saved in the offline download.
+  tiles-world/<layer>/<z>/<x>/<y>.png
+                                  the rest of the world at z(GLOBAL_ZMAX+1)..WORLD_ZMAX (z4-z5, about 5 km per pixel):
+                                  every tile with any ocean that is not already in tiles/. Same size and coding. Kept
+                                  in their own folder so the offline download can leave them out (online only; see
+                                  "onlineOnlyFiles" in scripts/offline/config.json). All-land and all-no-data tiles are
+                                  skipped.
   compare/<id>-swot.png, compare/<id>-v33.png
                                   the before-and-after pairs: the same box from SWOT and from the older V33 grid, same
                                   projection, same scale, same coding.
-  manifest.json                   version, coding, regions, tile lists (the page asks only for tiles that exist).
+  manifest.json                   version, coding, regions, tile lists (the page asks only for tiles that exist):
+                                  layers.<layer>.tiles = tiles/ lists, layers.<layer>.world = tiles-world/ lists.
 
 Sources (cite them; the page and data/credits.yaml do):
   SWOT gravity grids, Scripps Institution of Oceanography (D. Sandwell, Y. Yu):
@@ -36,6 +45,11 @@ How to re-run (for a new SWOT version, change VERSION and the file names; keep t
   for t in S30W120 S60E090; do curl --cacert $CA -O \
       https://oceania.generic-mapping-tools.org/server/earth/earth_vgg/earth_vgg_01m_p/$t.earth_vgg_01m_p.jp2; done
   cd .. && python3 /tmp/site/scripts/ocean/make-tiles.py --raw raw --out /tmp/site/static/earth/ocean-floor
+  Lighter on disk (what round 23 did): download only the two Natural Earth files into raw/ and let the script read the
+  .img grids straight from the server with HTTP Range requests, one grid at a time, without saving them:
+    python3 make-tiles.py --raw raw --out .../ocean-floor --layers vgg --stream --cacert $CA --no-compare
+    python3 make-tiles.py --raw raw --out .../ocean-floor --layers grav --stream --cacert $CA
+  (--no-compare keeps the existing compare/*.png, so the V33 files are not needed.)
   (one layer at a time works too: --layers vgg, then --layers grav; the manifest keeps the other layer's entry.)
   Then delete raw/. Needs numpy and Pillow (with JPEG 2000). Peak memory is about 4 GB.
   --check prints decoded tile values next to the raw grid at a few points (the spot check).
@@ -50,7 +64,11 @@ VERSION = "SWOT_06"            # README_SWOT_06.txt, September 15, 2026
 NCOL, NROW = 21600, 17280      # .img grid
 Y0 = 144.0                     # Mercator "degrees" at the top row (latitude 80.738)
 TILE = 256
-GLOBAL_ZMAX = 3                # whole-world tiles for z0..3
+GLOBAL_ZMAX = 3                # whole-world tiles for z0..3 (in tiles/, saved offline)
+WORLD_ZMAX = 5                 # whole-world ocean tiles for z4..5 too (in tiles-world/, online only). Approved:
+                               # worldwide z4-z5 for both layers; z6 stays in the featured regions only.
+WORLD_DIR = "tiles-world"
+URL = "https://topex.ucsd.edu/pub/global_grav_1min_SWOT/"
 # Coding: code = 128 + 127 * asinh(v / a) / asinh(vmax / a), clamped to 1..255. 0 = land / no data.
 LAYERS = {
     "vgg":  {"file": f"curv_{VERSION}.img", "scale": 0.1, "a": 25.0, "vmax": 400.0, "unit": "E",
@@ -106,9 +124,38 @@ def decode(c, a, vmax):
     return a * np.sinh((np.asarray(c, dtype=np.float64) - 128) * k)
 
 
-def read_img(path, scale):
+def fetch_img(url, cafile, chunk_rows=1080):
+    """Read the whole .img grid from the server with HTTP Range requests, straight into memory (nothing is saved)."""
+    import ssl, time, urllib.request
+    ctx = ssl.create_default_context(cafile=cafile)       # verification stays on
+    buf = np.empty(NROW * NCOL * 2, dtype=np.uint8)
+    step = chunk_rows * NCOL * 2
+    for off in range(0, buf.size, step):
+        end = min(buf.size, off + step) - 1
+        for attempt in range(5):
+            try:
+                req = urllib.request.Request(url, headers={"Range": f"bytes={off}-{end}"})
+                with urllib.request.urlopen(req, context=ctx, timeout=120) as r:
+                    if r.status != 206:
+                        raise IOError(f"expected 206, got {r.status}")
+                    data = r.read()
+                if len(data) != end - off + 1:
+                    raise IOError("short read")
+                buf[off:end + 1] = np.frombuffer(data, dtype=np.uint8)
+                break
+            except Exception as e:
+                if attempt == 4:
+                    raise
+                print(f"    retry {off}: {e}", flush=True)
+                time.sleep(3 * (attempt + 1))
+        print(f"    {100 * (end + 1) / buf.size:5.1f}%", flush=True)
+    return buf.view(">i2").reshape(NROW, NCOL)
+
+
+def read_img(path, scale, a=None):
     """The .img grid as float32 values, columns rolled so column 0 is longitude -180 (like the tiles)."""
-    a = np.fromfile(path, dtype=">i2").reshape(NROW, NCOL)
+    if a is None:
+        a = np.fromfile(path, dtype=">i2").reshape(NROW, NCOL)
     v = np.empty((NROW, NCOL), dtype=np.float32)
     v[:, :NCOL // 2] = a[:, NCOL // 2:]
     v[:, NCOL // 2:] = a[:, :NCOL // 2]
@@ -198,33 +245,39 @@ def write_png(arr, path):
 
 
 def make_layer(key, L, out, cfg):
-    old = os.path.join(out, "tiles", key)
-    if os.path.isdir(old):                       # start clean, so no stale tiles stay behind
-        import shutil
-        shutil.rmtree(old)
-    tiles = {}
+    import shutil
+    for d in ("tiles", WORLD_DIR):               # start clean, so no stale tiles stay behind
+        old = os.path.join(out, d, key)
+        if os.path.isdir(old):
+            shutil.rmtree(old)
     want = {}
     for z in range(GLOBAL_ZMAX + 1):
         want[z] = {(x, y) for x in range(1 << z) for y in range(1 << z)}
     for r in REGIONS:
         for z in range(REGION_ZMIN, min(r["zmax"], cfg.get("zmax", 99)) + 1):
             want.setdefault(z, set()).update(region_tiles(r, z))
-    total = 0
-    for z in sorted(want):
-        lst = []
-        for (x, y) in sorted(want[z]):
-            v, ok = L.sample(tile_box(z, x, y), (TILE, TILE))
-            if not ok.any():
-                continue
-            code = np.where(ok, encode(v, cfg["a"], cfg["vmax"]), 0)
-            p = os.path.join(out, "tiles", key, str(z), str(x), f"{y}.png")
-            write_png(code, p)
-            total += os.path.getsize(p)
-            lst.append([x, y])
-        tiles[str(z)] = lst
-        print(f"  {key} z{z}: {len(lst)} tiles", flush=True)
-    print(f"  {key}: {total / 1e6:.2f} MB")
-    return tiles
+    world = {}
+    for z in range(GLOBAL_ZMAX + 1, WORLD_ZMAX + 1):
+        world[z] = {(x, y) for x in range(1 << z) for y in range(1 << z)} - want.get(z, set())
+    res = {}
+    for d, sets in (("tiles", want), (WORLD_DIR, world)):
+        lists, total = {}, 0
+        for z in sorted(sets):
+            lst = []
+            for (x, y) in sorted(sets[z]):
+                v, ok = L.sample(tile_box(z, x, y), (TILE, TILE))
+                if not ok.any():                 # all land, or off the grid (no data)
+                    continue
+                code = np.where(ok, encode(v, cfg["a"], cfg["vmax"]), 0)
+                p = os.path.join(out, d, key, str(z), str(x), f"{y}.png")
+                write_png(code, p)
+                total += os.path.getsize(p)
+                lst.append([x, y])
+            lists[str(z)] = lst
+            print(f"  {key} {d} z{z}: {len(lst)} tiles", flush=True)
+        print(f"  {key} {d}: {total / 1e6:.2f} MB")
+        res[d] = lists
+    return res["tiles"], res[WORLD_DIR]
 
 
 def make_compare(L, mask, rawdir, out, cfg):
@@ -261,13 +314,15 @@ def make_compare(L, mask, rawdir, out, cfg):
 
 def check(L, cfg, out, key, src):
     """Spot check: decode a few tile pixels and compare with the raw grid at the same place."""
-    raw = np.memmap(src, dtype=">i2", mode="r", shape=(NROW, NCOL))
+    raw = src if isinstance(src, np.ndarray) else np.memmap(src, dtype=">i2", mode="r", shape=(NROW, NCOL))
     pts = [(-155.6, 19.4), (172.0, 32.0), (-96.5, -5.0), (145.0, 11.3), (95.0, -46.0), (-30.0, 0.5), (-57.0, -44.0)]
     for lon, lat in pts:
-        for z in (3, 6):
+        for z in (3, 5, 6):
             tx, ty = lonlat_to_tile(lon, lat, z)
             x, y = int(tx), int(ty)
             p = os.path.join(out, "tiles", key, str(z), str(x), f"{y}.png")
+            if not os.path.exists(p):
+                p = os.path.join(out, WORLD_DIR, key, str(z), str(x), f"{y}.png")
             if not os.path.exists(p):
                 continue
             px, py = int((tx - x) * TILE), int((ty - y) * TILE)
@@ -285,10 +340,14 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--layers", default="vgg,grav")
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--stream", action="store_true", help="read the .img grids from the server with Range requests")
+    ap.add_argument("--cacert", help="CA bundle for --stream (must include the emSign roots); never skip verification")
+    ap.add_argument("--no-compare", action="store_true", help="keep the existing compare/*.png")
     a = ap.parse_args()
     man_path = os.path.join(a.out, "manifest.json")
     man = json.load(open(man_path)) if os.path.exists(man_path) else {}
-    man.update({"version": VERSION, "tile": TILE, "globalZmax": GLOBAL_ZMAX, "regionZmin": REGION_ZMIN,
+    man.update({"version": VERSION, "tile": TILE, "globalZmax": GLOBAL_ZMAX, "worldZmax": WORLD_ZMAX,
+                "worldDir": WORLD_DIR + "/", "regionZmin": REGION_ZMIN,
                 "regions": REGIONS, "layers": man.get("layers", {})})
     print("land mask...", flush=True)
     mask = land_mask([os.path.join(a.raw, "ne_10m_land.geojson"),
@@ -296,22 +355,29 @@ def main():
     for key in a.layers.split(","):
         cfg = LAYERS[key]
         src = os.path.join(a.raw, cfg["file"])
-        if not os.path.exists(src):
+        grid = None
+        if a.stream:
+            print(f"{key}: streaming {URL + cfg['file']}", flush=True)
+            grid = fetch_img(URL + cfg["file"], a.cacert)
+        elif not os.path.exists(src):
             print(f"skip {key}: no {src}")
             continue
-        print(f"{key}: reading {src}", flush=True)
-        vals = read_img(src, cfg["scale"])
+        else:
+            print(f"{key}: reading {src}", flush=True)
+        vals = read_img(src, cfg["scale"], grid)
+        if not a.check:
+            grid = None                          # free it early (about 750 MB)
         L = Layer(vals, mask)
         del vals
-        tiles = make_layer(key, L, a.out, cfg)
+        tiles, world = make_layer(key, L, a.out, cfg)
         entry = {"name": cfg["name"], "unit": cfg["unit"], "a": cfg["a"], "vmax": cfg["vmax"], "tiles": tiles,
-                 "zmax": max(int(z) for z in tiles)}
-        if key == "vgg":
+                 "world": world, "zmax": max(int(z) for z in list(tiles) + list(world))}
+        if key == "vgg" and not a.no_compare:
             man["compare"] = make_compare(L, mask, a.raw, a.out, cfg)
         man["layers"][key] = entry
         if a.check:
-            check(L, cfg, a.out, key, src)
-        del L
+            check(L, cfg, a.out, key, grid if grid is not None else src)
+        del L, grid
     with open(man_path, "w") as f:
         json.dump(man, f, separators=(",", ":"))
     print("wrote", man_path)

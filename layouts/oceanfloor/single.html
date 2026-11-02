@@ -101,13 +101,13 @@
       <span class="of-leg-land"><i aria-hidden="true"></i> land and ice shelves</span>
     </div>
     <div class="of-regions">
-      <p class="of-regions-h">Featured regions, in full detail:</p>
+      <p class="of-regions-h">Featured regions, with extra detail:</p>
       <ul>
         {{- range $i, $s := .Params.tour }}
         <li><button type="button" class="of-reg" data-r="{{ $s.id }}" data-i="{{ $i }}" aria-current="false"><span aria-hidden="true">{{ add $i 1 }}</span> {{ $s.title }}</button></li>
         {{- end }}
       </ul>
-      <p class="of-small">Elsewhere the map shows a coarser world view, with land and ice shelves in tan. The dashed boxes mark the featured regions.</p>
+      <p class="of-small">You can zoom in anywhere in the ocean to see detail down to about 5 km. The featured regions, marked by dashed boxes, have extra detail, down to about 2.5 km. Land and ice shelves are in tan.</p>
     </div>
     <div class="of-prof" hidden>
       <div class="of-prof-head">

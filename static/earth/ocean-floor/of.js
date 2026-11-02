@@ -2,7 +2,11 @@
    the before-and-after swipe. Layout: layouts/oceanfloor/single.html; styles: of.css; animation: how.js.
    Tiles: tiles/<layer>/<z>/<x>/<y>.png (Web Mercator, 256 px, 8-bit gray). Each pixel is a code, not a color:
    0 = land or no data, 1..255 = value v = a * sinh((code - 128) * asinh(vmax / a) / 127). manifest.json lists every
-   tile, so we never ask for one that doesn't exist. All made by scripts/ocean/make-tiles.py. */
+   tile, so we never ask for one that doesn't exist. All made by scripts/ocean/make-tiles.py.
+   tiles/ = the world at z0-3 plus the featured regions (z4-6); tiles-world/ (manifest worldDir, lists in layers.*.world)
+   = the rest of the ocean at z4-5. tiles-world/ is online only (left out of the offline download), so we use it only
+   when it can be reached: never while the browser is offline, and only after one probe tile loads. Without it the map
+   simply shows the z0-3 world tiles enlarged. */
 (function () {
   'use strict';
   var root = document.querySelector('.of');
@@ -85,9 +89,46 @@
   }
 
   // ---------------------------------------------------------------- tiles
-  var cache = {}, avail = {}, version = 0;
+  var cache = {}, avail = {}, version = 0;      // avail: 1 = in tiles/, 2 = in tiles-world/
+  // the online-only world tiles: 0 = not tried yet, 1 = they load, -1 = not reachable (offline or not saved)
+  var world = (navigator.onLine === false) ? -1 : 0, probe = null, probeWait = [];
   function key(lk, z, x, y) { return lk + '/' + z + '/' + x + '/' + y; }
-  function hasTile(lk, z, x, y) { return !!avail[key(lk, z, x, y)]; }
+  function hasTile(lk, z, x, y) {
+    var k = key(lk, z, x, y), a = avail[k];
+    if (a !== 2) return a === 1;
+    if (world === 1) return true;
+    if (world === -1) return false;
+    if (!probe) startProbe(lk, z, x, y);
+    return k === probe;
+  }
+  function startProbe(lk, z, x, y) {
+    probe = key(lk, z, x, y);
+    getTile(lk, z, x, y).p.then(function (t) { worldIs(t.ok ? 1 : -1); });
+  }
+  function worldIs(v) {
+    world = v;
+    if (v !== 1) probe = null;
+    var w = probeWait; probeWait = [];
+    w.forEach(function (f) { f(); });
+    requestDraw();
+  }
+  // resolves once we know whether the world tiles can be used (starting a probe at this point if needed)
+  function worldKnown(lk, wx, wy) {
+    if (world !== 0) return Promise.resolve();
+    wx = ((wx % 1) + 1) % 1;
+    for (var z = MAN.worldZmax || 0; z > 0 && !probe; z--) {
+      var n = 1 << z, x = Math.floor(wx * n), y = Math.floor(wy * n);
+      if (avail[key(lk, z, x, y)] === 2) startProbe(lk, z, x, y);
+    }
+    if (!probe) return Promise.resolve();
+    return new Promise(function (res) { probeWait.push(res); });
+  }
+  window.addEventListener('offline', function () { if (world !== -1) worldIs(-1); });
+  window.addEventListener('online', function () {
+    if (world === 1) return;
+    Object.keys(cache).forEach(function (k) { if (avail[k] === 2 && cache[k].fail) delete cache[k]; });
+    world = 0; probe = null; requestDraw();
+  });
   function loadCodes(url) {
     return new Promise(function (res, rej) {
       var im = new Image();
@@ -109,7 +150,7 @@
     var k = key(lk, z, x, y), t = cache[k];
     if (t) return t;
     t = cache[k] = { lk: lk, z: z, x: x, y: y, ok: false, cv: null, ver: -1 };
-    t.p = loadCodes(BASE + 'tiles/' + k + '.png').then(function (r) {
+    t.p = loadCodes(BASE + (avail[k] === 2 ? MAN.worldDir || 'tiles-world/' : 'tiles/') + k + '.png').then(function (r) {
       t.codes = r.codes; t.ok = true; paint(t); requestDraw();
       return t;
     }, function () { t.fail = true; return t; });
@@ -549,6 +590,10 @@
     return -1;
   }
   function computeProfile() {
+    var my0 = prof;
+    worldKnown('vgg', (prof.a[0] + prof.b[0]) / 2, (prof.a[1] + prof.b[1]) / 2).then(function () { if (prof === my0) computeProfile2(); });
+  }
+  function computeProfile2() {
     var N = 360, pts = [], need = {}, lks = ['vgg', 'grav'], i, j;
     for (i = 0; i <= N; i++) {
       var t = i / N, wx = prof.a[0] + (prof.b[0] - prof.a[0]) * t, wy = prof.a[1] + (prof.b[1] - prof.a[1]) * t;
@@ -585,7 +630,7 @@
     if (rv) t += 'Gravity gradient from ' + fmtVal(rv[0], 'E') + ' to ' + fmtVal(rv[1], 'E') + '. ';
     if (rg) t += 'Gravity anomaly from ' + fmtVal(rg[0], 'mGal') + ' to ' + fmtVal(rg[1], 'mGal') + '. ';
     if (!rv) t += 'The line crosses only land.';
-    else if (pData.zv < 5) t += 'Outside the featured regions the map is coarse, so small features are smoothed out.';
+    else if (pData.zv < 4) t += 'Only the coarser world view is available here right now (the finer world tiles need a connection), so small features are smoothed out.';
     pSum.textContent = t;
   }
   function nice(lo, hi) {
@@ -728,6 +773,7 @@
     Object.keys(m.layers).forEach(function (lk) {
       var L = m.layers[lk];
       L.dec = decoder(L);
+      Object.keys(L.world || {}).forEach(function (z) { L.world[z].forEach(function (t) { avail[key(lk, +z, t[0], t[1])] = 2; }); });
       Object.keys(L.tiles).forEach(function (z) { L.tiles[z].forEach(function (t) { avail[key(lk, +z, t[0], t[1])] = 1; }); });
     });
     if (!m.layers[S.layer]) S.layer = 'vgg';
