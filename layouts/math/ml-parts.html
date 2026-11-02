@@ -117,10 +117,11 @@
 {{ partial "inline/ml-css.html" "math/math.css" }}
 {{- end -}}
 
-{{- define "_partials/inline/ml-cfg.html" -}}
-{{- $page := . }}{{ $lk := "math" -}}
-{{- if reflect.IsMap . }}{{ $page = .page }}{{ $lk = .ladder | default "math" }}{{ end -}}
-{{- $L := partial "inline/ml-ladder.html" $lk -}}
+{{- define "_partials/inline/ml-cfg-shared.html" -}}
+{{- /* (partialCached) the part of the ladder config that is the same on every page of every ladder: root, ladders, graph,
+   gen, viz, vb, courses. Returns { cfg: that dict, url: /math/ml-cfg.<md5>.js }. That file (built once per build) completes the
+   page's small <script id="ml-cfg"> (base, ladder, page) with these keys, in place, before any ladder script reads it, so
+   readers see the same full config as when all of it was inline on every page (about 30 KB per page). */ -}}
 {{- $g := partialCached "inline/ml-graph.html" "graph" -}}
 {{- $gen := dict -}}{{- $viz := dict -}}
 {{- range $k, $c := $g.C -}}
@@ -146,5 +147,21 @@
   {{- $vk := partial "inline/ml-vizbase.html" .key }}{{ if ne $c.ladder "math" }}{{ $vk = $c.dir }}{{ end -}}
   {{- $courses = $courses | append (dict "key" .key "slug" .slug "title" .title "short" .short "band" .band "grade" .grade "icon" .icon "color" .color "after" .after "url" .url "n" .n "viz" $vk "ladder" $c.ladder "dir" $c.dir "r" $c.r) -}}
 {{- end -}}
-<script type="application/json" id="ml-cfg">{{ dict "base" $L.url "root" ("/" | relURL) "ladder" $L.key "ladders" $lads "graph" (printf "%s?v=%s" $g.url $g.v) "gen" $gen "viz" $viz "vb" $vb "courses" $courses "page" $page | jsonify | safeJS }}</script>
+{{- $shared := dict "root" ("/" | relURL) "ladders" $lads "graph" (printf "%s?v=%s" $g.url $g.v) "gen" $gen "viz" $viz "vb" $vb "courses" $courses -}}
+{{- $js := printf "(function(){var e=document.getElementById(\"ml-cfg\");if(!e)return;var s=%s,o={},r={},k;try{o=JSON.parse(e.textContent)}catch(x){}for(k in s)if(!(k in o))o[k]=s[k];Object.keys(o).sort().forEach(function(k){r[k]=o[k]});e.textContent=JSON.stringify(r)})();" ($shared | jsonify) -}}
+{{- $res := resources.FromString "math/ml-cfg.js" $js | resources.Minify | fingerprint "md5" -}}
+{{- return (dict "cfg" $shared "url" $res.RelPermalink) -}}
+{{- end -}}
+
+{{- define "_partials/inline/ml-cfg.html" -}}
+{{- $page := . }}{{ $lk := "math" -}}
+{{- if reflect.IsMap . }}{{ $page = .page }}{{ $lk = .ladder | default "math" }}{{ end -}}
+{{- $L := partial "inline/ml-ladder.html" $lk -}}
+{{- $S := partialCached "inline/ml-cfg-shared.html" "shared" -}}
+{{- if eq $page "embed" -}}
+{{- /* embeds (/embed/practice/) keep the whole config inline: other sites frame them, and the toolkit and check-embeds read it */ -}}
+<script type="application/json" id="ml-cfg">{{ merge $S.cfg (dict "base" $L.url "ladder" $L.key "page" $page) | jsonify | safeJS }}</script>
+{{- else -}}
+<script type="application/json" id="ml-cfg">{{ dict "base" $L.url "ladder" $L.key "page" $page | jsonify | safeJS }}</script><script src="{{ $S.url }}"></script>
+{{- end -}}
 {{- end -}}

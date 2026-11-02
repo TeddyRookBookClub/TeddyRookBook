@@ -54,6 +54,9 @@
 {{- /* drop repeats (same name) */ -}}
 {{- $list := slice }}{{ range $items }}{{ if not (index $seen .name) }}{{ $seen = merge $seen (dict .name true) }}{{ $list = $list | append . }}{{ end }}{{ end -}}
 {{- with $list }}
+{{- /* Its styles: assets/css/site-credits.css, linked just before the block so the block never shows unstyled. */}}
+{{- $crCSS := resources.Get "css/site-credits.css" | resources.Minify | fingerprint "md5" }}
+<link rel="stylesheet" href="{{ $crCSS.RelPermalink }}">
 <aside class="trb-cr{{ if $own }} trb-cr-own{{ end }}{{ if $tight }} trb-cr-tight{{ end }}" data-noexpand aria-label="Sources and credits">
   {{- if $tight }}<details><summary>Sources and credits</summary>{{ else }}<h2 class="trb-cr-h">Sources and credits</h2>{{ end }}
   <ul>
@@ -64,22 +67,6 @@
   <p class="trb-cr-all">Every source and licence the site uses is on the <a href="{{ "credits/" | relURL }}">Credits page</a>.</p>
   {{- if $tight }}</details>{{ end }}
 </aside>
-<style>
-.trb-cr{clear:both;margin:2.2rem 0 .6rem;padding:.75rem 1rem .6rem;border:1px solid var(--border);border-left:3px solid #b8963e;border-radius:10px;font-size:.84rem;line-height:1.5;color:var(--secondary);max-width:100%;overflow-wrap:anywhere}
-.trb-cr .trb-cr-h,.trb-cr summary{font-size:.92rem;font-weight:700;color:#004225;margin:0 0 .35rem;letter-spacing:.01em}
-.trb-cr summary{cursor:pointer;margin:0;list-style-position:inside}
-.trb-cr details[open] summary{margin-bottom:.35rem}
-.trb-cr ul{margin:0;padding-left:1.1rem}
-.trb-cr li{margin:.15rem 0}
-.trb-cr a{color:inherit;text-decoration:underline;text-decoration-color:#b8963e;text-underline-offset:2px;box-shadow:none}
-.trb-cr a:hover{color:#004225}
-.trb-cr .trb-cr-all{margin:.4rem 0 0;font-size:.8rem}
-.trb-cr-own{margin-top:1rem;padding:.55rem .9rem .5rem}
-.trb-cr-own .trb-cr-h{font-size:.85rem}
-.trb-cr-tight{padding:.5rem .9rem}
-[data-theme="dark"] .trb-cr .trb-cr-h,[data-theme="dark"] .trb-cr summary,[data-theme="dark"] .trb-cr a:hover{color:#6cc79a}
-@media print{.trb-cr{break-inside:avoid;border-color:#999;color:#000;font-size:9pt}.trb-cr a{color:#000}.trb-cr .trb-cr-h,.trb-cr summary{color:#000}.trb-cr summary{list-style:none}.trb-cr .trb-cr-all{display:none}}
-</style>
 {{- if $tight }}<script>addEventListener('beforeprint',function(){document.querySelectorAll('.trb-cr details').forEach(function(d){d.open=true})})</script>{{ end }}
 {{- end -}}
 {{- end -}}

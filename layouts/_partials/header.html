@@ -38,7 +38,7 @@
                 {{- if (not site.Params.disableThemeToggle) }}
                 {{- /* Light/dark switch: a sun-and-moon slider. The theme's own code (footer.html) still does the switching on
                    click and saves 'pref-theme'; the knob follows html[data-theme] in CSS (assets/css/extended/theme-switch.css),
-                   so it is right from the first paint. aria-checked follows the theme through the small script at the end of this file. */}}
+                   so it is right from the first paint. aria-checked follows the theme through part 1 of assets/js/site-shell.js. */}}
                 <button type="button" id="theme-toggle" class="theme-toggle trb-switch" role="switch" aria-checked="false" aria-label="Dark mode" accesskey="t" title="Dark mode (Alt + T)">
                     <span class="trb-sw-track" aria-hidden="true">
                         <span class="trb-sw-knob"></span>
@@ -104,6 +104,4 @@
         </ul>
     </nav>
 </header>
-{{- if (not site.Params.disableThemeToggle) }}
-<script>(function () { 'use strict'; var b = document.getElementById('theme-toggle'), h = document.documentElement; if (!b) return; function sync() { b.setAttribute('aria-checked', h.getAttribute('data-theme') === 'dark' ? 'true' : 'false'); } sync(); try { new MutationObserver(sync).observe(h, { attributes: true, attributeFilter: ['data-theme'] }); } catch (e) { } })();</script>
-{{- end }}
+{{- /* The script that keeps the switch's aria-checked in step with the theme is now part 1 of assets/js/site-shell.js. */}}

@@ -54,7 +54,7 @@ There's nothing to join or buy: no accounts, ads or sign-ups (the repository's n
 | [Sewing & Knitting](https://teddyrookbook.com/sewing/) | Step-by-step guides for hand sewing, mending, hemming, the sewing machine, knitting and crochet, with the tools explained (hand, old-fashioned and electric), yarn weights and abbreviations. Guides and tools are in `data/sewing.yaml` with sources (extension and 4-H guides, Craft Yarn Council); pages come from `content/sewing/_content.gotmpl`; the stitch diagrams are original SVGs in `layouts/_partials/sew-diagram.html`. |
 | [PhotoCraft](https://teddyrookbook.com/photocraft/) | A hosted copy of [PhotoCraft](https://github.com/storytold/photocraft), an open-source image editor by the ArtCraft Team (MIT / Apache-2.0). It runs in the browser; pictures stay on the visitor's device. Not affiliated with Adobe. |
 
-Measurements on the garden, sewing and outdoor pages can show in US units, metric or both (`static/js/units.js` converts text inside any element marked `data-units`; the choice is kept in the browser). Groups of collapsible sections get an Expand all button (in `layouts/_partials/extend_footer.html`).
+Measurements on the garden, sewing and outdoor pages can show in US units, metric or both (`static/js/units.js` converts text inside any element marked `data-units`; the choice is kept in the browser). Groups of collapsible sections get an Expand all button (in `assets/js/site-shell.js`).
 
 No accounts, no ads, no tracking. Progress in the drills, flashcards and games is saved only in the visitor's own browser; the [My Progress](https://teddyrookbook.com/progress/) page can save it to a file and load it on another device. The search button in the header searches every page, infographic and timeline entry.
 

@@ -10,7 +10,7 @@ Some formulas are easier to read when each part has its own color. For example, 
 | TeX command, key, hover names, highlight, on/off | `static/math/core/tex.js` (`\role`, `MathLadder.roles`) |
 | Styles | `static/math/core/core.css` (end of file) |
 | Slider links | `static/math/viz/core.js` (`slider({ role })`, viz `opts.roleLinks`) |
-| On/off switch | the header's **Aa** menu (`layouts/_partials/extend_footer.html`), saved as `localStorage['trb-fcolors']` |
+| On/off switch | the header's **Aa** menu (`assets/js/site-shell.js`), saved as `localStorage['trb-fcolors']` |
 | Checks | `node scripts/math/check-roles.js` (runs in `.github/workflows/hugo.yml`) |
 
 ## Writing it

@@ -1,0 +1,24 @@
+/* Footer styles: "Expand all" bars, unit pickers and the social links. Linked from layouts/_partials/extend_footer.html
+   at the end of the page, where these styles used to be inline, so they still come after every page style. */
+.xa-bar{display:flex;justify-content:flex-end;margin:.25rem 0 .4rem}
+.xa-bar[hidden]{display:none}
+.xa-head{display:flex;align-items:center;justify-content:space-between;gap:.4rem .8rem;flex-wrap:wrap}
+.xa-head>h2,.xa-head>h3,.xa-head>h4{margin-top:0 !important;margin-bottom:.5rem}
+.xa-head>.xa-bar{margin:0 0 .5rem auto}
+* + .xa-head{margin-top:1.8rem}
+.xa-btn{font:inherit;font-size:.85rem;font-weight:600;padding:.25rem .8rem;border-radius:999px;border:1.5px solid #9dbba9;background:transparent;color:#004225;cursor:pointer}
+.xa-btn:hover{background:rgba(0,66,37,.07)}
+[data-theme="dark"] .xa-btn{border-color:#3c5a49;color:#6cc79a}
+[data-theme="dark"] .xa-btn:hover{background:rgba(108,199,154,.1)}
+@media print{.xa-bar,.un-pick{display:none}}
+.un-pick{display:inline-flex;align-items:center;gap:.25rem;font-size:.82rem;flex-wrap:wrap}
+.un-pick span{font-weight:600;opacity:.8;margin-right:.2rem}
+.un-pick button{font:inherit;font-weight:600;padding:.2rem .7rem;border-radius:999px;border:1.5px solid #9dbba9;background:transparent;color:#004225;cursor:pointer}
+.un-pick button[aria-pressed="true"]{background:#004225;border-color:#004225;color:#fff}
+[data-theme="dark"] .un-pick button{border-color:#3c5a49;color:#6cc79a}
+[data-theme="dark"] .un-pick button[aria-pressed="true"]{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
+.un-pick.un-float{display:flex;justify-content:flex-end;margin:.2rem 0 .5rem}
+.trb-social{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem 1.2rem;margin:.2rem 0 .8rem;font-size:.85rem}
+.trb-social a{display:inline-flex;align-items:center;gap:.35rem;color:var(--secondary);text-decoration:none;box-shadow:none}
+.trb-social a:hover{color:var(--primary)}
+.trb-social svg{width:18px;height:18px}

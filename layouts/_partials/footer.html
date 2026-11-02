@@ -1,0 +1,50 @@
+{{- /* Override of the theme footer (themes/PaperMod/layouts/_partials/footer.html): the same footer; its inline scripts moved
+   to assets/js/site-shell.js. */ -}}
+{{- if not (.Param "hideFooter") }}
+<footer class="footer">
+    {{- if not site.Params.footer.hideCopyright }}
+        {{- if site.Copyright }}
+        <span>{{ site.Copyright | markdownify }}</span>
+        {{- else }}
+        <span>&copy; {{ now.Year }} <a href="{{ "" | absLangURL }}">{{ site.Title }}</a></span>
+        {{- end }}
+        {{- print " · "}}
+    {{- end }}
+
+    {{- with site.Params.footer.text }}
+        {{ . | markdownify }}
+        {{- print " · "}}
+    {{- end }}
+
+    {{/*
+        - The "Powered by Hugo" text is intentionally left at the end of the footer to give it more prominence.
+        - We kindly encourage you to keep this line. Keeping this credit helps open source projects like PaperMod and Hugo reach more people, supports the open source ecosystem, and shows appreciation for the work that goes into these tools.
+        - If you choose to remove it, please consider adding a link to the PaperMod GitHub repository somewhere on your site to give credit to the project and its contributors.
+        - Support us by sponsoring the project on GitHub Sponsors: https://github.com/sponsors/adityatelange
+    */}}
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+{{- end }}
+
+{{- if (not site.Params.disableScrollToTop) }}
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+{{- end }}
+
+{{- partial "extend_footer.html" . }}
+{{- /* The theme's footer scripts and the site's own (they were inline here and in extend_footer.html and header.html) are one
+   cached file, assets/js/site-shell.js, run as a template once per build, minified and fingerprinted. A plain <script src>
+   at the same place, so everything runs at the same moment and in the same order as before. data-cc turns on the code copy
+   buttons on the same pages as the theme's condition did. */}}
+{{- $shellJS := resources.Get "js/site-shell.js" | resources.ExecuteAsTemplate "js/site-shell.js" site | resources.Minify | fingerprint "md5" }}
+<script src="{{ $shellJS.RelPermalink }}"{{ if (and (eq .Kind "page") (ne .Layout "archives") (ne .Layout "search") (.Param "ShowCodeCopyButtons")) }} data-cc{{ end }}></script>
