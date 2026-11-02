@@ -1,0 +1,26 @@
+{{- /* October Sky section frame (/october-sky/): crumbs, hero, the section's page menu, the page's content (an HTML
+   content file in content/october-sky/), then a "next page" line. Styles: static/october-sky/os.css. The companion course
+   is the Physics Ladder's "Rocket Boys Math and Physics" at /physics/rocket-boys/. */ -}}
+{{- $sec := site.GetPage "/october-sky" -}}
+{{- $pages := slice (dict "t" "The story" "u" "october-sky/") (dict "t" "The real story" "u" "october-sky/real-story/") (dict "t" "The Space Race" "u" "october-sky/space-race/") (dict "t" "Try it safely" "u" "october-sky/try-it-safely/") (dict "t" "Read and watch" "u" "october-sky/read-and-watch/") -}}
+<link rel="stylesheet" href="{{ "october-sky/os.css" | relURL }}?v={{ (os.Stat "static/october-sky/os.css").ModTime.Unix }}">
+<article class="os">
+  <nav class="os-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › {{ if .IsSection }}October Sky{{ else }}<a href="{{ "october-sky/" | relURL }}">October Sky</a> › {{ .Params.short | default .Title }}{{ end }}</nav>
+  <header class="os-hero">
+    <p class="os-eyebrow">{{ .Params.eyebrow | default "October Sky · The Rocket Boys of Coalwood" }}</p>
+    <h1>{{ .Params.heading | default .Title }}</h1>
+    {{ with .Params.lead }}<p>{{ . }}</p>{{ end }}
+  </header>
+  <nav aria-label="October Sky pages">
+    <ul class="os-nav">
+      {{- $here := .RelPermalink }}
+      {{- range $pages }}{{ $u := .u | relURL }}
+      <li><a href="{{ $u }}"{{ if eq $u $here }} aria-current="page"{{ end }}>{{ .t }}</a></li>
+      {{- end }}
+      <li><a class="os-course" href="{{ "physics/rocket-boys/" | relURL }}">The math and physics course →</a></li>
+    </ul>
+  </nav>
+  {{ .Content }}
+  {{- $i := 0 }}{{ range $k, $p := $pages }}{{ if eq ($p.u | relURL) $here }}{{ $i = add $k 1 }}{{ end }}{{ end }}
+  <p class="os-next">{{ if lt $i (len $pages) }}{{ with index $pages $i }}Next: <a href="{{ .u | relURL }}">{{ .t }}</a> · {{ end }}{{ end }}Learn the math the boys learned in <a href="{{ "physics/rocket-boys/" | relURL }}">Rocket Boys Math and Physics</a>, a Physics Ladder course.</p>
+</article>

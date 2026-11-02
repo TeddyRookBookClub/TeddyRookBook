@@ -132,6 +132,17 @@ document.addEventListener('click', function (e) {
   }
   btn.addEventListener('click', function (e) { e.stopPropagation(); pop.hidden = !pop.hidden; btn.setAttribute('aria-expanded', !pop.hidden); if (!pop.hidden) set(cur()); });
   pop.addEventListener('click', function (e) { e.stopPropagation(); var b = e.target.closest('[data-d]'); if (!b) return; var d = +b.dataset.d; set(d === 0 ? 2 : cur() + d); });
+  /* Formula colors on/off (docs/formula-colors.md): shown on pages with color-coded formulas; remembered on this device. */
+  var fc = document.createElement('button'); fc.type = 'button'; fc.className = 'trb-fs-fc'; fc.hidden = true; pop.appendChild(fc);
+  function fcOn() { return root.getAttribute('data-fcolors') !== 'off'; }
+  function fcShow() { var on = fcOn(); fc.innerHTML = 'Formula colors: <b>' + (on ? 'on' : 'off') + '</b>'; fc.setAttribute('aria-pressed', String(on)); }
+  fc.addEventListener('click', function () {
+    var on = !fcOn(), R = window.MathLadder && window.MathLadder.roles;
+    if (R && R.set) R.set(on);
+    else { if (on) root.removeAttribute('data-fcolors'); else root.setAttribute('data-fcolors', 'off'); try { if (on) localStorage.removeItem('trb-fcolors'); else localStorage.setItem('trb-fcolors', 'off'); } catch (e) { } }
+    fcShow();
+  });
+  btn.addEventListener('click', function () { fc.hidden = !document.querySelector('.ml-role[data-role]'); fcShow(); });
   document.addEventListener('click', function () { pop.hidden = true; btn.setAttribute('aria-expanded', 'false'); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') pop.hidden = true; });
 })();

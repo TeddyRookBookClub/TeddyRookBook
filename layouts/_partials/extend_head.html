@@ -8,6 +8,8 @@
 {{ partial "report/script.html" . }}
 {{- /* Text size: applied before the page paints so there is no jump. Set by the Aa button in the header. */ -}}
 <script>(function(){try{var f=parseFloat(localStorage.getItem('trb-fs'));if(f>0.7&&f<1.8)document.documentElement.style.setProperty('--fs',f)}catch(e){}})();</script>
+{{- /* Formula colors (docs/formula-colors.md): off when chosen in the Aa menu. */}}
+<script>try{if(localStorage.getItem('trb-fcolors')==='off')document.documentElement.setAttribute('data-fcolors','off')}catch(e){}</script>
 <style>
 html{font-size:calc(16px * var(--fs,1))}
 body{font-size:calc(18px * var(--fs,1))}
@@ -20,6 +22,11 @@ body{font-size:calc(18px * var(--fs,1))}
 .trb-fs-pop button{border:1px solid var(--border);background:var(--theme);color:var(--primary);border-radius:8px;min-width:34px;height:32px;cursor:pointer;font:600 14px system-ui,sans-serif}
 .trb-fs-pop button:hover{border-color:#004225}
 .trb-fs-pop output{min-width:3.2em;text-align:center;color:var(--secondary);font-variant-numeric:tabular-nums}
+.trb-fs-pop:not([hidden]):has(.trb-fs-fc:not([hidden])){display:grid;grid-template-columns:repeat(4,auto);align-items:center}
+.trb-fs-pop .trb-fs-fc{grid-column:1/-1;padding:0 .6rem;text-align:left;font-weight:500}
+.trb-fs-pop .trb-fs-fc[hidden]{display:none}
+.trb-fs-pop .trb-fs-fc[aria-pressed="true"]{border-color:#004225}
+.trb-fs-pop .trb-fs-fc b{font-weight:700}
 </style>
 <style>
 /* phones: keep the whole menu on screen */

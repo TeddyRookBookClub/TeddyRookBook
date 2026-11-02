@@ -1,0 +1,171 @@
+year: 2020
+edition: 61st
+date: "September 21–22, 2020 · held online, hosted by Russia"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2020/2020_eng.pdf
+  archive: https://www.imo-official.org/year_info.aspx?year=2020
+problems:
+  - id: P1
+    day: 1
+    topic: "Angle ratios 1:2:3 and a shared circumcenter"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Guess the common point: the circumcenter $O$ of triangle $ABP$ is already on the perpendicular bisector of $AB$.'
+      - 'Compare $\angle AOP$ with $\angle ADP$. What does it mean for $D$ and $O$ if those two angles add up to $180^\circ$?'
+    solution: |
+      **Key idea:** the circumcenter $O$ of triangle $ABP$ is the midpoint of an arc of the circle through $A$, $D$ and $P$. So $DO$ bisects the angle at $D$, and likewise $CO$ bisects the angle at $C$.
+
+      Let $\alpha=\angle PAD$, so $\angle PBA=2\alpha$ and $\angle DPA=3\alpha$. Let $\beta=\angle CBP$, so $\angle BAP=2\beta$ and $\angle BPC=3\beta$. Triangle $ADP$ has angles $\alpha$ and $3\alpha$, so $\alpha<45^\circ$ and $\angle ADP=180^\circ-4\alpha$. In the same way $\beta<45^\circ$ and $\angle BCP=180^\circ-4\beta$.
+
+      Let $O$ be the circumcenter of triangle $ABP$. It lies on the perpendicular bisector of $AB$. We show it lies on the other two lines.
+
+      **$O$ is on the bisector of $\angle ADP$.** Since $ABCD$ is convex and $P$ is inside it, line $AP$ separates $B$ from $D$. Let $W$ be the midpoint of the arc $AP$ of the circle $(ADP)$ that does not contain $D$. Then:
+      - $WA=WP$;
+      - $W$ is on $B$'s side of $AP$;
+      - $\angle AWP=180^\circ-\angle ADP=4\alpha$, since $ADPW$ is cyclic.
+
+      Now look at $O$. The inscribed angle $\angle ABP=2\alpha$ is acute, so $O$ is on the same side of $AP$ as $B$. Also $OA=OP$, and the central angle is $\angle AOP=2\cdot2\alpha=4\alpha$. On the perpendicular bisector of $AP$, on $B$'s side, only one point sees $AP$ at the angle $4\alpha$. So $O=W$. The midpoint of an arc $AP$ lies on the bisector of the angle that $AP$ subtends at $D$, so $DO$ bisects $\angle ADP$.
+
+      **$O$ is on the bisector of $\angle PCB$.** This is the same argument with $B$ in place of $A$ and $C$ in place of $D$. Line $BP$ separates $A$ from $C$. The arc midpoint $W'$ of arc $BP$ of the circle $(BCP)$, on the side away from $C$, satisfies $W'B=W'P$ and $\angle BW'P=180^\circ-\angle BCP=4\beta$. Meanwhile $O$ is on $A$'s side of $BP$ (since $\angle BAP=2\beta<90^\circ$), with $OB=OP$ and $\angle BOP=2\cdot2\beta=4\beta$. So $O=W'$, and $CO$ bisects $\angle PCB$.
+
+      So the three lines all pass through $O$.
+    checked: "script: built 14,969 random convex configurations from the angle conditions; the circumcenter of ABP lies on all three lines (distance below 1e-14)"
+    viz: imo-2020-p1
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Product of a weighted sum and self-powers stays below one"
+    areas: [algebra]
+    difficulty: 3
+    hints:
+      - 'Weighted AM-GM with weights $a,b,c,d$ bounds $a^ab^bc^cd^d$ by a simple quadratic expression.'
+      - 'Then compare $(a+2b+3c+4d)(a^2+b^2+c^2+d^2)$ with $(a+b+c+d)^3$, one variable at a time.'
+    solution: |
+      **Key idea:** weighted AM-GM turns the self-powers into $a^2+b^2+c^2+d^2$. After that, the cubic inequality can be checked term by term against $(a+b+c+d)^3$.
+
+      **Step 1.** The weights $a,b,c,d$ are positive and add up to $1$. By weighted AM-GM applied to the numbers $a,b,c,d$,
+      $$a^ab^bc^cd^d\le a\cdot a+b\cdot b+c\cdot c+d\cdot d=a^2+b^2+c^2+d^2 .$$
+      So it is enough to prove
+      $$(a+2b+3c+4d)(a^2+b^2+c^2+d^2)<(a+b+c+d)^3 .$$
+
+      **Step 2.** Write $s=a+b+c+d$ and $q=ab+ac+ad+bc+bd+cd$. Then $s^2=\sum a^2+2q$, so
+      $$s^3=s\sum a^2+2sq,\qquad (a+2b+3c+4d)\sum a^2=s\sum a^2+(b+2c+3d)\sum a^2 .$$
+      So we need $2sq>(b+2c+3d)\sum a^2$. Note $2sq=\sum_{x}2xq$, summing over $x\in\{a,b,c,d\}$. For each $x$, $q$ contains $x(s-x)$ plus some positive products not involving $x$, so $2xq>2x^2(s-x)$. Hence
+      $$2sq>2a^2(b+c+d)+2b^2(a+c+d)+2c^2(a+b+d)+2d^2(a+b+c).$$
+      Compare this with $(b+2c+3d)(a^2+b^2+c^2+d^2)$ coefficient by coefficient:
+      - $a^2$: $2(b+c+d)\ge b+2c+3d$ because $b\ge d$;
+      - $b^2$: $2(a+c+d)\ge b+2c+3d$ because $2a\ge b+d$;
+      - $c^2$: $2(a+b+d)\ge b+2c+3d$ because $2a+b\ge2c+d$;
+      - $d^2$: $2(a+b+c)\ge b+2c+3d$ because $2a+b\ge3d$.
+
+      All four hold since $a\ge b\ge c\ge d$. So $2sq>(b+2c+3d)\sum a^2$, and therefore
+      $$(a+2b+3c+4d)\,a^ab^bc^cd^d\le(a+2b+3c+4d)\sum a^2<s^3=1 .$$
+    checked: "script: 200,000 random admissible quadruples; the intermediate cubic inequality always held, and the largest value of the left side found was 0.946"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Splitting colored weights into two balanced piles"
+    areas: [combinatorics]
+    difficulty: 3
+    hints:
+      - 'Pair weight $i$ with weight $4n+1-i$. Every pair has the same total, so any $n$ pairs make half the weight.'
+      - 'Make the colors vertices and the pairs edges. Each color has degree $4$. Choose half the edges so that every vertex keeps degree $2$, using an Euler circuit.'
+    solution: |
+      **Key idea:** pair the weights so that all pairs have equal sums. Then the problem becomes a graph problem: split the edges of a $4$-regular multigraph into two halves of degree $2$ at every vertex. An Euler circuit does this.
+
+      **Pairs.** For $i=1,\dots,2n$, pair the pebble of weight $i$ with the pebble of weight $4n+1-i$. Each of the $2n$ pairs weighs $4n+1$. If each pile gets $n$ whole pairs, both piles weigh $n(4n+1)$.
+
+      **A graph.** Make one vertex for each color, and one edge for each pair, joining the colors of its two pebbles. A pair with two pebbles of the same color is a loop, which counts $2$ toward the degree. Each color has four pebbles, so every vertex has degree $4$. We need to choose $n$ edges such that every vertex has degree exactly $2$ among the chosen edges. Then each pile has two pebbles of every color.
+
+      **Choosing the edges.** All degrees are even, so each connected component has an Euler circuit. Walk each circuit and direct every edge along the walk. Each time the walk passes through a vertex it enters once and leaves once, so every vertex has in-degree $2$ and out-degree $2$. (A loop gives one of each.)
+
+      Now build a bipartite graph $H$. It has an "out" copy and an "in" copy of each color. Each directed edge $u\to v$ becomes an edge from out-$u$ to in-$v$. In $H$ every vertex has degree exactly $2$, so $H$ splits into disjoint even cycles. (They are even because $H$ is bipartite. A cycle of length $2$ comes from two parallel edges.) Taking every other edge of every cycle gives a set $M$ that uses each vertex of $H$ exactly once.
+
+      In the original graph, each color is then the start of exactly one edge of $M$ and the end of exactly one edge of $M$. So it has degree $2$ in $M$, and $M$ has $n$ edges. Put the pairs of $M$ in the first pile and the other $n$ pairs in the second. Both piles weigh $n(4n+1)$, and each contains two pebbles of every color.
+    checked: "script: ran this procedure on 2,800 random colorings with n = 1…14; every result balanced both weight and colors"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Two cable car networks forced to share a connection"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: "$k=n^2-n+1$"
+    hints:
+      - 'Each station starts at most one car and ends at most one car of a company. What does each company''s network look like?'
+      - 'For the lower bound, let one company link stations in blocks of $n$ consecutive ones, and the other link stations whose numbers agree mod $n$.'
+    solution: |
+      **Key idea:** each company's cars form disjoint upward chains. With $k$ cars there are $n^2-k$ chains, and two stations are linked exactly when they are on the same chain. Then pigeonhole gives the bound, and a grid-like pair of networks shows it is sharp.
+
+      Number the stations $1,\dots,n^2$ from the bottom.
+
+      **Chains.** Fix a company. Its cars have different starting stations and different finishing stations, so each station is the start of at most one car and the end of at most one car. The cars always go up, so they form disjoint paths. Isolated stations count as paths of length $0$. A forest of paths on $n^2$ vertices with $k$ edges has $n^2-k$ paths. Two stations are linked by the company exactly when they are on the same path: going along a path only goes upward, and it reaches every later station of that path.
+
+      **$k=n^2-n+1$ is enough.** Then each company has $n-1$ chains. Label every station by the pair (its chain for A, its chain for B). There are at most $(n-1)^2<n^2$ labels, so two stations get the same label, and they are linked by both companies.
+
+      **$k=n^2-n$ is not enough.** Let company A run the cars $i\to i+1$ for every $i$ that is not a multiple of $n$. Its chains are the blocks $\{1,\dots,n\}$, $\{n+1,\dots,2n\}$, and so on. Let company B run the cars $i\to i+n$ for $i=1,\dots,n^2-n$. Its chains are the residue classes mod $n$. Each company has $n^2-n$ cars, with distinct starts and distinct ends. In both, a car that starts higher also ends higher. Two different stations in the same block have different residues mod $n$, so no pair is linked by both. Fewer cars only remove links, so every $k\le n^2-n$ fails too.
+
+      So the answer is $k=n^2-n+1$.
+    checked: "script: exhaustive search over all networks for n = 2 and n = 3 confirms that k = 3 and k = 7 are the thresholds"
+    viz: imo-2020-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Card deck where pair averages are geometric means"
+    areas: [number-theory]
+    difficulty: 3
+    answer: "For every $n>1$: the cards must all be equal"
+    hints:
+      - 'Divide every card by the gcd of all of them. Then show all cards are odd. Why must an arithmetic mean that is a geometric mean of integers be an integer?'
+      - 'Take the largest card $M$, a prime $p\mid M$, and the largest card $b$ that $p$ does not divide. Which cards can appear in the collection for the pair $M,b$?'
+    solution: |
+      **Key idea:** a prime $p$ dividing the largest card $M$ cannot divide $\frac{M+b}2$, where $b$ is the largest card not divisible by $p$. So the collection for that pair avoids $p$. Its geometric mean is then at most $b$, but it should be more than $b$.
+
+      Suppose the cards are not all equal. The property survives dividing every card by the same number $g$, since both kinds of mean scale by $\frac1g$. So we may assume the gcd of all the cards is $1$.
+
+      **All cards are odd.** For two cards $x,y$, the mean $\frac{x+y}2$ is a rational number whose $m$-th power is an integer (a product of $m$ cards). A rational number with an integer power is an integer. So $x+y$ is even for every pair, and all cards have the same parity. They cannot all be even since the gcd is $1$, so they are all odd.
+
+      **The contradiction.** Let $M$ be the largest card. Since not all cards are equal, $M>1$. Let $p$ be a prime dividing $M$; it is odd. Since the gcd is $1$, some card is not divisible by $p$. Let $b$ be the largest such card. Then $b<M$, because $b\ne M$ and $M$ is the largest.
+
+      Now $M+b\equiv b\not\equiv0\pmod p$, and $p$ is odd, so $p\nmid\frac{M+b}2$. The deck gives a collection $c_1,\dots,c_m$ with
+      $$\Big(\frac{M+b}2\Big)^m=c_1c_2\cdots c_m .$$
+      The left side is not divisible by $p$, so no $c_i$ is divisible by $p$, and therefore every $c_i\le b$. Then the geometric mean of the $c_i$ is at most $b$. But it equals $\frac{M+b}2>b$. This is a contradiction.
+
+      So for every $n>1$ the property forces all the cards to be equal.
+    checked: "script: searched all decks of 2 to 4 cards with values up to 25; the only decks with the property are the constant ones"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Separating line far from all points of a spread set"
+    areas: [geometry, combinatorics]
+    difficulty: 5
+    answer: 'Such a constant exists; for example $c=\tfrac1{24}$ works.'
+    hints:
+      - 'Take two points $A,B$ of $S$ at the largest distance $D$, and project everything onto line $AB$. A gap of length $g$ between neighboring projections gives a separating line at distance $g/2$ from all points.'
+      - 'There are $n-1$ gaps covering a length $D$, so some gap is at least $D/(n-1)$. That is good when $D$ is large.'
+      - 'When $D$ is small, look only at the points whose projections are within $1$ of $A$. They lie in a thin cap of the disk of radius $D$ around $B$, so there are only about $\sqrt D$ of them.'
+    solution: |
+      **Key idea:** project onto the longest segment. Either the set is long, and then the projections have a big gap somewhere, or it is short, and then very few points sit near the far end, so there is a big gap there. The two estimates balance at $D\approx n^{2/3}$, which is where $n^{-1/3}$ comes from.
+
+      **Setup.** Let $A,B\in S$ be at the largest distance $D$ apart. Then $D\ge1$. Put $B$ at the origin and $A=(D,0)$. Every point of $S$ is within $D$ of $B$, so it lies in the disk $x^2+y^2\le D^2$, and in particular $x\le D$. For $q=(x,y)\in S$ let $t_q=D-x\ge0$, its distance from $A$ measured along the line $AB$. So $t_A=0$ and $t_B=D$.
+
+      Sort the values $t_q$ and suppose two neighbors in this order, $t'<t''$, differ by $g$. The vertical line $x=D-\tfrac{t'+t''}2$ has points of $S$ on both sides, so some segment between points of $S$ crosses it. And every point of $S$ is at distance at least $g/2$ from it. So it is enough to find a gap $g\ge\tfrac1{12}n^{-1/3}$; then $c=\tfrac1{24}$ works.
+
+      **Bound 1: $g\ge\dfrac{D}{n-1}$.** The sorted values run from $0$ to $D$ in $n-1$ steps, so some step is at least $D/(n-1)$.
+
+      **Bound 2: $g\ge\dfrac1{12\sqrt D}$.** Let $k$ be the number of points with $t_q\le1$. Such a point has $D-1\le x\le D$ and $y^2\le D^2-x^2\le D^2-(D-1)^2=2D-1$. So these points lie in a rectangle of size $1\times2\sqrt{2D}$. The disks of radius $\tfrac12$ around them don't overlap and fit inside the rectangle enlarged by $\tfrac12$ on every side, of area $2\,(2\sqrt{2D}+1)$. Each disk has area $\pi/4$, so
+      $$k\le\frac{8}{\pi}\big(2\sqrt{2D}+1\big)<3\big(2\sqrt2+1\big)\sqrt D<12\sqrt D,$$
+      using $D\ge1$. Now take the smallest $k+1$ values $t_q$ (all $n$ of them if $k=n$). They spread over a length of at least $1$: if $k<n$, the $(k+1)$-st value is more than $1$; if $k=n$, the largest value is $t_B=D\ge1$. At most $k$ steps cover this length, so some step is at least $1/k>\tfrac1{12\sqrt D}$.
+
+      **Combining.**
+      - If $D\ge n^{2/3}$, Bound 1 gives $g\ge \dfrac{n^{2/3}}{n-1}>n^{-1/3}$.
+      - If $D<n^{2/3}$, Bound 2 gives $g>\dfrac1{12\,n^{1/3}}$.
+
+      Either way $g>\tfrac1{12}n^{-1/3}$, and the line in the middle of that gap separates $S$ and stays at distance more than $\tfrac1{24}n^{-1/3}$ from every point of $S$.
+    checked: "script: 300 random sets (hexagonal packings, random spread points, points on a curve, n up to 400); the gap found this way was always at least 19 times the guaranteed amount, and the count k never exceeded 12√D"
+    status: ready

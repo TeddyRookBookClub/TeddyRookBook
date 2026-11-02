@@ -899,7 +899,7 @@
    },
    {
     "t": "key",
-    "html": "$A\\mathbf{x}$ is the combination of the columns of $A$ with the entries of $\\mathbf{x}$ as weights. So $A\\mathbf{x} = \\mathbf{b}$ is solvable exactly when $\\mathbf{b}$ is in the span of the columns."
+    "html": "$A\\mathbf{x}$ is the combination of the columns of $A$ with the entries of $\\mathbf{x}$ as weights. So $\\role{matrix}{A}\\role[weights]{vector}{\\mathbf{x}} = \\role[target vector]{output}{\\mathbf{b}}$ is solvable exactly when $\\mathbf{b}$ is in the span of the columns."
    },
    {
     "t": "try"
@@ -3444,7 +3444,7 @@
    },
    {
     "t": "key",
-    "html": "$A\\mathbf{v} = \\lambda\\mathbf{v}$ with $\\mathbf{v} \\neq \\mathbf{0}$: along $\\mathbf{v}$, $A$ just multiplies by $\\lambda$. The eigenvectors for $\\lambda$ are the nonzero solutions of $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$, and $\\lambda$ is an eigenvalue exactly when $A - \\lambda I$ is not invertible."
+    "html": "$\\role{matrix}{A}\\role[eigenvector]{vector}{\\mathbf{v}} = \\role[eigenvalue]{coefficient}{\\lambda}\\role[eigenvector]{vector}{\\mathbf{v}}$ with $\\mathbf{v} \\neq \\mathbf{0}$: along $\\mathbf{v}$, $A$ just multiplies by $\\lambda$. The eigenvectors for $\\lambda$ are the nonzero solutions of $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$, and $\\lambda$ is an eigenvalue exactly when $A - \\lambda I$ is not invertible."
    },
    {
     "t": "try"
@@ -3467,7 +3467,7 @@
    },
    {
     "t": "key",
-    "html": "$\\lambda$ is an eigenvalue of $A$ exactly when $\\det(A - \\lambda I) = 0$, the <b>characteristic equation</b>. For an $n \\times n$ matrix, $\\det(A - \\lambda I)$ is a polynomial of degree $n$ in $\\lambda$, the <b>characteristic polynomial</b>."
+    "html": "$\\lambda$ is an eigenvalue of $A$ exactly when $\\det(\\role{matrix}{A} - \\role[eigenvalue]{coefficient}{\\lambda} I) = 0$, the <b>characteristic equation</b>. For an $n \\times n$ matrix, $\\det(A - \\lambda I)$ is a polynomial of degree $n$ in $\\lambda$, the <b>characteristic polynomial</b>."
    },
    {
     "t": "why",
@@ -3670,7 +3670,7 @@
    },
    {
     "t": "key",
-    "html": "$A$ ($n \\times n$) is <b>diagonalizable</b> if $A = PDP^{-1}$ with $D$ diagonal. This happens exactly when $A$ has $n$ linearly independent eigenvectors; then the columns of $P$ are those eigenvectors and the diagonal of $D$ holds their eigenvalues, in the same order."
+    "html": "$A$ ($n \\times n$) is <b>diagonalizable</b> if $\\role{matrix}{A} = \\role[eigenvectors as columns]{vector}{P}\\role[eigenvalues on the diagonal]{coefficient}{D}\\role[eigenvectors as columns]{vector}{P}^{-1}$ with $D$ diagonal. This happens exactly when $A$ has $n$ linearly independent eigenvectors; then the columns of $P$ are those eigenvectors and the diagonal of $D$ holds their eigenvalues, in the same order."
    },
    {
     "t": "why",
@@ -4291,7 +4291,7 @@
    },
    {
     "t": "key",
-    "html": "If $\\{\\mathbf{u}_1, \\dots, \\mathbf{u}_p\\}$ is an <b>orthogonal</b> basis of $W$, the projection of $\\mathbf{y}$ onto $W$ is $$\\hat{\\mathbf{y}} = \\frac{\\mathbf{y}\\cdot\\mathbf{u}_1}{\\mathbf{u}_1\\cdot\\mathbf{u}_1}\\mathbf{u}_1 + \\cdots + \\frac{\\mathbf{y}\\cdot\\mathbf{u}_p}{\\mathbf{u}_p\\cdot\\mathbf{u}_p}\\mathbf{u}_p.$$ Then $\\mathbf{y} - \\hat{\\mathbf{y}}$ is in $W^{\\perp}$, and $\\hat{\\mathbf{y}}$ is the point of $W$ closest to $\\mathbf{y}$."
+    "html": "If $\\{\\mathbf{u}_1, \\dots, \\mathbf{u}_p\\}$ is an <b>orthogonal</b> basis of $W$, the projection of $\\mathbf{y}$ onto $W$ is $$\\role[projection onto W]{output}{\\hat{\\mathbf{y}}} = \\role[weight for u1]{coefficient}{\\frac{\\mathbf{y}\\cdot\\mathbf{u}_1}{\\mathbf{u}_1\\cdot\\mathbf{u}_1}}\\role[basis vector]{vector}{\\mathbf{u}_1} + \\cdots + \\frac{\\mathbf{y}\\cdot\\mathbf{u}_p}{\\mathbf{u}_p\\cdot\\mathbf{u}_p}\\mathbf{u}_p.$$ Then $\\mathbf{y} - \\hat{\\mathbf{y}}$ is in $W^{\\perp}$, and $\\hat{\\mathbf{y}}$ is the point of $W$ closest to $\\mathbf{y}$."
    },
    {
     "t": "why",

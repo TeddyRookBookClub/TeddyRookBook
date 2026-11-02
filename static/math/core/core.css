@@ -115,3 +115,31 @@ html[data-theme="dark"] .ml-key-enter{background:#6cc79a;border-color:#6cc79a;co
 .ml-in-unit{flex:0 0 auto;font-size:1.05rem;color:var(--mi-muted);padding:0 .1rem}
 /* "Report a problem" on each card (runner.js): shown only on pages that load static/js/report.js, which styles it */
 .mlp-report-row{display:none}
+/* ---------- formula colors (tex.js \role; palette data/formula-roles.yaml, docs/formula-colors.md) ----------
+   tex.js adds the palette as --ml-r-<role> (light and dark) and gives each [data-role] element --ml-rc. Color is never the
+   only cue: the key names every part, and hovering or focusing a part shows its name. html[data-fcolors="off"]: plain math. */
+math .ml-role{color:var(--ml-rc,inherit);border-radius:.2em;outline:none;transition:background-color .12s}
+math .ml-role:hover,math .ml-role:focus,math .ml-role.ml-role-hi{background:color-mix(in srgb,var(--ml-rc,currentColor) 16%,transparent);cursor:help}
+math .ml-role:focus-visible{box-shadow:0 0 0 2px var(--ml-rc,currentColor)}
+.ml-rkey{display:flex;flex-wrap:wrap;justify-content:center;gap:.25rem .9rem;margin:.15rem 0 .7rem;font:500 .84rem/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--muted,var(--ml-c-gray));text-align:left}
+.ml-md+.ml-rkey{margin-top:-.35rem}
+li>.ml-rkey,.mlp-ex-q>.ml-rkey,.mlp-box-body>.ml-rkey,div>.ml-rkey{justify-content:flex-start;margin:.3rem 0 .1rem}
+.ml-rkey-i{display:inline-flex;align-items:center;gap:0 .3rem;padding:.05rem .45rem .05rem .3rem;border-radius:999px;border:1px solid transparent;cursor:default}
+.ml-rkey-i.ml-role-hi{border-color:var(--ml-rc);background:color-mix(in srgb,var(--ml-rc) 10%,transparent)}
+.ml-rkey-sw{flex:0 0 auto;width:.7rem;height:.7rem;border-radius:3px;background:var(--ml-rc)}
+.ml-rkey math.ml-math{font-size:1.05em;color:var(--ml-rc)}
+.ml-rkey .ml-role-k{color:var(--ml-rc)}
+.ml-rkey-t{color:var(--ink,inherit)}
+.ml-rtip{position:fixed;z-index:300;pointer-events:none;padding:.18rem .5rem;border-radius:6px;background:#1d2320;color:#fff;font:600 .8rem/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.25);white-space:nowrap}
+.ml-rtip[hidden]{display:none}
+html[data-theme="dark"] .ml-rtip{background:#e6ece8;color:#14211a}
+/* a visual's parts linked to a formula (viz/core.js slider role, ML.roles.tag) */
+.ml-viz .ml-sl-role .ml-sl-lab::before{content:"";display:inline-block;width:.6rem;height:.6rem;border-radius:2px;margin-right:.3rem;background:var(--ml-rc);vertical-align:baseline}
+.ml-viz .ml-sl.ml-sl-role input{accent-color:var(--ml-rc)}
+.ml-viz [data-role].ml-role-hi{outline:2px solid var(--ml-rc);outline-offset:2px;border-radius:6px}
+/* off (Aa menu): no color, no keys */
+html[data-fcolors="off"] math .ml-role{color:inherit;background:none;cursor:auto}
+html[data-fcolors="off"] .ml-rkey{display:none}
+html[data-fcolors="off"] .ml-viz .ml-sl-role .ml-sl-lab::before{display:none}
+html[data-fcolors="off"] .ml-viz .ml-sl.ml-sl-role input{accent-color:var(--mv-acc)}
+@media print{.ml-rtip{display:none}}

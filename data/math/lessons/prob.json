@@ -384,7 +384,7 @@
    },
    {
     "t": "key",
-    "html": "If $A_1, \\ldots, A_n$ are disjoint and together cover the sample space (a <b>partition</b>), then $$P(B) = P(B \\mid A_1)P(A_1) + \\cdots + P(B \\mid A_n)P(A_n).$$"
+    "html": "If $A_1, \\ldots, A_n$ are disjoint and together cover the sample space (a <b>partition</b>), then $$\\role[total probability of B]{evidence}{P(B)} = \\role[likelihood]{likelihood}{P(B \\mid A_1)}\\role[prior]{prior}{P(A_1)} + \\cdots + \\role[likelihood]{likelihood}{P(B \\mid A_n)}\\role[prior]{prior}{P(A_n)}.$$"
    },
    {
     "t": "why",
@@ -513,7 +513,7 @@
    },
    {
     "t": "key",
-    "html": "For a partition $A_1, \\ldots, A_n$ and evidence $B$ with $P(B) > 0$: $$P(A_j \\mid B) = \\frac{P(B \\mid A_j)P(A_j)}{\\sum_i P(B \\mid A_i)P(A_i)}.$$ The <b>posterior</b> is proportional to <b>prior × likelihood</b>, rescaled so the posteriors add to 1."
+    "html": "For a partition $A_1, \\ldots, A_n$ and evidence $B$ with $P(B) > 0$: $$\\role[posterior]{posterior}{P(A_j \\mid B)} = \\frac{\\role[likelihood]{likelihood}{P(B \\mid A_j)}\\role[prior]{prior}{P(A_j)}}{\\role[total probability of B]{evidence}{\\sum_i P(B \\mid A_i)P(A_i)}}.$$ The <b>posterior</b> is proportional to <b>prior × likelihood</b>, rescaled so the posteriors add to 1."
    },
    {
     "t": "why",
@@ -809,7 +809,7 @@
    },
    {
     "t": "key",
-    "html": "For a function $g$, $$E[g(X)] = \\sum_x g(x)\\,P(X = x).$$ Apply $g$ to each value, then weight by the probabilities. In general $E[g(X)] \\ne g(E[X])$; they agree when $g(x) = ax + b$."
+    "html": "For a function $g$, $$\\role[expected value]{integral}{E[g(X)]} = \\sum_x \\role[value of g]{output}{g(x)}\\,\\role[weight]{probability}{P(X = x)}.$$ Apply $g$ to each value, then weight by the probabilities. In general $E[g(X)] \\ne g(E[X])$; they agree when $g(x) = ax + b$."
    },
    {
     "t": "why",
@@ -1681,7 +1681,7 @@
    },
    {
     "t": "key",
-    "html": "$$E[X] = \\int x\\,f(x)\\,dx, \\qquad E[g(X)] = \\int g(x)\\,f(x)\\,dx, \\qquad \\operatorname{Var}(X) = E[X^{2}] - (E[X])^{2}.$$"
+    "html": "$$\\role[expected value]{integral}{E[X]} = \\int \\role[value]{input}{x}\\,\\role[density]{probability}{f(x)}\\,dx, \\qquad E[g(X)] = \\int g(x)\\,f(x)\\,dx, \\qquad \\operatorname{Var}(X) = E[X^{2}] - (E[X])^{2}.$$"
    },
    {
     "t": "why",

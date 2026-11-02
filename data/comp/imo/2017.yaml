@@ -1,0 +1,189 @@
+year: 2017
+edition: 58th
+date: "July 18–19, 2017 · Rio de Janeiro, Brazil"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2017/2017_eng.pdf
+  archive: https://www.imo-official.org/year_info.aspx?year=2017
+problems:
+  - id: P1
+    day: 1
+    topic: "Square root or add three: when does it cycle?"
+    areas: [number-theory]
+    difficulty: 1
+    answer: "Exactly the starting values divisible by $3$"
+    hints:
+      - 'Adding $3$ keeps the residue mod $3$, and squares are $0$ or $1$ mod $3$. What happens to a start that is $2$ mod $3$?'
+      - 'For the other residues, look at a value $v$ with $(m-1)^2<v\le m^2$. How small is the next square root the sequence takes?'
+    solution: |
+      **Key idea:** track residues mod $3$. A square root step drops a large value far below where it started, so a multiple of $3$ falls into the cycle $3\to6\to9\to3$, while a value $\equiv1$ can never repeat.
+
+      All terms are integers greater than $1$. The step "add $3$" keeps the residue mod $3$, and from any value the sequence keeps adding $3$ until it lands on a perfect square.
+
+      **A useful estimate.** Let $v\ge5$ and let $m$ be the integer with $(m-1)^2<v\le m^2$, so $m\ge3$. Then $v\ge(m-1)^2+1$, and
+      $$(m-1)^2+1-(m+2)=m^2-3m>0\quad(m\ge4),\qquad (m-1)^2+1-(m+1)=m^2-3m+1>0\quad(m\ge3).$$
+
+      **Start $\equiv2\pmod 3$.** Squares are $0$ or $1$ mod $3$, so the sequence never meets a square. It increases forever, and no value repeats.
+
+      **Start $\equiv0\pmod3$.** Every term stays a multiple of $3$, because the square root of a square multiple of $3$ is a multiple of $3$. Take a term $v>9$, with $m$ as above, so $m\ge4$. The sequence runs through every multiple of $3$ from $v$ upward. So it reaches the square $(3t)^2$, where $3t$ is the least multiple of $3$ that is $\ge m$, unless it takes a smaller square first. Either way the next square root is at most $3t\le m+2<v$. So from any term above $9$ the sequence later drops below it, and it eventually reaches one of $3,6,9$. From there it runs $3\to6\to9\to3\to\cdots$ forever. So $3$ appears infinitely often.
+
+      **Start $\equiv1\pmod 3$.** A square root step from a value $\equiv1$ gives a number $\equiv1$ or $2$. If it is ever $\equiv2$, the sequence grows forever. Suppose instead some value repeats infinitely often. Then the sequence is eventually periodic, with every term $\equiv1\pmod3$. Let $v$ be the smallest value in the cycle, so $v\ge4$.
+      - If $v=4$, the next term is $2\equiv2\pmod 3$. Contradiction.
+      - Otherwise $v\ge7$ and $m\ge3$. The first square $\equiv1\pmod3$ at or above $v$ is $m^2$ if $3\nmid m$, and $(m+1)^2$ if $3\mid m$. The next square root is $m$ or $m+1$, and in both cases it is less than $v$ by the estimate. That contradicts the choice of $v$ as the smallest value in the cycle.
+
+      So a value repeats infinitely often exactly when $3\mid a_0$.
+    checked: "script: simulated every start from 2 to 2999; a value repeats exactly for the multiples of 3"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Functional equation mixing a composition, a sum and a product"
+    areas: [algebra]
+    difficulty: 3
+    answer: "$f(x)=0$, $f(x)=x-1$ and $f(x)=1-x$"
+    hints:
+      - 'If $f(z)=0$, choose $y$ with $z+y=zy$. What does that say about $f(0)$?'
+      - 'Normalize so $f(0)=-1$. Then $f(x+1)=f(x)+1$. Use this to show that $f$ is injective, and then that $f(f(x))=f(x-1)$.'
+    solution: |
+      **Key idea:** pin down the zeros of $f$, get the shift rule $f(x+1)=f(x)+1$, prove injectivity with a well-chosen pair whose sum and product are prescribed, and finish with the case $y=0$.
+
+      Write $E(x,y)$ for the equation $f(f(x)f(y))+f(x+y)=f(xy)$. If $f$ is a solution, so is $-f$, since $(-f(x))(-f(y))=f(x)f(y)$.
+
+      **Step 1: zeros.** $E(x,0)$ gives $f(f(x)f(0))=f(0)-f(x)$. If $f(0)=0$, this says $f(x)=0$ for every $x$, and $f\equiv0$ is a solution. From now on let $f(0)\ne0$. Suppose $f(z)=0$ for some $z\ne1$. Take $y=\frac{z}{z-1}$. Then $z+y=zy$, and $E(z,y)$ becomes $f(0)+f(zy)=f(zy)$, so $f(0)=0$. That is a contradiction. So $1$ is the only possible zero. $E(0,0)$ gives $f(f(0)^2)=0$, so $f(0)^2=1$ and $f(1)=0$. Replacing $f$ by $-f$ if needed, assume $f(0)=-1$.
+
+      **Step 2: shift.** $E(x,1)$ gives $f(0)+f(x+1)=f(x)$, so $f(x+1)=f(x)+1$. In particular $f(t)=-1$ means $f(t+1)=0$, so $t+1=1$. Hence $f(t)=-1$ only for $t=0$.
+
+      **Step 3: injective.** Let $f(a)=f(b)$. By the shift rule $f(a+N)=f(b+N)$ for every integer $N$. Choose $N$ so large that $(a+N+1)^2\ge4(b+N)$. Then there are real $x,y$ with
+      $$x+y=a+N+1,\qquad xy=b+N .$$
+      $E(x,y)$ gives
+      $$f(f(x)f(y))=f(b+N)-f(a+N+1)=f(a+N)-f(a+N)-1=-1,$$
+      so $f(x)f(y)=0$ by Step 2. Then $x=1$ or $y=1$; say $x=1$. Now $y=a+N$ from the sum and $y=b+N$ from the product, so $a=b$.
+
+      **Step 4: finish.** Let $I$ be the set of values of $f$. With $f(0)=-1$, $E(x,0)$ reads $f(-f(x))=-1-f(x)$. So $f(z)=z-1$ for every $z\in -I$. For such $z$, the number $z-1$ is a value of $f$, so $z-1\in I$, and by the shift rule $z\in I$. Thus $-I\subseteq I$, which also gives $I\subseteq -I$. So $f(t)=t-1$ for every $t\in I$. In particular $f(f(x))=f(x)-1=f(x-1)$ for every $x$, and injectivity gives $f(x)=x-1$.
+
+      **Check.** For $f(x)=x-1$: $f\big((x-1)(y-1)\big)+(x+y-1)=(xy-x-y+1-1)+x+y-1=xy-1=f(xy)$. Then $f(x)=1-x$ works too, as the negative of a solution, and so does $f\equiv0$.
+    checked: "algebra: the three answers satisfy the equation identically (sympy)"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Chasing an invisible runner with a noisy tracker"
+    areas: [combinatorics, geometry]
+    difficulty: 5
+    answer: 'No. The rabbit and the tracker can always keep the hunter more than $100$ away.'
+    hints:
+      - 'Play in blocks of $200$ rounds. Even if the hunter is told where the rabbit is at the start of a block, she can be fooled during it.'
+      - 'In a block, the rabbit runs straight to one of two points $200$ away that sit at height $+1$ and $-1$ above the line through the hunter and the rabbit. The tracker reports points on that line, which is always within $1$ of the rabbit.'
+      - 'The hunter can''t tell the two runs apart. Show that the square of the distance grows by almost $\tfrac12$ per block while it is at most $100$.'
+    solution: |
+      **Key idea:** split the game into blocks of $200$ rounds. In each block the rabbit can choose between two straight runs that the tracker makes look identical. Whatever the hunter does, one of the runs leaves her about $1$ unit farther off sideways, and that adds almost $\tfrac12$ to the square of the distance.
+
+      We show that for every strategy of the hunter, some rabbit path and some reports make the final distance larger than $100$. Fix the hunter's strategy. The rabbit and the tracker know it, so they can predict her moves from the reports they plan to give. Note $10^9=200\cdot(5\cdot10^6)$.
+
+      **One block.** At the start of a block, let the rabbit be at $A$ and the hunter at $B$, with $d=AB$. Choose coordinates with $A=(0,0)$ and $B=(-d,0)$ (any axis if $d=0$). Let $x=\sqrt{200^2-1}$ and let $R_\pm=(x,\pm1)$, two points at distance $200$ from $A$. The rabbit runs straight from $A$ to $R_+$ or to $R_-$ in $200$ unit steps. After $t$ steps it is at $\big(\tfrac{tx}{200},\pm\tfrac t{200}\big)$, at distance at most $1$ from the point $\big(\tfrac{tx}{200},0\big)$. So the tracker reports $\big(\tfrac{tx}{200},0\big)$ in both cases.
+
+      The reports are the same in both runs, so the hunter makes the same moves, and she ends the block at the same point $H=(h_1,h_2)$. She has walked $200$ units from $B$, so $h_1\le 200-d$. One of $(1-h_2)^2$ and $(1+h_2)^2$ is at least $1$. Let the rabbit take the run that ends at the matching point $R_\pm$. Then the new distance $d'$ satisfies
+      $$d'^2\ge (x-h_1)^2+1 .$$
+      Let $\varepsilon=200-x=\dfrac1{200+x}$. Then $0<\varepsilon<\dfrac1{399}$, and $x-h_1\ge d-\varepsilon$. So
+      $$d'^2\ge1\quad\text{always,}\qquad d'^2\ge(d-\varepsilon)^2+1\quad\text{if } d\ge\varepsilon .$$
+
+      **Many blocks.** Let $d_k$ be the distance after $k$ blocks. Then $d_1\ge1$, and $d_{k+1}^2\ge g(d_k)$ for $k\ge1$, where $g(t)=(t-\varepsilon)^2+1$ is increasing for $t\ge\varepsilon$. Define $e_1=1$ and $e_{k+1}=\sqrt{g(e_k)}$. By induction $d_k\ge e_k$ for all $k\ge1$.
+
+      Now
+      $$e_{k+1}^2-e_k^2=1-2\varepsilon e_k+\varepsilon^2>1-\tfrac{2e_k}{399}.$$
+      - While $e_k\le100$, this is more than $1-\tfrac{200}{399}>\tfrac25$. So if $e_k\le100$ for all $k\le K=5\cdot10^6$, then $e_K^2>1+\tfrac25(K-1)>100^2$, which is absurd. Hence $e_k>100$ for some $k\le K$.
+      - Once $e_j>100$, it stays above $100$. If $e_j\le199$, the difference above is positive, so $e_{j+1}>e_j$. If $e_j>199$, then $e_{j+1}>e_j-\varepsilon>198$.
+
+      So $d_K\ge e_K>100$. After $10^9$ rounds the rabbit is more than $100$ from the hunter, whatever she did. The answer is **no**.
+    checked: "numeric: iterating the bound from distance 1 passes 100 after 15,452 blocks, far fewer than the 5,000,000 available"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Tangent line from a midpoint construction on a circle"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'First show that $AT$ is parallel to $RK$. Chase angles through both circles, using that $S$, $T$, $R$ are collinear.'
+      - 'Tangency at $T$ means the power of $K$ with respect to $\Gamma$ equals $KT^2$. Write that power using $A$ and the tangent length $AR$, and compute with vectors from $R$.'
+    solution: |
+      **Key idea:** an angle chase shows $AT\parallel RK$. Then a short vector computation, based at $R$, shows that the power of $K$ with respect to $\Gamma$ equals $KT^2$, which is exactly tangency.
+
+      We use directed angles between lines, written $\angle(m,n)$ and taken mod $180^\circ$, so the argument does not depend on the picture.
+
+      **Step 1: $AT\parallel RK$.** The points $A,J,S,T$ lie on $\Gamma$, and $S,R,T$ are collinear, so
+      $$\angle(AJ,AT)=\angle(SJ,ST)=\angle(SJ,SR).$$
+      The points $S,K,J,R$ lie on $\Omega$, so $\angle(SJ,SR)=\angle(KJ,KR)$. Line $AJ$ is line $KJ$, so
+      $$\angle(\ell,AT)=\angle(\ell,AJ)+\angle(AJ,AT)=\angle(\ell,KJ)+\angle(KJ,KR)=\angle(\ell,KR).$$
+      Two lines making the same angle with $\ell$ are parallel, so $AT\parallel RK$.
+
+      **Step 2: the power of $K$.** Put the origin at $R$ and use vectors. Let $O$ be the center of $\Omega$, so $R^*=2O$ is the point diametrically opposite $R$. Points $X$ on $\Omega$ satisfy $|X|^2=2\,X\cdot O$. Since $\ell$ is tangent at $R$, $A\cdot O=0$. Since $S=T/2$ is on $\Omega$, $|T|^2=4\,T\cdot O$.
+
+      The power of $K$ with respect to $\Gamma$ is $\overrightarrow{KJ}\cdot\overrightarrow{KA}$. Write $\overrightarrow{KJ}=\overrightarrow{KA}+\overrightarrow{AJ}$. The power of $A$ with respect to $\Omega$ is $\overrightarrow{AJ}\cdot\overrightarrow{AK}=AR^2$. So
+      $$\operatorname{pow}_\Gamma(K)=KA^2-AR^2=|K|^2-2K\cdot A=2K\cdot O-2K\cdot A .$$
+      On the other hand,
+      $$KT^2=|K|^2-2K\cdot T+|T|^2=2K\cdot O-2K\cdot T+4T\cdot O .$$
+      Subtracting, and using $O\cdot A=0$,
+      $$KT^2-\operatorname{pow}_\Gamma(K)=-2K\cdot(T-A)+4\,O\cdot(T-A)=-2\,(K-R^*)\cdot(T-A).$$
+      Since $RR^*$ is a diameter, $KR^*\perp KR$ (or $K=R^*$), and $KR\parallel AT$ by Step 1. So the last dot product is $0$, and $\operatorname{pow}_\Gamma(K)=KT^2$.
+
+      **Finish.** $T$ is not on $\Omega$ (line $RS$ meets $\Omega$ only at $R$ and $S$), so $K\ne T$, and the power of $K$ is positive. Line $KT$ meets $\Gamma$ at $T$ and at a second point $T'$ with $KT\cdot KT'=KT^2$, so $T'=T$. The line touches $\Gamma$ only at $T$: it is tangent.
+    checked: "script: random configurations; the angle between KT and the radius of Γ at T is 90° to machine precision"
+    viz: imo-2017-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Thinning a row so height-ranked pairs stand together"
+    areas: [combinatorics]
+    difficulty: 3
+    hints:
+      - 'Split the players by height into $N$ groups of $N+1$: the tallest $N+1$, the next $N+1$, and so on. Aim to keep two players from each group.'
+      - 'Walk along the row from the left and stop the first time some group has shown two members. Keep those two, and drop everyone else you passed and the rest of that group.'
+    solution: |
+      **Key idea:** group the players by height and sweep the row from the left. The first group to show two members gives a pair that can stand together. Every other group loses at most one member, so we can repeat with one group fewer.
+
+      Sort the players by height and cut them into $N$ **height groups** of $N+1$ each: $G_1$ the tallest $N+1$, then $G_2$, and so on. If the final row keeps exactly two players from each group, then the two tallest kept players come from $G_1$, the next two from $G_2$, and so on. So it is enough to keep two players from each group so that **no kept player stands between the two kept members of a group**.
+
+      **Claim.** Suppose a row contains $k$ disjoint groups, each with at least $k+1$ members, possibly mixed with other people. Then we can keep two members of each group, remove everyone else, and have each kept pair standing side by side.
+
+      **Proof by induction on $k$.** Walk along the row from the left. Stop at the first moment when some group $G$ has shown two of its members. Such a moment comes, because each group has at least two members.
+      - Keep those two members of $G$. Remove everyone else we have passed, and also the rest of $G$. The two kept members are now neighbors, since the second one is exactly where we stopped.
+      - Up to that moment, every other group had shown at most one member. So every other group still has at least $k$ members to the right of the stopping point.
+      - Apply the claim with $k-1$ groups to the part of the row to the right. Everything kept there is to the right of the pair from $G$.
+
+      When $k=1$ the walk simply stops at the second member of the only group.
+
+      Applying the claim with $k=N$ and the height groups (each of size $N+1$) leaves $2N$ players. Each of the $N$ conditions says that a group's two kept members stand together, which is what the claim gives.
+    checked: "script: ran the procedure on 2,100 random rows with N = 2…8; every result satisfies all N conditions"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Homogeneous polynomial equal to one on chosen lattice points"
+    areas: [number-theory, algebra]
+    difficulty: 4
+    hints:
+      - 'One point is easy: if $ua+vb=1$, then $(ux+vy)^2$ works. Try to add the points one at a time.'
+      - 'To add a point $q$, use $g^m-K\cdot\Pi\cdot\ell^{e}$, where $\Pi$ vanishes on the earlier points. Why are $g(q)$ and $\Pi(q)$ coprime?'
+    solution: |
+      **Key idea:** add the points one at a time. A power of the previous polynomial fixes the old points. A correction term that vanishes on the old points fixes the new point, using Euler's theorem, once we know that a certain value is a unit modulo the right number.
+
+      We prove a slightly stronger statement: there is such a homogeneous $f$ of **even** degree. Even degree helps, because then $f(-x,-y)=f(x,y)$.
+
+      **One point.** For a primitive $(a,b)$ pick integers $u,v$ with $ua+vb=1$ and let $\ell(x,y)=ux+vy$. Then $\ell^2$ has degree $2$ and equals $1$ at $(a,b)$.
+
+      **Adding a point.** Suppose $g$ is homogeneous of even degree $n$ with integer coefficients, and $g=1$ on a finite set $S_0$ of primitive points. Let $q=(a,b)$ be a new primitive point. If $-q\in S_0$, then $g(q)=g(-q)=1$ already. Otherwise no point of $S_0$ is a multiple of $q$ (the only primitive multiples of $q$ are $\pm q$). Let
+      $$\Pi(x,y)=\prod_{(x_i,y_i)\in S_0}(y_i\,x-x_i\,y),$$
+      a homogeneous polynomial of degree $|S_0|$ that vanishes on $S_0$, with $D=\Pi(a,b)\ne0$. Put $G=g(a,b)$.
+
+      *Claim: $\gcd(G,D)=1$.* Let $p$ be a prime dividing $D$. Then $p\mid y_ia-x_ib$ for some $i$. Since $(a,b)$ is primitive, say $p\nmid a$, and set $\lambda\equiv x_ia^{-1}\pmod p$. Then $x_i\equiv\lambda a$ and $y_i\equiv\lambda b\pmod p$, and $\lambda\not\equiv0$, since otherwise $p$ would divide both $x_i$ and $y_i$. Because $g$ is homogeneous with integer coefficients,
+      $$1=g(x_i,y_i)\equiv g(\lambda a,\lambda b)=\lambda^nG\pmod p,$$
+      so $p\nmid G$.
+
+      Now choose $m\ge1$ with $G^m\equiv1\pmod{|D|}$ (by Euler's theorem, any multiple of $\varphi(|D|)$ works). Make $m$ large enough that $mn\ge|S_0|$. Let $K=(G^m-1)/D$, an integer. With $\ell$ as above for $q$, define
+      $$f=g^m-K\,\Pi\,\ell^{\,mn-|S_0|}.$$
+      Every term is homogeneous of degree $mn$, which is even. On $S_0$, $\Pi=0$, so $f=g^m=1$. At $q$, $f=G^m-K\cdot D\cdot1=1$.
+
+      Adding the points of $S$ one at a time gives the polynomial we need.
+    checked: "script: ran this construction on 25 random sets of 4 primitive points and verified f = 1 on each set"
+    status: ready

@@ -39,7 +39,22 @@
    gather split array{l c r |} (with \hline) equation, \substack, spaces (\, \: \; \! \quad \qquad \  ~ \hspace),
    dots (\ldots \cdots \vdots \ddots \dots), \angle \triangle \parallel \perp \circ ^\circ \degree \prime, \boxed,
    \color{green|blue|red|gold|purple|orange|teal|pink|gray}{…} and \textcolor (site colors, light and dark), \cancel
-   \bcancel \xcancel, \pmod \bmod \mod, \mid, \not, \phantom, \displaystyle \textstyle, \xrightarrow, % comments.  */
+   \bcancel \xcancel, \pmod \bmod \mod, \mid, \not, \phantom, \displaystyle \textstyle, \xrightarrow, % comments.
+
+   FORMULA COLORS (docs/formula-colors.md; palette in data/formula-roles.yaml, copied below by scripts/math/check-roles.js --write)
+   \role{velocity}{v}  or  \role[initial velocity]{velocity}{v_0}   colors one part of a formula by what it means. It becomes
+                              <mrow class="ml-role" data-role="velocity" tabindex="0">; typeset() then adds a key ("v: velocity")
+                              under the display formula, or after the paragraph, step or box that uses roles. Hovering or focusing
+                              a part shows its name and highlights every element with the same data-role nearby (other formula
+                              parts, the key, and a visual's sliders tagged with data-role). Inside .ml-norole (problem prompts,
+                              choices and hints: runner.js) and with opts.noRoles, \role shows its content plainly.
+   ML.roles.list              { name: { label, light, dark, hue, group } }
+   ML.roles.color(name)       the role's color for the current theme (for drawing a visual in the same color)
+   ML.roles.tag(el, map)      give a visual's parts a data-role: map = { "slider label start" | "css selector": "role" }
+                              (viz/core.js calls it with a lesson viz block's opts.roleLinks)
+   ML.roles.keys(root)        build the keys under root (typeset() does this)
+   ML.roles.on() / set(bool)  formula colors on or off (saved on this device as localStorage 'trb-fcolors' = 'off';
+                              <html data-fcolors="off">); the switch is in the header's Aa menu.  */
 (function (root) {
   'use strict';
   var ML = root.MathLadder = root.MathLadder || {};
@@ -94,6 +109,57 @@
   var COLORS = { green: ['--ml-c-green', '#00703c'], blue: ['--ml-c-blue', '#1c6fd6'], red: ['--ml-c-red', '#d6336c'], gold: ['--ml-c-gold', '#9a6f00'], purple: ['--ml-c-purple', '#7048e8'],
     orange: ['--ml-c-orange', '#d9480f'], teal: ['--ml-c-teal', '#0c8599'], pink: ['--ml-c-pink', '#c2255c'], gray: ['--ml-c-gray', '#5d6862'], grey: ['--ml-c-gray', '#5d6862'],
     magenta: ['--ml-c-pink', '#c2255c'], cyan: ['--ml-c-teal', '#0c8599'], brown: ['--ml-c-orange', '#a0522d'], black: ['--ml-c-ink', 'currentColor'] };
+  // formula roles: generated from data/formula-roles.yaml by scripts/math/check-roles.js --write (do not edit by hand)
+  /* ROLES:BEGIN */
+  var ROLES = {
+    position: {label: "position or displacement", light: "#0068B0", dark: "#4FAAE6", hue: "blue", group: "physics"},
+    velocity: {label: "velocity", light: "#00785A", dark: "#2FBF8E", hue: "green", group: "physics"},
+    acceleration: {label: "acceleration", light: "#A43F82", dark: "#F29ACD", hue: "purple", group: "physics"},
+    time: {label: "time", light: "#6B4500", dark: "#F5D27A", hue: "amber", group: "physics"},
+    mass: {label: "mass", light: "#2A2F85", dark: "#CFCBFF", hue: "navy", group: "physics"},
+    force: {label: "force", light: "#B84A00", dark: "#FF8040", hue: "verm", group: "physics"},
+    energy: {label: "energy", light: "#6B4500", dark: "#F5D27A", hue: "amber", group: "physics"},
+    momentum: {label: "momentum", light: "#A43F82", dark: "#F29ACD", hue: "purple", group: "physics"},
+    angle: {label: "angle", light: "#2A2F85", dark: "#CFCBFF", hue: "navy", group: "shared"},
+    angvel: {label: "angular velocity", light: "#7A1E3A", dark: "#FFC2D1", hue: "wine", group: "physics"},
+    angacc: {label: "angular acceleration", light: "#A43F82", dark: "#F29ACD", hue: "purple", group: "physics"},
+    angmom: {label: "angular momentum", light: "#A43F82", dark: "#F29ACD", hue: "purple", group: "physics"},
+    torque: {label: "torque", light: "#7A1E3A", dark: "#FFC2D1", hue: "wine", group: "physics"},
+    power: {label: "power", light: "#7A1E3A", dark: "#FFC2D1", hue: "wine", group: "physics"},
+    charge: {label: "charge", light: "#A43F82", dark: "#F29ACD", hue: "purple", group: "physics"},
+    field: {label: "field or flux", light: "#2A2F85", dark: "#CFCBFF", hue: "navy", group: "physics"},
+    current: {label: "current", light: "#00785A", dark: "#2FBF8E", hue: "green", group: "physics"},
+    voltage: {label: "voltage or potential", light: "#B84A00", dark: "#FF8040", hue: "verm", group: "physics"},
+    resistance: {label: "resistance", light: "#2A2F85", dark: "#CFCBFF", hue: "navy", group: "physics"},
+    wavelength: {label: "wavelength", light: "#0068B0", dark: "#4FAAE6", hue: "blue", group: "physics"},
+    frequency: {label: "frequency", light: "#A43F82", dark: "#F29ACD", hue: "purple", group: "physics"},
+    temperature: {label: "temperature", light: "#B84A00", dark: "#FF8040", hue: "verm", group: "physics"},
+    pressure: {label: "pressure", light: "#2A2F85", dark: "#CFCBFF", hue: "navy", group: "physics"},
+    volume: {label: "volume", light: "#0068B0", dark: "#4FAAE6", hue: "blue", group: "physics"},
+    amount: {label: "amount of substance", light: "#6B4500", dark: "#F5D27A", hue: "amber", group: "physics"},
+    constant: {label: "constant", light: "#59635D", dark: "#B0BDB5", hue: "gray", group: "shared"},
+    input: {label: "input", light: "#0068B0", dark: "#4FAAE6", hue: "blue", group: "math"},
+    output: {label: "output", light: "#B84A00", dark: "#FF8040", hue: "verm", group: "math"},
+    rate: {label: "rate of change", light: "#A43F82", dark: "#F29ACD", hue: "purple", group: "math"},
+    integral: {label: "accumulated amount", light: "#6B4500", dark: "#F5D27A", hue: "amber", group: "math"},
+    coefficient: {label: "coefficient", light: "#00785A", dark: "#2FBF8E", hue: "green", group: "math"},
+    exponent: {label: "exponent", light: "#7A1E3A", dark: "#FFC2D1", hue: "wine", group: "math"},
+    base: {label: "base", light: "#2A2F85", dark: "#CFCBFF", hue: "navy", group: "math"},
+    index: {label: "index", light: "#6B4500", dark: "#F5D27A", hue: "amber", group: "math"},
+    outer: {label: "outer function", light: "#B84A00", dark: "#FF8040", hue: "verm", group: "math"},
+    inner: {label: "inner function", light: "#00785A", dark: "#2FBF8E", hue: "green", group: "math"},
+    matrix: {label: "matrix", light: "#2A2F85", dark: "#CFCBFF", hue: "navy", group: "math"},
+    vector: {label: "vector", light: "#0068B0", dark: "#4FAAE6", hue: "blue", group: "math"},
+    remainder: {label: "error or remainder", light: "#7A1E3A", dark: "#FFC2D1", hue: "wine", group: "math"},
+    shift: {label: "horizontal shift", light: "#6B4500", dark: "#F5D27A", hue: "amber", group: "math"},
+    midline: {label: "midline", light: "#2A2F85", dark: "#CFCBFF", hue: "navy", group: "math"},
+    prior: {label: "prior probability", light: "#0068B0", dark: "#4FAAE6", hue: "blue", group: "math"},
+    likelihood: {label: "likelihood", light: "#00785A", dark: "#2FBF8E", hue: "green", group: "math"},
+    evidence: {label: "total probability of the evidence", light: "#2A2F85", dark: "#CFCBFF", hue: "navy", group: "math"},
+    posterior: {label: "updated probability", light: "#B84A00", dark: "#FF8040", hue: "verm", group: "math"},
+    probability: {label: "probability", light: "#A43F82", dark: "#F29ACD", hue: "purple", group: "math"}
+  };
+  /* ROLES:END */
   // character class for raw characters (built from the tables, plus ASCII)
   var CHARCLS = { '+': 'bin', '-': 'bin', '*': 'bin', '=': 'rel', '<': 'rel', '>': 'rel', ':': 'rel', ',': 'punct', ';': 'punct', '!': 'close', '?': 'close', '(': 'open',
     ')': 'close', '[': 'open', ']': 'close', '|': 'sym', '/': 'sym', '.': 'sym', '@': 'sym', '"': 'sym', '\u2212': 'bin', '·': 'bin', '°': 'sym', '′': 'sym', '″': 'sym', '‴': 'sym' };
@@ -119,7 +185,7 @@
     texttt: 'font-family:monospace', emph: 'font-style:italic', textmd: '', textsl: 'font-style:italic' };
 
   // ===================================================================== TeX parser
-  function P(src) { this.s = src; this.i = 0; this.errors = []; this.unknown = []; this.font = null; this.depth = 0; }
+  function P(src) { this.s = src; this.i = 0; this.errors = []; this.unknown = []; this.font = null; this.depth = 0; this.roles = []; this.noRoles = false; }
   P.prototype.err = function (m) { if (this.errors.indexOf(m) < 0) this.errors.push(m); };
   P.prototype.ws = function () {
     var s = this.s;
@@ -149,8 +215,9 @@
     return null;
   };
   P.prototype.sub = function (src) { // parse a substring with the same state
-    var q = new P(src); q.font = this.font; q.depth = this.depth + 1; var r = q.list({}); var self = this;
+    var q = new P(src); q.font = this.font; q.depth = this.depth + 1; q.noRoles = this.noRoles; var r = q.list({}); var self = this;
     q.errors.forEach(function (e) { self.err(e); }); q.unknown.forEach(function (u) { if (self.unknown.indexOf(u) < 0) self.unknown.push(u); });
+    q.roles.forEach(function (x) { self.roles.push(x); });
     return r;
   };
   P.prototype.top = function () {
@@ -343,6 +410,13 @@
       case 'text': case 'textrm': case 'textnormal': case 'mbox': case 'hbox': case 'textup': case 'textbf': case 'textit': case 'textsf': case 'texttt': case 'emph': case 'textmd': case 'textsl':
         return this.textNode(this.rawGroup(), TEXTCMD[name]);
       case 'textcolor': { var cn = this.rawGroup(); a = this.arg(); return { k: 'row', a: [a], css: colorCss(cn) }; }
+      case 'role': {
+        var rl = this.optArg(), rk = this.rawGroup().trim(); a = this.arg();
+        if (!Object.prototype.hasOwnProperty.call(ROLES, rk)) { var uk = 'role:' + rk; if (this.unknown.indexOf(uk) < 0) this.unknown.push(uk); }
+        this.roles.push(rk);
+        if (this.noRoles) return a;
+        return { k: 'row', a: [a], attrs: ' class="ml-role" data-role="' + esc(rk) + '"' + (rl ? ' data-label="' + esc(txt(rl).trim()) + '"' : '') + (rolesOn() ? ' tabindex="0"' : '') };
+      }
       case 'colorbox': { var cb = this.rawGroup(); a = this.arg(); var col = COLORS[cb] ? 'var(' + COLORS[cb][0] + '-soft,rgba(0,0,0,.08))' : cb; return { k: 'row', a: [a], css: 'background:' + col + ';padding:0 0.2em;border-radius:0.2em' }; }
       case 'boxed': case 'fbox': a = name === 'fbox' ? this.textNode(this.rawGroup(), '') : this.arg(); return { k: 'row', a: [a], css: 'border:0.07em solid currentColor;padding:0.15em 0.3em;border-radius:0.12em' };
       case 'cancel': case 'bcancel': case 'xcancel': case 'sout': {
@@ -664,6 +738,7 @@
   function render(src, opts) {
     opts = opts || {};
     var p = new P(String(src == null ? '' : src)), body = '', pieces = null;
+    p.noRoles = !!opts.noRoles;
     S = { lvl: 0, fd: 0, display: !!opts.display };
     try {
       var list = p.top();
@@ -675,7 +750,7 @@
     catch (e) { p.err('internal: ' + e.message); body = '<mtext>' + esc(src) + '</mtext>'; pieces = null; }
     var open = '<math xmlns="' + NS + '" class="ml-math"' + (opts.display ? ' display="block"' : '') + '>';
     var html = pieces ? pieces.map(function (x) { return open + x + '</math>'; }).join('<wbr>') : open + body + '</math>';
-    return { html: html, errors: p.errors, unknown: p.unknown };
+    return { html: html, errors: p.errors, unknown: p.unknown, roles: p.roles };
   }
   ML.tex = function (src, opts) { try { return render(src, opts).html; } catch (e) { return '<math xmlns="' + NS + '" class="ml-math"><mtext>' + esc(src) + '</mtext></math>'; } };
   ML.texLint = function (src) { var r = render(src, {}); return { ok: !r.errors.length && !r.unknown.length, errors: r.errors, unknown: r.unknown }; };
@@ -746,10 +821,12 @@
         var w = doc.createTreeWalker(rootEl, 5, { acceptNode: function (nd) { if (nd.nodeType === 1) return skipEl(nd) ? 2 : 3; return /[$\\]/.test(nd.nodeValue) ? 1 : 3; } });
         var nd; while ((nd = w.nextNode())) nodes.push(nd);
       }
+      var anyRole = false;
       nodes.forEach(function (tn) {
         try {
           var segs = segments(tn.nodeValue);
           if (!segs.some(function (s) { return s.math || /\\[$%]/.test(s.s); })) return;
+          var pe = tn.parentNode, noR = !!(pe && pe.closest && pe.closest('.ml-norole'));
           var frag = doc.createDocumentFragment();
           gluePunct(segs);
           segs.forEach(function (sg) {
@@ -759,7 +836,8 @@
               else frag.appendChild(doc.createTextNode(t));
               return;
             }
-            var r = render(sg.tex, { display: sg.display, split: true });
+            var r = render(sg.tex, { display: sg.display, split: true, noRoles: noR });
+            if (r.roles.length && !noR) anyRole = true;
             if (r.errors.length) { var bad = doc.createElement('span'); bad.className = 'ml-notex ml-texerr'; bad.textContent = sg.raw; bad.title = 'This math could not be read: ' + r.errors[0]; frag.appendChild(bad); return; }
             var box = doc.createElement('span'); box.className = sg.display ? 'ml-md' : 'ml-m';
             box.innerHTML = glue(r.html, sg.punct);
@@ -768,8 +846,133 @@
           if (tn.parentNode) tn.parentNode.replaceChild(frag, tn);
         } catch (e) { }
       });
+      if (anyRole) roleKeys(rootEl.nodeType === 1 ? rootEl : rootEl.parentNode || doc.body);
     } catch (e) { }
   };
+
+  // ===================================================================== formula colors (roles): keys, hover names, linked highlights
+  var RSTORE = 'trb-fcolors';
+  function rolesOn() { try { var d = root.document; return !d || d.documentElement.getAttribute('data-fcolors') !== 'off'; } catch (e) { return true; } }
+  function roleLabel(el) { var k = el.getAttribute('data-role'); return el.getAttribute('data-label') || (ROLES[k] ? ROLES[k].label : k); }
+  function roleCss() {
+    var L = [], D = [], R = [];
+    Object.keys(ROLES).forEach(function (k) {
+      L.push('--ml-r-' + k + ':' + ROLES[k].light); D.push('--ml-r-' + k + ':' + ROLES[k].dark);
+      R.push('[data-role="' + k + '"]{--ml-rc:var(--ml-r-' + k + ')}');
+    });
+    return ':root{' + L.join(';') + '}html[data-theme="dark"]{' + D.join(';') + '}' + R.join('');
+  }
+  function injectCss(doc) {
+    if (doc.getElementById('ml-role-css')) return;
+    var st = doc.createElement('style'); st.id = 'ml-role-css'; st.textContent = roleCss(); (doc.head || doc.documentElement).appendChild(st);
+  }
+  // where a part's key goes: under its display formula, else after the step, paragraph, list item or box that holds it
+  var KEYHOST = '.mlp-ex-q, .mlp-ex-a, .mlp-box-body, .mlp-steps-a, li, p, figcaption, dd, blockquote, td, th, div';
+  function keyHost(el) {
+    var md = el.closest('.ml-md'); if (md) return { at: md, after: true };
+    var h = el.closest(KEYHOST); if (!h) return null;
+    if (h.tagName === 'TD' || h.tagName === 'TH') { var tw = h.closest('.mlp-table-wrap, table'); return tw ? { at: tw, after: true } : null; }
+    if (h.tagName === 'P' || h.tagName === 'FIGCAPTION') return { at: h, after: true };
+    return { at: h, after: false };
+  }
+  function roleKeys(rootEl) {
+    var doc = root.document; if (!doc || !rootEl || !rootEl.querySelectorAll) return;
+    injectCss(doc); hookEvents(doc);
+    var parts = [].slice.call(rootEl.querySelectorAll('.ml-role[data-role]'));
+    if (rootEl.matches && rootEl.matches('.ml-role[data-role]')) parts.unshift(rootEl);
+    var hosts = [], byHost = [];
+    parts.forEach(function (el) {
+      if (el.closest('.ml-rkey, .ml-norole')) return;
+      var h = keyHost(el); if (!h) return;
+      var i = hosts.indexOf(h.at); if (i < 0) { i = hosts.length; hosts.push(h.at); byHost.push({ h: h, els: [] }); }
+      byHost[i].els.push(el);
+    });
+    byHost.forEach(function (g) {
+      var at = g.h.at;
+      // one key per host; rebuilt if the host is typeset again
+      var old = g.h.after ? at.nextElementSibling : at.lastElementChild;
+      if (old && old.classList && old.classList.contains('ml-rkey')) old.remove();
+      // in a worked example or a box, a part already named in an earlier key is not named again
+      var scope = at.closest('.mlp-ex, .mlp-box, .mlp-steps-wrap, .mlp-try');
+      var seen = scope ? (scope._mlRoleSeen = scope._mlRoleSeen || {}) : {};
+      var items = [], idx = {};
+      g.els.forEach(function (el) {
+        var lab = roleLabel(el), sym = (el.textContent || '').replace(/\s+/g, ''), rk = el.getAttribute('data-role'), id = rk + '|' + lab + '|' + sym;
+        if (seen[id] && seen[id] !== at) return;
+        seen[id] = at;
+        var key = rk + '|' + lab;
+        if (idx[key] === undefined) { idx[key] = items.length; items.push({ rk: rk, lab: lab, syms: [], ids: {} }); }
+        var it = items[idx[key]]; if (!it.ids[sym]) { it.ids[sym] = 1; it.syms.push(el); }
+      });
+      if (!items.length) return;
+      var box = doc.createElement('span'); box.className = 'ml-rkey'; box.setAttribute('role', 'note'); box.setAttribute('aria-label', 'Color key');
+      items.forEach(function (it) {
+        var s = doc.createElement('span'); s.className = 'ml-rkey-i'; s.setAttribute('data-role', it.rk);
+        var sw = doc.createElement('i'); sw.className = 'ml-rkey-sw'; sw.setAttribute('aria-hidden', 'true'); s.appendChild(sw);
+        it.syms.slice(0, 3).forEach(function (el, j) {
+          if (j) s.appendChild(doc.createTextNode(', '));
+          var m = doc.createElementNS(NS, 'math'); m.setAttribute('class', 'ml-math');
+          var c = el.cloneNode(true); c.removeAttribute('tabindex'); c.removeAttribute('class'); c.setAttribute('class', 'ml-role-k');
+          m.appendChild(c); s.appendChild(m);
+        });
+        s.appendChild(doc.createTextNode(':'));
+        var t = doc.createElement('span'); t.className = 'ml-rkey-t'; t.textContent = it.lab; s.appendChild(t);
+        box.appendChild(s);
+      });
+      if (g.h.after) at.parentNode.insertBefore(box, at.nextSibling); else at.appendChild(box);
+    });
+  }
+  // hover or focus: a small name tag on formula parts, and every element with the same data-role in the lesson lights up
+  var hooked = false, tip = null, tipEl = null, lit = [];
+  function scopeOf(el) { return el.closest('.mlp-lesson, .mlp-card, .ml-rscope, article') || root.document.body; }
+  function light(el) {
+    unlight(); if (!rolesOn()) return;
+    var rk = el.getAttribute('data-role'), sc = scopeOf(el);
+    sc.querySelectorAll('[data-role="' + rk.replace(/["\\]/g, '') + '"]').forEach(function (x) { if (x.closest('.ml-norole')) return; x.classList.add('ml-role-hi'); lit.push(x); });
+    if (el.classList.contains('ml-role')) showTip(el);
+  }
+  function unlight() { lit.forEach(function (x) { x.classList.remove('ml-role-hi'); }); lit = []; tipEl = null; if (tip) tip.hidden = true; }
+  function showTip(el) {
+    var doc = root.document;
+    if (!tip) { tip = doc.createElement('div'); tip.className = 'ml-rtip'; tip.setAttribute('role', 'tooltip'); tip.id = 'ml-rtip'; doc.body.appendChild(tip); }
+    tipEl = el; tip.textContent = roleLabel(el); tip.hidden = false;
+    var r = el.getBoundingClientRect(), tw = tip.offsetWidth, vw = doc.documentElement.clientWidth;
+    var x = Math.max(6, Math.min(vw - tw - 6, r.left + r.width / 2 - tw / 2)), y = r.top - tip.offsetHeight - 6;
+    if (y < 4) y = r.bottom + 6;
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  }
+  function hookEvents(doc) {
+    if (hooked) return; hooked = true;
+    function hit(e) { var t = e.target; return t && t.closest ? t.closest('.ml-role[data-role], .ml-rkey-i[data-role], .ml-viz [data-role]') : null; }
+    doc.addEventListener('mouseover', function (e) { var h = hit(e); if (h) light(h); });
+    doc.addEventListener('mouseout', function (e) { var h = hit(e); if (h && !(e.relatedTarget && h.contains(e.relatedTarget))) unlight(); });
+    doc.addEventListener('focusin', function (e) { var h = hit(e); if (h) light(h); });
+    doc.addEventListener('focusout', function (e) { if (hit(e)) unlight(); });
+    doc.addEventListener('keydown', function (e) { if (e.key === 'Escape') unlight(); });
+    root.addEventListener('scroll', function () { if (tip && !tip.hidden && tipEl) { if (tipEl.isConnected) showTip(tipEl); else unlight(); } }, { passive: true }); // follows the part (focus scrolls it into view)
+  }
+  function roleColor(k) { var r = ROLES[k]; if (!r) return null; var d = root.document && root.document.documentElement.getAttribute('data-theme') === 'dark'; return d ? r.dark : r.light; }
+  function tagViz(el, map) {
+    if (!el || !map || typeof map !== 'object') return;
+    var doc = root.document; if (doc) { injectCss(doc); hookEvents(doc); }
+    Object.keys(map).forEach(function (sel) {
+      var rk = map[sel]; if (!ROLES[rk]) return;
+      if (/^[.#\[]/.test(sel)) { try { el.querySelectorAll(sel).forEach(function (x) { x.setAttribute('data-role', rk); }); } catch (e) { } return; }
+      var want = sel.toLowerCase();
+      el.querySelectorAll('.ml-sl').forEach(function (s) {
+        var lab = s.querySelector('.ml-sl-lab'), t = (lab ? lab.textContent : '').trim().toLowerCase();
+        if (t.indexOf(want) === 0) { s.setAttribute('data-role', rk); s.classList.add('ml-sl-role'); }
+      });
+    });
+  }
+  function setRoles(on) {
+    var doc = root.document; if (!doc) return;
+    if (on) doc.documentElement.removeAttribute('data-fcolors'); else doc.documentElement.setAttribute('data-fcolors', 'off');
+    try { if (on) localStorage.removeItem(RSTORE); else localStorage.setItem(RSTORE, 'off'); } catch (e) { }
+    doc.querySelectorAll('.ml-role[data-role]').forEach(function (x) { if (on) x.setAttribute('tabindex', '0'); else x.removeAttribute('tabindex'); });
+    unlight();
+  }
+  ML.roles = { list: ROLES, color: roleColor, tag: tagViz, keys: roleKeys, on: rolesOn, set: setRoles, css: roleCss };
   // punctuation right after inline math ("… = 0." or "$x$,") stays on the line with the math's last piece
   var PUNCT = /^[.,;:!?)\]’”…]+/;
   function gluePunct(segs) {

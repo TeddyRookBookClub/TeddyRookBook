@@ -1,0 +1,196 @@
+year: 2016
+edition: 57th
+date: "July 11–12, 2016 · Hong Kong"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2016/2016_eng.pdf
+  archive: https://www.imo-official.org/year_info.aspx?year=2016
+problems:
+  - id: P1
+    day: 1
+    topic: "Three isosceles triangles with equal base angles; a hidden mirror"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Call the common base angle $\theta$. Show that $D$ lies on the circle with diameter $CF$, the one through $B$.'
+      - 'Prove that $FMDE$ is a rhombus. Then look for a reflection in line $ME$ that swaps $F$ with $D$ and $B$ with $X$.'
+    solution: |
+      **Key idea:** the line $ME$ is a mirror. Reflecting in it swaps $F$ with $D$ and $B$ with $X$, so it swaps the lines $BD$ and $FX$. Two mirror-image lines meet on the mirror.
+
+      **Angles.** Let $\theta=\angle FAB=\angle FBA$ (the triangle $FAB$ is isosceles). Since $AC$ bisects $\angle DAB$ and $DA=DC$, we get $\angle DAC=\angle DCA=\theta$. Since $AD$ bisects $\angle EAC$ and $EA=ED$, we get $\angle EAD=\angle EDA=\theta$. So the three isosceles triangles $FAB$, $DAC$ and $EAD$ all have base angle $\theta$. The exterior angle at $F$ gives $\angle BFC=2\theta$, and since this is an acute angle of a right triangle, $\theta<45^\circ$.
+
+      **Step 1: $D$ is on the circle with diameter $CF$.** Let $\omega$ be this circle. Its center is $M$, and it passes through $B$ because $\angle FBC=90^\circ$. Let $B'$ be the reflection of $B$ in line $AC$. It lies on ray $AD$ (because $AC$ bisects $\angle DAB$), and on $\omega$ (because $\omega$ is symmetric about $AC$). In an isosceles triangle with base angle $\theta$, the base is $2\cos\theta$ times a leg. So $AB=2\cos\theta\cdot AF$ and $AC=2\cos\theta\cdot AD$, which gives
+      $$AF\cdot AC=\frac{AB\cdot AC}{2\cos\theta}=AB'\cdot AD .$$
+      The points $F,C$ lie on one ray from $A$ and $B',D$ on another, so by the converse of the power of a point, $F,C,B',D$ are concyclic (if $B'=D$ there is nothing to prove). That circle is $\omega$. So $MF=MB=MC=MD$. Call this common length $r$.
+
+      **Step 2: $FMDE$ is a rhombus.** Triangle $MDC$ is isosceles ($MD=MC$) with $\angle MCD=\theta$, so its base $DC$ has base angles $\theta$. Triangle $EAD$ also has base angles $\theta$, and its base $AD$ equals $DC$. So the two triangles are congruent, and $EA=ED=MD=r$. Next, $\angle EDA=\angle DAC$, with $E$ and $C$ on opposite sides of $AD$. These are alternate angles, so $ED\parallel AC$, and the vector from $E$ to $D$ points the same way as the vector from $A$ to $C$, which is the vector from $F$ to $M$. Both have length $r$, so $\overrightarrow{ED}=\overrightarrow{FM}$ and $FMDE$ is a parallelogram with $MF=MD$: a rhombus. Its diagonal $ME$ is therefore the perpendicular bisector of $FD$. Let $\sigma$ be the reflection in line $ME$. Then $\sigma$ fixes $M$ and swaps $F$ and $D$.
+
+      **Step 3: $\sigma$ sends $B$ to $X$.** Measure directions of rays from $M$, with the direction of $\overrightarrow{AC}$ as $0^\circ$ and $B$'s side of $AC$ positive.
+      - Ray $MF$ points at $180^\circ$.
+      - Ray $MB$ points at $4\theta$, since the central angle $\angle BMC$ is twice the inscribed angle $\angle BFC=2\theta$.
+      - Ray $MD$ points at $180^\circ+2\theta$, since triangle $MDC$ has apex angle $180^\circ-2\theta$, so $\angle AMD=2\theta$, with $D$ on the negative side.
+      - Ray $MX$ is parallel to ray $AE$ (because $AMXE$ is a parallelogram), so it points at $-2\theta$. Also $MX=AE=r$.
+
+      The mirror bisects the angle between $MF$ and $MD$, so it is the line through $M$ in direction $\theta$ (equivalently $180^\circ+\theta$). Reflecting in it sends a direction $\varphi$ to $2\theta-\varphi$. This sends $180^\circ$ to $2\theta-180^\circ\equiv180^\circ+2\theta$ (so $F\mapsto D$, as it should). It also sends $4\theta$ to $-2\theta$. Since $MB=MX=r$, this means $\sigma(B)=X$.
+
+      **Finish.** The reflection $\sigma$ maps line $BD$ to line $XF$. A point where $BD$ crosses the mirror is fixed by $\sigma$, so it also lies on $XF$. Line $BD$ does cross the mirror. If it were parallel to $ME$, the chord $BD$ of $\omega$ would be perpendicular to the diameter in direction $\theta+90^\circ$. Then $B$ and $D$ would be mirror images in that diameter, which needs $180^\circ-2\theta\equiv180^\circ+2\theta$, so $4\theta\equiv0 \pmod{360^\circ}$. That is impossible for $0<\theta<45^\circ$. So $BD$, $FX$ and $ME$ pass through one point.
+    checked: "script: random admissible configurations; the three lines meet (error below 1e-12), and MB = MD = ME-rhombus side = AE"
+    viz: imo-2016-p1
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Balanced letters on rows, columns and diagonals of a grid"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: "Exactly the multiples of $9$"
+    hints:
+      - 'Cut the table into $3\times3$ blocks. Which rows, columns and diagonals pass through the block centers, and are their lengths multiples of $3$?'
+      - 'Count the letter I on those lines with multiplicity. Every non-center cell lies on exactly one of them, and every center on four.'
+    solution: |
+      **Key idea:** count one letter along a well-chosen family of lines. Block centers are counted four times and every other cell once, which forces $9\mid n$.
+
+      **Necessity.** Each row has one third of each letter, so $3\mid n$. Write $n=3m$ and number rows and columns $1,\dots,n$. Cut the table into $m^2$ blocks of size $3\times3$. The center of a block is a cell $(i,j)$ with $i\equiv j\equiv2\pmod 3$. Take this family of lines:
+      - the rows and columns with index $\equiv2\pmod3$;
+      - the diagonals $i+j=s$ with $s\equiv1\pmod3$;
+      - the diagonals $i-j=d$ with $d\equiv0\pmod3$.
+
+      Every block center lies on four of these lines. Each diagonal in the family has a length divisible by $3$: for $i+j=s$ the length is $s-1$ or $2n+1-s$, and for $i-j=d$ it is $n-|d|$. So on every line of the family, one third of the cells hold I.
+
+      Now look inside one block, with local coordinates $(a,b)\in\{1,2,3\}^2$. The center $(2,2)$ is on four lines of the family. Each of the other eight cells is on exactly one: $(2,1),(2,3)$ only on their row, $(1,2),(3,2)$ only on their column, $(1,1),(3,3)$ only on an $i-j$ diagonal, and $(1,3),(3,1)$ only on an $i+j$ diagonal. So the family has $12m^2$ cell-incidences in all, and one third of them, $4m^2$, are at a cell with I.
+
+      Count the same thing cell by cell. Let $c$ be the number of block centers holding I. The table holds $n^2/3=3m^2$ letters I. Each one is counted once, and those at centers are counted three extra times:
+      $$3m^2+3c=4m^2\quad\Longrightarrow\quad c=\frac{m^2}{3}.$$
+      So $3\mid m^2$, hence $3\mid m$ and $9\mid n$.
+
+      **Construction for $n=9k$.** Number rows and columns from $0$, and write letter number $(j+\lfloor i/3\rfloor)\bmod 3$ in cell $(i,j)$, with $0,1,2$ standing for I, M, O.
+      - *Rows:* along a row, $j$ runs through $n$ consecutive values, a multiple of $3$, so the row is balanced.
+      - *Columns:* along a column, $\lfloor i/3\rfloor$ takes each of the values $0,\dots,3k-1$ three times, and these $3k$ values are balanced mod $3$.
+      - *Diagonals $i-j=d$:* the length is a multiple of $3$ only when $3\mid d$. Then $i$ runs over whole blocks $\{3t,3t+1,3t+2\}$, and on such a block the letter is $i-d+t$, which takes three different values.
+      - *Diagonals $i+j=s$:* the length is a multiple of $3$ only when $s\equiv2\pmod3$. Then again $i$ runs over whole blocks $\{3t,3t+1,3t+2\}$, and the letter $s-i+t$ takes three different values on each block.
+
+      So every multiple of $9$ works, and nothing else does.
+    checked: "script: the construction passes every condition for n = 9, 18, 27, 36, 45 (and fails for n = 12)"
+    viz: imo-2016-p2
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Lattice polygon on a circle: area inherits side divisibility"
+    areas: [number-theory, geometry]
+    difficulty: 5
+    hints:
+      - 'Treat one prime power $p^t$ dividing $n$ at a time. For a triangle, write $(2S)^2$ in terms of the three squared sides.'
+      - 'For a cyclic quadrilateral, square Ptolemy''s theorem. You get an inequality between $p$-adic valuations of squared lengths, which shows that some diagonal can be cut along.'
+    solution: |
+      **Key idea:** work one prime power at a time. Triangles follow from Heron's formula. For bigger polygons, a squared form of Ptolemy's theorem, summed around the polygon, shows there is always a diagonal whose square is divisible by $p^t$, so we can cut the polygon in two.
+
+      Shoelace gives $2S\in\mathbb Z$. Fix an odd prime power $p^t$ exactly dividing $n$. It is enough to show $p^t\mid 2S$. For points $X,Y$ write $V(XY)=v_p(XY^2)$, the exponent of $p$ in the integer $XY^2$.
+
+      **Triangles.** If the squared sides are $a,b,c$, Heron's formula says
+      $$4(2S)^2=16S^2=2ab+2bc+2ca-a^2-b^2-c^2 .$$
+      If $p^t$ divides $a$, $b$ and $c$, the right side is divisible by $p^{2t}$. Since $p$ is odd, $p^{2t}\mid(2S)^2$, so $p^t\mid 2S$.
+
+      **A four-point inequality.** Let $ABCD$ be a quadrilateral with lattice vertices on a circle, in this order. Ptolemy's theorem squared reads
+      $$AC^2\,BD^2=AB^2\,CD^2+AD^2\,BC^2+2Q,\qquad Q=AB\cdot BC\cdot CD\cdot DA .$$
+      We claim $Q$ is rational with denominator dividing $4$. The angles at $B$ and $D$ are supplementary, so $\sin B=\sin D$ and $\cos D=-\cos B$. Write $[XYZ]$ for the area of triangle $XYZ$; twice an area of a lattice triangle is an integer. Then $Q\sin^2B=2[ABC]\cdot 2[ACD]$, while by the law of cosines
+      $$(AB^2+BC^2-AC^2)(CD^2+DA^2-AC^2)=(2AB\cdot BC\cos B)(2CD\cdot DA\cos D)=-4Q\cos^2B .$$
+      Adding gives
+      $$Q=2[ABC]\cdot2[ACD]-\tfrac14(AB^2+BC^2-AC^2)(CD^2+DA^2-AC^2),$$
+      as claimed. Also $Q^2$ is the product of four squared sides, so $v_p(Q)$ is half their total. That is the average of $v_p(AB^2CD^2)$ and $v_p(AD^2BC^2)$, so it is at least the smaller of the two. Taking $v_p$ of the squared Ptolemy identity therefore gives
+      $$V(AC)+V(BD)\ \ge\ \min\big(V(AB)+V(CD),\ V(AD)+V(BC)\big).\qquad(\ast)$$
+
+      **A diagonal to cut along.** Let the polygon be $A_1\dots A_k$ with $k\ge4$, indices mod $k$, and all sides with $V\ge t$. Suppose every diagonal had $V<t$. Write $d_s(i)=V(A_iA_{i+s})$ and $\Sigma_s=\sum_i d_s(i)$. For $2\le s\le k-2$, apply $(\ast)$ to the four vertices $A_i,A_{i+1},A_{i+s},A_{i+s+1}$, which are in circular order:
+      $$d_s(i)+d_s(i+1)\ \ge\ \min\big(d_1(i)+d_1(i+s),\ d_{s+1}(i)+d_{s-1}(i+1)\big).$$
+      The left side is below $2t$ (two diagonals), while $d_1(i)+d_1(i+s)\ge2t$ (two sides). So the minimum must be the second term, and the left side is at least $d_{s+1}(i)+d_{s-1}(i+1)$. Summing over $i$:
+      $$2\Sigma_s\ \ge\ \Sigma_{s+1}+\Sigma_{s-1}\qquad(2\le s\le k-2).$$
+      So $\Sigma_1,\Sigma_2,\dots,\Sigma_{k-1}$ is a concave sequence. A concave sequence never dips below the smaller of its two ends. Both ends are sums over the sides ($\Sigma_{k-1}=\Sigma_1$), so $\Sigma_2\ge\Sigma_1\ge kt$. But each of the $k$ terms of $\Sigma_2$ is a diagonal value below $t$. This is a contradiction, so some diagonal has $V\ge t$.
+
+      **Induction.** Cutting along that diagonal splits the convex polygon into two smaller convex polygons. Their vertices are lattice points on the same circle, and all their sides have $V\ge t$. Their doubled areas add up to $2S$. By induction on $k$, with triangles as the base case, $p^t\mid 2S$. Doing this for every prime power in $n$ gives $n\mid 2S$.
+    checked: "script: the four-point inequality holds for 4,000 random quadruples of lattice points on x² + y² = 5⁴·13²·17 (p = 5, 13, 17); 3,920 random lattice polygons on that circle satisfy the conclusion"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Shared prime factors among consecutive values of a quadratic"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$b=6$"
+    hints:
+      - 'Compute $\gcd(P(n),P(n+k))$ for $k=1,2,3,4$. Each can only be $1$ or one particular small number.'
+      - 'For $b\le5$ the middle elements have too few partners. For $b=6$, line up three pairs with the Chinese remainder theorem.'
+    solution: |
+      **Key idea:** values of $P$ at nearby arguments can share only a few specific primes. With five values there are not enough partners, and with six a congruence choice works.
+
+      $P(n)=n^2+n+1$ is always odd. We find which primes two values at distance $k$ can share.
+      - $k=1$: $P(n+1)-P(n)=2(n+1)$, and $P(n)=n(n+1)+1\equiv1\pmod{n+1}$. So $\gcd(P(n),P(n+1))=1$.
+      - $k=2$: a common divisor divides $P(n+2)-P(n)=2(2n+3)$, hence $2n+3$, hence $4P(n)-(2n+3)(2n-1)=7$. Since $P(n)\equiv0\pmod 7$ exactly when $n\equiv2$ or $4\pmod7$, the two values share a factor exactly when $n\equiv2\pmod7$.
+      - $k=3$: a common divisor divides $6(n+2)$, so it is odd and divides $3(n+2)$, while $P(n)\equiv3\pmod{n+2}$. So the gcd is a power of $3$. Since $3\mid P(n)$ exactly when $n\equiv1\pmod3$, the two values share a factor exactly when $n\equiv1\pmod3$.
+      - $k=4$: as for $k=2$, the gcd divides $4P(n)-(2n+5)(2n-3)=19$. The roots of $P$ mod $19$ are $7$ and $11$, so the two values share a factor exactly when $n\equiv7\pmod{19}$.
+
+      **$b\le5$ fails.** Write $P_1,\dots,P_b$ for $P(a+1),\dots,P(a+b)$. Neighbors never share a factor.
+      - $b=2$ is impossible right away. For $b=3$, $P_2$ has only neighbors.
+      - $b=4$: $P_2$ needs $P_4$ and $P_3$ needs $P_1$. These are two distance-2 pairs, so $a+1\equiv2$ and $a+2\equiv2\pmod7$, which is impossible.
+      - $b=5$: $P_3$ needs $P_1$ or $P_5$, a distance-2 pair. If $P_2$ and $P_4$ also share, then $a+2\equiv2\pmod7$, and $P_3$'s pair would need $a+1\equiv2$ or $a+3\equiv2\pmod 7$. Both contradict. Otherwise $P_2$ must use $P_5$ and $P_4$ must use $P_1$. These are two distance-3 pairs, needing $a+2\equiv1$ and $a+1\equiv1\pmod3$, which is impossible.
+
+      **$b=6$ works.** Pair $P_1$ with $P_4$ (needs $a\equiv0\pmod3$), $P_3$ with $P_5$ (needs $a\equiv6\pmod7$), and $P_2$ with $P_6$ (needs $a\equiv5\pmod{19}$). The Chinese remainder theorem gives $a\equiv195\pmod{399}$. For $a=195$, the six values are $38613,39007,39403,39801,40201,40603$. The three pairs share the primes $3$, $7$ and $19$ respectively, so every element has a partner.
+    checked: "script: brute force shows no a < 5000 works for b ≤ 5, and a = 195 is the first that works for b = 6; gcd patterns checked for n < 2000"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Erasing factors so a product equation has no roots"
+    areas: [algebra]
+    difficulty: 4
+    answer: "$k=2016$"
+    hints:
+      - 'If fewer than $2016$ factors are erased, some factor survives on both sides.'
+      - 'Group the numbers $1,\dots,2016$ in fours. Keep $(x-4i-1)(x-4i-4)$ on one side and $(x-4i-2)(x-4i-3)$ on the other. Each right factor is the left one plus $2$.'
+    solution: |
+      **Key idea:** fewer than $2016$ erasures leave a common factor, which gives a root. With exactly $2016$, split each block of four numbers so that every right-hand quadratic is the left-hand one plus $2$, and compare signs and sizes.
+
+      **Lower bound.** Each factor $x-j$ appears once on each side. Erasing fewer than $2016$ factors leaves some $x-j$ on both sides, and then $x=j$ is a solution. So $k\ge2016$.
+
+      **Construction with $k=2016$.** For $i=0,\dots,503$, keep $L_i=(x-4i-1)(x-4i-4)$ on the left and $R_i=(x-4i-2)(x-4i-3)$ on the right. That erases $1008$ factors from each side. With $z=x-4i$,
+      $$R_i-L_i=(z^2-5z+6)-(z^2-5z+4)=2 .$$
+      We show that $\prod L_i=\prod R_i$ has no real solution.
+
+      - **$x$ is one of $1,\dots,2016$.** Exactly one side is $0$, because the two sides have no common linear factor.
+      - **$x$ is outside every interval $(4i+1,4i+4)$.** Then every $L_i>0$, so $R_i=L_i+2>L_i>0$ for all $i$, and the right side is larger.
+      - **$x\in(4j+1,4j+2)$ or $x\in(4j+3,4j+4)$.** Then $L_j<0<R_j$, while all other $L_i,R_i$ are positive. So the left side is negative and the right side positive.
+      - **$x\in(4j+2,4j+3)$.** Now $L_j$ and $R_j$ are both negative and all other factors are positive. With $z=x-4j\in(2,3)$, we have $L_j=(z-1)(z-4)\in[-\tfrac94,-2)$, so $|L_j|\ge2$ and $|R_j|=|L_j+2|\le\tfrac14$. For $i=j\pm d$ with $d\ge1$, the distance from $x$ to the nearer root of $L_i$ is more than $4d-2$, and to the farther root more than $4d+1$. So
+      $$L_i>(4d-2)(4d+1)\ge 8d^2,\qquad\frac{R_i}{L_i}=1+\frac2{L_i}<1+\frac1{4d^2}.$$
+      Each $d$ occurs at most twice (once on each side of $j$), so
+      $$\left|\frac{\prod R_i}{\prod L_i}\right|<\frac{1/4}{2}\prod_{d\ge1}\Big(1+\frac1{4d^2}\Big)^2\le\frac18\exp\Big(\sum_{d\ge1}\frac1{2d^2}\Big)=\frac18e^{\pi^2/12}<\frac{2.3}{8}<1 .$$
+      So the two sides have different sizes.
+
+      In every case the two sides differ, so the equation has no real solution and $k=2016$ is the least value.
+    checked: "script: evaluated both sides on a fine grid over [−5, 2021] (and smaller analogues); wherever the signs agree, the logs differ by at least 0.08"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Frogs hopping along pairwise crossing segments without collisions"
+    areas: [combinatorics, geometry]
+    difficulty: 4
+    hints:
+      - 'Stretch every segment to a chord of one big circle. No new crossings appear, and the frogs'' schedules do not change.'
+      - 'Two frogs meet at their crossing point $X$ exactly when they reach it on the same clap. Count, for each other chord, whether it cuts the frogs'' two paths to $X$. The number of chord endpoints on the arc between the two starting points decides the parity.'
+    solution: |
+      **Key idea:** put the endpoints on a circle. Two frogs collide exactly when the arc between their starting points makes their two counts equal, and the parity of the endpoints on that arc decides it. Starting every other endpoint works when $n$ is odd, and is impossible when $n$ is even.
+
+      **Chords.** Take a circle containing all the segments and extend each segment to a chord. Two lines meet only once, so the extensions create no new crossings. Each frog's sequence of crossing points is unchanged, so we may assume the frogs start on the circle. Each chord crosses the other $n-1$ chords, so each side of it holds exactly $n-1$ of the other endpoints. Numbering the $2n$ endpoints $1,\dots,2n$ around the circle, the two ends of every chord are therefore $n$ apart.
+
+      **When do two frogs meet?** A frog visits its $n-1$ crossings at claps $1,\dots,n-1$, in order along its chord. Frogs on chords $i$ and $j$ can only meet at their crossing $X$. They meet exactly when they reach $X$ on the same clap. Let $A$ and $B$ be their starting points. Then the frogs meet exactly when the same number of other chords cut segment $AX$ as cut segment $BX$. Call these numbers $\alpha$ and $\beta$.
+
+      The ends of the two chords alternate around the circle, so one of the arcs from $A$ to $B$ contains no end of chord $i$ or $j$. Let $R$ be the region bounded by $AX$, $XB$ and that arc. It is convex, since its angle at $X$ is less than $180^\circ$. Take another chord $c$. It meets the boundary of $R$ in $0$ or $2$ points (counting its endpoints on the arc). It cannot have both endpoints on the arc: then it would lie inside $R$ and could not cross chord $i$. So
+      $$[c\text{ cuts }AX]+[c\text{ cuts }BX]+[c\text{ has an endpoint on the arc}]\in\{0,2\}.$$
+      Summing over all other chords, $\alpha+\beta+E$ is even, where $E$ is the number of endpoints strictly inside the arc.
+      - If $E$ is odd, then $\alpha\ne\beta$ and these two frogs never meet.
+      - If $E=0$, each chord cuts both $AX$ and $BX$ or neither, so $\alpha=\beta$ and the frogs meet.
+
+      **(a) $n$ odd.** Put the frogs on the endpoints with odd numbers $1,3,\dots,2n-1$. The two ends of a chord are $n$ apart, which is odd, so each chord gets exactly one frog. Any two frogs sit at odd positions, so each arc between them contains an odd number of endpoints. Then $E$ is odd, and no two frogs ever meet.
+
+      **(b) $n$ even.** Now the two ends of a chord have the same parity. If no two chosen starting points were next to each other around the circle, then $n$ points out of $2n$ would have to be all the odd or all the even positions. Then some chord would have both ends chosen, which is impossible. So two chosen starting points are neighbors on the circle. The arc between them holds no endpoints, so $E=0$ and those two frogs collide.
+    checked: "script: random configurations with n = 3…7; the alternating choice never collides for odd n, and for even n every one of the 2ⁿ choices collides"
+    viz: imo-2016-p6
+    status: ready

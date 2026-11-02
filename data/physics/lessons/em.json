@@ -318,7 +318,7 @@
    },
    {
     "t": "key",
-    "html": "Give each small patch of surface a vector $d\\vec{A}$: its area, pointing along the patch's <b>normal</b> (perpendicular to the surface). Then\n        $$\\Phi_E = \\int \\vec{E}\\cdot d\\vec{A}.$$\n        For a uniform field and a flat surface, $\\Phi_E = EA\\cos\\theta$, with $\\theta$ the angle between $\\vec{E}$ and the normal. Units: N·m²/C. On a closed surface the normals point <b>outward</b>, so field leaving counts as positive and field entering as negative."
+    "html": "Give each small patch of surface a vector $d\\vec{A}$: its area, pointing along the patch's <b>normal</b> (perpendicular to the surface). Then\n        $$\\role[electric flux]{field}{\\Phi_E} = \\int \\role[electric field]{field}{\\vec{E}}\\cdot \\role[tiny patch of area]{position}{d\\vec{A}}.$$\n        For a uniform field and a flat surface, $\\Phi_E = EA\\cos\\theta$, with $\\theta$ the angle between $\\vec{E}$ and the normal. Units: N·m²/C. On a closed surface the normals point <b>outward</b>, so field leaving counts as positive and field entering as negative."
    },
    {
     "t": "why",
@@ -407,7 +407,7 @@
    },
    {
     "t": "key",
-    "html": "<b>Gauss's law:</b> for any closed surface,\n        $$\\oint \\vec{E}\\cdot d\\vec{A} = \\frac{q_{\\text{enc}}}{\\varepsilon_0},$$\n        where $q_{\\text{enc}}$ is the net charge inside. Charges outside the surface add nothing to the net flux."
+    "html": "<b>Gauss's law:</b> for any closed surface,\n        $$\\oint \\role[electric field]{field}{\\vec{E}}\\cdot \\role[tiny patch of area]{position}{d\\vec{A}} = \\frac{\\role[charge inside]{charge}{q_{\\text{enc}}}}{\\role[permittivity of free space]{constant}{\\varepsilon_0}},$$\n        where $q_{\\text{enc}}$ is the net charge inside. Charges outside the surface add nothing to the net flux."
    },
    {
     "t": "why",
@@ -1673,7 +1673,7 @@
      "r1": 1,
      "r2": 3,
      "L": 20,
-     "rho": 0.0000011,
+     "rho": 1.1e-06,
      "n": 6,
      "task": "Add slices, then change the wide end. Compare the slice sum with the one-area estimate in the readout."
     },
@@ -1908,7 +1908,7 @@
    },
    {
     "t": "key",
-    "html": "$$q = C\\varepsilon\\left(1 - e^{-t/RC}\\right), \\qquad I = \\frac{dq}{dt} = \\frac{\\varepsilon}{R}e^{-t/RC}, \\qquad V_C = \\varepsilon\\left(1 - e^{-t/RC}\\right).$$\n        After one time constant $\\tau = RC$ the charge is 63% of its final value; after $5\\tau$ it is over 99%."
+    "html": "$$\\role{charge}{q} = \\role[capacitance]{constant}{C}\\role[emf]{voltage}{\\varepsilon}\\left(1 - e^{-\\role{time}{t}/\\role{resistance}{R}\\role[capacitance]{constant}{C}}\\right), \\qquad I = \\frac{dq}{dt} = \\frac{\\varepsilon}{R}e^{-t/RC}, \\qquad V_C = \\varepsilon\\left(1 - e^{-t/RC}\\right).$$\n        After one time constant $\\tau = RC$ the charge is 63% of its final value; after $5\\tau$ it is over 99%."
    },
    {
     "t": "p",
@@ -1921,7 +1921,12 @@
      "mode": "rc-charge",
      "R": 2000,
      "C": 500,
-     "V0": 12
+     "V0": 12,
+     "roleLinks": {
+      "resistance R": "resistance",
+      "capacitance C": "constant",
+      "time,": "time"
+     }
     },
     "cap": "Charging: the capacitor's voltage climbs toward $\\varepsilon$ while the current starts at its largest value and dies away. Change $R$ and $C$: only the time scale $RC$ changes."
    },
@@ -2085,7 +2090,7 @@
    },
    {
     "t": "key",
-    "html": "The <b>Lorentz force</b>:\n        $$\\vec{F} = q\\left(\\vec{E} + \\vec{v}\\times\\vec{B}\\right),$$\n        $$\\vec{v}\\times\\vec{B} = \\left(v_yB_z - v_zB_y,\\ \\ v_zB_x - v_xB_z,\\ \\ v_xB_y - v_yB_x\\right).$$\n        For a negative charge, $q < 0$ reverses the force."
+    "html": "The <b>Lorentz force</b>:\n        $$\\role{force}{\\vec{F}} = \\role{charge}{q}\\left(\\role[electric field]{field}{\\vec{E}} + \\role{velocity}{\\vec{v}}\\times\\role[magnetic field]{field}{\\vec{B}}\\right),$$\n        $$\\vec{v}\\times\\vec{B} = \\left(v_yB_z - v_zB_y,\\ \\ v_zB_x - v_xB_z,\\ \\ v_xB_y - v_yB_x\\right).$$\n        For a negative charge, $q < 0$ reverses the force."
    },
    {
     "t": "why",
@@ -2096,7 +2101,10 @@
     "name": "ph-magnetism",
     "opts": {
      "mode": "charge",
-     "angle": 60
+     "angle": 60,
+     "roleLinks": {
+      "Speed v": "velocity"
+     }
     },
     "cap": "A charge entering a uniform field at $60^\\circ$. The part of $\\vec{v}$ along $\\vec{B}$ feels nothing; the part across $\\vec{B}$ is turned into a circle. Together they make a helix."
    },
@@ -2493,7 +2501,7 @@
    },
    {
     "t": "key",
-    "html": "A piece of wire $d\\vec{\\ell}$ carrying current $I$ makes, at a point a distance $r$ away in the direction $\\hat{r}$,\n        $$d\\vec{B} = \\frac{\\mu_0}{4\\pi}\\,\\frac{I\\,d\\vec{\\ell}\\times\\hat{r}}{r^2}, \\qquad dB = \\frac{\\mu_0}{4\\pi}\\,\\frac{I\\,d\\ell\\,\\sin\\theta}{r^2},$$\n        with $\\mu_0/4\\pi = 10^{-7}\\ \\text{T·m/A}$ and $\\theta$ the angle between $d\\vec{\\ell}$ and $\\hat{r}$."
+    "html": "A piece of wire $d\\vec{\\ell}$ carrying current $I$ makes, at a point a distance $r$ away in the direction $\\hat{r}$,\n        $$\\role[tiny piece of magnetic field]{field}{d\\vec{B}} = \\frac{\\role[permeability of free space]{constant}{\\mu_0}}{4\\pi}\\,\\frac{\\role{current}{I}\\,\\role[tiny piece of wire]{position}{d\\vec{\\ell}}\\times\\hat{r}}{\\role[distance]{position}{r}^2}, \\qquad dB = \\frac{\\mu_0}{4\\pi}\\,\\frac{I\\,d\\ell\\,\\sin\\theta}{r^2},$$\n        with $\\mu_0/4\\pi = 10^{-7}\\ \\text{T·m/A}$ and $\\theta$ the angle between $d\\vec{\\ell}$ and $\\hat{r}$."
    },
    {
     "t": "why",
@@ -2503,7 +2511,10 @@
     "t": "viz",
     "name": "ph-magnetism",
     "opts": {
-     "mode": "biot"
+     "mode": "biot",
+     "roleLinks": {
+      "Current I": "current"
+     }
     },
     "cap": "Biot–Savart, piece by piece: each element of the wire adds a small $d\\vec{B}$ at P, perpendicular to both the element and the line to P. Elements straight in line with P add nothing."
    },
@@ -2645,7 +2656,7 @@
    },
    {
     "t": "key",
-    "html": "<b>Ampère's law:</b> around any closed path,\n        $$\\oint \\vec{B}\\cdot d\\vec{\\ell} = \\mu_0 I_{\\text{enc}},$$\n        where $I_{\\text{enc}}$ is the net current through any surface bounded by the path. Sign: curl the fingers of your right hand along the path; current along your thumb counts as positive. Currents outside the path do not count."
+    "html": "<b>Ampère's law:</b> around any closed path,\n        $$\\oint \\role[magnetic field]{field}{\\vec{B}}\\cdot \\role[tiny step along the path]{position}{d\\vec{\\ell}} = \\role[permeability of free space]{constant}{\\mu_0} \\role[current through the path]{current}{I_{\\text{enc}}},$$\n        where $I_{\\text{enc}}$ is the net current through any surface bounded by the path. Sign: curl the fingers of your right hand along the path; current along your thumb counts as positive. Currents outside the path do not count."
    },
    {
     "t": "why",
@@ -2884,7 +2895,7 @@
    },
    {
     "t": "key",
-    "html": "$$\\varepsilon = -N\\frac{d\\Phi_B}{dt}.$$\n        The minus sign is Lenz's law: the induced current makes a field that opposes the change. For $\\Phi = BA\\cos\\theta$, the <a href=\"/math/calculus-1/chain-rule/\">product and chain rules</a> give one term for each thing that changes."
+    "html": "$$\\role[emf]{voltage}{\\varepsilon} = -\\role[number of turns]{constant}{N}\\frac{\\role[tiny change in magnetic flux]{field}{d\\Phi_B}}{\\role[tiny time interval]{time}{dt}}.$$\n        The minus sign is Lenz's law: the induced current makes a field that opposes the change. For $\\Phi = BA\\cos\\theta$, the <a href=\"/math/calculus-1/chain-rule/\">product and chain rules</a> give one term for each thing that changes."
    },
    {
     "t": "why",
@@ -3187,7 +3198,7 @@
    },
    {
     "t": "key",
-    "html": "$$\\varepsilon = -L\\frac{dI}{dt}, \\qquad L = \\frac{N\\Phi_B}{I}.$$\n        Unit: the henry, $1\\ \\text{H} = 1\\ \\text{V·s/A}$. For a long solenoid of $N$ turns, length $\\ell$ and cross-section $A$, $L = \\dfrac{\\mu_0N^2A}{\\ell}$."
+    "html": "$$\\role[emf]{voltage}{\\varepsilon} = -\\role[inductance]{constant}{L}\\frac{\\role[tiny change in current]{current}{dI}}{\\role[tiny time interval]{time}{dt}}, \\qquad \\role[inductance]{constant}{L} = \\frac{\\role[number of turns]{constant}{N}\\role[magnetic flux]{field}{\\Phi_B}}{\\role{current}{I}}.$$\n        Unit: the henry, $1\\ \\text{H} = 1\\ \\text{V·s/A}$. For a long solenoid of $N$ turns, length $\\ell$ and cross-section $A$, $L = \\dfrac{\\mu_0N^2A}{\\ell}$."
    },
    {
     "t": "why",
@@ -4220,7 +4231,7 @@
    },
    {
     "t": "key",
-    "html": "In empty space electromagnetic waves travel at\n        $$c = \\frac{1}{\\sqrt{\\mu_0\\varepsilon_0}} = 3.00 \\times 10^{8}\\ \\text{m/s},$$\n        with $\\vec{E}$ and $\\vec{B}$ perpendicular to each other and to the direction of travel, <b>in phase</b>, and $E = cB$ at every point. The wave moves in the direction of $\\vec{E}\\times\\vec{B}$."
+    "html": "In empty space electromagnetic waves travel at\n        $$\\role[speed of light]{velocity}{c} = \\frac{1}{\\sqrt{\\role[permeability of free space]{constant}{\\mu_0}\\role[permittivity of free space]{constant}{\\varepsilon_0}}} = 3.00 \\times 10^{8}\\ \\text{m/s},$$\n        with $\\vec{E}$ and $\\vec{B}$ perpendicular to each other and to the direction of travel, <b>in phase</b>, and $E = cB$ at every point. The wave moves in the direction of $\\vec{E}\\times\\vec{B}$."
    },
    {
     "t": "viz",

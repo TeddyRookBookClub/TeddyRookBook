@@ -5,6 +5,8 @@
 {{- $Y := index $C "putnam" | default dict -}}
 {{- $O := (index (index $C "original" | default dict) "math") | default dict -}}
 {{- $ny := 0 }}{{ $nr := 0 }}{{ range $Y }}{{ $ny = add $ny 1 }}{{ range .problems }}{{ if eq .status "ready" }}{{ $nr = add $nr 1 }}{{ end }}{{ end }}{{ end -}}
+{{- $I := index $C "imo" | default dict -}}
+{{- $niy := 0 }}{{ $nir := 0 }}{{ range $I }}{{ $niy = add $niy 1 }}{{ range .problems }}{{ if eq .status "ready" }}{{ $nir = add $nir 1 }}{{ end }}{{ end }}{{ end -}}
 {{- $nc := 0 }}{{ range $O }}{{ if eq .status "ready" }}{{ $nc = add $nc 1 }}{{ end }}{{ end -}}
 <article class="cp cp-hub">
   <nav class="cp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <span>Competitions</span></nav>
@@ -25,6 +27,12 @@
       <p>The William Lowell Putnam Mathematical Competition is a contest for college students in the United States and Canada, held each year in early December: twelve problems in two sessions of three hours. Read a problem at the official link, try it, then come back for a hint or our full solution.</p>
       <p class="cp-small">{{ if $nr }}{{ $nr }} solutions ready across {{ $ny }} {{ cond (eq $ny 1) "year" "years" }}. {{ end }}The problems are © the Mathematical Association of America; we link to them and write our own solutions.</p>
       <p><a class="cp-btn pri" href="{{ "math/competitions/putnam/" | relURL }}">Open the guide</a></p>
+    </section>
+    <section class="cp-panel" aria-labelledby="cp-h-imo">
+      <h2 id="cp-h-imo"><span aria-hidden="true">🌍</span> IMO solutions guide</h2>
+      <p>The International Mathematical Olympiad is the world contest for school students, held each July: six problems over two days, four and a half hours a day. Read a problem at the official link, try it, then come back for a hint or our full solution.</p>
+      <p class="cp-small">{{ if $nir }}{{ $nir }} solutions ready across {{ $niy }} {{ cond (eq $niy 1) "year" "years" }}. {{ end }}The problems are © the International Mathematical Olympiad; we link to them and write our own solutions.</p>
+      <p><a class="cp-btn pri" href="{{ "math/competitions/imo/" | relURL }}">Open the guide</a></p>
     </section>
   </div>
   <aside class="cp-note">

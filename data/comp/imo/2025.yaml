@@ -1,0 +1,194 @@
+year: 2025
+edition: 66th
+date: "July 15–16, 2025 · Sunshine Coast, Australia"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2025/2025_eng.pdf
+  archive: https://www.imo-official.org/year_info.aspx?year=2025
+problems:
+  - id: P1
+    day: 1
+    topic: "Covering a triangle of lattice points with sunny lines"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: '$k=0$, $1$ or $3$ (for every $n\ge3$)'
+    hints:
+      - 'The points on the three sides of the triangle are hard to cover. A line that is not a side line meets the boundary in at most two of them.'
+      - 'So for $n\ge4$ one of the lines is a side line. Remove it and shrink to $n-1$. Then settle $n=3$ by hand.'
+    solution: |
+      **Key idea:** for $n\ge4$, some line must be one of the three sides of the triangle. Removing it leaves the same problem one size smaller, with the same number of sunny lines. So everything comes down to $n=3$.
+
+      Let $T_n$ be the set of points $(a,b)$ with positive integers and $a+b\le n+1$. Its convex hull is the triangle with corners $(1,1)$, $(1,n)$, $(n,1)$. The three **side lines** are $x=1$, $y=1$ and $x+y=n+1$. None of them is sunny.
+
+      **Constructions.** For any $n\ge3$:
+      - $k=0$: the $n$ lines $y=1,2,\dots,n$.
+      - $k=1$: the lines $y=1,\dots,n-1$, plus the sunny line $y=x+n-1$ through the last point $(1,n)$.
+      - $k=3$: the $n-3$ lines $x+y=n+1,\ n,\ \dots,\ 5$ cover every point with $a+b\ge5$. What remains is $T_3$, and the three sunny lines through $(1,1),(2,2)$, through $(1,2),(3,1)$, and through $(2,1),(1,3)$ cover it. (Their slopes are $1$, $-\tfrac12$ and $-2$.)
+
+      **Shrinking.** Let $n\ge4$, and take $n$ lines covering $T_n$ with $k$ sunny. The boundary of the hull contains $3n-3$ points of $T_n$. A line that is not a side line meets the boundary of a triangle in at most two points, so if no side line were used, the lines would cover at most $2n<3n-3$ boundary points. So one of the lines is a side line. Remove it. The points it misses form a copy of $T_{n-1}$: if it was $x+y=n+1$ they are exactly $T_{n-1}$, and if it was $x=1$ (or $y=1$) they are $T_{n-1}$ shifted one step right (or up). A shift doesn't change directions, so the other $n-1$ lines, shifted back, cover $T_{n-1}$, and $k$ of them are sunny. Repeating, any value of $k$ possible for $n$ is also possible for $n=3$.
+
+      **The case $n=3$.** Here $T_3$ has $6$ points, and $k\le3$. Only three triples of them are collinear, and they lie on the side lines. So a sunny line contains at most $2$ points, and a non-sunny line at most $3$, with $3$ only for a side line. Suppose exactly $2$ of the $3$ lines are sunny.
+      - If the third line is a side line, say $x=1$, the remaining points $(2,1),(2,2),(3,1)$ must be covered by the two sunny lines. But each pair of these lies on a vertical, horizontal or slope $-1$ line, so a sunny line contains at most one of them, and two sunny lines can't cover three points. The other two side lines behave the same way: the map $(a,b)\mapsto(b,a)$ and the map $(a,b)\mapsto(5-a-b,\,b)$ send $T_3$ to itself, permute the three non-sunny directions, and so keep sunny lines sunny.
+      - Otherwise the third line covers at most $2$ points, and $2+2+2=6$ means each line covers exactly $2$ points with no overlap. The non-sunny lines with exactly two points are $x=2$, $y=2$ and $x+y=3$, which are images of each other under the same maps, so take $x=2$. The four remaining points include $(1,1),(1,2),(1,3)$, and a sunny line holds at most one of these three, so two sunny lines can't cover them.
+
+      So $k=2$ is impossible for $n=3$, hence for every $n$, and the answer is $k\in\{0,1,3\}$.
+    checked: "script: exhaustive search over covers for n = 3, 4, 5 gives exactly k = 0, 1, 3"
+    viz: imo-2025-p1
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Two crossing circles, an orthocenter and a tangent line"
+    areas: [geometry]
+    difficulty: 4
+    hints:
+      - 'Put the common chord $AB$ on the $y$-axis and the line of centers on the $x$-axis, with $A=(0,1)$. Use the $x$-coordinates $c$ and $d$ of $C$ and $D$ as the two free parameters. Every point in the figure then has rational coordinates.'
+      - 'Walk along line $AP$ as $(t(c+d),\,1+t(cd-1))$. The second intersections with the two circles have simple values of $t$. For the last step, substitute the parallel line through $H$ into the equation of the circle and look for a perfect square.'
+    solution: |
+      **Key idea:** with the right two parameters, every point is rational and short. The tangency becomes the fact that one quadratic is a perfect square.
+
+      **Setup.** Take the line of centers as the $x$-axis and the common chord as the $y$-axis, scaled so that $A=(0,1)$ and $B=(0,-1)$. Write $C=(c,0)$ and $D=(d,0)$. The center $M=(m,0)$ is equally far from $A$ and $C$, so $m^2+1=(m-c)^2$, which gives $m=\dfrac{c^2-1}{2c}$. In the same way $N=\big(\tfrac{d^2-1}{2d},0\big)$. The circles are
+      $$\Omega:\ x^2+y^2-\tfrac{c^2-1}{c}\,x-1=0,\qquad \Gamma:\ x^2+y^2-\tfrac{d^2-1}{d}\,x-1=0 .$$
+      $C$ lies beyond $M$ away from $N$, so $c=m-|MA|<0$, and similarly $d>0$.
+
+      Two facts about $c$ and $d$:
+      - $cd<-1$. Let $\alpha=\angle ACM$ and $\beta=\angle ADN$. The triangles $MAC$ and $NAD$ are isosceles, so the exterior angles give $\angle AMN=2\alpha$ and $\angle ANM=2\beta$. These are two angles of triangle $AMN$, so $\alpha+\beta<90^\circ$ and $\angle CAD=180^\circ-\alpha-\beta>90^\circ$. Hence $\vec{AC}\cdot\vec{AD}=cd+1<0$.
+      - $c+d\ne0$. If $d=-c$, then $N$ is the mirror image of $M$ in the $y$-axis and the two radii are equal. The radii are different, so this can't happen.
+
+      **The points.** $P$ is on the perpendicular bisector $x=\tfrac{c+d}2$ of $CD$. From $PA=PC$ one gets
+      $$P=\Big(\tfrac{c+d}2,\ \tfrac{1+cd}2\Big).$$
+      So line $AP$ has direction $w=(c+d,\ cd-1)$, and its points are $X(t)=\big(t(c+d),\,1+t(cd-1)\big)$. Note $|w|^2=(c+d)^2+(cd-1)^2=(1+c^2)(1+d^2)$. Substituting $X(t)$ into the equation of $\Omega$ gives $t=0$ (the point $A$) and
+      $$t_E=\frac{c-d}{c(1+d^2)},\qquad\text{and in the same way, from }\Gamma,\qquad t_F=\frac{d-c}{d(1+c^2)} .$$
+      For $H$: side $MN$ is horizontal, so the altitude from $P$ is the line $x=\tfrac{c+d}2$. For a triangle with base on the $x$-axis, the orthocenter has height $-\dfrac{(x_P-x_M)(x_P-x_N)}{y_P}$. Here $x_P-x_M=\tfrac{1+cd}{2c}$ and $x_P-x_N=\tfrac{1+cd}{2d}$, so
+      $$H=\Big(\tfrac{c+d}2,\ -\tfrac{1+cd}{2cd}\Big).$$
+
+      **The circle $BEF$.** Consider
+      $$G(x,y)=2cd\,(x^2+y^2)-(cd-1)(c+d)\,x-(c-d)^2\,y-(c^2+d^2).$$
+      Since $2cd\ne0$, the set $G=0$ is a circle (or empty, or a point). It passes through $B$: $2cd+(c-d)^2-(c^2+d^2)=0$. On line $AP$,
+      $$G(X(t))=2cd(1+c^2)(1+d^2)\,t^2-2(cd-1)(c-d)^2\,t-2(c-d)^2 .$$
+      The roots of this quadratic have product $-\dfrac{(c-d)^2}{cd(1+c^2)(1+d^2)}$ and sum $\dfrac{(cd-1)(c-d)^2}{cd(1+c^2)(1+d^2)}$, and one checks that $t_Et_F$ and $t_E+t_F$ have exactly these values. So the roots are $t_E$ and $t_F$, and $G=0$ passes through $E$ and $F$. Moreover $t_E\ne t_F$, because $t_E=t_F$ simplifies to $(c+d)(1+cd)=0$. And $B$ is not on line $AP$, since that line is not vertical ($c+d\ne0$). So $B,E,F$ are three distinct points, not on one line, and $G=0$ is their circumcircle.
+
+      **The tangency.** The line through $H$ parallel to $AP$ consists of the points $H+s\,w$. Substituting into $G$ and simplifying,
+      $$G(H+s\,w)=\frac{(1+c^2)(1+d^2)}{2cd}\,\big(2cd\,s+1\big)^2 .$$
+      (The coefficients of $s^2$, $s$ and $1$ are $2cd(1+c^2)(1+d^2)$, $2(1+c^2)(1+d^2)$ and $\frac{(1+c^2)(1+d^2)}{2cd}$.) This quadratic in $s$ has a double root, $s=-\frac1{2cd}$, and no other. So the line meets the circle $BEF$ in exactly one point, which means it is tangent to it.
+    checked: "computer algebra: every displayed formula re-derived symbolically; numeric test on 10,000 random pairs of circles, distance from the circle's center to the line equals the radius to relative error 1e-8"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Divisibility functions with exponents: the best linear bound"
+    areas: [number-theory]
+    difficulty: 4
+    answer: '$c=4$'
+    hints:
+      - 'Plug in $b=a$, then $a=1$. Then show that a prime $p$ dividing any value forces $p\mid f(p)$.'
+      - 'If $p\mid f(p)$, then $f(b)\equiv b\pmod p$ for every $b$. Either this happens for infinitely many primes, or only $p=2$ can be special.'
+    solution: |
+      **Key idea:** every prime that divides a value of $f$ makes $f(b)\equiv b$ modulo that prime. With infinitely many such primes $f$ is the identity. Otherwise only the prime $2$ can appear, and a lifting-the-exponent count with $b=3$ gives $f(n)\le4n$. An explicit example shows $4$ is reached.
+
+      Call $f$ bonza. Throughout, $f(a)\mid b^a-f(b)^{f(a)}$.
+
+      **Basic facts.**
+      - With $b=a$: $f(a)\mid a^a-f(a)^{f(a)}$, so $f(a)\mid a^a$. Every prime factor of $f(a)$ divides $a$.
+      - With $a=b=1$: $f(1)\mid 1-f(1)^{f(1)}$, so $f(1)\mid1$ and $f(1)=1$.
+      - If a prime $p$ divides some $f(a)$, take $b=p$: $p\mid p^a-f(p)^{f(a)}$, so $p\mid f(p)$.
+
+      Let $\mathcal P$ be the set of primes $p$ with $p\mid f(p)$. Every prime factor of every value of $f$ lies in $\mathcal P$, and for a prime $q\notin\mathcal P$ we have $f(q)=1$ (since $f(q)\mid q^q$ but $q\nmid f(q)$).
+
+      **The congruence.** Let $p\in\mathcal P$, so $f(p)=p^e$ with $e\ge1$. Taking $a=p$: $p\mid b^p-f(b)^{p^e}$. By Fermat's little theorem $b^p\equiv b$ and $f(b)^{p^e}\equiv f(b)$ modulo $p$. So
+      $$f(b)\equiv b\pmod p\qquad\text{for every } b .$$
+
+      **Case 1: $\mathcal P$ is infinite.** Then $f(b)-b$ has infinitely many prime factors, so $f(b)=b$ for every $b$, and $f(n)\le n$.
+
+      **Case 2: $\mathcal P$ is finite.** First, $\mathcal P$ contains no odd prime. Suppose an odd $p\in\mathcal P$. Let $m=p\prod_{r\in\mathcal P}r-1$. Then $m\equiv-1\pmod p$. A product of primes that are all $\equiv1\pmod p$ is $\equiv1$, and $-1\not\equiv1$ since $p\ge3$, so $m$ has a prime factor $q\not\equiv1\pmod p$. This $q$ is not in $\mathcal P$, because every prime of $\mathcal P$ divides $m+1$. So $f(q)=1$, and the congruence gives $1\equiv q\pmod p$. Contradiction.
+
+      So either $\mathcal P$ is empty, and then $f\equiv1$, or $\mathcal P=\{2\}$. In the second case every value of $f$ is a power of $2$, and for odd $n$, $f(n)\mid n^n$ forces $f(n)=1$. For even $n$, take $b=3$ (so $f(3)=1$): $f(n)\mid 3^n-1$. By the lifting-the-exponent formula for even $n$,
+      $$v_2(3^n-1)=v_2(3-1)+v_2(3+1)+v_2(n)-1=v_2(n)+2 .$$
+      So $f(n)\le 2^{v_2(n)+2}\le4n$.
+
+      In all cases $f(n)\le4n$, so $c=4$ works.
+
+      **$4$ is needed.** Define $f(n)=1$ for odd $n$, $f(n)=2$ when $n\equiv2\pmod4$, and $f(n)=2^{v_2(n)+2}$ when $4\mid n$. Then $f(4)=16=4\cdot4$. To check that $f$ is bonza:
+      - $a$ odd: $f(a)=1$ divides everything.
+      - $a\equiv2\pmod4$: $f(a)=2$, and $b^a-f(b)^2$ is even because $b$ and $f(b)$ have the same parity.
+      - $4\mid a$, with $v=v_2(a)\ge2$ and $f(a)=2^{v+2}$. If $b$ is odd, $f(b)=1$, and $v_2(b^a-1)=v_2(b-1)+v_2(b+1)+v-1\ge v+2$ because $v_2(b-1)+v_2(b+1)\ge3$. If $b$ is even, both $b^a$ and $f(b)^{f(a)}$ are divisible by $2^{v+2}$, since $a\ge 2^v\ge v+2$ and $f(a)\ge v+2$.
+
+      So the smallest constant is $c=4$.
+    checked: "script: the example satisfies the condition for all a, b ≤ 64; an exhaustive search over all bonza functions on 1..10 finds max f(n)/n = 4"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Repeatedly summing the three largest proper divisors"
+    areas: [number-theory]
+    difficulty: 3
+    answer: '$a_1=6\cdot12^{j}\cdot m$ with $j\ge0$ and $\gcd(m,10)=1$'
+    hints:
+      - 'If $d_1<d_2<d_3$ are the three smallest divisors of $N$ above $1$, the next term is $N\big(\frac1{d_1}+\frac1{d_2}+\frac1{d_3}\big)$.'
+      - 'Show that a term not divisible by $6$ starts a strictly decreasing sequence. Then see what happens to multiples of $6$.'
+    solution: |
+      **Key idea:** the next term is $N(\frac1{d_1}+\frac1{d_2}+\frac1{d_3})$. That ratio is less than $1$ unless $2$ and $3$ divide $N$, and a decreasing sequence of positive integers can't go on forever. For multiples of $6$ there are only three cases: multiply by $\frac{13}{12}$, stay fixed, or turn odd.
+
+      For $N$ with at least three proper divisors, let $1<d_1<d_2<d_3$ be its three smallest divisors above $1$ (the third may be $N$ itself). The three largest proper divisors are $N/d_1$, $N/d_2$, $N/d_3$, so the next term is
+      $$F(N)=N\Big(\frac1{d_1}+\frac1{d_2}+\frac1{d_3}\Big).$$
+
+      **Step 1: terms not divisible by 6 lead to a dead end.**
+      - If $N$ is odd, all divisors are odd, so $d_1,d_2,d_3\ge3,5,7$ and $F(N)\le N\big(\frac13+\frac15+\frac17\big)<N$. Also $F(N)$ is a sum of three odd numbers, so it is odd.
+      - If $N$ is even and $3\nmid N$, then $d_1=2$, $d_2\ge4$ and $d_3\ge5$, so $F(N)\le N\big(\frac12+\frac14+\frac15\big)<N$. Moreover $F(N)$ is odd or not divisible by $3$. If $4\mid N$, then $d_2=4$ and $F(N)=3\cdot\frac N4+\frac N{d_3}$, and the last term is not a multiple of $3$. If $4\nmid N$, then $d_2=p$, the smallest odd prime factor. If $d_3=2p$, then $F(N)=N\cdot\frac{p+3}{2p}$, not a multiple of $3$ since $3\nmid p$. If $d_3$ is odd, then $N/2$ is odd while $N/p$ and $N/d_3$ are even, so $F(N)$ is odd.
+
+      So once a term is not a multiple of $6$, every later term is not a multiple of $6$ either, and the terms strictly decrease. A strictly decreasing sequence of positive integers can't be infinite. Hence **every term is a multiple of $6$**.
+
+      **Step 2: multiples of 6.** Now $d_1=2$, $d_2=3$, and $d_3\in\{4,5,6\}$, because $6\mid N$.
+      - If $4\mid N$: $F(N)=N\big(\frac12+\frac13+\frac14\big)=\frac{13}{12}N$.
+      - If $4\nmid N$ and $5\mid N$: $F(N)=\frac{31}{30}N=31\cdot\frac N{30}$, which is odd since $\frac N{30}$ is odd. That breaks Step 1, so this never happens.
+      - If $4\nmid N$ and $5\nmid N$: $F(N)=N\big(\frac12+\frac13+\frac16\big)=N$. The sequence stays put forever.
+
+      **Step 3: putting it together.** Each step of the first kind lowers the exponent of $2$ by $2$, so it can only happen finitely often. So the sequence takes $j\ge0$ steps of the first kind and then sits at a fixed point $M$ with $2\| M$, $3\mid M$, $5\nmid M$. Since $a_{j+1}=(13/12)^j a_1$, we get $a_1=12^j\cdot M/13^j$. Writing $M=6\cdot13^j m$ (the factor $13^j$ must be there since $a_1$ is an integer, and $13^j$ is coprime to $12^j$) gives $a_1=6\cdot12^j m$ with $m$ odd and $5\nmid m$, that is, $\gcd(m,10)=1$.
+
+      Conversely, if $a_1=6\cdot12^j m$ with $\gcd(m,10)=1$, then for $i\le j$ the term $a_i=6\cdot12^{j-i+1}13^{i-1}m$ is divisible by $12$, so the next term is $\frac{13}{12}a_i$. After $j$ steps we reach $6\cdot13^j m$, which is a fixed point because it is divisible by $6$ but not by $4$ or $5$. Every term is a multiple of $6$, so it has the proper divisors $1,2,3$, as required.
+    checked: "script: running the sequence from every a₁ < 30,000 gives exactly the numbers 6·12^j·m with gcd(m, 10) = 1"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "A game of sum budgets against square-sum budgets"
+    areas: [algebra]
+    difficulty: 3
+    answer: 'Alice wins for $\lambda>1/\sqrt2$, Bazza wins for $\lambda<1/\sqrt2$, and at $\lambda=1/\sqrt2$ neither can force a win'
+    hints:
+      - 'Bazza can always use up his whole budget: pick $x_{2k}$ so that the sum of squares becomes exactly $2k$. What does that do to the ordinary sum?'
+      - 'Alice can wait with zeros. By Cauchy–Schwarz, Bazza''s numbers after $2k$ turns add up to at most $k\sqrt2$.'
+    solution: |
+      **Key idea:** the threshold comes from a pair of turns. If Bazza fills his square budget, each pair of turns adds at least $\sqrt2$ to the ordinary sum. If Alice waits, Bazza's numbers add up to at most $k\sqrt2$ after $2k$ turns. Comparing $k\sqrt2$ with $2k\lambda$ gives $\lambda=1/\sqrt2$.
+
+      Write $S_n=x_1+\dots+x_n$ and $Q_n=x_1^2+\dots+x_n^2$.
+
+      **Bazza's plan: fill the square budget.** On each even turn $2k$, Bazza picks $x_{2k}=\sqrt{2k-Q_{2k-1}}$ whenever this is possible, making $Q_{2k}=2k$. It is possible as long as Alice's previous number satisfied $x_{2k-1}\le\sqrt2$, because then $Q_{2k-1}=2(k-1)+x_{2k-1}^2\le 2k$. With this plan each pair of turns has $x_{2i-1}^2+x_{2i}^2=2$, so
+      $$\big(x_{2i-1}+x_{2i}\big)^2=2+2x_{2i-1}x_{2i}\ge2,\qquad x_{2i-1}+x_{2i}\ge\sqrt2,\qquad S_{2k}\ge k\sqrt2 .$$
+      So on turn $2k+1$ Alice's number satisfies
+      $$x_{2k+1}\le \lambda(2k+1)-S_{2k}\le k\,(2\lambda-\sqrt2)+\lambda .$$
+
+      **Alice's plan: wait, then strike.** Alice plays $x_n=0$ on odd turns. This is always allowed when $\lambda\ge1/\sqrt2$: by Cauchy–Schwarz, Bazza's numbers satisfy $S_{2k}=x_2+x_4+\dots+x_{2k}\le\sqrt{k\cdot Q_{2k}}\le\sqrt{k\cdot2k}=k\sqrt2\le 2k\lambda<(2k+1)\lambda$. At a turn $2k+1$ of her choice she instead plays the largest number allowed, $x_{2k+1}=\lambda(2k+1)-S_{2k}\ge k(2\lambda-\sqrt2)+\lambda$.
+
+      **$\lambda<1/\sqrt2$: Bazza wins.** Bazza uses his plan. While $k(2\lambda-\sqrt2)+\lambda\ge0$, Alice's numbers are at most $\lambda<\sqrt2$, so Bazza can always reply. But $2\lambda-\sqrt2<0$, so for large $k$ the bound $k(2\lambda-\sqrt2)+\lambda$ is negative, and Alice has no legal move.
+
+      **$\lambda>1/\sqrt2$: Alice wins.** Alice waits with zeros, then strikes at a turn $2k+1$ with $\big(k(2\lambda-\sqrt2)+\lambda\big)^2>2k+2$. Such $k$ exists because the left side grows like $k^2$. Then $Q_{2k+1}\ge x_{2k+1}^2>2k+2$, and Bazza has no legal move on turn $2k+2$. (If Bazza gets stuck even earlier, Alice wins sooner.)
+
+      **$\lambda=1/\sqrt2$: nobody can force a win.** Alice can play zeros forever (shown above), so she never loses. Bazza can follow his plan forever: Alice's numbers are at most $k(2\lambda-\sqrt2)+\lambda=\lambda<\sqrt2$, so he always has a reply, and he never loses either.
+    checked: "algebra; also simulated: Bazza's plan beats random and greedy play by Alice at λ = 0.70, and Alice's plan beats Bazza's plan at λ = 0.72"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Fewest tiles leaving one hole per row and column"
+    areas: [combinatorics]
+    difficulty: 5
+    answer: '$2112$'
+    checked: "script: exhaustive search over every permutation for n ≤ 7 gives a minimum of n + ⌈2√n⌉ − 3; an explicit tiling for n = 2025 = 45² uses 2025 + 90 − 3 = 2112 tiles"
+    # imoH2 notes (lower bound not yet proved, so the solution stays hidden):
+    # - Construction: holes at row 45i+j, column 45j+44−i (0 ≤ i,j ≤ 44); (k−1)² squares of side k
+    #   below holes, plus strips; checked by script for k ≤ 45 to give k² + 2k − 3 tiles.
+    # - Exact identity: T = (n−1) + #(tiles whose top side touches no hole); same for each side.
+    # - Verified by brute force for n ≤ 7 (all permutations): T ≥ n + LIS + LDS − 3, and for n ≤ 5 over
+    #   every tiling: (1 + #free-top tiles touching a hole on the left)·(1 + #tiles with free top and
+    #   free left) ≥ n. Either statement would give T ≥ n + 2√n − 3; neither is proved yet.
+    status: coming

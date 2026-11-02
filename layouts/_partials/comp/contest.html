@@ -1,0 +1,20 @@
+{{- /* Solutions-guide settings per contest, so layouts/comp/putnam.html, pyear.html and _partials/comp/pcard.html serve
+   every contest by parameter. Argument: the contest key ("putnam" or "imo"; set as `contest` in the page params,
+   default "putnam"). Data lives in data/comp/<key>/<year>.yaml; pages at /<base><year>/. */ -}}
+{{- $C := dict
+  "putnam" (dict
+    "key" "putnam" "name" "Putnam" "base" "math/competitions/putnam/"
+    "owner" "the Mathematical Association of America"
+    "intro" "Each December, college students in the United States and Canada sit the William Lowell Putnam Mathematical Competition: problems A1 to A6 in the morning and B1 to B6 in the afternoon, three hours each, with the later problems usually the hardest. Here, year by year, are short topic labels, a link to each official problem, and our own solutions."
+    "legal" `<b>About these pages.</b> The Putnam problems are © the Mathematical Association of America. We don't copy them: read each one at the official link, on Kiran Kedlaya's <a href="https://kskedlaya.org/putnam-archive/" rel="noopener">Putnam Archive</a>, which hosts them with the MAA's permission. The hints and solutions are our own work, written from scratch. They are not official solutions.`
+    "archive" "https://kskedlaya.org/putnam-archive/" "archiveName" "the Putnam Archive"
+    "where" "on the archive site" "editionSuffix" " Putnam")
+  "imo" (dict
+    "key" "imo" "name" "IMO" "base" "math/competitions/imo/"
+    "owner" "the International Mathematical Olympiad"
+    "intro" "The International Mathematical Olympiad is the world championship of school mathematics. Each July, teams of up to six students from over a hundred countries sit two papers on two days, three problems a day, four and a half hours each. Problems 1 and 4 are usually the gentlest and 3 and 6 the hardest. Here, year by year, are short topic labels, a link to the official problems, and our own solutions."
+    "legal" `<b>About these pages.</b> The IMO problems are © the International Mathematical Olympiad. We don't copy them: read each one at the official link, on the <a href="https://www.imo-official.org/problems.aspx" rel="noopener">IMO's official site</a>, which has the problems of every year in many languages. The hints and solutions are our own work, written from scratch. They are not official solutions.`
+    "archive" "https://www.imo-official.org/problems.aspx" "archiveName" "the IMO's official site"
+    "where" "on the IMO's official site" "editionSuffix" " IMO")
+-}}
+{{- return (index $C (. | default "putnam")) | default (index $C "putnam") -}}

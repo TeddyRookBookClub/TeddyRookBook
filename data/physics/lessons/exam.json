@@ -7,7 +7,7 @@
    },
    {
     "t": "key",
-    "html": "Split the motion. Sideways, no force: $x = (v_0\\cos\\theta)\\,t$. Up and down, acceleration $g$: $y = (v_0\\sin\\theta)\\,t - \\tfrac{1}{2}gt^2$. The two share only the time $t$. For the landing speed, energy is quickest: $$v = \\sqrt{v_0^2 + 2gh},$$ whatever the launch angle."
+    "html": "Split the motion. Sideways, no force: $x = (v_0\\cos\\theta)\\,t$. Up and down, acceleration $g$: $y = (v_0\\sin\\theta)\\,t - \\tfrac{1}{2}gt^2$. The two share only the time $t$. For the landing speed, energy is quickest: $$\\role[landing speed]{velocity}{v} = \\sqrt{\\role[launch speed]{velocity}{v_0}^2 + 2\\role[acceleration of gravity]{acceleration}{g}\\role[height of the cliff]{position}{h}},$$ whatever the launch angle."
    },
    {
     "t": "viz",
@@ -98,7 +98,7 @@
    },
    {
     "t": "key",
-    "html": "Sticking collision: $$m_1v = (m_1 + m_2)V.$$ Kinetic energy is lost: the fraction lost is $\\dfrac{m_2}{m_1 + m_2}$ when $m_2$ starts at rest. After the collision: $\\tfrac{1}{2}V^2 = gh$, so $h = \\dfrac{V^2}{2g}$."
+    "html": "Sticking collision: $$\\role{mass}{m_1}\\role[speed before]{velocity}{v} = (\\role{mass}{m_1} + \\role{mass}{m_2})\\role[speed after]{velocity}{V}.$$ Kinetic energy is lost: the fraction lost is $\\dfrac{m_2}{m_1 + m_2}$ when $m_2$ starts at rest. After the collision: $\\tfrac{1}{2}V^2 = gh$, so $h = \\dfrac{V^2}{2g}$."
    },
    {
     "t": "viz",
@@ -144,7 +144,7 @@
    },
    {
     "t": "key",
-    "html": "Energy from the release height to the top of the loop ($2r$ up): $$mgh = mg(2r) + \\tfrac{1}{2}mv^2.$$ At the top both the push $N$ and gravity point down, to the center: $$N + mg = \\frac{mv^2}{r}.$$ Just making it round means $N = 0$, which needs $h = \\tfrac{5}{2}r$."
+    "html": "Energy from the release height to the top of the loop ($2r$ up): $$mgh = mg(2r) + \\tfrac{1}{2}mv^2.$$ At the top both the push $N$ and gravity point down, to the center: $$\\role[normal force]{force}{N} + \\role{mass}{m}\\role[acceleration of gravity]{acceleration}{g} = \\frac{\\role{mass}{m}\\role[speed at the top]{velocity}{v}^2}{\\role[loop radius]{position}{r}}.$$ Just making it round means $N = 0$, which needs $h = \\tfrac{5}{2}r$."
    },
    {
     "t": "viz",
@@ -626,7 +626,7 @@
    },
    {
     "t": "key",
-    "html": "Bright fringes: $d\\sin\\theta = m\\lambda$. For small angles, $$y_m = m\\frac{\\lambda L}{d}, \\qquad \\Delta y = \\frac{\\lambda L}{d}.$$ Dark fringes sit halfway between. In a medium of index $n$ the wavelength, and so the spacing, is divided by $n$."
+    "html": "Bright fringes: $d\\sin\\theta = m\\lambda$. For small angles, $$\\role[fringe position]{position}{y_m} = \\role[fringe number]{index}{m}\\frac{\\role{wavelength}{\\lambda} \\role[distance to the screen]{position}{L}}{\\role[slit spacing]{position}{d}}, \\qquad \\Delta y = \\frac{\\lambda L}{d}.$$ Dark fringes sit halfway between. In a medium of index $n$ the wavelength, and so the spacing, is divided by $n$."
    },
    {
     "t": "viz",
@@ -762,7 +762,7 @@
    },
    {
     "t": "key",
-    "html": "$$qV = \\tfrac{1}{2}mv^2, \\qquad qvB = \\frac{mv^2}{r} \\ \\Rightarrow\\ r = \\frac{mv}{qB} = \\frac{1}{B}\\sqrt{\\frac{2mV}{q}}.$$ So $r \\propto \\sqrt{m}$ for ions sped up by the same voltage, and the time for a half circle is $\\pi m/(qB)$."
+    "html": "$$qV = \\tfrac{1}{2}mv^2, \\qquad qvB = \\frac{mv^2}{r} \\ \\Rightarrow\\ \\role[radius of the path]{position}{r} = \\frac{\\role{mass}{m}\\role{velocity}{v}}{\\role{charge}{q}\\role[magnetic field]{field}{B}} = \\frac{1}{B}\\sqrt{\\frac{2mV}{q}}.$$ So $r \\propto \\sqrt{m}$ for ions sped up by the same voltage, and the time for a half circle is $\\pi m/(qB)$."
    },
    {
     "t": "viz",
@@ -805,7 +805,7 @@
    },
    {
     "t": "key",
-    "html": "$$\\varepsilon = BLv, \\qquad I = \\frac{\\varepsilon}{R}, \\qquad F = ILB = \\frac{B^2L^2v}{R}.$$ The magnetic force always opposes the motion, so something must keep pulling; its power $Fv$ equals the heating $I^2R$. With a steady pull $F$, the rod settles at $v_t = FR/(B^2L^2)$."
+    "html": "$$\\role[emf]{voltage}{\\varepsilon} = \\role[magnetic field]{field}{B}\\role[rod length]{position}{L}\\role{velocity}{v}, \\qquad \\role{current}{I} = \\frac{\\role[emf]{voltage}{\\varepsilon}}{\\role{resistance}{R}}, \\qquad F = ILB = \\frac{B^2L^2v}{R}.$$ The magnetic force always opposes the motion, so something must keep pulling; its power $Fv$ equals the heating $I^2R$. With a steady pull $F$, the rod settles at $v_t = FR/(B^2L^2)$."
    },
    {
     "t": "viz",

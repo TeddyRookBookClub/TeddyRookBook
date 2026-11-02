@@ -53,6 +53,11 @@ jobs:
           python3 -c 'import yaml' 2>/dev/null || pip install pyyaml
           node scripts/comp/check-comp.js
 
+      # Formula colors (docs/formula-colors.md): known roles only, the palette copied into tex.js, and never a colored part
+      # in a generated problem's prompt, choices or hints.
+      - name: Check formula colors
+        run: node scripts/math/check-roles.js --quiet
+
       # Lists every file of each section with a fingerprint, for /offline/ and the download kit's updater.
       - name: Offline manifests
         run: node scripts/offline/build-manifests.js public

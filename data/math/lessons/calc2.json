@@ -222,7 +222,7 @@
    },
    {
     "t": "key",
-    "html": "Revolving about a horizontal axis:\n$$V = \\pi\\int_a^b \\left[R(x)^{2} - r(x)^{2}\\right]dx,$$\nwhere $R$ is the outer radius and $r$ the inner radius ($r = 0$ for disks). Both radii are distances from the axis of rotation."
+    "html": "Revolving about a horizontal axis:\n$$\\role[volume]{integral}{V} = \\pi\\int_a^b \\left[\\role[outer radius]{outer}{R(x)}^{2} - \\role[inner radius]{inner}{r(x)}^{2}\\right]\\role[slice thickness]{input}{dx},$$\nwhere $R$ is the outer radius and $r$ the inner radius ($r = 0$ for disks). Both radii are distances from the axis of rotation."
    },
    {
     "t": "ex",
@@ -432,7 +432,7 @@
    },
    {
     "t": "key",
-    "html": "If $f'$ is continuous on $[a, b]$, the length of $y = f(x)$ from $x = a$ to $x = b$ is\n$$L = \\int_a^b \\sqrt{1 + \\left[f'(x)\\right]^{2}}\\,dx.$$"
+    "html": "If $f'$ is continuous on $[a, b]$, the length of $y = f(x)$ from $x = a$ to $x = b$ is\n$$\\role[arc length]{integral}{L} = \\int_a^b \\sqrt{1 + \\left[\\role[slope]{rate}{f'(x)}\\right]^{2}}\\,\\role[tiny step in x]{input}{dx}.$$"
    },
    {
     "t": "viz",
@@ -2618,7 +2618,7 @@
    },
    {
     "t": "key",
-    "html": "$$\\sum_{n=0}^{\\infty} ar^{n} = \\frac{a}{1 - r} = \\frac{\\text{first term}}{1 - \\text{ratio}} \\quad (|r| < 1);$$\nit diverges for $|r| \\ge 1$. A telescoping series $\\sum (b_n - b_{n+1})$ has $S_N = b_1 - b_{N+1}$."
+    "html": "$$\\sum_{\\role{index}{n}=0}^{\\infty} \\role[first term]{coefficient}{a}\\role[ratio]{base}{r}^{n} = \\frac{\\role[first term]{coefficient}{a}}{1 - \\role[ratio]{base}{r}} = \\frac{\\text{first term}}{1 - \\text{ratio}} \\quad (|r| < 1);$$\nit diverges for $|r| \\ge 1$. A telescoping series $\\sum (b_n - b_{n+1})$ has $S_N = b_1 - b_{N+1}$."
    },
    {
     "t": "ex",
@@ -3630,7 +3630,7 @@
    },
    {
     "t": "key",
-    "html": "The Taylor series of $f$ at $a$ is $\\sum_{n=0}^{\\infty}\\frac{f^{(n)}(a)}{n!}(x - a)^{n}$; at $a = 0$ it is called a Maclaurin series. The partial sum $T_n(x)$ is the Taylor polynomial of degree $n$: the polynomial that matches $f$ and its first $n$ derivatives at $a$."
+    "html": "The Taylor series of $f$ at $a$ is $\\sum_{\\role{index}{n}=0}^{\\infty}\\role[coefficient from the nth derivative]{coefficient}{\\frac{f^{(n)}(a)}{n!}}\\role[distance from the center a]{input}{(x - a)}^{n}$; at $a = 0$ it is called a Maclaurin series. The partial sum $T_n(x)$ is the Taylor polynomial of degree $n$: the polynomial that matches $f$ and its first $n$ derivatives at $a$."
    },
    {
     "t": "ex",
@@ -3669,7 +3669,10 @@
      "xmin": -7,
      "xmax": 7,
      "ymin": -3,
-     "ymax": 3
+     "ymax": 3,
+     "roleLinks": {
+      "degree n": "index"
+     }
     },
     "cap": "Taylor polynomials of $\\sin x$ at 0. Each new term bends the polynomial to follow the sine wave farther from the center. Move the probe point to see the error shrink."
    },
@@ -3709,7 +3712,7 @@
    },
    {
     "t": "key",
-    "html": "<b>Taylor's inequality:</b> if $|f^{(n+1)}(t)| \\le M$ for all $t$ between $a$ and $x$, then\n$$|R_n(x)| \\le \\frac{M}{(n + 1)!}|x - a|^{n+1}.$$\nIf $R_n(x) \\to 0$ as $n \\to \\infty$, the Taylor series converges to $f(x)$."
+    "html": "<b>Taylor's inequality:</b> if $|f^{(n+1)}(t)| \\le M$ for all $t$ between $a$ and $x$, then\n$$|\\role[error after degree n]{remainder}{R_n(x)}| \\le \\frac{\\role[bound on the next derivative]{constant}{M}}{(n + 1)!}|\\role[distance from the center a]{input}{x - a}|^{n+1}.$$\nIf $R_n(x) \\to 0$ as $n \\to \\infty$, the Taylor series converges to $f(x)$."
    },
    {
     "t": "ex",

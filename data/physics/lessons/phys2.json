@@ -475,7 +475,7 @@
    },
    {
     "t": "key",
-    "html": "$$PV = nRT = Nk_BT$$ with $P$ in pascals, $V$ in cubic meters, $T$ in <b>kelvins</b> ($T = T_C + 273$), $n$ in moles, $N$ the number of molecules, $R = 8.31\\,\\text{J/(mol}\\cdot\\text{K)}$ and $k_B = 1.38 \\times 10^{-23}\\,\\text{J/K}$."
+    "html": "$$\\role{pressure}{P}\\role{volume}{V} = \\role[moles of gas]{amount}{n}\\role[gas constant]{constant}{R}\\role{temperature}{T} = \\role[number of molecules]{amount}{N}\\role[Boltzmann constant]{constant}{k_B}\\role{temperature}{T}$$ with $P$ in pascals, $V$ in cubic meters, $T$ in <b>kelvins</b> ($T = T_C + 273$), $n$ in moles, $N$ the number of molecules, $R = 8.31\\,\\text{J/(mol}\\cdot\\text{K)}$ and $k_B = 1.38 \\times 10^{-23}\\,\\text{J/K}$."
    },
    {
     "t": "viz",
@@ -483,7 +483,12 @@
     "opts": {
      "N": 80,
      "T": 300,
-     "task": "Heat the gas, then push in the piston. Watch the pressure and the PV = Nk_BT check."
+     "task": "Heat the gas, then push in the piston. Watch the pressure and the PV = Nk_BT check.",
+     "roleLinks": {
+      "Wall temperature": "temperature",
+      "Volume": "volume",
+      "Number of atoms": "amount"
+     }
     },
     "cap": "Pressure is the average push of many tiny collisions. Try it in the <a href=\"/science-lab/gas/\">Gas in a Box</a> lab."
    },
@@ -1966,7 +1971,7 @@
    },
    {
     "t": "key",
-    "html": "$$F = k\\frac{|q_1 q_2|}{r^2}, \\quad k = 8.99 \\times 10^{9}\\,\\text{N}\\cdot\\text{m}^2/\\text{C}^2$$ The force acts along the line between the charges: like charges repel, unlike attract. Each charge feels the same size of force (Newton's third law)."
+    "html": "$$\\role{force}{F} = \\role[Coulomb constant]{constant}{k}\\frac{|\\role{charge}{q_1} \\role{charge}{q_2}|}{\\role[distance between the charges]{position}{r}^2}, \\quad k = 8.99 \\times 10^{9}\\,\\text{N}\\cdot\\text{m}^2/\\text{C}^2$$ The force acts along the line between the charges: like charges repel, unlike attract. Each charge feels the same size of force (Newton's third law)."
    },
    {
     "t": "viz",
@@ -2175,7 +2180,7 @@
    },
    {
     "t": "key",
-    "html": "$\\vec E = \\vec F/q$, the force per coulomb, in $\\text{N/C}$. A point charge makes $E = k\\dfrac{|Q|}{r^2}$, pointing away from a positive charge and toward a negative one. A charge $q$ in a field feels $\\vec F = q\\vec E$: along $\\vec E$ if $q > 0$, opposite if $q < 0$."
+    "html": "$\\role[electric field]{field}{\\vec E} = \\role{force}{\\vec F}/\\role[test charge]{charge}{q}$, the force per coulomb, in $\\text{N/C}$. A point charge makes $E = k\\dfrac{|Q|}{r^2}$, pointing away from a positive charge and toward a negative one. A charge $q$ in a field feels $\\vec F = q\\vec E$: along $\\vec E$ if $q > 0$, opposite if $q < 0$."
    },
    {
     "t": "viz",
@@ -2930,7 +2935,7 @@
    },
    {
     "t": "key",
-    "html": "$$I = \\frac{\\Delta Q}{\\Delta t}, \\qquad 1\\,\\text{A} = 1\\,\\text{C/s}$$ <b>Conventional current</b> points the way positive charge would flow: out of the battery's $+$ terminal, around the circuit, and back into its $-$ terminal. In wires, electrons drift the opposite way."
+    "html": "$$\\role{current}{I} = \\frac{\\role[charge passing]{charge}{\\Delta Q}}{\\role[time interval]{time}{\\Delta t}}, \\qquad 1\\,\\text{A} = 1\\,\\text{C/s}$$ <b>Conventional current</b> points the way positive charge would flow: out of the battery's $+$ terminal, around the circuit, and back into its $-$ terminal. In wires, electrons drift the opposite way."
    },
    {
     "t": "viz",
@@ -3108,7 +3113,7 @@
    },
    {
     "t": "key",
-    "html": "$$P = IV = I^2R = \\frac{V^2}{R}$$ Same current (series): the bigger resistor uses more power. Same voltage (parallel): the smaller resistor uses more power. Energy $=$ power $\\times$ time; $1\\,\\text{kWh} = 3.6 \\times 10^{6}\\,\\text{J}$."
+    "html": "$$\\role{power}{P} = \\role{current}{I}\\role{voltage}{V} = \\role{current}{I}^2\\role{resistance}{R} = \\frac{\\role{voltage}{V}^2}{\\role{resistance}{R}}$$ Same current (series): the bigger resistor uses more power. Same voltage (parallel): the smaller resistor uses more power. Energy $=$ power $\\times$ time; $1\\,\\text{kWh} = 3.6 \\times 10^{6}\\,\\text{J}$."
    },
    {
     "t": "viz",
@@ -4449,7 +4454,7 @@
    },
    {
     "t": "key",
-    "html": "A <b>changing</b> magnetic flux through a coil of $N$ turns makes an emf $$\\varepsilon = -N\\frac{\\Delta\\Phi}{\\Delta t}.$$ The size is $N|\\Delta\\Phi|/\\Delta t$. The minus sign is Lenz's law, which sets the direction (the next topic). A steady flux, however large, makes no emf."
+    "html": "A <b>changing</b> magnetic flux through a coil of $N$ turns makes an emf $$\\role[emf]{voltage}{\\varepsilon} = -\\role[number of turns]{constant}{N}\\frac{\\role[change in magnetic flux]{field}{\\Delta\\Phi}}{\\role[time interval]{time}{\\Delta t}}.$$ The size is $N|\\Delta\\Phi|/\\Delta t$. The minus sign is Lenz's law, which sets the direction (the next topic). A steady flux, however large, makes no emf."
    },
    {
     "t": "list",
@@ -4840,7 +4845,7 @@
    },
    {
     "t": "key",
-    "html": "$$n_1 \\sin\\theta_1 = n_2 \\sin\\theta_2,$$ with both angles measured from the <b>normal</b>. Going into a higher index, light bends <b>toward</b> the normal; going into a lower index, it bends <b>away</b>. Light that hits head-on ($\\theta_1 = 0$) goes straight through."
+    "html": "$$\\role[index of refraction, first medium]{constant}{n_1} \\sin\\role[angle in the first medium]{angle}{\\theta_1} = \\role[index of refraction, second medium]{constant}{n_2} \\sin\\role[angle in the second medium]{angle}{\\theta_2},$$ with both angles measured from the <b>normal</b>. Going into a higher index, light bends <b>toward</b> the normal; going into a lower index, it bends <b>away</b>. Light that hits head-on ($\\theta_1 = 0$) goes straight through."
    },
    {
     "t": "why",
@@ -4855,7 +4860,10 @@
      "n2": 1.5,
      "angle": 40,
      "lab": "/science-lab/optics/",
-     "task": "Set the angle to 0°. Does the ray bend?"
+     "task": "Set the angle to 0°. Does the ray bend?",
+     "roleLinks": {
+      "Angle of incidence": "angle"
+     }
     },
     "cap": "A ray going from air into glass. The angles are marked from the dashed normal, not from the surface."
    },
@@ -5432,7 +5440,7 @@
    },
    {
     "t": "key",
-    "html": "A <b>snapshot graph</b> ($y$ against $x$) shows the whole wave at one instant: read the <b>wavelength</b> $\\lambda$ between crests. A <b>history graph</b> ($y$ against $t$) follows one point over time: read the <b>period</b> $T$ between crests. Both show the amplitude $A$. Then $v = \\lambda/T = f\\lambda$."
+    "html": "A <b>snapshot graph</b> ($y$ against $x$) shows the whole wave at one instant: read the <b>wavelength</b> $\\lambda$ between crests. A <b>history graph</b> ($y$ against $t$) follows one point over time: read the <b>period</b> $T$ between crests. Both show the amplitude $A$. Then $\\role[wave speed]{velocity}{v} = \\role{wavelength}{\\lambda}/\\role[period]{time}{T} = \\role{frequency}{f}\\role{wavelength}{\\lambda}$."
    },
    {
     "t": "viz",
@@ -5446,7 +5454,10 @@
       "snapshot",
       "history"
      ],
-     "task": "Find the wavelength on one graph and the period on the other."
+     "task": "Find the wavelength on one graph and the period on the other.",
+     "roleLinks": {
+      "Frequency f": "frequency"
+     }
     },
     "cap": "The snapshot graph freezes time; the history graph freezes position and watches the marked point bob up and down."
    },

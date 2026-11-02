@@ -1,0 +1,66 @@
+# Formula colors: the site-wide palette for color-coded formulas (docs/formula-colors.md).
+# In TeX write \role{velocity}{v} (or \role[initial velocity]{velocity}{v_0} to name that part more exactly).
+# Each role: label (the plain name shown in the key and on hover), light and dark text colors, and its hue family.
+#
+# The colors are based on the Okabe-Ito palette (Okabe and Ito, "Color Universal Design", 2008), darkened for light
+# pages and lightened for dark ones so every color has a contrast of at least 4.5:1 on the page and on the lesson boxes.
+# Eight hue families are shared by all the roles. Roles that often meet in one formula (x, v, a, t; F, m, a; V, I, R;
+# v, f, lambda) get families that stay apart for red-green color blindness too (checked with the Machado 2009 model).
+# Color is never the only cue: the key under the formula names every part, and hovering or focusing a part shows its name.
+#
+# After editing, run  node scripts/math/check-roles.js --write  to copy the palette into static/math/core/tex.js.
+#
+# families (light / dark):
+#   blue    #0068B0 / #4FAAE6     navy    #2A2F85 / #CFCBFF     green   #00785A / #2FBF8E
+#   verm    #B84A00 / #FF8040     amber   #6B4500 / #F5D27A     purple  #A43F82 / #F29ACD
+#   wine    #7A1E3A / #FFC2D1     gray    #59635D / #B0BDB5
+
+# ---------- physics ----------
+position:     { label: "position or displacement", light: "#0068B0", dark: "#4FAAE6", hue: blue,   group: physics }
+velocity:     { label: "velocity",                 light: "#00785A", dark: "#2FBF8E", hue: green,  group: physics }
+acceleration: { label: "acceleration",             light: "#A43F82", dark: "#F29ACD", hue: purple, group: physics }
+time:         { label: "time",                     light: "#6B4500", dark: "#F5D27A", hue: amber,  group: physics }
+mass:         { label: "mass",                     light: "#2A2F85", dark: "#CFCBFF", hue: navy,   group: physics }
+force:        { label: "force",                    light: "#B84A00", dark: "#FF8040", hue: verm,   group: physics }
+energy:       { label: "energy",                   light: "#6B4500", dark: "#F5D27A", hue: amber,  group: physics }
+momentum:     { label: "momentum",                 light: "#A43F82", dark: "#F29ACD", hue: purple, group: physics }
+angle:        { label: "angle",                    light: "#2A2F85", dark: "#CFCBFF", hue: navy,   group: shared }
+angvel:       { label: "angular velocity",         light: "#7A1E3A", dark: "#FFC2D1", hue: wine,   group: physics }
+angacc:       { label: "angular acceleration",     light: "#A43F82", dark: "#F29ACD", hue: purple, group: physics }
+angmom:       { label: "angular momentum",         light: "#A43F82", dark: "#F29ACD", hue: purple, group: physics }
+torque:       { label: "torque",                   light: "#7A1E3A", dark: "#FFC2D1", hue: wine,   group: physics }
+power:        { label: "power",                    light: "#7A1E3A", dark: "#FFC2D1", hue: wine,   group: physics }
+charge:       { label: "charge",                   light: "#A43F82", dark: "#F29ACD", hue: purple, group: physics }
+field:        { label: "field or flux",            light: "#2A2F85", dark: "#CFCBFF", hue: navy,   group: physics }
+current:      { label: "current",                  light: "#00785A", dark: "#2FBF8E", hue: green,  group: physics }
+voltage:      { label: "voltage or potential",     light: "#B84A00", dark: "#FF8040", hue: verm,   group: physics }
+resistance:   { label: "resistance",               light: "#2A2F85", dark: "#CFCBFF", hue: navy,   group: physics }
+wavelength:   { label: "wavelength",               light: "#0068B0", dark: "#4FAAE6", hue: blue,   group: physics }
+frequency:    { label: "frequency",                light: "#A43F82", dark: "#F29ACD", hue: purple, group: physics }
+temperature:  { label: "temperature",              light: "#B84A00", dark: "#FF8040", hue: verm,   group: physics }
+pressure:     { label: "pressure",                 light: "#2A2F85", dark: "#CFCBFF", hue: navy,   group: physics }
+volume:       { label: "volume",                   light: "#0068B0", dark: "#4FAAE6", hue: blue,   group: physics }
+amount:       { label: "amount of substance",      light: "#6B4500", dark: "#F5D27A", hue: amber,  group: physics }
+constant:     { label: "constant",                 light: "#59635D", dark: "#B0BDB5", hue: gray,   group: shared }
+
+# ---------- math ----------
+input:        { label: "input",                    light: "#0068B0", dark: "#4FAAE6", hue: blue,   group: math }
+output:       { label: "output",                   light: "#B84A00", dark: "#FF8040", hue: verm,   group: math }
+rate:         { label: "rate of change",           light: "#A43F82", dark: "#F29ACD", hue: purple, group: math }
+integral:     { label: "accumulated amount",       light: "#6B4500", dark: "#F5D27A", hue: amber,  group: math }
+coefficient:  { label: "coefficient",              light: "#00785A", dark: "#2FBF8E", hue: green,  group: math }
+exponent:     { label: "exponent",                 light: "#7A1E3A", dark: "#FFC2D1", hue: wine,   group: math }
+base:         { label: "base",                     light: "#2A2F85", dark: "#CFCBFF", hue: navy,   group: math }
+index:        { label: "index",                    light: "#6B4500", dark: "#F5D27A", hue: amber,  group: math }
+outer:        { label: "outer function",           light: "#B84A00", dark: "#FF8040", hue: verm,   group: math }
+inner:        { label: "inner function",           light: "#00785A", dark: "#2FBF8E", hue: green,  group: math }
+matrix:       { label: "matrix",                   light: "#2A2F85", dark: "#CFCBFF", hue: navy,   group: math }
+vector:       { label: "vector",                   light: "#0068B0", dark: "#4FAAE6", hue: blue,   group: math }
+remainder:    { label: "error or remainder",       light: "#7A1E3A", dark: "#FFC2D1", hue: wine,   group: math }
+shift:        { label: "horizontal shift",         light: "#6B4500", dark: "#F5D27A", hue: amber,  group: math }
+midline:      { label: "midline",                  light: "#2A2F85", dark: "#CFCBFF", hue: navy,   group: math }
+prior:        { label: "prior probability",        light: "#0068B0", dark: "#4FAAE6", hue: blue,   group: math }
+likelihood:   { label: "likelihood",               light: "#00785A", dark: "#2FBF8E", hue: green,  group: math }
+evidence:     { label: "total probability of the evidence", light: "#2A2F85", dark: "#CFCBFF", hue: navy, group: math }
+posterior:    { label: "updated probability",      light: "#B84A00", dark: "#FF8040", hue: verm,   group: math }
+probability:  { label: "probability",              light: "#A43F82", dark: "#F29ACD", hue: purple, group: math }

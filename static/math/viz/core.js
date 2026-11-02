@@ -16,7 +16,9 @@
    onTheme(fn)               fn() when the site theme changes
    drag(cv, o)               pointer dragging with mouse, touch and pen: o = {hit(px, py) -> handle or null, move(handle, px, py, e),
                              start(handle), end(handle)}; also sets the cursor
-   slider(parent, o)         a labeled range input: o = {label, min, max, step, value, fmt(v), input(v)}; returns {el, input, get(), set(v)}
+   slider(parent, o)         a labeled range input: o = {label, min, max, step, value, fmt(v), input(v), role}; returns {el, input, get(), set(v)}
+                             (role: a formula role such as 'velocity', docs/formula-colors.md; a lesson's viz block can also
+                             tag sliders with opts.roleLinks = {"label start": "role"})
    seg(parent, o)            a segmented button group: o = {label, items: [[value, text], ...], value, change(v)}; returns {el, get(), set(v)}
    button(parent, text, fn, cls)
    readout(parent)           a live text line (aria-live) with .set(html)
@@ -164,6 +166,7 @@
     var w = el('label', 'ml-sl'), top = el('span', 'ml-sl-top'), lab = el('span', 'ml-sl-lab', o.label || ''), out = el('output', 'ml-sl-val');
     var inp = D.createElement('input'); inp.type = 'range'; inp.min = o.min; inp.max = o.max; inp.step = o.step || 'any'; inp.value = o.value;
     top.appendChild(lab); top.appendChild(out); w.appendChild(top); w.appendChild(inp); parent.appendChild(w);
+    if (o.role) { w.setAttribute('data-role', o.role); w.classList.add('ml-sl-role'); } // formula colors: links this slider to formula parts (tex.js ML.roles)
     function show() { out.textContent = o.fmt ? o.fmt(+inp.value) : fmt(+inp.value); }
     inp.addEventListener('input', function () { show(); if (o.input) o.input(+inp.value); }); show();
     return { el: w, input: inp, get: function () { return +inp.value; }, set: function (v) { inp.value = v; show(); } };
@@ -192,6 +195,7 @@
     var opts = {}; try { opts = JSON.parse(e.dataset.opts || '{}'); } catch (er) { if (W.console) W.console.warn('ml-viz: bad data-opts', e); }
     e.dataset.mounted = '1'; e.classList.add('ml-viz-on');
     try { e._ml = f(e, opts, V) || {}; } catch (er) { if (W.console) W.console.error('ml-viz ' + e.dataset.viz, er); e.insertAdjacentHTML('beforeend', '<p class="ml-viz-err">This picture could not be drawn.</p>'); }
+    if (opts.roleLinks && ML.roles) { try { ML.roles.tag(e, opts.roleLinks); } catch (er) { } } // a lesson's viz block may name its parts' roles
   }
   function mountAll(root) { (root || D).querySelectorAll('.ml-viz:not([data-mounted])').forEach(mount); }
 

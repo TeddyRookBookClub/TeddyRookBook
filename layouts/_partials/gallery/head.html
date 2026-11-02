@@ -1,0 +1,11 @@
+{{- /* Math Gallery pages (/math/gallery/…): styles and scripts. Argument: (dict "p" page "piece" slug-or-"").
+   Order matters (all deferred): the TeX renderer, the shared helper, then the piece. Conventions: static/gallery/core.js. */ -}}
+{{ partial "inline/ml-css.html" "math/core/core.css" }}
+{{ partial "inline/ml-css.html" "gallery/gallery.css" }}
+{{- if .piece }}
+{{ partial "inline/ml-js.html" "math/core/tex.js" }}
+{{- end }}
+{{ partial "inline/ml-js.html" "gallery/core.js" }}
+{{- with .piece }}
+{{ partial "inline/ml-js.html" (printf "gallery/pieces/%s.js" .) }}
+{{- end }}

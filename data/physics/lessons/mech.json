@@ -7,7 +7,7 @@
    },
    {
     "t": "key",
-    "html": "The velocity is the derivative of position with respect to time: $$v(t) = \\dfrac{dx}{dt} = \\lim_{\\Delta t \\to 0}\\dfrac{x(t + \\Delta t) - x(t)}{\\Delta t}.$$ Its sign gives the direction of motion along the axis, and its size is the speed. Units: meters per second."
+    "html": "The velocity is the derivative of position with respect to time: $$\\role{velocity}{v}(t) = \\dfrac{\\role[tiny change in position]{position}{dx}}{\\role[tiny time interval]{time}{dt}} = \\lim_{\\Delta t \\to 0}\\dfrac{x(t + \\Delta t) - x(t)}{\\Delta t}.$$ Its sign gives the direction of motion along the axis, and its size is the speed. Units: meters per second."
    },
    {
     "t": "why",
@@ -98,7 +98,7 @@
    },
    {
     "t": "key",
-    "html": "$$a(t) = \\dfrac{dv}{dt} = \\dfrac{d^2x}{dt^2}.$$ Acceleration is the slope of the $v$–$t$ graph and the concavity of the $x$–$t$ graph. Its units are $(\\text{m/s})/\\text{s} = \\text{m/s}^2$. The velocity at an instant and the acceleration at that instant are separate facts: either can be zero while the other is not."
+    "html": "$$\\role{acceleration}{a}(t) = \\dfrac{\\role[tiny change in velocity]{velocity}{dv}}{\\role[tiny time interval]{time}{dt}} = \\dfrac{d^2\\role{position}{x}}{\\role{time}{dt^2}}.$$ Acceleration is the slope of the $v$–$t$ graph and the concavity of the $x$–$t$ graph. Its units are $(\\text{m/s})/\\text{s} = \\text{m/s}^2$. The velocity at an instant and the acceleration at that instant are separate facts: either can be zero while the other is not."
    },
    {
     "t": "why",
@@ -205,7 +205,7 @@
    },
    {
     "t": "key",
-    "html": "$$v(t) = v_0 + \\int_0^t a(t')\\,dt', \\qquad x(t) = x_0 + \\int_0^t v(t')\\,dt'.$$ The area under the $a$–$t$ graph from 0 to $t$ is the change in velocity; the area under the $v$–$t$ graph is the change in position."
+    "html": "$$\\role{velocity}{v}(t) = \\role[initial velocity]{velocity}{v_0} + \\int_0^t \\role{acceleration}{a}(t')\\,dt', \\qquad \\role{position}{x}(t) = \\role[starting position]{position}{x_0} + \\int_0^t \\role{velocity}{v}(t')\\,dt'.$$ The area under the $a$–$t$ graph from 0 to $t$ is the change in velocity; the area under the $v$–$t$ graph is the change in position."
    },
    {
     "t": "why",
@@ -1252,7 +1252,7 @@
    },
    {
     "t": "key",
-    "html": "The work done by a force $F(x)$ along the $x$-axis from $x_1$ to $x_2$ is $$W = \\int_{x_1}^{x_2} F(x)\\,dx,$$ the signed area under the $F$–$x$ curve, in joules (N·m). For a spring stretched by an outside force $F = kx$: $W = \\tfrac{1}{2}k\\left(x_2^2 - x_1^2\\right)$."
+    "html": "The work done by a force $F(x)$ along the $x$-axis from $x_1$ to $x_2$ is $$\\role[work]{energy}{W} = \\int_{x_1}^{x_2} \\role{force}{F}(x)\\,\\role[tiny displacement]{position}{dx},$$ the signed area under the $F$–$x$ curve, in joules (N·m). For a spring stretched by an outside force $F = kx$: $W = \\tfrac{1}{2}k\\left(x_2^2 - x_1^2\\right)$."
    },
    {
     "t": "why",
@@ -1636,7 +1636,7 @@
    },
    {
     "t": "key",
-    "html": "$$F(x) = -\\dfrac{dU}{dx}.$$ The force points <b>downhill</b> on the $U(x)$ graph, toward lower potential energy, and it is strongest where the graph is steepest. In three dimensions, $\\vec{F} = -\\nabla U = -\\left\\langle \\dfrac{\\partial U}{\\partial x}, \\dfrac{\\partial U}{\\partial y}, \\dfrac{\\partial U}{\\partial z} \\right\\rangle$."
+    "html": "$$\\role{force}{F}(x) = -\\dfrac{\\role[tiny change in potential energy]{energy}{dU}}{\\role[tiny displacement]{position}{dx}}.$$ The force points <b>downhill</b> on the $U(x)$ graph, toward lower potential energy, and it is strongest where the graph is steepest. In three dimensions, $\\vec{F} = -\\nabla U = -\\left\\langle \\dfrac{\\partial U}{\\partial x}, \\dfrac{\\partial U}{\\partial y}, \\dfrac{\\partial U}{\\partial z} \\right\\rangle$."
    },
    {
     "t": "why",
@@ -1936,7 +1936,7 @@
    },
    {
     "t": "key",
-    "html": "$$\\vec{J} = \\int_{t_1}^{t_2} \\vec{F}\\,dt = \\Delta\\vec{p} = m\\vec{v}_2 - m\\vec{v}_1.$$ The impulse is the area under the $F$–$t$ curve, in N·s (the same as kg·m/s). The average force over the contact is $F_{\\text{avg}} = J/\\Delta t$."
+    "html": "$$\\role[impulse]{momentum}{\\vec{J}} = \\int_{t_1}^{t_2} \\role{force}{\\vec{F}}\\,\\role[tiny time interval]{time}{dt} = \\role[change in momentum]{momentum}{\\Delta\\vec{p}} = \\role{mass}{m}\\role[final velocity]{velocity}{\\vec{v}_2} - \\role{mass}{m}\\role[initial velocity]{velocity}{\\vec{v}_1}.$$ The impulse is the area under the $F$–$t$ curve, in N·s (the same as kg·m/s). The average force over the contact is $F_{\\text{avg}} = J/\\Delta t$."
    },
    {
     "t": "why",
@@ -2224,7 +2224,7 @@
    },
    {
     "t": "key",
-    "html": "$$\\Delta v = v_e\\ln\\dfrac{m_0}{m_f}, \\qquad F_{\\text{thrust}} = v_e\\left|\\dfrac{dm}{dt}\\right|.$$ The speed gained depends only on the exhaust speed and the mass ratio, not on how fast the fuel burns. Because of the logarithm, each extra bit of $\\Delta v$ needs an exponentially larger mass ratio, $m_0/m_f = e^{\\Delta v/v_e}$."
+    "html": "$$\\role[change in speed]{velocity}{\\Delta v} = \\role[exhaust speed]{velocity}{v_e}\\ln\\dfrac{\\role[starting mass]{mass}{m_0}}{\\role[final mass]{mass}{m_f}}, \\qquad \\role[thrust]{force}{F_{\\text{thrust}}} = \\role[exhaust speed]{velocity}{v_e}\\left|\\dfrac{\\role[tiny mass of fuel]{mass}{dm}}{\\role[tiny time interval]{time}{dt}}\\right|.$$ The speed gained depends only on the exhaust speed and the mass ratio, not on how fast the fuel burns. Because of the logarithm, each extra bit of $\\Delta v$ needs an exponentially larger mass ratio, $m_0/m_f = e^{\\Delta v/v_e}$."
    },
    {
     "t": "viz",
@@ -2386,7 +2386,7 @@
    },
    {
     "t": "key",
-    "html": "$$I = \\int r^2\\,dm,$$ where $r$ is each piece's distance <b>from the axis of rotation</b>. Results worth knowing: thin rod about its center $\\tfrac{1}{12}ML^2$, about one end $\\tfrac{1}{3}ML^2$; thin hoop $MR^2$; solid disk or cylinder about its axle $\\tfrac{1}{2}MR^2$; solid sphere $\\tfrac{2}{5}MR^2$; thin spherical shell $\\tfrac{2}{3}MR^2$."
+    "html": "$$\\role[moment of inertia]{mass}{I} = \\int \\role[distance from the axis]{position}{r}^2\\,\\role[tiny piece of mass]{mass}{dm},$$ where $r$ is each piece's distance <b>from the axis of rotation</b>. Results worth knowing: thin rod about its center $\\tfrac{1}{12}ML^2$, about one end $\\tfrac{1}{3}ML^2$; thin hoop $MR^2$; solid disk or cylinder about its axle $\\tfrac{1}{2}MR^2$; solid sphere $\\tfrac{2}{5}MR^2$; thin spherical shell $\\tfrac{2}{3}MR^2$."
    },
    {
     "t": "why",
@@ -2526,7 +2526,7 @@
    },
    {
     "t": "key",
-    "html": "The torque about a point O of a force $\\vec{F}$ applied at position $\\vec{r}$ (measured <b>from O</b> to where the force acts) is $$\\vec{\\tau} = \\vec{r}\\times\\vec{F}, \\qquad |\\vec{\\tau}| = rF\\sin\\theta.$$ Its direction, by the right-hand rule, is along the axis the force tends to turn the object about. In a plane, $\\tau_z = r_xF_y - r_yF_x$: positive is counterclockwise seen from $+z$."
+    "html": "The torque about a point O of a force $\\vec{F}$ applied at position $\\vec{r}$ (measured <b>from O</b> to where the force acts) is $$\\role{torque}{\\vec{\\tau}} = \\role[position from O]{position}{\\vec{r}}\\times\\role{force}{\\vec{F}}, \\qquad |\\role{torque}{\\vec{\\tau}}| = \\role[distance from O]{position}{r}\\role{force}{F}\\sin\\role[angle between r and F]{angle}{\\theta}.$$ Its direction, by the right-hand rule, is along the axis the force tends to turn the object about. In a plane, $\\tau_z = r_xF_y - r_yF_x$: positive is counterclockwise seen from $+z$."
    },
    {
     "t": "why",
@@ -2752,7 +2752,7 @@
    },
    {
     "t": "key",
-    "html": "The angular momentum of a particle about a point O is $$\\vec{L} = \\vec{r}\\times\\vec{p} = m\\,\\vec{r}\\times\\vec{v},$$ with $\\vec{r}$ measured from O. Its size is $mvr\\sin\\phi = mvd$, where $d$ is the perpendicular distance from O to the line of motion. Newton's second law gives $\\dfrac{d\\vec{L}}{dt} = \\vec{\\tau}$."
+    "html": "The angular momentum of a particle about a point O is $$\\role{angmom}{\\vec{L}} = \\role[position from O]{position}{\\vec{r}}\\times\\role{momentum}{\\vec{p}} = \\role{mass}{m}\\,\\role[position from O]{position}{\\vec{r}}\\times\\role{velocity}{\\vec{v}},$$ with $\\vec{r}$ measured from O. Its size is $mvr\\sin\\phi = mvd$, where $d$ is the perpendicular distance from O to the line of motion. Newton's second law gives $\\dfrac{d\\vec{L}}{dt} = \\vec{\\tau}$."
    },
    {
     "t": "why",
@@ -3491,7 +3491,7 @@
    },
    {
     "t": "key",
-    "html": "Simple harmonic motion obeys $\\ddot{x} = -\\omega^2x$, solved by $x = A\\cos(\\omega t + \\phi)$ with $$\\omega = \\sqrt{\\dfrac{k}{m}}, \\qquad f = \\dfrac{\\omega}{2\\pi}, \\qquad T = \\dfrac{2\\pi}{\\omega} = 2\\pi\\sqrt{\\dfrac{m}{k}}.$$ The greatest speed is $A\\omega$ (at equilibrium) and the greatest acceleration $A\\omega^2$ (at the turning points). The period doesn't depend on the amplitude."
+    "html": "Simple harmonic motion obeys $\\ddot{x} = -\\omega^2x$, solved by $x = A\\cos(\\omega t + \\phi)$ with $$\\role[angular frequency]{angvel}{\\omega} = \\sqrt{\\dfrac{\\role[spring constant]{constant}{k}}{\\role{mass}{m}}}, \\qquad \\role{frequency}{f} = \\dfrac{\\role[angular frequency]{angvel}{\\omega}}{2\\pi}, \\qquad \\role[period]{time}{T} = \\dfrac{2\\pi}{\\role[angular frequency]{angvel}{\\omega}} = 2\\pi\\sqrt{\\dfrac{\\role{mass}{m}}{\\role[spring constant]{constant}{k}}}.$$ The greatest speed is $A\\omega$ (at equilibrium) and the greatest acceleration $A\\omega^2$ (at the turning points). The period doesn't depend on the amplitude."
    },
    {
     "t": "viz",
@@ -3503,7 +3503,11 @@
      "x0": 1,
      "v0": 0,
      "tmax": 20,
-     "task": "Change $m$ and $k$. The period follows $2\\pi\\sqrt{m/k}$; changing the starting stretch changes only the amplitude."
+     "task": "Change $m$ and $k$. The period follows $2\\pi\\sqrt{m/k}$; changing the starting stretch changes only the amplitude.",
+     "roleLinks": {
+      "mass m": "mass",
+      "stiffness k": "constant"
+     }
     },
     "cap": "An undamped spring and mass: the graph of $x(t)$ is a cosine with $\\omega = \\sqrt{k/m}$."
    },

@@ -40,6 +40,7 @@ const SECTIONS = [
   ['/free-books/', 'exact'], ['/photocraft/', 'exact'], ['/asl/', 'tree'], ['/timeline/', 'exact'],
   ['/games/siege/', 'exact'], ['/games/thief/', 'exact'], ['/games/hero/', 'exact'],
   ['/games/thermopylae/', 'exact'], ['/games/daily/', 'exact'],
+  ['/october-sky/', 'tree'],                       // the Rocket Boys story: each page lists its sources
 ];
 
 // Known gaps, with the reason. A prefix ending in "*" covers everything under it.

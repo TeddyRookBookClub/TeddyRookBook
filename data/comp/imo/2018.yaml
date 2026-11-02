@@ -1,0 +1,205 @@
+year: 2018
+edition: 59th
+date: "July 9–10, 2018 · Cluj-Napoca, Romania"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2018/2018_eng.pdf
+  archive: https://www.imo-official.org/year_info.aspx?year=2018
+problems:
+  - id: P1
+    day: 1
+    topic: "Equal tangents from a vertex give a parallel chord"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - '$DE$ is perpendicular to the bisector of angle $A$. So you want $FG$ perpendicular to $AM$, where $M$ is the midpoint of arc $BC$.'
+      - 'Name the angles $\angle FAB=x$, $\angle FBA=y$, $\angle GAC=u$, $\angle GCA=v$. Show $AD=2R\sin(y-x)$, and use the angle between two crossing chords.'
+    solution: |
+      **Key idea:** put every length and arc in terms of four angles at $F$ and $G$. The condition $AD=AE$ becomes $y-x=v-u$, and that is exactly the condition for $FG$ to be perpendicular to the angle bisector at $A$.
+
+      Let $R$ be the circumradius. Let $A$, $B$, $C$ have angles $A$, $B$, $C$, and let $M$ be the midpoint of arc $BC$ not containing $A$. Line $AM$ is the bisector of angle $A$. Since $AD=AE$, the triangle $ADE$ is isosceles and $DE\perp AM$. So we must show $FG\perp AM$.
+
+      **Angles at $F$ and $G$.** Let $x=\angle FAB$, $y=\angle FBA$, $u=\angle GAC$ and $v=\angle GCA$. Since $AFBC$ is cyclic, $\angle AFB=180^\circ-C$, so $x+y=C$. Likewise $u+v=B$.
+
+      **Length $AD$.** $F$ is on the perpendicular bisector of $BD$, so $FD=FB$ and $\angle FDB=\angle FBD=y$. In triangle $AFD$:
+      - $\angle FAD=x$ and $\angle ADF=180^\circ-y$, so $\angle AFD=y-x$;
+      - $AF=2R\sin y$, the chord seen from $B$ at angle $y$.
+
+      The law of sines gives
+      $$AD=\frac{AF\sin(y-x)}{\sin(180^\circ-y)}=2R\sin(y-x).$$
+      In the same way $AE=2R\sin(v-u)$.
+
+      Both $y-x$ and $v-u$ lie strictly between $0^\circ$ and $90^\circ$ (for example $y-x<y<x+y=C<90^\circ$, since the triangle is acute). So $AD=AE$ gives
+      $$y-x=v-u.\qquad(\ast)$$
+
+      **The angle between $FG$ and $AM$.** Going around $\Gamma$, the points come in the order $A,F,B,M,C,G$. So the chords $FG$ and $AM$ cross. The angle between two crossing chords is half the sum of the two arcs they cut off. Here those arcs are:
+      - arc $AF$, which is $2y$ (it is seen from $B$ at angle $y$);
+      - arc $MG$ = arc $MC$ + arc $CG$, which is $A+2u$.
+
+      So the angle between $FG$ and $AM$ is $y+u+\tfrac A2$. It equals $90^\circ$ exactly when
+      $$2y+2u+A=A+B+C\iff 2y+2u=(u+v)+(x+y)\iff y-x=v-u,$$
+      which is $(\ast)$. So $FG\perp AM$, and $FG\parallel DE$ (or the two are the same line).
+    checked: "script: 2,000 random acute triangles and admissible D, E; the sine of the angle between FG and DE stays below 2e-15"
+    viz: imo-2018-p1
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Cyclic sequence where each term is product plus one"
+    areas: [algebra]
+    difficulty: 2
+    answer: "Exactly the multiples of $3$"
+    hints:
+      - 'For multiples of $3$, try a repeating block of three numbers, two of them equal.'
+      - 'Extend the sequence periodically. Compare $\sum a_ia_{i+3}$ with $\sum a_i^2$ by writing $a_{i+3}$ through the rule.'
+    solution: |
+      **Key idea:** summing the rule around the cycle gives $\sum a_ia_{i+3}=\sum a_i^2$, so $\sum(a_i-a_{i+3})^2=0$ and the sequence has period $3$.
+
+      **Multiples of $3$ work.** Repeat the block $-1,-1,2$. The rule holds at every position: $(-1)(-1)+1=2$, $(-1)\cdot2+1=-1$ and $2\cdot(-1)+1=-1$. When $3\mid n$ the block fits exactly into the cycle of length $n$.
+
+      **Only multiples of $3$.** The conditions say that the sequence, extended with period $n$ to all indices, satisfies $a_{i+2}=a_ia_{i+1}+1$ for every $i$. All sums below run over one period, $i=1,\dots,n$. Using the rule twice,
+      $$a_ia_{i+3}=a_i(a_{i+1}a_{i+2}+1)=(a_ia_{i+1})a_{i+2}+a_i=(a_{i+2}-1)a_{i+2}+a_i=a_{i+2}^2-a_{i+2}+a_i .$$
+      Summing over a period, the terms $-a_{i+2}$ and $a_i$ cancel, and $\sum a_{i+2}^2=\sum a_i^2$. So
+      $$\sum_i a_ia_{i+3}=\sum_i a_i^2,\qquad\text{hence}\qquad\sum_i(a_i-a_{i+3})^2=2\sum a_i^2-2\sum a_ia_{i+3}=0 .$$
+      So $a_{i+3}=a_i$ for all $i$. The sequence has periods $3$ and $n$, so it has period $\gcd(3,n)$. If $3\nmid n$, it is constant, $a_i=c$ with $c^2+1=c$. That equation has no real root, so $3\mid n$.
+    checked: "algebra: the identity a_i a_{i+3} = a_{i+2}^2 − a_{i+2} + a_i expands correctly (sympy); the block −1, −1, 2 checked directly"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Triangle of absolute differences using each number once"
+    areas: [combinatorics]
+    difficulty: 4
+    answer: "No"
+    hints:
+      - 'Start at the top. Each entry equals the larger of the two below it minus the smaller. Follow the larger one down: the bottom entry is a sum of one smaller entry from each row.'
+      - 'If the triangle contains each of $1,\dots,N$ once, that path uses up exactly $1,\dots,n$. Now find a big sub-triangle beside the path and run the same argument inside it.'
+    solution: |
+      **Key idea:** following the larger entry downward writes a bottom entry as a sum of distinct entries, one from each row. For the full triangle this uses up all the small numbers $1,\dots,2018$. A sub-triangle of about half the size, beside the path, then needs a bottom entry larger than the largest number available.
+
+      Let $n=2018$ and $N=\frac{n(n+1)}2$. The triangle has exactly $N$ entries, so if it contains every number $1,\dots,N$, they are all different and positive.
+
+      **The greedy path.** In any anti-Pascal triangle with distinct positive entries, let $b_1$ be the top. If $b_r$ is chosen in row $r$, its two children differ by $b_r$. Call the smaller child $a_{r+1}$ and let $b_{r+1}$ be the larger, so $b_{r+1}=b_r+a_{r+1}$. With $a_1=b_1$, this gives a bottom entry
+      $$b_m=a_1+a_2+\dots+a_m$$
+      in a triangle of $m$ rows, a sum of $m$ distinct entries, one from each row.
+
+      **The whole triangle.** Here $b_n\le N=1+2+\dots+n$. A sum of $n$ distinct positive integers is at least $1+\dots+n$, so $\{a_1,\dots,a_n\}=\{1,\dots,n\}$.
+
+      **Room beside the path.** Number the positions in row $r$ as $1,\dots,r$. The children of position $j$ are positions $j$ and $j+1$. Let $j_r$ be the position of $b_r$, and $p=j_n$. Going down a row, $j_r$ stays or increases by $1$. The entry $a_r$ sits right next to $b_r$, at $j_r\pm1$.
+      - **Left block:** the sub-triangle whose bottom row is positions $1,\dots,p-2$ of row $n$. It has $p-2$ rows, and in row $r$ it uses positions up to $r-n+p-2$. Since $j_r\ge p-(n-r)$, these are all left of $j_r-1$.
+      - **Right block:** the sub-triangle whose bottom row is positions $p+2,\dots,n$. It has $n-p-1$ rows, and in row $r$ it uses positions from $p+2$ on. Since $j_r\le p$, these are all right of $j_r+1$.
+
+      So both blocks avoid every $a_r$ and $b_r$. Together they have $n-3=2015$ rows, so one of them has at least $1008$ rows. Take a sub-triangle with exactly $k=1008$ rows inside it.
+
+      **Contradiction.** Any sub-triangle of an anti-Pascal triangle is anti-Pascal. Its greedy path gives a bottom entry equal to a sum of $k$ distinct entries of the sub-triangle. None of these is in $\{1,\dots,2018\}$, since those numbers all lie on the main path. So that bottom entry is at least
+      $$2019+2020+\dots+3026=1008\cdot2019+\frac{1007\cdot1008}{2}=2\,542\,680,$$
+      which is more than $N=2\,037\,171$. So no such triangle exists.
+    checked: "arithmetic checked by script; the greedy-path identity was tested on random anti-Pascal triangles"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Stone placing game avoiding one knight-move distance"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: "$K=100$"
+    hints:
+      - 'A move of length $\sqrt5$ changes $x+y$ by an odd number. Which $200$ sites can Amy always use safely?'
+      - 'For Ben: split the board into $4\times4$ blocks. Each block splits into four closed knight tours of length $4$. Answer each of Amy''s stones inside its own tour.'
+    solution: |
+      **Key idea:** Amy plays on one color of a checkerboard, where no two sites are $\sqrt5$ apart. Ben pairs up the sites inside small knight cycles, so that Amy can use at most one site of each cycle.
+
+      Two sites are $\sqrt5$ apart exactly when they differ by $(\pm1,\pm2)$ or $(\pm2,\pm1)$, a knight's move.
+
+      **Amy gets at least $100$.** A knight's move changes $x+y$ by $\pm1$ or $\pm3$, an odd number. So no two of the $200$ sites with $x+y$ even are $\sqrt5$ apart. Amy always plays on a free even site. After she has placed $i$ stones and Ben $i$ stones, at most $2i$ even sites are taken. So she can move again whenever $2i<200$, which gives her at least $100$ stones.
+
+      **Ben holds her to $100$.** Cut the board into $25$ blocks of $4\times4$. In local coordinates $1,\dots,4$, each block splits into four knight cycles of length $4$:
+      $$(1,1)\to(2,3)\to(4,4)\to(3,2),\qquad (1,4)\to(3,3)\to(4,1)\to(2,2),$$
+      $$(1,2)\to(3,1)\to(4,3)\to(2,4),\qquad (1,3)\to(2,1)\to(4,2)\to(3,4).$$
+      Each arrow, and the step from the last cell back to the first, is a knight's move. That gives $100$ cycles covering all $400$ sites.
+
+      Ben's rule: when Amy places a stone on a cycle, Ben takes the **opposite** site of that cycle (two steps away around it). The other two sites of the cycle are a knight's move from Amy's stone, so she can never use them. Ben only ever plays opposite sites, so whenever Amy enters a new cycle, its opposite site is still free and Ben can answer. Each cycle therefore holds at most one red stone, and Amy places at most $100$.
+
+      So $K=100$.
+    checked: "script: the four cycles are knight cycles that partition the 4×4 block; the parity claim checked over all pairs of sites"
+    viz: imo-2018-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Integer cyclic ratio sums force an eventually constant sequence"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'Subtract consecutive sums: $\frac{a_n}{a_{n+1}}+\frac{a_{n+1}-a_n}{a_1}$ is an integer for $n\ge N$.'
+      - 'Fix a prime $p$ and compare $v_p(a_n)$, $v_p(a_{n+1})$ and $v_p(a_1)$. The exponent can rise only to exactly $v_p(a_1)$, and can fall only to a value at least $v_p(a_1)$.'
+    solution: |
+      **Key idea:** look at one prime at a time. Its exponent in $a_n$ can only move in a very restricted way, so it is eventually constant. Only finitely many primes ever matter.
+
+      Let $S_n$ be the sum in the problem. For $n\ge N$, $S_{n+1}-S_n$ is an integer:
+      $$T_n=\frac{a_n}{a_{n+1}}+\frac{a_{n+1}-a_n}{a_1}\in\mathbb Z .$$
+
+      **One prime.** Fix a prime $p$, let $\alpha=v_p(a_1)$, and for $n\ge N$ let $x=v_p(a_n)$ and $y=v_p(a_{n+1})$.
+      - **If $y>x$:** the first term of $T_n$ has $p$-adic valuation $x-y<0$. The second has valuation $x-\alpha$, because $v_p(a_{n+1}-a_n)=x$. The sum is an integer, so the negative valuations must cancel, which needs $x-\alpha=x-y$. So **a rise lands exactly on $\alpha$**.
+      - **If $y<x$:** the first term has positive valuation, and the second has valuation $y-\alpha$. For the sum to be an integer we need $y-\alpha\ge0$. So **a fall lands on a value at least $\alpha$**.
+
+      Now follow $x_n=v_p(a_n)$ for $n\ge N$.
+      - Once $x_n\ge\alpha$, a rise would have to land on $\alpha\le x_n$, which is not a rise. A fall stays $\ge\alpha$. So from then on the exponent is non-increasing and stays $\ge\alpha$.
+      - While $x_n<\alpha$, a fall would have to land at least at $\alpha$, which is not a fall. So the exponent is non-decreasing.
+
+      Either way, $x_n$ is eventually monotone and bounded, so it is eventually constant. (When $p\nmid a_1$, $\alpha=0$ and the exponent never rises at all.)
+
+      **Finitely many primes.** If $p$ divides neither $a_1$ nor $a_N$, the exponent of $p$ starts at $0$ at $n=N$ and never rises. So every $a_n$ with $n\ge N$ is built from the finitely many primes dividing $a_1a_N$. Each of their exponents is eventually constant, so $a_n$ is eventually constant.
+    checked: "reasoning only: a structural proof with no numerical answer to test"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Quadrilateral with balanced side products and an inner point"
+    areas: [geometry]
+    difficulty: 5
+    hints:
+      - 'Name the eight angles at $A,B,C,D$ cut off by the segments to $X$. The goal says that the two "other" angles in triangles $XAB$ and $XCD$ add up to $180^\circ$ minus twice the equal angle.'
+      - 'Use the law of sines around $X$ twice: once to close the loop $XA\to XB\to XC\to XD\to XA$, and once to turn the side condition into an equation in sines.'
+      - 'Turn the products of sines into differences of cosines. Two equations come out, and their difference factors with a factor $\cos$ of half the angle sum you want.'
+    solution: |
+      **Key idea:** this is a trigonometry problem in disguise. The law of sines turns everything into two equations in sines. Their difference factors as $\cos(\sigma/2)$ times a quantity that is positive because $X$ is inside. So $\cos(\sigma/2)=0$, which is the goal.
+
+      **Angles.** Let $\alpha=\angle XAB=\angle XCD$ and $\beta=\angle XBC=\angle XDA$. Since $X$ is inside the convex quadrilateral, segment $XA$ splits the angle at $A$, and so on. Call the other parts
+      $$p=\angle XAD,\quad q=\angle XBA,\quad r=\angle XCB,\quad s=\angle XDC .$$
+      All eight angles are positive. The four triangles around $X$ have these angles:
+      - $XAB$: $\alpha$ at $A$, $q$ at $B$, and $180^\circ-\alpha-q$ at $X$;
+      - $XBC$: $\beta$ at $B$, $r$ at $C$, and $180^\circ-\beta-r$ at $X$;
+      - $XCD$: $\alpha$ at $C$, $s$ at $D$, and $180^\circ-\alpha-s$ at $X$;
+      - $XDA$: $\beta$ at $D$, $p$ at $A$, and $180^\circ-\beta-p$ at $X$.
+
+      The four angles at $X$ fill a full turn, so
+      $$2\alpha+2\beta+p+q+r+s=360^\circ .$$
+      Let $\sigma=2\alpha+q+s$. Then $2\beta+p+r=360^\circ-\sigma$, and $\angle BXA+\angle DXC=360^\circ-\sigma$. So the goal is $\sigma=180^\circ$.
+
+      **Two equations.** The law of sines in the four triangles gives
+      $$\frac{XA}{XB}=\frac{\sin q}{\sin\alpha},\quad \frac{XB}{XC}=\frac{\sin r}{\sin\beta},\quad \frac{XC}{XD}=\frac{\sin s}{\sin\alpha},\quad \frac{XD}{XA}=\frac{\sin p}{\sin\beta}.$$
+      Multiplying them,
+      $$\sin p\,\sin q\,\sin r\,\sin s=\sin^2\alpha\,\sin^2\beta. \tag{1}$$
+      The law of sines also gives the sides: $AB=XA\,\frac{\sin(\alpha+q)}{\sin q}$, $CD=XC\,\frac{\sin(\alpha+s)}{\sin s}$, $BC=XB\,\frac{\sin(\beta+r)}{\sin r}$, $DA=XD\,\frac{\sin(\beta+p)}{\sin p}$. Write $u=\sin(\alpha+q)\sin(\alpha+s)$ and $v=\sin(\beta+p)\sin(\beta+r)$. Both are positive, since each sum is less than $180^\circ$ (it is the sum of two angles of a triangle). Put the sides into $AB\cdot CD=BC\cdot DA$ and use $\frac{XB\cdot XD}{XA\cdot XC}=\frac{\sin^2\alpha}{\sin q\,\sin s}$ from the ratios above:
+      $$u\,\sin p\,\sin r=v\,\sin^2\alpha. \tag{2}$$
+      Multiplying (2) by $\sin q\sin s$ and using (1) gives the partner equation
+      $$v\,\sin q\,\sin s=u\,\sin^2\beta. \tag{3}$$
+
+      **Cosines.** Product to sum:
+      $$2u=\cos(q-s)-\cos\sigma,\qquad 2\sin q\sin s=\cos(q-s)-\cos(q+s)=2u+\cos\sigma-\cos(\sigma-2\alpha),$$
+      $$2v=\cos(p-r)-\cos\sigma,\qquad 2\sin p\sin r=2v+\cos\sigma-\cos(\sigma+2\beta).$$
+      (For the second line, $2\beta+p+r=360^\circ-\sigma$.) So (2) and (3) read
+      $$u\big(2v+\cos\sigma-\cos(\sigma+2\beta)\big)=2v\sin^2\alpha,\qquad v\big(2u+\cos\sigma-\cos(\sigma-2\alpha)\big)=2u\sin^2\beta .$$
+      Subtract the second from the first. The $2uv$ terms cancel, and moving the $\sin^2$ terms across,
+      $$u\big(\cos\sigma-\cos(\sigma+2\beta)+2\sin^2\beta\big)=v\big(\cos\sigma-\cos(\sigma-2\alpha)+2\sin^2\alpha\big).$$
+      With $2\sin^2\beta=1-\cos2\beta$ and sum-to-product,
+      $$\cos\sigma-\cos(\sigma+2\beta)+2\sin^2\beta=2\sin\beta\big(\sin(\sigma+\beta)+\sin\beta\big)=4\sin\beta\,\sin\!\big(\tfrac\sigma2+\beta\big)\cos\tfrac\sigma2,$$
+      $$\cos\sigma-\cos(\sigma-2\alpha)+2\sin^2\alpha=2\sin\alpha\big(\sin\alpha-\sin(\sigma-\alpha)\big)=4\sin\alpha\,\sin\!\big(\alpha-\tfrac\sigma2\big)\cos\tfrac\sigma2 .$$
+      So
+      $$4\cos\tfrac\sigma2\,\Big(u\sin\beta\,\sin\!\big(\tfrac\sigma2+\beta\big)-v\sin\alpha\,\sin\!\big(\alpha-\tfrac\sigma2\big)\Big)=0 .$$
+
+      **Signs.** Here $\tfrac\sigma2+\beta=180^\circ-\tfrac{p+r}2$, which lies strictly between $0^\circ$ and $180^\circ$, so its sine is positive. And $\alpha-\tfrac\sigma2=-\tfrac{q+s}2$ lies strictly between $-180^\circ$ and $0^\circ$, so its sine is negative. With $u,v,\sin\alpha,\sin\beta>0$, the big bracket is positive. Hence $\cos\tfrac\sigma2=0$.
+
+      Finally $\tfrac\sigma2=\tfrac{(\alpha+q)+(\alpha+s)}2$ is between $0^\circ$ and $180^\circ$, so $\tfrac\sigma2=90^\circ$ and $\sigma=180^\circ$. That is, $\angle BXA+\angle DXC=180^\circ$. (The sign step is where it matters that $X$ is inside.)
+    checked: "numeric: 300 random convex quadrilaterals with AB·CD = BC·DA, X found by solving the two angle equations; the angle sum is 180° to 3e-9, and equations (1) and (2) hold to 1e-11"
+    status: ready

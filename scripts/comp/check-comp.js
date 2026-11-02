@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /* Checks the competition data (formats: layouts/comp/ and the header of static/comp/comp.js).
      data/comp/putnam/<year>.yaml                     Putnam solutions guide
+     data/comp/imo/<year>.yaml                        IMO solutions guide (ids P1-P6, `day` 1 for P1-P3, 2 for P4-P6)
      data/comp/common-test/physics-<year>[-makeup].yaml  Common Test physics guide
      data/comp/original/math/<id>.yaml                original math challenges
    Checks: required fields, unique ids, status values, areas, difficulty, viz files exist (static/comp/viz/<id>.js),
@@ -60,23 +61,33 @@ function texBalanced(f, where, s) {
 const texts = [];
 const addT = (file, kind, where, text) => { if (typeof text === 'string' && text.trim()) texts.push({ file, kind, where, text }); };
 
-// ------------------------------------------------------------------ Putnam
-const pf = list(D('putnam')), PY = loadYaml(pf);
-for (const f of pf) {
+// ------------------------------------------------------------------ year guides: Putnam and IMO
+const IMO_AREAS = new Set(['algebra', 'combinatorics', 'geometry', 'number-theory']);
+const GUIDES = {
+  putnam: { idRe: /^[AB][1-6]$/, idMsg: 'A1-A6 or B1-B6', areas: AREAS },
+  imo: { idRe: /^P[1-6]$/, idMsg: 'P1-P6', areas: IMO_AREAS, day: true },
+};
+const gcount = {};
+let pf = [];
+for (const [gk, G] of Object.entries(GUIDES)) {
+const gf = list(D(gk)), PY = loadYaml(gf); gcount[gk] = gf.length; pf = pf.concat(gf);
+for (const f of gf) {
   const y = PY[f], base = path.basename(f).replace(/\.ya?ml$/, '');
   if (!y || y.__error__) { err(f, 'YAML does not parse: ' + (y && y.__error__)); continue; }
   if (String(y.year) !== base) err(f, 'year ' + y.year + ' does not match the file name');
   https(f, 'links.problems', y.links && y.links.problems, true);
   https(f, 'links.archive', y.links && y.links.archive, false);
+  if (gk === 'imo' && y.links && y.links.problems && !/^https:\/\/www\.imo-official\.org\//.test(y.links.problems)) err(f, 'links.problems must be on www.imo-official.org');
   if (!Array.isArray(y.problems) || !y.problems.length) { err(f, 'problems: missing or empty'); continue; }
   const seen = new Set();
   y.problems.forEach((p, i) => {
     const w = 'problem ' + (p && p.id || '#' + (i + 1));
-    if (!p || !/^[AB][1-6]$/.test(String(p.id))) err(f, w + ': id must be A1-A6 or B1-B6');
+    if (!p || !G.idRe.test(String(p.id))) err(f, w + ': id must be ' + G.idMsg);
+    if (G.day && p && G.idRe.test(String(p.id))) { const d = +String(p.id).slice(1) <= 3 ? 1 : 2; if (p.day !== d) err(f, w + ': day must be ' + d); }
     if (seen.has(p.id)) err(f, w + ': duplicate id'); seen.add(p.id);
     topic(f, w, p.topic);
     if (!STATUS.has(p.status)) err(f, w + ': status must be ready or coming');
-    if (p.areas != null) { if (!Array.isArray(p.areas)) err(f, w + ': areas must be a list'); else p.areas.forEach(a => { if (!AREAS.has(a)) err(f, w + ': unknown area "' + a + '"'); }); }
+    if (p.areas != null) { if (!Array.isArray(p.areas)) err(f, w + ': areas must be a list'); else p.areas.forEach(a => { if (!G.areas.has(a)) err(f, w + ': unknown area "' + a + '"'); }); }
     if (p.difficulty != null && !(Number.isInteger(p.difficulty) && p.difficulty >= 1 && p.difficulty <= 5)) err(f, w + ': difficulty must be 1-5');
     if (p.status === 'ready') {
       if (!isStr(p.solution)) err(f, w + ': ready but no solution');
@@ -89,6 +100,7 @@ for (const f of pf) {
     ['solution', 'answer', 'topic'].forEach(k => texBalanced(f, w + ' ' + k, p[k])); (p.hints || []).forEach((h, j) => texBalanced(f, w + ' hint ' + (j + 1), h));
     addT(f, 'src', w + ' topic', p.topic); addT(f, 'sol', w + ' solution', p.solution); (p.hints || []).forEach((h, j) => addT(f, 'sol', w + ' hint ' + (j + 1), h));
   });
+}
 }
 
 // ------------------------------------------------------------------ Common Test
@@ -186,5 +198,5 @@ for (const t of texts) if (t.kind === 'sol') {
 const n = pf.length + cf.length + of.length;
 warns.forEach(w => console.log('warning: ' + w));
 errs.forEach(e => console.log('ERROR: ' + e));
-console.log(`check-comp: ${n} files (${pf.length} Putnam, ${cf.length} Common Test, ${of.length} challenges), ${errs.length} errors, ${warns.length} warnings`);
+console.log(`check-comp: ${n} files (${gcount.putnam} Putnam, ${gcount.imo} IMO, ${cf.length} Common Test, ${of.length} challenges), ${errs.length} errors, ${warns.length} warnings`);
 process.exit(errs.length ? 1 : 0);

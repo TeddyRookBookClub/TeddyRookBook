@@ -534,7 +534,7 @@
    },
    {
     "t": "key",
-    "html": "$a = \\dfrac{\\Delta v}{\\Delta t} = \\dfrac{v_f - v_i}{\\Delta t}$. An object speeds up when $a$ and $v$ point the same way and slows down when they point opposite ways. The sign of $a$ alone doesn't tell you which."
+    "html": "$\\role{acceleration}{a} = \\dfrac{\\role[change in velocity]{velocity}{\\Delta v}}{\\role[time interval]{time}{\\Delta t}} = \\dfrac{\\role[final velocity]{velocity}{v_f} - \\role[initial velocity]{velocity}{v_i}}{\\role[time interval]{time}{\\Delta t}}$. An object speeds up when $a$ and $v$ point the same way and slows down when they point opposite ways. The sign of $a$ alone doesn't tell you which."
    },
    {
     "t": "why",
@@ -1009,7 +1009,7 @@
    },
    {
     "t": "key",
-    "html": "For constant acceleration: $v = v_0 + at$ and $x = x_0 + v_0 t + \\tfrac12 a t^2$. They hold only while the acceleration stays the same."
+    "html": "For constant acceleration: $\\role{velocity}{v} = \\role[initial velocity]{velocity}{v_0} + \\role{acceleration}{a}\\role{time}{t}$ and $\\role{position}{x} = \\role[starting position]{position}{x_0} + \\role[initial velocity]{velocity}{v_0} \\role{time}{t} + \\tfrac12 \\role{acceleration}{a} \\role{time}{t}^2$. They hold only while the acceleration stays the same."
    },
    {
     "t": "why",
@@ -1108,7 +1108,7 @@
    },
    {
     "t": "key",
-    "html": "$v^2 = v_0^2 + 2a\\Delta x$ links the speeds and the displacement without the time. It also needs constant acceleration."
+    "html": "$\\role{velocity}{v}^2 = \\role[initial velocity]{velocity}{v_0}^2 + 2\\role{acceleration}{a}\\role[displacement]{position}{\\Delta x}$ links the speeds and the displacement without the time. It also needs constant acceleration."
    },
    {
     "t": "why",
@@ -1225,7 +1225,7 @@
    },
    {
     "t": "why",
-    "html": "A heavier object is pulled harder, but it also has more inertia to overcome, in exactly the same proportion: $a = \\dfrac{F}{m} = \\dfrac{mg}{m} = g$. The mass cancels. In 1971, Apollo 15 astronaut David Scott dropped a hammer and a falcon feather on the airless Moon, and they landed together."
+    "html": "A heavier object is pulled harder, but it also has more inertia to overcome, in exactly the same proportion: $\\role{acceleration}{a} = \\dfrac{\\role{force}{F}}{\\role{mass}{m}} = \\dfrac{\\role{mass}{m}\\role[acceleration of gravity]{acceleration}{g}}{\\role{mass}{m}} = \\role[acceleration of gravity]{acceleration}{g}$. The mass cancels. In 1971, Apollo 15 astronaut David Scott dropped a hammer and a falcon feather on the airless Moon, and they landed together."
    },
    {
     "t": "viz",
@@ -1754,7 +1754,7 @@
    },
    {
     "t": "key",
-    "html": "Launch at speed $v_0$ and angle $\\theta$: $v_{0x} = v_0\\cos\\theta$ stays the same all flight; $v_{0y} = v_0\\sin\\theta$ changes by $-9.8\\ \\text{m/s}$ each second. On level ground the path is symmetric: up time equals down time."
+    "html": "Launch at speed $v_0$ and angle $\\theta$: $\\role[horizontal velocity]{velocity}{v_{0x}} = \\role[launch speed]{velocity}{v_0}\\cos\\role[launch angle]{angle}{\\theta}$ stays the same all flight; $\\role[vertical launch velocity]{velocity}{v_{0y}} = \\role[launch speed]{velocity}{v_0}\\sin\\role[launch angle]{angle}{\\theta}$ changes by $-9.8\\ \\text{m/s}$ each second. On level ground the path is symmetric: up time equals down time."
    },
    {
     "t": "why",
@@ -1772,7 +1772,11 @@
       "vy",
       "twin"
      ],
-     "task": "Change the angle. Which angle gives the longest range? Which pairs of angles land at the same spot?"
+     "task": "Change the angle. Which angle gives the longest range? Which pairs of angles land at the same spot?",
+     "roleLinks": {
+      "Launch speed": "velocity",
+      "Launch angle": "angle"
+     }
     },
     "cap": "Launched at 20 m/s and 40°, with the 50° path shown dashed: complementary angles give the same range."
    },
@@ -3072,7 +3076,7 @@
    },
    {
     "t": "key",
-    "html": "Every two masses attract each other with $F = \\dfrac{Gm_1m_2}{r^2}$, where $r$ is the distance between their <b>centers</b> and $G = 6.674 \\times 10^{-11}\\ \\text{N}\\cdot\\text{m}^2/\\text{kg}^2$. Each object feels the same size force (a third-law pair)."
+    "html": "Every two masses attract each other with $\\role{force}{F} = \\dfrac{\\role[gravitational constant]{constant}{G}\\role{mass}{m_1}\\role{mass}{m_2}}{\\role[distance between centers]{position}{r}^2}$, where $r$ is the distance between their <b>centers</b> and $G = 6.674 \\times 10^{-11}\\ \\text{N}\\cdot\\text{m}^2/\\text{kg}^2$. Each object feels the same size force (a third-law pair)."
    },
    {
     "t": "why",
@@ -3267,7 +3271,7 @@
    },
    {
     "t": "key",
-    "html": "An object moving at steady speed $v$ around a circle of radius $r$ accelerates toward the center with $a_c = \\dfrac{v^2}{r}$."
+    "html": "An object moving at steady speed $v$ around a circle of radius $r$ accelerates toward the center with $\\role[centripetal acceleration]{acceleration}{a_c} = \\dfrac{\\role[speed]{velocity}{v}^2}{\\role[radius]{position}{r}}$."
    },
    {
     "t": "why",
@@ -3280,7 +3284,11 @@
      "mode": "uniform",
      "v": 4,
      "r": 2,
-     "task": "Change the speed and the radius. Doubling v makes the acceleration four times as big."
+     "task": "Change the speed and the radius. Doubling v makes the acceleration four times as big.",
+     "roleLinks": {
+      "Speed v": "velocity",
+      "Radius r": "position"
+     }
     },
     "cap": "Steady speed, changing direction: the velocity is along the path and the acceleration points to the center."
    },
@@ -3312,7 +3320,7 @@
     "title": "Doubling the speed",
     "q": "A runner rounds a curve at $4\\ \\text{m/s}$, then later at $8\\ \\text{m/s}$ on the same curve. How does the centripetal acceleration change?",
     "steps": [
-     "$a_c = \\dfrac{v^2}{r}$: the speed is squared and $r$ is unchanged.",
+     "$\\role[centripetal acceleration]{acceleration}{a_c} = \\dfrac{\\role[speed]{velocity}{v}^2}{\\role[radius]{position}{r}}$: the speed is squared and $r$ is unchanged.",
      "Doubling $v$ multiplies $a_c$ by $2^2 = 4$."
     ],
     "a": "It becomes 4 times as large."
@@ -3346,7 +3354,7 @@
    },
    {
     "t": "key",
-    "html": "For motion in a circle, the net inward force is $\\Sigma F_{in} = \\dfrac{mv^2}{r}$. Tension, friction, gravity or a normal force supplies it. Nothing pushes outward."
+    "html": "For motion in a circle, the net inward force is $\\role[net inward force]{force}{\\Sigma F_{in}} = \\dfrac{\\role{mass}{m}\\role[speed]{velocity}{v}^2}{\\role[radius]{position}{r}}$. Tension, friction, gravity or a normal force supplies it. Nothing pushes outward."
    },
    {
     "t": "why",
@@ -3359,7 +3367,11 @@
      "mode": "cut",
      "v": 4,
      "r": 2,
-     "task": "Cut the string. Which way does the ball go?"
+     "task": "Cut the string. Which way does the ball go?",
+     "roleLinks": {
+      "Speed v": "velocity",
+      "Radius r": "position"
+     }
     },
     "cap": "When the string is cut, the inward force disappears and the ball leaves along the tangent, not straight outward."
    },
@@ -3505,7 +3517,7 @@
    },
    {
     "t": "key",
-    "html": "The work done by a constant force is $W = Fd\\cos\\theta$, where $\\theta$ is the angle between the force and the displacement. Work is in joules ($1\\ \\text{J} = 1\\ \\text{N}\\cdot\\text{m}$) and can be positive, negative or zero."
+    "html": "The work done by a constant force is $\\role[work]{energy}{W} = \\role{force}{F}\\role[displacement]{position}{d}\\cos\\role[angle between force and displacement]{angle}{\\theta}$, where $\\theta$ is the angle between the force and the displacement. Work is in joules ($1\\ \\text{J} = 1\\ \\text{N}\\cdot\\text{m}$) and can be positive, negative or zero."
    },
    {
     "t": "why",
@@ -3719,7 +3731,7 @@
    },
    {
     "t": "key",
-    "html": "The net work done on an object equals its change in kinetic energy: $W_{net} = \\Delta K = \\tfrac12 mv_f^2 - \\tfrac12 mv_i^2$. $W_{net}$ is the sum of the work done by every force, which equals the work done by the net force."
+    "html": "The net work done on an object equals its change in kinetic energy: $\\role[net work]{energy}{W_{net}} = \\role[change in kinetic energy]{energy}{\\Delta K} = \\tfrac12 \\role{mass}{m}\\role[final speed]{velocity}{v_f}^2 - \\tfrac12 \\role{mass}{m}\\role[initial speed]{velocity}{v_i}^2$. $W_{net}$ is the sum of the work done by every force, which equals the work done by the net force."
    },
    {
     "t": "why",
@@ -3736,7 +3748,10 @@
      "bars": [
       "K",
       "Eth"
-     ]
+     ],
+     "roleLinks": {
+      "Mass m": "mass"
+     }
     },
     "cap": "A box sliding to a stop: friction does negative work, and the kinetic energy bar shrinks by exactly that much."
    },
@@ -3806,7 +3821,7 @@
    },
    {
     "t": "key",
-    "html": "For an object–Earth system near Earth's surface, $\\Delta U_g = mg\\,\\Delta h$. Only changes in $U_g$ matter, so you may put $U_g = 0$ at any convenient height. $\\Delta U_g$ depends only on the change in height, not on the path."
+    "html": "For an object–Earth system near Earth's surface, $\\role[change in gravitational potential energy]{energy}{\\Delta U_g} = \\role{mass}{m}\\role[acceleration of gravity]{acceleration}{g}\\,\\role[change in height]{position}{\\Delta h}$. Only changes in $U_g$ matter, so you may put $U_g = 0$ at any convenient height. $\\Delta U_g$ depends only on the change in height, not on the path."
    },
    {
     "t": "why",
@@ -3819,7 +3834,11 @@
      "scene": "track",
      "m": 2,
      "h0": 4,
-     "task": "Watch the gravitational energy bar. It depends only on the cart's height, whatever the shape of the track."
+     "task": "Watch the gravitational energy bar. It depends only on the cart's height, whatever the shape of the track.",
+     "roleLinks": {
+      "Mass m": "mass",
+      "Starting height h": "position"
+     }
     },
     "cap": "A cart on a hilly track: Ug rises and falls with height alone."
    },
@@ -3886,7 +3905,7 @@
    },
    {
     "t": "key",
-    "html": "A spring stretched or compressed by $x$ from its natural length stores elastic potential energy $U_s = \\tfrac12 kx^2$."
+    "html": "A spring stretched or compressed by $x$ from its natural length stores elastic potential energy $\\role[spring potential energy]{energy}{U_s} = \\tfrac12 \\role[spring constant]{constant}{k}\\role[stretch or compression]{position}{x}^2$."
    },
    {
     "t": "why",
@@ -3989,7 +4008,7 @@
    },
    {
     "t": "key",
-    "html": "When only gravity and springs do work, the mechanical energy is conserved: $K_i + U_i = K_f + U_f$, with $U = U_g + U_s$."
+    "html": "When only gravity and springs do work, the mechanical energy is conserved: $\\role[starting kinetic energy]{energy}{K_i} + \\role[starting potential energy]{energy}{U_i} = \\role[final kinetic energy]{energy}{K_f} + \\role[final potential energy]{energy}{U_f}$, with $U = U_g + U_s$."
    },
    {
     "t": "why",
@@ -4045,7 +4064,7 @@
     "items": [
      "Choose the system and check that only gravity and springs do work on it.",
      "Pick a zero height for $U_g$; any level works, but keep it for the whole problem.",
-     "Write $K_i + U_i = K_f + U_f$ and solve for the unknown."
+     "Write $\\role[starting kinetic energy]{energy}{K_i} + \\role[starting potential energy]{energy}{U_i} = \\role[final kinetic energy]{energy}{K_f} + \\role[final potential energy]{energy}{U_f}$ and solve for the unknown."
     ]
    },
    {
@@ -4473,7 +4492,7 @@
    },
    {
     "t": "key",
-    "html": "Momentum is $\\vec{p} = m\\vec{v}$, measured in $\\text{kg·m/s}$. On a line, pick a positive direction and give each momentum a sign. The momentum of a system is the <b>vector sum</b> of the momenta of its parts: $\\vec{p}_{\\text{tot}} = m_1\\vec{v}_1 + m_2\\vec{v}_2 + \\dots$"
+    "html": "Momentum is $\\role{momentum}{\\vec{p}} = \\role{mass}{m}\\role{velocity}{\\vec{v}}$, measured in $\\text{kg·m/s}$. On a line, pick a positive direction and give each momentum a sign. The momentum of a system is the <b>vector sum</b> of the momenta of its parts: $\\vec{p}_{\\text{tot}} = m_1\\vec{v}_1 + m_2\\vec{v}_2 + \\dots$"
    },
    {
     "t": "why",
@@ -4493,7 +4512,13 @@
       "K"
      ],
      "lab": "/science-lab/newtons-laws/momentum/",
-     "task": "Watch the momentum bars before the collision: $p_2$ points left, so it is a negative bar, and the total is a difference."
+     "task": "Watch the momentum bars before the collision: $p_2$ points left, so it is a negative bar, and the total is a difference.",
+     "roleLinks": {
+      "m₁": "mass",
+      "m₂": "mass",
+      "v₁": "velocity",
+      "v₂": "velocity"
+     }
     },
     "cap": "Momentum bars for two gliders: each bar is $mv$ with a sign, and the teal bar is the total."
    },
@@ -4573,7 +4598,7 @@
    },
    {
     "t": "key",
-    "html": "Impulse equals change in momentum: $J = F_{\\text{avg}}\\Delta t = \\Delta p = m v_f - m v_i$. Its unit, $\\text{N·s}$, is the same as $\\text{kg·m/s}$. When the force changes during the push, the impulse is the <b>area under the force–time graph</b>."
+    "html": "Impulse equals change in momentum: $\\role[impulse]{momentum}{J} = \\role[average force]{force}{F_{\\text{avg}}}\\role[time interval]{time}{\\Delta t} = \\role[change in momentum]{momentum}{\\Delta p} = \\role{mass}{m} \\role[final velocity]{velocity}{v_f} - \\role{mass}{m} \\role[initial velocity]{velocity}{v_i}$. Its unit, $\\text{N·s}$, is the same as $\\text{kg·m/s}$. When the force changes during the push, the impulse is the <b>area under the force–time graph</b>."
    },
    {
     "t": "viz",
@@ -4699,7 +4724,7 @@
    },
    {
     "t": "key",
-    "html": "If the net <b>outside</b> force on a system is zero (or its impulse is negligible during a short collision), the total momentum stays the same: $$m_1 v_1 + m_2 v_2 = m_1 v_1' + m_2 v_2'.$$ Forces between parts of the system are internal and cancel in pairs."
+    "html": "If the net <b>outside</b> force on a system is zero (or its impulse is negligible during a short collision), the total momentum stays the same: $$\\role{mass}{m_1} \\role[velocity before]{velocity}{v_1} + \\role{mass}{m_2} \\role[velocity before]{velocity}{v_2} = \\role{mass}{m_1} \\role[velocity after]{velocity}{v_1'} + \\role{mass}{m_2} \\role[velocity after]{velocity}{v_2'}.$$ Forces between parts of the system are internal and cancel in pairs."
    },
    {
     "t": "list",
@@ -4721,7 +4746,13 @@
      "v2": -1,
      "e": 0.5,
      "lab": "/science-lab/newtons-laws/momentum/",
-     "task": "Slide the bounciness $e$ from 0 (stick) to 1 (elastic) and watch the total momentum bars."
+     "task": "Slide the bounciness $e$ from 0 (stick) to 1 (elastic) and watch the total momentum bars.",
+     "roleLinks": {
+      "m₁": "mass",
+      "m₂": "mass",
+      "v₁": "velocity",
+      "v₂": "velocity"
+     }
     },
     "cap": "However bouncy the collision, the total momentum before and after is the same. Only the kinetic energy bars change."
    },
@@ -5163,7 +5194,7 @@
    },
    {
     "t": "key",
-    "html": "Angular position $\\theta$ in radians ($1\\ \\text{rev} = 2\\pi\\ \\text{rad} = 360^\\circ$). Angular velocity $\\omega = \\dfrac{\\Delta\\theta}{\\Delta t}$ in rad/s. Angular acceleration $\\alpha = \\dfrac{\\Delta\\omega}{\\Delta t}$ in rad/s². Counterclockwise is usually positive, and $\\alpha$ against the turning means slowing down."
+    "html": "Angular position $\\theta$ in radians ($1\\ \\text{rev} = 2\\pi\\ \\text{rad} = 360^\\circ$). Angular velocity $\\role{angvel}{\\omega} = \\dfrac{\\role[change in angle]{angle}{\\Delta\\theta}}{\\role[time interval]{time}{\\Delta t}}$ in rad/s. Angular acceleration $\\role{angacc}{\\alpha} = \\dfrac{\\role[change in angular velocity]{angvel}{\\Delta\\omega}}{\\role[time interval]{time}{\\Delta t}}$ in rad/s². Counterclockwise is usually positive, and $\\alpha$ against the turning means slowing down."
    },
    {
     "t": "viz",
@@ -5171,7 +5202,10 @@
     "opts": {
      "mode": "wheel",
      "omega0": 1,
-     "task": "Change $\\omega$ and watch the four dots: they all sweep the same angle each second."
+     "task": "Change $\\omega$ and watch the four dots: they all sweep the same angle each second.",
+     "roleLinks": {
+      "Angular speed": "angvel"
+     }
     },
     "cap": "A wheel spinning at angular velocity $\\omega$. Every point turns through the same angle $\\theta$ (gold arc) in the same time."
    },
@@ -5290,7 +5324,7 @@
    },
    {
     "t": "key",
-    "html": "With constant $\\alpha$: $\\omega = \\omega_0 + \\alpha t$, $\\Delta\\theta = \\omega_0 t + \\tfrac{1}{2}\\alpha t^2$ and $\\omega^2 = \\omega_0^2 + 2\\alpha\\Delta\\theta$. Angles in radians, $\\omega$ in rad/s, $\\alpha$ in rad/s². Divide radians by $2\\pi$ to count revolutions."
+    "html": "With constant $\\alpha$: $\\role{angvel}{\\omega} = \\role[initial angular velocity]{angvel}{\\omega_0} + \\role{angacc}{\\alpha}\\role{time}{t}$, $\\role[angle turned]{angle}{\\Delta\\theta} = \\role[initial angular velocity]{angvel}{\\omega_0} \\role{time}{t} + \\tfrac{1}{2}\\role{angacc}{\\alpha} \\role{time}{t}^2$ and $\\role{angvel}{\\omega}^2 = \\role[initial angular velocity]{angvel}{\\omega_0}^2 + 2\\role{angacc}{\\alpha}\\role[angle turned]{angle}{\\Delta\\theta}$. Angles in radians, $\\omega$ in rad/s, $\\alpha$ in rad/s². Divide radians by $2\\pi$ to count revolutions."
    },
    {
     "t": "viz",
@@ -5387,11 +5421,11 @@
    },
    {
     "t": "why",
-    "html": "A point at radius $r$ that turns through $\\Delta\\theta$ travels the arc $\\Delta s = r\\Delta\\theta$. Divide by the time: its speed is $v = \\dfrac{\\Delta s}{\\Delta t} = r\\dfrac{\\Delta\\theta}{\\Delta t} = r\\omega$. If $\\omega$ changes, $v$ changes $r$ times as fast: the tangential acceleration is $a_t = r\\alpha$. And moving in a circle at speed $v$ always needs the centripetal acceleration $a_c = \\dfrac{v^2}{r} = r\\omega^2$, toward the center."
+    "html": "A point at radius $r$ that turns through $\\Delta\\theta$ travels the arc $\\Delta s = r\\Delta\\theta$. Divide by the time: its speed is $v = \\dfrac{\\Delta s}{\\Delta t} = r\\dfrac{\\Delta\\theta}{\\Delta t} = r\\omega$. If $\\omega$ changes, $v$ changes $r$ times as fast: the tangential acceleration is $\\role[tangential acceleration]{acceleration}{a_t} = \\role[distance from the axis]{position}{r}\\role{angacc}{\\alpha}$. And moving in a circle at speed $v$ always needs the centripetal acceleration $a_c = \\dfrac{v^2}{r} = r\\omega^2$, toward the center."
    },
    {
     "t": "key",
-    "html": "For a point at distance $r$ from the axis (angles in radians): speed $v = r\\omega$, tangential acceleration $a_t = r\\alpha$ (along the path), centripetal acceleration $a_c = r\\omega^2$ (toward the center). All points share one $\\omega$ and $\\alpha$, but $v$, $a_t$ and $a_c$ grow with $r$."
+    "html": "For a point at distance $r$ from the axis (angles in radians): speed $\\role[speed]{velocity}{v} = \\role[distance from the axis]{position}{r}\\role{angvel}{\\omega}$, tangential acceleration $\\role[tangential acceleration]{acceleration}{a_t} = \\role[distance from the axis]{position}{r}\\role{angacc}{\\alpha}$ (along the path), centripetal acceleration $\\role[centripetal acceleration]{acceleration}{a_c} = \\role[distance from the axis]{position}{r}\\role{angvel}{\\omega}^2$ (toward the center). All points share one $\\omega$ and $\\alpha$, but $v$, $a_t$ and $a_c$ grow with $r$."
    },
    {
     "t": "viz",
@@ -5399,7 +5433,10 @@
     "opts": {
      "mode": "wheel",
      "omega0": 1.5,
-     "task": "The green arrows are velocities. The rim point moves four times as fast as the point a quarter of the way out."
+     "task": "The green arrows are velocities. The rim point moves four times as fast as the point a quarter of the way out.",
+     "roleLinks": {
+      "Angular speed": "angvel"
+     }
     },
     "cap": "Same $\\omega$, different speeds: on the graph $v = r\\omega$ is a straight line through the origin."
    },
@@ -5449,7 +5486,11 @@
      "mode": "nonuniform",
      "r": 2,
      "v": 3,
-     "dvdt": 1
+     "dvdt": 1,
+     "roleLinks": {
+      "Speed v": "velocity",
+      "Radius r": "position"
+     }
     },
     "cap": "A point speeding up on a circle: the tangential part of its acceleration changes its speed, and the centripetal part turns its velocity."
    },
@@ -5481,14 +5522,18 @@
    },
    {
     "t": "key",
-    "html": "$$\\tau = rF\\sin\\theta = rF_\\perp = r_\\perp F,$$ where $r$ is the distance from the axis to where the force acts and $\\theta$ is the angle between $\\vec{r}$ and $\\vec{F}$. Unit: $\\text{N·m}$. Give torques a sign: counterclockwise positive, clockwise negative, and add them for the net torque."
+    "html": "$$\\role{torque}{\\tau} = \\role[distance from the axis]{position}{r}\\role{force}{F}\\sin\\role[angle between r and F]{angle}{\\theta} = \\role[distance from the axis]{position}{r}\\role[perpendicular part of the force]{force}{F_\\perp} = \\role[lever arm]{position}{r_\\perp} \\role{force}{F},$$ where $r$ is the distance from the axis to where the force acts and $\\theta$ is the angle between $\\vec{r}$ and $\\vec{F}$. Unit: $\\text{N·m}$. Give torques a sign: counterclockwise positive, clockwise negative, and add them for the net torque."
    },
    {
     "t": "viz",
     "name": "ph-torque",
     "opts": {
      "scene": "wrench",
-     "task": "Set the push angle to $90^\\circ$, then to $0^\\circ$. The same $50\\ \\text{N}$ gives the biggest torque at right angles and none at all along the handle."
+     "task": "Set the push angle to $90^\\circ$, then to $0^\\circ$. The same $50\\ \\text{N}$ gives the biggest torque at right angles and none at all along the handle.",
+     "roleLinks": {
+      "Push angle": "angle",
+      "Push strength": "force"
+     }
     },
     "cap": "The gold line is the lever arm: the perpendicular distance from the bolt to the line of the force."
    },
@@ -5755,7 +5800,7 @@
    },
    {
     "t": "key",
-    "html": "$$\\Sigma\\tau = I\\alpha.$$ The net torque about an axis equals the rotational inertia about that axis times the angular acceleration. Torque plays the role of force and $I$ plays the role of mass. Use signs: counterclockwise positive."
+    "html": "$$\\role[net torque]{torque}{\\Sigma\\tau} = \\role[rotational inertia]{mass}{I}\\role{angacc}{\\alpha}.$$ The net torque about an axis equals the rotational inertia about that axis times the angular acceleration. Torque plays the role of force and $I$ plays the role of mass. Use signs: counterclockwise positive."
    },
    {
     "t": "viz",
@@ -5909,7 +5954,7 @@
    },
    {
     "t": "key",
-    "html": "A spinning object stores $K_{\\text{rot}} = \\tfrac{1}{2}I\\omega^2$ ($\\omega$ in rad/s). A torque turning it through $\\Delta\\theta$ (in radians) does work $W = \\tau\\Delta\\theta$, and the net work equals the change in rotational kinetic energy: $\\Sigma\\tau\\,\\Delta\\theta = \\tfrac{1}{2}I\\omega_f^2 - \\tfrac{1}{2}I\\omega_i^2$."
+    "html": "A spinning object stores $\\role[rotational kinetic energy]{energy}{K_{\\text{rot}}} = \\tfrac{1}{2}\\role[rotational inertia]{mass}{I}\\role{angvel}{\\omega}^2$ ($\\omega$ in rad/s). A torque turning it through $\\Delta\\theta$ (in radians) does work $W = \\tau\\Delta\\theta$, and the net work equals the change in rotational kinetic energy: $\\Sigma\\tau\\,\\Delta\\theta = \\tfrac{1}{2}I\\omega_f^2 - \\tfrac{1}{2}I\\omega_i^2$."
    },
    {
     "t": "viz",
@@ -5917,7 +5962,10 @@
     "opts": {
      "mode": "wheel",
      "omega0": 2,
-     "task": "Compare the dots: the rim dot moves four times as fast as the inner one, so each kilogram there carries sixteen times the kinetic energy."
+     "task": "Compare the dots: the rim dot moves four times as fast as the inner one, so each kilogram there carries sixteen times the kinetic energy.",
+     "roleLinks": {
+      "Angular speed": "angvel"
+     }
     },
     "cap": "Speeds grow with radius ($v = r\\omega$), so kinetic energy is concentrated near the rim. That is why flywheels put their mass in a heavy outer ring."
    },
@@ -6067,11 +6115,11 @@
    },
    {
     "t": "why",
-    "html": "Start from $\\Sigma\\tau = I\\alpha = I\\dfrac{\\Delta\\omega}{\\Delta t}$ and multiply by $\\Delta t$: $\\Sigma\\tau\\,\\Delta t = \\Delta(I\\omega)$. The quantity $L = I\\omega$ is the <b>angular momentum</b>, and torque times time, the <b>angular impulse</b>, changes it. A single small mass going around a circle of radius $r$ has $I = mr^2$ and $\\omega = v/r$, so $L = mr^2\\cdot\\dfrac{v}{r} = mvr$. That last form works even for a mass moving in a straight line, measured about any point: use $L = mvr_\\perp$, where $r_\\perp$ is the perpendicular distance from the point to the line of motion."
+    "html": "Start from $\\Sigma\\tau = I\\alpha = I\\dfrac{\\Delta\\omega}{\\Delta t}$ and multiply by $\\Delta t$: $\\Sigma\\tau\\,\\Delta t = \\Delta(I\\omega)$. The quantity $L = I\\omega$ is the <b>angular momentum</b>, and torque times time, the <b>angular impulse</b>, changes it. A single small mass going around a circle of radius $r$ has $I = mr^2$ and $\\omega = v/r$, so $L = mr^2\\cdot\\dfrac{v}{r} = mvr$. That last form works even for a mass moving in a straight line, measured about any point: use $\\role{angmom}{L} = \\role{mass}{m}\\role{velocity}{v}\\role[perpendicular distance]{position}{r_\\perp}$, where $r_\\perp$ is the perpendicular distance from the point to the line of motion."
    },
    {
     "t": "key",
-    "html": "Angular momentum: $L = I\\omega$ for a spinning object, and $L = mvr_\\perp$ for a point mass about a chosen point ($r_\\perp$ = perpendicular distance from the point to its line of motion). Unit: $\\text{kg·m}^2\\text{/s}$. Angular impulse changes it: $\\tau\\,\\Delta t = \\Delta L$."
+    "html": "Angular momentum: $\\role{angmom}{L} = \\role[rotational inertia]{mass}{I}\\role{angvel}{\\omega}$ for a spinning object, and $\\role{angmom}{L} = \\role{mass}{m}\\role{velocity}{v}\\role[perpendicular distance]{position}{r_\\perp}$ for a point mass about a chosen point ($r_\\perp$ = perpendicular distance from the point to its line of motion). Unit: $\\text{kg·m}^2\\text{/s}$. Angular impulse changes it: $\\tau\\,\\Delta t = \\Delta L$."
    },
    {
     "t": "viz",
@@ -6080,7 +6128,11 @@
      "m": 2,
      "v": 3,
      "d": 1.5,
-     "task": "Watch the puck slide past P. The distance $r$ and the angle keep changing, but $r_\\perp$ and $L = mvr_\\perp$ stay the same, and every shaded triangle has the same area."
+     "task": "Watch the puck slide past P. The distance $r$ and the angle keep changing, but $r_\\perp$ and $L = mvr_\\perp$ stay the same, and every shaded triangle has the same area.",
+     "roleLinks": {
+      "Distance r": "position",
+      "Speed v": "velocity"
+     }
     },
     "cap": "A puck moving in a straight line has angular momentum about P. The line from P sweeps out equal areas in equal times, just as a planet does."
    },
@@ -6146,7 +6198,7 @@
    },
    {
     "t": "key",
-    "html": "If the net outside torque on a system is zero, its angular momentum stays the same: $$I_1\\omega_1 = I_2\\omega_2.$$ Pull mass toward the axis (smaller $I$) and the spin speeds up; push it outward and the spin slows."
+    "html": "If the net outside torque on a system is zero, its angular momentum stays the same: $$\\role[rotational inertia before]{mass}{I_1}\\role[spin rate before]{angvel}{\\omega_1} = \\role[rotational inertia after]{mass}{I_2}\\role[spin rate after]{angvel}{\\omega_2}.$$ Pull mass toward the axis (smaller $I$) and the spin speeds up; push it outward and the spin slows."
    },
    {
     "t": "why",
@@ -6423,7 +6475,7 @@
    },
    {
     "t": "key",
-    "html": "A mass $m$ on a spring of constant $k$ oscillates with period $T = 2\\pi\\sqrt{\\dfrac{m}{k}}$ and frequency $f = \\dfrac{1}{2\\pi}\\sqrt{\\dfrac{k}{m}}$. The amplitude does not appear: big and small swings take the same time. Four times the mass doubles the period."
+    "html": "A mass $m$ on a spring of constant $k$ oscillates with period $\\role[period]{time}{T} = 2\\pi\\sqrt{\\dfrac{\\role{mass}{m}}{\\role[spring constant]{constant}{k}}}$ and frequency $f = \\dfrac{1}{2\\pi}\\sqrt{\\dfrac{k}{m}}$. The amplitude does not appear: big and small swings take the same time. Four times the mass doubles the period."
    },
    {
     "t": "viz",
@@ -6439,7 +6491,11 @@
      "traces": [
       "x"
      ],
-     "task": "Two identical springs and masses, one pulled much farther. Watch them pass the middle together, every time."
+     "task": "Two identical springs and masses, one pulled much farther. Watch them pass the middle together, every time.",
+     "roleLinks": {
+      "Mass m": "mass",
+      "Spring constant k": "constant"
+     }
     },
     "cap": "Different amplitudes, same period: the far-pulled mass feels a bigger force, moves faster, and covers its longer path in the same time."
    },
@@ -6509,7 +6565,7 @@
    },
    {
     "t": "key",
-    "html": "For small swings, a simple pendulum of length $L$ (pivot to the center of the bob) has period $T = 2\\pi\\sqrt{\\dfrac{L}{g}}$. It depends on the length and on $g$ only, not on the mass or (for small angles) the amplitude. Four times the length doubles the period."
+    "html": "For small swings, a simple pendulum of length $L$ (pivot to the center of the bob) has period $\\role[period]{time}{T} = 2\\pi\\sqrt{\\dfrac{\\role[length]{position}{L}}{\\role[acceleration of gravity]{acceleration}{g}}}$. It depends on the length and on $g$ only, not on the mass or (for small angles) the amplitude. Four times the length doubles the period."
    },
    {
     "t": "viz",
@@ -6524,7 +6580,10 @@
      },
      "traces": [],
      "lab": "/science-lab/pendulums/",
-     "task": "A light bob and one six times heavier, on equal strings: they swing in step."
+     "task": "A light bob and one six times heavier, on equal strings: they swing in step.",
+     "roleLinks": {
+      "Length L": "position"
+     }
     },
     "cap": "Same length, very different masses, same period."
    },

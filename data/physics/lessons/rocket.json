@@ -1,0 +1,1109 @@
+{
+ "rocket.units-sig-figs": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> Homer Hickam's account of the Rocket Boys gives heights in feet and miles: their best rocket, flown in May 1960, rose nearly four miles. A NASA engineer would want that in meters, and wouldn't trust a digit more than the measurement could give. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "Every measurement is a number <em>and</em> a unit. To change units, multiply by a fraction equal to 1, such as $\\dfrac{0.3048\\ \\text{m}}{1\\ \\text{ft}}$, written so the old unit cancels. You can chain as many of these as you need: miles to feet to meters."
+   },
+   {
+    "t": "key",
+    "html": "Conversion factors: $1\\ \\text{ft} = 0.3048\\ \\text{m}$ and $1\\ \\text{in} = 2.54\\ \\text{cm}$ (both exact), $1\\ \\text{mi} = 5{,}280\\ \\text{ft}$. Put the unit you want to remove on the bottom.<br>Significant figures: count from the first nonzero digit; trailing zeros count only with a decimal point. A product or quotient keeps as many significant figures as its least precise factor."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-units",
+    "cap": "The same height read two ways: feet on the left, meters on the right. The number changes; the height doesn't."
+   },
+   {
+    "t": "ex",
+    "title": "Four miles high",
+    "q": "Express $4\\ \\text{mi}$ in meters.",
+    "steps": [
+     "$4\\ \\text{mi} \\times \\dfrac{5{,}280\\ \\text{ft}}{1\\ \\text{mi}} = 21{,}120\\ \\text{ft}$.",
+     "$21{,}120\\ \\text{ft} \\times \\dfrac{0.3048\\ \\text{m}}{1\\ \\text{ft}} \\approx 6{,}437\\ \\text{m}$, about $6.4\\ \\text{km}$."
+    ],
+    "a": "$\\approx 6{,}440\\ \\text{m}$"
+   },
+   {
+    "t": "ex",
+    "title": "How many digits?",
+    "q": "A baseline is paced off as $150\\ \\text{m}$ (2 significant figures) and the tangent of the angle is $1.428$. Report the height.",
+    "steps": [
+     "$150 \\times 1.428 = 214.2$.",
+     "The baseline has only 2 significant figures, so the height is $210\\ \\text{m}$. Writing 214.2 m claims a precision the pacing never had."
+    ],
+    "a": "$210\\ \\text{m}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Turning a factor upside down: $4\\ \\text{mi} \\times \\dfrac{1\\ \\text{mi}}{5{,}280\\ \\text{ft}}$ leaves miles squared per foot. Check that the units cancel before you multiply."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Smithsonian Air & Space, “The Big Creek Missile Agency” (Homer Hickam's account of the Rocket Boys)",
+    "url": "https://www.smithsonianmag.com/air-space-magazine/the-big-creek-missile-agency-85069719/"
+   },
+   {
+    "name": "OpenStax, College Physics 2e (Rice University): motion, forces, energy and momentum"
+   }
+  ]
+ },
+ "rocket.flight-graphs": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> The boys launched rocket after rocket from Cape Coalwood, their name for an old slack dump outside town. A graph turns the numbers from a flight into a picture you can read at a glance. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "A velocity-time graph tells the whole story of a straight-up flight. While the motor burns, the line climbs. After burnout, gravity alone acts, so the line falls at a steady slope of $-9.8\\ \\text{m/s}^2$. The rocket is still going up until that line reaches zero."
+   },
+   {
+    "t": "key",
+    "html": "On a velocity-time graph: <b>slope = acceleration</b>, <b>area between the line and the time axis = displacement</b> (height gained), and <b>apogee is where $v = 0$</b>. For a straight-line boost from rest to $v_b$ at $t_b$, then a coast, the whole area to apogee is one triangle: $h = \\tfrac12 v_b\\,t_\\text{top}$."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-flight-graph",
+    "cap": "The green line is velocity. The shaded area so far is the height gained. The top of the flight is where the line crosses zero, not at burnout.",
+    "opts": {
+     "vb": 60,
+     "tb": 2
+    }
+   },
+   {
+    "t": "ex",
+    "title": "Read the graph",
+    "q": "Velocity rises in a straight line to $60\\ \\text{m/s}$ at $t = 2\\ \\text{s}$, then coasts. Find the time of apogee and the height reached.",
+    "steps": [
+     "After burnout, $v$ falls $9.8\\ \\text{m/s}$ each second: $60/9.8 = 6.12\\ \\text{s}$ more, so apogee is at $t = 8.12\\ \\text{s}$.",
+     "Area of the triangle: $\\tfrac12 (8.12)(60) = 244\\ \\text{m}$."
+    ],
+    "a": "$t \\approx 8.1\\ \\text{s}$, $h \\approx 244\\ \\text{m}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking the rocket is highest at burnout because that's where the velocity graph peaks. The velocity is highest there; the <em>height</em> keeps growing until velocity reaches zero."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   },
+   {
+    "name": "OpenStax, College Physics 2e (Rice University): motion, forces, energy and momentum"
+   }
+  ]
+ },
+ "rocket.launch-statistics": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> The Rocket Boys numbered their rockets, and by May 1960 they had reached Auk XXXI. With many flights to compare, telling a real improvement from luck takes statistics. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "Fly the same rocket five times and you get five heights, because wind, launch angle and the motor vary a little. The <b>mean</b> is the typical value. The <b>range</b> (highest minus lowest) is a quick measure of spread. The <b>standard deviation</b> is a better one: roughly the typical distance of a flight from the mean."
+   },
+   {
+    "t": "key",
+    "html": "$\\bar x = \\dfrac{\\sum x_i}{n}$, &nbsp; median = middle value in order, &nbsp; range = max − min, &nbsp; $s = \\sqrt{\\dfrac{\\sum (x_i - \\bar x)^2}{n - 1}}$. A change in design is believable when the new mean differs from the old by more than the spread."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-launch-stats",
+    "cap": "Each dot is one launch. The red line is the mean; the gold band is one standard deviation either side."
+   },
+   {
+    "t": "ex",
+    "title": "Five flights",
+    "q": "Heights: $310, 330, 300, 340, 320$ m. Find the mean and standard deviation.",
+    "steps": [
+     "Mean: $1{,}600/5 = 320\\ \\text{m}$.",
+     "Differences: $-10, 10, -20, 20, 0$; squares add to $1{,}000$.",
+     "$s = \\sqrt{1{,}000/4} = \\sqrt{250} \\approx 15.8\\ \\text{m}$."
+    ],
+    "a": "$\\bar x = 320\\ \\text{m}$, $s \\approx 15.8\\ \\text{m}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Dividing by $n$ instead of $n - 1$ for a sample, or reporting the range as if it were the standard deviation. The range depends only on the two most extreme flights."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Introductory Statistics (Rice University): measures of center and spread"
+   }
+  ]
+ },
+ "rocket.newtons-laws-thrust": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> Their teacher at Big Creek High School, Freida Riley, pushed the boys toward harder math and physics, and Newton's laws were the place to start. Every rocket, from a model to the Space Shuttle, runs on them. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "A rocket throws mass out its back. Pushing that exhaust down means the exhaust pushes the rocket up with an equal force: Newton's third law. That push is the <b>thrust</b>. It doesn't need air to push against, which is why rockets work in space."
+   },
+   {
+    "t": "key",
+    "html": "First law: with no net force, motion doesn't change. Second law: $F_\\text{net} = ma$. Third law: forces come in equal, opposite pairs. At liftoff, up positive: $$\\role[net force]{force}{F_\\text{net}} = \\role[thrust]{force}{T} - \\role{mass}{m}\\role[acceleration of gravity]{acceleration}{g}, \\qquad \\role{acceleration}{a} = \\frac{\\role[thrust]{force}{T} - \\role{mass}{m}\\role[acceleration of gravity]{acceleration}{g}}{\\role{mass}{m}}.$$"
+   },
+   {
+    "t": "viz",
+    "name": "rocket-thrust-fbd",
+    "cap": "Move the thrust slider. The green arrow must beat the red one before the rocket moves at all.",
+    "opts": {
+     "T": 6,
+     "m": 0.12,
+     "roleLinks": {
+      "Thrust": "force"
+     }
+    }
+   },
+   {
+    "t": "ex",
+    "title": "Liftoff",
+    "q": "A $120\\ \\text{g}$ rocket has $6.0\\ \\text{N}$ of thrust. Find its acceleration.",
+    "steps": [
+     "$m = 0.120\\ \\text{kg}$, so $mg = 1.18\\ \\text{N}$.",
+     "$F_\\text{net} = 6.0 - 1.18 = 4.82\\ \\text{N}$.",
+     "$a = 4.82/0.120 \\approx 40\\ \\text{m/s}^2$, about four times $g$."
+    ],
+    "a": "$\\approx 40\\ \\text{m/s}^2$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using $a = T/m$. That gives $50\\ \\text{m/s}^2$ above, too big by $g$, because weight acts the whole time."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   },
+   {
+    "name": "OpenStax, College Physics 2e (Rice University): motion, forces, energy and momentum"
+   }
+  ]
+ },
+ "rocket.thrust-to-weight": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> In Hickam's account, several of the boys' early rockets barely rose or failed outright before they began to fly. A rocket that doesn't push harder than it weighs never leaves the ground. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "The <b>thrust-to-weight ratio</b> compares the push to the pull: $T/(mg)$. Below 1 the rocket sits on the pad. At 1 it just hovers. Above 1 it rises, and the net acceleration is $(T/W - 1)g$. A high ratio matters for another reason too: the rocket leaves its launch rod faster, and a fast rocket is steadied better by its fins."
+   },
+   {
+    "t": "key",
+    "html": "$$\\frac{T}{W} = \\frac{T}{mg}, \\qquad a = \\Big(\\frac{T}{W} - 1\\Big)g, \\qquad v_\\text{rod} = \\sqrt{2aL}$$ for a rod of length $L$, starting from rest (ignoring friction)."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-twr",
+    "cap": "Three rockets, three ratios. Below 1, nothing happens."
+   },
+   {
+    "t": "ex",
+    "title": "Off the rod",
+    "q": "A $100\\ \\text{g}$ rocket with $4.9\\ \\text{N}$ of thrust rides a $1.0\\ \\text{m}$ rod. How fast does it leave the rod?",
+    "steps": [
+     "$W = 0.98\\ \\text{N}$, so $T/W = 5$ and $a = 4g = 39.2\\ \\text{m/s}^2$.",
+     "$v = \\sqrt{2(39.2)(1.0)} \\approx 8.9\\ \\text{m/s}$."
+    ],
+    "a": "$\\approx 8.9\\ \\text{m/s}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking any thrust lifts a rocket. Thrust less than weight is still a real force; it just doesn't win."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   },
+   {
+    "name": "National Association of Rocketry, Model Rocket Safety Code",
+    "url": "https://nar.org/ModelRocketSafetyCode"
+   }
+  ]
+ },
+ "rocket.impulse-momentum": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> The boys' exhibit at the 1960 National Science Fair won a gold and a silver medal in propulsion, the science of how rockets push. A push that lasts longer can matter as much as a harder one. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "A motor's thrust changes during its burn: often a quick spike, then a steadier push. The total effect is the <b>impulse</b>, the area under the thrust-time curve. Impulse equals change in momentum, so it tells you how much speed the motor can give a rocket of a given mass."
+   },
+   {
+    "t": "key",
+    "html": "$$\\role[impulse]{momentum}{J} = \\int \\role{force}{F}\\,\\role[tiny time interval]{time}{dt} = \\role[average force]{force}{F_\\text{avg}}\\,\\role[burn time]{time}{\\Delta t} = \\role[change in momentum]{momentum}{\\Delta p} = \\role{mass}{m}\\,\\role[change in velocity]{velocity}{\\Delta v}.$$ With gravity during a vertical burn: $J_\\text{net} = (F_\\text{avg} - mg)\\,\\Delta t$. Commercial model motors are rated by total impulse: class A is up to $2.5\\ \\text{N}\\cdot\\text{s}$, and each letter after it allows twice as much."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-thrust-curve",
+    "cap": "The shaded area is the impulse delivered so far.",
+    "opts": {
+     "Fp": 14,
+     "tp": 0.25,
+     "Fs": 4.5,
+     "te": 1.6
+    }
+   },
+   {
+    "t": "ex",
+    "title": "Area under the curve",
+    "q": "Thrust rises in a straight line to $12\\ \\text{N}$ at $0.2\\ \\text{s}$, drops at once to $4\\ \\text{N}$, and stays there until $1.2\\ \\text{s}$. Find the impulse, and the speed it would give a $60\\ \\text{g}$ rocket with no gravity or drag.",
+    "steps": [
+     "Triangle: $\\tfrac12(0.2)(12) = 1.2$. Rectangle: $4(1.0) = 4.0$. $J = 5.2\\ \\text{N}\\cdot\\text{s}$.",
+     "$\\Delta v = J/m = 5.2/0.060 \\approx 87\\ \\text{m/s}$."
+    ],
+    "a": "$5.2\\ \\text{N}\\cdot\\text{s}$, $\\approx 87\\ \\text{m/s}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Multiplying the peak thrust by the burn time. The spike is brief; only the area counts."
+   },
+   {
+    "t": "note",
+    "html": "The real Rocket Boys made their own motors, and they had accidents doing it. Don't. Hobby rocketry uses commercially made, certified motors and the National Association of Rocketry's <a href=\"https://nar.org/ModelRocketSafetyCode\" rel=\"noopener\">Model Rocket Safety Code</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   },
+   {
+    "name": "Encyclopedia of Alabama: Homer Hickam",
+    "url": "https://encyclopediaofalabama.org/article/homer-hickam/"
+   },
+   {
+    "name": "National Association of Rocketry, Model Rocket Safety Code",
+    "url": "https://nar.org/ModelRocketSafetyCode"
+   }
+  ]
+ },
+ "rocket.rocket-equation": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> Riley gave Homer an engineering book, <i>Principles of Guided Missile Design</i>, which the group found very useful. Hickam's account lists mass ratios among the ideas they had to learn, and the mass ratio is the heart of this lesson. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "A rocket's mass keeps changing: each bit of exhaust it throws back makes it lighter, so the same push speeds it up more and more. To add all those small pushes, use calculus."
+   },
+   {
+    "t": "p",
+    "html": "In a short time $dt$ the rocket (mass $m$) throws out mass $dm_e$ at speed $v_e$ backward relative to itself. Momentum is conserved: $m\\,dv = v_e\\,dm_e$. The rocket's mass drops by that amount, $dm = -dm_e$, so $$dv = -v_e\\frac{dm}{m}.$$ Integrate from the full mass $m_0$ to the final mass $m_f$: $$\\Delta v = -v_e\\int_{m_0}^{m_f}\\frac{dm}{m} = v_e\\ln\\frac{m_0}{m_f}.$$"
+   },
+   {
+    "t": "key",
+    "html": "Tsiolkovsky's rocket equation: $\\role[change in speed]{velocity}{\\Delta v} = \\role[exhaust speed]{velocity}{v_e} \\ln\\dfrac{\\role[starting mass]{mass}{m_0}}{\\role[final mass]{mass}{m_f}}$. The <b>mass ratio</b> $m_0/m_f$ sits inside a logarithm, so doubling it adds only $v_e\\ln 2 \\approx 0.69\\,v_e$. Thrust is $T = \\dot m\\,v_e$. Flying straight up, gravity takes away about $g\\,t_b$: $\\Delta v = v_e\\ln(m_0/m_f) - g\\,t_b$."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-mass-ratio",
+    "cap": "The mass-ratio explorer. Slide the mass ratio and the exhaust speed: notice how slowly the curve climbs once the ratio is large.",
+    "opts": {
+     "MR": 4,
+     "ve": 2500,
+     "roleLinks": {
+      "Exhaust speed": "velocity"
+     }
+    }
+   },
+   {
+    "t": "ex",
+    "title": "Reaching orbit speed",
+    "q": "A rocket's exhaust speed is $3{,}000\\ \\text{m/s}$. What mass ratio gives $\\Delta v = 7{,}800\\ \\text{m/s}$ (ignoring gravity and drag)?",
+    "steps": [
+     "$m_0/m_f = e^{7800/3000} = e^{2.6} \\approx 13.5$.",
+     "So about $1 - 1/13.5 \\approx 93\\%$ of the launch mass must be propellant. That is why big rockets drop empty stages."
+    ],
+    "a": "$\\approx 13.5$"
+   },
+   {
+    "t": "why",
+    "html": "Each kilogram of propellant must first be lifted and pushed by the propellant burned before it. That compounding is what the logarithm describes."
+   },
+   {
+    "t": "mistake",
+    "html": "Putting the propellant mass, or $m_f/m_0$, inside the logarithm. With the ratio upside down the logarithm is negative."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "NASA Glenn Research Center, Beginner's Guide to Aeronautics: Ideal Rocket Equation",
+    "url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/ideal-rocket-equation"
+   },
+   {
+    "name": "Smithsonian Air & Space, “The Big Creek Missile Agency” (Homer Hickam's account of the Rocket Boys)",
+    "url": "https://www.smithsonianmag.com/air-space-magazine/the-big-creek-missile-agency-85069719/"
+   },
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   }
+  ]
+ },
+ "rocket.nozzles-concept": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> The guided-missile book the boys studied was written for engineers, far beyond model rockets. One idea from that world is how a rocket turns hot, high-pressure gas into speed. Here it is as physics only, with no building details. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "Inside a rocket engine the gas is at high pressure. Pressure pushes the gas toward the opening, and the nozzle's job is to turn as much of that pressure as possible into exhaust speed, because faster exhaust means more thrust from the same mass flow."
+   },
+   {
+    "t": "p",
+    "html": "Gas behaves in a surprising way. Slower than the speed of sound, a narrowing passage speeds it up. At the narrowest point, the <b>throat</b>, it reaches the speed of sound. Beyond that, faster than sound, a <em>widening</em> passage speeds it up further, while its pressure and temperature fall. That is why rocket nozzles narrow and then flare out."
+   },
+   {
+    "t": "key",
+    "html": "Thrust: $T = \\dot m\\,v_e + (p_e - p_a)A_e$. The first part is momentum carried away each second; the second is the pressure at the exit $p_e$ compared with the outside air $p_a$, over the exit area $A_e$. Faster exhaust and well-matched exit pressure both mean more thrust."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-nozzle",
+    "cap": "Tracer dots speed up the whole way through: in the narrowing part (slower than sound), through the throat (the speed of sound), and in the widening part (faster than sound)."
+   },
+   {
+    "t": "ex",
+    "title": "Two parts of thrust",
+    "q": "An engine has $\\dot m = 2\\ \\text{kg/s}$, $v_e = 2{,}500\\ \\text{m/s}$, $p_e = 80{,}000\\ \\text{Pa}$, $p_a = 101{,}000\\ \\text{Pa}$ and $A_e = 0.1\\ \\text{m}^2$. Find the thrust.",
+    "steps": [
+     "Momentum part: $2(2{,}500) = 5{,}000\\ \\text{N}$.",
+     "Pressure part: $(80{,}000 - 101{,}000)(0.1) = -2{,}100\\ \\text{N}$.",
+     "Total $2{,}900\\ \\text{N}$. At sea level this exit is too large; the outside air pushes back. High up, where $p_a$ is small, the same engine does better."
+    ],
+    "a": "$2{,}900\\ \\text{N}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Assuming a wider pipe always slows a gas. That is true below the speed of sound and backwards above it."
+   },
+   {
+    "t": "note",
+    "html": "This lesson is about the physics of flow only. Making nozzles or motors is not something to try; use certified, commercially made motors."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "NASA Glenn Research Center, Beginner's Guide to Aeronautics: Nozzle Design",
+    "url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/nozzle-design"
+   },
+   {
+    "name": "Smithsonian Air & Space, “The Big Creek Missile Agency” (Homer Hickam's account of the Rocket Boys)",
+    "url": "https://www.smithsonianmag.com/air-space-magazine/the-big-creek-missile-agency-85069719/"
+   },
+   {
+    "name": "National Association of Rocketry, Model Rocket Safety Code",
+    "url": "https://nar.org/ModelRocketSafetyCode"
+   }
+  ]
+ },
+ "rocket.calculus-of-motion": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> A reviewer of the memoir noted that the boys' teachers handed Homer books on calculus as well as rocketry. Calculus is the language of anything that changes, and a rocket's speed changes every instant. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "If height is a function of time, $h(t)$, then velocity is how fast it changes: the derivative. Going the other way, if you know the acceleration, the change in velocity is the area under its graph: the integral."
+   },
+   {
+    "t": "key",
+    "html": "$$v(t) = \\frac{dh}{dt}, \\qquad a(t) = \\frac{dv}{dt}, \\qquad v(t) = v(0) + \\int_0^t a\\,dt, \\qquad h(t) = h(0) + \\int_0^t v\\,dt.$$ At apogee $v = h'(t) = 0$."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-calculus",
+    "cap": "Acceleration, velocity and height, one above the other. The shaded area under $a$ is the change in $v$; the red tangent on $h$ has slope $v$."
+   },
+   {
+    "t": "ex",
+    "title": "The top of the coast",
+    "q": "After burnout, $h(t) = 120 + 45t - 4.9t^2$. Find the greatest height.",
+    "steps": [
+     "$h'(t) = 45 - 9.8t = 0$ at $t = 4.59\\ \\text{s}$.",
+     "$h(4.59) = 120 + 45(4.59) - 4.9(4.59)^2 \\approx 223\\ \\text{m}$."
+    ],
+    "a": "$\\approx 223\\ \\text{m}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Forgetting the starting value after integrating: $\\int a\\,dt$ gives the <em>change</em> in velocity, not the velocity itself."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   }
+  ]
+ },
+ "rocket.powered-flight": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> Nobody can read a speedometer on a small rocket, at Cape Coalwood or anywhere else. What you can know is the motor's thrust and how long it burns, and from those come the speed and height at burnout. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "In the simplest model, the thrust is steady and the rocket's mass changes little, so the net acceleration $a = (T - mg)/m$ is constant during the burn. Then the familiar kinematic equations apply from liftoff to burnout. (Real motors vary their thrust and lose mass, so this is an estimate.)"
+   },
+   {
+    "t": "key",
+    "html": "From rest, for a burn time $t_b$: $$\\role[burnout speed]{velocity}{v_b} = \\role{acceleration}{a}\\,\\role[burn time]{time}{t_b}, \\qquad \\role[burnout height]{position}{h_b} = \\tfrac12 \\role{acceleration}{a}\\,\\role[burn time]{time}{t_b}^2, \\qquad a = \\frac{T - mg}{m}.$$"
+   },
+   {
+    "t": "viz",
+    "name": "rocket-boost",
+    "cap": "The flame shows the burn. The orange dashed line marks burnout, where the coast begins."
+   },
+   {
+    "t": "ex",
+    "title": "Burnout",
+    "q": "A $90\\ \\text{g}$ rocket has a steady $5.0\\ \\text{N}$ thrust for $1.2\\ \\text{s}$. Find its burnout speed and height.",
+    "steps": [
+     "$a = (5.0 - 0.882)/0.090 \\approx 45.8\\ \\text{m/s}^2$.",
+     "$v_b = 45.8(1.2) \\approx 55\\ \\text{m/s}$; $h_b = \\tfrac12(45.8)(1.2)^2 \\approx 33\\ \\text{m}$."
+    ],
+    "a": "$\\approx 55\\ \\text{m/s}$, $\\approx 33\\ \\text{m}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using $T/m$ as the acceleration. Subtract the weight first."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   }
+  ]
+ },
+ "rocket.coasting-apogee": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> At Cape Coalwood the motor's roar lasted only moments, yet the rockets kept climbing long after it stopped. That climb with no push is the coast. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "Once the motor burns out, the only force (ignoring air) is gravity. The rocket keeps rising because of the speed it already has, losing $9.8\\ \\text{m/s}$ each second, until it stops for an instant at <b>apogee</b>, then falls."
+   },
+   {
+    "t": "key",
+    "html": "From burnout speed $v_b$ at height $h_b$: $$\\role[coasting time]{time}{t_\\text{coast}} = \\frac{\\role[burnout speed]{velocity}{v_b}}{\\role[acceleration of gravity]{acceleration}{g}}, \\qquad \\role[apogee height]{position}{h_\\text{apogee}} = \\role[burnout height]{position}{h_b} + \\frac{\\role[burnout speed]{velocity}{v_b}^2}{2\\role[acceleration of gravity]{acceleration}{g}}.$$ Falling from rest at apogee $H$: $t = \\sqrt{2H/g}$. A model motor's delay (burnout to parachute) is chosen to be close to the coast time."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-coast",
+    "cap": "One picture per second. The gaps shrink because the rocket slows by 9.8 m/s every second.",
+    "opts": {
+     "vb": 44,
+     "hb": 60
+    }
+   },
+   {
+    "t": "ex",
+    "title": "Apogee",
+    "q": "Burnout at $40\\ \\text{m}$ moving up at $50\\ \\text{m/s}$. How high, and when?",
+    "steps": [
+     "Coast time $50/9.8 \\approx 5.1\\ \\text{s}$.",
+     "Rise $50^2/19.6 \\approx 128\\ \\text{m}$, so apogee $\\approx 168\\ \\text{m}$."
+    ],
+    "a": "$\\approx 168\\ \\text{m}$, $5.1\\ \\text{s}$ after burnout"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking the rocket starts to fall the moment the motor stops. It is still going up, just slowing."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   },
+   {
+    "name": "National Association of Rocketry, Model Rocket Safety Code",
+    "url": "https://nar.org/ModelRocketSafetyCode"
+   }
+  ]
+ },
+ "rocket.energy-burnout-apogee": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> Hickam's account says the boys learned to estimate altitude with physics as well as with their theodolites. Energy gives a second way to the same answer, which is a good check. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "At burnout the rocket has kinetic energy $\\tfrac12 m v_b^2$. As it coasts up, that becomes gravitational potential energy. Without drag the two match exactly; with drag, some energy warms the air, and the apogee is lower."
+   },
+   {
+    "t": "key",
+    "html": "No drag: $\\tfrac12 m v_b^2 = m g\\,\\Delta h$, so $\\Delta h = \\dfrac{v_b^2}{2g}$, the same as the kinematic answer. With drag: energy lost $= \\tfrac12 m v_b^2 - m g\\,(H - h_b)$, where $H$ is the tracked apogee."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-energy",
+    "cap": "Kinetic energy (green) drains into potential energy (blue); the total (gold) stays the same."
+   },
+   {
+    "t": "ex",
+    "title": "Where did the energy go?",
+    "q": "A $200\\ \\text{g}$ rocket burns out at $40\\ \\text{m}$ moving $60\\ \\text{m/s}$, and is tracked at $180\\ \\text{m}$. How much energy did drag take?",
+    "steps": [
+     "Kinetic at burnout: $\\tfrac12(0.2)(60)^2 = 360\\ \\text{J}$.",
+     "Potential gained: $0.2(9.8)(140) = 274\\ \\text{J}$.",
+     "Drag took about $86\\ \\text{J}$, nearly a quarter."
+    ],
+    "a": "$\\approx 86\\ \\text{J}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Measuring the potential energy from the ground instead of from burnout. Kinetic energy at burnout only pays for the climb <em>after</em> burnout."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Smithsonian Air & Space, “The Big Creek Missile Agency” (Homer Hickam's account of the Rocket Boys)",
+    "url": "https://www.smithsonianmag.com/air-space-magazine/the-big-creek-missile-agency-85069719/"
+   },
+   {
+    "name": "OpenStax, College Physics 2e (Rice University): motion, forces, energy and momentum"
+   }
+  ]
+ },
+ "rocket.drag": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> Air drags on every rocket, including the ones that flew from Cape Coalwood, so real rockets never quite reach the heights the simple formulas promise. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "Moving through air costs force. For a rocket the drag is close to $F_D = \\tfrac12\\rho C_D A v^2$: double the speed and drag grows about four times. It always points against the motion: down on the way up, up on the way down."
+   },
+   {
+    "t": "p",
+    "html": "With drag the acceleration depends on the speed, so there is no simple formula for apogee. Instead, take small time steps. This is <b>Euler's method</b>: use the present speed to find the acceleration, then move forward a little."
+   },
+   {
+    "t": "key",
+    "html": "Coasting up: $a = -g - \\dfrac{k v^2}{m}$ with $k = \\tfrac12\\rho C_D A$. One Euler step of size $\\Delta t$: $$h_{n+1} = h_n + v_n\\Delta t, \\qquad v_{n+1} = v_n + a_n\\Delta t.$$ Smaller steps give better answers."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-drag",
+    "cap": "Slide the drag constant. The dashed curve has no drag; the red one is built from Euler steps.",
+    "opts": {
+     "k": 0.0012
+    }
+   },
+   {
+    "t": "ex",
+    "title": "One step",
+    "q": "A $250\\ \\text{g}$ rocket coasts up at $70\\ \\text{m/s}$ with $k = 0.0012\\ \\text{kg/m}$. Take one step of $0.1\\ \\text{s}$.",
+    "steps": [
+     "$a = -9.8 - 0.0012(70)^2/0.25 = -9.8 - 23.5 = -33.3\\ \\text{m/s}^2$.",
+     "$v_1 = 70 - 3.33 = 66.7\\ \\text{m/s}$; $h$ grows by $70(0.1) = 7\\ \\text{m}$."
+    ],
+    "a": "$v_1 \\approx 66.7\\ \\text{m/s}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Adding drag in the wrong direction, or using the starting speed's drag for the whole flight."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   }
+  ]
+ },
+ "rocket.stability": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> One of the boys' rockets, Hickam recalls, bounced off a tree and chased them through the woods. A rocket that doesn't fly straight goes wherever the air pushes it. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "Two points decide whether a rocket flies straight. The <b>center of mass</b> (CM) is its balance point. The <b>center of pressure</b> (CP) is where the air's sideways push effectively acts; fins move it toward the tail."
+   },
+   {
+    "t": "key",
+    "html": "Stable when the CM is ahead of (closer to the nose than) the CP. Then a gust that tips the rocket makes the air push the tail back, turning the nose into the wind like a weather vane. CM position: $x = \\dfrac{\\sum m_i x_i}{\\sum m_i}$. Weight in the nose moves the CM forward; bigger fins move the CP back."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-stability",
+    "cap": "Switch between the two. With the CM ahead, the gust's push turns the rocket back; with the CP ahead, the push turns it further away."
+   },
+   {
+    "t": "ex",
+    "title": "Balance point",
+    "q": "Nose cone $20\\ \\text{g}$ at $5\\ \\text{cm}$, body $30\\ \\text{g}$ at $25\\ \\text{cm}$, motor and fins $40\\ \\text{g}$ at $45\\ \\text{cm}$ from the tip. The CP is at $38\\ \\text{cm}$. Stable?",
+    "steps": [
+     "$x = \\dfrac{20(5) + 30(25) + 40(45)}{90} = \\dfrac{2{,}650}{90} \\approx 29.4\\ \\text{cm}$.",
+     "CM at $29.4$ is ahead of CP at $38$: stable."
+    ],
+    "a": "Yes: CM at $\\approx 29.4\\ \\text{cm}$ is ahead of the CP"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a heavier tail steadies a rocket. Weight at the back moves the CM toward the CP and makes it less stable."
+   },
+   {
+    "t": "note",
+    "html": "NASA's guide describes a simple check used with model rockets: tie a string at the center of mass and swing the rocket in a circle. A stable rocket points its nose the way it is moving."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "NASA Glenn Research Center, Beginner's Guide to Aeronautics: Conditions for Rocket Stability",
+    "url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/conditions-for-rocket-stability/"
+   },
+   {
+    "name": "Smithsonian Air & Space, “The Big Creek Missile Agency” (Homer Hickam's account of the Rocket Boys)",
+    "url": "https://www.smithsonianmag.com/air-space-magazine/the-big-creek-missile-agency-85069719/"
+   },
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   }
+  ]
+ },
+ "rocket.range-angle": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> The Christian Science Monitor's 1998 story says the boys taught themselves trigonometry to work out how far their launches went. Distance downrange is a projectile problem. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "When a flight leans, its speed splits into a sideways part, $v\\cos\\theta$, that stays the same (ignoring air), and an up-and-down part, $v\\sin\\theta$, that gravity slows and reverses. The time in the air comes from the vertical part; the range is the sideways speed times that time."
+   },
+   {
+    "t": "key",
+    "html": "On level ground with no drag: $$t = \\frac{2v\\sin\\theta}{g}, \\qquad R = \\frac{v^2\\sin 2\\theta}{g}, \\qquad H = \\frac{(v\\sin\\theta)^2}{2g}.$$ Range is largest at $45^\\circ$, and $\\theta$ and $90^\\circ - \\theta$ give the same range. (Rockets are launched close to vertical, within $30^\\circ$ under the NAR safety code, to keep them over the field.)"
+   },
+   {
+    "t": "viz",
+    "name": "rocket-range",
+    "cap": "Slide the angle and compare with the dashed paths. Angles that add to $90^\\circ$ land together.",
+    "opts": {
+     "th": 45,
+     "v": 20
+    }
+   },
+   {
+    "t": "ex",
+    "title": "Downrange",
+    "q": "A ball leaves the ground at $25\\ \\text{m/s}$, $60^\\circ$ up. Where does it land?",
+    "steps": [
+     "$R = \\dfrac{25^2\\sin 120^\\circ}{9.8} = \\dfrac{625(0.866)}{9.8} \\approx 55\\ \\text{m}$."
+    ],
+    "a": "$\\approx 55\\ \\text{m}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using the whole speed in both directions. Split it into $v\\cos\\theta$ and $v\\sin\\theta$ first."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Christian Science Monitor, “From the Garage to the Moon” (1998)",
+    "url": "https://csmonitor.com/1998/0910/091098.feat.feat.7.html"
+   },
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   },
+   {
+    "name": "National Association of Rocketry, Model Rocket Safety Code",
+    "url": "https://nar.org/ModelRocketSafetyCode"
+   }
+  ]
+ },
+ "rocket.altitude-tangent": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> To know how high their rocket went, the boys needed a way to measure height without climbing the sky. Hickam's account says they built their own theodolites, angle-measuring sights, and used trigonometry to estimate altitude. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "Here is the idea. Measure a <b>baseline</b> $b$ along the ground from the launch pad to where you stand. When the rocket reaches its highest point, sight it and read the <b>angle of elevation</b> $\\theta$ above level. If the rocket went straight up, the pad, you and the rocket make a right triangle. The baseline is the side next to the angle; the height is the side opposite it."
+   },
+   {
+    "t": "key",
+    "html": "$$\\tan\\theta = \\frac{\\text{opposite}}{\\text{adjacent}} = \\frac{h}{b} \\qquad\\Longrightarrow\\qquad h = b\\tan\\theta.$$ Add the height of the instrument above the ground. To find the angle to expect: $\\theta = \\tan^{-1}(h/b)$."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-theodolite",
+    "cap": "The tracker follows the rocket up. Try a short baseline and a long one with the same height: the angle changes, but $b\\tan\\theta$ comes out the same.",
+    "opts": {
+     "b": 150,
+     "th": 55,
+     "e": 1.5
+    }
+   },
+   {
+    "t": "p",
+    "html": "NASA's classroom version of this uses a hand-held tracker at a fixed baseline (30 m in their activity), adds the height of the person holding it, and averages readings from more than one station. How long a baseline to choose is the subject of the next lesson."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-tangent",
+    "cap": "The tangent grows slowly at first and then without limit near $90^\\circ$: at steep angles a small misreading makes a big difference in height."
+   },
+   {
+    "t": "ex",
+    "title": "A theodolite reading",
+    "q": "A tracker $200\\ \\text{m}$ from the pad, with the sight $1.5\\ \\text{m}$ above the ground, reads $58^\\circ$ at apogee. How high was the rocket?",
+    "steps": [
+     "$h = 200\\tan 58^\\circ = 200(1.600) = 320\\ \\text{m}$ above the sight.",
+     "Add $1.5\\ \\text{m}$: about $322\\ \\text{m}$, or roughly $1{,}050$ feet."
+    ],
+    "a": "$\\approx 322\\ \\text{m}$"
+   },
+   {
+    "t": "ex",
+    "title": "Where to look",
+    "q": "A rocket should reach about $400\\ \\text{m}$. A tracker stands $250\\ \\text{m}$ from the pad. At what angle should they expect it?",
+    "steps": [
+     "$\\tan\\theta = 400/250 = 1.6$.",
+     "$\\theta = \\tan^{-1}1.6 \\approx 58^\\circ$."
+    ],
+    "a": "$\\approx 58^\\circ$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using sine instead of tangent: $\\sin\\theta$ is opposite over the <em>hypotenuse</em>, the slanted sight line, which nobody measured. Also check the calculator is in degrees: in radians mode, $\\tan 58$ comes out near $8.4$, which makes no sense for this triangle."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Smithsonian Air & Space, “The Big Creek Missile Agency” (Homer Hickam's account of the Rocket Boys)",
+    "url": "https://www.smithsonianmag.com/air-space-magazine/the-big-creek-missile-agency-85069719/"
+   },
+   {
+    "name": "NASA Glenn Research Center, Rocket Altitude Tracking",
+    "url": "https://www.grc.nasa.gov/WWW/K-12/rocket/TRCRocket/altitude_tracking2.html"
+   },
+   {
+    "name": "OpenStax, College Physics 2e (Rice University): motion, forces, energy and momentum"
+   }
+  ]
+ },
+ "rocket.angle-error": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> The boys' theodolites were homemade, so every angle they read came with some uncertainty. A good scientist reports how far off the answer might be, not just the answer. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "Suppose the angle could be off by $\\pm 2^\\circ$. The true height is somewhere between $b\\tan(\\theta - 2^\\circ)$ and $b\\tan(\\theta + 2^\\circ)$. Because the tangent climbs steeply near $90^\\circ$, the same $2^\\circ$ slip matters much more at steep angles."
+   },
+   {
+    "t": "key",
+    "html": "Height range: $b\\tan(\\theta - \\Delta\\theta) \\le h \\le b\\tan(\\theta + \\Delta\\theta)$. With calculus, $dh = b\\sec^2\\theta\\,d\\theta$ ($d\\theta$ in radians), so the relative error $\\dfrac{dh}{h} = \\dfrac{d\\theta}{\\sin\\theta\\cos\\theta}$ is smallest at $\\theta = 45^\\circ$. Two or three trackers in different directions, averaged, cancel some of the error from a rocket that drifted."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-angle-error",
+    "cap": "The gold wedge is $\\pm 2^\\circ$. Watch the red band of possible heights stretch as the angle climbs."
+   },
+   {
+    "t": "ex",
+    "title": "How sure?",
+    "q": "A tracker $100\\ \\text{m}$ away reads $70^\\circ \\pm 2^\\circ$. Give the range of heights.",
+    "steps": [
+     "$100\\tan 68^\\circ \\approx 248\\ \\text{m}$; $100\\tan 72^\\circ \\approx 308\\ \\text{m}$.",
+     "So $h$ is between about $248$ and $308\\ \\text{m}$, a spread of $60\\ \\text{m}$. At $45^\\circ \\pm 2^\\circ$ the spread would be only about $14\\ \\text{m}$."
+    ],
+    "a": "$248$ to $308\\ \\text{m}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Assuming a fixed angle error gives a fixed height error. It depends strongly on the angle."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "NASA Glenn Research Center, Rocket Altitude Tracking",
+    "url": "https://www.grc.nasa.gov/WWW/K-12/rocket/TRCRocket/altitude_tracking2.html"
+   },
+   {
+    "name": "Smithsonian Air & Space, “The Big Creek Missile Agency” (Homer Hickam's account of the Rocket Boys)",
+    "url": "https://www.smithsonianmag.com/air-space-magazine/the-big-creek-missile-agency-85069719/"
+   }
+  ]
+ },
+ "rocket.triangulation": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> A rocket rarely went perfectly straight up, which spoils the single-tracker triangle. Hickam's account describes the boys tracking flights with trigonometry, and with two sightings you no longer need to know exactly where the rocket was over the ground. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "Two observers stand a known distance $d$ apart, in line with the rocket's path. Each reads an angle of elevation at the same moment. Write each observer's ground distance to the point under the rocket as $h\\cot$ of their angle. Those two distances differ by $d$ (same side) or add to $d$ (opposite sides)."
+   },
+   {
+    "t": "key",
+    "html": "Same side (far angle $\\alpha$, near angle $\\beta$): $$h = \\frac{d}{\\cot\\alpha - \\cot\\beta}.$$ Opposite sides: $h = \\dfrac{d}{\\cot\\alpha + \\cot\\beta}$. Check with the law of sines: in the triangle of the two observers and the rocket, the angle at the rocket is $\\beta - \\alpha$ (same side)."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-triangulate",
+    "cap": "Switch between the two set-ups. Only the distance between the observers is measured on the ground."
+   },
+   {
+    "t": "ex",
+    "title": "Two trackers",
+    "q": "Two trackers on the same side, $150\\ \\text{m}$ apart, read $35^\\circ$ (far) and $55^\\circ$ (near). Find the height.",
+    "steps": [
+     "$\\cot 35^\\circ = 1.428$, $\\cot 55^\\circ = 0.700$.",
+     "$h = \\dfrac{150}{1.428 - 0.700} \\approx 206\\ \\text{m}$.",
+     "Law of sines check: the near tracker's sight line is $\\dfrac{150\\sin 35^\\circ}{\\sin 20^\\circ} \\approx 251.5\\ \\text{m}$, and $251.5\\sin 55^\\circ \\approx 206\\ \\text{m}$."
+    ],
+    "a": "$\\approx 206\\ \\text{m}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Swapping the near and far angles (the denominator turns negative), or adding cotangents when both stand on the same side."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Smithsonian Air & Space, “The Big Creek Missile Agency” (Homer Hickam's account of the Rocket Boys)",
+    "url": "https://www.smithsonianmag.com/air-space-magazine/the-big-creek-missile-agency-85069719/"
+   },
+   {
+    "name": "NASA Glenn Research Center, Rocket Altitude Tracking",
+    "url": "https://www.grc.nasa.gov/WWW/K-12/rocket/TRCRocket/altitude_tracking2.html"
+   },
+   {
+    "name": "OpenStax, College Physics 2e (Rice University): motion, forces, energy and momentum"
+   }
+  ]
+ },
+ "rocket.gravity-orbits": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> On October 4, 1957, the Soviet Union launched Sputnik 1, an 83.6 kg sphere that circled Earth about once every 98 minutes. Its flight is what set Homer Hickam, then 14, to building rockets. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "Why didn't Sputnik fall? It did, all the time. Isaac Newton imagined a cannon on a very tall mountain. A slow shot falls nearby; a faster one lands farther around the curved Earth. Fast enough, and the ground curves away as fast as the ball falls toward it, so it never lands. That is an orbit."
+   },
+   {
+    "t": "key",
+    "html": "For a circular orbit, gravity supplies the centripetal force: $$\\frac{GMm}{r^2} = \\frac{mv^2}{r} \\quad\\Longrightarrow\\quad \\role[orbital speed]{velocity}{v} = \\sqrt{\\frac{\\role[gravitational constant]{constant}{G}\\role[Earth's mass]{mass}{M}}{\\role[distance from the center]{position}{r}}}, \\qquad T = \\frac{2\\pi r}{v} = 2\\pi\\sqrt{\\frac{r^3}{GM}}.$$ Here $r$ is measured from the center of the Earth: radius plus altitude. Low Earth orbit takes about $7.8\\ \\text{km/s}$."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-cannon",
+    "cap": "Newton's cannon. Each faster shot lands farther around, until one falls all the way around."
+   },
+   {
+    "t": "ex",
+    "title": "Low orbit",
+    "q": "Find the speed and period of a circular orbit $300\\ \\text{km}$ up. ($GM_E = 3.986 \\times 10^{14}\\ \\text{m}^3/\\text{s}^2$, $R_E = 6{,}371\\ \\text{km}$.)",
+    "steps": [
+     "$r = 6{,}671\\ \\text{km} = 6.671 \\times 10^6\\ \\text{m}$.",
+     "$v = \\sqrt{3.986 \\times 10^{14}/6.671 \\times 10^6} \\approx 7{,}730\\ \\text{m/s}$.",
+     "$T = 2\\pi r/v \\approx 5{,}420\\ \\text{s} \\approx 90\\ \\text{min}$."
+    ],
+    "a": "$\\approx 7.7\\ \\text{km/s}$, $\\approx 90\\ \\text{min}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking there is no gravity in orbit. At $300\\ \\text{km}$ up, gravity is still about $91\\%$ as strong as on the ground; astronauts float because they are falling with their spacecraft."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "NASA History: Sputnik and the Dawn of the Space Age",
+    "url": "https://www.nasa.gov/history/sputnik/index.html"
+   },
+   {
+    "name": "e-WV, The West Virginia Encyclopedia: Homer Hickam",
+    "url": "https://www.wvencyclopedia.org/entries/101"
+   },
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   }
+  ]
+ },
+ "rocket.escape-velocity": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> Homer Hickam went on to work at NASA's Marshall Space Flight Center from 1981 to 1998, where he helped train astronauts. Reaching the Moon or the planets takes more speed than any orbit around Earth. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "Throw something up and it slows as it climbs, because gravity pulls it back. But gravity weakens with distance, so the total energy needed to climb out of Earth's “well” is finite. Give an object at least that much kinetic energy and it never returns."
+   },
+   {
+    "t": "key",
+    "html": "Escape condition: $\\tfrac12 m v^2 = \\dfrac{GMm}{r}$, so $$\\role[escape speed]{velocity}{v_\\text{esc}} = \\sqrt{\\frac{2\\role[gravitational constant]{constant}{G}\\role[Earth's mass]{mass}{M}}{\\role[distance from the center]{position}{r}}} = \\sqrt2\\,\\role[orbital speed]{velocity}{v_\\text{orbit}}.$$ From Earth's surface it is about $11.2\\ \\text{km/s}$; from the Moon about $2.4\\ \\text{km/s}$. Use $r$ from the center."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-escape",
+    "cap": "Same starting point, different speeds. At $\\sqrt2$ times circular speed the path opens up and never closes."
+   },
+   {
+    "t": "ex",
+    "title": "From the Moon",
+    "q": "The Moon's mass is $7.342 \\times 10^{22}\\ \\text{kg}$ and its radius $1{,}737\\ \\text{km}$. Find its escape speed.",
+    "steps": [
+     "$v = \\sqrt{\\dfrac{2(6.674 \\times 10^{-11})(7.342 \\times 10^{22})}{1.737 \\times 10^6}} \\approx 2{,}380\\ \\text{m/s}$."
+    ],
+    "a": "$\\approx 2.38\\ \\text{km/s}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using the altitude above the surface for $r$. Gravity's formulas measure from the center."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   },
+   {
+    "name": "NASA History: Sputnik and the Dawn of the Space Age",
+    "url": "https://www.nasa.gov/history/sputnik/index.html"
+   }
+  ]
+ },
+ "rocket.kepler-ellipses": {
+  "blocks": [
+   {
+    "t": "note",
+    "html": "<b>From the story.</b> Sputnik's path was not a circle. NASA's history describes its orbit as elliptical, taking about 98 minutes, so it swept lower and higher above the Earth on each trip. (More in <a href=\"/october-sky/\">October Sky</a>.)"
+   },
+   {
+    "t": "p",
+    "html": "Johannes Kepler found three rules for orbits, and Newton later showed why they follow from gravity. An orbit is an ellipse with the planet at one <b>focus</b>. The low point is <b>perigee</b> (closest), the high point <b>apogee</b>."
+   },
+   {
+    "t": "key",
+    "html": "1. Ellipse with Earth at a focus: $a = \\dfrac{r_p + r_a}{2}$, $e = \\dfrac{r_a - r_p}{r_a + r_p}$ (distances from the center).<br>2. Equal areas in equal times, so it moves fastest at perigee: $r_p v_p = r_a v_a$.<br>3. $T = 2\\pi\\sqrt{\\dfrac{a^3}{GM}}$: the period depends only on the semi-major axis, and $T^2 \\propto a^3$."
+   },
+   {
+    "t": "viz",
+    "name": "rocket-kepler",
+    "cap": "Slide the eccentricity. The two shaded wedges take the same time and have the same area.",
+    "opts": {
+     "e": 0.5
+    }
+   },
+   {
+    "t": "ex",
+    "title": "How big was Sputnik's ellipse?",
+    "q": "With a period of about $98\\ \\text{min}$, find the semi-major axis of Sputnik's orbit and its average height. ($GM_E = 3.986 \\times 10^{14}\\ \\text{m}^3/\\text{s}^2$.)",
+    "steps": [
+     "$T = 5{,}880\\ \\text{s}$. $a = \\left(\\dfrac{GM T^2}{4\\pi^2}\\right)^{1/3} \\approx 7.04 \\times 10^6\\ \\text{m}$.",
+     "$7{,}040 - 6{,}371 \\approx 670\\ \\text{km}$: the average of its perigee and apogee altitudes (from NASA's rounded period)."
+    ],
+    "a": "$a \\approx 7{,}040\\ \\text{km}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using altitudes for $r_p$ and $r_a$. Add Earth's radius to each first."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "NASA History: Sputnik and the Dawn of the Space Age",
+    "url": "https://www.nasa.gov/history/sputnik/index.html"
+   },
+   {
+    "name": "OpenStax, University Physics Volume 1 (Rice University): kinematics, Newton's laws, momentum, gravitation"
+   }
+  ]
+ }
+}

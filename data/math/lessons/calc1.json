@@ -1221,7 +1221,7 @@
    },
    {
     "t": "key",
-    "html": "The <b>derivative of $f$ at $a$</b> is $$f'(a) = \\lim_{h \\to 0} \\frac{f(a + h) - f(a)}{h},$$ when this limit exists. It is the slope of the tangent line to $y = f(x)$ at $(a, f(a))$ and the instantaneous rate of change of $f$ at $a$. An equivalent form is $f'(a) = \\lim_{x \\to a} \\frac{f(x) - f(a)}{x - a}$."
+    "html": "The <b>derivative of $f$ at $a$</b> is $$\\role[slope at a]{rate}{f'(a)} = \\lim_{h \\to 0} \\frac{\\role[change in output]{output}{f(a + h) - f(a)}}{\\role[change in input]{input}{h}},$$ when this limit exists. It is the slope of the tangent line to $y = f(x)$ at $(a, f(a))$ and the instantaneous rate of change of $f$ at $a$. An equivalent form is $f'(a) = \\lim_{x \\to a} \\frac{f(x) - f(a)}{x - a}$."
    },
    {
     "t": "viz",
@@ -1231,7 +1231,10 @@
      "a": 3,
      "h": 1.5,
      "tangent": true,
-     "table": true
+     "table": true,
+     "roleLinks": {
+      "h": "input"
+     }
     },
     "cap": "$f(x) = x^2 - 2x$ at $a = 3$: the secant slopes $4 + h$ approach $f'(3) = 4$."
    },
@@ -1313,7 +1316,7 @@
    },
    {
     "t": "key",
-    "html": "The tangent line to $y = f(x)$ at $x = a$ passes through $(a, f(a))$ with slope $f'(a)$: $$y = f(a) + f'(a)(x - a).$$ Near $a$, this line is the best straight-line description of the curve."
+    "html": "The tangent line to $y = f(x)$ at $x = a$ passes through $(a, f(a))$ with slope $f'(a)$: $$\\role{output}{y} = \\role[height at a]{output}{f(a)} + \\role[slope at a]{rate}{f'(a)}\\role[distance from a]{input}{(x - a)}.$$ Near $a$, this line is the best straight-line description of the curve."
    },
    {
     "t": "viz",
@@ -1410,7 +1413,7 @@
    },
    {
     "t": "key",
-    "html": "The <b>derivative function</b> is $$f'(x) = \\lim_{h \\to 0} \\frac{f(x + h) - f(x)}{h}$$ for every $x$ where the limit exists. Its graph shows the slope of $f$: $f' > 0$ where $f$ rises, $f' < 0$ where $f$ falls, and $f' = 0$ where the tangent is flat."
+    "html": "The <b>derivative function</b> is $$\\role[slope at x]{rate}{f'(x)} = \\lim_{h \\to 0} \\frac{\\role[change in output]{output}{f(x + h) - f(x)}}{\\role[change in input]{input}{h}}$$ for every $x$ where the limit exists. Its graph shows the slope of $f$: $f' > 0$ where $f$ rises, $f' < 0$ where $f$ falls, and $f' = 0$ where the tangent is flat."
    },
    {
     "t": "viz",
@@ -1690,7 +1693,7 @@
    },
    {
     "t": "key",
-    "html": "$$\\frac{d}{dx}x^n = nx^{n-1} \\quad\\text{for every real } n, \\qquad \\frac{d}{dx}c = 0, \\qquad \\frac{d}{dx}\\big[c\\,f(x)\\big] = c\\,f'(x), \\qquad \\frac{d}{dx}\\big[f(x) \\pm g(x)\\big] = f'(x) \\pm g'(x).$$ Bring the exponent down as a factor, then lower the exponent by one. Differentiate a sum term by term."
+    "html": "$$\\frac{d}{dx}x^{\\role{exponent}{n}} = \\role[old exponent, now a coefficient]{coefficient}{n}x^{\\role[new exponent]{exponent}{n-1}} \\quad\\text{for every real } n, \\qquad \\frac{d}{dx}c = 0, \\qquad \\frac{d}{dx}\\big[c\\,f(x)\\big] = c\\,f'(x), \\qquad \\frac{d}{dx}\\big[f(x) \\pm g(x)\\big] = f'(x) \\pm g'(x).$$ Bring the exponent down as a factor, then lower the exponent by one. Differentiate a sum term by term."
    },
    {
     "t": "why",
@@ -2118,7 +2121,7 @@
    },
    {
     "t": "key",
-    "html": "If $y = f(u)$ and $u = g(x)$, then $$\\frac{dy}{dx} = \\frac{dy}{du}\\cdot\\frac{du}{dx}, \\qquad\\text{that is,}\\qquad \\big(f(g(x))\\big)' = f'\\big(g(x)\\big)\\cdot g'(x).$$ Differentiate the outside, leaving the inside alone, then multiply by the derivative of the inside."
+    "html": "If $y = f(u)$ and $u = g(x)$, then $$\\role[rate of the whole]{rate}{\\frac{dy}{dx}} = \\role[rate of the outside]{outer}{\\frac{dy}{du}}\\cdot\\role[rate of the inside]{inner}{\\frac{du}{dx}}, \\qquad\\text{that is,}\\qquad \\big(f(g(x))\\big)' = \\role[derivative of the outside]{outer}{f'}\\big(\\role[inside, left alone]{inner}{g(x)}\\big)\\cdot \\role[derivative of the inside]{inner}{g'(x)}.$$ Differentiate the outside, leaving the inside alone, then multiply by the derivative of the inside."
    },
    {
     "t": "p",
@@ -2872,7 +2875,7 @@
    },
    {
     "t": "key",
-    "html": "The <b>linearization</b> of $f$ at $a$ is $L(x) = f(a) + f'(a)(x - a)$, and $f(x) \\approx L(x)$ for $x$ near $a$. In differential form: if $x$ changes by $dx$, then $f$ changes by about $dy = f'(x)\\,dx$."
+    "html": "The <b>linearization</b> of $f$ at $a$ is $\\role[linear estimate]{output}{L(x)} = \\role[height at a]{output}{f(a)} + \\role[slope at a]{rate}{f'(a)}\\role[distance from a]{input}{(x - a)}$, and $f(x) \\approx L(x)$ for $x$ near $a$. In differential form: if $x$ changes by $dx$, then $f$ changes by about $dy = f'(x)\\,dx$."
    },
    {
     "t": "viz",
@@ -3029,7 +3032,7 @@
    },
    {
     "t": "key",
-    "html": "<b>Mean Value Theorem (MVT).</b> If $f$ is continuous on $[a, b]$ and differentiable on $(a, b)$, then there is at least one $c$ in $(a, b)$ with $$f'(c) = \\frac{f(b) - f(a)}{b - a}.$$ Somewhere the tangent line is parallel to the secant line through the endpoints."
+    "html": "<b>Mean Value Theorem (MVT).</b> If $f$ is continuous on $[a, b]$ and differentiable on $(a, b)$, then there is at least one $c$ in $(a, b)$ with $$\\role[slope of the tangent at c]{rate}{f'(c)} = \\frac{\\role[rise]{output}{f(b) - f(a)}}{\\role[run]{input}{b - a}}.$$ Somewhere the tangent line is parallel to the secant line through the endpoints."
    },
    {
     "t": "viz",
@@ -3930,7 +3933,7 @@
    },
    {
     "t": "key",
-    "html": "A <b>Riemann sum</b> for $f$ on $[a, b]$ is $\\displaystyle\\sum_{i=1}^{n} f(x_i^*)\\,\\Delta x$, where $x_i^*$ is any sample point in the $i$th strip. The <b>midpoint sum</b> $M_n$ uses the middle of each strip. For a continuous $f$, every choice of sample points gives the same limit as $n \\to \\infty$."
+    "html": "A <b>Riemann sum</b> for $f$ on $[a, b]$ is $\\displaystyle\\sum_{\\role{index}{i}=1}^{n} \\role[height of strip i]{output}{f(x_i^*)}\\,\\role[strip width]{input}{\\Delta x}$, where $x_i^*$ is any sample point in the $i$th strip. The <b>midpoint sum</b> $M_n$ uses the middle of each strip. For a continuous $f$, every choice of sample points gives the same limit as $n \\to \\infty$."
    },
    {
     "t": "viz",
@@ -3943,7 +3946,10 @@
      "method": "mid",
      "compare": true,
      "exact": true,
-     "task": "Increase $n$ and compare the four methods in the table. The midpoint sum is usually the closest."
+     "task": "Increase $n$ and compare the four methods in the table. The midpoint sum is usually the closest.",
+     "roleLinks": {
+      "n (number": "index"
+     }
     },
     "cap": "Riemann sums for $x^2$ on $[0, 2]$. All of them close in on $\\frac{8}{3}$ as $n$ grows."
    },
@@ -4173,7 +4179,7 @@
    },
    {
     "t": "key",
-    "html": "<b>Fundamental Theorem of Calculus, Part 1.</b> If $f$ is continuous and $A(x) = \\displaystyle\\int_a^x f(t)\\,dt$, then $A'(x) = f(x)$. With a function as the upper limit: $$\\dfrac{d}{dx}\\displaystyle\\int_a^{u(x)} f(t)\\,dt = f\\big(u(x)\\big)\\cdot u'(x)$$."
+    "html": "<b>Fundamental Theorem of Calculus, Part 1.</b> If $f$ is continuous and $\\role[area so far]{integral}{A(x)} = \\displaystyle\\int_a^{\\role[upper limit]{input}{x}} f(t)\\,dt$, then $\\role[rate the area grows]{rate}{A'(x)} = \\role[height at the upper limit]{output}{f(x)}$. With a function as the upper limit: $$\\dfrac{d}{dx}\\displaystyle\\int_a^{u(x)} f(t)\\,dt = f\\big(u(x)\\big)\\cdot u'(x)$$."
    },
    {
     "t": "viz",
@@ -4186,7 +4192,10 @@
      "xmax": 5,
      "ghost": true,
      "play": true,
-     "task": "Press play. When the curve is above the axis, $A$ climbs; below it, $A$ falls. Where the curve crosses zero, $A$ peaks."
+     "task": "Press play. When the curve is above the axis, $A$ climbs; below it, $A$ falls. Where the curve crosses zero, $A$ peaks.",
+     "roleLinks": {
+      "x (upper": "input"
+     }
     },
     "cap": "Top: the area under $f(t) = 2 - t$ from 0 to $x$. Bottom: that area as a function, $A(x)$. The slope of $A$ is always the height of $f$."
    },
@@ -4250,7 +4259,7 @@
    },
    {
     "t": "key",
-    "html": "<b>Fundamental Theorem of Calculus, Part 2.</b> If $f$ is continuous on $[a, b]$ and $F$ is any antiderivative of $f$, then $$\\int_a^b f(x)\\,dx = F(b) - F(a) = \\Big[F(x)\\Big]_a^b.$$"
+    "html": "<b>Fundamental Theorem of Calculus, Part 2.</b> If $f$ is continuous on $[a, b]$ and $F$ is any antiderivative of $f$, then $$\\role[accumulated area]{integral}{\\int_a^b f(x)\\,dx} = \\role[change in the antiderivative]{output}{F(b) - F(a)} = \\Big[F(x)\\Big]_a^b.$$"
    },
    {
     "t": "why",
@@ -4404,7 +4413,7 @@
    },
    {
     "t": "key",
-    "html": "The <b>average value</b> of $f$ on $[a, b]$ is $$f_{\\text{avg}} = \\frac{1}{b - a}\\int_a^b f(x)\\,dx.$$ It is the height of the rectangle on $[a, b]$ with the same area as the region under $f$. If $f$ is continuous, some $c$ in $[a, b]$ has $f(c) = f_{\\text{avg}}$ (the Mean Value Theorem for integrals)."
+    "html": "The <b>average value</b> of $f$ on $[a, b]$ is $$\\role[average height]{output}{f_{\\text{avg}}} = \\frac{1}{\\role[width of the interval]{input}{b - a}}\\role[area under f]{integral}{\\int_a^b f(x)\\,dx}.$$ It is the height of the rectangle on $[a, b]$ with the same area as the region under $f$. If $f$ is continuous, some $c$ in $[a, b]$ has $f(c) = f_{\\text{avg}}$ (the Mean Value Theorem for integrals)."
    },
    {
     "t": "why",
@@ -4497,7 +4506,7 @@
    },
    {
     "t": "key",
-    "html": "<b>Substitution.</b> Choose $u = g(x)$, usually an inside function, so that $du = g'(x)\\,dx$ also appears (up to a constant factor). Rewrite the whole integral in $u$, integrate, then substitute back: $$\\int f\\big(g(x)\\big)g'(x)\\,dx = \\int f(u)\\,du.$$"
+    "html": "<b>Substitution.</b> Choose $u = g(x)$, usually an inside function, so that $du = g'(x)\\,dx$ also appears (up to a constant factor). Rewrite the whole integral in $u$, integrate, then substitute back: $$\\int \\role[outside function]{outer}{f}\\big(\\role[inside function, u]{inner}{g(x)}\\big)\\role[du]{inner}{g'(x)\\,dx} = \\int \\role[outside function]{outer}{f}(\\role[inside function, u]{inner}{u})\\,\\role[du]{inner}{du}.$$"
    },
    {
     "t": "why",

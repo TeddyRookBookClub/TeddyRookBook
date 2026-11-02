@@ -1,0 +1,193 @@
+year: 2023
+edition: 64th
+date: "July 8–9, 2023 · Chiba, Japan"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2023/2023_eng.pdf
+  archive: https://www.imo-official.org/year_info.aspx?year=2023
+problems:
+  - id: P1
+    day: 1
+    topic: "Composites whose divisors divide sums of the next two"
+    areas: [number-theory]
+    difficulty: 1
+    answer: 'The prime powers $n=p^m$ with $m\ge2$'
+    hints:
+      - 'Pair each small divisor $d$ with the large divisor $n/d$. The condition near the top of the list says something about the bottom of the list.'
+      - 'If $n$ has two prime factors $p<q$, look at the divisors just below $q$.'
+    solution: |
+      **Key idea:** the conditions at the top of the divisor list are about divisors like $n/q$ and $n/p^j$. If a second prime $q$ shows up, one of them fails because $p$ divides neither $q$ nor $1+p$.
+
+      **Prime powers work.** If $n=p^m$ with $m\ge2$, the divisors are $1,p,\dots,p^m$, and $p^i$ divides $p^{i+1}+p^{i+2}$.
+
+      **Nothing else works.** Suppose $n$ has at least two prime factors, and let $p<q$ be the two smallest. Every divisor of $n$ smaller than $q$ has no prime factor other than $p$, so the divisors below $q$ are exactly $1,p,p^2,\dots,p^s$ for some $s\ge1$, and the next divisor is $q$. So, in increasing order,
+      $$d_s=p^{s-1},\qquad d_{s+1}=p^s,\qquad d_{s+2}=q .$$
+      Divisors pair up as $d_i\cdot d_{k+1-i}=n$. Apply the condition at index $i=k-s-1$ (which is between $1$ and $k-2$ because $s\ge1$ and $s+2\le k$):
+      $$d_{k-s-1}\ \Big|\ d_{k-s}+d_{k-s+1},\qquad\text{that is,}\qquad \frac nq\ \Big|\ \frac n{p^s}+\frac n{p^{s-1}}=\frac n{p^s}\,(1+p).$$
+      Dividing the right side by the left, the quotient $\dfrac{q(1+p)}{p^s}$ must be a whole number. But $p$ divides neither $q$ nor $1+p$, and $s\ge1$. Contradiction.
+
+      So the answer is all $n=p^m$ with $p$ prime and $m\ge2$.
+    checked: "script: every composite n < 20,000 with the property is a prime power, and every prime power there has it"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Arc midpoint, altitude, and a tangent meeting the bisector"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Bring in $T$, the midpoint of the other arc $BC$. Then $AT$ is the bisector, $ST$ is a diameter, and $AE\parallel ST$. Show that $P$ lies on line $SL$.'
+      - 'Let $X$ be where $AT$ meets $BS$. Show $AT$ is tangent to the circle $ABD$, so $XA^2=XB\cdot XD$, which is also the power of $X$ with respect to $\omega$.'
+      - 'Angle chase the tangent at $P$: it makes the same angle with $PA$ as $AT$ does. So it crosses $AT$ at a point $Y$ with $YA=YP$. Why must $Y=X$?'
+    solution: |
+      **Key idea:** first locate $P$: it is the second point where line $SL$ meets $\Omega$. Then the bisector point $X$ on $BS$ and the point where the tangent at $P$ crosses the bisector both satisfy "power with respect to $\omega$ equals squared distance to $A$". That condition picks out only one point of the bisector.
+
+      Angles written $\measuredangle(\ell,m)$ are directed angles between lines, taken modulo $180^\circ$, so the argument doesn't depend on the picture.
+
+      **Setup.** Let $T$ be the midpoint of the arc $BC$ that does not contain $A$. Then $AT$ is the internal bisector at $A$, and $ST$ is a diameter of $\Omega$ perpendicular to $BC$. The line $AE$ is also perpendicular to $BC$, so $AE\parallel ST$. Going around $\Omega$ the points come in the order $B,A,S,C,T$ (the arc $BAC$ holds $A$ nearer to $B$ because $AB<AC$). So the chords $BS$ and $AT$ cross inside $\Omega$; call the crossing point $X$. For the same reason the chords $BS$ and $AE$ cross inside $\Omega$, so $D$ is strictly inside $\Omega$. Also $D\ne S$, because $S$ is not on line $AE$ (that would need $AB=AC$).
+
+      **Step 1: $P$ lies on line $SL$.** Let $P'$ be the second point where line $SL$ meets $\Omega$. It is not $B$: otherwise $L$ would lie on both $BS$ and $BE$, so $L=B$, but $L$ is on the line through $D$ parallel to $BC$, which misses $B$. Now, using the chord $SB$ of $\Omega$, then $SB=SC$, then $DL\parallel BC$:
+      $$\measuredangle(P'L,P'B)=\measuredangle(P'S,P'B)=\measuredangle(CS,CB)=\measuredangle(BC,BS)=\measuredangle(DL,DB).$$
+      So $P'$ lies on the circle through $B,D,L$, which is $\omega$. The circles $\omega$ and $\Omega$ meet only at $B$ and $P$, so $P'=P$.
+
+      **Step 2: the power of $X$.** Using the chord $AS$, and then $TS\parallel AE$,
+      $$\measuredangle(BA,BD)=\measuredangle(BA,BS)=\measuredangle(TA,TS)=\measuredangle(AT,AE)=\measuredangle(AX,AD).$$
+      By the tangent–chord angle, this says line $AT$ is tangent to the circle through $A,B,D$ at $A$. Since $X$ is on line $BD$, its power with respect to that circle gives $XA^2=XB\cdot XD$ (signed lengths). And $B,D$ are on $\omega$, so
+      $$\operatorname{pow}_\omega(X)=XB\cdot XD=XA^2 .$$
+
+      **The case $P=A$.** Then $\omega$ passes through $A,B,D$, so by Step 2 its tangent at $P=A$ is the line $AT$, which meets $BS$ at $X$. From now on $P\ne A$.
+
+      **Step 3: the tangent at $P$.** Let $t$ be the tangent to $\omega$ at $P$. Note $P\ne S$ (line $BS$ meets $\omega$ only at $B$ and $D$, and $S$ is neither). Also $P\ne E$: line $BE$ meets $\omega$ only at $B$ and $L$, and $L\ne E$, because the only point of line $AE$ on the parallel through $D$ is $D$ itself, and $D$ is inside $\Omega$ while $E$ is on it. By the tangent–chord angle in $\omega$, then Step 1 and $L\in BE$, then chords of $\Omega$:
+      $$\measuredangle(t,PS)=\measuredangle(t,PL)=\measuredangle(BP,BL)=\measuredangle(BP,BE)=\measuredangle(SP,SE)=\measuredangle(AP,AE).$$
+      Also $\measuredangle(PS,PA)=\measuredangle(TS,TA)$ (chord $SA$), and $AE\parallel TS$. Adding,
+      $$\measuredangle(t,PA)=\measuredangle(AP,TS)+\measuredangle(TS,TA)=\measuredangle(AP,AT). \qquad (\ast)$$
+
+      **The case $P=T$.** Then $(\ast)$ says $t$ is parallel to $TA$, so $t$ is the line $AT$ itself, and it meets $BS$ at $X$.
+
+      **Step 4: the main case.** Now $P\ne A,T$, so $P$ is not on line $AT$. The perpendicular bisector of $AP$ meets line $AT$ at one point $Y$ (it could only be parallel if $AP\perp AT$, which would put $P$ at $S$). In the isosceles triangle $YAP$ the base angles give $\measuredangle(PY,PA)=\measuredangle(AP,AY)=\measuredangle(AP,AT)$. Comparing with $(\ast)$, the lines $PY$ and $t$ make the same angle with $PA$, so $t=PY$. Since $t$ is tangent at $P$,
+      $$\operatorname{pow}_\omega(Y)=YP^2=YA^2 .$$
+      Now look at $f(Z)=\operatorname{pow}_\omega(Z)-ZA^2$. Writing both terms with coordinates, the $|Z|^2$ parts cancel, so $f$ is a linear function of $Z$ plus a constant. It vanishes at $X$ (Step 2) and at $Y$. If $X\ne Y$, it vanishes on the whole line $AT$, in particular at $A$: then $A$ is on $\omega$, and $\omega$ and $\Omega$ share the three different points $A,B,P$, so they are the same circle. That is impossible, because $D$ is on $\omega$ but strictly inside $\Omega$. So $Y=X$.
+
+      Therefore the tangent $t$ passes through $X$, the point of $BS$ on the bisector $AT$. (It meets $BS$ only there, since $t\ne BS$: the line $BS$ cuts $\omega$ at $B$ and $D$, while $t$ touches it at $P$.)
+    checked: "numeric: 3,000 random acute triangles; the tangent meets BS on the bisector, and S, L, P collinear, XA = XP, AT tangent to circle ABD and the angle (∗) all hold to 1e-12"
+    viz: imo-2023-p2
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Monic polynomial turning one term into a product of next"
+    areas: [number-theory, algebra]
+    difficulty: 5
+    answer: 'The arithmetic progressions $a_n=a_1+(n-1)d$ with a whole number $d\ge0$, using $P(x)=(x+d)(x+2d)\cdots(x+kd)$'
+    hints:
+      - 'Divide the relation for $n+1$ by the relation for $n$. What does $a_{n+1}<a_n$ tell you about $a_{n+k+1}$?'
+      - 'Show the sequence never goes down: one drop would force another drop later that lands lower, forever.'
+      - 'Once the sequence is nondecreasing, its steps are bounded. A pattern of $k$ steps that repeats infinitely often gives a polynomial identity for $P$.'
+    solution: |
+      **Key idea:** comparing the relation at $n$ and $n+1$ shows that a single drop in the sequence forces a lower drop later, which can't go on forever. So the sequence never goes down. Then its steps are bounded, and matching $P$ against products of shifted copies of $x$ pins the steps down completely.
+
+      **These work.** If $a_n=a_1+(n-1)d$ with $d\ge0$ and $P(x)=(x+d)(x+2d)\cdots(x+kd)$, then $P$ is monic with nonnegative integer coefficients, and $P(a_n)=(a_n+d)\cdots(a_n+kd)=a_{n+1}\cdots a_{n+k}$.
+
+      Now take any sequence and polynomial $P$ that satisfy the conditions. $P$ is strictly increasing on $x\ge0$ (all its coefficients are nonnegative and it is monic).
+
+      **Step 1: the ratio rule.** Writing the relation for $n$ and for $n+1$ and dividing,
+      $$\frac{P(a_{n+1})}{P(a_n)}=\frac{a_{n+2}\cdots a_{n+k+1}}{a_{n+1}\cdots a_{n+k}}=\frac{a_{n+k+1}}{a_{n+1}} .$$
+      So if $a_{n+1}<a_n$, then $P(a_{n+1})<P(a_n)$, and therefore $a_{n+k+1}<a_{n+1}$.
+
+      **Step 2: the sequence never goes down.** Call $n$ a *drop* if $a_{n+1}<a_n$, with *landing value* $a_{n+1}$. Suppose there is a drop at $n$. By Step 1, $a_{n+k+1}<a_{n+1}$. Let $j$ be the last index in $n+1,\dots,n+k$ with $a_j\ge a_{n+1}$ (there is one, since $j=n+1$ qualifies). Then $a_{j+1}<a_{n+1}\le a_j$, so $j$ is a drop with a landing value smaller than $a_{n+1}$. Repeating this gives drops whose landing values decrease forever, which is impossible for positive integers. So there are no drops: $a_1\le a_2\le a_3\le\cdots$.
+
+      **Step 3: the bounded case.** If the sequence is bounded, it is eventually equal to some constant $c\ge1$. Then $P(c)=c^k$. Since $P(c)-c^k=c_{k-1}c^{k-1}+\dots+c_0$ is a sum of nonnegative terms, all the $c_i$ are $0$ and $P(x)=x^k$. Now for every $n$ we have $a_{n+1}\cdots a_{n+k}=a_n^k$, while each factor is at least $a_n$. So all the factors equal $a_n$, and the sequence is constant: the case $d=0$.
+
+      **Step 4: the steps are bounded.** Suppose instead the sequence is unbounded, so $a_n\to\infty$. Let $C\ge1$ be at least every coefficient of $P$. Expanding $(x+C)^k$ shows $P(x)\le(x+C)^k$ for $x\ge0$. Since the sequence is nondecreasing,
+      $$a_{n+1}^k\le a_{n+1}a_{n+2}\cdots a_{n+k}=P(a_n)\le(a_n+C)^k,$$
+      so every step $d_n=a_{n+1}-a_n$ lies in $\{0,1,\dots,C\}$.
+
+      **Step 5: a polynomial identity.** Look at the window of $k$ steps $(d_n,d_{n+1},\dots,d_{n+k-1})$. There are finitely many possible windows, so some window $w=(w_1,\dots,w_k)$ occurs for infinitely many $n$. Let $E_i=w_1+\dots+w_i$, so that $0\le E_1\le E_2\le\dots\le E_k$. For each such $n$,
+      $$P(a_n)=a_{n+1}\cdots a_{n+k}=(a_n+E_1)(a_n+E_2)\cdots(a_n+E_k).$$
+      This holds for infinitely many different values $a_n$, so it is an identity of polynomials: $P(x)=(x+E_1)\cdots(x+E_k)$. So the numbers $E_1\le\dots\le E_k$ are the roots of $P$ with their signs changed, listed in increasing order. That list depends only on $P$. Hence $w$ is determined by $P$: only one window can occur infinitely often.
+
+      **Step 6: the steps are constant.** The other windows occur only finitely often, so from some point on every window is $w$. Comparing the windows that start at $n$ and at $n+1$, which overlap, gives $w_2=w_1$, $w_3=w_2$, and so on. So all the $w_i$ equal some $d\ge1$, the sequence is eventually an arithmetic progression with step $d$, and $P(x)=(x+d)(x+2d)\cdots(x+kd)$.
+
+      **Step 7: back to the start.** Suppose $a_{n+1},\dots,a_{n+k}$ go up by $d$ each time. Then
+      $$P(a_n)=a_{n+1}\cdots a_{n+k}=P(a_{n+1}-d).$$
+      For $x>-d$ every factor $x+id$ is positive and increasing, so $P$ is strictly increasing there. Both $a_n$ and $a_{n+1}-d$ are greater than $-d$, so $a_n=a_{n+1}-d$. Going backwards one index at a time, the whole sequence is an arithmetic progression with step $d$.
+
+      So the sequences are exactly the arithmetic progressions with a nonnegative whole-number step $d$ (the polynomial is then $P(x)=\prod_{i=1}^{k}(x+id)$).
+    checked: "script: for k = 2 and 3, small coefficients and small starting values, every choice that stays whole for 40 terms is an arithmetic progression of this kind"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Integer values of sum times reciprocal sum grow fast"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Compare $a_{n+2}$ with $a_n$. Split the two sums into the first $n$ terms and the two new ones.'
+      - 'Cauchy–Schwarz in the form $(P+U)(Q+V)\ge(\sqrt{PQ}+\sqrt{UV})^2$.'
+    solution: |
+      **Key idea:** adding two new numbers raises $a$ by more than $2$. Since the $a_n$ are integers, it rises by at least $3$ every two steps.
+
+      **Two steps at a time.** Fix $n$ and write
+      $$P=x_1+\dots+x_n,\quad Q=\frac1{x_1}+\dots+\frac1{x_n},\quad U=x_{n+1}+x_{n+2},\quad V=\frac1{x_{n+1}}+\frac1{x_{n+2}} .$$
+      Then $a_n=\sqrt{PQ}$ and $a_{n+2}=\sqrt{(P+U)(Q+V)}$. By Cauchy–Schwarz (applied to the vectors $(\sqrt P,\sqrt U)$ and $(\sqrt Q,\sqrt V)$),
+      $$(P+U)(Q+V)\ \ge\ \big(\sqrt{PQ}+\sqrt{UV}\big)^2,\qquad\text{so}\qquad a_{n+2}\ge a_n+\sqrt{UV}.$$
+      Now
+      $$UV=(x_{n+1}+x_{n+2})\Big(\frac1{x_{n+1}}+\frac1{x_{n+2}}\Big)=2+\frac{x_{n+1}}{x_{n+2}}+\frac{x_{n+2}}{x_{n+1}}>4,$$
+      because $t+1/t>2$ for every positive $t\ne1$, and the two numbers are different. So $a_{n+2}>a_n+2$.
+
+      **Integers.** All the $a_n$ are integers, so $a_{n+2}\ge a_n+3$.
+
+      **Finish.** $a_1=\sqrt{x_1\cdot\frac1{x_1}}=1$. Applying the step $1011$ times,
+      $$a_{2023}\ge a_1+3\cdot1011=3034 .$$
+    checked: "algebra; the step inequality was also spot-checked numerically with random positive numbers"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Best downward path through a triangle of red circles"
+    areas: [combinatorics]
+    difficulty: 4
+    answer: '$k=\lfloor\log_2 n\rfloor+1$'
+    hints:
+      - 'For each circle, record the most red circles a path can collect from the top down to that circle. How do these numbers pass from one row to the next?'
+      - 'For a level $m$, count the circles in a row whose record is at least $m$. Going down one row, this count grows by at least one.'
+      - 'For the other direction, split the rows into blocks of $1,2,4,8,\dots$ rows and place the red circles so that a path can catch at most one per block.'
+    solution: |
+      **Key idea:** give every circle a score, the best red count of a path ending there. Moving down a row, each level of scores spreads out by at least one place. The red circle of the row either raises the top score or uses up some "slack", and the slack can only roughly double between raises. That gives the bound, and a layout in blocks of $1,2,4,\dots$ rows shows it is the best possible.
+
+      Number the rows $1,\dots,n$ from the top and the circles in row $r$ as $1,\dots,r$ from the left, so circle $j$ of row $r$ sits above circles $j$ and $j+1$ of row $r+1$. A path moves from position $j$ to $j$ or $j+1$ at each step.
+
+      **Scores.** Let $f(r,j)$ be the largest number of red circles on a path from the top circle down to circle $j$ of row $r$, counting both ends. Then $f(1,1)=1$, and
+      $$f(r+1,j)=\max\big(f(r,j-1),\,f(r,j)\big)+\big[\text{circle } j \text{ of row } r+1 \text{ is red}\big],$$
+      where a term with $j-1=0$ or $j=r+1$ is left out. Every score is at least $1$, and the best path has $M_n$ red circles, where $M_r$ is the largest score in row $r$.
+
+      **Spreading.** Fix a level $m\le M_r$ and let $A$ be the set of positions in row $r$ with score at least $m$. In row $r+1$, every position $j$ with $j\in A$ or $j-1\in A$ gets score at least $m$. There are at least $|A|+1$ such positions: all of $A$, plus one more than the largest element of $A$. So if we write $s_r(m)$ for the number of circles in row $r$ with score less than $m$ (the *slack* at level $m$), then
+      $$s_{r+1}(m)\le (r+1)-(|A|+1)=s_r(m)\qquad\text{for } m\le M_r .$$
+
+      **The red circle.** Let the red circle of row $r+1$ be at position $j$, and let $g=\max\big(f(r,j-1),f(r,j)\big)$, so its score is $g+1$.
+      - If $g<M_r$: position $j$ was not among the positions counted above for level $g+1$ (its value before adding the red circle was only $g$), and now its score reaches $g+1$. So the slack at level $g+1$ drops by at least one more: $s_{r+1}(g+1)\le s_r(g+1)-1$. The top score stays the same, $M_{r+1}=M_r$.
+      - If $g=M_r$: the top score goes up by one, $M_{r+1}=M_r+1$.
+
+      **Bookkeeping.** Let $E_r=\sum_{m=2}^{M_r}s_r(m)$, the total slack at the levels $2,\dots,M_r$ (an empty sum is $0$). It is never negative. From the two facts above:
+      - in a row where the top score does not go up, $E_{r+1}\le E_r-1$ (the level $g+1$ is between $2$ and $M_r$);
+      - in a row where it does go up, the old levels don't gain slack, and the new level $M_r+1$ has slack at most $r$ (the red circle has that score), so $E_{r+1}\le E_r+r$.
+
+      **Claim.** If the top score first equals $M$ in row $t$, then $t+E_t\le 2^M-1$.
+
+      For $M=1$ this is $1+0\le1$. Suppose it holds for $M$ with row $t$ and $E_t=e$. If the top score stays $M$ for $q$ more rows, $E$ drops at least $q$ times, so $q\le e$. If it then rises to $M+1$ in row $t'=t+q+1$, we get $E_{t'}\le (e-q)+(t+q)=e+t$, so
+      $$t'+E_{t'}\le (t+q+1)+(e+t)\le 2(t+e)+1\le 2^{M+1}-1 .$$
+
+      **The lower bound.** Let $M=M_n$ and let $t$ be the first row where the top score is $M$ (the top score rises by at most one per row, so this row exists). Rows $t+1,\dots,n$ all keep the top score $M$, so $n-t\le E_t\le 2^M-1-t$, that is, $n\le 2^M-1$. Hence $2^M>n$, and $M\ge\lfloor\log_2 n\rfloor+1$. Every arrangement has a path with that many red circles.
+
+      **A matching arrangement.** Write each row number uniquely as $r=2^a+b$ with $0\le b<2^a$, and make circle $2b+1$ of that row red. This position exists, since $2b+1\le 2^a+b$. Call rows $2^a,\dots,2^{a+1}-1$ block $a$. Suppose a path met red circles in two rows $2^a+b_1$ and $2^a+b_2$ of the same block, with $b_1<b_2$. Between them it moves right by $(2b_2+1)-(2b_1+1)=2(b_2-b_1)$ places in only $b_2-b_1$ steps, which is impossible. So a path meets at most one red circle per block. Rows $1,\dots,n$ touch the blocks $a=0,1,\dots,\lfloor\log_2 n\rfloor$, so no path has more than $\lfloor\log_2 n\rfloor+1$ red circles.
+
+      Together: the greatest $k$ is $\lfloor\log_2 n\rfloor+1$.
+    checked: "script: exhaustive search over all arrangements for n ≤ 9 gives exactly floor(log2 n)+1; the block arrangement was checked by dynamic programming for n up to 3,000"
+    viz: imo-2023-p5
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Equilateral triangle, three apex points, circles sharing two points"
+    areas: [geometry]
+    difficulty: 5
+    status: coming

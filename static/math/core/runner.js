@@ -147,7 +147,7 @@
         case 'tuple': return '(' + a.v.map(plain).join(', ') + ')';
         case 'matrix': if (ML.tex && ML.plainToTex) return ML.tex('\\begin{bmatrix}' + a.v.map(function (r) { return r.map(function (x) { try { return ML.plainToTex(String(x)); } catch (e) { return String(x); } }).join(' & '); }).join(' \\\\ ') + '\\end{bmatrix}'); return a.v.map(function (r) { return '[' + r.join(', ') + ']'; }).join(' ');
         case 'interval': return esc(String(a.v).replace(/-inf/g, '−∞').replace(/inf/g, '∞').replace(/\bU\b/g, '∪'));
-        case 'mc': var cs = a.choices || []; return (Array.isArray(a.v) ? a.v : [a.v]).map(function (i) { return '<span class="mlp-ans-choice">' + cs[i] + '</span>'; }).join(', ');
+        case 'mc': var cs = a.choices || []; return (Array.isArray(a.v) ? a.v : [a.v]).map(function (i) { return '<span class="mlp-ans-choice ml-norole">' + cs[i] + '</span>'; }).join(', ');
         case 'tf': return a.v ? 'True' : 'False';
         case 'text': return esc(Array.isArray(a.v) ? a.v[0] : a.v);
         case 'multi': return a.parts.map(function (p) { return '<span class="mlp-ans-part">' + (p.label ? p.label + ' ' : '') + fmtAnswer(p.a) + '</span>'; }).join('<span class="mlp-ans-sep">; </span>');
@@ -172,8 +172,8 @@
     if (card0) card.className = 'mlp-card mlp-card-review mlp-card-card';
     var top = el('div', 'mlp-card-top'), meta = el('div', 'mlp-card-meta'), prog = el('div', 'mlp-card-prog'), xpEl = el('span', 'mlp-xp-float');
     top.appendChild(meta); top.appendChild(prog);
-    var body = el('div', 'mlp-card-body'), qEl = el('div', 'mlp-q'), vizHost = el('div', 'mlp-qviz'), ansEl = el('div', 'mlp-ans');
-    var hintEl = el('div', 'mlp-hint'); hintEl.hidden = true;
+    var body = el('div', 'mlp-card-body'), qEl = el('div', 'mlp-q ml-norole'), vizHost = el('div', 'mlp-qviz'), ansEl = el('div', 'mlp-ans ml-norole');
+    var hintEl = el('div', 'mlp-hint ml-norole'); hintEl.hidden = true; // ml-norole: formula colors never show in a prompt, its choices or a hint (tex.js)
     var acts = el('div', 'mlp-acts'), fb = el('div', 'mlp-fb'), steps = el('div', 'mlp-steps-wrap'), after = el('div', 'mlp-after');
     fb.setAttribute('aria-live', 'polite'); fb.setAttribute('role', 'status');
     body.appendChild(qEl); body.appendChild(vizHost); body.appendChild(ansEl); body.appendChild(hintEl); body.appendChild(acts); body.appendChild(fb); body.appendChild(steps); body.appendChild(after);
@@ -390,7 +390,7 @@
       var a = L.ans, sp = L.p.a;
       try {
         if (a === null || a === undefined || a === '' || a === -1) return '<i>no answer</i>';
-        if (sp.t === 'mc') return (Array.isArray(a) ? a : [a]).map(function (i) { return '<span class="mlp-ans-choice">' + (sp.choices || [])[i] + '</span>'; }).join(', ');
+        if (sp.t === 'mc') return (Array.isArray(a) ? a : [a]).map(function (i) { return '<span class="mlp-ans-choice ml-norole">' + (sp.choices || [])[i] + '</span>'; }).join(', ');
         if (sp.t === 'tf') return a ? 'True' : 'False';
         if (sp.t === 'formula') { try { return esc('$' + ML._check.formulaTex(String(a)) + '$'); } catch (e2) { return esc(String(a)); } }
         if (sp.t === 'prop') { try { return esc(ML._check.propShow(String(a))); } catch (e3) { return esc(String(a)); } }
@@ -410,7 +410,7 @@
       var h = card0 ? '<div class="mlp-done"><p class="mlp-done-big">' + sum.right + ' of ' + sum.total + ' right</p><p>' + (sum.right === sum.total ? 'Every one. Strong work.' : 'Look over the ones you missed below: each shows its steps.') + '</p><ol class="mlp-qsum">'
         : '<div class="mlp-done"><p class="mlp-done-big">Checkpoint: ' + sum.right + ' of ' + sum.total + ' right</p><p>' + (sum.right >= sum.total - 1 ? 'Strong work. You’ve kept these topics.' : 'Look over the ones you missed below. They’ll come back for review tomorrow.') + '</p><ol class="mlp-qsum">';
       log.forEach(function (L) {
-        h += '<li class="' + (L.ok ? 'ok' : 'no') + '"><details' + (L.ok ? '' : ' open') + '><summary><span class="mlp-qsum-icon" aria-hidden="true">' + (L.ok ? '✓' : '↺') + '</span><span class="mlp-sr">' + (L.ok ? 'Right: ' : 'Missed: ') + '</span>' + esc(topicTitle(L.id)) + '</summary><div class="mlp-qsum-q">' + L.p.q + '</div>' + (L.ok ? '' : '<p class="mlp-qsum-you">Your answer: ' + yours(L) + '</p>') + '<ol class="mlp-steps">' + (L.p.steps || []).map(function (s) { return '<li>' + s + '</li>'; }).join('') + '</ol><p class="mlp-steps-a"><b>Answer:</b> ' + fmtAnswer(L.p.a) + '</p></details></li>';
+        h += '<li class="' + (L.ok ? 'ok' : 'no') + '"><details' + (L.ok ? '' : ' open') + '><summary><span class="mlp-qsum-icon" aria-hidden="true">' + (L.ok ? '✓' : '↺') + '</span><span class="mlp-sr">' + (L.ok ? 'Right: ' : 'Missed: ') + '</span>' + esc(topicTitle(L.id)) + '</summary><div class="mlp-qsum-q ml-norole">' + L.p.q + '</div>' + (L.ok ? '' : '<p class="mlp-qsum-you">Your answer: ' + yours(L) + '</p>') + '<ol class="mlp-steps">' + (L.p.steps || []).map(function (s) { return '<li>' + s + '</li>'; }).join('') + '</ol><p class="mlp-steps-a"><b>Answer:</b> ' + fmtAnswer(L.p.a) + '</p></details></li>';
       });
       body.innerHTML = h + '</ol></div>'; typeset(body);
     }

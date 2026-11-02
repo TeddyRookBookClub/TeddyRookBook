@@ -1,0 +1,202 @@
+year: 2019
+edition: 60th
+date: "July 16–17, 2019 · Bath, United Kingdom"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2019/2019_eng.pdf
+  archive: https://www.imo-official.org/year_info.aspx?year=2019
+problems:
+  - id: P1
+    day: 1
+    topic: "Integer functional equation with doubling and composition"
+    areas: [algebra, number-theory]
+    difficulty: 1
+    answer: "$f(n)=0$ for all $n$, and $f(n)=2n+c$ for any integer $c$"
+    hints:
+      - 'Put $a=0$ to rewrite $f(f(m))$ in terms of $f(m)$, then use it on the right side.'
+      - 'You should reach $f(a+b)=f(a)+f(b)-f(0)$. What does that make $f$?'
+    solution: |
+      **Key idea:** the case $a=0$ removes the composition. What is left says $f$ is linear, and comparing coefficients finishes.
+
+      Put $a=0$: $f(f(b))=f(0)+2f(b)$ for every $b$. Use this with $b$ replaced by $a+b$ on the right side of the equation:
+      $$f(2a)+2f(b)=f(0)+2f(a+b).$$
+      With $b=0$ this gives $f(2a)=2f(a)-f(0)$. Substituting back,
+      $$2f(a)-f(0)+2f(b)=f(0)+2f(a+b)\quad\Longrightarrow\quad f(a+b)=f(a)+f(b)-f(0).$$
+      So $g(n)=f(n)-f(0)$ satisfies $g(a+b)=g(a)+g(b)$ on the integers, which forces $g(n)=kn$ with $k=g(1)$. Hence $f(n)=kn+c$.
+
+      Plug in. The left side is $2ka+c+2(kb+c)=2k(a+b)+3c$. The right side is $k\big(k(a+b)+c\big)+c=k^2(a+b)+kc+c$. These agree for all $a,b$ exactly when $k^2=2k$ and $3c=kc+c$:
+      - $k=0$ needs $c=0$, giving $f\equiv0$;
+      - $k=2$ works for every integer $c$, giving $f(n)=2n+c$.
+    checked: "script: among all f(n) = kn + c with |k|, |c| ≤ 20, exactly f ≡ 0 and the 41 functions 2n + c pass for all |a|, |b| ≤ 8"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Four points on a circle through two cevians"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Extend $AA_1$ and $BB_1$ to meet the circumcircle again at $A_2$ and $B_2$. Since $PQ\parallel AB$, the points $P,Q,A_2,B_2$ are concyclic.'
+      - 'The angle condition at $P_1$ matches an inscribed angle at $B_2$. Show that $C,B_1,P_1,B_2$ are concyclic, then move angles to the circle through $P,A_2,B_2$.'
+    solution: |
+      **Key idea:** extend the two cevians to the circumcircle. The two second intersections lie on a circle with $P$ and $Q$. The angle conditions place $P_1$ and $Q_1$ on that same circle.
+
+      Let $\omega$ be the circumcircle of $ABC$. Let line $AA_1$ meet $\omega$ again at $A_2$, and line $BB_1$ meet it again at $B_2$. We write $\angle(m,n)$ for the directed angle between lines, mod $180^\circ$.
+
+      **Step 1: $P,Q,A_2,B_2$ are concyclic.** Since $PQ\parallel AB$, $P$ is on line $AA_2$ and $Q$ is on line $BB_2$,
+      $$\angle(PQ,PA_2)=\angle(AB,AA_2)=\angle(B_2B,B_2A_2)=\angle(B_2Q,B_2A_2),$$
+      where the middle step uses the chord $BA_2$ of $\omega$. So $P$ and $B_2$ see $QA_2$ at the same directed angle. Call the circle through $P,Q,A_2,B_2$ $\gamma$.
+
+      **Step 2: $C,B_1,P_1,B_2$ are concyclic.** Point $B_2$ lies on arc $CA$ not containing $B$, so $\angle BB_2C=\angle BAC$ (both see the chord $BC$ from the side of $A$). $B_1$ is on segment $BB_2$ and on segment $PP_1$, so
+      $$\angle B_1P_1C=\angle PP_1C=\angle BAC=\angle BB_2C=\angle B_1B_2C .$$
+      Both $P_1$ and $B_2$ lie on the side of line $AC$ away from $B$. ($P$ is inside the triangle, and $P_1$ is past $B_1$ on line $PB_1$.) Equal angles over $B_1C$ from the same side give the circle.
+
+      **Step 3: $P_1$ is on $\gamma$.**
+      $$\angle(P_1P,P_1B_2)=\angle(P_1B_1,P_1B_2)=\angle(CB_1,CB_2)=\angle(CA,CB_2)=\angle(A_2A,A_2B_2)=\angle(A_2P,A_2B_2).$$
+      The second equality uses the circle of Step 2, and the fourth uses $\omega$ (chord $AB_2$). So $P_1$ lies on the circle through $P,A_2,B_2$, which is $\gamma$.
+
+      **Step 4: $Q_1$ is on $\gamma$.** The same argument with the roles of $A$ and $B$ swapped works. $A_2$ is on arc $BC$ not containing $A$, so $\angle AA_2C=\angle ABC$, and
+      $$\angle A_1Q_1C=\angle QQ_1C=\angle CBA=\angle AA_2C=\angle A_1A_2C,$$
+      with $Q_1$ and $A_2$ on the side of $BC$ away from $A$. So $C,A_1,Q_1,A_2$ are concyclic. Then
+      $$\angle(Q_1Q,Q_1A_2)=\angle(CA_1,CA_2)=\angle(CB,CA_2)=\angle(B_2B,B_2A_2)=\angle(B_2Q,B_2A_2),$$
+      so $Q_1$ is on the circle through $Q,B_2,A_2$, again $\gamma$.
+
+      So $P,Q,P_1,Q_1$ all lie on $\gamma$.
+    checked: "script: 150 random configurations (P₁, Q₁ found numerically from the angle conditions); P, Q, P₁, Q₁ concyclic to relative error 2e-12"
+    viz: imo-2019-p2
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Trading friendships until everyone has at most one"
+    areas: [combinatorics]
+    difficulty: 5
+    hints:
+      - 'Think of a graph. A move takes a path $B-A-C$ with $B,C$ not adjacent and replaces its two edges by the edge $BC$. Every degree keeps its parity. What happens if the graph is a tree?'
+      - 'In a forest, moves can always be made until every degree is at most $1$. So it is enough to reach a tree.'
+      - 'Show: if a connected graph has a cycle, is not complete, and is not just one cycle, some move keeps it connected. Why can our graph never become a single cycle?'
+    solution: |
+      **Key idea:** keep the graph connected while it has cycles; then it ends up a tree, and trees are easy. The only connected graphs that could block this are complete graphs and single cycles, and parity rules out both.
+
+      Think of users as vertices and friendships as edges. A move picks a vertex $A$ with two neighbors $B,C$ that are not adjacent, deletes $AB$ and $AC$, and adds $BC$. It lowers the number of edges by one. The degree of $A$ drops by $2$, and every other degree stays the same, so **every degree keeps its parity.**
+
+      **Step 1: forests are easy.** Suppose the graph is a forest (no cycles). If some vertex $A$ has degree at least $2$, take two of its neighbors $B,C$. They are not adjacent (no triangles in a forest), so the move is allowed. Before the move, the only path from $B$ to $C$ went through $A$, so after deleting $AB$ and $AC$ they are in different components, and adding $BC$ creates no cycle. So the graph stays a forest. The number of edges drops each time, so after finitely many moves every vertex has degree at most $1$.
+
+      **Step 2: a lemma.** *Let $G$ be connected, with a cycle, not complete, and not a single cycle. Then some move leaves $G$ connected.*
+
+      Two kinds of moves are safe:
+      - (a) $A$ is not a cut vertex, has degree at least $3$, and has two non-adjacent neighbors $B,C$. After the move, $G-A$ is still connected (it only gained the edge $BC$), and $A$ is still joined to a third neighbor.
+      - (b) $A$ is a cut vertex, and some component $K_1$ of $G-A$ contains two neighbors $B,B'$ of $A$. Take $C$ a neighbor of $A$ in another component $K_2$. Then $B,C$ are not adjacent. After the move, $BC$ joins $K_1$ and $K_2$, $A$ is still joined to $B'\in K_1$, and $A$ keeps its edges to all other components. So everything stays connected.
+
+      Since $G$ has a cycle, it has a block $H$ (a maximal 2-connected piece) with at least $3$ vertices. Every vertex of $H$ has at least two neighbors in $H$.
+      - If $H\ne G$, then $H$ contains a cut vertex $A$ of $G$. The set $H-A$ is connected, so it lies in one component of $G-A$, and it holds two neighbors of $A$. So (b) applies.
+      - If $H=G$, then $G$ is 2-connected and has no cut vertices. If some vertex of degree at least $3$ has two non-adjacent neighbors, (a) applies. Otherwise every vertex of degree at least $3$ has a complete neighborhood. Suppose some vertex $v$ has degree at least $3$. Each neighbor $u$ of $v$ is adjacent to $v$ and to the other (at least two) neighbors of $v$, so $u$ has degree at least $3$. Its neighborhood is complete and contains $v$, so every neighbor of $u$ is $v$ or a neighbor of $v$. Hence $u$ and $v$ have the same closed neighborhood. So the closed neighborhood of $v$ is closed under taking neighbors. It is the whole connected graph, and it is complete. That is excluded. So every vertex has degree $2$ (degree $\le1$ is impossible in a 2-connected graph with $3$ or more vertices), and $G$ is a single cycle, also excluded.
+
+      **Step 3: the start is connected.** Each user has at least $1009$ friends. Two users $u,v$ who are not friends have at least $1009+1009=2018$ friends among the other $2017$ users, so they have a common friend. Hence the graph is connected.
+
+      **Step 4: the plan.** While the graph has a cycle, make a move that keeps it connected. This is always possible by the lemma, because the graph is never complete and never a single cycle:
+      - complete is impossible because the graph starts with $1009\cdot1010$ edges, fewer than $\binom{2019}{2}=2019\cdot1009$, and edges only decrease;
+      - a single cycle is impossible because it has all degrees even, while $1010$ users start with an odd degree ($1009$) and parities never change.
+
+      Each move removes an edge, so this stops, and it stops at a connected graph with no cycle: a tree. Then Step 1 finishes the job. At the end every user has at most one friend.
+    checked: "script: the lemma checked on every connected graph with at most 6 vertices; the whole plan run on random graphs of the same shape with 5 to 11 vertices, always ending with all degrees at most 1"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "A factorial equal to a product of power-of-two gaps"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$(k,n)=(1,1)$ and $(3,2)$"
+    hints:
+      - 'Pull out the powers of $2$ from the right side. Comparing the exponent of $2$ shows $k$ is much larger than $n$.'
+      - 'Now compare exponents of $3$. Only factors $2^j-1$ with $j$ even contribute, and the lifting-the-exponent lemma counts them.'
+    solution: |
+      **Key idea:** the power of $2$ on the right forces $k>\tfrac{n(n-1)}2$, while the power of $3$ on the right is only about $\tfrac34n$. These are compatible only for $n\le6$, which a direct check finishes.
+
+      The right side is
+      $$\prod_{i=0}^{n-1}(2^n-2^i)=2^{0+1+\dots+(n-1)}\prod_{j=1}^{n}(2^j-1)=2^{n(n-1)/2}\prod_{j=1}^{n}(2^j-1).$$
+
+      **Powers of $2$.** $v_2(k!)=k-s_2(k)<k$, where $s_2$ is the binary digit sum. So $k>\frac{n(n-1)}2$, that is $k\ge\frac{n(n-1)}2+1$.
+
+      **Powers of $3$.** $3\mid2^j-1$ only for even $j=2m$. By lifting the exponent, $v_3(4^m-1)=1+v_3(m)$. So
+      $$v_3(\text{right side})=\sum_{m=1}^{\lfloor n/2\rfloor}\big(1+v_3(m)\big)=\lfloor n/2\rfloor+v_3\big(\lfloor n/2\rfloor!\big)<\frac n2+\frac n4=\frac{3n}4,$$
+      using $v_3(r!)<r/2$ (for $n=1$ the right side is $1$, which we check directly). On the left, $v_3(k!)\ge\lfloor k/3\rfloor>\frac k3-1$. Equality of the two sides then needs
+      $$\frac13\Big(\frac{n(n-1)}2+1\Big)-1<\frac{3n}4\iff 2n^2-11n-8<0,$$
+      which forces $n\le6$.
+
+      **Small cases.** The right side for $n=1,\dots,6$ is $1$, $6$, $168$, $20160$, $9999360$ and $20158709760$. Of these only $1=1!$ and $6=3!$ are factorials. ($168$ lies between $5!$ and $6!$, $20160$ between $7!$ and $8!$, $9999360$ between $10!$ and $11!$, and $20158709760$ between $13!$ and $14!$.)
+    checked: "script: computed the right side for n ≤ 11 and compared it with factorials; only (1, 1) and (3, 2)"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Flipping the coin counted by the heads: average length"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: "The average is $\\dfrac{n(n+1)}{4}$"
+    hints:
+      - 'If the last coin shows T, it is never touched. What if it shows H?'
+      - 'With the last coin H, reverse the other $n-1$ coins and flip all of them. Compare the two processes step by step.'
+    solution: |
+      **Key idea:** condition on the last coin. If it shows T, nothing changes. If it shows H, the process on the other coins mirrors the process on their reversed complement, plus exactly $n$ extra steps at the end. That gives the recursion $E_n=E_{n-1}+\frac n2$.
+
+      Write a configuration of $n$ coins as $C'X$, where $C'$ is the first $n-1$ coins and $X$ is the last coin. Let $E_n$ be the average of $L$ over all $2^n$ configurations. We prove by induction on $n$ that every process stops, and find $E_n$. For $n=1$: $L(T)=0$ and $L(H)=1$, so $E_1=\tfrac12$.
+
+      **Last coin T.** At most $n-1$ coins show H, so the flipped coin is always among the first $n-1$, and the last coin stays T. The process is exactly the process on $C'$, so $L(C'T)=L(C')$.
+
+      **Last coin H.** Let $D$ be $C'$ reversed and complemented: position $j$ of $D$ shows the opposite of position $n-j$ of $C'$. Suppose $C'$ has $h<n-1$ heads. Then
+      - in $C'H$ there are $h+1\le n-1$ heads, so coin $h+1$ is flipped, inside $C'$;
+      - $D$ has $(n-1)-h\ge1$ heads, so its process flips its coin $n-1-h$, which is coin $n-(n-1-h)=h+1$ of $C'$.
+
+      Flipping a coin in $C'$ is the same as flipping the matching coin in $D$. So the two processes move in lockstep until $D$ is all tails, which is when $C'$ is all heads. That takes $L(D)$ steps. Then the state is all $n$ coins H. The next step flips coin $n$, giving $n-1$ heads followed by T. By the first case, this takes $L(H\cdots H)$ more steps on $n-1$ coins. From $m$ heads in a row, each step turns the last head into a tail, so that is $n-1$ steps. Altogether
+      $$L(C'H)=L(D)+1+(n-1)=L(D)+n .$$
+
+      **Average.** As $C'$ runs over all configurations of $n-1$ coins, so does $D$. So
+      $$E_n=\frac12\big(E_{n-1}\big)+\frac12\big(E_{n-1}+n\big)=E_{n-1}+\frac n2,$$
+      and with $E_1=\frac12$ this gives $E_n=\frac12(1+2+\dots+n)=\frac{n(n+1)}4$. Both cases also show, by induction, that every process stops.
+    checked: "script: exact averages for n = 1…10 by running all 2ⁿ configurations match n(n+1)/4"
+    viz: imo-2019-p5
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Incircle chords and two circles meeting on a perpendicular"
+    areas: [geometry]
+    difficulty: 5
+    hints:
+      - 'Let $M$ be the midpoint of $EF$ and $D''$ the point of $\omega$ opposite $D$. Show that $P$, $M$ and $D''$ are collinear. Then let line $DM$ meet $\omega$ again at $X$.'
+      - 'The polar of $M$ with respect to $\omega$ is the line through $A$ perpendicular to $AI$. So, by the self-polar diagonal triangle of the quadrilateral $D,X,D'',P$, it is enough to show that $X$ lies on line $PQ$.'
+      - 'Line $PQ$ is the radical axis of the two circles. For a point $z$ of $\omega$, its power with respect to circle $PCE$ has a short formula in complex numbers.'
+    solution: |
+      **Key idea:** the second intersection $X$ of line $PQ$ with the incircle can be named exactly: it is where the line from $D$ through the midpoint of $EF$ meets the incircle again. After that, a classical fact about poles and polars finishes the proof.
+
+      **Setup.** Use complex numbers with $\omega$ the unit circle, so $I=0$ and $D,E,F$ are unit numbers $d,e,f$. For a unit number $z$, $\bar z=1/z$. The tangents meet at
+      $$A=\frac{2ef}{e+f},\qquad B=\frac{2fd}{f+d},\qquad C=\frac{2de}{d+e}.$$
+      Let $M=\frac{e+f}2$ be the midpoint of $EF$, and $D'=-d$ the point opposite $D$. Two standard facts about unit numbers $u,v$:
+      - the points $z$ of line $uv$ satisfy $z+uv\,\bar z=u+v$;
+      - so if a line through a point $m$ meets $\omega$ at $z$, it meets $\omega$ again at $\sigma_m(z)=\dfrac{z-m}{\bar m z-1}$ (put $u=z$, $v=\sigma_m(z)$ and the point $m$ into the first fact).
+
+      The map $\sigma_m$ is a Möbius transformation, so it keeps the cross ratio $(z_1,z_2;z_3,z_4)=\frac{(z_1-z_3)(z_2-z_4)}{(z_1-z_4)(z_2-z_3)}$. Write $\sigma=\sigma_M$. Line $EF$ goes through $M$, so $\sigma$ swaps $E$ and $F$.
+
+      **Step 1: $P=\sigma(D')$.** Chords $DR$ and $EF$ are perpendicular exactly when $dr=-ef$, so $R=-ef/d$. With $\bar A=\frac{2}{e+f}$,
+      $$P=\sigma_A(R)=\frac{R-A}{\bar A R-1}=\frac{ef(e+f+2d)}{2ef+de+df}.$$
+      With $\bar M=\frac{e+f}{2ef}$, we also get $\sigma(-d)=\dfrac{-d-M}{-\bar M d-1}=\dfrac{ef(e+f+2d)}{2ef+de+df}$. They agree, so $P$, $M$, $D'$ are collinear. (Geometrically: $DR\parallel AI$, so $R$ is the mirror image of $D'$ in $AI$.)
+
+      **Step 2: powers of points on $\omega$.** Let $\omega_1$ be the circle $PCE$ and $\omega_2$ the circle $PBF$. The function $g_1(z)=\operatorname{pow}(z,\omega_1)-\operatorname{pow}(z,\omega)$ is a real affine function of $z$ that vanishes on line $PE$. So is $h_1(z)/h_1(C)$, where $h_1(z)=z+pe\,\bar z-p-e$. (It is real because $\overline{h_1(z)}=h_1(z)/(pe)$.) Two real affine functions that vanish on the same line and agree at a point $C$ off it are equal, so
+      $$g_1(z)=g_1(C)\,\frac{h_1(z)}{h_1(C)} .$$
+      ($C$ is not on line $PE$: line $CE$ touches $\omega$ only at $E$, and $P\ne E$.) Now $g_1(C)=-CE^2$, and a short computation gives $C-E=\frac{e(d-e)}{d+e}$, $CE^2=-\frac{(d-e)^2}{(d+e)^2}$ and $h_1(C)=\frac{(e-p)(d-e)}{d+e}$. For $z$ on $\omega$, $h_1(z)=z+\frac{pe}z-p-e=\frac{(z-p)(z-e)}{z}$. So for $z$ on $\omega$,
+      $$\operatorname{pow}(z,\omega_1)=\frac{(d-e)(z-p)(z-e)}{(d+e)(e-p)\,z},\qquad
+        \operatorname{pow}(z,\omega_2)=\frac{(d-f)(z-p)(z-f)}{(d+f)(f-p)\,z},$$
+      the second by the same computation with $B,F$ in place of $C,E$.
+
+      **Step 3: $X=\sigma(D)$ lies on line $PQ$.** Apply $\sigma$ to the four points $D,D',E,F$. They go to $X,P,F,E$. Cross ratios are kept, and $(a,b;c,d)=(b,a;d,c)=1/(b,a;c,d)$, so
+      $$(X,P;E,F)=(D',D;E,F),\quad\text{that is}\quad \frac{(x-e)(p-f)}{(x-f)(p-e)}=\frac{(d+e)(d-f)}{(d+f)(d-e)} .$$
+      Rearranged, this says $\frac{(d-e)(x-e)}{(d+e)(e-p)}=\frac{(d-f)(x-f)}{(d+f)(f-p)}$. Multiply by $\frac{x-p}{x}$: by Step 2, $X$ has the same power with respect to $\omega_1$ and $\omega_2$. So $X$ lies on their radical axis, which is line $PQ$. Also $X\ne P$, since $\sigma$ is one-to-one and $D\ne D'$. Hence line $PQ$ is line $PX$.
+
+      **Step 4: poles and polars.** In the right triangle $AEI$, $M$ is the foot of the altitude from $E$, so $IM\cdot IA=IE^2$. Hence the polar of $M$ with respect to $\omega$ is the line $\ell$ through $A$ perpendicular to $AI$.
+
+      The four points $D,X,D',P$ lie on $\omega$ and are distinct. ($M$ lies strictly inside $\omega$, so it is on no tangent, which rules out $X=D$ and $P=D'$. And $M$ is on line $DI$ only if line $AI$ is line $DI$, which would mean $AB=AC$.) Lines $DX$ and $D'P$ meet at $M$. For four points on a circle, the diagonal points of the quadrilateral form a self-polar triangle. So the point where lines $DD'$ and $PX$ meet lies on the polar of $M$, which is $\ell$.
+
+      Line $DD'$ is line $DI$. It is not parallel to $\ell$: otherwise $AI\perp\ell$ and $AI\parallel DI$ would give $AI\perp BC$, so $AB=AC$. So $DI$ meets $\ell$ at a single point $K$, and line $PX=PQ$ passes through $K$ (or is line $DI$ itself). So lines $DI$ and $PQ$ meet on $\ell$.
+    checked: "computer algebra: the formulas for P, X and the powers, and the collinearity of P, Q, K, checked symbolically; numeric test on random acute triangles"
+    status: ready

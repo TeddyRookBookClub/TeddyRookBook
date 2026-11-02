@@ -1,0 +1,51 @@
+{{ define "main" }}
+{{- /* /math/gallery/<slug>/: one Math Gallery piece (content/math/gallery/<slug>.md). Front matter: title, summary, emoji,
+   gtags (chaos probability geometry numbers famous-problems unsolved), ladder_links [{url, title?, why?}], credits
+   [{name, url, what, licence}] (the Sources and credits block), weight (order), piece (default: the file name).
+   Body: markdown with TeX in $…$ / $$…$$ (protected by comp/md.html, typeset in the browser by static/math/core/tex.js),
+   with the sections "What you're seeing", "Why it works" and "Try this" as ## headings. "Go deeper" comes from
+   ladder_links. The visual: static/gallery/pieces/<piece>.js on the shared helper static/gallery/core.js. */ -}}
+{{- $slug := .Params.piece | default .File.ContentBaseName -}}
+{{- partial "gallery/head.html" (dict "p" . "piece" $slug) -}}
+{{- $T := dict "chaos" "Chaos" "probability" "Probability" "geometry" "Geometry" "numbers" "Numbers" "famous-problems" "Famous problems" "unsolved" "Unsolved" -}}
+<article class="gx gx-page">
+  <nav class="gx-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <a href="{{ "math/gallery/" | relURL }}">Gallery</a> <span aria-hidden="true">›</span> <span>{{ .Title }}</span></nav>
+  <header class="gx-head">
+    <h1><span class="gx-emoji" aria-hidden="true">{{ .Params.emoji }}</span> {{ .Title }}</h1>
+    {{ with .Params.summary }}<p class="gx-sum">{{ . }}</p>{{ end }}
+    {{- with .Params.gtags }}
+    <ul class="gx-tags" aria-label="Tags">{{ range . }}<li><a href="{{ "math/gallery/" | relURL }}#tag={{ . }}">{{ index $T . | default . }}</a></li>{{ end }}</ul>
+    {{- end }}
+  </header>
+  <section class="gx-hero" data-piece="{{ $slug }}" aria-label="Interactive picture: {{ .Title }}">
+    <div class="gx-stage"></div>
+    <div class="gx-stats" aria-live="off"></div>
+    <div class="gx-bar"></div>
+    <p class="gx-live gx-sr" aria-live="polite"></p>
+    <noscript><p class="gx-err">The interactive picture needs JavaScript. The explanation below does not.</p></noscript>
+  </section>
+  <div class="gx-body" data-tex>
+    {{ partial "comp/md.html" (dict "s" .RawContent "p" .) }}
+  </div>
+  {{- with .Params.ladder_links }}
+  <section class="gx-deeper" aria-labelledby="gx-deeper-h">
+    <h2 id="gx-deeper-h">Go deeper</h2>
+    <ul>
+      {{- range . }}
+      {{- $u := .url }}{{ $t := .title }}{{ $c := "" }}
+      {{- with site.GetPage (strings.TrimSuffix "/" $u) }}{{ if not $t }}{{ $t = .Title }}{{ end }}{{ with .Parent }}{{ if ne .Kind "home" }}{{ $c = .Title }}{{ end }}{{ end }}{{ else }}{{ warnf "gallery %s: ladder link %s not found" $slug $u }}{{ end }}
+      <li><a href="{{ $u | relURL }}">{{ $t | default $u }}</a>{{ with $c }}{{ if ne . "Math Ladder" }} <span class="gx-in">· {{ . }}</span>{{ end }}{{ end }}{{ with .why }}<span class="gx-why">: {{ . }}</span>{{ end }}</li>
+      {{- end }}
+    </ul>
+  </section>
+  {{- end }}
+  {{- $all := where (where site.RegularPages "Section" "math") "Type" "gallery" -}}
+  {{- $all = sort $all "Weight" -}}
+  {{- $i := -1 }}{{ range $k, $v := $all }}{{ if eq $v.RelPermalink $.RelPermalink }}{{ $i = $k }}{{ end }}{{ end -}}
+  <nav class="gx-pn" aria-label="More pieces">
+    {{- if gt $i 0 }}{{ with index $all (sub $i 1) }}<a class="gx-pn-a" href="{{ .RelPermalink }}" rel="prev"><span>← Previous</span> {{ .Params.emoji }} {{ .Title }}</a>{{ end }}{{ else }}<span></span>{{ end }}
+    {{- if and (ge $i 0) (lt (add $i 1) (len $all)) }}{{ with index $all (add $i 1) }}<a class="gx-pn-a gx-next" href="{{ .RelPermalink }}" rel="next"><span>Next →</span> {{ .Params.emoji }} {{ .Title }}</a>{{ end }}{{ end }}
+  </nav>
+  <p class="gx-back"><a href="{{ "math/gallery/" | relURL }}">All pieces in the Math Gallery</a></p>
+</article>
+{{ end }}

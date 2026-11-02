@@ -1,0 +1,38 @@
+{{ define "main" }}
+{{- /* /math/gallery/: the Math Gallery hub (content/math/gallery/_index.md). Cards for every piece, ordered by weight,
+   with tag filters (static/gallery/core.js; #tag=<tag> in the address opens a filter). */ -}}
+{{- partial "gallery/head.html" (dict "p" . "piece" "") -}}
+{{- $T := slice (slice "chaos" "Chaos") (slice "probability" "Probability") (slice "geometry" "Geometry") (slice "numbers" "Numbers") (slice "famous-problems" "Famous problems") (slice "unsolved" "Unsolved") -}}
+{{- $TL := dict }}{{ range $T }}{{ $TL = merge $TL (dict (index . 0) (index . 1)) }}{{ end -}}
+{{- $all := sort .RegularPages "Weight" -}}
+<article class="gx gx-hub">
+  <nav class="gx-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <span>Gallery</span></nav>
+  <header class="gx-head">
+    <p class="gx-eyebrow">Math Ladder · Pictures you can play with</p>
+    <h1>{{ .Title }}</h1>
+    <div class="gx-intro">{{ .Content }}</div>
+  </header>
+  <div class="gx-filters" role="group" aria-label="Show pieces by tag">
+    <button type="button" class="gx-chip" data-tag="" aria-pressed="true">All</button>
+    {{- range $T }}{{ $k := index . 0 }}{{ if where $all "Params.gtags" "intersect" (slice $k) }}
+    <button type="button" class="gx-chip" data-tag="{{ $k }}" aria-pressed="false">{{ index . 1 }}</button>
+    {{- end }}{{ end }}
+  </div>
+  <p class="gx-count" aria-live="polite">{{ len $all }} pieces</p>
+  <ul class="gx-cards">
+    {{- range $all }}
+    <li class="gx-card" data-tags="{{ delimit (.Params.gtags | default slice) " " }}">
+      <a href="{{ .RelPermalink }}">
+        <span class="gx-card-e" aria-hidden="true">{{ .Params.emoji }}</span>
+        <span class="gx-card-t">{{ .Title }}</span>
+        <span class="gx-card-s">{{ .Params.summary }}</span>
+        <span class="gx-card-tags">{{ range $j, $t := .Params.gtags }}{{ if $j }} · {{ end }}{{ index $TL $t | default $t }}{{ end }}</span>
+      </a>
+    </li>
+    {{- end }}
+  </ul>
+  <aside class="gx-note">
+    <p>Each piece is a picture you can poke at, then a plain explanation built up from the start, with links to the <a href="{{ "math/" | relURL }}">Math Ladder</a> lessons that teach the ideas behind it. The pictures are drawn in your browser, and they pause when you scroll away.</p>
+  </aside>
+</article>
+{{ end }}

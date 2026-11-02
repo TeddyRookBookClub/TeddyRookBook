@@ -1,32 +1,34 @@
 {{ define "main" }}
-{{- /* One Putnam year (data/comp/putnam/<year>.yaml; page made by content/math/competitions/putnam/_content.gotmpl). */ -}}
+{{- /* One year of a solutions guide: data/comp/<contest>/<year>.yaml (page param `contest`, default "putnam"; settings in
+   _partials/comp/contest.html; pages made by content/math/competitions/<contest>/_content.gotmpl). */ -}}
+{{- $K := partial "comp/contest.html" .Params.contest -}}
 {{ partial "comp/head.html" . }}
-{{- $Y := (index (site.Data.comp | default dict) "putnam") | default dict -}}
+{{- $Y := (index (site.Data.comp | default dict) $K.key) | default dict -}}
 {{- $k := .Params.year }}{{ $y := index $Y $k -}}
 {{- $keys := slice }}{{ range $kk, $_ := $Y }}{{ $keys = $keys | append (string $kk) }}{{ end }}{{ $keys = sort $keys -}}
 {{- $prev := "" }}{{ $next := "" }}{{ range $i, $v := $keys }}{{ if eq $v $k }}{{ if gt $i 0 }}{{ $prev = index $keys (sub $i 1) }}{{ end }}{{ if lt (add $i 1) (len $keys) }}{{ $next = index $keys (add $i 1) }}{{ end }}{{ end }}{{ end -}}
-{{- $pdf := $y.links.problems | default "https://kskedlaya.org/putnam-archive/" -}}
+{{- $pdf := $y.links.problems | default $K.archive -}}
 {{- $n := 0 }}{{ range $y.problems }}{{ if eq .status "ready" }}{{ $n = add $n 1 }}{{ end }}{{ end -}}
 <article class="cp cp-year">
-  <nav class="cp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <a href="{{ "math/competitions/" | relURL }}">Competitions</a> <span aria-hidden="true">›</span> <a href="{{ "math/competitions/putnam/" | relURL }}">Putnam</a> <span aria-hidden="true">›</span> <span>{{ $y.year }}</span></nav>
+  <nav class="cp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <a href="{{ "math/competitions/" | relURL }}">Competitions</a> <span aria-hidden="true">›</span> <a href="{{ $K.base | relURL }}">{{ $K.name }}</a> <span aria-hidden="true">›</span> <span>{{ $y.year }}</span></nav>
   <header class="cp-head">
     <h1>{{ .Title }}</h1>
-    <p class="cp-meta">{{ with $y.edition }}The {{ . }} Putnam{{ end }}{{ with $y.date }}{{ if $y.edition }}, {{ end }}{{ . }}{{ end }}{{ if or $y.edition $y.date }} · {{ end }}{{ $n }} of {{ len ($y.problems | default slice) }} solutions ready</p>
+    <p class="cp-meta">{{ with $y.edition }}The {{ . }}{{ $K.editionSuffix }}{{ end }}{{ with $y.date }}{{ if $y.edition }}, {{ end }}{{ . }}{{ end }}{{ if or $y.edition $y.date }} · {{ end }}{{ $n }} of {{ len ($y.problems | default slice) }} solutions ready</p>
   </header>
   <div class="cp-legal" role="note">
-    <p><b>Read the problems at the official link.</b> The {{ $y.year }} Putnam problems are © the Mathematical Association of America, so we don't reproduce them here. <a href="{{ $pdf }}" rel="noopener">Open the {{ $y.year }} problems (PDF)</a>{{ with $y.links.archive }} from the <a href="{{ . }}" rel="noopener">Putnam Archive</a>{{ end }}.</p>
+    <p><b>Read the problems at the official link.</b> The {{ $y.year }} {{ $K.name }} problems are © {{ $K.owner }}, so we don't reproduce them here. <a href="{{ $pdf }}" rel="noopener">Open the {{ $y.year }} problems (PDF)</a>{{ with $y.links.archive }} from <a href="{{ . }}" rel="noopener">{{ $K.archiveName }}</a>{{ end }}.</p>
     <p>The topic labels, hints and solutions below are our own, written from scratch: <b>our solutions, not official ones</b>. If you spot a mistake, please use “Report a problem” at the bottom of the page.</p>
   </div>
   {{ with $y.note }}<div class="cp-md cp-ynote">{{ partial "comp/md.html" (dict "s" . "p" $) }}</div>{{ end }}
   <div class="cp-cards">
   {{- range $y.problems }}
-  {{ partial "comp/pcard.html" (dict "p" $ "x" . "year" $y.year "pdf" $pdf) }}
+  {{ partial "comp/pcard.html" (dict "p" $ "x" . "year" $y.year "pdf" $pdf "where" $K.where) }}
   {{- end }}
   </div>
   <nav class="cp-pn" aria-label="Other years">
-    {{ with $prev }}<a href="{{ printf "math/competitions/putnam/%s/" . | relURL }}" rel="prev">← Putnam {{ . }}</a>{{ else }}<span></span>{{ end }}
-    <a href="{{ "math/competitions/putnam/" | relURL }}">All years</a>
-    {{ with $next }}<a href="{{ printf "math/competitions/putnam/%s/" . | relURL }}" rel="next">Putnam {{ . }} →</a>{{ else }}<span></span>{{ end }}
+    {{ with $prev }}<a href="{{ printf "%s%s/" $K.base . | relURL }}" rel="prev">← {{ $K.name }} {{ . }}</a>{{ else }}<span></span>{{ end }}
+    <a href="{{ $K.base | relURL }}">All years</a>
+    {{ with $next }}<a href="{{ printf "%s%s/" $K.base . | relURL }}" rel="next">{{ $K.name }} {{ . }} →</a>{{ else }}<span></span>{{ end }}
   </nav>
 </article>
 {{ end }}

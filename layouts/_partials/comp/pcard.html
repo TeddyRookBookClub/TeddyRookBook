@@ -1,14 +1,15 @@
-{{- /* One Putnam problem card. Argument: (dict "p" page "x" problem "year" year "pdf" problem-PDF url). */ -}}
+{{- /* One problem card (Putnam, IMO). Argument: (dict "p" page "x" problem "year" year "pdf" problem-PDF url "where" link text for screen readers, optional).
+   An optional `day` field (IMO) shows as a tag. */ -}}
 {{- $p := .p }}{{ $x := .x }}{{ $A := partial "comp/areas.html" "x" -}}
 {{- $uid := printf "p%v-%s" .year ($x.id | lower) -}}
 {{- $ready := eq ($x.status | default "coming") "ready" -}}
 <article class="cp-card{{ if not $ready }} cp-coming{{ end }}" id="{{ $x.id | lower }}" aria-labelledby="{{ $uid }}-h" data-areas="{{ delimit ($x.areas | default slice) " " }}" data-diff="{{ $x.difficulty }}">
   <header class="cp-card-h">
     <h2 id="{{ $uid }}-h"><span class="cp-id">{{ $x.id }}</span> <span class="cp-topic">{{ partial "comp/md.html" (dict "s" $x.topic "inline" true) }}</span></h2>
-    <p class="cp-tags">{{ range $x.areas }}<span class="cp-tag">{{ index $A . | default . }}</span>{{ end }}{{ with $x.difficulty }}<span class="cp-diff" title="Difficulty {{ . }} of 5, our estimate"><span class="cp-sr">Difficulty </span>{{ range seq 5 }}<i{{ if le . $x.difficulty }} class="on"{{ end }} aria-hidden="true"></i>{{ end }}<span class="cp-sr"> {{ . }} of 5</span></span>{{ end }}</p>
+    <p class="cp-tags">{{ with $x.day }}<span class="cp-tag cp-tday">Day {{ . }}</span>{{ end }}{{ range $x.areas }}<span class="cp-tag">{{ index $A . | default . }}</span>{{ end }}{{ with $x.difficulty }}<span class="cp-diff" title="Difficulty {{ . }} of 5, our estimate"><span class="cp-sr">Difficulty </span>{{ range seq 5 }}<i{{ if le . $x.difficulty }} class="on"{{ end }} aria-hidden="true"></i>{{ end }}<span class="cp-sr"> {{ . }} of 5</span></span>{{ end }}</p>
   </header>
   <div class="cp-acts">
-    <a class="cp-btn" href="{{ .pdf }}" rel="noopener">Open the problem (PDF)<span class="cp-sr">, {{ .year }} {{ $x.id }}, on the archive site</span></a>
+    <a class="cp-btn" href="{{ .pdf }}" rel="noopener">Open the problem (PDF)<span class="cp-sr">, {{ .year }} {{ $x.id }}, {{ .where | default "on the archive site" }}</span></a>
     {{- if $ready }}
     {{- with $x.hints }}<button type="button" class="cp-btn" data-hint="{{ $uid }}-hints" aria-controls="{{ $uid }}-hints" aria-expanded="false">Show hints</button>{{ end }}
     <button type="button" class="cp-btn pri" data-reveal="{{ $uid }}-sol" aria-controls="{{ $uid }}-sol" aria-expanded="false">Show our solution</button>

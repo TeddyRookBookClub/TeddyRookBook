@@ -1,0 +1,184 @@
+year: 2024
+edition: 65th
+date: "July 16–17, 2024 · Bath, United Kingdom"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2024/2024_eng.pdf
+  archive: https://www.imo-official.org/year_info.aspx?year=2024
+problems:
+  - id: P1
+    day: 1
+    topic: "Sums of floors of multiples, divisible by their count"
+    areas: [number-theory, algebra]
+    difficulty: 1
+    answer: 'Exactly the even integers'
+    hints:
+      - 'Adding $2$ to $\alpha$ adds $n(n+1)$ to the sum. So only $0\le\alpha<2$ needs study.'
+      - 'For $1\le\alpha<2$, write the sum as $n\,u_n$ and compare $u_n$ with $u_{n-1}$.'
+    solution: |
+      **Key idea:** shifting $\alpha$ by $2$ changes nothing, so only $[0,2)$ matters. There, comparing the average of the first $n$ terms with the average of the first $n-1$ pins everything down.
+
+      Let $S_n(\alpha)=\lfloor\alpha\rfloor+\lfloor2\alpha\rfloor+\dots+\lfloor n\alpha\rfloor$. Call $\alpha$ **good** if $n\mid S_n(\alpha)$ for all $n\ge1$.
+
+      **Even integers are good.** For $\alpha=2m$, $S_n=2m(1+\dots+n)=m\,n(n+1)$.
+
+      **Shifting by 2.** Since $\lfloor i(\alpha+2)\rfloor=\lfloor i\alpha\rfloor+2i$, we get $S_n(\alpha+2)=S_n(\alpha)+n(n+1)$. So $\alpha$ is good exactly when $\alpha+2$ is. Every real number differs from a number in $[0,2)$ by an even integer, so it is enough to show that $0$ is the only good number in $[0,2)$.
+
+      **$0<\alpha<1$ is not good.** Let $m$ be the first index with $\lfloor m\alpha\rfloor\ge1$. Then $m\ge2$, the earlier terms are $0$, and $\lfloor m\alpha\rfloor=1$ because $m\alpha=(m-1)\alpha+\alpha<1+1$. So $S_m=1$, which is not a multiple of $m$.
+
+      **$1\le\alpha<2$ is not good.** Suppose it were, and write $S_n=n\,u_n$ with whole numbers $u_n$, so $u_1=\lfloor\alpha\rfloor=1$. For $n\ge2$,
+      $$n\,(u_n-u_{n-1})=\big(S_n-S_{n-1}\big)-u_{n-1}=\lfloor n\alpha\rfloor-u_{n-1}.$$
+      Now $u_{n-1}$ is the average of $\lfloor i\alpha\rfloor$ over $i\le n-1$, and each $\lfloor i\alpha\rfloor$ lies in $(i\alpha-1,\,i\alpha]$, so $u_{n-1}$ lies in $\big(\tfrac{n\alpha}2-1,\ \tfrac{n\alpha}2\big]$. Also $\lfloor n\alpha\rfloor\in(n\alpha-1,\,n\alpha]$. Therefore
+      $$\lfloor n\alpha\rfloor-u_{n-1}\in\Big(\frac{n\alpha}2-1,\ \frac{n\alpha}2+1\Big)\subseteq\Big(\frac n2-1,\ n+1\Big).$$
+      For $n\ge2$ the only multiple of $n$ in that last interval is $n$ itself. So $u_n=u_{n-1}+1$ for all $n\ge2$, giving $u_n=n$ and $S_n=n^2$. Then $\lfloor n\alpha\rfloor=S_n-S_{n-1}=2n-1$, so $\alpha\ge 2-\frac1n$ for every $n$, and $\alpha\ge2$. Contradiction.
+
+      So the good numbers are exactly the even integers.
+    checked: "script: every rational p/q with q ≤ 12 and |p/q| ≤ 6 was tested for n ≤ 60; exactly the even integers passed"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "When a gcd of two exponential expressions settles"
+    areas: [number-theory]
+    difficulty: 2
+    answer: '$(a,b)=(1,1)$ only'
+    hints:
+      - 'Look at both expressions modulo $ab+1$, which is coprime to $a$ and to $b$.'
+      - 'Choose $n\equiv-1$ modulo $\varphi(ab+1)$, then $n\equiv 0$.'
+    solution: |
+      **Key idea:** modulo $M=ab+1$, an exponent $n\equiv-1$ turns $a^n$ into $a^{-1}$, and then $a^n+b$ and $b^n+a$ are both multiples of $M$. So $M$ divides the constant gcd. An exponent $n\equiv0$ then shows that $M$ is too big unless $a=b=1$.
+
+      **$(1,1)$ works:** the gcd is always $\gcd(2,2)=2$.
+
+      **Nothing else works.** Suppose the gcd equals $g$ for all $n\ge N$. Let $M=ab+1$. It is coprime to $a$ and to $b$ (a common factor of $M$ and $a$ would divide $M-ab=1$). Let $\varphi=\varphi(M)$, so $a^\varphi\equiv b^\varphi\equiv1\pmod M$ by Euler's theorem.
+
+      *Step 1: $M\mid g$.* Take $n\ge N$ with $n\equiv-1\pmod\varphi$. Then $a^{n+1}\equiv1$, so
+      $$a\,(a^n+b)=a^{n+1}+ab\equiv1+ab\equiv0\pmod M .$$
+      As $a$ is invertible modulo $M$, $M\mid a^n+b$. In the same way $M\mid b^n+a$. So $M$ divides the gcd, which is $g$.
+
+      *Step 2: $M\mid b+1$.* Now take $n\ge N$ with $\varphi\mid n$. Then $a^n+b\equiv1+b\pmod M$. But $g\mid a^n+b$ and $M\mid g$, so $M\mid b+1$.
+
+      Since $0<b+1\le ab+1=M$, this forces $b+1=M$, that is, $a=1$. By symmetry ($M\mid a+1$ the same way) $b=1$.
+    checked: "script: for 1 ≤ a, b ≤ 24, only (1, 1) gives the same gcd for every n from 30 to 399"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "A self-counting sequence has an eventually periodic half"
+    areas: [combinatorics]
+    difficulty: 5
+    status: coming
+
+  - id: P4
+    day: 2
+    topic: "Incircle tangents parallel to sides and an angle sum"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'The second tangent to $\omega$ parallel to a side is that side reflected in $I$. Where do the two reflected sides meet?'
+      - 'Let $A^\ast$ be the reflection of $A$ in $I$. Show that $A^\ast$, $B$, $P$, $X$ lie on a circle.'
+    solution: |
+      **Key idea:** the reflection $A^\ast$ of $A$ in $I$ ties everything together. Doubling from $A$ carries the angle $KIL$ to the angle $BA^\ast C$. Two circles through $P$ and $A^\ast$ split the angle $YPX$ into the two base angles of triangle $BA^\ast C$.
+
+      Let $A^\ast=2I-A$ be the reflection of $A$ in $I$. It lies on line $AI$, so $A,I,A^\ast,P$ are collinear. Write $\measuredangle(\ell,m)$ for the directed angle from line $\ell$ to line $m$, modulo $180^\circ$.
+
+      **Step 1: the two tangent lines.** A circle has exactly two tangents in a given direction, and they are mirror images in its center. So the tangent through $X$ parallel to $AC$ is line $AC$ reflected in $I$, and it passes through $A^\ast$. Hence $A^\ast X\parallel AC$, and likewise $A^\ast Y\parallel AB$.
+
+      **Step 2: the angle $KIL$.** The doubling map centered at $A$ sends $L\mapsto B$, $K\mapsto C$ and $I\mapsto A^\ast$. So $\angle KIL=\angle CA^\ast B$.
+
+      **Step 3: two circles.** Since $X$ is on line $BC$ and $XA^\ast\parallel CA$,
+      $$\measuredangle(XB,XA^\ast)=\measuredangle(CB,CA).$$
+      Since $A^\ast$ is on line $PA$ and $P$, $C$ are on the circumcircle of $ABC$,
+      $$\measuredangle(PB,PA^\ast)=\measuredangle(PB,PA)=\measuredangle(CB,CA).$$
+      These are equal, so $B,A^\ast,X,P$ lie on one circle. The same argument with $AB$ in place of $AC$ shows that $C,A^\ast,Y,P$ lie on one circle. (Here $A^\ast\ne P$: by the usual formulas $AI=r/\sin\frac A2$ and $IP=PB=2R\sin\frac A2$, and $AI<IP$ reduces to $\cos\frac{B-C}2<2\sin\frac A2$, which holds because the largest angle $A$ exceeds $60^\circ$.)
+
+      **Step 4: adding up.** From the two circles,
+      $$\measuredangle(PA^\ast,PX)=\measuredangle(BA^\ast,BX)=\measuredangle(BA^\ast,BC),\qquad \measuredangle(PY,PA^\ast)=\measuredangle(CY,CA^\ast)=\measuredangle(CB,CA^\ast).$$
+      Adding, $\measuredangle(PY,PX)=\measuredangle(BA^\ast,BC)+\measuredangle(BC,CA^\ast)=\measuredangle(A^\ast B,A^\ast C)$.
+
+      **Step 5: from directed to ordinary angles.** We check that triangles $YPX$ and $BA^\ast C$ have opposite orientations.
+      - $P$ and $A^\ast$ are on the far side of $BC$ from $A$. For $P$ this holds because it is on the arc $BC$ away from $A$. For $A^\ast$: its signed distance to $BC$ is $2r-h_a$, where $h_a$ is the altitude from $A$, and $h_a>2r$ because $a\,h_a=2\,[ABC]=r(a+b+c)>2ar$.
+      - On line $BC$ the order is $B,X,Y,C$. The tangent through $Y$ is parallel to $AB$ at distance $2r$ from it, so $BY=2r/\sin B$; likewise $CX=2r/\sin C$. Since $\frac2{\sin B}=\tan\frac B2+\cot\frac B2>\cot\frac B2$, we get $BY+CX>r\big(\cot\frac B2+\cot\frac C2\big)=BC$, so $X$ is closer to $B$ than $Y$ is.
+
+      So going $Y\to P\to X$ runs from the $C$ side to the $B$ side below line $BC$, while $B\to A^\ast\to C$ runs from the $B$ side to the $C$ side below it. Opposite orientations turn the equal directed angles of Step 4 into $\angle YPX+\angle BA^\ast C\equiv0\pmod{180^\circ}$. Both angles are strictly between $0^\circ$ and $180^\circ$, so they add up to $180^\circ$. With Step 2, $\angle KIL+\angle YPX=180^\circ$.
+    checked: "numeric: 222 random triangles with AB < AC < BC; the angle sum is 180° to 1e-12, and the circle through A*, B, P, X, the order B, X, Y, C and the side of A* were confirmed in each"
+    viz: imo-2024-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "A snail crossing a board of hidden monsters"
+    areas: [combinatorics]
+    difficulty: 4
+    answer: '$n=3$'
+    hints:
+      - 'Two attempts are not enough: a monster can always be waiting at the first cell Turbo enters in row 2, and then at the first cell he enters in row 3.'
+      - 'For three attempts, first walk along row 2 to find its monster. If it is not at the edge, go around it on one side, then the other. If it is at the edge, use a staircase.'
+    solution: |
+      **Key idea:** rows have exactly one monster each and columns at most one. So finding a monster clears the rest of its row and the rest of its column. Every plan below only steps on cells that are already known to be safe, except for one or two places where a monster would hand Turbo a safe route next time.
+
+      Number the rows $1$ (top) to $2024$ and the columns $1$ to $2023$. Monsters are in rows $2$ to $2023$, one per row, in different columns.
+
+      **Two attempts can fail.** Fix any strategy. On the first attempt, Turbo must enter row $2$ at some point; put a monster on the first row-$2$ cell he enters. On the second attempt he must reach row $3$, and he can only get there from row $2$. He can't step down from the monster's cell, so the first row-$3$ cell he enters is in a different column from the row-$2$ monster. Put the row-$3$ monster there. Place the other monsters in any unused columns (there are plenty). Both attempts end on a monster.
+
+      **Three attempts always suffice.**
+
+      *Attempt 1.* Enter row $2$ at column $1$ and walk along the row. Turbo meets the row-$2$ monster, say at column $c$. Now all of row $2$ except column $c$ is safe, and so is all of column $c$ below row $2$.
+
+      *If $1<c<2023$.* Attempt 2: go down column $c-1$ to row $3$, step right into column $c$, and walk straight down column $c$ to the bottom. The only cell not known to be safe is $(3,c-1)$. If a monster is there, then row $3$'s monster is found, so $(3,c+1)$ is safe. Attempt 3 is the mirror image: down column $c+1$ to row $3$, step left into column $c$, and walk down. Every cell is safe.
+
+      *If $c=1$* (the case $c=2023$ is the mirror image). Now column $1$ is safe from row $3$ down. Attempt 2 is a staircase: in each row $r=2,3,\dots,2022$, visit $(r,r)$ and then $(r,r+1)$, stepping down from $(r,r+1)$ to $(r+1,r+1)$. Finish with $(2023,2023)$ and step into row $2024$. If no monster is met, Turbo is done. Otherwise the first monster he meets is in some row $r\ge3$ (row $2$ is safe here), and every staircase cell before it is safe. That monster clears the rest of row $r$.
+      - If it is at $(r,r)$, reached by stepping down from $(r-1,r)$: attempt 3 follows the staircase to $(r-1,r-1)$, steps down to $(r,r-1)$, walks left along row $r$ to column $1$, then down column $1$ to the bottom.
+      - If it is at $(r,r+1)$, reached by stepping right from $(r,r)$: attempt 3 follows the staircase to $(r,r)$, walks left along row $r$ to column $1$, then down column $1$.
+
+      In each case attempt 3 uses only safe cells: staircase cells before the monster, cells of row $r$ other than the monster, and column $1$ below row $2$. So Turbo always reaches the last row by his third attempt, and the answer is $3$.
+    checked: "script: the three-attempt strategy simulated on boards with 3 to 7 columns (one more row than columns), against every monster placement; it never needed more than 3 attempts"
+    viz: imo-2024-p5
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Either-or functional equation on the rationals: symmetric sums"
+    areas: [algebra]
+    difficulty: 5
+    answer: '$c=2$'
+    hints:
+      - 'The two alternatives are the same statement with $x$ and $y$ swapped. Putting $y=x$ shows that every $x+f(x)$ is a fixed point. Then show $f$ is one-to-one, $f(0)=0$ and $f(-f(x))=-x$.'
+      - 'The fixed points form a group $F$ under addition, and $f(x+p)=f(x)+p$ for $p\in F$. Write $f(x)=-x+\varphi(x)$ with $\varphi(x)\in F$, and rewrite the condition in terms of $\varphi$.'
+      - 'For $c=2$ to be needed, try $f(x)=2\lfloor x\rfloor-x$.'
+    solution: |
+      **Key idea:** write $f(x)=-x+\varphi(x)$. The condition becomes "the defect $\varphi(a+b)-\varphi(a)-\varphi(b)$ is either $0$ or minus the symmetric sum at $b$". Since the defect is symmetric in $a$ and $b$, two different nonzero symmetric sums can't coexist.
+
+      For rationals $u,v$ let $[u,v]$ stand for the statement $f(u+f(v))=f(u)+v$. The condition says that for all $x,y$, at least one of $[x,y]$ and $[y,x]$ holds.
+
+      **Basic facts.**
+      - Taking $y=x$: $f(x+f(x))=x+f(x)$. So $x+f(x)$ is a fixed point for every $x$.
+      - $f$ is one-to-one. If $f(u)=f(v)=w$, then $[u,v]$ says $f(u+w)=w+v$, while $f(u+w)=f(u+f(u))=u+w$; so $u=v$. The case $[v,u]$ is the same with $u,v$ swapped.
+      - $f(0)=0$: taking $x=y=0$ gives $f(f(0))=f(0)$, and $f$ is one-to-one.
+      - $f(-f(x))=-x$. Take $y=-f(x)$. If $[x,y]$ holds, $f(x+f(y))=f(x)+y=0=f(0)$, so $x+f(y)=0$. If $[y,x]$ holds, $0=f(0)=f(y+f(x))=f(y)+x$. Either way $f(y)=-x$.
+
+      **The fixed points.** Let $F$ be the set of fixed points. If $p,q\in F$, both alternatives for $(p,q)$ say $f(p+q)=p+q$. Also $f(-p)=f(-f(p))=-p$. So $F$ is closed under addition and negation, and contains $0$.
+
+      For $p\in F$ and any $x$, we claim $f(x+p)=f(x)+p$. If $[p,x]$ holds, then $f(p+f(x))=p+f(x)$, so $p+f(x)\in F$ and hence $f(x)\in F$. Then $f(f(x))=f(x)$, so $f(x)=x$ and $x\in F$, and the claim holds because $x+p\in F$. Otherwise $[x,p]$ holds, which is the claim.
+
+      **Rewriting.** Let $\varphi(x)=x+f(x)$, which lies in $F$. Using the shift rule with $p=\varphi(y)$,
+      $$f(x+f(y))=f\big((x-y)+\varphi(y)\big)=-(x-y)+\varphi(x-y)+\varphi(y),$$
+      while $f(x)+y=-x+\varphi(x)+y$. So $[x,y]$ holds exactly when $\varphi(x)=\varphi(y)+\varphi(x-y)$.
+
+      Let $s(r)=f(r)+f(-r)=\varphi(r)+\varphi(-r)$, the quantity we care about, and let
+      $$D(a,b)=\varphi(a+b)-\varphi(a)-\varphi(b),$$
+      which is symmetric in $a$ and $b$. Apply the condition to $x=a+b$, $y=a$:
+      - $[x,y]$ says $\varphi(a+b)=\varphi(a)+\varphi(b)$, that is, $D(a,b)=0$;
+      - $[y,x]$ says $\varphi(a)=\varphi(a+b)+\varphi(-b)$, that is, $D(a,b)=-s(b)$.
+
+      So $D(a,b)\in\{0,-s(b)\}$, and by symmetry also $D(a,b)\in\{0,-s(a)\}$. In particular,
+      $$D(a,b)\ne0\ \Longrightarrow\ s(a)=s(b)=-D(a,b). \tag{$*$}$$
+
+      **At most two values.** Note $s(0)=0$ and $s(-r)=s(r)$. Suppose $s(a)=\sigma$ and $s(b)=\tau$ with $0,\sigma,\tau$ all different. By $(*)$, $D(a,b)=0$ and $D(-a,-b)=0$. Adding these,
+      $$s(a+b)=\varphi(a)+\varphi(b)+\varphi(-a)+\varphi(-b)=\sigma+\tau .$$
+      Now $D(a+b,-a)=\varphi(b)-\varphi(a+b)-\varphi(-a)=-\varphi(a)-\varphi(-a)=-\sigma\ne0$. By $(*)$, $s(a+b)=s(-a)=\sigma$. So $\sigma+\tau=\sigma$ and $\tau=0$, a contradiction. Hence $s$ takes at most one nonzero value, and at most two values in all. So $c=2$ works.
+
+      **Two values happen.** Let $f(x)=2\lfloor x\rfloor-x$. Write $x=m+u$ and $y=n+v$ with integers $m,n$ and $u,v\in[0,1)$. Then $f(y)=n-v$. If $u\ge v$, then $x+f(y)=(m+n)+(u-v)$ with $0\le u-v<1$, so
+      $$f(x+f(y))=2(m+n)-(m+n+u-v)=(m-u)+(n+v)=f(x)+y .$$
+      If $v\ge u$, the same computation with $x,y$ swapped gives the other alternative. So $f$ qualifies. For an integer $r$, $f(r)+f(-r)=r-r=0$. For $r=m+u$ with $0<u<1$, we have $-r=(-m-1)+(1-u)$, so $f(r)+f(-r)=(m-u)+(-m-2+u)=-2$. Both values $0$ and $-2$ occur, so $c=1$ is not enough.
+    checked: "script: f(x) = 2⌊x⌋ − x satisfies the condition for all pairs from 117 rationals in [−15, 15] with denominators up to 6, and its symmetric sums are exactly 0 and −2"
+    status: ready

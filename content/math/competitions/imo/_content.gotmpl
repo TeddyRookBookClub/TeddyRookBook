@@ -1,0 +1,8 @@
+{{- /* IMO solutions guide: one page per year file, data/comp/imo/<year>.yaml -> /math/competitions/imo/<year>/
+   (layouts/comp/pyear.html with contest "imo"). A new YAML file makes a new page. */ -}}
+{{- $Y := (index ($.Site.Data.comp | default dict) "imo") | default dict -}}
+{{- range $k, $y := $Y -}}
+  {{- $n := 0 }}{{ range $y.problems }}{{ if eq .status "ready" }}{{ $n = add $n 1 }}{{ end }}{{ end -}}
+  {{- $desc := printf "IMO %v: our own solutions (not official) to %d of the %d problems, with hints and animations, and a link to the official problems." $y.year $n (len ($y.problems | default slice)) -}}
+  {{- $.AddPage (dict "path" (string $k) "kind" "page" "type" "comp" "layout" "pyear" "title" (printf "IMO %v" $y.year) "description" $desc "params" (dict "year" (string $k) "contest" "imo")) -}}
+{{- end -}}

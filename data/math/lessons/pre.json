@@ -356,7 +356,7 @@
    },
    {
     "t": "key",
-    "html": "Draw $\\theta$ in standard position. Its terminal side meets the unit circle at one point, and that point is $$(\\cos\\theta, \\sin\\theta).$$ Cosine is the $x$-coordinate and sine is the $y$-coordinate."
+    "html": "Draw $\\theta$ in standard position. Its terminal side meets the unit circle at one point, and that point is $$(\\role[x-coordinate]{input}{\\cos\\theta}, \\role[y-coordinate]{output}{\\sin\\theta}).$$ Cosine is the $x$-coordinate and sine is the $y$-coordinate."
    },
    {
     "t": "why",
@@ -371,7 +371,10 @@
      "snap": 5,
      "graph": "both",
      "task": "Turn the angle to $180^\\circ$. What are $\\cos 180^\\circ$ and $\\sin 180^\\circ$?",
-     "target": 180
+     "target": 180,
+     "roleLinks": {
+      "Angle": "angle"
+     }
     },
     "cap": "The blue segment is $\\cos\\theta$ (across) and the red segment is $\\sin\\theta$ (up). The graphs on the right trace them as the angle grows."
    },
@@ -822,7 +825,7 @@
    },
    {
     "t": "key",
-    "html": "$$\\sin^2\\theta + \\cos^2\\theta = 1 \\quad \\text{for every angle } \\theta.$$ To find one value from the other, solve for its square, take the square root, and choose the sign from the quadrant."
+    "html": "$$\\role[y-coordinate squared]{output}{\\sin^2\\theta} + \\role[x-coordinate squared]{input}{\\cos^2\\theta} = 1 \\quad \\text{for every angle } \\theta.$$ To find one value from the other, solve for its square, take the square root, and choose the sign from the quadrant."
    },
    {
     "t": "why",
@@ -840,7 +843,10 @@
      "units": "deg",
      "snap": 5,
      "graph": "none",
-     "signs": true
+     "signs": true,
+     "roleLinks": {
+      "Angle": "angle"
+     }
     },
     "cap": "Wherever you turn, the blue and red segments are the legs of a right triangle with hypotenuse $1$."
    },
@@ -1028,7 +1034,7 @@
    },
    {
     "t": "key",
-    "html": "For $y = A\\sin(Bx)$ or $y = A\\cos(Bx)$ with $B > 0$: the <b>amplitude</b> is $|A|$ and the <b>period</b> is $\\dfrac{2\\pi}{B}$."
+    "html": "For $\\role{output}{y} = \\role[amplitude]{coefficient}{A}\\sin(\\role[frequency factor]{frequency}{B}\\role{input}{x})$ or $\\role{output}{y} = \\role[amplitude]{coefficient}{A}\\cos(\\role[frequency factor]{frequency}{B}\\role{input}{x})$ with $B > 0$: the <b>amplitude</b> is $|A|$ and the <b>period</b> is $\\dfrac{2\\pi}{B}$."
    },
    {
     "t": "why",
@@ -1050,6 +1056,10 @@
      "target": {
       "A": 2,
       "B": 2
+     },
+     "roleLinks": {
+      "A:": "coefficient",
+      "B:": "frequency"
      }
     },
     "cap": "The dashed curve is $y = \\sin x$. The green arrows mark one period; the red arrow is the amplitude."
@@ -1114,7 +1124,7 @@
    },
    {
     "t": "key",
-    "html": "In $$y = A\\sin\\big(B(x - h)\\big) + k,$$ the graph shifts right by $h$ (left if $h < 0$), and the <b>midline</b> is $y = k$. The maximum is $k + |A|$ and the minimum is $k - |A|$. If the equation is written $y = A\\sin(Bx - C) + k$, factor out $B$ first: the shift is $h = \\frac{C}{B}$."
+    "html": "In $$\\role{output}{y} = \\role[amplitude]{coefficient}{A}\\sin\\big(\\role[frequency factor]{frequency}{B}(\\role{input}{x} - \\role[horizontal shift]{shift}{h})\\big) + \\role{midline}{k},$$ the graph shifts right by $h$ (left if $h < 0$), and the <b>midline</b> is $y = k$. The maximum is $k + |A|$ and the minimum is $k - |A|$. If the equation is written $y = A\\sin(Bx - C) + k$, factor out $B$ first: the shift is $h = \\frac{C}{B}$."
    },
    {
     "t": "why",
@@ -1138,6 +1148,12 @@
      "target": {
       "B": 2,
       "C": "pi/2"
+     },
+     "roleLinks": {
+      "A:": "coefficient",
+      "B:": "frequency",
+      "C:": "shift",
+      "D:": "midline"
      }
     },
     "cap": "The gold dot marks where a cycle starts. The readout warns when the shift is not the number you see inside the parentheses."
@@ -5137,7 +5153,7 @@
    },
    {
     "t": "key",
-    "html": "The <b>difference quotient</b> $$\\frac{f(x + h) - f(x)}{h}, \\quad h \\ne 0,$$ is the slope of the secant line through $(x, f(x))$ and $(x + h, f(x + h))$. To simplify: find $f(x + h)$ by replacing every $x$ with $(x + h)$, subtract $f(x)$, then divide out the factor $h$."
+    "html": "The <b>difference quotient</b> $$\\frac{\\role[change in output]{output}{f(x + h) - f(x)}}{\\role[change in input]{input}{h}}, \\quad h \\ne 0,$$ is the slope of the secant line through $(x, f(x))$ and $(x + h, f(x + h))$. To simplify: find $f(x + h)$ by replacing every $x$ with $(x + h)$, subtract $f(x)$, then divide out the factor $h$."
    },
    {
     "t": "why",
@@ -5151,7 +5167,10 @@
      "a": 1,
      "h": 2,
      "tangent": true,
-     "table": true
+     "table": true,
+     "roleLinks": {
+      "h": "input"
+     }
     },
     "cap": "Shrink $h$: the secant line through the two points swings toward the dashed tangent line, and its slope approaches $2$."
    },

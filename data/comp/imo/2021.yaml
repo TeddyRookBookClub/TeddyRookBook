@@ -1,0 +1,204 @@
+year: 2021
+edition: 62nd
+date: "July 19–20, 2021 · held online, hosted by Russia"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2021/2021_eng.pdf
+  archive: https://www.imo-official.org/year_info.aspx?year=2021
+problems:
+  - id: P1
+    day: 1
+    topic: "Split consecutive cards: a square sum is unavoidable"
+    areas: [combinatorics, number-theory]
+    difficulty: 1
+    hints:
+      - 'You only need three cards whose three pairwise sums are all perfect squares. Why?'
+      - 'Ask for the pairwise sums to be three consecutive squares, $(2k-1)^2$, $(2k)^2$ and $(2k+1)^2$, and solve for the three numbers.'
+    solution: |
+      **Key idea:** find three numbers in the range whose pairwise sums are all squares. Two of the three must land in the same pile.
+
+      **The triple.** Suppose three numbers $x<y<z$ have
+      $$x+y=(2k-1)^2,\qquad x+z=(2k)^2,\qquad y+z=(2k+1)^2 .$$
+      Adding all three and halving gives $x+y+z=6k^2+1$. Subtracting each equation from this in turn:
+      $$x=2k^2-4k,\qquad y=2k^2+1,\qquad z=2k^2+4k .$$
+      These are distinct whole numbers for $k\ge 3$, and their pairwise sums are squares by construction.
+
+      **Fitting the range.** All three lie between $n$ and $2n$ exactly when $n\le 2k^2-4k$ and $2k^2+4k\le 2n$, that is,
+      $$k^2+2k\ \le\ n\ \le\ 2k^2-4k .$$
+      Call this interval $J_k$. For $k=9$ it is $[99,126]$, and for $k=10$ it is $[120,160]$. In general the next interval starts no later than one step past the end of the current one: $(k+1)^2+2(k+1)\le (2k^2-4k)+1$ is the same as $k^2-8k-2\ge 0$, which holds for $k\ge 9$. So $J_9, J_{10}, J_{11},\dots$ leave no gaps and cover every integer from $99$ on. In particular every $n\ge100$ lies in some $J_k$.
+
+      **Finish.** For that $k$, the cards $2k^2-4k$, $2k^2+1$ and $2k^2+4k$ are all among $n,\dots,2n$. With only two piles, two of these three cards share a pile, and their sum is a perfect square.
+
+      For example, when $n=100$ we can use $k=9$: the cards $126$, $163$ and $198$ have pairwise sums $289=17^2$, $324=18^2$ and $361=19^2$.
+    checked: "script: for every n from 99 to 20,000 a suitable k exists, and the triples have square pairwise sums"
+    viz: imo-2021-p1
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Square roots of differences never beat square roots of sums"
+    areas: [algebra]
+    difficulty: 4
+    hints:
+      - 'Write $\sqrt{|t|}$ as an integral of $1-\cos(tu)$ against a positive weight in $u$.'
+      - 'Then the inequality becomes a statement about $\sum_{i,j}\cos\big((x_i\pm x_j)u\big)$, which you can write with squares of sums of sines and cosines.'
+    solution: |
+      **Key idea:** a square root can be written as a weighted average of functions $1-\cos(tu)$. For cosines, the "differences versus sums" comparison is a perfect square, so it has a sign.
+
+      **Step 1: an integral formula.** Let
+      $$c=\int_0^\infty \frac{1-\cos v}{v^{3/2}}\,dv .$$
+      The integral converges (near $0$ the integrand is about $\tfrac12 v^{1/2}$, and for large $v$ it is at most $2v^{-3/2}$), and $c>0$ because the integrand is nonnegative and not identically zero. For $t\neq0$, substituting $v=|t|u$ gives
+      $$\int_0^\infty \frac{1-\cos(tu)}{u^{3/2}}\,du=c\sqrt{|t|},$$
+      and this also holds for $t=0$, where both sides are $0$.
+
+      **Step 2: compare the two sums.** Apply this to every $t=x_i-x_j$ and every $t=x_i+x_j$. Then
+      $$\sum_{i,j}\sqrt{|x_i+x_j|}-\sum_{i,j}\sqrt{|x_i-x_j|}=\frac1c\int_0^\infty \frac{D(u)}{u^{3/2}}\,du,$$
+      where
+      $$D(u)=\sum_{i,j}\cos\big((x_i-x_j)u\big)-\sum_{i,j}\cos\big((x_i+x_j)u\big).$$
+      (The $1$'s cancel. Combining the $2n^2$ integrals into one is fine because each of them converges.)
+
+      **Step 3: $D(u)$ is a square.** Write $C=\sum_i\cos(x_iu)$ and $S=\sum_i\sin(x_iu)$. By the addition formulas,
+      $$\sum_{i,j}\cos\big((x_i-x_j)u\big)=\sum_{i,j}\big(\cos x_iu\cos x_ju+\sin x_iu\sin x_ju\big)=C^2+S^2,$$
+      $$\sum_{i,j}\cos\big((x_i+x_j)u\big)=\sum_{i,j}\big(\cos x_iu\cos x_ju-\sin x_iu\sin x_ju\big)=C^2-S^2.$$
+      So $D(u)=2S^2\ge0$ for every $u$. The integral in Step 2 is nonnegative, and the inequality follows.
+    checked: "script: 20,000 random tests (up to 7 numbers, mixed scales and integers) never found the left side larger"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Angle-bisector point, two circumcenters and a concurrence"
+    areas: [geometry]
+    difficulty: 5
+    hints:
+      - 'Guess the common point: it is the point $K$ of line $BC$ with $KB/KC=DB^2/DC^2$ (outside the segment). Check $K\in EF$ with Menelaus and the law of sines.'
+      - 'The circle through $D$ centered at $K$ is the set of points $P$ with $PB/PC=DB/DC$. Its power function is $\big(DC^2\,PB^2-DB^2\,PC^2\big)/\big(DC^2-DB^2\big)$.'
+      - 'Three circles through $D$ have collinear centers if one power function is a weighted average of the other two. Test this on the line $AC$, where both circumcircles cut it at known points.'
+    solution: |
+      **Key idea:** name the meeting point in advance. Let $K$ be the center of the circle through $D$ made of the points $P$ with $PB/PC=DB/DC$. Menelaus puts $K$ on $EF$. A computation with power functions shows that this circle's power is a weighted average of the powers for the two circumcircles, and that forces its center $K$ onto $O_1O_2$.
+
+      **Notation.** Let $\alpha,\beta,\gamma$ be the angles of the triangle and $\theta=\alpha/2$. Since $AB>AC$, we have $\gamma>\beta$. Put
+      $$b_1=\angle DBC,\quad b_2=\angle ABD,\quad c_1=\angle DCB,\quad c_2=\angle ACD,$$
+      so $b_1+b_2=\beta$ and $c_1+c_2=\gamma$. The law of sines in $DBC$ gives $DB/DC=\sin c_1/\sin b_1$. In $ABD$ and $ACD$ it gives $DB=AD\sin\theta/\sin b_2$ and $DC=AD\sin\theta/\sin c_2$. So
+      $$\frac{DB}{DC}=\frac{\sin c_1}{\sin b_1}=\frac{\sin c_2}{\sin b_2}. \qquad (1)$$
+      Also $DB\ne DC$: otherwise $D$ would be on both the bisector from $A$ and the perpendicular bisector of $BC$, which meet outside the triangle when $AB\ne AC$.
+
+      **Step 1: lengths on the sides.** In triangle $ADE$ the angles at $A$ and $D$ are $\theta$ and $c_1$, so $\angle AED=180^\circ-\theta-c_1$ and $\angle CED=\theta+c_1$. Then in triangle $CDE$ the angle at $D$ is $180^\circ-\theta-c_1-c_2=180^\circ-\theta-\gamma$. The law of sines in both triangles gives
+      $$AE=\frac{AD\sin c_1}{\sin(\theta+c_1)},\qquad CE=\frac{DC\sin(\theta+\gamma)}{\sin(\theta+c_1)} .$$
+      In the same way, from triangles $ADF$ and $BDF$,
+      $$AF=\frac{AD\sin b_1}{\sin(\theta+b_1)},\qquad BF=\frac{DB\sin(\theta+\beta)}{\sin(\theta+b_1)} .$$
+      Since $\theta+\beta+\gamma=180^\circ-\theta$, we have $\theta+\gamma=90^\circ+\tfrac{\gamma-\beta}2$ and $\theta+\beta=90^\circ-\tfrac{\gamma-\beta}2$. So
+      $$\sin(\theta+\gamma)=\sin(\theta+\beta)=\cos\tfrac{\gamma-\beta}2 . \qquad (2)$$
+
+      **Step 2: the point $K$.** Let $K$ be the point of line $BC$ outside the segment with $KB/KC=DB^2/DC^2$. By Step 1, (1) and (2),
+      $$\frac{KB}{KC}\cdot\frac{CE}{EA}\cdot\frac{AF}{FB}=\frac{DB^2}{DC^2}\cdot\frac{DC\sin(\theta+\gamma)}{AD\sin c_1}\cdot\frac{AD\sin b_1}{DB\sin(\theta+\beta)}=\frac{DB}{DC}\cdot\frac{\sin b_1}{\sin c_1}=1 .$$
+      $E$ and $F$ are inside sides $AC$ and $AB$ and $K$ is outside side $BC$, so by the converse of Menelaus' theorem, $K$ lies on line $EF$. So $BC$ and $EF$ meet at $K$. It remains to show that $K$ is on $O_1O_2$.
+
+      **Step 3: power functions.** For a circle with center $O$ and radius $r$, the power of a point $P$ is $|P-O|^2-r^2=|P|^2-2\,O\cdot P+(|O|^2-r^2)$. Define
+      $$g_0(P)=\frac{DC^2\,PB^2-DB^2\,PC^2}{DC^2-DB^2}.$$
+      The coefficients $DC^2$ and $-DB^2$ over $DC^2-DB^2$ add up to $1$, so $g_0$ has the same form, with $O$ replaced by $\dfrac{DC^2\,B-DB^2\,C}{DC^2-DB^2}$. That point is $K$: it is on line $BC$, outside the segment, and its distances to $B$ and $C$ are in the ratio $DB^2:DC^2$. Since $g_0(D)=0$, the function $g_0$ is the power function of a real circle $\Gamma$ with center $K$ through $D$. Let $g_1,g_2$ be the power functions of $\omega_1=(ADC)$ and $\omega_2=(EXD)$.
+
+      **Step 4: the plan.** Suppose there is a number $\mu$ with $g_0=\mu g_1+(1-\mu)g_2$ at the points $A$ and $C$. The difference $g_0-\mu g_1-(1-\mu)g_2$ has no $|P|^2$ term, so it is an affine function of $P$. It vanishes at $A$, at $C$, and also at $D$, where all three powers are $0$. Those three points are not collinear, so the difference is zero everywhere. Comparing the terms linear in $P$ gives $K=\mu O_1+(1-\mu)O_2$, so $K$ is on line $O_1O_2$. (The centers differ: two circles through $D$ with one center would be equal, but $\omega_1$ contains $A$, and $\omega_2$ meets line $AC$ only at $E$ and $X$.)
+
+      Since $g_1(A)=g_1(C)=0$, such a $\mu$ exists exactly when
+      $$\frac{g_0(A)}{g_0(C)}=\frac{g_2(A)}{g_2(C)} . \qquad (3)$$
+      (Here $g_0(C)=DC^2a^2/(DC^2-DB^2)\ne0$, and $g_2(A),g_2(C)\ne0$.)
+
+      **Step 5: the right side of (3).** The point $X$ is on ray $CA$ with $CX=\dfrac{a}{2\cos\gamma}$, since that point projects onto the midpoint of $BC$. By the law of sines and $\sin\alpha=\sin\beta\cos\gamma+\cos\beta\sin\gamma$,
+      $$\frac{AX}{CX}=\frac{CX-CA}{CX}=1-\frac{2\sin\beta\cos\gamma}{\sin\alpha}=\frac{\sin(\gamma-\beta)}{\sin\alpha}>0,$$
+      so the order on the line is $X,A,E,C$. The power of a point on line $AC$ with respect to $\omega_2$ is the signed product of its distances to $E$ and $X$. So $g_2(A)=-AE\cdot AX$ and $g_2(C)=CE\cdot CX$. From Step 1 and $AD/DC=\sin c_2/\sin\theta$,
+      $$\frac{g_2(A)}{g_2(C)}=-\frac{AE}{CE}\cdot\frac{AX}{CX}=-\frac{\sin c_1\sin c_2}{\sin\theta\,\sin(\theta+\gamma)}\cdot\frac{\sin(\gamma-\beta)}{\sin\alpha}.$$
+
+      **Step 6: the left side of (3).** With $AB=c$, $AC=b$, $BC=a$ and the law of sines,
+      $$\frac{g_0(A)}{g_0(C)}=\frac{DC^2c^2-DB^2b^2}{DC^2a^2}=\frac{\sin^2\gamma-\rho^2\sin^2\beta}{\sin^2\alpha},\qquad \rho=\frac{DB}{DC}=\frac{\sin c_1}{\sin b_1}.$$
+
+      **Step 7: the identity.** Let $q=\dfrac{\sin c_2}{\sin c_1}=\dfrac{\sin b_2}{\sin b_1}$ (equal by (1)). Expanding $\sin c_2=\sin(\gamma-c_1)$ and $\sin b_2=\sin(\beta-b_1)$,
+      $$\sin\gamma\cot c_1=q+\cos\gamma,\qquad \sin\beta\cot b_1=q+\cos\beta .$$
+      Using $1/\sin^2 t=1+\cot^2 t$,
+      $$\frac{\sin^2\gamma-\rho^2\sin^2\beta}{\sin^2c_1}=\frac{\sin^2\gamma}{\sin^2c_1}-\frac{\sin^2\beta}{\sin^2b_1}=(\sin^2\gamma-\sin^2\beta)+(q+\cos\gamma)^2-(q+\cos\beta)^2 .$$
+      Since $\sin^2\gamma-\sin^2\beta=\cos^2\beta-\cos^2\gamma$, this collapses to $2q(\cos\gamma-\cos\beta)$. So, using $\sin c_1\sin c_2=q\sin^2c_1$, equation (3) becomes (after dividing both sides by $q\sin^2c_1/\sin\alpha$)
+      $$\frac{2(\cos\gamma-\cos\beta)}{\sin\alpha}=-\frac{\sin(\gamma-\beta)}{\sin\theta\,\sin(\theta+\gamma)} .$$
+      Both sides equal $-\dfrac{2\sin\frac{\gamma-\beta}2}{\sin\theta}$. On the left, $\cos\gamma-\cos\beta=-2\cos\theta\sin\frac{\gamma-\beta}2$ (because $\frac{\beta+\gamma}2=90^\circ-\theta$) and $\sin\alpha=2\sin\theta\cos\theta$. On the right, $\sin(\gamma-\beta)=2\sin\frac{\gamma-\beta}2\cos\frac{\gamma-\beta}2$, and by (2) $\sin(\theta+\gamma)=\cos\frac{\gamma-\beta}2$.
+
+      So (3) holds, $K$ lies on $O_1O_2$, and the lines $BC$, $EF$ and $O_1O_2$ all pass through $K$.
+    checked: "numeric: 400 random triangles and points D; the three lines meet to 1e-13, and each formula in Steps 1–7 (including the identity (3)) was checked numerically"
+    viz: imo-2021-p3
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Tangential quadrilateral and a circle through its incenter"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Compare the chords $IX$ and $IY$ of $\Omega$ using the inscribed angles at $A$. Do the same at $C$.'
+      - 'Use tangent lengths to $\Gamma$: from a point on a side line, the tangent length is the distance to the touch point on that side.'
+    solution: |
+      **Key idea:** $I$ is equally far from $X$ and $Y$, and from $Z$ and $T$. Equal distances from $I$ mean equal tangent lengths to $\Gamma$, and the rest is bookkeeping with tangent lengths.
+
+      Let $r$ be the radius of $\Gamma$ and $R$ the radius of $\Omega$. Let $a,b,c,d$ be the tangent lengths from $A,B,C,D$ to $\Gamma$, so $AD=a+d$ and $CD=c+d$.
+
+      **Step 1: $IX=IY$ and $IZ=IT$.** The line $AI$ bisects the angle at $A$; call each half $\alpha$. The point $X$ is on line $AB$ beyond $A$, so the angle between rays $AX$ and $AI$ is $180^\circ-\alpha$. The point $Y$ is on ray $AD$, so the angle between rays $AY$ and $AI$ is $\alpha$. In $\Omega$, a chord seen at angle $\theta$ from another point of the circle has length $2R\sin\theta$, and $\sin(180^\circ-\alpha)=\sin\alpha$. So $IX=IY$. The same argument at $C$ ($CI$ bisects the angle at $C$, $Z$ is beyond $C$ on line $BC$, and $T$ is on ray $CD$) gives $IZ=IT$.
+
+      **Step 2: $TX=YZ$.** The points of $\Omega$ at a given distance from $I$ are mirror images of each other in the diameter through $I$. So that reflection swaps $X$ with $Y$ and $Z$ with $T$. It carries segment $XT$ onto segment $YZ$, so $TX=YZ$.
+
+      **Step 3: tangent lengths.** For a point $P$ outside $\Gamma$, the tangent length is $\sqrt{IP^2-r^2}$. When $P$ lies on a side line, this is the distance from $P$ to that side's touch point. The touch point on $AB$ lies between $A$ and $B$, and $X$ is beyond $A$, so the tangent length from $X$ is $XA+a$. In the same way the tangent length from $Y$ (beyond $D$ on line $AD$) is $YD+d$, from $Z$ (beyond $C$ on line $BC$) it is $ZC+c$, and from $T$ (beyond $D$ on line $CD$) it is $TD+d$. Step 1 now gives
+      $$XA+a=YD+d,\qquad ZC+c=TD+d .$$
+
+      **Step 4: finish.** By Step 2 it is enough to show $AD+DT+XA=CD+DY+ZC$. Substituting $XA=YD+d-a$ and $ZC=TD+d-c$, this becomes
+      $$AD+DT+YD+d-a=CD+DY+TD+d-c,$$
+      that is, $AD-a=CD-c$. Both sides equal $d$.
+    checked: "numeric: 200 random tangential quadrilaterals; the two sides and the three equalities of Steps 1 and 2 agree to 1e-12"
+    viz: imo-2021-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Swapping neighbors around a circle: one swap straddles"
+    areas: [combinatorics]
+    difficulty: 3
+    hints:
+      - 'Suppose every move swaps two walnuts that are both smaller, or both larger, than the walnut in the middle.'
+      - 'At move $k$, color walnuts $1,\dots,k$ red. Count the red blocks (maximal runs of red around the circle) and watch the parity.'
+    solution: |
+      **Key idea:** if no move ever straddles, then each move adds walnut $k$ to the red set either as a brand-new block or as a bridge between two blocks. The block count changes by exactly one each time, and a parity count fails because $2021$ is odd.
+
+      Write $n=2021$. Suppose, for contradiction, that at every move $k$ the two neighbors of walnut $k$ are both smaller than $k$ or both larger than $k$.
+
+      **Red blocks.** For $m=1,\dots,n-1$, color walnuts $1,\dots,m$ red and the rest white. Let $b_m$ be the number of maximal runs of red holes around the circle, counted at the time of move $m$.
+
+      **The moves don't disturb the colorings we need.** Move $k$ swaps two walnuts on the same side of $k$, so they get the same color in the coloring for $m=k-1$ and also in the coloring for $m=k$. Swapping two walnuts of the same color doesn't change which holes are red. So during move $k$, the pattern for $m=k-1$ is still the one counted by $b_{k-1}$ (only move $k-1$ came in between, and it didn't change it), and the pattern for $m=k$ is the one counted by $b_k$.
+
+      **Each step changes the count by one.** Take $2\le k\le n-1$ and look at the moment of move $k$. Going from the coloring for $k-1$ to the one for $k$ just turns walnut $k$ red.
+      - If both neighbors of $k$ are larger, they are white, so $k$ becomes a new block by itself: $b_k=b_{k-1}+1$.
+      - If both neighbors are smaller, they are red, and they are in different blocks. (If one red block contained both, it would run all the way around the circle except at $k$, so all $n-1$ other walnuts would be smaller than $k$, which is false for $k\le n-1$.) So walnut $k$ joins two blocks into one: $b_k=b_{k-1}-1$.
+
+      **Parity.** We start with $b_1=1$, and each step changes $b$ by $\pm1$, so $b_m\equiv m \pmod 2$. But for $m=n-1$ every walnut except $n$ is red, a single block, so $b_{n-1}=1$, while $n-1=2020$ is even. This contradiction shows that at some move $k$ the two swapped walnuts $a$ and $b$ satisfy $a<k<b$ (after naming them so that $a<b$).
+
+      (The argument needs $n$ odd. A computer search confirms that with an even number of walnuts the statement can fail.)
+    checked: "script: every starting arrangement for 3, 5, 7 and 9 walnuts has a straddling move; with 4 walnuts there is a counterexample"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Subsets with prescribed sums need a large ground set"
+    areas: [combinatorics, algebra]
+    difficulty: 4
+    hints:
+      - 'Combine the subset sums with coefficients $c_k\in\{0,1,\dots,m-1\}$. The numbers $\sum c_k m^k$ are all different.'
+      - 'Each such combination is also $\sum_{a\in A}t_a\,a$ with small whole numbers $t_a$. Count both ways.'
+    solution: |
+      **Key idea:** base-$m$ digits give $m^m$ different numbers, and each of them is a combination of the elements of $A$ with small coefficients. A small set can't make that many different combinations.
+
+      Let $s=|A|$, and suppose $s<m/2$.
+
+      **Many different values.** For every choice of digits $c_1,\dots,c_m\in\{0,1,\dots,m-1\}$ consider
+      $$N(c)=\sum_{k=1}^m c_k\,m^k .$$
+      Base-$m$ expansions are unique, so the $m^m$ digit choices give $m^m$ different numbers.
+
+      **Few possible forms.** Since the elements of $B_k$ add up to $m^k$,
+      $$N(c)=\sum_{k=1}^m c_k\sum_{a\in B_k}a=\sum_{a\in A}t_a\,a,\qquad\text{where } t_a=\sum_{k:\ a\in B_k}c_k .$$
+      Each $t_a$ is a whole number from $0$ to $m(m-1)$, so the vector $(t_a)_{a\in A}$ can take at most $(m^2-m+1)^s$ values. Two digit choices with the same vector would give the same number $N(c)$, so different digit choices give different vectors. Hence
+      $$m^m\le (m^2-m+1)^s .$$
+
+      **Contradiction.** But $m^2-m+1<m^2$, so $(m^2-m+1)^s\le m^{2s}<m^m$ when $s<m/2$. Therefore $s\ge m/2$.
+    checked: "script: (m²−m+1)^s < m^m whenever 2s < m, for all m < 800 (the proof covers all m)"
+    status: ready

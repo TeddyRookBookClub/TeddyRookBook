@@ -329,6 +329,15 @@ note = "The ancient world, era by era"
 icon = "⏳"
 
 [[menu.main]]
+name = "October Sky"
+url = "/october-sky/"
+weight = 34
+[menu.main.params]
+group = "Education"
+note = "The Rocket Boys' story, and the math and physics of rockets"
+icon = "🚀"
+
+[[menu.main]]
 name = "Resources"
 url = "/resources/"
 weight = 34
@@ -820,6 +829,9 @@ note = "Save sections to use without the internet, and keep them up to date"
   [segments.meals]
     [[segments.meals.includes]]
       path = '{/meal-prep,/meal-prep/**}'
+  [segments.october]
+    [[segments.october.includes]]
+      path = '{/october-sky,/october-sky/**}'
   [segments.memory]
     [[segments.memory.includes]]
       path = '{/memory,/memory/**}'

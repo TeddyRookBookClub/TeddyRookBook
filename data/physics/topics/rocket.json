@@ -1,0 +1,375 @@
+{
+ "course": "rocket",
+ "units": [
+  {
+   "key": "tools",
+   "title": "Tools of the Trade",
+   "blurb": "Units, significant figures, graphs and the statistics of many launches: how to record a flight so the numbers mean something."
+  },
+  {
+   "key": "thrust",
+   "title": "Pushing Off",
+   "blurb": "Newton's laws, thrust, impulse, the rocket equation and nozzles, all as ideas and numbers, never as building plans."
+  },
+  {
+   "key": "flight",
+   "title": "Up and Down",
+   "blurb": "Calculus of motion, powered flight, coasting to the top, energy, drag, stability and range."
+  },
+  {
+   "key": "tracking",
+   "title": "How High Did It Go?",
+   "blurb": "Measuring height from the ground with angles: the tangent, the size of the error, and two observers."
+  },
+  {
+   "key": "orbit",
+   "title": "Beyond the Sky",
+   "blurb": "Why Sputnik didn't fall, how fast you must go to leave Earth, and the ellipses of Kepler."
+  }
+ ],
+ "topics": [
+  {
+   "id": "rocket.units-sig-figs",
+   "slug": "units-sig-figs",
+   "unit": "tools",
+   "title": "Units and Significant Figures",
+   "short": "Change feet to meters and miles to feet with conversion factors, and keep only as many digits as the measurement deserves.",
+   "prereqs": [
+    "phys1.dimensional-analysis",
+    "alg1.units-quantities"
+   ],
+   "xp": 2,
+   "trouble": "Students flip a conversion factor upside down, or copy every calculator digit into the answer.",
+   "viz": [
+    "rocket-units"
+   ]
+  },
+  {
+   "id": "rocket.flight-graphs",
+   "slug": "flight-graphs",
+   "unit": "tools",
+   "title": "Graphing Flight Data",
+   "short": "Read a rocket's velocity-time graph: the slope is acceleration, the area is height, and the top of the flight is where the line crosses zero.",
+   "prereqs": [
+    "phys1.velocity-time-graphs",
+    "phys1.position-time-graphs"
+   ],
+   "xp": 2,
+   "trouble": "Students think the rocket is highest where the velocity graph is highest, at burnout, instead of where velocity reaches zero.",
+   "viz": [
+    "rocket-flight-graph"
+   ]
+  },
+  {
+   "id": "rocket.launch-statistics",
+   "slug": "launch-statistics",
+   "unit": "tools",
+   "title": "Statistics of Repeated Launches",
+   "short": "Fly the same rocket again and again: the mean says what to expect, and the range and standard deviation say how much to trust it.",
+   "prereqs": [
+    "stat.standard-deviation"
+   ],
+   "xp": 2,
+   "trouble": "Students treat one launch as the answer, or confuse the range with the standard deviation.",
+   "viz": [
+    "rocket-launch-stats"
+   ]
+  },
+  {
+   "id": "rocket.newtons-laws-thrust",
+   "slug": "newtons-laws-thrust",
+   "unit": "thrust",
+   "title": "Newton's Three Laws and Thrust",
+   "short": "A rocket pushes its exhaust down and the exhaust pushes the rocket up. Net force, not thrust alone, sets the acceleration.",
+   "prereqs": [
+    "phys1.newtons-third-law",
+    "phys1.second-law-systems"
+   ],
+   "xp": 2,
+   "trouble": "Students divide thrust by mass and forget that weight pulls down the whole time.",
+   "viz": [
+    "rocket-thrust-fbd"
+   ],
+   "lab": "/science-lab/newtons-laws/third-law/"
+  },
+  {
+   "id": "rocket.thrust-to-weight",
+   "slug": "thrust-to-weight",
+   "unit": "thrust",
+   "title": "Thrust-to-Weight and Liftoff",
+   "short": "A rocket leaves the pad only if its thrust beats its weight. The ratio of the two tells how hard it jumps and how fast it leaves the launch rod.",
+   "prereqs": [
+    "rocket.newtons-laws-thrust",
+    "phys1.kinematics-without-time"
+   ],
+   "xp": 2,
+   "trouble": "Students think any thrust at all will lift a rocket.",
+   "viz": [
+    "rocket-twr"
+   ]
+  },
+  {
+   "id": "rocket.impulse-momentum",
+   "slug": "impulse-momentum",
+   "unit": "thrust",
+   "title": "Impulse, Momentum and Thrust Curves",
+   "short": "Total impulse is the area under the thrust curve. It equals the change in momentum, and it is what a motor's letter class measures.",
+   "prereqs": [
+    "phys1.impulse",
+    "phys1.momentum"
+   ],
+   "xp": 2,
+   "trouble": "Students multiply peak thrust by burn time instead of finding the area under the whole curve.",
+   "viz": [
+    "rocket-thrust-curve"
+   ]
+  },
+  {
+   "id": "rocket.rocket-equation",
+   "slug": "rocket-equation",
+   "unit": "thrust",
+   "title": "Mass Flow and the Rocket Equation",
+   "short": "As a rocket throws mass backward it gets lighter. Adding up those small pushes with calculus gives Tsiolkovsky's equation, $\\Delta v = v_e \\ln(m_0/m_f)$.",
+   "prereqs": [
+    "rocket.impulse-momentum",
+    "phys1.momentum-conservation",
+    "calc1.exp-log-integrals"
+   ],
+   "xp": 3,
+   "trouble": "Students use the propellant mass, or the ratio upside down, inside the logarithm.",
+   "viz": [
+    "rocket-mass-ratio"
+   ],
+   "lab": "/science-lab/rocket/"
+  },
+  {
+   "id": "rocket.nozzles-concept",
+   "slug": "nozzles-concept",
+   "unit": "thrust",
+   "title": "Nozzles in Concept",
+   "short": "Why a rocket nozzle narrows and then widens: pressure turns into exhaust speed, and faster exhaust means more thrust from the same mass flow.",
+   "prereqs": [
+    "rocket.rocket-equation",
+    "physsci.pressure"
+   ],
+   "xp": 2,
+   "trouble": "Students assume a wider pipe always slows a gas, which is true below the speed of sound but not above it.",
+   "viz": [
+    "rocket-nozzle"
+   ]
+  },
+  {
+   "id": "rocket.calculus-of-motion",
+   "slug": "calculus-of-motion",
+   "unit": "flight",
+   "title": "Calculus of Motion",
+   "short": "Velocity is the derivative of height, and the change in velocity is the area under the acceleration graph.",
+   "prereqs": [
+    "calc1.motion",
+    "calc1.ftc-accumulation",
+    "phys1.kinematic-equations"
+   ],
+   "xp": 3,
+   "trouble": "Students evaluate the height function where they need its derivative, or forget the starting value after integrating.",
+   "viz": [
+    "rocket-calculus"
+   ]
+  },
+  {
+   "id": "rocket.powered-flight",
+   "slug": "powered-flight",
+   "unit": "flight",
+   "title": "Powered Flight to Burnout",
+   "short": "While the motor burns, the net force gives a steady acceleration (in a simple model). Burnout speed and height follow from the kinematic equations.",
+   "prereqs": [
+    "rocket.thrust-to-weight",
+    "rocket.calculus-of-motion"
+   ],
+   "xp": 2,
+   "trouble": "Students use the acceleration from thrust alone, without subtracting gravity.",
+   "viz": [
+    "rocket-boost"
+   ]
+  },
+  {
+   "id": "rocket.coasting-apogee",
+   "slug": "coasting-apogee",
+   "unit": "flight",
+   "title": "Free Fall and Coasting to Apogee",
+   "short": "After burnout the rocket is still going up, slowing by 9.8 m/s every second until it stops at apogee.",
+   "prereqs": [
+    "rocket.powered-flight",
+    "phys1.free-fall",
+    "phys1.vertical-launch"
+   ],
+   "xp": 2,
+   "trouble": "Students think the rocket starts falling the moment the motor stops.",
+   "viz": [
+    "rocket-coast"
+   ]
+  },
+  {
+   "id": "rocket.energy-burnout-apogee",
+   "slug": "energy-burnout-apogee",
+   "unit": "flight",
+   "title": "Energy From Burnout to Apogee",
+   "short": "Kinetic energy at burnout turns into potential energy on the way up. Comparing the two shows how much energy drag took.",
+   "prereqs": [
+    "rocket.coasting-apogee",
+    "phys1.energy-conservation"
+   ],
+   "xp": 2,
+   "trouble": "Students set kinetic energy equal to potential energy measured from the ground instead of from burnout.",
+   "viz": [
+    "rocket-energy"
+   ]
+  },
+  {
+   "id": "rocket.drag",
+   "slug": "drag",
+   "unit": "flight",
+   "title": "Drag: A First Look, Then a Numerical Step",
+   "short": "Air pushes back harder the faster you go, about as the square of speed. With drag there is no neat formula, so we step through the flight a little at a time.",
+   "prereqs": [
+    "rocket.coasting-apogee",
+    "phys1.second-law-systems"
+   ],
+   "xp": 3,
+   "trouble": "Students add the drag force in the wrong direction, or forget that it changes as the speed changes.",
+   "viz": [
+    "rocket-drag"
+   ]
+  },
+  {
+   "id": "rocket.stability",
+   "slug": "stability",
+   "unit": "flight",
+   "title": "Stability: Center of Mass and Center of Pressure",
+   "short": "A rocket flies straight when its center of mass is ahead of its center of pressure, so a gust turns it back into the wind like a weather vane.",
+   "prereqs": [
+    "phys1.systems-center-of-mass",
+    "phys1.torque"
+   ],
+   "xp": 2,
+   "trouble": "Students think the fins should be near the middle, or that a heavier tail makes a rocket steadier.",
+   "viz": [
+    "rocket-stability"
+   ]
+  },
+  {
+   "id": "rocket.range-angle",
+   "slug": "range-angle",
+   "unit": "flight",
+   "title": "Projectile Range and Launch Angle",
+   "short": "Tilt the flight and some of the speed carries the rocket sideways. Range depends on the angle, with the longest at 45 degrees in the ideal case.",
+   "prereqs": [
+    "phys1.projectile-angled"
+   ],
+   "xp": 2,
+   "trouble": "Students use the full speed in both the sideways and the up-and-down equations.",
+   "viz": [
+    "rocket-range"
+   ],
+   "lab": "/science-lab/trebuchet/"
+  },
+  {
+   "id": "rocket.altitude-tangent",
+   "slug": "altitude-tangent",
+   "unit": "tracking",
+   "title": "Altitude by the Tangent",
+   "short": "Stand a measured distance from the pad, sight the rocket at its highest point, and the tangent of the angle times the baseline gives its height.",
+   "prereqs": [
+    "geo.trig-ratios",
+    "geo.elevation-depression"
+   ],
+   "xp": 3,
+   "trouble": "Students use sine instead of tangent, or leave the calculator in radians.",
+   "viz": [
+    "rocket-theodolite",
+    "rocket-tangent"
+   ]
+  },
+  {
+   "id": "rocket.angle-error",
+   "slug": "angle-error",
+   "unit": "tracking",
+   "title": "How Good Is the Estimate?",
+   "short": "A one-degree slip in the angle changes the height by an amount that grows fast at steep angles. Choosing the baseline well keeps the error small.",
+   "prereqs": [
+    "rocket.altitude-tangent",
+    "rocket.launch-statistics"
+   ],
+   "xp": 3,
+   "trouble": "Students assume the error in height is the same whatever the angle.",
+   "viz": [
+    "rocket-angle-error"
+   ]
+  },
+  {
+   "id": "rocket.triangulation",
+   "slug": "triangulation",
+   "unit": "tracking",
+   "title": "Triangulating From Two Observers",
+   "short": "Two people sighting the same rocket from two places can find its height without measuring the distance to the rocket at all.",
+   "prereqs": [
+    "rocket.altitude-tangent",
+    "geo.law-of-sines"
+   ],
+   "xp": 3,
+   "trouble": "Students mix up the near and far observers' angles, or add cotangents when the observers stand on the same side.",
+   "viz": [
+    "rocket-triangulate"
+   ]
+  },
+  {
+   "id": "rocket.gravity-orbits",
+   "slug": "gravity-orbits",
+   "unit": "orbit",
+   "title": "Why Sputnik Didn't Fall",
+   "short": "An orbiting satellite is falling all the time, but it moves sideways so fast that the ground curves away beneath it.",
+   "prereqs": [
+    "phys1.orbiting-satellites",
+    "phys1.gravitational-force"
+   ],
+   "xp": 2,
+   "trouble": "Students think there is no gravity in orbit.",
+   "viz": [
+    "rocket-cannon"
+   ],
+   "lab": "/science-lab/orbits/"
+  },
+  {
+   "id": "rocket.escape-velocity",
+   "slug": "escape-velocity",
+   "unit": "orbit",
+   "title": "Escape Velocity",
+   "short": "Fast enough and an object never comes back: kinetic energy beats the whole gravitational well. Escape speed is $\\sqrt{2}$ times circular orbit speed.",
+   "prereqs": [
+    "rocket.gravity-orbits",
+    "phys1.gravitational-pe-universal"
+   ],
+   "xp": 2,
+   "trouble": "Students measure the distance from the surface instead of from the planet's center.",
+   "viz": [
+    "rocket-escape"
+   ]
+  },
+  {
+   "id": "rocket.kepler-ellipses",
+   "slug": "kepler-ellipses",
+   "unit": "orbit",
+   "title": "Ellipses and Kepler's Laws",
+   "short": "Real orbits are ellipses with Earth at one focus. The satellite speeds up near the low point, and the size of the ellipse sets the period.",
+   "prereqs": [
+    "rocket.gravity-orbits",
+    "pre.ellipses",
+    "astro.kepler-third-law"
+   ],
+   "xp": 3,
+   "trouble": "Students use altitudes above the ground instead of distances from Earth's center.",
+   "viz": [
+    "rocket-kepler"
+   ]
+  }
+ ]
+}

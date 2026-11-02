@@ -1,0 +1,41 @@
+year: 1988
+edition: 29th
+date: "July 1988 · Canberra, Australia"
+note: "This page has only Problem 6, the famous one: it gave its name to the method called [Vieta jumping](https://grokipedia.com/page/Vieta_jumping)."
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1988/1988_eng.pdf
+  archive: https://www.imo-official.org/year_info.aspx?year=1988
+problems:
+  - id: P6
+    day: 2
+    topic: "Vieta jumping: a divisibility quotient is a perfect square"
+    areas: [number-theory, algebra]
+    difficulty: 4
+    hints:
+      - 'Fix the quotient $k$ and read the condition as a quadratic equation in $a$. If $a$ is one root, what is the other?'
+      - 'Start from a solution with the smallest possible $a+b$. The other root gives a smaller solution, unless it is $0$. What does a root $0$ say about $k$?'
+    solution: |
+      **Key idea:** treat the condition as a quadratic in one variable and "jump" to the other root. This makes the solution smaller, so a smallest solution cannot exist, unless a jump lands on $0$. That forces $k$ to be a square.
+
+      Let $k=\dfrac{a^2+b^2}{ab+1}$, a positive integer. Suppose $k$ is **not** a perfect square. Among all pairs of positive integers $(a,b)$ with
+      $$a^2+b^2=k(ab+1)$$
+      choose one with the smallest sum $a+b$, and name them so that $a\ge b$.
+
+      **The jump.** Fix $b$ and $k$. Then $a$ is a root of
+      $$t^2-kb\,t+(b^2-k)=0 .$$
+      By Vieta's formulas the other root is
+      $$a'=kb-a=\frac{b^2-k}{a}.$$
+      The first form shows that $a'$ is an integer, and $(a',b)$ satisfies the same equation $a'^2+b^2=k(a'b+1)$.
+
+      **The other root is a positive integer.**
+      - $a'\ne0$: otherwise $b^2=k$, and $k$ would be a square.
+      - $a'>0$: if $a'<0$, then $a'b+1\le1-b\le0$, so $k(a'b+1)\le0<a'^2+b^2$, which is impossible.
+
+      **It is smaller.** From the second form, $a'=\frac{b^2-k}{a}<\frac{b^2}{a}\le\frac{a^2}{a}=a$. So $(a',b)$ is a pair of positive integers satisfying the equation with $a'+b<a+b$. This contradicts the choice of $(a,b)$.
+
+      So $k$ is a perfect square. Running the jumps on an actual solution shows how: they keep shrinking the pair until one entry reaches $0$, and at that moment $b^2=k$. For example, $(30,8)\to(8,2)\to(2,0)$ with $k=4$.
+
+      (The quotient can be every square: $(a,b)=(m^3,m)$ gives $k=m^2$.)
+    checked: "script: every pair with 1 ≤ b ≤ a < 1500 for which the quotient is an integer gives a perfect square (1, 4, 9, …, 121 occur)"
+    viz: imo-1988-p6
+    status: ready
