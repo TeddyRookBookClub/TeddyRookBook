@@ -1,0 +1,107 @@
+{{- /* Great Books Ladder hub (/great-books/, content/great-books/_index.md, layout: gbhub). Its own layout, on the ladder
+   engine's styles: Start here (the opening rungs), the map of every rung by era (from data/greatbooks/rungs.yaml via the
+   topics files; ready rungs come from the engine's graph, the rest show "being written"), the set volume by volume,
+   For families, the one-year path (coming), Harvard Classics Daily and the ideas index. Styles: static/greatbooks/viz/greatbooks.css. */ -}}
+{{ define "main" }}
+{{ partial "inline/ml-head.html" . }}
+{{ partial "inline/ml-css.html" "greatbooks/viz/greatbooks.css" }}
+{{- $lk := "greatbooks" -}}
+{{- $L := partial "inline/ml-ladder.html" $lk -}}
+{{- $LD := index site.Data $L.dir | default dict -}}
+{{- $g := partialCached "inline/ml-graph.html" "graph" -}}
+{{- $D := partialCached "greatbooks/rung-data.html" "gb" -}}
+{{- $base := $L.url -}}
+{{- $nT := 0 }}{{ $nR := 0 }}{{ range $LD.courses }}{{ with index $g.C .key }}{{ $nT = add $nT .n }}{{ $nR = add $nR .r }}{{ end }}{{ end -}}
+{{- $start := index $LD.topics "gbstart" -}}
+<div class="mlp mlp-hub mlp-hub-x gbh" id="mlp-hub" data-ladder="{{ $lk }}" style="--lc:{{ $L.color }};--lcd:{{ $L.dark }}">
+  <header class="mlp-hero">
+    <div class="mlp-hero-text">
+      <p class="mlp-eyebrow">{{ $L.eyebrow }}</p>
+      <h1>{{ $L.headline }}</h1>
+      <p>{{ $L.intro }}</p>
+      <div class="mlp-hero-btns">
+        <a class="mlp-btn gold big" href="{{ printf "%s/start-here/how-to-read-a-great-book/" $L.slug | relURL }}">Start here</a>
+        <a class="mlp-btn light big" href="#gbh-map">See every rung</a>
+      </div>
+    </div>
+    <div class="mlp-hero-art mlp-hero-art-x" aria-hidden="true"><svg viewBox="0 0 160 200" focusable="false"><g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"><path d="M40 196 L64 6"/><path d="M120 196 L96 6"/></g><g stroke="currentColor" stroke-width="6" stroke-linecap="round"><path d="M45 160h72"/><path d="M50 120h62"/><path d="M55 80h52"/><path d="M60 40h42"/></g></svg><span>{{ $L.icon }}</span></div>
+  </header>
+
+  <section class="gbh-sec" aria-labelledby="gbh-start-h">
+    <h2 id="gbh-start-h">Start here</h2>
+    <p class="gbh-sub">Three short rungs for the whole family before the first book.</p>
+    <div class="gbh-start">
+      {{- range $i, $t := $start.topics }}
+      <a class="gbh-card" href="{{ printf "%s/start-here/%s/" $L.slug $t.slug | relURL }}"><span class="gbh-n">Rung {{ add $i 1 }}</span><b>{{ $t.title }}</b><small>{{ $t.short }}</small></a>
+      {{- end }}
+    </div>
+  </section>
+
+  <section class="gbh-sec" id="gbh-map" aria-labelledby="gbh-map-h">
+    <h2 id="gbh-map-h">The ladder, era by era</h2>
+    <p class="gbh-sub"><b>{{ $nT }}</b> rungs, one for each work (or part of a long work) in the 60 volumes of <i>Great Books of the Western World</i>, 2nd edition (1990). <b>{{ $nR }}</b> {{ cond (eq $nR 1) "is" "are" }} ready; the rest are being written, science books first. The small number on each rung is its volume.</p>
+    <ul class="gbh-legend" aria-label="What the marks mean"><li><span class="gbh-rung ready" aria-hidden="true"><span>Ready</span></span> ready to read and practice</li><li><span class="gbh-rung soon" aria-hidden="true"><span>Being written</span></span> on the way</li></ul>
+    <div class="gbh-eras">
+      {{- range $LD.courses }}{{ if ne .key "gbstart" }}
+      {{- $c := . }}{{ $d := index $LD.topics .key }}{{ $gc := index $g.C .key }}
+      <section class="gbh-era" style="--c:{{ $c.color }}" aria-labelledby="gbh-era-{{ $c.key }}">
+        <div class="gbh-era-h"><h3 id="gbh-era-{{ $c.key }}"><a href="{{ printf "%s/%s/" $L.slug $c.slug | relURL }}"><span aria-hidden="true">{{ $c.icon }}</span> {{ $c.title }}</a></h3><small>{{ $gc.n }} rungs{{ if $gc.r }} · {{ $gc.r }} ready{{ end }}</small></div>
+        <p>{{ $c.blurb }}</p>
+        {{- range $d.units }}{{ $u := . }}
+        <p class="gbh-unit">{{ .title }}</p>
+        <ul class="gbh-rungs">
+          {{- range where $d.topics "unit" $u.key }}{{ $r := index $D.R .id }}{{ $s := index $g.soon .id }}
+          <li><a class="gbh-rung {{ if $s }}soon{{ else }}ready{{ end }}" href="{{ printf "%s/%s/%s/" $L.slug $c.slug .slug | relURL }}" title="{{ .short }}">{{ with $r.vol }}<i>{{ if reflect.IsSlice . }}{{ delimit . "–" }}{{ else }}{{ . }}{{ end }}</i>{{ end }}<span>{{ .title }}</span>{{ if $s }}<em class="mlp-sr"> (being written)</em>{{ end }}</a></li>
+          {{- end }}
+        </ul>
+        {{- end }}
+      </section>
+      {{- end }}{{ end }}
+    </div>
+  </section>
+
+  <section class="gbh-sec" aria-labelledby="gbh-vol-h">
+    <h2 id="gbh-vol-h">Your set, volume by volume</h2>
+    <details>
+      <summary>Show all 60 volumes and their rungs</summary>
+      <ul class="gbh-vols">
+        {{- range $n := seq 1 60 }}
+        {{- $in := slice }}{{ range $LD.courses }}{{ $c := . }}{{ range (index $LD.topics .key).topics }}{{ $r := index $D.R .id }}{{ $v := $r.vol }}{{ $vs := slice }}{{ if reflect.IsSlice $v }}{{ $vs = $v }}{{ else if $v }}{{ $vs = slice $v }}{{ end }}{{ if in $vs $n }}{{ $in = $in | append (dict "t" . "c" $c) }}{{ end }}{{ end }}{{ end }}
+        <li><b>{{ $n }}</b> {{ range $i, $x := $in }}{{ if $i }}; {{ end }}<a href="{{ printf "%s/%s/%s/" $L.slug $x.c.slug $x.t.slug | relURL }}">{{ $x.t.title }}</a>{{ end }}</li>
+        {{- end }}
+      </ul>
+    </details>
+  </section>
+
+  <div class="gbh-two gbh-sec">
+    <section class="gbh-box" aria-labelledby="gbh-fam-h">
+      <h2 id="gbh-fam-h"><span aria-hidden="true">🏡</span> For families</h2>
+      <ul>
+        <li><b>Three paths on every rung.</b> Children of about 8 to 12 take the young readers' path, with a story or an activity; teens and parents take the full lesson; anyone curious can go deeper.</li>
+        <li><b>Read aloud together.</b> Many of these books were written to be heard. Ten or fifteen minutes after dinner is enough.</li>
+        <li><b>Talk it over.</b> Each rung ends with questions for the family. There are no wrong opinions, only reasons to give.</li>
+        <li><b>Let kids climb on their own.</b> The practice is short and checks answers, so older children can work alone and show you their progress.</li>
+        <li><b>A note for parents</b> appears on rungs with mature parts (war in Homer, some plays, Freud), with suggestions for what to read with younger children.</li>
+      </ul>
+      <p class="mlp-small">Start with <a href="{{ printf "%s/start-here/how-to-read-a-great-book/" $L.slug | relURL }}">How to Read a Great Book</a>; it has a sample family week.</p>
+    </section>
+    <section class="gbh-box" aria-labelledby="gbh-year-h">
+      <h2 id="gbh-year-h"><span aria-hidden="true">📅</span> A Great Books year <span class="gbh-coming">Coming</span></h2>
+      <p>A second, shorter ladder is on the way: a path you can finish in one year, about 40 XP a day, paired with the fifteen-minute <a href="{{ "harvard-classics/" | relURL }}">Harvard Classics</a> reading for the same day. Until then, climb this ladder at your own pace.</p>
+      <h3><span aria-hidden="true">📚</span> Harvard Classics Daily</h3>
+      <p>The site's fifteen-minutes-a-day reading, from Charles W. Eliot's 1909 Five Foot Shelf. {{ len $D.hc }} rungs here link to the days that read the same author: Plato, Plutarch, Bacon, Pascal, Harvey, Darwin, Adam Smith, Milton and more.</p>
+      <ul>
+        <li><a href="{{ "harvard-classics/today/" | relURL }}">Today's reading</a></li>
+        <li><a href="{{ "harvard-classics/" | relURL }}">The whole year of readings</a></li>
+      </ul>
+    </section>
+    <section class="gbh-box" aria-labelledby="gbh-ideas-h">
+      <h2 id="gbh-ideas-h"><span aria-hidden="true">💡</span> Great Ideas index</h2>
+      <p>Follow one idea, like justice, courage or motion, through every rung that takes it up. It is our own index, inspired by Mortimer Adler's Syntopicon, and it grows as rungs are built.</p>
+      <p><a class="mlp-btn" href="{{ printf "%s/ideas/" $L.slug | relURL }}">Open the ideas index</a></p>
+      <h3>Your progress</h3>
+      <p class="mlp-small">Practice on every rung earns XP and comes back for reviews, saved in this browser with all the other ladders. <a href="{{ printf "%s/progress/" $L.slug | relURL }}">See your progress</a>{{ if $nR }} · <a href="{{ printf "%s/practice/" $L.slug | relURL }}">Practice now</a>{{ end }}.</p>
+    </section>
+  </div>
+</div>
+{{ end }}

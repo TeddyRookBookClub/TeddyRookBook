@@ -1,0 +1,42 @@
+{{- /* Great Books Ladder: our own Great Ideas index (/great-books/ideas/, content/great-books/ideas.md, layout: gbideas).
+   Ideas and groups: data/greatbooks/ideas.yaml (our own names and groups, inspired by Adler's Syntopicon, not copied
+   from it). Each idea lists the rungs whose ideas tags (data/greatbooks/rungs.yaml) include it, in ladder order, ready
+   rungs marked; it grows as rungs are built and tagged. Styles: static/greatbooks/viz/greatbooks.css. */ -}}
+{{ define "main" }}
+{{ partial "inline/ml-head.html" . }}
+{{ partial "inline/ml-css.html" "greatbooks/viz/greatbooks.css" }}
+{{- $L := partial "inline/ml-ladder.html" "greatbooks" -}}
+{{- $GB := site.Data.greatbooks | default dict -}}
+{{- $g := partialCached "inline/ml-graph.html" "graph" -}}
+{{- $idx := partialCached "inline/ml-index.html" "index" -}}
+{{- $rungs := $GB.rungs.rungs | default slice -}}
+<div class="mlp gbh" id="gbh-ideas">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ $L.url }}">{{ $L.short }}</a> <span aria-hidden="true">›</span> <span>Great Ideas</span></nav>
+  <header class="mlp-thead">
+    <p class="mlp-eyebrow"><span>Great Books Ladder</span><span>Index</span></p>
+    <h1>Great Ideas: our index</h1>
+    <p class="mlp-short">Pick an idea and follow it through the great books, rung by rung, from the oldest to the newest.</p>
+  </header>
+  <div class="mlp-note"><p>This index is inspired by Mortimer J. Adler's <i>Syntopicon</i>, the index of great ideas in volumes 1 and 2 of <i>Great Books of the Western World</i>, which lists passage by passage where each idea is discussed. Ours is far smaller and our own: {{ len $GB.ideas.ideas }} ideas, named and grouped our way, each linking to the rungs on this ladder that take it up. It grows as rungs are built. To learn how the Syntopicon itself works, see <a href="{{ printf "%s/start-here/syntopicon-and-adler/" $L.slug | relURL }}">The Syntopicon and Mortimer Adler</a>.</p></div>
+  <ul class="gbh-jump" aria-label="Groups">{{ range $GB.ideas.groups }}<li><a href="#group-{{ .key }}">{{ .title }}</a></li>{{ end }}</ul>
+  <div class="gbh-ideas-groups">
+    {{- range $GB.ideas.groups }}{{ $gr := . }}
+    <section class="gbh-ig" id="group-{{ .key }}" aria-labelledby="group-{{ .key }}-h">
+      <h2 id="group-{{ .key }}-h">{{ .title }}</h2>
+      <p>{{ .blurb }}</p>
+      {{- range where $GB.ideas.ideas "group" $gr.key }}{{ $k := .key }}
+      {{- $hits := slice }}{{ range $rungs }}{{ if in (.ideas | default slice) $k }}{{ with index $idx.T .id }}{{ $hits = $hits | append . }}{{ end }}{{ end }}{{ end }}
+      {{- $nr := 0 }}{{ range $hits }}{{ if not (index $g.soon .id) }}{{ $nr = add $nr 1 }}{{ end }}{{ end }}
+      <article class="gbh-idea" id="{{ $k }}">
+        <h3>{{ .name }} <span class="gbh-n">{{ len $hits }} {{ cond (eq (len $hits) 1) "rung" "rungs" }}{{ if $nr }}, {{ $nr }} ready{{ end }}</span></h3>
+        <p>{{ .blurb }}</p>
+        {{- if $hits }}
+        <ul class="gbh-rungs">{{ range $hits }}{{ $s := index $g.soon .id }}<li><a class="gbh-rung {{ if $s }}soon{{ else }}ready{{ end }}" href="{{ .url }}" title="{{ .short }}"><span>{{ .title }}</span>{{ if $s }}<em class="mlp-sr"> (being written)</em>{{ end }}</a></li>{{ end }}</ul>
+        {{- else }}<p class="mlp-small">No rungs tagged yet.</p>{{ end }}
+      </article>
+      {{- end }}
+    </section>
+    {{- end }}
+  </div>
+</div>
+{{ end }}

@@ -1,0 +1,46 @@
+{{- /* Great Books Ladder cross-links (called from layouts/math/single.html with (dict "ladder" $lk "id" $id)).
+   - On any ladder's topic page: a "Read the source" card for each Great Books rung that data/greatbooks/links.yaml maps
+     to this topic (nothing when there is no mapping).
+   - On a Great Books rung: "Related on this site" (the rung's links.yaml targets) and "15 minutes a day" (its Harvard
+     Classics Daily days, data/greatbooks/harvard.json, from scripts/greatbooks/harvard.py).
+   Cards on other ladders reuse the engine's .mlp-labcard style; the rung's own sections use static/greatbooks/viz/greatbooks.css. */ -}}
+{{- $D := partialCached "greatbooks/rung-data.html" "gb" -}}
+{{- $id := .id -}}
+{{- $idx := partialCached "inline/ml-index.html" "index" -}}
+{{- with index $D.to $id }}
+{{- range . }}{{ $e := . }}{{ with index $idx.T $e.rung }}{{ $rr := index $D.R $e.rung }}
+<a class="mlp-labcard gb-srccard" href="{{ .url }}"{{ with $e.note }} title="{{ . }}"{{ end }}><span class="mlp-labcard-icon" aria-hidden="true">📚</span><span><small>{{ if $rr.vol }}Read the source{{ else }}See also{{ end }} · Great Books Ladder</small><b>{{ .title }}</b>{{ with $e.note }}<span class="gb-srccard-note">{{ . }}</span>{{ end }}</span><span aria-hidden="true">→</span></a>
+{{- end }}{{ end }}
+{{- end }}
+{{- if eq .ladder "greatbooks" -}}
+{{- $g := partialCached "inline/ml-graph.html" "graph" -}}
+{{- $links := index $D.from $id | default slice -}}
+{{- $T := slice }}{{ $P := slice -}}
+{{- range $links }}{{ range .to | default slice }}{{ with index $idx.T . }}{{ $T = $T | append . }}{{ end }}{{ end }}{{ range .pages | default slice }}{{ $P = $P | append . }}{{ end }}{{ end -}}
+{{- if or $T $P }}
+<section class="gb-rel" aria-labelledby="gb-rel-h">
+  <h2 id="gb-rel-h"><span aria-hidden="true">🔗</span> Related on this site</h2>
+  {{- with $T }}
+  <ul class="mlp-chips small">{{ range . }}{{ $pc := index $g.C .course }}<li><a class="mlp-chip" href="{{ .url }}" data-id="{{ .id }}"><i class="mlp-dot" aria-hidden="true"></i><span>{{ .title }} <small>{{ $pc.lshort }}{{ if ne $pc.short $pc.lshort }} · {{ $pc.short }}{{ end }}</small></span><em class="mlp-sr" data-st></em></a></li>{{ end }}</ul>
+  {{- end }}
+  {{- with $P }}
+  <ul class="gb-rel-pages">{{ range . }}<li><a href="{{ .url | relURL }}">{{ .title }}</a></li>{{ end }}</ul>
+  {{- end }}
+</section>
+{{- end }}
+{{- with index $D.hc $id }}
+{{- $same := where . "same" true }}{{ $other := where . "same" false }}
+<section class="gb-hc" aria-labelledby="gb-hc-h">
+  <h2 id="gb-hc-h"><span aria-hidden="true">📚</span> 15 minutes a day: Harvard Classics readings</h2>
+  <p class="mlp-small">Days in <a href="{{ "harvard-classics/" | relURL }}">Harvard Classics Daily</a>, from the 1930 reading guide to the 1909–10 Harvard Classics, that read this author.</p>
+  {{- with $same }}
+  <h3>From this work</h3>
+  <ul class="gb-hc-list">{{ range . }}<li><a href="{{ .url | relURL }}"><b>{{ .date }}</b><span>{{ .title }}</span><small>{{ .work }}</small></a></li>{{ end }}</ul>
+  {{- end }}
+  {{- with $other }}
+  <h3>{{ if $same }}More readings by the same author{{ else }}Readings from other works by the same author{{ end }}</h3>
+  <ul class="gb-hc-list">{{ range . }}<li><a href="{{ .url | relURL }}"><b>{{ .date }}</b><span>{{ .title }}</span><small>{{ with .author }}{{ . }}, {{ end }}{{ .work }}</small></a></li>{{ end }}</ul>
+  {{- end }}
+</section>
+{{- end }}
+{{- end -}}

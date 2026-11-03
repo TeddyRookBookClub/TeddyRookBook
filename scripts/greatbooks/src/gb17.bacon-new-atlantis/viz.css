@@ -1,0 +1,11 @@
+.gb-sal .gb-sal-task{margin:0 0 .5rem;font-size:.95rem}
+.gb-sal .gb-sal-ring{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:.4rem;counter-reset:sal}
+.gb-sal .gb-sal-ring li{counter-increment:sal;position:relative;min-width:0}
+.gb-sal .gb-sal-b{width:100%;text-align:left;font:600 .88rem system-ui,sans-serif;min-height:44px;padding:.4rem .6rem;border-radius:10px;border:1px solid var(--mv-line);background:var(--mv-card);color:var(--mv-ink);cursor:pointer;display:flex;gap:.5rem;align-items:center}
+.gb-sal .gb-sal-b::before{content:counter(sal);font-size:.75rem;color:var(--mv-muted);min-width:1em}
+.gb-sal .gb-sal-b[aria-pressed="true"]{border-color:var(--mv-acc);box-shadow:0 0 0 2px var(--mv-acc) inset}
+.gb-sal .gb-sal-n{display:inline-block;min-width:1.8em;text-align:center;border-radius:999px;background:var(--mv-paper);border:1px solid var(--mv-line);font-size:.8rem;padding:0 .3rem}
+.gb-sal .gb-sal-det{margin:.7rem 0 0;padding:.5rem .7rem;border-left:4px solid #b8963e;background:var(--mv-card);border-radius:8px;font-size:.95rem;min-height:3.2em}
+.gb-sal .gb-sal-det p{margin:.2rem 0}
+.gb-sal .gb-sal-mod{color:var(--mv-muted)}
+.gb-sal .gb-sal-story{font-style:italic}

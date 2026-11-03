@@ -1,0 +1,274 @@
+{
+ "paths": {
+  "young": [
+   {
+    "t": "p",
+    "html": "<b>Archimedes</b> lived in Syracuse, a Greek city on the island of Sicily, about 2,250 years ago. He was a mathematician who loved to measure things nobody else could: the space inside a ball, the number of grains of sand it would take to fill the whole sky, and the reason a ship floats."
+   },
+   {
+    "t": "p",
+    "html": "He worked out the rule of the <b>lever</b>. A small weight far from the balance point can lift a big weight close to it. That is why a long crowbar can move a heavy rock, and why a small child at the far end of a seesaw can balance a grown-up sitting near the middle."
+   },
+   {
+    "t": "viz",
+    "name": "gb-lever",
+    "cap": "Change the weights and distances. When weight × distance is the same on both sides, the beam balances.",
+    "opts": {
+     "m1": 3,
+     "d1": 4,
+     "m2": 2,
+     "d2": 6
+    }
+   },
+   {
+    "t": "activity",
+    "html": "<b>A ruler seesaw.</b> Balance a ruler on a pencil at its middle mark. Put 2 coins at the 3 cm mark on one side. Where must 1 coin go on the other side to balance? (Try 6 cm.) Now try 3 coins at 2 cm. Can you predict the answer before you test it?"
+   },
+   {
+    "t": "p",
+    "html": "There is a famous story that Archimedes jumped out of his bath shouting <em>\"Eureka!\"</em> (\"I have found it!\") when he saw how to test whether a king's crown was pure gold. The story was written down about 200 years after he died, by a Roman builder named Vitruvius, so nobody knows whether it happened. But the science is real: water pushes up on anything in it, and a crown with cheap silver mixed in takes up more room than pure gold of the same weight."
+   }
+  ],
+  "full": [
+   {
+    "t": "h",
+    "text": "Who, when and why"
+   },
+   {
+    "t": "p",
+    "html": "Archimedes (c. 287–212 BC) lived in Syracuse when it was a wealthy Greek city allied with Rome. He corresponded with mathematicians at Alexandria, sending them his results with letters that open many of his books. He died when Roman forces captured Syracuse during the Second Punic War. Plutarch, writing about 300 years later, gives several versions of how a Roman soldier killed him, and says the Roman general Marcellus was grieved by it."
+   },
+   {
+    "t": "p",
+    "html": "His problem was measurement. Euclid had shown how to prove things about shapes, but many questions stayed open. How do you find the area of a curved shape, or the volume of a sphere? Why does a lever work? What makes some things float? Archimedes answered them with proofs as careful as Euclid's, often in short books addressed to friends."
+   },
+   {
+    "t": "h",
+    "text": "The law of the lever"
+   },
+   {
+    "t": "p",
+    "html": "<em>On the Equilibrium of Planes</em> starts from a few postulates, like \"equal weights at equal distances balance\", and proves the law of the lever as a theorem."
+   },
+   {
+    "t": "quote",
+    "text": "<p>Two magnitudes, whether commensurable or incommensurable, balance at distances reciprocally proportional to the magnitudes.</p>",
+    "author": "Archimedes",
+    "work": "On the Equilibrium of Planes, Book I, Propositions 6 and 7",
+    "tr": "Thomas L. Heath",
+    "ed": "Cambridge University Press",
+    "year": 1897,
+    "url": "https://archive.org/details/worksofarchimede00arch",
+    "src": "Internet Archive",
+    "note": "Heath's bracketed proposition numbers are left out."
+   },
+   {
+    "t": "key",
+    "html": "<b>Reciprocally proportional</b> means the bigger weight sits at the smaller distance, in the same ratio: if $W_1 : W_2 = d_2 : d_1$, the lever balances. In modern words, $W_1 d_1 = W_2 d_2$."
+   },
+   {
+    "t": "viz",
+    "name": "gb-lever",
+    "cap": "Set any weights and distances on the notches. The readout multiplies weight by distance on each side."
+   },
+   {
+    "t": "ex",
+    "title": "Lifting a stone",
+    "q": "A stone weighing 600 newtons sits 0.3 m from the pivot of a crowbar. How hard must you push down 1.8 m from the pivot on the other side to balance it?",
+    "steps": [
+     "Weight × distance must match: $600 \\times 0.3 = F \\times 1.8$.",
+     "$180 = 1.8F$, so $F = 100$ newtons.",
+     "A push of a sixth of the weight, because the arm is six times as long."
+    ],
+    "a": "100 newtons"
+   },
+   {
+    "t": "p",
+    "html": "Pappus of Alexandria, five centuries later, reports Archimedes saying, in effect, <em>give me a place to stand and I will move the Earth</em>. The words are a later report, but the idea is exactly the law of the lever: with a long enough arm, any weight can be balanced."
+   },
+   {
+    "t": "h",
+    "text": "Why things float"
+   },
+   {
+    "t": "quote",
+    "text": "<p>A solid heavier than a fluid will, if placed in it, descend to the bottom of the fluid, and the solid will, when weighed in the fluid, be lighter than its true weight by the weight of the fluid displaced.</p>",
+    "author": "Archimedes",
+    "work": "On Floating Bodies, Book I, Proposition 7",
+    "tr": "Thomas L. Heath",
+    "ed": "Cambridge University Press",
+    "year": 1897,
+    "url": "https://archive.org/details/worksofarchimede00arch",
+    "src": "Internet Archive"
+   },
+   {
+    "t": "p",
+    "html": "Proposition 5 deals with floating: a floating solid sinks until it has pushed aside its own weight of fluid. Together they give <b>Archimedes' principle</b>: anything in a fluid is pushed up by a force equal to the weight of the fluid it pushes aside. A floating ship sinks until it has pushed aside its own weight of water. A stone is pushed up too, just not enough to float."
+   },
+   {
+    "t": "viz",
+    "name": "gb-crown",
+    "cap": "Mix some silver into the crown, then lower both into water. The crown and the gold weigh the same in air; in water the bulkier one is pushed up more.",
+    "opts": {
+     "silver": 0.25
+    }
+   },
+   {
+    "t": "ex",
+    "title": "Weighing a crown in water",
+    "q": "A crown weighs 1,000 g in air and 940 g when hanging in water. Pure gold is about 19.3 times as dense as water. Is it pure gold?",
+    "steps": [
+     "In water it lost 60 g, so it pushed aside 60 g of water: its volume is 60 cm³.",
+     "Its density is $1000 \\div 60 \\approx 16.7$ times water.",
+     "Pure gold would be 19.3, losing only $1000 \\div 19.3 \\approx 52$ g. The crown is too bulky for its weight."
+    ],
+    "a": "No: its density is about 16.7, less than gold's 19.3, so something lighter is mixed in."
+   },
+   {
+    "t": "mistake",
+    "html": "Believing the bathtub story as told. Vitruvius (writing about 25 BC) says Archimedes measured the water each object spilled over. Galileo, in a short essay of 1586 called <em>La Bilancetta</em> (\"the little balance\"), argued that the spilled water would be too small to measure well, and suggested Archimedes more likely weighed the crown and gold in water on a balance, using his own principle. Whether the crown story happened at all is unknown."
+   },
+   {
+    "t": "h",
+    "text": "Trapping pi"
+   },
+   {
+    "t": "quote",
+    "text": "<p>The ratio of the circumference of any circle to its diameter is less than 3 1/7 but greater than 3 10/71.</p>",
+    "author": "Archimedes",
+    "work": "Measurement of a Circle, Proposition 3",
+    "tr": "Thomas L. Heath",
+    "ed": "Cambridge University Press",
+    "year": 1897,
+    "url": "https://archive.org/details/worksofarchimede00arch",
+    "src": "Internet Archive"
+   },
+   {
+    "t": "p",
+    "html": "Archimedes drew regular polygons inside and outside a circle, starting with hexagons and doubling the sides four times, to 96. The circle's perimeter is caught between the two polygons. He had no decimals and no algebra; he worked with whole-number fractions and careful estimates of square roots, rounding in the safe direction each time."
+   },
+   {
+    "t": "viz",
+    "name": "gb-circle-pi",
+    "cap": "Double the sides and watch the two polygons squeeze the circle.",
+    "opts": {
+     "n": 6
+    }
+   },
+   {
+    "t": "ex",
+    "title": "The first step",
+    "q": "Find Archimedes' bounds from hexagons alone, for a circle of diameter 1.",
+    "steps": [
+     "The inside hexagon has six sides, each equal to the radius, $\\tfrac12$. Its perimeter is 3.",
+     "The outside hexagon has sides $\\tfrac{1}{\\sqrt3} \\approx 0.5774$. Its perimeter is $6 \\times 0.5774 \\approx 3.464$.",
+     "So $3 < \\pi < 3.464$. Doubling to 96 sides narrows this to between about 3.1410 and 3.1427, which Archimedes rounded, always in the safe direction, to 3 10/71 and 3 1/7."
+    ],
+    "a": "$3 < \\pi < 3.47$, before any doubling"
+   },
+   {
+    "t": "h",
+    "text": "The other books, briefly"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>On the Sphere and Cylinder:</b> a sphere has two-thirds the volume and two-thirds the surface of the cylinder that just holds it. Archimedes was so proud of this that, according to Cicero, a sphere in a cylinder was carved on his tomb; Cicero found the overgrown tomb in 75 BC.",
+     "<b>Quadrature of the Parabola:</b> a slice of a parabola is $\\tfrac43$ of the triangle inside it, found by adding up an endless series of triangles: $1 + \\tfrac14 + \\tfrac1{16} + \\dots = \\tfrac43$.",
+     "<b>The Sand-Reckoner:</b> a way to name huge numbers, used to show that even the grains of sand needed to fill the universe can be counted. It also preserves the only surviving report of Aristarchus's idea that the Earth goes around the Sun.",
+     "<b>On Spirals, On Conoids and Spheroids,</b> and <b>The Method</b>, which explains how he found results by imagining shapes balanced on a lever before proving them."
+    ]
+   },
+   {
+    "t": "quote",
+    "text": "<p>There are some, king Gelon, who think that the number of the sand is infinite in multitude; and I mean by the sand not only that which exists about Syracuse and the rest of Sicily but also that which is found in every region whether inhabited or uninhabited.</p>",
+    "author": "Archimedes",
+    "work": "The Sand-Reckoner",
+    "tr": "Thomas L. Heath",
+    "ed": "Cambridge University Press",
+    "year": 1897,
+    "url": "https://archive.org/details/worksofarchimede00arch",
+    "src": "Internet Archive"
+   },
+   {
+    "t": "h",
+    "text": "What later science kept, and what it changed"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Kept:</b> the law of the lever and Archimedes' principle, unchanged, in every physics book.",
+     "<b>Extended:</b> his method of adding up thin slices and endless series points straight toward the integral calculus of Newton and Leibniz.",
+     "<b>Changed:</b> we now compute $\\pi$ by series, not polygons, to trillions of digits. But 3 10/71 < π < 3 1/7 is still correct."
+    ]
+   }
+  ],
+  "deep": [
+   {
+    "t": "h",
+    "text": "The lost book found under a prayer book"
+   },
+   {
+    "t": "p",
+    "html": "<em>The Method</em> was lost for centuries. In 1906 the Danish scholar J. L. Heiberg found it in Constantinople, in a prayer book whose parchment had been scraped and reused in the 1200s: beneath the prayers lay a copy of Archimedes from the 900s. This book, the <b>Archimedes Palimpsest</b>, was imaged with ultraviolet and X-ray light from 1999 to 2008, and more of Archimedes' text came back. Heath's 1912 supplement translated <em>The Method</em> soon after Heiberg's find."
+   },
+   {
+    "t": "p",
+    "html": "<em>The Method</em> shows Archimedes' private way of discovery. He imagined a shape as made of countless thin slices and balanced them, slice by slice, against a known shape on a lever. He says plainly that this only suggests the answer, and that a proper proof must follow. The distinction he draws, between finding a result and proving it, is one later scientists kept returning to."
+   },
+   {
+    "t": "h",
+    "text": "Legends and engines"
+   },
+   {
+    "t": "p",
+    "html": "Ancient historians (Polybius, Livy, Plutarch) say Archimedes designed catapults and cranes that held off the Roman siege for many months. The later story that he set ships on fire with mirrors first appears centuries afterward, and modern tests have not shown it would work in battle. Plutarch also says Archimedes thought little of his machines compared with pure mathematics; that is Plutarch's view, and Archimedes' own books do take up practical questions such as floating."
+   },
+   {
+    "t": "h",
+    "text": "Big questions"
+   },
+   {
+    "t": "list",
+    "items": [
+     "Is guessing an answer first, then proving it, a fair way to do mathematics?",
+     "Archimedes counted the grains of sand needed to fill the universe. Why might it matter to show that a number is finite even when it is too big to write out?",
+     "Which matters more, a clever machine or a clever proof?"
+    ]
+   },
+   {
+    "t": "p",
+    "html": "Galileo, later on this ladder, admired Archimedes above the other ancient mathematicians and built on his statics and floating bodies. Newton's calculus finished the work Archimedes' slices began."
+   }
+  ]
+ },
+ "questions": [
+  "Where do you use a lever at home? (Scissors, a bottle opener, a wheelbarrow, a door handle.) Where is the pivot on each?",
+  "Why does a huge steel ship float, but a small steel nail sinks?",
+  "The Eureka story may not be true. Does a good story help people remember science, or does it get in the way?",
+  "Archimedes trapped π between two numbers instead of finding it exactly. When is an answer that says \"between this and that\" good enough?",
+  "Archimedes asked for a sphere and cylinder on his tomb. If you could carve one idea you are proud of, what would it be?"
+ ],
+ "sources": [
+  {
+   "name": "The Works of Archimedes, ed. and tr. T. L. Heath (Cambridge, 1897), Internet Archive",
+   "url": "https://archive.org/details/worksofarchimede00arch"
+  },
+  {
+   "name": "Chris Rorres, Archimedes (New York University): The Golden Crown and Galileo's La Bilancetta",
+   "url": "https://math.nyu.edu/Archimedes/Crown/bilancetta.html"
+  },
+  {
+   "name": "Grokipedia: Archimedes",
+   "url": "https://grokipedia.com/page/Archimedes"
+  },
+  {
+   "name": "Grokipedia: Archimedes Palimpsest",
+   "url": "https://grokipedia.com/page/Archimedes_Palimpsest"
+  },
+  {
+   "name": "Plutarch, Lives of the Noble Grecians and Romans (Dryden translation, rev. A. H. Clough), Life of Marcellus, Project Gutenberg",
+   "url": "https://www.gutenberg.org/ebooks/674"
+  }
+ ]
+}

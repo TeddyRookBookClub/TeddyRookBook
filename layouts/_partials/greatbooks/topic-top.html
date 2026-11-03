@@ -1,0 +1,32 @@
+{{- /* Great Books Ladder: the strip under a rung's title (called from layouts/math/single.html with
+   (dict "ladder" $lk "id" $id "lesson" (bool))): volume, author and life, the work and its date, idea tags, and
+   "Read the full text" (public-domain texts only) or, when there is no public-domain English, where to find it.
+   Outside the Great Books Ladder it renders nothing. Styles: static/greatbooks/viz/greatbooks.css. */ -}}
+{{- if eq .ladder "greatbooks" -}}
+{{- $D := partialCached "greatbooks/rung-data.html" "gb" -}}
+{{- with index $D.R .id -}}
+{{- $r := . -}}
+{{- if ne $r.author "Teddy Rook Book" }}
+<section class="gb-meta" aria-label="About this work">
+  <dl class="gb-meta-dl">
+    {{- with $r.vol }}<div><dt>Volume</dt><dd>{{ if reflect.IsSlice . }}{{ delimit . " and " }}{{ else }}{{ . }}{{ end }} <small>of the 1990 set</small></dd></div>{{ end }}
+    <div><dt>Author</dt><dd>{{ $r.author }}{{ with $r.life }} <small>({{ . }})</small>{{ end }}</dd></div>
+    {{- with $r.work }}<div class="gb-meta-work"><dt>Work</dt><dd><i>{{ . }}</i>{{ with $r.date }} <small>{{ . }}</small>{{ end }}</dd></div>{{ end }}
+  </dl>
+  {{- with $r.ideas }}
+  <p class="gb-meta-ideas"><span>Ideas:</span> {{ range . }}{{ with index $D.ideas . }}<a class="gb-idea" href="{{ printf "great-books/ideas/#%s" .key | relURL }}">{{ .name }}</a> {{ end }}{{ end }}</p>
+  {{- end }}
+  {{- if $r.read }}
+  <p class="gb-meta-read"><span aria-hidden="true">📖</span> <b>Read the full text, free:</b> {{ range $i, $x := $r.read }}{{ if $i }} · {{ end }}<a href="{{ $x.url }}" rel="noopener">{{ $x.name }}</a>{{ end }}</p>
+  {{- else if $r.nopd }}
+  <p class="gb-meta-read"><span aria-hidden="true">🏛️</span> {{ with $r.where }}{{ . | markdownify }}{{ else }}<b>No public-domain English translation.</b> Find it at a library: <a href="https://openlibrary.org/search?q={{ printf "%s %s" $r.author ($r.work | default $r.title) | urlquery }}" rel="noopener">Open Library</a> or <a href="https://search.worldcat.org/search?q={{ printf "%s %s" $r.author ($r.work | default $r.title) | urlquery }}" rel="noopener">WorldCat</a>.{{ end }}</p>
+  {{- else }}
+  <p class="gb-meta-read"><span aria-hidden="true">📖</span> <b>Read it free:</b> <a href="https://www.gutenberg.org/ebooks/search/?query={{ $r.q | default (printf "%s %s" (index (split $r.author " ") (sub (len (split $r.author " ")) 1)) (index (split ($r.work | default $r.title) ",") 0)) | urlquery }}" rel="noopener">search Project Gutenberg</a> for public-domain editions.</p>
+  {{- end }}
+  {{- if and $r.care (not $.lesson) }}
+  <p class="gb-care"><b>A note for parents:</b> {{ $r.care }}</p>
+  {{- end }}
+</section>
+{{- end }}
+{{- end -}}
+{{- end -}}

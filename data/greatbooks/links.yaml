@@ -1,0 +1,141 @@
+# Great Books Ladder cross-links (format: /tmp/work_gbcore/FORMAT.md, section 7).
+# Each entry: rung (a Great Books topic id), to: [topic ids on any ladder, from data/<ladder>/topics/*.json],
+# optional note (shown on the target's "Read the source" card), optional pages: [{ url, title }] (other site pages).
+# The rung page lists "Related on this site"; each target topic page gets a "Read the source" card linking back
+# (layouts/_partials/greatbooks/topic-cards.html). Check with: python3 scripts/greatbooks/check-gb.py
+# Writers: add one block per rung with a separate small edit; keep blocks in ladder order where you can.
+
+- rung: gbstart.how-to-read-a-great-book
+  to: [memsk.narration, comp.summarizing, rhet.reading-sources]
+  note: "How to read the classics: narration, notes and questions"
+  pages:
+    - { url: "/harvard-classics/", title: "Harvard Classics Daily: fifteen minutes a day" }
+
+- rung: gbstart.the-great-conversation
+  to: [rhet.counterargument]
+  pages:
+    - { url: "/harvard-classics/", title: "Harvard Classics Daily" }
+    - { url: "/debate/", title: "Debate: argue both sides of a question" }
+
+- rung: gbstart.syntopicon-and-adler
+  to: []
+  pages:
+    - { url: "/great-books/ideas/", title: "Our Great Ideas index" }
+
+- rung: gbgreeks.aristotle-physics
+  to: [physsci.first-law-inertia, phys1.free-fall, physsci.forces-intro, phys1.equilibrium-first-law, alg2.infinite-geometric-series]
+  note: "Aristotle's rules of motion, his near-miss with inertia, and Zeno's halves"
+
+- rung: gbgreeks.aristotle-on-the-heavens
+  to: [astro.celestial-sphere, earthsci.eclipses, astro.eclipses, earthsci.latitude-longitude, astro.heliocentric-model]
+  note: "Aristotle's evidence that the Earth is a sphere: the curved shadow in lunar eclipses"
+
+- rung: gbgreeks.aristotle-biology
+  to: [lifesci.classification-ranks, lifesci.vertebrate-groups, lifesci.invertebrate-groups, lifesci.backbones, lifek.sorting-animals, hsbio.cladograms]
+  note: "Aristotle, the first great sorter of animals: blooded and bloodless, live-bearing and egg-laying"
+
+- rung: gbgreeks.hippocrates-works
+  to: [hsbio.hypotheses-experiments, lifesci.helpful-harmful-microbes, lifesci.systems-together]
+  note: "Hippocratic medicine: natural causes, careful case records and the doctor's duty"
+
+- rung: gbgreeks.euclid-plane-geometry
+  to: [geo.basic-constructions, geo.two-column-proofs, geo.triangle-theorems, geo.isosceles-triangles, g8.triangle-angle-sum, g8.pythagorean-theorem, g8.pythagorean-converse, geo.pythagorean-proof, geo.inscribed-constructions]
+  note: "Euclid's own constructions and proofs, from the equilateral triangle to the Pythagorean theorem"
+
+- rung: gbgreeks.euclid-proportion-and-number
+  to: [nt.euclidean-algorithm, nt.infinitely-many-primes, nt.perfect-numbers, g6.gcf-lcm, g8.irrational-numbers, geo.side-splitter, disc.contradiction-proof]
+  note: "Euclid's algorithm, his proof that the primes never run out, and his recipe for perfect numbers"
+
+- rung: gbgreeks.euclid-solid-geometry
+  to: [geo.pyramids-cones-spheres, g8.volume-cones, g8.volume-spheres, geo.scaling-solids, geo.surface-area-solids]
+  note: "Euclid's volumes of cones and pyramids, and his proof that there are only five regular solids"
+
+- rung: gbgreeks.archimedes-works
+  to: [physsci.levers, physsci.simple-machines, phys1.torque, phys1.rotational-equilibrium, phys2.buoyancy, earthsci.density, g7.circle-area, g8.volume-spheres]
+  note: "Archimedes on the lever, floating bodies and the measurement of the circle"
+
+- rung: gbrome.lucretius-on-the-nature-of-things
+  to: [chem.atomic-models, chem.conservation-of-mass, chem.matter-classification, gchem1.mass-laws]
+  note: "Lucretius's poem of atoms and the void, and what later chemistry kept"
+
+- rung: gbrome.nicomachus-introduction-to-arithmetic
+  to: [g4.prime-composite, nt.primality-sieve, nt.perfect-numbers, nt.divisor-functions, g5.prime-factorization, alg1.arithmetic-sequences]
+  note: "Nicomachus's sieve, perfect numbers and figurate numbers"
+
+- rung: gbrome.ptolemy-almagest
+  to: [astro.heliocentric-model, astro.celestial-sphere, astro.celestial-coordinates, astro.kepler-second-law, geo.trig-ratios]
+  note: "Ptolemy's epicycles: how an Earth-centered system explained the planets' backward loops"
+
+- rung: gbrome.galen-on-the-natural-faculties
+  to: [hsbio.kidneys, lifesci.circulatory-system, hsbio.circulation, lifesci.digestive-system, hsbio.digestion-absorption, hsbio.hypotheses-experiments]
+  note: "Galen's ureter experiment and his picture of the blood, before Harvey"
+
+- rung: gbren.copernicus-on-the-revolutions
+  to: [astro.heliocentric-model, astro.celestial-sphere, astro.solar-sidereal-day, astro.parallax, earthsci.solar-system-objects]
+  note: "Copernicus's own case for a sun-centered system, and why Mars seems to loop backward"
+
+- rung: gb17.gilbert-on-the-loadstone
+  to: [physsci.magnets, phys2.magnetic-fields, physsci.static-forces, geology.paleomagnetism, geology.magnetic-stripes, maps.using-a-compass]
+  note: "Gilbert's little magnetic earth, and his proof that the Earth itself is a magnet (1600)"
+
+- rung: gb17.kepler-harmonies
+  to: [astro.kepler-third-law, astro.weighing-with-orbits, mech.kepler-third-from-newton, earthsci.gravity-orbits, physsci.sound]
+  note: "Kepler's third law, found while he searched for music in the planets' motions"
+
+- rung: gb17.kepler-epitome
+  to: [astro.kepler-first-law, astro.kepler-second-law, pre.ellipses, rocket.kepler-ellipses, mech.kepler-second-from-newton, mech.vis-viva]
+  note: "Kepler's ellipses and equal areas, from his own textbook of the new astronomy"
+
+- rung: gb17.bacon-novum-organum
+  to: [informal.deductive-inductive, informal.inductive-strength, informal.hasty-generalization, informal.causal-reasoning, hsbio.hypotheses-experiments, stat.experimental-design, phys2.kinetic-theory]
+  note: "Bacon's method of induction, his 'idols' of the mind, and his guess that heat is motion"
+
+- rung: gb17.bacon-new-atlantis
+  to: [hsbio.scientific-theories]
+  note: "Bacon's imagined house of research, the model for the first scientific societies"
+
+- rung: gb17.harvey-motion-of-the-heart
+  to: [lifesci.circulatory-system, hsbio.circulation, hsbio.gas-exchange]
+  note: "Harvey's 1628 proof that the heart pumps the same blood round and round"
+
+- rung: gb17.descartes-discourse-on-method
+  to: [phys2.snells-law, phys2.index-of-refraction, physsci.refraction-intro, physsci.color]
+  note: "Descartes's rainbow: tracing rays of light through a single raindrop"
+
+- rung: gb17.descartes-geometry
+  to: [g5.coordinate-plane, g6.four-quadrants, geo.coordinate-proofs, geo.similar-right-triangles, g8.similar-figures, alg1.quadratic-formula, alg2.solve-polynomial-equations, pre.classify-conics]
+  note: "Where algebra met geometry: Descartes's Geometry of 1637"
+
+- rung: gb17.galileo-two-new-sciences
+  to: [phys1.free-fall, phys1.inclined-planes, phys1.kinematic-equations, physsci.acceleration-intro, phys1.projectile-angled, rocket.range-angle, phys1.pendulum-period, geo.scaling-solids, mech.galilean-frames]
+  note: "Galileo's rolling-ball experiments and the law of falling bodies, in his own words"
+
+- rung: gb17.harvey-generation-of-animals
+  to: [lifek.chicken-cycle, lifek.compare-cycles, lifesci.cell-theory]
+  note: "Harvey watched a chick take shape in the egg, day by day (1651)"
+
+- rung: gb17.pascal-scientific-treatises
+  to: [physsci.pressure, phys2.pressure-depth, phys2.pascals-principle, chem.gas-pressure, stat.combinations, disc.binomial-identities, alg2.binomial-theorem, stat.expected-value]
+  note: "Pascal's barometer on the mountain, his machine for multiplying forces and his arithmetical triangle"
+
+- rung: gb17.huygens-treatise-on-light
+  to: [modern.huygens-principle, phys2.snells-law, phys2.index-of-refraction, phys2.total-internal-reflection, phys2.polarization, phys1.pendulum-period]
+  note: "Huygens's wavelets and the speed of light, in his own Treatise on Light"
+
+- rung: gb17.newton-principia
+  to: [physsci.first-law-inertia, physsci.second-law-intro, physsci.third-law-intro, physsci.gravity-mass-distance, phys1.newtons-third-law, phys1.gravitational-force, phys1.orbiting-satellites, astro.orbits-escape, mech.kepler-third-from-newton, astro.tides]
+  note: "Newton's own laws of motion, the cannonball on the mountain and the Moon test"
+
+- rung: gb17.newton-optics
+  to: [physsci.color, physsci.refraction-intro, phys2.index-of-refraction, phys2.snells-law, phys2.thin-films, gchem1.light-waves, astro.telescopes]
+  note: "Newton's prism experiments: white light is a mixture of colors"
+
+- rung: gb18.lavoisier-elements-of-chemistry
+  to: [chem.conservation-of-mass, chem.balancing-equations, gchem1.mass-laws, chem.percent-composition, gchem1.combustion-analysis, chem.naming-covalent, gchem1.redox-reactions]
+  note: "Lavoisier's balance, oxygen and the conservation of mass"
+
+- rung: gb19.faraday-experimental-researches
+  to: [physsci.generators, physsci.electromagnets, phys2.magnetic-flux, phys2.faradays-law, phys2.lenzs-law, em.faraday-calculus, em.mutual-inductance, em.generators, gchem2.electrolytic-cells, gchem2.faraday]
+  note: "Faraday's 1831 discovery of induction, in his own words"
+  pages:
+    - { url: "/homeschool/science/chemical-history-of-a-candle/", title: "The Chemical History of a Candle: Faraday's lectures for young people" }

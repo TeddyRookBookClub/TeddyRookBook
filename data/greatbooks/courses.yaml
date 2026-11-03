@@ -1,0 +1,104 @@
+# Great Books Ladder courses (eras), in ladder order. The rungs of each era are in data/greatbooks/rungs.yaml;
+# data/greatbooks/topics/*.json, lessons/*.json and static/greatbooks/gen|viz/*.js are BUILT from it and from
+# scripts/greatbooks/src/ by scripts/greatbooks/build.py. Format: /tmp/work_gbcore/FORMAT.md.
+# band and grade are the engine's fields (check-course allows Elementary, Middle school, High school, College); every
+# rung has a young readers' path for about ages 8 to 12, a full path for teens and adults, and a going-deeper path.
+- key: gbstart
+  slug: start-here
+  title: "Start Here"
+  short: "Start Here"
+  band: "Middle school"
+  grade: "3–12"
+  icon: "🧭"
+  color: "#00562f"
+  blurb: "Three opening rungs for the whole family: how to read a great book, what the Great Conversation is and where the idea came from, and Mortimer Adler's Syntopicon, with our own index of great ideas."
+  note: "Every rung on this ladder has three paths: **For young readers** (about 8 to 12), **For teens and adults**, and **Going deeper**. Read together, or let each reader take their own path."
+  after: []
+- key: gbgreeks
+  slug: the-greeks
+  title: "The Greeks"
+  short: "The Greeks"
+  band: "High school"
+  grade: "7–12"
+  icon: "🏛️"
+  color: "#1d4f91"
+  blurb: "Volumes 3 to 10: Homer, the Athenian playwrights, Herodotus and Thucydides, Plato, Aristotle, Hippocrates, Euclid and Archimedes, from about 750 to 212 BC."
+  note: "Each rung has three paths: **For young readers** (about 8 to 12), **For teens and adults**, and **Going deeper**, plus questions to talk over as a family."
+  after: [gbstart]
+- key: gbrome
+  slug: rome-and-late-antiquity
+  title: "Rome and Late Antiquity"
+  short: "Rome"
+  band: "High school"
+  grade: "7–12"
+  icon: "🦅"
+  color: "#8a2f2f"
+  blurb: "Volumes 9 to 16: Lucretius, Virgil, Plutarch, Tacitus, Epictetus, Marcus Aurelius, Plotinus, Nicomachus, Ptolemy, Galen and Augustine, from about 55 BC to AD 430."
+  note: "Each rung has three paths: **For young readers** (about 8 to 12), **For teens and adults**, and **Going deeper**, plus questions to talk over as a family."
+  after: [gbgreeks]
+- key: gbmiddle
+  slug: the-middle-ages
+  title: "The Middle Ages"
+  short: "Middle Ages"
+  band: "High school"
+  grade: "7–12"
+  icon: "🏰"
+  color: "#5b4a8a"
+  blurb: "Volumes 17 to 19: Thomas Aquinas's Summa Theologica, Dante's Divine Comedy and Chaucer's Troilus and Criseyde and Canterbury Tales."
+  note: "Each rung has three paths: **For young readers** (about 8 to 12), **For teens and adults**, and **Going deeper**, plus questions to talk over as a family."
+  after: [gbrome]
+- key: gbren
+  slug: renaissance-and-reformation
+  title: "Renaissance and Reformation"
+  short: "Renaissance"
+  band: "High school"
+  grade: "7–12"
+  icon: "🎭"
+  color: "#9a5b00"
+  blurb: "Volumes 15 and 20 to 27: Erasmus, Machiavelli, Rabelais, Montaigne, Calvin, Copernicus, Shakespeare and Cervantes, from 1511 to 1616."
+  note: "Each rung has three paths: **For young readers** (about 8 to 12), **For teens and adults**, and **Going deeper**, plus questions to talk over as a family."
+  after: [gbmiddle]
+- key: gb17
+  slug: the-age-of-reason
+  title: "The Age of Reason"
+  short: "17th Century"
+  band: "High school"
+  grade: "7–12"
+  icon: "🔭"
+  color: "#00562f"
+  blurb: "The 17th century, volumes 15 and 21 to 32: Gilbert, Kepler, Bacon, Harvey, Descartes, Galileo, Hobbes, Spinoza, Pascal, Milton, Molière, Racine, Huygens and Newton."
+  note: "Each rung has three paths: **For young readers** (about 8 to 12), **For teens and adults**, and **Going deeper**, plus questions to talk over as a family."
+  after: [gbren]
+- key: gb18
+  slug: the-enlightenment
+  title: "The Enlightenment"
+  short: "18th Century"
+  band: "High school"
+  grade: "7–12"
+  icon: "🕯️"
+  color: "#1d6f7a"
+  blurb: "The 18th century, volumes 33 to 42: Locke, Berkeley, Hume, Kant, Swift, Voltaire, Diderot, Montesquieu, Rousseau, Adam Smith, the American founding papers, Gibbon, Boswell and Lavoisier."
+  note: "Each rung has three paths: **For young readers** (about 8 to 12), **For teens and adults**, and **Going deeper**, plus questions to talk over as a family."
+  after: [gb17]
+- key: gb19
+  slug: the-19th-century
+  title: "The 19th Century"
+  short: "19th Century"
+  band: "High school"
+  grade: "7–12"
+  icon: "⚙️"
+  color: "#6e3f1f"
+  blurb: "Volumes 40 to 53: Hegel, Mill, Kierkegaard, Nietzsche, Tocqueville, Marx and Engels, Faraday, Darwin, William James, and the great novelists from Goethe and Austen to Tolstoy, Dostoevsky and Twain."
+  note: "Each rung has three paths: **For young readers** (about 8 to 12), **For teens and adults**, and **Going deeper**, plus questions to talk over as a family."
+  after: [gb18]
+- key: gb20
+  slug: the-20th-century
+  title: "The 20th Century"
+  short: "20th Century"
+  band: "High school"
+  grade: "7–12"
+  icon: "📻"
+  color: "#3f48cc"
+  blurb: "Volumes 54 to 60: Freud, then one rung for each author of the six 20th-century volumes, in philosophy and religion, natural science, social science and imaginative literature."
+  note: "Most 20th-century works are still under copyright, so these rungs give our own summaries and point to libraries. Each rung has three paths: **For young readers** (about 8 to 12), **For teens and adults**, and **Going deeper**."
+  after: [gb19]

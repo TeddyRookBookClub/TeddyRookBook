@@ -1,0 +1,85 @@
+/* Lavoisier: a flask on a balance. Heat tin (or burn a candle) in a sealed vessel or an open one, and watch the mass.
+   Masses: a 1 L flask of air holds 1.20 g of air, 0.28 g of it oxygen. Tin takes up that oxygen (sealed) or, in an
+   open dish, as much as it needs: 10.0 g of tin becomes 12.7 g of tin oxide. A candle burning in the open loses the
+   carbon dioxide and water it makes to the room. Our own design. */
+(function () {
+  function isReduced(V) { return typeof V.reduced === 'function' ? V.reduced() : !!V.reduced; }
+  var MODES = {
+    tinS: { lab: 'Tin, sealed flask', base: 310.0, sealed: true, d: function (p) { return 0; }, open: 0.28 },
+    tinO: { lab: 'Tin, open dish', base: 160.0, sealed: false, d: function (p) { return 2.7 * p; } },
+    canO: { lab: 'Candle, open', base: 140.0, sealed: false, d: function (p) { return -1.6 * p; } },
+    canS: { lab: 'Candle, sealed jar', base: 520.0, sealed: true, d: function (p) { return 0; }, open: 0 }
+  };
+  ML.viz.register('gb-lavoisier-balance', function (el, o, V) {
+    o = o || {};
+    var RM = isReduced(V), st = { m: 'tinS', p: 0, opened: 0, run: false };
+    var c = V.canvas(el, { aspect: 1.6, max: 340, min: 220 });
+    var ctl = V.el('div', 'gbsc-ctl'); el.appendChild(ctl);
+    if (!o.young) V.seg(ctl, { label: 'Experiment', items: Object.keys(MODES).map(function (k) { return [k, MODES[k].lab]; }), value: st.m, change: function (v) { st.m = v; reset(); } });
+    var heatB = V.button(ctl, 'Heat', function () { if (st.p >= 1) return; if (RM) { st.p = 1; draw(); } else { st.run = true; loop.start(); } });
+    var openB = V.button(ctl, 'Open the stopper', function () { if (!MODES[st.m].sealed) return; if (RM) { st.opened = 1; draw(); } else { st.openRun = true; loop.start(); } });
+    V.button(ctl, 'Reset', function () { reset(); });
+    var out = V.readout(el);
+    var loop = V.loop(el, function (dt) {
+      var ch = false;
+      if (st.run) { st.p = Math.min(1, st.p + dt / 3); ch = true; if (st.p >= 1) st.run = false; }
+      if (st.openRun) { st.opened = Math.min(1, st.opened + dt / 1.2); ch = true; if (st.opened >= 1) st.openRun = false; }
+      if (ch) draw(); else loop.stop();
+    });
+    function reset() { st.p = 0; st.opened = 0; st.run = false; st.openRun = false; draw(); }
+    function mass() { var M = MODES[st.m]; return M.base + M.d(st.p) + (M.sealed ? (M.open || 0) * st.p * st.opened : 0); }
+    function draw() {
+      var k = V.colors(), x = c.ctx, w = c.w, h = c.h, M = MODES[st.m];
+      openB.disabled = !M.sealed || st.p < 1 || st.opened >= 1; heatB.disabled = st.p >= 1;
+      x.clearRect(0, 0, w, h); x.fillStyle = k.bg; x.fillRect(0, 0, w, h);
+      var m = mass(), diff = m - M.base, tilt = Math.max(-0.16, Math.min(0.16, diff * 0.05 + (diff > 0 ? 0.02 : diff < 0 ? -0.02 : 0)));
+      var cx = w / 2, py = Math.max(58, h * 0.32), arm = Math.min(w * 0.36, 190);
+      // stand
+      x.strokeStyle = k.ink; x.lineWidth = 3; x.beginPath(); x.moveTo(cx, py); x.lineTo(cx, h - 16); x.moveTo(cx - 50, h - 16); x.lineTo(cx + 50, h - 16); x.stroke();
+      var lx = cx - arm * Math.cos(tilt), ly = py + arm * Math.sin(tilt), rx = cx + arm * Math.cos(tilt), ry = py - arm * Math.sin(tilt);
+      x.lineWidth = 4; x.beginPath(); x.moveTo(lx, ly); x.lineTo(rx, ry); x.stroke();
+      x.fillStyle = k.gold; x.beginPath(); x.moveTo(cx - 8, py + 2); x.lineTo(cx + 8, py + 2); x.lineTo(cx, py - 10); x.closePath(); x.fill();
+      // pointer
+      x.strokeStyle = k.muted; x.lineWidth = 1.2; x.beginPath(); x.arc(cx, py, 44, -Math.PI / 2 - 0.35, -Math.PI / 2 + 0.35); x.stroke();
+      for (var tk = -2; tk <= 2; tk++) { var ta = -Math.PI / 2 + tk * 0.15; x.beginPath(); x.moveTo(cx + 40 * Math.cos(ta), py + 40 * Math.sin(ta)); x.lineTo(cx + 48 * Math.cos(ta), py + 48 * Math.sin(ta)); x.stroke(); }
+      x.strokeStyle = k.red; x.lineWidth = 2.5; x.beginPath(); x.moveTo(cx, py); x.lineTo(cx - 46 * Math.sin(tilt * 1.5), py - 46 * Math.cos(tilt * 1.5)); x.stroke();
+      // pans
+      function pan(px, pyy) { x.strokeStyle = k.muted; x.lineWidth = 1.2; x.beginPath(); x.moveTo(px, pyy); x.lineTo(px - 34, pyy + 70); x.moveTo(px, pyy); x.lineTo(px + 34, pyy + 70); x.stroke(); x.strokeStyle = k.ink; x.lineWidth = 3; x.beginPath(); x.moveTo(px - 40, pyy + 70); x.lineTo(px + 40, pyy + 70); x.stroke(); return pyy + 70; }
+      var lb = pan(lx, ly), rb = pan(rx, ry);
+      // weights on the right pan
+      x.fillStyle = k.muted; x.fillRect(rx - 22, rb - 18, 18, 18); x.fillRect(rx + 2, rb - 12, 14, 12); x.fillRect(rx + 18, rb - 8, 9, 8);
+      // vessel on the left pan
+      var vx = lx, vy = lb, isCandle = st.m === 'canO' || st.m === 'canS';
+      if (M.sealed || !isCandle) {
+        if (M.sealed) { // flask
+          x.strokeStyle = k.blue; x.lineWidth = 2; x.fillStyle = k.blueSoft;
+          x.beginPath(); x.moveTo(vx - 6, vy - 62); x.lineTo(vx - 6, vy - 44); x.lineTo(vx - 26, vy - 4); x.lineTo(vx + 26, vy - 4); x.lineTo(vx + 6, vy - 44); x.lineTo(vx + 6, vy - 62); x.closePath(); x.fill(); x.stroke();
+          if (st.opened < 0.5) { x.fillStyle = k.gold; x.fillRect(vx - 7, vy - 70, 14, 9); }
+          if (st.opened > 0 && st.opened < 1) { x.strokeStyle = k.purple; x.lineWidth = 1.5; for (var a = 0; a < 3; a++) { var yy = vy - 84 + a * 7 + st.opened * 20; x.beginPath(); x.moveTo(vx - 10 + a * 6, yy - 10); x.lineTo(vx - 4 + a * 4, yy); x.stroke(); } }
+        } else { x.strokeStyle = k.ink; x.lineWidth = 2; x.beginPath(); x.moveTo(vx - 26, vy - 14); x.lineTo(vx - 20, vy - 4); x.lineTo(vx + 20, vy - 4); x.lineTo(vx + 26, vy - 14); x.stroke(); }
+      }
+      if (!isCandle) { // tin: gray metal turning to whitish calx
+        var p = st.p; x.fillStyle = 'rgb(' + Math.round(150 + 90 * p) + ',' + Math.round(155 + 85 * p) + ',' + Math.round(160 + 70 * p) + ')';
+        x.fillRect(vx - 14, vy - 12, 28, 7);
+      } else { // candle
+        var hgt = 34 * (1 - (st.m === 'canO' ? 0.5 * st.p : 0.12 * st.p));
+        if (st.m === 'canS') { x.strokeStyle = k.blue; x.lineWidth = 2; x.fillStyle = k.blueSoft; x.beginPath(); x.moveTo(vx - 26, vy - 4); x.lineTo(vx - 26, vy - 64); x.quadraticCurveTo(vx, vy - 84, vx + 26, vy - 64); x.lineTo(vx + 26, vy - 4); x.fill(); x.stroke(); }
+        x.fillStyle = '#f4ecd2'; x.strokeStyle = k.muted; x.lineWidth = 1; x.fillRect(vx - 6, vy - 4 - hgt, 12, hgt); x.strokeRect(vx - 6, vy - 4 - hgt, 12, hgt);
+        var lit = st.p > 0 && (st.m === 'canO' ? st.p < 1 || st.run : st.p < 0.6);
+        if (lit) { x.fillStyle = '#ffb02e'; x.beginPath(); x.ellipse(vx, vy - 12 - hgt, 4, 9, 0, 0, 7); x.fill(); }
+      }
+      if (st.run && !isCandle) { x.fillStyle = k.red; for (var f = 0; f < 3; f++) { x.beginPath(); x.ellipse(vx - 12 + f * 12, vy + 8, 4, 7, 0, 0, 7); x.fill(); } }
+      x.fillStyle = k.ink; x.font = '600 14px system-ui,sans-serif'; x.textAlign = 'center'; x.textBaseline = 'top';
+      x.fillText(m.toFixed(1) + ' g', lx, Math.min(h - 18, lb + 6));
+      x.fillText(M.base.toFixed(1) + ' g', rx, Math.min(h - 18, rb + 6));
+      var msg;
+      if (st.m === 'tinS') msg = st.p < 1 ? 'Tin and 1 liter of air, sealed in a flask: ' + M.base.toFixed(1) + ' g. Heat it.' : st.opened < 1 ? 'The tin has taken up the oxygen inside (0.28 g of it), yet the sealed flask still weighs <b>' + m.toFixed(1) + ' g</b>: nothing came in or went out.' : 'Air rushed in to fill the space the oxygen left. The flask is now <b>' + m.toFixed(1) + ' g</b>: heavier by about what the tin gained.';
+      else if (st.m === 'tinO') msg = st.p < 1 ? 'Tin in an open dish.' : '10.0 g of tin became 12.7 g of tin oxide. The dish gained <b>2.7 g</b>, taken from the air. A burned metal is heavier, not lighter.';
+      else if (st.m === 'canO') msg = st.p < 1 ? 'A candle burning in the open.' : 'The candle lost <b>1.6 g</b>, but nothing was destroyed: the wax and some oxygen became carbon dioxide and water vapor, which floated away into the room.';
+      else msg = st.p < 1 ? 'A candle under a sealed glass jar.' : 'The candle went out when it had used much of the oxygen. Sealed, the mass stays <b>' + m.toFixed(1) + ' g</b>: the products are still inside.';
+      out.set(o.young ? (st.p < 1 ? 'Press Heat.' : st.opened < 1 ? 'Still the same weight! Now open it.' : 'Air rushed in, so now it is heavier.') : msg);
+    }
+    c.onResize(draw); V.onTheme(draw); draw();
+    return { update: draw };
+  });
+})();

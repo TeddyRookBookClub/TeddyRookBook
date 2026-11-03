@@ -1,0 +1,231 @@
+{
+ "paths": {
+  "young": [
+   {
+    "t": "p",
+    "html": "In the middle of his book, Euclid stops drawing triangles and starts thinking about <b>numbers</b>. He asks questions you can explore with counters or blocks."
+   },
+   {
+    "t": "p",
+    "html": "Some numbers can be made into a rectangle of dots in more than one way: 12 dots can be 3 rows of 4, or 2 rows of 6. Others, like 7 or 13, only make a single row. Those are the <b>prime numbers</b>. Euclid proved something amazing about them: <b>they never run out</b>. However many primes you list, there is always another."
+   },
+   {
+    "t": "key",
+    "html": "Euclid's trick for finding a new prime: multiply all the primes on your list and add 1. The answer can't be divided evenly by any prime on your list, so its prime factors are new ones."
+   },
+   {
+    "t": "activity",
+    "html": "<b>Try it.</b> Start with the primes 2, 3 and 5. Multiply: 2 × 3 × 5 = 30. Add 1: 31. Try dividing 31 by 2, 3 and 5. There is always 1 left over! (31 happens to be prime itself.) Now try 2 × 3 × 5 × 7 × 11 × 13 + 1 = 30,031. It isn't prime: 30,031 = 59 × 509. But 59 and 509 are new primes, not on the list. Euclid's argument works either way."
+   },
+   {
+    "t": "viz",
+    "name": "gb-euclid-gcd",
+    "cap": "Euclid's way to find the biggest number that measures two others: keep cutting the biggest squares you can out of a rectangle. Press Cut."
+   },
+   {
+    "t": "p",
+    "html": "Euclid also found <b>perfect numbers</b>: numbers equal to the sum of their smaller divisors. 6 = 1 + 2 + 3 is the first. 28 = 1 + 2 + 4 + 7 + 14 is the next."
+   }
+  ],
+  "full": [
+   {
+    "t": "h",
+    "text": "Who, when and why"
+   },
+   {
+    "t": "p",
+    "html": "Books V to X of the <em>Elements</em> (Euclid, Alexandria, c. 300 BC) tackle a crisis in Greek mathematics. The Pythagoreans had hoped that everything could be measured by whole numbers. Then someone discovered that the diagonal of a square and its side have no common measure: no unit, however small, fits a whole number of times into both. Their ratio is what we call $\\sqrt{2}$, and it is not a ratio of whole numbers."
+   },
+   {
+    "t": "p",
+    "html": "If lengths can't always be compared as numbers, how can geometry use ratios at all? Book V gives the answer, a theory of proportion credited by ancient writers to Eudoxus of Cnidus (c. 390–c. 340 BC). It defines when two ratios are equal without needing them to be ratios of whole numbers. Book VI then applies it to similar figures."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Book",
+     "Subject",
+     "A landmark"
+    ],
+    "rows": [
+     [
+      "V",
+      "Ratio and proportion for any magnitudes",
+      "Definition 5: when ratios are \"in the same ratio\" (Eudoxus)"
+     ],
+     [
+      "VI",
+      "Similar figures",
+      "VI.2: a line parallel to one side of a triangle cuts the other two sides proportionally"
+     ],
+     [
+      "VII",
+      "Whole numbers: divisibility",
+      "VII.1–2: the Euclidean algorithm"
+     ],
+     [
+      "VIII",
+      "Numbers in continued proportion",
+      "geometric sequences such as 3, 6, 12, 24"
+     ],
+     [
+      "IX",
+      "More on number",
+      "IX.20: there are infinitely many primes; IX.36: how to make perfect numbers"
+     ],
+     [
+      "X",
+      "Incommensurable lines",
+      "a long classification of lines like $\\sqrt{a} + \\sqrt{b}$; X.1 is a first step toward limits"
+     ]
+    ]
+   },
+   {
+    "t": "h",
+    "text": "Euclid's algorithm"
+   },
+   {
+    "t": "p",
+    "html": "Book VII, Proposition 2 shows how to find the greatest common measure of two numbers: subtract the smaller from the larger again and again (or, as we say now, divide and keep the remainder) until the remainder measures the number before it. If the process ends at the unit, the numbers are <b>prime to one another</b> (VII.1). It is one of the oldest procedures still in daily use: computers run it to reduce fractions and in the arithmetic behind encryption."
+   },
+   {
+    "t": "viz",
+    "name": "gb-euclid-gcd",
+    "cap": "Choose a length and width, then cut. The side of the last square is the greatest common measure.",
+    "opts": {
+     "a": 30,
+     "b": 12
+    }
+   },
+   {
+    "t": "ex",
+    "title": "A greatest common measure",
+    "q": "Find the greatest common measure of 1,071 and 462 by Euclid's method.",
+    "steps": [
+     "$1071 = 2 \\times 462 + 147$",
+     "$462 = 3 \\times 147 + 21$",
+     "$147 = 7 \\times 21 + 0$",
+     "The last nonzero remainder, 21, measures both numbers. No larger number does."
+    ],
+    "a": "21"
+   },
+   {
+    "t": "h",
+    "text": "The primes never run out"
+   },
+   {
+    "t": "quote",
+    "text": "<p>Prime numbers are more than any assigned multitude of prime numbers.</p>",
+    "author": "Euclid",
+    "work": "Elements, Book IX, Proposition 20",
+    "tr": "Thomas L. Heath",
+    "ed": "Cambridge University Press",
+    "year": 1908,
+    "url": "https://archive.org/details/thirteenbookseu00heibgoog",
+    "src": "Internet Archive"
+   },
+   {
+    "t": "p",
+    "html": "Euclid's proof takes three primes A, B and C, multiplies them and adds the unit. The new number is either prime itself, or it has a prime factor, and that factor can't be A, B or C, because each of those leaves a remainder of 1. Either way there is a prime not on the list. The same argument works for a list of any length. Notice how careful he is: he does not say \"infinitely many\", a phrase Greek mathematicians avoided. He says that for any list, there are more."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking that $2 \\times 3 \\times 5 \\times \\dots \\times p + 1$ is always prime. It isn't: $2 \\times 3 \\times 5 \\times 7 \\times 11 \\times 13 + 1 = 30{,}031 = 59 \\times 509$. Euclid never claimed it was. He only needs it to have a prime factor that is not on the list."
+   },
+   {
+    "t": "h",
+    "text": "Perfect numbers"
+   },
+   {
+    "t": "quote",
+    "text": "<p>If as many numbers as we please beginning from an unit be set out continuously in double proportion, until the sum of all becomes prime, and if the sum multiplied into the last make some number, the product will be perfect.</p>",
+    "author": "Euclid",
+    "work": "Elements, Book IX, Proposition 36",
+    "tr": "Thomas L. Heath",
+    "ed": "Cambridge University Press",
+    "year": 1908,
+    "url": "https://archive.org/details/thirteenbookseu00heibgoog",
+    "src": "Internet Archive"
+   },
+   {
+    "t": "ex",
+    "title": "Euclid's recipe",
+    "q": "Use IX.36 to find the third perfect number.",
+    "steps": [
+     "Double from the unit and add as you go: 1 + 2 = 3 (prime), 1 + 2 + 4 = 7 (prime), 1 + 2 + 4 + 8 = 15 (not prime), 1 + 2 + 4 + 8 + 16 = 31 (prime).",
+     "The first two primes give $3 \\times 2 = 6$ and $7 \\times 4 = 28$.",
+     "The next prime sum, 31, times the last number added, 16, gives $31 \\times 16 = 496$.",
+     "Check: the parts of 496 are 1, 2, 4, 8, 16, 31, 62, 124, 248, which add to 496."
+    ],
+    "a": "496"
+   },
+   {
+    "t": "h",
+    "text": "What later mathematics kept, and what it changed"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Kept:</b> the Euclidean algorithm, the infinitude of primes and IX.36 are all still taught, with the same proofs.",
+     "<b>Finished:</b> in the 1700s Leonhard Euler proved the converse for even numbers: every even perfect number comes from Euclid's recipe. Whether any odd perfect number exists is still unknown.",
+     "<b>Changed:</b> Eudoxus's theory of proportion was rebuilt in 1872 by Richard Dedekind, whose definition of the real numbers follows Book V's Definition 5 closely. Today we treat $\\sqrt{2}$ as a number; Euclid treated it as a ratio of lines."
+    ]
+   }
+  ],
+  "deep": [
+   {
+    "t": "h",
+    "text": "Number and magnitude"
+   },
+   {
+    "t": "p",
+    "html": "Euclid keeps two worlds apart. <b>Numbers</b> (Books VII–IX) are collections of units: 1 is not even a number for him, just the unit. <b>Magnitudes</b> (Books V, VI, X) are lengths, areas and volumes, which can be divided without end. The discovery of incommensurables is why: some magnitudes simply are not counts of a common unit. Much of the history of mathematics from Descartes to Dedekind is the story of joining the two worlds back together into one number line."
+   },
+   {
+    "t": "p",
+    "html": "Book X, the longest in the <em>Elements</em>, sorts 13 kinds of irrational lines. Its first proposition, that halving again and again eventually leaves something smaller than any given magnitude, is the basis of the \"method of exhaustion\" used in Book XII and by Archimedes, an ancestor of the limits of calculus."
+   },
+   {
+    "t": "h",
+    "text": "Big questions"
+   },
+   {
+    "t": "list",
+    "items": [
+     "Are numbers discovered or invented? Euclid's primes were there before anyone counted them, weren't they?",
+     "Why should a proof that something exists (another prime) be satisfying even when it doesn't hand you the thing?",
+     "Euclid's algorithm is 2,300 years old and is now part of the arithmetic of computer encryption. What other old ideas have found new uses?"
+    ]
+   },
+   {
+    "t": "p",
+    "html": "Nicomachus, later on this ladder, covers much of the same number lore as Books VII–IX but without proofs, by listing examples. Comparing the two shows the difference between knowing that something is true and knowing why."
+   }
+  ]
+ },
+ "questions": [
+  "Euclid proved the primes never run out, without listing them all. How can you know something about a list you can never finish?",
+  "Try Euclid's \"multiply and add 1\" trick on 2 and 3, then on 2, 3, 5 and 7. What do you get each time?",
+  "Why might the discovery that the diagonal and side of a square have no common measure have upset people who believed \"all is number\"?",
+  "Perfect numbers have no practical use that anyone knows of, yet people have hunted them for 2,000 years. Why do people study things that have no use?",
+  "Is there a difference between knowing that something is true and knowing why? Give an example from everyday life."
+ ],
+ "sources": [
+  {
+   "name": "Euclid, The Thirteen Books of Euclid's Elements, tr. T. L. Heath, vol. 2 (Cambridge, 1908), Internet Archive",
+   "url": "https://archive.org/details/thirteenbookseu00heibgoog"
+  },
+  {
+   "name": "Grokipedia: Perfect number",
+   "url": "https://grokipedia.com/page/Perfect_number"
+  },
+  {
+   "name": "Grokipedia: Euclid",
+   "url": "https://grokipedia.com/page/Euclid"
+  },
+  {
+   "name": "Richard Dedekind, Essays on the Theory of Numbers, tr. W. W. Beman (1901), Project Gutenberg",
+   "url": "https://www.gutenberg.org/ebooks/21016"
+  }
+ ]
+}

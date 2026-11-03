@@ -1,0 +1,270 @@
+{
+ "paths": {
+  "young": [
+   {
+    "t": "p",
+    "html": "<b>Nicomachus</b> lived about 1,900 years ago in Gerasa, a Roman city in what is now Jordan. He wrote a short book about the <b>personalities of numbers</b>: which are even and which odd, which can be split into equal rows, and which are special in other ways."
+   },
+   {
+    "t": "p",
+    "html": "Some numbers make pictures. Put dots in rows of 1, 2, 3, 4 and you get a triangle of 10 dots. Make rows of 3, 3 and 3 and you get a square of 9. Nicomachus called these <b>triangular</b> and <b>square</b> numbers."
+   },
+   {
+    "t": "viz",
+    "name": "gb-figurate",
+    "cap": "Pick a kind and slide n to grow the picture.",
+    "opts": {
+     "kind": "tri",
+     "n": 4
+    }
+   },
+   {
+    "t": "activity",
+    "html": "<b>Dots and beans.</b> With dried beans or pennies, build the triangles for 1, 3, 6, 10 and 15. Put two triangles side by side: what shape do you get? Now build squares 1, 4, 9 and 16. How many beans do you add each time to go from one square to the next? (Try the odd numbers.)"
+   },
+   {
+    "t": "p",
+    "html": "Nicomachus also liked <b>perfect numbers</b>. The numbers that divide 6 evenly, apart from 6, are 1, 2 and 3. Add them: 1 + 2 + 3 = 6. The number is exactly the sum of its parts! The next perfect number is 28. They are rare: there are only four below 10,000."
+   }
+  ],
+  "full": [
+   {
+    "t": "h",
+    "text": "Who, when and why"
+   },
+   {
+    "t": "p",
+    "html": "Nicomachus (c. AD 60–c. 120) came from Gerasa, a prosperous city of the Roman province of Syria (today Jerash in Jordan). He was a <b>Pythagorean</b>: a follower of the old tradition, going back to Pythagoras in the 500s BC, that saw number as the key to music, the heavens and the order of the world. He also wrote a short handbook on music theory."
+   },
+   {
+    "t": "p",
+    "html": "His problem was teaching. Euclid had proved results about numbers, but his <em>Elements</em> are hard going. Nicomachus wrote an introduction for students: definitions, names and many worked examples, with no proofs. It became one of the most copied textbooks in history. Boethius adapted it into Latin around AD 500, and his version was the standard arithmetic of European schools for about a thousand years, as the first of the four mathematical arts (arithmetic, music, geometry and astronomy). Thabit ibn Qurra translated it into Arabic in the 800s."
+   },
+   {
+    "t": "quote",
+    "text": "<p>Number is limited multitude or a combination of units or a flow of quantity made up of units; and the first division of number is even and odd.</p>",
+    "author": "Nicomachus",
+    "work": "Introduction to Arithmetic, Book I, Chapter 7",
+    "tr": "Martin Luther D'Ooge",
+    "ed": "Macmillan, University of Michigan Studies, Humanistic Series XVI",
+    "year": 1926,
+    "url": "https://archive.org/details/nicomachus-introduction-to-arithmetic",
+    "src": "Internet Archive"
+   },
+   {
+    "t": "h",
+    "text": "Sorting numbers"
+   },
+   {
+    "t": "table",
+    "head": [
+     "Name",
+     "Meaning",
+     "Examples"
+    ],
+    "rows": [
+     [
+      "even-times even",
+      "keeps halving evenly all the way down to 1",
+      "2, 4, 8, 16, 32"
+     ],
+     [
+      "even-times odd",
+      "halves once to an odd number",
+      "6, 10, 14, 18"
+     ],
+     [
+      "odd-times even",
+      "halves more than once, but not down to 1",
+      "12, 20, 24, 28"
+     ],
+     [
+      "prime and incomposite",
+      "an odd number measured only by the unit",
+      "3, 5, 7, 11, 13"
+     ],
+     [
+      "secondary and composite",
+      "an odd number with another odd factor",
+      "9, 15, 21, 25"
+     ]
+    ],
+    "cap": "Nicomachus's names for kinds of numbers (Book I). He treats 2 as even-times even and lists primes among the odd numbers."
+   },
+   {
+    "t": "p",
+    "html": "To find the odd primes he describes the method Eratosthenes, the librarian of Alexandria, had called the <b>sieve</b>. Nicomachus's book is our earliest surviving description of it."
+   },
+   {
+    "t": "quote",
+    "text": "<p>The production of these numbers is called by Eratosthenes the 'sieve,' because we take the odd numbers mingled together and indiscriminate and out of them by this method of production separate, as by a kind of instrument or sieve, the prime and incomposite by themselves, and the secondary and composite by themselves.</p>",
+    "author": "Nicomachus",
+    "work": "Introduction to Arithmetic, Book I, Chapter 13",
+    "tr": "Martin Luther D'Ooge",
+    "ed": "Macmillan, University of Michigan Studies, Humanistic Series XVI",
+    "year": 1926,
+    "url": "https://archive.org/details/nicomachus-introduction-to-arithmetic",
+    "src": "Internet Archive",
+    "note": "Slightly shortened at the end."
+   },
+   {
+    "t": "ex",
+    "title": "Sifting to 50",
+    "q": "Use the sieve to find the odd primes below 50.",
+    "steps": [
+     "Write the odd numbers 3, 5, 7, …, 49.",
+     "Cross out every third one after 3 (9, 15, 21, 27, 33, 39, 45): the multiples of 3.",
+     "Cross out the multiples of 5 after 5 (25, 35); 15 and 45 are already gone.",
+     "Cross out the multiples of 7 after 7 (49; 21 and 35 are gone). Since $7 \\times 7 = 49$ is the last square below 50, we can stop."
+    ],
+    "a": "3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47"
+   },
+   {
+    "t": "h",
+    "text": "Too much, too little and just right"
+   },
+   {
+    "t": "p",
+    "html": "Nicomachus sorts numbers by adding up their <b>parts</b> (the smaller numbers that divide them exactly). If the parts add to less than the number, it is <b>deficient</b>; if more, <b>superabundant</b>; if exactly equal, <b>perfect</b>."
+   },
+   {
+    "t": "quote",
+    "text": "<p>Such numbers are 6 and 28; for 6 has the factors half, third, and sixth, 3, 2, and 1, respectively, and these added together make 6 and are equal to the original number, and neither more nor less.</p>",
+    "author": "Nicomachus",
+    "work": "Introduction to Arithmetic, Book I, Chapter 16",
+    "tr": "Martin Luther D'Ooge",
+    "ed": "Macmillan, University of Michigan Studies, Humanistic Series XVI",
+    "year": 1926,
+    "url": "https://archive.org/details/nicomachus-introduction-to-arithmetic",
+    "src": "Internet Archive"
+   },
+   {
+    "t": "viz",
+    "name": "gb-perfect",
+    "cap": "Each number is colored by whether its parts fall short, overshoot or land exactly. Press one to see its parts."
+   },
+   {
+    "t": "p",
+    "html": "He gives the first four perfect numbers, 6, 28, 496 and 8,128, and a recipe for making more that is Euclid's IX.36 in other words: add 1 + 2 + 4 + 8 + … and, whenever the sum is prime, multiply it by the last number added."
+   },
+   {
+    "t": "mistake",
+    "html": "Trusting every pattern Nicomachus states. He says there is one perfect number among the units, one among the tens, one among the hundreds and one among the thousands, and that they end alternately in 6 and 8. Both patterns fail. The fifth perfect number, 33,550,336, has eight digits, so there is none with five, six or seven; and the fifth and sixth (8,589,869,056) both end in 6. He saw the pattern in four examples and did not prove it. That is the difference between his book and Euclid's."
+   },
+   {
+    "t": "h",
+    "text": "Numbers as shapes"
+   },
+   {
+    "t": "viz",
+    "name": "gb-figurate",
+    "cap": "Triangular, square, pentagonal and oblong numbers, and the cubes built from odd numbers.",
+    "opts": {
+     "kind": "sq",
+     "n": 5
+    }
+   },
+   {
+    "t": "p",
+    "html": "Book II arranges numbers as shapes made of points: <b>polygonal</b> numbers (triangular, square, pentagonal, …), <b>oblong</b> numbers (a side times one more: 2, 6, 12, 20), and solid numbers like pyramids and cubes. Along the way come neat facts: every square is the sum of two neighboring triangular numbers, and if you add the odd numbers in groups (1; 3 + 5; 7 + 9 + 11; …) you get the cubes 1, 8, 27, …"
+   },
+   {
+    "t": "ex",
+    "title": "The cube of 4 from odd numbers",
+    "q": "Which odd numbers add up to $4^3$ in Nicomachus's pattern?",
+    "steps": [
+     "Groups so far: 1 | 3, 5 | 7, 9, 11. The fourth group takes the next four odd numbers.",
+     "They are 13, 15, 17 and 19.",
+     "$13 + 15 + 17 + 19 = 64 = 4^3$."
+    ],
+    "a": "13 + 15 + 17 + 19 = 64"
+   },
+   {
+    "t": "ex",
+    "title": "Three kinds of mean",
+    "q": "Find the arithmetic, geometric and harmonic means of 4 and 9 (where they are whole numbers).",
+    "steps": [
+     "Arithmetic mean: halfway, $\\frac{4 + 9}{2} = 6.5$.",
+     "Geometric mean: the number $g$ with $4 : g = g : 9$, so $g^2 = 36$, $g = 6$.",
+     "Harmonic mean: $\\frac{2 \\times 4 \\times 9}{4 + 9} = \\frac{72}{13} \\approx 5.54$. Only the geometric mean is a whole number here."
+    ],
+    "a": "6.5, 6 and about 5.54"
+   },
+   {
+    "t": "p",
+    "html": "The book ends with ten kinds of proportion. Nicomachus calls 6, 8, 9, 12 the \"most perfect proportion\": 9 is the arithmetic mean of 6 and 12, 8 is their harmonic mean, and the ratios 6 : 8 and 9 : 12 (3 : 4), 6 : 9 and 8 : 12 (2 : 3), and 6 : 12 (1 : 2) are the musical intervals of the fourth, the fifth and the octave."
+   },
+   {
+    "t": "h",
+    "text": "What later mathematics kept, and what it changed"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Kept:</b> the sieve, figurate numbers, perfect and abundant numbers, and the means. Mathematicians still use the words <em>abundant</em> and <em>deficient</em>.",
+     "<b>Dropped:</b> the moral and religious meanings Nicomachus gave to numbers, such as calling equality the source of goodness. Those belong to his Pythagorean philosophy, not to arithmetic.",
+     "<b>Changed:</b> arithmetic since Fermat and Euler rests on proofs, not examples. The questions Nicomachus raised are still open in places: no one knows whether there are infinitely many perfect numbers, or any odd ones."
+    ]
+   }
+  ],
+  "deep": [
+   {
+    "t": "h",
+    "text": "Examples and proofs"
+   },
+   {
+    "t": "p",
+    "html": "Nicomachus and Euclid cover some of the same ground, the kinds of numbers and the recipe for perfect numbers, but they work in different ways. Euclid proves each claim from definitions. Nicomachus shows examples, names the patterns and leaves it there. For teaching beginners his way has strengths: students see and count before they prove. But it lets mistakes in, as with his patterns for perfect numbers."
+   },
+   {
+    "t": "p",
+    "html": "This is a lasting question in teaching mathematics: how much should beginners see and count, and how soon should they meet proofs? The medieval schools learned from Boethius's Nicomachus for centuries before Euclid's proofs came back into wide use."
+   },
+   {
+    "t": "h",
+    "text": "Numbers and the world"
+   },
+   {
+    "t": "p",
+    "html": "For Nicomachus, number was the pattern in the mind of the maker of the world, and arithmetic was the first of the sciences because the others depend on it. Readers today can take or leave that philosophy, but the practical point survived: music is ratios of string lengths, astronomy is cycles and periods, and geometry needs measurement. Kepler, Galileo and Newton, later on this ladder, kept the conviction that nature is written in numbers, while dropping the number mysticism."
+   },
+   {
+    "t": "h",
+    "text": "Big questions"
+   },
+   {
+    "t": "list",
+    "items": [
+     "Is a pattern that holds for four examples likely to hold forever? How many examples would convince you?",
+     "Why do people give personalities and meanings to numbers (lucky numbers, unlucky numbers)?",
+     "Nicomachus's book was read for 1,000 years. What makes a textbook last?"
+    ]
+   }
+  ]
+ },
+ "questions": [
+  "Build the first five triangular numbers with beans. What do you add each time?",
+  "Do you have a favorite number? What is special about it: is it even, odd, prime, square, triangular?",
+  "Nicomachus guessed a pattern from four perfect numbers and was wrong. When have you guessed a pattern that turned out to break?",
+  "Why might a teacher show examples first and proofs later? Is that how you like to learn?",
+  "Nicomachus thought numbers explained music. Can you find the 1 : 2 ratio by plucking a string, then pressing it down at its middle?"
+ ],
+ "sources": [
+  {
+   "name": "Nicomachus of Gerasa, Introduction to Arithmetic, tr. M. L. D'Ooge, with studies by F. E. Robbins and L. C. Karpinski (Macmillan, 1926), Internet Archive",
+   "url": "https://archive.org/details/nicomachus-introduction-to-arithmetic"
+  },
+  {
+   "name": "Grokipedia: Nicomachus",
+   "url": "https://grokipedia.com/page/Nicomachus"
+  },
+  {
+   "name": "Grokipedia: Sieve of Eratosthenes",
+   "url": "https://grokipedia.com/page/Sieve_of_Eratosthenes"
+  },
+  {
+   "name": "Grokipedia: Perfect number",
+   "url": "https://grokipedia.com/page/Perfect_number"
+  }
+ ]
+}

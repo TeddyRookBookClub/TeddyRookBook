@@ -1,0 +1,244 @@
+{
+ "paths": {
+  "young": [
+   {
+    "t": "p",
+    "html": "Geometry is about shapes: lines, circles, triangles. Algebra is about numbers and letters, like $x + 3 = 5$. For two thousand years they were mostly separate subjects. René Descartes, a French thinker, joined them together about 400 years ago."
+   },
+   {
+    "t": "p",
+    "html": "His trick: <b>treat lengths like numbers</b>. Call one length $a$, another $b$. Then you can add them, multiply them, even take square roots, by drawing lines. And the other way around: a curve, like a circle, can be described by an equation that tells you where its points are."
+   },
+   {
+    "t": "p",
+    "html": "Today, every time you draw a graph on grid paper, with points like (3, 2), you are using an idea that grew from Descartes's book. That's why the grid is called the <b>Cartesian</b> plane, from his name in Latin, Cartesius."
+   },
+   {
+    "t": "viz",
+    "name": "gb-cartes",
+    "opts": {
+     "mode": "mult",
+     "a": 2,
+     "b": 1.5
+    },
+    "cap": "Descartes multiplied lengths with a ruler. Move the sliders: the green line BE is always BD times BC."
+   },
+   {
+    "t": "activity",
+    "html": "<b>Play \"Where am I?\"</b> Draw a grid on paper and number the lines along the bottom and up the side. One person secretly picks a square and gives its two numbers (\"4 across, 2 up\"); the other finds it. Now make a rule: color every square where the \"up\" number is the same as the \"across\" number. What shape do you get? That is a rule (an equation) drawing a line!"
+   }
+  ],
+  "full": [
+   {
+    "t": "h",
+    "text": "Who, when and why"
+   },
+   {
+    "t": "p",
+    "html": "René Descartes (1596–1650) published <em>The Geometry</em> in 1637 as the third essay after his <em>Discourse on Method</em> (the rung before this one), to show his method at work in mathematics. It is in French and has three books: problems that need only straight lines and circles; the nature of curved lines; and solid problems, which lead to equations of the third and higher degree."
+   },
+   {
+    "t": "h",
+    "text": "The problem Descartes faced"
+   },
+   {
+    "t": "p",
+    "html": "Greek geometers had solved many problems by brilliant, special constructions, one trick per problem, and some problems they could not solve at all. A famous one, from Pappus of Alexandria (about AD 320), asks for the points whose distances to several given lines stand in a fixed proportion. Descartes wanted a general method: a way to turn <em>any</em> such problem into equations and then solve the equations step by step, as his rules in the Discourse said."
+   },
+   {
+    "t": "quote",
+    "text": "<p>Any problem in geometry can easily be reduced to such terms that a knowledge of the lengths of certain straight lines is sufficient for its construction. Just as arithmetic consists of only four or five operations, namely, addition, subtraction, multiplication, division and the extraction of roots, which may be considered a kind of division, so in geometry, to find required lines it is merely necessary to add or subtract other lines …</p>",
+    "work": "The Geometry, Book I",
+    "note": "shortened; a footnote mark is left out",
+    "author": "René Descartes",
+    "tr": "David Eugene Smith and Marcia L. Latham",
+    "ed": "Open Court, Chicago",
+    "year": 1925,
+    "url": "https://archive.org/details/geometryofrene00desc",
+    "src": "Internet Archive"
+   },
+   {
+    "t": "h",
+    "text": "Idea 1: lengths behave like numbers"
+   },
+   {
+    "t": "p",
+    "html": "The Greeks thought of the product of two lengths as an area, and three lengths as a volume; four lengths multiplied made no sense. Descartes chose one line as the <b>unit</b>. Then the product of two lines can be another <em>line</em>, by similar triangles, and there is no limit to how many can be multiplied."
+   },
+   {
+    "t": "quote",
+    "text": "<p>For example, let AB be taken as unity, and let it be required to multiply BD by BC. I have only to join the points A and C, and draw DE parallel to CA; then BE is the product of BD and BC.</p>",
+    "work": "The Geometry, Book I",
+    "author": "René Descartes",
+    "tr": "David Eugene Smith and Marcia L. Latham",
+    "ed": "Open Court, Chicago",
+    "year": 1925,
+    "url": "https://archive.org/details/geometryofrene00desc",
+    "src": "Internet Archive"
+   },
+   {
+    "t": "viz",
+    "name": "gb-cartes",
+    "opts": {
+     "mode": "mult",
+     "a": 2.5,
+     "b": 1.2
+    },
+    "cap": "Descartes's first figure. Triangles BAC and BDE have the same shape, so BE : BD = BC : BA, and with BA = 1, BE = BD × BC."
+   },
+   {
+    "t": "p",
+    "html": "Square roots work too. Lay the unit EG next to the line GH, draw a half-circle on the whole of EH, and raise an upright line at G. Where it meets the circle, at I, the height GI is the square root of GH."
+   },
+   {
+    "t": "viz",
+    "name": "gb-cartes",
+    "opts": {
+     "mode": "root",
+     "x": 4
+    },
+    "cap": "The square-root construction. Triangle EIH has a right angle at I, so GI × GI = EG × GH = 1 × GH."
+   },
+   {
+    "t": "ex",
+    "title": "Why the square root works",
+    "q": "In the half-circle construction, EG = 1 and GH = 9. Show that GI = 3.",
+    "steps": [
+     "An angle drawn in a half-circle is a right angle, so angle EIH is 90°.",
+     "In a right triangle, the height to the hypotenuse is the mean proportional of the two pieces: EG : GI = GI : GH.",
+     "So $GI^2 = EG \\times GH = 1 \\times 9 = 9$, and $GI = 3$."
+    ],
+    "a": "GI = 3, the square root of 9."
+   },
+   {
+    "t": "h",
+    "text": "Idea 2: letters for lengths"
+   },
+   {
+    "t": "quote",
+    "text": "<p>Often it is not necessary thus to draw the lines on paper, but it is sufficient to designate each by a single letter. Thus, to add the lines BD and GH, I call one a and the other b, and write a + b.</p>",
+    "work": "The Geometry, Book I",
+    "author": "René Descartes",
+    "tr": "David Eugene Smith and Marcia L. Latham",
+    "ed": "Open Court, Chicago",
+    "year": 1925,
+    "url": "https://archive.org/details/geometryofrene00desc",
+    "src": "Internet Archive"
+   },
+   {
+    "t": "p",
+    "html": "Descartes's notation is very close to ours. He used letters early in the alphabet ($a, b, c$) for known quantities and letters near the end ($x, y, z$) for unknowns, and small raised numbers for powers, like $a^3$, though he usually wrote $aa$ for $a^2$. Algebra in school still follows these choices."
+   },
+   {
+    "t": "h",
+    "text": "Idea 3: solving an equation by drawing"
+   },
+   {
+    "t": "p",
+    "html": "For an equation like $z^2 = az + b^2$, Descartes draws a right triangle NLM with legs $LM = b$ and $LN = \\tfrac{a}{2}$, extends the hypotenuse MN past N by a length NO equal to NL, and the whole line OM is $z$. This is the geometric twin of the quadratic formula."
+   },
+   {
+    "t": "ex",
+    "title": "Descartes's quadratic",
+    "q": "Solve $z^2 = 6z + 16$ with Descartes's construction ($a = 6$, $b = 4$).",
+    "steps": [
+     "Legs: $LN = a/2 = 3$ and $LM = b = 4$.",
+     "Hypotenuse $MN = \\sqrt{3^2 + 4^2} = 5$.",
+     "$z = OM = MN + NO = 5 + 3 = 8$.",
+     "Check: $8^2 = 64$ and $6 \\times 8 + 16 = 64$."
+    ],
+    "a": "z = 8."
+   },
+   {
+    "t": "h",
+    "text": "Idea 4: curves as equations"
+   },
+   {
+    "t": "p",
+    "html": "In Book II Descartes measures each point of a curve by two lengths: how far along a fixed line, and how far out from it at a fixed angle. Then the curve is everything that satisfies one equation in those two unknowns. He sorted curves by the degree of their equations, showed how to find the line at right angles to a curve at any point (the key step toward tangents and calculus), and solved Pappus's problem: the answer is a conic section, a circle, ellipse, parabola or hyperbola."
+   },
+   {
+    "t": "h",
+    "text": "Idea 5: counting the roots"
+   },
+   {
+    "t": "quote",
+    "text": "<p>An equation can have as many true roots as it contains changes of sign, from + to − or from − to +; and as many false roots as the number of times two + signs or two − signs are found in succession.</p>",
+    "work": "The Geometry, Book III",
+    "author": "René Descartes",
+    "tr": "David Eugene Smith and Marcia L. Latham",
+    "ed": "Open Court, Chicago",
+    "year": 1925,
+    "url": "https://archive.org/details/geometryofrene00desc",
+    "src": "Internet Archive"
+   },
+   {
+    "t": "p",
+    "html": "\\\"True\\\" roots are positive and \\\"false\\\" roots negative. Descartes's own example is $x^4 - 4x^3 - 19x^2 + 106x - 120 = 0$: three changes of sign and one repeat, with roots 2, 3, 4 and −5. Today this is <b>Descartes's rule of signs</b>, which gives the most positive roots there can be (the true count can be smaller by an even number)."
+   },
+   {
+    "t": "h",
+    "text": "Getting the history right"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Descartes did not draw our x–y grid.</b> His book has no pair of perpendicular axes with negative numbers on both sides, and few graphs of equations. That familiar picture was built over the next century by his followers, especially Frans van Schooten, who published a Latin edition with commentary, and later by John Wallis, Isaac Newton and Leonhard Euler.",
+     "<b>He was not alone.</b> Pierre de Fermat, a lawyer in Toulouse, worked out the same basic idea, describing curves by equations, by about 1636, and circulated it in manuscript; it was printed only in 1679.",
+     "<b>The fly on the ceiling.</b> A popular story says Descartes got the idea of coordinates by watching a fly on his bedroom ceiling. It is a legend; there is no evidence from his own time."
+    ]
+   },
+   {
+    "t": "h",
+    "text": "What later science kept, and what it changed"
+   },
+   {
+    "t": "p",
+    "html": "Kept: the marriage of algebra and geometry (analytic geometry), the use of letters for knowns and unknowns, exponents, and the rule of signs. Newton and Leibniz built calculus on this foundation, and almost all of physics is written in its language. Changed: Descartes judged that only curves with algebraic equations belonged in geometry and excluded \"mechanical\" curves such as spirals. Mathematicians after him, starting with Newton and Leibniz, brought those curves back in."
+   }
+  ],
+  "deep": [
+   {
+    "t": "p",
+    "html": "<b>Two pictures of one thing.</b> After Descartes, a circle can be thought of as a shape you draw, or as the equation $x^2 + y^2 = r^2$. Each picture makes some problems easy and others hard. Learning to switch between them is one of the most powerful habits in mathematics."
+   },
+   {
+    "t": "p",
+    "html": "<b>A method for everything?</b> Descartes boasted that he had left much unsaid \"so as to leave to others the pleasure of discovery.\" He believed his method could solve any geometry problem in principle. Later mathematicians proved that some classical problems, like trisecting any angle with compass and straightedge, are impossible, using the very algebra he introduced."
+   },
+   {
+    "t": "p",
+    "html": "<b>How later books answered.</b> Newton's <em>Principia</em> uses geometry in the Greek style on the surface, but Newton learned his mathematics from Descartes's <em>Geometry</em> in van Schooten's edition, and calculus grew straight out of it."
+   },
+   {
+    "t": "p",
+    "html": "<b>Big questions.</b> Why should numbers and shapes fit together so well? Is a length really a number, or are we choosing to treat it like one?"
+   }
+  ]
+ },
+ "questions": [
+  "Where do you see grids and coordinates in everyday life (maps, games, spreadsheets)?",
+  "Descartes chose one line to be \"1\". Why do you need a unit before you can multiply lengths and get a length?",
+  "Fermat and Descartes had the same idea at about the same time. Why do you think that happens in science?",
+  "The fly-on-the-ceiling story is probably not true. Why do people like stories about sudden ideas?",
+  "Is it better to solve a problem with a clever drawing or with algebra? When would you pick each?"
+ ],
+ "sources": [
+  {
+   "name": "The Geometry of René Descartes, tr. David Eugene Smith and Marcia L. Latham (Open Court, 1925), Internet Archive",
+   "url": "https://archive.org/details/geometryofrene00desc"
+  },
+  {
+   "name": "Grokipedia: La Géométrie",
+   "url": "https://grokipedia.com/page/La_Géométrie"
+  },
+  {
+   "name": "Grokipedia: Pierre de Fermat",
+   "url": "https://grokipedia.com/page/Pierre_de_Fermat"
+  },
+  {
+   "name": "Grokipedia: René Descartes",
+   "url": "https://grokipedia.com/page/René_Descartes"
+  }
+ ]
+}

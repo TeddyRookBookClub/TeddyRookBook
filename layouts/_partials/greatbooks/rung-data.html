@@ -1,0 +1,14 @@
+{{- /* Great Books Ladder (partialCached "greatbooks/rung-data.html" "gb"): lookups built once per build.
+   Returns { R: rung id -> rung (data/greatbooks/rungs.yaml, plus course), from: rung id -> [links.yaml entries],
+   to: target topic id -> [{ rung, note }], ideas: idea key -> idea, hc: data/greatbooks/harvard.json } */ -}}
+{{- $GB := site.Data.greatbooks | default dict -}}
+{{- $R := dict -}}{{- $I := dict -}}
+{{- with $GB.rungs }}{{ range .rungs }}{{ $R = merge $R (dict .id (merge . (dict "course" (index (split .id ".") 0)))) }}{{ end }}{{ end -}}
+{{- with $GB.ideas }}{{ range .ideas }}{{ $I = merge $I (dict .key .) }}{{ end }}{{ end -}}
+{{- $from := newScratch -}}{{- $to := newScratch -}}
+{{- range $GB.links | default slice -}}
+  {{- $e := . -}}
+  {{- $from.Add .rung (slice $e) -}}
+  {{- range .to | default slice }}{{ $to.Add . (slice (dict "rung" $e.rung "note" ($e.note | default ""))) }}{{ end -}}
+{{- end -}}
+{{- return (dict "R" $R "from" $from.Values "to" $to.Values "ideas" $I "hc" ($GB.harvard | default dict)) -}}

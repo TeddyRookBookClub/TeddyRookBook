@@ -1,0 +1,13 @@
+.gb-tri { display: flex; flex-direction: column; align-items: center; gap: 3px; margin: .5rem 0; max-width: 100%; overflow: hidden; }
+.gb-tri-row { display: flex; gap: 2px; justify-content: center; }
+.gb-tri-cell { min-width: 0; width: clamp(22px, 7.3vw, 40px); height: clamp(24px, 7.6vw, 36px); padding: 0; border-radius: 6px;
+  border: 1px solid var(--gb-mut, #8a948e); background: var(--gb-paper, #fbf8f0); color: var(--gb-ink, #1d2320);
+  font: 600 clamp(10px, 2.9vw, 14px)/1 system-ui, sans-serif; cursor: pointer; font-variant-numeric: tabular-nums; }
+.gb-tri-cell:focus-visible { outline: 3px solid var(--gb-gold, #b8963e); outline-offset: 1px; }
+.gb-tri-cell.gb-src { background: rgba(184, 150, 62, .30); border-color: var(--gb-gold, #b8963e); }
+.gb-tri-cell.gb-on { background: var(--gb-acc, #00562f); border-color: var(--gb-acc, #00562f); color: #fff; }
+.gb-tri-cell.gb-odd { background: rgba(0, 86, 47, .22); border-color: var(--gb-acc, #00562f); }
+[data-theme="dark"] .gb-tri-cell.gb-on { color: #10201a; }
+[data-theme="dark"] .gb-tri-cell.gb-odd { background: rgba(108, 199, 154, .25); }
+.gbsc-ctl { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; margin-top: .5rem; }
+.gbsc-ctl .ml-sl { flex: 1 1 220px; min-width: 0; }

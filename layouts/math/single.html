@@ -58,6 +58,7 @@
       {{ if $hasGen }}<a class="mlp-btn small" href="#practice">Jump to practice</a>{{ end }}
     </div>
   </header>
+  {{- if eq $lk "greatbooks" }}{{ partial "greatbooks/topic-top.html" (dict "ladder" $lk "id" $id "lesson" (ne $L0 false)) }}{{ end }}
 
   {{- if $L0 }}
   <article class="mlp-lesson" id="lesson" aria-label="Lesson">
@@ -101,6 +102,8 @@
   {{- with $lab }}
   <a class="mlp-labcard" href="{{ .url | relURL }}"><span class="mlp-labcard-icon" aria-hidden="true">{{ .icon }}</span><span><small>{{ .kind }}</small><b>{{ .title }}</b></span><span aria-hidden="true">→</span></a>
   {{- end }}
+  {{- /* Great Books Ladder: "Read the source" cards (only when data/greatbooks/links.yaml maps a rung to this topic), and a rung's own related links and Harvard Classics days */}}
+  {{- partial "greatbooks/topic-cards.html" (dict "ladder" $lk "id" $id) }}
 
   {{- if not $wip }}
   <section class="mlp-practice" id="practice" aria-labelledby="mlp-prac-h">

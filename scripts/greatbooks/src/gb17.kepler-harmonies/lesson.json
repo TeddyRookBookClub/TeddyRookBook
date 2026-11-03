@@ -1,0 +1,181 @@
+{
+ "paths": {
+  "young": [
+   {
+    "t": "p",
+    "html": "Pluck a guitar string, then press it down in the middle and pluck again. The note jumps up: that is an <b>octave</b>. Musicians since ancient Greece have known that sweet-sounding notes come from simple number patterns, like a string half as long, or two-thirds as long."
+   },
+   {
+    "t": "p",
+    "html": "Johannes Kepler loved this idea. He wondered: if God made the world with numbers, maybe the planets make a kind of music too. Not a sound you can hear, but a pattern of speeds. He compared how fast each planet moves when it is closest to the sun and when it is farthest. Many of those comparisons matched musical intervals!"
+   },
+   {
+    "t": "p",
+    "html": "While hunting for this music, Kepler found something that turned out to matter much more. He found a rule that links how far a planet is from the sun to how long its year is. Planets far from the sun don't just have farther to go; they also move more slowly. Saturn takes almost 30 of our years to go around once."
+   },
+   {
+    "t": "viz",
+    "name": "gb-harmony",
+    "opts": {
+     "planet": "saturn"
+    },
+    "cap": "Pick a planet. The two strings show how fast it moves at its farthest and nearest points from the sun. Press the button to hear the two notes."
+   },
+   {
+    "t": "activity",
+    "html": "<b>Make a planet chord.</b> Stretch a rubber band over an open box and pluck it. Now hold it down at the middle and pluck one half: an octave higher. Try holding it at two-thirds of the way. Musicians call that a fifth. Kepler heard Saturn's speeds as close to a major third (a ratio of 4 to 5)."
+   }
+  ],
+  "full": [
+   {
+    "t": "h",
+    "text": "Who, when and why"
+   },
+   {
+    "t": "p",
+    "html": "Kepler (1571–1630) published <em>The Harmonies of the World</em> in 1619, while working in Linz in Austria. It has five books: on the geometry of regular figures, on how shapes fit together, on musical harmony, on harmonies in the soul and in astrology, and, in Book V (the part in the Great Books set), on harmonies in the motions of the planets. He considered it his finest work. Kepler had already found the ellipse and the equal-area rule (see the rung on his <em>Epitome</em>)."
+   },
+   {
+    "t": "h",
+    "text": "The problem Kepler faced"
+   },
+   {
+    "t": "p",
+    "html": "Why are there six planets, spaced as they are, moving at the speeds they do? Copernicus had fixed the order and the relative distances, but nothing linked a planet's distance to its period. Kepler believed the Creator had used geometry and harmony, the same ratios Pythagoras had found in music, and he set out to find them in the sky."
+   },
+   {
+    "t": "h",
+    "text": "Idea 1: the third law"
+   },
+   {
+    "t": "p",
+    "html": "In Book V, chapter 3, Kepler announces a rule he found, he says, on 8 March 1618, at first threw out after a slip in the arithmetic, and confirmed on 15 May. <b>The square of a planet's period is proportional to the cube of its mean distance from the sun.</b> With the period in years and the distance in units of Earth's distance (astronomical units), the rule is simply $T^2 = a^3$."
+   },
+   {
+    "t": "viz",
+    "name": "gb-kepler",
+    "opts": {
+     "mode": "third"
+    },
+    "cap": "Six planets, from Mercury to Saturn. On this chart, where each step is a multiplication, they fall on one straight line: period squared equals distance cubed."
+   },
+   {
+    "t": "ex",
+    "title": "How long is Jupiter's year?",
+    "q": "Jupiter is 5.2 times as far from the sun as Earth. Use $T^2 = a^3$.",
+    "steps": [
+     "$a^3 = 5.2^3 = 140.6$.",
+     "$T = \\sqrt{140.6} \\approx 11.9$ years."
+    ],
+    "a": "About 11.9 years (the measured value is 11.86)."
+   },
+   {
+    "t": "ex",
+    "title": "Working backward",
+    "q": "An asteroid takes 8 years to go around the sun. How far out is it?",
+    "steps": [
+     "$a^3 = T^2 = 64$.",
+     "$a = \\sqrt[3]{64} = 4$."
+    ],
+    "a": "4 astronomical units from the sun."
+   },
+   {
+    "t": "h",
+    "text": "Idea 2: the planets' music"
+   },
+   {
+    "t": "p",
+    "html": "Kepler first tried comparing the planets' distances and their periods to musical ratios, and they didn't fit. Then he tried a new measure: how fast each planet <em>appears to move</em>, seen from the sun, in degrees per day, at its farthest point (aphelion) and its nearest (perihelion). Those pairs did fit, roughly. Saturn's slowest and fastest speeds are close to 4 : 5, a major third. Jupiter's are close to 5 : 6, a minor third. Mars's span a fifth (2 : 3). Earth's change only a little, about a half step, which Kepler wrote as the notes mi and fa."
+   },
+   {
+    "t": "key",
+    "html": "Seen from the sun, a planet's angular speed at perihelion divided by its angular speed at aphelion is $\\left(\\frac{1+e}{1-e}\\right)^2$, where $e$ is the eccentricity. (Distance is $1 \\pm e$ times $a$, and the equal-area rule makes angular speed go as one over distance squared.)"
+   },
+   {
+    "t": "ex",
+    "title": "Saturn's interval",
+    "q": "Saturn's eccentricity is about $0.056$. What is the ratio of its fastest to slowest angular speed, and what musical interval is it near?",
+    "steps": [
+     "$\\frac{1.056}{0.944} \\approx 1.119$.",
+     "Squared: $1.119^2 \\approx 1.25$.",
+     "1.25 = 5/4: a major third."
+    ],
+    "a": "About 5 : 4, a major third."
+   },
+   {
+    "t": "viz",
+    "name": "gb-harmony",
+    "opts": {
+     "planet": "mars"
+    },
+    "cap": "Each planet's two speeds as two strings (a faster speed gives a shorter string and a higher note). Compare the nearest simple musical ratio."
+   },
+   {
+    "t": "h",
+    "text": "Getting the history right"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>The famous law is a small part of the book.</b> Kepler valued the harmonies most; later readers kept only the third law. He gave it no number and no special place: it appears in one chapter, among the musical comparisons.",
+     "<b>\"Music of the spheres\" is older than Kepler.</b> The idea goes back to the Pythagoreans and to Plato's <em>Republic</em>. Kepler's version was new because it was built on measured speeds, and he said plainly that this music is not heard with the ears."
+    ]
+   },
+   {
+    "t": "h",
+    "text": "What later science kept, and what it changed"
+   },
+   {
+    "t": "p",
+    "html": "Kept: the third law, which Newton (1687) derived from gravity. Newton's version adds the masses: $T^2 = \\frac{4\\pi^2}{G(M+m)}a^3$. That small change turned Kepler's rule into a scale for weighing the sun, planets with moons, double stars and even far-off galaxies. The law also holds for moons around a planet and for exoplanets around other stars. Changed: the musical harmonies are not part of physics; the near-matches are now seen as partly coincidence, though resonances (simple ratios between orbital periods, like 2 : 1) really do shape some orbits, such as Jupiter's moons Io, Europa and Ganymede."
+   }
+  ],
+  "deep": [
+   {
+    "t": "p",
+    "html": "<b>Beauty as a guide.</b> Kepler searched for beauty and found a law. Many later scientists, such as Paul Dirac, also said that a beautiful equation is more likely to be true. Others warn that the universe has no duty to be beautiful. Kepler's book is a test case for both views."
+   },
+   {
+    "t": "p",
+    "html": "<b>Wrong ideas that help.</b> The polyhedra of his first book and the harmonies of this one were mostly wrong, yet they kept him measuring and calculating until he found real patterns. Can a mistaken idea still be useful? What does it take to drop the wrong part and keep the right part?"
+   },
+   {
+    "t": "p",
+    "html": "<b>Faith and science.</b> Kepler ends Book V with a prayer of thanks. He saw his work as reading the plan of the Creator. That was his view, shared by many scientists of his age; the ladder's rungs on Galileo, Bacon and Descartes show other ways thinkers of the time joined, or separated, faith and the study of nature."
+   },
+   {
+    "t": "p",
+    "html": "<b>Big questions.</b> Why should numbers, like the ratios of a musical scale, describe anything in nature? Is the harmony in the world, or in our minds?"
+   }
+  ]
+ },
+ "questions": [
+  "Kepler looked for music and found a law about orbits. Have you ever found something important while looking for something else?",
+  "Why do you think simple ratios like 1 : 2 and 2 : 3 sound pleasant together?",
+  "Is it a good idea to look for beauty in nature? Can it lead you astray?",
+  "Saturn takes almost 30 years to go around the sun. How old would you be in \"Saturn years\"?",
+  "Kepler thanked God at the end of his book. Why do you think he saw his science that way?"
+ ],
+ "sources": [
+  {
+   "name": "Grokipedia: Kepler's laws of planetary motion",
+   "url": "https://grokipedia.com/page/Kepler's_laws_of_planetary_motion"
+  },
+  {
+   "name": "Grokipedia: Johannes Kepler",
+   "url": "https://grokipedia.com/page/Johannes_Kepler"
+  },
+  {
+   "name": "Wikipedia: Harmonices Mundi",
+   "url": "https://en.wikipedia.org/wiki/Harmonices_Mundi"
+  },
+  {
+   "name": "Kepler, The Harmony of the World, tr. E. J. Aiton, A. M. Duncan and J. V. Field (American Philosophical Society, 1997), Open Library",
+   "url": "https://openlibrary.org/search?q=Kepler+The+Harmony+of+the+World+Aiton"
+  },
+  {
+   "name": "Grokipedia: Mysterium Cosmographicum",
+   "url": "https://grokipedia.com/page/Mysterium_Cosmographicum"
+  }
+ ]
+}

@@ -1,0 +1,211 @@
+{
+ "paths": {
+  "young": [
+   {
+    "t": "p",
+    "html": "<b>Ptolemy</b> was an astronomer who lived in Alexandria, in Egypt, about 1,900 years ago. He wrote a giant book that explained how to predict where the Sun, the Moon and the planets would be in the sky, years ahead. People used it for about 1,400 years."
+   },
+   {
+    "t": "p",
+    "html": "Ptolemy thought the Earth stood still in the middle, with everything else going around it. The tricky part was the planets. Mars, for example, usually drifts slowly eastward against the stars, night after night. But every two years or so it slows down, goes <b>backward</b> for a few weeks, then turns forward again!"
+   },
+   {
+    "t": "p",
+    "html": "Ptolemy explained this with a circle on a circle. Mars rides around a small circle, and the center of the small circle rides around a big circle. When Mars is on the inside of its small circle, it seems to go backward."
+   },
+   {
+    "t": "viz",
+    "name": "gb-epicycle",
+    "cap": "Watch Mars loop backward. Then switch to the Sun in the middle and see the same thing another way."
+   },
+   {
+    "t": "activity",
+    "html": "<b>Act it out.</b> You need two people and a lamp for the Sun. One person (Earth) walks a small circle around the lamp; the other (Mars) walks a bigger circle, more slowly. Earth keeps pointing at Mars. When Earth overtakes Mars on the inside, Earth's arm swings backward for a while, though both are still walking forward. That is the backward loop!"
+   }
+  ],
+  "full": [
+   {
+    "t": "h",
+    "text": "Who, when and why"
+   },
+   {
+    "t": "p",
+    "html": "Claudius Ptolemy (c. AD 100–c. 170) worked in Alexandria under Roman rule. His observations date from AD 127 to 141. He called his great work the <em>Mathematical Composition</em>; Arabic translators called it <em>al-majisti</em>, \"the greatest\", which became <em>Almagest</em> in Latin. He also wrote major books on geography, optics, music theory and astrology."
+   },
+   {
+    "t": "p",
+    "html": "The problem he faced was prediction. Greek astronomers had believed for centuries that heavenly motions must be built from uniform circles. Hipparchus (c. 190–c. 120 BC) had made this work for the Sun and Moon, but his books are lost. Nobody had produced a full, working theory for the planets, with tables anyone could use to compute their positions. Ptolemy did."
+   },
+   {
+    "t": "note",
+    "html": "No public-domain English translation of the <em>Almagest</em> exists, so this lesson describes it in our own words, with no quotations. The standard English translation is G. J. Toomer's (1984); the Great Books set uses R. Catesby Taliaferro's (1952). Both are under copyright. Look for them in a library."
+   },
+   {
+    "t": "h",
+    "text": "What the Almagest contains"
+   },
+   {
+    "t": "table",
+    "head": [
+     "Books",
+     "Subject"
+    ],
+    "rows": [
+     [
+      "I–II",
+      "The heavens are a sphere and turn as one; the Earth is a sphere at the center, motionless, and tiny compared with the distance to the stars. A table of chords (an early form of trigonometry)."
+     ],
+     [
+      "III",
+      "The Sun's motion and the length of the year."
+     ],
+     [
+      "IV–V",
+      "The Moon, and the distances of the Sun and Moon."
+     ],
+     [
+      "VI",
+      "Eclipses of the Sun and Moon."
+     ],
+     [
+      "VII–VIII",
+      "The fixed stars: a catalog of 1,022 stars in 48 constellations, with positions and brightness on a scale of six magnitudes."
+     ],
+     [
+      "IX–XIII",
+      "The five planets: Mercury, Venus, Mars, Jupiter and Saturn."
+     ]
+    ]
+   },
+   {
+    "t": "h",
+    "text": "Circles on circles"
+   },
+   {
+    "t": "p",
+    "html": "For each planet Ptolemy used a big circle, the <b>deferent</b>, around the Earth, and a small circle, the <b>epicycle</b>, whose center rides along the deferent. The planet moves on the epicycle. When the planet is on the near side of its epicycle, moving opposite to the epicycle's center, it appears to move backward: <b>retrograde</b> motion."
+   },
+   {
+    "t": "viz",
+    "name": "gb-epicycle",
+    "cap": "Change the epicycle's size. With no epicycle there are no loops; at the right size, the picture matches a Sun-centered one exactly."
+   },
+   {
+    "t": "p",
+    "html": "Ptolemy added two refinements. The Earth is set a little off the center of the deferent (an <b>eccentric</b>). And the epicycle's center moves at a steady angular speed not as seen from the Earth or from the deferent's center but from a third point, the <b>equant</b>, placed on the other side of the center from the Earth. The equant broke the old rule of uniform motion about a circle's center, and many later astronomers disliked it, but it made the predictions much better."
+   },
+   {
+    "t": "key",
+    "html": "For Mars, Jupiter and Saturn, the line from the epicycle's center to the planet always points the same way as the line from the Earth to the Sun. That is a strong hint that the Sun matters, and it is exactly what a Sun-centered system explains. Copernicus noticed it."
+   },
+   {
+    "t": "ex",
+    "title": "Ptolemy's numbers and the planets' distances",
+    "q": "Ptolemy gave Mars an epicycle of radius 39½ on a deferent of radius 60. What is the ratio? Compare it with Earth's distance from the Sun divided by Mars's distance (1 ÷ 1.524).",
+    "steps": [
+     "$39.5 \\div 60 \\approx 0.658$.",
+     "$1 \\div 1.524 \\approx 0.656$.",
+     "They agree to within half a percent. Ptolemy's epicycle is, in effect, the Earth's own orbit seen in reverse."
+    ],
+    "a": "Both are about 0.66"
+   },
+   {
+    "t": "ex",
+    "title": "How often does Mars go backward?",
+    "q": "Earth goes around the Sun in 1 year, Mars in 1.88 years. How often does Earth overtake Mars, causing a retrograde loop?",
+    "steps": [
+     "Each year Earth gains $1 - \\frac{1}{1.88}$ of a lap on Mars.",
+     "$1 - 0.532 = 0.468$ of a lap per year.",
+     "One full lap takes $1 \\div 0.468 \\approx 2.14$ years, about 780 days."
+    ],
+    "a": "About every 2.14 years (780 days)"
+   },
+   {
+    "t": "h",
+    "text": "Why he kept the Earth still"
+   },
+   {
+    "t": "p",
+    "html": "Ptolemy knew of the idea that the Earth turns. He rejected it with physical arguments: if the Earth spun, clouds and birds and things thrown upward would be left behind toward the west. Answering that objection needed a new physics of motion, which came with Galileo and Newton. Ptolemy was not being stubborn; with the physics of his day, a moving Earth looked impossible."
+   },
+   {
+    "t": "mistake",
+    "html": "Believing that by Copernicus's time Ptolemy's system had grown \"epicycles on epicycles\" to fit the data. The historian Owen Gingerich (1975) showed that the tables in use around 1500 used Ptolemy's original scheme, one epicycle per planet, with no added circles. And Copernicus's own system needed about as many circles as Ptolemy's. The Sun-centered system won because of how it fit together, and later because of Kepler's ellipses, not because it used fewer circles."
+   },
+   {
+    "t": "h",
+    "text": "What later science kept, and what it changed"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Kept:</b> the star magnitude scale (modern astronomers still use it, made precise in 1856); much of the trigonometry; the practice of building a model, comparing it with observations and adjusting it.",
+     "<b>Changed:</b> the Earth moves (Copernicus, 1543); orbits are ellipses, not circles on circles (Kepler, 1609); all of it follows from gravity (Newton, 1687).",
+     "<b>An echo:</b> Kepler's second law makes a planet sweep out equal areas in equal times. Seen from the empty focus of the ellipse, the planet then moves at a nearly steady angular rate, which is just what Ptolemy's equant did."
+    ]
+   }
+  ],
+  "deep": [
+   {
+    "t": "h",
+    "text": "Saving the appearances"
+   },
+   {
+    "t": "p",
+    "html": "Did Ptolemy think his circles were real, or only a way to compute? He seems to have thought both mattered. In the <em>Almagest</em> he aims at models that predict; in a later work, the <em>Planetary Hypotheses</em>, he builds them into a physical system of nested shells and estimates the size of the universe. Medieval astronomers argued about whether astronomy describes the world or only \"saves the appearances\". The same argument came back when Copernicus's book was published with a preface (not by Copernicus) saying the Sun-centered system was only a calculating device."
+   },
+   {
+    "t": "p",
+    "html": "Historians also debate how much of Ptolemy's star catalog came from Hipparchus, about 265 years earlier. Most think Ptolemy used and updated Hipparchus's work, as he says he did in places; a few have argued he copied more than he admits."
+   },
+   {
+    "t": "h",
+    "text": "A long life"
+   },
+   {
+    "t": "p",
+    "html": "The <em>Almagest</em> was translated into Arabic in the 800s, and astronomers in Baghdad, Damascus, Maragha and Samarkand checked and improved it. Ibn al-Shatir in Damascus (1300s) replaced the equant with extra small circles in a way very like Copernicus's later models. Gerard of Cremona translated it from Arabic into Latin in 1175. Copernicus learned astronomy from it, and his own book follows its plan."
+   },
+   {
+    "t": "h",
+    "text": "Big questions"
+   },
+   {
+    "t": "list",
+    "items": [
+     "If a theory predicts well but is built on a wrong picture, is it a good theory?",
+     "Ptolemy's model worked for 1,400 years. Why might people keep a model that works even when it seems strange?",
+     "How would you convince someone that the Earth moves, using only what you can see from your backyard?"
+    ]
+   }
+  ]
+ },
+ "questions": [
+  "Act out the Earth and Mars walk. Can you see why Mars seems to go backward?",
+  "Ptolemy thought if the Earth spun, things thrown up would land behind us. Why don't they?",
+  "Is a good prediction enough, or do we also want a true picture of how things are?",
+  "Ptolemy built on Hipparchus, and Copernicus built on Ptolemy. Whose work do you build on when you learn something new?",
+  "Look for Mars, Jupiter or Saturn in the night sky (a planet app or almanac can help). Mark its place against the stars over several weeks."
+ ],
+ "sources": [
+  {
+   "name": "G. J. Toomer, tr., Ptolemy's Almagest (Duckworth, 1984; Princeton University Press, 1998)"
+  },
+  {
+   "name": "Owen Gingerich, '\"Crisis\" versus Aesthetic in the Copernican Revolution', Vistas in Astronomy 17 (1975)",
+   "url": "https://core.ac.uk/download/28933164.pdf"
+  },
+  {
+   "name": "Grokipedia: Almagest",
+   "url": "https://grokipedia.com/page/Almagest"
+  },
+  {
+   "name": "Grokipedia: Deferent and epicycle",
+   "url": "https://grokipedia.com/page/Deferent_and_epicycle"
+  },
+  {
+   "name": "Grokipedia: Equant",
+   "url": "https://grokipedia.com/page/Equant"
+  }
+ ]
+}
