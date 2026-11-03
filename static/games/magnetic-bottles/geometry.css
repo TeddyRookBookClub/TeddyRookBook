@@ -1,0 +1,44 @@
+/* Magnetic Bottles: "The geometry of the donut" section (geometry.js). Uses the shared lab look (static/games/lab/lab.css). */
+#magnetic-bottles-lab .mbg-intro{max-width:52rem}
+#magnetic-bottles-lab .mbg-stage{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:.8rem;align-items:start;margin:.8rem 0 1rem}
+#magnetic-bottles-lab .mbg-view{position:relative;height:440px;border-radius:14px;overflow:hidden;background:radial-gradient(ellipse at 50% 45%,#0e2738 0%,#08182a 45%,#06111a 80%);color:var(--sim-ink);touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+#magnetic-bottles-lab .mbg-view:active{cursor:grabbing}
+#magnetic-bottles-lab .mbg-view canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#magnetic-bottles-lab .mbg-view canvas:focus{outline:none}
+#magnetic-bottles-lab .mbg-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#magnetic-bottles-lab .mbg-view .lab-hud{max-width:calc(100% - 1.2rem)}
+#magnetic-bottles-lab .mbg-view .lab-hud b{color:var(--sim-gold)}
+#magnetic-bottles-lab .mbg-view .mbg-closed{color:var(--sim-acc)}
+#magnetic-bottles-lab .mbg-panel .lab-seg button{min-height:36px}
+#magnetic-bottles-lab .mbg-panel .lab-field input[type=range]{min-height:36px;margin:0}
+#magnetic-bottles-lab .mbg-panel .lab-field output{font:600 .82rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink);white-space:nowrap}
+#magnetic-bottles-lab .mbg-panel p{margin:0}
+#magnetic-bottles-lab .mbg-row{display:flex;flex-wrap:wrap;gap:.4rem}
+#magnetic-bottles-lab .mbg-row .lab-btn{min-height:36px}
+#magnetic-bottles-lab .mbg-prof{display:block;width:100%;height:auto;border-radius:10px;background:var(--paper);border:1px solid var(--line)}
+#magnetic-bottles-lab .mbg-prof text{font:12px system-ui,-apple-system,"Segoe UI",sans-serif;fill:var(--muted)}
+#magnetic-bottles-lab .mbg-prof .ax{stroke:var(--muted);stroke-width:1;fill:none}
+#magnetic-bottles-lab .mbg-prof .cv{stroke:var(--acc);stroke-width:2.2;fill:none}
+#magnetic-bottles-lab .mbg-prof .gd{stroke:var(--line);stroke-width:1;stroke-dasharray:3 3}
+#magnetic-bottles-lab .mbg-f{margin:.2rem 0 1rem}
+#magnetic-bottles-lab .mbg-f .lab-formula{text-align:center}
+#magnetic-bottles-lab .mbg-f .lab-formula .ml-md{margin:.2em 0}
+#magnetic-bottles-lab .mbg-f .lab-small{margin:.1rem 0 0}
+#magnetic-bottles-lab .mbg-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#magnetic-bottles-lab .mbg-kin{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem 1.4rem;margin:.4rem 0 .8rem;padding:0;list-style:none}
+#magnetic-bottles-lab .mbg-kin>li{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.5rem .75rem;margin:0}
+#magnetic-bottles-lab .mbg-kin h4{margin:0 0 .25rem;font:700 .78rem system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+#magnetic-bottles-lab .mbg-kin ul{margin:0;padding-left:1.1rem}
+#magnetic-bottles-lab .mbg-kin ul li{margin:.2rem 0}
+@media (max-width:860px){
+  #magnetic-bottles-lab .mbg-stage{grid-template-columns:1fr}
+  #magnetic-bottles-lab .mbg-view{height:min(60vh,360px);min-height:300px}
+  #magnetic-bottles-lab .mbg-kin{grid-template-columns:1fr}
+}
+@media print{#magnetic-bottles-lab .mbg-stage{display:none}}
+#magnetic-bottles-lab #mbg-linebox,#magnetic-bottles-lab #mbg-nestbox{display:flex;flex-direction:column;gap:.6rem}
+#magnetic-bottles-lab .mbg-view .lab-hud{top:auto;bottom:.6rem}
+#magnetic-bottles-lab .mbg-f .ml-md>math.ml-math{font-size:1.4em}
+/* This section reads as one column: the page's two-column text left large gaps here. */
+#magnetic-bottles-lab #mb-geo .lab-cols{display:block;columns:auto;max-width:860px}
+#magnetic-bottles-lab #mb-geo .lab-cols>*{margin-bottom:.4rem}

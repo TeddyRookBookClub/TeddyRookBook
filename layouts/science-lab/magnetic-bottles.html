@@ -1,6 +1,7 @@
 {{ define "main" }}
 {{ partial "lab-head.html" . }}
 <link rel="stylesheet" href="{{ "games/magnetic-bottles/sim.css" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/magnetic-bottles/geometry.css" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/geometry.css").ModTime.Unix }}">
 <div class="lab" id="magnetic-bottles-lab" data-worker="{{ "games/magnetic-bottles/explore-worker.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/explore-worker.js").ModTime.Unix }}" data-physics="{{ "games/magnetic-bottles/physics.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/physics.js").ModTime.Unix }}" data-explore="{{ "games/magnetic-bottles/explore.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/explore.js").ModTime.Unix }}">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Magnetic Bottles for Fusion</nav>
   <header class="lab-hero">
@@ -208,6 +209,79 @@
     </div>
   </section>
 
+  {{/* The geometry of the donut: static/games/magnetic-bottles/geometry.js and geometry.css, loaded when the section is near the screen */}}
+  <section class="lab-sec mbg" id="mb-geo" aria-labelledby="mb-geo-h" data-js="{{ "games/magnetic-bottles/geometry.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/geometry.js").ModTime.Unix }}" data-tex-js="{{ "math/core/tex.js" | relURL }}?v={{ (os.Stat "static/math/core/tex.js").ModTime.Unix }}" data-texcss="{{ "math/core/core.css" | relURL }}?v={{ (os.Stat "static/math/core/core.css").ModTime.Unix }}">
+    <h2 id="mb-geo-h">The geometry of the donut</h2>
+    <p class="mbg-intro">Every bottle on this page is built from flux surfaces: doughnut-shaped layers nested inside each other, each covered by field lines that never leave it. How a line winds around its layer matters a great deal. Tokamak scientists measure it with the <i>safety factor</i> <var>q</var>: the number of turns a line makes the long way around for each turn the short way. It is the twist ι from above, turned upside down: <var>q</var> = 1/ι.</p>
+    <div class="mbg-stage">
+      <div class="mbg-view">
+        <canvas id="mbg-cv" tabindex="0" aria-label="A doughnut-shaped surface with one magnetic field line winding around it. Drag or use the arrow keys to turn it."></canvas>
+        <div class="lab-hud bottom" id="mbg-hud" aria-hidden="true"></div>
+        <noscript><p class="mb-noscript">This picture needs JavaScript.</p></noscript>
+      </div>
+      <div class="lab-panel mbg-panel">
+        <h3>Show</h3>
+        <div class="lab-seg" role="group" aria-label="What to show" id="mbg-mode">
+          <button type="button" data-m="line" aria-pressed="true">One field line</button>
+          <button type="button" data-m="nest" aria-pressed="false">Nested surfaces</button>
+        </div>
+        <div id="mbg-linebox">
+          <div class="lab-seg" role="group" aria-label="Choose q" id="mbg-pre">
+            <button type="button" data-q="1" aria-pressed="false">q = 1</button>
+            <button type="button" data-q="2" aria-pressed="false">2</button>
+            <button type="button" data-q="3/2" aria-pressed="true">3/2</button>
+            <button type="button" data-q="2/3" aria-pressed="false">2/3</button>
+            <button type="button" data-q="phi" aria-pressed="false">golden ratio φ</button>
+          </div>
+          <div class="lab-field">
+            <span><label for="mbg-q">Turns the long way per turn the short way, <var>q</var></label><output id="mbg-qo" for="mbg-q"></output></span>
+            <input type="range" id="mbg-q" min="0.5" max="3.5" step="0.01" value="1.5">
+          </div>
+          <div class="mbg-row"><button type="button" class="lab-btn" id="mbg-play" aria-pressed="false">Pause</button><button type="button" class="lab-btn" id="mbg-again">Start again</button></div>
+          <p class="lab-small">A simple fraction closes after a few turns. The golden ratio is the number hardest to match with fractions, so its line never closes: it slowly paints the whole surface gold. Each slider value is a fraction like 137/100, so it does close, after 137 turns.</p>
+        </div>
+        <div id="mbg-nestbox" hidden>
+          <svg class="mbg-prof" id="mbg-prof" viewBox="0 0 240 142" role="img" aria-label="Chart: q rises from 1 on the magnetic axis to 3 at the edge. Dots mark the three surfaces at q = 1.22, 1.89 and 3."></svg>
+          <p class="lab-small">Three layers from a typical tokamak-like profile that we made up for this picture, <var>q</var> = 1 + 2<var>s</var>², where <var>s</var> runs from 0 on the axis to 1 at the edge. From the inside out, <var>q</var> = 1.22, 1.89 and 3. The inner lines twist the most. When neighboring layers twist by different amounts, that is <i>magnetic shear</i>.</p>
+        </div>
+        <p class="mbg-sr" id="mbg-live" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="mbg-f ml-rscope">
+      <div class="lab-formula" data-tex="q = \frac{\text{turns the long way}}{\text{turns the short way}} = \frac{1}{\iota}||q \approx \frac{\role[minor radius]{position}{r}\,\role[toroidal field (the long way)]{field}{B_{\text{tor}}}}{\role[major radius]{position}{R}\,\role[poloidal field (the short way)]{field}{B_{\text{pol}}}}"><var>q</var> = (turns the long way) ÷ (turns the short way) = 1/ι<br><var>q</var> ≈ <var>r B</var><sub>tor</sub> / (<var>R B</var><sub>pol</sub>)</div>
+      <p class="lab-small">The second line is an approximation for a thin ring with a round cross-section (<var>r</var> much smaller than <var>R</var>). <var>B</var><sub>tor</sub> is the part of the field that points the long way around, and <var>B</var><sub>pol</sub> the part that points the short way. The dashed lines in the picture show <var>R</var> and <var>r</var>.</p>
+    </div>
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">Why the twist matters</h3>
+        <p>As “Why a doughnut, and why the twist” explains above, a plain ring field lets ions and electrons drift apart, and the plasma is pushed into the wall. A twisted line carries each particle over the top and under the bottom of the doughnut, so the drifts cancel on average. So the field lines must wind both ways, and <var>q</var> says how.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Lines that close, and lines that don’t</h3>
+        <p>If <var>q</var> is a fraction <var>m</var>/<var>n</var> in lowest terms, a line closes after <var>m</var> turns the long way and <var>n</var> the short way. Layers like that are called <i>rational surfaces</i>. If <var>q</var> is irrational, the line never closes. It comes as close as you like to every point of its layer, so one line covers the whole surface. In a tokamak, <var>q</var> changes from layer to layer, so most lines never close. Rational layers are scattered among them, like fractions among all numbers.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Why rational surfaces are delicate</h3>
+        <p>On a rational surface, a closed line passes the same spots over and over. A small ripple in the field that matches its twist pushes it the same way every time, instead of averaging out. Such ripples can tear the surface and reconnect the field into a chain of <i>magnetic islands</i>: small doughnuts of their own, which let heat leak across faster. The <var>q</var> = 1 surface is where a repeating instability called the <i>sawtooth</i> starts. At other rational surfaces, <i>tearing modes</i> can grow islands big enough to end the plasma in a sudden collapse, a <i>disruption</i>.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Magnetic shear</h3>
+        <p>In a tokamak, the field comes from coils outside plus the current in the plasma, and <var>q</var> usually rises from the middle to the edge. A disturbance that lines up with the field on one layer is then out of line on the next, so to grow it has to bend field lines, and that costs energy. This change of twist with depth, <i>magnetic shear</i>, helps hold many instabilities back. Try “Nested surfaces” above. Family 1 at the top of this page has ι = 2, so <var>q</var> = ½ on every layer: all its lines close, and it has no shear. Family 2’s twist changes only slightly from axis to edge.</p>
+      </div>
+    </div>
+    <h3 class="lab-h">A cousin from pure math</h3>
+    <div class="lab-cols">
+      <p>In 1931 the mathematician Heinz Hopf found a way to fill space with circles. Seen in ordinary 3-D space, the circles lie on nested tori around one central circle, and one of them becomes a straight line through the middle. Every circle is linked with every other exactly once, like two links of a chain. On each torus every circle winds once the long way and once the short way, so “<var>q</var>” is 1 on every layer. This is the <i>Hopf fibration</i>. You can build it yourself in the Math Gallery: <a href="{{ "math/gallery/hopf-fibration/" | relURL }}">The Hopf fibration</a>.</p>
+      <p>In 1982 the physicist A. M. Kamchatnov showed that a magnetic field whose lines are Hopf’s circles, in a perfectly conducting fluid that flows along the lines, is an exact steady solution of the equations of magnetohydrodynamics. He called it a topological soliton; such knotted solutions are now often called <i>hopfions</i>. In 1989 Antonio Rañada used the same map to build solutions of Maxwell’s equations for light in empty space in which every electric and every magnetic field line is a closed loop linked with the others: “knotted light”. Computer studies (Smiet and colleagues, 2015) found that a plasma started in a Hopf-like field settles into nested toroidal surfaces and keeps its linked shape for a long time.</p>
+      <p>How linked the lines are is measured by <i>magnetic helicity</i>. It adds up the linking and twisting of every pair of thin bundles of field lines, weighted by how much field each carries (Moffatt, 1969; Berger and Field, 1984). The <i>spheromak</i> is a real experiment with a related shape: a compact ring of plasma whose field comes from currents in the plasma itself, with no coil through the middle and ring-shaped flux surfaces inside. It settles toward the lowest-energy state that keeps its helicity.</p>
+    </div>
+    <ul class="mbg-kin">
+      <li><h4>What they share</h4><ul><li>Nested tori, each covered by field lines that stay on it.</li><li>Lines that wind the long way and the short way, counted by <var>q</var> (or ι).</li><li>Linked field lines, measured by magnetic helicity.</li></ul></li>
+      <li><h4>How they differ</h4><ul><li>A tokamak’s field comes from coils plus plasma current, and <var>q</var> changes from layer to layer. In the Hopf field, <var>q</var> = 1 on every layer.</li><li>Every Hopf line is a closed circle. In a tokamak most lines never close.</li><li>Hopfions are exact solutions on paper, not fusion machines.</li></ul></li>
+    </ul>
+    <script>(function () { var s = document.getElementById('mb-geo'); if (!s) return; function go() { if (s._ld) return; s._ld = 1; var e = document.createElement('script'); e.src = s.getAttribute('data-js'); document.body.appendChild(e); } if ('IntersectionObserver' in window) { var o = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { o.disconnect(); go(); } }, { rootMargin: '700px 0px' }); o.observe(s); } else go(); })();</script>
+  </section>
+
   <section class="lab-sec">
     <h2>Try this</h2>
     <div class="lab-try"><b>Find the symmetry.</b> Turn on the mirror test in Family 1 and press the τ₀ = 0 button. The pink cage hugs the bottle. Now slide τ₀ slowly to 0.5. The real bottle sinks and the turned-over one rises, until they no longer touch. Watch the “mirror gap” number.</div>
@@ -261,6 +335,20 @@
       <li>Princeton Plasma Physics Laboratory, SULI course, <a href="https://suli.pppl.gov/2024/course/stellarators.pdf">Introduction to stellarators</a> (2024): drifts in a plain ring field, why the field lines must twist, nested flux surfaces.</li>
       <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-2/pages/11-3-motion-of-a-charged-particle-in-a-magnetic-field">University Physics Volume 2, 11.3 Motion of a Charged Particle in a Magnetic Field</a>: spiral paths and <var>r</var> = <var>mv</var>/(<var>qB</var>).</li>
       <li>NIST, <a href="https://physics.nist.gov/cuu/Constants/">CODATA fundamental constants</a>: deuteron mass 3.3436 × 10⁻²⁷ kg, elementary charge 1.602 × 10⁻¹⁹ C, Boltzmann constant 1.381 × 10⁻²³ J/K.</li>
+      <li><b>The geometry of the donut:</b></li>
+      <li>J. Wesson, <i>Tokamaks</i>, 4th ed. (Oxford University Press, 2011): general reference for the safety factor, flux surfaces, rational surfaces, magnetic shear, tearing modes and the sawtooth.</li>
+      <li>J. P. Freidberg, <a href="https://ocw.mit.edu/courses/22-615-mhd-theory-of-fusion-systems-spring-2007/resources/lecture6">MHD Theory of Fusion Systems, lecture 6: The safety factor and the ohmic tokamak</a> (MIT OpenCourseWare, 2007): the twist per toroidal turn, and <var>q</var> ≈ <var>rB</var><sub>tor</sub>/(<var>RB</var><sub>pol</sub>) for a thin ring.</li>
+      <li>GOLEM tokamak, Czech Technical University, <a href="https://golem.fjfi.cvut.cz/wiki/Theory/Tokamaks/Equilibrium/SafetyFactor/description">Safety factor</a>: <var>q</var> as toroidal turns per poloidal turn and the large-aspect-ratio formula.</li>
+      <li>S. R. Hudson (Princeton Plasma Physics Laboratory), <a href="https://w3.pppl.gov/~shudson/Papers/Conference/2013Culham/2013_Culham_Hudson.pdf">How do chaotic magnetic fields confine plasma equilibria?</a> (2013): lines close at rational twist and come arbitrarily close to every point at irrational twist; islands form at resonances.</li>
+      <li>H. R. Wilson, <a href="https://scientific-publications.ukaea.uk/wp-content/uploads/Published/FusionSTVOL45P123.pdf">Neoclassical tearing modes</a>, Fusion Science and Technology 45 (2004) 123–131: island chains on rational surfaces, the sawtooth and the <var>q</var> = 1 surface, islands large enough to cause a disruption.</li>
+      <li>B. R. Suydam, <a href="https://www.princeton.edu/~vnd/Suydam.pdf">Stability of a linear pinch</a>, Proc. Second UN Conference on the Peaceful Uses of Atomic Energy 31 (1958) 157: twisting field lines stabilize, and disturbances are localized where their pitch matches the field’s.</li>
+      <li>H. Hopf, <a href="https://eudml.org/doc/159489">Über die Abbildungen der dreidimensionalen Sphäre auf die Kugelfläche</a>, Mathematische Annalen 104 (1931) 637–665.</li>
+      <li>A. M. Kamchatnov, Topological soliton in magnetohydrodynamics, Sov. Phys. JETP 55(1) (1982) 69–73; <a href="https://arxiv.org/abs/physics/0409093">English text at arXiv:physics/0409093</a>: closed field lines on nested tori, each linked with all the others, with flow along the lines; a steady solution of ideal MHD.</li>
+      <li>A. F. Rañada, <a href="https://doi.org/10.1007/BF00401864">A topological theory of the electromagnetic field</a>, Letters in Mathematical Physics 18 (1989) 97–106; and W. T. M. Irvine and D. Bouwmeester, <a href="https://doi.org/10.1038/nphys1056">Linked and knotted beams of light</a>, Nature Physics 4 (2008) 716–720: all electric and magnetic field lines closed and linked.</li>
+      <li>C. B. Smiet, S. Candelaresi, A. Thompson, J. Swearngin, J. W. Dalhuisen and D. Bouwmeester, <a href="https://arxiv.org/abs/1507.08780">Self-organizing knotted magnetic structures in plasma</a>, Physical Review Letters 115 (2015) 095001.</li>
+      <li>H. K. Moffatt, The degree of knottedness of tangled vortex lines, Journal of Fluid Mechanics 35 (1969) 117–129; M. A. Berger and G. B. Field, <a href="https://doi.org/10.1017/S0022112084002019">The topological properties of magnetic helicity</a>, Journal of Fluid Mechanics 147 (1984) 133–148: helicity as linking and twisting of flux tubes.</li>
+      <li>J. B. Taylor, Relaxation of toroidal plasma and generation of reverse magnetic fields, Physical Review Letters 33 (1974) 1139: relaxation to the lowest-energy state at fixed helicity.</li>
+      <li>Encyclopedia: Grokipedia, <a href="https://grokipedia.com/page/Hopf_fibration">Hopf fibration</a>, <a href="https://grokipedia.com/page/Hopfion">Hopfion</a>, <a href="https://grokipedia.com/page/Spheromak">Spheromak</a> and <a href="https://grokipedia.com/page/Tokamak">Tokamak</a>; Wikipedia, <a href="https://en.wikipedia.org/wiki/Safety_factor_(plasma_physics)">Safety factor (plasma physics)</a> and <a href="https://en.wikipedia.org/wiki/Magnetic_helicity">Magnetic helicity</a>.</li>
     </ul>
   </section>
 
