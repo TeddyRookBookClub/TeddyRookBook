@@ -16,7 +16,7 @@
   {{- $dk := "" -}}
   {{- with .Params.data }}{{ $dk = . }}{{ else }}{{ if eq .Kind "page" }}{{ with .CurrentSection }}{{ with .Params.data }}{{ $dk = . }}{{ else }}{{ with .Params.course }}{{ if hasPrefix $path "/homeschool/rays-arithmetic/" }}{{ $dk = printf "rays_%s" . }}{{ end }}{{ end }}{{ end }}{{ end }}{{ else }}{{ with .Params.course }}{{ if hasPrefix $path "/homeschool/rays-arithmetic/" }}{{ $dk = printf "rays_%s" . }}{{ end }}{{ end }}{{ end }}{{ end -}}
   {{- with $dk }}{{ with index site.Data . }}{{ with .book }}{{ if .id -}}
-    {{- $items = $items | append (dict "name" (printf "%s (%s)" .title .year) "url" (printf "https://archive.org/details/%s" .id) "what" "the book and its pages; scan kept by the Internet Archive" "licence" "public domain in the United States") -}}
+    {{- $items = $items | append (dict "name" (printf "%s (%v)" .title .year) "url" (printf "https://archive.org/details/%s" .id) "what" "the book and its pages; scan kept by the Internet Archive" "licence" "public domain in the United States") -}}
     {{- with .key_id }}{{ $items = $items | append (dict "name" "The answer key" "url" (printf "https://archive.org/details/%s" .) "what" "scan kept by the Internet Archive" "licence" "public domain in the United States") }}{{ end -}}
   {{- end }}{{ end }}{{ end }}{{ end -}}
 {{- end -}}
@@ -45,7 +45,7 @@
       {{- $items = $items | append (dict "name" "The books" "what" "published before 1931, so in the public domain in the United States") -}}
     {{- end -}}
     {{- if eq .hook "outdoor-skills" }}{{ range site.Data.outdoor_skills.sources -}}
-      {{- $items = $items | append (dict "name" (printf "%s (%d)" .title .year) "url" (printf "https://archive.org/details/%s" .id)) -}}
+      {{- $items = $items | append (dict "name" (printf "%s (%v)" .title .year) "url" (printf "https://archive.org/details/%s" .id)) -}}
     {{- end }}{{ end -}}
     {{- range .items }}{{ $items = $items | append . }}{{ end -}}
   {{- end -}}

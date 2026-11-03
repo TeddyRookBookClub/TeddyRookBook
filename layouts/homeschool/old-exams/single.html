@@ -17,7 +17,7 @@
     {{ with $s.time }}<p class="hs-noprint"><button type="button" class="hs-btn hx-timer" data-t="{{ . }}">⏱ Start the clock</button> <span class="hx-left"></span></p>{{ end }}
     <ol class="hx-qs">
       {{ range $qi, $q := $s.questions }}
-      <li data-q="{{ $si }}-{{ $qi }}"><p class="hx-q">{{ $q.q }}</p>
+      <li data-q="{{ $si }}-{{ $qi }}"><p class="hx-q"{{ if in $q.q "\n" }} style="white-space:pre-line"{{ end }}>{{ $q.q }}</p>
         {{ if $q.answer }}<details class="hs-ans hs-noprint"><summary>Answer notes</summary><p>{{ $q.answer }}</p>{{ with $q.then }}<p><b>Then:</b> {{ . }}</p>{{ end }}{{ with $q.now }}<p><b>Now:</b> {{ . }}</p>{{ end }}{{ with $q.study }}<p class="hs-small"><b>Study:</b> {{ . }}</p>{{ end }}</details>
         <label class="hs-check hs-noprint"><input type="checkbox"> Got it right</label>{{ end }}
       </li>
