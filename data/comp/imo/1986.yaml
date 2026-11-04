@@ -1,0 +1,139 @@
+year: 1986
+edition: 27th
+date: "July 4–15, 1986 · Warsaw, Poland"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1986/1986_eng.pdf
+  archive: https://www.imo-official.org/editions/1986/
+problems:
+  - id: P1
+    day: 1
+    topic: "Products minus one that cannot all be squares"
+    areas: [number-theory]
+    difficulty: 1
+    answer: "Among the pairs that involve $d$, at least one product minus one is not a square"
+    hints:
+      - 'The three pairs inside $\{2,5,13\}$ all give squares ($9$, $25$, $64$). So the bad pair must involve $d$.'
+      - 'If $2d-1$ is a square, what does that say about $d$ mod $4$? Then compare $5d-1$ and $13d-1$.'
+    solution: |
+      **Key idea:** if all three of $2d-1$, $5d-1$, $13d-1$ were squares, then $d$ would be odd and the difference $13d-1-(5d-1)=8d$ would be a difference of two even squares that is $8$ times an odd number. That is impossible mod $4$.
+
+      The pairs inside $\{2,5,13\}$ give $2\cdot5-1=9$, $2\cdot13-1=25$, $5\cdot13-1=64$, all squares. So we must show that $2d-1$, $5d-1$, $13d-1$ are not all squares.
+
+      Suppose they are: $2d-1=x^2$, $5d-1=y^2$, $13d-1=z^2$. Then $x$ is odd, so $x^2\equiv1\pmod8$ and $2d\equiv2\pmod 8$. Hence $d\equiv1\pmod4$, and $d$ is odd. Then $5d-1$ and $13d-1$ are even, so $y=2y'$ and $z=2z'$. Now
+      $$z^2-y^2=8d\quad\Longrightarrow\quad z'^2-y'^2=2d\equiv2\pmod4 .$$
+      But a difference of two squares is never $2$ mod $4$ (squares are $0$ or $1$ mod $4$). This contradiction proves the claim.
+    checked: "script: no d below 10⁶ makes all three numbers squares"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Repeated third-turn rotations about a triangle's vertices"
+    areas: [geometry, algebra]
+    difficulty: 2
+    hints:
+      - 'Three rotations by $120^\circ$ in a row turn by $360^\circ$ in total. What kind of map is their composition?'
+      - 'Use complex numbers with $\omega=e^{-2\pi i/3}$ and compute that map.'
+    solution: |
+      **Key idea:** one round of three rotations is a translation, because the angles add to a full turn. The point comes back after $662$ rounds only if this translation is zero, and that happens exactly for an equilateral triangle.
+
+      Use complex numbers, with $a_1,a_2,a_3$ for the vertices and $\omega=e^{-2\pi i/3}$ (a clockwise turn by $120^\circ$). The rotation about $a$ is $z\mapsto\omega(z-a)+a$. Composing the three rotations in order gives
+      $$z\ \longmapsto\ \omega^3z+(1-\omega)\big(\omega^2a_1+\omega a_2+a_3\big)=z+t,\qquad t=(1-\omega)\big(\omega^2a_1+\omega a_2+a_3\big).$$
+      Since $1986=3\cdot662$, we get $P_{1986}=P_0+662\,t$. So $P_{1986}=P_0$ forces $t=0$, that is
+      $$\omega^2a_1+\omega a_2+a_3=0 .$$
+      Using $\omega^2=-1-\omega$, this becomes $(a_3-a_1)+\omega(a_2-a_1)=0$, or
+      $$a_3-a_1=-\omega\,(a_2-a_1).$$
+      The number $-\omega=e^{i\pi/3}$ is a turn by $60^\circ$. So the segment from $A_1$ to $A_3$ is the segment from $A_1$ to $A_2$ turned by $60^\circ$: the two sides from $A_1$ have equal length and meet at $60^\circ$. The triangle is equilateral.
+    checked: "algebra: sympy confirms the composition is z ↦ z + (1−ω)(ω²a₁+ωa₂+a₃)"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Flipping negatives around a pentagon always stops"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: "Yes, it always ends after finitely many steps"
+    hints:
+      - 'The total sum $S$ never changes. Look for a nonnegative integer quantity that drops at every step.'
+      - 'Try the sum of the squares of the differences between numbers two places apart.'
+    solution: |
+      **Key idea:** a sum of squared differences drops by $2|y|S$ at each step, where $S>0$ is the fixed total. A nonnegative integer cannot drop forever.
+
+      Label the numbers around the pentagon $v_1,\dots,v_5$ (indices mod $5$). A step at a negative $y$ with neighbors $x,z$ keeps the total $S=v_1+\dots+v_5$ unchanged, since $(x+y)+(-y)+(z+y)=x+y+z$. Define
+      $$F=\sum_{i=1}^{5}(v_i-v_{i+2})^2 .$$
+      This is a nonnegative integer. Expand the effect of one step: say the numbers are $a,b,c,d,e$ in order, and the step acts on $b,c,d$ with $c<0$, giving $a,\ b+c,\ -c,\ d+c,\ e$. A direct expansion of the five squares gives
+      $$F_{\text{new}}-F_{\text{old}}=2c\,(a+b+c+d+e)=2cS .$$
+      Since $c\le-1$ and $S\ge1$, every step lowers $F$ by at least $2$. So there can be at most $F_{\text{start}}/2$ steps, and the process stops.
+    checked: "algebra: sympy gives the change 2c(a+b+c+d+e); random runs always stop"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Sliding a triangle around a regular polygon: a star locus"
+    areas: [geometry]
+    difficulty: 3
+    answer: "A star of $n$ segments from the center $O$. Each runs from $O$ directly away from a vertex and has length $R\\big(\\frac{1}{\\cos(\\pi/n)}-1\\big)$, where $R=OA$."
+    hints:
+      - 'When $Y$ and $Z$ sit on two sides meeting at a vertex $V$, the angles at $V$ and at $X$ add up to $180^\circ$.'
+      - 'So $X,Y,V,Z$ are concyclic, and $X$ is the midpoint of an arc $YZ$. Which line through $V$ must $X$ lie on?'
+    solution: |
+      **Key idea:** while $Y$ and $Z$ ride on the two sides at a vertex $V$, the points $X,Y,V,Z$ stay on one circle of fixed size, and $X$ is the midpoint of arc $YZ$. So $X$ slides along the line $VO$, out past $O$ and back.
+
+      Let $R=OA$, let $s$ be the side length and $\theta=\frac{2\pi}{n}$ the angle at $X$. The interior angle of the polygon is $\pi-\theta$.
+
+      **Where $Y$ and $Z$ can be.** Two points on the boundary at distance $s$ lie on one side (then they are its ends, and $X=O$) or on two adjacent sides. For $n\ge5$ the interior angles are obtuse, so two non-adjacent sides are at least $s$ apart, and distance exactly $s$ occurs only for the two ends of a side between them (which is the first case again).
+
+      **Adjacent sides at a vertex $V$.** Then $\angle YVZ+\angle YXZ=(\pi-\theta)+\theta=\pi$, and $X$ is on the other side of $YZ$ from $V$ (inside the polygon). So $X,Y,V,Z$ lie on a circle. This is the circle of triangle $XYZ$, of radius $\rho=\dfrac{s}{2\sin\theta}$. Since $XY=XZ$, $X$ is the midpoint of the arc $YZ$ not containing $V$, so $VX$ bisects the angle at $V$, and $X$ lies on line $VO$.
+
+      **How far.** Let $\varphi=\angle VYZ$, which runs from $0$ (when $Z=V$) to $\theta$ (when $Y=V$). Then $\angle VYX=\varphi+\angle ZYX=\varphi+\frac\pi2-\frac\theta2$, and the chord is
+      $$VX=2\rho\sin\!\Big(\varphi+\frac\pi2-\frac\pi n\Big).$$
+      At both ends this equals $2\rho\cos\frac\pi n=R$ (so $X=O$), and in between it rises to its maximum $2\rho$ when the angle is $90^\circ$. Since $2\rho=\dfrac{s}{\sin\theta}=\dfrac{R}{\cos(\pi/n)}$ (use $s=2R\sin\frac\pi n$), the point $X$ moves from $O$ along ray $VO$ beyond $O$ to distance $R\big(\frac1{\cos(\pi/n)}-1\big)$ and back.
+
+      As $Y,Z$ go around, every vertex takes its turn. So the locus is the union of $n$ segments: from $O$, away from each vertex, of length $R\big(\sec\frac\pi n-1\big)$. These stay inside the polygon, since that length is less than the distance $R\cos\frac\pi n$ from $O$ to the sides when $n\ge5$.
+    checked: "numeric: the viz traces the motion; the length agrees with direct computation"
+    viz: imo-1986-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Functional equation with a zero at two"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$f(x)=\\dfrac{2}{2-x}$ for $0\\le x<2$, and $f(x)=0$ for $x\\ge2$"
+    hints:
+      - 'Write any $x\ge2$ as $(x-2)+2$ and use the equation with $y=2$.'
+      - 'For $y<2$, choose $x=2-y$, and also look at all $x<2-y$. You get an upper and a lower bound for $f(y)$.'
+    solution: |
+      **Key idea:** the zeros of $f$ are exactly $[2,\infty)$. Then $f(xf(y))=0$ says exactly when $xf(y)\ge2$, and comparing with $x+y\ge2$ pins down $f(y)$.
+
+      **Zeros.** For $x\ge2$, put $y=2$ in the equation with $x-2$ in place of $x$: $f(x)=f\big((x-2)f(2)\big)f(2)=0$. Together with (iii), $f(t)=0$ exactly when $t\ge2$.
+
+      **Values below $2$.** Fix $y<2$, so $f(y)>0$. The equation says $f(xf(y))f(y)=f(x+y)$, so
+      $$f(xf(y))=0\iff f(x+y)=0\iff x+y\ge2 .$$
+      By the first step, the left side means $xf(y)\ge2$. So for all $x\ge0$:
+      $$x\,f(y)\ge2\iff x\ge2-y .$$
+      Taking $x=2-y$ gives $f(y)\ge\frac2{2-y}$. Taking $x$ slightly less than $2-y$ gives $xf(y)<2$ for all such $x$, so $f(y)\le\frac2{2-y}$. Hence $f(y)=\frac2{2-y}$.
+
+      **Check.** For $y\ge2$ both sides are $0$. For $y<2$ and $x+y\ge2$, $xf(y)=\frac{2x}{2-y}\ge2$, so both sides are $0$. For $x+y<2$,
+      $$f\Big(\frac{2x}{2-y}\Big)\cdot\frac2{2-y}=\frac{2}{2-\frac{2x}{2-y}}\cdot\frac{2}{2-y}=\frac{2}{2-x-y}=f(x+y).$$
+    checked: "numeric: 10,000 random pairs satisfy the equation"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Balanced two-coloring of lattice points on every line"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: "Yes, such a coloring always exists"
+    hints:
+      - 'On each horizontal line, pair up the points in order: first with second, third with fourth, and so on. Do the same on vertical lines.'
+      - 'Join paired points. Every point has at most one horizontal and one vertical partner. What do the cycles look like?'
+    solution: |
+      **Key idea:** pair up points along every row and every column. The pairs form paths and even cycles, so we can color so that every pair gets two different colors.
+
+      On each horizontal line, list its points from left to right and join the 1st to the 2nd, the 3rd to the 4th, and so on; at most one point is left over. Do the same on each vertical line. This gives a graph on the points where each point has at most one horizontal edge and at most one vertical edge.
+
+      So every vertex has degree at most $2$, and each connected piece is a path or a cycle. Along a cycle the edges alternate horizontal, vertical, horizontal, …, because no point has two edges of the same direction. So every cycle has even length. Paths and even cycles can be colored with two colors so that the ends of each edge differ.
+
+      Color red and white in this way. On any line parallel to an axis, the points come in joined pairs (one red, one white) plus at most one extra point. So the counts of red and white differ by at most $1$.
+    checked: "reasoning; script: the pairing coloring balances every row and column for random point sets"
+    status: ready

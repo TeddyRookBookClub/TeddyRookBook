@@ -1,0 +1,128 @@
+year: 1971
+edition: 13th
+date: "July 10–21, 1971 · Žilina, Czechoslovakia"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1971/1971_eng.pdf
+  archive: https://www.imo-official.org/editions/1971/
+problems:
+  - id: P1
+    day: 1
+    topic: "Sum of products of differences: sign for which sizes"
+    areas: [algebra]
+    difficulty: 2
+    answer: "True for $n=3$ and $n=5$ only"
+    hints:
+      - 'Sort the numbers. For $n=3$ and $n=5$, pair the first two terms and the last two terms, and compare sizes.'
+      - 'For a counterexample, make all but one number take repeated values: every term containing a factor $a_i-a_j$ with $a_i=a_j$ vanishes.'
+    solution: |
+      **Key idea:** after sorting, the terms pair up so that a positive term always outweighs its negative partner. For other $n$, repeated values kill all terms but one, and that one can be made negative.
+
+      Write $T_i=\prod_{j\ne i}(a_i-a_j)$, so the sum is $S=T_1+\dots+T_n$. The sum does not depend on the order of the numbers, so assume $a_1\ge a_2\ge\dots\ge a_n$.
+
+      **$n=3$.** Here $T_1=(a_1-a_2)(a_1-a_3)\ge(a_1-a_2)(a_2-a_3)=-T_2$, because $a_1-a_3\ge a_2-a_3\ge0$. And $T_3=(a_1-a_3)(a_2-a_3)\ge0$. So $S\ge0$.
+
+      **$n=5$.**
+      - $T_1+T_2\ge0$: $T_1=(a_1-a_2)\prod_{k=3}^5(a_1-a_k)$ and $-T_2=(a_1-a_2)\prod_{k=3}^5(a_2-a_k)$, and $a_1-a_k\ge a_2-a_k\ge0$ for $k\ge3$.
+      - $T_3=(a_1-a_3)(a_2-a_3)(a_3-a_4)(a_3-a_5)\ge0$.
+      - $T_4+T_5\ge0$: $T_5=\prod_{k=1}^4(a_k-a_5)\ge0$ and $-T_4=(a_4-a_5)\prod_{k=1}^3(a_k-a_4)$, and $a_k-a_5\ge a_k-a_4\ge0$.
+
+      So $S\ge0$.
+
+      **Even $n\ge4$.** Take $a_1=-1$ and $a_2=\dots=a_n=0$. Every $T_i$ with $i\ge2$ contains a factor $0$, and $T_1=(-1)^{n-1}=-1<0$.
+
+      **Odd $n\ge7$.** Take $a_1=0$, three numbers equal to $1$ and the remaining $n-4\ge3$ numbers equal to $-1$. Again only $T_1$ survives, and $T_1=(0-1)^3(0+1)^{n-4}=-1<0$.
+
+      (For $n=5$ this second construction fails, because then $-1$ appears only once.)
+    checked: "script: random tests for n = 3, 5 never give a negative sum; the counterexamples give -1 for n = 4, 6, 7, 8, 9, 11"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Nine translated copies of a convex solid must overlap"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'All nine copies fit inside one larger copy of the solid. Which one, and how much larger?'
+      - 'Compare volumes.'
+    solution: |
+      **Key idea:** all nine translates sit inside the solid scaled by $2$ from $A_1$, which has volume $8V$. Nine disjoint interiors of volume $V$ each cannot fit.
+
+      Let $V>0$ be the volume of $P_1$, and let $Q$ be the image of $P_1$ under the homothety with center $A_1$ and ratio $2$. Its volume is $8V$.
+
+      **Each $P_i$ lies in $Q$.** A point of $P_i$ has the form $x+(A_i-A_1)$ with $x\in P_1$. Since $P_1$ is convex and contains $x$ and $A_i$, it contains the midpoint $m=\frac{x+A_i}2$. The image of $m$ under the homothety is $A_1+2(m-A_1)=x+A_i-A_1$, our point. So it lies in $Q$.
+
+      **Volumes.** If the interiors of $P_1,\dots,P_9$ were pairwise disjoint, then (since the boundaries have volume zero) the union would have volume $9V$. But the union lies in $Q$, of volume $8V<9V$. So two of the interiors meet, and those two copies share an interior point.
+    checked: "algebra only: containment and volume count"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Infinitely many pairwise coprime numbers one less than a power"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'Build the set one element at a time. Given the elements so far, with product $s$ (an odd number), look for an exponent $k$ with $2^k-3$ prime to $s$.'
+      - 'Euler''s theorem: $2^{\varphi(s)}\equiv1\pmod s$.'
+    solution: |
+      **Key idea:** Euler's theorem makes $2^{\varphi(s)}-3\equiv-2\pmod s$, which is prime to an odd $s$.
+
+      Start with $x_1=2^3-3=5$. Suppose we have chosen $x_1,\dots,x_m$, all of the form $2^k-3$ with $k\ge2$, pairwise coprime and all greater than $1$. Their product $s$ is odd and at least $5$. By Euler's theorem $2^{\varphi(s)}\equiv1\pmod s$, so
+      $$2^{\varphi(s)}-3\equiv-2\pmod s .$$
+      Since $s$ is odd, $\gcd(-2,s)=1$, so $x_{m+1}=2^{\varphi(s)}-3$ is prime to $s$, hence to each earlier $x_i$.
+
+      It is a valid new element: an odd $s\ge5$ has $\varphi(s)\ge4$, so the exponent is at least $2$ and $x_{m+1}\ge13>1$. And it differs from every earlier $x_i$, because it is prime to $x_i>1$. Repeating forever gives an infinite pairwise coprime subset.
+    checked: "script: the first terms 5, 13, … are pairwise coprime"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Shortest closed path around four tetrahedron edges"
+    areas: [geometry]
+    difficulty: 4
+    status: coming
+
+  - id: P5
+    day: 2
+    topic: "Finite point sets with exactly m unit neighbors each"
+    areas: [combinatorics, geometry]
+    difficulty: 2
+    hints:
+      - 'Start with two points at distance $1$. Can you double the set to raise every point''s count by one?'
+      - 'Translate the whole set by a unit vector. Only finitely many directions cause trouble.'
+    solution: |
+      **Key idea:** take the set and a copy shifted by a unit vector chosen in a generic direction. Each point gains exactly one new unit neighbor: its own copy.
+
+      Call a finite set *$m$-good* if every point has exactly $m$ points of the set at distance $1$. A single point is $0$-good. We show: if $S$ is $m$-good, then for a suitable unit vector $v$ the set $S'=S\cup(S+v)$ is $(m+1)$-good, with $2|S|$ points.
+
+      **Bad directions.** For points $x,y\in S$:
+      - $x+v=y$ happens for at most one unit vector $v$ (when $|y-x|=1$).
+      - For $x\ne y$, the condition $|x+v-y|=1$ says that $v$ lies on the unit circle centered at $y-x$. That circle and the unit circle centered at $0$ are different, so they share at most $2$ points.
+
+      There are finitely many pairs, so we can choose a unit vector $v$ avoiding all of these.
+
+      **Counting neighbors.** Then $S$ and $S+v$ are disjoint, so $S'$ has $2|S|$ points. Take $x\in S$. Its unit neighbors in $S$ are the same $m$ as before. In $S+v$, a point $y+v$ is at distance $1$ from $x$ only if $y=x$ (by the choice of $v$), and $x+v$ is indeed at distance $|v|=1$. So $x$ has exactly $m+1$ unit neighbors. The same argument works for points of $S+v$.
+
+      Starting from one point and repeating $m$ times gives an $m$-good set with $2^m$ points.
+    checked: "script: the doubling with random directions gives exact neighbor counts for m = 1 to 5"
+    viz: imo-1971-p5
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Nonnegative integer matrix: zeros force a large total"
+    areas: [combinatorics, algebra]
+    difficulty: 3
+    hints:
+      - 'Look at the line (row or column) with the smallest sum, say $k$. If $k\ge n/2$ you are done.'
+      - 'Otherwise that line has at least $n-k$ zeros. What does each zero say about its crossing line?'
+    solution: |
+      **Key idea:** take the line with the smallest sum $k$. Its zeros force big sums on the crossing lines, and all other crossing lines are at least $k$; the total is at least $(n-k)^2+k^2$.
+
+      Among all $2n$ rows and columns, choose one with the smallest sum $k$; by symmetry say it is row $r$. If $k\ge\frac n2$, then all $n$ rows have sum at least $\frac n2$ and the total is at least $\frac{n^2}2$.
+
+      So suppose $k<\frac n2$. Row $r$ has at most $k$ nonzero entries (they are positive integers adding up to $k$), so it has $z\ge n-k$ zeros. For each zero $a_{rj}=0$, row $r$ and column $j$ together have sum at least $n$, so column $j$ has sum at least $n-k$. Every other column has sum at least $k$, by the choice of $k$. Adding up the columns,
+      $$\text{total}\ge z(n-k)+(n-z)k=nk+z(n-2k)\ge nk+(n-k)(n-2k),$$
+      using $n-2k>0$ and $z\ge n-k$. The right side equals $(n-k)^2+k^2$, and
+      $$(n-k)^2+k^2=\frac{n^2}{2}+\frac{(n-2k)^2}{2}\ge\frac{n^2}2 .$$
+    checked: "script: exhaustive search for n = 2 and n = 3 (entries 0 to n) gives minimum totals 2 and 5"
+    status: ready

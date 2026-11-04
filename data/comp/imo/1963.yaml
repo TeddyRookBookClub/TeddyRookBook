@@ -1,0 +1,154 @@
+year: 1963
+edition: 5th
+date: "July 5–13, 1963 · Wrocław, Poland"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1963/1963_eng.pdf
+  archive: https://www.imo-official.org/editions/1963/
+problems:
+  - id: P1
+    day: 1
+    topic: "Radical equation with a parameter: square twice, then verify"
+    areas: [algebra]
+    difficulty: 2
+    answer: "For $0\\le p\\le\\frac43$: the single root $x=\\dfrac{4-p}{\\sqrt{8(2-p)}}$; for other $p$: no real root"
+    hints:
+      - 'Squaring twice gives $x^2(16-8p)=(4-p)^2$. But squaring can add false roots.'
+      - 'Plug the candidate back in: $x^2-1$ and $x^2-p$ turn out to be perfect squares over $8(2-p)$.'
+    solution: |
+      **Key idea:** squaring twice leaves a single candidate. Substituting it back is clean, because both radicands become perfect squares. That check decides which $p$ work.
+
+      **The candidate.** The left side is non-negative, so any root has $x\ge0$. Move one root across, $\sqrt{x^2-p}=x-2\sqrt{x^2-1}$, and square:
+      $$x^2-p=x^2-4x\sqrt{x^2-1}+4x^2-4\iff 4x\sqrt{x^2-1}=4x^2-4+p .$$
+      Square again: $16x^4-16x^2=16x^4+8(p-4)x^2+(p-4)^2$, which simplifies to
+      $$x^2(16-8p)=(4-p)^2 .$$
+      For $p\ge2$ this has no solution (for $p=2$ it reads $0=4$, and for $p>2$ the left side is $\le0$ while the right side is positive). For $p<2$, the only non-negative candidate is
+      $$x_0=\frac{4-p}{\sqrt{8(2-p)}} .$$
+
+      **The check.** Write $D=\sqrt{8(2-p)}$. Then
+      $$x_0^2-1=\frac{(4-p)^2-8(2-p)}{D^2}=\frac{p^2}{D^2},\qquad x_0^2-p=\frac{(4-p)^2-8p(2-p)}{D^2}=\frac{(3p-4)^2}{D^2}.$$
+      Both are non-negative, so the roots exist, and the equation at $x_0$ becomes
+      $$|3p-4|+2|p|=4-p .$$
+      - If $0\le p\le\frac43$: the left side is $4-3p+2p=4-p$. True.
+      - If $\frac43<p<2$: the left side is $5p-4$, which equals $4-p$ only at $p=\frac43$. False.
+      - If $p<0$: the left side is $4-5p$, which equals $4-p$ only at $p=0$. False.
+
+      **Answer.** For $0\le p\le\frac43$, there is exactly one real root, $x=\dfrac{4-p}{\sqrt{8(2-p)}}$. For example, $p=0$ gives $x=1$. For all other $p$, there is none.
+    checked: "script: the candidate satisfies the equation for every p in [0, 4/3] on a grid, and the equation has no root for sampled p outside"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Space locus: vertices of right angles toward a segment"
+    areas: [geometry]
+    difficulty: 2
+    answer: "The solid region between the two balls on diameters $AB$ and $AC$: points in one closed ball but not inside the other"
+    hints:
+      - 'For a fixed point $X$, the vertices of right angles with sides through $A$ and $X$ form the sphere with diameter $AX$.'
+      - 'For a point $P$, the quantity $(A-P)\cdot(X-P)$ is a linear function of $X$. When does it vanish somewhere on the segment?'
+    solution: |
+      **Key idea:** $P$ works when $(A-P)\cdot(X-P)=0$ for some $X$ on the segment. This expression is linear in $X$, so it vanishes on the segment exactly when its values at $B$ and $C$ have opposite signs (or one is zero).
+
+      The angle at $P$ is right with one side through $A$ and the other through a point $X$ of segment $BC$ exactly when $(A-P)\cdot(X-P)=0$ (for $P\ne A$, $P\ne X$). Equivalently, $P$ lies on the sphere with diameter $AX$. So the locus is the union of these spheres as $X$ runs along $BC$.
+
+      Fix $P$ and let $f(X)=(A-P)\cdot(X-P)$. Along the segment, $X=(1-\lambda)B+\lambda C$, and $f$ is a linear function of $\lambda\in[0,1]$. So $f$ has a zero on the segment exactly when
+      $$f(B)\,f(C)\le0 .$$
+      Now $f(B)\le0$ means the angle $APB$ is right or obtuse, that is, $P$ lies in the closed ball with diameter $AB$. Likewise for $C$. So the condition says:
+
+      *$P$ lies in one of the two closed balls (on diameters $AB$ and $AC$) and not in the interior of the other.*
+
+      This is the locus: the solid region between the two spheres, with both spheres included, except for degenerate cases. The point $A$ itself is excluded. A point $P$ on segment $BC$ satisfies the inequality only through the useless choice $X=P$. Such a point is a real solution only when $AP\perp BC$. (Both spheres pass through $A$ and through the foot of the perpendicular from $A$ to line $BC$. In a plane through $A$, $B$ and $C$, the picture is two disks through $A$, and the locus is their "difference" region.)
+    checked: "algebra: the linear-in-X argument; spot-checked numerically for random points"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Equiangular polygon with decreasing sides is regular"
+    areas: [geometry, algebra]
+    difficulty: 3
+    hints:
+      - 'Write the sides as complex numbers $a_k\omega^k$ with $\omega=e^{2\pi i/n}$. They add up to $0$.'
+      - 'Sum by parts with the differences $a_k-a_{k+1}\ge0$, then look at the real part.'
+    solution: |
+      **Key idea:** going around an equiangular polygon, each side is the previous direction turned by $2\pi/n$. Summation by parts turns the closing condition into a sum of non-negative terms that must vanish.
+
+      All exterior angles are equal, so they are $2\pi/n$ each. With $\omega=e^{2\pi i/n}$ and a suitable rotation, the $k$-th side is the complex number $a_k\omega^k$. The polygon closes, so
+      $$\sum_{k=1}^n a_k\omega^k=0 .$$
+      Let $S_k=\omega+\omega^2+\dots+\omega^k=\dfrac{\omega(1-\omega^k)}{1-\omega}$. Note $S_n=0$. Put $d_k=a_k-a_{k+1}\ge0$ for $k<n$. Summation by parts gives
+      $$0=\sum_{k=1}^na_k\omega^k=\sum_{k=1}^{n-1}d_kS_k+a_nS_n=\frac{\omega}{1-\omega}\sum_{k=1}^{n-1}d_k(1-\omega^k).$$
+      So $\sum_{k=1}^{n-1}d_k(1-\omega^k)=0$. Its real part is
+      $$\sum_{k=1}^{n-1}d_k\Bigl(1-\cos\frac{2\pi k}{n}\Bigr)=0 .$$
+      Every term is non-negative, and $1-\cos\frac{2\pi k}{n}>0$ for $1\le k\le n-1$. So every $d_k=0$, that is $a_1=a_2=\dots=a_n$.
+    checked: "algebra; spot-checked with random decreasing sides (the polygon never closes unless all are equal)"
+    viz: imo-1963-p3
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "A cyclic linear system on five variables"
+    areas: [algebra]
+    difficulty: 3
+    answer: "$y=2$: all $x_i$ equal. $y^2+y-1=0$: $(s,\\,t,\\,yt-s,\\,-y(s+t),\\,ys-t)$ for any $s,t$. Any other $y$: only zeros"
+    hints:
+      - 'Choose $x_1,x_2$ freely and use three of the equations to compute $x_3,x_4,x_5$ in turn. Two equations are left.'
+      - 'Those two form a linear system in $x_1,x_2$ with determinant $(y-2)(y^2+y-1)^2$.'
+    solution: |
+      **Key idea:** the equations say $x_{i+1}=yx_i-x_{i-1}$ around a cycle of length $5$. Run the recurrence from $x_1,x_2$. The two leftover equations have determinant $(y-2)(y^2+y-1)^2$.
+
+      Put $x_1=s$ and $x_2=t$. The equations with $yx_2$, $yx_3$ and $yx_4$ on the right give, in turn,
+      $$x_3=yt-s,\qquad x_4=yx_3-t=(y^2-1)t-ys,\qquad x_5=yx_4-x_3=(y^3-2y)t-(y^2-1)s .$$
+      Two equations remain: $x_5+x_2=yx_1$ and $x_4+x_1=yx_5$. Both are linear in $s,t$, and their determinant works out to
+      $$(y-2)\,(y^2+y-1)^2 .$$
+      **Other $y$.** If the determinant is not zero, then $s=t=0$, so all $x_i=0$.
+
+      **$y=2$.** The equations $x_{i-1}+x_{i+1}=2x_i$ say that each $x_i$ is the average of its two neighbours around the cycle. Take $x_i$ to be a largest value: both neighbours must equal it, and so on around the cycle. So all $x_i$ are equal, to any common value, and that does solve the system.
+
+      **$y^2+y-1=0$**, that is $y=\frac{-1\pm\sqrt5}{2}$. Using $y^2=1-y$, the formulas simplify to
+      $$x_4=-y(s+t),\qquad x_5=ys-t .$$
+      Check the two remaining equations: $x_5+x_2=ys=yx_1$, and $yx_5=y^2s-yt=(1-y)s-yt=s-y(s+t)=x_1+x_4$. Both hold, so every $(s,t)$ gives a solution:
+      $$(x_1,\dots,x_5)=\bigl(s,\ t,\ yt-s,\ -y(s+t),\ ys-t\bigr).$$
+      (The values $2$, $\frac{-1+\sqrt5}2$ and $\frac{-1-\sqrt5}2$ are $2\cos\frac{2\pi k}5$ for $k=0,1,2$. They are the only $y$ for which the recurrence comes back to its start after $5$ steps.)
+    checked: "sympy: the determinant factors as (y − 2)(y² + y − 1)², and the family satisfies all five equations for both roots"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "A telescoping cosine identity with sevenths of pi"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - '$-\cos\frac{2\pi}7=\cos\frac{5\pi}7$.'
+      - 'Multiply $\cos\theta+\cos3\theta+\cos5\theta$ by $2\sin\theta$ and use product-to-sum.'
+    solution: |
+      **Key idea:** after one sign flip the sum is $\cos\theta+\cos3\theta+\cos5\theta$ with $\theta=\frac\pi7$. Multiplying by $2\sin\theta$ makes it telescope.
+
+      Let $\theta=\frac\pi7$. Since $\cos(\pi-u)=-\cos u$, we have $-\cos2\theta=\cos5\theta$. So the sum is
+      $$S=\cos\theta+\cos3\theta+\cos5\theta .$$
+      By $2\sin\theta\cos k\theta=\sin(k+1)\theta-\sin(k-1)\theta$:
+      $$2\sin\theta\,S=\sin2\theta+(\sin4\theta-\sin2\theta)+(\sin6\theta-\sin4\theta)=\sin6\theta .$$
+      And $\sin6\theta=\sin(\pi-\theta)=\sin\theta\ne0$. So $2\sin\theta\,S=\sin\theta$, which gives $S=\frac12$.
+    checked: "script: the sum equals 1/2 to machine precision"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Logic puzzle: finishing order from two predictions"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: "$E,D,A,C,B$"
+    hints:
+      - 'Start from the second prediction. Which two disjoint adjacent pairs of it can both occur?'
+      - 'Each choice leaves three blocks to arrange. Test every arrangement against the first prediction.'
+    solution: |
+      **Key idea:** the second prediction leaves only three choices of its two adjacent pairs. Each choice leaves three blocks, so six orders to test against the first prediction.
+
+      We read "finished consecutively" as: next to each other, in the predicted order.
+
+      The second prediction $D\,A\,E\,C\,B$ has adjacent pairs $DA,AE,EC,CB$. The disjoint pairs among them are $\{DA,EC\}$, $\{DA,CB\}$ and $\{AE,CB\}$. In each case, glue the two pairs into blocks and arrange the three blocks. The first prediction forbids $A$ first, $B$ second, $C$ third, $D$ fourth, $E$ fifth, and the adjacent pairs $AB,BC,CD,DE$.
+
+      - $\{DA,EC\}$ with $B$. The orders: $DAECB$ (the prediction itself, five places right), $DABEC$ (contains $AB$), $ECDAB$ (contains $CD$), $ECBDA$ ($D$ fourth), $BECDA$ (contains $CD$), $BDAEC$ (no place matches the second prediction, but two are needed). None works.
+      - $\{AE,CB\}$ with $D$. $AECBD$ and $AEDCB$ put $A$ first, $CBAED$ and $CBDAE$ put $B$ second, $DCBAE$ puts $E$ fifth, and $DAECB$ is the prediction itself. None works.
+      - $\{DA,CB\}$ with $E$. $DACBE$ and $CBDAE$ put $E$ fifth, $CBEDA$ puts $B$ second, $ECBDA$ puts $D$ fourth, $DAECB$ is the prediction itself. That leaves $EDACB$.
+
+      **Check of $E\,D\,A\,C\,B$.** Against $ABCDE$: no one is in the predicted place, and its adjacent pairs $ED,DA,AC,CB$ avoid $AB,BC,CD,DE$. Against $DAECB$: exactly $C$ and $B$ are in place, and the disjoint pairs $DA$ and $CB$ occur. So the order was $E,D,A,C,B$.
+    checked: "script: all 120 orders tested; EDACB is the only one meeting every condition"
+    status: ready

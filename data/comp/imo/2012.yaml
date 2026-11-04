@@ -1,0 +1,126 @@
+year: 2012
+edition: 53rd
+date: "July 10–11, 2012 · Mar del Plata, Argentina"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2012/2012_eng.pdf
+  archive: https://www.imo-official.org/editions/2012/
+problems:
+  - id: P1
+    day: 1
+    topic: "Excircle tangency points and a midpoint on the base"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Show that $\angle AFB=90^\circ$. The points $A,K,J,L$ lie on the circle with diameter $AJ$; is $F$ on it too?'
+      - 'Line $BJ$ bisects the angle between lines $BA$ and $BC$. If $AF\perp BJ$, then $S$ is the mirror image of $A$ in $BJ$. Compute $MS$.'
+    solution: |
+      **Key idea:** $F$ is the foot of the perpendicular from $A$ to the external bisector $BJ$. Reflecting in $BJ$ then sends $A$ to $S$, so $BS=BA$, and $MS$ works out to the semiperimeter. The same holds for $MT$.
+
+      Let $a,b,c$ be the sides and $s$ the semiperimeter. Tangent lengths from a point to a circle are equal, so $AK=AL=s$, $BK=BM=s-c$ and $CL=CM=s-b$.
+
+      **Step 1: $F$ is on the circle with diameter $AJ$.** The angles $AKJ$ and $ALJ$ are right angles, so $K$ and $L$ lie on the circle $\omega$ with diameter $AJ$. Now look at the excircle. The inscribed angle $\angle KLM$ is half the central angle $\angle KJM$. Since $BK$ and $BM$ are the two tangents from $B$, the line $JB$ bisects $\angle KJM$. So
+      $$\angle KLF=\angle KLM=\tfrac12\angle KJM=\angle KJB=\angle KJF .$$
+      The segment $KF$ is seen from $L$ and from $J$ at the same angle, so $K,F,J,L$ are concyclic. That circle is $\omega$ (it passes through $K,J,L$). Hence $\angle AFJ=90^\circ$: $AF\perp BJ$.
+
+      **Step 2: $S$ is the reflection of $A$.** $BJ$ is the external bisector at $B$: it bisects the angle between ray $BM$ (toward $C$) and ray $BK$ (the extension of $AB$ beyond $B$). So the reflection in $BJ$ swaps the lines $BA$ and $BC$, and sends $A$ to the point $A'$ of line $BC$ with $BA'=BA=c$, on the far side of $B$ from $M$. Because $AF\perp BJ$ with $F$ on $BJ$, the point $A'$ lies on line $AF$. So $A'$ is where line $AF$ meets $BC$, that is, $A'=S$. Then
+      $$MS=MB+BS=(s-c)+c=s .$$
+
+      **Step 3: same for $T$.** The same argument with $C$, $G$, $L$, $K$ in place of $B$, $F$, $K$, $L$ gives $MT=(s-b)+b=s$, with $T$ on the other side of $M$.
+
+      So $MS=MT$, and $M$ is the midpoint of $ST$.
+    viz: imo-2012-p1
+    checked: "script: 1,000 random triangles; the midpoint of ST is M to 1e-13"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Product of rising powers exceeds n to the n"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Split $1$ into $k-1$ equal parts: $1+a_k=\frac1{k-1}+\dots+\frac1{k-1}+a_k$. Apply AM–GM to these $k$ numbers.'
+      - 'The constants telescope to $n^n$. Why can''t equality hold?'
+    solution: |
+      **Key idea:** a weighted AM–GM on each factor produces constants that telescope to exactly $n^n$, and the product of the $a_k$ disappears because it is $1$.
+
+      For each $k\ge2$, write $1+a_k$ as the sum of $k$ numbers: $k-1$ copies of $\frac1{k-1}$ and one $a_k$. By AM–GM,
+      $$1+a_k\ \ge\ k\,\sqrt[k]{\frac{a_k}{(k-1)^{k-1}}},\qquad\text{so}\qquad(1+a_k)^k\ \ge\ \frac{k^k}{(k-1)^{k-1}}\,a_k .$$
+      Multiply over $k=2,\dots,n$. The constants telescope:
+      $$\prod_{k=2}^n\frac{k^k}{(k-1)^{k-1}}=\frac{n^n}{1^1}=n^n,$$
+      and $\prod a_k=1$. So the product is at least $n^n$.
+
+      **Strict.** Equality would need $a_k=\frac1{k-1}$ for every $k$ (all numbers in each AM–GM equal). Then $\prod a_k=\frac1{(n-1)!}<1$ for $n\ge3$, which is not allowed. So the inequality is strict.
+    checked: "script: 10,000 random choices with n from 3 to 9; the product always exceeds n^n"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "A guessing game against a player allowed to lie"
+    areas: [combinatorics]
+    difficulty: 5
+    status: coming
+
+  - id: P4
+    day: 2
+    topic: "Integer functions with a symmetric quadratic rule on zero-sum triples"
+    areas: [algebra, number-theory]
+    difficulty: 3
+    answer: '$f(x)=kx^2$; $f(x)=k$ for odd $x$ and $0$ for even $x$; $f(x)=0,k,4k,k$ for $x\equiv0,1,2,3\pmod4$ (any integer $k$)'
+    hints:
+      - 'Read the rule as a quadratic in $f(a+b)$ (use the triple $(a,b,-a-b)$ and that $f$ is even). Its roots are $f(a)+f(b)\pm2\sqrt{f(a)f(b)}$.'
+      - 'Let $k=f(1)$. Then $f(2)\in\{0,4k\}$, $f(3)\in\{k,9k\}$, $f(4)\in\{0,16k\}$. Each branch either becomes periodic or is forced to $kn^2$.'
+    solution: |
+      **Key idea:** the rule says $f(a+b)$ is a root of a quadratic with roots $f(a)+f(b)\pm2\sqrt{f(a)f(b)}$. Starting from $k=f(1)$, the first few values split into three branches, and each branch is then forced.
+
+      **Basics.** $(0,0,0)$: $3f(0)^2=6f(0)^2$, so $f(0)=0$. $(a,-a,0)$: $(f(a)-f(-a))^2=0$, so $f$ is even. Using $(a,b,-a-b)$ and evenness, the rule is a quadratic in $f(a+b)$:
+      $$f(a+b)^2-2\big(f(a)+f(b)\big)f(a+b)+\big(f(a)-f(b)\big)^2=0,$$
+      whose roots are $f(a)+f(b)\pm2\sqrt{f(a)f(b)}$ (the discriminant $4f(a)f(b)$ is $\ge0$ since a root exists). $\quad(\dagger)$
+
+      Let $k=f(1)$. If $k=0$, then $(\dagger)$ with $b=1$ gives $f(n+1)=f(n)$, so $f\equiv0$ (which is $kx^2$ with $k=0$). From now on $k\ne0$.
+
+      **$f(2)$.** $(\dagger)$ with $a=b$: $f(2a)\in\{0,4f(a)\}$. So $f(2)\in\{0,4k\}$.
+
+      **Branch $f(2)=0$.** $(\dagger)$ with $b=2$: $f(n+2)=f(n)$. So $f$ is $k$ on odd numbers and $0$ on even numbers.
+
+      **Branch $f(2)=4k$.** $(\dagger)$ with $(a,b)=(2,1)$: $f(3)=5k\pm4k\in\{k,9k\}$. Also $f(4)\in\{0,4f(2)\}=\{0,16k\}$, and $(\dagger)$ with $(3,1)$ gives $f(4)=f(3)+k\pm2\sqrt{kf(3)}$.
+      - If $f(3)=k$: $f(4)\in\{0,4k\}$, so $f(4)=0$. Then $(\dagger)$ with $b=4$ gives $f(n+4)=f(n)$: the values are $0,k,4k,k$ by residue mod $4$.
+      - If $f(3)=9k$: $f(4)\in\{4k,16k\}$, so $f(4)=16k$. Now suppose $f(j)=kj^2$ for $j\le n$, with $n\ge4$. $(\dagger)$ with $(n,1)$ gives $f(n+1)\in\{k(n+1)^2,k(n-1)^2\}$, and with $(n-1,2)$ gives $f(n+1)\in\{k(n+1)^2,k(n-3)^2\}$. Since $(n-1)^2\ne(n-3)^2$ for $n\ne2$, $f(n+1)=k(n+1)^2$. So $f(x)=kx^2$.
+
+      **Check.** Each of the three families satisfies the rule for every zero-sum triple: for $kx^2$ this is the identity $\sum a^4=2\sum a^2b^2$ when $a+b+c=0$, and for the two periodic families it is a finite check of residues.
+    checked: "script: the three families pass every triple with |a|, |b| ≤ 30 for several k; a search of f(1..5) in [−150, 150] finds only these"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Right triangle, two circles, and equal tangent lengths"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Draw the circle about $A$ through $C$ (it contains $L$) and the circle about $B$ through $C$ (it contains $K$). Line $CD$ is their common chord line, and $X$ is on it.'
+      - 'Let lines $AX$ and $BX$ meet these circles again at $K''$ and $L''$. Show $K,K'',L,L''$ lie on one circle, and that $AL$ and $BK$ are tangent to it.'
+    solution: |
+      **Key idea:** $K$ and $L$ lie on one circle $\Gamma$ to which $AL$ and $BK$ are both tangent. Then $MK$ and $ML$ are the two tangent segments from $M$ to $\Gamma$.
+
+      Let $\omega_A$ be the circle with center $A$ through $C$, and $\omega_B$ the circle with center $B$ through $C$. Then $L\in\omega_A$ and $K\in\omega_B$.
+
+      **Tangents at $C$.** $\angle ACB=90^\circ$, so $AC$ is tangent to $\omega_B$ at $C$, and $BC$ is tangent to $\omega_A$ at $C$. Hence the power of $A$ with respect to $\omega_B$ is $AC^2$, and the power of $B$ with respect to $\omega_A$ is $BC^2$.
+
+      **The common chord.** The two circles meet at $C$ and at its reflection $C'$ in line $AB$. So their radical axis is line $CC'$, which is line $CD$. The point $X$ is on it, so it has the same power with respect to both circles.
+
+      **A circle through four points.** Let line $AX$ meet $\omega_B$ at $K$ and $K'$, and line $BX$ meet $\omega_A$ at $L$ and $L'$. Then
+      $$XK\cdot XK'=\operatorname{pow}_{\omega_B}(X)=\operatorname{pow}_{\omega_A}(X)=XL\cdot XL' .$$
+      So $K,K',L,L'$ lie on one circle $\Gamma$ (converse of the power of a point).
+
+      **Two tangents.** $A$ lies on line $KK'$, so its power with respect to $\Gamma$ is $AK\cdot AK'$, which is its power with respect to $\omega_B$, namely $AC^2=AL^2$. Since $L\in\Gamma$, the line $AL$ meets $\Gamma$ at $L$ and at a point $L^*$ with $AL\cdot AL^*=AL^2$, so $L^*=L$. That means $AL$ is tangent to $\Gamma$ at $L$. In the same way, $B$ has power $BL\cdot BL'=BC^2=BK^2$, so $BK$ is tangent to $\Gamma$ at $K$.
+
+      **Finish.** $M$ is where the tangents at $K$ and $L$ meet. Two tangent segments from one point to a circle are equal, so $MK=ML$.
+    viz: imo-2012-p5
+    checked: "script: 1,000 random right triangles and points X; |MK − ML| below 2e-14"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Unit fractions in two bases that both sum to one"
+    areas: [number-theory, combinatorics]
+    difficulty: 5
+    status: coming

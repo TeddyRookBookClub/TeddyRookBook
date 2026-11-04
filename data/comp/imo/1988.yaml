@@ -1,11 +1,127 @@
 year: 1988
 edition: 29th
-date: "July 1988 · Canberra, Australia"
-note: "This page has only Problem 6, the famous one: it gave its name to the method called [Vieta jumping](https://grokipedia.com/page/Vieta_jumping)."
+date: "July 9–21, 1988 · Canberra, Australia"
+note: "Problem 6 is the famous one: it gave its name to the method called [Vieta jumping](https://grokipedia.com/page/Vieta_jumping)."
 links:
   problems: https://www.imo-official.org/assets/documents/problems/1988/1988_eng.pdf
-  archive: https://www.imo-official.org/year_info.aspx?year=1988
+  archive: https://www.imo-official.org/editions/1988/
 problems:
+  - id: P1
+    day: 1
+    topic: "Two concentric circles: a constant sum and a midpoint circle"
+    areas: [geometry]
+    difficulty: 2
+    answer: "(i) Only the value $6R^2+2r^2$. (ii) The circle with diameter $OP$, where $O$ is the common center."
+    hints:
+      - 'The midpoint of a chord is the foot of the perpendicular from the center to that chord.'
+      - 'Put $P$ at the origin of a frame with unit vectors $u$ along $BC$ and $v$ along $PA$. Write $B,C$ as $P+su$ and $A$ as $P+tv$, and use Vieta for $s$.'
+    solution: |
+      **Key idea:** the midpoint of $BC$ is the foot of the perpendicular from the center $O$, so it sees $OP$ at a right angle. For the sum, a coordinate frame along the two perpendicular lines and Vieta's formulas do the work.
+
+      Put $O$ at the origin. Let $u$ be a unit vector along line $BC$ and $v$ the perpendicular unit vector along line $PA$. Write $a=P\cdot u$ and $b=P\cdot v$, so $a^2+b^2=|P|^2=r^2$.
+
+      **The points.** $B$ and $C$ are $P+su$, where $s$ solves $|P+su|^2=R^2$, that is $s^2+2as+r^2-R^2=0$. So $s_1+s_2=-2a$ and $s_1s_2=r^2-R^2$. The point $A$ is $P+tv$ with $|P+tv|^2=r^2$ and $t\ne0$, so $t=-2b$ (and $t=0$, $A=P$, in the tangent case $b=0$; the formula still holds).
+
+      **(i) The sum.** Since $u\perp v$,
+      $$BC^2=(s_1-s_2)^2,\qquad AB^2=s_1^2+t^2,\qquad AC^2=s_2^2+t^2 .$$
+      Adding,
+      $$(s_1-s_2)^2+s_1^2+s_2^2+2t^2=2(s_1+s_2)^2-6s_1s_2+2t^2=8a^2-6(r^2-R^2)+8b^2=6R^2+2r^2 .$$
+      The sum is always $6R^2+2r^2$, so the set of values is this single number.
+
+      **(ii) The midpoint.** The midpoint $M$ of chord $BC$ is the foot of the perpendicular from $O$ to line $BC$. So $\angle OMP=90^\circ$ (or $M$ is $O$ or $P$), and $M$ lies on the circle with diameter $OP$. Conversely, every point $M$ of that circle is the foot of the perpendicular from $O$ to the line $PM$ (to the line through $P$ perpendicular to $OP$ if $M=P$), and that line meets the large circle in a chord $BC$ with midpoint $M$. So the locus is the whole circle with diameter $OP$.
+    checked: "numeric: 1,000 random configurations give the sum 6R²+2r² and midpoints on the circle with diameter OP"
+    viz: imo-1988-p1
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Sets meeting pairwise once: balanced zero-one labels"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: "Exactly the even $n$"
+    hints:
+      - 'Fix one set $A_i$. It meets each of the other $2n$ sets in one element. Show every element lies in exactly two sets.'
+      - 'Then the elements are the edges of a complete graph on $2n+1$ vertices. Count the edges labeled $0$.'
+    solution: |
+      **Key idea:** each element lies in exactly two of the sets, so the setup is the complete graph on $2n+1$ vertices, with sets as vertices and elements as edges. Asking for $n$ zeros at each vertex forces $n$ even, and a circular rule works for even $n$.
+
+      **Each element is in exactly two sets.** Fix $A_i$. Each of its $2n$ elements lies in at least one other set, and each of the other $2n$ sets meets $A_i$ in exactly one element. Counting the pairs (element of $A_i$, other set containing it) gives exactly $2n$, with at least one per element. So each element of $A_i$ lies in exactly one other set. Every element is in some $A_i$, so every element is in exactly two sets. Two sets share exactly one element, so elements match the pairs $\{i,j\}$: the edges of the complete graph $K_{2n+1}$.
+
+      **Necessity.** We need to label the edges $0$ or $1$ so that each vertex has exactly $n$ zeros. The number of zero edges is then $\frac{(2n+1)n}{2}$, which must be an integer. Since $2n+1$ is odd, $n$ is even.
+
+      **Construction for even $n$.** Place the vertices $0,1,\dots,2n$ around a circle and label edge $\{i,j\}$ with $0$ when the circular distance between $i$ and $j$ is at most $\frac n2$. Each vertex has two neighbors at each distance $1,\dots,\frac n2$, so exactly $n$ zero edges.
+    checked: "script: the circular rule gives n zeros at every vertex for n = 2, 4, 6"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "A recursive function that reverses binary digits"
+    areas: [number-theory, combinatorics]
+    difficulty: 2
+    answer: "$92$"
+    hints:
+      - 'Compute $f$ for $n$ up to $20$ and write both $n$ and $f(n)$ in binary.'
+      - 'Prove that $f$ reverses the binary digits. Then count binary palindromes up to $1988$.'
+    solution: |
+      **Key idea:** $f(n)$ is $n$ with its binary digits read backward. So the fixed points are the binary palindromes.
+
+      **Claim:** $f(n)=\operatorname{rev}(n)$, the number whose binary digits are those of $n$ reversed. Induct on $n$. The cases $1,2,3$ hold. Let $n$ have $k$ binary digits.
+      - $2n$ is $n$ followed by $0$; reversing gives $\operatorname{rev}(n)$, matching $f(2n)=f(n)$.
+      - $2n+1$ is $n$ followed by $1$, so $\operatorname{rev}(2n+1)=2^k+\operatorname{rev}(n)$.
+      - $4n+1$ ends in $01$, so $\operatorname{rev}(4n+1)=2^{k+1}+\operatorname{rev}(n)$, and indeed $2f(2n+1)-f(n)=2^{k+1}+2\operatorname{rev}(n)-\operatorname{rev}(n)$.
+      - $4n+3$ ends in $11$, so $\operatorname{rev}(4n+3)=3\cdot2^k+\operatorname{rev}(n)$, and indeed $3f(2n+1)-2f(n)=3\cdot2^k+3\operatorname{rev}(n)-2\operatorname{rev}(n)$.
+
+      **Counting.** $f(n)=n$ exactly when $n$ is a binary palindrome. A palindrome with $L$ digits is fixed by its first $\lceil L/2\rceil$ digits, the first being $1$, so there are $2^{\lceil L/2\rceil-1}$ of them. For $L=1,\dots,10$ that gives $1+1+2+2+4+4+8+8+16+16=62$, all below $1024$.
+
+      For $L=11$ there are $32$, all below $2048$. In binary $1988=11111000100$. An $11$-digit palindrome above it must start $11111$; then its 6th digit decides. With 6th digit $1$ it is $11111111111=2047$; with 6th digit $0$ it is $11111011111=2015$. Both exceed $1988$, and every other $11$-digit palindrome is smaller. So $30$ of them count.
+
+      Total: $62+30=92$.
+    checked: "script: computed f from the recursion; it equals binary reversal for n < 5000 and has 92 fixed points up to 1988"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Rational inequality whose solution intervals total 1988"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'On each interval between consecutive poles the left side drops from $+\infty$ to $-\infty$. Where is the solution set on each piece?'
+      - 'The right endpoints are the roots of a polynomial of degree $70$. Use Vieta for their sum.'
+    solution: |
+      **Key idea:** on each gap between poles the solutions form one interval starting at the pole. The right ends are the $70$ roots of one polynomial, and Vieta gives their sum.
+
+      Let $g(x)=\sum_{k=1}^{70}\frac{k}{x-k}$. Its derivative $-\sum\frac{k}{(x-k)^2}$ is negative, so $g$ decreases on each interval of its domain.
+      - For $x<1$ every term is negative, so $g(x)<0<\frac54$: no solutions.
+      - On $(k,k+1)$ for $k=1,\dots,69$, $g$ falls from $+\infty$ to $-\infty$. So there is one $x_k$ in the interval with $g(x_k)=\frac54$, and the solutions there form $(k,x_k]$.
+      - On $(70,\infty)$, $g$ falls from $+\infty$ to $0$, so the solutions form $(70,x_{70}]$.
+
+      The total length is $\sum_{k=1}^{70}(x_k-k)$. The $x_k$ are $70$ distinct roots of
+      $$5\prod_{j=1}^{70}(x-j)-4\sum_{k=1}^{70}k\prod_{j\ne k}(x-j)=0,$$
+      a polynomial of degree $70$, so they are all its roots. Its leading coefficient is $5$ and its $x^{69}$ coefficient is $-5\sum j-4\sum k=-9\cdot2485$. By Vieta, $\sum x_k=\frac{9\cdot2485}{5}=4473$. So the total length is $4473-2485=1988$.
+    checked: "numeric: bisection finds the 70 roots; the lengths add to 1988.0000"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Incenters of the altitude pieces of a right triangle"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Guess first: in examples, $AK$ and $AL$ both equal the altitude $AD$.'
+      - 'Mark $L^*$ on $AC$ with $AL^*=AD$. Compare triangles $ADI_2$ and $AL^*I_2$, where $I_2$ is the incenter of $ACD$.'
+    solution: |
+      **Key idea:** both $AK$ and $AL$ equal the altitude $AD$. Then $T=\frac12AD^2$, and the inequality reduces to the altitude being at most half the hypotenuse.
+
+      Let $I_1,I_2$ be the incenters of $ABD$ and $ACD$, and $h=AD$. Mark $K^*$ on $AB$ and $L^*$ on $AC$ with $AK^*=AL^*=h$ (possible, as $h<AB$ and $h<AC$). Triangle $AK^*L^*$ is right isosceles, so $\angle AL^*K^*=45^\circ$.
+
+      **$I_2$ is on line $K^*L^*$.** $AI_2$ bisects angle $DAC$, so triangles $ADI_2$ and $AL^*I_2$ are congruent (SAS: $AD=AL^*$, common side $AI_2$, equal angles at $A$). Hence $\angle AL^*I_2=\angle ADI_2=45^\circ$, since $DI_2$ bisects the right angle at $D$. Both $I_2$ and $K^*$ lie on the same side of line $AC$ as $B$ (and $D$). So rays $L^*I_2$ and $L^*K^*$ make the same angle with $L^*A$ on the same side: they coincide. By the same argument $I_1$ is on line $K^*L^*$.
+
+      Since $I_1\ne I_2$, line $I_1I_2$ is line $K^*L^*$, so $K=K^*$ and $L=L^*$. Thus $T=\frac12h^2$.
+
+      **The inequality.** $S=\frac12\,BC\cdot h$, so $S\ge2T$ means $BC\ge2h$. The altitude is at most the median from the right angle, which is $\frac{BC}2$. Equality holds when $AB=AC$.
+    checked: "numeric: 1,000 random right triangles give AK = AL = AD"
+    status: ready
+
   - id: P6
     day: 2
     topic: "Vieta jumping: a divisibility quotient is a perfect square"

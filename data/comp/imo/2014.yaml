@@ -1,0 +1,125 @@
+year: 2014
+edition: 55th
+date: "July 8–9, 2014 · Cape Town, South Africa"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2014/2014_eng.pdf
+  archive: https://www.imo-official.org/editions/2014/
+problems:
+  - id: P1
+    day: 1
+    topic: "A running average falls between two terms exactly once"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - 'Let $d_n=(a_0+\dots+a_n)-na_n$. Rewrite both inequalities in terms of $d_n$ and $d_{n+1}$.'
+      - 'Show $d_{n+1}<d_n$ for $n\ge1$, and $d_1=a_0>0$.'
+    solution: |
+      **Key idea:** one integer sequence $d_n$ captures both inequalities, and it strictly decreases from a positive start. It crosses zero exactly once.
+
+      Let $d_n=(a_0+a_1+\dots+a_n)-na_n$ for $n\ge1$.
+      - The left inequality $na_n<a_0+\dots+a_n$ says $d_n>0$.
+      - The right inequality $a_0+\dots+a_n\le na_{n+1}$ says $(a_0+\dots+a_{n+1})-(n+1)a_{n+1}\le0$, that is, $d_{n+1}\le0$.
+
+      So we need exactly one $n\ge1$ with $d_n>0\ge d_{n+1}$.
+
+      Now $d_{n+1}-d_n=a_{n+1}-(n+1)a_{n+1}+na_n=n(a_n-a_{n+1})<0$, so the integers $d_1,d_2,\dots$ strictly decrease. Also $d_1=a_0>0$. A strictly decreasing integer sequence goes below $0$ eventually, so there is a first index $m$ with $d_m\le0$, and $m\ge2$. Then $n=m-1$ works, and no other $n$ does: for smaller $n$, $d_{n+1}>0$; for larger $n$, $d_n\le0$.
+    checked: "script: 3,000 random increasing sequences; exactly one index works each time"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Peaceful rooks always leave an empty square of some size"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: '$k=\lfloor\sqrt{n-1}\rfloor$'
+    hints:
+      - 'If $k^2<n$: take $k$ consecutive rows containing the rook of the first column. The other $k-1$ rooks in those rows can''t block all the blocks of $k$ columns to the right.'
+      - 'For $n=\ell^2$, write each row number in base $\ell$ as two digits and put the rook in the column with the digits swapped. Then delete rows and columns for smaller $n$.'
+    solution: |
+      **Key idea:** an empty $k\times k$ square exists whenever $k^2<n$, by a pigeonhole on blocks of columns. For the matching example, write positions in base $\ell$ and swap the two digits.
+
+      Let $k=\lfloor\sqrt{n-1}\rfloor$, so $k^2\le n-1$ and $(k+1)^2\ge n$. Rows and columns are numbered from $0$.
+
+      **An empty $k\times k$ square always exists.** Let the rook of column $0$ be in row $r$. Choose $k$ consecutive rows that include row $r$. These rows hold $k$ rooks: one in column $0$, and $k-1$ others. Columns $1,\dots,n-1$ contain $\lfloor\frac{n-1}k\rfloor\ge k$ disjoint blocks of $k$ consecutive columns. The $k-1$ other rooks meet at most $k-1$ of these blocks, so one block has no rook in the chosen rows. That gives an empty $k\times k$ square.
+
+      **A board with no empty $(k+1)\times(k+1)$ square.** Let $\ell=k+1$.
+
+      *For $n=\ell^2$.* Write a row as $a\ell+b$ with digits $0\le a,b<\ell$, and put its rook in column $b\ell+a$. This is a permutation. Take an $\ell\times\ell$ square with rows from $a_0\ell+b_0$ and columns from $\beta\ell+\alpha$. Its rows are $(a_0,b)$ for $b\ge b_0$ and $(a_0+1,b)$ for $b<b_0$. Its columns are $(\beta,a)$ for $a\ge\alpha$ and $(\beta+1,a)$ for $a<\alpha$. The rook of row $(A,B)$ is in column $(B,A)$. We look for a row in the square with $B=\beta$, $A\ge\alpha$, or with $B=\beta+1$, $A<\alpha$.
+      - If $\beta\ge b_0$: rows with $B=\beta$ and $B=\beta+1$ have $A=a_0$. If $a_0\ge\alpha$, the first kind works. If $a_0<\alpha$, the second kind works, provided $\beta+1<\ell$; and if $\beta=\ell-1$, the square fits on the board only when $\alpha=0\le a_0$.
+      - If $\beta<b_0$: the row with $B=\beta$ has $A=a_0+1$, which works if $a_0+1\ge\alpha$. Otherwise $a_0+1<\alpha$; the row with $B=\beta+1$ has $A=a_0$ or $a_0+1$, both less than $\alpha$, so it works.
+
+      So every $\ell\times\ell$ square contains a rook.
+
+      *For $n<\ell^2$.* Start from the $\ell^2$ board and delete the last $\ell^2-n$ rows together with the columns of their rooks. What remains is a peaceful board of size $n$. An $\ell\times\ell$ square on it comes from $\ell$ consecutive old rows and a run of old columns at least $\ell$ long. The first $\ell$ of those columns form an old square, which has a rook. Its row was kept, so its column was kept too, and the rook is in the new square.
+
+      So $k=\lfloor\sqrt{n-1}\rfloor$ is the answer.
+    checked: "script: brute force over all permutations for n ≤ 7, and the digit-swap board checked for ℓ ≤ 7"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Right angles at B and D and a tangent circle"
+    areas: [geometry]
+    difficulty: 5
+    status: coming
+
+  - id: P4
+    day: 2
+    topic: "Doubling cevians across the base; meeting on the circumcircle"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Triangles $BAP$ and $BCA$ are similar, and so are $CAQ$ and $CBA$. Find $AP$, $AQ$, $BP$, $CQ$ in terms of the sides.'
+      - 'Show triangles $BPM$ and $NQC$ are similar. Then add up angles in triangle $BXC$.'
+    solution: |
+      **Key idea:** the two cevians have the same length, and the doubled points make two similar triangles. Then the angle at the meeting point is $180^\circ-\angle A$, so it is on the circumcircle.
+
+      Let $a,b,c$ be the sides and $\alpha=\angle A$.
+
+      **Lengths.** $\angle PAB=\angle C$ and the angle at $B$ is shared, so triangles $BAP$ and $BCA$ are similar: $BP=\dfrac{c^2}a$, $AP=\dfrac{bc}a$, and $\angle APB=\alpha$. In the same way $CQ=\dfrac{b^2}a$, $AQ=\dfrac{bc}a$, and $\angle AQC=\alpha$. So $PM=AP=AQ=QN=\dfrac{bc}a$.
+
+      **Similar triangles.** $M$ is on ray $AP$ beyond $P$, so $\angle BPM=180^\circ-\angle APB=180^\circ-\alpha$. Likewise $\angle NQC=180^\circ-\alpha$. Also
+      $$\frac{BP}{PM}=\frac{c^2/a}{bc/a}=\frac cb,\qquad\frac{NQ}{QC}=\frac{bc/a}{b^2/a}=\frac cb .$$
+      So triangles $BPM$ and $NQC$ are similar (equal angle between proportional sides), and $\angle PBM=\angle QNC$.
+
+      **The meeting point.** Let $X$ be where $BM$ and $CN$ meet; it lies on the other side of $BC$ from $A$. Then
+      $$\angle XBC+\angle XCB=\angle PBM+\angle QCN=\angle QNC+\angle QCN=180^\circ-\angle NQC=\alpha .$$
+      So $\angle BXC=180^\circ-\alpha$. A point on the opposite side of $BC$ from $A$ that sees $BC$ at $180^\circ-\alpha$ lies on the circumcircle.
+    viz: imo-2014-p4
+    checked: "script: 1,000 random acute triangles; the meeting point is on the circumcircle to 1e-15"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Packing unit-fraction coins into at most 100 groups"
+    areas: [combinatorics, number-theory]
+    difficulty: 4
+    hints:
+      - 'Tidy up first: two coins $\frac1{2k}$ can be treated as one coin $\frac1k$, and $d$ coins $\frac1d$ make a full group by themselves.'
+      - 'After tidying, put the denominators $2k-1$ and $2k$ together in group $k$. Then add the small coins greedily.'
+    solution: |
+      **Key idea:** after tidying, the coins with denominators $2k-1$ and $2k$ fit into one group. The remaining coins are tiny, and a greedy filling can only fail if every group is nearly full, which the total doesn't allow.
+
+      Keep track of $N$, the number of groups still available, and the total value $V$ of the coins not yet placed. At the start $N=100$ and $V\le N-\tfrac12$.
+
+      **Tidying.** Repeat while possible:
+      - If there are two coins $\frac1{2k}$, glue them into one "coin" of value $\frac1k$ (they will go to the same group).
+      - If there are $d$ coins $\frac1d$ (for any $d$, including $d=1$), put them in a group of their own. This uses one group and removes value exactly $1$, so $V\le N-\tfrac12$ still holds.
+
+      Each step lowers the number of coins, so this stops. Afterwards: at most one coin $\frac1{2k}$ for each $k$, and at most $d-1$ coins $\frac1d$ for each odd $d$. Also $N\ge1$ unless nothing is left, because $V\ge0$.
+
+      **The first $N$ groups.** Put all coins with denominators $2k-1$ and $2k$ into group $k$, for $k=1,\dots,N$. Its value is at most
+      $$\frac{2k-2}{2k-1}+\frac1{2k}<\frac{2k-2}{2k-1}+\frac1{2k-1}=1 .$$
+
+      **Small coins.** The coins left have denominators at least $2N+1$, so each is at most $\frac1{2N+1}$. Place them one by one into any group where they fit. If some coin fits nowhere, every group has value more than $1-\frac1{2N+1}=\frac{2N}{2N+1}$, and
+      $$V>\frac{2N^2}{2N+1}=N-\frac{N}{2N+1}>N-\frac12,$$
+      a contradiction. So all coins are placed, in the $N$ groups plus the full groups made earlier. That is at most $100$ groups, each of value at most $1$.
+    checked: "script: the procedure run with exact fractions on 400 random collections with 5, 10 or 20 groups and total ≤ groups − ½; it never failed"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Coloring many lines so no bounded region is all blue"
+    areas: [combinatorics, geometry]
+    difficulty: 5
+    status: coming

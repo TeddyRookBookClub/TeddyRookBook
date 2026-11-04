@@ -1,0 +1,150 @@
+year: 1996
+edition: 37th
+date: "July 5–17, 1996 · Mumbai, India"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1996/1996_eng.pdf
+  archive: https://www.imo-official.org/editions/1996/
+problems:
+  - id: P1
+    day: 1
+    topic: "Fixed-length jumps across a 20 by 12 board"
+    areas: [combinatorics, number-theory]
+    difficulty: 2
+    answer: "(a) Impossible. (b) Possible. (c) No."
+    hints:
+      - 'A move changes the coordinates by $(a,b)$ with $a^2+b^2=r$. For (a), look at $a+b$ mod $2$, or at $a$ and $b$ mod $3$.'
+      - 'For $r=97$ the only moves are $(\pm9,\pm4)$ and $(\pm4,\pm9)$. Split the rows into the middle four and the outer eight.'
+    solution: |
+      **Key idea:** each move shifts by $(a,b)$ with $a^2+b^2=r$. Parity and divisibility rule out (a); for $r=97$, an invariant mixing column parity with a row band rules out (c).
+
+      Use coordinates $(x,y)$ with $0\le x\le19$, $0\le y\le11$; the task goes from $(0,0)$ to $(19,0)$.
+
+      **(a)** If $r$ is even, $a$ and $b$ have the same parity, so $x+y$ keeps its parity; but $19$ is odd. If $3\mid r$, then $a^2+b^2\equiv0\pmod3$ forces $3\mid a$ and $3\mid b$ (squares are $0$ or $1$ mod $3$), so $x$ stays a multiple of $3$; but $19$ is not.
+
+      **(b)** With moves $(\pm3,\pm8)$ and $(\pm8,\pm3)$, one route is
+      $$(0,0)\to(3,8)\to(11,5)\to(3,2)\to(0,10)\to(8,7)\to(0,4)\to(8,1)\to(11,9)\to(3,6)\to(11,3)\to(19,0).$$
+
+      **(c)** $97=9^2+4^2$ is the only way to write $97$ as two squares, so moves are $(\pm9,\pm4)$ and $(\pm4,\pm9)$. Call rows $4$–$7$ *middle* and the rest *outer*.
+      - A move $(\pm4,\pm9)$ needs $y\le2$ or $y\ge9$ and goes between outer rows. It keeps the parity of $x$.
+      - A move $(\pm9,\pm4)$ goes from an outer row to a middle row or back (rows $0$–$3$ and $8$–$11$ shift by $4$ into $4$–$7$, and vice versa). It flips the parity of $x$.
+
+      So "parity of $x$, plus $1$ if in a middle row" (mod $2$) never changes. It is $0$ at $(0,0)$ and $1$ at $(19,0)$, so the task cannot be done.
+    checked: "script: breadth-first search finds the route for 73, none for 97, and none for any r ≤ 400 divisible by 2 or 3"
+    viz: imo-1996-p1
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "An interior point with an angle condition and two incenters"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Drop perpendiculars from $P$ to the sides to get the pedal triangle. Its angles are $\angle BPC-\angle A$ and so on.'
+      - 'The condition makes the pedal triangle isosceles. Translate that into $\frac{AB}{PB}=\frac{AC}{PC}$ and use the bisector theorem on $AP$.'
+    solution: |
+      **Key idea:** the hypothesis makes the pedal triangle of $P$ isosceles, which says $AB\cdot PC=AC\cdot PB$. Then the bisectors from $B$ and $C$ cut $AP$ in the same ratio.
+
+      Let $X,Y,Z$ be the feet of the perpendiculars from $P$ to $BC$, $CA$, $AB$.
+
+      **Angles of the pedal triangle.** $B,X,P,Z$ lie on the circle with diameter $PB$, and $C,X,P,Y$ on the circle with diameter $PC$. So
+      $$\angle ZXY=\angle ZXP+\angle PXY=\angle ZBP+\angle PCY=\angle ABP+\angle ACP=\angle BPC-\angle A,$$
+      the last step from the angle sum around $P$ in quadrilateral $ABPC$. In the same way $\angle XYZ=\angle CPA-\angle B$ and $\angle YZX=\angle APB-\angle C$. The hypothesis says $\angle Z=\angle Y$, so $XY=XZ$.
+
+      **Lengths.** $XY$ is a chord of the circle with diameter $PC$, seen from $C$ under angle $C$, so $XY=PC\sin C$. Likewise $XZ=PB\sin B$. So $PC\sin C=PB\sin B$, and by the law of sines in $ABC$,
+      $$\frac{AB}{PB}=\frac{AC}{PC}.$$
+
+      **Concurrence.** In triangle $ABP$, the bisector $BD$ meets $AP$ at the point $U$ with $\frac{AU}{UP}=\frac{AB}{BP}$. In triangle $ACP$, the bisector $CE$ meets $AP$ at $V$ with $\frac{AV}{VP}=\frac{AC}{CP}$. These ratios are equal, so $U=V$, and $AP$, $BD$, $CE$ meet there.
+    checked: "reasoning"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Additive-looking functional equation on the nonnegative integers"
+    areas: [algebra, number-theory]
+    difficulty: 2
+    answer: "$f\\equiv0$, or for some $d\\ge1$ and any $n_1,\\dots,n_{d-1}\\ge0$: $f(qd+r)=(q+n_r)d$ for $0\\le r<d$, with $n_0=0$"
+    hints:
+      - 'Show $f(0)=0$ and $f(f(n))=f(n)$. Then the equation says $f(m+f(n))=f(m)+f(n)$.'
+      - 'Let $d$ be the smallest positive value of $f$. Which numbers are fixed points?'
+    solution: |
+      **Key idea:** the values of $f$ are fixed points, and with $d$ the least positive value, $f(m+d)=f(m)+d$. That makes the fixed points the multiples of $d$, and $f$ is free on $0,\dots,d-1$ up to multiples of $d$.
+
+      **First steps.** $m=n=0$ gives $f(f(0))=f(f(0))+f(0)$, so $f(0)=0$. Then $m=0$ gives $f(f(n))=f(n)$: every value of $f$ is a fixed point. So the equation becomes
+      $$f(m+f(n))=f(m)+f(n).$$
+
+      If $f\equiv0$, it works. Otherwise let $d$ be the smallest positive value of $f$. Then $f(m+d)=f(m)+d$, so $f(m+qd)=f(m)+qd$.
+
+      **Fixed points.** Every $qd$ is fixed: $f(qd)=f(0)+qd$. If $a=qd+r$ is fixed with $0<r<d$, then $a=f(a)=f(r)+qd$, so $f(r)=r$ is a positive value below $d$. Impossible. So the fixed points are exactly the multiples of $d$, and every value of $f$ is a multiple of $d$.
+
+      **Form.** So $f(r)=n_rd$ for $0\le r<d$, with $n_0=0$ and $n_r\ge0$, and $f(qd+r)=(q+n_r)d$.
+
+      **Check.** All values are multiples of $d$, hence fixed, so $f(f(m))=f(m)$; and adding a multiple of $d$ to the input adds it to the output, so $f(m+f(n))=f(m)+f(n)$. (For $d=1$ this is $f(n)=n$.)
+    checked: "reasoning; the family checked by script for d ≤ 4"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Two linear forms that are both squares"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$481^2=231361$"
+    hints:
+      - 'If the squares are $r^2$ and $s^2$, compute $r^4+s^4$ in terms of $a$ and $b$.'
+      - '$481=13\cdot37$. Show that $13$ and $37$ divide both $r$ and $s$, using the order of an element.'
+    solution: |
+      **Key idea:** $r^4+s^4=481(a^2+b^2)$, and $x^4\equiv-1$ has no solution mod $13$ or mod $37$. So $481$ divides both $r$ and $s$.
+
+      Let $15a+16b=r^2$ and $16a-15b=s^2$. Then
+      $$r^4+s^4=(15a+16b)^2+(16a-15b)^2=(15^2+16^2)(a^2+b^2)=481\,(a^2+b^2).$$
+      Let $q$ be $13$ or $37$, so $q\mid r^4+s^4$. If $q\nmid s$, then $u=r/s$ mod $q$ has $u^4\equiv-1$, so $u^8\equiv1$ and $u$ has order exactly $8$. That order divides $q-1$, which is $12$ or $36$, neither a multiple of $8$. So $q\mid s$, and then $q\mid r$.
+
+      Hence $481\mid r$ and $481\mid s$, and the smaller square is at least $481^2$. This is reached with $a=31\cdot481$, $b=481$: then $15a+16b=481(465+16)=481^2$ and $16a-15b=481(496-15)=481^2$.
+    checked: "arithmetic: the example gives both squares equal to 481²"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Hexagon with parallel opposite sides: circumradii versus perimeter"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Opposite angles are equal: $\angle A=\angle D$, $\angle B=\angle E$, $\angle C=\angle F$. Write $2R_A=\frac{BF}{\sin A}$.'
+      - '$BF$ is at least the distance between lines $BC$ and $EF$. Compute that distance in two ways, going around each side of the hexagon.'
+      - 'Add up and use $\frac xy+\frac yx\ge2$.'
+    solution: |
+      **Key idea:** each diagonal like $BF$ is at least the distance between two parallel sides, and that distance can be read off along either half of the hexagon. Adding the six lower bounds and using $\frac xy+\frac yx\ge2$ gives the perimeter.
+
+      Write $a,b,c,d,e,f$ for $AB,BC,CD,DE,EF,FA$, and $A,B,C$ for the angles at $A,B,C$. Parallel opposite sides give $\angle D=A$, $\angle E=B$, $\angle F=C$. By the law of sines,
+      $$2R_A=\frac{BF}{\sin A},\qquad 2R_C=\frac{BD}{\sin C},\qquad 2R_E=\frac{DF}{\sin B}.$$
+
+      **Lower bounds.** $B$ is on line $BC$ and $F$ on the parallel line $EF$, so $BF$ is at least their distance. Measure it along the path $B\to A\to F$: side $BA$ makes angle $B$ with $BC$ and contributes $a\sin B$; side $AF$ makes angle $C$ with $EF$ and contributes $f\sin C$. Along the path $B\to C\to D\to E$: $CD$ contributes $c\sin C$ and $DE$ contributes $d\sin B$. (In a convex hexagon all these contributions point the same way.) So
+      $$2BF\ge(a+d)\sin B+(c+f)\sin C .$$
+      In the same way, using lines $AB\parallel DE$ and $CD\parallel FA$:
+      $$2BD\ge(b+e)\sin B+(c+f)\sin A,\qquad 2DF\ge(a+d)\sin A+(b+e)\sin C .$$
+
+      **Adding.**
+      $$4(R_A+R_C+R_E)\ge(a+d)\Big(\frac{\sin B}{\sin A}+\frac{\sin A}{\sin B}\Big)+(c+f)\Big(\frac{\sin C}{\sin A}+\frac{\sin A}{\sin C}\Big)+(b+e)\Big(\frac{\sin B}{\sin C}+\frac{\sin C}{\sin B}\Big).$$
+      Each bracket is at least $2$, so the right side is at least $2(a+b+c+d+e+f)=2P$. Hence $R_A+R_C+R_E\ge\frac P2$.
+    checked: "numeric: 3,000 random hexagons with parallel opposite sides"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Up-and-down walks that return must repeat a value"
+    areas: [combinatorics, number-theory]
+    difficulty: 3
+    hints:
+      - 'Let $d=\gcd(p,q)$, $p=dp''$, $q=dq''$. Count the up-steps: $n$ is a multiple of $L=p''+q''$, and $n\ge2L$.'
+      - 'In a window of $L$ consecutive steps, the walk returns to its level exactly when the window has $q''$ up-steps. Slide the window.'
+    solution: |
+      **Key idea:** a window of $L=\frac{p+q}{\gcd(p,q)}$ consecutive steps returns to the same level exactly when it holds the "average" number of up-steps. Sliding a window changes that number by at most one, so some window hits the average.
+
+      Let $d=\gcd(p,q)$, $p=dp'$, $q=dq'$, $L=p'+q'$. With $u$ up-steps and $n-u$ down-steps, $x_n=0$ gives $up=(n-u)q$, so $up'=(n-u)q'$. Since $\gcd(p',q')=1$, $u=Kq'$ and $n-u=Kp'$, so $n=KL$. From $p+q<n$ we get $dL<KL$, so $K>d\ge1$, and $K\ge2$.
+
+      **Windows.** For $0\le i\le n-L$, let $u_i$ be the number of up-steps among steps $i+1,\dots,i+L$. Then
+      $$x_{i+L}-x_i=u_ip-(L-u_i)q=dL\,(u_i-q').$$
+      So $x_{i+L}=x_i$ exactly when $u_i=q'$.
+
+      **Sliding.** The windows starting at $0,L,2L,\dots,(K-1)L$ are disjoint and contain $Kq'$ up-steps in total, so one has $u_i\le q'$ and one has $u_i\ge q'$. Moving a window by one step changes $u_i$ by at most $1$. So some $i$ between them has $u_i=q'$, giving $x_i=x_{i+L}$. Since $L<n$, the pair $(i,i+L)$ is not $(0,n)$.
+    checked: "script: every valid walk with p, q ≤ 6 and n ≤ 15 has a repeated value"
+    status: ready

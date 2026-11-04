@@ -1,0 +1,191 @@
+year: 1962
+edition: 4th
+date: "July 7–15, 1962 · České Budějovice, Czechoslovakia"
+note: "This year's paper had seven problems, so the page runs to P7."
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1962/1962_eng.pdf
+  archive: https://www.imo-official.org/editions/1962/
+problems:
+  - id: P1
+    day: 1
+    topic: "Moving the last digit to the front quadruples"
+    areas: [number-theory]
+    difficulty: 1
+    answer: "$153846$"
+    hints:
+      - 'Write the number as $10m+6$, where $m$ has $k$ digits. Moving the $6$ gives $6\cdot10^k+m$.'
+      - 'You need $13m=2\cdot10^k-8$. For which $k$ is $10^k\equiv4\pmod{13}$?'
+    solution: |
+      **Key idea:** the digit move is a linear equation. It reduces to finding the order of $10$ modulo $13$.
+
+      Write $n=10m+6$, where $m$ has $k$ digits. Moving the $6$ to the front gives $6\cdot10^k+m$. The condition is
+      $$6\cdot10^k+m=4(10m+6)\iff 39m=6\cdot10^k-24\iff 13m=2\cdot10^k-8 .$$
+      So we need $2\cdot10^k\equiv8$, that is $10^k\equiv4\pmod{13}$. The powers of $10$ modulo $13$ are $10,9,12,3,4,\dots$ for $k=1,2,3,4,5$. The first $k$ that works is $k=5$, which gives $m=\frac{199992}{13}=15384$. This $m$ has exactly $5$ digits, as it must. (For every $k\ge1$, the $m$ from the formula lies between $10^{k-1}$ and $10^k$.)
+
+      So the smallest number is $n=153846$. Check: $4\cdot153846=615384$.
+    checked: "script: brute-force search up to 10^7"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Difference of two square roots above one half"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$-1\\le x<1-\\frac{\\sqrt{31}}{8}$"
+    hints:
+      - 'The left side is a decreasing function of $x$ on its domain. So the answer is an interval that starts at the left end of the domain.'
+      - 'Find where equality holds by squaring twice, keeping track of signs.'
+    solution: |
+      **Key idea:** the left side decreases, so only the equality point matters.
+
+      The domain is $-1\le x\le3$. On it, $\sqrt{3-x}$ decreases and $\sqrt{x+1}$ increases, so $f(x)=\sqrt{3-x}-\sqrt{x+1}$ is strictly decreasing, from $f(-1)=2$ to $f(3)=-2$. So the solution set is $[-1,x_0)$, where $f(x_0)=\frac12$.
+
+      **Finding $x_0$.** $\sqrt{3-x}=\sqrt{x+1}+\frac12$. Squaring gives $3-x=x+1+\sqrt{x+1}+\frac14$, that is
+      $$\sqrt{x+1}=\tfrac74-2x,$$
+      which requires $x\le\frac78$. Squaring again: $x+1=4x^2-7x+\frac{49}{16}$, so $64x^2-128x+33=0$ and
+      $$x=1\pm\frac{\sqrt{31}}{8}.$$
+      Only $x_0=1-\frac{\sqrt{31}}8\approx0.304$ satisfies $x\le\frac78$. The two squarings were reversible under the sign conditions we kept, so $f(x_0)=\frac12$.
+
+      **Answer:** $-1\le x<1-\dfrac{\sqrt{31}}{8}$.
+    checked: "script: the inequality tested on a grid of 40,001 points"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Two points racing around a cube; their midpoint's path"
+    areas: [geometry]
+    difficulty: 2
+    answer: "The boundary of a rhombus with angles $60^\\circ$ and $120^\\circ$: centers of two side faces, the top face's center, and the shared corner $C$"
+    hints:
+      - 'Use coordinates in the unit cube and follow both points one edge at a time.'
+      - 'On each stretch both points move along straight lines at constant speed, so the midpoint does too.'
+    solution: |
+      **Key idea:** during each quarter of the trip both points move uniformly along straight edges, so the midpoint moves along a straight segment. Four segments close up into a rhombus.
+
+      Take the unit cube with the top face at height $1$: $A=(0,0,1)$, $B=(1,0,1)$, $C=(1,1,1)$, $D=(0,1,1)$, and each primed vertex directly below at height $0$. One edge takes one unit of time. Let $s\in[0,1]$ be the time within each quarter.
+
+      | time | $X$ | $Y$ | midpoint |
+      |---|---|---|---|
+      | 1st quarter | $(s,0,1)$ | $(1,s,0)$ | $(\frac{1+s}2,\frac s2,\frac12)$ |
+      | 2nd quarter | $(1,s,1)$ | $(1,1,s)$ | $(1,\frac{1+s}2,\frac{1+s}2)$ |
+      | 3rd quarter | $(1-s,1,1)$ | $(1,1-s,1)$ | $(1-\frac s2,1-\frac s2,1)$ |
+      | 4th quarter | $(0,1-s,1)$ | $(1,0,1-s)$ | $(\frac12,\frac{1-s}2,1-\frac s2)$ |
+
+      So the midpoint runs along four segments joining, in order,
+      $$K=(\tfrac12,0,\tfrac12)\to L=(1,\tfrac12,\tfrac12)\to C=(1,1,1)\to N=(\tfrac12,\tfrac12,1)\to K,$$
+      and then repeats. Here $K$ is the center of face $ABB'A'$, $L$ the center of face $BCC'B'$, and $N$ the center of the top face.
+
+      **Shape.** $\overrightarrow{KL}=(\frac12,\frac12,0)=\overrightarrow{NC}$ and $\overrightarrow{KN}=(0,\frac12,\frac12)=\overrightarrow{LC}$. So $KLCN$ is a parallelogram (in particular, the four points lie in one plane). Its sides all have length $\frac{\sqrt2}2$, so it is a rhombus. The angle at $K$ has cosine $\frac{1/4}{1/2}=\frac12$, so it is $60^\circ$, and the angle at $L$ is $120^\circ$.
+
+      The locus is the boundary of this rhombus.
+    checked: "script: 4000 time samples; every midpoint lies on the rhombus boundary"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Three squared cosines summing to one"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$x=\\frac\\pi4+\\frac{k\\pi}2$ or $x=\\frac\\pi6+\\frac{k\\pi}3$ ($k$ any integer)"
+    hints:
+      - 'Lower the powers with $\cos^2\theta=\frac{1+\cos2\theta}2$.'
+      - 'Turn the resulting sum of cosines into a product: the equation becomes $\cos x\cos2x\cos3x=0$.'
+    solution: |
+      **Key idea:** after lowering the powers, sum-to-product turns the equation into a product of three cosines.
+
+      With $\cos^2\theta=\frac{1+\cos2\theta}2$, the equation becomes
+      $$\frac{3+\cos2x+\cos4x+\cos6x}{2}=1\iff 1+\cos2x+\cos4x+\cos6x=0 .$$
+      Pair the terms: $1+\cos4x=2\cos^22x$ and $\cos2x+\cos6x=2\cos4x\cos2x$. So the left side is
+      $$2\cos2x\,(\cos2x+\cos4x)=2\cos2x\cdot2\cos3x\cos x .$$
+      The equation is therefore $\cos x\cos2x\cos3x=0$.
+      - $\cos2x=0$: $x=\frac\pi4+\frac{k\pi}2$.
+      - $\cos3x=0$: $x=\frac\pi6+\frac{k\pi}3$.
+      - $\cos x=0$: $x=\frac\pi2+k\pi$. These are already in the previous family, because $\cos3x=4\cos^3x-3\cos x$ vanishes with $\cos x$.
+
+      So the solutions are $x=\frac\pi4+\frac{k\pi}2$ and $x=\frac\pi6+\frac{k\pi}3$.
+    checked: "script: the left side minus 1 equals 2·cos x·cos 2x·cos 3x at 100 sample points"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Ruler-and-compass: a fourth point making a tangential quadrilateral"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'A convex quadrilateral has an incircle exactly when the sums of opposite sides agree. So you need $DA-DC=AB-BC$.'
+      - 'Mark $E$ on $DA$ with $DE=DC$. Then $AE=AB-BC$ is known, and the angle $AEC$ depends only on the angle at $B$.'
+    solution: |
+      **Key idea:** Pitot's condition fixes the difference $DA-DC$. Cutting $DC$ off $DA$ leaves a point $E$ at a known distance from $A$, which sees $AC$ under a known angle.
+
+      The three given points cut $K$ into three arcs, and $D$ can go on any of them. Whichever arc we pick, rename the three points so that it is the arc $AC$ not containing $B$; the argument below then gives exactly one point on each arc, so three solutions in all. From now on, put $D$ on the arc $AC$ that does not contain $B$, so $ABCD$ is convex. A convex quadrilateral has an inscribed circle exactly when $AB+CD=BC+DA$, that is
+      $$DA-DC=AB-BC=:\delta .$$
+      **Existence and uniqueness.** As $D$ moves along the arc from $A$ to $C$, the chord $DA$ grows and $DC$ shrinks, so $DA-DC$ increases steadily from $-AC$ to $AC$. By the triangle inequality, $|\delta|<AC$. So exactly one point $D$ works.
+
+      **Construction.** If $\delta=0$, take $D$ to be the midpoint of the arc. Otherwise, swapping the names $A$ and $C$ if needed, let $\delta>0$.
+
+      1. Extend $CB$ beyond $B$ to the point $P$ with $BP=BA$. Triangle $ABP$ is isosceles, and its exterior angle at $B$ is $\angle ABC$, so $\angle APC=\frac12\angle ABC$.
+      2. Draw the circle $\Gamma$ through $A,P,C$. Its points on the far side of $AC$ from $B$ see $AC$ under the angle $180^\circ-\frac12\angle B$. Call that arc $\gamma$. It is the shorter arc, because the angle is obtuse.
+      3. Draw the circle about $A$ with radius $\delta$. It meets $\gamma$ at exactly one point $E$: along the short arc $\gamma$ the distance from $A$ grows steadily from $0$ to $AC$, and $0<\delta<AC$.
+      4. Line $AE$ meets the circle $K$ again at $D$.
+
+      **Why it works.** Let $D_0$ be the true solution, and mark $E_0$ on segment $D_0A$ with $D_0E_0=D_0C$ (possible since $D_0C<D_0A$). Then $AE_0=\delta$. The triangle $D_0E_0C$ is isosceles with apex angle $\angle AD_0C=180^\circ-\angle B$ (opposite angles of a cyclic quadrilateral). So its base angles are $\frac12\angle B$, and $\angle AE_0C=180^\circ-\frac12\angle B$. Hence $E_0$ lies on $\gamma$ at distance $\delta$ from $A$, so $E_0=E$, and $D_0$ is the second point where line $AE$ meets $K$. That is the constructed $D$.
+    checked: "script: 300 random triples on a circle; the constructed D always satisfies AB + CD = BC + DA"
+    viz: imo-1962-p5
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Distance between circumcenter and incenter (Euler)"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Let the bisector from the apex meet the circumcircle again at $W$. Show that $WB=WI$.'
+      - 'The power of $I$ with respect to the circumcircle is $IA\cdot IW=r^2-d^2$.'
+    solution: |
+      **Key idea:** the power of the incenter with respect to the circumcircle equals $2r\rho$. In an isosceles triangle everything sits on the axis, which makes this quick.
+
+      Let $A$ be the apex, $O$ the circumcenter, $I$ the incenter, and let the angles be $\alpha$ at $A$ and $\beta$ at $B$ and $C$. Both centers lie on the axis of symmetry, which is a diameter $AW$ of the circumcircle. ($W$ is the midpoint of arc $BC$.)
+
+      **$WB=WI$.** We have $\angle WBI=\angle WBC+\angle CBI=\angle WAC+\frac\beta2=\frac\alpha2+\frac\beta2$ (the inscribed angles on arc $WC$ are equal). Also $\angle WIB$ is an exterior angle of triangle $ABI$, so it equals $\frac\alpha2+\frac\beta2$. The triangle $WBI$ is isosceles.
+
+      **The two lengths.** Since $AW$ is a diameter, the angle $ABW$ is right, so $WB=2r\sin\frac\alpha2$. The distance from $I$ to line $AB$ is $\rho$, and $AI$ makes the angle $\frac\alpha2$ with $AB$, so $AI=\dfrac{\rho}{\sin(\alpha/2)}$. So
+      $$IA\cdot IW=\frac{\rho}{\sin\frac\alpha2}\cdot2r\sin\frac\alpha2=2r\rho .$$
+      **Power of the point.** $I$ lies inside the circle on the diameter $AW$, at distance $d$ from $O$. So $IA$ and $IW$ are $r-d$ and $r+d$, and $IA\cdot IW=r^2-d^2$. Comparing,
+      $$r^2-d^2=2r\rho\iff d=\sqrt{r(r-2\rho)} .$$
+      (The same argument, with $W$ the second point where $AI$ meets the circumcircle, proves Euler's formula for every triangle.)
+    checked: "script: 100 random isosceles triangles"
+    status: ready
+
+  - id: P7
+    day: 2
+    topic: "Spheres touching all six edge lines force regularity"
+    areas: [geometry]
+    difficulty: 4
+    hints:
+      - 'Each face plane cuts such a sphere in a circle tangent to the three side lines of the face: the incircle or an excircle. The tangent lengths from a vertex are equal along its three edges.'
+      - 'Call an edge "outer" when the sphere touches its extension. Each face has $0$ or $2$ outer edges, meeting at a vertex. Which sets of outer edges are possible? How many spheres can each pattern give?'
+    solution: |
+      **Key idea:** classify a sphere by which edges it touches outside the segment. Only five patterns are possible, each gives at most one sphere, and each pattern turns into equations between the edge lengths. All five together force all edges to be equal.
+
+      **Setup.** Suppose a sphere is tangent to all six edge lines. A vertex $V$ is outside the sphere (if it were on it, the three edges at $V$ would all lie in the tangent plane at $V$, but they are not coplanar). So $V$ has a tangent length $t_V>0$, the same along all three edges at $V$. A face plane cuts the sphere in a circle tangent to the three side lines of that face, so the circle is the face's incircle or one of its excircles.
+
+      Call an edge *outer* if the sphere touches it outside the segment. For an edge $UV$, the length is $t_U+t_V$ if it is not outer, and $|t_U-t_V|$ if it is. The incircle has no outer edges. The excircle opposite $U$ touches the far side inside the segment and the two sides at $U$ outside, with $t_U$ larger than the other two tangent lengths. So each face has either no outer edges, or two outer edges meeting at a vertex $U$ with $t_U$ the largest tangent length in that face.
+
+      **The patterns.** The outer edges form a set $X$ of edges such that every face contains $0$ or $2$ of them. Going through all $64$ edge sets (or by a short case check on the size of $X$), the only ones with this property are: $X$ empty, $X$ the three edges at one vertex, or $X$ a 4-cycle. A 4-cycle is impossible. With the cycle $S\!-\!A\!-\!B\!-\!C\!-\!S$, face $SAB$ has its outer edges $SA,AB$ meeting at $A$, so $t_A>t_S$. But face $SAC$ has its outer edges $SA,SC$ meeting at $S$, so $t_S>t_A$. So there are at most five patterns: "none", and "star at $V$" for each vertex $V$.
+
+      **One sphere per pattern.** The pattern fixes every face circle, hence all the tangent lengths, hence the point of tangency on each edge line. A sphere tangent to line $SA$ at a given point has its center in the plane through that point perpendicular to $SA$. The three such planes for $SA,SB,SC$ meet in a single point (their normals are not coplanar). So the center, and then the radius, are determined. Five spheres therefore means every pattern occurs.
+
+      **The equations.** Write $p,q,r$ for $SA,SB,SC$ and $x,y,z$ for the opposite edges $BC,CA,AB$.
+      - Pattern "none": every edge is $t_U+t_V$, so each sum of opposite edges equals $t_S+t_A+t_B+t_C$:
+      $$p+x=q+y=r+z .$$
+      - Star at $S$: $p=t_S-t_A$ and $q=t_S-t_B$, so $p-q=t_B-t_A$. Face $ABC$ uses its incircle, so $y-x=t_A-t_B$. Hence $p-q=x-y$. In the same way $p-r=x-z$.
+
+      From $p-q=y-x$ (the first line) and $p-q=x-y$ we get $x=y$ and $p=q$. In the same way $x=z$ and $p=r$. So the three edges at $S$ are equal to $p$, and the face $ABC$ is equilateral with side $x$. Finally, the star at $A$ gives, by the same reasoning with $A$ as the special vertex, $AS-AB=CB-CS$, that is $p-x=x-p$. So $p=x$, and all six edges are equal. The tetrahedron is regular.
+
+      **Converse.** Let the regular tetrahedron have edge $1$.
+      - By symmetry, its center is equally far from all six edge lines, with feet at the midpoints. That gives the midsphere.
+      - For a vertex $S$, let $O'$ be the point on the axis through $S$ where the plane perpendicular to $SA$, through the point $Q_A$ on ray $SA$ at distance $\frac32$ from $S$, meets the axis. By the threefold symmetry about the axis, $O'$ also lies on the matching planes for $SB$ and $SC$. It also lies on the perpendicular bisector planes of $AB$, $BC$, $CA$, since these contain the axis. Then $O'Q_A^2=O'A^2-\frac14$, because $AQ_A=\frac12$. Also, if $M_{AB}$ is the midpoint of $AB$, then $O'M_{AB}^2=O'A^2-\frac14$. So all six distances from $O'$ to the edge lines are equal, and the sphere about $O'$ with this radius touches all six lines.
+
+      Doing this for each of the four vertices gives four more spheres. All five are different (their points of tangency differ), so a regular tetrahedron has exactly five such spheres.
+    checked: "script: all 64 edge sets enumerated; exactly the empty set, the four stars and the three 4-cycles meet every face in 0 or 2 edges"
+    status: ready

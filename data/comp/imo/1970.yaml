@@ -1,0 +1,144 @@
+year: 1970
+edition: 12th
+date: "July 8–22, 1970 · Keszthely, Hungary"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1970/1970_eng.pdf
+  archive: https://www.imo-official.org/editions/1970/
+problems:
+  - id: P1
+    day: 1
+    topic: "Cevian splits a triangle: inradius over exradius multiplies"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'For one triangle, write the side opposite $C$ in two ways: once using the incircle and the half-angles at its ends, once using the excircle that touches that side.'
+      - 'The ratio of the inradius to that exradius depends only on the two base angles. At the cevian''s foot, the two small triangles have base angles $\varphi$ and $180^\circ-\varphi$.'
+    solution: |
+      **Key idea:** for any triangle, the inradius divided by the exradius on the far side of one side depends only on the two angles at the ends of that side. The cevian's foot contributes $\tan\frac\varphi2$ to one small triangle and $\cot\frac\varphi2$ to the other, and these cancel.
+
+      **A formula for one triangle.** Take a triangle $XYZ$ and its side $XY$, with angles $\alpha$ at $X$ and $\beta$ at $Y$. Let $\rho$ be the inradius and $\rho'$ the radius of the excircle that touches the segment $XY$ (the one inside the angle at $Z$).
+      - The incenter lies on the bisector at $X$, so the incircle's touching point on $XY$ is at distance $\rho\cot\frac\alpha2$ from $X$. The same holds at $Y$, and the touching point lies between them, so $XY=\rho\left(\cot\frac\alpha2+\cot\frac\beta2\right)$.
+      - The excenter lies on the *outer* bisector at $X$, which makes the angle $90^\circ-\frac\alpha2$ with line $XY$. So that excircle touches $XY$ at distance $\rho'\tan\frac\alpha2$ from $X$, and again the touching point lies between $X$ and $Y$. So $XY=\rho'\left(\tan\frac\alpha2+\tan\frac\beta2\right)$.
+
+      Dividing, with $u=\tan\frac\alpha2$ and $v=\tan\frac\beta2$:
+      $$\frac{\rho}{\rho'}=\frac{u+v}{\frac1u+\frac1v}=uv=\tan\frac\alpha2\tan\frac\beta2 .$$
+
+      **Apply it three times.** In all three triangles of the problem, the excircle in question is the one in the angle at $C$, so it touches the side on line $AB$. Let $\varphi=\angle AMC$, so $\angle BMC=180^\circ-\varphi$. Then
+      $$\frac{r_1}{q_1}=\tan\frac A2\tan\frac\varphi2,\qquad \frac{r_2}{q_2}=\tan\frac B2\cot\frac\varphi2,\qquad \frac{r}{q}=\tan\frac A2\tan\frac B2 .$$
+      Multiplying the first two gives the third.
+    checked: "script: 1,000 random triangles and cevians; the identity holds to 1e-15"
+    viz: imo-1970-p1
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Same digits read in two bases: comparing ratios"
+    areas: [number-theory, algebra]
+    difficulty: 1
+    hints:
+      - 'Compare the reciprocals instead. The longer number is the shorter one plus its leading digit times a power of the base.'
+      - 'After clearing denominators, the inequality becomes a sum of terms $x_i\,(a^nb^i-b^na^i)$. What is the sign of each term?'
+    solution: |
+      **Key idea:** the longer number is the shorter one plus one leading term, so the comparison reduces to a sum whose terms all have the sign of $a-b$.
+
+      Write $A_n=x_na^n+A_{n-1}$ and $B_n=x_nb^n+B_{n-1}$. All the numbers are positive, so
+      $$\frac{A_{n-1}}{A_n}<\frac{B_{n-1}}{B_n}\iff\frac{A_n}{A_{n-1}}>\frac{B_n}{B_{n-1}}\iff \frac{x_na^n}{A_{n-1}}>\frac{x_nb^n}{B_{n-1}}\iff a^nB_{n-1}>b^nA_{n-1}.$$
+      Expanding $A_{n-1}=\sum_{i<n}x_ia^i$ and $B_{n-1}=\sum_{i<n}x_ib^i$, the last inequality says
+      $$\sum_{i=0}^{n-1}x_i\,a^ib^i\left(a^{n-i}-b^{n-i}\right)>0 .$$
+      Each $n-i$ is at least $1$, and each $x_i\ge0$ with $x_{n-1}>0$.
+      - If $a>b$, every term is $\ge0$ and the term with $i=n-1$ is positive, so the sum is positive.
+      - If $a<b$, every term is $\le0$, so the sum is not positive.
+      - If $a=b$, every term is $0$.
+
+      So the inequality holds exactly when $a>b$.
+    checked: "algebra only: each equivalence above is reversible because all quantities are positive"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Telescoping bound for a sum built from rising terms"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Write $a_k=c_k^2$. Can you bound each term by a multiple of $\frac1{c_{k-1}}-\frac1{c_k}$?'
+      - 'For part (b), try a geometric sequence $a_k=d^{2k}$ and let $d$ approach $1$.'
+    solution: |
+      **Key idea:** each term is at most twice a telescoping difference of $1/\sqrt{a_k}$, and a geometric choice of $a_k$ comes as close to $2$ as we like.
+
+      Put $c_k=\sqrt{a_k}$, so $1=c_0\le c_1\le c_2\le\cdots$. The $k$-th term is
+      $$t_k=\left(1-\frac{c_{k-1}^2}{c_k^2}\right)\frac1{c_k}=\frac{(c_k-c_{k-1})(c_k+c_{k-1})}{c_k^3}.$$
+
+      **(a)** Each $t_k\ge0$, so $b_n\ge0$. For the upper bound use $c_k+c_{k-1}\le 2c_k$ and then $c_k\ge c_{k-1}$:
+      $$t_k\le\frac{2(c_k-c_{k-1})}{c_k^2}\le\frac{2(c_k-c_{k-1})}{c_kc_{k-1}}=2\left(\frac1{c_{k-1}}-\frac1{c_k}\right).$$
+      The sum telescopes: $b_n\le 2\left(1-\frac1{c_n}\right)<2$.
+
+      **(b)** Take $a_k=d^{2k}$ with $d>1$, so $c_k=d^k$ and $t_k=(1-d^{-2})\,d^{-k}$. Then
+      $$b_n=(1-d^{-2})\sum_{k=1}^n d^{-k}\ \longrightarrow\ \frac{1-d^{-2}}{d-1}=\frac{d+1}{d^2}\quad(n\to\infty).$$
+      As $d\to1^+$, the limit $\frac{d+1}{d^2}$ tends to $2$. So for a given $c<2$, pick $d>1$ with $\frac{d+1}{d^2}>c$. The increasing sequence $b_n$ tends to this limit, so $b_n>c$ for all large $n$.
+    checked: "script: d = 1.01 and 1.1 give partial sums matching (d+1)/d^2"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Six consecutive integers split into equal products"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "No such $n$ exists"
+    hints:
+      - 'If a prime divides one of the six numbers, it must also divide a number in the other group. Which primes can divide two of six consecutive integers?'
+      - 'Look at the two numbers among the six that are prime to $6$.'
+    solution: |
+      **Key idea:** every prime that appears must divide at least two of the six numbers, which leaves only $2$, $3$ and $5$. The two numbers prime to $6$ then have nowhere to go.
+
+      Suppose the six numbers $n,\dots,n+5$ are split into two groups with equal products. If a prime $p$ divides some number in one group, it divides that group's product, so it divides a number in the other group as well. So $p$ divides two of the six numbers, whose difference is at most $5$; hence $p\le5$.
+
+      So every one of the six numbers has only the prime factors $2,3,5$. Among six consecutive integers, exactly two are prime to $6$, and they differ by $2$ or $4$. Each of them is a power of $5$. Two powers of $5$ that are both at least $5$ differ by a multiple of $5$, so one of them is $1$, and the other is $3$ or $5$; being prime to $3$, it is $5$. So the six numbers are $1,2,3,4,5,6$. But then $5$ divides only one of them, which we ruled out. So no $n$ works.
+    checked: "script: no n below 20,000 admits such a split"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Tetrahedron with orthocentric foot: three right angles at a vertex"
+    areas: [geometry]
+    difficulty: 2
+    answer: "Equality exactly when $AD=BD=CD$ (then $ABC$ is equilateral)"
+    hints:
+      - 'Put $D$ at the origin and use vectors. The foot $H$ is perpendicular to every vector lying in the plane $ABC$.'
+      - 'Show that $A\cdot B=A\cdot C=B\cdot C$. One of them is $0$.'
+    solution: |
+      **Key idea:** the conditions force the three edges at $D$ to be mutually perpendicular. Then the inequality is the root-mean-square inequality for the three sides of $ABC$.
+
+      **Three right angles at $D$.** Use vectors with $D$ at the origin, and write $A,B,C,H$ for the position vectors. The vector $H$ is perpendicular to the plane $ABC$, so $H\cdot(B-C)=0$. Since $H$ is the orthocenter, $(A-H)\cdot(B-C)=0$ (this holds trivially if $H=A$). Adding,
+      $$A\cdot(B-C)=0,\qquad\text{so }A\cdot B=A\cdot C .$$
+      In the same way $B\cdot C=B\cdot A$. So the three dot products $A\cdot B$, $B\cdot C$, $C\cdot A$ are equal, and $B\cdot C=0$ because $\angle BDC=90^\circ$. So $DA,DB,DC$ are mutually perpendicular.
+
+      **The inequality.** Let $x=AD$, $y=BD$, $z=CD$. By Pythagoras, $AB^2=x^2+y^2$, $BC^2=y^2+z^2$, $CA^2=z^2+x^2$, so
+      $$AB^2+BC^2+CA^2=2(x^2+y^2+z^2).$$
+      For any three reals, $(p+q+r)^2\le3(p^2+q^2+r^2)$, since the difference is $(p-q)^2+(q-r)^2+(r-p)^2\ge0$. With $p,q,r$ the three sides,
+      $$(AB+BC+CA)^2\le 3\cdot2(x^2+y^2+z^2)=6(AD^2+BD^2+CD^2).$$
+      Equality holds exactly when $AB=BC=CA$, that is, $x^2+y^2=y^2+z^2=z^2+x^2$, that is, $AD=BD=CD$: the corner of a cube cut off by a plane through three neighbors of a vertex.
+    checked: "algebra only: the dot-product step and the identity for (p+q+r)^2 are exact"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "At most seventy percent of point triangles are acute"
+    areas: [combinatorics, geometry]
+    difficulty: 3
+    hints:
+      - 'Among any four of the points, at least one of the four triangles is not acute. Look at the convex hull of the four points.'
+      - 'Use that to bound the number of acute triangles among five points, then average over all five-point subsets.'
+    solution: |
+      **Key idea:** four points always give a non-acute triangle, five points always give at least three, and averaging over all five-point subsets turns "three out of ten" into $30\%$ of all triangles.
+
+      **Four points.** Take four of the points (no three collinear).
+      - If they form a convex quadrilateral, its angles add up to $360^\circ$, so one angle is at least $90^\circ$. The triangle formed by that vertex and its two neighbors is not acute.
+      - Otherwise one point $D$ lies inside the triangle $ABC$ of the other three. The angles $ADB$, $BDC$, $CDA$ add up to $360^\circ$, so one of them is at least $120^\circ$, and that triangle is not acute.
+
+      **Five points.** Five points have $5$ four-point subsets, each with a non-acute triangle. A given triangle lies in exactly $2$ of these subsets (add one of the $2$ remaining points). So there are at least $\lceil 5/2\rceil=3$ non-acute triangles, and at most $7$ of the $10$ are acute.
+
+      **All $100$ points.** Count pairs (five-point subset $S$, non-acute triangle inside $S$). Each of the $\binom{100}5$ subsets gives at least $3$ such pairs. Each triangle lies in exactly $\binom{97}2$ five-point subsets. So the number $N$ of non-acute triangles satisfies
+      $$N\binom{97}{2}\ge 3\binom{100}{5}.$$
+      Counting the ways to choose a five-point set together with a triangle inside it gives $\binom{100}5\binom53=\binom{100}3\binom{97}2$, so $\binom{100}5/\binom{97}2=\binom{100}3/10$. Hence $N\ge\frac{3}{10}\binom{100}3$, and at most $70\%$ of the triangles are acute.
+    checked: "script: 20,000 random sets of five points never give more than 7 acute triangles out of 10"
+    status: ready

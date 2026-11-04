@@ -1,0 +1,157 @@
+year: 1998
+edition: 39th
+date: "July 10–21, 1998 · Taipei, Taiwan"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1998/1998_eng.pdf
+  archive: https://www.imo-official.org/editions/1998/
+problems:
+  - id: P1
+    day: 1
+    topic: "Perpendicular diagonals: cyclic exactly when two areas match"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Put the diagonals on the coordinate axes, with the crossing point at the origin.'
+      - 'The quadrilateral is cyclic exactly when the products of the diagonal pieces agree. Compute the difference of the two signed areas.'
+    solution: |
+      **Key idea:** in coordinates along the diagonals, the difference of the two areas factors as (a nonzero number) times $\big(EA\cdot EC-EB\cdot ED\big)$. The second factor vanishes exactly for cyclic quadrilaterals.
+
+      Let the diagonals meet at $E$, the origin, with $A=(\alpha,0)$, $C=(\gamma,0)$, $B=(0,\beta)$, $D=(0,\delta)$, where $\alpha<0<\gamma$ and $\delta<0<\beta$. By the intersecting chords theorem and its converse, $ABCD$ is cyclic exactly when $EA\cdot EC=EB\cdot ED$, that is $\alpha\gamma=\beta\delta$.
+
+      **The point $P$.** $PA=PB$ and $PC=PD$ are two linear equations for $P=(x,y)$:
+      $$2\beta y-2\alpha x=\beta^2-\alpha^2,\qquad 2\delta y-2\gamma x=\delta^2-\gamma^2 .$$
+      Their determinant is a multiple of $\alpha\delta-\beta\gamma$, which is nonzero exactly because $AB\nparallel CD$ (the direction vectors $(-\alpha,\beta)$ and $(\gamma,-\delta)$ are not parallel).
+
+      **The areas.** $P$ is inside, so triangles $ABP$ and $CDP$ have the same orientation, and their areas are equal exactly when the signed quantities
+      $$\det(B-A,\,P-A)\quad\text{and}\quad\det(D-C,\,P-C)$$
+      are equal. Substituting the solution for $P$ and simplifying, their difference is
+      $$-\frac{(\alpha\gamma-\beta\delta)\big((\alpha-\gamma)^2+(\beta-\delta)^2\big)}{2(\alpha\delta-\beta\gamma)} .$$
+      The factor $(\alpha-\gamma)^2+(\beta-\delta)^2=AC^2+BD^2$ is positive. So the areas are equal exactly when $\alpha\gamma=\beta\delta$, that is, exactly when $ABCD$ is cyclic.
+    checked: "algebra: sympy solves for P and factors the difference of the signed areas"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Judges agreeing too often, by double counting"
+    areas: [combinatorics]
+    difficulty: 1
+    hints:
+      - 'Count triples (pair of judges, contestant) where the two judges agree on that contestant.'
+      - 'If $x$ judges pass a contestant, the agreeing pairs number $\binom x2+\binom{b-x}2$. How small can that be when $b$ is odd?'
+    solution: |
+      **Key idea:** count agreeing judge pairs per contestant from below and per judge pair from above.
+
+      For a contestant passed by $x$ judges and failed by $b-x$, the number of agreeing pairs is
+      $$\binom x2+\binom{b-x}2=\frac{x^2+(b-x)^2-b}2 .$$
+      For odd $b$ and integer $x$, $x^2+(b-x)^2$ is smallest at $x=\frac{b\pm1}2$, where it is $\frac{b^2+1}2$. So each contestant gives at least $\frac{(b-1)^2}4$ agreeing pairs, and there are at least $a\,\frac{(b-1)^2}4$ in total.
+
+      Each of the $\binom b2$ pairs of judges agrees on at most $k$ contestants, so the total is at most $k\,\frac{b(b-1)}2$. Hence
+      $$a\,\frac{(b-1)^2}4\le k\,\frac{b(b-1)}2\quad\Longrightarrow\quad\frac ka\ge\frac{b-1}{2b}.$$
+    checked: "reasoning"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Which ratios of divisor counts of a square occur"
+    areas: [number-theory]
+    difficulty: 3
+    answer: "Exactly the odd $k$"
+    hints:
+      - 'With $n=\prod p_i^{e_i}$, the ratio is $\prod\frac{2e_i+1}{e_i+1}$. Why must it be odd?'
+      - 'Factors $\frac{2u-1}u$ can telescope: if $u_{j+1}=2u_j-1$, then $\prod\frac{2u_j-1}{u_j}=\frac{u_{r+1}}{u_1}$.'
+      - 'Write $k+1=2^rs$ with $s$ odd and start the chain at $u_1=s(2^r-1)$.'
+    solution: |
+      **Key idea:** the ratio is a product of fractions $\frac{2u-1}u$, one for each prime ($u$ is the exponent plus one). Chains with $u_{j+1}=2u_j-1$ telescope, which lets us get from $s$ to $k$ when $k+1=2^rs$.
+
+      For $n=\prod p_i^{e_i}$, $\frac{d(n^2)}{d(n)}=\prod\frac{2e_i+1}{e_i+1}$. If this is an integer $k$, then $k\prod(e_i+1)=\prod(2e_i+1)$ is odd, so $k$ is odd.
+
+      **Every odd $k$ occurs.** Write $F(u)=\frac{2u-1}u$, so a prime with exponent $u-1$ contributes $F(u)$, and any finite list of values $u\ge1$ can be used (on distinct primes). We show by strong induction that every odd $k$ is a product of such factors. For $k=1$ use the empty product ($n=1$).
+
+      Let $k>1$ be odd and write $k+1=2^rs$ with $s$ odd and $r\ge1$; then $s<k$, so $s$ is a product of factors by induction. Let $u_1=s(2^r-1)$ and $u_{j+1}=2u_j-1$. Then $u_{j}-1=2^{j-1}(u_1-1)$, and the product telescopes:
+      $$\prod_{j=1}^rF(u_j)=\frac{u_2}{u_1}\cdot\frac{u_3}{u_2}\cdots\frac{u_{r+1}}{u_r}=\frac{u_{r+1}}{u_1}=\frac{2^r(u_1-1)+1}{u_1}.$$
+      Now $2^r(s2^r-s-1)+1=(2^rs-1)(2^r-1)=k\,(2^r-1)$, so this equals $\frac{k(2^r-1)}{s(2^r-1)}=\frac ks$. Multiplying by the factors for $s$ gives $k$.
+
+      For example $k=3$: $r=2$, $s=1$, $u=3,5$, and $n=p^2q^4$ gives $\frac{5\cdot9}{3\cdot5}=3$.
+    checked: "script: the construction gives every odd k < 400"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Pairs where one quadratic expression divides another"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$(11,1)$, $(49,1)$ and $(7t^2,7t)$ for every positive integer $t$"
+    hints:
+      - 'Compute $b\,(a^2b+a+b)-a\,(ab^2+b+7)$.'
+      - 'So $ab^2+b+7$ divides $b^2-7a$. Split by the sign of $b^2-7a$.'
+    solution: |
+      **Key idea:** a combination of the two expressions kills the big terms and leaves $b^2-7a$. A divisor larger than it in size forces $b^2=7a$ or tiny $b$.
+
+      Let $N=ab^2+b+7$. Then $b(a^2b+a+b)-a(ab^2+b+7)=b^2-7a$, so $N\mid b^2-7a$.
+      - **$b^2-7a>0$:** then $0<b^2-7a<b^2<N$, impossible.
+      - **$b^2-7a=0$:** $b=7t$, $a=7t^2$. Then $a^2b+a+b=7t(49t^4+t+1)$ and $N=7(49t^4+t+1)$, so the quotient is $t$. These all work.
+      - **$b^2-7a<0$:** then $N\le7a-b^2<7a$, so $ab^2<7a$ and $b\in\{1,2\}$.
+        - $b=1$: $a+8\mid a^2+a+1$. Since $a^2+a+1=(a+8)(a-7)+57$, we need $a+8\mid57$, so $a=11$ or $a=49$.
+        - $b=2$: $4a+9\mid7a-4$, so $4a+9$ divides $7(4a+9)-4(7a-4)=79$. Then $4a+9=79$, which has no integer solution.
+    checked: "script: search with a < 600, b < 100"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Parallel to a contact chord: acute angle at incenter"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'The line through $B$ parallel to $MK$ is perpendicular to $BI$. If $R,S$ lie on it, the angle $RIS$ is acute exactly when the signed product $BR\cdot BS$ is greater than $-BI^2$.'
+      - 'Show that triangles $BMR$ and $BSK$ are similar. Then $BR\cdot BS=-BK^2$.'
+    solution: |
+      **Key idea:** triangles $BMR$ and $BSK$ are similar, which gives the signed product $BR\cdot BS=-BK^2$. Then $\vec{IR}\cdot\vec{IS}=BI^2-BK^2=r^2>0$.
+
+      Let $\ell$ be the line through $B$ parallel to $MK$. Since $BM=BK$, line $BI$ is the perpendicular bisector of $MK$, so $\ell\perp BI$. Also $\ell$ is the external bisector at $B$: the reflection in $\ell$ swaps lines $BA$ and $BC$, sending ray $BA$ to the ray opposite $BC$.
+
+      **Similar triangles.** Use directed angles mod $180^\circ$.
+      - At $B$: $\angle(BM,BR)=\angle(BA,\ell)=\angle(\ell,BC)=\angle(BS,BK)$, by the reflection.
+      - At $M$ and $S$: by the tangent–chord rule, $\angle(MR,MB)=\angle(ML,MA)=\angle(KL,KM)$, and since $\ell\parallel KM$, $\angle(KL,KM)=\angle(SK,SB)$.
+
+      So triangles $BMR$ and $BSK$ are directly similar, and in complex numbers with origin $B$: $\frac{R}{M}=\frac{K}{S}$, so $R\cdot S=M\cdot K$.
+
+      **Signed product.** Rotate so that $\ell$ is the real axis. Then $R$ and $S$ are real numbers $\rho,\sigma$. The reflection in $\ell$ sends $M$ to the point at distance $BK$ on the ray opposite $BC$, so $K=-\overline M$ and
+      $$\rho\sigma=M\cdot(-\overline M)=-|M|^2=-BK^2<0 .$$
+      So $R$ and $S$ lie on opposite sides of $B$.
+
+      **The angle.** $I=ih$ with $h=BI$. Then
+      $$\vec{IR}\cdot\vec{IS}=\operatorname{Re}\big((\rho-ih)\overline{(\sigma-ih)}\big)=\rho\sigma+h^2=BI^2-BK^2=r^2>0,$$
+      where $r$ is the inradius. A positive dot product means $\angle RIS$ is acute.
+    checked: "numeric: IR·IS = r² for 500 random triangles"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Least value of a function with a twisted multiplicative rule"
+    areas: [number-theory, algebra]
+    difficulty: 4
+    answer: "$120$"
+    hints:
+      - 'With $a=f(1)$, find $f(f(s))=a^2s$ (so $f$ is injective) and $f(at^2)=f(t)^2$.'
+      - 'Prove $a\,f(st)=f(s)f(t)$. Then $g=f/a$ is integer-valued, completely multiplicative and its own inverse.'
+      - 'So $g$ swaps primes in pairs. Choose the swaps to make $g(2)g(3)^3g(37)$ small.'
+    solution: |
+      **Key idea:** $f$ is $a$ times a completely multiplicative involution $g$, and $g$ permutes the primes in pairs. Then $f(1998)=a\,g(2)g(3)^3g(37)$, which is smallest when $g$ swaps $2\leftrightarrow3$ and sends $37$ to $5$.
+
+      Let $a=f(1)$ and write $E(s,t)$ for $f(t^2f(s))=s\,f(t)^2$.
+
+      **Basic facts.** $E(s,1)$: $f(f(s))=a^2s$, so $f$ is injective, and $f(a)=f(f(1))=a^2$. $E(1,t)$: $f(at^2)=f(t)^2$.
+
+      **$f(a^2s^2)=af(s)^2$.** Both sides have the same image under $f$: $f(f(a^2s^2))=a^4s^2$, and $f(af(s)^2)=f(f(s))^2=a^4s^2$. By injectivity they are equal.
+
+      **$f(tf(s))=as\,f(t)$.** $E(a^2s^2,t)$ gives $f\big(t^2af(s)^2\big)=a^2s^2f(t)^2$. The left side is $f\big(a\,(tf(s))^2\big)=f(tf(s))^2$. Take square roots.
+
+      **$af(st)=f(s)f(t)$.** Apply the previous fact with $t=a$: $f(af(st))=a\,st\,f(a)=a^3st$. Apply it with $t\to f(t)$: $f(f(t)f(s))=as\,f(f(t))=a^3st$. By injectivity, $af(st)=f(s)f(t)$.
+
+      **$a$ divides every value.** By induction $f(s)^k=a^{k-1}f(s^k)$, so $a^{k-1}\mid f(s)^k$ for all $k$. For each prime $\ell$, $(k-1)v_\ell(a)\le k\,v_\ell(f(s))$ for all $k$, so $v_\ell(a)\le v_\ell(f(s))$.
+
+      **The involution.** Let $g=f/a$, a function to the positive integers. Then $g(st)=g(s)g(t)$, $g(1)=1$, and $f(ax)=af(x)$ gives $af(g(s))=f(f(s))=a^2s$, so $g(g(s))=s$. If a prime $p$ had $g(p)=xy$ with $x,y>1$, then $p=g(x)g(y)$ with both factors above $1$, impossible. So $g$ maps primes to primes, in pairs or fixed.
+
+      **Minimizing.** $f(1998)=a\,g(2)\,g(3)^3\,g(37)\ge g(2)g(3)^3g(37)$, with three distinct primes. If $g(3)=2$, then $g(2)=3$ and $g(37)\ge5$, giving at least $3\cdot8\cdot5=120$. If $g(3)\ge3$, the value is at least $27\cdot2\cdot3=162$. The value $120$ is reached by $a=1$ and $g$ swapping $2\leftrightarrow3$ and $5\leftrightarrow37$, fixing other primes. Then $f=g$ satisfies $f(t^2f(s))=g(t)^2g(g(s))=s\,f(t)^2$.
+    checked: "reasoning; the example checked by script on s, t ≤ 200"
+    status: ready

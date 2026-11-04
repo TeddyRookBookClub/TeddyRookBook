@@ -1,0 +1,137 @@
+year: 2006
+edition: 47th
+date: "July 12–13, 2006 · Ljubljana, Slovenia"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2006/2006_eng.pdf
+  archive: https://www.imo-official.org/editions/2006/
+problems:
+  - id: P1
+    day: 1
+    topic: "Seeing BC like the incenter means farther from A"
+    areas: [geometry]
+    difficulty: 1
+    hints:
+      - 'The angle condition says $\angle PBC+\angle PCB=\tfrac12(\angle B+\angle C)$. So what is $\angle BPC$?'
+      - '$P$ lies on the circle through $B$, $I$, $C$. Its center is where line $AI$ meets the circumcircle again.'
+    solution: |
+      **Key idea:** $P$ sees $BC$ at the same angle as the incenter does, so $P$ lies on the circle $BIC$. The center of that circle is on line $AI$, and the triangle inequality finishes.
+
+      **Where $P$ is.** The four angles $\angle PBA$, $\angle PBC$, $\angle PCA$, $\angle PCB$ add up to $\angle B+\angle C$, and the condition splits them into two groups with equal sums. So
+      $$\angle PBC+\angle PCB=\tfrac12(\angle B+\angle C),\qquad \angle BPC=180^\circ-\tfrac12(\angle B+\angle C)=90^\circ+\tfrac12\angle A .$$
+      The incenter has the same angle: $\angle BIC=90^\circ+\tfrac12\angle A$. Both $P$ and $I$ are on the same side of $BC$, so $P$ lies on the circle $\omega$ through $B$, $I$, $C$.
+
+      **The center of $\omega$.** Let $M$ be the second point where line $AI$ meets the circumcircle of $ABC$; it is the midpoint of arc $BC$. A classical fact: $MB=MI=MC$. (Angle chase: $\angle MBI=\tfrac12\angle A+\tfrac12\angle B=\angle MIB$.) So $M$ is the center of $\omega$, and $MP=MI$.
+
+      **Finish.** $A$, $I$, $M$ lie on a line in this order, so $AM=AI+IM$. By the triangle inequality,
+      $$AP+PM\ge AM=AI+IM=AI+PM,$$
+      so $AP\ge AI$. Equality means $P$ lies on segment $AM$. The only point of $\omega$ on that segment is $I$, so equality holds only for $P=I$.
+    viz: imo-2006-p1
+    checked: "script: 2,000 random triangles, points P of arc BIC inside the triangle satisfy the angle condition and AP ≥ AI"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Triangulating a 2006-gon: isosceles triangles with odd-arc sides"
+    areas: [combinatorics, geometry]
+    difficulty: 4
+    answer: '$1003$'
+    hints:
+      - 'In a good isosceles triangle, the two equal sides cut off two arcs with the same odd number of polygon sides.'
+      - 'Give each good isosceles triangle one polygon side in each of its two arcs, a side not already inside a smaller such arc. Odd minus even is never zero.'
+    solution: |
+      **Key idea:** each good isosceles triangle can claim two polygon sides of its own, one under each leg. With $2006$ sides, at most $1003$ triangles. A fan of small ear triangles reaches $1003$.
+
+      **Arcs.** A diagonal or side splits the boundary into two arcs. The diagonals don't cross, so for any two of them the arcs cut off are nested or disjoint. A triangle $XYZ$ of the dissection splits the boundary into three arcs, of $a$, $b$, $c$ sides with $a+b+c=2006$. Equal chords in a regular polygon cut off equal or complementary arcs, and complementary would leave the third arc empty. So in an isosceles triangle with apex $X$, the arcs under the legs $XY$ and $XZ$ have the same length $a$. If the triangle has two good sides, two arcs are odd and one is even (their sum is even), and the equal arcs must be the odd ones. So: **a good triangle has legs cutting off two equal odd arcs**, and its base cuts off the even remaining arc. Call the arcs under the legs its *leg arcs*.
+
+      **Leg arcs of triangles inside.** Fix a good triangle $T$ and one leg arc $\Lambda$ of $T$, with $a$ sides, $a$ odd. Look at the good triangles lying in the region cut off by that leg. For each of them, both leg arcs lie inside $\Lambda$ (the other arc of such a triangle contains everything outside $\Lambda$, so it has at least $2006-a\ge1005$ sides, while a leg arc has at most $1001$ sides, since two leg arcs and a nonempty base arc add up to $2006$; so the outside arc is the base arc). Take the *maximal* ones among all these leg arcs. They are pairwise disjoint, and they come in pairs: if one leg arc of a triangle $T'$ sat inside another triangle's leg arc, the whole triangle $T'$, and so its other leg arc, would sit inside too. Each pair has two arcs of equal length, so the maximal arcs cover an even number of sides. Since $a$ is odd, at least one side of $\Lambda$ is not under any leg arc of a smaller good triangle. Assign that side to $T$.
+
+      Doing this for both legs gives $T$ two sides.
+
+      **No side is claimed twice.** Suppose side $s$ is assigned to $T_1$ and $T_2$, through leg arcs $\Lambda_1$ and $\Lambda_2$ that both contain $s$. They are nested; they can't be equal, because the two triangles on either side of one diagonal have that diagonal's two complementary arcs as their arcs. Say $\Lambda_2\subsetneq\Lambda_1$. The triangle $T_2$ lies on the far side of its leg from $\Lambda_2$, which is still inside the region cut off by $T_1$'s leg. So $s$ lies under a leg arc of a smaller good triangle inside $\Lambda_1$, and it was not assigned to $T_1$. Contradiction.
+
+      **Upper bound.** Each good isosceles triangle owns two sides, no side is owned twice, so there are at most $2006/2=1003$ of them.
+
+      **Construction.** Number the vertices $P_0,\dots,P_{2005}$. Draw the $1003$ diagonals $P_{2i}P_{2i+2}$ (indices mod $2006$). They cut off $1003$ triangles $P_{2i}P_{2i+1}P_{2i+2}$, each isosceles with two polygon sides as legs, and sides are good. The middle region is a $1003$-gon, which we split by $1000$ more diagonals from one vertex. In total that is $1003+1000=2003$ diagonals, and $1003$ good isosceles triangles.
+    checked: "script: dynamic programming over all triangulations of regular m-gons for even m from 4 to 20; the maximum is always m/2"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Sharp constant for a cyclic quartic inequality"
+    areas: [algebra]
+    difficulty: 4
+    answer: '$M=\dfrac{9\sqrt2}{32}$'
+    hints:
+      - 'The left side factors as $(a-b)(b-c)(a-c)(a+b+c)$, up to sign.'
+      - 'Order $a\le b\le c$ and let $d=c-a$, $s=a+b+c$. Show $|{\rm LHS}|\le\frac14d^3|s|$ and $3(a^2+b^2+c^2)\ge s^2+\frac32d^2$. Then AM–GM with weights.'
+    solution: |
+      **Key idea:** the left side factors. Then everything depends on two quantities, the spread $d$ and the sum $s$, and a weighted AM–GM finds the best constant.
+
+      **Factor.** The left side $L$ vanishes whenever two of the variables are equal, so it is divisible by $(a-b)(b-c)(c-a)$, and the remaining factor has degree $1$ and is symmetric, so it is a multiple of $a+b+c$. Comparing the coefficient of $a^3b$ (which is $1$) gives
+      $$L=-(a-b)(b-c)(c-a)(a+b+c).$$
+
+      **Bounds.** $|L|$ is symmetric, so assume $a\le b\le c$, and let $d=c-a$, $s=a+b+c$, $Q=a^2+b^2+c^2$.
+      - By AM–GM, $(b-a)(c-b)\le\big(\tfrac{c-a}2\big)^2$, so $|L|\le\tfrac14d^3|s|$.
+      - $3Q=s^2+(a-b)^2+(b-c)^2+(c-a)^2$, and $(a-b)^2+(b-c)^2\ge\tfrac12d^2$, so $3Q\ge s^2+\tfrac32d^2$.
+
+      **AM–GM.** Split $\tfrac32d^2$ into three equal parts:
+      $$s^2+\tfrac{d^2}2+\tfrac{d^2}2+\tfrac{d^2}2\ \ge\ 4\sqrt[4]{\tfrac{s^2d^6}8}.$$
+      So $\tfrac{s^2d^6}8\le\big(\tfrac{3Q}4\big)^4$, which gives $|s|\,d^3\le\tfrac{9\sqrt2}8Q^2$, and then
+      $$|L|\le\frac{9\sqrt2}{32}\,(a^2+b^2+c^2)^2 .$$
+
+      **Sharp.** Equality needs $b$ to be the midpoint of $a$ and $c$, and $s^2=\tfrac{d^2}2$. Take $b=1$, $d=3\sqrt2$: the triple $a=1+\tfrac{3\sqrt2}2$, $b=1$, $c=1-\tfrac{3\sqrt2}2$ gives $L=\tfrac{9\sqrt2}{32}Q^2$ with a plus sign. So the least constant is $M=\dfrac{9\sqrt2}{32}$.
+    checked: "sympy: the factorization and the value at the example; 200,000 random triples never beat 9√2/32 ≈ 0.39775"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "When is one plus two powers of two a square?"
+    areas: [number-theory]
+    difficulty: 2
+    answer: '$(x,y)=(0,\pm2)$ and $(4,\pm23)$'
+    hints:
+      - 'For $x\ge1$ write $2^x(1+2^{x+1})=(y-1)(y+1)$. One of $y\pm1$ carries almost all the factors of $2$.'
+      - 'So $y=2^{x-1}m+\varepsilon$ with $m$ odd and $\varepsilon=\pm1$. Substitute and compare sizes.'
+    solution: |
+      **Key idea:** factor $y^2-1$. The two factors share only one $2$, so one of them is a big power of two times an odd number. Substituting leaves a tiny equation.
+
+      **Small and negative $x$.** For $x\le-2$ the left side is strictly between $1$ and $2$, not an integer. For $x=-1$ it is $2$, not a square. For $x=0$ it is $4$: $y=\pm2$. For $x=1,2$ it is $11$ and $37$, not squares.
+
+      **$x\ge3$.** By symmetry take $y>0$. Then $y$ is odd and
+      $$(y-1)(y+1)=2^x\big(1+2^{x+1}\big).$$
+      $\gcd(y-1,y+1)=2$, so one factor is divisible by $2^{x-1}$. Write $y=2^{x-1}m+\varepsilon$ with $\varepsilon=\pm1$ and $m$ odd; $m\ge1$ since $y>0$. Then
+      $$y^2-1=2^{2x-2}m^2+2^x\varepsilon m=2^x\big(1+2^{x+1}\big)\iff 2^{x-2}\big(m^2-8\big)=1-\varepsilon m .$$
+      - $\varepsilon=1$: the right side is $1-m\le0$, so $m^2\le8$, $m=1$, and then $-7\cdot2^{x-2}=0$: impossible.
+      - $\varepsilon=-1$: $2^{x-2}(m^2-8)=1+m$. $m=1$ gives a negative left side. For $m\ge5$, the left side is at least $2(m^2-8)>m+1$. So $m=3$, and $2^{x-2}=4$, $x=4$, $y=8\cdot3-1=23$.
+
+      **Check.** $1+2^4+2^9=529=23^2$. So the solutions are $(0,\pm2)$ and $(4,\pm23)$.
+    checked: "script: x from 0 to 59; only x = 0 and x = 4 give squares"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Fixed points of an iterated integer polynomial"
+    areas: [algebra, number-theory]
+    difficulty: 3
+    hints:
+      - 'Since $a-b$ divides $P(a)-P(b)$, the steps around a cycle of $P$ all have the same absolute size. So every integer cycle has length $1$ or $2$.'
+      - 'Then every integer solution of $Q(t)=t$ satisfies $P(P(t))=t$. If there is a $2$-cycle $a\leftrightarrow b$, show that $t+P(t)=a+b$ for every such $t$.'
+    solution: |
+      **Key idea:** integer polynomials can only have cycles of length $1$ or $2$ on the integers. Then all the solutions sit on the roots of one polynomial of degree $n$.
+
+      **Step 1: short cycles.** Let $t$ be an integer with $Q(t)=t$. Then $t$ lies on a cycle $x_0\to x_1\to\dots\to x_{m}=x_0$ of $P$, with $x_{i+1}=P(x_i)$ and $m\mid k$. Let $d_i=x_{i+1}-x_i$. Since $x_{i+1}-x_i$ divides $P(x_{i+1})-P(x_i)=x_{i+2}-x_{i+1}$, each $d_i$ divides $d_{i+1}$, and going around the cycle, all $|d_i|$ are equal. If the cycle has more than one point, the $d_i$ are nonzero and add up to $0$, so not all have the same sign: some $d_{i+1}=-d_i$, that is, $x_{i+2}=x_i$. So the cycle has length $1$ or $2$. In every case $P(P(t))=t$.
+
+      **Step 2a: only fixed points.** If every such $t$ has $P(t)=t$, they are roots of $P(x)-x$, which has degree $n$. At most $n$ of them.
+
+      **Step 2b: a $2$-cycle exists.** Say $P(a)=b$, $P(b)=a$ with $a\ne b$. Let $t$ be any integer with $P(P(t))=t$, and let $s=P(t)$. Then $t-a\mid s-b$ and $s-b\mid t-a$, so $|t-a|=|s-b|$. In the same way $|t-b|=|s-a|$. If both held with a plus sign, $t-a=s-b$ and $t-b=s-a$, then subtracting gives $a=b$. So one holds with a minus sign, and either way $t+s=a+b$. Hence every such $t$ is a root of
+      $$P(x)+x-(a+b),$$
+      which has degree $n$ because $n>1$. At most $n$ of them.
+    checked: "script: 300 random integer polynomials of degree 2 to 4; for k ≤ 4 never more than n integer solutions in [−60, 60]"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Largest triangles on the sides of a convex polygon"
+    areas: [geometry]
+    difficulty: 5
+    status: coming

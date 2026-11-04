@@ -1,0 +1,147 @@
+year: 2009
+edition: 50th
+date: "July 15–16, 2009 · Bremen, Germany"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2009/2009_eng.pdf
+  archive: https://www.imo-official.org/editions/2009/
+problems:
+  - id: P1
+    day: 1
+    topic: "A chain of divisibilities that can't close up"
+    areas: [number-theory]
+    difficulty: 1
+    hints:
+      - 'The condition says $a_ia_{i+1}\equiv a_i\pmod n$. Suppose the chain also closes: $a_ka_1\equiv a_k$.'
+      - 'Then multiply your way around the whole cycle starting from any $a_i$. What does every $a_i$ become congruent to?'
+    solution: |
+      **Key idea:** if the chain closed into a cycle, every term would be congruent to the product of all the terms. Then two different terms would be congruent mod $n$, which is impossible in $\{1,\dots,n\}$.
+
+      Suppose $n\mid a_k(a_1-1)$ as well. Then, with indices read cyclically ($a_{k+1}=a_1$),
+      $$a_ja_{j+1}\equiv a_j\pmod n\qquad\text{for every }j .$$
+      Start from any $a_i$ and use this repeatedly:
+      $$a_i\equiv a_ia_{i+1}\equiv a_ia_{i+1}a_{i+2}\equiv\dots\equiv a_ia_{i+1}\cdots a_{i+k-1}=a_1a_2\cdots a_k\pmod n .$$
+      Each step multiplies the relation $a_j\equiv a_ja_{j+1}$ by the product of the earlier terms. So every $a_i$ is congruent to the same product. In particular $a_1\equiv a_2\pmod n$, and since both lie in $\{1,\dots,n\}$, $a_1=a_2$. That contradicts that the numbers are distinct.
+    checked: "script: exhaustive search for n ≤ 12 and chains of length ≤ 4 finds no closed chain"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "A midpoint circle tangent to a segment gives equal distances"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - '$MK$ is parallel to $AB$ and half of $BQ$; $ML$ is parallel to $AC$ and half of $CP$.'
+      - 'Tangency at $M$ makes triangle $MKL$ similar to triangle $APQ$. Turn the ratio into $AP\cdot PC=AQ\cdot QB$, which is a statement about powers.'
+    solution: |
+      **Key idea:** tangency gives a similarity between the midpoint triangle and $APQ$. The resulting ratio says $P$ and $Q$ have the same power with respect to the circumcircle.
+
+      **Midlines.** In triangle $BPQ$, $K$ and $M$ are midpoints of $BP$ and $PQ$, so $MK\parallel BQ$ (which is line $AB$) and $MK=\tfrac12BQ$. In triangle $CQP$, $ML\parallel CP$ (line $AC$) and $ML=\tfrac12CP$.
+
+      **Similar triangles.** $PQ$ is tangent to $\Gamma$ at $M$. By the tangent–chord angle, $\angle(PQ,MK)=\angle MLK$. Since $MK\parallel AQ$, $\angle(PQ,MK)=\angle AQP$. So $\angle MLK=\angle AQP$. In the same way $\angle MKL=\angle APQ$. Hence triangles $MKL$ and $APQ$ are similar, with $M\leftrightarrow A$, $K\leftrightarrow P$, $L\leftrightarrow Q$. By the law of sines,
+      $$\frac{MK}{ML}=\frac{\sin\angle MLK}{\sin\angle MKL}=\frac{\sin\angle AQP}{\sin\angle APQ}=\frac{AP}{AQ}.$$
+
+      **Powers.** Substituting $MK=\tfrac12BQ$ and $ML=\tfrac12CP$ gives $BQ\cdot AQ=CP\cdot AP$. The power of $P$ with respect to the circumcircle is $-PA\cdot PC=OP^2-R^2$, and the power of $Q$ is $-QA\cdot QB=OQ^2-R^2$. These are equal, so $OP=OQ$.
+    viz: imo-2009-p2
+    checked: "script: 374 tangent configurations found numerically; AP·PC = AQ·QB to 1e-14 in each"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Two arithmetic subsequences force the whole sequence to be arithmetic"
+    areas: [algebra, combinatorics]
+    difficulty: 4
+    hints:
+      - 'The two subsequences have the same common difference $D$. And the gaps $d_n=s_{n+1}-s_n$ are at most $D$.'
+      - 'Let $m$ and $M$ be the smallest and largest gaps. Summing gaps over a block gives $mM\le D\le mM$. What does equality say about the gaps right after $s_n$?'
+    solution: |
+      **Key idea:** the jump between $s_{s_n}$ and $s_{s_{n+1}}$ is a sum of $d_n$ consecutive gaps. Comparing the smallest and the largest gap pins that sum down, and the first gap of each block is a constant. That forces the smallest and largest gaps to be equal.
+
+      Let $d_n=s_{n+1}-s_n\ge1$. Let $s_{s_n}=A+nD$ and $s_{s_n+1}=B+nD'$.
+
+      **Same difference.** Since $s$ is increasing, $s_{s_n}<s_{s_n+1}\le s_{s_{n+1}}$, so $A+nD<B+nD'\le A+(n+1)D$ for every $n$. This forces $D=D'$. So $c:=s_{s_n+1}-s_{s_n}=d_{s_n}$ is the same for every $n$.
+
+      **Gaps are bounded.** For integers, $s_j-s_i\ge j-i$ when $j>i$. So $d_n=s_{n+1}-s_n\le s_{s_{n+1}}-s_{s_n}=D$. Let $m=\min d_n$ and $M=\max d_n$; both are attained.
+
+      **Squeeze.** For each $n$,
+      $$D=s_{s_{n+1}}-s_{s_n}=d_{s_n}+d_{s_n+1}+\dots+d_{s_{n+1}-1},$$
+      a sum of $d_n$ gaps. So $m\,d_n\le D\le M\,d_n$.
+      - Take $n$ with $d_n=M$: then $D\ge mM$.
+      - Take $n$ with $d_n=m$: then $D\le Mm$.
+
+      So $D=mM$. For an $n$ with $d_n=M$, the sum of $M$ gaps equals $mM$, so all of them equal $m$; in particular $d_{s_n}=m$. For an $n$ with $d_n=m$, all gaps in the block equal $M$, so $d_{s_n}=M$. But $d_{s_n}=c$ for every $n$, so $m=c=M$.
+
+      All gaps are equal, so $(s_n)$ is an arithmetic progression.
+    checked: "logic: each inequality is elementary; the squeeze is exact"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Isosceles triangle, two incenters, and a forty-five degree angle"
+    areas: [geometry]
+    difficulty: 3
+    answer: '$\angle CAB=60^\circ$ or $90^\circ$'
+    hints:
+      - '$K$ lies on the bisector $CI$, and $DK$ bisects the right angle $ADC$, so $\angle IDK=45^\circ$. Reflect $D$ in line $CI$ to a point $D''$ on $CA$.'
+      - 'Both $E$ and $D''$ are points of line $CA$ that see $IK$ at $45^\circ$. Either they coincide, or $I,K,E,D''$ are concyclic. Use the power of $C$.'
+    solution: |
+      **Key idea:** the point $D$ already sees the segment $IK$ at $45^\circ$. Reflecting it onto line $CA$ gives a second point there with that property. So either $E$ is that point, or $E$ is on the same circle, and the power of $C$ turns this into one trigonometric equation.
+
+      Let $\beta=\angle B=\angle C$, so $\angle A=180^\circ-2\beta$ and $0<\beta<90^\circ$. Let $a=BC$, $b=CA=AB$, and let $I$ be the incenter of $ABC$, where $AD$ and $BE$ meet. Since the triangle is isosceles, $AD\perp BC$ and $CD=\tfrac a2$.
+
+      **Where $K$ is.** $K$ is the incenter of $ADC$. Its bisector from $C$ is the bisector of the whole angle $C$, so $K$ lies on segment $CI$. Its bisector from $D$ halves the right angle $ADC$, so $\angle IDK=\angle KDC=45^\circ$.
+
+      **Two points on line $CA$.** Reflect $D$ in line $CI$ to get $D'$ on ray $CA$, with $CD'=\tfrac a2$. The reflection fixes $I$ and $K$, so $\angle ID'K=45^\circ$. Also $I$ lies on segment $BE$, so $\angle BEK=\angle IEK$.
+
+      The points $X$ on the side of line $CI$ containing $A$ with $\angle IXK=45^\circ$ form an arc of a circle through $I$ and $K$. Line $CA$ meets this arc in at most two points, and $D'$ is one of them. So $\angle BEK=45^\circ$ holds exactly when $E=D'$ or when $E\ne D'$ and $I,K,E,D'$ are concyclic. Since $C,K,I$ lie on a line in this order and $E,D'$ lie on one ray from $C$, "concyclic" is the same as $CK\cdot CI=CE\cdot CD'$ (power of $C$).
+
+      **Lengths.** From the right triangle $CDI$: $CI=\dfrac{a}{2\cos(\beta/2)}$. In triangle $CDK$ the angles are $45^\circ$ at $D$, $\tfrac\beta2$ at $C$, and $135^\circ-\tfrac\beta2$ at $K$, so $CK=\dfrac{(a/2)\sin45^\circ}{\sin(135^\circ-\beta/2)}$. By the bisector theorem, $CE=\dfrac{ab}{a+b}$, and $b=\dfrac{a}{2\cos\beta}$, so $CE=\dfrac{a}{1+2\cos\beta}$.
+
+      **Case $E=D'$.** $\dfrac a{1+2\cos\beta}=\dfrac a2$ gives $\cos\beta=\tfrac12$, $\beta=60^\circ$, $\angle A=60^\circ$.
+
+      **Case concyclic.** $CK\cdot CI=CE\cdot CD'$ becomes
+      $$\frac{\sin45^\circ}{2\sin(135^\circ-\beta/2)\cos(\beta/2)}=\frac1{1+2\cos\beta}.$$
+      Since $2\sin(135^\circ-\tfrac\beta2)\cos\tfrac\beta2=\sin135^\circ+\sin(135^\circ-\beta)$, this is
+      $$\tfrac{\sqrt2}2+\sqrt2\cos\beta=\tfrac{\sqrt2}2+\tfrac{\sqrt2}2(\cos\beta+\sin\beta)\iff\tan\beta=1 .$$
+      So $\beta=45^\circ$ and $\angle A=90^\circ$. Here $E\ne D'$, since $\cos45^\circ\ne\tfrac12$.
+
+      Each case was an equivalence, so $\angle BEK=45^\circ$ exactly when $\angle CAB$ is $60^\circ$ or $90^\circ$.
+    checked: "script: ∠BEK computed for ∠A from 0.5° to 179.5°; it equals 45° only at 60° and 90°"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Functions on positive integers that always make triangles"
+    areas: [algebra]
+    difficulty: 3
+    answer: '$f(n)=n$ only'
+    hints:
+      - 'With $a=1$ the triangle is very thin. Show $f(1)=1$, and then with $b=1$ show $f(f(a))=a$.'
+      - 'Replacing $a$ by $f(a)$ gives $f(a+b-1)<f(a)+f(b)$. Let $z=f(2)$ and show by induction that $f(j(z-1)+1)=j+1$.'
+    solution: |
+      **Key idea:** thin triangles force $f(1)=1$ and $f(f(a))=a$. Then a subadditive bound and injectivity make $f$ linear, and being its own inverse makes it the identity.
+
+      Write $T(a,b)$ for the condition that $a$, $f(b)$, $f(b+f(a)-1)$ are the sides of a nondegenerate triangle.
+
+      **$f(1)=1$.** $T(1,b)$ needs $|f(b)-f(b+f(1)-1)|<1$, so $f(b+f(1)-1)=f(b)$. If $f(1)>1$, then $f$ is periodic, so it takes only finitely many values, all at most some $B$. Then $T(2B,b)$ fails, since $2B\ge f(b)+f(\dots)$. So $f(1)=1$.
+
+      **Involution.** $T(a,1)$: the sides are $a$, $1$, $f(f(a))$, so $|a-f(f(a))|<1$ and $f(f(a))=a$. In particular $f$ is a bijection.
+
+      **Subadditivity.** $T(f(a),b)$ has sides $f(a)$, $f(b)$, $f(b+a-1)$, so
+      $$f(a+b-1)<f(a)+f(b),\quad\text{that is,}\quad f(a+b-1)\le f(a)+f(b)-1 .$$
+
+      **Linear.** Let $z=f(2)$. Then $z\ne1$ (since $f(1)=1$ and $f$ is injective), so $z\ge2$, and $f(z)=f(f(2))=2$. Claim: $f\big(j(z-1)+1\big)=j+1$ for all $j\ge0$. It holds for $j=0,1$. If it holds up to $j$, apply subadditivity with $a=j(z-1)+1$ and $b=z$:
+      $$f\big((j+1)(z-1)+1\big)\le(j+1)+2-1=j+2 .$$
+      The values $1,\dots,j+1$ are already taken at the smaller points $i(z-1)+1$, $i\le j$, and $f$ is injective, so the value is exactly $j+2$.
+
+      Applying $f$ to the claim: $f(j+1)=j(z-1)+1$, that is, $f(n)=(n-1)(z-1)+1$ for all $n$. Then $f(f(n))=(n-1)(z-1)^2+1=n$ forces $(z-1)^2=1$, so $z=2$ and $f(n)=n$.
+
+      **Check.** For $f(n)=n$ the sides are $a$, $b$, $a+b-1$, and every triangle inequality holds strictly.
+    checked: "logic: every step is forced; the identity was checked against the triangle condition for a, b ≤ 200"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "A grasshopper avoiding a forbidden set of landing points"
+    areas: [combinatorics]
+    difficulty: 5
+    status: coming

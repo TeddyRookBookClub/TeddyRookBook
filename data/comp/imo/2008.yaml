@@ -1,0 +1,136 @@
+year: 2008
+edition: 49th
+date: "July 16–17, 2008 · Madrid, Spain"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2008/2008_eng.pdf
+  archive: https://www.imo-official.org/editions/2008/
+problems:
+  - id: P1
+    day: 1
+    topic: "Six points from circles through the orthocenter are concyclic"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'The two points on $BC$ are symmetric about the midpoint $M_a$. So their distance from the circumcenter $O$ satisfies $OA_1^2=OM_a^2+M_aH^2$.'
+      - 'Put $O$ at the origin, so $H=A+B+C$ as vectors. Compute $OM_a^2+M_aH^2$ and look for symmetry.'
+    solution: |
+      **Key idea:** all six points are at the same distance from the circumcenter $O$. A short vector computation shows that the squared distance is a symmetric expression in $A$, $B$, $C$.
+
+      Put the origin at the circumcenter $O$, write $R$ for the circumradius, and use vectors, so $|A|=|B|=|C|=R$. A standard fact: the orthocenter is $H=A+B+C$. (Indeed $(H-A)\cdot(B-C)=(B+C)\cdot(B-C)=|B|^2-|C|^2=0$, and similarly for the other altitudes.)
+
+      **One point.** Let $M_a=\tfrac{B+C}2$. Since $OM_a\perp BC$ and $A_1$ is on line $BC$ with $M_aA_1=M_aH$,
+      $$OA_1^2=OM_a^2+M_aA_1^2=OM_a^2+M_aH^2 .$$
+      The same holds for $A_2$.
+
+      **Compute.** $H-M_a=A+\tfrac{B+C}2$, so
+      $$OM_a^2+M_aH^2=\frac{|B+C|^2}4+R^2+A\cdot(B+C)+\frac{|B+C|^2}4=R^2+\frac{2R^2+2B\cdot C}2+A\cdot B+A\cdot C .$$
+      That is
+      $$OA_1^2=2R^2+A\cdot B+B\cdot C+C\cdot A,$$
+      which is symmetric in $A$, $B$, $C$.
+
+      **Finish.** The same computation for the other two sides gives the same value. So all six points are at the same distance from $O$: they lie on one circle centered at $O$.
+    viz: imo-2008-p1
+    checked: "script: random acute triangles; the six distances from O agree to 1e-12"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "A sum of three squared ratios is at least one"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Substitute $a=\dfrac x{x-1}$, $b=\dfrac y{y-1}$, $c=\dfrac z{z-1}$. Rewrite $xyz=1$ in terms of $a,b,c$.'
+      - 'You should get $ab+bc+ca=a+b+c-1$. Then $a^2+b^2+c^2=(a+b+c-1)^2+1$. For part (b), make $a+b+c=1$ with rational numbers.'
+    solution: |
+      **Key idea:** with the right substitution, the constraint becomes linear in the pair sums, and the left side becomes a perfect square plus $1$.
+
+      **(a)** Let $a=\dfrac x{x-1}$, $b=\dfrac y{y-1}$, $c=\dfrac z{z-1}$. Then $a\ne1$ and $x=\dfrac a{a-1}$, and similarly for $y,z$. The condition $xyz=1$ becomes $abc=(a-1)(b-1)(c-1)$, which expands to
+      $$ab+bc+ca=a+b+c-1 .$$
+      Let $s=a+b+c$. Then
+      $$a^2+b^2+c^2=s^2-2(s-1)=(s-1)^2+1\ \ge1 .$$
+
+      **(b)** Equality holds when $s=1$, and then $ab+bc+ca=0$. For a rational $r\notin\{0,-1\}$, set
+      $$a=\frac{1+r}{r^2+r+1},\qquad b=\frac{r(1+r)}{r^2+r+1},\qquad c=\frac{-r}{r^2+r+1}.$$
+      Then $a+b+c=1$, and $ab+bc+ca=0$ (with $b=ra$, the condition $ab+(a+b)c=0$ is exactly what fixed $a$). None of $a,b,c$ equals $1$: $a=1$ needs $r=0$, $b=1$ never happens, and $c=1$ needs $r=-1$. So $x=\frac a{a-1}$, $y=\frac b{b-1}$, $z=\frac c{c-1}$ are rational, different from $1$, satisfy $xyz=1$, and give equality.
+
+      Different values of $r$ give different values of $c$, except that each value of $c$ comes from at most two values of $r$. So there are infinitely many such triples.
+    checked: "exact arithmetic: the family checked with fractions for r = 1/2, 2, 3/7, −5/3"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Large prime factors of n squared plus one"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'Take a prime $p\equiv1\pmod4$ and an $n\le\frac{p-1}2$ with $p\mid n^2+1$.'
+      - 'Let $d=p-2n$. Then $d^2+4\equiv(p-2n)^2+4\equiv4(n^2+1)\equiv0\pmod p$. How large must $d$ be?'
+    solution: |
+      **Key idea:** for a prime $p\equiv1\pmod4$, choose the smaller square root of $-1$ mod $p$. The gap $d=p-2n$ satisfies $p\mid d^2+4$, so it can't be small.
+
+      **Ingredients.** There are infinitely many primes $p\equiv1\pmod4$. (If $p_1,\dots,p_k$ were all, every prime factor of $(2p_1\cdots p_k)^2+1$ would be odd and $\equiv1\pmod4$, but none is on the list.) For each such $p$, $-1$ is a square mod $p$: for example $\big(\tfrac{p-1}2!\big)^2\equiv-1$ by Wilson's theorem. Replacing $n$ by $p-n$ if needed, there is $n$ with $1\le n\le\frac{p-1}2$ and $p\mid n^2+1$.
+
+      **The gap.** Let $d=p-2n\ge1$. Then
+      $$d^2+4\equiv4n^2+4=4(n^2+1)\equiv0\pmod p,$$
+      so $d^2+4\ge p=2n+d$. Since $d$ is odd, $d\in\{1,3\}$ would give $p\mid5$ or $p\mid13$. So for $p>13$, $d\ge5$, and then
+      $$d^2\ge2n+d-4>2n,$$
+      so $d>\sqrt{2n}$ and $p=2n+d>2n+\sqrt{2n}$.
+
+      **Infinitely many $n$.** Each prime $p>13$ with $p\equiv1\pmod4$ gives such an $n$, and $n^2+1\ge p$, so $n\ge\sqrt{p-1}$. As $p$ grows, so does $n$, and we get infinitely many different $n$.
+    checked: "script: for n < 20,000, 14,164 values of n have such a prime factor, and every prime p ≡ 1 mod 4 with 13 < p < 10^5 gives one"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Positive functions that respect a ratio of sums of squares"
+    areas: [algebra]
+    difficulty: 2
+    answer: '$f(x)=x$ and $f(x)=\dfrac1x$'
+    hints:
+      - 'All four variables equal to $1$, then all equal to $t$: you get $f(1)=1$ and $f(t^2)=f(t)^2$.'
+      - 'Now take $w=t$, $x=1$, $y=z=\sqrt t$. You get $f(t)+\frac1{f(t)}=t+\frac1t$. Rule out mixing the two choices.'
+    solution: |
+      **Key idea:** a few substitutions show that $f(t)$ is $t$ or $\tfrac1t$ for each $t$. One more substitution shows that the choice can't change from point to point.
+
+      **Values.** $w=x=y=z=1$: $\dfrac{2f(1)^2}{2f(1)}=1$, so $f(1)=1$. Then $w=x=y=z=t$: $\dfrac{2f(t)^2}{2f(t^2)}=1$, so $f(t^2)=f(t)^2$. Then $w=t$, $x=1$, $y=z=\sqrt t$ (so $wx=yz$):
+      $$\frac{f(t)^2+1}{2f(t)}=\frac{t^2+1}{2t},\quad\text{so}\quad f(t)+\frac1{f(t)}=t+\frac1t .$$
+      The map $u\mapsto u+\frac1u$ takes each value at $u$ and $\frac1u$ only, so $f(t)\in\{t,\frac1t\}$ for every $t$.
+
+      **No mixing.** Suppose $f(a)=a\ne\frac1a$ and $f(b)=\frac1b\ne b$; so $a\ne1$ and $b\ne1$. Put $w=a$, $x=b$, $y=z=\sqrt{ab}$:
+      $$\frac{a^2+b^{-2}}{2f(ab)}=\frac{a^2+b^2}{2ab}.$$
+      - If $f(ab)=ab$: $a^2+b^{-2}=a^2+b^2$, so $b=1$. Contradiction.
+      - If $f(ab)=\frac1{ab}$: $(a^2+b^{-2})a^2b^2=a^2+b^2$, so $a^4b^2=b^2$ and $a=1$. Contradiction.
+
+      So either $f(t)=t$ for all $t$, or $f(t)=\frac1t$ for all $t$ (at $t=1$ the two agree).
+
+      **Check.** $f(t)=t$ clearly works. For $f(t)=\frac1t$, the left side is $\dfrac{(w^2+x^2)/(w^2x^2)}{(y^2+z^2)/(y^2z^2)}=\dfrac{w^2+x^2}{y^2+z^2}$ because $wx=yz$.
+    checked: "script: both answers satisfy the equation on 1,000 random quadruples with wx = yz"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Counting lamp-switching sequences with and without forbidden lamps"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: '$N/M=2^{k-n}$'
+    hints:
+      - 'Map each long sequence to a short one by replacing every switch of lamp $n+i$ with a switch of lamp $i$.'
+      - 'How many sequences map to a given one? If lamp $i$ is switched $c_i$ times, choose which of those switches really belong to lamp $n+i$.'
+    solution: |
+      **Key idea:** fold the lamps $n+i$ onto the lamps $i$. Every restricted sequence has exactly $2^{k-n}$ unrestricted sequences folding onto it.
+
+      **The map.** Given a sequence counted by $N$, replace every switch of lamp $n+i$ by a switch of lamp $i$. In the original, lamp $i$ is switched an odd number of times and lamp $n+i$ an even number, so in the new sequence lamp $i$ is switched an odd number of times and lamps $n+1,\dots,2n$ never. So the new sequence is counted by $M$.
+
+      **Fibers.** Fix a sequence counted by $M$, where lamp $i$ is switched $c_i$ times ($c_i$ odd, $\sum c_i=k$). Its preimages come from choosing, for each $i$, which of the $c_i$ switches of lamp $i$ should really be switches of lamp $n+i$. Lamp $n+i$ must end off, so we choose an even-sized subset. A set of $c_i\ge1$ elements has $2^{c_i-1}$ even-sized subsets. So the number of preimages is
+      $$\prod_i2^{c_i-1}=2^{k-n}.$$
+
+      Hence $N=2^{k-n}M$.
+    checked: "script: brute force over all sequences for small n and k; N/M = 2^(k−n) every time"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "A circle tangent to four lines and two incircles"
+    areas: [geometry]
+    difficulty: 5
+    status: coming

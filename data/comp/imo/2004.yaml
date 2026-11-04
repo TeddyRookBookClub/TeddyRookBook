@@ -1,0 +1,104 @@
+year: 2004
+edition: 45th
+date: "July 2004 · Athens, Greece"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2004/2004_eng.pdf
+  archive: https://www.imo-official.org/editions/2004/
+problems:
+  - id: P1
+    day: 1
+    topic: "Two bisectors meet; the bisector foot is on both circles"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Since $OM=ON$, the bisector of angle $MON$ is the perpendicular bisector of $MN$. Where does it meet the bisector of angle $A$ in triangle $AMN$?'
+      - 'Let the bisector from $A$ meet $BC$ at $L$. Show $B,M,R,L$ are concyclic by an angle chase through the circle $BCNM$.'
+    solution: |
+      **Key idea:** $R$ lies on the circle $AMN$. Then the foot $L$ of the bisector from $A$ is on both circles $BMR$ and $CNR$, and it lies on side $BC$.
+
+      We use directed angles between lines, written $\angle(m,n)$ and taken mod $180^\circ$.
+
+      **Step 1: $A,M,R,N$ are concyclic.** The circle with diameter $BC$ has center $O$, so $OM=ON$ and the bisector of angle $MON$ is the perpendicular bisector of $MN$. Also $\angle BMC=90^\circ$, so $AM=AC\cos A$, and similarly $AN=AB\cos A$. Since $AB\ne AC$, we get $AM\ne AN$. In a triangle with two unequal sides, the bisector of the angle between them and the perpendicular bisector of the third side meet at the midpoint of an arc of its circumcircle. So $R$ lies on the circle $AMN$.
+
+      **Step 2: the common point.** Let the bisector $AR$ meet $BC$ at $L$. Since it is the bisector of angle $A$ of triangle $ABC$, $L$ lies on the side $BC$. Now
+      $$\angle(RM,RL)=\angle(RM,RA)=\angle(NM,NA)$$
+      by Step 1. The points $B,C,N,M$ lie on one circle, so $\angle(NM,NC)=\angle(BM,BC)$, and since line $NA$ is line $NC$ and line $BM$ is line $AB$,
+      $$\angle(NM,NA)=\angle(BM,BL).$$
+      So $\angle(RM,RL)=\angle(BM,BL)$, which means $B,M,R,L$ lie on one circle. The same chase with the roles of $B$ and $C$ swapped shows that $C,N,R,L$ lie on one circle.
+
+      So the circles $BMR$ and $CNR$ both pass through $L$, which lies on side $BC$.
+    viz: imo-2004-p1
+    checked: "script: 1,000 random acute triangles; the bisector foot L lies on both circles to 1e-11"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Polynomials matched on triples with zero pairwise sum"
+    areas: [algebra]
+    difficulty: 3
+    answer: "$f(x)=\\alpha x^4+\\beta x^2$ for real $\\alpha,\\beta$"
+    hints:
+      - 'Try $a=b=c=0$, then $b=c=0$. You learn $f(0)=0$ and that $f$ is even.'
+      - 'The triple $(6t,3t,-2t)$ satisfies the condition for every $t$. Compare the coefficient of $x^k$ on both sides.'
+    solution: |
+      **Key idea:** one well-chosen family of triples kills every even power above $4$. Powers $2$ and $4$ survive because of two classical identities.
+
+      **Easy facts.** With $a=b=c=0$: $3f(0)=2f(0)$, so $f(0)=0$. With $b=c=0$ (and any $a$), the condition holds and gives $f(a)+f(0)+f(-a)=2f(a)$, so $f(-a)=f(a)$. Hence $f$ has only even powers: $f(x)=\sum_{k\ \text{even},\,k\ge2}c_kx^k$.
+
+      **A family of triples.** For $(a,b,c)=(6t,3t,-2t)$ we get $ab+bc+ca=(18-6-12)t^2=0$, and $a-b=3t$, $b-c=5t$, $c-a=-8t$, $a+b+c=7t$. So for every $t$,
+      $$f(3t)+f(5t)+f(8t)=2f(7t).$$
+      Comparing coefficients of $t^k$: $c_k\,(3^k+5^k+8^k-2\cdot7^k)=0$. For $k=2$: $9+25+64=98=2\cdot49$. For $k=4$: $81+625+4096=4802=2\cdot2401$. For even $k\ge6$, $8^k>2\cdot7^k$ because $(8/7)^6>2$, so the bracket is positive and $c_k=0$. So $f(x)=\alpha x^4+\beta x^2$.
+
+      **These work.** Suppose $ab+bc+ca=0$ and let $p=a^2+b^2+c^2$, so $(a+b+c)^2=p$.
+      - $x^2$: $\sum(a-b)^2=2p-2(ab+bc+ca)=2p=2(a+b+c)^2$.
+      - $x^4$: the three numbers $a-b$, $b-c$, $c-a$ add up to $0$. For any $u+v+w=0$ we have $u^4+v^4+w^4=\tfrac12(u^2+v^2+w^2)^2$. So $\sum(a-b)^4=\tfrac12(2p)^2=2p^2=2(a+b+c)^4$.
+
+      By linearity every $\alpha x^4+\beta x^2$ works.
+    checked: "script: the bracket 3^k + 5^k + 8^k − 2·7^k vanishes only for k = 2, 4 (k ≤ 11); x² and x⁴ checked on 200 random valid triples"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Tiling rectangles with six-square hooks"
+    areas: [combinatorics]
+    difficulty: 5
+    status: coming
+
+  - id: P4
+    day: 2
+    topic: "A tight sum–reciprocal bound forces triangle sides"
+    areas: [algebra]
+    difficulty: 3
+    hints:
+      - 'Suppose $t_1\ge t_2+t_3$. Show that $(t_1+t_2+t_3)\big(\tfrac1{t_1}+\tfrac1{t_2}+\tfrac1{t_3}\big)\ge10$.'
+      - 'Split the full product into the first three terms and the rest, and use Cauchy–Schwarz: $(a+b)(c+d)\ge(\sqrt{ac}+\sqrt{bd})^2$.'
+    solution: |
+      **Key idea:** three numbers that fail the triangle inequality make their own sum–reciprocal product at least $10$. Cauchy–Schwarz then pushes the full product to at least $n^2+1$.
+
+      Suppose some three numbers are not triangle sides; rename them $t_1\ge t_2+t_3$. Let $T=t_1+t_2+t_3$ and $U=\frac1{t_1}+\frac1{t_2}+\frac1{t_3}$.
+
+      **Three numbers.** Let $u=t_2+t_3$ and $x=t_1\ge u$. Since $\frac1{t_2}+\frac1{t_3}\ge\frac4{t_2+t_3}$,
+      $$TU\ge(x+u)\Big(\frac1x+\frac4u\Big)=5+\frac{4x}u+\frac ux=5+4r+\frac1r,\qquad r=\frac xu\ge1 .$$
+      The function $4r+\frac1r$ is increasing for $r\ge\tfrac12$, so $TU\ge5+4+1=10$.
+
+      **All numbers.** Let $T'$ and $U'$ be the sums of the other $t_i$ and of their reciprocals. By Cauchy–Schwarz, $T'U'\ge(n-3)^2$ and
+      $$\Big(\sum t_i\Big)\Big(\sum\tfrac1{t_i}\Big)=(T+T')(U+U')\ge\big(\sqrt{TU}+\sqrt{T'U'}\big)^2\ge\big(\sqrt{10}+n-3\big)^2 .$$
+      Expanding, the right side is
+      $$n^2+1+(n-3)\big(2\sqrt{10}-6\big)\ \ge\ n^2+1,$$
+      since $\sqrt{10}>3$. That contradicts the hypothesis. So every three of the numbers are triangle sides.
+    checked: "script: 100,000 random lists of 3 to 7 numbers; whenever the product is below n² + 1, every triple is a triangle"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Isogonal-style point inside a quadrilateral and equal distances"
+    areas: [geometry]
+    difficulty: 4
+    status: coming
+
+  - id: P6
+    day: 2
+    topic: "Which numbers have a multiple with alternating digit parity?"
+    areas: [number-theory]
+    difficulty: 5
+    status: coming

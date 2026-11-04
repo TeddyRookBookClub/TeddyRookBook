@@ -1,0 +1,141 @@
+year: 1984
+edition: 25th
+date: "June 29–July 10, 1984 · Prague, Czechoslovakia"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1984/1984_eng.pdf
+  archive: https://www.imo-official.org/editions/1984/
+problems:
+  - id: P1
+    day: 1
+    topic: "Symmetric cubic expression on the triangle x+y+z=1"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - 'For the lower bound, compare $xy$ with $xyz$.'
+      - 'For the upper bound, expand $(1-2x)(1-2y)(1-2z)$ using $x+y+z=1$.'
+    solution: |
+      **Key idea:** the expression is $\frac14\big(1+(1-2x)(1-2y)(1-2z)\big)$, and that product is at most $\frac1{27}$ by AM–GM.
+
+      Let $E=yz+zx+xy-2xyz$.
+
+      **Lower bound.** Each variable is at most $1$, so $xy\ge xyz$, $yz\ge xyz$, $zx\ge xyz$. Hence $E\ge3xyz-2xyz=xyz\ge0$.
+
+      **Upper bound.** Expanding and using $x+y+z=1$:
+      $$(1-2x)(1-2y)(1-2z)=1-2+4(xy+yz+zx)-8xyz=4E-1 .$$
+      So $E=\frac14\left(1+(1-2x)(1-2y)(1-2z)\right)$. Two of the factors cannot both be negative, since that needs two variables above $\frac12$. If one factor is $\le0$, the product is $\le0$. If all three are positive, AM–GM gives
+      $$(1-2x)(1-2y)(1-2z)\le\left(\frac{3-2(x+y+z)}{3}\right)^3=\frac1{27}.$$
+      Either way $E\le\frac14\left(1+\frac1{27}\right)=\frac7{27}$, with equality at $x=y=z=\frac13$.
+    checked: "script: sympy confirms the expansion"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "A pair making a seventh-power expression divisible by 7^7"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "For example $a=18$, $b=1$"
+    hints:
+      - 'Factor $(a+b)^7-a^7-b^7$. A square of a quadratic appears.'
+      - 'You need $7^3\mid a^2+ab+b^2$. Note $a^3-b^3=(a-b)(a^2+ab+b^2)$, so look for $a^3\equiv1\pmod{343}$ with $b=1$.'
+    solution: |
+      **Key idea:** the expression factors as $7ab(a+b)(a^2+ab+b^2)^2$, so we need $343\mid a^2+ab+b^2$; a cube root of $1$ modulo $343$ gives one.
+
+      The factorization (a direct expansion) is
+      $$(a+b)^7-a^7-b^7=7ab(a+b)\left(a^2+ab+b^2\right)^2 .$$
+      If $7\nmid ab(a+b)$, then $7^7$ divides the expression exactly when $7^6\mid(a^2+ab+b^2)^2$, that is, $7^3=343\mid a^2+ab+b^2$.
+
+      Take $b=1$. Since $a^3-1=(a-1)(a^2+a+1)$, we look for $a\not\equiv1\pmod7$ with $a^3\equiv1\pmod{343}$. Trying $a=18$: $18^3=5832=17\cdot343+1$. Indeed
+      $$18^2+18+1=343=7^3 .$$
+      And $ab(a+b)=18\cdot1\cdot19$ is not divisible by $7$. So $(a,b)=(18,1)$ works; directly, $19^7-18^7-1$ is divisible by $7^7$.
+    checked: "script: sympy factorization, and 19^7 − 18^7 − 1 ≡ 0 (mod 7^7)"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Finitely many colors and spiraling circles around a center"
+    areas: [combinatorics, geometry]
+    difficulty: 2
+    hints:
+      - 'A point at distance $\rho$ and angle $\theta$ sends you to the circle of radius $\rho+\theta/\rho$. Given radii $\rho<t$, which angle sends a point of the first circle to the second?'
+      - 'Each circle has a set of colors that appear on it. With finitely many colors, two nearby circles have the same color set.'
+    solution: |
+      **Key idea:** each circle about $O$ carries a set of colors. With finitely many colors there are finitely many possible sets, so two close circles carry the same set. A point on the smaller one can be aimed exactly at the larger one.
+
+      For a point $Y$ at distance $\rho$ from $O$ and angle $\theta=a(Y)$, the circle $C(Y)$ has radius $\rho+\frac\theta\rho$. Conversely, for radii $\rho<t$ with $\rho(t-\rho)<2\pi$, the point $Y$ on the circle of radius $\rho$ at angle $\theta=\rho(t-\rho)\in(0,2\pi)$ has $C(Y)$ equal to the circle of radius $t$.
+
+      Let there be $k$ colors. For each radius $s$, let $K(s)$ be the set of colors appearing on the circle of radius $s$ about $O$; it is one of at most $2^k$ sets. Among the $2^k+1$ radii
+      $$s_j=1+\frac{j}{2^k+1}\qquad(j=0,1,\dots,2^k),$$
+      all in $[1,2)$, two have the same color set: $K(\rho)=K(t)$ with $\rho<t$. Then $\rho(t-\rho)<2\cdot1<2\pi$. Take $Y$ on the circle of radius $\rho$ at angle $\theta=\rho(t-\rho)$. Then $a(Y)=\theta>0$, and $C(Y)$ is the circle of radius $t$. The color of $Y$ lies in $K(\rho)=K(t)$, so it appears on $C(Y)$.
+    checked: "algebra only: pigeonhole on color sets"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Quadrilateral with mutual tangency of diameter circles"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Tangency of the circle on $AB$ to line $CD$ says: the distance from the midpoint $M$ of $AB$ to $CD$ is $\frac{AB}2$. Turn it into an area statement about triangle $MCD$.'
+      - 'The area of $MCD$ is the average of the areas of $ACD$ and $BCD$.'
+    solution: |
+      **Key idea:** both tangencies become statements about areas of triangles built on midpoints, and their difference is the difference of the areas of $ABC$ and $DBC$, which vanishes exactly when $AD\parallel BC$.
+
+      Let $M$, $N$ be the midpoints of $AB$, $CD$, and write $[XYZ]$ for areas.
+
+      **Tangency as area.** The circle on $AB$ touches line $CD$ exactly when the distance from $M$ to $CD$ is $\frac{AB}2$, that is, $[MCD]=\frac12\,CD\cdot\frac{AB}2=\frac{AB\cdot CD}4$. Likewise the circle on $CD$ touches line $AB$ exactly when $[NAB]=\frac{AB\cdot CD}4$. We know the first, so the second holds exactly when $[NAB]=[MCD]$.
+
+      **Midpoint areas.** Since the quadrilateral is convex, $A$ and $B$ are on the same side of line $CD$, and the distance from the midpoint $M$ to $CD$ is the average of theirs. So $[MCD]=\frac12\left([ACD]+[BCD]\right)$, and likewise $[NAB]=\frac12\left([CAB]+[DAB]\right)$. Let $Q$ be the area of $ABCD$; then $[ABC]+[ACD]=Q=[ABD]+[BCD]$. Therefore
+      $$[NAB]-[MCD]=\tfrac12\big([ABC]+[ABD]-[ACD]-[BCD]\big)=\tfrac12\big([ABC]+(Q-[BCD])-(Q-[ABC])-[BCD]\big)=[ABC]-[BCD].$$
+
+      **Finish.** Triangles $ABC$ and $DBC$ share the base $BC$, and $A$, $D$ are on the same side of it. Their areas are equal exactly when $A$ and $D$ are equally far from line $BC$, that is, when $AD\parallel BC$. So line $AB$ touches the circle on $CD$ if and only if $BC\parallel AD$.
+    checked: "script: the area identity [NAB] − [MCD] = [ABC] − [BCD] holds for 2,000 random convex quadrilaterals"
+    viz: imo-1984-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Diagonals versus perimeter of a convex polygon"
+    areas: [geometry, combinatorics]
+    difficulty: 3
+    hints:
+      - 'Lower bound: two non-adjacent sides form a convex quadrilateral whose diagonals are diagonals of the polygon. Sum over all such pairs of sides.'
+      - 'Upper bound: a diagonal skipping $k$ sides is shorter than those $k$ sides. Group the diagonals by $k$.'
+    solution: |
+      **Key idea:** crossing diagonals beat the two sides they join (lower bound), and each diagonal is shorter than the shorter way around the polygon (upper bound). Both bounds come from summing over all diagonals in a balanced way.
+
+      Number the vertices $A_1,\dots,A_n$ in order (indices modulo $n$), and let $s_i=A_iA_{i+1}$.
+
+      **Lower bound.** Take two sides $s_i$ and $s_j$ that do not share a vertex. The points $A_i,A_{i+1},A_j,A_{j+1}$ form a convex quadrilateral with diagonals $A_iA_j$ and $A_{i+1}A_{j+1}$, which are diagonals of the polygon. These cross, so by the triangle inequality at the crossing point,
+      $$A_iA_j+A_{i+1}A_{j+1}>A_iA_{i+1}+A_jA_{j+1}.$$
+      Add this over all unordered pairs of non-adjacent sides. Each side is in $n-3$ pairs, so the right side totals $(n-3)p$. On the left, a diagonal $A_uA_v$ appears exactly twice: once from the pair $\{s_u,s_v\}$ and once from the pair $\{s_{u-1},s_{v-1}\}$. So the left side totals $2d$, and $2d>(n-3)p$.
+
+      **Upper bound.** A diagonal $A_iA_{i+k}$ is shorter than the path $s_i+s_{i+1}+\dots+s_{i+k-1}$ (the vertices are not collinear). Adding over $i=1,\dots,n$ for a fixed $k$: the sum of $A_iA_{i+k}$ over all $i$ is less than $kp$, since each side is counted $k$ times.
+      - **$n=2m+1$.** Each diagonal is $A_iA_{i+k}$ for exactly one $k\in\{2,\dots,m\}$ and one $i$. So $d<p\sum_{k=2}^m k=p\left(\frac{m(m+1)}2-1\right)$, and $\frac{2d}p<m(m+1)-2$.
+      - **$n=2m$.** For $k=2,\dots,m-1$ the same holds. The $m$ longest diagonals ($k=m$) each appear twice among $i=1,\dots,n$, so their total is less than $\frac{mp}2$. So $d<p\left(\frac{(m-1)m}2-1+\frac m2\right)=p\left(\frac{m^2}2-1\right)$, and $\frac{2d}p<m^2-2$.
+
+      In both cases $m(m+1)$ or $m^2$ equals $\left[\frac n2\right]\left[\frac{n+1}2\right]$, which gives the upper bound.
+    checked: "script: 3,000 random convex polygons with 4 to 9 vertices satisfy both bounds"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Odd numbers with equal products and power-of-two sums"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'Show $a+d>b+c$, so $k>m$. Then rewrite $ad=bc$ as $2^mb-2^ka=(b-a)(b+a)$.'
+      - 'Exactly one of $b-a$, $b+a$ is $2$ times an odd number. Which one can hold the factor $2^{m-1}$?'
+    solution: |
+      **Key idea:** substituting $d=2^k-a$ and $c=2^m-b$ gives $(b-a)(b+a)=2^mb-2^ka$, which is divisible by $2^m$. Size limits force $b+a=2^{m-1}$, and then $a$ is a power of $2$.
+
+      **$k>m$.** From $ad=bc$: $(a+d)^2-(b+c)^2=(d-a)^2-(c-b)^2$. Since $a<b<c<d$, we have $d-a>c-b>0$, so $a+d>b+c$ and $k>m$.
+
+      **The key equation.** Substituting $d=2^k-a$ and $c=2^m-b$ into $ad=bc$:
+      $$2^ka-a^2=2^mb-b^2\quad\Longrightarrow\quad(b-a)(b+a)=2^mb-2^ka .$$
+      The right side is divisible by $2^m$ (as $k>m$). Both $b-a$ and $b+a$ are even, and their sum $2b$ is $2$ times an odd number, so one of them is $\equiv2\pmod4$ and has only one factor $2$. The other must therefore be divisible by $2^{m-1}$.
+
+      **Which one.** Since $b<c$ and $b+c=2^m$, we have $b<2^{m-1}$. So $0<b-a<2^{m-1}$, and $b-a$ cannot be a multiple of $2^{m-1}$. Hence $2^{m-1}\mid b+a$, and $0<b+a<b+c=2^m$ gives $b+a=2^{m-1}$.
+
+      **Finish.** Divide the key equation by $2^{m-1}$: $b-a=2b-2^{k-m+1}a$, so $2^{k-m+1}a=a+b=2^{m-1}$. Then $a$ is a power of $2$, and since $a$ is odd, $a=1$.
+    checked: "script: every solution with k ≤ 15 has a = 1, namely (1, 2^j − 1, 2^j + 1, 4^j − 1)"
+    status: ready

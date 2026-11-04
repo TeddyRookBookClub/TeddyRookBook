@@ -1,0 +1,150 @@
+year: 1997
+edition: 38th
+date: "July 18–31, 1997 · Mar del Plata, Argentina"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1997/1997_eng.pdf
+  archive: https://www.imo-official.org/editions/1997/
+problems:
+  - id: P1
+    day: 1
+    topic: "Black minus white area of a chessboard right triangle"
+    areas: [geometry, combinatorics]
+    difficulty: 3
+    answer: "(a) $f=0$ if $m,n$ are both even, $f=\\frac12$ if both are odd. (b), (c) as stated; in fact $f(2k+1,2k)=\\frac{2k-1}{6}$."
+    hints:
+      - 'Complete the triangle to an $m\times n$ rectangle. When $m+n$ is even, the half-turn about the center keeps the coloring.'
+      - 'For mixed parity, shorten the odd leg by $1$ and estimate the thin sliver you removed.'
+      - 'For (c), compute the sliver exactly for legs $2k+1$ and $2k$, row by row.'
+    solution: |
+      **Key idea:** when $m+n$ is even the coloring is symmetric under a half-turn of the rectangle, so the two triangles share the imbalance equally. A thin sliver handles mixed parity, and computing that sliver exactly shows the imbalance grows.
+
+      Put the right angle at the origin with legs along the axes: $m$ along $x$, $n$ along $y$. For a region $W$, let $\delta(W)$ be black area minus white area, so $f=|\delta(\text{triangle})|$.
+
+      **(a)** The half-turn about the center of the rectangle $[0,m]\times[0,n]$ sends cell $(i,j)$ to $(m-1-i,\,n-1-j)$, whose color parity $i+j+(m+n-2)$ matches when $m+n$ is even. It swaps the two triangles cut by the diagonal, so both have the same $\delta$, equal to half of $\delta(\text{rectangle})$. That is $0$ if $m,n$ are even and $\pm1$ if both are odd. So $f=0$ or $f=\frac12$.
+
+      **(b)** Say $m$ is odd and $n$ even (the other case is symmetric). The triangle with legs $m,n$ is the triangle with legs $m-1,n$ plus a sliver with vertices $(m-1,0),(m,0),(0,n)$ of area $\frac n2$. By (a) the smaller triangle has $\delta=0$, so $f(m,n)\le\frac n2\le\frac12\max(m,n)$.
+
+      **(c)** Take $m=2k+1$, $n=2k$; then $f$ equals $|\delta(\text{sliver})|$. In row $j$ ($j\le y\le j+1$) the sliver runs from $x=2k-y$ to $x=2k+1-y-\frac y{2k}$. The left edge is the diagonal of cell $(2k-1-j,\,j)$, which has odd parity. The right part spills into cell $(2k-j,\,j)$, of even parity. With $y=j+u$, the spill has width $1-u-\frac{j+u}{2k}$ while positive, that is for $u<\tau=\frac{2k-j}{2k+1}$, so its area is
+      $$\int_0^\tau\Big(\frac{2k-j}{2k}-\frac{2k+1}{2k}u\Big)du=\frac{(2k-j)^2}{4k(2k+1)}.$$
+      The sliver has area $k$ in total, and the spill areas add up to $\sum_{i=1}^{2k}\frac{i^2}{4k(2k+1)}=\frac{4k+1}{12}$. So
+      $$f(2k+1,2k)=k-2\cdot\frac{4k+1}{12}=\frac{2k-1}6,$$
+      which is unbounded.
+    checked: "script: exact area computation gives f(3,2)=1/6, f(5,4)=1/2, f(7,6)=5/6, f(9,8)=7/6, and the bound in (b) for m, n < 10"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Two perpendicular bisectors and a broken chord"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Reflect the line $AU$ in the perpendicular bisector of $AB$. It becomes line $BV$, and $U$ goes to a point $X$ on the circle with $BX=AU$.'
+      - 'Do the same at $C$ to get a chord $CY$ with $CY=AU$. Two equal chords through $T$ are mirror images in a line through the center.'
+    solution: |
+      **Key idea:** reflecting in the two perpendicular bisectors turns $AU$ into equal chords $BX$ and $CY$ through $T$. A further reflection swaps these chords and shows $TC=TX$, so $TB+TC=BX=AU$.
+
+      Let $\sigma_B$ and $\sigma_C$ be the reflections in the perpendicular bisectors of $AB$ and $AC$. Each passes through the center $O$, maps the circumcircle to itself, and fixes $V$ (or $W$).
+
+      **Two equal chords.** $\sigma_B$ swaps $A$ and $B$ and fixes $V$, so it maps line $AU$ to line $BV$, and $U$ to a point $X$ of the circle on line $BV$, with $BX=AU$. Likewise $\sigma_C$ maps $U$ to a point $Y$ on line $CW$, with $CY=AU$. So $T$ is where lines $BX$ and $CY$ meet.
+
+      **Where the points sit.** Measure positions on the circle by angle, starting at $A$, in the direction of $B$: $0=\theta_A<\theta_B<\theta_U<\theta_C<2\pi$. A reflection through $O$ acts as $\theta\mapsto\text{const}-\theta$, so $\theta_X=\theta_B-\theta_U+2\pi$ and $\theta_Y=\theta_C-\theta_U$. Arc $BU$ is shorter than arc $BC$, which is $2\angle A\le2\angle B=$ arc $CA$; so $\theta_X>\theta_C$. Similarly arc $UC<2\angle A\le2\angle C=$ arc $AB$, so $0<\theta_Y<\theta_B$. The order around the circle is $Y,B,C,X$, so chords $BX$ and $CY$ cross inside the circle, and $T$ lies on segment $BX$.
+
+      **A swapping reflection.** Let $\tau$ be the reflection in the line through $O$ at angle $\frac{\theta_B+\theta_Y}2$. It maps $\theta\mapsto\theta_B+\theta_Y-\theta$, so $B\mapsto Y$ and $X\mapsto\theta_B+\theta_Y-\theta_X=\theta_C$, that is $X\mapsto C$. So $\tau$ maps line $BX$ to line $YC$ and fixes their intersection $T$. Hence $TX=TC$, and
+      $$TB+TC=TB+TX=BX=AU .$$
+    checked: "numeric: 500 random triangles with A smallest"
+    viz: imo-1997-p2
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Reordering numbers to keep a weighted sum small"
+    areas: [combinatorics, algebra]
+    difficulty: 2
+    hints:
+      - 'Compare the weighted sum for the given order and for the reversed order. What is their sum?'
+      - 'Swapping two neighbors changes the weighted sum by at most $n+1$. Walk from one order to the other.'
+    solution: |
+      **Key idea:** the original and reversed orders have weighted sums adding to $\pm(n+1)$, and swapping neighbors changes the sum by at most $n+1$. So on the way from one to the other, the sum must land in $\big[-\frac{n+1}2,\frac{n+1}2\big]$.
+
+      For an order $y$, let $W(y)=\sum iy_i$. Let $S=W(x_1,\dots,x_n)$ and $S'=W(x_n,\dots,x_1)$. Then
+      $$S+S'=\sum_i(i+(n+1-i))x_i=(n+1)\sum x_i=\pm(n+1).$$
+
+      **Small steps.** Swapping the entries in positions $k,k+1$ changes $W$ by $y_k-y_{k+1}$, and $|y_k-y_{k+1}|\le2\cdot\frac{n+1}2=n+1$. Bubble sort reaches the reversed order from the original by such swaps.
+
+      **Conclusion.** If $|S|\le\frac{n+1}2$ or $|S'|\le\frac{n+1}2$, we are done. Otherwise, since $S+S'=\pm(n+1)$, one of $S,S'$ is above $\frac{n+1}2$ and the other below $-\frac{n+1}2$. Along the chain of swaps, $W$ cannot jump from above $\frac{n+1}2$ to below $-\frac{n+1}2$ in one step (that would be a change larger than $n+1$). So some order in the chain has $|W|\le\frac{n+1}2$.
+    checked: "reasoning"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Matrices where each row-column cross holds every symbol"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'Cross $i$ (row $i$ plus column $i$) has exactly $2n-1$ cells. So each symbol appears in it exactly once.'
+      - 'Take a symbol missing from the diagonal. Each of its occurrences lies in exactly two crosses. What does that say about $n$?'
+      - 'For (b), build size $2n$ from size $n$ with four blocks.'
+    solution: |
+      **Key idea:** a symbol that avoids the diagonal pairs up the crosses, so $n$ must be even. A block doubling builds examples for every power of $2$.
+
+      **(a)** Cross $i$ (row $i$ together with column $i$) has $2n-1$ cells, so each of the $2n-1$ symbols appears in it exactly once. The diagonal has only $n<2n-1$ cells, so some symbol $s$ is not on it. Each occurrence of $s$, at $(i,j)$ with $i\ne j$, lies in crosses $i$ and $j$ and no others. Every cross contains $s$ exactly once, so the occurrences pair up the $n$ crosses, and $n$ is even. Hence there is none for $n=1997$.
+
+      **(b)** For $n=1$ take $(1)$. Given a silver matrix $A$ of size $n$, let $B=A+2n$ (add $2n$ to every entry) and let $C$ be $B$ with its diagonal replaced by $2n$. Set
+      $$M=\begin{pmatrix}A&B\\C&A\end{pmatrix}.$$
+      For $i\le n$, cross $i$ of $M$ is cross $i$ of $A$ (symbols $1,\dots,2n-1$), plus row $i$ of $B$ and column $i$ of $C$. Those are cross $i$ of $A$ shifted by $2n$ (symbols $2n+1,\dots,4n-1$), except that $C_{ii}$ was replaced by $2n$. So cross $i$ holds $1,\dots,4n-1$. Cross $n+i$ works the same way with the roles of $B$ and $C$ swapped. So $M$ is silver of size $2n$, and silver matrices exist for every $n=2^k$.
+    checked: "script: the construction is silver for n = 2, 4, 8, 16, 32"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Powers equal with a squared exponent"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$(1,1),\\ (16,2),\\ (27,3)$"
+    hints:
+      - 'If $a,b\ge2$, compare prime exponents to show $a=c^p$ and $b=c^q$ for some integer $c$ and coprime $p,q$.'
+      - 'The equation becomes $p\,c^{2q}=q\,c^p$. Compare $p$ with $2q$.'
+    solution: |
+      **Key idea:** both numbers are powers of one base $c$, and the equation becomes $pc^{2q}=qc^p$, which leaves only two small cases.
+
+      If $a=1$ then $b=1$, and if $b=1$ then $a=1$. Let $a,b\ge2$. For each prime $\ell$, $v_\ell(a)\,b^2=v_\ell(b)\,a$, so $\frac{v_\ell(a)}{v_\ell(b)}=\frac a{b^2}$ for all $\ell$ dividing $ab$. Write $\frac a{b^2}=\frac pq$ in lowest terms; then $v_\ell(a)=pt_\ell$ and $v_\ell(b)=qt_\ell$, so $a=c^p$ and $b=c^q$ with $c=\prod\ell^{t_\ell}\ge2$. The equation $a\,q=b^2p$ reads
+      $$p\,c^{2q}=q\,c^p .$$
+      - If $p>2q$: $c^{p-2q}=\frac pq$ is an integer, so $q=1$ (as $\gcd(p,q)=1$) and $c^{p-2}=p$. Since $c\ge2$, $2^{p-2}\le p$, so $p\le4$. $p=3$ gives $c=3$, $(a,b)=(27,3)$; $p=4$ gives $c=2$, $(a,b)=(16,2)$.
+      - If $p=2q$: then $p=q$, impossible.
+      - If $p<2q$: $c^{2q-p}=\frac qp$, so $p=1$ and $c^{2q-1}=q$, impossible since $c^{2q-1}\ge2^{2q-1}>q$.
+
+      Check: $27^9=3^{27}$ and $16^4=2^{16}$.
+    checked: "script: search with a < 200, b < 60"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Growth of the number of binary partitions"
+    areas: [combinatorics, number-theory]
+    difficulty: 4
+    hints:
+      - 'Show $f(2k+1)=f(2k)$ and $f(2k)=f(2k-1)+f(k)$, so $f(2m)=f(0)+f(1)+\dots+f(m)$.'
+      - 'For the upper bound, use $f(2m)\le(m+1)f(m)$.'
+      - 'For the lower bound, $g(i)=f(2i)$ has increasing differences. Pair terms symmetrically to get $f(4M)>2M\,f(M)$.'
+    solution: |
+      **Key idea:** a recursion turns $f(2m)$ into a sum of earlier values. The sum is at most $(m+1)$ copies of the largest term, and, by convexity, at least $2M$ copies of the middle one. Iterating gives the two bounds.
+
+      **Recursion.** Set $f(0)=1$. A partition of an odd number has a part $1$; removing it is a bijection with partitions of $2k$, so $f(2k+1)=f(2k)$. Partitions of $2k$ with a part $1$ match partitions of $2k-1$; those without have all parts even and match partitions of $k$ after halving. So $f(2k)=f(2k-1)+f(k)=f(2k-2)+f(k)$, and by induction
+      $$f(2m)=f(0)+f(1)+\dots+f(m).$$
+      In particular $f$ is nondecreasing.
+
+      **Upper bound.** $f(2m)\le(m+1)f(m)$, so with $f(1)=1$,
+      $$f(2^n)\le\prod_{k=1}^n(2^{k-1}+1)=2\cdot2^{n(n-1)/2}\prod_{j=1}^{n-1}(1+2^{-j})<6\cdot2^{n(n-1)/2},$$
+      since $\prod(1+2^{-j})<e^{\sum2^{-j}}=e<3$. This is less than $2^{n^2/2}$ when $2^{n/2}>6$, that is for $n\ge6$. For $n=3,4,5$ the values $f(8)=10$, $f(16)=36$, $f(32)=202$ are below $2^{4.5}$, $2^8$, $2^{12.5}$.
+
+      **Convexity.** Let $g(i)=f(2i)$. Then $g(i+1)-g(i)=f(i+1)$, which is nondecreasing, so $g$ is convex: for $M$ even and $0\le i\le M$, $g(i)+g(M-i)\ge2g(M/2)=2f(M)$.
+
+      **Lower bound.** For $M$ even, using $f(2i+1)=f(2i)$,
+      $$f(4M)=\sum_{j=0}^{2M}f(j)=2\sum_{i=0}^{M-1}g(i)+g(M)=g(0)+\sum_{i=0}^{M-1}\big(g(i)+g(M-i)\big)\ge1+2M\,f(M).$$
+      With $4M=2^n$ ($n\ge3$): $f(2^n)>2^{n-1}f(2^{n-2})$. Iterating down to $f(4)=4$ or $f(2)=2$:
+      - $n$ even: $f(2^n)>2^{(n-1)+(n-3)+\dots+3}\cdot4=2^{n^2/4-1}\cdot2^2=2^{n^2/4+1}$.
+      - $n$ odd: $f(2^n)>2^{(n-1)+(n-3)+\dots+2}\cdot2=2^{(n^2-1)/4+1}$.
+
+      Both exceed $2^{n^2/4}$.
+    checked: "script: f(2^n) computed for n ≤ 10; both bounds hold"
+    status: ready

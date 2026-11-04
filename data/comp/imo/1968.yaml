@@ -1,0 +1,130 @@
+year: 1968
+edition: 10th
+date: "July 5–18, 1968 · Moscow, USSR"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1968/1968_eng.pdf
+  archive: https://www.imo-official.org/editions/1968/
+problems:
+  - id: P1
+    day: 1
+    topic: "Consecutive-integer sides with one angle double another"
+    areas: [geometry, number-theory]
+    difficulty: 2
+    answer: "Only the triangle with sides $4,5,6$"
+    hints:
+      - 'If the angle opposite $b$ is twice the angle opposite $a$, then $b^2=a(a+c)$.'
+      - 'Try the three ways of assigning $n-1,n,n+1$ to $a,b,c$ with $b>a$.'
+    solution: |
+      **Key idea:** a doubled angle gives the relation $b^2=a(a+c)$ between the sides. With consecutive integers, only one assignment has a whole-number solution.
+
+      **Lemma.** In a triangle with sides $a,b,c$ opposite $A,B,C$: if $B=2A$ and $a\ne c$, then $b^2=a(a+c)$.
+      By the law of sines, $\frac ba=\frac{\sin2A}{\sin A}=2\cos A=\frac{b^2+c^2-a^2}{bc}$. So $b^2c=a(b^2+c^2-a^2)$, which rearranges to $b^2(c-a)=a(c-a)(c+a)$. Dividing by $c-a\ne0$ gives $b^2=a(a+c)$.
+
+      **The search.** The sides $n-1,n,n+1$ are all different, and they form a triangle only when $n\ge3$. If one angle is twice another, call the smaller angle's opposite side $a$ and the larger one's $b$. Then $b>a$, and $c$ is the remaining side.
+      - $(a,b,c)=(n-1,n,n+1)$: $n^2=(n-1)\cdot2n$ gives $n=2$. Not a triangle.
+      - $(a,b,c)=(n-1,n+1,n)$: $(n+1)^2=(n-1)(2n-1)$ gives $n^2=5n$, so $n=5$.
+      - $(a,b,c)=(n,n+1,n-1)$: $(n+1)^2=n(2n-1)$ gives $n^2-3n-1=0$, which has no integer root.
+
+      So the only candidate has sides $4,5,6$, with the angle opposite $6$ twice the angle opposite $4$.
+
+      **It works.** The angle opposite $4$ has cosine $\frac{25+36-16}{60}=\frac34$, and the angle opposite $6$ has cosine $\frac{16+25-36}{40}=\frac18$. Since $2\bigl(\frac34\bigr)^2-1=\frac18$, the second angle is double the first.
+    checked: "script: every triple n − 1, n, n + 1 with n < 10,000; only n = 5 has an angle twice another"
+    viz: imo-1968-p1
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Digit product equal to a quadratic in the number"
+    areas: [number-theory]
+    difficulty: 1
+    answer: "$x=12$"
+    hints:
+      - 'The product of the digits of $x$ is never larger than $x$.'
+      - 'This bounds $x$ above, and the product being non-negative bounds it below.'
+    solution: |
+      **Key idea:** the product of the digits is between $0$ and $x$. This traps $x$ between two roots of quadratics.
+
+      Let $p(x)$ be the product of the digits. If $x$ has $k$ digits with leading digit $d$, then $p(x)\le d\cdot9^{k-1}\le d\cdot10^{k-1}\le x$. So
+      $$x^2-10x-22\le x\iff x^2-11x-22\le0\iff x\le\frac{11+\sqrt{209}}2\approx12.7 .$$
+      Also $p(x)\ge0$, so $x^2-10x-22\ge0$, which for positive $x$ means $x\ge5+\sqrt{47}\approx11.9$. The only whole number left is $x=12$. Check: $1\cdot2=2$ and $144-120-22=2$.
+    checked: "script: every x below 100,000"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "A cyclic system built from one quadratic map"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Let $f(t)=at^2+bt+c$. The equations say $x_{i+1}=f(x_i)$ around a cycle.'
+      - 'Add all the equations: $\sum\bigl(f(x_i)-x_i\bigr)=0$. Note that $f(t)-t$ has discriminant $\Delta$.'
+    solution: |
+      **Key idea:** adding the equations gives $\sum g(x_i)=0$ for $g(t)=f(t)-t$, a quadratic with discriminant $\Delta$. The sign of $\Delta$ controls the sign of $g$.
+
+      Let $f(t)=at^2+bt+c$ and $g(t)=f(t)-t=at^2+(b-1)t+c$, whose discriminant is $\Delta$. The system says $x_2=f(x_1),\dots,x_n=f(x_{n-1}),x_1=f(x_n)$. The right-hand sides are $x_1,\dots,x_n$ in a different order, so adding all equations gives
+      $$\sum_{i=1}^n g(x_i)=0 .$$
+      **(a) $\Delta<0$.** Then $g$ has no real root and has the sign of $a$ everywhere. A sum of $n$ numbers of the same strict sign is not $0$. No solution.
+
+      **(b) $\Delta=0$.** Then $g(t)=a(t-r)^2$ with $r=\frac{1-b}{2a}$. The sum $a\sum(x_i-r)^2=0$ forces every $x_i=r$. And $x_i=r$ for all $i$ is a solution, since $f(r)=r$. Exactly one solution.
+
+      **(c) $\Delta>0$.** Then $g$ has two different roots $r_1,r_2$, which are fixed points of $f$. The constant tuples $(r_1,\dots,r_1)$ and $(r_2,\dots,r_2)$ are two different solutions. So there is more than one.
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Some tetrahedron vertex has edges forming a triangle"
+    areas: [geometry]
+    difficulty: 1
+    hints:
+      - 'Look at the two ends of the longest edge.'
+    solution: |
+      **Key idea:** if both ends of the longest edge fail, adding the two failures contradicts the triangle inequality in the two faces through that edge.
+
+      Let $AB$ be a longest edge. At vertex $A$ the edges are $AB,AC,AD$. Since $AB$ is the longest, the only way they can fail to form a triangle is $AB\ge AC+AD$. Likewise at $B$, failure means $AB\ge BC+BD$. If both fail, then adding,
+      $$2AB\ge(AC+CB)+(AD+DB)>AB+AB,$$
+      using the strict triangle inequality in faces $ABC$ and $ABD$. This is impossible. So at $A$ or at $B$ the three edges form a triangle.
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "A square-root functional equation forces period 2a"
+    areas: [algebra]
+    difficulty: 2
+    answer: "(a) $2a$ is a period; (b) for example $f(x)=\\frac12+\\frac12\\bigl|\\cos\\frac{\\pi x}2\\bigr|$"
+    hints:
+      - 'Every value of $f$ is at least $\frac12$. Set $g=f-\frac12\ge0$.'
+      - 'Then $g(x+a)^2=\frac14-g(x)^2$. Apply it twice.'
+    solution: |
+      **Key idea:** with $g=f-\frac12$, the equation says $g(x+a)^2+g(x)^2=\frac14$. Applying it twice brings back $g(x)^2$.
+
+      **(a)** Every real $y$ is $x+a$ for $x=y-a$, so $f(y)\ge\frac12$ for all $y$. Put $g=f-\frac12\ge0$. Since $f-f^2=\frac14-g^2$, the equation reads
+      $$g(x+a)=\sqrt{\tfrac14-g(x)^2},\qquad\text{so}\qquad g(x+a)^2=\tfrac14-g(x)^2 .$$
+      Applying this twice: $g(x+2a)^2=\frac14-g(x+a)^2=g(x)^2$. Both values are non-negative, so $g(x+2a)=g(x)$, and $f$ has period $2a$.
+
+      **(b)** For $a=1$, take $g(x)=\frac12\bigl|\cos\frac{\pi x}{2}\bigr|$, that is
+      $$f(x)=\frac12+\frac12\Bigl|\cos\frac{\pi x}2\Bigr| .$$
+      Then $g(x+1)=\frac12\bigl|\sin\frac{\pi x}2\bigr|=\sqrt{\frac14-\frac14\cos^2\frac{\pi x}{2}}=\sqrt{\frac14-g(x)^2}$, as required, and $f$ is not constant. (A step function also works: $f=1$ on $[2j,2j+1)$ and $f=\frac12$ on $[2j+1,2j+2)$ for every integer $j$.)
+    checked: "script: the example checked at 1001 points"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "A floor-function sum that always returns n"
+    areas: [number-theory, algebra]
+    difficulty: 2
+    answer: "The sum equals $n$"
+    hints:
+      - 'Each term is $\bigl\lfloor\frac{n}{2^{k+1}}+\frac12\bigr\rfloor$.'
+      - 'For real $x$: $\lfloor x+\frac12\rfloor=\lfloor2x\rfloor-\lfloor x\rfloor$.'
+    solution: |
+      **Key idea:** each term is a difference of two floors, so the sum telescopes.
+
+      **Identity.** For real $x$, $\lfloor x\rfloor+\lfloor x+\frac12\rfloor=\lfloor2x\rfloor$. Write $x=j+t$ with $j$ an integer and $0\le t<1$. If $t<\frac12$, both sides are $2j$. If $t\ge\frac12$, both sides are $2j+1$.
+
+      **The sum.** The $k$-th term is $\bigl\lfloor\frac{n+2^k}{2^{k+1}}\bigr\rfloor=\bigl\lfloor\frac n{2^{k+1}}+\frac12\bigr\rfloor$. By the identity with $x=\frac n{2^{k+1}}$, this is
+      $$\Bigl\lfloor\frac n{2^k}\Bigr\rfloor-\Bigl\lfloor\frac n{2^{k+1}}\Bigr\rfloor .$$
+      Summing over $k=0,1,2,\dots$ telescopes. Once $2^{k}>n$ the floors are $0$, so the sum is $\lfloor n/1\rfloor=n$.
+
+      (A way to see it: the $k$-th term counts the numbers from $1$ to $n$ that are divisible by $2^k$ but not by $2^{k+1}$. Every number is counted once.)
+    checked: "script: n = 1 to 99,999"
+    status: ready

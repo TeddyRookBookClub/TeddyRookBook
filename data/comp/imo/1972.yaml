@@ -1,0 +1,113 @@
+year: 1972
+edition: 14th
+date: "July 5–17, 1972 · Toruń, Poland"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1972/1972_eng.pdf
+  archive: https://www.imo-official.org/editions/1972/
+problems:
+  - id: P1
+    day: 1
+    topic: "Two-digit numbers: two disjoint groups with equal sums"
+    areas: [combinatorics]
+    difficulty: 1
+    hints:
+      - 'How many nonempty subsets are there, and how large can a subset''s sum be?'
+      - 'Two different subsets with the same sum may overlap. What happens if you remove the common part?'
+    solution: |
+      **Key idea:** pigeonhole. There are more subsets than possible sums.
+
+      Ten numbers have $2^{10}-1=1023$ nonempty subsets. Every subset sum is at most $90+91+\dots+99=945$. So two different subsets $X\ne Y$ have the same sum.
+
+      Remove the common elements: $X'=X\setminus Y$ and $Y'=Y\setminus X$ are disjoint and still have equal sums (we subtracted the same amount from both). Neither is empty: if, say, $X'$ were empty, then $Y'$ would have sum $0$, so $Y'$ would be empty too, and $X=Y$. So $X'$ and $Y'$ are the required subsets.
+    checked: "algebra only: counting argument"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Cutting a cyclic quadrilateral into n cyclic pieces"
+    areas: [geometry]
+    difficulty: 3
+    status: coming
+
+  - id: P3
+    day: 1
+    topic: "A factorial quotient that is always an integer"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'Call the quotient $f(m,n)$. Compute $f(m+1,n)/f(m,n)$ and $f(m,n+1)/f(m,n)$.'
+      - 'Find a relation $f(m,n+1)=4f(m,n)-f(m+1,n)$ and induct on $n$.'
+    solution: |
+      **Key idea:** the quotients satisfy a recurrence with integer coefficients, and the starting values are central binomial coefficients.
+
+      Let
+      $$f(m,n)=\frac{(2m)!\,(2n)!}{m!\,n!\,(m+n)!}.$$
+      Changing one variable by $1$ gives
+      $$f(m+1,n)=f(m,n)\cdot\frac{(2m+2)(2m+1)}{(m+1)(m+n+1)}=f(m,n)\cdot\frac{2(2m+1)}{m+n+1},$$
+      and in the same way $f(m,n+1)=f(m,n)\cdot\frac{2(2n+1)}{m+n+1}$. Adding these,
+      $$f(m+1,n)+f(m,n+1)=f(m,n)\cdot\frac{4m+2+4n+2}{m+n+1}=4f(m,n).$$
+      So
+      $$f(m,n+1)=4f(m,n)-f(m+1,n).$$
+
+      Now induct on $n$. For $n=0$, $f(m,0)=\frac{(2m)!}{m!\,m!}=\binom{2m}m$ is an integer for every $m$. If $f(m,n)$ is an integer for every $m$, the relation shows the same for $f(m,n+1)$. So $f(m,n)$ is always an integer.
+    checked: "script: f(m, n) is an integer for all 0 ≤ m, n < 40"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Five cyclic product inequalities force equal unknowns"
+    areas: [algebra]
+    difficulty: 2
+    answer: "Exactly the solutions $x_1=x_2=x_3=x_4=x_5$ (any positive value)"
+    hints:
+      - 'Add the five inequalities and expand. The sum is at most $0$.'
+      - 'Show that twice the sum is a sum of terms $x_i^2(x_j-x_k)^2$.'
+    solution: |
+      **Key idea:** the sum of the five left sides is a sum of squares. It is also at most $0$, so every square vanishes.
+
+      Let $S$ be the sum of the five left-hand sides. Each is $\le0$, so $S\le0$. Expanding and grouping (a direct check), twice the sum is
+      $$\begin{aligned}2S={}&x_1^2\left[(x_2-x_4)^2+(x_3-x_5)^2\right]+x_2^2\left[(x_1-x_4)^2+(x_3-x_5)^2\right]\\&+x_3^2\left[(x_1-x_4)^2+(x_2-x_5)^2\right]+x_4^2\left[(x_1-x_3)^2+(x_2-x_5)^2\right]\\&+x_5^2\left[(x_1-x_3)^2+(x_2-x_4)^2\right].\end{aligned}$$
+      (Both sides have the ten terms $2x_i^2x_j^2$ and the same ten terms of the form $-2x_i^2x_jx_k$.) So $S\ge0$, hence $S=0$ and every bracket vanishes, since all $x_i>0$. The $x_1^2$ and $x_2^2$ terms give $x_2=x_4$, $x_3=x_5$ and $x_1=x_4$; the $x_3^2$ term gives $x_2=x_5$. So all five are equal.
+
+      Conversely, if all five are equal to $t>0$, every factor is $t^2-t^2=0$ and all five inequalities hold.
+    checked: "script: sympy confirms the sum-of-squares identity exactly"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Bounded solution of a cosine-type functional equation"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - 'Let $M$ be the least upper bound of $|f|$. It is positive and finite.'
+      - 'If $|g(y)|>1$ for some $y$, use the equation to bound $|f(x)|$ by something smaller than $M$, for every $x$.'
+    solution: |
+      **Key idea:** a value $|g(y_0)|>1$ would push the supremum of $|f|$ below itself.
+
+      Let $M=\sup_x|f(x)|$. Then $0<M\le1$, since $f$ is bounded by $1$ and not identically zero. Suppose $|g(y_0)|>1$ for some $y_0$. For every $x$,
+      $$2|f(x)|\,|g(y_0)|=|f(x+y_0)+f(x-y_0)|\le 2M,$$
+      so $|f(x)|\le\dfrac{M}{|g(y_0)|}$ for all $x$. Taking the supremum over $x$ gives $M\le\dfrac{M}{|g(y_0)|}<M$, a contradiction. So $|g(y)|\le1$ for all $y$.
+    checked: "algebra only: short supremum argument"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Regular tetrahedron touching four parallel planes"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Fix a regular tetrahedron and instead choose the direction of the planes. Heights along a unit vector $u$ are dot products.'
+      - 'The three edge vectors from one vertex are linearly independent. Solve a linear system for a vector $w$ with prescribed dot products, then scale.'
+    solution: |
+      **Key idea:** instead of placing the tetrahedron, choose the planes' normal direction. Three independent edge vectors let us prescribe any three heights, and scaling fixes the size.
+
+      Let the four planes be $z=0,\ a,\ b,\ c$ in a coordinate system whose $z$-axis is their common normal (shift so that one plane is $z=0$). Then $a,b,c$ are distinct and nonzero.
+
+      Take any regular tetrahedron with vertices $V_1,V_2,V_3,V_4$, and let $e_i=V_{i+1}-V_1$ for $i=1,2,3$. These three vectors are linearly independent, so the linear system
+      $$e_1\cdot w=a,\qquad e_2\cdot w=b,\qquad e_3\cdot w=c$$
+      has a (unique) solution $w$, and $w\ne0$ because $a\ne0$. Let $u=w/|w|$ and scale the tetrahedron by the factor $\lambda=|w|$ about $V_1$. The scaled edge vectors $\lambda e_i$ satisfy
+      $$(\lambda e_i)\cdot u=e_i\cdot w\in\{a,b,c\}.$$
+      So, measured along the unit vector $u$, the four vertices sit at heights $0,a,b,c$ above $V_1$. Finally move the scaled tetrahedron rigidly so that $V_1$ lies on the plane $z=0$ and $u$ points along the positive $z$-axis. Then its vertices lie on the four planes, one on each.
+    checked: "algebra only: linear system and scaling"
+    viz: imo-1972-p6
+    status: ready

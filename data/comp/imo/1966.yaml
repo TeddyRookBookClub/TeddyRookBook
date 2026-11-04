@@ -1,0 +1,141 @@
+year: 1966
+edition: 8th
+date: "July 1–14, 1966 · Sofia, Bulgaria"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1966/1966_eng.pdf
+  archive: https://www.imo-official.org/editions/1966/
+problems:
+  - id: P1
+    day: 1
+    topic: "Venn-diagram counting with three problems"
+    areas: [combinatorics, algebra]
+    difficulty: 1
+    answer: "$6$"
+    hints:
+      - 'Name the seven regions of the Venn diagram, then translate each sentence into an equation.'
+      - 'You should reach $9c+4m=26$, where $c$ counts "only C" and $m$ counts "B and C but not A".'
+    solution: |
+      **Key idea:** name the regions of the Venn diagram. The conditions collapse to one equation in whole numbers, $9c+4m=26$.
+
+      Let $a,b,c$ be the numbers who solved only A, only B, only C. Let $m$ be the number who solved B and C but not A, and let $w$ be the number who solved A together with something else.
+      - Total: $a+b+c+m+w=25$.
+      - Among those who missed A, solvers of B ($b+m$) are twice the solvers of C ($c+m$): $b+m=2c+2m$, so $b=2c+m$.
+      - $a=w+1$.
+      - Half of the single-problem solvers missed A: $b+c=a$.
+
+      Then $a=b+c=3c+m$ and $w=a-1$, so the total is $a+a+(a-1)+m=25$, that is $3a+m=26$. Substituting $a=3c+m$ gives
+      $$9c+4m=26 .$$
+      In non-negative integers: $c=0$ gives $4m=26$ and $c=1$ gives $4m=17$, both impossible; $c=2$ gives $m=2$; and $c\ge3$ is too big. So $c=2$, $m=2$, $a=8$, $w=7$, and
+      $$b=2c+m=6 .$$
+      Check: $8+6+2+2+7=25$; among those who missed A, $6+2=8$ solved B and $2+2=4$ solved C; and the single-problem solvers are $16$, of whom $8$ missed A.
+    checked: "script: all non-negative values of the four free counts up to 25"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "A tangent condition on a triangle forces two equal angles"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Write $\tan\frac\gamma2=\cot\sigma$ with $\sigma=\frac{\alpha+\beta}2$, and move everything to one side.'
+      - '$1-\tan\alpha\cot\sigma=\dfrac{\sin(\sigma-\alpha)}{\cos\alpha\sin\sigma}$.'
+    solution: |
+      **Key idea:** with $\sigma=\frac{\alpha+\beta}2$, the condition factors as $\sin\frac{\beta-\alpha}2\cdot\bigl(\frac{a}{\cos\alpha}-\frac b{\cos\beta}\bigr)=0$. Both factors vanish only when $\alpha=\beta$.
+
+      The condition only makes sense when $\alpha,\beta\ne90^\circ$, so both tangents exist. Let $\sigma=\frac{\alpha+\beta}2=90^\circ-\frac\gamma2$. Then $\tan\frac\gamma2=\cot\sigma$, and the condition reads
+      $$a(1-\tan\alpha\cot\sigma)+b(1-\tan\beta\cot\sigma)=0 .$$
+      Now
+      $$1-\tan\alpha\cot\sigma=\frac{\cos\alpha\sin\sigma-\sin\alpha\cos\sigma}{\cos\alpha\sin\sigma}=\frac{\sin(\sigma-\alpha)}{\cos\alpha\sin\sigma},$$
+      with $\sigma-\alpha=\frac{\beta-\alpha}2$, and similarly with $\sigma-\beta=-\frac{\beta-\alpha}2$. The condition becomes
+      $$\frac{\sin\frac{\beta-\alpha}2}{\sin\sigma}\Bigl(\frac a{\cos\alpha}-\frac b{\cos\beta}\Bigr)=0 .$$
+      - Either $\sin\frac{\beta-\alpha}2=0$, which means $\alpha=\beta$,
+      - or $\frac a{\cos\alpha}=\frac b{\cos\beta}$. By the law of sines $a:b=\sin\alpha:\sin\beta$, so this says $\tan\alpha=\tan\beta$. Two angles of a triangle with equal tangents are equal, since $\tan$ is one-to-one on $(0^\circ,90^\circ)\cup(90^\circ,180^\circ)$ and takes positive values on the first part and negative values on the second.
+
+      In both cases $\alpha=\beta$, so the triangle is isosceles with $a=b$.
+    checked: "script: random triangles; whenever the condition holds to 1e-7, the two angles agree"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "The center minimizes total distance to a regular tetrahedron's vertices"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'The unit vectors from the center to the four vertices add up to zero.'
+      - 'For any point $P$ and unit vector $u_i$, $|PV_i|\ge u_i\cdot(V_i-P)$.'
+    solution: |
+      **Key idea:** project each distance onto the direction from the center to that vertex. Those four directions cancel.
+
+      Let $O$ be the center, $R$ the circumradius, and $u_i=\frac{V_i-O}{R}$ the unit vectors toward the vertices. By symmetry their sum is invariant under every symmetry of the tetrahedron, so it is $0$: $\sum u_i=0$.
+
+      For any point $P$, by Cauchy–Schwarz,
+      $$|PV_i|\ge u_i\cdot(V_i-P)=u_i\cdot(V_i-O)-u_i\cdot(P-O)=R-u_i\cdot(P-O).$$
+      Adding over the four vertices:
+      $$\sum|PV_i|\ge4R-\Bigl(\sum u_i\Bigr)\cdot(P-O)=4R=\sum|OV_i| .$$
+      **Strictness.** Equality needs $V_i-P$ to point along $u_i$ for every $i$. That means $P-O=(R-\lambda_i)u_i$ for numbers $\lambda_i\ge0$. Since no two of the $u_i$ are parallel, $P-O$ is parallel to two non-parallel vectors, so $P=O$. For every other point the sum is strictly larger.
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Telescoping reciprocals of sines at doubling angles"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - 'Prove $\dfrac1{\sin2\theta}=\cot\theta-\cot2\theta$.'
+    solution: |
+      **Key idea:** each term is a difference of two cotangents, so the sum telescopes.
+
+      **The identity.** For $\sin2\theta\ne0$,
+      $$\cot\theta-\cot2\theta=\frac{\cos\theta}{\sin\theta}-\frac{\cos2\theta}{2\sin\theta\cos\theta}=\frac{2\cos^2\theta-\cos2\theta}{\sin2\theta}=\frac1{\sin2\theta},$$
+      because $2\cos^2\theta-\cos2\theta=1$.
+
+      **The sum.** Apply this with $\theta=2^{k-1}x$ for $k=1,\dots,n$:
+      $$\sum_{k=1}^n\frac1{\sin2^kx}=\sum_{k=1}^n\bigl(\cot2^{k-1}x-\cot2^kx\bigr)=\cot x-\cot2^nx .$$
+      The excluded values of $x$ are exactly those where some $\sin2^tx$ ($0\le t\le n$) vanishes, so every term is defined.
+    checked: "script: n = 1 to 7 at random x"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Linear system with absolute differences as coefficients"
+    areas: [algebra]
+    difficulty: 2
+    answer: "If $a_p$ is the largest and $a_q$ the smallest: $x_p=x_q=\\dfrac1{a_p-a_q}$, the other two unknowns $0$"
+    hints:
+      - 'Relabel so that $a_1>a_2>a_3>a_4$. Then every absolute value has a known sign.'
+      - 'Subtract consecutive equations. Each difference divides by a positive gap and leaves a simple equation.'
+    solution: |
+      **Key idea:** with the $a_i$ in decreasing order, subtracting neighbouring equations removes the absolute values.
+
+      **How we read the system.** The official English text has a misprint in the second equation: its last term repeats the $x_3$ term instead of bringing in $x_4$. We read that term as $|a_2-a_4|\,x_4$, so that all four equations follow the same pattern: equation $i$ is $\sum_{j\ne i}|a_i-a_j|\,x_j=1$. Everything below uses this reading.
+
+      Relabel so that $a_1>a_2>a_3>a_4$. Subtract equation 2 from equation 1. For $j=1$ the coefficient is $0-(a_1-a_2)$. For $j\ge2$ it is $(a_1-a_j)-(a_2-a_j)=a_1-a_2$. Dividing by $a_1-a_2>0$:
+      $$-x_1+x_2+x_3+x_4=0 .$$
+      In the same way, equations 2 minus 3, and 3 minus 4, give
+      $$-x_1-x_2+x_3+x_4=0,\qquad -x_1-x_2-x_3+x_4=0 .$$
+      The difference of the last two gives $x_3=0$. The difference of the first two gives $x_2=0$. Then $x_1=x_4$. Equation 1 now reads $(a_1-a_4)x_4=1$. So
+      $$x_1=x_4=\frac1{a_1-a_4},\qquad x_2=x_3=0 .$$
+      Check equation 2: $(a_1-a_2)x_1+(a_2-a_4)x_4=\frac{a_1-a_4}{a_1-a_4}=1$, and equation 3 the same way. The solution is unique.
+
+      In the original labels: the unknowns belonging to the largest and the smallest $a$ both equal $1/(a_{\max}-a_{\min})$, and the other two are $0$.
+    checked: "script: 100 random choices of distinct a_i, solved numerically"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Corner triangles: one has at most a quarter"
+    areas: [geometry, algebra]
+    difficulty: 1
+    hints:
+      - 'Describe the three points by the fractions of the sides they cut off. Each corner triangle has area (fraction) × (fraction) of the whole.'
+      - 'Multiply the three areas together. Each side contributes $t(1-t)\le\frac14$.'
+    solution: |
+      **Key idea:** the product of the three corner areas is a product of three factors $t(1-t)$, each at most $\frac14$.
+
+      Let $S$ be the area of $ABC$, and put $AM=m\cdot AB$, $BK=k\cdot BC$, $CL=l\cdot CA$ with $m,k,l\in(0,1)$. A triangle that shares an angle with $ABC$ has area proportional to the product of the two sides along that angle. So
+      $$\frac{[AML]}S=m(1-l),\qquad\frac{[BKM]}S=k(1-m),\qquad\frac{[CLK]}S=l(1-k).$$
+      Multiplying,
+      $$\frac{[AML][BKM][CLK]}{S^3}=m(1-m)\cdot k(1-k)\cdot l(1-l)\le\Bigl(\frac14\Bigr)^3,$$
+      since $t(1-t)\le\frac14$ for every $t$. If all three areas were larger than $\frac S4$, the product would be larger than $(\frac S4)^3$. So at least one area is at most $\frac S4$. (Equality throughout happens when all three points are midpoints.)
+    viz: imo-1966-p6
+    status: ready

@@ -1,0 +1,131 @@
+year: 1967
+edition: 9th
+date: "July 2–13, 1967 · Cetinje, Yugoslavia"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1967/1967_eng.pdf
+  archive: https://www.imo-official.org/editions/1967/
+problems:
+  - id: P1
+    day: 1
+    topic: "Four unit circles covering a parallelogram"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Split the parallelogram along $BD$ into two congruent acute triangles. The worst point of triangle $ABD$ is its circumcenter.'
+      - 'The circles cover exactly when the circumradius of $ABD$ is at most $1$. Then use the law of sines and the law of cosines.'
+    solution: |
+      **Key idea:** the circles cover the parallelogram exactly when the circumradius $R$ of triangle $ABD$ is at most $1$. Translating $R\le1$ with the law of sines and the law of cosines gives the stated inequality.
+
+      The diagonal $BD$ cuts the parallelogram into triangles $ABD$ and $CDB$, which are congruent by a half-turn about the center. That half-turn swaps the circles about $A$ and $C$ and swaps those about $B$ and $D$. Let $O$ be the circumcenter of $ABD$. It lies inside the triangle, since the triangle is acute.
+
+      **If $R\le1$, the circles cover.** The segments $OA,OB,OD$ cut $ABD$ into three triangles, and each of these is cut by the perpendicular from $O$ into two right triangles, such as $O,A,$ and the midpoint $N$ of $AB$. Every point $X$ of triangle $OAN$ satisfies $AX\le\max(AO,AN)\le R\le1$, because the distance from $A$ is largest at a vertex of that triangle. So triangle $ABD$ is covered by the circles about $A,B,D$. By the half-turn, triangle $CDB$ is covered by those about $C,D,B$.
+
+      **If $R>1$, they do not.** The point $O$ is at distance $R>1$ from $A,B,D$. It is also farther than $R$ from $C$. Indeed, $C$ and $A$ are on opposite sides of $BD$, and $\angle BCD=\alpha$. A point on the circle on that side would see $BD$ under $180^\circ-\alpha$, and since $\alpha<90^\circ$ we have $\alpha<180^\circ-\alpha$. So $C$ is outside the circumcircle and $OC>R>1$. The point $O$ is not covered.
+
+      **Translating $R\le1$.** By the law of sines in $ABD$, $BD=2R\sin\alpha$, so $R\le1\iff BD^2\le4\sin^2\alpha$. By the law of cosines, $BD^2=a^2+1-2a\cos\alpha$. So the condition is
+      $$a^2-2a\cos\alpha+\cos^2\alpha\le4\sin^2\alpha-1+\cos^2\alpha=3\sin^2\alpha,$$
+      that is $|a-\cos\alpha|\le\sqrt3\sin\alpha$. The angle of $ABD$ at $B$ is acute, which means the foot of the perpendicular from $D$ to line $AB$ lies on the same side of $B$ as $A$: $\cos\alpha<a$. So the lower half of the double inequality holds automatically, and the condition is
+      $$a\le\cos\alpha+\sqrt3\sin\alpha .$$
+    checked: "script: random acute cases; coverage tested on a 121 × 121 grid of points of the parallelogram agrees with the inequality"
+    viz: imo-1967-p1
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Tetrahedron with one long edge has volume at most 1/8"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Let $CD$ be the edge opposite the long one. Both faces through $CD$ have all sides at most $1$.'
+      - 'In such a face, the height over $CD$ is at most $\sqrt{1-c^2/4}$, where $c=CD$. The volume is at most $\frac16\,c\,h_1h_2$.'
+    solution: |
+      **Key idea:** look at the edge opposite the long one. Both faces through it are short triangles, so their heights over it are small. The volume is at most one sixth of the edge times the two heights.
+
+      Let $AB$ be the edge longer than $1$, so the other five are at most $1$. Let $c=CD\le1$.
+
+      **Heights over $CD$.** In triangle $ACD$, drop the perpendicular from $A$ to line $CD$, with foot $F$. One of $FC,FD$ is at least $\frac c2$ (if $F$ is between $C$ and $D$, they add up to $c$; if not, one of them is at least $c$). Say $FC\ge\frac c2$. Then
+      $$h_1=AF=\sqrt{AC^2-FC^2}\le\sqrt{1-\tfrac{c^2}4}.$$
+      In the same way, the height $h_2$ of $B$ over line $CD$ in triangle $BCD$ is at most $\sqrt{1-c^2/4}$.
+
+      **The volume.** The base $BCD$ has area $\frac12c\,h_2$, and the height of $A$ over the plane $BCD$ is at most $h_1$. So
+      $$V\le\frac13\cdot\frac12c\,h_2\cdot h_1\le\frac16\,c\Bigl(1-\frac{c^2}{4}\Bigr).$$
+      The function $f(c)=c-\frac{c^3}4$ has derivative $1-\frac{3c^2}4>0$ on $(0,1]$, so $f(c)\le f(1)=\frac34$. Hence $V\le\frac16\cdot\frac34=\frac18$.
+
+      Equality holds for two equilateral triangles of side $1$ on a common edge, in perpendicular planes. The long edge is then $\sqrt{3/2}>1$.
+    checked: "script: 200,000 random tetrahedra with exactly one edge over 1; largest volume found 0.100 < 0.125"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Products of differences of pronic numbers"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - '$c_u-c_v=(u-v)(u+v+1)$.'
+      - 'The product splits into $n$ consecutive integers times $n$ consecutive integers that follow the prime $p=m+k+1$.'
+    solution: |
+      **Key idea:** each difference factors, and the product becomes two blocks of $n$ consecutive integers. The prime takes care of the extra factor $n+1$.
+
+      Since $c_u-c_v=u^2+u-v^2-v=(u-v)(u+v+1)$,
+      $$\prod_{i=1}^n(c_{m+i}-c_k)=\prod_{i=1}^n(m-k+i)\cdot\prod_{i=1}^n(m+k+1+i).$$
+      The divisor is $c_1c_2\cdots c_n=\prod i(i+1)=n!\,(n+1)!$.
+
+      - **First block.** $\prod_{i=1}^n(m-k+i)$ is a product of $n$ consecutive integers. It is divisible by $n!$. (If it contains $0$, it is $0$. If all factors are negative, change signs. If all are positive, the quotient is a binomial coefficient.)
+      - **Second block.** Let $p=m+k+1$, a prime with $p>n+1$. The product $p(p+1)\cdots(p+n)$ of $n+1$ consecutive positive integers is divisible by $(n+1)!$. Since $p$ is a prime larger than $n+1$, it shares no factor with $(n+1)!$. So $(n+1)!$ divides $(p+1)\cdots(p+n)=\prod_{i=1}^n(m+k+1+i)$.
+
+      Multiplying, $n!\,(n+1)!$ divides the product.
+    checked: "script: all k, m ≤ 14 with m + k + 1 prime and every n < m + k"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Largest similar triangle circumscribed about a given triangle"
+    areas: [geometry]
+    difficulty: 4
+    status: coming
+
+  - id: P5
+    day: 2
+    topic: "Power sums of eight numbers vanishing infinitely often"
+    areas: [algebra]
+    difficulty: 2
+    answer: "Exactly the odd $n$"
+    hints:
+      - 'Even power sums are positive. So infinitely many odd ones vanish.'
+      - 'Divide by the $n$-th power of the largest absolute value and let $n\to\infty$ through odd values.'
+    solution: |
+      **Key idea:** for large odd $n$, the numbers of largest absolute value dominate the sum. They must cancel in pairs $\pm M$. Peel them off and repeat.
+
+      For even $n$, $c_n$ is a sum of non-negative terms, not all zero, so $c_n>0$. Hence $c_n=0$ for infinitely many **odd** $n$.
+
+      **Claim:** the non-zero $a_i$ split into pairs $\{x,-x\}$. Let $M>0$ be the largest $|a_i|$. Suppose $M$ appears $u$ times and $-M$ appears $v$ times. For odd $n$,
+      $$\frac{c_n}{M^n}=u-v+\sum_{|a_i|<M}\Bigl(\frac{a_i}{M}\Bigr)^n .$$
+      The last sum tends to $0$ as $n\to\infty$. Along the infinitely many odd $n$ with $c_n=0$, this forces $u-v=0$. For odd $n$, the $u$ copies of $M$ and the $u$ copies of $-M$ cancel, so removing them does not change $c_n$ for any odd $n$. The remaining numbers again have $c_n=0$ for infinitely many odd $n$. Repeat until only zeros remain.
+
+      So the numbers are zeros together with pairs $x,-x$. Then every odd power sum is $0$, and every even one is positive. The answer is: $c_n=0$ exactly for odd $n$.
+    checked: "script: for random multisets of pairs ±x plus zeros, c_n vanishes for odd n and is positive for even n"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Medals handed out by a one-seventh rule"
+    areas: [algebra, number-theory]
+    difficulty: 2
+    answer: "$6$ days and $36$ medals"
+    hints:
+      - 'If $r_k$ medals remain before day $k$, then $r_{k+1}=\frac67(r_k-k)$.'
+      - 'Solve the recurrence: $r_k=42-6k+C\bigl(\frac67\bigr)^{k-1}$. The last day gives $C$, and $r_1$ must be a whole number.'
+    solution: |
+      **Key idea:** the remaining medals follow a linear recurrence. Its solution has a term $(\frac67)^{k}$, and whole numbers force that term to vanish.
+
+      Let $r_k$ be the number of medals left before day $k$, so $r_1=m$. On day $k$, $k+\frac17(r_k-k)$ medals are given out, which leaves
+      $$r_{k+1}=\frac67(r_k-k).$$
+      **Solving.** Try $r_k=\alpha k+\beta$: $\alpha(k+1)+\beta=\frac67(\alpha k+\beta-k)$ gives $\alpha=-6$, $\beta=42$. So the general solution is
+      $$r_k=42-6k+C\Bigl(\frac67\Bigr)^{k-1}.$$
+      **The last day.** On day $n$ all remaining medals, $n$ of them, are given, so $r_n=n$:
+      $$C\Bigl(\frac67\Bigr)^{n-1}=7n-42,\qquad m=r_1=36+C=36+\frac{7^n(n-6)}{6^{n-1}} .$$
+      Since $m$ is a whole number and $7^n$ is coprime to $6$, we need $6^{n-1}\mid n-6$. For $n\ge2$, $6^{n-1}>|n-6|$ (check $n=2$: $6>4$; after that the left side grows much faster). So $n-6=0$.
+
+      Hence $n=6$ and $m=36$. Check: each day $6$ medals are given ($1+\frac{35}{7}$, then $2+\frac{28}{7}$, and so on), and on day $6$ the last $6$ remain.
+    checked: "script: brute force over n < 40 and m < 5000; (6, 36) is the only solution"
+    status: ready

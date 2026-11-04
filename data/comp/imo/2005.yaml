@@ -1,0 +1,150 @@
+year: 2005
+edition: 46th
+date: "July 2005 · Mérida, Mexico"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2005/2005_eng.pdf
+  archive: https://www.imo-official.org/editions/2005/
+problems:
+  - id: P1
+    day: 1
+    topic: "Equal-sided hexagon in an equilateral triangle; three diagonals concur"
+    areas: [geometry]
+    difficulty: 3
+    status: coming
+
+  - id: P2
+    day: 1
+    topic: "Distinct remainders force a sequence to hit every integer"
+    areas: [number-theory, combinatorics]
+    difficulty: 2
+    hints:
+      - 'Two terms among the first $n$ can''t differ by $n$ or more. Why? Look at the first $d$ terms, where $d$ is their difference.'
+      - 'So the first $n$ terms are $n$ different integers spread over fewer than $n+1$ consecutive values. What set must they be?'
+    solution: |
+      **Key idea:** the first $n$ terms always fill a block of $n$ consecutive integers. Since the sequence goes far up and far down, every integer lands in one of these blocks.
+
+      **No repeats.** If $a_i=a_j$ with $i<j$, the first $j$ terms contain two equal numbers, so they don't leave $j$ different remainders mod $j$. So all terms are different.
+
+      **Small spread.** Take $i<j\le n$ and let $d=|a_i-a_j|>0$. If $d\ge n$, then $d\ge j$, so $a_i$ and $a_j$ are among the first $d$ terms and leave the same remainder mod $d$. That is not allowed. So $|a_i-a_j|\le n-1$ for all $i,j\le n$.
+
+      **Blocks.** The first $n$ terms are $n$ different integers whose largest and smallest differ by at most $n-1$. So they are exactly $n$ consecutive integers.
+
+      **Every integer appears.** Let $m$ be any integer. The positive terms are infinitely many and all different, so they can't all be below $m$: some term $a_p\ge m$. In the same way some term $a_q\le m$. Let $n=\max(p,q)$. The first $n$ terms form a block of consecutive integers containing $a_q\le m\le a_p$, so they contain $m$.
+
+      Each integer appears at least once, and by the first step at most once.
+    checked: "logic: each step is a direct consequence of the remainder condition"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Fifth powers and squares: a cyclic sum is nonnegative"
+    areas: [algebra]
+    difficulty: 3
+    hints:
+      - 'Compare $\dfrac{x^5-x^2}{x^5+y^2+z^2}$ with $\dfrac{x^5-x^2}{x^3(x^2+y^2+z^2)}$. Their difference has the sign of $(x^3-1)^2$.'
+      - 'The second fraction is $\dfrac{x^2-1/x}{x^2+y^2+z^2}$, and $\tfrac1x\le yz$.'
+    solution: |
+      **Key idea:** replace each denominator by $x^3(x^2+y^2+z^2)$. This can only lower the term, and afterwards all three terms share the same denominator.
+
+      Let $S=x^2+y^2+z^2$.
+
+      **Step 1: a lower bound for each term.** Let $D_1=x^5+y^2+z^2$ and $D_2=x^3S=x^5+x^3(y^2+z^2)$. Then $D_2-D_1=(x^3-1)(y^2+z^2)$, and
+      $$\frac{x^5-x^2}{D_1}-\frac{x^5-x^2}{D_2}=\frac{(x^5-x^2)(D_2-D_1)}{D_1D_2}=\frac{x^2(x^3-1)^2(y^2+z^2)}{D_1D_2}\ \ge0 .$$
+      So
+      $$\frac{x^5-x^2}{x^5+y^2+z^2}\ \ge\ \frac{x^5-x^2}{x^3S}=\frac{x^2-\frac1x}{S}\ \ge\ \frac{x^2-yz}{S},$$
+      where the last step uses $\frac1x\le yz$, which is $xyz\ge1$.
+
+      **Step 2: add.** Doing the same for $y$ and $z$ and adding,
+      $$\text{sum}\ \ge\ \frac{x^2+y^2+z^2-xy-yz-zx}{S}=\frac{(x-y)^2+(y-z)^2+(z-x)^2}{2S}\ \ge0 .$$
+    checked: "script: 200,000 random triples with xyz ≥ 1; the smallest sum found was positive"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Which numbers are coprime to a whole sequence?"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "Only $1$"
+    hints:
+      - 'Show every prime divides some term. The primes $2$ and $3$ divide the first two terms.'
+      - 'For a prime $p\ge5$, try $n=p-2$ and multiply the term by $6$. Fermat does the rest.'
+    solution: |
+      **Key idea:** every prime divides some term, so no number above $1$ is coprime to all of them. The index $n=p-2$ works for every prime $p\ge5$.
+
+      Write $a_n=2^n+3^n+6^n-1$. We have $a_1=10$ and $a_2=48$, so $2$ and $3$ divide terms.
+
+      Let $p\ge5$ be prime. By Fermat, $2^{p-1}\equiv3^{p-1}\equiv6^{p-1}\equiv1\pmod p$. So
+      $$6a_{p-2}=3\cdot2^{p-1}+2\cdot3^{p-1}+6^{p-1}-6\equiv3+2+1-6=0\pmod p .$$
+      Since $p\nmid6$, we get $p\mid a_{p-2}$.
+
+      So every prime divides some term. A positive integer coprime to every term has no prime factor: it is $1$. And $1$ is coprime to everything.
+    checked: "script: p divides a_(p−2) for p = 5, 7, 11, 13, 101"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Moving points with equal distances; a fixed Miquel point"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Since $BC=DA$, some rotation takes $B$ to $D$ and $C$ to $A$. Where does it take $E$?'
+      - 'Let $X$ be the center of that rotation. Triangles $XBD$, $XEF$, $XCA$ are isosceles with the same apex angle. Use them to show $X$ is on the circles $BCP$ and $BEQ$, then on $PQR$.'
+    solution: |
+      **Key idea:** a single rotation carries side $BC$ onto side $DA$, and it carries $E$ to $F$ for every position. Its center $X$ doesn't depend on $E$, and it lies on every circle $PQR$.
+
+      We use directed angles between lines, written $\angle(m,n)$ and taken mod $180^\circ$.
+
+      **The rotation.** The segments $BC$ and $DA$ have the same length and are not parallel. So there is a rotation $\rho$, with some center $X$ and angle $\theta\ne0$, taking $B\mapsto D$ and $C\mapsto A$. It takes the point of $BC$ at distance $t$ from $B$ to the point of $DA$ at distance $t$ from $D$. So $\rho(E)=F$ for every allowed $E$, and $X$ is the same point every time.
+
+      **Similar triangles.** The triangles $XBD$, $XEF$, $XCA$ are isosceles ($XB=XD$, etc.), with apex angle $\theta$ at $X$ and the same orientation. So they are similar, and their base angles match:
+      $$\angle(BX,BD)=\angle(EX,EF)=\angle(CX,CA).$$
+
+      **$X$ is on two circles.** Recall $P=AC\cap BD$, $Q=BD\cap EF$, $R=EF\cap AC$.
+      - Circle $BCP$: $\angle(BX,BP)=\angle(BX,BD)=\angle(CX,CA)=\angle(CX,CP)$, so $X,B,C,P$ are concyclic.
+      - Circle $BEQ$: $\angle(BX,BQ)=\angle(BX,BD)=\angle(EX,EF)=\angle(EX,EQ)$, so $X,B,E,Q$ are concyclic.
+
+      **$X$ is on circle $PQR$.** Using these two circles, and that $B,E,C$ lie on one line,
+      $$\angle(PX,PR)=\angle(PX,PC)=\angle(BX,BC)=\angle(BX,BE)=\angle(QX,QE)=\angle(QX,QR).$$
+      So $X,P,Q,R$ are concyclic.
+
+      **$X\ne P$.** If $X=P$, then $PB=PD$ and $PC=PA$, so the diagonals of $ABCD$ bisect each other and $ABCD$ is a parallelogram. Then $BC\parallel DA$, which is excluded.
+
+      So every circle $PQR$ passes through the fixed point $X\ne P$.
+    viz: imo-2005-p5
+    checked: "script: 300 random quadrilaterals with BC = DA, five positions of E each; the rotation center lies on circle PQR to 1e-13"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Six problems, popular pairs: two near-perfect scores"
+    areas: [combinatorics]
+    difficulty: 4
+    hints:
+      - 'Count pairs (contestant, pair of problems they solved). Each pair of problems gives at least $\tfrac{2N+1}5$, so the total is at least $6N+3$.'
+      - 'If at most one contestant solved five, the total is at most $6N+4$. Show this forces $N=5k+2$, everyone else solved exactly four, and then look mod $3$ at the problem the five-solver missed.'
+    solution: |
+      **Key idea:** double counting leaves almost no slack. If only one contestant solved five problems, the numbers fit only in a very rigid way, and a count mod $3$ breaks it.
+
+      Let $N$ be the number of contestants and $s_i$ the number of problems contestant $i$ solved, so $s_i\le5$. For a pair of problems let $c$ be the number of contestants who solved both; we know $5c\ge2N+1$. Counting pairs (contestant, two problems they solved):
+      $$\sum_i\binom{s_i}2=\sum_{\text{pairs}}c\ \ge\ 15\cdot\frac{2N+1}5=6N+3 .$$
+
+      **At least one solved five.** If $s_i\le4$ for all $i$, the left side is at most $6N$. So someone solved five.
+
+      **Suppose exactly one did.** Call this contestant $X$, and let $p$ be the problem $X$ missed. Then $\sum\binom{s_i}2\le10+6(N-1)=6N+4$. Let $m$ be the least integer with $5m\ge2N+1$, so $15m\le6N+4$. Write $N=5k+r$ with $0\le r\le4$:
+
+      | $r$ | $0$ | $1$ | $2$ | $3$ | $4$ |
+      |---|---|---|---|---|---|
+      | $m$ | $2k+1$ | $2k+1$ | $2k+1$ | $2k+2$ | $2k+2$ |
+      | $15m\le6N+4$? | $15\le4$ no | $15\le10$ no | $15\le16$ yes | $30\le22$ no | $30\le28$ no |
+
+      So $N=5k+2$, every pair count is at least $2k+1$, and $30k+15\le\sum c\le30k+16$.
+
+      **Rigid structure.** If some contestant other than $X$ solved at most three problems, then $\sum\binom{s_i}2\le10+6(N-2)+3=30k+13$, too small. So everyone except $X$ solved exactly four, and $\sum c=10+6(N-1)=30k+16$. Since each of the $15$ pair counts is at least $2k+1$, exactly one pair has count $2k+2$ and the rest have $2k+1$.
+
+      **Count around one problem.** For a problem $q$, let $\Sigma_q$ be the sum of the five pair counts involving $q$. Then $\Sigma_q$ is $10k+5$, or $10k+6$ if $q$ is in the special pair. Also $\Sigma_q$ counts, over the solvers of $q$, the number of other problems they solved.
+      - For $q\ne p$: $X$ contributes $4$ and each other solver contributes $3$, so $\Sigma_q\equiv1\pmod3$. At least three of the five problems $q\ne p$ are outside the special pair, so $10k+5\equiv1$, which gives $k\equiv2\pmod3$.
+      - For $q=p$: $X$ didn't solve $p$, and each solver contributes $3$, so $\Sigma_p\equiv0\pmod3$. But with $k\equiv2$, we get $10k+5\equiv1$ and $10k+6\equiv2\pmod3$.
+
+      That is a contradiction. So at least two contestants solved exactly five problems.
+    checked: "arithmetic: the table and the residues mod 3 were checked by a short script over N up to 200"
+    status: ready

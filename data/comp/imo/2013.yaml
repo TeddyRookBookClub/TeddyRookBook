@@ -1,0 +1,119 @@
+year: 2013
+edition: 54th
+date: "July 23–24, 2013 · Santa Marta, Colombia"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2013/2013_eng.pdf
+  archive: https://www.imo-official.org/editions/2013/
+problems:
+  - id: P1
+    day: 1
+    topic: "Splitting a fraction into a product of unit steps"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'Use induction on $k$. Peel off one factor $1+\frac1m$ so that what is left has the same shape with $k-1$ and a new denominator.'
+      - 'Treat even and odd $n$ separately. For $n=2t$ the leftover should be $1+\frac{2^{k-1}-1}{t}$; the same works for $n=2t-1$.'
+    solution: |
+      **Key idea:** induction on $k$. One factor $1+\frac1m$ can always be split off so that the remaining fraction is of the same type with $2^{k-1}-1$ on top and about half the denominator.
+
+      **Base.** For $k=1$, take $m_1=n$.
+
+      **Step.** Suppose the claim holds for $k-1$ and every $n$. Note
+      $$1+\frac{2^{k-1}-1}{t}=\frac{2t+2^k-2}{2t}.$$
+      - **$n=2t$ even.**
+      $$1+\frac{2^k-1}{2t}=\frac{2t+2^k-1}{2t}=\frac{2t+2^k-2}{2t}\cdot\frac{2t+2^k-1}{2t+2^k-2}=\Big(1+\frac{2^{k-1}-1}{t}\Big)\Big(1+\frac1{2t+2^k-2}\Big).$$
+      - **$n=2t-1$ odd.**
+      $$1+\frac{2^k-1}{2t-1}=\frac{2t+2^k-2}{2t-1}=\frac{2t+2^k-2}{2t}\cdot\frac{2t}{2t-1}=\Big(1+\frac{2^{k-1}-1}{t}\Big)\Big(1+\frac1{2t-1}\Big).$$
+
+      In both cases the first factor is a product of $k-1$ factors $1+\frac1{m_i}$ by the induction hypothesis (with $t$ in place of $n$), and the second factor is one more, with a positive integer denominator. That gives $k$ factors.
+    checked: "exact arithmetic: the recursive construction verified for k ≤ 8 and n < 200"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Fewest lines to separate red and blue points"
+    areas: [combinatorics, geometry]
+    difficulty: 3
+    answer: '$k=2013$'
+    hints:
+      - 'Lower bound: put the points on a circle, alternating colors as much as possible. Each line crosses the circle at most twice.'
+      - 'Upper bound: two lines parallel to a segment, very close to it, cut off exactly the two endpoints. Pair up the points of one color, after using one line on the convex hull.'
+    solution: |
+      **Key idea:** on a circle with alternating colors, every color change needs its own crossing, and a line crosses the circle only twice. Conversely, pairs of same-colored points can be fenced off by thin strips, and one extra line at the convex hull handles the odd one out.
+
+      **Lower bound.** Place the $4027$ points on a circle in the order $R,B,R,B,\dots,R,B,B$. No three points of a circle are collinear. Each of the $2013$ red points has blue points on both sides, so there are $4026$ arcs between neighbors of different colors. For such neighbors $P,Q$, some line must separate them, so it crosses the chord $PQ$. A line entering the region between the chord and the short arc $PQ$ through the chord must leave through the arc. So each of these $4026$ arcs is crossed by some line, and a line meets the circle at most twice. So at least $2013$ lines are needed.
+
+      **Strips.** For two points $P,Q$ of the configuration, take the two lines parallel to $PQ$ at a tiny distance on either side. If the distance is small enough, the strip between them contains no other point of the configuration (no three are collinear). So these two lines cut $P$ and $Q$ off from all other points.
+
+      **Upper bound.** Look at the convex hull.
+      - If some vertex of the hull is red, one line cuts that red point off from the rest. Pair the other $2012$ red points into $1006$ pairs and use two strip lines for each pair: $1+2012=2013$ lines. Every region containing a red point lies inside a strip or inside the cut-off part, and these contain only red points. Every other region contains only blue points.
+      - If every hull vertex is blue, take two neighboring hull vertices; one line cuts these two blue points off. Pair the remaining $2012$ blue points with strips: again $2013$ lines, and now every region with a blue point contains only blue points, and the rest only red.
+
+      So $2013$ lines always suffice, and the answer is $k=2013$.
+    checked: "logic: the circle argument and the strip construction; the count 1 + 2·1006 = 2013"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Excircle touch points; circumcenter on circumcircle forces a right angle"
+    areas: [geometry]
+    difficulty: 4
+    status: coming
+
+  - id: P4
+    day: 2
+    topic: "Two circles through a base point and a collinear orthocenter"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Let the two circles meet again at $Z$. Since $BCMN$ is cyclic, $A$ has the same power with respect to both circles. So $A$, $Z$, $W$ are collinear.'
+      - '$X$ and $Y$ both lie on the line through $Z$ perpendicular to $AW$. Show $H$ is on it too, using $AZ\cdot AW=AN\cdot AB=AH\cdot AD$, where $D$ is the foot from $A$.'
+    solution: |
+      **Key idea:** the second meeting point $Z$ of the two circles lies on line $AW$. The diameters through $W$ make $X$, $Z$, $Y$ lie on the perpendicular to $AW$ at $Z$, and a power-of-a-point computation puts $H$ on that perpendicular too.
+
+      Let $D$ be the foot of the altitude from $A$, and let $\omega_1$ and $\omega_2$ meet again at $Z$.
+
+      **$A$ is on the common chord.** $\angle BNC=\angle BMC=90^\circ$, so $B,C,M,N$ lie on one circle and $AN\cdot AB=AM\cdot AC$. The left side is the power of $A$ with respect to $\omega_1$ (line $AB$ meets it at $N$ and $B$), and the right side is its power with respect to $\omega_2$. So $A$ lies on the radical axis $WZ$: the points $A$, $Z$, $W$ are collinear.
+
+      **$X$, $Z$, $Y$ are collinear.** $WX$ is a diameter of $\omega_1$, so $\angle WZX=90^\circ$. Likewise $\angle WZY=90^\circ$. So $X$ and $Y$ both lie on the line $\ell$ through $Z$ perpendicular to $ZW$, which is line $AW$.
+
+      **$H$ is on $\ell$.** $\angle BNH=\angle BDH=90^\circ$, so $B,N,H,D$ are concyclic and $AN\cdot AB=AH\cdot AD$. Together with the first step,
+      $$AZ\cdot AW=AH\cdot AD .$$
+      So $Z,W,D,H$ are concyclic (converse of the power of a point). In that circle, $\angle HZW$ is equal or supplementary to $\angle HDW=90^\circ$, so $HZ\perp AW$, and $H\in\ell$.
+
+      **Edge cases.** If $Z=W$ (the circles touch), $\ell$ is the line through $W$ perpendicular to $AW$, and $AW^2=AH\cdot AD$ makes triangles $AWH$ and $ADW$ similar, so $\angle AWH=\angle ADW=90^\circ$ and again $H\in\ell$. If $W=D$, the equation gives $AZ=AH$, so $Z=H$, which is on $\ell$.
+
+      So $X$, $Y$ and $H$ are collinear.
+    viz: imo-2013-p4
+    checked: "script: 1,000 random acute triangles and points W; the distance from H to line XY is below 2e-15"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Super-additive, sub-multiplicative function on positive rationals"
+    areas: [algebra]
+    difficulty: 3
+    hints:
+      - 'From (i) with $y=1$ and (iii), $f(1)\ge1$. Then (ii) gives $f(n)\ge n$ for integers, and $f$ is positive and increasing.'
+      - 'Show $f(x)\ge x$ for $x>1$ using $f(x)^n\ge f(x^n)\ge\lfloor x^n\rfloor$. Then use $a^n$ to squeeze $f(m)\le m$ for integers $m$.'
+    solution: |
+      **Key idea:** first show $f(x)\ge x$ for $x>1$. The fixed point $a$ gives $f(a^n)=a^n$ for all powers, and super-additivity at those huge values squeezes $f(m)\le m$ for integers. Then rationals follow from (i) and (ii).
+
+      **Step 1: basic facts.** By (i) with $x=a$, $y=1$: $af(1)=f(a)f(1)\ge f(a)=a$, so $f(1)\ge1$. By (ii), $f(n)\ge nf(1)\ge n$ for every positive integer $n$. For $x=\frac pq$, (i) gives $f(q)f(x)\ge f(p)>0$, so $f(x)>0$ for all $x$. Then (ii) shows $f$ is strictly increasing: $f(x+y)\ge f(x)+f(y)>f(x)$.
+
+      **Step 2: $f(x)\ge x$ for $x>1$.** For $z\ge1$, $f(z)\ge f(\lfloor z\rfloor)\ge\lfloor z\rfloor>z-1$. By (i) repeatedly (all values are positive), $f(x)^n\ge f(x^n)>x^n-1$. So $f(x)>(x^n-1)^{1/n}$ for every $n$, and letting $n\to\infty$ gives $f(x)\ge x$.
+
+      **Step 3: $f(m)=m$ for integers.** By (i), $f(a^n)\le f(a)^n=a^n$, and by Step 2, $f(a^n)\ge a^n$. So $f(a^n)=a^n$. Fix a positive integer $m$ and take $n$ so large that $a^n-m>1$. Then by (ii) and Step 2,
+      $$a^n=f(a^n)\ge f(a^n-m)+f(m)\ge a^n-m+f(m),$$
+      so $f(m)\le m$. With Step 1, $f(m)=m$.
+
+      **Step 4: rationals.** Let $x=\frac pq$. By (i), $f(q)f(x)\ge f(p)$, so $f(x)\ge\frac pq$. By (ii) applied $q$ times, $f(p)=f(qx)\ge qf(x)$, so $f(x)\le\frac pq$. Hence $f(x)=x$.
+    checked: "logic: four steps; the limit in Step 2 uses (x^n − 1)^(1/n) → x for x > 1"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Counting beautiful labelings of points on a circle"
+    areas: [combinatorics, number-theory]
+    difficulty: 5
+    status: coming

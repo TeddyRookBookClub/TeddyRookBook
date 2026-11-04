@@ -1,0 +1,147 @@
+year: 1964
+edition: 6th
+date: "June 30 – July 10, 1964 · Moscow, USSR"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1964/1964_eng.pdf
+  archive: https://www.imo-official.org/editions/1964/
+problems:
+  - id: P1
+    day: 1
+    topic: "Powers of two modulo seven"
+    areas: [number-theory]
+    difficulty: 1
+    answer: "(a) exactly the multiples of $3$; (b) never"
+    hints:
+      - 'Since $2^3=8\equiv1\pmod 7$, the remainders of $2^n$ repeat with period $3$.'
+    solution: |
+      **Key idea:** $2^3=8\equiv1\pmod7$, so $2^n$ modulo $7$ only depends on $n$ modulo $3$.
+
+      Write $n=3q+r$ with $r\in\{0,1,2\}$. Then $2^n=8^q\cdot2^r\equiv2^r\pmod7$, so $2^n$ leaves remainder $1$, $2$ or $4$ for $r=0,1,2$.
+
+      **(a)** $7\mid2^n-1$ exactly when the remainder is $1$, that is when $3\mid n$.
+
+      **(b)** $2^n+1$ leaves remainder $2$, $3$ or $5$, never $0$. So $7$ never divides $2^n+1$.
+    checked: "script: n = 1 to 299"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "A cubic inequality in the sides: Schur in disguise"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Expand. The inequality is $a^3+b^3+c^3+3abc\ge a^2(b+c)+b^2(c+a)+c^2(a+b)$.'
+      - 'That is $a(a-b)(a-c)+b(b-a)(b-c)+c(c-a)(c-b)\ge0$. Order the variables.'
+    solution: |
+      **Key idea:** after expanding, this is Schur's inequality, which holds for all non-negative numbers, not just triangle sides.
+
+      Expanding, the left side is $a^2(b+c)+b^2(c+a)+c^2(a+b)-(a^3+b^3+c^3)$. So the claim is
+      $$a^3+b^3+c^3+3abc\ \ge\ a^2(b+c)+b^2(c+a)+c^2(a+b),$$
+      which can be rewritten as
+      $$a(a-b)(a-c)+b(b-a)(b-c)+c(c-a)(c-b)\ge0 .$$
+      (Expand each product to check.) By symmetry, assume $a\ge b\ge c\ge0$. The last term is $c(a-c)(b-c)\ge0$. The first two combine to
+      $$(a-b)\bigl[a(a-c)-b(b-c)\bigr]\ge0,$$
+      because $a-b\ge0$ and $a(a-c)\ge b(b-c)$ (each factor on the left is at least the matching factor on the right, and all are non-negative). So the sum is non-negative.
+
+      For a triangle, equality holds only when $a=b=c$: in the ordered case, equality needs $c(a-c)(b-c)=0$ and $(a-b)[\dots]=0$, and for positive sides this forces $a=b=c$.
+    checked: "script: 10,000 random triples"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Four incircles: one big, three in the corners"
+    areas: [geometry]
+    difficulty: 2
+    answer: "$\\dfrac{\\pi\\,xyz\\,(a^2+b^2+c^2)}{(a+b+c)^3}$, where $x=b+c-a$, $y=c+a-b$, $z=a+b-c$"
+    hints:
+      - 'Each corner triangle is similar to the whole triangle. Compare heights: the tangent parallel to $BC$ is $2\rho$ from $BC$.'
+      - 'The scale factor at $A$ is $1-\frac{2\rho}{h_a}=1-\frac as=\frac{s-a}{s}$, where $s$ is the semiperimeter.'
+    solution: |
+      **Key idea:** each corner triangle is a scaled copy of $ABC$, with factor $\frac{s-a}{s}$. So its incircle has radius $\frac{s-a}{s}\rho$.
+
+      Let $s=\frac{a+b+c}2$, let $\rho$ be the inradius and $T$ the area. The tangent parallel to $BC$ (other than $BC$ itself) is at distance $2\rho$ from $BC$, on the side of $A$. It cuts off a triangle at $A$ that is similar to $ABC$, with ratio of heights
+      $$k_a=\frac{h_a-2\rho}{h_a}=1-\frac{2\rho}{h_a}=1-\frac{2T/s}{2T/a}=\frac{s-a}{s}.$$
+      Its incircle has radius $k_a\rho$, and similarly at $B$ and $C$. The total area is
+      $$\pi\rho^2\Bigl(1+\frac{(s-a)^2+(s-b)^2+(s-c)^2}{s^2}\Bigr).$$
+      Expanding, $(s-a)^2+(s-b)^2+(s-c)^2=3s^2-2s(a+b+c)+a^2+b^2+c^2=a^2+b^2+c^2-s^2$, because $a+b+c=2s$. So the bracket is $\frac{a^2+b^2+c^2}{s^2}$. Heron's formula gives $\rho^2=\frac{T^2}{s^2}=\frac{(s-a)(s-b)(s-c)}{s}$. So the total is
+      $$\frac{\pi(s-a)(s-b)(s-c)(a^2+b^2+c^2)}{s^3}.$$
+      With $x=b+c-a$, $y=c+a-b$, $z=a+b-c$ (so $s-a=\frac x2$, and so on) this is
+      $$\frac{\pi\,xyz\,(a^2+b^2+c^2)}{(a+b+c)^3}.$$
+      For an equilateral triangle of side $1$ this is $\frac{\pi}{9}$: the big incircle has area $\frac{\pi}{12}$ and each small one $\frac{\pi}{108}$.
+    checked: "script: 200 random triangles, the four incircles computed from coordinates"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Seventeen correspondents, three topics: a one-topic triangle"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'Fix one person. Of the $16$ others, at least $6$ write to them on the same topic.'
+      - 'Among $6$ people using only two topics, there is always a one-topic triangle.'
+    solution: |
+      **Key idea:** pigeonhole twice, the same idea that shows any party of six has three mutual friends or three mutual strangers.
+
+      Think of people as points and color the line between two people by their topic: three colors.
+
+      **Six people, two colors.** Pick one person $P$ among six. Of the $5$ lines from $P$, at least $3$ have the same color, say red, going to $Q,R,S$. If any line among $Q,R,S$ is red, it forms a red triangle with $P$. If none is, $QRS$ is a triangle in the other color.
+
+      **Seventeen people, three colors.** Pick one person $P$. The $16$ lines from $P$ use three colors, so at least $6$ share a color, say red (since $3\cdot5=15<16$). Call those six people the group.
+      - If two people in the group write to each other in red, they and $P$ form a red triangle.
+      - Otherwise the six people in the group use only the other two colors among themselves, and by the first step they contain a one-color triangle.
+
+      Either way, some three people all share one topic in their letters.
+    viz: imo-1964-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Counting crossings of perpendiculars among five points"
+    areas: [combinatorics, geometry]
+    difficulty: 3
+    answer: "$315$"
+    hints:
+      - 'There are $30$ perpendiculars and $\binom{30}{2}=435$ pairs. Which pairs are forced to be parallel, and which groups are forced through a common point?'
+      - 'Three kinds of loss: the six lines from the same point; parallel lines perpendicular to the same joining line; and the three altitudes of each triangle.'
+    solution: |
+      **Key idea:** start from all pairs of perpendiculars and subtract the coincidences that geometry forces. Then exhibit a configuration where nothing else coincides.
+
+      Each point is joined to the other four by $\binom42=6$ lines not through it, so there are $5\cdot6=30$ perpendiculars and $\binom{30}2=435$ pairs of them.
+
+      **Forced coincidences.**
+      1. *Parallel pairs.* The perpendiculars to the same joining line are parallel. Each of the $10$ joining lines receives perpendiculars from the $3$ points not on it, giving $3$ parallel pairs. That is $30$ pairs with no intersection.
+      2. *Pairs through a given point.* The $6$ perpendiculars from the same point meet only there: $15$ pairs give $1$ point. Over five points, $75$ pairs give only $5$ points.
+      3. *Altitudes.* For each of the $\binom53=10$ triangles, its three altitudes are perpendiculars (from a vertex to the opposite side's line) and meet at the orthocenter. Their $3$ pairs give $1$ point. These pairs join perpendiculars from different points to non-parallel lines, so they are not counted in 1 or 2. That is $30$ pairs giving $10$ points.
+
+      So the number of distinct intersection points is at most
+      $$(435-30-75-30)+5+10=300+15=315 .$$
+
+      **The bound is reached.** We need one admissible configuration with no further coincidence. The points $(0,0)$, $(0,2)$, $(2,5)$, $(6,8)$, $(7,6)$ qualify: none of the $10$ joining lines are parallel, perpendicular or equal. Computing all intersection points of the $30$ perpendiculars in exact rational arithmetic gives exactly $315$ distinct points. (A configuration in general position, for instance one chosen at random, does the same.)
+
+      So the maximum is $315$.
+    checked: "script: exact rational arithmetic for the five points listed, 315 distinct intersection points; random admissible configurations never exceed 315"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Tetrahedron volume tripled by lines parallel to a median"
+    areas: [geometry]
+    difficulty: 3
+    answer: "Yes, the ratio $3$ holds for any point $D_0$ inside triangle $ABC$"
+    hints:
+      - 'Volumes and parallel lines survive a shear, so you may assume $DD_0$ is perpendicular to the plane $ABC$.'
+      - 'Let $D_0$ have barycentric coordinates $(\alpha,\beta,\gamma)$. The line through $A$ meets plane $BCD$ at height $\frac1\alpha$ times the height of $D$.'
+    solution: |
+      **Key idea:** with barycentric coordinates for $D_0$, each new point sits above a vertex at height $h/\alpha$, $h/\beta$ or $h/\gamma$. The determinant then adds up three areas weighted by $\alpha,\beta,\gamma$ and cancels these weights exactly.
+
+      Let $D_0=\alpha A+\beta B+\gamma C$ with $\alpha,\beta,\gamma>0$ and $\alpha+\beta+\gamma=1$. (The centroid has all three equal to $\frac13$, but we keep them general.) A shear that fixes the plane $ABC$ and moves $D$ parallel to that plane preserves volumes, parallel lines and planes. So we may assume $\vec e=\overrightarrow{D_0D}$ is perpendicular to the plane $ABC$, of length $h$.
+
+      **The new points.** A point $A+t\vec e$ lies in plane $BCD$ when $A+t\vec e=xB+yC+zD$ with $x+y+z=1$. Since $D=\alpha A+\beta B+\gamma C+\vec e$, comparing the parts along $\vec e$ and the coefficients of $A,B,C$ gives $t=z$ and $1=z\alpha$. So $t=\frac1\alpha$, and
+      $$A_1=A+\tfrac1\alpha\vec e,\qquad B_1=B+\tfrac1\beta\vec e,\qquad C_1=C+\tfrac1\gamma\vec e .$$
+      **The volume.** Put $D_0$ at the origin and let $\mathbf a,\mathbf b,\mathbf c$ be the positions of $A,B,C$ in the plane. Let $S$ be the area of $ABC$. Six times the volume of $A_1B_1C_1D_0$ is the absolute value of the determinant of the three vectors $\overrightarrow{D_0A_1},\overrightarrow{D_0B_1},\overrightarrow{D_0C_1}$. Their parts in the plane are $\mathbf a,\mathbf b,\mathbf c$ and their heights are $h/\alpha,h/\beta,h/\gamma$. Expanding the determinant along the heights gives
+      $$\frac{h\,(\mathbf b\times\mathbf c)}{\alpha}+\frac{h\,(\mathbf c\times\mathbf a)}{\beta}+\frac{h\,(\mathbf a\times\mathbf b)}{\gamma},$$
+      with $\times$ the planar cross product. Now $\mathbf b\times\mathbf c$ is twice the signed area of $D_0BC$, which is $2\alpha S$ by the meaning of barycentric coordinates. Likewise $\mathbf c\times\mathbf a=2\beta S$ and $\mathbf a\times\mathbf b=2\gamma S$. So the determinant is $6hS$, and
+      $$\operatorname{vol}(A_1B_1C_1D_0)=hS=3\cdot\tfrac13hS=3\operatorname{vol}(ABCD).$$
+      The weights cancelled for every interior point $D_0$, not just the centroid. So the answer to the last question is **yes**.
+    checked: "script: 100 random tetrahedra with a random interior point D0; the ratio is 3 every time"
+    status: ready

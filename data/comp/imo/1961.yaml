@@ -1,0 +1,150 @@
+year: 1961
+edition: 3rd
+date: "July 6–16, 1961 · Veszprém, Hungary"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1961/1961_eng.pdf
+  archive: https://www.imo-official.org/editions/1961/
+problems:
+  - id: P1
+    day: 1
+    topic: "Sum, sum of squares, and a geometric-mean condition"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$z=\\dfrac{a^2-b^2}{2a}$, $x,y=\\dfrac{a^2+b^2\\pm\\sqrt{(3a^2-b^2)(3b^2-a^2)}}{4a}$; distinct positive exactly when $a>0$ and $\\frac{a}{\\sqrt3}<|b|<a$"
+    hints:
+      - 'Compute $(x+y)^2$ in two ways: from the first equation, and from the second and third.'
+      - 'This gives $z$ directly. Then $x,y$ are the roots of a quadratic with known sum and product.'
+    solution: |
+      **Key idea:** $(x+y)^2=x^2+y^2+2xy$ uses all three equations at once and leaves a linear equation for $z$.
+
+      From the second and third equations, $(x+y)^2=x^2+y^2+2xy=(b^2-z^2)+2z^2=b^2+z^2$. From the first, $x+y=a-z$. So
+      $$(a-z)^2=b^2+z^2\iff a^2-2az=b^2 .$$
+      If $a=0$, this forces $b=0$, and then $x^2+y^2+z^2=0$ gives the single solution $x=y=z=0$. Otherwise
+      $$z=\frac{a^2-b^2}{2a},\qquad x+y=a-z=\frac{a^2+b^2}{2a},\qquad xy=z^2 .$$
+      So $x,y$ are the roots of $t^2-\frac{a^2+b^2}{2a}t+z^2=0$. Its discriminant is
+      $$\frac{(a^2+b^2)^2-4(a^2-b^2)^2}{4a^2}=\frac{(3b^2-a^2)(3a^2-b^2)}{4a^2},$$
+      which gives
+      $$x,y=\frac{a^2+b^2\pm\sqrt{(3a^2-b^2)(3b^2-a^2)}}{4a}.$$
+      These formulas give all solutions. Retracing the steps shows each of them satisfies the system.
+
+      **When are $x,y,z$ distinct and positive?**
+      - Positive numbers have a positive sum, so $a>0$. Then $z>0\iff a^2>b^2\iff|b|<a$.
+      - $x\ne y$ needs a positive discriminant. With $|b|<a$ we have $3a^2-b^2>0$, so we need $3b^2>a^2$, that is $|b|>a/\sqrt3$.
+      - Then $x,y$ are real with positive sum and positive product $z^2$, so both are positive.
+      - Finally $z$ differs from $x$ and $y$: if $z=x$, then $xy=z^2$ gives $y=z$ as well, so $x=y$.
+
+      So the solutions are distinct positive numbers exactly when $a>0$ and $\dfrac{a}{\sqrt3}<|b|<a$.
+    checked: "script: random (a, b); the formulas satisfy the system, and the condition matches 'distinct and positive'"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Sum of squared sides bounds the area (Weitzenböck)"
+    areas: [geometry, algebra]
+    difficulty: 2
+    answer: "Equality only for the equilateral triangle"
+    hints:
+      - 'Use the law of cosines for one side and $T=\tfrac12bc\sin A$ for the area.'
+      - '$\cos A+\sqrt3\sin A=2\sin(A+30^\circ)\le2$.'
+    solution: |
+      **Key idea:** with the law of cosines and the sine area formula, the difference becomes a sum of a square and a non-negative term.
+
+      Let $A$ be the angle between the sides $b$ and $c$. Then $a^2=b^2+c^2-2bc\cos A$ and $T=\frac12bc\sin A$, so
+      $$a^2+b^2+c^2-4\sqrt3\,T=2b^2+2c^2-2bc\bigl(\cos A+\sqrt3\sin A\bigr)=2b^2+2c^2-4bc\sin(A+30^\circ).$$
+      Since $\sin(A+30^\circ)\le1$, this is at least
+      $$2b^2+2c^2-4bc=2(b-c)^2\ge0 .$$
+      So $a^2+b^2+c^2\ge4\sqrt3\,T$. Equality needs $b=c$ and $A+30^\circ=90^\circ$, that is $A=60^\circ$. An isosceles triangle with a $60^\circ$ apex angle is equilateral, and the equilateral triangle does give equality: $3s^2=4\sqrt3\cdot\frac{\sqrt3}{4}s^2$.
+    checked: "script: 10,000 random triangles"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Powers of cosine minus powers of sine equal one"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$n$ even: $x=k\\pi$. $n$ odd: $x=2k\\pi$ or $x=-\\frac\\pi2+2k\\pi$ ($k$ any integer)"
+    hints:
+      - 'For $n\ge2$, $|\cos x|^n\le\cos^2x$, and the same for sine.'
+      - 'So the left side is at most $\cos^2x+\sin^2x=1$. When is every step an equality?'
+    solution: |
+      **Key idea:** for $n\ge2$, powers of numbers in $[-1,1]$ only shrink, so the left side is at most $1$. Equality pins $\cos x$ and $\sin x$ to $0$ and $\pm1$.
+
+      **Case $n=1$.** $\cos x-\sin x=\sqrt2\cos(x+\frac\pi4)=1$ gives $x+\frac\pi4=\pm\frac\pi4+2k\pi$, so $x=2k\pi$ or $x=-\frac\pi2+2k\pi$.
+
+      **Case $n\ge2$.** Since $|\cos x|\le1$, we have $|\cos x|^n\le\cos^2x$, with equality only when $|\cos x|\in\{0,1\}$. The same holds for $\sin x$. So
+      $$\cos^nx-\sin^nx\le|\cos x|^n+|\sin x|^n\le\cos^2x+\sin^2x=1 .$$
+      For equality, both steps must be equalities. So $|\cos x|$ and $|\sin x|$ are each $0$ or $1$, and also $\cos^nx\ge0$ and $\sin^nx\le0$. There are two possibilities:
+      - $\sin x=0$ and $\cos x=\pm1$. We need $\cos^nx=1$, so $\cos x=1$, or $\cos x=-1$ with $n$ even.
+      - $\cos x=0$ and $\sin x=\pm1$. We need $\sin^nx=-1$, so $\sin x=-1$ with $n$ odd.
+
+      **Answer.** For even $n$: $x=k\pi$. For odd $n$ (including $n=1$): $x=2k\pi$ or $x=-\frac\pi2+2k\pi$.
+    checked: "script: n = 1 to 8, the equation scanned on [0, 2π)"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Cevians through a point: ratios on both sides of 2"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Compare the areas of the three small triangles at the point with the area of the whole triangle.'
+      - 'The three area fractions add up to $1$, so one is at least $\frac13$ and one is at most $\frac13$.'
+    solution: |
+      **Key idea:** each ratio is a function of one area fraction, and the three area fractions add up to $1$.
+
+      Let $S$ be the area of the triangle and $S_i$ the area of the triangle formed by $P$ and the side opposite $P_i$. Then $S_1+S_2+S_3=S$, since $P$ is inside. Put $w_i=S_i/S$, so the $w_i$ are positive and add up to $1$.
+
+      The triangles with base the side opposite $P_i$ and apexes $P$ and $P_i$ share that base. Their heights are in the ratio $PQ_i:P_iQ_i$, because $P_i,P,Q_i$ are collinear with $Q_i$ on that side. So
+      $$\frac{PQ_i}{P_iQ_i}=w_i,\qquad\frac{P_iP}{PQ_i}=\frac{P_iQ_i-PQ_i}{PQ_i}=\frac{1-w_i}{w_i}=\frac1{w_i}-1 .$$
+      This ratio is at most $2$ exactly when $w_i\ge\frac13$, and at least $2$ exactly when $w_i\le\frac13$. Three positive numbers with sum $1$ have a largest one, at least $\frac13$, and a smallest one, at most $\frac13$. The corresponding ratios are at most $2$ and at least $2$. (All three equal $2$ only at the centroid.)
+    checked: "script: 1000 random interior points"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Triangle from two sides and the angle at a median"
+    areas: [geometry]
+    difficulty: 3
+    answer: "A solution exists exactly when $b\\tan\\frac\\omega2\\le c<b$; equality means the angle at $A$ is a right angle"
+    hints:
+      - 'Fix the side $AB$. Where can the midpoint $M$ of $BC$ be? One condition is an angle, the other is a length.'
+      - 'If $K$ is the midpoint of $AB$, then $KM$ is a midline of the triangle, so $KM=\frac b2$.'
+    solution: |
+      **Key idea:** with $AB$ fixed, the midpoint $M$ of $BC$ lies on an arc (it sees $AB$ under the angle $\omega$) and on a circle (it is $\frac b2$ from the midpoint of $AB$). The condition says when the two meet.
+
+      **Construction.** Draw $AB=c$ and let $K$ be its midpoint.
+      - Since $\angle AMB=\omega$, the point $M$ lies on an arc $\Gamma$ over $AB$ from which $AB$ is seen at the angle $\omega$. Take the arc on one side of $AB$; the other side gives mirror images.
+      - $KM$ joins the midpoints of $AB$ and $BC$, so it is a midline: $KM=\frac{AC}{2}=\frac b2$. So $M$ lies on the circle about $K$ with radius $\frac b2$.
+
+      Take $M$ in the intersection, and let $C$ be the reflection of $B$ in $M$. Then $M$ is the midpoint of $BC$, $\angle AMB=\omega$, and $AC=2KM=b$. The triangle is not degenerate because $M$ is not on line $AB$. So every intersection point gives a solution, and every solution arises this way.
+
+      **When do they meet?** As $M$ moves along $\Gamma$ from $A$ to the top point $T$ (the point of $\Gamma$ on the perpendicular bisector of $AB$), its distance from $K$ grows steadily from $\frac c2$ to $KT$. Here is why. Since $\omega<90^\circ$, the arc $\Gamma$ is the larger arc, and the center $O$ of its circle lies on the same side of $AB$. Then $T$ is the point of the circle farthest from $K$, and the distance from $K$ to a point of the circle grows with the angle that point makes at $O$, measured from the ray $OK$. In the isosceles triangle $ATB$ the apex angle is $\omega$, so
+      $$KT=\frac c2\cot\frac\omega2 .$$
+      The arc from $T$ to $B$ is the mirror image. Points $M=A$ or $M=B$ are not allowed, so the circle of radius $\frac b2$ meets $\Gamma$ exactly when
+      $$\frac c2<\frac b2\le\frac c2\cot\frac\omega2\iff b\tan\frac\omega2\le c<b .$$
+      If the inequalities are strict, there are two meeting points on $\Gamma$, mirror images in the perpendicular bisector of $AB$. They give two triangles, which in general are not congruent: their medians from $A$ and their half-sides $\frac a2$ trade places.
+
+      **Equality.** $c=b\tan\frac\omega2$ means $M=T$, so $MA=MB=MC$. Then $A$ lies on the circle with diameter $BC$, and the angle at $A$ is $90^\circ$. Conversely, in a right triangle at $A$ the median is $\frac a2$, so $AMB$ is isosceles with apex $\omega$, and $c=a\sin\frac\omega2$, $b=a\cos\frac\omega2$ give $c=b\tan\frac\omega2$.
+    checked: "script: with p = median and q = a/2, the law of cosines gives 2pq = (b² − c²)/(2cos ω) and p² + q² = (b² + c²)/2; real solutions exist exactly when b·tan(ω/2) ≤ c < b (500 random cases)"
+    viz: imo-1961-p5
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Centroid of midpoints: a half-size copy of a plane"
+    areas: [geometry]
+    difficulty: 2
+    answer: "The whole plane parallel to $\\varepsilon$, halfway between $\\varepsilon$ and the centroid of $ABC$"
+    hints:
+      - 'Write the centroid of the three midpoints as an average of six points.'
+      - 'It is the midpoint of the centroid of $ABC$ and the centroid of the three points in the plane.'
+    solution: |
+      **Key idea:** averages commute. The centroid of the midpoints is the midpoint of two centroids.
+
+      Use position vectors. Let $S=\frac13(A+B+C)$ be the centroid of $ABC$ and $S'=\frac13(A'+B'+C')$ the centroid of the three points in $\varepsilon$. Then
+      $$G=\frac13\Bigl(\frac{A+A'}2+\frac{B+B'}2+\frac{C+C'}2\Bigr)=\frac{S+S'}2 .$$
+      $S$ is fixed. $S'$ is a point of $\varepsilon$, and it can be any point $X$ of $\varepsilon$: take $A'=B'=C'=X$. Then the midpoints are the images of $A,B,C$ under the half-size scaling about $X$, which form a real triangle. So the excluded positions do not remove any value of $S'$.
+
+      Hence the locus of $G$ is the image of $\varepsilon$ under the scaling about $S$ with factor $\frac12$: the whole plane parallel to $\varepsilon$, halfway between $\varepsilon$ and $S$.
+    checked: "algebra: G = (S + S′)/2 is an identity"
+    status: ready

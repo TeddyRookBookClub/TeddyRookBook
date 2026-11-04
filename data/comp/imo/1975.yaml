@@ -1,0 +1,144 @@
+year: 1975
+edition: 17th
+date: "July 3–16, 1975 · Burgas, Bulgaria"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1975/1975_eng.pdf
+  archive: https://www.imo-official.org/editions/1975/
+problems:
+  - id: P1
+    day: 1
+    topic: "Sorted pairing minimizes the sum of squared gaps"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - 'Expand the squares. Only the cross terms $\sum x_iz_i$ depend on the order.'
+      - 'If $z_i<z_j$ for some $i<j$, what does swapping them do to $\sum x_iz_i$?'
+    solution: |
+      **Key idea:** after expanding, the claim is the rearrangement inequality, and swapping an out-of-order pair never hurts.
+
+      Since $z$ is a rearrangement of $y$, $\sum z_i^2=\sum y_i^2$. Expanding both sides, the claim becomes
+      $$\sum_i x_iy_i\ge\sum_i x_iz_i .$$
+      Suppose $z$ is not sorted in decreasing order, so $z_i<z_j$ for some $i<j$. Swap them. The sum $\sum x_kz_k$ changes by
+      $$x_iz_j+x_jz_i-x_iz_i-x_jz_j=(x_i-x_j)(z_j-z_i)\ge0,$$
+      because $x_i\ge x_j$. Each swap removes at least one out-of-order pair, so after finitely many swaps we reach the decreasing order, which is $y$. The sum never decreased along the way, so $\sum x_iz_i\le\sum x_iy_i$.
+    checked: "algebra only: exchange argument"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Increasing sequence: terms as combinations of two earlier terms"
+    areas: [number-theory]
+    difficulty: 1
+    hints:
+      - 'Sort the later terms by their remainders modulo $a_p$.'
+      - 'Infinitely many later terms share one remainder. Compare each of them with the first one.'
+    solution: |
+      **Key idea:** pigeonhole on remainders modulo $a_p$; two terms with the same remainder differ by a multiple of $a_p$.
+
+      Fix $p$. The terms $a_{p+1},a_{p+2},\dots$ are infinitely many, and there are only $a_p$ possible remainders modulo $a_p$. So some remainder is shared by infinitely many of them. Let $a_q$ (with $q>p$) be the first such term. Every later term $a_m$ in the same class satisfies $a_m>a_q$ and $a_m\equiv a_q\pmod{a_p}$, so
+      $$a_m=x\,a_p+1\cdot a_q\quad\text{with }x=\frac{a_m-a_q}{a_p}\ge1 .$$
+      There are infinitely many such $a_m$, each with $y=1$ and $q>p$.
+    checked: "algebra only: pigeonhole"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Three outer triangles with 15, 30, 45 degree angles"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Use complex numbers. Each of $P,Q,R$ is a fixed complex combination of two vertices. Note that the side ratio $\frac{\sin30^\circ}{\sin105^\circ}$ equals $\frac1{2\cos15^\circ}$.'
+      - 'The claim says $P-R=\pm i(Q-R)$. This is linear in $A,B,C$, so check the coefficient of each vertex.'
+    solution: |
+      **Key idea:** with complex numbers, the claim "$RP$ is $RQ$ turned through $90^\circ$" is a linear identity in $A,B,C$. Its coefficients vanish because of one exact value of $\cos15^\circ$.
+
+      Take $A,B,C$ counterclockwise; for the other orientation, reflect the whole figure. Then the outside of each side is on the right as we walk around the triangle. Let
+      $$k=\frac{1}{2\cos15^\circ}=\frac{\sin30^\circ}{\sin105^\circ}.$$
+
+      **The three apexes.** In triangle $BCP$ the angles are $45^\circ$ at $B$, $30^\circ$ at $C$ and $105^\circ$ at $P$. By the law of sines $BP=k\cdot BC$, and $P$ is reached from $B$ by turning $\overrightarrow{BC}$ by $45^\circ$ clockwise (to the outside). Treating $Q$ (from $A$, toward $C$) and $R$ (base $AB$, base angles $15^\circ$, so $AR=k\cdot AB$) the same way:
+      $$P=B+u(C-B),\quad Q=A+v(C-A),\quad R=A+w(B-A),$$
+      with $u=k\,e^{-i\pi/4}$, $v=k\,e^{i\pi/4}$, $w=k\,e^{-i\pi/12}$.
+
+      **The identity.** We show $(P-R)+i(Q-R)=0$. The left side is $\alpha A+\beta B+\gamma C$ for some constants.
+      - Coefficient of $C$: $\gamma=u+iv=k\left(e^{-i\pi/4}+e^{3i\pi/4}\right)=0$.
+      - Coefficient of $B$: $\beta=1-u-(1+i)w$. Here $(1+i)w=\sqrt2\,k\,e^{i\pi/6}$, so
+        $$u+(1+i)w=k\left(e^{-i\pi/4}+\sqrt2e^{i\pi/6}\right)=k\left(\tfrac{\sqrt2}2+\tfrac{\sqrt6}2\right)=k\cdot2\cos15^\circ=1,$$
+        since the imaginary parts $-\frac{\sqrt2}2+\frac{\sqrt2}2$ cancel and $\cos15^\circ=\frac{\sqrt6+\sqrt2}4$. So $\beta=0$.
+      - Coefficient of $A$: if $A=B=C$, then $P=Q=R$ and the expression is $0$, so $\alpha+\beta+\gamma=0$, hence $\alpha=0$.
+
+      So $P-R=-i(Q-R)$: the vector $RP$ is $RQ$ turned through $90^\circ$. That is, $RP=RQ$ and $\angle QRP=90^\circ$.
+    checked: "script: random triangles; angles of the constructed triangles checked from the definition, and |(P−R)+i(Q−R)| < 1e-15"
+    viz: imo-1975-p3
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Repeated digit sums of a huge power"
+    areas: [number-theory]
+    difficulty: 1
+    answer: "$7$"
+    hints:
+      - 'Bound the number of digits of the power, then the sizes of $A$, $B$ and the final digit sum.'
+      - 'A digit sum keeps the remainder modulo $9$.'
+    solution: |
+      **Key idea:** size bounds make the final answer small, and remainders modulo $9$ pin it down.
+
+      Let $N=4444^{4444}$.
+
+      **Sizes.** $N<10000^{4444}=10^{17776}$, so $N$ has at most $17776$ digits and $A\le9\cdot17776=159984$. A number up to $159984$ has at most six digits, the first of them at most $1$, so $B\le1+5\cdot9=46$. A number up to $46$ has digit sum at most $3+9=12$.
+
+      **Modulo $9$.** A number and its digit sum leave the same remainder modulo $9$. Now $4444\equiv16\equiv7\pmod9$, and $7^3=343\equiv1\pmod 9$. Since $4444=3\cdot1481+1$,
+      $$N\equiv7^{4444}\equiv7\pmod9 .$$
+      So the digit sum of $B$ is a positive number at most $12$ that is $\equiv7\pmod 9$. It is $7$.
+    checked: "script: computed exactly with big integers: A = 72601, B = 16, digit sum of B = 7"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Many points on a circle with rational distances"
+    areas: [number-theory, geometry]
+    difficulty: 2
+    answer: "Yes, such points exist"
+    hints:
+      - 'A chord of the unit circle subtending the angle $2\alpha$ at the center has length $2|\sin\alpha|$.'
+      - 'Use an angle $\theta$ with $\cos\theta=\frac45$, $\sin\theta=\frac35$, and its multiples. Why are the points distinct?'
+    solution: |
+      **Key idea:** multiples of an angle with rational sine and cosine have rational sines, and chord lengths are sines of half the central angle.
+
+      Let $\theta$ be the angle with $\cos\theta=\frac45$, $\sin\theta=\frac35$. By the addition formulas, $\cos k\theta$ and $\sin k\theta$ are rational for every integer $k$. Take the points
+      $$Z_k=(\cos2k\theta,\ \sin2k\theta),\qquad k=1,\dots,1975 .$$
+      The chord $Z_jZ_k$ subtends the central angle $2(j-k)\theta$, so its length is $2|\sin(j-k)\theta|$, a rational number.
+
+      **The points are distinct.** It is enough that $\sin m\theta\ne0$ for $m\ge1$. Write $(4+3i)^m=x_m+iy_m$; then $\sin m\theta=y_m/5^m$. From $x_{m+1}=4x_m-3y_m$ and $y_{m+1}=3x_m+4y_m$, modulo $5$ we get $x_{m+1}\equiv-x_m+2y_m$ and $y_{m+1}\equiv-2x_m-y_m$. Starting from $(x_1,y_1)=(4,3)$, which has $y_1\equiv2x_1$, induction shows
+      $$y_m\equiv2x_m,\qquad x_{m+1}\equiv3x_m\pmod5 .$$
+      Indeed, if $y\equiv2x$ then $x'\equiv3x$ and $y'\equiv-4x\equiv x\equiv2\cdot3x$. So $x_m\equiv4\cdot3^{m-1}\not\equiv0$, hence $y_m\not\equiv0\pmod5$, and in particular $y_m\ne0$.
+    checked: "script: y_m is not divisible by 5 for m < 3000"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Homogeneous two-variable polynomial with a cyclic vanishing sum"
+    areas: [algebra]
+    difficulty: 3
+    answer: "$P(x,y)=(x-2y)(x+y)^{n-1}$"
+    hints:
+      - 'Put $s=a+b+c$. Each term has the form $P(s-t,t)$. Study $f(t)=P(1-t,t)$.'
+      - 'Show that $f(a)+f(b)=f\!\left(a+b-\frac13\right)$, so a shifted $f$ is additive. An additive polynomial is linear.'
+    solution: |
+      **Key idea:** on the line $x+y=1$ the condition makes $P$ an additive function (after a shift), hence linear. Homogeneity then rebuilds $P$ everywhere.
+
+      Note that $(b+c)+a=(c+a)+b=(a+b)+c=s$, where $s=a+b+c$. Let $f(t)=P(1-t,t)$, a polynomial in $t$. Taking $s=1$, condition (ii) says
+      $$f(a)+f(b)+f(c)=0\qquad\text{whenever }a+b+c=1 .$$
+      - With $a=b=c=\frac13$: $f(\frac13)=0$.
+      - With $c=\frac13$: $f(a)+f(b)=0$ whenever $a+b=\frac23$.
+      - So for any $a,b$: $f(1-a-b)=-f\left(a+b-\frac13\right)$, and the condition becomes $f(a)+f(b)=f\left(a+b-\frac13\right)$.
+
+      Let $g(u)=f(u+\frac13)$. Then $g(u)+g(v)=g(u+v)$ for all $u,v$. Comparing the coefficients of $g(2u)=2g(u)$ shows that only the degree-$1$ coefficient can be nonzero, so $g(u)=\lambda u$ and $f(t)=\lambda(t-\frac13)$. From $f(0)=P(1,0)=1$ we get $\lambda=-3$, so
+      $$P(1-t,t)=1-3t .$$
+      For $x+y\ne0$, homogeneity gives
+      $$P(x,y)=(x+y)^nP\!\left(\tfrac{x}{x+y},\tfrac{y}{x+y}\right)=(x+y)^n\left(1-\tfrac{3y}{x+y}\right)=(x-2y)(x+y)^{n-1}.$$
+      Two polynomials that agree off the line $x+y=0$ agree everywhere.
+
+      **Check.** $(x-2y)(x+y)^{n-1}$ is homogeneous of degree $n$ and equals $1$ at $(1,0)$. With $s=a+b+c$, the term $P(s-a,a)=(s-3a)s^{n-1}$, and the three terms add up to $(3s-3s)s^{n-1}=0$.
+    checked: "script: sympy verifies conditions (i)–(iii) for n = 1 to 6"
+    status: ready

@@ -1,0 +1,140 @@
+year: 2007
+edition: 48th
+date: "July 25–26, 2007 · Hanoi, Vietnam"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2007/2007_eng.pdf
+  archive: https://www.imo-official.org/editions/2007/
+problems:
+  - id: P1
+    day: 1
+    topic: "Best sorted approximation of a list of numbers"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Take the index $i$ where $d=d_i$. There is $p\le i\le r$ with $a_p-a_r=d$. Compare $x_p\le x_r$ with $a_p$ and $a_r$.'
+      - 'For part (b), try $x_i=\max(a_1,\dots,a_i)-\tfrac d2$.'
+    solution: |
+      **Key idea:** a sorted list can't follow a big early value and a small late value at the same time, so it misses one of them by at least $\tfrac d2$. The running maximum shifted down by $\tfrac d2$ misses nothing by more.
+
+      **(a)** Choose $i$ with $d_i=d$. There are indices $p\le i$ with $a_p=\max_{j\le i}a_j$ and $r\ge i$ with $a_r=\min_{j\ge i}a_j$, so $p\le r$ and $a_p-a_r=d$. Since the $x$'s are sorted, $x_p\le x_r$. Then
+      $$(a_p-x_p)+(x_r-a_r)\ \ge\ a_p-a_r=d,$$
+      so one of $|x_p-a_p|$ and $|x_r-a_r|$ is at least $\tfrac d2$.
+
+      **(b)** Let $M_i=\max(a_1,\dots,a_i)$ and $x_i=M_i-\tfrac d2$. This list is sorted because $M_i$ never decreases. For every $i$:
+      - $x_i-a_i=M_i-a_i-\tfrac d2\ge-\tfrac d2$, since $M_i\ge a_i$;
+      - $x_i-a_i\le M_i-\min_{j\ge i}a_j-\tfrac d2=d_i-\tfrac d2\le\tfrac d2$, since $a_i\ge\min_{j\ge i}a_j$.
+
+      So $\max|x_i-a_i|\le\tfrac d2$, and by part (a) it equals $\tfrac d2$.
+    checked: "script: random lists of length up to 8; the running-maximum choice always attains d/2"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Parallelogram, a cyclic quadrilateral and an equidistant point"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Because $AB\parallel DC$ and $AD\parallel BC$, the line through $A$ bisects angle $DAB$ exactly when $CF=CG$.'
+      - '$E$ is the circumcenter of $CFG$. Drop perpendiculars from $E$ to $CF$ and $CG$, at their midpoints $M$ and $N$. The circle $BCED$ makes the right triangles $EMD$ and $ENB$ similar.'
+    solution: |
+      **Key idea:** reduce to $CF=CG$. The cyclic quadrilateral makes two right triangles similar, and that gives a second formula for the ratio of the distances from $E$ to the lines $DC$ and $BC$. The two formulas agree only when $CF=CG$.
+
+      **Reduction.** Since $AB\parallel FC$, $\angle CFG=\angle BAG$, and since $AD\parallel CG$, $\angle CGF=\angle DAG$. So the line bisects angle $DAB$ exactly when $\angle CFG=\angle CGF$, that is, when $CF=CG$.
+
+      **Setup.** $F$ is inside segment $DC$, so $G$ is on line $BC$ beyond $C$. $E$ is the circumcenter of triangle $CFG$; let $\rho$ be its circumradius. Let $M$ and $N$ be the midpoints of $CF$ and $CG$, so $EM\perp DC$ and $EN\perp BC$, and
+      $$EM=\sqrt{\rho^2-\tfrac14CF^2},\qquad EN=\sqrt{\rho^2-\tfrac14CG^2}.$$
+
+      **Similar right triangles.** $M$ lies on segment $DC$ and $N$ on ray $BC$, so $\angle EDM=\angle EDC$ and $\angle EBN=\angle EBC$. These are inscribed angles of circle $BCED$ on the chord $EC$, so they are equal or supplementary. Both are acute angles of right triangles, so they are equal. Hence triangles $EMD$ and $ENB$ are similar, and
+      $$\frac{EM}{EN}=\frac{DM}{BN}.$$
+
+      **The ratio $DM/BN$.** Triangles $FDA$ and $FCG$ are similar (parallel sides), so $DF=AD\cdot\dfrac{CF}{CG}=BC\cdot\dfrac{CF}{CG}$. Then
+      $$DM=DF+\tfrac12CF=\frac{CF}{CG}\Big(BC+\tfrac12CG\Big)=\frac{CF}{CG}\cdot BN .$$
+      So $\dfrac{EM}{EN}=\dfrac{CF}{CG}$.
+
+      **Finish.** Squaring, $CG^2\big(\rho^2-\tfrac14CF^2\big)=CF^2\big(\rho^2-\tfrac14CG^2\big)$, so $\rho^2CG^2=\rho^2CF^2$ and $CF=CG$. By the reduction, the line is the bisector of angle $DAB$.
+    viz: imo-2007-p2
+    checked: "script: 300 random parallelograms, scanning lines through A; E lies on circle BCD only for the bisector (to grid accuracy)"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Splitting friends into two rooms with equal largest cliques"
+    areas: [combinatorics]
+    difficulty: 5
+    status: coming
+
+  - id: P4
+    day: 2
+    topic: "Equal areas from an angle bisector and two perpendicular bisectors"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Let $O$ be the circumcenter. The lines $OP$ and $OQ$ make equal angles with the bisector $CR$. So $OP=OQ$.'
+      - 'The foot of the perpendicular from $O$ to $CR$ is the midpoint of both $CR$ and $PQ$. So $CQ=PR$ and $CP=QR$. Now write each area as half a base times a height.'
+    solution: |
+      **Key idea:** the circumcenter is equally far from $P$ and $Q$, so $P$ and $Q$ sit symmetrically on the chord $CR$. Then both areas reduce to the same product.
+
+      Let $a=BC$, $b=CA$, $\gamma=\angle C$, and $O$ the circumcenter, where the perpendicular bisectors meet. So $OP\perp BC$ and $OQ\perp CA$.
+
+      **Symmetric points.** The bisector $CR$ makes the angle $\tfrac\gamma2$ with both $CB$ and $CA$. So the line $OP$ (perpendicular to $CB$) and the line $OQ$ (perpendicular to $CA$) both make the angle $90^\circ-\tfrac\gamma2$ with $CR$. So triangle $OPQ$ is isosceles with $OP=OQ$, and the foot $H$ of the perpendicular from $O$ to $CR$ is the midpoint of $PQ$. $H$ is also the midpoint of the chord $CR$. Hence
+      $$CQ=PR,\qquad CP=QR .$$
+
+      **Lengths.** In the right triangle $CKP$, $CK=\tfrac a2$ and the angle at $C$ is $\tfrac\gamma2$, so $CP=\dfrac{a}{2\cos(\gamma/2)}$. In the same way $CQ=\dfrac{b}{2\cos(\gamma/2)}$.
+
+      **Areas.** Use $RP$ and $RQ$ (on line $CR$) as bases. The distance from $K$ to line $CR$ is $CK\sin\tfrac\gamma2=\tfrac a2\sin\tfrac\gamma2$, and from $L$ it is $\tfrac b2\sin\tfrac\gamma2$. So
+      $$[RPK]=\tfrac12\,RP\cdot\tfrac a2\sin\tfrac\gamma2=\tfrac12\,CQ\cdot\tfrac a2\sin\tfrac\gamma2=\frac{ab\sin\frac\gamma2}{8\cos\frac\gamma2},$$
+      $$[RQL]=\tfrac12\,RQ\cdot\tfrac b2\sin\tfrac\gamma2=\tfrac12\,CP\cdot\tfrac b2\sin\tfrac\gamma2=\frac{ab\sin\frac\gamma2}{8\cos\frac\gamma2}.$$
+      The two areas are equal.
+    viz: imo-2007-p4
+    checked: "script: 1,000 random triangles; the two areas agree to 1e-14"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Vieta jumping: a divisor of a fourth-power expression"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'Work mod $4ab-1$, where $4ab\equiv1$. Multiply $4a^2-1$ by $4b$. You should find that $4ab-1\mid(a-b)^2$.'
+      - 'Write $(a-b)^2=k(4ab-1)$ and take a solution with $a>b$ and $a+b$ as small as possible. Jump $a$ to the other root of the quadratic.'
+    solution: |
+      **Key idea:** the condition is the same as $4ab-1\mid(a-b)^2$. If $a\ne b$, the quotient equation is a quadratic in $a$, and jumping to its other root gives a smaller solution.
+
+      **Reduce.** Let $q=4ab-1$. Mod $q$ we have $4ab\equiv1$, so
+      $$(4a^2-1)\cdot4b=4a\cdot4ab-4b\equiv4a-4b\pmod q .$$
+      Squaring, $16b^2(4a^2-1)^2\equiv16(a-b)^2$. Since $q$ is odd and coprime to $b$, $\gcd(16b^2,q)=1$. So $q\mid(4a^2-1)^2$ exactly when $q\mid(a-b)^2$.
+
+      **Descent.** Suppose $a\ne b$. Then $(a-b)^2=kq$ with $k\ge1$, for a fixed $k$. The equation $(x-y)^2=k(4xy-1)$ is symmetric. Among its positive solutions with $x\ne y$, pick one $(a,b)$ with $a>b$ and $a+b$ smallest. As a quadratic in $a$,
+      $$a^2-(2+4k)b\,a+(b^2+k)=0 .$$
+      The other root is $a'=(2+4k)b-a=\dfrac{b^2+k}{a}$, a positive integer, and $(a',b)$ is again a solution. $a'\ne b$, since $a'=b$ would give $k=0$.
+
+      Now $k=\dfrac{(a-b)^2}{4ab-1}\le(a-b)^2<(a-b)(a+b)=a^2-b^2$, so $b^2+k<a^2$ and $a'<a$. Then $(a',b)$ (or $(b,a')$, whichever has the larger entry first) is a solution with $x\ne y$ and a smaller sum. That contradicts the choice of $(a,b)$.
+
+      So $a=b$.
+    checked: "script: all pairs a, b < 300; the divisibility holds only when a = b"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Fewest planes covering a cube grid except the origin"
+    areas: [combinatorics, algebra]
+    difficulty: 4
+    answer: '$3n$'
+    hints:
+      - 'The planes $x+y+z=t$ for $t=1,\dots,3n$ work. For the lower bound, multiply the equations of the planes into one polynomial.'
+      - 'A polynomial of degree less than $3n$ has $\sum_{i,j,k}(-1)^{i+j+k}\binom ni\binom nj\binom nk P(i,j,k)=0$. What does that sum equal for your product?'
+    solution: |
+      **Key idea:** the product of the planes' equations is a polynomial that vanishes on the grid except at the origin. A triple finite difference shows such a polynomial has degree at least $3n$.
+
+      **Enough.** The $3n$ planes $x+y+z=t$, $t=1,\dots,3n$, cover every grid point except the origin, and miss the origin.
+
+      **One-variable fact.** For a polynomial $g$ of degree less than $n$, $\sum_{i=0}^n(-1)^i\binom ni g(i)=0$. (This is the $n$-th finite difference of $g$; each difference lowers the degree by one. It is enough to check it for $g(i)=i^e$ with $e<n$.)
+
+      **Three variables.** Let $P(x,y,z)$ have degree less than $3n$. Every monomial $x^\alpha y^\beta z^\gamma$ of $P$ has $\alpha+\beta+\gamma<3n$, so one exponent is less than $n$. Then
+      $$\sum_{i,j,k=0}^n(-1)^{i+j+k}\binom ni\binom nj\binom nk\,i^\alpha j^\beta k^\gamma$$
+      splits into a product of three one-variable sums, one of which is $0$. By linearity,
+      $$\sum_{i,j,k}(-1)^{i+j+k}\binom ni\binom nj\binom nk P(i,j,k)=0\quad\text{whenever }\deg P<3n .$$
+
+      **Lower bound.** Suppose $N$ planes cover the set and miss the origin. Write the $m$-th plane as $\ell_m(x,y,z)=d_m$ with $d_m\ne0$, and let $P=\prod_m(\ell_m-d_m)$, of degree $N$. It vanishes at every grid point except the origin, where it is $\prod(-d_m)\ne0$. So the alternating sum above equals $P(0,0,0)\ne0$. Hence $\deg P\ge3n$, that is, $N\ge3n$.
+    checked: "script: the identity Σ(−1)^i C(n,i) i^e = 0 for e < n, n ≤ 10; the 3n planes cover the grid for n ≤ 6"
+    status: ready

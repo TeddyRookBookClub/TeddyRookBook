@@ -1,0 +1,68 @@
+year: 2015
+edition: 56th
+date: "July 10–11, 2015 · Chiang Mai, Thailand"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2015/2015_eng.pdf
+  archive: https://www.imo-official.org/editions/2015/
+problems:
+  - id: P1
+    day: 1
+    topic: "Point sets where every pair has an equidistant partner"
+    areas: [combinatorics, geometry]
+    difficulty: 2
+    answer: '(a) every $n\ge3$; (b) exactly the odd $n\ge3$'
+    hints:
+      - 'For odd $n$, try a regular $n$-gon. For even $n$, use a center point and points on a circle around it, arranged so that every circle point has a neighbor exactly $60^\circ$ away.'
+      - 'For (b), count. A point $C$ can serve as the equidistant point for at most $\lfloor\frac{n-1}2\rfloor$ pairs if no three points are at the same distance from it.'
+    solution: |
+      **Key idea:** regular polygons with an odd number of sides do everything. For even $n$, a counting argument shows that some point would have to be equally far from three others.
+
+      **(a), odd $n$.** Take a regular $n$-gon. For two vertices $A,B$, the perpendicular bisector of $AB$ is a mirror line of the polygon, and for an odd polygon every mirror line passes through exactly one vertex $C$. Then $CA=CB$.
+
+      **(a), even $n\ge4$.** Let $O$ be the center of a unit circle, and use angles on that circle. Take the points at $0^\circ$, $60^\circ$, $120^\circ$, and, for $m=\frac{n-4}2$ different angles $\theta_1,\dots,\theta_m$ in $(120^\circ,180^\circ)$, the points at $\theta_j$ and $\theta_j+60^\circ$. Together with $O$, that is $1+3+2m=n$ points, all different.
+      - Two points on the circle: $O$ is equally far from both.
+      - $O$ and a circle point $A$: every circle point has another circle point $B$ exactly $60^\circ$ away (the triple $0^\circ,60^\circ,120^\circ$ and the pairs $\theta_j,\theta_j+60^\circ$ are chosen for this). Then $OAB$ is equilateral, so $BO=BA$.
+
+      **(b), odd $n$ works.** In the regular $n$-gon, a point equally far from three vertices is the center of the circle through them, which is the polygon's center, not a vertex. So the set is centre-free.
+
+      **(b), even $n$ fails.** Suppose $S$ is balanced and centre-free with $|S|=n$. For each $C\in S$, group the other $n-1$ points by their distance from $C$. Centre-free means each group has at most $2$ points, so $C$ is equally far from the two points of at most $\big\lfloor\frac{n-1}2\big\rfloor$ pairs. Balanced means every one of the $\binom n2$ pairs is served by some $C$. So
+      $$\frac{n(n-1)}2\le n\Big\lfloor\frac{n-1}2\Big\rfloor .$$
+      For even $n$ the right side is $\frac{n(n-2)}2$, which is smaller. Contradiction.
+    viz: imo-2015-p1
+    checked: "script: the constructions for n = 3 to 12 were tested for balance (and odd ones for centre-freeness), distances compared to 1e-9"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Three products minus a number, all powers of two"
+    areas: [number-theory]
+    difficulty: 4
+    status: coming
+
+  - id: P3
+    day: 1
+    topic: "Orthocenter, a right-angle chain, and two tangent circles"
+    areas: [geometry]
+    difficulty: 5
+    status: coming
+
+  - id: P4
+    day: 2
+    topic: "Circle about A cuts the base; lines meet on AO"
+    areas: [geometry]
+    difficulty: 3
+    status: coming
+
+  - id: P5
+    day: 2
+    topic: "A functional equation with two simple linear answers"
+    areas: [algebra]
+    difficulty: 4
+    status: coming
+
+  - id: P6
+    day: 2
+    topic: "Bounded juggling sequences have bounded drift"
+    areas: [combinatorics]
+    difficulty: 5
+    status: coming

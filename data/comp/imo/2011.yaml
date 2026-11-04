@@ -1,0 +1,147 @@
+year: 2011
+edition: 52nd
+date: "July 18–19, 2011 · Amsterdam, Netherlands"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2011/2011_eng.pdf
+  archive: https://www.imo-official.org/editions/2011/
+problems:
+  - id: P1
+    day: 1
+    topic: "Four numbers with as many pair sums dividing the total"
+    areas: [number-theory]
+    difficulty: 2
+    answer: '$\{d,5d,7d,11d\}$ and $\{d,11d,19d,29d\}$ for positive integers $d$'
+    hints:
+      - 'Order $a_1<a_2<a_3<a_4$. The pair sums $a_3+a_4$ and $a_2+a_4$ are more than half the total, so they can''t divide it. So at most $4$.'
+      - 'For $4$, you need $a_1+a_4=a_2+a_3$, and the ratios $s/(a_1+a_3)$ and $s/(a_1+a_2)$ must be integers. Pin them down by size.'
+    solution: |
+      **Key idea:** two pair sums are too big to divide the total, so the best possible is $4$. Requiring the other four to divide pins the ratios to a few small integers.
+
+      Order the set as $a_1<a_2<a_3<a_4$ with total $s$. A divisor of $s$ that is less than $s$ is at most $\tfrac s2$. Now $a_3+a_4>a_1+a_2$ and $a_2+a_4>a_1+a_3$, so both $a_3+a_4$ and $a_2+a_4$ exceed $\tfrac s2$, and neither divides $s$. So $n_A\le4$.
+
+      **When $n_A=4$.** All of $a_1+a_4$, $a_2+a_3$, $a_1+a_3$, $a_1+a_2$ divide $s$.
+      - $a_1+a_4$ and $a_2+a_3$ add up to $s$ and both divide $s$, so each is at most $\tfrac s2$: both equal $\tfrac s2$. So $s=2(a_2+a_3)$ and $a_4=a_2+a_3-a_1$.
+      - $\dfrac{s}{a_1+a_3}=\dfrac{2(a_2+a_3)}{a_1+a_3}$ is strictly between $2$ and $4$, so it is $3$: $a_3=2a_2-3a_1$.
+      - $\dfrac{s}{a_1+a_2}=\dfrac{2(3a_2-3a_1)}{a_1+a_2}=:k$, an integer less than $6$. Then $a_2(6-k)=a_1(6+k)$. Also $a_3>a_2$ means $a_2>3a_1$, so $\frac{6+k}{6-k}>3$, which gives $k>3$.
+
+      For $k=4$: $a_2=5a_1$, $a_3=7a_1$, $a_4=11a_1$. For $k=5$: $a_2=11a_1$, $a_3=19a_1$, $a_4=29a_1$.
+
+      **Check.** $\{1,5,7,11\}$: total $24$, pair sums $6,8,12,12$ all divide $24$. $\{1,11,19,29\}$: total $60$, pair sums $12,20,30,30$ all divide $60$. Scaling by $d$ keeps this.
+    checked: "script: all sets inside {1, …, 59}; the maximum is 4, reached only by the two families"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "A rotating windmill line that visits every pivot"
+    areas: [combinatorics, geometry]
+    difficulty: 3
+    hints:
+      - 'Give the line a direction. Show that the number of points strictly to its right never changes, not even when the pivot switches.'
+      - 'Start with a line through a point that has exactly $\lfloor\frac{n-1}2\rfloor$ points on its right. For a fixed direction, how many such lines are there?'
+    solution: |
+      **Key idea:** with an orientation, the windmill keeps the same number of points on its right forever. Choose that number to be about half. Then for each direction there is only one possible line, and every point gets its turn as the "middle" point for some direction.
+
+      Let $n=|S|$ and $k=\big\lfloor\frac{n-1}2\big\rfloor$. Call a direction *generic* if no line through two points of $S$ is parallel to it; all but finitely many directions are generic.
+
+      **The right side is preserved.** Give the line an orientation and carry it along as the line turns. Between pivot changes, no point crosses the line. At a pivot change from $P$ to $Q$, put the line along the $x$-axis with $P$ at the origin and $Q=(q,0)$. Just before, the line through $P$ has a small positive angle $\varepsilon$; just after, the line through $Q$ has angle $-\varepsilon$. A short computation shows that $Q$ is on the right of the first line exactly when $q>0$, and $P$ is on the right of the second line exactly when $q>0$. So $Q$ leaves the right side and $P$ takes its place: the number of points on the right never changes.
+
+      **One line per direction.** For a generic oriented direction $\theta$, sort the points by how far they are to the right. Exactly one point $X_\theta$ has exactly $k$ points to its right. So the line in direction $\theta$ through a point of $S$, with exactly $k$ points on its right, is unique: it passes through $X_\theta$.
+
+      **The windmill.** Start on such a line. Then the windmill always has $k$ points on its right. It turns clockwise without stopping. Each turn between pivot changes is positive and at least the smallest gap between the finitely many special directions, so the total turn grows without bound. Whenever its direction is a generic $\theta$, the windmill is the unique line above, so its pivot is $X_\theta$.
+
+      **Every point is a middle point.** Fix $X\in S$ and let $r(\theta)$ be the number of points to the right of the line through $X$ in direction $\theta$. Turning by $180^\circ$ swaps the sides, so $r(\theta+180^\circ)=n-1-r(\theta)$. As $\theta$ turns, $r$ changes by $\pm1$ at a time. One of $r(\theta)$ and $n-1-r(\theta)$ is at most $k$ and the other at least $k$ (check $n$ odd and $n$ even), so $r=k$ on some interval of generic directions. For such $\theta$, $X_\theta=X$.
+
+      The windmill passes through direction $\theta$ again and again, and each time its pivot is $X$. So every point of $S$ is a pivot infinitely often.
+    viz: imo-2011-p2
+    checked: "simulation: 300 random sets of 5 to 12 points; started this way, the windmill used every point as a pivot within half a turn"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "A functional inequality forces zero on the negatives"
+    areas: [algebra]
+    difficulty: 3
+    hints:
+      - 'Write the inequality as $f(t)\le(t-x)f(x)+f(f(x))$. Use it twice, with $(x,t)=(a,f(b))$ and $(b,f(a))$, and add.'
+      - 'You get $2f(a)f(b)\ge af(a)+bf(b)$. Put $b=2f(a)$.'
+    solution: |
+      **Key idea:** two clever instances of the inequality, added together, show $af(a)\le0$. Then $f$ can't be positive anywhere, because a line with positive slope would push $f$ negative far to the left.
+
+      Put $t=x+y$: the condition is
+      $$f(t)\le(t-x)f(x)+f(f(x))\qquad\text{for all }x,t .\tag{$*$}$$
+
+      **Step 1: $af(a)\le0$.** Apply $(*)$ with $x=a$, $t=f(b)$, and with $x=b$, $t=f(a)$:
+      $$f(f(b))\le(f(b)-a)f(a)+f(f(a)),\qquad f(f(a))\le(f(a)-b)f(b)+f(f(b)).$$
+      Adding, $0\le2f(a)f(b)-af(a)-bf(b)$. Now take $b=2f(a)$: $0\le-af(a)$. So $f(a)\ge0$ for $a<0$ and $f(a)\le0$ for $a>0$.
+
+      **Step 2: $f\le0$ everywhere.** Suppose $f(x_0)>0$. By $(*)$, $f(t)\le(t-x_0)f(x_0)+f(f(x_0))$, and the right side tends to $-\infty$ as $t\to-\infty$. So $f(t)<0$ for some $t<0$, contradicting Step 1.
+
+      **Step 3: zero on the negatives.** For $x<0$, Step 1 gives $f(x)\ge0$ and Step 2 gives $f(x)\le0$, so $f(x)=0$.
+
+      **Step 4: $f(0)=0$.** Apply $(*)$ with $x=-1$: since $f(-1)=0$, $f(t)\le f(f(-1))=f(0)$ for all $t$. Take $t=-1$: $0\le f(0)$. With Step 2, $f(0)=0$.
+    checked: "logic: four short steps, each a direct substitution"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Placing power-of-two weights so the right pan never wins"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: '$(2n-1)!!=1\cdot3\cdot5\cdots(2n-1)$'
+    hints:
+      - 'Look at the lightest weight $1$. Removing it from a valid placing leaves a valid placing of the others. Why?'
+      - 'A signed sum of distinct powers of two is never $0$. So once a heavy weight is down, the left pan leads by at least $2$, and the weight $1$ can go on either side.'
+    solution: |
+      **Key idea:** the lightest weight barely matters. After the first heavier weight is placed, the left pan leads by at least $2$, so the weight $1$ can go anywhere, on either pan. This gives the recursion $f(n)=(2n-1)f(n-1)$.
+
+      Let $f(n)$ be the number of ways. Clearly $f(1)=1$. Placing weights $2,4,\dots,2^{n-1}$ is the same problem as placing $1,2,\dots,2^{n-2}$, scaled by $2$, so it has $f(n-1)$ ways.
+
+      **Signed sums.** A sum $\pm2^{e_1}\pm2^{e_2}\pm\dots$ of distinct powers of two is never $0$: the smallest power can't be cancelled by the larger ones, which are all multiples of twice it. So in a valid placing of the even weights, after the first placement the difference "left minus right" is a positive even number, at least $2$.
+
+      **Removing the weight 1.** In a valid placing of all $n$ weights, look at the even weights alone. At every moment their difference $D$ is the full difference minus $\pm1$, so $D\ge-1$. $D$ is even, so $D\ge0$. So removing the weight $1$ leaves a valid placing of the even weights.
+
+      **Inserting the weight 1.** Conversely, take a valid placing of the even weights, and insert the weight $1$ at step $j$ ($1\le j\le n$).
+      - If $j=1$, it is the first weight and must go on the left: $1$ way.
+      - If $j\ge2$, at least one even weight is already placed, so $D\ge2$ at every later moment, and $D\pm1\ge1$. Both pans are fine: $2$ ways.
+
+      So each placing of the even weights extends in $1+2(n-1)=2n-1$ ways, and $f(n)=(2n-1)f(n-1)$. Hence
+      $$f(n)=1\cdot3\cdot5\cdots(2n-1).$$
+    checked: "script: brute force for n ≤ 6 gives 1, 3, 15, 105, 945, 10395"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Divisibility of differences forces a divisibility chain"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'With $n=0$ you get $f(m)\mid f(0)$ for all $m$. Then show $f(-n)=f(n)$.'
+      - 'Let $a=f(m)\le b=f(n)$ and $c=f(n-m)$. Find three divisibilities, including $b\mid c-a$, and split into $c\le b$ and $c>b$.'
+    solution: |
+      **Key idea:** all values divide $f(0)$, and $f$ is even. Then three instances of the condition relate $a=f(m)$, $b=f(n)$ and $c=f(n-m)$ tightly enough to force $a\mid b$.
+
+      Write $x\mid y$ for divisibility; all values of $f$ are positive.
+
+      **All values divide $f(0)$.** Take $n=0$: $f(m)\mid f(m)-f(0)$, so $f(m)\mid f(0)$.
+
+      **$f$ is even.** Take $m=0$: $f(-n)\mid f(0)-f(n)$. Since also $f(-n)\mid f(0)$, we get $f(-n)\mid f(n)$. Swapping $n$ and $-n$, $f(n)\mid f(-n)$. So $f(-n)=f(n)$.
+
+      **Three relations.** Let $a=f(m)\le b=f(n)$ and $c=f(n-m)=f(m-n)$.
+      1. The pair $(n,m)$: $c\mid b-a$.
+      2. The pair $(n,n-m)$: $f(m)\mid f(n)-f(n-m)$, so $a\mid b-c$.
+      3. The pair $(n-m,-m)$: $f(n)\mid f(n-m)-f(-m)$, so $b\mid c-a$.
+
+      **Case $c\le b$.** Then $|c-a|<b$ (both $a$ and $c$ are between $1$ and $b$), so relation 3 forces $c=a$. Relation 2 becomes $a\mid b-a$, so $a\mid b$.
+
+      **Case $c>b$.** Relation 1: $c$ divides $b-a$, where $0\le b-a<b<c$. So $b-a=0$, and $a=b$ divides $b$.
+
+      Either way $f(m)\mid f(n)$.
+    checked: "logic: three substitutions and a size comparison; examples such as f(n) = d for k ∤ n and D for k ∣ n (with d ∣ D) fit"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Reflected tangent lines and a circle tangent to the circumcircle"
+    areas: [geometry]
+    difficulty: 5
+    status: coming

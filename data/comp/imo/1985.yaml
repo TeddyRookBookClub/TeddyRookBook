@@ -1,0 +1,149 @@
+year: 1985
+edition: 26th
+date: "June 29–July 11, 1985 · Joutsa, Finland"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1985/1985_eng.pdf
+  archive: https://www.imo-official.org/editions/1985/
+problems:
+  - id: P1
+    day: 1
+    topic: "Cyclic quadrilateral with a circle centered on one side"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'The center $O$ is equally far from three side lines, so it sits on two angle bisectors. Which ones?'
+      - 'Compute $AD-AO$ and $BC-BO$ with the law of sines, using that opposite angles add up to $180^\circ$.'
+    solution: |
+      **Key idea:** the center lies on the bisectors of the two angles away from its side. The law of sines then gives $AD-AO$ and $BC-BO$ as equal numbers with opposite signs.
+
+      Write $A,B,C,D$ also for the angles of the quadrilateral, so $A+C=B+D=180^\circ$. Let $O$ be the center and $r$ the radius. The circle touches lines $DA$ and $DC$, and $O$ lies inside angle $D$, so $DO$ bisects angle $D$. In the same way $CO$ bisects angle $C$.
+
+      **Two distances.** $O$ is on segment $AB$, so the distance from $O$ to line $AD$ is $AO\sin A=r$. Hence $AO=\dfrac{r}{\sin A}$, and likewise $BO=\dfrac{r}{\sin B}$.
+
+      **Side $AD$.** In triangle $AOD$ the angles at $A$ and $D$ are $A$ and $\tfrac D2$. The law of sines gives
+      $$AD=\frac{AO\,\sin\!\big(A+\tfrac D2\big)}{\sin\tfrac D2}=\frac{r\,\sin\!\big(A+\tfrac D2\big)}{\sin A\,\sin\tfrac D2}.$$
+      Since $A=180^\circ-C$, we have $\sin A=\sin C$ and $\sin\!\big(A+\tfrac D2\big)=\sin\!\big(C-\tfrac D2\big)$. So
+      $$AD-AO=\frac{r\big(\sin(C-\tfrac D2)-\sin\tfrac D2\big)}{\sin C\,\sin\tfrac D2}=\frac{2r\cos\tfrac C2\,\sin\tfrac{C-D}{2}}{2\sin\tfrac C2\cos\tfrac C2\,\sin\tfrac D2}=\frac{r\sin\tfrac{C-D}{2}}{\sin\tfrac C2\,\sin\tfrac D2}.$$
+
+      **Side $BC$.** The same computation with the letters swapped ($B\leftrightarrow A$, $C\leftrightarrow D$) gives
+      $$BC-BO=\frac{r\sin\tfrac{D-C}{2}}{\sin\tfrac D2\,\sin\tfrac C2}.$$
+
+      The two differences cancel. So $AD+BC=AO+BO=AB$.
+    checked: "numeric: the identity checked for 500 random angle choices"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Two coloring rules on a range force one color"
+    areas: [combinatorics, number-theory]
+    difficulty: 2
+    hints:
+      - 'Walk through the multiples $k,2k,3k,\dots$ taken mod $n$. They visit every number in the set once.'
+      - 'Show that $r$ and the next residue in that walk always get the same color. Split into the cases $r<n-k$ and $r>n-k$.'
+    solution: |
+      **Key idea:** list the residues of $k,2k,\dots,(n-1)k$ mod $n$. Neighbors in that list are always linked by the two rules, and the list covers the whole set.
+
+      Let $r_i$ be the remainder of $ik$ mod $n$, for $i=1,\dots,n-1$. Since $\gcd(n,k)=1$, these are the numbers $1,\dots,n-1$, each once. We show that $r_i$ and $r_{i+1}$ have the same color for $i=1,\dots,n-2$. Write $r=r_i$.
+
+      - **If $r<n-k$:** then $r_{i+1}=r+k$. This is in the set and differs from $k$, and $|(r+k)-k|=r$. Rule (ii) applied to $r+k$ says $r+k$ and $r$ share a color.
+      - **If $r>n-k$:** ($r=n-k$ would give $r_{i+1}=0$, which happens only for $i+1=n$.) Then $r_{i+1}=r+k-n$. By rule (i), $r$ has the color of $n-r$. Now $n-r<k$, so $n-r\ne k$ and $|(n-r)-k|=k-(n-r)=r_{i+1}$. Rule (ii) applied to $n-r$ gives the color of $r_{i+1}$.
+
+      So all of $r_1,\dots,r_{n-1}$, which is the whole set, have one color.
+    checked: "script: for every coprime pair with n ≤ 14, the rules link all numbers into one class"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Odd coefficients of sums of binomial powers"
+    areas: [algebra, combinatorics]
+    difficulty: 4
+    hints:
+      - 'Work mod $2$. If $2^m$ is the largest power of two not above $j$, then $(1+x)^j\equiv(1+x^{2^m})(1+x)^{j-2^m}$.'
+      - 'Induct on the largest exponent. Split the sum into the terms below $2^m$ and the rest.'
+    solution: |
+      **Key idea:** mod $2$, $(1+x)^{2^m}=1+x^{2^m}$. Splitting at the top power of two separates the polynomial into a low half and a high half that do not overlap, and induction does the rest.
+
+      Work with coefficients mod $2$; $w(P)$ counts the nonzero ones. Two facts:
+      - $w(P+Q)\ge w(P)-w(Q)$, since a coefficient of $P$ that is odd can only be cancelled where $Q$ has an odd one.
+      - If $\deg S<2^m$, then $w\big((1+x^{2^m})S\big)=2w(S)$, because $S$ and $x^{2^m}S$ use disjoint powers of $x$.
+
+      We prove the claim by strong induction on the largest exponent $i_n$. If $i_n=0$ there is one term and nothing to prove. Otherwise let $2^m\le i_n<2^{m+1}$. For $2^m\le j<2^{m+1}$,
+      $$(1+x)^j=(1+x)^{2^m}(1+x)^{j-2^m}\equiv(1+x^{2^m})(1+x)^{j-2^m}\pmod 2 .$$
+
+      **Case $i_1\ge2^m$.** Then the whole sum is $(1+x^{2^m})S$, where $S=\sum_t(1+x)^{i_t-2^m}$ has degree below $2^m$. The exponents $i_t-2^m$ are distinct and below $i_n$, so by induction $w(S)\ge w\big((1+x)^{i_1-2^m}\big)$. Hence
+      $$w(\text{sum})=2w(S)\ge2w\big((1+x)^{i_1-2^m}\big)=w\big((1+x)^{i_1}\big).$$
+
+      **Case $i_1<2^m$.** Let $P$ be the sum of the terms with exponent below $2^m$ (it contains the $i_1$ term), and write the other terms as $(1+x^{2^m})R$ with $\deg R<2^m$. The sum is $(P+R)+x^{2^m}R$, and the two parts use disjoint powers. So
+      $$w(\text{sum})=w(P+R)+w(R)\ge w(P)\ge w\big((1+x)^{i_1}\big),$$
+      the last step by induction, since every exponent in $P$ is below $2^m\le i_n$.
+    checked: "script: every set of exponents below 12 (all 4095 nonempty subsets) satisfies the inequality"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Products of small primes: four with a fourth-power product"
+    areas: [number-theory, combinatorics]
+    difficulty: 2
+    hints:
+      - 'Record each number by the parities of its exponents of the nine primes below $26$. How many patterns are there?'
+      - 'First pull out many pairs whose product is a square. Then apply the same idea to the square roots of those products.'
+    solution: |
+      **Key idea:** pigeonhole twice on exponent parities. The first round makes many square products; the second pairs up two of those squares.
+
+      The primes up to $26$ are $2,3,5,7,11,13,17,19,23$, nine of them. Give each number the vector of its nine exponents mod $2$. There are $2^9=512$ vectors, and two numbers with the same vector have a product that is a perfect square.
+
+      **Round one.** While at least $513$ numbers remain, two of them share a vector; set that pair aside. Starting from $1985$ numbers, we can do this as long as the count is at least $513$, which gives at least $(1985-513)/2+1=737$ disjoint pairs. Each pair has product $c_j^2$, and $c_j$ is again built only from the nine primes.
+
+      **Round two.** There are $737>512$ numbers $c_j$, so two of them, $c_i$ and $c_j$, have the same vector. Then $c_ic_j$ is a square, say $d^2$. The four numbers in pairs $i$ and $j$ are distinct, and their product is $c_i^2c_j^2=d^4$.
+    checked: "arithmetic: 1985 − 2·736 = 513, so a 737th pair still exists"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Miquel point gives a right angle with the center"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Look for a point where three radical axes meet: one for each pair among the three circles.'
+      - 'Call that point $P$ on line $BM$. Show that $M,N,C,P$ lie on a circle, then compare the powers of $B$ and $P$ with respect to the circle centered at $O$.'
+    solution: |
+      **Key idea:** the lines $AC$, $KN$ and $BM$ are radical axes of the three circles, so they meet at one point $P$. Then the powers of $B$ and $P$ with respect to the circle at $O$ are the two products along line $BMP$. That forces $M$ to be the foot of the perpendicular from $O$.
+
+      Call the circles $\omega$ (center $O$, radius $\rho$, through $A,K,N,C$), $\Gamma=(ABC)$ and $\gamma=(BKNM)$. Their pairwise radical axes are $AC$, $KN$ and $BM$. These three lines meet at a point $P$ (they are not parallel: if $KN\parallel AC$, the homothety at $B$ taking $K,N$ to $A,C$ would make $\gamma$ tangent to $\Gamma$ at $B$, so there would be no second point $M$). $P$ is on line $AC$, so $P\ne B$; also $P\ne A,C$, because line $KN$ meets line $AB$ only at $K$ and line $BC$ only at $N$.
+
+      **A fourth circle.** With directed angles mod $180^\circ$:
+      $$\angle(MN,MP)=\angle(MN,MB)=\angle(KN,KB)=\angle(KN,KA)=\angle(CN,CA)=\angle(CN,CP),$$
+      using $\gamma$, then $\omega$. So $M,N,C,P$ are concyclic, and $B$ lies on lines $MP$ and $NC$.
+
+      **Powers.** Put coordinates on line $BMP$, with $b,m,p$ the positions of $B,M,P$. The power of $P$ with respect to $\gamma$ equals its power with respect to $\omega$, and the power of $B$ with respect to circle $MNCP$ equals its power with respect to $\omega$ (both are $BN\cdot BC$):
+      $$(m-p)(b-p)=OP^2-\rho^2,\qquad (m-b)(p-b)=OB^2-\rho^2 .$$
+      Subtracting, $OP^2-OB^2=(b-p)(2m-b-p)=(p-m)^2-(b-m)^2=PM^2-BM^2$. So
+      $$OP^2-PM^2=OB^2-BM^2 .$$
+
+      **Conclusion.** Let $H$ be the foot of the perpendicular from $O$ to line $BP$, at position $h$. For a point $X$ at position $x$ on the line, $OX^2-XM^2=OH^2+(x-h)^2-(x-m)^2$, which is linear in $x$ with slope $2(m-h)$. It takes the same value at $B$ and $P\ne B$, so $h=m$. Thus $OM\perp BM$.
+    checked: "numeric: 500 random configurations give a right angle at M (to 1e-6)"
+    viz: imo-1985-p5
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "One start keeps a quadratic recursion increasing below one"
+    areas: [algebra]
+    difficulty: 3
+    hints:
+      - 'The term $x_n$ is an increasing function of $x_1$ on $[0,\infty)$. Write the condition as $1-\tfrac1n<x_n<1$ for all $n$.'
+      - 'For existence, nest intervals. For uniqueness, see how fast the gap between two good sequences grows.'
+    solution: |
+      **Key idea:** the condition says $1-\frac1n<x_n<1$ for every $n$. Each such condition cuts out an interval of starting values, and the intervals are nested. Two good starts would have gaps that grow geometrically, yet stay below $\frac1n$.
+
+      For $x_n>0$ we have $x_{n+1}>x_n\iff x_n+\frac1n>1$, and $x_{n+1}<1$. So $x_1$ is good exactly when $0<x_1$ and
+      $$1-\tfrac1n<x_n<1\quad\text{for all }n\ge1 .$$
+      Write $x_n=P_n(x_1)$. Since $t\mapsto t(t+\frac1n)$ is increasing and continuous on $[0,\infty)$, each $P_n$ is increasing and continuous there, with $P_n(0)=0$ and $P_n(t)\to\infty$. Let $a_n<b_n$ be the starts with $P_n(a_n)=1-\frac1n$ and $P_n(b_n)=1$.
+
+      **Nesting.** If $x_n=1-\frac1n$, then $x_{n+1}=(1-\frac1n)\cdot1<1-\frac1{n+1}$, so $a_{n+1}>a_n$. If $x_n=1$, then $x_{n+1}=1+\frac1n>1$, so $b_{n+1}<b_n$. Thus the closed intervals $[a_n,b_n]$ are nested and have a common point $x$. Then $a_n<a_{n+1}\le x\le b_{n+1}<b_n$ for every $n$, so $x$ lies in every open interval $(a_n,b_n)$ and is good.
+
+      **Uniqueness.** Suppose $x_1<y_1$ are both good. Then $x_n<y_n$, both in $(1-\frac1n,1)$, so $y_n-x_n<\frac1n$. But
+      $$y_{n+1}-x_{n+1}=(y_n-x_n)\Big(y_n+x_n+\tfrac1n\Big)>(y_n-x_n)\Big(2-\tfrac1n\Big)\ge\tfrac32(y_n-x_n)\quad(n\ge2).$$
+      The gap grows at least geometrically, so it cannot stay below $\frac1n$. Hence exactly one $x_1$ works.
+    checked: "numeric: bisection on the start converges to x₁ ≈ 0.44653"
+    status: ready

@@ -1,0 +1,153 @@
+year: 1969
+edition: 11th
+date: "July 5–20, 1969 · Bucharest, Romania"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1969/1969_eng.pdf
+  archive: https://www.imo-official.org/editions/1969/
+problems:
+  - id: P1
+    day: 1
+    topic: "Fourth powers plus a constant that are never prime"
+    areas: [number-theory, algebra]
+    difficulty: 2
+    answer: "For example every $a=4k^4$ with $k\\ge2$"
+    hints:
+      - 'Look for $a$ that makes $n^4+a$ factor as a polynomial in $n$.'
+      - '$n^4+4k^4=(n^2+2k^2)^2-(2nk)^2$.'
+    solution: |
+      **Key idea:** Sophie Germain's identity: $n^4+4k^4$ is a difference of two squares.
+
+      For $a=4k^4$,
+      $$n^4+4k^4=(n^2+2k^2)^2-(2nk)^2=(n^2+2nk+2k^2)(n^2-2nk+2k^2).$$
+      The smaller factor is $(n-k)^2+k^2\ge k^2$, and the larger one is bigger still. If $k\ge2$, both factors are at least $4$, so $n^4+a$ is composite for every natural $n$. The numbers $a=4k^4$ with $k=2,3,4,\dots$ are infinitely many.
+    checked: "script: k = 2 to 7 and n = 1 to 199, never prime"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Weighted cosine sum: zeros differ by multiples of pi"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Any sum of shifted cosines is a single shifted cosine $R\cos(x+\varphi)$, unless it is identically $0$.'
+      - 'Show $R\ne0$: the first term has weight $1$ and the others have total weight less than $1$.'
+    solution: |
+      **Key idea:** $f$ is one sinusoid $R\cos(x+\varphi)$, and the weights guarantee $R>0$. Zeros of a sinusoid are spaced by $\pi$.
+
+      Let $Z=\sum_{k=1}^n2^{1-k}e^{ia_k}$, a complex number. Then $f(x)=\operatorname{Re}\bigl(e^{ix}Z\bigr)$. Its size is
+      $$|Z|\ge1-\sum_{k=2}^n2^{1-k}=1-\bigl(1-2^{1-n}\bigr)=2^{1-n}>0 .$$
+      Write $Z=Re^{i\varphi}$ with $R>0$. Then $f(x)=R\cos(x+\varphi)$. Its zeros are exactly the $x$ with $x+\varphi=\frac\pi2+j\pi$ for an integer $j$. So if $f(x_1)=f(x_2)=0$, then $x_2-x_1$ is an integer multiple of $\pi$.
+    checked: "script: 50 random cases; all sign changes on [0, 10] are spaced by multiples of π"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Tetrahedra with only two edge lengths"
+    areas: [geometry]
+    difficulty: 3
+    answer: "$k=1$: $a<\\sqrt3$. $k=2$: $a<\\sqrt{2+\\sqrt3}$. $k=3$: any $a$. $k=4$: $a>\\sqrt{2-\\sqrt3}$. $k=5$: $a>\\frac1{\\sqrt3}$"
+    hints:
+      - 'Scaling by $\frac1a$ turns $k$ edges of length $a$ into $6-k$ edges of length $\frac1a$. So $k=4,5$ follow from $k=2,1$.'
+      - 'For $k=2$, the two long edges are either opposite or adjacent: do both cases. For $k=3$, the three edges form a face, a star at a vertex, or a path.'
+    solution: |
+      **Key idea:** build each tetrahedron from a rigid piece (a triangle or an edge) and find the range of the free distance as the remaining point turns about an axis. The ends of the range are the flat positions.
+
+      **$k=1$.** Let $CD=a$ and the other edges $1$. Then $ABC$ and $ABD$ are unit equilateral triangles hinged on $AB$. The points $C,D$ are at distance $\frac{\sqrt3}2$ from the midpoint of $AB$, in planes perpendicular to $AB$. As the hinge angle $\theta$ runs over $(0^\circ,180^\circ)$, $CD=\sqrt3\sin\frac\theta2$ takes every value in $(0,\sqrt3)$. So $0<a<\sqrt3$.
+
+      **$k=2$, opposite edges** $AB=CD=a$. The points $C,D$ are at distance $1$ from $A$ and $B$, so they lie on the circle around $AB$ through its midpoint, with radius $\sqrt{1-a^2/4}$ (this needs $a<2$). The chord $CD=a$ must be shorter than the diameter, since a diameter would make the four points coplanar: $a<2\sqrt{1-a^2/4}$, that is $a<\sqrt2$. Every $a\in(0,\sqrt2)$ works.
+
+      **$k=2$, adjacent edges** $AB=AC=a$. Then $BCD$ is a unit equilateral triangle and $AD=1$. The point $A$ lies in the plane that bisects $BC$ perpendicularly, which contains $D$ and the midpoint $N$ of $BC$, on the circle of radius $1$ about $D$. Then $AB^2=AN^2+\frac14$. As $A$ moves around the circle off the line $DN$, $AN$ takes every value strictly between $1-\frac{\sqrt3}{2}$ and $1+\frac{\sqrt3}2$. So $a^2\in(2-\sqrt3,\,2+\sqrt3)$.
+      The union of the two cases is $0<a<\sqrt{2+\sqrt3}=\frac{\sqrt6+\sqrt2}2$, because $\sqrt{2-\sqrt3}<\sqrt2<\sqrt{2+\sqrt3}$.
+
+      **$k=3$.** If the three edges of length $a$ form a face, the fourth vertex is at distance $1$ from the three corners of an equilateral triangle with circumradius $\frac a{\sqrt3}$. This is possible exactly when $\frac{a}{\sqrt3}<1$. If they form a star at a vertex, that vertex is at distance $a$ from the corners of a unit equilateral triangle, which needs $a>\frac1{\sqrt3}$. Every $a>0$ satisfies one of the two, so every $a$ works.
+
+      **$k=4,5$.** Scaling by $\frac1a$ turns a tetrahedron with $k$ edges $a$ and $6-k$ edges $1$ into one with $6-k$ edges $\frac1a$ and $k$ edges $1$. So $k=4$ needs $\frac1a<\sqrt{2+\sqrt3}$, that is $a>\sqrt{2-\sqrt3}=\frac{\sqrt6-\sqrt2}{2}$. And $k=5$ needs $\frac1a<\sqrt3$, that is $a>\frac1{\sqrt3}$.
+    checked: "script: Cayley–Menger determinant over every placement of the k edges, for 600 values of a; the ranges agree"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Three circles on a diameter share a second tangent"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Several circles tangent to the same line on the same side have another common tangent if their centers are collinear: reflect the line in the line of centers.'
+      - 'Use coordinates with the semicircle of radius $1$ centered at the origin and $D=(d,0)$. Show the incenter is the midpoint of the other two centers.'
+    solution: |
+      **Key idea:** the incenter of $ABC$ is exactly the midpoint of the centers of the other two circles. With the three centers on one line, reflecting $AB$ in that line gives the second tangent.
+
+      **Reduction.** Let three circles touch line $AB$ from the same side, with centers on a line $\ell$. The reflection in $\ell$ maps each circle to itself, so it maps $AB$ to a line tangent to all three. That line is different from $AB$, unless $\ell$ is $AB$ itself or perpendicular to it. Neither happens here: the centers lie above $AB$, and they have different first coordinates, as we will see. So it is enough to show that the centers are collinear.
+
+      **Coordinates.** Let the semicircle have center $O=(0,0)$ and radius $1$, so $A=(-1,0)$ and $B=(1,0)$. Let $D=(d,0)$ and $C=(d,\sqrt{1-d^2})$.
+      - *Circle on the side of $B$.* Its center is $(d+r,r)$. Internal tangency to the big circle means distance $1-r$ from $O$: $(d+r)^2+r^2=(1-r)^2$, so $r^2+2(1+d)r+d^2-1=0$ and
+      $$r=\sqrt{2+2d}-(1+d).$$
+      - *Circle on the side of $A$.* By the same computation with $d$ replaced by $-d$, its center is $(d-s,s)$ with $s=\sqrt{2-2d}-(1-d)$.
+      - *Incircle.* The angle at $C$ is right, and $CA=\sqrt{2+2d}$, $CB=\sqrt{2-2d}$, $AB=2$. In a right triangle the inradius is $\rho=\frac{CA+CB-AB}{2}$. The incircle touches $AB$ at distance $\frac{CA+AB-CB}{2}$ from $A$, so its center is
+      $$I=\Bigl(\tfrac{\sqrt{2+2d}-\sqrt{2-2d}}2,\ \tfrac{\sqrt{2+2d}+\sqrt{2-2d}-2}2\Bigr).$$
+
+      **The midpoint.** The two other centers have average height $\frac{r+s}2=\frac{\sqrt{2+2d}+\sqrt{2-2d}-2}2=\rho$. Their average first coordinate is
+      $$d+\frac{r-s}{2}=d+\frac{\sqrt{2+2d}-\sqrt{2-2d}-2d}{2}=\frac{\sqrt{2+2d}-\sqrt{2-2d}}2 .$$
+      This is exactly $I$. So $I$ is the midpoint of the other two centers, and the three centers are collinear. Their first coordinates $d+r$ and $d-s$ differ, so $\ell$ is not perpendicular to $AB$. By the reduction, the three circles have a second common tangent.
+    checked: "script: 100 random positions of C; both small circles are tangent to the semicircle, and the incenter is the midpoint of their centers"
+    viz: imo-1969-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Many convex quadrilaterals among points in general position"
+    areas: [combinatorics, geometry]
+    difficulty: 3
+    hints:
+      - 'Any five points with no three collinear include four in convex position.'
+      - 'Count pairs (five-point subset, convex quadrilateral inside it) in two ways.'
+    solution: |
+      **Key idea:** every five points contain a convex quadrilateral, and each convex quadrilateral lies in only $n-4$ five-point sets. Double counting then gives the bound.
+
+      **Lemma (five points).** Among five points with no three collinear, some four are the vertices of a convex quadrilateral.
+      If the convex hull has $4$ or $5$ corners, take four of them. Otherwise the hull is a triangle $XYZ$ with the other two points $U,V$ inside. The line $UV$ passes through no corner, so two corners, say $X,Y$, lie on the same side of it. Then $U,V,X,Y$ are in convex position:
+      - $X$ and $Y$ are hull corners, so neither lies in a triangle of the others;
+      - $U$ is not inside triangle $XYV$, since a line from $V$ through an interior point $U$ of that triangle would separate $X$ from $Y$;
+      - the same holds for $V$.
+
+      Four points none of which lies in the triangle of the other three are in convex position.
+
+      **Double counting.** Let $Q$ be the number of convex quadrilaterals. Count pairs (5-set, convex quadrilateral inside it). Each of the $\binom n5$ five-point sets contains at least one. Each quadrilateral lies in exactly $n-4$ five-point sets. So
+      $$Q\ge\frac{1}{n-4}\binom n5=\frac{n(n-1)(n-2)(n-3)}{120}.$$
+      **Comparison.** We want this to be at least $\binom{n-3}2=\frac{(n-3)(n-4)}2$, that is $n(n-1)(n-2)\ge60(n-4)$.
+      - For $n=5,6,7,8$: $60\ge60$, $120\ge120$, $210\ge180$, $336\ge240$.
+      - For $n\ge9$: $n(n-1)\ge72>60$, so $n(n-1)(n-2)>60(n-2)>60(n-4)$.
+
+      So there are at least $\binom{n-3}2$ convex quadrilaterals.
+    checked: "script: random point sets with n = 5 to 9 always have at least C(n − 3, 2) convex quadrilaterals"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "A determinant-style inequality for two positive quadratic forms"
+    areas: [algebra]
+    difficulty: 3
+    answer: "Equality exactly when $x_1=x_2$, $y_1=y_2$ and $z_1=z_2$"
+    hints:
+      - 'With $D_i=x_iy_i-z_i^2$, show $(x_1+x_2)(y_1+y_2)-(z_1+z_2)^2\ge\bigl(\sqrt{D_1}+\sqrt{D_2}\bigr)^2$.'
+      - 'Use AM–GM on $x_1y_2+x_2y_1$ and Cauchy–Schwarz on $(D_1+z_1^2)(D_2+z_2^2)$.'
+    solution: |
+      **Key idea:** the "determinant" of a sum is at least $(\sqrt{D_1}+\sqrt{D_2})^2$. After that, two AM–GM steps finish.
+
+      Let $D_1=x_1y_1-z_1^2>0$ and $D_2=x_2y_2-z_2^2>0$. Then $y_i>z_i^2/x_i\ge0$, so all of $x_i,y_i$ are positive. Let $D$ be the denominator on the left.
+
+      **Step 1.** Expanding,
+      $$D=(x_1+x_2)(y_1+y_2)-(z_1+z_2)^2=D_1+D_2+x_1y_2+x_2y_1-2z_1z_2 .$$
+      By AM–GM, $x_1y_2+x_2y_1\ge2\sqrt{x_1y_1\,x_2y_2}$. By Cauchy–Schwarz,
+      $$x_1y_1\,x_2y_2=(D_1+z_1^2)(D_2+z_2^2)\ge\bigl(\sqrt{D_1D_2}+|z_1z_2|\bigr)^2 .$$
+      So $x_1y_2+x_2y_1\ge2\sqrt{D_1D_2}+2|z_1z_2|\ge2\sqrt{D_1D_2}+2z_1z_2$, and therefore
+      $$D\ge D_1+D_2+2\sqrt{D_1D_2}=\bigl(\sqrt{D_1}+\sqrt{D_2}\bigr)^2>0 .$$
+      **Step 2.** With $u=\sqrt{D_1}$ and $v=\sqrt{D_2}$,
+      $$\frac8D\le\frac8{(u+v)^2}\le\frac8{4uv}=\frac2{uv}\le\frac1{u^2}+\frac1{v^2}=\frac1{D_1}+\frac1{D_2}.$$
+      **Equality.** Every step must be an equality:
+      - $u=v$, so $D_1=D_2$;
+      - $z_1z_2=|z_1z_2|$, and Cauchy–Schwarz equality $D_1z_2^2=D_2z_1^2$, which with $D_1=D_2$ gives $z_1^2=z_2^2$, so $z_1=z_2$;
+      - AM–GM equality $x_1y_2=x_2y_1$. Together with $x_1y_1=x_2y_2$ (from $D_1=D_2$ and $z_1=z_2$), this gives $(x_1/x_2)^2=1$, so $x_1=x_2$ and $y_1=y_2$.
+
+      Conversely, equal triples give $\frac{8}{4D_1}=\frac{2}{D_1}$ on both sides. So equality holds exactly when $x_1=x_2$, $y_1=y_2$, $z_1=z_2$.
+    checked: "script: 100,000 random admissible inputs"
+    status: ready

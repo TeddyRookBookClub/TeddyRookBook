@@ -1,0 +1,157 @@
+year: 1992
+edition: 33rd
+date: "July 10–21, 1992 · Moscow, Russia"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1992/1992_eng.pdf
+  archive: https://www.imo-official.org/editions/1992/
+problems:
+  - id: P1
+    day: 1
+    topic: "Triples where a product of predecessors divides abc minus one"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$(a,b,c)=(2,4,8)$ and $(3,5,15)$"
+    hints:
+      - 'Put $x=a-1$, $y=b-1$, $z=c-1$. Then the quotient is $\frac1x+\frac1y+\frac1z+\frac1{xy}+\frac1{yz}+\frac1{zx}$.'
+      - 'This sum is small unless $x$ is small. Bound $x$ and the quotient, then solve for $z$.'
+    solution: |
+      **Key idea:** after shifting by one, the quotient is a sum of six unit fractions. That caps the smallest variable and the quotient, and the rest is a short divisor check.
+
+      Let $x=a-1$, $y=b-1$, $z=c-1$, so $1\le x<y<z$. Then $abc-1=xyz+(xy+yz+zx)+(x+y+z)$. So $xyz$ divides $abc-1$ exactly when it divides $xy+yz+zx+x+y+z$. Call the quotient $k\ge1$; dividing by $xyz$,
+      $$k=\frac1x+\frac1y+\frac1z+\frac1{xy}+\frac1{yz}+\frac1{zx}.$$
+
+      **Bounds.** If $x\ge3$ (so $y\ge4$, $z\ge5$), the sum is at most $\frac13+\frac14+\frac15+\frac1{12}+\frac1{20}+\frac1{15}=\frac{59}{60}<1$. Impossible. If $x=2$, the sum is at most $\frac12+\frac13+\frac14+\frac16+\frac1{12}+\frac18=\frac{35}{24}<2$, so $k=1$. If $x=1$, the sum exceeds $1$ and is at most $\frac{17}6<3$, so $k=2$.
+
+      **Solving.** The equation $kxyz=xy+yz+zx+x+y+z$ gives
+      $$z=\frac{xy+x+y}{kxy-x-y-1}.$$
+      - $x=1$, $k=2$: the equation reads $z(y-2)=2y+1$, so $y\ne2$ and $z=\frac{2y+1}{y-2}=2+\frac5{y-2}$. So $y-2\in\{1,5\}$; $y=3$ gives $z=7$, while $y=7$ gives $z=3<y$. So $(x,y,z)=(1,3,7)$.
+      - $x=2$, $k=1$: the equation reads $z(y-3)=3y+2$, so $y\ne3$ and $z=\frac{3y+2}{y-3}=3+\frac{11}{y-3}$. So $y=4$, $z=14$ (the choice $y=14$ gives $z=4<y$). So $(x,y,z)=(2,4,14)$.
+
+      Back to $a,b,c$: $(2,4,8)$ and $(3,5,15)$. Check: $63/21=3$ and $224/112=2$.
+    checked: "script: search with a < 60, b < 400, c < 3000 finds only these two"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Functional equation with a square inside and outside"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$f(x)=x$"
+    hints:
+      - 'Show $f$ is a bijection and $f(f(y))=y+f(0)^2$. Then find the zero of $f$.'
+      - 'Once $f(0)=0$, you get $f(x^2)=f(x)^2$, so $f\ge0$ on $[0,\infty)$, and $f$ is additive in a useful way.'
+    solution: |
+      **Key idea:** first force $f(0)=0$. Then $f$ is additive with $f\ge0$ on nonnegative numbers, hence increasing, and an increasing involution is the identity.
+
+      **Bijective.** The right side takes every real value as $y$ varies, so $f$ is onto. If $f(y_1)=f(y_2)$, the left sides agree, so $y_1=y_2$: $f$ is one-to-one. With $c=f(0)$, setting $x=0$ gives $f(f(y))=y+c^2$, and setting $y=0$ gives $f(x^2+c)=f(x)^2$.
+
+      **$f(0)=0$.** Replacing $x$ by $-x$ shows $f(-x)^2=f(x)^2$. Let $f(a)=0$. Then $f(-a)^2=0$, so $f(-a)=0=f(a)$ and $a=-a$, that is $a=0$. So $c=f(0)=0$.
+
+      **Monotone.** Now $f(f(y))=y$ and $f(x^2)=f(x)^2\ge0$, so $f(t)\ge0$ for $t\ge0$. The equation reads $f(t+f(y))=y+f(t)$ for $t=x^2\ge0$. Put $y=f(z)$: $f(t+z)=f(z)+f(t)\ge f(z)$. So $f$ is nondecreasing.
+
+      **Identity.** If $f(x)>x$, then $x=f(f(x))\ge f(x)>x$; if $f(x)<x$, then $x=f(f(x))\le f(x)<x$. Both are impossible, so $f(x)=x$, which clearly works.
+    checked: "reasoning; f(x)=x checks directly"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Edges among nine points forcing a one-color triangle"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: "$n=33$"
+    hints:
+      - 'With $33$ colored edges only $3$ are missing. Delete one end of each missing edge. What is left?'
+      - 'For $32$, start from a two-coloring of the five-point complete graph with no one-color triangle, and blow up four of its points into pairs.'
+    solution: |
+      **Key idea:** with at most three missing edges we can delete three points and keep a complete two-colored graph on six points, which has a one-color triangle. With four missing edges a "blown-up" pentagon coloring avoids one.
+
+      There are $\binom92=36$ edges.
+
+      **$33$ works.** Then exactly $3$ edges are uncolored. Remove one endpoint of each; at least $6$ points remain, with all edges between them colored. On six points, pick a point $v$: of its $5$ edges, $3$ share a color, say red, going to $u_1,u_2,u_3$. If any edge $u_iu_j$ is red, it forms a red triangle with $v$; otherwise $u_1u_2u_3$ is a blue triangle.
+
+      **$32$ is not enough.** Color the five-point complete graph on $\{1,2,3,4,5\}$: the pentagon edges $\{i,i+1\}$ red and the diagonals blue. Neither color has a triangle (each color is a $5$-cycle). Now split the nine points into groups $G_1,G_2,G_3,G_4$ of two points and $G_5$ of one. Leave the $4$ edges inside groups uncolored, and color each edge between $G_i$ and $G_j$ like the edge $\{i,j\}$. That colors $32$ edges. A one-color triangle would have its three points in three different groups, giving a one-color triangle on $\{1,\dots,5\}$. So there is none, and for every $n\le32$ we can keep just $n$ of these colored edges.
+    checked: "reasoning (Ramsey number R(3,3) = 6)"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Locus of a vertex with fixed incircle and midpoint"
+    areas: [geometry]
+    difficulty: 3
+    answer: "An open ray: on the line through $T'$ (the reflection of the tangency point $T$ in $M$) and the point $T^*$ of the circle opposite $T$, the part beyond $T^*$."
+    hints:
+      - 'Where does the excircle opposite $P$ touch line $QR$? Compare it with the point $T$ where the circle touches.'
+      - 'The homothety at $P$ taking the incircle to that excircle sends the top point of the incircle to the excircle''s touching point.'
+    solution: |
+      **Key idea:** the excircle opposite $P$ touches $QR$ at the reflection $T'$ of $T$ in $M$. A homothety at $P$ shows that $P$, the top point $T^*$ of the circle, and $T'$ are collinear.
+
+      Let the circle $C$ (center $I$, radius $r$) touch $L$ at $T$, let $T^*$ be the point of $C$ opposite $T$, and let $T'$ be the reflection of $T$ in $M$.
+
+      **Two standard facts.** In a triangle $PQR$ with incircle touching $QR$ at $T$ and $P$-excircle touching $QR$ at $T_e$: $QT=s-PR$ and $RT_e=s-PR$ (with $s$ the semiperimeter), so $T$ and $T_e$ are symmetric about the midpoint of $QR$. Also, the homothety at $P$ taking the incircle to the excircle maps $T^*$ (where the tangent is parallel to $QR$, on $P$'s side) to $T_e$ (where the tangent is $QR$ itself). So $P$, $T^*$, $T_e$ are collinear, with $T^*$ between $P$ and $T_e$.
+
+      **Necessity.** If $P$ has the property, then $T_e=T'$, so $P$ lies on line $T'T^*$, beyond $T^*$ as seen from $T'$.
+
+      **Sufficiency.** Let $P$ be on that open ray. It lies farther from $L$ than $T^*$, so the two tangents from $P$ to $C$ meet $L$ at points $Q,R$ on either side, and $C$ is the incircle of $PQR$. Its $P$-excircle touches $L$ at the point where line $PT^*$ meets $L$, which is $T'$. By the symmetry fact, the midpoint of $QR$ is the midpoint of $TT'$, which is $M$.
+
+      So the locus is the open ray from $T^*$ along line $T'T^*$, pointing away from $T'$.
+    checked: "numeric: 500 random points on the ray give M as the midpoint"
+    viz: imo-1992-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Projections of a point set onto three planes"
+    areas: [combinatorics]
+    difficulty: 3
+    hints:
+      - 'Slice $S$ by the planes $z=$ constant. For a slice with $n_k$ points, let $X_k$ and $Y_k$ be its sets of $x$- and $y$-coordinates.'
+      - 'Then $n_k\le|S_z|$ and $n_k\le|X_k|\,|Y_k|$, while $\sum|X_k|=|S_y|$ and $\sum|Y_k|=|S_x|$. Use Cauchy–Schwarz.'
+    solution: |
+      **Key idea:** slice by horizontal planes. Each slice is bounded by the floor projection and by the product of its two shadows, and Cauchy–Schwarz glues the slices together.
+
+      For each value $k$ of $z$, let $S^k$ be the points of $S$ with $z=k$, $n_k=|S^k|$, and let $X_k$ and $Y_k$ be the sets of $x$- and $y$-coordinates used in $S^k$.
+      - $S^k$ projects one-to-one onto the $xy$-plane, so $n_k\le|S_z|$.
+      - $S^k\subseteq X_k\times Y_k$, so $n_k\le|X_k|\,|Y_k|$.
+      - The projection onto the $zx$-plane is the disjoint union over $k$ of the pairs $(k,x)$ with $x\in X_k$, so $|S_y|=\sum_k|X_k|$. Likewise $|S_x|=\sum_k|Y_k|$.
+
+      Therefore
+      $$|S|=\sum_k n_k\le\sum_k\sqrt{|S_z|}\sqrt{|X_k||Y_k|}\le\sqrt{|S_z|}\,\sqrt{\sum_k|X_k|}\,\sqrt{\sum_k|Y_k|}=\sqrt{|S_x||S_y||S_z|},$$
+      using Cauchy–Schwarz in the middle step. Squaring gives the claim.
+    checked: "reasoning"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Writing a square as a sum of many squares"
+    areas: [number-theory, combinatorics]
+    difficulty: 4
+    answer: "(b) $n=13$ works. (c) Every $n=13\\cdot2^j$ works."
+    hints:
+      - 'Write each square as $1+(t^2-1)$. A sum of $N-d$ squares equal to $N$ needs $d$ to be a sum of numbers $3,8,15,\dots$. Which $d$ fail?'
+      - 'Every integer from $14$ on is a sum of $3$s and $8$s. Use this to handle many values of $k$ at once.'
+      - 'For (c), from a good $n$ go to $2n$: double all terms, or split $(2n)^2$ into four copies of $n^2$.'
+    solution: |
+      **Key idea:** with mostly $1$s, the "excess" $\sum(t^2-1)$ must be a sum of $3$s, $8$s, $15$s, …. The number $13$ is not such a sum, which gives (a); every number from $14$ on is, which covers most $k$ in (b) and (c).
+
+      **Lemma.** If $M-t\ge14$ and $M\le4t$, then $M$ is a sum of exactly $t$ positive squares. *Proof.* Every integer $D\ge14$ has the form $3u+8v$ with $u,v\ge0$ ($14=3\cdot2+8$, $15=3\cdot5$, $16=8\cdot2$, then add $3$s). Take $D=M-t$ and use $u$ copies of $2^2$, $v$ copies of $3^2$ and $t-u-v$ copies of $1^2$. This needs $u+v\le\frac D3\le t$, which is $M\le4t$. The sum is $t+3u+8v=M$.
+
+      **(a)** Suppose $n^2$ is a sum of $k=n^2-13$ positive squares ($k\ge3$ for $n\ge4$). Then $\sum(t_i^2-1)=13$, with each $t_i^2-1\in\{0,3,8,15,\dots\}$. Only $3$ and $8$ are small enough, and $13$ is not of the form $3u+8v$. So $k=n^2-13$ fails, and $S(n)\le n^2-14$.
+
+      **(b) $n=13$.** We need every $k$ from $1$ to $155$.
+      - $43\le k\le155$: the lemma with $M=169$, $t=k$.
+      - $12\le k\le47$: write $169=r\cdot1^2+4M$ with $r=1,13,25$ (so $M=42,39,36$). By the lemma, $M$ is a sum of $t$ squares for $\lceil M/4\rceil\le t\le M-14$; doubling each gives $4M$ as $t$ even squares. This gives $k=r+t$ in $[12,29]$, $[23,38]$ and $[34,47]$.
+      - $1\le k\le11$, written out (a power like $2^2\times4$ means four copies of $2^2$):
+        - $k=1,2,3,4$: $13^2$; $\ 12^2+5^2$; $\ 12^2+4^2+3^2$; $\ 11^2+4^2+4^2+4^2$.
+        - $k=5,6,7,8$: $12^2$ plus $4^2+2^2+2^2+1^2$; $\ 3^2+2^2\times4$; $\ 3^2+3^2+2^2+1^2\times3$; $\ 4^2+2^2+1^2\times5$.
+        - $k=9,10,11$: $12^2$ plus $3^2+2^2\times3+1^2\times4$; $\ 3^2+3^2+1^2\times7$; $\ 4^2+1^2\times9$.
+
+      Together with (a), $S(13)=169-14$.
+
+      **(c) From $n$ to $2n$.** Suppose $S(n)=n^2-14$ with $n\ge13$. For $(2n)^2=4n^2$ and $1\le k\le4n^2-14$:
+      - $k\le n^2-14$: double every term of a $k$-term sum for $n^2$.
+      - $4\le k\le4n^2-56$: write $k=k_1+k_2+k_3+k_4$ with $1\le k_i\le n^2-14$ and use $4n^2=n^2+n^2+n^2+n^2$, each $n^2$ split into $k_i$ squares.
+      - $n^2\le k\le4n^2-14$: the lemma with $M=4n^2$.
+
+      These ranges cover $1,\dots,4n^2-14$ (the middle one covers $n^2-13,\dots,n^2-1$). With (a), $S(2n)=(2n)^2-14$. Starting from $13$, all $n=13\cdot2^j$ work.
+    checked: "script: dynamic programming confirms S(13) = 155 and the covering ranges"
+    status: ready

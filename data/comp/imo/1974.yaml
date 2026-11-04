@@ -1,0 +1,144 @@
+year: 1974
+edition: 16th
+date: "July 4–17, 1974 · Erfurt, East Germany"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1974/1974_eng.pdf
+  archive: https://www.imo-official.org/editions/1974/
+problems:
+  - id: P1
+    day: 1
+    topic: "Card-dealing puzzle: recover the first round from totals"
+    areas: [combinatorics, number-theory]
+    difficulty: 1
+    answer: "Player $C$ (the cards were $1,4,8$, dealt three times)"
+    hints:
+      - 'The grand total of counters is $39$. It is the number of rounds times $p+q+r$.'
+      - 'Use the totals of $A$ and $B$ to pin down $r$, then $p$ and $q$.'
+    solution: |
+      **Key idea:** the grand total fixes the number of rounds, and the two extreme players fix the cards.
+
+      **Rounds.** All counters together: $20+10+9=39=N(p+q+r)$, where $N\ge2$ is the number of rounds. Since $p+q+r\ge1+2+3=6$, the only option is $N=3$ and $p+q+r=13$.
+
+      **The cards.** Player $A$ got $20$ in three rounds, so $3r\ge20$ and $r\ge7$. Player $B$ got $r$ in the last round and at least $p$ in each of the others, so $r+2p\le10$ and $r\le8$.
+      - If $r=7$: then $p+q=6$, and $B$'s other two cards add up to $3$. With $p<q$ and $p+q=6$, the possible sums of two cards from $\{p,q\}$ are $2p$, $p+q=6$ and $2q$. None of these is $3$ ($2p=3$ is impossible). So $r\ne7$.
+      - So $r=8$, $p+q=5$, and $B$'s other two cards add up to $2$, so both are $p=1$. Then $q=4$.
+
+      **Who got what.** With cards $1,4,8$: $B$ got $1,1,8$ (the $8$ in round $3$). Player $A$'s $20$ must be $8+8+4$, so $A$ took the $8$ in rounds $1$ and $2$ and the $4$ in round $3$. Then $C$ got $4,4,1$, which is $9$, as required. In round $1$, $A$ had $8$, $B$ had $1$, so **$C$ received $q$**.
+    checked: "script: brute force over all cards and deals finds only p, q, r = 1, 4, 8 with C getting q first"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Cevian equal to the geometric mean of its base pieces"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Extend $CD$ to meet the circumcircle again at $E$. The power of $D$ gives $AD\cdot DB=CD\cdot DE$.'
+      - 'So the condition says $D$ is the midpoint of $CE$. How far can a point $E$ of the arc be from line $AB$?'
+    solution: |
+      **Key idea:** by the power of a point, the condition says that $D$ is the midpoint of a chord from $C$. That happens when the far arc reaches as far from $AB$ as $C$ does.
+
+      Let $R$ be the circumradius. For $D$ strictly inside segment $AB$, extend $CD$ to meet the circumcircle again at $E$, on the arc $AB$ not containing $C$. The power of $D$ gives $AD\cdot DB=CD\cdot DE$. So
+      $$CD^2=AD\cdot DB\iff CD=DE\iff D\text{ is the midpoint of }CE .$$
+
+      **Reformulate.** The midpoint of $CE$ lies on line $AB$ exactly when $E$ and $C$ are at the same distance from that line (on opposite sides). And when it does, it lies inside segment $AB$, since chord $CE$ crosses chord $AB$ inside the circle. So a suitable $D$ exists if and only if some point $E$ of the far arc has distance $h_C$ from $AB$, where $h_C$ is the altitude from $C$.
+
+      **Distances.** Along the far arc (ends excluded), the distance to $AB$ takes every value in $(0,d]$, where $d$ is attained at the arc's midpoint. The center $O$ is at signed distance $R\cos C$ from $AB$ on the side of $C$, so $d=R-R\cos C=2R\sin^2\frac C2$. And $h_C=b\sin A=2R\sin A\sin B$. So $D$ exists if and only if
+      $$2R\sin A\sin B\le2R\sin^2\frac C2,\quad\text{that is,}\quad \sin A\sin B\le\sin^2\frac C2 .$$
+    checked: "script: 3,000 random triangles; a numeric search for D agrees with the criterion"
+    viz: imo-1974-p2
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Binomial sum with powers of eight avoids multiples of five"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'The sum is the coefficient of $\sqrt8$ in $(1+\sqrt8)^{2n+1}$.'
+      - 'Multiply by the conjugate $(1-\sqrt8)^{2n+1}$ and look at the result modulo $5$.'
+    solution: |
+      **Key idea:** the sum is the irrational part of $(1+\sqrt8)^{2n+1}$. A norm identity then turns divisibility by $5$ into a square congruence that is impossible.
+
+      Expand $(1+\sqrt8)^{2n+1}=X+Y\sqrt8$ with integers $X,Y$. The terms with odd powers of $\sqrt8$ give
+      $$Y=\sum_{k=0}^n\binom{2n+1}{2k+1}8^k=\sum_{k=0}^n\binom{2n+1}{2k+1}2^{3k},$$
+      our number. Also $(1-\sqrt8)^{2n+1}=X-Y\sqrt8$. Multiplying,
+      $$X^2-8Y^2=(1-8)^{2n+1}=-7^{2n+1}.$$
+      Suppose $5\mid Y$. Then modulo $5$, using $7\equiv2$ and $4\equiv-1$,
+      $$X^2\equiv-7^{2n+1}\equiv-2\cdot4^n\equiv\mp2\pmod 5 .$$
+      But squares modulo $5$ are $0,1,4$, and $\pm2\equiv2,3$. Contradiction, so $5\nmid Y$.
+    checked: "script: the sum is not divisible by 5 for n = 0 to 499"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Chessboard cut into balanced rectangles of increasing size"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: "$p=7$, with $(1,2,3,4,5,7,10)$, $(1,2,3,4,5,8,9)$, $(1,2,3,4,6,7,9)$ or $(1,2,3,5,6,7,8)$"
+    hints:
+      - 'A rectangle has as many white as black squares exactly when its area is even. The numbers $a_i$ are distinct positive integers adding up to $32$.'
+      - 'List the sets of seven distinct positive integers with sum $32$. Which value cannot be the half-area of a rectangle on the board?'
+    solution: |
+      **Key idea:** each $a_i$ is half the area of a rectangle, the $a_i$ are distinct and add up to $32$, so there are at most seven. Of the five candidate lists, one needs a rectangle too long for the board, and the other four can be drawn.
+
+      **Balance means even area.** A rectangle with an even side splits into dominoes, each with one square of each color. A rectangle with both sides odd has odd area, so it cannot be balanced. So rectangle $i$ is balanced exactly when its area $2a_i$ is even, and the condition is that the areas $2a_1<\dots<2a_p$ add up to $64$, that is, $a_1+\dots+a_p=32$.
+
+      **At most seven.** Eight distinct positive integers add up to at least $1+2+\dots+8=36>32$. So $p\le7$.
+
+      **Seven pieces.** Seven distinct positive integers add up to at least $28$, so we add $4$ in total to $1,2,\dots,7$ while keeping them distinct. That gives exactly five lists:
+      $$(1,2,3,4,5,6,11),\ (1,2,3,4,5,7,10),\ (1,2,3,4,5,8,9),\ (1,2,3,4,6,7,9),\ (1,2,3,5,6,7,8).$$
+      The first is impossible: a rectangle of area $22=2\cdot11$ would need a side of length $11$ or $22$. The other four lists all occur. The animation shows a cutting of the board for each one. All needed areas fit on the board: $2\times1$, $2\times2$, $2\times3$, $2\times4$, $2\times5$, $3\times4$, $2\times7$, $4\times4$, $3\times6$, $4\times5$.
+    checked: "script: listed all seven-element sets with sum 32, and found a tiling for each of the four valid lists by backtracking"
+    viz: imo-1974-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Range of a cyclic sum of four fractions"
+    areas: [algebra]
+    difficulty: 1
+    answer: "Every number strictly between $1$ and $2$"
+    hints:
+      - 'For the lower bound, replace each denominator by $a+b+c+d$. For the upper bound, pair the first two terms and the last two.'
+      - 'Find positive values where the sum is close to $1$ and others where it is close to $2$, then use continuity.'
+    solution: |
+      **Key idea:** simple comparisons trap the sum strictly between $1$ and $2$, and continuity fills in everything between.
+
+      Call the sum $S$ and let $T=a+b+c+d$.
+
+      **$S>1$:** each denominator is less than $T$, so $S>\frac{a+b+c+d}{T}=1$.
+
+      **$S<2$:** shrinking a denominator increases a fraction, so
+      $$\frac a{a+b+d}+\frac b{a+b+c}<\frac a{a+b}+\frac b{a+b}=1,\qquad \frac c{b+c+d}+\frac d{a+c+d}<\frac c{c+d}+\frac d{c+d}=1 .$$
+
+      **Every value in between.** With $(a,b,c,d)=(1,1,\varepsilon,\varepsilon)$,
+      $$S=\frac{2}{2+\varepsilon}+\frac{2\varepsilon}{1+2\varepsilon}\to1\quad(\varepsilon\to0).$$
+      With $(a,b,c,d)=(1,\varepsilon,1,\varepsilon)$,
+      $$S=\frac{2}{1+2\varepsilon}+\frac{2\varepsilon}{2+\varepsilon}\to2 .$$
+      $S$ is a continuous function on the connected set of positive quadruples, so its values form an interval. That interval lies in $(1,2)$ and comes arbitrarily close to both ends, so it is all of $(1,2)$.
+    checked: "script: 100,000 random quadruples give values from 1.0000004 to 1.9999993"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Integer polynomial hitting plus or minus one"
+    areas: [algebra, number-theory]
+    difficulty: 2
+    hints:
+      - 'If $P(u)=1$ and $P(v)=-1$ for integers $u,v$, then $u-v$ divides $P(u)-P(v)=2$.'
+      - 'So when both values occur, all the integers involved lie in a short interval. Treat degree $1$ and $2$ separately.'
+    solution: |
+      **Key idea:** an integer where $P=1$ and one where $P=-1$ are at most $2$ apart, so if both kinds occur, at most five integers are involved. Small degrees are handled by counting roots.
+
+      Let $d=\deg P\ge1$. Let $U$ be the set of integers $k$ with $P(k)=1$ and $W$ the set with $P(k)=-1$. Then $n(P)=|U|+|W|$. The polynomials $P-1$ and $P+1$ have degree $d$, so $|U|\le d$ and $|W|\le d$.
+
+      **If $U$ or $W$ is empty,** then $n(P)\le d$.
+
+      **If $d\le2$,** then $n(P)\le2d\le d+2$.
+
+      **If both are nonempty and $d\ge3$.** For $u\in U$ and $w\in W$, the difference $u-w$ divides $P(u)-P(w)=2$ (because $P$ has integer coefficients), so $|u-w|\le2$. Let $m$ be the smallest element of $U\cup W$; by symmetry (replace $P$ by $-P$) say $m\in U$. Then every $w\in W$ satisfies $m<w\le m+2$. And every $u\in U$ is within $2$ of some $w$, so $u\le m+4$. So $U\cup W\subseteq\{m,\dots,m+4\}$, which gives $n(P)\le5\le d+2$.
+
+      In every case $n(P)-\deg P\le2$.
+    checked: "algebra only: divisibility of integer polynomials and root counts"
+    status: ready

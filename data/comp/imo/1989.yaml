@@ -1,0 +1,119 @@
+year: 1989
+edition: 30th
+date: "July 13–24, 1989 · Braunschweig, Germany"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1989/1989_eng.pdf
+  archive: https://www.imo-official.org/editions/1989/
+problems:
+  - id: P1
+    day: 1
+    topic: "Splitting 1 to 1989 into equal-sum groups of 17"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'Think of a table with $117$ rows (the groups) and $17$ columns. Two columns can be filled with constant row sums by running one up and one down.'
+      - 'That handles $14$ columns. For the last $3$ columns you need $117$ triples with equal sums from $1,\dots,351$.'
+    solution: |
+      **Key idea:** build a $117\times17$ table whose rows are the groups. Seven pairs of "up and down" columns have constant row sums. The remaining three columns form triples of equal sum by a shifted pairing.
+
+      Note $1989=117\cdot17$. The rows are the sets $A_1,\dots,A_{117}$.
+
+      **Three columns from $1,\dots,351$.** For row $i$ ($1\le i\le117$) let
+      $$j_i=\begin{cases}i+58,& i\le59\\ i-59,& i\ge60\end{cases}$$
+      which runs over $1,\dots,117$ once. Put $i$, $117+j_i$ and $528-i-(117+j_i)$ in row $i$. The values $i+j_i$ are $2i+58$ for $i\le59$ (the even numbers $60,\dots,176$) and $2i-59$ for $i\ge60$ (the odd numbers $61,\dots,175$). So $i+j_i$ runs over $60,\dots,176$ once each, and the third entries $411-(i+j_i)$ run over $235,\dots,351$ once each. The three columns use $1,\dots,351$ exactly once, and each row sums to $528$.
+
+      **Fourteen columns from $352,\dots,1989$.** These $1638=7\cdot234$ numbers form seven blocks of $234$ consecutive numbers. For the block starting at $s$, put $s+i-1$ in one column and $s+233-(i-1)$ in the next, so row $i$ gets the pair sum $2s+233$, the same for every row. Each block is used exactly once.
+
+      Every row then has $17$ numbers, the rows use $1,\dots,1989$ once each, and all row sums are equal.
+    checked: "script: the table uses 1..1989 once, has rows of 17, and one common row sum"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Excentral triangle versus hexagon versus triangle areas"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Let $I$ be the incenter. The point $A_1$ is equally far from $B$, $C$ and $I$. Why is it the midpoint of $IA_0$?'
+      - 'For (ii), compare triangle $BA_1C$ with triangle $BHC$, where $H$ is the orthocenter, using heights over $BC$.'
+    solution: |
+      **Key idea:** $A_1$ is the midpoint of $IA_0$, so cutting both figures into six triangles around $I$ gives (i). For (ii), each cap triangle on a side beats the matching piece cut out by the orthocenter.
+
+      Let $I$ be the incenter and $R$ the circumradius. $A_0,B_0,C_0$ are the excenters, and $B$ lies on segment $A_0C_0$ (the external bisector at $B$), and so on.
+
+      **$A_1$ is the midpoint of $IA_0$.** Angle chasing gives $\angle A_1BI=\frac B2+\frac A2=\angle A_1IB$, so $A_1B=A_1I$, and likewise $A_1C=A_1I$. The internal and external bisectors at $B$ are perpendicular, so $\angle IBA_0=90^\circ$. The point of segment $IA_0$ equidistant from $I$ and $B$ is the midpoint of the hypotenuse of right triangle $IBA_0$. So $A_1$ is that midpoint.
+
+      **(i)** The triangle $A_0B_0C_0$ splits around $I$ into the six triangles $IBA_0$, $IA_0C$, $ICB_0$, $IB_0A$, $IAC_0$, $IC_0B$. The hexagon splits into $IBA_1$, $IA_1C$, $ICB_1$, $IB_1A$, $IAC_1$, $IC_1B$. Triangles $IBA_1$ and $IBA_0$ share the side $IB$, and $A_1$, the midpoint of $IA_0$, is half as far from line $IB$ as $A_0$. So $[IBA_1]=\frac12[IBA_0]$, and the same holds for the other five pairs. Hence $[A_0B_0C_0]=2\,[\text{hexagon}]$.
+
+      **(ii)** The hexagon is triangle $ABC$ plus the three caps $BA_1C$, $CB_1A$, $AC_1B$. The distance from $A_1$ (midpoint of arc $BC$) to $BC$ is $R(1-\cos A)$. The orthocenter $H$ is inside (acute triangle) at distance $2R\cos B\cos C$ from $BC$. Now
+      $$1-\cos A=1+\cos(B+C)=1+\cos B\cos C-\sin B\sin C,$$
+      $$1-\cos A-2\cos B\cos C=1-\cos(B-C)\ge0 .$$
+      So $[BA_1C]\ge[BHC]$, and similarly for the other caps. Adding, the caps total at least $[BHC]+[CHA]+[AHB]=[ABC]$. So the hexagon has area at least twice $[ABC]$, and by (i) $[A_0B_0C_0]\ge4[ABC]$.
+    checked: "numeric: 1,000 random acute triangles confirm both parts"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Many equidistant neighbors force few of them"
+    areas: [combinatorics, geometry]
+    difficulty: 2
+    hints:
+      - 'Count pairs $\{Q,R\}$ together with a point $P$ equally far from both.'
+      - 'A point equally far from $Q$ and $R$ lies on their perpendicular bisector. How many points of the set can that line hold?'
+    solution: |
+      **Key idea:** double count triples $(P,\{Q,R\})$ with $PQ=PR$. Each point $P$ gives many such pairs, but each pair has at most two such $P$.
+
+      For each $P$ there is a circle centered at $P$ through at least $k$ points of $S$, which gives at least $\binom k2$ pairs $\{Q,R\}$ with $PQ=PR$. So there are at least $n\binom k2$ triples.
+
+      For a fixed pair $\{Q,R\}$, every such $P$ lies on the perpendicular bisector of $QR$. No three points of $S$ are collinear, so there are at most $2$ such $P$. So there are at most $2\binom n2$ triples. Hence
+      $$n\,\frac{k(k-1)}2\le n(n-1)\quad\Longrightarrow\quad k^2-k-2(n-1)\le0 .$$
+      So $k\le\frac12+\sqrt{2n-\frac74}<\frac12+\sqrt{2n}$.
+    checked: "reasoning (double counting)"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Three touching circles and a tangent line inequality"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Draw the circle about $A$ of radius $AD$, the circle about $B$ of radius $BC$, and the circle about $P$ of radius $h$. How are they placed?'
+    status: coming
+
+  - id: P5
+    day: 2
+    topic: "Long runs of integers that are not prime powers"
+    areas: [number-theory]
+    difficulty: 1
+    hints:
+      - 'A number divisible by two different primes is not a prime power.'
+      - 'Choose $2n$ different primes and use the Chinese remainder theorem.'
+    solution: |
+      **Key idea:** force each number of the run to be divisible by two different primes.
+
+      Take $2n$ distinct primes $p_1,q_1,\dots,p_n,q_n$. By the Chinese remainder theorem there is a positive integer $x$ with
+      $$x\equiv-i\pmod{p_iq_i}\qquad(i=1,\dots,n).$$
+      Then $x+i$ is divisible by the two different primes $p_i$ and $q_i$, so it is not a power of a prime. The numbers $x+1,\dots,x+n$ are $n$ consecutive positive integers, none a prime power.
+    checked: "reasoning"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Permutations with a partner pair side by side"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'Call $i$ and $i+n$ partners. Find a one-to-one map from permutations with no adjacent partners into those with exactly one adjacent pair.'
+      - 'Move the first entry so that it lands just before its partner.'
+    solution: |
+      **Key idea:** move the first entry next to its partner. This maps the permutations without the property one-to-one into those with exactly one adjacent partner pair, and some permutations with the property are missed.
+
+      Call $i$ and $i+n$ partners. Let $\pi=(x_1,\dots,x_{2n})$ have no adjacent partners. The partner of $x_1$ sits at some position $k\ge3$. Define
+      $$\Phi(\pi)=(x_2,\dots,x_{k-1},\,x_1,\,x_k,\dots,x_{2n}).$$
+      In $\Phi(\pi)$ the entries $x_1,x_k$ are adjacent partners. The other new neighbor of $x_1$ is $x_{k-1}$, not its partner, and every other adjacent pair was already adjacent in $\pi$. So $\Phi(\pi)$ has **exactly one** adjacent partner pair, with $x_1$ as its first entry.
+
+      **One-to-one.** From $\Phi(\pi)$ we recover $\pi$: find the unique adjacent partner pair and move its first entry to the front. So $\Phi$ is injective, and there are at least as many permutations with the property as without.
+
+      **Strictly more.** For $n\ge2$, the permutation $(1,n+1,2,n+2,3,\dots)$ has at least two adjacent partner pairs, so it is not in the image. For $n=1$ both permutations of $\{1,2\}$ have the property. So the inequality is strict.
+    checked: "script: for n ≤ 4 the counts are 2–0, 16–8, 480–240, 26496–13824"
+    status: ready

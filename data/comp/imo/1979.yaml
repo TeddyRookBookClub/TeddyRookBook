@@ -1,0 +1,141 @@
+year: 1979
+edition: 21st
+date: "June 30–July 9, 1979 · London, United Kingdom"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1979/1979_eng.pdf
+  archive: https://www.imo-official.org/editions/1979/
+problems:
+  - id: P1
+    day: 1
+    topic: "Alternating harmonic sum: numerator divisible by 1979"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'Write the alternating sum as the full harmonic sum minus twice its even terms. What is left?'
+      - 'The remaining terms run from $660$ to $1319$. Pair $k$ with $1979-k$.'
+    solution: |
+      **Key idea:** the alternating sum equals $\sum_{k=660}^{1319}\frac1k$, and pairing $k$ with $1979-k$ puts the prime $1979$ in every numerator.
+
+      Subtracting twice the even terms from the full harmonic sum,
+      $$\sum_{k=1}^{1319}\frac{(-1)^{k+1}}{k}=\sum_{k=1}^{1319}\frac1k-2\sum_{k=1}^{659}\frac1{2k}=\sum_{k=660}^{1319}\frac1k .$$
+      These $660$ terms pair up as $k$ and $1979-k$ for $k=660,\dots,989$, and
+      $$\frac1k+\frac1{1979-k}=\frac{1979}{k(1979-k)} .$$
+      So $\frac pq=1979\cdot\frac{N}{D}$, where $D$ is the product of all the denominators $k(1979-k)$, all less than $1979$. The number $1979$ is prime (it has no prime factor up to $43$, and $44^2>1979$), so $1979\nmid D$. From $pD=1979\,Nq$ we get $1979\mid pD$, hence $1979\mid p$.
+    checked: "script: exact fractions; the reduced numerator is divisible by 1979"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Two-colored prism with no one-color triangle"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'Show: if a top edge $A_iA_{i+1}$ has color $X$, then $A_i$ sends at most two edges of color $X$ to the bottom.'
+      - 'Any three bottom vertices include two neighbors on the bottom pentagon.'
+    solution: |
+      **Key idea:** a top edge of one color limits how many edges of that color its endpoint sends down. Since five edges go down, the other color dominates, and that forces both top edges at each vertex to share a color.
+
+      Call the colors red and green, and indices modulo $5$. A fact used twice: **any three of the five bottom vertices include two that are neighbors on the bottom pentagon.**
+
+      **Lemma.** If the top edge $A_1A_2$ has color $X$, then at most two of the edges $A_1B_j$ have color $X$. Suppose $A_1B_j,A_1B_k,A_1B_l$ all have color $X$. For each of these $B$'s, triangle $A_1A_2B$ has two sides of color $X$, so $A_2B$ has the other color $Y$. Two of $B_j,B_k,B_l$ are neighbors, say $B_jB_k$. Triangle $A_1B_jB_k$ forces $B_jB_k$ to be $Y$. Then triangle $A_2B_jB_k$ is all $Y$. Contradiction.
+
+      **Each pentagon is one color.** Each top vertex sends five edges down, so at least three have one color $Z$. By the lemma, neither top edge at that vertex has color $Z$. So the two top edges at every top vertex have the same color, and going around the pentagon, all five top edges share a color. The same argument works for the bottom.
+
+      **Top and bottom match.** Suppose the top is red and the bottom green. By the lemma, $A_1$ sends at most two red edges down, so at least three green ones. Two of their bottom ends are neighbors, joined by a green bottom edge, which makes a green triangle. Contradiction. So all ten pentagon edges have one color.
+    checked: "algebra only: case analysis"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Two points circling in step: a fixed equidistant point"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Both points turn about their centers by the same angle at each moment. Use complex numbers with $e=e^{i\omega t}$.'
+      - 'Guess the fixed point by symmetry: reflect $A$ in the perpendicular bisector of the two centers.'
+    solution: |
+      **Key idea:** the two motions are rotations by the same angle about the two centers. The mirror image of $A$ in the perpendicular bisector of the centers is equidistant from both points at every moment.
+
+      Put the midpoint of the centers at the origin and the centers at $O_1=-d$ and $O_2=d$, with $d$ real, and let $A=\alpha$. Both points start at $A$, turn in the same sense and return together, so at any moment both have turned through the same angle. With $e=e^{i\omega t}$,
+      $$X=-d+(\alpha+d)e,\qquad Y=d+(\alpha-d)e .$$
+      Let $P=-\bar\alpha$, the reflection of $A$ in the imaginary axis, which is the perpendicular bisector of $O_1O_2$. Then
+      $$X-P=(\bar\alpha-d)+(\alpha+d)e,\qquad Y-P=(\bar\alpha+d)+(\alpha-d)e .$$
+      Using $|z+we|^2=|z|^2+|w|^2+2\,\mathrm{Re}(z\bar w\bar e)$ and the fact that $d$ is real:
+      $$|X-P|^2=|\alpha-d|^2+|\alpha+d|^2+2\,\mathrm{Re}\big((\bar\alpha-d)(\bar\alpha+d)\bar e\big),$$
+      $$|Y-P|^2=|\alpha+d|^2+|\alpha-d|^2+2\,\mathrm{Re}\big((\bar\alpha+d)(\bar\alpha-d)\bar e\big).$$
+      These are equal. So $PX=PY$ at every moment.
+
+      In words: the fixed point is the mirror image of $A$ across the perpendicular bisector of the two centers. (If that bisector passes through $A$, the point is $A$ itself.)
+    checked: "script: random circles; |PX| − |PY| stays below 1e-15 over a full turn"
+    viz: imo-1979-p3
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Point in a plane maximizing a ratio of distances"
+    areas: [geometry]
+    difficulty: 2
+    answer: "$R$ on the ray from $P$ through the foot $H$ of $Q$, with $PR=PQ$ (if $H=P$: any $R$ on the circle about $P$ of radius $PQ$)"
+    hints:
+      - 'In triangle $QPR$, use the law of sines: the ratio becomes $\frac{\cos\frac{Q-R}2}{\sin\frac P2}$, where $P,Q,R$ are the angles.'
+      - 'For a fixed direction of $PR$, the best $R$ makes the triangle isosceles. Which direction makes the angle at $P$ smallest?'
+    solution: |
+      **Key idea:** by the law of sines the ratio equals $\cos\frac{\hat Q-\hat R}{2}\big/\sin\frac{\hat P}{2}$, where hats denote the angles of triangle $QPR$. The best $R$ makes the triangle isosceles and the angle at $P$ as small as possible.
+
+      For $R\ne P$, let $\hat P,\hat Q,\hat R$ be the angles of triangle $QPR$. By the law of sines,
+      $$\frac{QP+PR}{QR}=\frac{\sin\hat R+\sin\hat Q}{\sin\hat P}=\frac{2\sin\frac{\hat Q+\hat R}2\cos\frac{\hat Q-\hat R}2}{2\sin\frac{\hat P}2\cos\frac{\hat P}2}=\frac{\cos\frac{\hat Q-\hat R}2}{\sin\frac{\hat P}2},$$
+      because $\sin\frac{\hat Q+\hat R}2=\cos\frac{\hat P}2$. (At $R=P$ the ratio is $1$, which is smaller.)
+
+      So the ratio is at most $1/\sin\frac{\hat P}2$, with equality when $\hat Q=\hat R$, that is, $PR=PQ$. The angle $\hat P=\angle QPR$ is the angle between ray $PQ$ and a ray in the plane $\pi$. Let $H$ be the foot of the perpendicular from $Q$ to $\pi$.
+      - If $H\ne P$, the smallest such angle is the angle $\delta$ between $PQ$ and the plane, attained only on the ray $PH$. The maximum ratio is $1/\sin\frac\delta2$, attained only at the point $R$ of ray $PH$ with $PR=PQ$.
+      - If $H=P$, every angle $\hat P$ is $90^\circ$, the maximum is $\sqrt2$, and it is attained at every $R$ with $PR=PQ$.
+    checked: "script: grid search over the plane matches the predicted point and value in two test cases"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Three weighted moment equations with nonnegative unknowns"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$a\\in\\{0,1,4,9,16,25\\}$"
+    hints:
+      - 'Combine the three equations into $\sum_k k\,(a-k^2)^2x_k$.'
+      - 'A sum of nonnegative terms that equals $0$ has every term $0$.'
+    solution: |
+      **Key idea:** a combination of the three equations is a sum of nonnegative terms that must vanish, so all the weight sits at one $k$ with $k^2=a$.
+
+      Multiply the equations by $a^2$, $-2a$ and $1$ and add:
+      $$\sum_{k=1}^5 k\,(a-k^2)^2\,x_k=a^2\cdot a-2a\cdot a^2+a^3=0 .$$
+      Each term is $\ge0$, so for each $k$, either $x_k=0$ or $k^2=a$.
+      - If all $x_k=0$, then $a=0$.
+      - Otherwise $a=k^2$ for one $k$, and every other $x_j$ is $0$. The first equation gives $kx_k=k^2$, so $x_k=k$. Then $k^3x_k=k^4=a^2$ and $k^5x_k=k^6=a^3$, so all three equations hold.
+
+      So $a$ is one of $0,1,4,9,16,25$.
+    checked: "algebra only: the identity and the substitution"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Frog on an octagon: counting paths to the opposite vertex"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'Color the vertices alternately. How does parity rule out odd path lengths?'
+      - 'Track the frog two jumps at a time: count paths at the start vertex and at the two vertices two steps away.'
+    solution: |
+      **Key idea:** look at the frog every two jumps. Two numbers then evolve by a $2\times2$ linear recurrence whose eigenvalues are $2\pm\sqrt2$.
+
+      Label the vertices $0,\dots,7$ around the octagon, with $A=0$ and $E=4$. Each jump changes the parity of the label, and $4$ is even, so $E$ can only be reached after an even number of jumps: $a_{2n-1}=0$.
+
+      After an even number of jumps, the frog (if not yet stopped) is at $0$, $2$ or $6$. Let $u_n$ be the number of allowed paths of $2n$ jumps ending at $0$, and $v_n$ the number ending at $2$ or $6$. Two jumps pass through an odd vertex, never $E$, so:
+      - from $0$: back to $0$ in $2$ ways (via $1$ or $7$), to $\{2,6\}$ in $2$ ways;
+      - from $2$: to $0$ in $1$ way, back to $2$ in $2$ ways, to $E$ in $1$ way (the same for $6$).
+
+      So $u_{n+1}=2u_n+v_n$, $v_{n+1}=2u_n+2v_n$, and $a_{2n+2}=v_n$, with $u_0=1$, $v_0=0$.
+
+      Eliminate $u$: the second equation gives $2u_n=v_{n+1}-2v_n$, so
+      $$v_{n+2}=2u_{n+1}+2v_{n+1}=2(2u_n+v_n)+2v_{n+1}=2(v_{n+1}-2v_n)+2v_n+2v_{n+1}=4v_{n+1}-2v_n ,$$
+      whose characteristic roots are $2\pm\sqrt2=x,y$. With $v_0=0$ and $v_1=2$, the solution is $v_n=\frac{x^n-y^n}{\sqrt2}$ (check: $n=1$ gives $\frac{2\sqrt2}{\sqrt2}=2$). Therefore
+      $$a_{2n}=v_{n-1}=\frac{1}{\sqrt2}\left(x^{n-1}-y^{n-1}\right).$$
+    checked: "script: direct path counting up to 20 jumps matches (0, 0, 0, 2, 0, 8, 0, 28, 0, 96, …)"
+    status: ready

@@ -1,0 +1,126 @@
+year: 1987
+edition: 28th
+date: "July 5–16, 1987 · Havana, Cuba"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1987/1987_eng.pdf
+  archive: https://www.imo-official.org/editions/1987/
+problems:
+  - id: P1
+    day: 1
+    topic: "Counting fixed points over all permutations"
+    areas: [combinatorics]
+    difficulty: 1
+    hints:
+      - 'The sum counts pairs (permutation, one of its fixed points). Count the same pairs the other way round.'
+    solution: |
+      **Key idea:** count pairs $(\sigma,i)$ where $\sigma$ is a permutation and $i$ is a fixed point of $\sigma$, in two ways.
+
+      **By permutation.** A permutation with exactly $k$ fixed points contributes $k$ pairs. There are $p_n(k)$ such permutations, so the number of pairs is $\sum_k k\,p_n(k)$.
+
+      **By point.** For a fixed $i$, the permutations with $\sigma(i)=i$ are the permutations of the other $n-1$ elements, so there are $(n-1)!$ of them. Summing over the $n$ choices of $i$ gives $n\cdot(n-1)!=n!$ pairs.
+
+      Both counts are equal, so $\sum_k k\,p_n(k)=n!$.
+    checked: "script: brute force for n ≤ 7"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Bisector, feet and circumcircle: equal areas"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'The quadrilateral is symmetric about the bisector, since the two feet are mirror images. Its area is $AK\cdot AN\sin\frac A2$.'
+      - 'Find two similar triangles that give $AB\cdot AC=AL\cdot AN$.'
+    solution: |
+      **Key idea:** the quadrilateral splits along $AN$ into two mirror-image triangles, and the classic similarity $ABL\sim ANC$ turns $AL\cdot AN$ into $AB\cdot AC$.
+
+      **The quadrilateral.** $L$ is on the bisector of angle $A$, so its feet $K$ and $M$ on $AB$ and $AC$ are mirror images in line $AN$. Then $AK=AM=AL\cos\frac A2$, and the diagonal $AN$ splits the quadrilateral into two triangles with angle $\frac A2$ at $A$:
+      $$[AKNM]=2\cdot\tfrac12\,AK\cdot AN\sin\tfrac A2=AL\cdot AN\,\sin\tfrac A2\cos\tfrac A2=\tfrac12\,AL\cdot AN\,\sin A .$$
+
+      **A similarity.** In triangles $ABL$ and $ANC$: $\angle BAL=\angle NAC$ (bisector), and $\angle ABL=\angle ABC=\angle ANC$ (both subtend arc $AC$). So the triangles are similar, and
+      $$\frac{AB}{AN}=\frac{AL}{AC}\quad\Longrightarrow\quad AB\cdot AC=AL\cdot AN .$$
+
+      Hence $[AKNM]=\tfrac12\,AB\cdot AC\sin A=[ABC]$.
+    checked: "numeric: 2,000 random acute triangles"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Pigeonhole for a small integer combination"
+    areas: [combinatorics, algebra]
+    difficulty: 2
+    hints:
+      - 'You may assume every $x_i\ge0$ (flip the sign of $a_i$ otherwise). Then $\sum x_i\le\sqrt n$.'
+      - 'Look at all $k^n$ sums $\sum a_ix_i$ with $0\le a_i\le k-1$, and cut their range into $k^n-1$ pieces.'
+    solution: |
+      **Key idea:** there are $k^n$ sums with coefficients from $0$ to $k-1$, all inside an interval of length $(k-1)\sqrt n$. Two land close together, and their difference is the combination we want.
+
+      Changing the sign of $x_i$ and of $a_i$ together changes nothing, so assume $x_i\ge0$. By Cauchy–Schwarz, $\sum x_i\le\sqrt n\,\sqrt{\sum x_i^2}=\sqrt n$.
+
+      For each of the $k^n$ choices $(b_1,\dots,b_n)$ with $b_i\in\{0,1,\dots,k-1\}$, the sum $\sum b_ix_i$ lies in $[0,(k-1)\sqrt n]$. Cut this interval into $k^n-1$ closed pieces of length $\dfrac{(k-1)\sqrt n}{k^n-1}$. Two of the $k^n$ sums fall in the same piece, say those for $b$ and $b'$. Then $a_i=b_i-b'_i$ satisfies $|a_i|\le k-1$, not all $a_i$ are $0$, and
+      $$\Big|\sum a_ix_i\Big|\le\frac{(k-1)\sqrt n}{k^n-1}.$$
+    checked: "reasoning (pigeonhole)"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "No function whose double application adds a constant"
+    areas: [algebra, number-theory]
+    difficulty: 1
+    hints:
+      - 'Show that $f(n+1987)=f(n)+1987$. So $f$ acts on residues mod $1987$.'
+      - 'On residues the induced map is its own inverse. Can it have a fixed point? What about $1987$ being odd?'
+    solution: |
+      **Key idea:** $f$ induces a map on residues mod $1987$ that pairs them up, but $1987$ is odd.
+
+      **A shift rule.** $f(n+1987)=f\big(f(f(n))\big)=f(f(n))+1987$, where the outer step uses the equation at $f(n)$. So $f(n+1987)=f(n)+1987$. Hence $f$ induces a map $g$ on residues mod $1987$, and $g(g(r))=r$ because $f(f(n))\equiv n$.
+
+      **No fixed residue.** Suppose $g(r)=r$ for some $0\le r\le1986$. Then $f(r)=r+1987t$ with $t\ge0$ (as $f(r)\ge0$). By the shift rule,
+      $$r+1987=f(f(r))=f(r+1987t)=f(r)+1987t=r+2\cdot1987\,t,$$
+      so $2t=1$, which is impossible.
+
+      **Contradiction.** So $g$ splits the $1987$ residues into pairs $\{r,g(r)\}$ with $g(r)\ne r$. But $1987$ is odd.
+    checked: "reasoning (parity of 1987)"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Points with irrational distances and rational areas"
+    areas: [geometry, number-theory]
+    difficulty: 1
+    hints:
+      - 'Lattice points always give rational areas. Which lattice points have no three on a line?'
+      - 'Try points on the parabola $y=x^2$ and compute the squared distances.'
+    solution: |
+      **Key idea:** take the points $(i,i^2)$. Lattice points give half-integer areas, a parabola has no three collinear points, and the squared distances turn out to be non-squares.
+
+      Let $P_i=(i,i^2)$ for $i=1,\dots,n$.
+      - **Areas.** Every triangle with integer vertices has area half an integer, so the areas are rational. A line meets the parabola $y=x^2$ in at most two points, so no three points are collinear and every area is positive.
+      - **Distances.** For $i\ne j$,
+      $$P_iP_j^2=(i-j)^2+(i^2-j^2)^2=(i-j)^2\big(1+(i+j)^2\big).$$
+      This is a perfect square only if $1+(i+j)^2$ is one. But $m^2<m^2+1<(m+1)^2$ for $m=i+j\ge1$. So every distance is irrational.
+    checked: "reasoning"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Prime values of a quadratic spread from small inputs"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'Take the smallest $m$ for which $m^2+m+n$ is composite, and let $p$ be its smallest prime factor. Then $p^2\le m^2+m+n$.'
+      - 'If $p\le2m$, find a smaller $x$ with $p\mid x^2+x+n$, using $x^2+x-m^2-m=(x-m)(x+m+1)$.'
+    solution: |
+      **Key idea:** at the first composite value, a small prime factor would also divide an earlier value, which is prime, and that leads to a contradiction. So the smallest prime factor is large, but then the number is too big.
+
+      Suppose not. Let $m\le n-2$ be the smallest $k$ with $N=m^2+m+n$ composite. By hypothesis $m>\sqrt{n/3}$, so $3m^2>n$. Let $p$ be the smallest prime factor of $N$, so $p^2\le N$.
+
+      **Claim: $p>2m$.** Note $x^2+x+n-N=(x-m)(x+m+1)$.
+      - If $p\le m$, put $x=m-p$. Then $p\mid x^2+x+n$ and $0\le x<m$, so $x^2+x+n$ is a prime divisible by $p$, hence equal to $p$. But $x^2+x+n\ge n>m\ge p$. Contradiction.
+      - If $m<p\le2m$, put $x=p-1-m$, so $0\le x<m$ and $p\mid x^2+x+n$ (the second factor is $p$). Again $x^2+x+n=p=x+1+m$, which gives $x^2+n=m+1\le n-1$. Contradiction.
+
+      **Finish.** So $p\ge2m+1$, and
+      $$N\ge p^2\ge(2m+1)^2=4m^2+4m+1>m^2+m+n,$$
+      since $3m^2>n$. This contradicts $N=m^2+m+n$.
+    checked: "script: the statement holds for every n < 3000"
+    status: ready

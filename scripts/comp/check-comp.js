@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* Checks the competition data (formats: layouts/comp/ and the header of static/comp/comp.js).
      data/comp/putnam/<year>.yaml                     Putnam solutions guide
-     data/comp/imo/<year>.yaml                        IMO solutions guide (ids P1-P6, `day` 1 for P1-P3, 2 for P4-P6)
+     data/comp/imo/<year>.yaml                        IMO solutions guide (ids P1-P6, `day` 1 for P1-P3, 2 for P4-P6; 1960 and 1962 also P7, day 2)
      data/comp/schweitzer/<year>.yaml                 Schweitzer selection: Putnam format, ids P1-P12, `total` (size of the
                                                       year's set), optional `language`, links on the approved Szeged host,
                                                       every listed problem ready (areas may include topology)
@@ -100,7 +100,10 @@ for (const f of gf) {
   const seen = new Set();
   y.problems.forEach((p, i) => {
     const w = 'problem ' + (p && p.id || '#' + (i + 1));
-    if (!p || !G.idRe.test(String(p.id))) err(f, w + ': id must be ' + G.idMsg);
+    // IMO 1960 and 1962 set seven problems: P7 (day 2) is allowed only in those two years
+    const p7 = gk === 'imo' && p && String(p.id) === 'P7' && (base === '1960' || base === '1962');
+    if (!p || !(G.idRe.test(String(p.id)) || p7)) err(f, w + ': id must be ' + G.idMsg + (gk === 'imo' ? ' (P7 also in 1960 and 1962)' : ''));
+    if (p7 && p.day !== 2) err(f, w + ': day must be 2');
     if (G.selection && p) {
       if (p.status !== 'ready') err(f, w + ': a selection lists only finished problems (status ready; leave the problem out instead of `coming`)');
       if (Number.isInteger(y.total) && +String(p.id).slice(1) > y.total) err(f, w + ': id is beyond total ' + y.total);

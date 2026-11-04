@@ -1,0 +1,130 @@
+year: 1982
+edition: 23rd
+date: "July 5–14, 1982 · Budapest, Hungary"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1982/1982_eng.pdf
+  archive: https://www.imo-official.org/editions/1982/
+problems:
+  - id: P1
+    day: 1
+    topic: "Almost additive function pinned down by a few values"
+    areas: [algebra, number-theory]
+    difficulty: 2
+    answer: "$f(1982)=660$"
+    hints:
+      - 'Find $f(1)$ and $f(3)$, then show $f(3n)\ge n$ for all $n$.'
+      - 'If $f(3n)>n$ for some $n\le3333$, what happens to $f(9999)$? Then use $f(3x)\ge3f(x)$.'
+    solution: |
+      **Key idea:** $f$ is superadditive, so $f(3n)\ge n$. The value at $9999$ forces equality up to $9999$, and superadditivity squeezes $f(1982)$ between $660$ and $660.67$.
+
+      The condition says $f(m+n)\ge f(m)+f(n)$, with excess at most $1$.
+      - $0=f(2)\ge2f(1)$, so $f(1)=0$.
+      - $f(3)\in\{f(2)+f(1),\,f(2)+f(1)+1\}=\{0,1\}$ and $f(3)>0$, so $f(3)=1$.
+      - $f(3(n+1))\ge f(3n)+f(3)$, so by induction $f(3n)\ge n$.
+
+      **$f(3n)=n$ for $n\le3333$.** If $f(3n)\ge n+1$ for some $n<3333$, then
+      $$f(9999)\ge f(3n)+f(9999-3n)\ge(n+1)+(3333-n)=3334,$$
+      a contradiction. So $f(3n)=n$ for these $n$, in particular $f(5946)=1982$ and $f(1980)=660$.
+
+      **Squeeze.** From superadditivity, $f(5946)\ge3f(1982)$, so $f(1982)\le\frac{1982}3<661$. And $f(1982)\ge f(1980)+f(2)=660$. So $f(1982)=660$.
+
+      (Such a function exists: $f(n)=\lfloor n/3\rfloor$ satisfies every condition.)
+    checked: "script: floor(n/3) meets all conditions; the argument above is exact"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Reflected incircle touch points and side midpoints concur"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'The reflection of a touch point in an angle bisector stays on the incircle. Where?'
+      - 'Show that $S_1S_2$ is parallel to the side $A_1A_2$. Then the triangles $S_1S_2S_3$ and $M_1M_2M_3$ have parallel sides.'
+    solution: |
+      **Key idea:** the reflected points lie on the incircle and form a triangle whose sides are parallel to those of the medial triangle. Two triangles with parallel sides and different sizes are related by a homothety, and its center is the common point.
+
+      Let $I$ and $r$ be the incenter and inradius. The incircle is symmetric in each bisector $A_iI$, so each $S_i$ is on the incircle. Describe points of the incircle by the direction angle of the ray from $I$: say $T_i$ has angle $\theta_i$.
+
+      **Positions of the $S_i$.** The bisector $A_1I$ bisects the angle $T_2IT_3$ (the two touch points on the sides from $A_1$ are mirror images in it), so it has direction $\frac{\theta_2+\theta_3}2$. Reflecting in it sends the angle $\theta$ to $\theta_2+\theta_3-\theta$. So $S_1$ has angle $\theta_2+\theta_3-\theta_1$, and likewise $S_2$ has $\theta_1+\theta_3-\theta_2$ and $S_3$ has $\theta_1+\theta_2-\theta_3$.
+
+      **Parallel sides.** A chord between angles $\psi$ and $\psi'$ is perpendicular to the direction $\frac{\psi+\psi'}2$. For $S_1S_2$ this is $\theta_3$: the chord $S_1S_2$ is perpendicular to $IT_3$, so it is parallel to side $A_1A_2$, which is tangent at $T_3$. (The points $S_1$, $S_2$ are different: otherwise $2\theta_1\equiv2\theta_2$, making $T_1$, $T_2$ equal or opposite, and two sides parallel.) The midline $M_1M_2$ is also parallel to $A_1A_2$. In the same way $S_2S_3\parallel M_2M_3$ and $S_3S_1\parallel M_3M_1$.
+
+      **Homothety.** Two triangles with corresponding sides parallel are related by a translation or by a homothety. The medial triangle has circumradius $\frac R2$, while $S_1S_2S_3$ has circumradius $r$. Euler's inequality $R\ge2r$, with equality only for an equilateral triangle, gives $\frac R2>r$. So the map is not a translation but a homothety, and the lines joining corresponding vertices, $M_iS_i$, pass through its center. (Each $M_i\ne S_i$: the incircle meets side $a_i$ only at $T_i$, and $S_i=T_i$ would put $T_i$ on the bisector from $A_i$, making the triangle isosceles.)
+    checked: "script: random non-isosceles triangles; the three lines meet within 1e-14, and each S_i is on the incircle"
+    viz: imo-1982-p2
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Decreasing sequence: a sum of squared ratios nears four"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'AM–GM: $\frac{x_i^2}{x_{i+1}}+4x_{i+1}\ge4x_i$. Sum this up.'
+      - 'If the sequence does not tend to $0$, each term $\frac{x_i^2}{x_{i+1}}\ge x_i$ stays large. For (b), try a geometric sequence.'
+    solution: |
+      **Key idea:** AM–GM gives a telescoping lower bound $4(x_0-x_n)$. Either $x_n$ gets small, or the terms themselves stay large.
+
+      Let $S_n=\sum_{i=0}^{n-1}\frac{x_i^2}{x_{i+1}}$.
+
+      **(a)** By AM–GM, $\frac{x_i^2}{x_{i+1}}+4x_{i+1}\ge2\sqrt{4x_i^2}=4x_i$. Summing for $i=0,\dots,n-1$,
+      $$S_n\ge4\sum_{i=0}^{n-1}x_i-4\sum_{i=1}^{n}x_i=4(x_0-x_n)=4-4x_n .$$
+      - If some $x_n\le\frac1{4000}$, then $S_n\ge4-0.001=3.999$.
+      - Otherwise all $x_i>\frac1{4000}$, and since $x_{i+1}\le x_i$, each term $\frac{x_i^2}{x_{i+1}}\ge x_i>\frac1{4000}$. Then $S_{16000}>4$.
+
+      **(b)** Take $x_n=2^{-n}$. Then $\frac{x_i^2}{x_{i+1}}=\frac{2^{-2i}}{2^{-i-1}}=2^{1-i}$, and
+      $$S_n=\sum_{i=0}^{n-1}2^{1-i}=4\left(1-2^{-n}\right)<4 .$$
+    checked: "script: exact sums for the example equal 4(1 − 2^(−n)), below 4"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Cubic form: solutions come in threes; one value impossible"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'Look for a linear change of variables $(x,y)\mapsto(y-x,-x)$ that keeps the form unchanged. What is its order?'
+      - 'For $2891$, work modulo $9$. Show the form modulo $9$ depends only on $x,y$ modulo $3$.'
+    solution: |
+      **Key idea:** a linear map of order $3$ preserves the form and moves every nonzero solution, so solutions come in triples. Modulo $9$ the form takes only a few values, and $2891$ is not among them.
+
+      Let $F(x,y)=x^3-3xy^2+y^3$ and $\tau(x,y)=(y-x,-x)$.
+
+      **$\tau$ preserves $F$.**
+      $$F(y-x,-x)=(y-x)^3-3(y-x)x^2-x^3=y^3-3y^2x+3yx^2-x^3-3x^2y+3x^3-x^3=F(x,y).$$
+      **$\tau$ has order $3$:** $\tau^2(x,y)=(-y,x-y)$ and $\tau^3(x,y)=(x,y)$. Its only fixed point is $(0,0)$ (from $y-x=x$ and $-x=y$). So if $F(x,y)=n>0$, then $(x,y)\ne(0,0)$, and $(x,y)$, $\tau(x,y)$, $\tau^2(x,y)$ are three different solutions (an orbit of size $3$, since its size divides $3$ and is not $1$).
+
+      **No solutions for $2891$.** Modulo $9$: $(x+3s)^3\equiv x^3$ and $3(x+3s)y^2\equiv3xy^2$, and the same for $y$. So $F\bmod9$ depends only on $x,y\bmod3$. Since $2891\equiv2\pmod 9$, and $F\equiv x^3+y^3\equiv x+y\pmod3$, we need $x+y\equiv2\pmod3$, that is, $(x,y)\equiv(0,2),(2,0)$ or $(1,1)\pmod3$. These give
+      $$F(0,2)=8,\qquad F(2,0)=8,\qquad F(1,1)=-1\equiv8\pmod9 .$$
+      Never $2$. So $F(x,y)=2891$ has no integer solutions.
+    checked: "script: F mod 9 takes only the values 0, 1, 3, 6, 8; no solution with |x|, |y| ≤ 300; sympy confirms the invariance"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Regular hexagon: two diagonal points collinear with a vertex"
+    areas: [geometry]
+    difficulty: 1
+    answer: "$r=\\dfrac1{\\sqrt3}$"
+    hints:
+      - 'Put the hexagon''s center at the origin with unit circumradius and write $M$ and $N$ in coordinates.'
+      - 'Collinearity of $B,M,N$ is a $2\times2$ determinant equal to $0$.'
+    solution: |
+      **Key idea:** with coordinates, collinearity is one determinant, and it reduces to $3r^2=1$.
+
+      Take the hexagon with center at the origin and vertices on the unit circle:
+      $$A=(1,0),\ B=\left(\tfrac12,\tfrac{\sqrt3}2\right),\ C=\left(-\tfrac12,\tfrac{\sqrt3}2\right),\ E=\left(-\tfrac12,-\tfrac{\sqrt3}2\right).$$
+      Then
+      $$M=A+r(C-A)=\left(1-\tfrac32r,\ \tfrac{\sqrt3}2r\right),\qquad N=C+r(E-C)=\left(-\tfrac12,\ \tfrac{\sqrt3}2-\sqrt3\,r\right).$$
+      Relative to $B$: $M-B=\left(\tfrac12-\tfrac32r,\ \tfrac{\sqrt3}2(r-1)\right)$ and $N-B=\left(-1,\ -\sqrt3\,r\right)$. They are parallel when
+      $$\left(\tfrac12-\tfrac32r\right)(-\sqrt3\,r)-\tfrac{\sqrt3}2(r-1)(-1)=\frac{\sqrt3}2\left(3r^2-1\right)=0 .$$
+      With $0<r<1$, this gives $r=\frac1{\sqrt3}$.
+    checked: "script: sympy solves the collinearity condition symbolically"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Path covering a square's boundary nearly returns on itself"
+    areas: [geometry, combinatorics]
+    difficulty: 5
+    status: coming

@@ -1,0 +1,150 @@
+year: 1977
+edition: 19th
+date: "July 1–13, 1977 · Belgrade, Yugoslavia"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1977/1977_eng.pdf
+  archive: https://www.imo-official.org/editions/1977/
+problems:
+  - id: P1
+    day: 1
+    topic: "Square with inner equilateral triangles hides a regular dodecagon"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Use coordinates with the square''s center at the origin. A quarter turn about the center maps the whole figure to itself.'
+      - 'So you only need two of the twelve points: one midpoint between two apexes, and one midpoint between an apex and a corner.'
+    solution: |
+      **Key idea:** the figure has quarter-turn symmetry, so two representative midpoints suffice. Both are at the same distance from the center, at angles $135^\circ$ and $\pm15^\circ$; turning them by quarter turns fills in every multiple of $30^\circ$ plus $15^\circ$.
+
+      Let the square have side $2$ and center $O$ at the origin: $A=(-1,-1)$, $B=(1,-1)$, $C=(1,1)$, $D=(-1,1)$. An inner equilateral triangle on a side of length $2$ has height $\sqrt3$, so
+      $$K=(0,\sqrt3-1),\quad L=(1-\sqrt3,0),\quad M=(0,1-\sqrt3),\quad N=(\sqrt3-1,0).$$
+      A quarter turn about $O$ maps $A\to B\to C\to D\to A$ and so $K\to L\to M\to N\to K$. It maps the set of twelve midpoints to itself.
+
+      **The midpoint of $KL$** is $\left(\frac{1-\sqrt3}2,\frac{\sqrt3-1}2\right)$: at angle $135^\circ$ and distance $\rho$ with $\rho^2=\frac{(\sqrt3-1)^2}{2}=2-\sqrt3$.
+
+      **The midpoints of $AK$ and $BK$** are $\left(\mp\frac12,\frac{\sqrt3-2}2\right)$. Their squared distance from $O$ is $\frac14+\frac{(2-\sqrt3)^2}{4}=\frac{8-4\sqrt3}{4}=2-\sqrt3=\rho^2$. Their angles: the slope magnitude is $2-\sqrt3=\tan15^\circ$, so they sit at $195^\circ$ and $345^\circ$.
+
+      **All twelve.** Applying quarter turns:
+      - the four apex-apex midpoints are at $45^\circ,135^\circ,225^\circ,315^\circ$;
+      - the eight apex-corner midpoints are at $195^\circ,345^\circ$ plus multiples of $90^\circ$, that is, $15^\circ,105^\circ,195^\circ,285^\circ$ and $75^\circ,165^\circ,255^\circ,345^\circ$.
+
+      Together these are the twelve angles $15^\circ+30^\circ k$, all at distance $\rho$ from $O$: the vertices of a regular dodecagon.
+    checked: "script: the twelve points all have radius 0.5176 and angles 15°, 45°, …, 345°"
+    viz: imo-1977-p1
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Window sums of seven negative, eleven positive: longest sequence"
+    areas: [combinatorics, algebra]
+    difficulty: 2
+    answer: "$16$"
+    hints:
+      - 'With $17$ terms, arrange $77$ of them in a $7\times11$ table so that rows and columns are windows. Add it up two ways.'
+      - 'For $16$ terms, try a pattern of $5$s and $-13$s.'
+    solution: |
+      **Key idea:** a table whose rows are $11$-windows and whose columns are $7$-windows has a total that must be both positive and negative.
+
+      **At most $16$.** Suppose there are $17$ terms $x_1,\dots,x_{17}$. Fill a $7\times11$ table with $x_{i+j-1}$ in row $i$, column $j$; the largest index is $7+11-1=17$. Each row is $11$ consecutive terms, so the total is positive. Each column is $7$ consecutive terms, so the total is negative. Contradiction.
+
+      **Sixteen terms work:**
+      $$5,\ 5,\ -13,\ 5,\ 5,\ 5,\ -13,\ 5,\ 5,\ -13,\ 5,\ 5,\ 5,\ -13,\ 5,\ 5 .$$
+      Every $7$-window contains exactly two $-13$s and five $5$s, so its sum is $25-26=-1$. Every $11$-window contains exactly three $-13$s and eight $5$s, so its sum is $40-39=1$. (The $-13$s sit at positions $3,7,10,14$, and one checks each window directly.)
+    checked: "script: all 10 seven-windows of the example are negative and all 6 eleven-windows are positive"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Numbers one more than multiples of n: non-unique factoring"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'Any element of the set is at least $n+1$, so a product of two elements is at least $(n+1)^2$. Small elements are therefore automatically indecomposable.'
+      - 'Try $(n-1)^2$, $(2n-1)^2$ and $(n-1)(2n-1)$. Two values of $n$ need a separate example.'
+    solution: |
+      **Key idea:** with $u=n-1$ and $w=2n-1$, the numbers $u^2$, $w^2$, $uw$ all lie in $V_n$, are usually indecomposable, and $u^2\cdot w^2=uw\cdot uw$ gives two different factorizations.
+
+      Write $V=V_n$. Its smallest element is $n+1$, and the only element below $2n+1$ is $n+1$.
+
+      Since $u\equiv-1$ and $w\equiv-1\pmod n$, the numbers $u^2$, $w^2$ and $uw$ are all $\equiv1\pmod n$, and they exceed $1$, so they lie in $V$.
+
+      - **$u^2$ is indecomposable:** a product of two elements is at least $(n+1)^2>u^2$.
+      - **$w^2$:** in a factorization $w^2=pq$ with $p\le q$, we get $p\le w=2n-1$, so $p=n+1$. That needs $n+1\mid(2n-1)^2$. Since $2n-1\equiv-3\pmod{n+1}$, this means $n+1\mid9$, so $n=8$ (as $n>2$).
+      - **$uw$:** in a factorization $uw=pq$ with $p\le q$, we get $p\le\sqrt{uw}<\sqrt2\,n<2n+1$, so $p=n+1$. That needs $n+1\mid(n-1)(2n-1)\equiv(-2)(-3)=6$, so $n=5$.
+
+      So for $n\ne5,8$, all three are indecomposable, and
+      $$r=(n-1)^2(2n-1)^2=u^2\cdot w^2=uw\cdot uw$$
+      has two different factorizations (as $u^2\ne uw$).
+
+      **The two exceptions.**
+      - $n=5$: $V=\{6,11,16,21,26,\dots\}$ and $336=16\cdot21=6\cdot56$. Here $6,16,21$ are below $6^2=36$, so indecomposable, and $56$ is not divisible by $6$, the only element up to $\sqrt{56}$.
+      - $n=8$: $V=\{9,17,25,33,\dots\}$ and $1089=33\cdot33=9\cdot121$. Here $9$ and $33$ are below $81$, and $121$ is not divisible by $9$, the only element up to $11$.
+    checked: "script: for every n from 3 to 300 except 5 and 8 the three numbers are indecomposable; the two exceptions were found by search"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Nonnegative trigonometric polynomial bounds its coefficients"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Write the two parts as $r\cos(\theta-\alpha)$ and $R\cos(2\theta-\beta)$.'
+      - 'Add $f(\theta)$ and $f(\theta+\pi)$ to kill the first part. Add $f(\theta)$ and $f(\theta+\frac\pi2)$ to kill the second.'
+    solution: |
+      **Key idea:** averaging $f$ at two well-chosen points cancels one harmonic and leaves a clean bound on the other.
+
+      Write $a\cos\theta+b\sin\theta=r\cos(\theta-\alpha)$ with $r=\sqrt{a^2+b^2}$, and $A\cos2\theta+B\sin2\theta=R\cos(2\theta-\beta)$ with $R=\sqrt{A^2+B^2}$. So
+      $$f(\theta)=1-r\cos(\theta-\alpha)-R\cos(2\theta-\beta)\ge0\quad\text{for all }\theta .$$
+
+      **$R\le1$.** Shifting $\theta$ by $\pi$ flips the sign of the first cosine and keeps the second, so $f(\theta)+f(\theta+\pi)=2-2R\cos(2\theta-\beta)$. At $\theta=\frac\beta2$ this is $2-2R\ge0$.
+
+      **$r\le\sqrt2$.** Shifting $\theta$ by $\frac\pi2$ flips the sign of the second cosine, and $\cos(\varphi+\frac\pi2)=-\sin\varphi$. With $\varphi=\theta-\alpha$,
+      $$f(\theta)+f(\theta+\tfrac\pi2)=2-r(\cos\varphi-\sin\varphi)=2-\sqrt2\,r\cos(\varphi+\tfrac\pi4).$$
+      At $\varphi=-\frac\pi4$ this is $2-\sqrt2\,r\ge0$, so $r\le\sqrt2$.
+
+      Hence $a^2+b^2\le2$ and $A^2+B^2\le1$.
+    checked: "script: random coefficients that keep f ≥ 0 on a fine grid all satisfy both bounds"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Quotient and remainder of a sum of squares"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$(a,b)=(50,37),(50,7),(37,50),(7,50)$"
+    hints:
+      - 'Since $\frac{a^2+b^2}{a+b}\ge\frac{a+b}2$, the remainder is small compared to the quotient. Show $q=44$.'
+      - 'Then complete the squares: $(a-22)^2+(b-22)^2=1009$.'
+    solution: |
+      **Key idea:** the remainder is less than $a+b$, which is less than about $2q$. So $q^2$ is almost $1977$, giving $q=44$, and the rest is a sum of two squares.
+
+      We have $a^2+b^2=q(a+b)+r$ with $0\le r<a+b$. Since $a^2+b^2\ge\frac{(a+b)^2}2$,
+      $$\frac{a+b}2\le\frac{a^2+b^2}{a+b}<q+1,\qquad\text{so } a+b\le 2q+1 .$$
+      Then $1977-q^2=r<a+b\le2q+1$, so $(q+1)^2>1977$ and $q\ge44$. Also $q^2\le1977$ gives $q\le44$. So $q=44$ and $r=1977-1936=41$.
+
+      Now $a^2+b^2=44(a+b)+41$, that is,
+      $$(a-22)^2+(b-22)^2=41+2\cdot22^2=1009 .$$
+      Checking $x=0,1,\dots,31$, the only way to write $1009$ as a sum of two squares is $15^2+28^2$. So $\{|a-22|,|b-22|\}=\{15,28\}$. Since $a,b>0$, $|a-22|=28$ forces $a=50$, and $|a-22|=15$ gives $a=37$ or $7$. This yields $(50,37),(50,7),(37,50),(7,50)$. In each case $r=41<a+b$, so $q$ and $r$ really are the quotient and remainder.
+    checked: "script: brute force over 1 ≤ a, b < 500 finds exactly these four pairs"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Self-map with f(n+1) beyond f(f(n)) is the identity"
+    areas: [number-theory, algebra]
+    difficulty: 2
+    hints:
+      - 'Prove by induction on $k$: every $n\ge k$ has $f(n)\ge k$.'
+      - 'So $f(n)\ge n$. Use this to show that $f$ is increasing, and then compare $f(n+1)$ with $f(f(n))$ again.'
+    solution: |
+      **Key idea:** a short induction shows $f(n)\ge n$. Then $f$ is increasing, and an increasing $f$ with $f(n+1)>f(f(n))$ must have $f(n)<n+1$.
+
+      **Step 1: $f(n)\ge n$.** We show for each $k\ge1$: if $n\ge k$ then $f(n)\ge k$. For $k=1$ this is clear. Assume it for $k$ and let $n\ge k+1$. Then $n-1\ge k$, so $f(n-1)\ge k$, and applying the assumption to $f(n-1)$ gives $f(f(n-1))\ge k$. So $f(n)>f(f(n-1))\ge k$, that is, $f(n)\ge k+1$. Taking $k=n$ gives $f(n)\ge n$.
+
+      **Step 2: $f$ is increasing.** By Step 1 applied to $f(n)$, $f(f(n))\ge f(n)$. So $f(n+1)>f(f(n))\ge f(n)$.
+
+      **Step 3: $f(n)\le n$.** If $f(n)\ge n+1$, then since $f$ is increasing, $f(f(n))\ge f(n+1)$, contradicting $f(n+1)>f(f(n))$.
+
+      So $f(n)=n$ for every $n$.
+    checked: "algebra only: induction"
+    status: ready

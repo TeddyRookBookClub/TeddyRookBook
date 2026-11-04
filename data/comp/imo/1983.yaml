@@ -1,0 +1,150 @@
+year: 1983
+edition: 24th
+date: "July 1–12, 1983 · Paris, France"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1983/1983_eng.pdf
+  archive: https://www.imo-official.org/editions/1983/
+problems:
+  - id: P1
+    day: 1
+    topic: "Functional equation with decay at infinity: the reciprocal"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$f(x)=\\dfrac1x$"
+    hints:
+      - 'Put $x=1$ to get $f(f(y))=y\,f(1)$, and find $f(1)$.'
+      - 'For every $x$, the number $x f(x)$ is a fixed point of $f$. Which fixed points are possible?'
+    solution: |
+      **Key idea:** $x f(x)$ is always a fixed point, and the set of fixed points is closed under squaring and taking reciprocals. Decay at infinity then allows only the fixed point $1$.
+
+      Let $c=f(1)$.
+      - $x=1$: $f(f(y))=cy$ for all $y$.
+      - $x=y=1$: $f(c)=c$. Then $f(f(c))=f(c)=c$, but also $f(f(c))=c\cdot c$. So $c^2=c$ and $c=1$.
+
+      **Fixed points.** With $y=x$: $f(xf(x))=xf(x)$, so $u=xf(x)$ is a fixed point for every $x$. If $u$ is a fixed point, then:
+      - $f(u^2)=f(u\,f(u))=u\,f(u)=u^2$, so $u^{2^k}$ is a fixed point for every $k$;
+      - with $x=\frac1u$, $y=u$: $f\left(\tfrac1u\cdot u\right)=u\,f\left(\tfrac1u\right)$, so $f\left(\tfrac1u\right)=\tfrac1u$ is a fixed point.
+
+      If some fixed point $u\ne1$ existed, then one of $u,\frac1u$ would be a fixed point $v>1$, and $f\left(v^{2^k}\right)=v^{2^k}\to\infty$, against $f(x)\to0$. So the only fixed point is $1$, and $xf(x)=1$ for all $x$.
+
+      **Check.** $f(x)=\frac1x$ gives $f\left(\frac xy\right)=\frac yx=y\,f(x)$, and $\frac1x\to0$.
+    checked: "algebra only: substitutions"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Two circles, two tangents: equal angles at an intersection"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Let $S$ be the point where the two common tangents meet, on the line of centers. Where do $M_1$ and $M_2$ lie?'
+      - 'Show $SA^2=SM_1\cdot SO_2=SM_2\cdot SO_1$ using the homothety at $S$ and the power of $S$. Then find similar triangles.'
+    solution: |
+      **Key idea:** with $S$ the meeting point of the common tangents, $SA^2=SM_1\cdot SO_2=SM_2\cdot SO_1$. That gives two pairs of similar triangles, which move each angle at $A$ to an angle at a center.
+
+      If the radii are equal, the common tangents are parallel to $O_1O_2$, so $M_1=O_1$ and $M_2=O_2$, and the two angles are the same angle. From now on let the radii be $r_1<r_2$, and let $k=\frac{r_2}{r_1}$. The two common tangents of intersecting circles meet at the external center of similitude $S$, on line $O_1O_2$, beyond $O_1$. The homothety $h$ with center $S$ and ratio $k$ maps $C_1$ to $C_2$, $P_1\to P_2$ and $O_1\to O_2$.
+
+      **Where $M_1$, $M_2$ are.** The chord $P_1Q_1$ is perpendicular to $SO_1$ (by symmetry in the line of centers), so its midpoint $M_1$ is on segment $SO_1$, and in the right triangle $SP_1O_1$ the foot of the altitude gives $SM_1\cdot SO_1=SP_1^2$. Likewise $SM_2\cdot SO_2=SP_2^2$. With $SP_2=k\,SP_1$ and $SO_2=k\,SO_1$:
+      $$SM_1\cdot SO_2=k\,SP_1^2,\qquad SM_2\cdot SO_1=\frac{k^2SP_1^2}{k}=k\,SP_1^2 .$$
+
+      **$SA^2=k\,SP_1^2$.** The image $h(A)$ lies on $C_2$ and on line $SA$, and $h(A)\ne A$ because $k\ne1$. So line $SA$ meets $C_2$ at $A$ and $h(A)$, and the power of $S$ with respect to $C_2$ is
+      $$SA\cdot S\,h(A)=k\,SA^2=SP_2^2=k^2SP_1^2 .$$
+      So $SA^2=k\,SP_1^2=SM_1\cdot SO_2=SM_2\cdot SO_1$.
+
+      **Similar triangles.** From $\frac{SA}{SM_1}=\frac{SO_2}{SA}$ and the common angle at $S$, triangles $SAM_1$ and $SO_2A$ are similar, so $\angle SAM_1=\angle SO_2A$. In the same way $\angle SAM_2=\angle SO_1A$.
+
+      **Finish.** The points $S,O_1,O_2$ lie in this order on a line, so in triangle $AO_1O_2$ the exterior angle at $O_1$ gives $\angle SO_1A=\angle O_1AO_2+\angle SO_2A$. Hence $\angle SAM_2-\angle SAM_1=\angle O_1AO_2>0$. Both $M_1$ and $M_2$ lie on the ray from $S$ through $O_1$, so the rays $AM_1$ and $AM_2$ are on the same side of $AS$, and
+      $$\angle M_1AM_2=\angle SAM_2-\angle SAM_1=\angle O_1AO_2 .$$
+    checked: "script: random intersecting circles; the two angles agree to 1e-15"
+    viz: imo-1983-p2
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Largest number not representable with three pairwise coprime parts"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'For the number itself: reduce a supposed representation modulo $a$, $b$ and $c$, and add $1$ to each coefficient.'
+      - 'For larger numbers: choose $x<a$ and $y<b$ to fix the remainders modulo $a$ and $b$; the rest is a multiple of $ab$.'
+    solution: |
+      **Key idea:** modulo $a$, only the term $xbc$ matters, so remainders pin down $x$ and $y$; the size bound decides whether $z\ge0$.
+
+      Let $N=2abc-ab-bc-ca$.
+
+      **$N$ is not representable.** Suppose $xbc+yca+zab=N$ with $x,y,z\ge0$. Modulo $a$: $xbc\equiv-bc$, and $bc$ is prime to $a$, so $x\equiv-1\pmod a$, hence $x+1\ge a$. Likewise $y+1\ge b$ and $z+1\ge c$. But the equation says
+      $$(x+1)bc+(y+1)ca+(z+1)ab=2abc,$$
+      while the left side is at least $abc+abc+abc=3abc$. Contradiction.
+
+      **Every $n>N$ is representable.** Choose $x\in\{0,\dots,a-1\}$ with $xbc\equiv n\pmod a$, and $y\in\{0,\dots,b-1\}$ with $yca\equiv n\pmod b$ (possible since $bc$ is prime to $a$ and $ca$ to $b$). Then $m=n-xbc-yca$ is divisible by $a$ (as $yca\equiv0$) and by $b$ (as $xbc\equiv0$), so by $ab$: $m=zab$. And
+      $$m\ge n-(a-1)bc-(b-1)ca>N-(a-1)bc-(b-1)ca=-ab ,$$
+      so $z>-1$, that is, $z\ge0$. Hence $n=xbc+yca+zab$.
+    checked: "script: for five coprime triples, N is not representable and the next 500 numbers are"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Two-coloring a triangle's outline forces a right triangle"
+    areas: [combinatorics, geometry]
+    difficulty: 2
+    answer: "Yes: one of the two sets always contains a right triangle"
+    hints:
+      - 'Mark the points that cut each side in the ratio $1:2$. In the triangle they form, each side is perpendicular to a side of $ABC$.'
+      - 'Two of the three marked points share a set. Then look at the side of $ABC$ that their segment is perpendicular to.'
+    solution: |
+      **Key idea:** the points at one third of each side form a triangle whose sides are perpendicular to the sides of $ABC$. Two of them share a set, and then any point of the matching side either completes a right triangle or the other set fills that side and gets one.
+
+      Let the side be $3$. Take $P$ on $BC$ with $BP=1$, $Q$ on $CA$ with $CQ=1$, $R$ on $AB$ with $AR=1$. In triangle $BPR$, $BP=1$, $BR=2$ and $\angle B=60^\circ$, so $PR^2=1+4-2=3$ and $BP^2+PR^2=BR^2$: the angle at $P$ is right, so $RP\perp BC$. In the same way $PQ\perp CA$ and $QR\perp AB$.
+
+      Two of $P,Q,R$ are in the same set; by the symmetry of the figure under turning, say $P,R\in S_1$.
+      1. If some $X\ne P$ on side $BC$ is in $S_1$, then $R,P,X$ is a right triangle in $S_1$ (right angle at $P$). Done.
+      2. Otherwise all of $BC$ except $P$ is in $S_2$.
+         - If $Q\in S_2$: its foot $F$ on $BC$ has $CF=\frac12\ne2=CP$, so $F\in S_2$, and $Q,F,B$ is a right triangle in $S_2$.
+         - If $Q\in S_1$: then $Q,R\in S_1$ and $QR\perp AB$. If some $Y\ne R$ on $AB$ is in $S_1$, then $Q,R,Y$ is a right triangle in $S_1$. Otherwise all of $AB$ except $R$ is in $S_2$, including $A$. The midpoint $D$ of $BC$ is not $P$, so $D\in S_2$, and $C\in S_2$. Then $A,D,C$ is a right triangle in $S_2$ (right angle at $D$).
+
+      In every case one set contains the vertices of a right triangle.
+    checked: "algebra only: case analysis"
+    viz: imo-1983-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Many numbers below 100,000 with no three in progression"
+    areas: [combinatorics, number-theory]
+    difficulty: 2
+    answer: "Yes"
+    hints:
+      - 'Think in base $3$. What happens when you add two numbers whose base-$3$ digits are all $0$ or $1$?'
+      - 'How many such numbers have at most $11$ digits, and how big is the largest?'
+    solution: |
+      **Key idea:** numbers whose base-$3$ digits are only $0$ and $1$ add without carries, so $x+z=2y$ forces $x=z$.
+
+      Let $T$ be the set of numbers whose base-$3$ representation, with $11$ digits, uses only $0$ and $1$. It has $2^{11}=2048$ elements, from $0$ up to $1+3+\dots+3^{10}=\frac{3^{11}-1}2=88573$.
+
+      **No three in progression.** Suppose $x,y,z\in T$ with $x+z=2y$. In base $3$, digit by digit, $x_i+z_i\le2$, so adding $x$ and $z$ involves no carries, and the digits of $x+z$ are $x_i+z_i$. The digits of $2y$ are $2y_i\in\{0,2\}$, also without carries. So $x_i+z_i=2y_i$ for every $i$, which with $x_i,z_i\in\{0,1\}$ forces $x_i=z_i=y_i$. So $x=y=z$.
+
+      **The answer.** Add $1$ to every element of $T$; this keeps the property (a progression shifted is still a progression). Now all $2048$ numbers are positive and at most $88574\le10^5$. Any $1983$ of them work. So the answer is yes.
+    checked: "script: the 2048 numbers contain no three-term progression; the largest is 88,574"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Cyclic inequality for triangle sides"
+    areas: [algebra, geometry]
+    difficulty: 2
+    answer: "Equality exactly for equilateral triangles"
+    hints:
+      - 'Substitute $a=y+z$, $b=z+x$, $c=x+y$ with $x,y,z>0$.'
+      - 'The expression becomes $2\cdot\left(x y^3+y z^3+z x^3-x y z(x+y+z)\right)$. Divide by $xyz$.'
+    solution: |
+      **Key idea:** the substitution from the touch points of the incircle turns the inequality into $\frac{y^2}{z}+\frac{z^2}{x}+\frac{x^2}{y}\ge x+y+z$, which is AM–GM term by term.
+
+      For a triangle there are positive $x,y,z$ (the tangent lengths from the vertices to the incircle) with $a=y+z$, $b=z+x$, $c=x+y$. Expanding (a routine check),
+      $$a^2b(a-b)+b^2c(b-c)+c^2a(c-a)=2\left(xy^3+yz^3+zx^3-xyz(x+y+z)\right).$$
+      Divide by $2\,x\,y\,z>0$. We need
+      $$\frac{y^2}{z}+\frac{z^2}{x}+\frac{x^2}{y}\ge x+y+z .$$
+      By AM–GM, $\frac{y^2}z+z\ge2y$, $\frac{z^2}x+x\ge2z$ and $\frac{x^2}y+y\ge2x$. Adding these gives the claim.
+
+      Equality needs $y=z$, $z=x$ and $x=y$, so $x=y=z$, which means $a=b=c$. And for an equilateral triangle every term is $0$.
+    checked: "script: sympy confirms the expansion exactly"
+    status: ready

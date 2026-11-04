@@ -1,0 +1,155 @@
+year: 1990
+edition: 31st
+date: "July 8–19, 1990 · Beijing, China"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1990/1990_eng.pdf
+  archive: https://www.imo-official.org/editions/1990/
+problems:
+  - id: P1
+    day: 1
+    topic: "Tangent at a chord crossing cut by two lines"
+    areas: [geometry]
+    difficulty: 2
+    answer: "$\\dfrac{EG}{EF}=\\dfrac{t}{1-t}$"
+    hints:
+      - 'Look for a triangle at $C$ that is similar to a triangle with vertices $M$, $D$ and one of $A,B$.'
+      - 'Use the tangent–chord angle at $E$ and the inscribed angles of the big circle. Then $EF$ and $EG$ are both multiples of $EC\cdot MD$.'
+    solution: |
+      **Key idea:** the tangent at $E$ makes triangle $ECF$ similar to $MAD$ and triangle $ECG$ similar to $MBD$. Dividing, $EG/EF=MA/MB$.
+
+      Let $\ell$ be the tangent line at $E$. We use directed angles between lines, mod $180^\circ$. Note that line $ME$ is line $AB$, line $EC$ is line $CD$, and $\ell$ is line $FG$.
+
+      **Tangent angle.** By the tangent–chord rule in circle $DEM$,
+      $$\angle(EC,\ell)=\angle(ED,\ell)=-\angle(ME,MD)=\angle(MD,MA)=\angle(MD,MB).$$
+
+      **Triangles $ECF$ and $MAD$.** Since $ABCD$ is cyclic, $\angle(CE,CF)=\angle(CD,CB)=\angle(AD,AB)=\angle(AD,AM)$. Together with $\angle(EC,EF)=\angle(MD,MA)$, both angles of triangle $ECF$ (at $C$ and $E$) are the negatives of the matching angles of triangle $MAD$ (at $A$ and $M$). So the triangles are similar (with opposite orientation), and
+      $$\frac{EF}{EC}=\frac{MD}{MA}.$$
+
+      **Triangles $ECG$ and $MBD$.** In the same way, $\angle(CE,CG)=\angle(CD,CA)=\angle(BD,BA)=\angle(BD,BM)$ and $\angle(EC,EG)=\angle(MD,MB)$. So
+      $$\frac{EG}{EC}=\frac{MD}{MB}.$$
+
+      **Divide.** $\dfrac{EG}{EF}=\dfrac{MA}{MB}$. Since $M$ lies between $A$ and $B$, $MA=t\,AB$ and $MB=(1-t)AB$, so $\dfrac{EG}{EF}=\dfrac{t}{1-t}$.
+    checked: "numeric: 500 random configurations match t/(1−t) to relative error 1e-6"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Black points on a circle with a gap of n"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: "$k=n$ if $3\\nmid 2n-1$, and $k=n-1$ if $3\\mid 2n-1$"
+    hints:
+      - 'Number the points $0,\dots,2n-2$. Two points make a good pair when they differ by $n+1$ (mod $2n-1$). Draw these pairs as edges.'
+      - 'The graph is a union of cycles. How many, and how long? A coloring is bad when the black points form an independent set.'
+    solution: |
+      **Key idea:** join two points when they form a good pair. The graph is one cycle or three cycles of odd length, and the largest bad coloring is a largest independent set.
+
+      Number the points $0,1,\dots,2n-2$ around the circle. The arc from $i$ to $j$ (going forward) has exactly $n$ points inside when $j\equiv i+n+1\pmod{2n-1}$. So a pair is good exactly when its two points differ by $\pm(n+1)$ mod $2n-1$. Join such pairs by edges. Each point has exactly two neighbors, $i\pm(n+1)$, which are different since $2(n+1)\equiv3\not\equiv0$ for $n\ge3$.
+
+      A coloring is good unless the black points are pairwise non-adjacent. So the answer is one more than the largest independent set.
+
+      **The cycles.** Stepping by $n+1$ visits all points if $\gcd(n+1,2n-1)=1$, and $\gcd(n+1,2n-1)=\gcd(n+1,3)$.
+      - If $3\nmid2n-1$: one cycle of odd length $2n-1$. Its largest independent set has $n-1$ points, so $k=n$.
+      - If $3\mid2n-1$: three cycles, each of odd length $L=\frac{2n-1}3$. Each allows $\frac{L-1}2$ points, in total $3\cdot\frac{L-1}2=n-2$. So $k=n-1$.
+
+      (An odd cycle of length $L$ has largest independent set $\frac{L-1}2$: take every other point, and any larger set would contain two neighbors.)
+    checked: "script: brute force over all colorings for n = 3, …, 11"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "When n squared divides two to the n, plus one"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$n=3$ only"
+    hints:
+      - 'Let $p$ be the smallest prime factor of $n$. The order of $2$ mod $p$ divides both $2n$ and $p-1$.'
+      - 'Once $3\mid n$, use lifting the exponent to see how many factors of $3$ are possible. Then repeat the order trick with the next prime.'
+    solution: |
+      **Key idea:** the smallest prime of $n$ must be $3$, exactly one factor $3$ fits, and any further prime would have to be $7$, which never divides $2^n+1$.
+
+      Clearly $n$ is odd. Let $p$ be the smallest prime factor of $n$, and $d$ the order of $2$ mod $p$. From $2^n\equiv-1$ we get $2^{2n}\equiv1$, so $d\mid2n$; also $d\mid p-1$. Every prime factor of $p-1$ is less than $p$, so the only one it can share with $2n$ is $2$, and $d\mid2$. Then $p\mid2^2-1=3$, so $p=3$.
+
+      **Powers of 3.** For odd $n$, lifting the exponent gives $v_3(2^n+1)=v_3(2+1)+v_3(n)=1+v_3(n)$. We need this to be at least $2v_3(n)$, so $v_3(n)=1$. Write $n=3m$ with $3\nmid m$.
+
+      **No other prime.** Suppose $m>1$ and let $q$ be its smallest prime, so $q\ge5$. The order of $2$ mod $q$ divides $2n$ and $q-1$. The primes below $q$ that divide $2n$ are only $2$ and $3$, each to the first power. So the order divides $6$, and $q\mid2^6-1=63$, giving $q=7$. But the powers of $2$ mod $7$ are $1,2,4$, never $-1$, so $7\nmid2^n+1$. Contradiction.
+
+      So $n=3$, and indeed $\frac{2^3+1}{9}=1$.
+    checked: "script: n = 3 is the only solution below 200,000"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Building a rational function from pairing up primes"
+    areas: [algebra, number-theory]
+    difficulty: 2
+    hints:
+      - 'Look for a multiplicative $f$ with $f(f(y))=\frac1y$. Then the equation holds at once.'
+      - 'Pair the primes as $(p_1,p_2),(p_3,p_4),\dots$ and send $p_1\mapsto p_2\mapsto\frac1{p_1}$.'
+    solution: |
+      **Key idea:** a multiplicative $f$ with $f(f(y))=1/y$ works, and such an $f$ can be built prime by prime.
+
+      List the primes $p_1<p_2<p_3<\cdots$. Define $f$ on primes by
+      $$f(p_{2i-1})=p_{2i},\qquad f(p_{2i})=\frac1{p_{2i-1}},$$
+      and extend to all positive rationals by $f\big(\prod p^{e_p}\big)=\prod f(p)^{e_p}$ (exponents may be negative). Then $f$ is multiplicative: $f(xy)=f(x)f(y)$, and $f(1/x)=1/f(x)$.
+
+      On primes, $f(f(p_{2i-1}))=f(p_{2i})=\frac1{p_{2i-1}}$ and $f(f(p_{2i}))=f\big(\tfrac1{p_{2i-1}}\big)=\frac1{p_{2i}}$. Since $f\circ f$ is multiplicative, $f(f(y))=\frac1y$ for all $y$. Hence
+      $$f(xf(y))=f(x)\,f(f(y))=\frac{f(x)}{y}.$$
+    checked: "reasoning"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "A squaring and dividing game aiming at 1990"
+    areas: [number-theory, combinatorics]
+    difficulty: 3
+    answer: "(a) A wins for $n_0\\ge8$. (b) B wins for $n_0\\in\\{2,3,4,5\\}$. (c) Neither for $n_0\\in\\{6,7\\}$."
+    hints:
+      - 'From $45$ up to $1990$, player A can name $1990$ at once. From larger numbers, numbers like $105\cdot2^r$ let A bring the game down without risk.'
+      - 'For small starts, find a ladder: from each range, a number whose every division lands in a higher range.'
+    solution: |
+      **Key idea:** A wins by naming numbers with several prime factors, so that every division by a prime power still leaves a number from which A wins. For small starts, B can always divide down to a tiny number.
+
+      A move of B divides A's number by a prime power. A non-prime-power $m$ can always be divided by the full power $P$ of one of its primes, giving $m/P$. A loses at once if he names a prime power.
+
+      **A wins for $n_0\ge8$.** Look at the number A faces.
+      - $45\le n\le1990$: A names $1990\in[n,n^2]$ (as $45^2>1990$) and wins.
+      - $n>1990$: A names $105\cdot2^r$, the least such number $\ge n$, so it is below $2n\le n^2$, with $r\ge5$. B's result is at most half of it, so below $n$, and at least $\min(105,\ 15\cdot2^r)\ge105$. Repeating, the numbers drop until they fall into $[45,1990]$.
+      - $21\le n\le44$: A names $420=2^2\cdot3\cdot5\cdot7\le21^2$. B can produce $210,105,140,84,60$, all $\ge45$.
+      - $15\le n\le20$: A names $210\le15^2$. B can produce $105,70,42,30$, all $\ge21$.
+      - $11\le n\le14$: A names $105\le11^2$. B can produce $35,21$ (at least $21$) or $15$.
+      - $8\le n\le10$: A names $60\le8^2$. B can produce $30,15,20,12$.
+
+      In each case B's answer lands in a later line of the list, so A reaches $1990$ in finitely many moves.
+
+      **B wins for $n_0\le5$.** A's number $m$ is at most $25$. If it is a prime power, B divides to $1$. Otherwise $m$ has exactly two prime power parts (three would need $m\ge30$), and the smaller part $Q$ has $Q^2<m\le25$, so $Q\le4$. B divides by the larger part and leaves $Q\in\{2,3,4\}$. From $2$, every choice of A ($2,3,4$) is a prime power. From $3$, A's only non-prime-power is $6$, and B leaves $2$. From $4$, A's non-prime-powers $6,10,12,14,15$ let B leave $2$ or $3$. So B wins within a few rounds.
+
+      **Neither for $n_0\in\{6,7\}$.** A's number is at most $49$. B can always answer $1$ (prime power) or a number from $2$ to $7$: a non-prime-power $m\le49$ with two parts has smaller part below $7$, and with three parts it is $30$ or $42$, where dividing by $5$ or $7$ leaves $6$. So A never names $1990$, and A cannot force a win. On the other hand A can name $30$ whenever he faces $6$ or $7$. B must answer $15$, $10$ or $6$. From $15$ or $10$ A wins by the first part, so B must keep answering $6$, and the game never ends. So B cannot force a win either.
+    checked: "script: retrograde analysis for starts up to 44 confirms the three sets and the ladder of moves"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Equiangular polygon with consecutive squares as sides"
+    areas: [algebra, geometry, number-theory]
+    difficulty: 4
+    hints:
+      - 'An equiangular polygon with sides $s_0,\dots,s_{N-1}$ exists exactly when $\sum s_k\omega^k=0$, with $\omega=e^{2\pi i/N}$.'
+      - 'Write $1990=2\cdot5\cdot199$ and split each $k$ by the Chinese remainder theorem. A quadratic in three variables is a sum of terms that each miss a variable.'
+    solution: |
+      **Key idea:** split the index $k$ into three coordinates using $1990=2\cdot5\cdot199$. Assign side $k$ the square of a number that is linear in those coordinates. A square is quadratic, so it is a sum of pieces that each ignore one coordinate, and each piece sums to zero against the roots of unity.
+
+      **Setup.** Let $N=1990$ and $\omega=e^{2\pi i/N}$. Walk along sides of lengths $s_0,\dots,s_{N-1}$, turning by $\frac{2\pi}N$ after each side, so side $k$ points in direction $\omega^k$. The path closes up exactly when $\sum s_k\omega^k=0$, and then it is a convex polygon with all angles equal (the direction turns once around, in equal steps). So we need a permutation of the squares $1^2,\dots,1990^2$ with $\sum s_k\omega^k=0$.
+
+      **Splitting the index.** Since $1=995\cdot1+398\cdot2+10\cdot20-1990$, we have $\frac1{1990}\equiv\frac12+\frac25+\frac{20}{199}\pmod 1$. So
+      $$\omega^k=(-1)^{a}\,\zeta^{b}\,\eta^{c},\qquad a=k\bmod2,\ \ b=2k\bmod5,\ \ c=20k\bmod199,$$
+      with $\zeta=e^{2\pi i/5}$ and $\eta=e^{2\pi i/199}$. By the Chinese remainder theorem, $k\mapsto(a,b,c)$ is a bijection onto $\{0,1\}\times\{0,\dots,4\}\times\{0,\dots,198\}$.
+
+      **The sides.** Give side $k$ the length
+      $$s_k=\big(995a+199b+c+1\big)^2 .$$
+      The number $995a+199b+c+1$ runs over $1,\dots,1990$ exactly once, so the sides are the required squares.
+
+      **Closing.** Expand $s_k$: it is a sum of terms of the form (constant)$\times$(a product of at most two of $a,b,c$). Each term ignores at least one of the three coordinates. For a term that does not involve $c$, summing over $c$ first gives the factor $\sum_{c=0}^{198}\eta^c=0$. A term without $b$ gives $\sum_b\zeta^b=0$, and a term without $a$ gives $\sum_a(-1)^a=0$. So every term contributes $0$, and $\sum s_k\omega^k=0$.
+    checked: "script: the assignment uses every square once and the closing sum is 0 to within 1e-6"
+    viz: imo-1990-p6
+    status: ready

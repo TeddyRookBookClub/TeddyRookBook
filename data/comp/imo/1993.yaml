@@ -1,0 +1,137 @@
+year: 1993
+edition: 34th
+date: "July 13–24, 1993 · Istanbul, Turkey"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1993/1993_eng.pdf
+  archive: https://www.imo-official.org/editions/1993/
+problems:
+  - id: P1
+    day: 1
+    topic: "Irreducibility of a trinomial by reducing mod three"
+    areas: [algebra, number-theory]
+    difficulty: 2
+    hints:
+      - 'Mod $3$ the polynomial is $x^{n-1}(x+2)$. How can that split between two monic factors?'
+      - 'The constant terms multiply to $3$, so they cannot both be multiples of $3$.'
+    solution: |
+      **Key idea:** mod $3$ the polynomial is $x^{n-1}(x+2)$. Since $9\nmid3$, one factor gets no power of $x$, so it has degree at most $1$. Then $f$ would have an integer root, and it has none.
+
+      Let $f=gh$ with $g,h$ nonconstant and integer coefficients; we may take both monic. Mod $3$, $f\equiv x^{n-1}(x+2)$. Mod $3$ factorization is unique, so $g\equiv x^i(x+2)^\varepsilon$ and $h\equiv x^{n-1-i}(x+2)^{1-\varepsilon}$, with degrees kept (the factors are monic).
+
+      If both reductions contained the factor $x$, then $3$ would divide both $g(0)$ and $h(0)$, so $9\mid g(0)h(0)=f(0)=3$. That is false. So one factor, say $g$, has no factor $x$ mod $3$: $g\equiv(x+2)^\varepsilon$, so $\deg g=\varepsilon\le1$, and as $g$ is nonconstant, $\deg g=1$.
+
+      Then $f$ has an integer root dividing $3$. But $f(1)=9$, $f(3)>0$, $f(-1)=3-4(-1)^n\in\{-1,7\}$ and $f(-3)=2(-3)^{n-1}+3$, which is not $0$ since $|2\cdot3^{n-1}|\ge6$. None is $0$, so $f$ is irreducible.
+    checked: "reasoning"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "A point with a right-angle excess: ratio and orthogonal circles"
+    areas: [geometry]
+    difficulty: 3
+    answer: "(a) $\\sqrt2$"
+    hints:
+      - 'Put $C$ at $0$ in the complex plane. Turn both conditions into one equation: $\frac{a-d}{b-d}=i\,\frac ab$.'
+      - 'For (b), invert at $C$: the two circles become the lines $A''D''$ and $B''D''$.'
+    solution: |
+      **Key idea:** in complex numbers with $C=0$, the two conditions together say $\frac{a-d}{b-d}=i\frac ab$. Solving for $d$ gives (a), and an inversion at $C$ gives (b).
+
+      Use complex numbers $a,b,d$ for $A,B,D$ with $C=0$. The number $\frac{a-d}{b-d}$ has modulus $\frac{AD}{BD}$ and argument $\angle ADB$ (turning from $DB$ to $DA$). The number $\frac ab$ has modulus $\frac{AC}{BC}$ and argument $\angle ACB$, turning the same way, because $D$ and $C$ are on the same side of $AB$. Reflecting the figure if necessary, we may assume this common turn is counterclockwise, so both arguments are the unsigned angles. The hypotheses say $\frac{AD}{BD}=\frac{AC}{BC}$ and $\angle ADB=\angle ACB+90^\circ$, so
+      $$\frac{a-d}{b-d}=i\,\frac ab .$$
+
+      **(a)** Solving, $b(a-d)=ia(b-d)$, so $d=\dfrac{(i-1)ab}{ia-b}$ and $b-d=\dfrac{b(a-b)}{ia-b}$. Hence
+      $$\frac{AB\cdot CD}{AC\cdot BD}=\frac{|a-b|\,|d|}{|a|\,|b-d|}=\frac{|a-b|\cdot\sqrt2|a||b|}{|a|\cdot|b||a-b|}=\sqrt2 .$$
+
+      **(b)** Invert in the unit circle at $C$: $z\mapsto1/\bar z$. The circles $ACD$ and $BCD$ pass through $C$, so they become lines $A'D'$ and $B'D'$, and each is parallel to the tangent of its circle at $C$. The direction of $A'D'$ is $\frac1{\bar a}-\frac1{\bar d}=\overline{\Big(\frac{d-a}{ad}\Big)}$, and that of $B'D'$ is $\overline{\Big(\frac{d-b}{bd}\Big)}$. Their quotient is the conjugate of
+      $$\frac{(d-a)\,b}{(d-b)\,a}=\frac{a-d}{b-d}\cdot\frac ba=i .$$
+      So the two lines are perpendicular, and so are the two tangents at $C$.
+    checked: "numeric: the ratio equals √2 for 300 random choices of A and B"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Peg solitaire on a square block of pieces"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: "Exactly when $n$ is not a multiple of $3$"
+    hints:
+      - 'Color square $(x,y)$ by $x+y$ mod $3$. A jump touches three squares of three different colors. What happens to the parities of the three counts?'
+      - 'For the construction, find a short sequence that clears a line of three pieces using one helper piece next to it, which ends where it started.'
+    solution: |
+      **Key idea:** a mod-$3$ coloring shows the three color counts keep equal parities, which rules out $3\mid n$. Otherwise a three-move gadget peels off a $3$-wide L-shaped border, shrinking $n$ to $n-3$.
+
+      **Impossible when $3\mid n$.** Color square $(x,y)$ with $x+y$ mod $3$. A jump uses three consecutive squares in a line, one of each color: two pieces disappear from two colors and one appears on the third. So each of the three counts changes by $\pm1$, and all three parities flip together. At the start each color has $n^2/3$ pieces, so the parities are equal, and they stay equal. A single piece gives counts $(1,0,0)$, with unequal parities.
+
+      **The gadget.** Suppose $a,b,c$ are three pieces in a line, $h$ is a piece next to the end $a$ in the perpendicular direction, and the square $e$ on the other side of $a$ from $h$ is empty. Then: $h$ jumps over $a$ to $e$; $c$ jumps over $b$ into $a$; the piece on $e$ jumps over $a$ back to $h$'s square. The line $a,b,c$ is gone and everything else is as before.
+
+      **From $n$ to $n-3$ ($n\ge4$).** Use coordinates $1,\dots,n$ for the block's columns and rows.
+      1. For rows $r=n,n-1,\dots,4$: clear the three squares in columns $n-2,n-1,n$, with $a$ in column $n-2$, helper below in row $r-1$, and the empty square above (row $r+1$, cleared or outside).
+      2. For columns $x=n,n-1,\dots,4$: clear rows $1,2,3$ of column $x$, with $a$ in row $3$, helper on its left in column $x-1$, and the empty square on its right (cleared or outside).
+      3. For rows $r=1,2,3$: clear columns $1,2,3$ of row $r$, with $a$ in column $1$, helper above in row $r+1$ (for $r=3$ this is a square of the remaining block), and the empty square below.
+
+      What remains is the $(n-3)\times(n-3)$ block in columns $1,\dots,n-3$ and rows $4,\dots,n$.
+
+      **Small cases.** A $1\times1$ block is already done. For $2\times2$: two parallel jumps move both rows one column over into a vertical pair, and one more jump finishes. Since $n\not\equiv0\pmod 3$, repeating the reduction ends at $1$ or $2$.
+    checked: "script: simulated the reduction for n = 1, 2, 4, 5, 7, 8, 10, 11, 13, 14; every move legal, one piece left"
+    viz: imo-1993-p3
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Smallest altitude of a triangle versus three subtriangles"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'The smallest altitude is twice the area divided by the longest side. Start with the case where $X$ is inside triangle $ABC$.'
+    status: coming
+
+  - id: P5
+    day: 2
+    topic: "Increasing function whose double application adds the input"
+    areas: [algebra, number-theory]
+    difficulty: 2
+    answer: "Yes: for example $f(n)=\\lfloor n\\varphi+\\tfrac12\\rfloor$ with $\\varphi=\\frac{1+\\sqrt5}2$"
+    hints:
+      - 'If $f(n)\approx cn$, then $c^2=c+1$. So try the golden ratio.'
+      - 'Round $n\varphi$ to the nearest integer and use $\varphi=1+\frac1\varphi$.'
+    solution: |
+      **Key idea:** take $f(n)$ to be $n\varphi$ rounded, where $\varphi^2=\varphi+1$. Rounding errors shrink by the factor $\frac1\varphi$, so they never spoil the identity.
+
+      Let $\varphi=\frac{1+\sqrt5}2$, so $\varphi=1+\frac1\varphi$, and let $f(n)$ be the integer nearest to $n\varphi$ (no ties, since $n\varphi$ is irrational).
+      - $f(1)=\lfloor1.618\ldots+0.5\rfloor=2$.
+      - **Increasing.** $(n+1)\varphi=n\varphi+\varphi$ with $\varphi>1$, and rounding to the nearest integer is nondecreasing and commutes with adding $1$. So $f(n+1)\ge f(n)+1$.
+      - **The identity.** Write $m=f(n)=n\varphi+\varepsilon$ with $|\varepsilon|<\frac12$. Then
+      $$m\varphi=m+\frac m\varphi=m+n+\frac\varepsilon\varphi,$$
+      and $\big|\frac\varepsilon\varphi\big|<\frac1{2\varphi}<\frac12$. So the nearest integer to $m\varphi$ is $m+n$, that is $f(f(n))=f(n)+n$.
+    checked: "script: the three properties hold for n < 100,000"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Lamps in a circle toggled by their neighbors"
+    areas: [combinatorics, algebra]
+    difficulty: 4
+    hints:
+      - 'Record the value $b_t$ of the lamp changed at step $t$. Show that $b_t=b_{t-1}+b_{t-n}$ mod $2$.'
+      - 'Work in the ring of polynomials mod $2$ modulo $x^n+x^{n-1}+1$. If $x^M=1$ there, the sequence repeats with period $M$.'
+      - 'From $x^{n-1}(x+1)=1$, use the Frobenius rule $(u+v)^{2^k}=u^{2^k}+v^{2^k}$.'
+    solution: |
+      **Key idea:** the lamp values satisfy a linear recurrence mod $2$ with characteristic polynomial $x^n+x^{n-1}+1$. Showing $x^M\equiv1$ modulo that polynomial gives the period, and squaring maps in characteristic $2$ make that easy for $n=2^k$ and $2^k+1$.
+
+      **(a)** The state is the set of lamps that are on together with the step number mod $n$. There are finitely many states, and each step can be undone: $L_{i-1}$ is not changed at step $s_i$, so we know whether $L_i$ was toggled. So the sequence of states is purely periodic, and some $M(n)$ returns to all lamps on at a step number divisible by $n$.
+
+      **A recurrence.** Let $b_t\in\{0,1\}$ be the state of lamp $L_{t\bmod n}$ right after step $t$, and set $b_{-n}=\dots=b_{-1}=1$. Before step $t$, lamp $L_t$ shows $b_{t-n}$, and $L_{t-1}$ shows $b_{t-1}$. So
+      $$b_t\equiv b_{t-1}+b_{t-n}\pmod2 .$$
+      After $M$ steps the lamps show $b_{M-n},\dots,b_{M-1}$. So it suffices that $b_{t+M}=b_t$ for all $t$.
+
+      **Algebra.** Let $p(x)=x^n+x^{n-1}+1$ over $\mathbb F_2$. If $x^M-1=q(x)p(x)$, apply both sides to the sequence as polynomials in the shift $S$ ($Sb_t=b_{t+1}$). Since $p(S)$ kills our sequence, so does $S^M-1$, which means period $M$. Now compute mod $p$: $x^{n-1}(x+1)=1$, so $x$ and $x+1$ are invertible.
+
+      **(b) $n=2^k$.** From $x^n=x^{n-1}+1$ we get $x^{n-1}=\frac1{x+1}$ and $x^n=\frac x{x+1}$. Raising to the power $n=2^k$ (a ring homomorphism mod $2$):
+      $$x^{n^2}=\frac{x^n}{x^n+1}=\frac{x/(x+1)}{1/(x+1)}=x .$$
+      So $x^{n^2-1}=1$, and $M=n^2-1$ works.
+
+      **(c) $n=2^k+1$.** Let $m=n-1=2^k$. Then $x^m=\frac1{x+1}$, and raising to the power $m$:
+      $$x^{m^2}=\frac1{x^m+1}=\frac1{\frac1{x+1}+1}=\frac{x+1}x .$$
+      So $x^{m^2+1}=x+1=x^{-m}$, that is $x^{m^2+m+1}=1$. Since $m^2+m+1=n^2-n+1$, this $M$ works.
+    checked: "script: simulated the lamps; the first return times divide n²−1 and n²−n+1 for k ≤ 5"
+    status: ready

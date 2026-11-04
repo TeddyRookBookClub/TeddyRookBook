@@ -1,0 +1,134 @@
+year: 1976
+edition: 18th
+date: "July 7–21, 1976 · Lienz, Austria"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1976/1976_eng.pdf
+  archive: https://www.imo-official.org/editions/1976/
+problems:
+  - id: P1
+    day: 1
+    topic: "Quadrilateral area forces the length of a diagonal"
+    areas: [geometry]
+    difficulty: 1
+    answer: "$8\\sqrt2$ only"
+    hints:
+      - 'Split the quadrilateral along the given diagonal and bound each triangle''s area by half the product of two sides.'
+      - 'Then use AM–GM on the diagonal and the sum of the two sides. When is everything an equality?'
+    solution: |
+      **Key idea:** the area is at most half the diagonal times the two opposite sides, and AM–GM makes this at most $32$. So every inequality is tight, which fixes the shape.
+
+      Let the quadrilateral be $ABCD$, with given diagonal $AC$ and opposite sides $AB$ and $CD$, so $AB+CD+AC=16$. Splitting along $AC$,
+      $$32=[ABC]+[ACD]\le\tfrac12AB\cdot AC+\tfrac12CD\cdot AC=\tfrac12AC\,(AB+CD)\le\tfrac12\left(\frac{AC+AB+CD}{2}\right)^2=32 .$$
+      So both steps are equalities: $AB\perp AC$, $CD\perp AC$, and $AC=AB+CD=8$.
+
+      Now $B$ and $D$ lie on opposite sides of $AC$ (the quadrilateral is convex), on lines perpendicular to $AC$ through its two ends. Measuring along and across $AC$, the vector from $B$ to $D$ has components $AC=8$ and $AB+CD=8$. So
+      $$BD=\sqrt{8^2+8^2}=8\sqrt2 .$$
+      This value does occur, for example with $AB=CD=4$ and $AC=8$.
+    checked: "algebra only: chain of inequalities with equality cases"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Iterating x squared minus two: all fixed points real"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Substitute $x=2\cos t$. What does $x^2-2$ become?'
+      - 'Solve $\cos(2^nt)=\cos t$ and count the solutions with $t\in[0,\pi]$.'
+    solution: |
+      **Key idea:** with $x=2\cos t$, the map $x\mapsto x^2-2$ doubles the angle. The equation becomes $\cos 2^nt=\cos t$, which already has $2^n$ distinct real solutions, as many as the degree.
+
+      Since $(2\cos t)^2-2=2\cos2t$, induction gives $P_n(2\cos t)=2\cos(2^nt)$. So $x=2\cos t$ solves $P_n(x)=x$ when $\cos2^nt=\cos t$, for instance when
+      $$t=\frac{2\pi k}{2^n-1}\quad\text{or}\quad t=\frac{2\pi k}{2^n+1}.$$
+      Take the values in $[0,\pi]$:
+      - $t=\frac{2\pi k}{2^n-1}$ with $k=0,1,\dots,2^{n-1}-1$: that is $2^{n-1}$ values;
+      - $t=\frac{2\pi k}{2^n+1}$ with $k=1,\dots,2^{n-1}$: another $2^{n-1}$ values.
+
+      They are all different: if $\frac{k}{2^n-1}=\frac{j}{2^n+1}$, then since $2^n-1$ and $2^n+1$ are coprime (both odd, differing by $2$), $2^n-1$ divides $k$, which forces $k=0$ and then $j=0$, but $j\ge1$.
+
+      So we have $2^n$ different $t\in[0,\pi]$. Cosine is one-to-one there, so they give $2^n$ different real roots $x=2\cos t$. The polynomial $P_n(x)-x$ has degree $2^n$, so these are all its roots, and they are real and distinct.
+    checked: "script: for n = 1 to 5 the polynomial has 2^n real, distinct roots"
+    viz: imo-1976-p2
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Box filled 40 percent by cubes of volume two"
+    areas: [number-theory, combinatorics]
+    difficulty: 2
+    answer: "$2\\times3\\times5$ and $2\\times5\\times6$"
+    hints:
+      - 'Along an edge of length $a$ fit $f(a)=\lfloor a/\sqrt[3]2\rfloor$ cubes. The condition is $abc=5f(a)f(b)f(c)$, so the three ratios $a/f(a)$ multiply to $5$.'
+      - 'Compute the ratio for small $a$. Only a few lengths have a ratio of $1.5$ or more.'
+    solution: |
+      **Key idea:** the three edges contribute independent ratios $a/f(a)$ whose product must be $5$, and only a handful of lengths have a large enough ratio.
+
+      Cubes of volume $2$ have edge $\sqrt[3]2$, so along an edge of length $a$ the most we can fit is $f(a)=\lfloor a/\sqrt[3]2\rfloor$, the largest $m$ with $2m^3\le a^3$. The best packing uses $f(a)f(b)f(c)$ cubes, so the condition is $\frac25abc=2f(a)f(b)f(c)$, that is,
+      $$\frac{a}{f(a)}\cdot\frac{b}{f(b)}\cdot\frac{c}{f(c)}=5 .$$
+      (An edge of length $1$ holds no cube at all, so all edges are at least $2$.)
+
+      **The ratios.** For $a=2,3,4,5,6,7$ we get $f(a)=1,2,3,3,4,5$, so the ratios $a/f(a)$ are
+      $$2,\quad\tfrac32,\quad\tfrac43,\quad\tfrac53,\quad\tfrac32,\quad\tfrac75 .$$
+      For $a\ge8$: $f(a)>\frac a{\sqrt[3]2}-1\ge\frac{2a}3$, because $a\left(\frac1{\sqrt[3]2}-\frac23\right)>8\cdot0.127>1$. So $a/f(a)<1.5$.
+
+      **Cases.** Every ratio other than that of $a=2$ is at most $\frac53$, and $\left(\frac53\right)^3<5$, so some edge is $2$. Two edges of $2$ would need a third ratio of $\frac54$, but every ratio is at least $\sqrt[3]2>1.25$. So exactly one edge is $2$, and the other two ratios multiply to $\frac52$. Each is at most $\frac53$, so each is at least $\frac52\cdot\frac35=1.5$, which leaves only $3,5,6$. Among these, only $\frac53\cdot\frac32=\frac52$ works: the edges $\{5,3\}$ or $\{5,6\}$.
+    checked: "script: all boxes with edges below 60 searched; only 2×3×5 and 2×5×6 work"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Largest product of positive integers with a fixed sum"
+    areas: [number-theory, algebra]
+    difficulty: 1
+    answer: "$2\\cdot3^{658}$"
+    hints:
+      - 'In a best product, can a part be $1$? Can a part be $5$ or more? Can there be three $2$s?'
+    solution: |
+      **Key idea:** in a best product all parts are $2$ or $3$, with at most two $2$s; the sum $1976$ then decides everything.
+
+      A maximal product exists, since there are finitely many ways to write $1976$ as a sum. Take one. Then:
+      - No part is $1$ (merge it into another part: $1\cdot x<x+1$).
+      - No part $x\ge5$ (replace it by $2$ and $x-2$: $2(x-2)=2x-4>x$). A part $4$ can be replaced by $2+2$ with the same product, so assume there are none.
+      - At most two parts are $2$ (replace $2+2+2$ by $3+3$: $8<9$).
+
+      So the product is $2^j3^m$ with $j\le2$ and $2j+3m=1976$. Since $1976=3\cdot658+2$, we need $2j\equiv2\pmod3$, so $j=1$ and $m=658$. The largest product is $2\cdot3^{658}$.
+    checked: "script: dynamic programming confirms the 2-and-3 rule for every sum up to 79"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Small integer solution of a linear system by pigeonhole"
+    areas: [combinatorics, algebra]
+    difficulty: 2
+    hints:
+      - 'Plug in every vector with entries in $\{0,1,\dots,q\}$. How many vectors, and how many possible values of the left-hand sides?'
+      - 'Two vectors with the same left-hand sides give a difference that solves the system.'
+    solution: |
+      **Key idea:** there are more vectors with small entries than there are possible values of the left-hand sides, so two collide, and their difference is the solution.
+
+      Consider the $(q+1)^q$ vectors $x$ with every $x_j\in\{0,1,\dots,q\}$. For one equation, let $s^+$ and $s^-$ be the numbers of coefficients equal to $1$ and $-1$; then $s^++s^-\le q$. The value of its left side lies between $-q\,s^-$ and $q\,s^+$, so it takes at most $q(s^++s^-)+1\le q^2+1$ integer values. The $p$ left sides together take at most $(q^2+1)^p$ value combinations. Since $q=2p$,
+      $$(q+1)^q=\left((q+1)^2\right)^p>(q^2+1)^p .$$
+      So two different vectors $x\ne x'$ give the same left sides. Their difference $x-x'$ solves the system, is not zero, and has integer entries with $|x_j-x'_j|\le q$.
+    checked: "algebra only: pigeonhole count"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "A recursive sequence whose floors are powers of two"
+    areas: [algebra, number-theory]
+    difficulty: 2
+    hints:
+      - 'Write $u_0=2^0+2^{-0}$ and $u_1=2^1+2^{-1}$. Guess $u_n=2^{e_n}+2^{-e_n}$.'
+      - 'Multiply out $u_n(u_{n-1}^2-2)$ in this form. Two of the four terms add up to $u_1$.'
+    solution: |
+      **Key idea:** every term has the form $2^{e}+2^{-e}$ with an integer exponent $e$, and the floor of such a number is $2^e$.
+
+      Let $e_n=\frac{2^n-(-1)^n}{3}$, an integer ($2\equiv-1\pmod3$). Then $e_0=0$ and $e_1=1$, and we show $u_n=2^{e_n}+2^{-e_n}$ for all $n$. This holds for $n=0,1$. Suppose it holds for $n-1$ and $n$. Then $u_{n-1}^2-2=2^{2e_{n-1}}+2^{-2e_{n-1}}$, and
+      $$u_n(u_{n-1}^2-2)=2^{e_n+2e_{n-1}}+2^{-(e_n+2e_{n-1})}+2^{e_n-2e_{n-1}}+2^{-(e_n-2e_{n-1})}.$$
+      Now
+      $$e_n+2e_{n-1}=\frac{2^n-(-1)^n+2^n+2(-1)^n}{3}=\frac{2^{n+1}+(-1)^n}{3}=e_{n+1},\qquad e_n-2e_{n-1}=\frac{-(-1)^n-2(-1)^n}{3}=-(-1)^n .$$
+      So the last two terms are $2^{1}+2^{-1}=u_1$ in some order, and $u_{n+1}=u_n(u_{n-1}^2-2)-u_1=2^{e_{n+1}}+2^{-e_{n+1}}$.
+
+      For $n\ge1$, $e_n\ge1$, so $0<2^{-e_n}<1$ and $\lfloor u_n\rfloor=2^{e_n}=2^{[2^n-(-1)^n]/3}$.
+    checked: "script: exact rational arithmetic confirms the floors for n = 1 to 12"
+    status: ready

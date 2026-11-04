@@ -1,0 +1,148 @@
+year: 1973
+edition: 15th
+date: "July 5–16, 1973 · Moscow, Soviet Union"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1973/1973_eng.pdf
+  archive: https://www.imo-official.org/editions/1973/
+problems:
+  - id: P1
+    day: 1
+    topic: "Odd number of unit vectors in a half-plane"
+    areas: [geometry, algebra]
+    difficulty: 2
+    hints:
+      - 'Induct on the odd number $n$, removing the two outermost vectors.'
+      - 'The sum of the middle vectors points somewhere inside the angle spanned by the two outer ones. Compare its direction with the sum of the outer pair.'
+    solution: |
+      **Key idea:** the two outermost vectors add up to a vector that makes an angle of at most $90^\circ$ with the sum of all the others. Adding it cannot make that sum shorter.
+
+      Induct on odd $n$. For $n=1$ the length is $1$. Let $n\ge3$ and measure each vector by its angle $\theta\in[0^\circ,180^\circ]$ from the ray of $g$. Sort them: $\theta_1\le\theta_2\le\dots\le\theta_n$.
+
+      Let $v$ be the sum of the middle $n-2$ vectors. By induction $|v|\ge1$. Each middle vector lies in the angle $[\theta_1,\theta_n]$, which is convex because it is at most $180^\circ$ wide. A sum of vectors from a convex angle stays in it, so the direction $\psi$ of $v$ satisfies $\theta_1\le\psi\le\theta_n$.
+
+      The outer pair adds up to $s=u_1+u_n$, which points along the bisector $\frac{\theta_1+\theta_n}2$ (or is $0$). The angle between $s$ and $v$ is at most $\frac{\theta_n-\theta_1}2\le90^\circ$, so $s\cdot v\ge0$. Hence
+      $$|s+v|^2=|s|^2+2\,s\cdot v+|v|^2\ge|v|^2\ge1 .$$
+    checked: "script: 20,000 random odd families have smallest sum length 1.000 (attained when vectors cancel in pairs)"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Space point set where every segment has a parallel twin"
+    areas: [geometry, combinatorics]
+    difficulty: 2
+    answer: "Yes. For example the $27$ points of the grid $\\{0,1,2\\}^3$"
+    hints:
+      - 'Try a small cubic grid. A shift by a coordinate unit vector often moves a segment to a parallel one.'
+      - 'The only segments that cannot be shifted are the long diagonals of the big cube. Use half of one of them.'
+    solution: |
+      **Key idea:** in the grid $\{0,1,2\}^3$, a segment can almost always be slid one step along some axis. The four long diagonals, which cannot, have a parallel half-length twin.
+
+      Let $G=\{0,1,2\}^3$; its $27$ points are not coplanar. Take two points $A\ne B$ of $G$ and let $d=B-A$. We find another pair of $G$ on a parallel but different line.
+
+      - **Some coordinate of $d$ is $0$,** say the $i$-th. Then $A$ and $B$ have the same $i$-th coordinate $t$. Pick $t'\in\{0,1,2\}$ with $|t'-t|=1$ and move both points by $(t'-t)e_i$. Both stay in $G$, the segment stays parallel, and the line moves, because $e_i$ is not parallel to $d$.
+      - **Some coordinate of $d$ is $\pm1$**, say the $i$-th, and the others are nonzero. The $i$-th coordinates of $A,B$ are $\{0,1\}$ or $\{1,2\}$; shift both by $+e_i$ or $-e_i$ to get $\{1,2\}$ or $\{0,1\}$. Again both stay in $G$ and the line moves.
+      - **All coordinates of $d$ are $\pm2$.** Then $A$ and $B$ are opposite corners of the big cube. Let $s=\pm e_1$ point from $A$'s first coordinate toward $1$, and take $A'=A+s$, $B'=A+\frac d2+s$. Then $A'$ has first coordinate $1$ and its other coordinates in $\{0,2\}$; $B'$ has coordinates $1$, $1\pm1$, so both lie in $G$. The segment $A'B'$ is parallel to $d$, and its line differs from line $AB$ because $s$ is not parallel to $d$.
+
+      So the answer is yes.
+    checked: "script: every one of the 351 pairs in {0,1,2}^3 has a parallel, non-collinear partner pair"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Palindromic quartic with a real root: smallest coefficient size"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$\\dfrac45$, at $(a,b)=\\left(\\mp\\dfrac45,-\\dfrac25\\right)$"
+    hints:
+      - 'A root is not $0$. Divide by $x^2$ and set $t=x+\frac1x$. What values can $t$ take?'
+      - 'The condition becomes $at+b=2-t^2$, a line in the $(a,b)$-plane. Use Cauchy–Schwarz.'
+    solution: |
+      **Key idea:** the substitution $t=x+\frac1x$ turns the quartic into a line in the $(a,b)$-plane, and $a^2+b^2$ is the squared distance to the origin.
+
+      A real root $x$ is not $0$. Dividing by $x^2$ and putting $t=x+\frac1x$ gives $x^2+\frac1{x^2}=t^2-2$, so
+      $$t^2+at+b-2=0,\qquad |t|\ge2,$$
+      since $|x+\frac1x|\ge2$ for real $x\ne0$. Conversely, any $t$ with $|t|\ge2$ comes from a real $x$.
+
+      So $(a,b)$ is admissible exactly when $at+b=2-t^2$ for some $|t|\ge2$. By Cauchy–Schwarz, $(at+b)^2\le(a^2+b^2)(t^2+1)$, so
+      $$a^2+b^2\ge\frac{(t^2-2)^2}{t^2+1}.$$
+      With $s=t^2\ge4$, the function $h(s)=\frac{(s-2)^2}{s+1}$ has $h'(s)=\frac{(s-2)(s+4)}{(s+1)^2}>0$, so $h(s)\ge h(4)=\frac45$.
+
+      Equality needs $t^2=4$ and $(a,b)$ parallel to $(t,1)$. For $t=2$: $(a,b)=\lambda(2,1)$ with $5\lambda=-2$, so $(a,b)=\left(-\frac45,-\frac25\right)$, and $x=1$ is a root. For $t=-2$ we get $\left(\frac45,-\frac25\right)$ with root $x=-1$. The minimum is $\frac45$.
+    checked: "script: 200,000 random values of t give a minimum of 0.80008 for (t²-2)²/(t²+1)"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Shortest sweep of a triangle with a short-range detector"
+    areas: [geometry]
+    difficulty: 3
+    answer: "Go to the midpoint of the altitude from one far vertex, then head straight for the other far vertex and stop at detector range from it. Length $\\frac{2\\sqrt7-\\sqrt3}{4}$ times the side."
+    hints:
+      - 'Any good path must come within detector range $r$ (half the altitude) of both far vertices. Which one does it reach first?'
+      - 'Bound $AP+PB$ for points $P$ at height at least $r$ above line $AB$ (Minkowski''s inequality). For coverage, use that the distance to a segment is a convex function.'
+    solution: |
+      **Key idea:** a path must come within range of both far corners. A sharp lower bound comes from the sum of distances from a point to two fixed points, and the path that meets it covers the triangle because distance to a segment is convex.
+
+      Let the triangle be $ABC$ with side $s$, altitude $h=\frac{\sqrt3}2s$, start at $A$, and detector range $r=\frac h2$. Put $M$ at the midpoint of $AB$, so $CM$ is an altitude.
+
+      **Lower bound.** The path must pass a point $P$ with $PC\le r$ and a point $Q$ with $QB\le r$. The triangle is symmetric in its altitude from $A$, which swaps $B$ and $C$, so we may assume the path reaches $P$ no later than $Q$. Then
+      $$\text{length}\ge AP+PQ\ge AP+PB-QB\ge AP+PB-r .$$
+      Now $A$ and $B$ are mirror images in line $CM$. Put coordinates with $M=(0,0)$, $A=(-\frac s2,0)$, $B=(\frac s2,0)$, $C=(0,h)$. Since $PC\le r$, the point $P=(x,y)$ has $y\ge h-r=\frac h2$. By Minkowski's inequality
+      $$AP+PB=\sqrt{(x+\tfrac s2)^2+y^2}+\sqrt{(\tfrac s2-x)^2+y^2}\ge\sqrt{s^2+4y^2}\ge\sqrt{s^2+h^2}.$$
+      With $h^2=\frac34s^2$ this is $\frac{\sqrt7}2s$, so
+      $$\text{length}\ge\frac{\sqrt7}{2}s-\frac{\sqrt3}{4}s=\frac{2\sqrt7-\sqrt3}{4}\,s\approx0.890\,s .$$
+
+      **A path with this length.** Let $P_0$ be the midpoint of $CM$ (the equality point above) and $Q_0$ the point of segment $P_0B$ at distance $r$ from $B$. The path $A\to P_0\to Q_0$ has length $AP_0+P_0B-r$, which is the bound.
+
+      **It sweeps the whole triangle.** The distance from a point to a fixed segment is a convex function, so on a triangle it is largest at a vertex.
+      - On triangle $AMC$, the distance to segment $AP_0$ is $0$ at $A$, at most $MP_0=r$ at $M$, and at most $CP_0=r$ at $C$.
+      - On triangle $BMC$, the distance to segment $P_0Q_0$ is at most $CP_0=r$ at $C$, at most $MP_0=r$ at $M$, and exactly $BQ_0=r$ at $B$.
+
+      These two triangles make up $ABC$, so every point is within range. The mirror-image path (via the midpoint of the altitude from $B$, ending near $C$) is equally short.
+    checked: "script: grid check that the path covers the triangle (largest gap 0), and random sampling of the lower bound"
+    viz: imo-1973-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "A group of linear maps, each with a fixed point"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Which maps $x\mapsto x+b$ can belong to the set?'
+      - 'The commutator $g\circ f\circ g^{-1}\circ f^{-1}$ has slope $1$. What does that say about $f$ and $g$?'
+    solution: |
+      **Key idea:** the only translation in the set is the identity, so all commutators are trivial. Commuting maps share the fixed point of any non-identity element.
+
+      **Translations.** A map $x\mapsto x+b$ with $b\ne0$ has no fixed point. So the only element of slope $1$ in $G$ is the identity.
+
+      **Everything commutes.** For $f,g\in G$, the map $h=g\circ f\circ g^{-1}\circ f^{-1}$ is in $G$ by (a) and (b), and its slope is the product of the slopes $a_g\,a_f\,a_g^{-1}a_f^{-1}=1$. So $h$ is the identity, which means $g\circ f=f\circ g$.
+
+      **A common fixed point.** If every element of $G$ is the identity, any $k$ works. Otherwise pick $f\in G$ that is not the identity; its slope $a\ne1$, so it has exactly one fixed point $k=\frac{b}{1-a}$. For any $g\in G$,
+      $$f(g(k))=g(f(k))=g(k),$$
+      so $g(k)$ is a fixed point of $f$, and therefore $g(k)=k$.
+    checked: "algebra only: slope bookkeeping"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Dominating sequence with controlled ratios and total"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Spread each $a_j$ over all positions with geometric weights $q^{|k-j|}$.'
+      - 'Compare the weights at positions $k$ and $k+1$: each ratio is $q$ or $\frac1q$.'
+    solution: |
+      **Key idea:** let each $a_j$ leak into its neighbors with weight $q$ per step. Ratios of neighbors then stay between $q$ and $\frac1q$, and the total is at most a two-sided geometric series.
+
+      If $n=1$, take $b_1=\frac{a_1}{1-q}$: then $a_1<b_1<\frac{1+q}{1-q}a_1$, and (b) is empty. For $n\ge2$ set
+      $$b_k=\sum_{j=1}^n a_j\,q^{|k-j|}\qquad(k=1,\dots,n).$$
+
+      **(a)** $b_k$ contains $a_k$ (weight $q^0=1$) plus at least one more positive term, so $b_k>a_k$.
+
+      **(b)** For each $j$, the weight ratio $q^{|k+1-j|}/q^{|k-j|}$ is $q$ if $j\le k$ and $\frac1q$ if $j\ge k+1$. Both lie in $[q,\frac1q]$, so $q\,b_k\le b_{k+1}\le\frac1q\,b_k$. The inequalities are strict: the term $j=k+1$ has ratio $\frac1q>q$, and the term $j=k$ has ratio $q<\frac1q$.
+
+      **(c)** Adding over $k$,
+      $$\sum_k b_k=\sum_j a_j\sum_{k=1}^n q^{|k-j|}<\sum_j a_j\left(1+2\sum_{m=1}^\infty q^m\right)=\frac{1+q}{1-q}\sum_j a_j .$$
+    checked: "script: 2,000 random cases (n ≤ 8) satisfy all three conditions"
+    status: ready

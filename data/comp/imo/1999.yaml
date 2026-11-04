@@ -1,0 +1,131 @@
+year: 1999
+edition: 40th
+date: "July 10–22, 1999 · Bucharest, Romania"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1999/1999_eng.pdf
+  archive: https://www.imo-official.org/editions/1999/
+problems:
+  - id: P1
+    day: 1
+    topic: "Point sets symmetric about every perpendicular bisector"
+    areas: [geometry]
+    difficulty: 2
+    answer: "The vertex sets of regular polygons"
+    hints:
+      - 'Every symmetry of a finite set fixes its centroid. What does that say about where the points lie?'
+      - 'Once the points are on a circle, use the perpendicular bisector of two points that are second neighbors.'
+    solution: |
+      **Key idea:** all the reflections fix the centroid, so the points lie on a circle around it. Reflecting in the bisector of second neighbors shows that consecutive gaps are equal.
+
+      **On a circle.** Let $G$ be the centroid of $S$. A reflection that maps $S$ to itself maps $G$ to the centroid of the image, which is $G$. So $G$ lies on the perpendicular bisector of every pair $A,B$, that is $GA=GB$. All points are equally far from $G$.
+
+      **Equal gaps.** List the points around the circle as $P_1,\dots,P_n$ (indices mod $n$, $n\ge3$). The reflection in the perpendicular bisector of $P_iP_{i+2}$ swaps $P_i$ and $P_{i+2}$ and maps the arc between them that contains $P_{i+1}$ to itself. The only point of $S$ inside that arc is $P_{i+1}$, so it is mapped to itself, and it lies on the axis: it is the midpoint of the arc. So $P_iP_{i+1}=P_{i+1}P_{i+2}$ for all $i$, and $S$ is a regular polygon.
+
+      **Converse.** For a regular $n$-gon, the perpendicular bisector of two vertices passes through the center at an angle that is a multiple of $\frac\pi n$ from a vertex, which is one of the polygon's mirror lines.
+    checked: "reasoning"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Best constant for a symmetric quartic inequality"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$C=\\frac18$, with equality when two of the $x_i$ are equal and the rest are $0$ (or all are $0$)"
+    hints:
+      - 'Bound $x_i^2+x_j^2$ by the sum of all squares $p$. Then the left side is at most $p\,q$, where $q=\sum_{i<j}x_ix_j$.'
+      - '$(\sum x_i)^4=(p+2q)^2$. Use AM–GM on $p$ and $2q$.'
+    solution: |
+      **Key idea:** replace each $x_i^2+x_j^2$ by the full sum of squares, then AM–GM on $p$ and $2q$.
+
+      Let $p=\sum x_i^2$ and $q=\sum_{i<j}x_ix_j$, so $\big(\sum x_i\big)^2=p+2q$. Since all $x_k\ge0$, $x_i^2+x_j^2\le p$, so
+      $$\sum_{i<j}x_ix_j(x_i^2+x_j^2)\le p\,q=\frac18\cdot4\,p\,(2q)\le\frac18(p+2q)^2=\frac18\Big(\sum x_i\Big)^4 .$$
+      So $C=\frac18$ works.
+
+      **Equality.** We need $x_i^2+x_j^2=p$ whenever $x_ix_j>0$, and $p=2q$ (or both sides $0$). If three numbers are positive, the first fails. If exactly one is positive, the left side is $0$ and the right is not. If exactly two are positive, say $x,y$, then $p=x^2+y^2$ and $q=xy$, and $p=2q$ forces $x=y$. Indeed for $x_1=x_2=1$ and the rest $0$, both sides equal $2$. So $C=\frac18$ is the least constant, with equality exactly when two values are equal and the rest are $0$, or all are $0$.
+    checked: "numeric: 20,000 random nonnegative vectors"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Fewest marked cells so every cell has a marked neighbor"
+    areas: [combinatorics]
+    difficulty: 4
+    hints:
+      - 'Color the board like a chessboard. A cell only has neighbors of the other color, so the two colors can be handled separately.'
+    status: coming
+
+  - id: P4
+    day: 2
+    topic: "When a power of n divides a power plus one"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$(1,p)$ for every prime $p$, together with $(2,2)$ and $(3,3)$"
+    hints:
+      - 'For odd $p$, $n$ is odd. Let $q$ be the smallest prime factor of $n$ and look at the order of $p-1$ mod $q$.'
+      - 'You will find $q=p$, so $n=p$. Then use lifting the exponent.'
+    solution: |
+      **Key idea:** the smallest prime of $n$ must be $p$ itself, so $n=p$, and lifting the exponent allows only $p=3$.
+
+      $n=1$ always works. Let $n\ge2$.
+
+      **$p=2$:** the condition is $n\mid2$ with $n\le4$, so $n=2$.
+
+      **$p$ odd:** $(p-1)^n+1$ is odd, so $n$ is odd. Let $q$ be its smallest prime factor. From $(p-1)^n\equiv-1\pmod q$, the order of $p-1$ mod $q$ divides $2n$ and $q-1$; the only prime factor of $q-1$ that can divide $2n$ is $2$, and only once. So the order divides $2$, and $(p-1)^2\equiv1$, that is $p-1\equiv\pm1\pmod q$. Since $n$ is odd, $p-1\equiv1$ would give $(p-1)^n\equiv1\ne-1$ (as $q$ is odd). So $p-1\equiv-1$, and $q\mid p$, so $q=p$.
+
+      Then $p\mid n$, $n$ is odd and $n\le2p$, so $n=p$. We need $p^{p-1}\mid(p-1)^p+1$. By lifting the exponent (for odd $p$ dividing $(p-1)+1$),
+      $$v_p\big((p-1)^p+1\big)=v_p(p)+v_p(p)=2 .$$
+      So $p-1\le2$, $p=3$, and indeed $3^2\mid2^3+1=9$.
+    checked: "script: search over primes p < 200 and n ≤ 2p"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Three tangent circles and a chord tangent to the third"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'The homothety at $M$ that maps the big circle to the circle through $M$ sends $A$ to $C$ and $B$ to $D$. So $CD\parallel AB$.'
+      - 'Both lines are perpendicular to the line of centers. Put that line on the $x$-axis and compute where $CD$ crosses it.'
+    solution: |
+      **Key idea:** a homothety at $M$ shows $CD\parallel AB$, so both are perpendicular to the line of centers. A short computation of where $CD$ crosses that line gives distance exactly $r_2$ from the center of $G_2$.
+
+      Let $G_1$ have center $O_1$ and radius $r_1$, $G_2$ center $O_2$ and radius $r_2$, $G$ center $O$ and radius $R$. Scale so $r_1=1$, and use coordinates with $O_1=(0,0)$ and $O_2=(1,0)$ (as $O_2$ lies on $G_1$).
+
+      **Line $AB$.** It is the radical axis of $G_1$ and $G_2$: $x^2+y^2-1=(x-1)^2+y^2-r_2^2$, so it is the vertical line $x=x_0$ with $x_0=1-\frac{r_2^2}2$.
+
+      **Line $CD$.** $G_1$ touches $G$ internally at $M$, so the homothety $h$ at $M$ with ratio $\frac1R$ maps $G$ to $G_1$, sending $A,B$ to the second points $C,D$ on lines $MA,MB$. So $CD=h(AB)$ is the vertical line $x=c$ with $c=m_x+\frac{x_0-m_x}R$, where $M=(m_x,m_y)$. Since $M$ is on ray $OO_1$ at distance $1$ from $O_1$, $M=-\frac{O}{R-1}$, so $m_x=-\frac{O_x}{R-1}$ and
+      $$c=\Big(1-\frac1R\Big)m_x+\frac{x_0}R=\frac{x_0-O_x}R .$$
+
+      **Finding $O_x$.** Internal tangency gives $|O|=R-1$ and $|O-O_2|=R-r_2$. Subtracting the squares, $2O_x-1=(R-1)^2-(R-r_2)^2$, so
+      $$O_x=1-R+Rr_2-\frac{r_2^2}2,\qquad x_0-O_x=R(1-r_2).$$
+      Hence $c=1-r_2$. The line $CD$ is the vertical line at distance $1-c=r_2$ from $O_2=(1,0)$, so it is tangent to $G_2$.
+    checked: "numeric: 500 random configurations give distance r₂ from the center of G₂ to CD"
+    viz: imo-1999-p5
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Functional equation that forces a downward parabola"
+    areas: [algebra]
+    difficulty: 3
+    answer: "$f(x)=1-\\dfrac{x^2}2$"
+    hints:
+      - 'Put $x=f(y)$. You get a formula for $f$ on the set of values of $f$.'
+      - 'Show that every real number is a difference of two values of $f$. Then evaluate $f$ at such a difference.'
+    solution: |
+      **Key idea:** first find $f$ on its own values. Then show that every real number is a difference of two values, and the equation evaluates $f$ there.
+
+      Let $c=f(0)$ and let $V$ be the set of values of $f$. $f\equiv0$ fails (it gives $0=-1$), so some $v_0\ne0$ is in $V$.
+
+      **On $V$.** For $v=f(y)$ and $x=v$: $c=f(v)+v^2+f(v)-1$, so
+      $$f(v)=\frac{c+1}2-\frac{v^2}2\qquad(v\in V).$$
+
+      **Differences of values.** With $f(y)=v_0$, the equation gives $f(x-v_0)-f(x)=f(v_0)+xv_0-1$. As $x$ varies, the right side takes every real value. So every real $z$ is $f(u)-f(w)$ for some $u,w$: a difference $v_1-v_2$ with $v_1,v_2\in V$.
+
+      **Everywhere.** For $v_1,v_2\in V$, take $x=v_1$ and $y$ with $f(y)=v_2$:
+      $$f(v_1-v_2)=f(v_2)+v_1v_2+f(v_1)-1=(c+1)-\frac{v_1^2+v_2^2}2+v_1v_2-1=c-\frac{(v_1-v_2)^2}2 .$$
+      So $f(z)=c-\frac{z^2}2$ for all $z$. Comparing with the formula on $V$ (at $v_0$) gives $c=\frac{c+1}2$, so $c=1$.
+
+      **Check.** With $f(x)=1-\frac{x^2}2$ and $v=f(y)$: the left side is $1-\frac{(x-v)^2}2$, and the right side is $1-\frac{v^2}2+xv+1-\frac{x^2}2-1=1-\frac{(x-v)^2}2$.
+    checked: "algebra: the check expands to an identity"
+    status: ready

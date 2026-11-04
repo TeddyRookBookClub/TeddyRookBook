@@ -1,0 +1,136 @@
+year: 1981
+edition: 22nd
+date: "July 8–20, 1981 · Washington, D.C., United States"
+note: "There was no IMO in 1980. This was the next contest after 1979."
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1981/1981_eng.pdf
+  archive: https://www.imo-official.org/editions/1981/
+problems:
+  - id: P1
+    day: 1
+    topic: "Point minimizing side lengths over distances to sides"
+    areas: [geometry, algebra]
+    difficulty: 1
+    answer: "The incenter"
+    hints:
+      - 'With $x,y,z$ the three distances, the sum $ax+by+cz$ is fixed. Which quantity is it?'
+      - 'Apply Cauchy–Schwarz to $\left(\frac ax+\frac by+\frac cz\right)(ax+by+cz)$.'
+    solution: |
+      **Key idea:** $ax+by+cz$ is twice the area, a constant, and Cauchy–Schwarz then bounds the sum below, with equality exactly when the three distances are equal.
+
+      Let $a=BC$, $b=CA$, $c=AB$ and $x=PD$, $y=PE$, $z=PF$. Splitting $ABC$ into the triangles $PBC$, $PCA$, $PAB$ gives $ax+by+cz=2S$, where $S$ is the area. By Cauchy–Schwarz,
+      $$\left(\frac ax+\frac by+\frac cz\right)(ax+by+cz)\ge(a+b+c)^2,$$
+      so the sum is at least $\frac{(a+b+c)^2}{2S}$. Equality holds when the vectors $\left(\sqrt{a/x},\sqrt{b/y},\sqrt{c/z}\right)$ and $\left(\sqrt{ax},\sqrt{by},\sqrt{cz}\right)$ are proportional. Their ratios are $\frac1x,\frac1y,\frac1z$, so this means $x=y=z$. The only interior point at equal distances from the three sides is the incenter, so the minimum is attained exactly there.
+    checked: "algebra only: Cauchy–Schwarz with its equality case"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Average smallest element of a random subset"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'Count the subsets whose smallest element is $k$: $\binom{n-k}{r-1}$.'
+      - 'Write $k$ as $\sum_{j=1}^k1$ and apply the hockey-stick identity twice.'
+    solution: |
+      **Key idea:** the total of the smallest elements is a double sum that collapses with the hockey-stick identity $\sum_{i\le m}\binom{i}{r}=\binom{m+1}{r+1}$.
+
+      A subset with smallest element $k$ consists of $k$ and $r-1$ elements from $\{k+1,\dots,n\}$, so there are $\binom{n-k}{r-1}$ of them. The total of all smallest elements is
+      $$T=\sum_{k\ge1}k\binom{n-k}{r-1}=\sum_{j\ge1}\ \sum_{k\ge j}\binom{n-k}{r-1}=\sum_{j\ge1}\binom{n-j+1}{r}=\binom{n+1}{r+1},$$
+      using the hockey-stick identity in the inner sum and again in the outer sum. Dividing by the number of subsets,
+      $$F(n,r)=\frac{\binom{n+1}{r+1}}{\binom nr}=\frac{(n+1)!\,r!\,(n-r)!}{(r+1)!\,(n-r)!\,n!}=\frac{n+1}{r+1}.$$
+    checked: "script: exact averages for all 1 ≤ r ≤ n ≤ 11"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Integer pairs on a quadratic form: Fibonacci in disguise"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$987^3+1597^3=5{,}034{,}507{,}976$ (for the usual version with squares, $987^2+1597^2=3{,}524{,}578$)"
+    hints:
+      - 'If $(m,n)$ is a solution with $n>m$, check that $(n-m,m)$ is also a solution.'
+      - 'Run this step backwards from $(1,1)$. Which pairs do you get?'
+    solution: |
+      **Key idea:** the step $(m,n)\to(n-m,m)$ keeps the equation and shrinks the pair, so every solution comes from $(1,1)$ by the reverse step. The solutions are consecutive Fibonacci numbers.
+
+      **The step.** If $n^2-mn-m^2=\pm1$, then for the pair $(n-m,m)$:
+      $$m^2-m(n-m)-(n-m)^2=-(n^2-mn-m^2)=\mp1,$$
+      so it is again a solution.
+
+      **Solutions have $n>m$, except $(1,1)$.** If $n\le m$, then $n^2-mn\le0$, so $n^2-mn-m^2\le-m^2\le-1$. Equality needs $m=1$ and $n^2=n$, so $(m,n)=(1,1)$.
+
+      **Descent.** Starting from any solution other than $(1,1)$, apply the step. The new pair is a solution of positive integers with a smaller second entry. Repeating, we must end at $(1,1)$. Reversing, every solution is obtained from $(1,1)$ by $(m,n)\to(n,m+n)$, which gives exactly the consecutive Fibonacci pairs
+      $$(1,1),(1,2),(2,3),(3,5),\dots,(610,987),(987,1597),(1597,2584),\dots$$
+
+      With both entries at most $1981$, the largest pair is $(987,1597)$, and $m^3+n^3=987^3+1597^3=5034507976$.
+
+      (The official English text asks for $m^3+n^3$; most other sources ask for $m^2+n^2$. Both grow with $m$ and $n$, so the same pair wins, and the answer to the squares version is $987^2+1597^2=3524578$.)
+    checked: "script: brute force over all m, n ≤ 1981 gives the same maximum"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Consecutive integers whose largest divides the others' lcm"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "(a) every $n\\ge4$; (b) only $n=4$"
+    hints:
+      - 'The largest number $L$ divides the lcm of $L-1,\dots,L-n+1$ exactly when each prime power $p^e$ exactly dividing $L$ divides some $j<n$.'
+      - 'Try $L=(n-1)(n-2)$ and $L=(n-2)(n-3)$.'
+    solution: |
+      **Key idea:** a prime power divides both $L$ and $L-j$ only if it divides $j$. So $L$ works exactly when every prime power in $L$ is a divisor of some $j<n$, and the answers follow.
+
+      Let the numbers be $L-n+1,\dots,L-1,L$, with $L-n+1\ge1$.
+
+      **Criterion.** $L$ divides $\mathrm{lcm}(L-1,\dots,L-n+1)$ exactly when each prime power $p^e$ exactly dividing $L$ divides some $L-j$ with $1\le j\le n-1$. And $p^e\mid L-j$ together with $p^e\mid L$ means $p^e\mid j$.
+
+      **$n=3$ fails.** Each prime power of $L$ would divide $1$ or $2$, so $L\mid2$, impossible for $L\ge3$.
+
+      **$n\ge4$ works.** Take $L=(n-1)(n-2)$. The numbers $n-1$ and $n-2$ are coprime and both less than $n$, and every prime power of $L$ divides one of them. The smallest number in the set is $L-n+1=(n-1)(n-3)\ge1$. (For $n=4$: $\{3,4,5,6\}$.)
+
+      **$n=4$ is unique.** Each prime power of $L$ divides $1$, $2$ or $3$, so $L\mid6$, and $L\ge4$ gives $L=6$.
+
+      **$n\ge5$ is not unique.** Also take $L'=(n-2)(n-3)$: the coprime factors $n-2$ and $n-3$ are less than $n$, and $L'-n+1=n^2-6n+7\ge2$ for $n\ge5$. Since $L'\ne L$, there are two sets. So (a) all $n\ge4$, and (b) only $n=4$.
+    checked: "script: for n = 3 to 11, all sets with largest element below 3,000 listed (none for n = 3, only {3,4,5,6} for n = 4)"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Three equal circles in a triangle through one point"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'The center of each circle lies on an angle bisector. The triangle of centers has sides parallel to the triangle''s sides.'
+      - 'The common point is equally far from the three centers. What is it for the triangle of centers?'
+    solution: |
+      **Key idea:** the triangle of centers is a shrunken copy of $ABC$ with homothety center at the incenter. The common point is its circumcenter, so it is the image of $ABC$'s circumcenter.
+
+      Let $\rho$ be the common radius and $r$ the inradius of $ABC$, with incenter $I$. The circle tangent to the two sides at $A$ has its center $O_A$ on the bisector $AI$, at distance $\rho$ from both sides; since the circles are inside the triangle, $\rho<r$. The homothety with center $I$ and ratio $k=\frac{r-\rho}{r}$ moves each side line toward $I$ to the parallel line at distance $\rho$ inside. So it maps $A$ to the point on $AI$ at distance $\rho$ from both sides at $A$, which is $O_A$. Likewise it maps $B\to O_B$ and $C\to O_C$.
+
+      The point $O$ lies on all three circles, so $OO_A=OO_B=OO_C=\rho$: it is the circumcenter of $O_AO_BO_C$. The homothety maps the circumcenter $O'$ of $ABC$ to the circumcenter of $O_AO_BO_C$, which is $O$. A homothety's center, a point and its image are collinear, so $I$, $O'$ and $O$ lie on one line.
+    checked: "algebra only: homothety argument"
+    viz: imo-1981-p5
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "A recursion that grows into a tower of twos"
+    areas: [algebra, combinatorics]
+    difficulty: 2
+    answer: "A tower of $1984$ twos, minus $3$"
+    hints:
+      - 'Find closed forms for $f(1,y)$, $f(2,y)$ and $f(3,y)$ by induction on $y$.'
+      - 'Then $f(4,y+1)+3=2^{f(4,y)+3}$.'
+    solution: |
+      **Key idea:** each row of the table is the previous row iterated, so adding $3$ turns the rows into "add", "double", "power of two" and "tower of twos".
+
+      Rule (3) says $f(x+1,y+1)=f(x,f(x+1,y))$: row $x+1$ is obtained by applying row $x$ repeatedly. Induct on $y$ in each row.
+      - **Row 1:** $f(1,0)=f(0,1)=2$ and $f(1,y+1)=f(1,y)+1$, so $f(1,y)=y+2$.
+      - **Row 2:** $f(2,0)=f(1,1)=3$ and $f(2,y+1)=f(2,y)+2$, so $f(2,y)=2y+3$.
+      - **Row 3:** $f(3,0)=f(2,1)=5$ and $f(3,y+1)=2f(3,y)+3$, that is, $f(3,y+1)+3=2\,(f(3,y)+3)$. So $f(3,y)+3=8\cdot2^y$ and $f(3,y)=2^{y+3}-3$.
+      - **Row 4:** $f(4,0)=f(3,1)=13=2^{2^2}-3$, and $f(4,y+1)=2^{f(4,y)+3}-3$, that is, $f(4,y+1)+3=2^{f(4,y)+3}$. So $f(4,y)+3$ is a tower of $y+3$ twos.
+
+      Hence $f(4,1981)$ is a tower of $1984$ twos, minus $3$.
+    checked: "script: the recursion computed directly matches the closed forms for rows 1 to 3 and f(4,0) = 13"
+    status: ready

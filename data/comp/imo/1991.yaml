@@ -1,0 +1,132 @@
+year: 1991
+edition: 32nd
+date: "July 12–23, 1991 · Sigtuna, Sweden"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1991/1991_eng.pdf
+  archive: https://www.imo-official.org/editions/1991/
+problems:
+  - id: P1
+    day: 1
+    topic: "Bounds for a product of incenter ratios"
+    areas: [geometry, algebra]
+    difficulty: 1
+    hints:
+      - 'Use the angle bisector theorem twice to show $\frac{AI}{AA''}=\frac{b+c}{a+b+c}$.'
+      - 'The three ratios add up to $2$ and each is more than $\frac12$.'
+    solution: |
+      **Key idea:** each ratio is $\frac{b+c}{a+b+c}$. The three ratios add to $2$ and each exceeds $\frac12$; AM–GM gives the upper bound, and expanding around $\frac12$ gives the lower one.
+
+      Let $a,b,c$ be the sides and $s=a+b+c$. By the bisector theorem, $BA'=\frac{ac}{b+c}$. In triangle $ABA'$, $BI$ bisects the angle at $B$, so
+      $$\frac{AI}{IA'}=\frac{AB}{BA'}=\frac{b+c}{a},\qquad\text{so}\qquad \frac{AI}{AA'}=\frac{b+c}{s}.$$
+      Let $x=\frac{b+c}s$, $y=\frac{c+a}s$, $z=\frac{a+b}s$. Then $x+y+z=2$, and by the triangle inequality $b+c>a$, so $x>\frac12$; likewise $y,z>\frac12$.
+
+      **Upper bound.** By AM–GM, $xyz\le\big(\frac{x+y+z}3\big)^3=\frac8{27}$.
+
+      **Lower bound.** Write $x=\frac12+u$, $y=\frac12+v$, $z=\frac12+w$ with $u,v,w>0$ and $u+v+w=\frac12$. Expanding,
+      $$xyz>\frac18+\frac14(u+v+w)=\frac18+\frac18=\frac14 .$$
+    checked: "reasoning"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Coprime residues in arithmetic progression"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'The first two terms are $1$ and the smallest prime $p$ not dividing $n$. So the common difference is $p-1$.'
+      - 'If $p\ge5$, then $6\mid n$. Look at the third term mod $3$.'
+    solution: |
+      **Key idea:** the second term is the smallest prime $p$ not dividing $n$. For $p=2$ or $3$ we get a prime or a power of $2$; for $p\ge5$ the third term is a multiple of $3$.
+
+      The list starts with $a_1=1$ and ends with $a_k=n-1$. Since $n>6$, $\varphi(n)\ge3$ (only $n=3,4,6$ have $\varphi(n)=2$), so $k\ge3$. The second term $a_2$ is the smallest integer above $1$ coprime to $n$. Every prime factor of $a_2$ is coprime to $n$ and at most $a_2$, so $a_2=p$ is the smallest prime not dividing $n$. The common difference is $d=p-1$.
+      - **$p=2$:** $d=1$, so every number below $n$ is coprime to $n$, and $n$ is prime.
+      - **$p=3$:** $2\mid n$ and $d=2$, so every odd number below $n$ is coprime to $n$. Then $n$ has no odd prime factor, so $n$ is a power of $2$.
+      - **$p\ge5$:** then $2\mid n$ and $3\mid n$. Since $n-1=1+(k-1)d$, we have $d\mid n-2$, and $n-2\equiv1\pmod3$, so $3\nmid d$. Also $3\nmid d+1=p$, as $p\ge5$ is prime. So $d\equiv1\pmod3$, and the third term $a_3=1+2d\equiv0\pmod 3$. It is coprime to $n$ yet divisible by $3\mid n$. Contradiction.
+    checked: "reasoning"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Forcing five pairwise coprime numbers up to 280"
+    areas: [combinatorics, number-theory]
+    difficulty: 3
+    answer: "$n=217$"
+    hints:
+      - 'Which $216$ numbers up to $280$ are divisible by $2$, $3$, $5$ or $7$?'
+      - 'For the other direction, use $1$ and the primes, plus a few disjoint groups of five pairwise coprime composite numbers.'
+    solution: |
+      **Key idea:** the multiples of $2,3,5,7$ are $216$ numbers with no five pairwise coprime. With $217$ numbers, either five come from $\{1\}\cup\{\text{primes}\}$, or almost all composites are present, which completes one of eight prepared groups.
+
+      **$216$ is not enough.** By inclusion–exclusion, the numbers up to $280$ divisible by $2$, $3$, $5$ or $7$ number
+      $$140+93+56+40-46-28-20-18-13-8+9+6+4+2-1=216 .$$
+      Among any five of them, two share one of the four primes. So $n\ge217$.
+
+      **$217$ is enough.** Let $P$ be the set of $1$ and the $59$ primes up to $280$; it has $60$ elements, any five of them pairwise coprime. A $217$-subset with at least $5$ elements of $P$ is done. Otherwise it contains at least $213$ of the $220$ numbers outside $P$, so it misses at most $7$ of them. Now take these eight disjoint groups of composite numbers, each pairwise coprime:
+      $$\{2^2,3^2,5^2,7^2,13^2\},\ \{2\cdot23,3\cdot19,5\cdot17,7\cdot13,11^2\},\ \{2\cdot29,3\cdot23,5\cdot19,7\cdot17,11\cdot13\},$$
+      $$\{2\cdot31,3\cdot29,5\cdot23,7\cdot19,11\cdot17\},\ \{2\cdot37,3\cdot31,5\cdot29,7\cdot23,11\cdot19\},$$
+      $$\{2\cdot41,3\cdot37,5\cdot31,7\cdot29,11\cdot23\},\ \{2\cdot43,3\cdot41,5\cdot37,7\cdot31,13\cdot17\},\ \{2\cdot47,3\cdot43,5\cdot41,7\cdot37,13\cdot19\}.$$
+      All $40$ numbers are distinct and at most $280$. At most $7$ are missing, so one group is complete, giving five pairwise coprime numbers.
+    checked: "script: the count 216 and the eight groups (distinct, ≤ 280, pairwise coprime, composite)"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Labeling graph edges so each vertex sees coprime labels"
+    areas: [combinatorics, number-theory]
+    difficulty: 2
+    hints:
+      - 'Consecutive integers are coprime. Can you make every vertex of degree at least $2$ carry two consecutive labels?'
+      - 'Walk along unused edges, numbering them as you go.'
+    solution: |
+      **Key idea:** number the edges in the order of a walk. A vertex that the walk passes through gets two consecutive labels, and the starting vertex gets label $1$.
+
+      Start at a vertex $v_0$ and walk along unused edges, labeling them $1,2,3,\dots$ in order, until the current vertex has no unused edge. If unused edges remain, connectedness gives an already visited vertex with an unused edge; start a new walk there and continue the numbering. Repeat until all $k$ edges are labeled.
+
+      - **$v_0$** has the edge labeled $1$, and $\gcd(1,\cdot)=1$.
+      - **Any other vertex $w$ of degree at least $2$.** Every new walk starts at a visited vertex, so $w$ is first reached by entering it along some edge, labeled $m$. At that moment that is the only labeled edge at $w$, and $w$ has another unused edge, so the walk goes on along an edge labeled $m+1$. Since $\gcd(m,m+1)=1$, the gcd of all labels at $w$ is $1$.
+    checked: "reasoning"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "An interior point sees some side at most thirty degrees"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Let $\alpha=\angle PAB$ and $\alpha''=\angle PAC$, and similarly at $B$ and $C$. The law of sines in the three small triangles gives one product relation.'
+      - 'Combine $\sin\alpha\sin\alpha''\le\sin^2\frac{\alpha+\alpha''}2$ with $\sin\frac A2\sin\frac B2\sin\frac C2\le\frac18$.'
+    solution: |
+      **Key idea:** the trigonometric form of Ceva bounds $\sin\angle PAB\,\sin\angle PBC\,\sin\angle PCA$ by $\frac18$. Three sines above $\frac12$ would break that.
+
+      Let $\alpha=\angle PAB$, $\beta=\angle PBC$, $\gamma=\angle PCA$, and $\alpha'=\angle PAC$, $\beta'=\angle PBA$, $\gamma'=\angle PCB$, so $\alpha+\alpha'=A$ and so on.
+
+      **A product relation.** The law of sines in triangles $PAB$, $PBC$, $PCA$ gives $\frac{PA}{PB}=\frac{\sin\beta'}{\sin\alpha}$, $\frac{PB}{PC}=\frac{\sin\gamma'}{\sin\beta}$, $\frac{PC}{PA}=\frac{\sin\alpha'}{\sin\gamma}$. Multiplying,
+      $$\sin\alpha\sin\beta\sin\gamma=\sin\alpha'\sin\beta'\sin\gamma' .$$
+
+      **A bound.** For angles $x,y$ in $(0,\pi)$: $\sin x\sin y=\frac{\cos(x-y)-\cos(x+y)}2\le\frac{1-\cos(x+y)}2=\sin^2\frac{x+y}2$. Hence
+      $$(\sin\alpha\sin\beta\sin\gamma)^2=\prod\sin\alpha\sin\alpha'\le\Big(\sin\frac A2\sin\frac B2\sin\frac C2\Big)^2 .$$
+      Since $\ln\sin$ is concave on $(0,\pi)$ and $\frac A2+\frac B2+\frac C2=\frac\pi2$, Jensen gives $\sin\frac A2\sin\frac B2\sin\frac C2\le\sin^3\frac\pi6=\frac18$. So $\sin\alpha\sin\beta\sin\gamma\le\frac18$.
+
+      **Conclusion.** Suppose all of $\alpha,\beta,\gamma$ exceed $30^\circ$. Since $\alpha+\beta+\gamma<A+B+C=180^\circ$, none of them reaches $150^\circ$ (the other two would be below $30^\circ$). So each sine exceeds $\frac12$ and the product exceeds $\frac18$, a contradiction.
+    checked: "reasoning"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "A bounded sequence with well-separated terms"
+    areas: [number-theory, algebra]
+    difficulty: 2
+    hints:
+      - 'Try $x_n=c\{n\sqrt2\}$, the fractional part times a constant.'
+      - 'From $|2q^2-p^2|\ge1$ you get $|q\sqrt2-p|>\frac1{4q}$ for all integers $p$ and $q\ge1$.'
+    solution: |
+      **Key idea:** use the fractional parts of $n\sqrt2$. Since $\sqrt2$ is badly approximable, two terms $i,j$ differ by at least about $\frac1{|i-j|}$, which beats $|i-j|^{-a}$ for $a>1$.
+
+      **A Diophantine bound.** Let $q\ge1$ and $p$ be integers. The integer $2q^2-p^2$ is not $0$, so
+      $$1\le|2q^2-p^2|=|q\sqrt2-p|\cdot|q\sqrt2+p| .$$
+      If $|q\sqrt2-p|<1$, then $0<p<q\sqrt2+1$, so $|q\sqrt2+p|<2q\sqrt2+1<4q$ and $|q\sqrt2-p|>\frac1{4q}$. If $|q\sqrt2-p|\ge1$, the same bound holds trivially.
+
+      **The sequence.** Let $x_n=4\{n\sqrt2\}$, which lies in $[0,4)$. For $i\ne j$, put $q=|i-j|$. Then $x_i-x_j=4\big(q\sqrt2-p\big)$ up to sign, for the integer $p=\pm(\lfloor i\sqrt2\rfloor-\lfloor j\sqrt2\rfloor)$. So
+      $$|x_i-x_j|\,|i-j|^a>4\cdot\frac1{4q}\cdot q^a=q^{a-1}\ge1 .$$
+    checked: "reasoning; spot-checked numerically for i, j < 2000"
+    status: ready

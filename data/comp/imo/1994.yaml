@@ -1,0 +1,146 @@
+year: 1994
+edition: 35th
+date: "July 8–20, 1994 · Hong Kong"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1994/1994_eng.pdf
+  archive: https://www.imo-official.org/editions/1994/
+problems:
+  - id: P1
+    day: 1
+    topic: "Sets closed under small sums have a large average"
+    areas: [combinatorics, algebra]
+    difficulty: 2
+    hints:
+      - 'Sort the numbers in decreasing order. Try to show that the $i$-th largest plus the $i$-th smallest is more than $n$.'
+      - 'If not, add the $i$-th largest to each of the $i$ smallest numbers.'
+    solution: |
+      **Key idea:** pair the $i$-th largest with the $i$-th smallest. If such a pair summed to at most $n$, we would get $i$ different sums in the set, all larger than the $i$-th largest, but only $i-1$ elements are larger.
+
+      Sort the numbers as $a_1>a_2>\dots>a_m$. We claim $a_i+a_{m+1-i}\ge n+1$ for every $i$.
+
+      Suppose $a_i+a_{m+1-i}\le n$ for some $i$. Then for each $j$ from $m+1-i$ to $m$, $a_i+a_j\le a_i+a_{m+1-i}\le n$, so $a_i+a_j$ is in the set. These are $i$ different numbers (the $a_j$ differ), and each is larger than $a_i$. But only $a_1,\dots,a_{i-1}$, that is $i-1$ numbers, are larger than $a_i$. Contradiction.
+
+      Adding the claim over $i=1,\dots,m$ counts each element twice:
+      $$2(a_1+\dots+a_m)\ge m(n+1),$$
+      which is the inequality.
+    checked: "script: brute force over all such sets for n ≤ 12"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Isosceles triangle: perpendicular from a center versus midpoint"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'If $OQ\perp EF$, then $Q$ and $B$ both see $OE$ at a right angle, and $Q$ and $C$ both see $OF$ at a right angle.'
+      - 'For the converse, the line through $Q$ cut in half by $Q$ between lines $AB$ and $AC$ is unique.'
+    solution: |
+      **Key idea:** if $OQ\perp EF$, two circles with diameters $OE$ and $OF$ make triangle $OEF$ isosceles, so $Q$ is the midpoint. The converse follows because only one segment through $Q$ is bisected by $Q$.
+
+      By symmetry in line $AM$, $OC\perp AC$ and $\angle OBC=\angle OCB$. We use directed angles mod $180^\circ$.
+
+      **($\Rightarrow$)** Let $OQ\perp EF$. Then $\angle OQE=\angle OBE=90^\circ$, so $O,Q,B,E$ lie on the circle with diameter $OE$. Likewise $O,Q,C,F$ lie on the circle with diameter $OF$. Hence
+      $$\angle(EO,EF)=\angle(EO,EQ)=\angle(BO,BQ)=\angle(BO,BC),\qquad \angle(FE,FO)=\angle(FQ,FO)=\angle(CQ,CO)=\angle(CB,CO).$$
+      The reflection in $AM$ fixes $O$ and swaps $B,C$, so $\angle(BO,BC)=\angle(CB,CO)$. Thus the angles of triangle $OEF$ at $E$ and $F$ agree, so $OE=OF$. The foot of the perpendicular from $O$ to $EF$, which is $Q$, is then the midpoint of $EF$.
+
+      **($\Leftarrow$)** Let $QE=QF$. Let $E'F'$ be the segment through $Q$ perpendicular to $OQ$ with ends on lines $AB$, $AC$. (It exists: if the perpendicular were parallel to $AB$, then $OQ\perp AB$ would put $Q$ on line $OB$, so $Q=B$; likewise for $AC$.) By the first part $Q$ is its midpoint. The half-turn about $Q$ maps line $AB$ to a parallel line, which meets line $AC$ in one point (since $AB\nparallel AC$). Both $F$ and $F'$ are that point, so $F=F'$, $E=E'$, and $OQ\perp EF$.
+    checked: "numeric: 500 random configurations give QE = QF when OQ ⊥ EF"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Counting numbers with three binary ones in a doubling range"
+    areas: [number-theory, combinatorics]
+    difficulty: 2
+    answer: "(b) Exactly the numbers $m=\\binom j2+1$ with $j\\ge2$: $2,4,7,11,16,\\dots$"
+    hints:
+      - 'Compare $f(k+1)$ with $f(k)$. The range gains $2k+1$ and $2k+2$ and loses $k+1$.'
+      - '$f$ goes up by $1$ exactly when $k$ has two binary ones. Also $f(2^j)=\binom j2$.'
+    solution: |
+      **Key idea:** $f$ steps up by $0$ or $1$, and steps up exactly when $k$ has two binary ones. So $f$ hits every value, and a value is hit once only when two step-ups happen in a row.
+
+      Let $w(x)=1$ if $x$ has exactly three binary ones, else $0$.
+
+      **Steps.** Going from $k$ to $k+1$, the range gains $2k+1$ and $2k+2$ and loses $k+1$. Since $2k+2$ is $k+1$ shifted left, $w(2k+2)=w(k+1)$, so
+      $$f(k+1)-f(k)=w(2k+1),$$
+      which is $1$ exactly when $k$ has two binary ones (as $2k+1$ is $k$ with a $1$ appended).
+
+      **(a)** $f(1)=0$, and $f(2^j)=\binom j2$: the numbers from $2^j+1$ to $2^{j+1}-1$ with three ones choose two more ones among $j$ lower places, and $2^{j+1}$ has one. So $f$ is unbounded and rises in steps of $0$ or $1$; it takes every value $m\ge0$.
+
+      **(b)** As $f$ never decreases, $f(k)=m$ has exactly one solution iff the steps into and out of $k$ are both $1$: both $k-1$ and $k$ have two binary ones. If $k-1$ were even, $k$ would have three ones. So $k-1=2^j+1$ and $k=2^j+2$, which has two ones when $j\ge2$. Then
+      $$m=f(2^j+2)=f(2^j)+w(2^{j+1}+1)+w(2^{j+1}+3)=\binom j2+0+1 .$$
+      So the values with a unique $k$ are $\binom j2+1$ for $j\ge2$.
+    checked: "script: computed f for k < 5000; the unique values are 2, 4, 7, 11, 16, …"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "When mn minus one divides n cubed plus one"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$(1,2),(2,1),(1,3),(3,1),(2,2),(2,5),(5,2),(3,5),(5,3)$"
+    hints:
+      - 'Show the condition is symmetric: $mn-1\mid n^3+1$ exactly when $mn-1\mid m^3+1$.'
+      - 'Write the quotient as $an-1$. Then $(a,n)$ is also a solution, with $a$ small when $m>n$.'
+    solution: |
+      **Key idea:** the quotient has the form $an-1$, and then $(a,n)$ is a smaller solution. When $m>n$ this forces $a=1$, and a short divisor check finishes.
+
+      **Symmetry.** $m^3(n^3+1)=(mn)^3+m^3\equiv1+m^3\pmod{mn-1}$, and $\gcd(m,mn-1)=1$. So $mn-1\mid n^3+1$ exactly when $mn-1\mid m^3+1$. Assume $m\ge n$. (The pair $(1,1)$ is excluded since $mn-1=0$.)
+
+      **$n=1$:** $m-1\mid2$, so $m=2,3$.
+
+      **$m=n\ge2$:** $n^2-1\mid n^3+1$ means $(n-1)\mid n^2-n+1$ after dividing by $n+1$, so $n-1\mid1$ and $n=2$.
+
+      **$m>n\ge2$:** let $k=\frac{n^3+1}{mn-1}$. Reducing $k(mn-1)=n^3+1$ mod $n$ gives $k\equiv-1$, so $k=an-1$ with $a\ge1$. Then $(an-1)(mn-1)=n^3+1$, and since $m\ge n+1$,
+      $$an-1\le\frac{n^3+1}{n^2+n-1}<n$$
+      (as $n^3+n^2-n>n^3+1$ for $n\ge2$). So $a=1$ and $mn-1=\frac{n^3+1}{n-1}=n^2+n+1+\frac2{n-1}$. Hence $n-1\mid2$: $n=2$ gives $mn-1=9$, $m=5$; $n=3$ gives $mn-1=14$, $m=5$.
+
+      With symmetry, the solutions are $(2,1),(3,1),(2,2),(5,2),(5,3)$ and their swaps.
+    checked: "script: search with m, n < 400 gives exactly these nine pairs"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Functional equation under a shifted product operation"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$f(x)=-\\dfrac{x}{1+x}$"
+    hints:
+      - 'Write $x\circ y=x+y+xy=(1+x)(1+y)-1$. Then the equation is $f(x\circ f(y))=y\circ f(x)$.'
+      - 'Put $x=y$: the number $x\circ f(x)$ is a fixed point of $f$. How many fixed points can there be?'
+    solution: |
+      **Key idea:** with $x\circ y=(1+x)(1+y)-1$, the number $x\circ f(x)$ is always a fixed point. Fixed points come in chains $a,\ a\circ a,\dots$, which the monotonicity condition forbids, so the only fixed point is $0$.
+
+      Let $x\circ y=(1+x)(1+y)-1$; it maps $S\times S$ to $S$. The equation reads $f(x\circ f(y))=y\circ f(x)$.
+
+      **Fixed points.** Put $y=x$: $f(x\circ f(x))=x\circ f(x)$, so $a=x\circ f(x)$ is a fixed point. If $f(a)=a$, then putting $x=y=a$ gives $f(a\circ a)=a\circ a$: so $a\circ a$ is fixed too.
+
+      A fixed point $a\ne0$ has $\frac{f(a)}a=1$. Since $\frac{f(x)}x$ is strictly increasing on $(-1,0)$ and on $(0,\infty)$, each interval contains at most one fixed point.
+      - If $a>0$ is fixed, then $a\circ a=a^2+2a>a$ is another fixed point in $(0,\infty)$.
+      - If $-1<a<0$ is fixed, then $a\circ a=(1+a)^2-1$ is in $(-1,0)$ and differs from $a$ (equality would need $1+a\in\{0,1\}$).
+
+      Both are impossible, so $0$ is the only fixed point, and $x\circ f(x)=0$ for all $x$. That is $(1+x)(1+f(x))=1$, so $f(x)=\frac1{1+x}-1=-\frac x{1+x}$.
+
+      **Check.** Here $1+f(x)=\frac1{1+x}$, so $f(x)\in S$, and $x\circ f(y)=\frac{1+x}{1+y}-1$. Then $f(x\circ f(y))=\frac{1+y}{1+x}-1$, while $y\circ f(x)=\frac{1+y}{1+x}-1$. Also $\frac{f(x)}x=-\frac1{1+x}$ increases on each interval.
+    checked: "algebra: the solution satisfies both conditions"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "A set that every infinite set of primes splits"
+    areas: [number-theory, combinatorics]
+    difficulty: 2
+    hints:
+      - 'Let membership depend on the number of prime factors and on the smallest prime factor.'
+    solution: |
+      **Key idea:** put a squarefree number in $A$ when its number of prime factors equals its smallest prime factor. Any infinite set of primes can build a product of each kind.
+
+      Let $A$ be the set of numbers $p_1p_2\cdots p_k$ with primes $p_1<p_2<\dots<p_k$ and $k=p_1$.
+
+      Let $S$ be an infinite set of primes and $p$ its smallest element; note $p\ge2$.
+      - **In $A$:** $m=p\,q_2\cdots q_p$ with $q_2,\dots,q_p$ other elements of $S$. It has $p$ distinct prime factors and smallest factor $p$, so $m\in A$.
+      - **Not in $A$:** $n=q_1q_2\cdots q_p$ with $p$ elements of $S$ other than $p$. Its smallest factor exceeds $p$, but it has $p$ factors, so $n\notin A$.
+
+      Both are products of $k=p\ge2$ distinct elements of $S$.
+    checked: "reasoning"
+    status: ready

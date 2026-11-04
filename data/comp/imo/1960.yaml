@@ -1,0 +1,186 @@
+year: 1960
+edition: 2nd
+date: "July 18–26, 1960 · Sinaia, Romania"
+note: "This year's paper had seven problems, so the page runs to P7. Several are constructions and space geometry, in the style of the time."
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1960/1960_eng.pdf
+  archive: https://www.imo-official.org/editions/1960/
+problems:
+  - id: P1
+    day: 1
+    topic: "Three-digit multiples of 11 and their digit squares"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$550$ and $803$"
+    hints:
+      - 'With digits $a,b,c$, the number is a multiple of $11$ exactly when $a-b+c$ is $0$ or $11$.'
+      - 'In each case write the quotient by $11$ in terms of the digits, compare parities, and treat the result as a quadratic in $a$.'
+    solution: |
+      **Key idea:** the divisibility rule for $11$ splits the problem into two cases. In each case, a parity check and a discriminant leave only a few digits to try.
+
+      Let the digits be $a,b,c$ with $a\ge1$. The number $100a+10b+c$ is divisible by $11$ exactly when $a-b+c$ is a multiple of $11$. Since $-9\le a-b+c\le18$, that means $a-b+c=0$ or $11$.
+
+      **Case $b=a+c$.** The number is $100a+10(a+c)+c=11(10a+c)$, so the quotient is $10a+c$. The condition is
+      $$10a+c=a^2+(a+c)^2+c^2=2a^2+2ac+2c^2 .$$
+      The right side is even, so $c$ is even. As a quadratic in $a$, $2a^2+(2c-10)a+(2c^2-c)=0$, with discriminant $(2c-10)^2-8(2c^2-c)=100-32c-12c^2$. This is negative for $c\ge2$, so $c=0$. Then $2a^2-10a=0$ gives $a=5$ and $b=5$. That is the number $550$. Check: $550=11\cdot50$ and $25+25+0=50$.
+
+      **Case $b=a+c-11$.** The number is $110a+11c-110=11(10a+c-10)$, so the condition is
+      $$10a+c-10=a^2+(a+c-11)^2+c^2 .$$
+      Since $t^2\equiv t\pmod 2$, the right side has the parity of $a+(a+c-11)+c$, which is odd. So $c$ is odd. As a quadratic in $a$:
+      $$2a^2+(2c-32)a+\bigl[(c-11)^2+c^2-c+10\bigr]=0 .$$
+      A quarter of the discriminant is $(c-16)^2-2\bigl[(c-11)^2+c^2-c+10\bigr]=-3c^2+14c-6$. It is non-negative only for $0.5<c<4.2$, so $c=1$ or $c=3$.
+      - $c=1$: $a^2-15a+55=0$, whose discriminant $5$ is not a square. No digit.
+      - $c=3$: $a^2-13a+40=0$, so $a=5$ or $a=8$. Then $b=a-8$ must be a digit, so $a=8$ and $b=0$. That is $803=11\cdot73$, and $64+0+9=73$.
+
+      The numbers are $550$ and $803$.
+    checked: "script: brute force over all three-digit numbers"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Rationalizing an inequality with a square root"
+    areas: [algebra]
+    difficulty: 1
+    answer: "$-\\tfrac12\\le x<\\tfrac{45}{8}$ with $x\\ne0$"
+    hints:
+      - 'Substitute $s=\sqrt{1+2x}$, so $2x=s^2-1$.'
+      - 'The numerator $4x^2=(s^2-1)^2$ shares a factor with the denominator.'
+    solution: |
+      **Key idea:** with $s=\sqrt{1+2x}$, the fraction simplifies to a perfect square.
+
+      The root needs $x\ge-\tfrac12$, and the denominator vanishes at $x=0$, so the domain is $x\ge-\tfrac12$, $x\ne0$. Put $s=\sqrt{1+2x}$, so $s\ge0$, $s\ne1$ and $2x=s^2-1$. Then
+      $$\frac{4x^2}{(1-s)^2}=\frac{(s^2-1)^2}{(s-1)^2}=(s+1)^2 .$$
+      The right side of the inequality is $2x+9=s^2+8$. So the inequality becomes
+      $$s^2+2s+1<s^2+8\iff s<\tfrac72\iff 1+2x<\tfrac{49}{4}\iff x<\tfrac{45}{8}.$$
+      Together with the domain, the answer is $-\tfrac12\le x<\tfrac{45}8$, $x\ne0$.
+    checked: "script: the inequality tested on a fine grid"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Angle seen from the right-angle vertex: the middle piece"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'The midpoint of the hypotenuse is at distance $a/2$ from the right-angle vertex.'
+      - 'Use coordinates with the hypotenuse on the $x$-axis and its midpoint at the origin. Compute the tangent of the angle from a cross product and a dot product.'
+    solution: |
+      **Key idea:** the middle piece is centered at the midpoint of the hypotenuse, and the right-angle vertex is at distance $a/2$ from that midpoint. Coordinates then give the tangent at once.
+
+      Take $n\ge3$ odd (for $n=1$ the "piece" is the whole hypotenuse and the angle is $90^\circ$). Put the hypotenuse on the $x$-axis with its midpoint $O$ at the origin. The middle piece has the same midpoint, so its ends are $(\pm\delta,0)$ with $\delta=\frac{a}{2n}$. The right-angle vertex is $V=(u,h)$, where $h$ is the altitude and $u^2+h^2=VO^2=\frac{a^2}{4}$, because $V$ lies on the circle with the hypotenuse as diameter.
+
+      The vectors from $V$ to the two ends are $(-\delta-u,\,-h)$ and $(\delta-u,\,-h)$. Their cross product has size
+      $$|(-\delta-u)(-h)-(-h)(\delta-u)|=2h\delta,$$
+      and their dot product is
+      $$(-\delta-u)(\delta-u)+h^2=u^2+h^2-\delta^2=\frac{a^2}{4}-\frac{a^2}{4n^2}>0 .$$
+      The tangent of the angle between two vectors is the size of the cross product over the dot product (the angle is acute because the dot product is positive). So
+      $$\tan\alpha=\frac{2h\delta}{\frac{a^2}{4}\bigl(1-\frac1{n^2}\bigr)}=\frac{ha/n}{a^2(n^2-1)/(4n^2)}=\frac{4nh}{(n^2-1)\,a}.$$
+    checked: "script: random right triangles and n = 3, 5, …, 11, the angle computed directly"
+    viz: imo-1960-p3
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Triangle from two altitudes and a median"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'The altitude and the median from the same vertex give a right triangle you can draw first. It fixes the line of the opposite side.'
+      - 'The midpoint of that side is half as far from the second side line as the far vertex is. So the second side is tangent to a known circle.'
+    solution: |
+      **Key idea:** halve the second altitude. The midpoint $M$ of $BC$ is at distance $h_b/2$ from line $AC$, so line $AC$ is a tangent from $A$ to the circle about $M$ with radius $h_b/2$.
+
+      **Step 1.** Let $H$ be the foot of the altitude from $A$ and $M$ the midpoint of $BC$. The triangle $AHM$ has a right angle at $H$, leg $AH=h_a$ and hypotenuse $AM=m_a$. Construct it (if $m_a=h_a$, then $H=M$). Line $HM$ is the line $BC$.
+
+      **Step 2.** The distance from $B$ to line $AC$ is $h_b$. Since $C$ lies on line $AC$ and $M$ is the midpoint of $BC$, the distance from $M$ to line $AC$ is half of it, $h_b/2$. So line $AC$ is a line through $A$ tangent to the circle $k$ with center $M$ and radius $h_b/2$. Draw the tangents from $A$ to $k$.
+
+      **Step 3.** Each tangent meets line $HM$ at a point $C$. Reflect $C$ in $M$ to get $B$. The triangle $ABC$ has altitude $h_a$ from $A$ (the distance from $A$ to line $HM$), median $m_a$, and distance $h_b$ from $B$ to line $AC$ (twice the distance from $M$). So it is a solution, and every solution arises this way.
+
+      **Discussion.**
+      - Step 1 needs $h_a\le m_a$.
+      - Step 2 needs $A$ outside or on $k$: $m_a\ge h_b/2$. If $m_a>h_b/2$ there are two tangents; if $m_a=h_b/2$ there is one.
+      - Step 3 fails for a tangent parallel to $BC$. Such a tangent is at distance $h_a$ from $BC$, so from $M$, and this happens only when $h_b=2h_a$.
+
+      So there are at most two triangles. When $h_a=m_a$, the two tangents are mirror images in line $AM$, and the two triangles are congruent.
+    checked: "script: for 300 random triangles, the construction from (h_a, h_b, m_a) returns the original triangle"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Cube: midpoints and trisection points between two diagonals"
+    areas: [geometry]
+    difficulty: 2
+    answer: "(a) The square whose corners are the centers of the four side faces; (b) a rectangle in the plane one third of the way down from the top face"
+    hints:
+      - 'Coordinates: a point of the top diagonal is $(s,s,1)$ and a point of the bottom diagonal is $(1-t,t,0)$.'
+      - 'An affine map sends the parameter square $[0,1]^2$ to a parallelogram. Find the images of its four corners.'
+    solution: |
+      **Key idea:** the point we track depends linearly on the two parameters, so its locus is the image of a square under an affine map: a filled parallelogram, which we identify from its corners.
+
+      Take the cube $[0,1]^3$ with the top face at height $1$, so that $A=(0,0,1)$, $B=(1,0,1)$, $C=(1,1,1)$, $D=(0,1,1)$, and each primed vertex lies directly below its partner at height $0$. The top diagonal $AC$ is $X=(s,s,1)$, and the bottom diagonal $B'D'$ is $Y=(1-t,t,0)$, with $0\le s,t\le1$.
+
+      **(a)** The midpoint is
+      $$\tfrac12(X+Y)=\Bigl(\tfrac{1+s-t}{2},\ \tfrac{s+t}{2},\ \tfrac12\Bigr).$$
+      This is an affine function of $(s,t)$, so as $(s,t)$ fills the square $[0,1]^2$, the midpoint fills the parallelogram spanned by the images of the corners. Those images are
+      $(s,t)=(0,0)\mapsto(\tfrac12,0,\tfrac12)$, $(1,0)\mapsto(1,\tfrac12,\tfrac12)$, $(1,1)\mapsto(\tfrac12,1,\tfrac12)$ and $(0,1)\mapsto(0,\tfrac12,\tfrac12)$.
+      These are the centers of the four side faces. The locus is the filled square with these four corners, lying in the horizontal plane halfway up the cube.
+
+      **(b)** The point $Z$ on $XY$ with $ZY=2XZ$ is $Z=\tfrac13(2X+Y)$:
+      $$Z=\Bigl(\tfrac{2s+1-t}{3},\ \tfrac{2s+t}{3},\ \tfrac23\Bigr).$$
+      The corners map to $(\tfrac13,0)$, $(1,\tfrac23)$, $(\tfrac23,1)$ and $(0,\tfrac13)$, all at height $\tfrac23$. The edge vectors are $(\tfrac23,\tfrac23)$ and $(-\tfrac13,\tfrac13)$. They are perpendicular, with lengths $\tfrac{2\sqrt2}{3}$ and $\tfrac{\sqrt2}{3}$. So the locus is a filled rectangle in the horizontal plane one third of an edge below the face $ABCD$. Its long sides are parallel to $AC$, and each of its four corners lies on a side face of the cube.
+    checked: "script: 2000 random pairs (X, Y); every midpoint lies in the square and every Z at height 2/3"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Cone versus cylinder around the same ball"
+    areas: [geometry, algebra]
+    difficulty: 2
+    answer: "$V_1/V_2\\ge\\tfrac43$, so $V_1\\ne V_2$; the smallest $k$ is $\\tfrac43$, when the apex angle $\\varphi$ has $\\sin\\frac\\varphi2=\\frac13$ (about $38.9^\\circ$)"
+    hints:
+      - 'In the cross-section through the axis, the ball becomes the incircle of an isosceles triangle. Let $\beta$ be the base angle; the incenter lies on its bisector.'
+      - 'With $t=\tan\frac\beta2$, the ratio of volumes is $\dfrac{1}{3t^2(1-t^2)}$.'
+    solution: |
+      **Key idea:** express both volumes through the ball's radius $r$ and the half base angle. The ratio is then $1/(3t^2(1-t^2))$, and $t^2(1-t^2)\le\frac14$.
+
+      Cut through the axis. The cone becomes an isosceles triangle with base radius $R$, height $H$ and base angle $\beta$. The ball becomes its incircle, of radius $r$. The incenter lies on the bisector of the base angle, so $r=R\tan\frac\beta2$, and $H=R\tan\beta$. With $t=\tan\frac\beta2\in(0,1)$, we get $R=r/t$ and $\tan\beta=\frac{2t}{1-t^2}$. So
+      $$V_1=\frac\pi3R^2H=\frac\pi3\cdot\frac{r^3}{t^3}\cdot\frac{2t}{1-t^2}=\frac{2\pi r^3}{3t^2(1-t^2)} .$$
+      The cylinder around the ball has radius $r$ and height $2r$, so $V_2=2\pi r^3$. Hence
+      $$\frac{V_1}{V_2}=\frac1{3\,t^2(1-t^2)} .$$
+      By AM–GM, $t^2(1-t^2)\le\bigl(\frac{t^2+1-t^2}{2}\bigr)^2=\frac14$, with equality only for $t^2=\frac12$. So $V_1/V_2\ge\frac43$.
+
+      **(a)** The ratio is never $1$, so $V_1\ne V_2$.
+
+      **(b)** The smallest possible $k$ is $\frac43$, reached when $\tan^2\frac\beta2=\frac12$. Then $\cos\beta=\frac{1-t^2}{1+t^2}=\frac13$. The apex angle $\varphi$ (the angle at the vertex subtending a diameter of the base) is $180^\circ-2\beta$, so $\sin\frac\varphi2=\cos\beta=\frac13$, which makes $\varphi\approx38.94^\circ$ (also $\cos\varphi=\frac79$).
+
+      **Construction of $\varphi$:** draw a right triangle with hypotenuse $3$ and one leg $1$. The angle opposite the leg is $\frac\varphi2$; double it.
+    checked: "script: the ratio minimized numerically over t (1.33333), and checked directly at cos β = 1/3"
+    status: ready
+
+  - id: P7
+    day: 2
+    topic: "Points on a trapezoid's axis seeing both legs squarely"
+    areas: [geometry, algebra]
+    difficulty: 1
+    answer: "$P$ is at distance $\\frac{h\\pm\\sqrt{h^2-ac}}{2}$ from the base $a$: two points if $h^2>ac$, one if $h^2=ac$, none if $h^2<ac$"
+    hints:
+      - 'Put the axis on the $y$-axis and the base $a$ on the $x$-axis.'
+      - 'A right angle at $P$ means a zero dot product.'
+    solution: |
+      **Key idea:** one dot product gives a quadratic for the height of $P$.
+
+      Put the base $a$ on the $x$-axis with ends $(\pm\frac a2,0)$ and the base $c$ on the line $y=h$ with ends $(\pm\frac c2,h)$. The axis is the $y$-axis. Let $P=(0,y)$. The leg from $(\frac a2,0)$ to $(\frac c2,h)$ subtends a right angle at $P$ exactly when the vectors from $P$ to its ends are perpendicular:
+      $$\Bigl(\frac a2,-y\Bigr)\cdot\Bigl(\frac c2,h-y\Bigr)=\frac{ac}4-y(h-y)=0 .$$
+      By symmetry, the other leg gives the same equation. So
+      $$y^2-hy+\frac{ac}{4}=0,\qquad y=\frac{h\pm\sqrt{h^2-ac}}{2}.$$
+
+      **(a)** The points are $(0,y)$ for these roots. **(b)** The distance from the base $a$ is $y$ and from the base $c$ is $h-y$. The two roots are swapped by $y\leftrightarrow h-y$, so the two points are placed symmetrically between the bases.
+
+      **(c)**
+      - $h^2>ac$: two points, both strictly between the bases (both roots lie in $(0,h)$, since their sum is $h$ and their product is positive).
+      - $h^2=ac$: one point, halfway between the bases. The circle with a leg as diameter then just touches the axis.
+      - $h^2<ac$: no point.
+
+      Geometrically, $P$ must lie on the circle with a leg as diameter. That circle has its center at distance $\frac{a+c}{4}$ from the axis and radius half the leg. The condition $h^2\ge ac$ is the same as $(a+c)^2\le(a-c)^2+4h^2$, which says this circle reaches the axis.
+    checked: "script: for random a, c, h with h² ≥ ac, both roots give zero dot products"
+    status: ready

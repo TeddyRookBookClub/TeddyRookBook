@@ -1,0 +1,155 @@
+year: 2001
+edition: 42nd
+date: "July 8–9, 2001 · Washington, D.C., United States"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2001/2001_eng.pdf
+  archive: https://www.imo-official.org/editions/2001/
+problems:
+  - id: P1
+    day: 1
+    topic: "Circumcenter, altitude foot, and an angle budget"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'In triangle $OPC$, the angle at $C$ is $90^\circ-\angle A$. So the goal is the same as $\angle COP<\angle OCP$. Which sides does that compare?'
+      - 'Show $CP<\tfrac R2$, where $R$ is the circumradius. Write $CP=2R\sin B\cos C$ and use a product-to-sum formula.'
+    solution: |
+      **Key idea:** the claim is a comparison of two angles in triangle $OPC$, so it is a comparison of two sides: we need $CP<OP$. The angle condition makes $CP$ less than half the circumradius, and that is enough.
+
+      Write $A,B,C$ for the angles and $R$ for the circumradius. The triangle is acute, so $O$ is inside it, and $\angle OCB=90^\circ-A$ (triangle $OBC$ is isosceles with apex angle $2A$).
+
+      **Reduce to sides.** In triangle $OPC$ the angle at $C$ is $\angle OCP=90^\circ-A$. The claim $A+\angle COP<90^\circ$ says $\angle COP<\angle OCP$. In a triangle the larger angle faces the larger side, so this is the same as $CP<OP$.
+
+      **$CP$ is short.** From the right triangle $APC$, $CP=AC\cos C=2R\sin B\cos C$. A product-to-sum formula gives
+      $$CP=R\big(\sin(B+C)-\sin(C-B)\big)=R\big(\sin A-\sin(C-B)\big).$$
+      We know $30^\circ\le C-B<90^\circ$, so $\sin(C-B)\ge\tfrac12$. Also $\sin A<1$ because $A<90^\circ$. So $CP<R\big(1-\tfrac12\big)=\tfrac R2$.
+
+      **Finish.** By the triangle inequality in $OPC$, $OP\ge OC-CP=R-CP>\tfrac R2>CP$. So $CP<OP$, and therefore $\angle CAB+\angle COP<90^\circ$.
+    viz: imo-2001-p1
+    checked: "script: 20,000 random acute triangles with C ≥ B + 30°; the largest value of A + ∠COP found was 89.98°"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Square-root fractions bounded below by one"
+    areas: [algebra]
+    difficulty: 3
+    hints:
+      - 'Look for an exponent $r$ with $\dfrac{a}{\sqrt{a^2+8bc}}\ge\dfrac{a^r}{a^r+b^r+c^r}$. Summing such bounds gives exactly $1$.'
+      - '$r=\tfrac43$ works. After squaring, you need $(a^{4/3}+b^{4/3}+c^{4/3})^2-a^{8/3}\ge 8a^{2/3}bc$. Factor the left side and use AM–GM on each factor.'
+    solution: |
+      **Key idea:** compare each term with a fraction of the form $\dfrac{a^r}{a^r+b^r+c^r}$. These three fractions add up to exactly $1$, and $r=\tfrac43$ makes each comparison true.
+
+      Let $x=a^{4/3}$, $y=b^{4/3}$, $z=c^{4/3}$. We claim
+      $$\frac{a}{\sqrt{a^2+8bc}}\ \ge\ \frac{x}{x+y+z}.$$
+      Both sides are positive. Cross-multiplying and squaring, this is $(x+y+z)^2\ge a^{2/3}(a^2+8bc)=x^2+8a^{2/3}bc$, that is,
+      $$(y+z)(2x+y+z)\ \ge\ 8\,a^{2/3}bc .$$
+      By AM–GM, $y+z\ge2\sqrt{yz}=2\,b^{2/3}c^{2/3}$, and
+      $$2x+y+z=x+x+y+z\ge4\sqrt[4]{x^2yz}=4\,a^{2/3}b^{1/3}c^{1/3}.$$
+      Multiplying, $(y+z)(2x+y+z)\ge8\,a^{2/3}bc$, which proves the claim.
+
+      Writing the same bound for the other two terms and adding,
+      $$\sum\frac{a}{\sqrt{a^2+8bc}}\ \ge\ \frac{x+y+z}{x+y+z}=1 .$$
+      Equality holds when $a=b=c$.
+    checked: "script: 100,000 random positive triples; the smallest sum found was 1.00002"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Girls, boys, shared problems: a popular problem must exist"
+    areas: [combinatorics]
+    difficulty: 3
+    hints:
+      - 'Suppose not: every problem was solved by at most two girls or by at most two boys. Make a $21\times21$ table of girl–boy pairs.'
+      - 'Fix one boy. If $11$ girls share a "few girls" problem with him, how many of his problems must be of that kind? What then happens to the other girls?'
+    solution: |
+      **Key idea:** count girl–boy pairs. Each boy can share a "few girls" problem with at most $10$ girls, and each girl can share a "few boys" problem with at most $10$ boys. That covers at most $420$ of the $441$ pairs.
+
+      Suppose, for contradiction, that every problem has at most two solvers of one sex or the other. Call a problem **G-light** if at most two girls solved it, and **B-light** if at most two boys solved it. Every problem is G-light or B-light (or both).
+
+      **Columns.** Fix a boy $b$. Suppose at least $11$ girls share a G-light problem with $b$. Each G-light problem reaches at most $2$ girls, so $b$ solved at least $6$ G-light problems. He solved at most $6$ problems in all, so all of his problems are G-light. But every one of the $21$ girls shares some problem with $b$, and his $6$ problems reach at most $12$ girls. That is a contradiction. So each boy shares a G-light problem with **at most $10$** girls.
+
+      **Rows.** In the same way, each girl shares a B-light problem with at most $10$ boys.
+
+      **Count.** There are $21\cdot21=441$ girl–boy pairs. Each pair shares a problem, which is G-light or B-light. By the column bound, at most $21\cdot10=210$ pairs share a G-light problem. By the row bound, at most $210$ pairs share a B-light problem. That covers at most $420<441$ pairs, a contradiction.
+
+      So the assumption fails: some problem has three or more solvers of each sex.
+    checked: "logic: the counting is exact; 441 pairs against at most 420 covered"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Weighted sums over all permutations: two must collide"
+    areas: [number-theory, combinatorics]
+    difficulty: 2
+    hints:
+      - 'Suppose the $n!$ sums are all different mod $n!$. Then they are $0,1,\dots,n!-1$ in some order. What is their total mod $n!$?'
+      - 'Compute the total directly: each number $1,\dots,n$ sits in each position $(n-1)!$ times.'
+    solution: |
+      **Key idea:** add up all $n!$ sums in two ways. If they were all different mod $n!$, the total would be $\tfrac{n!}2$ mod $n!$. A direct count shows the total is $0$ mod $n!$.
+
+      Suppose no two of the $n!$ numbers $S(a)$ are congruent mod $n!$. Then their remainders are exactly $0,1,\dots,n!-1$, so
+      $$\sum_a S(a)\equiv\frac{(n!-1)\,n!}{2}\pmod{n!}.$$
+      Since $n!$ is even and $n!-1$ is odd, this is $\tfrac{n!}2\cdot(\text{odd})\equiv\tfrac{n!}2\pmod{n!}$, which is not $0$.
+
+      Now compute directly. For each position $i$, each value $1,\dots,n$ appears in that position in exactly $(n-1)!$ permutations. So
+      $$\sum_a S(a)=\sum_{i=1}^n k_i\,(n-1)!\,(1+2+\dots+n)=n!\cdot\frac{n+1}{2}\sum_i k_i .$$
+      Since $n$ is odd, $\tfrac{n+1}2$ is an integer, so the total is a multiple of $n!$. This contradicts the first count. Hence two different permutations $b\ne c$ have $n!\mid S(b)-S(c)$.
+    checked: "script: n = 3 and 5 with random integer weights; a collision mod n! always appears"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Two angle bisectors and a pair of equal sums"
+    areas: [geometry]
+    difficulty: 3
+    answer: "$\\angle B=80^\\circ$, $\\angle C=40^\\circ$ (and $\\angle A=60^\\circ$)"
+    hints:
+      - 'Fix $AB=1$ and let $\angle B=x$. Use the law of sines in triangles $ABP$ and $ABQ$ to write every length in terms of $x$.'
+      - 'Put $t=x/4$. Sum-to-product formulas turn the equation into $\cos(3t+30^\circ)\,(2\cos2t-1)=0$.'
+    solution: |
+      **Key idea:** turn the length condition into one trigonometric equation in $\angle B$. It factors completely.
+
+      Let $\angle B=x$, so $\angle C=120^\circ-x$ and $0<x<120^\circ$. Scale so that $AB=1$.
+
+      **Lengths.** In triangle $ABP$ the angles are $30^\circ$ at $A$, $x$ at $B$, and $150^\circ-x$ at $P$. The law of sines gives
+      $$BP=\frac{\sin30^\circ}{\sin(150^\circ-x)}=\frac{1}{2\sin(30^\circ+x)} .$$
+      In triangle $ABQ$ the angles are $60^\circ$ at $A$, $\tfrac x2$ at $B$, and $120^\circ-\tfrac x2$ at $Q$, so
+      $$AQ+QB=\frac{\sin\frac x2+\sin60^\circ}{\sin\big(120^\circ-\frac x2\big)} .$$
+
+      **Simplify.** Put $t=\tfrac x4$, so $0<t<30^\circ$. Sum-to-product gives $\sin\tfrac x2+\sin60^\circ=2\sin(t+30^\circ)\cos(t-30^\circ)$, and $\sin(120^\circ-2t)=\sin(60^\circ+2t)=2\sin(30^\circ+t)\cos(30^\circ+t)$. So
+      $$AQ+QB=\frac{\cos(t-30^\circ)}{\cos(t+30^\circ)}=1+\frac{\cos(t-30^\circ)-\cos(t+30^\circ)}{\cos(t+30^\circ)}=1+\frac{\sin t}{\cos(t+30^\circ)} .$$
+      The condition $AB+BP=AQ+QB$ becomes
+      $$\frac{1}{2\sin(30^\circ+4t)}=\frac{\sin t}{\cos(t+30^\circ)}\iff \cos(t+30^\circ)=2\sin t\,\sin(30^\circ+4t)=\cos(30^\circ+3t)-\cos(30^\circ+5t).$$
+      Since $\cos(t+30^\circ)+\cos(5t+30^\circ)=2\cos(3t+30^\circ)\cos2t$, this is
+      $$\cos(3t+30^\circ)\,\big(2\cos2t-1\big)=0 .$$
+
+      **Solve.** For $0<t<30^\circ$: $2\cos2t=1$ needs $t=30^\circ$, which is excluded. And $\cos(3t+30^\circ)=0$ with $30^\circ<3t+30^\circ<120^\circ$ needs $3t+30^\circ=90^\circ$, so $t=20^\circ$. Hence $\angle B=80^\circ$ and $\angle C=40^\circ$. Every step was an equivalence, so this triangle does satisfy the condition.
+    checked: "script: scanned ∠B from 0° to 120° in steps of 0.01°; the only root of the length equation is 80°"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "A quadratic constraint that makes a sum of products composite"
+    areas: [number-theory, algebra]
+    difficulty: 4
+    hints:
+      - 'Expand the condition. It says $a^2-ac+c^2=b^2+bd+d^2$. Call this common value $K$.'
+      - 'Show $(ab+cd)(ad+bc)=(ac+bd)K$. Then compare the sizes of $ab+cd$, $ac+bd$ and $ad+bc$.'
+    solution: |
+      **Key idea:** the condition makes $(ab+cd)(ad+bc)$ equal to $(ac+bd)$ times a positive integer. Since $ab+cd$ is the largest of the three numbers involved, it can't be prime.
+
+      **Rewrite the condition.** The right side is $(b+d)^2-(a-c)^2$. So $ac+bd=b^2+2bd+d^2-a^2+2ac-c^2$, which rearranges to
+      $$a^2-ac+c^2=b^2+bd+d^2=:K>0 .$$
+
+      **An identity.** Expand:
+      $$(ab+cd)(ad+bc)=ac(b^2+d^2)+bd(a^2+c^2).$$
+      Using $b^2+d^2=K-bd$ and $a^2+c^2=K+ac$, this is $ac(K-bd)+bd(K+ac)=(ac+bd)K$.
+
+      **Sizes.** Since $a>b>c>d>0$:
+      $$(ab+cd)-(ac+bd)=(a-d)(b-c)>0,\qquad (ac+bd)-(ad+bc)=(a-b)(c-d)>0 .$$
+      So $ab+cd>ac+bd>ad+bc>0$.
+
+      **Finish.** Suppose $p=ab+cd$ is prime. It divides $(ac+bd)K$. Since $0<ac+bd<p$, the prime $p$ doesn't divide $ac+bd$, so $p\mid K$. Write $K=pm$ with $m\ge1$. Dividing the identity by $p$ gives $ad+bc=(ac+bd)\,m\ge ac+bd$. That contradicts $ad+bc<ac+bd$. So $ab+cd$ is not prime.
+    checked: "script: all 732 solutions with a < 80 satisfy the identity, and none has ab + cd prime"
+    status: ready

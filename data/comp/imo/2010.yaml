@@ -1,0 +1,130 @@
+year: 2010
+edition: 51st
+date: "July 7–8, 2010 · Astana, Kazakhstan"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2010/2010_eng.pdf
+  archive: https://www.imo-official.org/editions/2010/
+problems:
+  - id: P1
+    day: 1
+    topic: "Functional equation with floors inside and outside"
+    areas: [algebra]
+    difficulty: 2
+    answer: '$f\equiv0$, or $f\equiv c$ with $1\le c<2$'
+    hints:
+      - 'Put $x=0$. Either $f(0)=0$, or $\lfloor f(y)\rfloor=1$ for every $y$.'
+      - 'If $f(0)=0$, take $x\in[0,1)$. Then use $x$ with $\lfloor x\rfloor=n$ and $y\in[0,1)$ to reach every real number $ny$.'
+    solution: |
+      **Key idea:** the value $f(0)$ splits the problem in two. If it is nonzero, $f$ is constant. If it is zero, $f$ vanishes on $[0,1)$, and every real number is an integer times a number in $[0,1)$.
+
+      Write the equation as $f(\lfloor x\rfloor y)=f(x)\lfloor f(y)\rfloor$.
+
+      **Case $f(0)\ne0$.** With $x=0$: $f(0)=f(0)\lfloor f(y)\rfloor$, so $\lfloor f(y)\rfloor=1$ for all $y$. With $y=0$: $f(0)=f(x)\lfloor f(0)\rfloor=f(x)$. So $f\equiv c$ with $\lfloor c\rfloor=1$, that is, $1\le c<2$. These work: both sides equal $c$.
+
+      **Case $f(0)=0$.** For $x\in[0,1)$ we get $0=f(x)\lfloor f(y)\rfloor$ for all $y$.
+      - If $\lfloor f(y)\rfloor=0$ for every $y$, then the right side is always $0$, and $x=1$ gives $f(y)=0$ for all $y$.
+      - Otherwise $f(x)=0$ for all $x\in[0,1)$. Then for $y\in[0,1)$ the right side is $f(x)\lfloor0\rfloor=0$, so $f(ny)=0$ for every integer $n$ (take $x=n$). Every real $t$ has this form: for $t\ge0$ use $n=\lfloor t\rfloor+1$, for $t<0$ use $n=-\lfloor -t\rfloor-1$, and $y=t/n\in[0,1)$. So $f\equiv0$.
+
+      $f\equiv0$ clearly works. So the solutions are $f\equiv0$ and the constants $c\in[1,2)$.
+    checked: "logic: both cases are exhaustive; the constants were checked against the equation on random inputs"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Incenter, equal-angle cevians, and a meeting on the circumcircle"
+    areas: [geometry]
+    difficulty: 4
+    status: coming
+
+  - id: P3
+    day: 1
+    topic: "Making a product of two shifted values always a square"
+    areas: [number-theory]
+    difficulty: 4
+    answer: '$g(n)=n+c$ for a fixed integer $c\ge0$'
+    hints:
+      - 'Show: if a prime $p$ divides $g(k)-g(l)$, then $p$ divides $k-l$. Choose $n$ so that $g(k)+n$ and $g(l)+n$ both have an odd power of $p$.'
+      - 'Then $g(k+1)-g(k)$ has no prime factor at all.'
+    solution: |
+      **Key idea:** if $p$ divides $g(k)-g(l)$, we can pick $n$ so that $p$ appears to an odd power in both $g(k)+n$ and $g(l)+n$. The square condition then pushes $p$ into $k+g(n)$ and $l+g(n)$, so $p\mid k-l$. Neighboring values then differ by exactly $1$.
+
+      **Lemma.** If a prime $p$ divides $g(k)-g(l)$, then $p\mid k-l$.
+
+      *Proof.* We choose $n=pu-g(k)$ with $u$ a large positive integer (so $n>0$), so that both $g(k)+n$ and $g(l)+n$ contain an odd power of $p$:
+      - If $p^2\mid g(l)-g(k)$ (this includes the difference $0$): take $p\nmid u$. Then $g(k)+n=pu$ and $g(l)+n=pu+(g(l)-g(k))$ both have exactly one factor $p$.
+      - If $g(l)-g(k)=pw$ with $p\nmid w$, and $p$ is odd: take $u\not\equiv0$ and $u\not\equiv-w\pmod p$. Then $g(k)+n=pu$ and $g(l)+n=p(u+w)$ both have exactly one factor $p$.
+      - If $g(l)-g(k)=2w$ with $w$ odd: take $u\equiv4-w\pmod 8$, which is odd. Then $g(k)+n=2u$ has one factor $2$, and $g(l)+n=2(u+w)$ with $u+w\equiv4\pmod8$ has exactly three.
+
+      Now $(g(k)+n)(k+g(n))$ is a square and $p$ divides $g(k)+n$ to an odd power, so $p\mid k+g(n)$. In the same way $p\mid l+g(n)$. Subtracting, $p\mid k-l$.
+
+      **Steps of size one.** No prime divides $(k+1)-k=1$, so by the Lemma no prime divides $g(k+1)-g(k)$. That difference is not $0$ (every prime divides $0$), so $g(k+1)-g(k)=\pm1$. Also $g$ is injective: if $g(k)=g(l)$, every prime divides $k-l$, so $k=l$.
+
+      **Same direction.** If one step were $+1$ and the next $-1$ (or the reverse), then $g(k+2)=g(k)$, contradicting injectivity. So all steps are $+1$, or all are $-1$. All $-1$ would make $g$ negative eventually. So $g(n)=n+c$ with $c=g(1)-1\ge0$.
+
+      **Check.** $(g(m)+n)(m+g(n))=(m+n+c)^2$.
+    checked: "script: brute force over g on {1, …, 5} with values ≤ 12, square condition for m, n ≤ 5; only the shifts g(n) = n + c survive"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "A tangent, equal distances, and an isosceles chord triangle"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Chords through $P$ give similar triangles: $PMK\sim PAC$ and $PML\sim PBC$. Find $MK/ML$ in terms of $PA$, $PB$, $AC$, $BC$.'
+      - 'You need $PA/PB=CA/CB$. The circle with center $S$ through $C$ is an Apollonius circle for $A$ and $B$.'
+    solution: |
+      **Key idea:** $MK=ML$ is the same as $PA:PB=CA:CB$. The circle centered at $S$ through $C$ is exactly the set of points with that ratio, and $P$ is on it.
+
+      **Reduce to a ratio.** The chords $AK$ and $CM$ cross at $P$, so $PA\cdot PK=PC\cdot PM$ and triangles $PAC$ and $PMK$ are similar. Hence $\dfrac{MK}{AC}=\dfrac{PM}{PA}$. In the same way, from the chords $BL$ and $CM$, $\dfrac{ML}{BC}=\dfrac{PM}{PB}$. Dividing,
+      $$\frac{MK}{ML}=\frac{AC}{BC}\cdot\frac{PB}{PA}.$$
+      So $MK=ML$ exactly when $\dfrac{PA}{PB}=\dfrac{CA}{CB}$.
+
+      **The circle about $S$.** $SC$ is tangent to $\Gamma$, so $SC^2=SA\cdot SB$, and triangles $SCA$ and $SBC$ are similar (common angle at $S$). So $\dfrac{CA}{BC}=\dfrac{SC}{SB}$.
+
+      Now $SP=SC$, so $SP^2=SA\cdot SB$, and in the same way triangles $SPA$ and $SBP$ are similar. So $\dfrac{PA}{BP}=\dfrac{SP}{SB}=\dfrac{SC}{SB}$.
+
+      **Finish.** Both ratios equal $\dfrac{SC}{SB}$, so $\dfrac{PA}{PB}=\dfrac{CA}{CB}$ and $MK=ML$.
+    viz: imo-2010-p4
+    checked: "script: 230 random triangles with P on the circle about S through C, inside the triangle; MK = ML to 1e-13"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Coin boxes and a tower of powers"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: 'Yes'
+    hints:
+      - 'With three boxes $(a,0,0)$ you can reach $(0,2^a,0)$: double into the middle box, push it to the right box, then use the swap move to bring it back.'
+      - 'With four boxes the same trick iterates, giving a tower of $2$''s. Get the coins into the middle boxes first, build a huge pile, then trim it with swap moves on empty boxes.'
+    solution: |
+      **Key idea:** the swap move lets us reuse a doubling routine many times, so a few coins grow into a tower of powers of $2$. A pile can also be trimmed one coin at a time, by swapping two empty boxes. Build far more than needed, trim to a quarter of the target, then double twice.
+
+      Write the six box contents as a list, and let $T=2010^{2010^{2010}}$.
+
+      **Doubling routine.** In three neighboring boxes (the first at position $\le4$), $(k,s,0)\to(k,0,2s)$ by $s$ moves of type 1 on the middle box, and then one type 2 move on the first box gives $(k-1,2s,0)$. Starting from $(a,0,0)$, a type 1 move gives $(a-1,2,0)$, and repeating the routine gives
+      $$(a,0,0)\to(0,2^a,0).$$
+
+      **Tower routine.** In four neighboring boxes (starting at position $\le3$), from $(k,t,0,0)$ the doubling routine on the last three boxes gives $(k,0,2^t,0)$, and a type 2 move on the first box gives $(k-1,2^t,0,0)$. Starting from $(a,0,0,0)$, a type 1 move gives $(a-1,2,0,0)$, and repeating gives
+      $$(a,0,0,0)\to(0,P_a,0,0),\qquad P_1=2,\ P_{j+1}=2^{P_j},$$
+      a tower of $a$ twos.
+
+      **The plan.**
+      - Type 1 on box 5, then type 2 on boxes 4, 3, 2, 1 in that order:
+      $$(1,1,1,1,1,1)\to(1,1,1,1,0,3)\to(1,1,1,0,3,0)\to(1,1,0,3,0,0)\to(1,0,3,0,0,0)\to(0,3,0,0,0,0).$$
+      - Doubling on boxes 2–4: $(0,0,8,0,0,0)$.
+      - Tower on boxes 3–6: $(0,0,0,P_8,0,0)$.
+      - $P_8$ is far larger than $T/4$: indeed $\log_2T=2010^{2010}\log_22010<2^{11\cdot2010+4}<2^{65536}=P_5$, so $T<P_6<P_8$. Apply type 2 to box 4 repeatedly: it removes one coin and swaps the empty boxes 5 and 6, so it just lowers box 4 by one. Stop at $(0,0,0,T/4,0,0)$; note $4\mid T$.
+      - Type 1 on box 4, $T/4$ times: $(0,0,0,0,T/2,0)$. Type 1 on box 5, $T/2$ times: $(0,0,0,0,0,T)$.
+
+      So the answer is **yes**.
+    checked: "script: the routines simulated for small inputs (doubling up to a = 6, tower up to a = 3) and the opening moves replayed exactly"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "A max-plus recursion becomes eventually additive"
+    areas: [algebra, combinatorics]
+    difficulty: 5
+    status: coming

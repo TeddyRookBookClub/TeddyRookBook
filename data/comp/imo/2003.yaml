@@ -1,0 +1,159 @@
+year: 2003
+edition: 44th
+date: "July 2003 · Tokyo, Japan"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2003/2003_eng.pdf
+  archive: https://www.imo-official.org/editions/2003/
+problems:
+  - id: P1
+    day: 1
+    topic: "Disjoint translates of a small set, chosen greedily"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'The sets $A+x$ and $A+y$ overlap exactly when $x-y$ is a difference of two elements of $A$.'
+      - 'Choose the shifts one at a time. How many values can the earlier shifts rule out?'
+    solution: |
+      **Key idea:** two translates of $A$ collide only when the shifts differ by a difference of two elements of $A$. There are few such differences, so a greedy choice never gets stuck.
+
+      Let $D=\{a-a' : a,a'\in A\}$. It contains $0$ and at most $101\cdot100$ nonzero values, so $|D|\le10101$. The sets $A+x$ and $A+y$ meet exactly when $a+x=a'+y$ for some $a,a'\in A$, that is, when $x-y\in D$.
+
+      Choose $x_1,x_2,\dots,x_{100}$ in $S$ one at a time. When choosing $x_j$, each earlier $x_i$ rules out the values $x_i+D$, at most $10101$ numbers. So at most
+      $$99\cdot10101=999{,}999<1{,}000{,}000$$
+      values are ruled out, and some $x_j\in S$ is still free. It differs from every earlier choice (since $0\in D$), and $x_j-x_i\notin D$ for all $i<j$.
+
+      After $100$ steps the sets $A+x_1,\dots,A+x_{100}$ are pairwise disjoint.
+    checked: "arithmetic: 99 · 10101 = 999,999, just below one million"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "A square over a cubic expression must be an integer"
+    areas: [number-theory]
+    difficulty: 3
+    answer: "$(m,n)=(2t,1)$, $(t,2t)$ and $(8t^4-t,\\,2t)$ for positive integers $t$"
+    hints:
+      - 'Call the quotient $k$. Then $a$ is a root of $x^2-2kb^2x+k(b^3-1)=0$. The other root is a positive integer too.'
+      - 'For $b\ge2$, the smaller root $a_1$ satisfies $\tfrac b2\le a_1<b$. If $2a_1>b$, the denominator is bigger than $a_1^2$.'
+    solution: |
+      **Key idea:** view the condition as a quadratic in $a$. Its smaller root is squeezed between $\tfrac b2$ and $b$, which forces $b=2a_1$. The larger root then gives the third family.
+
+      Write $m,n$ of the problem as $a,b$, and let $k=\dfrac{a^2}{2ab^2-b^3+1}$, a positive integer. The denominator is positive.
+
+      **$b=1$.** The denominator is $2a$, so we need $2a\mid a^2$, that is, $a$ even: $(a,b)=(2t,1)$.
+
+      **$b\ge2$.** The condition reads $a^2-2kb^2a+k(b^3-1)=0$. So $a$ is a root of $x^2-2kb^2x+k(b^3-1)$. The roots $a_1\le a_2$ have sum $2kb^2$ and product $k(b^3-1)>0$, so both are positive integers. And each root $x$ satisfies $x^2=k(2xb^2-b^3+1)$, so it is also a solution with the same $b$.
+      - $a_2\ge kb^2$ (it is at least half the sum), so $a_1=\dfrac{k(b^3-1)}{a_2}\le\dfrac{b^3-1}{b^2}<b$.
+      - The denominator for $a_1$ is positive: $2a_1b^2>b^3-1$, so $a_1>\tfrac b2-\tfrac1{2b^2}$, hence $2a_1\ge b$ (as $2a_1$ is an integer and $b$ is an integer).
+
+      If $2a_1>b$, the denominator $b^2(2a_1-b)+1\ge b^2+1>a_1^2$, so it can't divide $a_1^2$. Hence $b=2a_1$. Write $a_1=t$, so $b=2t$, the denominator is $1$, and $k=t^2$. The other root is $a_2=2kb^2-a_1=8t^4-t$.
+
+      So for $b\ge2$ the solutions are $(t,2t)$ and $(8t^4-t,2t)$. Both work: for $(t,2t)$ the denominator is $1$, and $8t^4-t$ is the other root of the same quadratic.
+    checked: "script: every pair with a < 600, b < 60 checked; the 330 solutions are exactly the three families"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Hexagon with long midpoint distances must be equiangular"
+    areas: [geometry]
+    difficulty: 4
+    hints:
+      - 'Lemma: if a triangle has angle at least $60^\circ$ at $P$, the median from $P$ is at most $\tfrac{\sqrt3}2$ times the opposite side, with equality only for an equilateral triangle.'
+      - 'The three main diagonals of the hexagon cross in pairs. The three crossing angles add up to $180^\circ$, so one is at least $60^\circ$.'
+    solution: |
+      **Key idea:** if two main diagonals meet at an angle of at least $60^\circ$, the midpoint distance for the matching pair of opposite sides is at most $\tfrac{\sqrt3}2$ times their sum. Equality forces equilateral triangles everywhere.
+
+      **Lemma.** In triangle $PXY$ with $\angle P\ge60^\circ$, the median $m$ from $P$ satisfies $m\le\tfrac{\sqrt3}2XY$, with equality only if the triangle is equilateral.
+
+      *Proof.* Let $u=PX$, $v=PY$, $w=XY$. Then $4m^2=2u^2+2v^2-w^2$, so $m^2\le\tfrac34w^2$ means $u^2+v^2\le2w^2=2(u^2+v^2-2uv\cos P)$, that is, $4uv\cos P\le u^2+v^2$. Since $\cos P\le\tfrac12$, the left side is at most $2uv\le u^2+v^2$. Equality needs $\cos P=\tfrac12$ and $u=v$.
+
+      **The diagonals.** Label the hexagon $ABCDEF$ counterclockwise. In a convex hexagon, $AD$ and $BE$ cross at an interior point $P$, $BE$ and $CF$ at $Q$, and $CF$ and $AD$ at $R$. Let $v_1=\overrightarrow{AD}$, $v_2=\overrightarrow{BE}$, $v_3=\overrightarrow{CF}$, $v_4=\overrightarrow{DA}=-v_1$. Going from $B$ to $E$ crosses line $AD$ from its right side to its left side, so $v_2$ is $v_1$ turned counterclockwise by an angle $\theta_1\in(0^\circ,180^\circ)$. In the same way $v_3$ is $v_2$ turned by $\theta_2$, and $v_4$ is $v_3$ turned by $\theta_3$, both in $(0^\circ,180^\circ)$. The total turn takes $v_1$ to $-v_1$, so $\theta_1+\theta_2+\theta_3$ is an odd multiple of $180^\circ$ below $540^\circ$: it equals $180^\circ$. Here $\theta_1=\angle APB=\angle DPE$, $\theta_2=\angle BQC=\angle EQF$, $\theta_3=\angle CRD=\angle FRA$.
+
+      **One pair of opposite sides.** Say $\theta_1\ge60^\circ$. Let $K$, $L$ be the midpoints of $AB$, $DE$. By the Lemma in triangles $PAB$ and $PDE$,
+      $$KL\le PK+PL\le\tfrac{\sqrt3}2(AB+DE).$$
+      The given condition says $KL=\tfrac{\sqrt3}2(AB+DE)$. So all inequalities are equalities, and $PAB$, $PDE$ are equilateral. In particular $\theta_1=60^\circ$.
+
+      **All pairs.** Now $\theta_2+\theta_3=120^\circ$, so one of them is at least $60^\circ$, and the same argument makes it exactly $60^\circ$, with two more equilateral triangles. Then the last angle is $60^\circ$ too, and the argument applies a third time. So all six triangles $PAB$, $PDE$, $QBC$, $QEF$, $RCD$, $RFA$ are equilateral.
+
+      **Angles.** At $B$, the points $P$ and $Q$ lie on segment $BE$, so
+      $$\angle ABC=\angle ABP+\angle PBC=\angle ABP+\angle QBC=60^\circ+60^\circ=120^\circ .$$
+      The same holds at every vertex, so all six angles equal $120^\circ$.
+    checked: "algebra: the median formula and the lemma's equality case; a regular hexagon meets the condition with equality"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Simson line distances and two bisectors on a diagonal"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - '$P$ and $R$ lie on the circle with diameter $DA$. So $PR$ is a chord of that circle. Use the extended law of sines.'
+      - 'Both conditions turn into $AB\cdot CD=BC\cdot AD$. For the bisectors, use the angle bisector theorem.'
+    solution: |
+      **Key idea:** each of the two conditions turns into the same equation, $AB\cdot CD=BC\cdot AD$.
+
+      **The feet.** The angles $DPA$ and $DRA$ are right angles, so $P$ and $R$ lie on the circle with diameter $DA$. In that circle the chord $PR$ subtends the angle between lines $AB$ and $AC$ at the point $A$, so by the extended law of sines
+      $$PR=DA\cdot\sin\angle BAC .$$
+      In the same way $Q$ and $R$ lie on the circle with diameter $DC$, and
+      $$QR=DC\cdot\sin\angle BCA .$$
+      (The sine of an angle and of its supplement agree, so it doesn't matter which of the two angles between the lines we use.)
+
+      **The distance condition.** By the law of sines in triangle $ABC$, $\sin\angle BAC:\sin\angle BCA=BC:AB$. So
+      $$RP=RQ\iff DA\cdot BC=DC\cdot AB .$$
+
+      **The bisector condition.** The bisector of angle $ABC$ meets $AC$ at the point $X$ with $AX:XC=AB:BC$. The bisector of angle $CDA$ meets $AC$ at the point $Y$ with $AY:YC=AD:DC$. They meet on $AC$ exactly when $X=Y$, that is,
+      $$\frac{AB}{BC}=\frac{AD}{DC}\iff AB\cdot DC=BC\cdot AD .$$
+
+      The two conditions are the same, which proves the claim.
+    viz: imo-2003-p4
+    checked: "script: 1,000 random cyclic quadrilaterals; RP/RQ equals (DA·BC)/(DC·AB) to 1e-9"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Sum of distances squared versus sum of squared distances"
+    areas: [algebra]
+    difficulty: 3
+    hints:
+      - 'Both sides stay the same if you shift all the numbers. Shift so that their sum is $0$.'
+      - 'For sorted numbers, $\sum_{i,j}|x_i-x_j|=2\sum_i(2i-n-1)x_i$. Now use Cauchy–Schwarz.'
+    solution: |
+      **Key idea:** for sorted numbers, the sum of distances is a linear form with weights $2i-n-1$. Cauchy–Schwarz against those weights gives the inequality, and its equality case is an arithmetic progression.
+
+      Both sides are unchanged when we add the same number to every $x_i$, so assume $\sum x_i=0$.
+
+      **Left side.** For $i<j$, $|x_i-x_j|=x_j-x_i$. The number $x_i$ appears with a plus sign $i-1$ times and with a minus sign $n-i$ times, so
+      $$\sum_{i,j}|x_i-x_j|=2\sum_{i<j}(x_j-x_i)=2\sum_i(2i-n-1)x_i .$$
+
+      **Right side.** $\sum_{i,j}(x_i-x_j)^2=2n\sum x_i^2-2\big(\sum x_i\big)^2=2n\sum x_i^2$.
+
+      **Cauchy–Schwarz.** With $w_i=2i-n-1$, $\sum w_i^2=\dfrac{n(n^2-1)}3$, so
+      $$\Big(\sum_{i,j}|x_i-x_j|\Big)^2=4\Big(\sum w_ix_i\Big)^2\le4\cdot\frac{n(n^2-1)}3\sum x_i^2=\frac23(n^2-1)\cdot 2n\sum x_i^2 ,$$
+      which is the claim.
+
+      **Equality.** Cauchy–Schwarz is an equality exactly when $x_i=\lambda w_i$ for some $\lambda$ (here $\lambda\ge0$ because the $x_i$ are sorted). Undoing the shift, equality holds exactly when $x_i=c+\lambda(2i-n-1)$: the numbers form an arithmetic progression. Conversely every arithmetic progression has this form, so it gives equality.
+    checked: "script: 1,000 random sorted lists of 3 to 8 numbers satisfy the inequality; arithmetic progressions give equality"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "A prime that never divides n^p minus p"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'Look at $\dfrac{p^p-1}{p-1}=1+p+\dots+p^{p-1}$. It is $1+p$ mod $p^2$, so it has a prime factor $q$ with $q\not\equiv1\pmod{p^2}$.'
+      - 'If $n^p\equiv p\pmod q$, then $n^{p^2}\equiv p^p\equiv1$. Combine this with Fermat.'
+    solution: |
+      **Key idea:** take $q$ to be a prime factor of $1+p+\dots+p^{p-1}$ with $q\not\equiv1\pmod{p^2}$. Orders mod $q$ then force a contradiction.
+
+      **Choosing $q$.** Let $s=1+p+p^2+\dots+p^{p-1}=\dfrac{p^p-1}{p-1}$. Every term from $p^2$ on is divisible by $p^2$, so $s\equiv1+p\pmod{p^2}$. If every prime factor of $s$ were $\equiv1\pmod{p^2}$, then $s$ would be too. So some prime $q\mid s$ has $q\not\equiv1\pmod{p^2}$. Also $q\mid p^p-1$, and $q\ne p$.
+
+      **No $n$ works.** Suppose $q\mid n^p-p$. Then $q\nmid n$ (otherwise $q\mid p$). Raise to the $p$-th power:
+      $$n^{p^2}\equiv p^p\equiv1\pmod q .$$
+      By Fermat, $n^{q-1}\equiv1\pmod q$. So the order of $n$ mod $q$ divides $\gcd(p^2,q-1)$. Since $p^2\nmid q-1$, this gcd divides $p$, so $n^p\equiv1\pmod q$. Then $p\equiv n^p\equiv1\pmod q$.
+
+      But then $s=1+p+\dots+p^{p-1}\equiv1+1+\dots+1=p\equiv1\pmod q$, which contradicts $q\mid s$.
+
+      So no $n$ has $q\mid n^p-p$.
+    checked: "script: for p = 2, 3, 5, 7, 11, a prime q found this way never divides n^p − p for any residue n"
+    status: ready

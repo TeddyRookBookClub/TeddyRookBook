@@ -1,0 +1,146 @@
+year: 2002
+edition: 43rd
+date: "July 2002 · Glasgow, United Kingdom"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2002/2002_eng.pdf
+  archive: https://www.imo-official.org/editions/2002/
+problems:
+  - id: P1
+    day: 1
+    topic: "Red staircase corner: counting blue transversals two ways"
+    areas: [combinatorics]
+    difficulty: 3
+    hints:
+      - 'A set of the first type takes one blue cell from each column, so their number is the product of the column counts of blue cells. The second type is the product of the row counts.'
+      - 'Show the column counts and the row counts are the same list, up to order. Build the red set one corner cell at a time.'
+    solution: |
+      **Key idea:** both numbers are products of blue counts, one over columns and one over rows. The two lists of counts are rearrangements of each other, because turning one corner cell red changes one column count and one row count, from the same value to the same value.
+
+      Picture the cells $(h,k)$ with $h+k<n$ as a staircase, with column $h$ holding $n-h$ cells and row $k$ holding $n-k$ cells. The red cells form a set closed under moving down or left.
+
+      **Two products.** A set of the first type has $n$ blue cells with different first coordinates. There are exactly $n$ columns, so it takes exactly one blue cell from each column, and any such choice works. So the number of these sets is $\prod_h c_h$, where $c_h$ is the number of blue cells in column $h$. In the same way, the number of sets of the second type is $\prod_k r_k$, where $r_k$ is the number of blue cells in row $k$. It is enough to show that the lists $(c_h)$ and $(r_k)$ agree up to order.
+
+      **All blue.** If no cell is red, $c_h=n-h$ and $r_k=n-k$. Both lists are $1,2,\dots,n$.
+
+      **Adding one red cell.** Any allowed red set can be built from nothing by adding one cell at a time, each time a cell $(h,k)$ whose lower and left neighbors are already red (add the cells in order of increasing $h+k$). At the moment we add $(h,k)$, column $h$ has red cells exactly at heights $0,\dots,k-1$, so
+      $$c_h=(n-h)-k ,$$
+      and row $k$ has red cells exactly at positions $0,\dots,h-1$, so
+      $$r_k=(n-k)-h .$$
+      These are equal. Turning $(h,k)$ red lowers $c_h$ and $r_k$ by one each, from the same value to the same value. So the two lists stay rearrangements of each other at every stage.
+
+      Hence $\prod_h c_h=\prod_k r_k$, and the two types are equally numerous.
+    checked: "script: 3,000 random red sets for n ≤ 7; the column and row counts always agree up to order"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Perpendicular bisector chord and an incenter on a diameter"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Where is the incenter of $CEF$? The bisector from $C$ passes through the midpoint of arc $EF$, and that midpoint is $A$.'
+      - 'The incenter is the point of segment $CA$ at distance $AE$ from $A$. Now show $ADOJ$ is a parallelogram.'
+    solution: |
+      **Key idea:** the incenter of $CEF$ is the point on $CA$ at distance $AE=R$ from $A$. A parallelogram shows that $J$ is exactly that point.
+
+      Let $R$ be the radius.
+
+      **Where the incenter is.** The chord $EF$ is the perpendicular bisector of $AO$, so $EA=EO=R$ and $FA=FO=R$. The triangles $AOE$ and $AOF$ are equilateral, and $A$ is the midpoint of the arc $EF$ of $60^\circ+60^\circ=120^\circ$. Since $\angle AOC>60^\circ$, the point $C$ is not on that arc. So the bisector of angle $ECF$ passes through $A$.
+
+      A classical fact: the incenter $I$ of triangle $CEF$ lies on segment $CA$ with $AI=AE$. (Angle chase: $\angle AEI=\tfrac12\angle E+\tfrac12\angle C=\angle AIE$, using $\angle AEF=\angle ACF=\tfrac12\angle C$.) So $I$ is the point of segment $CA$ with $AI=R$.
+
+      **Where $J$ is.** $D$ is the midpoint of arc $AB$, so $OD\perp AB$. Since $BC$ is a diameter, $\angle BAC=90^\circ$, so $AC\perp AB$ too. Hence $OD\parallel AJ$. By construction $OJ\parallel AD$. So $ADOJ$ is a parallelogram, and $AJ=DO=R$.
+
+      Also $\overrightarrow{AJ}=\overrightarrow{DO}$. The point $D$ lies on the minor arc $AB$, on the far side of line $AB$ from $O$ and $C$, so this vector points from line $AB$ toward $C$. So $J$ is on ray $AC$ with $AJ=R$, which is the point $I$.
+    viz: imo-2002-p2
+    checked: "script: 200 random positions of A with ∠AOC between 61° and 179°; J matches the incenter of CEF to 1e-9"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Polynomial divisibility for infinitely many integers"
+    areas: [number-theory, algebra]
+    difficulty: 3
+    answer: "$(m,n)=(5,3)$ only"
+    hints:
+      - 'Divide $x^m+x-1$ by $x^n+x^2-1$ with remainder. If the remainder is not zero, its values are too small to be multiples for large $k$.'
+      - 'The divisor has a root $\alpha$ in $(0,1)$. Use it to show $m<2n$. Then subtract multiples of the divisor and compare degrees.'
+    solution: |
+      **Key idea:** "infinitely many $k$" upgrades to divisibility of polynomials. A root in $(0,1)$ caps $m$ below $2n$, and then one or two subtraction steps leave only $(5,3)$.
+
+      Let $f=x^n+x^2-1$ and $g=x^m+x-1$.
+
+      **Step 1: polynomial divisibility.** $f$ is monic with integer coefficients, so $g=qf+r$ with integer polynomials $q,r$ and $\deg r<n$. For the infinitely many good $k$, $f(k)\mid r(k)$. For large $k$, $|r(k)|<f(k)$, so $r(k)=0$. A polynomial with infinitely many roots is zero, so $f\mid g$. In particular $m\ge n$, and $m=n$ is impossible since $g-f=x-x^2\ne0$. So $m>n$.
+
+      **Step 2: $m<2n$.** $f(0)=-1<0<1=f(1)$, so $f$ has a root $\alpha\in(0,1)$, and then $g(\alpha)=0$ too. So $\alpha^n=1-\alpha^2$ and $\alpha^m=1-\alpha$. If $m\ge2n$, then
+      $$1-\alpha=\alpha^m\le\alpha^{2n}=(1-\alpha)^2(1+\alpha)^2,$$
+      so $1\le(1-\alpha)(1+\alpha)^2=1+\alpha-\alpha^2-\alpha^3$, which means $\alpha+\alpha^2\le1$. But then $\alpha^n=1-\alpha^2\ge\alpha$, impossible for $\alpha\in(0,1)$ and $n\ge3$. So $m<2n$.
+
+      **Step 3: subtract.** Let $h=g-x^{m-n}f=-x^{m-n+2}+x^{m-n}+x-1$. Then $f\mid h$. Since $m-n\ge1$, $h\ne0$, so $\deg h=m-n+2\ge n$, which gives $m\ge2n-2$. With Step 2, $m=2n-2$ or $m=2n-1$.
+      - If $m=2n-2$: $h+f=x^{n-2}+x^2+x-2$ has degree less than $n$, and it is not zero because its constant term is $-2$. A nonzero multiple of $f$ can't have degree below $n$, so this case fails.
+      - If $m=2n-1$: $h+xf=x^{n-1}+x^3-1$. If $n\ge5$ its degree is $n-1<n$ and it is not zero: impossible. If $n=4$ it is $2x^3-1$: impossible for the same reason. If $n=3$ it is $x^3+x^2-1=f$: fine. So $n=3$, $m=5$.
+
+      **Check.** $x^5+x-1=(x^3+x^2-1)(x^2-x+1)$, so $k^3+k^2-1$ divides $k^5+k-1$ for every $k$.
+    checked: "script: for 3 ≤ n ≤ m < 40, only (5, 3) passes the divisibility for every k from 2 to 29"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Sum of neighboring divisor products versus the square"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$d<n^2$ always; $d\\mid n^2$ exactly when $n$ is prime"
+    hints:
+      - 'Pair the divisors as $d_i=n/d_{k+1-i}$. Each product $d_id_{i+1}$ is $n^2$ divided by a product of two divisors. Bound it by a difference of reciprocals.'
+      - 'If $n$ is composite with smallest prime $p$, the last product alone exceeds $n^2/p$. Then $n^2/d$ would be a divisor of $n^2$ between $1$ and $p$.'
+    solution: |
+      **Key idea:** written with the complementary divisors, the sum telescopes and stays below $n^2$. For composite $n$, the last term alone is too big for $d$ to divide $n^2$.
+
+      **The bound.** The map $x\mapsto n/x$ lists the divisors in reverse order, so $d_j=n/d_{k+1-j}$ and $d_jd_{j+1}=\dfrac{n^2}{d_{k-j}\,d_{k+1-j}}$, where $d_{k-j}<d_{k+1-j}$ are again two consecutive divisors. As $j$ runs from $1$ to $k-1$, this pair runs over all consecutive pairs. For consecutive divisors $u<v$, $v-u\ge1$, so
+      $$\frac1{uv}\le\frac{v-u}{uv}=\frac1u-\frac1v .$$
+      Summing over consecutive pairs of divisors,
+      $$d\le n^2\Big(\frac1{d_1}-\frac1{d_k}\Big)=n^2\Big(1-\frac1n\Big)<n^2 .$$
+
+      **Primes work.** If $n$ is prime, the only divisors are $1$ and $n$, so $d=n$, which divides $n^2$.
+
+      **Composites fail.** Let $n$ be composite with smallest prime factor $p$. Then $d_{k-1}=n/p$ and the last term is $d_{k-1}d_k=n^2/p$. There are other terms too, so $d>n^2/p$. Suppose $d\mid n^2$. Then $n^2/d$ is a divisor of $n^2$ with $1<n^2/d<p$. But every divisor of $n^2$ greater than $1$ has a prime factor of $n$, so it is at least $p$. Contradiction.
+
+      So $d\mid n^2$ exactly when $n$ is prime.
+    checked: "script: every n from 2 to 2999; d < n² always, and d divides n² exactly for the primes"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Functional equation shaped like a product of two norms"
+    areas: [algebra]
+    difficulty: 3
+    answer: "$f\\equiv0$, $f\\equiv\\tfrac12$, and $f(x)=x^2$"
+    hints:
+      - 'Set all variables to $0$, then set $y=v=0$. You learn $f(0)$ and that $f$ is multiplicative.'
+      - 'With $u=y$ and $v=x$ you get $f(x^2+y^2)=(f(x)+f(y))^2$. Take square roots and look at $F(s)=\sqrt{f(s)}$ for $s\ge0$.'
+    solution: |
+      **Key idea:** special values make $f$ even and multiplicative. One clever substitution turns $\sqrt f$ into an additive, nonnegative function on $[0,\infty)$, which must be linear.
+
+      **Step 1: $f(0)$.** All variables $0$: $4f(0)^2=2f(0)$, so $f(0)=0$ or $\tfrac12$.
+
+      **Case $f(0)=\tfrac12$.** Take $y=u=v=0$: $(f(x)+\tfrac12)\cdot1=f(0)+f(0)=1$, so $f\equiv\tfrac12$. This works: both sides equal $1$.
+
+      **Case $f(0)=0$.** Take $y=v=0$: $f(x)f(u)=f(xu)$. With $x=u=1$, $f(1)\in\{0,1\}$. If $f(1)=0$, then $f(x)=f(x)f(1)=0$ for all $x$, and $f\equiv0$ works. So let $f(1)=1$.
+      - $u=0$, $v=1$: $f(x)+f(y)=f(-y)+f(x)$, so $f$ is even.
+      - $f(x^2)=f(x)^2\ge0$, so $f\ge0$ on $[0,\infty)$, and since $f$ is even, $f\ge0$ everywhere.
+      - $u=y$, $v=x$: $(f(x)+f(y))^2=f(0)+f(x^2+y^2)$, so $f(x^2+y^2)=(f(x)+f(y))^2$.
+
+      **Step 2: additivity.** For $s\ge0$ let $F(s)=\sqrt{f(s)}$. Since $f(x^2)=f(x)^2$ and $f(x)\ge0$, we have $f(x)=F(x^2)$. Taking square roots in the last identity,
+      $$F(x^2+y^2)=f(x)+f(y)=F(x^2)+F(y^2).$$
+      So $F(a+b)=F(a)+F(b)$ for all $a,b\ge0$. An additive function that is never negative is increasing ($F(a+b)\ge F(a)$), and an increasing additive function is linear: first $F(q)=qF(1)$ for rational $q\ge0$, then squeeze any real between rationals. With $F(1)=1$, $F(s)=s$. Hence $f(x)=F(x^2)=x^2$.
+
+      **Check.** $(x^2+y^2)(u^2+v^2)=(xu-yv)^2+(xv+yu)^2$, the two-squares identity.
+    checked: "algebra: the three answers satisfy the equation identically (sympy)"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Unit circles that no line meets three at once"
+    areas: [geometry, combinatorics]
+    difficulty: 5
+    status: coming

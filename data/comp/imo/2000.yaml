@@ -1,0 +1,145 @@
+year: 2000
+edition: 41st
+date: "July 2000 · Taejon, Republic of Korea"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/2000/2000_eng.pdf
+  archive: https://www.imo-official.org/editions/2000/
+problems:
+  - id: P1
+    day: 1
+    topic: "Two circles, one tangent line, and a hidden mirror"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'The common tangent $AB$ is cut in half by the line $MN$. Why? Then use the parallel lines $AB$ and $PQ$.'
+      - 'Show that line $AB$ bisects the angle $EAM$, and also the angle $EBM$. What does that say about $E$ and $M$?'
+    solution: |
+      **Key idea:** $M$ turns out to be the midpoint of $PQ$, and $E$ is the mirror image of $M$ in the line $AB$. So $E$ sits on the perpendicular bisector of $PQ$.
+
+      We work in the usual picture, with $C$, $M$, $D$ in this order on a line parallel to $AB$, and $N$ between the lines $AB$ and $CD$. (The points $M$ and $N$ lie on the same side of $AB$; the point $E$ lies on the other side.)
+
+      **Step 1: $M$ is the midpoint of $PQ$.** Let line $NM$ meet $AB$ at $K$. The power of $K$ with respect to the first circle is $KA^2=KM\cdot KN$, and with respect to the second it is $KB^2=KM\cdot KN$. So $KA=KB$: $K$ is the midpoint of $AB$.
+
+      Now look from $N$. The points $P$, $M$, $Q$ lie on line $CD$, which is parallel to $AB$, and $P$, $M$, $Q$ lie on the lines $NA$, $NK$, $NB$. The scaling about $N$ that carries line $AB$ to line $CD$ sends $A\mapsto P$, $K\mapsto M$, $B\mapsto Q$. Scalings keep midpoints, so $M$ is the midpoint of $PQ$.
+
+      **Step 2: $E$ is the reflection of $M$ in $AB$.** The line $AB$ is tangent to the first circle at $A$, so the angle between $AB$ and the chord $AM$ equals the inscribed angle on that chord:
+      $$\angle BAM=\angle ACM .$$
+      Since $E$ lies on ray $CA$ beyond $A$ and $AB\parallel CM$, corresponding angles give $\angle BAE=\angle ACM$. So $\angle BAE=\angle BAM$: the line $AB$ bisects the angle $EAM$. In the same way $\angle ABE=\angle ABM$.
+
+      The triangles $ABE$ and $ABM$ share the side $AB$, have equal angles at $A$ and at $B$, and lie on opposite sides of $AB$. So each is the mirror image of the other in $AB$, and $E$ is the reflection of $M$.
+
+      **Finish.** A point and its reflection are joined by a line perpendicular to the mirror, so $EM\perp AB$. Since $PQ\parallel AB$, also $EM\perp PQ$. Together with Step 1, the line $EM$ is the perpendicular bisector of $PQ$. Every point on it is equally far from $P$ and $Q$, so $PE=QE$.
+    viz: imo-2000-p1
+    checked: "script: random configurations; |PE − QE| below 1e-12 and M is the midpoint of PQ"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Product of three shifted ratios is at most one"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Any three positive numbers with product $1$ can be written as $x/y$, $y/z$, $z/x$. What do the three factors become?'
+      - 'Show $(x+y-z)(y+z-x)(z+x-y)\le xyz$. At most one factor can be negative. If none is, pair them up.'
+    solution: |
+      **Key idea:** write the numbers as ratios. The inequality becomes a classical fact about three numbers that may or may not be the sides of a triangle.
+
+      Since $ABC=1$, we can write $A=\dfrac xy$, $B=\dfrac yz$, $C=\dfrac zx$ with $x,y,z>0$ (take $x=1$, $y=\frac1A$, $z=\frac1{AB}$). Then
+      $$A-1+\frac1B=\frac xy-1+\frac zy=\frac{x-y+z}{y},$$
+      and in the same way the other two factors are $\dfrac{y-z+x}{z}$ and $\dfrac{z-x+y}{x}$. So we must show
+      $$(x-y+z)(y-z+x)(z-x+y)\le xyz .$$
+
+      **At most one factor is negative.** The sum of any two factors is $2x$, $2y$ or $2z$, which is positive. So two factors can't both be negative. If exactly one is negative, the left side is negative and we are done.
+
+      **All factors at least zero.** Pair them:
+      $$(x-y+z)(x+y-z)=x^2-(y-z)^2\le x^2,$$
+      and similarly the other two pairs are at most $y^2$ and $z^2$. Multiplying the three pair inequalities (all sides are nonnegative) gives
+      $$\big[(x-y+z)(y-z+x)(z-x+y)\big]^2\le x^2y^2z^2,$$
+      and taking square roots finishes the proof. Equality holds for $x=y=z$, that is, $A=B=C=1$.
+    checked: "script: 200,000 random triples with product 1; the product never exceeds 1"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Leapfrogging points on a line: how strong must jumps be?"
+    areas: [algebra, combinatorics]
+    difficulty: 3
+    answer: 'Exactly when $k\ge\dfrac1{N-1}$'
+    hints:
+      - 'Track two numbers: the position $R$ of the rightmost point and the total $S$ of all positions. Compare how much a move can raise each.'
+      - 'For large $k$, always jump the leftmost point over the rightmost one, and watch $\Phi=NR-S$, the total distance from the points to the rightmost one.'
+    solution: |
+      **Key idea:** compare the gain of the rightmost position with the gain of the total. The quantity $\Phi=NR-S$ (the sum of the distances from every point to the rightmost one) decides everything.
+
+      Let $R$ be the largest position and $S$ the sum of all positions, so $\Phi=NR-S\ge0$. A move takes a point at $b$ and a point at $a>b$, and puts the first point at $a+k(a-b)$. Write $g=a-b>0$.
+      - $S$ grows by exactly $(1+k)g$.
+      - $R$ grows by at most $kg$: the new point is $a+kg\le R+kg$.
+
+      **If $k<\frac1{N-1}$, the points stay bounded.** In one move, $\Delta R\le kg=\dfrac{k}{1+k}\Delta S$, so
+      $$\Delta\Phi=N\,\Delta R-\Delta S\le\Big(N-\frac{1+k}{k}\Big)\Delta R=-c\,\Delta R,\qquad c=\frac1k+1-N>0 .$$
+      (If $\Delta R=0$ then $\Delta\Phi=-\Delta S<0$, which also fits.) Since $\Phi$ starts at some value $\Phi_0$ and never goes below $0$, the total increase of $R$ over all moves is at most $\Phi_0/c$. The points can never pass $R_0+\Phi_0/c$.
+
+      **If $k\ge\frac1{N-1}$, they can go as far as we like.** Always jump the leftmost point $b$ over the rightmost point $R$. Then $g=R-b$, the new rightmost position is $R+kg$, and
+      $$\Phi_{\text{new}}=N(R+kg)-\big(S-b+R+kg\big)=\Phi-g+(N-1)kg\ \ge\ \Phi .$$
+      So $\Phi$ never drops below its starting value $\Phi_0>0$ (the points are not all equal). In particular the leftmost and rightmost points never coincide, so the move is always allowed. Also $\Phi$ is a sum of $N$ distances, each at most $g$, so $g\ge\Phi/N\ge\Phi_0/N$. Each move raises $R$ by $kg\ge k\Phi_0/N$, a fixed positive amount. After enough moves, every point can be pushed past any mark: once $R$ is huge, one more round of jumps moves each point beyond the old $R$.
+    checked: "simulation: N = 2..6, k slightly above and below 1/(N−1); the leftmost-over-rightmost strategy diverges exactly above the threshold"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Card tricks: sorting 1 to 100 into three boxes"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: "$12$ ways"
+    hints:
+      - 'The rule says the three sets of pair sums (from boxes 1 and 2, 2 and 3, 3 and 1) never share a value. Use equal sums like $x+(y+1)=(x+1)+y$.'
+      - 'Suppose $x$ and $x+1$ are in different boxes. What can you say about the neighbors of a card in the third box?'
+    solution: |
+      **Key idea:** equal sums such as $x+(y+1)=(x+1)+y$ are forbidden across different pairs of boxes. This forces either the pattern of remainders mod $3$, or the split $\{1\},\{100\},\{2,\dots,99\}$.
+
+      Call the boxes $X,Y,Z$. The trick works exactly when the three sets of sums $X+Y$, $Y+Z$, $Z+X$ (one card from each of two boxes) are pairwise disjoint.
+
+      **Both families work.** If the boxes hold the numbers $\equiv0,1,2\pmod3$, the three kinds of sums are $\equiv1,0,2\pmod3$, all different. If the boxes are $\{1\}$, $\{100\}$, $\{2,\dots,99\}$, the sums are $101$, the range $3$–$100$, and the range $102$–$199$. In each family the boxes can be assigned in $3!=6$ ways, so we get $12$ ways. It remains to show there are no others.
+
+      **Lemma.** Suppose $x\in X$ and $x+1\in Y$ with $X\ne Y$, and $z$ is in the third box $Z$. Then $z+1\in X$ (if $z<100$) and $z-1\in Y$ (if $z>1$).
+
+      *Proof.* $x+(z+1)=(x+1)+z$, and the right side is a $Y{+}Z$ sum. If $z+1$ were in $Y$ or $Z$, the left side would be an $X{+}Y$ or $X{+}Z$ sum, which is not allowed. So $z+1\in X$. Similarly $(x+1)+(z-1)=x+z$ is an $X{+}Z$ sum, so $z-1$ must be in $Y$.
+
+      **Case 1: three consecutive numbers $t,t+1,t+2$ sit in three different boxes.** Say $t\in X$, $t+1\in Y$, $t+2\in Z$. Then $t+3\in X$: if $t+3\in Z$, then $(t+3)+t=(t+1)+(t+2)$ is both a $Z{+}X$ and a $Y{+}Z$ sum; if $t+3\in Y$, it is both an $X{+}Y$ and a $Y{+}Z$ sum. By the mirror argument $t-1\in Z$. Repeating forward and backward, the boxes follow the remainders mod $3$. That is the first family.
+
+      **Case 2: no three consecutive numbers are in three different boxes.** Since every box is used, somewhere $x$ and $x+1$ are in different boxes $X\ne Y$. By the Lemma, a card $z$ of the third box with $1<z<100$ would have $z-1\in Y$, $z\in Z$, $z+1\in X$, which Case 2 forbids. So the third box is contained in $\{1,100\}$. This holds for every "change point" $x,x+1$.
+
+      The third box can't be $\{1,100\}$: the change point $1,2$ would then have a third box avoiding both $1$ and $100$, so it would be empty. So it is a single card, say $\{1\}$ (the case $\{100\}$ is the mirror image under $n\mapsto101-n$). Now $1,2$ is a change point, and its third box is inside $\{1,100\}$ but doesn't contain $1$. So it is $\{100\}$, and the remaining box holds $2,\dots,99$. That is the second family.
+
+      So there are exactly $12$ ways.
+    checked: "script: brute force over all box assignments for 4 to 11 cards gives 12 every time"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Divisor of two to its own power plus one"
+    areas: [number-theory]
+    difficulty: 3
+    answer: "Yes"
+    hints:
+      - 'Start with $N=3$. If $N\mid 2^N+1$ and a prime $p\nmid N$ divides $2^N+1$, then $pN$ works too.'
+      - 'To find a new prime, compare $2^{3N}+1$ with $2^N+1$. With $t=2^N$, the quotient is $t^2-t+1$.'
+    solution: |
+      **Key idea:** build $N$ one prime at a time. The factor $t^2-t+1$ of $t^3+1$ always brings a new prime.
+
+      Call $N$ *good* if $N$ is odd, $3\mid N$ and $N\mid 2^N+1$. For example $N=3$ is good, since $3\mid 9$. We show: if $N$ is good, there is a good number with exactly one more prime factor. Starting from $3$ and applying this $1999$ times gives a good number with exactly $2000$ prime factors, so the answer is **yes**.
+
+      **Step 1: $3N$ is good.** Let $t=2^N$. Then $2^{3N}+1=t^3+1=(t+1)(t^2-t+1)$. We know $N\mid t+1$. Also $3\mid t+1$, so $t\equiv-1\pmod 3$ and $t^2-t+1\equiv3\equiv0\pmod 3$. So $3N\mid 2^{3N}+1$.
+
+      **Step 2: a new prime.** Write $t^2-t+1=(t+1)^2-3t$. Since $9\mid(t+1)^2$ but $9\nmid 3t$, exactly one factor $3$ divides $t^2-t+1$. So $t^2-t+1=3m$ with $3\nmid m$, and $m>1$ because $t\ge8$. Any common divisor of $t+1$ and $t^2-t+1$ divides $(t+1)^2-(t^2-t+1)=3t$, and since $t+1$ is odd and prime to $t$, it divides $3$. So $m$ is coprime to $t+1$. Take a prime $p\mid m$. Then $p\ne3$, $p\nmid t+1=2^N+1$, hence $p\nmid N$ (because $N\mid 2^N+1$), and $p\mid 2^{3N}+1$.
+
+      **Step 3: $p\cdot 3N$ is good.** Let $N'=3N$, which is good by Step 1, with $p\mid 2^{N'}+1$ and $p\nmid N'$. Since $p$ is odd, $2^{N'}+1$ divides $2^{pN'}+1$. So both $N'$ and $p$ divide $2^{pN'}+1$, and they are coprime, so $pN'\mid 2^{pN'}+1$. The number $pN'$ is odd and divisible by $3$, and it has exactly one more prime factor than $N$.
+    checked: "script: from N = 3 the steps give 9, then p = 19 and 171; 171 divides 2^171 + 1, and the new cofactor is prime to 3 and to 2^N + 1"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Altitude feet, touch points, and reflected lines meeting the incircle"
+    areas: [geometry]
+    difficulty: 5
+    status: coming

@@ -1,0 +1,138 @@
+year: 1995
+edition: 36th
+date: "July 13–25, 1995 · Toronto, Canada"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1995/1995_eng.pdf
+  archive: https://www.imo-official.org/editions/1995/
+problems:
+  - id: P1
+    day: 1
+    topic: "Two circles on a line and a concurrence"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Since $P$ is on the radical axis, $PM\cdot PC=PN\cdot PB$. What does that say about $B,C,M,N$?'
+      - 'Show that $A,M,N,D$ are concyclic, then look for a radical center.'
+    solution: |
+      **Key idea:** $A,M,N,D$ lie on one circle. Then $AM$, $DN$ and $XY$ are the three radical axes of that circle and the two given circles, so they meet.
+
+      Let $\omega_1$ and $\omega_2$ be the circles on diameters $AC$ and $BD$. Line $XY$ is their radical axis, and $P$ is on it, so $PM\cdot PC=PN\cdot PB$ (signed). So $B,C,M,N$ are concyclic.
+
+      **$A,M,N,D$ are concyclic.** Use directed angles mod $180^\circ$. Since $AC$ is a diameter, $MA\perp MC$; since $BD$ is a diameter, $NB\perp ND$. Then
+      $$\angle(MA,MN)=\angle(MA,MC)+\angle(MC,MN)=90^\circ+\angle(BC,BN),$$
+      using the circle $BCMN$ for the second term. Also
+      $$\angle(DA,DN)=\angle(DB,DN)=\angle(DB,BN)+\angle(BN,DN)=\angle(BC,BN)+90^\circ,$$
+      because lines $DB$, $BC$ and $DA$ are all the line $\ell$ through the four points. So $\angle(MA,MN)=\angle(DA,DN)$, and $A,M,N,D$ lie on a circle $\omega_3$.
+
+      **Radical center.** The radical axes of the pairs among $\omega_1,\omega_2,\omega_3$ are $XY$, $AM$ (for $\omega_1,\omega_3$) and $DN$ (for $\omega_2,\omega_3$). Three radical axes meet at one point or are parallel. They are not parallel: $AM\parallel XY$ would mean $AM\perp\ell$, so $AM$ would be tangent to $\omega_1$ at $A$, forcing $M=A$; then $P$ would be on line $CA=\ell$, so $P=Z$, which is excluded. So $AM$, $DN$, $XY$ are concurrent.
+    checked: "numeric: 500 random configurations"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Cyclic inequality with product one"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - 'Substitute $x=\frac1a$, $y=\frac1b$, $z=\frac1c$. What does each term become?'
+      - 'Then use $\sum\frac{x^2}{y+z}\ge\frac{(x+y+z)^2}{2(x+y+z)}$.'
+    solution: |
+      **Key idea:** after $x=1/a$ and so on, the terms become $\frac{x^2}{y+z}$, and the Cauchy–Schwarz (Engel) form plus AM–GM finish.
+
+      Let $x=\frac1a$, $y=\frac1b$, $z=\frac1c$, so $xyz=1$. Then
+      $$\frac1{a^3(b+c)}=\frac{x^3}{\frac1y+\frac1z}=\frac{x^3yz}{y+z}=\frac{x^2}{y+z}.$$
+      By Cauchy–Schwarz in Engel form,
+      $$\frac{x^2}{y+z}+\frac{y^2}{z+x}+\frac{z^2}{x+y}\ge\frac{(x+y+z)^2}{2(x+y+z)}=\frac{x+y+z}2\ge\frac{3\sqrt[3]{xyz}}2=\frac32 .$$
+    checked: "reasoning"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Triangle areas as sums of point weights"
+    areas: [geometry, combinatorics]
+    difficulty: 3
+    answer: "$n=4$ only"
+    hints:
+      - 'For four points in convex position, the two ways to cut the quadrilateral along a diagonal give a linear relation between the weights.'
+      - 'Among five points, look at the convex hull: a pentagon, a quadrilateral with one point inside, or a triangle with two inside.'
+    solution: |
+      **Key idea:** the area rules give linear relations between the weights: for a convex quadrilateral, opposite corners have equal weight sums; for a point inside a triangle, the inside weight is tied to the outer ones. Five points always create a contradiction.
+
+      **$n=4$ works:** the corners of a unit square, with all $r_i=\frac16$.
+
+      **Two relations.** Write $[ijk]$ for the area of triangle $A_iA_jA_k$, equal to $r_i+r_j+r_k$.
+      - (Q) If $P,Q,R,S$ form a convex quadrilateral with diagonals $PR$ and $QS$, then $[PQR]+[PRS]=[PQS]+[QRS]$, so $r_P+r_R=r_Q+r_S$.
+      - (T) If $S$ is inside triangle $PQR$, then $[PQR]=[PQS]+[QRS]+[RPS]$, so $r_P+r_Q+r_R+3r_S=0$.
+
+      **No five points.** It is enough to rule out $n=5$. Look at the convex hull.
+      - **Pentagon $A_1\dots A_5$.** For each $i$, (Q) on $A_i,A_{i+1},A_{i+2},A_{i+3}$ and on $A_i,A_{i+1},A_{i+2},A_{i+4}$ gives $r_i+r_{i+2}=r_{i+1}+r_{i+3}=r_{i+1}+r_{i+4}$, so $r_{i+3}=r_{i+4}$. Hence all $r_i$ are equal and all triangles have the same area. Then $A_3,A_4,A_5$ are equally far from line $A_1A_2$, on the same side, so they are collinear. Contradiction.
+      - **Quadrilateral $A_1A_2A_3A_4$ with $A_5$ inside.** $A_5$ lies in one triangle of each diagonal split; relabel so it is in $A_1A_2A_3$ and $A_1A_2A_4$. (T) twice gives $r_1+r_2+r_3=r_1+r_2+r_4=-3r_5$, so $r_3=r_4$. Line $A_4A_5$ crosses side $A_1A_2$, so it separates $A_1$ from $A_3$; and $A_4,A_5$ lie on opposite sides of $A_1A_3$. So $A_1,A_4,A_3,A_5$ is convex with diagonals $A_1A_3$ and $A_4A_5$, and (Q) gives $r_1+r_3=r_4+r_5$, so $r_1=r_5$. In the same way, line $A_3A_5$ crosses side $A_1A_2$ and separates $A_2$ from $A_4$, so (Q) on diagonals $A_2A_4$, $A_3A_5$ gives $r_2+r_4=r_3+r_5$, so $r_2=r_5$. Now with $s=r_1=r_2=r_5$ and $t=r_3=r_4$, (T) reads $5s+t=0$. Area $[125]=3s>0$, so $t=-5s<0$ and $[341]=2t+s=-9s<0$. Contradiction.
+      - **Triangle $A_1A_2A_3$ with $A_4,A_5$ inside.** (T) twice gives $r_4=r_5$. Then $[124]=[125]$, so line $A_4A_5$ is parallel to $A_1A_2$ (both points are on the same side of it); likewise $[134]=[135]$ makes it parallel to $A_1A_3$. Contradiction.
+    checked: "reasoning; relations (Q) and (T) checked on examples"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "A recurrence that halves or inverts, then returns"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$x_0=2^{997}$"
+    hints:
+      - 'Factor the relation: it says $(2x_i-x_{i-1})(x_ix_{i-1}-1)=0$.'
+      - 'In terms of $t=\log_2x$, each step is $t\mapsto t-1$ or $t\mapsto-t$. Use parity.'
+    solution: |
+      **Key idea:** each step either halves or inverts. In base-$2$ logarithms that is "subtract $1$" or "change sign", and a parity count bounds the start.
+
+      Multiply the relation by $x_{i-1}x_i$ and rearrange:
+      $$(2x_i-x_{i-1})\Big(1-\frac1{x_{i-1}x_i}\Big)=0 .$$
+      So each step is $x_i=\frac{x_{i-1}}2$ or $x_i=\frac1{x_{i-1}}$. With $t_i=\log_2x_i$, each step is $t\mapsto t-1$ or $t\mapsto-t$.
+
+      Let $r$ be the number of sign changes and $h=1995-r$ the number of halvings. Following the steps, $t_{1995}=(-1)^rt_0+c$, where $c$ is a sum of $h$ terms $\pm1$. So $|c|\le h$ and $c\equiv h\pmod2$.
+      - If $r$ is even, $h$ is odd, so $c\ne0$, and $t_{1995}=t_0+c\ne t_0$. Impossible.
+      - So $r$ is odd, $h\le1994$, and $t_0=-t_0+c$ gives $t_0=\frac c2\le\frac{1994}2=997$.
+
+      Hence $x_0\le2^{997}$. This is reached: from $2^{997}$, halve $1994$ times to get $2^{-997}$, then invert to return to $2^{997}$.
+    checked: "reasoning; the sequence for 2^997 checked by script"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Hexagon with two equilateral corners and a path bound"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Triangles $BCD$ and $EFA$ are equilateral. Reflect in line $BE$: where do $A$, $D$, $C$, $F$ go?'
+      - 'A point $G$ with $\angle AGB=120^\circ$ on the right side satisfies $AG+GB=GC''$, where $ABC''$ is equilateral (Ptolemy).'
+    solution: |
+      **Key idea:** reflecting in $BE$ swaps $A$ and $D$. The reflected corners $C'$ and $F'$ are apexes of equilateral triangles on $AB$ and $DE$, and Ptolemy turns $AG+GB$ into $C'G$. A broken line $C'GHF'$ is at least $C'F'=CF$.
+
+      Triangle $BCD$ has $BC=CD$ and a $60^\circ$ angle, so it is equilateral and $BD=AB$. Likewise $EFA$ is equilateral and $EA=ED$. So $B$ and $E$ are both equidistant from $A$ and $D$, and the reflection in line $BE$ swaps $A$ and $D$. Let $C'$ and $F'$ be the images of $C$ and $F$. Then $ABC'$ and $DEF'$ are equilateral, and $C'F'=CF$.
+
+      **Sides.** $C$ lies on the far side of line $BD$ from $E$, so $C'$ lies on the far side of line $AB$ from $E$, outside the hexagon. $G$ is inside the convex hexagon, on the same side of $AB$ as $E$. Since $\angle AGB=120^\circ$ and $\angle AC'B=60^\circ$, $G$ lies on the circle $ABC'$, on the arc $AB$ away from $C'$.
+
+      **Ptolemy.** For the cyclic quadrilateral $AGBC'$, $AG\cdot BC'+GB\cdot AC'=GC'\cdot AB$, and the three sides of $ABC'$ are equal, so $AG+GB=GC'$. In the same way $DH+HE=HF'$. Therefore
+      $$AG+GB+GH+DH+HE=C'G+GH+HF'\ge C'F'=CF .$$
+    checked: "reasoning"
+    viz: imo-1995-p5
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Half-size subsets with sum divisible by a prime"
+    areas: [combinatorics, number-theory]
+    difficulty: 3
+    answer: "$\\dfrac{\\binom{2p}{p}-2}{p}+2$"
+    hints:
+      - 'Split $\{1,\dots,2p\}$ into $\{1,\dots,p\}$ and $\{p+1,\dots,2p\}$. Shift the part of a subset in the first half cyclically.'
+      - 'If a subset meets the first half in $j$ elements with $0<j<p$, the shift by $s$ changes the sum by $js$ mod $p$.'
+    solution: |
+      **Key idea:** rotate the part of the subset that lies in $\{1,\dots,p\}$. Apart from the two halves themselves, subsets fall into groups of $p$, and in each group exactly one sum is divisible by $p$.
+
+      Let $X$ be a $p$-element subset other than $\{1,\dots,p\}$ and $\{p+1,\dots,2p\}$, and let $j=|X\cap\{1,\dots,p\}|$, so $0<j<p$. For $s=0,\dots,p-1$, let $X_s$ be obtained by shifting each element of $X\cap\{1,\dots,p\}$ by $s$ cyclically within $\{1,\dots,p\}$, keeping the rest of $X$.
+      - The sum of $X_s$ is the sum of $X$ plus $js$ mod $p$. Since $p\nmid j$, the $p$ sets $X_0,\dots,X_{p-1}$ have all $p$ residues, one each.
+      - These $p$ sets are distinct: a $j$-element subset of $\mathbb Z_p$ that is fixed by a nonzero shift is a union of cosets of the whole group, so $j\in\{0,p\}$.
+
+      So the $\binom{2p}p-2$ such subsets split into $\frac{\binom{2p}p-2}p$ groups, each with exactly one good subset. Both halves are good: their sums are $\frac{p(p+1)}2$ and $p^2+\frac{p(p+1)}2$, multiples of $p$ since $p$ is odd. The total is
+      $$\frac{\binom{2p}p-2}p+2 .$$
+    checked: "script: brute force for p = 3, 5, 7 gives 8, 52, 492"
+    status: ready

@@ -1,0 +1,164 @@
+year: 1959
+edition: 1st
+date: "July 21–31, 1959 · Brașov, Romania"
+note: "The first IMO had seven countries, all from Eastern Europe. The problems are gentler than today's, and several are classical constructions."
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1959/1959_eng.pdf
+  archive: https://www.imo-official.org/editions/1959/
+problems:
+  - id: P1
+    day: 1
+    topic: "A fraction that never cancels: the Euclidean algorithm"
+    areas: [number-theory]
+    difficulty: 1
+    hints:
+      - 'A common divisor of two numbers also divides every combination of them with integer coefficients.'
+      - 'Find whole numbers $u,v$ with $u(14n+3)-v(21n+4)$ free of $n$.'
+    solution: |
+      **Key idea:** find a combination of the numerator and the denominator that does not depend on $n$.
+
+      Let $d$ be a positive common divisor of $21n+4$ and $14n+3$. Then $d$ divides
+      $$3(14n+3)-2(21n+4)=42n+9-42n-8=1 .$$
+      So $d=1$. The numerator and denominator have no common factor larger than $1$, for every natural number $n$, and the fraction is already in lowest terms.
+
+      (This is one step of the Euclidean algorithm run on the two linear expressions: $21n+4=1\cdot(14n+3)+(7n+1)$ and $14n+3=2(7n+1)+1$.)
+    checked: "script: gcd(21n+4, 14n+3) = 1 for every n < 100000"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Nested square roots that collapse to absolute values"
+    areas: [algebra]
+    difficulty: 2
+    answer: "(a) every $x$ with $\\tfrac12\\le x\\le1$; (b) no $x$; (c) $x=\\tfrac32$"
+    hints:
+      - 'Write $u=\sqrt{2x-1}$. Express $x\pm u$ as a perfect square divided by $2$.'
+      - 'The left side becomes $\bigl(|u+1|+|u-1|\bigr)/\sqrt2$. Split into $u\le1$ and $u>1$.'
+    solution: |
+      **Key idea:** both radicands are perfect squares in disguise.
+
+      The inner root needs $2x-1\ge0$, so $x\ge\tfrac12$. Put $u=\sqrt{2x-1}\ge0$, so $x=\tfrac{u^2+1}{2}$. Then
+      $$x\pm u=\frac{u^2\pm2u+1}{2}=\frac{(u\pm1)^2}{2}.$$
+      Both are non-negative, so both outer roots exist, and the left side equals
+      $$\frac{|u+1|+|u-1|}{\sqrt2}=\frac{(u+1)+|u-1|}{\sqrt2}.$$
+      - If $u\le1$, that is $\tfrac12\le x\le1$, the left side is $\dfrac{2}{\sqrt2}=\sqrt2$, a constant.
+      - If $u>1$, that is $x>1$, the left side is $\dfrac{2u}{\sqrt2}=\sqrt{2}\,u=\sqrt{4x-2}$, which is larger than $\sqrt2$ and grows with $x$.
+
+      So the left side takes the value $\sqrt2$ on the whole interval $[\tfrac12,1]$ and every value above $\sqrt2$ exactly once after that. It never drops below $\sqrt2$.
+
+      - **(a)** For the value $\sqrt2$: every $x$ with $\tfrac12\le x\le1$.
+      - **(b)** For the value $1<\sqrt2$: no solution.
+      - **(c)** For the value $2$: $\sqrt{4x-2}=2$ gives $x=\tfrac32$.
+    checked: "script: the left side evaluated on a fine grid of x ≥ 1/2"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Rewriting a quadratic in cos x for cos 2x"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$a^2y^2+2(a^2+2ac-b^2)\\,y+(a+2c)^2-2b^2=0$ for $y=\\cos2x$; for $(4,2,-1)$ both equations have the same coefficients"
+    hints:
+      - 'Use $\cos^2x=\tfrac{1+\cos2x}{2}$. The odd power $\cos x$ is the only obstacle.'
+      - 'Move $b\cos x$ to one side and square.'
+    solution: |
+      **Key idea:** isolate the single odd term $b\cos x$ and square, so that only $\cos^2x$ remains. Then replace $\cos^2x$ by $\tfrac{1+\cos2x}{2}$.
+
+      Write $u=\cos x$ and $y=\cos2x=2u^2-1$, so $u^2=\frac{y+1}{2}$. If $u$ satisfies $au^2+bu+c=0$, then $au^2+c=-bu$, and squaring gives $(au^2+c)^2=b^2u^2$. Substituting $u^2=\frac{y+1}{2}$:
+      $$\Bigl(\frac{a(y+1)}{2}+c\Bigr)^2=\frac{b^2(y+1)}{2}.$$
+      Multiply by $4$ and expand:
+      $$a^2(y+1)^2+4ac(y+1)+4c^2-2b^2(y+1)=0,$$
+      $$a^2y^2+2(a^2+2ac-b^2)\,y+(a^2+4ac+4c^2-2b^2)=0 .$$
+      The constant term is $(a+2c)^2-2b^2$. Why these are exactly the right roots (for $a\ne0$): if $u_1,u_2$ are the roots of $au^2+bu+c$, then
+      $$(au^2+c)^2-b^2u^2=(au^2+bu+c)(au^2-bu+c)=a^2(u^2-u_1^2)(u^2-u_2^2).$$
+      So, as an equation in $u^2$, the squared equation has exactly the roots $u_1^2$ and $u_2^2$, and the new equation has exactly the roots $y=2u_1^2-1$ and $y=2u_2^2-1$. These are the values of $\cos2x$ that belong to the roots of the original.
+
+      **The example $a=4$, $b=2$, $c=-1$.** The new coefficients are $16$, $2(16-8-4)=8$ and $(4-2)^2-8=-4$. Dividing by $4$:
+      $$4y^2+2y-1=0,$$
+      the **same** equation as $4u^2+2u-1=0$. The roots are $\frac{-1\pm\sqrt5}{4}$, which are $\cos72^\circ$ and $\cos144^\circ$. Doubling the angles swaps them: $\cos144^\circ$ and $\cos288^\circ=\cos72^\circ$. That is why the two equations agree.
+    checked: "script: for random (a, b, c), every real root u with |u| ≤ 1 makes y = 2u² − 1 a root of the new equation"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Right triangle whose median is a geometric mean"
+    areas: [geometry]
+    difficulty: 1
+    answer: "The acute angles are $15^\\circ$ and $75^\\circ$; the altitude to the hypotenuse is $c/4$"
+    hints:
+      - 'The median to the hypotenuse is half the hypotenuse.'
+      - 'The product of the legs is twice the area, and also the hypotenuse times the altitude to it.'
+    solution: |
+      **Key idea:** the condition fixes the product of the legs, which fixes the altitude to the hypotenuse.
+
+      In a right triangle the median to the hypotenuse has length $c/2$ (the right-angle vertex lies on the circle with the hypotenuse as diameter). Call the legs $p,q$. The condition says $pq=(c/2)^2=c^2/4$.
+
+      Twice the area is $pq$, and it is also $c\cdot h$ where $h$ is the altitude to the hypotenuse. So
+      $$h=\frac{pq}{c}=\frac c4 .$$
+
+      **Construction.** Draw a segment of length $c$ and the semicircle on it as diameter. Draw the line parallel to the segment at distance $c/4$. Since $c/4<c/2$ (the radius), this line meets the semicircle in two points, mirror images of each other. Either one is the right-angle vertex, and the two triangles are congruent.
+
+      **Check of the angles.** If $\theta$ is an acute angle, then $p=c\sin\theta$ and $q=c\cos\theta$, so $pq=\tfrac{c^2}{2}\sin2\theta$. The condition becomes $\sin2\theta=\tfrac12$, so $\theta=15^\circ$ or $75^\circ$. The triangle is unique up to congruence: its acute angles are $15^\circ$ and $75^\circ$.
+    checked: "script: legs c·sin 15°, c·cos 15° have product c²/4"
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Two squares on a segment: chords through a fixed point"
+    areas: [geometry]
+    difficulty: 2
+    answer: "(c) An open segment parallel to the base, at a quarter of its length above it, with half its length"
+    hints:
+      - 'Each circle has a diagonal of its square as a diameter. Check that the lines in part (a) are perpendicular.'
+      - 'Coordinates make (b) and (c) short: put the base on the $x$-axis and write both circle equations. Their difference is the common chord.'
+    solution: |
+      **Key idea:** the two lines in (a) are perpendicular, which puts their meeting point on both circles (Thales). Coordinates finish the rest.
+
+      Put $A=(0,0)$, $B=(L,0)$ and $M=(m,0)$ with $0<m<L$, squares above the axis. Then the first square has vertices $A,M,C=(m,m),D=(0,m)$ and the second has $M,B,E=(L,L-m),F=(m,L-m)$. The circle about a square has a diagonal as a diameter: the first circle has diameter $AC$ and center $P=(\tfrac m2,\tfrac m2)$, the second has diameter $BF$ and center $Q=(\tfrac{L+m}2,\tfrac{L-m}2)$.
+
+      **(a)** Line $AF$ has direction $(m,\,L-m)$ and line $BC$ has direction $(m-L,\,m)$. Their dot product is $m(m-L)+(L-m)m=0$, so the lines are perpendicular. Let $N'$ be where they meet. Since $AN'\perp N'C$, the angle $AN'C$ is right, so $N'$ lies on the circle with diameter $AC$. Since $BN'\perp N'F$, it also lies on the circle with diameter $BF$. And $N'\ne M$, because $M$ is not on line $AF$ (that line meets the axis only at $A$). Two different circles meet in at most two points, so $N'$ is the second common point $N$.
+
+      **(b)** The circles are
+      $$x^2+y^2-mx-my=0,\qquad x^2+y^2-(L+m)x-(L-m)y+Lm=0$$
+      (the second passes through $M$, which fixes the constant). Subtracting gives the line through both common points $M$ and $N$:
+      $$Lx+(L-2m)\,y-Lm=0 .$$
+      The point $S=(\tfrac L2,-\tfrac L2)$ satisfies it for every $m$: $\tfrac{L^2}{2}-\tfrac{L(L-2m)}{2}-Lm=0$. So every line $MN$ passes through $S$, the apex of the right isosceles triangle on $AB$ built on the other side.
+
+      **(c)** The midpoint of $PQ$ is
+      $$\Bigl(\frac{L+2m}{4},\ \frac L4\Bigr).$$
+      Its height is always $L/4$, and as $m$ runs over $(0,L)$ its first coordinate runs over $(\tfrac L4,\tfrac{3L}4)$. The locus is the open segment at height $L/4$ above $AB$ between the points above $\tfrac L4$ and $\tfrac{3L}{4}$: half as long as $AB$, centered over its midpoint.
+    checked: "script: for random M, AF ∩ BC lies on both circles and on line MS"
+    viz: imo-1959-p5
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Space construction: a tangential isosceles trapezoid across two planes"
+    areas: [geometry]
+    difficulty: 3
+    hints:
+      - 'Two parallel lines lying in two intersecting planes must both be parallel to the line where the planes meet.'
+      - 'In the plane of the trapezoid, a circle fits inside exactly when the two parallel sides add up to the two legs. Show the legs must equal the distance from $A$ to the foot of the perpendicular from $C$ onto line $AB$.'
+    solution: |
+      **Key idea:** the parallel sides are forced to be parallel to $p$, which reduces everything to a construction in one plane. There the incircle condition pins the leg length.
+
+      **Step 1: the two lines.** Line $AB$ lies in plane $P$ and line $CD$ lies in plane $Q$. If they are parallel, line $AB$ is parallel to a line of $Q$, hence to the plane $Q$. A line in $P$ parallel to $Q$ is parallel to $P\cap Q=p$. So $AB$ is the line $\ell_1$ through $A$ parallel to $p$, and likewise $CD$ is the line $\ell_2$ through $C$ parallel to $p$. Conversely any point $B\ne A$ of $\ell_1$ lies in $P$ and any point $D$ of $\ell_2$ lies in $Q$. The lines $\ell_1,\ell_2$ are different (otherwise both would lie in $P\cap Q=p$, but $A$ is not on $p$). They span a plane, and the rest happens in it.
+
+      **Step 2: coordinates in that plane.** Let $\ell_1$ be the $x$-axis with $A=(0,0)$ and let $\ell_2$ be the line $y=h$, with $C=(c,h)$ and $h>0$. Choose the direction of the axis so that $c\ge0$. So $c$ is the distance from $A$ to the foot $C^*$ of the perpendicular from $C$ to $\ell_1$. Write $B=(b,0)$ and $D=(d,h)$, and go around the quadrilateral $A,B,C,D$ with $b>0$ and $d<c$.
+
+      - *Isosceles:* the axis of symmetry is perpendicular to both bases and passes through their midpoints, so $\tfrac b2=\tfrac{c+d}{2}$, that is $b=c+d$. Then $AB=c+d$, $CD=c-d$, and both legs have length $\sqrt{d^2+h^2}$.
+      - *Incircle:* a convex quadrilateral has an inscribed circle exactly when the sums of opposite sides agree. Here that reads $(c+d)+(c-d)=2\sqrt{d^2+h^2}$, that is
+      $$\text{leg}=\sqrt{d^2+h^2}=c .$$
+
+      So each leg must equal $c=AC^*$.
+
+      **Construction.** In the plane of $\ell_1,\ell_2$, drop the perpendicular from $C$ to $\ell_1$, with foot $C^*$. Draw the circle about $A$ with radius $AC^*$. It meets $\ell_2$ at the possible points $D$. Then $B$ is the point of $\ell_1$, on the side of $C^*$, with $AB=AC^*+(\text{signed }x\text{-coordinate of }D)$. Equivalently, $B$ is the mirror image of $A$ in the perpendicular bisector of $CD$.
+
+      **Discussion.** The circle meets $\ell_2$ only if $AC^*\ge h$, where $h$ is the distance between $\ell_1$ and $\ell_2$:
+      - $AC^*>h$: two solutions, $d=\pm\sqrt{c^2-h^2}$. Both are valid trapezoids, since $c+d>0$ and $c-d>0$.
+      - $AC^*=h$: one solution, $d=0$, and the "trapezoid" is a square of side $h$.
+      - $AC^*<h$: no solution.
+
+      In words: the part of $AC$ along the direction of $p$ must be at least as long as the distance between the two parallel lines.
+    checked: "script: for random h ≤ c, both choices of d give equal legs and AB + CD = 2·leg"
+    status: ready

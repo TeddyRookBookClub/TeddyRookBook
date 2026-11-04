@@ -1,0 +1,158 @@
+year: 1978
+edition: 20th
+date: "July 3–10, 1978 · Bucharest, Romania"
+links:
+  problems: https://www.imo-official.org/assets/documents/problems/1978/1978_eng.pdf
+  archive: https://www.imo-official.org/editions/1978/
+problems:
+  - id: P1
+    day: 1
+    topic: "Two powers of 1978 with the same last three digits"
+    areas: [number-theory]
+    difficulty: 1
+    answer: "$m=3$, $n=103$, so $m+n=106$"
+    hints:
+      - 'The difference is $1978^m\left(1978^{n-m}-1\right)$. The second factor is odd. What does $8\mid$ the difference say about $m$?'
+      - 'For the factor $125$, find the order of $1978\equiv103\pmod{125}$.'
+    solution: |
+      **Key idea:** split $1000=8\cdot125$. The power of $2$ fixes $m\ge3$, and the order of $1978$ modulo $125$ fixes $n-m$.
+
+      We need $1000\mid1978^n-1978^m=1978^m\left(1978^{n-m}-1\right)$.
+
+      **The factor $8$.** The second factor is odd, so $8\mid1978^m$. As $1978=2\cdot989$ with $989$ odd, this means $m\ge3$.
+
+      **The factor $125$.** $1978^m$ is prime to $5$, so we need $1978^{n-m}\equiv1\pmod{125}$. Now $1978\equiv103\equiv-22\pmod{125}$. The order of $-22$ divides $\varphi(125)=100$. Modulo $5$, $-22\equiv3$, whose order is $4$; so the order modulo $125$ is a multiple of $4$ dividing $100$: one of $4,20,100$. Compute:
+      $$(-22)^2=484\equiv-16,\qquad (-22)^4\equiv256\equiv6,\qquad (-22)^{20}\equiv6^5=7776\equiv26\pmod{125}.$$
+      Neither is $1$, so the order is $100$, and $100\mid n-m$.
+
+      The smallest sum is $m=3$, $n=3+100=103$, giving $m+n=106$.
+    checked: "script: search over n < 400 confirms the minimum m + n = 106"
+    status: ready
+
+  - id: P2
+    day: 1
+    topic: "Box from three perpendicular chords: locus of far corner"
+    areas: [geometry]
+    difficulty: 3
+    answer: "The sphere with the same center $O$ and radius $\\sqrt{3R^2-2\\,OP^2}$"
+    hints:
+      - 'Use vectors from the center $O$. Write $U=P+u$, $V=P+v$, $W=P+w$ with $u,v,w$ pairwise perpendicular, so $Q=P+u+v+w$.'
+      - 'Add the three equations $|P+u|^2=R^2$ (and the other two) and compare with $|Q|^2$. For the converse, the far corner sees each neighbor of $P$ at a right angle.'
+    solution: |
+      **Key idea:** adding the three sphere equations gives $|Q|^2$ directly. For the converse, build the box one edge at a time, using the intermediate value theorem twice.
+
+      Put the origin at the center $O$, let $R$ be the radius, and write $p=OP<R$.
+
+      **Every $Q$ lies on the sphere.** Write $U=P+u$, $V=P+v$, $W=P+w$ with $u,v,w$ pairwise perpendicular, so $Q=P+u+v+w$. Since $U$ is on the sphere, $p^2+2P\cdot u+|u|^2=R^2$, and similarly for $v,w$. The cross terms $u\cdot v$ etc. vanish, so
+      $$|Q|^2=p^2+2P\cdot(u+v+w)+|u|^2+|v|^2+|w|^2=p^2+3(R^2-p^2)=3R^2-2p^2 .$$
+
+      **Every point of that sphere occurs.** Take $Q$ with $|Q|^2=3R^2-2p^2$; note $|Q|>R$ because $p<R$.
+      1. *The first edge.* The sphere $\Sigma$ with diameter $PQ$ contains $P$ (inside the big sphere) and $Q$ (outside it). It is connected, so it contains a point $U$ with $|U|=R$, and $U\ne P,Q$. Since $U\in\Sigma$, the angle $PUQ$ is right. Let $u=U-P$ and $d=Q-U$; then $d\perp u$ and $d\ne0$.
+      2. *The other two edges.* In the plane through $P$ perpendicular to $u$, take the circle with diameter from $P$ to $P+d$. For a point $X=P+v$ on it, let $X^*=P+(d-v)$ be the opposite end of the diameter through $X$. By Thales, $v\perp d-v$, so
+         $$|X|^2+|X^*|^2=2p^2+2P\cdot d+|d|^2 .$$
+         Expanding $|Q|^2=|U+d|^2=R^2+2P\cdot d+|d|^2$ (using $U=P+u$ and $u\perp d$) and comparing with $|Q|^2=3R^2-2p^2$ shows that the right side equals $2R^2$. So $h(X)=|X|^2-R^2$ satisfies $h(X^*)=-h(X)$ on this circle. Since $h(P)<0<h(P+d)$, the continuous function $h$ has a zero at some $X$ other than $P$ and $P+d$. Then $X^*$ is also on the big sphere.
+      3. *The box.* Take $V=X$ and $W=X^*$: the vectors $u$, $v$, $w=d-v$ are pairwise perpendicular and nonzero, all three endpoints lie on the sphere, and $P+u+v+w=U+d=Q$.
+
+      So the locus is the whole sphere centered at $O$ with radius $\sqrt{3R^2-2\,OP^2}$.
+    checked: "script: 20,000 random triads give |OQ| equal to the formula within 2e-15, and the far corners spread over the whole sphere"
+    status: ready
+
+  - id: P3
+    day: 1
+    topic: "Complementary sequences with g(n) = f(f(n)) + 1"
+    areas: [number-theory, combinatorics]
+    difficulty: 3
+    answer: "$f(240)=388$"
+    hints:
+      - 'Count the integers below $g(n)$. Show that $g(n)=f(n)+n$.'
+      - 'The conditions determine the sequences one step at a time. Check that $f(n)=\lfloor n\varphi\rfloor$ with the golden ratio $\varphi$ satisfies them.'
+    solution: |
+      **Key idea:** counting gives $g(n)=f(n)+n$, so the pair is determined step by step. The golden-ratio Beatty sequences satisfy the conditions, so they are the pair.
+
+      **Step 1: $g(n)=f(n)+n$.** The integers $1,\dots,g(n)-1$ consist of $g(1),\dots,g(n-1)$ and all values of $f$ below $g(n)=f(f(n))+1$, which are $f(1),\dots,f(f(n))$. So $g(n)-1=(n-1)+f(n)$.
+
+      **Step 2: uniqueness.** Decide, for $k=1,2,3,\dots$ in turn, whether $k$ is an $f$-value or a $g$-value. Suppose this is settled for $1,\dots,k-1$, which are $f(1),\dots,f(i)$ and $g(1),\dots,g(j)$. Then $k$ is either $f(i+1)$ or $g(j+1)$, and $g(j+1)=f(j+1)+j+1$ by Step 1.
+      - If $j+1\le i$, then $f(j+1)$ is known, and $k=g(j+1)$ exactly when $k=f(j+1)+j+1$.
+      - If $j+1>i$, then $g(j+1)>f(j+1)\ge f(i+1)\ge k$, so $k=f(i+1)$.
+
+      Either way the answer is forced, so at most one pair of sequences satisfies the conditions.
+
+      **Step 3: the golden pair works.** Let $\varphi=\frac{1+\sqrt5}2$, so $\varphi^2=\varphi+1$ and $\frac1\varphi+\frac1{\varphi^2}=1$. Put $f(n)=\lfloor n\varphi\rfloor$ and $g(n)=\lfloor n\varphi^2\rfloor=f(n)+n$.
+      - *They split the positive integers.* Both are strictly increasing. The number of terms of either sequence that are at most $N$ is $\left\lfloor\frac{N+1}{\varphi}\right\rfloor+\left\lfloor\frac{N+1}{\varphi^2}\right\rfloor=N$, because the two fractions are irrational and add up to the integer $N+1$. Since this count is $N$ for every $N$, each positive integer is hit exactly once.
+      - *The relation.* Let $m=f(n)=n\varphi-\varepsilon$ with $0<\varepsilon<1$. Then
+        $$m\varphi=n\varphi^2-\varepsilon\varphi=n\varphi+n-\varepsilon\varphi=m+n-\frac{\varepsilon}{\varphi},$$
+        using $\varphi-1=\frac1\varphi$. Since $0<\frac\varepsilon\varphi<1$, $f(f(n))=m+n-1=g(n)-1$.
+
+      So $f(240)=\lfloor240\varphi\rfloor=\lfloor388.33\ldots\rfloor=388$.
+    checked: "script: building the sequences greedily from the conditions gives f(n) = floor(nφ) for every n computed, and f(240) = 388"
+    status: ready
+
+  - id: P4
+    day: 2
+    topic: "Isosceles triangle: tangent circle chord passes through incenter"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Everything is symmetric in the axis through $A$. Where does the small circle touch the circumcircle?'
+      - 'Let $2\alpha$ be the apex angle and $R$ the circumradius. Compute both the distance from $A$ to the midpoint of $PQ$ and the distance $AI$.'
+    solution: |
+      **Key idea:** both points lie on the symmetry axis, so it is enough to compute their distances from $A$. Both come out as $2R(1-\sin\alpha)$.
+
+      Let $\angle A=2\alpha$, $R$ the circumradius, and $\ell$ the axis of symmetry through $A$. The small circle (center $K$, radius $\rho$) is tangent to both legs, so $K$ is on $\ell$ and $AK=\frac\rho{\sin\alpha}$. Both centers lie on $\ell$, so the circles touch at a point of $\ell$. Being inside, the small circle touches at the far end of the diameter from $A$:
+      $$\frac{\rho}{\sin\alpha}+\rho=2R,\qquad \rho=\frac{2R\sin\alpha}{1+\sin\alpha}.$$
+
+      **Midpoint of $PQ$.** It lies on $\ell$ at distance $AP\cos\alpha$ from $A$, with $AP=AK\cos\alpha=\frac{\rho\cos\alpha}{\sin\alpha}$. So
+      $$AP\cos\alpha=\frac{\rho\cos^2\alpha}{\sin\alpha}=\frac{2R\cos^2\alpha}{1+\sin\alpha}=2R(1-\sin\alpha).$$
+
+      **Incenter.** By the law of sines, $AB=2R\sin C=2R\cos\alpha$. The altitude from $A$ is $AB\cos\alpha=2R\cos^2\alpha$ and half the base is $2R\cos\alpha\sin\alpha$. So the area is $4R^2\sin\alpha\cos^3\alpha$ and the semiperimeter is $2R\cos\alpha(1+\sin\alpha)$, which gives the inradius
+      $$r=\frac{2R\sin\alpha\cos^2\alpha}{1+\sin\alpha}=2R\sin\alpha(1-\sin\alpha).$$
+      The incenter is on $\ell$ with $AI=\frac{r}{\sin\alpha}=2R(1-\sin\alpha)$.
+
+      Both points are on $\ell$, on the same side of $A$, at the same distance. So they coincide.
+    checked: "script: random apex angles; the two distances agree to 1e-15"
+    viz: imo-1978-p4
+    status: ready
+
+  - id: P5
+    day: 2
+    topic: "Distinct integers over squares beat the harmonic sum"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - 'Sort $a_1,\dots,a_n$ increasingly as $b_1<\dots<b_n$. Why is $b_k\ge k$?'
+      - 'Which pairing of the $a$''s with the weights $\frac1{k^2}$ makes the sum smallest?'
+    solution: |
+      **Key idea:** rearrange so that the smallest numbers get the largest weights; that only lowers the sum, and then each number is at least its position.
+
+      Let $b_1<b_2<\dots<b_n$ be $a_1,\dots,a_n$ in increasing order. They are distinct positive integers, so $b_k\ge k$. The weights $\frac1{k^2}$ decrease. By the rearrangement inequality, the sum $\sum c_k/k^2$ over orderings $c$ of these numbers is smallest when the numbers increase. So
+      $$\sum_{k=1}^n\frac{a_k}{k^2}\ge\sum_{k=1}^n\frac{b_k}{k^2}\ge\sum_{k=1}^n\frac{k}{k^2}=\sum_{k=1}^n\frac1k .$$
+      (The rearrangement step: if $c_i>c_j$ with $i<j$, swapping them changes the sum by $(c_j-c_i)\left(\frac1{i^2}-\frac1{j^2}\right)<0$.)
+    checked: "script: exact check over all choices of distinct values up to 8 for n ≤ 6"
+    status: ready
+
+  - id: P6
+    day: 2
+    topic: "Six groups of 1 to 1978: a sum inside one"
+    areas: [combinatorics]
+    difficulty: 3
+    hints:
+      - 'Call a group bad if no member is the sum of two members of it (or twice one). In a bad group, the difference of two members never lies in the group.'
+      - 'Take the largest group, form differences with its largest member, and repeat inside the largest group of those differences. The groups run out.'
+    solution: |
+      **Key idea:** repeatedly take differences from a largest element. Differences of differences are still differences in all earlier groups, so they are banned from every group used so far, and with six groups the list runs dry.
+
+      Suppose no group has a member that is the sum of two members of the same group (possibly the same member twice). Then for $x>y$ in one group, $x-y$ is not in that group, since $y+(x-y)=x$.
+
+      **A useful fact.** If numbers $t_1<\dots<t_m$ all have the form $t_i=K-s_i$ for one fixed $K$, then $t_j-t_i=s_i-s_j$. So a difference of two $t$'s is also a difference of two $s$'s.
+
+      **The chain.**
+      1. Some group $G_1$ has at least $\lceil1978/6\rceil=330$ members. Subtract each of the others from the largest: this gives $329$ distinct numbers in $[1,1977]$, each a difference of two members of $G_1$, so none is in $G_1$.
+      2. Among these $329$ numbers, at least $\lceil329/5\rceil=66$ lie in one other group $G_2$. Subtract each from the largest of them: $65$ numbers. By the useful fact, each is a difference of two members of $G_2$ and also of two members of $G_1$. So none lies in $G_1$ or $G_2$.
+      3. At least $\lceil65/4\rceil=17$ of them lie in one group $G_3$. Subtracting from the largest gives $16$ numbers that avoid $G_1,G_2,G_3$.
+      4. At least $\lceil16/3\rceil=6$ lie in one group $G_4$, giving $5$ numbers that avoid $G_1,\dots,G_4$.
+      5. At least $\lceil5/2\rceil=3$ lie in one group $G_5$, giving $2$ numbers that avoid $G_1,\dots,G_5$. Both lie in $G_6$.
+      6. Their difference is a difference of two members of each of $G_1,\dots,G_6$, so it lies in no group at all. But it is an integer between $1$ and $1977$.
+
+      This contradiction shows that some member's number is the sum of two numbers from its own country, or twice one of them.
+    checked: "algebra only: the counting chain 1978 → 330 → 66 → 17 → 6 → 3 → 2"
+    status: ready
