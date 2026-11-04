@@ -55,6 +55,349 @@ ML.viz.register('gb-atoms', function (el, opts, V) {
 /* Mars: deferent radius 1.52 (period 1.88 years), epicycle radius 1 turning once a year with the Sun's direction.
    The same motion is a Sun-centered pair of circles: Earth (1 AU, 1 year) and Mars (1.52 AU, 1.88 years). */
   })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbrome.virgil-eclogues-georgics (scripts/greatbooks/src/gbrome.virgil-eclogues-georgics/viz.js) ---- */
+  try { (function () {
+/* gbrome.virgil-eclogues-georgics: visual gb-georgics (gbe3, our own design). Pick a book of the Georgics, or one of
+   the ten Eclogues, to see what it is about. Icons are simple shapes drawn in SVG. */
+var BOOKS = [
+  { n: 'I', t: 'Fields and weather', icon: 'plow', s: 'Plowing, sowing grain, the farmer’s tools and calendar, and the signs in sky and animals that warn of rain and fair weather. It ends with the omens around the death of Julius Caesar and a prayer for Rome after the civil wars.', y: 'Watch the sky and the animals, and do each job in its season.' },
+  { n: 'II', t: 'Trees and vines', icon: 'vine', s: 'How trees grow from seed, cuttings and grafts; which soils suit which plants; the care of vines and olives. In the middle comes a famous praise of Italy, and near the end the praise of country life: “too fortunate the farmers, did they know their own happiness.”', y: 'Different plants need different soil, and patience.' },
+  { n: 'III', t: 'Horses and cattle', icon: 'ox', s: 'Choosing and raising horses and cattle, then sheep and goats, with advice for summer and winter. The book ends darkly with a cattle plague in the Alps.', y: 'Care for animals as they grow, in every season.' },
+  { n: 'IV', t: 'Bees', icon: 'hive', s: 'The hive as a little state: its order, its work, its loyalty. The book ends with the story of the beekeeper Aristaeus, who loses his bees, and inside it the story of Orpheus, who goes to the underworld to bring back his wife Eurydice.', y: 'Bees work together, and their work feeds everyone.' }
+];
+var ECL = ['Two herdsmen: Tityrus keeps his farm, while Meliboeus must leave his, in the years when land was taken for soldiers.', 'The shepherd Corydon sings of a love that is not returned.', 'A singing contest between two shepherds. The judge calls it a tie.', 'A child is born, and a golden age returns. Later Christian readers took it as a prophecy.', 'Two shepherds mourn the herdsman-poet Daphnis, then celebrate him as a god.', 'The old woodland god Silenus sings of how the world began, and of ancient myths.', 'Meliboeus remembers a singing match: Corydon against Thyrsis. Corydon wins.', 'Two singers each perform a love song; the second is a country spell.', 'Two herdsmen on the road; their friend Menalcas has lost his land, and they half-remember his songs.', 'Virgil’s friend, the poet Gallus, pines for a lost love: “Love conquers all.”'];
+var NS = 'http://www.w3.org/2000/svg';
+function icon(k) {
+  var s = { plow: '<path d="M18 70 L70 58 L96 74" class="gbg-w"/><path d="M70 58 L58 30" class="gbg-w"/><path d="M50 26 L66 22" class="gbg-w"/><path d="M90 70 L110 86 L84 84 Z" class="gbg-m"/><path d="M8 92 Q60 82 112 92" class="gbg-g"/>',
+    vine: '<path d="M60 96 Q56 60 64 30 Q70 14 86 12" class="gbg-w"/><path d="M62 50 Q40 40 30 52 Q42 62 62 50Z" class="gbg-l"/><path d="M64 34 Q84 26 92 38 Q78 46 64 34Z" class="gbg-l"/>' + [[46, 66], [56, 66], [51, 75], [61, 75], [41, 75], [46, 84], [56, 84], [51, 92]].map(function (p) { return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="5.5" class="gbg-gr"/>'; }).join(''),
+    ox: '<ellipse cx="60" cy="58" rx="34" ry="18" class="gbg-b"/><path d="M28 58 L22 86 M38 66 L36 88 M80 66 L82 88 M90 58 L94 86" class="gbg-w"/><circle cx="96" cy="44" r="11" class="gbg-b"/><path d="M90 34 Q86 24 92 22 M102 34 Q106 24 100 22" class="gbg-w"/><path d="M26 54 Q14 60 16 72" class="gbg-w"/>',
+    hive: '<path d="M30 92 L30 64 Q30 26 60 24 Q90 26 90 64 L90 92 Z" class="gbg-h"/><path d="M32 46 H88 M30 60 H90 M30 74 H90" class="gbg-w"/><rect x="52" y="80" width="16" height="12" rx="6" class="gbg-d"/><path d="M14 98 H106" class="gbg-g"/>' + [[100, 30], [18, 40], [104, 56]].map(function (p) { return '<ellipse cx="' + p[0] + '" cy="' + p[1] + '" rx="5" ry="3.5" class="gbg-bee"/><path d="M' + (p[0] - 2) + ' ' + (p[1] - 3) + ' l-3 -6 M' + (p[0] + 2) + ' ' + (p[1] - 3) + ' l3 -6" class="gbg-wing"/>'; }).join('') };
+  return s[k];
+}
+ML.viz.register('gb-georgics', function (el, opts, V) {
+  var mode = opts.mode === 'eclogues' ? 'e' : 'g', cur = 0;
+  var wrap = document.createElement('div'); wrap.className = 'gb-stage gbg'; el.appendChild(wrap);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  var tabs = V.seg(ctl, { label: 'Which poems', items: [['g', 'Georgics (4 books)'], ['e', 'Eclogues (10 poems)']], value: mode, change: function (v) { mode = v; cur = 0; draw(); } });
+  var ro = V.readout(el);
+  function draw() {
+    var h = '<div class="gbg-picks" role="group" aria-label="' + (mode === 'g' ? 'Books of the Georgics' : 'The Eclogues') + '">';
+    (mode === 'g' ? BOOKS : ECL).forEach(function (b, i) { h += '<button type="button" data-i="' + i + '" aria-pressed="' + (i === cur) + '">' + (mode === 'g' ? 'Book ' + b.n + '<small>' + b.t + '</small>' : 'Eclogue ' + (i + 1)) + '</button>'; });
+    h += '</div>';
+    if (mode === 'g') h += '<svg class="gbg-icon" viewBox="0 0 120 104" role="img" aria-label="' + BOOKS[cur].t + '">' + icon(BOOKS[cur].icon) + '</svg>';
+    wrap.innerHTML = h;
+    Array.prototype.forEach.call(wrap.querySelectorAll('.gbg-picks button'), function (b) { b.addEventListener('click', function () { cur = +b.getAttribute('data-i'); draw(); }); });
+    if (mode === 'g') { var b = BOOKS[cur]; ro.set('<b>Georgics, Book ' + b.n + ': ' + b.t + '.</b> ' + b.s + '<br><i>In one line:</i> ' + b.y); }
+    else ro.set('<b>Eclogue ' + (cur + 1) + '.</b> ' + ECL[cur]);
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbrome.virgil-aeneid (scripts/greatbooks/src/gbrome.virgil-aeneid/viz.js) ---- */
+  try { (function () {
+/* gbrome.virgil-aeneid: visual gb-voyage (gbe3, our own design). A schematic map of the central Mediterranean
+   (coastlines simplified by hand from latitude and longitude) with a numbered route you step through.
+   opts.route: 'aeneas' (default; the Aeneid, Books 1-8) or 'augustine' (Augustine's travels, Confessions). */
+var NS = 'http://www.w3.org/2000/svg';
+var L0 = 3, L1 = 30, T0 = 46.6, T1 = 33.2, KX = 0.78 * 24, KY = 24;
+function px(p) { return [Math.round((p[0] - L0) * KX * 10) / 10, Math.round((T0 - p[1]) * KY * 10) / 10]; }
+function path(pts, close) { return pts.map(function (p, i) { var q = px(p); return (i ? 'L' : 'M') + q[0] + ' ' + q[1]; }).join('') + (close ? 'Z' : ''); }
+var EUROPE = [[-6, 46.6], [-6, 36], [-4.4, 36.7], [-2.2, 36.7], [-1, 37.6], [0.2, 38.7], [-0.3, 39.5], [0.9, 40.7], [2.2, 41.4], [3.3, 42.3], [3.0, 42.8], [3.9, 43.5], [5.4, 43.3], [6.0, 43.1], [7.3, 43.7], [8.9, 44.4], [9.8, 44.1], [10.5, 42.9], [11.8, 42.1], [12.3, 41.7], [13.5, 41.2], [14.2, 40.8], [14.8, 40.6], [15.3, 40.0], [15.8, 39.6], [16.0, 39.0], [15.6, 38.0], [16.0, 37.9], [16.6, 38.4], [17.1, 39.1], [16.5, 39.7], [17.2, 40.4], [18.0, 40.0], [18.4, 39.8], [18.5, 40.15], [17.9, 40.6], [16.9, 41.1], [16.2, 41.9], [14.2, 42.5], [13.5, 43.6], [12.6, 44.1], [12.3, 45.4], [13.8, 45.6], [13.9, 44.8], [14.4, 45.3], [15.2, 44.1], [16.4, 43.5], [18.1, 42.6], [19.4, 41.3], [19.4, 40.5], [20.0, 39.7], [20.75, 38.95], [21.3, 38.3], [21.1, 37.7], [21.7, 36.9], [22.5, 36.4], [22.8, 37.0], [23.2, 36.45], [22.8, 37.6], [23.4, 37.4], [23.6, 38.0], [24.0, 37.65], [24.0, 38.15], [22.9, 39.4], [22.9, 40.6], [23.8, 40.0], [24.4, 40.9], [25.9, 40.85], [26.2, 40.05], [26.6, 40.4], [27.5, 40.97], [29.0, 41.1], [28.0, 41.6], [27.9, 43.0], [28.7, 44.3], [29.7, 45.2], [30.7, 46.4], [31.5, 46.6]];
+var ASIA_AFRICA = [[29.1, 41.2], [29.0, 40.4], [27.5, 40.4], [26.4, 40.15], [26.2, 39.95], [26.1, 39.5], [26.8, 38.9], [27.0, 38.4], [26.3, 38.3], [27.2, 37.9], [27.3, 37.0], [28.1, 36.7], [29.1, 36.6], [30.5, 36.3], [30.6, 36.85], [32.0, 36.5], [33.0, 36.1], [34.6, 36.8], [35.9, 36.8], [35.8, 36.2], [35.9, 35.4], [35.8, 34.5], [35.5, 33.9], [35.1, 33.0], [34.8, 32.1], [34.3, 31.3], [32.3, 31.2], [31.0, 31.5], [29.9, 31.2], [25.1, 31.6], [23.0, 32.6], [22.2, 32.9], [20.0, 32.1], [19.0, 30.3], [15.6, 31.3], [13.2, 32.9], [11.2, 33.2], [10.1, 33.9], [11.1, 35.2], [10.6, 35.8], [11.1, 36.9], [10.3, 36.8], [9.8, 37.3], [8.6, 36.9], [7.7, 36.9], [6.3, 37.1], [5.0, 36.7], [3.0, 36.8], [1.3, 36.5], [-0.6, 35.7], [-6, 35.8], [-6, 30], [40, 30], [40, 41.0], [36.0, 41.7], [34.0, 42.0], [31.5, 41.3]];
+var ISLANDS = [
+  [[12.4, 37.8], [12.5, 38.1], [13.4, 38.2], [14.5, 38.05], [15.6, 38.3], [15.1, 37.5], [15.3, 37.0], [15.1, 36.65], [14.3, 37.0], [13.2, 37.5]],
+  [[8.4, 39.0], [9.6, 39.1], [9.8, 40.5], [9.5, 41.2], [8.4, 40.9], [8.1, 40.0]],
+  [[8.6, 41.4], [9.3, 41.4], [9.5, 42.2], [9.4, 43.0], [8.6, 42.4]],
+  [[23.5, 35.3], [24.3, 35.6], [25.4, 35.35], [26.3, 35.3], [26.1, 35.0], [24.8, 34.95]],
+  [[23.0, 38.9], [24.2, 38.2], [24.6, 38.1], [23.3, 38.95]],
+  [[19.7, 39.8], [20.1, 39.4], [19.9, 39.8]]
+];
+var ROUTES = {
+  aeneas: { title: 'The voyage of Aeneas', stops: [
+    ['Troy', 26.24, 39.96, 'Book 2', 'The Greeks take Troy by the trick of the wooden horse. Aeneas carries his father Anchises on his shoulders and leads his son Ascanius out of the burning city.'],
+    ['Thrace', 26.1, 40.75, 'Book 3', 'The Trojans start to build a town, but a sign from the grave of a murdered Trojan prince warns them that this land is unlucky.'],
+    ['Delos', 25.27, 37.40, 'Book 3', 'Apollo’s oracle tells them to seek their “ancient mother.” Anchises guesses that it means Crete.'],
+    ['Crete', 24.9, 35.3, 'Book 3', 'A sickness strikes. In a dream, the household gods explain that the “ancient mother” is Italy, where the Trojans’ ancestor Dardanus came from.'],
+    ['Strophades', 21.0, 37.25, 'Book 3', 'The Harpies, bird-women, spoil the Trojans’ food. One of them prophesies hunger before they found their city.'],
+    ['Actium and Buthrotum', 20.3, 39.3, 'Book 3', 'They hold games at Actium, then find Andromache, Hector’s widow, and the prophet Helenus, who tells Aeneas the way to Italy and to the Sibyl at Cumae.'],
+    ['First sight of Italy', 18.4, 40.1, 'Book 3', 'They land briefly in the heel of Italy, then sail around the south, keeping clear of Scylla and Charybdis.'],
+    ['Drepanum, Sicily', 12.5, 38.02, 'Book 3', 'Anchises dies here. The story of the wanderings, told by Aeneas at Dido’s table, ends at this point.'],
+    ['Carthage', 10.33, 36.85, 'Books 1 and 4', 'Juno’s storm drives the fleet to Africa. Queen Dido welcomes them. The god Mercury reminds Aeneas of his duty, and he sails on, leaving Dido heartbroken.'],
+    ['Sicily again', 12.6, 38.05, 'Book 5', 'Games for the first anniversary of Anchises’ death: a boat race, a foot race, boxing, archery.'],
+    ['Cumae', 14.05, 40.85, 'Book 6', 'The Sibyl leads Aeneas into the underworld, where Anchises shows him the souls of the Romans still to be born.'],
+    ['Caieta', 13.57, 41.21, 'Book 7', 'Aeneas buries his old nurse Caieta; the town of Gaeta still bears her name.'],
+    ['Mouth of the Tiber', 12.25, 41.73, 'Book 7', 'The Trojans reach Latium. King Latinus offers peace and his daughter Lavinia, but Juno stirs up war with Turnus.'],
+    ['Pallanteum (the future Rome)', 12.6, 41.95, 'Book 8', 'King Evander shows Aeneas the hills where Rome will stand. Vulcan makes Aeneas a shield showing Rome’s future.']
+  ] },
+  augustine: { title: 'Augustine’s journeys', stops: [
+    ['Thagaste', 7.95, 36.29, 'AD 354', 'Augustine is born in a small town in the Roman province of Africa (today Souk Ahras, Algeria). His mother Monica is a Christian; his father Patricius is not, until near his death.'],
+    ['Madauros', 7.82, 35.95, 'c. AD 366', 'He goes to school in a nearby town. As a schoolboy he loved Virgil, and he later wrote that he wept for Dido but not for his own faults.'],
+    ['Carthage', 10.33, 36.85, 'AD 371', 'University years in the great city. At 19 he reads Cicero’s Hortensius and falls in love with wisdom. He joins the Manichees, a sect he later leaves.'],
+    ['Rome', 12.48, 41.89, 'AD 383', 'He sails to Rome to teach rhetoric, hoping for better-behaved students. They turn out to skip paying their fees.'],
+    ['Milan', 9.19, 45.46, 'AD 384–387', 'He becomes the city’s professor of rhetoric, hears Bishop Ambrose preach, reads the Platonists, and in AD 386, in a garden, hears a child’s voice: “Take up and read.” Ambrose baptizes him at Easter 387.'],
+    ['Ostia', 12.29, 41.75, 'AD 387', 'Waiting for a ship home, Augustine and Monica talk at a window overlooking a garden. A few days later she falls ill and dies.'],
+    ['Thagaste again', 7.95, 36.29, 'AD 388', 'Home in Africa, he lives a quiet life of study and prayer with friends.'],
+    ['Hippo Regius', 7.75, 36.88, 'AD 391–430', 'The people of the port city make him a priest, and soon he becomes their bishop. He writes the Confessions here about AD 397–400, and dies here in AD 430.']
+  ] }
+};
+ML.viz.register('gb-voyage', function (el, opts, V) {
+  var R = ROUTES[opts.route] || ROUTES.aeneas, S = R.stops, i = opts.start != null ? opts.start : 0;
+  var W = Math.round((L1 - L0) * KX), Ht = Math.round((T0 - T1) * KY);
+  var stage = document.createElement('div'); stage.className = 'gb-stage gb-map'; el.appendChild(stage);
+  var svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Ht); svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', R.title + ': a schematic map of the central Mediterranean with the route marked');
+  var h = '<rect class="gb-map-sea" x="0" y="0" width="' + W + '" height="' + Ht + '"/>';
+  h += '<path class="gb-map-land" d="' + path(EUROPE, true) + '"/><path class="gb-map-land" d="' + path(ASIA_AFRICA, true) + '"/>';
+  ISLANDS.forEach(function (isl) { h += '<path class="gb-map-land" d="' + path(isl, true) + '"/>'; });
+  [['ITALY', 14.6, 42.3], ['GREECE', 21.6, 39.4], ['AFRICA', 8.5, 34.6], ['ASIA', 28.8, 38.6], ['SICILY', 14.0, 37.55]].forEach(function (t) { var q = px([t[1], t[2]]); h += '<text class="gb-map-region" x="' + q[0] + '" y="' + q[1] + '">' + t[0] + '</text>'; });
+  h += '<path class="gb-map-route-all" d="' + path(S.map(function (s) { return [s[1], s[2]]; })) + '"/><path class="gb-map-route" d=""/>';
+  S.forEach(function (s, k) { var q = px([s[1], s[2]]); h += '<g class="gb-map-stop" data-k="' + k + '" tabindex="0" role="button" aria-label="' + (k + 1) + ': ' + s[0] + '"><circle cx="' + q[0] + '" cy="' + q[1] + '" r="9"/><text x="' + q[0] + '" y="' + (q[1] + 3.6) + '">' + (k + 1) + '</text></g>'; });
+  svg.innerHTML = h; stage.appendChild(svg);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  var ro = V.readout(el);
+  var prev = V.button(ctl, '◀ Back', function () { go(i - 1); });
+  var next = V.button(ctl, 'Next stop ▶', function () { go(i + 1); }, 'pri');
+  V.button(ctl, 'Start again', function () { go(0); });
+  var route = svg.querySelector('.gb-map-route'), stops = svg.querySelectorAll('.gb-map-stop');
+  function go(k) {
+    i = Math.max(0, Math.min(S.length - 1, k));
+    route.setAttribute('d', path(S.slice(0, i + 1).map(function (s) { return [s[1], s[2]]; })));
+    for (var j = 0; j < stops.length; j++) { stops[j].setAttribute('class', 'gb-map-stop' + (j === i ? ' on' : j < i ? ' past' : '')); }
+    prev.disabled = i === 0; next.disabled = i === S.length - 1;
+    var s = S[i];
+    ro.set('<b>' + (i + 1) + '. ' + s[0] + '</b> <small>(' + s[3] + ')</small><br>' + s[4]);
+  }
+  Array.prototype.forEach.call(stops, function (g) {
+    g.addEventListener('click', function () { go(+g.getAttribute('data-k')); });
+    g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(+g.getAttribute('data-k')); } });
+  });
+  go(i);
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbrome.plutarch-greek-lives (scripts/greatbooks/src/gbrome.plutarch-greek-lives/viz.js) ---- */
+  try { (function () {
+/* gbrome.plutarch-greek-lives: visual gb-parallel-lives (gbe3, our own design), also used by gbrome.plutarch-roman-lives.
+   Choose one of Plutarch's pairs: the Greek and the Roman life on one time line, with Plutarch's own lifetime for scale.
+   Dates are approximate; legendary figures (dashed) have traditional dates only. opts.pair: a key from PAIRS. */
+var PAIRS = {
+  'theseus-romulus': ['Theseus', -1260, -1200, 1, 'Romulus', -771, -716, 1, 'Founders: each united scattered villages into a city, and each story mixes history with legend.'],
+  'lycurgus-numa': ['Lycurgus', -820, -760, 1, 'Numa', -753, -673, 1, 'Lawgivers: Lycurgus made Sparta disciplined and warlike; Numa made Rome gentle and religious.'],
+  'solon-publicola': ['Solon', -638, -558, 0, 'Publicola', -560, -503, 1, 'Founders of free government: Solon’s laws for Athens; Publicola, a consul of Rome’s first republican years.'],
+  'themistocles-camillus': ['Themistocles', -524, -459, 0, 'Camillus', -446, -365, 0, 'Saviors of their cities who were later driven into exile by their own people.'],
+  'pericles-fabius': ['Pericles', -495, -429, 0, 'Fabius Maximus', -280, -203, 0, 'Patient leaders in long wars, who held their people back from rash battles.'],
+  'aristides-cato': ['Aristides', -530, -468, 0, 'Cato the Elder', -234, -149, 0, 'Honest statesmen who lived plainly and would not be bought.'],
+  'alcibiades-coriolanus': ['Alcibiades', -450, -404, 0, 'Coriolanus', -527, -488, 1, 'Brilliant, proud men who went over to their cities’ enemies.'],
+  'demosthenes-cicero': ['Demosthenes', -384, -322, 0, 'Cicero', -106, -43, 0, 'The two greatest orators, who spoke for freedom against a strong man and died for it.'],
+  'alexander-caesar': ['Alexander', -356, -323, 0, 'Julius Caesar', -100, -44, 0, 'The two great conquerors. Plutarch says here that he writes lives, not histories.'],
+  'demetrius-antony': ['Demetrius', -337, -283, 0, 'Antony', -83, -30, 0, 'Great gifts spoiled by luxury: Plutarch offers them as warnings, not models.'],
+  'dion-brutus': ['Dion', -408, -354, 0, 'Brutus', -85, -42, 0, 'Students of Plato’s philosophy who fought against one-man rule.']
+};
+var NAMES = { 'theseus-romulus': 'Theseus and Romulus', 'lycurgus-numa': 'Lycurgus and Numa', 'solon-publicola': 'Solon and Publicola', 'themistocles-camillus': 'Themistocles and Camillus', 'pericles-fabius': 'Pericles and Fabius', 'aristides-cato': 'Aristides and Cato', 'alcibiades-coriolanus': 'Alcibiades and Coriolanus', 'demosthenes-cicero': 'Demosthenes and Cicero', 'alexander-caesar': 'Alexander and Caesar', 'demetrius-antony': 'Demetrius and Antony', 'dion-brutus': 'Dion and Brutus' };
+function yr(y) { return y < 0 ? (-y) + ' BC' : 'AD ' + y; }
+ML.viz.register('gb-parallel-lives', function (el, opts, V) {
+  var key = PAIRS[opts.pair] ? opts.pair : 'pericles-fabius';
+  var stage = document.createElement('div'); stage.className = 'gb-stage gbpl'; el.appendChild(stage);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  var lab = document.createElement('label'); lab.className = 'gbpl-sel'; lab.innerHTML = '<span>Pair</span>';
+  var sel = document.createElement('select');
+  Object.keys(PAIRS).forEach(function (k) { var o = document.createElement('option'); o.value = k; o.textContent = NAMES[k]; if (k === key) o.selected = true; sel.appendChild(o); });
+  lab.appendChild(sel); ctl.appendChild(lab);
+  var ro = V.readout(el);
+  sel.addEventListener('change', function () { key = sel.value; draw(); });
+  function draw() {
+    var p = PAIRS[key], lo = Math.min(p[1], p[5]), hi = 120, W = 460, H = 196, x0 = 14, x1 = W - 14;
+    var span = hi - lo, X = function (y) { return x0 + (y - lo) / span * (x1 - x0); };
+    var h = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Time line of ' + NAMES[key] + ', with Plutarch’s lifetime">';
+    var step = span > 900 ? 300 : span > 500 ? 200 : 100, t0 = Math.ceil(lo / step) * step;
+    for (var t = t0; t <= hi; t += step) { var xx = X(t); if (xx < 24 || xx > W - 24) continue; h += '<line class="gbpl-grid" x1="' + xx + '" y1="24" x2="' + xx + '" y2="' + (H - 26) + '"/><text class="gbpl-tick" x="' + xx + '" y="' + (H - 10) + '">' + (t === 0 ? '0' : yr(t)) + '</text>'; }
+    function bar(y, a, b, name, leg, cls) {
+      var xa = X(a), xb = Math.max(X(b), xa + 6);
+      return '<rect class="gbpl-bar ' + cls + (leg ? ' leg' : '') + '" x="' + xa + '" y="' + y + '" width="' + (xb - xa) + '" height="22" rx="6"/>' +
+        '<text class="gbpl-name" x="' + Math.max(4, Math.min(xa, W - 220)) + '" y="' + (y - 6) + '">' + name + (leg ? ' (legend)' : '') + ': ' + yr(a) + '–' + yr(b) + '</text>';
+    }
+    h += bar(44, p[1], p[2], p[0], p[3], 'gr') + bar(100, p[5], p[6], p[4], p[7], 'ro') + bar(150, 46, 120, 'Plutarch', 0, 'pl');
+    h += '</svg>';
+    stage.innerHTML = h;
+    var gap = Math.abs(Math.round((p[5] + p[6]) / 2 - (p[1] + p[2]) / 2)), since = Math.round(100 - (p[1] + p[2]) / 2);
+    ro.set('<b>' + NAMES[key] + ':</b> ' + p[8] + '<br>About <b>' + gap + '</b> years separate the middle of the two lives; Plutarch wrote about <b>' + since + '</b> years after the Greek.' + (p[3] || p[7] ? ' Dashed bars are legendary figures with traditional dates.' : ''));
+  }
+  V.onTheme(function () {}); draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbrome.tacitus-annals-histories (scripts/greatbooks/src/gbrome.tacitus-annals-histories/viz.js) ---- */
+  try { (function () {
+/* gbrome.tacitus-annals-histories: visual gb-emperors (gbe3, our own design). The emperors from AD 14 to 96 on one
+   time line, with the parts of Tacitus's Annals and Histories that survive (solid) and that are lost (hatched).
+   Tap an emperor to read how Tacitus covers his reign. */
+var EMP = [
+  ['Tiberius', 14, 37, 'Annals 1–6', 'Augustus’s stepson. Tacitus paints him as able but secretive and suspicious; his minister Sejanus grows powerful, and treason trials spread fear in the senate. Most of this survives (part of Book 5 is lost).'],
+  ['Caligula', 37, 41, 'Annals 7–10 (lost)', 'The whole account of his reign is lost. We know it from other writers, such as Suetonius and Cassius Dio.'],
+  ['Claudius', 41, 54, 'Annals 7–12', 'The surviving text picks up in AD 47, halfway through his reign: the conquest of Britain is under way, and Claudius’s wives and freedmen hold great power at court.'],
+  ['Nero', 54, 68, 'Annals 13–16', 'Nero’s early years go well under his advisers, the philosopher Seneca and Burrus. Then come crimes, the great fire of Rome in AD 64, and a failed plot against him. The text breaks off in AD 66.'],
+  ['Galba', 68, 69, 'Histories 1', 'The first of the four emperors of AD 69. Tacitus says everyone would have thought him fit to rule, had he never ruled.'],
+  ['Otho', 69, 69, 'Histories 1–2', 'He seizes power in January 69 and dies in April after his army is beaten.'],
+  ['Vitellius', 69, 69, 'Histories 2–3', 'The commander of the Rhine armies, who holds Rome for most of the year 69.'],
+  ['Vespasian', 69, 79, 'Histories 2–5', 'The general of the East, who ends the civil war and founds the Flavian dynasty. The surviving Histories stop in AD 70.'],
+  ['Titus', 79, 81, 'Histories (lost)', 'Vespasian’s son. Tacitus’s account of his reign is lost.'],
+  ['Domitian', 81, 96, 'Histories (lost)', 'Vespasian’s younger son. Tacitus lived through his reign as a senator and wrote of it with bitterness in the Agricola; the Histories’ account is lost.']
+];
+var SURV = [[14, 29, 'A'], [31, 37, 'A'], [47, 66, 'A'], [69, 70, 'H']];
+var LOST = [[29, 31, 'A'], [37, 47, 'A'], [66, 68, 'A'], [70, 96, 'H']];
+ML.viz.register('gb-emperors', function (el, opts, V) {
+  var pid = V.uid('gbem'), cur = opts.start || 0, W = 460, H = 200, x0 = 16, x1 = W - 16, X = function (y) { return x0 + (y - 14) / (96 - 14) * (x1 - x0); };
+  var stage = document.createElement('div'); stage.className = 'gb-stage gbem'; el.appendChild(stage);
+  var ro = V.readout(el);
+  function draw() {
+    var h = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Emperors from AD 14 to 96, with the surviving and lost parts of Tacitus"><defs><pattern id="' + pid + '" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" class="gbem-lostbg"/><line x1="0" y1="0" x2="0" y2="6" class="gbem-hatchl"/></pattern></defs>';
+    [14, 30, 50, 70, 90].forEach(function (t) { h += '<line class="gbem-grid" x1="' + X(t) + '" y1="14" x2="' + X(t) + '" y2="' + (H - 24) + '"/><text class="gbem-tick" x="' + X(t) + '" y="' + (H - 8) + '">AD ' + t + '</text>'; });
+    h += '<text class="gbem-lab" x="' + x0 + '" y="26">Emperors (tap one)</text>';
+    EMP.forEach(function (e, i) {
+      var xa = X(e[1]), xb = Math.max(X(e[2]), xa + 7), y = i % 2 ? 50 : 36;
+      var q4 = ['Galba', 'Otho', 'Vitellius'].indexOf(e[0]); if (q4 >= 0) { xa = X(67.6) + q4 * 13; xb = xa + 11; y = 66; }
+      h += '<rect class="gbem-emp' + (i === cur ? ' on' : '') + '" data-i="' + i + '" x="' + xa + '" y="' + y + '" width="' + (xb - xa) + '" height="12" rx="3" tabindex="0" role="button" aria-label="' + e[0] + ', AD ' + e[1] + (e[2] !== e[1] ? '–' + e[2] : '') + '"/>';
+    });
+    var e = EMP[cur], lx = Math.max(x0, Math.min(X(e[1]), W - 120));
+    h += '<text class="gbem-name" x="' + (W - 16) + '" y="26" text-anchor="end">' + e[0] + '</text>';
+    h += '<text class="gbem-lab" x="' + x0 + '" y="108">Annals (AD 14–68)</text><text class="gbem-lab" x="' + X(69) + '" y="108">Histories (69–96)</text>';
+    SURV.forEach(function (s) { h += '<rect class="gbem-surv ' + s[2] + '" x="' + X(s[0]) + '" y="' + (s[2] === 'A' ? 116 : 140) + '" width="' + (X(s[1]) - X(s[0])) + '" height="16" rx="3"/>'; });
+    LOST.forEach(function (s) { h += '<rect class="gbem-lost" fill="url(#' + pid + ')" x="' + X(s[0]) + '" y="' + (s[2] === 'A' ? 116 : 140) + '" width="' + (X(s[1]) - X(s[0])) + '" height="16" rx="3"/>'; });
+    h += '<g class="gbem-key"><rect x="' + x0 + '" y="162" width="14" height="10" class="gbem-surv A"/><text x="' + (x0 + 18) + '" y="171">survives</text><rect x="' + (x0 + 84) + '" y="162" width="14" height="10" fill="url(#' + pid + ')"/><text x="' + (x0 + 102) + '" y="171">lost</text></g>';
+    h += '</svg>';
+    stage.innerHTML = h;
+    Array.prototype.forEach.call(stage.querySelectorAll('.gbem-emp'), function (r) {
+      var f = function () { cur = +r.getAttribute('data-i'); draw(); var n = stage.querySelector('.gbem-emp[data-i="' + cur + '"]'); if (n) n.focus(); };
+      r.addEventListener('click', f); r.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); f(); } });
+    });
+    ro.set('<b>' + e[0] + '</b>, AD ' + e[1] + (e[2] !== e[1] ? '–' + e[2] : '') + ' · <i>' + e[3] + '</i><br>' + e[4]);
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbrome.epictetus-discourses (scripts/greatbooks/src/gbrome.epictetus-discourses/viz.js) ---- */
+  try { (function () {
+/* gbrome.epictetus-discourses: visual gb-up-to-us (gbe3, our own design). Sort cards into "up to me" and "not up to me",
+   following the first line of Epictetus's Handbook, then check. A new set each round. */
+var CARDS = [
+  ['What I think about the rain', 1, 'Your opinion is your own act.'], ['Whether it rains on my birthday', 0, 'The weather is not up to you.'],
+  ['Whether I try my best in the game', 1, 'Effort is your own choice.'], ['Whether my team wins', 0, 'The other players and luck have a say.'],
+  ['How I treat my little brother', 1, 'Your actions toward others are yours.'], ['What my classmates think of me', 0, 'Reputation is in other people’s minds.'],
+  ['Whether I tell the truth', 1, 'Honesty is a choice.'], ['Whether I catch a cold', 0, 'Epictetus counts the body among things not fully up to us.'],
+  ['Whether I am kind when I lose', 1, 'How you respond is yours.'], ['Whether the bus is late', 0, 'Other people and events decide that.'],
+  ['What I want most', 1, 'Desire is one of the things Epictetus lists as ours.'], ['How rich my family is', 0, 'Property is on his list of things not up to us.'],
+  ['Whether I say sorry', 1, 'An action you choose.'], ['Whether my friend forgives me', 0, 'That is your friend’s choice.'],
+  ['What I choose to read', 1, 'Your choice.'], ['Whether I get picked for a prize', 0, 'Offices and honors are on his list of things not up to us.']
+];
+ML.viz.register('gb-up-to-us', function (el, opts, V) {
+  var n = opts.n || 6, set = [], ans = {}, checked = false, seed = 1;
+  var stage = document.createElement('div'); stage.className = 'gb-stage gbu'; el.appendChild(stage);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  var ro = V.readout(el);
+  function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+  function deal() {
+    var ups = CARDS.filter(function (c) { return c[1]; }), nots = CARDS.filter(function (c) { return !c[1]; });
+    function take(a, k) { a = a.slice(); var o = []; while (o.length < k && a.length) o.push(a.splice(Math.floor(rnd() * a.length), 1)[0]); return o; }
+    set = take(ups, n / 2).concat(take(nots, n / 2)); set.sort(function () { return rnd() - 0.5; }); ans = {}; checked = false; draw();
+  }
+  function draw() {
+    var h = '<ul class="gbu-list">';
+    set.forEach(function (c, i) {
+      var a = ans[i], ok = checked && a != null ? (a === c[1]) : null;
+      h += '<li class="gbu-card' + (ok === true ? ' ok' : ok === false ? ' bad' : '') + '"><span class="gbu-t">' + c[0] + '</span><span class="gbu-b" role="group" aria-label="' + c[0] + '">' +
+        '<button type="button" data-i="' + i + '" data-v="1" aria-pressed="' + (a === 1) + '">Up to me</button><button type="button" data-i="' + i + '" data-v="0" aria-pressed="' + (a === 0) + '">Not up to me</button></span>' +
+        (checked ? '<small class="gbu-why">' + (ok ? '✓ ' : ok === false ? '✗ ' : '') + c[2] + '</small>' : '') + '</li>';
+    });
+    stage.innerHTML = h + '</ul>';
+    Array.prototype.forEach.call(stage.querySelectorAll('button'), function (b) { b.addEventListener('click', function () { ans[+b.getAttribute('data-i')] = +b.getAttribute('data-v'); if (checked) checked = false; draw(); }); });
+    var done = Object.keys(ans).length;
+    if (!checked) ro.set('Sorted <b>' + done + '</b> of ' + set.length + '. Epictetus: “Of things some are in our power, and others are not.”');
+    else { var right = set.filter(function (c, i) { return ans[i] === c[1]; }).length; ro.set('<b>' + right + ' of ' + set.length + '</b> match Epictetus. What is up to us is our own acts: opinion, desire, aversion, choice. Body, property, reputation and offices are not.'); }
+  }
+  V.button(ctl, 'Check', function () { checked = true; draw(); }, 'pri');
+  V.button(ctl, 'New cards', function () { deal(); });
+  deal();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbrome.marcus-aurelius-meditations (scripts/greatbooks/src/gbrome.marcus-aurelius-meditations/viz.js) ---- */
+  try { (function () {
+/* gbrome.marcus-aurelius-meditations: visual gb-view-from-above (gbe3, our own design). Marcus's exercise of seeing
+   things from far above: zoom out from one person to the camp, the empire, the Earth and all of time. The person is a
+   generic figure in the site's cartoon skin color. Thoughts are paraphrased from the Meditations, with book and section. */
+var LV = [
+  ['You', 'Within yourself', 'You can retire into yourself whenever you choose; nowhere is quieter than your own mind. (IV.3)'],
+  ['Your tent', 'The start of the day', 'Begin the morning expecting to meet difficult people, and remember they are your kin: we are made to work together, like hands and feet. (II.1)'],
+  ['The camp', 'Among the soldiers on the Danube', 'Do each task as if it were the last of your life, without carelessness, pretending or complaint. Marcus wrote parts of his notebook in army camps on the Danube. (II.5)'],
+  ['The empire', 'Rome’s whole world', 'Asia and Europe are corners of the universe; the whole sea is a drop; a great mountain is a little clod. (VI.36)'],
+  ['The Earth', 'A point in the universe', 'The whole earth is a point, and how small a nook of it is where you live, and how few will praise you. (IV.3)'],
+  ['All of time', 'Ages before and after', 'Think of the times of Vespasian: people marrying, farming, flattering, quarreling, wishing for power. Their life is gone, and so will ours be. (IV.32)']
+];
+var K = 2.7;
+ML.viz.register('gb-view-from-above', function (el, opts, V) {
+  var lv = opts.level || 0, S = 300, C = S / 2;
+  var stage = document.createElement('div'); stage.className = 'gb-stage gbva'; el.appendChild(stage);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  var ro = V.readout(el);
+  V.slider(ctl, { label: 'Zoom out', min: 0, max: 5, step: 1, value: lv, fmt: function (v) { return LV[v][0]; }, input: function (v) { lv = v; draw(); } });
+  function person(r) {
+    var s = r / 40;
+    return '<g transform="translate(' + C + ' ' + C + ') scale(' + s + ')"><path d="M-14 34 Q-14 6 0 6 Q14 6 14 34 Z" class="gbva-robe"/><circle cx="0" cy="-8" r="11" class="gbva-skin"/><path d="M-11 -11 Q0 -24 11 -11" class="gbva-hair"/></g>';
+  }
+  function draw() {
+    var h = '<svg viewBox="0 0 ' + S + ' ' + S + '" role="img" aria-label="The view from above, zoomed out to: ' + LV[lv][0] + '"><rect width="' + S + '" height="' + S + '" class="gbva-bg"/>';
+    for (var k = 5; k >= 0; k--) {
+      var r = 130 * Math.pow(K, k - lv);
+      if (r > 220 || r < 1.2) continue;
+      h += '<circle cx="' + C + '" cy="' + C + '" r="' + r.toFixed(1) + '" class="gbva-ring k' + k + (k === lv ? ' on' : '') + '"/>';
+      if (r > 18 && k > 0) h += '<text x="' + C + '" y="' + (C - r + 14).toFixed(1) + '" class="gbva-lab' + (k === lv ? ' on' : '') + '">' + LV[k][0] + '</text>';
+    }
+    var r0 = 130 * Math.pow(K, -lv);
+    if (r0 >= 2) h += person(r0); else h += '<circle cx="' + C + '" cy="' + C + '" r="1.6" class="gbva-dot"/>';
+    if (lv > 0) h += '<text x="' + C + '" y="' + (C + Math.max(r0, 3) + 12).toFixed(1) + '" class="gbva-you">you</text>';
+    stage.innerHTML = h + '</svg>';
+    ro.set('<b>' + LV[lv][0] + ': ' + LV[lv][1] + '.</b> ' + LV[lv][2]);
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbrome.plotinus-enneads (scripts/greatbooks/src/gbrome.plotinus-enneads/viz.js) ---- */
+  try { (function () {
+/* gbrome.plotinus-enneads: visual gb-emanation (gbe3, our own design). Plotinus's picture of reality as light spreading
+   from a source: the One, Intellect, Soul, the world of bodies, and matter at the dim edge. Toggle "going out"
+   (procession) and "coming back" (return); tap a ring to read about it. */
+var LEVELS = [
+  ['The One', 'Also called the Good. The first source of everything, beyond all names and beyond being. It gives without losing anything, as the sun gives light. (Ennead VI; V.1)'],
+  ['Intellect', 'Greek <em>nous</em>: the divine Mind, which holds all the Forms, the perfect patterns Plato wrote of. Here knowing and being are one. (Ennead V)'],
+  ['Soul', 'The World-Soul and every individual soul. Soul looks up to Intellect and gives life and order to bodies below it. (Ennead IV)'],
+  ['Nature and bodies', 'The visible world, alive and beautiful because Soul shapes it. Its beauty is a trace of the beauty above. (Ennead III; I.6)'],
+  ['Matter', 'The dimmest edge, where the light gives out. Plotinus calls matter a kind of absence: formless, receiving shape but having none of its own. (Ennead II.4; I.8)']
+];
+ML.viz.register('gb-emanation', function (el, opts, V) {
+  var cur = opts.start == null ? 0 : opts.start, dir = 'out', S = 320, C = S / 2, RR = [24, 58, 92, 124, 152];
+  var pid = V.uid('gbe');
+  var stage = document.createElement('div'); stage.className = 'gb-stage gbe'; el.appendChild(stage);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  V.seg(ctl, { label: 'Direction', items: [['out', 'Going out (procession)'], ['back', 'Coming back (return)']], value: dir, change: function (v) { dir = v; draw(); } });
+  var ro = V.readout(el);
+  function draw() {
+    var h = '<svg viewBox="0 0 ' + S + ' ' + S + '" role="img" aria-label="Plotinus: the One at the center, then Intellect, Soul, bodies and matter in rings"><defs><radialGradient id="' + pid + '"><stop offset="0" class="gbe-s0"/><stop offset="0.5" class="gbe-s1"/><stop offset="1" class="gbe-s2"/></radialGradient></defs>';
+    h += '<rect width="' + S + '" height="' + S + '" class="gbe-bg"/><circle cx="' + C + '" cy="' + C + '" r="' + RR[4] + '" fill="url(#' + pid + ')"/>';
+    for (var k = 4; k >= 0; k--) h += '<circle data-k="' + k + '" cx="' + C + '" cy="' + C + '" r="' + RR[k] + '" class="gbe-ring' + (k === cur ? ' on' : '') + '" tabindex="0" role="button" aria-label="' + LEVELS[k][0] + '"/>';
+    for (k = 0; k < 5; k++) { var y = k === 0 ? C + 4 : C - (RR[k - 1] + RR[k]) / 2 + 4; h += '<text x="' + C + '" y="' + y + '" class="gbe-lab' + (k === cur ? ' on' : '') + (k === 0 ? ' one' : '') + '">' + LEVELS[k][0] + '</text>'; }
+    [30, 150, 90].forEach(function (a) {
+      var t = a * Math.PI / 180, r1 = 34, r2 = 146, x1 = C + r1 * Math.cos(t), y1 = C + r1 * Math.sin(t), x2 = C + r2 * Math.cos(t), y2 = C + r2 * Math.sin(t);
+      if (dir === 'back') { var tx = x1, ty = y1; x1 = x2; y1 = y2; x2 = tx; y2 = ty; }
+      var ang = Math.atan2(y2 - y1, x2 - x1), hx = x2 - 9 * Math.cos(ang - 0.45), hy = y2 - 9 * Math.sin(ang - 0.45), jx = x2 - 9 * Math.cos(ang + 0.45), jy = y2 - 9 * Math.sin(ang + 0.45);
+      h += '<path class="gbe-arrow ' + dir + '" d="M' + x1.toFixed(1) + ' ' + y1.toFixed(1) + 'L' + x2.toFixed(1) + ' ' + y2.toFixed(1) + 'M' + hx.toFixed(1) + ' ' + hy.toFixed(1) + 'L' + x2.toFixed(1) + ' ' + y2.toFixed(1) + 'L' + jx.toFixed(1) + ' ' + jy.toFixed(1) + '"/>';
+    });
+    stage.innerHTML = h + '</svg>';
+    Array.prototype.forEach.call(stage.querySelectorAll('.gbe-ring'), function (c) {
+      var f = function () { cur = +c.getAttribute('data-k'); draw(); };
+      c.addEventListener('click', f); c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); f(); } });
+    });
+    ro.set('<b>' + LEVELS[cur][0] + '.</b> ' + LEVELS[cur][1] + '<br><i>' + (dir === 'out' ? 'Going out: each level flows from the one above, like light from the sun, growing fainter with distance.' : 'Coming back: the soul turns inward and climbs, through virtue, beauty and contemplation, toward Intellect and the One.') + '</i>');
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
   /* ---- gbrome.nicomachus-introduction-to-arithmetic (scripts/greatbooks/src/gbrome.nicomachus-introduction-to-arithmetic/viz.js) ---- */
   try { (function () {
 /* gbrome.nicomachus-introduction-to-arithmetic: visuals gb-figurate, gb-perfect (gbsA, our own designs; theme colors from MathLadder.viz.colors()). */
@@ -226,6 +569,92 @@ ML.viz.register('gb-ureters', function (el, opts, V) {
   V.button(B.ctl, 'Empty the bladder', function () { fill.bl = 0.05; draw(); });
   if (!RM) run = V.loop(el, function (dt) { stepF(dt); draw(); });
   c.onResize(draw); V.onTheme(draw); draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbrome.augustine-city-of-god (scripts/greatbooks/src/gbrome.augustine-city-of-god/viz.js) ---- */
+  try { (function () {
+/* gbrome.augustine-city-of-god: visual gb-two-cities (gbe3, our own design). Augustine's two cities as two strands
+   running, intertwined, through the six ages of history he lists at the end of the City of God (XXII.30), to the
+   seventh, the eternal rest. Tap an age. Summaries are ours; book numbers point to where Augustine discusses them. */
+var AGES = [
+  ['Adam to the Flood', 'Cain builds a city; Abel, a pilgrim on earth, builds none. From here on Augustine follows two lines of people, two cities. (Book XV)'],
+  ['The Flood to Abraham', 'Noah’s ark is, for Augustine, a figure of the city of God. The tower of Babel shows the earthly city’s pride. (Books XV–XVI)'],
+  ['Abraham to David', 'God’s promise to Abraham begins a people. In the earthly city, the great empire of Assyria rises. (Books XVI, XVIII)'],
+  ['David to the exile', 'Jerusalem, its kings and prophets. Rome is founded, which Augustine calls a second Babylon in the West. (Books XVII–XVIII)'],
+  ['The exile to Christ', 'Return from Babylon; the last prophets. Rome grows into an empire. (Book XVIII)'],
+  ['From Christ to the end', 'The age we live in, says Augustine: the Church spreads among the nations, and the two cities are mixed together until the last judgment. (Books XVIII–XX)'],
+  ['The seventh day', 'Not an age of history but its end: the eternal rest and peace of the city of God, “where we shall rest and see, see and love, love and praise.” (Book XXII)']
+];
+ML.viz.register('gb-two-cities', function (el, opts, V) {
+  var cur = opts.start == null ? 5 : opts.start, W = 460, H = 190, x0 = 12, cw = (W - 2 * x0) / 7;
+  var stage = document.createElement('div'); stage.className = 'gb-stage gbtc'; el.appendChild(stage);
+  var ro = V.readout(el);
+  function strand(ph, cls) {
+    var d = '', end = x0 + cw * 6;
+    for (var x = x0; x <= end; x += 4) { var y = 92 + 26 * Math.sin((x - x0) / cw * Math.PI + ph); d += (x === x0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1); }
+    return '<path class="gbtc-s ' + cls + '" d="' + d + '"/>';
+  }
+  function draw() {
+    var h = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="The two cities through the seven ages, after Augustine">';
+    for (var i = 0; i < 7; i++) {
+      var x = x0 + i * cw;
+      h += '<rect class="gbtc-col' + (i === cur ? ' on' : '') + (i === 6 ? ' rest' : '') + '" data-i="' + i + '" x="' + (x + 1) + '" y="28" width="' + (cw - 2) + '" height="128" rx="8" tabindex="0" role="button" aria-label="Age ' + (i + 1) + ': ' + AGES[i][0] + '"/>';
+      h += '<text class="gbtc-n' + (i === cur ? ' on' : '') + '" x="' + (x + cw / 2) + '" y="20">' + (i + 1) + '</text>';
+    }
+    h += strand(0, 'god') + strand(Math.PI, 'earth');
+    h += '<circle cx="' + (x0 + cw * 6.5) + '" cy="92" r="16" class="gbtc-rest"/>';
+    h += '<g class="gbtc-key"><line x1="' + x0 + '" y1="176" x2="' + (x0 + 22) + '" y2="176" class="gbtc-s god"/><text x="' + (x0 + 28) + '" y="180">city of God: love of God</text><line x1="' + (x0 + 210) + '" y1="176" x2="' + (x0 + 232) + '" y2="176" class="gbtc-s earth"/><text x="' + (x0 + 238) + '" y="180">earthly city: love of self</text></g>';
+    stage.innerHTML = h + '</svg>';
+    Array.prototype.forEach.call(stage.querySelectorAll('.gbtc-col'), function (r) {
+      var f = function () { cur = +r.getAttribute('data-i'); draw(); var n = stage.querySelector('.gbtc-col[data-i="' + cur + '"]'); if (n) n.focus(); };
+      r.addEventListener('click', f); r.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); f(); } });
+    });
+    ro.set('<b>' + (cur < 6 ? 'Age ' + (cur + 1) : 'The end') + ': ' + AGES[cur][0] + '.</b> ' + AGES[cur][1]);
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbrome.augustine-on-christian-doctrine (scripts/greatbooks/src/gbrome.augustine-on-christian-doctrine/viz.js) ---- */
+  try { (function () {
+/* gbrome.augustine-on-christian-doctrine: visual gb-signs (gbe3, our own design). Augustine's sorting of things and
+   signs (On Christian Doctrine I.2 and II.1-3): a plain thing, a natural sign, or a conventional (given) sign.
+   Augustine's own examples are marked; the rest are ours, in the same spirit. */
+var EX = [
+  ['Smoke rising from behind a hill', 'n', 'It makes you think of fire, though no one meant it as a sign. (Augustine’s example, II.1)'],
+  ['An animal’s footprint in the mud', 'n', 'It tells you an animal passed, without anyone intending it. (Augustine’s example, II.1)'],
+  ['An angry look on someone’s face', 'n', 'It shows a feeling whether the person wants it to or not. (Augustine’s example, II.1)'],
+  ['A spoken word', 'c', 'Words are the chief conventional signs: people use them on purpose to share what is in their minds. (II.3)'],
+  ['A trumpet call telling soldiers to advance', 'c', 'Agreed on beforehand, and given on purpose. (Augustine’s example, II.1)'],
+  ['A nod of the head', 'c', 'A sign given to the eyes, on purpose. (Augustine’s example, II.3)'],
+  ['A military flag', 'c', 'It conveys the commander’s will through the eyes. (Augustine’s example, II.3)'],
+  ['A piece of wood, just as wood', 'thing', 'A thing in the strict sense: not used as a sign of anything else. (Augustine’s example, I.2)'],
+  ['A stone, just as a stone', 'thing', 'A plain thing. Though Jacob’s stone pillow was also a sign, Augustine says. (I.2)'],
+  ['Cattle in a field', 'thing', 'A plain thing. (Augustine’s example, I.2)'],
+  ['Dark clouds before a storm', 'n', 'A natural sign of rain: no one sends it as a message.'],
+  ['A red traffic light', 'c', 'A conventional sign: people agreed what red means.'],
+  ['A written letter of the alphabet', 'c', 'Letters are signs of the sounds of words, Augustine says: signs of signs. (II.4)'],
+  ['A fever’s flushed cheeks', 'n', 'A natural sign of illness.'],
+  ['A wave of the hand to say hello', 'c', 'A gesture given on purpose.'],
+  ['A loaf of bread on a plate', 'thing', 'Just a thing, unless someone uses it to mean something else.']
+];
+var LAB = { n: 'Natural sign', c: 'Conventional sign', thing: 'Just a thing' };
+ML.viz.register('gb-signs', function (el, opts, V) {
+  var order = EX.map(function (_, i) { return i; }), pos = 0, picked = null, score = 0, tries = 0;
+  var stage = document.createElement('div'); stage.className = 'gb-stage gbsg'; el.appendChild(stage);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  var ro = V.readout(el);
+  function draw() {
+    var e = EX[order[pos]], h = '<p class="gbsg-card"><span class="gbsg-k">' + (pos + 1) + ' of ' + EX.length + '</span>' + e[0] + '</p><div class="gbsg-btns" role="group" aria-label="Choose a kind">';
+    ['thing', 'n', 'c'].forEach(function (k) { h += '<button type="button" data-k="' + k + '" class="' + (picked ? (k === e[1] ? 'right' : k === picked ? 'wrong' : '') : '') + '"' + (picked ? ' disabled' : '') + '>' + LAB[k] + '</button>'; });
+    stage.innerHTML = h + '</div>';
+    Array.prototype.forEach.call(stage.querySelectorAll('.gbsg-btns button'), function (b) {
+      b.addEventListener('click', function () { if (picked) return; picked = b.getAttribute('data-k'); tries++; if (picked === e[1]) score++; draw(); });
+    });
+    ro.set(picked ? (picked === e[1] ? '<b>Yes: ' + LAB[e[1]].toLowerCase() + '.</b> ' : '<b>Augustine would say: ' + LAB[e[1]].toLowerCase() + '.</b> ') + e[2] + ' <small>(' + score + ' of ' + tries + ' so far)</small>'
+      : 'Is it a plain thing, a <b>natural sign</b> (it points to something without anyone meaning it to), or a <b>conventional sign</b> (given on purpose to share a thought)?');
+  }
+  V.button(ctl, 'Next example ▶', function () { pos = (pos + 1) % EX.length; picked = null; draw(); }, 'pri');
+  draw();
 });
   })(); } catch (e) { if (W.console) console.error(e); }
     return true;

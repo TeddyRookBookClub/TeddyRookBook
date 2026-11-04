@@ -1,0 +1,205 @@
+{
+ "paths": {
+  "young": [
+   {
+    "t": "p",
+    "html": "Alfred North Whitehead was an English mathematician who later became a philosopher in America. In 1911 he wrote a small book for anyone curious about what mathematics is <b>for</b>. His answer: mathematics is the study of <b>patterns</b> that fit many things at once."
+   },
+   {
+    "t": "p",
+    "html": "When you learn that 2 apples and 3 apples make 5 apples, you have learned something about cats, stars and pennies too. Two of anything and three of anything make five. That jump, from <em>these</em> things to <em>any</em> things, is where mathematics begins, Whitehead said."
+   },
+   {
+    "t": "p",
+    "html": "He also loved things that <b>repeat</b>: day and night, the seasons, a swing going back and forth, the note of a guitar string. Mathematics has a special wave shape, the sine wave, for all of them. Even sharp, jagged shapes can be built by adding smooth waves together."
+   },
+   {
+    "t": "viz",
+    "name": "gb-waves",
+    "opts": {
+     "shape": "square",
+     "terms": 3
+    },
+    "cap": "Add more and more smooth waves. Watch them build a square wave with sharp corners."
+   },
+   {
+    "t": "activity",
+    "html": "<b>Find the repeats.</b> With a grown-up, make a list of things in your day that repeat: the ticking of a clock, your heartbeat (count it for 15 seconds and multiply by 4), the lights at a crossing. For each one, how long does it take to come back around? That time is called the <b>period</b>."
+   }
+  ],
+  "full": [
+   {
+    "t": "h",
+    "text": "Who, when and why"
+   },
+   {
+    "t": "p",
+    "html": "Alfred North Whitehead (1861–1947) taught mathematics at Trinity College, Cambridge, where one of his students was Bertrand Russell. Together they wrote <em>Principia Mathematica</em> (1910–1913), a vast attempt to build mathematics from logic. In the middle of that labor Whitehead wrote <em>An Introduction to Mathematics</em> (1911) for the Home University Library, a series of short, cheap books by experts for general readers. Later he moved to Harvard (1924) and became a philosopher; his <em>Science and the Modern World</em> (1925) is another rung on this ladder."
+   },
+   {
+    "t": "p",
+    "html": "His aim is not to teach techniques but to show the main ideas, so that a reader understands why mathematics matters in science and in thinking. He knew how school mathematics often feels:"
+   },
+   {
+    "t": "quote",
+    "text": "<p>The study of mathematics is apt to commence in disappointment. The important applications of the science, the theoretical interest of its ideas, and the logical rigour of its methods, all generate the expectation of a speedy introduction to processes of interest.</p>",
+    "author": "Alfred North Whitehead",
+    "work": "An Introduction to Mathematics, Chapter I",
+    "tr": "",
+    "ed": "Williams and Norgate, Home University Library",
+    "year": 1911,
+    "url": "https://www.gutenberg.org/ebooks/41568",
+    "src": "Project Gutenberg"
+   },
+   {
+    "t": "h",
+    "text": "Idea 1: abstraction and the variable"
+   },
+   {
+    "t": "p",
+    "html": "Mathematics, Whitehead says, is about <b>any</b> things, not particular ones. A statement like “two and three make five” is true of anything you can count. The tool that captures “any” is the <b>variable</b>: a letter such as $x$ that stands for any number of a certain kind."
+   },
+   {
+    "t": "quote",
+    "text": "<p>Mathematics as a science commenced when first someone, probably a Greek, proved propositions about any things or about some things, without specification of definite particular things. These propositions were first enunciated by the Greeks for geometry; and, accordingly, geometry was the great Greek mathematical science.</p>",
+    "author": "Alfred North Whitehead",
+    "work": "An Introduction to Mathematics, Chapter II, Variables",
+    "tr": "",
+    "ed": "Williams and Norgate, Home University Library",
+    "year": 1911,
+    "url": "https://www.gutenberg.org/ebooks/41568",
+    "src": "Project Gutenberg"
+   },
+   {
+    "t": "h",
+    "text": "Idea 2: good symbols save thought"
+   },
+   {
+    "t": "p",
+    "html": "Whitehead praises mathematical notation, from the decimal place system to the signs of algebra, because it lets us do routine steps without thinking about them, and saves our attention for the hard part."
+   },
+   {
+    "t": "quote",
+    "text": "<p>It is a profoundly erroneous truism, repeated by all copy-books and by eminent people when they are making speeches, that we should cultivate the habit of thinking of what we are doing. The precise opposite is the case. Civilization advances by extending the number of important operations which we can perform without thinking about them.</p>",
+    "author": "Alfred North Whitehead",
+    "work": "An Introduction to Mathematics, Chapter V, The Symbolism of Mathematics",
+    "tr": "",
+    "ed": "Williams and Norgate, Home University Library",
+    "year": 1911,
+    "url": "https://www.gutenberg.org/ebooks/41568",
+    "src": "Project Gutenberg"
+   },
+   {
+    "t": "h",
+    "text": "Idea 3: functions, periodicity and series"
+   },
+   {
+    "t": "p",
+    "html": "The later chapters tour imaginary numbers, coordinate geometry and the conic sections, <b>functions</b> (a rule linking each value of one variable to a value of another), <b>periodicity in nature</b>, trigonometry, <b>series</b> and the calculus. The sine and cosine functions are the natural language of anything that repeats, because they repeat themselves: $\\sin(x + 360°) = \\sin x$."
+   },
+   {
+    "t": "p",
+    "html": "A great result of the century before Whitehead, due to Joseph Fourier, carries the idea further: almost any repeating shape, even one with corners, is a sum of sine waves. This is the mathematics behind sound, tides, radio and much more."
+   },
+   {
+    "t": "viz",
+    "name": "gb-waves",
+    "opts": {
+     "shape": "square",
+     "terms": 5
+    },
+    "cap": "A Fourier series: each added wave is a sine with a higher frequency and smaller size. The more you add, the closer the total comes to the square wave or the sawtooth."
+   },
+   {
+    "t": "ex",
+    "title": "The period of a wave",
+    "q": "The function $y = \\sin(3x)$, with $x$ in degrees, repeats after how many degrees? How many full waves fit between 0° and 360°?",
+    "steps": [
+     "$\\sin$ repeats when its input grows by 360°.",
+     "$3x$ grows by 360° when $x$ grows by 360 ÷ 3 = 120°.",
+     "So the period is 120°, and 360 ÷ 120 = 3 waves fit in one turn."
+    ],
+    "a": "Period 120°; three waves."
+   },
+   {
+    "t": "ex",
+    "title": "Multiplying imaginary numbers",
+    "q": "Whitehead explains that numbers like $i$, with $i^2 = -1$, obey the ordinary rules. Work out $(2 + 3i)(1 - i)$.",
+    "steps": [
+     "Multiply out: $2 \\cdot 1 + 2(-i) + 3i \\cdot 1 + 3i(-i)$.",
+     "$= 2 - 2i + 3i - 3i^2$.",
+     "Since $i^2 = -1$: $= 2 + i + 3 = 5 + i$."
+    ],
+    "a": "$5 + i$"
+   },
+   {
+    "t": "key",
+    "html": "Whitehead’s picture of mathematics: it begins with <b>abstraction</b> (statements about any things), works through <b>variables</b> and <b>functions</b>, and is useful exactly because it is general. A pattern found once applies wherever the same form appears."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking that abstract means useless. Whitehead argues the reverse: the more general an idea, the more places it applies. Imaginary numbers, once a puzzle, became everyday tools of electrical engineering."
+   },
+   {
+    "t": "h",
+    "text": "How it was judged"
+   },
+   {
+    "t": "p",
+    "html": "The little book stayed in print for decades and is still recommended as one of the best short explanations of what mathematics is about. Readers note its clarity and its humor. Its wider hope, that mathematics rests on logic, was dealt a blow in 1931 by Kurt Gödel, who showed that no such system can prove every true statement of arithmetic. That did not touch the book’s main lesson about patterns and their uses."
+   }
+  ],
+  "deep": [
+   {
+    "t": "h",
+    "text": "Whitehead in the great conversation"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Euclid</b> and <b>Nicomachus</b>, earlier on this ladder, are the Greeks whose “propositions about any things” Whitehead has in mind.",
+     "<b>Descartes</b> joined algebra to geometry with coordinates, a chapter Whitehead retells.",
+     "<b>Poincaré</b>, the rung before, doubted that mathematics could be reduced to logic. Whitehead and Russell tried; the argument went on for decades.",
+     "<b>Hardy</b>’s <em>A Mathematician’s Apology</em>, a few rungs on, defends mathematics for its beauty rather than its uses. Compare the two."
+    ]
+   },
+   {
+    "t": "h",
+    "text": "Big questions"
+   },
+   {
+    "t": "list",
+    "items": [
+     "Why should a pattern found by thinking also fit the physical world?",
+     "Is mathematics discovered, like a continent, or invented, like a game?",
+     "Which things in your daily life do you now do “without thinking about them,” and what did that free you to do?"
+    ]
+   },
+   {
+    "t": "p",
+    "html": "See the Math Ladder’s topics on functions, complex numbers, series and Fourier series."
+   }
+  ]
+ },
+ "questions": [
+  "Whitehead says mathematics often begins in disappointment. Has that been true for you? What would make it less so?",
+  "Two and three make five for apples and for stars. Why is that surprising when you think about it?",
+  "What operations can you now do without thinking (tying shoes, adding small numbers)? How does that help?",
+  "Name three things in nature that repeat. What is the period of each?",
+  "Is it better to learn many techniques or a few big ideas? Why might you need both?"
+ ],
+ "sources": [
+  {
+   "name": "Alfred North Whitehead, An Introduction to Mathematics (Williams and Norgate / Henry Holt, Home University Library, 1911), Project Gutenberg",
+   "url": "https://www.gutenberg.org/ebooks/41568"
+  },
+  {
+   "name": "Grokipedia: Alfred North Whitehead",
+   "url": "https://grokipedia.com/page/Alfred_North_Whitehead"
+  },
+  {
+   "name": "Grokipedia: Fourier series",
+   "url": "https://grokipedia.com/page/Fourier_series"
+  }
+ ]
+}

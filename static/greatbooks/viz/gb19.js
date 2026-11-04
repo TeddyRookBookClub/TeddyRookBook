@@ -4,6 +4,366 @@
   var ML = W.MathLadder = W.MathLadder || {};
   function boot() {
     if (!ML.viz || !ML.viz.register) return false;
+  /* ---- gb19.hegel-philosophy-of-right (scripts/greatbooks/src/gb19.hegel-philosophy-of-right/viz.js) ---- */
+  try { (function () {
+/* gb19 visuals kit (gbw4, our own designs), shared by the 19th-century rungs written in wave 2.
+   This rung is the first of them in rungs.yaml, so the build puts this file first in static/greatbooks/viz/gb19.js;
+   the others read ML.gb19kit when they mount. Three engines:
+     cards(el, V, o)  boxes in a row, column or stairs, tap one to read it   o = { label, layout, items: [{ t, s, html }], sets, start }
+     net(el, V, o)    people or ideas joined by lines, with optional sets of lines to switch between
+     route(el, V, o)  a journey on a sketch map, stop by stop
+   Styles: this rung's viz.css (.gb19-*). Drawn people: fill #ffcc4d, outline #e8a93a. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function wrap(s, n) { var w = String(s).split(' '), out = [], cur = ''; w.forEach(function (x) { if (cur && (cur + ' ' + x).length > n) { out.push(cur); cur = x; } else cur = cur ? cur + ' ' + x : x; }); if (cur) out.push(cur); return out; }
+function T(par, x, y, s, cls, anc, n) {
+  var t = S('text', { x: x, y: y, 'class': cls || 'gb19-t', 'text-anchor': anc || 'middle' }, par), L = n ? wrap(s, n) : [String(s)];
+  L.forEach(function (ln, i) { var sp = S('tspan', { x: x, dy: i ? '1.15em' : 0 }, t); sp.textContent = ln; });
+  return t;
+}
+function frame(el, w, h, label) {
+  el.classList.add('gb19');
+  var st = document.createElement('div'); st.className = 'gb19-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl gb19-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl, stage: st };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function clickable(g, fn, label) {
+  g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); if (label) g.setAttribute('aria-label', label);
+  g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+function arrow(par, x1, y1, x2, y2, cls) {
+  S('line', { x1: x1, y1: y1, x2: x2, y2: y2, 'class': cls || 'gb19-arrow' }, par);
+  var a = Math.atan2(y2 - y1, x2 - x1), L = 7;
+  S('path', { d: 'M' + x2 + ',' + y2 + ' L' + (x2 - L * Math.cos(a - 0.45)) + ',' + (y2 - L * Math.sin(a - 0.45)) + ' L' + (x2 - L * Math.cos(a + 0.45)) + ',' + (y2 - L * Math.sin(a + 0.45)) + ' Z', 'class': 'gb19-head' }, par);
+}
+function person(par, x, y, s, robe) { // a generic standing figure in the site's cartoon skin color
+  S('path', { d: 'M' + (x - 8 * s) + ',' + (y + 22 * s) + ' Q' + x + ',' + (y - 2 * s) + ' ' + (x + 8 * s) + ',' + (y + 22 * s) + ' Z', 'class': robe || 'gb19-robe' }, par);
+  S('circle', { cx: x, cy: y - 5 * s, r: 6.5 * s, 'class': 'gb19-skin' }, par);
+}
+
+/* ---- cards ---- */
+function cards(el, V, o) {
+  var sets = o.sets || null, key = sets ? (o.set || sets[0][0]) : null;
+  function items() { if (!sets) return o.items; for (var i = 0; i < sets.length; i++) if (sets[i][0] === key) return sets[i][2]; return sets[0][2]; }
+  var lay = o.layout || 'row', n0 = items().length;
+  var W = o.w || 400, H = o.h || (lay === 'col' ? 24 + n0 * 62 : lay === 'stairs' ? 250 : 170);
+  var F = frame(el, W, H, o.label || 'A diagram'), sv = F.svg, ro = V.readout(el), cur = o.start || 0;
+  function draw() {
+    clear(sv); var it = items(), n = it.length;
+    if (o.title) T(sv, W / 2, 16, o.title, 'gb19-s');
+    var top = o.title ? 26 : 8;
+    it.forEach(function (c, i) {
+      var x, y, w, h;
+      if (lay === 'col') { w = W - 40; h = 50; x = 20; y = top + i * 62; }
+      else if (lay === 'stairs') { w = (W - 20) / n - 8; var ch = Math.max(6, Math.floor(w / 6.6)), need = 34 + 15 * wrap(c.t, ch).length + 14 * (c.s ? wrap(c.s, ch + 1).length : 0); h = Math.max(need, 60 + i * ((H - top - 80) / Math.max(1, n - 1))); x = 10 + i * (w + 8); y = H - 8 - h; }
+      else { w = (W - 20) / n - 14; h = H - top - 16; x = 10 + i * (w + 14); y = top + 4; }
+      var g = S('g', { 'class': 'gb19-it' + (i === cur ? ' gb19-on' : '') + (c.cls ? ' ' + c.cls : '') }, sv);
+      S('rect', { x: x, y: y, width: w, height: h, rx: 9, 'class': 'gb19-box' }, g);
+      var chars = Math.max(6, Math.floor(w / 6.6));
+      if (lay === 'col') { T(g, x + 12, y + 20, c.t, 'gb19-t', 'start'); if (c.s) T(g, x + 12, y + 37, c.s, 'gb19-s', 'start'); }
+      else { T(g, x + w / 2, y + 20, c.t, 'gb19-t', 'middle', chars); if (c.s) T(g, x + w / 2, y + 22 + 15 * wrap(c.t, chars).length + 6, c.s, 'gb19-s', 'middle', chars + 1); }
+      clickable(g, function () { cur = i; draw(); }, c.t);
+      if (o.arrows !== false && i < n - 1) {
+        if (lay === 'col') arrow(sv, W / 2, y + h + 1, W / 2, y + 61);
+        else if (lay === 'row') arrow(sv, x + w + 1, y + h / 2, x + w + 13, y + h / 2);
+      }
+    });
+    var c = it[Math.min(cur, n - 1)]; ro.set('<b>' + (cur + 1) + '. ' + c.t + '.</b> ' + c.html);
+  }
+  if (sets) V.seg(F.ctl, { label: o.setLabel || 'Show', items: sets.map(function (s) { return [s[0], s[1]]; }), value: key, change: function (v) { key = v; cur = 0; draw(); } });
+  V.button(F.ctl, '← Back', function () { cur = Math.max(0, cur - 1); draw(); });
+  V.button(F.ctl, 'Next →', function () { cur = Math.min(items().length - 1, cur + 1); draw(); });
+  draw();
+}
+
+/* ---- net ---- */
+function net(el, V, o) {
+  var W = o.w || 400, H = o.h || 300, F = frame(el, W, H, o.label || 'A diagram'), sv = F.svg, ro = V.readout(el);
+  var sets = o.sets || null, key = sets ? (o.set || sets[0][0]) : null, cur = o.start === undefined ? -1 : o.start;
+  var byId = {}; o.nodes.forEach(function (nd) { byId[nd.id] = nd; });
+  function nw(nd) { return Math.max(String(nd.t).length, String(nd.s || '').length * 0.85) * 6.7 + 16; }
+  o.nodes.forEach(function (nd) { var w = nw(nd), h = nd.s ? 36 : 24; nd._x = Math.max(w / 2 + 3, Math.min(W - w / 2 - 3, nd.x)); nd._y = Math.max(h / 2 + 3, Math.min(H - h / 2 - 3, nd.y)); });
+  function draw() {
+    clear(sv);
+    o.edges.forEach(function (e) {
+      if (e.set && e.set !== key) return;
+      var a0 = byId[e.a], b0 = byId[e.b], a = { x: a0._x, y: a0._y }, b = { x: b0._x, y: b0._y }, cls = 'gb19-edge' + (e.cls ? ' ' + e.cls : '');
+      if (e.dir) { var dx = b.x - a.x, dy = b.y - a.y, d = Math.sqrt(dx * dx + dy * dy) || 1, r = 22; arrow(sv, a.x + dx / d * r, a.y + dy / d * r, b.x - dx / d * r, b.y - dy / d * r, cls); }
+      else S('line', { x1: a.x, y1: a.y, x2: b.x, y2: b.y, 'class': cls }, sv);
+      if (e.t) { var mx = (a.x + b.x) / 2 + (e.dx || 0), my = (a.y + b.y) / 2 + (e.dy || 0); var tt = T(sv, mx, my - 3, e.t, 'gb19-el'); tt.setAttribute('paint-order', 'stroke'); }
+    });
+    o.nodes.forEach(function (nd, i) {
+      var w = nw(nd), h = nd.s ? 36 : 24, g = S('g', { 'class': 'gb19-it' + (i === cur ? ' gb19-on' : '') + (nd.cls ? ' ' + nd.cls : '') }, sv);
+      var X = nd._x, Y = nd._y;
+      S('rect', { x: X - w / 2, y: Y - h / 2, width: w, height: h, rx: 8, 'class': 'gb19-box' }, g);
+      T(g, X, Y + (nd.s ? -3 : 4), nd.t, 'gb19-t'); if (nd.s) T(g, X, Y + 11, nd.s, 'gb19-s');
+      clickable(g, function () { cur = i; draw(); }, nd.t);
+    });
+    var setNote = ''; if (sets) sets.forEach(function (s) { if (s[0] === key) setNote = s[2]; });
+    ro.set(cur >= 0 ? '<b>' + o.nodes[cur].t + '.</b> ' + o.nodes[cur].html : (setNote || o.hint || 'Tap a name to read about it.'));
+  }
+  if (sets) V.seg(F.ctl, { label: o.setLabel || 'Show', items: sets.map(function (s) { return [s[0], s[1]]; }), value: key, change: function (v) { key = v; cur = -1; draw(); } });
+  draw();
+}
+
+/* ---- route ---- */
+function route(el, V, o) {
+  var W = o.w || 400, H = o.h || 300, F = frame(el, W, H, o.label || 'A map'), sv = F.svg, ro = V.readout(el), cur = o.start || 0;
+  var P = o.proj; function xy(p) { return P ? [(p[0] - P[0]) / (P[1] - P[0]) * W, (P[2] - p[1]) / (P[2] - P[3]) * H] : p; }
+  var stops = o.stops.map(function (s) { var q = xy(s.p); return { x: q[0], y: q[1], s: s }; });
+  function pathOf(pts) { return pts.map(function (q, i) { return (i ? 'L' : 'M') + q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' '); }
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 0, width: W, height: H, 'class': o.sea === false ? 'gb19-paperbg' : 'gb19-sea' }, sv);
+    (o.bg || []).forEach(function (b) { var pts = b.pts.map(xy); S('path', { d: pathOf(pts) + (b.open ? '' : ' Z'), 'class': b.cls || 'gb19-land' }, sv); });
+    (o.labels || []).forEach(function (l) { var q = xy(l[0]); T(sv, q[0], q[1], l[1], l[2] || 'gb19-map'); });
+    var all = stops.map(function (s) { return [s.x, s.y]; });
+    S('path', { d: pathOf(all), 'class': 'gb19-route-todo' }, sv);
+    S('path', { d: pathOf(all.slice(0, cur + 1)), 'class': 'gb19-route' }, sv);
+    stops.forEach(function (s, i) {
+      var g = S('g', { 'class': 'gb19-it' }, sv);
+      S('circle', { cx: s.x, cy: s.y, r: 11, 'class': 'gb19-hit' }, g);
+      S('circle', { cx: s.x, cy: s.y, r: i === cur ? 6 : 4, 'class': i <= cur ? 'gb19-dot gb19-dot-on' : 'gb19-dot' }, g);
+      if (i === cur || s.s.always) { var dx = s.s.dx === undefined ? 8 : s.s.dx, dy = s.s.dy === undefined ? -8 : s.s.dy; T(g, s.x + dx, s.y + dy, (s.s.n || s.s.t), i === cur ? 'gb19-t gb19-halo' : 'gb19-s gb19-halo', dx < 0 ? 'end' : 'start'); }
+      clickable(g, function () { cur = i; draw(); }, s.s.t);
+    });
+    ro.set('<b>' + (cur + 1) + ' of ' + stops.length + ': ' + stops[cur].s.t + '.</b> ' + stops[cur].s.html);
+  }
+  V.button(F.ctl, '← Back', function () { cur = Math.max(0, cur - 1); draw(); });
+  V.button(F.ctl, 'Next →', function () { cur = Math.min(stops.length - 1, cur + 1); draw(); });
+  draw();
+}
+ML.gb19kit = { S: S, T: T, wrap: wrap, frame: frame, clear: clear, clickable: clickable, arrow: arrow, person: person, cards: cards, net: net, route: route };
+
+/* gb-hegel-right: the plan of the Philosophy of Right, from abstract right to the state (our own summaries). */
+ML.viz.register('gb-hegel-right', function (el, opts, V) {
+  var K = ML.gb19kit;
+  K.cards(el, V, { label: 'The plan of Hegel\'s Philosophy of Right', layout: opts.layout || 'col', title: 'Freedom made real, step by step', items: [
+    { t: 'Abstract right', s: 'persons, property, contracts', html: 'A person is free first as an owner. I put my will into a thing, and others must respect it. Hegel\'s command here is: be a person and respect others as persons. Wrong and crime break this, and punishment, he argues, restores the right.' },
+    { t: 'Morality', s: 'the inner world of conscience', html: 'Now freedom turns inward: my purposes, my intentions and my conscience. Hegel praises this modern inwardness, but warns that conscience on its own can talk itself into anything.' },
+    { t: 'The family', s: 'ethical life, first form', html: 'Ethical life (<i>Sittlichkeit</i>) means freedom lived out in shared customs and institutions. The family is its first form, held together by love and trust rather than contract.' },
+    { t: 'Civil society', s: 'work, markets, courts', html: 'Grown children leave home for the world of work and trade, where each pursues his own interest and depends on everyone else. Hegel draws on Adam Smith here. He also sees its problems, such as poverty, and calls for courts, police and associations to temper them.' },
+    { t: 'The state', s: 'ethical life, completed', html: 'For Hegel the state, with its constitution and laws, is where freedom becomes fully real, because citizens see the common good as their own. Readers have argued for two centuries over what he meant: some read a defense of constitutional liberty, others an over-praise of state power.' }
+  ] });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.hegel-philosophy-of-history (scripts/greatbooks/src/gb19.hegel-philosophy-of-history/viz.js) ---- */
+  try { (function () {
+/* gb-hegel-history: Hegel's four "worlds" of history, as he told it in his Berlin lectures (our summaries; uses ML.gb19kit). */
+ML.viz.register('gb-hegel-history', function (el, opts, V) {
+  ML.gb19kit.cards(el, V, { label: 'Hegel\'s stages of world history', layout: opts.layout || 'row', h: (opts.layout || 'row') === 'row' ? 190 : undefined, title: 'History as the growth of freedom, in Hegel\'s telling', items: [
+    { t: 'The Oriental world', s: 'one is free', html: 'Hegel\'s first stage is the ancient empires of China, India and Persia. In his view only the ruler was free there. Modern historians reject this picture of Asia as unchanging and unfree; it shows how little Europeans of his day knew of Asian history and thought.' },
+    { t: 'The Greek world', s: 'some are free', html: 'In the Greek city, Hegel says, citizens felt at one with their laws, as a beautiful harmony. But the Greeks kept slaves, so only some were free.' },
+    { t: 'The Roman world', s: 'law and the person', html: 'Rome brought law, the legal person and property rights, but also harsh power. Hegel sees in Rome the inward turn of the person, and the rise of Christianity.' },
+    { t: 'The Germanic world', s: 'all are free', html: 'Hegel\'s last stage is Christian Europe, from the Reformation to his own day. He believed it had learned that every human being, as human, is free, even if that truth was still being worked out in its laws. Critics have called this ending self-flattering to Hegel\'s own time and place.' }
+  ] });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.mill-on-liberty (scripts/greatbooks/src/gb19.mill-on-liberty/viz.js) ---- */
+  try { (function () {
+/* gb-mill-harm: sort cases the way Mill does in On Liberty. The cases are Mill's own examples (Chapters II, IV and V),
+   retold in our words. Our own design; styles from gb19.hegel-philosophy-of-right/viz.css. */
+ML.viz.register('gb-mill-harm', function (el, opts, V) {
+  el.classList.add('gb19');
+  var A = ['Leave it to the person', 'Society may step in', 'Warn, but do not force'];
+  var C = [
+    ['A man drinks too much at home, alone, and harms no one but himself.', 0, 'Mill: no one should be punished simply for being drunk. Friends may advise him, and others may choose to avoid him, but that is all.'],
+    ['A police officer is drunk while on duty.', 1, 'Mill\'s own example: a soldier or policeman drunk on duty may be punished, because now others are put at risk.'],
+    ['A writer prints in a newspaper that grain dealers are starving the poor.', 0, 'Mill: opinions, even wrong or unpopular ones, should be free to be published and argued against.'],
+    ['Someone shouts the same claim to an angry crowd gathered outside a grain dealer\'s house.', 1, 'Mill: the same words may be punished when, in that setting, they are a spark to violence against a person.'],
+    ['A traveler is about to step onto a bridge that you know is unsafe, and there is no time to warn him.', 1, 'Mill: you may seize him and turn him back. Liberty means doing what you want, and he does not want to fall into the river.'],
+    ['A traveler knows a mountain path is risky and chooses to climb it anyway.', 2, 'Mill: when a person knows the danger and only they are at risk, others should warn them, not stop them.'],
+    ['A person dresses, eats and lives in an unusual way that their neighbors dislike.', 0, 'Mill praises "experiments of living." Dislike is not harm.'],
+    ['A shop sells a poison that also has good uses, such as killing rats.', 2, 'Mill: do not ban it; label it and keep a record of sales, so buyers know what it is and crimes can be traced.'],
+    ['A man spends the money he owes for his children\'s support on drink.', 1, 'Mill: he may be blamed and made to pay, not for drinking, but for failing a duty he owes to others.'],
+    ['Someone wants to sign a contract selling himself as a slave.', 1, 'Mill: the state need not enforce it. Freedom cannot mean the freedom to give up all freedom.']
+  ];
+  var order = C.map(function (_, i) { return i; }), k = 0, score = 0, done = false;
+  var box = document.createElement('div'); box.className = 'gb19-panel'; el.appendChild(box);
+  var card = document.createElement('div'); card.className = 'gb19-card'; box.appendChild(card);
+  var btns = document.createElement('div'); btns.className = 'gb19-btns'; box.appendChild(btns);
+  var ro = V.readout(el), nx;
+  function show() {
+    var c = C[order[k]]; done = false;
+    card.innerHTML = '<p class="gb19-s">Case ' + (k + 1) + ' of ' + C.length + '</p><p class="gb19-big">' + c[0] + '</p>';
+    ro.set('What would Mill say? Choose one.'); nx.disabled = true;
+  }
+  A.forEach(function (a, i) {
+    V.button(btns, a, function () {
+      if (done) return; var c = C[order[k]]; done = true; if (i === c[1]) score++;
+      ro.set((i === c[1] ? '<span class="gb19-ok">Mill agrees.</span> ' : '<span class="gb19-no">Mill would say: ' + A[c[1]].toLowerCase() + '.</span> ') + c[2] + ' <i>Score: ' + score + ' of ' + (k + 1) + '.</i>');
+      nx.disabled = k >= C.length - 1;
+    });
+  });
+  nx = V.button(btns, 'Next case →', function () { if (k < C.length - 1) { k++; show(); } });
+  V.button(btns, 'Start over', function () { k = 0; score = 0; show(); });
+  show();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.mill-utilitarianism (scripts/greatbooks/src/gb19.mill-utilitarianism/viz.js) ---- */
+  try { (function () {
+/* gb-mill-happy: a "greatest happiness" calculator: two choices, how many people each affects and by how much.
+   Our own design; it also shows the classic worry, a small gain for many against a large loss for one. */
+ML.viz.register('gb-mill-happy', function (el, opts, V) {
+  var K = ML.gb19kit, F = K.frame(el, 400, 170, 'Two choices compared by total happiness'), sv = F.svg, ro = V.readout(el);
+  var P = {
+    snack: ['Class snack: pizza or fruit?', { n: 18, d: 3, lab: 'Pizza' }, { n: 6, d: 4, lab: 'Fruit' }],
+    music: ['Loud music late at night', { n: 12, d: 2, lab: 'Party goes on' }, { n: 1, d: 9, lab: 'Neighbor sleeps' }],
+    park: ['Spend town money on a park or a library', { n: 20, d: 2, lab: 'Park' }, { n: 15, d: 3, lab: 'Library' }]
+  };
+  var key = opts.preset || 'snack', a = {}, b = {}, sl = [];
+  function load() { var p = P[key]; a = { n: p[1].n, d: p[1].d, lab: p[1].lab }; b = { n: p[2].n, d: p[2].d, lab: p[2].lab }; sl.forEach(function (s) { s.s.set(s.o[s.k]); }); }
+  function bar(y, o, tot, max) {
+    var w = Math.max(2, tot / max * 190);
+    K.T(sv, 8, y + 14, o.lab, 'gb19-t', 'start');
+    S('rect', { x: 110, y: y, width: w, height: 20, rx: 4, 'class': tot >= 0 ? 'gb19-accf' : 'gb19-mutf' }, sv);
+    K.T(sv, 116 + w, y + 14, o.n + ' × ' + o.d + ' = ' + tot, 'gb19-s', 'start');
+  }
+  var S = K.S;
+  function draw() {
+    K.clear(sv); var ta = a.n * a.d, tb = b.n * b.d, mx = Math.max(ta, tb, 1);
+    K.T(sv, 200, 18, P[key][0], 'gb19-t');
+    K.T(sv, 200, 36, 'people × happiness each = total', 'gb19-s');
+    bar(56, a, ta, mx); bar(100, b, tb, mx);
+    var win = ta === tb ? 'a tie' : (ta > tb ? a.lab : b.lab);
+    K.T(sv, 200, 156, 'Greatest total: ' + win, 'gb19-t');
+    var warn = (Math.max(a.n, b.n) > 8 && Math.min(a.n, b.n) === 1 && Math.max(a.d, b.d) >= 8) ? ' Notice the worry critics raise: one person\'s large loss can be outweighed by many small gains. Mill answered that rules protecting everyone\'s security, which he called justice, matter most of all to happiness in the long run.' : '';
+    ro.set(a.lab + ': ' + a.n + ' people, ' + a.d + ' each, total <b>' + ta + '</b>. ' + b.lab + ': ' + b.n + ' people, ' + b.d + ' each, total <b>' + tb + '</b>. A simple sum favors <b>' + win + '</b>. Mill would add: pleasures also differ in <i>quality</i>, not only amount.' + warn);
+  }
+  V.seg(F.ctl, { label: 'Example', items: [['snack', 'Snack'], ['music', 'Late music'], ['park', 'Park or library']], value: key, change: function (v) { key = v; load(); draw(); } });
+  [[a, 'n', 'people'], [a, 'd', 'happiness each'], [b, 'n', 'people'], [b, 'd', 'happiness each']].forEach(function (q, i) {
+    var o = i < 2 ? 'a' : 'b';
+    var s = V.slider(F.ctl, { label: (i < 2 ? 'Choice 1: ' : 'Choice 2: ') + q[2], min: 1, max: q[1] === 'n' ? 30 : 10, step: 1, value: (o === 'a' ? a : b)[q[1]], input: function (v) { (o === 'a' ? a : b)[q[1]] = v; draw(); } });
+    sl.push({ s: s, k: q[1], get o() { return o === 'a' ? a : b; } });
+  });
+  load(); draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.kierkegaard-fear-and-trembling (scripts/greatbooks/src/gb19.kierkegaard-fear-and-trembling/viz.js) ---- */
+  try { (function () {
+/* gb-kierkegaard-stages: the figures of Fear and Trembling, set on the "stages of life" Kierkegaard sketched across his books
+   (our own summaries; uses ML.gb19kit). */
+ML.viz.register('gb-kierkegaard-stages', function (el, opts, V) {
+  ML.gb19kit.cards(el, V, { label: 'Kierkegaard\'s stages and the figures of Fear and Trembling', layout: 'stairs', h: 250, title: 'Higher steps ask more of a person, as Kierkegaard\'s writers describe them', items: [
+    { t: 'The aesthetic life', s: 'living for interest and pleasure', html: 'In <i>Either/Or</i> (1843) Kierkegaard pictures a person who lives for what is interesting, new or beautiful, and avoids lasting commitment. He thought such a life ends in boredom and despair.' },
+    { t: 'The ethical life', s: 'duty, marriage, the tragic hero', html: 'The ethical person takes on duties and keeps them. In <i>Fear and Trembling</i> the "tragic hero," such as King Agamemnon in the Greek story, gives up what he loves for a higher duty that everyone can understand: his people.' },
+    { t: 'Infinite resignation', s: 'letting go of what you love', html: 'The "knight of infinite resignation" gives up what he loves most and makes peace with the loss. The book\'s narrator says he can understand this, and could do it himself.' },
+    { t: 'Faith', s: 'the knight of faith', html: 'The "knight of faith" gives everything up and, at the same time, trusts that he will receive it back, "by virtue of the absurd." The narrator says he cannot understand this, only admire it. Kierkegaard adds that a knight of faith might look like an ordinary shopkeeper.' }
+  ] });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.nietzsche-beyond-good-and-evil (scripts/greatbooks/src/gb19.nietzsche-beyond-good-and-evil/viz.js) ---- */
+  try { (function () {
+/* gb-perspective: one object, many views. A cylinder seen from the side, from above and in between, for Nietzsche's
+   claim that all seeing is from a perspective. Our own design (uses ML.gb19kit). */
+ML.viz.register('gb-perspective', function (el, opts, V) {
+  var K = ML.gb19kit, F = K.frame(el, 400, 230, 'A cylinder seen from different angles'), sv = F.svg, ro = V.readout(el), th = opts.angle === undefined ? 30 : opts.angle;
+  function draw() {
+    K.clear(sv);
+    var r = 60, hgt = 110, s = Math.sin(th * Math.PI / 180), c = Math.cos(th * Math.PI / 180), cx = 140, ry = Math.max(0.5, r * s), bh = hgt * c, top = 115 - bh / 2;
+    var S = K.S;
+    S('path', { d: 'M' + (cx - r) + ',' + top + ' L' + (cx - r) + ',' + (top + bh) + ' A' + r + ',' + ry + ' 0 0 0 ' + (cx + r) + ',' + (top + bh) + ' L' + (cx + r) + ',' + top + ' Z', 'class': 'gb19-box' }, sv);
+    S('ellipse', { cx: cx, cy: top, rx: r, ry: ry, 'class': 'gb19-box gb19-top' }, sv);
+    // the viewer, a small generic figure on an arc
+    S('path', { d: 'M260,200 A150,150 0 0 1 310,50', 'class': 'gb19-route-todo' }, sv);
+    K.person(sv, 300 + 10 * c, 190 - 140 * s, 0.9);
+    K.T(sv, 300, 222, 'your view: ' + Math.round(th) + '° above the side', 'gb19-s');
+    var shape = th < 8 ? 'a rectangle' : th > 82 ? 'a circle' : 'a can, with an oval on top';
+    K.T(sv, cx, 222, 'You see ' + shape, 'gb19-t');
+    ro.set('From here the object looks like <b>' + shape + '</b>. From the side it is a rectangle; from straight above, a circle. Each view is a true view, and none is the whole. Nietzsche argued that all knowing is like this: there is no view "from nowhere," only perspectives, and philosophers forget theirs. Critics reply that if every view is only a perspective, that claim is a perspective too.');
+  }
+  var sl = V.slider(F.ctl, { label: 'Viewing angle', min: 0, max: 90, step: 1, value: th, fmt: function (v) { return v + '°'; }, input: function (v) { th = v; draw(); } });
+  V.seg(F.ctl, { label: 'Jump to', items: [['0', 'Side'], ['35', 'Between'], ['90', 'Above']], value: '', change: function (v) { th = +v; sl.set(th); draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.tocqueville-democracy-in-america (scripts/greatbooks/src/gb19.tocqueville-democracy-in-america/viz.js) ---- */
+  try { (function () {
+/* gb-tocqueville-journey: Tocqueville and Beaumont's journey, May 1831 to February 1832, on a rough sketch map
+   (our own drawing; places by longitude and latitude; uses ML.gb19kit). */
+ML.viz.register('gb-tocqueville-journey', function (el, opts, V) {
+  ML.gb19kit.route(el, V, { label: 'Map of Tocqueville\'s American journey, 1831 to 1832', w: 400, h: 300, proj: [-96, -65, 48.5, 28],
+    bg: [
+      { pts: [[-96, 48.5], [-65, 48.5], [-65, 45], [-67, 44.6], [-70, 43.6], [-70.6, 42.6], [-70, 41.8], [-71.5, 41.3], [-74, 40.5], [-74.3, 39.4], [-75.5, 38.3], [-76, 37], [-75.6, 35.3], [-77.9, 33.9], [-79.9, 32.8], [-81, 32], [-81.4, 30.3], [-80.6, 28], [-82.6, 28], [-82.8, 29], [-83.6, 29.8], [-84.6, 30], [-86.2, 30.4], [-88, 30.5], [-89.6, 30.2], [-89.3, 29.2], [-90.6, 29.1], [-92.2, 29.6], [-94.2, 29.6], [-96, 28.8]] },
+      { pts: [[-92, 46.7], [-89.3, 48.1], [-85, 47], [-84.5, 46.4], [-87.2, 46.4]], cls: 'gb19-lake' },
+      { pts: [[-87.8, 42], [-87.6, 45.6], [-85, 46], [-86.3, 43.6], [-86.6, 42.1]], cls: 'gb19-lake' },
+      { pts: [[-84.6, 45.9], [-82.4, 45.9], [-81.4, 45.1], [-81.7, 43.3], [-82.5, 43], [-83.5, 44]], cls: 'gb19-lake' },
+      { pts: [[-83.4, 41.7], [-81, 42.3], [-79, 42.9], [-79.3, 42.4], [-81.6, 41.5]], cls: 'gb19-lake' },
+      { pts: [[-79.8, 43.3], [-76.3, 44.1], [-76.2, 43.4], [-79, 43.2]], cls: 'gb19-lake' },
+      { pts: [[-76.3, 44.2], [-75, 45], [-73.6, 45.5], [-71.2, 46.8], [-68, 48.6]], cls: 'gb19-river', open: true },
+      { pts: [[-95.2, 47.3], [-93.2, 44.9], [-91.2, 43.5], [-91.1, 40.8], [-90.2, 38.6], [-89.2, 37], [-90, 35.1], [-91.1, 33], [-91.5, 31.2], [-90.1, 30], [-89.4, 29.2]], cls: 'gb19-river', open: true },
+      { pts: [[-80, 40.44], [-80.7, 39.5], [-82.6, 38.6], [-84.5, 39.1], [-85.76, 38.25], [-87.6, 37.9], [-89.2, 37]], cls: 'gb19-river', open: true },
+      { pts: [[-74, 40.7], [-73.9, 41.5], [-73.75, 42.65]], cls: 'gb19-river', open: true }
+    ],
+    labels: [[[-70, 35.5], 'Atlantic Ocean'], [[-89, 28.6], 'Gulf of Mexico'], [[-92.8, 38.5], 'Mississippi'], [[-83.2, 37.8], 'Ohio River']],
+    stops: [
+      { p: [-71.3, 41.5], t: 'Newport', html: 'May 9, 1831. Alexis de Tocqueville, 25, and his friend Gustave de Beaumont land after five weeks at sea. Their official task: to study American prisons for the French government.' },
+      { p: [-74, 40.7], t: 'New York', html: 'May to June 1831. They visit Sing Sing prison up the Hudson and are swept into dinners, balls and endless conversations. Everyone, Tocqueville notes, talks politics.', dy: 14 },
+      { p: [-73.75, 42.65], t: 'Albany', html: 'July 4, 1831. They watch Independence Day celebrated by citizens who feel the nation is their own.' },
+      { p: [-78.9, 42.9], t: 'Buffalo', html: 'Mid-July 1831. On to the frontier, and Niagara Falls.' },
+      { p: [-83.05, 42.33], t: 'Detroit', html: 'July 1831. They buy horses and ride into the forest to see the edge of settlement.', dx: -8 },
+      { p: [-84, 43.4], t: 'Saginaw', html: 'July 1831. Days in the wilderness, with pioneers clearing land. Tocqueville later wrote a sketch, "A Fortnight in the Wilds."' },
+      { p: [-88, 44.5], t: 'Green Bay', html: 'August 1831. By steamboat across the Great Lakes, by way of Mackinac.' },
+      { p: [-73.6, 45.5], t: 'Montreal and Quebec', html: 'August 1831. In French Canada they find people of their own language living under British rule.' },
+      { p: [-71.06, 42.36], t: 'Boston', html: 'September 1831. Conversations with leading New Englanders about town meetings, the root, Tocqueville decides, of American self-government.' },
+      { p: [-75.16, 39.95], t: 'Philadelphia', html: 'October 1831. They study the new Eastern State Penitentiary, built on solitary confinement.', dx: -8, dy: 14 },
+      { p: [-76.6, 39.3], t: 'Baltimore', html: 'November 1831. Tocqueville meets Charles Carroll, the last living signer of the Declaration of Independence.' },
+      { p: [-80, 40.44], t: 'Pittsburgh', html: 'November 1831. West over the mountains, then by steamboat down the Ohio River.' },
+      { p: [-84.5, 39.1], t: 'Cincinnati', html: 'December 1831. On the Ohio River, Tocqueville compares the free state of Ohio with slave-holding Kentucky across the water, and judges that slavery harms the society that keeps it, as well as the enslaved.' },
+      { p: [-85.76, 38.25], t: 'Louisville', html: 'December 1831. With the river frozen, they travel overland through Kentucky and Tennessee in bitter cold.', dy: 16 },
+      { p: [-90.05, 35.15], t: 'Memphis', html: 'December 1831. They watch Choctaw families, forced from their lands, crossing the icy Mississippi, a scene Tocqueville describes with sorrow.' },
+      { p: [-90.07, 29.95], t: 'New Orleans', html: 'January 1, 1832. By steamboat down the Mississippi to the city at its mouth.', dx: -8, dy: -10 },
+      { p: [-77.04, 38.9], t: 'Washington', html: 'January 1832. Overland through the South to the capital, where they meet President Andrew Jackson.' },
+      { p: [-74, 40.7], t: 'New York, home', html: 'February 20, 1832. They sail for France, nine months after landing. Volume 1 of <i>Democracy in America</i> appears in 1835, Volume 2 in 1840.', dx: -8, dy: 16 }
+    ] });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.marx-engels-manifesto (scripts/greatbooks/src/gb19.marx-engels-manifesto/viz.js) ---- */
+  try { (function () {
+/* gb-manifesto: the Manifesto's story of history, and what critics and later history said (our own summaries; uses ML.gb19kit). */
+ML.viz.register('gb-manifesto', function (el, opts, V) {
+  ML.gb19kit.cards(el, V, { label: 'The Communist Manifesto: its claims and the record', layout: 'col', setLabel: 'Show', set: opts.set || 'claims', sets: [
+    ['claims', 'The Manifesto\'s story', [
+      { t: 'Ancient society', s: 'free and slave, patrician and plebeian', html: 'Marx and Engels begin: the history of all society so far is the history of class struggles. In the ancient world the struggle was between free citizens and slaves.' },
+      { t: 'Feudal society', s: 'lord and serf, guild master and journeyman', html: 'In the Middle Ages, lords and serfs, guild masters and journeymen. Each age, they claim, ends when a new class overturns the old order.' },
+      { t: 'Bourgeois society', s: 'owners and wage workers', html: 'The modern middle class, the bourgeoisie, overthrew feudalism and built world markets, cities and industry. The Manifesto praises its achievements as "more massive and more colossal" than those of all earlier generations together, and then predicts its fall.' },
+      { t: 'The predicted revolution', s: 'workers take power', html: 'The authors predicted that wage workers, the proletariat, would grow poorer and more numerous until they overthrew the owners, abolished private property in the means of production, and in time ended classes altogether.' }
+    ]],
+    ['record', 'What critics and history said', [
+      { t: 'Wages and living standards', s: 'a key prediction failed', html: 'In the industrial countries, workers\' wages and living standards rose greatly over the following century rather than falling. Critics see this as a central failed prediction.' },
+      { t: 'Where revolutions came', s: 'not where predicted', html: 'Marx expected revolution in the most industrial countries, such as Britain. Revolutions in his name came instead in largely farming countries, such as Russia in 1917 and China in 1949.' },
+      { t: 'States that claimed his ideas', s: 'the 20th-century record', html: 'Governments that called themselves Marxist set up one-party rule and state-run economies. Their record includes famines, labor camps, mass executions and the loss of basic freedoms. The Soviet Union broke up in 1991. Some Marxists answer that these states betrayed Marx\'s ideas; most critics reply that the outcome followed from the plan to abolish private property and concentrate power.' },
+      { t: 'Lasting influence', s: 'why the book is still read', html: 'The Manifesto remains one of the most widely read political pamphlets ever written. Historians still use its attention to economic life and social class, even many who reject its conclusions. Labor laws, public schooling and other reforms it called for were also pursued by non-Marxist reformers in democratic countries.' }
+    ]]
+  ] });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.marx-capital (scripts/greatbooks/src/gb19.marx-capital/viz.js) ---- */
+  try { (function () {
+/* gb-workday: Marx's working day, split into "necessary" and "surplus" labor, with his rate of surplus value.
+   His terms, our own design (uses ML.gb19kit). The lesson notes that most economists today do not accept this theory of value. */
+ML.viz.register('gb-workday', function (el, opts, V) {
+  var K = ML.gb19kit, F = K.frame(el, 400, 150, 'Marx\'s working day: necessary and surplus labor'), sv = F.svg, ro = V.readout(el);
+  var day = opts.day || 12, nec = opts.nec || 6, sDay, sNec;
+  function draw() {
+    if (nec > day - 1) nec = day - 1;
+    K.clear(sv); var x0 = 20, W = 360, u = W / 16, sur = day - nec, rate = Math.round(sur / nec * 100);
+    K.T(sv, 200, 18, 'A ' + day + '-hour working day, in Marx\'s terms', 'gb19-t');
+    K.S('rect', { x: x0, y: 40, width: nec * u, height: 36, rx: 4, 'class': 'gb19-mutf' }, sv);
+    K.S('rect', { x: x0 + nec * u, y: 40, width: sur * u, height: 36, rx: 4, 'class': 'gb19-accf' }, sv);
+    for (var h = 0; h <= 16; h++) { K.S('line', { x1: x0 + h * u, y1: 80, x2: x0 + h * u, y2: h % 2 ? 84 : 88, 'class': 'gb19-ink' }, sv); if (h % 2 === 0) K.T(sv, x0 + h * u, 100, h + 'h', 'gb19-s'); }
+    K.T(sv, x0 + nec * u / 2, 63, nec + 'h necessary', 'gb19-onbar');
+    if (sur > 0) K.T(sv, x0 + nec * u + sur * u / 2, 63, sur + 'h surplus', 'gb19-onbar');
+    K.T(sv, 200, 130, 'rate of surplus value = ' + sur + ' ÷ ' + nec + ' = ' + rate + '%', 'gb19-t');
+    ro.set('Marx\'s claim: in the first <b>' + nec + ' hours</b> the worker produces value equal to his wage ("necessary labor"); in the remaining <b>' + sur + ' hours</b> he produces "surplus value" that goes to the owner. Marx\'s rate of surplus value is ' + sur + '/' + nec + ' = <b>' + rate + '%</b>. Factory laws limiting the working day, he argued, cut into this surplus. Most economists since the 1870s explain wages and profits differently, through supply, demand and the marginal value of labor and capital.');
+  }
+  sDay = V.slider(F.ctl, { label: 'Working day', min: 8, max: 16, step: 1, value: day, fmt: function (v) { return v + 'h'; }, input: function (v) { day = v; if (nec > day - 1) { nec = day - 1; sNec.set(nec); } draw(); } });
+  sNec = V.slider(F.ctl, { label: 'Necessary labor', min: 2, max: 10, step: 1, value: nec, fmt: function (v) { return v + 'h'; }, input: function (v) { nec = Math.min(v, day - 1); draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
   /* ---- gb19.faraday-experimental-researches (scripts/greatbooks/src/gb19.faraday-experimental-researches/viz.js) ---- */
   try { (function () {
 /* Faraday: a bar magnet and a coil joined to a galvanometer (his paragraph 39). The flux through the coil is modeled from
@@ -81,6 +441,383 @@
     return { update: draw };
   });
 })();
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.darwin-origin-of-species (scripts/greatbooks/src/gb19.darwin-origin-of-species/viz.js) ---- */
+  try { (function () {
+/* gb-selection: natural selection in a few generations. Beetles of two colors on light or dark ground; birds catch the
+   easy-to-see ones more often. Deterministic: 90% of hidden beetles and 50% of visible ones survive, and survivors
+   breed back to 40. Our own design (uses ML.gb19kit). */
+ML.viz.register('gb-selection', function (el, opts, V) {
+  var K = ML.gb19kit, F = K.frame(el, 400, 250, 'Beetles on light or dark ground, generation by generation'), sv = F.svg, ro = V.readout(el);
+  var N = 40, ground = opts.ground || 'dark', frac = 0.1, gen = 0, hist = [0.1];
+  function step() {
+    var dark = frac * N, light = N - dark, sd = ground === 'dark' ? 0.9 : 0.5, sl = ground === 'dark' ? 0.5 : 0.9;
+    var a = dark * sd, b = light * sl; frac = a / (a + b); gen++; hist.push(frac); if (hist.length > 13) hist.shift();
+  }
+  function draw() {
+    K.clear(sv); var S = K.S;
+    S('rect', { x: 10, y: 10, width: 230, height: 230, rx: 10, 'class': ground === 'dark' ? 'gb19-ground-d' : 'gb19-ground-l' }, sv);
+    var nd = Math.round(frac * N);
+    for (var i = 0; i < N; i++) {
+      var col = i % 8, row = Math.floor(i / 8), x = 30 + col * 27 + (row % 2) * 8, y = 34 + row * 44 + ((i * 37) % 11);
+      var isD = ((i * 17) % N) < nd;
+      S('ellipse', { cx: x, cy: y, rx: 7, ry: 9, 'class': isD ? 'gb19-beetle-d' : 'gb19-beetle-l' }, sv);
+      S('line', { x1: x, y1: y - 9, x2: x, y2: y + 9, 'class': 'gb19-beetle-line' }, sv);
+    }
+    K.T(sv, 320, 24, 'Share of dark beetles', 'gb19-s');
+    S('rect', { x: 255, y: 34, width: 135, height: 120, 'class': 'gb19-box' }, sv);
+    var pts = hist.map(function (f, j) { return (262 + j * 10) + ',' + (150 - f * 110); }).join(' ');
+    S('polyline', { points: pts, 'class': 'gb19-route' }, sv);
+    hist.forEach(function (f, j) { S('circle', { cx: 262 + j * 10, cy: 150 - f * 110, r: 2.5, 'class': 'gb19-dot gb19-dot-on' }, sv); });
+    K.T(sv, 386, 48, '100%', 'gb19-s', 'end'); K.T(sv, 386, 150, '0%', 'gb19-s', 'end');
+    K.T(sv, 320, 172, 'generation ' + gen, 'gb19-t');
+    K.T(sv, 320, 192, Math.round(frac * 100) + '% dark', 'gb19-t');
+    K.T(sv, 320, 214, ground === 'dark' ? 'dark beetles hide' : 'light beetles hide', 'gb19-s');
+    ro.set('Generation ' + gen + ': <b>' + Math.round(frac * 100) + '%</b> of the beetles are dark. On ' + ground + ' ground, birds spot the ' + (ground === 'dark' ? 'light' : 'dark') + ' beetles more easily, so fewer of them live to have young. No beetle changes color; the <b>population</b> changes, because some kinds survive and breed more. That is natural selection.');
+  }
+  V.seg(F.ctl, { label: 'Ground', items: [['dark', 'Dark ground'], ['light', 'Light ground']], value: ground, change: function (v) { ground = v; draw(); } });
+  V.button(F.ctl, 'Next generation', function () { step(); draw(); });
+  V.button(F.ctl, 'Start over', function () { frac = ground === 'dark' ? 0.1 : 0.9; gen = 0; hist = [frac]; draw(); });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.darwin-descent-of-man (scripts/greatbooks/src/gb19.darwin-descent-of-man/viz.js) ---- */
+  try { (function () {
+/* gb-homology: the same bones in four forelimbs (human arm, bat wing, whale flipper, bird wing), schematic, our own drawing.
+   Tap a bone group to light it up in all four. Uses ML.gb19kit. */
+ML.viz.register('gb-homology', function (el, opts, V) {
+  var K = ML.gb19kit, F = K.frame(el, 400, 210, 'Four forelimbs built from the same bones'), sv = F.svg, ro = V.readout(el), on = opts.group || 'up';
+  var G = { up: ['Upper arm', 'one bone (the humerus)'], fore: ['Forearm', 'two bones (radius and ulna)'], wrist: ['Wrist', 'a cluster of small bones'], hand: ['Hand', 'finger bones']};
+  // each limb: [label, outline path or null, segments [group, x1, y1, x2, y2, width]]
+  var L = [
+    ['Human arm', 'M41,8 L59,8 L61,64 L64,112 L68,122 L66,162 L34,162 L28,134 L36,116 L39,64 Z', [['up', 50, 14, 50, 62, 7], ['fore', 46, 66, 44, 110, 4], ['fore', 54, 66, 56, 110, 4], ['wrist', 50, 116, 50, 116, 9], ['hand', 42, 122, 38, 150, 3], ['hand', 47, 124, 46, 156, 3], ['hand', 52, 124, 53, 158, 3], ['hand', 57, 122, 60, 154, 3], ['hand', 41, 117, 30, 132, 3]]],
+    ['Bat wing', 'M18,12 L62,58 L96,24 L98,64 L88,104 L68,128 L40,150 Z', [['up', 18, 12, 36, 42, 6], ['fore', 36, 44, 62, 58, 3], ['fore', 37, 47, 61, 61, 2], ['wrist', 64, 60, 64, 60, 6], ['hand', 66, 58, 96, 24, 2], ['hand', 67, 61, 98, 64, 2], ['hand', 66, 64, 88, 104, 2], ['hand', 64, 66, 68, 128, 2], ['hand', 62, 57, 66, 48, 2]]],
+    ['Whale flipper', 'M40,10 C18,40 22,110 46,170 C70,110 74,40 52,10 Z', [['up', 46, 14, 46, 38, 11], ['fore', 41, 42, 39, 62, 7], ['fore', 51, 42, 53, 62, 7], ['wrist', 46, 70, 46, 70, 10], ['hand', 36, 80, 32, 138, 3], ['hand', 43, 82, 42, 158, 3], ['hand', 50, 82, 51, 160, 3], ['hand', 57, 80, 60, 140, 3]]],
+    ['Bird wing', 'M16,12 C60,30 96,60 98,104 C80,116 50,104 40,70 Z', [['up', 16, 12, 40, 48, 6], ['fore', 41, 50, 72, 70, 3], ['fore', 43, 53, 70, 74, 2], ['wrist', 75, 74, 75, 74, 6], ['hand', 77, 76, 96, 98, 4], ['hand', 76, 72, 82, 66, 2]]]
+  ];
+  function draw() {
+    K.clear(sv); var S = K.S;
+    L.forEach(function (lb, i) {
+      var g = S('g', { transform: 'translate(' + (i * 100) + ',0)' }, sv);
+      if (lb[1]) S('path', { d: lb[1], 'class': i === 0 ? 'gb19-skin' : 'gb19-membrane' }, g);
+      lb[2].forEach(function (s) {
+        var c = 'gb19-bone' + (s[0] === on ? ' gb19-bone-on' : '');
+        if (s[1] === s[3] && s[2] === s[4]) S('circle', { cx: s[1], cy: s[2], r: s[5] / 1.4, 'class': c + ' gb19-bonef' }, g);
+        else S('line', { x1: s[1], y1: s[2], x2: s[3], y2: s[4], 'stroke-width': s[5], 'class': c }, g);
+      });
+      K.T(g, 50, 196, lb[0], 'gb19-t');
+    });
+    ro.set('<b>' + G[on][0] + ':</b> ' + G[on][1] + ', highlighted in all four. A human arm, a bat\'s wing, a whale\'s flipper and a bird\'s wing do very different jobs, yet they are built on the same plan of bones. Darwin argued that such shared plans, called <b>homologies</b>, are best explained by descent from a common ancestor.');
+  }
+  V.seg(F.ctl, { label: 'Light up', items: Object.keys(G).map(function (k) { return [k, G[k][0]]; }), value: on, change: function (v) { on = v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.james-principles-of-psychology (scripts/greatbooks/src/gb19.james-principles-of-psychology/viz.js) ---- */
+  try { (function () {
+/* gb-james-emotion: the order of events in an emotion, common sense versus James (and Lange). Uses ML.gb19kit.cards.
+   gb-james-habit: an illustration (not data) of James's picture of habit: each repetition wears the path deeper and
+   the act takes less effort and attention. Our own designs. */
+ML.viz.register('gb-james-emotion', function (el, opts, V) {
+  ML.gb19kit.cards(el, V, { label: 'Two orders of an emotion', layout: 'row', h: 160, set: opts.set || 'common', setLabel: 'Order', sets: [
+    ['common', 'Common sense', [
+      { t: 'You see a bear', s: 'something happens', html: 'Something frightening happens.' },
+      { t: 'You feel afraid', s: 'the feeling', html: 'Common sense says the feeling of fear comes first...' },
+      { t: 'You tremble and run', s: 'the body', html: '...and then the body reacts. James thought this order was wrong.' }
+    ]],
+    ['james', 'James\'s order', [
+      { t: 'You see a bear', s: 'something happens', html: 'Something frightening happens.' },
+      { t: 'You tremble and run', s: 'the body reacts', html: 'James: the body reacts at once, heart pounding, muscles tense, before you have time to think.' },
+      { t: 'You feel afraid', s: 'feeling the body', html: 'The emotion is your feeling of those bodily changes. "We feel sorry because we cry, angry because we strike, afraid because we tremble," in his famous summary. Later research found that the body\'s state does shape emotion, but that how we read the situation matters too.' }
+    ]]
+  ] });
+});
+ML.viz.register('gb-james-habit', function (el, opts, V) {
+  var K = ML.gb19kit, F = K.frame(el, 400, 170, 'A path worn deeper by repetition'), sv = F.svg, ro = V.readout(el), n = opts.n || 1;
+  function draw() {
+    K.clear(sv); var d = Math.min(40, 6 * Math.log(1 + n) * 2.2), eff = Math.round(100 / (1 + n / 6));
+    K.S('rect', { x: 10, y: 20, width: 380, height: 90, rx: 10, 'class': 'gb19-ground-l' }, sv);
+    K.S('path', { d: 'M20,' + (60) + ' C120,' + (60 - d) + ' 280,' + (60 + d) + ' 380,60', 'class': 'gb19-groove', 'stroke-width': 2 + d / 2.5 }, sv);
+    K.person(sv, 20 + Math.min(360, n * 6), 52, 0.9);
+    K.T(sv, 200, 130, 'times repeated: ' + n, 'gb19-t');
+    K.S('rect', { x: 100, y: 140, width: 200, height: 10, rx: 3, 'class': 'gb19-box' }, sv);
+    K.S('rect', { x: 100, y: 140, width: 2 * eff, height: 10, rx: 3, 'class': 'gb19-accf' }, sv);
+    K.T(sv, 200, 165, 'effort and attention needed', 'gb19-s');
+    ro.set('After <b>' + n + '</b> repetition' + (n > 1 ? 's' : '') + ', the path is worn deeper and the act needs less effort and attention (an illustration, not a measurement). James compared habit to a path or a fold in paper: "make our nervous system our ally instead of our enemy," he urged, by making useful actions automatic early.');
+  }
+  V.slider(F.ctl, { label: 'Repetitions', min: 1, max: 60, step: 1, value: n, input: function (v) { n = v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.goethe-faust (scripts/greatbooks/src/gb19.goethe-faust/viz.js) ---- */
+  try { (function () {
+/* gb-faust-journey: the road through Faust, Parts One and Two, scene by scene (our own summaries; uses ML.gb19kit.cards). */
+ML.viz.register('gb-faust-journey', function (el, opts, V) {
+  ML.gb19kit.cards(el, V, { label: 'Faust\'s journey through the two parts of the play', layout: 'col', setLabel: 'Part', set: opts.part || 'one', sets: [
+    ['one', 'Part One (1808)', [
+      { t: 'Prologue in Heaven', s: 'a wager', html: 'As in the Book of Job, Mephistopheles asks leave to tempt a good man, the scholar Faust. The Lord allows it, saying that a person who strives may err, but a good man, even in his dark urges, knows the right way.' },
+      { t: 'Night', s: 'the scholar\'s despair', html: 'Faust has studied every subject and feels he knows nothing. He turns to magic, and is called back from despair by the Easter bells.' },
+      { t: 'The pact', s: 'Faust meets Mephistopheles', html: 'Mephistopheles, first appearing as a black poodle, offers to serve Faust. Faust wagers his soul: if he ever finds a moment so satisfying that he asks it to stay, he will be lost.' },
+      { t: 'Auerbach\'s Cellar and the Witch\'s Kitchen', s: 'low pleasures', html: 'Mephistopheles shows Faust rowdy students drinking, then has a witch give him a potion that makes him young again. Faust is not satisfied.' },
+      { t: 'Gretchen', s: 'the tragedy', html: 'Faust falls in love with a young townswoman, Gretchen (Margaret). Mephistopheles\' schemes bring ruin on her family, and she is condemned for a terrible act done in despair. Faust tries to free her from prison; she refuses to flee and puts herself in God\'s hands. A voice from above declares that she is saved.' }
+    ]],
+    ['two', 'Part Two (1832)', [
+      { t: 'A pleasant landscape', s: 'healing sleep', html: 'Spirits of nature let Faust sleep away his guilt and grief. He wakes ready to strive again.' },
+      { t: 'The emperor\'s court', s: 'paper money and illusions', html: 'Faust and Mephistopheles serve a careless emperor, inventing paper money and staging magic shows.' },
+      { t: 'Helen of Troy', s: 'the classical world', html: 'Faust seeks Helen, the ideal of Greek beauty, and in a dreamlike act they marry and have a son, Euphorion, who flies too high and falls.' },
+      { t: 'Land from the sea', s: 'useful work', html: 'Old and blind, Faust plans to drain a marsh and make land where free people can live and work. Imagining it, he says he could ask such a moment to stay, and he dies.' },
+      { t: 'Mountain gorges', s: 'Faust is saved', html: 'Angels carry off Faust\'s immortal part, because, they sing, whoever keeps striving can be redeemed. Gretchen, among the blessed, welcomes him. The play ends: "The Woman-Soul leadeth us upward and on!"' }
+    ]]
+  ] });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.austen-emma (scripts/greatbooks/src/gb19.austen-emma/viz.js) ---- */
+  try { (function () {
+/* gb-emma-matches: Highbury's matches, as Emma imagines them and as they turn out (our own summaries; uses ML.gb19kit.net). */
+ML.viz.register('gb-emma-matches', function (el, opts, V) {
+  ML.gb19kit.net(el, V, { label: 'The people of Emma and their matches', w: 400, h: 300, set: opts.set || 'plans', setLabel: 'Show', sets: [
+    ['plans', 'Emma\'s plans', 'Emma\'s matchmaking, as she imagines it. Tap a name.'],
+    ['real', 'What really happens', 'How things actually turn out by the end. Tap a name.']
+  ], nodes: [
+    { id: 'em', x: 200, y: 150, t: 'Emma Woodhouse', s: 'the matchmaker', html: 'Handsome, clever and rich, nearly twenty-one, and sure she knows everyone\'s heart. She has vowed never to marry. She misreads almost everyone, herself most of all.' },
+    { id: 'ha', x: 70, y: 60, t: 'Harriet Smith', s: 'Emma\'s new friend', html: 'A sweet, simple girl of unknown parents. Emma talks her out of accepting the farmer Robert Martin, to aim higher.' },
+    { id: 'el', x: 200, y: 40, t: 'Mr. Elton', s: 'the vicar', html: 'Emma plans him for Harriet. He has been courting Emma all along, and when refused, he marries the vain Augusta Hawkins.' },
+    { id: 'rm', x: 60, y: 240, t: 'Robert Martin', s: 'a good farmer', html: 'Honest and steady; Mr. Knightley thinks highly of him. Harriet marries him in the end.' },
+    { id: 'fc', x: 330, y: 60, t: 'Frank Churchill', s: 'charming visitor', html: 'Mr. Weston\'s son, who flirts with Emma in public, while hiding a secret engagement to Jane Fairfax.' },
+    { id: 'jf', x: 340, y: 150, t: 'Jane Fairfax', s: 'reserved and gifted', html: 'Miss Bates\'s niece, accomplished and poor. Emma half-envies her and spreads a foolish guess about her. She is secretly engaged to Frank.' },
+    { id: 'kn', x: 200, y: 260, t: 'Mr. Knightley', s: 'neighbor and old friend', html: 'Sixteen years older than Emma, sensible and kind, and "the only one who ever told her of" her faults. Emma realizes late that she loves him.' },
+    { id: 'ae', x: 330, y: 250, t: 'Mrs. Elton', s: 'Augusta Hawkins', html: 'Mr. Elton\'s bride: pushy and showy, a comic portrait of vanity.' }
+  ], edges: [
+    { a: 'ha', b: 'el', t: 'Emma\'s plan', set: 'plans', cls: 'gb19-eg gb19-dash' },
+    { a: 'ha', b: 'rm', t: 'refused, at Emma\'s urging', set: 'plans', cls: 'gb19-dash', dx: 30 },
+    { a: 'em', b: 'fc', t: 'Emma imagines', set: 'plans', cls: 'gb19-eg gb19-dash' },
+    { a: 'ha', b: 'fc', t: 'Emma\'s next guess', set: 'plans', cls: 'gb19-eg gb19-dash', dy: -10 },
+    { a: 'ha', b: 'rm', t: 'marry', set: 'real', cls: 'gb19-ea' },
+    { a: 'fc', b: 'jf', t: 'secretly engaged', set: 'real', cls: 'gb19-ea' },
+    { a: 'em', b: 'kn', t: 'marry', set: 'real', cls: 'gb19-ea' },
+    { a: 'el', b: 'ae', t: 'marry', set: 'real', cls: 'gb19-ea', dx: 30 },
+    { a: 'el', b: 'em', t: 'he courted Emma', set: 'real', cls: 'gb19-dash' }
+  ] });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.balzac-cousin-bette (scripts/greatbooks/src/gb19.balzac-cousin-bette/viz.js) ---- */
+  try { (function () {
+/* gb-bette-family: the Hulot and Fischer families and the people around them in Cousin Bette (our own summaries; ML.gb19kit.net). */
+ML.viz.register('gb-bette-family', function (el, opts, V) {
+  ML.gb19kit.net(el, V, { label: 'The families of Cousin Bette', w: 400, h: 310, hint: 'Tap a name to read about each person. Gold lines are family; dashed lines are Bette\'s schemes.', nodes: [
+    { id: 'be', x: 80, y: 40, t: 'Lisbeth Fischer', s: '"Cousin Bette"', html: 'A poor relation from a peasant family in the Vosges, plain and proud. As children she worked while her pretty cousin Adeline was petted. She seems devoted to the Hulots, but envy has been growing in her for decades.' },
+    { id: 'ad', x: 300, y: 40, t: 'Adeline Hulot', s: 'Bette\'s cousin', html: 'A village beauty who married a rising officer of Napoleon\'s army and became a baroness. Patient, generous and long-suffering, she forgives her husband again and again.' },
+    { id: 'hh', x: 338, y: 120, t: 'Baron Hulot', s: 'Adeline\'s husband', html: 'A once-brilliant official whose reckless pursuit of other women drains the family\'s money and honor. Balzac shows his weakness growing like a disease.' },
+    { id: 'ho', x: 75, y: 200, t: 'Hortense', s: 'the Hulots\' daughter', html: 'She marries Wenceslas, the young artist Bette had secretly hoped to keep for herself, which turns Bette\'s quiet envy into a plan for revenge.' },
+    { id: 'wn', x: 70, y: 120, t: 'Wenceslas Steinbock', s: 'a Polish sculptor', html: 'A gifted but weak exile whom Bette rescued and supported. He has talent, but little will to work.' },
+    { id: 'vi', x: 330, y: 200, t: 'Victorin Hulot', s: 'the Hulots\' son', html: 'A sober lawyer who tries to save the family\'s finances and name.' },
+    { id: 'cr', x: 300, y: 280, t: 'Célestin Crevel', s: 'a rich retired perfumer', html: 'Victorin\'s father-in-law, vain and self-made, a rival of Baron Hulot.' },
+    { id: 'va', x: 215, y: 120, t: 'Valérie Marneffe', s: 'Bette\'s ally', html: 'A scheming young wife who, with Bette\'s help, entangles several men, Hulot and Crevel among them, and takes their money.' }
+  ], edges: [
+    { a: 'be', b: 'ad', t: 'cousins', cls: 'gb19-eg' },
+    { a: 'ad', b: 'hh', t: 'married', cls: 'gb19-eg' },
+    { a: 'hh', b: 'ho', t: 'daughter', cls: 'gb19-eg', dx: -30, dy: 14 }, { a: 'hh', b: 'vi', t: 'son', cls: 'gb19-eg' },
+    { a: 'ho', b: 'wn', t: 'married', cls: 'gb19-eg' },
+    { a: 'vi', b: 'cr', t: 'his father-in-law', cls: 'gb19-eg' },
+    { a: 'be', b: 'wn', t: 'her protégé', cls: 'gb19-dash' },
+    { a: 'be', b: 'va', t: 'allies', cls: 'gb19-ea gb19-dash' },
+    { a: 'va', b: 'hh', t: 'ruins', cls: 'gb19-ea gb19-dash', dy: -22 },
+    { a: 'va', b: 'cr', t: 'ruins', cls: 'gb19-ea gb19-dash' }
+  ] });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.melville-moby-dick (scripts/greatbooks/src/gb19.melville-moby-dick/viz.js) ---- */
+  try { (function () {
+/* gb-pequod-voyage: the Pequod's voyage and its meetings ("gams") with other ships, on a rough world sketch of our own.
+   Places follow the novel loosely; the continents are simplified shapes. Uses ML.gb19kit.route. */
+ML.viz.register('gb-pequod-voyage', function (el, opts, V) {
+  ML.gb19kit.route(el, V, { label: 'Map of the Pequod\'s voyage in Moby-Dick', w: 400, h: 250, proj: [-85, 185, 52, -48],
+    bg: [
+      { pts: [[-85, 52], [-56, 52], [-60, 46], [-70, 42], [-75, 38], [-76, 35], [-81, 31], [-80, 26], [-81, 9], [-75, 11], [-62, 10], [-52, 5], [-50, 0], [-35, -6], [-39, -15], [-41, -22], [-48, -27], [-53, -34], [-58, -38], [-65, -42], [-68, -48], [-85, -48]] },
+      { pts: [[-17, 21], [-17, 14], [-12, 8], [-8, 4], [5, 5], [9, 4], [10, -2], [13, -10], [12, -17], [15, -27], [18, -34], [20, -35], [26, -34], [33, -27], [35, -20], [40, -15], [40, -5], [43, 0], [51, 12], [43, 12], [35, 28], [32, 31], [20, 32], [10, 37], [-5, 36], [-10, 30]] },
+      { pts: [[-10, 36], [-10, 52], [142, 52], [142, 46], [135, 42], [129, 35], [122, 40], [121, 31], [117, 24], [108, 21], [106, 11], [103, 1], [100, 6], [98, 15], [92, 22], [88, 22], [80, 15], [77, 8], [73, 20], [67, 25], [57, 25], [56, 22], [52, 16], [44, 12], [42, 15], [35, 28], [34, 31], [28, 37], [20, 40], [12, 44], [3, 43], [-5, 36]] },
+      { pts: [[130, 31], [141, 36], [142, 40], [141, 45], [139, 38], [133, 34]] },
+      { pts: [[95, 5], [106, -6], [102, -3]] }, { pts: [[105, -6], [115, -8], [106, -7.5]] },
+      { pts: [[109, 1], [117, 7], [119, 1], [116, -4], [110, -3]] },
+      { pts: [[132, -1], [141, -3], [150, -10], [141, -9]] },
+      { pts: [[114, -22], [122, -17], [130, -12], [137, -12], [142, -11], [146, -19], [153, -25], [151, -34], [145, -38], [138, -35], [131, -31], [115, -34], [113, -26]] },
+      { pts: [[44, -25], [47, -13], [50, -15], [47, -25]] }
+    ],
+    labels: [[[-40, 30], 'Atlantic'], [[75, -25], 'Indian Ocean'], [[165, 20], 'Pacific'], [[-60, -1], 'equator', 'gb19-map']],
+    stops: [
+      { p: [-70.1, 41.3], t: 'Nantucket', html: 'Ishmael and his friend Queequeg sign on to the whaling ship <i>Pequod</i>, which sails on Christmas Day. Captain Ahab stays hidden in his cabin.', dy: 14 },
+      { p: [-40, 25], t: 'The Atlantic', html: 'Ahab appears on deck at last, with a leg made from a whale\'s jawbone. He nails a gold coin to the mast for the first man to sight the white whale that took his leg, Moby Dick.' },
+      { p: [15, -40], t: 'Off the Cape of Good Hope', html: 'The first meetings, or "gams," with other ships: the <i>Goney</i>, then the <i>Town-Ho</i>, whose crew has a strange story about the white whale.' },
+      { p: [65, -20], t: 'The Indian Ocean', html: 'More gams: the <i>Jeroboam</i>, with a wild prophet aboard who warns against Moby Dick, and the German <i>Jungfrau</i>.' },
+      { p: [104, -7], t: 'The Sunda Strait', html: 'Near Java the <i>Pequod</i> meets a vast herd of whales, the "Grand Armada," and Ishmael glimpses mother whales and their young swimming calmly at the center.', dx: -8 },
+      { p: [128, 10], t: 'Toward the Pacific', html: 'The French <i>Rose-Bud</i>, and the English <i>Samuel Enderby</i>, whose captain lost an arm to Moby Dick and wants nothing more to do with him.' },
+      { p: [150, 30], t: 'The Japanese whaling grounds', html: 'The cheerful <i>Bachelor</i>, homeward bound and full of oil; then a typhoon. Starbuck, the first mate, begs Ahab to turn back.' },
+      { p: [170, 1], t: 'The equator, Pacific', html: 'The <i>Rachel</i> is searching for its captain\'s lost son; Ahab will not stop to help. After the <i>Delight</i>, which has lost men to Moby Dick, the three-day chase ends with the ship sunk. Only Ishmael survives, floating on Queequeg\'s coffin, until the <i>Rachel</i> finds him.', dx: -8, dy: 16 }
+    ] });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.dickens-little-dorrit (scripts/greatbooks/src/gb19.dickens-little-dorrit/viz.js) ---- */
+  try { (function () {
+/* gb-circumlocution: Dickens's Circumlocution Office as a game that never ends: every form sends you to another department.
+   Our own design (uses ML.gb19kit). */
+ML.viz.register('gb-circumlocution', function (el, opts, V) {
+  var K = ML.gb19kit, F = K.frame(el, 400, 250, 'The Circumlocution Office: a loop of departments'), sv = F.svg, ro = V.readout(el);
+  var OF = ['Front desk', 'Department of Forms', 'Barnacle Junior', 'Records Room', 'Secretary\'s Office', 'Mr. Tite Barnacle'];
+  var SAY = ['Have you an appointment? Fill in this form and take it upstairs.', 'This form is the wrong form. Take the right form to Barnacle Junior.', '"Upon my soul you mustn\'t come into the place saying you want to know, you know!" (Dickens\'s own words.) Try the Records Room.', 'That file has been sent to the Secretary. Ask there.', 'The Secretary is engaged. Leave your name and apply to Mr. Tite Barnacle.', 'Mr. Barnacle is not at liberty. Kindly call again, beginning at the front desk.'];
+  var cur = 0, visits = 0;
+  function draw() {
+    K.clear(sv); var cx = 200, cy = 125, R = 88;
+    K.S('circle', { cx: cx, cy: cy, r: R, 'class': 'gb19-route-todo' }, sv);
+    OF.forEach(function (o, i) {
+      var a = -Math.PI / 2 + i * 2 * Math.PI / OF.length, x = cx + R * Math.cos(a), y = cy + R * Math.sin(a);
+      var g = K.S('g', { 'class': 'gb19-it' + (i === cur ? ' gb19-on' : '') }, sv), w = o.length * 6.4 + 14;
+      K.S('rect', { x: x - w / 2, y: y - 12, width: w, height: 24, rx: 7, 'class': 'gb19-box' }, g);
+      K.T(g, x, y + 4, o, 'gb19-t');
+    });
+    K.T(sv, cx, cy - 6, 'Forms filed: ' + visits, 'gb19-t');
+    K.T(sv, cx, cy + 12, 'Answers received: 0', 'gb19-s');
+    ro.set('<b>' + OF[cur] + ':</b> ' + SAY[cur] + ' <span class="gb19-s">(Lines in our words except where marked.)</span>' + (visits >= OF.length ? ' <i>You have been all the way round ' + Math.floor(visits / OF.length) + ' time' + (visits >= 2 * OF.length ? 's' : '') + '. Dickens: the Office had mastered "the art of perceiving—HOW NOT TO DO IT."</i>' : ''));
+  }
+  V.button(F.ctl, 'File the form', function () { visits++; cur = (cur + 1) % OF.length; draw(); });
+  V.button(F.ctl, 'Start again', function () { visits = 0; cur = 0; draw(); });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.tolstoy-war-and-peace (scripts/greatbooks/src/gb19.tolstoy-war-and-peace/viz.js) ---- */
+  try { (function () {
+/* gb-1812: Napoleon's invasion of Russia in 1812 and the retreat, as War and Peace follows it (our own sketch map; rivers simplified).
+   Dates are New Style (the Western calendar). Uses ML.gb19kit.route. */
+ML.viz.register('gb-1812', function (el, opts, V) {
+  ML.gb19kit.route(el, V, { label: 'Map of the 1812 campaign in War and Peace', w: 400, h: 250, sea: false, proj: [21.5, 39.5, 56.6, 53.2],
+    bg: [
+      { pts: [[21.5, 56.6], [39.5, 56.6], [39.5, 53.2], [21.5, 53.2]], cls: 'gb19-land' },
+      { pts: [[24.0, 53.4], [23.9, 54.9], [22.0, 55.1]], cls: 'gb19-river', open: true },
+      { pts: [[33.5, 55.6], [32.05, 54.78], [30.4, 54.5], [30.0, 53.9], [30.3, 53.2]], cls: 'gb19-river', open: true },
+      { pts: [[35.2, 55.6], [37.6, 55.75], [38.8, 55.1]], cls: 'gb19-river', open: true },
+      { pts: [[28.6, 55.3], [28.3, 54.3], [29.2, 53.2]], cls: 'gb19-river', open: true }
+    ],
+    labels: [[[22.6, 53.5], 'Neman'], [[30.9, 53.6], 'Dnieper'], [[28.0, 55.5], 'Berezina'], [[38.4, 55.3], 'Moskva']],
+    stops: [
+      { p: [23.9, 54.9], t: 'Crossing the Neman', html: 'June 24, 1812. Napoleon\'s Grand Army, perhaps 450,000 to 600,000 men from many nations, crosses into Russia. Tolstoy shows Polish lancers drowning in a river to impress the Emperor, who barely notices.', always: true, dy: 18 },
+      { p: [25.3, 54.7], t: 'Vilna', html: 'Tsar Alexander hears of the invasion at a ball. The Russian armies fall back, refusing battle.', dy: 16 },
+      { p: [32.05, 54.78], t: 'Smolensk', html: 'August 1812. After hard fighting the city burns. Old Prince Bolkonsky\'s estate, Bald Hills, lies in the army\'s path; Princess Mary must flee.', always: true },
+      { p: [35.8, 55.52], t: 'Borodino', html: 'September 7, 1812. The great battle, with tens of thousands killed or wounded on each side. Pierre wanders the field in a white hat; Prince Andrew is gravely wounded. Neither side wins outright, but the Russian army survives.', always: true },
+      { p: [37.6, 55.75], t: 'Moscow', html: 'September 14. The French enter an emptied city, which soon burns. The Rostovs leave and, at Natasha\'s urging, give their carts to the wounded. Pierre stays behind and is taken prisoner.', always: true, dx: -8 },
+      { p: [36.6, 55.0], t: 'Maloyaroslavets', html: 'October 24. Napoleon tries to march south; after a battle here he turns back along the ravaged road he came by. Old General Kutuzov waits, letting the winter and the long road do their work.', dy: 16 },
+      { p: [34.3, 55.2], t: 'Vyazma and the retreat', html: 'November. Cold, hunger and partisans wear down the French. Denisov and Dolokhov\'s raiders free Pierre; young Petya Rostov is killed in the attack.' },
+      { p: [28.3, 54.3], t: 'The Berezina', html: 'November 26 to 29. The remnants of the Grand Army cross the river on hastily built bridges, with terrible losses.', always: true, dx: -8 },
+      { p: [23.9, 54.9], t: 'Out of Russia', html: 'December 1812. Only a small fraction of the army that invaded crosses back. Tolstoy asks: did Napoleon\'s orders decide any of this, or millions of people\'s choices?', dy: -12 }
+    ] });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.george-eliot-middlemarch (scripts/greatbooks/src/gb19.george-eliot-middlemarch/viz.js) ---- */
+  try { (function () {
+/* gb-middlemarch-web: the town's four main stories and how they tangle (our own summaries; uses ML.gb19kit.net). */
+ML.viz.register('gb-middlemarch-web', function (el, opts, V) {
+  ML.gb19kit.net(el, V, { label: 'The web of Middlemarch', w: 400, h: 310, hint: 'Tap a name. Gold lines are marriages; other lines show how the stories touch.', nodes: [
+    { id: 'do', x: 80, y: 40, t: 'Dorothea Brooke', s: 'longs to do great good', html: 'Young, earnest and generous, she marries the elderly scholar Casaubon, hoping to help his great work. She learns, painfully, to see others as they are, and finds her life in many small acts of goodness.' },
+    { id: 'ca', x: 300, y: 40, t: 'Mr. Casaubon', s: 'an elderly scholar', html: 'He has spent decades on a "Key to all Mythologies" he will never finish. Cold and jealous, he leaves a will meant to control Dorothea after his death.' },
+    { id: 'wl', x: 90, y: 120, t: 'Will Ladislaw', s: 'Casaubon\'s young cousin', html: 'A lively, idealistic artist and journalist. Dorothea gives up Casaubon\'s fortune to marry him.' },
+    { id: 'ly', x: 300, y: 120, t: 'Tertius Lydgate', s: 'a new young doctor', html: 'Ambitious to reform medicine, he is dragged down by debt and an unhappy marriage, and his hopes shrink.' },
+    { id: 'ro', x: 300, y: 200, t: 'Rosamond Vincy', s: 'the mayor\'s daughter', html: 'Beautiful and self-absorbed, she marries Lydgate for his position and resists every sacrifice.' },
+    { id: 'fr', x: 90, y: 200, t: 'Fred Vincy', s: 'Rosamond\'s brother', html: 'Good-natured and idle, deep in debt, he grows up through honest work for Caleb Garth to deserve Mary.' },
+    { id: 'ma', x: 75, y: 280, t: 'Mary Garth', s: 'plain-spoken and wise', html: 'She will not marry Fred unless he becomes a man with a useful calling. Her father Caleb is the novel\'s picture of honest work.' },
+    { id: 'bu', x: 330, y: 280, t: 'Mr. Bulstrode', s: 'a pious banker', html: 'Respected and powerful, he hides a shameful past. When it comes to light, his fall nearly drags Lydgate down with him.' },
+    { id: 'fa', x: 205, y: 280, t: 'Mr. Farebrother', s: 'the kindly vicar', html: 'A wise, tolerant clergyman who loves Mary but helps Fred win her.' }
+  ], edges: [
+    { a: 'do', b: 'ca', t: 'first marriage', cls: 'gb19-eg' },
+    { a: 'do', b: 'wl', t: 'second marriage', cls: 'gb19-eg', dx: 4 },
+    { a: 'ca', b: 'wl', t: 'cousins', cls: 'gb19-dash', dx: 40, dy: 16 },
+    { a: 'ly', b: 'ro', t: 'married', cls: 'gb19-eg' },
+    { a: 'ro', b: 'fr', t: 'brother and sister', cls: 'gb19-dash' },
+    { a: 'fr', b: 'ma', t: 'marry at last', cls: 'gb19-eg' },
+    { a: 'bu', b: 'ly', t: 'debt and scandal', cls: 'gb19-ea gb19-dash', dx: -50, dy: 42 },
+    { a: 'do', b: 'ly', t: 'she trusts him', cls: 'gb19-ea gb19-dash', dx: 30, dy: -4 },
+    { a: 'fa', b: 'ma', t: 'friend', cls: 'gb19-dash' }
+  ] });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.ibsen-plays (scripts/greatbooks/src/gb19.ibsen-plays/viz.js) ---- */
+  try { (function () {
+/* gb-ibsen-past: in each of the four plays, a hidden past comes to light (our own summaries; uses ML.gb19kit.cards). */
+ML.viz.register('gb-ibsen-past', function (el, opts, V) {
+  ML.gb19kit.cards(el, V, { label: 'How the hidden past comes to light in four plays by Ibsen', layout: 'col', setLabel: 'Play', set: opts.play || 'doll', sets: [
+    ['doll', 'A Doll\'s House (1879)', [
+      { t: 'The secret', s: 'years before the play', html: 'When her husband Torvald was ill, Nora secretly borrowed money to take him south to recover, forging her dying father\'s signature, since a wife could not borrow without a man\'s consent.' },
+      { t: 'The pressure', s: 'Christmas week', html: 'Krogstad, the clerk who lent her the money, is about to lose his job at Torvald\'s bank. He threatens to reveal the forgery unless Nora saves his place.' },
+      { t: 'The letter', s: 'Act III', html: 'Torvald reads Krogstad\'s letter and turns on Nora, caring only for his reputation. When the danger passes, he forgives her as if nothing happened.' },
+      { t: 'The door', s: 'the ending', html: 'Nora sees that she has been treated like a doll all her life. She tells Torvald she must learn to think for herself, and walks out, closing the door behind her.' }
+    ]],
+    ['duck', 'The Wild Duck (1884)', [
+      { t: 'The secret', s: 'years before the play', html: 'The Ekdal family\'s modest happiness rests on a past they do not know: the rich merchant Werle arranged Hjalmar Ekdal\'s marriage and quietly supports them.' },
+      { t: 'The idealist', s: 'Gregers arrives', html: 'Werle\'s son Gregers believes everyone must live in the truth, and decides to tell his friend Hjalmar everything.' },
+      { t: 'The doctor', s: 'the "life-illusion"', html: 'Dr. Relling warns that most people need their comforting illusions to go on living.' },
+      { t: 'The cost', s: 'the ending', html: 'Gregers\'s truth-telling breaks the family apart and ends in a heartbreaking tragedy for the Ekdals\' young daughter, Hedvig, who loves the wild duck in the attic.' }
+    ]],
+    ['hedda', 'Hedda Gabler (1890)', [
+      { t: 'The past', s: 'before the play', html: 'Hedda, a general\'s proud daughter, has married a dull scholar, Tesman, out of boredom. Years before, she knew the brilliant, troubled writer Eilert Lövborg.' },
+      { t: 'The return', s: 'Lövborg\'s new book', html: 'Lövborg returns with a new manuscript, a work of genius, written with the help of the gentle Thea Elvsted.' },
+      { t: 'The manuscript', s: 'Act III', html: 'When the manuscript falls into Hedda\'s hands, she destroys it out of jealousy and a wish to control another\'s fate.' },
+      { t: 'The trap', s: 'the ending', html: 'Caught in the consequences and unwilling to live under another\'s power, Hedda ends the play in tragedy.' }
+    ]],
+    ['builder', 'The Master Builder (1892)', [
+      { t: 'The past', s: 'before the play', html: 'Halvard Solness rose to fame as a builder after a fire destroyed his wife\'s family home, a fortune he secretly feels guilty about.' },
+      { t: 'The young', s: 'fear of being replaced', html: 'He fears the younger generation, and keeps his gifted assistant Ragnar from striking out on his own.' },
+      { t: 'Hilde', s: 'a promise remembered', html: 'A young woman, Hilde Wangel, arrives saying that ten years ago he promised her "a kingdom," and urges him to climb his new tower as he once did.' },
+      { t: 'The tower', s: 'the ending', html: 'Solness, afraid of heights, climbs the tower to hang a wreath, and falls.' }
+    ]]
+  ] });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.dostoevsky-brothers-karamazov (scripts/greatbooks/src/gb19.dostoevsky-brothers-karamazov/viz.js) ---- */
+  try { (function () {
+/* gb-karamazov-family: the Karamazovs and those around them (our own summaries; uses ML.gb19kit.net). */
+ML.viz.register('gb-karamazov-family', function (el, opts, V) {
+  ML.gb19kit.net(el, V, { label: 'The Karamazov family and the people around them', w: 400, h: 315, hint: 'Tap a name. Gold lines are family; others show the main ties.', nodes: [
+    { id: 'fy', x: 200, y: 40, t: 'Fyodor Karamazov', s: 'the father', html: 'A greedy, mocking landowner who neglected all his sons. His murder is the mystery at the center of the novel.' },
+    { id: 'dm', x: 70, y: 125, t: 'Dmitri (Mitya)', s: 'eldest son, a soldier', html: 'Passionate, reckless and generous, he quarrels with his father over money and love, and is accused of the murder. In prison he finds a new sense of guilt and hope.' },
+    { id: 'iv', x: 200, y: 125, t: 'Ivan', s: 'second son, a thinker', html: 'A brilliant, proud intellectual who cannot accept a world with so much suffering, and who tells Alyosha the story of the Grand Inquisitor.' },
+    { id: 'al', x: 330, y: 125, t: 'Alyosha', s: 'youngest son', html: 'Gentle and loving, a novice at the monastery under the elder Zosima. The narrator calls him the hero of the book.' },
+    { id: 'sm', x: 200, y: 215, t: 'Smerdyakov', s: 'the servant', html: 'The household cook, rumored to be Fyodor\'s unacknowledged son. He has taken Ivan\'s idea that "everything is lawful" in a dangerous direction.' },
+    { id: 'zo', x: 345, y: 40, t: 'Father Zosima', s: 'the elder', html: 'A wise, loving monk who teaches that each person is responsible to all, and sends Alyosha out into the world.' },
+    { id: 'gr', x: 65, y: 215, t: 'Grushenka', s: 'a proud young woman', html: 'Both Fyodor and Dmitri want her; in the end she stands by Dmitri.' },
+    { id: 'ka', x: 200, y: 290, t: 'Katerina Ivanovna', s: 'Dmitri\'s fiancée', html: 'Proud and wounded, she is torn between Dmitri and Ivan, and her testimony at the trial is decisive.' },
+    { id: 'il', x: 330, y: 215, t: 'Ilyusha and the boys', s: 'schoolboys', html: 'A sick, poor boy and his schoolmates, whom Alyosha befriends. The novel ends with Alyosha speaking to the boys at Ilyusha\'s stone.' }
+  ], edges: [
+    { a: 'fy', b: 'dm', cls: 'gb19-eg' }, { a: 'fy', b: 'iv', cls: 'gb19-eg' }, { a: 'fy', b: 'al', cls: 'gb19-eg' },
+    { a: 'fy', b: 'sm', t: 'rumored son', cls: 'gb19-eg gb19-dash' },
+    { a: 'iv', b: 'sm', t: 'ideas taken up', cls: 'gb19-ea gb19-dash' },
+    { a: 'al', b: 'zo', t: 'his teacher', cls: 'gb19-ea' },
+    { a: 'dm', b: 'gr', t: 'love', cls: 'gb19-ea' },
+    { a: 'dm', b: 'ka', t: 'engaged', cls: 'gb19-dash', dy: 50 },
+    { a: 'al', b: 'il', t: 'friend', cls: 'gb19-ea' }
+  ] });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb19.twain-huckleberry-finn (scripts/greatbooks/src/gb19.twain-huckleberry-finn/viz.js) ---- */
+  try { (function () {
+/* gb-huck-river: Huck and Jim's raft trip down the Mississippi. Real places by longitude and latitude; the novel's made-up
+   towns are placed by us along the river, roughly where the story puts them. Our own sketch map; uses ML.gb19kit.route. */
+ML.viz.register('gb-huck-river', function (el, opts, V) {
+  ML.gb19kit.route(el, V, { label: 'Map of Huck and Jim\'s journey down the Mississippi', w: 400, h: 320, sea: false, proj: [-93.2, -87.6, 40.3, 32.9],
+    bg: [
+      { pts: [[-93.2, 40.3], [-87.6, 40.3], [-87.6, 32.9], [-93.2, 32.9]], cls: 'gb19-land' },
+      { pts: [[-91.5, 40.3], [-91.36, 39.71], [-90.8, 39.1], [-90.19, 38.63], [-89.9, 38.0], [-89.52, 37.3], [-89.18, 37.0], [-89.53, 36.59], [-89.7, 36.0], [-90.05, 35.15], [-90.6, 34.53], [-91.0, 33.9], [-91.1, 33.3], [-91.0, 32.9]], cls: 'gb19-river', open: true },
+      { pts: [[-89.18, 37.0], [-88.6, 37.1], [-87.6, 37.6]], cls: 'gb19-river', open: true },
+      { pts: [[-93.2, 39.0], [-90.19, 38.63]], cls: 'gb19-river', open: true }
+    ],
+    labels: [[[-92.4, 37.8], 'MISSOURI'], [[-88.9, 38.8], 'ILLINOIS'], [[-88.7, 36.4], 'KENTUCKY'], [[-88.9, 35.5], 'TENNESSEE'], [[-92.2, 34.6], 'ARKANSAS'], [[-88.1, 37.85], 'Ohio River'], [[-90.7, 36.6], 'Mississippi']],
+    stops: [
+      { p: [-91.36, 39.71], t: 'St. Petersburg', n: 'St. Petersburg (Hannibal)', html: 'Huck\'s home town, modeled on Twain\'s own Hannibal, Missouri. The Widow Douglas is trying to "sivilize" him; then his cruel, drunken father carries him off to a cabin. Huck escapes by faking his own death.', always: true },
+      { p: [-91.2, 39.45], t: 'Jackson\'s Island', html: 'Hiding on the island, Huck finds Jim, who has run away from Miss Watson because she planned to sell him down the river, away from his wife and children. The two decide to travel together.', dx: -8 },
+      { p: [-90.19, 38.63], t: 'Past St. Louis', html: 'They float at night on a raft and hide by day. Jim plans to reach Cairo, at the mouth of the Ohio, and go up that river to the free states.', dx: -8 },
+      { p: [-89.18, 37.0], t: 'Cairo, lost in the fog', html: 'In a thick fog they drift past Cairo without knowing it. Huck plays a cruel trick on Jim, then apologizes, and later saves him from slave-hunters by inventing a story about smallpox aboard.', always: true },
+      { p: [-89.6, 36.3], t: 'The Grangerford feud', html: 'After a steamboat smashes the raft, Huck stays with the Grangerfords, a family locked in a deadly feud with the Shepherdsons. Sickened, he escapes back to the raft and Jim.', dx: -8 },
+      { p: [-90.2, 35.0], t: 'The king and the duke', html: 'Two con men join the raft, claiming to be a duke and a lost king. They swindle towns along the river with fake shows and lies, and Huck and Jim cannot get rid of them.', dx: -8 },
+      { p: [-90.75, 34.2], t: 'The Wilks family', html: 'The con men pose as relatives to steal three orphan sisters\' inheritance. Huck, touched by the sisters\' kindness, secretly works against the swindle.', dx: -8 },
+      { p: [-91.05, 33.5], t: 'Phelps farm', html: 'The king sells Jim for a reward. Huck faces his great choice, decides to help Jim even if it means, as he has been taught, going to hell, and finds Jim held at the Phelps farm. Tom Sawyer arrives and turns the rescue into an elaborate game. In the end Jim learns he was already free: Miss Watson had freed him in her will.', always: true, dx: 8 }
+    ] });
+});
   })(); } catch (e) { if (W.console) console.error(e); }
     return true;
   }

@@ -4,6 +4,1536 @@
   var ML = W.MathLadder = W.MathLadder || {};
   function boot() {
     if (!ML.viz || !ML.viz.register) return false;
+  /* ---- gb18.locke-government-and-toleration (scripts/greatbooks/src/gb18.locke-government-and-toleration/viz.js) ---- */
+  try { (function () {
+/* gb18.locke-government-and-toleration: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-locke-path: Locke's argument in the Second Treatise, from the state of nature to the people's right when a government breaks its trust. */
+ML.viz.register('gb-locke-path', function (el, opts, V) {
+  var F = frame(el, 400, 270, 'Locke\'s path from the state of nature to government by consent'), sv = F.svg, ro = V.readout(el);
+  var ST = [
+    ['State of nature', 'free and equal; the law of nature: harm no one', 'People are free and equal, with no common ruler. Reason teaches the <b>law of nature</b>: no one ought to harm another in life, health, liberty or possessions (ch. II).'],
+    ['Its troubles', 'no settled law, no fair judge, no power to enforce', 'Everyone judges his own case, and people are partial to themselves. There is no settled, known law, no impartial judge and no power to carry out a just sentence (ch. IX).'],
+    ['Consent', 'people agree to join one society', 'So people <b>consent</b> to join together into one community, each giving up his power to punish to the whole, for the safer enjoyment of their lives, liberties and estates (ch. VIII).'],
+    ['Government in trust', 'legislature makes known laws; executive and judges carry them out', 'The community sets up a <b>legislature</b>, the supreme power, which must rule by known laws, may not take property without consent, and holds its power <b>in trust</b> for the public good (ch. XI–XIII).'],
+    ['Trust broken', 'a long train of abuses: the people may set up a new government', 'If the government acts against its trust, aiming at the people\'s lives, liberties or property by a long train of abuses, it dissolves itself, and the people may set up a new legislature (ch. XIX).']
+  ];
+  var st = opts.stage || 0;
+  function draw() {
+    clear(sv);
+    for (var i = 0; i < 5; i++) {
+      var y = 8 + i * 52, on = i === st, past = i < st;
+      S('rect', { x: 40, y: y, width: 320, height: 40, rx: 9, 'class': on ? (i === 4 ? 'gbx-box-red' : 'gbx-box-on') : past ? 'gbx-box-gold' : 'gbx-box' }, sv);
+      Tx(sv, 58, y + 17, (i + 1) + '.', 'b', 'start'); Tx(sv, 76, y + 17, ST[i][0], 'b', 'start'); Tx(sv, 76, y + 32, ST[i][1], 'xs mut', 'start');
+      if (i < 4) S('path', { d: 'M200,' + (y + 41) + ' v9 m-4,-4 l4,4 l4,-4', 'class': 'gbx-arrow' }, sv);
+    }
+    if (st === 4) { S('path', { d: 'M362,236 C394,236 394,124 362,124', 'class': 'gbx-route' }, sv); Tx(sv, 392, 182, 'anew', 'xs acc', 'end'); }
+    ro.set('<b>' + (st + 1) + '. ' + ST[st][0] + '.</b> ' + ST[st][2]);
+  }
+  V.seg(F.ctl, { label: 'Step', items: ST.map(function (s, i) { return [i, (i + 1) + '. ' + s[0]]; }), value: st, change: function (v) { st = +v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.locke-human-understanding (scripts/greatbooks/src/gb18.locke-human-understanding/viz.js) ---- */
+  try { (function () {
+/* gb18.locke-human-understanding: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-idea-builder: Locke's simple ideas (from sensation or reflection) joined into a complex idea (Essay II.ii, II.xii, II.xxiii). */
+ML.viz.register('gb-idea-builder', function (el, opts, V) {
+  var F = frame(el, 400, 250, 'Simple ideas joined by the mind into a complex idea'), sv = F.svg, ro = V.readout(el);
+  var T = {
+    apple: { name: 'an apple', ids: [['red', 'S', 'secondary'], ['round', 'S', 'primary'], ['sweet', 'S', 'secondary'], ['solid', 'S', 'primary'], ['fresh smell', 'S', 'secondary'], ['crunch when bitten', 'S', 'secondary']] },
+    gold: { name: 'gold (Locke\'s own example)', ids: [['yellow', 'S', 'secondary'], ['heavy', 'S', 'primary'], ['hammers thin', 'S', 'power'], ['melts in fire', 'S', 'power'], ['shining', 'S', 'secondary'], ['solid', 'S', 'primary']] },
+    memory: { name: 'remembering a favorite song', ids: [['a tune heard', 'S', 'secondary'], ['a voice', 'S', 'secondary'], ['remembering', 'R', ''], ['enjoying', 'R', ''], ['wanting to hear it again', 'R', ''], ['thinking about it', 'R', '']] }
+  };
+  var key = T[opts.pick] ? opts.pick : 'apple', on = [];
+  function reset() { on = T[key].ids.map(function () { return true; }); on[0] = false; on[3] = false; }
+  reset();
+  var chips = document.createElement('div'); chips.className = 'gbx-chips';
+  function draw() {
+    clear(sv); var t = T[key], n = on.filter(Boolean).length;
+    S('circle', { cx: 200, cy: 125, r: 52, 'class': n === t.ids.length ? 'gbx-box-on' : 'gbx-box' }, sv);
+    Tx(sv, 200, 118, 'complex idea', 'xs mut'); Tw(sv, 200, 134, t.name, 16, 13, 'sm b');
+    t.ids.forEach(function (d, i) {
+      var a = -Math.PI / 2 + i * 2 * Math.PI / t.ids.length, x = 200 + Math.cos(a) * 128, y = 125 + Math.sin(a) * 92;
+      if (on[i]) S('line', { x1: 200 + Math.cos(a) * 54, y1: 125 + Math.sin(a) * 54, x2: x - Math.cos(a) * 18, y2: y - Math.sin(a) * 14, 'class': 'gbx-arrow' }, sv);
+      S('rect', { x: x - 54, y: y - 13, width: 108, height: 26, rx: 13, 'class': on[i] ? (d[1] === 'R' ? 'gbx-box-blue' : 'gbx-box-gold') : 'gbx-box' }, sv);
+      Tx(sv, x, y + 4, d[0], on[i] ? 'sm b' : 'sm mut');
+    });
+    Tx(sv, 8, 244, 'gold = from sensation · blue = from reflection', 'xs mut', 'start');
+    var s = t.ids.filter(function (d, i) { return on[i] && d[1] === 'S'; }).length, r = t.ids.filter(function (d, i) { return on[i] && d[1] === 'R'; }).length;
+    ro.set('The mind has joined <b>' + n + '</b> of ' + t.ids.length + ' simple ideas: ' + s + ' from <b>sensation</b>, ' + r + ' from <b>reflection</b>. ' + (n === t.ids.length ? 'The complex idea of ' + t.name + ' is complete. ' : 'Switch on the rest to complete the complex idea. ') + (key === 'memory' ? 'Reflection is the mind noticing its own operations: remembering, enjoying, willing, thinking.' : 'Locke would add that shape, size and solidity are <b>primary</b> qualities, really in the thing, while colors, tastes and smells are <b>secondary</b>: powers to cause ideas in us.'));
+    Array.prototype.forEach.call(chips.children, function (b, i) { b.setAttribute('aria-pressed', on[i] ? 'true' : 'false'); });
+  }
+  function mk() {
+    chips.innerHTML = '';
+    T[key].ids.forEach(function (d, i) { var b = document.createElement('button'); b.type = 'button'; b.className = 'gbx-chip'; b.textContent = d[0]; b.addEventListener('click', function () { on[i] = !on[i]; draw(); }); chips.appendChild(b); });
+  }
+  V.seg(F.ctl, { label: 'Thing', items: [['apple', 'An apple'], ['gold', 'Gold'], ['memory', 'A song remembered']], value: key, change: function (v) { key = v; reset(); mk(); draw(); } });
+  F.ctl.appendChild(chips); mk(); draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.berkeley-principles (scripts/greatbooks/src/gb18.berkeley-principles/viz.js) ---- */
+  try { (function () {
+/* gb18.berkeley-principles: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-water-hands: Berkeley's (and Locke's) bowl of water felt warm by one hand and cold by the other (Three Dialogues I; Principles §14). */
+ML.viz.register('gb-water-hands', function (el, opts, V) {
+  var F = frame(el, 400, 230, 'Two hands, one bowl of water'), sv = F.svg, ro = V.readout(el);
+  var L = opts.left == null ? 40 : opts.left, R = opts.right == null ? 10 : opts.right, Wt = opts.water == null ? 25 : opts.water;
+  function feel(h) { var d = Wt - h; return d > 4 ? ['warm', 'gbx-box-red'] : d < -4 ? ['cold', 'gbx-box-blue'] : ['neither warm nor cold', 'gbx-box']; }
+  function hand(x, flip) {
+    var g = S('g', { transform: 'translate(' + x + ',58)' + (flip ? ' scale(-1,1)' : '') }, sv);
+    S('rect', { x: -12, y: 0, width: 24, height: 70, rx: 9, 'class': 'gbx-cloth2' }, g);
+    S('rect', { x: -15, y: 66, width: 30, height: 34, rx: 10, 'class': 'gbx-skin' }, g);
+    [-10, -3.5, 3, 9.5].forEach(function (fx) { S('rect', { x: fx - 2.8, y: 92, width: 5.6, height: 22, rx: 2.8, 'class': 'gbx-skin' }, g); });
+    S('rect', { x: 13, y: 74, width: 6, height: 15, rx: 3, 'class': 'gbx-skin' }, g);
+  }
+  function draw() {
+    clear(sv);
+    S('path', { d: 'M90,140 L310,140 Q300,214 200,214 Q100,214 90,140 Z', 'class': 'gbx-box' }, sv);
+    S('path', { d: 'M96,152 L304,152 Q294,208 200,208 Q106,208 96,152 Z', 'class': 'gbx-sea' }, sv);
+    hand(150, false); hand(250, true);
+    var fl = feel(L), fr = feel(R);
+    S('rect', { x: 8, y: 14, width: 118, height: 40, rx: 8, 'class': fl[1] }, sv); Tx(sv, 67, 30, 'left hand was ' + L + '°C', 'xs mut'); Tx(sv, 67, 46, 'feels ' + fl[0], 'sm b');
+    S('rect', { x: 274, y: 14, width: 118, height: 40, rx: 8, 'class': fr[1] }, sv); Tx(sv, 333, 30, 'right hand was ' + R + '°C', 'xs mut'); Tx(sv, 333, 46, 'feels ' + fr[0], 'sm b');
+    Tx(sv, 200, 196, 'water ' + Wt + '°C', 'sm b');
+    var same = fl[0] === fr[0];
+    ro.set(same ? 'Both hands feel the water the same way: ' + fl[0] + '. Now make one hand warmer and the other colder than the water.' : 'One bowl of water at ' + Wt + '°C feels <b>' + fl[0] + '</b> to the left hand and <b>' + fr[0] + '</b> to the right. The water can\'t be both at once, so, Berkeley argues, the warmth and cold are in the feeling, in the mind, not in the water. He then asks why shape and size should be any different.');
+  }
+  V.slider(F.ctl, { label: 'Left hand', min: 5, max: 45, step: 1, value: L, fmt: function (v) { return v + '°C'; }, input: function (v) { L = v; draw(); } });
+  V.slider(F.ctl, { label: 'Right hand', min: 5, max: 45, step: 1, value: R, fmt: function (v) { return v + '°C'; }, input: function (v) { R = v; draw(); } });
+  V.slider(F.ctl, { label: 'Water', min: 10, max: 40, step: 1, value: Wt, fmt: function (v) { return v + '°C'; }, input: function (v) { Wt = v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.hume-enquiry (scripts/greatbooks/src/gb18.hume-enquiry/viz.js) ---- */
+  try { (function () {
+/* gb18.hume-enquiry: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-billiards: Hume's billiard balls (Enquiry IV–VII): we see motion, contact and motion, never the power; custom grows with each trial. */
+ML.viz.register('gb-billiards', function (el, opts, V) {
+  var F = frame(el, 400, 190, 'Two billiard balls on a table'), sv = F.svg, ro = V.readout(el);
+  var n = opts.trials || 0, mode = 'b', t = 1, anim = null;
+  var OUT = { b: ['the second ball rolls away', 'what we always see'], rest: ['both balls stay still', 'conceivable, says Hume'], back: ['the first ball bounces straight back', 'conceivable too'], up: ['the second ball leaps off sideways', 'also no contradiction'] };
+  function pos(t) {
+    var ax = 60 + Math.min(t, .5) / .5 * 140, bx = 222, by = 110, ay = 110;
+    if (t > .5) { var u = (t - .5) / .5;
+      if (mode === 'b') { bx = 222 + u * 140; }
+      else if (mode === 'back') { ax = 200 - u * 120; }
+      else if (mode === 'up') { bx = 222 + u * 90; by = 110 - u * 70; }
+    }
+    return [ax, ay, bx, by];
+  }
+  function draw() {
+    clear(sv);
+    S('rect', { x: 10, y: 40, width: 380, height: 140, rx: 14, 'class': 'gbx-box-on' }, sv);
+    var p = pos(t);
+    S('circle', { cx: p[0], cy: p[1], r: 11, 'class': 'gbx-paper' }, sv); S('circle', { cx: p[0], cy: p[1], r: 11, 'class': 'gbx-ink' }, sv);
+    S('circle', { cx: p[2], cy: p[3], r: 11, 'class': 'gbx-redf' }, sv);
+    Tx(sv, 200, 24, 'Trials seen: ' + n + (mode !== 'b' ? '  ·  imagining: ' + OUT[mode][0] : ''), 'sm b');
+    var seen = n === 0 ? 'Strike the ball to see what happens.' : n < 3 ? 'You saw the first ball move, touch, and the second ball move. Look as hard as you like: you never see a <b>power</b> or <b>necessary connection</b>, only one event after another.' : 'After ' + n + ' trials you <b>expect</b> the second ball to move before it does. Nothing new appeared in the balls; what changed is in you: <b>custom</b>. That felt expectation, Hume says, is where our idea of necessary connection comes from.';
+    ro.set(mode === 'b' ? seen : 'Imagining that <b>' + OUT[mode][0] + '</b>: ' + OUT[mode][1] + '. Reason alone, before experience, finds no contradiction in it. Only experience tells us which one happens.');
+  }
+  function strike() {
+    if (anim) anim.stop();
+    if (V.reduced) { t = 1; if (mode === 'b') n++; draw(); return; }
+    t = 0; var go = V.loop(el, function (dt) { t = Math.min(1, t + dt / 1.4); draw(); if (t >= 1) { go.stop(); anim = null; if (mode === 'b') { n++; draw(); } } });
+    anim = go; go.start();
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, 'Strike the ball', strike);
+  V.seg(F.ctl, { label: 'Imagine instead', items: [['b', 'What usually happens'], ['rest', 'Both stay still'], ['back', 'First bounces back'], ['up', 'Second leaps sideways']], value: 'b', change: function (v) { mode = v; t = 0; draw(); strike(); } });
+  t = n ? 1 : 0; draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.kant-critique-of-pure-reason (scripts/greatbooks/src/gb18.kant-critique-of-pure-reason/viz.js) ---- */
+  try { (function () {
+/* gb18.kant-critique-of-pure-reason: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-kant-lenses: Kant's picture of experience: sensations given form by space and time and joined by the categories into objects connected by cause. */
+ML.viz.register('gb-kant-lenses', function (el, opts, V) {
+  var F = frame(el, 400, 240, 'Sensation, space, time and the categories'), sv = F.svg, ro = V.readout(el);
+  var lay = opts.layer == null ? 0 : opts.layer, on = { sp: lay >= 1, tm: lay >= 2, ct: lay >= 3 };
+  var DOTS = [[52, 70, 'r'], [300, 160, 'b'], [130, 190, 'r'], [340, 60, 'g'], [210, 110, 'b'], [90, 140, 'g'], [260, 200, 'r'], [170, 60, 'b'], [360, 130, 'g'], [40, 200, 'b'], [230, 170, 'g'], [120, 100, 'r']];
+  var CL = { r: 'gbx-redf', b: 'gbx-bluef', g: 'gbx-gold' };
+  function scene(g, x, y, s, k) { /* ball rolling toward a block; k = 0, 1, 2 frames */
+    S('line', { x1: x, y1: y + 22 * s, x2: x + 100 * s, y2: y + 22 * s, 'class': 'gbx-ink' }, g);
+    var bx = x + [12, 44, 62][k] * s, kx = x + [74, 74, 88][k] * s;
+    S('circle', { cx: bx, cy: y + 13 * s, r: 9 * s, 'class': 'gbx-redf' }, g);
+    S('rect', { x: kx, y: y - 4 * s, width: 18 * s, height: 26 * s, 'class': 'gbx-bluef' }, g);
+  }
+  function draw() {
+    clear(sv);
+    S('rect', { x: 10, y: 20, width: 380, height: 205, rx: 12, 'class': 'gbx-box' }, sv);
+    if (!on.sp && !on.tm) {
+      DOTS.forEach(function (d) { S('circle', { cx: d[0], cy: d[1], r: 7, 'class': CL[d[2]], opacity: .8 }, sv); });
+      Tx(sv, 200, 42, on.ct ? 'concepts with nothing given to them' : 'a manifold of sensations: no where, no when', 'sm mut');
+    } else if (on.sp && !on.tm) {
+      scene(sv, 110, 110, 1.8, 1); Tx(sv, 200, 42, 'placed in space: here, there, beside, apart', 'sm mut');
+    } else if (!on.sp && on.tm) {
+      [0, 1, 2].forEach(function (k) { [0, 1, 2, 3].forEach(function (j) { var d = DOTS[(k * 4 + j) % DOTS.length]; S('circle', { cx: 60 + k * 120 + j * 14, cy: 120 + (j % 2) * 16, r: 6, 'class': CL[d[2]], opacity: .8 }, sv); }); Tx(sv, 80 + k * 120, 170, ['first', 'then', 'then'][k], 'sm b'); });
+      Tx(sv, 200, 42, 'one after another in time, but nowhere', 'sm mut');
+    } else {
+      [0, 1, 2].forEach(function (k) { scene(sv, 22 + k * 126, 110, 1, k); Tx(sv, 72 + k * 126, 160, ['t₁', 't₂', 't₃'][k], 'sm b'); });
+      Tx(sv, 200, 42, 'in space and in time', 'sm mut');
+    }
+    if (on.ct && on.sp && on.tm) {
+      Tx(sv, 72, 92, 'one ball (unity)', 'xs acc'); Tx(sv, 226, 92, 'the same things go on (substance)', 'xs acc');
+      S('path', { d: 'M80,170 Q200,195 322,170', 'class': 'gbx-route' }, sv); Tx(sv, 200, 212, 'the ball pushes the block: cause → effect', 'xs acc');
+    } else if (on.ct) Tx(sv, 200, 205, 'categories ready: unity, substance, cause…', 'xs acc');
+    var msg = !on.sp && !on.tm ? (on.ct ? 'Categories with no intuition: thoughts without content are <b>empty</b>.' : 'Only raw sensation: a scatter of colors and feelings. Without forms and concepts, intuitions are <b>blind</b>.')
+      : on.ct && on.sp && on.tm ? 'Experience: <b>objects</b> in space and time, connected by <b>cause and effect</b>. Because the mind supplies these forms and concepts, Kant says, we can know a priori that every event we experience will have a cause.'
+      : 'Forms of intuition without the categories: things appear ' + (on.sp && on.tm ? 'in space and time' : on.sp ? 'in space' : 'in time') + ', but nothing yet joins them into lasting objects connected by cause.';
+    ro.set(msg);
+    Array.prototype.forEach.call(chips.children, function (b) { b.setAttribute('aria-pressed', on[b.dataset.k] ? 'true' : 'false'); });
+  }
+  var chips = document.createElement('div'); chips.className = 'gbx-chips'; F.ctl.appendChild(chips);
+  [['sp', 'Space'], ['tm', 'Time'], ['ct', 'Categories']].forEach(function (c) { var b = document.createElement('button'); b.type = 'button'; b.className = 'gbx-chip'; b.dataset.k = c[0]; b.textContent = c[1]; b.addEventListener('click', function () { on[c[0]] = !on[c[0]]; draw(); }); chips.appendChild(b); });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.kant-moral-philosophy (scripts/greatbooks/src/gb18.kant-moral-philosophy/viz.js) ---- */
+  try { (function () {
+/* gb18.kant-moral-philosophy: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-maxim-test: Kant's universal-law test (Fundamental Principles, Second Section), with his own examples and everyday ones. */
+ML.viz.register('gb-maxim-test', function (el, opts, V) {
+  var F = frame(el, 400, 250, 'Kant\'s test: could this maxim be a universal law?'), sv = F.svg, ro = V.readout(el);
+  var MX = [
+    ['When I need money, I\'ll make a promise I don\'t mean to keep.', 'Everyone makes false promises when in need.', 'No one would believe a promise, so no one could even make one.', 'fails', 'can\'t even be thought as a law', 'Kant\'s own example: the maxim destroys the very practice it relies on.'],
+    ['I\'ll cut in line whenever I\'m in a hurry.', 'Everyone cuts in line when in a hurry.', 'There would be no lines left to cut into.', 'fails', 'can\'t even be thought as a law', 'Like the lying promise, it works only if most people don\'t do it.'],
+    ['I\'ll never help anyone in need, though I could.', 'No one ever helps anyone.', 'Such a world could exist, but I can\'t will it, since I will need help someday.', 'fails', 'can\'t be willed without contradiction', 'Kant\'s example of a wider duty: helping others.'],
+    ['I\'ll let my talents rust and just amuse myself.', 'No one ever develops any talent.', 'Such a world could exist, but a rational being necessarily wills that his abilities be developed.', 'fails', 'can\'t be willed without contradiction', 'Kant\'s example of a duty to oneself.'],
+    ['I\'ll keep my promises.', 'Everyone keeps promises.', 'Promises become completely reliable.', 'passes', 'can be a universal law', 'The maxim is consistent as a law for all.'],
+    ['I\'ll return what I borrow.', 'Everyone returns what they borrow.', 'Lending works better than ever.', 'passes', 'can be a universal law', 'Consistent as a law for all.']
+  ];
+  var m = Math.max(0, Math.min(MX.length - 1, opts.m || 0));
+  function box(y, lab, txt, cls) { S('rect', { x: 14, y: y, width: 372, height: 50, rx: 9, 'class': cls }, sv); Tx(sv, 26, y + 15, lab, 'xs mut', 'start'); Tw(sv, 26, y + 31, txt, 58, 14, 'sm', 'start'); }
+  function draw() {
+    clear(sv); var x = MX[m], pass = x[3] === 'passes';
+    box(6, '1. My maxim (the rule behind my action)', x[0], 'gbx-box');
+    S('path', { d: 'M200,57 v8 m-4,-4 l4,4 l4,-4', 'class': 'gbx-arrow' }, sv);
+    box(68, '2. Imagine it as a law of nature for everyone', x[1], 'gbx-box-gold');
+    S('path', { d: 'M200,119 v8 m-4,-4 l4,4 l4,-4', 'class': 'gbx-arrow' }, sv);
+    box(130, '3. What would that world be like?', x[2], 'gbx-box');
+    S('rect', { x: 90, y: 196, width: 220, height: 42, rx: 21, 'class': pass ? 'gbx-box-on' : 'gbx-box-red' }, sv);
+    Tx(sv, 200, 214, pass ? 'PASSES' : 'FAILS', 'b ' + (pass ? 'g' : 'red')); Tx(sv, 200, 230, x[4], 'xs');
+    ro.set('<b>' + (pass ? 'Passes.' : 'Fails.') + '</b> ' + x[5] + ' Kant\'s formula: act only on a maxim you can at the same time will to be a universal law.');
+  }
+  V.seg(F.ctl, { label: 'Maxim', items: MX.map(function (x, i) { return [i, ['Lying promise', 'Cutting in line', 'Never helping', 'Wasting talents', 'Keeping promises', 'Returning loans'][i]]; }), value: m, change: function (v) { m = +v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.kant-critique-of-judgment (scripts/greatbooks/src/gb18.kant-critique-of-judgment/viz.js) ---- */
+  try { (function () {
+/* gb18.kant-critique-of-judgment: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-beauty-sublime: Kant's kinds of liking (Critique of Judgement §§1–29): the pleasant, the beautiful, the good, and the sublime. */
+ML.viz.register('gb-beauty-sublime', function (el, opts, V) {
+  var F = frame(el, 400, 240, 'Pleasant, beautiful, good or sublime?'), sv = F.svg, ro = V.readout(el);
+  var SC = [
+    ['A favorite food', 'pleasant', 'It pleases the senses, and it\'s fine if others disagree: \"to each his own taste.\" Kant calls this the <b>agreeable</b>.'],
+    ['A rose', 'beautiful', 'We call it <b>beautiful</b> without any concept of what it\'s for, and we speak as if everyone ought to agree. It seems designed, yet for no purpose we can name.'],
+    ['A bird\'s song', 'beautiful', 'Free, unplanned beauty in nature, Kant\'s favorite kind. No rule proves it beautiful, yet we expect agreement.'],
+    ['The starry sky', 'sublime (mathematical)', 'So vast that imagination can\'t take it in at once: the <b>mathematically sublime</b>. We feel small, and yet reason can think of the infinite.'],
+    ['A storm at sea, seen from safe shore', 'sublime (dynamical)', 'Overwhelming power, enjoyed only because we are safe: the <b>dynamically sublime</b>. It shows, Kant says, a strength in us that nature can\'t master: our moral freedom.'],
+    ['A good hammer', 'good', 'We like it for what it\'s for: a concept of its purpose. That is liking the <b>good</b> (here, the useful), not beauty.']
+  ];
+  var s = Math.max(0, Math.min(SC.length - 1, opts.scene || 0));
+  var ZONES = [['pleasant', 'just for me'], ['beautiful', 'all ought to agree'], ['sublime', 'vast or mighty'], ['good', 'by a concept']];
+  function icon(k) {
+    var g = S('g', { transform: 'translate(200,92)' }, sv);
+    if (k === 0) { S('path', { d: 'M-40,0 Q0,46 40,0 Z', 'class': 'gbx-gold' }, g); S('ellipse', { cx: 0, cy: 0, rx: 40, ry: 8, 'class': 'gbx-box' }, g); [-14, 0, 14].forEach(function (x) { S('path', { d: 'M' + x + ',-8 q6,-12 0,-24', 'class': 'gbx-arrow' }, g); }); }
+    if (k === 1) { S('line', { x1: 0, y1: 0, x2: 0, y2: 50, 'class': 'gbx-ink' }, g); S('path', { d: 'M0,30 q14,-10 20,2 q-12,6 -20,-2', 'class': 'gbx-leaf' }, g); [0, 72, 144, 216, 288].forEach(function (a) { S('ellipse', { cx: 0, cy: -14, rx: 10, ry: 15, transform: 'rotate(' + a + ')', 'class': 'gbx-redf', opacity: .75 }, g); }); S('circle', { cx: 0, cy: 0, r: 7, 'class': 'gbx-redf' }, g); }
+    if (k === 2) { S('path', { d: 'M-50,40 L50,40 M-20,40 L-20,10', 'class': 'gbx-ink' }, g); S('ellipse', { cx: -20, cy: 4, rx: 16, ry: 10, 'class': 'gbx-bluef' }, g); S('circle', { cx: -8, cy: -2, r: 6, 'class': 'gbx-bluef' }, g); S('path', { d: 'M-2,-2 l6,1 l-6,2 z', 'class': 'gbx-gold' }, g); [[14, -20], [30, -34], [44, -16]].forEach(function (p) { S('ellipse', { cx: p[0], cy: p[1], rx: 4, ry: 3, 'class': 'gbx-mutf' }, g); S('line', { x1: p[0] + 4, y1: p[1], x2: p[0] + 4, y2: p[1] - 12, 'class': 'gbx-ink' }, g); }); }
+    if (k === 3) { S('rect', { x: -90, y: -40, width: 180, height: 80, rx: 8, 'class': 'gbx-night' }, g); for (var i = 0; i < 40; i++) S('circle', { cx: -84 + (i * 37) % 168, cy: -34 + (i * 53) % 70, r: i % 5 ? 1.2 : 2.2, fill: '#f4f1e6' }, g); }
+    if (k === 4) { S('rect', { x: -90, y: -40, width: 180, height: 80, rx: 8, 'class': 'gbx-sea' }, g); S('path', { d: 'M-90,10 q15,-26 30,0 t30,0 t30,0 t30,0 t30,0 t30,0 L90,40 L-90,40 Z', 'class': 'gbx-bluef', opacity: .8 }, g); S('ellipse', { cx: -20, cy: -26, rx: 50, ry: 12, 'class': 'gbx-mutf' }, g); S('path', { d: 'M10,-16 l-8,16 h8 l-8,16', 'class': 'gbx-arrow', stroke: '#e8590c' }, g); person(g, 70, 38, .6); }
+    if (k === 5) { S('rect', { x: -6, y: -10, width: 12, height: 56, rx: 4, 'class': 'gbx-wood' }, g); S('rect', { x: -30, y: -26, width: 60, height: 18, rx: 4, 'class': 'gbx-mutf' }, g); }
+  }
+  function draw() {
+    clear(sv); var c = SC[s], z = c[1].split(' ')[0];
+    S('rect', { x: 10, y: 40, width: 380, height: 110, rx: 12, 'class': 'gbx-box' }, sv); Tx(sv, 200, 26, c[0], 'b');
+    icon(s);
+    ZONES.forEach(function (q, i) { var x = 14 + i * 95, on = q[0] === z; S('rect', { x: x, y: 168, width: 89, height: 52, rx: 10, 'class': on ? 'gbx-box-on' : 'gbx-box' }, sv); Tx(sv, x + 44.5, 190, q[0], on ? 'sm b g' : 'sm'); Tx(sv, x + 44.5, 207, q[1], 'xs mut'); });
+    ro.set('<b>' + c[0] + ': ' + c[1] + '.</b> ' + c[2]);
+  }
+  V.seg(F.ctl, { label: 'Scene', items: SC.map(function (c, i) { return [i, c[0]]; }), value: s, change: function (v) { s = +v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.swift-gullivers-travels (scripts/greatbooks/src/gb18.swift-gullivers-travels/viz.js) ---- */
+  try { (function () {
+/* gb18.swift-gullivers-travels: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-gulliver-scale: Gulliver beside a Lilliputian (1 : 12) and a Brobdingnagian (12 : 1); lengths scale by k, areas by k², volumes by k³ (Part I ch. III's 1728). */
+ML.viz.register('gb-gulliver-scale', function (el, opts, V) {
+  var F = frame(el, 400, 250, 'Gulliver and the people of Lilliput and Brobdingnag'), sv = F.svg, ro = V.readout(el);
+  var voy = opts.voyage || 0, k = 12;
+  function draw() {
+    clear(sv);
+    S('line', { x1: 10, y1: 232, x2: 390, y2: 232, 'class': 'gbx-ink' }, sv);
+    var big = 200, small = big / k, gx = 150, nx = 280;
+    if (voy === 0) { person(sv, gx, 232, big / 43, 'gbx-cloth2'); person(sv, nx, 232, small / 43, 'gbx-cloth3'); Tx(sv, gx, 246, 'Gulliver', 'sm b'); Tx(sv, nx, 246, 'a Lilliputian', 'sm b'); S('path', { d: 'M' + (nx + 14) + ',' + (232 - small) + ' h40', 'class': 'gbx-lead' }, sv); Tx(sv, nx + 58, 232 - small + 4, '1/' + k + ' as tall', 'xs acc', 'start'); }
+    else { person(sv, gx, 232, big / 43, 'gbx-cloth3'); person(sv, nx, 232, small / 43, 'gbx-cloth2'); Tx(sv, gx, 246, 'a Brobdingnagian', 'sm b'); Tx(sv, nx, 246, 'Gulliver', 'sm b'); S('path', { d: 'M' + (nx + 14) + ',' + (232 - small) + ' h40', 'class': 'gbx-lead' }, sv); Tx(sv, nx + 58, 232 - small + 4, k + '× smaller', 'xs acc', 'start'); }
+    var k2 = k * k, k3 = k2 * k;
+    S('rect', { x: 250, y: 12, width: 140, height: 76, rx: 9, 'class': 'gbx-box-gold' }, sv);
+    Tx(sv, 320, 30, 'scale factor ' + k, 'sm b'); Tx(sv, 320, 47, 'height × ' + k, 'xs'); Tx(sv, 320, 62, 'skin (area) × ' + k2.toLocaleString('en-US'), 'xs'); Tx(sv, 320, 77, 'body (volume) × ' + k3.toLocaleString('en-US'), 'xs');
+    ro.set(voy === 0 ? 'In <b>Lilliput</b> Gulliver is ' + k + ' times taller. Being the same shape, his body holds ' + k + ' × ' + k + ' × ' + k + ' = <b>' + k3.toLocaleString('en-US') + '</b> times as much, so ' + (k === 12 ? 'the emperor\'s mathematicians rightly allowed him food for <b>1,728</b> Lilliputians.' : 'he would need ' + k3.toLocaleString('en-US') + ' Lilliputians\' rations.') : 'In <b>Brobdingnag</b> everyone is ' + k + ' times taller than Gulliver, so a giant\'s body is ' + k3.toLocaleString('en-US') + ' times his. Galileo showed that a giant\'s bones, whose strength grows only as the area (× ' + k2.toLocaleString('en-US') + '), would struggle to carry a weight that grows as the volume (× ' + k3.toLocaleString('en-US') + ').');
+  }
+  V.seg(F.ctl, { label: 'Voyage', items: [[0, 'I. Lilliput'], [1, 'II. Brobdingnag']], value: voy, change: function (v) { voy = +v; draw(); } });
+  V.slider(F.ctl, { label: 'Scale factor', min: 2, max: 12, step: 1, value: k, fmt: function (v) { return v + '×'; }, input: function (v) { k = v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.voltaire-candide (scripts/greatbooks/src/gb18.voltaire-candide/viz.js) ---- */
+  try { (function () {
+/* gb18.voltaire-candide: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-candide-map: Candide's journey, a schematic map (positions roughly by longitude and latitude; El Dorado is imaginary). */
+ML.viz.register('gb-candide-map', function (el, opts, V) {
+  var F = frame(el, 400, 260, 'A schematic map of Candide\'s journey'), sv = F.svg, ro = V.readout(el);
+  function P(lon, lat) { return [16 + (lon + 80) / 125 * 368, 16 + (62 - lat) / 102 * 228]; }
+  var LAND = [
+    [[-10, 36], [-9, 43], [-2, 48], [-5, 58], [8, 58], [10, 54], [20, 55], [30, 60], [40, 58], [42, 42], [30, 37], [26, 41], [20, 40], [12, 38], [15, 45], [8, 44], [3, 43], [-6, 36]],
+    [[-17, 21], [-10, 35], [10, 37], [32, 31], [35, 28], [43, 12], [51, 11], [40, -15], [30, -34], [18, -34], [12, -15], [10, 4], [-8, 5]],
+    [[-80, 8], [-75, 11], [-62, 10], [-50, 0], [-35, -6], [-40, -22], [-48, -28], [-58, -38], [-66, -55], [-74, -48], [-71, -18], [-81, -5]],
+    [[-6, 50], [-3, 56], [1, 53], [1, 51]]
+  ];
+  var ST = [
+    [8, 52, 'Westphalia', 'The castle of Thunder-ten-Tronckh, where Pangloss teaches that all is for the best. Candide is kicked out for kissing Cunégonde (ch. I).'],
+    [6, 51.5, 'The Bulgar army and Holland', 'Forced into an army, Candide sees a war in which both kings sing hymns of victory. In Holland a kind Anabaptist, Jacques, helps him (ch. II–IV). Target: war.'],
+    [-9, 38.7, 'Lisbon', 'A storm, a shipwreck and the great earthquake of 1755. Pangloss explains why it had to be (ch. V–VI). Targets: optimism and persecution.'],
+    [-6.3, 36.5, 'Cádiz', 'Candide sails for the New World with Cunégonde and the old woman, who tells a tale of misfortunes (ch. X–XII).'],
+    [-58.4, -34.6, 'Buenos Aires', 'The vain governor wants Cunégonde; Candide must flee (ch. XIII). Target: pride and power.'],
+    [-56, -24, 'Paraguay', 'The Jesuit colony, where Candide meets Cunégonde\'s brother (ch. XIV–XV).'],
+    [-72, -8, 'El Dorado', 'A hidden, peaceful land where gold is pebbles, all worship together without quarrels, and there are no prisons. Candide leaves anyway (ch. XVII–XVIII). An imaginary place.'],
+    [-55, 5.8, 'Surinam', 'Candide meets an enslaved man who has been cruelly maimed, and for the first time calls optimism a madness (ch. XIX). Target: slavery.'],
+    [2.3, 48.9, 'Paris', 'Cheats and flatterers take his money (ch. XXII). Target: high society.'],
+    [-1.1, 50.8, 'Portsmouth', 'From the ship Candide sees an admiral executed \"to encourage the others\" (ch. XXIII). Target: cruelty of the powerful.'],
+    [12.3, 45.4, 'Venice', 'A rich senator who is bored with every book and painting (ch. XXIV–XXVI).'],
+    [29, 41, 'The garden near Constantinople', 'The friends settle on a small farm. Work keeps away boredom, vice and need: \"we must cultivate our garden\" (ch. XXX).']
+  ];
+  var s = Math.max(0, Math.min(ST.length - 1, opts.stop || 0));
+  function draw() {
+    clear(sv);
+    S('rect', { x: 8, y: 8, width: 384, height: 244, rx: 10, 'class': 'gbx-sea' }, sv);
+    LAND.forEach(function (p) { S('path', { d: 'M' + p.map(function (q) { var c = P(q[0], q[1]); return c[0].toFixed(1) + ',' + c[1].toFixed(1); }).join(' L') + ' Z', 'class': 'gbx-land' }, sv); });
+    var pts = ST.map(function (x) { return P(x[0], x[1]); });
+    S('path', { d: 'M' + pts.slice(0, s + 1).map(function (c) { return c[0].toFixed(1) + ',' + c[1].toFixed(1); }).join(' L'), 'class': 'gbx-route' }, sv);
+    pts.forEach(function (c, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': (i + 1) + '. ' + ST[i][2] }, sv);
+      S('circle', { cx: c[0], cy: c[1], r: i === s ? 8 : 5.5, 'class': i === s ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('circle', { cx: c[0], cy: c[1], r: 11, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { s = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); s = i; draw(); sv.querySelectorAll('.gbx-hit')[i].focus(); } });
+    });
+    var c = pts[s]; Tx(sv, Math.max(60, Math.min(340, c[0])), c[1] < 40 ? c[1] + 24 : c[1] - 13, (s + 1) + '. ' + ST[s][2], 'sm b');
+    Tx(sv, 384, 246, 'schematic map', 'xs mut', 'end');
+    ro.set('<b>' + (s + 1) + '. ' + ST[s][2] + '.</b> ' + ST[s][3]);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Back', function () { s = Math.max(0, s - 1); draw(); });
+  V.button(row, 'Next stop ▶', function () { s = Math.min(ST.length - 1, s + 1); draw(); });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.diderot-rameaus-nephew (scripts/greatbooks/src/gb18.diderot-rameaus-nephew/viz.js) ---- */
+  try { (function () {
+/* gb18.diderot-rameaus-nephew: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-me-him: sort claims from Rameau's Nephew (our own summaries) to Me, the philosopher, or Him, the nephew. */
+ML.viz.register('gb-me-him', function (el, opts, V) {
+  var F = frame(el, 400, 200, 'Me and Him at a café table by the chess players'), sv = F.svg, ro = V.readout(el);
+  var CL = [
+    ['Virtue and happiness go together in the end.', 'me'],
+    ['In a world of flatterers, a poor man is a fool not to flatter too.', 'him'],
+    ['Everyone takes a \"position,\" bowing and posing like a dancer, to please someone above him.', 'him'],
+    ['A good education should teach a child to be honest and useful, not only clever.', 'me'],
+    ['I would rather be a cheerful rascal with a full stomach than an honest man who is hungry.', 'him'],
+    ['There are pleasures of the mind, of friendship and of doing good that last longer than a dinner.', 'me'],
+    ['My uncle the composer is a genius, and I envy him for it.', 'him'],
+    ['Even the king takes a position, before his mistress and before God: whoever needs another must pose.', 'me']
+  ];
+  var i = Math.max(0, Math.min(CL.length - 1, opts.i || 0)), ans = null, score = 0, seen = 0;
+  function draw() {
+    clear(sv);
+    S('rect', { x: 150, y: 120, width: 100, height: 10, rx: 3, 'class': 'gbx-wood' }, sv); S('rect', { x: 195, y: 130, width: 10, height: 50, 'class': 'gbx-wood' }, sv);
+    for (var r = 0; r < 2; r++) for (var c = 0; c < 4; c++) S('rect', { x: 182 + c * 9, y: 112 + r * 4, width: 9, height: 4, 'class': (r + c) % 2 ? 'gbx-mutf' : 'gbx-paper' }, sv);
+    person(sv, 110, 180, 1.5, 'gbx-cloth2'); person(sv, 290, 180, 1.5, 'gbx-cloth3');
+    Tx(sv, 110, 196, 'Me (Moi)', 'sm b'); Tx(sv, 290, 196, 'Him (Lui)', 'sm b');
+    if (ans) { var x = CL[i][1] === 'me' ? 110 : 290; S('path', { d: 'M' + (x - 70) + ',14 h140 v50 h-60 l-10,12 l-10,-12 h-60 z', 'class': ans === CL[i][1] ? 'gbx-box-on' : 'gbx-box-red' }, sv); Tw(sv, x, 32, CL[i][1] === 'me' ? 'That was me.' : 'That was me!', 22, 14, 'sm b'); }
+    else Tx(sv, 200, 40, 'Who says it?', 'b acc');
+    ro.set('<b>Claim ' + (i + 1) + ' of ' + CL.length + ':</b> \"' + CL[i][0] + '\"' + (ans ? (ans === CL[i][1] ? ' <b>Right:</b> ' : ' <b>Not quite:</b> ') + (CL[i][1] === 'me' ? 'Me, the philosopher, says this.' : 'Him, the nephew, says this.') + ' Score: ' + score + ' of ' + seen + '.' : ''));
+  }
+  function pick(w) { if (ans) return; ans = w; seen++; if (w === CL[i][1]) score++; draw(); }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, 'Me said it', function () { pick('me'); }); V.button(row, 'Him said it', function () { pick('him'); });
+  V.button(row, 'Next claim ▶', function () { i = (i + 1) % CL.length; ans = null; draw(); });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.montesquieu-spirit-of-laws (scripts/greatbooks/src/gb18.montesquieu-spirit-of-laws/viz.js) ---- */
+  try { (function () {
+/* gb18.montesquieu-spirit-of-laws: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-three-powers: Montesquieu's three powers (Spirit of Laws XI.6), separate or joined in one hand. */
+ML.viz.register('gb-three-powers', function (el, opts, V) {
+  var F = frame(el, 400, 230, 'The legislative, executive and judging powers'), sv = F.svg, ro = V.readout(el);
+  var PW = [['L', 'Legislative', 'makes the laws'], ['E', 'Executive', 'carries them out'], ['J', 'Judging', 'tries cases']];
+  var OPT = [
+    [[], 'All three separate', 'Each power is in different hands, and power checks power. This, for Montesquieu, is the condition of political liberty: no citizen need fear another.'],
+    [['L', 'E'], 'Legislative + executive joined', '\"There can be no liberty,\" because the same monarch or senate might make tyrannical laws and carry them out tyrannically.'],
+    [['L', 'J'], 'Legislative + judging joined', '"The life and liberty of the subject would be exposed to arbitrary control; for the judge would be then the legislator."'],
+    [['E', 'J'], 'Executive + judging joined', '"The judge might behave with violence and oppression."'],
+    [['L', 'E', 'J'], 'All three in one hand', '\"There would be an end of everything\": the same person or body makes the laws, carries them out and judges. This is Montesquieu\'s picture of despotism.']
+  ];
+  var o = Math.max(0, Math.min(4, opts.joined || 0));
+  var POS = { L: [80, 120], E: [200, 120], J: [320, 120] };
+  function draw() {
+    clear(sv); var j = OPT[o][0];
+    if (j.length) {
+      var xs = j.map(function (k) { return POS[k][0]; }), x0 = Math.min.apply(null, xs) - 56, x1 = Math.max.apply(null, xs) + 56;
+      S('rect', { x: x0, y: 64, width: x1 - x0, height: 112, rx: 50, 'class': 'gbx-box-red' }, sv);
+      person(sv, (x0 + x1) / 2, 60, .9, 'gbx-cloth3'); Tx(sv, (x0 + x1) / 2, 198, 'one hand', 'sm b red');
+    }
+    PW.forEach(function (p) { var c = POS[p[0]], jo = j.indexOf(p[0]) >= 0;
+      S('circle', { cx: c[0], cy: c[1], r: 44, 'class': jo ? 'gbx-box-red' : 'gbx-box-on' }, sv);
+      Tx(sv, c[0], c[1] - 4, p[1], 'sm b'); Tx(sv, c[0], c[1] + 12, p[2], 'xs mut');
+    });
+    if (!j.length) { [['L', 'E'], ['E', 'J']].forEach(function (pr) { var a = POS[pr[0]], b = POS[pr[1]]; S('path', { d: 'M' + (a[0] + 46) + ',' + (a[1] - 6) + ' L' + (b[0] - 46) + ',' + (b[1] - 6) + ' M' + (b[0] - 46) + ',' + (b[1] + 6) + ' L' + (a[0] + 46) + ',' + (a[1] + 6), 'class': 'gbx-arrow' }, sv); }); S('path', { d: 'M80,166 Q200,226 320,166', 'class': 'gbx-arrow' }, sv); Tx(sv, 200, 216, 'each checks the others', 'sm g b'); }
+    ro.set('<b>' + OPT[o][1] + '.</b> ' + OPT[o][2]);
+  }
+  V.seg(F.ctl, { label: 'Who holds the powers?', items: OPT.map(function (x, i) { return [i, x[1]]; }), value: o, change: function (v) { o = +v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.rousseau-discourses (scripts/greatbooks/src/gb18.rousseau-discourses/viz.js) ---- */
+  try { (function () {
+/* gb18.rousseau-discourses: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-inequality: Rousseau's stages in the Discourse on the Origin of Inequality, Part II. */
+ML.viz.register('gb-inequality', function (el, opts, V) {
+  var F = frame(el, 400, 220, 'Rousseau\'s story of how inequality began'), sv = F.svg, ro = V.readout(el);
+  var ST = [
+    ['Alone in the forest', 'Natural man lives alone, with few needs, healthy and free. He feels <b>self-love</b> and <b>pity</b>, and has the power to change, <b>perfectibility</b>. Inequality is slight: only differences of strength and age.'],
+    ['Huts and families', 'People build huts with stone tools and live in families. Small groups form; language grows. Rousseau calls this the happiest age, between idleness and our restless self-love.'],
+    ['Comparing', 'Gathered under a tree to sing and dance, each wants to be looked at. The best singer, the strongest, the handsomest are esteemed: \"the first step towards inequality, and at the same time towards vice.\"'],
+    ['Fields and iron', 'Agriculture and metalworking divide labor. People need each other; some work the land, others make tools. Talents now bring unequal rewards.'],
+    ['The first fence', 'Someone encloses land and says \"This is mine.\" Property brings rich and poor, masters and servants, and quarrels.'],
+    ['Laws for the rich', 'The rich propose laws and a government \"to guard the weak from oppression,\" which in fact fix property and inequality in place. In time, Rousseau says, it ends in despotism.']
+  ];
+  var s = Math.max(0, Math.min(ST.length - 1, opts.stage || 0));
+  function tree(x, y, k) { S('rect', { x: x - 3 * k, y: y - 26 * k, width: 6 * k, height: 26 * k, 'class': 'gbx-wood' }, sv); S('circle', { cx: x, cy: y - 34 * k, r: 14 * k, 'class': 'gbx-leaf' }, sv); }
+  function hut(x, y) { S('path', { d: 'M' + (x - 22) + ',' + y + ' v-22 l22,-18 l22,18 v22 z', 'class': 'gbx-land' }, sv); S('rect', { x: x - 5, y: y - 14, width: 10, height: 14, 'class': 'gbx-wood' }, sv); }
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 150, width: 400, height: 50, 'class': 'gbx-box-on' }, sv);
+    if (s === 0) { tree(80, 150, 1.4); tree(300, 150, 1.2); tree(360, 150, 1); person(sv, 180, 160, 1.2); }
+    if (s === 1) { hut(120, 150); hut(270, 150); tree(360, 150, 1.1); person(sv, 170, 162, 1.1); person(sv, 190, 162, .8, 'gbx-cloth2'); person(sv, 310, 162, 1.1, 'gbx-cloth3'); }
+    if (s === 2) { tree(200, 150, 2); [110, 150, 250, 290].forEach(function (x, i) { person(sv, x, 168, 1, ['gbx-cloth', 'gbx-cloth2', 'gbx-cloth3', 'gbx-cloth'][i]); }); person(sv, 200, 175, 1.25, 'gbx-cloth2'); Tx(sv, 200, 84, '♪', 'lg acc'); S('path', { d: 'M150,118 L190,124 M250,118 L210,124', 'class': 'gbx-lead' }, sv); }
+    if (s === 3) { for (var r = 0; r < 4; r++) S('line', { x1: 40, y1: 158 + r * 9, x2: 210, y2: 158 + r * 9, 'class': 'gbx-line' }, sv); person(sv, 120, 168, 1); S('rect', { x: 270, y: 120, width: 34, height: 30, 'class': 'gbx-mutf' }, sv); Tx(sv, 287, 112, 'forge', 'xs mut'); person(sv, 320, 168, 1, 'gbx-cloth3'); }
+    if (s >= 4) { for (var f = 0; f < 9; f++) S('rect', { x: 30 + f * 22, y: 128, width: 4, height: 30, 'class': 'gbx-wood' }, sv); S('line', { x1: 30, y1: 136, x2: 210, y2: 136, 'class': 'gbx-ink' }, sv); S('line', { x1: 30, y1: 148, x2: 210, y2: 148, 'class': 'gbx-ink' }, sv); hut(110, 126); person(sv, 240, 168, 1.15, 'gbx-cloth2'); Tx(sv, 240, 108, '\"This is mine.\"', 'sm b acc'); person(sv, 320, 168, .95); person(sv, 350, 168, .95, 'gbx-cloth3'); }
+    if (s === 5) { S('rect', { x: 250, y: 20, width: 140, height: 60, rx: 8, 'class': 'gbx-box-gold' }, sv); Tx(sv, 320, 42, 'LAWS', 'b'); Tx(sv, 320, 60, '\"for the good of all\"', 'xs mut'); }
+    Tx(sv, 14, 24, (s + 1) + '. ' + ST[s][0], 'b', 'start');
+    ro.set('<b>' + (s + 1) + '. ' + ST[s][0] + '.</b> ' + ST[s][1]);
+  }
+  V.seg(F.ctl, { label: 'Stage', items: ST.map(function (x, i) { return [i, (i + 1) + '. ' + x[0]]; }), value: s, change: function (v) { s = +v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.rousseau-social-contract (scripts/greatbooks/src/gb18.rousseau-social-contract/viz.js) ---- */
+  try { (function () {
+/* gb18.rousseau-social-contract: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-sovereign-share: Rousseau's ratio in Social Contract III.1: each citizen holds 1/N of the sovereign authority, yet is wholly under it. */
+ML.viz.register('gb-sovereign-share', function (el, opts, V) {
+  var F = frame(el, 400, 220, 'Each citizen\'s share of the sovereign'), sv = F.svg, ro = V.readout(el);
+  var n = opts.n || 10000;
+  function fmtN(x) { return Math.round(x).toLocaleString('en-US'); }
+  function draw() {
+    clear(sv);
+    var dots = 400, per = n / dots;
+    for (var i = 0; i < dots; i++) { var a = i * 2.39996, r = 4.5 * Math.sqrt(i + .5); S('circle', { cx: 110 + r * Math.cos(a), cy: 112 + r * Math.sin(a) * .95, r: 2, 'class': i === 0 ? 'gbx-redf' : 'gbx-g', opacity: i === 0 ? 1 : .55 }, sv); }
+    Tx(sv, 110, 214, 'the sovereign: all ' + fmtN(n) + ' citizens', 'xs mut');
+    var share = 1 / n, bw = 150;
+    Tx(sv, 230, 40, 'your share in making the law', 'sm b', 'start');
+    S('rect', { x: 230, y: 50, width: bw, height: 16, 'class': 'gbx-box' }, sv); S('rect', { x: 230, y: 50, width: Math.max(1, bw * share), height: 16, 'class': 'gbx-redf' }, sv);
+    Tx(sv, 230, 84, '1 / ' + fmtN(n) + ' = ' + V.fmt(share, 8), 'xs', 'start');
+    Tx(sv, 230, 124, 'how much the law binds you', 'sm b', 'start');
+    S('rect', { x: 230, y: 134, width: bw, height: 16, 'class': 'gbx-box-on' }, sv); Tx(sv, 230, 168, 'all of you, whatever N is', 'xs', 'start');
+    Tx(sv, 110, 12, per >= 2 ? 'each dot ≈ ' + fmtN(per) + ' citizens' : 'one dot per citizen', 'xs mut');
+    ro.set('With <b>' + fmtN(n) + '</b> citizens, each has 1/' + fmtN(n) + ' of the sovereign authority, but is wholly under the law. ' + (n >= 100000 ? 'Ten times more citizens means a vote with ten times less influence. ' : '') + 'Rousseau concludes: \"the larger the State, the less the liberty,\" so government must grow stronger as the people grows, which is why he thought small republics best fit liberty.');
+  }
+  V.slider(F.ctl, { label: 'Citizens N', min: 2, max: 6, step: 0.05, value: Math.log10(n), fmt: function (v) { return fmtN(Math.pow(10, v)); }, input: function (v) { var x = Math.pow(10, v), p = Math.pow(10, Math.floor(Math.log10(x)) - 1); n = Math.max(100, Math.round(x / p) * p); draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.smith-wealth-of-nations (scripts/greatbooks/src/gb18.smith-wealth-of-nations/viz.js) ---- */
+  try { (function () {
+/* gb18.smith-wealth-of-nations: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-pin-factory: Smith's pin manufactory (Wealth of Nations I.1): about eighteen operations shared among workers. Smith's own figures are for one worker alone and for ten. */
+ML.viz.register('gb-pin-factory', function (el, opts, V) {
+  var F = frame(el, 400, 230, 'The eighteen operations of pin-making shared among workers'), sv = F.svg, ro = V.readout(el);
+  var OPS = ['draw wire', 'straighten', 'cut', 'point', 'grind top', 'head 1', 'head 2', 'head 3', 'head on', 'whiten', 'step 11', 'step 12', 'step 13', 'step 14', 'step 15', 'step 16', 'step 17', 'into paper']; /* Smith names about ten of the eighteen */
+  var w = Math.max(1, Math.min(18, opts.workers || 10));
+  var COLS = ['gbx-box-gold', 'gbx-box-blue', 'gbx-box-on', 'gbx-box-red'];
+  function draw() {
+    clear(sv);
+    OPS.forEach(function (op, i) { var c = i % 6, r = Math.floor(i / 6), x = 10 + c * 64, y = 10 + r * 46, who = Math.floor(i * w / 18);
+      S('rect', { x: x, y: y, width: 60, height: 40, rx: 7, 'class': COLS[who % 4] }, sv); Tx(sv, x + 30, y + 17, op, 'xs'); Tx(sv, x + 30, y + 32, 'worker ' + (who + 1), 'xs mut'); });
+    var y = 160;
+    S('rect', { x: 10, y: y, width: 380, height: 60, rx: 9, 'class': 'gbx-box' }, sv);
+    if (w === 1) { Tx(sv, 200, y + 24, 'One worker does all 18 operations', 'sm b'); Tx(sv, 200, y + 44, 'Smith: hardly one pin a day, and certainly not twenty', 'xs'); }
+    else if (w === 10) { Tx(sv, 200, y + 24, 'Ten workers share the work: about 48,000 pins a day', 'sm b'); Tx(sv, 200, y + 44, '48,000 ÷ 10 = 4,800 pins per worker', 'xs'); }
+    else { Tx(sv, 200, y + 24, w + ' workers: about ' + V.fmt(18 / w, 1) + ' operations each', 'sm b'); Tx(sv, 200, y + 44, 'Smith gives figures only for one worker alone and for ten', 'xs mut'); }
+    ro.set(w === 1 ? 'Working alone and untrained, Smith says, a man could hardly make <b>one pin</b> a day, and certainly not twenty.' : w === 10 ? 'In the small factory Smith saw, <b>ten</b> workers, some doing two or three operations, made about twelve pounds of pins a day, over 48,000 pins: <b>4,800</b> each, at least 240 times what one could make alone.' : 'With ' + w + ' workers each does about ' + V.fmt(18 / w, 1) + ' of the 18 operations (Smith names about ten of them; the rest are numbered here). Smith\'s three reasons this helps: more skill at one task, no time lost switching tasks, and new machines invented by people focused on one job.');
+  }
+  V.slider(F.ctl, { label: 'Workers', min: 1, max: 18, step: 1, value: w, input: function (v) { w = v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.american-state-papers (scripts/greatbooks/src/gb18.american-state-papers/viz.js) ---- */
+  try { (function () {
+/* gb18.american-state-papers: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-founding: the founding years, 1776–1791 (Declaration, Articles, Convention, ratification, Bill of Rights). */
+ML.viz.register('gb-founding', function (el, opts, V) {
+  timeline(el, V, [
+    { y: 1776.5, when: 'July 4, 1776', lab: 'Declaration of Independence', txt: 'The Continental Congress approves the Declaration, drafted by Thomas Jefferson and edited by a committee and by Congress.' },
+    { y: 1777.9, when: 'November 1777', lab: 'Articles of Confederation agreed', txt: 'Congress sends the Articles to the states: a \"firm league of friendship\" with one vote per state.' },
+    { y: 1781.2, when: 'March 1, 1781', lab: 'The Articles take effect', txt: 'Maryland, the last state, ratifies, once states give up their claims to western lands.' },
+    { y: 1783.7, when: '1783', lab: 'Treaty of Paris', txt: 'Britain recognizes American independence.' },
+    { y: 1786.7, when: '1786–1787', lab: 'Shays\' Rebellion', txt: 'Farmers in Massachusetts, crushed by debts and taxes, close courts; many leaders conclude the national government is too weak.' },
+    { y: 1787.4, when: 'May–September 1787', lab: 'The Constitutional Convention', txt: 'Delegates meet in Philadelphia and sign the Constitution on September 17, 1787.' },
+    { y: 1787.9, when: '1787–1788', lab: 'The Federalist and the ratification debate', txt: 'Publius defends the Constitution in New York newspapers; Anti-Federalists answer. See the next rung.' },
+    { y: 1788.5, when: 'June 21, 1788', lab: 'Ninth state ratifies', txt: 'New Hampshire becomes the ninth state to ratify, enough for the Constitution to take effect.' },
+    { y: 1789.3, when: 'April 30, 1789', lab: 'Washington inaugurated', txt: 'The new government begins in New York City; Congress proposes amendments that September.' },
+    { y: 1791.95, when: 'December 15, 1791', lab: 'Bill of Rights ratified', txt: 'The first ten amendments become part of the Constitution.' }
+  ], { y0: 1775.5, y1: 1792.5, ticks: [1776, 1781, 1787, 1791], sel: opts.step || 0, label: 'Timeline of the founding, 1776 to 1791' });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.federalist-papers (scripts/greatbooks/src/gb18.federalist-papers/viz.js) ---- */
+  try { (function () {
+/* gb18.federalist-papers: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-factions: Madison's argument in Federalist No. 10: the more interests a republic contains, the harder for one to form a majority. Shares are a made-up illustration. */
+ML.viz.register('gb-factions', function (el, opts, V) {
+  var F = frame(el, 400, 230, 'Interests in a small and a large republic'), sv = F.svg, ro = V.readout(el);
+  var n = opts.n || 3, seed = 7;
+  function rnd(s) { return function () { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; }
+  var NAMES = ['farmers', 'merchants', 'artisans', 'lenders', 'debtors', 'sailors', 'planters', 'shippers', 'millers', 'printers', 'fishers', 'lawyers', 'grocers', 'builders', 'miners', 'weavers', 'brewers', 'teachers', 'tanners', 'smiths', 'coopers', 'bakers', 'carters', 'clerks'];
+  function shares() { var r = rnd(seed * 97 + n), w = [], t = 0, i; for (i = 0; i < n; i++) { var x = .4 + r() * (i === 0 ? 1.4 : 1); w.push(x); t += x; } return w.map(function (x, i) { return [NAMES[i % NAMES.length], x / t]; }).sort(function (a, b) { return b[1] - a[1]; }); }
+  function draw() {
+    clear(sv); var sh = shares(), bw = Math.min(40, 340 / n), top = sh[0][1];
+    S('line', { x1: 30, y1: 190 - .5 * 300, x2: 390, y2: 190 - .5 * 300, 'class': 'gbx-lead' }, sv); Tx(sv, 388, 190 - 150 - 5, 'majority (50%)', 'xs acc', 'end');
+    sh.forEach(function (s, i) { var h = s[1] * 300, x = 34 + i * (340 / n);
+      S('rect', { x: x, y: 190 - h, width: bw - 3, height: h, rx: 2, 'class': s[1] > .5 ? 'gbx-redf' : 'gbx-g', opacity: .8 }, sv);
+      if (n <= 8) Tx(sv, x + bw / 2, 204, s[0], 'xs mut'); });
+    S('line', { x1: 30, y1: 190, x2: 390, y2: 190, 'class': 'gbx-ink' }, sv);
+    var k = 0, acc = 0; while (acc <= .5) { acc += sh[k][1]; k++; }
+    Tx(sv, 34, 20, n + ' interests · largest has ' + Math.round(top * 100) + '%', 'sm b', 'start');
+    ro.set(top > .5 ? 'With only <b>' + n + '</b> interests, the largest, the ' + sh[0][0] + ', holds a majority by itself and could outvote everyone else. Madison: in a small republic a faction is more likely to be a majority.' : 'With <b>' + n + '</b> interests, the largest holds only ' + Math.round(top * 100) + '%. To make a majority, at least <b>' + k + '</b> different interests must agree, which, Madison argues, is less likely when the aim is to \"invade the rights of other citizens.\" \"Extend the sphere.\"');
+  }
+  V.slider(F.ctl, { label: 'Number of interests', min: 2, max: 24, step: 1, value: n, input: function (v) { n = v; draw(); } });
+  V.button(F.ctl, 'Another republic', function () { seed++; draw(); });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.gibbon-decline-and-fall-1 (scripts/greatbooks/src/gb18.gibbon-decline-and-fall-1/viz.js) ---- */
+  try { (function () {
+/* gb18.gibbon-decline-and-fall-1: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-rome-timeline: the Decline and Fall in two parts (part 1: AD 96–493; part 2: AD 527–1453). Used by both Gibbon rungs. */
+ML.viz.register('gb-rome-timeline', function (el, opts, V) {
+  var P1 = [
+    { y: 96, when: 'AD 96–180', lab: 'The five good emperors', txt: 'Nerva, Trajan, Hadrian, Antoninus Pius and Marcus Aurelius: Gibbon\'s \"most happy and prosperous\" age (ch. I–III).' },
+    { y: 180, when: 'AD 180', lab: 'Commodus becomes emperor', txt: 'Marcus Aurelius\' son rules badly; decline begins in earnest (ch. IV).' },
+    { y: 235, when: 'AD 235–284', lab: 'The crisis of the third century', txt: 'Armies make and unmake emperors; invasions, plague and civil wars (ch. VI–XII).' },
+    { y: 284, when: 'AD 284', lab: 'Diocletian\'s reforms', txt: 'Rule is shared among several emperors and the empire is reorganized (ch. XIII).' },
+    { y: 330, when: 'AD 330', lab: 'Constantinople founded', txt: 'Constantine, the first Christian emperor, dedicates his new capital on the Bosporus (ch. XVII).' },
+    { y: 378, when: 'AD 378', lab: 'Battle of Adrianople', txt: 'The Goths defeat and kill the emperor Valens (ch. XXVI).' },
+    { y: 410, when: 'AD 410', lab: 'Alaric sacks Rome', txt: 'The first sack of Rome by a foreign enemy in about 800 years (ch. XXXI).' },
+    { y: 451, when: 'AD 451', lab: 'Attila turned back in Gaul', txt: 'The Huns are checked at the Catalaunian Plains (ch. XXXV).' },
+    { y: 476, when: 'AD 476', lab: 'The last emperor in the west', txt: 'Odoacer deposes the boy Romulus Augustulus and names no successor (ch. XXXVI).' },
+    { y: 493, when: 'AD 493', lab: 'Theodoric rules Italy', txt: 'The Ostrogothic king governs Italy from Ravenna (ch. XXXIX).' }
+  ];
+  var P2 = [
+    { y: 527, when: 'AD 527–565', lab: 'Justinian', txt: 'Reconquests in Africa and Italy, Hagia Sophia, and the great code of Roman law (ch. XL–XLIV).' },
+    { y: 622, when: 'AD 622', lab: 'Muhammad goes to Medina', txt: 'The Hijra; the rise of Islam and the Arab conquests follow (ch. L–LI).' },
+    { y: 717, when: 'AD 717–718', lab: 'Constantinople holds', txt: 'An Arab siege of the city fails (ch. LII).' },
+    { y: 800, when: 'AD 800', lab: 'Charlemagne crowned', txt: 'The pope crowns the Frankish king emperor in Rome (ch. XLIX).' },
+    { y: 1054, when: 'AD 1054', lab: 'East and West divided', txt: 'The churches of Rome and Constantinople split (ch. LX).' },
+    { y: 1096, when: 'AD 1096', lab: 'The First Crusade', txt: 'Western armies march to the East (ch. LVIII).' },
+    { y: 1204, when: 'AD 1204', lab: 'Crusaders take Constantinople', txt: 'The Fourth Crusade sacks the city (ch. LX).' },
+    { y: 1258, when: 'AD 1258', lab: 'The Mongols take Baghdad', txt: 'The end of the Abbasid caliphate (ch. LXIV).' },
+    { y: 1347, when: 'AD 1347', lab: 'Cola di Rienzo in Rome', txt: 'A brief dream of reviving the Roman republic (ch. LXX).' },
+    { y: 1453, when: 'AD 1453', lab: 'Fall of Constantinople', txt: 'Mehmed II takes the city on May 29; Constantine XI dies in the final assault (ch. LXVIII).' }
+  ];
+  var two = opts.part === 2;
+  timeline(el, V, two ? P2 : P1, two ? { y0: 480, y1: 1500, ticks: [500, 800, 1100, 1400], ad: true, sel: opts.sel || 0, label: 'Timeline of the Roman Empire from AD 527 to 1453' } : { y0: 80, y1: 510, ticks: [100, 200, 300, 400, 500], ad: true, sel: opts.sel || 0, label: 'Timeline of the Roman Empire from AD 96 to 493' });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb18.boswell-life-of-johnson (scripts/greatbooks/src/gb18.boswell-life-of-johnson/viz.js) ---- */
+  try { (function () {
+/* gb18.boswell-life-of-johnson: visuals (gbw3, our own designs). */
+/* gbw3 shared SVG helpers (copied into each gb18 rung by gbw3; styles in gb18.locke-government-and-toleration/viz.css) */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbx-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function wrap(s, n) { var w = s.split(' '), out = [], line = ''; w.forEach(function (x) { if ((line + ' ' + x).trim().length > n) { if (line) out.push(line); line = x; } else line = (line + ' ' + x).trim(); }); if (line) out.push(line); return out; }
+function Tw(par, x, y, s, n, lh, cls, anc) { wrap(s, n).forEach(function (l, i) { Tx(par, x, y + i * lh, l, cls, anc); }); }
+function person(g, x, y, s, cls) { /* a generic standing figure, feet at y, in the site's cartoon skin color */
+  s = s || 1;
+  S('rect', { x: x - 6 * s, y: y - 30 * s, width: 12 * s, height: 18 * s, rx: 5 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x - 5 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('rect', { x: x + 1 * s, y: y - 13 * s, width: 4 * s, height: 13 * s, rx: 2 * s, 'class': cls || 'gbx-cloth' }, g);
+  S('circle', { cx: x, cy: y - 36 * s, r: 6.5 * s, 'class': 'gbx-skin' }, g);
+}
+function btns(ctl, V, items, cur, fn) { /* a row of toggle-free choice buttons via V.seg */ return V.seg(ctl, { label: items.label, items: items.list, value: cur, change: fn }); }
+/* a timeline with focusable markers: ev = [{ y, lab, txt, lane? }] */
+function timeline(el, V, ev, o) {
+  o = o || {};
+  var lanes = o.lanes || null, W = 400, H = lanes ? 210 : 170, F = frame(el, W, H, o.label || 'A timeline'), sv = F.svg, ro = V.readout(el);
+  var y0 = o.y0, y1 = o.y1, X = function (y) { return 24 + (y - y0) / (y1 - y0) * (W - 48); }, sel = Math.max(0, Math.min(ev.length - 1, o.sel || 0));
+  function laneY(e) { return lanes ? 112 + (e.lane || 0) * 50 : 120; }
+  function draw() {
+    clear(sv);
+    if (lanes) lanes.forEach(function (l, i) {
+      var ly = 112 + i * 50; S('line', { x1: X(l.from), y1: ly, x2: X(l.to), y2: ly, 'class': 'gbx-lane gbx-lane' + i }, sv);
+      Tx(sv, X(l.from), ly - 10, l.name, 'sm b', 'start');
+    }); else S('line', { x1: 20, y1: 120, x2: W - 20, y2: 120, 'class': 'gbx-axis' }, sv);
+    var ty = lanes ? H - 12 : 150;
+    (o.ticks || []).forEach(function (t) { S('line', { x1: X(t), y1: ty - 26, x2: X(t), y2: ty - 20, 'class': 'gbx-tick' }, sv); Tx(sv, X(t), ty, (t < 0 ? (-t) + ' BC' : (o.ad ? 'AD ' : '') + t), 'sm mut'); });
+    ev.forEach(function (e, i) {
+      var g = S('g', { 'class': 'gbx-hit', tabindex: 0, role: 'button', 'aria-label': e.lab + ', ' + e.when }, sv), on = i === sel;
+      S('circle', { cx: X(e.y), cy: laneY(e), r: on ? 8 : 5.5, 'class': on ? 'gbx-dot-on' : 'gbx-dot' }, g);
+      S('rect', { x: X(e.y) - 9, y: laneY(e) - 12, width: 18, height: 24, 'class': 'gbx-hitbox' }, g);
+      g.addEventListener('click', function () { sel = i; draw(); });
+      g.addEventListener('keydown', function (k) { if (k.key === 'Enter' || k.key === ' ') { k.preventDefault(); sel = i; draw(); var n = sv.querySelectorAll('.gbx-hit')[i]; if (n) n.focus(); } });
+    });
+    var e = ev[sel], cx = Math.max(110, Math.min(W - 110, X(e.y)));
+    S('line', { x1: X(e.y), y1: laneY(e) - 9, x2: cx, y2: 62, 'class': 'gbx-lead' }, sv);
+    Tx(sv, cx, 36, e.when, 'b acc');
+    Tw(sv, cx, 54, e.lab, 34, 14, 'b', 'middle');
+    ro.set('<b>' + e.when + ': ' + e.lab + '.</b> ' + e.txt);
+  }
+  var row = document.createElement('div'); row.className = 'gbx-row'; F.ctl.appendChild(row);
+  V.button(row, '◀ Earlier', function () { sel = Math.max(0, sel - 1); draw(); });
+  V.button(row, 'Later ▶', function () { sel = Math.min(ev.length - 1, sel + 1); draw(); });
+  draw();
+}
+/* gb-two-lives: Samuel Johnson (1709–1784) and James Boswell (1740–1795), in parallel. */
+ML.viz.register('gb-two-lives', function (el, opts, V) {
+  timeline(el, V, [
+    { y: 1709, lane: 0, when: '1709', lab: 'Johnson born in Lichfield', txt: 'The son of a poor bookseller.' },
+    { y: 1737, lane: 0, when: '1737', lab: 'Johnson comes to London', txt: 'With his pupil David Garrick, later a famous actor; he lives by writing.' },
+    { y: 1740, lane: 1, when: '1740', lab: 'Boswell born in Edinburgh', txt: 'The son of a Scottish judge.' },
+    { y: 1755, lane: 0, when: '1755', lab: 'The Dictionary', txt: 'Johnson\'s Dictionary of the English Language, about nine years\' work.' },
+    { y: 1759, lane: 0, when: '1759', lab: 'Rasselas', txt: 'A moral tale about the search for happiness, written quickly, it was said, to pay for his mother\'s funeral.' },
+    { y: 1763, lane: 1, when: 'May 16, 1763', lab: 'They meet', txt: 'In Thomas Davies\'s bookshop: \"I do indeed come from Scotland, but I cannot help it.\"' },
+    { y: 1764, lane: 0, when: '1764', lab: 'The Club', txt: 'Johnson and Joshua Reynolds found a dining club; members came to include Burke, Goldsmith, Garrick, Boswell, Gibbon and Adam Smith.' },
+    { y: 1773, lane: 1, when: '1773', lab: 'Tour to the Hebrides', txt: 'Boswell and Johnson travel through the Scottish Highlands and islands.' },
+    { y: 1781, lane: 0, when: '1779–1781', lab: 'Lives of the Poets', txt: 'Johnson\'s critical biographies of English poets.' },
+    { y: 1784, lane: 0, when: 'December 13, 1784', lab: 'Johnson dies', txt: 'He is buried in Westminster Abbey.' },
+    { y: 1785, lane: 1, when: '1785', lab: 'Journal of a Tour to the Hebrides', txt: 'Boswell\'s first book about Johnson.' },
+    { y: 1791, lane: 1, when: '1791', lab: 'The Life of Samuel Johnson', txt: 'Boswell\'s great biography appears in two volumes.' },
+    { y: 1795, lane: 1, when: '1795', lab: 'Boswell dies', txt: 'He was working on a third edition of the Life.' }
+  ], { y0: 1700, y1: 1800, ticks: [1710, 1740, 1770, 1800], lanes: [{ name: 'Johnson', from: 1709, to: 1784 }, { name: 'Boswell', from: 1740, to: 1795 }], sel: opts.sel || 0, label: 'The lives of Johnson and Boswell side by side' });
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
   /* ---- gb18.lavoisier-elements-of-chemistry (scripts/greatbooks/src/gb18.lavoisier-elements-of-chemistry/viz.js) ---- */
   try { (function () {
 /* Lavoisier: a flask on a balance. Heat tin (or burn a candle) in a sealed vessel or an open one, and watch the mass.

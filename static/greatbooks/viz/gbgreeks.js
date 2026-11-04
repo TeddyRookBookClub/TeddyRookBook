@@ -4,6 +4,1197 @@
   var ML = W.MathLadder = W.MathLadder || {};
   function boot() {
     if (!ML.viz || !ML.viz.register) return false;
+  /* ---- gbgreeks.homer-iliad (scripts/greatbooks/src/gbgreeks.homer-iliad/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.homer-iliad: visual gb-iliad-books (gbe1, our own design). The 24 books as a strip, colored by phase,
+   with a line for Achilles' anger (our own reading of the poem, not a measurement). Tap a book or use the arrows.
+   opts: book (1-24, the book selected at the start). Shared .gbx-* styles live in this rung's viz.css. */
+var NS = 'http://www.w3.org/2000/svg', D = document;
+function S(tag, at, par) { var e = D.createElementNS(NS, tag); if (at) for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function T(par, x, y, s, cls, anchor) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anchor || 'middle' }, par); t.textContent = s; return t; }
+function hit(g, label, fn) {
+  g.setAttribute('class', (g.getAttribute('class') || '') + ' gbx-hit'); g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label);
+  g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+var PH = [['q', 'The quarrel', 1, 1], ['b', 'First battles', 2, 7], ['t', 'The Trojans advance', 8, 15], ['p', 'Patroclus', 16, 17], ['a', 'Achilles returns', 18, 22], ['e', 'Endings', 23, 24]];
+var BK = [
+  ['The quarrel', 'Apollo sends a plague on the Greek camp. Agamemnon gives back his captive to end it, then takes Briseis from Achilles. Achilles withdraws, and his mother Thetis asks Zeus to let the Trojans win for a while.', 9],
+  ['The armies gather', 'Zeus sends Agamemnon a misleading dream. The Greeks muster, and the poet lists their ships and leaders: the Catalogue of Ships.', 7],
+  ['A duel for Helen', 'Paris and Menelaus fight a duel to settle the war. Aphrodite carries Paris away to safety. On the wall, Helen names the Greek heroes for King Priam.', 6],
+  ['The truce is broken', 'A Trojan archer, urged by Athena, shoots at Menelaus, and the battle begins.', 6],
+  ["Diomedes' great day", 'The Greek hero Diomedes fights so fiercely that he even wounds two gods.', 6],
+  ['Hector and Andromache', 'Hector goes into Troy. He meets his wife Andromache and baby son Astyanax on the wall, and prays that his son will be greater than he is.', 6],
+  ['Hector and Ajax', 'Hector and the Greek giant Ajax fight a duel until night. Both sides bury their dead, and the Greeks build a wall around their ships.', 6],
+  ['The Trojans push forward', 'Zeus forbids the gods to help either side. The Trojans drive the Greeks back and camp on the plain, their fires burning all night.', 7],
+  ['The embassy', 'Odysseus, Ajax and old Phoenix beg Achilles to return, offering rich gifts. He refuses them all.', 9],
+  ['A night raid', 'Odysseus and Diomedes slip out to spy on the Trojan camp.', 7],
+  ['Agamemnon wounded', 'Agamemnon fights well and is wounded. Achilles sends his friend Patroclus to find out who else has been hurt.', 7],
+  ['The wall is stormed', 'Hector breaks through the Greek wall.', 6],
+  ['Poseidon helps', 'The sea god Poseidon helps the Greeks hold their ships.', 6],
+  ['Hera and Zeus', 'Hera lulls Zeus to sleep so that the Greeks can rally.', 6],
+  ['Fire at the ships', 'Zeus wakes, Hector reaches the ships, and the Greeks are close to defeat.', 6],
+  ['Patroclus', 'Patroclus goes out in Achilles\' armor, drives the Trojans back, and is killed by Hector.', 7],
+  ['The fight for the body', 'Greeks and Trojans struggle over Patroclus\' body; the Greeks carry it back.', 8],
+  ['The shield', 'Achilles grieves for his friend. The god Hephaestus makes him new armor and a great shield showing a whole world, at war and at peace.', 10],
+  ['Reconciled', 'Achilles and Agamemnon make peace. Achilles arms for battle.', 10],
+  ['Achilles returns', 'Achilles goes back into battle, and the gods join the fighting.', 10],
+  ['The river', 'Achilles fights so wildly that the river god Scamander rises against him.', 10],
+  ['Hector', 'Hector stands alone outside the walls of Troy. Achilles kills him, while Priam and Hecuba watch from the city.', 10],
+  ['The funeral games', 'The Greeks hold a funeral for Patroclus and games in his honor: chariot races, boxing, running.', 8],
+  ['Priam and Achilles', 'Old Priam, guided by Hermes, goes to Achilles at night to ransom Hector\'s body. Achilles thinks of his own father and gives it back. The poem ends with Hector\'s funeral.', 2]
+];
+function phase(b) { for (var i = 0; i < PH.length; i++) if (b >= PH[i][2] && b <= PH[i][3]) return PH[i]; return PH[0]; }
+ML.viz.register('gb-iliad-books', function (el, opts, V) {
+  var cur = Math.max(1, Math.min(24, +opts.book || 1));
+  var box = D.createElement('div'); box.className = 'gbx gbx-scroll'; box.style.setProperty('--gbx-minw', '620px'); el.appendChild(box);
+  var W = 720, H = 210, x0 = 18, cw = 28.5, top = 110, ch = 52;
+  var svg = S('svg', { viewBox: '0 0 ' + W + ' ' + H, 'class': 'gbx-svg', role: 'group', 'aria-label': 'The 24 books of the Iliad' }, box);
+  S('rect', { x: 0, y: 0, width: W, height: H, 'class': 'gbx-bg', rx: 10 }, svg);
+  T(svg, x0, 22, "Achilles' anger (our reading)", 'gbx-cap', 'start');
+  var yA = function (v) { return 98 - v * 6.6; };
+  var pts = BK.map(function (b, i) { return (x0 + i * cw + cw / 2).toFixed(1) + ',' + yA(b[2]).toFixed(1); }).join(' ');
+  S('polyline', { points: pts, 'class': 'gbx-line' }, svg);
+  var dot = S('circle', { r: 5, 'class': 'gbx-dot' }, svg);
+  var cells = [];
+  BK.forEach(function (b, i) {
+    var n = i + 1, g = S('g', {}, svg), ph = phase(n);
+    var r = S('rect', { x: x0 + i * cw + 1, y: top, width: cw - 2, height: ch, rx: 4, 'class': 'gbx-cell gbx-ph-' + ph[0] }, g);
+    T(g, x0 + i * cw + cw / 2, top + ch / 2 + 5, String(n), 'gbx-num');
+    hit(g, 'Book ' + n + ': ' + b[0], function () { set(n); });
+    cells.push(r);
+  });
+  PH.forEach(function (p) {
+    var xa = x0 + (p[2] - 1) * cw, xb = x0 + p[3] * cw;
+    S('line', { x1: xa + 2, x2: xb - 2, y1: top + ch + 10, y2: top + ch + 10, 'class': 'gbx-ph-line gbx-phs-' + p[0] }, svg);
+    if (p[3] - p[2] >= 1) T(svg, (xa + xb) / 2, top + ch + 26, p[1], 'gbx-small');
+  });
+  var ctl = D.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  V.button(ctl, '◀ Book before', function () { set(Math.max(1, cur - 1)); });
+  V.button(ctl, 'Next book ▶', function () { set(Math.min(24, cur + 1)); });
+  var ro = V.readout(el);
+  function set(n) {
+    cur = n; var b = BK[n - 1];
+    cells.forEach(function (r, i) { r.classList.toggle('gbx-on', i === n - 1); });
+    dot.setAttribute('cx', (x0 + (n - 1) * cw + cw / 2).toFixed(1)); dot.setAttribute('cy', yA(b[2]).toFixed(1));
+    ro.set('<b>Book ' + n + ': ' + b[0] + '.</b> ' + b[1] + ' <span class="gbx-mut">(' + phase(n)[1] + ')</span>');
+  }
+  set(cur);
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.homer-odyssey (scripts/greatbooks/src/gbgreeks.homer-odyssey/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.homer-odyssey: visual gb-odyssey-map (gbe1, our own design), and the small map kit ML.gbMap that the
+   Herodotus and Thucydides maps also use. Land outlines: Natural Earth (public domain), projected (equirectangular,
+   x scaled by cos 38°) and simplified for this ladder from the site's static/geog/data/world.json.
+   gb-odyssey-map opts: stop (index of the stop shown at the start). The places of Books 9–12 are legendary; the dots
+   are the traditional guesses, as the readout says. */
+var NS = 'http://www.w3.org/2000/svg', D = document;
+ML.gbLand = { lon0: -10, lat1: 48, k: 20, c: 0.788011, d: 'M1072 115l0 102 0 -113 0 9 0 -3 -3 6 -7 1 -7 6 1 12 -16 -1 0 -74 23 -7 9 -4 0 66zM122 -24l1 -1 3 1 -4 0zM116 -29l2 -1 -1 1 -1 0zM1045 447l1 13 -5 5 -2 -4 -2 2 -1 12 4 4 -8 2 0 4 -6 23 -40 -7 -15 -23 -1 -4 3 1 3 5 5 0 6 -3 20 1 8 -4 5 -10 19 -20 2 -5 1 7 3 1zM996 474l3 -2 0 2 -3 0zM1003 477l3 -2 1 2 -4 0zM1014 471l1 -1 1 2 -2 -1zM760 18l-11 1 -3 3 -18 5 -6 1 -8 6 -1 -3 -6 5 2 9 -5 -5 -16 -4 -1 2 -6 -1 -12 1 -11 -4 4 -3 -7 -2 13 1 3 -2 -16 -1 -12 2 -5 9 -4 5 -10 3 2 9 -8 -3 -7 3 -5 -1 -4 -3 4 -1 1 -3 7 -8 0 -8 3 -2 11 4 4 -1 -3 -3 -1 -6 -4 -3 -1 -6 -6 -3 1 -6 -2 -4 -5 -3 -5 0 -14 -8 -5 3 -6 -1 -4 3 -5 1 -2 4 -11 2 -9 4 -5 -5 -6 1 -16 -4 -5 3 -2 -3 -10 -6 7 -13 4 1 -2 -11 6 -7 16 -2 -7 0 222 0 5 2 4 -2 10 3 4 0 10 6 3 -1 2 7 -7 5 5 3 -5 2 4 10 -3 8 -13 0 -10 6 -1 9zM654 33l2 2 -1 0 -1 -2zM993 179l2 5 -2 -5zM1040 134l16 1 -1 -12 7 -6 7 -1 3 -6 0 3 0 -9 0 153 0 -53 -9 -3 -4 -5 -12 -1 -3 4 -10 -1 -8 4 -6 8 -7 3 -6 0 -1 -12 1 -18 -3 -7 -6 -3 -3 2 2 -7 5 1 -1 -7 -8 -2 -2 2 -2 -10 3 -13 3 4 8 1 2 3 10 -1 -1 -3 6 -1 -2 -6 -8 -6 -4 -12 -11 0 -3 2 -1 16 -6 -12 9 -7 17 -4 12 9 5 9 5 4 7 -1zM562 157l4 -2 1 2 -5 0zM812 130l15 1 4 -3 11 10 5 8 -3 4 2 7 5 3 5 -1 8 8 -4 -2 -3 7 -6 0 4 11 1 9 2 1 -4 9 6 3 0 6 4 3 -1 3 -2 -1 -6 4 -1 -5 -11 0 -6 -2 -5 0 -7 5 -1 -4 -12 4 -13 0 -11 5 -10 3 -9 0 -9 -4 -12 5 -6 0 -7 -3 -2 7 2 4 -4 2 -4 6 -4 -1 -1 -8 6 -7 -2 -5 -8 6 -6 -1 -6 -3 -3 0 -14 12 -15 3 -6 -3 -6 -7 -10 -5 -11 -1 -5 12 -2 -1 -9 3 -8 -5 -2 -6 -11 -2 -11 3 -3 -1 8 -2 5 -5 -14 1 3 -3 -5 -5 -3 -6 3 -1 0 -5 -15 -6 3 -7 2 5 8 0 -6 -6 4 -4 -5 -8 2 -5 -11 2 1 -11 2 0 7 -8 9 -1 3 3 25 -2 -5 -3 3 -2 14 -2 -8 -1 -5 -4 1 -4 4 -1 9 2 7 -1 7 2 7 0 3 -4 14 -9 17 -5 21 1 4 -2 5 6 4 2 8 -1 2 5 5 4 4 -2 5 3 21 6 16 -4 6 2 7 1 11 -5 9 -6zM599 121l0 2 5 8 12 4 -2 5 -3 1 -9 -3 -4 2 -7 1 -4 5 -7 4 -9 9 0 -5 9 -7 -11 1 -1 -3 5 -4 0 -6 4 -3 0 -4 -5 -2 5 -5 11 -3 4 4 7 -1zM339 296l0 16 -11 6 -5 7 -3 1 -3 5 2 8 0 5 -5 8 -6 3 -8 -36 -11 -10 -4 -11 -6 -3 -3 -12 0 -5 12 -13 2 -9 -2 -13 1 -10 -2 -3 6 -9 9 -5 8 -3 8 3 0 3 4 6 2 -3 8 -3 1 4 -5 7 -5 4 1 8 7 5 2 8 -9 14 -8 7 2 7 4 4 4 -1 1 4 5 -1 2 6 5 1zM333 266l2 -2 0 1 -2 1zM327 285l0 -3 4 2 -4 1zM723 242l4 1 4 -6 4 -2 -2 -4 2 -7 7 3 6 0 12 -5 9 4 9 0 10 -3 11 -5 13 0 12 -4 1 4 -9 10 -6 2 -2 9 1 8 -2 7 0 11 -3 6 -35 22 -31 21 -7 -2 -9 -7 0 -13 3 -3 1 -6 8 -7 -2 -8 -7 -1 -2 -4 1 -7 -3 -7 2 -7zM308 10l1 9 8 4 4 -3 1 3 0 6 -4 -1 -2 2 2 5 -4 -2 -6 1 -4 -4 -1 4 -4 9 -8 -8 -1 -4 -5 4 1 2 -6 5 -4 -2 -8 1 -4 -4 0 -5 -5 -1 -5 6 -1 -6 15 -17 1 -4 6 1 3 -3 12 0 3 -3 5 2 4 0 6 3zM695 540l-193 0 49 0 0 -20 98 0 3 -4 1 4 86 0 1 8 4 8 0 4 22 0 -71 0zM180 186l0 -1 2 2 -2 -1zM195 169l8 -7 4 -1 0 3 5 1 -3 7 -3 2 -7 -5 -4 0zM218 160l6 -1 1 4 -7 -3zM177 182l2 -4 4 1 -3 4 -3 -1zM129 92l6 3 -1 4 12 2 2 3 5 -1 4 3 11 0 1 -3 10 3 2 5 3 -1 6 3 2 -1 7 1 5 -2 4 0 1 10 -19 13 -16 5 -5 5 3 2 -5 2 -15 22 2 9 7 6 -9 6 -5 6 -2 11 -8 1 -8 6 -2 6 -4 4 -6 -1 -3 2 -25 0 -5 4 -8 2 -3 5 -4 2 -7 -3 -7 -15 -6 -5 -8 0 -2 -8 5 -8 3 -1 -5 -8 1 -5 4 -7 -2 -2 -3 -6 -3 -4 6 -1 4 -6 -2 -4 3 -3 -2 -13 12 -11 -6 -2 -1 -6 -8 -1 -4 3 -13 -1 0 -5 -9 4 -1 -3 3 -3 -2 -8 -3 1 1 -4 -5 -4 1 -3 5 -4 5 0 5 -2 -1 -3 9 -3 7 3 25 0 18 4 15 -2 9 3 2 -2 9 2 8 -1zM513 -21l-7 13 -6 1 -4 -4 -15 0 -3 5 -7 3 -4 -1 -3 2 -10 2 -1 4 -15 1 -10 -5 -5 -8 5 -9 9 -1 6 -3 1 -4 7 -5 3 0 5 2 5 -4 5 5 0 3 5 0 1 -2 8 -2 5 2 2 -2 9 0 6 4 8 3zM418 30l-14 6 0 7 -6 2 1 6 -7 0 -5 -4 -3 3 -8 1 -4 -1 4 -2 -5 -5 -1 -4 2 -3 -4 -1 6 -5 13 2 7 -5 15 -1 2 -3 3 0 4 7zM515 75l-4 5 0 6 2 5 7 5 -5 6 -3 1 1 8 -3 3 -2 -1 -11 2 3 -8 -5 -2 -6 -7 -4 -3 -7 8 0 -1 -12 -6 -6 -7 4 0 1 -3 -4 -5 5 -2 -7 -5 0 -5 4 -7 -6 1 2 -7 3 -1 -5 -3 1 -3 -3 -6 1 -2 4 -1 5 -3 12 1 8 7 0 5 11 8 -2 5 12 6 6 -3 4 3 -4 2 3 4zM733 447l4 2 -4 -2zM977 540l-195 0 -8 -6 1 -4 -3 -8 2 -10 -2 -7 -4 -11 -7 -12 -6 -6 -6 -2 -5 -10 1 -3 -2 -7 -31 -55 -9 -2 3 -7 2 -17 17 3 7 -6 5 -7 11 -3 3 -6 5 -4 -16 -20 32 -10 3 -2 19 3 27 17 41 38 43 4 4 9 12 0 5 12 1 5 7 4 2 6 9 7 1 6 3 3 -1 6 -2 0 4 11 3 3 1 6 7 11 7 0 -2 4 4 1 1 4 15 23 40 7 1 -2 8 14 -11 20 -47 0zM734 445l0 -2 0 2zM353 81l2 -1 -1 2 -1 -1zM1072 114l0 -154 0 18 0 -18 -148 0 3 0 -6 3 -3 -2 -16 -1 -4 3 -3 10 4 5 -5 6 -1 8 5 2 2 7 3 4 3 -1 10 1 7 9 6 11 -5 0 0 4 10 4 -3 3 -6 2 1 4 -4 -1 -4 3 -11 4 -7 16 -6 3 0 5 5 1 5 7 2 10 0 9 14 22 3 2 -3 5 -5 3 -3 5 -10 -2 0 -3 -8 -7 -12 -5 -5 -3 1 -6 -6 -1 -7 -4 -2 3 -4 -3 -9 4 -2 -4 -11 -5 -2 -2 -9 -2 -13 0 -12 -6 -11 -1 -2 3 -20 -18 -9 -2 -5 -6 -7 -1 -3 -4 -9 -4 7 -3 9 -2 0 -5 4 -7 9 -2 -6 -6 -3 0 -2 -5 7 -1 4 1 -1 -3 14 -6 -2 -3 -15 3 1 -9 10 -6 13 0 3 -8 -4 -10 5 -2 -5 -3 7 -5 -2 -7 -3 1 -10 -6 -4 0 -10 -3 -4 2 -5 -2 -163 0 483 0 0 154zM913 48l1 3 -1 -3zM687 38l1 -2 16 4 11 13 10 0 3 -2 6 1 -3 7 -8 1 -5 -2 -7 6 -6 0 -13 8 -7 -3 2 -7 -1 -4 -10 -5 -6 -1 18 -11 -1 -3zM602 51l4 3 5 1 7 -3 8 3 -3 8 -8 2 0 -4 -6 13 -1 11 -8 -1 -3 -4 -7 0 -5 -3 -14 3 -7 5 -5 2 -35 -4 -5 0 2 -5 -9 -7 4 -2 -4 -3 -6 3 -12 -6 2 -5 -11 -8 0 -5 -8 -7 12 -3 15 -25 5 -5 6 -1 8 -6 16 4 6 -1 5 5 9 -4 11 -2 2 -4 5 -1 6 2 5 10 12 13 3 7 -3 14 2 10zM966 468l-5 1 -3 -5 0 -13 3 -11 5 -3 4 5 -1 7 2 8 -3 10 -2 1zM19 121l9 -4 0 5 13 1 4 -3 8 1 1 6 6 2 -12 11 2 13 -3 3 2 4 -4 6 -6 1 3 4 3 6 2 2 -4 7 -1 5 5 8 -3 1 -5 8 2 8 -7 4 -12 -2 -6 1 3 -8 -1 -10 1 -5 -1 -5 -6 0 2 -6 -6 0 2 -12 3 -4 5 -11 0 -2 3 -17 -3 -16 1 -2zM530 -40l7 0 -16 2 -6 7 2 11 -12 -4 -6 -4 -9 0 -2 2 -5 -2 -8 2 -1 2 -5 0 0 -3 -5 -5 -5 4 -5 -2 -4 -8 -8 -2 -62 0 150 0zM994 540l30 0 11 -20 -8 -14 1 -7 4 -14 0 -4 8 -2 -4 -4 1 -12 2 -2 2 4 5 -5 4 11 5 6 4 5 13 5 0 53 -78 0zM1045 447l-3 -1 -1 -7 6 -6 -2 14zM1043 456l1 -2 1 1 -2 1zM372 540l-212 0 116 0 70 -50 24 6 12 12 12 -8 3 30 6 10 6 0 -37 0zM123 258l6 7 2 29 3 8 7 9 -3 2 -1 5 -18 -1 -8 2 -1 4 -13 4 0 9 3 3 -11 7 -10 5 -3 6 -4 4 -17 3 -2 5 -7 -2 -10 6 -15 13 0 21 -2 0 0 11 -10 0 -5 5 -8 0 -5 -3 -6 0 -7 2 1 5 -6 11 -5 1 0 93 1 -135 8 -5 6 -6 9 -7 10 -15 3 -6 0 -7 -3 -5 1 -14 2 -6 5 -8 2 -9 15 -17 22 -11 8 -17 7 -20 10 -2 -1 3 8 9 8 3 10 -3 8 1 4 -3 2 5 10 1zM460 89l6 7 12 6 0 1 -5 2 1 4 -5 1 -2 -3 -6 10 1 6 -7 -8 -6 -4 -1 -2 2 -2 -2 -6 3 -2 5 -9 4 -1zM577 -5l4 -3 6 1 5 -3 14 8 5 0 5 3 2 4 -1 6 6 3 1 6 4 3 1 6 3 3 -4 1 -11 -4 -3 2 0 8 -7 8 -1 3 -4 1 -2 -10 3 -14 -3 -7 -12 -13 -5 -10 -6 -2zM-32 540l0 -100 53 0 0 -26 61 46 -28 0 15 80 4 0 -105 0zM384 243l0 -3 3 3 -3 0zM381 239l1 -1 0 2 -1 -1zM-22 540l95 0 -4 0 -15 -80 28 0 94 78 0 2 48 0 -246 0zM497 115l11 -2 10 7 2 6 -1 7 -7 5 -9 0 -5 5 -14 -1 -3 -7 -1 -5 2 -7 3 -4 4 -2 4 1 4 -3zM254 -40l6 4 -2 7 -9 -2 1 -2 -2 -5 6 -2zM309 19l-1 -4 1 4zM308 355l6 -3 5 -8 0 -5 -2 -8 3 -5 3 -1 5 -7 11 -6 0 -16 12 7 8 1 8 -2 15 4 4 4 11 2 3 5 2 10 3 4 7 4 10 1 9 2 13 6 12 10 6 0 6 -4 5 -6 2 -6 -3 -14 3 -8 8 -8 7 -4 5 0 4 -3 8 1 14 6 1 5 3 3 8 1 5 3 9 0 5 2 2 5 -5 6 2 11 -4 12 4 20 0 164 -15 0 -127 -49 -27 17 -12 -12 -24 -6 -7 -16 -13 -5 -4 1 -3 -2 -3 -9 -1 -6 -8 -14 0 -6 6 -4 1 -6 -3 -10 3 -9 -1 -23 -3 -14 -6 -9 4 -3zM725 267l7 1 2 8 -8 7 -1 6 -9 9 -5 0 8 -19 0 -4 6 -8zM915 364l2 -4 3 4 -3 4 -2 -4zM921 389l-12 0 -4 -9 -14 -2 6 -9 4 -9 9 -2 4 2 2 9 -2 -1 -4 4 5 1 6 16zM478 103l7 -8 4 3 6 7 5 2 -3 8 -4 3 -4 -1 -4 2 -3 4 -2 -7 -6 -7 -1 -4 5 -2zM946 61l2 2 -1 0 -1 -2zM950 60l1 -2 -1 3 0 -1zM986 51l1 -2 1 3 -2 -1zM1072 115l0 -66 -9 4 -23 7 0 74 -7 1 -5 -4 -5 -9 -12 -9 -17 4 -9 7 -1 -6 3 -7 0 -6 -10 -2 -6 -6 -5 0 0 -7 -7 -14 -8 -3 1 -5 7 -1 5 3 6 -1 -8 -5 0 -4 6 -7 17 -1 11 1 -7 -4 6 -13 -1 -7 2 -2 -4 -6 -7 -1 -6 3 -7 -3 -8 -2 -12 4 -6 5 -11 3 -1 3 -10 -4 0 -4 5 0 -6 -11 -7 -9 -10 -1 -3 1 -3 -4 -2 -7 -5 -2 1 -8 5 -6 -4 -5 3 -10 4 -3 16 1 3 2 6 -3 -3 0 148 0 0 155zM722 305l9 7 7 2 31 -21 4 17 0 4 3 -1 -4 7 -32 10 16 20 -5 4 -3 6 -11 3 -5 7 -7 6 -17 -3 3 -21 5 -15 3 -31 3 -1zM268 41l8 -1 4 2 6 -5 -1 -2 5 -4 1 4 8 8 4 -9 1 -4 4 4 6 -1 4 2 -2 -5 2 -2 4 1 0 -6 9 1 4 -4 8 0 6 -2 0 3 4 5 21 4 -6 5 4 1 -2 3 1 4 5 5 -2 0 -2 -3 -6 0 -3 2 -12 4 -1 4 5 6 -4 5 2 10 5 4 13 9 7 17 14 13 5 2 12 0 3 4 -4 3 2 3 17 8 14 8 5 6 3 5 -2 6 -4 -3 -4 -7 -6 0 -5 -4 -4 1 -6 12 1 4 8 5 1 8 -6 2 -3 4 -1 6 -4 3 -3 6 -6 0 -1 -5 3 -2 2 -8 4 -1 -3 -12 -5 -13 -6 -1 -6 -4 1 -3 -4 -5 -6 1 1 -3 -5 -2 -6 -8 -10 0 -7 -4 -16 -17 -7 -5 -8 -8 -3 0 1 -4 -4 -7 -1 -7 -3 -3 -12 -6 -8 -2 -4 1 -7 9 -9 3 2 -8 -4 0 -7 -3 -2 -4 3 -4 -4 -4 -2 -4 7 -3 1 -3 -5 -6 3 -5zM317 104l5 0 0 2 -5 -2zM346 223l2 2 -2 -2zM354 204l4 -8 3 3 4 -3 8 4 13 -1 6 -2 4 0 8 -2 -6 9 -2 7 3 9 -3 6 -10 -2 -6 -6 -3 0 -16 -9 -4 -1 -3 -4zM287 145l0 -3 6 1 10 -8 6 5 3 10 -2 5 0 3 -1 15 -2 4 -7 -2 -2 7 -4 -1 -4 -5 0 -6 2 -7 -2 -1 1 -8 -4 -9zM289 178l2 1 -1 2 -1 -3zM287 140l2 -2 -2 2zM722 292l0 13 -3 1 -1 6 -6 -3 -4 8 1 5 3 3 -4 3 -1 4 4 1 5 -3 0 7 -5 15 0 5 -3 13 -11 -34 7 -14 7 -24 5 0 6 -6zM701 328l-4 8 0 -2 4 -6zM718 312l0 13 -2 5 -5 3 -4 -1 1 -4 4 -3 -3 -3 -1 -5 4 -8 6 3zM825 218l7 -5 5 0 6 2 11 0 1 5 6 -4 2 1 10 23 5 3 7 1 -3 6 3 7 -7 7 -1 5 -3 3 1 5 -2 4 5 7 3 0 4 7 -1 6 8 2 8 8 4 1 7 12 -2 8 0 8 5 0 0 11 5 3 4 7 -7 -2 -2 1 -4 -2 -9 2 -4 9 -6 9 -29 -2 -41 -38 -27 -17 -19 -3 1 -5 -3 1 0 -4 -4 -17 35 -22 3 -6 0 -11 2 -7 -1 -8 2 -9 6 -2 9 -10zM1029 427l15 -7 -5 6 -8 2 -2 -1zM1007 213l6 0 7 -3 6 -8 8 -4 10 1 3 -4 12 1 4 5 9 3 0 254 0 -10 -11 -4 -5 -22 -3 -4 -7 -2 -11 4 -12 9 -4 1 -6 -4 -9 -1 -4 -4 -12 -7 -3 -6 -7 -4 -6 -1 -6 -6 -4 -12 -3 -2 0 -4 -3 -2 0 -5 -8 -10 -1 -6 -8 3 -8 -5 2 -3 -3 -1 -1 8 -6 3 -4 -7 -5 -3 0 -11 -5 0 0 -8 2 -8 -7 -12 -4 -1 -8 -8 -8 -2 1 -6 -4 -7 -3 0 -5 -7 2 -4 -1 -5 3 -3 1 -5 7 -7 -3 -7 3 -6 -7 -1 -5 -3 -2 -7 -4 -4 -4 -12 1 -3 -4 -3 0 -6 -6 -3 4 -9 -2 -1 -1 -9 -4 -11 6 0 3 -7 4 2 5 8 7 6 8 1 6 0 21 -15 3 -1 5 6 -3 2 2 6 -4 4 9 8 5 -1 1 11 2 5 6 3 11 2 6 8 9 5 10 3 7 0 19 -5 9 1 -1 -11zM506 -8l10 6 2 3 -3 3 -6 1 -5 5 -15 25 -12 3 -12 -1 -5 3 -13 5 -9 -1 -8 -4 -8 -8 -4 -2 -4 -7 -3 0 6 -3 0 -8 3 -1 -2 -6 9 1 1 -6 10 5 15 -1 1 -4 10 -2 3 -2 4 1 7 -3 3 -5 15 0 4 4 6 -1zM596 228l1 -1 -1 2 0 -1zM478 196l4 -5 3 8 -7 -3zM483 203l1 -2 4 5 -2 1 -3 -4zM482 188l1 -4 1 3 -2 1zM483 190l1 1 0 3 -1 -4zM467 165l3 -1 1 7 -4 -6zM518 183l7 -4 3 4 9 4 3 9 5 1 -1 4 -5 -3 -3 -6 -4 0 -8 -8 -6 -1zM529 176l3 2 -1 0 -2 -2zM533 177l2 -1 -2 1zM543 182l1 -2 3 4 -4 -2zM544 147l3 -3 1 4 -4 -1zM527 201l1 -1 0 2 -1 -1zM519 234l3 1 -3 1 0 -2zM584 248l3 2 -2 2 -1 -4zM581 218l3 2 -2 1 -1 -3zM582 225l2 -2 5 0 -7 2zM557 219l3 -3 0 5 -3 -2zM553 219l3 -2 -1 3 -2 -1zM557 233l1 -2 1 1 -2 1zM556 225l2 1 -1 1 -1 -2zM577 206l3 -2 4 2 -3 1 -4 -1zM567 209l2 -2 4 0 -6 2zM563 224l3 -2 -1 2 -2 0zM572 229l2 -1 -1 2 -1 -1zM540 208l2 -1 -2 2 0 -1zM542 212l1 0 -1 2 0 -2zM541 227l3 -2 0 1 -3 1zM547 201l4 1 0 4 -4 -5zM552 206l3 1 -1 2 -2 -3zM546 220l2 1 -1 1 -1 -2zM565 189l5 0 0 5 -3 3 -2 -8zM565 176l8 -4 4 7 -7 0 -5 -3zM559 150l2 0 1 1 -3 -1zM552 160l7 -1 -2 5 -4 -1 -1 -3zM556 212l1 -2 2 1 -3 1zM543 217l0 -1 1 2 -1 -1zM594 241l0 -4 4 -4 5 -2 -3 8 -6 2zM529 252l3 -5 5 1 4 5 6 -2 12 3 4 -1 0 4 9 -3 -1 5 -23 2 -1 -3 -17 -3 -1 -3zM572 126l5 2 0 4 -4 3 0 6 -5 4 -3 -2 -12 -3 -5 3 -5 -2 -6 5 -5 -1 1 8 -2 1 4 4 0 3 -4 -5 -6 0 -7 -4 1 -4 -5 2 0 9 11 15 -7 1 2 4 -6 3 10 5 7 6 4 2 2 11 -2 0 -6 -6 -8 2 2 6 5 3 -5 2 -7 -4 4 11 0 9 -3 -5 -3 0 -4 6 0 -4 -4 -7 -3 6 -5 -7 1 -4 -1 -5 -7 -6 4 -7 4 0 3 -3 17 8 3 -5 -3 0 -8 -5 -3 2 -4 -1 -8 2 -6 -2 -5 -11 5 1 0 -3 -5 1 -7 -7 -5 -7 3 1 3 -4 -1 -3 5 -2 3 -7 3 -3 -1 -5 10 0 5 -5 9 0 7 -5 11 -1 7 -3 7 0 12 6 14 -4 -2 -4 4 -1zM308 10l-6 -3 -4 0 -5 -2 -3 3 -12 0 -2 -1 5 -20 5 -6 -11 -4 -11 0 -6 -6 2 -7 -6 -4 4 0 -7 0 143 0 -44 0 5 2 -2 3 4 6 18 14 -2 5 -3 -2 -1 4 -9 5 -1 1 4 8 0 4 -5 -3 -8 -1 0 2 -8 0 -6 4 -5 0 -2 -2 -7 -1 -2 5 -9 -6 -3 2zM842 138l-11 -10 -4 3 -15 -1 3 -4 1 -5 -6 -16 -22 -13 2 -3 11 1 12 6 13 0 9 2 2 2 11 5 2 4 9 -4 4 3 2 -3 7 4 6 1 -1 6 12 6 -3 3 1 5 6 4 -3 5 -5 -3 -6 0 -1 -3 -7 -2 -7 5 -9 0 -13 2zM293 116l2 -7 7 -4 2 1 1 -6 2 0 1 17 -6 15 -6 -4 2 -2 -5 -5 0 -5zM278 8l-3 3 -6 -1 -1 4 -15 17 1 6 5 -6 5 1 0 5 4 4 -3 5 5 6 -1 3 -7 3 2 4 4 4 -3 4 2 4 7 3 4 0 -2 8 -13 8 -3 4 -6 2 -11 -4 -6 -4 -6 1 -10 -4 -12 8 -3 6 2 9 -4 0 -5 2 -7 -1 -2 1 -10 -5 -1 -2 -10 -3 -1 3 -11 0 -4 -3 -5 1 -2 -3 -12 -2 1 -4 -6 -3 5 -3 7 -40 5 5 -2 -5 -5 -3 2 -1 -1 -11 -11 -4 -4 -6 1 -5 -3 -2 3 -3 -8 0 1 -3 -5 -1 -6 -4 -12 -3 -6 1 -6 -5 5 -2 -3 -2 4 -2 -7 0 0 -4 24 -6 3 1 5 5 4 -2 17 0 -3 -3 0 -8 -5 -10 10 0 2 6 15 2 9 -3 -4 -1 1 -4 16 -6 56 1 1 3 7 2 3 4 5 -1 9 2 6 6 11 0 11 4 -5 6 -5 20 2 1zM136 39l3 3 -1 2 -2 -5zM739 520l-86 0 -1 -4 -3 4 -98 0 0 -144 -4 -20 4 -12 -2 -11 5 -6 4 3 8 -2 21 4 5 4 15 3 9 4 8 -3 5 -5 5 0 3 -4 8 -2 -6 3 7 -1 1 -3 7 3 6 -2 -2 5 6 4 3 -3 4 4 9 -2 1 1 11 -2 5 -2 11 36 -3 5 -5 25 -3 5 -7 -6 -8 -10 -3 -10 -6 -9 -2 -9 -3 6 3 5 1 8 4 9 10 13 0 6 6 11 1 8 19 43 10 11 -4 1 -1 9 3 10 4 4 5 2 10 13zM454 -30l-3 0 -7 5 -1 4 -6 3 -9 1 -3 5 -1 -2 -7 -2 -6 1 -12 -4 -5 -1 -1 5 -4 3 -10 0 -22 -17 -4 -6 2 -3 -5 -2 92 0 8 2 4 8zM673 257l3 1 8 -1 2 2 8 0 -17 9 -8 -3 -2 -4 6 -4zM372 50l4 1 8 -1 3 -3 5 4 7 0 -1 -6 6 -2 0 -7 14 -6 4 2 8 8 8 4 9 1 9 -4 -1 2 3 6 -1 3 5 3 -3 1 -2 7 -5 -5 -11 -1 -3 1 -10 -1 -4 -3 -6 2 -4 4 -4 -4 -4 0 0 9 6 6 1 5 8 8 9 7 0 3 5 5 0 2 -11 -9 -8 -3 -6 1 -1 -3 -7 -5 -6 -7 5 0 -9 -9 0 -8 -5 -4 -4 -1 -5 10 -6 -5 0 -8zM420 100l8 2 -7 0 -1 -2zM416 96l13 1 -9 1 -4 -2zM416 94l7 -1 -1 2 -6 -1zM395 77l3 2 -3 -2zM385 58l2 -2 4 4 -6 -2zM389 64l1 -1 2 3 -3 -2zM390 66l8 7 -1 1 -7 -8zM392 77l5 5 -5 -5zM398 80l2 2 -2 -2zM383 57l3 4 0 7 -3 -11zM431 104l6 2 -6 -2zM448 109l1 2 -13 -9 12 7zM536 540l-166 0 39 0 -6 0 -6 -10 -3 -30 15 -9 127 49zM599 121l-7 1 -4 -4 -11 3 -5 5 -4 1 2 4 -14 4 -12 -6 -7 0 -7 3 -11 1 1 -7 -2 -6 -8 -6 3 -3 -1 -8 3 -1 5 -6 -7 -5 -2 -5 0 -6 4 -5 6 3 -2 5 5 0 35 4 5 -2 7 -5 14 -3 5 3 7 0 3 4 8 1 -2 7 -5 0 -3 4 -1 9 -6 6 3 2 5 8zM460 89l-4 1 -5 9 -3 2 2 6 -2 2 -12 -7 -1 -1 0 -2 -5 -5 0 -3 -9 -7 -8 -8 -1 -5 -6 -6 0 -9 4 0 4 4 4 -4 6 -2 4 3 10 1 3 -1 11 1 5 5 6 -1 -4 7 0 5 7 5 -5 2 4 5 -1 3 -4 0zM224 -40l34 0 -6 0 -4 2 2 5 -1 2 -5 1 -3 -4 -7 -2 -1 -3 -36 -1 27 0zM953 436l2 2 0 6 -2 -8zM864 167l-1 -1 4 -1 7 5 5 -1 0 3 5 10 -8 -1 -7 -6 -5 -8zM928 191l-5 1 -9 -8 4 -4 -2 -6 3 -2 -5 -6 -3 1 -21 15 -1 -10 1 -3 -4 -1 -10 -8 4 0 2 -5 -6 -3 -3 -5 3 -4 -9 -9 4 -3 7 2 1 3 6 0 5 3 3 -5 -6 -4 -1 -5 3 -3 5 2 8 7 0 3 10 2 3 -5 5 -3 3 -5 9 11 1 5 9 9 3 0 6 6 -7 0 -5 2 -4 12 1 5 -3 6 -3 -2 -3 7 1 7zM308 15l0 -5 3 -2 9 6 2 -5 7 1 2 2 5 0 6 -4 8 0 0 -2 8 1 5 3 0 -4 -4 -8 1 -1 9 -5 1 -4 3 2 2 -5 4 3 10 0 4 -3 1 -5 5 1 12 4 6 -1 7 2 1 2 -2 4 5 8 -1 6 -9 -1 2 6 -3 1 0 8 -6 3 -2 3 -15 1 -7 5 -34 -6 -4 -5 0 -3 -6 2 -8 0 -4 4 -9 -1 -1 -3 -4 3 -8 -4 -1 -4zM863 166l-7 -7 -5 1 -5 -3 -2 -7 3 -4 -5 -8 13 -2 9 0 3 -2 9 9 -3 4 3 5 6 3 -2 5 -4 0 10 8 4 1 -1 3 1 10 -6 0 -5 -10 0 -3 -5 1 -7 -5 -4 1zM184 110l-3 1 -1 -3 4 2zM293 221l-6 9 2 3 -1 10 2 13 -2 9 -12 13 0 5 3 12 6 3 4 11 11 10 8 36 -4 3 6 9 3 14 1 23 -3 9 3 10 -1 6 -6 4 0 6 8 14 1 6 3 9 3 2 4 -1 13 5 7 16 -70 50 -100 0 0 -2 -90 -74 -65 -50 0 -28 15 -13 10 -6 7 2 2 -5 17 -3 4 -4 3 -6 10 -5 11 -7 -3 -3 0 -9 13 -4 1 -4 8 -2 18 1 1 -5 3 -2 -7 -9 -3 -8 -2 -29 -6 -7 4 0 10 -5 6 -6 8 -4 7 -1 2 -3 6 -4 11 -5 21 -2 6 -4 9 0 4 -2 16 0 7 4 3 0 10 -3 4 -4 10 3 5 -1 -1 -3 11 5 11 -2zM462 123l-1 -6 6 -10 2 3 5 -1 6 7 2 7 -2 7 1 5 3 7 4 1 1 5 -3 3 -3 7 -5 2 1 3 -3 4 -3 -1 -3 -7 -5 -3 -3 -9 2 -6 0 -9 2 -8 -4 -1z' };
+function S(tag, at, par) { var e = D.createElementNS(NS, tag); if (at) for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function T(par, x, y, s, cls, anchor) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anchor || 'middle' }, par); t.textContent = s; return t; }
+function hit(g, label, fn) {
+  g.setAttribute('class', (g.getAttribute('class') || '') + ' gbx-hit'); g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label);
+  g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+/* ML.gbMap(parent, { lon: [w, e], lat: [s, n], W: width units, label }) -> { svg, P(lon, lat) -> [x, y], layer(name), S, T, hit } */
+ML.gbMap = function (parent, o) {
+  var L = ML.gbLand, Wd = o.W || 520;
+  var x0 = (o.lon[0] - L.lon0) * L.c * L.k, x1 = (o.lon[1] - L.lon0) * L.c * L.k, y0 = (L.lat1 - o.lat[1]) * L.k, y1 = (L.lat1 - o.lat[0]) * L.k;
+  var s = Wd / (x1 - x0), Hd = Math.round((y1 - y0) * s);
+  var svg = S('svg', { viewBox: '0 0 ' + Wd + ' ' + Hd, 'class': 'gbx-svg', role: 'group', 'aria-label': o.label || 'Map' }, parent);
+  var cid = 'gbxclip' + Math.random().toString(36).slice(2, 8);
+  var defs = S('defs', {}, svg), cp = S('clipPath', { id: cid }, defs); S('rect', { x: 0, y: 0, width: Wd, height: Hd, rx: 10 }, cp);
+  var root = S('g', { 'clip-path': 'url(#' + cid + ')' }, svg);
+  S('rect', { x: 0, y: 0, width: Wd, height: Hd, 'class': 'gbx-sea' }, root);
+  S('path', { d: L.d, 'class': 'gbx-land', transform: 'scale(' + s.toFixed(5) + ') translate(' + (-x0).toFixed(2) + ',' + (-y0).toFixed(2) + ')' }, root);
+  var layers = {};
+  function layer(n) { if (!layers[n]) layers[n] = S('g', {}, root); return layers[n]; }
+  ['seas', 'routes', 'marks', 'labels'].forEach(layer);
+  function P(lon, lat) { return [((lon - L.lon0) * L.c * L.k - x0) * s, ((L.lat1 - lat) * L.k - y0) * s]; }
+  (o.seas || []).forEach(function (q) { var p = P(q[1], q[2]); T(layers.seas, p[0], p[1], q[0], 'gbx-sealab'); });
+  return { svg: svg, P: P, layer: layer, W: Wd, H: Hd, S: S, T: T, hit: hit };
+};
+/* stops: [key, name, lon, lat, book, text, guess?] */
+var STOPS = [
+  ['troy', 'Troy', 26.24, 39.96, 'IX', 'The war is over. Odysseus sets out from Troy with twelve ships.'],
+  ['cicones', 'Ismarus (the Cicones)', 25.5, 40.9, 'IX', 'He raids the town of the Cicones in Thrace; his men linger, and the Cicones strike back. He loses men from every ship.'],
+  ['malea', 'Cape Malea', 23.2, 36.44, 'IX', 'Rounding the southern cape of Greece, the fleet is caught by a storm from the north and blown far off course for nine days.'],
+  ['lotus', 'The Lotus-eaters', 10.9, 33.8, 'IX', 'Men who eat the lotus fruit forget all wish to go home. Odysseus drags his scouts back to the ships. (Often placed on the island of Djerba, off Tunisia: a guess.)', 1],
+  ['cyclops', 'The Cyclops', 15.0, 37.75, 'IX', 'The giant Polyphemus traps them in his cave. "Noman" blinds him and escapes under the bellies of his sheep, then shouts his real name, and Poseidon becomes his enemy. (Traditionally Sicily, near Mount Etna.)', 1],
+  ['aeolus', 'Aeolus, keeper of the winds', 14.95, 38.5, 'X', 'King Aeolus gives Odysseus all the storm winds tied in a bag, and a gentle west wind to blow him home. (Traditionally the Aeolian Islands.)', 1],
+  ['home1', 'Within sight of Ithaca', 20.3, 38.1, 'X', 'Ithaca is in sight when Odysseus falls asleep. His men open the bag, thinking it holds gold, and the winds blow them all the way back to Aeolus, who sends them away.'],
+  ['aeolus2', 'Back to Aeolus', 14.95, 38.5, 'X', 'Aeolus refuses to help a man the gods seem to hate.', 1],
+  ['laestry', 'The Laestrygonians', 13.6, 41.26, 'X', 'Giants smash the ships in a harbor with boulders. Only Odysseus\' own ship escapes. (Ancient readers placed them near Formiae in Italy; others said Sicily.)', 1],
+  ['circe', "Circe's island", 13.05, 41.23, 'X', 'The enchantress Circe turns his scouts into pigs. Helped by Hermes, Odysseus resists her magic; she turns them back, and they stay a year. (Traditionally Monte Circeo, Italy.)', 1],
+  ['dead', 'The land of the dead', 14.07, 40.84, 'XI', 'At the edge of the world, Odysseus speaks with the spirits of the dead: the prophet Tiresias, his own mother, Achilles. (Homer puts it beyond the stream of Ocean; Romans pointed to Lake Avernus near Cumae.)', 1],
+  ['circe2', "Back to Circe's island", 13.05, 41.23, 'XII', 'Circe warns him what lies ahead.', 1],
+  ['sirens', 'The Sirens', 14.43, 40.58, 'XII', 'His men plug their ears with wax; Odysseus, tied to the mast, hears the Sirens\' song and lives. (Often placed off Sorrento.)', 1],
+  ['scylla', 'Scylla and Charybdis', 15.63, 38.25, 'XII', 'A narrow strait between a six-headed monster and a whirlpool. He chooses to pass close to Scylla and loses six men rather than the ship. (Traditionally the Strait of Messina.)', 1],
+  ['sun', 'Thrinacia, island of the Sun', 14.5, 37.4, 'XII', 'Stuck by contrary winds, the starving crew kill the Sun god\'s sacred cattle. Zeus wrecks the ship with a thunderbolt; only Odysseus survives. (Often identified with Sicily.)', 1],
+  ['ogygia', "Ogygia, Calypso's island", 14.25, 36.05, 'V', 'Odysseus drifts to the nymph Calypso, who keeps him for seven years and offers to make him immortal. The gods order her to let him go, and he builds a raft. (Its place is unknown; one guess is Gozo, near Malta.)', 1],
+  ['scheria', 'Scheria, land of the Phaeacians', 19.9, 39.6, 'VI–VIII', 'Shipwrecked again, he is found by the princess Nausicaa. At her father\'s palace he tells the story of his wanderings (Books IX–XII). (Ancient Greeks identified Scheria with Corfu.)', 1],
+  ['ithaca', 'Ithaca', 20.7, 38.4, 'XIII', 'The Phaeacians carry him home asleep. After twenty years away, he wakes on Ithaca.']
+];
+ML.viz.register('gb-odyssey-map', function (el, opts, V) {
+  if (!ML.gbLand) { el.insertAdjacentHTML('beforeend', '<p class="ml-viz-err">This map could not be drawn.</p>'); return; }
+  var box = D.createElement('div'); box.className = 'gbx'; el.appendChild(box);
+  var M = ML.gbMap(box, { lon: [8.5, 29.5], lat: [32.6, 42.6], W: 560, label: 'Map of Odysseus\' voyage, from Troy to Ithaca',
+    seas: [['Ionian Sea', 18.6, 37.0], ['Aegean', 25.0, 38.4], ['Tyrrhenian Sea', 12.2, 39.6], ['Mediterranean', 20.5, 34.2]] });
+  var cur = Math.max(0, Math.min(STOPS.length - 1, +opts.stop || 0));
+  var pts = STOPS.map(function (s) { return M.P(s[2], s[3]); });
+  var fut = S('polyline', { 'class': 'gbx-route-future', points: pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') }, M.layer('routes'));
+  var done = S('polyline', { 'class': 'gbx-route', points: '' }, M.layer('routes'));
+  var ring = S('circle', { r: 11, 'class': 'gbx-ring' }, M.layer('marks'));
+  var seen = {}, dots = [];
+  STOPS.forEach(function (s, i) {
+    var k = s[2] + ',' + s[3]; if (seen[k] !== undefined) { dots.push(dots[seen[k]]); return; } seen[k] = i;
+    var g = S('g', {}, M.layer('marks')), p = pts[i];
+    S('circle', { cx: p[0], cy: p[1], r: 6, 'class': 'gbx-pt' }, g);
+    hit(g, s[1], function () { set(i); });
+    dots.push(g);
+  });
+  var lab = T(M.layer('labels'), 0, 0, '', 'gbx-lab');
+  var fixed = [['Troy', 26.24, 39.96, 'start', 8, 4], ['Ithaca', 20.7, 38.4, 'start', 9, 4], ['SICILY', 14.1, 37.55, 'middle', 0, 0], ['GREECE', 21.9, 39.5, 'middle', 0, 0], ['ITALY', 16.3, 40.6, 'middle', 0, 0], ['AFRICA', 12.5, 33.4, 'middle', 0, 0]];
+  fixed.forEach(function (f) { var p = M.P(f[1], f[2]); T(M.layer('labels'), p[0] + f[4], p[1] + f[5], f[0], f[0] === f[0].toUpperCase() ? 'gbx-sealab' : 'gbx-lab', f[3]); });
+  var ctl = D.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  V.button(ctl, '⏮ Start', function () { set(0); });
+  V.button(ctl, '◀ Back', function () { set(Math.max(0, cur - 1)); });
+  V.button(ctl, 'Next stop ▶', function () { set(Math.min(STOPS.length - 1, cur + 1)); });
+  var ro = V.readout(el);
+  function set(i) {
+    cur = i; var s = STOPS[i], p = pts[i];
+    done.setAttribute('points', pts.slice(0, i + 1).map(function (q) { return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' '));
+    ring.setAttribute('cx', p[0]); ring.setAttribute('cy', p[1]);
+    var right = p[0] < M.W - 150;
+    lab.textContent = s[0] === 'troy' || s[0] === 'ithaca' ? '' : s[1]; lab.setAttribute('x', p[0] + (right ? 14 : -14)); lab.setAttribute('y', p[1] - 10); lab.setAttribute('text-anchor', right ? 'start' : 'end');
+    ro.set('<b>Stop ' + (i + 1) + ' of ' + STOPS.length + ': ' + s[1] + '</b> (Book ' + s[4] + '). ' + s[5]);
+  }
+  set(cur);
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.aeschylus-oresteia (scripts/greatbooks/src/gbgreeks.aeschylus-oresteia/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.aeschylus-oresteia: visual gb-atreus (gbe1, our own design). The family of Atreus as a tree; tap a name for
+   who they are; choose a play to light up the family members in it. opts: play ('all' | 'ag' | 'lb' | 'eu'). */
+var NS = 'http://www.w3.org/2000/svg', D = document;
+function S(tag, at, par) { var e = D.createElementNS(NS, tag); if (at) for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function T(par, x, y, s, cls, anchor) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anchor || 'middle' }, par); t.textContent = s; return t; }
+function hit(g, label, fn) {
+  g.setAttribute('class', (g.getAttribute('class') || '') + ' gbx-hit'); g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label);
+  g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+/* [key, name, x, y, plays, text] */
+var P = [
+  ['tantalus', 'Tantalus', 360, 34, '', 'A king who offended the gods. In the myth he is punished in the underworld with water and fruit always just out of reach, which is where the word <em>tantalize</em> comes from.'],
+  ['pelops', 'Pelops', 360, 92, '', 'Son of Tantalus. He won his bride in a chariot race, by trickery in some versions. The Peloponnese, "the island of Pelops", is named after him.'],
+  ['tyndareus', 'Tyndareus & Leda', 92, 150, '', 'King and queen of Sparta, parents of Clytemnestra. Helen is also their daughter, though in the myth her father is Zeus.'],
+  ['atreus', 'Atreus', 270, 150, '', 'He and his brother Thyestes quarreled over the throne. Atreus did a terrible wrong to Thyestes\' children, and Thyestes cursed his house. That old crime hangs over the whole trilogy.'],
+  ['thyestes', 'Thyestes', 520, 150, '', 'Brother and rival of Atreus. His surviving son, Aegisthus, grows up wanting revenge on Atreus\' line.'],
+  ['clytemnestra', 'Clytemnestra', 92, 214, 'ag lb eu', 'Agamemnon\'s queen, who rules Argos while he is at Troy. She kills him on his return to avenge their daughter Iphigenia, is killed by her son Orestes, and as a ghost rouses the Furies in The Eumenides.'],
+  ['agamemnon', 'Agamemnon', 230, 214, 'ag', 'King of Argos and leader of the Greeks at Troy. To get winds for his fleet he sacrificed his daughter Iphigenia. He comes home in the first play and is killed.'],
+  ['menelaus', 'Menelaus', 360, 214, '', 'King of Sparta, Agamemnon\'s brother. He is lost at sea on the way home from Troy and does not appear in the trilogy.'],
+  ['helen', 'Helen', 470, 214, '', 'Wife of Menelaus, Clytemnestra\'s sister. Her going to Troy with Paris began the war. The chorus of Agamemnon blames her bitterly.'],
+  ['aegisthus', 'Aegisthus', 600, 214, 'ag lb', 'Son of Thyestes and cousin of Agamemnon. He is Clytemnestra\'s ally in Agamemnon and is killed by Orestes in The Libation Bearers.'],
+  ['iphigenia', 'Iphigenia', 54, 280, '', 'The daughter sacrificed at Aulis. She never appears, but her death is the reason Clytemnestra gives. (In Euripides\' versions, the goddess Artemis saves her.)'],
+  ['electra', 'Electra', 150, 280, 'lb', 'She mourns her father and waits for her brother. In The Libation Bearers she knows Orestes by a lock of his hair left on the tomb.'],
+  ['orestes', 'Orestes', 250, 280, 'lb eu', 'Commanded by Apollo, he avenges his father by killing his mother and Aegisthus. Hunted by the Furies, he is tried in Athens and acquitted.'],
+  ['hermione', 'Hermione', 415, 280, '', 'Daughter of Menelaus and Helen. She appears in later plays by Euripides.']
+];
+var E = [['tantalus', 'pelops'], ['pelops', 'atreus'], ['pelops', 'thyestes'], ['atreus', 'agamemnon'], ['atreus', 'menelaus'], ['thyestes', 'aegisthus'],
+  ['tyndareus', 'clytemnestra'], ['tyndareus', 'helen'], ['m:agamemnon', 'iphigenia'], ['m:agamemnon', 'electra'], ['m:agamemnon', 'orestes'], ['m:menelaus', 'hermione']];
+var PLAYS = { all: ['All', 'The family of Atreus. Tap a name.'], ag: ['Agamemnon', 'Play 1, <em>Agamemnon</em>: also on stage are a watchman, a herald, the Trojan princess Cassandra and a chorus of old men of Argos.'],
+  lb: ['Libation Bearers', 'Play 2, <em>The Libation Bearers</em>: also on stage are Orestes\' friend Pylades, his old nurse, and a chorus of women bringing offerings to Agamemnon\'s tomb.'],
+  eu: ['Eumenides', 'Play 3, <em>The Eumenides</em>: also on stage are Apollo, Athena, the jurors of Athens and the chorus of Furies.'] };
+ML.viz.register('gb-atreus', function (el, opts, V) {
+  var box = D.createElement('div'); box.className = 'gbx gbx-scroll'; box.style.setProperty('--gbx-minw', '600px'); el.appendChild(box);
+  var svg = S('svg', { viewBox: '0 0 680 312', 'class': 'gbx-svg', role: 'group', 'aria-label': 'Family tree of the house of Atreus' }, box);
+  S('rect', { x: 0, y: 0, width: 680, height: 312, rx: 10, 'class': 'gbx-bg' }, svg);
+  var by = {}; P.forEach(function (p) { by[p[0]] = p; });
+  var eg = S('g', {}, svg), ng = S('g', {}, svg);
+  function mid(a, b) { return [(by[a][2] + by[b][2]) / 2, by[a][3]]; }
+  // marriages
+  [['clytemnestra', 'agamemnon'], ['menelaus', 'helen']].forEach(function (m) { S('line', { x1: by[m[0]][2], y1: by[m[0]][3], x2: by[m[1]][2], y2: by[m[1]][3], 'class': 'gbx-edge', 'stroke-dasharray': '4 3' }, eg); });
+  E.forEach(function (e) {
+    var a = e[0], b = by[e[1]], p;
+    if (a.indexOf('m:') === 0) { a = a.slice(2); p = a === 'agamemnon' ? mid('clytemnestra', 'agamemnon') : mid('menelaus', 'helen'); }
+    else p = [by[a][2], by[a][3] + 14];
+    var ym = (p[1] + b[3] - 14) / 2 + (a === 'tyndareus' ? -8 : a === 'atreus' ? 6 : 0);
+    S('path', { d: 'M' + p[0] + ' ' + p[1] + ' V' + ym + ' H' + b[2] + ' V' + (b[3] - 14), 'class': 'gbx-edge' }, eg);
+  });
+  var rects = {};
+  P.forEach(function (p) {
+    var g = S('g', {}, ng), w = Math.max(76, p[1].length * 7.6 + 18);
+    rects[p[0]] = S('rect', { x: p[2] - w / 2, y: p[3] - 14, width: w, height: 28, rx: 8, 'class': 'gbx-node' }, g);
+    T(g, p[2], p[3] + 5, p[1], 'gbx-num');
+    hit(g, p[1], function () { pick(p[0]); });
+  });
+  var ctl = D.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  var play = PLAYS[opts.play] ? opts.play : 'all', sel = null;
+  V.seg(ctl, { label: 'Play', items: Object.keys(PLAYS).map(function (k) { return [k, PLAYS[k][0]]; }), value: play, change: function (v) { play = v; sel = null; draw(); } });
+  var ro = V.readout(el);
+  function pick(k) { sel = k; draw(); }
+  function draw() {
+    P.forEach(function (p) {
+      var r = rects[p[0]];
+      r.classList.toggle('gbx-in', play !== 'all' && p[4].indexOf(play) >= 0);
+      r.classList.toggle('gbx-on', sel === p[0]);
+    });
+    if (sel) { var p = by[sel], inn = p[4] ? p[4].split(' ').map(function (k) { return PLAYS[k][0]; }) : []; ro.set('<b>' + p[1] + '.</b> ' + p[5] + (inn.length ? ' <span class="gbx-mut">In: ' + inn.join(', ') + '.</span>' : ' <span class="gbx-mut">Not a speaking part in the trilogy.</span>')); }
+    else ro.set(PLAYS[play][1] + (play !== 'all' ? ' Family members in the play are highlighted.' : ''));
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.sophocles-oedipus (scripts/greatbooks/src/gbgreeks.sophocles-oedipus/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.sophocles-oedipus: visual gb-greek-theater (gbe1, our own design). A Greek theater seen from above,
+   simplified from the Theater of Dionysus in Athens: tap a part for what it was and how the plays used it.
+   opts: part (a key below, selected at the start). */
+var NS = 'http://www.w3.org/2000/svg', D = document;
+function S(tag, at, par) { var e = D.createElementNS(NS, tag); if (at) for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function T(par, x, y, s, cls, anchor) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anchor || 'middle' }, par); t.textContent = s; return t; }
+function hit(g, label, fn) {
+  g.setAttribute('class', (g.getAttribute('class') || '') + ' gbx-hit'); g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label);
+  g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+var PARTS = {
+  theatron: ['The seating (<em>theatron</em>)', 'The "watching place": rows of seats cut into the hillside below the Acropolis, divided into wedges by stairways. Wooden benches in Sophocles\' time, later stone. Estimates of the size vary; in its later stone form it may have held more than 15,000 people.'],
+  orchestra: ['The dancing floor (<em>orchēstra</em>)', 'A flat, round floor where the chorus of 12 or 15 sang and danced between the scenes. The word comes from the Greek for "to dance". An altar may have stood near the middle.'],
+  skene: ['The stage building (<em>skēnē</em>)', 'A wooden building behind the orchestra, usually painted as a palace or temple front. Actors changed masks and costumes inside, and its central door was the palace door: in Oedipus, the door through which the messenger comes out with the terrible news. Our word <em>scene</em> comes from it.'],
+  parodos: ['The side passages (<em>parodoi</em>)', 'Two open passages between the seats and the stage building. The chorus marched in by one of them, and travelers and messengers arrived along them, by custom from the city on one side and from the country or abroad on the other.'],
+  ekkyklema: ['The rolling platform (<em>ekkyklēma</em>)', 'A low platform rolled out through the central door to show what had happened inside, since violence was never acted in front of the audience: for example, the bodies of Agamemnon and Cassandra, or of Clytemnestra and Aegisthus.'],
+  mechane: ['The crane (<em>mēchanē</em>)', 'A crane on the stage building that could swing an actor into the air: a god appearing above the action, as at the end of many plays by Euripides. Hence <em>deus ex machina</em>, "a god from the machine".'],
+  actors: ['Actors and masks', 'All the actors were men. Tragedy used at most three speaking actors, who played every part between them by changing masks; Aristotle says Sophocles added the third. The masks were large and easy to read from the back rows.']
+};
+ML.viz.register('gb-greek-theater', function (el, opts, V) {
+  var box = D.createElement('div'); box.className = 'gbx'; el.appendChild(box);
+  var W = 560, H = 404, cx = 280, cy = 238;
+  var svg = S('svg', { viewBox: '0 0 ' + W + ' ' + H, 'class': 'gbx-svg', role: 'group', 'aria-label': 'Plan of a Greek theater' }, box);
+  S('rect', { x: 0, y: 0, width: W, height: H, rx: 10, 'class': 'gbx-bg' }, svg);
+  var shapes = {};
+  function arc(r, a0, a1) { return [cx + r * Math.cos(a0), cy - r * Math.sin(a0), cx + r * Math.cos(a1), cy - r * Math.sin(a1)]; }
+  // seating: a band from radius 92 to 220, over about 220 degrees, wedges by stairways
+  var g1 = S('g', {}, svg), r0 = 92, r1 = 222, A0 = -20 * Math.PI / 180, A1 = 200 * Math.PI / 180;
+  var o = arc(r1, A0, A1), i = arc(r0, A1, A0);
+  shapes.theatron = S('path', { d: 'M' + o[0] + ' ' + o[1] + ' A' + r1 + ' ' + r1 + ' 0 1 0 ' + o[2] + ' ' + o[3] + ' L' + i[0] + ' ' + i[1] + ' A' + r0 + ' ' + r0 + ' 0 1 1 ' + i[2] + ' ' + i[3] + ' Z', 'class': 'gbx-part gbx-fill1' }, g1);
+  for (var k = 0; k <= 13; k++) { var a = A0 + (A1 - A0) * k / 13, p = arc(r0, a, a), q = arc(r1, a, a); S('line', { x1: p[0], y1: p[1], x2: q[0], y2: q[1], 'class': 'gbx-wed' }, g1); }
+  [140, 180].forEach(function (r) { var c = arc(r, A0, A1); S('path', { d: 'M' + c[0] + ' ' + c[1] + ' A' + r + ' ' + r + ' 0 1 0 ' + c[2] + ' ' + c[3], fill: 'none', 'class': 'gbx-wed', 'stroke-width': 1 }, g1); });
+  T(g1, cx, cy - 160, 'seating (theatron)', 'gbx-lab');
+  hit(g1, 'The seating', function () { set('theatron'); });
+  var g2 = S('g', {}, svg);
+  shapes.orchestra = S('circle', { cx: cx, cy: cy, r: 78, 'class': 'gbx-part gbx-fill2' }, g2);
+  S('rect', { x: cx - 6, y: cy - 6, width: 12, height: 12, 'class': 'gbx-wed', fill: 'none' }, g2);
+  T(g2, cx, cy - 22, 'orchestra', 'gbx-lab');
+  T(g2, cx, cy - 8, '(chorus)', 'gbx-small');
+  hit(g2, 'The orchestra', function () { set('orchestra'); });
+  var g3 = S('g', {}, svg);
+  shapes.skene = S('rect', { x: cx - 150, y: cy + 88, width: 300, height: 40, rx: 3, 'class': 'gbx-part gbx-fill3' }, g3);
+  T(g3, cx - 80, cy + 113, 'stage building (skēnē)', 'gbx-lab');
+  hit(g3, 'The stage building', function () { set('skene'); });
+  var g4 = S('g', {}, svg);
+  shapes.ekkyklema = S('rect', { x: cx - 22, y: cy + 78, width: 44, height: 14, rx: 2, 'class': 'gbx-part gbx-fill4' }, g4);
+  S('line', { x1: cx, y1: cy + 92, x2: cx, y2: cy + 140, 'class': 'gbx-wed', 'stroke-width': 1 }, g4);
+  T(g4, cx, cy + 154, 'rolling platform', 'gbx-small');
+  hit(g4, 'The rolling platform', function () { set('ekkyklema'); });
+  var g5 = S('g', {}, svg);
+  shapes.mechane = S('path', { d: 'M' + (cx + 120) + ' ' + (cy + 88) + ' l0 -34 l-30 -8', 'class': 'gbx-part', fill: 'none', 'stroke-width': 4 }, g5);
+  S('circle', { cx: cx + 90, cy: cy + 46, r: 5, 'class': 'gbx-dot' }, g5);
+  S('line', { x1: cx + 120, y1: cy + 128, x2: cx + 120, y2: cy + 140, 'class': 'gbx-wed', 'stroke-width': 1 }, g5);
+  T(g5, cx + 120, cy + 154, 'crane', 'gbx-small');
+  hit(g5, 'The crane', function () { set('mechane'); });
+  var g6 = S('g', {}, svg);
+  var pa = S('path', { d: 'M' + (cx - 222) + ' ' + (cy + 70) + ' L' + (cx - 160) + ' ' + (cy + 96) + ' M' + (cx + 222) + ' ' + (cy + 70) + ' L' + (cx + 160) + ' ' + (cy + 96), 'class': 'gbx-route-a', 'stroke-width': 10, 'stroke-opacity': 0.35 }, g6);
+  shapes.parodos = pa;
+  T(g6, cx - 214, cy + 102, 'side passage', 'gbx-small', 'start');
+  T(g6, cx + 214, cy + 102, 'side passage', 'gbx-small', 'end');
+  hit(g6, 'The side passages', function () { set('parodos'); });
+  var g7 = S('g', {}, svg);
+  [-26, 0, 26].forEach(function (dx) { shapes['a' + dx] = S('circle', { cx: cx + dx - 20, cy: cy + 34, r: 7, 'class': 'gbx-pt' }, g7); });
+  T(g7, cx - 20, cy + 58, '3 actors', 'gbx-small');
+  shapes.actors = shapes.a0;
+  hit(g7, 'Actors and masks', function () { set('actors'); });
+  var ctl = D.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  var keys = Object.keys(PARTS), cur = PARTS[opts.part] ? opts.part : 'orchestra';
+  V.button(ctl, 'Next part ▶', function () { set(keys[(keys.indexOf(cur) + 1) % keys.length]); });
+  var ro = V.readout(el);
+  function set(k) {
+    cur = k;
+    Object.keys(shapes).forEach(function (s) { if (shapes[s].classList) shapes[s].classList.remove('gbx-on'); });
+    if (shapes[k]) shapes[k].classList.add('gbx-on');
+    if (k === 'actors') ['a-26', 'a0', 'a26'].forEach(function (a) { shapes[a].classList.add('gbx-on'); });
+    ro.set('<b>' + PARTS[k][0] + '.</b> ' + PARTS[k][1]);
+  }
+  set(cur);
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.euripides-plays (scripts/greatbooks/src/gbgreeks.euripides-plays/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.euripides-plays: visual gb-tragedians (gbe1, our own design). The lives of the Athenian playwrights and
+   historians on one time axis, with the wars and some famous first performances. Drag the year to see who was alive
+   and about how old. Birth years are approximate (ancient dates). opts: year (negative = BC). */
+var NS = 'http://www.w3.org/2000/svg', D = document;
+function S(tag, at, par) { var e = D.createElementNS(NS, tag); if (at) for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function T(par, x, y, s, cls, anchor) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anchor || 'middle' }, par); t.textContent = s; return t; }
+var LIVES = [['Aeschylus', -525, -456, 'gbx-fill4'], ['Sophocles', -496, -406, 'gbx-fill3'], ['Euripides', -480, -406, 'gbx-fill2'], ['Aristophanes', -446, -386, 'gbx-fill1'],
+  ['Herodotus', -484, -425, 'gbx-fill5'], ['Thucydides', -460, -400, 'gbx-fill6'], ['Socrates', -470, -399, 'gbx-fill6']];
+var EV = [[-490, 'Marathon'], [-480, 'Salamis'], [-458, 'Oresteia (Aeschylus)'], [-441, 'Antigone (Sophocles), about this year'], [-438, 'Alcestis (Euripides)'], [-431, 'Medea (Euripides); the Peloponnesian War begins'],
+  [-429, 'Oedipus the King (Sophocles), about this year'], [-423, 'The Clouds (Aristophanes)'], [-415, 'The Trojan Women (Euripides)'], [-414, 'The Birds (Aristophanes)'],
+  [-405, 'The Frogs (Aristophanes)'], [-404, 'Athens surrenders'], [-399, 'Trial and death of Socrates']];
+function yr(y) { return (-y) + ' BC'; }
+ML.viz.register('gb-tragedians', function (el, opts, V) {
+  var box = D.createElement('div'); box.className = 'gbx gbx-scroll'; box.style.setProperty('--gbx-minw', '600px'); el.appendChild(box);
+  var W = 640, H = 300, X0 = 96, X1 = 624, Y0 = -530, Y1 = -380, rowH = 28, top = 34;
+  function X(y) { return X0 + (y - Y0) / (Y1 - Y0) * (X1 - X0); }
+  var svg = S('svg', { viewBox: '0 0 ' + W + ' ' + H, 'class': 'gbx-svg', role: 'img', 'aria-label': 'Timeline of the Greek playwrights and historians, 530 to 380 BC' }, box);
+  S('rect', { x: 0, y: 0, width: W, height: H, rx: 10, 'class': 'gbx-bg' }, svg);
+  S('rect', { x: X(-431), y: top - 10, width: X(-404) - X(-431), height: LIVES.length * rowH + 14, 'class': 'gbx-band' }, svg);
+  T(svg, (X(-431) + X(-404)) / 2, top - 14, 'Peloponnesian War', 'gbx-small');
+  T(svg, X(-485), top - 14, 'Persian Wars', 'gbx-small');
+  S('rect', { x: X(-490), y: top - 10, width: X(-479) - X(-490), height: LIVES.length * rowH + 14, 'class': 'gbx-band', style: 'fill:var(--gbx-p)' }, svg);
+  LIVES.forEach(function (l, i) {
+    var y = top + i * rowH;
+    T(svg, X0 - 8, y + 14, l[0], 'gbx-lab', 'end');
+    S('rect', { x: X(l[1]), y: y + 2, width: X(l[2]) - X(l[1]), height: rowH - 8, rx: 6, 'class': 'gbx-part ' + l[3] }, svg);
+  });
+  var ay = top + LIVES.length * rowH + 14;
+  S('line', { x1: X0, x2: X1, y1: ay, y2: ay, 'class': 'gbx-axis' }, svg);
+  for (var t = -525; t <= -385; t += 25) { S('line', { x1: X(t), x2: X(t), y1: ay, y2: ay + 5, 'class': 'gbx-axis' }, svg); T(svg, X(t), ay + 18, yr(t), 'gbx-small'); }
+  EV.forEach(function (e) { S('circle', { cx: X(e[0]), cy: ay + 30, r: 3.5, 'class': 'gbx-pt' }, svg); });
+  var now = S('line', { y1: top - 10, y2: ay + 34, 'class': 'gbx-now' }, svg);
+  var ctl = D.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  var cur = Math.max(Y0 + 5, Math.min(Y1 - 5, +opts.year || -431));
+  var sl = V.slider(ctl, { label: 'Year', min: -525, max: -386, step: 1, value: cur, fmt: function (v) { return yr(v); }, input: function (v) { set(v); } });
+  var ro = V.readout(el);
+  function set(y) {
+    cur = y; now.setAttribute('x1', X(y)); now.setAttribute('x2', X(y));
+    var alive = LIVES.filter(function (l) { return y >= l[1] && y <= l[2]; }).map(function (l) { return l[0] + ' (about ' + (y - l[1]) + ')'; });
+    var near = EV.filter(function (e) { return Math.abs(e[0] - y) <= 1; }).map(function (e) { return yr(e[0]) + ': ' + e[1]; });
+    ro.set('<b>' + yr(y) + '.</b> ' + (alive.length ? 'Alive: ' + alive.join(', ') + '.' : 'None of these writers is alive.') + (near.length ? ' <b>' + near.join('; ') + '.</b>' : ''));
+  }
+  set(cur);
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.aristophanes-comedies (scripts/greatbooks/src/gbgreeks.aristophanes-comedies/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.aristophanes-comedies: visual gb-old-comedy (gbe1, our own design). The usual parts of an Old Comedy as a
+   strip, in the order they come in The Birds or The Frogs; tap a part for what it is and what happens there.
+   opts: play ('birds' | 'frogs'), part (a key, selected at the start). Widths are rough proportions, not line counts. */
+var NS = 'http://www.w3.org/2000/svg', D = document;
+function S(tag, at, par) { var e = D.createElementNS(NS, tag); if (at) for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function T(par, x, y, s, cls, anchor) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anchor || 'middle' }, par); t.textContent = s; return t; }
+function hit(g, label, fn) {
+  g.setAttribute('class', (g.getAttribute('class') || '') + ' gbx-hit'); g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label);
+  g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+var KIND = {
+  prologue: ['Prologue', 'The opening scene, before the chorus arrives: the hero explains the bright idea that drives the plot.', 'gbx-fill1'],
+  parodos: ['Parodos', 'The entrance song of the chorus, often in spectacular costume.', 'gbx-fill2'],
+  agon: ['Agon', 'The "contest": a formal debate in which two sides argue it out, and one wins.', 'gbx-fill4'],
+  parabasis: ['Parabasis', 'The chorus steps forward and speaks straight to the audience, often for the poet himself, with jokes, praise of his own plays and advice to the city.', 'gbx-fill5'],
+  episodes: ['Episodes', 'A run of short, quick scenes, often a parade of visitors who come to profit from the hero\'s success and are sent packing.', 'gbx-fill3'],
+  exodos: ['Exodos', 'The finale and exit, often a celebration, procession or wedding.', 'gbx-fill6']
+};
+var PLAYS = {
+  birds: ['The Birds (414 BC)', [
+    ['prologue', 2, 'Two Athenians, Peisetaerus and Euelpides, tired of their city\'s lawsuits, follow a crow and a jackdaw to find Tereus, a king who was turned into a hoopoe bird.'],
+    ['parodos', 1.2, 'The birds flock in from every side, furious at the humans, and nearly attack them.'],
+    ['agon', 1.4, 'Peisetaerus argues that the birds were the first rulers of the world, older than the gods, and that a city in the air could cut the gods off from the smoke of human sacrifices.'],
+    ['parabasis', 1.4, 'The bird chorus tells the audience its own comic story of how the world began, with the birds first, and lists all the good things birds do for people.'],
+    ['episodes', 3, 'Cloudcuckooland is founded and walled. Pests arrive to cash in: a poet, an oracle-seller, a surveyor, an inspector. The messenger goddess Iris is caught trespassing, and Prometheus sneaks in with advice.'],
+    ['exodos', 1, 'The gods give in. Peisetaerus marries Basileia, "Sovereignty", and is hailed as ruler of the universe.']
+  ]],
+  frogs: ['The Frogs (405 BC)', [
+    ['prologue', 2, 'Dionysus, dressed in a lion skin like Heracles, sets off with his slave Xanthias to bring Euripides back from the dead. Crossing the lake, he must row while the frogs croak at him.'],
+    ['parodos', 1.2, 'A chorus of happy initiates of the Mysteries comes singing through the underworld.'],
+    ['episodes', 2, 'Comic mix-ups at the door of the underworld, as Dionysus and Xanthias keep swapping the lion skin depending on who is being welcomed and who is being threatened.'],
+    ['parabasis', 1.2, 'The chorus gives serious advice: forgive citizens who made mistakes and restore their rights, and trust good, honest leaders. Ancient sources say this is why the play was performed a second time.'],
+    ['agon', 3, 'In this play the contest comes late: Aeschylus and Euripides argue over who is the better poet, quote and mock each other, and weigh their verses on a scale.'],
+    ['exodos', 1, 'Dionysus chooses Aeschylus, who is led back to Athens by torchlight. Sophocles is left to keep the chair of tragedy below.']
+  ]]
+};
+ML.viz.register('gb-old-comedy', function (el, opts, V) {
+  var box = D.createElement('div'); box.className = 'gbx gbx-scroll'; box.style.setProperty('--gbx-minw', '560px'); el.appendChild(box);
+  var W = 640, H = 120, x0 = 10, x1 = 630, play = PLAYS[opts.play] ? opts.play : 'birds', cur = 0;
+  var svg = S('svg', { viewBox: '0 0 ' + W + ' ' + H, 'class': 'gbx-svg', role: 'group', 'aria-label': 'The parts of an Old Comedy' }, box);
+  var g = S('g', {}, svg), rects = [];
+  var ctl = D.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  V.seg(ctl, { label: 'Play', items: [['birds', 'The Birds'], ['frogs', 'The Frogs']], value: play, change: function (v) { play = v; cur = 0; draw(); } });
+  V.button(ctl, 'Next part ▶', function () { cur = (cur + 1) % PLAYS[play][1].length; mark(); });
+  var ro = V.readout(el);
+  function draw() {
+    while (g.firstChild) g.removeChild(g.firstChild);
+    S('rect', { x: 0, y: 0, width: W, height: H, rx: 10, 'class': 'gbx-bg' }, g);
+    T(g, x0, 22, PLAYS[play][0] + ': the parts in order', 'gbx-cap', 'start');
+    var parts = PLAYS[play][1], tot = parts.reduce(function (a, p) { return a + p[1]; }, 0), x = x0; rects = [];
+    parts.forEach(function (p, i) {
+      var w = (x1 - x0) * p[1] / tot, k = KIND[p[0]], c = S('g', {}, g);
+      rects.push(S('rect', { x: x + 1, y: 34, width: w - 2, height: 56, rx: 6, 'class': 'gbx-part ' + k[2] }, c));
+      T(c, x + w / 2, 67, k[0], 'gbx-num');
+      hit(c, k[0], function () { cur = i; mark(); });
+      x += w;
+    });
+    T(g, x0, 108, 'Start of the play', 'gbx-small', 'start'); T(g, x1, 108, 'End', 'gbx-small', 'end');
+    mark();
+  }
+  function mark() {
+    rects.forEach(function (r, i) { r.classList.toggle('gbx-on', i === cur); });
+    var p = PLAYS[play][1][cur], k = KIND[p[0]];
+    ro.set('<b>' + k[0] + '.</b> ' + k[1] + ' <b>In ' + PLAYS[play][0].replace(/ \(.*/, '') + ':</b> ' + p[2]);
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.herodotus-histories (scripts/greatbooks/src/gbgreeks.herodotus-histories/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.herodotus-histories: visual gb-persian-wars (gbe1, our own design), drawn with ML.gbMap from the Odyssey
+   rung's viz.js (Natural Earth outlines). Step through the wars from the Ionian Revolt to Plataea, or tap a place.
+   opts: step (index at the start). Routes are simplified. */
+var D = document;
+var PL = {
+  sardis: ['Sardis', 28.04, 38.49, 'p', 'Capital of Lydia, then the western headquarters of the Persian kings.'],
+  miletus: ['Miletus', 27.28, 37.53, 'p', 'The great Ionian Greek city that led the revolt against Persia in 499 BC.'],
+  halicarnassus: ['Halicarnassus', 27.42, 37.04, 'p', 'Herodotus\' home city (modern Bodrum).'],
+  samos: ['Samos', 26.85, 37.72, 'p', 'An island city; Herodotus lived there for a time.'],
+  abydos: ['Abydos', 26.4, 40.2, 'p', 'Where Xerxes\' army crossed the Hellespont into Europe on two bridges of boats.'],
+  athos: ['Mount Athos', 24.33, 40.16, 'p', 'Xerxes had a canal dug across the neck of this peninsula so his fleet could avoid the dangerous cape.'],
+  thermopylae: ['Thermopylae', 22.54, 38.8, 'g', 'The narrow pass where Leonidas and the Greeks held the Persian army for three days in 480 BC.'],
+  artemisium: ['Artemisium', 23.25, 39.0, 'g', 'Where the Greek fleet fought the Persian fleet at the same time as Thermopylae.'],
+  athens: ['Athens', 23.73, 37.98, 'g', 'Sent ships to help the Ionian revolt; won at Marathon; was abandoned and burned by Xerxes in 480 BC.'],
+  salamis: ['Salamis', 23.47, 37.94, 'g', 'The island off Athens where the Greek fleet, led in strategy by Themistocles, won the great sea battle of 480 BC.'],
+  marathon: ['Marathon', 23.97, 38.15, 'g', 'The plain where the Athenians and Plataeans defeated Darius\' army in 490 BC.'],
+  eretria: ['Eretria', 23.79, 38.39, 'g', 'A city on Euboea that had helped the Ionians; the Persians captured it in 490 BC.'],
+  naxos: ['Naxos', 25.38, 37.1, 'g', 'An island the Persian fleet attacked on its way across the Aegean in 490 BC.'],
+  sparta: ['Sparta', 22.43, 37.07, 'g', 'The leading land power of Greece. Its army arrived just after Marathon, and led the Greeks at Thermopylae and Plataea.'],
+  plataea: ['Plataea', 23.27, 38.22, 'g', 'A small city allied to Athens; near it, in 479 BC, the Greeks defeated the Persian land army.'],
+  mycale: ['Mycale', 27.2, 37.65, 'p', 'A cape in Ionia where, by tradition on the same day as Plataea, the Greeks destroyed the Persian camp and beached fleet.'],
+  delphi: ['Delphi', 22.5, 38.48, 'g', 'The oracle of Apollo, which both sides consulted. It told the Athenians to trust their "wooden wall", which Themistocles read as their ships.']
+};
+var STEPS = [
+  ['The two worlds', '', [], [], 'The Persian Empire stretched from here east to India; its kings ruled from Susa and Persepolis, far off this map. The Greeks lived in hundreds of independent cities around the Aegean. Herodotus was born in Halicarnassus, a Greek city under Persian rule.', 'I'],
+  ['499 BC: the Ionian Revolt', 'p', [['miletus', 'sardis']], ['miletus', 'sardis', 'athens', 'eretria'], 'The Ionian Greek cities rebel. Athens and Eretria send ships to help, and the rebels burn the lower city of Sardis. Herodotus calls those ships the beginning of the troubles between Greeks and barbarians.', 'V'],
+  ['494 BC: Miletus falls', 'p', [], ['miletus'], 'The Persians win a sea battle off Miletus and destroy the city. King Darius resolves to punish Athens and Eretria.', 'VI'],
+  ['490 BC: across the Aegean', 'p', [['samos', 'naxos', 'eretria', 'marathon']], ['samos', 'naxos', 'eretria', 'marathon'], 'Darius sends a fleet straight across the Aegean. It attacks Naxos, captures Eretria, and lands at Marathon, about 25 miles from Athens.', 'VI'],
+  ['490 BC: Marathon', 'g', [['athens', 'marathon']], ['marathon', 'athens', 'sparta'], 'The Athenians and Plataeans charge and win. The Spartans, held up by a religious festival, arrive after the battle. (The famous run to Athens is a later legend; Herodotus tells of a runner sent to Sparta to ask for help.)', 'VI'],
+  ['480 BC: Xerxes crosses into Europe', 'p', [['sardis', 'abydos', 'athos', 'thermopylae']], ['sardis', 'abydos', 'athos'], 'Darius\' son Xerxes leads a vast army from Sardis, crosses the Hellespont on bridges of boats, and marches around the coast, while his fleet uses the canal cut through the Athos peninsula.', 'VII'],
+  ['480 BC: Thermopylae and Artemisium', 'g', [], ['thermopylae', 'artemisium', 'delphi'], 'Leonidas holds the pass for three days while the fleets fight off Artemisium. Betrayed by a mountain path, Leonidas sends most of the allies away and dies fighting with his Spartans and the Thespians.', 'VII–VIII'],
+  ['480 BC: Salamis', 'g', [['thermopylae', 'athens', 'salamis']], ['athens', 'salamis'], 'The Persians burn the abandoned city of Athens. In the narrow strait of Salamis, the Greek fleet defeats the Persian navy. Xerxes returns to Asia, leaving an army behind under Mardonius.', 'VIII'],
+  ['479 BC: Plataea and Mycale', 'g', [], ['plataea', 'mycale', 'sparta'], 'The Greeks, led by the Spartan Pausanias, defeat Mardonius\' army at Plataea. At Mycale in Ionia, the Greeks destroy the rest of the Persian fleet. Herodotus\' main story ends soon after.', 'IX']
+];
+ML.viz.register('gb-persian-wars', function (el, opts, V) {
+  if (!ML.gbMap || !ML.gbLand) { el.insertAdjacentHTML('beforeend', '<p class="ml-viz-err">This map could not be drawn.</p>'); return; }
+  var box = D.createElement('div'); box.className = 'gbx'; el.appendChild(box);
+  var M = ML.gbMap(box, { lon: [20.6, 29.6], lat: [35.9, 41.4], W: 560, label: 'Map of the Persian Wars',
+    seas: [['Aegean Sea', 25.0, 38.9], ['ASIA MINOR', 28.6, 39.6], ['GREECE', 21.9, 39.7]] });
+  var S = M.S, T = M.T, hit = M.hit;
+  var cur = Math.max(0, Math.min(STEPS.length - 1, +opts.step || 0)), dots = {}, labs = {};
+  var rg = M.layer('routes');
+  Object.keys(PL).forEach(function (k) {
+    var p = PL[k], q = M.P(p[1], p[2]), g = S('g', {}, M.layer('marks'));
+    dots[k] = S('circle', { cx: q[0], cy: q[1], r: 6, 'class': p[3] === 'p' ? 'gbx-pt-p' : 'gbx-pt-a' }, g);
+    hit(g, p[0], function () { info(k); });
+    labs[k] = T(M.layer('labels'), q[0] + 9, q[1] - 7, p[0], 'gbx-lab', 'start');
+  });
+  [['abydos', 'end', -9], ['salamis', 'end', -9], ['plataea', 'end', -9], ['delphi', 'end', -9], ['eretria', 'start', 9], ['thermopylae', 'end', -9]].forEach(function (a) { labs[a[0]].setAttribute('text-anchor', a[1]); labs[a[0]].setAttribute('x', +M.P(PL[a[0]][1], PL[a[0]][2])[0] + a[2]); });
+  var key = D.createElement('ul'); key.className = 'gbx-key';
+  key.innerHTML = '<li><i style="background:var(--gbx-p)"></i>Persian Empire and its subjects</li><li><i style="background:var(--gbx-a)"></i>Free Greek cities</li>';
+  el.appendChild(key);
+  var ctl = D.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  V.button(ctl, '◀ Back', function () { set(Math.max(0, cur - 1)); });
+  V.button(ctl, 'Next ▶', function () { set(Math.min(STEPS.length - 1, cur + 1)); });
+  var ro = V.readout(el);
+  function show(ks) { Object.keys(PL).forEach(function (k) { var on = !ks || ks.indexOf(k) >= 0; labs[k].style.display = on ? '' : 'none'; dots[k].classList.toggle('gbx-on', !!ks && ks.indexOf(k) >= 0); }); }
+  function set(i) {
+    cur = i; var s = STEPS[i];
+    while (rg.firstChild) rg.removeChild(rg.firstChild);
+    s[2].forEach(function (r) { S('polyline', { points: r.map(function (k) { var q = M.P(PL[k][1], PL[k][2]); return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' '), 'class': s[1] === 'p' ? 'gbx-route-p' : 'gbx-route-a' }, rg); });
+    show(s[3].length ? s[3] : ['sardis', 'halicarnassus', 'athens', 'sparta', 'miletus']);
+    ro.set('<b>' + s[0] + '</b> <span class="gbx-mut">(Book ' + s[5] + ')</span>. ' + s[4]);
+  }
+  function info(k) { var p = PL[k]; show(null); Object.keys(labs).forEach(function (j) { labs[j].style.display = j === k ? '' : 'none'; dots[j].classList.toggle('gbx-on', j === k); }); ro.set('<b>' + p[0] + '.</b> ' + p[4]); }
+  set(cur);
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.thucydides-peloponnesian-war (scripts/greatbooks/src/gbgreeks.thucydides-peloponnesian-war/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.thucydides-peloponnesian-war: visual gb-athens-sparta (gbe1, our own design), drawn with ML.gbMap from the
+   Odyssey rung's viz.js (Natural Earth outlines). The two alliances in 431 BC and the main turns of the war.
+   opts: step (index at the start). Alliance colors are simplified: some cities changed sides during the war. */
+var D = document;
+/* [name, lon, lat, side a|s|n, note] */
+var C = {
+  athens: ['Athens', 23.73, 37.98, 'a', 'A democracy with the strongest navy in Greece, at the head of the Delian League, which had become its empire.'],
+  sparta: ['Sparta', 22.43, 37.07, 's', 'A city of trained soldiers, leader of the Peloponnesian League.'],
+  corinth: ['Corinth', 22.88, 37.94, 's', 'A rich trading city, Sparta\'s ally, and a rival of Athens at sea; its quarrels with Athens over Corcyra and Potidaea helped start the war.'],
+  thebes: ['Thebes', 23.32, 38.32, 's', 'The leading city of Boeotia, an ally of Sparta and an old enemy of Athens.'],
+  megara: ['Megara', 23.35, 38.0, 's', 'A neighbor of Athens, cut off from Athenian markets by a decree before the war.'],
+  argos: ['Argos', 22.73, 37.63, 'n', 'Sparta\'s old rival in the Peloponnese; neutral at first, it allied with Athens after the Peace of Nicias.'],
+  plataea: ['Plataea', 23.27, 38.22, 'a', 'Athens\' small ally on the border of Boeotia; the war began with a Theban night attack on it in 431 BC.'],
+  naupactus: ['Naupactus', 21.83, 38.39, 'a', 'An Athenian naval base at the mouth of the Gulf of Corinth.'],
+  corcyra: ['Corcyra', 19.92, 39.62, 'a', 'A great naval island (modern Corfu) allied with Athens; its quarrel with Corinth helped start the war, and in 427 BC it fell into civil strife.'],
+  potidaea: ['Potidaea', 23.33, 40.19, 'a', 'A member of Athens\' league that revolted in 432 BC, with help from Corinth.'],
+  amphipolis: ['Amphipolis', 23.84, 40.82, 'a', 'An Athenian colony in Thrace, taken by the Spartan general Brasidas in 424 BC. Thucydides arrived too late to save it and was exiled.'],
+  mytilene: ['Mytilene', 26.55, 39.1, 'a', 'The chief city of Lesbos, which revolted from Athens in 427 BC.'],
+  samos: ['Samos', 26.85, 37.72, 'a', 'An island ally, later the base of the Athenian fleet.'],
+  melos: ['Melos', 24.43, 36.73, 'n', 'A small island, settled long before from Sparta, which tried to stay neutral.'],
+  pylos: ['Pylos', 21.69, 36.92, 'a', 'Where in 425 BC the Athenians built a fort and captured Spartan soldiers on the island of Sphacteria.'],
+  syracuse: ['Syracuse', 15.29, 37.08, 's', 'The greatest Greek city of Sicily, a Dorian city friendly to Sparta.'],
+  decelea: ['Decelea', 23.82, 38.17, 's', 'A place in Attica that the Spartans fortified in 413 BC, on the advice of the Athenian exile Alcibiades.'],
+  aegospotami: ['Aegospotami', 26.6, 40.3, 's', 'Where in 405 BC the Spartan admiral Lysander destroyed the Athenian fleet.']
+};
+var STEPS = [
+  ['431 BC: two alliances', [], [], 'Athens and its league of islands and coastal cities (blue) against Sparta and its allies on land (red). Thucydides says the truest cause was the growth of Athenian power and the fear it caused in Sparta.', 'I'],
+  ['431 BC: Attica invaded', [['sparta', 'corinth', 'megara', 'athens']], ['sparta', 'athens', 'plataea'], 'The Spartan king Archidamus invades Attica and burns the farms. On Pericles\' advice, the Athenians move inside the city walls and use their fleet to raid the coasts.', 'II'],
+  ['430 BC: the plague', [], ['athens'], 'A plague breaks out in crowded Athens and kills a large part of the population. Thucydides catches it and recovers. Pericles dies the next year.', 'II'],
+  ['427 BC: Mytilene and Corcyra', [], ['mytilene', 'corcyra', 'athens'], 'Mytilene\'s revolt is crushed. The Athenian assembly votes for a harsh punishment, then reverses it the next day after a debate between Cleon and Diodotus. Corcyra falls into civil strife.', 'III'],
+  ['425 BC: Pylos', [['athens', 'pylos']], ['pylos', 'sparta'], 'An Athenian force fortifies Pylos and captures Spartan soldiers on Sphacteria, to the amazement of Greece.', 'IV'],
+  ['424 BC: Amphipolis', [], ['amphipolis'], 'The Spartan Brasidas marches north and takes Amphipolis. Thucydides, the Athenian general nearby, comes too late and is exiled for twenty years.', 'IV'],
+  ['421 BC: the Peace of Nicias', [], ['athens', 'sparta', 'argos'], 'Athens and Sparta make a peace meant to last fifty years. It is never fully kept.', 'V'],
+  ['416 BC: Melos', [['athens', 'melos']], ['melos', 'athens'], 'Athens demands that neutral Melos join its empire: the Melian Dialogue. Melos refuses and is destroyed.', 'V'],
+  ['415–413 BC: the Sicilian Expedition', [['athens', 'corcyra', 'syracuse']], ['athens', 'corcyra', 'syracuse'], 'A huge Athenian fleet sails to conquer Sicily. Alcibiades, one of its generals, is recalled and flees to Sparta. In 413 BC the whole force is destroyed at Syracuse.', 'VI–VII'],
+  ['413 BC: Decelea', [], ['decelea', 'athens'], 'Sparta builds a fort in Attica itself, and thousands of Athenian slaves escape to it. Persia begins to fund Sparta\'s fleet.', 'VII–VIII'],
+  ['405–404 BC: the end', [['sparta', 'aegospotami']], ['aegospotami', 'athens'], 'Thucydides\' history breaks off in 411 BC. Xenophon tells the end: Lysander destroys the last Athenian fleet at Aegospotami, and Athens, starved by blockade, surrenders in 404 BC.', '(Xenophon)']
+];
+ML.viz.register('gb-athens-sparta', function (el, opts, V) {
+  if (!ML.gbMap || !ML.gbLand) { el.insertAdjacentHTML('beforeend', '<p class="ml-viz-err">This map could not be drawn.</p>'); return; }
+  var box = D.createElement('div'); box.className = 'gbx'; el.appendChild(box);
+  var M = ML.gbMap(box, { lon: [13.6, 28.4], lat: [35.6, 41.6], W: 560, label: 'Map of the Peloponnesian War',
+    seas: [['Aegean', 25.2, 38.7], ['Ionian Sea', 18.6, 37.4], ['SICILY', 14.2, 37.75]] });
+  var S = M.S, T = M.T, hit = M.hit;
+  var cur = Math.max(0, Math.min(STEPS.length - 1, +opts.step || 0)), dots = {}, labs = {};
+  var rg = M.layer('routes');
+  Object.keys(C).forEach(function (k) {
+    var c = C[k], q = M.P(c[1], c[2]), g = S('g', {}, M.layer('marks'));
+    dots[k] = S('circle', { cx: q[0], cy: q[1], r: k === 'athens' || k === 'sparta' ? 8 : 5.5, 'class': 'gbx-pt-' + c[3] }, g);
+    hit(g, c[0], function () { info(k); });
+    labs[k] = T(M.layer('labels'), q[0] + 9, q[1] - 7, c[0], 'gbx-lab', 'start');
+  });
+  [['megara', 'end', -8], ['corinth', 'end', -8], ['plataea', 'end', -8], ['thebes', 'start', 8], ['naupactus', 'end', -8], ['pylos', 'end', -8], ['argos', 'end', -8], ['sparta', 'end', -10]].forEach(function (a) { labs[a[0]].setAttribute('text-anchor', a[1]); labs[a[0]].setAttribute('x', +M.P(C[a[0]][1], C[a[0]][2])[0] + a[2]); });
+  var ring = S('g', {}, M.layer('marks'));
+  var key = D.createElement('ul'); key.className = 'gbx-key';
+  key.innerHTML = '<li><i style="background:var(--gbx-a)"></i>Athens and its allies</li><li><i style="background:var(--gbx-s)"></i>Sparta and its allies</li><li><i style="background:var(--gbx-n)"></i>Neutral at first</li>';
+  el.appendChild(key);
+  var ctl = D.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  V.button(ctl, '◀ Back', function () { set(Math.max(0, cur - 1)); });
+  V.button(ctl, 'Next ▶', function () { set(Math.min(STEPS.length - 1, cur + 1)); });
+  var ro = V.readout(el);
+  var MAIN = ['athens', 'sparta', 'corinth', 'thebes', 'corcyra', 'syracuse', 'melos', 'argos', 'amphipolis', 'mytilene'];
+  function show(ks, hl) {
+    while (ring.firstChild) ring.removeChild(ring.firstChild);
+    Object.keys(C).forEach(function (k) { labs[k].style.display = ks.indexOf(k) >= 0 ? '' : 'none'; });
+    hl.forEach(function (k) { var q = M.P(C[k][1], C[k][2]); S('circle', { cx: q[0], cy: q[1], r: 12, 'class': 'gbx-ring' }, ring); });
+  }
+  function set(i) {
+    cur = i; var s = STEPS[i];
+    while (rg.firstChild) rg.removeChild(rg.firstChild);
+    s[1].forEach(function (r) { var side = C[r[0]][3]; S('polyline', { points: r.map(function (k) { var q = M.P(C[k][1], C[k][2]); return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' '), 'class': side === 's' ? 'gbx-route-s' : 'gbx-route-a' }, rg); });
+    show(s[2].length ? s[2] : MAIN, s[2]);
+    ro.set('<b>' + s[0] + '</b> <span class="gbx-mut">(' + (/^\(/.test(s[4]) ? s[4].slice(1, -1) : 'Book ' + s[4]) + ')</span>. ' + s[3]);
+  }
+  function info(k) { var c = C[k]; show([k], [k]); ro.set('<b>' + c[0] + '.</b> ' + c[4]); }
+  set(cur);
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.plato-trial-of-socrates (scripts/greatbooks/src/gbgreeks.plato-trial-of-socrates/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.plato-trial-of-socrates: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-last-days: Socrates' last days in four dialogues, with the jury vote of the Apology (about 280 to 220). */
+ML.viz.register('gb-last-days', function (el, opts, V) {
+  var F = frame(el, 400, 250, 'Socrates\' last days, from the Euthyphro to the Phaedo'), sv = F.svg, ro = V.readout(el);
+  var SC = [
+    { k: 'euth', t: 'Euthyphro', s: 'Outside the court', txt: '<b>Euthyphro.</b> On his way to answer the charges, Socrates meets Euthyphro, who is sure he knows what holiness is. Five answers later, neither of them can say.' },
+    { k: 'apol', t: 'Apology', s: 'The trial', txt: '' },
+    { k: 'crit', t: 'Crito', s: 'In prison', txt: '<b>Crito.</b> The execution waited about a month, until a sacred ship came back from Delos. Near the end, his old friend Crito comes at dawn with a plan to escape. Socrates imagines the Laws of Athens speaking to him, and stays.' },
+    { k: 'phae', t: 'Phaedo', s: 'The last day', txt: '<b>Phaedo.</b> On his last day Socrates talks with friends about whether the soul outlives the body. At sunset he drinks the cup of poison, as the sentence required, calmly.' }
+  ];
+  var cur = opts.scene || 0, sw = 0, top = S('g', {}, sv), body = S('g', {}, sv);
+  function drawTop() {
+    clear(top);
+    S('line', { x1: 50, y1: 26, x2: 350, y2: 26, 'class': 'gbe-line' }, top);
+    SC.forEach(function (c, i) {
+      var x = 50 + i * 100, on = i === cur;
+      S('circle', { cx: x, cy: 26, r: on ? 10 : 7, 'class': on ? 'gbe-dot-on' : 'gbe-dot' }, top);
+      Tx(top, x, 52, c.t, on ? 'b' : 'mut');
+      Tx(top, x, 66, c.s, 'sm mut');
+    });
+  }
+  function drawBody() {
+    clear(body);
+    if (SC[cur].k !== 'apol') {
+      var icon = SC[cur].k;
+      var g = S('g', { transform: 'translate(200,165)' }, body);
+      if (icon === 'euth') { // columns of a porch
+        S('rect', { x: -90, y: -62, width: 180, height: 12, 'class': 'gbe-stone' }, g); S('path', { d: 'M-100,-62 L0,-88 L100,-62 Z', 'class': 'gbe-stone' }, g);
+        for (var i = 0; i < 5; i++) S('rect', { x: -80 + i * 38, y: -50, width: 12, height: 90, 'class': 'gbe-stone' }, g);
+        S('rect', { x: -95, y: 40, width: 190, height: 10, 'class': 'gbe-stone' }, g);
+      } else if (icon === 'crit') { // a barred window
+        S('rect', { x: -60, y: -70, width: 120, height: 110, rx: 4, 'class': 'gbe-stone' }, g);
+        S('rect', { x: -40, y: -50, width: 80, height: 70, 'class': 'gbe-sky' }, g);
+        for (var j = 0; j < 4; j++) S('line', { x1: -30 + j * 20, y1: -50, x2: -30 + j * 20, y2: 20, 'class': 'gbe-bar' }, g);
+        S('circle', { cx: 18, cy: -32, r: 9, 'class': 'gbe-moon' }, g);
+      } else { // a setting sun over hills
+        S('circle', { cx: 0, cy: 10, r: 34, 'class': 'gbe-sun' }, g);
+        S('path', { d: 'M-130,40 Q-60,-5 0,30 T130,25 L130,50 L-130,50 Z', 'class': 'gbe-hill' }, g);
+      }
+      ro.set(SC[cur].txt); return;
+    }
+    var G = 280 - sw, I = 220 + sw, n = 0;
+    for (var r = 0; r < 10; r++) for (var c = 0; c < 50; c++) {
+      S('rect', { x: 26 + c * 7, y: 88 + r * 9, width: 5.2, height: 7, rx: 1, 'class': n < G ? 'gbe-guilty' : 'gbe-free' }, body); n++;
+    }
+    Tx(body, 26, 196, 'Guilty: ' + G, 'b gbe-tg', 'start'); Tx(body, 374, 196, 'Not guilty: ' + I, 'b gbe-tf', 'end');
+    var verdict = G > I ? 'Guilty, by ' + (G - I) + ' votes' : (G === I ? 'A tie: in Athens a tie set the defendant free' : 'Acquitted');
+    Tx(body, 200, 222, verdict, 'b');
+    ro.set('<b>Apology.</b> About 500 citizens sat on the jury. The usual reckoning is 280 votes for guilty and 220 against. Socrates said that if only <b>30</b> votes had gone the other way, he would have been set free. Move the slider to switch votes. ' + (sw ? 'You have switched <b>' + sw + '</b>.' : ''));
+  }
+  function draw() { drawTop(); drawBody(); }
+  V.seg(F.ctl, { label: 'Scene', items: SC.map(function (c, i) { return [i, c.t]; }), value: cur, change: function (v) { cur = +v; sl.el.style.display = cur === 1 ? '' : 'none'; draw(); } });
+  var sl = V.slider(F.ctl, { label: 'Votes switched (Apology)', min: 0, max: 40, step: 1, value: 0, input: function (v) { sw = v; draw(); } });
+  sl.el.style.display = cur === 1 ? '' : 'none';
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.plato-phaedo (scripts/greatbooks/src/gbgreeks.plato-phaedo/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.plato-phaedo: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-opposites: the Phaedo's argument from opposites. Each pair of opposites comes from the other by two processes. */
+ML.viz.register('gb-opposites', function (el, opts, V) {
+  var F = frame(el, 400, 220, 'Opposites come from opposites: a cycle of two processes'), sv = F.svg, ro = V.readout(el);
+  var P = [
+    ['Asleep', 'Awake', 'waking up', 'falling asleep', 'Sleeping and waking take turns. If people only ever fell asleep and never woke, Socrates says, the whole world would end up like Endymion in the old story, asleep for ever.'],
+    ['Smaller', 'Larger', 'growing', 'shrinking', 'Anything that becomes larger was smaller before. Becoming larger and becoming smaller are the two roads between the pair.'],
+    ['Cold', 'Hot', 'warming', 'cooling', 'Hot things come from cold ones by warming, and cold from hot by cooling. Neither road runs one way only.'],
+    ['Dead', 'Living', 'coming back to life', 'dying', 'Socrates applies the pattern to life and death: if the living come from the dead, souls must exist somewhere between lives. Cebes and Simmias still have doubts, so he goes on to other arguments.']
+  ];
+  var cur = opts.pair == null ? 3 : opts.pair, one = false;
+  function arc(d, cls, label, y) { S('path', { d: d, 'class': cls, 'marker-end': 'url(#' + mid + ')' }, sv); Tx(sv, 200, y, label, 'b'); }
+  var mid = V.uid('gbe-arr');
+  function draw() {
+    clear(sv);
+    var defs = S('defs', {}, sv), m = S('marker', { id: mid, viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' }, defs);
+    S('path', { d: 'M0,0 L10,5 L0,10 Z', 'class': 'gbe-mutf' }, m);
+    var p = P[cur];
+    S('circle', { cx: 80, cy: 110, r: 46, 'class': 'gbe-box-blue' }, sv); Tx(sv, 80, 115, p[0], 'b lg');
+    S('circle', { cx: 320, cy: 110, r: 46, 'class': 'gbe-box-gold' }, sv); Tx(sv, 320, 115, p[1], 'b lg');
+    arc('M110,72 Q200,10 290,72', 'gbe-arrow', p[2], 34);
+    if (!one) arc('M290,148 Q200,210 110,148', 'gbe-arrow', p[3], 200);
+    else Tx(sv, 200, 200, 'No road back: everything piles up on one side', 'mut');
+    ro.set(one ? 'If the change ran <b>only one way</b>, everything would end up on one side and change would stop. That, Socrates argues, is not how nature works.' : p[4]);
+  }
+  V.seg(F.ctl, { label: 'Pair of opposites', items: P.map(function (p, i) { return [i, p[0] + ' / ' + p[1]]; }), value: cur, change: function (v) { cur = +v; draw(); } });
+  V.button(F.ctl, 'What if it ran one way?', function (e) { one = !one; e.target.textContent = one ? 'Show both roads' : 'What if it ran one way?'; draw(); });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.plato-meno (scripts/greatbooks/src/gbgreeks.plato-meno/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.plato-meno: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-meno-square: the geometry lesson in the Meno (82b-85b). Doubling a square of side 2: the boy's two wrong guesses,
+   then the square on the diagonal. */
+ML.viz.register('gb-meno-square', function (el, opts, V) {
+  var F = frame(el, 400, 256, 'Doubling the square, step by step, as in the Meno'), sv = F.svg, ro = V.readout(el);
+  var u = 50, ox = 100, oy = 20, step = opts.step || 0;
+  var TXT = [
+    'Socrates draws a square with sides of <b>2 feet</b>. Its area is $2 \\times 2 = 4$ square feet. He asks the boy: how long is the side of a square <b>twice</b> as big, 8 square feet?',
+    'The boy\'s first guess: <b>double the side</b>, to 4 feet. But that square holds four copies of the first one: $4 \\times 4 = 16$ square feet, four times as big, not twice.',
+    'Second guess: a side of <b>3 feet</b>, between 2 and 4. That gives $3 \\times 3 = 9$, still not 8. Now the boy admits he does not know, and Socrates says he is better off than when he thought he knew.',
+    'Socrates draws a line from corner to corner across each of the four small squares. The four <b>diagonals</b> make a new square, tilted on its point.',
+    'Each diagonal cuts a small square in half. The tilted square holds four halves, $4 \\times 2 = 8$ square feet: exactly <b>double</b>. The answer is the square on the <b>diagonal</b> of the first square.'
+  ];
+  function grid(n) { for (var i = 0; i <= n; i++) { S('line', { x1: ox + i * u, y1: oy, x2: ox + i * u, y2: oy + n * u, 'class': 'gbe-line', 'stroke-width': 0.7 }, sv); S('line', { x1: ox, y1: oy + i * u, x2: ox + n * u, y2: oy + i * u, 'class': 'gbe-line', 'stroke-width': 0.7 }, sv); } }
+  function sq(x, y, s, cls) { return S('rect', { x: ox + x * u / 2, y: oy + y * u / 2, width: s * u / 2, height: s * u / 2, 'class': cls }, sv); }
+  function draw() {
+    clear(sv); grid(4);
+    if (step === 1) { sq(0, 0, 8, 'gbe-box-red'); [[0, 0], [4, 0], [0, 4], [4, 4]].forEach(function (p) { sq(p[0], p[1], 4, 'gbe-ink'); }); Tx(sv, ox + 2 * u, 246, 'side 4: area 16', 'b gbe-tg'); }
+    if (step === 2) { sq(0, 0, 6, 'gbe-box-red'); Tx(sv, ox + 2 * u, 246, 'side 3: area 9', 'b gbe-tg'); }
+    if (step >= 3) {
+      [[0, 0], [4, 0], [0, 4], [4, 4]].forEach(function (p) { sq(p[0], p[1], 4, 'gbe-ink'); });
+      var c = function (x, y) { return (ox + x * u / 2) + ',' + (oy + y * u / 2); };
+      S('polygon', { points: [c(4, 0), c(8, 4), c(4, 8), c(0, 4)].join(' '), 'class': step === 4 ? 'gbe-box-on' : 'gbe-ink' }, sv);
+      Tx(sv, ox + 2 * u, 246, step === 4 ? 'square on the diagonal: area 8' : 'four diagonals', 'b gbe-tf');
+    }
+    sq(0, 0, 4, step >= 3 ? 'gbe-box-gold' : 'gbe-box-gold'); Tx(sv, ox + 2 * u / 2, oy + 2 * u / 2 + 5, 'area 4', 'b');
+    if (step === 0) Tx(sv, ox + 2 * u, 246, 'side 2: area 4', 'b');
+    ro.set('<b>Step ' + (step + 1) + ' of 5.</b> ' + TXT[step]);
+  }
+  var back = V.button(F.ctl, '◀ Back', function () { if (step > 0) { step--; draw(); } });
+  var next = V.button(F.ctl, 'Next ▶', function () { if (step < 4) { step++; draw(); } });
+  V.button(F.ctl, 'Start over', function () { step = 0; draw(); });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.plato-gorgias-protagoras (scripts/greatbooks/src/gbgreeks.plato-gorgias-protagoras/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.plato-gorgias-protagoras: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-flattery: Socrates' map of arts and their imitations in the Gorgias (464b-465d). */
+ML.viz.register('gb-flattery', function (el, opts, V) {
+  var F = frame(el, 400, 262, 'Four true arts and the four flatteries that imitate them, from Plato\'s Gorgias'), sv = F.svg, ro = V.readout(el);
+  var C = [ // [column, row, art, sham, note]
+    [0, 0, 'Gymnastics', 'Cosmetics', 'Training keeps the body truly fit. Dressing up and face paint only make it <em>look</em> fit.'],
+    [0, 1, 'Medicine', 'Cookery', 'Medicine knows what is good for a sick body. Cookery, in Socrates\' picture, only knows what tastes good, and pretends that is the same thing. Children choosing between a doctor and a cook would pick the cook.'],
+    [1, 0, 'Lawmaking', 'Sophistry', 'Good laws shape a healthy soul and city. Sophistry, clever arguing for pay, imitates lawmaking.'],
+    [1, 1, 'Justice', 'Rhetoric', 'Justice sets a wrongdoer right, as medicine heals the body. Rhetoric, as Gorgias teaches it, aims at pleasing a crowd, not making it better: so Socrates calls it a kind of flattery.']
+  ];
+  var mode = 'both', sel = 3;
+  function draw() {
+    clear(sv);
+    Tx(sv, 144, 20, 'For the BODY', 'b mut'); Tx(sv, 310, 20, 'For the SOUL', 'b mut');
+    Tx(sv, 33, 82, 'Keeps it', 'sm mut'); Tx(sv, 33, 96, 'well', 'sm mut'); Tx(sv, 33, 182, 'Sets it', 'sm mut'); Tx(sv, 33, 196, 'right', 'sm mut');
+    C.forEach(function (c, i) {
+      var x = 66 + c[0] * 166, y = 34 + c[1] * 102, g = S('g', { 'class': 'gbe-hit', tabindex: 0, role: 'button', 'aria-label': c[2] + ' and its imitation, ' + c[3] }, sv);
+      S('rect', { x: x, y: y, width: 156, height: 92, rx: 10, 'class': i === sel ? 'gbe-box-on' : 'gbe-box' }, g);
+      if (mode !== 'sham') Tx(g, x + 78, y + (mode === 'both' ? 36 : 52), c[2], 'b lg acc');
+      if (mode !== 'art') Tx(g, x + 78, y + (mode === 'both' ? 70 : 52), (mode === 'both' ? 'imitated by ' + c[3].toLowerCase() : c[3]), mode === 'both' ? 'gbe-tg' : 'b lg gbe-tg');
+      function pick() { sel = i; draw(); }
+      g.addEventListener('click', pick); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+    });
+    Tx(sv, 200, 240, 'cosmetics : gymnastics  =  cookery : medicine', 'sm mut'); Tx(sv, 200, 256, 'sophistry : lawmaking  =  rhetoric : justice', 'sm mut');
+    var c = C[sel]; ro.set('<b>' + c[2] + '</b> and its imitation, <b>' + c[3] + '</b>. ' + c[4]);
+  }
+  V.seg(F.ctl, { label: 'Show', items: [['art', 'The true arts'], ['sham', 'The imitations'], ['both', 'Both']], value: mode, change: function (v) { mode = v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.plato-symposium-phaedrus (scripts/greatbooks/src/gbgreeks.plato-symposium-phaedrus/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.plato-symposium-phaedrus: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-diotima-ladder: the ascent to beauty that Socrates says he learned from Diotima (Symposium 210a-212a). Our own wording. */
+ML.viz.register('gb-diotima-ladder', function (el, opts, V) {
+  var F = frame(el, 400, 300, 'Diotima\'s ladder of beauty, from one beautiful thing up to beauty itself'), sv = F.svg, ro = V.readout(el);
+  var R = [
+    ['One beautiful person', 'It starts with admiring someone, the way anyone might. Diotima says this is the first step, not the last.'],
+    ['Beauty in many people', 'The learner notices that beauty in one person is like beauty in another, and stops thinking only one person has it.'],
+    ['Beauty of character', 'A good and wise mind is more beautiful than a handsome face. The learner begins to love goodness in people.'],
+    ['Beautiful ways of life and laws', 'Then the beauty of good customs and fair laws: the way a whole city can be beautiful.'],
+    ['Beautiful knowledge', 'Next, the beauty of the sciences and of understanding: seeing how much there is to know, and loving it.'],
+    ['Beauty itself', 'At the top, beauty itself: not beautiful in one way and ugly in another, never growing or fading, the source of every beautiful thing below. Diotima says a life spent seeing it is the life most worth living.']
+  ];
+  var cur = opts.step == null ? 0 : opts.step;
+  function draw() {
+    clear(sv);
+    var x1 = 70, x2 = 130, y0 = 280, gap = 44;
+    S('line', { x1: x1, y1: 16, x2: x1, y2: 292, 'class': 'gbe-ink', 'stroke-width': 4 }, sv);
+    S('line', { x1: x2, y1: 16, x2: x2, y2: 292, 'class': 'gbe-ink', 'stroke-width': 4 }, sv);
+    R.forEach(function (r, i) {
+      var y = y0 - i * gap, on = i === cur, done = i < cur, g = S('g', { 'class': 'gbe-hit', tabindex: 0, role: 'button', 'aria-label': 'Step ' + (i + 1) + ': ' + r[0] }, sv);
+      S('rect', { x: x1 - 4, y: y - 5, width: x2 - x1 + 8, height: 10, rx: 3, 'class': on ? 'gbe-box-gold' : (done ? 'gbe-box-on' : 'gbe-box') }, g);
+      S('rect', { x: 150, y: y - 15, width: 236, height: 30, rx: 8, 'class': on ? 'gbe-box-gold' : 'gbe-box' }, g);
+      Tx(g, 160, y + 5, (i + 1) + '. ' + r[0], on ? 'b' : (done ? '' : 'mut'), 'start');
+      function pick() { cur = i; draw(); }
+      g.addEventListener('click', pick); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+    });
+    if (cur === 5) S('circle', { cx: 100, cy: 30, r: 13, 'class': 'gbe-sun' }, sv);
+    ro.set('<b>Step ' + (cur + 1) + ': ' + R[cur][0] + '.</b> ' + R[cur][1]);
+  }
+  V.button(F.ctl, 'Climb down', function () { if (cur > 0) { cur--; draw(); } });
+  V.button(F.ctl, 'Climb up', function () { if (cur < 5) { cur++; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.plato-republic-justice (scripts/greatbooks/src/gbgreeks.plato-republic-justice/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.plato-republic-justice: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-city-soul: the three classes of the city in words and the three parts of the soul (Republic II-IV). */
+ML.viz.register('gb-city-soul', function (el, opts, V) {
+  var F = frame(el, 400, 250, 'The three parts of Plato\'s city beside the three parts of the soul'), sv = F.svg, ro = V.readout(el);
+  var L = [
+    ['Rulers', 'Reason', 'Wisdom', 'The few who rule, trained for many years, beside <b>reason</b>, the part of you that thinks things through. Their virtue is <b>wisdom</b>.'],
+    ['Soldiers', 'Spirit', 'Courage', 'The guardians who defend the city, beside <b>spirit</b>, the part that feels anger at wrong and stands firm. Their virtue is <b>courage</b>.'],
+    ['Producers', 'Appetite', 'Moderation', 'Farmers, builders and traders, beside <b>appetite</b>, the part that wants food, drink and comfort. <b>Moderation</b> is all three parts agreeing about who should lead.']
+  ];
+  var sel = 0, just = true;
+  function draw() {
+    clear(sv);
+    Tx(sv, 74, 20, 'THE CITY', 'b mut'); Tx(sv, 200, 20, 'THE SOUL', 'b mut'); Tx(sv, 326, 20, 'ITS VIRTUE', 'b mut');
+    var order = just ? [0, 1, 2] : [2, 1, 0];
+    order.forEach(function (k, row) {
+      var l = L[k], y = 34 + row * 62, on = k === sel, g = S('g', { 'class': 'gbe-hit', tabindex: 0, role: 'button', 'aria-label': l[0] + ', ' + l[1] + ', ' + l[2] }, sv);
+      [[14, l[0]], [140, l[1]], [266, l[2]]].forEach(function (c, j) {
+        S('rect', { x: c[0], y: y, width: 120, height: 48, rx: 9, 'class': on ? 'gbe-box-on' : (j === 2 ? 'gbe-box-gold' : 'gbe-box') }, g);
+        Tx(g, c[0] + 60, y + 29, c[1], 'b' + (j === 2 ? ' acc' : ''));
+      });
+      function pick() { sel = k; draw(); }
+      g.addEventListener('click', pick); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+    });
+    Tx(sv, 200, 238, just ? 'Justice: each part does its own work, with reason leading' : 'Injustice: appetite on top, giving the orders', 'b ' + (just ? 'gbe-tf' : 'gbe-tg'));
+    ro.set(just ? L[sel][3] : 'When <b>appetite</b> takes charge, wanting more and more, and reason only works out how to get it, the soul is turned upside down. Plato compares it to a city run by its worst desires. ' + 'Selected: ' + L[sel][1] + '.');
+  }
+  V.seg(F.ctl, { label: 'Order', items: [['j', 'Just'], ['u', 'Unjust']], value: 'j', change: function (v) { just = v === 'j'; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.plato-republic-cave (scripts/greatbooks/src/gbgreeks.plato-republic-cave/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.plato-republic-cave: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-cave: the allegory of the cave (Republic VII, 514a-517a), in five stages.
+   gb-divided-line: the divided line (Republic VI, 509d-511e); the two middle parts always come out equal. */
+function person(g, x, y, s) { // a generic seated figure in the site's cartoon skin color
+  S('rect', { x: x - 7 * s, y: y - 4 * s, width: 14 * s, height: 20 * s, rx: 6 * s, 'class': 'gbe-cloth' }, g);
+  S('circle', { cx: x, cy: y - 10 * s, r: 7 * s, 'class': 'gbe-skin' }, g);
+}
+ML.viz.register('gb-cave', function (el, opts, V) {
+  var F = frame(el, 400, 250, 'Plato\'s cave: prisoners, the wall of shadows, the fire, the road up and the sun'), sv = F.svg, ro = V.readout(el);
+  var ST = [
+    ['Chained', 'Prisoners sit chained from childhood, facing the back wall. People behind them carry objects along a low wall, and the fire throws the objects\' <b>shadows</b> on the cave wall. The prisoners think the shadows are all there is.'],
+    ['Turned around', 'One prisoner is set free and turned toward the fire. The light hurts his eyes. Told that the objects are more real than the shadows, he does not believe it at first.'],
+    ['Dragged up', 'He is pulled up the rough, steep road toward the mouth of the cave. It is hard and he resists.'],
+    ['In the sunlight', 'Outside, he is dazzled. First he can look only at shadows and reflections in water, then at the things themselves, then the night sky, and at last the <b>sun</b>, which Plato compares to the Good: the source of light and of seeing.'],
+    ['Going back', 'He goes back down to free the others. His eyes are not used to the dark, and he does badly at the shadow game. The prisoners laugh at him and say the trip up ruined his eyes. Plato hints they might even turn on him, as Athens turned on Socrates.']
+  ];
+  var st = opts.stage || 0, ground = 214;
+  function draw() {
+    clear(sv);
+    S('path', { d: 'M0,0 L290,0 Q300,60 340,92 L400,92 L400,250 L0,250 Z', 'class': 'gbe-stone' }, sv); // rock
+    S('path', { d: 'M24,30 L250,30 Q262,96 330,140 L400,140 L400,214 L24,214 Z', 'class': 'gbe-box' }, sv); // the hollow
+    S('rect', { x: 290, y: 0, width: 110, height: 92, 'class': 'gbe-sky' }, sv);
+    S('circle', { cx: 372, cy: 30, r: 14, 'class': 'gbe-sun', opacity: st === 3 ? 1 : 0.55 }, sv);
+    S('rect', { x: 30, y: 70, width: 44, height: 130, rx: 4, 'class': st === 0 ? 'gbe-box-gold' : 'gbe-box' }, sv); // the wall the prisoners face
+    [[36, 'M0,0 l10,-14 l10,14 z'], [40, 'M0,0 c0,-14 18,-14 18,0 z'], [41, 'M0,0 l6,-18 l6,18 z']].forEach(function (sh, i) { S('path', { d: sh[1], transform: 'translate(' + sh[0] + ',' + (110 + i * 36) + ') scale(1.4)', 'class': 'gbe-shadow' }, sv); });
+    S('rect', { x: 176, y: 172, width: 26, height: 42, 'class': 'gbe-stone' }, sv); // low wall
+    [[182, 'M0,0 l8,-16 l8,16 z'], [192, 'M0,0 c0,-12 14,-12 14,0 z']].forEach(function (s, i) { S('path', { d: s[1], transform: 'translate(' + (s[0] - 6 + i * 4) + ',' + (172 - i * 2) + ')', 'class': 'gbe-gold' }, sv); });
+    S('path', { d: 'M234,214 q6,-30 12,-46 q8,18 14,46 z', 'class': 'gbe-fire' }, sv); S('path', { d: 'M240,214 q4,-16 7,-26 q5,10 8,26 z', 'class': 'gbe-flame' }, sv);
+    for (var i = 0; i < 3; i++) person(sv, 96 + i * 24, 200, 0.9);
+    S('line', { x1: 86, y1: 210, x2: 154, y2: 210, 'class': 'gbe-bar', 'stroke-width': 2 }, sv);
+    var pos = [[0, 0], [162, 200], [300, 128], [345, 84], [78, 200]][st];
+    if (st > 0) person(sv, pos[0], pos[1], 0.9);
+    Tx(sv, 52, 62, 'the wall', 'sm mut'); Tx(sv, 120, 238, 'prisoners', 'sm mut'); Tx(sv, 190, 238, 'low wall', 'sm mut'); Tx(sv, 250, 238, 'fire', 'sm mut'); Tx(sv, 345, 110, 'the road up', 'sm mut');
+    ro.set('<b>' + (st + 1) + '. ' + ST[st][0] + '.</b> ' + ST[st][1]);
+  }
+  V.seg(F.ctl, { label: 'Stage', items: ST.map(function (s, i) { return [i, (i + 1) + '. ' + s[0]]; }), value: st, change: function (v) { st = +v; draw(); } });
+  draw();
+});
+
+ML.viz.register('gb-divided-line', function (el, opts, V) {
+  var F = frame(el, 400, 270, 'The divided line: four kinds of thing and four ways of knowing'), sv = F.svg, ro = V.readout(el);
+  var k = opts.k || 2, total = 180;
+  var P = [['Images', 'shadows, reflections', 'imagining (eikasia)'], ['Things', 'animals, plants, made things', 'belief (pistis)'], ['Mathematics', 'numbers, figures', 'reasoning (dianoia)'], ['Forms', 'the Good, justice itself', 'understanding (noesis)']];
+  function draw() {
+    clear(sv);
+    var vis = total / (1 + k), intl = total - vis, seg = [vis / (1 + k), vis * k / (1 + k), intl / (1 + k), intl * k / (1 + k)];
+    var y = 250, x = 70, cls = ['gbe-box', 'gbe-box-blue', 'gbe-box-gold', 'gbe-box-on'];
+    var slot = [232, 186, 140, 94];
+    for (var i = 0; i < 4; i++) {
+      var h = seg[i]; y -= h;
+      S('rect', { x: x, y: y, width: 26, height: h, 'class': cls[i] }, sv);
+      S('line', { x1: x + 28, y1: y + h / 2, x2: x + 46, y2: slot[i] - 4, 'class': 'gbe-line', 'stroke-width': 1 }, sv);
+      Tx(sv, x + 50, slot[i] - 3, P[i][0] + '  ' + V.fmt(h, 1), 'b', 'start');
+      Tx(sv, x + 50, slot[i] + 12, P[i][1] + ' · ' + P[i][2], 'sm mut', 'start');
+    }
+    S('line', { x1: 52, y1: 250, x2: 52, y2: 250 - vis, 'class': 'gbe-ink' }, sv); S('line', { x1: 52, y1: 250 - vis, x2: 52, y2: 70, 'class': 'gbe-arrow' }, sv);
+    Tx(sv, 40, 250 - vis / 2, 'seen', 'sm mut', 'end'); Tx(sv, 40, 250 - vis - intl / 2, 'known', 'sm mut', 'end');
+    Tx(sv, 200, 40, 'A line of ' + total + ' units, cut ' + V.fmt(k, 1) + ' : 1, then each part cut the same way', 'sm mut');
+    ro.set('The <b>known</b> part is ' + V.fmt(k, 1) + ' times the <b>seen</b> part, and each part is cut again in the same ratio. Things and Mathematics both come to <b>' + V.fmt(seg[1], 1) + '</b>: the two middle parts are always equal, whatever ratio you choose. (Plato does not point this out; readers have noticed it ever since.)');
+  }
+  V.slider(F.ctl, { label: 'Ratio (known : seen)', min: 1.2, max: 3, step: 0.1, value: k, input: function (v) { k = v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.plato-theaetetus (scripts/greatbooks/src/gbgreeks.plato-theaetetus/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.plato-theaetetus: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-wax-tablet: Socrates' picture of memory as a block of wax (Theaetetus 191c-195a). Our own simplified model. */
+ML.viz.register('gb-wax-tablet', function (el, opts, V) {
+  var F = frame(el, 400, 220, 'Memory as a wax tablet: stamp an impression and watch how well it lasts'), sv = F.svg, ro = V.readout(el);
+  var W = {
+    good: { n: 'Deep and smooth', d: 1, blur: 0, fade: 0.05, size: 1, txt: 'Deep, smooth, well-mixed wax takes clear marks that last. Socrates says such people learn easily, remember well, and judge truly.' },
+    soft: { n: 'Too soft', d: 1, blur: 1.6, fade: 0.5, size: 1, txt: 'Soft wax takes a mark quickly, but the mark soon blurs: quick to learn, quick to forget.' },
+    hard: { n: 'Too hard', d: 0.45, blur: 0, fade: 0.03, size: 1, txt: 'Hard wax takes only a shallow mark, though what it takes it keeps: slow to learn, slow to forget.' },
+    rough: { n: 'Rough and impure', d: 0.8, blur: 1, fade: 0.15, size: 1, txt: 'Rough or impure wax gives smudged marks, so the person mixes up one memory with another.' },
+    small: { n: 'Too small', d: 1, blur: 0, fade: 0.05, size: 0.55, txt: 'A small tablet has no room: the marks crowd and overlap, and the person confuses them.' }
+  };
+  var kind = opts.kind || 'good', marks = [], t = 0, fid = V.uid('gbe-blur');
+  function draw() {
+    clear(sv);
+    var w = W[kind], defs = S('defs', {}, sv), f = S('filter', { id: fid, x: '-20%', y: '-20%', width: '140%', height: '140%' }, defs);
+    S('feGaussianBlur', { stdDeviation: w.blur + (kind === 'soft' ? t * 0.35 : 0) }, f);
+    var tw = 340 * w.size, th = 150 * w.size, tx = 200 - tw / 2, ty = 20 + (150 - th) / 2;
+    S('rect', { x: tx - 10, y: ty - 10, width: tw + 20, height: th + 20, rx: 8, 'class': 'gbe-stone' }, sv);
+    S('rect', { x: tx, y: ty, width: tw, height: th, rx: 4, 'class': 'gbe-box-gold' }, sv);
+    marks.forEach(function (m, i) {
+      var op = Math.max(0, w.d * Math.exp(-w.fade * (t - m.t))), cx = tx + m.x * tw, cy = ty + m.y * th, r = 26;
+      var g = S('g', { opacity: op.toFixed(3), filter: w.blur || kind === 'soft' ? 'url(#' + fid + ')' : '' }, sv);
+      S('circle', { cx: cx, cy: cy, r: r, 'class': 'gbe-ink', 'stroke-width': 3 }, g);
+      Tx(g, cx, cy + 8, m.s, 'b lg');
+    });
+    Tx(sv, 200, 212, marks.length ? 'Time passed: ' + t + (t === 1 ? ' day' : ' days') : 'Press "Stamp a memory"', 'sm mut');
+    ro.set('<b>' + w.n + '.</b> ' + w.txt);
+  }
+  var SY = ['Α', 'Β', 'Γ', 'Δ', 'Ε', 'Θ', 'Λ', 'Σ', 'Ω'];
+  V.seg(F.ctl, { label: 'Kind of wax', items: Object.keys(W).map(function (k) { return [k, W[k].n]; }), value: kind, change: function (v) { kind = v; seed(); draw(); } });
+  function stamp() { var i = marks.length; marks.push({ x: 0.15 + (i % 4) * 0.23 + (W[kind].size < 1 ? 0.05 : 0), y: i < 4 ? 0.32 : 0.72, s: SY[i % SY.length], t: t }); if (marks.length > 8) marks.shift(); }
+  function seed() { marks = []; t = 0; stamp(); stamp(); stamp(); }
+  V.button(F.ctl, 'Stamp a memory', function () { stamp(); draw(); });
+  V.button(F.ctl, 'Let a day pass', function () { t++; draw(); });
+  seed(); draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.plato-timaeus (scripts/greatbooks/src/gbgreeks.plato-timaeus/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.plato-timaeus: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-elements: the Timaeus's four elements as solids made of triangles (53c-57d). Fire, air and water can change into
+   one another because their faces are the same equilateral triangles; earth's square faces cannot. */
+ML.viz.register('gb-elements', function (el, opts, V) {
+  var F = frame(el, 400, 250, 'Plato\'s four elements as solids, and how fire, air and water trade triangles'), sv = F.svg, ro = V.readout(el);
+  var E = [
+    { k: 'fire', n: 'Fire', s: 'tetrahedron', f: 4 }, { k: 'air', n: 'Air', s: 'octahedron', f: 8 },
+    { k: 'water', n: 'Water', s: 'icosahedron', f: 20 }, { k: 'earth', n: 'Earth', s: 'cube', f: 6 }
+  ];
+  var N = { fire: 0, air: 1, water: 2, earth: 1 }, msg = 'Fire, air and water are built from the same equilateral triangles, so they can break apart and join up again as one another. Try the buttons.';
+  function icon(g, k, x, y) {
+    var c = 'gbe-ink';
+    if (k === 'fire') { S('path', { d: 'M' + x + ',' + (y - 22) + ' l22,38 l-44,0 z M' + x + ',' + (y - 22) + ' l6,38', 'class': c }, g); }
+    if (k === 'air') { S('path', { d: 'M' + x + ',' + (y - 24) + ' l22,24 l-22,24 l-22,-24 z M' + (x - 22) + ',' + y + ' l30,4 l14,-4 M' + x + ',' + (y - 24) + ' l8,28 l-8,20', 'class': c }, g); }
+    if (k === 'water') { var p = []; for (var i = 0; i < 6; i++) { var a = Math.PI / 6 + i * Math.PI / 3; p.push((x + 24 * Math.cos(a)).toFixed(1) + ',' + (y + 24 * Math.sin(a)).toFixed(1)); } S('polygon', { points: p.join(' '), 'class': c }, g); S('path', { d: 'M' + p[0] + ' L' + p[2] + ' L' + p[4] + ' Z M' + p[1] + ' L' + p[3] + ' L' + p[5] + ' Z', 'class': c, 'stroke-width': 1 }, g); }
+    if (k === 'earth') { S('path', { d: 'M' + (x - 18) + ',' + (y - 10) + ' h26 v26 h-26 z M' + (x - 18) + ',' + (y - 10) + ' l10,-10 h26 l-10,10 M' + (x + 8) + ',' + (y + 16) + ' l10,-10 v-26', 'class': c }, g); }
+  }
+  function draw() {
+    clear(sv);
+    E.forEach(function (e, i) {
+      var x = 52 + i * 99, g = S('g', {}, sv);
+      S('rect', { x: x - 44, y: 14, width: 88, height: 150, rx: 10, 'class': e.k === 'earth' ? 'gbe-box' : 'gbe-box-gold' }, g);
+      icon(g, e.k, x, 56); Tx(g, x, 104, e.n, 'b lg'); Tx(g, x, 120, e.s, 'sm mut'); Tx(g, x, 136, e.f + (e.k === 'earth' ? ' squares' : ' triangles'), 'sm mut');
+      Tx(g, x, 156, '× ' + N[e.k], 'b acc');
+    });
+    var tri = 4 * N.fire + 8 * N.air + 20 * N.water;
+    Tx(sv, 200, 194, 'Triangles in fire, air and water: ' + tri, 'b');
+    Tx(sv, 200, 214, 'The count never changes: triangles are only rearranged.', 'sm mut');
+    Tx(sv, 200, 238, 'Plato gives the fifth solid, the dodecahedron, to the whole universe.', 'sm mut');
+    ro.set(msg);
+  }
+  function act(fn) { return function () { msg = fn(); draw(); }; }
+  V.button(F.ctl, 'Break up 1 water', act(function () { if (!N.water) return 'There is no water left to break.'; N.water--; N.air += 2; N.fire++; return 'One water (20 triangles) breaks into 2 air (8 + 8) and 1 fire (4): 20 = 16 + 4.'; }));
+  V.button(F.ctl, 'Break up 1 air', act(function () { if (!N.air) return 'There is no air left to break.'; N.air--; N.fire += 2; return 'One air (8 triangles) becomes 2 fire (4 + 4).'; }));
+  V.button(F.ctl, 'Join 2 fire', act(function () { if (N.fire < 2) return 'You need at least 2 fire.'; N.fire -= 2; N.air++; return 'Two fire (4 + 4) join into 1 air (8).'; }));
+  V.button(F.ctl, 'Join 5 air', act(function () { if (N.air < 5) return 'Five air (40 triangles) would make 2 water (20 + 20). You need 5 air.'; N.air -= 5; N.water += 2; return 'Five air (40 triangles) join into 2 water (20 + 20).'; }));
+  V.button(F.ctl, 'Break up earth?', act(function () { return 'Earth\'s cube has square faces, made from a different triangle, so in the Timaeus earth never turns into the others. Broken up, its pieces drift until they join again as earth.'; }));
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.plato-laws (scripts/greatbooks/src/gbgreeks.plato-laws/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.plato-laws: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-constitutions: the six kinds of rule. mode 'statesman': Plato's Statesman (302b-303b), lawful and lawless rule.
+   mode 'aristotle': Aristotle's Politics III.7, rule for the common good and rule for the rulers' own good. */
+ML.viz.register('gb-constitutions', function (el, opts, V) {
+  var F = frame(el, 400, 240, 'Six kinds of government: rule by one, by a few, or by many, in a good form and a bad form'), sv = F.svg, ro = V.readout(el);
+  var M = {
+    statesman: { cols: ['Keeps the laws', 'Ignores the laws'], cells: [
+      ['Monarchy', 'A king who rules by good laws: the best of the six, says the Stranger.', 'Tyranny', 'One ruler above the law: the worst of all to live under.'],
+      ['Aristocracy', 'A few good rulers under law: in the middle.', 'Oligarchy', 'A few who rule for themselves, without law: in the middle of the bad forms.'],
+      ['Democracy (lawful)', 'Rule by the many under law: the weakest of the good forms, because power is spread so thin that it can do little good or harm.', 'Democracy (lawless)', 'Rule by the many without law: the least bad of the bad forms, for the same reason.']],
+      note: 'Above all six the Stranger puts a seventh: rule by a true statesman with real knowledge, which he compares to a god among mortals.' },
+    aristotle: { cols: ['For the common good', 'For the rulers\' own good'], cells: [
+      ['Kingship', 'One person rules for everyone\'s good.', 'Tyranny', 'One person rules for his own good.'],
+      ['Aristocracy', 'The best few rule for everyone\'s good.', 'Oligarchy', 'The rich few rule in their own interest. Aristotle says wealth, not number, is what really marks it.'],
+      ['Polity', 'The many rule for everyone\'s good, a mix of rich and poor with a large middle class. Aristotle thinks it the most stable form in practice.', 'Democracy', 'In Aristotle\'s word, rule by the poor many in their own interest. (He uses "democracy" for the bad form; today the word is used in a much broader sense.)']],
+      note: 'Aristotle names the good forms and their "deviations". He also asks which form suits a given people, not only which is best in theory.' }
+  };
+  var mode = M[opts.mode] ? opts.mode : 'statesman', sel = [0, 0], showRank = false;
+  var RANK = [[1, 6], [2, 5], [3, 4]];
+  function draw() {
+    clear(sv);
+    var m = M[mode];
+    Tx(sv, 162, 24, m.cols[0], 'b sm gbe-tf'); Tx(sv, 310, 24, m.cols[1], 'b sm gbe-tg');
+    ['One', 'A few', 'Many'].forEach(function (r, i) { Tx(sv, 44, 66 + i * 64, r, 'b mut'); });
+    m.cells.forEach(function (row, i) {
+      [0, 1].forEach(function (j) {
+        var x = 92 + j * 148, y = 36 + i * 64, on = sel[0] === i && sel[1] === j, g = S('g', { 'class': 'gbe-hit', tabindex: 0, role: 'button', 'aria-label': row[j * 2] }, sv);
+        S('rect', { x: x, y: y, width: 140, height: 54, rx: 9, 'class': on ? 'gbe-box-on' : (j ? 'gbe-box-red' : 'gbe-box') }, g);
+        Tx(g, x + 70, y + 32, row[j * 2], 'b');
+        if (showRank && mode === 'statesman') Tx(g, x + 128, y + 16, '#' + RANK[i][j], 'sm acc');
+        function pick() { sel = [i, j]; draw(); }
+        g.addEventListener('click', pick); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+      });
+    });
+    var c = m.cells[sel[0]];
+    ro.set('<b>' + c[sel[1] * 2] + '.</b> ' + c[sel[1] * 2 + 1] + ' <br>' + m.note);
+  }
+  if (mode === 'statesman') V.button(F.ctl, 'Show the Stranger\'s ranking', function (e) { showRank = !showRank; e.target.textContent = showRank ? 'Hide the ranking' : 'Show the Stranger\'s ranking'; draw(); });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.aristotle-logic (scripts/greatbooks/src/gbgreeks.aristotle-logic/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.aristotle-logic: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-syllogism: build a categorical syllogism (four figures, forms A E I O) and test it on a three-circle diagram.
+   Validity is checked by brute force over all 256 ways of filling the eight regions, assuming (as Aristotle does)
+   that S, M and P each name something that exists. */
+var FORMS = { A: ['All', 'are'], E: ['No', 'are'], I: ['Some', 'are'], O: ['Some', 'are not'] };
+var FIG = { 1: [['M', 'P'], ['S', 'M']], 2: [['P', 'M'], ['S', 'M']], 3: [['M', 'P'], ['M', 'S']], 4: [['P', 'M'], ['M', 'S']] };
+var MOODS = { '1AAA': 'Barbara', '1EAE': 'Celarent', '1AII': 'Darii', '1EIO': 'Ferio', '2EAE': 'Cesare', '2AEE': 'Camestres', '2EIO': 'Festino', '2AOO': 'Baroco', '3AAI': 'Darapti', '3EAO': 'Felapton', '3IAI': 'Disamis', '3AII': 'Datisi', '3OAO': 'Bocardo', '3EIO': 'Ferison', '4AAI': 'Bramantip', '4AEE': 'Camenes', '4IAI': 'Dimaris', '4EAO': 'Fesapo', '4EIO': 'Fresison' };
+var BIT = { S: 1, M: 2, P: 4 };
+function holds(f, x, y, occ) { // occ: array of 8 booleans, region r is occupied
+  var X = BIT[x], Y = BIT[y], r;
+  for (r = 0; r < 8; r++) { if (!occ[r] || !(r & X)) continue; if (f === 'A' && !(r & Y)) return false; if (f === 'E' && (r & Y)) return false; if (f === 'I' && (r & Y)) return true; if (f === 'O' && !(r & Y)) return true; }
+  return f === 'A' || f === 'E';
+}
+function sylValid(fig, a, b, c) {
+  var p = FIG[fig];
+  for (var m = 0; m < 256; m++) {
+    var occ = []; for (var r = 0; r < 8; r++) occ.push(!!(m >> r & 1));
+    var ok = ['S', 'M', 'P'].every(function (t) { for (var r = 0; r < 8; r++) if (occ[r] && (r & BIT[t])) return true; return false; });
+    if (!ok) continue;
+    if (holds(a, p[0][0], p[0][1], occ) && holds(b, p[1][0], p[1][1], occ) && !holds(c, 'S', 'P', occ)) return false;
+  }
+  return true;
+}
+ML.gbSylValid = sylValid;
+function sent(f, x, y) { return FORMS[f][0] + ' ' + x + ' ' + FORMS[f][1] + ' ' + y; }
+ML.viz.register('gb-syllogism', function (el, opts, V) {
+  var stage = document.createElement('div'); stage.className = 'gb-stage'; el.appendChild(stage);
+  var c = V.canvas(stage, { aspect: 1.55, max: 330, min: 220 }), ro = V.readout(el), ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  var st = { fig: String(opts.fig || 1), a: opts.a || 'A', b: opts.b || 'A', c: opts.c || 'A' };
+  var cen = null;
+  function circles(k) { var s = Math.min(c.w / 400, c.h / 258); return { s: s, ox: (c.w - 400 * s) / 2, S: [150, 160], P: [250, 160], M: [200, 92], r: 72 }; }
+  function region(G, px, py) { var r = 0;['S', 'M', 'P'].forEach(function (t) { var dx = px - G[t][0], dy = py - G[t][1]; if (dx * dx + dy * dy <= G.r * G.r) r |= BIT[t]; }); return r; }
+  function centers(G) { var sx = [], sy = [], n = []; for (var r = 0; r < 8; r++) { sx.push(0); sy.push(0); n.push(0); } for (var x = 100; x < 330; x += 3) for (var y = 15; y < 240; y += 3) { var r2 = region(G, x, y); sx[r2] += x; sy[r2] += y; n[r2]++; } return sx.map(function (v, i) { return n[i] ? [v / n[i], sy[i] / n[i]] : null; }); }
+  function draw() {
+    var k = V.colors(), ctx = c.ctx, G = circles(), p = FIG[st.fig];
+    if (!cen) cen = centers(G);
+    ctx.fillStyle = k.bg; ctx.fillRect(0, 0, c.w, c.h);
+    ctx.save(); ctx.translate(G.ox, 0); ctx.scale(G.s, G.s);
+    var empty = [];
+    for (var r = 1; r < 8; r++) {
+      var e = false;
+      [[st.a, p[0]], [st.b, p[1]]].forEach(function (q) { var X = BIT[q[1][0]], Y = BIT[q[1][1]]; if (!(r & X)) return; if (q[0] === 'A' && !(r & Y)) e = true; if (q[0] === 'E' && (r & Y)) e = true; });
+      empty[r] = e;
+    }
+    // shade emptied regions by sampling
+    ctx.fillStyle = k.redSoft;
+    for (var x = 76; x < 324; x += 2) for (var y = 18; y < 236; y += 2) { var rr = region(G, x + 1, y + 1); if (rr && empty[rr]) ctx.fillRect(x, y, 2, 2); }
+    ctx.lineWidth = 2;
+    [['S', k.blue], ['M', k.gold], ['P', k.green]].forEach(function (t) { ctx.strokeStyle = t[1]; ctx.beginPath(); ctx.arc(G[t[0]][0], G[t[0]][1], G.r, 0, 2 * Math.PI); ctx.stroke(); });
+    ctx.font = '700 16px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = k.blue; ctx.fillText('S', 90, 200); ctx.fillStyle = k.green; ctx.fillText('P', 310, 200); ctx.fillStyle = k.gold; ctx.fillText('M', 200, 12);
+    // particular premises: an x in each region that could hold it
+    ctx.font = '700 14px system-ui,sans-serif'; ctx.fillStyle = k.ink;
+    [[st.a, p[0]], [st.b, p[1]]].forEach(function (q) {
+      if (q[0] !== 'I' && q[0] !== 'O') return;
+      var X = BIT[q[1][0]], Y = BIT[q[1][1]], cand = [];
+      for (var r = 1; r < 8; r++) if ((r & X) && (q[0] === 'I' ? (r & Y) : !(r & Y)) && !empty[r]) cand.push(r);
+      cand.forEach(function (r) { var pt = cen[r]; if (pt) ctx.fillText(cand.length > 1 ? 'x?' : 'x', pt[0], pt[1] + (q === st.a ? -6 : 8)); });
+    });
+    ctx.restore();
+    var ok = sylValid(st.fig, st.a, st.b, st.c), name = MOODS[st.fig + st.a + st.b + st.c];
+    ro.set('1. ' + sent(st.a, p[0][0], p[0][1]) + '. &nbsp;2. ' + sent(st.b, p[1][0], p[1][1]) + '. &nbsp;So: <b>' + sent(st.c, 'S', 'P') + '</b>.<br>' +
+      (ok ? '<b>Valid</b>' + (name ? ' (the form later called <i>' + name + '</i>)' : '') + ': whenever both premises are true, the conclusion must be true.' : '<b>Not valid</b>: the premises can be true while the conclusion is false.') +
+      ' Shaded areas are empty; x marks where something must be.');
+  }
+  function row(lab, key, items) { V.seg(ctl, { label: lab, items: items, value: st[key], change: function (v) { st[key] = String(v); draw(); } }); var l = document.createElement('span'); l.className = 'ml-sl-lab'; l.textContent = lab; ctl.insertBefore(l, ctl.lastChild); }
+  var AEIO = [['A', 'All'], ['E', 'No'], ['I', 'Some'], ['O', 'Some…not']];
+  row('Figure', 'fig', [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4']]); row('Premise 1', 'a', AEIO); row('Premise 2', 'b', AEIO); row('Conclusion', 'c', AEIO);
+  c.onResize(function () { cen = null; draw(); }); V.onTheme(draw); draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
   /* ---- gbgreeks.aristotle-physics (scripts/greatbooks/src/gbgreeks.aristotle-physics/viz.js) ---- */
   try { (function () {
 /* gbgreeks.aristotle-physics: visuals gb-four-causes, gb-fall-rules (gbsA, our own designs; theme colors from MathLadder.viz.colors()). */
@@ -118,6 +1309,94 @@ ML.viz.register('gb-earth-shadow', function (el, opts, V) {
   c.onResize(draw); V.onTheme(draw); draw();
 });
   })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.aristotle-on-the-soul (scripts/greatbooks/src/gbgreeks.aristotle-on-the-soul/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.aristotle-on-the-soul: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-soul-powers: Aristotle's ladder of the soul's powers (On the Soul II.2-3): nutrition, sensation, thought. */
+ML.viz.register('gb-soul-powers', function (el, opts, V) {
+  var F = frame(el, 400, 250, 'Aristotle\'s powers of the soul: plants, animals and people'), sv = F.svg, ro = V.readout(el);
+  var K = {
+    plant: { n: 'A plant', lv: 1, t: 'A plant has the first power only: <b>nutrition</b>. It takes in food, grows and makes new plants. For Aristotle that is already a kind of soul, because it is what makes the plant alive.' },
+    animal: { n: 'An animal', lv: 2, t: 'An animal has nutrition and also <b>sensation</b>: every animal has at least touch. With feeling comes <b>desire</b>, wanting what is pleasant, and most animals can also <b>move</b> from place to place.' },
+    human: { n: 'A person', lv: 3, t: 'A human being has all of these and one more: <b>thought</b>, the power to reason and understand. The higher powers never come without the lower ones.' }
+  };
+  var cur = opts.who || 'animal';
+  function leaf(g, x, y) { S('path', { d: 'M' + x + ',' + (y + 18) + ' q-18,-20 0,-38 q18,18 0,38 z', 'class': 'gbe-g', opacity: 0.8 }, g); S('line', { x1: x, y1: y + 18, x2: x, y2: y + 26, 'class': 'gbe-ink' }, g); }
+  function beast(g, x, y) { S('rect', { x: x - 18, y: y - 6, width: 32, height: 14, rx: 7, 'class': 'gbe-mutf' }, g); S('circle', { cx: x + 18, cy: y - 6, r: 7, 'class': 'gbe-mutf' }, g); [-14, -6, 4, 10].forEach(function (d) { S('rect', { x: x + d, y: y + 6, width: 3, height: 12, 'class': 'gbe-mutf' }, g); }); }
+  function human(g, x, y) { S('rect', { x: x - 8, y: y - 6, width: 16, height: 24, rx: 6, 'class': 'gbe-cloth' }, g); S('circle', { cx: x, cy: y - 14, r: 8, 'class': 'gbe-skin' }, g); }
+  function draw() {
+    clear(sv);
+    var lv = K[cur].lv, cx = 108, cy = 124;
+    [[3, 102, 'Thought', 'gbe-box-blue'], [2, 72, 'Sensation, desire, movement', 'gbe-box-gold'], [1, 40, 'Nutrition and growth', 'gbe-box-on']].forEach(function (r) {
+      S('circle', { cx: cx, cy: cy, r: r[1], 'class': r[0] <= lv ? r[3] : 'gbe-box', opacity: r[0] <= lv ? 1 : 0.55 }, sv);
+    });
+    Tx(sv, cx, cy + 5, 'Nutrition', 'b sm'); Tx(sv, cx, cy - 54, 'Sensation', 'b sm' + (lv >= 2 ? '' : ' mut')); Tx(sv, cx, cy - 84, 'Thought', 'b sm' + (lv >= 3 ? '' : ' mut'));
+    var g = S('g', {}, sv);
+    Tx(sv, 316, 40, K[cur].n, 'b lg');
+    if (cur === 'plant') leaf(g, 320, 90); else if (cur === 'animal') beast(g, 318, 92); else human(g, 320, 96);
+    ['Nutrition', 'Sensation, desire', 'Thought'].forEach(function (p, i) { var has = i < lv; Tx(sv, 250, 150 + i * 22, (has ? '✓ ' : '✗ ') + p, has ? 'gbe-tf b' : 'mut', 'start'); });
+    ro.set(K[cur].t);
+  }
+  V.seg(F.ctl, { label: 'Living thing', items: [['plant', 'Plant'], ['animal', 'Animal'], ['human', 'Person']], value: cur, change: function (v) { cur = v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.aristotle-metaphysics (scripts/greatbooks/src/gbgreeks.aristotle-metaphysics/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.aristotle-metaphysics: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-potential: potentiality and actuality (Metaphysics IX), with the four causes for each example (Metaphysics I and V). */
+ML.viz.register('gb-potential', function (el, opts, V) {
+  var F = frame(el, 400, 230, 'From what something can be to what it is: an acorn, a lump of clay, a pile of bricks'), sv = F.svg, ro = V.readout(el);
+  var X = {
+    oak: { n: 'Acorn → oak', a: 'an acorn', b: 'an oak', c: ['the stuff of the seed, then wood', 'the form of an oak tree', 'the parent oak that dropped the acorn', 'to be a full-grown oak'] },
+    bowl: { n: 'Clay → bowl', a: 'a lump of clay', b: 'a bowl', c: ['clay', 'the shape of a bowl', 'the potter', 'to hold food or water'] },
+    house: { n: 'Bricks → house', a: 'a pile of bricks', b: 'a house', c: ['bricks and timber', 'the plan of a house', 'the builder', 'shelter for people and their things'] }
+  };
+  var cur = opts.ex || 'oak', p = opts.p == null ? 0.35 : opts.p;
+  var BR = []; for (var i = 0; i < 12; i++) BR.push({ x0: 150 + (i % 5) * 22 + (i > 4 ? 11 : 0) + (i > 8 ? 11 : 0), y0: 192 - Math.floor(i / 5) * 11, x1: 160 + (i % 4) * 22, y1: 182 - Math.floor(i / 4) * 22 });
+  function draw() {
+    clear(sv);
+    S('line', { x1: 30, y1: 202, x2: 370, y2: 202, 'class': 'gbe-line' }, sv);
+    if (cur === 'oak') {
+      if (p < 0.12) { S('ellipse', { cx: 200, cy: 192, rx: 9, ry: 11, 'class': 'gbe-gold' }, sv); S('path', { d: 'M190,186 q10,-10 20,0 z', 'class': 'gbe-mutf' }, sv); }
+      else { var h = 20 + p * 120, r = 8 + p * 58; S('rect', { x: 200 - (3 + p * 8), y: 202 - h, width: 6 + p * 16, height: h, rx: 3, 'class': 'gbe-mutf' }, sv); S('circle', { cx: 200, cy: 202 - h - r * 0.55, r: r, 'class': 'gbe-g', opacity: 0.75 }, sv); }
+    } else if (cur === 'bowl') {
+      S('ellipse', { cx: 200, cy: 202 - 22 * (1 - p), rx: 30 + 4 * p, ry: 22 * (1 - p) + 2, 'class': 'gbe-stone', opacity: (1 - p).toFixed(2) }, sv);
+      S('path', { d: 'M150,150 Q155,200 200,200 Q245,200 250,150 Z', 'class': 'gbe-box-gold', opacity: p.toFixed(2) }, sv);
+    } else {
+      BR.forEach(function (b) { var x = b.x0 + (b.x1 - b.x0) * p, y = b.y0 + (b.y1 - b.y0) * p; S('rect', { x: x, y: y, width: 20, height: p > 0.5 ? 20 : 10, rx: 2, 'class': 'gbe-box-red' }, sv); });
+      if (p > 0.8) S('path', { d: 'M150,138 L204,98 L258,138 Z', 'class': 'gbe-box-gold', opacity: ((p - 0.8) * 5).toFixed(2) }, sv);
+    }
+    Tx(sv, 60, 30, 'can be', 'sm mut'); Tx(sv, 340, 30, 'is', 'sm mut');
+    S('rect', { x: 60, y: 40, width: 280, height: 8, rx: 4, 'class': 'gbe-box' }, sv); S('rect', { x: 60, y: 40, width: 280 * p, height: 8, rx: 4, 'class': 'gbe-g' }, sv);
+    var e = X[cur], word = p < 0.05 ? 'only potentially ' + e.b : (p > 0.97 ? 'actually ' + e.b : 'on the way to being ' + e.b);
+    ro.set('Now it is <b>' + word + '</b>. ' + '<br>Its four causes: <b>material</b>, ' + e.c[0] + '; <b>formal</b>, ' + e.c[1] + '; <b>efficient</b> (the maker or mover), ' + e.c[2] + '; <b>final</b> (what it is for), ' + e.c[3] + '.');
+  }
+  V.seg(F.ctl, { label: 'Example', items: Object.keys(X).map(function (k) { return [k, X[k].n]; }), value: cur, change: function (v) { cur = v; draw(); } });
+  V.slider(F.ctl, { label: 'From potential to actual', min: 0, max: 1, step: 0.01, value: p, fmt: function (v) { return Math.round(v * 100) + '%'; }, input: function (v) { p = v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
   /* ---- gbgreeks.aristotle-biology (scripts/greatbooks/src/gbgreeks.aristotle-biology/viz.js) ---- */
   try { (function () {
 /* gbgreeks.aristotle-biology: visuals gb-animal-tree (gbsA, our own designs; theme colors from MathLadder.viz.colors()). */
@@ -174,6 +1453,156 @@ ML.viz.register('gb-animal-tree', function (el, opts, V) {
   var wrap = document.createElement('div'); wrap.className = 'ml-seg gb-animals'; wrap.setAttribute('role', 'group'); wrap.setAttribute('aria-label', 'Animal'); ctl.appendChild(wrap);
   ANIMALS.forEach(function (a, i) { var b = document.createElement('button'); b.type = 'button'; b.textContent = a[0]; b.addEventListener('click', function () { pick(i); }); wrap.appendChild(b); btns.push(b); });
   pick(opts.start || 1);
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.aristotle-ethics (scripts/greatbooks/src/gbgreeks.aristotle-ethics/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.aristotle-ethics: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-golden-mean: virtue as a mean between two vices (Nicomachean Ethics II.6-9). The mean is not always the exact
+   middle (II.8), and it is "relative to us" (II.6: the wrestler Milo and the beginner). */
+ML.viz.register('gb-golden-mean', function (el, opts, V) {
+  var F = frame(el, 400, 200, 'The golden mean: a virtue between too little and too much'), sv = F.svg, ro = V.readout(el);
+  var A = {
+    fear: { n: 'Facing danger', lo: 'Cowardice', mid: 'Courage', hi: 'Rashness', m: 0.58, t: 'Courage is nearer to rashness than to cowardice, Aristotle says, so cowardice is its real opposite.' },
+    money: { n: 'Giving money', lo: 'Stinginess', mid: 'Generosity', hi: 'Wastefulness', m: 0.56, t: 'The generous person gives the right amount, to the right people, at the right time.' },
+    anger: { n: 'Anger', lo: 'Never angry', mid: 'Good temper', hi: 'Hot temper', m: 0.45, t: 'Aristotle thinks it right to be angry at real wrongs, in the right way and for the right length of time.' },
+    self: { n: 'Talking about yourself', lo: 'False modesty', mid: 'Truthfulness', hi: 'Boasting', m: 0.5, t: 'The truthful person claims neither more nor less than is true about himself.' },
+    fun: { n: 'Jokes and fun', lo: 'Dullness', mid: 'Wit', hi: 'Clowning', m: 0.5, t: 'The witty person jokes with taste; the clown will do anything for a laugh; the dull person never laughs at all.' },
+    food: { n: 'The mean for you', food: true }
+  };
+  var cur = opts.area || 'fear', v = opts.v == null ? 0.3 : opts.v, who = 'new';
+  function draw() {
+    clear(sv);
+    var a = A[cur], x0 = 30, W = 340;
+    if (a.food) {
+      var pounds = 2 + v * 8, best = who === 'milo' ? 8 : 3.5, lo = best - 1, hi = best + 1;
+      S('rect', { x: x0, y: 70, width: W, height: 26, rx: 13, 'class': 'gbe-box' }, sv);
+      S('rect', { x: x0 + (lo - 2) / 8 * W, y: 70, width: 2 / 8 * W, height: 26, rx: 13, 'class': 'gbe-box-on' }, sv);
+      S('line', { x1: x0 + 0.5 * W, y1: 60, x2: x0 + 0.5 * W, y2: 106, 'class': 'gbe-arrow', 'stroke-dasharray': '4 4' }, sv);
+      Tx(sv, x0 + 0.5 * W, 122, 'halfway: 6 lb', 'sm mut');
+      S('circle', { cx: x0 + v * W, cy: 83, r: 11, 'class': 'gbe-box-gold' }, sv);
+      Tx(sv, x0, 50, '2 lb: too little', 'sm mut', 'start'); Tx(sv, x0 + W, 50, '10 lb: too much', 'sm mut', 'end');
+      Tx(sv, 200, 160, V.fmt(pounds, 1) + ' lb of food for ' + (who === 'milo' ? 'Milo the wrestler' : 'a beginner'), 'b');
+      var ok = pounds >= lo && pounds <= hi;
+      Tx(sv, 200, 184, ok ? 'About right for this person' : (pounds < lo ? 'Too little for this person' : 'Too much for this person'), 'b ' + (ok ? 'gbe-tf' : 'gbe-tg'));
+      ro.set('Aristotle\'s example: if 10 pounds of food is too much and 2 too little, the trainer will not simply order 6. That might be too little for Milo, a famous wrestler, and too much for a beginner. The mean is <b>relative to us</b>. (The green band is our own rough guess, to show the idea.)');
+      return;
+    }
+    S('rect', { x: x0, y: 70, width: W, height: 26, rx: 13, 'class': 'gbe-box' }, sv);
+    S('rect', { x: x0 + (a.m - 0.12) * W, y: 70, width: 0.24 * W, height: 26, rx: 13, 'class': 'gbe-box-on' }, sv);
+    S('circle', { cx: x0 + v * W, cy: 83, r: 11, 'class': 'gbe-box-gold' }, sv);
+    Tx(sv, x0, 124, a.lo, 'b gbe-tg', 'start'); Tx(sv, x0 + a.m * W, 124, a.mid, 'b gbe-tf'); Tx(sv, x0 + W, 124, a.hi, 'b gbe-tg', 'end');
+    Tx(sv, x0, 50, 'too little', 'sm mut', 'start'); Tx(sv, x0 + W, 50, 'too much', 'sm mut', 'end'); Tx(sv, 200, 30, a.n, 'b lg');
+    var d = v - a.m, word = Math.abs(d) <= 0.12 ? a.mid : (d < 0 ? a.lo : a.hi);
+    Tx(sv, 200, 168, 'Here: ' + word, 'b ' + (word === a.mid ? 'gbe-tf' : 'gbe-tg'));
+    ro.set('<b>' + a.mid + '</b> lies between <b>' + a.lo.toLowerCase() + '</b> and <b>' + a.hi.toLowerCase() + '</b>. ' + a.t);
+  }
+  var whoSeg = null;
+  V.seg(F.ctl, { label: 'Area of life', items: Object.keys(A).map(function (k) { return [k, A[k].n]; }), value: cur, change: function (x) { cur = x; whoSeg.el.style.display = A[cur].food ? '' : 'none'; draw(); } });
+  V.slider(F.ctl, { label: 'How much', min: 0, max: 1, step: 0.01, value: v, fmt: function (x) { return Math.round(x * 100) + '%'; }, input: function (x) { v = x; draw(); } });
+  whoSeg = V.seg(F.ctl, { label: 'Whose meal', items: [['new', 'A beginner'], ['milo', 'Milo']], value: who, change: function (x) { who = x; draw(); } });
+  whoSeg.el.style.display = A[cur].food ? '' : 'none';
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbgreeks.aristotle-poetics-rhetoric (scripts/greatbooks/src/gbgreeks.aristotle-poetics-rhetoric/viz.js) ---- */
+  try { (function () {
+/* gbgreeks.aristotle-poetics-rhetoric: visuals (gbe2, our own designs). SVG helpers first. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gb-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbe-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* gb-plot-arc: the parts of a plot in Aristotle's Poetics (beginning, tying, reversal, recognition, unraveling).
+   gb-appeals: the three modes of persuasion in the Rhetoric (I.2), as a sorting game with our own sentences. */
+ML.viz.register('gb-plot-arc', function (el, opts, V) {
+  var F = frame(el, 400, 220, 'The shape of a plot: fortune over the course of a story'), sv = F.svg, ro = V.readout(el);
+  var X = {
+    oed: { n: 'Oedipus the King', f: [0.75, 0.8, 0.85, 0.8, 0.2, 0.12, 0.1], ev: [
+      'A plague strikes Thebes. King Oedipus, who once saved the city by solving the Sphinx\'s riddle, promises to find the cause.',
+      'He learns the plague will end only when an old king\'s killer is found, and vows to find him. The knot tightens.',
+      'A messenger arrives with what he thinks is good news, meant to ease the king\'s fears. Aristotle\'s own example: it does the opposite.',
+      'Oedipus learns who he really is, and that he himself is the man he has been hunting. The truth is terrible.',
+      'His happiness is gone. He asks to be sent away from the city, and Creon takes charge. Order returns at a great cost to him.'] },
+    ody: { n: 'The Odyssey', f: [0.35, 0.3, 0.2, 0.55, 0.75, 0.9, 0.92], ev: [
+      'Odysseus has been away from home for twenty years. Unwelcome guests crowd his house, and his family waits.',
+      'He comes home in disguise, and the danger grows: he is one man against many.',
+      'His old nurse, washing his feet, sees a scar and knows him. Aristotle names this as a recognition.',
+      'With his son\'s help he wins back his house, and is known at last by his wife.',
+      'The family is together again. Aristotle notes that the Odyssey ends well for the good and badly for the wicked.'] }
+  };
+  var LAB = ['Beginning', 'Tying the knot', 'Reversal', 'Recognition', 'Unraveling'], AT = [0, 1, 2.6, 3.3, 5], cur = 0, ex = opts.ex || 'oed';
+  function pt(i, f) { return [40 + i * 54, 180 - f * 140]; }
+  function draw() {
+    clear(sv);
+    var e = X[ex], d = '';
+    e.f.forEach(function (f, i) { var p = pt(i, f); d += (i ? ' L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1); });
+    S('line', { x1: 40, y1: 180, x2: 368, y2: 180, 'class': 'gbe-line' }, sv); Tx(sv, 34, 44, 'good fortune', 'sm mut', 'start'); Tx(sv, 34, 196, 'bad fortune', 'sm mut', 'start');
+    S('path', { d: d, 'class': 'gbe-ink', 'stroke-width': 3 }, sv);
+    AT.forEach(function (a, i) {
+      var j = Math.floor(a), t = a - j, f = e.f[j] + (e.f[Math.min(j + 1, 6)] - e.f[j]) * t, p = pt(a, f), on = i === cur;
+      var g = S('g', { 'class': 'gbe-hit', tabindex: 0, role: 'button', 'aria-label': LAB[i] }, sv);
+      S('circle', { cx: p[0], cy: p[1], r: on ? 10 : 7, 'class': on ? 'gbe-dot-on' : 'gbe-dot' }, g);
+      Tx(g, p[0], p[1] + (f > 0.5 ? 26 : -16), (i + 1) + '', 'b sm');
+      function pick() { cur = i; if (partSeg) partSeg.set(i); draw(); }
+      g.addEventListener('click', pick); g.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); pick(); } });
+    });
+    Tx(sv, 200, 214, (cur + 1) + '. ' + LAB[cur], 'b');
+    ro.set('<b>' + e.n + ', ' + LAB[cur].toLowerCase() + '.</b> ' + e.ev[cur]);
+  }
+  V.seg(F.ctl, { label: 'Story', items: [['oed', 'Oedipus the King'], ['ody', 'The Odyssey']], value: ex, change: function (v) { ex = v; draw(); } });
+  var partSeg = null;
+  partSeg = V.seg(F.ctl, { label: 'Part', items: LAB.map(function (l, i) { return [i, (i + 1) + '']; }), value: 0, change: function (v) { cur = +v; draw(); } });
+  draw();
+});
+
+ML.viz.register('gb-appeals', function (el, opts, V) {
+  var F = frame(el, 400, 200, 'Aristotle\'s three ways to persuade: character, feeling and reasoning'), sv = F.svg, ro = V.readout(el);
+  var Q = [
+    ['I have coached swimming for twenty years, and I have never seen a stronger beginner.', 0],
+    ['Picture the empty playground and the children with nowhere safe to play.', 1],
+    ['The bridge carries 9,000 cars a day, and it was built for 4,000. It needs repair.', 2],
+    ['As your doctor, I would give my own family this advice.', 0],
+    ['If every family saves one gallon a day, the town saves a million gallons a year.', 2],
+    ['Think how proud you will feel on the day you finish.', 1],
+    ['All the tested samples came from the north well, and all of them were clean.', 2],
+    ['I grew up on this street, and I want the best for it, just as you do.', 0],
+    ['Imagine the dog waiting at the shelter door, hoping today is the day.', 1]
+  ];
+  var A = [['Ethos', 'the speaker\'s character', 'gbe-box-blue'], ['Pathos', 'the listeners\' feelings', 'gbe-box-red'], ['Logos', 'the reasoning itself', 'gbe-box-gold']];
+  var k = 0, got = null, score = 0, tries = 0;
+  function draw() {
+    clear(sv);
+    var P = [[200, 34], [84, 160], [316, 160]];
+    S('polygon', { points: P.map(function (p) { return p.join(','); }).join(' '), 'class': 'gbe-line' }, sv);
+    A.forEach(function (a, i) {
+      var on = got !== null && Q[k][1] === i, g = S('g', { 'class': 'gbe-hit', tabindex: 0, role: 'button', 'aria-label': a[0] + ': ' + a[1] }, sv);
+      S('rect', { x: P[i][0] - 78, y: P[i][1] - 24, width: 156, height: 48, rx: 10, 'class': on ? 'gbe-box-on' : a[2] }, g);
+      Tx(g, P[i][0], P[i][1] - 3, a[0], 'b lg'); Tx(g, P[i][0], P[i][1] + 14, a[1], 'sm mut');
+      function pick() { if (got !== null) return; got = i; tries++; if (i === Q[k][1]) score++; draw(); }
+      g.addEventListener('click', pick); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+    });
+    Tx(sv, 200, 110, 'Score: ' + score + ' of ' + tries, 'sm mut');
+    var q = '“' + Q[k][0] + '”';
+    ro.set(got === null ? q + ' <br>Which appeal does this lean on most? Tap one.' : q + ' <br>' + (got === Q[k][1] ? '<b>Yes:</b> ' : '<b>Not quite:</b> ') + 'this one leans on <b>' + A[Q[k][1]][0] + '</b>, ' + A[Q[k][1]][1] + '. Many real speeches use all three.');
+  }
+  V.button(F.ctl, 'Next sentence', function () { k = (k + 1) % Q.length; got = null; draw(); });
+  draw();
 });
   })(); } catch (e) { if (W.console) console.error(e); }
   /* ---- gbgreeks.hippocrates-works (scripts/greatbooks/src/gbgreeks.hippocrates-works/viz.js) ---- */

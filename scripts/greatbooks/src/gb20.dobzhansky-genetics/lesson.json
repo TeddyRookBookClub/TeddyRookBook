@@ -1,0 +1,177 @@
+{
+ "paths": {
+  "young": [
+   {
+    "t": "p",
+    "html": "Theodosius Dobzhansky grew up in Ukraine, collecting ladybugs, and became one of the great scientists of evolution in America. He studied tiny fruit flies by the millions, in the lab and in the wild mountains of the American West."
+   },
+   {
+    "t": "p",
+    "html": "Charles Darwin had shown that living things change over many generations. But Darwin didn’t know how traits pass from parents to children. By Dobzhansky’s time scientists knew about <b>genes</b>, the instructions passed down in every living thing. Dobzhansky’s 1937 book put the two ideas together."
+   },
+   {
+    "t": "p",
+    "html": "His big idea: evolution is a change in <b>how common different versions of genes are</b> in a group. Some versions get more common because they help their owners survive (natural selection). Some get more common or rarer just by luck, especially in small groups. That luck is called <b>genetic drift</b>."
+   },
+   {
+    "t": "viz",
+    "name": "gb-drift",
+    "opts": {
+     "N": 20
+    },
+    "cap": "Eight separate groups of animals, each starting with half the A version of a gene. Small groups wander by luck. Make the groups bigger and see what changes."
+   },
+   {
+    "t": "activity",
+    "html": "<b>Bean-bag drift.</b> Put 5 red and 5 white beans in a cup. Without looking, pull one out, note its color, put it back, and do this 10 times. Make a new cup of 10 beans with the colors you drew. Repeat for a few “generations.” Does one color sometimes take over just by luck? Try again with 50 beans in the cup. Is it harder for luck to win?"
+   }
+  ],
+  "full": [
+   {
+    "t": "h",
+    "text": "Who, when and why"
+   },
+   {
+    "t": "p",
+    "html": "Theodosius Dobzhansky (1900–1975) was born in Nemyriv, in what is now Ukraine, and studied and taught biology in Kyiv and Leningrad. In 1927 he came to the United States to work in Thomas Hunt Morgan’s famous fruit-fly laboratory at Columbia University, followed Morgan to Caltech, and stayed. He returned to Columbia as a professor in 1940."
+   },
+   {
+    "t": "p",
+    "html": "<em>Genetics and the Origin of Species</em> (Columbia University Press, 1937) grew out of lectures he gave at Columbia in 1936. It went through three editions (1937, 1941, 1951) and is counted as the founding book of the <b>modern synthesis</b>, the joining of Darwin’s natural selection with Mendel’s genetics."
+   },
+   {
+    "t": "note",
+    "html": "This book was first published in 1937, so it is still under copyright, and this rung quotes none of it. Everything here is our own summary."
+   },
+   {
+    "t": "h",
+    "text": "The problem"
+   },
+   {
+    "t": "p",
+    "html": "In 1900 Mendel’s laws of inheritance were rediscovered. For a while many geneticists thought they <em>competed</em> with Darwin: genes seemed to come in sudden jumps, while Darwin had described slow change. In the 1920s and early 1930s the mathematicians R. A. Fisher, J. B. S. Haldane and Sewall Wright showed on paper that Mendelian genes and selection fit together. But their work was hard for most biologists to follow, and it needed evidence from real, wild populations. Dobzhansky supplied both: clear explanations and field data."
+   },
+   {
+    "t": "h",
+    "text": "The argument, step by step"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Mutation</b> supplies new versions of genes (alleles) and changes in chromosomes. It is the raw material.",
+     "<b>Wild populations are full of hidden variation.</b> Dobzhansky’s studies of the fruit fly <em>Drosophila pseudoobscura</em> found different arrangements of its chromosomes (inversions) in different mountain ranges, and even changing with the seasons.",
+     "<b>Selection, migration and drift</b> change how common each variant is. In small populations chance alone can carry a variant to 0% or 100% (Wright’s genetic drift).",
+     "<b>Evolution</b> is a change in the genetic make-up of populations.",
+     "<b>Species</b> form when populations become <b>reproductively isolated</b>, so they no longer interbreed. Dobzhansky named and sorted the <b>isolating mechanisms</b>: living in different places or seasons, different courtship, failure of mating, and hybrids that die or are sterile (like the mule)."
+    ]
+   },
+   {
+    "t": "viz",
+    "name": "gb-drift",
+    "opts": {
+     "N": 20
+    },
+    "cap": "A simulation of the Wright–Fisher model: each generation is a random draw from the last. Compare a population of 20 with one of 500, then add a small selective advantage."
+   },
+   {
+    "t": "h",
+    "text": "The math of gene frequencies"
+   },
+   {
+    "t": "p",
+    "html": "If a gene has two versions, A with frequency $p$ and a with frequency $q = 1 - p$, and mating is random, the three kinds of individuals appear in the proportions $p^2$ (AA), $2pq$ (Aa) and $q^2$ (aa). This is the <b>Hardy–Weinberg</b> rule (1908), named for the mathematician G. H. Hardy, a few rungs on, and the physician Wilhelm Weinberg. Without selection, drift, migration or mutation, the proportions stay the same forever. Evolution is any departure from it."
+   },
+   {
+    "t": "ex",
+    "title": "Hardy–Weinberg",
+    "q": "In a population, 16% of the flies show a recessive trait (genotype aa). Assuming Hardy–Weinberg proportions, what share of flies carry one hidden copy (Aa)?",
+    "steps": [
+     "$q^2 = 0.16$, so $q = 0.4$ and $p = 0.6$.",
+     "$2pq = 2 \\times 0.6 \\times 0.4 = 0.48$."
+    ],
+    "a": "48% are carriers: three times as many as show the trait. This is the hidden variation Dobzhansky found."
+   },
+   {
+    "t": "ex",
+    "title": "Drift by chance",
+    "q": "A tiny population has 4 gene copies, 2 of them A. The next generation’s 4 copies are drawn at random, each with chance 1/2 of being A. What is the chance that A is lost at once?",
+    "steps": [
+     "Each copy must be a: chance 1/2 each.",
+     "$(1/2)^4 = 1/16 = 6.25\\%$."
+    ],
+    "a": "1 in 16. In a population of 100 copies, the chance would be far too small to notice."
+   },
+   {
+    "t": "key",
+    "html": "The modern synthesis in one line: <b>mutation</b> makes variation, <b>selection and drift</b> sort it, and <b>isolation</b> splits one species into two."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking genes and Darwin were rivals. Before the synthesis many scientists thought so. Dobzhansky’s book showed that Mendel’s genes are the very variation that natural selection acts on."
+   },
+   {
+    "t": "h",
+    "text": "How it was judged"
+   },
+   {
+    "t": "p",
+    "html": "The book was an immediate success and shaped evolutionary biology for decades. Ernst Mayr (1942), Julian Huxley (1942), George Gaylord Simpson (1944) and G. Ledyard Stebbins (1950) extended the synthesis to classification, fossils and plants. Since Dobzhansky’s time, the discovery of DNA, molecular genetics, and the study of development have added a great deal, and biologists debate how much the synthesis must be widened. But its core, evolution as genetic change in populations, remains the framework of modern biology. Dobzhansky later wrote a famous 1973 essay whose title says that nothing in biology makes sense except in the light of evolution. He was a religious believer himself and wrote that he saw no conflict between his faith and evolution; readers hold different views on that question, and this rung leaves it to them."
+   }
+  ],
+  "deep": [
+   {
+    "t": "h",
+    "text": "Dobzhansky in the great conversation"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Darwin</b>’s <em>Origin of Species</em>, earlier on this ladder, lacked a theory of inheritance. Dobzhansky’s title echoes Darwin’s on purpose.",
+     "<b>Aristotle</b> classified animals into fixed kinds; for Dobzhansky a species is a group of populations that can interbreed.",
+     "<b>Schrödinger</b> and <b>Waddington</b>, later rungs, ask what a gene is physically and how genes build a body."
+    ]
+   },
+   {
+    "t": "h",
+    "text": "Big questions"
+   },
+   {
+    "t": "list",
+    "items": [
+     "How can chance (drift and mutation) and something like design (adaptation by selection) both be at work?",
+     "Where exactly is the line between two species, and does nature draw it sharply?",
+     "Why does hidden variation make a population better able to face change?"
+    ]
+   },
+   {
+    "t": "p",
+    "html": "See the Biology Ladder’s topics on Hardy–Weinberg, genetic drift, the mechanisms of evolution and how new species form."
+   }
+  ]
+ },
+ "questions": [
+  "Why might a tiny island population lose some gene versions just by luck?",
+  "Horses and donkeys can have a mule, but mules can’t have babies. Why does that make horses and donkeys separate species?",
+  "Dobzhansky studied flies, not elephants. Why are flies good animals for studying evolution?",
+  "Two scientists can agree on the facts of evolution and disagree about what it means for religion. How can people talk about that respectfully?",
+  "What hidden variety is there in your family, for instance in traits that skip a generation?"
+ ],
+ "sources": [
+  {
+   "name": "Grokipedia: Theodosius Dobzhansky",
+   "url": "https://grokipedia.com/page/Theodosius_Dobzhansky"
+  },
+  {
+   "name": "Grokipedia: Modern synthesis (20th century)",
+   "url": "https://grokipedia.com/page/Modern_synthesis_(20th_century)"
+  },
+  {
+   "name": "Grokipedia: Genetic drift",
+   "url": "https://grokipedia.com/page/Genetic_drift"
+  },
+  {
+   "name": "Grokipedia: Hardy–Weinberg principle",
+   "url": "https://grokipedia.com/page/Hardy–Weinberg_principle"
+  }
+ ]
+}

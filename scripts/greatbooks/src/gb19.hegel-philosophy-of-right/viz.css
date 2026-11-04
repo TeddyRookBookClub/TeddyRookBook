@@ -1,0 +1,63 @@
+/* gb19 visuals kit (gbw4): shared styles for the wave-2 19th-century rungs (ML.gb19kit). Light and dark through --gb-* variables. */
+.gb19-stage svg{display:block;width:100%;max-width:600px;height:auto;margin:.3rem auto}
+.gb19-ctl{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;justify-content:center}
+.gb19 .gb19-box{fill:var(--gb-paper);stroke:var(--gb-gold);stroke-width:1.5}
+.gb19 .gb19-it{cursor:pointer;outline:none}
+.gb19 .gb19-it:focus-visible .gb19-box,.gb19 .gb19-it:focus-visible .gb19-dot{stroke-dasharray:4 3;stroke-width:3}
+.gb19 .gb19-it:hover .gb19-box{stroke:var(--gb-acc)}
+.gb19 .gb19-on .gb19-box{fill:color-mix(in srgb,var(--gb-acc) 18%,var(--gb-paper));stroke:var(--gb-acc);stroke-width:2.5}
+.gb19 .gb19-t{fill:var(--gb-ink);font:600 12px system-ui,sans-serif}
+.gb19 .gb19-on .gb19-t{fill:var(--gb-acc);font-weight:800}
+.gb19 .gb19-s{fill:var(--gb-mut);font:11px system-ui,sans-serif}
+.gb19 .gb19-el{fill:var(--gb-mut);font:italic 10.5px Georgia,serif;stroke:var(--gb-paper);stroke-width:3px;stroke-linejoin:round}
+.gb19 .gb19-map{fill:var(--gb-mut);font:italic 11px Georgia,serif}
+.gb19 .gb19-halo{paint-order:stroke;stroke:var(--gb-paper);stroke-width:3px;stroke-linejoin:round}
+.gb19 .gb19-arrow{stroke:var(--gb-mut);stroke-width:1.5;fill:none}
+.gb19 .gb19-head{fill:var(--gb-mut)}
+.gb19 .gb19-edge{stroke:var(--gb-mut);stroke-width:1.6;fill:none}
+.gb19 .gb19-edge+.gb19-head{fill:var(--gb-mut)}
+.gb19 .gb19-ea{stroke:var(--gb-acc);stroke-width:2.2}
+.gb19 .gb19-eg{stroke:var(--gb-gold);stroke-width:2.2}
+.gb19 .gb19-eb{stroke:#2f5f9e;stroke-width:2.2}
+.gb19 .gb19-dash{stroke-dasharray:5 4}
+.gb19 .gb19-sea{fill:color-mix(in srgb,#2f5f9e 14%,var(--gb-paper))}
+.gb19 .gb19-paperbg{fill:var(--gb-paper)}
+.gb19 .gb19-land{fill:color-mix(in srgb,#3b7d5a 26%,var(--gb-paper));stroke:color-mix(in srgb,#3b7d5a 55%,var(--gb-paper));stroke-width:1}
+.gb19 .gb19-lake{fill:color-mix(in srgb,#2f5f9e 30%,var(--gb-paper));stroke:none}
+.gb19 .gb19-river{fill:none;stroke:color-mix(in srgb,#2f5f9e 70%,var(--gb-paper));stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.gb19 .gb19-route{fill:none;stroke:var(--gb-acc);stroke-width:2.6;stroke-linejoin:round}
+.gb19 .gb19-route-todo{fill:none;stroke:var(--gb-mut);stroke-width:1.4;stroke-dasharray:4 4}
+.gb19 .gb19-hit{fill:transparent}
+.gb19 .gb19-dot{fill:var(--gb-paper);stroke:var(--gb-acc);stroke-width:2}
+.gb19 .gb19-dot-on{fill:var(--gb-acc)}
+.gb19 .gb19-skin{fill:#ffcc4d;stroke:#e8a93a;stroke-width:1.2}
+.gb19 .gb19-robe{fill:#2f5f9e;stroke:var(--gb-paper);stroke-width:1}
+.gb19 .gb19-robe2{fill:#3b7d5a;stroke:var(--gb-paper);stroke-width:1}
+.gb19 .gb19-gold{fill:var(--gb-gold)}
+.gb19 .gb19-accf{fill:var(--gb-acc)}
+.gb19 .gb19-mutf{fill:var(--gb-mut)}
+.gb19 .gb19-ink{stroke:var(--gb-ink);stroke-width:1.5;fill:none}
+.gb19-panel{display:grid;gap:.5rem;margin:.4rem 0}
+.gb19-card{border:1px solid var(--gb-gold);border-radius:12px;padding:.6rem .8rem;background:var(--gb-paper);color:var(--gb-ink)}
+.gb19-card p{margin:.2rem 0}
+.gb19-btns{display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0}
+.gb19-big{font:700 1.15rem/1.3 Georgia,serif;color:var(--gb-acc)}
+.gb19-ok{color:#2f7d4a;font-weight:700}
+html[data-theme="dark"] .gb19-ok{color:#7fd6a6}
+.gb19-no{color:#a3402a;font-weight:700}
+html[data-theme="dark"] .gb19-no{color:#f0a08a}
+.gb19 .gb19-top{fill:color-mix(in srgb,var(--gb-gold) 30%,var(--gb-paper))}
+.gb19 .gb19-ground-d{fill:#4a3b2a}
+.gb19 .gb19-ground-l{fill:#e9dcc0}
+.gb19 .gb19-beetle-d{fill:#2a2118;stroke:#7a6550;stroke-width:1}
+.gb19 .gb19-beetle-l{fill:#d9c9a3;stroke:#8f7d58;stroke-width:1}
+.gb19 .gb19-beetle-line{stroke:#8f7d58;stroke-width:1}
+.gb19 .gb19-membrane{fill:color-mix(in srgb,var(--gb-mut) 16%,var(--gb-paper));stroke:var(--gb-mut);stroke-width:1}
+.gb19 .gb19-bone{stroke:color-mix(in srgb,var(--gb-ink) 45%,var(--gb-paper));stroke-linecap:round}
+.gb19 .gb19-bonef{fill:color-mix(in srgb,var(--gb-ink) 45%,var(--gb-paper));stroke:none}
+.gb19 .gb19-bone-on{stroke:var(--gb-acc)}
+.gb19 .gb19-bone-on.gb19-bonef{fill:var(--gb-acc)}
+.gb19 .gb19-groove{fill:none;stroke:color-mix(in srgb,#7a4a10 55%,var(--gb-paper));stroke-linecap:round}
+.gb19 span.gb19-s{color:var(--gb-mut);font-size:.88em}
+.gb19 .gb19-onbar{fill:#fffdf7;font:600 11px system-ui,sans-serif}
+html[data-theme="dark"] .gb19 .gb19-onbar{fill:#18211c}

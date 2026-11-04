@@ -1,0 +1,236 @@
+{
+ "paths": {
+  "young": [
+   {
+    "t": "p",
+    "html": "<b>Aristotle</b> was Plato's student. He wanted to know how good reasoning works: what makes an argument <em>prove</em> something? He was the first person we know of to study this carefully, and the subject he started is called <b>logic</b>."
+   },
+   {
+    "t": "p",
+    "html": "His favorite kind of argument is the <b>syllogism</b>: two statements that, put together, force a third. For example:"
+   },
+   {
+    "t": "list",
+    "items": [
+     "All mammals breathe air.",
+     "All whales are mammals.",
+     "<b>So,</b> all whales breathe air."
+    ]
+   },
+   {
+    "t": "p",
+    "html": "If the first two are true, the third <em>must</em> be true. That is called a <b>valid</b> argument. But be careful! This one looks similar but is not valid: “All cats have tails. My dog has a tail. So my dog is a cat.” The first two are true, and the last is silly."
+   },
+   {
+    "t": "viz",
+    "name": "gb-syllogism",
+    "cap": "Choose the kind of each statement. The circles show what is empty (shaded) and what must exist (x). The readout says whether the conclusion must follow.",
+    "opts": {
+     "fig": 1,
+     "a": "A",
+     "b": "A",
+     "c": "A"
+    }
+   },
+   {
+    "t": "activity",
+    "html": "<b>Syllogism or silly-gism?</b> Make up three-line arguments with “All,” “No” or “Some.” Use your own topics (dinosaurs, sports, foods). Read them to someone and ask: if the first two lines are true, must the third be true? Try to make one that sounds right but isn't."
+   },
+   {
+    "t": "p",
+    "html": "Aristotle also wrote a book about <b>tricks</b> in arguments, called fallacies. One trick uses a word with two meanings: “A bat can fly. My baseball bat is a bat. So my baseball bat can fly.”"
+   }
+  ],
+  "full": [
+   {
+    "t": "h",
+    "text": "Who, when and what"
+   },
+   {
+    "t": "p",
+    "html": "Aristotle (384–322 BC) was born in Stagira in northern Greece, studied in Plato's Academy for twenty years, tutored the young Alexander the Great, and in 335 BC founded his own school in Athens, the <b>Lyceum</b>. His logical works were later gathered as the <b>Organon</b>, “the tool,” because his followers saw logic as the tool for every other study. They are lecture notes rather than polished books, and often hard going. This rung introduces six of them."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Work",
+     "What it does"
+    ],
+    "rows": [
+     [
+      "Categories",
+      "Sorts the things we can say about anything into ten kinds."
+     ],
+     [
+      "On Interpretation",
+      "Statements: what makes them true or false, and which pairs contradict each other."
+     ],
+     [
+      "Prior Analytics",
+      "The syllogism: which combinations of premises prove a conclusion."
+     ],
+     [
+      "Posterior Analytics",
+      "Scientific proof: how we know things through their causes, from first principles."
+     ],
+     [
+      "Topics",
+      "Arguing from widely held opinions, as in a debate."
+     ],
+     [
+      "Sophistical Refutations",
+      "Fallacies: arguments that only look like proofs."
+     ]
+    ]
+   },
+   {
+    "t": "h",
+    "text": "Categories"
+   },
+   {
+    "t": "quote",
+    "text": "<p>Expressions which are in no way composite signify substance, quantity, quality, relation, place, time, position, state, action, or affection.</p>",
+    "author": "Aristotle",
+    "work": "Categories 4",
+    "tr": "E. M. Edghill",
+    "ed": "The Works of Aristotle, vol. I, Clarendon Press",
+    "year": 1928,
+    "url": "https://archive.org/details/worksofaristotle0001emed",
+    "src": "Internet Archive",
+    "note": "A footnote number is left out."
+   },
+   {
+    "t": "p",
+    "html": "His own examples: “man” or “horse” (substance), “two cubits long” (quantity), “white” (quality), “double” (relation), “in the Lyceum” (place), “yesterday” (time), “lying” or “sitting” (position), “shod” (state), “cuts” (action), “is cut” (affection). <b>Substance</b> comes first: an individual like this man or this horse is what the other nine are said <em>of</em>."
+   },
+   {
+    "t": "h",
+    "text": "The syllogism"
+   },
+   {
+    "t": "quote",
+    "text": "<p>A syllogism is discourse in which, certain things being stated, something other than what is stated follows of necessity from their being so.</p>",
+    "author": "Aristotle",
+    "work": "Prior Analytics I.1",
+    "tr": "A. J. Jenkinson",
+    "ed": "The Works of Aristotle, vol. I, Clarendon Press",
+    "year": 1928,
+    "url": "https://archive.org/details/worksofaristotle0001emed",
+    "src": "Internet Archive"
+   },
+   {
+    "t": "p",
+    "html": "Aristotle works with four kinds of statement, later named by the letters A, E, I and O: “All S are P,” “No S is P,” “Some S is P” and “Some S is not P.” A syllogism has two premises sharing a <b>middle term</b> (M) that disappears in the conclusion. Aristotle sorted syllogisms into <b>figures</b> by where the middle term stands, and showed which combinations always work. Medieval students gave the valid forms Latin nicknames, such as <i>Barbara</i> (A, A, A) and <i>Celarent</i> (E, A, E), whose vowels spell out the kinds of statement."
+   },
+   {
+    "t": "viz",
+    "name": "gb-syllogism",
+    "cap": "Pick a figure and the kind of each statement. Validity is checked against every possible way of filling the circles.",
+    "opts": {
+     "fig": 1,
+     "a": "E",
+     "b": "A",
+     "c": "E"
+    }
+   },
+   {
+    "t": "ex",
+    "title": "Testing a syllogism",
+    "q": "Is this valid? “All poets are dreamers. All dreamers are happy. So all poets are happy.”",
+    "steps": [
+     "Terms: S = poets, P = happy, M = dreamers.",
+     "Premises: All M are P (dreamers are happy); All S are M (poets are dreamers).",
+     "This is the first figure with A, A, A: <i>Barbara</i>, always valid.",
+     "Valid means the conclusion follows; it does not mean the premises are true."
+    ],
+    "a": "Valid (Barbara). Whether it is true depends on the premises."
+   },
+   {
+    "t": "mistake",
+    "html": "Confusing <b>valid</b> with <b>true</b>. “All fish can fly; all sharks are fish; so all sharks can fly” is valid but false. An argument can also have true premises and a true conclusion and still be invalid, like the cat-and-dog example."
+   },
+   {
+    "t": "key",
+    "html": "<b>The middle term must be “distributed.”</b> “All cats have tails; all dogs have tails; so all dogs are cats” fails because the middle term, “things with tails,” is never used to cover <em>all</em> tailed things. That is the fallacy of the <b>undistributed middle</b>."
+   },
+   {
+    "t": "h",
+    "text": "Proof and first principles"
+   },
+   {
+    "t": "quote",
+    "text": "<p>All instruction given or received by way of argument proceeds from pre-existent knowledge.</p>",
+    "author": "Aristotle",
+    "work": "Posterior Analytics I.1",
+    "tr": "G. R. G. Mure",
+    "ed": "The Works of Aristotle, vol. I, Clarendon Press",
+    "year": 1928,
+    "url": "https://archive.org/details/worksofaristotle0001emed",
+    "src": "Internet Archive"
+   },
+   {
+    "t": "p",
+    "html": "If every proof needs earlier knowledge, where does it start? Aristotle says scientific proof rests on <b>first principles</b> that cannot themselves be proved, or else proofs would go back for ever or in a circle. We reach those principles by <b>induction</b>, from many perceptions to a general grasp, and by understanding. Real scientific knowledge, he says, knows the <em>cause</em> of a fact, not just the fact."
+   },
+   {
+    "t": "h",
+    "text": "Fallacies"
+   },
+   {
+    "t": "p",
+    "html": "In <em>Sophistical Refutations</em> Aristotle lists thirteen kinds of false argument: six that depend on language (such as words with two meanings, <b>equivocation</b>) and seven that do not (such as <b>begging the question</b>, assuming what you set out to prove, and <b>many questions</b>, asking two things as if they were one). At the end he says that on reasoning, unlike rhetoric, he had nothing earlier to build on and had to work it out himself."
+   }
+  ],
+  "deep": [
+   {
+    "t": "h",
+    "text": "Two thousand years of logic"
+   },
+   {
+    "t": "p",
+    "html": "Aristotle's logic was taught almost unchanged for two thousand years, through Boethius, the Arabic philosophers and the medieval universities. A “fourth figure” was added by later logicians. In 1787 Immanuel Kant, later on this ladder, wrote that logic had not had to take a step backward since Aristotle, and seemed complete. Within a century, George Boole and Gottlob Frege built new logics with symbols, and modern logic can handle arguments, such as those about relations (“taller than”), that the syllogism cannot."
+   },
+   {
+    "t": "p",
+    "html": "Aristotle also assumed that every term names something that exists. Modern logic drops that assumption for “All S are P,” which is why some traditional forms, such as <i>Darapti</i>, are valid for Aristotle but not in modern textbooks. The diagram above uses Aristotle's assumption."
+   },
+   {
+    "t": "p",
+    "html": "<em>On Interpretation</em> raises a puzzle still discussed: is “there will be a sea battle tomorrow” already true or false today? If so, is the future fixed? Aristotle seems to say such statements are not yet true or false."
+   },
+   {
+    "t": "h",
+    "text": "Big questions"
+   },
+   {
+    "t": "list",
+    "items": [
+     "Is logic invented, like the rules of a game, or discovered, like a fact about the world?",
+     "Can a valid argument with true premises ever mislead you?",
+     "Is it already true today what you will eat for breakfast tomorrow?"
+    ]
+   }
+  ]
+ },
+ "questions": [
+  "Make up a syllogism about your family (“All the people in our house like pancakes…”). Is it valid? Is it true?",
+  "Why do you think Aristotle's followers called logic a “tool”?",
+  "Can you remember an argument that sounded right but turned out to be a trick? What was wrong with it?",
+  "What's the difference between an argument being valid and its conclusion being true?",
+  "Aristotle says every proof needs a starting point you can't prove. What are some things you accept without proof?"
+ ],
+ "sources": [
+  {
+   "name": "The Works of Aristotle, vol. I, ed. W. D. Ross: Categories and On Interpretation (E. M. Edghill), Prior Analytics (A. J. Jenkinson), Posterior Analytics (G. R. G. Mure), Topics and Sophistical Refutations (W. A. Pickard-Cambridge) (Oxford, 1928), Internet Archive",
+   "url": "https://archive.org/details/worksofaristotle0001emed"
+  },
+  {
+   "name": "Grokipedia: Organon",
+   "url": "https://grokipedia.com/page/Organon"
+  },
+  {
+   "name": "Grokipedia: Syllogism",
+   "url": "https://grokipedia.com/page/Syllogism"
+  }
+ ]
+}

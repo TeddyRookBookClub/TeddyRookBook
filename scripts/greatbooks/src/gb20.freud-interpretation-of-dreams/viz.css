@@ -1,0 +1,63 @@
+/* gb20 visuals kit (gbx1): shared styles for the 20th-century rungs (ML.gb20kit). Adapted from the gb19 kit. */
+.gb20-stage svg{display:block;width:100%;max-width:600px;height:auto;margin:.3rem auto}
+.gb20-ctl{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;justify-content:center}
+.gb20 .gb20-box{fill:var(--gb-paper);stroke:var(--gb-gold);stroke-width:1.5}
+.gb20 .gb20-it{cursor:pointer;outline:none}
+.gb20 .gb20-it:focus-visible .gb20-box,.gb20 .gb20-it:focus-visible .gb20-dot{stroke-dasharray:4 3;stroke-width:3}
+.gb20 .gb20-it:hover .gb20-box{stroke:var(--gb-acc)}
+.gb20 .gb20-on .gb20-box{fill:color-mix(in srgb,var(--gb-acc) 18%,var(--gb-paper));stroke:var(--gb-acc);stroke-width:2.5}
+.gb20 .gb20-t{fill:var(--gb-ink);font:600 12px system-ui,sans-serif}
+.gb20 .gb20-on .gb20-t{fill:var(--gb-acc);font-weight:800}
+.gb20 .gb20-s{fill:var(--gb-mut);font:11px system-ui,sans-serif}
+.gb20 .gb20-el{fill:var(--gb-mut);font:italic 10.5px Georgia,serif;stroke:var(--gb-paper);stroke-width:3px;stroke-linejoin:round}
+.gb20 .gb20-map{fill:var(--gb-mut);font:italic 11px Georgia,serif}
+.gb20 .gb20-halo{paint-order:stroke;stroke:var(--gb-paper);stroke-width:3px;stroke-linejoin:round}
+.gb20 .gb20-arrow{stroke:var(--gb-mut);stroke-width:1.5;fill:none}
+.gb20 .gb20-head{fill:var(--gb-mut)}
+.gb20 .gb20-edge{stroke:var(--gb-mut);stroke-width:1.6;fill:none}
+.gb20 .gb20-edge+.gb20-head{fill:var(--gb-mut)}
+.gb20 .gb20-ea{stroke:var(--gb-acc);stroke-width:2.2}
+.gb20 .gb20-eg{stroke:var(--gb-gold);stroke-width:2.2}
+.gb20 .gb20-eb{stroke:#2f5f9e;stroke-width:2.2}
+.gb20 .gb20-dash{stroke-dasharray:5 4}
+.gb20 .gb20-sea{fill:color-mix(in srgb,#2f5f9e 14%,var(--gb-paper))}
+.gb20 .gb20-paperbg{fill:var(--gb-paper)}
+.gb20 .gb20-land{fill:color-mix(in srgb,#3b7d5a 26%,var(--gb-paper));stroke:color-mix(in srgb,#3b7d5a 55%,var(--gb-paper));stroke-width:1}
+.gb20 .gb20-lake{fill:color-mix(in srgb,#2f5f9e 30%,var(--gb-paper));stroke:none}
+.gb20 .gb20-river{fill:none;stroke:color-mix(in srgb,#2f5f9e 70%,var(--gb-paper));stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.gb20 .gb20-route{fill:none;stroke:var(--gb-acc);stroke-width:2.6;stroke-linejoin:round}
+.gb20 .gb20-route-todo{fill:none;stroke:var(--gb-mut);stroke-width:1.4;stroke-dasharray:4 4}
+.gb20 .gb20-hit{fill:transparent}
+.gb20 .gb20-dot{fill:var(--gb-paper);stroke:var(--gb-acc);stroke-width:2}
+.gb20 .gb20-dot-on{fill:var(--gb-acc)}
+.gb20 .gb20-skin{fill:#ffcc4d;stroke:#e8a93a;stroke-width:1.2}
+.gb20 .gb20-robe{fill:#2f5f9e;stroke:var(--gb-paper);stroke-width:1}
+.gb20 .gb20-robe2{fill:#3b7d5a;stroke:var(--gb-paper);stroke-width:1}
+.gb20 .gb20-gold{fill:var(--gb-gold)}
+.gb20 .gb20-accf{fill:var(--gb-acc)}
+.gb20 .gb20-mutf{fill:var(--gb-mut)}
+.gb20 .gb20-ink{stroke:var(--gb-ink);stroke-width:1.5;fill:none}
+.gb20-panel{display:grid;gap:.5rem;margin:.4rem 0}
+.gb20-card{border:1px solid var(--gb-gold);border-radius:12px;padding:.6rem .8rem;background:var(--gb-paper);color:var(--gb-ink)}
+.gb20-card p{margin:.2rem 0}
+.gb20-btns{display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0}
+.gb20-big{font:700 1.15rem/1.3 Georgia,serif;color:var(--gb-acc)}
+.gb20-ok{color:#2f7d4a;font-weight:700}
+html[data-theme="dark"] .gb20-ok{color:#7fd6a6}
+.gb20-no{color:#a3402a;font-weight:700}
+html[data-theme="dark"] .gb20-no{color:#f0a08a}
+.gb20 .gb20-top{fill:color-mix(in srgb,var(--gb-gold) 30%,var(--gb-paper))}
+.gb20 .gb20-ground-d{fill:#4a3b2a}
+.gb20 .gb20-ground-l{fill:#e9dcc0}
+.gb20 .gb20-beetle-d{fill:#2a2118;stroke:#7a6550;stroke-width:1}
+.gb20 .gb20-beetle-l{fill:#d9c9a3;stroke:#8f7d58;stroke-width:1}
+.gb20 .gb20-beetle-line{stroke:#8f7d58;stroke-width:1}
+.gb20 .gb20-membrane{fill:color-mix(in srgb,var(--gb-mut) 16%,var(--gb-paper));stroke:var(--gb-mut);stroke-width:1}
+.gb20 .gb20-bone{stroke:color-mix(in srgb,var(--gb-ink) 45%,var(--gb-paper));stroke-linecap:round}
+.gb20 .gb20-bonef{fill:color-mix(in srgb,var(--gb-ink) 45%,var(--gb-paper));stroke:none}
+.gb20 .gb20-bone-on{stroke:var(--gb-acc)}
+.gb20 .gb20-bone-on.gb20-bonef{fill:var(--gb-acc)}
+.gb20 .gb20-groove{fill:none;stroke:color-mix(in srgb,#7a4a10 55%,var(--gb-paper));stroke-linecap:round}
+.gb20 span.gb20-s{color:var(--gb-mut);font-size:.88em}
+.gb20 .gb20-onbar{fill:#fffdf7;font:600 11px system-ui,sans-serif}
+html[data-theme="dark"] .gb20 .gb20-onbar{fill:#18211c}

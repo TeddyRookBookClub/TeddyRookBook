@@ -1,0 +1,198 @@
+{
+ "paths": {
+  "young": [
+   {
+    "t": "p",
+    "html": "G. H. Hardy was an English mathematician who loved numbers the way some people love music, and who also loved cricket. Near the end of his life he wrote a short book explaining why he had spent his life on mathematics, even though, he said, his own discoveries had never been useful for anything practical."
+   },
+   {
+    "t": "p",
+    "html": "His reason: some ideas are simply <b>beautiful</b>, and finding them is worth doing for its own sake, like painting a picture or writing a poem. To show what he meant, he chose a proof that is more than 2,000 years old: Euclid’s proof that <b>the prime numbers never run out</b>."
+   },
+   {
+    "t": "p",
+    "html": "Prime numbers are numbers like 2, 3, 5, 7 and 11 that can only be divided evenly by 1 and themselves. Suppose someone says, “Here is a list of all the primes.” Multiply them all together and add 1. The new number can’t be divided evenly by any prime on the list (you always get a remainder of 1). So it must be made of primes that weren’t on the list. The list was never complete!"
+   },
+   {
+    "t": "viz",
+    "name": "gb-euclid-primes",
+    "opts": {
+     "pick": [
+      2,
+      3,
+      5
+     ]
+    },
+    "cap": "Pick any list of primes. Multiply them and add 1. The result always has a prime factor that isn’t on your list."
+   },
+   {
+    "t": "activity",
+    "html": "<b>Prime hunting.</b> Write the numbers 1 to 50 on paper. Cross out 1. Circle 2, then cross out every second number after it. Circle 3, and cross out every third number. Keep going with the next number that isn’t crossed out. The circled ones are the primes. (This method is called the sieve of Eratosthenes, after a Greek who lived about 2,200 years ago.)"
+   }
+  ],
+  "full": [
+   {
+    "t": "h",
+    "text": "Who, when and why"
+   },
+   {
+    "t": "p",
+    "html": "Godfrey Harold Hardy (1877–1947) spent most of his life at Trinity College, Cambridge, with twelve years as a professor at Oxford (1919–1931). He was the leading English pure mathematician of his time, a master of number theory and analysis. For thirty-five years he worked in partnership with J. E. Littlewood. In 1913 he received a letter from an unknown clerk in Madras, Srinivasa Ramanujan, full of astonishing formulas; Hardy brought him to Cambridge, and their work together from 1914 to 1919 became one of the famous stories of mathematics."
+   },
+   {
+    "t": "p",
+    "html": "<em>A Mathematician’s Apology</em> (Cambridge University Press, 1940) was written after a heart attack, when Hardy felt that his creative power was gone. An “apology” here means a defense, as in Plato’s <em>Apology</em> of Socrates. The book is short, proud, funny and sad. Since 1967 it has usually been printed with a long foreword by his friend C. P. Snow."
+   },
+   {
+    "t": "note",
+    "html": "This book was first published in 1940, so it is still under copyright, and this rung quotes none of it. Everything here is our own summary."
+   },
+   {
+    "t": "h",
+    "text": "The argument"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Mathematics is a young person’s game.</b> Hardy claims that the great discoveries are mostly made early in life, and he writes as one who believes his own best work is behind him.",
+     "<b>A defense must be honest about uses.</b> He separates the elementary mathematics that engineers and everyone need from “real” mathematics, the deep theories of the great mathematicians. Real mathematics, he says, is almost wholly useless in practice.",
+     "<b>Its value is beauty.</b> Like a painter’s or a poet’s, the mathematician’s work is to make patterns, and they must be beautiful. Ugly mathematics, he says, has no lasting place.",
+     "<b>What makes a theorem beautiful:</b> it is <b>serious</b> (connected to many other ideas), <b>general</b> and <b>deep</b>, and its proof has surprise, inevitability and economy.",
+     "<b>Mathematical reality is out there.</b> Hardy holds that the mathematician discovers truths that exist independently of us, rather than inventing them.",
+     "<b>Useless means harmless.</b> Writing as a lifelong opponent of war, he takes comfort that number theory had never served any warlike purpose."
+    ]
+   },
+   {
+    "t": "h",
+    "text": "Two proofs Hardy chose"
+   },
+   {
+    "t": "p",
+    "html": "Hardy chooses two Greek proofs to show what a beautiful theorem looks like, because they are short enough to give in full and as fresh as when they were found."
+   },
+   {
+    "t": "ex",
+    "title": "Euclid: the primes never run out",
+    "q": "Show that no finite list of primes can contain them all.",
+    "steps": [
+     "Take any list of primes, say $p_1, p_2, \\ldots, p_k$, and form $N = p_1 p_2 \\cdots p_k + 1$.",
+     "Dividing $N$ by any prime on the list leaves remainder 1, so none of them divides $N$.",
+     "But every whole number above 1 has at least one prime factor. So $N$ has a prime factor that is not on the list.",
+     "Example: $2 \\cdot 3 \\cdot 5 \\cdot 7 \\cdot 11 \\cdot 13 + 1 = 30{,}031 = 59 \\times 509$. Neither 59 nor 509 was on the list."
+    ],
+    "a": "The list is never complete: there are infinitely many primes."
+   },
+   {
+    "t": "viz",
+    "name": "gb-euclid-primes",
+    "opts": {
+     "pick": [
+      2,
+      3,
+      5,
+      7,
+      11,
+      13
+     ]
+    },
+    "cap": "Try it with your own lists. Notice that the new number need not be prime itself; it only has to have a new prime factor."
+   },
+   {
+    "t": "ex",
+    "title": "Pythagoras: √2 is not a fraction",
+    "q": "Show that no fraction $a/b$ squares to exactly 2.",
+    "steps": [
+     "Suppose $\\sqrt2 = a/b$ in lowest terms, so $a$ and $b$ are not both even.",
+     "Then $a^2 = 2b^2$, so $a^2$ is even, so $a$ is even: $a = 2c$.",
+     "Then $4c^2 = 2b^2$, so $b^2 = 2c^2$, and $b$ is even too.",
+     "Both even contradicts “lowest terms.” So the supposition was false."
+    ],
+    "a": "√2 is irrational. This is a proof by contradiction, the kind of argument Hardy admired above almost any other."
+   },
+   {
+    "t": "key",
+    "html": "Hardy’s test for a great theorem: <b>serious</b>, <b>general</b>, <b>deep</b>, with a proof that is <b>surprising</b>, <b>inevitable</b> and <b>economical</b>. Both Greek proofs pass after more than two thousand years."
+   },
+   {
+    "t": "mistake",
+    "html": "Taking Hardy’s claim of uselessness as the last word. Within forty years the theory of prime numbers, his own field, became the basis of the public-key codes that protect online banking and messages (RSA, 1977). Hardy had also counted relativity and quantum theory among the harmless subjects; physics built on them produced the atomic bomb only five years after the book appeared."
+   },
+   {
+    "t": "h",
+    "text": "A twist about genetics"
+   },
+   {
+    "t": "p",
+    "html": "Hardy’s best-known result outside mathematics is one he thought trivial. In 1908 he wrote a short letter to the journal <em>Science</em> showing that, with random mating, gene frequencies stay steady from generation to generation. The Hardy–Weinberg rule is now in every biology textbook (see the Dobzhansky rung)."
+   },
+   {
+    "t": "h",
+    "text": "How it was judged"
+   },
+   {
+    "t": "p",
+    "html": "The <em>Apology</em> is one of the most widely read books about mathematics, loved for its prose and its passion. Many mathematicians recognize their own experience of beauty in it. Critics have answered several of its claims: that pure and applied mathematics are separate (they keep crossing), that mathematicians always peak young (many have done great work late), and that beauty is the main reason mathematics matters. Snow’s foreword, and Hardy’s own pages, also leave readers with a portrait of a man who was kind, shy and devoted to his friends, including Ramanujan."
+   }
+  ],
+  "deep": [
+   {
+    "t": "h",
+    "text": "Hardy in the great conversation"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Euclid</b>, earlier on this ladder, wrote both of the proofs Hardy admires (Elements IX.20 for the primes; the √2 argument is in the tradition of Book X).",
+     "<b>Plato</b> held that the objects of mathematics are real and eternal; Hardy is a modern Platonist.",
+     "<b>Whitehead</b>’s <em>Introduction to Mathematics</em> praises mathematics for its uses; Hardy praises it for its beauty. Read them together.",
+     "<b>Nicomachus</b> loved numbers for their patterns too, though with more number mysticism than proof."
+    ]
+   },
+   {
+    "t": "h",
+    "text": "Big questions"
+   },
+   {
+    "t": "list",
+    "items": [
+     "Is something worth doing if it has no use? What else besides mathematics might be?",
+     "Are mathematical truths discovered or invented?",
+     "Can anyone be sure their work will never be used for harm?"
+    ]
+   },
+   {
+    "t": "p",
+    "html": "See the Math Ladder’s topics on infinitely many primes, the sieve of Eratosthenes, irrational numbers and RSA."
+   }
+  ]
+ },
+ "questions": [
+  "What do you do just because it is beautiful or fun, not because it is useful?",
+  "Hardy thought his work would never be used in war. Was it a good thing to hope? Can anyone control how ideas are used?",
+  "Does a proof feel beautiful to you? Which part of Euclid’s proof is the clever turn?",
+  "Hardy said mathematics is a young person’s game. Do you know people who did great things later in life?",
+  "Why do you think Hardy and Ramanujan worked so well together, though they came from very different worlds?"
+ ],
+ "sources": [
+  {
+   "name": "Grokipedia: G. H. Hardy",
+   "url": "https://grokipedia.com/page/G._H._Hardy"
+  },
+  {
+   "name": "Grokipedia: A Mathematician's Apology",
+   "url": "https://grokipedia.com/page/A_Mathematician%27s_Apology"
+  },
+  {
+   "name": "Grokipedia: Srinivasa Ramanujan",
+   "url": "https://grokipedia.com/page/Srinivasa_Ramanujan"
+  },
+  {
+   "name": "Grokipedia: Euclid's theorem",
+   "url": "https://grokipedia.com/page/Euclid%27s_theorem"
+  },
+  {
+   "name": "Grokipedia: Square root of 2",
+   "url": "https://grokipedia.com/page/Square_root_of_2"
+  }
+ ]
+}

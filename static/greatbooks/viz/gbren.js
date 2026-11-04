@@ -4,6 +4,323 @@
   var ML = W.MathLadder = W.MathLadder || {};
   function boot() {
     if (!ML.viz || !ML.viz.register) return false;
+  /* ---- gbren.erasmus-praise-of-folly (scripts/greatbooks/src/gbren.erasmus-praise-of-folly/viz.js) ---- */
+  try { (function () {
+/* gb-folly: Folly at the center of the world, and the people her speech teases, as a ring. Our own summaries. */
+/* gbw1 SVG helpers (each viz.js carries its own copy, since each is wrapped on its own). Styles: .gbr-* in this course's viz.css. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || 'gbr-t', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbr'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbr-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl, stage: st };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* a clickable group: Enter/Space activate it too */
+function hit(g, label, fn) {
+  g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbr-hit');
+  g.addEventListener('click', fn);
+  g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+/* a generic cartoon person, in the site's skin color */
+function person(g, x, y, s, cloth) {
+  S('rect', { x: x - 7 * s, y: y - 2 * s, width: 14 * s, height: 18 * s, rx: 6 * s, 'class': cloth || 'gbr-cloth' }, g);
+  S('circle', { cx: x, cy: y - 9 * s, r: 7 * s, 'class': 'gbr-skin' }, g);
+}
+/* wrap text into lines of at most n characters */
+function wrap(s, n) { var w = s.split(' '), out = [], cur = ''; w.forEach(function (x) { if ((cur + ' ' + x).trim().length > n) { if (cur) out.push(cur); cur = x; } else cur = (cur + ' ' + x).trim(); }); if (cur) out.push(cur); return out; }
+ML.viz.register('gb-folly', function (el, opts, V) {
+  var T = [
+    ['Everyday people', 'Lovers, hunters, gamblers, builders who cannot stop building: Folly says she makes ordinary life sweet, because no one could bear it if they saw themselves too clearly.'],
+    ['Teachers', 'Schoolmasters who rule a classroom like kings and quarrel over tiny points of grammar.'],
+    ['Poets and authors', 'Writers who live for praise, rewrite their books for years, and are delighted when someone admires them.'],
+    ['Philosophers', 'Thinkers who claim to measure the stars but cannot see what is in front of them.'],
+    ['Theologians', 'Scholars who argue over endless puzzling questions instead of living the simple teaching of the Gospel.'],
+    ['Monks and friars', 'Some who care more about the exact rules of their dress and diet than about kindness.'],
+    ['Rulers and courtiers', 'Kings who think only of pleasure, and courtiers who flatter them.'],
+    ['Popes and bishops', 'Church leaders who live like princes, which Folly says is the opposite of the apostles\' poverty.']
+  ];
+  var F = frame(el, 400, 300, 'Folly in the middle, and the kinds of people her speech teases'), sv = F.svg, ro = V.readout(el), cur = -1, cx = 200, cy = 150, R = 132, r0 = 58;
+  function arc(a0, a1, r1, r2) {
+    var p = function (a, r) { return (cx + r * Math.cos(a)).toFixed(1) + ',' + (cy + r * Math.sin(a)).toFixed(1); };
+    return 'M' + p(a0, r2) + ' A' + r2 + ',' + r2 + ' 0 0 1 ' + p(a1, r2) + ' L' + p(a1, r1) + ' A' + r1 + ',' + r1 + ' 0 0 0 ' + p(a0, r1) + ' Z';
+  }
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 0, width: 400, height: 300, 'class': 'gbr-bg' }, sv);
+    T.forEach(function (t, i) {
+      var a0 = -Math.PI / 2 - Math.PI / T.length + i * 2 * Math.PI / T.length, a1 = a0 + 2 * Math.PI / T.length, am = (a0 + a1) / 2;
+      var g = S('g', { 'class': i === cur ? 'gbr-on' : '' }, sv);
+      S('path', { d: arc(a0, a1, r0, R), 'class': 'gbr-f' + (i % 6) + ' gbr-sec' }, g);
+      var lines = wrap(t[0], 11), rx = cx + 96 * Math.cos(am), ry = cy + 96 * Math.sin(am) - (lines.length - 1) * 7 + 4;
+      lines.forEach(function (l, j) { Tx(g, rx, ry + j * 14, l, 'gbr-b'); });
+      hit(g, t[0], function () { cur = i; draw(); });
+    });
+    S('circle', { cx: cx, cy: cy, r: r0 - 4, 'class': 'gbr-card' }, sv);
+    // Folly: a generic figure in a jester's cap with bells
+    person(sv, cx, cy + 2, 1.1, 'gbr-cloth2');
+    S('path', { d: 'M' + (cx - 8) + ',' + (cy - 14) + ' Q' + (cx - 20) + ',' + (cy - 28) + ' ' + (cx - 24) + ',' + (cy - 18) + ' M' + (cx + 8) + ',' + (cy - 14) + ' Q' + (cx + 20) + ',' + (cy - 28) + ' ' + (cx + 24) + ',' + (cy - 18), 'class': 'gbr-ln-acc' }, sv);
+    S('circle', { cx: cx - 24, cy: cy - 17, r: 3, 'class': 'gbr-gold' }, sv); S('circle', { cx: cx + 24, cy: cy - 17, r: 3, 'class': 'gbr-gold' }, sv);
+    Tx(sv, cx, cy + 42, 'Folly', 'gbr-big');
+    ro.set(cur < 0 ? 'Folly speaks from the middle of the ring: everyone, she says, owes something to her. Tap a group to see what she says about them.' : '<b>' + T[cur][0] + '.</b> ' + T[cur][1] + ' <span class="gbr-mut">(Our summary. Erasmus is teasing, and Folly is not always to be believed.)</span>');
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbren.machiavelli-the-prince (scripts/greatbooks/src/gbren.machiavelli-the-prince/viz.js) ---- */
+  try { (function () {
+/* gb-principalities: Machiavelli's map of kinds of state (The Prince, chapters I-XI), as a tree.
+   gb-fortune-river: chapter XXV's picture of fortune as a flooding river, and the dikes built in calm weather. Our own drawings. */
+/* gbw1 SVG helpers (each viz.js carries its own copy, since each is wrapped on its own). Styles: .gbr-* in this course's viz.css. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || 'gbr-t', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbr'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbr-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl, stage: st };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* a clickable group: Enter/Space activate it too */
+function hit(g, label, fn) {
+  g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbr-hit');
+  g.addEventListener('click', fn);
+  g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+/* a generic cartoon person, in the site's skin color */
+function person(g, x, y, s, cloth) {
+  S('rect', { x: x - 7 * s, y: y - 2 * s, width: 14 * s, height: 18 * s, rx: 6 * s, 'class': cloth || 'gbr-cloth' }, g);
+  S('circle', { cx: x, cy: y - 9 * s, r: 7 * s, 'class': 'gbr-skin' }, g);
+}
+/* wrap text into lines of at most n characters */
+function wrap(s, n) { var w = s.split(' '), out = [], cur = ''; w.forEach(function (x) { if ((cur + ' ' + x).trim().length > n) { if (cur) out.push(cur); cur = x; } else cur = (cur + ' ' + x).trim(); }); if (cur) out.push(cur); return out; }
+ML.viz.register('gb-principalities', function (el, opts, V) {
+  var N = [
+    ['all', 'States', 200, 28, '', 'Chapter I: every state is either a republic or a principality (ruled by a prince). The Prince is about principalities; Machiavelli says he wrote about republics elsewhere (his Discourses on Livy).'],
+    ['her', 'Hereditary', 62, 90, 'all', 'Chapter II: ruled by an old family. Easy to keep, he says: the prince need only not upset the old ways.'],
+    ['new', 'New', 200, 90, 'all', 'Chapters III-V: newly won, wholly or as an addition to an old state. Hard to hold, because the people who helped you expect too much and the ones you displaced want revenge.'],
+    ['eccl', 'Church states', 338, 90, 'all', 'Chapter XI: states ruled by the Church, held up, he says, by ancient religious customs.'],
+    ['own', 'By your own arms and ability', 52, 178, 'new', 'Chapter VI: founders who rose by their own virtù (ability and drive), such as Moses, Cyrus, Romulus and Theseus. Hard to win, but easier to keep.'],
+    ['fort', 'By others\' arms and fortune', 150, 178, 'new', 'Chapter VII: those raised up by luck or others\' help, such as Cesare Borgia. Easy to win, hard to keep.'],
+    ['crime', 'By wickedness', 248, 178, 'new', 'Chapter VIII: those who rose by crimes, such as Agathocles of Syracuse. Machiavelli says such a man may win power but not glory.'],
+    ['civ', 'By the favor of fellow citizens', 346, 178, 'new', 'Chapter IX: the "civil principality." Machiavelli advises such a prince to keep the people\'s friendship, since the people want only not to be oppressed.']
+  ];
+  var F = frame(el, 400, 220, 'Machiavelli\'s kinds of principality'), sv = F.svg, ro = V.readout(el), cur = opts.node || 'all';
+  var byId = {}; N.forEach(function (n) { byId[n[0]] = n; });
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 0, width: 400, height: 220, 'class': 'gbr-bg' }, sv);
+    N.forEach(function (n) { if (n[4]) { var p = byId[n[4]]; S('path', { d: 'M' + p[2] + ',' + (p[3] + 14) + ' C' + p[2] + ',' + (p[3] + 40) + ' ' + n[2] + ',' + (n[3] - 40) + ' ' + n[2] + ',' + (n[3] - 14), 'class': 'gbr-ln' }, sv); } });
+    N.forEach(function (n) {
+      var g = S('g', { 'class': n[0] === cur ? 'gbr-on' : '' }, sv), L = wrap(n[1], 13), w = 94, h = 14 + L.length * 13;
+      S('rect', { x: n[2] - w / 2, y: n[3] - h / 2, width: w, height: h, rx: 8, 'class': 'gbr-node' }, g);
+      L.forEach(function (l, j) { Tx(g, n[2], n[3] - h / 2 + 18 + j * 13, l, 'gbr-b'); });
+      hit(g, n[1], function () { cur = n[0]; draw(); });
+    });
+    ro.set('<b>' + byId[cur][1] + '.</b> ' + byId[cur][5]);
+  }
+  draw();
+});
+
+ML.viz.register('gb-fortune-river', function (el, opts, V) {
+  var F = frame(el, 400, 220, 'A river in flood and the dikes built beforehand'), sv = F.svg, ro = V.readout(el), dike = opts.dike || 2, flood = 0;
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 0, width: 400, height: 220, 'class': 'gbr-sky' }, sv);
+    var lvl = flood ? 110 : 170, top = 150 - dike * 12, over = flood > 0 && lvl < top;
+    S('path', { d: 'M0,150 L130,150 L150,190 L250,190 L270,150 L400,150 L400,220 L0,220 Z', 'class': 'gbr-land' }, sv);
+    S('path', { d: 'M' + (lvl < 150 ? 132 : 150 + (lvl - 150) * 0) + ',' + lvl + ' L' + (lvl < 150 ? 268 : 250) + ',' + lvl + ' L250,190 L150,190 Z', 'class': 'gbr-water' }, sv);
+    if (dike > 0) { S('rect', { x: 118, y: top, width: 14, height: 150 - top, 'class': 'gbr-stone' }, sv); S('rect', { x: 268, y: top, width: 14, height: 150 - top, 'class': 'gbr-stone' }, sv); }
+    if (over) { S('rect', { x: 0, y: 134, width: 400, height: 16, 'class': 'gbr-water', opacity: 0.9 }, sv); }
+    [40, 80, 320, 360].forEach(function (x) { S('rect', { x: x - 2, y: 128, width: 4, height: 22, 'class': 'gbr-wood' }, sv); S('circle', { cx: x, cy: 124, r: 10, 'class': over ? 'gbr-f5' : 'gbr-f1' }, sv); });
+    Tx(sv, 200, 210, 'the river', 'gbr-m'); Tx(sv, 60, 166, 'fields', 'gbr-m'); Tx(sv, 340, 166, 'fields', 'gbr-m');
+    var msg = flood ? (over ? '<b>The flood breaks over the banks</b> and sweeps across the fields. Fortune, Machiavelli says, shows her power where no one has prepared to resist her.' : '<b>The dikes hold.</b> The river rises, but the fields are safe. This is Machiavelli\'s advice: prepare in quiet times, and fortune can do far less harm.') : 'Calm weather. Build dikes and banks now (use the slider), then press <b>Send the flood</b>. In Chapter XXV Machiavelli says fortune rules about half of what happens to us and leaves the other half to us.';
+    ro.set(msg);
+  }
+  var sl = V.slider(F.ctl, { label: 'Dikes built in calm weather', min: 0, max: 6, step: 1, value: dike, fmt: function (v) { return ['none', 'very low', 'low', 'fair', 'good', 'high', 'very high'][v]; }, input: function (v) { dike = v; flood = 0; draw(); } });
+  V.button(F.ctl, 'Send the flood', function () { flood = 1; draw(); });
+  V.button(F.ctl, 'Calm again', function () { flood = 0; draw(); });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbren.rabelais-gargantua (scripts/greatbooks/src/gbren.rabelais-gargantua/viz.js) ---- */
+  try { (function () {
+/* gb-theleme: the Abbey of Thélème (Gargantua, chapters LII-LVII), drawn from Rabelais's description: six sides, a round tower
+   at each corner, a courtyard with a fountain, and no wall around it. Our own drawing and summaries. */
+/* gbw1 SVG helpers (each viz.js carries its own copy, since each is wrapped on its own). Styles: .gbr-* in this course's viz.css. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || 'gbr-t', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbr'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbr-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl, stage: st };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* a clickable group: Enter/Space activate it too */
+function hit(g, label, fn) {
+  g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbr-hit');
+  g.addEventListener('click', fn);
+  g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+/* a generic cartoon person, in the site's skin color */
+function person(g, x, y, s, cloth) {
+  S('rect', { x: x - 7 * s, y: y - 2 * s, width: 14 * s, height: 18 * s, rx: 6 * s, 'class': cloth || 'gbr-cloth' }, g);
+  S('circle', { cx: x, cy: y - 9 * s, r: 7 * s, 'class': 'gbr-skin' }, g);
+}
+/* wrap text into lines of at most n characters */
+function wrap(s, n) { var w = s.split(' '), out = [], cur = ''; w.forEach(function (x) { if ((cur + ' ' + x).trim().length > n) { if (cur) out.push(cur); cur = x; } else cur = (cur + ' ' + x).trim(); }); if (cur) out.push(cur); return out; }
+ML.viz.register('gb-theleme', function (el, opts, V) {
+  var TW = ['Arctic', 'Calaer', 'Anatole', 'Mesembrine', 'Hesperia', 'Criere'];
+  var INFO = {
+    tower: 'Each corner of the six-sided abbey has a great round tower, and Rabelais gives each a name made from Greek words. Four of them point to the four directions: Arctic (north), Anatole (east, where the sun rises), Mesembrine (south, the noonday side) and Hesperia (west, where the sun sets).',
+    court: 'In the middle is a courtyard with a fine fountain. Around it run galleries, libraries in many languages, and rooms for music, games and exercise.',
+    gate: 'Over the gate is a long verse inscription saying who is not welcome (the sour, the greedy, the quarrelsome and the hypocrites) and who is: the honest, the cheerful and the noble-hearted.',
+    wall: 'Gargantua orders that the abbey have no wall around it. Walls, he jokes, are where grumbling and plotting grow. Everything about Thélème is the opposite of a strict monastery of his day: no clocks, no bells, men and women together, and anyone may leave to marry.',
+    rule: 'The abbey has only one rule, written in its book of rules: "Do What Thou Wilt." Rabelais explains that free, well-taught people in good company naturally want to do good. Readers still argue over whether he meant this as a serious ideal or as a joke about a world that could never be.'
+  };
+  var F = frame(el, 400, 290, 'The Abbey of Thélème: six sides, six towers, a fountain in the courtyard'), sv = F.svg, ro = V.readout(el), cur = opts.part || 'rule', cx = 200, cy = 145, R = 100;
+  function P(i, r) { var a = -Math.PI / 2 + i * Math.PI / 3; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; }
+  function g(key, label) { var e = S('g', { 'class': key === cur ? 'gbr-on' : '' }, sv); hit(e, label, function () { cur = key; draw(); }); return e; }
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 0, width: 400, height: 290, 'class': 'gbr-bg' }, sv);
+    var gw = g('wall', 'No wall around it'); S('rect', { x: 8, y: 8, width: 384, height: 274, rx: 18, 'class': 'gbr-f1', opacity: 0.5 }, gw); Tx(gw, 24, 30, 'open fields: no wall', 'gbr-i', 'start');
+    var outer = [], inner = [];
+    for (var i = 0; i < 6; i++) { outer.push(P(i, R).join(',')); inner.push(P(i, R - 34).join(',')); }
+    S('polygon', { points: outer.join(' '), 'class': 'gbr-stone' }, sv);
+    var gc = g('court', 'The courtyard and fountain'); S('polygon', { points: inner.join(' '), 'class': 'gbr-f2 gbr-sec' }, gc);
+    S('circle', { cx: cx, cy: cy, r: 16, 'class': 'gbr-water' }, gc); S('circle', { cx: cx, cy: cy, r: 5, 'class': 'gbr-card' }, gc); Tx(gc, cx, cy + 32, 'fountain', 'gbr-m');
+    var gt = g('tower', 'The six towers');
+    for (var j = 0; j < 6; j++) { var p = P(j, R), q = P(j, R + 34); S('circle', { cx: p[0], cy: p[1], r: 17, 'class': 'gbr-f0 gbr-sec' }, gt); Tx(gt, q[0], q[1] + 4, TW[j], 'gbr-b'); }
+    var gg = g('gate', 'The gate and its inscription'), m = [(P(2, R)[0] + P(3, R)[0]) / 2, (P(2, R)[1] + P(3, R)[1]) / 2];
+    S('rect', { x: m[0] - 9, y: m[1] - 9, width: 18, height: 18, rx: 3, 'class': 'gbr-f3 gbr-sec', transform: 'rotate(30 ' + m[0] + ' ' + m[1] + ')' }, gg); Tx(gg, m[0] + 30, m[1] + 18, 'gate', 'gbr-m');
+    var gr = g('rule', 'The one rule'); S('rect', { x: 12, y: 248, width: 150, height: 24, rx: 6, 'class': 'gbr-card' }, gr); Tx(gr, 87, 264, 'DO WHAT THOU WILT', 'gbr-b');
+    ro.set('<b>' + { tower: 'The towers', court: 'The courtyard', gate: 'The gate', wall: 'No wall', rule: 'The one rule' }[cur] + '.</b> ' + INFO[cur]);
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbren.montaigne-essays (scripts/greatbooks/src/gbren.montaigne-essays/viz.js) ---- */
+  try { (function () {
+/* gb-scales: Montaigne's balance. In 1576 he had a medal made with a pair of scales and his motto "Que sais-je?" ("What do I know?").
+   Pick a question, add reasons to each pan, and watch the beam. Questions and reasons are our own, in the spirit of the Essays. */
+/* gbw1 SVG helpers (each viz.js carries its own copy, since each is wrapped on its own). Styles: .gbr-* in this course's viz.css. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || 'gbr-t', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbr'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbr-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl, stage: st };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* a clickable group: Enter/Space activate it too */
+function hit(g, label, fn) {
+  g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbr-hit');
+  g.addEventListener('click', fn);
+  g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+/* a generic cartoon person, in the site's skin color */
+function person(g, x, y, s, cloth) {
+  S('rect', { x: x - 7 * s, y: y - 2 * s, width: 14 * s, height: 18 * s, rx: 6 * s, 'class': cloth || 'gbr-cloth' }, g);
+  S('circle', { cx: x, cy: y - 9 * s, r: 7 * s, 'class': 'gbr-skin' }, g);
+}
+/* wrap text into lines of at most n characters */
+function wrap(s, n) { var w = s.split(' '), out = [], cur = ''; w.forEach(function (x) { if ((cur + ' ' + x).trim().length > n) { if (cur) out.push(cur); cur = x; } else cur = (cur + ' ' + x).trim(); }); if (cur) out.push(cur); return out; }
+ML.viz.register('gb-scales', function (el, opts, V) {
+  var Q = [
+    ['Are animals cleverer than we think?', ['A cat can play a game with you and seem to enjoy it.', 'Birds build nests and travel thousands of miles without a map.', 'Dogs read our moods.'], ['People write books, build bridges and do mathematics.', 'Animals mostly follow habit and instinct.', 'We cannot ask an animal what it is thinking.']],
+    ['Are faraway customs strange, or only different?', ['Every land thinks its own ways are the natural ones.', 'Our customs would seem odd to a visitor too.', 'Many "strange" customs have good reasons behind them.'], ['Some customs really are cruel and should be judged.', 'Not all ways of living are equally good.', 'We need some standard to judge by.']],
+    ['Is it better to learn many facts, or to learn to think?', ['A full memory without judgment is like a stuffed sack.', 'Knowing how to weigh a question lasts a lifetime.', 'Facts change; good judgment travels.'], ['You cannot think well about something you know nothing about.', 'Facts are the bricks thinking builds with.', 'Some things simply must be memorized.']]
+  ];
+  var F = frame(el, 400, 250, 'A balance with reasons on each side'), sv = F.svg, ro = V.readout(el), qi = 0, L = 0, Rr = 0, sel;
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 0, width: 400, height: 250, 'class': 'gbr-bg' }, sv);
+    var d = Math.max(-3, Math.min(3, Rr - L)), ang = d * 6, cx = 200, cy = 70, arm = 120;
+    var rad = ang * Math.PI / 180, lx = cx - arm * Math.cos(rad), ly = cy - arm * Math.sin(rad), rx = cx + arm * Math.cos(rad), ry = cy + arm * Math.sin(rad);
+    S('path', { d: 'M' + (cx - 40) + ',236 L' + (cx + 40) + ',236 L' + (cx + 8) + ',220 L' + (cx + 4) + ',' + cy + ' L' + (cx - 4) + ',' + cy + ' L' + (cx - 8) + ',220 Z', 'class': 'gbr-gold' }, sv);
+    S('line', { x1: lx, y1: ly, x2: rx, y2: ry, 'class': 'gbr-ln-acc' }, sv);
+    S('circle', { cx: cx, cy: cy, r: 6, 'class': 'gbr-gold' }, sv);
+    [[lx, ly, L, 'Yes'], [rx, ry, Rr, 'No']].forEach(function (p) {
+      S('line', { x1: p[0], y1: p[1], x2: p[0] - 34, y2: p[1] + 70, 'class': 'gbr-ln' }, sv); S('line', { x1: p[0], y1: p[1], x2: p[0] + 34, y2: p[1] + 70, 'class': 'gbr-ln' }, sv);
+      S('path', { d: 'M' + (p[0] - 44) + ',' + (p[1] + 70) + ' Q' + p[0] + ',' + (p[1] + 104) + ' ' + (p[0] + 44) + ',' + (p[1] + 70) + ' Z', 'class': 'gbr-f0 gbr-sec' }, sv);
+      for (var k = 0; k < p[2]; k++) S('rect', { x: p[0] - 30 + k * 21, y: p[1] + 58, width: 18, height: 12, rx: 2, 'class': 'gbr-f2' }, sv);
+      Tx(sv, p[0], p[1] + 98, p[3] + ' (' + p[2] + ')', 'gbr-b');
+    });
+    Tx(sv, 200, 24, Q[qi][0], 'gbr-h');
+    var msg = L === 0 && Rr === 0 ? 'Add a reason to either side. Montaigne liked to weigh both sides of a question before (or instead of) deciding.' : '';
+    if (L || Rr) msg = (L ? '<b>Yes:</b> ' + Q[qi][1].slice(0, L).join(' ') + ' ' : '') + (Rr ? '<b>No:</b> ' + Q[qi][2].slice(0, Rr).join(' ') + ' ' : '') + (L === Rr ? ' <b>The beam is level.</b> Montaigne would smile and ask, "What do I know?" (in French, <i>Que sais-je?</i>), and keep thinking.' : (L > Rr ? ' The beam tips toward yes, for now.' : ' The beam tips toward no, for now.'));
+    ro.set(msg);
+  }
+  sel = V.seg(F.ctl, { label: 'Question', items: Q.map(function (q, i) { return [i, ['Animals', 'Customs', 'Learning'][i]]; }), value: 0, change: function (v) { qi = +v; L = 0; Rr = 0; draw(); } });
+  V.button(F.ctl, 'Add a "yes" reason', function () { if (L < 3) L++; draw(); });
+  V.button(F.ctl, 'Add a "no" reason', function () { if (Rr < 3) Rr++; draw(); });
+  V.button(F.ctl, 'Empty the pans', function () { L = 0; Rr = 0; draw(); });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbren.calvin-institutes (scripts/greatbooks/src/gbren.calvin-institutes/viz.js) ---- */
+  try { (function () {
+/* gb-institutes: the plan of Calvin's Institutes (final Latin edition, 1559): four books, 80 chapters, following the order of the
+   Apostles' Creed. Our own summaries of Calvin's teaching, as his views. */
+/* gbw1 SVG helpers (each viz.js carries its own copy, since each is wrapped on its own). Styles: .gbr-* in this course's viz.css. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || 'gbr-t', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbr'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbr-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl, stage: st };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* a clickable group: Enter/Space activate it too */
+function hit(g, label, fn) {
+  g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbr-hit');
+  g.addEventListener('click', fn);
+  g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+/* a generic cartoon person, in the site's skin color */
+function person(g, x, y, s, cloth) {
+  S('rect', { x: x - 7 * s, y: y - 2 * s, width: 14 * s, height: 18 * s, rx: 6 * s, 'class': cloth || 'gbr-cloth' }, g);
+  S('circle', { cx: x, cy: y - 9 * s, r: 7 * s, 'class': 'gbr-skin' }, g);
+}
+/* wrap text into lines of at most n characters */
+function wrap(s, n) { var w = s.split(' '), out = [], cur = ''; w.forEach(function (x) { if ((cur + ' ' + x).trim().length > n) { if (cur) out.push(cur); cur = x; } else cur = (cur + ' ' + x).trim(); }); if (cur) out.push(cur); return out; }
+ML.viz.register('gb-institutes', function (el, opts, V) {
+  var B = [
+    ['Book I', 'The knowledge of God the Creator', 18, 'I believe in God the Father', 'How we know God, through the created world and, more clearly, through Scripture; God as Creator; and God\'s providence, his care and rule over all things.'],
+    ['Book II', 'The knowledge of God the Redeemer', 17, 'and in Jesus Christ', 'Humanity\'s fall and its effects, the law, and Christ as the one who restores the relationship between God and people.'],
+    ['Book III', 'How we receive the grace of Christ', 25, 'I believe in the Holy Spirit', 'Faith, repentance, the Christian life, prayer, and justification by faith. It also treats election (predestination), the teaching most debated by Calvin\'s critics.'],
+    ['Book IV', 'The outward means: the church', 20, 'the holy catholic church', 'The church and its ministry, the sacraments (for Calvin, baptism and the Lord\'s Supper), and, in the last chapter, civil government.']
+  ];
+  var F = frame(el, 400, 250, 'The four books of the Institutes and their chapters'), sv = F.svg, ro = V.readout(el), cur = opts.book == null ? -1 : opts.book;
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 0, width: 400, height: 250, 'class': 'gbr-bg' }, sv);
+    var y = 30;
+    B.forEach(function (b, i) {
+      var g = S('g', { 'class': i === cur ? 'gbr-on' : '' }, sv), w = b[2] * 11;
+      S('rect', { x: 120, y: y, width: w, height: 40, rx: 6, 'class': 'gbr-f' + i + ' gbr-sec' }, g);
+      for (var c = 0; c <= b[2]; c++) S('line', { x1: 120 + c * 11, y1: y + 41, x2: 120 + c * 11, y2: y + 46, 'class': 'gbr-ln' }, g);
+      Tx(g, 112, y + 17, b[0], 'gbr-b', 'end'); Tx(g, 112, y + 31, b[2] + ' chapters', 'gbr-m', 'end');
+      Tx(g, 126, y + 18, b[1], 'gbr-b', 'start'); Tx(g, 126, y + 32, '"' + b[3] + ' ..."', 'gbr-i', 'start');
+      hit(g, b[0] + ': ' + b[1], function () { cur = i; draw(); });
+      y += 52;
+    });
+    Tx(sv, 200, 18, 'Each space between ticks is one chapter: 18 + 17 + 25 + 20 = 80', 'gbr-m');
+    ro.set(cur < 0 ? 'Calvin arranged the 1559 Institutes in four books that follow the Apostles\' Creed: the Father, the Son, the Holy Spirit and the church. Tap a book.' : '<b>' + B[cur][0] + ': ' + B[cur][1] + '</b> (' + B[cur][2] + ' chapters). ' + B[cur][4]);
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
   /* ---- gbren.copernicus-on-the-revolutions (scripts/greatbooks/src/gbren.copernicus-on-the-revolutions/viz.js) ---- */
   try { (function () {
 /* gb-sky: the same motion of Mars (or Jupiter) told two ways.
@@ -107,6 +424,514 @@
     return { update: function (q) { if (q && q.view) { view = q.view; draw(); } } };
   });
 })();
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbren.shakespeare-comedies (scripts/greatbooks/src/gbren.shakespeare-comedies/viz.js) ---- */
+  try { (function () {
+/* gb-globe: a plan of the Globe playhouse (1599), drawn from the usual reconstruction, with its parts explained. Our own drawing. */
+/* gbw1 SVG helpers (each viz.js carries its own copy, since each is wrapped on its own). Styles: .gbr-* in this course's viz.css. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || 'gbr-t', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbr'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbr-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl, stage: st };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* a clickable group: Enter/Space activate it too */
+function hit(g, label, fn) {
+  g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbr-hit');
+  g.addEventListener('click', fn);
+  g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+/* a generic cartoon person, in the site's skin color */
+function person(g, x, y, s, cloth) {
+  S('rect', { x: x - 7 * s, y: y - 2 * s, width: 14 * s, height: 18 * s, rx: 6 * s, 'class': cloth || 'gbr-cloth' }, g);
+  S('circle', { cx: x, cy: y - 9 * s, r: 7 * s, 'class': 'gbr-skin' }, g);
+}
+/* wrap text into lines of at most n characters */
+function wrap(s, n) { var w = s.split(' '), out = [], cur = ''; w.forEach(function (x) { if ((cur + ' ' + x).trim().length > n) { if (cur) out.push(cur); cur = x; } else cur = (cur + ' ' + x).trim(); }); if (cur) out.push(cur); return out; }
+ML.viz.register('gb-globe', function (el, opts, V) {
+  var F = frame(el, 400, 300, 'A plan of the Globe playhouse, seen from above'), sv = F.svg, ro = V.readout(el), cur = opts.part || 'stage';
+  var cx = 200, cy = 150, R1 = 128, R2 = 92, N = 20;
+  var P = {
+    galleries: ['The galleries', 'Three levels of covered wooden benches ring the yard. A seat cost more than standing, and a cushion more again. The building held perhaps 3,000 people.'],
+    yard: ['The yard', 'An open-air space in front of the stage, with no roof. "Groundlings" paid a penny to stand here, close enough to touch the stage. If it rained, they got wet.'],
+    stage: ['The stage', 'A raised platform that juts out into the yard, so the audience stands on three sides. There was almost no scenery: the words told you where you were. A trapdoor let ghosts and spirits rise from below.'],
+    tiring: ['The tiring house', 'The building behind the stage where actors attired themselves (dressed) and waited. Two or three doors led onto the stage, and a balcony above could be a castle wall or Juliet\'s window.'],
+    heavens: ['The heavens', 'A roof over the stage, held up by two great pillars and painted underneath with sun, moon and stars. Actors could be lowered from it.'],
+    door: ['The entrance', 'Plays began in the afternoon, by daylight. A flag on the roof announced a performance that day.']
+  };
+  function poly(r) { var pts = []; for (var i = 0; i < N; i++) { var a = -Math.PI / 2 + i * 2 * Math.PI / N; pts.push((cx + r * Math.cos(a)).toFixed(1) + ',' + (cy + r * Math.sin(a)).toFixed(1)); } return pts.join(' '); }
+  function part(key, build) { var g = S('g', { 'class': key === cur ? 'gbr-on' : '' }, sv); build(g); hit(g, P[key][0], function () { cur = key; draw(); }); return g; }
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 0, width: 400, height: 300, 'class': 'gbr-bg' }, sv);
+    part('galleries', function (g) { S('polygon', { points: poly(R1), 'class': 'gbr-f0 gbr-sec' }, g); });
+    part('yard', function (g) { S('polygon', { points: poly(R2), 'class': 'gbr-f1 gbr-sec' }, g); for (var i = 0; i < 14; i++) { var a = 0.4 + i * 0.37, r = 40 + (i % 3) * 16; person(g, cx + r * Math.cos(a), cy + 30 + r * 0.55 * Math.sin(a), 0.45, ['gbr-cloth', 'gbr-cloth2', 'gbr-cloth3'][i % 3]); } });
+    part('tiring', function (g) { S('path', { d: 'M' + (cx - 70) + ',' + (cy - 118) + ' L' + (cx + 70) + ',' + (cy - 118) + ' L' + (cx + 62) + ',' + (cy - 86) + ' L' + (cx - 62) + ',' + (cy - 86) + ' Z', 'class': 'gbr-f4 gbr-sec' }, g); });
+    part('stage', function (g) { S('rect', { x: cx - 58, y: cy - 86, width: 116, height: 82, 'class': 'gbr-f2 gbr-sec' }, g); S('rect', { x: cx - 8, y: cy - 52, width: 16, height: 12, 'class': 'gbr-ln' }, g); });
+    part('heavens', function (g) { S('rect', { x: cx - 58, y: cy - 86, width: 116, height: 26, 'class': 'gbr-f5 gbr-sec', opacity: 0.85 }, g); S('circle', { cx: cx - 44, cy: cy - 46, r: 5, 'class': 'gbr-wood' }, g); S('circle', { cx: cx + 44, cy: cy - 46, r: 5, 'class': 'gbr-wood' }, g); });
+    part('door', function (g) { S('rect', { x: cx - 14, y: cy + R1 - 8, width: 28, height: 16, rx: 3, 'class': 'gbr-f3 gbr-sec' }, g); });
+    Tx(sv, cx, cy - 98, 'tiring house', 'gbr-m'); Tx(sv, cx, cy - 66, 'heavens', 'gbr-m'); Tx(sv, cx, cy - 22, 'stage', 'gbr-b');
+    Tx(sv, cx + 66, cy + 72, 'yard', 'gbr-b'); Tx(sv, cx + 104, cy - 96, 'galleries', 'gbr-b', 'start'); Tx(sv, cx, cy + R1 + 20, 'entrance', 'gbr-m');
+    Tx(sv, 12, 290, 'Not to scale. About 30 m (100 ft) across.', 'gbr-m', 'start');
+    ro.set('<b>' + P[cur][0] + '.</b> ' + P[cur][1]);
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbren.shakespeare-histories (scripts/greatbooks/src/gbren.shakespeare-histories/viz.js) ---- */
+  try { (function () {
+/* gb-kings: the English kings from Richard II to Henry VII (1377-1509), by royal house, with the Shakespeare play that tells each reign. */
+/* gbw1 SVG helpers (each viz.js carries its own copy, since each is wrapped on its own). Styles: .gbr-* in this course's viz.css. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || 'gbr-t', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbr'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbr-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl, stage: st };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* a clickable group: Enter/Space activate it too */
+function hit(g, label, fn) {
+  g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbr-hit');
+  g.addEventListener('click', fn);
+  g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+/* a generic cartoon person, in the site's skin color */
+function person(g, x, y, s, cloth) {
+  S('rect', { x: x - 7 * s, y: y - 2 * s, width: 14 * s, height: 18 * s, rx: 6 * s, 'class': cloth || 'gbr-cloth' }, g);
+  S('circle', { cx: x, cy: y - 9 * s, r: 7 * s, 'class': 'gbr-skin' }, g);
+}
+/* wrap text into lines of at most n characters */
+function wrap(s, n) { var w = s.split(' '), out = [], cur = ''; w.forEach(function (x) { if ((cur + ' ' + x).trim().length > n) { if (cur) out.push(cur); cur = x; } else cur = (cur + ' ' + x).trim(); }); if (cur) out.push(cur); return out; }
+ML.viz.register('gb-kings', function (el, opts, V) {
+  var K = [
+    ['Richard II', [[1377, 1399]], 'p', 'Richard II', 'Crowned as a boy of ten. In 1399 his cousin Henry Bolingbroke returned from exile, took the throne and became Henry IV. Shakespeare shows Richard as a poet-king who loses his crown and finds his voice.'],
+    ['Henry IV', [[1399, 1413]], 'l', 'Henry IV, Parts 1 and 2', 'The first Lancastrian king, troubled by rebellions and by guilt over how he got the crown. His son, Prince Hal, spends his days in the tavern with Sir John Falstaff, then proves himself in battle.'],
+    ['Henry V', [[1413, 1422]], 'l', 'Henry V', 'Prince Hal as king. He invades France and wins the Battle of Agincourt (1415) against long odds, then dies young.'],
+    ['Henry VI', [[1422, 1461], [1470, 1471]], 'l', 'Henry VI, Parts 1, 2 and 3', 'King at nine months old. France is lost, and the quarrel of Lancaster and York becomes the Wars of the Roses (from 1455). He lost the throne in 1461, regained it briefly in 1470, and lost it again.'],
+    ['Edward IV', [[1461, 1470], [1471, 1483]], 'y', 'Henry VI, Part 3; Richard III', 'The first Yorkist king, who won the crown in battle.'],
+    ['Edward V', [[1483, 1483.3]], 'y', 'Richard III', 'A boy king, who with his brother was placed in the Tower of London and never seen again.'],
+    ['Richard III', [[1483, 1485]], 'y', 'Richard III', 'Edward IV\'s brother. Shakespeare makes him a charming, scheming villain who tells the audience his plans. He was killed at the Battle of Bosworth in 1485. Historians still debate how fair the Tudor picture of him is.'],
+    ['Henry VII', [[1485, 1509]], 't', 'Richard III (as Richmond)', 'Henry Tudor, of Lancastrian descent, won at Bosworth and married Elizabeth of York, uniting the two houses. He was Queen Elizabeth I\'s grandfather, and Shakespeare wrote under Elizabeth.']
+  ];
+  var HS = { p: ['Plantagenet', 'gbr-f5'], l: ['Lancaster', 'gbr-f3'], y: ['York', 'gbr-f0'], t: ['Tudor', 'gbr-f1'] };
+  var F = frame(el, 400, 300, 'The English kings from 1377 to 1509 and the history plays'), sv = F.svg, ro = V.readout(el), cur = opts.king || 0;
+  var x0 = 100, x1 = 388, X = function (y) { return x0 + (y - 1375) / (1510 - 1375) * (x1 - x0); };
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 0, width: 400, height: 300, 'class': 'gbr-bg' }, sv);
+    [1400, 1425, 1450, 1475, 1500].forEach(function (y) { S('line', { x1: X(y), y1: 22, x2: X(y), y2: 262, 'class': 'gbr-ln-dash' }, sv); Tx(sv, X(y), 276, String(y), 'gbr-m'); });
+    S('rect', { x: X(1455), y: 22, width: X(1487) - X(1455), height: 240, 'class': 'gbr-f3', opacity: 0.25 }, sv);
+    Tx(sv, X(1471), 16, 'Wars of the Roses', 'gbr-i');
+    K.forEach(function (k, i) {
+      var y = 34 + i * 28, g = S('g', { 'class': i === cur ? 'gbr-on' : '' }, sv);
+      S('rect', { x: 2, y: y - 4, width: 396, height: 26, rx: 5, 'class': i === cur ? 'gbr-node' : '', fill: 'transparent' }, g);
+      Tx(g, 92, y + 13, k[0], 'gbr-b', 'end');
+      k[1].forEach(function (r) { S('rect', { x: X(r[0]), y: y, width: Math.max(4, X(r[1]) - X(r[0])), height: 18, rx: 3, 'class': HS[k[2]][1] + ' gbr-sec' }, g); });
+      hit(g, k[0], function () { cur = i; draw(); });
+    });
+    var lx = 100; ['p', 'l', 'y', 't'].forEach(function (h) { S('rect', { x: lx, y: 284, width: 12, height: 12, 'class': HS[h][1] }, sv); Tx(sv, lx + 16, 294, HS[h][0], 'gbr-m', 'start'); lx += 74; });
+    var k = K[cur], yrs = k[1].map(function (r) { return Math.floor(r[0]) + (Math.floor(r[1]) !== Math.floor(r[0]) ? '–' + Math.floor(r[1]) : ''); }).join(' and ');
+    ro.set('<b>' + k[0] + '</b> (reigned ' + yrs + '; House of ' + HS[k[2]][0] + '). <i>Play:</i> ' + k[3] + '. ' + k[4]);
+  }
+  V.seg(F.ctl, { label: 'King', items: K.map(function (k, i) { return [i, k[0]]; }), value: cur, change: function (v) { cur = +v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbren.shakespeare-hamlet (scripts/greatbooks/src/gbren.shakespeare-hamlet/viz.js) ---- */
+  try { (function () {
+/* Shakespeare visuals shared by the gbren Shakespeare rungs (gbw1, our own designs and summaries).
+   gb-acts: a play's five acts on a rising-and-falling curve; opts.play = romeo | caesar | hamlet | othello | lear | macbeth | tempest | dream.
+   gb-cast: who is who in a play, as a web; opts.play = romeo | caesar | hamlet | othello | lear | macbeth | tempest.
+   gb-meter: tap out the beat of famous lines; opts.lines = [indexes] (default all). */
+/* gbw1 SVG helpers (each viz.js carries its own copy, since each is wrapped on its own). Styles: .gbr-* in this course's viz.css. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || 'gbr-t', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbr'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbr-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl, stage: st };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* a clickable group: Enter/Space activate it too */
+function hit(g, label, fn) {
+  g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbr-hit');
+  g.addEventListener('click', fn);
+  g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+/* a generic cartoon person, in the site's skin color */
+function person(g, x, y, s, cloth) {
+  S('rect', { x: x - 7 * s, y: y - 2 * s, width: 14 * s, height: 18 * s, rx: 6 * s, 'class': cloth || 'gbr-cloth' }, g);
+  S('circle', { cx: x, cy: y - 9 * s, r: 7 * s, 'class': 'gbr-skin' }, g);
+}
+/* wrap text into lines of at most n characters */
+function wrap(s, n) { var w = s.split(' '), out = [], cur = ''; w.forEach(function (x) { if ((cur + ' ' + x).trim().length > n) { if (cur) out.push(cur); cur = x; } else cur = (cur + ' ' + x).trim(); }); if (cur) out.push(cur); return out; }
+var ACTS = {
+  romeo: { t: 'Romeo and Juliet', h: [0.35, 0.55, 0.95, 0.7, 0.3], a: [
+    ['A feud and a feast', 'Servants of the Montagues and Capulets brawl in the street, and the Prince warns that the next fight will be punished by death. That night Romeo slips into the Capulets\' feast and meets Juliet. Only afterward do they learn each other\'s family.'],
+    ['The balcony and the wedding', 'Under Juliet\'s window the two promise to marry. Friar Laurence agrees, hoping the match will end the feud, and marries them in secret.'],
+    ['The turning point', 'Juliet\'s cousin Tybalt kills Romeo\'s friend Mercutio, and Romeo, in anger, kills Tybalt. The Prince banishes Romeo. Juliet\'s father, knowing nothing of the marriage, arranges for her to marry Count Paris.'],
+    ['The friar\'s plan', 'Friar Laurence gives Juliet a potion that will make her seem dead for a time, and sends a letter to tell Romeo. On the wedding morning the family finds her, as they think, dead.'],
+    ['The tomb', 'The friar\'s letter never reaches Romeo. Believing Juliet dead, he comes to her tomb, and both young people die there. The grieving families at last make peace.']] },
+  caesar: { t: 'Julius Caesar', h: [0.35, 0.6, 0.95, 0.65, 0.35], a: [
+    ['Caesar\'s triumph', 'Rome celebrates Caesar\'s victories. A soothsayer warns him to beware the Ides of March (the 15th). Cassius begins to persuade Brutus that Caesar\'s power is a danger to Rome.'],
+    ['The plot', 'After a sleepless night Brutus joins the conspirators. Caesar\'s wife, Calpurnia, dreams of disaster and begs him to stay home, but he is talked into going to the Senate.'],
+    ['The Ides of March', 'The conspirators kill Caesar. Brutus explains to the crowd that he acted for Rome\'s freedom. Then Mark Antony speaks, and turns the crowd against the conspirators.'],
+    ['The quarrel', 'Brutus and Cassius, now leading an army, quarrel and make up. That night Caesar\'s ghost appears to Brutus and says they will meet again at Philippi.'],
+    ['Philippi', 'The armies meet. Cassius and then Brutus take their own lives rather than be captured. Antony calls Brutus "the noblest Roman of them all."']] },
+  hamlet: { t: 'Hamlet', h: [0.3, 0.5, 0.95, 0.65, 0.45], a: [
+    ['The ghost', 'In Denmark, guards see the ghost of the dead King. His brother Claudius is now king and has married the widow, Queen Gertrude. The ghost tells Prince Hamlet he was murdered by Claudius and asks for revenge. Hamlet decides to act as if he were mad.'],
+    ['Watching and waiting', 'The old counselor Polonius thinks Hamlet is mad with love for his daughter, Ophelia. Two school friends are sent to spy on Hamlet. A company of actors arrives, and Hamlet plans a test.'],
+    ['The play and the mistake', 'Hamlet wonders aloud whether it is better "to be, or not to be." The actors stage a murder like his father\'s, and Claudius rushes out, guilty. Hamlet finds Claudius praying and holds back. Then, thinking Claudius is hiding behind a curtain, he strikes and kills Polonius instead.'],
+    ['Exile and grief', 'Claudius sends Hamlet to England with orders for his death, but Hamlet escapes. Ophelia, overwhelmed with grief, drowns. Her brother Laertes returns wanting revenge, and Claudius plots with him.'],
+    ['The duel', 'Hamlet holds the skull of Yorick, a jester he loved as a child. In a fencing match the plot of the poisoned sword and the poisoned cup goes wrong: the Queen, Laertes, Claudius and Hamlet all die. Hamlet asks his friend Horatio to tell his story.']] },
+  othello: { t: 'Othello', h: [0.3, 0.5, 0.95, 0.75, 0.4], a: [
+    ['Venice', 'Iago, an officer, hates his general, Othello, who has promoted Cassio over him. Othello has secretly married Desdemona, a senator\'s daughter. Her father objects, but the Senate sends Othello to defend Cyprus, and Desdemona goes with him.'],
+    ['Cyprus', 'A storm destroys the enemy fleet. Iago gets Cassio drunk and into a fight, and Othello takes away Cassio\'s rank.'],
+    ['The seed of doubt', 'Iago hints that Desdemona loves Cassio. He gets hold of a handkerchief Othello gave her and plants it where Cassio will find it. Othello, half-convinced, demands proof.'],
+    ['Jealousy grows', 'Iago feeds Othello false "proof," and Othello treats Desdemona cruelly in front of others. She cannot understand what she has done.'],
+    ['The truth too late', 'Othello kills Desdemona. Iago\'s wife, Emilia, reveals the truth about the handkerchief. Othello, seeing what he has done, takes his own life. Iago is arrested.']] },
+  lear: { t: 'King Lear', h: [0.35, 0.6, 0.9, 0.7, 0.35], a: [
+    ['The love test', 'Old King Lear will divide Britain among his three daughters by how much each says she loves him. Goneril and Regan flatter him. Cordelia, the youngest, will not, and he disowns her. In a second family, the Earl of Gloucester is tricked by his son Edmund into turning against his loyal son Edgar.'],
+    ['Turned out', 'Goneril and Regan cut down Lear\'s followers and shut him out. Edgar hides as a poor madman, "Tom." Lear goes out into a terrible storm.'],
+    ['The storm', 'On the open heath, with his Fool and "Poor Tom," Lear rages and begins to see the suffering of the poor. Gloucester is cruelly punished for helping the King and loses his sight.'],
+    ['Reunion', 'Edgar, still in disguise, guides his blind father. Cordelia returns with an army from France and cares for Lear, who wakes and knows her.'],
+    ['The end', 'Cordelia\'s army loses. Edgar defeats Edmund. Goneril and Regan destroy each other. Cordelia is killed, and Lear dies grieving over her.']] },
+  macbeth: { t: 'Macbeth', h: [0.35, 0.8, 0.9, 0.65, 0.4], a: [
+    ['The prophecy', 'After a battle, three witches tell the Scottish general Macbeth that he will be king. Part of the prophecy comes true at once. Lady Macbeth urges him on when King Duncan comes to stay.'],
+    ['The murder', 'Macbeth kills Duncan in his sleep. Duncan\'s sons flee, and Macbeth is crowned.'],
+    ['Banquo', 'Fearing the witches\' promise that his friend Banquo\'s children will be kings, Macbeth has Banquo killed, but Banquo\'s son escapes. At a feast, only Macbeth sees Banquo\'s ghost.'],
+    ['New prophecies', 'The witches tell Macbeth no man born of woman can harm him, and he will not fall until Birnam Wood comes to Dunsinane. He has Macduff\'s family killed. Malcolm and Macduff gather an army in England.'],
+    ['Birnam Wood', 'Lady Macbeth walks in her sleep, trying to wash away a spot of blood that is not there, and dies. Soldiers carry branches from Birnam Wood. Macduff, who was born in an unusual way, defeats Macbeth, and Malcolm becomes king.']] },
+  tempest: { t: 'The Tempest', h: [0.35, 0.55, 0.7, 0.8, 0.45], a: [
+    ['The storm', 'On an island, the magician Prospero raises a storm that wrecks a ship carrying the King of Naples and Prospero\'s brother, Antonio, who stole his dukedom of Milan twelve years before. Prospero tells his daughter Miranda their story. His spirit-servant Ariel has kept everyone on board safe. The King\'s son, Ferdinand, meets Miranda.'],
+    ['Plots', 'Antonio tempts the King\'s brother, Sebastian, to kill the King. Caliban, the island\'s other inhabitant, joins two drunken sailors in a plot against Prospero.'],
+    ['Tests', 'Ferdinand carries logs for Prospero to prove himself, and he and Miranda promise to marry. Ariel, as a fierce harpy, confronts the King, Antonio and Sebastian with their wrongs.'],
+    ['The masque', 'Prospero blesses the engagement with a show of spirits, then breaks it off: "Our revels now are ended." Caliban\'s plot comes to nothing.'],
+    ['Forgiveness', 'Prospero decides that "the rarer action is / In virtue than in vengeance." He forgives his enemies, gets back his dukedom, frees Ariel and gives up his magic. In the epilogue he asks the audience to set him free with their applause.']] },
+  dream: { t: 'A Midsummer Night\'s Dream', h: [0.3, 0.6, 0.95, 0.55, 0.25], a: [
+    ['Athens', 'Duke Theseus is about to marry. Hermia loves Lysander, but her father orders her to marry Demetrius, so she and Lysander plan to run away through the woods. Helena, who loves Demetrius, follows. A group of workmen plan a play for the wedding.'],
+    ['The wood', 'The fairy king and queen, Oberon and Titania, are quarreling. Oberon sends the mischievous Puck for a flower whose juice makes a sleeper fall in love with the first creature seen. Puck puts it on the wrong young man.'],
+    ['Mix-ups', 'Puck gives the weaver Bottom a donkey\'s head, and the enchanted Titania falls in love with him. Now both young men chase Helena, and the four friends quarrel. "Lord, what fools these mortals be!"'],
+    ['Waking', 'Oberon sets things right. The lovers wake in pairs, Theseus lets them marry, and Bottom wakes from what he calls a most rare dream.'],
+    ['The wedding play', 'Three couples marry. The workmen act their tragedy of Pyramus and Thisbe so badly that it becomes a comedy. The fairies bless the house, and Puck asks the audience to think it was all a dream.']] }
+};
+var STAGES = ['Setting out', 'Rising action', 'Turning point', 'Falling action', 'Ending'];
+ML.viz.register('gb-acts', function (el, opts, V) {
+  var D = ACTS[opts.play] || ACTS.hamlet, F = frame(el, 400, 210, D.t + ': the five acts'), sv = F.svg, ro = V.readout(el), cur = opts.act || 0, sg;
+  var X = function (i) { return 48 + i * 76; }, Y = function (h) { return 170 - h * 130; };
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 0, width: 400, height: 210, 'class': 'gbr-bg' }, sv);
+    S('line', { x1: 20, y1: 172, x2: 380, y2: 172, 'class': 'gbr-ln' }, sv);
+    var d = 'M20,172 ' + D.h.map(function (h, i) { return 'L' + X(i) + ',' + Y(h); }).join(' ') + ' L380,172';
+    S('path', { d: d, 'class': 'gbr-ln-acc' }, sv);
+    D.h.forEach(function (h, i) {
+      var g = S('g', { 'class': i === cur ? 'gbr-on' : '' }, sv);
+      S('circle', { cx: X(i), cy: Y(h), r: 15, 'class': 'gbr-node' }, g);
+      Tx(g, X(i), Y(h) + 4.5, ['I', 'II', 'III', 'IV', 'V'][i], 'gbr-b');
+      Tx(g, X(i), 190, STAGES[i], 'gbr-m');
+      hit(g, 'Act ' + (i + 1) + ': ' + D.a[i][0], function () { cur = i; sg.set(i); draw(); });
+    });
+    Tx(sv, 200, 22, D.t, 'gbr-h');
+    ro.set('<b>Act ' + ['I', 'II', 'III', 'IV', 'V'][cur] + ': ' + D.a[cur][0] + '.</b> ' + D.a[cur][1]);
+  }
+  sg = V.seg(F.ctl, { label: 'Act', items: [0, 1, 2, 3, 4].map(function (i) { return [i, 'Act ' + ['I', 'II', 'III', 'IV', 'V'][i]]; }), value: cur, change: function (v) { cur = +v; draw(); } });
+  draw();
+});
+
+/* the cast: x, y on a 400 x 260 board; c = clothing class (one color per side or family) */
+var CAST = {
+  romeo: { t: 'Romeo and Juliet', n: [
+    ['Romeo', 95, 95, 'gbr-cloth', 'A young Montague, quick to fall in love and quick to act.'], ['Juliet', 305, 95, 'gbr-cloth2', 'A Capulet, not yet fourteen; braver and clearer-headed than anyone around her.'],
+    ['Mercutio', 50, 190, 'gbr-cloth4', 'Romeo\'s witty friend, a relative of the Prince, belonging to neither family.'], ['Benvolio', 140, 205, 'gbr-cloth', 'Romeo\'s cousin, a peacemaker.'],
+    ['Tybalt', 300, 205, 'gbr-cloth2', 'Juliet\'s hot-tempered cousin.'], ['The Nurse', 370, 175, 'gbr-cloth2', 'Juliet\'s nurse and go-between, warm and talkative.'],
+    ['Friar Laurence', 200, 160, 'gbr-cloth3', 'A kindly friar who marries the two in secret, hoping to end the feud.'], ['The Prince', 200, 50, 'gbr-cloth4', 'Escalus, ruler of Verona, who wants the fighting stopped.']],
+    e: [['Romeo', 'Juliet', 'secretly married'], ['Romeo', 'Mercutio', 'friends'], ['Romeo', 'Benvolio', 'cousins'], ['Juliet', 'Tybalt', 'cousins'], ['Juliet', 'The Nurse', 'nurse'], ['Friar Laurence', 'Romeo', 'advises'], ['Friar Laurence', 'Juliet', 'advises'], ['Mercutio', 'Tybalt', 'fight'], ['The Prince', 'Mercutio', 'kinsman']],
+    k: 'Blue: Montagues. Red: Capulets. Green: the Church. Gold: the Prince\'s family.' },
+  caesar: { t: 'Julius Caesar', n: [
+    ['Caesar', 200, 55, 'gbr-cloth4', 'The great general, now close to being king in all but name.'], ['Brutus', 95, 125, 'gbr-cloth2', 'Caesar\'s friend, who joins the plot because he fears for the Republic.'],
+    ['Cassius', 70, 215, 'gbr-cloth2', 'The plot\'s organizer, sharp and resentful of Caesar.'], ['Casca', 180, 215, 'gbr-cloth2', 'A blunt conspirator.'],
+    ['Mark Antony', 305, 125, 'gbr-cloth', 'Caesar\'s loyal friend, whose funeral speech turns the crowd.'], ['Octavius', 345, 215, 'gbr-cloth', 'Caesar\'s young heir, who joins Antony.'],
+    ['Portia', 30, 60, 'gbr-cloth3', 'Brutus\'s wife, who asks to share his secret.'], ['Calpurnia', 360, 50, 'gbr-cloth3', 'Caesar\'s wife, who dreams of his death.']],
+    e: [['Brutus', 'Caesar', 'friends'], ['Cassius', 'Brutus', 'persuades'], ['Casca', 'Cassius', 'conspirators'], ['Mark Antony', 'Caesar', 'loyal friend'], ['Octavius', 'Mark Antony', 'allies'], ['Portia', 'Brutus', 'married'], ['Calpurnia', 'Caesar', 'married']],
+    k: 'Red: the conspirators. Blue: Caesar\'s side after his death. Green: the wives.' },
+  hamlet: { t: 'Hamlet', n: [
+    ['Hamlet', 200, 120, 'gbr-cloth', 'The Prince of Denmark, a student called home by his father\'s death.'], ['The Ghost', 200, 35, 'gbr-cloth4', 'The spirit of Hamlet\'s father, the old King.'],
+    ['Claudius', 80, 70, 'gbr-cloth2', 'The old King\'s brother, now king and married to Gertrude.'], ['Gertrude', 320, 70, 'gbr-cloth4', 'The Queen, Hamlet\'s mother.'],
+    ['Polonius', 70, 190, 'gbr-cloth3', 'The King\'s chief counselor, full of advice.'], ['Ophelia', 165, 225, 'gbr-cloth3', 'Polonius\'s daughter, whom Hamlet once courted.'],
+    ['Laertes', 260, 225, 'gbr-cloth3', 'Ophelia\'s brother, who wants revenge for his father.'], ['Horatio', 340, 175, 'gbr-cloth', 'Hamlet\'s true friend, who lives to tell the story.']],
+    e: [['The Ghost', 'Hamlet', 'father'], ['Claudius', 'Gertrude', 'married'], ['Gertrude', 'Hamlet', 'mother'], ['Claudius', 'The Ghost', 'brothers'], ['Polonius', 'Ophelia', 'father'], ['Ophelia', 'Laertes', 'siblings'], ['Hamlet', 'Ophelia', 'once courted'], ['Horatio', 'Hamlet', 'friends'], ['Polonius', 'Claudius', 'serves']],
+    k: 'Blue: Hamlet and his friend. Gold: the old King and Queen. Red: the new King. Green: Polonius\'s family.' },
+  othello: { t: 'Othello', n: [
+    ['Othello', 120, 70, 'gbr-cloth', 'A great general serving Venice, honest and trusting.'], ['Desdemona', 300, 70, 'gbr-cloth3', 'Othello\'s loyal wife.'],
+    ['Iago', 200, 165, 'gbr-cloth2', 'Othello\'s officer, who smiles and lies.'], ['Cassio', 330, 180, 'gbr-cloth', 'Othello\'s lieutenant, a good man Iago uses.'],
+    ['Emilia', 260, 235, 'gbr-cloth3', 'Iago\'s wife and Desdemona\'s companion, who finally tells the truth.'], ['Roderigo', 70, 200, 'gbr-cloth4', 'A foolish Venetian who pays Iago to help him win Desdemona.'],
+    ['Brabantio', 370, 25, 'gbr-cloth4', 'Desdemona\'s father, a senator.']],
+    e: [['Othello', 'Desdemona', 'married'], ['Iago', 'Othello', 'lies to'], ['Iago', 'Cassio', 'uses'], ['Iago', 'Emilia', 'married'], ['Emilia', 'Desdemona', 'serves'], ['Iago', 'Roderigo', 'cheats'], ['Brabantio', 'Desdemona', 'father'], ['Cassio', 'Othello', 'lieutenant']],
+    k: 'Red: the liar. Follow the lines from Iago: he works on almost everyone.' },
+  lear: { t: 'King Lear', n: [
+    ['Lear', 200, 40, 'gbr-cloth4', 'The old King of Britain, proud and quick to anger.'], ['Goneril', 75, 115, 'gbr-cloth2', 'His eldest daughter, who flatters and then turns on him.'],
+    ['Regan', 165, 125, 'gbr-cloth2', 'His second daughter, as cruel as her sister.'], ['Cordelia', 300, 115, 'gbr-cloth', 'His youngest, who loves him and will not flatter.'],
+    ['The Fool', 360, 45, 'gbr-cloth3', 'Lear\'s jester, who tells him the truth in jokes and songs.'], ['Gloucester', 110, 210, 'gbr-cloth4', 'An earl, who also misjudges his children.'],
+    ['Edgar', 50, 245, 'gbr-cloth', 'Gloucester\'s loyal son, who hides as "Poor Tom."'], ['Edmund', 205, 240, 'gbr-cloth2', 'Gloucester\'s younger son, who schemes to take everything.'], ['Kent', 325, 210, 'gbr-cloth', 'A loyal lord who, banished, serves Lear in disguise.']],
+    e: [['Lear', 'Goneril', 'daughter'], ['Lear', 'Regan', 'daughter'], ['Lear', 'Cordelia', 'daughter'], ['The Fool', 'Lear', 'jester'], ['Kent', 'Lear', 'loyal'], ['Gloucester', 'Edgar', 'son'], ['Gloucester', 'Edmund', 'son'], ['Edmund', 'Goneril', 'schemes with']],
+    k: 'Two families, the same mistake: each father trusts the child who flatters and rejects the one who loves him. Blue: the loyal.' },
+  macbeth: { t: 'Macbeth', n: [
+    ['Macbeth', 200, 110, 'gbr-cloth2', 'A brave Scottish general who wants to be king.'], ['Lady Macbeth', 320, 95, 'gbr-cloth2', 'His wife, who pushes him on and is later haunted by guilt.'],
+    ['The witches', 200, 30, 'gbr-cloth3', 'Three strange sisters who speak in riddles about the future.'], ['Duncan', 70, 70, 'gbr-cloth4', 'The good old King of Scotland.'],
+    ['Malcolm', 60, 175, 'gbr-cloth4', 'Duncan\'s son, the rightful heir.'], ['Banquo', 330, 190, 'gbr-cloth', 'Macbeth\'s friend; the witches say his children will be kings.'],
+    ['Macduff', 160, 230, 'gbr-cloth', 'A lord who suspects Macbeth and finally faces him.'], ['Fleance', 380, 245, 'gbr-cloth', 'Banquo\'s son, who escapes.']],
+    e: [['Macbeth', 'Lady Macbeth', 'married'], ['The witches', 'Macbeth', 'prophesy to'], ['Macbeth', 'Duncan', 'serves, then kills'], ['Duncan', 'Malcolm', 'father'], ['Banquo', 'Macbeth', 'friends'], ['Banquo', 'Fleance', 'father'], ['Macduff', 'Malcolm', 'supports'], ['Macduff', 'Macbeth', 'faces']],
+    k: 'Red: the Macbeths. Gold: the royal line. Blue: those Macbeth fears.' },
+  tempest: { t: 'The Tempest', n: [
+    ['Prospero', 200, 95, 'gbr-cloth4', 'The rightful Duke of Milan, now a magician on an island.'], ['Miranda', 320, 120, 'gbr-cloth3', 'His daughter, who has grown up on the island.'],
+    ['Ariel', 330, 35, 'gbr-cloth', 'A spirit who serves Prospero and longs to be free.'], ['Caliban', 80, 35, 'gbr-cloth3', 'The island\'s earlier inhabitant, who resents Prospero.'],
+    ['Antonio', 65, 160, 'gbr-cloth2', 'Prospero\'s brother, who took his dukedom.'], ['Alonso', 160, 215, 'gbr-cloth2', 'The King of Naples, who helped Antonio.'],
+    ['Ferdinand', 300, 225, 'gbr-cloth', 'Alonso\'s son, who falls in love with Miranda.'], ['Gonzalo', 45, 245, 'gbr-cloth', 'An honest old counselor who helped Prospero long ago.']],
+    e: [['Prospero', 'Miranda', 'father'], ['Ariel', 'Prospero', 'serves'], ['Caliban', 'Prospero', 'serves, resents'], ['Antonio', 'Prospero', 'brother, betrayed'], ['Alonso', 'Antonio', 'helped'], ['Alonso', 'Ferdinand', 'father'], ['Ferdinand', 'Miranda', 'in love'], ['Gonzalo', 'Prospero', 'helped']],
+    k: 'Red: the men who wronged Prospero. Follow the lines to see who must forgive whom.' }
+};
+ML.viz.register('gb-cast', function (el, opts, V) {
+  var D = CAST[opts.play] || CAST.hamlet, F = frame(el, 400, 270, D.t + ': who is who'), sv = F.svg, ro = V.readout(el), cur = -1;
+  var idx = {}; D.n.forEach(function (n, i) { idx[n[0]] = i; });
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 0, width: 400, height: 270, 'class': 'gbr-bg' }, sv);
+    D.e.forEach(function (e) {
+      var a = D.n[idx[e[0]]], b = D.n[idx[e[1]]], on = cur >= 0 && (idx[e[0]] === cur || idx[e[1]] === cur);
+      S('line', { x1: a[1], y1: a[2], x2: b[1], y2: b[2], 'class': on ? 'gbr-ln-acc' : 'gbr-ln-dash' }, sv);
+      if (on) { var t = Tx(sv, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2 - 3, e[2], 'gbr-i'); t.setAttribute('paint-order', 'stroke'); t.setAttribute('stroke', 'var(--gbr-bg)'); t.setAttribute('stroke-width', '4'); }
+    });
+    D.n.forEach(function (n, i) {
+      var g = S('g', { 'class': i === cur ? 'gbr-on' : '' }, sv);
+      S('rect', { x: n[1] - 38, y: n[2] - 22, width: 76, height: 40, rx: 10, 'class': 'gbr-node' }, g);
+      person(g, n[1], n[2] - 6, 0.55, n[3]);
+      Tx(g, n[1], n[2] + 14, n[0], 'gbr-b');
+      hit(g, n[0] + ': ' + n[4], function () { cur = i; draw(); });
+    });
+    ro.set(cur < 0 ? 'Tap a name to see who it is and how they are connected. ' + D.k : '<b>' + D.n[cur][0] + ':</b> ' + D.n[cur][4] + ' <span class="gbr-mut">' + D.k + '</span>');
+  }
+  draw();
+});
+
+/* meter: syllables with 1 = stressed; f = 'i' (iambic, da-DUM) or 't' (trochaic, DUM-da) */
+var LINES = [
+  ['But soft! What light through yonder window breaks?', 'Romeo and Juliet, II.2', 'But|soft|What|light|through|yon|der|win|dow|breaks', '0101010101', 'i'],
+  ['Shall I compare thee to a summer’s day?', 'Sonnet 18', 'Shall|I|com|pare|thee|to|a|sum|mer’s|day', '0101010101', 'i'],
+  ['The course of true love never did run smooth.', 'A Midsummer Night’s Dream, I.1', 'The|course|of|true|love|nev|er|did|run|smooth', '0101010101', 'i'],
+  ['Once more unto the breach, dear friends, once more,', 'Henry V, III.1', 'Once|more|un|to|the|breach|dear|friends|once|more', '0101010101', 'i'],
+  ['To be, or not to be, that is the question:', 'Hamlet, III.1', 'To|be|or|not|to|be|that|is|the|ques|tion', '01010101010', 'i'],
+  ['Is this a dagger which I see before me,', 'Macbeth, II.1', 'Is|this|a|dag|ger|which|I|see|be|fore|me', '01010101010', 'i'],
+  ['Fair is foul, and foul is fair:', 'Macbeth, I.1 (the witches)', 'Fair|is|foul|and|foul|is|fair', '1010101', 't'],
+  ['Lord, what fools these mortals be!', 'A Midsummer Night’s Dream, III.2 (Puck)', 'Lord|what|fools|these|mor|tals|be', '1010101', 't']
+];
+ML.viz.register('gb-meter', function (el, opts, V) {
+  var use = (opts.lines || LINES.map(function (_, i) { return i; })).map(function (i) { return LINES[i]; }).filter(Boolean), cur = 0, show = false;
+  var box = document.createElement('div'); box.className = 'gbr'; el.appendChild(box);
+  var src = document.createElement('p'); src.className = 'gbr-lines'; box.appendChild(src);
+  var row = document.createElement('div'); row.className = 'gbr-syl'; row.setAttribute('aria-live', 'polite'); box.appendChild(row);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  var ro = V.readout(el);
+  function draw() {
+    var L = use[cur], sy = L[2].split('|'), st = L[3], n = sy.length, stresses = st.split('').filter(function (c) { return c === '1'; }).length;
+    src.innerHTML = '<i>' + L[0] + '</i> <small class="gbr-mut">(' + L[1] + ')</small>';
+    row.innerHTML = '';
+    sy.forEach(function (s, i) {
+      var sp = document.createElement('span'), on = show && st[i] === '1';
+      if (on) sp.className = 'gbr-str';
+      if (show && i % 2 === 1 && i < n - 1) sp.className += ' gbr-ft';
+      sp.innerHTML = '<i>' + (show ? (st[i] === '1' ? 'DUM' : 'da') : '') + '</i>' + s;
+      row.appendChild(sp);
+    });
+    var msg = '<b>' + n + ' syllables.</b> ';
+    if (!show) msg += 'Say the line aloud and tap the table on each syllable. Which ones are louder? Then press <b>Show the beat</b>.';
+    else if (L[4] === 't') msg += 'This line goes DUM-da, DUM-da (a <b>trochee</b> is DUM-da), ' + stresses + ' beats, with the last soft syllable left off. Shakespeare often gives fairies and witches this chanting beat, different from everyone else.';
+    else if (n === 10) msg += 'Five da-DUMs: <b>iambic pentameter</b>, five iambs (an iamb is da-DUM), ' + stresses + ' stresses. It is the beat of most of Shakespeare\'s verse, close to the rhythm of English speech.';
+    else msg += 'Iambic pentameter with one extra soft syllable at the end (' + n + ' syllables, ' + stresses + ' stresses). Actors call it a soft or "feminine" ending; it makes the line sound unfinished, like a mind still thinking.';
+    ro.set(msg);
+  }
+  if (use.length > 1) V.seg(ctl, { label: 'Line', items: use.map(function (L, i) { return [i, L[0].split(' ').slice(0, 3).join(' ').replace(/[,:!?]$/, '') + '…']; }), value: 0, change: function (v) { cur = +v; draw(); } });
+  var b = V.button(ctl, 'Show the beat', function () { show = !show; b.textContent = show ? 'Hide the beat' : 'Show the beat'; draw(); });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbren.shakespeare-sonnets (scripts/greatbooks/src/gbren.shakespeare-sonnets/viz.js) ---- */
+  try { (function () {
+/* gb-sonnet: the shape of a Shakespearean sonnet: three quatrains and a couplet, ABAB CDCD EFEF GG, with the rhymes colored.
+   Text: Project Gutenberg #1041 (spelling as there). opts.n = 18 | 116. */
+/* gbw1 SVG helpers (each viz.js carries its own copy, since each is wrapped on its own). Styles: .gbr-* in this course's viz.css. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || 'gbr-t', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbr'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbr-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl, stage: st };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* a clickable group: Enter/Space activate it too */
+function hit(g, label, fn) {
+  g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbr-hit');
+  g.addEventListener('click', fn);
+  g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+/* a generic cartoon person, in the site's skin color */
+function person(g, x, y, s, cloth) {
+  S('rect', { x: x - 7 * s, y: y - 2 * s, width: 14 * s, height: 18 * s, rx: 6 * s, 'class': cloth || 'gbr-cloth' }, g);
+  S('circle', { cx: x, cy: y - 9 * s, r: 7 * s, 'class': 'gbr-skin' }, g);
+}
+/* wrap text into lines of at most n characters */
+function wrap(s, n) { var w = s.split(' '), out = [], cur = ''; w.forEach(function (x) { if ((cur + ' ' + x).trim().length > n) { if (cur) out.push(cur); cur = x; } else cur = (cur + ' ' + x).trim(); }); if (cur) out.push(cur); return out; }
+var SONS = {
+  18: ['Shall I compare thee to a summer’s day?', 'Thou art more lovely and more temperate:', 'Rough winds do shake the darling buds of May,', 'And summer’s lease hath all too short a date:', 'Sometime too hot the eye of heaven shines,', 'And often is his gold complexion dimm’d,', 'And every fair from fair sometime declines,', 'By chance, or nature’s changing course untrimm’d:', 'But thy eternal summer shall not fade,', 'Nor lose possession of that fair thou ow’st,', 'Nor shall death brag thou wander’st in his shade,', 'When in eternal lines to time thou grow’st,', 'So long as men can breathe, or eyes can see,', 'So long lives this, and this gives life to thee.'],
+  116: ['Let me not to the marriage of true minds', 'Admit impediments. Love is not love', 'Which alters when it alteration finds,', 'Or bends with the remover to remove:', 'O, no! it is an ever-fixed mark,', 'That looks on tempests and is never shaken;', 'It is the star to every wandering bark,', 'Whose worth’s unknown, although his height be taken.', 'Love’s not Time’s fool, though rosy lips and cheeks', 'Within his bending sickle’s compass come;', 'Love alters not with his brief hours and weeks,', 'But bears it out even to the edge of doom.', 'If this be error and upon me prov’d,', 'I never writ, nor no man ever lov’d.']
+};
+var PARTS = { 18: ['The question: should I compare you to a summer day? No: summer is too short and too changeable.', 'Even the sun is sometimes too hot or hidden by clouds, and every lovely thing fades.', 'The turn: but YOUR summer will not fade, because you will live on in these lines.', 'The couplet: as long as people read, this poem lives, and it keeps you alive.'],
+  116: ['True love does not change when circumstances change.', 'It is like a fixed star that guides ships: its worth is beyond measuring.', 'Time can take away youth and beauty, but not love.', 'The couplet: if I am wrong about this, then I never wrote and no one ever loved.'] };
+ML.viz.register('gb-sonnet', function (el, opts, V) {
+  var n = SONS[opts.n] ? opts.n : 18, mode = 'rhyme';
+  var box = document.createElement('div'); box.className = 'gbr gbr-lines'; el.appendChild(box);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  var ro = V.readout(el), SCH = 'ABABCDCDEFEFGG';
+  function draw() {
+    box.innerHTML = '';
+    SONS[n].forEach(function (l, i) {
+      if (i === 4 || i === 8 || i === 12) { var gp = document.createElement('div'); gp.className = 'gbr-gap'; box.appendChild(gp); }
+      var r = document.createElement('div'); r.className = 'gbr-row';
+      var c = SCH.charCodeAt(i) - 65, m = l.match(/^(.*?)([A-Za-z’'-]+)([^A-Za-z’'-]*)$/);
+      var tail = mode === 'rhyme' ? '<b class="gbr-rw" style="border-color:' + ['#d9a520', '#3f9a6a', '#4f7fd1', '#c9654f', '#8e63c9', '#a39a3c', '#c95c95'][c] + '">' + m[2] + '</b>' + m[3] : m[2] + m[3];
+      r.innerHTML = '<span class="gbr-n">' + (i + 1) + '</span>' + (mode === 'rhyme' ? '<span class="gbr-let gbr-r' + c + '">' + SCH[i] + '</span>' : '<span class="gbr-let gbr-r' + Math.min(3, Math.floor(i / 4)) + '">' + (i < 12 ? 'Q' + (Math.floor(i / 4) + 1) : 'C') + '</span>') + '<span>' + m[1] + tail + '</span>';
+      box.appendChild(r);
+    });
+    ro.set(mode === 'rhyme' ? '<b>Sonnet ' + n + '.</b> Fourteen lines of iambic pentameter. Each group of four lines (a <b>quatrain</b>) has its own pair of rhymes, ABAB CDCD EFEF, and a rhyming <b>couplet</b>, GG, closes the poem: seven rhyme sounds in all.' : '<b>What each part says (our summary).</b> ' + PARTS[n].map(function (p, i) { return '<b>' + (i < 3 ? 'Q' + (i + 1) : 'Couplet') + ':</b> ' + p; }).join(' '));
+  }
+  V.seg(ctl, { label: 'Sonnet', items: [[18, 'Sonnet 18'], [116, 'Sonnet 116']], value: n, change: function (v) { n = +v; draw(); } });
+  V.seg(ctl, { label: 'Show', items: [['rhyme', 'Rhymes'], ['parts', 'The four parts']], value: mode, change: function (v) { mode = v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbren.cervantes-don-quixote-1 (scripts/greatbooks/src/gbren.cervantes-don-quixote-1/viz.js) ---- */
+  try { (function () {
+/* gb-windmill: Part One, Chapter VIII. Slide between what Sancho sees (a windmill) and what Don Quixote sees (a giant). Our own drawing:
+   the giant is a generic figure in the site's cartoon skin color. */
+/* gbw1 SVG helpers (each viz.js carries its own copy, since each is wrapped on its own). Styles: .gbr-* in this course's viz.css. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || 'gbr-t', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbr'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbr-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl, stage: st };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* a clickable group: Enter/Space activate it too */
+function hit(g, label, fn) {
+  g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbr-hit');
+  g.addEventListener('click', fn);
+  g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+/* a generic cartoon person, in the site's skin color */
+function person(g, x, y, s, cloth) {
+  S('rect', { x: x - 7 * s, y: y - 2 * s, width: 14 * s, height: 18 * s, rx: 6 * s, 'class': cloth || 'gbr-cloth' }, g);
+  S('circle', { cx: x, cy: y - 9 * s, r: 7 * s, 'class': 'gbr-skin' }, g);
+}
+/* wrap text into lines of at most n characters */
+function wrap(s, n) { var w = s.split(' '), out = [], cur = ''; w.forEach(function (x) { if ((cur + ' ' + x).trim().length > n) { if (cur) out.push(cur); cur = x; } else cur = (cur + ' ' + x).trim(); }); if (cur) out.push(cur); return out; }
+ML.viz.register('gb-windmill', function (el, opts, V) {
+  var F = frame(el, 400, 250, 'A windmill on the plain, or a giant'), sv = F.svg, ro = V.readout(el), m = opts.m || 0, ang = 0, cx = 230, cy = 95;
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 0, width: 400, height: 250, 'class': 'gbr-sky' }, sv);
+    S('path', { d: 'M0,190 Q100,175 200,188 T400,184 L400,250 L0,250 Z', 'class': 'gbr-land' }, sv);
+    var mill = S('g', { opacity: (1 - m).toFixed(2) }, sv);
+    S('path', { d: 'M' + (cx - 22) + ',192 L' + (cx - 14) + ',' + (cy + 4) + ' L' + (cx + 14) + ',' + (cy + 4) + ' L' + (cx + 22) + ',192 Z', 'class': 'gbr-stone' }, mill);
+    S('path', { d: 'M' + (cx - 16) + ',' + (cy + 6) + ' L' + cx + ',' + (cy - 12) + ' L' + (cx + 16) + ',' + (cy + 6) + ' Z', 'class': 'gbr-wood' }, mill);
+    for (var i = 0; i < 4; i++) { var a = ang + i * Math.PI / 2, ex = cx + 74 * Math.cos(a), ey = cy + 74 * Math.sin(a); S('line', { x1: cx, y1: cy, x2: ex, y2: ey, 'class': 'gbr-ln', 'stroke-width': 3 }, mill); var px = -Math.sin(a) * 9, py = Math.cos(a) * 9; S('path', { d: 'M' + (cx + 20 * Math.cos(a)) + ',' + (cy + 20 * Math.sin(a)) + ' L' + ex + ',' + ey + ' L' + (ex + px) + ',' + (ey + py) + ' L' + (cx + 20 * Math.cos(a) + px) + ',' + (cy + 20 * Math.sin(a) + py) + ' Z', 'class': 'gbr-card' }, mill); }
+    var gi = S('g', { opacity: m.toFixed(2) }, sv);
+    S('rect', { x: cx - 26, y: cy - 4, width: 52, height: 100, rx: 18, 'class': 'gbr-cloth2' }, gi);
+    S('rect', { x: cx - 22, y: 180, width: 16, height: 14, rx: 4, 'class': 'gbr-wood' }, gi); S('rect', { x: cx + 6, y: 180, width: 16, height: 14, rx: 4, 'class': 'gbr-wood' }, gi);
+    for (var j = 0; j < 4; j++) { var b = ang + j * Math.PI / 2; S('line', { x1: cx, y1: cy + 10, x2: cx + 70 * Math.cos(b), y2: cy + 10 + 70 * Math.sin(b), stroke: '#e8a93a', 'stroke-width': 9, 'stroke-linecap': 'round' }, gi); }
+    S('circle', { cx: cx, cy: cy - 22, r: 22, 'class': 'gbr-skin' }, gi);
+    S('path', { d: 'M' + (cx - 10) + ',' + (cy - 26) + ' l6,3 M' + (cx + 10) + ',' + (cy - 26) + ' l-6,3', 'class': 'gbr-ln', 'stroke-width': 2 }, gi);
+    S('path', { d: 'M' + (cx - 8) + ',' + (cy - 12) + ' q8,-5 16,0', 'class': 'gbr-ln', 'stroke-width': 2 }, gi);
+    // the knight and his squire, small, on the left
+    S('rect', { x: 46, y: 166, width: 34, height: 16, rx: 6, 'class': 'gbr-f5' }, sv); S('rect', { x: 50, y: 180, width: 4, height: 14, 'class': 'gbr-wood' }, sv); S('rect', { x: 72, y: 180, width: 4, height: 14, 'class': 'gbr-wood' }, sv);
+    person(sv, 62, 156, 0.8, 'gbr-stone'); S('line', { x1: 66, y1: 156, x2: 120, y2: 132, 'class': 'gbr-ln', 'stroke-width': 2.5 }, sv);
+    person(sv, 112, 178, 0.75, 'gbr-cloth3');
+    Tx(sv, 62, 214, 'Don Quixote', 'gbr-m'); Tx(sv, 116, 228, 'Sancho', 'gbr-m');
+    ro.set(m < 0.5 ? '<b>What Sancho sees:</b> a windmill, its sails turning in the wind to grind grain. La Mancha\'s plain was dotted with them.' : '<b>What Don Quixote sees:</b> a monstrous giant waving its long arms. He charges with his lance, a sail catches him, and he and his horse go tumbling. He decides an enchanter turned the giants into windmills to rob him of the glory.');
+  }
+  V.slider(F.ctl, { label: 'Whose eyes?', min: 0, max: 1, step: 0.05, value: m, fmt: function (v) { return v < 0.5 ? 'Sancho\'s' : 'Don Quixote\'s'; }, input: function (v) { m = v; draw(); } });
+  if (!V.reduced) { var lp = V.loop(el, function (dt) { ang += dt * 0.6; draw(); }); V.button(F.ctl, 'Stop the wind', function () { if (lp.running()) { lp.stop(); this.textContent = 'Start the wind'; } else { lp.start(); this.textContent = 'Stop the wind'; } }); }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gbren.cervantes-don-quixote-2 (scripts/greatbooks/src/gbren.cervantes-don-quixote-2/viz.js) ---- */
+  try { (function () {
+/* gb-frames: the boxes inside boxes of Don Quixote: who tells the story to whom. Our own diagram and summaries. */
+/* gbw1 SVG helpers (each viz.js carries its own copy, since each is wrapped on its own). Styles: .gbr-* in this course's viz.css. */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || 'gbr-t', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbr'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbr-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl, stage: st };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* a clickable group: Enter/Space activate it too */
+function hit(g, label, fn) {
+  g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbr-hit');
+  g.addEventListener('click', fn);
+  g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+}
+/* a generic cartoon person, in the site's skin color */
+function person(g, x, y, s, cloth) {
+  S('rect', { x: x - 7 * s, y: y - 2 * s, width: 14 * s, height: 18 * s, rx: 6 * s, 'class': cloth || 'gbr-cloth' }, g);
+  S('circle', { cx: x, cy: y - 9 * s, r: 7 * s, 'class': 'gbr-skin' }, g);
+}
+/* wrap text into lines of at most n characters */
+function wrap(s, n) { var w = s.split(' '), out = [], cur = ''; w.forEach(function (x) { if ((cur + ' ' + x).trim().length > n) { if (cur) out.push(cur); cur = x; } else cur = (cur + ' ' + x).trim(); }); if (cur) out.push(cur); return out; }
+ML.viz.register('gb-frames', function (el, opts, V) {
+  var L = [
+    ['You, the reader', 'You hold the book. In Part Two, Cervantes keeps reminding you that you are reading a story about people who read stories.'],
+    ['Cervantes, the "second author"', 'The narrator says that in Part One, Chapter IX, he found the rest of the story in Arabic notebooks sold in the market of Toledo, and paid someone to translate them.'],
+    ['The translator', 'A Spanish speaker of Arabic who turns the notebooks into Spanish, and who now and then adds his own doubts about a chapter.'],
+    ['Cide Hamete Benengeli', 'The invented Arab historian who is supposed to have written the "true history." The narrator jokes that he may not be reliable.'],
+    ['Don Quixote and Sancho', 'The knight and his squire themselves, living out the adventures.'],
+    ['Readers inside the book', 'In Part Two, people they meet have read Part One: the student Sansón Carrasco, and a Duke and Duchess who play tricks on them because they know the story. The characters even hear of a false sequel by another author (published in 1614) and change their route to prove it wrong.']
+  ];
+  var F = frame(el, 400, 290, 'Nested boxes: who tells the story of Don Quixote'), sv = F.svg, ro = V.readout(el), cur = opts.layer == null ? 4 : opts.layer;
+  function draw() {
+    clear(sv);
+    S('rect', { x: 0, y: 0, width: 400, height: 290, 'class': 'gbr-bg' }, sv);
+    for (var i = 0; i < 5; i++) {
+      var g = S('g', { 'class': i === cur ? 'gbr-on' : '' }, sv), pad = i * 24;
+      S('rect', { x: 8 + pad, y: 8 + pad, width: 384 - 2 * pad, height: 274 - 2 * pad, rx: 14, 'class': 'gbr-f' + i + ' gbr-sec' }, g);
+      Tx(g, 20 + pad, 24 + pad, L[i][0], 'gbr-b', 'start');
+      hit(g, L[i][0], (function (k) { return function () { cur = k; draw(); }; })(i));
+    }
+    person(sv, 176, 172, 1.1, 'gbr-stone'); person(sv, 222, 178, 1, 'gbr-cloth3');
+    var gr = S('g', { 'class': cur === 5 ? 'gbr-on' : '' }, sv);
+    S('rect', { x: 250, y: 196, width: 112, height: 34, rx: 8, 'class': 'gbr-card' }, gr); Tx(gr, 306, 211, 'readers of Part One,', 'gbr-m'); Tx(gr, 306, 224, 'inside Part Two', 'gbr-m');
+    hit(gr, L[5][0], function () { cur = 5; draw(); });
+    ro.set('<b>' + L[cur][0] + '.</b> ' + L[cur][1]);
+  }
+  V.seg(F.ctl, { label: 'Layer', items: L.map(function (l, i) { return [i, ['Reader', 'Cervantes', 'Translator', 'Cide Hamete', 'Knight and squire', 'Readers inside'][i]]; }), value: cur, change: function (v) { cur = +v; draw(); } });
+  draw();
+});
   })(); } catch (e) { if (W.console) console.error(e); }
     return true;
   }

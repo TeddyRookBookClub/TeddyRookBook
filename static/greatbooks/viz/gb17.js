@@ -75,6 +75,62 @@
   });
 })();
   })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb17.bacon-advancement-of-learning (scripts/greatbooks/src/gb17.bacon-advancement-of-learning/viz.js) ---- */
+  try { (function () {
+/* gb17.bacon-advancement-of-learning: visuals (gbw2, our own design). */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbw-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbw-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl gbw-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function person(g, x, y, s, robe) { // a generic standing figure in the site's cartoon skin color
+  s = s || 1;
+  S('path', { d: 'M' + (x - 8 * s) + ',' + (y + 22 * s) + ' L' + (x - 6 * s) + ',' + (y + 2 * s) + ' Q' + x + ',' + (y - 2 * s) + ' ' + (x + 6 * s) + ',' + (y + 2 * s) + ' L' + (x + 8 * s) + ',' + (y + 22 * s) + ' Z', 'class': 'gbw-robe' + (robe ? ' ' + robe : '') }, g);
+  S('circle', { cx: x, cy: y - 6 * s, r: 6 * s, 'class': 'gbw-skin' }, g);
+}
+function clickable(g, label, fn) { g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbw-click'); g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } }); return g; }
+/* gb-bacon-map: Bacon's division of learning by the three powers of the mind (Advancement, Second Book). */
+ML.viz.register('gb-bacon-map', function (el, opts, V) {
+  var F = frame(el, 400, 250, 'Bacon\'s map of learning: memory, imagination and reason'), sv = F.svg, ro = V.readout(el);
+  var B = [
+    { pow: 'Memory', art: 'History', kids: [['Natural', 'the history of nature: creatures, the heavens, and the arts and trades'], ['Civil', 'the history of peoples and governments'], ['Church', 'the history of religion and the church'], ['Learning', 'the history of learning itself']], gap: 'Bacon said there was no proper history of the arts and trades, and no history of learning: who discovered what, and how.', young: 'What happened: the story of nature, of countries and of people.' },
+    { pow: 'Imagination', art: 'Poesy', kids: [['Narrative', 'stories told in words, like epics and histories in verse'], ['Dramatic', 'stories acted on a stage'], ['Allegorical', 'stories with a hidden meaning, like fables']], gap: 'Bacon found no gap here: poetry was well supplied. He says poetry is free to join what nature keeps apart, and to part what nature joins.', young: 'Stories, poems and plays: things people imagine.' },
+    { pow: 'Reason', art: 'Philosophy', kids: [['Divine', 'what reason alone can learn about God'], ['Natural', 'the causes of things, and the works they lead to'], ['Human', 'the body and mind, ethics, and life in society']], gap: 'Bacon said the art of discovery itself was missing: a method for finding new things, not just arguing about old ones. His Novum Organum (1620) tried to supply it.', young: 'Why things happen: science, mathematics and thinking about right and wrong.' }
+  ];
+  var cur = opts.pick == null ? -1 : opts.pick;
+  function draw() {
+    clear(sv);
+    S('rect', { x: 140, y: 8, width: 120, height: 30, rx: 8, 'class': 'gbw-box' }, sv);
+    Tx(sv, 200, 28, 'Human learning', 'b serif');
+    B.forEach(function (b, i) {
+      var x = 20 + i * 125, on = cur === i;
+      S('path', { d: 'M200,38 C200,52 ' + (x + 55) + ',48 ' + (x + 55) + ',62', 'class': on ? 'gbw-hot' : 'gbw-line' }, sv);
+      var g = S('g', {}, sv);
+      S('rect', { x: x, y: 62, width: 110, height: 44, rx: 9, 'class': on ? 'gbw-on' : 'gbw-box' }, g);
+      Tx(g, x + 55, 80, b.pow, 'sm mut');
+      Tx(g, x + 55, 97, b.art, 'b');
+      clickable(g, b.pow + ': ' + b.art, function () { cur = cur === i ? -1 : i; draw(); });
+      if (on) {
+        b.kids.forEach(function (k, j) {
+          var y = 122 + j * 30;
+          S('path', { d: 'M' + (x + 55) + ',106 L' + (x + 55) + ',' + (y + 12), 'class': 'gbw-line' }, sv);
+          S('rect', { x: x + 8, y: y, width: 94, height: 24, rx: 6, 'class': 'gbw-box' }, sv);
+          Tx(sv, x + 55, y + 16, k[0], 'sm b');
+        });
+      }
+    });
+    if (cur < 0) { Tx(sv, 200, 160, 'Tap a branch to open it.', 'mut'); ro.set('Bacon divides all learning by the three powers of the mind: <b>memory</b>, <b>imagination</b> and <b>reason</b>.'); return; }
+    var b = B[cur];
+    ro.set('<b>' + b.pow + ' → ' + b.art + '.</b> ' + (opts.young ? b.young : b.kids.map(function (k) { return '<b>' + k[0] + '</b>: ' + k[1]; }).join('; ') + '. <span style="color:var(--gb-gold)">Gap:</span> ' + b.gap));
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
   /* ---- gb17.kepler-harmonies (scripts/greatbooks/src/gb17.kepler-harmonies/viz.js) ---- */
   try { (function () {
 /* gb-harmony: Kepler's planetary "music" (Harmonies of the World, Book V).
@@ -651,6 +707,164 @@
   });
 })();
   })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb17.descartes-meditations (scripts/greatbooks/src/gb17.descartes-meditations/viz.js) ---- */
+  try { (function () {
+/* gb17.descartes-meditations: visuals (gbw2, our own design). */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbw-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbw-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl gbw-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function person(g, x, y, s, robe) { // a generic standing figure in the site's cartoon skin color
+  s = s || 1;
+  S('path', { d: 'M' + (x - 8 * s) + ',' + (y + 22 * s) + ' L' + (x - 6 * s) + ',' + (y + 2 * s) + ' Q' + x + ',' + (y - 2 * s) + ' ' + (x + 6 * s) + ',' + (y + 2 * s) + ' L' + (x + 8 * s) + ',' + (y + 22 * s) + ' Z', 'class': 'gbw-robe' + (robe ? ' ' + robe : '') }, g);
+  S('circle', { cx: x, cy: y - 6 * s, r: 6 * s, 'class': 'gbw-skin' }, g);
+}
+function clickable(g, label, fn) { g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbw-click'); g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } }); return g; }
+/* gb-doubt: six days of the Meditations as a wall of beliefs knocked down and rebuilt on one foundation stone. */
+ML.viz.register('gb-doubt', function (el, opts, V) {
+  var F = frame(el, 400, 240, 'The Meditations: beliefs doubted and rebuilt, day by day'), sv = F.svg, ro = V.readout(el);
+  // blocks: [label, row, col, doubted on day, rebuilt on day]  (row 0 = bottom)
+  var BL = [['I exist', 0, 1, 99, 2], ['I am a thinking thing', 1, 1, 99, 2], ['God exists, no deceiver', 2, 1, 99, 3], ['clear and distinct ideas', 3, 1, 99, 4], ['geometry, extension', 4, 1, 1, 5], ['my senses', 1, 0, 1, 6], ['my body', 2, 0, 1, 6], ['the world around me', 3, 0, 1, 6], ['I am awake', 1, 2, 1, 6], ['2 + 3 = 5', 2, 2, 1, 5]];
+  var D = [
+    ['Day I', 'Doubt everything that could possibly be false: the senses, being awake, even arithmetic, with the help of an imagined deceiving demon. Everything falls.'],
+    ['Day II', '<b>I am, I exist</b>: even a deceiver cannot make me nothing while I think. I am a thinking thing. The wax shows that the mind, not the senses, grasps what bodies are.'],
+    ['Day III', 'The idea of an infinite, perfect being must come from such a being: <b>God exists</b>, and a perfect God is no deceiver.'],
+    ['Day IV', 'Error comes when the will outruns the understanding. Trust <b>clear and distinct</b> ideas, and hold back judgment on the rest.'],
+    ['Day V', 'The essence of bodies is <b>extension</b>, the subject of geometry. Mathematics is certain again. A second proof of God.'],
+    ['Day VI', 'Mind and body are distinct but closely joined. <b>Bodies exist</b>; the senses are a fair guide to what helps or harms us; waking life hangs together as dreams do not.']
+  ];
+  var day = opts.day || 1;
+  function draw() {
+    clear(sv);
+    S('rect', { x: 10, y: 214, width: 380, height: 10, rx: 3, 'class': 'gbw-box' }, sv);
+    BL.forEach(function (b) {
+      var up = day >= b[4], w = 118, x = 14 + b[2] * 125, y = 182 - b[1] * 34;
+      if (!up && b[3] > day) return; // not built yet
+      if (!up) { // doubted: a faint dashed outline, struck through
+        S('rect', { x: x, y: y, width: w, height: 30, rx: 5, 'class': 'gbw-doubt' }, sv);
+        Tx(sv, x + w / 2, y + 19, b[0], 'sm mut');
+        S('line', { x1: x + 10, y1: y + 15, x2: x + w - 10, y2: y + 15, 'class': 'gbw-strike' }, sv);
+        return;
+      }
+      var fresh = day === b[4];
+      S('rect', { x: x, y: y, width: w, height: 30, rx: 5, 'class': fresh ? 'gbw-on' : 'gbw-box' }, sv);
+      Tx(sv, x + w / 2, y + 19, b[0], b[1] === 0 ? 'sm b' : 'sm');
+    });
+    Tx(sv, 200, 14, D[day - 1][0], 'b serif');
+    ro.set('<b>' + D[day - 1][0] + '.</b> ' + D[day - 1][1]);
+  }
+  V.seg(F.ctl, { label: 'Meditation', items: D.map(function (d, i) { return [i + 1, d[0]]; }), value: day, change: function (v) { day = +v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb17.hobbes-leviathan (scripts/greatbooks/src/gb17.hobbes-leviathan/viz.js) ---- */
+  try { (function () {
+/* gb17.hobbes-leviathan: visuals (gbw2, our own design). */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbw-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbw-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl gbw-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function person(g, x, y, s, robe) { // a generic standing figure in the site's cartoon skin color
+  s = s || 1;
+  S('path', { d: 'M' + (x - 8 * s) + ',' + (y + 22 * s) + ' L' + (x - 6 * s) + ',' + (y + 2 * s) + ' Q' + x + ',' + (y - 2 * s) + ' ' + (x + 6 * s) + ',' + (y + 2 * s) + ' L' + (x + 8 * s) + ',' + (y + 22 * s) + ' Z', 'class': 'gbw-robe' + (robe ? ' ' + robe : '') }, g);
+  S('circle', { cx: x, cy: y - 6 * s, r: 6 * s, 'class': 'gbw-skin' }, g);
+}
+function clickable(g, label, fn) { g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbw-click'); g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } }); return g; }
+/* gb-leviathan: the state of nature, the covenant and the commonwealth (Leviathan XIII-XVIII), drawn as generic figures. */
+ML.viz.register('gb-leviathan', function (el, opts, V) {
+  var F = frame(el, 400, 230, 'Hobbes: from the state of nature to the commonwealth'), sv = F.svg, ro = V.readout(el);
+  var ST = [
+    ['State of nature', 'No common power over anyone. Roughly equal people want the same things and distrust one another, so each is ready to strike first: a war of every man against every man. No farming, no building, no learning, and continual fear.'],
+    ['The covenant', 'Each person agrees with every other: I give up my right of governing myself to this person or assembly, if you do the same. The agreement is among the people; the sovereign is not a party to it.'],
+    ['Commonwealth', 'The sovereign holds the united power of all and keeps the peace. Now there is room for work, trade, arts and letters. Subjects still keep the right to defend their own lives.']
+  ];
+  var st = opts.stage || 0;
+  var P = [[60, 120], [120, 70], [190, 140], [260, 80], [330, 130], [95, 180], [230, 190], [320, 190]];
+  function draw() {
+    clear(sv);
+    var cx = 200, cy = 112, ring = [];
+    for (var i = 0; i < P.length; i++) { var a = -Math.PI / 2 + i * 2 * Math.PI / P.length; ring.push([cx + 150 * Math.cos(a) * 0.95, cy + 78 * Math.sin(a) + 6]); }
+    var pos = st === 0 ? P : ring;
+    if (st === 0) { // arrows of distrust between neighbours
+      [[0, 1], [1, 3], [2, 4], [0, 5], [2, 6], [4, 7], [3, 2], [5, 6]].forEach(function (e) { var a = P[e[0]], b = P[e[1]]; S('line', { x1: a[0], y1: a[1], x2: b[0], y2: b[1], 'class': 'gbw-line', 'stroke-dasharray': '4 4' }, sv); });
+      Tx(sv, 200, 222, 'every one against every one', 'sm mut');
+    } else {
+      if (st === 1) for (var j = 0; j < ring.length; j++) { var n = ring[(j + 1) % ring.length]; S('path', { d: 'M' + ring[j][0] + ',' + ring[j][1] + ' Q' + cx + ',' + cy + ' ' + n[0] + ',' + n[1], 'class': 'gbw-line' }, sv); }
+      if (st === 2) ring.forEach(function (r) { S('line', { x1: r[0], y1: r[1], x2: cx, y2: cy, 'class': 'gbw-hot' }, sv); });
+      // the sovereign's seat: a crown on a pedestal (no portrait)
+      S('rect', { x: cx - 30, y: cy - 6, width: 60, height: 34, rx: 6, 'class': st === 2 ? 'gbw-on' : 'gbw-box' }, sv);
+      S('path', { d: 'M' + (cx - 18) + ',' + (cy - 8) + ' l4,-18 l8,10 l6,-14 l6,14 l8,-10 l4,18 z', 'class': 'gbw-crown' + (st === 2 ? '' : ' gbw-off') }, sv);
+      Tx(sv, cx, cy + 16, st === 2 ? 'sovereign' : '(to be chosen)', 'sm b');
+      Tx(sv, 200, 222, st === 1 ? 'each agrees with each' : 'one common power keeps the peace', 'sm mut');
+    }
+    pos.forEach(function (p, i) { person(sv, p[0], p[1] - 14, 0.85, st === 0 && i % 3 === 0 ? 'gbw-robe2' : ''); });
+    ro.set('<b>' + (st + 1) + '. ' + ST[st][0] + '.</b> ' + ST[st][1]);
+  }
+  V.seg(F.ctl, { label: 'Stage', items: ST.map(function (s, i) { return [i, (i + 1) + '. ' + s[0]]; }), value: st, change: function (v) { st = +v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb17.spinoza-ethics (scripts/greatbooks/src/gb17.spinoza-ethics/viz.js) ---- */
+  try { (function () {
+/* gb17.spinoza-ethics: visuals (gbw2, our own design). */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbw-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbw-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl gbw-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function person(g, x, y, s, robe) { // a generic standing figure in the site's cartoon skin color
+  s = s || 1;
+  S('path', { d: 'M' + (x - 8 * s) + ',' + (y + 22 * s) + ' L' + (x - 6 * s) + ',' + (y + 2 * s) + ' Q' + x + ',' + (y - 2 * s) + ' ' + (x + 6 * s) + ',' + (y + 2 * s) + ' L' + (x + 8 * s) + ',' + (y + 22 * s) + ' Z', 'class': 'gbw-robe' + (robe ? ' ' + robe : '') }, g);
+  S('circle', { cx: x, cy: y - 6 * s, r: 6 * s, 'class': 'gbw-skin' }, g);
+}
+function clickable(g, label, fn) { g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbw-click'); g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } }); return g; }
+/* gb-affects: Spinoza's compound emotions (Ethics III, Definitions of the Emotions), in our own words.
+   base (pleasure or pain) + an accompanying idea -> the named emotion. */
+ML.viz.register('gb-affects', function (el, opts, V) {
+  var F = frame(el, 400, 200, 'Spinoza\'s emotions: a basic feeling plus an idea gives a named emotion'), sv = F.svg, ro = V.readout(el);
+  var IDEA = [['ext', 'an outside cause', 'thinking of an outside cause'], ['doubt', 'something uncertain', 'thinking of something past or future whose outcome is in doubt'], ['sure', 'something now certain', 'thinking of something past or future, with all doubt removed'], ['self', 'oneself', 'looking at oneself and one\'s own power (or weakness)']];
+  var R = { 'plus-ext': ['Love', 'VI'], 'minus-ext': ['Hatred', 'VII'], 'plus-doubt': ['Hope', 'XII'], 'minus-doubt': ['Fear', 'XIII'], 'plus-sure': ['Confidence', 'XIV'], 'minus-sure': ['Despair', 'XV'], 'plus-self': ['Self-approval', 'XXV'], 'minus-self': ['Humility', 'XXVI'] };
+  var YNG = { Love: 'You feel glad, and you know who or what made you glad.', Hatred: 'You feel bad, and you blame someone or something outside you.', Hope: 'Gladness about something that might happen, but you are not sure.', Fear: 'Sadness about something that might happen, but you are not sure.', Confidence: 'Hope with the doubt taken away.', Despair: 'Fear with the doubt taken away.', 'Self-approval': 'Gladness when you think about what you can do.', Humility: 'Sadness when you think about what you can\'t do.' };
+  var base = opts.base || 'plus', idea = opts.idea || 'ext';
+  function draw() {
+    clear(sv);
+    var r = R[base + '-' + idea], ii = IDEA.filter(function (x) { return x[0] === idea; })[0];
+    S('rect', { x: 14, y: 60, width: 110, height: 60, rx: 10, 'class': 'gbw-box' }, sv);
+    Tx(sv, 69, 86, base === 'plus' ? 'Pleasure' : 'Pain', 'b');
+    Tx(sv, 69, 104, base === 'plus' ? '(joy)' : '(sadness)', 'sm mut');
+    Tx(sv, 140, 96, '+', 'b');
+    S('rect', { x: 156, y: 60, width: 110, height: 60, rx: 10, 'class': 'gbw-box' }, sv);
+    Tx(sv, 211, 86, 'the idea of', 'sm mut'); Tx(sv, 211, 104, ii[1], 'sm b');
+    S('path', { d: 'M270,90 L290,90 M284,84 L290,90 L284,96', 'class': 'gbw-hot' }, sv);
+    S('rect', { x: 294, y: 54, width: 96, height: 72, rx: 12, 'class': 'gbw-on' }, sv);
+    Tx(sv, 342, 94, r[0], 'b serif');
+    Tx(sv, 342, 112, 'Def. ' + r[1], 'sm mut');
+    Tx(sv, 200, 22, 'Desire, pleasure and pain are the three basic emotions', 'sm mut');
+    Tx(sv, 200, 160, 'Change the two parts below and watch the emotion change.', 'sm mut');
+    ro.set(opts.young ? '<b>' + r[0] + ':</b> ' + YNG[r[0]] : '<b>' + r[0] + '</b> (Part III, Definitions of the Emotions, ' + r[1] + '): ' + (base === 'plus' ? 'pleasure' : 'pain') + ' that comes with ' + ii[2] + '. In our words; Spinoza\'s own definitions are more exact.');
+  }
+  V.seg(F.ctl, { label: 'Basic feeling', items: [['plus', 'Pleasure'], ['minus', 'Pain']], value: base, change: function (v) { base = v; draw(); } });
+  V.seg(F.ctl, { label: 'Joined to the idea of', items: IDEA.map(function (x) { return [x[0], x[1]]; }), value: idea, change: function (v) { idea = v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
   /* ---- gb17.pascal-scientific-treatises (scripts/greatbooks/src/gb17.pascal-scientific-treatises/viz.js) ---- */
   try { (function () {
 /* Pascal: the barometer on the Puy de Dôme, and the arithmetical triangle. Our own designs. */
@@ -776,6 +990,319 @@
     return { update: paint };
   });
 })();
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb17.pascal-provincial-letters (scripts/greatbooks/src/gb17.pascal-provincial-letters/viz.js) ---- */
+  try { (function () {
+/* gb17.pascal-provincial-letters: visuals (gbw2, our own design). */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbw-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbw-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl gbw-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function person(g, x, y, s, robe) { // a generic standing figure in the site's cartoon skin color
+  s = s || 1;
+  S('path', { d: 'M' + (x - 8 * s) + ',' + (y + 22 * s) + ' L' + (x - 6 * s) + ',' + (y + 2 * s) + ' Q' + x + ',' + (y - 2 * s) + ' ' + (x + 6 * s) + ',' + (y + 2 * s) + ' L' + (x + 8 * s) + ',' + (y + 22 * s) + ' Z', 'class': 'gbw-robe' + (robe ? ' ' + robe : '') }, g);
+  S('circle', { cx: x, cy: y - 6 * s, r: 6 * s, 'class': 'gbw-skin' }, g);
+}
+function clickable(g, label, fn) { g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbw-click'); g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } }); return g; }
+/* gb-provincial: the eighteen Provincial Letters on a timeline, January 1656 to March 1657, in three groups. */
+ML.viz.register('gb-provincial', function (el, opts, V) {
+  var F = frame(el, 400, 170, 'The eighteen Provincial Letters, 1656 to 1657'), sv = F.svg, ro = V.readout(el);
+  var RN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII'];
+  var G = [[0, 2, 'Letters to a friend: the Sorbonne quarrel over grace', 'gbw-g1'], [3, 9, 'Letters to a friend: dialogues with a Jesuit casuist', 'gbw-g2'], [10, 17, 'Letters to the Jesuit Fathers (XVII–XVIII to Father Annat)', 'gbw-g3']];
+  var NOTE = { 0: 'The narrator learns that the censure of Arnauld turns on the word "proximate", which nobody can define.', 1: 'Sufficient grace, which (as the narrator finds) does not suffice.', 4: 'The good Father explains probable opinions: one learned author is enough to make an opinion safe to follow.', 6: 'Directing the intention: how an act might be excused by fixing the mind on a harmless purpose.', 10: 'Pascal drops the fictional friend, writes to the Jesuits directly, and defends the use of irony against error.', 15: 'It ends with the apology that it is long only because he lacked the leisure to make it shorter.', 16: 'To Father Annat: back to the grace dispute and the five propositions.', 17: 'The last letter, March 1657.' };
+  var cur = opts.pick == null ? 0 : opts.pick;
+  function grp(i) { for (var k = 0; k < G.length; k++) if (i >= G[k][0] && i <= G[k][1]) return G[k]; }
+  function draw() {
+    clear(sv);
+    var DT = ['Jan–Feb 1656', 'Feb–Aug 1656', 'Aug 1656–Mar 1657'];
+    G.forEach(function (gr, r) {
+      var y = 14 + r * 46;
+      Tx(sv, 8, y + 9, DT[r], 'sm mut', 'start');
+      for (var i = gr[0]; i <= gr[1]; i++) (function (i) {
+        var x = 8 + (i - gr[0]) * 48, on = i === cur, g = S('g', {}, sv);
+        S('rect', { x: x, y: y + 14, width: 44, height: 24, rx: 5, 'class': (on ? 'gbw-on ' : '') + gr[3] }, g);
+        Tx(g, x + 22, y + 30, RN[i], 'sm' + (on ? ' b' : ''));
+        clickable(g, 'Letter ' + RN[i], function () { cur = i; draw(); });
+      })(i);
+    });
+    Tx(sv, 392, 160, 'Tap a letter.', 'sm mut', 'end');
+    var g = grp(cur);
+    ro.set('<b>Letter ' + RN[cur] + '.</b> ' + g[2] + '. ' + (NOTE[cur] || ''));
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb17.pascal-pensees (scripts/greatbooks/src/gb17.pascal-pensees/viz.js) ---- */
+  try { (function () {
+/* gb17.pascal-pensees: visuals (gbw2, our own design). */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbw-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbw-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl gbw-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function person(g, x, y, s, robe) { // a generic standing figure in the site's cartoon skin color
+  s = s || 1;
+  S('path', { d: 'M' + (x - 8 * s) + ',' + (y + 22 * s) + ' L' + (x - 6 * s) + ',' + (y + 2 * s) + ' Q' + x + ',' + (y - 2 * s) + ' ' + (x + 6 * s) + ',' + (y + 2 * s) + ' L' + (x + 8 * s) + ',' + (y + 22 * s) + ' Z', 'class': 'gbw-robe' + (robe ? ' ' + robe : '') }, g);
+  S('circle', { cx: x, cy: y - 6 * s, r: 6 * s, 'class': 'gbw-skin' }, g);
+}
+function clickable(g, label, fn) { g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbw-click'); g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } }); return g; }
+/* gb-wager: Pascal's wager (Pensees 233) as an expected-value table. EV(bet) = p * reward - cost; EV(not) = 0.
+   With an infinite reward, any chance above zero gives an infinite expected value, which is Pascal's point. */
+ML.viz.register('gb-wager', function (el, opts, V) {
+  var F = frame(el, 400, 190, 'Pascal\'s wager as a table of chances and payoffs'), sv = F.svg, ro = V.readout(el);
+  var mode = opts.mode || 'inf', p = opts.p || 0.1, c = opts.c || 5, R = opts.R || 40;
+  function draw() {
+    clear(sv);
+    var inf = mode === 'inf', ev = inf ? Infinity : p * R - c;
+    // table
+    var X = [10, 120, 260], Y = [10, 46, 92], W = [110, 140, 130];
+    var head = ['', 'God is (chance ' + Math.round(p * 100) + '%)', 'God is not (' + Math.round((1 - p) * 100) + '%)'];
+    var rows = [['Wager for', inf ? 'infinite gain' : '+' + R, '−' + c + ' (a finite life)'], ['Wager against', 'finite gain at most', '+0 (or small pleasures)']];
+    for (var j = 0; j < 3; j++) { S('rect', { x: X[j], y: Y[0], width: W[j], height: 34, 'class': 'gbw-box' }, sv); Tx(sv, X[j] + W[j] / 2, Y[0] + 21, head[j], 'sm b'); }
+    rows.forEach(function (r, i) { for (var j = 0; j < 3; j++) { S('rect', { x: X[j], y: Y[i + 1], width: W[j], height: 44, 'class': j === 0 ? 'gbw-box' : (i === 0 && j === 1 ? 'gbw-on' : 'gbw-box') }, sv); Tx(sv, X[j] + W[j] / 2, Y[i + 1] + 27, r[j], j === 0 ? 'sm b' : 'sm'); } });
+    Tx(sv, 200, 160, 'Expected value of wagering that He is: ' + (inf ? '∞ (for any chance above zero)' : V.fmt(p, 2) + ' × ' + R + ' − ' + c + ' = ' + V.fmt(ev, 2)), 'sm b');
+    Tx(sv, 200, 180, inf ? 'Pascal: an infinite prize outweighs any finite stake.' : (ev > 0 ? 'With this finite prize, betting still comes out ahead.' : 'With this finite prize, betting does not pay on average.'), 'sm mut');
+    ro.set(inf ? 'As Pascal frames it, the reward if God is and you wagered for Him is an infinite happiness, while the stake is finite. So the expected value is infinite whenever the chance is above zero. Critics reply with the questions in “Going deeper”: which God, whether belief can be chosen, and whether such a bet is the right reason to believe.' : 'With a finite prize the answer depends on the numbers: betting pays on average only when chance × prize is larger than the stake. Move the sliders to find the break-even point.');
+  }
+  V.seg(F.ctl, { label: 'The prize if God is', items: [['inf', 'Infinite (Pascal)'], ['fin', 'Finite (test)']], value: mode, change: function (v) { mode = v; draw(); } });
+  V.slider(F.ctl, { label: 'Chance that God is', min: 0.01, max: 0.99, step: 0.01, value: p, fmt: function (v) { return Math.round(v * 100) + '%'; }, input: function (v) { p = v; draw(); } });
+  V.slider(F.ctl, { label: 'Stake (what you give up)', min: 1, max: 20, step: 1, value: c, fmt: function (v) { return String(v); }, input: function (v) { c = v; draw(); } });
+  V.slider(F.ctl, { label: 'Finite prize', min: 10, max: 200, step: 5, value: R, fmt: function (v) { return String(v); }, input: function (v) { R = v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb17.milton-paradise-lost (scripts/greatbooks/src/gb17.milton-paradise-lost/viz.js) ---- */
+  try { (function () {
+/* gb17.milton-paradise-lost: visuals (gbw2, our own design). */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbw-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbw-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl gbw-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function person(g, x, y, s, robe) { // a generic standing figure in the site's cartoon skin color
+  s = s || 1;
+  S('path', { d: 'M' + (x - 8 * s) + ',' + (y + 22 * s) + ' L' + (x - 6 * s) + ',' + (y + 2 * s) + ' Q' + x + ',' + (y - 2 * s) + ' ' + (x + 6 * s) + ',' + (y + 2 * s) + ' L' + (x + 8 * s) + ',' + (y + 22 * s) + ' Z', 'class': 'gbw-robe' + (robe ? ' ' + robe : '') }, g);
+  S('circle', { cx: x, cy: y - 6 * s, r: 6 * s, 'class': 'gbw-skin' }, g);
+}
+function clickable(g, label, fn) { g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbw-click'); g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } }); return g; }
+/* gb-pl-cosmos: Milton's universe in Paradise Lost: Heaven above, Hell below, Chaos between, and the created World
+   hanging from Heaven by a golden chain (Book II). The story's parts light up where they happen; Satan's route is dashed. */
+ML.viz.register('gb-pl-cosmos', function (el, opts, V) {
+  var F = frame(el, 400, 300, 'Milton\'s universe: Heaven, Chaos, the World and Hell'), sv = F.svg, ro = V.readout(el);
+  var P = [
+    ['I–II', 'hell', 'Hell and the long journey', 'Satan and the rebel angels lie in Hell. After their council, Satan crosses the wild, dark sea of Chaos alone, heading upward toward the new world.'],
+    ['III', 'heaven', 'Heaven', 'God and the Son speak of human freedom and of redemption. Satan reaches the outside of the World and finds the way in.'],
+    ['IV', 'world', 'Eden', 'Inside the World, on Earth, Satan finds Adam and Eve in the Garden of Eden. The guardian angels drive him out.'],
+    ['V–VIII', 'heaven', 'Raphael\'s story', 'Raphael tells Adam of the war in Heaven, when the rebels were driven down through Chaos into Hell, and of the creation of the World.'],
+    ['IX–X', 'world', 'The Fall', 'In Eden, Satan as a serpent tempts Eve, and Adam eats too. A great bridge is built across Chaos from Hell to the World.'],
+    ['XI–XII', 'world', 'Leaving Eden', 'Michael shows Adam the future, then leads Adam and Eve out of the garden into the world.']
+  ];
+  var cur = opts.part || 0;
+  function draw() {
+    clear(sv);
+    var p = P[cur], z = p[1];
+    S('rect', { x: 40, y: 8, width: 320, height: 58, rx: 28, 'class': z === 'heaven' ? 'gbw-on' : 'gbw-heaven' }, sv); Tx(sv, 200, 40, 'Heaven', 'b serif');
+    S('rect', { x: 10, y: 66, width: 380, height: 168, rx: 14, 'class': 'gbw-chaos' }, sv); Tx(sv, 340, 150, 'Chaos', 'sm mut serif');
+    S('line', { x1: 200, y1: 66, x2: 200, y2: 98, 'class': 'gbw-chain' }, sv);
+    S('circle', { cx: 200, cy: 128, r: 30, 'class': z === 'world' ? 'gbw-on' : 'gbw-box' }, sv); Tx(sv, 200, 126, 'the World', 'sm b'); Tx(sv, 200, 140, '(Earth, Eden)', 'sm mut');
+    S('rect', { x: 60, y: 234, width: 280, height: 58, rx: 10, 'class': z === 'hell' ? 'gbw-on' : 'gbw-hell' }, sv); Tx(sv, 200, 268, 'Hell', 'b serif');
+    var route = cur === 0 || cur === 1 ? 'M150,240 C110,200 120,150 170,140' : cur === 3 ? 'M120,66 C90,140 100,200 130,234' : cur === 4 ? 'M200,234 L200,158' : '';
+    if (route) S('path', { d: route, 'class': 'gbw-hot', 'stroke-dasharray': '6 4' }, sv);
+    if (cur === 4) Tx(sv, 214, 200, 'the bridge', 'sm acc', 'start');
+    if (cur === 3) Tx(sv, 60, 160, 'the fall of the rebels', 'sm acc', 'start');
+    if (cur === 0) Tx(sv, 60, 200, 'Satan\'s route', 'sm acc', 'start');
+    ro.set('<b>Books ' + p[0] + ': ' + p[2] + '.</b> ' + p[3]);
+  }
+  V.seg(F.ctl, { label: 'Part of the poem', items: P.map(function (p, i) { return [i, p[0]]; }), value: cur, change: function (v) { cur = +v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb17.milton-areopagitica-and-poems (scripts/greatbooks/src/gb17.milton-areopagitica-and-poems/viz.js) ---- */
+  try { (function () {
+/* gb17.milton-areopagitica-and-poems: visuals (gbw2, our own designs). */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbw-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbw-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl gbw-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function person(g, x, y, s, robe) { // a generic standing figure in the site's cartoon skin color
+  s = s || 1;
+  S('path', { d: 'M' + (x - 8 * s) + ',' + (y + 22 * s) + ' L' + (x - 6 * s) + ',' + (y + 2 * s) + ' Q' + x + ',' + (y - 2 * s) + ' ' + (x + 6 * s) + ',' + (y + 2 * s) + ' L' + (x + 8 * s) + ',' + (y + 22 * s) + ' Z', 'class': 'gbw-robe' + (robe ? ' ' + robe : '') }, g);
+  S('circle', { cx: x, cy: y - 6 * s, r: 6 * s, 'class': 'gbw-skin' }, g);
+}
+function clickable(g, label, fn) { g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbw-click'); g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } }); return g; }
+/* gb-licensing: the path of a book under the 1643 Licensing Order versus Milton's proposal in Areopagitica (1644). */
+ML.viz.register('gb-licensing', function (el, opts, V) {
+  var F = frame(el, 400, 150, 'How a book reached readers: licensing before printing, or Milton\'s plan'), sv = F.svg, ro = V.readout(el);
+  var mode = opts.mode || 'lic';
+  function box(x, w, t1, t2, cls) { S('rect', { x: x, y: 50, width: w, height: 50, rx: 9, 'class': cls || 'gbw-box' }, sv); Tx(sv, x + w / 2, 72, t1, 'sm b'); if (t2) Tx(sv, x + w / 2, 88, t2, 'sm mut'); }
+  function arrow(x1, x2) { S('path', { d: 'M' + x1 + ',75 L' + x2 + ',75 M' + (x2 - 6) + ',69 L' + x2 + ',75 L' + (x2 - 6) + ',81', 'class': 'gbw-hot' }, sv); }
+  function draw() {
+    clear(sv);
+    if (mode === 'lic') {
+      box(6, 80, 'Author', 'writes'); arrow(88, 104); box(106, 92, 'Licenser', 'approves or not', 'gbw-on'); arrow(200, 216); box(218, 80, 'Printer', 'prints'); arrow(300, 316); box(318, 76, 'Readers', '');
+      S('path', { d: 'M152,100 L152,128', 'class': 'gbw-line', 'stroke-dasharray': '3 3' }, sv); Tx(sv, 152, 142, 'refused books are never printed', 'sm mut');
+      Tx(sv, 200, 26, 'The Licensing Order of 1643', 'b serif');
+      ro.set('Under the order of June 1643, an official licenser had to read and approve a book <b>before</b> it could be printed. A book he refused never reached readers at all.');
+    } else {
+      box(6, 96, 'Author', 'name on the book'); arrow(104, 122); box(124, 96, 'Printer', 'prints freely'); arrow(222, 240); box(242, 96, 'Readers', 'judge and argue');
+      S('rect', { x: 344, y: 50, width: 50, height: 50, rx: 9, 'class': 'gbw-box gbw-off' }, sv); Tx(sv, 369, 72, 'Law', 'sm b'); Tx(sv, 369, 88, 'afterward', 'sm mut');
+      S('path', { d: 'M340,75 L344,75', 'class': 'gbw-line' }, sv);
+      Tx(sv, 200, 26, 'Milton\'s proposal in Areopagitica', 'b serif');
+      Tx(sv, 200, 132, 'books found harmful may be punished after printing', 'sm mut');
+      ro.set('Milton asks that books be printed without a licenser, with the author\'s and printer\'s names known. If a book proves harmful, the law can act <b>after</b> it appears. Readers meet good and bad ideas and learn to judge. He still excluded some writings from toleration; see the box below.');
+    }
+  }
+  V.seg(F.ctl, { label: 'Show', items: [['lic', 'Licensing, 1643'], ['mil', 'Milton\'s plan']], value: mode, change: function (v) { mode = v; draw(); } });
+  draw();
+});
+
+/* gb-sonnet: the rhyme scheme of Sonnet XIX (abbaabba cdecde), from its line-end words in the 1673 text. */
+ML.viz.register('gb-sonnet', function (el, opts, V) {
+  var F = frame(el, 400, 250, 'The rhyme scheme of Milton\'s Sonnet XIX'), sv = F.svg, ro = V.readout(el);
+  var W = ['spent', 'wide', 'hide', 'bent', 'present', 'chide', "deny'd", 'prevent', 'need', 'best', 'State', 'speed', 'rest', 'waite'];
+  var L = 'abbaabbacdecde';
+  var cur = opts.pick == null ? -1 : opts.pick;
+  function draw() {
+    clear(sv);
+    Tx(sv, 110, 16, 'Octave (lines 1–8)', 'sm b'); Tx(sv, 300, 16, 'Sestet (lines 9–14)', 'sm b');
+    W.forEach(function (w, i) {
+      var oct = i < 8, x = oct ? 30 : 220, y = 34 + (oct ? i : i - 8) * 26, on = cur >= 0 && L[i] === L[cur];
+      var g = S('g', {}, sv);
+      S('rect', { x: x, y: y, width: 160, height: 22, rx: 6, 'class': on ? 'gbw-on' : 'gbw-box' }, g);
+      Tx(g, x + 12, y + 15, String(i + 1), 'sm mut', 'start');
+      Tx(g, x + 34, y + 15, '…' + w, 'sm serif', 'start');
+      Tx(g, x + 148, y + 15, L[i], 'b', 'end');
+      clickable(g, 'Line ' + (i + 1) + ', ending ' + w + ', rhyme ' + L[i], function () { cur = i; draw(); });
+    });
+    S('path', { d: 'M196,40 L214,40 L214,236', 'class': 'gbw-line', 'stroke-dasharray': '3 3' }, sv);
+    Tx(sv, 300, 210, 'the turn comes early, in line 8', 'sm mut');
+    if (cur < 0) { ro.set('An Italian (Petrarchan) sonnet rhymes <b>abbaabba</b> in the first eight lines and here <b>cdecde</b> in the last six. Tap a line ending to see which lines rhyme with it.'); return; }
+    var mates = []; for (var i = 0; i < 14; i++) if (L[i] === L[cur]) mates.push((i + 1) + ' (' + W[i] + ')');
+    ro.set('Rhyme <b>' + L[cur] + '</b>: lines ' + mates.join(', ') + '. In the octave the poet asks his question; Patience begins to answer in the middle of line 8, and the sestet completes the answer.');
+  }
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb17.moliere-comedies (scripts/greatbooks/src/gb17.moliere-comedies/viz.js) ---- */
+  try { (function () {
+/* gb17.moliere-comedies: visuals (gbw2, our own design). */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbw-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbw-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl gbw-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function person(g, x, y, s, robe) { // a generic standing figure in the site's cartoon skin color
+  s = s || 1;
+  S('path', { d: 'M' + (x - 8 * s) + ',' + (y + 22 * s) + ' L' + (x - 6 * s) + ',' + (y + 2 * s) + ' Q' + x + ',' + (y - 2 * s) + ' ' + (x + 6 * s) + ',' + (y + 2 * s) + ' L' + (x + 8 * s) + ',' + (y + 22 * s) + ' Z', 'class': 'gbw-robe' + (robe ? ' ' + robe : '') }, g);
+  S('circle', { cx: x, cy: y - 6 * s, r: 6 * s, 'class': 'gbw-skin' }, g);
+}
+function clickable(g, label, fn) { g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbw-click'); g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } }); return g; }
+/* gb-moliere: the pattern of Moliere's character comedies: the hero ruled by one idea, the clear-sighted one, the people at risk. */
+ML.viz.register('gb-moliere', function (el, opts, V) {
+  var F = frame(el, 400, 220, 'Moliere\'s comedies: who is foolish, who sees clearly, who is at risk'), sv = F.svg, ro = V.readout(el);
+  var PL = {
+    school: ['The School for Wives', 1662, 'Arnolphe', 'fear of being deceived', 'Agnès, his ward (her innocence)', 'Agnès and the young Horace', 'Arnolphe\'s plan collapses; the young people are free to marry.'],
+    tartuffe: ['Tartuffe', 1669, 'Orgon', 'blind trust in a false saint', 'Dorine the maid; Elmire, his wife', 'Orgon\'s daughter, wife and fortune', 'Elmire exposes Tartuffe; an officer of the king arrests him.'],
+    juan: ['Don Juan', 1665, 'Don Juan', 'pleasure, and contempt for every promise', 'Sganarelle, his servant', 'everyone he deceives', 'The statue of a man he wronged comes to dinner, and in the end the earth swallows Don Juan up.'],
+    miser: ['The Miser', 1668, 'Harpagon', 'his money-box', 'La Flèche, his son\'s quick-witted valet', 'his son, his daughter and the girl he wants to marry', 'Harpagon gets his money-box back in exchange for letting his children marry the people they love.'],
+    gent: ['The Would-Be Gentleman', 1670, 'Monsieur Jourdain', 'wanting to be a nobleman', 'Madame Jourdain and Nicole the maid', 'his daughter Lucile and her suitor', 'He is fooled by a mock Turkish ceremony, and his daughter marries the man she loves.'],
+    invalid: ['The Would-Be Invalid', 1673, 'Argan', 'being sure he is sick', 'Toinette the maid', 'his daughter Angélique', 'Toinette plays a doctor; Argan is made a "doctor" himself in a mock ceremony.']
+  };
+  var key = opts.play || 'miser';
+  function mask(x, y, sad, cls) {
+    S('path', { d: 'M' + (x - 22) + ',' + (y - 16) + ' Q' + x + ',' + (y - 26) + ' ' + (x + 22) + ',' + (y - 16) + ' Q' + (x + 24) + ',' + (y + 14) + ' ' + x + ',' + (y + 24) + ' Q' + (x - 24) + ',' + (y + 14) + ' ' + (x - 22) + ',' + (y - 16) + ' Z', 'class': cls }, sv);
+    S('ellipse', { cx: x - 9, cy: y - 4, rx: 5, ry: 3, 'class': 'gbw-eye' }, sv); S('ellipse', { cx: x + 9, cy: y - 4, rx: 5, ry: 3, 'class': 'gbw-eye' }, sv);
+    S('path', { d: sad ? 'M' + (x - 9) + ',' + (y + 13) + ' Q' + x + ',' + (y + 5) + ' ' + (x + 9) + ',' + (y + 13) : 'M' + (x - 10) + ',' + (y + 7) + ' Q' + x + ',' + (y + 17) + ' ' + (x + 10) + ',' + (y + 7), 'class': 'gbw-mouth' }, sv);
+  }
+  function draw() {
+    clear(sv);
+    var p = PL[key];
+    Tx(sv, 200, 20, p[0] + ' (' + p[1] + ')', 'b serif');
+    mask(200, 78, false, 'gbw-mask-on');
+    Tx(sv, 200, 124, p[2], 'b'); Tx(sv, 200, 140, 'ruled by: ' + p[3], 'sm mut');
+    mask(70, 92, false, 'gbw-mask'); Tx(sv, 70, 134, 'sees clearly', 'sm b'); 
+    mask(330, 92, true, 'gbw-mask'); Tx(sv, 330, 134, 'at risk', 'sm b');
+    S('path', { d: 'M96,88 L172,80', 'class': 'gbw-line', 'stroke-dasharray': '3 3' }, sv); S('path', { d: 'M228,80 L304,88', 'class': 'gbw-hot' }, sv);
+    var wrap = function (s, x, y) { var w = s.split(' '), line = '', n = 0; w.forEach(function (t) { if ((line + ' ' + t).length > 22) { Tx(sv, x, y + n * 13, line.trim(), 'sm'); n++; line = ''; } line += ' ' + t; }); Tx(sv, x, y + n * 13, line.trim(), 'sm'); };
+    wrap(p[4], 70, 152); wrap(p[5], 330, 152);
+    ro.set('<b>' + p[0] + '.</b> ' + p[2] + ' is ruled by ' + p[3] + '. Seeing clearly: ' + p[4] + '. At risk: ' + p[5] + '. <b>Ending:</b> ' + p[6]);
+  }
+  V.seg(F.ctl, { label: 'Play', items: [['school', 'School for Wives'], ['tartuffe', 'Tartuffe'], ['juan', 'Don Juan'], ['miser', 'The Miser'], ['gent', 'Would-Be Gentleman'], ['invalid', 'Would-Be Invalid']], value: key, change: function (v) { key = v; draw(); } });
+  draw();
+});
+  })(); } catch (e) { if (W.console) console.error(e); }
+  /* ---- gb17.racine-phaedra (scripts/greatbooks/src/gb17.racine-phaedra/viz.js) ---- */
+  try { (function () {
+/* gb17.racine-phaedra: visuals (gbw2, our own design). */
+var NS = 'http://www.w3.org/2000/svg';
+function S(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
+function Tx(par, x, y, s, cls, anc) { var t = S('text', { x: x, y: y, 'class': cls || '', 'text-anchor': anc || 'middle' }, par); t.textContent = s; return t; }
+function frame(el, w, h, label) {
+  var st = document.createElement('div'); st.className = 'gbw-stage'; el.appendChild(st);
+  var sv = S('svg', { viewBox: '0 0 ' + w + ' ' + h, 'class': 'gbw-svg', role: 'img', 'aria-label': label }, st);
+  var ctl = document.createElement('div'); ctl.className = 'ml-ctl gbw-ctl'; el.appendChild(ctl);
+  return { svg: sv, ctl: ctl };
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+function person(g, x, y, s, robe) { // a generic standing figure in the site's cartoon skin color
+  s = s || 1;
+  S('path', { d: 'M' + (x - 8 * s) + ',' + (y + 22 * s) + ' L' + (x - 6 * s) + ',' + (y + 2 * s) + ' Q' + x + ',' + (y - 2 * s) + ' ' + (x + 6 * s) + ',' + (y + 2 * s) + ' L' + (x + 8 * s) + ',' + (y + 22 * s) + ' Z', 'class': 'gbw-robe' + (robe ? ' ' + robe : '') }, g);
+  S('circle', { cx: x, cy: y - 6 * s, r: 6 * s, 'class': 'gbw-skin' }, g);
+}
+function clickable(g, label, fn) { g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', label); g.setAttribute('class', (g.getAttribute('class') || '') + ' gbw-click'); g.addEventListener('click', fn); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } }); return g; }
+/* gb-phaedra: who is who in Racine's Phaedra and Berenice. Solid lines: family; gold lines: love; dashed: a secret love. */
+ML.viz.register('gb-phaedra', function (el, opts, V) {
+  var F = frame(el, 400, 240, 'The characters of Racine\'s Phaedra and Berenice and how they are linked'), sv = F.svg, ro = V.readout(el);
+  var D = {
+    phaedra: { t: 'Phaedra (1677) · Troezen · one day', n: { th: [200, 40, 'Theseus', 'King of Athens, long absent; reported dead, then returns.'], ph: [80, 120, 'Phaedra', 'Theseus\'s wife, daughter of King Minos of Crete. She hides a love she knows is wrong.'], hi: [320, 120, 'Hippolytus', 'Theseus\'s son by an earlier marriage. He loves Aricia.'], ar: [200, 205, 'Aricia', 'A princess of a rival royal family, whom Theseus has forbidden to marry.'], oe: [70, 205, 'Oenone', 'Phaedra\'s old nurse and confidant. Her plan leads to the false accusation.'], tr: [330, 205, 'Theramenes', 'Hippolytus\'s tutor and friend. He tells how Hippolytus died.'] },
+      e: [['th', 'ph', 'fam', 'married'], ['th', 'hi', 'fam', 'father and son'], ['ph', 'hi', 'secret', 'her hidden love'], ['hi', 'ar', 'love', 'in love', -26], ['ph', 'oe', 'conf', 'confidant'], ['hi', 'tr', 'conf', 'confidant']] },
+    berenice: { t: 'Berenice (1670) · Rome · one day', n: { ti: [200, 40, 'Titus', 'The new emperor of Rome. He loves Berenice but believes Rome will not accept a foreign queen.'], be: [90, 150, 'Berenice', 'Queen from the East, in Rome expecting to marry Titus.'], an: [310, 150, 'Antiochus', 'A king, Titus\'s friend, who has silently loved Berenice for years.'], pa: [60, 40, 'Paulinus', 'Titus\'s confidant, who speaks for what Rome will and will not accept.'] },
+      e: [['ti', 'be', 'love', 'they love each other'], ['an', 'be', 'secret', 'his hidden love'], ['ti', 'an', 'fam', 'friends'], ['ti', 'pa', 'conf', 'confidant']] }
+  };
+  var play = opts.play || 'phaedra', cur = null;
+  function draw() {
+    clear(sv);
+    var d = D[play];
+    d.e.forEach(function (e) { var a = d.n[e[0]], b = d.n[e[1]]; S('line', { x1: a[0], y1: a[1], x2: b[0], y2: b[1], 'class': 'gbw-e-' + e[2] + (cur && (cur === e[0] || cur === e[1]) ? ' gbw-e-hot' : '') }, sv); if (e[2] !== 'conf') Tx(sv, (a[0] + b[0]) / 2 + (e[4] || 0), (a[1] + b[1]) / 2 - 5, e[3], 'sm mut'); });
+    Object.keys(d.n).forEach(function (k) {
+      var n = d.n[k], g = S('g', {}, sv);
+      S('rect', { x: n[0] - 48, y: n[1] - 14, width: 96, height: 28, rx: 14, 'class': cur === k ? 'gbw-on' : 'gbw-box' }, g);
+      Tx(g, n[0], n[1] + 4, n[2], 'sm b');
+      clickable(g, n[2], function () { cur = k; draw(); });
+    });
+    Tx(sv, 200, 234, d.t, 'sm mut');
+    ro.set(cur ? '<b>' + d.n[cur][2] + ':</b> ' + d.n[cur][3] : 'Tap a character. Gray lines are family or friendship, gold lines are love, gold dashes a hidden love, and dotted lines join a confidant.');
+  }
+  V.seg(F.ctl, { label: 'Play', items: [['phaedra', 'Phaedra'], ['berenice', 'Berenice']], value: play, change: function (v) { play = v; cur = null; draw(); } });
+  draw();
+});
   })(); } catch (e) { if (W.console) console.error(e); }
   /* ---- gb17.huygens-treatise-on-light (scripts/greatbooks/src/gb17.huygens-treatise-on-light/viz.js) ---- */
   try { (function () {

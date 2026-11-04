@@ -339,4 +339,12 @@ for p in problems:
 print('greatbooks build: %d rungs in %d courses, %d built; %d Harvard Classics day links on %d rungs; %d error(s), %d warning(s)%s' % (
     n, len(courses), nr, sum(len(v) for v in hc.values()), len(hc), sum(p.startswith('ERROR') for p in problems),
     sum(p.startswith('warn') for p in problems), ' (check only: nothing written)' if CHECK else ''))
+# ------------------------------------------------------------------ the one-year path (data/greatbooks/year.yaml)
+if not CHECK and not any(p.startswith('ERROR') for p in problems):
+    import subprocess  # noqa: E402
+    r = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'year-plan.py')], capture_output=True, text=True)
+    print((r.stdout or '').strip().splitlines()[-1] if r.stdout.strip() else 'year-plan: no output')
+    if r.returncode:
+        print(r.stderr.strip())
+        sys.exit(1)
 sys.exit(1 if any(p.startswith('ERROR') for p in problems) else 0)
