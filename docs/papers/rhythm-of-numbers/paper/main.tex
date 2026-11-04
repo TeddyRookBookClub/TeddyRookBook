@@ -1,0 +1,125 @@
+% The Rhythm of Numbers: Continued Fractions, Primes, Music and Self-Similarity
+% Teddy Rook, 2026.  Build: latexmk -xelatex main.tex  (see README.md)
+\documentclass[11pt,oneside,openany]{memoir}
+\usepackage{fontspec}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage{siunitx}
+\usepackage{enumitem}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[hidelinks,pdfusetitle,bookmarksnumbered]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+\definecolor{racing}{HTML}{004225}
+\definecolor{gold}{HTML}{B8963E}
+\hypersetup{colorlinks=true,linkcolor=racing,citecolor=racing,urlcolor=racing,
+  pdftitle={The Rhythm of Numbers: Continued Fractions, Primes, Music and Self-Similarity},
+  pdfauthor={Teddy Rook}}
+\sisetup{group-separator={,},group-minimum-digits=4}
+
+% page layout
+\setstocksize{11in}{8.5in}
+\settrimmedsize{11in}{8.5in}{*}
+\setlrmarginsandblock{1.15in}{1.15in}{*}
+\setulmarginsandblock{1in}{1.05in}{*}
+\checkandfixthelayout
+\setlength{\parskip}{0pt}
+\chapterstyle{veelo}
+\renewcommand*{\chapnumfont}{\normalfont\HUGE\bfseries\color{racing}}
+\renewcommand*{\chaptitlefont}{\normalfont\huge\bfseries\color{racing}}
+\setsecheadstyle{\Large\bfseries\color{racing}}
+\setsubsecheadstyle{\large\bfseries}
+\setsubsubsecheadstyle{\normalsize\bfseries\itshape}
+\makepagestyle{rook}
+\makeoddhead{rook}{\small\itshape\leftmark}{}{\small\thepage}
+\makeheadrule{rook}{\textwidth}{0.3pt}
+\makeoddfoot{rook}{}{}{}
+\makepsmarks{rook}{\createmark{chapter}{left}{shownumber}{}{.\ }}
+\pagestyle{rook}
+\aliaspagestyle{chapter}{plain}
+\setsecnumdepth{subsection}
+\cftsetindents{section}{1.5em}{2.8em}
+\cftsetindents{figure}{0em}{3.1em}
+\cftsetindents{table}{0em}{3.1em}
+\renewcommand{\bibmark}{\markboth{Bibliography}{Bibliography}}
+\maxtocdepth{section}
+\captionnamefont{\small\bfseries}
+\captiontitlefont{\small}
+\captiondelim{.\ }
+\setfloatlocations{figure}{tbp}
+
+% theorem environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{heuristic}[theorem]{Heuristic}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\crefname{heuristic}{Heuristic}{Heuristics}
+\crefname{conjecture}{Conjecture}{Conjectures}
+
+% notation
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\cf}[1]{[#1]}
+\newcommand{\fl}[1]{\left\lfloor #1\right\rfloor}
+\newcommand{\fr}[1]{\{#1\}}
+\DeclareMathOperator{\corr}{corr}
+\DeclareMathOperator{\lcm}{lcm}
+\newcommand{\hit}{\texttt{x}}
+\newcommand{\rest}{\texttt{.}}
+\newcommand{\video}[1]{\par\smallskip\noindent\fbox{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{\small\textbf{For the video.} #1}}\par\smallskip}
+
+% numbers computed by the scripts in compute/ (never typed by hand)
+\input{gen/c1_cf.tex}
+\input{gen/c2_music.tex}
+\input{gen/c3_coprime.tex}
+\input{gen/c4_tools.tex}
+\input{gen/c5_spacing.tex}
+\input{gen/c6_fractals.tex}
+\input{gen/c6b_gcf.tex}
+\input{gen/c7_primeconv.tex}
+\input{gen/c8_suite.tex}
+\input{gen/c10_connections.tex}
+
+\graphicspath{{figures/}}
+
+\begin{document}
+\frontmatter
+\input{front}
+\mainmatter
+\input{ch01_intro}
+\input{ch02_cf}
+\input{ch03_rhythm}
+\input{ch04_music}
+\input{ch05_coprime}
+\input{ch06_primes}
+\input{ch07_tools}
+\input{ch08_primeconv}
+\input{ch09_spectrum}
+\input{ch10_fractals}
+\input{ch11_suite}
+\input{ch12_connections}
+\input{ch13_new}
+\input{ch14_discussion}
+\appendix
+\input{appA_algorithms}
+\input{appB_methods}
+\input{appC_repro}
+\backmatter
+\bibintoc
+\bibliographystyle{plainnat}
+\bibliography{refs}
+\end{document}

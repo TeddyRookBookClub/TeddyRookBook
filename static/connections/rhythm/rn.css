@@ -189,3 +189,21 @@ main.main:has(.rn){max-width:1040px}
 .rn fieldset.rn-fs-terms legend{padding:0;margin-right:.4rem;float:left}
 .rn-fr .rn-tablebox td:nth-child(2){font-variant-numeric:tabular-nums}
 .rn-readout dd.rn-ddtext{font-family:inherit;font-size:.95rem}
+/* 33 six numbers, six fractals (fr4.js) */
+.rn-sf .rn-ghost[aria-pressed="true"]{border-color:var(--rn-g);color:var(--rn-g);box-shadow:inset 0 0 0 1px var(--rn-g);font-weight:700}
+.rn-sf #sfSq{display:contents}
+.rn-sf-gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,9.2rem),1fr));gap:.5rem;margin:.6rem 0 .3rem}
+.rn-sf-gal button{display:flex;flex-direction:column;gap:.25rem;align-items:stretch;padding:.35rem;border:1px solid var(--rn-line);border-radius:10px;background:var(--rn-panel);color:var(--rn-ink);font:inherit;font-size:.82rem;cursor:pointer;min-width:0;text-align:left}
+.rn-sf-gal button canvas{display:block;width:100%;border-radius:6px}
+.rn-sf-gal button[aria-pressed="true"]{border-color:var(--rn-g);box-shadow:inset 0 0 0 2px var(--rn-g)}
+.rn-sf-gal button b{color:var(--rn-gold-t);margin-right:.2rem}
+.rn-sf-caps{margin:.8rem 0}
+.rn-sf-caps h3{margin-bottom:.3rem}
+.rn-sf-caps p{margin:.3rem 0}
+
+/* "Read the paper" card (hub and fractals page) -> /connections/rhythm-of-numbers/paper/ */
+.rn-papercard{display:grid;grid-template-columns:auto 1fr;gap:.1rem .8rem;align-items:center;padding:.7rem 1rem;border:1px solid var(--rn-line);border-left:4px solid var(--rn-g);border-radius:12px;background:var(--rn-panel);text-decoration:none;color:var(--rn-ink);max-width:44rem}
+.rn-papercard-i{font-size:1.6rem;grid-row:span 2}
+.rn-papercard b{color:var(--rn-g);font-size:1.05rem}
+.rn-papercard span:last-child{font-size:.94rem;color:var(--rn-muted)}
+.rn-papercard:hover b,.rn-papercard:focus-visible b{text-decoration:underline}

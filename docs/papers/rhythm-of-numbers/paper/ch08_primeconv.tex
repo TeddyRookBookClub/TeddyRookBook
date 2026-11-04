@@ -1,0 +1,141 @@
+\chapter{Thread (a): prime convergents}\label{ch:primeconv}
+
+\section{The question}
+
+The three classical fractions for $\pi$, $22/7$, $223/71$ and $355/113$, all have prime denominators, and two of them are convergents. Among the convergents $p_n/q_n$ of $\pi$, the prime denominators begin
+\[
+  q_1 = 7, \quad q_3 = 113, \quad q_8 = 265{,}381, \quad q_{32} = 842{,}468{,}587{,}426{,}513{,}207,
+\]
+a list recorded in the OEIS \citep{OEIS_A086788}; the prime numerators begin $3, 103993, 833719, 4272943, \dots$ \citep{OEIS_A086785}. Does the list go on forever? Nobody knows. The same question for the golden ratio asks whether there are infinitely many Fibonacci primes, and for $\sqrt 2$ whether there are infinitely many Pell primes; both are famous open problems.
+
+We cannot answer the question. What we can do is the next best thing: derive a heuristic prediction, with an explicit constant, for how many prime denominators a \emph{typical} real number should have among its first $N$ convergents; test the prediction on random numbers; and see where $\pi$, $e$, $\sqrt2$, $\varphi$ and $\log_2(3/2)$ fall. This chapter does all three.
+
+\section{A heuristic with an explicit constant}
+
+\paragraph{Step 1: size.} By Lévy's theorem (\cref{thm:khinchin-levy}), for almost every $x$ the denominators grow like
+\begin{equation}\label{eq:levy}
+  \ln q_n \sim L n, \qquad L = \frac{\pi^2}{12 \ln 2} = \LevyConst\ldots
+\end{equation}
+
+\paragraph{Step 2: the naive guess.} By the prime number theorem, a ``random'' integer near $q$ is prime with probability about $1/\ln q$. If the $q_n$ behaved like random integers of their size, the expected number of prime $q_n$ with $n \le N$ would be about $\sum_{n \le N} 1/(Ln) \approx (1/L) \ln N$.
+
+\paragraph{Step 3: local corrections.} The $q_n$ are not random integers. Consecutive denominators are coprime by \eqref{eq:det}, so, for example, two consecutive $q_n$ are never both even. The right description of their local behavior is the following equidistribution theorem.
+
+\begin{theorem}[Szüsz; Moeckel; Jager and Liardet]\label{thm:equidist}
+Let $m \ge 2$. For almost every $x$, the pairs $(q_{n-1}, q_n)$ reduced modulo $m$ are equidistributed among the pairs $(u,v)$ of residues with $\gcd(u, v, m) = 1$.
+\end{theorem}
+
+Szüsz proved the statement for pairs of denominators in 1962 \citep[Satz~3.2]{Szusz1962}; Moeckel obtained it up to sign through the geodesic flow on modular surfaces \citep{Moeckel1982}; Jager and Liardet proved equidistribution of the whole matrix $\left(\begin{smallmatrix}p_n & p_{n-1}\\ q_n & q_{n-1}\end{smallmatrix}\right)$ modulo $m$ \citep{JagerLiardet1988}. Borda's recent paper surveys this history and extends it \citep{Borda2025}. The case $m = 2$ says that, for almost every $x$, exactly one third of the denominators are even.
+
+\begin{corollary}\label{cor:divisible}
+For almost every $x$ and every prime $\ell$, the proportion of $n$ with $\ell \mid q_n$ is $1/(\ell + 1)$, not the $1/\ell$ of random integers.
+\end{corollary}
+
+\begin{proof}
+Modulo a prime $\ell$, the admissible pairs are the $\ell^2 - 1$ nonzero pairs $(u, v)$. Those with $v = 0$ are the $\ell - 1$ pairs $(u, 0)$, $u \ne 0$. By \cref{thm:equidist} the proportion is $(\ell - 1)/(\ell^2 - 1) = 1/(\ell + 1)$.
+\end{proof}
+
+\Cref{tab:modp} and \cref{fig:modp} check the corollary on the first \NT{} convergents of $\pi$ and on $400{,}000$ convergents of 200 random reals. Both match $1/(\ell + 1)$ to within sampling error; $\pi$ is typical here too.
+
+\begin{table}[t]
+\centering
+\caption[Divisibility of convergent denominators by small primes]{The share of convergent denominators $q_n$ divisible by a prime $\ell$: for $\pi$ ($n \le 10{,}000$), for 200 random reals ($n \le 2{,}000$ each), the prediction $1/(\ell+1)$ of \cref{cor:divisible}, and $1/\ell$ for random integers.}
+\label{tab:modp}
+\begin{tabular}{rrrrr}
+\toprule
+$\ell$ & $\pi$ & random reals & $1/(\ell+1)$ & $1/\ell$ \\
+\midrule
+\ModTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.75\textwidth]{qn_mod_p}
+\caption[Convergent denominators avoid small primes]{Convergent denominators avoid small prime factors: the share of $q_n$ divisible by $\ell$ follows $1/(\ell+1)$ (gold), not $1/\ell$ (black), both for $\pi$ and for random reals.}
+\label{fig:modp}
+\end{figure}
+
+\paragraph{Step 4: the correction factor is $\zeta(2)$.} In the usual way of refining the prime number theorem for structured sequences, the probability that $q_n$ is prime is $1/\ln q_n$ multiplied, for each prime $\ell$, by the ratio of the chance that $\ell \nmid q_n$ to the chance that $\ell$ does not divide a random integer:
+\begin{equation}\label{eq:correction}
+  \mathfrak{S} = \prod_{\ell} \frac{1 - \frac{1}{\ell + 1}}{1 - \frac{1}{\ell}} = \prod_\ell \frac{\ell}{\ell+1}\cdot\frac{\ell}{\ell - 1} = \prod_\ell \frac{1}{1 - \ell^{-2}} = \zeta(2) = \frac{\pi^2}{6}.
+\end{equation}
+The product converges absolutely, so the correction is a single constant. It is a pleasant surprise that the constant is $\pi^2/6$, the same number as in Chapter~\ref{ch:coprime}, and for a related reason: the correction measures how much more often than random a denominator avoids each prime, and the reason it does is the coprimality of neighbors.
+
+\paragraph{Step 5: the count.} Putting the steps together, for a typical $x$,
+\begin{equation}\label{eq:heuristic}
+  \mathbb{E}\,\#\{n \le N : q_n \text{ prime}\} \approx \sum_{n \le N} \frac{\zeta(2)}{\ln q_n} \approx \frac{\zeta(2)}{L}\ln N = \frac{\pi^2}{6}\cdot\frac{12 \ln 2}{\pi^2}\ln N = 2\ln 2 \cdot \ln N.
+\end{equation}
+
+\begin{heuristic}\label{heur:primeconv}
+For almost every real $x$, the number of prime denominators among the first $N$ convergents grows like $c \ln N$ with
+\[
+  c = 2 \ln 2 = \CconstVal\ldots
+\]
+The same holds for prime numerators, because \cref{thm:equidist} in the matrix form of Jager and Liardet gives the numerators the same local behavior.
+\end{heuristic}
+
+Three remarks. First, the constant is independent of everything except the two laws used, which is why it is so clean: $\zeta(2)$ from the arithmetic and $\pi^2/(12\ln2)$ from the dynamics, and the two $\pi^2$ cancel. Second, a count growing like $\ln N$ is very slow: it predicts infinitely many prime denominators for a typical number, but only about one new one each time $N$ is multiplied by $e^{1/c} \approx 2.06$, roughly one per doubling. Third, this is a heuristic. It treats primality of different $q_n$ as independent events with the stated probabilities. It says nothing about any particular number such as $\pi$ unless $\pi$ is typical, which is unproved.
+
+\section{The test on random reals}
+
+To test \cref{heur:primeconv} we need many truly random real numbers with known continued fractions. We draw a random integer $r$ with $D = 1{,}620$ digits and expand $r/10^D$ by exact integer arithmetic. Every real number in the interval $[r/10^D, (r+1)/10^D)$ shares the first terms, and since the error of the $n$th convergent shrinks like $q_n^{-2} \approx e^{-2Ln}$, about $D\ln 10/(2L) \approx 0.97D$ terms are shared, far more than the $\RandN$ we use. So the first $\RandN$ terms are those of a uniformly random real. We drew $\RandM$ such reals and counted probable primes among $q_1, \dots, q_{1000}$ and $p_1, \dots, p_{1000}$ (Appendix~\ref{app:methods}).
+
+\paragraph{Results.} The mean number of prime denominators was $\RandQmean$ (standard deviation $\RandQsd$), and of prime numerators $\RandPmean$ ($\RandPsd$). The growth is the test of the constant: between $n = 100$ and $n = 1000$ the mean count rose by $\RandGrowthObs$, against the predicted $2 \ln 2 \cdot \ln 10 = \RandGrowthPred$; between $n = 200$ and $n = 1000$ it rose by $\RandGrowthObsB$ against $\RandGrowthPredB$. A least-squares fit of the mean count against $\ln n$ over $50 \le n \le 1000$ gives slope $\RandSlope \pm \RandSlopeSE$, slightly above $2\ln 2$ because the earliest convergents, where $q_n$ is small, still carry some weight. The absolute level has an additive constant that the heuristic does not fix: the pathwise sum $\sum \zeta(2)/\ln q_n$ averages $\RandExpMean$ at $N = 1000$, a little above the observed mean, because $1/\ln q$ is a poor guide for the first few, very small denominators. The heuristic's \emph{slope} is what matters, and it fits.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{prime_conv_counts}
+\caption[Prime denominators among convergents]{Prime convergent denominators, counted cumulatively against the index $n$ (log scale). The shaded band is the mean $\pm$ one standard deviation over \RandM{} random reals; the dotted line has the predicted slope $2\ln 2$ per $e$-fold. Steps: $\pi$ (to $n = 5{,}000$), $e$ and $\log_2(3/2)$ (to $3{,}000$); dashed: $\pi$'s own expected count $\sum \zeta(2)/\ln q_n$.}
+\label{fig:primeconv}
+\end{figure}
+
+\section{Is pi typical?}
+
+\Cref{tab:primeconv} gives the counts for the five constants of the Suite, and \cref{fig:primeconv,fig:primeconv-hist} compare them with the random sample.
+
+\begin{table}[t]
+\centering
+\caption[Prime convergents of five constants]{Probable primes among convergents. Columns: the number of convergents $N$ examined; prime denominators $q_n$, $n \le N$, and the heuristic expectation $\sum_{n\le N}\zeta(2)/\ln q_n$; prime numerators; the counts of prime $q_n$ and $p_n$ for $n \le 1000$ with the expectation; and the percentile of the $q_n$ count at $n \le 1000$ among \RandM{} random reals (share of random reals with at most as many). For $\sqrt2$ and $\varphi$ the typical-number heuristic does not apply.}
+\label{tab:primeconv}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+& & \multicolumn{3}{c}{$n \le N$} & \multicolumn{3}{c}{$n \le 1000$} & \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}
+number & $N$ & $q_n$ & exp. & $p_n$ & $q_n$ & $p_n$ & exp. & pct. \\
+\midrule
+\PrimeConvTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.75\textwidth]{prime_conv_hist}
+\caption[Where $\pi$ falls among random reals]{The number of prime denominators among the first 1{,}000 convergents, for \RandM{} random reals (histogram), with $\pi$, $e$ and $\log_2(3/2)$ marked.}
+\label{fig:primeconv-hist}
+\end{figure}
+
+\paragraph{Pi.} Among its first 5{,}000 convergents, $\pi$ has $\PiQPrimes$ prime denominators, at $n =$ \PiQIdx, against $\PiQExp$ expected; the last has $\PiLastQDigits$ digits. It has $\PiPPrimes$ prime numerators, at $n =$ \PiPIdx{} (the largest has $\PiLastPDigits$ digits). The first four denominators and the first numerators agree with the OEIS lists \citep{OEIS_A086788,OEIS_A086785}. At $n \le 1000$, $\pi$'s count of $\PiQThousand$ prime denominators sits at the $\PiPct$th percentile of the random sample: on the low side, but well inside the range of ordinary numbers, and its count of prime numerators is about average. Its even denominators make up $\PiEvenShare$ of the first \NT{} (prediction $1/3$) and those divisible by 3 make up $\PiThreeShare$ (prediction $1/4$). By every measure here, $\pi$ looks like a typical real number. Heuristic~\ref{heur:primeconv} predicts that it has infinitely many prime denominators, with the next few spread out roughly one per doubling of $n$.
+
+\paragraph{The fifth and $e$.} The number $\log_2(3/2)$ has $\FifthQPrimes$ prime denominators up to $n = 3{,}000$ against $\FifthQExp$ expected; $e$ has $\EQPrimes$ against $\EQExp$. Both are unremarkable, although $e$ is not a typical number (its terms grow, and its denominators are even exactly one third of the time because of its pattern, not because of \cref{thm:equidist}).
+
+\paragraph{Quadratic irrationals.} For $\varphi$, $q_n$ is the Fibonacci number $F_{n+1}$; for $\sqrt 2$ it is the Pell number $P_{n+1}$. Our counts recover the known lists of indices of Fibonacci and Pell primes \citep{OEIS_A001605,OEIS_A096650} up to index 3{,}001: the Fibonacci indices are \PhiFibIdx, and the Pell indices are \RootPellIdx. These sequences break the typical-number heuristic in a structured way. They are divisibility sequences ($F_m \mid F_n$ whenever $m \mid n$), so $F_n$ can be prime only when $n$ is prime (or $n = 4$), and their denominators are not equidistributed modulo $m$: half of the Pell denominators are even, not a third. Grantham and Granville \citep{GranthamGranville2024} develop heuristics for primes in such linear recurrences; for Fibonacci numbers they predict about $e^{\gamma}\log_\varphi N$ primes $F_n$ with $n \le N$, which is $\GGFib$ for $N = 3{,}001$, against the \PhiQPrimes{} found (they note that the Fibonacci data run below the prediction). Whether either list is infinite is open.
+
+\section{Do the site's tools help?}
+
+The owner of the companion site asked whether the tools assembled there help with this question. Here is a frank assessment.
+\begin{itemize}
+\item \emph{Rhythms and Sturmian words.} The denominators are block lengths (\cref{thm:nested}), which makes the question easy to state musically: does $\pi$'s form contain infinitely many sections whose length in bars is prime? But the rhythm adds no information about primality beyond the recurrence.
+\item \emph{Coprimality and $6/\pi^2$.} This is the tool that does real work: the coprimality of neighboring blocks is exactly what produces the correction factor $\zeta(2)$ in \eqref{eq:correction}.
+\item \emph{Necklaces, diffraction, the prime hunt.} These do not bear on the question. The prime hunt is a different experiment with the same verdict: rhythms of $\pi$ neither attract nor repel primes.
+\item \emph{Self-similarity.} For quadratic irrationals, exact self-similarity means a linear recurrence, and the recurrence's divisibility structure is exactly what governs Fibonacci and Pell primes. For typical numbers, self-similarity in rule but not in shape is what makes the random model plausible.
+\end{itemize}
+In short, the tools organize the heuristic and explain its constant. They do not bring a proof closer. A proof that $\pi$ has infinitely many prime denominators would require, at the least, control of $\pi$'s terms that nobody has: it is not even known that they are unbounded.
+
+\section{What is known, and what is not}
+
+Known: the equidistribution of convergents modulo $m$ for almost every $x$ (\cref{thm:equidist}); Lévy's theorem; the published lists of prime numerators and denominators for $\pi$ and of Fibonacci and Pell primes; the Grantham--Granville heuristics for linear recurrences. Open: whether $\pi$, $e$, $\varphi$ or $\sqrt 2$ has infinitely many prime convergent denominators. We did not find in the literature we searched the explicit heuristic constant $2\ln 2$ for typical reals, or a test of it on a large random sample; both are offered here as a heuristic and an experiment, not a theorem.
+
+\video{State the question with $\pi$'s four prime denominators on screen. Build the heuristic in five steps, ending with the two $\pi^2$'s cancelling to leave $2\ln 2$. Show \cref{fig:primeconv} and the histogram with $\pi$ marked. Close with the frank assessment: the tools explain the constant but do not prove anything. Instrument: ``The ladder,'' with the bar switched between $\pi$, $\varphi$ and $\sqrt 2$. About 12 minutes.}

@@ -1,0 +1,83 @@
+\chapter{Music from the same ladder}\label{ch:music}
+
+The continued fraction is not only a rhythm generator. The same ladder of fractions decides how musical scales are tuned, the same algorithm spreads drum hits around the world's traditional rhythms, and the same fractions are where coupled oscillators lock together. This chapter retells these classical connections in the language of Chapters~\ref{ch:cf} and~\ref{ch:rhythm}.
+
+\section{Tuning: the fifth and its convergents}
+
+Two notes sound smooth together when their frequencies are in a simple ratio. The octave is $2:1$ and the fifth is $3:2$. Measured in octaves, a fifth is
+\[
+  \log_2 \tfrac32 = \FifthValue\ldots = \cf{0; \FifthTermsShown, \dots}.
+\]
+A scale that divides the octave into $n$ equal steps (an \emph{$n$-note equal temperament}, or $n$-EDO) contains a good fifth when some $k/n$ is close to $\log_2(3/2)$. The convergents of $\log_2(3/2)$ are
+\[
+  \FifthConvs, \ldots
+\]
+and they are the classical answers: $7/12$ is ``a fifth is 7 of 12 half steps,'' and 41 and 53 are the next good stops, long known to theorists \citep{Benson2006}. In cents (hundredths of an equal-tempered half step, so 1200 cents per octave), the 12-note fifth is $\TwelveFlat$ cents flat; the 41-note fifth misses by $\FortyOneErr$ cents and the 53-note fifth by $\FiftyThreeErr$.
+
+\Cref{fig:edo} shows the error of the best fifth in every $n$-note scale up to $n = 72$. The scales that set a new record for the fifth are $n = \BestEDOs$. All are convergent denominators except $29$, whose fifth $17/29$ is an \emph{intermediate fraction} between the convergents $7/12$ and $24/41$. That is exactly what the theory of best approximations predicts: the record-setters for $|n x - k|$ are the convergents, and the record-setters for $|x - k/n|$ also include some intermediate fractions \citep[Ch.~II]{Khinchin1964}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{edo_fifths}
+\caption[The fifth in equal temperaments]{The error of the best fifth in every $n$-note equal temperament, $n = 1, \dots, 72$, in cents. Green bars and labels mark well-known scales; gold dots mark the convergent denominators of $\log_2(3/2)$: 2, 5, 12, 41, 53.}
+\label{fig:edo}
+\end{figure}
+
+\paragraph{The Pythagorean comma.} Twelve pure fifths overshoot seven octaves by a ratio, $3^{12}/2^{19} = \CommaRatio$, called the Pythagorean comma, which is $\CommaCents$ cents. Equal temperament shares the comma out equally: each of its twelve fifths is $\CommaCents/12 = \TwelveFlat$ cents flat, which our script confirms to nine decimals. The comma exists because $\log_2(3/2)$ is irrational: no number of pure fifths can ever equal a whole number of octaves.
+
+\paragraph{Thirds, and a prime number of notes.} The same comparison for the major third $5:4$ gives a 12-note third $\TwelveThird$ cents sharp, while the 31-note scale, which Christiaan Huygens advocated \citep{Benson2006}, has a third within $\ThirtyOneThird$ cents of pure. Stepping around an $n$-note circle by $s$ notes visits every note exactly when $\gcd(s,n) = 1$, so the number of step sizes that visit all notes is Euler's $\varphi(n)$. The circle of fifths visits all 12 notes because $\gcd(7,12) = 1$. In a scale with a prime number of notes, such as 7, 31 or 53, every step size visits every note.
+
+\section{Euclidean rhythms}\label{sec:euclid}
+
+Suppose we want $k$ drum hits in a cycle of $n$ steps, spread as evenly as possible. In 2003 Eric Bjorklund described an algorithm for exactly this problem, for spacing pulses in the timing system of the Spallation Neutron Source accelerator; in 2005 Godfried Toussaint observed that its outputs include many traditional rhythms from around the world and named them \emph{Euclidean rhythms}, because the algorithm has the structure of Euclid's algorithm \citep{Toussaint2005}. Bjorklund's method starts with $k$ groups \texttt{[x]} and $n-k$ groups \texttt{[.]}, and repeatedly appends one leftover group to each of the others until at most one leftover group remains. The group counts follow Euclid's algorithm on $(n, k)$.
+
+\begin{table}[t]
+\centering
+\caption[Euclidean rhythms]{Euclidean rhythms $E(k,n)$ from Bjorklund's algorithm, as computed by our script, with the gaps between hits. The names follow Toussaint \citep{Toussaint2005}. The son clave (gaps $3,3,4,2,4$) is not a rotation of $E(5,16)$, so it is not Euclidean.}
+\label{tab:euclid}
+\begin{tabular}{llll}
+\toprule
+name & rhythm & pattern & gaps \\
+\midrule
+\EuclidTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proposition}\label{prop:euclid-christoffel}
+For $1 \le k < n$, the Euclidean rhythm $E(k,n)$ is a rotation of the lower Christoffel word of slope $k/n$, the period of the rhythm of $k/n$ in the sense of \eqref{eq:beat-rule}.
+\end{proposition}
+
+This is known; Gómez-Martín, Taslakian and Toussaint relate Euclidean rhythms to the maximally even sets of Clough and Douthett and to other even-spacing constructions \citep{GomezTaslakianToussaint2009,CloughDouthett1991}. Our script confirms it for all $\BjorkPairs$ pairs with $n \le 40$. Two consequences connect the drum machine to $\pi$. Running Euclid's algorithm on $355$ and $113$ produces the quotients $3, 7, 16$, the beginning of $\pi$'s continued fraction. And $E(16, 113)$ is a rotation of the level-3 block of $\pi$'s rhythm (Table~\ref{tab:pi-levels}): the drum machine with 16 hits in 113 steps plays $\pi$ at level 3. \Cref{fig:euclid} draws some of these rhythms as necklaces.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{euclid_necklaces}
+\caption[Euclidean rhythms as necklaces]{Euclidean rhythms drawn as necklaces: steps run clockwise from the top, hits are filled. The hits of each rhythm form a polygon that is as close to regular as the steps allow. The last necklace is the first level of $\pi$'s rhythm, one hit in seven.}
+\label{fig:euclid}
+\end{figure}
+
+\section{Polyrhythm and coprimality}
+
+Two pulse trains, one with a hit every $a$ steps and one every $b$ steps, coincide every $\lcm(a,b)$ steps. When $a$ and $b$ are coprime, they meet only once per cycle of $ab$ steps: three against four meet only on the downbeat of a 12-step cycle. When they share a factor, they meet more often; four against six meet every 12 steps, twice per cycle of 24. The Polyrhythm layerer on the site stacks the rhythms of several convergents as concentric rings; for $\pi$, the rings $1/7$, $15/106$ and $16/113$ play three versions of one beat that drift apart and realign. Because $\gcd(7, 113) = 1$, the 7-ring and 113-ring meet only at the start of their common cycle. Chapter~\ref{ch:coprime} turns ``meeting less often'' into an exact correlation.
+
+\section{Mode locking and the circle map}\label{sec:locking}
+
+In 1665 Christiaan Huygens noticed that two pendulum clocks hanging from the same beam fell into step; a modern experimental study is Bennett, Schatz, Rockwood and Wiesenfeld \citep{Bennett2002}. Coupled oscillators tend to lock at simple frequency ratios, and the simplest model of this is the \emph{sine circle map}
+\begin{equation}\label{eq:circle-map}
+  \theta_{t+1} = \theta_t + \Omega - \frac{K}{2\pi} \sin(2\pi \theta_t),
+\end{equation}
+where $\Omega$ is the natural rotation per step and $K \ge 0$ the strength of the coupling. The \emph{rotation number} $W = \lim (\theta_t - \theta_0)/t$ is the average rotation actually achieved. For $K = 0$, $W = \Omega$. For $0 < K \le 1$ the map is a homeomorphism of the circle and $W$ exists; it is locked to a fraction $p/q$ on an interval of $\Omega$ around $p/q$, and these intervals widen with $K$ into the \emph{Arnold tongues} of \cref{fig:tongues}. At $K = 1$ the locked intervals fill the whole line except a Cantor set of measure zero, a ``complete devil's staircase'' \citep{JensenBakBohr1983}, which Chapter~\ref{ch:fractals} explores.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{arnold_tongues}
+\caption[Arnold tongues of the circle map]{Arnold tongues of the sine circle map \eqref{eq:circle-map}. Shaded points $(\Omega, K)$ have rotation number $p/q$ with $q \le 8$ (darker: smaller $q$), computed from 400 iterations after a transient. The dashed gold line is $\Omega = \pi - 3$, which enters the $0/1$ tongue at $K = 2\pi(\pi - 3) \approx \CaptureK$.}
+\label{fig:tongues}
+\end{figure}
+
+The $0/1$ tongue can be computed exactly. A fixed point of \eqref{eq:circle-map} (modulo 1) needs $\Omega = (K/2\pi)\sin(2\pi\theta)$, which has a solution if and only if $|\Omega| \le K/(2\pi)$. So at $K = 1$ the $0/1$ step extends $1/(2\pi) = \InvTwoPi$ on each side of 0; our numerical staircase gives $\ZeroTongueHalf$. The number $\pi - 3 = 0.14159\ldots$ is inside it, so a system whose natural rotation is $\pi - 3$ is captured into the $0/1$ lock once $K \ge 2\pi(\pi-3) = \CaptureK$. Numerically, at $K = 1$ the $1/2$ step is $\HalfTongue$ wide and the $1/3$ step $\ThirdTongue$, and the steps with denominators up to 10 already cover a fraction $\PlateauSum$ of the interval $[0,1]$.
+
+\paragraph{Counting the tongues.} Each tongue belongs to a fraction $p/q$ in lowest terms, so the number of tongues with $0 \le p/q \le 1$ and $q \le N$ is $1 + \sum_{q \le N}\varphi(q)$, the length of the Farey sequence of order $N$. A classical theorem \citep[Thm.~330]{HardyWright2008} gives $\sum_{q\le N}\varphi(q) \sim 3N^2/\pi^2$. For $N = 50$, 100 and 200 our counts are \FareyFifty, \FareyHundred{} and \FareyTwoHundred, against $3N^2/\pi^2 \approx \FareyExpFifty$, \FareyExpHundred{} and \FareyExpTwoHundred. Here $\pi$ appears through $6/\pi^2$, the subject of the next chapter.
+
+\video{Play a pure fifth against a 12-tone fifth and let the beating be heard. Show \cref{fig:edo} with the convergent denominators lighting up. Then the drum machine: tresillo, cinquillo, and ``pi: 16 in 113.'' Finish on the circle map with the tongues growing as $K$ rises and the pi line being captured. Instruments: ``Circle of fifths,'' ``Euclid \& Bjorklund,'' ``Mode locking,'' the Polyrhythm layerer and the drum machine. About 10 minutes.}

@@ -1,0 +1,65 @@
+\chapter{What is new here, and what is re-found}\label{ch:new}
+
+A work that walks through this much classical mathematics owes its readers a careful account of what is old. This chapter audits every idea in the work and in the companion site against the literature, and sorts it into four classes:
+\begin{description}
+\item[Classical:] a standard result with a long history; we cite a primary source or a standard text.
+\item[Specialist:] known in a research literature, though not in standard texts; we cite it.
+\item[New presentation:] a new arrangement, picture, synthesis or computation of known results.
+\item[New:] something we did not find anywhere: an original artifact, a computation, or a heuristic that we could not locate in the literature we searched.
+\end{description}
+The searches covered the standard texts cited throughout, the music-theory literature on maximally even sets, well-formed scales, Christoffel words and Sturmian rhythms (searching for, among others, ``Sturmian words music,'' ``continued fractions musical form,'' ``Christoffel words rhythm''), the OEIS, and the number-theory literature on convergent denominators. No search of this kind is complete. When we say ``we did not find prior work,'' we mean exactly that, and nothing stronger.
+
+\section{The audit}
+
+\begin{longtable}{p{0.27\textwidth}p{0.17\textwidth}p{0.47\textwidth}}
+\caption[The prior-art audit]{The prior-art audit, idea by idea.}\label{tab:audit}\\
+\toprule
+idea & class & notes and sources \\
+\midrule
+\endfirsthead
+\toprule
+idea & class & notes and sources \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+The guess $\pi \approx 3 + k/(7k+1)$ and $k = 16$ & classical & The guess is the continued fraction of $\pi$ stopped after two terms (Chapter~\ref{ch:intro}); $355/113$ is Zu Chongzhi's Milü \citep{Martzloff2006}; $223/71$ and $22/7$ are Archimedes' bounds. Re-found independently by Teddy Rook. \\
+Continued fractions, convergents, best approximation, Legendre, Lagrange & classical & \citet{Khinchin1964,HardyWright2008}. \\
+Gauss--Kuzmin, Khinchin, Lévy & classical & \citet{Kuzmin1928,Levy1929,Khintchine1935,Levy1936}. \\
+The ``rhythm of a number'' & classical & It is the characteristic Sturmian word of $\alpha$, the cutting sequence of a line of slope $\alpha$ \citep{Lothaire2002,AlloucheShallit2003,BerstelChristoffel2009}. The rhythm of $\pi$ in particular is the characteristic word of $\pi - 3$; we found no claim that it is new and make none. \\
+Nested blocks: block lengths are the $q_n$ & classical & Standard words; \citet{FraenkelMushkinTassa1978,Brown1993}; our proof in Chapter~\ref{ch:rhythm} is a direct version for completeness. \\
+The beats 32,996 and 33,102 & new presentation & Elementary consequences of the standard word $s_4 = s_3^{292}s_2$; computing and reconciling the two counts is ours. \\
+The continued fraction as musical \emph{form} (bar, phrase, section, movement) & specialist / new presentation & Closely related work exists. Carey and Clampitt studied self-similar pitch structures and their rhythmic analogues \citep{CareyClampitt1989,CareyClampitt1996}; Clampitt and Noll use Sturmian morphisms and Christoffel words for modes \citep{ClampittNoll2011,DominguezClampittNoll2009}; Callender built rhythmic canons from Sturmian words whose voices and relations are set by the continued fraction of the slope \citep{Callender2013,Callender2015}; Fibonacci proportions in form have a long analytic literature \citep{Lendvai2000}. We did not find the specific reading of a number's \emph{whole} continued fraction as a nested hierarchy of formal units, each term a repeat count with a closing contrasting unit, used to lay out complete pieces. \\
+The Composer and ``Compose a piece'' instruments & new (artifact) & Software on the companion site. \\
+Euclid's algorithm and Euclidean rhythms & specialist & \citet{Toussaint2005,GomezTaslakianToussaint2009,CloughDouthett1991}; Bjorklund's 2003 algorithm as reported by Toussaint. That $E(16,113)$ is $\pi$'s level-3 block is an observation that follows at once. \\
+Tuning from $\log_2(3/2)$, the comma, 41 and 53 & classical & \citet{Benson2006}. \\
+Circle map, Arnold tongues, devil's staircase & classical & \citet{JensenBakBohr1983}; Huygens's clocks \citep{Bennett2002}. \\
+$6/\pi^2$, the Euler product, $\zeta(2)$ & classical & \citet{Euler1740,Euler1744,HardyWright2008}. \\
+Correlation of pulse trains, $(\gcd - 1)/\sqrt{(a-1)(b-1)}$ & new presentation & An elementary computation. We did not find it stated in this form, but expect it is known; the ``orchard as correlation matrix'' reading is a presentation, not a theorem. \\
+Hydrogen's $1/n^2$ and $\pi^2/6$ & classical, with a caveat & \citet{Balmer1885}; a shared formula, not shared physics (Chapter~\ref{ch:coprime}). \\
+Residue bias of consecutive primes & specialist & \citet{LemkeOliverSound2016}; our counts re-done. \\
+The prime sunflower of $\pi$ & new presentation & Dirichlet's theorem and wheel sieves are classical \citep{HardyWright2008}; seeding the $\pi - 3$ spiral with primes is a picture of them. \\
+Diffraction of $\pi$'s rhythm and of the primes & specialist & Sturmian diffraction \citep{BaakeGrimm2013}; primes \citep{Torquato2018}. The Ramanujan-sum explanation of the square-free rule is standard reasoning; our computation re-done. \\
+Explicit formula and zeros & classical & \citet{Riemann1859,Mangoldt1895}. \\
+Continued-fraction factoring & classical & \citet{LehmerPowers1931,MorrisonBrillhart1975}. \\
+Mersenne necklaces and Fermat's little theorem & classical & \citet{Golomb1956}. \\
+The prime hunt in rhythm prefixes & new (experiment) & We did not find prior work testing binary prefixes of Sturmian words for primality. The outcome is a null result (Chapter~\ref{ch:tools}). \\
+The prime-convergent heuristic with $c = 2\ln 2$ & new (heuristic) & Built entirely from known theorems \citep{Levy1936,Szusz1962,Moeckel1982,JagerLiardet1988}. We did not find the constant or the identification of the correction factor as $\zeta(2)$ in the literature we searched. Related heuristics for linear recurrences: \citet{GranthamGranville2024}. \\
+The random-real test of the heuristic, and $\pi$'s placement & new (computation) & Our computation (Chapter~\ref{ch:primeconv}); the lists for $\pi$ match the OEIS \citep{OEIS_A086788,OEIS_A086785}. \\
+The spacing spectrum (crystal $\to$ quasicrystal $\to$ GUE $\to$ Poisson) & new presentation & Every ingredient is known: \citet{Montgomery1973,Dyson1962,Odlyzko1987,Mehta2004,Berry1988,Bogomolny2006}; ordering point patterns by number variance is the hyperuniformity program of \citet{TorquatoStillinger2003}; Dyson's quasicrystal remark is in \citet{Dyson2009}. Putting $\pi$'s rhythm, the zeros, GUE and the primes on one scale with one set of tools is our synthesis. \\
+Teddy Rook's picture of the nested tail & classical & The self-similarity of continued fractions; Chapter~\ref{ch:fractals}. \\
+Patterned continued fractions for $\pi$ & classical & Brouncker \citep{Khrushchev2006}; \citet{Lange1999}. \\
+Ford circles, Stern--Brocot, ?$(x)$, Cantor dust, Farey bulbs, Fibonacci word fractal & classical / specialist & \citet{Ford1938,Stern1858,Brocot1861,Minkowski1904,Denjoy1938,Salem1943,Good1941,JenkinsonPollicott2001,JenkinsonPollicott2018,Devaney1999,MonnerotDumaine2009}. Our dimension computation re-does the published method. \\
+The six-numbers pictures & new presentation & Square cutting is a classical picture of Euclid's algorithm; applying one construction to the Suite's numbers is ours. \\
+Gauss--Kuzmin test of $\pi$'s first 10,000 terms & new presentation & Statistical checks of $\pi$'s terms are a known kind of computation; the specific statistics are ours. \\
+The Continued-Fraction Suite & new (artwork) & An original composition by Teddy Rook \citep{SuiteScore}. \\
+Golden's two-level labels & new presentation & An observation about labeling form in a self-similar piece. \\
+\end{longtable}
+
+\section{The two questions the owner asked}
+
+\paragraph{Is the rhythm of $\pi$ new?} No. The rhythm of any number, in the sense of Chapter~\ref{ch:rhythm}, is its characteristic Sturmian word, a classical object, and the nested-block structure is a classical theorem. The rhythm of $\pi$ is one instance. What is less common is to \emph{listen} to it and to name its levels as musical form; that reading has close relatives in the music-theory literature, notably the Sturmian canons of Callender, in which the continued fraction governs the relations between voices, and the work of Carey, Clampitt and Noll on Sturmian structures in scales and rhythms. We did not find the full form reading (every term a repeat count, from bar to movement) laid out as a method for composing complete pieces.
+
+\paragraph{Is the new music new?} Yes, as music. The Continued-Fraction Suite is an original work by Teddy Rook, and its originality as an artwork does not depend on the novelty of its method, any more than a fugue's does on the novelty of counterpoint. Of its method, the Fibonacci proportions of Golden have a long history in analysis and composition; Sturmian rhythms and continued-fraction-governed canons exist in the specialist literature. We did not find a prior composition whose whole form is laid out level by level from a number's continued fraction, nor one that sets out to reach the 292nd return of $\pi$'s 113-bar cycle.
+
+\video{A brisk tour of \cref{tab:audit}, colored by class. Spend most of the time on the two questions: the rhythm of $\pi$ is a classical object, heard in a new way; the Suite is new music. About 6 minutes.}

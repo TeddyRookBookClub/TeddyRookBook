@@ -1,0 +1,85 @@
+\chapter{Thread (b): one spectrum, from crystal to randomness}\label{ch:spectrum}
+
+\section{The question}
+
+Chapter~\ref{ch:primes} ended with the Montgomery--Dyson observation: the zeros of the zeta function seem to be spaced like the eigenvalues of large random Hermitian matrices, the model physicists use for energy levels of heavy nuclei. The companion site lists this as an open thread and asks whether the tools assembled here help. They cannot prove anything about the zeros. What they can do is supply a scale on which to place the zeros: at one end a perfect crystal, next the rhythm of $\pi$ (a quasicrystal), then the zeros and random matrices, and at the other end pure randomness. This chapter computes the statistics that define that scale, for every point set on it, with one set of tools.
+
+\section{The point sets}
+
+All point sets are \emph{unfolded}, that is, rescaled so that the mean spacing is 1, before any statistic is computed.
+\begin{itemize}
+\item \emph{Crystal:} the integers.
+\item \emph{Quasicrystal:} the hits of $\pi$'s rhythm in the first $33{,}102$ beats (\cref{thm:nested}), multiplied by $\pi - 3$. The spacings take two values, $7(\pi-3) = \PiGapA$ and $8(\pi-3) = \PiGapB$. The three-gap points $\fr{n(\pi-3)}$ of \cref{thm:threegap} belong here too; for $N = 1{,}000$ their spacings, in units of $1/N$, take the values $\TGValues$.
+\item \emph{Zeta zeros:} the imaginary parts $\gamma_1 < \gamma_2 < \cdots$ of the first $\NZeros$ nontrivial zeros, up to height $\ZeroLast$, computed with mpmath and checked against the zero-counting function. They are unfolded with the smooth part of the Riemann--von Mangoldt counting formula, $\bar N(T) = \frac{T}{2\pi}\ln\frac{T}{2\pi e} + \frac78$; the unfolded spacings have mean $\ZeroSpacingMean$. Odlyzko's tables \citep{Odlyzko1987} reach far higher; we used only zeros we computed ourselves.
+\item \emph{GUE:} the eigenvalues of 16 random $1000 \times 1000$ complex Hermitian matrices with independent Gaussian entries, from the central half of each spectrum, unfolded with the semicircle law \citep{Mehta2004}; mean spacing $\GUESpacingMean$.
+\item \emph{Primes:} the gaps between the $\NprimesGap$ primes in $[10^9, 10^9 + 3\cdot 10^5)$, divided by $\ln p$ and normalized to mean 1.
+\item \emph{Poisson:} independent exponential spacings, the model of points with no correlation at all.
+\end{itemize}
+
+\section{Nearest-neighbor spacings}
+
+\Cref{fig:spacing} shows the distribution of the spacings $s$ between neighbors. The crystal has a single spacing and the quasicrystal two. The zeros and the GUE eigenvalues share a distribution that vanishes like $s^2$ at $s = 0$: close pairs are rare, a phenomenon called \emph{level repulsion}. The curve drawn with them is the Wigner surmise $P(s) = \frac{32}{\pi^2}s^2 e^{-4s^2/\pi}$, a simple and very accurate approximation to the exact GUE spacing law \citep{Mehta2004}. The prime gaps, by contrast, look like the Poisson law $e^{-s}$, with the most likely spacing near zero.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{spacing_dist}
+\caption[Nearest-neighbor spacings]{Nearest-neighbor spacing distributions, all with mean spacing 1. Left: a crystal (one spacing) and $\pi$'s rhythm (two spacings, heights proportional to their frequencies; note the zoomed axis). Center: \NZeros{} zeta zeros (bars) and GUE eigenvalues (steps), with the Wigner surmise. Right: prime gaps divided by $\ln p$ near $10^9$, with the Poisson law $e^{-s}$.}
+\label{fig:spacing}
+\end{figure}
+
+A simple number captures the repulsion: the share of spacings below $1/4$. It is $\SmallZero$ for the zeros, $\SmallGUE$ for the GUE matrices and $\SmallWigner$ for the Wigner surmise, but $\SmallPoisson$ for the Poisson process and $\SmallPrimes$ for the normalized prime gaps (whose discreteness, all gaps being even, distorts the smallest bins). The Kolmogorov--Smirnov distance between the zero spacings and the GUE spacings is $\KSZeroGUE$, against $\KSZeroPoisson$ between zeros and Poisson. The small remaining difference between zeros and GUE is expected: at the low heights we can reach, the zeros behave like random matrices of a modest effective size, a finite-height effect analyzed by Bogomolny, Bohigas, Leboeuf and Monastra \citep{Bogomolny2006}. Correspondingly, the variance of the zero spacings, $\VarZero$, is a little below the GUE value $\VarGUE$.
+
+\section{Pair correlation}
+
+The pair correlation $R_2(u)$ measures how likely it is to find another point at distance $u$ from a given point, relative to a uniform density. Montgomery's conjecture \citep{Montgomery1973} is that for the unfolded zeros
+\begin{equation}\label{eq:montgomery}
+  R_2(u) = 1 - \left(\frac{\sin \pi u}{\pi u}\right)^2,
+\end{equation}
+which is exactly the GUE pair correlation in the limit of large matrices \citep{Dyson1962,Mehta2004}. \Cref{fig:paircorr} shows our estimate from the first \NZeros{} zeros, the GUE sample, a Poisson sample (flat at 1) and $\pi$'s rhythm (sharp spikes at the sums of its two spacings). The root-mean-square difference between the zeros' histogram and \eqref{eq:montgomery} over $0 \le u \le 3$ is $\PairRMS$, comparable to the sampling noise of the histogram.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{pair_correlation}
+\caption[Pair correlation of zeta zeros]{Pair correlation $R_2(u)$: \NZeros{} zeta zeros (dots), GUE eigenvalues (dashed), Poisson points (grey), $\pi$'s rhythm (gold spikes), and Montgomery's function \eqref{eq:montgomery} (black).}
+\label{fig:paircorr}
+\end{figure}
+
+\section{Number variance: a scale of rigidity}
+
+The most telling statistic is the \emph{number variance} $\Sigma^2(L)$: drop a window of length $L$ (in mean spacings) at a random place and count the points inside; $\Sigma^2(L)$ is the variance of that count. It measures how rigid the arrangement is over a range of $L$ spacings.
+\begin{itemize}
+\item For a Poisson process, $\Sigma^2(L) = L$: the counts fluctuate as much as they can.
+\item For the GUE, $\Sigma^2(L) \approx \frac{1}{\pi^2}\left(\ln(2\pi L) + \gamma + 1\right)$ for large $L$, with $\gamma$ Euler's constant \citep{Mehta2004}: the fluctuations grow only logarithmically.
+\item For a crystal, $\Sigma^2(L) = \fr{L}(1 - \fr{L}) \le \tfrac14$, bounded. Point sets with bounded number variance are called \emph{hyperuniform} \citep{TorquatoStillinger2003}; crystals and many quasicrystals, including Sturmian ones like $\pi$'s rhythm, are of this kind.
+\end{itemize}
+For the zeros, Berry predicted that $\Sigma^2(L)$ follows the GUE law for small $L$ and then saturates at a level set by the height of the zeros \citep{Berry1988}. \Cref{fig:numvar} shows all six point sets on one logarithmic plot. At $L = \NVL$ we find $\Sigma^2 = \NVCrys$ for the crystal, $\NVPiR$ for $\pi$'s rhythm, $\NVZer$ for the zeros, $\NVGue$ for the GUE sample (asymptotic formula $\NVGueTh$), $\NVPri$ for the normalized prime gaps and $\NVPoi$ for Poisson. The zeros lie below the GUE curve at this $L$, consistent with Berry's saturation at our low heights, while the GUE sample matches its formula.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{number_variance}
+\caption[Number variance: one scale of rigidity]{Number variance $\Sigma^2(L)$ on log--log axes for six point sets. From bottom to top: crystal and $\pi$'s rhythm (bounded, with dips where $L$ is close to a period), zeta zeros and GUE (logarithmic growth; dotted: the asymptotic GUE formula), normalized prime gaps and Poisson (linear growth).}
+\label{fig:numvar}
+\end{figure}
+
+\section{The spectrum, and Dyson's bridge}
+
+The three statistics put the point sets in one order of decreasing rigidity:
+\begin{center}
+crystal $\;\to\;$ quasicrystal ($\pi$'s rhythm) $\;\to\;$ GUE and zeta zeros $\;\to\;$ Poisson (and the primes at short range).
+\end{center}
+The crystal has one spacing and bounded fluctuations. The rhythm of $\pi$ has two spacings, at most three on the circle, and still bounded fluctuations: it is ordered without being periodic. The zeros have a continuous spacing law but repel each other and fluctuate only logarithmically. Poisson points do not interact at all, and the primes, seen through their gaps at short range, look Poisson-like, although Chapter~\ref{ch:primes} showed their long-range diffraction is far from random.
+
+Where do the zeros belong, then? Freeman Dyson, in his lecture ``Birds and Frogs,'' observed that if the Riemann hypothesis is true then the zeros form a one-dimensional quasicrystal in a precise sense, and suggested that classifying one-dimensional quasicrystals might lead to a proof \citep{Dyson2009}. His sense is about the Fourier transform of the zeros, not their spacings, and the explicit formula \eqref{eq:explicit} explains it: the sum of the waves $\cos(\gamma t)$ over the zeros is concentrated at $t = \ln p^m$, the logarithms of prime powers, just as the diffraction of a quasicrystal is concentrated on a discrete set. \Cref{fig:zerosfourier} shows this with our \NZeros{} zeros: the sum $\sum_\gamma \cos(\gamma t)$, smoothly cut off, has sharp dips at $\ln 2$, $\ln 3$, $\ln 4$, $\ln 5$, $\ln 7$, \dots{} (depths $\DipTwo$ and $\DipThree$ at $\ln 2$ and $\ln 3$ on the plotted scale, against a background fluctuation of about $\FzNoise$). So the zeros are GUE-like at short range and quasicrystal-like in their Fourier transform. The rhythm of $\pi$ is quasicrystal-like in both. That is the bridge Dyson pointed to, and this picture organizes it; it does not cross it.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{zeros_fourier}
+\caption[The zeros diffract at logarithms of prime powers]{The zeros ``diffract'' at logarithms of prime powers: $\sum_\gamma \cos(\gamma t)$ over the first \NZeros{} zeros with a smooth cutoff, scaled by $1/\sqrt{\text{number of zeros}}$. Dotted gold lines mark $t = \ln n$ for the prime powers $n \le 40$; the dips sit exactly there, as the explicit formula predicts.}
+\label{fig:zerosfourier}
+\end{figure}
+
+\section{What this does and does not show}
+
+Everything in this chapter is a measurement of known phenomena with our own data, arranged so that a reader can see a crystal, $\pi$'s rhythm, the zeros, random matrices and the primes on one scale. It illuminates the Montgomery--Dyson connection and makes Dyson's remark concrete. It proves nothing about the Riemann hypothesis, about the pair-correlation conjecture, or about any operator whose eigenvalues might be the zeros. Of the site's tools, the ones that help are the rhythm (as the quasicrystal end of the scale) and the diffraction picture (as the language for Dyson's remark); the others play no role.
+
+\video{Line up six strips of dots, from evenly spaced to random, and let the viewer guess which is which. Then show the three statistics, each with all six sets. End on \cref{fig:zerosfourier}: the zeros' waves spike at $\ln 2$, $\ln 3$, $\ln 5$; this is Dyson's quasicrystal remark made visible. Say clearly that this organizes the mystery and does not solve it. Instruments: ``Zeta zeros \& nuclei,'' ``Quasicrystals.'' About 12 minutes.}

@@ -1,0 +1,31 @@
+\chapter{Reproducibility}\label{app:repro}
+
+The full source of this work, including the \LaTeX{} files, the bibliography and every script, is kept with the companion site's source under \texttt{docs/papers/rhythm-of-numbers/}. Running the scripts in order regenerates every figure (\texttt{paper/figures/}) and every number in the text: each script writes a file of \LaTeX{} macros to \texttt{paper/gen/}, and the text uses only those macros for computed values. Scripts stop with an error if any asserted fact fails.
+
+\begin{table}[h]
+\centering
+\caption[The scripts]{The scripts, in the order \texttt{run\_all.sh} runs them, with what each computes.}
+\label{tab:scripts}
+\small
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+script & computes \\
+\midrule
+\texttt{common.py} & shared helpers: certified continued fractions, convergents, standard words, the floor rule, macro output, figure style \\
+\texttt{c1\_cf.py} & terms of $\pi$, $e$, $\sqrt2$, $\varphi$, $\log_2(3/2)$; the starting guess; convergent table; Legendre and best-approximation checks; nested-block checks; beats 32,996 and 33,102; three-gap check; Gauss--Kuzmin, Khinchin and Lévy statistics \\
+\texttt{c2\_music.py} & equal temperaments, comma, thirds; Bjorklund vs.\ Christoffel; Euclidean table; circle map, tongues, staircase and Farey rule; Farey counts \\
+\texttt{c3\_coprime.py} & orchard, Euler product, correlation formula and matrix, Balmer, residue bias to $10^7$, sunflower and wheels, structure factors, explicit formula \\
+\texttt{c4\_tools.py} & Lehmer--Powers factoring, necklaces, the prime hunt and its Poisson tails \\
+\texttt{zeros.py} & the first 5{,}000 zeta zeros (about one hour) \\
+\texttt{c5\_spacing.py} & spacing distributions, pair correlation, number variance, the Fourier picture of the zeros \\
+\texttt{c6\_fractals.py}, \texttt{c6b\_gcf.py} & complete quotients, Ford circles, Stern--Brocot, ?$(x)$, dimensions, Mandelbrot bulbs, Fibonacci word, six pictures; patterned fractions for $\pi$ \\
+\texttt{c7\_primeconv.py}, \texttt{c7b\_primeconv\_figs.py} & prime convergents of five constants and 400 random reals (several minutes); divisibility shares; figures and tables \\
+\texttt{c8\_suite.py} & the Suite's forms checked against the continued fractions; form figure \\
+\texttt{c9\_misc\_figs.py}, \texttt{c10\_connections.py} & remaining figures; drum-mode ratios \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Building.} With Python 3 and the packages of Appendix~\ref{app:methods} installed, run \texttt{sh run\_all.sh} in \texttt{compute/}, then \texttt{latexmk -xelatex main.tex} in \texttt{paper/}. Random choices use fixed seeds, so a rebuild reproduces the same numbers, except that the GUE samples (seeded too) and timings may differ across library versions in the last digit.
+
+\paragraph{Provenance of non-computed facts.} Dates, names and bibliographic details were checked against the sources listed in the bibliography. The musical facts about the Suite come from the companion site's data file \texttt{data/music/suite.yaml}, compiled from the engraved score.

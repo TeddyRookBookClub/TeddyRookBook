@@ -1,0 +1,160 @@
+\chapter{Self-similarity and fractals}\label{ch:fractals}
+
+\section{Teddy Rook's picture}
+
+Teddy Rook pictured $\pi$ as ``a number, then a slightly smaller number after it, at least a decimal place over, then a smaller one after that, and so on.'' Does that idea fit with fractals? It does, and the precise version is one line long. By \eqref{eq:cf-step},
+\[
+  x = a_0 + \frac{1}{x_1}, \qquad x_1 = \cf{a_1; a_2, a_3, \dots}.
+\]
+The ``smaller number after it,'' the tail $1/x_1$, is built from a continued fraction made by exactly the same rule; so is its tail, and so on forever. An object that contains a copy of itself, made by the same rule, at every scale is \emph{self-similar}, and self-similarity is the defining feature of a fractal. And each step really is smaller: by \eqref{eq:error-bounds} the $n$th convergent misses by less than $1/q_n^2$. For $\pi$ the complete quotients are $x_1, \dots, x_6 = \CQsix$ (\cref{fig:tail}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{nested_tail}
+\caption[The nested tail of $\pi$]{The nested tail of $\pi$. Left: the complete quotients $x_n$ (log scale); each is the number ``seen from'' level $n$, and its whole part is the next term. The gold bar is $x_4 = 292.63$. Right: the error of each convergent (green) stays below $1/q_n^2$ (gold).}
+\label{fig:tail}
+\end{figure}
+
+\paragraph{Exact self-similarity, and self-similarity of rule.} When the terms repeat, the tail is literally the number again: $\varphi = 1 + 1/\varphi$, so every complete quotient of $\varphi$ is $\varphi$, and every complete quotient of $\sqrt2 = \cf{1; 2, 2, \dots}$ after the first is $1 + \sqrt 2$. Every picture we draw from such a number repeats exactly under zoom. For $\pi$ the terms $7, 15, 1, 292, 1, 1, 1, 2, \dots$ follow no known pattern, so the \emph{rule} is the same at every level but the \emph{shape} is new each time. That is not a flaw in the picture; it is one of the most interesting facts about $\pi$.
+
+\paragraph{A twist: patterned fractions for $\pi$.} If the numerators of a continued fraction are allowed to be numbers other than 1, $\pi$ does have beautiful patterns, and then Teddy Rook's ``never-ending string of continued fractions'' holds with a clean rule all the way down. Brouncker found
+\begin{equation}\label{eq:brouncker}
+  \frac{4}{\pi} = 1 + \cfrac{1^2}{2 + \cfrac{3^2}{2 + \cfrac{5^2}{2 + \cdots}}}
+\end{equation}
+in 1655, at the request of John Wallis, who published it in his \emph{Arithmetica Infinitorum}; Khrushchev has reconstructed Brouncker's proof \citep{Khrushchev2006}. Lange found $\pi = 3 + 1^2/(6 + 3^2/(6 + 5^2/(6 + \cdots)))$ \citep{Lange1999}, and the continued fraction of the arctangent gives $\pi = 4/(1 + 1^2/(3 + 2^2/(5 + 3^2/(7 + \cdots))))$. They converge at three very different speeds. After 10, 100 and 1000 levels Brouncker's fraction misses $\pi$ by $\BrouTen$, $\BrouHundred$ and $\BrouThousand$; its stopping points are exactly the partial sums of the Leibniz series $4(1 - \frac13 + \frac15 - \cdots)$, as our script confirms with exact fractions. Lange's misses by $\LangeTen$, $\LangeHundred$ and $\LangeThousand$ (its stopping points are the partial sums of Nilakantha's series). The arctangent fraction misses by $\AtanFive$, $\AtanTen$ and $\AtanTwenty$ after 5, 10 and 20 levels; each level shrinks the error by a factor $\AtanRatio = (\sqrt2 - 1)^2$.
+
+The rest of this chapter turns the rule ``a number contains a copy of itself after every term'' into pictures. Each is a classical fractal; for each we say who found it and draw it for $\pi$.
+
+\section{Ford circles}
+
+In 1938 Lester Ford drew, for every fraction $p/q$ in lowest terms, a circle $C(p/q)$ tangent to the real axis at $p/q$ with radius $1/(2q^2)$ \citep{Ford1938}.
+
+\begin{proposition}[Ford]\label{prop:ford}
+Two Ford circles $C(p/q)$ and $C(r/s)$ never overlap. They are tangent if and only if $|ps - qr| = 1$, that is, if $p/q$ and $r/s$ are neighbors in some Farey sequence; and between two tangent circles, the largest circle tangent to both is $C\big((p+r)/(q+s)\big)$.
+\end{proposition}
+
+\begin{proof}[Proof of the first two statements]
+The squared distance between the centers minus the square of the sum of the radii is
+\[
+  \Big(\frac pq - \frac rs\Big)^2 + \Big(\frac{1}{2q^2} - \frac{1}{2s^2}\Big)^2 - \Big(\frac{1}{2q^2} + \frac{1}{2s^2}\Big)^2 = \frac{(ps - qr)^2 - 1}{q^2 s^2},
+\]
+which is $\ge 0$ for distinct fractions, with equality exactly when $|ps - qr| = 1$.
+\end{proof}
+
+Zoom in anywhere and the same pattern of circles appears again; the picture is self-similar under the maps $x \mapsto (ax+b)/(cx+d)$ with integer entries and determinant $\pm1$. Ford circles turn Legendre's theorem into geometry. A vertical line through $x$ passes through $C(p/q)$ exactly when $|x - p/q| < 1/(2q^2)$, so by \cref{thm:legendre} every circle it pierces belongs to a convergent; and of any two consecutive convergents, at least one is pierced \citep[Ch.~II]{Khinchin1964}. For $\pi - 3$ our script finds the pierced circles among the first convergents to be $\Pierced$, while $15/106$ and $4687/33102$ are convergents whose circles the line just misses (\cref{fig:ford}). Falling down the line toward $\pi - 3$, one drops through circle after circle, and after $16/113$ the fall is very long, because $355/113$ is so close: that is the 292 again.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{ford_circles}
+\caption[Ford circles near $\pi - 3$]{Ford circles near $\pi - 3$ (gold line), drawn to scale. Filled circles belong to convergents of $\pi - 3$. Left: the circle at $1/7$ with its neighbors. Right: a zoom by a factor of about 300, where the circles at $15/106$ and $16/113$ touch; the line passes through the second and misses the first.}
+\label{fig:ford}
+\end{figure}
+
+\section{The Stern--Brocot tree}
+
+Start with $0/1$ and $1/0$ and repeatedly insert the \emph{mediant} $(p+r)/(q+s)$ between neighbors $p/q$ and $r/s$. The result, described by Moritz Stern in 1858 \citep{Stern1858} and independently by the clockmaker Achille Brocot in 1861 \citep{Brocot1861}, who used it to design gear trains, is a binary tree that contains every positive fraction exactly once, in lowest terms \citep[\S 4.5]{GKP1994}. To locate a number, start at $1/1$ and go left (L) if the number is smaller and right (R) if larger. The path is a sequence of runs, and the run lengths are the terms of the continued fraction. For $355/113 = \cf{3; 7, 16}$ the path is $R^3 L^7 R^{15}$ (the last run is one short because the path stops on the fraction itself), and for $\pi$ our script finds $\SBPiRuns\ldots$, with the 292 as a run of 292 Rs. The golden ratio zigzags $RLRL\ldots$ forever and $\sqrt2$ goes $R, LL, RR, LL, \dots$. Every subtree is a copy of the whole tree with the fractions changed, which is self-similarity again (\cref{fig:sb}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{stern_brocot}
+\caption[The Stern--Brocot tree]{The first five levels of the Stern--Brocot tree, with the beginning $RRRL$ of the path to $\pi$ highlighted: $1/1 \to 2/1 \to 3/1 \to 4/1 \to 7/2$. The path continues with six more Ls to $22/7$.}
+\label{fig:sb}
+\end{figure}
+
+\section{Minkowski's question-mark function}
+
+In 1904 Hermann Minkowski introduced a function that turns continued fractions into binary expansions \citep{Minkowski1904}. For $x = \cf{0; a_1, a_2, a_3, \dots}$,
+\begin{equation}\label{eq:qmark}
+  ?(x) = 2\left(2^{-a_1} - 2^{-(a_1 + a_2)} + 2^{-(a_1+a_2+a_3)} - \cdots\right),
+\end{equation}
+which in binary is $a_1 - 1$ zeros, then $a_2$ ones, then $a_3$ zeros, and so on: each term becomes one run of binary digits. The function is continuous and strictly increasing from $?(0) = 0$ to $?(1) = 1$, maps rationals to dyadic rationals and quadratic irrationals to rationals, and yet its derivative is zero almost everywhere: it is a ``singular'' function, all of whose increase happens on a set of measure zero \citep{Denjoy1938,Salem1943}. It satisfies $?(x/(1+x)) = ?(x)/2$, so the left half of its graph is the whole graph squashed by a factor 2. Our script confirms $?(\varphi - 1) = 2/3$ and $?(\sqrt 2 - 1) = 2/5$, and finds $?(\pi - 3) = \QPi\ldots$, just under $1/64$: six zeros, then fifteen ones (\cref{fig:minkowski}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{minkowski}
+\caption[Minkowski's question-mark function]{Minkowski's $?(x)$. Left: the whole graph with the diagonal dashed; quadratic irrationals land on fractions. Right: the boxed region magnified, showing flat stretches and bursts of growth at every scale.}
+\label{fig:minkowski}
+\end{figure}
+
+\section{The devil's staircase}\label{sec:staircase}
+
+Return to the circle map \eqref{eq:circle-map} of Chapter~\ref{ch:music}, at full coupling $K = 1$. Plot the rotation number $W$ against $\Omega$: the result is a staircase with a flat step at every fraction (\cref{fig:staircase}). At $K = 1$ the steps fill the whole interval except a Cantor set of measure zero, whose fractal dimension Jensen, Bak and Bohr measured as about $0.87$ \citep{JensenBakBohr1983}. Between two adjacent steps $p/q$ and $r/s$ the widest step is the one at the mediant $(p+r)/(q+s)$, the Stern--Brocot rule once more, so zooming between two steps reproduces the whole staircase in miniature.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{devils_staircase}
+\caption[The devil's staircase of the circle map]{The devil's staircase: rotation number $W$ of the sine circle map at $K = 1$ against $\Omega$ (2{,}520 iterations per point). The dashed line is $\Omega = \pi - 3$, inside the wide $0/1$ step. Right: the boxed region, with steps labeled by their fractions; between $1/3$ and $2/5$ the widest step is $3/8$, between $3/8$ and $2/5$ it is $5/13$.}
+\label{fig:staircase}
+\end{figure}
+
+\section{Cantor dust: numbers with small terms}
+
+Which numbers in $(0,1)$ have continued fractions that use only the terms 1 and 2? Fixing the first term to be 1 or 2 keeps two intervals; fixing the second keeps two sub-intervals of each, and so on. What survives forever is a Cantor-like ``dust'' $E_2$ (\cref{fig:dust}). It has length zero, but more than a point's worth of size: its Hausdorff dimension is $\dim_H E_2 = 0.5312805062772051\ldots$. I.\,J. Good bounded it between 0.5306 and 0.5320 in 1941 \citep{Good1941}; Jenkinson and Pollicott computed it to 25 digits with a transfer-operator method \citep{JenkinsonPollicott2001} and later to 100 rigorously certified digits \citep{JenkinsonPollicott2018}.
+
+The method is elegant. The dimension of the set $E_A$ of numbers whose terms all lie in a finite set $A$ is the unique $s$ for which the transfer operator
+\[
+  (\mathcal L_s f)(x) = \sum_{a \in A} (a + x)^{-2s} f\!\left(\frac{1}{a+x}\right)
+\]
+has spectral radius 1. We discretize $\mathcal L_s$ on Chebyshev nodes and bisect on $s$ (Appendix~\ref{app:methods}). With 60 nodes our script gives $\dim_H E_{\{1,2\}} = \DimEtwo$, agreeing with the published value in all twelve printed digits. It also gives $\dim_H E_{\{1,2,3\}} = \DimEthree$, $\dim_H E_{\{1,2,3,4\}} = \DimEfour$, $\dim_H E_{\{1,\dots,6\}} = \DimEsix$ and $\dim_H E_{\{2,3\}} = \DimTwoThree$. Since $\pi - 3$ starts with a 7 and contains a 292, it lies in none of these small-term dusts; the golden ratio's $\varphi - 1$ (all 1s) and $\sqrt2 - 1$ (all 2s) are single points of $E_{\{1,2\}}$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{cantor_dust}
+\caption[Cantor dust of continued fractions with terms 1 and 2]{The numbers whose first $k$ terms are all 1 or 2, for $k = 1, \dots, 7$. Each row keeps two pieces of each piece of the row above; the limit is a Cantor set of dimension $0.5313$.}
+\label{fig:dust}
+\end{figure}
+
+\section{The Mandelbrot set's Farey bulbs}
+
+The Mandelbrot set consists of the complex $c$ for which $z \mapsto z^2 + c$, started at $z = 0$, stays bounded. Its heart-shaped main body is fringed with bulbs, and each bulb carries a fraction: the bulb attached at the point $c = e^{2\pi i p/q}/2 - e^{4\pi i p/q}/4$ of the main cardioid is the $p/q$ bulb, and inside it the orbit settles on an attracting cycle of period $q$. Devaney explained how these fractions are arranged \citep{Devaney1999}: between the $p/q$ and $r/s$ bulbs, the largest bulb (measured by the share of the outside that leads into it) is the $(p+r)/(q+s)$ bulb, the mediant once more, which puts the Fibonacci fractions $1/2, 1/3, 2/5, 3/8, 5/13, \dots$ on a path toward the golden-mean point. Our script places a test point just inside each bulb with $q \le 12$ and finds an attracting cycle of period exactly $q$ in every case (\BulbMismatch{} exceptions). \Cref{fig:mandel} labels the larger bulbs. Walking $\pi - 3 = 0.14159$ of the way around the cardioid lands just short of the $1/7$ bulb, since $\pi - 3 < 1/7$, and $\pi$'s convergents $15/106$ and $16/113$ are bulbs much smaller and much closer to that spot.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.66\textwidth]{mandelbrot_bulbs}
+\caption[The Farey bulbs of the Mandelbrot set]{The Mandelbrot set with its main bulbs labeled $p/q$ by the point where they attach to the cardioid. Inside the $p/q$ bulb the orbit of 0 settles on a cycle of $q$ points.}
+\label{fig:mandel}
+\end{figure}
+
+\section{The Fibonacci word fractal}
+
+In 2009 Alexis Monnerot-Dumaine drew the Fibonacci word as a path \citep{MonnerotDumaine2009}: take one unit step for each letter, and after the $k$th letter, if it is a 0, turn a quarter turn, left if $k$ is even and right if $k$ is odd. The Fibonacci word $0100101001001\ldots$ is exactly the rhythm of $\varphi - 1$ from Chapter~\ref{ch:rhythm} with hits and rests exchanged (our script checks this over $30{,}000$ letters), so this is the golden rhythm, walked. The path is a fractal curve made of smaller copies of itself, of dimension $3\ln\varphi/\ln(1+\sqrt2) = \FibDim$ \citep{MonnerotDumaine2009}. \Cref{fig:fibword} draws the same rule for three numbers: the golden rhythm makes the fractal, $\sqrt2 - 1$ weaves a grid, and $e - 2$ draws a zigzag of growing arms. For $\pi - 3$ the turns nearly cancel within each 7- or 8-beat gap, and over the first $33{,}102$ beats the path is a long, thin zigzag.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fibonacci_word}
+\caption[The Fibonacci word fractal and its relatives]{Rhythms walked as paths with Monnerot-Dumaine's rule. Left: the golden rhythm, the Fibonacci word fractal. Center: $\sqrt2 - 1$. Right: $e - 2$.}
+\label{fig:fibword}
+\end{figure}
+
+\section{Six numbers, six pictures}\label{sec:six}
+
+The Continued-Fraction Suite of Chapter~\ref{ch:suite} uses five numbers. One construction draws them all on the same footing: cut a $1 \times x$ rectangle into as many squares as fit (that count is the first term), turn the leftover a quarter turn, and repeat. \Cref{fig:six} shows the first six levels of each number, each level's rectangle stretched to the same height so that thin levels stay visible. The golden ratio cuts one square at every level and the silver ratio two: exactly self-similar. The fifth and $e$ change their counts, $e$ in its stretching pattern $1, 2, 1, 1, 4, 1, 1, 6$. Pi cuts 7, then 15, then 1, then 292 squares, the last a dense gold band. The sixth panel zooms to level 4 of $\pi$, the 292, which is where the sixth movement lives.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{six_squares}
+\caption[The Suite's numbers as square-cutting ladders]{The Suite's numbers as square-cutting ladders. Each row is one level: the number of squares cut (printed at the left) is the term, and the grey sliver is what passes to the next level. Rows are stretched to equal height. A count above 50 is drawn as a gold band.}
+\label{fig:six}
+\end{figure}
+
+\section{Is pi typical?}\label{sec:typical}
+
+The Gauss map \eqref{eq:gauss-map} reads off the terms, and the Gauss--Kuzmin law (\cref{thm:gk}) says what a typical number's terms look like. Here is a formal test of $\pi$'s first \NT{} terms against it. Group the terms as $1, 2, \dots, 12$ and $13+$; the expected count in each group is \NT{} times its Gauss--Kuzmin probability. The chi-square statistic is $\chi^2 = \ChiThirteen$ on 12 degrees of freedom, with $p = \PThirteen$. With the finer grouping $1, \dots, 20$ and $21+$, $\chi^2 = \ChiTwenty$ on 20 degrees of freedom, $p = \PTwenty$. Either way the counts are fully consistent with the law (\cref{fig:gk}): $\GKones$ ones ($\GKonesPct\%$, law $\GKlawOnePct\%$), $\GKtwos$ twos and $\GKthrees$ threes. The geometric mean of the terms is $\GeoMeanH$ after 100 terms, $\GeoMeanT$ after 1{,}000 and $\GeoMean$ after \NT{}, wandering around Khinchin's $K_0 = \Khinchin$ as a random number's would; and $\ln q_{10000}/10000 = \LevyObs$ against Lévy's $\LevyConst$ (\cref{fig:khinchin}). The largest term so far is $\MaxTerm$, at position $\MaxTermPos$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\textwidth]{gauss_kuzmin}
+\caption[Pi's terms against the Gauss--Kuzmin law]{The shares of the values $1, \dots, 20$ among $\pi$'s first \NT{} terms (bars) against the Gauss--Kuzmin law (gold).}
+\label{fig:gk}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{khinchin_levy}
+\caption[Khinchin and Lévy for $\pi$]{Running geometric mean of $\pi$'s terms against Khinchin's constant (left) and $\ln q_n/n$ against Lévy's constant $\pi^2/(12\ln2)$ (right).}
+\label{fig:khinchin}
+\end{figure}
+
+Nobody has proved that $\pi$ obeys these laws, or even that its terms are unbounded, but by every count we can make it behaves like a typical number. This fits the null result of the prime hunt (Section~\ref{sec:hunt}) and the typical behavior of its prime convergents (Chapter~\ref{ch:primeconv}). The number $e$, by contrast, fails the test on purpose: its terms $1, 2, 1, 1, 4, 1, 1, 6, \dots$ have far too many ones and a geometric mean that grows without bound.
+
+\video{Begin with Teddy Rook's sentence and the one-line formula. Then six short visits: falling through Ford circles to $\pi$; walking the Stern--Brocot tree as L and R; the question-mark function heard as pitch; zooming into the devil's staircase; the Cantor dust building row by row; the Fibonacci word fractal drawing itself. Finish with \cref{fig:six} and the chi-square verdict: $\pi$ looks typical. Instruments: all of Chapter VII on the fractals page. About 14 minutes.}

@@ -2,11 +2,11 @@
 {{- /* /connections/rhythm-of-numbers/fractals/: Chapter VII of "The Rhythm of Numbers", "Fractals: the same rule at every
    scale" (content/connections/rhythm-of-numbers/fractals.md). Its own page because the hub is already long; the hub
    links it from its chapter list, a card (#ch7) and its map. It shares the hub's bar, styles and core
-   (static/connections/rhythm/core.js: read its header); this page's instruments are fr1.js, fr2.js and fr3.js, each
+   (static/connections/rhythm/core.js: read its header); this page's instruments are fr1.js, fr2.js, fr3.js and fr4.js (section 33, also used by the Suite page), each
    loaded when its first section comes near the screen. Element ids are the instruments' contract with the scripts.
    Every number on the page was checked by script: see the Notes and sources at the bottom. */ -}}
 {{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
-{{- $v := dict }}{{ range slice "fr1" "fr2" "fr3" }}{{ $f := printf "static/connections/rhythm/%s.js" . }}{{ if fileExists $f }}{{ $v = merge $v (dict . (os.Stat $f).ModTime.Unix) }}{{ end }}{{ end }}
+{{- $v := dict }}{{ range slice "fr1" "fr2" "fr3" "fr4" }}{{ $f := printf "static/connections/rhythm/%s.js" . }}{{ if fileExists $f }}{{ $v = merge $v (dict . (os.Stat $f).ModTime.Unix) }}{{ end }}{{ end }}
 {{- $tex := "math/core/tex.js" | relURL }}{{ with os.Stat "static/math/core/tex.js" }}{{ $tex = printf "%s?v=%d" $tex .ModTime.Unix }}{{ end }}
 {{- $texcss := "math/core/core.css" | relURL }}{{ with os.Stat "static/math/core/core.css" }}{{ $texcss = printf "%s?v=%d" $texcss .ModTime.Unix }}{{ end }}
 {{- $hub := "connections/rhythm-of-numbers/" | relURL }}
@@ -47,6 +47,7 @@
       <li>This is Chapter VII of <a href="{{ $hub }}">The Rhythm of Numbers</a>. The first six chapters are on that page.</li>
     </ul>
   </aside>
+  <a class="rn-papercard" href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}"><span class="rn-papercard-i" aria-hidden="true">📄</span><b>Read the paper</b><span>Every picture on this page, with its proofs and sources, is a chapter of “The Rhythm of Numbers,” a free 86-page paper by Teddy Rook.</span></a>
   <nav aria-label="Sections in this chapter"><ul class="rn-toc">
     <li><a href="#patterns"><span>24</span><b>Pi’s patterned fractions</b></a></li>
     <li><a href="#ford"><span>25</span><b>Ford circles</b></a></li>
@@ -57,7 +58,8 @@
     <li><a href="#bulbs"><span>30</span><b>The Mandelbrot set’s bulbs</b></a></li>
     <li><a href="#fibword"><span>31</span><b>The Fibonacci word fractal</b></a></li>
     <li><a href="#gauss"><span>32</span><b>Is pi typical?</b></a></li>
-    <li><a href="#frNotes"><span>33</span><b>Threads and sources</b></a></li>
+    <li><a href="#six"><span>33</span><b>Six numbers, six fractals</b></a></li>
+    <li><a href="#frNotes"><span>34</span><b>Threads and sources</b></a></li>
   </ul></nav>
 </header>
 
@@ -227,8 +229,53 @@
   <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"gkSrc":"pi"}}'>Pi’s 10,000 terms</button> <button type="button" class="rn-ghost" data-remix='{"set":{"gkSrc":"rand"},"click":"gkRoll"}'>A random number</button> <button type="button" class="rn-ghost" data-remix='{"set":{"gkSrc":"e"}}'>e breaks the law</button></p>
 </section>
 
+<section class="rn-s" id="six" data-mod="fr4" data-tags="cf self" aria-labelledby="six-h">
+  {{- $suite := "music/continued-fraction-suite/" | relURL }}{{ $vid := site.Data.music.suite.video }}
+  <div class="rn-head"><p class="rn-eyebrow">33 · Six numbers, six fractals</p><h2 id="six-h">The Suite’s six numbers, drawn as <em>six fractals</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Teddy Rook’s <a href="{{ $suite }}">Continued-Fraction Suite</a> has six movements for piano, each built from one number. Here each number’s continued fraction is drawn by the same rule, so you can set them side by side. Pick a drawing style, then a number. A repeating continued fraction gives a picture that is exactly the same at every zoom; a changing one keeps the rule and changes the shape.</p></div>
+  <div class="rn-inst rn-sf" data-fs>
+    <div class="rn-controls" role="group" aria-label="Drawing style">
+      <button id="sfS-squares" type="button" class="rn-ghost" aria-pressed="true">Squares</button>
+      <button id="sfS-rings" type="button" class="rn-ghost" aria-pressed="false">Rings</button>
+      <button id="sfS-path" type="button" class="rn-ghost" aria-pressed="false">Path</button>
+    </div>
+    <p class="rn-small" id="sfHow-squares">Start with a rectangle 1 wide and as tall as the number. Cut off as many squares as fit: that count is the first term. Turn what is left a quarter turn and do it again: the next count is the next term. The gold arcs join the squares into a spiral. <b>Zoom forever</b> flies into what is left, and each level magnifies by about its term, so a 292 takes a long time to cross.</p>
+    <p class="rn-small" id="sfHow-rings" hidden>The music’s nesting, drawn as rings. The inner ring splits one big block into its parts, and each ring outward splits every block again: a block of one level is “term” copies of the level below (green and teal), then one block from two levels below (amber). In the Suite the smallest blocks are bars; then come phrases, sections and cycles. The black line marks where the piece starts.</p>
+    <p class="rn-small" id="sfHow-path" hidden>The number’s beat (hit, rest, rest, …) walked as a path: one step for every beat, and a quarter turn on each hit, left on even beats and right on odd ones. This is the rule of section 31; the colors mark the blocks of one level.</p>
+    <canvas id="sfCan" height="440" tabindex="0" role="img" aria-label="The chosen number's fractal"></canvas>
+    <div class="rn-controls">
+      <button id="sfPlay" type="button" class="rn-play" hidden>▶ Play</button>
+      <span id="sfSq">
+        <button id="sfOut" type="button" class="rn-ghost">‹ Back a level</button>
+        <button id="sfIn" type="button" class="rn-ghost">Next level ›</button>
+        <button id="sfZoom" type="button" class="rn-play" aria-pressed="false">▶ Zoom forever</button>
+        <label><input id="sfSnd" type="checkbox"> Sound: a note per square (up to 48 a level)</label>
+      </span>
+      <button id="sfPngL" type="button" class="rn-ghost">⬇ Save a picture (light)</button>
+      <button id="sfPngD" type="button" class="rn-ghost">⬇ Save a picture (dark)</button>
+    </div>
+    <dl class="rn-readout"><div><dt>Number</dt><dd id="sfName" class="rn-ddtext"></dd></div><div><dt>Terms</dt><dd id="sfTerms" class="rn-mono"></dd></div><div><dt>What you see</dt><dd id="sfWhat" class="rn-ddtext"></dd></div></dl>
+    <div class="rn-sf-gal" id="sfGal" role="group" aria-label="The six numbers">
+      {{- range site.Data.music.suite.movements }}
+      <button type="button" id="sfB-{{ .slug }}" aria-pressed="false"><canvas height="120" aria-hidden="true"></canvas><span><b>{{ .num }}</b> {{ .name }}</span></button>
+      {{- end }}
+    </div>
+    <p class="rn-small">The six small pictures are the same drawing for each movement. Tap one to see it large. On the big picture, the left and right arrow keys change the number, and + and − step the squares’ zoom.</p>
+  </div>
+  <div class="rn-sf-caps">
+    <div id="sfCap-golden" hidden><h3>I · Golden: φ − 1 = [0; 1, 1, 1, …]</h3><p>Every term is 1, so every level is the same: one square, then a rectangle exactly 1.618 times smaller, turned a quarter turn. That is the golden spiral, and every zoom shows the same picture. The rings have the Fibonacci lengths 1, 2, 3, 5, 8, 13, …, each block one of the last size plus one of the size before, and the path is the Fibonacci word fractal of section 31. In the music: 5-bar and 3-bar phrases making 8-bar and 5-bar sections.</p><p><a href="{{ $suite }}golden/">The Golden piano lesson</a> · <a href="https://www.youtube.com/watch?v={{ $vid }}" rel="noopener">the Suite video</a></p></div>
+    <div id="sfCap-silver" hidden><h3>II · Silver: √2 − 1 = [0; 2, 2, 2, …]</h3><p>Every term is 2: two squares at every level, and what is left is 1 + √2 = 2.414 times smaller each time. Exactly self-similar again, with a different ratio. The blocks are 1, 2, 5, 12, 29, 70, 169, …, each two of the last plus one of the one before, and the path weaves a square grid. In the music: 12-bar sections made of 5 + 5 + 2 bars, with a 5-bar B section now and then.</p><p><a href="{{ $suite }}silver/">The Silver piano lesson</a> · <a href="https://www.youtube.com/watch?v={{ $vid }}" rel="noopener">the Suite video</a></p></div>
+    <div id="sfCap-the-fifth" hidden><h3>III · The Fifth: log₂(3/2) = [0; 1, 1, 2, 2, 3, 1, 5, 2, 23, …]</h3><p>The terms change, so each level of the squares has its own count, and the 23 at the ninth level makes a long amber band. The block lengths are 1, 2, 5, 12, 41, 53, 306, 665, 15,601. Musicians know some of these: 12 notes in our octave, and 41, 53 and 665 notes in other scales that tune the fifth closer and closer. The same rule at every level, a new shape at each one. In the music: 12-bar sections of 5 + 5 + 2 bars.</p><p><a href="{{ $suite }}the-fifth/">The Fifth piano lesson</a> · <a href="https://www.youtube.com/watch?v={{ $vid }}" rel="noopener">the Suite video</a></p></div>
+    <div id="sfCap-euler" hidden><h3>IV · Euler: e − 2 = [0; 1, 2, 1, 1, 4, 1, 1, 6, …]</h3><p>A pattern that keeps stretching: 1, then 2, 1, 1, then 4, 1, 1, then 6, 1, 1, and so on. Every third level of the squares has two more squares than the last time (2, 4, 6, 8, …), so the spiral repeats its moves but each lap is a little longer. The blocks are 1, 3, 4, 7, 32, 39, 71, 465, 536, 1,001, 8,544. In the music: 7-bar sections of 4 + 3 bars, with a 4-bar B section.</p><p><a href="{{ $suite }}euler/">The Euler piano lesson</a> · <a href="https://www.youtube.com/watch?v={{ $vid }}" rel="noopener">the Suite video</a></p></div>
+    <div id="sfCap-pi" hidden><h3>V · Pi: π − 3 = [0; 7, 15, 1, 292, 1, 1, 1, 2, …]</h3><p>Seven squares, then fifteen, then one, then 292 in a long thin band, then small counts again. No one has found a pattern in pi’s terms, so no two levels look alike. The rings show it too: the blocks are 7, 106, 113, 33,102 and 33,215 long, and the second ring is 292 copies of the 113-block packed into a dense band. Pi’s path is a long, thin zigzag. In the music: 7-bar phrases and a 113-bar cycle.</p><p><a href="{{ $suite }}pi/">The Pi piano lesson</a> · <a href="https://www.youtube.com/watch?v={{ $vid }}" rel="noopener">the Suite video</a></p></div>
+    <div id="sfCap-pi-bar-32996" hidden><h3>VI · Pi, bar 32,996: inside pi’s 292</h3><p>The same pictures as pi, zoomed in to the 292nd return. The rings show bars 32,658 to 33,102: the last three 113-bar cycles, then the 106-bar short cycle (amber in the inner ring) that starts after 292 × 113 = 32,996 bars. The gold arc is the 50 bars that Movement VI plays, 32,968 to 33,017. The squares show the end of the 292-square band, and the path marks step 32,996 with a dot.</p><p><a href="{{ $suite }}pi-bar-32996/">The Pi, bar 32,996 piano lesson</a> · <a href="https://www.youtube.com/watch?v={{ $vid }}" rel="noopener">the Suite video</a></p></div>
+  </div>
+  <div class="rn-link"><b>Suite ↔ fractals</b><span>Each movement’s bars, phrases and sections are the rings of its picture. Where the terms repeat, as for φ and √2, the music and the picture are the same at every level; where they change, as for e and pi, the rule stays and the shape moves on.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"click":"sfB-golden"}'>The golden spiral</button> <button type="button" class="rn-ghost" data-remix='{"click":"sfB-pi"}'>Pi’s 292</button> <button type="button" class="rn-ghost" data-remix='{"click":"sfS-rings"}'>All six as rings</button> <button type="button" class="rn-ghost" data-remix='{"click":"sfB-pi-bar-32996"}'>Bar 32,996</button></p>
+</section>
+
 <footer class="rn-notes" id="frNotes" aria-labelledby="fr-notes-h">
-  <p class="rn-eyebrow">33 · Threads and sources</p>
+  <p class="rn-eyebrow">34 · Threads and sources</p>
   <h2 id="fr-notes-h" class="rn-h3">Threads to pull</h2>
   <div class="rn-threadlist">
     <div class="rn-thr"><span class="rn-tag rn-open">Open</span><h3 class="rn-h4">Is pi typical?</h3><p>Nobody knows whether pi’s terms follow the Gauss–Kuzmin law forever, or whether they are even unbounded. Every count so far says “typical”.</p></div>

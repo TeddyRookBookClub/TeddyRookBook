@@ -1,0 +1,23 @@
+\chapter{Computational methods}\label{app:methods}
+
+\paragraph{Software.} All computations use Python 3 with mpmath 1.3 (arbitrary-precision reals and the zeros of the zeta function), sympy (factorizations, small primality tests), gmpy2 (fast big-integer arithmetic and the Baillie--PSW test), NumPy and SciPy (linear algebra, statistics), and matplotlib (figures). The typesetting uses XeLaTeX with BibTeX.
+
+\paragraph{Continued fractions.} The terms of $\pi$ come from $\pi$ evaluated to $11{,}600$ decimal digits, expanded by the Gauss map at two working precisions; only terms on which the two expansions agree, less one, are kept (Algorithm~\ref{alg:terms}), which certifies the first $\NT$ terms. The constants $e$, $\sqrt 2$, $\varphi$ and $\log_2(3/2)$ are expanded the same way to 4{,}001 terms, with the precision raised automatically when needed. The pattern of $e$ and the constant terms of $\sqrt2$ and $\varphi$ are asserted, which checks the method.
+
+\paragraph{Rhythms.} Rhythms are built with Algorithm~\ref{alg:rhythm} and compared, letter for letter, with the floor rule \eqref{eq:beat-rule} evaluated in multiple precision: $140{,}000$ beats for $\pi - 3$ and complete words for 200 random term sequences.
+
+\paragraph{Primality.} A number is called prime if it is below $3{,}000$ and in the list of small primes, or if it has no prime factor below $3{,}000$ (one gcd with the primorial) and passes the Baillie--PSW probable-prime test of gmpy2. For the Fibonacci and Pell indices our lists agree with the OEIS \citep{OEIS_A001605,OEIS_A096650}, and for $\pi$ with \citep{OEIS_A086788,OEIS_A086785}.
+
+\paragraph{Random reals.} A random real is represented by $r/10^D$ with $r$ a uniformly random integer of $D = 1{,}620$ digits (Algorithm~\ref{alg:randconv}). Its first $1{,}000$ terms are shared by every real in $[r/10^D, (r+1)/10^D)$, as explained in Chapter~\ref{ch:primeconv}. The generator is Python's \texttt{random.Random} with a fixed seed, so the sample is reproducible.
+
+\paragraph{Zeta zeros.} The first \NZeros{} zeros were computed with \texttt{mpmath.zetazero} at 20 digits; the script checks that \texttt{mpmath.nzeros} counts exactly \NZeros{} zeros up to the last one, so none is missing, and recomputes a few at higher precision. The explicit-formula figure uses the first 100 zeros.
+
+\paragraph{Random matrices.} GUE matrices are $H = (A + A^*)/2$ with $A$ a $1000 \times 1000$ matrix of independent standard complex Gaussians, so that $E|H_{ij}|^2 = 1$ off the diagonal; eigenvalues are divided by $\sqrt{1000}$ (semicircle of radius 2) and unfolded with the semicircle distribution function, keeping the central half.
+
+\paragraph{Statistics.} Chi-square tests use SciPy's $\chi^2$ survival function; the Kolmogorov--Smirnov distance is the two-sample statistic; Poisson tail probabilities use SciPy. The pair-correlation histogram counts all pairs within 3 mean spacings among the first $6{,}000$ points of each set; the number variance uses $1{,}500$ to $4{,}000$ random windows per length (Algorithm~\ref{alg:numvar}).
+
+\paragraph{Structure factors.} $S(k)$ is computed directly from \eqref{eq:sk} on a grid of $40{,}000$ wavenumbers, with positions measured from the start of the window; the figures use a Hann taper (weights $2\sin^2(\pi x/\ell)$ across the window of length $\ell$) to suppress side lobes, while the peak values quoted in the text are untapered and evaluated exactly at the rational wavenumbers.
+
+\paragraph{Circle map.} Rotation numbers are averages over $2{,}520$ iterations (a multiple of every $q \le 10$, so locked orbits give exact fractions) after a transient of 400; step widths are measured on a grid of $40{,}001$ values of $\Omega$.
+
+\paragraph{Dimension.} Algorithm~\ref{alg:dim} with 40 and 60 Chebyshev nodes; the two agree to 13 digits for $E_{\{1,2\}}$, and the 60-node value matches the published $0.53128050627720514\ldots$ \citep{JenkinsonPollicott2018} to the twelve digits we print.

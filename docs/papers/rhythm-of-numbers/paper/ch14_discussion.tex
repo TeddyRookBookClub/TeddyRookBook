@@ -1,0 +1,35 @@
+\chapter{Discussion}\label{ch:discussion}
+
+\section{What the work shows}
+
+One guess about $\pi$ led, through one algorithm, to a surprising amount of mathematics and music. The guess $3 + k/(7k+1)$ is a continued fraction; a continued fraction is a rhythm whose levels are its terms (\cref{thm:nested}); the same algorithm builds tunings, Euclidean rhythms, mode-locking staircases and a factoring method; coprimality, which every level of the rhythm obeys, is where $6/\pi^2$ enters; and the self-similarity of the continued fraction is the common root of a family of classical fractals. Along the way we found the precise meaning of two numbers that the site's sources disagreed about (32,996 and 33,102), and we checked every numerical claim by script.
+
+The two research threads gave concrete answers. For prime convergents, a heuristic built from Lévy's theorem and the equidistribution of convergents modulo $m$ predicts $2\ln 2 \cdot \ln N$ prime denominators among the first $N$ convergents of a typical number, with the correction factor turning out to be $\zeta(2)$; a sample of random reals fits the predicted growth, and $\pi$ is typical. For the Montgomery--Dyson connection, one set of statistics places a crystal, $\pi$'s rhythm, the zeta zeros, random matrices, the primes and Poisson points on a single scale, and the explicit formula makes Dyson's quasicrystal remark visible. Neither thread proves a theorem about $\pi$ or the zeta function, and we have been careful to say so.
+
+\section{Limitations}
+
+\begin{itemize}
+\item \emph{Heuristics are not theorems.} \Cref{heur:primeconv} treats primality of different denominators as independent events; the agreement with data supports it but does not prove it.
+\item \emph{Finite samples.} The prime-convergent test uses \RandM{} random reals and $1{,}000$ convergents each; the slope fit has a standard error of $\RandSlopeSE$ and is slightly above the prediction because of early terms. A larger sample, and longer expansions, would sharpen the test.
+\item \emph{Low zeros.} We used the first \NZeros{} zeros, which we computed ourselves. At these heights finite-size corrections are visible \citep{Bogomolny2006,Berry1988}; Odlyzko's tables of zeros at much greater heights \citep{Odlyzko1987} would show closer agreement with the GUE.
+\item \emph{Probable primes.} Large ``primes'' are Baillie--PSW probable primes. No composite is known to pass that test, but it is not a proof of primality.
+\item \emph{Score facts.} The facts about the Suite come from the site's data, which its builders read from the engraved score; we checked the bar arithmetic but not each note.
+\item \emph{Literature search.} The audit of Chapter~\ref{ch:new} is as careful as we could make it, but the music-theory literature in particular is large, and related work may exist that we did not find.
+\end{itemize}
+
+\section{Open questions}
+
+\begin{enumerate}
+\item Does $\pi$ have infinitely many prime convergent denominators? Infinitely many prime numerators? (Open; Chapter~\ref{ch:primeconv}.)
+\item Are there infinitely many Fibonacci primes? Pell primes? (Open.)
+\item Can \cref{heur:primeconv} be proved in a model? For example, for almost every $x$, is the number of $n \le N$ with $q_n$ prime asymptotic to $2\ln 2 \cdot \ln N$? Even an upper bound of that order for almost every $x$ would be interesting.
+\item Are $\pi$'s terms unbounded? Do they obey the Gauss--Kuzmin law? (Open; every computation says ``typical.'')
+\item How does the spectrum of the arithmetic correlation matrix of Section~\ref{sec:corr} compare with random-matrix benchmarks, and does $6/\pi^2$ appear in its bulk?
+\item Rank all equal temperaments up to 200 notes by how well they approximate several just intervals at once. Do prime sizes stand out? (We expect not; a clear ``no'' would still be a result.)
+\end{enumerate}
+
+\section{Future work}
+
+On the mathematical side: extend the prime-convergent test to $10^4$ convergents for hundreds of reals and to the numerators; repeat the spacing statistics with zeros at large height; and look for a rigorous version of the heuristic in a probabilistic model of continued fractions. On the musical side: the method of Chapter~\ref{ch:suite} invites pieces in tunings whose number of notes is itself a convergent denominator (a pi movement in a 113-note tuning, for instance), and pieces built from numbers with chosen terms, whose form a composer could design by picking the continued fraction. The companion site's instruments already do much of this; the score of each new piece is a continued fraction made audible.
+
+\video{Close the film: return to the scrap of paper with $3 + k/(7k+1)$, list the open questions on screen, and play the last bars of Movement VI. About 4 minutes.}

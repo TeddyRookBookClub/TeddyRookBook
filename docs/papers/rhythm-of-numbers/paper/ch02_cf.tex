@@ -1,0 +1,137 @@
+\chapter{Continued fractions: the machine}\label{ch:cf}
+
+This chapter collects the facts about continued fractions that the rest of the work uses. All of them are classical; good sources are Khinchin's short book \citep{Khinchin1964} and Chapter~X of Hardy and Wright \citep{HardyWright2008}. We include the short proofs because the identities in them are the ones that turn into rhythms later.
+
+\section{The algorithm}
+
+Take a real number $x$. Write it as its whole part plus a leftover, and turn the leftover upside down:
+\begin{equation}\label{eq:cf-step}
+  x = a_0 + \frac{1}{x_1}, \qquad a_0 = \fl{x}, \quad x_1 = \frac{1}{x - a_0} > 1.
+\end{equation}
+Now do the same to $x_1$, then to $x_2$, and so on: $x_n = a_n + 1/x_{n+1}$ with $a_n = \fl{x_n}$. The whole numbers $a_0, a_1, a_2, \dots$ are the \emph{terms} (or partial quotients) of $x$, and the real numbers $x_n > 1$ are its \emph{complete quotients}. The process stops exactly when some leftover is zero, which happens exactly when $x$ is rational. Writing the steps inside one another gives
+\[
+  x = a_0 + \cfrac{1}{a_1 + \cfrac{1}{a_2 + \cfrac{1}{\ddots + \cfrac{1}{x_{n}}}}} = \cf{a_0; a_1, \dots, a_{n-1}, x_n}.
+\]
+For $\pi$ the first complete quotients are $x_1 = \CQone$, $x_2 = \CQtwo$, $x_3 = \CQthree$ and $x_4 = \CQfour$. The size of $x_4$ is the famous 292 at work.
+
+When $x = a/b$ is rational, the algorithm is Euclid's algorithm in disguise: dividing $a$ by $b$ gives quotient $a_0$ and remainder $r_1$, then $b$ by $r_1$ gives $a_1$, and so on. Running it on $355$ and $113$ gives the quotients $3, 7, 16$, so $355/113 = \cf{3; 7, 16}$, and the last nonzero remainder is $\gcd(355,113) = 1$.
+
+For $0 < x < 1$ the step from $x_n$ to $x_{n+1}$ is one iteration of the \emph{Gauss map}
+\begin{equation}\label{eq:gauss-map}
+  T(x) = \frac{1}{x} - \fl{\frac{1}{x}}, \qquad 0 < x < 1,
+\end{equation}
+which reads off the term $\fl{1/x}$ and keeps the leftover. Most of the statistics in this work are statements about long runs of $T$.
+
+\section{Convergents and the recurrence}
+
+Stopping after the term $a_n$ gives a fraction $p_n/q_n = \cf{a_0; a_1, \dots, a_n}$, the $n$th \emph{convergent}. Its numerator and denominator obey a two-term recurrence that is the engine of everything that follows.
+
+\begin{proposition}[the recurrence; see {\citealp[Thm.~1]{Khinchin1964}}]\label{prop:recurrence}
+Set $p_{-1} = 1$, $q_{-1} = 0$, $p_0 = a_0$, $q_0 = 1$, and for $n \ge 1$
+\begin{equation}\label{eq:recurrence}
+  p_n = a_n p_{n-1} + p_{n-2}, \qquad q_n = a_n q_{n-1} + q_{n-2}.
+\end{equation}
+Then $\cf{a_0; a_1, \dots, a_n} = p_n/q_n$ for every $n$, and more generally $\cf{a_0; a_1, \dots, a_{n-1}, t} = (t p_{n-1} + p_{n-2})/(t q_{n-1} + q_{n-2})$ for every real $t > 0$.
+\end{proposition}
+
+\begin{proof}
+In matrix form, \eqref{eq:recurrence} says
+\begin{equation}\label{eq:matrix}
+  \begin{pmatrix} p_n & p_{n-1} \\ q_n & q_{n-1} \end{pmatrix}
+  = \begin{pmatrix} a_0 & 1 \\ 1 & 0 \end{pmatrix}
+    \begin{pmatrix} a_1 & 1 \\ 1 & 0 \end{pmatrix} \cdots
+    \begin{pmatrix} a_n & 1 \\ 1 & 0 \end{pmatrix}.
+\end{equation}
+A matrix $\left(\begin{smallmatrix} a & b \\ c & d\end{smallmatrix}\right)$ acts on numbers by $t \mapsto (at + b)/(ct + d)$, and products of matrices act by composition. The matrix $\left(\begin{smallmatrix} a & 1 \\ 1 & 0\end{smallmatrix}\right)$ sends $t$ to $a + 1/t$, which is one layer of a continued fraction. Composing the layers gives the general statement, and $t = a_n$ in the last layer gives the first.
+\end{proof}
+
+Taking determinants in \eqref{eq:matrix}, each factor has determinant $-1$, so
+\begin{equation}\label{eq:det}
+  p_n q_{n-1} - p_{n-1} q_n = (-1)^{n-1}.
+\end{equation}
+Two consequences will matter again and again. First, any common divisor of $p_n$ and $q_n$ divides $\pm 1$, so every convergent is in lowest terms. Second, the same is true of neighboring denominators: $\gcd(q_n, q_{n-1}) = 1$. In the language of Chapter~\ref{ch:rhythm}, the length of a rhythmic block and its number of hits never share a factor, and neither do the lengths of neighboring blocks.
+
+\section{How close the convergents are}
+
+\begin{proposition}[the error of a convergent; {\citealp[Thms.~9 and~13]{Khinchin1964}}]\label{prop:error}
+If $x$ is irrational, then
+\begin{equation}\label{eq:error}
+  x - \frac{p_n}{q_n} = \frac{(-1)^n}{q_n\,(x_{n+1} q_n + q_{n-1})},
+\end{equation}
+and therefore
+\begin{equation}\label{eq:error-bounds}
+  \frac{1}{q_n (q_n + q_{n+1})} < \left| x - \frac{p_n}{q_n} \right| < \frac{1}{q_n q_{n+1}} \le \frac{1}{q_n^2}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+By \cref{prop:recurrence} with $t = x_{n+1}$, $x = (x_{n+1} p_n + p_{n-1})/(x_{n+1} q_n + q_{n-1})$. Subtract $p_n/q_n$, put everything over a common denominator, and use \eqref{eq:det}. For the bounds, $a_{n+1} < x_{n+1} < a_{n+1} + 1$ gives $q_{n+1} < x_{n+1} q_n + q_{n-1} < q_{n+1} + q_n$.
+\end{proof}
+
+The formula \eqref{eq:error} explains the 292. The error of $p_3/q_3 = 355/113$ is about $1/(113 \cdot x_4 \cdot 113)$, and $x_4 = \CQfour$ is large, so the error is tiny. A big term is a sign that the convergent just before it is unusually good. \Cref{tab:pi-conv} lists the first convergents of $\pi$ with their errors and the normalized error $q_n^2|\pi - p_n/q_n|$, which by \eqref{eq:error} is roughly $1/a_{n+1}$.
+
+\begin{table}[t]
+\centering
+\caption[The first convergents of $\pi$]{The first convergents of $\pi$. The last column is $q_n^2\,|\pi - p_n/q_n|$, which is close to $1/a_{n+1}$; it is smallest just before the large term 292.}
+\label{tab:pi-conv}
+\begin{tabular}{rrrrrr}
+\toprule
+$n$ & $a_n$ & $p_n$ & $q_n$ & $|\pi - p_n/q_n|$ & $q_n^2\,|\pi - p_n/q_n|$ \\
+\midrule
+\ConvTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+Convergents are not only close; they are the best possible for their size.
+
+\begin{theorem}[best approximation; Lagrange, see {\citealp[Thms.~16--17]{Khinchin1964}}]\label{thm:best}
+If $1 \le q < q_{n+1}$, then $|q x - p| \ge |q_n x - p_n|$ for every integer $p$, with equality only for $p/q = p_n/q_n$. In particular no fraction with denominator smaller than $q_{n+1}$ is closer to $x$ than $p_n/q_n$.
+\end{theorem}
+
+For $\pi$ this means that no fraction with denominator below $33{,}102$ beats $355/113$; our script checks it directly by scanning every denominator. A partial converse is due to Legendre.
+
+\begin{theorem}[Legendre; {\citealp[Thm.~184]{HardyWright2008}}]\label{thm:legendre}
+If $p/q$ is in lowest terms and $|x - p/q| < 1/(2q^2)$, then $p/q$ is a convergent of $x$.
+\end{theorem}
+
+We confirmed it for $\pi$ by brute force: among all fractions with denominator up to \LegendreQmax{}, the only ones within $1/(2q^2)$ of $\pi$ are convergents. Legendre's theorem reappears in Chapter~\ref{ch:fractals} as a statement about circles.
+
+\section{Patterns in the terms}
+
+Some numbers have continued fractions with simple patterns:
+\begin{align*}
+  \varphi = \tfrac{1 + \sqrt5}{2} &= \cf{1; 1, 1, 1, \dots}, & \sqrt2 &= \cf{1; 2, 2, 2, \dots},\\
+  e &= \cf{2; 1, 2, 1, 1, 4, 1, 1, 6, 1, \dots}, & \log_2\tfrac32 &= \cf{0; \FifthTermsShown, \dots}.
+\end{align*}
+For $\varphi$ the recurrence \eqref{eq:recurrence} with all terms equal to 1 is the Fibonacci recurrence, and the denominators are $\PhiQs, \dots$. For $\sqrt2$ they are the Pell numbers $\SqrtQs, \dots$. The pattern of $e$, with $2, 4, 6, \dots$ in every third place, is due to Euler; our scripts verify it for the first 3{,}900 terms. The number $\log_2(3/2)$, which measures a musical fifth (Chapter~\ref{ch:music}), shows no pattern, and neither does $\pi$.
+
+\begin{theorem}[Euler and Lagrange; {\citealp[Thms.~176--177]{HardyWright2008}}]\label{thm:lagrange}
+The continued fraction of $x$ is eventually periodic if and only if $x$ is a quadratic irrational, that is, an irrational root of a quadratic equation with integer coefficients.
+\end{theorem}
+
+So $\varphi$ and $\sqrt2$ have repeating terms, while $\pi$ and $e$, which are not quadratic irrationals, do not. This dichotomy returns in every chapter: repeating terms give exactly self-similar rhythms, music and pictures; non-repeating terms give the same \emph{rule} at every level but a new \emph{shape}.
+
+\section{The statistics of a typical number}\label{sec:metric}
+
+Pick $x$ at random between 0 and 1. What do its terms look like? Gauss conjectured, and Kuzmin proved in 1928 \citep{Kuzmin1928}, with a sharper version by Lévy \citep{Levy1929}, that for almost every $x$ the terms follow one fixed law.
+
+\begin{theorem}[Gauss--Kuzmin law]\label{thm:gk}
+For almost every $x \in (0,1)$, the proportion of indices $n \le N$ with $a_n = k$ tends, as $N \to \infty$, to
+\begin{equation}\label{eq:gk}
+  P(k) = -\log_2\!\left(1 - \frac{1}{(k+1)^2}\right).
+\end{equation}
+\end{theorem}
+
+So about $\GKlawOnePct\%$ of the terms are 1, $\GKlawTwoPct\%$ are 2 and $\GKlawThreePct\%$ are 3. Behind the law is the \emph{Gauss measure} $d\mu = dx/((1+x)\ln 2)$, which the Gauss map \eqref{eq:gauss-map} leaves invariant, and the fact that $T$ is ergodic for it; the frequency of $a_n = k$ is the Gauss measure of the interval $(1/(k+1), 1/k]$, which is \eqref{eq:gk}. Two more laws follow from the same ergodic theory.
+
+\begin{theorem}[Khinchin 1935; Lévy 1936]\label{thm:khinchin-levy}
+For almost every $x$,
+\begin{equation}\label{eq:khinchin}
+  (a_1 a_2 \cdots a_n)^{1/n} \to K_0 = \Khinchin\ldots \qquad\text{and}\qquad \frac{\ln q_n}{n} \to \frac{\pi^2}{12 \ln 2} = \LevyConst\ldots
+\end{equation}
+\end{theorem}
+
+The first limit is Khinchin's constant \citep{Khintchine1935}; the second is Lévy's constant \citep{Levy1936}, and it says that the denominators grow like $e^{\LevyConst n} \approx \LevyExp^n$. Lévy's theorem is the key input to the prime-convergent heuristic of Chapter~\ref{ch:primeconv}. No one knows whether $\pi$ obeys any of these laws; nobody has even proved that its terms are unbounded. What we can do is count. From $\pi$ computed to 11{,}600 digits, our scripts extract its first \NT{} terms (two precisions agree on every one), and find \GKones{} ones ($\GKonesPct\%$), a geometric mean of \GeoMean{} and $\ln q_{10000}/10000 = \LevyObs$. Chapter~\ref{ch:fractals} turns these counts into a formal test.
+
+\video{Animate the algorithm on $\pi$: peel off 3, flip $0.14159$ to $7.0625$, peel off 7, flip again. Show \cref{tab:pi-conv} filling in, with the error column shrinking and dipping at $355/113$. End with the slogan ``a big term means the fraction before it was unusually good.'' Instrument: ``The ladder.'' About 8 minutes.}

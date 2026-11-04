@@ -76,3 +76,10 @@ html[data-theme="dark"] .sx .sx-ph{color:#0f1a14}
 .sx .sx-tempi{font:600 .88rem system-ui,sans-serif;color:var(--gt)}
 @media (prefers-reduced-motion:reduce){.sx .sx-c{transition:none}}
 @media print{.sx .sx-play,.sx .sx-video,.ml-strip{display:none}}
+
+/* hub: six numbers, six fractals (thumbnails drawn by static/connections/rhythm/fr4.js) */
+.sx .sx-fr{list-style:none;margin:.8rem 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr));gap:.6rem}
+.sx .sx-fr a{display:flex;flex-direction:column;gap:.3rem;padding:.45rem;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;box-shadow:none;color:inherit;font:.88rem system-ui,sans-serif}
+.sx .sx-fr a:hover{border-color:var(--acc)}
+.sx .sx-fr canvas{display:block;width:100%}
+.sx .sx-fr b{color:var(--acc);margin-right:.2rem}

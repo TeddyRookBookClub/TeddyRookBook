@@ -1,0 +1,20 @@
+/* The Rhythm of Numbers: the paper page (/connections/rhythm-of-numbers/paper/). Prefix rp-; builds on rn.css tokens. */
+.rn-paper{display:grid;gap:1.4rem;padding-bottom:1rem}
+.rn-paper h1 em{display:block;font-size:.62em;line-height:1.25;margin-top:.3rem}
+.rp-by{font-weight:700;color:var(--rn-muted)}
+.rp-btns{display:flex;flex-wrap:wrap;gap:.5rem}
+.rp-btn{display:inline-block;padding:.55rem .95rem;border-radius:10px;border:1px solid var(--rn-g);color:var(--rn-g);text-decoration:none;font-weight:700}
+.rp-btn:hover,.rp-btn:focus-visible{text-decoration:underline}
+.rp-pri{background:var(--rn-g);color:var(--rn-on)!important}
+.rp-sec{display:grid;gap:.6rem}
+.rp-abs{display:grid;gap:.7rem}
+.rp-toc{list-style:none;margin:0;padding:0;display:grid;gap:.55rem}
+.rp-toc li{display:grid;grid-template-columns:2.6rem 1fr;gap:.2rem .6rem;padding:.6rem .8rem;border:1px solid var(--rn-line);border-left:4px solid var(--rn-gold);border-radius:10px;background:var(--rn-panel)}
+.rp-n{font-weight:700;color:var(--rn-gold-t);font-size:1.05rem}
+.rp-toc h3{font-size:1rem;margin:0 0 .15rem}
+.rp-toc p{max-width:none}
+.rp-links{font-size:.9rem;margin-top:.25rem!important}
+.rp-cite{border:1px solid var(--rn-line);border-radius:10px;padding:.7rem .9rem;background:var(--rn-soft);overflow-wrap:anywhere;max-width:none!important}
+.rp-more{margin:0;padding-left:1.2rem;display:grid;gap:.3rem}
+.rn-paper .rn-small{font-size:.88rem}
+@media print{.rp-btns{display:none}.rp-toc li{break-inside:avoid}}

@@ -38,6 +38,19 @@
     </ol>
   </section>
 
+  <section class="sx-sec" aria-labelledby="sx-frac-h">
+    {{- $fr := "connections/rhythm-of-numbers/fractals/" | relURL }}
+    <h2 id="sx-frac-h">Six numbers, six fractals</h2>
+    <p>Each movement’s bars, phrases and sections nest inside each other, and drawn as rings they make a fractal picture of its number. These are drawn live from the continued fractions. Open one to see it large, as a spiral of squares or a walking path too, and to hear it.</p>
+    <ul class="sx-fr">
+      {{- range $S.movements }}
+      <li><a href="{{ $fr }}?n={{ .slug }}#six"><canvas data-sixfrac="{{ .slug }}" data-style="rings" height="150" role="img" aria-label="Movement {{ .num }}, {{ .name }}: the nested blocks of {{ .number }} drawn as rings"></canvas><span><b>{{ .num }}</b> {{ .name }} <span class="sx-n">{{ .number }}</span></span></a></li>
+      {{- end }}
+    </ul>
+    {{- $js := "connections/rhythm/fr4.js" | relURL }}{{ with os.Stat "static/connections/rhythm/fr4.js" }}{{ $js = printf "%s?v=%d" $js .ModTime.Unix }}{{ end }}
+    <script src="{{ $js }}" defer></script>
+  </section>
+
   <section class="sx-sec" aria-labelledby="sx-more-h">
     <h2 id="sx-more-h">Where the music came from</h2>
     <p><a href="{{ "connections/rhythm-of-numbers/" | relURL }}"><b>The Rhythm of Numbers</b></a> is the workshop behind the suite: play pi as a beat, see its levels, and compose your own piece from any number. Its <a href="{{ "connections/rhythm-of-numbers/" | relURL }}#levels">levels</a> section shows how a continued fraction turns into bars, phrases and sections, and <a href="{{ "connections/rhythm-of-numbers/" | relURL }}#compose">Compose a piece</a> builds one for you.</p>

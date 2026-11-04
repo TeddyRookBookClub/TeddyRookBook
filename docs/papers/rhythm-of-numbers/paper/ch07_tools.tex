@@ -1,0 +1,81 @@
+\chapter{Tools that hunt primes}\label{ch:tools}
+
+The continued fraction found $355/113$. Can the same machine find primes? This chapter tries three tools from the companion site on the primes: a factoring method that is built from continued fractions, a picture of Fermat's little theorem made of rhythms, and an experiment that reads rhythms as binary numbers and tests them for primality. The first two are classical; the third is our experiment, and its result is a clear null.
+
+\section{Factoring with the continued fraction of \texorpdfstring{$\sqrt N$}{sqrt N}}
+
+To factor an odd number $N$ it is enough to find $x$ and $y$ with $x^2 \equiv y^2 \pmod N$ and $x \not\equiv \pm y$, because then $\gcd(x - y, N)$ is a proper factor. Continued fractions produce many congruences of the form $x^2 \equiv (\text{small number}) \pmod N$. Expand $\sqrt{N}$ (or $\sqrt{kN}$ for a small multiplier $k$) with the integer recurrence
+\begin{equation}\label{eq:cfrac}
+  P_{n+1} = a_n Q_n - P_n, \qquad Q_{n+1} = \frac{kN - P_{n+1}^2}{Q_n}, \qquad a_{n+1} = \fl{\frac{\fl{\sqrt{kN}} + P_{n+1}}{Q_{n+1}}},
+\end{equation}
+starting from $P_0 = 0$, $Q_0 = 1$, $a_0 = \fl{\sqrt{kN}}$. If $A_n$ are the numerators of the convergents, reduced modulo $N$, then
+\begin{equation}\label{eq:cfrac-congruence}
+  A_{n-1}^2 \equiv (-1)^n Q_n \pmod N, \qquad 0 < Q_n < 2\sqrt{kN}.
+\end{equation}
+These are standard facts about the continued fraction of a square root. Using them to factor, by searching the $Q_n$ for squares, was described by D.\,H. Lehmer and R.\,E. Powers in 1931 \citep{LehmerPowers1931}. In 1975 Michael Morrison and John Brillhart made it practical by combining many $Q_n$ that factor over a small set of primes, using linear algebra modulo 2 to find a product that is a square, and with it factored the seventh Fermat number $F_7 = 2^{128} + 1$ \citep{MorrisonBrillhart1975}.
+
+Our script implements the simple Lehmer--Powers search. It is instructive to run it on $F_5 = 2^{32} + 1$, which Euler showed is divisible by 641 \citep[\S 2.5]{HardyWright2008}. Because $F_5 = 65536^2 + 1$, the continued fraction of $\sqrt{F_5}$ is $\cf{65536; 131072, 131072, \dots}$ with every $Q_n = 1$, a square that gives only the trivial factorization. With multiplier $k = \FFiveMult$ the search succeeds: at step $n = \FFiveSteps$ it finds a square $Q_n$, and the gcd gives $F_5 = \FFiveFactor \times \FFiveCofactor$. \Cref{tab:cfrac} shows the first steps. A product of two six-digit primes, $999{,}983 \times 1{,}000{,}003$, falls after $\SemiSteps$ steps, because two factors this close make $N$ nearly a square.
+
+\begin{table}[t]
+\centering
+\caption[Continued-fraction factoring of $2^{32}+1$]{The first steps of the continued fraction of $\sqrt{2(2^{32} + 1)}$ in the recurrence \eqref{eq:cfrac}. By \eqref{eq:cfrac-congruence} each $Q_n$ is, up to sign, a square modulo $N$; the search waits for one that is a perfect square at an even step.}
+\label{tab:cfrac}
+\begin{tabular}{rrrc}
+\toprule
+$n$ & $a_n$ & $Q_n$ & square? \\
+\midrule
+\CfracRows
+\bottomrule
+\end{tabular}
+\end{table}
+
+This is the clearest case of ``pi's machine doing prime work'': the algorithm that, run on $\pi$, finds $22/7$ and $355/113$ is the algorithm that, run on $\sqrt N$, finds factors. It does not use any property of $\pi$, of course.
+
+\section{Mersenne necklaces and Fermat's little theorem}
+
+Take $m = 2^p - 1$ points on a circle and join each point $x$ to $2x \bmod m$. Write $x$ in binary with $p$ digits. Since $2^p \equiv 1 \pmod m$, doubling modulo $m$ simply rotates the digits by one place. So every orbit of the doubling map is a binary word of length $p$ together with all its rotations: a \emph{necklace}, or in our language a $p$-beat rhythm and all its rotations.
+
+\begin{proposition}[Fermat's little theorem for base 2, by necklaces]
+If $p$ is prime, then $p$ divides $2^p - 2$.
+\end{proposition}
+
+\begin{proof}
+Exclude the two constant words (all rests and all hits). Every other binary word of prime length $p$ has exactly $p$ distinct rotations, since a word equal to a nontrivial rotation of itself has a period dividing $p$, hence period 1. So the $2^p - 2$ nonconstant words split into orbits of size exactly $p$.
+\end{proof}
+
+The same argument with an alphabet of $a$ letters gives $p \mid a^p - a$; this combinatorial proof is due to Golomb \citep{Golomb1956}. For $p = 7$ there are $(2^7 - 2)/7 = \OrbitsSeven$ necklaces, each a 7-beat rhythm. For the composite length $p = 6$ the orbits have mixed sizes: \OrbitsSix. The picture does \emph{not} make $2^p - 1$ prime: $2^{11} - 1 = 2047 = 23 \times 89$. The test that does is the Lucas--Lehmer test, and with it the Great Internet Mersenne Prime Search found the largest known prime, $2^{136{,}279{,}841} - 1$, with $\MersenneDigits$ digits, in October 2024 \citep{GIMPS2024}.
+
+\section{The prime hunt}\label{sec:hunt}
+
+Here is an experiment from the companion site. Read the first $n$ beats of a number's rhythm as a binary number, a hit as 1 and a rest as 0, and test it for primality as $n$ grows. Does the rhythm of $\pi$ attract primes?
+
+\paragraph{Method.} For each of $\alpha = \pi - 3$, $e - 2$, $\sqrt2 - 1$ and $\varphi - 1$ we built the first 1{,}500 beats with \cref{thm:nested}, formed the prefixes $v_n$ (the binary number of the first $n$ beats) for $n = 2, \dots, 1500$, and tested every odd prefix with the Baillie--PSW probable-prime test (Appendix~\ref{app:methods}). A prefix is odd exactly when beat $n$ is a hit. For a random odd number of size $v$, the prime number theorem gives a probability of about $2/\ln v$ of being prime, so the expected count is $\sum 2/\ln v_n$ over the odd prefixes. The site uses the slightly cruder $\sum 2/(n \ln 2)$, which treats every prefix as an $n$-digit number; both are reported.
+
+\begin{table}[t]
+\centering
+\caption[The prime hunt in rhythm prefixes]{The prime hunt: probable primes among the binary prefixes of the first 1{,}500 beats of each rhythm. ``Expected'' is $\sum 2/\ln v_n$ over odd prefixes (the site's simpler $\sum 2/(n\ln 2)$ in parentheses). The last two columns are Poisson probabilities of a count at least as low, or at least as high, as the one found.}
+\label{tab:hunt}
+\begin{tabular}{lrrrr}
+\toprule
+number & found & expected & $P(X \le \text{found})$ & $P(X \ge \text{found})$ \\
+\midrule
+$\pi - 3$ & \HuntPi & \HuntPiExpV{} (\HuntPiExp) & \HuntLoPi & \HuntHiPi \\
+$e - 2$ & \HuntE & \HuntEExpV{} (\HuntEExp) & \HuntLoE & \HuntHiE \\
+$\sqrt2 - 1$ & \HuntRoot & \HuntRootExpV{} (\HuntRootExp) & \HuntLoRoot & \HuntHiRoot \\
+$\varphi - 1$ & \HuntPhi & \HuntPhiExpV{} (\HuntPhiExp) & \HuntLoPhi & \HuntHiPhi \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Results.} \Cref{tab:hunt} and \cref{fig:hunt} give the counts. The rhythm of $\pi - 3$ produced a single probable prime, at beat $\HuntPiAt$, where about $\HuntPiExpV$ were expected; its rhythm is mostly rests, so its prefixes are odd only once every seven beats or so, and the expected count is small. The other three constants found close to their expected counts. In total the four rhythms gave $\HuntTotFound$ probable primes against $\HuntTotExp$ expected. No count is unusual: every Poisson tail probability in the table is above $0.2$.
+
+\paragraph{Interpretation.} The rhythm of $\pi$ does not attract primes, and neither does any other rhythm we tried. This is a null result, and we report it as one. The comparison is with Mersenne numbers $2^p - 1$, whose binary form is the all-hit rhythm: they \emph{are} prime far more often than random numbers of their size, because every prime factor of $2^p - 1$ must be $\equiv 1 \pmod{2p}$, which removes all the small potential divisors. A construction that clearly beat its chance count in this test would deserve a closer look; none did. The same verdict, by a different route, comes from the statistics of $\pi$'s terms in Chapter~\ref{ch:fractals} and the prime convergents in Chapter~\ref{ch:primeconv}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{prime_hunt}
+\caption[The prime hunt]{The prime hunt: cumulative probable primes among binary prefixes of each rhythm (steps) against the expected count $\sum 2/\ln v_n$ (dashed), for the first 1{,}500 beats.}
+\label{fig:hunt}
+\end{figure}
+
+\video{Factor $2^{32}+1$ live: show the $Q_n$ scrolling past until a square appears and 641 drops out. Draw the doubling circle for $p = 7$ and let each necklace play as a rhythm. Run the prime hunt for $\pi$ and watch it find one prime, then for $e$ and watch it keep pace with chance. Say plainly: no attraction. Instruments: ``Factoring,'' ``Mersenne circles,'' ``Rhythm $\to$ number,'' ``Prime hunt.'' About 10 minutes.}

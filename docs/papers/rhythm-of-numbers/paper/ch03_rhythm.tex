@@ -1,0 +1,141 @@
+\chapter{The rhythm of a number}\label{ch:rhythm}
+
+\section{Playing a number as a beat}
+
+Let $0 < \alpha < 1$. Imagine a drummer who keeps a running total, adding $\alpha$ on every beat, and strikes the drum whenever the total passes a whole number. On beat $n$ the total goes from $n\alpha$ to $(n+1)\alpha$, so the rule is:
+\begin{equation}\label{eq:beat-rule}
+  \text{beat } n \text{ is a hit} \iff \fl{(n+1)\alpha} > \fl{n\alpha}, \qquad n = 1, 2, 3, \dots
+\end{equation}
+We write a hit as \hit{} and a rest as \rest{}, or as 1 and 0. The resulting infinite word $c_\alpha = c_\alpha(1)\,c_\alpha(2)\,c_\alpha(3)\cdots$ is called the \emph{characteristic word} of $\alpha$. Since the total grows by less than 1 per beat, there is at most one hit per beat, and after $L$ beats there have been exactly $\fl{(L+1)\alpha}$ hits. The hits are spread as evenly as the whole numbers allow: the density of hits is $\alpha$, and any two stretches of the same length differ by at most one hit. For $\alpha = \pi - 3$ the first 40 beats are
+\begin{center}
+\texttt{......x......x......x......x......x.....}
+\end{center}
+a hit every 7 beats, because $1/\alpha = \CQone$ lies between 7 and 8. The leftover $0.0625 \approx 1/16$ means that roughly every 16th gap is an 8 instead of a 7. That is already the start of a hierarchy, and this chapter shows that it continues forever, level by level, exactly as the continued fraction says.
+
+\section{Sturmian and Christoffel words}
+
+Words like $c_\alpha$ have a long history in combinatorics, where they are called \emph{Sturmian words}; the standard reference is Chapter~2 of Lothaire's book, written by Berstel and Séébold \citep{Lothaire2002}, and the books of Allouche and Shallit \citep[Ch.~9]{AlloucheShallit2003} and Berstel, Lauve, Reutenauer and Saliola \citep{BerstelChristoffel2009}.
+
+\begin{definition}
+A binary word is \emph{balanced} if any two factors (blocks of consecutive letters) of the same length contain numbers of 1s that differ by at most 1. An infinite word is \emph{Sturmian} if it is balanced and not eventually periodic. A \emph{mechanical word} of slope $\alpha$ and intercept $\rho$ has $n$th letter $\fl{(n+1)\alpha + \rho} - \fl{n\alpha + \rho}$; the characteristic word is the case $\rho = 0$. For a rational slope $p/q$ in lowest terms, one period of the mechanical word with $\rho = 0$, read as $\fl{(i+1)p/q} - \fl{ip/q}$ for $i = 0, \dots, q-1$, is the \emph{lower Christoffel word} of slope $p/q$.
+\end{definition}
+
+For irrational $\alpha$, the mechanical words of slope $\alpha$ are exactly the Sturmian words \citep[Ch.~2]{Lothaire2002}. A Christoffel word is the finite, rational version: it spreads $p$ hits over $q$ beats as evenly as possible. In music these are the maximally even rhythms of Clough and Douthett \citep{CloughDouthett1991}, and, up to rotation, the Euclidean rhythms of Chapter~\ref{ch:music}.
+
+\section{The nested-block theorem}
+
+The construction that the companion site uses to play a number builds the rhythm from its continued fraction rather than from the floor rule \eqref{eq:beat-rule}. It is the classical construction of \emph{standard words}.
+
+\begin{definition}[standard words]
+Let $\alpha = \cf{0; a_1, a_2, \dots}$. Set $s_{-1} = \hit$, $s_0 = \rest$, and
+\begin{equation}\label{eq:standard}
+  s_1 = s_0^{\,a_1 - 1}\, s_{-1}, \qquad s_{n} = s_{n-1}^{\,a_n}\, s_{n-2} \quad (n \ge 2),
+\end{equation}
+where $w^a$ means $a$ copies of $w$ in a row.
+\end{definition}
+
+In words: the level-1 block is $a_1 - 1$ rests and a hit; each later block is \emph{(term) copies of the block just built, followed by the block before it}. For $\pi - 3$, $s_1$ is the 7-beat block \texttt{......x}; $s_2$ is fifteen of those and one extra rest, 106 beats; $s_3 = s_2 s_1$ is 113 beats; $s_4 = s_3^{292} s_2$ is \BlockEnd{} beats. In pseudocode (Algorithm~\ref{alg:rhythm} in Appendix~\ref{app:alg}):
+\begin{center}
+\texttt{this, prev = "."*(a1-1) + "x", "."; for a in a2, a3, ...: this, prev = this*a + prev, this}
+\end{center}
+The theorem below says that this construction and the floor rule \eqref{eq:beat-rule} produce the same rhythm, and that the block lengths are the convergent denominators.
+
+\begin{lemma}[floors near a convergent]\label{lem:floors}
+Let $n \ge 1$ and $1 \le m < q_n + q_{n+1}$. Then $\fl{m\alpha} = \fl{m p_n/q_n} - \varepsilon_n(m)$, where $\varepsilon_n(m) = 1$ if $q_n$ divides $m$ and $n$ is odd, and $\varepsilon_n(m) = 0$ otherwise.
+\end{lemma}
+
+\begin{proof}
+By \eqref{eq:det}, $p_n/q_n$ and $p_{n+1}/q_{n+1}$ satisfy $|p_n q_{n+1} - p_{n+1} q_n| = 1$, and $\alpha$ lies strictly between them (\cref{prop:error}). A fraction $a/b$ strictly between two such fractions has $b \ge q_n + q_{n+1}$: indeed $|a/b - p_n/q_n| \ge 1/(b q_n)$ and $|p_{n+1}/q_{n+1} - a/b| \ge 1/(b q_{n+1})$, and the two distances add up to $1/(q_n q_{n+1})$, which forces $b \ge q_n + q_{n+1}$. Now take $m < q_n + q_{n+1}$. If an integer $k$ lay strictly between $m\alpha$ and $m p_n/q_n$, then $k/m$ would lie strictly between $\alpha$ and $p_n/q_n$, which is impossible. So if $m p_n/q_n$ is not an integer, both numbers have the same floor. If it is an integer (that is, $q_n \mid m$), the floors agree when $\alpha > p_n/q_n$ and differ by one when $\alpha < p_n/q_n$; by \eqref{eq:error} the convergent lies above $\alpha$ exactly when $n$ is odd.
+\end{proof}
+
+\begin{lemma}[near-periodicity]\label{lem:period}
+For $n \ge 1$ and $1 \le j \le q_{n+1} - 2$, $c_\alpha(j + q_n) = c_\alpha(j)$.
+\end{lemma}
+
+\begin{proof}
+Let $f(m) = \fl{m p_n/q_n} - \varepsilon_n(m)$. Then $f(m + q_n) = f(m) + p_n$, because $\varepsilon_n$ has period $q_n$. By \cref{lem:floors}, $c_\alpha(j) = f(j+1) - f(j)$ whenever $j + 1 < q_n + q_{n+1}$. For $j \le q_{n+1} - 2$ both $j+1$ and $j + q_n + 1$ are below $q_n + q_{n+1}$, so $c_\alpha(j+q_n) = f(j+q_n+1) - f(j+q_n) = f(j+1) - f(j) = c_\alpha(j)$.
+\end{proof}
+
+\begin{theorem}[nested blocks; Fraenkel, Mushkin and Tassa; Brown]\label{thm:nested}
+Let $\alpha = \cf{0; a_1, a_2, \dots}$ be irrational, with convergents $p_n/q_n$ and standard words $s_n$. Then for every $n \ge 0$:
+\begin{enumerate}[label=(\roman*)]
+\item $s_n$ is $q_n$ beats long and contains $p_n$ hits;
+\item the length and the number of hits of $s_n$ are coprime, and so are the lengths of $s_n$ and $s_{n-1}$;
+\item for $n \ge 1$, $s_n$ is the beginning of the characteristic word $c_\alpha$. Hence the first $q_{n+1}$ beats of the rhythm consist of $a_{n+1}$ copies of the level-$n$ block followed by one level-$(n-1)$ block, and $c_\alpha = \lim_{n\to\infty} s_n$.
+\end{enumerate}
+\end{theorem}
+
+Part (iii) is due to Fraenkel, Mushkin and Tassa \citep{FraenkelMushkinTassa1978} and Brown \citep{Brown1993}; a proof through Sturmian morphisms is in Lothaire \citep[Ch.~2]{Lothaire2002}. We give a direct proof from the two lemmas, since the same counting reappears in every musical application.
+
+\begin{proof}
+(i) The lengths satisfy $|s_{-1}| = |s_0| = 1$, $|s_1| = a_1 = q_1$, and $|s_n| = a_n |s_{n-1}| + |s_{n-2}|$, which is the recurrence \eqref{eq:recurrence} for $q_n$ with $q_0 = 1$. The hit counts satisfy $0, 1, a_n \cdot (\text{previous}) + (\text{one before})$, starting from $s_0$ with $0 = p_0$ hits and $s_1$ with $1 = p_1$ hit, which is the recurrence for $p_n$.
+
+(ii) follows from (i) and the determinant identity \eqref{eq:det}.
+
+(iii) For $n = 1$: $\alpha$ lies between $1/(a_1 + 1)$ and $1/a_1$, so $(j+1)\alpha < 1$ for $j < a_1$ and $(a_1 + 1)\alpha > 1$; the first $a_1$ beats are $a_1 - 1$ rests and a hit, which is $s_1$. For $n = 2$ when $a_1 = 1$ (so $q_1 = 1$ and the lemma below does not apply): then $1 - \alpha$ lies between $1/(a_2 + 2)$ and $1/(a_2+1)$, hence $\fl{j\alpha} = j - 1$ for $1 \le j \le a_2 + 1$ and $\fl{(a_2 + 2)\alpha} = a_2$; the first $a_2 + 1$ beats are $a_2$ hits and a rest, which is $s_2 = s_1^{a_2} s_0$.
+
+For the inductive step, suppose $n \ge 1$, $q_n \ge 2$, and $s_n$ and $s_{n-1}$ are beginnings of $c_\alpha$ (for $n = 1$ we use $s_0 = \rest = c_\alpha(1)$, which holds when $a_1 \ge 2$, the only case with $q_1 \ge 2$). Since $q_n \ge 2$, every position $j \le q_{n+1} - q_n$ satisfies $j \le q_{n+1} - 2$, so \cref{lem:period} lets us shift by $q_n$ repeatedly: the first $q_{n+1} = a_{n+1} q_n + q_{n-1}$ beats are $a_{n+1}$ copies of the first $q_n$ beats followed by the first $q_{n-1}$ beats. By hypothesis these are $s_n$ and $s_{n-1}$, so the first $q_{n+1}$ beats are $s_n^{a_{n+1}} s_{n-1} = s_{n+1}$. Since $q_n \ge 2$ for all $n \ge 2$, the induction runs forever.
+\end{proof}
+
+We also confirmed the theorem by computer: for 200 random term sequences (terms drawn from $\{1,2,3,4,5,7,12\}$, words up to several thousand beats) and for $\pi - 3$ over the first $140{,}000$ beats, the standard words agree letter for letter with the floor rule \eqref{eq:beat-rule}, and every block has $q_n$ beats and $p_n$ hits.
+
+\begin{remark}
+The theorem is the precise form of the statement that ``every term of the continued fraction is a repeat count.'' The term $a_{n+1}$ says how many times the level-$n$ block repeats before the level-$(n-1)$ block closes the level-$(n+1)$ block. Big terms mean long runs of identical blocks; a term equal to 1 means the level adds a single block. For the golden ratio every term is 1, so every level is ``one long block, then one short block,'' and the levels are the Fibonacci numbers.
+\end{remark}
+
+\section{Pi's levels, and the beat where the surprise lands}\label{sec:pi-levels}
+
+\Cref{tab:pi-levels} lists the first levels of the rhythm of $\pi - 3$, and \cref{fig:pi-blocks} draws them.
+
+\begin{table}[t]
+\centering
+\caption[The levels of the rhythm of $\pi - 3$]{The levels of the rhythm of $\pi - 3 = \cf{0; 7, 15, 1, 292, 1, 1, \dots}$. Each block is (term) copies of the block above it in the table, then the block two rows up. The fraction is hits over beats, the $n$th convergent of $\pi - 3$; adding 3 gives the convergent of $\pi$.}
+\label{tab:pi-levels}
+\begin{tabular}{rrlrrl}
+\toprule
+level $n$ & term $a_n$ & block $s_n$ & beats $q_n$ & hits $p_n$ & convergent of $\pi$ \\
+\midrule
+1 & 7 & $\rest^6\hit$ & 7 & 1 & $22/7$ \\
+2 & 15 & $s_1^{15}\, s_0$ & 106 & 15 & $333/106$ \\
+3 & 1 & $s_2\, s_1$ & 113 & 16 & $355/113$ \\
+4 & 292 & $s_3^{292}\, s_2$ & 33{,}102 & 4{,}687 & $103993/33102$ \\
+5 & 1 & $s_4\, s_3$ & 33{,}215 & 4{,}703 & $104348/33215$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{pi_blocks}
+\caption[The nested blocks of $\pi$'s rhythm]{The nested blocks of $\pi$'s rhythm, drawn to scale at four zoom levels. Top: one 113-beat block (hits in green). Second row: the start of level 4, a run of 113-beat phrases. Third row: all of level 4, 292 phrases of 113 beats and then the single 106-beat phrase (gold), which begins at beat 32{,}996 and closes the block at 33{,}102. Bottom: levels 5 to 7, where each term is 1.}
+\label{fig:pi-blocks}
+\end{figure}
+
+The two artifacts on which the companion site is based disagreed about where the first short phrase of level 4 ``lands'': one said beat 32{,}996, the other 33{,}102. Both are right about different things. Number the beats from 0, as the site does. Level 4 is $s_4 = s_3^{292} s_2$: 292 phrases of 113 beats followed by one phrase of 106. The 292 long phrases fill beats 0 through $292 \times 113 - 1 = 32{,}995$, so the short phrase \emph{begins} at beat $\ShortStart$; it fills beats $32{,}996$ to $33{,}101$, so the level-4 block \emph{ends} after beat $33{,}101$, and the next block begins at beat $\BlockEnd = q_4$. Our script locates every short phrase in the first $140{,}000$ beats: they begin at beats \ShortStarts. In the first $80{,}000$ beats there are \PhrasesLong{} complete phrases of 113 beats and \PhrasesShort{} of 106.
+
+When each beat is one bar of music, as in the fifth and sixth movements of the Suite (Chapter~\ref{ch:suite}), bars are numbered from 1, and the same moment is the bar line after bar 32{,}996: the first bar of the short cycle is printed as bar 32{,}997, and the short cycle ends with bar 33{,}102. At a tempo of one bar every 2.5 seconds, reaching it takes \HoursToRare{} hours of continuous playing.
+
+\section{From levels to musical form}\label{sec:form}
+
+\Cref{thm:nested} turns any continued fraction into a hierarchy of blocks, and a hierarchy of blocks is what musicians call \emph{form}: notes group into bars, bars into phrases, phrases into sections, sections into movements. The reading proposed on the companion site, and used by Teddy Rook for the Suite, is simply to name the levels: the shortest block is a bar, the next a phrase, the next a section, and so on. Each term then says how many of one unit make the next, and the second, shorter block at each level is a contrasting unit, a ``B'' section that the number brings in on its own schedule.
+
+Two small choices make the reading musical. First, a level that adds a single unit to the one below (a term equal to 1 at a low level, or the ``extra rest'' in $s_2 = s_1^{15} s_0$) can be absorbed: in the Composer on the site, $\pi$'s bars are 7 beats, its phrases 113, and its sections $33{,}102$. Second, the rhythm itself can be kept inside each bar, so that the accents of a piece follow the number at the smallest scale while its form follows the number at the largest. Chapter~\ref{ch:suite} shows both choices at work.
+
+\section{Three gaps}
+
+The rhythm of $\alpha$ has only two kinds of gaps between hits, $\fl{1/\alpha}$ and $\fl{1/\alpha} + 1$ (7 and 8 for $\pi - 3$), because it is balanced. A related classical fact concerns the points $\fr{\alpha}, \fr{2\alpha}, \dots, \fr{N\alpha}$ placed on a circle of circumference 1.
+
+\begin{theorem}[three-gap theorem; Sós, Świerczkowski]\label{thm:threegap}
+For any irrational $\alpha$ and any $N$, the points $0, \fr{\alpha}, \dots, \fr{N\alpha}$ cut the circle into arcs of at most three different lengths, and when there are three, the largest is the sum of the other two.
+\end{theorem}
+
+The statement was conjectured by Steinhaus. Proofs and the history are in Sós \citep{Sos1958}, Świerczkowski \citep{Swierczkowski1958} and the survey of Alessandri and Berthé \citep{AlessandriBerthe1998}, which also explains the link with Sturmian words. The gap lengths are built from the distances $\|q_k\alpha\|$ of the multiples $q_k\alpha$ to the nearest integer, so the continued fraction controls them too. \Cref{fig:three-gap} shows the distinct gap lengths for $\pi - 3$ and $N \le 120$; our script checks the theorem for every $N \le \ThreeGapN$. At $N = 100$ the three lengths are $\ThreeGapHundred$. In Chapter~\ref{ch:spectrum} this rigidity, two gaps in the rhythm and at most three on the circle, puts $\pi$'s rhythm at the ``quasicrystal'' end of a scale whose other end is pure randomness.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{three_gap}
+\caption[The three-gap theorem for $\pi - 3$]{The three-gap theorem for $\alpha = \pi - 3$. Left: the distinct arc lengths among the points $0, \fr{\alpha}, \dots, \fr{N\alpha}$ for $N = 1, \dots, 120$ (green: three lengths; gold: two; dashed lines at the denominators $N = 7$ and $N = 113$). The count is two whenever the number of points, $N+1$, is a denominator such as 7, 106 or 113. Right: the first 20 points, which cluster near multiples of $1/7$ because $7\alpha$ is close to 1.}
+\label{fig:three-gap}
+\end{figure}
+
+\video{Play the pi rhythm slowly and count the 7s. Then speed up and show \cref{fig:pi-blocks} zooming out level by level, ending on the single gold phrase after 292 long ones. Explain ``beat 32,996 vs.\ 33,102'' with a ruler: one is where the short phrase starts, the other where the block ends. Instruments: ``The levels'' and the Composer's ``Jump to the rarest block.'' About 10 minutes.}

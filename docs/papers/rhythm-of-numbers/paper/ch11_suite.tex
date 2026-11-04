@@ -1,0 +1,63 @@
+\chapter{Composition: the Continued-Fraction Suite as a method}\label{ch:suite}
+
+\section{The work}
+
+The \emph{Continued-Fraction Suite} is an original composition by Teddy Rook: six short pieces for piano, one number each, engraved with LilyPond and published as a free score with a recorded performance \citep{SuiteScore}. It grew out of the Composer and ``Compose a piece'' instruments of the companion site, which play a number's rhythm with one voice per level. Whatever the prior art on its method (Chapter~\ref{ch:new}), the Suite is a new artwork. This chapter describes it as a method, in words and form diagrams; it does not reproduce the score. The musical facts below (keys, meters, tempos, bar counts, rehearsal marks) were read from the score by the site's builders and recorded in the site's data, and our script checks every bar count against the continued fractions.
+
+\begin{table}[t]
+\centering
+\caption[The six movements]{The six movements of the Continued-Fraction Suite. ``Bars'' is the length of the movement as printed; Movement VI begins at bar 32{,}968.}
+\label{tab:suite}
+\small
+\begin{tabular}{lllll}
+\toprule
+movement & number & key & meter, tempo & bars \\
+\midrule
+I. Golden & $\varphi - 1 = \cf{0; 1, 1, 1, \dots}$ & \KeyGolden & \TimeGolden, \TempoGolden & \BarsGolden \\
+II. Silver & $\sqrt2 - 1 = \cf{0; 2, 2, 2, \dots}$ & \KeySilver & \TimeSilver, \TempoSilver & \BarsSilver \\
+III. The Fifth & $\log_2\frac32 = \cf{0; 1, 1, 2, 2, 3, \dots}$ & \KeyFifth & \TimeFifth, \TempoFifth & \BarsFifth \\
+IV. Euler & $e - 2 = \cf{0; 1, 2, 1, 1, 4, \dots}$ & \KeyEuler & \TimeEuler, \TempoEuler & \BarsEuler \\
+V. Pi & $\pi - 3 = \cf{0; 7, 15, 1, 292, \dots}$ & \KeyPi & \TimePi, \TempoPi & \BarsPi \\
+VI. Pi, bar 32{,}996 & $\pi - 3$, at level 4 & \KeySix & \TimeSix, \TempoSix & \BarsSix \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{The method}
+
+Each movement applies the same five decisions to its number.
+\begin{enumerate}
+\item \emph{Choose the number and its levels.} Compute the terms $a_1, a_2, \dots$ and the block lengths $q_n$ (\cref{thm:nested}).
+\item \emph{Choose which level is a bar.} The block lengths then become lengths in bars of phrases, sections and larger units. Levels that are too short to be phrases are passed over: Golden starts its phrases at 3 and 5 bars, Silver at 2 and 5, Pi at 7.
+\item \emph{Lay out the form as the standard word.} At each level the long block appears $a_{n+1}$ times and is closed by one short block. The score marks the long unit A, the short one B, and a unit that the number brings in only rarely as a ``rare block.''
+\item \emph{Put the rhythm inside each bar.} The left hand carries accents on the eighth notes where the number's own beat word has a hit (with $\alpha$ replaced by $1 - \alpha$ when $\alpha > \frac12$, so the accents stay sparse). So the same number shapes the music at the smallest scale and the largest.
+\item \emph{Let the melody walk the digits.} The score's preface says that the melody follows the number's decimal digits; this is a free compositional choice and carries no structural weight in what follows.
+\end{enumerate}
+\Cref{fig:suite-forms} draws the six forms to scale, and the rest of this section reads each one.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{suite_forms}
+\caption[The forms of the six movements]{The forms of the six movements, drawn to scale (one unit per bar) from the section list read from the score. Colors follow the rehearsal marks: green for the opening and A sections (and Movement VI's long cycle), gold for B, mint for rare blocks and the short cycle, dark grey for a held bar. White ticks mark phrase boundaries.}
+\label{fig:suite-forms}
+\end{figure}
+
+\paragraph{I. Golden.} Every term of $\varphi - 1$ is 1, so each block is the two blocks before it joined: the Fibonacci rule. Phrases are 5 and 3 bars, sections are $8 = 5 + 3$ and $5$ bars, and the sections follow the Fibonacci word: $\GoldenSeq$, which is eight 8s and five 5s, $64 + 25 = 89$ bars, itself a Fibonacci number. Our script checks that this sequence is the golden rhythm, letter for letter. Because every term is 1, no section ever comes three times in a row.
+
+Golden also shows a subtlety of labeling that we call \emph{two-level labels}. In the other movements the short block is truly rare. Here every level is ``one long block, then one short block,'' and the sizes slide up the Fibonacci numbers: an 8-bar unit is the \emph{long} block at the level of sections ($8$ against $5$) and the \emph{short} block at the level above ($13 = 8 + 5$ against $8$). The score names each 8-bar unit by whichever level's boundary falls there, so the same 8 bars of music are marked A in some places and ``rare block'' in others. That is the self-similarity of the golden ratio, written into rehearsal marks.
+
+\paragraph{II. Silver.} Every term of $\sqrt2 - 1$ is 2: ``two of these, then one of those.'' Phrases are 5 and 2 bars, sections $12 = 5 + 5 + 2$ and 5 bars, and the whole is $29 + 29 + 12 = 70$ bars, where $29 = 12 + 12 + 5$. The numbers $2, 5, 12, 29, 70$ are the Pell numbers, the denominators of $\sqrt 2$.
+
+\paragraph{III. The Fifth.} The terms of $\log_2(3/2)$ change: $1, 1, 2, 2, 3, 1, 5, \dots$ Phrases are 5 and 2 bars and sections $12 = 5 + 5 + 2$; then the 3 takes over, three 12-bar sections and a 5 make $41$, and one more 12 makes $53$. The section sequence $12, 12, 12, 5, 12$ builds the denominators $5, 12, 41, 53$ of the best fractions for the fifth (Chapter~\ref{ch:music}) directly into the form.
+
+\paragraph{IV. Euler.} The terms of $e - 2$ grow in a pattern: $1, 2, 1, 1, 4, 1, 1, 6, \dots$ Phrases are 4 and 3 bars, sections $7 = 4 + 3$ and 4; the 4 in the continued fraction makes a $32$-bar block of four 7s and a 4; then $39 = 32 + 7$ and $71 = 39 + 32$. The denominators $7, 32, 39, 71$ are those of the convergents $5/7$, $23/32$, $28/39$, $51/71$ of $e - 2$.
+
+\paragraph{V. Pi.} The first three terms of $\pi - 3$ build a 113-bar cycle: fifteen 7-bar phrases, one held bar, and a last 7-bar phrase marked B, so $15 \times 7 + 1 + 7 = 113$. The held bar is the ``one extra rest'' of the standard word $s_2 = s_1^{15}s_0$, and the B phrase is the closing $s_1$ of $s_3 = s_2 s_1$.
+
+\paragraph{VI. Pi, bar 32,996.} The fourth term, 292, says that the 113-bar cycle repeats 292 times before the first short cycle of 106 bars. If Movement V never stopped, that moment would come after $292 \times 113 = 32{,}996$ bars, about $\VIhours$ hours at the marked tempo ($\SecondsPerBarPi$ seconds per bar). The last movement jumps there. It plays bars 32{,}968 to 33{,}017: the end of the 292nd cycle (three phrases, the held bar and the B phrase, here in F major) and the opening three phrases of the short cycle, which begins at the printed bar 32{,}997. A short cycle is a long one without its closing phrase, so on paper it starts exactly like a long one; the composer marks the moment instead with a change of key and a hush. Section~\ref{sec:pi-levels} explains why ``beat 32,996'' on the site and ``bar 32,997'' in the score name the same moment.
+
+\section{What the method gives a composer}
+
+The method gives proportions without dictating content. A number fixes how long each unit is and when contrast arrives; the composer still chooses every note. Quadratic irrationals give forms that repeat exactly at every level (Golden, Silver); numbers with changing terms give forms in which each level follows a different rule (The Fifth, Euler); and a number with one huge term gives a form with a surprise that is postponed almost indefinitely (Pi). In the language of Chapter~\ref{ch:fractals}, the first kind is self-similar in shape and the others only in rule.
+
+\video{Play eight bars of each movement while its strip from \cref{fig:suite-forms} scrolls underneath with a playhead. Pause on Golden's two-level labels. For Movement VI, show a counter running from bar 1 to 32,996 at high speed, then cut to the real music at bar 32,968. Instruments: the Composer's ``Jump to the rarest block,'' ``Compose a piece,'' and the six piano lessons in the Music section. About 10 minutes.}

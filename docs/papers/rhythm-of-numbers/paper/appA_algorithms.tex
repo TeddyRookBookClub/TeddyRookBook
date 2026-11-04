@@ -1,0 +1,94 @@
+\chapter{Algorithms}\label{app:alg}
+
+This appendix gives the main algorithms in pseudocode. The Python scripts of Appendix~\ref{app:repro} implement each one.
+
+\begin{algorithm}[h]
+\caption{Certified continued-fraction terms of a real constant}\label{alg:terms}
+\KwIn{a procedure that evaluates $x$ to $d$ decimal digits; the number of terms $n$}
+\KwOut{the first $n$ terms of $x$, each guaranteed correct}
+\Repeat{at least $n$ terms are certified}{
+  evaluate $x$ at precision $d$ and at precision $d + 200$\;
+  expand both: $a \leftarrow \fl{y}$, $y \leftarrow 1/(y - a)$, repeated\;
+  keep the common prefix of the two term lists, minus its last term\;
+  \lIf{fewer than $n$ terms are kept}{$d \leftarrow 1.6\,d$}
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Convergents (\cref{prop:recurrence})}\label{alg:conv}
+\KwIn{terms $a_0, a_1, \dots, a_N$}
+$p_{-1}, q_{-1}, p_0, q_0 \leftarrow 1, 0, a_0, 1$\;
+\For{$n \leftarrow 1$ \KwTo $N$}{
+  $p_n \leftarrow a_n p_{n-1} + p_{n-2}$;\quad $q_n \leftarrow a_n q_{n-1} + q_{n-2}$\;
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{The rhythm of a number (standard words, \cref{thm:nested})}\label{alg:rhythm}
+\KwIn{terms $a_1, a_2, \dots, a_k$ of $\alpha = \cf{0; a_1, a_2, \dots}$}
+\KwOut{the level words $s_0, \dots, s_k$; $s_n$ has $q_n$ beats and $p_n$ hits}
+$s_{-1} \leftarrow \texttt{x}$;\quad $s_0 \leftarrow \texttt{.}$\;
+$s_1 \leftarrow s_0^{\,a_1 - 1}\, s_{-1}$\;
+\For{$n \leftarrow 2$ \KwTo $k$}{
+  $s_n \leftarrow s_{n-1}^{\,a_n}\, s_{n-2}$ \tcp*{repeat, then close}
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Bjorklund's algorithm for the Euclidean rhythm $E(k,n)$}\label{alg:bjork}
+\KwIn{$1 \le k < n$}
+$A \leftarrow k$ groups \texttt{[x]};\quad $B \leftarrow n - k$ groups \texttt{[.]}\;
+\While{$B$ has more than one group}{
+  $m \leftarrow \min(|A|, |B|)$\;
+  append the $i$th group of $B$ to the $i$th group of $A$, for $i = 1, \dots, m$\;
+  the unused groups (from $A$ if $|A| > m$, else from $B$) become the new $B$\;
+}
+\Return{the concatenation of the groups of $A$ and then of $B$}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Lehmer--Powers square search on the continued fraction of $\sqrt{kN}$}\label{alg:cfrac}
+\KwIn{odd composite $N$, multiplier $k$}
+$a_0 \leftarrow \fl{\sqrt{kN}}$; $P \leftarrow 0$; $Q \leftarrow 1$; $a \leftarrow a_0$; $A_{-1} \leftarrow 1$; $A_0 \leftarrow a_0 \bmod N$\;
+\For{$n \leftarrow 1, 2, \dots$}{
+  $P \leftarrow aQ - P$;\quad $Q \leftarrow (kN - P^2)/Q$;\quad $a \leftarrow \fl{(a_0 + P)/Q}$\;
+  \If{$n$ is even and $Q = s^2$ for an integer $s$}{
+    $g \leftarrow \gcd(A_{n-1} - s, N)$\;
+    \lIf{$1 < g < N$}{\Return{$g$}}
+  }
+  $A_n \leftarrow (a A_{n-1} + A_{n-2}) \bmod N$\;
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Counting prime convergents of random reals (Chapter~\ref{ch:primeconv})}\label{alg:randconv}
+\KwIn{number of reals $M$, number of convergents $N$}
+\For{$i \leftarrow 1$ \KwTo $M$}{
+  draw a uniform integer $r \in [1, 10^D)$ with $D = \lfloor 1.6N \rfloor + 20$\;
+  expand $r/10^D$ by exact Euclidean division; keep the first $N+1$ terms\;
+  compute $p_n, q_n$ for $n \le N$ (Algorithm~\ref{alg:conv})\;
+  \ForEach{$n \le N$}{
+    $E \leftarrow E + \zeta(2)/\ln q_n$\tcp*{heuristic expectation}
+    \If{$q_n$ has no prime factor below $3000$ and passes Baillie--PSW}{count $q_n$ as prime}
+  }
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Hausdorff dimension of a continued-fraction Cantor set}\label{alg:dim}
+\KwIn{allowed terms $A$; number of Chebyshev nodes $m$}
+nodes $x_1, \dots, x_m$ on $[0,1]$; interpolation matrix $V^{-1}$ for polynomials of degree $< m$\;
+\SetKwFunction{Rho}{rho}
+\Rho{$s$}: matrix $M = \sum_{a \in A} \mathrm{diag}\big((a + x_i)^{-2s}\big)\, V_a V^{-1}$, where $V_a$ evaluates the basis at $1/(a + x_i)$; \Return{spectral radius of $M$}\;
+bisect on $s \in [0,1]$ for $\rho(s) = 1$\;
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Number variance of an unfolded point set}\label{alg:numvar}
+\KwIn{sorted points $u_1 < \dots < u_N$ with mean spacing 1; window lengths $L$; trials $T$}
+\ForEach{$L$}{
+  draw $T$ uniform window starts $t$ in $[u_1, u_N - L]$\;
+  count the points in each window $[t, t+L)$ by binary search\;
+  $\Sigma^2(L) \leftarrow$ sample variance of the counts\;
+}
+\end{algorithm}

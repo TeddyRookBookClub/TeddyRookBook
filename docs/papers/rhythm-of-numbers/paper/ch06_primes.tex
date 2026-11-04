@@ -1,0 +1,75 @@
+\chapter{Primes in sound and space}\label{ch:primes}
+
+This chapter collects the places on the companion site where the primes are heard or seen: as notes, as arms of a spiral, as columns of a wheel, as peaks in a diffraction pattern and as a sum of waves. Each is a classical or recent published result; our contribution is to compute each one again and to tie it to the rhythm of $\pi$.
+
+\section{Primes as notes, and the bias of neighbors}
+
+Number the twelve notes of the octave $0, \dots, 11$. Every prime above 3 leaves remainder 1, 5, 7 or 11 on division by 12, because the other remainders share a factor with 12; these are the $\varphi(12) = 4$ notes C$\sharp$, F, G and B. Playing the primes in order as notes, with each gap to the next prime as a duration, gives the ``prime music'' instrument on the site.
+
+If the remainders of consecutive primes were independent and equally likely, a prime would repeat the remainder of the one before it one time in four. They do not. Lemke Oliver and Soundararajan \citep{LemkeOliverSound2016} showed numerically that consecutive primes avoid repeating their remainder, and explained the bias by a conjecture of Hardy--Littlewood type that predicts it fades only like $1/\ln x$. Our counts agree (\cref{fig:residue}). Modulo 10, among the primes from 7 up to $10^5$, $10^6$ and $10^7$, the share of repeats is $\RepTenA\%$, $\RepTenB\%$ and $\RepTenC\%$, against 25\% for independence; modulo 12 it is $\RepTwelveA\%$, $\RepTwelveB\%$ and $\RepTwelveC\%$. The share creeps up toward 25\% as the range grows, slowly, as predicted.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.48\textwidth]{residue_bias}
+\caption[The last digits of consecutive primes]{Last digits of consecutive primes up to $10^7$ ($\PrimesToTenSeven$ primes from 7 on). Each cell is the percentage of pairs (prime, next prime) with the given last digits; independence would give 6.25\% everywhere. The diagonal, where the digit repeats, is depleted.}
+\label{fig:residue}
+\end{figure}
+
+\section{A sunflower seeded with primes}
+
+Place seed number $k$ at angle $2\pi k\alpha$ and distance $\sqrt{k}$ from the center. With $\alpha = \varphi - 1$ (the golden angle) this is the familiar model of a sunflower head; with $\alpha = \pi - 3$ the seeds fall into 7 spokes that curl into 113 arms (\cref{fig:sunflower}). The reason is the rhythm again: $113\alpha = 113\pi - 339$ differs from the integer 16 by only $\MiluGap$, so seeds $k$ and $k + 113$ sit at almost the same angle, and arm $j$ of the 113 holds the seeds $k \equiv j \pmod{113}$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{sunflower}
+\caption[Pi's sunflower, seeded with primes]{Pi's sunflower: seed $k$ at angle $2\pi k(\pi - 3)$ and radius $\sqrt k$. Left, all seeds up to 3{,}000 form 7 spokes that curl into 113 arms (seeds divisible by 113 in gold). Right, only the prime seeds up to 8{,}000: they fill the arms evenly.}
+\label{fig:sunflower}
+\end{figure}
+
+Now light only the prime seeds. A prime larger than $q$ can lie in arm $j$ of $q$ only if $\gcd(j, q) = 1$, each of those $\varphi(q)$ arms holds infinitely many primes by Dirichlet's theorem of 1837 \citep[Thm.~15]{HardyWright2008}, and by the prime number theorem for arithmetic progressions they share the primes equally in the long run. Since 113 is prime, primes avoid only the arm $j = 0$; among the primes up to 8{,}000 they occupy $\ArmsOneThirteen$ of the 113 arms. With 106 arms, which is $2 \times 53$, primes occupy only $\ArmsOneOSix = \varphi(106)$ arms, and half the spiral goes dark.
+
+\paragraph{Wheels.} The same fact, straightened out, is \emph{wheel factorization}: lay the integers in rows of width $w$, and the primes beyond $w$ fall only in the $\varphi(w)$ columns coprime to $w$. With $w = 30$ a sieve can skip $\WheelSkip\%$ of all numbers without testing them, and with $w = 210$, $\WheelTwoTen\%$. Pi's rhythm, laid in rows of width 113, forms 16 nearly straight columns, one for each hit in a 113-beat block.
+
+\section{Diffraction: a quasicrystal and the primes}
+
+Crystallographers read the order of a material from its diffraction pattern, which is (up to constants) the squared modulus of the Fourier transform of the atom positions. For $N$ points $x_1, \dots, x_N$ on a line, define the structure factor
+\begin{equation}\label{eq:sk}
+  S(k) = \frac{1}{N}\left|\sum_{j=1}^N e^{2\pi i k x_j}\right|^2 .
+\end{equation}
+A random set gives $S(k) \approx 1$ for all $k \ne 0$; a periodic crystal gives sharp peaks of height about $N$ at the multiples of its reciprocal lattice. In 1982 Dan Shechtman observed sharp diffraction from a metal alloy whose symmetry no periodic crystal can have \citep{Shechtman1984}; such ordered but aperiodic materials are \emph{quasicrystals}, and he received the 2011 Nobel Prize in Chemistry.
+
+\paragraph{Pi's rhythm is a one-dimensional quasicrystal.} Put an atom at each hit of $\pi$'s rhythm. Sturmian point sets are standard examples of one-dimensional quasicrystals: their diffraction is pure point, with Bragg peaks at the points $m\alpha + n$ of the ``Fourier module'' $\Z + \alpha\Z$ \citep{BaakeGrimm2013}. In \cref{fig:diffraction} (top) the peaks sit at $\fr{m(\pi - 3)}$, folded into $[0, \tfrac12]$; the peak at $k = \pi - 3$ has height $\SpiAlpha$ for the hits among the first 3{,}000 beats.
+
+\paragraph{The primes are ``effectively limit-periodic.''} Torquato, Zhang and de Courcy-Ireland \citep{Torquato2018} computed the structure factor of the primes in long intervals and found dense Bragg-like peaks at rational wavenumbers $k = a/q$ with \emph{square-free} $q$, and none at $1/4$ or $1/9$; they called this order ``effectively limit-periodic.'' The rational positions and the square-free rule have a short explanation. If the primes in a window are equidistributed among the $\varphi(q)$ residue classes coprime to $q$, then for $\gcd(a, q) = 1$
+\[
+  \sum_{p} e^{2\pi i a p/q} \approx \frac{N}{\varphi(q)} \sum_{\substack{r \bmod q\\ \gcd(r,q)=1}} e^{2\pi i a r/q} = \frac{N\,\mu(q)}{\varphi(q)},
+\]
+because the inner sum is a Ramanujan sum, which equals the Möbius function $\mu(q)$ \citep[\S 16.6]{HardyWright2008}. So $S(a/q) \approx N \mu(q)^2/\varphi(q)^2$, which vanishes unless $q$ is square-free. For the $\NprimesWindow$ primes in $[10^6, 10^6 + 2\cdot 10^4)$ our computation gives $S(1/2) = \SprHalf$ (all are odd), $S(1/3) = \SprThird$ (the prediction $N/4$ is $368$), but only $S(1/4) = \SprQuarter$ and $S(1/9) = \SprNinth$, at the level of the random background.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{diffraction}
+\caption[Diffraction of $\pi$'s rhythm and of the primes]{Structure factors \eqref{eq:sk} on a logarithmic scale (computed with a smooth taper to suppress side lobes). Top: atoms at the hits of $\pi$'s rhythm in the first 3{,}000 beats; gold triangles mark $\fr{m(\pi-3)}$ for $m = 1, \dots, 7$, folded into $[0, \frac12]$. Bottom: atoms at the primes in $[10^6, 10^6 + 2 \cdot 10^4)$ (green) and at a random set of the same size (gold); the prime peaks sit at fractions with square-free denominators.}
+\label{fig:diffraction}
+\end{figure}
+
+Freeman Dyson suggested that the zeros of the zeta function, if the Riemann hypothesis is true, form a one-dimensional quasicrystal in a suitable sense, and that classifying such quasicrystals might lead somewhere \citep{Dyson2009}. Chapter~\ref{ch:spectrum} takes up that remark.
+
+\section{Primes as a sum of waves}
+
+Let $\psi(x) = \sum_{p^m \le x} \ln p$, a staircase that climbs by $\ln p$ at every prime power $p^m$. Riemann's 1859 paper \citep{Riemann1859} introduced the idea, and von Mangoldt proved \citep{Mangoldt1895}, that for $x > 1$ not a prime power
+\begin{equation}\label{eq:explicit}
+  \psi(x) = x - \sum_{\rho} \frac{x^\rho}{\rho} - \ln(2\pi) - \tfrac12 \ln\!\left(1 - x^{-2}\right),
+\end{equation}
+where $\rho$ runs over the nontrivial zeros of the zeta function, summed symmetrically in pairs $\rho, \bar\rho$. Writing $\rho = \tfrac12 + i\gamma$ (as all computed zeros are), each pair contributes a wave $-2\,\mathrm{Re}(x^\rho/\rho)$ with amplitude about $\sqrt x/\gamma$ and frequency $\gamma$ in the variable $\ln x$. The first zeros have $\gamma = \ZeroOne$, $\ZeroTwo$ and $\ZeroThree$. \Cref{fig:explicit} rebuilds $\psi$ from 3, 20 and 100 pairs of zeros: the waves add up to the staircase. The $\ln 2\pi$ in \eqref{eq:explicit} is one more place where $\pi$ sits next to the primes.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{explicit_formula}
+\caption[The prime staircase rebuilt from zeta zeros]{The explicit formula \eqref{eq:explicit}: the staircase $\psi(x)$ (black) and its reconstruction from the first 3, 20 and 100 pairs of zeta zeros.}
+\label{fig:explicit}
+\end{figure}
+
+\paragraph{The Montgomery--Dyson observation, stated carefully.} In 1972 Hugh Montgomery, studying the spacings between the $\gamma$'s, derived a pair-correlation function $1 - (\sin \pi u/\pi u)^2$ for suitably normalized zeros; he proved it for a restricted class of test functions assuming the Riemann hypothesis, and conjectured it in general \citep{Montgomery1973}. Freeman Dyson recognized the function as the pair correlation of eigenvalues of large random Hermitian matrices from the Gaussian Unitary Ensemble (GUE), a model of the energy levels of heavy nuclei \citep{Dyson1962,Mehta2004}. Odlyzko's large-scale computations showed excellent agreement \citep{Odlyzko1987}. What is known is the agreement of statistics; there is no known Hermitian operator whose eigenvalues are the zeros, and no proof that the statistics must agree. Chapter~\ref{ch:spectrum} computes these statistics for ourselves.
+
+\video{Play the primes as notes and show the diagonal of \cref{fig:residue} fading. Grow the sunflower seed by seed, then switch to primes only. Show both diffraction patterns, and point to the missing peaks at $1/4$ and $1/9$. End with \cref{fig:explicit} adding waves one by one, and say clearly what Montgomery and Dyson found and what is still unknown. Instruments: ``Prime music,'' ``Pi's sunflower,'' ``Sieves \& periods,'' ``Quasicrystals,'' ``Zeta zeros \& nuclei.'' About 11 minutes.}

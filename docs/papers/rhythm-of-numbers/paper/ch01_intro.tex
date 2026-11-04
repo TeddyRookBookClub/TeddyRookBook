@@ -1,0 +1,62 @@
+\chapter{Introduction: a guess about pi}\label{ch:intro}
+
+\section{The guess}
+
+This work began with a guess written on a scrap of paper. Pi is a little more than 3. The leftover, $\pi - 3 = 0.14159\ldots$, is a little less than $1/7$. So try
+\begin{equation}\label{eq:guess}
+  \pi \approx 3 + \frac{k}{7k+1}
+\end{equation}
+for some whole number $k$. When $k$ is large, $k/(7k+1)$ is just under $1/7$; when $k$ is small it is further below. Somewhere in between it might hit $\pi - 3$ well. Teddy Rook tried values of $k$ one at a time, and \cref{fig:guess} shows what happens. The error falls steadily, reaches a sharp minimum at $k = 16$, and then rises again. At $k = 16$ the guess gives
+\[
+  3 + \frac{16}{113} = \frac{355}{113} = 3.14159292\ldots,
+\]
+which differs from $\pi$ by \ErrMilu. That is six correct decimal places from a fraction with a three-digit denominator.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{guess}
+\caption[The starting guess $\pi \approx 3 + k/(7k+1)$]{The starting guess. The error $|\pi - (3 + k/(7k+1))|$ for $k = 1, \dots, 40$ on a logarithmic scale. The sharp dip at $k=16$ is $355/113$; $k = 10$ gives Archimedes' lower bound $223/71$ and $k=1$ gives $25/8$. Gold rings mark the $k$ for which $7k+1$ is prime.}
+\label{fig:guess}
+\end{figure}
+
+The fraction $355/113$ is famous. The Chinese mathematician Zu Chongzhi recorded it in the fifth century AD; it is called \emph{Milü}, ``the close ratio'' \citep[p.~281]{Martzloff2006}; see also \citet{BerggrenBorwein1997}. Two other values of $k$ give classical fractions too: $k = 10$ gives $223/71$, the lower bound that Archimedes proved, and the limit $k \to \infty$ gives $22/7$, his upper bound. So the guess \eqref{eq:guess} quietly contains three classical fractions for $\pi$.
+
+\section{Why the guess works}
+
+The guess works because of a small piece of algebra:
+\begin{equation}\label{eq:guess-cf}
+  \frac{k}{7k+1} = \cfrac{1}{7 + \cfrac{1}{k}}.
+\end{equation}
+The right-hand side is a \emph{continued fraction} stopped after two steps. Solving $1/(7 + 1/k) = \pi - 3$ for $k$ gives
+\[
+  k^\ast = \frac{\pi - 3}{1 - 7(\pi-3)} = \Kstar,
+\]
+not a whole number but very close to 16. Rounding $k^\ast$ to the nearest integer is exactly the next step of the continued fraction of $\pi$, and the reason the rounding error is so small is that the step after that is huge. Writing out the first few steps,
+\begin{equation}\label{eq:pi-cf}
+  \pi = 3 + \cfrac{1}{7 + \cfrac{1}{15 + \cfrac{1}{1 + \cfrac{1}{292 + \cdots}}}},
+\end{equation}
+and $k^\ast = 15 + 1/(1 + 1/(292 + \cdots)) \approx 16$. The terms of $\pi$'s continued fraction begin
+\[
+  \pi = \cf{3;\ \PiTermsShown, \dots}.
+\]
+Chapter~\ref{ch:cf} develops this machinery from the beginning.
+
+\section{Three directions}
+
+The rest of this work follows the continued fraction of $\pi$, and of a few other numbers, in three directions.
+
+\paragraph{Rhythm and music.} Play a number $\alpha$ between 0 and 1 as a beat: on beat $n$, sound a hit if $\fl{(n+1)\alpha} > \fl{n\alpha}$, and stay silent otherwise. For $\alpha = \pi - 3$ the hits come every 7 beats, with an occasional gap of 8. Listen longer and the gaps of 8 come in a pattern of their own, and that pattern has a pattern, and so on. Chapter~\ref{ch:rhythm} proves that the levels of this rhythm are exactly the levels of the continued fraction: the terms $7, 15, 1, 292, \dots$ are repeat counts. Read as bar, phrase, section and movement, they give a musical form; Chapter~\ref{ch:music} connects the same machinery to tuning, Euclidean rhythms and mode locking, and Chapter~\ref{ch:suite} describes the \emph{Continued-Fraction Suite}, six piano pieces Teddy Rook composed this way.
+
+\paragraph{Primes.} The algorithm that builds a continued fraction is Euclid's algorithm, and Euclid's algorithm is the oldest test for whether two numbers share a prime factor. Chapters~\ref{ch:coprime}--\ref{ch:tools} follow that link through coprime pairs and $6/\pi^2$, the patterns of primes in residues, spirals and diffraction, the zeros of the zeta function, factoring with continued fractions, and a hunt for primes in rhythms. Two questions from the companion site get chapters of their own. Does $\pi$'s continued fraction have infinitely many prime denominators (Chapter~\ref{ch:primeconv})? And what is the right way to picture the famous match between zeros of the zeta function and energy levels of heavy nuclei (Chapter~\ref{ch:spectrum})?
+
+\paragraph{Self-similarity.} Teddy Rook pictured $\pi$ as ``a number, then a smaller number after it, then a smaller one after that, and so on forever.'' Chapter~\ref{ch:fractals} makes this precise: the tail of a continued fraction is again a continued fraction, built by the same rule. That one fact underlies a family of classical fractals, and we draw each of them for $\pi$.
+
+\section{What is new and what is not}
+
+Almost all of the mathematics here is classical, and we cite it as such. The rhythm of a number is a Sturmian word \citep{Lothaire2002}; the even spreading of beats is the Euclidean rhythm of Bjorklund and Toussaint \citep{Toussaint2005}; Ford circles, the Stern--Brocot tree and the question-mark function date from 1858 to 1938. Chapter~\ref{ch:new} carries out a careful audit, idea by idea. In brief, the parts we did not find elsewhere are: the systematic reading of a number's whole continued fraction as nested musical form (bar, phrase, section, movement), together with its use as a compositional method; the Suite itself, which is new as an artwork whatever the prior art on its method; the explicit constant $2\ln 2$ in the heuristic count of prime convergents and its test on hundreds of random reals; and the placement of several point sets on a single spacing spectrum. Even for these we say ``we did not find prior work,'' not ``this is new,'' wherever the literature is too wide to search completely.
+
+\section{Conventions}
+
+Throughout, $\fl{x}$ is the floor of $x$ and $\fr{x} = x - \fl{x}$ its fractional part. A continued fraction is written $\cf{a_0; a_1, a_2, \dots}$. For a number $\alpha$ between 0 and 1 we often write $\alpha = \cf{0; a_1, a_2, \dots}$ and work with $\pi - 3$, $\varphi - 1$, $\sqrt2 - 1$, $e - 2$ and $\log_2(3/2)$, the five numbers of the Suite. We count beats from 1 when we state the rhythm rule, but we index positions in a beat string from 0, as the companion site does; Section~\ref{sec:pi-levels} says exactly what each count means. ``Prime'' for numbers with more than a few hundred digits means \emph{probable prime} by the Baillie--PSW test (Appendix~\ref{app:methods}).
+
+\video{Open on the scrap of paper: $3 + k/(7k+1)$. Slide $k$ from 1 to 40 while \cref{fig:guess} draws itself, and stop at the dip. Show the identity \eqref{eq:guess-cf} as two nested fractions. Instrument: ``The starting guess'' on the Rhythm of Numbers page. About 6 minutes.}
