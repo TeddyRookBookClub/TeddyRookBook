@@ -1,0 +1,112 @@
+# Great Books Ladder: the Great Idea "experiment", followed through the books (page: /great-books/ideas/experiment/, layout layouts/math/gbidea.html).
+# Our own words: inspired by Adler's Syntopicon, NOT copied from it. Checked by scripts/greatbooks/check-gb.py.
+#   question: one or two plain sentences.  intro: optional.  stances: optional [{key, label}] (colors the timeline; only where views divide cleanly)
+#   stops (4-10, oldest first): rung (a rung id), year (number, negative = BC), optional when/who/work (else the rung's date/author/work),
+#     optional stance, text (2-4 sentences, our own words), optional quote: ONE short line (under 40 words) copied exactly from an
+#     excerpt already in that rung's lesson (scripts/greatbooks/src/<rung>/lesson.json), with that excerpt's credit fields; nothing from 1931 or later.
+#   young: paragraphs for young readers.  talk: 4-6 family questions.  see: topic ids on other ladders.  pages: optional [{url, title}].
+key: experiment
+question: Why test ideas instead of only arguing about them? How did people learn to ask nature questions with experiments?
+stops:
+- rung: gbgreeks.aristotle-biology
+  year: -340
+  text: Aristotle was a great observer. He opened eggs day by day to watch chicks grow and gathered reports from fishermen and farmers.
+    He did not do controlled experiments as we know them, but he insisted on checking theory against what we see.
+- rung: gbrome.galen-on-the-natural-faculties
+  year: 180
+  text: Galen did real experiments. To show that the kidneys make urine, he tied the tubes leading from them to the bladder in a living
+    animal and watched what happened. He scolded rivals who argued without testing.
+- rung: gb17.gilbert-on-the-loadstone
+  year: 1600
+  text: Gilbert says the old books are full of untested claims about magnets. He tests them himself, rubbing magnets with garlic and
+    showing nothing changes. He calls for true experiments in place of guesses and fables.
+  quote:
+    text: Plutarch and Claudius Ptolemy, and all the copyists since their time, think that a loadstone smeared with garlick does not
+      allure iron.
+    author: William Gilbert
+    work: On the Magnet, Book I, chapter 14
+    tr: Silvanus P. Thompson and the Gilbert Club
+    ed: Chiswick Press, London
+    year: 1900
+    src: Project Gutenberg
+    url: https://www.gutenberg.org/ebooks/33810
+- rung: gb17.bacon-novum-organum
+  year: 1620
+  text: Bacon argues that knowledge grows by planned experiments and careful tables of cases, not by clever argument alone. He warns
+    that we notice cases that fit our ideas and forget the ones that don't. Experiments should be designed to catch our mistakes.
+  quote:
+    text: The former like ants only heap up and use their store, the latter like spiders spin out their own webs.
+    author: Francis Bacon
+    work: Novum Organum, Book I, aphorism 95
+    tr: the version edited by Joseph Devey
+    ed: P. F. Collier & Son, New York
+    year: 1902
+    src: Internet Archive
+    url: https://archive.org/details/novumorganum00bacogoog
+- rung: gb17.harvey-motion-of-the-heart
+  year: 1628
+  text: Harvey ties tight and loose bands on an arm to show which way blood flows in arteries and veins. He presses on veins to show
+    the valves only let blood go toward the heart. Simple experiments anyone could repeat made his case.
+- rung: gb17.galileo-two-new-sciences
+  year: 1638
+  text: Galileo rolls balls down a smooth grooved ramp many times and times them carefully. He repeats the test at different slopes
+    and finds the same law. An experiment, for him, is a question asked of nature in the language of mathematics.
+- rung: gb17.pascal-scientific-treatises
+  year: 1648
+  text: Pascal designs experiments with tubes of mercury and water to test whether nature abhors a vacuum. The test on a mountain shows
+    the air's weight holds up the mercury. He says the ancients would have changed their minds if they had seen it.
+  quote:
+    text: But if the modern experiments had been known to them, perhaps they would have found cause for affirming what they found cause
+      for denying, for the reason that vacuum had not yet appeared.
+    author: Blaise Pascal
+    work: Preface to the Treatise on Vacuum
+    tr: O. W. Wight
+    ed: The Harvard Classics, vol. 48, P. F. Collier and Son
+    year: 1910
+    src: Internet Archive
+    url: https://archive.org/details/harvardclassics48eliouoft
+- rung: gb17.newton-optics
+  year: 1704
+  text: Newton passes sunlight through one prism, picks out a single color, and sends it through a second prism. The color bends again
+    but does not change. This crucial experiment showed that colors are in the light, not made by the glass.
+  quote:
+    text: The Light of the Sun consists of Rays differently Refrangible.
+    author: Isaac Newton
+    work: Opticks, Book I, Part I, Proposition II, Theorem II, Experiment 3
+    tr: ''
+    ed: 4th edition, William Innys, London
+    year: 1730
+    src: Internet Archive
+    url: https://archive.org/details/bim_eighteenth-century_opticks-or-a-treatise-_newton-sir-isaac_1730
+- rung: gb19.faraday-experimental-researches
+  year: 1831
+  text: Faraday kept careful numbered notes of thousands of experiments. After many failures, he found that a current appears only when
+    a magnet moves or a current switches on or off. He wrote his results so clearly that others could repeat them.
+  quote:
+    text: But whilst the voltaic current was continuing to pass through the one helix, no galvanometrical appearances of any effect
+      like induction upon the other helix could be perceived.
+    author: Michael Faraday
+    work: Experimental Researches in Electricity, First Series, paragraph 10
+    tr: ''
+    ed: Philosophical Transactions of the Royal Society of London, vol. 122
+    year: 1832
+    src: Internet Archive
+    url: https://archive.org/details/philtrans01461252
+young:
+- An experiment is a test to find out if an idea is true. Instead of just saying 'I think heavy things fall faster,' you drop two things
+  and watch!
+- A good experiment changes only one thing at a time. Want to know if plants need light? Grow two bean plants the same way, but put
+  one in a dark closet. What happens after a week?
+talk:
+- Why is it better to test an idea than just argue about it?
+- Gilbert tested whether garlic stops magnets. Can you test an old saying, like 'a watched pot never boils'?
+- Why should an experiment change only one thing at a time?
+- Faraday kept careful notes. Why do scientists write everything down?
+- Plan an experiment together. What will you change, and what will you measure?
+see:
+- hsbio.hypotheses-experiments
+- stat.experimental-design
+- stat.observational-experimental
+- lifek.observing
+- physsci.magnets
+- phys2.faradays-law

@@ -1,0 +1,110 @@
+# Great Books Ladder: the Great Idea "measurement", followed through the books (page: /great-books/ideas/measurement/, layout layouts/math/gbidea.html).
+# Our own words: inspired by Adler's Syntopicon, NOT copied from it. Checked by scripts/greatbooks/check-gb.py.
+#   question: one or two plain sentences.  intro: optional.  stances: optional [{key, label}] (colors the timeline; only where views divide cleanly)
+#   stops (4-10, oldest first): rung (a rung id), year (number, negative = BC), optional when/who/work (else the rung's date/author/work),
+#     optional stance, text (2-4 sentences, our own words), optional quote: ONE short line (under 40 words) copied exactly from an
+#     excerpt already in that rung's lesson (scripts/greatbooks/src/<rung>/lesson.json), with that excerpt's credit fields; nothing from 1931 or later.
+#   young: paragraphs for young readers.  talk: 4-6 family questions.  see: topic ids on other ladders.  pages: optional [{url, title}].
+key: measurement
+question: How did people learn to turn size, weight and time into numbers, and why does measuring matter?
+stops:
+- rung: gbgreeks.euclid-solid-geometry
+  year: -300
+  text: Euclid proves exact relations between solids, such as that a cone holds one third as much as a cylinder with the same base and
+    height. He does it without any units at all, by comparing one shape with another. Measurement begins as ratio.
+  quote:
+    text: Any cone is a third part of the cylinder which has the same base with it and equal height.
+    author: Euclid
+    work: Elements, Book XII, Proposition 10
+    tr: Thomas L. Heath
+    ed: Cambridge University Press
+    year: 1908
+    src: Internet Archive
+    url: https://archive.org/details/thirteenbookseu01heibgoog
+- rung: gbgreeks.archimedes-works
+  year: -250
+  text: Archimedes traps the circle between polygons of 96 sides to pin down the ratio of circumference to diameter. He proves it lies
+    between 3 10/71 and 3 1/7. It was the best value for centuries, and his method of closing in on a number is still used.
+  quote:
+    text: The ratio of the circumference of any circle to its diameter is less than 3 1/7 but greater than 3 10/71.
+    author: Archimedes
+    work: Measurement of a Circle, Proposition 3
+    tr: Thomas L. Heath
+    ed: Cambridge University Press
+    year: 1897
+    src: Internet Archive
+    url: https://archive.org/details/worksofarchimede00arch
+- rung: gbrome.ptolemy-almagest
+  year: 150
+  text: Ptolemy measures the heavens. He builds tables of chords, an early form of trigonometry, and uses old and new observations to
+    set the planets' cycles. His careful numbers let astronomers predict eclipses.
+- rung: gb17.harvey-motion-of-the-heart
+  year: 1628
+  text: 'Harvey does a simple calculation: how much blood does the heart push out with each beat, and how many beats in half an hour?
+    The total is far more than the body could make from food. So, he argues, the same blood must go around and around.'
+  quote:
+    text: Now in the course of half an hour, the heart will have made more than one thousand beats, in some as many as two, three, and
+      even four thousand.
+    author: William Harvey
+    work: On the Motion of the Heart and Blood in Animals, chapter 9
+    tr: Robert Willis
+    ed: The Sydenham Society, London
+    year: 1847
+    src: Internet Archive
+    url: https://archive.org/details/worksofwilliamha00harviala
+- rung: gb17.galileo-two-new-sciences
+  year: 1638
+  text: Galileo times balls rolling down ramps by weighing water that flows from a vessel during each run. The distances, he finds,
+    grow as the squares of the times. Measurement turns a guess about falling into a law.
+- rung: gb17.pascal-scientific-treatises
+  year: 1648
+  text: Pascal has his brother-in-law carry a tube of mercury up a mountain, the Puy de Dôme. The mercury stands lower at the top, showing
+    that the weight of the air above us pushes it up. A measurement settled an old argument about whether nature abhors a vacuum.
+- rung: gb17.huygens-treatise-on-light
+  year: 1690
+  text: Huygens uses Ole Rømer's timings of Jupiter's moons to show light takes time to travel. He estimates its speed as hundreds of
+    thousands of times faster than sound. Huygens also invented the pendulum clock, which made time far easier to measure.
+  quote:
+    text: 'But Sound, as I have said above, only travels 180 toises in the same time of one second: hence the velocity of Light is more
+      than six hundred thousand times greater than that of Sound.'
+    author: Christiaan Huygens
+    work: Treatise on Light, Chapter I
+    tr: Silvanus P. Thompson
+    ed: Macmillan, London
+    year: 1912
+    src: Internet Archive
+    url: https://archive.org/details/treatiseonlight031310mbp
+- rung: gb18.swift-gullivers-travels
+  year: 1726
+  text: Swift has fun with measurement. The Lilliputians, one-twelfth Gulliver's size, calculate that he needs food enough for 1,728
+    of them, which is 12 times 12 times 12. Swift mocks scientists elsewhere, but here he gets the math right.
+  quote:
+    text: …the emperor stipulates to allow me a quantity of meat and drink sufficient for the support of 1728 Lilliputians.
+    author: Jonathan Swift
+    work: Part I, ch. III
+    tr: ''
+    ed: Travels of Lemuel Gulliver into Several Remote Regions of the World, Farm and Fireside Company, Springfield, Ohio
+    year: 1881
+    src: Internet Archive
+    url: https://archive.org/details/travelsoflemuelg00swif
+- rung: gb18.lavoisier-elements-of-chemistry
+  year: 1789
+  text: Lavoisier weighs everything that goes into and comes out of a reaction, using balances of great precision. The totals always
+    match. This careful weighing founded modern chemistry.
+young:
+- Measuring means finding out how big, heavy or long something is, using numbers. You might measure your height on a door frame each
+  birthday.
+- 'Great discoveries often came from careful measuring. Harvey counted heartbeats and figured out that blood goes around the body in
+  a circle. Try it: count your heartbeats for one minute, then do 20 jumping jacks and count again!'
+talk:
+- Why did Gulliver need food for 1,728 Lilliputians, not just 12?
+- How could you measure the height of a tree without climbing it?
+- Count your heartbeats in one minute. How many in a day?
+- Before clocks, how might people have measured time?
+see:
+- g7.circle-area
+- g8.volume-cones
+- design.proportion-scale
+- chem.conservation-of-mass
+- physsci.pressure
+- phys1.pendulum-period

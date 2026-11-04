@@ -14,7 +14,7 @@
     {{- with $r.work }}<div class="gb-meta-work"><dt>Work</dt><dd><i>{{ . }}</i>{{ with $r.date }} <small>{{ . }}</small>{{ end }}</dd></div>{{ end }}
   </dl>
   {{- with $r.ideas }}
-  <p class="gb-meta-ideas"><span>Ideas:</span> {{ range . }}{{ with index $D.ideas . }}<a class="gb-idea" href="{{ printf "great-books/ideas/#%s" .key | relURL }}">{{ .name }}</a> {{ end }}{{ end }}</p>
+  <p class="gb-meta-ideas"><span>Ideas:</span> {{ range . }}{{ with index $D.ideas . }}<a class="gb-idea" href="{{ if index (site.Data.greatbooks.ideas_pages | default dict) .key }}{{ printf "great-books/ideas/%s/" .key | relURL }}{{ else }}{{ printf "great-books/ideas/#%s" .key | relURL }}{{ end }}">{{ .name }}</a> {{ end }}{{ end }}</p>
   {{- end }}
   {{- if $r.read }}
   <p class="gb-meta-read"><span aria-hidden="true">📖</span> <b>Read the full text, free:</b> {{ range $i, $x := $r.read }}{{ if $i }} · {{ end }}<a href="{{ $x.url }}" rel="noopener">{{ $x.name }}</a>{{ end }}</p>

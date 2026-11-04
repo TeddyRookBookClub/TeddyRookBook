@@ -7,7 +7,7 @@ layout: rhythm
 # video_id: the YouTube id of the Continued-Fraction Suite video (the 11 characters after "watch?v=" in an individual
 # video's link, never a playlist or channel). While it is empty, section 23 shows no video at all. Once it is filled in,
 # the page shows a click-to-play poster; nothing loads from YouTube until it is pressed (youtube-nocookie.com).
-video_id: ""
+video_id: "K0l47YsgopE"
 # video_title: "The Continued-Fraction Suite, by Teddy Rook"
 # video_about: "Original music built from the rhythms on this page."
 credits:

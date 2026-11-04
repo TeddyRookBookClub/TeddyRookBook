@@ -24,7 +24,7 @@
   <section class="hs-sec">
     <h2>{{ .title }}</h2>
     <p>{{ .about }}</p>
-    <p style="display:flex;flex-wrap:wrap;gap:.5rem"><a class="hs-btn pri" href="{{ .url | relURL }}">Read it online →</a><a class="hs-btn" href="{{ .pdf | relURL }}" download>⬇ Download the PDF ({{ .pdf_size }})</a></p>
+    <p style="display:flex;flex-wrap:wrap;gap:.5rem"><a class="hs-btn pri" href="{{ .url | relURL }}">{{ .url_label | default "Read it online" }} →</a><a class="hs-btn" href="{{ .pdf | relURL }}" download>⬇ Download the PDF ({{ .pdf_size }})</a></p>
   </section>
   {{ end }}
   {{ with $v.related }}

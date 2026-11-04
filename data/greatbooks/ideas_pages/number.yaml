@@ -1,0 +1,105 @@
+# Great Books Ladder: the Great Idea "number", followed through the books (page: /great-books/ideas/number/, layout layouts/math/gbidea.html).
+# Our own words: inspired by Adler's Syntopicon, NOT copied from it. Checked by scripts/greatbooks/check-gb.py.
+#   question: one or two plain sentences.  intro: optional.  stances: optional [{key, label}] (colors the timeline; only where views divide cleanly)
+#   stops (4-10, oldest first): rung (a rung id), year (number, negative = BC), optional when/who/work (else the rung's date/author/work),
+#     optional stance, text (2-4 sentences, our own words), optional quote: ONE short line (under 40 words) copied exactly from an
+#     excerpt already in that rung's lesson (scripts/greatbooks/src/<rung>/lesson.json), with that excerpt's credit fields; nothing from 1931 or later.
+#   young: paragraphs for young readers.  talk: 4-6 family questions.  see: topic ids on other ladders.  pages: optional [{url, title}].
+key: number
+question: What are numbers, and what patterns hide inside them?
+stops:
+- rung: gbgreeks.euclid-proportion-and-number
+  year: -300
+  text: 'Euclid''s books on number define primes and prove there are infinitely many of them: for any list of primes, there is always
+    another. He also gives a way to find the greatest common divisor, still taught today, and a rule for making perfect numbers.'
+  quote:
+    text: Prime numbers are more than any assigned multitude of prime numbers.
+    author: Euclid
+    work: Elements, Book IX, Proposition 20
+    tr: Thomas L. Heath
+    ed: Cambridge University Press
+    year: 1908
+    src: Internet Archive
+    url: https://archive.org/details/thirteenbookseu00heibgoog
+- rung: gbgreeks.archimedes-works
+  year: -250
+  work: The Sand-Reckoner
+  text: 'In The Sand-Reckoner, Archimedes sets out to count the grains of sand it would take to fill the whole universe as the Greeks
+    pictured it. Greek numerals stopped at a myriad (ten thousand), so he invents a system for huge numbers. His point: no number is
+    too big to name.'
+- rung: gbrome.nicomachus-introduction-to-arithmetic
+  year: 100
+  text: 'Nicomachus sorts numbers into families: even and odd, prime and composite, and perfect, abundant and deficient. A perfect number
+    like 6 or 28 equals the sum of its smaller factors. His textbook taught arithmetic in schools for a thousand years.'
+  quote:
+    text: Number is limited multitude or a combination of units or a flow of quantity made up of units; and the first division of number
+      is even and odd.
+    author: Nicomachus
+    work: Introduction to Arithmetic, Book I, Chapter 7
+    tr: Martin Luther D'Ooge
+    ed: Macmillan, University of Michigan Studies, Humanistic Series XVI
+    year: 1926
+    src: Internet Archive
+    url: https://archive.org/details/nicomachus-introduction-to-arithmetic
+- rung: gb17.descartes-geometry
+  year: 1637
+  text: Descartes treats lengths as numbers and uses letters for them, so geometry problems become algebra. Multiplying two lengths
+    gives a length, not an area, once a unit length is chosen. This joined number and shape in a new way.
+  quote:
+    text: Often it is not necessary thus to draw the lines on paper, but it is sufficient to designate each by a single letter.
+    author: René Descartes
+    work: The Geometry, Book I
+    tr: David Eugene Smith and Marcia L. Latham
+    ed: Open Court, Chicago
+    year: 1925
+    src: Internet Archive
+    url: https://archive.org/details/geometryofrene00desc
+- rung: gb17.pascal-scientific-treatises
+  year: 1654
+  text: Pascal studies a triangle of numbers in which each number is the sum of the two above it. He uses it to count combinations and
+    to solve problems about games of chance. It is now called Pascal's triangle, though others had found it earlier.
+  quote:
+    text: The number of each cell is equal to that of the cell which precedes it in its perpendicular rank, added to that of the cell
+      which precedes it in its parallel rank.
+    author: Blaise Pascal
+    work: Treatise on the Arithmetic Triangle
+    tr: Anna Savitsky
+    ed: A Source Book in Mathematics, ed. David Eugene Smith, McGraw-Hill
+    year: 1929
+    src: Internet Archive
+    url: https://archive.org/details/sourcebookinmath00smit
+- rung: gb20.whitehead-introduction-to-mathematics
+  year: 1911
+  text: 'Whitehead explains that mathematics began when people saw that two apples and two days share something: the number two. Mathematics
+    is the study of such general patterns, apart from any particular things. He shows how this abstract thinking is also very practical.'
+  quote:
+    text: Mathematics as a science commenced when first someone, probably a Greek, proved propositions about any things or about some
+      things, without specification of definite particular things.
+    author: Alfred North Whitehead
+    work: An Introduction to Mathematics, Chapter II, Variables
+    tr: ''
+    ed: Williams and Norgate, Home University Library
+    year: 1911
+    src: Project Gutenberg
+    url: https://www.gutenberg.org/ebooks/41568
+- rung: gb20.hardy-mathematicians-apology
+  year: 1940
+  text: Hardy, a great number theorist, writes about why he loved pure mathematics. He uses Euclid's proof of infinitely many primes
+    as an example of mathematical beauty. He thought his number theory was useless, but it later became important in computer security.
+young:
+- 'Numbers help us count, share and measure. But they also have secret patterns. Some numbers can be split into equal rows, like 12
+  (3 rows of 4). Others, like 7, can''t be split evenly at all: those are called prime numbers.'
+- 'Euclid proved over 2,000 years ago that primes never run out. And some numbers are ''perfect'': 6 is perfect because 1 + 2 + 3 =
+  6. Can you check whether 28 is perfect?'
+talk:
+- Find all the prime numbers up to 30. Is there a pattern?
+- Archimedes counted grains of sand to fill the universe. What's the biggest number you can name?
+- Build the first five rows of Pascal's triangle. What patterns do you see?
+- Whitehead says two apples and two days share something. What is it?
+see:
+- nt.infinitely-many-primes
+- nt.perfect-numbers
+- g4.prime-composite
+- nt.primality-sieve
+- alg2.binomial-theorem
+- nt.euclidean-algorithm

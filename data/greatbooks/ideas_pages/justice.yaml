@@ -1,0 +1,129 @@
+# Great Books Ladder: the Great Idea "justice", followed through the books (page: /great-books/ideas/justice/, layout layouts/math/gbidea.html).
+# Our own words: inspired by Adler's Syntopicon, NOT copied from it. Checked by scripts/greatbooks/check-gb.py.
+#   question: one or two plain sentences.  intro: optional.  stances: optional [{key, label}] (colors the timeline; only where views divide cleanly)
+#   stops (4-10, oldest first): rung (a rung id), year (number, negative = BC), optional when/who/work (else the rung's date/author/work),
+#     optional stance, text (2-4 sentences, our own words), optional quote: ONE short line (under 40 words) copied exactly from an
+#     excerpt already in that rung's lesson (scripts/greatbooks/src/<rung>/lesson.json), with that excerpt's credit fields; nothing from 1931 or later.
+#   young: paragraphs for young readers.  talk: 4-6 family questions.  see: topic ids on other ladders.  pages: optional [{url, title}].
+key: justice
+question: What is justice? Is it built into nature, or is it something people agree on?
+stances:
+- key: nature
+  label: Rooted in nature, reason or God
+- key: made
+  label: Made by agreement or by power
+- key: both
+  label: Partly both
+stance_note: Uncolored stops don't sit neatly on either side.
+stops:
+- rung: gbgreeks.aeschylus-oresteia
+  year: -458
+  text: Aeschylus tells how one killing in the house of Atreus leads to another, each one called justice by the person who strikes.
+    At the end the goddess Athena sets up a court of citizens to judge Orestes. The cycle of revenge gives way to a public trial, and
+    the Furies are given an honored place in the city instead of hunting the guilty on their own.
+  quote:
+    text: Hear now my ordinance, people of Attica, as you judge the first trial for bloodshed.
+    author: Aeschylus
+    work: The Eumenides
+    tr: Herbert Weir Smyth
+    ed: Loeb Classical Library, Heinemann and G. P. Putnam's Sons
+    year: 1926
+    src: Perseus Digital Library (Perseids)
+    url: https://cts.perseids.org/read/greekLit/tlg0085/tlg007/perseus-eng2/679-729
+- rung: gbgreeks.thucydides-peloponnesian-war
+  year: -416
+  when: the debate at Melos, 416 BC
+  stance: made
+  text: In Thucydides' history, Athenian envoys tell the small island of Melos to surrender. They say talk of right only matters between
+    equals in power; otherwise the strong take what they can. Thucydides reports the argument without cheering for it, and his readers
+    have argued ever since about what he thought of it.
+  quote:
+    text: since you know as well as we do that right, as the world goes, is only in question between equals in power, while the strong
+      do what they can and the weak suffer what they must.
+    author: Thucydides
+    work: History of the Peloponnesian War, Book V
+    tr: Richard Crawley
+    ed: J. M. Dent and Sons (Everyman's Library)
+    year: 1914
+    src: Perseus Digital Library (Perseids)
+    url: https://fgh.perseids.org/read/greekLit/tlg0003/tlg001/perseus-eng6/5.89.1-5.90.1
+- rung: gbgreeks.plato-republic-justice
+  year: -375
+  stance: nature
+  text: In the Republic, Thrasymachus claims justice is just a name for whatever helps the people in charge, and Glaucon asks whether
+    anyone would stay just if a magic ring made them invisible. Socrates answers by picturing a city and a soul in good order. Justice,
+    he argues, is each part doing its own work, with reason in charge, and it is a kind of health that makes the just person better
+    off.
+  quote:
+    text: I proclaim that justice is nothing else than the interest of the stronger.
+    author: Plato
+    work: Republic I, 338c
+    tr: Benjamin Jowett
+    ed: The Dialogues of Plato, 3rd edition, vol. III, Clarendon Press
+    year: 1892
+    src: Internet Archive
+    url: https://archive.org/details/b24750189_0003
+- rung: gbgreeks.aristotle-ethics
+  year: -340
+  stance: both
+  work: Nicomachean Ethics, Book V
+  text: Aristotle answers Plato with careful distinctions. Fair sharing gives each person a share that fits what they bring, and fair
+    correcting restores the balance when someone has been wronged. He also says that some of what is just in a city holds by nature
+    everywhere, while some is fixed by local law and could have been settled another way.
+- rung: gbrome.augustine-city-of-god
+  year: 420
+  stance: nature
+  text: Augustine writes after Rome has been sacked. Without justice, he says, a kingdom is no better than a gang of robbers on a large
+    scale. For him, full justice means giving God what is due to God, and he holds that every earthly city falls short of it.
+  quote:
+    text: Justice being taken away, then, what are kingdoms but great robberies?
+    author: Augustine
+    work: The City of God, Book IV, chapter 4
+    tr: Marcus Dods
+    ed: A Select Library of the Nicene and Post-Nicene Fathers, vol. II, The Christian Literature Company, Buffalo
+    year: 1887
+    src: Internet Archive
+    url: https://archive.org/details/cityofgodtrbymar0002augu
+- rung: gbmiddle.aquinas-on-happiness-and-law
+  year: 1270
+  stance: nature
+  text: Thomas Aquinas teaches that a natural law, known by reason, stands behind the laws of cities. Good human laws apply it to local
+    needs. A command that goes against it, he argues, is not truly a law but a corruption of law.
+- rung: gb17.hobbes-leviathan
+  year: 1651
+  stance: made
+  text: Hobbes disagrees sharply with the older view. In a state of nature, with no government, he says nothing can be called unjust,
+    because there are no agreements yet and no one to enforce them. Justice begins when people make covenants and set up a sovereign
+    strong enough to make everyone keep them.
+- rung: gb18.rousseau-social-contract
+  year: 1762
+  stance: made
+  text: Rousseau also starts from an agreement, but a different one. A rightful order, he argues, comes from a social contract in which
+    free and equal people bind themselves to the general will, the will of the whole people for the common good. Force alone can never
+    make a right.
+- rung: gb19.mill-utilitarianism
+  year: 1863
+  work: Utilitarianism, Chapter V
+  text: 'Mill admits that justice feels different from ordinary usefulness: it feels stern and binding. He argues that this feeling
+    protects the most important parts of the general good, such as security and the rights that society should defend for each person.
+    So for Mill justice rests on the happiness of all, not on a separate law of nature.'
+young:
+- Justice is about being fair. If three friends share a pizza, it is fair for each to get the same number of slices. If one friend paid
+  for most of it, some people think that friend should get a little more. Both ideas are about fairness, and the great books argue about
+  which one fits when.
+- Justice is also about fixing a wrong. If you break your brother's toy, being fair means saying sorry and helping to fix it or replace
+  it. Long ago, in a famous Greek play, people learned to settle wrongs in a court with a fair trial, instead of getting even on their
+  own.
+talk:
+- Is something fair because the rules say so, or do we make rules because some things are already fair?
+- Glaucon asks what you would do with a ring that made you invisible. What would you do, and why?
+- When is it fair to give everyone the same, and when is it fair to give more to some people?
+- Why might a trial be better than getting even?
+- Can a law ever be unfair? How would you tell?
+see:
+- law.what-is-law
+- law.trial-and-appeal
+- gov.rule-of-law
+- gov.natural-rights-social-contract
+- gov.purposes-of-government
+- adv.judging-fairly

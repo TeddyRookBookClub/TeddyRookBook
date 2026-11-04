@@ -1,0 +1,74 @@
+# Great Books Ladder: the Great Idea "matter", followed through the books (page: /great-books/ideas/matter/, layout layouts/math/gbidea.html).
+# Our own words: inspired by Adler's Syntopicon, NOT copied from it. Checked by scripts/greatbooks/check-gb.py.
+#   question: one or two plain sentences.  intro: optional.  stances: optional [{key, label}] (colors the timeline; only where views divide cleanly)
+#   stops (4-10, oldest first): rung (a rung id), year (number, negative = BC), optional when/who/work (else the rung's date/author/work),
+#     optional stance, text (2-4 sentences, our own words), optional quote: ONE short line (under 40 words) copied exactly from an
+#     excerpt already in that rung's lesson (scripts/greatbooks/src/<rung>/lesson.json), with that excerpt's credit fields; nothing from 1931 or later.
+#   young: paragraphs for young readers.  talk: 4-6 family questions.  see: topic ids on other ladders.  pages: optional [{url, title}].
+key: matter
+question: What is everything made of? Is matter made of tiny pieces, or of something smooth and continuous?
+stops:
+- rung: gbgreeks.plato-timaeus
+  year: -360
+  text: 'Plato imagines the four elements, earth, water, air and fire, as made of tiny geometric shapes: cubes, icosahedrons, octahedrons
+    and pyramids, all built from triangles. Elements change into each other when their triangles break and recombine. It is mathematics
+    shaping matter.'
+- rung: gbgreeks.aristotle-on-the-heavens
+  year: -350
+  work: On Generation and Corruption
+  text: Aristotle rejects atoms and empty space. He teaches that the four elements are made of hot, cold, wet and dry in different pairs,
+    and can turn into one another. His view was taught for nearly two thousand years.
+- rung: gbrome.lucretius-on-the-nature-of-things
+  year: -55
+  text: Lucretius, following the Greek thinkers Democritus and Epicurus, teaches that everything is made of tiny atoms too small to
+    see, moving in empty space. Nothing comes from nothing, and nothing is ever destroyed, only broken back into atoms. He gives clever
+    everyday evidence, like clothes drying and rings wearing thin.
+- rung: gb17.bacon-novum-organum
+  year: 1620
+  text: Bacon tests his new method on heat. Collecting many cases, he concludes that heat is a kind of motion of the tiny particles
+    of bodies. It was a guess well ahead of its time.
+  quote:
+    text: Heat is an expansive motion restrained, and striving to exert itself in the smaller particles.
+    author: Francis Bacon
+    work: Novum Organum, Book II, aphorism 20 (the first vintage)
+    tr: the version edited by Joseph Devey
+    ed: P. F. Collier & Son, New York
+    year: 1902
+    src: Internet Archive
+    url: https://archive.org/details/novumorganum00bacogoog
+- rung: gb18.lavoisier-elements-of-chemistry
+  year: 1789
+  text: Lavoisier shows that in chemical reactions the total weight stays the same. He defines an element as any substance not yet broken
+    down into simpler ones, and lists over thirty. Water, he showed, is not an element but hydrogen and oxygen combined.
+- rung: gb19.faraday-experimental-researches
+  year: 1834
+  text: Faraday passes electric current through solutions and finds that the amount of a substance released depends exactly on the amount
+    of electricity. The result hints that electricity and matter both come in definite units. He was careful, though, about claiming
+    too much about atoms.
+- rung: gb20.bohr-atomic-theory
+  year: 1934
+  text: Bohr pictures the atom as a tiny nucleus with electrons in fixed energy levels, jumping between them and giving off light of
+    exact colors. His model explained the spectrum of hydrogen. He also wrote about how the strange behavior of atoms changes the way
+    we describe nature.
+- rung: gb20.heisenberg-physics-and-philosophy
+  year: 1958
+  text: Heisenberg, a founder of quantum mechanics, explains that at the smallest scale we can't know both exactly where a particle
+    is and how it is moving. He compares the new physics to the old Greek debates, and suggests atoms are less like little stones and
+    more like mathematical forms.
+young:
+- 'Everything around you is made of matter: your chair, the air and even you! But what is matter made of?'
+- 'Long ago, a Roman poet said everything is made of tiny pieces called atoms, too small to see. Here''s a clue he used: a perfume bottle
+  opened across the room can soon be smelled everywhere, because tiny bits travel through the air. Today scientists know atoms are real,
+  and that they are made of even smaller parts.'
+talk:
+- Lucretius said rings wear thin from fingers. What does that suggest?
+- Lavoisier found weight stays the same in a reaction. If you burn a log, where does it go?
+- Plato thought elements were shapes. Why do you think he liked that idea?
+- How could people believe in atoms before anyone could see them?
+see:
+- chem.atomic-models
+- chem.conservation-of-mass
+- chem.matter-classification
+- gchem1.mass-laws
+- phys2.bohr-model
+- modern.uncertainty-principle

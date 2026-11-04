@@ -1,0 +1,55 @@
+{{- /* /music/continued-fraction-suite/: Teddy Rook's Continued-Fraction Suite, six pieces for piano (suite builder).
+   content/music/continued-fraction-suite/_index.md sets `layout: suite`; its children (one piano lesson per movement)
+   cascade `layout: suite-lesson`. The movement facts come from data/music/suite.yaml (read from the score); the score
+   PDF is static/pdfs/Continued-Fraction-Suite-score.pdf. Styles: static/music/suite/suite.css. */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+{{- $S := site.Data.music.suite -}}
+{{- $kids := .Pages.ByWeight -}}
+<div class="mus ml-page sx" id="sx-hub">
+  {{ partial "inline/mus-crumbs.html" . }}
+  {{ partial "inline/mus-hero.html" . }}
+  <div class="mus-body">
+    {{ .Content }}
+  </div>
+
+  <section class="sx-sec" aria-labelledby="sx-video-h">
+    <h2 id="sx-video-h">Watch and listen</h2>
+    <p>Teddy Rook’s video of the Continued-Fraction Suite. It loads from YouTube only when you press play.</p>
+    <div class="sx-video">{{ partial "video.html" $S.video }}</div>
+  </section>
+
+  {{ partial "inline/sx-score.html" (dict "S" $S "lead" "Print it, read along with the video, or play from it at the piano.") }}
+
+  <section class="sx-sec" aria-labelledby="sx-mv-h">
+    <h2 id="sx-mv-h">The six movements</h2>
+    <p>Each card opens a piano lesson for that movement: what is on the page, how its number shapes the music, a practice plan, a play-along, and ideas for families.</p>
+    <ol class="sx-cards">
+      {{- range $i, $m := $S.movements }}{{ $p := index $kids $i }}
+      <li class="sx-card">
+        <a class="sx-ct" href="{{ with $p }}{{ .RelPermalink }}{{ end }}"><span class="sx-num" aria-hidden="true">{{ $m.num }}</span><b><span class="ml-sr">Movement {{ $m.num }}: </span>{{ $m.name }}</b></a>
+        <p class="sx-cf"><span class="sx-n">{{ $m.number }}</span> = {{ $m.cf }}</p>
+        <p>{{ with $p }}{{ .Description }}{{ end }}</p>
+        <p class="sx-meta">{{ $m.key }} · {{ $m.time }} · {{ $m.tempo }} · {{ $m.bars }} bars</p>
+        <p class="sx-meta"><span class="sx-lv">{{ $m.level }}</span> <a href="{{ $S.pdf | relURL }}#page={{ index (split $m.pages "–") 0 }}">score pages {{ $m.pages }}</a></p>
+        <a class="sx-go" href="{{ with $p }}{{ .RelPermalink }}{{ end }}">The piano lesson →</a>
+      </li>
+      {{- end }}
+    </ol>
+  </section>
+
+  <section class="sx-sec" aria-labelledby="sx-more-h">
+    <h2 id="sx-more-h">Where the music came from</h2>
+    <p><a href="{{ "connections/rhythm-of-numbers/" | relURL }}"><b>The Rhythm of Numbers</b></a> is the workshop behind the suite: play pi as a beat, see its levels, and compose your own piece from any number. Its <a href="{{ "connections/rhythm-of-numbers/" | relURL }}#levels">levels</a> section shows how a continued fraction turns into bars, phrases and sections, and <a href="{{ "connections/rhythm-of-numbers/" | relURL }}#compose">Compose a piece</a> builds one for you.</p>
+    <p>New to reading music? Start with <a href="{{ "music/piano-basics/" | relURL }}">Piano Basics</a> and <a href="{{ "music/reading-music/" | relURL }}">Reading Music</a>, then come back. Keep time with the <a href="{{ "music/metronome/" | relURL }}">metronome</a>.</p>
+  </section>
+</div>
+{{ end }}
+
+{{- define "_partials/inline/sx-score.html" -}}
+<section class="sx-sec sx-dl" aria-labelledby="sx-dl-h">
+  <h2 id="sx-dl-h">The score</h2>
+  <p>The full score of all six movements, engraved by Teddy Rook. {{ .lead }} Free to download.</p>
+  <p class="sx-btns"><a class="sx-btn sx-pri" href="{{ .S.pdf | relURL }}" download>⬇ Download the score (PDF, {{ .S.pdf_size }})</a><a class="sx-btn" href="{{ .S.pdf | relURL }}{{ with .page }}#page={{ . }}{{ end }}" target="_blank" rel="noopener">Open it in a new tab</a></p>
+</section>
+{{- end -}}

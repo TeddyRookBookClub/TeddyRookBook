@@ -1,0 +1,110 @@
+# Great Books Ladder: the Great Idea "logic", followed through the books (page: /great-books/ideas/logic/, layout layouts/math/gbidea.html).
+# Our own words: inspired by Adler's Syntopicon, NOT copied from it. Checked by scripts/greatbooks/check-gb.py.
+#   question: one or two plain sentences.  intro: optional.  stances: optional [{key, label}] (colors the timeline; only where views divide cleanly)
+#   stops (4-10, oldest first): rung (a rung id), year (number, negative = BC), optional when/who/work (else the rung's date/author/work),
+#     optional stance, text (2-4 sentences, our own words), optional quote: ONE short line (under 40 words) copied exactly from an
+#     excerpt already in that rung's lesson (scripts/greatbooks/src/<rung>/lesson.json), with that excerpt's credit fields; nothing from 1931 or later.
+#   young: paragraphs for young readers.  talk: 4-6 family questions.  see: topic ids on other ladders.  pages: optional [{url, title}].
+key: logic
+question: What makes an argument good? How can we reason step by step to conclusions we can trust?
+stops:
+- rung: gbgreeks.plato-gorgias-protagoras
+  year: -390
+  text: Socrates tests people's beliefs by asking questions. He gets someone to state a view, then shows that it clashes with other
+    things they believe. The method, called dialectic, teaches that a good argument must hang together.
+  quote:
+    text: 'For I certainly think that I and you and every man do really believe, that to do is a greater evil than to suffer injustice:
+      and not to be punished than to be punished.'
+    author: Plato
+    work: Gorgias 474b
+    tr: Benjamin Jowett
+    ed: The Dialogues of Plato, 3rd edition, vol. II, Clarendon Press
+    year: 1892
+    src: Internet Archive
+    url: https://archive.org/details/b24750189_0002
+- rung: gbgreeks.aristotle-logic
+  year: -350
+  text: Aristotle was the first to study the forms of argument. A syllogism is an argument where, once some things are granted, something
+    else must follow. 'All people are mortal; Socrates is a person; so Socrates is mortal' is valid whatever the subject.
+  quote:
+    text: A syllogism is discourse in which, certain things being stated, something other than what is stated follows of necessity from
+      their being so.
+    author: Aristotle
+    work: Prior Analytics I.1
+    tr: A. J. Jenkinson
+    ed: The Works of Aristotle, vol. I, Clarendon Press
+    year: 1928
+    src: Internet Archive
+    url: https://archive.org/details/worksofaristotle0001emed
+- rung: gbgreeks.euclid-plane-geometry
+  year: -300
+  text: Euclid shows logic building a whole science. He starts with a few definitions and postulates and proves one proposition after
+    another, each resting on earlier ones. For two thousand years his Elements was the model of how to prove something.
+- rung: gbmiddle.aquinas-on-god
+  year: 1268
+  text: Aquinas writes in the form of disputed questions. For each question he first lists the best objections to his own answer, then
+    gives his answer and his reasons, and then replies to each objection. It is a model of taking the other side seriously.
+  quote:
+    text: The existence of God can be proved in five ways.
+    author: Thomas Aquinas
+    work: Summa Theologica, First Part, Question 2, Article 3
+    tr: the Fathers of the English Dominican Province
+    ed: Second and Revised Edition
+    year: 1920
+    src: New Advent
+    url: https://www.newadvent.org/summa/1002.htm
+- rung: gb17.descartes-discourse-on-method
+  year: 1637
+  text: 'Descartes gives himself four rules: accept nothing as true that you don''t clearly know, divide each problem into parts, go
+    from the simplest to the hardest, and check that nothing has been left out. He wanted to reason in every field the way mathematicians
+    do.'
+- rung: gb17.spinoza-ethics
+  year: 1677
+  text: Spinoza writes his Ethics like Euclid, with definitions, axioms and numbered proofs. He believed that truths about God, the
+    mind and happiness could be shown as firmly as truths about triangles. Readers admire the rigor even when they doubt the starting
+    points.
+  quote:
+    text: By God, I mean a being absolutely infinite—that is, a substance consisting in infinite attributes, of which each expresses
+      eternal and infinite essentiality.
+    author: Baruch Spinoza
+    work: Ethics, Part I, Definition VI
+    tr: R. H. M. Elwes
+    ed: The Chief Works of Benedict de Spinoza, vol. II, George Bell & Sons
+    year: 1883
+    src: Project Gutenberg
+    url: https://www.gutenberg.org/ebooks/3800
+- rung: gb18.hume-enquiry
+  year: 1748
+  text: Hume says logic and math can prove relations of ideas, but no amount of logic can prove a matter of fact, such as what will
+    happen tomorrow. For that we rely on experience. His point still guides how people think about proof and evidence.
+  quote:
+    text: All these suppositions are consistent and conceivable.
+    author: David Hume
+    work: Enquiry, Section IV, Part I
+    tr: ''
+    ed: An Enquiry Concerning Human Understanding, reprinted from the edition of 1777, Open Court, Chicago
+    year: 1900
+    src: Internet Archive
+    url: https://archive.org/details/enquiryconcernin01hume
+- rung: gb20.wittgenstein-philosophical-investigations
+  year: 1953
+  text: Wittgenstein, who had once tried to build a perfect logical language, changed his mind. He came to think that words get their
+    meaning from how they are used in many different activities, which he called language games. Many puzzles in philosophy, he argued,
+    come from taking words out of their ordinary use.
+young:
+- Logic is the art of thinking clearly. If you know all cats have whiskers, and Tiger is a cat, then you know Tiger has whiskers. That's
+  a logical step.
+- 'Logic also helps you spot mistakes. If someone says ''my friend got sick after eating pizza, so pizza makes people sick,'' you can
+  ask: did anything else happen? Good thinkers check each step.'
+talk:
+- Make up your own 'All... Some... So...' argument. Is it valid?
+- Aquinas listed the best arguments against his view first. Why is that a good habit?
+- Descartes says to break a big problem into small parts. Try it on a chore or a puzzle.
+- Can an argument be logical and still have a false conclusion? How?
+see:
+- trad.syllogism-parts
+- trad.valid-forms
+- informal.premise-conclusion
+- informal.fallacy-intro
+- geo.two-column-proofs
+- informal.validity

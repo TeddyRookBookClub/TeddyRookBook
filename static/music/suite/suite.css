@@ -1,0 +1,78 @@
+/* The Continued-Fraction Suite (/music/continued-fraction-suite/): hub cards, lesson "At a glance", the form strip and
+   the accent player. Uses the music kit's tokens (static/music/kit/kit.css: --acc, --gold, --card, --line, …). */
+.sx{--sx-a:#2f7d55;--sx-b:#b8963e;--sx-r:#7a4fa3;--sx-h:#8a948e;--sx-on:#c4473a}
+html[data-theme="dark"] .sx{--sx-a:#4fae80;--sx-b:#d4b25a;--sx-r:#b48ae0;--sx-h:#7d8a83;--sx-on:#f08a7e}
+.sx .sx-sec{margin:1.6rem 0}
+.sx .sx-n{font-family:Georgia,serif;font-style:italic;white-space:nowrap}
+.sx .sx-video{max-width:640px}
+.sx .sx-btns{display:flex;flex-wrap:wrap;gap:.5rem}
+.sx .sx-btn{display:inline-flex;align-items:center;gap:.35rem;min-height:40px;box-sizing:border-box;padding:.45rem .95rem;border:1px solid var(--acc);border-radius:999px;background:var(--card);color:var(--acc);font:600 .92rem system-ui,sans-serif;text-decoration:none;box-shadow:none;cursor:pointer}
+.sx .sx-btn.sx-pri{background:#004225;border-color:#004225;color:#fff}
+html[data-theme="dark"] .sx .sx-btn.sx-pri{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
+.sx .sx-btn:hover{filter:brightness(1.08)}
+.sx .sx-dl{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:.9rem 1.1rem}
+.sx .sx-dl h2{margin-top:.2rem}
+
+/* hub: the movement cards */
+.sx .sx-cards{list-style:none;margin:.8rem 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:.8rem}
+.sx .sx-card{display:flex;flex-direction:column;gap:.25rem;padding:.95rem 1.1rem;border:1px solid var(--line);border-radius:16px;background:var(--card);box-shadow:0 1px 6px rgba(0,0,0,.05)}
+.sx .sx-card p{margin:.15rem 0;line-height:1.5}
+.sx .sx-ct{display:flex;align-items:center;gap:.6rem;text-decoration:none;box-shadow:none}
+.sx .sx-ct b{font:700 1.18rem Georgia,serif;color:var(--acc)}
+.sx .sx-num{display:inline-flex;align-items:center;justify-content:center;min-width:2.2rem;height:2.2rem;padding:0 .3rem;box-sizing:border-box;border-radius:999px;background:var(--soft);color:var(--acc);font:700 .9rem Georgia,serif}
+.sx .sx-cf{font-size:.95rem}
+.sx .sx-meta{font:.86rem system-ui,sans-serif;color:var(--muted)}
+.sx .sx-lv{display:inline-block;padding:.05rem .5rem;margin-right:.35rem;border-radius:999px;border:1px solid var(--gold);color:var(--gt);font-weight:600}
+.sx .sx-go{margin-top:auto;padding-top:.3rem;font-weight:600}
+.sx .ml-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* lesson: at a glance */
+.sx .sx-glance{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:.5rem;margin:.6rem 0;max-width:none}
+.sx .sx-glance>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.55rem .8rem}
+.sx .sx-glance dt{font:700 .74rem system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.sx .sx-glance dd{margin:.15rem 0 0;line-height:1.45}
+
+/* the form strip */
+.sx .sx-form{margin:1rem 0;max-width:none}
+.sx .sx-strip{display:flex;gap:2px;height:46px;border-radius:8px;overflow:hidden}
+.sx .sx-blk{display:flex;flex-basis:0;min-width:2px;gap:1px}
+.sx .sx-ph{flex-basis:0;min-width:1px;display:flex;align-items:center;justify-content:center;font:700 .72rem system-ui,sans-serif;color:#fff;overflow:hidden;white-space:nowrap}
+.sx .sx-a .sx-ph{background:var(--sx-a)}
+.sx .sx-b .sx-ph{background:var(--sx-b);color:#1d2320}
+.sx .sx-r .sx-ph{background:var(--sx-r)}
+.sx .sx-h .sx-ph{background:var(--sx-h)}
+html[data-theme="dark"] .sx .sx-ph{color:#0f1a14}
+.sx .sx-key{display:flex;flex-wrap:wrap;gap:.3rem 1rem;list-style:none;margin:.5rem 0 .2rem;padding:0;font:.85rem system-ui,sans-serif;color:var(--muted)}
+.sx .sx-key li::before{content:"";display:inline-block;width:.85rem;height:.85rem;border-radius:3px;margin-right:.35rem;vertical-align:-2px;background:var(--sx-a)}
+.sx .sx-key .sx-b::before{background:var(--sx-b)}.sx .sx-key .sx-r::before{background:var(--sx-r)}.sx .sx-key .sx-h::before{background:var(--sx-h)}
+.sx .sx-form figcaption{font-size:.9rem;color:var(--muted);margin:.3rem 0;max-width:44rem}
+.sx .sx-list{margin:.4rem 0}
+.sx .sx-list summary{cursor:pointer;font-weight:600;color:var(--acc)}
+.sx .sx-list table{border-collapse:collapse;margin:.5rem 0;font-size:.9rem;width:100%;max-width:36rem}
+.sx .sx-list th,.sx .sx-list td{border-bottom:1px solid var(--line);padding:.25rem .5rem;text-align:left}
+.sx .sx-try{font-size:.95rem}
+.sx .sx-cycle{display:flex;gap:2px;height:40px;border-radius:8px;overflow:hidden;margin:.6rem 0 .3rem}
+.sx .sx-cycle span{flex:1 1 0;min-width:0;background:var(--sx-a)}
+.sx .sx-cycle span.sx-dots{flex:3 1 0;background:repeating-linear-gradient(90deg,var(--sx-a) 0 3px,transparent 3px 6px)}
+.sx .sx-cycle span.sx-short{flex:.94 1 0;background:var(--sx-r)}
+.sx .sx-cycle-l{display:flex;justify-content:space-between;gap:.5rem;font:.8rem system-ui,sans-serif;color:var(--muted)}
+
+/* the accent player */
+.sx .sx-play{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem 1rem;margin:1rem 0;max-width:44rem}
+.sx .sx-play-h{margin:0 0 .5rem}
+.sx .sx-grid{display:grid;gap:3px;margin:.4rem 0}
+.sx .sx-row{display:grid;grid-template-columns:3.6rem repeat(var(--e,8),minmax(0,1fr));gap:3px;align-items:center}
+.sx .sx-bn{font:600 .75rem ui-monospace,Menlo,Consolas,monospace;color:var(--muted);text-align:right;padding-right:.3rem}
+.sx .sx-c{height:18px;border-radius:4px;background:var(--soft);border:1px solid var(--line)}
+.sx .sx-c.sx-down{border-left:3px solid var(--muted)}
+.sx .sx-c.sx-acc{background:var(--acc);border-color:var(--acc)}
+.sx .sx-c.sx-on{outline:3px solid var(--sx-on);outline-offset:1px}
+.sx .sx-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;margin:.5rem 0}
+.sx .sx-ctl label{display:inline-flex;align-items:center;gap:.4rem;font:.9rem system-ui,sans-serif}
+.sx .sx-ctl input[type=range]{width:min(160px,40vw)}
+.sx .sx-tv{font:600 .9rem ui-monospace,Menlo,Consolas,monospace}
+.sx .sx-now{font:.88rem system-ui,sans-serif;color:var(--muted);margin:.2rem 0 0}
+.sx .sx-steps>li{margin:.5rem 0}
+.sx .sx-tempi{font:600 .88rem system-ui,sans-serif;color:var(--gt)}
+@media (prefers-reduced-motion:reduce){.sx .sx-c{transition:none}}
+@media print{.sx .sx-play,.sx .sx-video,.ml-strip{display:none}}

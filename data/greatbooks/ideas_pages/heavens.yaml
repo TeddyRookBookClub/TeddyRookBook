@@ -1,0 +1,102 @@
+# Great Books Ladder: the Great Idea "heavens", followed through the books (page: /great-books/ideas/heavens/, layout layouts/math/gbidea.html).
+# Our own words: inspired by Adler's Syntopicon, NOT copied from it. Checked by scripts/greatbooks/check-gb.py.
+#   question: one or two plain sentences.  intro: optional.  stances: optional [{key, label}] (colors the timeline; only where views divide cleanly)
+#   stops (4-10, oldest first): rung (a rung id), year (number, negative = BC), optional when/who/work (else the rung's date/author/work),
+#     optional stance, text (2-4 sentences, our own words), optional quote: ONE short line (under 40 words) copied exactly from an
+#     excerpt already in that rung's lesson (scripts/greatbooks/src/<rung>/lesson.json), with that excerpt's credit fields; nothing from 1931 or later.
+#   young: paragraphs for young readers.  talk: 4-6 family questions.  see: topic ids on other ladders.  pages: optional [{url, title}].
+key: heavens
+question: How are the sun, moon, planets and stars arranged, and what makes them move?
+stances:
+- key: geo
+  label: Earth at the center
+- key: helio
+  label: Sun at the center
+stance_note: 'Uncolored stops go beyond that question: gravity as curved space-time, and a universe of many galaxies.'
+stops:
+- rung: gbgreeks.plato-timaeus
+  year: -360
+  stance: geo
+  text: In the Timaeus, Plato tells a story of a divine craftsman shaping the world as a living whole, with the earth at the center.
+    The heavenly bodies move in circles, which he thought the most perfect motion. Their regular paths make time and give people a model
+    of order.
+- rung: gbgreeks.aristotle-on-the-heavens
+  year: -350
+  stance: geo
+  text: 'Aristotle gives evidence that the earth is a sphere: its shadow on the moon in an eclipse is always curved, and new stars appear
+    as you travel south. He places the earth, unmoving, at the center, with the heavens made of a special element that moves forever
+    in circles.'
+  quote:
+    text: How else would eclipses of the moon show segments shaped as we see them?
+    author: Aristotle
+    work: On the Heavens, Book II, 14
+    tr: J. L. Stocks
+    ed: Oxford, Clarendon Press
+    year: 1922
+    src: Internet Archive
+    url: https://archive.org/details/decaeloleofric00arisuoft
+- rung: gbrome.ptolemy-almagest
+  year: 150
+  stance: geo
+  text: Ptolemy builds a full mathematical model of the heavens with the earth at the center. To match what astronomers saw, such as
+    planets seeming to loop backward, he adds small circles riding on larger ones. His tables predicted planet positions well enough
+    to be used for some 1,400 years.
+- rung: gbmiddle.dante-paradiso
+  year: 1316
+  stance: geo
+  text: 'Dante rises through the nine heavens of the medieval picture: the moon, the planets, the sun, the fixed stars and beyond. He
+    uses the astronomy of his day as a ladder of light and joy. The poem ends with the love that moves the sun and the other stars.'
+  quote:
+    text: But yet the will roll'd onward, like a wheel In even motion, by the Love impell'd, That moves the sun in heav'n and all the
+      stars.
+    author: Dante
+    work: Paradiso, Canto XXXIII (the last lines of the Comedy)
+    tr: Henry Francis Cary
+    ed: The Vision, London
+    year: 1814
+    src: Project Gutenberg
+    url: https://www.gutenberg.org/ebooks/8798
+- rung: gbren.copernicus-on-the-revolutions
+  year: 1543
+  stance: helio
+  text: Copernicus puts the sun near the center and the earth among the planets, turning daily and circling yearly. This explains the
+    planets' backward loops simply, as the earth overtaking or being overtaken. He still used circles and some small epicycles, and
+    his idea took decades to win wide acceptance.
+- rung: gb17.kepler-epitome
+  year: 1620
+  stance: helio
+  text: Kepler, working from Tycho Brahe's careful observations, found that planets move in ellipses with the sun at one focus, and
+    faster when they are closer to it. His Epitome teaches the whole sun-centered system with these laws. He also guessed that a force
+    from the sun drives the planets.
+- rung: gb17.newton-principia
+  year: 1687
+  stance: helio
+  text: Newton shows that one law of gravity explains both an apple's fall and the moon's orbit. From it he derives Kepler's laws, the
+    tides and the paths of comets. The heavens and the earth now follow the same physics.
+- rung: gb20.einstein-relativity
+  year: 1916
+  text: Einstein's general theory describes gravity as the bending of space and time by mass. It explained a small puzzle in Mercury's
+    orbit and predicted that starlight would bend near the sun, which was observed in 1919. Newton's law remains an excellent approximation
+    for most purposes.
+- rung: gb20.eddington-expanding-universe
+  year: 1933
+  text: Eddington explains for general readers the new discovery that distant galaxies are moving away from us, so that the universe
+    is expanding. The heavens are far larger than earlier astronomers imagined, and they have a history. He also wrote with wonder about
+    what this meant for our place in it.
+young:
+- 'Look up on a clear night: the stars seem to turn around us, and the sun seems to travel across the sky by day. For a long time, most
+  people thought the earth stood still in the middle of everything.'
+- 'Then astronomers like Copernicus, Kepler and Galileo showed that the earth spins and travels around the sun. Try it: walk in a circle
+  around a lamp while spinning slowly. The lamp seems to move around you, but you are the one moving!'
+talk:
+- Why did it make sense for people long ago to think the sun moved around the earth?
+- Aristotle used a lunar eclipse to show the earth is round. How does that work?
+- What would it take to change your mind about something everyone believes?
+- Dante saw the heavens as full of meaning. How do the stars make you feel?
+see:
+- astro.heliocentric-model
+- astro.celestial-sphere
+- astro.kepler-first-law
+- astro.eclipses
+- earthsci.solar-system-objects
+- astro.hubble-law

@@ -8,6 +8,7 @@ layout: hub
 scripts: [audio, keyboard, "music/lessons/core.js", "music/lessons/widgets.js"]
 styles: ["music/lessons/lessons.css"]
 sections:
+  - { url: "/music/continued-fraction-suite/", icon: "🎼", title: "The Continued-Fraction Suite", text: "Six original piano pieces by Teddy Rook, each built from one number. Watch the video, download the free score, and learn each movement with its own piano lesson." }
   - { url: "/connections/rhythm-of-numbers/", icon: "🥁", title: "The Rhythm of Numbers", text: "Play pi as a beat: a drum machine with world rhythms, a polyrhythm layerer, and a composer that turns a number into a piece you can download as MIDI." }
   - { url: "/connections/", icon: "🔷", title: "Where Music, Patterns, Math and Chemistry Meet", text: "Why some notes blend, the circle of fifths as a clock, rhythms from Euclid, sand that draws sound on a ringing plate, and how an atom is like a drum." }
 need:

@@ -1,0 +1,99 @@
+# Great Books Ladder: the Great Idea "geometry", followed through the books (page: /great-books/ideas/geometry/, layout layouts/math/gbidea.html).
+# Our own words: inspired by Adler's Syntopicon, NOT copied from it. Checked by scripts/greatbooks/check-gb.py.
+#   question: one or two plain sentences.  intro: optional.  stances: optional [{key, label}] (colors the timeline; only where views divide cleanly)
+#   stops (4-10, oldest first): rung (a rung id), year (number, negative = BC), optional when/who/work (else the rung's date/author/work),
+#     optional stance, text (2-4 sentences, our own words), optional quote: ONE short line (under 40 words) copied exactly from an
+#     excerpt already in that rung's lesson (scripts/greatbooks/src/<rung>/lesson.json), with that excerpt's credit fields; nothing from 1931 or later.
+#   young: paragraphs for young readers.  talk: 4-6 family questions.  see: topic ids on other ladders.  pages: optional [{url, title}].
+key: geometry
+question: What can we prove about shapes and space? Is Euclid's geometry the true geometry of the world?
+stops:
+- rung: gbgreeks.plato-meno
+  year: -385
+  text: Socrates draws squares in the sand and asks a boy how to make a square with twice the area. The boy first guesses wrong, then
+    sees that the answer is the square built on the diagonal. For Plato, geometry shows that the mind can find truths it was never told.
+- rung: gbgreeks.plato-timaeus
+  year: -360
+  text: 'Plato links the five regular solids to the elements of nature: the cube to earth, the pyramid to fire, and so on. These solids
+    are the only ones with identical regular faces. Geometry, for him, is the plan behind the world.'
+- rung: gbgreeks.euclid-plane-geometry
+  year: -300
+  text: Euclid starts with five postulates, such as that a straight line can be drawn between any two points, and proves theorem after
+    theorem. Book I ends with the Pythagorean theorem and its converse. The fifth postulate, about parallel lines, puzzled mathematicians
+    for two thousand years.
+  quote:
+    text: In right-angled triangles the square on the side subtending the right angle is equal to the squares on the sides containing
+      the right angle.
+    author: Euclid
+    work: Elements, Book I, Proposition 47
+    tr: Thomas L. Heath
+    ed: Cambridge University Press
+    year: 1908
+    src: Internet Archive
+    url: https://archive.org/details/thirteenbookseu02heibgoog
+- rung: gbgreeks.euclid-solid-geometry
+  year: -300
+  text: The last book of the Elements builds the five regular solids inside a sphere and proves there can be no others. Many think this
+    was the goal of the whole work. It joins the geometry of Plato's Timaeus to strict proof.
+  quote:
+    text: I say next that no other figure, besides the said five figures, can be constructed which is contained by equilateral and equiangular
+      figures equal to one another.
+    author: Euclid
+    work: Elements, Book XIII, after Proposition 18
+    tr: Thomas L. Heath
+    ed: Cambridge University Press
+    year: 1908
+    src: Internet Archive
+    url: https://archive.org/details/thirteenbookseu01heibgoog
+- rung: gbgreeks.archimedes-works
+  year: -250
+  text: Archimedes finds the area of a circle, the volume of a sphere and the area of a parabola's slice, using clever methods of squeezing
+    a shape between figures he could measure. He was proudest of showing a sphere has two-thirds the volume of the cylinder around it.
+- rung: gb17.descartes-geometry
+  year: 1637
+  text: Descartes shows how to describe curves with equations, so that geometry and algebra can solve each other's problems. Today's
+    graphs on x and y axes grow from his idea. Hard geometric problems become calculations.
+  quote:
+    text: Any problem in geometry can easily be reduced to such terms that a knowledge of the lengths of certain straight lines is sufficient
+      for its construction.
+    author: René Descartes
+    work: The Geometry, Book I
+    tr: David Eugene Smith and Marcia L. Latham
+    ed: Open Court, Chicago
+    year: 1925
+    src: Internet Archive
+    url: https://archive.org/details/geometryofrene00desc
+- rung: gb20.poincare-science-and-hypothesis
+  year: 1902
+  text: By Poincaré's time, mathematicians had found consistent geometries in which Euclid's parallel postulate fails. Poincaré argues
+    that asking which geometry is true is like asking whether meters are truer than feet. We choose the one that is most convenient.
+  quote:
+    text: One geometry cannot be more true than another; it can only be more convenient.
+    author: Henri Poincaré
+    work: Science and Hypothesis, Chapter III, Non-Euclidean Geometries
+    tr: W. J. Greenstreet
+    ed: Walter Scott Publishing
+    year: 1905
+    src: Project Gutenberg
+    url: https://www.gutenberg.org/ebooks/37157
+- rung: gb20.einstein-relativity
+  year: 1916
+  text: Einstein answers that, for physics, the geometry of space-time is something to be found by experiment, and near heavy masses
+    it is not Euclid's. Gravity shows up as curved space-time. Geometry becomes part of physics.
+young:
+- 'Geometry is the math of shapes: lines, circles, triangles and cubes. Euclid, a Greek teacher, showed how to prove facts about shapes
+  step by step, starting from simple rules.'
+- 'Try this: draw a square, then draw a line from one corner to the opposite corner. Build a new square on that line. It has exactly
+  twice the area of the first one! Socrates showed a boy this trick 2,400 years ago.'
+talk:
+- Why is it not enough to measure a drawing to prove something in geometry?
+- 'Find shapes around your house: circles, triangles, rectangles, cubes. Which is most common?'
+- Can you make a solid with all faces the same regular shape? How many kinds can you find?
+- What would a world look like where parallel lines could meet?
+see:
+- geo.basic-constructions
+- geo.two-column-proofs
+- g8.pythagorean-theorem
+- geo.pyramids-cones-spheres
+- g5.coordinate-plane
+- disc.planar-graphs

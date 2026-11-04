@@ -1,0 +1,94 @@
+{{- /* A piano lesson for one movement of the Continued-Fraction Suite (/music/continued-fraction-suite/<slug>/).
+   Front matter: title, description, lead, weight (movement order), movement (the slug in data/music/suite.yaml).
+   The lesson text is HTML (content/music/continued-fraction-suite/<slug>.html). Two slots in it are filled here:
+     <div class="sx-slot" data-slot="form"></div>  the form diagram, built from the movement's sections
+     <div class="sx-slot" data-slot="play"></div>  the left-hand accent player (static/music/suite/suite.js)
+   "At a glance" and the score download come from the data, before and after the text. */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+{{- $S := site.Data.music.suite -}}
+{{- $m := dict }}{{ $mi := 0 }}{{ range $i, $x := $S.movements }}{{ if eq $x.slug $.Params.movement }}{{ $m = $x }}{{ $mi = $i }}{{ end }}{{ end -}}
+{{- if not $m.slug }}{{ errorf "suite lesson %s: movement %q not in data/music/suite.yaml" .File.Path .Params.movement }}{{ end -}}
+{{- $course := .Parent -}}
+{{- $sib := $course.Pages.ByWeight -}}
+{{- $rn := "connections/rhythm-of-numbers/" | relURL -}}
+<div class="mus ml-page sx" id="sx-lesson">
+  {{ partial "inline/mus-crumbs.html" . }}
+  <nav class="ml-strip" aria-label="Movements of the suite">
+    <a class="ml-strip-home" href="{{ $course.RelPermalink }}"><span aria-hidden="true">🎼</span>The suite</a>
+    <ol>{{ range $i, $p := $sib }}{{ $x := index $S.movements $i }}<li><a href="{{ $p.RelPermalink }}" title="{{ $p.Title }}"{{ if eq $p.RelPermalink $.RelPermalink }} aria-current="page"{{ end }}><b>{{ $x.num }}</b><span>{{ $x.name }}</span></a></li>{{ end }}</ol>
+  </nav>
+  <header class="mus-hero">
+    <p class="mus-eyebrow">The Continued-Fraction Suite · Movement {{ $m.num }} of VI</p>
+    <h1>{{ .Title }}</h1>
+    {{- with (.Params.lead | default .Description) }}
+    <p>{{ . | markdownify }}</p>{{ end }}
+    <span class="mus-mark" aria-hidden="true">🎹</span>
+  </header>
+
+  <section class="sx-sec" aria-labelledby="sx-glance-h">
+    <h2 id="sx-glance-h">At a glance</h2>
+    <dl class="sx-glance">
+      <div><dt>Key</dt><dd>{{ $m.keys }}</dd></div>
+      <div><dt>Time signature</dt><dd>{{ $m.time }}</dd></div>
+      <div><dt>Tempo</dt><dd>{{ $m.tempo }} (♩ = {{ $m.bpm }})</dd></div>
+      <div><dt>Length</dt><dd>{{ $m.bars }} bars{{ if ne $m.first 1 }} (bars {{ lang.FormatNumber 0 $m.first }}–{{ lang.FormatNumber 0 (add $m.first (sub $m.bars 1)) }}){{ end }}, {{ $m.minutes }}</dd></div>
+      <div><dt>Level</dt><dd>{{ $m.level }}</dd></div>
+      <div><dt>The number</dt><dd><span class="sx-n">{{ $m.number }}</span> = {{ $m.value }}</dd></div>
+      <div><dt>Its continued fraction</dt><dd>{{ $m.cf }}: {{ $m.cfnote }}</dd></div>
+      <div><dt>In the score</dt><dd><a href="{{ $S.pdf | relURL }}#page={{ index (split $m.pages "–") 0 }}" target="_blank" rel="noopener">pages {{ $m.pages }}</a> of the PDF</dd></div>
+    </dl>
+  </section>
+
+  {{- $form := partial "inline/sx-form.html" (dict "m" $m "rn" $rn) -}}
+  {{- $play := partial "inline/sx-play.html" (dict "m" $m) -}}
+  <div class="mus-body">
+    {{ replace (replace .Content `<div class="sx-slot" data-slot="form"></div>` $form) `<div class="sx-slot" data-slot="play"></div>` $play | safeHTML }}
+  </div>
+
+  {{ partial "inline/sx-score.html" (dict "S" $S "page" (index (split $m.pages "–") 0) "lead" (printf "This movement is on pages %s." $m.pages)) }}
+
+  {{ partial "inline/mus-pn.html" . }}
+</div>
+{{ end }}
+
+{{- define "_partials/inline/sx-form.html" -}}
+{{- $m := .m -}}
+{{- $n := 0 }}{{ range $m.sections }}{{ $n = add $n (index . 1) }}{{ end -}}
+<figure class="sx-form" aria-labelledby="sx-form-cap-{{ $m.slug }}">
+  <div class="sx-strip" role="img" aria-label="The form of {{ $m.name }} as a strip of {{ len $m.sections }} sections, {{ $n }} bars in all. The list below gives every section.">
+    {{- range $m.sections }}{{ $lab := index . 2 }}{{ $k := "a" }}{{ if eq $lab "B" }}{{ $k = "b" }}{{ else if eq $lab "rare block" }}{{ $k = "r" }}{{ else if eq $lab "held bar" }}{{ $k = "h" }}{{ else if eq $lab "short cycle" }}{{ $k = "r" }}{{ end }}
+    <div class="sx-blk sx-{{ $k }}" style="flex-grow:{{ index . 1 }}" title="{{ with $lab }}{{ . }} · {{ end }}bar {{ lang.FormatNumber 0 (index . 0) }}, {{ index . 1 }} bar{{ if ne (index . 1) 1 }}s{{ end }}">
+      {{- range index . 3 }}<span class="sx-ph" style="flex-grow:{{ . }}">{{ if ge . 3 }}{{ . }}{{ end }}</span>{{ end -}}
+    </div>
+    {{- end }}
+  </div>
+  {{- $labs := slice }}{{ range $m.sections }}{{ $labs = $labs | append (index . 2) }}{{ end }}
+  <ul class="sx-key"><li class="sx-a">{{ if eq $m.slug "pi-bar-32996" }}the long cycle{{ else if eq $m.slug "pi" }}the 7-bar phrases{{ else }}A (or no mark), the usual section{{ end }}</li>
+    {{- if in $labs "B" }}<li class="sx-b">B, {{ if or (eq $m.slug "pi") (eq $m.slug "pi-bar-32996") }}the closing phrase{{ else }}the short section{{ end }}</li>{{ end }}
+    {{- if in $labs "rare block" }}<li class="sx-r">rare block</li>{{ end }}{{ if in $labs "short cycle" }}<li class="sx-r">the short cycle</li>{{ end }}
+    {{- if in $labs "held bar" }}<li class="sx-h">held bar</li>{{ end }}</ul>
+  <figcaption id="sx-form-cap-{{ $m.slug }}">Every bar of the movement, left to right. Each box is a section, the thin lines inside it are its phrases, and the numbers are phrase lengths in bars, as printed in small italics above the staff.</figcaption>
+  <details class="sx-list"><summary>Section by section</summary>
+    <table><thead><tr><th scope="col">Starts at bar</th><th scope="col">Mark in the score</th><th scope="col">Bars</th><th scope="col">Phrases</th></tr></thead><tbody>
+    {{- range $m.sections }}<tr><td>{{ lang.FormatNumber 0 (index . 0) }}</td><td>{{ index . 2 | default "(none: the opening)" }}</td><td>{{ index . 1 }}</td><td>{{ delimit (index . 3) " + " }}</td></tr>{{ end }}
+    </tbody></table>
+  </details>
+</figure>
+<p class="sx-try">Hear and see this number’s form on the interactive page: <a href="{{ .rn }}?cp={{ $m.cp }}&amp;cf=3#compose">compose a piece from {{ $m.number }}</a>, or watch its <a href="{{ .rn }}#levels">levels</a> build up from the beats.</p>
+{{- end -}}
+
+{{- define "_partials/inline/sx-play.html" -}}
+{{- $m := .m -}}
+<div class="sx-play" data-rate="{{ $m.rate }}" data-eighths="{{ $m.eighths }}" data-bpm="{{ $m.bpm }}" data-first="{{ $m.first }}" data-name="{{ $m.name }}">
+  <p class="sx-play-h"><b>The left-hand accents</b> · {{ $m.rate_label }}</p>
+  <div class="sx-grid" aria-hidden="true"></div>
+  <div class="sx-ctl">
+    <button type="button" class="sx-btn sx-pri sx-go-btn" aria-pressed="false">▶ Play the accents</button>
+    <label>Tempo <input type="range" class="sx-tempo" min="40" max="{{ $m.bpm }}" step="2" value="{{ $m.bpm }}" aria-label="Tempo in quarter notes per minute"></label> <output class="sx-tv">♩ = {{ $m.bpm }}</output>
+    <label><input type="checkbox" class="sx-tick" checked> Every eighth note</label>
+  </div>
+  <p class="sx-now" aria-live="polite">Press play. Sound starts only when you do.</p>
+  <noscript><p>The accent player needs JavaScript.</p></noscript>
+</div>
+{{- end -}}

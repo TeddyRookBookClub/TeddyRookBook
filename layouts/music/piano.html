@@ -61,6 +61,12 @@
       <p>{{ .Description }}</p>
       <span class="ml-meta">{{ index $icount "piano" }} piano pieces{{ with $sg }} · <a href="{{ .RelPermalink }}#piano">see them all</a>{{ end }}</span>
     </div>{{ end }}
+    {{- with site.GetPage "/music/continued-fraction-suite" }}
+    <div class="ml-bc">
+      <a class="ml-bct" href="{{ .RelPermalink }}"><span class="ml-ic" aria-hidden="true">{{ .Params.icon | default "🎼" }}</span><b>{{ .LinkTitle }}</b></a>
+      <p>{{ .Description }}</p>
+      <span class="ml-meta">{{ len .Pages }} piano lessons and a free score · for early intermediate players and up</span>
+    </div>{{ end }}
   </div>
   <p class="ml-lead">Also for every instrument: the <a href="{{ with $mt }}{{ .RelPermalink }}{{ end }}">metronome</a>, the <a href="{{ with $rt }}{{ .RelPermalink }}{{ end }}">rhythm trainer</a> and the rest of <a href="{{ "music/" | relURL }}">Music</a>.</p>
 

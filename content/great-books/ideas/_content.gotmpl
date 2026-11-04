@@ -1,0 +1,14 @@
+{{- /* Great Books Ladder: one page per Great Idea, /great-books/ideas/<key>/ (layouts/math/gbidea.html).
+   The ideas and their order: data/greatbooks/ideas.yaml. Each page's content: data/greatbooks/ideas_pages/<key>.yaml
+   (the question, the stops through the books, for young readers, talk about it, where else on the site).
+   An idea without a page file gets no page; the index (layouts/math/gbideas.html) then links to its anchor only.
+   Checked by scripts/greatbooks/check-gb.py. */ -}}
+{{- $GB := $.Site.Data.greatbooks | default dict -}}
+{{- $P := $GB.ideas_pages | default dict -}}
+{{- range $i, $it := ($GB.ideas.ideas | default slice) -}}
+  {{- with index $P $it.key -}}
+    {{- $.AddPage (dict "path" $it.key "kind" "page" "type" "math" "layout" "gbidea" "title" $it.name "weight" (add $i 1)
+        "description" (printf "%s How the great books answer it, from %d stops through the ladder, with a part for young readers and questions to talk about. Great Ideas · Great Books Ladder." .question (len .stops))
+        "params" (dict "ladder" "greatbooks" "idea" $it.key)) -}}
+  {{- end -}}
+{{- end -}}

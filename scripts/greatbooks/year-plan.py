@@ -267,7 +267,7 @@ def main():
         e = {'t': r['title'], 'u': '/great-books/%s/%s/' % (cs, ts), 'a': r.get('author', ''), 'k': r['_kind']}
         if r.get('vol'):
             e['v'] = r['vol']
-        days_hc = [h['id'] for h in hc.get(r['id'], [])]
+        days_hc = [h['id'] for h in hc.get(r['id'], []) if not h.get('rel')]  # by the rung's author (the card says so)
         if days_hc:
             e['hc'] = days_hc
         rungs[r['id']] = e

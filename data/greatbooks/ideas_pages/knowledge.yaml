@@ -1,0 +1,132 @@
+# Great Books Ladder: the Great Idea "knowledge", followed through the books (page: /great-books/ideas/knowledge/, layout layouts/math/gbidea.html).
+# Our own words: inspired by Adler's Syntopicon, NOT copied from it. Checked by scripts/greatbooks/check-gb.py.
+#   question: one or two plain sentences.  intro: optional.  stances: optional [{key, label}] (colors the timeline; only where views divide cleanly)
+#   stops (4-10, oldest first): rung (a rung id), year (number, negative = BC), optional when/who/work (else the rung's date/author/work),
+#     optional stance, text (2-4 sentences, our own words), optional quote: ONE short line (under 40 words) copied exactly from an
+#     excerpt already in that rung's lesson (scripts/greatbooks/src/<rung>/lesson.json), with that excerpt's credit fields; nothing from 1931 or later.
+#   young: paragraphs for young readers.  talk: 4-6 family questions.  see: topic ids on other ladders.  pages: optional [{url, title}].
+key: knowledge
+question: 'What is knowledge, and where does it come from: from reason, from the senses, or from both?'
+stances:
+- key: reason
+  label: Mainly from reason
+- key: senses
+  label: Mainly from the senses and experience
+- key: both
+  label: From both working together
+stops:
+- rung: gbgreeks.plato-republic-cave
+  year: -375
+  stance: reason
+  text: Plato pictures prisoners in a cave who see only shadows on a wall and take them for real things. The senses, he says, show us
+    shadows; real knowledge is of unchanging truths, which the mind reaches by reasoning. Education is the slow climb out of the cave
+    into the sunlight.
+- rung: gbgreeks.aristotle-metaphysics
+  year: -340
+  stance: both
+  text: 'Aristotle begins with the senses: we love seeing even when it is useless. Experience builds up from many memories, but knowledge
+    proper means grasping the reasons and causes behind things. Unlike Plato, he looks for the general truths inside the things we see.'
+  quote:
+    text: All men by nature desire to know.
+    author: Aristotle
+    work: Metaphysics I.1, 980a
+    tr: W. D. Ross
+    ed: The Works of Aristotle, vol. VIII, 2nd edition, Clarendon Press
+    year: 1928
+    src: Internet Archive
+    url: https://archive.org/details/worksofaristotle0008wdro_h7t3
+- rung: gb17.descartes-meditations
+  year: 1641
+  stance: reason
+  text: Descartes sets aside everything that could possibly be doubted, including the senses. What survives is that he is thinking,
+    so he must exist. From there he tries to rebuild knowledge on ideas so clear and distinct that reason cannot doubt them.
+  quote:
+    text: I am, I exist, is necessarily true each time it is expressed by me, or conceived in my mind.
+    author: René Descartes
+    work: Meditations, II
+    tr: John Veitch
+    ed: Descartes' Meditations and Selections from the Principles of Philosophy, Open Court
+    year: 1913
+    src: Internet Archive
+    url: https://archive.org/details/meditationsselec00desc
+- rung: gb18.locke-human-understanding
+  year: 1689
+  stance: senses
+  text: 'Locke denies that we are born with any ideas built in. The mind starts like blank paper, and all its ideas come from experience:
+    from the senses and from noticing our own thinking. Knowledge is then the mind seeing how its ideas agree or disagree.'
+  quote:
+    text: 'To this I answer, in one word, from experience: in that all our knowledge is founded, and from that it ultimately derives
+      itself.'
+    author: John Locke
+    work: Essay, Book II, ch. I, §2
+    tr: ''
+    ed: An Essay Concerning Human Understanding, Thomas Tegg, London
+    year: 1832
+    src: Internet Archive
+    url: https://archive.org/details/anessayconcerni23lockgoog
+- rung: gb18.berkeley-principles
+  year: 1710
+  stance: senses
+  text: Berkeley pushes Locke further. If all we ever know are our ideas, he asks, what sense does it make to speak of matter existing
+    apart from any mind? For him, to be is to be perceived, and the steady order of the world comes from God.
+- rung: gb18.hume-enquiry
+  year: 1748
+  stance: senses
+  text: 'Hume divides knowledge into two kinds: relations of ideas, as in math, which are certain, and matters of fact, which rest on
+    experience. We expect the sun to rise because it always has, but reason cannot prove it will. Habit, not logic, carries us from
+    the past to the future.'
+  quote:
+    text: Custom, then, is the great guide of human life.
+    author: David Hume
+    work: Enquiry, Section V, Part I
+    tr: ''
+    ed: An Enquiry Concerning Human Understanding, reprinted from the edition of 1777, Open Court, Chicago
+    year: 1900
+    src: Internet Archive
+    url: https://archive.org/details/enquiryconcernin01hume
+- rung: gb18.kant-critique-of-pure-reason
+  year: 1781
+  stance: both
+  text: Kant says Hume woke him from his slumber. He agrees that knowledge begins with experience, but argues that the mind supplies
+    its own forms, such as space, time and cause, that shape all experience. Neither the senses nor reason can give knowledge alone.
+  quote:
+    text: Thoughts without content are void; intuitions without conceptions, blind.
+    author: Immanuel Kant
+    work: Critique of Pure Reason, Transcendental Logic, Introduction
+    tr: J. M. D. Meiklejohn
+    ed: Critique of Pure Reason, Bohn's Philosophical Library (Project Gutenberg text)
+    year: 1855
+    src: Internet Archive
+    url: https://archive.org/details/thecritiqueofpur04280gut
+- rung: gb20.russell-problems-of-philosophy
+  year: 1912
+  stance: both
+  text: Russell begins by asking whether anything can be known for certain. He separates knowing things directly, by acquaintance, from
+    knowing about them through descriptions. He holds that some general truths, such as logic, are known by reason, while most of what
+    we know rests on the senses.
+  quote:
+    text: Is there any knowledge in the world which is so certain that no reasonable man could doubt it?
+    author: Bertrand Russell
+    work: The Problems of Philosophy, Chapter I
+    tr: ''
+    ed: Williams and Norgate, London (Home University Library)
+    year: 1912
+    src: Internet Archive
+    url: https://archive.org/details/problemsofphilos1912russ
+young:
+- How do you know your dog is in the yard? You can see him and hear him bark. That's knowing by your senses. How do you know 2 + 2 =
+  4? You can figure it out in your head. That's knowing by reason.
+- For a long time, thinkers argued about which way of knowing comes first. Many ended up saying we need both, like two eyes working
+  together.
+talk:
+- Name three things you know because you saw them, and three you know because you figured them out.
+- What's the difference between knowing something and just believing it?
+- In Plato's cave, the prisoners think shadows are real. Have you ever been fooled by your eyes?
+- Hume says we expect the sun to rise because it always has. Is that good enough reason?
+- How could you find out if something you read is true?
+see:
+- informal.deductive-inductive
+- informal.inductive-strength
+- adv.belief-doubt
+- lifek.observing
+- informal.analogies

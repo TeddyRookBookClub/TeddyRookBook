@@ -1,0 +1,4 @@
+{{- /* Great Books Ladder: a year number as BC/AD text for the Great Ideas pages (layouts/math/gbidea.html).
+   -375 -> "375 BC", 0 -> "AD 1", 397 -> "AD 397", 1651 -> "1651". */ -}}
+{{- $y := int . -}}
+{{- if lt $y 0 }}{{ printf "%d BC" (sub 0 $y) }}{{ else if eq $y 0 }}AD 1{{ else if lt $y 1000 }}{{ printf "AD %d" $y }}{{ else }}{{ $y }}{{ end -}}

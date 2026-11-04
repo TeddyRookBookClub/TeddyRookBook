@@ -1,0 +1,74 @@
+# Great Books Ladder: the Great Idea "evolution", followed through the books (page: /great-books/ideas/evolution/, layout layouts/math/gbidea.html).
+# Our own words: inspired by Adler's Syntopicon, NOT copied from it. Checked by scripts/greatbooks/check-gb.py.
+#   question: one or two plain sentences.  intro: optional.  stances: optional [{key, label}] (colors the timeline; only where views divide cleanly)
+#   stops (4-10, oldest first): rung (a rung id), year (number, negative = BC), optional when/who/work (else the rung's date/author/work),
+#     optional stance, text (2-4 sentences, our own words), optional quote: ONE short line (under 40 words) copied exactly from an
+#     excerpt already in that rung's lesson (scripts/greatbooks/src/<rung>/lesson.json), with that excerpt's credit fields; nothing from 1931 or later.
+#   young: paragraphs for young readers.  talk: 4-6 family questions.  see: topic ids on other ladders.  pages: optional [{url, title}].
+key: evolution
+question: Have living things always been the way they are, or have they changed over long ages? How?
+stops:
+- rung: gbgreeks.aristotle-physics
+  year: -350
+  text: 'Aristotle reports an older idea from Empedocles: that long ago animals came together by chance, and only the well-fitted ones
+    survived. He rejects it. Living things, he argues, grow according to purpose, since their parts are too regularly fitted to be mere
+    chance.'
+- rung: gbrome.lucretius-on-the-nature-of-things
+  year: -55
+  text: Lucretius writes that the earth once produced many strange creatures, and those that could not feed, defend themselves and have
+    young died out. It is not evolution as Darwin meant it, since species did not change into new ones, but it is an early idea of nature
+    weeding out the unfit.
+- rung: gb19.darwin-origin-of-species
+  year: 1859
+  text: 'Darwin gathers evidence from breeders, fossils, islands and the shapes of living things. He argues that species change over
+    many generations by natural selection: helpful variations are kept, harmful ones lost. He admitted gaps in the evidence and answered
+    objections at length.'
+  quote:
+    text: This preservation of favourable variations and the rejection of injurious variations, I call Natural Selection.
+    author: Darwin
+    work: On the Origin of Species, Chapter IV
+    tr: ''
+    ed: John Murray, London (first edition)
+    year: 1859
+    src: Internet Archive (Project Gutenberg text)
+    url: https://archive.org/details/ontheoriginofspe01228gut
+- rung: gb19.darwin-descent-of-man
+  year: 1871
+  text: Darwin applies his theory to human beings, arguing that people share ancestors with other animals. He spends much of the book
+    on how moral sense and kindness could develop. He calls conscience the most important difference between humans and other animals.
+  quote:
+    text: I fully subscribe to the judgment of those writers who maintain that of all the differences between man and the lower animals,
+      the moral sense or conscience is by far the most important. ...
+    author: Darwin
+    work: The Descent of Man, Chapter IV
+    tr: ''
+    ed: John Murray, London (first edition)
+    year: 1871
+    src: Internet Archive (Project Gutenberg text)
+    url: https://archive.org/details/thedescentofmana34967gut
+- rung: gb20.dobzhansky-genetics
+  year: 1937
+  text: Dobzhansky joins Darwin's theory with the new science of genes. He shows how variation, inheritance and selection work in wild
+    populations, especially fruit flies. His book helped build what is called the modern synthesis.
+- rung: gb20.waddington-nature-of-life
+  year: 1961
+  text: Waddington asks how development and evolution fit together. Changes in how an embryo grows, he argues, are what natural selection
+    works on. He wanted biology to explain both the history of life and the growth of each living thing.
+young:
+- Long ago there were dinosaurs, giant ferns and woolly mammoths. Today there are different animals. Charles Darwin studied how living
+  things change over very long times.
+- He noticed that animals have babies that are a little different from each other. The ones best suited to their home, like a bird whose
+  beak fits the seeds nearby, tend to survive and have more babies. Over many, many generations, that adds up to big changes. People
+  hold different beliefs about how this fits with faith, and families can talk about that together.
+talk:
+- Look at pictures of dogs of different breeds. How did people make them so different?
+- Why might a white rabbit survive better in snowy places?
+- Darwin said conscience was the most important difference between people and animals. What do you think?
+- How do fossils help us learn about the past?
+see:
+- lifesci.natural-selection
+- hsbio.natural-selection
+- hsbio.speciation
+- hsbio.evidence-fossils-anatomy
+- hsbio.mendel
+- hsbio.hardy-weinberg

@@ -1,0 +1,192 @@
+# The Continued-Fraction Suite (/music/continued-fraction-suite/): Teddy Rook's six pieces for piano, one number each.
+# Every fact here was read from the score (static/pdfs/Continued-Fraction-Suite-score.pdf, 16 pages, engraved with
+# LilyPond) and the math was checked by script (Python, mpmath). The pages are built by layouts/music/suite.html and
+# layouts/music/suite-lesson.html; the accent player is static/music/suite/suite.js.
+#
+# Per movement:
+#   slug, num (Roman), name, number (as printed), cf (as printed), key, keys (key changes, plain words), time, tempo,
+#   bpm (quarter notes per minute), bars, first (first printed bar number), minutes, level, pages (score pages),
+#   rate: the left-hand accent rate: an accent falls on eighth note n (counting from 0 at bar 1) when
+#         floor((n+1)·rate) > floor(n·rate). rate = the number when it is under 1/2, else 1 − the number.
+#         Checked against the accents printed in the opening bars of every movement.
+#   eighths: eighth notes per bar;  cp: the number's key in the Rhythm of Numbers composer
+#   sections: [start bar, bars, label as printed ("" = no mark), [phrase lengths]]
+pdf: "/pdfs/Continued-Fraction-Suite-score.pdf"
+pdf_size: "16 pages, 1.7 MB"
+video: K0l47YsgopE
+movements:
+  - slug: golden
+    num: "I"
+    name: "Golden"
+    number: "φ − 1"
+    value: "0.6180339…"
+    cf: "[0; 1, 1, 1, 1, …]"
+    cfnote: "every term is 1"
+    key: "G major"
+    keys: "G major, with three of the 5-bar B sections (bars 9, 43 and 64) in C major"
+    time: "3/4"
+    tempo: "Andante cantabile"
+    bpm: 84
+    bars: 89
+    first: 1
+    minutes: "about 3¼ minutes"
+    level: "Early intermediate"
+    pages: "1–3"
+    rate: 0.3819660113
+    rate_label: "1 − (φ − 1) = 0.382…, an accent every 2 or 3 eighth notes"
+    eighths: 6
+    cp: phi
+    sections:
+      - [1, 8, "", [5, 3]]
+      - [9, 5, "B", [5]]
+      - [14, 8, "rare block", [5, 3]]
+      - [22, 8, "rare block", [5, 3]]
+      - [30, 5, "B", [5]]
+      - [35, 8, "A", [5, 3]]
+      - [43, 5, "B", [5]]
+      - [48, 8, "rare block", [5, 3]]
+      - [56, 8, "A", [5, 3]]
+      - [64, 5, "B", [5]]
+      - [69, 8, "rare block", [5, 3]]
+      - [77, 8, "rare block", [5, 3]]
+      - [85, 5, "B", [5]]
+  - slug: silver
+    num: "II"
+    name: "Silver"
+    number: "√2 − 1"
+    value: "0.4142135…"
+    cf: "[0; 2, 2, 2, …]"
+    cfnote: "every term is 2"
+    key: "D major"
+    keys: "D major, with the two 5-bar B sections (bars 25 and 54) in G major"
+    time: "4/4"
+    tempo: "Adagio"
+    bpm: 76
+    bars: 70
+    first: 1
+    minutes: "about 3¾ minutes"
+    level: "Intermediate"
+    pages: "4–6"
+    rate: 0.4142135624
+    rate_label: "√2 − 1 = 0.414…, an accent every 2 or 3 eighth notes"
+    eighths: 8
+    cp: sqrt2
+    sections:
+      - [1, 12, "", [5, 5, 2]]
+      - [13, 12, "A", [5, 5, 2]]
+      - [25, 5, "B", [5]]
+      - [30, 12, "A", [5, 5, 2]]
+      - [42, 12, "A", [5, 5, 2]]
+      - [54, 5, "B", [5]]
+      - [59, 12, "rare block", [5, 5, 2]]
+  - slug: the-fifth
+    num: "III"
+    name: "The Fifth"
+    number: "log₂(3/2)"
+    value: "0.5849625…"
+    cf: "[0; 1, 1, 2, 2, 3, 1, 5, …]"
+    cfnote: "the terms change"
+    key: "F major"
+    keys: "F major, with the 5-bar B section (bars 37–41) in B♭ major"
+    time: "4/4"
+    tempo: "Allegretto"
+    bpm: 88
+    bars: 53
+    first: 1
+    minutes: "about 2½ minutes"
+    level: "Intermediate"
+    pages: "7–8"
+    rate: 0.4150374993
+    rate_label: "1 − log₂(3/2) = 0.415…, an accent every 2 or 3 eighth notes"
+    eighths: 8
+    cp: fifth
+    sections:
+      - [1, 12, "", [5, 5, 2]]
+      - [13, 12, "A", [5, 5, 2]]
+      - [25, 12, "A", [5, 5, 2]]
+      - [37, 5, "B", [5]]
+      - [42, 12, "rare block", [5, 5, 2]]
+  - slug: euler
+    num: "IV"
+    name: "Euler"
+    number: "e − 2"
+    value: "0.7182818…"
+    cf: "[0; 1, 2, 1, 1, 4, 1, 1, 6, …]"
+    cfnote: "a pattern that keeps growing: 2, 4, 6, 8, …"
+    key: "A minor"
+    keys: "A minor all the way (no key signature; the G♯s are written in)"
+    time: "3/4"
+    tempo: "Tempo di valzer"
+    bpm: 96
+    bars: 71
+    first: 1
+    minutes: "about 2¼ minutes"
+    level: "Early intermediate"
+    pages: "9–10"
+    rate: 0.2817181715
+    rate_label: "1 − (e − 2) = 0.282…, an accent every 3 or 4 eighth notes"
+    eighths: 6
+    cp: e
+    sections:
+      - [1, 7, "", [4, 3]]
+      - [8, 7, "A", [4, 3]]
+      - [15, 7, "A", [4, 3]]
+      - [22, 7, "A", [4, 3]]
+      - [29, 4, "B", [4]]
+      - [33, 7, "rare block", [4, 3]]
+      - [40, 7, "rare block", [4, 3]]
+      - [47, 7, "A", [4, 3]]
+      - [54, 7, "A", [4, 3]]
+      - [61, 7, "A", [4, 3]]
+      - [68, 4, "B", [4]]
+  - slug: pi
+    num: "V"
+    name: "Pi"
+    number: "π − 3"
+    value: "0.1415926…"
+    cf: "[0; 7, 15, 1, 292, …]"
+    cfnote: "a 7, a 15, a 1, then the famous 292"
+    key: "C major"
+    keys: "C major all the way"
+    time: "4/4"
+    tempo: "Moderato"
+    bpm: 96
+    bars: 113
+    first: 1
+    minutes: "about 4¾ minutes"
+    level: "Early intermediate"
+    pages: "11–14"
+    rate: 0.1415926536
+    rate_label: "π − 3 = 0.1416…, an accent every 7 eighth notes (now and then 8)"
+    eighths: 8
+    cp: pi
+    sections:
+      - [1, 105, "", [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+      - [106, 1, "held bar", [1]]
+      - [107, 7, "B", [7]]
+  - slug: pi-bar-32996
+    num: "VI"
+    name: "Pi, bar 32,996"
+    number: "π − 3"
+    value: "0.1415926…"
+    cf: "[0; 7, 15, 1, 292, …]"
+    cfnote: "the 292: the first short cycle"
+    key: "C major"
+    keys: "C major, with the 7-bar B phrase (bars 32,990–32,996) in F major"
+    time: "4/4"
+    tempo: "Moderato"
+    bpm: 96
+    bars: 50
+    first: 32968
+    minutes: "about 2 minutes"
+    level: "Early intermediate"
+    pages: "15–16"
+    rate: 0.1415926536
+    rate_label: "π − 3 = 0.1416…, the same accents as Movement V"
+    eighths: 8
+    cp: pi
+    sections:
+      - [32968, 21, "end of cycle 292", [7, 7, 7]]
+      - [32989, 1, "held bar", [1]]
+      - [32990, 7, "B", [7]]
+      - [32997, 21, "short cycle", [7, 7, 7]]

@@ -1,0 +1,127 @@
+{{- /* Great Books Ladder: one Great Idea, followed through the books (/great-books/ideas/<key>/, made by
+   content/great-books/ideas/_content.gotmpl; params.idea = the key). Content: data/greatbooks/ideas_pages/<key>.yaml
+   (our own words; format in the header of any of those files); names and groups: data/greatbooks/ideas.yaml.
+   Sections: The question · a timeline strip of the stops (colored by stance when the file lists stances) · How the books
+   answer (the stops, oldest first, each linking to its rung) · For young readers · Talk about it · Where else on the site.
+   Styles: static/greatbooks/ideas.css (plus static/greatbooks/viz/greatbooks.css). Checked by scripts/greatbooks/check-gb.py. */ -}}
+{{ define "main" }}
+{{ partial "inline/ml-head.html" . }}
+{{ partial "inline/ml-css.html" "greatbooks/viz/greatbooks.css" }}
+{{ partial "inline/ml-css.html" "greatbooks/ideas.css" }}
+{{- $L := partial "inline/ml-ladder.html" "greatbooks" -}}
+{{- $GB := site.Data.greatbooks | default dict -}}
+{{- $k := .Params.idea -}}
+{{- $P := index ($GB.ideas_pages | default dict) $k -}}
+{{- $D := partialCached "greatbooks/rung-data.html" "gb" -}}
+{{- $I := index $D.ideas $k -}}
+{{- $g := partialCached "inline/ml-graph.html" "graph" -}}
+{{- $idx := partialCached "inline/ml-index.html" "index" -}}
+{{- $grp := index (where $GB.ideas.groups "key" $I.group) 0 -}}
+{{- $base := printf "%s/ideas/" $L.slug | relURL -}}
+{{- /* stance index (1-based) for the color classes */ -}}
+{{- $sx := dict -}}{{- range $i, $s := $P.stances | default slice }}{{ $sx = merge $sx (dict $s.key (add $i 1)) }}{{ end -}}
+{{- /* the timeline range, with nice ticks */ -}}
+{{- $ys := slice }}{{ range $P.stops }}{{ $ys = $ys | append .year }}{{ end -}}
+{{- $y0 := index (sort $ys) 0 }}{{ $y1 := index (sort $ys "value" "desc") 0 -}}
+{{- $span := sub $y1 $y0 -}}
+{{- $step := 50 }}{{ if gt $span 1600 }}{{ $step = 500 }}{{ else if gt $span 700 }}{{ $step = 200 }}{{ else if gt $span 280 }}{{ $step = 100 }}{{ else if lt $span 90 }}{{ $step = 25 }}{{ end -}}
+{{- $lo := mul (math.Floor (div (float $y0) $step)) $step | int -}}
+{{- $hi := mul (math.Ceil (div (float $y1) $step)) $step | int -}}
+{{- $w := float (sub $hi $lo) -}}
+<div class="mlp gbh gbi" id="gbi-{{ $k }}">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ $L.url }}">{{ $L.short }}</a> <span aria-hidden="true">›</span> <a href="{{ $base }}">Great Ideas</a> <span aria-hidden="true">›</span> <span>{{ $I.name }}</span></nav>
+  <header class="mlp-thead">
+    <p class="mlp-eyebrow"><span>Great Ideas</span><span>{{ $grp.title }}</span></p>
+    <h1>{{ $I.name }}</h1>
+    <p class="mlp-short">{{ $I.blurb }}</p>
+  </header>
+
+  <section class="gbi-q" aria-labelledby="gbi-q-h">
+    <h2 id="gbi-q-h">The question</h2>
+    <p class="gbi-qtext">{{ $P.question }}</p>
+    {{- with $P.intro }}<p>{{ . | safeHTML }}</p>{{ end }}
+  </section>
+
+  <figure class="gbi-tl" aria-labelledby="gbi-tl-cap">
+    <figcaption id="gbi-tl-cap"><b>The stops on a time line</b> <span>{{ len $P.stops }} stops, from {{ partial "greatbooks/idea-year.html" $y0 }} to {{ partial "greatbooks/idea-year.html" $y1 }}. Each number is a stop below, placed at its year.</span></figcaption>
+    <div class="gbi-tl-bar" aria-hidden="true">
+      {{- $lanes := slice -100.0 -100.0 -100.0 -100.0 -}}
+      {{- range $i, $s := $P.stops }}
+        {{- $x := mul 100.0 (div (float (sub $s.year $lo)) $w) -}}
+        {{- $ln := -1 }}{{ range $j, $last := $lanes }}{{ if and (lt $ln 0) (ge (sub $x $last) 6.5) }}{{ $ln = $j }}{{ end }}{{ end -}}
+        {{- if lt $ln 0 }}{{ $ln = 3 }}{{ end -}}
+        {{- $nl := slice }}{{ range $j, $last := $lanes }}{{ if eq $j $ln }}{{ $nl = $nl | append $x }}{{ else }}{{ $nl = $nl | append $last }}{{ end }}{{ end }}{{ $lanes = $nl -}}
+        {{- $st := index $sx ($s.stance | default "") | default 0 }}
+      <a class="gbi-dot s{{ $st }} l{{ $ln }}" href="#stop-{{ add $i 1 }}" style="left:{{ printf "%.2f" $x }}%" tabindex="-1">{{ add $i 1 }}</a>
+      {{- end }}
+      <span class="gbi-axis"></span>
+      {{- range $t := seq $lo $step $hi }}
+      <span class="gbi-tick" style="left:{{ printf "%.2f" (mul 100.0 (div (float (sub $t $lo)) $w)) }}%"><i>{{ partial "greatbooks/idea-year.html" $t }}</i></span>
+      {{- end }}
+    </div>
+    <ol class="gbi-tl-list">
+      {{- range $i, $s := $P.stops }}{{ $r := index $D.R $s.rung }}{{ $st := index $sx ($s.stance | default "") | default 0 }}
+      <li><a href="#stop-{{ add $i 1 }}"><span class="gbi-n s{{ $st }}">{{ add $i 1 }}</span> {{ $s.who | default $r.author }} <small>{{ partial "greatbooks/idea-year.html" $s.year }}</small></a></li>
+      {{- end }}
+    </ol>
+    {{- with $P.stances }}
+    <ul class="gbi-legend" aria-label="Colors: where each author stands">
+      {{- range $i, $s := . }}<li><span class="gbi-sw s{{ add $i 1 }}" aria-hidden="true"></span> {{ $s.label }}</li>{{ end }}
+    </ul>
+    {{- with $P.stance_note }}<p class="mlp-small">{{ . }}</p>{{ end }}
+    {{- end }}
+  </figure>
+
+  <section class="gbi-stops-sec" aria-labelledby="gbi-stops-h">
+    <h2 id="gbi-stops-h">How the books answer</h2>
+    <p class="mlp-small">Oldest first. Each stop is our own short summary of what the author argued; follow the link to the rung for the whole lesson.</p>
+    <ol class="gbi-stops">
+      {{- range $i, $s := $P.stops }}{{ $r := index $D.R $s.rung }}{{ $t := index $idx.T $s.rung }}{{ $soon := index $g.soon $s.rung }}{{ $st := index $sx ($s.stance | default "") | default 0 }}
+      <li class="gbi-stop s{{ $st }}" id="stop-{{ add $i 1 }}">
+        <p class="gbi-when"><span class="gbi-n s{{ $st }}" aria-hidden="true">{{ add $i 1 }}</span> {{ $s.when | default $r.date }}</p>
+        <h3>{{ $s.who | default $r.author }}, <i>{{ $s.work | default $r.work }}</i></h3>
+        {{- with $s.stance }}{{ with index (where $P.stances "key" .) 0 }}<p class="gbi-stance"><span class="gbi-sw s{{ $st }}" aria-hidden="true"></span> {{ .label }}</p>{{ end }}{{ end }}
+        <p>{{ $s.text | safeHTML }}</p>
+        {{- with $s.quote }}
+        <blockquote class="gbi-quote"><p>“{{ .text }}”</p>
+          <footer>{{ .author }}, <i>{{ .work }}</i>.{{ with .tr }} Translated by {{ . }}{{ end }} ({{ .ed }}, {{ .year }}). <a href="{{ .url }}" rel="noopener">{{ .src }}</a>.</footer></blockquote>
+        {{- end }}
+        {{- with $t }}<p class="gbi-go"><a href="{{ .url }}">{{ if $soon }}The rung (being written){{ else }}Go to the rung{{ end }}: {{ .title }} <span aria-hidden="true">→</span></a></p>{{ end }}
+      </li>
+      {{- end }}
+    </ol>
+  </section>
+
+  <section class="gbi-box gbi-young" aria-labelledby="gbi-young-h">
+    <h2 id="gbi-young-h"><span aria-hidden="true">🌱</span> For young readers</h2>
+    {{- range $P.young }}<p>{{ . | safeHTML }}</p>{{ end }}
+  </section>
+
+  <section class="gbi-box" aria-labelledby="gbi-talk-h">
+    <h2 id="gbi-talk-h"><span aria-hidden="true">💬</span> Talk about it</h2>
+    <ul class="gbi-talk">{{ range $P.talk }}<li>{{ . | safeHTML }}</li>{{ end }}</ul>
+  </section>
+
+  <section class="gbi-box" aria-labelledby="gbi-see-h">
+    <h2 id="gbi-see-h"><span aria-hidden="true">🔗</span> Where else on the site</h2>
+    <ul class="gbh-rungs gbi-see">
+      {{- range $P.see }}{{ with index $idx.T . }}<li><a class="gbh-rung" href="{{ .url }}" title="{{ .short }}"><span>{{ .title }}</span></a></li>{{ end }}{{ end }}
+      {{- range $P.pages }}<li><a class="gbh-rung" href="{{ .url | relURL }}"><span>{{ .title }}</span></a></li>{{ end }}
+    </ul>
+    {{- $hits := slice }}{{ range $GB.rungs.rungs }}{{ if in (.ideas | default slice) $k }}{{ $hits = $hits | append .id }}{{ end }}{{ end }}
+    {{- with $hits }}
+    <p class="mlp-small gbi-tagged">Every rung tagged with this idea:</p>
+    <ul class="gbh-rungs">{{ range . }}{{ with index $idx.T . }}{{ $soon := index $g.soon .id }}<li><a class="gbh-rung {{ if $soon }}soon{{ else }}ready{{ end }}" href="{{ .url }}" title="{{ .short }}"><span>{{ .title }}</span>{{ if $soon }}<em class="mlp-sr"> (being written)</em>{{ end }}</a></li>{{ end }}{{ end }}</ul>
+    {{- end }}
+  </section>
+
+  {{- $all := $GB.ideas.ideas }}{{ $pos := 0 }}{{ range $i, $x := $all }}{{ if eq $x.key $k }}{{ $pos = $i }}{{ end }}{{ end }}
+  {{- $pi := index $all (cond (eq $pos 0) (sub (len $all) 1) (sub $pos 1)) }}{{ $ni := index $all (cond (eq $pos (sub (len $all) 1)) 0 (add $pos 1)) }}
+  <nav class="gbi-pn" aria-label="More ideas">
+    <a href="{{ $base }}{{ $pi.key }}/"><span aria-hidden="true">←</span> {{ $pi.name }}</a>
+    <a href="{{ $base }}">All the ideas</a>
+    <a href="{{ $base }}{{ $ni.key }}/">{{ $ni.name }} <span aria-hidden="true">→</span></a>
+  </nav>
+  <p class="mlp-small gbi-credit">These pages are our own short synthesis, written for families. They were inspired by Mortimer J. Adler's <i>Syntopicon</i>, the index of great ideas in volumes 1 and 2 of <i>Great Books of the Western World</i>, but the questions, summaries and groupings are ours, not the Syntopicon's. Short excerpts come from public-domain translations, credited where they appear.</p>
+</div>
+{{ end }}

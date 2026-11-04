@@ -11,8 +11,10 @@ Rules
     a reading no pattern fits goes to the author's rung with hc.default: true (else the author's first rung).
   - same: true when the reading is from the rung's own work (the pattern fits, or the titles overlap); false when it is
     another work by the same author. The rung page lists "From this work" first, then "More by <author>".
-  - data/greatbooks/harvard_overrides.yaml: { <rung id>: { add: [day ids], drop: [day ids] } }.
-Output: { rung id: [ { id, slug, url, date, title, author, work, same } ] }, by date in the year.
+  - data/greatbooks/harvard_overrides.yaml: { <rung id>: { add: [day ids], drop: [day ids] } }. An added day by the rung's
+    author gets same as above; one by another author (a source, a commentary, the same historical figures) gets rel: true,
+    and the rung page lists it under "Related readings".
+Output: { rung id: [ { id, slug, url, date, title, author, work, same, rel } ] }, by date in the year.
 """
 import json, os, re, sys, unicodedata
 
@@ -49,13 +51,13 @@ def build(rungs, root, warn=lambda m: None):
             anyw.append(r)
     out = {}
 
-    def add(r, day, rd, same):
+    def add(r, day, rd, same, rel=False):
         lst = out.setdefault(r['id'], [])
         if any(x['id'] == day['id'] and x['work'] == rd['work'] for x in lst):
             return
         lst.append({'id': day['id'], 'slug': day['slug'], 'url': '/harvard-classics/' + day['slug'] + '/',
                     'date': MONTHS[day['month'] - 1] + ' ' + str(day['day']), 'title': day['title'],
-                    'author': rd.get('author') or '', 'work': rd.get('work') or '', 'same': bool(same)})
+                    'author': rd.get('author') or '', 'work': rd.get('work') or '', 'same': bool(same), 'rel': bool(rel)})
 
     def fits(r, rd):
         pat = (r.get('hc') or {}).get('works')
@@ -94,7 +96,12 @@ def build(rungs, root, warn=lambda m: None):
                 warn('harvard_overrides.yaml: unknown day ' + str(did) + ' or rung ' + rid)
                 continue
             for rd in day['readings'][:1]:
-                add(r, day, rd, True)
+                # same author: from this work if the pattern or title fits, else another work by the author;
+                # another author (a source, a commentary, the same historical figures): a related reading
+                if r in names.get(norm(rd.get('author')), []):
+                    add(r, day, rd, fits(r, rd) or overlap(r, rd))
+                else:
+                    add(r, day, rd, False, True)
     for k in list(out):
         out[k].sort(key=lambda x: x['id'])
         if not out[k]:

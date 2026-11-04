@@ -1,0 +1,93 @@
+# Great Books Ladder: the Great Idea "light", followed through the books (page: /great-books/ideas/light/, layout layouts/math/gbidea.html).
+# Our own words: inspired by Adler's Syntopicon, NOT copied from it. Checked by scripts/greatbooks/check-gb.py.
+#   question: one or two plain sentences.  intro: optional.  stances: optional [{key, label}] (colors the timeline; only where views divide cleanly)
+#   stops (4-10, oldest first): rung (a rung id), year (number, negative = BC), optional when/who/work (else the rung's date/author/work),
+#     optional stance, text (2-4 sentences, our own words), optional quote: ONE short line (under 40 words) copied exactly from an
+#     excerpt already in that rung's lesson (scripts/greatbooks/src/<rung>/lesson.json), with that excerpt's credit fields; nothing from 1931 or later.
+#   young: paragraphs for young readers.  talk: 4-6 family questions.  see: topic ids on other ladders.  pages: optional [{url, title}].
+key: light
+question: What is light, and how do we see colors? Is light made of particles, of waves, or something stranger?
+stances:
+- key: wave
+  label: Light as a wave
+- key: particle
+  label: Light as particles
+- key: both
+  label: Something of both
+stops:
+- rung: gbgreeks.aristotle-on-the-soul
+  year: -350
+  text: Aristotle says light is not a thing that travels but a state of a clear medium, like air or water, when it is lit by fire or
+    the sun. Color moves the lit medium, and the medium moves the eye. Seeing needs something in between.
+- rung: gb17.descartes-discourse-on-method
+  year: 1637
+  work: Optics (published with the Discourse)
+  text: In the Optics printed with his Discourse, Descartes explains light as a pressure passed through a medium, like a blind man's
+    stick feeling the ground. He works out the law of refraction for light bending into glass or water. He uses it to explain lenses
+    and the rainbow.
+- rung: gb17.huygens-treatise-on-light
+  year: 1690
+  stance: wave
+  text: Huygens argues that light is a wave spreading through a fine medium, like sound but far faster. Each point on a wave sends out
+    its own little wave, and together they make the next wavefront. This explains reflection and refraction, and he notes that light's
+    speed is great but finite.
+  quote:
+    text: This, however, is quite another thing from being instantaneous, since there is all the difference between a finite thing and
+      an infinite.
+    author: Christiaan Huygens
+    work: Treatise on Light, Chapter I
+    tr: Silvanus P. Thompson
+    ed: Macmillan, London
+    year: 1912
+    src: Internet Archive
+    url: https://archive.org/details/treatiseonlight031310mbp
+- rung: gb17.newton-optics
+  year: 1704
+  stance: particle
+  text: Newton splits sunlight with a prism and shows that white light is a mixture of colors, each bent by a different amount. At the
+    end of the book he asks, as a question, whether light might be made of tiny particles. For a century his view was favored over Huygens'.
+  quote:
+    text: Are not the Rays of Light very small Bodies emitted from shining Substances?
+    author: Isaac Newton
+    work: Opticks, Book III, Query 29
+    tr: ''
+    ed: 4th edition, William Innys, London
+    year: 1730
+    src: Internet Archive
+    url: https://archive.org/details/bim_eighteenth-century_opticks-or-a-treatise-_newton-sir-isaac_1730
+- rung: gb20.einstein-relativity
+  year: 1916
+  text: Einstein builds relativity on the principle that light's speed in empty space is the same for every observer, however they move.
+    This simple rule changes our ideas of space and time. Light becomes the measuring stick of the universe.
+  quote:
+    text: If the observer perceives the two flashes of lightning at the same time, then they are simultaneous.
+    author: Albert Einstein
+    work: Relativity, Part I, Section VIII, On the Idea of Time in Physics
+    tr: Robert W. Lawson
+    ed: Methuen
+    year: 1920
+    src: Project Gutenberg
+    url: https://www.gutenberg.org/ebooks/36114
+- rung: gb20.planck-scientific-autobiography
+  year: 1948
+  stance: both
+  text: Planck looks back on how, in 1900, he found that energy is given off in small packets called quanta. Einstein and others then
+    showed that light itself behaves both like waves and like particles. Planck writes about how hard it was even for him to accept
+    the new picture.
+young:
+- Light lets us see. It travels super fast, from the sun to the earth in about eight minutes.
+- 'Newton found something amazing: white sunlight is really all the colors mixed together. A prism, or a glass of water in a sunny window,
+  can split it into a rainbow. Try it! Scientists argued for years whether light is like tiny bullets or like waves on a pond. The answer
+  turned out to be: a bit of both.'
+talk:
+- Make a rainbow with a glass of water or a hose. Where do the colors come from?
+- Why does a straw look bent in water?
+- Huygens thought light was a wave, Newton thought particles. How could both be partly right?
+- Why do you think we see lightning before we hear thunder?
+see:
+- physsci.color
+- physsci.refraction-intro
+- phys2.snells-law
+- modern.huygens-principle
+- phys2.photons
+- modern.relativity-postulates

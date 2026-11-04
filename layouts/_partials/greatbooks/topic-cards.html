@@ -29,16 +29,20 @@
 </section>
 {{- end }}
 {{- with index $D.hc $id }}
-{{- $same := where . "same" true }}{{ $other := where . "same" false }}
+{{- $same := where . "same" true }}{{ $rel := where . "rel" true }}{{ $other := where (where . "same" false) "rel" "!=" true }}
 <section class="gb-hc" aria-labelledby="gb-hc-h">
   <h2 id="gb-hc-h"><span aria-hidden="true">📚</span> 15 minutes a day: Harvard Classics readings</h2>
-  <p class="mlp-small">Days in <a href="{{ "harvard-classics/" | relURL }}">Harvard Classics Daily</a>, from the 1930 reading guide to the 1909–10 Harvard Classics, that read this author.</p>
+  <p class="mlp-small">Days in <a href="{{ "harvard-classics/" | relURL }}">Harvard Classics Daily</a>, from the 1930 reading guide to the 1909–10 Harvard Classics, that read {{ if and $rel (not $same) (not $other) }}a text closely tied to this work{{ else }}this author{{ if $rel }} or a text closely tied to this work{{ end }}{{ end }}.</p>
   {{- with $same }}
   <h3>From this work</h3>
   <ul class="gb-hc-list">{{ range . }}<li><a href="{{ .url | relURL }}"><b>{{ .date }}</b><span>{{ .title }}</span><small>{{ .work }}</small></a></li>{{ end }}</ul>
   {{- end }}
   {{- with $other }}
   <h3>{{ if $same }}More readings by the same author{{ else }}Readings from other works by the same author{{ end }}</h3>
+  <ul class="gb-hc-list">{{ range . }}<li><a href="{{ .url | relURL }}"><b>{{ .date }}</b><span>{{ .title }}</span><small>{{ with .author }}{{ . }}, {{ end }}{{ .work }}</small></a></li>{{ end }}</ul>
+  {{- end }}
+  {{- with $rel }}
+  <h3>Related readings: sources, commentary and the same figures</h3>
   <ul class="gb-hc-list">{{ range . }}<li><a href="{{ .url | relURL }}"><b>{{ .date }}</b><span>{{ .title }}</span><small>{{ with .author }}{{ . }}, {{ end }}{{ .work }}</small></a></li>{{ end }}</ul>
   {{- end }}
 </section>

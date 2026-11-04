@@ -1,10 +1,12 @@
-{{- /* Great Books Ladder: our own Great Ideas index (/great-books/ideas/, content/great-books/ideas.md, layout: gbideas).
-   Ideas and groups: data/greatbooks/ideas.yaml (our own names and groups, inspired by Adler's Syntopicon, not copied
+{{- /* Great Books Ladder: our own Great Ideas index (/great-books/ideas/, content/great-books/ideas/_index.md, layout: gbideas).
+   Ideas and groups: data/greatbooks/ideas.yaml; each idea's own page (question, stops; layouts/math/gbidea.html) from
+   data/greatbooks/ideas_pages/<key>.yaml, linked here with its question and stop count. (our own names and groups, inspired by Adler's Syntopicon, not copied
    from it). Each idea lists the rungs whose ideas tags (data/greatbooks/rungs.yaml) include it, in ladder order, ready
    rungs marked; it grows as rungs are built and tagged. Styles: static/greatbooks/viz/greatbooks.css. */ -}}
 {{ define "main" }}
 {{ partial "inline/ml-head.html" . }}
 {{ partial "inline/ml-css.html" "greatbooks/viz/greatbooks.css" }}
+{{ partial "inline/ml-css.html" "greatbooks/ideas.css" }}
 {{- $L := partial "inline/ml-ladder.html" "greatbooks" -}}
 {{- $GB := site.Data.greatbooks | default dict -}}
 {{- $g := partialCached "inline/ml-graph.html" "graph" -}}
@@ -15,7 +17,7 @@
   <header class="mlp-thead">
     <p class="mlp-eyebrow"><span>Great Books Ladder</span><span>Index</span></p>
     <h1>Great Ideas: our index</h1>
-    <p class="mlp-short">Pick an idea and follow it through the great books, rung by rung, from the oldest to the newest.</p>
+    <p class="mlp-short">Pick an idea and follow it through the great books, from the oldest to the newest: each idea has its own page with the question, how the books answer it, a part for young readers and questions to talk about.</p>
   </header>
   <div class="mlp-note"><p>This index is inspired by Mortimer J. Adler's <i>Syntopicon</i>, the index of great ideas in volumes 1 and 2 of <i>Great Books of the Western World</i>, which lists passage by passage where each idea is discussed. Ours is far smaller and our own: {{ len $GB.ideas.ideas }} ideas, named and grouped our way, each linking to the rungs on this ladder that take it up. It grows as rungs are built. To learn how the Syntopicon itself works, see <a href="{{ printf "%s/start-here/syntopicon-and-adler/" $L.slug | relURL }}">The Syntopicon and Mortimer Adler</a>.</p></div>
   <ul class="gbh-jump" aria-label="Groups">{{ range $GB.ideas.groups }}<li><a href="#group-{{ .key }}">{{ .title }}</a></li>{{ end }}</ul>
@@ -27,9 +29,12 @@
       {{- range where $GB.ideas.ideas "group" $gr.key }}{{ $k := .key }}
       {{- $hits := slice }}{{ range $rungs }}{{ if in (.ideas | default slice) $k }}{{ with index $idx.T .id }}{{ $hits = $hits | append . }}{{ end }}{{ end }}{{ end }}
       {{- $nr := 0 }}{{ range $hits }}{{ if not (index $g.soon .id) }}{{ $nr = add $nr 1 }}{{ end }}{{ end }}
+      {{- $pg := index ($GB.ideas_pages | default dict) $k }}
       <article class="gbh-idea" id="{{ $k }}">
-        <h3>{{ .name }} <span class="gbh-n">{{ len $hits }} {{ cond (eq (len $hits) 1) "rung" "rungs" }}{{ if $nr }}, {{ $nr }} ready{{ end }}</span></h3>
+        <h3>{{ if $pg }}<a href="{{ printf "%s/ideas/%s/" $L.slug $k | relURL }}">{{ .name }}</a>{{ else }}{{ .name }}{{ end }} <span class="gbh-n">{{ len $hits }} {{ cond (eq (len $hits) 1) "rung" "rungs" }}{{ if $nr }}, {{ $nr }} ready{{ end }}</span></h3>
+        {{- with $pg }}<p class="gbh-iq">{{ .question }}</p>{{ end }}
         <p>{{ .blurb }}</p>
+        {{- with $pg }}<p class="gbh-ilink"><a href="{{ printf "%s/ideas/%s/" $L.slug $k | relURL }}">Follow it through the books: {{ len .stops }} stops <span aria-hidden="true">→</span></a></p>{{ end }}
         {{- if $hits }}
         <ul class="gbh-rungs">{{ range $hits }}{{ $s := index $g.soon .id }}<li><a class="gbh-rung {{ if $s }}soon{{ else }}ready{{ end }}" href="{{ .url }}" title="{{ .short }}"><span>{{ .title }}</span>{{ if $s }}<em class="mlp-sr"> (being written)</em>{{ end }}</a></li>{{ end }}</ul>
         {{- else }}<p class="mlp-small">No rungs tagged yet.</p>{{ end }}

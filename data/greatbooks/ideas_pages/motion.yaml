@@ -1,0 +1,129 @@
+# Great Books Ladder: the Great Idea "motion", followed through the books (page: /great-books/ideas/motion/, layout layouts/math/gbidea.html).
+# Our own words: inspired by Adler's Syntopicon, NOT copied from it. Checked by scripts/greatbooks/check-gb.py.
+#   question: one or two plain sentences.  intro: optional.  stances: optional [{key, label}] (colors the timeline; only where views divide cleanly)
+#   stops (4-10, oldest first): rung (a rung id), year (number, negative = BC), optional when/who/work (else the rung's date/author/work),
+#     optional stance, text (2-4 sentences, our own words), optional quote: ONE short line (under 40 words) copied exactly from an
+#     excerpt already in that rung's lesson (scripts/greatbooks/src/<rung>/lesson.json), with that excerpt's credit fields; nothing from 1931 or later.
+#   young: paragraphs for young readers.  talk: 4-6 family questions.  see: topic ids on other ladders.  pages: optional [{url, title}].
+key: motion
+question: Why do things move, fall and keep moving? Does motion need a push to keep going?
+stances:
+- key: mover
+  label: Motion needs a mover to keep going
+- key: inertia
+  label: Motion keeps going unless something changes it
+stops:
+- rung: gbgreeks.aristotle-physics
+  year: -350
+  stance: mover
+  text: Aristotle teaches that whatever moves is moved by something. Heavy things fall toward their natural place, and he said heavier
+    things fall faster. He also argued against empty space, noticing that in a void nothing would explain why a moving thing should
+    ever stop.
+  quote:
+    text: Further, no one could say why a thing once set in motion should stop anywhere; for why should it stop here rather than here?
+    author: Aristotle
+    work: Physics, Book IV, 8
+    tr: R. P. Hardie and R. K. Gaye
+    ed: Oxford, Clarendon Press
+    year: 1930
+    src: Internet Archive
+    url: https://archive.org/details/workstranslatedi02arisuoft
+- rung: gbgreeks.archimedes-works
+  year: -250
+  text: Archimedes studies bodies in balance rather than in motion. He proves the law of the lever and finds the centers of gravity
+    of shapes. His mathematical mechanics became a model for Galileo.
+  quote:
+    text: Two magnitudes, whether commensurable or incommensurable, balance at distances reciprocally proportional to the magnitudes.
+    author: Archimedes
+    work: On the Equilibrium of Planes, Book I, Propositions 6 and 7
+    tr: Thomas L. Heath
+    ed: Cambridge University Press
+    year: 1897
+    src: Internet Archive
+    url: https://archive.org/details/worksofarchimede00arch
+- rung: gbmiddle.aquinas-on-god
+  year: 1268
+  stance: mover
+  text: Aquinas builds on Aristotle's idea that everything moved is moved by another. His first way of arguing for God reasons that
+    the chain of movers can't go back forever, so there must be a first mover. Readers still discuss whether the argument depends on
+    Aristotle's physics.
+  quote:
+    text: It is certain, and evident to our senses, that in the world some things are in motion.
+    author: Thomas Aquinas
+    work: Summa Theologica, First Part, Question 2, Article 3
+    tr: the Fathers of the English Dominican Province
+    ed: Second and Revised Edition
+    year: 1920
+    src: New Advent
+    url: https://www.newadvent.org/summa/1002.htm
+- rung: gb17.kepler-epitome
+  year: 1620
+  stance: mover
+  text: Kepler asks what physically moves the planets. He imagines a force from the turning sun that sweeps them along, weaker farther
+    away. He was still thinking of a mover, but now as a physical force that could be studied with mathematics.
+- rung: gb17.galileo-two-new-sciences
+  year: 1638
+  stance: inertia
+  text: Galileo shows by reasoning and by rolling balls down ramps that, without air resistance, heavy and light bodies fall together,
+    speeding up evenly. A ball on a level surface with no friction would roll on and on. A thrown ball follows a curve called a parabola.
+- rung: gb17.newton-principia
+  year: 1687
+  stance: inertia
+  text: Newton states the three laws of motion. A body keeps its rest or straight motion unless a force acts; force changes motion;
+    every action has an equal and opposite reaction. With his law of gravity, these explain motion on earth and in the heavens.
+  quote:
+    text: Every body perseveres in its state of rest, or of uniform motion in a right line, unless it is compelled to change that state
+      by forces impress'd thereon.
+    author: Isaac Newton
+    work: The Mathematical Principles of Natural Philosophy, Axioms, or Laws of Motion, Laws I–III
+    tr: Andrew Motte
+    ed: Benjamin Motte, London
+    year: 1729
+    src: Internet Archive
+    url: https://archive.org/details/bim_eighteenth-century_principia-english-th_newton-sir-isaac_1729_1
+- rung: gb19.faraday-experimental-researches
+  year: 1832
+  text: Faraday finds that moving a magnet near a coil of wire makes an electric current, and that a current can make a wire move near
+    a magnet. Motion, electricity and magnetism are linked. His discoveries led to electric motors and generators.
+  quote:
+    text: Being left in, the needle resumed its first position, and then the magnet being withdrawn the needle was deflected in the
+      opposite direction.
+    author: Michael Faraday
+    work: Experimental Researches in Electricity, First Series, paragraph 39
+    tr: ''
+    ed: Philosophical Transactions of the Royal Society of London, vol. 122
+    year: 1832
+    src: Internet Archive
+    url: https://archive.org/details/philtrans01461252
+- rung: gb20.einstein-relativity
+  year: 1916
+  text: Einstein asks what motion means when everything is moving relative to something else. If the speed of light is the same for
+    every observer, then time and length must change with motion. Newton's laws still work at everyday speeds.
+  quote:
+    text: Events which are simultaneous with reference to the embankment are not simultaneous with respect to the train, and vice versa
+      (relativity of simultaneity).
+    author: Albert Einstein
+    work: Relativity, Part I, Section IX, The Relativity of Simultaneity
+    tr: Robert W. Lawson
+    ed: Methuen
+    year: 1920
+    src: Project Gutenberg
+    url: https://www.gutenberg.org/ebooks/36114
+young:
+- Roll a ball across the floor. It slows down and stops. Long ago, people thought this meant things stop moving when nothing pushes
+  them.
+- 'Galileo and Newton saw it differently: the ball stops because the floor rubs against it (friction). On smooth ice it rolls much farther.
+  Out in space, with nothing to slow it, it would roll forever! Try rolling a toy car on carpet, on wood and on a smooth tray to see
+  the difference.'
+talk:
+- Drop a heavy book and a light ball at the same time. Which lands first? Try it!
+- Why do you lean forward when a car stops suddenly?
+- Aristotle's ideas were wrong in some ways but lasted 2,000 years. Why do you think?
+- Newton's third law says every push has a push back. Where do you see that when you jump?
+see:
+- physsci.first-law-inertia
+- phys1.free-fall
+- physsci.second-law-intro
+- physsci.third-law-intro
+- phys1.inclined-planes
+- physsci.levers
