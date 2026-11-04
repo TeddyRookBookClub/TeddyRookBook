@@ -10,7 +10,7 @@
 <script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
 {{- end }}
 <div class="hs eg-page td-page">
-  <nav class="hs-crumbs"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "egypt/" | relURL }}">Ancient Egypt</a> › 3-D models</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "egypt/" | relURL }}">Ancient Egypt</a> › 3-D models</nav>
   <header>
     <h1>{{ .Title }}</h1>
     <p class="td-lead">Six places from ancient Egypt, built at their real sizes from published measurements: the Giza plateau, the inside of the Great Pyramid, a temple, Abu Simbel and its rescue, Tutankhamun’s tomb and a mastaba. The forms are simple on purpose, so the sizes and the layout stand out. Drag to turn a model, take the guided tour, and switch on <b>See through</b> to look inside.</p>

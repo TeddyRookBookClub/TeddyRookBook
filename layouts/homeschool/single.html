@@ -9,7 +9,7 @@
 {{ $id := $d.book.id }}
 {{ $next := "" }}{{ $nextTitle := "" }}{{ if lt $n $total }}{{ $next = printf "%slesson-%d/" $base (add $n 1) }}{{ $nextTitle = (index (where $d.lessons "num" (add $n 1)) 0).title }}{{ end }}
 <div class="hs hs-lesson" data-course="{{ $key }}" data-n="{{ $n }}" data-total="{{ $total }}">
-  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ $ser.RelPermalink }}">{{ $sd.crumb | default $ser.Title }}</a> › <a href="{{ $base }}">{{ $d.book.short }}</a> › Lesson {{ $n }}</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ $ser.RelPermalink }}">{{ $sd.crumb | default $ser.Title }}</a> › <a href="{{ $base }}">{{ $d.book.short }}</a> › Lesson {{ $n }}</nav>
   <header class="hs-lhead">
     <p class="hs-eyebrow">{{ $d.book.title }} · {{ if isset $d.book "lessonword" }}{{ with $d.book.lessonword }}{{ . }} {{ end }}{{ else }}Lesson {{ end }}{{ $l.roman }} · {{ $d.book.unitword | default "Unit" }} {{ $u.id }}: {{ $u.name }}</p>
     <h1>{{ $n }}. {{ $l.title }}{{ if $l.optional }} <em class="hs-opt">optional</em>{{ end }}</h1>

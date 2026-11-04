@@ -30,9 +30,10 @@
 
   // ---------- plans bar ----------
   function renderPlans() {
-    var h = '<div class="mp-plantabs" role="tablist" aria-label="Saved plans">';
+    // the tablist holds only the plan tabs; "New plan" is a plain button after them (display:contents keeps the row as it was)
+    var h = '<div class="mp-plantabs"><div role="tablist" aria-label="Saved plans" style="display:contents">';
     st.plans.forEach(function (p) { h += '<button type="button" role="tab" class="mp-plantab" data-plan="' + p.id + '" aria-selected="' + (p.id === st.cur) + '">' + esc(p.name) + '</button>'; });
-    h += '<button type="button" class="mp-plantab add" id="mp-newplan" aria-label="New plan">＋ New plan</button></div>';
+    h += '</div><button type="button" class="mp-plantab add" id="mp-newplan" aria-label="New plan">＋ New plan</button></div>';
     h += '<button type="button" class="hs-btn ghost mp-planmenu" id="mp-planmenu" aria-label="Rename, copy or delete this plan">⋯</button>';
     $('#mp-plans').innerHTML = h;
   }

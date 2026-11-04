@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="{{ printf "trades/%s/%s.css" . . | relURL }}?v={{ (os.Stat $hc).ModTime.Unix }}">
 {{- end }}{{ end }}
 <div class="hs tr" id="tr-hub">
-  <nav class="hs-crumbs"><a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> › The Trades</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> › The Trades</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">Next steps after Being an Adult 101</p>
     <h1>The Trades</h1>
@@ -80,7 +80,7 @@
 <link rel="stylesheet" href="{{ printf "trades/%s/%s.css" $course $course | relURL }}?v={{ (os.Stat $css).ModTime.Unix }}">
 {{- end }}
 <div class="hs tr c-{{ $course }}" id="tr-course" data-course="{{ $course }}" data-units data-base="{{ $B }}">
-  <nav class="hs-crumbs"><a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> › <a href="{{ "trades/" | relURL }}">The Trades</a> › {{ $c.short }}</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> › <a href="{{ "trades/" | relURL }}">The Trades</a> › {{ $c.short }}</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">The Trades · Course {{ $c.n }} · {{ $nles }} lessons</p>
     <h1>{{ $c.title }}</h1>

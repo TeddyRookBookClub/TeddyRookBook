@@ -7,7 +7,7 @@
 {{- $D := site.Data.egypt -}}
 {{- $n := 0 }}{{ range $D.courses }}{{ with index $D.topics .key }}{{ $n = add $n (len .topics) }}{{ end }}{{ end -}}
 <div class="hs eg-page eg-hub">
-  <nav class="hs-crumbs"><a href="{{ "education/" | relURL }}">Education</a> › Ancient Egypt</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › Ancient Egypt</nav>
   <header class="hs-hero eg-hero">
     <div class="eg-hero-text">
       <p class="hs-eyebrow">Ancient Egypt · Free, age 8 to college</p>

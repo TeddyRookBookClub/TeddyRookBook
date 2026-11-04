@@ -1,0 +1,112 @@
+{
+ "course": "rbsense",
+ "units": [
+  {
+   "key": "sensors",
+   "title": "Sensors",
+   "blurb": "Encoders, sound echoes and inertial sensors."
+  },
+  {
+   "key": "estimation",
+   "title": "Noise and Estimation",
+   "blurb": "Averages, filters and the Kalman filter's idea: blend a prediction with a measurement."
+  }
+ ],
+ "topics": [
+  {
+   "id": "rbsense.encoders",
+   "slug": "encoders",
+   "unit": "sensors",
+   "title": "Wheel Encoders",
+   "short": "Counts divided by counts per turn give turns; turns times the circumference give distance.",
+   "prereqs": [
+    "rbmech.wheel-speed"
+   ],
+   "xp": 2,
+   "trouble": "Students use the radius instead of the circumference, or forget the gear ratio between motor and wheel.",
+   "viz": [
+    "rb-encoder"
+   ]
+  },
+  {
+   "id": "rbsense.ultrasonic-ranging",
+   "slug": "ultrasonic-ranging",
+   "unit": "sensors",
+   "title": "Ultrasonic Distance",
+   "short": "Sound goes out and back, so distance = speed of sound times time, divided by 2.",
+   "prereqs": [
+    "rbprog.sensor-decisions",
+    "physsci.speed"
+   ],
+   "xp": 2,
+   "trouble": "Students forget to halve the round trip.",
+   "viz": [
+    "rb-sta"
+   ]
+  },
+  {
+   "id": "rbsense.imu",
+   "slug": "imu",
+   "unit": "sensors",
+   "title": "Accelerometers and Gyros",
+   "short": "At rest, an accelerometer's tilt is atan(ax / az); a gyro gives turn rate, which adds up to angle and drifts.",
+   "prereqs": [
+    "geo.inverse-trig-angles",
+    "rbsense.encoders"
+   ],
+   "xp": 3,
+   "trouble": "Students trust the accelerometer while the robot is speeding up, or the gyro's angle after a long time.",
+   "viz": [
+    "rb-noise"
+   ]
+  },
+  {
+   "id": "rbsense.noise-averaging",
+   "slug": "noise-averaging",
+   "unit": "estimation",
+   "title": "Noise and Averages",
+   "short": "Averaging N independent readings shrinks the noise by the square root of N.",
+   "prereqs": [
+    "stat.standard-deviation",
+    "rbsense.ultrasonic-ranging"
+   ],
+   "xp": 2,
+   "trouble": "Students expect averaging 4 readings to cut the noise to a quarter, not a half.",
+   "viz": [
+    "rb-noise"
+   ]
+  },
+  {
+   "id": "rbsense.complementary-filter",
+   "slug": "complementary-filter",
+   "unit": "estimation",
+   "title": "The Complementary Filter",
+   "short": "Trust the gyro over short times and the accelerometer over long times: θ = α(θ + ω Δt) + (1 − α) θ_acc.",
+   "prereqs": [
+    "rbsense.imu",
+    "rbsense.noise-averaging"
+   ],
+   "xp": 3,
+   "trouble": "Students swap the weights and trust the noisy accelerometer most.",
+   "viz": [
+    "rb-noise"
+   ]
+  },
+  {
+   "id": "rbsense.kalman-1d",
+   "slug": "kalman-1d",
+   "unit": "estimation",
+   "title": "A Kalman Filter in One Dimension",
+   "short": "Gain K = P / (P + R); new estimate = old + K (measurement − old); new P = (1 − K) P.",
+   "prereqs": [
+    "rbsense.noise-averaging",
+    "stat.bayes-rule"
+   ],
+   "xp": 3,
+   "trouble": "Students think a Kalman filter just averages; it weighs each source by how much it is trusted.",
+   "viz": [
+    "rb-kalman"
+   ]
+  }
+ ]
+}

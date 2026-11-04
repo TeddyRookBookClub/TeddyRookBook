@@ -11,7 +11,7 @@
 {{- $PN := dict "pre" "Predynastic" "ed" "Early Dynastic" "ok" "Old Kingdom" "fip" "First Intermediate" "mk" "Middle Kingdom" "sip" "Second Intermediate" "nk" "New Kingdom" "tip" "Third Intermediate" "late" "Late Period" "ptol" "Ptolemaic" "rom" "Roman" -}}
 {{- $used := slice }}{{ range $all }}{{ $used = $used | append .periods }}{{ end }}{{ $used = $used | uniq -}}
 <div class="hs eg-page egat">
-  <nav class="hs-crumbs"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "egypt/" | relURL }}">Ancient Egypt</a> › Sites</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "egypt/" | relURL }}">Ancient Egypt</a> › Sites</nav>
   <header class="hs-hero egat-hero">
     <p class="hs-eyebrow">Ancient Egypt · The site atlas</p>
     <h1>{{ .Title }}</h1>

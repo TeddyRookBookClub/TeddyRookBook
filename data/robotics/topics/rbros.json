@@ -1,0 +1,92 @@
+{
+ "course": "rbros",
+ "units": [
+  {
+   "key": "graph",
+   "title": "The ROS 2 Graph",
+   "blurb": "Nodes, topics, services and actions: how robot programs talk."
+  },
+  {
+   "key": "frames",
+   "title": "Units, Frames and Simulation",
+   "blurb": "The shared conventions that let programs agree, and how simulators step time."
+  }
+ ],
+ "topics": [
+  {
+   "id": "rbros.nodes-topics",
+   "slug": "nodes-topics",
+   "unit": "graph",
+   "title": "Nodes and Topics",
+   "short": "Each job is a node; nodes publish and subscribe to named topics at steady rates.",
+   "prereqs": [
+    "rbprog.state-machines",
+    "rbprog.loop-timing"
+   ],
+   "xp": 2,
+   "trouble": "Students make one giant program, or forget that a topic with no publisher just stays silent.",
+   "viz": [
+    "rb-ros"
+   ]
+  },
+  {
+   "id": "rbros.services-actions",
+   "slug": "services-actions",
+   "unit": "graph",
+   "title": "Services and Actions",
+   "short": "A topic streams, a service asks once and waits for one reply, and an action runs a long task with feedback and can be canceled.",
+   "prereqs": [
+    "rbros.nodes-topics"
+   ],
+   "xp": 2,
+   "trouble": "Students use a service for a long task, so the caller freezes until it is done.",
+   "viz": []
+  },
+  {
+   "id": "rbros.units-conventions",
+   "slug": "units-conventions",
+   "unit": "frames",
+   "title": "Units and Axes: REP 103",
+   "short": "ROS uses SI units (meters, seconds, radians) and right-handed frames: x forward, y left, z up.",
+   "prereqs": [
+    "rbros.nodes-topics",
+    "rbmech.coordinate-frames"
+   ],
+   "xp": 2,
+   "trouble": "Students publish degrees or centimeters where every other node expects radians and meters.",
+   "viz": []
+  },
+  {
+   "id": "rbros.transforms",
+   "slug": "transforms",
+   "unit": "frames",
+   "title": "Chains of Transforms",
+   "short": "A point in the camera's frame reaches the map through a chain: camera to base, base to map.",
+   "prereqs": [
+    "rbros.units-conventions",
+    "rbmobile.odometry"
+   ],
+   "xp": 3,
+   "trouble": "Students apply the transforms in the wrong order.",
+   "viz": [
+    "rb-frames"
+   ]
+  },
+  {
+   "id": "rbros.simulation",
+   "slug": "simulation",
+   "unit": "frames",
+   "title": "How a Simulator Steps Time",
+   "short": "A simulator advances in fixed steps Δt; the real-time factor is simulated time over wall-clock time.",
+   "prereqs": [
+    "rbros.nodes-topics",
+    "calc2.slope-fields-euler"
+   ],
+   "xp": 2,
+   "trouble": "Students think a slow simulation gives wrong answers, or that a large time step is always fine.",
+   "viz": [
+    "rb-pid"
+   ]
+  }
+ ]
+}

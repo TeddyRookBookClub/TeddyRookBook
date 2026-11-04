@@ -37,7 +37,7 @@
 
   <p class="mlp-cnext" id="mlp-cnext" hidden></p>
   {{- with $c.note }}
-  <aside class="mlp-tip mlp-cnote"><p>{{ . | markdownify }}</p></aside>
+  <aside class="mlp-tip mlp-cnote" aria-label="About this course"><p>{{ . | markdownify }}</p></aside>
   {{- end }}
   {{- if and $nT (not $nR) }}
   <div class="mlp-writing" role="note"><span class="mlp-writing-icon" aria-hidden="true">✎</span><p><b>Being written.</b> The lessons and practice for {{ $c.title }} are on the way. The skill map is ready: below is every topic you'll learn, in order, and each topic's page shows what it builds on.</p></div>

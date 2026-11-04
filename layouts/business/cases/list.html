@@ -3,7 +3,7 @@
 {{ $d := site.Data.business_cases }}
 {{ $tags := slice }}{{ range $d.cases }}{{ range .tags }}{{ if not (in $tags .) }}{{ $tags = $tags | append . }}{{ end }}{{ end }}{{ end }}
 <div class="bz">
-  <nav class="bz-crumbs"><a href="{{ "business/" | relURL }}">Business</a> › Cases</nav>
+  <nav class="bz-crumbs" aria-label="Breadcrumb"><a href="{{ "business/" | relURL }}">Business</a> › Cases</nav>
   <header class="bz-hero">
     <p class="bz-eyebrow">Business · Cases</p>
     <h1>Business cases</h1>

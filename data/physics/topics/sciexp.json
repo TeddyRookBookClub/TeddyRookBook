@@ -1,0 +1,636 @@
+{
+ "course": "sciexp",
+ "units": [
+  {
+   "key": "think",
+   "title": "Thinking Like a Scientist",
+   "blurb": "Observing and asking questions, fair tests that change one thing, and measuring with the right tools and units."
+  },
+  {
+   "key": "matter",
+   "title": "Matter",
+   "blurb": "What matter is, solids, liquids and gases, melting and freezing, mixtures and solutions, and changes that make something new."
+  },
+  {
+   "key": "forces",
+   "title": "Forces and Simple Machines",
+   "blurb": "Pushes and pulls, friction and gravity, and the simple machines that make work easier: levers, wheels and pulleys, ramps, wedges and screws."
+  },
+  {
+   "key": "energy",
+   "title": "Energy",
+   "blurb": "The forms energy takes, how it changes from one form to another, and how heat moves."
+  },
+  {
+   "key": "electricity",
+   "title": "Electricity and Magnets",
+   "blurb": "Magnets and their poles, circuits that light a bulb, and the materials that let electricity through."
+  },
+  {
+   "key": "light-sound",
+   "title": "Light and Sound",
+   "blurb": "Light travels in straight lines and makes shadows, mirrors and water change its path, white light holds the rainbow, and sound is vibration."
+  },
+  {
+   "key": "earth",
+   "title": "Earth and Weather",
+   "blurb": "The water cycle, weather and the tools that measure it, rocks and minerals, and how wind and water shape the land."
+  },
+  {
+   "key": "life",
+   "title": "Living Things and the Body",
+   "blurb": "How plants make food, food chains and webs, adaptations, and the systems of the human body."
+  },
+  {
+   "key": "space",
+   "title": "Earth in Space",
+   "blurb": "Day and night, the phases of the Moon, and the Sun and its planets."
+  }
+ ],
+ "topics": [
+  {
+   "id": "sciexp.observe-question",
+   "slug": "observe-question",
+   "unit": "think",
+   "title": "Observing and Asking Questions",
+   "short": "Scientists look closely, use their senses and tools, and ask questions they can test. An observation is what you notice; a guess about why is a hypothesis.",
+   "prereqs": [],
+   "xp": 1,
+   "trouble": "Children mix up what they saw with what they think caused it. \"The ice melted\" is an observation; \"the sun melted it\" is a guess to test.",
+   "viz": [
+    "sciexp-pic"
+   ]
+  },
+  {
+   "id": "sciexp.fair-test",
+   "slug": "fair-test",
+   "unit": "think",
+   "title": "A Fair Test",
+   "short": "In a fair test you change only one thing, keep everything else the same, and measure what happens. Then you can tell what made the difference.",
+   "prereqs": [
+    "sciexp.observe-question"
+   ],
+   "xp": 2,
+   "trouble": "Changing two things at once (more water and more sun) and then not knowing which one helped the plant grow.",
+   "viz": [
+    "sciexp-bars"
+   ]
+  },
+  {
+   "id": "sciexp.measure",
+   "slug": "measure",
+   "unit": "think",
+   "title": "Measuring Like a Scientist",
+   "short": "Length in centimeters and meters, mass in grams and kilograms, liquid volume in milliliters and liters, and temperature in degrees. Read the scale at eye level.",
+   "prereqs": [
+    "sciexp.observe-question"
+   ],
+   "xp": 2,
+   "trouble": "Reading a ruler from 1 instead of 0, or reading a measuring cup from above instead of at eye level.",
+   "viz": [
+    "sciexp-measure"
+   ]
+  },
+  {
+   "id": "sciexp.what-is-matter",
+   "slug": "what-is-matter",
+   "unit": "matter",
+   "title": "What Is Matter?",
+   "short": "Matter is anything that has mass and takes up space. Air is matter too: a balloon gets bigger when you fill it, and a full ball weighs a little more than a flat one.",
+   "prereqs": [
+    "sciexp.observe-question"
+   ],
+   "xp": 1,
+   "std": "5-PS1-1",
+   "trouble": "Thinking air is \"nothing\". Air has mass and takes up space, even though we can't see it.",
+   "viz": [
+    "sciexp-particles"
+   ]
+  },
+  {
+   "id": "sciexp.three-states",
+   "slug": "three-states",
+   "unit": "matter",
+   "title": "Solids, Liquids and Gases",
+   "short": "A solid keeps its own shape. A liquid takes the shape of its container but keeps its amount. A gas spreads out to fill any container.",
+   "prereqs": [
+    "sciexp.what-is-matter"
+   ],
+   "xp": 1,
+   "std": "5-PS1-1",
+   "trouble": "Thinking a powder like sugar or sand is a liquid because it pours. Each grain is a tiny solid that keeps its shape.",
+   "viz": [
+    "sciexp-particles",
+    "sciexp-pic"
+   ],
+   "lab": "/science-lab/gas/"
+  },
+  {
+   "id": "sciexp.changing-state",
+   "slug": "changing-state",
+   "unit": "matter",
+   "title": "Melting, Freezing and Boiling",
+   "short": "Heating can melt a solid into a liquid and turn a liquid into a gas. Cooling does the reverse. Water freezes at 0 °C (32 °F) and boils at 100 °C (212 °F) at sea level.",
+   "prereqs": [
+    "sciexp.three-states",
+    "sciexp.measure"
+   ],
+   "xp": 2,
+   "std": "5-PS1-2",
+   "trouble": "Thinking the steam you see over a pot is the gas. Water vapor is invisible; the white cloud is tiny drops of liquid water that formed as the vapor cooled.",
+   "viz": [
+    "sciexp-particles",
+    "sciexp-measure"
+   ]
+  },
+  {
+   "id": "sciexp.mixtures-solutions",
+   "slug": "mixtures-solutions",
+   "unit": "matter",
+   "title": "Mixtures and Solutions",
+   "short": "A mixture is two or more things mixed together that keep their own properties. In a solution, one thing dissolves evenly into another, like salt in water. The total mass stays the same.",
+   "prereqs": [
+    "sciexp.three-states"
+   ],
+   "xp": 2,
+   "std": "5-PS1-2",
+   "trouble": "Thinking dissolved salt is gone. It is still there, spread out in pieces too small to see: the water tastes salty and the mass has not changed.",
+   "viz": [
+    "sciexp-pic"
+   ],
+   "lab": "/science-lab/chem-lab/"
+  },
+  {
+   "id": "sciexp.new-substances",
+   "slug": "new-substances",
+   "unit": "matter",
+   "title": "Changes That Make Something New",
+   "short": "A physical change (cutting, melting, dissolving) keeps the same substance. A chemical change makes a new substance: signs are a gas, a new color, light, heat or a smell.",
+   "prereqs": [
+    "sciexp.mixtures-solutions"
+   ],
+   "xp": 2,
+   "std": "5-PS1-4",
+   "trouble": "Thinking melting is a chemical change because the ice \"turns into something else\". Melted ice is still water; burning wood is a chemical change because ash and smoke are new substances.",
+   "viz": [
+    "sciexp-pic"
+   ],
+   "lab": "/science-lab/chem-lab/"
+  },
+  {
+   "id": "sciexp.pushes-pulls",
+   "slug": "pushes-pulls",
+   "unit": "forces",
+   "title": "Pushes and Pulls",
+   "short": "A force is a push or a pull. Forces can start something moving, stop it, speed it up, slow it down or change its direction. Balanced forces cancel; unbalanced forces change motion.",
+   "prereqs": [
+    "sciexp.observe-question"
+   ],
+   "xp": 1,
+   "std": "3-PS2-1",
+   "trouble": "Thinking a ball keeps rolling only while something pushes it. A rolling ball slows down because friction pushes back, not because its push \"runs out\".",
+   "viz": [
+    "sciexp-pic"
+   ],
+   "lab": "/science-lab/newtons-laws/"
+  },
+  {
+   "id": "sciexp.friction-gravity",
+   "slug": "friction-gravity",
+   "unit": "forces",
+   "title": "Friction and Gravity",
+   "short": "Friction is a force that rubs against motion; rough surfaces make more of it. Gravity pulls things toward the center of the Earth, so dropped things fall down.",
+   "prereqs": [
+    "sciexp.pushes-pulls"
+   ],
+   "xp": 2,
+   "std": "5-PS2-1",
+   "trouble": "Thinking heavy things fall much faster than light things. Without air in the way, a hammer and a feather fall together, as an astronaut showed on the Moon.",
+   "viz": [
+    "sciexp-pic"
+   ],
+   "lab": "/science-lab/book-cart/"
+  },
+  {
+   "id": "sciexp.levers",
+   "slug": "levers",
+   "unit": "forces",
+   "title": "Levers",
+   "short": "A lever is a stiff bar that turns on a point called the fulcrum. Pushing far from the fulcrum lets a small push lift a big load.",
+   "prereqs": [
+    "sciexp.pushes-pulls"
+   ],
+   "xp": 2,
+   "trouble": "Thinking a lever gives you something for free. You push less, but you push farther: the far end moves a long way to lift the load a little.",
+   "viz": [
+    "sciexp-lever",
+    "sciexp-machines"
+   ],
+   "lab": "/science-lab/trebuchet/"
+  },
+  {
+   "id": "sciexp.wheels-pulleys",
+   "slug": "wheels-pulleys",
+   "unit": "forces",
+   "title": "Wheels, Axles and Pulleys",
+   "short": "A wheel and axle turn together: a small turn of the axle makes a big turn of the wheel, or the other way. A pulley is a wheel with a rope; a movable pulley halves the pull you need.",
+   "prereqs": [
+    "sciexp.levers"
+   ],
+   "xp": 2,
+   "trouble": "Thinking a single fixed pulley at the top makes lifting lighter. It only changes the direction: you pull down to lift up. A movable pulley, or more pulleys, makes the pull smaller.",
+   "viz": [
+    "sciexp-machines"
+   ]
+  },
+  {
+   "id": "sciexp.ramps-wedges-screws",
+   "slug": "ramps-wedges-screws",
+   "unit": "forces",
+   "title": "Ramps, Wedges and Screws",
+   "short": "A ramp (inclined plane) lets you raise a load with a smaller push over a longer path. A wedge is two ramps back to back that split things apart. A screw is a ramp wrapped around a post.",
+   "prereqs": [
+    "sciexp.levers"
+   ],
+   "xp": 2,
+   "trouble": "Thinking a longer ramp is harder because it is longer. The path is longer, but each step of the push is easier.",
+   "viz": [
+    "sciexp-machines"
+   ]
+  },
+  {
+   "id": "sciexp.energy-forms",
+   "slug": "energy-forms",
+   "unit": "energy",
+   "title": "Forms of Energy",
+   "short": "Energy is what makes things move, light up, heat up or make sound. Its forms include motion, stored (in food, batteries, a stretched rubber band or something high up), heat, light, sound and electrical energy.",
+   "prereqs": [
+    "sciexp.pushes-pulls"
+   ],
+   "xp": 1,
+   "std": "4-PS3-1",
+   "trouble": "Thinking only moving things have energy. A book on a high shelf, a battery and a sandwich all have stored energy.",
+   "viz": [
+    "sciexp-pic"
+   ]
+  },
+  {
+   "id": "sciexp.energy-changes",
+   "slug": "energy-changes",
+   "unit": "energy",
+   "title": "Energy Changes Form",
+   "short": "Energy is never used up; it changes from one form to another. A flashlight turns stored energy in the battery into electrical energy, then light and some heat.",
+   "prereqs": [
+    "sciexp.energy-forms"
+   ],
+   "xp": 2,
+   "std": "4-PS3-4",
+   "trouble": "Saying a battery \"runs out of energy and it disappears\". The energy went somewhere: into light, sound, motion and heat.",
+   "viz": [
+    "sciexp-pic"
+   ],
+   "lab": "/science-lab/pendulums/"
+  },
+  {
+   "id": "sciexp.heat-moves",
+   "slug": "heat-moves",
+   "unit": "energy",
+   "title": "How Heat Moves",
+   "short": "Heat moves from warmer things to cooler things. It moves by touching (conduction), by moving air or water (convection) and by rays like sunshine (radiation). Insulators slow it down.",
+   "prereqs": [
+    "sciexp.energy-forms",
+    "sciexp.measure"
+   ],
+   "xp": 2,
+   "std": "4-PS3-2",
+   "trouble": "Thinking a sweater or blanket makes heat. It keeps your own body heat from escaping; wrap a sweater around an ice cube and the ice stays cold longer.",
+   "viz": [
+    "sciexp-measure",
+    "sciexp-pic"
+   ],
+   "lab": "/science-lab/thermodynamics/"
+  },
+  {
+   "id": "sciexp.magnets",
+   "slug": "magnets",
+   "unit": "electricity",
+   "title": "Magnets",
+   "short": "A magnet has a north pole and a south pole. Opposite poles attract and like poles repel. Magnets pull on iron and steel, but not on wood, plastic, paper, glass or most coins.",
+   "prereqs": [
+    "sciexp.pushes-pulls"
+   ],
+   "xp": 1,
+   "std": "3-PS2-3",
+   "trouble": "Thinking magnets attract every metal. Iron and steel stick; aluminum foil, copper and gold do not.",
+   "viz": [
+    "sciexp-magnets",
+    "sciexp-pic"
+   ]
+  },
+  {
+   "id": "sciexp.circuits",
+   "slug": "circuits",
+   "unit": "electricity",
+   "title": "Circuits",
+   "short": "Electricity flows only around a complete loop called a closed circuit: from the battery, through the wires and the bulb, and back. A switch opens the loop to turn the bulb off.",
+   "prereqs": [
+    "sciexp.energy-changes"
+   ],
+   "xp": 2,
+   "std": "4-PS3-2",
+   "trouble": "Thinking one wire from the battery to the bulb is enough. The current needs a path out of the battery and a path back in.",
+   "viz": [
+    "sciexp-circuit"
+   ],
+   "lab": "/science-lab/circuits/"
+  },
+  {
+   "id": "sciexp.conductors-insulators",
+   "slug": "conductors-insulators",
+   "unit": "electricity",
+   "title": "Conductors and Insulators",
+   "short": "Conductors, like metals, let electricity flow through them. Insulators, like plastic, rubber, wood and glass, do not. Wires are metal inside and plastic outside.",
+   "prereqs": [
+    "sciexp.circuits"
+   ],
+   "xp": 2,
+   "std": "4-PS3-2",
+   "trouble": "Thinking anything shiny conducts. A plastic ruler with shiny paint does not; metal does, shiny or dull.",
+   "viz": [
+    "sciexp-circuit",
+    "sciexp-pic"
+   ],
+   "lab": "/science-lab/circuits/"
+  },
+  {
+   "id": "sciexp.electromagnets",
+   "slug": "electromagnets",
+   "unit": "electricity",
+   "title": "Electromagnets and Motors",
+   "short": "Electricity flowing through a coil of wire makes a magnet that can be turned on and off. Electromagnets lift scrap metal and turn the motors in fans and toys.",
+   "prereqs": [
+    "sciexp.magnets",
+    "sciexp.circuits"
+   ],
+   "xp": 2,
+   "std": "4-PS3-4",
+   "trouble": "Thinking an electromagnet stays a magnet after the current stops. Switch the current off and it lets go.",
+   "viz": [
+    "sciexp-magnets",
+    "sciexp-circuit"
+   ]
+  },
+  {
+   "id": "sciexp.light-shadows",
+   "slug": "light-shadows",
+   "unit": "light-sound",
+   "title": "Light and Shadows",
+   "short": "Light travels in straight lines. When something blocks it, a shadow forms on the other side. The closer the object is to the light, the bigger its shadow.",
+   "prereqs": [
+    "sciexp.energy-forms"
+   ],
+   "xp": 1,
+   "std": "4-PS4-2",
+   "trouble": "Thinking shadows are made of something or are a reflection. A shadow is just the place the light cannot reach.",
+   "viz": [
+    "sciexp-shadow"
+   ],
+   "lab": "/science-lab/optics/"
+  },
+  {
+   "id": "sciexp.mirrors-bending",
+   "slug": "mirrors-bending",
+   "unit": "light-sound",
+   "title": "Mirrors and Bending Light",
+   "short": "Light bounces off a mirror at the same angle it hits it. Light bends when it passes from air into water or glass, so a straw in a glass looks broken.",
+   "prereqs": [
+    "sciexp.light-shadows"
+   ],
+   "xp": 2,
+   "std": "4-PS4-2",
+   "trouble": "Thinking we see things because light comes out of our eyes. We see because light from a lamp or the Sun bounces off things and into our eyes.",
+   "viz": [
+    "sciexp-light"
+   ],
+   "lab": "/science-lab/optics/"
+  },
+  {
+   "id": "sciexp.colors",
+   "slug": "colors",
+   "unit": "light-sound",
+   "title": "White Light and Colors",
+   "short": "White light is a mix of all the colors of the rainbow: red, orange, yellow, green, blue, indigo and violet. A prism or raindrops spread them out. A red apple looks red because it reflects red light.",
+   "prereqs": [
+    "sciexp.mirrors-bending"
+   ],
+   "xp": 2,
+   "std": "4-PS4-2",
+   "trouble": "Thinking a prism adds colors to light. The colors were already in the white light; the prism spreads them apart.",
+   "viz": [
+    "sciexp-light"
+   ],
+   "lab": "/science-lab/optics/"
+  },
+  {
+   "id": "sciexp.sound",
+   "slug": "sound",
+   "unit": "light-sound",
+   "title": "Sound and Vibrations",
+   "short": "Sound is made when something vibrates. Fast vibrations make a high pitch; slow ones a low pitch. Bigger vibrations are louder. Sound travels through air, water and solids, but not through empty space.",
+   "prereqs": [
+    "sciexp.energy-forms"
+   ],
+   "xp": 2,
+   "std": "4-PS4-1",
+   "trouble": "Mixing up loud and high. A tuba can be loud and low; a whisper can be soft and high.",
+   "viz": [
+    "sciexp-sound"
+   ],
+   "lab": "/science-lab/pendulums/"
+  },
+  {
+   "id": "sciexp.water-cycle",
+   "slug": "water-cycle",
+   "unit": "earth",
+   "title": "The Water Cycle",
+   "short": "The Sun warms water so it evaporates into vapor. The vapor rises, cools and condenses into clouds. Water falls as rain or snow (precipitation) and collects in oceans, lakes, rivers and the ground.",
+   "prereqs": [
+    "sciexp.changing-state"
+   ],
+   "xp": 2,
+   "std": "5-ESS2-1",
+   "trouble": "Thinking clouds are made of water vapor or cotton-like steam. Clouds are billions of tiny drops of liquid water or bits of ice.",
+   "viz": [
+    "sciexp-cycle"
+   ]
+  },
+  {
+   "id": "sciexp.weather",
+   "slug": "weather",
+   "unit": "earth",
+   "title": "Weather and Its Tools",
+   "short": "Weather is the air outside today: temperature, wind, clouds and rain. A thermometer measures temperature, a rain gauge rain, a wind vane wind direction and an anemometer wind speed.",
+   "prereqs": [
+    "sciexp.water-cycle",
+    "sciexp.measure"
+   ],
+   "xp": 2,
+   "std": "3-ESS2-1",
+   "trouble": "Mixing up weather and climate. Weather is today; climate is the usual weather of a place over many years.",
+   "viz": [
+    "sciexp-measure",
+    "sciexp-pic"
+   ]
+  },
+  {
+   "id": "sciexp.rocks-minerals",
+   "slug": "rocks-minerals",
+   "unit": "earth",
+   "title": "Rocks and Minerals",
+   "short": "Rocks are made of minerals. Igneous rock forms when melted rock cools, sedimentary rock from layers of sand and mud pressed together, and metamorphic rock when heat and pressure change a rock.",
+   "prereqs": [
+    "sciexp.what-is-matter"
+   ],
+   "xp": 2,
+   "std": "4-ESS1-1",
+   "trouble": "Thinking rocks never change. Over a very long time, rocks melt, wear down, get pressed into new rocks and change again: the rock cycle.",
+   "viz": [
+    "sciexp-cycle"
+   ],
+   "lab": "/science-lab/elements/"
+  },
+  {
+   "id": "sciexp.weathering-erosion",
+   "slug": "weathering-erosion",
+   "unit": "earth",
+   "title": "Weathering and Erosion",
+   "short": "Weathering breaks rock into smaller pieces; water, ice, wind and plant roots all do it. Erosion carries the pieces away, and they are dropped somewhere else, building new land.",
+   "prereqs": [
+    "sciexp.rocks-minerals"
+   ],
+   "xp": 2,
+   "std": "4-ESS2-1",
+   "trouble": "Thinking weathering and erosion are the same. Weathering breaks the rock; erosion moves the pieces.",
+   "viz": [
+    "sciexp-pic"
+   ]
+  },
+  {
+   "id": "sciexp.plants-make-food",
+   "slug": "plants-make-food",
+   "unit": "life",
+   "title": "How Plants Make Food",
+   "short": "Plants make their own food (a sugar) in their leaves from sunlight, water and carbon dioxide from the air. They give off oxygen. Roots take in water; they do not \"eat\" soil.",
+   "prereqs": [
+    "sciexp.what-is-matter"
+   ],
+   "xp": 2,
+   "std": "5-LS1-1",
+   "trouble": "Thinking plants get their food from the soil. The soil gives water and a few minerals; most of a plant's mass comes from air and water.",
+   "viz": [
+    "sciexp-plant"
+   ]
+  },
+  {
+   "id": "sciexp.food-webs",
+   "slug": "food-webs",
+   "unit": "life",
+   "title": "Food Chains and Food Webs",
+   "short": "Energy starts with the Sun. Producers (plants) make food; consumers eat plants or other animals; decomposers break down dead things. A food web is many food chains joined together.",
+   "prereqs": [
+    "sciexp.plants-make-food"
+   ],
+   "xp": 2,
+   "std": "5-LS2-1",
+   "trouble": "Reading the arrows backward. In a food chain the arrow points from the food to the eater: grass → rabbit means the rabbit eats the grass.",
+   "viz": [
+    "sciexp-chain"
+   ],
+   "lab": "/science-lab/ecosystem/"
+  },
+  {
+   "id": "sciexp.adaptations",
+   "slug": "adaptations",
+   "unit": "life",
+   "title": "Adaptations",
+   "short": "An adaptation is a body part or behavior that helps a living thing survive where it lives: a camel's hump of fat, a duck's webbed feet, a cactus's spines and waxy skin, birds flying south.",
+   "prereqs": [
+    "sciexp.food-webs"
+   ],
+   "xp": 2,
+   "std": "4-LS1-1",
+   "trouble": "Thinking an animal grows an adaptation because it needs it. Adaptations are passed down from parents over many generations.",
+   "viz": [
+    "sciexp-pic"
+   ]
+  },
+  {
+   "id": "sciexp.human-body",
+   "slug": "human-body",
+   "unit": "life",
+   "title": "The Human Body",
+   "short": "Body systems work together. Bones hold you up and muscles move them. The heart pumps blood; the lungs bring in oxygen; the stomach and intestines break down food; the brain and nerves send messages.",
+   "prereqs": [
+    "sciexp.plants-make-food"
+   ],
+   "xp": 2,
+   "std": "4-LS1-1",
+   "trouble": "Thinking the heart is on the far left of the chest and shaped like a valentine. It is near the middle, tipped a little to the left, and about the size of your fist.",
+   "viz": [
+    "sciexp-body"
+   ]
+  },
+  {
+   "id": "sciexp.day-night",
+   "slug": "day-night",
+   "unit": "space",
+   "title": "Day, Night and the Sun's Path",
+   "short": "The Earth spins once about every 24 hours. The side facing the Sun has day; the other side has night. The Sun seems to rise in the east and set in the west because the Earth turns.",
+   "prereqs": [
+    "sciexp.light-shadows"
+   ],
+   "xp": 2,
+   "std": "5-ESS1-2",
+   "trouble": "Thinking the Sun moves around the Earth each day, or that the Sun goes behind the Moon at night. The Earth's spin makes day and night.",
+   "viz": [
+    "sciexp-sky",
+    "sciexp-shadow"
+   ],
+   "lab": "/science-lab/night-sky/"
+  },
+  {
+   "id": "sciexp.moon-phases",
+   "slug": "moon-phases",
+   "unit": "space",
+   "title": "Phases of the Moon",
+   "short": "The Moon makes no light of its own; it reflects sunlight. As it goes around the Earth, about once a month, we see more or less of its sunlit half: new, crescent, quarter, gibbous and full.",
+   "prereqs": [
+    "sciexp.day-night"
+   ],
+   "xp": 2,
+   "trouble": "Thinking the Earth's shadow makes the phases. The shadow only matters in an eclipse; phases come from how much of the Moon's lit half faces us.",
+   "viz": [
+    "sciexp-sky"
+   ],
+   "lab": "/science-lab/night-sky/"
+  },
+  {
+   "id": "sciexp.solar-system",
+   "slug": "solar-system",
+   "unit": "space",
+   "title": "The Sun and Its Planets",
+   "short": "The Sun is a star, the closest one to us. Eight planets go around it: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus and Neptune. Gravity keeps them in their orbits.",
+   "prereqs": [
+    "sciexp.day-night",
+    "sciexp.friction-gravity"
+   ],
+   "xp": 2,
+   "std": "5-ESS1-1",
+   "trouble": "Thinking the Sun is a different kind of thing from the stars. It is a star; other stars look tiny only because they are so much farther away.",
+   "viz": [
+    "sciexp-sky"
+   ],
+   "lab": "/science-lab/orbits/"
+  }
+ ]
+}

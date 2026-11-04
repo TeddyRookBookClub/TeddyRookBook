@@ -121,8 +121,7 @@ document.addEventListener('click', function (e) {
 /* "More" menu: close when clicking elsewhere or pressing Escape. */
 (function () {
   var ds = document.querySelectorAll('#menu .trb-more details'); if (!ds.length) return;
-  // the group name is a link to that group's page; the arrow (or hovering, with a mouse) opens the list
-  ds.forEach(function (d) { var a = d.querySelector('summary a.trb-gl'); if (a) a.addEventListener('click', function (e) { e.stopPropagation(); }); });
+  // the group name is a link to that group's page, beside the summary (layouts/_partials/header.html); the arrow (or hovering, with a mouse) opens the list
   if (window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches) ds.forEach(function (d) {
     var li = d.parentNode, t = 0;
     li.addEventListener('mouseenter', function () { clearTimeout(t); d.open = true; });
@@ -195,6 +194,70 @@ document.addEventListener('click', function (e) {
   });
   var m = /[?&]search=([^&]*)/.exec(location.search); if (m) open(decodeURIComponent(m[1].replace(/\+/g, ' ')));
   window.trbSearch = open;
+})();
+/* Keyboard and screen-reader helpers (see "Keyboard" in assets/css/site-shell.css). */
+(function () {
+  // Skip link: move focus into <main id="main-content"> too (the theme's # link handler below only scrolls).
+  var sk = document.querySelector('.trb-skip'), t = document.getElementById('main-content');
+  if (sk && !t) sk.parentNode.removeChild(sk);
+  else if (sk) sk.addEventListener('click', function () {
+    if (t.hasAttribute('tabindex')) { t.focus({ preventScroll: true }); return; }
+    // focusable only for this one move, so later clicks inside the page (games, canvases) do not land on <main>
+    t.setAttribute('tabindex', '-1'); t.focus({ preventScroll: true });
+    t.addEventListener('blur', function () { t.removeAttribute('tabindex'); }, { once: true });
+  });
+  // Search box: a modal dialog, so Tab stays inside it while it is open.
+  var ov = document.querySelector('.trb-search');
+  if (ov) {
+    ov.setAttribute('aria-modal', 'true');
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab' || ov.hidden) return;
+      var f = [].slice.call(ov.querySelectorAll('input,button,a[href]')).filter(function (x) { return x.offsetParent !== null; }); if (!f.length) return;
+      var a = f[0], z = f[f.length - 1], c = document.activeElement;
+      if (!ov.contains(c)) { e.preventDefault(); a.focus(); }
+      else if (e.shiftKey && c === a) { e.preventDefault(); z.focus(); }
+      else if (!e.shiftKey && c === z) { e.preventDefault(); a.focus(); }
+    });
+  }
+  // Links inside running text (a sentence, a table cell, a breadcrumb) get .trb-il, an underline, so they are not told apart by
+  // color alone. Only plain inline text links: buttons, cards, menus and links that are the whole line are left as they are.
+  var seen = window.WeakSet ? new WeakSet() : null;
+  function links() {
+    var as = document.querySelectorAll('main a[href]:not(.trb-il)'), n = Math.min(as.length, 4000);
+    for (var i = 0; i < n; i++) {
+      var a = as[i];
+      if (seen) { if (seen.has(a)) continue; seen.add(a); }
+      if (a.closest('.toc, [role="tablist"], [role="menu"], [role="toolbar"], button, summary')) continue;
+      if (a.querySelector('img, svg, canvas, picture')) continue;
+      var cs = getComputedStyle(a);
+      if (cs.display !== 'inline' || cs.textDecorationLine.indexOf('underline') >= 0) continue;
+      var p = a.parentElement; while (p && getComputedStyle(p).display === 'inline') p = p.parentElement;
+      if (!p) continue;
+      var lt = a.textContent.replace(/\s+/g, '').length; if (!lt) continue;
+      if (p.textContent.replace(/\s+/g, '').length - lt < 2) continue;
+      a.classList.add('trb-il');
+    }
+  }
+  // A box that scrolls sideways or up and down (a wide table, a long list) and holds nothing focusable gets tabindex="0",
+  // so keyboard users can reach it and scroll it with the arrow keys.
+  function scrollers() {
+    var els = document.querySelectorAll('main pre, main table, main ol, main ul, main [class*="table"], main [class*="tw"], main [class*="box"], main [class*="wrap"]'), n = Math.min(els.length, 3000);
+    for (var i = 0; i < n; i++) {
+      var el = els[i];
+      if (el.hasAttribute('tabindex') || !(el.scrollWidth > el.clientWidth + 2 || el.scrollHeight > el.clientHeight + 2)) continue;
+      var cs = getComputedStyle(el);
+      if (!/auto|scroll/.test(cs.overflowX + cs.overflowY)) continue;
+      if (el.querySelector('a[href], button, input, select, textarea, [tabindex]')) continue;
+      el.setAttribute('tabindex', '0');
+    }
+  }
+  links();
+  window.addEventListener('load', function () {
+    links(); scrollers();
+    // pages that draw their content later (planners, tables, games) are checked again, at most every half second
+    var m = document.getElementById('main-content'), tm = 0;
+    if (m && window.MutationObserver) new MutationObserver(function () { if (!tm) tm = setTimeout(function () { tm = 0; links(); scrollers(); }, 500); }).observe(m, { childList: true, subtree: true });
+  });
 })();
 /* Offline: only for people who saved sections on /offline/. Keeps the service worker registered and shows "Update available". */
 try{if(localStorage.getItem('trb-off')&&'serviceWorker' in navigator){var s=document.createElement('script');s.src='{{ "js/offline-notice.js" | relURL }}?v={{ (os.Stat "static/js/offline-notice.js").ModTime.Unix }}';s.defer=true;document.head.appendChild(s)}}catch(e){}

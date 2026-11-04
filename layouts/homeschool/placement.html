@@ -27,7 +27,7 @@
   {{- $lp := . -}}{{- with site.GetPage $lp -}}{{- $links = merge $links (dict (strings.TrimPrefix "/" $lp) .RelPermalink) -}}{{- end -}}
 {{- end -}}
 <div class="hs pc" id="pc">
-  <nav class="hs-crumbs hs-noprint"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Where should we start?</nav>
+  <nav class="hs-crumbs hs-noprint" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Where should we start?</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">Homeschool · Placement</p>
     <h1>Where should we start?</h1>

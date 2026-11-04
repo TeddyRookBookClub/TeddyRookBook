@@ -14,7 +14,7 @@
 {{- $prev := "" }}{{ $next := "" }}
 {{- range $d.lessons }}{{ if eq (int .n) (sub $n 1) }}{{ $prev = . }}{{ end }}{{ if eq (int .n) (add $n 1) }}{{ $next = . }}{{ end }}{{ end }}
 <div class="hs tr tr-lesson c-{{ $course }}" id="tr-lesson" data-course="{{ $course }}" data-lesson="{{ $L.key }}" data-units data-base="{{ $B }}">
-  <nav class="hs-crumbs"><a href="{{ "trades/" | relURL }}">The Trades</a> › <a href="{{ printf "trades/%s/" $course | relURL }}">{{ $c.short }}</a> › Lesson {{ $n }}</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "trades/" | relURL }}">The Trades</a> › <a href="{{ printf "trades/%s/" $course | relURL }}">{{ $c.short }}</a> › Lesson {{ $n }}</nav>
   <header class="tr-lhead">
     <span class="tr-lhead-icon" aria-hidden="true">{{ $L.icon }}</span>
     <p class="hs-eyebrow"><span>{{ $c.short }} · Lesson {{ $n }} of {{ $tot }}</span><span class="tr-badge b-{{ lower $L.level }}">{{ $L.level }}</span><span>{{ $L.minutes }} min read</span></p>

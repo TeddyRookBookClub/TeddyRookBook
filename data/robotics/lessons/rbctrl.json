@@ -1,0 +1,306 @@
+{
+ "rbctrl.open-closed-loop": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Tell a robot to drive forward for 3 seconds. On carpet it goes 80 cm; on wood, 1.2 m; with a weak battery, 60 cm. It has no idea. That is <b>open-loop</b> control."
+   },
+   {
+    "t": "key",
+    "html": "<b>Open loop:</b> send a fixed command and hope. <b>Closed loop</b> (feedback): measure the result, compare it with the goal, and correct. The <b>error</b> is $e = \\text{setpoint} - \\text{measurement}$."
+   },
+   {
+    "t": "viz",
+    "name": "rb-pid",
+    "opts": {
+     "mode": "pid",
+     "kp": 1,
+     "ki": 0,
+     "kd": 0
+    },
+    "cap": "A cart driven by a controller. Start with these settings, then try others."
+   },
+   {
+    "t": "why",
+    "html": "Feedback works without knowing the world exactly. Whether the floor is carpet or wood, the robot keeps measuring and correcting until the error is small. That is why almost every robot joint and wheel runs a feedback loop."
+   },
+   {
+    "t": "ex",
+    "title": "The error",
+    "q": "Goal: 90°. The arm's sensor reads 72°.",
+    "steps": [
+     "$e = 90 - 72 = 18^\\circ$.",
+     "Positive: push toward larger angles."
+    ],
+    "a": "18°."
+   },
+   {
+    "t": "ex",
+    "title": "Open or closed?",
+    "q": "A thermostat that turns the heater on when the room is below the set temperature.",
+    "steps": [
+     "It measures the result (room temperature) and corrects."
+    ],
+    "a": "Closed loop."
+   },
+   {
+    "t": "mistake",
+    "html": "Getting the sign of the error backward (measurement minus setpoint). Then the controller pushes the wrong way and the error grows."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Karl J. Åström and Richard M. Murray, Feedback Systems: An Introduction for Scientists and Engineers, 2nd ed. (Princeton University Press), free online edition",
+    "url": "https://www.cds.caltech.edu/~murray/amwiki/"
+   },
+   {
+    "name": "MIT OpenCourseWare, 2.12 Introduction to Robotics (Fall 2005)",
+    "url": "https://ocw.mit.edu/courses/2-12-introduction-to-robotics-fall-2005/"
+   }
+  ]
+ },
+ "rbctrl.p-control": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The simplest feedback rule: push harder the farther you are from the goal."
+   },
+   {
+    "t": "key",
+    "html": "A <b>proportional</b> controller sends $u = K_p\\, e$. The gain $K_p$ sets how hard it pushes per unit of error. Real motors have limits, so the command is clipped to what the motor can give (this is called <b>saturation</b>)."
+   },
+   {
+    "t": "viz",
+    "name": "rb-pid",
+    "opts": {
+     "mode": "pid",
+     "kp": 2,
+     "ki": 0,
+     "kd": 0
+    },
+    "cap": "Change $K_p$. Small: slow. Large: fast, then overshoot and wobble."
+   },
+   {
+    "t": "why",
+    "html": "Far from the goal the command is big; near it, small. So the robot slows as it arrives. But with friction or a load, a small error makes too small a push to move, so P control alone often stops a little short. That leftover is called <b>steady-state error</b>."
+   },
+   {
+    "t": "ex",
+    "title": "Command",
+    "q": "$K_p = 3$, setpoint 40, measurement 25.",
+    "steps": [
+     "$e = 15$.",
+     "$u = 3 \\times 15 = 45$."
+    ],
+    "a": "45."
+   },
+   {
+    "t": "ex",
+    "title": "Saturated",
+    "q": "$K_p = 8$, $e = 40$, motor limit ±255.",
+    "steps": [
+     "$u = 320$, past the limit.",
+     "Clipped to 255."
+    ],
+    "a": "255."
+   },
+   {
+    "t": "mistake",
+    "html": "Forgetting the motor's limit. Big gains with big errors ask for commands the motor cannot give."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Karl J. Åström and Richard M. Murray, Feedback Systems: An Introduction for Scientists and Engineers, 2nd ed. (Princeton University Press), free online edition",
+    "url": "https://www.cds.caltech.edu/~murray/amwiki/"
+   }
+  ]
+ },
+ "rbctrl.pid-step": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Two more terms fix P control's weaknesses: one remembers the past, one looks at the trend."
+   },
+   {
+    "t": "key",
+    "html": "<b>PID:</b> $u = K_p e + K_i \\sum e\\,\\Delta t + K_d \\dfrac{e - e_{\\text{prev}}}{\\Delta t}$. The <b>integral</b> term adds up error over time and removes steady-state error. The <b>derivative</b> term reacts to how fast the error changes and damps overshoot."
+   },
+   {
+    "t": "viz",
+    "name": "rb-pid",
+    "opts": {
+     "mode": "pid",
+     "kp": 2,
+     "ki": 0.5,
+     "kd": 0.5
+    },
+    "cap": "Turn each term on and off. Watch the graph: I removes the gap, D calms the wobble."
+   },
+   {
+    "t": "list",
+    "items": [
+     "Each pass: measure, compute $e$.",
+     "Integral: $I \\leftarrow I + e\\,\\Delta t$.",
+     "Derivative: $D = (e - e_{\\text{prev}})/\\Delta t$.",
+     "Command: $u = K_p e + K_i I + K_d D$; clip it; send it.",
+     "Save $e$ as $e_{\\text{prev}}$."
+    ]
+   },
+   {
+    "t": "ex",
+    "title": "One step",
+    "q": "$K_p = 2$, $K_i = 1$, $K_d = 0.1$, $\\Delta t = 0.05$. Previous error 10, integral 3. Now $e = 8$.",
+    "steps": [
+     "$I = 3 + 8 \\times 0.05 = 3.4$.",
+     "$D = (8 - 10)/0.05 = -40$.",
+     "$u = 16 + 3.4 - 4 = 15.4$."
+    ],
+    "a": "15.4."
+   },
+   {
+    "t": "why",
+    "html": "The derivative term is negative here because the error is shrinking: it eases off before the cart overshoots. The integral term keeps pushing a little as long as any error is left."
+   },
+   {
+    "t": "mistake",
+    "html": "Forgetting $\\Delta t$, or letting the integral grow without bound while the motor is saturated (called windup). Real code limits the integral."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Karl J. Åström and Richard M. Murray, Feedback Systems: An Introduction for Scientists and Engineers, 2nd ed. (Princeton University Press), free online edition",
+    "url": "https://www.cds.caltech.edu/~murray/amwiki/"
+   }
+  ]
+ },
+ "rbctrl.first-order-response": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Many things respond to a sudden change smoothly: a motor coming up to speed, a heater warming up. They follow a curve with one key number."
+   },
+   {
+    "t": "key",
+    "html": "A <b>first-order</b> system with <b>time constant</b> $\\tau$ moves toward its new value as $y(t) = y_{\\text{final}}\\,(1 - e^{-t/\\tau})$. After $\\tau$ it has covered about <b>63%</b>; after $3\\tau$, 95%; after $5\\tau$, more than 99%."
+   },
+   {
+    "t": "viz",
+    "name": "rb-pid",
+    "opts": {
+     "mode": "first",
+     "tau": 1
+    },
+    "cap": "Change $\\tau$ and watch the curve: same shape, stretched in time."
+   },
+   {
+    "t": "why",
+    "html": "The rate of change is proportional to how far there is left to go. That gives exponential approach, the same curve as on the Math Ladder's exponential models. Engineers read $\\tau$ off a test run to know how fast a part can respond."
+   },
+   {
+    "t": "ex",
+    "title": "How far after 2τ?",
+    "q": "Final speed 200 rpm.",
+    "steps": [
+     "$1 - e^{-2} \\approx 0.865$.",
+     "$0.865 \\times 200 \\approx 173\\ \\text{rpm}$."
+    ],
+    "a": "About 173 rpm."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking the system arrives after one time constant. It is only 63% of the way; plan on about $5\\tau$ to settle."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Karl J. Åström and Richard M. Murray, Feedback Systems: An Introduction for Scientists and Engineers, 2nd ed. (Princeton University Press), free online edition",
+    "url": "https://www.cds.caltech.edu/~murray/amwiki/"
+   }
+  ]
+ },
+ "rbctrl.stability": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Turn up the gain to go faster, and at some point the robot starts to shake, then to swing wildly. Feedback can make things worse."
+   },
+   {
+    "t": "key",
+    "html": "A system is <b>stable</b> if its error dies out. Too much gain or too much delay makes it <b>overshoot</b>, then <b>oscillate</b>, and finally <b>diverge</b>. A common hand-tuning order: raise $K_p$ until it oscillates, back off; add $K_d$ to damp; add a little $K_i$ last for the leftover error."
+   },
+   {
+    "t": "viz",
+    "name": "rb-pid",
+    "opts": {
+     "mode": "pid",
+     "kp": 8,
+     "ki": 0,
+     "kd": 0
+    },
+    "cap": "Start with a large $K_p$ and watch the overshoot. Add $K_d$ to calm it."
+   },
+   {
+    "t": "why",
+    "html": "Each correction takes time to show up in the measurement. A big correction based on old news overshoots, and the next correction overshoots back. A simple model shows it: if each step corrects $K$ times the error, the new error is $(1 - K)$ times the old. That shrinks only if $0 < K < 2$."
+   },
+   {
+    "t": "ex",
+    "title": "Does it settle?",
+    "q": "Each step: new error $= (1 - K) \\times$ old. With $K = 1.5$ and starting error 8?",
+    "steps": [
+     "$1 - 1.5 = -0.5$.",
+     "Errors: 8, −4, 2, −1, 0.5…"
+    ],
+    "a": "Yes: it flips sign each step but shrinks."
+   },
+   {
+    "t": "ex",
+    "title": "And with K = 2.5?",
+    "q": "Same start.",
+    "steps": [
+     "$1 - 2.5 = -1.5$.",
+     "Errors: 8, −12, 18, −27…"
+    ],
+    "a": "No: it grows. Unstable."
+   },
+   {
+    "t": "mistake",
+    "html": "Raising the gain to go faster and being surprised when the robot shakes. Faster response and calm response pull against each other."
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"rb-safe\"><b>Safety while tuning.</b> Tune a new controller with the robot on a stand or the arm unloaded, at low power, with the power switch in reach. An unstable loop can swing hard.</div>"
+   },
+   {
+    "t": "note",
+    "html": "The <a href=\"/science-lab/book-cart/\">Book Cart</a> in the Science Lab balances a chain of books on a moving cart, a classic hard control problem."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Karl J. Åström and Richard M. Murray, Feedback Systems: An Introduction for Scientists and Engineers, 2nd ed. (Princeton University Press), free online edition",
+    "url": "https://www.cds.caltech.edu/~murray/amwiki/"
+   },
+   {
+    "name": "MIT OpenCourseWare, 2.12 Introduction to Robotics (Fall 2005)",
+    "url": "https://ocw.mit.edu/courses/2-12-introduction-to-robotics-fall-2005/"
+   }
+  ]
+ }
+}

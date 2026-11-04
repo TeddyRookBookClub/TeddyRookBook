@@ -368,7 +368,7 @@
     h += '<p>Plants in the same family share pests and diseases, so move each group to a new ' + (pots ? 'set of pots' : 'area') + ' every year and wait 3 to 4 years before it comes back. ' +
       'Split ' + (pots ? 'your containers' : 'your space') + ' into ' + n + ' parts and shift each group one part along each year' + (gi[0].i === 0 ? '; beans and peas lead because they add nitrogen' : '') + '.' +
       (n < 4 ? ' With only ' + n + ' groups a family comes back every ' + n + ' years; adding a group' + (n < 3 ? ' or two' : '') + ' would stretch that to the 3 to 4 years experts suggest.' : '') + '</p>';
-    h += '<div class="gd-tablewrap"><table class="hs-table gd-rot"><thead><tr><th></th>';
+    h += '<div class="gd-tablewrap"><table class="hs-table gd-rot"><thead><tr><td></td>';
     for (var b = 0; b < n; b++) h += '<th>' + part + (b + 1) + '</th>';
     h += '</tr></thead><tbody>';
     for (var y = 0; y < n; y++) {

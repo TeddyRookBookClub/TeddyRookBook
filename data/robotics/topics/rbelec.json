@@ -1,0 +1,114 @@
+{
+ "course": "rbelec",
+ "units": [
+  {
+   "key": "bench",
+   "title": "The Safe Workbench",
+   "blurb": "Low voltage only, batteries and soldering done the careful way."
+  },
+  {
+   "key": "circuits",
+   "title": "Circuits on a Breadboard",
+   "blurb": "Ohm's law, the resistor every LED needs, and voltage dividers."
+  },
+  {
+   "key": "mcu",
+   "title": "Talking to a Microcontroller",
+   "blurb": "Analog readings and PWM on an Arduino or Raspberry Pi Pico."
+  }
+ ],
+ "topics": [
+  {
+   "id": "rbelec.safe-workbench",
+   "slug": "safe-workbench",
+   "unit": "bench",
+   "title": "A Safe Electronics Bench",
+   "short": "Low-voltage kits, batteries handled by the maker's rules, and a soldering iron that always goes back in its stand.",
+   "prereqs": [
+    "rbkids.simple-circuits"
+   ],
+   "xp": 1,
+   "trouble": "Beginners treat a lithium battery like an AA cell, or set a hot iron down on the table.",
+   "viz": []
+  },
+  {
+   "id": "rbelec.ohms-law",
+   "slug": "ohms-law",
+   "unit": "circuits",
+   "title": "Ohm's Law on a Breadboard",
+   "short": "Voltage pushes, resistance resists, and current is the result: V = IR.",
+   "prereqs": [
+    "physsci.ohms-law",
+    "rbelec.safe-workbench"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up milliamps and amps, or forget which breadboard holes are connected.",
+   "viz": [
+    "rb-circuit"
+   ],
+   "lab": "/science-lab/circuits/"
+  },
+  {
+   "id": "rbelec.led-resistor",
+   "slug": "led-resistor",
+   "unit": "circuits",
+   "title": "The Resistor Every LED Needs",
+   "short": "Pick the series resistor from what is left after the LED's forward voltage: R = (V - Vf)/I.",
+   "prereqs": [
+    "rbelec.ohms-law"
+   ],
+   "xp": 2,
+   "trouble": "Students divide the whole supply voltage by the current, forgetting the LED's own voltage drop.",
+   "viz": [
+    "rb-circuit"
+   ]
+  },
+  {
+   "id": "rbelec.voltage-divider",
+   "slug": "voltage-divider",
+   "unit": "circuits",
+   "title": "Voltage Dividers and Sensors",
+   "short": "Two resistors in series split a voltage; a light sensor in a divider turns light into volts.",
+   "prereqs": [
+    "rbelec.ohms-law",
+    "phys2.series-resistors"
+   ],
+   "xp": 2,
+   "trouble": "Students put the wrong resistor on top of the fraction, R1 instead of the one between the output and ground.",
+   "viz": [
+    "rb-divider"
+   ]
+  },
+  {
+   "id": "rbelec.analog-input",
+   "slug": "analog-input",
+   "unit": "mcu",
+   "title": "Analog Readings",
+   "short": "An analog-to-digital converter turns 0 to 3.3 V into a whole number from 0 to 1023 (10-bit) or 4095 (12-bit).",
+   "prereqs": [
+    "rbelec.voltage-divider",
+    "g8.proportional-slope"
+   ],
+   "xp": 2,
+   "trouble": "Students use 1024 or 4096 as the top reading instead of one less.",
+   "viz": [
+    "rb-divider"
+   ]
+  },
+  {
+   "id": "rbelec.pwm",
+   "slug": "pwm",
+   "unit": "mcu",
+   "title": "PWM: Fast Switching for Motors and Lights",
+   "short": "Switch fully on and off very fast; the fraction of time on, the duty cycle, sets the average voltage.",
+   "prereqs": [
+    "rbelec.analog-input"
+   ],
+   "xp": 2,
+   "trouble": "Students think PWM makes a lower steady voltage, or confuse the frequency with the duty cycle.",
+   "viz": [
+    "rb-pwm"
+   ]
+  }
+ ]
+}

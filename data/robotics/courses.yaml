@@ -1,0 +1,105 @@
+# Robotics Ladder courses, bottom rung to top rung (the order of this list is the ladder).
+# Skill maps: data/robotics/topics/<key>.json; lessons: data/robotics/lessons/<key>.json; generators: static/robotics/gen/<key>.js;
+# visuals: static/robotics/viz/robotics.js (names rb-…). Topics and lessons are built by scripts/robotics/build.py: edit
+# that script and run it (python3 scripts/robotics/build.py), or edit the JSON with care and run check-course.
+# The "Six-month roadmap, improved" page is /robotics/roadmap/ (data/robotics/roadmap.yaml, layouts/robroad/single.html).
+- key: rbkids
+  slug: robotics-for-kids
+  title: "Robotics for Kids"
+  short: "For Kids"
+  band: "Elementary"
+  grade: "3–6"
+  icon: "🧸"
+  color: "#c2410c"
+  blurb: "For ages 8 to 12, with a grown-up: what makes a machine a robot, sensors and motors, a first safe circuit, programs as steps and loops, and a cardboard arm and a bristlebot to build."
+  after: []
+- key: rbelec
+  slug: electronics-and-microcontrollers
+  title: "Electronics and Microcontrollers"
+  short: "Electronics"
+  band: "Middle school"
+  grade: "7–9"
+  icon: "🔌"
+  color: "#b45309"
+  blurb: "Safe low-voltage benchwork, Ohm's law on a breadboard, the resistor every LED needs, voltage dividers for sensors, analog readings and PWM on an Arduino or Raspberry Pi Pico."
+  after: [rbkids, physsci]
+- key: rbprog
+  slug: programming-robots
+  title: "Programming Robots"
+  short: "Programming"
+  band: "High school"
+  grade: "8–10"
+  icon: "💻"
+  color: "#0f766e"
+  blurb: "Python on a Raspberry Pi and C on a microcontroller: reading code line by line, sensor decisions, state machines, loop timing, and the integer and bit tricks that cause real bugs."
+  after: [rbelec]
+- key: rbmech
+  slug: mechanics-and-motion
+  title: "Mechanics and Motion"
+  short: "Mechanics"
+  band: "High school"
+  grade: "10–11"
+  icon: "⚙️"
+  color: "#1d4ed8"
+  blurb: "Gears and torque, wheels and speed, coordinate frames, and the forward and inverse kinematics of a two-link arm you can drag on the page."
+  after: [rbelec, geo, pre]
+- key: rbctrl
+  slug: control
+  title: "Feedback and Control"
+  short: "Control"
+  band: "High school"
+  grade: "11–12"
+  icon: "🎛️"
+  color: "#7c3aed"
+  blurb: "Open and closed loops, proportional control, the full PID step by step, first-order response and time constants, and stability, with a PID tuner to play with."
+  after: [rbprog, rbmech]
+- key: rbsense
+  slug: sensing-and-estimation
+  title: "Sensing and Estimation"
+  short: "Sensing"
+  band: "High school"
+  grade: "11–12"
+  icon: "📡"
+  color: "#be185d"
+  blurb: "Encoders, ultrasonic ranging and IMUs; noise, averages and standard deviation; the complementary filter; and a one-dimensional Kalman filter built from intuition."
+  after: [rbprog, rbmech, stat]
+- key: rbmobile
+  slug: mobile-robots
+  title: "Mobile Robots and Navigation"
+  short: "Navigation"
+  band: "College"
+  grade: "College"
+  icon: "🛞"
+  color: "#15803d"
+  blurb: "Differential drive, odometry and its drift, occupancy grids, shortest paths with breadth-first search and A*, and the ideas behind SLAM."
+  after: [rbctrl, rbsense]
+- key: rbros
+  slug: ros-2-and-simulation
+  title: "ROS 2 and Simulation"
+  short: "ROS 2"
+  band: "College"
+  grade: "College"
+  icon: "🧩"
+  color: "#334155"
+  blurb: "What ROS 2 is for: nodes, topics, services and actions, units and frames by the REP 103 conventions, chains of transforms, and how a simulator steps time."
+  after: [rbprog, rbmobile]
+- key: rbvision
+  slug: robot-vision
+  title: "Robot Vision"
+  short: "Vision"
+  band: "College"
+  grade: "College"
+  icon: "👁️"
+  color: "#0369a1"
+  blurb: "Images as grids of numbers, color thresholding, steering toward a target's center, and the pinhole camera that turns pixels into meters."
+  after: [rbprog, rbmech]
+- key: rbcap
+  slug: capstone-and-careers
+  title: "Capstone Projects and Careers"
+  short: "Capstone"
+  band: "College"
+  grade: "College"
+  icon: "🏁"
+  color: "#a16207"
+  blurb: "Power budgets and battery life, design-build-test cycles with honest test logs, a project ladder for a portfolio, and what robotics careers really ask for, with sourced numbers."
+  after: [rbmobile, rbros, rbvision]

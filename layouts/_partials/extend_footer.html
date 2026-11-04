@@ -4,9 +4,10 @@
    loaded by layouts/_partials/footer.html right after this partial. */}}
 {{- $footCSS := resources.Get "css/site-foot.css" | resources.Minify | fingerprint "md5" }}
 <link rel="stylesheet" href="{{ $footCSS.RelPermalink }}">
-<div class="trb-social">
+{{- /* A labeled nav landmark, so screen-reader users can find these links (they sit after the footer, outside it). */}}
+<nav class="trb-social" aria-label="Site links">
   <a href="https://x.com/teddyrookbook" target="_blank" rel="noopener me" title="Teddy Rook on X">{{ partial "svg.html" (dict "name" "x") }}<span>@teddyrookbook</span></a>
   <a href="https://github.com/TeddyRookBookClub" target="_blank" rel="noopener me" title="Teddy Rook Book on GitHub">{{ partial "svg.html" (dict "name" "github") }}<span>GitHub</span></a>
   <a href="{{ "credits/" | relURL }}" title="Sources and credits for the whole site"><span>Sources and credits</span></a>
   <button type="button" class="trb-report" data-report="page" hidden>Report a problem</button>
-</div>
+</nav>

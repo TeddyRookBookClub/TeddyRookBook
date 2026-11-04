@@ -1,0 +1,65 @@
+# Programming Robots (rbprog): lessons. Python examples run on a Raspberry Pi; C examples on a microcontroller.
+LESSONS = {
+"trace-code": LES([
+ P("Before you trust a robot's program, run it in your head. Professionals do this all the time; it is the fastest way to find a bug."),
+ K("To <b>trace</b> code, go one line at a time and keep a table of every variable. Each time a line changes a variable, write the new value. For a loop, write one row per pass."),
+ EX("Trace a loop", "<code>speed = 0<br>for i in range(4):<br>&nbsp;&nbsp;&nbsp;&nbsp;speed = speed + 25</code><br>What is <code>speed</code> at the end?",
+    ["range(4) gives i = 0, 1, 2, 3: four passes.", "speed: 0 → 25 → 50 → 75 → 100."], "100."),
+ EX("Trace a while loop", "<code>d = 50<br>steps = 0<br>while d &gt; 10:<br>&nbsp;&nbsp;&nbsp;&nbsp;d = d - 15<br>&nbsp;&nbsp;&nbsp;&nbsp;steps = steps + 1</code>",
+    ["Pass 1: d = 35, steps = 1.", "Pass 2: d = 20, steps = 2.", "Pass 3: d = 5, steps = 3.", "Now d &gt; 10 is false, so the loop stops."], "d = 5, steps = 3."),
+ TB(["pass", "d before", "d after", "steps"], [["1", "50", "35", "1"], ["2", "35", "20", "2"], ["3", "20", "5", "3"]], "A trace table for the while loop."),
+ W("A robot's bugs often hide in the first or last pass of a loop. Writing every pass down catches them before the robot drives off the table."),
+ M("Guessing what a loop does from its shape. Write the table; it takes a minute and it is never wrong."),
+ H("Hands-on: your first Raspberry Pi program"),
+ N('<div class="rb-parts"><b>Getting started</b><ul><li><b>\\$0:</b> Python on any computer, or a free online Python editor.</li><li><b>About \\$5 to \\$10:</b> a Raspberry Pi Pico with MicroPython, plus an LED and resistor from the starter kit.</li><li><b>About \\$60 to \\$100:</b> a Raspberry Pi single-board computer with a power supply and memory card, for camera and vision projects later.</li></ul></div>'),
+ P("Blink the Pico's built-in LED. Then change the program to blink faster each time through the loop, and trace it on paper before you run it."),
+ TRY,
+], "py", "rpi"),
+
+"sensor-decisions": LES([
+ P("A sensor reading is just a number. A program turns that number into a choice."),
+ K("Use <b>if</b>, <b>elif</b> and <b>else</b>. Python checks the tests <b>in order</b> and runs only the first one that is true. Put narrow tests before broad ones."),
+ EX("Order matters", "<code>if d &lt; 50:<br>&nbsp;&nbsp;&nbsp;&nbsp;action = 'slow'<br>elif d &lt; 15:<br>&nbsp;&nbsp;&nbsp;&nbsp;action = 'stop'<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;action = 'go'</code><br>What happens at d = 10?",
+    ["d &lt; 50 is true, so action = 'slow'.", "The elif is never checked. The robot never stops!"], "'slow'. Fix it by testing d &lt; 15 first."),
+ EX("Two sensors", "A line follower has left and right sensors that read True on the line. Left True, right False: which way should it steer?",
+    ["The line is under the left sensor, so the line is to the left.", "Steer left to center it."], "Left."),
+ W("Most robot behavior is a stack of decisions like these, run many times a second. Getting the order right is the difference between a robot that stops at the wall and one that hits it."),
+ M("Writing an early, broad test that hides a later, narrow one. Test the most specific case first."),
+ H("Hands-on: a night-light robot"),
+ P("Put a light sensor in a voltage divider on an analog pin. Print the reading every half second while you cover and uncover it. Pick a threshold halfway between dark and bright, and turn an LED on below it. Then add a second threshold for \"very dark\" and blink."),
+ TRY,
+], "py", "rpi", "ard"),
+
+"state-machines": LES([
+ P("A robot that only reacts to what it senses right now forgets what it was doing. A state machine gives it a memory."),
+ K("A <b>state machine</b> has a set of <b>states</b> (like SEARCH, FOLLOW, LOST). The robot is in exactly one state at a time. Each loop it reads its sensors, and a table of <b>rules</b> says which state comes next."),
+ V("rb-fsm", None, "Press sensor readings and watch the line follower move between states."),
+ TB(["State", "Sensor reading", "Next state"], [["FOLLOW", "on the line", "FOLLOW"], ["FOLLOW", "line lost", "SEARCH"], ["SEARCH", "on the line", "FOLLOW"], ["SEARCH", "line lost for 3 s", "STOP"]], "Rules for a simple line follower."),
+ W("Writing the states and rules down first makes the behavior easy to check. It also makes timeouts possible: the robot can know how long it has been searching."),
+ EX("Follow the rules", "The robot is in FOLLOW. It reads: line lost, line lost, on the line. Which state is it in after each reading?", ["Line lost: FOLLOW → SEARCH.", "Line lost again (less than 3 s): stays in SEARCH.", "On the line: SEARCH → FOLLOW."], "SEARCH, SEARCH, FOLLOW."),
+ M("Long chains of if statements with no state variable. The robot then cannot tell \"I just lost the line\" from \"I have been lost for a minute.\""),
+ P("In code, keep one variable such as <code>state = 'FOLLOW'</code>, and in the main loop use if and elif on it to decide what to do and what state comes next."),
+ TRY,
+], "py", "ocw"),
+
+"loop-timing": LES([
+ P("A robot's program is one big loop: read sensors, decide, act, repeat. How often it repeats matters as much as what it does."),
+ K("A control loop runs at a steady <b>rate</b> $f$ (in hertz, times per second). Its <b>period</b> is $T = 1/f$. All the work of one pass must fit inside the period, with room to spare."),
+ EX("Period", "A loop runs at 50 Hz. What is its period?", ["$T = 1/50\\ \\text{s} = 0.02\\ \\text{s} = 20\\ \\text{ms}$."], "20 ms."),
+ EX("Will it fit?", "Reading the sensors takes 6 ms, the math takes 3 ms, and sending the motor commands takes 2 ms. Can the loop run at 100 Hz?", ["Work per pass: $6 + 3 + 2 = 11\\ \\text{ms}$.", "At 100 Hz the period is 10 ms."], "No. It needs at least 11 ms, so at most about 90 Hz; 50 Hz would leave a safe margin."),
+ W("Controllers like PID assume the time step $\\Delta t$ is steady. If the loop sometimes takes 10 ms and sometimes 40 ms, the math is wrong and the robot shakes. Good code measures the time each pass and waits for the rest of the period, instead of sleeping a fixed amount."),
+ M("Mixing milliseconds and seconds, or forgetting that the work itself takes time. A loop that does 15 ms of work and then sleeps 20 ms runs every 35 ms, not every 20."),
+ TRY,
+], "py", "ard", "am"),
+
+"integers-and-bits": LES([
+ P("On a small microcontroller, programs are often written in C or C++ (an Arduino sketch is C++). Numbers there have fixed sizes, and that causes some of the most confusing bugs in robotics."),
+ K("An <b>8-bit unsigned</b> integer (uint8_t) holds 0 to 255; adding past 255 <b>wraps around</b> to 0. A 16-bit unsigned one holds 0 to 65,535. <b>Bit masks</b> work on single bits: <code>x | (1 &lt;&lt; n)</code> sets bit $n$, <code>x &amp; ~(1 &lt;&lt; n)</code> clears it, and <code>x &amp; (1 &lt;&lt; n)</code> tests it."),
+ EX("Overflow", "A uint8_t holds 250. The program adds 10. What does it hold?", ["$250 + 10 = 260$.", "260 is more than 255, so it wraps: $260 - 256 = 4$."], "4."),
+ EX("Set a bit", "A register holds binary 0000 0101 (5). Set bit 3.", ["<code>1 &lt;&lt; 3</code> is 0000 1000 (8).", "OR them: 0000 1101."], "13."),
+ W("Encoder counts, timers and sensor registers all live in fixed-size integers. A robot whose distance suddenly jumps from 32,767 to −32,768 has hit a 16-bit signed overflow, not a broken sensor. Hardware registers pack many on-off settings into one byte, so bit masks are how you change one without disturbing the rest."),
+ M("Expecting 250 + 10 to be 260 in an 8-bit variable, or clearing a bit with OR. OR can only set bits; to clear one, AND with the mask's complement."),
+ N("Our Homeschool <a href=\"/homeschool/code-practice/\">Code Practice</a> page drills binary and hexadecimal, the number bases these masks are written in."),
+ TRY,
+], "kr", "ard"),
+}

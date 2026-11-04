@@ -1,0 +1,98 @@
+{
+ "course": "rbctrl",
+ "units": [
+  {
+   "key": "loops",
+   "title": "Feedback Loops",
+   "blurb": "Measure, compare, correct: why closing the loop works."
+  },
+  {
+   "key": "pid",
+   "title": "PID Control",
+   "blurb": "Proportional, integral and derivative, one term at a time."
+  },
+  {
+   "key": "response",
+   "title": "Response and Stability",
+   "blurb": "How fast a system settles, and when a controller makes things worse."
+  }
+ ],
+ "topics": [
+  {
+   "id": "rbctrl.open-closed-loop",
+   "slug": "open-closed-loop",
+   "unit": "loops",
+   "title": "Open and Closed Loops",
+   "short": "Open loop runs a fixed command; closed loop measures the error, setpoint minus measurement, and corrects it.",
+   "prereqs": [
+    "rbprog.loop-timing"
+   ],
+   "xp": 2,
+   "trouble": "Students get the sign of the error backward, measurement minus setpoint.",
+   "viz": []
+  },
+  {
+   "id": "rbctrl.p-control",
+   "slug": "p-control",
+   "unit": "pid",
+   "title": "Proportional Control",
+   "short": "Command = Kp times the error, limited to what the motor can give.",
+   "prereqs": [
+    "rbctrl.open-closed-loop",
+    "alg1.linear-models-context"
+   ],
+   "xp": 2,
+   "trouble": "Students forget the motor's limit, so a big error gives an impossible command.",
+   "viz": [
+    "rb-pid"
+   ]
+  },
+  {
+   "id": "rbctrl.pid-step",
+   "slug": "pid-step",
+   "unit": "pid",
+   "title": "One Step of a PID Controller",
+   "short": "u = Kp e + Ki (sum of e Δt) + Kd (Δe / Δt), computed fresh every loop.",
+   "prereqs": [
+    "rbctrl.p-control"
+   ],
+   "xp": 3,
+   "trouble": "Students forget Δt in the integral or derivative term, or use the error from the wrong step.",
+   "viz": [
+    "rb-pid"
+   ]
+  },
+  {
+   "id": "rbctrl.first-order-response",
+   "slug": "first-order-response",
+   "unit": "response",
+   "title": "Time Constants",
+   "short": "A first-order system covers 63% of the way to its new value in one time constant τ, and about 99% in 5τ.",
+   "prereqs": [
+    "rbctrl.open-closed-loop",
+    "alg2.exponential-log-models"
+   ],
+   "xp": 3,
+   "trouble": "Students think the system arrives after one time constant.",
+   "viz": [
+    "rb-pid"
+   ]
+  },
+  {
+   "id": "rbctrl.stability",
+   "slug": "stability",
+   "unit": "response",
+   "title": "Stability and Tuning",
+   "short": "Too much gain overshoots and can oscillate or diverge; tune P first, then D, then a little I.",
+   "prereqs": [
+    "rbctrl.pid-step",
+    "rbctrl.first-order-response"
+   ],
+   "xp": 3,
+   "trouble": "Students keep raising the gain to go faster and are surprised when the robot starts to shake.",
+   "viz": [
+    "rb-pid"
+   ]
+  }
+ ]
+}

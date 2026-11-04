@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{{ "homeschool/phonics/phonics.css" | relURL }}?v={{ (os.Stat "static/homeschool/phonics/phonics.css").ModTime.Unix }}">
 {{ $d := site.Data.phonics }}{{ $hc := site.Data.hs_hannah.curricula }}
 <div class="hs pp pp-hub" id="pp">
-  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/actual-reading/" | relURL }}">Actual Reading</a> › Phonics Practice</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/actual-reading/" | relURL }}">Actual Reading</a> › Phonics Practice</nav>
   <header class="hs-hero pp-hero">
     <p class="hs-eyebrow">Actual Reading · A practice companion by Teddy Rook Book</p>
     <h1>Phonics Practice</h1>

@@ -1,0 +1,112 @@
+{
+ "course": "rbmech",
+ "units": [
+  {
+   "key": "drive",
+   "title": "Gears, Torque and Wheels",
+   "blurb": "How motors turn into force and speed."
+  },
+  {
+   "key": "frames",
+   "title": "Frames and Kinematics",
+   "blurb": "Where things are, from the robot's point of view and the world's, and where an arm's hand ends up."
+  }
+ ],
+ "topics": [
+  {
+   "id": "rbmech.gears",
+   "slug": "gears",
+   "unit": "drive",
+   "title": "Gear Ratios",
+   "short": "A small gear driving a big one trades speed for torque by the ratio of their teeth.",
+   "prereqs": [
+    "physsci.simple-machines"
+   ],
+   "xp": 2,
+   "trouble": "Students divide the wrong way and make the slow gear faster.",
+   "viz": [
+    "rb-gears"
+   ]
+  },
+  {
+   "id": "rbmech.torque-motors",
+   "slug": "torque-motors",
+   "unit": "drive",
+   "title": "Torque and Choosing a Motor",
+   "short": "Torque is force times lever arm; a motor must beat the load's torque, m g L, with room to spare.",
+   "prereqs": [
+    "phys1.torque",
+    "rbmech.gears"
+   ],
+   "xp": 2,
+   "trouble": "Students forget that holding a load farther out takes more torque, or mix up grams and kilograms.",
+   "viz": [
+    "rb-lever"
+   ]
+  },
+  {
+   "id": "rbmech.wheel-speed",
+   "slug": "wheel-speed",
+   "unit": "drive",
+   "title": "Wheels and Speed",
+   "short": "Rolling speed is angular speed times radius: v = ωr, and rpm must be turned into radians per second first.",
+   "prereqs": [
+    "phys1.linear-angular",
+    "rbmech.gears"
+   ],
+   "xp": 2,
+   "trouble": "Students multiply rpm by the radius without converting to radians per second.",
+   "viz": [
+    "rb-encoder"
+   ]
+  },
+  {
+   "id": "rbmech.coordinate-frames",
+   "slug": "coordinate-frames",
+   "unit": "frames",
+   "title": "Coordinate Frames",
+   "short": "A point seen by the robot becomes a point on the map by a rotation and a shift.",
+   "prereqs": [
+    "pre.matrix-transformations",
+    "geo.trig-ratios"
+   ],
+   "xp": 3,
+   "trouble": "Students add the robot's position but forget to rotate by its heading, or rotate the wrong way.",
+   "viz": [
+    "rb-frames"
+   ]
+  },
+  {
+   "id": "rbmech.forward-kinematics",
+   "slug": "forward-kinematics",
+   "unit": "frames",
+   "title": "Forward Kinematics of a Two-Link Arm",
+   "short": "Given the joint angles, the hand is at x = L1 cos θ1 + L2 cos(θ1 + θ2), y = L1 sin θ1 + L2 sin(θ1 + θ2).",
+   "prereqs": [
+    "rbmech.coordinate-frames"
+   ],
+   "xp": 3,
+   "trouble": "Students use θ2 alone for the second link instead of θ1 + θ2.",
+   "viz": [
+    "rb-arm"
+   ]
+  },
+  {
+   "id": "rbmech.inverse-kinematics",
+   "slug": "inverse-kinematics",
+   "unit": "frames",
+   "title": "Inverse Kinematics of a Two-Link Arm",
+   "short": "Given where the hand should go, the law of cosines gives the elbow angle; there are usually two answers, and sometimes none.",
+   "prereqs": [
+    "rbmech.forward-kinematics",
+    "geo.law-of-cosines",
+    "pre.inverse-trig"
+   ],
+   "xp": 3,
+   "trouble": "Students forget to check that the target is in reach, or miss the second, elbow-up solution.",
+   "viz": [
+    "rb-arm"
+   ]
+  }
+ ]
+}

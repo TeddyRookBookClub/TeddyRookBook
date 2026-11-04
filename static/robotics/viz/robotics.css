@@ -1,0 +1,16 @@
+/* Robotics Ladder visuals (static/robotics/viz/robotics.js): small additions to math/viz/viz.css. Light and dark themes
+   come from the shared palette (V.colors) and html[data-theme="dark"]. */
+.ml-viz.rbv .ml-cv{touch-action:pan-y;box-shadow:inset 0 0 0 1px var(--mv-line)}
+.rbv .rbv-wrap{max-width:100%}
+.rbv .rbv-task{margin:0 0 .45rem;font-weight:600;font-size:.95rem}
+.rbv .rbv-ctl{align-items:center}
+.rbv .rbv-play{min-width:5.6rem}
+.rbv .rbv-hint{font-size:.85rem;color:var(--mv-muted)}
+.rbv .ml-sl{min-width:min(100%,12rem);flex:1 1 12rem}
+/* safety and parts boxes inside Robotics lessons (note blocks with these classes) */
+.mlp-lesson .rb-safe{border-left:4px solid #b8963e;padding:.55rem .8rem;background:rgba(184,150,62,.09);border-radius:8px}
+.mlp-lesson .rb-parts{border-left:4px solid #00562f;padding:.55rem .8rem;background:rgba(0,86,47,.06);border-radius:8px}
+html[data-theme="dark"] .mlp-lesson .rb-parts{border-left-color:#6cc79a;background:rgba(108,199,154,.08)}
+.mlp-lesson .rb-parts ul,.mlp-lesson .rb-safe ul{margin:.35rem 0 0 1.1rem;padding:0}
+/* a small text grid in practice problems (rbmobile.grid-search): S start, G goal, # wall */
+.rb-gridtxt{display:inline-block;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:1rem;line-height:1.3;margin:.5rem 0;padding:.45rem .7rem;background:rgba(127,127,127,.1);border-radius:6px;white-space:pre;max-width:100%;overflow-x:auto}

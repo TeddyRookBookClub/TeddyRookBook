@@ -11,7 +11,7 @@
   {{- $book := "" }}{{ range $d.passages.books }}{{ if eq .key $p.bk }}{{ $book = .name }}{{ end }}{{ end }}
   {{- $t := int $p.t }}{{ $mm := div $t 60 }}{{ $ss := mod $t 60 }}{{ $hh := div $mm 60 }}{{ $mm = mod $mm 60 }}
   {{- $stamp := cond (gt $hh 0) (printf "%d:%02d:%02d" $hh $mm $ss) (printf "%d:%02d" $mm $ss) }}
-  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › <a href="{{ printf "%s%s/" $root $p.bk | relURL }}">{{ $book }}</a> › {{ $p.ref }}</nav>
+  <nav class="jc-crumbs" aria-label="Breadcrumb"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › <a href="{{ printf "%s%s/" $root $p.bk | relURL }}">{{ $book }}</a> › {{ $p.ref }}</nav>
   <header class="jc-ph"><span class="jc-n">{{ $p.n }}</span><h1 style="margin:0;font:700 2rem Georgia,serif">{{ $p.ref }}</h1></header>
   {{ with $p.ctx }}<p class="jc-sub" style="margin:.2rem 0 0;font-style:italic">{{ . }}</p>{{ end }}
   <div class="jc-tools" role="group" aria-label="Show or hide">
@@ -73,7 +73,7 @@
   {{- $lang := .Params.lang }}{{ $L := cond (eq $lang "greek") "Greek" "Latin" }}{{ $lc := cond (eq $lang "greek") "grc" "la" }}
   {{- $f := index (index $d (printf "forms_%s" $lang)) .Params.slug }}
   {{- $all := $d.passages.passages }}
-  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › <a href="{{ printf "%s%s/" $root $lang | relURL }}">{{ $L }} core words</a> › {{ $f.w }}</nav>
+  <nav class="jc-crumbs" aria-label="Breadcrumb"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › <a href="{{ printf "%s%s/" $root $lang | relURL }}">{{ $L }} core words</a> › {{ $f.w }}</nav>
   <header>
     <p class="jc-small" style="margin:0">{{ $L }} core word #{{ $f.rank }}{{ with $f.pos }} · <i>{{ . }}</i>{{ end }} · {{ $f.nt }} times in the New Testament</p>
     <div class="jc-wh"><h1 class="hw" lang="{{ $lc }}" style="margin:0">{{ $f.w }}</h1>{{ with $f.pron2 | default $f.pron }}<span class="pr">{{ . }}</span>{{ end }}</div>
@@ -111,7 +111,7 @@
 
 {{ else if eq $jk "foundations" }}
   {{- $F := $d.foundations }}
-  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › Part One</nav>
+  <nav class="jc-crumbs" aria-label="Breadcrumb"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › Part One</nav>
   <header class="lang-hero">
     <p class="lang-eyebrow">Part One</p>
     <h1>Foundations</h1>
@@ -133,7 +133,7 @@
   <p class="jc-small">PDF pages 9–20 · <a href="{{ $pdf }}#page=9">open the PDF here</a></p>
 
 {{ else if eq $jk "review" }}
-  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › Final review</nav>
+  <nav class="jc-crumbs" aria-label="Breadcrumb"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › Final review</nav>
   <header class="lang-hero">
     <p class="lang-eyebrow">Practice</p>
     <h1>Final review</h1>

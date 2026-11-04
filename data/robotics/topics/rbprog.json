@@ -1,0 +1,91 @@
+{
+ "course": "rbprog",
+ "units": [
+  {
+   "key": "python",
+   "title": "Python on a Raspberry Pi",
+   "blurb": "Reading code like the computer does, and turning sensor readings into decisions."
+  },
+  {
+   "key": "structure",
+   "title": "Programs That Run Forever",
+   "blurb": "State machines and steady control loops."
+  },
+  {
+   "key": "embedded",
+   "title": "C on a Microcontroller",
+   "blurb": "Integer sizes, overflow and bit masks: the bugs that bite on small chips."
+  }
+ ],
+ "topics": [
+  {
+   "id": "rbprog.trace-code",
+   "slug": "trace-code",
+   "unit": "python",
+   "title": "Tracing Code by Hand",
+   "short": "Follow a program one line at a time, writing down every variable, to know what it will do.",
+   "prereqs": [
+    "rbkids.block-coding",
+    "g6.variables-meaning"
+   ],
+   "xp": 2,
+   "trouble": "Students guess what the loop does instead of writing down each pass, and miss the last pass or the first.",
+   "viz": []
+  },
+  {
+   "id": "rbprog.sensor-decisions",
+   "slug": "sensor-decisions",
+   "unit": "python",
+   "title": "Decisions from Sensors",
+   "short": "if, elif and else turn readings into actions; the order of the tests matters.",
+   "prereqs": [
+    "rbprog.trace-code"
+   ],
+   "xp": 2,
+   "trouble": "Students write tests in an order where an early, broad test hides a later, narrow one.",
+   "viz": []
+  },
+  {
+   "id": "rbprog.state-machines",
+   "slug": "state-machines",
+   "unit": "structure",
+   "title": "State Machines",
+   "short": "A robot is always in one state; each input moves it along a rule to the next.",
+   "prereqs": [
+    "rbprog.sensor-decisions"
+   ],
+   "xp": 2,
+   "trouble": "Students write long chains of if statements that forget what the robot was already doing.",
+   "viz": [
+    "rb-fsm"
+   ]
+  },
+  {
+   "id": "rbprog.loop-timing",
+   "slug": "loop-timing",
+   "unit": "structure",
+   "title": "Loop Timing",
+   "short": "A control loop runs at a steady rate: period = 1 / frequency, and all the work must fit inside it.",
+   "prereqs": [
+    "rbprog.state-machines"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up milliseconds and seconds, or forget that the work itself takes time.",
+   "viz": []
+  },
+  {
+   "id": "rbprog.integers-and-bits",
+   "slug": "integers-and-bits",
+   "unit": "embedded",
+   "title": "Integers, Overflow and Bit Masks",
+   "short": "An 8-bit unsigned number wraps from 255 to 0; masks set, clear and test single bits.",
+   "prereqs": [
+    "rbprog.trace-code",
+    "rbelec.analog-input"
+   ],
+   "xp": 3,
+   "trouble": "Students expect 250 + 10 to be 260 in an 8-bit variable, or clear a bit with OR.",
+   "viz": []
+  }
+ ]
+}

@@ -22,7 +22,7 @@
 <body id="top">
 {{- end }}
     {{ partialCached "header.html" . .Page -}}
-    <main class="main">
+    <main class="main" id="main-content">
         {{- block "main" . }}{{ end }}
         {{- partial "credits-block.html" . }}
     </main>

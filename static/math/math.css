@@ -6,6 +6,9 @@ main.main:has(.mlp){max-width:1120px}
   color:var(--ink)}
 html[data-theme="dark"] .mlp{--g:#6cc79a;--g2:#6cc79a;--acc:#6cc79a;--gold:#d8b860;--goldbg:#2b2817;--ink:#e6ece8;--muted:#a9b8af;--line:#2f4a3b;--line2:#3a5a48;--card:#15251c;--paper:#18291f;--soft:#1f3328;--right:#7fd6a6;--rightbg:#173525;--wrong:#ffb38a;--wrongbg:#3a2619;--blue:#8cbcf5;--bluebg:#1a2b40;--shadow:0 1px 3px rgba(0,0,0,.3),0 6px 22px rgba(0,0,0,.25);
   --st-passed:#6cc79a;--st-passed-bg:#1b3a29;--st-due:#f0c35a;--st-due-bg:#3a3118;--st-learning:#8cbcf5;--st-learning-bg:#1b2c42;--st-ready-bg:#15251c;--st-locked:#7c8a82;--st-locked-bg:#17231c}
+/* Text-size gold and blue (eyebrows, box labels) at 4.5:1 or better on light cards; borders and markers keep --gold and --blue. */
+.mlp{--goldtx:#856a24;--bluetx:#2a64b2}
+html[data-theme="dark"] .mlp{--goldtx:var(--gold);--bluetx:var(--blue)}
 .mlp a{color:var(--g)}
 .mlp h1,.mlp h2,.mlp h3{font-family:Georgia,"Times New Roman",serif}
 .mlp h2{font-size:1.35rem;color:var(--g);margin:0 0 .5rem}
@@ -16,7 +19,7 @@ html[data-theme="dark"] .mlp{--g:#6cc79a;--g2:#6cc79a;--acc:#6cc79a;--gold:#d8b8
 .mlp-crumbs{font-size:.88rem;color:var(--muted);margin:0 0 .7rem;display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
 .mlp-crumbs a{text-decoration:none;box-shadow:none}
 .mlp-crumbs a:hover{text-decoration:underline}
-.mlp-eyebrow{margin:0;text-transform:uppercase;letter-spacing:.13em;font-size:.72rem;font-weight:600;color:var(--gold)}
+.mlp-eyebrow{margin:0;text-transform:uppercase;letter-spacing:.13em;font-size:.72rem;font-weight:600;color:var(--goldtx,var(--gold))}
 .mlp-loading{color:var(--muted);font-style:italic;padding:1rem 0}
 .mlp :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 
@@ -207,7 +210,7 @@ html[data-theme="dark"] .mlp-chero{background:linear-gradient(135deg,#00331c,#00
 .mlp-key .mlp-box-lab{color:var(--right)}
 .mlp-key .mlp-box-body{font-size:1.08rem}
 .mlp-why{background:var(--bluebg);border-color:color-mix(in srgb,var(--blue) 35%,transparent);border-left:6px solid var(--blue)}
-.mlp-why .mlp-box-lab{color:var(--blue)}
+.mlp-why .mlp-box-lab{color:var(--bluetx,var(--blue))}
 .mlp-mistake{background:var(--wrongbg);border-color:color-mix(in srgb,var(--wrong) 35%,transparent);border-left:6px solid var(--wrong)}
 .mlp-mistake .mlp-box-lab{color:var(--wrong)}
 .mlp-note{color:var(--muted);font-size:.95rem;border-left:3px solid var(--line2);padding:.1rem 0 .1rem .9rem;margin:1rem 0}
@@ -221,7 +224,7 @@ html[data-theme="dark"] .mlp-chero{background:linear-gradient(135deg,#00331c,#00
 .mlp-fig{margin:1.3rem 0}
 .mlp-fig figcaption{font-size:.9rem;color:var(--muted);line-height:1.45;margin-top:-.4rem;padding:0 .3rem}
 .mlp-ex{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--gold);border-radius:14px;padding:.9rem 1.15rem 1rem;margin:1.3rem 0;box-shadow:var(--shadow);transition:box-shadow .3s}
-.mlp-ex .mlp-box-lab{color:var(--gold)}
+.mlp-ex .mlp-box-lab{color:var(--goldtx,var(--gold))}
 .mlp-ex-title{text-transform:none;letter-spacing:0;font:700 1rem Georgia,serif;color:var(--ink)}
 .mlp-ex-q{font-size:1.06rem;margin:.2rem 0 .5rem}
 .mlp-ex-q>:first-child{margin-top:0}.mlp-ex-q>:last-child{margin-bottom:0}
@@ -344,7 +347,7 @@ html[data-theme="dark"] .mlp-xp-float{color:#f0d68a}
 .mlp-tbanner-icon{font-size:1.8rem;line-height:1;flex:0 0 auto;width:3rem;height:3rem;border-radius:12px;display:grid;place-items:center;background:var(--soft)}
 .mlp-tbanner h2{margin:.1rem 0 .2rem;font-size:1.35rem;color:var(--ink)}
 .mlp-tbanner p{margin:.15rem 0;line-height:1.5;color:var(--muted)}
-.mlp-tbanner .mlp-eyebrow{color:var(--gold)}
+.mlp-tbanner .mlp-eyebrow{color:var(--goldtx,var(--gold))}
 .mlp-inlesson{border:1px solid var(--line);border-radius:16px;background:var(--card);margin:0 0 1rem}
 .mlp-inlesson>summary{cursor:pointer;padding:.8rem 1.1rem;font-weight:700;color:var(--g);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem;min-height:44px}
 .mlp-inlesson>summary::-webkit-details-marker{display:none}
@@ -464,8 +467,8 @@ html[data-theme="dark"] .mlp-coming .mlp-tbanner-icon{color:var(--lcd,var(--g))}
 .mlp-chip.soon.st-ready,.mlp-chip.soon.st-locked{border-color:var(--line2)}
 .mlp-chip.soon .mlp-dot{border-style:dotted;border-color:var(--line2);background:transparent}
 .mlp-chip.soon:hover{border-color:var(--acc)}
-.mlp-wip{font-style:normal;color:var(--gold);font-size:.85em;margin-left:-.1rem}
-.mlp-pill-wip{border-style:dashed;color:var(--gold);border-color:color-mix(in srgb,var(--gold) 60%,transparent);background:var(--goldbg)}
+.mlp-wip{font-style:normal;color:var(--goldtx,var(--gold));font-size:.85em;margin-left:-.1rem}
+.mlp-pill-wip{border-style:dashed;color:var(--goldtx,var(--gold));border-color:color-mix(in srgb,var(--gold) 60%,transparent);background:var(--goldbg)}
 .mlp-wipbox h2{display:flex;gap:.4rem;align-items:center}
 .mlp-wipbox h2 span{color:var(--gold)}
 .mlp-topic-wip .mlp-rel{margin-top:1.2rem}

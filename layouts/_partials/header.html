@@ -1,5 +1,8 @@
 <header class="header">
-    <nav class="header-nav">
+    {{- /* Skip link: the first stop for keyboard users, shown only when focused (assets/css/site-shell.css, "Keyboard").
+       Its target is <main id="main-content"> in layouts/baseof.html. */}}
+    <a class="trb-skip" href="#main-content">Skip to content</a>
+    <nav class="header-nav" aria-label="Main">
         <div class="logo">
             {{- $label_text := (site.Params.label.text | default site.Title) }}
             {{- if site.Title }}
@@ -86,10 +89,13 @@
             {{- else if $items }}
             {{- $in := false }}{{ range $items }}{{ $u := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL)) | absLangURL }}{{ if hasPrefix $page_url $u }}{{ $in = true }}{{ end }}{{ end }}
             <li class="trb-more{{ if lt $gi 2 }} l{{ end }}">
+                {{- $gu := index (site.Params.menugroupurls | default dict) (lower $g) }}
+                {{- if $gu }}{{ if hasPrefix $page_url ($gu | absLangURL) }}{{ $in = true }}{{ end }}{{ end }}
+                {{- /* The group name links to the group page and sits beside the arrow, not inside it: a link inside <summary> is a
+                   control inside a control, which keyboards and screen readers handle badly. The arrow (summary) opens the list. */}}
+                {{- if $gu }}<a class="trb-gl" href="{{ $gu | absLangURL }}"><span{{ if $in }} class="active"{{ end }}>{{ $g }}</span></a>{{ end }}
                 <details>
-                    {{- $gu := index (site.Params.menugroupurls | default dict) (lower $g) }}
-                    {{- if $gu }}{{ if hasPrefix $page_url ($gu | absLangURL) }}{{ $in = true }}{{ end }}{{ end }}
-                    <summary>{{ if $gu }}<a class="trb-gl" href="{{ $gu | absLangURL }}"><span{{ if $in }} class="active"{{ end }}>{{ $g }}</span></a>{{ else }}<span{{ if $in }} class="active"{{ end }}>{{ $g }}</span>{{ end }}<svg aria-hidden="true" viewBox="0 0 12 12" width="10" height="10"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></summary>
+                    <summary{{ if $gu }} aria-label="More in {{ $g }}" title="More in {{ $g }}"{{ end }}>{{ if not $gu }}<span{{ if $in }} class="active"{{ end }}>{{ $g }}</span>{{ end }}<svg aria-hidden="true" viewBox="0 0 12 12" width="10" height="10"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></summary>
                     <ul>
                         {{- range first 10 $items }}
                         {{- $u := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL)) | absLangURL }}

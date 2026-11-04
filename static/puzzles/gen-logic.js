@@ -336,7 +336,7 @@
   P.lgClueText = clueText;
   function lgGrid(cds, n) {
     var k = cds.length, cols = P.range(1, k), rows = [0].concat(P.range(2, k).reverse());
-    var h = '<table class="pz-lg" aria-label="logic grid"><thead><tr><th class="pz-lgcorner" colspan="2" rowspan="2"></th>';
+    var h = '<table class="pz-lg" aria-label="logic grid"><thead><tr><td class="pz-lgcorner" colspan="2" rowspan="2"></td>';
     cols.forEach(function (c) { h += '<th class="pz-lgcat" colspan="' + n + '">' + esc(cds[c].head) + '</th>'; });
     h += '</tr><tr>';
     cols.forEach(function (c) { cds[c].items.forEach(function (it, i) { h += '<th class="pz-lgv' + (i === 0 ? ' pz-lgb' : '') + '"><span>' + esc(it) + '</span></th>'; }); });

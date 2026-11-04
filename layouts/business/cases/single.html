@@ -3,7 +3,7 @@
 {{ $all := sort site.Data.business_cases.cases "year" }}{{ $c := index (where $all "slug" .Params.case) 0 }}
 {{ $prev := dict }}{{ $next := dict }}{{ range $i, $x := $all }}{{ if eq $x.slug $c.slug }}{{ if gt $i 0 }}{{ $prev = index $all (sub $i 1) }}{{ end }}{{ if lt (add $i 1) (len $all) }}{{ $next = index $all (add $i 1) }}{{ end }}{{ end }}{{ end }}
 <article class="bz bz-case">
-  <nav class="bz-crumbs"><a href="{{ "business/" | relURL }}">Business</a> › <a href="{{ "business/cases/" | relURL }}">Cases</a> › {{ $c.company }}</nav>
+  <nav class="bz-crumbs" aria-label="Breadcrumb"><a href="{{ "business/" | relURL }}">Business</a> › <a href="{{ "business/cases/" | relURL }}">Cases</a> › {{ $c.company }}</nav>
   <header class="bz-hero">
     <p class="bz-eyebrow">{{ $c.company }} · {{ $c.year }} · {{ $c.industry }}</p>
     <h1>{{ $c.title }}</h1>

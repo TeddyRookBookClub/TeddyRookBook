@@ -3,7 +3,7 @@
 {{ $vs := slice }}{{ range $id, $v := site.Data.videos }}{{ $vs = $vs | append (merge $v (dict "id" $id)) }}{{ end }}
 {{ $vs = sort $vs "date" "desc" }}
 <div class="hs vd">
-  <nav class="hs-crumbs"><a href="{{ "education/" | relURL }}">Education</a> › Videos</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › Videos</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">Watch and learn</p>
     <h1>Videos</h1>

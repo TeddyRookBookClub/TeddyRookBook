@@ -22,7 +22,7 @@
     </div>
 
     <div class="lab-panel" id="eco-panel">
-      <h3 id="eco-scenes-h">Scenes</h3>
+      <h2 id="eco-scenes-h">Scenes</h2>
       <div class="lab-seg" id="eco-scenes" role="group" aria-labelledby="eco-scenes-h">
         <button type="button" data-scene="classic" aria-pressed="true">Classic cycles</button>
         <button type="button" data-scene="lean" aria-pressed="false">Lean meadow</button>
@@ -34,7 +34,7 @@
       </div>
       <p class="lab-small eco-note" id="eco-note"></p>
 
-      <h3>Meadow</h3>
+      <h2>Meadow</h2>
       <label class="lab-field"><span><span>Grass regrowth</span> <output id="eco-grow-o">4.5% a day</output></span><input type="range" id="eco-grow" min="10" max="100" step="5" value="45" aria-label="Grass regrowth: the share of the eaten grass that grows back each day, in tenths of a percent"></label>
       <label class="lab-field"><span><span>Refuge behind a fence</span> <output id="eco-refuge-o">none</output></span><input type="range" id="eco-refuge" min="0" max="40" step="5" value="0" aria-label="Refuge: the share of the meadow behind a fence that rabbits can slip under and foxes can't cross, in percent"></label>
       <label class="lab-chk"><input type="checkbox" id="eco-seasons"> Seasons (grass grows fastest in spring; fox cubs are born in spring)</label>
@@ -50,18 +50,18 @@
         </div>
       </div>
 
-      <h3>Rabbits</h3>
+      <h2>Rabbits</h2>
       <label class="lab-field"><span><span>Rabbits at the start</span> <output id="eco-r0-o">150</output></span><input type="range" id="eco-r0" min="0" max="400" step="10" value="150" aria-label="Number of rabbits at the start, used when you start again"></label>
       <label class="lab-field"><span><span>Young in a litter</span> <output id="eco-rl-o">4</output></span><input type="range" id="eco-rl" min="1" max="8" step="1" value="4" aria-label="Average number of young in a rabbit litter"></label>
       <label class="lab-field"><span><span>Energy in a patch of grass</span> <output id="eco-gf-o">4 days</output></span><input type="range" id="eco-gf" min="2" max="8" step="1" value="4" aria-label="Days of energy a rabbit gets from a full patch of grass"></label>
 
-      <h3>Foxes</h3>
+      <h2>Foxes</h2>
       <label class="lab-field"><span><span>Foxes at the start</span> <output id="eco-f0-o">12</output></span><input type="range" id="eco-f0" min="0" max="60" step="1" value="12" aria-label="Number of foxes at the start, used when you start again"></label>
       <label class="lab-field"><span><span>Cubs in a litter</span> <output id="eco-fl-o">3</output></span><input type="range" id="eco-fl" min="1" max="8" step="1" value="3" aria-label="Average number of cubs in a fox litter"></label>
       <label class="lab-field"><span><span>Energy in one rabbit</span> <output id="eco-rf-o">10 days</output></span><input type="range" id="eco-rf" min="4" max="30" step="1" value="10" aria-label="Days of energy a fox gets from one rabbit"></label>
       <label class="lab-field"><span><span>Hunting success</span> <output id="eco-hunt-o">40%</output></span><input type="range" id="eco-hunt" min="5" max="100" step="5" value="40" aria-label="Hunting success: the chance that a fox's pounce catches the rabbit, in percent"></label>
 
-      <h3>Start again</h3>
+      <h2>Start again</h2>
       <div class="eco-seedrow">
         <label class="lab-chk"><input type="checkbox" id="eco-fixed"> Repeat with seed</label>
         <input type="number" id="eco-seed" min="1" max="99999" step="1" value="2029" aria-label="Seed for the random numbers: the same seed and the same settings give the same run">
@@ -69,7 +69,7 @@
       </div>
       <p class="lab-small">Tick “Repeat with seed” to get exactly the same run each time you start again. Leave it off for a new run each time; the box shows the seed of the run you're watching.</p>
 
-      <h3>Live numbers</h3>
+      <h2>Live numbers</h2>
       <dl class="lab-readout" id="eco-read">
         <dt>Time</dt><dd id="eco-r-day">—</dd>
         <dt>Rabbits</dt><dd id="eco-r-rab">—</dd>
@@ -82,7 +82,7 @@
       </dl>
       <p class="lab-small">The rhythm is the average time between rabbit peaks over the last few cycles. A season is 90 days.</p>
 
-      <h3>Equations (Lotka–Volterra)</h3>
+      <h2>Equations (Lotka–Volterra)</h2>
       <p class="lab-small eco-eq">d<i>R</i>/d<i>t</i> = <i>a R</i> (1 − <i>F</i>/<i>F</i>*) &nbsp; d<i>F</i>/d<i>t</i> = <i>d F</i> (<i>R</i>/<i>R</i>* − 1)</p>
       <label class="lab-field"><span><span><i>a</i>: rabbit growth with no foxes</span> <output id="eco-a-o">1.20</output></span><input type="range" id="eco-a" min="10" max="300" step="5" value="120" aria-label="Equation knob a: how fast rabbits multiply with no foxes, per season, in hundredths"></label>
       <label class="lab-field"><span><span><i>d</i>: fox deaths with no rabbits</span> <output id="eco-d-o">0.90</output></span><input type="range" id="eco-d" min="10" max="300" step="5" value="90" aria-label="Equation knob d: how fast foxes die with no rabbits, per season, in hundredths"></label>
@@ -99,14 +99,14 @@
       </dl>
       <p class="lab-small"><i>a</i> and <i>d</i> are rates per season. The equations run on the same clock as the meadow and start from the same numbers.</p>
 
-      <h3>Grass experiment</h3>
+      <h2>Grass experiment</h2>
       <p class="lab-small" id="eco-exp-status">Change the grass regrowth, or start again, to measure how many foxes it feeds.</p>
       <div class="lab-tw"><table class="lab-table eco-exp">
         <thead><tr><th scope="col">Grass regrowth</th><th scope="col">Average foxes over 40 seasons</th></tr></thead>
         <tbody id="eco-exp"><tr><td colspan="2">No results yet.</td></tr></tbody>
       </table></div>
 
-      <h3>Missions</h3>
+      <h2>Missions</h2>
       <p class="lab-progress"></p>
       <ul class="lab-missions" id="eco-missions"></ul>
       <p class="lab-small">Keys, with the meadow selected: space pauses, + and − change the speed, R starts again, W sends a hard winter, V a disease.</p>

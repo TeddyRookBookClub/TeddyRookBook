@@ -53,7 +53,7 @@
       '<p>The answers are common words: Latin nouns and adjectives from classical authors, and Greek words found in the New Testament (Koine). Guesses may be any five-letter form found in the Perseus and PROIEL treebanks. Everyone gets the same word each day, with a new Latin and a new Greek word at midnight.</p><p>Want more? <b>Practice word</b> gives you a random word to play as often as you like; practice games don’t count towards your streak.</p><p>Stuck? The <b>Word bank</b> lists every possible answer with its meaning, and can cross out the ones your tiles have ruled out.</p></div>' +
       '<div class="dw-mode" id="dw-mode" hidden></div>' +
       '<div class="dw-msg" id="dw-msg" role="status" aria-live="polite"></div>' +
-      '<div class="dw-grid" id="dw-grid" aria-label="Guesses"></div>' +
+      '<div class="dw-grid" id="dw-grid" role="group" aria-label="Guesses"></div>' +
       '<div class="dw-end" id="dw-end" hidden></div>' +
       '<div class="dw-kb" id="dw-kb"></div>' +
       '<div class="dw-bank" id="dw-bank" hidden></div>' +

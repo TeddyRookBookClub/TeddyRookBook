@@ -300,7 +300,7 @@
   function mount() {
     var sw = D.querySelector('.logo-switches'); if (!sw || wrap) return;
     wrap = el('span', 'trb-pf'); wrap.hidden = true;
-    btn = el('button', 'trb-pf-btn'); btn.type = 'button'; btn.setAttribute('aria-haspopup', 'menu'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', 'trb-pf-menu');
+    btn = el('button', 'trb-pf-btn'); btn.type = 'button'; btn.setAttribute('aria-label', 'Learner: switch learner or save progress'); btn.setAttribute('aria-haspopup', 'menu'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', 'trb-pf-menu');
     menu = el('div', 'trb-pf-menu'); menu.id = 'trb-pf-menu'; menu.setAttribute('role', 'menu'); menu.setAttribute('aria-labelledby', 'trb-pf-mh'); menu.hidden = true;
     wrap.appendChild(btn); wrap.appendChild(menu);
     var tg = D.getElementById('theme-toggle'); if (tg && tg.parentNode === sw) sw.insertBefore(wrap, tg.nextSibling); else sw.appendChild(wrap);

@@ -1296,7 +1296,7 @@
         var pS = p === 'inf' ? '∞' : p === '1' ? '₁' : '₂';
         var hiR = p === 'inf' ? (rows[0] >= rows[1] ? 0 : 1) : -1, hiC = p === '1' ? (cols[0] >= cols[1] ? 0 : 1) : -1;
         var cell = function (v, cls) { return '<td' + (cls ? ' class="' + cls + '"' : '') + '>' + fs(v, 4) + '</td>'; };
-        rightN.innerHTML = '<div class="mla-tbl" role="region" aria-label="Absolute row and column sums" tabindex="0"><table><thead><tr><th></th><th>col 1</th><th>col 2</th><th>|row| sum</th></tr></thead><tbody>' +
+        rightN.innerHTML = '<div class="mla-tbl" role="region" aria-label="Absolute row and column sums" tabindex="0"><table><thead><tr><td></td><th>col 1</th><th>col 2</th><th>|row| sum</th></tr></thead><tbody>' +
           [0, 1].map(function (i) { return '<tr><th>row ' + (i + 1) + '</th>' + cell(A[i][0]) + cell(A[i][1]) + cell(rows[i], i === hiR ? 'cur' : '') + '</tr>'; }).join('') +
           '<tr><th>|col| sum</th>' + cell(cols[0], hiC === 0 ? 'cur' : '') + cell(cols[1], hiC === 1 ? 'cur' : '') + '<td></td></tr></tbody></table></div>' +
           keyHTML([[K.blue, 'unit ball ‖x‖' + pS + ' ≤ 1'], [K.orange, 'its image under A'], [K.gold, 'radius ‖A‖' + pS, 'd'], [K.purple, 'your x', 'p']]) +

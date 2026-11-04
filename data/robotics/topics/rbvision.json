@@ -1,0 +1,78 @@
+{
+ "course": "rbvision",
+ "units": [
+  {
+   "key": "images",
+   "title": "Images as Numbers",
+   "blurb": "Pixels, colors and the size of a picture in memory."
+  },
+  {
+   "key": "seeing",
+   "title": "From Pixels to Steering",
+   "blurb": "Thresholds, centers and the pinhole camera."
+  }
+ ],
+ "topics": [
+  {
+   "id": "rbvision.pixels",
+   "slug": "pixels",
+   "unit": "images",
+   "title": "Pixels and Image Size",
+   "short": "An image is a grid of pixels; a color pixel stores three numbers, so a 640 × 480 color frame is 921,600 bytes.",
+   "prereqs": [
+    "rbprog.integers-and-bits"
+   ],
+   "xp": 2,
+   "trouble": "Students forget the three color channels, or mix up bits and bytes.",
+   "viz": []
+  },
+  {
+   "id": "rbvision.color-threshold",
+   "slug": "color-threshold",
+   "unit": "seeing",
+   "title": "Color Thresholding",
+   "short": "Keep the pixels whose color passes a test, such as red − (green + blue)/2 > T; the rest are background.",
+   "prereqs": [
+    "rbvision.pixels",
+    "rbprog.sensor-decisions"
+   ],
+   "xp": 2,
+   "trouble": "Students set one threshold in a bright room and are surprised when it fails in a dim one.",
+   "viz": [
+    "rb-threshold"
+   ]
+  },
+  {
+   "id": "rbvision.centroid-steering",
+   "slug": "centroid-steering",
+   "unit": "seeing",
+   "title": "Finding the Center and Steering",
+   "short": "The target's center is the average column of the pixels that pass; the steering error is that minus the image center.",
+   "prereqs": [
+    "rbvision.color-threshold",
+    "rbctrl.p-control"
+   ],
+   "xp": 3,
+   "trouble": "Students measure the error from the left edge instead of from the center.",
+   "viz": [
+    "rb-threshold"
+   ]
+  },
+  {
+   "id": "rbvision.pinhole-camera",
+   "slug": "pinhole-camera",
+   "unit": "seeing",
+   "title": "The Pinhole Camera",
+   "short": "Image size in pixels = f × real size ÷ distance, so a known size gives the distance.",
+   "prereqs": [
+    "rbvision.pixels",
+    "geo.similar-right-triangles"
+   ],
+   "xp": 3,
+   "trouble": "Students mix units: focal length in pixels, sizes and distances both in meters.",
+   "viz": [
+    "rb-pinhole"
+   ]
+  }
+ ]
+}

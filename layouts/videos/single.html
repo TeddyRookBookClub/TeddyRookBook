@@ -2,7 +2,7 @@
 {{ partial "hs-head.html" . }}
 {{ $id := .Params.vid }}{{ $v := index site.Data.videos $id }}
 <div class="hs vd">
-  <nav class="hs-crumbs"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "videos/" | relURL }}">Videos</a> › {{ $v.title }}</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "videos/" | relURL }}">Videos</a> › {{ $v.title }}</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">Video{{ with $v.topics }} · {{ delimit . " · " }}{{ end }}{{ with $v.length }} · {{ . }}{{ end }}</p>
     <h1>{{ $v.title }}</h1>

@@ -7,7 +7,7 @@
 {{ $h := $g.how_it_works }}
 {{ $learn := dict "Physics" (slice "homeschool/science/" "Science") "Chemistry" (slice "homeschool/science/" "Science") "Biology" (slice "homeschool/science/" "Science") "Earth science" (slice "homeschool/science/" "Science") "Math" (slice "homeschool/rays-arithmetic/" "Ray's Arithmetic") "Economics" (slice "business/cases/" "Business Cases") "Civics" (slice "homeschool/history/" "History") }}
 <div class="hs os ad" id="os-skill" data-skill="{{ $g.key }}" data-units>
-  <nav class="hs-crumbs"><a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> › <a href="{{ printf "being-an-adult/#%s" $area.area.key | relURL }}">{{ $area.area.name }}</a> › {{ $g.name }}</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> › <a href="{{ printf "being-an-adult/#%s" $area.area.key | relURL }}">{{ $area.area.name }}</a> › {{ $g.name }}</nav>
   <header class="hs-hero os-hero">
     <span class="os-icon big" aria-hidden="true">{{ $g.icon }}</span>
     <div>

@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{{ "adult/adult.css" | relURL }}?v={{ (os.Stat "static/adult/adult.css").ModTime.Unix }}">
 {{ $areas := slice "house" "car" "money" "everyday" }}{{ $n := 0 }}{{ range $areas }}{{ $n = add $n (len (index site.Data.adult .).guides) }}{{ end }}
 <div class="hs os ad" id="ad-hub" data-units>
-  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Being an Adult 101</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Being an Adult 101</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">Life skills · For parents and kids</p>
     <h1>Being an Adult 101</h1>

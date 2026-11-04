@@ -1,0 +1,95 @@
+# The Robotics Ladder's "Six-Month Roadmap, Improved" (/robotics/roadmap/, content/robotics/roadmap.md, layouts/math/robroad.html).
+# Our own plan, in our own words. Course links are /robotics/<course slug>/ (data/robotics/courses.yaml).
+# Career figures: BLS Occupational Outlook Handbook (pages modified Aug 27 and Oct 29, 2026; May 2025 pay; 2025–2035 projections).
+intro:
+  - "Short online roadmaps that promise a robotics career in six months are popular, and some are full of good links. This page is our own plan for the same six months. It keeps what such plans get right (build things from week one, use real tools, finish with a portfolio) and adds what they often leave out: the math, time for control and debugging, safety, a cheaper simulation path, and plain talk about what six months can do."
+  - "It assumes an adult starting from scratch with about <b>10 hours a week</b>, about 260 hours in all. If you have more time, move faster; if a phase's math is new to you, give it longer."
+honest:
+  - { h: "What six months can do", t: "About 260 hours gives you solid basics, six finished projects with test logs, and the vocabulary to read robotics documentation. That is a strong start for a technician program, an engineering degree, a robotics club, or a move from software into robotics software." }
+  - { h: "What it cannot do", t: "It does not replace an engineering degree. The Bureau of Labor Statistics lists a bachelor's degree as the typical entry education for mechanical and for electrical and electronics engineers, the groups most robotics engineers fall in; technicians typically start with an associate's degree or a certificate. Treat any promise of a job title in six months with care." }
+  - { h: "The math is part of the work", t: "Arms need trigonometry and matrices, control needs rates of change, and filters need probability. Each phase below names the Math Ladder topics it uses. If they are new, add four to eight weeks; it pays back many times over." }
+  - { h: "Expect debugging", t: "Most hours in robotics go into finding out why something does not work: a loose wire, a sign error, a loop that runs too slowly. The plan leaves room for that in every phase." }
+phases:
+  - weeks: "Weeks 1–4"
+    title: "Electronics and safe benchwork"
+    courses: [electronics-and-microcontrollers]
+    math: "Ohm's law and proportions; binary numbers"
+    learn: "Set up a safe low-voltage bench; Ohm's law on a breadboard; LED resistors; voltage dividers; analog readings; PWM."
+    project: "A light-sensing night-light on an Arduino-compatible board or a Raspberry Pi Pico, then a motor whose speed follows the light."
+    check: "You can choose a resistor for an LED and explain why a motor needs a driver."
+  - weeks: "Weeks 5–8"
+    title: "Programming robots"
+    courses: [programming-robots]
+    math: "Variables and functions; binary and hexadecimal"
+    learn: "Python on a Raspberry Pi or Pico; C on a microcontroller; tracing code; decisions from sensors; state machines; steady loop timing; integer overflow and bit masks."
+    project: "A line follower with two light sensors, written as a state machine, with a loop that runs at a fixed rate."
+    check: "You can draw your robot's states and rules, and say how long one pass of the loop takes."
+  - weeks: "Weeks 9–12"
+    title: "Mechanics and kinematics"
+    courses: [mechanics-and-motion]
+    math: "Trigonometry, the law of cosines, rotation matrices"
+    learn: "Gears and torque; choosing a motor; wheel speed; coordinate frames; forward and inverse kinematics of a two-link arm."
+    project: "A two-servo arm that reaches typed-in targets using your own inverse-kinematics code, with measured errors."
+    check: "You can compute both elbow solutions by hand and say when a target is out of reach."
+  - weeks: "Weeks 13–16"
+    title: "Feedback control"
+    courses: [control]
+    math: "Linear models, exponential growth and decay"
+    learn: "Open and closed loops; P, I and D one at a time; time constants; stability and hand tuning; integral windup."
+    project: "A wheel-speed PID controller using encoders, with plotted step responses at three sets of gains."
+    check: "You can explain from your plots what each gain changed."
+  - weeks: "Weeks 17–20"
+    title: "Sensors, estimation and driving"
+    courses: [sensing-and-estimation, mobile-robots]
+    math: "Mean and standard deviation; Bayes' rule"
+    learn: "Encoders, ultrasonic ranging and IMUs; noise and averaging; the complementary filter; a one-dimensional Kalman filter; differential drive and odometry."
+    project: "A small two-wheeled robot that drives a 1-meter square by odometry, with a ten-run log of where it ends."
+    check: "You can say how big your robot's drift is, and which sensor you would add to reduce it."
+  - weeks: "Weeks 21–24"
+    title: "Planning, ROS 2, simulation and vision"
+    courses: [mobile-robots, ros-2-and-simulation, robot-vision]
+    math: "Graphs and shortest paths; similar triangles"
+    learn: "Occupancy grids; breadth-first search and A*; ROS 2 nodes, topics, services and actions; units and frames (REP 103); stepping a simulator; color thresholding and the pinhole camera."
+    project: "Your robot in ROS 2: separate nodes for the camera, the controller and the motors, tested first in simulation, then chasing a colored ball for real."
+    check: "You can list your robot's nodes and topics, and show the same code running in the simulator and on the robot."
+  - weeks: "Weeks 25–26"
+    title: "Portfolio and next steps"
+    courses: [capstone-and-careers]
+    math: "Percentages and rates"
+    learn: "Power budgets; design-build-test cycles; honest test logs; how robotics careers really work."
+    project: "A one-page write-up for each of your six projects: goal, photo or video, code, test log and what you would change."
+    check: "Someone who has never met you can see what you built and how well it works."
+later:
+  - "Optimal control (LQR, MPC) after a course in linear algebra and differential equations."
+  - "Full SLAM and particle filters, with multivariable probability."
+  - "Robot learning (imitation and reinforcement learning), after programming, probability and calculus are comfortable."
+  - "CAD and 3D printing for custom parts, if your projects call for them."
+compare:
+  head: ["Topic", "A typical viral six-month plan", "This plan"]
+  rows:
+    - ["Hands-on building", "From the first week; a strong point", "From the first week, with a parts list at three price points"]
+    - ["Math", "Seldom planned; advanced control appears within a few weeks", "Each phase names the math it uses, linked to the Math Ladder"]
+    - ["Control", "PID, LQR and MPC packed into one phase with vision and kinematics", "Four weeks on feedback, tuning and stability; LQR and MPC listed as later study"]
+    - ["Frameworks", "ROS 2 midway through", "The ideas first (states, timing, frames, units), then ROS 2"]
+    - ["Embedded C", "Often implied by Arduino work", "Its own topic: integer sizes, overflow and bit masks"]
+    - ["Simulation", "Often after buying hardware", "A free simulation path for every phase"]
+    - ["Safety", "Rarely mentioned", "Battery, soldering and moving-part notes in the lessons"]
+    - ["Careers", "Six months to a job title", "BLS figures with dates, and realistic next steps"]
+costs:
+  - { tier: "Free", price: "$0", items: "A computer; browser circuit and microcontroller simulators; Python; ROS 2 with the Gazebo simulator on Linux; our Science Lab and Robotics Ladder pictures." }
+  - { tier: "Budget", price: "about $120–$180", items: "A breadboard starter kit with an Arduino-compatible board or Raspberry Pi Pico; a basic multimeter; a two-wheel chassis kit with gear motors and encoders; a dual motor driver; two hobby servos; an IMU board; an ultrasonic sensor; AA battery holders." }
+  - { tier: "Full", price: "about $350–$500", items: "The budget kit plus a Raspberry Pi computer with a camera; better encoder motors; a rechargeable lithium pack with its matching charger; a temperature-controlled soldering station with a fume extractor and safety glasses; an open-source robot arm kit (3D printing extra)." }
+costs_note: "Approximate U.S. prices in 2026, for generic parts; no brands are endorsed and none of these are affiliate links."
+homeschool:
+  intro: "A school year is about 36 weeks. Two or three sessions a week, 45 to 90 minutes each, is plenty. Pick the band that fits your student; older students can start lower and move quickly."
+  head: ["", "Ages 8–11", "Ages 12–14", "Ages 15–18"]
+  rows:
+    - ["Weeks 1–9", "Robotics for Kids: what robots are; sensors and motors; be-the-robot game", "Robotics for Kids, quickly; then a safe bench and Ohm's law", "Electronics and Microcontrollers"]
+    - ["Weeks 10–18", "First circuits; paper circuit cards; block coding", "LED resistors, voltage dividers, analog readings, PWM", "Programming Robots, with Python and C"]
+    - ["Weeks 19–27", "Cardboard arm and bristlebot; levers", "Programming Robots: tracing, decisions, state machines", "Mechanics and Motion; Feedback and Control"]
+    - ["Weeks 28–36", "A first kit robot with block coding; a family robot show", "A line-following robot; start of Mechanics and Motion", "Sensing and Estimation; a capstone robot and portfolio"]
+  notes:
+    - "Pair it with math: the Math Ladder's trig and algebra topics for the older bands, and measurement and multiplication for the younger."
+    - "Join a team if you can. FIRST lists FIRST LEGO League for grades K to 8, FIRST Tech Challenge for grades 7 to 12, and FIRST Robotics Competition for grades 9 to 12 (ages vary by region); homeschool students can join or form teams."
+    - "A grown-up handles batteries, cutting and any soldering with younger students; see the safety notes in each course."
+    - "Keep a robot notebook: sketches, programs, test logs and photos. It doubles as a portfolio and a record of the school year."

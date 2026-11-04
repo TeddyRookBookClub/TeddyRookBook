@@ -1,0 +1,80 @@
+{{- /* Robotics Ladder: "Six-Month Roadmap, Improved" (/robotics/roadmap/, content/robotics/roadmap.md, layout: robroad).
+   Everything on the page comes from data/robotics/roadmap.yaml; course links come from data/robotics/courses.yaml.
+   Plain HTML, styled by static/robotics/roadmap.css (light and dark, print). No scripts. */ -}}
+{{ define "main" }}
+{{ partial "inline/ml-head.html" . }}
+{{ partial "inline/ml-css.html" "robotics/roadmap.css" }}
+{{- $L := partial "inline/ml-ladder.html" "robotics" -}}
+{{- $D := site.Data.robotics -}}
+{{- $R := $D.roadmap | default dict -}}
+{{- $cs := dict }}{{ range $D.courses }}{{ $cs = merge $cs (dict .slug .) }}{{ end -}}
+<div class="mlp rbr" style="--mc:{{ $L.color | default "#b8401a" }}">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ $L.url }}">{{ $L.short }}</a> <span aria-hidden="true">›</span> <span>Six-Month Roadmap, Improved</span></nav>
+  <header class="mlp-thead">
+    <p class="mlp-eyebrow"><span>Robotics Ladder</span><span>A realistic plan</span></p>
+    <h1>{{ .Title }}</h1>
+    <p class="mlp-short">Six months, about ten hours a week, from your first circuit to a robot in ROS 2, with the math, the safety and the honest notes.</p>
+  </header>
+
+  <section class="rbr-sec" aria-labelledby="rbr-why">
+    <h2 id="rbr-why">Why another roadmap?</h2>
+    {{ range $R.intro }}<p>{{ . | safeHTML }}</p>{{ end }}
+    <div class="rbr-honest">
+      {{ range $R.honest }}<div class="rbr-card"><h3>{{ .h }}</h3><p>{{ .t }}</p></div>{{ end }}
+    </div>
+  </section>
+
+  <section class="rbr-sec" aria-labelledby="rbr-plan">
+    <h2 id="rbr-plan">The plan, week by week</h2>
+    <ol class="rbr-phases">
+      {{ range $R.phases }}
+      <li class="rbr-phase">
+        <p class="rbr-weeks">{{ .weeks }}</p>
+        <h3>{{ .title }}</h3>
+        <p class="rbr-courses"><span class="rbr-lbl">Courses</span> {{ range $i, $s := .courses }}{{ if $i }}, {{ end }}{{ with index $cs $s }}<a href="{{ printf "/robotics/%s/" $s | relURL }}">{{ .icon }} {{ .title }}</a>{{ end }}{{ end }}</p>
+        <dl>
+          <dt>Learn</dt><dd>{{ .learn }}</dd>
+          <dt>Math it uses</dt><dd>{{ .math }} (<a href="{{ "/math/" | relURL }}">Math Ladder</a>)</dd>
+          <dt>Build</dt><dd>{{ .project }}</dd>
+          <dt>Ready to move on when</dt><dd>{{ .check }}</dd>
+        </dl>
+      </li>
+      {{ end }}
+    </ol>
+    <div class="rbr-card rbr-later">
+      <h3>After the six months</h3>
+      <ul>{{ range $R.later }}<li>{{ . }}</li>{{ end }}</ul>
+    </div>
+  </section>
+
+  <section class="rbr-sec" aria-labelledby="rbr-cmp">
+    <h2 id="rbr-cmp">What we changed, and why</h2>
+    <p>Here is how this plan compares with the shape of a typical viral six-month plan. The popular plans get a lot right; these are the gaps we tried to fill.</p>
+    <div class="rbr-tbl" role="region" aria-labelledby="rbr-cmp" tabindex="0">
+      <table><thead><tr>{{ range $R.compare.head }}<th scope="col">{{ . }}</th>{{ end }}</tr></thead>
+      <tbody>{{ range $R.compare.rows }}<tr>{{ range $i, $c := . }}{{ if eq $i 0 }}<th scope="row">{{ $c }}</th>{{ else }}<td>{{ $c }}</td>{{ end }}{{ end }}</tr>{{ end }}</tbody></table>
+    </div>
+  </section>
+
+  <section class="rbr-sec" aria-labelledby="rbr-cost">
+    <h2 id="rbr-cost">What it costs</h2>
+    <div class="rbr-costs">
+      {{ range $R.costs }}<div class="rbr-card"><h3>{{ .tier }} <span class="rbr-price">{{ .price }}</span></h3><p>{{ .items }}</p></div>{{ end }}
+    </div>
+    <p class="mlp-small">{{ $R.costs_note }}</p>
+    <p class="rbr-safe"><b>Safety first.</b> Low voltage only; lithium packs with their own charger, never charged unattended, and retired if swollen; a soldering iron that always goes back in its stand, with fresh air and safety glasses; fingers clear of moving parts. Read <a href="{{ "/robotics/electronics-and-microcontrollers/safe-workbench/" | relURL }}">A Safe Electronics Bench</a> before you buy anything.</p>
+  </section>
+
+  <section class="rbr-sec" aria-labelledby="rbr-hs">
+    <h2 id="rbr-hs">For homeschool families: a school year of robotics</h2>
+    <p>{{ $R.homeschool.intro }}</p>
+    <div class="rbr-tbl" role="region" aria-labelledby="rbr-hs" tabindex="0">
+      <table><thead><tr>{{ range $R.homeschool.head }}<th scope="col">{{ . }}</th>{{ end }}</tr></thead>
+      <tbody>{{ range $R.homeschool.rows }}<tr>{{ range $i, $c := . }}{{ if eq $i 0 }}<th scope="row">{{ $c }}</th>{{ else }}<td>{{ $c }}</td>{{ end }}{{ end }}</tr>{{ end }}</tbody></table>
+    </div>
+    <ul class="rbr-notes">{{ range $R.homeschool.notes }}<li>{{ . }}</li>{{ end }}</ul>
+  </section>
+
+  <p class="rbr-start"><a class="mlp-btn pri" href="{{ $L.url }}">Start climbing the Robotics Ladder</a> <a class="mlp-btn ghost" href="{{ "/robotics/placement/" | relURL }}">Find your rung</a></p>
+</div>
+{{ end }}

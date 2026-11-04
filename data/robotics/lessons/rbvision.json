@@ -1,0 +1,223 @@
+{
+ "rbvision.pixels": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "To a robot, a picture is not a scene. It is a big table of numbers."
+   },
+   {
+    "t": "key",
+    "html": "An image is a grid of <b>pixels</b>, $w$ wide and $h$ tall. A grayscale pixel is one number, usually 0 (black) to 255 (white), one byte. A color pixel stores three: red, green and blue. So a color frame takes $w \\times h \\times 3$ bytes."
+   },
+   {
+    "t": "why",
+    "html": "Knowing the size of an image tells you what a small computer can handle. A 640 × 480 color frame is 921,600 bytes; at 30 frames a second, that is about 28 MB every second. Robots shrink images, turn them gray, or look at only part of them to keep up."
+   },
+   {
+    "t": "ex",
+    "title": "Frame size",
+    "q": "A 320 × 240 color image.",
+    "steps": [
+     "$320 \\times 240 = 76{,}800$ pixels.",
+     "$\\times 3 = 230{,}400$ bytes."
+    ],
+    "a": "230,400 bytes."
+   },
+   {
+    "t": "mistake",
+    "html": "Forgetting the three color channels, or mixing up bits and bytes (8 bits make 1 byte)."
+   },
+   {
+    "t": "h",
+    "text": "Hands-on: see the numbers"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"rb-parts\"><b>Camera setups</b> (approximate U.S. prices, 2026)<ul><li><b>\\$0:</b> your computer's webcam with free Python image libraries.</li><li><b>About \\$25 to \\$35:</b> a Raspberry Pi camera module for a Raspberry Pi you already have.</li><li><b>About \\$60 to \\$90:</b> a small smart-camera board that finds colors and tags itself and sends results to a microcontroller.</li></ul></div>"
+   },
+   {
+    "t": "p",
+    "html": "Load a photo in Python and print the three numbers of one pixel on a red apple and one on a leaf. Which number is biggest in each?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Richard Szeliski, Computer Vision: Algorithms and Applications, 2nd ed. (Springer, 2022), free online edition",
+    "url": "https://szeliski.org/Book/"
+   },
+   {
+    "name": "Raspberry Pi Foundation, Raspberry Pi Projects",
+    "url": "https://projects.raspberrypi.org/"
+   }
+  ]
+ },
+ "rbvision.color-threshold": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The simplest way to find a red ball: keep the pixels that look red and ignore the rest."
+   },
+   {
+    "t": "key",
+    "html": "<b>Thresholding</b> tests every pixel and keeps those that pass, making a black-and-white <b>mask</b>. A simple redness test: keep pixels where $r - \\dfrac{g + b}{2} > T$ for some threshold $T$."
+   },
+   {
+    "t": "viz",
+    "name": "rb-threshold",
+    "opts": {
+     "t": 60
+    },
+    "cap": "Slide the threshold. Too low, and the background sneaks in; too high, and the ball disappears."
+   },
+   {
+    "t": "why",
+    "html": "A pure red has a big red number and small green and blue. White is bright in all three, so plain \"red &gt; 150\" would wrongly keep white. Subtracting the other channels asks how much <i>more</i> red there is, which is closer to what our eyes call red."
+   },
+   {
+    "t": "ex",
+    "title": "Test a pixel",
+    "q": "Pixel (200, 80, 60), $T = 60$.",
+    "steps": [
+     "$(80 + 60)/2 = 70$.",
+     "$200 - 70 = 130 > 60$."
+    ],
+    "a": "It passes."
+   },
+   {
+    "t": "mistake",
+    "html": "Setting one threshold in a bright room and being surprised when it fails in a dim one. Light changes all the numbers; many robots use color spaces such as HSV that separate color from brightness."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Richard Szeliski, Computer Vision: Algorithms and Applications, 2nd ed. (Springer, 2022), free online edition",
+    "url": "https://szeliski.org/Book/"
+   }
+  ]
+ },
+ "rbvision.centroid-steering": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The mask shows where the ball is. Now steer toward it."
+   },
+   {
+    "t": "key",
+    "html": "The target's <b>center</b> (centroid) is the average column of the pixels that passed. The <b>steering error</b> is that column minus the image's middle column, $w/2$. Feed it to a proportional controller: turn toward the target, harder when it is farther off center."
+   },
+   {
+    "t": "viz",
+    "name": "rb-threshold",
+    "opts": {
+     "t": 50
+    },
+    "cap": "The cross marks the center of the kept pixels. The readout gives the steering error."
+   },
+   {
+    "t": "why",
+    "html": "This is closed-loop control with a camera as the sensor. Each frame measures the error and the robot corrects; as it turns, the ball moves toward the middle and the error shrinks. It is how many FIRST robots line up with targets."
+   },
+   {
+    "t": "ex",
+    "title": "Steering error",
+    "q": "Image 320 wide; kept pixels in columns 210, 214, 220, 224.",
+    "steps": [
+     "Center: $(210 + 214 + 220 + 224)/4 = 217$.",
+     "Error: $217 - 160 = 57$."
+    ],
+    "a": "57 pixels right of center: turn right."
+   },
+   {
+    "t": "mistake",
+    "html": "Measuring the error from the left edge instead of from the center."
+   },
+   {
+    "t": "h",
+    "text": "Hands-on: a ball-chasing robot"
+   },
+   {
+    "t": "p",
+    "html": "Put a camera on your mobile robot. Each frame: threshold for your ball's color, find the center, and set the wheel speeds from the steering error. Start with a small gain and raise it until the robot turns briskly without wobbling."
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"rb-safe\"><b>Safety.</b> Chase a soft ball in an open room at low speed, with the power switch in reach. Keep the robot away from stairs.</div>"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Richard Szeliski, Computer Vision: Algorithms and Applications, 2nd ed. (Springer, 2022), free online edition",
+    "url": "https://szeliski.org/Book/"
+   },
+   {
+    "name": "FIRST (For Inspiration and Recognition of Science and Technology), programs for students",
+    "url": "https://www.firstinspires.org/"
+   }
+  ]
+ },
+ "rbvision.pinhole-camera": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A camera squashes the 3-D world onto a flat image. A simple model tells us exactly how, and lets a robot measure distance with one camera."
+   },
+   {
+    "t": "key",
+    "html": "In the <b>pinhole model</b>, an object of height $H$ at distance $Z$ makes an image $h = \\dfrac{f\\,H}{Z}$ pixels tall, where $f$ is the focal length measured in pixels. Know the object's real size, and $Z = \\dfrac{f\\,H}{h}$."
+   },
+   {
+    "t": "viz",
+    "name": "rb-pinhole",
+    "opts": {
+     "h": 1,
+     "z": 3,
+     "f": 500
+    },
+    "cap": "Move the object closer or farther, or make it bigger. The image size changes as $f H / Z$."
+   },
+   {
+    "t": "why",
+    "html": "Light from the top and bottom of the object passes through the pinhole and makes two similar triangles, one outside the camera and one inside. Similar triangles have equal ratios: $h/f = H/Z$. The Math Ladder's similar-triangles topic is all you need."
+   },
+   {
+    "t": "ex",
+    "title": "How far?",
+    "q": "A 0.2 m ball looks 50 pixels wide, with $f = 600$.",
+    "steps": [
+     "$Z = 600 \\times 0.2 / 50 = 2.4\\ \\text{m}$."
+    ],
+    "a": "2.4 m."
+   },
+   {
+    "t": "mistake",
+    "html": "Mixing units: the focal length is in pixels, and the size and distance must both be in meters (or both in centimeters)."
+   },
+   {
+    "t": "note",
+    "html": "Real lenses bend straight lines a little; camera calibration measures $f$ and that bending from photos of a checkerboard."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Richard Szeliski, Computer Vision: Algorithms and Applications, 2nd ed. (Springer, 2022), free online edition",
+    "url": "https://szeliski.org/Book/"
+   },
+   {
+    "name": "Kevin M. Lynch and Frank C. Park, Modern Robotics: Mechanics, Planning, and Control (Cambridge University Press, 2017), free preprint and videos",
+    "url": "https://hades.mech.northwestern.edu/index.php/Modern_Robotics"
+   }
+  ]
+ }
+}

@@ -19,7 +19,7 @@ const PUB = path.resolve(process.argv[2] || path.join(ROOT, 'public'));
 
 // The ladders: their topic pages (/<ladder>/<course>/<topic>/) carry lessons with sources.
 const LADDERS = ['math', 'physics', 'chemistry', 'biology', 'earth-and-space', 'economics', 'logic', 'writing', 'vocabulary',
-  'american-history', 'geography', 'art', 'etiquette', 'egyptology', 'ancient-scripts', 'great-books'];
+  'american-history', 'geography', 'art', 'etiquette', 'egyptology', 'ancient-scripts', 'great-books', 'robotics'];
 const LADDER_SKIP = ['/vocabulary/words/', '/vocabulary/print/', '/american-history/federalist-papers/', '/american-history/anti-federalist-papers/'];
 
 // [path, how]: how = 'tree' (the path and everything under it), 'under' (only pages below it), 'exact' (that page only).

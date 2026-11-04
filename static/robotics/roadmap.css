@@ -1,0 +1,30 @@
+/* Robotics Ladder: Six-Month Roadmap, Improved (layouts/math/robroad.html). Uses the ladder page tokens from math/math.css
+   (--ink, --muted, --line, --card, --paper, --g, --gold), so light and dark themes follow html[data-theme]. */
+.rbr .rbr-sec{margin:0 0 2rem}
+.rbr p,.rbr li,.rbr dd{line-height:1.6}
+.rbr h3{font-size:1.08rem;margin:0 0 .35rem;color:var(--ink)}
+.rbr-honest,.rbr-costs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.8rem;margin:1rem 0}
+.rbr-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.9rem 1rem}
+.rbr-card p{margin:0}
+.rbr-phases{list-style:none;margin:0;padding:0;display:grid;gap:.9rem;counter-reset:ph}
+.rbr-phase{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--mc);border-radius:12px;padding:.9rem 1.1rem}
+.rbr-weeks{margin:0;font-size:.85rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--goldtx)}
+.rbr-courses{margin:.1rem 0 .5rem}
+.rbr-lbl{font-weight:700;margin-right:.3rem}
+.rbr-phase dl{display:grid;grid-template-columns:minmax(7rem,max-content) 1fr;gap:.3rem .9rem;margin:0}
+.rbr-phase dt{font-weight:700;color:var(--muted)}
+.rbr-phase dd{margin:0}
+.rbr-later{margin-top:1rem}
+.rbr-later ul,.rbr-notes{margin:.3rem 0 0 1.2rem;padding:0}
+.rbr-price{font-weight:600;color:var(--muted);font-size:.95rem;margin-left:.3rem}
+.rbr-tbl{overflow-x:auto;max-width:100%;border:1px solid var(--line);border-radius:12px}
+.rbr-tbl table{border-collapse:collapse;width:100%;min-width:34rem;font-size:.95rem}
+.rbr-tbl th,.rbr-tbl td{padding:.55rem .7rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.rbr-tbl thead th{background:var(--paper)}
+.rbr-tbl tbody th{font-weight:700}
+.rbr-tbl tr:last-child th,.rbr-tbl tr:last-child td{border-bottom:0}
+.rbr-safe{border-left:4px solid var(--gold);padding:.6rem .9rem;background:var(--goldbg);border-radius:8px}
+.rbr-start{display:flex;flex-wrap:wrap;gap:.6rem}
+@media (max-width:560px){.rbr-phase dl{grid-template-columns:1fr}.rbr-phase dt{margin-top:.3rem}}
+@media print{.rbr-start,.mlp-crumbs{display:none}.rbr-phase,.rbr-card{break-inside:avoid}.rbr-tbl{overflow:visible;border:0}}
+.rbr .rbr-sec>p{margin:0 0 .8rem}

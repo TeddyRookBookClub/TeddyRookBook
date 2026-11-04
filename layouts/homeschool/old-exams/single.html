@@ -2,7 +2,7 @@
 {{ partial "hs-head.html" . }}
 {{ $k := .Params.exam }}{{ $e := index (where site.Data.hs_exams.exams "key" $k) 0 }}
 <div class="hs hs-exam" data-exam="{{ $k }}">
-  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/old-exams/" | relURL }}">The old exams</a> › {{ $e.year }}</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/old-exams/" | relURL }}">The old exams</a> › {{ $e.year }}</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">The old exams · {{ $e.sub }}</p>
     <h1>{{ $e.display }}</h1>

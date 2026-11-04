@@ -13,7 +13,7 @@
   {{ range partialCached "meal-prep/recipes-all.html" "r" }}{{ $r := . }}{{ range .ingredients }}{{ if not .optional }}{{ with index $by .item }}{{ $k := . }}{{ $key := printf "%s|r|%s" $k $r.id }}{{ if not (index $seen $key) }}{{ $seen = merge $seen (dict $key true) }}{{ $cook = merge $cook (dict $k ((index $cook $k | default slice) | append (dict "u" (printf "meal-prep/recipes/%s/" $r.id | relURL) "n" $r.name "e" $r.emoji))) }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
 {{ end }}
 <div class="hs gd" id="gd" data-units data-meals="{{ "meal-prep/plan/" | relURL }}">
-  <nav class="hs-crumbs"><a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> › Food Garden Planner</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> › Food Garden Planner</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">Grow your own food</p>
     <h1>Food Garden Planner</h1>

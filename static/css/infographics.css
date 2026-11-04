@@ -28,6 +28,13 @@
 .ig-close{position:fixed;top:.6rem;right:1rem;font-size:2.2rem;line-height:1;background:none;border:0;color:#fff;cursor:pointer}
 .ig-card a.ig-open{display:block}
 :root.dark .ig-card,:root.dark .ig-chip{background:#1d1e20}
+/* Dark theme (the rule above uses an old selector the theme no longer sets): dark cards, so the light caption text can be read. */
+html[data-theme="dark"] .ig-card,html[data-theme="dark"] .ig-lb-inner{background:var(--entry);border-color:var(--border)}
+html[data-theme="dark"] .ig-chip{background:var(--entry);color:#6cc79a;border-color:#6cc79a}
+html[data-theme="dark"] .ig-chip.active{background:#6cc79a;color:#0b1a13}
+html[data-theme="dark"] .ig-header p,html[data-theme="dark"] .ig-books,html[data-theme="dark"] .ig-card figcaption span,html[data-theme="dark"] .ig-lb-caption p{color:var(--secondary)}
+html[data-theme="dark"] .ig-frame.tall::after{background:linear-gradient(to bottom,rgba(0,0,0,0),var(--entry))}
+html[data-theme="dark"] .ig-pdf{color:#6cc79a}
 .ig-pdf{display:inline-block;margin-top:.4rem;font-size:.82rem;color:#004225;font-weight:600;text-decoration:underline}
 .ig-lb-caption a{margin-right:1rem}
 .ig-pdf[hidden]{display:none}

@@ -42,7 +42,7 @@
       var thP = (-S * eq * npdf(d1) * v / (2 * Math.sqrt(T)) + r * K * er * N(-d2) - q * S * eq * N(-d1)) / 365;
       var rhoC = K * T * er * N(d2) / 100, rhoP = -K * T * er * N(-d2) / 100;
       function row(n, c, p) { return '<tr><td>' + n + '</td><td class="num">' + c + '</td><td class="num">' + p + '</td></tr>'; }
-      $('#bs-out').innerHTML = '<table class="mk-t"><thead><tr><th></th><th class="num">Call</th><th class="num">Put</th></tr></thead><tbody>' +
+      $('#bs-out').innerHTML = '<table class="mk-t"><thead><tr><td></td><th class="num">Call</th><th class="num">Put</th></tr></thead><tbody>' +
         row('<b>Price</b>', '<b>' + money(call) + '</b>', '<b>' + money(put) + '</b>') + row('Delta', (eq * N(d1)).toFixed(3), (eq * (N(d1) - 1)).toFixed(3)) +
         row('Gamma', gamma.toFixed(4), gamma.toFixed(4)) + row('Theta (per day)', money(thC), money(thP)) + row('Vega (per 1 vol point)', money(vega), money(vega)) +
         row('Rho (per 1% rate)', money(rhoC), money(rhoP)) + row('Chance of expiring in the money', (N(d2) * 100).toFixed(1) + '%', (N(-d2) * 100).toFixed(1) + '%') + '</tbody></table>' +

@@ -15,7 +15,7 @@
 {{- end -}}
 {{- $json := resources.FromString "homeschool/sheets-data.json" (dict "courses" (sort $cs "group") | jsonify) -}}
 <div class="hs ps" id="ps" data-src="{{ $json.RelPermalink }}">
-  <nav class="hs-crumbs ps-noprint"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Practice sheets</nav>
+  <nav class="hs-crumbs ps-noprint" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Practice sheets</nav>
   <header class="hs-hero ps-noprint">
     <p class="hs-eyebrow">Homeschool · Printables</p>
     <h1>Practice sheets</h1>

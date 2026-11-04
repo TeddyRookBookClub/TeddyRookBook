@@ -339,6 +339,16 @@ note = "Every work in the 60 volumes, one rung at a time"
 icon = "📚"
 
 [[menu.main]]
+name = "Robotics Ladder"
+identifier = "robotics-edu"
+url = "/robotics/"
+weight = 27
+[menu.main.params]
+group = "Education"
+note = "From a cardboard arm to Arduino, Raspberry Pi, PID, ROS 2 and robot vision"
+icon = "🤖"
+
+[[menu.main]]
 name = "October Sky"
 url = "/october-sky/"
 weight = 34
@@ -854,6 +864,9 @@ note = "Save sections to use without the internet, and keep them up to date"
   [segments.connections]
     [[segments.connections.includes]]
       path = '{/connections,/connections/**}'
+  [segments.robotics]
+    [[segments.robotics.includes]]
+      path = '{/robotics,/robotics/**}'
   [segments.memory]
     [[segments.memory.includes]]
       path = '{/memory,/memory/**}'

@@ -11,7 +11,7 @@
 {{- $all := slice }}{{ range $k, $v := $D.sites }}{{ if ne $k "_groups" }}{{ $all = $all | append $v }}{{ end }}{{ end }}{{ $all = sort $all "order" -}}
 {{- $PN := dict "pre" "Predynastic" "ed" "Early Dynastic" "ok" "Old Kingdom" "fip" "First Intermediate" "mk" "Middle Kingdom" "sip" "Second Intermediate" "nk" "New Kingdom" "tip" "Third Intermediate" "late" "Late Period" "ptol" "Ptolemaic" "rom" "Roman" -}}
 <div class="hs eg-page egat">
-  <nav class="hs-crumbs"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "egypt/" | relURL }}">Ancient Egypt</a> › <a href="{{ "egypt/sites/" | relURL }}">Sites</a> › {{ $S.name }}</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "egypt/" | relURL }}">Ancient Egypt</a> › <a href="{{ "egypt/sites/" | relURL }}">Sites</a> › {{ $S.name }}</nav>
   <div class="egat-head">
     <p class="egat-eyebrow">{{ $g.name }} · {{ range $i, $p := $S.periods }}{{ if $i }}, {{ end }}{{ index $PN $p }}{{ end }}</p>
     <h1>{{ $S.name }}</h1>

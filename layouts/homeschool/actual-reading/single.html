@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{{ "homeschool/ar.css" | relURL }}?v={{ (os.Stat "static/homeschool/ar.css").ModTime.Unix }}">
 {{ $d := site.Data.hs_hannah }}{{ $key := .Params.course }}{{ $c := index (where $d.curricula "key" $key) 0 }}
 <div class="hs ar"{{ if eq $c.kind "lessons" }} data-ar="{{ $c.key }}" data-total="{{ $c.total }}"{{ end }}>
-  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/actual-reading/" | relURL }}">Actual Reading</a> › {{ $c.short }}</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/actual-reading/" | relURL }}">Actual Reading</a> › {{ $c.short }}</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">Actual Reading · {{ $c.level }} · Ages {{ $c.ages }}</p>
     <h1>{{ $c.title }}</h1>

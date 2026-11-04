@@ -1138,7 +1138,7 @@
     if (!F.quiet && mode === 'show') F.body.appendChild(info);
     // ---- the svg
     var full = P(G.box.s, G.box.e), FW = full[0], FH = full[1];
-    var svg = sv('svg', { class: 'egm-svg', role: 'img', tabindex: F.interactive ? 0 : null, 'aria-label': o.quiet ? 'Map of Egypt and Nubia' : 'Map of Egypt and Nubia with the Nile, ancient sites and modern cities' + (F.interactive ? '. Use the arrow keys to move, plus and minus to zoom.' : ''), focusable: 'false' }, wrap);
+    var svg = sv('svg', { class: 'egm-svg', role: F.interactive ? 'group' : 'img', tabindex: F.interactive ? 0 : null, 'aria-label': o.quiet ? 'Map of Egypt and Nubia' : 'Map of Egypt and Nubia with the Nile, ancient sites and modern cities' + (F.interactive ? '. Use the arrow keys to move, plus and minus to zoom.' : ''), focusable: 'false' }, wrap);
     var gBase = sv('g', {}, svg), gTop = sv('g', {}, svg);
     sv('rect', { x: -400, y: -400, width: FW + 800, height: FH + 800, class: 'egm-land' }, gBase);
     sv('path', { d: ringPath(G.med, true), class: 'egm-sea' }, gBase);
@@ -1362,6 +1362,7 @@
       var H = y0 + hP + 12 + hD + 10 + kingRows + evRows + placeRow + 24;
       stage.innerHTML = '';
       svg = svgRoot(Wd, H, o.quiet ? 'A timeline' : 'Timeline from ' + EG.year(from) + ' to ' + EG.year(to), 'egt-svg'); stage.appendChild(svg);
+      if (F.interactive) svg.setAttribute('role', 'group'); // it holds buttons and a slider, so not a single picture
       // axis
       var step = niceStep(to - from), ay = H - 18;
       sv('line', { x1: 20, y1: ay, x2: Wd - 20, y2: ay, class: 'egt-axis' }, svg);

@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
 {{ $src := partial "meal-prep/data.html" . }}
 <div class="hs mp mp-app" id="mp" data-src="{{ $src }}" data-print="{{ "meal-prep/print/" | relURL }}" data-recipes="{{ "meal-prep/recipes/" | relURL }}">
-  <nav class="hs-crumbs hs-noprint"><a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> › <a href="{{ "meal-prep/" | relURL }}">Meal Prep</a> › Planner</nav>
+  <nav class="hs-crumbs hs-noprint" aria-label="Breadcrumb"><a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> › <a href="{{ "meal-prep/" | relURL }}">Meal Prep</a> › Planner</nav>
   <header class="mp-top hs-noprint">
     <div>
       <p class="hs-eyebrow">Meal Prep · Planner</p>
@@ -54,13 +54,16 @@
     </div>
   </details>
 
-  <div class="mp-tabs hs-noprint" role="tablist" aria-label="Planner views" id="mp-tabs">
+  <div class="mp-tabs hs-noprint" id="mp-tabs">
+    {{- /* The tablist holds only the tabs (Export is a plain button beside them); display:contents keeps the row as it was. */}}
+    <div role="tablist" aria-label="Planner views" style="display:contents">
     <button type="button" role="tab" data-v="cal" id="tab-cal">📅 Calendar</button>
     <button type="button" role="tab" data-v="shop" id="tab-shop">🛒 Shopping list</button>
     <button type="button" role="tab" data-v="nutr" id="tab-nutr">📊 Nutrition</button>
     <button type="button" role="tab" data-v="prep" id="tab-prep">🔪 Prep day</button>
     <button type="button" role="tab" data-v="kids" id="tab-kids">🧒 Kids' chart</button>
     <button type="button" role="tab" data-v="grow" id="tab-grow">🌱 Grow</button>
+    </div>
     <button type="button" class="mp-export-btn" id="mp-export">⬇ Export</button>
   </div>
   <p class="mp-msg" id="mp-msg" aria-live="polite"></p>

@@ -7,7 +7,7 @@
 {{- $yt := "IAxxfABk6Fc" }}
 <div class="lang jc{{ with .Params.lang }} {{ . }}{{ end }}">
 {{ if eq $jk "hub" }}
-  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › Study companion</nav>
+  <nav class="jc-crumbs" aria-label="Breadcrumb"><a href="{{ "languages/" | relURL }}">Languages</a> › Study companion</nav>
   <header class="lang-hero">
     <p class="lang-eyebrow">Languages · Free study companion</p>
     <h1>Greek and Latin with Jerome</h1>
@@ -100,7 +100,7 @@
   {{- $bi := 0 }}{{ range $i, $b := $books }}{{ if eq $b.key $bk }}{{ $bi = $i }}{{ end }}{{ end }}
   {{- $b := index $books $bi }}
   {{- $first := index $d.passages.passages (sub (int $b.from) 1) }}
-  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › {{ $b.name }}</nav>
+  <nav class="jc-crumbs" aria-label="Breadcrumb"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › {{ $b.name }}</nav>
   <header class="lang-hero">
     <p class="lang-eyebrow">Part Two · Reading the New Testament · Passages {{ $b.from }}–{{ $b.to }}</p>
     <h1>{{ $b.name }}</h1>
@@ -129,7 +129,7 @@
 {{ else if eq $jk "vocab" }}
   {{- $lang := .Params.lang }}{{ $L := cond (eq $lang "greek") "Greek" "Latin" }}{{ $O := cond (eq $lang "greek") "latin" "greek" }}
   {{- $list := index $d.vocab $lang }}
-  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › {{ $L }} core words</nav>
+  <nav class="jc-crumbs" aria-label="Breadcrumb"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › {{ $L }} core words</nav>
   <header class="lang-hero">
     <p class="lang-eyebrow">Appendix A · Core vocabulary</p>
     <h1>{{ $L }} core words</h1>

@@ -4,7 +4,7 @@
 {{ $ser := .Parent }}{{ $sd := index site.Data.hs_series ($ser.Params.series | default "rays") }}
 {{ $book := dict }}{{ $keybook := dict }}{{ range $sd.groups }}{{ range .books }}{{ if eq .id $d.book.id }}{{ $book = . }}{{ end }}{{ if eq .id ($d.book.key_id | default "-") }}{{ $keybook = . }}{{ end }}{{ end }}{{ end }}
 <div class="hs" data-course="{{ $key }}" data-total="{{ len $d.lessons }}">
-  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ $ser.RelPermalink }}">{{ $sd.crumb | default $ser.Title }}</a> › {{ $d.book.short }}</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ $ser.RelPermalink }}">{{ $sd.crumb | default $ser.Title }}</a> › {{ $d.book.short }}</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">{{ $d.book.eyebrow }}</p>
     <h1>{{ $d.book.title }}</h1>

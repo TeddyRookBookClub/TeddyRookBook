@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{{ "games/coin-match.css" | relURL }}?v={{ (os.Stat "static/games/coin-match.css").ModTime.Unix }}">
 {{ partial "game-shell.html" . }}
 <div class="gwrap"><div class="gbar"><a href="{{ "games/brain-games/" | relURL }}">‹ Brain games</a><span>{{ .Title }}</span></div><div class="bk coinm gbox" id="coinm" data-hub="{{ "games/brain-games/" | relURL }}"><noscript>This game needs JavaScript.</noscript></div></div>
-<p style="font-size:.8rem;color:#777;margin-top:.5rem">Same or different? Right arrow for Same, left arrow for Different; P pauses. Part of the <a href="{{ "games/brain-games/" | relURL }}">brain games</a>; for paper puzzles, see <a href="{{ "puzzles/" | relURL }}">Brain Puzzles</a>.</p>
+<p style="font-size:.8rem;color:var(--secondary);margin-top:.5rem">Same or different? Right arrow for Same, left arrow for Different; P pauses. Part of the <a href="{{ "games/brain-games/" | relURL }}">brain games</a>; for paper puzzles, see <a href="{{ "puzzles/" | relURL }}">Brain Puzzles</a>.</p>
 <script src="{{ "games/brain-kit.js" | relURL }}?v={{ (os.Stat "static/games/brain-kit.js").ModTime.Unix }}"></script>
 <script src="{{ "games/coin-match.js" | relURL }}?v={{ (os.Stat "static/games/coin-match.js").ModTime.Unix }}"></script>
 {{ end }}

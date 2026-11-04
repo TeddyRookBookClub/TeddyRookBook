@@ -8,7 +8,7 @@
 {{ $hub := "homeschool/actual-reading/phonics-practice/" | relURL }}
 {{ $hc := site.Data.hs_hannah.curricula }}
 <div class="hs pp" id="pp" data-step="{{ $s.key }}">
-  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/actual-reading/" | relURL }}">Actual Reading</a> › <a href="{{ $hub }}">Phonics Practice</a> › Step {{ $n }}</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/actual-reading/" | relURL }}">Actual Reading</a> › <a href="{{ $hub }}">Phonics Practice</a> › Step {{ $n }}</nav>
 
   <header class="pp-head">
     <span class="pp-head-ic" aria-hidden="true">{{ $s.icon }}</span>

@@ -1,0 +1,70 @@
+# Mechanics and Motion (rbmech): lessons.
+LESSONS = {
+"gears": LES([
+ P("Small hobby motors spin fast, thousands of turns a minute, but with little twisting force. Wheels and arms need the opposite: slow and strong. Gears make the trade."),
+ K("When a gear with $N_1$ teeth drives a gear with $N_2$ teeth, the <b>gear ratio</b> is $N_2 : N_1$. The output turns $N_1/N_2$ as fast, and (ignoring friction) with $N_2/N_1$ times the torque."),
+ V("rb-gears", {"t1": 12, "t2": 36}, "Change the teeth on each gear. Watch the speeds and the torque change in opposite directions."),
+ W("Each tooth that passes the meeting point is one tooth on both gears. So the big gear must turn less to pass the same number of teeth. Power, speed times torque, stays about the same, so slower means stronger."),
+ EX("Slow it down", "A 10-tooth gear on a motor at 3,000 rpm drives a 50-tooth gear. How fast does the big gear turn?", ["Ratio $50:10 = 5:1$.", "$3000 / 5 = 600\\ \\text{rpm}$, with about 5 times the torque."], "600 rpm."),
+ EX("Two stages", "Two 5:1 stages in a row. What is the total ratio?", ["Ratios multiply: $5 \\times 5 = 25$."], "25:1."),
+ M("Dividing the wrong way and making the slow gear faster. The gear with more teeth always turns slower."),
+ N('<div class="rb-safe"><b>Safety.</b> Gears are pinch points. Keep fingers, hair and loose sleeves away while they turn, and switch off before you reach in.</div>'),
+ TRY,
+], "mr", "ocw"),
+
+"torque-motors": LES([
+ P("Can this motor lift that arm? Torque answers the question."),
+ K("<b>Torque</b> is force times lever arm: $\\tau = F \\times d$ (newton-meters, N·m). To hold a mass $m$ straight out at distance $L$, a joint needs $\\tau = m g L$, with $g \\approx 9.8\\ \\text{m/s}^2$. Pick a motor with plenty more than that, often about twice, for speeding up and for friction."),
+ V("rb-lever", {"a": 4, "b": 16}, "A long arm needs a lot of torque at the joint to hold its load."),
+ W("A servo's datasheet lists stall torque, the most it can give while not moving. Running near stall heats the motor and draws large currents. Designing for half of it keeps the robot cool and lets it move, not just hold."),
+ EX("Hold a can", "A 0.35 kg can held 0.20 m from the shoulder joint, arm weight ignored.", ["$\\tau = m g L = 0.35 \\times 9.8 \\times 0.20 \\approx 0.69\\ \\text{N·m}$.", "Datasheets often use kg·cm: divide by 9.8 and multiply by 100: about 7 kg·cm."], "About 0.69 N·m (7 kg·cm). Choose a servo rated well above that, around 14 kg·cm or more."),
+ EX("Reach farther", "The same can at 0.30 m.", ["Torque grows in step with distance: $0.69 \\times 1.5 \\approx 1.03\\ \\text{N·m}$."], "About 1.03 N·m."),
+ M("Forgetting that holding a load farther out takes more torque, or using grams as if they were kilograms."),
+ TRY,
+], "mr", "ocw"),
+
+"wheel-speed": LES([
+ P("How fast will a robot drive? It depends on how fast its wheels turn and how big they are."),
+ K("A wheel that rolls without slipping moves at $v = \\omega r$, where $\\omega$ is its angular speed in <b>radians per second</b> and $r$ its radius. To change rpm to rad/s, multiply by $2\\pi/60$."),
+ V("rb-encoder", {"cpr": 20, "r": 3}, "Turn the wheel and watch the distance it rolls: one turn is one circumference."),
+ W("In one turn the wheel's rim lays down its whole circumference, $2\\pi r$, on the floor. So turns per second times $2\\pi r$ is the speed, which is the same as $\\omega r$."),
+ EX("Robot speed", "A 6.5 cm wheel (radius 3.25 cm) turns at 120 rpm.", ["$\\omega = 120 \\times 2\\pi / 60 \\approx 12.57\\ \\text{rad/s}$.", "$v = 12.57 \\times 0.0325 \\approx 0.41\\ \\text{m/s}$."], "About 0.41 m/s."),
+ M("Multiplying rpm by the radius without changing to radians per second. The answer comes out about 10 times too big."),
+ TRY,
+], "mr", "sieg"),
+
+"coordinate-frames": LES([
+ P("The robot's distance sensor says, \"Obstacle 1 meter ahead.\" Where is that on the map? It depends on where the robot is and which way it faces."),
+ K("A <b>frame</b> is a point of view: an origin and axes. A point $(x_r, y_r)$ in the robot's frame, for a robot at $(x, y)$ facing angle $\\theta$, is on the map at <br>$x_m = x + x_r\\cos\\theta - y_r\\sin\\theta$, $\\ y_m = y + x_r\\sin\\theta + y_r\\cos\\theta$. <b>Rotate, then shift.</b>"),
+ V("rb-frames", {"x": 2, "y": 1, "th": 30}, "Move and turn the robot. The point its sensor sees stays fixed in the robot's frame but moves on the map."),
+ W("The rotation is a matrix multiplication, the same one taught on the Math Ladder. Robots chain many of these: camera to body, body to map. Every one is rotate, then shift."),
+ EX("Straight ahead", "Robot at (2, 1) facing 90° (straight up the map). Its sensor sees a point 1 m ahead: $(1, 0)$ in its frame.", ["$\\cos 90^\\circ = 0$, $\\sin 90^\\circ = 1$.", "$x_m = 2 + 1 \\cdot 0 - 0 = 2$, $y_m = 1 + 1 \\cdot 1 + 0 = 2$."], "(2, 2)."),
+ M("Adding the robot's position but forgetting to rotate by its heading. That is only right when the robot faces along the map's $x$-axis."),
+ TRY,
+], "mr", "rep103"),
+
+"forward-kinematics": LES([
+ P("A robot arm knows its joint angles from its motors. Where is its hand? Working that out is <b>forward kinematics</b>."),
+ K("For a two-link arm in a plane with link lengths $L_1$, $L_2$ and joint angles $\\theta_1$ (shoulder, from the $x$-axis) and $\\theta_2$ (elbow, from the first link):<br>$x = L_1\\cos\\theta_1 + L_2\\cos(\\theta_1 + \\theta_2)$, $\\ y = L_1\\sin\\theta_1 + L_2\\sin(\\theta_1 + \\theta_2)$."),
+ V("rb-arm", {"mode": "fk", "l1": 10, "l2": 7}, "Slide the two joint angles. The readout gives the hand's position."),
+ W("The first link points at $\\theta_1$. The second link is measured from the first, so its direction on the map is $\\theta_1 + \\theta_2$. Each link adds an arrow; the hand is at the tip of the last arrow."),
+ EX("Hand position", "$L_1 = 10$, $L_2 = 7$, $\\theta_1 = 30^\\circ$, $\\theta_2 = 60^\\circ$.", ["First link: $(10\\cos 30^\\circ, 10\\sin 30^\\circ) \\approx (8.66, 5)$.", "Second link points at $90^\\circ$: $(0, 7)$.", "Add: $(8.66, 12)$."], "About (8.66, 12)."),
+ M("Using $\\theta_2$ alone for the second link's direction. It is measured from the first link, so use $\\theta_1 + \\theta_2$."),
+ H("Hands-on: a servo arm"),
+ N('<div class="rb-parts"><b>Parts</b>, three price points (approximate U.S. prices, 2026)<ul><li><b>About \\$10:</b> two small hobby servos, craft sticks or stiff cardboard, and your microcontroller from the starter kit.</li><li><b>About \\$40 to \\$60:</b> an acrylic or plastic desktop arm kit with four small servos and a gripper.</li><li><b>About \\$120 to \\$250:</b> an open-source 3D-printed arm kit with smart servos; printing is extra.</li></ul></div>'),
+ P("Build a two-joint arm from two servos and measure $L_1$ and $L_2$. Command a few angle pairs, predict the hand's position with the formula, then measure it with a ruler. How close are you? What makes the difference?"),
+ N('<div class="rb-safe"><b>Safety.</b> Power servos from their own battery pack, not from the microcontroller\'s pin. Keep fingers out of the joints while the arm has power; servos can snap to position fast on startup.</div>'),
+ TRY,
+], "mr", "ocw"),
+
+"inverse-kinematics": LES([
+ P("Usually we want the opposite: put the hand <i>there</i>. Which joint angles do that? This is <b>inverse kinematics</b>."),
+ K("For a two-link arm and target $(x, y)$, let $r^2 = x^2 + y^2$. The law of cosines gives the elbow: $\\cos\\theta_2 = \\dfrac{r^2 - L_1^2 - L_2^2}{2 L_1 L_2}$. If that is outside $[-1, 1]$, the target is <b>out of reach</b>. Otherwise there are usually <b>two</b> answers, elbow up and elbow down. Then $\\theta_1 = \\operatorname{atan2}(y, x) - \\operatorname{atan2}(L_2\\sin\\theta_2,\\ L_1 + L_2\\cos\\theta_2)$."),
+ V("rb-arm", {"mode": "ik", "l1": 10, "l2": 7}, "Drag the target. The arm finds its angles; switch between elbow up and elbow down. Drag it out of reach and see what happens."),
+ W("The two links and the line from the shoulder to the target make a triangle with sides $L_1$, $L_2$ and $r$. The law of cosines finds the angle between the links. A triangle can be flipped over its long side, which is why there are two answers."),
+ EX("Find the elbow", "$L_1 = 10$, $L_2 = 7$, target $(12, 5)$.", ["$r^2 = 144 + 25 = 169$, so $r = 13$.", "$\\cos\\theta_2 = \\dfrac{169 - 100 - 49}{140} = \\dfrac{20}{140} \\approx 0.143$.", "$\\theta_2 \\approx \\pm 81.8^\\circ$."], "About 81.8° (elbow down) or −81.8° (elbow up)."),
+ EX("Out of reach", "Same arm, target $(15, 9)$.", ["$r = \\sqrt{225 + 81} \\approx 17.5$, more than $L_1 + L_2 = 17$."], "No solution: the target is out of reach."),
+ M("Forgetting to check that the target is in reach, or missing the second solution."),
+ TRY,
+], "mr", "ocw"),
+}

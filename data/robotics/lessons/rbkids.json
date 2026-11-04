@@ -1,0 +1,442 @@
+{
+ "rbkids.what-is-a-robot": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A toaster has a heater and a timer. A remote-control car has motors and wheels. Are they robots? Most robot makers would say no. To be a robot, a machine has to do three jobs, over and over, on its own."
+   },
+   {
+    "t": "key",
+    "html": "A <b>robot</b> is a machine that <b>senses</b> the world, <b>thinks</b> with a program, and <b>acts</b> by moving or changing something. Then it senses again. Robot makers call this the <b>sense, think, act</b> loop."
+   },
+   {
+    "t": "p",
+    "html": "<b>Sense:</b> a robot vacuum feels a bump. <b>Think:</b> its program says, \"If I bump, back up and turn.\" <b>Act:</b> its wheels back up and turn. Then it senses again, many times each second."
+   },
+   {
+    "t": "why",
+    "html": "A remote-control car only does what your thumbs tell it. If you let go, it does nothing smart. A robot keeps checking and deciding for itself. That loop is what lets a robot vacuum clean a room while you eat breakfast."
+   },
+   {
+    "t": "viz",
+    "name": "rb-sta",
+    "opts": {
+     "sensor": true
+    },
+    "cap": "Press Play. With its sensor on, the robot sees the wall and stops. Switch the sensor off and watch what happens."
+   },
+   {
+    "t": "h",
+    "text": "Let's think it through"
+   },
+   {
+    "t": "ex",
+    "title": "Robot or not?",
+    "q": "A night-light turns on by itself when the room gets dark. Is it a robot?",
+    "steps": [
+     "Does it sense? Yes, it senses light.",
+     "Does it think? A little: if dark, then on.",
+     "Does it act by moving or changing the world? It only turns a light on. It never moves."
+    ],
+    "a": "Most people would call it a smart machine, not a robot. It is close, though: it has a tiny sense, think, act loop."
+   },
+   {
+    "t": "ex",
+    "title": "Robot or not?",
+    "q": "A toy dog walks forward when you press its button, and keeps walking into the wall.",
+    "steps": [
+     "Does it sense the wall? No.",
+     "It does the same thing no matter what is in front of it."
+    ],
+    "a": "Not a robot by our rule. It acts, but it does not sense or decide."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking anything with motors and lights is a robot. Ask the three questions: does it sense, does it decide, does it act? A robot needs all three."
+   },
+   {
+    "t": "h",
+    "text": "Try it at home: be the robot"
+   },
+   {
+    "t": "p",
+    "html": "Play a game. One person is the robot and wears a blindfold, in a clear, soft space with a grown-up watching. The robot may only sense by touch, with hands held out in front. The robot's program is: <i>walk slowly; if your hands touch something, stop, turn right, and walk again.</i> Everyone else is quiet. How does the robot do? What would a better program say?"
+   },
+   {
+    "t": "note",
+    "html": "<b>For the grown-up.</b> Clear the space of anything sharp or breakable and keep the robot walking slowly. This game teaches the sense, think, act loop better than any picture."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "FIRST (For Inspiration and Recognition of Science and Technology), programs for students",
+    "url": "https://www.firstinspires.org/"
+   },
+   {
+    "name": "Raspberry Pi Foundation, Raspberry Pi Projects",
+    "url": "https://projects.raspberrypi.org/"
+   }
+  ]
+ },
+ "rbkids.sensors-and-motors": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have senses: eyes, ears, skin. You have muscles that move you. A robot has parts for each job too."
+   },
+   {
+    "t": "key",
+    "html": "<b>Sensors</b> are a robot's senses. They measure something: light, distance, touch, sound, tilt. <b>Actuators</b> are a robot's muscles. They make something happen: motors turn wheels, servos move arms, lights glow, speakers beep."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Sensor (senses)",
+     "What it notices"
+    ],
+    "rows": [
+     [
+      "Bump switch",
+      "Touch: it clicks when pressed"
+     ],
+     [
+      "Light sensor",
+      "How bright it is"
+     ],
+     [
+      "Ultrasonic sensor",
+      "How far away something is, by bouncing sound off it"
+     ],
+     [
+      "Line sensor",
+      "Dark or light floor right under the robot"
+     ],
+     [
+      "Tilt sensor (accelerometer)",
+      "Which way is down"
+     ]
+    ]
+   },
+   {
+    "t": "table",
+    "head": [
+     "Actuator (muscles)",
+     "What it does"
+    ],
+    "rows": [
+     [
+      "DC motor",
+      "Spins around and around, fast; good for wheels"
+     ],
+     [
+      "Servo",
+      "Turns to an exact angle and holds it; good for arms and steering"
+     ],
+     [
+      "LED",
+      "Lights up"
+     ],
+     [
+      "Buzzer",
+      "Makes a beep or a tune"
+     ]
+    ]
+   },
+   {
+    "t": "why",
+    "html": "Every robot idea starts with two questions. What does it need to notice? What does it need to do? A robot that waters plants needs to notice dry soil (a soil moisture sensor) and to pour water (a small pump)."
+   },
+   {
+    "t": "h",
+    "text": "Let's think it through"
+   },
+   {
+    "t": "ex",
+    "title": "Pick the parts",
+    "q": "You want a robot that follows a black line on white paper. What sensor and what actuators?",
+    "steps": [
+     "It needs to notice dark or light floor: a line sensor.",
+     "It needs to move: two motors with wheels."
+    ],
+    "a": "A line sensor (or two) and two drive motors."
+   },
+   {
+    "t": "ex",
+    "title": "Sensor or actuator?",
+    "q": "A servo that opens a robot's gripper. Sensor or actuator?",
+    "steps": [
+     "Does it measure something, or make something happen?",
+     "It makes the gripper open."
+    ],
+    "a": "Actuator."
+   },
+   {
+    "t": "mistake",
+    "html": "Calling a motor a sensor because it is part of the robot. Ask: does it notice, or does it do? A motor does."
+   },
+   {
+    "t": "h",
+    "text": "Try it at home: sensor hunt"
+   },
+   {
+    "t": "p",
+    "html": "Walk through the house with a notebook. Find machines that sense something: a thermostat, an automatic door, a phone screen, a smoke alarm. Write what each one senses and what it does when it notices. You will find a dozen without trying."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Raspberry Pi Foundation, Raspberry Pi Projects",
+    "url": "https://projects.raspberrypi.org/"
+   },
+   {
+    "name": "Arduino Documentation",
+    "url": "https://docs.arduino.cc/"
+   }
+  ]
+ },
+ "rbkids.simple-circuits": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Electricity needs a road that goes all the way around. Leave a gap anywhere, and nothing happens."
+   },
+   {
+    "t": "key",
+    "html": "A <b>circuit</b> is a complete loop: from the battery, through the parts, and back to the battery. A <b>switch</b> opens and closes the loop. An <b>LED</b> lights only when current flows through it the right way, and it needs a <b>resistor</b> to keep the current small."
+   },
+   {
+    "t": "viz",
+    "name": "rb-circuit",
+    "opts": {
+     "mode": "kids"
+    },
+    "cap": "Flip the switch to close the loop. Current flows only when the loop is complete."
+   },
+   {
+    "t": "why",
+    "html": "A robot's brain, sensors and motors are all circuits. Every robot builder, from age eight to eighty, checks the same thing first when something does not work: is the loop complete?"
+   },
+   {
+    "t": "h",
+    "text": "Let's think it through"
+   },
+   {
+    "t": "ex",
+    "title": "Why is it dark?",
+    "q": "Your LED will not light. The battery is new. What could be wrong?",
+    "steps": [
+     "Is the loop complete, with no loose wire?",
+     "Is the switch closed?",
+     "An LED has a long leg (+) and a short leg (−). Is it in backward?"
+    ],
+    "a": "Check for a gap, the switch, and which way the LED faces."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a part is broken when it is just in backward. LEDs work only one way around. Flip it and try again."
+   },
+   {
+    "t": "h",
+    "text": "Hands-on project: a paper circuit card"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"rb-parts\"><b>Parts</b> (about \\$10 to \\$15 for enough to make several cards)<ul><li>Copper tape with conductive glue</li><li>A 3-volt coin cell (CR2032)</li><li>A few small LEDs</li><li>A binder clip, card stock and markers</li></ul></div>"
+   },
+   {
+    "t": "list",
+    "items": [
+     "Draw two lines on the card for the copper tape roads: one from the + side of the battery to the LED's long leg, one from the LED's short leg back to the − side.",
+     "Stick down the tape. Bend the LED's legs flat and tape them onto the roads.",
+     "Fold a corner of the card over the battery and hold it with the binder clip. When the fold presses down, the loop closes and the LED lights. You built a switch."
+    ]
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"rb-safe\"><b>Safety.</b><ul><li>Use only batteries: coin cells, AA or AAA. Never use a wall outlet for projects.</li><li>Coin cells are dangerous if swallowed. A grown-up keeps them, hands them out one at a time, and puts them away. Keep them far from little brothers and sisters.</li><li>Do not connect a battery's + and − sides with just a wire. That is a short circuit; the wire and battery get hot.</li></ul></div>"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Raspberry Pi Foundation, Raspberry Pi Projects",
+    "url": "https://projects.raspberrypi.org/"
+   },
+   {
+    "name": "Arduino Documentation",
+    "url": "https://docs.arduino.cc/"
+   }
+  ]
+ },
+ "rbkids.block-coding": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A robot does not understand \"go to the kitchen.\" It understands small steps, done in order, exactly."
+   },
+   {
+    "t": "key",
+    "html": "A <b>program</b> is a list of steps that a computer follows <b>in order</b>. A <b>loop</b> repeats some steps. In <b>block coding</b>, each step is a block you snap together, like a puzzle."
+   },
+   {
+    "t": "viz",
+    "name": "rb-grid",
+    "opts": {
+     "prog": 0
+    },
+    "cap": "Step through the program and watch the robot follow each block. Then try the other programs."
+   },
+   {
+    "t": "why",
+    "html": "Grown-up programmers do the same thing in typed code. Breaking a big job into small, exact steps is the most important skill in programming."
+   },
+   {
+    "t": "h",
+    "text": "Let's think it through"
+   },
+   {
+    "t": "ex",
+    "title": "Follow the steps",
+    "q": "A robot faces right. Its program: forward, forward, turn left, forward. How many squares has it moved, and which way does it face at the end?",
+    "steps": [
+     "Forward, forward: 2 squares right.",
+     "Turn left: it now faces up. Turning does not move it.",
+     "Forward: 1 square up."
+    ],
+    "a": "3 squares moved; it faces up."
+   },
+   {
+    "t": "ex",
+    "title": "Use a loop",
+    "q": "Write a shorter program for: forward, turn right, forward, turn right, forward, turn right, forward, turn right.",
+    "steps": [
+     "Find the part that repeats: forward, turn right.",
+     "It repeats 4 times."
+    ],
+    "a": "Repeat 4 times: [forward, turn right]. The robot drives in a square."
+   },
+   {
+    "t": "mistake",
+    "html": "Counting a turn as a move. A turn changes which way the robot faces, but it stays on the same square."
+   },
+   {
+    "t": "h",
+    "text": "Try it at home: program a grown-up"
+   },
+   {
+    "t": "p",
+    "html": "Write a program on paper to make a peanut butter sandwich, then have a grown-up follow it <i>exactly</i>, doing only what the words say. \"Put peanut butter on bread\" might end with the whole jar on the loaf. Fix your program and try again. Free block-coding sites such as Scratch let you program on-screen sprites the same way."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Raspberry Pi Foundation, Raspberry Pi Projects",
+    "url": "https://projects.raspberrypi.org/"
+   },
+   {
+    "name": "FIRST (For Inspiration and Recognition of Science and Technology), programs for students",
+    "url": "https://www.firstinspires.org/"
+   }
+  ]
+ },
+ "rbkids.cardboard-arm": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Hold a ruler at one end and wave it. The far end moves much farther than your hand. That is a lever, and it is how every robot arm works."
+   },
+   {
+    "t": "key",
+    "html": "A <b>lever</b> turns around a pivot. A point far from the pivot moves <b>farther</b> than a point close to it. But it pushes with <b>less force</b>. You cannot get both for free."
+   },
+   {
+    "t": "viz",
+    "name": "rb-lever",
+    "opts": {
+     "a": 2,
+     "b": 6
+    },
+    "cap": "Slide the two distances and the push. Watch how far each end moves, and the readout for how hard the gripper can push."
+   },
+   {
+    "t": "why",
+    "html": "Robot arms are chains of levers. Long arms reach far but cannot lift much. Strong arms are short or have big motors. Engineers always trade reach for strength."
+   },
+   {
+    "t": "h",
+    "text": "Let's think it through"
+   },
+   {
+    "t": "ex",
+    "title": "How far does it reach?",
+    "q": "You push a lever 2 cm from its pivot and move it down 1 cm. The other end is 6 cm from the pivot. How far does it move up?",
+    "steps": [
+     "The far end is 3 times as far from the pivot (6 ÷ 2 = 3).",
+     "So it moves 3 times as far: 3 × 1 cm."
+    ],
+    "a": "3 cm."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a long arm is both farther-reaching and stronger. Each step out along the arm gives more reach and less strength."
+   },
+   {
+    "t": "h",
+    "text": "Hands-on project 1: a cardboard arm"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"rb-parts\"><b>Parts</b> (mostly free)<ul><li>Cardboard from a box, a ruler and a pencil</li><li>Brass paper fasteners for the joints</li><li>Clothespin for the gripper</li><li>Optional: plastic syringes and tubing (a few dollars) to make the joints move with water pressure</li></ul></div>"
+   },
+   {
+    "t": "list",
+    "items": [
+     "Cut three cardboard strips: a base, an upper arm and a forearm.",
+     "Join them with paper fasteners at the shoulder and elbow so they bend.",
+     "Glue a clothespin at the end as the hand. Move the joints by hand and pick up a paper cup.",
+     "Measure: how far can the hand reach? What can it lift without bending?"
+    ]
+   },
+   {
+    "t": "h",
+    "text": "Hands-on project 2: a bristlebot"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"rb-parts\"><b>Parts</b> (about \\$10 for several)<ul><li>A toothbrush head (or a brush with stiff bristles)</li><li>A small vibration motor, sold for hobby projects</li><li>A 3-volt coin cell and double-sided foam tape</li></ul></div>"
+   },
+   {
+    "t": "p",
+    "html": "Tape the motor and coin cell on top of the brush head, and touch the motor's wires to the battery. The motor shakes, the bristles bend, and the bot scoots. Try bending the bristles one way to make it go straighter. It is not a robot (it does not sense), but it is a first machine you built yourself."
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"rb-safe\"><b>Safety.</b><ul><li>A grown-up does the cutting with a craft knife, on a cutting mat. Kids can use safety scissors.</li><li>Use a low-temperature glue gun with a grown-up, or plain white glue.</li><li>Coin cells: a grown-up hands them out and puts them away; they are dangerous if swallowed.</li></ul></div>"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "FIRST (For Inspiration and Recognition of Science and Technology), programs for students",
+    "url": "https://www.firstinspires.org/"
+   },
+   {
+    "name": "Raspberry Pi Foundation, Raspberry Pi Projects",
+    "url": "https://projects.raspberrypi.org/"
+   }
+  ]
+ }
+}

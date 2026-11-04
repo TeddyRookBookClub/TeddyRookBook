@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{{ "garden/garden.css" | relURL }}?v={{ (os.Stat "static/garden/garden.css").ModTime.Unix }}">
 {{ $g := site.Data.garden.guide }}{{ $a := site.Data.garden.animals }}{{ $v := site.Data.garden.viz }}
 <div class="hs gd" id="gd-gpage" data-units>
-  <nav class="hs-crumbs"><a href="{{ "garden/" | relURL }}">Food Garden Planner</a> › Guides</nav>
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "garden/" | relURL }}">Food Garden Planner</a> › Guides</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">Grow your own food</p>
     <h1>Growing Guides</h1>

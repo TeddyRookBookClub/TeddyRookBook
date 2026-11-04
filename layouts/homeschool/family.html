@@ -40,7 +40,7 @@
 {{- end -}}
 {{- $json := resources.FromString "homeschool/family/units.json" (dict "units" $units "T" ($S.Get "T" | default dict) | jsonify) | fingerprint "md5" -}}
 <div class="hs fam" id="fam" data-src="{{ $json.RelPermalink }}" data-root="{{ "/" | relURL }}" data-planner="{{ "homeschool/planner/" | relURL }}">
-  <nav class="hs-crumbs hs-noprint"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Family Study</nav>
+  <nav class="hs-crumbs hs-noprint" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Family Study</nav>
   <header class="hs-hero hs-noprint">
     <p class="hs-eyebrow">Homeschool · Family Study</p>
     <h1>Family Study</h1>

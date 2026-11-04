@@ -242,7 +242,7 @@
       GT.seg(el.pre, 'data-g', S.preset); GT.seg(el.bots, 'data-bot', S.bot); GT.seg(el.size, 'data-n', g.rows.length);
       el.edit.setAttribute('aria-pressed', String(S.edit)); el.edit.textContent = S.edit ? '✓ Done editing' : '✎ Edit the game';
       if (S.edit) {
-        var h = '<div class="gt1-ed"><table aria-label="Edit the payoffs. Your payoff first, the opponent’s second."><thead><tr><th></th>';
+        var h = '<div class="gt1-ed"><table aria-label="Edit the payoffs. Your payoff first, the opponent’s second."><thead><tr><td></td>';
         g.cols.forEach(function (cn, j) { h += '<th><input type="text" class="gt1-n2" data-c="' + j + '" value="' + esc(cn) + '" maxlength="12" aria-label="Name of column ' + (j + 1) + '"></th>'; });
         h += '</tr></thead><tbody>';
         g.rows.forEach(function (rn, i) {

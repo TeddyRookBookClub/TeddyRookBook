@@ -5,7 +5,7 @@
 {{ $g := index (where $d.groups "key" $f.group) 0 }}
 {{ $sib := where $d.families "group" $f.group }}
 <div class="hs pz" id="pz-fam" data-fam="{{ $f.key }}">
-  <nav class="hs-crumbs pz-noprint"><a href="{{ "puzzles/" | relURL }}">Brain Puzzles</a> › <a href="{{ printf "puzzles/#%s" $g.key | relURL }}">{{ $g.name }}</a> › {{ $f.name }}</nav>
+  <nav class="hs-crumbs pz-noprint" aria-label="Breadcrumb"><a href="{{ "puzzles/" | relURL }}">Brain Puzzles</a> › <a href="{{ printf "puzzles/#%s" $g.key | relURL }}">{{ $g.name }}</a> › {{ $f.name }}</nav>
   <header class="hs-hero pz-hero pz-noprint">
     <div class="pz-fhead">
       <span class="pz-big-ic" aria-hidden="true">{{ $f.icon }}</span>
