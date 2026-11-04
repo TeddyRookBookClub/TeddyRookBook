@@ -1,0 +1,285 @@
+year: 2001
+edition: 62nd
+date: "December 1, 2001"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2001.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Algebra: one identity for a binary operation implies another"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - 'The identity holds for every pair. Use it with the first slot filled by $b*a$.'
+    solution: |
+      **Key idea:** apply the given identity to the pair $(b*a,\ b)$, then simplify the inside with the identity again.
+
+      The rule $(x*y)*x=y$ holds for all $x,y\in S$.
+
+      - With $x=b$, $y=a$: $(b*a)*b=a$.
+      - With $x=b*a$, $y=b$: $\big((b*a)*b\big)*(b*a)=b$.
+
+      Substitute the first line into the second: $a*(b*a)=b$, which is what we wanted.
+    checked: "proof only (two substitutions)"
+    status: ready
+
+  - id: A2
+    topic: "Probability: parity of heads from biased coins"
+    areas: [probability]
+    difficulty: 1
+    answer: '$\dfrac{n}{2n+1}$'
+    hints:
+      - 'Look at $\prod_k\big((1-p_k)-p_k\big)$. What does it measure?'
+      - 'The product telescopes.'
+    solution: |
+      **Key idea:** the expected value of $(-1)^{\#\text{heads}}$ is a product, and here it telescopes.
+
+      Let $p_k=\frac1{2k+1}$ and let $H$ be the number of heads. The coins are independent, so
+      $$E\big[(-1)^H\big]=\prod_{k=1}^n\big((1-p_k)-p_k\big)=\prod_{k=1}^n\frac{2k-1}{2k+1}=\frac1{2n+1}.$$
+      On the other hand $E[(-1)^H]=P(\text{even})-P(\text{odd})=1-2P(\text{odd})$. Therefore
+      $$P(\text{odd})=\frac12\Big(1-\frac1{2n+1}\Big)=\frac{n}{2n+1}.$$
+    checked: "script: exact enumeration with fractions for n = 1..7"
+    status: ready
+
+  - id: A3
+    topic: "Algebra: when a quartic factors over the integers"
+    areas: [algebra, number-theory]
+    difficulty: 2
+    answer: '$m$ is a perfect square or twice a perfect square ($m=k^2$ or $m=2k^2$, $k\ge0$)'
+    hints:
+      - 'Solve for $x^2$. The discriminant is a nice multiple of $m$.'
+      - 'The roots are $\pm\sqrt m\pm\sqrt2$. A factor of degree 2 picks two of them.'
+    solution: |
+      **Key idea:** the four roots are $\pm\sqrt m\pm\sqrt2$, and a quadratic factor with integer coefficients must pair them in a way that makes its coefficients integers.
+
+      **The roots.** As a quadratic in $x^2$, the discriminant is $(m+2)^2-(m-2)^2=8m$, so
+      $$x^2=m+2\pm2\sqrt{2m}=(\sqrt m\pm\sqrt2)^2 ,$$
+      and the roots are $\pm\sqrt m\pm\sqrt2$ (all four sign choices; for $m<0$, $\sqrt m$ is imaginary).
+
+      **Sufficiency.**
+      - If $m=k^2$: $P_m=\big(x^2-2kx+k^2-2\big)\big(x^2+2kx+k^2-2\big)$, pairing $k\pm\sqrt2$ and $-k\pm\sqrt2$.
+      - If $m=2k^2$: $P_m=\big(x^2-2(k+1)^2\big)\big(x^2-2(k-1)^2\big)$, since $\sqrt m\pm\sqrt2=(k\pm1)\sqrt2$.
+
+      **Necessity.** A factorization into nonconstant integer polynomials has a factor of degree $1$ or $2$.
+
+      - Degree $1$ means a rational root $q=\varepsilon\sqrt2\pm\sqrt m$ with $\varepsilon=\pm1$. Then $(q-\varepsilon\sqrt2)^2=m$ gives $q^2+2-m=2\varepsilon q\sqrt2$, so $q=0$ and $m=2$, which is twice a square.
+      - Degree $2$ means a monic integer quadratic whose roots are two of the four. Pairing $r$ with $-r$ gives $x^2-r^2$ with $r^2=m+2\pm2\sqrt{2m}$, an integer only if $\sqrt{2m}$ is rational, so $2m$ is a perfect square and $m=2k^2$. Pairing $\sqrt m+\sqrt2$ with $\sqrt m-\sqrt2$ (or the negatives) gives the sum $\pm2\sqrt m$, an integer only if $m$ is a perfect square. Pairing $\sqrt2+\sqrt m$ with $\sqrt2-\sqrt m$ (or the negatives) gives the sum $\pm2\sqrt2$, never an integer.
+
+      So $P_m$ factors exactly when $m$ is a square or twice a square (this includes $m=0$ and $m=2$; negative $m$ never work).
+    checked: "script: sympy factored P_m for -30 ≤ m ≤ 100; it splits exactly for 0,1,2,4,8,9,16,18,25,…"
+    status: ready
+
+  - id: A4
+    topic: "Geometry: three cevians bisecting each other in a cycle"
+    areas: [geometry]
+    difficulty: 3
+    answer: '$\dfrac{7-3\sqrt5}{4}$'
+    hints:
+      - 'Put $A$ at the origin and use vectors. Write each point on a side with one ratio.'
+      - 'Each bisecting condition gives one equation; the three equations are the same up to a cyclic shift, and they force the three ratios to be equal.'
+    solution: |
+      **Key idea:** each condition is one equation in the side ratios; a monotonicity argument makes the three ratios equal, and the area is a $3\times3$ determinant in barycentric coordinates.
+
+      **Set up.** Use vectors with $A$ at the origin, $B=\mathbf b$, $C=\mathbf c$. Write
+      $$E=(1-e)\mathbf b+e\,\mathbf c,\qquad F=(1-f)\,\mathbf c,\qquad G=g\,\mathbf b,$$
+      so $e=BE/BC$, $f=CF/CA$, $g=AG/AB$, all in $(0,1)$.
+
+      **One condition.** $R$ is the midpoint of $BF$: $R=\tfrac12\mathbf b+\tfrac{1-f}2\mathbf c$. It lies on line $AE$ exactly when its coefficients are proportional to those of $E$: $\frac{1-f}{2}(1-e)=\frac12e$, i.e. $(1-e)(1-f)=e$. Relabeling $A\to B\to C\to A$ moves $e\to f\to g$, so the other two conditions are $(1-f)(1-g)=f$ and $(1-g)(1-e)=g$.
+
+      **Solve.** The first equation says $e=\varphi(f)$ with $\varphi(x)=\frac{1-x}{2-x}$, and similarly $f=\varphi(g)$, $g=\varphi(e)$. So $e=\varphi(\varphi(\varphi(e)))$. The function $\varphi$ is strictly decreasing on $[0,1]$, so $\varphi\circ\varphi\circ\varphi$ is strictly decreasing too, and the equation $x=\varphi^3(x)$ has at most one solution. The fixed point of $\varphi$ is one: $x=\frac{1-x}{2-x}$ gives $x^2-3x+1=0$, so $x=\frac{3-\sqrt5}2$. Hence $e=f=g=x$ with $x^2=3x-1$.
+
+      **Area.** In barycentric coordinates with respect to $A,B,C$ (weights summing to $1$):
+      $$R=\Big(\tfrac x2,\tfrac12,\tfrac{1-x}2\Big),\quad S=\Big(\tfrac{1-x}2,\tfrac x2,\tfrac12\Big),\quad T=\Big(\tfrac12,\tfrac{1-x}2,\tfrac x2\Big)$$
+      ($S$ and $T$ follow from $R$ by the cyclic relabeling). The area of $RST$ divided by the area of $ABC$ is the absolute value of the determinant of these rows. It is $\tfrac18$ times the circulant determinant of $(x,1,1-x)$, and a circulant $(p,q,r)$ has determinant $p^3+q^3+r^3-3pqr$:
+      $$x^3+1+(1-x)^3-3x(1-x)=6x^2-6x+2=12x-4=14-6\sqrt5 .$$
+      Since $[ABC]=1$, the area of $RST$ is $\frac{14-6\sqrt5}8=\frac{7-3\sqrt5}4\approx0.073$.
+    checked: "script: sympy solved the three midpoint-on-line conditions in coordinates; the only solution in the triangle gives area (7−3√5)/4"
+    status: ready
+
+  - id: A5
+    topic: "Number theory: an exponential equation equal to 2001"
+    areas: [number-theory]
+    difficulty: 3
+    answer: '$a=13,\ n=2$'
+    hints:
+      - 'Reduce mod $a$ and mod $a+1$. Both give strong conditions on $a$.'
+      - 'For the few candidates left, reduce mod $3$ or mod $8$.'
+    solution: |
+      **Key idea:** reducing modulo $a$ and $a+1$ leaves only three values of $a$; small moduli then pin down $n$.
+
+      Note $13^3-14^2=2197-196=2001$, so $(a,n)=(13,2)$ works. We show it is the only pair.
+
+      **Mod $a$.** $(a+1)^n\equiv1$, so $a^{n+1}-(a+1)^n\equiv-1$. Hence $2001\equiv-1\pmod a$, i.e. $a\mid2002=2\cdot7\cdot11\cdot13$.
+
+      **Mod $a+1$.** $a\equiv-1$, so $(-1)^{n+1}\equiv2001\pmod{a+1}$, i.e. $a+1$ divides $2000$ or $2002$.
+
+      Checking the sixteen divisors $a$ of $2002$, the only ones with $a+1\mid2000$ or $a+1\mid2002$ are $a=1$ ($a+1=2$), $a=7$ ($a+1=8\mid2000$) and $a=13$ ($a+1=14\mid2002$).
+
+      - $a=1$: $1-2^n=2001$ is impossible.
+      - $a=7$: mod $8$, $(-1)^{n+1}\equiv2001\equiv1$, so $n$ is odd. Mod $3$, $7\equiv1$ and $8\equiv2$, so $1-2^n\equiv2001\equiv0$, i.e. $2^n\equiv1\pmod 3$, so $n$ is even. Contradiction.
+      - $a=13$: mod $14$, $(-1)^{n+1}\equiv2001\equiv-1$, so $n$ is even. Mod $8$: $13\equiv5$, and $5^{n+1}\equiv5$ for even $n$; if $n\ge3$ then $14^n\equiv0\pmod8$, giving $5\equiv2001\equiv1\pmod 8$, false. So $n\le2$, and $n$ even means $n=2$.
+
+      Hence $(a,n)=(13,2)$ is the unique solution.
+    checked: "script: search over a < 3000, n < 40 finds only (13, 2)"
+    status: ready
+
+  - id: A6
+    topic: "Calculus: a long parabolic arc inside a unit circle"
+    areas: [calculus, geometry]
+    difficulty: 4
+    answer: 'Yes'
+    hints:
+      - 'Use a very narrow parabola with its vertex at the bottom of the circle. Roughly, it runs up and back down a diameter.'
+      - 'Compare $\sqrt{1+t^2}$ with $t$: the difference is $\frac1{\sqrt{1+t^2}+t}$, which is at least $\frac1{1+2t}$.'
+    solution: |
+      **Key idea:** a narrow parabola runs almost up a diameter and back, for length almost $4$; a careful estimate shows the small sideways wiggle adds more than the arc falls short at the top.
+
+      Take the unit circle centered at the origin and the parabola $y=ax^2-1$ with $a$ large. Substituting into $x^2+y^2=1$ gives $x^2\big(a^2x^2-(2a-1)\big)=0$, so the parabola is inside the circle for $|x|\le x_0$, where $x_0=\frac{\sqrt{2a-1}}a$. At the ends, $y=ax_0^2-1=1-\frac1a$.
+
+      The length of this arc is
+      $$L=2\int_0^{x_0}\sqrt{1+4a^2x^2}\,dx .$$
+      For $t\ge0$, $\sqrt{1+t^2}-t=\frac1{\sqrt{1+t^2}+t}\ge\frac1{1+2t}$, because $\sqrt{1+t^2}\le1+t$. With $t=2ax$,
+      $$L\ge2\int_0^{x_0}2ax\,dx+2\int_0^{x_0}\frac{dx}{1+4ax}=2ax_0^2+\frac{\ln(1+4ax_0)}{2a}=4-\frac2a+\frac{\ln\big(1+4\sqrt{2a-1}\big)}{2a}.$$
+      So $L>4$ as soon as $\ln(1+4\sqrt{2a-1})>4$, i.e. $1+4\sqrt{2a-1}>e^4\approx54.6$. This holds for $a=100$, where the bound gives $L>4.0002$ (a numerical integration gives $L\approx4.0027$).
+
+      The vertex $(0,-1)$ and the two ends lie on the circle. If the arc must lie strictly inside, shrink the picture by a factor $1-\varepsilon$ about the center: it is still a parabolic arc, now strictly inside, and its length $(1-\varepsilon)L$ is still above $4$ for small $\varepsilon$.
+
+      So the answer is yes.
+    viz: putnam-2001-a6
+    checked: "script: numerical arc lengths for a = 50, 90, 100, 200, 1000 are all above 4 (about 4.0018 to 4.0027)"
+    status: ready
+
+  - id: B1
+    topic: "Combinatorics: balanced coloring of a numbered grid"
+    areas: [combinatorics]
+    difficulty: 1
+    hints:
+      - 'Split each entry into a row part and a column part.'
+    solution: |
+      **Key idea:** each entry is a row part plus a column part, and the coloring is balanced in every row and every column.
+
+      The entry in row $k$, column $j$ is $(k-1)n+j$. Sum it over the red squares in two pieces.
+
+      - **Row parts.** Each row has $n/2$ red squares, so the red row parts add up to $\sum_k\frac n2(k-1)n$. The same count holds for black.
+      - **Column parts.** Each column has $n/2$ red squares, so the red column parts add up to $\sum_j\frac n2\,j$. Again the same for black.
+
+      So the red total equals the black total.
+    checked: "proof only"
+    status: ready
+
+  - id: B2
+    topic: "Algebra: a system that hides two fifth powers"
+    areas: [algebra]
+    difficulty: 2
+    answer: '$x=\dfrac{\sqrt[5]3+1}{2},\ y=\dfrac{\sqrt[5]3-1}{2}$'
+    hints:
+      - 'Add and subtract the two equations, then multiply by $x$ or by $y$.'
+      - 'Compare with the binomial expansion of $(x\pm y)^5$.'
+    solution: |
+      **Key idea:** adding and subtracting the equations, then clearing denominators, gives exactly the two halves of $(x+y)^5$ and $(x-y)^5$.
+
+      Note $x,y\ne0$. The right sides are $3x^4+10x^2y^2+3y^4$ and $2y^4-2x^4$.
+
+      - Adding: $\frac2x=x^4+10x^2y^2+5y^4$, so $x^5+10x^3y^2+5xy^4=2$.
+      - Subtracting: $\frac1y=5x^4+10x^2y^2+y^4$, so $5x^4y+10x^2y^3+y^5=1$.
+
+      These are the odd-in-$y$ and even-in-$y$ halves of the binomial expansion:
+      $$(x+y)^5=2+1=3,\qquad (x-y)^5=2-1=1 .$$
+      So $x+y=\sqrt[5]3$ and $x-y=1$, giving the single real pair
+      $$x=\frac{\sqrt[5]3+1}2,\qquad y=\frac{\sqrt[5]3-1}2 .$$
+      Both are nonzero, and each step reverses (we only multiplied by the nonzero $x$ or $y$), so this pair does solve the system.
+    checked: "script: substituting the pair into both equations gives residuals below 2e-15"
+    status: ready
+
+  - id: B3
+    topic: "Series: grouping terms by the nearest integer to a root"
+    areas: [analysis, number-theory]
+    difficulty: 2
+    answer: '$3$'
+    hints:
+      - 'For which $n$ is the nearest integer to $\sqrt n$ equal to $k$?'
+      - 'After grouping, the sum telescopes.'
+    solution: |
+      **Key idea:** group the terms by the value $k$ of the nearest integer; each group is a short geometric sum, and the total telescopes.
+
+      The nearest integer to $\sqrt n$ is $k$ exactly when $k-\tfrac12<\sqrt n<k+\tfrac12$, i.e. $k^2-k+\tfrac14<n<k^2+k+\tfrac14$, i.e. $k^2-k+1\le n\le k^2+k$. (No $\sqrt n$ is ever a half-integer.) So
+      $$\sum_{n\ge1}\frac{2^{\langle n\rangle}+2^{-\langle n\rangle}}{2^n}=\sum_{k\ge1}\big(2^k+2^{-k}\big)\sum_{n=k^2-k+1}^{k^2+k}2^{-n}=\sum_{k\ge1}\big(2^k+2^{-k}\big)\big(2^{-(k^2-k)}-2^{-(k^2+k)}\big).$$
+      Expanding the product, the two middle terms cancel:
+      $$2^{-k^2+2k}-2^{-k^2-2k}=2\big(2^{-(k-1)^2}-2^{-(k+1)^2}\big).$$
+      Summing over $k\ge1$, everything cancels except the first two positive terms:
+      $$2\big(2^{0}+2^{-1}\big)=3 .$$
+    checked: "script: the first 200 terms sum to 3.0 in floating point"
+    status: ready
+
+  - id: B4
+    topic: "Number theory: iterating x minus 1/x on rationals"
+    areas: [number-theory, algebra]
+    difficulty: 3
+    answer: 'True: the intersection is empty'
+    hints:
+      - 'Write $x=p/q$ in lowest terms. Is $\frac{p^2-q^2}{pq}$ in lowest terms?'
+      - 'Find a size measure on rationals that strictly increases under $f$.'
+    solution: |
+      **Key idea:** the "height" $|p|+|q|$ of a fraction strictly increases under $f$, so each rational can be reached by only boundedly many steps.
+
+      For a rational $x=p/q$ in lowest terms ($q\ge1$), let $h(x)=|p|+|q|$.
+
+      **$f$ in lowest terms.** $f(p/q)=\frac{p^2-q^2}{pq}$. A prime dividing $pq$ divides $p$ or $q$, but not both; then it does not divide $p^2-q^2$. So this fraction is in lowest terms (up to the sign of the denominator), and
+      $$h(f(x))=|p^2-q^2|+|pq| .$$
+
+      **$h$ grows.** For $x\in S$ we have $p\ne0$ and $|p|\ne|q|$. So $|p^2-q^2|=\big||p|-|q|\big|\,(|p|+|q|)\ge|p|+|q|$, and $|pq|\ge1$. Hence $h(f(x))\ge h(x)+1$.
+
+      **Conclusion.** If $y\in f^{(n)}(S)$, then $y=f^{(n)}(x)$ for some $x\in S$, and $h(y)\ge h(x)+n>n$. So a given rational $y$ is not in $f^{(n)}(S)$ once $n\ge h(y)$. No rational lies in every $f^{(n)}(S)$: the intersection is empty, and the statement is true.
+    checked: "script: h(f(x)) > h(x) checked for all p/q with |p| ≤ 30, q ≤ 30"
+    status: ready
+
+  - id: B5
+    topic: "Functional equation: a continuous g with linear second iterate"
+    areas: [analysis]
+    difficulty: 4
+    hints:
+      - 'Show $g$ is injective, hence monotone, and then onto. So every orbit $g^n(x)$ is defined for all integers $n$.'
+      - 'Along an orbit, $x_{n+2}=ax_{n+1}+bx_n$. Compare the two roots of $t^2-at-b$: one positive, one negative and smaller in size.'
+    solution: |
+      **Key idea:** along each orbit the values satisfy a linear recurrence. Monotonicity of $g$ forbids one of the two exponential modes, and what remains is $g(x)=cx$.
+
+      **$g$ is a bijection.** If $g(x)=g(y)$, then $bx=g(g(x))-ag(x)=by$, so $x=y$. A continuous injective function on $\mathbb R$ is strictly monotone.
+      - If $g$ is increasing and had a finite limit $L$ at $+\infty$, then $g(g(x))\to g(L)$ while $ag(x)+bx\to+\infty$. So $g\to+\infty$ at $+\infty$; similarly $g\to-\infty$ at $-\infty$.
+      - If $g$ is decreasing, the same argument gives $g\to\mp\infty$ at $\pm\infty$.
+
+      Either way $g$ is onto, so $g^{-1}$ exists and orbits $x_n=g^n(x)$ make sense for all $n\in\mathbb Z$.
+
+      **The recurrence.** Applying the equation at $x_n$ gives $x_{n+2}=ax_{n+1}+bx_n$ for every integer $n$. The roots of $t^2-at-b$ are
+      $$r_1=\frac{a+\sqrt{a^2+4b}}2>0,\qquad r_2=\frac{a-\sqrt{a^2+4b}}2<0,$$
+      and $|r_2|<r_1$ because $r_1+r_2=a>0$. So for all $n\in\mathbb Z$, $x_n=c_1r_1^n+c_2r_2^n$, with $c_1,c_2$ fixed by $x_0=x$ and $x_1=g(x)$. The differences are
+      $$d_n=x_{n+1}-x_n=c_1(r_1-1)r_1^n+c_2(r_2-1)r_2^n .$$
+      Here $r_2-1\ne0$, and $r_1\ne1$ because $1-a-b>0$. If $x_1=x_0$ then $x$ is a fixed point, so $x=ax+bx$ and $x=0$. Otherwise all $d_n\ne0$.
+
+      **Increasing $g$.** Then the orbit is monotone: all $d_n$ have the same sign. As $n\to-\infty$, $|r_2|^n$ beats $r_1^n$ (since $|r_2|<r_1$), so if $c_2\ne0$ the sign of $d_n$ would alternate. Thus $c_2=0$, and $g(x)=x_1=r_1x_0=r_1x$.
+
+      **Decreasing $g$.** Then $d_n$ and $d_{n+1}$ always have opposite signs. As $n\to+\infty$, $r_1^n$ beats $|r_2|^n$, so if $c_1\ne0$ the sign of $d_n$ would eventually be constant. Thus $c_1=0$ and $g(x)=r_2x$.
+
+      Each case covers every $x$ (including $x=0$, where $g(0)=0$), so $g(x)=cx$ with $c=r_1$ or $c=r_2$.
+    checked: "proof only"
+    status: ready
+
+  - id: B6
+    topic: "Sequences: local concavity of a sublinear increasing sequence"
+    areas: [analysis]
+    difficulty: 4
+    answer: 'Yes'
+    hints:
+      - 'Tilt the picture: look at $a_k-ck$ for a small slope $c>0$.'
+      - 'Take the last index where $a_k-ck$ is largest. What does that say about $a_{n-i}+a_{n+i}$?'
+    solution: |
+      **Key idea:** subtract a line of small slope $c$ and take the last place where the result is largest; that index has the required property, and as $c\to0$ these indices go to infinity.
+
+      We read "increasing" as strictly increasing. (If equal neighbors were allowed, a sequence that is eventually constant would be a counterexample.)
+
+      Fix $c>0$. Since $a_k/k\to0$, we have $a_k-ck\to-\infty$, so $a_k-ck$ has a largest value over $k\ge1$. Let $n=n(c)$ be the **largest** index where it is attained. For $1\le i\le n-1$:
+      $$a_{n+i}-c(n+i)<a_n-cn\quad(\text{strict: }n\text{ is the last maximum}),\qquad a_{n-i}-c(n-i)\le a_n-cn .$$
+      Adding, the $c$ terms cancel and $a_{n-i}+a_{n+i}<2a_n$. So every $n(c)$ works.
+
+      **Infinitely many.** Suppose all $n(c)$ for $c$ in some sequence $c\to0$ were at most $M$. For each such $c$ and every $k$, $a_k-ck\le a_{n(c)}-c\,n(c)\le a_M$. Letting $c\to0$ gives $a_k\le a_M$ for all $k$, contradicting $a_{M+1}>a_M$. So $n(c)\to\infty$ as $c\to0$, and infinitely many $n$ have the property.
+    checked: "proof only"
+    status: ready

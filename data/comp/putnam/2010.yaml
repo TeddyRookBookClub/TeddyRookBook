@@ -1,0 +1,272 @@
+year: 2010
+edition: 71st
+date: "December 4, 2010"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2010.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Combinatorics: splitting 1 to n into equal-sum boxes"
+    areas: [combinatorics]
+    difficulty: 1
+    answer: "$k=\\lceil n/2\\rceil$"
+    hints:
+      - 'The box that holds $n$ has sum at least $n$.'
+      - 'Pair small numbers with large ones.'
+    solution: |
+      **Key idea:** every box sum is at least $n$, which caps $k$; pairing $j$ with $n-j$ (or $n+1-j$) reaches the cap.
+
+      **Upper bound.** All boxes have the same sum $s$, and the box containing $n$ shows $s\ge n$. The total is $\frac{n(n+1)}2=ks\ge kn$, so $k\le\frac{n+1}2$. As $k$ is an integer, $k\le\lceil n/2\rceil$.
+
+      **Construction.**
+      - If $n$ is even, use the $\frac n2$ boxes $\{1,n\},\{2,n-1\},\dots,\{\frac n2,\frac n2+1\}$, each with sum $n+1$.
+      - If $n$ is odd, use $\{n\}$ and the $\frac{n-1}2$ boxes $\{1,n-1\},\{2,n-2\},\dots$, each with sum $n$. That is $\frac{n+1}2$ boxes.
+
+      Both match the bound, so the largest $k$ is $\lceil n/2\rceil$.
+    viz: putnam-2010-a1
+    checked: "script: exhaustive search for n ≤ 12 agrees with ⌈n/2⌉"
+    status: ready
+
+  - id: A2
+    topic: "Functional equation: derivative equals every forward difference"
+    areas: [analysis, calculus]
+    difficulty: 1
+    answer: "$f(x)=ax+b$"
+    hints:
+      - 'Compare the cases $n=1$ and $n=2$.'
+      - 'Show that $f''$ has period $1$; then differentiate the $n=1$ equation.'
+    solution: |
+      **Key idea:** the cases $n=1$ and $n=2$ make $f'$ periodic, and then $f''=0$.
+
+      With $n=1$: $f'(x)=f(x+1)-f(x)$. With $n=2$:
+      $$2f'(x)=f(x+2)-f(x)=\big(f(x+2)-f(x+1)\big)+\big(f(x+1)-f(x)\big)=f'(x+1)+f'(x).$$
+      So $f'(x+1)=f'(x)$ for all $x$.
+
+      The right side of $f'(x)=f(x+1)-f(x)$ is differentiable, so $f'$ is differentiable, and
+      $$f''(x)=f'(x+1)-f'(x)=0 .$$
+      Hence $f'$ is constant and $f(x)=ax+b$.
+
+      Conversely, for $f(x)=ax+b$ both sides equal $a$ for every $n$. So the answer is all linear functions $f(x)=ax+b$.
+    checked: "exact algebra: substitution verified symbolically"
+    status: ready
+
+  - id: A3
+    topic: "PDE: bounded solution of a first-order equation"
+    areas: [analysis, calculus]
+    difficulty: 1
+    hints:
+      - 'Restrict $h$ to a line in the direction $(a,b)$.'
+      - 'On such a line, $h$ satisfies $\varphi''=\varphi$.'
+    solution: |
+      **Key idea:** along lines in the direction $(a,b)$, the equation says $h$ grows exactly like $e^t$.
+
+      If $a=b=0$ the equation reads $h=0$ directly. Otherwise fix a point $(x,y)$ and let
+      $$\varphi(t)=h(x+at,\;y+bt).$$
+      By the chain rule, $\varphi'(t)=a\,h_x+b\,h_y$ evaluated at $(x+at,y+bt)$, which equals $h(x+at,y+bt)=\varphi(t)$. So $\varphi(t)=\varphi(0)e^t$.
+
+      Since $|\varphi(t)|\le M$ for all $t$, and $e^t\to\infty$, we must have $\varphi(0)=0$. That is, $h(x,y)=0$. The point was arbitrary, so $h\equiv0$.
+    checked: "proof only"
+    status: ready
+
+  - id: A4
+    topic: "Number theory: a tower of powers of ten is composite"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'Write $n=2^s m$ with $m$ odd and try the divisor $10^{2^s}+1$.'
+      - 'Modulo $10^{2^s}+1$, we have $10^{2^s}\equiv-1$. Which powers of $10$ become $1$?'
+    solution: |
+      **Key idea:** with $n=2^sm$, $m$ odd, the number $10^{2^s}+1$ divides it, because each tower term reduces to $\pm1$.
+
+      Let $t=2^s$ and $Q=10^t+1$, so $10^t\equiv-1$ and $10^{2t}\equiv1\pmod Q$. Hence $10^e\equiv1$ whenever $2t\mid e$, and $10^e\equiv-1$ when $e$ is an odd multiple of $t$.
+
+      - $10^n=(10^t)^m\equiv(-1)^m=-1$, since $m$ is odd.
+      - $10^n$ is divisible by $2^n$, and $n\ge 2^s\ge s+1$, so $2t=2^{s+1}$ divides $10^n$. Hence $10^{10^n}\equiv1$.
+      - Likewise $10^{10^n}$ is divisible by $2^{s+1}$, so $10^{10^{10^n}}\equiv1$.
+
+      Adding, the number is $\equiv1+1+(-1)-1=0\pmod Q$. It is clearly larger than $Q$ and $Q>1$, so it is not prime.
+    checked: "script: for n=1..7 the number is ≡ 0 modulo 10^{2^s}+1 (computed with modular exponentiation)"
+    status: ready
+
+  - id: A5
+    topic: "Groups in space whose product matches the cross product"
+    areas: [algebra, linear-algebra]
+    difficulty: 3
+    hints:
+      - 'Let $e$ be the identity. If $e$ is not the zero vector, use $a*e=a$ to show every element is parallel to $e$.'
+      - 'If $e$ is the zero vector, show first that $a^{-1}$ is parallel to $a$, then that any two non-parallel elements are perpendicular.'
+    solution: |
+      **Key idea:** whenever $a\times b\ne0$ the group product must be the cross product, and that structure is too rigid; we split by whether the identity is the zero vector.
+
+      Note: if $x,y\in G$ are not parallel, then $x\times y\ne0$, so the rule forces $x*y=x\times y$, a vector perpendicular to both.
+
+      **Case 1: the identity $e$ is not $0$.** For $a\in G$, if $a\times e\ne0$ then $a=a*e=a\times e$, which is perpendicular to $a$. So $a\cdot a=0$, $a=0$, and then $a\times e=0$ after all, a contradiction. Hence $a\times e=0$ for every $a$: all elements lie on the line through $e$, and all cross products vanish.
+
+      **Case 2: $e=0$.** Suppose, for contradiction, that $a,b\in G$ are not parallel. Then $a,b\ne0$ and $c:=a*b=a\times b\ne0$.
+
+      1. *$a^{-1}$ is parallel to $a$.* Otherwise $0=e=a*a^{-1}=a\times a^{-1}\ne0$. Write $a^{-1}=\lambda a$ with $\lambda\ne0$.
+      2. *$a\perp b$.* Since $c\perp a$, the vectors $a^{-1}$ and $c$ are not parallel, so $b=a^{-1}*c=\lambda\,a\times(a\times b)=\lambda(a\cdot b)\,a-\lambda|a|^2b$. As $a,b$ are independent, $1+\lambda|a|^2=0$ and $a\cdot b=0$. In particular $\lambda=-1/|a|^2<0$.
+      3. *Then $a*c=a\times c=a\times(a\times b)=-|a|^2b$*, again because $a,c$ are not parallel.
+      4. *Look at $s=a*a$.* If $s=0=e$, then $a^{-1}=a$ and $\lambda=1$, which contradicts $\lambda<0$. If $s=\mu a$ with $\mu\ne0$, then $s$ and $b$ are not parallel, so $s*b=\mu\,a\times b=\mu c$. But associativity gives $s*b=a*(a*b)=a*c=-|a|^2b$, and $\mu c$ is not parallel to $b$. Contradiction. Finally, if $s$ is not parallel to $a$, then $a*s=a\times s$ and $s*a=s\times a$. Both equal $a*a*a$, so $a\times s=s\times a=-(a\times s)$, giving $a\times s=0$. That is a contradiction too.
+
+      So in Case 2 any two elements are parallel, and again every cross product is $0$.
+    checked: "proof only; each vector identity was checked with sympy on symbolic vectors"
+    status: ready
+
+  - id: A6
+    topic: "Improper integrals: relative drop of a decreasing function"
+    areas: [analysis]
+    difficulty: 2
+    hints:
+      - 'For $x\ge t$, the denominator $f(x)$ is at most $f(t)$.'
+      - 'The integral of $f(x)-f(x+1)$ telescopes.'
+    solution: |
+      **Key idea:** the tail of the integral from any $t$ is at least $f(t+1)/f(t)$; if the integral converged this ratio would tend to $0$, and then the integrand would tend to $1$.
+
+      Since $f$ decreases strictly to $0$, it is positive. The integrand $1-\frac{f(x+1)}{f(x)}$ is positive.
+
+      **A lower bound for the tail.** Fix $t\ge0$. For $x\ge t$ we have $0<f(x)\le f(t)$, so the integrand is at least $\frac{f(x)-f(x+1)}{f(t)}$. For $T>t$,
+      $$\int_t^T\big(f(x)-f(x+1)\big)dx=\int_t^{t+1}f-\int_T^{T+1}f\ \longrightarrow\ \int_t^{t+1}f\ \ge\ f(t+1)$$
+      as $T\to\infty$, since $f\to0$. So
+      $$\int_t^\infty\frac{f(x)-f(x+1)}{f(x)}\,dx\ \ge\ \frac{f(t+1)}{f(t)} .$$
+
+      **Conclusion.** If the integral converged, its tails would tend to $0$, so $\frac{f(t+1)}{f(t)}\to0$ as $t\to\infty$. Then the integrand $1-\frac{f(t+1)}{f(t)}$ tends to $1$, and the integral of a function tending to $1$ diverges. This contradiction shows the integral diverges.
+    checked: "proof only; the telescoping identity was checked numerically for f(x)=e^{-x^2} and f(x)=1/(1+x)"
+    status: ready
+
+  - id: B1
+    topic: "Power sums of a sequence equal to the exponent"
+    areas: [analysis, algebra]
+    difficulty: 1
+    answer: "No"
+    hints:
+      - 'Compare the sum of fourth powers with the square of the sum of squares.'
+      - 'When can $\sum x_i^2=(\sum x_i)^2$ hold for nonnegative $x_i$?'
+    solution: |
+      **Key idea:** $\sum a_i^4\le\big(\sum a_i^2\big)^2$ with equality only for a single nonzero term, and one term can't fit $m=2,4,6$ at once.
+
+      Suppose such a sequence exists. Put $x_i=a_i^2\ge0$. The cases $m=2$ and $m=4$ say $\sum x_i=2$ and $\sum x_i^2=4$. But
+      $$\Big(\sum x_i\Big)^2-\sum x_i^2=\sum_{i\ne j}x_ix_j\ \ge0,$$
+      with equality only if at most one $x_i$ is nonzero. Here $4-4=0$, so exactly one term $a$ is nonzero, with $a^2=2$.
+
+      Then $m=6$ requires $a^6=6$. But $a^6=(a^2)^3=8$. Contradiction, so no such sequence exists.
+    checked: "exact algebra"
+    status: ready
+
+  - id: B2
+    topic: "Geometry: lattice triangle with whole-number sides"
+    areas: [geometry, number-theory]
+    difficulty: 1
+    answer: "$3$"
+    hints:
+      - 'If $AB$ is $1$ or $2$, then $AB$ must be horizontal or vertical. Why?'
+      - 'Use the triangle inequality $|AC-BC|<AB$ and look at parity.'
+    solution: |
+      **Key idea:** short integer sides force $A$ and $B$ onto a grid line, and then the triangle inequality plus parity rules out $1$ and $2$.
+
+      **$3$ works:** $A=(0,0)$, $B=(3,0)$, $C=(0,4)$ gives sides $3,4,5$.
+
+      **$1$ and $2$ fail.** Let $AB=d\in\{1,2\}$. The vector $B-A=(p,q)$ has $p^2+q^2=d^2$. For $d=1,2$ the only integer solutions put one of $p,q$ at $0$. So set $A=(0,0)$, $B=(d,0)$, $C=(x,y)$ with $y\ne0$, and let $m=AC$, $n=BC$. Since the points are not collinear, $|m-n|<d$.
+
+      - $d=1$: then $m=n$, so $C$ is on the line $x=\frac12$, which is not an integer.
+      - $d=2$, $m=n$: then $x=1$ and $m^2=1+y^2$, so $(m-y)(m+y)=1$, forcing $y=0$. Not allowed.
+      - $d=2$, $|m-n|=1$: then $m^2-n^2=x^2-(x-2)^2=4(x-1)$ is even. But $m^2-n^2=\pm(m+n)$, and $m+n$ is odd. Contradiction.
+
+      So the smallest possible $AB$ is $3$.
+    checked: "script: searched all lattice points with |coordinates| ≤ 30; none works for AB=1 or 2, and AB=3 works"
+    status: ready
+
+  - id: B3
+    topic: "Combinatorics: moving balls between boxes to equalize"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: "$n\\ge1005$"
+    hints:
+      - 'Find a starting position where no move is possible at all.'
+      - 'For the other direction, try to gather every ball into box $B_1$.'
+    solution: |
+      **Key idea:** if box $B_i$ holds fewer than $i$ balls for every $i$, nothing can move; with enough balls you can sweep everything into $B_1$ and then hand out balls one at a time.
+
+      **If $n\le1004$, it can fail.** Put at most $i-1$ balls in box $B_i$ for every $i$. That holds up to $\sum_{i=1}^{2010}(i-1)=\frac{2009\cdot2010}{2}=2019045$ balls, which is at least $2010\cdot1004=2018040$. So we can place all $2010n$ balls this way. Then no box $B_i$ has $i$ balls, no move is possible, and since $B_1$ is empty we are not at the goal.
+
+      **If $n\ge1005$, it always works.** From $B_1$ we can move a single ball anywhere. So once all balls sit in $B_1$, we just deal out $n$ balls to each box. It remains to gather everything into $B_1$.
+
+      *Step 1.* While some $B_i$ ($i\ge2$) has at least $i$ balls, move $i$ of them to $B_1$. Afterwards each $B_i$ holds $r_i\le i-1$ balls.
+
+      *Step 2.* For $i=2,3,\dots,2010$ in order: move $i-r_i$ single balls from $B_1$ into $B_i$, then move all $i$ balls from $B_i$ to $B_1$. Box $B_i$ is now empty and $B_1$ has gained $r_i$.
+
+      Step 2 needs $B_1$ to hold at least $i-r_i\le i$ balls when we reach box $i$. At that moment boxes $2,\dots,i-1$ are empty and box $j\ge i$ holds at most $j-1$ balls, so
+      $$|B_1|\ \ge\ 2010n-\sum_{j=i}^{2010}(j-1)\ \ge\ 2020050-2019045+\sum_{t=0}^{i-2}t=1005+\frac{(i-1)(i-2)}2 ,$$
+      which is at least $i$ for every $i\ge2$. So the sweep always succeeds.
+    checked: "script: ran the sweep on 200 random and near-stuck distributions with n=1005 (all succeeded); exhaustive search on 3- and 4-box versions gives the matching threshold"
+    status: ready
+
+  - id: B4
+    topic: "Polynomials: a shifted Wronskian-type identity equal to one"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$p(x)=ax+b,\\ q(x)=cx+d$ with $bc-ad=1$"
+    hints:
+      - 'Write the identity at $x$ and at $x+1$ and subtract to get a relation between $p(x),p(x+1),p(x+2)$.'
+      - '$p(x+1)$ and $q(x+1)$ have no common factor.'
+    solution: |
+      **Key idea:** comparing the identity at $x$ and $x+1$ shows $p(x)+p(x+2)=2p(x+1)$, so the second difference of $p$ is $0$ and $p$ is linear; the same goes for $q$.
+
+      Write $W(x)=p(x)q(x+1)-p(x+1)q(x)$. From $W(x)=W(x+1)=1$:
+      $$p(x)q(x+1)-p(x+1)q(x)=p(x+1)q(x+2)-p(x+2)q(x+1),$$
+      which rearranges to
+      $$q(x+1)\big(p(x)+p(x+2)\big)=p(x+1)\big(q(x)+q(x+2)\big). \tag{$*$}$$
+      By $W(x+1)=1$, any common factor of $p(x+1)$ and $q(x+1)$ divides $1$, so they are coprime. Neither is $0$ (else $W=0$). By $(*)$, $p(x+1)$ divides $p(x)+p(x+2)$. Write $p(x)+p(x+2)=r(x)\,p(x+1)$. If $p$ has degree $k$ and leading coefficient $\alpha$, the left side has degree $k$ and leading coefficient $2\alpha$, so $r$ is the constant $2$. Hence
+      $$p(x+2)-2p(x+1)+p(x)=0 .$$
+      A polynomial whose second difference vanishes has degree at most $1$. Substituting back into $(*)$, the same holds for $q$.
+
+      Now let $p=ax+b$ and $q=cx+d$. Expanding,
+      $$(ax+b)(cx+c+d)-(ax+a+b)(cx+d)=bc-ad .$$
+      So the solutions are exactly these pairs with $bc-ad=1$.
+    checked: "exact algebra: sympy expansion of the linear case; a random search over 4000 integer pairs of degree ≤ 2 found only linear solutions"
+    status: ready
+
+  - id: B5
+    topic: "Calculus: can f prime equal f composed with f?"
+    areas: [analysis, calculus]
+    difficulty: 2
+    answer: "No"
+    hints:
+      - 'Show $f''$ is strictly increasing, so $f$ is convex, and $f''>0$.'
+      - 'For large $x$ you get $f(x)\ge2x$; compare $f(f(x))\ge f(2x)$ with the tangent line at $x$.'
+    solution: |
+      **Key idea:** $f$ ends up convex with $f(x)\ge 2x$ for large $x$, and then the tangent-line inequality at $x$, evaluated at $2x$, gives an impossible bound.
+
+      Suppose such an $f$ exists.
+
+      **Shape of $f$.** Since $f$ is increasing, $f'\ge0$. Since $f$ is strictly increasing, $f\circ f$ is strictly increasing, so $f'$ is strictly increasing. Then $f'(x)>f'(x-1)\ge0$, so $f'>0$ everywhere, and $f$ is convex.
+
+      **Growth.** For $x\ge0$, $f(x)\ge f(0)+f'(0)x\to\infty$. So $f'(x)=f(f(x))\to\infty$. Pick $a$ with $f'(a)\ge3$. For $x\ge a$, $f(x)\ge f(a)+3(x-a)$, so there is $X>1$ with $f(x)\ge2x$ and $f(x)>0$ for all $x\ge X$.
+
+      **Contradiction.** Take $x\ge X$. Since $f$ is increasing and $f(x)\ge2x$, then $f(f(x))\ge f(2x)$. Since $f$ is convex, its graph lies above the tangent line at $x$, so $f(2x)\ge f(x)+x\,f'(x)$. Together,
+      $$f'(x)=f(f(x))\ge f(x)+x\,f'(x),\qquad\text{so}\qquad (1-x)\,f'(x)\ge f(x)>0 .$$
+      But $x>1$ and $f'(x)>0$ make the left side negative. So no such function exists.
+    checked: "proof only"
+    status: ready
+
+  - id: B6
+    topic: "Matrices whose powers match entrywise powers"
+    areas: [linear-algebra]
+    difficulty: 3
+    hints:
+      - 'Cayley–Hamilton gives a polynomial identity of degree $n+1$ with no constant term, $A\chi(A)=0$.'
+      - 'Read that identity entry by entry, using the hypothesis.'
+    solution: |
+      **Key idea:** Cayley–Hamilton gives one recurrence for the powers $A^k$; the hypothesis turns it into the same recurrence for every entry, so both sequences agree forever.
+
+      Let $\chi(t)=t^n+c_{n-1}t^{n-1}+\dots+c_0$ be the characteristic polynomial of $A$. By Cayley–Hamilton, $A\,\chi(A)=0$:
+      $$A^{n+1}+c_{n-1}A^n+\dots+c_0A=0 .$$
+      Only the powers $A^1,\dots,A^{n+1}$ appear. By hypothesis each equals the matching entrywise power, so
+      $$A^{[n+1]}+c_{n-1}A^{[n]}+\dots+c_0A^{[1]}=0 .$$
+      Entry by entry, every entry $a$ of $A$ satisfies $a\,\chi(a)=0$. Multiplying by $a^{k-n-1}$ for $k\ge n+2$:
+      $$a^k=-\big(c_{n-1}a^{k-1}+\dots+c_0a^{k-n}\big).$$
+      In matrix form, $A^{[k]}=-\big(c_{n-1}A^{[k-1]}+\dots+c_0A^{[k-n]}\big)$. Multiplying the Cayley–Hamilton identity by $A^{k-n-1}$ gives the same recurrence for ordinary powers:
+      $$A^{k}=-\big(c_{n-1}A^{k-1}+\dots+c_0A^{k-n}\big).$$
+      Both sequences obey the same recurrence for $k\ge n+2$, which only looks back to indices at least $2$, and they agree for $k=1,\dots,n+1$. By strong induction, $A^k=A^{[k]}$ for all $k\ge1$.
+    checked: "proof only"
+    status: ready

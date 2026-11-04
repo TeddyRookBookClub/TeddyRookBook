@@ -1,0 +1,237 @@
+year: 2007
+edition: 68th
+date: "December 1, 2007"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2007.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Calculus: tangency of a parabola and its mirror image"
+    areas: [calculus, algebra]
+    difficulty: 2
+    answer: '$\alpha=\tfrac23,\ \tfrac32,\ \dfrac{13\pm\sqrt{601}}{12}$'
+    hints:
+      - 'The second curve is the mirror image of the first in the line $y=x$. Subtract the two equations.'
+      - 'Tangency means parallel normal vectors. Show this can only happen on the line $y=x$, where the slope must be $1$ or $-1$.'
+    solution: |
+      **Key idea:** the curves are mirror images in $y=x$; a tangency off that line is impossible, and on it the parabola's slope must be $\pm1$.
+
+      Let $F(x,y)=\alpha x^2+\alpha x+\frac1{24}-y$ and $G(x,y)=F(y,x)$. ($\alpha=0$ gives two perpendicular lines, so assume $\alpha\ne0$.)
+
+      **Where can they be tangent?** Tangency at a common point means $\nabla F=(2\alpha x+\alpha,-1)$ and $\nabla G=(-1,2\alpha y+\alpha)$ are parallel, i.e. with $u=2\alpha x+\alpha$, $v=2\alpha y+\alpha$:
+      $$uv=1 .$$
+      Subtracting $F=0$ and $G=0$ gives $(x-y)\big(\alpha(x+y)+\alpha+1\big)=0$. If $x\ne y$, then $\alpha(x+y)=-\alpha-1$, so $u+v=2\alpha(x+y)+2\alpha=-2$. With $uv=1$ this forces $u=v=-1$, hence $x=y$, a contradiction. So tangency happens only at points with $x=y$, where $u=v$ and $u^2=1$: the parabola's slope there is $1$ or $-1$.
+
+      **Slope $1$.** The parabola touches the line $y=x$: $\alpha x^2+(\alpha-1)x+\frac1{24}=0$ has a double root, so $(\alpha-1)^2=\frac\alpha6$, i.e. $6\alpha^2-13\alpha+6=0$, giving $\alpha=\frac23$ or $\frac32$.
+
+      **Slope $-1$.** We need $2\alpha x+\alpha=-1$, so $x=-\frac{1+\alpha}{2\alpha}$, and the point must lie on $y=x$: $\alpha x^2+(\alpha-1)x+\frac1{24}=0$. Substituting,
+      $$\frac{(1+\alpha)^2}{4\alpha}-\frac{(\alpha-1)(\alpha+1)}{2\alpha}+\frac1{24}=0\iff\frac{3+2\alpha-\alpha^2}{4\alpha}=-\frac1{24}\iff6\alpha^2-13\alpha-18=0,$$
+      so $\alpha=\frac{13\pm\sqrt{601}}{12}$.
+
+      All four values give a tangency (at a point on $y=x$, both curves pass through it with the same tangent line).
+    checked: "script: sympy's discriminant of the intersection resultant factors as (2α−3)(3α−2)(6α²−13α−18)³ times a power of α"
+    status: ready
+
+  - id: A2
+    topic: "Geometry: smallest convex set meeting four hyperbola branches"
+    areas: [geometry]
+    difficulty: 2
+    answer: '$4$'
+    hints:
+      - 'Pick one point on each branch, one in each quadrant. The convex set contains their convex hull.'
+      - 'Split the hull into four triangles at the origin. Each has area at least $1$.'
+    solution: |
+      **Key idea:** one point per branch, one per quadrant; the hull contains the origin, and the four triangles from the origin each have area at least $1$ by AM–GM.
+
+      The four branches lie in the four open quadrants. A convex set meeting them contains points $P_1=(a,\frac1a)$, $P_2=(-b,\frac1b)$, $P_3=(-c,-\frac1c)$, $P_4=(d,-\frac1d)$ with $a,b,c,d>0$, and so contains their convex hull $H$.
+
+      **The origin is in $H$.** Otherwise a line through the origin would have $H$ strictly on one side: $w\cdot P_i>0$ for some fixed $w=(w_1,w_2)\ne0$ and all $i$. Take the quadrant whose $x$-sign is opposite to the sign of $w_1$ and whose $y$-sign is opposite to the sign of $w_2$ (either sign where $w_j=0$). Its point $P_i$ has $w\cdot P_i<0$, a contradiction.
+
+      **Four triangles.** The points are in angular order around the origin, with consecutive angles less than $\pi$ apart, so the triangles $OP_1P_2$, $OP_2P_3$, $OP_3P_4$, $OP_4P_1$ lie in $H$ and do not overlap. For the first,
+      $$\text{area}=\tfrac12\Big|a\cdot\tfrac1b-(-b)\cdot\tfrac1a\Big|=\tfrac12\Big(\frac ab+\frac ba\Big)\ge1 ,$$
+      and the other three work the same way. So the area is at least $4$.
+
+      **Equality.** The square with vertices $(\pm1,\pm1)$ has area $4$ and its corners lie on all four branches.
+    viz: putnam-2007-a2
+    checked: "proof; the bound is AM–GM, and the square attains it"
+    status: ready
+
+  - id: A3
+    topic: "Probability: random order avoiding partial sums divisible by 3"
+    areas: [probability, combinatorics]
+    difficulty: 3
+    answer: '$\dfrac{k!\,(k+1)!}{(3k+1)\,(2k)!}$'
+    hints:
+      - 'Work mod $3$. Ignore the multiples of $3$ at first: what must the sequence of nonzero residues look like?'
+      - 'Multiples of $3$ do not change the running sum mod $3$, so they may go anywhere except first.'
+    solution: |
+      **Key idea:** mod $3$, the nonzero residues are forced into one pattern, and the multiples of $3$ can go anywhere except the very first place.
+
+      Among $1,\dots,3k+1$ there are $k+1$ numbers $\equiv1$, $k$ numbers $\equiv2$, and $k$ multiples of $3$ (mod $3$).
+
+      **Nonzero residues.** Track the running sum mod $3$; it must never be $0$ (a positive sum divisible by $3$). If it is $1$, the next nonzero residue must be $1$ (making $2$), not $2$ (making $0$). If it is $2$, the next must be $2$. Starting with a $1$ forces $1,1,2,1,2,\dots,1,2$, which uses one more $1$ than $2$s. Starting with a $2$ forces $2,2,1,2,1,\dots$, which uses more $2$s than $1$s, impossible here. So the $2k+1$ nonzero residues must appear in the single order $1,1,2,1,2,\dots,1,2$. In a random order, the residues of these $2k+1$ numbers form a uniformly random arrangement of $k+1$ ones and $k$ twos, so this happens with probability $\frac{(k+1)!\,k!}{(2k+1)!}$.
+
+      **Multiples of 3.** A multiple of $3$ leaves the running sum mod $3$ unchanged, so it is harmless unless it comes first (then the sum is a positive multiple of $3$ right away). The positions of the $k$ multiples of $3$ are independent of the relative order of the other numbers, and the first position is a non-multiple with probability $\frac{2k+1}{3k+1}$.
+
+      Multiplying,
+      $$P=\frac{(k+1)!\,k!}{(2k+1)!}\cdot\frac{2k+1}{3k+1}=\frac{k!\,(k+1)!}{(3k+1)\,(2k)!}.$$
+    checked: "script: brute force over all orders for k = 1, 2, 3 gives 1/4, 1/14, 1/50, matching the formula"
+    status: ready
+
+  - id: A4
+    topic: "Polynomials: maps that send repunits to repunits"
+    areas: [algebra, number-theory]
+    difficulty: 3
+    answer: '$f(x)=\dfrac{10^c(9x+1)^d-1}{9}$ with integers $d\ge0$ and $c\ge1-d$'
+    hints:
+      - 'A repunit is $\frac{10^m-1}9$. Change variables so that repunits become powers of $10$.'
+      - 'If a polynomial $g$ sends every $10^m$ to a power of $10$, compare $g(10^m)$ with its leading term as $m\to\infty$.'
+    solution: |
+      **Key idea:** after the change of variable $x\mapsto9x+1$, the question becomes which polynomials send powers of $10$ to powers of $10$; growth forces $g(x)=10^cx^d$.
+
+      Write $R_m=\frac{10^m-1}9$ for $m\ge1$. Let $g(x)=9f\big(\frac{x-1}9\big)+1$, a polynomial with real coefficients. Then $9R_m+1=10^m$, and $f(R_m)=R_{h(m)}$ for some $h(m)\ge1$ means
+      $$g(10^m)=10^{h(m)}\qquad\text{for all }m\ge1 .$$
+
+      **Form of $g$.** $g$ is not the zero polynomial. Let $d=\deg g$ and $A$ its leading coefficient. Then $\frac{g(10^m)}{10^{dm}}\to A$, and the left side equals $10^{h(m)-dm}$, a power of $10$ with integer exponent. Positive powers of $10$ with integer exponents can approach a nonzero limit only if the exponents are eventually constant, say equal to $c$, and then $A=10^c$. So $g(10^m)=10^c\cdot10^{dm}$ for all large $m$, and the polynomial $g(x)-10^cx^d$ has infinitely many roots. Hence $g(x)=10^cx^d$.
+
+      **Back to $f$.** $f(x)=\frac{g(9x+1)-1}9=\frac{10^c(9x+1)^d-1}9$, and then $f(R_m)=R_{c+dm}$. This is a repunit for every $m\ge1$ exactly when $c+dm\ge1$ for all $m\ge1$, i.e. $c+d\ge1$ (with $d\ge0$).
+
+      So the solutions are $f(x)=\frac{10^c(9x+1)^d-1}9$ with integers $d\ge0$, $c\ge1-d$. Examples: the constants $R_c$ ($d=0$), $f(x)=x$ ($c=0,d=1$), and $f(x)=10x+1$ ($c=1,d=1$).
+    checked: "script: for (c, d) = (0,1), (1,1), (−1,2), (3,0), (−2,3), (2,2) the formula sends R_1 … R_8 to repunits; the growth argument is the proof"
+    status: ready
+
+  - id: A5
+    topic: "Group theory: elements of prime order, count mod p"
+    areas: [algebra]
+    difficulty: 3
+    hints:
+      - 'Count the $p$-tuples $(g_1,\dots,g_p)$ with $g_1g_2\cdots g_p=e$.'
+      - 'Rotating such a tuple gives another one. Which tuples are fixed by rotation?'
+    solution: |
+      **Key idea:** count solutions of $g_1g_2\cdots g_p=e$ in two ways: there are $|G|^{p-1}$ of them, and cyclic rotation groups them into orbits of size $p$ except for the constant tuples.
+
+      If $p\nmid|G|$, there are no elements of order $p$ (Lagrange), so $n=0$. Assume $p\mid|G|$.
+
+      Let $X$ be the set of $p$-tuples with $g_1g_2\cdots g_p=e$. The first $p-1$ entries are free and the last is then determined, so $|X|=|G|^{p-1}$, a multiple of $p$.
+
+      If $g_1g_2\cdots g_p=e$, then $g_2\cdots g_pg_1=g_1^{-1}(g_1\cdots g_p)g_1=e$. So rotating a tuple keeps it in $X$. Rotation generates a cyclic group of order $p$ acting on $X$; since $p$ is prime, each orbit has size $1$ or $p$. Orbits of size $1$ are constant tuples $(g,\dots,g)$ with $g^p=e$: the identity and the $n$ elements of order $p$. So
+      $$|G|^{p-1}=|X|\equiv n+1\pmod p,$$
+      and $p\mid n+1$.
+    checked: "script: checked n ≡ −1 (mod p) or n = 0 for p = 2, 3, 5 in S4, A5, S5 and a dihedral group"
+    status: ready
+
+  - id: A6
+    topic: "Combinatorial geometry: bounded size of admissible triangulations"
+    areas: [combinatorics, geometry]
+    status: coming
+
+  - id: B1
+    topic: "Number theory: divisibility after one iteration of a polynomial"
+    areas: [number-theory, algebra]
+    difficulty: 1
+    hints:
+      - 'Mod $f(n)$, the number $f(n)+1$ is $1$.'
+    solution: |
+      **Key idea:** modulo $f(n)$, plugging in $f(n)+1$ is the same as plugging in $1$.
+
+      For an integer polynomial, $u\equiv v\pmod M$ implies $f(u)\equiv f(v)\pmod M$. With $M=f(n)$, $u=f(n)+1$, $v=1$:
+      $$f(f(n)+1)\equiv f(1)\pmod{f(n)}.$$
+      So $f(n)$ divides $f(f(n)+1)$ exactly when it divides $f(1)$.
+
+      - For $n=1$ this holds.
+      - For $n\ge2$: $f$ has positive coefficients and is not constant, so it is strictly increasing on the positive numbers, and $f(n)>f(1)>0$. A number larger than $f(1)$ cannot divide it.
+    checked: "proof only"
+    status: ready
+
+  - id: B2
+    topic: "Integral inequality: partial integral bounded by the derivative"
+    areas: [analysis, calculus]
+    difficulty: 2
+    hints:
+      - 'Use $\int_0^1f=0$ to write $\int_0^\alpha f$ as a double integral of $f(x)-f(y)$ over $x<\alpha<y$.'
+      - '$|f(x)-f(y)|\le M|x-y|$ with $M=\max|f''|$.'
+    solution: |
+      **Key idea:** since $f$ has mean zero, $\int_0^\alpha f$ is an average of differences $f(x)-f(y)$ across $\alpha$; each is at most $M$ times the distance, and that double integral is at most $\frac18$.
+
+      Let $F=\int_0^\alpha f$, so $\int_\alpha^1f=-F$. Then
+      $$\int_0^\alpha\!\!\int_\alpha^1\big(f(x)-f(y)\big)\,dy\,dx=(1-\alpha)F-\alpha(-F)=F .$$
+      With $M=\max|f'|$, the mean value theorem gives $|f(x)-f(y)|\le M(y-x)$ for $x<y$. Hence
+      $$|F|\le M\int_0^\alpha\!\!\int_\alpha^1(y-x)\,dy\,dx=M\Big(\alpha\cdot\frac{1-\alpha^2}2-(1-\alpha)\frac{\alpha^2}2\Big)=M\,\frac{\alpha(1-\alpha)}2\le\frac M8,$$
+      since $\alpha(1-\alpha)\le\frac14$.
+    checked: "script: random polynomials with mean zero; max |∫₀^α f| ≤ max|f′|/8 every time"
+    status: ready
+
+  - id: B3
+    topic: "Recurrences: floor with root 5 gives Fibonacci numbers"
+    areas: [number-theory, algebra]
+    difficulty: 3
+    answer: '$x_{2007}=2^{2006}F_{4017}=\dfrac{2^{2006}}{\sqrt5}\Big(\varphi^{4017}+\varphi^{-4017}\Big)$, with $\varphi=\frac{1+\sqrt5}2$'
+    hints:
+      - 'Divide the given terms by powers of $2$ and compare with Fibonacci numbers.'
+      - 'Use $L_m^2-5F_m^2=-4$ for odd $m$ ($L_m$ the Lucas numbers) to evaluate the floor.'
+    solution: |
+      **Key idea:** $x_n=2^{n-1}F_{2n+3}$; the floor of $\sqrt5\,x_n$ is $2^{n-1}L_{2n+3}$ because $\sqrt5F_m$ is just above the Lucas number $L_m$ when $m$ is odd.
+
+      Let $F_m$ be the Fibonacci numbers ($F_1=F_2=1$) and $L_m=F_{m-1}+F_{m+1}$ the Lucas numbers. With $\varphi=\frac{1+\sqrt5}2$ and $\psi=-\frac1\varphi$: $F_m=\frac{\varphi^m-\psi^m}{\sqrt5}$ and $L_m=\varphi^m+\psi^m$.
+
+      **Claim:** $x_n=2^{n-1}F_{2n+3}$. It holds for $n=0$ ($\frac12\cdot2=1$). Suppose it holds for $n$, and let $m=2n+3$ (odd).
+
+      *The floor.* $\sqrt5F_m-L_m=-2\psi^m=2\varphi^{-m}>0$ (for odd $m$), so
+      $$\sqrt5\,x_n-2^{n-1}L_m=2^n\varphi^{-m}=\frac{2^n}{\varphi^{3}(\varphi^2)^n}<1,$$
+      because $\varphi^2>2$ and $\varphi^3>1$. Also $2^{n-1}L_m$ is an integer ($L_3=4$ covers $n=0$). So $\lfloor\sqrt5x_n\rfloor=2^{n-1}L_m$.
+
+      *The step.* Then $x_{n+1}=2^{n-1}(3F_m+L_m)$. Since $L_m=F_{m-1}+F_{m+1}=F_m+2F_{m-1}$,
+      $$3F_m+L_m=4F_m+2F_{m-1}=2F_m+2(F_m+F_{m-1})=2F_m+2F_{m+1}=2F_{m+2}.$$
+      So $x_{n+1}=2^nF_{m+2}=2^nF_{2(n+1)+3}$, as claimed.
+
+      **Answer.** $x_{2007}=2^{2006}F_{4017}=\frac{2^{2006}}{\sqrt5}\big(\varphi^{4017}+\varphi^{-4017}\big)$, using $\psi^{4017}=-\varphi^{-4017}$.
+    checked: "script: exact integer iteration (integer square roots) agrees with 2^(n−1)·F(2n+3) for n < 60"
+    status: ready
+
+  - id: B4
+    topic: "Polynomials: writing X^(2n)+1 as a sum of two squares"
+    areas: [algebra]
+    difficulty: 3
+    answer: '$2^{n+1}$'
+    hints:
+      - 'Factor $P^2+Q^2=(P+iQ)(P-iQ)$ over the complex numbers.'
+      - 'The roots of $X^{2n}+1$ are simple and come in $n$ conjugate pairs. How many ways can $P+iQ$ take its roots?'
+    solution: |
+      **Key idea:** $P+iQ$ must take exactly one root from each conjugate pair of roots of $X^{2n}+1$, and its leading coefficient is $\pm1$.
+
+      Let $G=P+iQ$. Since $P,Q$ are real, the conjugate polynomial is $\bar G=P-iQ$, and $G\bar G=P^2+Q^2=X^{2n}+1$.
+
+      **Degrees.** $\deg P>\deg Q$, so $\deg G=\deg P$ and the leading coefficient of $G$ is the real leading coefficient $c$ of $P$. Comparing with $X^{2n}+1$: $2\deg G=2n$ and $c^2=1$.
+
+      **Roots.** $X^{2n}+1$ has $2n$ simple roots, none real, in $n$ conjugate pairs $\{\zeta,\bar\zeta\}$. If $\zeta$ is a root of $G$, then $\bar\zeta$ is a root of $\bar G$. Since the roots are simple, $G$ takes exactly one root from each pair. So
+      $$G=c\prod_{\text{pairs}}(X-\zeta_{\text{chosen}}),\qquad c=\pm1,$$
+      giving at most $2\cdot2^n$ possibilities.
+
+      **Each works.** For any such choice, $G\bar G=c^2\prod(X-\zeta)(X-\bar\zeta)=X^{2n}+1$. Put $P=\frac{G+\bar G}2$, $Q=\frac{G-\bar G}{2i}$, real polynomials with $P^2+Q^2=G\bar G$. $G$ has the real leading term $cX^n$, so $P$ has degree $n$ and $Q$ has smaller degree. Different choices give different $G$, hence different pairs.
+
+      So there are $2^{n+1}$ pairs.
+    checked: "script: built all 2^(n+1) choices numerically for n ≤ 6; each gives P² + Q² = X^(2n) + 1 with deg Q < deg P, and all are distinct"
+    status: ready
+
+  - id: B5
+    topic: "Polynomials: powers of a floor quotient"
+    areas: [algebra, number-theory]
+    difficulty: 2
+    hints:
+      - 'Let $q=\lfloor n/k\rfloor$. Then $n-kq$ is one of $0,1,\dots,k-1$.'
+      - 'So the product $\prod_{j=0}^{k-1}(n-j-kq)$ is always $0$.'
+    solution: |
+      **Key idea:** the product of $n-kq-j$ over $j=0,\dots,k-1$ vanishes, and expanding it expresses $q^k$ through lower powers of $q$.
+
+      Let $q=\lfloor n/k\rfloor$. Then $n-kq\in\{0,1,\dots,k-1\}$, so one factor of
+      $$\prod_{j=0}^{k-1}\big(n-j-kq\big)$$
+      is zero, and the product is $0$ for every integer $n$. As a polynomial in $q$ with coefficients that are polynomials in $n$, its leading term is $(-k)^kq^k$. So
+      $$(-k)^kq^k+\sum_{i=0}^{k-1}c_i(n)\,q^i=0 .$$
+      Dividing by $-(-k)^k$ gives $q^k=\sum_{i<k}P_i(n)q^i$ with $P_i(n)=-\frac{c_i(n)}{(-k)^k}$, polynomials (with rational coefficients) depending only on $k$.
+    checked: "script: for k ≤ 5 the product vanishes at q = floor(n/k) for −30 ≤ n < 30"
+    status: ready
+
+  - id: B6
+    topic: "Asymptotics: making n! cents from factorial coins"
+    areas: [combinatorics, analysis]
+    status: coming

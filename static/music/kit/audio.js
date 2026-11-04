@@ -157,16 +157,21 @@
     var i = voices.indexOf(best); if (i >= 0) voices.splice(i, 1);
   }
 
+  // tells the background music player (static/music/suite/player/player.js) that this page is making sound, so it ducks
+  var ssT = 0;
+  function soundStart() { var n = Date.now(); if (n - ssT < 500) return; ssT = n; try { window.dispatchEvent(new Event('trb:sound-start')); } catch (e) {} }
   var api = {
     log: [],
     play: function (midi, when, dur, vel) {
       if (logOn) api.log.push({ midi: midi, when: when, dur: dur, vel: vel });
+      soundStart();
       var v = startVoice(midi, when, vel);
       if (v) release(v, v.t + Math.max(0.05, dur || 0.5));
       return v;
     },
     noteOn: function (midi, vel) {
       if (logOn) api.log.push({ midi: midi, when: api.now(), dur: null, vel: vel, live: true });
+      soundStart();
       var v = startVoice(midi, 0, vel);
       if (v) (held[midi] = held[midi] || []).push(v);
       return v;
@@ -183,6 +188,7 @@
     click: function (when, accent, volume) {
       var c = make();
       if (!c) return;
+      soundStart();
       var t = Math.max(when || 0, c.currentTime), o = c.createOscillator(), g = c.createGain(), bp = c.createBiquadFilter();
       o.type = 'triangle'; o.frequency.setValueAtTime(accent ? 1760 : 1320, t); o.frequency.exponentialRampToValueAtTime(accent ? 1250 : 950, t + 0.03);
       bp.type = 'bandpass'; bp.frequency.value = accent ? 1600 : 1200; bp.Q.value = 2.5;

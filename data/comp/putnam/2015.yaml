@@ -1,0 +1,255 @@
+year: 2015
+edition: 76th
+date: "December 5, 2015"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2015.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Geometry: equal areas cut from a hyperbola"
+    areas: [geometry, calculus]
+    difficulty: 1
+    hints:
+      - 'Where is the tangent to the hyperbola parallel to the chord $AB$?'
+      - 'The map $(x,y)\mapsto(x/t,\;ty)$ keeps the hyperbola and all areas. Use it to move $P$ to $(1,1)$.'
+    solution: |
+      **Key idea:** a squeeze map moves $P$ to $(1,1)$ without changing areas, and then reflection in $y=x$ swaps the two regions.
+
+      By the symmetry $(x,y)\mapsto(-x,-y)$ we may take the branch with $x>0$. Let $A=(a,\frac1a)$ and $B=(b,\frac1b)$ with $0<a<b$.
+
+      **Where $P$ is.** The area of $APB$ is $\frac12|AB|$ times the distance from $P$ to the line $AB$. On the arc between $A$ and $B$, the curve is strictly convex, so this distance is largest at the unique point where the tangent is parallel to $AB$. The chord has slope $\frac{1/b-1/a}{b-a}=-\frac1{ab}$, and the tangent at $(p,\frac1p)$ has slope $-\frac1{p^2}$. So $p=\sqrt{ab}$.
+
+      **Squeeze.** The linear map $T(x,y)=(x/p,\ py)$ has determinant $1$, so it preserves areas, and it maps the hyperbola $xy=1$ to itself. It sends
+      $$P\mapsto(1,1),\qquad A\mapsto\Big(\sqrt{\tfrac ab},\sqrt{\tfrac ba}\Big),\qquad B\mapsto\Big(\sqrt{\tfrac ba},\sqrt{\tfrac ab}\Big).$$
+      Chords go to chords and the arc goes to the arc, so the two regions map to the regions cut off by the chords from $(1,1)$ to $T(A)$ and to $T(B)$.
+
+      **Reflect.** The reflection $(x,y)\mapsto(y,x)$ preserves areas, the hyperbola and the point $(1,1)$, and it swaps $T(A)$ and $T(B)$. So it carries one region onto the other. Their areas are equal, and so are the original areas.
+    viz: putnam-2015-a1
+    checked: "script: for 20 random pairs, the area-maximizing point is √(ab) and the two region areas agree to 1e-9"
+    status: ready
+
+  - id: A2
+    topic: "Number theory: a prime factor of a linear recurrence term"
+    areas: [number-theory, algebra]
+    difficulty: 1
+    answer: "$181$ (for example)"
+    hints:
+      - 'Compute the first few terms. Which small index divides $2015$?'
+      - 'For odd $m$, $a_k$ divides $a_{km}$. Think of $a_n$ as $\frac12(\alpha^n+\alpha^{-n})$.'
+    solution: |
+      **Key idea:** $a_5=362=2\cdot181$, and $a_5$ divides $a_{2015}$ because $2015=5\cdot403$ with $403$ odd.
+
+      The terms begin $1,2,7,26,97,362$, so $a_5=362=2\cdot181$, and $181$ is prime.
+
+      **Why $a_5\mid a_{2015}$.** The characteristic roots are $\alpha=2+\sqrt3$ and $\alpha^{-1}=2-\sqrt3$. Matching $a_0,a_1$ gives $2a_n=\alpha^n+\alpha^{-n}$. For odd $m$, $t^m+t^{-m}$ is a polynomial in $s=t+t^{-1}$ with integer coefficients and only odd powers of $s$. (Use $t^{j+1}+t^{-j-1}=s\,(t^j+t^{-j})-(t^{j-1}+t^{1-j})$ and induction: these polynomials alternate between even and odd.) So $t^m+t^{-m}=s\,R(s)$ with $R\in\mathbb Z[s]$. With $t=\alpha^k$, $s=2a_k$:
+      $$2a_{km}=2a_k\,R(2a_k),\qquad a_{km}=a_k\,R(2a_k).$$
+      Thus $a_k\mid a_{km}$ for odd $m$. With $k=5$, $m=403$: $181\mid a_5\mid a_{2015}$.
+    checked: "script: a_2015 mod 181 = 0 (computed with the recurrence mod 181)"
+    status: ready
+
+  - id: A3
+    topic: "Roots of unity: the base-two logarithm of a double product"
+    areas: [number-theory, algebra]
+    difficulty: 2
+    answer: "$13725$"
+    hints:
+      - 'For fixed $a$ with $d=\gcd(a,2015)$, the numbers $ab$ modulo $2015$ run through the multiples of $d$, each $d$ times.'
+      - 'For odd $m$, $\prod_{t=0}^{m-1}(1+\zeta^t)=2$ where $\zeta$ is a primitive $m$-th root of unity.'
+    solution: |
+      **Key idea:** each row of the product equals $2^{\gcd(a,2015)}$, so the answer is $\sum_a\gcd(a,2015)$.
+
+      **One row.** Fix $a$, let $d=\gcd(a,2015)$ and $m=2015/d$. As $b$ runs over $1,\dots,2015$, $ab\bmod2015$ hits each multiple of $d$ exactly $d$ times. So $e^{2\pi iab/2015}$ runs over the $m$-th roots of unity, each $d$ times, and
+      $$\prod_{b=1}^{2015}\big(1+e^{2\pi iab/2015}\big)=\Big(\prod_{t=0}^{m-1}(1+\zeta^t)\Big)^d .$$
+      From $x^m-1=\prod_t(x-\zeta^t)$ at $x=-1$: $\prod_t(-1-\zeta^t)=(-1)^m-1=-2$ (as $m$ is odd), so $\prod_t(1+\zeta^t)=(-1)^m(-2)=2$. The row equals $2^d$.
+
+      **Summing.** The total exponent is $\sum_{a=1}^{2015}\gcd(a,2015)$. Counting by the value of the gcd, $\sum_{a=1}^n\gcd(a,n)=\sum_{d\mid n}d\,\varphi(n/d)$. This is multiplicative, and for a prime it gives $p+(p-1)=2p-1$. With $2015=5\cdot13\cdot31$:
+      $$\log_2(\text{product})=9\cdot25\cdot61=13725 .$$
+    checked: "script: direct sum of gcd(a, 2015) for a = 1..2015 is 13725"
+    status: ready
+
+  - id: A4
+    topic: "Binary sums from floor parities: the smallest value"
+    areas: [analysis, number-theory]
+    difficulty: 3
+    answer: "$L=\\tfrac47$"
+    hints:
+      - 'For $x<\frac12$, the terms $n=1,2$ already give $\frac34$.'
+      - 'For $x\ge\frac12$, the floor $\lfloor nx\rfloor$ grows by $0$ or $1$ each step and never stays put twice in a row. What does that say about runs of odd values?'
+    solution: |
+      **Key idea:** for $x\ge\frac12$ the parity sequence never has three odd values in a row, so its $1$'s (the even values) come at least every third place; the slowest pattern $1,0,0,1,0,0,\dots$ gives $\frac47$, and $x$ just below $\frac23$ realizes it.
+
+      Write $e_n=1$ if $\lfloor nx\rfloor$ is even and $0$ otherwise, so $f(x)=\sum_ne_n2^{-n}$. Since $0\le x<1$, $e_1=1$.
+
+      **Small $x$.** If $x<\frac12$, then $\lfloor x\rfloor=\lfloor2x\rfloor=0$, so $f(x)\ge\frac12+\frac14=\frac34$.
+
+      **$x\ge\frac12$.** Each step $\lfloor(n+1)x\rfloor-\lfloor nx\rfloor$ is $0$ or $1$ (because $x<1$), and two steps together give
+      $$\lfloor(n+2)x\rfloor-\lfloor nx\rfloor\ge\lfloor2x\rfloor=1 .$$
+      So two zero steps never come in a row. A zero step keeps the parity, and a one step flips it. Hence $e_n=e_{n+1}=e_{n+2}$ is impossible: there are never three equal values in a row, in particular never three $0$'s. So the positions $n_1=1<n_2<\dots$ of the $1$'s satisfy $n_{j+1}-n_j\le3$, hence $n_j\le3j-2$, and
+      $$f(x)=\sum_j2^{-n_j}\ge\sum_{j\ge1}2^{-(3j-2)}=\frac{1/2}{1-1/8}=\frac47 .$$
+
+      **$\frac47$ is the best constant.** Take $x=\frac23-\varepsilon$ with $0<\varepsilon<\frac1{3N}$. For $n\le N$, $\lfloor nx\rfloor$ is $2k-1$, $2k$, $2k+1$ for $n=3k$, $3k+1$, $3k+2$ respectively. So $e_n=1$ exactly when $n\equiv1\pmod3$, for $n\le N$, and
+      $$f(x)\le\sum_{n\equiv1\ (3)}2^{-n}+2^{-N}=\frac47+2^{-N}.$$
+      So no constant larger than $\frac47$ works, and $L=\frac47$.
+    viz: putnam-2015-a4
+    checked: "script: evaluated f on a grid of 200,000 points; minimum 0.5714285714 = 4/7 (near x ≈ 0.66)"
+    status: ready
+
+  - id: A5
+    topic: "Number theory: parity of a count of small coprime residues"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'Count with inclusion–exclusion over the squarefree divisors $d$ of $q$: the multiples of $d$ below $q/4$ number $\lfloor q/(4d)\rfloor$.'
+      - 'For odd $m$, $\lfloor m/4\rfloor$ is odd exactly when $m\equiv5$ or $7\pmod 8$, and that condition behaves like a homomorphism to $\mathbb Z/2$.'
+    solution: |
+      **Key idea:** inclusion–exclusion writes $N_q$ as a sum of $\pm\lfloor q/(4d)\rfloor$; modulo $2$ each term only records whether $q/d\equiv5,7\pmod8$, and that is a homomorphism, so the count of odd terms is easy.
+
+      **Inclusion–exclusion.** Since $q$ is odd, $q/(4d)$ is never an integer, so the number of multiples of $d$ in $(0,q/4)$ is $\lfloor\frac{q}{4d}\rfloor$. Hence
+      $$N_q=\sum_{d\mid q}\mu(d)\Big\lfloor\frac{q}{4d}\Big\rfloor .$$
+      Modulo $2$ the signs don't matter, so $N_q\equiv\sum_{d}\lfloor\frac{q/d}{4}\rfloor$, the sum over squarefree divisors $d$ of $q$.
+
+      **Parity of one term.** For odd $m$, write $m=8j+c$ with $c\in\{1,3,5,7\}$. Then $\lfloor m/4\rfloor=2j$ when $c=1,3$ and $2j+1$ when $c=5,7$. So $\lfloor m/4\rfloor\equiv\psi(m)\pmod 2$, where $\psi(m)=1$ if $m\equiv5,7\pmod8$ and $0$ if $m\equiv1,3\pmod 8$.
+
+      **$\psi$ is a homomorphism.** The odd residues modulo $8$ form the group $\{1,3,5,7\}$ under multiplication, and $\{1,3\}$ is a subgroup of index $2$. So $\psi(mn)\equiv\psi(m)+\psi(n)\pmod 2$. In particular $\psi(q/d)\equiv\psi(q)+\psi(d)$.
+
+      **Counting.** Let $q=p_1^{e_1}\cdots p_s^{e_s}$. The squarefree divisors are $d_T=\prod_{i\in T}p_i$ for subsets $T\subseteq\{1,\dots,s\}$, so
+      $$N_q\equiv\#\Big\{T:\ \psi(q)+\sum_{i\in T}\psi(p_i)\equiv1\Big\}\pmod 2 .$$
+      - If some $\psi(p_i)=1$, then adding or removing $i$ flips the condition, so exactly half of the $2^s$ subsets qualify: $2^{s-1}$. This is odd only when $s=1$.
+      - If every $\psi(p_i)=0$, then $\psi(q)=\sum e_i\psi(p_i)=0$ too, and no subset qualifies: the count is $0$. (This includes $q=1$.)
+
+      So $N_q$ is odd exactly when $s=1$ and $\psi(p_1)=1$, that is, when $q=p^k$ with $p\equiv5$ or $7\pmod 8$.
+    checked: "script: computed N_q directly for every odd q < 4000; odd exactly for the predicted prime powers"
+    status: ready
+
+  - id: A6
+    topic: "Matrices: equal determinants from an intertwining relation"
+    areas: [linear-algebra]
+    difficulty: 3
+    hints:
+      - 'From $AM=MB$ you get $A^jM=MB^j$ for every $j$.'
+      - 'Show $A-MX$ and $B-XM$ have the same traces of all powers: expand into words and rotate each word under the trace.'
+    solution: |
+      **Key idea:** the traces of all powers of $A-MX$ and $B-XM$ agree, word by word, so the two matrices have the same characteristic polynomial and the same determinant.
+
+      From $AM=MB$, induction gives $A^jM=MB^j$ for all $j\ge0$.
+
+      **Matching words.** Expand $(A-MX)^k$ as a sum of $2^k$ words in the letters $A$ and $-MX$. Pair each word with the word for $(B-XM)^k$ that has $B$ where it had $A$ and $-XM$ where it had $-MX$. We show paired words have the same trace.
+
+      - A word with no $MX$: the traces are $\operatorname{tr}A^k$ and $\operatorname{tr}B^k$. These are equal because $A$ and $B$ have the same characteristic polynomial, hence the same eigenvalues with multiplicity.
+      - A word with at least one $MX$: the trace is unchanged by cyclic rotation, so rotate both paired words the same way until they end in $MX$ and $XM$. Up to the sign, the first word is $A^{j_1}MX\,A^{j_2}MX\cdots A^{j_r}MX$, and
+      $$\operatorname{tr}\big(A^{j_1}MX\cdots A^{j_r}MX\big)=\operatorname{tr}\big(XA^{j_1}M\,XA^{j_2}M\cdots XA^{j_r}M\big)=\operatorname{tr}\big(XMB^{j_1}\,XMB^{j_2}\cdots XMB^{j_r}\big).$$
+      The first step moves the last $X$ to the front, and the second uses $A^jM=MB^j$. The result is the trace of $(XM)B^{j_1}(XM)B^{j_2}\cdots(XM)B^{j_r}$, a rotation of the paired word $B^{j_1}XM\cdots B^{j_r}XM$.
+
+      Hence $\operatorname{tr}(A-MX)^k=\operatorname{tr}(B-XM)^k$ for every $k\ge1$. Over $\mathbb R$, Newton's identities recover the characteristic polynomial from these power traces. So $A-MX$ and $B-XM$ have the same characteristic polynomial, and in particular the same determinant.
+    checked: "script: 200 random examples with singular M (built so that AM = MB and A, B are similar); the determinants agreed"
+    status: ready
+
+  - id: B1
+    topic: "Rolle's theorem: zeros of a cubic differential expression"
+    areas: [analysis, calculus]
+    difficulty: 1
+    hints:
+      - 'The operator is $(1+2D)^3$, where $D$ means differentiation.'
+      - '$h+2h''=2e^{-x/2}\big(e^{x/2}h\big)''$.'
+    solution: |
+      **Key idea:** $f+6f'+12f''+8f'''=8e^{-x/2}\,\big(e^{x/2}f\big)'''$, and Rolle's theorem three times takes five zeros down to two.
+
+      For a differentiable $h$,
+      $$2e^{-x/2}\big(e^{x/2}h\big)'=2e^{-x/2}e^{x/2}\Big(\tfrac12h+h'\Big)=h+2h' .$$
+      Applying this three times (the operator $h\mapsto h+2h'$ cubed is $1+6D+12D^2+8D^3$):
+      $$f+6f'+12f''+8f'''=8e^{-x/2}\,g''',\qquad g=e^{x/2}f .$$
+      The function $g$ has the same zeros as $f$, at least five. Between consecutive zeros of $g$, Rolle gives a zero of $g'$, so $g'$ has at least four. Likewise $g''$ has at least three and $g'''$ at least two distinct zeros. Since $8e^{-x/2}\ne0$, the expression has at least two distinct real zeros.
+    checked: "exact algebra: sympy confirms the operator identity"
+    status: ready
+
+  - id: B2
+    topic: "Sequences: crossing off triples and their sums"
+    areas: [combinatorics, number-theory]
+    difficulty: 4
+    status: coming
+
+  - id: B3
+    topic: "Matrices with arithmetic-progression entries closed under powers"
+    areas: [linear-algebra]
+    difficulty: 2
+    answer: "$M=a\\begin{pmatrix}1&1\\\\1&1\\end{pmatrix}$ or $M=c\\begin{pmatrix}-3&-1\\\\1&3\\end{pmatrix}$ ($a,c$ real)"
+    hints:
+      - 'By Cayley–Hamilton, $M^k=\alpha M+\beta I$. Is the identity matrix in $S$?'
+      - 'So $\beta=0$. Use the eigenvalues; note $\det M=-2d^2$ where $d$ is the common difference.'
+    solution: |
+      **Key idea:** $M^k=\alpha M+\beta I$ and $I\notin S$ force $\beta=0$, which pins down the eigenvalues.
+
+      Elements of $S$ are $M=\begin{pmatrix}a&a+d\\a+2d&a+3d\end{pmatrix}$, and $S$ is a vector space. Note $\operatorname{tr}M=2a+3d$ and $\det M=a(a+3d)-(a+d)(a+2d)=-2d^2$.
+
+      **Reduction.** By Cayley–Hamilton, dividing $t^k$ by the characteristic polynomial gives $M^k=\alpha M+\beta I$ for some real $\alpha,\beta$. If $M^k\in S$, then $\beta I=M^k-\alpha M\in S$. The identity has entries $1,0,0,1$, which are not in arithmetic progression, so $\beta=0$.
+
+      **When is $\beta=0$?** Let the eigenvalues be $\lambda,\mu$. They are real, since the discriminant $(\operatorname{tr}M)^2+8d^2\ge0$.
+      - If $\lambda=\mu$: dividing $t^k$ by $(t-\lambda)^2$ leaves $k\lambda^{k-1}t+(1-k)\lambda^k$, so $\beta=0$ forces $\lambda=0$, and $\det M=0$.
+      - If $\lambda\ne\mu$: the remainder has $\beta=\dfrac{\lambda\mu\,(\mu^{k-1}-\lambda^{k-1})}{\lambda-\mu}$. So $\beta=0$ means $\lambda\mu=0$, or $\lambda^{k-1}=\mu^{k-1}$, which for distinct reals means $\mu=-\lambda$ (and $k-1$ even).
+
+      **The two families.**
+      - $\det M=0$ means $d=0$, so $M=aJ$ with $J=\begin{pmatrix}1&1\\1&1\end{pmatrix}$. Then $M^k=2^{k-1}a^kJ\in S$ for every $k$.
+      - $\mu=-\lambda\ne0$ means $\operatorname{tr}M=0$ and $d\ne0$, so $a=-\frac32d$ and $M=\frac d2\begin{pmatrix}-3&-1\\1&3\end{pmatrix}$. With $N=\begin{pmatrix}-3&-1\\1&3\end{pmatrix}$ we get $N^2=8I$, so $N^3=8N\in S$.
+
+      So the answer is exactly the multiples of $J$ and the multiples of $N$ (including $0$).
+    checked: "script: searched all integer a, d in [−6, 6] and k ≤ 8; every M with some M^k in S is a multiple of J or of N"
+    status: ready
+
+  - id: B4
+    topic: "Series: weighted sum over all integer triangles"
+    areas: [combinatorics, number-theory]
+    difficulty: 2
+    answer: "$\\dfrac{17}{21}$"
+    hints:
+      - 'Parametrize integer triangles: $a=q+r$, $b=p+r$, $c=p+q$ when the perimeter is even.'
+      - 'When the perimeter is odd, use $a=q+r+1$, $b=p+r+1$, $c=p+q+1$ with $p,q,r\ge0$. Each sum factors into three geometric series.'
+    solution: |
+      **Key idea:** the substitution $p=\frac{b+c-a}2$ (and its odd-perimeter version) turns the sum into products of geometric series.
+
+      **Parametrization.** For a nondegenerate triangle with integer sides:
+      - if $a+b+c$ is even, $p=\frac{b+c-a}2$, $q=\frac{a+c-b}2$, $r=\frac{a+b-c}2$ are positive integers, and $a=q+r$, $b=p+r$, $c=p+q$;
+      - if $a+b+c$ is odd, $p=\frac{b+c-a-1}2$ and so on are integers $\ge0$, and $a=q+r+1$, $b=p+r+1$, $c=p+q+1$.
+
+      Both maps are bijections onto their parameter sets.
+
+      **Even perimeter.** The term is $\dfrac{2^{q+r}}{3^{p+r}5^{p+q}}=\Big(\frac1{15}\Big)^p\Big(\frac25\Big)^q\Big(\frac23\Big)^r$. Summing over $p,q,r\ge1$:
+      $$\frac{1/15}{14/15}\cdot\frac{2/5}{3/5}\cdot\frac{2/3}{1/3}=\frac1{14}\cdot\frac23\cdot2=\frac2{21}.$$
+
+      **Odd perimeter.** The term is $\dfrac{2}{15}\Big(\frac1{15}\Big)^p\Big(\frac25\Big)^q\Big(\frac23\Big)^r$. Summing over $p,q,r\ge0$:
+      $$\frac2{15}\cdot\frac{15}{14}\cdot\frac53\cdot3=\frac57 .$$
+
+      Total: $\frac2{21}+\frac57=\frac{17}{21}$.
+    checked: "script: direct summation over all triangles with sides below 60 gives 0.8095238 = 17/21"
+    status: ready
+
+  - id: B5
+    topic: "Permutations moving neighbors at most two apart"
+    areas: [combinatorics]
+    difficulty: 4
+    status: coming
+
+  - id: B6
+    topic: "Series: alternating sum of counts of small odd divisors"
+    areas: [analysis, number-theory]
+    difficulty: 3
+    answer: "$\\dfrac{\\pi^2}{16}$"
+    hints:
+      - 'Write $k=dm$ with $d$ odd. The size condition becomes $m>d/2$, and the sign is $(-1)^{m-1}$.'
+      - 'For each $d$, the inner sum is a tail of $\sum(-1)^{m-1}/m$; write it as an integral of $x^{M-1}/(1+x)$, then substitute $x=t^2$.'
+    solution: |
+      **Key idea:** regroup by the odd divisor $d$, write each inner tail as an integral, and the sum over $d$ becomes $\int_0^1\frac{2\arctan t}{1+t^2}\,dt=\frac{\pi^2}{16}$.
+
+      **Regrouping.** An odd divisor $d$ of $k=dm$ satisfies $d<\sqrt{2k}$ exactly when $d^2<2dm$, that is $m>\frac d2$. Since $d$ is odd, $(-1)^{k-1}=(-1)^{m-1}$. So the partial sum up to $K$ is
+      $$S_K=\sum_{d\text{ odd}}\frac1d\sum_{d/2<m\le K/d}\frac{(-1)^{m-1}}m ,$$
+      where only $d<\sqrt{2K}$ contribute. Let $T(d)=\sum_{m>d/2}\frac{(-1)^{m-1}}m$. The missing tail $\sum_{m>K/d}$ is an alternating tail, so it is at most its first term $\le\frac dK$. Hence
+      $$\Big|S_K-\sum_{d\text{ odd},\,d<\sqrt{2K}}\frac{T(d)}d\Big|\le\sum_{d<\sqrt{2K}}\frac1K\le\frac{\sqrt{2K}}K\to0 .$$
+      Also $|T(d)|\le\frac2d$, so $\sum_dT(d)/d$ converges absolutely. Therefore $\lim S_K=\sum_{d\text{ odd}}T(d)/d$.
+
+      **Each tail as an integral.** With $M=\frac{d+1}2$, the first $m$ above $\frac d2$, and $\frac1m=\int_0^1x^{m-1}dx$ (the remainder of the geometric sum tends to $0$),
+      $$T(d)=\sum_{m\ge M}(-1)^{m-1}\int_0^1x^{m-1}dx=(-1)^{M-1}\int_0^1\frac{x^{M-1}}{1+x}\,dx=(-1)^{\frac{d-1}2}\int_0^1\frac{2t^d}{1+t^2}\,dt,$$
+      using $x=t^2$.
+
+      **Summing over $d$.** The series $\sum_{d\text{ odd}}(-1)^{(d-1)/2}\frac{t^d}d=\arctan t$ converges uniformly on $[0,1]$ (alternating, with tail at most $\frac1D$). So we may swap the sum and the integral:
+      $$\sum_{d\text{ odd}}\frac{T(d)}d=\int_0^1\frac{2\arctan t}{1+t^2}\,dt=\Big[\arctan^2t\Big]_0^1=\frac{\pi^2}{16}.$$
+    checked: "script: partial sums up to k = 10^4 give 0.61652, approaching π²/16 = 0.61685 (the error shrinks like 1/√k)"
+    status: ready

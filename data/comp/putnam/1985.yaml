@@ -1,0 +1,280 @@
+year: 1985
+edition: 46th
+date: "December 7, 1985"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1985.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Counting: triples of sets covering ten elements"
+    areas: [combinatorics]
+    difficulty: 1
+    answer: "$6^{10} = 2^{10}3^{10}5^0 7^0$"
+    hints:
+      - "Decide, one element at a time, which of the three sets it goes into."
+      - "Which of the $2^3$ membership patterns are ruled out?"
+    solution: |
+      **Key idea:** the conditions only restrict each element separately, so count the choices for one element and raise to the tenth power.
+
+      A triple of sets is the same as a choice, for each element $x$ of $\{1,\dots,10\}$, of which of the three sets contain $x$. That is a subset of $\{1,2,3\}$, so there are $8$ patterns per element.
+
+      - The union must be everything, so $x$ must be in at least one set: the empty pattern is out.
+      - The triple intersection must be empty, so $x$ cannot be in all three: the full pattern is out.
+
+      That leaves $6$ patterns for each element, chosen independently. The number of triples is
+      $$6^{10}=2^{10}\,3^{10}\,5^0\,7^0 .$$
+    checked: "script: counted the allowed membership patterns (6) and computed 6^10 = 60466176"
+    status: ready
+
+  - id: A2
+    topic: "Geometry: two stacked rectangles inside a triangle"
+    areas: [geometry, calculus]
+    difficulty: 2
+    answer: "$\\dfrac23$ (for every triangle)"
+    hints:
+      - "Measure the height of the first rectangle as a fraction $t$ of the triangle's height. What fraction of the triangle's area does it take?"
+      - "The small triangle above the first rectangle is similar to the original one."
+    solution: |
+      **Key idea:** a rectangle standing on the base of a triangle, whose height is the fraction $t$ of the triangle's height, has area $2t(1-t)$ times the triangle's area.
+
+      **One rectangle.** Put the side of the triangle with the rectangle on it as the base, with length $b$ and height $h$, so the triangle has area $\tfrac12 bh$. At height $y$ the triangle is $b(1-y/h)$ wide. A rectangle of height $y=th$ resting on the base has width at most $b(1-t)$, so its area is at most
+      $$b(1-t)\cdot th = 2t(1-t)\cdot \tfrac12 bh .$$
+      We take the widest one, since a narrower one only loses area.
+
+      **The second rectangle.** Above the first rectangle sits a triangle similar to the original, scaled by $1-t$, so its area is $(1-t)^2$ times the original. By the same formula, the second rectangle has area $2s(1-s)(1-t)^2$ times the original, for its own fraction $s$. The best choice is $s=\frac12$, which gives $\frac12(1-t)^2$.
+
+      **Optimize.** The ratio is
+      $$\phi(t)=2t(1-t)+\tfrac12(1-t)^2 .$$
+      Then $\phi'(t)=2-4t-(1-t)=1-3t$, which is zero at $t=\frac13$, and $\phi$ is a downward parabola. So the maximum is
+      $$\phi\!\left(\tfrac13\right)=2\cdot\tfrac13\cdot\tfrac23+\tfrac12\cdot\tfrac49=\tfrac49+\tfrac29=\tfrac23 .$$
+      The answer does not depend on the shape of the triangle or on which side we use. The acute condition only guarantees that a rectangle can sit on any side.
+    checked: "script: grid search over t and s gives a maximum of 0.66667"
+    status: ready
+
+  - id: A3
+    topic: "Limits: a quadratic recursion that becomes the exponential"
+    areas: [analysis]
+    difficulty: 2
+    answer: "$e^d-1$"
+    hints:
+      - "Add $1$ to both sides of the recursion."
+      - "You should see repeated squaring."
+    solution: |
+      **Key idea:** with $b=a+1$ the recursion becomes $b \mapsto b^2$.
+
+      From $a_{j+1}=a_j^2+2a_j$ we get $a_{j+1}+1=(a_j+1)^2$. So after $j$ steps the quantity $a+1$ has been squared $j$ times:
+      $$a_m(j)+1=\big(a_m(0)+1\big)^{2^j}=\Big(1+\frac{d}{2^m}\Big)^{2^j}.$$
+      Take $m=j=n$ and write $N=2^n$:
+      $$a_n(n)=\Big(1+\frac{d}{N}\Big)^{N}-1 .$$
+      As $n\to\infty$, $N\to\infty$, and the classical limit $(1+d/N)^N\to e^d$ gives
+      $$\lim_{n\to\infty}a_n(n)=e^d-1 .$$
+    checked: "script: computed a_n(n) for d = 0.7 and n up to 20; it approaches e^0.7 − 1"
+    status: ready
+
+  - id: A4
+    topic: "Number theory: last two digits of a power tower"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "Only $87$"
+    hints:
+      - "To know $3^k \\bmod 100$, you only need $k$ modulo the order of $3$ mod $100$."
+      - "Work down: modulo $4$, then $20$, then $100$."
+    solution: |
+      **Key idea:** each layer of the tower only matters modulo the order of $3$ for the layer above, and these orders shrink fast: $100 \to 20 \to 4$.
+
+      Here $a_{i+1}=3^{a_i}$.
+
+      **Orders.** $3^4=81\equiv1 \pmod{20}$, so $3^k \bmod 20$ depends only on $k \bmod 4$. Also $3^{20}\equiv 1\pmod{100}$ (for example, $3^{10}=59049\equiv 49$ and $49^2=2401\equiv 1$), so $3^k \bmod 100$ depends only on $k \bmod 20$.
+
+      **Step 1.** Every $a_i$ is odd, and $3^{\text{odd}}\equiv(-1)^{\text{odd}}=-1\equiv 3\pmod 4$. So $a_i\equiv 3\pmod 4$ for $i\ge2$.
+
+      **Step 2.** For $i\ge3$, $a_i=3^{a_{i-1}}$ with $a_{i-1}\equiv3\pmod4$, so $a_i\equiv 3^3=27\equiv 7\pmod{20}$.
+
+      **Step 3.** For $i\ge4$, $a_i=3^{a_{i-1}}$ with $a_{i-1}\equiv 7\pmod{20}$, so
+      $$a_i\equiv 3^7=2187\equiv 87\pmod{100}.$$
+
+      So from $a_4$ on, every term ends in $87$, and only finitely many terms end in anything else. The answer is $87$ alone. (In fact $a_3=3^{27}$ already ends in $87$.)
+    checked: "script: computed the tower modulo 100 with exact exponent reduction: 3, 27, 87, 87, 87, …"
+    status: ready
+
+  - id: A5
+    topic: "Integrals: products of cosines and signed sums"
+    areas: [calculus, combinatorics]
+    difficulty: 2
+    answer: "$m = 3, 4, 7, 8$"
+    hints:
+      - "Write each cosine as $\\tfrac12(e^{ikx}+e^{-ikx})$ and expand the product."
+      - "The integral of $e^{inx}$ over a full period is zero unless $n=0$."
+    solution: |
+      **Key idea:** expanding the product turns the integral into a count of ways to choose signs with $\pm1\pm2\pm\cdots\pm m=0$.
+
+      Write $\cos kx=\frac12(e^{ikx}+e^{-ikx})$. Multiplying out,
+      $$\prod_{k=1}^m\cos kx=\frac1{2^m}\sum_{\varepsilon}\exp\big(i(\varepsilon_1\cdot1+\varepsilon_2\cdot2+\cdots+\varepsilon_m m)x\big),$$
+      summed over all $2^m$ sign choices $\varepsilon_k=\pm1$. Over $[0,2\pi]$, $e^{inx}$ integrates to $2\pi$ if $n=0$ and to $0$ otherwise. So
+      $$I_m=\frac{2\pi}{2^m}\cdot\#\{\varepsilon:\ \textstyle\sum_k \varepsilon_k k=0\}.$$
+      This is never negative, and it is nonzero exactly when some choice of signs gives $0$.
+
+      **When can the signs cancel?** A signed sum has the same parity as $1+2+\cdots+m=\frac{m(m+1)}2$. So we need $\frac{m(m+1)}2$ even, which happens exactly when $m\equiv 0$ or $3\pmod 4$. Conversely, for those $m$ there is a choice:
+
+      - $m=3$: $1+2-3=0$.
+      - $m=4$: $1-2-3+4=0$.
+      - A block of four consecutive numbers can always be cancelled: $k-(k+1)-(k+2)+(k+3)=0$. So $m=7$ is $1+2-3$ plus the block $4,5,6,7$, and $m=8$ is two blocks.
+
+      In the range $1\le m\le10$, the answer is $m=3,4,7,8$.
+    checked: "script: numerical integration for m = 1…10; nonzero exactly for 3, 4, 7, 8 (e.g. I_3 = π/2, I_4 = π/4)"
+    status: ready
+
+  - id: A6
+    topic: "Polynomials: sum of squared coefficients on the unit circle"
+    areas: [algebra, analysis]
+    difficulty: 3
+    answer: "$g(x)=6x^2+5x+1$"
+    hints:
+      - "The sum of the squared coefficients of a real polynomial $p$ is the average of $|p(z)|^2$ over the unit circle."
+      - "Factor $3x^2+7x+2$. Can you change one factor without changing its absolute value on the unit circle?"
+    solution: |
+      **Key idea:** $\Gamma(p)$ only depends on $|p|$ on the unit circle, and on that circle $|x+2|=|2x+1|$.
+
+      **A formula for $\Gamma$.** For a real polynomial $p(x)=\sum a_k x^k$ and $z=e^{i\theta}$,
+      $$|p(z)|^2=p(z)\overline{p(z)}=\sum_{j,k}a_ja_k e^{i(j-k)\theta}.$$
+      Averaging over $\theta\in[0,2\pi]$ kills every term with $j\ne k$, so
+      $$\Gamma(p)=\frac1{2\pi}\int_0^{2\pi}\big|p(e^{i\theta})\big|^2\,d\theta .$$
+
+      **The swap.** The given polynomial factors as $(3x+1)(x+2)$. For $|z|=1$ we have $\bar z=1/z$, so
+      $$|z+2|=|\bar z+2|=\Big|\frac1z+2\Big|=\frac{|1+2z|}{|z|}=|2z+1| .$$
+      Let $g(x)=(3x+1)(2x+1)=6x^2+5x+1$. Then $g(0)=1$ and $|g(z)|=|(3z+1)(z+2)|$ on the unit circle. Raising to the power $n$ keeps this equality, so for every $n\ge1$ the two $n$-th powers have the same $|\cdot|^2$ on the circle and hence the same $\Gamma$.
+    checked: "script: compared the sums of squared coefficients of both n-th powers for n = 1…6 (62, 6366, 751520, …)"
+    status: ready
+
+  - id: B1
+    topic: "Polynomials: fewest nonzero coefficients with five integer roots"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$k=3$, for example $m_i=-2,-1,0,1,2$"
+    hints:
+      - "Try roots placed symmetrically around $0$."
+      - "With only two terms, $x^5+ax^j$, count how many real roots can be distinct."
+    solution: |
+      **Key idea:** symmetric roots kill every even-degree coefficient; two terms cannot give five distinct real roots.
+
+      **Three is possible.** With roots $-2,-1,0,1,2$:
+      $$x(x^2-1)(x^2-4)=x^5-5x^3+4x,$$
+      which has three nonzero coefficients.
+
+      **Fewer is impossible.** The leading coefficient is $1$, so one term means $p=x^5$, which has a repeated root. With two terms, $p=x^5+ax^j$ with $a\ne0$ and $0\le j\le4$.
+
+      - If $j\ge2$, then $x^j$ divides $p$, so $0$ is a repeated root.
+      - If $j=1$, then $p=x(x^4+a)$, and $x^4=-a$ has at most two real solutions. That is at most $3$ real roots.
+      - If $j=0$, then $x^5=-a$ has only one real solution.
+
+      In every case $p$ cannot have five distinct integer roots. So $k=3$.
+    checked: "script: expanded the product for roots −2…2: x^5 − 5x^3 + 4x"
+    status: ready
+
+  - id: B2
+    topic: "Polynomials: a derivative recursion with a closed form"
+    areas: [algebra, calculus]
+    difficulty: 2
+    answer: "$101^{99}$"
+    hints:
+      - "Compute the first few polynomials and factor them."
+      - "Guess $f_n(x)=x(x+n)^{n-1}$ and check it against the recursion."
+    solution: |
+      **Key idea:** the first few cases suggest $f_n(x)=x(x+n)^{n-1}$, and the recursion plus $f_n(0)=0$ pins it down.
+
+      The recursion gives the derivative of $f_{n+1}$, and $f_{n+1}(0)=0$ gives the constant, so each $f_{n+1}$ is determined by $f_n$. Computing: $f_1=x$, $f_2=x(x+2)$, $f_3=x(x+3)^2$. We claim $f_n(x)=x(x+n)^{n-1}$ for $n\ge1$.
+
+      **Check.** It holds for $n=1$. Suppose it holds for $n$. Then
+      $$(n+1)f_n(x+1)=(n+1)(x+1)(x+n+1)^{n-1}.$$
+      On the other hand, the candidate $q(x)=x(x+n+1)^n$ has
+      $$q'(x)=(x+n+1)^n+nx(x+n+1)^{n-1}=(x+n+1)^{n-1}\big((n+1)x+n+1\big),$$
+      which is the same thing. Since $q(0)=0$ too, $q=f_{n+1}$.
+
+      **Answer.** $f_{100}(1)=1\cdot101^{99}$, and $101$ is prime, so this is already the factorization.
+    checked: "script: generated f_1 … f_8 by integrating the recursion with sympy and factored them"
+    status: ready
+
+  - id: B3
+    topic: "Counting: an array where each value repeats eight times"
+    areas: [combinatorics, number-theory]
+    difficulty: 2
+    hints:
+      - "Suppose every entry at position $(m,n)$ is at most $mn$. Look at all positions with $mn\\le N$."
+      - "How many such positions are there, compared to $N$?"
+    solution: |
+      **Key idea:** the positions $(m,n)$ with $mn\le N$ number about $N\ln N$, but only $8N$ entries can have values at most $N$.
+
+      Suppose, for contradiction, that $a_{m,n}\le mn$ for all $m,n$. Fix a large $N$ and look at the positions with $mn\le N$. Every entry there is a positive integer at most $N$.
+
+      **Few small values.** Each of the values $1,2,\dots,N$ appears exactly eight times, so at most $8N$ positions in the whole array hold a value at most $N$.
+
+      **Many positions.** For each row $m\le N$ there are $\lfloor N/m\rfloor$ columns with $mn\le N$. So the number of positions is
+      $$\sum_{m=1}^N\Big\lfloor\frac Nm\Big\rfloor\ \ge\ \sum_{m=1}^N\Big(\frac Nm-1\Big)=N(H_N-1),$$
+      where $H_N=1+\frac12+\cdots+\frac1N$ grows without bound. Choose $N$ with $H_N>9$. Then there are more than $8N$ positions, each holding a value at most $N$. That is a contradiction.
+
+      So some entry has $a_{m,n}>mn$.
+    checked: "proof only; the harmonic sum bound is standard (H_N > 9 for N ≥ 4550)"
+    status: ready
+
+  - id: B4
+    topic: "Probability: a random rectangle inside the unit circle"
+    areas: [probability, geometry]
+    difficulty: 2
+    answer: "$\\dfrac4{\\pi^2}$"
+    hints:
+      - "A rectangle with sides parallel to the axes is inside the disk exactly when its four corners are."
+      - "Two of the corners mix a coordinate of the point on the circle with a coordinate of the point inside."
+    solution: |
+      **Key idea:** once the point on the circle is fixed, the good inside points form an axis-parallel rectangle inscribed in the circle.
+
+      Let $p=(\cos\theta,\sin\theta)$ and $q=(u,v)$. The rectangle with diagonal $pq$ has corners $p$, $q$, $(\cos\theta,v)$ and $(u,\sin\theta)$. The disk is convex, so the rectangle lies inside it exactly when all four corners do. The corners $p,q$ are fine, so the conditions are
+      $$\cos^2\theta+v^2\le1\iff |v|\le|\sin\theta|,\qquad u^2+\sin^2\theta\le1\iff|u|\le|\cos\theta| .$$
+      So for this $\theta$, the good points $q$ fill the rectangle $|u|\le|\cos\theta|$, $|v|\le|\sin\theta|$. Its corners are on the circle, and its area is
+      $$4|\cos\theta\sin\theta|=2|\sin2\theta| .$$
+      The chance that a uniform point of the disk lands there is $2|\sin 2\theta|/\pi$. Now average over $\theta$. The average of $|\sin2\theta|$ over a period is $\frac2\pi$, so
+      $$P=\frac2\pi\cdot\frac2\pi=\frac4{\pi^2}\approx0.405 .$$
+    viz: putnam-1985-b4
+    checked: "script: Monte Carlo with 4 million trials gives 0.4054; 4/π² = 0.4053"
+    status: ready
+
+  - id: B5
+    topic: "Integrals: a Gaussian hidden by a substitution"
+    areas: [calculus]
+    difficulty: 2
+    answer: "$\\sqrt{\\dfrac{\\pi}{1985}}\\,e^{-3970}$"
+    hints:
+      - "Substitute $t=u^2$, then complete the square: $u^2+u^{-2}=(u-u^{-1})^2+2$."
+      - "The map $u\\mapsto 1/u$ lets you add a factor $1+u^{-2}$, which is the derivative of $u-u^{-1}$."
+    solution: |
+      **Key idea:** after $t=u^2$, the exponent is $-a(u-1/u)^2-2a$, and $u-1/u$ is a perfect substitution once the integrand is symmetrized.
+
+      Let $a=1985$. With $t=u^2$, $dt=2u\,du$ and $t^{-1/2}=u^{-1}$:
+      $$I=\int_0^\infty t^{-1/2}e^{-a(t+1/t)}dt=2\int_0^\infty e^{-a(u^2+u^{-2})}du=2e^{-2a}J,\qquad J=\int_0^\infty e^{-a(u-1/u)^2}du .$$
+      The substitution $u\mapsto 1/u$ leaves the exponent unchanged and gives $J=\int_0^\infty e^{-a(u-1/u)^2}u^{-2}\,du$. Averaging the two forms,
+      $$J=\frac12\int_0^\infty e^{-a(u-1/u)^2}\Big(1+\frac1{u^2}\Big)du .$$
+      Now $w=u-1/u$ runs from $-\infty$ to $\infty$ as $u$ runs over $(0,\infty)$, with $dw=(1+u^{-2})du$. So
+      $$J=\frac12\int_{-\infty}^{\infty}e^{-aw^2}dw=\frac12\sqrt{\frac\pi a}.$$
+      Therefore
+      $$I=\sqrt{\frac{\pi}{1985}}\,e^{-3970}.$$
+    checked: "script: numerical integration of e^{3970}·(integrand) gives 0.0397827, matching √(π/1985)"
+    status: ready
+
+  - id: B6
+    topic: "Linear algebra: averaging a finite matrix group"
+    areas: [linear-algebra, algebra]
+    difficulty: 3
+    hints:
+      - "Let $P$ be the average of all the matrices in the group. What is $M_iP$?"
+      - "An idempotent matrix has trace equal to its rank."
+    solution: |
+      **Key idea:** the average $P$ of the group satisfies $P^2=P$, and for such a matrix the trace is the rank.
+
+      Let $P=\frac1r\sum_{i=1}^r M_i$. For a fixed $M_j$, the products $M_jM_1,\dots,M_jM_r$ are the elements of the group again, each once (multiplying by a group element permutes the group). So
+      $$M_jP=\frac1r\sum_i M_jM_i=P .$$
+      Averaging this over $j$ gives $P^2=P$.
+
+      A matrix with $P^2=P$ is a projection. Its eigenvalues are $0$ or $1$, and it is diagonalizable, because its minimal polynomial divides $x^2-x$, which has distinct roots. So in a suitable basis $P$ is diagonal with $\operatorname{rank}P$ ones. Hence
+      $$\operatorname{rank}P=\operatorname{tr}P=\frac1r\sum_i\operatorname{tr}M_i=0 .$$
+      A matrix of rank $0$ is the zero matrix, so $\sum_i M_i=rP=0$.
+    checked: "proof only; tested numerically on the rotation group of order 3 in the plane (trace sum 0, matrix sum 0)"
+    status: ready

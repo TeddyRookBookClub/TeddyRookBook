@@ -1,0 +1,260 @@
+year: 2003
+edition: 64th
+date: "December 6, 2003"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2003.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Combinatorics: nearly equal parts of n"
+    areas: [combinatorics, number-theory]
+    difficulty: 1
+    answer: '$n$'
+    hints:
+      - 'Fix the number of parts $k$. How many ways are there to use only two neighboring sizes?'
+    solution: |
+      **Key idea:** for each number of parts $k$ there is exactly one way, so the answer is the number of choices of $k$.
+
+      In such a sum every part is $a_1$ or $a_1+1$. Fix the number of parts $k$, with $1\le k\le n$. If $r$ parts equal $q+1$ and $k-r$ equal $q$ (with $0\le r<k$), then $n=kq+r$. Division with remainder says $q$ and $r$ are uniquely determined by $n$ and $k$, and $q\ge1$ because $k\le n$. Since the parts are listed in increasing order, the sum is then fixed.
+
+      So each $k=1,2,\dots,n$ gives exactly one way, and there are $n$ ways in all.
+    checked: "script: brute-force count over partitions for n ≤ 11"
+    status: ready
+
+  - id: A2
+    topic: "Inequality: superadditivity of the geometric mean"
+    areas: [algebra, analysis]
+    difficulty: 1
+    hints:
+      - 'Divide both sides by the right side and use AM–GM on each of the two products.'
+    solution: |
+      **Key idea:** after dividing by the right side, AM–GM bounds each term, and the two bounds add to $1$.
+
+      If some $a_i+b_i=0$, then $a_i=b_i=0$ and both sides are $0$. Otherwise put $u_i=\frac{a_i}{a_i+b_i}$ and $v_i=\frac{b_i}{a_i+b_i}$, so $u_i+v_i=1$. Dividing the inequality by the right side, we need
+      $$\Big(\prod u_i\Big)^{1/n}+\Big(\prod v_i\Big)^{1/n}\le1 .$$
+      By AM–GM, $\big(\prod u_i\big)^{1/n}\le\frac1n\sum u_i$ and $\big(\prod v_i\big)^{1/n}\le\frac1n\sum v_i$. Adding, the left side is at most $\frac1n\sum(u_i+v_i)=1$.
+    checked: "proof only"
+    status: ready
+
+  - id: A3
+    topic: "Trigonometry: minimum of a six-term trigonometric sum"
+    areas: [algebra, calculus]
+    difficulty: 2
+    answer: '$2\sqrt2-1$'
+    hints:
+      - 'Let $t=\sin x+\cos x$. Write $\sin x\cos x$, and then all six terms, in terms of $t$.'
+      - 'The sum becomes $t+\dfrac{2}{t-1}$.'
+    solution: |
+      **Key idea:** with $t=\sin x+\cos x$, everything collapses to a one-variable function, $t+\frac2{t-1}$.
+
+      Let $t=\sin x+\cos x$, so $t\in[-\sqrt2,\sqrt2]$ and $\sin x\cos x=\frac{t^2-1}2$ (which must be nonzero, so $t\ne\pm1$). Then
+      $$\tan x+\cot x=\frac1{\sin x\cos x}=\frac2{t^2-1},\qquad \sec x+\csc x=\frac{\sin x+\cos x}{\sin x\cos x}=\frac{2t}{t^2-1}.$$
+      The sum is
+      $$t+\frac{2(1+t)}{t^2-1}=t+\frac2{t-1}.$$
+      Put $u=t-1\in[-\sqrt2-1,\ \sqrt2-1]$, $u\ne0,-2$. The sum is $1+u+\frac2u$.
+
+      - For $0<u\le\sqrt2-1$: $u+\frac2u\ge\frac2u\ge\frac{2}{\sqrt2-1}>4$, so the sum exceeds $5$.
+      - For $u<0$: by AM–GM on $-u$ and $-\frac2u$, $u+\frac2u\le-2\sqrt2$, with equality at $u=-\sqrt2$, which is in range. So the sum is at most $1-2\sqrt2<0$, and its absolute value is at least $2\sqrt2-1$.
+
+      Equality occurs at $t=1-\sqrt2$, which some real $x$ attains. The minimum is $2\sqrt2-1\approx1.828$.
+    checked: "script: a fine scan over x gives 1.8284271…"
+    status: ready
+
+  - id: A4
+    topic: "Inequality: comparing discriminants of dominated quadratics"
+    areas: [algebra]
+    difficulty: 3
+    hints:
+      - 'Arrange $A>0$ and $a>0$ by changing signs. If $Q$ takes negative values, $P$ must vanish at the roots of $Q$.'
+      - 'Otherwise $Q\pm P\ge0$, so their discriminants are $\le0$. Add them. For the other direction compare minimum values.'
+    solution: |
+      **Key idea:** either $P$ is a multiple of $Q$, or $Q\ge|P|$ everywhere; in the second case, nonnegative quadratics have nonpositive discriminants, and comparing minima finishes it.
+
+      Write $P=ax^2+bx+c$, $Q=Ax^2+Bx+C$, and $\Delta(P)=b^2-4ac$. Replacing $P$ by $-P$ or $Q$ by $-Q$ changes nothing, so assume $a>0$ and $A>0$. Dividing $|P|\le|Q|$ by $x^2$ and letting $x\to\infty$ gives $a\le A$.
+
+      **Case 1: $Q$ takes a negative value.** Then $Q$ has two distinct real roots, and $|P|\le|Q|$ makes $P$ vanish there too. A quadratic with the same two roots is a multiple: $P=\lambda Q$, and $|\lambda|=a/A\le1$. So $\Delta(P)=\lambda^2\Delta(Q)$ and $|\Delta(P)|\le|\Delta(Q)|$.
+
+      **Case 2: $Q\ge0$ everywhere.** Then $\Delta(Q)\le0$, and $Q-P\ge0$, $Q+P\ge0$ everywhere.
+
+      - *$\Delta(P)\le-\Delta(Q)$.* A polynomial of degree at most $2$ that is $\ge0$ everywhere has discriminant $\le0$ (if its leading coefficient is $0$ it is a constant and its "discriminant" $(B\mp b)^2$ is $0$). The discriminant is a quadratic form in the coefficients, so $\Delta(Q-P)+\Delta(Q+P)=2\Delta(Q)+2\Delta(P)$. Both are $\le0$, so $\Delta(P)\le-\Delta(Q)=|\Delta(Q)|$.
+      - *$-\Delta(P)\le|\Delta(Q)|$.* This matters only when $\Delta(P)<0$. Then $P>0$ with minimum value $\frac{-\Delta(P)}{4a}$, and $Q$ has minimum value $\frac{-\Delta(Q)}{4A}$ at some point $x_Q$. Since $0<P\le Q$,
+      $$\frac{-\Delta(P)}{4a}\le P(x_Q)\le Q(x_Q)=\frac{-\Delta(Q)}{4A},$$
+      so $-\Delta(P)\le\frac aA(-\Delta(Q))\le-\Delta(Q)$.
+
+      Together, $|\Delta(P)|\le|\Delta(Q)|$, that is, $|b^2-4ac|\le|B^2-4AC|$.
+    checked: "proof only"
+    status: ready
+
+  - id: A5
+    topic: "Combinatorics: lattice paths with only odd returns"
+    areas: [combinatorics]
+    difficulty: 4
+    hints:
+      - 'Split a path into arches (pieces between visits to the axis). How does the length of an arch''s final descent depend on the path inside it?'
+      - 'Set up generating functions for paths whose last descent to the axis is odd or even, and use $C=1+xC^2$ for the Catalan series.'
+    solution: |
+      **Key idea:** two finite sets have a one-to-one correspondence exactly when they have the same size, so we count. Generating functions show the paths with only odd returns are counted by the Catalan number $C_{n-1}$.
+
+      Write $U$ for an upstep and $D$ for a downstep. Let $C(x)=\sum_n C_nx^n$ count all Dyck paths by semilength; it satisfies $C=1+xC^2$. Shifting by one, $\sum_{n\ge1}C_{n-1}x^n=xC$.
+
+      **Arches.** A nonempty path splits uniquely into *arches* $U\,W\,D$ that start and end on the axis, with $W$ any Dyck path. Each return is the final run of downsteps of one arch. That run is $1$ step long if $W$ is empty, and otherwise it is $1$ plus the length of the last return of $W$. So an arch's return is **odd** exactly when $W$ is empty or the last return of $W$ is even.
+
+      **Last-return parity.** Let $O$ and $E$ count nonempty paths whose last return is odd or even. A path is a sequence of arches, and only the last arch decides, so
+      $$O=C\cdot x(1+E),\qquad E=C\cdot xO .$$
+      Hence $E=x^2C^2(1+E)$, so $1+E=\frac1{1-x^2C^2}$.
+
+      **All returns odd.** Such a path is any sequence of odd arches, and odd arches are counted by $x(1+E)$:
+      $$G=\frac1{1-x(1+E)}=\frac{1-x^2C^2}{1-x-x^2C^2}.$$
+      Using $x^2C^2=x(C-1)$ (from $C=1+xC^2$): the numerator is $1+x-xC$ and the denominator is $1-xC$. Then
+      $$(1+xC)(1-xC)=1-x^2C^2=1+x-xC,$$
+      so $G=1+xC$. The coefficient of $x^n$ for $n\ge1$ is $C_{n-1}$: the number of Dyck $n$-paths with no even return equals the number of Dyck $(n-1)$-paths. Equal finite counts give a one-to-one correspondence.
+    checked: "script: enumerated all Dyck paths for n ≤ 10; the paths with only odd returns number C(n−1) each time"
+    status: ready
+
+  - id: A6
+    topic: "Combinatorics: splitting integers with equal representation counts"
+    areas: [combinatorics, number-theory]
+    difficulty: 4
+    answer: 'Yes: split by the parity of the number of 1s in binary'
+    hints:
+      - 'Try splitting by the number of 1s in the binary expansion: even goes to $A$, odd to $B$.'
+      - 'Prove by induction on $k$ that the split works for numbers below $2^k$.'
+    solution: |
+      **Key idea:** the Thue–Morse split (even or odd number of binary 1s) works; doubling the range swaps the roles of the two sets, which makes an induction go through.
+
+      Put $n$ in $A$ if its binary expansion has an even number of $1$s, and in $B$ otherwise. Let $A_k,B_k$ be the parts below $2^k$. Adding $2^k$ to a number below $2^k$ adds one binary $1$, so
+      $$A_{k+1}=A_k\cup(2^k+B_k),\qquad B_{k+1}=B_k\cup(2^k+A_k).$$
+      We show by induction that $r_{A_k}(n)=r_{B_k}(n)$ for all $n$. For $k=0$, $A_0=\{0\}$ and $B_0=\varnothing$, and both counts are $0$.
+
+      For the step, sort the ordered pairs counted by $r_{A_{k+1}}(n)$ by where the two entries come from:
+      - both in $A_k$: $r_{A_k}(n)$ pairs;
+      - both in $2^k+B_k$: $r_{B_k}(n-2^{k+1})$ pairs;
+      - one in $A_k$ and one in $2^k+B_k$: twice the number $X$ of pairs $(a,b)\in A_k\times B_k$ with $a+b=n-2^k$ (the two entries are automatically different).
+
+      For $r_{B_{k+1}}(n)$ the same sorting gives $r_{B_k}(n)+r_{A_k}(n-2^{k+1})+2X$, with the same $X$. By the induction hypothesis the totals agree.
+
+      Finally, $r_A(n)$ only involves elements up to $n$, so $r_A(n)=r_{A_k}(n)=r_{B_k}(n)=r_B(n)$ once $2^k>n$. So the answer is yes.
+    checked: "script: r_A(n) = r_B(n) for all n < 600 with the Thue–Morse split"
+    status: ready
+
+  - id: B1
+    topic: "Linear algebra: a rank obstruction for separated products"
+    areas: [linear-algebra, algebra]
+    difficulty: 2
+    answer: 'No'
+    hints:
+      - 'Record the coefficient of $x^iy^j$ in a matrix. What is the rank of the matrix for $a(x)c(y)$?'
+    solution: |
+      **Key idea:** a polynomial in $x$ and $y$ has a coefficient matrix, a product $a(x)c(y)$ has rank at most $1$, and the left side has rank $3$.
+
+      For a polynomial $F(x,y)=\sum m_{ij}x^iy^j$ let $M(F)=(m_{ij})$ be its coefficient matrix (indices $i,j\ge0$, finitely many nonzero). $M$ is linear in $F$.
+
+      If $a(x)=\sum\alpha_ix^i$ and $c(y)=\sum\gamma_jy^j$, then $M(a(x)c(y))=(\alpha_i\gamma_j)$, an outer product of two vectors, which has rank at most $1$. So the right side has a coefficient matrix of rank at most $2$.
+
+      For $1+xy+x^2y^2$ the coefficient matrix has $1$s at positions $(0,0),(1,1),(2,2)$ and zeros elsewhere: rank $3$. So no such polynomials exist.
+    checked: "proof only"
+    status: ready
+
+  - id: B2
+    topic: "Averages: repeated neighbor averaging of reciprocals"
+    areas: [combinatorics, analysis]
+    difficulty: 2
+    hints:
+      - 'After all the averaging, the final number is a binomially weighted average of the starting entries.'
+      - 'Use $\frac1{k+1}\binom{n-1}k=\frac1n\binom n{k+1}$.'
+    solution: |
+      **Key idea:** repeated averaging produces binomial weights, and the resulting sum has a closed form.
+
+      Averaging neighbors $n-1$ times gives each starting entry a weight from the binomial distribution: the last number is
+      $$x_n=\frac1{2^{n-1}}\sum_{k=0}^{n-1}\binom{n-1}k\frac1{k+1}.$$
+      (By induction: each step is the average of two neighbors, which is how the rows of Pascal's triangle are built.) Now $\frac1{k+1}\binom{n-1}k=\frac1n\binom n{k+1}$, so
+      $$x_n=\frac1{n\,2^{n-1}}\sum_{j=1}^{n}\binom nj=\frac{2^n-1}{n\,2^{n-1}}<\frac{2^n}{n\,2^{n-1}}=\frac2n .$$
+    checked: "script: exact averaging with fractions for n < 30 matches (2^n − 1)/(n·2^(n−1))"
+    status: ready
+
+  - id: B3
+    topic: "Number theory: factorial as a product of lcms"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'Compare the power of a prime $p$ on both sides.'
+      - 'The power of $p$ in $\operatorname{lcm}\{1,\dots,m\}$ is the number of $j\ge1$ with $p^j\le m$.'
+    solution: |
+      **Key idea:** both sides count the same pairs $(i,j)$ with $i\,p^j\le n$, for each prime $p$.
+
+      Fix a prime $p$. The exponent of $p$ in $\operatorname{lcm}\{1,\dots,m\}$ is the largest $e$ with $p^e\le m$, which is the number of $j\ge1$ with $p^j\le m$. With $m=\lfloor n/i\rfloor$, the condition $p^j\le\lfloor n/i\rfloor$ is the same as $ip^j\le n$. So the exponent of $p$ on the right side is
+      $$\#\{(i,j):i\ge1,\ j\ge1,\ ip^j\le n\}=\sum_{j\ge1}\Big\lfloor\frac n{p^j}\Big\rfloor,$$
+      counting by $j$ first. That is Legendre's formula for the exponent of $p$ in $n!$. Every prime appears to the same power on both sides, so they are equal.
+    checked: "script: both sides equal for n < 60"
+    status: ready
+
+  - id: B4
+    topic: "Algebra: rational pair sums of quartic roots"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Let $s=r_1+r_2$, $t=r_3+r_4$, $p=r_1r_2$, $q=r_3r_4$. Which combinations of $p,q$ are rational?'
+    solution: |
+      **Key idea:** the coefficients give two linear equations for $p=r_1r_2$ and $q=r_3r_4$ with rational coefficients, and $s\ne t$ makes them solvable.
+
+      Let $s=r_1+r_2$, $t=r_3+r_4$, $p=r_1r_2$, $q=r_3r_4$. Then
+      $$f(z)=a(z^2-sz+p)(z^2-tz+q).$$
+      Comparing coefficients: $s+t=-\frac ba$, so $t$ is rational along with $s$;
+      $$p+q+st=\frac ca,\qquad -(pt+qs)=\frac da .$$
+      So $p+q$ and $tp+sq$ are rational. This is a linear system for $p,q$ with determinant $s-t\ne0$, and its rational coefficients give the rational solution $p=\frac{s(p+q)-(tp+sq)}{s-t}$. So $r_1r_2=p$ is rational.
+    checked: "proof only"
+    status: ready
+
+  - id: B5
+    topic: "Geometry: distances to an equilateral triangle's vertices"
+    areas: [geometry]
+    difficulty: 3
+    answer: 'area $=\dfrac{\sqrt3}{4}\big(1-|OP|^2\big)$'
+    hints:
+      - 'Rotate the plane by $60^\circ$ about one vertex so that another vertex lands on the third. Where does $P$ go?'
+      - 'Compute the area of the new triangle with complex numbers, with the circle as the unit circle.'
+    solution: |
+      **Key idea:** a $60^\circ$ rotation about $C$ builds a triangle with sides $a,b,c$; complex numbers give its area as $\frac{\sqrt3}4(1-|P|^2)$.
+
+      Use complex numbers with $O=0$ and $\omega=e^{2\pi i/3}$: put $A=1$, $B=\omega$, $C=\omega^2$.
+
+      **The rotation.** Let $\rho$ be the rotation about $C$ by $-60^\circ$: $\rho(z)=C+e^{-i\pi/3}(z-C)$. It sends $B$ to $A$, since $\frac{A-C}{B-C}=\frac{1-\omega^2}{\omega-\omega^2}=-\omega=e^{-i\pi/3}$. Let $P'=\rho(P)$. Then:
+      - $|PP'|=|P-C|=c$, since triangle $CPP'$ is equilateral;
+      - $|P'A|=|\rho(P)-\rho(B)|=|P-B|=b$;
+      - $|PA|=a$.
+
+      So the triangle $PP'A$ has sides $a,b,c$, provided it is not flat. We show its area is positive.
+
+      **The area.** Note $e^{-i\pi/3}-1=\omega^2$, so $P'-P=\omega^2(P-C)=\omega^2P-\omega$. The signed area of $P,P',A$ is $\frac12\operatorname{Im}\big(\overline{(P'-P)}(A-P)\big)$, and
+      $$\overline{(P'-P)}(A-P)=(\omega\bar P-\omega^2)(1-P)=\big(\omega\bar P+\omega^2P\big)-\omega|P|^2-\omega^2 .$$
+      The bracket is real, since $\omega^2P$ is the conjugate of $\omega\bar P$. With $\operatorname{Im}\omega=\frac{\sqrt3}2$ and $\operatorname{Im}\omega^2=-\frac{\sqrt3}2$,
+      $$\text{area}=\frac12\Big(\frac{\sqrt3}2-\frac{\sqrt3}2|P|^2\Big)=\frac{\sqrt3}4\big(1-|OP|^2\big).$$
+      For $P$ inside the circle this is positive, so the triangle exists, and its area depends only on $|OP|$.
+    viz: putnam-2003-b5
+    checked: "script: Heron's formula with the three distances matches √3/4·(1 − d²) at random interior points"
+    status: ready
+
+  - id: B6
+    topic: "Integral inequality: absolute values of pairwise sums"
+    areas: [analysis]
+    difficulty: 4
+    hints:
+      - 'Split $[0,1]$ into $P=\{f\ge0\}$ and $N=\{f<0\}$ and look at the four kinds of pairs $(x,y)$.'
+      - 'On $P\times N$, bound the integral of $|f(x)+f(y)|$ below by the absolute value of the integral.'
+    solution: |
+      **Key idea:** split by the sign of $f$. Same-sign pairs add, mixed pairs are bounded by an absolute value, and what is left is a one-variable inequality.
+
+      Let $P=\{f\ge0\}$ and $N=\{f<0\}$, with lengths $p$ and $q=1-p$. Let $I_+=\int_Pf$ and $I_-=\int_N(-f)$, both $\ge0$; the right side of the inequality is $I_++I_-$.
+
+      - On $P\times P$, $|f(x)+f(y)|=f(x)+f(y)$, contributing $2pI_+$.
+      - On $N\times N$, similarly $2qI_-$.
+      - On $P\times N$ and on $N\times P$ (the same by symmetry): with $g=-f>0$ on $N$,
+        $$\int_P\int_N|f(x)-g(y)|\,dy\,dx\ \ge\ \Big|\int_P\int_N\big(f(x)-g(y)\big)\Big|=|qI_+-pI_-| .$$
+
+      So the left side is at least $2pI_++2qI_-+2|qI_+-pI_-|$. This bound used only $f\ge0$ on $P$ and $f\le0$ on $N$, so it also holds for $-f$ with the roles of $P$ and $N$ swapped. Hence we may assume $qI_+\ge pI_-$. The bound becomes $2I_++2(q-p)I_-$, and we need
+      $$2I_++2(q-p)I_-\ge I_++I_-,\quad\text{i.e.}\quad I_+\ge(1-2q+2p)I_-=(4p-1)I_- .$$
+      If $q=0$ then $I_-=0$ and this is clear. Otherwise $I_+\ge\frac pqI_-$, and
+      $$\frac p{1-p}\ge4p-1\iff p\ge(4p-1)(1-p)\iff(2p-1)^2\ge0 .$$
+      So $I_+\ge\frac pqI_-\ge(4p-1)I_-$ (using $I_-\ge0$), and the inequality holds.
+    checked: "script: 200 random polynomial f on a fine grid; the inequality held each time"
+    status: ready

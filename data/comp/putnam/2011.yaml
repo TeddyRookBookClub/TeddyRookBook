@@ -1,0 +1,277 @@
+year: 2011
+edition: 72nd
+date: "December 3, 2011"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2011.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Lattice paths: endpoints of spirals with growing steps"
+    areas: [combinatorics, geometry]
+    difficulty: 2
+    answer: "$10053$"
+    hints:
+      - 'Write the endpoint as alternating sums of the lengths. For which numbers of segments does it land in the first quadrant?'
+      - 'Two segments reach every point with $y>x\ge1$; six segments reach every point with $x\ge3$, $y\ge4$.'
+    solution: |
+      **Key idea:** only spirals with $n\equiv2\pmod 4$ segments end in the closed first quadrant, and the two shortest such shapes already reach everything that is reachable.
+
+      Let the lengths be $\ell_1<\ell_2<\dots<\ell_n$. The endpoint is
+      $$x=\ell_1-\ell_3+\ell_5-\cdots,\qquad y=\ell_2-\ell_4+\ell_6-\cdots,$$
+      where each sum runs over the odd (or even) indices up to $n$.
+
+      **Which $n$ can end with $x,y\ge0$.** Group the terms in pairs from the end. If the last odd index carries a minus sign ($n\equiv3,0\pmod 4$), then $x<0$. If the last even index carries a minus sign ($n\equiv1\pmod4$), then $y<0$. So $n\equiv2\pmod4$, and then
+      $$x=\ell_1+(\ell_5-\ell_3)+\cdots,\qquad y=\ell_2+(\ell_6-\ell_4)+\cdots .$$
+      Every bracket is at least $2$. In particular $x\ge1$ and $y\ge2$ always, and for $n\ge6$ we get $x\ge3$, $y\ge4$.
+
+      **What is reached.**
+      - $n=2$: the endpoint is $(\ell_1,\ell_2)$, which gives exactly the points with $y>x\ge1$.
+      - $n=6$: every point with $x\ge3$, $y\ge4$. Take $\ell_1=1$, $\ell_2=2$, $\ell_3=3$, $\ell_5=x+2$, $\ell_6=\ell_4+y-2$. If $y>x$, choose $\ell_4=4$. Otherwise choose $\ell_4=x+1$, which works since $y\ge4$. In both cases the lengths increase.
+
+      So a point of the grid $0\le x,y\le N$ is an endpoint if and only if $y>x\ge1$, or $x\ge3$ and $y\ge4$.
+
+      **Counting the others for $N=2011$.** The column $x=0$ has $N+1$ points. For $x=1$ the bad points are $y\in\{0,1\}$, and for $x=2$ they are $y\in\{0,1,2\}$. For each $x\ge3$ they are $y\in\{0,1,2,3\}$. Total:
+      $$(N+1)+2+3+4(N-2)=5N-2=10053 .$$
+    viz: putnam-2011-a1
+    checked: "script: enumerated all spirals with up to 10 segments in a 10×10 box; the unreachable set matches the rule (48 points = 5·10−2)"
+    status: ready
+
+  - id: A2
+    topic: "Series: a telescoping sum from a product recurrence"
+    areas: [analysis, algebra]
+    difficulty: 2
+    answer: "$S=\\tfrac32$"
+    hints:
+      - 'Let $P_n=a_1a_2\cdots a_n$ and divide the recurrence by $P_n$.'
+      - 'You should find $\frac{2}{P_n}=\frac{b_{n-1}}{P_{n-1}}-\frac{b_n}{P_n}$.'
+    solution: |
+      **Key idea:** dividing the recurrence by $P_n=a_1\cdots a_n$ makes the series telescope.
+
+      Divide $b_n=b_{n-1}a_n-2$ by $P_n$:
+      $$\frac{b_n}{P_n}=\frac{b_{n-1}}{P_{n-1}}-\frac2{P_n}\qquad(n\ge2).$$
+      Summing from $n=2$ to $N$, and using $b_1/P_1=1$,
+      $$\sum_{n=1}^N\frac1{P_n}=1+\frac12\Big(1-\frac{b_N}{P_N}\Big)=\frac32-\frac{b_N}{2P_N} .$$
+
+      **Convergence.** All terms are positive, so the partial sums increase. They are below $\frac32$ because $b_N,P_N>0$. So the series converges.
+
+      **The value.** A convergent series has terms tending to $0$, so $1/P_N\to0$, that is $P_N\to\infty$. Since $(b_N)$ is bounded, $b_N/P_N\to0$. Therefore $S=\frac32$.
+    checked: "script: built a_n from prescribed bounded sequences b_n (constant 3, and random in [0.1, 5]); partial sums approach 1.5"
+    status: ready
+
+  - id: A3
+    topic: "Limits: ratio of two integrals with a high power"
+    areas: [analysis, calculus]
+    difficulty: 2
+    answer: "$c=-1,\\ L=\\dfrac{2}{\\pi}$"
+    hints:
+      - 'Integrate the cosine integral by parts once.'
+      - 'For large $r$, the weight $x^r$ crowds next to $x=\pi/2$.'
+    solution: |
+      **Key idea:** one integration by parts turns the ratio into $(r+1)I_r/I_{r+1}$, where $I_r=\int_0^{\pi/2}x^r\sin x\,dx$, and $I_{r+1}/I_r\to\frac\pi2$.
+
+      Let $I_r=\int_0^{\pi/2}x^r\sin x\,dx$. Integrating by parts (the boundary term vanishes because $\cos\frac\pi2=0$),
+      $$\int_0^{\pi/2}x^r\cos x\,dx=\frac{1}{r+1}\int_0^{\pi/2}x^{r+1}\sin x\,dx=\frac{I_{r+1}}{r+1}.$$
+      So the expression is $r^c\,(r+1)\dfrac{I_r}{I_{r+1}}$.
+
+      **Claim: $I_{r+1}/I_r\to\frac\pi2$.** Since $x\le\frac\pi2$, $I_{r+1}\le\frac\pi2I_r$. For a lower bound fix small $\delta>0$. Split $I_r$ at $\frac\pi2-\delta$. The left part is at most $(\frac\pi2-\delta)^{r+1}$. The full integral is at least $\frac\delta2(\frac\pi2-\frac\delta2)^r\sin(\frac\pi2-\frac\delta2)$, the contribution of the last stretch of length $\delta/2$. The ratio of these two quantities tends to $0$ geometrically. So for large $r$ almost all of $I_r$ comes from $x\ge\frac\pi2-\delta$, where the extra factor $x$ is at least $\frac\pi2-\delta$. Hence
+      $$\liminf\frac{I_{r+1}}{I_r}\ge\frac\pi2-\delta$$
+      for every $\delta$, and the claim follows.
+
+      Therefore the expression behaves like $r^{c}\cdot r\cdot\frac2\pi$. It has a positive finite limit exactly when $c=-1$, and then $L=\frac2\pi$.
+    checked: "script: numerical integration for r = 50, 200, 800 gives ratios 0.662, 0.643, 0.638, approaching 2/π ≈ 0.6366"
+    status: ready
+
+  - id: A4
+    topic: "Linear algebra mod 2: even self products, odd cross products"
+    areas: [linear-algebra, number-theory]
+    difficulty: 2
+    answer: "Exactly the odd $n$"
+    hints:
+      - 'For odd $n$, try the matrix with $0$ on the diagonal and $1$ elsewhere.'
+      - 'Modulo $2$, a row''s dot product with itself equals the sum of its entries. So every row is orthogonal to the all-ones vector.'
+    solution: |
+      **Key idea:** modulo $2$, every row is orthogonal to the all-ones vector, which caps the rank of the Gram matrix at $n-1$; but $J-I$ has full rank when $n$ is even.
+
+      **Odd $n$ works.** Let $M=J-I$ ($0$ on the diagonal, $1$ elsewhere). A row dotted with itself gives $n-1$, which is even. Two different rows share $1$'s in $n-2$ positions, which is odd.
+
+      **Even $n$ fails.** Work modulo $2$ and suppose $M$ exists. Its Gram matrix $MM^T$ is $J-I$ over $\mathbb F_2$. For a $0/1$ vector, $x\cdot x=\sum x_i^2\equiv\sum x_i=x\cdot\mathbf 1$. So every row $r$ has $r\cdot\mathbf1=r\cdot r=0$. All rows lie in the $(n-1)$-dimensional space $\mathbf1^\perp$, so $\operatorname{rank}M\le n-1$ and $\operatorname{rank}(MM^T)\le n-1$.
+
+      But for even $n$, $(J-I)^2=J^2-2J+I=nJ-2J+I\equiv I\pmod2$, because $J^2=nJ$. So $J-I$ is invertible over $\mathbb F_2$, with rank $n$. Contradiction.
+    checked: "script: exhaustive search over 0/1 matrices for n ≤ 4 finds examples exactly for n = 1, 3"
+    status: ready
+
+  - id: A5
+    topic: "Calculus: gradients parallel to a fixed field give closeness"
+    areas: [analysis, calculus]
+    difficulty: 3
+    hints:
+      - 'Let $G$ be an antiderivative of $g$. Why is the range of $G$ a bounded interval?'
+      - 'In the coordinates $s=G(u)$, $t=G(v)$, the function $F$ is constant along lines of slope $1$.'
+    solution: |
+      **Key idea:** after the change of variables $s=G(u)$, $t=G(v)$ with $G'=g$, the function $F$ depends only on $s-t$. Since $G$ has bounded range, two of the $n+1$ points are within $O(1/n)$ in the new coordinate.
+
+      **The new coordinate.** Let $G(x)=\int_0^xg$. Since $g>0$, $G$ is strictly increasing. For $|x|\ge1$, $g(x)\le1/x^2$, so $G$ has finite limits $\alpha<\beta$ at $\mp\infty$. Thus $G$ is a $C^1$ bijection from $\mathbb R$ onto the bounded interval $(\alpha,\beta)$, with inverse $G^{-1}$ also $C^1$.
+
+      **$F$ in the new coordinates.** Let $H(s,t)=F(G^{-1}(s),G^{-1}(t))$ on the square $(\alpha,\beta)^2$. Then $H_s=F_u/g(u)$ and $H_t=F_v/g(v)$. The gradient condition says $(F_u,F_v)=\lambda(g(u),-g(v))$ for some real $\lambda$ (possibly $0$), so
+      $$H_s+H_t=\lambda-\lambda=0 .$$
+      So $H$ is constant along every segment of slope $1$ inside the square. Also $H(s,s)=F(u,u)=0$.
+
+      **The estimate.** Let $m=\frac{\alpha+\beta}2$ and $\delta=\frac{\beta-\alpha}4$. On the compact square $K=[m-\delta,m+\delta]^2$, $H$ is $C^1$, so $|H_s|\le K_0$ there. Now take $s,t\in(\alpha,\beta)$ with $d=s-t$ and $|d|\le2\delta$. Slide $(s,t)$ along its slope-$1$ line to $(m+\frac d2,m-\frac d2)$. The whole segment stays in the square, because both coordinates stay between the old and new values. Then
+      $$|H(s,t)|=\big|H(m+\tfrac d2,m-\tfrac d2)-H(m-\tfrac d2,m-\tfrac d2)\big|\le K_0|d| .$$
+
+      **Pigeonhole.** Given $x_1,\dots,x_{n+1}$, the values $G(x_i)$ are $n+1$ numbers in an interval of length $\beta-\alpha$. Two of them, say for $i\ne j$, are within $\frac{\beta-\alpha}n\le\frac{\beta-\alpha}{2}=2\delta$, using $n\ge2$. Hence
+      $$|F(x_i,x_j)|=|H(G(x_i),G(x_j))|\le\frac{K_0(\beta-\alpha)}{n},$$
+      so $C=K_0(\beta-\alpha)$ works. (If two of the $x_i$ are equal, the minimum is $0$.)
+    checked: "proof only; the change of variables was checked on F(u,v)=arctan u − arctan v with g = 1/(1+x²)"
+    status: ready
+
+  - id: A6
+    topic: "Random walk on a finite abelian group: rate of mixing"
+    areas: [probability, algebra]
+    difficulty: 3
+    hints:
+      - 'Use characters: the Fourier transform turns the $m$-fold product into an $m$-th power.'
+      - 'Let $b$ be the largest $|\hat\mu(\chi)|$ over nontrivial characters. Why is $0<b<1$?'
+    solution: |
+      **Key idea:** with characters, the sum equals $\frac1n\sum_{\chi\ne1}|\hat\mu(\chi)|^{2m}$; take $b$ to be the largest $|\hat\mu(\chi)|$.
+
+      Let $\mu$ be the distribution of one roll: $\mu(g_i)=\frac1k$. Then $g$ has distribution $\mu^{*m}$, the $m$-fold convolution. A character is a homomorphism $\chi:G\to\mathbb C^{\times}$; there are $n$ of them. Define $\hat f(\chi)=\sum_xf(x)\overline{\chi(x)}$. Then convolution becomes multiplication, and Plancherel's formula says $\sum_x|f(x)|^2=\frac1n\sum_\chi|\hat f(\chi)|^2$.
+
+      Apply this to $f=\mu^{*m}-\frac1n$. For the trivial character, $\hat f=1-1=0$. For $\chi\ne1$, the constant contributes nothing, so $\hat f(\chi)=\hat\mu(\chi)^m$. Hence
+      $$\sum_{x\in G}\Big(\Pr(g=x)-\frac1n\Big)^2=\frac1n\sum_{\chi\ne1}|\hat\mu(\chi)|^{2m},\qquad \hat\mu(\chi)=\frac1k\sum_{i=1}^k\overline{\chi(g_i)} .$$
+
+      **$|\hat\mu(\chi)|<1$ for $\chi\ne1$.** It is an average of $k$ complex numbers of modulus $1$. Equality would force all $\chi(g_i)$ to be equal, hence equal to $\chi(e)=1$. Then $\chi$ is trivial on a generating set, so $\chi=1$.
+
+      **Some $\hat\mu(\chi)\ne0$ with $\chi\ne1$.** Plancherel gives $\sum_\chi|\hat\mu(\chi)|^2=n\sum_x\mu(x)^2=\frac nk>1$, since the generators form a proper subset, so $k<n$. The trivial character contributes only $1$.
+
+      So $b=\max_{\chi\ne1}|\hat\mu(\chi)|$ lies in $(0,1)$. Dividing by $b^{2m}$,
+      $$\frac1{b^{2m}}\sum_x\Big(\Pr(g=x)-\frac1n\Big)^2=\frac1n\sum_{\chi\ne1}\Big(\frac{|\hat\mu(\chi)|}{b}\Big)^{2m}\longrightarrow\frac{\#\{\chi:|\hat\mu(\chi)|=b\}}{n},$$
+      which is positive and finite.
+    checked: "script: exact distributions on Z/6 and Z/2×Z/4 with sample generator sets; at m = 20 the scaled sums equal (number of maximal characters)/n to 9 digits"
+    status: ready
+
+  - id: B1
+    topic: "Approximation: differences of square roots in a window"
+    areas: [number-theory, analysis]
+    difficulty: 1
+    hints:
+      - 'Choose $m=k^2a$ and $n=h^2b$ so that $h\sqrt m-k\sqrt n=hk(\sqrt a-\sqrt b)$.'
+      - 'The gaps $\sqrt{N^2+j+1}-\sqrt{N^2+j}$ are all smaller than $\frac1{2N}$.'
+    solution: |
+      **Key idea:** with $m=k^2(N^2+j)$ and $n=h^2N^2$ the difference is $hk(\sqrt{N^2+j}-N)$, which climbs from $0$ in steps smaller than $\frac{1}{2N}$.
+
+      Let $\eta=\frac{\varepsilon}{hk}$ and choose an integer $N$ with $\frac1{2N}<\eta$. Consider
+      $$d_j=\sqrt{N^2+j}-N,\qquad j=0,1,2,\dots$$
+      Then $d_0=0$, $d_j\to\infty$, and each step is small:
+      $$d_{j+1}-d_j=\frac1{\sqrt{N^2+j+1}+\sqrt{N^2+j}}<\frac1{2N}<\eta .$$
+      Let $j$ be the first index with $d_j>\eta$. Then $j\ge1$ and $d_j<d_{j-1}+\eta\le2\eta$.
+
+      Now set $m=k^2(N^2+j)$ and $n=h^2N^2$. Then
+      $$h\sqrt m-k\sqrt n=hk\big(\sqrt{N^2+j}-N\big)=hk\,d_j\in(\varepsilon,2\varepsilon).$$
+    checked: "script: 500 random cases with h,k ≤ 20 and ε down to 1e-6, in 60-digit arithmetic; the construction always lands in (ε, 2ε)"
+    status: ready
+
+  - id: B2
+    topic: "Number theory: prime quadratics with a rational root"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$2$ and $5$"
+    hints:
+      - 'A rational root means $px^2+qx+r$ factors over the integers. List the possible factorizations.'
+      - 'The middle coefficient is $p+r$ or $pr+1$; for it to be prime, one of $p,r$ must be $2$.'
+    solution: |
+      **Key idea:** a rational root forces $q=p+r$ or $q=pr+1$, so one of $p,r$ is $2$; an odd prime then appears at most twice for each of four simple conditions.
+
+      **The triples.** If the quadratic has a rational root, it factors as $(ax+b)(cx+d)$ over the integers (Gauss's lemma), with $a,c>0$. Then $bd=r>0$ and $ad+bc=q>0$, so $b,d>0$. Since $p$ and $r$ are prime, $\{a,c\}=\{1,p\}$ and $\{b,d\}=\{1,r\}$, and so
+      $$q=p+r\qquad\text{or}\qquad q=pr+1 .$$
+      In either case $q$ is an odd prime only if one of $p,r$ equals $2$. (If $q=2$, then $p+r=2$ or $pr=1$, both impossible.) So the elements of $S$ are
+      $$(2,\,\ell+2,\,\ell),\ (\ell,\,\ell+2,\,2)\ \text{ with }\ell+2\text{ prime};\qquad(2,\,2\ell+1,\,\ell),\ (\ell,\,2\ell+1,\,2)\ \text{ with }2\ell+1\text{ prime},$$
+      for primes $\ell$.
+
+      **An odd prime $\ell$.** It can appear in two triples as an end entry if $\ell+2$ is prime, and two more if $2\ell+1$ is prime. As the middle entry, it appears in two triples if $\ell-2$ is prime, and two more if $\frac{\ell-1}2$ is prime. These triples are all different, except that for $\ell=5$ the last pair collapses to the single triple $(2,5,2)$.
+
+      For $\ell\ne5$ the triples come in pairs, so $7$ or more requires all four conditions. In particular $\ell-2,\ell,\ell+2$ would all be prime. One of three numbers spaced by $2$ is divisible by $3$, so it must equal $3$, which forces $\ell=5$, a contradiction. For $\ell=5$ all four conditions hold ($3$, $7$, $11$ and $2$ are prime), giving $2+2+2+1=7$ triples:
+      $$(2,7,5),\ (5,7,2),\ (2,11,5),\ (5,11,2),\ (2,5,3),\ (3,5,2),\ (2,5,2).$$
+
+      **The prime $2$.** It appears at least $7$ times, for example in
+      $$(2,5,3),\ (3,5,2),\ (2,7,5),\ (5,7,2),\ (2,7,3),\ (3,7,2),\ (2,13,11).$$
+      The answer is $2$ and $5$.
+    checked: "script: listed all prime triples with entries below 2000 having a rational root; only 2 and 5 occur 7+ times (5 exactly 7 times)"
+    status: ready
+
+  - id: B3
+    topic: "Calculus: differentiability from a product and a quotient"
+    areas: [analysis, calculus]
+    difficulty: 2
+    answer: "Yes"
+    hints:
+      - 'Treat the cases $f(0)\ne0$ and $f(0)=0$ separately.'
+      - 'If $f(0)\ne0$, then $g^2=(fg)/(f/g)$ is differentiable at $0$.'
+    solution: |
+      **Key idea:** if $f(0)\ne0$, recover $g$ from $g^2=\frac{fg}{f/g}$; if $f(0)=0$, write $\frac{f(x)}x=\frac{(f/g)(x)}{x}\cdot g(x)$.
+
+      Let $u=fg$ and $w=f/g$, both differentiable at $0$.
+
+      **Case $f(0)\ne0$.** Then $w(0)\ne0$, so $g^2=u/w$ is differentiable at $0$, and $g(0)^2>0$. Because $g$ is continuous and nonzero at $0$, it keeps one sign near $0$. So $g=\pm\sqrt{g^2}$ near $0$, and the square root of a positive differentiable function is differentiable. Hence $g$ is differentiable at $0$, and so is $f=u/g$.
+
+      **Case $f(0)=0$.** Then $w(0)=0$ and
+      $$\frac{f(x)-f(0)}{x}=\frac{w(x)}{x}\cdot g(x)\longrightarrow w'(0)\,g(0),$$
+      using continuity of $g$ at $0$. So $f'(0)$ exists.
+
+      Either way $f$ is differentiable at $0$.
+    checked: "proof only"
+    status: ready
+
+  - id: B4
+    topic: "Tournaments: a Hermitian determinant divisible by a power of two"
+    areas: [linear-algebra, combinatorics]
+    difficulty: 2
+    hints:
+      - 'Encode one game by a vector with entry $1$ for a winner and $-i$ for a loser. What is $vv^*$?'
+      - '$T+iW=AA^*$ for a square matrix $A$ with entries $1$ and $-i$. Subtract one row from the others.'
+    solution: |
+      **Key idea:** each game adds a rank-one matrix $vv^*$ with $v$ made of $1$'s and $-i$'s, so $T+iW=AA^*$; row reduction pulls out $(1+i)^{2010}$ from $\det A$.
+
+      **One game.** Let $v_h=1$ if player $h$ won and $v_h=-i$ if $h$ lost. Then $(vv^*)_{hk}=v_h\overline{v_k}$ is:
+      - $1\cdot1=1$ or $(-i)(i)=1$ when $h$ and $k$ tied;
+      - $1\cdot i=i$ when $h$ won and $k$ lost;
+      - $(-i)\cdot1=-i$ when $h$ lost and $k$ won.
+
+      This is exactly the change in $T+iW$ from that game. So with $A$ the $2011\times2011$ matrix whose columns are the vectors $v$ of the $2011$ games,
+      $$T+iW=AA^* ,\qquad \det(T+iW)=|\det A|^2 .$$
+      It is a nonnegative real number. Since $\det A$ is in $\mathbb Z[i]$, $|\det A|^2$ is a nonnegative integer.
+
+      **The power of $2$.** Subtract the first row of $A$ from each other row; this keeps the determinant. Every entry of those $2010$ rows becomes $0$ or $\pm(1+i)$, since $1-(-i)=1+i$. So $(1+i)$ factors out of each of them:
+      $$\det A=(1+i)^{2010}\,z,\qquad z\in\mathbb Z[i].$$
+      Then $\det(T+iW)=|1+i|^{4020}|z|^2=2^{2010}|z|^2$, which is divisible by $2^{2010}$.
+    checked: "script: random tournaments with 5 to 9 players (as many games as players); det(T+iW) was always a nonnegative integer divisible by 2^(N−1)"
+    status: ready
+
+  - id: B5
+    topic: "Inequalities: Cauchy kernels force points to spread out"
+    areas: [analysis]
+    difficulty: 2
+    hints:
+      - 'Expand the square and integrate each product. Two Cauchy kernels give $\int\frac{dx}{(1+(x-a)^2)(1+(x-b)^2)}=\frac{2\pi}{4+(a-b)^2}$.'
+      - 'Apply Cauchy–Schwarz to the $n^2$ numbers $4+(a_i-a_j)^2$.'
+    solution: |
+      **Key idea:** the integral is $\sum_{i,j}\frac{2\pi}{4+(a_i-a_j)^2}$, and Cauchy–Schwarz turns a small sum of reciprocals into a large sum.
+
+      **The integral.** For real $a,b$ with $d=a-b$,
+      $$\int_{-\infty}^\infty\frac{dx}{(1+(x-a)^2)(1+(x-b)^2)}=\frac{2\pi}{4+d^2}.$$
+      One way to see it: $\frac1{\pi(1+x^2)}$ is the Cauchy density with scale $1$, and the convolution of two of them is the Cauchy density with scale $2$, namely $\frac{2}{\pi(4+d^2)}$. (A residue computation gives the same.) Expanding the square, the hypothesis becomes
+      $$\sum_{i,j=1}^n\frac{2\pi}{4+(a_i-a_j)^2}\le An .$$
+
+      **Cauchy–Schwarz.** With $t_{ij}=4+(a_i-a_j)^2$,
+      $$\Big(\sum_{i,j}t_{ij}\Big)\Big(\sum_{i,j}\frac1{t_{ij}}\Big)\ge(n^2)^2 ,\qquad\text{so}\qquad\sum_{i,j}t_{ij}\ge\frac{n^4}{An/(2\pi)}=\frac{2\pi n^3}{A}.$$
+      Finally $1+(a_i-a_j)^2\ge\frac14t_{ij}$, so
+      $$\sum_{i,j}\big(1+(a_i-a_j)^2\big)\ge\frac{\pi}{2A}\,n^3 ,$$
+      and $B=\frac{\pi}{2A}$ works.
+    checked: "script: numerical integration of the two-kernel product for several (a,b) matches 2π/(4+d²) to 15 digits"
+    status: ready
+
+  - id: B6
+    topic: "Number theory: values of a factorial-weighted polynomial mod p"
+    areas: [number-theory]
+    difficulty: 4
+    status: coming

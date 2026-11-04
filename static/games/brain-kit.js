@@ -65,12 +65,13 @@
   function pick(n, k, r) { var a = []; for (var i = 0; i < n; i++) a.push(i); return shuffle(a, r).slice(0, k); }
 
   // ---------- sound (synthesized, off by default) ----------
-  var AC = null, soundOn = false;
+  var AC = null, soundOn = false, ssT = 0;
   function setSound(on) { soundOn = !!on; }
   function tone(f, d, type, vol, when, slide) {
     if (!soundOn) return;
     if (!AC) { try { AC = new (W.AudioContext || W.webkitAudioContext)(); } catch (e) { soundOn = false; return; } }   // made on first use, after a tap
     if (AC.state === 'suspended') AC.resume();
+    var nw = Date.now(); if (nw - ssT > 500) { ssT = nw; try { W.dispatchEvent(new Event('trb:sound-start')); } catch (e) { } } // the background music ducks (static/music/suite/player/)
     var t = AC.currentTime + (when || 0), o = AC.createOscillator(), g = AC.createGain();
     o.type = type || 'sine'; o.frequency.setValueAtTime(f, t); if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + d);
     g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol || 0.12, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + d);

@@ -197,6 +197,9 @@
     if (AC.state === 'suspended') AC.resume();
     return AC;
   };
+  // the page's instruments tell the background music player (static/music/suite/player/player.js) to duck, at most twice a second
+  var ssT = 0;
+  RN.soundStart = function () { var n = Date.now(); if (n - ssT < 500) return; ssT = n; try { W.dispatchEvent(new Event('trb:sound-start')); } catch (e) { } };
   function chain(ctx) {
     var g = ctx.createGain(), comp = ctx.createDynamicsCompressor();
     comp.threshold.value = -14; comp.knee.value = 12; comp.ratio.value = 4; comp.attack.value = 0.004; comp.release.value = 0.2;
@@ -213,7 +216,7 @@
   function noise(ctx, dest, t, dur, g, type, f, q) { var s = ctx.createBufferSource(); s.buffer = noiseBuf(ctx); var fl = ctx.createBiquadFilter(); fl.type = type || 'highpass'; fl.frequency.value = f || 3000; if (q) fl.Q.value = q; var v = ctx.createGain(); env(ctx, v, t, 0.002, g, dur); s.connect(fl); fl.connect(v); v.connect(dest); s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.05); }
   RN.noise = function (t, dur, g, hp, ctx, dest) { ctx = ctx || RN.ac(); if (!ctx) return; noise(ctx, dest || OUT, t, dur, g, 'highpass', hp || 3000); };
   RN.drum = function (kind, t, vel, ctx, dest) {
-    ctx = ctx || RN.ac(); if (!ctx) return; dest = dest || OUT; vel = vel == null ? 1 : vel;
+    ctx = ctx || RN.ac(); if (!ctx) return; if (ctx === AC) RN.soundStart(); dest = dest || OUT; vel = vel == null ? 1 : vel;
     var o, g;
     if (kind === 'kick') { o = ctx.createOscillator(); g = ctx.createGain(); o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.12); env(ctx, g, t, 0.002, 0.9 * vel, 0.32); o.connect(g); g.connect(dest); o.start(t); o.stop(t + 0.4); }
     else if (kind === 'snare') { noise(ctx, dest, t, 0.16, 0.45 * vel, 'bandpass', 1800, 0.7); o = ctx.createOscillator(); g = ctx.createGain(); o.type = 'triangle'; o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(160, t + 0.08); env(ctx, g, t, 0.002, 0.3 * vel, 0.1); o.connect(g); g.connect(dest); o.start(t); o.stop(t + 0.15); }
@@ -223,7 +226,7 @@
   };
   RN.VOICES = [['sine', 'Soft sine'], ['mallet', 'Mallet'], ['pluck', 'Pluck'], ['organ', 'Organ'], ['kit', 'Drum kit']];
   RN.voice = function (name, t, f, dur, vel, ctx, dest) {
-    ctx = ctx || RN.ac(); if (!ctx) return; dest = dest || OUT; vel = vel == null ? 0.3 : vel; dur = Math.max(0.03, dur || 0.3);
+    ctx = ctx || RN.ac(); if (!ctx) return; if (ctx === AC) RN.soundStart(); dest = dest || OUT; vel = vel == null ? 0.3 : vel; dur = Math.max(0.03, dur || 0.3);
     var o, g;
     if (name === 'kit') { var m = Math.round(12 * Math.log2(f / 440) + 69), pc = ((m % 12) + 12) % 12; RN.drum(m < 50 ? 'kick' : pc < 3 ? 'kick' : pc < 6 ? 'snare' : pc < 9 ? 'hat' : 'bell', t, Math.min(1, vel * 2.6), ctx, dest); return; }
     if (name === 'mallet') {

@@ -1,0 +1,252 @@
+year: 1987
+edition: 48th
+date: "December 5, 1987"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1987.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Complex numbers: four curves from one cubic equation"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - "Let $z=x+iy$. Which complex expressions have real part $x^2-y^2$ and $\\frac{x}{x^2+y^2}$?"
+      - "Combine the first two equations into one complex equation and clear the denominator."
+    solution: |
+      **Key idea:** with $z=x+iy$, the first pair of equations is the real and imaginary parts of $z^2-1/z=3i$, and the second pair is the real and imaginary parts of $z^3-3iz-1=0$.
+
+      Let $z=x+iy\ne0$. Then
+      $$z^2=(x^2-y^2)+2xy\,i,\qquad \frac1z=\frac{x-iy}{x^2+y^2}.$$
+      So the equations defining $A$ and $B$ say exactly that
+      $$\operatorname{Re}\Big(z^2-\frac1z\Big)=0,\qquad \operatorname{Im}\Big(z^2-\frac1z\Big)=2xy+\frac{y}{x^2+y^2}=3 .$$
+      Hence $A\cap B$ is the set of $z\ne0$ with $z^2-\frac1z=3i$, which is the same as $z^3-3iz-1=0$ (multiply by $z$; and $z=0$ is not a root of the cubic).
+
+      Now expand the cubic:
+      $$z^3-3iz-1=\big(x^3-3xy^2+3y-1\big)+i\big(3x^2y-y^3-3x\big).$$
+      It vanishes exactly when both parts vanish, that is, when $(x,y)$ lies on both $C$ and $D$. So $A\cap B=C\cap D$.
+    checked: "sympy: real and imaginary parts of z³ − 3iz − 1"
+    status: ready
+
+  - id: A2
+    topic: "Counting digits: where the written-out integers reach a position"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "$f(1987)=1984$"
+    hints:
+      - "Count how many digits are used by all numbers with at most $m$ digits."
+      - "That count is close to $m\\cdot10^m$."
+    solution: |
+      **Key idea:** the numbers with at most $m$ digits use about $m\cdot10^m$ digits, so reaching $10^{1987}$ digits takes numbers with about $1984$ digits.
+
+      There are $9\cdot10^{k-1}$ numbers with $k$ digits. So all numbers with at most $m$ digits use
+      $$D(m)=\sum_{k=1}^m9k\cdot10^{k-1}=m\cdot10^m-\frac{10^m-1}{9}$$
+      digits (the closed form is easy to check by induction). Then $f(n)=m$ exactly when $D(m-1)<10^n\le D(m)$.
+
+      - $D(1983)<1983\cdot10^{1983}<10^4\cdot10^{1983}=10^{1987}$.
+      - $D(1984)=1984\cdot10^{1984}-\frac{10^{1984}-1}9>1983\cdot10^{1984}>10^{1987}$.
+
+      So the $10^{1987}$-th digit is written while the $1984$-digit numbers are being placed: $f(1987)=1984$.
+    checked: "script: exact big-integer computation of D(m); the first m with D(m) ≥ 10^1987 is 1984"
+    status: ready
+
+  - id: A3
+    topic: "Differential equations: positivity of solutions and derivatives"
+    areas: [calculus, analysis]
+    difficulty: 2
+    answer: "(a) No. (b) Yes."
+    hints:
+      - "Solve the equation: the solutions are $e^x$ times a quadratic."
+      - "A quadratic with leading coefficient $1$ is positive everywhere exactly when its discriminant is negative."
+    solution: |
+      **Key idea:** every solution is $(x^2+ax+b)e^x$, so both questions are about discriminants of quadratics.
+
+      The characteristic polynomial $(\lambda-1)^2$ has the double root $1$, and $x^2e^x$ is a particular solution (check: $(x^2e^x)''-2(x^2e^x)'+x^2e^x=2e^x$). So
+      $$f(x)=(x^2+ax+b)e^x,\qquad f'(x)=\big(x^2+(a+2)x+(a+b)\big)e^x .$$
+
+      **(a) No.** Take $a=0$, $b=1$: $f=(x^2+1)e^x>0$ everywhere, but $f'=(x+1)^2e^x$ vanishes at $x=-1$.
+
+      **(b) Yes.** If $f'>0$ everywhere, its quadratic has negative discriminant:
+      $$(a+2)^2-4(a+b)=a^2+4-4b<0 .$$
+      Then the discriminant of $f$'s quadratic is $a^2-4b<-4<0$, so $x^2+ax+b>0$ for all $x$, and $f>0$.
+    checked: "algebra checked by hand; the particular solution and the counterexample were checked symbolically"
+    status: ready
+
+  - id: A4
+    topic: "Polynomials: a translation-invariant quadratic form"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$|C-A|=\\dfrac{5\\sqrt{30}}{3}$"
+    hints:
+      - "Show that $P(x,y,z)$ is a quadratic form in $y-x$ and $z-x$."
+      - "Use the three given values to find its coefficients."
+    solution: |
+      **Key idea:** $P$ is a quadratic form in $s=y-x$ and $t=z-x$; its three coefficients come from the three given values.
+
+      Put $u=1$: $P(x,y,z)=F(y-x,z-x)$. With $x=0$, $F(y,z)=P(0,y,z)$ is a polynomial, and the scaling condition says it is homogeneous of degree $2$. So
+      $$P(x,y,z)=\alpha s^2+\beta st+\gamma t^2,\qquad s=y-x,\ t=z-x .$$
+      The given values:
+      - $P(0,1,0)$: $s=1,t=0$, so $\alpha=5$.
+      - $P(0,0,1)$: $s=0,t=1$, so $\gamma=6$.
+      - $P(1,0,0)$: $s=t=-1$, so $\alpha+\beta+\gamma=4$, and $\beta=-7$.
+
+      Now let $s=B-A$ and $t=C-A$ (complex), with $|s|=10$, so $s\ne0$. Then $5s^2-7st+6t^2=0$, so $w=t/s$ solves
+      $$6w^2-7w+5=0 .$$
+      Its discriminant $49-120$ is negative, so the two roots are complex conjugates, and each has $|w|^2=w\bar w=\frac56$ (the product of the roots). Therefore
+      $$|C-A|=|t|=10\sqrt{\tfrac56}=\frac{5\sqrt{30}}3 .$$
+    checked: "sympy: both roots of 6w² − 7w + 5 have |w|·10 = 5√30/3"
+    status: ready
+
+  - id: A5
+    topic: "Vector calculus: a nonzero circulation rules out a potential"
+    areas: [analysis, calculus]
+    difficulty: 3
+    answer: "No such field exists"
+    hints:
+      - "Space minus one point is simply connected. What does that say about curl-free fields there?"
+      - "Integrate the given planar field around the ellipse $x^2+4y^2=1$."
+    solution: |
+      **Key idea:** a curl-free field on $\mathbb R^3\setminus\{0\}$ has zero circulation around every closed loop, but the given field circulates around an ellipse in the plane $z=0$.
+
+      Suppose such a field $\vec F$ exists. The region $\mathbb R^3\setminus\{0\}$ is simply connected: any loop can be shrunk to a point while avoiding the origin. By Stokes' theorem (or the fact that a curl-free field on a simply connected region is a gradient), $\oint\vec F\cdot d\vec r=0$ for every closed loop there.
+
+      Take the ellipse $x=\cos\theta$, $y=\tfrac12\sin\theta$, $z=0$. It stays in the plane $z=0$, where $\vec F$ equals $\vec G$, and its tangent has no $z$-part. On it $x^2+4y^2=1$, so
+      $$\vec F\cdot d\vec r=-y\,dx+x\,dy=\Big(\tfrac12\sin^2\theta+\tfrac12\cos^2\theta\Big)d\theta=\tfrac12\,d\theta .$$
+      The circulation is $\int_0^{2\pi}\frac12\,d\theta=\pi\ne0$. This contradicts the previous paragraph, so no such $\vec F$ exists.
+    checked: "script: numerical line integral around the ellipse gives 3.14159"
+    status: ready
+
+  - id: A6
+    topic: "Series: counting zeros in base three"
+    areas: [analysis, combinatorics]
+    difficulty: 3
+    answer: "Converges exactly for $0<x<25$"
+    hints:
+      - "Group the terms by the number of base-$3$ digits."
+      - "Over all $k$-digit numbers, the sum of $x^{a(n)}$ has a closed form."
+    solution: |
+      **Key idea:** over the $k$-digit numbers, $x^{a(n)}$ sums to $2(x+2)^{k-1}$, while $n^3$ is about $27^k$.
+
+      A $k$-digit base-$3$ number has first digit $1$ or $2$, and each of the other $k-1$ digits is $0$ (weight $x$) or $1,2$ (weight $1$ each). So
+      $$\sum_{3^{k-1}\le n<3^k}x^{a(n)}=2(x+2)^{k-1}.$$
+      For these $n$, $27^{k-1}\le n^3<27^k$. Since all terms are positive, the block of $k$-digit terms, $S_k$, satisfies
+      $$\frac{2(x+2)^{k-1}}{27^k}\le S_k\le\frac{2(x+2)^{k-1}}{27^{k-1}} .$$
+      Both bounds are geometric in $k$ with ratio $\frac{x+2}{27}$. So the series converges exactly when $x+2<27$, that is, $x<25$. At $x=25$ every block is at least $\frac2{27}$, and the series diverges.
+    checked: "script: the block sums at x = 24, 25, 26 shrink, stay at 2/27, and grow"
+    status: ready
+
+  - id: B1
+    topic: "Integrals: a symmetric quotient of square roots of logarithms"
+    areas: [calculus]
+    difficulty: 1
+    answer: "$1$"
+    hints:
+      - "What does the substitution $x\\mapsto 6-x$ do to $9-x$ and $x+3$?"
+    solution: |
+      **Key idea:** the reflection $x\mapsto6-x$ swaps $9-x$ and $x+3$ and maps $[2,4]$ to itself.
+
+      Call the integral $I$ and write $\phi(x)=\sqrt{\ln(9-x)}$, $\psi(x)=\sqrt{\ln(x+3)}$, so the integrand is $\frac{\phi}{\phi+\psi}$. Under $x=6-u$, $\phi(x)=\psi(u)$ and $\psi(x)=\phi(u)$, and $[2,4]$ maps to itself. So
+      $$I=\int_2^4\frac{\psi(u)}{\psi(u)+\phi(u)}\,du .$$
+      Adding the two forms, the integrand becomes $1$:
+      $$2I=\int_2^41\,dx=2,\qquad I=1 .$$
+    checked: "script: numerical integration gives 1.0000"
+    status: ready
+
+  - id: B2
+    topic: "Binomial identities: a sum of reciprocal binomial coefficients"
+    areas: [combinatorics, calculus]
+    difficulty: 3
+    hints:
+      - "The reciprocal of $\\binom tj$ is $(t+1)$ times a Beta integral."
+      - "Inside the integral, the sum over $k$ is a binomial expansion."
+    solution: |
+      **Key idea:** write each reciprocal binomial coefficient as a Beta integral; the sum then collapses by the binomial theorem.
+
+      For $0\le j\le t$,
+      $$\int_0^1x^j(1-x)^{t-j}\,dx=\frac{j!\,(t-j)!}{(t+1)!}=\frac1{(t+1)\binom tj}.$$
+      So the left side is
+      $$\sum_{k=0}^s\binom sk(t+1)\int_0^1x^{r+k}(1-x)^{t-r-k}dx=(t+1)\int_0^1x^r(1-x)^{t-r-s}\sum_{k=0}^s\binom skx^k(1-x)^{s-k}\,dx .$$
+      The inner sum is $(x+1-x)^s=1$. (All exponents are nonnegative because $r+s\le t$.) Using the Beta formula again, with total degree $t-s$,
+      $$(t+1)\int_0^1x^r(1-x)^{(t-s)-r}dx=\frac{t+1}{(t-s+1)\binom{t-s}{r}},$$
+      which is the right side.
+    checked: "script: exact rational check of the identity for all t ≤ 11 and all valid r, s"
+    status: ready
+
+  - id: B3
+    topic: "Algebra: rational parametrization of the circle over a field"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - "Draw the line through $(1,0)$ and another point of the circle. What is its slope?"
+      - "If $x\\ne1$, set $r=\\frac{y}{1-x}$ and compute $r^2$."
+    solution: |
+      **Key idea:** every point other than $(1,0)$ is determined by the slope of the line joining it to $(1,0)$, and $1+1\ne0$ lets us divide by $2$.
+
+      **These points are solutions.** If $r^2\ne-1$,
+      $$\Big(\frac{r^2-1}{r^2+1}\Big)^2+\Big(\frac{2r}{r^2+1}\Big)^2=\frac{r^4-2r^2+1+4r^2}{(r^2+1)^2}=1,$$
+      and $(1,0)$ is clearly a solution.
+
+      **Every solution is one of them.** Let $x^2+y^2=1$ with $(x,y)\ne(1,0)$. If $x=1$ then $y^2=0$, so $y=0$; hence $x\ne1$. Put $r=\frac y{1-x}$. Since $y^2=(1-x)(1+x)$,
+      $$r^2=\frac{1+x}{1-x}.$$
+      If $r^2=-1$ we would get $1+x=-(1-x)$, i.e. $2=0$, which is excluded. Now
+      $$r^2+1=\frac2{1-x},\qquad r^2-1=\frac{2x}{1-x},$$
+      so $\frac{r^2-1}{r^2+1}=x$ and $\frac{2r}{r^2+1}=\frac{2y}{1-x}\cdot\frac{1-x}2=y$. So $(x,y)$ is the point for this $r$.
+    checked: "script: for p = 3, 5, 7, 11, 13 the two sets of points in F_p × F_p coincide"
+    status: ready
+
+  - id: B4
+    topic: "Dynamics: a rotation by the current height"
+    areas: [analysis]
+    difficulty: 2
+    answer: "$x_n\\to-1$, $y_n\\to0$"
+    hints:
+      - "The map is a rotation, so the length of $(x_n,y_n)$ never changes."
+      - "Track the polar angle $\\theta_n$. How does it change in one step?"
+    solution: |
+      **Key idea:** the point stays on the unit circle, and its angle follows $\theta\mapsto\theta+\sin\theta$, which creeps up to $\pi$.
+
+      Each step rotates $(x_n,y_n)$ by the angle $y_n$, so the length stays $\sqrt{0.8^2+0.6^2}=1$. Write $(x_n,y_n)=(\cos\theta_n,\sin\theta_n)$. Then $y_n=\sin\theta_n$ and
+      $$\theta_{n+1}=\theta_n+\sin\theta_n,\qquad\theta_1=\arcsin0.6\in(0,\pi).$$
+      Let $g(\theta)=\theta+\sin\theta$. On $(0,\pi)$: $g(\theta)>\theta$ because $\sin\theta>0$, and $g(\theta)<g(\pi)=\pi$ because $g'=1+\cos\theta>0$ there. So $\theta_n$ is increasing and stays below $\pi$. It converges to some $L\in(0,\pi]$, and by continuity $L=L+\sin L$, so $\sin L=0$ and $L=\pi$.
+
+      Therefore $x_n=\cos\theta_n\to-1$ and $y_n=\sin\theta_n\to0$.
+    viz: putnam-1987-b4
+    checked: "script: iterated 60 steps; (x, y) → (−1.0, 0.0)"
+    status: ready
+
+  - id: B5
+    topic: "Linear algebra: real parts of a complex linear map"
+    areas: [linear-algebra]
+    difficulty: 3
+    hints:
+      - "View $w\\mapsto\\operatorname{Re}(Mw)$ as a real-linear map between two real spaces of dimension $2n$."
+      - "If it is not onto, some nonzero real vector is orthogonal to its image."
+    solution: |
+      **Key idea:** the map $w\mapsto\operatorname{Re}(Mw)$ is real-linear from $\mathbb R^{2n}$ to $\mathbb R^{2n}$; if it missed something, a real vector $z$ would be orthogonal to its image, forcing $zM=0$.
+
+      Identify $\mathbb C^n$ with $\mathbb R^{2n}$. The map $T(w)=\operatorname{Re}(Mw)$ is $\mathbb R$-linear into $\mathbb R^{2n}$. We must show $T$ is onto.
+
+      If not, its image is a proper subspace, so some nonzero real row vector $z$ has $z\cdot T(w)=0$ for all $w$. Because $z$ is real,
+      $$z\cdot\operatorname{Re}(Mw)=\operatorname{Re}(zMw).$$
+      Let $c=zM\in\mathbb C^n$ (a row vector). Choose $w=\bar c^{\,T}$. Then $zMw=\sum|c_k|^2$, a real number, and it must be $0$. So $c=zM=0$ with $z$ real and nonzero. That contradicts the hypothesis. Hence $T$ is onto, and the required $w$ exists for every real right-hand side.
+    checked: "proof only"
+    status: ready
+
+  - id: B6
+    topic: "Finite fields: half of the nonzero elements and doubling"
+    areas: [algebra, number-theory]
+    difficulty: 3
+    hints:
+      - "Compare the product of $2a$ over $a\\in S$ with the product of $a$ over $a\\in S$."
+      - "Every element of the prime field is a square in the field with $p^2$ elements."
+    solution: |
+      **Key idea:** multiplying all elements of $S$ by $2$ permutes $S$ up to signs, so $2^{|S|}=(-1)^{|S|-N}$; and $2^{|S|}=1$ in this field.
+
+      Let $q=p^2$ and $m=|S|=\frac{q-1}2$. For each $a\in S$, exactly one of $\pm2a$ is in $S$; call it $\sigma(a)$. If $\sigma(a)=\sigma(b)$ then $2a=\pm2b$, so $a=\pm b$, and since both are in $S$, $a=b$. So $\sigma$ is a bijection of $S$. Also $\sigma(a)=2a$ exactly when $a\in S$ and $2a\in S$, which happens for $N$ elements; for the other $m-N$ elements, $\sigma(a)=-2a$. Taking the product over $S$:
+      $$\prod_{a\in S}a=\prod_{a\in S}\sigma(a)=(-1)^{m-N}\,2^m\prod_{a\in S}a .$$
+      The product is nonzero, so $2^m=(-1)^{m-N}$.
+
+      **$2^m=1$.** The element $2$ lies in the prime field, so $2^{p-1}=1$. Then $2^m=2^{(p-1)(p+1)/2}=\big(2^{p-1}\big)^{(p+1)/2}=1$.
+
+      **Conclusion.** $(-1)^{m-N}=1$, and since $p$ is odd, $1+1\ne0$, so $m-N$ is even. Finally $m=\frac{p^2-1}2$ is even, since $p^2\equiv1\pmod8$. Hence $N$ is even.
+    checked: "script: brute force over all valid S for p = 3 (N = 0 always) and p = 5 (N = 6 always)"
+    status: ready

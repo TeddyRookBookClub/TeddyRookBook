@@ -1,0 +1,233 @@
+year: 2014
+edition: 75th
+date: "December 6, 2014"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2014.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Taylor coefficients whose numerators are one or prime"
+    areas: [number-theory, calculus]
+    difficulty: 1
+    hints:
+      - 'Multiply out: the coefficient of $x^n$ is $\frac1{n!}-\frac1{(n-1)!}+\frac1{(n-2)!}$.'
+      - 'It simplifies to $\frac{n-1}{n\,(n-2)!}$. When does $n-1$ divide $(n-2)!$?'
+    solution: |
+      **Key idea:** the coefficient of $x^n$ is $\frac{(n-1)^2}{n!}=\frac{n-1}{n\,(n-2)!}$, and a composite number $m>4$ divides $(m-1)!$.
+
+      For $n\ge2$, the coefficient of $x^n$ is
+      $$\frac1{n!}-\frac1{(n-1)!}+\frac1{(n-2)!}=\frac{1-n+n(n-1)}{n!}=\frac{(n-1)^2}{n!}=\frac{n-1}{n\,(n-2)!}.$$
+      The coefficients for $n=0,1$ are $1$ and $0$.
+
+      Let $m=n-1$. Since $\gcd(m,n)=1$, the only cancellation in $\frac{m}{n\,(m-1)!}$ is between $m$ and $(m-1)!$.
+
+      - $m=1$: the coefficient is $\frac12$.
+      - $m$ prime: $m\nmid(m-1)!$ and $m\nmid n$, so the reduced numerator is $m$, a prime.
+      - $m=4$: the coefficient is $\frac{4}{5\cdot6}=\frac2{15}$; numerator $2$.
+      - $m$ composite, $m>4$: then $m\mid(m-1)!$. If $m=ab$ with $1<a<b<m$, both factors appear in $(m-1)!$. If $m=p^2$ with $p>2$, then $p$ and $2p$ are distinct and below $m$. So the reduced numerator is $1$.
+
+      In every case the numerator is $1$ or a prime.
+    checked: "script: reduced the first 500 coefficients exactly; every numerator is 1 or prime"
+    status: ready
+
+  - id: A2
+    topic: "Determinants: matrix with reciprocal minimum entries"
+    areas: [linear-algebra]
+    difficulty: 1
+    answer: "$\\dfrac{(-1)^{n-1}}{(n-1)!\\,n!}$"
+    hints:
+      - 'Subtract each row from the row above it.'
+      - 'Row $i$ minus row $i+1$ is zero up to column $i$ and constant $\frac1{i(i+1)}$ after that.'
+    solution: |
+      **Key idea:** differences of neighboring rows give a staircase matrix, which becomes triangular after moving the last row to the top.
+
+      Row $i$ has entries $\frac1j$ for $j\le i$ and $\frac1i$ for $j>i$. For $i<n$ replace row $i$ by (row $i$) $-$ (row $i+1$), using the original rows; this does not change the determinant. The new row $i$ is
+      $$\Big(0,\dots,0,\ \underbrace{\tfrac1i-\tfrac1{i+1},\ \dots,\ \tfrac1i-\tfrac1{i+1}}_{\text{columns }i+1,\dots,n}\Big),$$
+      and the last row stays $(1,\frac12,\dots,\frac1n)$.
+
+      Move the last row to the top. That is a cyclic shift of $n$ rows, which multiplies the determinant by $(-1)^{n-1}$. Now row $r$ starts at column $r$, so the matrix is upper triangular. Its diagonal is $1,\frac1{1\cdot2},\frac1{2\cdot3},\dots,\frac1{(n-1)n}$. Therefore
+      $$\det A=(-1)^{n-1}\prod_{i=1}^{n-1}\frac1{i(i+1)}=\frac{(-1)^{n-1}}{(n-1)!\,n!}.$$
+    checked: "script: exact determinants for n = 1..6 match (1, −1/2, 1/12, −1/144, 1/2880, −1/86400)"
+    status: ready
+
+  - id: A3
+    topic: "Infinite products: a doubling recurrence that telescopes"
+    areas: [algebra, analysis]
+    difficulty: 2
+    answer: "$\\dfrac37$"
+    hints:
+      - 'Show $a_k=2^{2^k}+2^{-2^k}$.'
+      - 'With $x=2^{2^k}$, the factor is $\frac{x^3+1}{(x+1)(x^2+1)}$. Products of $1+y^{2^k}$ telescope.'
+    solution: |
+      **Key idea:** $a_k=x_k+x_k^{-1}$ with $x_k=2^{2^k}$, and each factor becomes a ratio of terms $1+y^{2^k}$ whose products telescope.
+
+      Since $a_0=2+\frac12$ and $(x+x^{-1})^2-2=x^2+x^{-2}$, induction gives $a_k=x_k+x_k^{-1}$ with $x_k=2^{2^k}$. Then
+      $$1-\frac1{a_k}=\frac{x^2-x+1}{x^2+1}=\frac{x^3+1}{(x+1)(x^2+1)}\qquad(x=x_k).$$
+
+      **Telescoping.** For any $y>1$, $\prod_{k=0}^K\big(1+y^{2^k}\big)=\dfrac{y^{2^{K+1}}-1}{y-1}$, since multiplying by $y-1$ collapses the product. Apply this with $y=2$, $y=4$ and $y=8$, using $x_k^2=4^{2^k}$ and $x_k^3=8^{2^k}$:
+      $$\prod_{k=0}^K\Big(1-\frac1{a_k}\Big)=\frac{\dfrac{8^{2^{K+1}}-1}{7}}{\dfrac{2^{2^{K+1}}-1}{1}\cdot\dfrac{4^{2^{K+1}}-1}{3}} .$$
+      Let $T=2^{2^{K+1}}$. This is $\dfrac{3(T^3-1)}{7(T-1)(T^2-1)}\to\dfrac37$ as $T\to\infty$.
+    checked: "script: the partial product after 6 factors equals 0.428571428… = 3/7 in double precision"
+    status: ready
+
+  - id: A4
+    topic: "Probability: fewest zeros given three moments"
+    areas: [probability]
+    difficulty: 2
+    answer: "$\\tfrac13$"
+    hints:
+      - 'Find a cubic $q$ with $q(0)=1$ and $q(x)\le0$ for every positive integer $x$.'
+      - 'Try roots at $1,2,3$.'
+    solution: |
+      **Key idea:** the cubic $q(x)=-\frac16(x-1)(x-2)(x-3)$ is $1$ at $0$ and at most $0$ at every positive integer, so $\Pr(X=0)\ge\mathbb E\,q(X)$, which the moments fix at $\frac13$.
+
+      **Lower bound.** Let $q(x)=-\frac16(x-1)(x-2)(x-3)$. Then $q(0)=1$, $q(1)=q(2)=q(3)=0$, and $q(x)<0$ for integers $x\ge4$. So $q(x)\le\mathbf 1[x=0]$ for every nonnegative integer $x$, and
+      $$\Pr(X=0)\ge\mathbb E\,q(X)=-\frac16\Big(\mathbb E X^3-6\,\mathbb E X^2+11\,\mathbb E X-6\Big)=-\frac16(5-12+11-6)=\frac13 .$$
+
+      **It is reached.** Equality needs $X\in\{0,1,2,3\}$. Solving the three moment equations for $p_1,p_2,p_3$:
+      $$p_1+2p_2+3p_3=1,\quad p_1+4p_2+9p_3=2,\quad p_1+8p_2+27p_3=5$$
+      gives $p_1=\frac12$, $p_2=0$, $p_3=\frac16$, and then $p_0=\frac13$. These are valid probabilities. The minimum is $\frac13$.
+    checked: "script: linear programming over distributions on {0,…,30} with the three moment constraints gives minimum P(X=0) = 1/3"
+    status: ready
+
+  - id: A5
+    topic: "Polynomials: derivatives of geometric sums share no roots"
+    areas: [algebra]
+    difficulty: 4
+    status: coming
+
+  - id: A6
+    topic: "Matrices: products with a zero diagonal entry exactly off-diagonal"
+    areas: [linear-algebra, combinatorics]
+    difficulty: 5
+    status: coming
+
+  - id: B1
+    topic: "Number bases: digits allowed to reach ten"
+    areas: [number-theory]
+    difficulty: 1
+    answer: "Exactly the numbers with no digit $0$ in base $10$"
+    hints:
+      - 'A zero digit with a nonzero digit just above it can be traded: borrow one from above and write $10$.'
+      - 'If there is no zero digit, look at the last digit modulo $10$.'
+    solution: |
+      **Key idea:** a zero digit lets you borrow and write $10$; with no zero digit, the last digit is forced at each stage.
+
+      **A zero digit gives a second expansion.** Let $N=\sum d_i10^i$ be the usual expansion with a digit $0$ somewhere below the leading digit. Going up from that zero, take the first nonzero digit; so there is a position $j$ with $d_j=0$ and $d_{j+1}\ge1$. Replace $d_{j+1}$ by $d_{j+1}-1$ and $d_j$ by $10$. The value is unchanged. If $d_{j+1}$ was the leading digit $1$, the new leading digit is the $10$ at position $j$, which is still nonzero. This is a different over-expansion.
+
+      **No zero digit gives uniqueness.** Suppose every usual digit is in $\{1,\dots,9\}$, and let $N=\sum e_i10^i$ be any over-expansion. Then $e_0\equiv N\equiv d_0\pmod{10}$ with $e_0\in\{0,\dots,10\}$. The only digits $\equiv d_0$ in that range are $d_0$ itself, plus $0$ and $10$ when $d_0=0$. Since $d_0\ne0$, $e_0=d_0$. Now $(N-d_0)/10$ again has no zero digits, and $\sum_{i\ge1}e_i10^{i-1}$ is an over-expansion of it. Induction gives $e_i=d_i$ for all $i$.
+
+      So the integers with a unique over-expansion are exactly those whose usual decimal digits are all nonzero.
+    checked: "script: counted over-expansions of every N ≤ 5000 by dynamic programming; unique exactly when N has no zero digit"
+    status: ready
+
+  - id: B2
+    topic: "Optimization: a weighted integral with a bounded zero-mean function"
+    areas: [analysis, calculus]
+    difficulty: 1
+    answer: "$\\ln\\tfrac43$"
+    hints:
+      - 'Since $\int f=0$, you may subtract any constant from $\frac1x$.'
+      - 'Subtract $\frac12$, the value of $\frac1x$ in the middle of the interval.'
+    solution: |
+      **Key idea:** subtract the constant $\frac12$ from $\frac1x$, then use $|f|\le1$; the bound is reached by a step function.
+
+      Since $\int_1^3f=0$,
+      $$\int_1^3\frac{f(x)}x\,dx=\int_1^3f(x)\Big(\frac1x-\frac12\Big)dx\le\int_1^3\Big|\frac1x-\frac12\Big|dx .$$
+      The weight $\frac1x-\frac12$ is positive on $[1,2)$ and negative on $(2,3]$, so the right side is
+      $$\int_1^2\Big(\frac1x-\frac12\Big)dx+\int_2^3\Big(\frac12-\frac1x\Big)dx=\Big(\ln2-\frac12\Big)+\Big(\frac12-\ln\frac32\Big)=\ln\frac43 .$$
+
+      Equality holds for $f=1$ on $[1,2]$ and $f=-1$ on $(2,3]$. Its integral is $0$, and $\int_1^3\frac fx\,dx=\ln2-\ln\frac32=\ln\frac43$.
+    checked: "script: ln(4/3) = 0.28768; thousands of random admissible step functions never exceeded it"
+    status: ready
+
+  - id: B3
+    topic: "Linear algebra: many prime entries force rank at least two"
+    areas: [linear-algebra, number-theory]
+    difficulty: 2
+    hints:
+      - 'A rank-one matrix has entries $u_iv_j$. What does that say about products around a closed loop of entries?'
+      - 'Make a graph with a vertex for each row and column and an edge for each prime entry. With $m+n$ edges, there is a cycle.'
+    solution: |
+      **Key idea:** in a rank-one matrix, products around a cycle of entries alternate equal; a cycle of distinct primes makes that impossible.
+
+      $A\ne0$, so suppose $\operatorname{rank}A=1$. Then $a_{ij}=u_iv_j$ for some vectors $u,v$.
+
+      Make a bipartite graph with one vertex for each of the $m$ rows and $n$ columns. For each of the $m+n$ distinct primes, choose one entry $a_{ij}$ with $|a_{ij}|$ equal to that prime, and draw an edge from row $i$ to column $j$. This gives $m+n$ distinct edges on $m+n$ vertices. A graph with as many edges as vertices contains a cycle. In a bipartite graph the cycle alternates rows and columns:
+      $$i_1,\ j_1,\ i_2,\ j_2,\ \dots,\ i_r,\ j_r,\ i_1 .$$
+      Its edges are $a_{i_1j_1},a_{i_2j_1},a_{i_2j_2},\dots,a_{i_1j_r}$. Take the product of every other edge:
+      $$\prod_{t}a_{i_tj_t}=\prod_tu_{i_t}\prod_tv_{j_t}=\prod_ta_{i_{t+1}j_t}\qquad(i_{r+1}=i_1),$$
+      since both products contain each $u_{i_t}$ and each $v_{j_t}$ once. In absolute value, both sides are products of $r$ distinct primes, and the two sets of primes are disjoint. By unique factorization this is impossible. So $\operatorname{rank}A\ge2$.
+    checked: "proof only"
+    status: ready
+
+  - id: B4
+    topic: "Real roots: a polynomial with coefficients two to a quadratic"
+    areas: [algebra, analysis]
+    difficulty: 3
+    hints:
+      - 'Evaluate at $x_m=-2^{2m-n}$ for $m=0,1,\dots,n$.'
+      - 'There the $k$-th term is $(-1)^k2^{m^2-(k-m)^2}$. Pair the terms by their distance from $k=m$.'
+    solution: |
+      **Key idea:** at the $n+1$ points $x_m=-2^{2m-n}$, the sign of the polynomial is $(-1)^m$, which forces $n$ sign changes and hence $n$ real roots.
+
+      Let $p(x)=\sum_{k=0}^n2^{k(n-k)}x^k$ and $x_m=-2^{2m-n}$. The $k$-th term at $x_m$ is
+      $$2^{k(n-k)}(-1)^k2^{k(2m-n)}=(-1)^k\,2^{2mk-k^2}=(-1)^k\,2^{m^2-(k-m)^2}.$$
+      With $d=k-m$,
+      $$p(x_m)=(-1)^m\,2^{m^2}\,\Sigma_m,\qquad\Sigma_m=\sum_{d=-m}^{n-m}(-1)^d2^{-d^2}.$$
+
+      **The sign of $\Sigma_m$.** Split it as $1+\sum_{d=1}^{n-m}(-1)^d2^{-d^2}+\sum_{d=1}^{m}(-1)^d2^{-d^2}$. Each one-sided sum alternates with strictly decreasing sizes.
+      - If $m=0$ or $m=n$, one side is empty and the other is $-\frac12+(\text{something}\ge0)$, so $\Sigma_m\ge\frac12$.
+      - If $1\le m\le n-1$, the two $d=\pm1$ terms use up the $1$, and what is left is $\sum_{d=2}^{n-m}(-1)^d2^{-d^2}+\sum_{d=2}^m(-1)^d2^{-d^2}$. Each of these is an alternating sum starting with a positive term of largest size, so it is $\ge0$, and $>0$ when not empty. Both are empty only if $m=1$ and $n-m=1$, that is $n=2$.
+
+      **Conclusion.** For $n\ne2$, $p(x_m)$ has sign exactly $(-1)^m$ for $m=0,\dots,n$. The points satisfy $x_0>x_1>\dots>x_n$ (they move left as $m$ grows), so $p$ changes sign in each of the $n$ intervals $(x_{m},x_{m+1})$, giving $n$ distinct real roots. Since $p$ has degree $n$, these are all its roots. For $n=2$, $p=1+2x+x^2=(1+x)^2$, whose roots are real.
+    viz: putnam-2014-b4
+    checked: "script: numpy roots for n = 1..13 are all real; the sign pattern at the points x_m was checked for n ≤ 40 in exact arithmetic"
+    status: ready
+
+  - id: B5
+    topic: "Games: choosing commuting invertible matrices over a finite field"
+    areas: [algebra, combinatorics]
+    difficulty: 3
+    answer: "Patniss wins if $p=2$; Keeta wins if $p$ is odd"
+    hints:
+      - 'For odd $p$, the second player can answer every matrix $x$ with $-x$.'
+      - 'For $p=2$, the first player can pick a matrix whose centralizer is abelian of odd order. A generator of $\mathbb F_{2^n}^\times$, acting on $\mathbb F_{2^n}\cong\mathbb F_2^n$, is one.'
+    solution: |
+      **Key idea:** for odd $p$, answering $x$ with $-x$ is a winning pairing for the second player; for $p=2$, the first player picks a matrix whose centralizer is a cyclic group of odd order $2^n-1$, which fixes the length of the game.
+
+      **Odd $p$: Keeta wins.** Since $p$ is odd, $-x\ne x$. Keeta answers each move $x$ with $-x$. After each of her moves, the chosen set is closed under $x\mapsto-x$. Patniss's new $x$ was not chosen, so $-x$ was not chosen either. And $-x$ commutes with everything $x$ commutes with, including $x$. So Keeta always has a move, and Patniss is the one who eventually gets stuck.
+
+      **$p=2$: Patniss wins.** Identify $\mathbb F_2^n$ with the field $\mathbb F_{2^n}$, and let $x$ be multiplication by a generator $\alpha$ of the cyclic group $\mathbb F_{2^n}^\times$. This is an invertible $\mathbb F_2$-linear map. Patniss chooses $x$ first.
+
+      *Centralizer of $x$.* The matrices $c_0I+c_1x+\dots$ form the ring $\mathbb F_2[x]$, which acts as multiplication by $\mathbb F_2[\alpha]=\mathbb F_{2^n}$. A matrix commuting with $x$ commutes with this whole ring, so it is $\mathbb F_{2^n}$-linear on the one-dimensional $\mathbb F_{2^n}$-space $\mathbb F_{2^n}$. So it is multiplication by some field element. The invertible ones form $\mathbb F_{2^n}^\times$: an abelian group with $2^n-1$ elements, an odd number.
+
+      *The game is now fixed.* Every later move must commute with $x$, so it lies in this group. Any unchosen element of the group is legal, because the group is abelian. So the game lasts exactly $2^n-1$ moves. That is odd, so Patniss makes the last move and Keeta cannot move. (For $n=1$ this is just the one-element group.)
+    checked: "script: full game-tree search on GL_1(F_p) for p = 2, 3, 5, 7 and on GL_2(F_2), GL_2(F_3) agrees"
+    status: ready
+
+  - id: B6
+    topic: "Lipschitz functions with rational-linear values are piecewise linear"
+    areas: [analysis, number-theory]
+    difficulty: 4
+    hints:
+      - 'If $r=c/d$ in lowest terms, the condition says exactly that $d\,f(r)$ is an integer.'
+      - 'Take Farey neighbors $r_1,r_2$ and their mediant $m$. Compare $f(m)$ with the chord through $(r_1,f(r_1))$ and $(r_2,f(r_2))$; the gap is a multiple of $\frac1{d_1+d_2}$.'
+    solution: |
+      **Key idea:** at a mediant, the gap between $f$ and the chord is a multiple of $\frac1{d_1+d_2}$ but smaller than that once the denominators exceed $2K$; so $f$ follows the chord on each interval between neighbors in a fine enough Farey sequence.
+
+      **What the condition says.** For $r=c/d$ in lowest terms, $a+bc/d=\frac{ad+bc}{d}$, so $d\,f(r)$ is an integer.
+
+      **Farey neighbors.** Let $r_1=\frac{c_1}{d_1}<r_2=\frac{c_2}{d_2}$ with $c_2d_1-c_1d_2=1$. Their mediant $m=\frac{c_1+c_2}{d_1+d_2}$ is in lowest terms and lies between them, with
+      $$m-r_1=\frac1{d_1(d_1+d_2)},\qquad r_2-m=\frac1{d_2(d_1+d_2)} .$$
+      Let $L$ be the linear function through $(r_1,f(r_1))$ and $(r_2,f(r_2))$; its slope is at most $K$ in absolute value. Since $m=\frac{d_1r_1+d_2r_2}{d_1+d_2}$,
+      $$(d_1+d_2)\,L(m)=d_1f(r_1)+d_2f(r_2)\in\mathbb Z ,$$
+      and $(d_1+d_2)f(m)\in\mathbb Z$. So $N=(d_1+d_2)(f(m)-L(m))$ is an integer. Also
+      $$|f(m)-L(m)|\le|f(m)-f(r_1)|+|L(r_1)-L(m)|\le2K(m-r_1),$$
+      and similarly $\le2K(r_2-m)$. So $|N|\le\frac{2K}{\max(d_1,d_2)}$.
+
+      **One interval.** Suppose $\max(d_1,d_2)>2K$. Then $|N|<1$, so $N=0$ and $f(m)=L(m)$. The pairs $(r_1,m)$ and $(m,r_2)$ are again Farey neighbors, with larger maximum denominator, and on each of them the chord is still $L$. Repeating, $f=L$ at every iterated mediant. Every rational in $(r_1,r_2)$ is an iterated mediant. (If $\frac cd$ lies strictly between, then $\frac1{d_1d_2}=(\frac cd-r_1)+(r_2-\frac cd)\ge\frac{d_1+d_2}{d\,d_1d_2}$, so $d\ge d_1+d_2$, with equality only for the mediant. Otherwise $\frac cd$ lies in one half, whose denominators add up to more, and this can only happen finitely often.) By continuity, $f=L$ on $[r_1,r_2]$.
+
+      **Finitely many intervals.** Take an integer $Q\ge4K$ and the Farey sequence of all fractions in $[0,1]$ with denominator at most $Q$. Consecutive terms are Farey neighbors with $d_1+d_2>Q$, so $\max(d_1,d_2)>Q/2\ge2K$. On each of these finitely many intervals $f$ is linear, and together they cover $[0,1]$.
+    checked: "proof only"
+    status: ready

@@ -1,0 +1,259 @@
+year: 2005
+edition: 66th
+date: "December 3, 2005"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2005.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Number theory: sums of non-dividing 2^r 3^s terms"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'If $n$ is even, use a representation of $n/2$ and double every term.'
+      - 'If $n$ is odd, subtract the largest power of $3$ that fits. What is left is even and small.'
+    solution: |
+      **Key idea:** strong induction. Even numbers come from halving; odd numbers split off the largest power of $3$, and the rest is twice a smaller number.
+
+      Call a representation *good* if no term divides another. $n=1$ is the single term $1$. Assume every number below $n$ has a good representation.
+
+      **$n$ even.** Take a good representation of $n/2$ and double every term. Doubling keeps the form $2^r3^s$ and keeps "no term divides another".
+
+      **$n$ odd.** Let $3^s$ be the largest power of $3$ with $3^s\le n$. If $n=3^s$ we are done. Otherwise $n-3^s$ is even and positive; write it as $2m$. Take a good representation of $m<n$ and double it, getting terms $2^{r+1}3^t$ that sum to $2m$ and do not divide each other. Add the term $3^s$.
+      - $3^s$ is odd and every other term is even, so no other term divides $3^s$.
+      - Each other term is at most $2m=n-3^s<3^{s+1}-3^s=2\cdot3^s$. A term $2^{r+1}3^t$ with $t\ge s$ would be at least $2\cdot3^s$, so every term has $t<s$, and $3^s$ divides none of them.
+
+      So the new representation of $n$ is good.
+    checked: "script: the construction produced good representations for every n < 3000"
+    status: ready
+
+  - id: A2
+    topic: "Combinatorics: Hamiltonian paths on a 3-by-n grid"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: '$2^{n-2}$ for $n\ge2$ (and $0$ for $n=1$)'
+    hints:
+      - 'Look at the corner cell in the first column that is not the start. It is not an endpoint, so the path uses both of its edges.'
+      - 'Also count paths between opposite corners. You get two counts that satisfy the same recursion.'
+    solution: |
+      **Key idea:** look at the first column. Either the path sweeps it at once, or it leaves and comes back through a forced detour. This gives a recursion for corner-to-corner paths of two kinds, and the counts double each time.
+
+      Picture the points as cells in $n$ columns and $3$ rows (row $1$ at the bottom). Let $f(n)$ count paths through all cells from the bottom-left to the bottom-right corner, and $g(n)$ count those from the top-left to the bottom-right corner. Clearly $f(1)=0$ and $g(1)=1$.
+
+      **Recursion for $f$** ($n\ge2$). The top-left cell is not an endpoint, so the path uses both of its edges: to the middle-left cell and to the cell on its right.
+      - *First step up.* The middle-left cell has degree $2$ in the path, and its edges must go to the start and to the top-left cell. So the path sweeps column $1$ upward and then enters column $2$ at the top. The rest is a path on columns $2..n$ from top-left to bottom-right: $g(n-1)$ ways.
+      - *First step right.* Then the start's only edge is used, so the middle-left cell connects to the top-left cell and to its right neighbor. The path contains the detour (column 2, middle) $\to$ (column 1, middle) $\to$ (column 1, top) $\to$ (column 2, top). Replacing this detour by the direct edge between the two column-2 cells gives a path on columns $2..n$ from bottom-left to bottom-right that uses that edge. Every such path uses it: the top cell of column $2$ is a corner of that smaller board and not an endpoint (when $n-1\ge2$), so both its edges are used. For $n-1=1$ there are none, matching $f(1)=0$. So this case gives $f(n-1)$ ways.
+
+      Hence $f(n)=f(n-1)+g(n-1)$.
+
+      **Recursion for $g$** ($n\ge2$). The same argument with the roles of top and bottom swapped (now the bottom-left cell is the corner that is not an endpoint) gives $g(n)=f(n-1)+g(n-1)$. In the "first step right" case the path on columns $2..n$ runs from top-left to bottom-right and must use the edge between the bottom and middle cells of column $2$; this also holds when $n-1=1$, where that single column is swept top to bottom.
+
+      **Solve.** For $n\ge2$ both $f(n)$ and $g(n)$ equal $f(n-1)+g(n-1)$, so $f(n)=g(n)$ and then $f(n+1)=2f(n)$. With $f(2)=f(1)+g(1)=1$, we get $f(n)=2^{n-2}$ for $n\ge2$.
+    checked: "script: depth-first search counted the paths for n = 1..8: 0, 1, 2, 4, 8, 16, 32, 64"
+    status: ready
+
+  - id: A3
+    topic: "Complex analysis: derivative zeros stay on the unit circle"
+    areas: [algebra, analysis]
+    difficulty: 3
+    hints:
+      - 'Compute the logarithmic derivative $g''/g$ as a sum over the zeros $z_k$.'
+      - 'For $|z_k|=1$, the real part of $\dfrac{z+z_k}{z-z_k}$ has the sign of $|z|^2-1$.'
+    solution: |
+      **Key idea:** the logarithmic derivative of $g$ is a sum of terms $\frac{z+z_k}{z-z_k}$, and off the circle all of them have real parts of the same strict sign, so the sum cannot vanish.
+
+      Let $z_1,\dots,z_n$ be the zeros of $p$, all with $|z_k|=1$. Since $p(0)\ne0$, consider $z\ne0$. Wherever $p(z)\ne0$,
+      $$\frac{g'(z)}{g(z)}=\frac{p'(z)}{p(z)}-\frac n{2z}=\sum_k\Big(\frac1{z-z_k}-\frac1{2z}\Big)=\frac1{2z}\sum_k\frac{z+z_k}{z-z_k}.$$
+      (For odd $n$, $z^{n/2}$ is a branch of a square root; its logarithmic derivative is still $\frac n{2z}$, and the zeros of $g'$ are the zeros of the polynomial $2zp'(z)-np(z)$, which does not vanish at $0$.)
+
+      For $|z_k|=1$,
+      $$\operatorname{Re}\frac{z+z_k}{z-z_k}=\frac{\operatorname{Re}\big((z+z_k)(\bar z-\bar z_k)\big)}{|z-z_k|^2}=\frac{|z|^2-1}{|z-z_k|^2},$$
+      because the cross terms $z_k\bar z-z\bar z_k$ are purely imaginary. If $|z|\ne1$, every term has real part of the same strict sign, so the sum is not zero, and $g'(z)\ne0$ (here $p(z)\ne0$ too). So every zero of $g'$ has absolute value $1$.
+    checked: "script: random polynomials with roots on the circle, degree ≤ 8; all roots of 2zp′ − np had modulus 1 to 1e-6"
+    status: ready
+
+  - id: A4
+    topic: "Linear algebra: an all-ones block in a Hadamard matrix"
+    areas: [linear-algebra, combinatorics]
+    difficulty: 2
+    hints:
+      - 'Orthogonal rows of length $\sqrt n$ mean $HH^T=nI$, so also $H^TH=nI$.'
+      - 'Apply $H$ to the indicator vector of the $b$ columns of the block.'
+    solution: |
+      **Key idea:** $H/\sqrt n$ is an orthogonal matrix, so it preserves lengths; applying it to the indicator of the block's columns gives a vector with $a$ entries equal to $b$.
+
+      Each row has length $\sqrt n$ and the rows are orthogonal, so $HH^T=nI$. Then $H^T=nH^{-1}$, so $H^TH=nI$ as well, and $|Hu|^2=u^TH^THu=n|u|^2$ for every vector $u$.
+
+      Let $u$ have $1$ in the $b$ columns of the all-ones block and $0$ elsewhere. Then $|u|^2=b$, so $|Hu|^2=nb$. For each of the $a$ rows of the block, the corresponding entry of $Hu$ is the sum of $b$ ones, which is $b$. Hence
+      $$ab^2\le|Hu|^2=nb,$$
+      and $ab\le n$.
+    checked: "proof only"
+    status: ready
+
+  - id: A5
+    topic: "Integration: logarithm over 1 + x², a symmetry trick"
+    areas: [calculus]
+    difficulty: 2
+    answer: '$\dfrac{\pi}{8}\ln2$'
+    hints:
+      - 'Substitute $x=\tan\theta$.'
+      - 'Then replace $\theta$ by $\frac\pi4-\theta$. What is $1+\tan(\frac\pi4-\theta)$?'
+    solution: |
+      **Key idea:** after $x=\tan\theta$, the reflection $\theta\mapsto\frac\pi4-\theta$ turns the integrand into $\ln2$ minus itself.
+
+      With $x=\tan\theta$, $dx=(1+x^2)\,d\theta$, so
+      $$I=\int_0^1\frac{\ln(1+x)}{1+x^2}\,dx=\int_0^{\pi/4}\ln(1+\tan\theta)\,d\theta .$$
+      Substitute $\theta\to\frac\pi4-\theta$. Since $\tan(\frac\pi4-\theta)=\frac{1-\tan\theta}{1+\tan\theta}$,
+      $$1+\tan\big(\tfrac\pi4-\theta\big)=\frac2{1+\tan\theta}.$$
+      So $I=\int_0^{\pi/4}\big(\ln2-\ln(1+\tan\theta)\big)\,d\theta=\frac\pi4\ln2-I$, and $I=\frac\pi8\ln2$.
+    checked: "script: numerical quadrature gives 0.2721983, equal to (π/8)·ln 2"
+    status: ready
+
+  - id: A6
+    topic: "Probability: acute angles in a random inscribed polygon"
+    areas: [probability, geometry]
+    difficulty: 4
+    answer: '$\dfrac{n(n-2)}{2^{n-1}}$'
+    hints:
+      - 'An inscribed angle at $P_i$ is acute exactly when the two arcs next to $P_i$ add up to more than a semicircle.'
+      - 'Count acute angles: at most two, and two only at neighboring vertices. So the answer is (expected number) minus (probability of two).'
+    solution: |
+      **Key idea:** an acute angle means the two gaps around a vertex cover more than half the circle. At most two angles can be acute, and only at neighbors, so inclusion–exclusion needs just two probabilities about random gaps.
+
+      Scale the circle to length $1$. In circular order the points cut it into gaps $g_1,\dots,g_n$ (with $g_i$ just before $P_i$ and $g_{i+1}$ just after it). The angle at $P_i$ is half the arc between its neighbors that avoids $P_i$, which is $1-g_i-g_{i+1}$ of the circle. So it is acute exactly when
+      $$E_i:\quad g_i+g_{i+1}>\tfrac12 .$$
+
+      **Facts about gaps.** The vector $(g_1,\dots,g_n)$ is uniform on the simplex $\{g_i\ge0,\ \sum g_i=1\}$. Consequently, a sum of $k$ of the gaps has density $\frac{(n-1)!}{(k-1)!(n-k-1)!}s^{k-1}(1-s)^{n-k-1}$, and given that sum, those $k$ gaps divided by it are uniform on a smaller simplex.
+
+      **At most two, and only neighbors.** If $E_i$ and $E_j$ use four different gaps, the gaps would add to more than $1$. So only neighboring $i,j$ can both hold, and three cannot hold at once (among three neighbors, the outer two use four different gaps, since $n\ge4$). Hence
+      $$P(\text{some acute})=\sum_iP(E_i)-\sum_iP(E_i\cap E_{i+1}).$$
+
+      **$P(E_i)$.** The sum $s=g_i+g_{i+1}$ has density $(n-1)(n-2)s(1-s)^{n-3}$. With $t=1-s$,
+      $$P(s>\tfrac12)=(n-1)(n-2)\int_0^{1/2}(1-t)t^{n-3}\,dt=\frac{n-1}{2^{n-2}}-\frac{n-2}{2^{n-1}}=\frac n{2^{n-1}}.$$
+
+      **$P(E_1\cap E_2)$.** This involves $g_1,g_2,g_3$ with $g_1+g_2>\frac12$ and $g_2+g_3>\frac12$. Let $s=g_1+g_2+g_3$, with density $\frac{(n-1)(n-2)(n-3)}2s^2(1-s)^{n-4}$, and write $g_j=su_j$ with $(u_1,u_2,u_3)$ uniform on a triangle. The conditions say $u_3<c$ and $u_1<c$ with $c=1-\frac1{2s}$, which needs $s>\frac12$. On the triangle, $P(u_1\ge c)=(1-c)^2$, and both $u_1,u_3\ge c$ has probability $(1-2c)^2$ when $c<\frac12$. So the conditional probability is
+      $$1-2(1-c)^2+(1-2c)^2=2-\frac2s+\frac1{2s^2}=\frac{(2s-1)^2}{2s^2}\qquad(\tfrac12<s\le1).$$
+      Then, with $t=1-s$,
+      $$P(E_1\cap E_2)=\frac{(n-1)(n-2)(n-3)}4\int_0^{1/2}(1-2t)^2t^{n-4}\,dt=\frac1{2^{n-2}},$$
+      since $\int_0^{1/2}(1-2t)^2t^{n-4}dt=\frac{2^{-(n-3)}\cdot2}{(n-1)(n-2)(n-3)}$ after expanding.
+
+      **Total.** $P=n\cdot\frac n{2^{n-1}}-n\cdot\frac1{2^{n-2}}=\frac{n(n-2)}{2^{n-1}}$. (For $n=4$ this is $1$: a cyclic quadrilateral always has an acute angle, since opposite angles add to $180^\circ$.)
+    viz: putnam-2005-a6
+    checked: "script: Monte Carlo with 60,000 trials gives 1.000, 0.937, 0.751 for n = 4, 5, 6; the formula gives 1, 0.9375, 0.75"
+    status: ready
+
+  - id: B1
+    topic: "Algebra: a polynomial relation between two floors"
+    areas: [algebra, number-theory]
+    difficulty: 1
+    answer: '$P(x,y)=(y-2x)(y-2x-1)$'
+    hints:
+      - 'How is $\lfloor 2a\rfloor$ related to $2\lfloor a\rfloor$?'
+    solution: |
+      **Key idea:** $\lfloor2a\rfloor$ is always $2\lfloor a\rfloor$ or $2\lfloor a\rfloor+1$.
+
+      Write $a=k+r$ with $k=\lfloor a\rfloor$ and $0\le r<1$. Then $2a=2k+2r$ with $0\le2r<2$, so $\lfloor2a\rfloor=2k$ if $r<\frac12$ and $2k+1$ if $r\ge\frac12$. Either way $y=\lfloor2a\rfloor$ and $x=\lfloor a\rfloor$ satisfy $(y-2x)(y-2x-1)=0$. So $P(x,y)=(y-2x)(y-2x-1)$ works.
+    checked: "proof only"
+    status: ready
+
+  - id: B2
+    topic: "Number theory: reciprocals summing to one, fixed total"
+    areas: [number-theory, algebra]
+    difficulty: 2
+    answer: '$n=1$: $k_1=1$; $n=3$: $(2,3,6)$ in any order; $n=4$: $(4,4,4,4)$'
+    hints:
+      - 'Cauchy–Schwarz: $\big(\sum k_i\big)\big(\sum\frac1{k_i}\big)\ge n^2$.'
+    solution: |
+      **Key idea:** Cauchy–Schwarz limits $n$ to at most $4$, and the few small cases are quick.
+
+      By Cauchy–Schwarz (or AM–HM), $(k_1+\cdots+k_n)\big(\frac1{k_1}+\cdots+\frac1{k_n}\big)\ge n^2$, so $5n-4\ge n^2$, i.e. $(n-1)(n-4)\le0$ and $1\le n\le4$.
+
+      - $n=1$: $k_1=1$, and $5-4=1$. Works.
+      - $n=2$: $\frac1{k_1}+\frac1{k_2}=1$ forces $k_1=k_2=2$, with sum $4\ne6$. None.
+      - $n=3$: the solutions of $\frac1{k_1}+\frac1{k_2}+\frac1{k_3}=1$ are $(3,3,3)$, $(2,4,4)$, $(2,3,6)$ up to order, with sums $9,10,11$. We need $11$: $(2,3,6)$.
+      - $n=4$: the sum is $16=n^2$, so Cauchy–Schwarz holds with equality and all $k_i$ are equal: $(4,4,4,4)$.
+
+      (For $n=3$: if $k_1\le k_2\le k_3$ then $\frac3{k_1}\ge1$, so $k_1\in\{2,3\}$; $k_1=3$ forces $(3,3,3)$, and $k_1=2$ leaves $\frac1{k_2}+\frac1{k_3}=\frac12$ with $k_2\in\{3,4\}$.)
+    checked: "script: exhaustive search for n ≤ 6 finds exactly (1), (2,3,6), (4,4,4,4) up to order"
+    status: ready
+
+  - id: B3
+    topic: "Functional equation: derivative at a/x equals x/f(x)"
+    areas: [analysis, calculus]
+    difficulty: 3
+    answer: '$f(x)=Cx^p$ with $C,p>0$, where $C=1$ if $p=1$'
+    hints:
+      - 'Replace $x$ by $a/x$ to get a second equation. Then show $f(x)f(a/x)$ is constant.'
+      - 'With that constant, the equation becomes $f''/f=\text{const}/x$.'
+    solution: |
+      **Key idea:** the product $f(x)f(a/x)$ has zero derivative, and then the equation becomes a simple separable one.
+
+      **Two forms.** The equation is $f'(a/x)\,f(x)=x$. Replacing $x$ by $a/x$ gives $f'(x)\,f(a/x)=a/x$.
+
+      **A constant.** Let $h(x)=f(x)f(a/x)$. Then
+      $$h'(x)=f'(x)f(a/x)-\frac a{x^2}f(x)f'(a/x)=\frac ax-\frac a{x^2}\cdot x=0,$$
+      so $h\equiv K>0$.
+
+      **Solve.** Then $f(a/x)=K/f(x)$, and the second form gives $\frac{f'(x)}{f(x)}=\frac a{Kx}$. So $f(x)=Cx^p$ with $C>0$ and $p=a/K>0$.
+
+      **Which work.** Plugging $f=Cx^p$ into $f'(a/x)=x/f(x)$ gives $C^2p\,a^{p-1}=1$. For $p\ne1$ this has a solution $a>0$ for every $C>0$. For $p=1$ it needs $C^2=1$, so $f(x)=x$ (and then any $a$ works). So the answers are $f(x)=Cx^p$ with $C,p>0$, except that $p=1$ requires $C=1$.
+    checked: "script: checked the equation numerically for (C, p) = (2, 0.5), (0.3, 3), (1, 1) with the matching a"
+    status: ready
+
+  - id: B4
+    topic: "Combinatorics: lattice points in a cross-polytope, symmetric count"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'Sort the tuples by the number $k$ of nonzero coordinates.'
+      - 'How many ways are there to choose $k$ positive integers with sum at most $m$?'
+    solution: |
+      **Key idea:** count by the number $k$ of nonzero coordinates; the result $\sum_k2^k\binom nk\binom mk$ is symmetric in $m$ and $n$.
+
+      Fix $k$, the number of nonzero coordinates. Choose which coordinates: $\binom nk$ ways. Choose their signs: $2^k$ ways. Choose their absolute values: $k$ positive integers with sum at most $m$. Adding a slack variable, these are $k$ positive integers and one nonnegative integer with sum exactly $m$; by stars and bars there are $\binom mk$ of them. Hence
+      $$f(m,n)=\sum_{k\ge0}2^k\binom nk\binom mk,$$
+      which is unchanged when $m$ and $n$ are swapped.
+    checked: "script: brute-force counts equal the formula and are symmetric for 1 ≤ m, n ≤ 4"
+    status: ready
+
+  - id: B5
+    topic: "Algebra: a harmonic polynomial divisible by the squared radius"
+    areas: [algebra, analysis]
+    difficulty: 4
+    hints:
+      - 'Reduce to homogeneous $P$ by looking at each degree separately.'
+      - 'Use the inner product $\langle F,G\rangle=F(\partial)\,G$, where $F(\partial)$ replaces each $x_i$ by $\partial/\partial x_i$. Monomials are orthogonal and $\langle x^\alpha,x^\alpha\rangle=\alpha!>0$.'
+    solution: |
+      **Key idea:** with the "differentiate by a polynomial" inner product, multiplication by $|x|^2$ is the adjoint of the Laplacian. A harmonic $P$ is then orthogonal to every multiple of $|x|^2$, including itself.
+
+      Write $r^2=x_1^2+\cdots+x_n^2$ and $P=r^2Q$.
+
+      **Homogeneous parts.** The Laplacian lowers degree by exactly $2$, and multiplying by $r^2$ raises it by $2$. So the degree-$d$ part of $P$ is harmonic and equals $r^2$ times the degree-$(d-2)$ part of $Q$. It is enough to treat homogeneous $P$ of degree $d$.
+
+      **An inner product.** For homogeneous polynomials of degree $d$, let $\langle F,G\rangle=F(\partial)G$, the number obtained by replacing each $x_i$ in $F$ by $\partial/\partial x_i$ and applying it to $G$. On monomials, $\partial^\alpha x^\beta$ is $0$ unless $\alpha=\beta$, when it is $\alpha!=\alpha_1!\cdots\alpha_n!$. So $\langle F,F\rangle=\sum_\alpha\alpha!\,c_\alpha^2>0$ for $F=\sum c_\alpha x^\alpha\ne0$.
+
+      **Conclusion.** Since $r^2(\partial)$ is the Laplacian $\Delta$, and constant-coefficient operators commute,
+      $$\langle P,P\rangle=\langle r^2Q,P\rangle=Q(\partial)\,\Delta P=Q(\partial)\,0=0 .$$
+      Hence $P=0$.
+    checked: "proof only"
+    status: ready
+
+  - id: B6
+    topic: "Permutations: signed sum over fixed points as an integral"
+    areas: [combinatorics, linear-algebra]
+    difficulty: 3
+    hints:
+      - 'Write $\dfrac1{\nu+1}=\int_0^1t^{\nu}\,dt$.'
+      - '$\sum_\pi\sigma(\pi)t^{\nu(\pi)}$ is the determinant of the matrix with $t$ on the diagonal and $1$ elsewhere.'
+    solution: |
+      **Key idea:** $\frac1{\nu+1}=\int_0^1t^\nu dt$ turns the sum into the integral of a determinant, and that determinant has a simple closed form.
+
+      Let $M(t)$ be the $n\times n$ matrix with $t$ on the diagonal and $1$ off it. By the Leibniz formula, $\det M(t)=\sum_\pi\sigma(\pi)\prod_iM_{i,\pi(i)}=\sum_\pi\sigma(\pi)t^{\nu(\pi)}$, since the diagonal entries used are exactly the fixed points.
+
+      $M(t)=(t-1)I+J$ where $J$ is all ones. $J$ has eigenvalues $n$ (once) and $0$ ($n-1$ times), so
+      $$\det M(t)=(t-1)^{n-1}(t-1+n).$$
+      Therefore
+      $$\sum_\pi\frac{\sigma(\pi)}{\nu(\pi)+1}=\int_0^1(t-1)^{n-1}(t-1+n)\,dt=\Big[\frac{(t-1)^{n+1}}{n+1}+(t-1)^n\Big]_0^1=-\frac{(-1)^{n+1}}{n+1}-(-1)^n .$$
+      This equals $(-1)^n\big(\frac1{n+1}-1\big)=(-1)^{n+1}\frac n{n+1}$.
+    checked: "script: exact sum over all permutations for n ≤ 7"
+    status: ready

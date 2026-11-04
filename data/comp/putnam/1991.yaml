@@ -1,0 +1,278 @@
+year: 1991
+edition: 52nd
+date: "December 7, 1991"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1991.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Geometry: area under the path of a rolling rectangle"
+    areas: [geometry, calculus]
+    difficulty: 2
+    answer: "$6+\\dfrac{7\\pi}{2}$"
+    hints:
+      - "During each quarter turn, the tracked point moves on a quarter circle around the pivot."
+      - "Split the area under each arc into a quarter disk and two right triangles."
+    solution: |
+      **Key idea:** the path is four quarter circles, and the region under each one is a quarter disk plus two right triangles with a corner at the pivot.
+
+      A quarter turn clockwise about a pivot $Q$ sends the offset $(u,v)$ from $Q$ to $(v,-u)$. Following the point that starts at $(1,1)$:
+
+      | pivot | start | end | radius$^2$ |
+      |---|---|---|---|
+      | $(2,0)$ | $(1,1)$ | $(3,1)$ | $2$ |
+      | $(5,0)$ | $(3,1)$ | $(6,2)$ | $5$ |
+      | $(7,0)$ | $(6,2)$ | $(9,1)$ | $5$ |
+      | $(10,0)$ | $(9,1)$ | $(11,1)$ | $2$ |
+
+      Each arc sweeps a quarter turn around its pivot, from a start point on one side of the pivot to an end point on the other. So the region under that arc, down to the $x$-axis, is the quarter disk swept by the radius, plus the right triangle between the pivot, the start point and its foot on the axis, plus the same for the end point.
+
+      - Arc 1: quarter disk $\frac{2\pi}4$; triangles $\frac12\cdot1\cdot1$ twice. Total $\frac\pi2+1$.
+      - Arc 2: quarter disk $\frac{5\pi}4$; triangles with legs $2,1$ and $1,2$. Total $\frac{5\pi}4+2$.
+      - Arc 3: the same as arc 2: $\frac{5\pi}4+2$.
+      - Arc 4: the same as arc 1: $\frac\pi2+1$.
+
+      Adding up, the area is
+      $$6+\Big(\frac12+\frac54+\frac54+\frac12\Big)\pi=6+\frac{7\pi}2 .$$
+    viz: putnam-1991-a1
+    checked: "script: traced the path numerically and integrated: 16.99557 = 6 + 7π/2"
+    status: ready
+
+  - id: A2
+    topic: "Linear algebra: a factorization that forces singularity"
+    areas: [linear-algebra]
+    difficulty: 1
+    answer: "No"
+    hints:
+      - "Multiply $A^2+B^2$ by $A-B$."
+    solution: |
+      **Key idea:** $(A^2+B^2)(A-B)=0$ while $A-B\ne0$.
+
+      Expand, keeping the order of factors:
+      $$(A^2+B^2)(A-B)=A^3-A^2B+B^2A-B^3 .$$
+      The hypotheses say $A^3=B^3$ and $A^2B=B^2A$, so this is $0$. If $A^2+B^2$ were invertible, multiplying on the left by its inverse would give $A-B=0$, contradicting $A\ne B$. So $A^2+B^2$ is never invertible.
+    checked: "algebra checked by hand"
+    status: ready
+
+  - id: A3
+    topic: "Polynomials: critical points exactly at root midpoints"
+    areas: [algebra, calculus]
+    difficulty: 2
+    answer: "Exactly the quadratics with two distinct real roots"
+    hints:
+      - "Use the logarithmic derivative $\\frac{p'}{p}=\\sum_j\\frac1{x-r_j}$."
+      - "At the midpoint of the first two roots, the two nearest terms cancel. What sign do the others have?"
+    solution: |
+      **Key idea:** at the midpoint of the two smallest roots, the two nearest terms of $p'/p$ cancel, and any further root contributes a term of a single sign.
+
+      Since $p$ has degree $n$ and $n$ distinct real roots, $p(x)=c\prod_{j=1}^n(x-r_j)$, and away from the roots
+      $$\frac{p'(x)}{p(x)}=\sum_{j=1}^n\frac1{x-r_j}.$$
+      Let $m=\frac{r_1+r_2}2$. It is not a root, so $p'(m)=0$ means the sum is $0$ at $m$. The terms for $j=1,2$ are $\frac2{r_2-r_1}$ and $-\frac2{r_2-r_1}$, which cancel. Every other root has $r_j>r_2>m$, so its term $\frac1{m-r_j}$ is negative. A sum of negative terms is zero only if there are none, so $n=2$.
+
+      Conversely, for $n=2$, $p=c(x-r_1)(x-r_2)$ has $p'(x)=c(2x-r_1-r_2)$, which vanishes at the midpoint. So the answer is all $p(x)=c(x-r_1)(x-r_2)$ with $c\ne0$ and $r_1<r_2$ real.
+    checked: "proof only"
+    status: ready
+
+  - id: A4
+    topic: "Geometry: small discs that meet every line"
+    areas: [geometry, analysis]
+    difficulty: 3
+    answer: "Yes"
+    hints:
+      - "A line at distance $\\rho$ from the origin crosses every circle of radius $R\\ge\\rho$ about the origin."
+      - "Put many tiny discs, evenly spaced, on circles of radius $k=1,2,3,\\dots$, with fewer and fewer total area."
+    solution: |
+      **Key idea:** a ring of $N$ evenly spaced discs on a circle of radius $R$ catches every line closer than $R$ to the origin if their radius is about $\pi R/N$; the ring's total area is then about $\pi^3R^2/N$, which we can make summable.
+
+      **One ring.** Put $N$ points $c_j=R(\cos\theta_j,\sin\theta_j)$ on the circle of radius $R$, at angles spaced $\frac{2\pi}N$ apart, and give each a disc of radius $r=\frac{\pi R}N$. Take a line at distance $\rho\le R$ from the origin, with unit normal $(\cos\varphi,\sin\varphi)$. A point $c$ is at distance $|c\cdot(\cos\varphi,\sin\varphi)-\rho|$ from the line. As $\theta$ varies, $R\cos(\theta-\varphi)$ takes every value in $[-R,R]$, so it equals $\rho$ for some angle $\theta^*$. Some $\theta_j$ is within $\frac\pi N$ of $\theta^*$, and $R\cos(\cdot-\varphi)$ changes by at most $R$ times the change in angle, so
+      $$\big|c_j\cdot(\cos\varphi,\sin\varphi)-\rho\big|\le\frac{\pi R}N=r .$$
+      So the line meets the disc around $c_j$.
+
+      **All rings.** For $k=1,2,3,\dots$ use a ring with $R=k$ and $N=k^4$. Every line is at some finite distance $\rho$ from the origin, so the ring with $k\ge\rho$ catches it. The total area is
+      $$\sum_k k^4\cdot\pi\Big(\frac{\pi k}{k^4}\Big)^2=\sum_k\frac{\pi^3}{k^2}<\infty .$$
+      Each ring has finitely many centers, and the rings move off to infinity, so the centers have no limit point in the plane. So such discs exist.
+    checked: "proof only; the one-ring estimate was spot-checked with random lines"
+    status: ready
+
+  - id: A5
+    topic: "Integrals: bounding an arc-length-style integral"
+    areas: [calculus, analysis]
+    difficulty: 2
+    answer: "$\\dfrac13$ (at $y=1$)"
+    hints:
+      - "Use $\\sqrt{u^2+v^2}\\le u+v$ for $u,v\\ge0$."
+    solution: |
+      **Key idea:** bound the square root by the sum of the two square roots; the resulting cubic in $y$ peaks at $y=1$, where the bound is exact.
+
+      For $u,v\ge0$, $\sqrt{u^2+v^2}\le u+v$. With $u=x^2$ and $v=y-y^2\ge0$:
+      $$\int_0^y\sqrt{x^4+(y-y^2)^2}\,dx\le\int_0^y\big(x^2+y-y^2\big)dx=\frac{y^3}3+y^2-y^3=y^2-\frac{2y^3}3 .$$
+      The right side has derivative $2y(1-y)\ge0$ on $[0,1]$, so it is at most its value at $y=1$, which is $\frac13$.
+
+      At $y=1$ the integral is $\int_0^1x^2\,dx=\frac13$. So the maximum is $\frac13$.
+    checked: "script: numerical values at y = 0.5, 0.9, 1 are 0.136, 0.272, 0.3333"
+    status: ready
+
+  - id: A6
+    topic: "Partitions: a Fibonacci-like sequence of parts"
+    areas: [combinatorics]
+    difficulty: 4
+    hints:
+      - "Measure the slack in each condition: $d_i=a_i-a_{i+1}-a_{i+2}$, with $a_{r+1}=a_{r+2}=0$."
+      - "Write $n=\\sum a_i$ in terms of the $d_j$. The coefficients are $1,2,4,7,12,\\dots$"
+    solution: |
+      **Key idea:** the slacks $d_j$ in the inequalities are arbitrary positive integers, and $n=\sum_jd_jg_j$. Reading $d_j$ as the number of parts equal to $g_j$ gives the bijection.
+
+      **Slacks.** Given a sum $a_1+\dots+a_r$ of the first kind, set $a_{r+1}=a_{r+2}=0$ and
+      $$d_i=a_i-a_{i+1}-a_{i+2}\qquad(1\le i\le r).$$
+      The conditions say exactly that $d_1,\dots,d_r$ are positive integers ($d_{r-1}=a_{r-1}-a_r$ and $d_r=a_r$). Conversely, any positive integers $d_1,\dots,d_r$ determine $a_r,a_{r-1},\dots,a_1$ in turn by $a_i=d_i+a_{i+1}+a_{i+2}$, and these satisfy the conditions. So sums of the first kind with $r$ terms correspond one-to-one to $r$-tuples of positive integers.
+
+      **The total.** Unwinding the recursion, $a_i=\sum_{j\ge i}F_{j-i+1}d_j$, where $F_1=F_2=1,F_3=2,\dots$ are the Fibonacci numbers. (Check: $d_r$ enters $a_r,a_{r-1},a_{r-2},\dots$ with weights $1,1,2,3,\dots$, since the weights obey the same recursion.) Summing over $i$, the coefficient of $d_j$ in $n$ is
+      $$F_1+F_2+\dots+F_j=F_{j+2}-1 .$$
+      The numbers $F_{j+2}-1$ are $1,2,4,7,12,\dots$ and satisfy $G_j=G_{j-1}+G_{j-2}+1$, so they are exactly the $g_j$. Hence
+      $$n=\sum_{j=1}^r d_j\,g_j .$$
+
+      **The bijection.** A sum of the second kind with largest part $g_r$ is the same as a choice of multiplicities $d_1,\dots,d_r$ of the parts $g_1,\dots,g_r$, all at least $1$, with $\sum d_jg_j=n$. So both kinds of sums correspond to the same set of tuples $(r;d_1,\dots,d_r)$, and $A(n)=B(n)$.
+    checked: "script: computed A(n) and B(n) by brute force for n ≤ 15; they agree (1, 1, 2, 2, 3, 3, 5, 5, 7, 7, 10, 10, 13, 14, 18)"
+    status: ready
+
+  - id: B1
+    topic: "Number theory: adding the excess over a square"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "Exactly when $A$ is a perfect square"
+    hints:
+      - "If $a=m^2+s$ with $0<s\\le2m$, where can $a+s$ lie relative to the next squares?"
+    solution: |
+      **Key idea:** a non-square never becomes a square after one step, so the sequence keeps growing.
+
+      If $A=m^2$, then $S(A)=0$ and the sequence is constant.
+
+      Now let $a$ be a non-square: $a=m^2+s$ with $1\le s\le2m$. The next term is $a+s=m^2+2s$, and
+      $$m^2<m^2+2s\le m^2+4m<(m+2)^2 .$$
+      So it is a square only if $m^2+2s=(m+1)^2$, i.e. $2s=2m+1$, which is impossible by parity. Hence a non-square always leads to a non-square, $S(a_k)\ge1$ for every $k$, and the sequence increases forever.
+
+      The sequence is eventually constant exactly when $A$ is a perfect square.
+    checked: "script: ran the sequence 40 steps for A < 300; it settles only for squares"
+    status: ready
+
+  - id: B2
+    topic: "Functional equations: complex exponential in disguise"
+    areas: [analysis, algebra]
+    difficulty: 2
+    hints:
+      - "Look at $h=f+ig$. What does $h(x+y)$ equal?"
+      - "Show $|h|^2$ has derivative $0$."
+    solution: |
+      **Key idea:** $h=f+ig$ satisfies $h(x+y)=h(x)h(y)$, and $f'(0)=0$ makes $h'(0)$ purely imaginary, so $|h|$ cannot change.
+
+      Let $h=f+ig$. The two equations are the real and imaginary parts of
+      $$h(x+y)=h(x)\,h(y).$$
+      **$h(0)=1$.** From $h(0)=h(0)^2$, $h(0)\in\{0,1\}$. If $h(0)=0$ then $h(x)=h(x)h(0)=0$ for all $x$, so $f$ and $g$ are constant, which is excluded. So $h(0)=1$.
+
+      **Derivative.** Differentiating $h(x+y)=h(x)h(y)$ in $y$ at $y=0$ gives $h'(x)=h(x)\,h'(0)$. Here $h'(0)=f'(0)+ig'(0)=i\kappa$ with $\kappa=g'(0)$ real. Then
+      $$\frac{d}{dx}|h|^2=2\operatorname{Re}\big(\overline{h}\,h'\big)=2\operatorname{Re}\big(i\kappa|h|^2\big)=0 .$$
+      So $f^2+g^2=|h|^2$ is constant, equal to $|h(0)|^2=1$.
+    checked: "proof only"
+    status: ready
+
+  - id: B3
+    topic: "Tiling: large rectangles from two brick sizes"
+    areas: [combinatorics, number-theory]
+    difficulty: 3
+    answer: "Yes (for example $L=197$ works)"
+    hints:
+      - "Find strip heights that can be filled for every large width, using one brick type per column."
+      - "Heights $20$, $28$ and $35$ work, and they have greatest common divisor $1$."
+    solution: |
+      **Key idea:** stack identical bricks into columns to make strips of heights $20$, $28$, $35$ that fit every width $n\ge30$; these heights combine to every $m\ge198$.
+
+      **Strips.** A strip of height $h$ can be filled with columns, each made of identical bricks stacked in the same orientation:
+
+      | height | column of… | column width |
+      |---|---|---|
+      | $20$ | five $4\times6$ (height $4$) / four $5\times7$ (height $5$) | $6$ / $7$ |
+      | $28$ | seven $4\times6$ (height $4$) / four $5\times7$ (height $7$) | $6$ / $5$ |
+      | $35$ | seven $5\times7$ (height $5$) / five $5\times7$ (height $7$) | $7$ / $5$ |
+
+      So a strip of height $20$ can have any width $6x+7y$, which covers every integer $\ge30$ (the largest gap of $6,7$ is $6\cdot7-6-7=29$). Height $28$ allows every width $5x+6y\ge20$, and height $35$ every width $5x+7y\ge24$. Hence for $n\ge30$, strips of all three heights can be made with width $n$.
+
+      **Stacking strips.** Now stack strips to reach height $m$. Since $\gcd(20,28,35)=1$, every large $m$ is $20u+28v+35w$ with $u,v,w\ge0$; a direct check shows the largest exception is $197$.
+
+      So whenever $m,n>197$, the $m\times n$ rectangle can be tiled. Such an $L$ exists.
+    checked: "script: the largest integer not of the form 20u + 28v + 35w is 197; the gaps 29, 19, 23 for the widths were computed too"
+    status: ready
+
+  - id: B4
+    topic: "Number theory: a binomial sum modulo a prime squared"
+    areas: [number-theory, combinatorics]
+    difficulty: 3
+    hints:
+      - "For $0<j<p$, $p$ divides $\\binom pj$, and $\\binom{p+j}j\\equiv1\\pmod p$."
+      - "Treat $j=p$ separately: why is $\\binom{2p}{p}\\equiv2\\pmod{p^2}$?"
+    solution: |
+      **Key idea:** for $0<j<p$ each term is $\binom pj$ modulo $p^2$, and the last term $\binom{2p}p$ is $2$ modulo $p^2$.
+
+      **Middle terms.** For $0<j<p$, $\binom pj=p\,u_j$ for an integer $u_j$. Also
+      $$\binom{p+j}{j}=\prod_{k=1}^j\frac{p+k}k$$
+      is an integer, and modulo $p$ each factor $p+k\equiv k$ with $k$ invertible, so $\binom{p+j}j\equiv1\pmod p$. Write it as $1+p\,v_j$. Then
+      $$\binom pj\binom{p+j}j=p\,u_j(1+p\,v_j)\equiv p\,u_j=\binom pj\pmod{p^2}.$$
+
+      **End terms.** $j=0$ gives $1$. For $j=p$, the term is $\binom{2p}p$. By Vandermonde,
+      $$\binom{2p}p=\sum_{k=0}^p\binom pk^2=2+\sum_{k=1}^{p-1}\binom pk^2\equiv2\pmod{p^2},$$
+      since each $\binom pk$ with $0<k<p$ is divisible by $p$.
+
+      **Total.**
+      $$\sum_{j=0}^p\binom pj\binom{p+j}j\equiv1+\sum_{j=1}^{p-1}\binom pj+2=1+(2^p-2)+2=2^p+1\pmod{p^2}.$$
+    checked: "script: exact check for p = 3, 5, 7, 11, 13, 17"
+    status: ready
+
+  - id: B5
+    topic: "Finite fields: squares that are one more than squares"
+    areas: [number-theory, combinatorics]
+    difficulty: 3
+    answer: "$\\dfrac{p+3}{4}$ if $p\\equiv1\\pmod4$; $\\dfrac{p+1}{4}$ if $p\\equiv3\\pmod4$"
+    hints:
+      - "Count the solutions of $x^2-y^2=1$ in two ways."
+      - "How many pairs $(x,y)$ give the same common value $x^2=y^2+1$?"
+    solution: |
+      **Key idea:** the curve $x^2-y^2=1$ has exactly $p-1$ points, and each common value corresponds to $4$ of them, except for the special values $0$ and $1$.
+
+      **Points on the curve.** Since $p$ is odd, $(x-y)(x+y)=1$ is equivalent to $x-y=u$, $x+y=u^{-1}$ for some $u\ne0$, which determines $(x,y)$. So there are $p-1$ solutions.
+
+      **Grouping by value.** A value $c$ is in the intersection exactly when $c=x^2=y^2+1$ for some $(x,y)$ on the curve.
+      - If $c\ne0,1$: then $x\ne0$ and $y\ne0$, and the solutions with this value are $(\pm x,\pm y)$, four of them.
+      - $c=1$: $x=\pm1$, $y=0$: two solutions. And $1$ is always in the intersection.
+      - $c=0$: needs $y^2=-1$. This happens when $-1$ is a square, i.e. $p\equiv1\pmod4$, and then gives two solutions $(0,\pm y)$.
+
+      Let $N'$ be the number of values other than $0,1$.
+      - $p\equiv1\pmod4$: $4N'+2+2=p-1$, so $N'=\frac{p-5}4$, and the answer is $N'+2=\frac{p+3}4$.
+      - $p\equiv3\pmod4$: $4N'+2=p-1$, so $N'=\frac{p-3}4$, and the answer is $N'+1=\frac{p+1}4$.
+    checked: "script: brute force for all primes 3 ≤ p ≤ 29"
+    status: ready
+
+  - id: B6
+    topic: "Inequalities: geometric interpolation against hyperbolic interpolation"
+    areas: [analysis]
+    difficulty: 3
+    answer: "$c=\\left|\\ln\\dfrac ab\\right|$"
+    hints:
+      - "Treat both sides as functions of $x$ on $[0,1]$. Each one solves an equation of the form $y''=\\text{const}\\cdot y$, and they agree at $x=0$ and $x=1$."
+      - "Let $k=\\ln(a/b)$. Look at the difference of the two sides and compare $u^2$ with $k^2$."
+    solution: |
+      **Key idea:** the two sides solve $y''=k^2y$ and $y''=u^2y$ with the same end values, where $k=\ln(a/b)$. A maximum-principle argument shows which one lies on top, and that depends only on whether $u^2$ is above or below $k^2$.
+
+      Let $k=\ln(a/b)$ and fix $u\ne0$. For $0\le x\le1$ put
+      $$\psi(x)=a^xb^{1-x}=b\,e^{kx},\qquad \varphi(x)=\frac{a\sinh(ux)+b\sinh\big(u(1-x)\big)}{\sinh u}.$$
+      Then $\psi''=k^2\psi$ and $\varphi''=u^2\varphi$. Both functions equal $b$ at $x=0$ and $a$ at $x=1$. The inequality says that $D=\varphi-\psi$ is $\ge0$ on $(0,1)$. We know $D(0)=D(1)=0$, and
+      $$D''-u^2D=\big(\varphi''-u^2\varphi\big)-\big(\psi''-u^2\psi\big)=(u^2-k^2)\,\psi .$$
+      Note that $\psi>0$ everywhere.
+
+      **If $u^2\le k^2$, the inequality holds.** Here $D''-u^2D\le0$. Suppose $D$ is negative somewhere. Since $D$ is $0$ at both ends, its minimum over $[0,1]$ is negative and occurs at an interior point $x_0$, where $D''(x_0)\ge0$. Then $D''(x_0)-u^2D(x_0)>0$, which is a contradiction. So $D\ge0$.
+
+      **If $u^2>k^2$, the inequality fails.** Here $D''-u^2D>0$ everywhere. Suppose $D\ge0$ on all of $[0,1]$. $D$ cannot be identically $0$, since then $D''-u^2D=0$. So $D$ has a positive maximum at an interior point $x_0$, where $D''(x_0)\le0$, and then $D''(x_0)-u^2D(x_0)<0$. That is a contradiction, so $D(x)<0$ for some $x$ in $(0,1)$.
+
+      **Answer.** Replacing $u$ by $-u$ does not change the right side, since numerator and denominator both change sign. So the inequality holds for all $x$ in $(0,1)$ exactly when $0<|u|\le|k|$, and the largest $c$ is
+      $$c=|k|=\Big|\ln\frac ab\Big| .$$
+      When $a=b$ this gives $c=0$. Indeed, then every $u\ne0$ fails, so no positive $c$ works.
+    checked: "script: for (a, b) = (3, 1), (1, 5), (2, 2.5), (10, 0.3), the inequality holds on a fine grid of x for |u| up to |ln(a/b)| and fails at 1.01·|ln(a/b)|"
+    status: ready

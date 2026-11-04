@@ -261,6 +261,38 @@ document.addEventListener('click', function (e) {
 })();
 /* Offline: only for people who saved sections on /offline/. Keeps the service worker registered and shows "Update available". */
 try{if(localStorage.getItem('trb-off')&&'serviceWorker' in navigator){var s=document.createElement('script');s.src='{{ "js/offline-notice.js" | relURL }}?v={{ (os.Stat "static/js/offline-notice.js").ModTime.Unix }}';s.defer=true;document.head.appendChild(s)}}catch(e){}
+/* Background music (Teddy Rook's Continued-Fraction Suite): a ♪ button beside Aa, and buttons with data-trb-music="play".
+   This stub only loads the player (static/music/suite/player/player.js and .css) when one is pressed, or when trb-music-v1
+   says music was playing on the last page (under 30 minutes ago, and not in the pop-out window). Sound never starts by itself
+   on a first visit. While the pop-out window plays, the page's own sounds (event trb:sound-start) are passed on to it. */
+(function () {
+  var K = 'trb-music-v1', P = '{{ "music/suite/player/" | relURL }}', V = '?v={{ with os.Stat "static/music/suite/player/player.js" }}{{ .ModTime.Unix }}{{ end }}', ld = 0, q = [], bc = null;
+  function st() { try { return JSON.parse(localStorage.getItem(K) || 'null') || {}; } catch (e) { return {}; } }
+  function go(c) {
+    if (window.TRBPlayer) return window.TRBPlayer.cmd(c);
+    q.push(c); if (ld) return; ld = 1;
+    var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = P + 'player.css' + V; document.head.appendChild(l);
+    var s = document.createElement('script'); s.src = P + 'player.js' + V;
+    s.onload = function () { q.forEach(function (c) { window.TRBPlayer.cmd(c); }); q = []; };
+    document.head.appendChild(s);
+  }
+  window.trbMusic = go;
+  var sw = document.querySelector('.logo-switches');
+  if (sw) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'trb-mbtn'; b.title = 'Background music';
+    b.setAttribute('aria-label', 'Background music'); b.setAttribute('aria-expanded', 'false');
+    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.5V6l10-2v11.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="6.5" cy="17.5" r="2.5" fill="currentColor"/><circle cx="16.5" cy="15.5" r="2.5" fill="currentColor"/></svg>';
+    b.addEventListener('click', function (e) { e.stopPropagation(); go('panel'); });
+    sw.appendChild(b);
+  }
+  document.addEventListener('click', function (e) { var t = e.target.closest && e.target.closest('[data-trb-music]'); if (t) { e.preventDefault(); go(t.getAttribute('data-trb-music')); } });
+  var s = st(), n = Date.now(), popOn = function (s) { return s.pop && Date.now() - s.pop < 10000; };
+  if (s.playing && n - (s.t || 0) < 18e5 && !popOn(s)) go('resume');
+  window.addEventListener('trb:sound-start', function () {
+    if (window.TRBPlayer || !window.BroadcastChannel || !popOn(st())) return;
+    try { (bc = bc || new BroadcastChannel('trb-music')).postMessage({ t: 'duck' }); } catch (e) { }
+  });
+})();
     let menu = document.getElementById('menu');
     if (menu) {
         // Set the scroll position

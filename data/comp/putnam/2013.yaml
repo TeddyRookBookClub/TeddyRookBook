@@ -1,0 +1,250 @@
+year: 2013
+edition: 74th
+date: "December 7, 2013"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2013.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Counting: labels on an icosahedron's faces"
+    areas: [combinatorics, geometry]
+    difficulty: 1
+    hints:
+      - 'Five faces meet at each vertex. If their labels were all different, how small could their sum be?'
+      - 'Add over all $12$ vertices. How many times is each face counted?'
+    solution: |
+      **Key idea:** if the five faces at each vertex had different labels, each vertex would see a sum of at least $10$, and adding over the vertices gives too much.
+
+      Suppose no two faces sharing a vertex have the same label. At each vertex five faces meet, carrying five different nonnegative integers. Their sum is at least $0+1+2+3+4=10$.
+
+      Add these sums over all $12$ vertices. Each face has $3$ vertices, so it is counted $3$ times, and the total is $3\cdot39=117$. But the vertex sums give at least $12\cdot10=120$. Contradiction.
+    checked: "arithmetic: 3·39 = 117 < 120"
+    status: ready
+
+  - id: A2
+    topic: "Number theory: smallest top factor completing a square"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'Suppose $f(m)=f(n)=a$ with $m<n$. Multiply the two square products together.'
+      - 'Factors that appear in both lists, including $a$ itself, pair up into squares and can be dropped.'
+    solution: |
+      **Key idea:** if $f(m)=f(n)=a$, multiplying the two square products and cancelling the common factors gives a square product for $m$ that stops below $a$.
+
+      Suppose $m<n$ are non-squares with $f(m)=f(n)=a$. Take sets $A_m\subseteq(m,a]$ and $A_n\subseteq(n,a]$, both containing $a$, with
+      $$m\prod_{x\in A_m}x\quad\text{and}\quad n\prod_{x\in A_n}x$$
+      both perfect squares. Their product is a square. Every $x$ in both sets appears twice, so we may drop it. Hence
+      $$m\cdot n\cdot\prod_{x\in A_m\triangle A_n}x$$
+      is a square, where $\triangle$ is the symmetric difference. Note $a\notin A_m\triangle A_n$, so every element of it lies in $(m,a)$.
+
+      - If $n\notin A_m$, then $B=\{n\}\cup(A_m\triangle A_n)$ is a set of distinct integers in $(m,a)$ (since $m<n<a$).
+      - If $n\in A_m$, then $n\in A_m\triangle A_n$ (it is not in $A_n\subseteq(n,a]$). The factor $n^2$ is a square, so we can remove it, and $B=(A_m\triangle A_n)\setminus\{n\}$ works.
+
+      Either way $m\prod_{x\in B}x$ is a square. $B$ is not empty, because $m$ is not a square. Its largest element is below $a$, which contradicts $f(m)=a$. So $f$ is one-to-one.
+    checked: "script: computed f(n) for all non-squares n ≤ 60 by linear algebra over GF(2); f(2) = 6 and the values are distinct"
+    status: ready
+
+  - id: A3
+    topic: "Series: a weighted sum zero forces a polynomial root"
+    areas: [analysis, algebra]
+    difficulty: 2
+    hints:
+      - 'Expand each $\frac{1}{1-x^{k+1}}$ as a geometric series.'
+      - 'Regroup to get $\sum_{j\ge0}x^jP(x^j)$ with $P(y)=a_0+a_1y+\dots+a_ny^n$.'
+    solution: |
+      **Key idea:** expanding the geometric series turns the hypothesis into $\sum_{j\ge0}x^jP(x^j)=0$, which is impossible if $P$ keeps one sign on $(0,1)$.
+
+      Let $P(y)=a_0+a_1y+\dots+a_ny^n$. Since $0<x<1$,
+      $$\frac{a_k}{1-x^{k+1}}=\sum_{j\ge0}a_kx^{j(k+1)}=\sum_{j\ge0}x^j\,a_k\,(x^j)^k .$$
+      There are finitely many $k$ and each series converges absolutely, so we may add over $k$ first:
+      $$0=\sum_{k=0}^n\frac{a_k}{1-x^{k+1}}=\sum_{j\ge0}x^jP(x^j).$$
+      If $P\equiv0$, any $y$ works. Otherwise suppose $P$ has no root in $(0,1)$. Then it keeps one sign there, say positive. By continuity $P(1)\ge0$. The term $j=0$ is $P(1)\ge0$, and every term with $j\ge1$ is $x^jP(x^j)>0$, since $x^j\in(0,1)$. So the sum is positive, a contradiction. Hence $P(y)=0$ for some $y\in(0,1)$.
+    checked: "proof only; the regrouping identity was checked numerically for random coefficients"
+    status: ready
+
+  - id: A4
+    topic: "Balanced binary circles: averaging arcs gives an actual arc"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'For a fixed length $L$, what is the average number of zeros over all $n$ arcs of length $L$?'
+      - 'For each length, the zero counts take at most two neighboring values. Average the chosen arcs'' lengths.'
+    solution: |
+      **Key idea:** for each length $L$, the zero counts of arcs of length $L$ are the floor and ceiling of $L\rho$, where $\rho$ is the density of zeros; averaging pins $Z$ to one of those values for the average length.
+
+      Let the circle have $n$ digits, $z$ of them zeros, and $\rho=z/n$. Fix a length $L$ with $0\le L\le n$. Each digit lies in exactly $L$ of the $n$ arcs of length $L$, so these arcs have on average $L\rho$ zeros. Their zero counts differ by at most $1$, so they lie in $\{c,c+1\}$ for some $c$, and $c\le L\rho\le c+1$. Hence:
+      - every arc of length $L$ has $|Z(w)-L\rho|<1$;
+      - if $L\rho$ is an integer, every such arc has exactly $L\rho$ zeros;
+      - if not, both $\lfloor L\rho\rfloor$ and $\lceil L\rho\rceil$ occur (the average lies strictly between).
+
+      Now let the given arcs have lengths $L_1,\dots,L_k$, and let $L=Z+N$, the average of the $L_j$. It is an integer between $0$ and $n$. Averaging $|Z(w_j)-L_j\rho|<1$ over $j$ gives $|Z-L\rho|<1$. Since $Z$ is an integer:
+      - if $L\rho$ is an integer, then $Z=L\rho$, and every arc of length $L$ has $Z$ zeros;
+      - otherwise $Z$ is $\lfloor L\rho\rfloor$ or $\lceil L\rho\rceil$, and both occur among arcs of length $L$.
+
+      Either way some arc $w$ of length $L$ has $Z(w)=Z$, and then $N(w)=L-Z=N$.
+    checked: "script: 300 random balanced circles (lengths up to 20) with random arc families; whenever the averages were integers, a matching arc existed"
+    status: ready
+
+  - id: A5
+    topic: "Geometry: weighted triangle areas from the plane to space"
+    areas: [geometry]
+    difficulty: 2
+    hints:
+      - 'Project the points onto a plane. How does a triangle''s area change?'
+      - 'Average over all directions: a planar region''s projected area is, on average, half its area.'
+    solution: |
+      **Key idea:** the area of a triangle in space is twice the average area of its projections onto random planes, and each projected configuration is a planar one.
+
+      For a unit vector $u$, let $\pi_u$ be the orthogonal projection onto the plane perpendicular to $u$. A triangle with area $S$ and unit normal $\nu$ projects to a triangle of area $S\,|\nu\cdot u|$. If $u$ is uniform on the sphere, then $\nu\cdot u$ is uniform on $[-1,1]$ (Archimedes), so $\mathbb E|\nu\cdot u|=\frac12$. Hence, for every triangle in $\mathbb R^3$, including degenerate ones,
+      $$\operatorname{Area}(T)=2\,\mathbb E_u\big[\operatorname{Area}(\pi_uT)\big].$$
+
+      Now take points $A_1,\dots,A_m\in\mathbb R^3$. By linearity of expectation,
+      $$\sum a_{ijk}\operatorname{Area}(A_iA_jA_k)=2\,\mathbb E_u\Big[\sum a_{ijk}\operatorname{Area}\big(\pi_uA_i\,\pi_uA_j\,\pi_uA_k\big)\Big].$$
+      For each $u$, the projected points lie in a plane, a copy of $\mathbb R^2$. Since the list is area definite for $\mathbb R^2$, the bracket is $\ge0$ for every $u$. So the average is $\ge0$, and the list is area definite for $\mathbb R^3$.
+    checked: "script: Monte Carlo average of |u·ν| over 400,000 random directions is 0.5002"
+    status: ready
+
+  - id: A6
+    topic: "Fourier analysis: a weight table with a positive transform"
+    areas: [analysis, combinatorics]
+    difficulty: 3
+    hints:
+      - 'Write $A(S)$ as an integral of $|\sum_{s\in S}e^{i\,s\cdot\theta}|^2$ against the Fourier series of $w$.'
+      - 'With $u=\cos\theta_1$, $v=\cos\theta_2$, the Fourier series is $16\big((u+v)^2-uv(1+u)(1+v)\big)$.'
+    solution: |
+      **Key idea:** $A(S)$ is the integral of $|\sum_s e^{is\cdot\theta}|^2$ against the Fourier series $\hat w$ of $w$, and $\hat w\ge0$ with only finitely many zeros.
+
+      **Fourier form.** Let $\hat w(\theta)=\sum_{c\in\mathbb Z^2}w(c)e^{-ic\cdot\theta}$ for $\theta=(\theta_1,\theta_2)$. The table is symmetric under $a\mapsto-a$ and under $b\mapsto-b$, so $\hat w$ is real. With $P(\theta)=\sum_{s\in S}e^{is\cdot\theta}$,
+      $$\frac1{4\pi^2}\int_{[0,2\pi]^2}\hat w(\theta)\,|P(\theta)|^2\,d\theta=\sum_{s,s'\in S}w(s-s')=A(S),$$
+      because $\frac1{4\pi^2}\int e^{i(s-s'-c)\cdot\theta}d\theta$ is $1$ if $c=s-s'$ and $0$ otherwise.
+
+      **Computing $\hat w$.** Grouping the table by symmetric pairs gives
+      $$\hat w=12-8u-8v+16uv+4C_1+4C_2-8u\,C_2-8v\,C_1-4C_1C_2,$$
+      where $u=\cos\theta_1$, $v=\cos\theta_2$, $C_1=\cos2\theta_1=2u^2-1$, $C_2=2v^2-1$. Substituting and simplifying,
+      $$\hat w=16\big(u^2+uv+v^2-u^2v-uv^2-u^2v^2\big)=16\Big((u+v)^2-uv(1+u)(1+v)\Big).$$
+
+      **$\hat w\ge0$ on $[-1,1]^2$, with finitely many zeros.**
+      - If $uv\le0$: the subtracted term is $\le0$, so $\hat w\ge16(u+v)^2\ge0$.
+      - If $u,v>0$: $(1+u)(1+v)\le4$, so $uv(1+u)(1+v)\le4uv\le(u+v)^2$.
+      - If $u,v<0$: $(1+u)(1+v)\le1$, so $uv(1+u)(1+v)\le uv<4uv\le(u+v)^2$.
+
+      Equality needs $u=v=1$, or $u=v=0$, or $\{u,v\}=\{1,-1\}$. That is finitely many points $\theta$ in the torus.
+
+      **Conclusion.** $P$ is a nonzero trigonometric polynomial (its frequencies are distinct), so $|P|^2>0$ on a nonempty open set. That set contains points where $\hat w>0$, so the integral, which is $4\pi^2A(S)$, is positive.
+    viz: putnam-2013-a6
+    checked: "script: compared the closed form of the transform with the direct sum at 20,000 random points (error < 1e-13); its minimum over the torus is 0"
+    status: ready
+
+  - id: B1
+    topic: "Sequences: a sign rule from binary digits"
+    areas: [number-theory, combinatorics]
+    difficulty: 1
+    answer: "$-1$"
+    hints:
+      - 'Compare the terms for $n=2m$ and $n=2m+1$.'
+      - 'They cancel for every $m\ge1$. Only $n=1$ is left.'
+    solution: |
+      **Key idea:** the terms for $n=2m$ and $n=2m+1$ cancel, leaving only $n=1$.
+
+      For $m\ge1$:
+      $$c(2m)\,c(2m+2)=c(m)\,c(m+1),$$
+      $$c(2m+1)\,c(2m+3)=(-1)^mc(m)\cdot(-1)^{m+1}c(m+1)=-c(m)\,c(m+1).$$
+      So the terms for $n=2m$ and $n=2m+1$ add to $0$. The range $2\le n\le2013$ splits into the pairs $(2,3),(4,5),\dots,(2012,2013)$, which all cancel. What remains is the term $n=1$:
+      $$c(1)\,c(3)=1\cdot(-1)^1c(1)=-1 .$$
+    checked: "script: direct computation of the sum gives −1"
+    status: ready
+
+  - id: B2
+    topic: "Trigonometric polynomials: nonnegative sums missing multiples of three"
+    areas: [analysis]
+    difficulty: 2
+    answer: "$3$"
+    hints:
+      - 'Add the values at $x=0,\frac13,\frac23$. Which coefficients survive?'
+      - 'For the example, square $|1+e^{i\theta}+e^{2i\theta}|$.'
+    solution: |
+      **Key idea:** $f(0)+f(\frac13)+f(\frac23)=3$ for every allowed $f$; since $f\ge0$, $f(0)\le3$, and a Fejér kernel reaches it.
+
+      **Upper bound.** For an integer $n$, $1+\cos\frac{2\pi n}3+\cos\frac{4\pi n}3$ equals $3$ if $3\mid n$ and $0$ otherwise (it is the real part of a sum of the cube roots of unity raised to the $n$-th power). The coefficients with $3\mid n$ are $0$, so
+      $$f(0)+f(\tfrac13)+f(\tfrac23)=3+\sum_na_n\Big(1+\cos\tfrac{2\pi n}3+\cos\tfrac{4\pi n}3\Big)=3 .$$
+      Since $f(\frac13),f(\frac23)\ge0$, we get $f(0)\le3$.
+
+      **The maximum is attained.** With $\theta=2\pi x$,
+      $$f(x)=\frac13\big|1+e^{i\theta}+e^{2i\theta}\big|^2=1+\frac43\cos(2\pi x)+\frac23\cos(4\pi x).$$
+      It is $\ge0$, has $a_1=\frac43$, $a_2=\frac23$ and all other $a_n=0$ (so none at multiples of $3$), and $f(0)=\frac13\cdot9=3$.
+    viz: putnam-2013-b2
+    checked: "script: the example's minimum on a fine grid is 0 (at x = 1/3, 2/3) and f(0) = 3"
+    status: ready
+
+  - id: B3
+    topic: "Set families: modular functions on lattices of subsets"
+    areas: [combinatorics, algebra]
+    difficulty: 2
+    answer: "Yes"
+    hints:
+      - 'For each $i$, look at the smallest set in $P$ that contains $i$.'
+      - 'Removing $i$ from that set gives another set in $P$; use the difference of $f$ as $f_i$.'
+    solution: |
+      **Key idea:** define $f_i$ from the smallest set $M_i\in P$ containing $i$; then peeling off one element at a time and using the union–intersection rule with $M_i$ gives additivity.
+
+      $P$ is closed under intersection and finite, so for each $i$ that lies in some member of $P$ there is a smallest member $M_i$ containing $i$: the intersection of all of them. By property (ii) some $T\in P$ with $T\subset M_i$ has one element fewer. $T$ can't contain $i$, by minimality of $M_i$, so $T=M_i\setminus\{i\}$, and this set is in $P$. Define
+      $$f_i=f(M_i)-f(M_i\setminus\{i\}),$$
+      and $f_i=0$ for $i$ in no member of $P$.
+
+      **Claim:** $f(S)=\sum_{i\in S}f_i$ for all $S\in P$. Induct on $|S|$. For $S=\varnothing$ both sides are $0$. (Starting from any member and applying (ii) repeatedly reaches $\varnothing$, so $\varnothing\in P$.) For $S\ne\varnothing$, by (ii) there is $j\in S$ with $T=S\setminus\{j\}\in P$. Since $j\in S$, minimality gives $M_j\subseteq S$. Then
+      $$T\cup M_j=S,\qquad T\cap M_j=M_j\setminus\{j\} .$$
+      The given rule applied to $T$ and $M_j$:
+      $$f(S)=f(T)+f(M_j)-f(M_j\setminus\{j\})=f(T)+f_j .$$
+      By induction $f(T)=\sum_{i\in T}f_i$, so $f(S)=\sum_{i\in S}f_i$.
+    checked: "proof only"
+    status: ready
+
+  - id: B4
+    topic: "Inequalities: variance of a product of functions"
+    areas: [analysis, probability]
+    difficulty: 1
+    hints:
+      - 'Write the variance as $\frac12\iint(h(x)-h(y))^2\,dx\,dy$.'
+      - 'Split $f(x)g(x)-f(y)g(y)$ into two differences.'
+    solution: |
+      **Key idea:** use the pair form of the variance and split the difference of products.
+
+      For any continuous $h$ on $[0,1]$,
+      $$\operatorname{Var}(h)=\frac12\int_0^1\!\!\int_0^1\big(h(x)-h(y)\big)^2dx\,dy,$$
+      which follows by expanding the square. Now
+      $$f(x)g(x)-f(y)g(y)=f(x)\big(g(x)-g(y)\big)+g(y)\big(f(x)-f(y)\big).$$
+      Using $(p+q)^2\le2p^2+2q^2$, $|f(x)|\le M(f)$ and $|g(y)|\le M(g)$,
+      $$\big(fg(x)-fg(y)\big)^2\le2M(f)^2\big(g(x)-g(y)\big)^2+2M(g)^2\big(f(x)-f(y)\big)^2 .$$
+      Integrate over $[0,1]^2$ and divide by $2$:
+      $$\operatorname{Var}(fg)\le2M(f)^2\operatorname{Var}(g)+2M(g)^2\operatorname{Var}(f).$$
+    checked: "script: 500 random trigonometric pairs satisfied the inequality"
+    status: ready
+
+  - id: B5
+    topic: "Counting functions whose orbits all reach a set"
+    areas: [combinatorics]
+    difficulty: 3
+    hints:
+      - 'Values on $\{1,\dots,k\}$ are free. For the others, the arrows must form a forest flowing into $\{1,\dots,k\}$.'
+      - 'Count such forests with a Prüfer-type code: repeatedly remove the largest leaf and write down where it pointed.'
+    solution: |
+      **Key idea:** the condition only restricts $f$ outside $R=\{1,\dots,k\}$, where it must be a forest of arrows draining into $R$; a Prüfer code counts these forests as $k\,n^{n-k-1}$.
+
+      **Splitting.** For $x\in R$ the condition holds with $j=0$, so $f(x)$ is arbitrary: $n^k$ choices. Let $Y=X\setminus R$, with $m=n-k$ elements. The condition says: starting from any $y\in Y$ and following arrows, we eventually enter $R$. Equivalently, the arrows on $Y$ contain no cycle inside $Y$. We show the number of such maps $Y\to X$ is $k\,n^{m-1}$. Then the total is $n^k\cdot k\,n^{n-k-1}=k\,n^{n-1}$. (If $m=0$, there is nothing to count and the total is $n^n=k\,n^{n-1}$.)
+
+      **A code.** Given such a map, call $y\in Y$ a *leaf* if no remaining element of $Y$ points to it. Repeat $m$ times: remove the largest leaf, and record the element it points to. This gives a sequence $(c_1,\dots,c_m)$ in $X$.
+      - A leaf always exists, since following arrows backward inside the finite set $Y$ would otherwise produce a cycle.
+      - A removed element was a leaf, so nothing still present points to it. Hence the element that remains last points into $R$: $c_m\in R$.
+      - $c_1,\dots,c_{m-1}$ can be anything in $X$.
+
+      **Decoding.** As for Prüfer codes of trees: at step $i$, the removed leaf must be the largest element of $Y$ that is neither already removed nor among $c_i,c_{i+1},\dots,c_m$. (An element still has something pointing to it exactly when it appears later in the code.) So the map can be rebuilt from its code. Running the same rule on any sequence with $c_m\in R$ produces a valid map with that code.
+
+      So the codes are exactly the sequences in $X^{m-1}\times R$, and there are $n^{m-1}k$ of them.
+    checked: "script: brute force over all functions for n ≤ 5 and every k matches k·n^(n−1)"
+    status: ready
+
+  - id: B6
+    topic: "Combinatorial game: placing and splitting stones in a row"
+    areas: [combinatorics]
+    difficulty: 5
+    status: coming

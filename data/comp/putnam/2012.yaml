@@ -1,0 +1,262 @@
+year: 2012
+edition: 73rd
+date: "December 1, 2012"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2012.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Geometry: twelve lengths always contain an acute triangle"
+    areas: [geometry, combinatorics]
+    difficulty: 1
+    hints:
+      - 'Sort the lengths. If three neighbors $a\le b\le c$ never form an acute triangle, then $c^2\ge a^2+b^2$.'
+      - 'The squares then grow at least like Fibonacci numbers.'
+    solution: |
+      **Key idea:** if no three consecutive lengths form an acute triangle, their squares grow like Fibonacci numbers and pass $144$.
+
+      For $a\le b\le c$, the condition $a^2+b^2>c^2$ already gives a triangle, because $(a+b)^2>a^2+b^2>c^2$. It is then acute, since its largest angle is opposite $c$.
+
+      Sort the numbers: $d_1\le d_2\le\dots\le d_{12}$. Suppose no three of them form an acute triangle. Then for every $k\ge3$,
+      $$d_k^2\ge d_{k-1}^2+d_{k-2}^2 .$$
+      Let $F_1=F_2=1$, $F_k=F_{k-1}+F_{k-2}$. Since $d_1^2>1$ and $d_2^2>1$, induction gives $d_k^2>F_k$ for every $k$. But $F_{12}=144$, so $d_{12}>12$, contradicting $d_{12}<12$.
+    checked: "script: F_12 = 144; random trials with 12 numbers in (1,12) always found an acute triple"
+    status: ready
+
+  - id: A2
+    topic: "Algebra: cancellation in a commutative semigroup with division"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - 'Find an element $e$ with $a*e=a$. Is it an identity for everything?'
+      - 'Once you have an identity, find an inverse for $c$.'
+    solution: |
+      **Key idea:** the solvability condition produces an identity element and inverses; then cancel.
+
+      **An identity.** Pick any $a\in S$ and choose $e$ with $a*e=a$. Given any $y\in S$, choose $w$ with $a*w=y$. Then, by commutativity and associativity,
+      $$y*e=(a*w)*e=(a*e)*w=a*w=y .$$
+      So $e$ is an identity for all of $S$.
+
+      **Inverses.** For $c\in S$, choose $c'$ with $c*c'=e$.
+
+      **Cancellation.** If $a*c=b*c$, then
+      $$a=a*e=(a*c)*c'=(b*c)*c'=b*e=b .$$
+    checked: "proof only"
+    status: ready
+
+  - id: A3
+    topic: "Functional equation: a self-similar function on an interval"
+    areas: [analysis]
+    difficulty: 2
+    answer: "$f(x)=\\sqrt{1-x^2}$"
+    hints:
+      - 'Guess from $f(0)=1$ and the behavior near $x=1$, then check the identity.'
+      - 'For uniqueness, divide by $\sqrt{1-x^2}$ and iterate the map $x\mapsto\frac{x^2}{2-x^2}$.'
+    solution: |
+      **Key idea:** $\sqrt{1-x^2}$ satisfies the equation, and the ratio $f(x)/\sqrt{1-x^2}$ is unchanged under the map $\varphi(x)=\frac{x^2}{2-x^2}$, whose iterates run to $0$.
+
+      **It works.** Let $f(x)=\sqrt{1-x^2}$. Then
+      $$1-\Big(\frac{x^2}{2-x^2}\Big)^2=\frac{(2-x^2)^2-x^4}{(2-x^2)^2}=\frac{4(1-x^2)}{(2-x^2)^2},$$
+      so $\frac{2-x^2}2f\big(\frac{x^2}{2-x^2}\big)=\frac{2-x^2}{2}\cdot\frac{2\sqrt{1-x^2}}{2-x^2}=f(x)$. Also $f(0)=1$, and $f(x)/\sqrt{1-x}=\sqrt{1+x}\to\sqrt2$.
+
+      **It is the only one.** Let $f$ satisfy the conditions and set $g(x)=f(x)/\sqrt{1-x^2}$ on $(-1,1)$, a continuous function with $g(0)=1$. Dividing the equation by $\sqrt{1-x^2}=\frac{2-x^2}{2}\sqrt{1-\varphi(x)^2}$ gives
+      $$g(x)=g(\varphi(x)) .$$
+      Fix $x\in(-1,1)$ and let $x_0=x$, $x_{k+1}=\varphi(x_k)$. From $k=1$ on, $x_k\in[0,1)$. For $t\in(0,1)$ we have $\varphi(t)<t$, because this is $t<2-t^2$, that is $(t+2)(t-1)<0$. So the sequence decreases and has a limit $L\in[0,1)$ with $\varphi(L)=L$. The only such $L$ is $0$. By continuity of $g$ at $0$,
+      $$g(x)=g(x_k)\to g(0)=1 .$$
+      So $f(x)=\sqrt{1-x^2}$ on $(-1,1)$, and by continuity also at $\pm1$, where both sides are $0$. (Condition (iii) is not even needed for this argument.)
+    viz: putnam-2012-a3
+    checked: "script: verified the functional equation symbolically and at 1000 random points; iterates of φ reach below 1e-9 within 40 steps from x = 0.999999"
+    status: ready
+
+  - id: A4
+    topic: "Number theory: an arithmetic progression hidden in a residue condition"
+    areas: [number-theory, geometry]
+    difficulty: 3
+    hints:
+      - 'Turn each $a\in S$ into a lattice point $(a,b)$ with $b\in B$ and $ra\equiv b\pmod q$. Which lattice is this?'
+      - 'A triangle drawn inside a rectangle covers at most half of it. Can three of the lattice points in $A\times B$ fail to be on one line?'
+    solution: |
+      **Key idea:** the pairs $(a,b)$ with $ra\equiv b\pmod q$ form a lattice in which every triangle has area at least $q/2$. The box $A\times B$ is too small to hold such a triangle, so its lattice points sit on one line, and their first coordinates form a progression.
+
+      **How to read the claim.** The progression is allowed to be finite, so the claim is that $S$ is empty or a finite arithmetic progression. If it had to be infinite, the claim would fail. For example, with $q=4$, $r=3$, $A=[0,3]$, $B=[2,3]$ the lengths multiply to $3<4$, and $S=\{1,2\}$. An infinite progression through $1$ and $2$ with no other point in $A$ is impossible, since $0$ and $3$ are in $A$.
+
+      **The lattice.** Let $\Lambda$ be the set of integer points $(x,y)$ with $y\equiv rx\pmod q$. It is closed under addition and subtraction. An integer $a$ lies in $S$ exactly when $a\in A$ and some integer $b\in B$ has $ra-b$ divisible by $q$, that is, when $(a,b)\in\Lambda\cap(A\times B)$. So $S$ is the set of first coordinates of the points of $\Lambda$ in the box $A\times B$.
+
+      **Lattice triangles are big.** For two vectors $(x_1,y_1),(x_2,y_2)$ in $\Lambda$,
+      $$x_1y_2-x_2y_1\equiv x_1(rx_2)-x_2(rx_1)=0\pmod q .$$
+      So if $P_1,P_2,P_3\in\Lambda$ are not on one line, this determinant for $P_2-P_1$ and $P_3-P_1$ is a nonzero multiple of $q$, and the triangle $P_1P_2P_3$ has area at least $\frac q2$.
+
+      **The box is small.** Let $A$ and $B$ have lengths $\alpha$ and $\beta$. The box fits in a closed $\alpha\times\beta$ rectangle with sides parallel to the axes. A triangle inside it has area at most $\frac{\alpha\beta}2$. To see this, cut the triangle by the horizontal line through its middle vertex (middle in height). The cut has length at most $\alpha$, and the two pieces are triangles on this cut whose heights add up to at most $\beta$. So the area is at most $\frac12\alpha\beta<\frac q2$.
+
+      **Conclusion.** By the two facts, all points of $\Lambda$ in the box lie on one line $\ell$. If there are at most two, their first coordinates already form a progression. Otherwise, the points of $\Lambda$ on $\ell$ form a group under subtraction inside a line, so they are $P_0+kv$ $(k\in\mathbb Z)$ for one vector $v=(v_1,v_2)$. The box is convex, so the values of $k$ that land in it form a block of consecutive integers. The first coordinates are $x_0+kv_1$ for those $k$, where $x_0$ is the first coordinate of $P_0$. That is an arithmetic progression with step $v_1$ (a single number if $v_1=0$), and it is exactly $S$.
+    checked: "script: 300,000 random cases with |A||B| < q (closed intervals, rational endpoints); S was always empty or a progression (22,286 cases had 3 or more terms); the infinite reading fails on the example shown"
+    status: ready
+
+  - id: A5
+    topic: "Finite fields: affine maps that visit every vector"
+    areas: [linear-algebra, algebra]
+    difficulty: 3
+    answer: "$n=1$ with any $p$, and $(p,n)=(2,2)$"
+    hints:
+      - 'If the orbit covers everything, $G$ is a single cycle of length $p^n$, so $M^{p^n}=I$. What does that say about $M-I$?'
+      - 'Write $M=I+N$. Over $\mathbb F_p$, $\sum_{i<p^k}(1+N)^i=N^{p^k-1}$, and $N^n=0$.'
+    solution: |
+      **Key idea:** $G$ must be one big cycle, which forces $M=I+N$ with $N$ nilpotent; then $G^{p^{n-1}}$ is the identity unless $p^{n-1}-1<n$.
+
+      Suppose the $p^n$ vectors $G^{(k)}(0)$ are distinct. Then they are all of $\mathbb F_p^n$, so $G$ permutes the space as a single cycle of length $p^n$. Thus $G$ is a bijection (so $M$ is invertible), $G^{(p^n)}$ is the identity, and $G^{(p^{n-1})}$ is not.
+
+      **$M$ is unipotent.** The linear part of $G^{(p^n)}$ is $M^{p^n}=I$. Over a field of characteristic $p$, $(M-I)^{p^n}=M^{p^n}-I=0$. So $N=M-I$ is nilpotent, and $N^n=0$.
+
+      **Powers of $G$.** By induction, $G^{(m)}(x)=M^mx+\big(\sum_{i<m}M^i\big)v$. Let $m=p^k$. Using $\sum_{i<m}\binom ij=\binom m{j+1}$,
+      $$\sum_{i<m}(I+N)^i=\sum_{j\ge0}\binom{m}{j+1}N^j=N^{m-1},$$
+      since $\binom{p^k}{j+1}\equiv0\pmod p$ unless $j+1=p^k$. Also $(I+N)^{p^k}=I+N^{p^k}$. So
+      $$G^{(p^k)}(x)=x+N^{p^k}x+N^{p^k-1}v .$$
+      If $p^{n-1}-1\ge n$, both powers of $N$ vanish for $k=n-1$, and $G^{(p^{n-1})}$ is the identity. That is impossible. So we need $p^{n-1}-1<n$:
+      - $n=1$: always true;
+      - $n=2$: $p-1<2$, so $p=2$;
+      - $n\ge3$: $p^{n-1}\ge2^{n-1}\ge n+1$, never.
+
+      **Examples.** For $n=1$: $G(x)=x+1$ runs through $1,2,\dots,p-1,0$. For $p=n=2$: take $M=\begin{pmatrix}1&0\\1&1\end{pmatrix}$ and $v=\binom10$. The orbit of $0$ is $\binom10,\binom01,\binom11,\binom00$, all four vectors.
+    checked: "script: verified the (2,2) example; exhaustive search finds no example for (p,n) = (3,2) or (2,3)"
+    status: ready
+
+  - id: A6
+    topic: "Integrals: functions vanishing on every unit-area rectangle"
+    areas: [analysis]
+    difficulty: 4
+    status: coming
+
+  - id: B1
+    topic: "Function classes: products from sums, compositions and differences"
+    areas: [analysis, algebra]
+    difficulty: 1
+    hints:
+      - '$e^{x}-1$ and $\ln(1+x)$ undo each other.'
+      - '$(1+f)(1+g)-1=f+g+fg$, and $1+f=e^{\ln(1+f)}$.'
+    solution: |
+      **Key idea:** $f+g+fg=(1+f)(1+g)-1$ is $f_1$ applied to $f_2\circ f+f_2\circ g$, and subtracting $f+g$ leaves $fg$.
+
+      Let $f_1(x)=e^x-1$ and $f_2(x)=\ln(x+1)$. For $f,g\in S$, the functions $f_2\circ f$ and $f_2\circ g$ are in $S$ (composition), so is their sum, and so is
+      $$h=f_1\circ\big(f_2\circ f+f_2\circ g\big)=e^{\ln(1+f)+\ln(1+g)}-1=(1+f)(1+g)-1=f+g+fg .$$
+      Also $f+g\in S$. Since $f,g\ge0$, we have $h-(f+g)=fg\ge0$, so the difference rule applies:
+      $$fg=h-(f+g)\in S .$$
+    checked: "exact algebra"
+    status: ready
+
+  - id: B2
+    topic: "Geometry: covering a polyhedron's surface with small balls"
+    areas: [geometry, analysis]
+    difficulty: 2
+    hints:
+      - 'How much of one flat face can a ball of radius $r$ cover?'
+      - 'Compare $\sum r_i^2$ with $\sum r_i^3$ using Hölder''s inequality.'
+    solution: |
+      **Key idea:** a ball of radius $r$ covers at most $F\pi r^2$ of the surface, where $F$ is the number of faces; Hölder turns the total $\sum r_i^2$ into a bound involving $n$ and $V$.
+
+      Let $P$ have surface area $\mathcal A>0$ and $F$ faces. A ball of radius $r$ meets the plane of a face in a disk of radius at most $r$. So it covers at most $\pi r^2$ of each face and at most $F\pi r^2$ of the surface.
+
+      If balls of radii $r_1,\dots,r_n$ cover the surface,
+      $$\mathcal A\le F\pi\sum r_i^2 .$$
+      By Hölder's inequality with exponents $\frac32$ and $3$,
+      $$\sum r_i^2\le\Big(\sum r_i^3\Big)^{2/3}n^{1/3}=\Big(\frac{3V}{4\pi}\Big)^{2/3}n^{1/3},$$
+      since $\sum\frac43\pi r_i^3=V$. Combining and cubing,
+      $$n\ \ge\ \Big(\frac{\mathcal A}{F\pi}\Big)^3\Big(\frac{4\pi}{3V}\Big)^2=\frac{c_0}{V^2},\qquad c_0=\Big(\frac{\mathcal A}{F\pi}\Big)^3\Big(\frac{4\pi}{3}\Big)^2 .$$
+      Taking $c(P)=c_0/2$ gives the strict inequality $n>c(P)/V^2$.
+    checked: "proof only; the Hölder step was spot-checked on 1000 random lists of radii"
+    status: ready
+
+  - id: B3
+    topic: "Tournaments: choosing distinct daily winners with Hall's theorem"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: "Yes"
+    hints:
+      - 'Set up a bipartite graph: days on one side, teams on the other, joining each day to its winners.'
+      - 'If $k$ days had fewer than $k$ winners, many teams lost every game on those days. Where did those teams play each other?'
+    solution: |
+      **Key idea:** Hall's marriage theorem; a set of days with too few winners leaves too many all-losing teams, who could not have fit their games against each other into the remaining days.
+
+      Join each day to the $n$ teams that won that day. We want a matching that covers all days. By Hall's theorem it is enough to show: any $k$ days have, together, at least $k$ different winners.
+
+      Suppose some set $D$ of $k$ days has a winner set $W$ with $|W|\le k-1$. Let $L$ be the other teams, so $|L|\ge2n-k+1$. Every team in $L$ lost all its games on the days in $D$.
+
+      Two teams of $L$ cannot have met on a day in $D$: one of them would have won. So all games among teams of $L$ happened on the $2n-1-k$ days outside $D$. A team of $L$ plays the other $|L|-1$ teams of $L$, one game per day, so
+      $$|L|-1\le2n-1-k,\qquad\text{that is}\qquad|L|\le2n-k .$$
+      This contradicts $|L|\ge2n-k+1$. So Hall's condition holds, and we can choose a different winning team for each day.
+    checked: "script: 50 random round-robin schedules (circle method) with random results for each 2n ≤ 12; a full matching always existed"
+    status: ready
+
+  - id: B4
+    topic: "Recurrences: a sequence growing like the logarithm"
+    areas: [analysis]
+    difficulty: 2
+    answer: "Yes; the limit is $0$"
+    hints:
+      - 'Look at $b_n=e^{a_n}$. What is $b_{n+1}-b_n$?'
+      - 'Show $1<b_{n+1}-b_n<1+\frac1{b_n}$.'
+    solution: |
+      **Key idea:** $b_n=e^{a_n}$ grows by a little more than $1$ each step, so $b_n/n\to1$ and $a_n-\log n=\log(b_n/n)\to0$.
+
+      Let $b_n=e^{a_n}$, so $b_0=e$ and
+      $$b_{n+1}=e^{a_n+e^{-a_n}}=b_n\,e^{1/b_n},\qquad b_{n+1}-b_n=b_n\big(e^{1/b_n}-1\big).$$
+      For $0<u\le1$, $u<e^u-1=u+\sum_{k\ge2}\frac{u^k}{k!}\le u+u^2(e-2)<u+u^2$. With $u=1/b_n\le1$:
+      $$1<b_{n+1}-b_n<1+\frac1{b_n} .$$
+      The left inequality gives $b_n\ge n+e$, which keeps $u\le1$. Then the right one gives
+      $$n+e\le b_n\le n+e+\sum_{k=0}^{n-1}\frac1{k+e}\le n+e+1+\ln n .$$
+      So $b_n/n\to1$, and
+      $$a_n-\log n=\log\frac{b_n}{n}\to0 .$$
+      The limit exists and equals $0$.
+    checked: "script: iterated to n = 10^6; a_n − ln n = 0.0057, 0.00069, 0.00008, 0.000009 at n = 10^3..10^6"
+    status: ready
+
+  - id: B5
+    topic: "Convexity: a supremum of exponentials as a max of lines"
+    areas: [analysis]
+    difficulty: 2
+    hints:
+      - 'Show the left side, as a function of $x$, is convex and finite.'
+      - 'A convex function is the maximum of its tangent (supporting) lines, and the maximum is reached.'
+    solution: |
+      **Key idea:** the left side is a finite convex function of $x$, and every convex function is the maximum of its supporting lines, with the maximum reached at the point of tangency.
+
+      Let $\Phi(x)=\sup_s g_1(s)^xg_2(s)$.
+
+      **$\Phi$ is finite.** Say $g_1\le C_1$ and $g_2\le C_2$. Since $g_1\ge1$, $g_1(s)^x\le C_1^x$ for $x\ge0$ and $g_1(s)^x\le1$ for $x<0$. So $\Phi(x)\le C_2\max(C_1^x,1)<\infty$, and $\Phi(x)>0$.
+
+      **$\Phi$ is convex.** For each $s$, $x\mapsto g_2(s)e^{x\ln g_1(s)}$ is convex (an exponential times a positive constant). A pointwise supremum of convex functions is convex.
+
+      **Supporting lines.** A finite convex function on $\mathbb R$ has a supporting line at every point: for each $t$ there is a slope $m(t)$ with
+      $$\Phi(x)\ge\Phi(t)+m(t)(x-t)\quad\text{for all }x,$$
+      for example the right derivative at $t$. Set $h_1(t)=m(t)$ and $h_2(t)=\Phi(t)-t\,m(t)$. Then $xh_1(t)+h_2(t)\le\Phi(x)$ for all $t$, with equality at $t=x$. Hence
+      $$\Phi(x)=\max_t\big(xh_1(t)+h_2(t)\big),$$
+      and the maximum is reached.
+    checked: "script: for 50 random step functions g1, g2, the maximum over a grid of supporting lines never exceeded Φ and matched it to grid accuracy"
+    status: ready
+
+  - id: B6
+    topic: "Permutations: parity of cubing modulo a prime"
+    areas: [number-theory, combinatorics]
+    difficulty: 2
+    hints:
+      - 'Use a primitive root to turn cubing on the nonzero residues into multiplication by $3$ on $\mathbb Z/(p-1)$.'
+      - 'Count inversions of $i\mapsto3i \bmod m$ on $0,1,\dots,m-1$ by splitting into three increasing runs.'
+    solution: |
+      **Key idea:** cubing becomes $i\mapsto3i$ modulo $m=p-1$, whose inversions can be counted exactly; the count is $\frac32q(q+1)$ with $m=3q+1$.
+
+      Since $p\equiv2\pmod3$, $\gcd(3,p-1)=1$, so cubing is a bijection. It fixes $0$. Let $g$ be a primitive root; then $g^i\mapsto g^{3i}$. So on the nonzero residues, $\pi$ has the same cycle structure, and therefore the same sign, as $\sigma(i)=3i\bmod m$ on $\{0,\dots,m-1\}$, $m=p-1$.
+
+      **Counting inversions.** Here $m\equiv1\pmod3$; write $m=3q+1$. List $\sigma(0),\sigma(1),\dots$:
+      - for $0\le i\le q$: the values $0,3,\dots,3q$ (multiples of $3$);
+      - for $q+1\le i\le2q$: the values $2,5,\dots,3q-1$;
+      - for $2q+1\le i\le3q$: the values $1,4,\dots,3q-2$.
+
+      Each run increases, so inversions only occur between runs.
+      - Runs 1 and 2: $3u>3v+2$ iff $u>v$, for $0\le u\le q$, $0\le v\le q-1$. That gives $\sum_{u=0}^qu=\frac{q(q+1)}2$ pairs.
+      - Runs 1 and 3: $3u>3v+1$ iff $u>v$. Again $\frac{q(q+1)}2$.
+      - Runs 2 and 3: $3u+2>3v+1$ iff $u\ge v$, for $0\le u,v\le q-1$. Again $\frac{q(q+1)}2$.
+
+      In total $\frac32q(q+1)$ inversions, so the sign is $(-1)^{q(q+1)/2}$.
+
+      **Reading off $p$.** Since $p=3q+2$ is odd, $q$ is odd. If $q\equiv1\pmod4$, then $\frac{q(q+1)}2$ is odd and $p\equiv5\equiv1\pmod4$. If $q\equiv3\pmod4$, then $\frac{q(q+1)}2$ is even and $p\equiv11\equiv3\pmod4$. So $\pi$ is even exactly when $p\equiv3\pmod4$.
+    checked: "script: computed the sign of x ↦ x³ directly for all primes p ≡ 2 (mod 3) below 200; even exactly when p ≡ 3 (mod 4)"
+    status: ready

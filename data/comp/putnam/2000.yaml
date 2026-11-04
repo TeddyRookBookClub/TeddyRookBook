@@ -1,0 +1,258 @@
+year: 2000
+edition: 61st
+date: "December 2, 2000"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2000.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Series: possible sums of squares of a positive series"
+    areas: [analysis]
+    difficulty: 1
+    answer: 'every value in the open interval $(0, A^2)$'
+    hints:
+      - 'Compare $\big(\sum x_j\big)^2$ with $\sum x_j^2$. What do the cross terms do?'
+      - 'Try a geometric series $x_j = c\,r^j$ and let $r$ run from $0$ to $1$.'
+    solution: |
+      **Key idea:** squaring the sum adds positive cross terms, and geometric series fill in every value below the bound.
+
+      **Upper and lower bounds.** Every $x_j$ is positive, so the sum of squares is positive. Squaring the series (all terms positive, so we may rearrange freely),
+      $$A^2=\Big(\sum_j x_j\Big)^2=\sum_j x_j^2+2\sum_{i<j}x_ix_j>\sum_j x_j^2,$$
+      because there are infinitely many positive terms and so at least one positive cross term. Hence every possible value lies in $(0,A^2)$.
+
+      **Every value occurs.** Take $x_j=A(1-r)r^j$ with $0<r<1$. Then $\sum x_j=A$ and
+      $$\sum_j x_j^2=A^2(1-r)^2\sum_j r^{2j}=A^2\frac{(1-r)^2}{1-r^2}=A^2\,\frac{1-r}{1+r}.$$
+      As $r$ goes from $0$ to $1$, the factor $\frac{1-r}{1+r}$ decreases continuously from $1$ to $0$. So it takes every value strictly between, and every number in $(0,A^2)$ is a possible sum.
+    checked: "algebra: the geometric family was checked symbolically; the bound is the cross-term identity"
+    status: ready
+
+  - id: A2
+    topic: "Number theory: three consecutive sums of two squares"
+    areas: [number-theory]
+    difficulty: 1
+    hints:
+      - 'Make the middle number a perfect square. Then the number above it is a square plus $1$.'
+      - 'You need $a^2-1=(a-1)(a+1)$ to be a sum of two squares. Try $a=2k^2+1$.'
+    solution: |
+      **Key idea:** put a perfect square in the middle; then only the number just below it needs work, and a good choice of the square makes it factor nicely.
+
+      Take $a=2k^2+1$ for an integer $k\ge1$ and look at the three numbers $a^2-1,\ a^2,\ a^2+1$.
+
+      - $a^2 = a^2+0^2$.
+      - $a^2+1 = a^2+1^2$.
+      - $a^2-1=(a-1)(a+1)=2k^2\,(2k^2+2)=4k^2(k^2+1)=(2k^2)^2+(2k)^2$.
+
+      So $n=a^2-1=4k^4+4k^2$ works, and different $k$ give different $n$. There are infinitely many such $n$. (For $k=1$: $8=2^2+2^2$, $9=3^2+0^2$, $10=3^2+1^2$.)
+    checked: "script: the identity was checked for k = 1 to 49"
+    status: ready
+
+  - id: A3
+    topic: "Geometry: octagon from an inscribed square and rectangle"
+    areas: [geometry]
+    difficulty: 2
+    answer: '$3\sqrt5$'
+    hints:
+      - 'Cut the octagon into eight triangles from the center. The area of each is $\tfrac12R^2\sin(\text{central angle})$.'
+      - 'An inscribed rectangle has its diagonals as diameters. Its area fixes one relation between the two angles that place its vertices.'
+    solution: |
+      **Key idea:** measure everything by central angles. The square fixes the radius, the rectangle fixes the difference of two angles, and the area is a sum of sines.
+
+      The square has area $5$, so its diagonal is $\sqrt{10}$ and the circle has radius $R$ with $R^2=\tfrac52$. Put the square's vertices at angles $0^\circ,90^\circ,180^\circ,270^\circ$.
+
+      The rectangle is inscribed, so its diagonals are diameters: opposite vertices are antipodal. Say the rectangle's vertex in the first quarter-arc is at angle $\alpha$, and the one in the second quarter-arc is at $90^\circ+\beta$, with $0<\alpha,\beta<90^\circ$. The antipodes are at $180^\circ+\alpha$ and $270^\circ+\beta$.
+
+      **Area of the octagon.** From the center the octagon splits into eight triangles. Each quarter-arc is cut into two pieces, $\alpha$ and $90^\circ-\alpha$ (twice) or $\beta$ and $90^\circ-\beta$ (twice). Using $\tfrac12R^2\sin\theta$ for each triangle,
+      $$\text{area}=R^2\big(\sin\alpha+\cos\alpha+\sin\beta+\cos\beta\big).$$
+
+      **The rectangle's area.** Its two sides subtend central angles $\gamma=90^\circ+\beta-\alpha$ and $180^\circ-\gamma$, so its area is $(2R\sin\tfrac\gamma2)(2R\cos\tfrac\gamma2)=2R^2\sin\gamma=5\cos(\beta-\alpha)$. This equals $4$, so $\cos(\alpha-\beta)=\tfrac45$.
+
+      **Maximize.** Using $\sin\theta+\cos\theta=\sqrt2\sin(\theta+45^\circ)$ and a sum-to-product step,
+      $$\sin\alpha+\cos\alpha+\sin\beta+\cos\beta=2\sqrt2\,\sin\Big(\frac{\alpha+\beta}2+45^\circ\Big)\cos\frac{\alpha-\beta}2.$$
+      The cosine factor is fixed: $\cos\frac{\alpha-\beta}2=\sqrt{\frac{1+4/5}{2}}=\frac{3}{\sqrt{10}}$. The sine factor is at most $1$, with equality when $\alpha+\beta=90^\circ$. Together with $\alpha-\beta=\arccos\tfrac45\approx36.9^\circ$ this gives $\alpha\approx63.4^\circ,\ \beta\approx26.6^\circ$, both allowed. So
+      $$\text{max area}=\frac52\cdot2\sqrt2\cdot\frac3{\sqrt{10}}=\frac{15}{\sqrt5}=3\sqrt5 .$$
+    viz: putnam-2000-a3
+    checked: "script: grid search over the two angles with the rectangle constraint gives 6.7076..., matching 3√5 = 6.7082"
+    status: ready
+
+  - id: A4
+    topic: "Analysis: convergence of an oscillating improper integral"
+    areas: [analysis, calculus]
+    difficulty: 3
+    hints:
+      - 'Write $\sin x\sin x^2=\frac{\sin x}{2x}\cdot 2x\sin x^2$ and integrate by parts.'
+      - 'A leftover term has $\cos x\cos x^2$. Turn it into $\cos(x^2\pm x)$ and integrate by parts once more.'
+    solution: |
+      **Key idea:** each integration by parts against a fast oscillation gains a factor $1/x$; two rounds leave only absolutely convergent pieces.
+
+      The integral over $[0,1]$ is a proper integral, so we study $\int_1^B$ as $B\to\infty$.
+
+      **First step.** Since $\frac{d}{dx}(-\cos x^2)=2x\sin x^2$,
+      $$\int_1^B \sin x\sin x^2\,dx=\Big[-\frac{\sin x}{2x}\cos x^2\Big]_1^B+\int_1^B \cos x^2\Big(\frac{\cos x}{2x}-\frac{\sin x}{2x^2}\Big)dx .$$
+      The boundary term has a limit (it is $O(1/B)$ at the top). The piece with $\frac{\sin x}{2x^2}$ converges absolutely, because $|\cdot|\le\frac1{2x^2}$. It remains to handle
+      $$\int_1^B\frac{\cos x\cos x^2}{x}\,dx=\frac12\int_1^B\frac{\cos(x^2+x)}{x}\,dx+\frac12\int_1^B\frac{\cos(x^2-x)}{x}\,dx .$$
+
+      **Second step.** Take $\phi(x)=x^2+x$, so $\phi'(x)=2x+1>0$ on $[1,\infty)$. Then
+      $$\int_1^B\frac{\cos\phi}{x}\,dx=\int_1^B\frac{\phi'\cos\phi}{x(2x+1)}\,dx=\Big[\frac{\sin\phi}{x(2x+1)}\Big]_1^B+\int_1^B\sin\phi\;\frac{4x+1}{x^2(2x+1)^2}\,dx .$$
+      The boundary term tends to a limit, and the last integrand is at most $\frac{5x}{4x^4}$ in size, which is integrable. The same works for $\phi(x)=x^2-x$, with $\phi'=2x-1\ge1$ on $[1,\infty)$ and the weight $\frac1{x(2x-1)}$.
+
+      Every piece has a finite limit as $B\to\infty$, so the improper integral converges. (Numerically it is about $0.49$.)
+    checked: "script: numerical integration up to B = 50, 100, 200 settles near 0.49"
+    status: ready
+
+  - id: A5
+    topic: "Geometry: three lattice points on a circle"
+    areas: [geometry, number-theory]
+    difficulty: 2
+    hints:
+      - 'A triangle with integer vertices that is not flat has area at least $\tfrac12$.'
+      - 'For a triangle inscribed in a circle of radius $r$, area $=\dfrac{abc}{4r}$.'
+    solution: |
+      **Key idea:** the triangle's area is at least $\tfrac12$ (lattice points) and equals $\frac{abc}{4r}$ (circumradius formula), so the sides cannot all be short.
+
+      Three distinct points on a circle are never collinear, so they form a real triangle. Let its sides be $a,b,c$ and its area $K$.
+
+      - With integer coordinates, the shoelace formula gives $2K$ as the absolute value of an integer. It is not zero, so $K\ge\tfrac12$.
+      - The circle is the triangle's circumcircle, so $K=\dfrac{abc}{4r}$.
+
+      Hence $abc=4rK\ge 2r$. The largest side then satisfies
+      $$\max(a,b,c)\ge (abc)^{1/3}\ge(2r)^{1/3}>r^{1/3}.$$
+      So two of the points are at distance at least $r^{1/3}$ (in fact more than that).
+    checked: "proof only; the area and circumradius formulas are standard"
+    status: ready
+
+  - id: A6
+    topic: "Number theory: iterating an integer polynomial back to zero"
+    areas: [number-theory, algebra]
+    difficulty: 3
+    hints:
+      - 'For an integer polynomial, $u-v$ divides $f(u)-f(v)$. Apply it to consecutive terms.'
+      - 'If the sequence returns to $0$, it is periodic, and the consecutive differences divide each other around a cycle.'
+    solution: |
+      **Key idea:** consecutive differences divide each other, so around a cycle they all have the same size; then either they are all equal (impossible) or two in a row cancel.
+
+      Suppose $a_m=0$ with $m\ge1$. Since $a_{n+1}$ depends only on $a_n$, the sequence repeats: $a_{n+m}=a_n$ for all $n\ge0$.
+
+      Let $d_n=a_{n+1}-a_n$. For an integer polynomial, $u-v$ divides $f(u)-f(v)$ (each $u^k-v^k$ is a multiple of $u-v$). With $u=a_{n+1}$, $v=a_n$ this gives $d_n\mid d_{n+1}$. Around the cycle,
+      $$d_0\mid d_1\mid\cdots\mid d_{m}=d_0 .$$
+
+      - If $d_0=0$, then $a_1=a_0=0$ and we are done.
+      - Otherwise no $d_n$ is zero, and divisibility around a cycle forces $|d_0|=|d_1|=\cdots=|d_{m-1}|$. If all of them were equal, then $a_m=a_0+m\,d_0\ne0$, a contradiction. So for some $n$ we have $d_{n+1}=-d_n$, which means $a_{n+2}=a_n$.
+
+      From $a_{n+2}=a_n$ the sequence is periodic with period $2$ from index $n$ on. Pick a multiple $k$ of $m$ with $k\ge n$. Then $a_k=a_0=0$ and $a_2=a_{k+2}=a_k=0$. So $a_2=0$.
+    checked: "script: all polynomials with coefficients in {-2,...,2} and degree ≤ 3, 12 iterations: no counterexample"
+    status: ready
+
+  - id: B1
+    topic: "Combinatorics: parity of linear forms, averaging argument"
+    areas: [combinatorics, number-theory]
+    difficulty: 2
+    hints:
+      - 'Only parities matter. Work with vectors in $\{0,1\}^3$ and arithmetic mod $2$.'
+      - 'Pick $(r,s,t)$ at random among the seven nonzero parity vectors. How often is one fixed form odd?'
+    solution: |
+      **Key idea:** average over the seven nonzero choices of $(r,s,t)$ mod $2$; each triple $(a_j,b_j,c_j)$ makes the sum odd for exactly four of them.
+
+      Only parities matter, so think of $v_j=(a_j,b_j,c_j)$ and $w=(r,s,t)$ as vectors over the field with two elements. The condition says $v_j\ne0$.
+
+      Fix a nonzero $v$. The map $w\mapsto v\cdot w$ is a nonzero linear map onto $\{0,1\}$, so it takes the value $1$ on exactly half of the $8$ vectors $w$, that is, on $4$ of them. None of these is $w=0$. So among the $7$ nonzero $w$, exactly $4$ make $v\cdot w$ odd.
+
+      Now choose $w$ uniformly among the $7$ nonzero vectors. Each $j$ is "odd" with probability $\tfrac47$, so the expected number of good $j$ is $\tfrac{4N}7$. Some choice does at least as well as the average. Take $r,s,t$ to be that choice (as integers $0$ or $1$).
+    checked: "script: 200 random instances with N ≤ 9; the best of the 8 choices always reached 4N/7"
+    status: ready
+
+  - id: B2
+    topic: "Number theory: a gcd multiple of a binomial coefficient"
+    areas: [number-theory, combinatorics]
+    difficulty: 1
+    hints:
+      - 'Write $\gcd(m,n)=xm+yn$ with integers $x,y$.'
+      - 'What is $\frac mn\binom nm$?'
+    solution: |
+      **Key idea:** write the gcd as a combination of $m$ and $n$; each part gives an integer.
+
+      By Bézout there are integers $x,y$ with $\gcd(m,n)=xm+yn$. Then
+      $$\frac{\gcd(m,n)}{n}\binom nm=x\cdot\frac mn\binom nm+y\binom nm .$$
+      The second term is an integer. For the first, $\frac mn\binom nm=\frac mn\cdot\frac{n!}{m!(n-m)!}=\frac{(n-1)!}{(m-1)!(n-m)!}=\binom{n-1}{m-1}$, an integer. So the whole expression is an integer.
+    checked: "script: checked for all 1 ≤ m ≤ n < 40"
+    status: ready
+
+  - id: B3
+    topic: "Analysis: zeros of derivatives of a trigonometric polynomial"
+    areas: [analysis]
+    difficulty: 4
+    hints:
+      - 'Think of $f$ on a circle (period $1$). Rolle''s theorem then works between every pair of neighboring zeros, including the wrap-around.'
+      - 'For the limit, divide the $k$-th derivative by $(2\pi N)^k a_N$. Which term survives?'
+    solution: |
+      **Key idea:** on the circle, Rolle never loses zeros, and a trigonometric polynomial of degree $N$ has at most $2N$ zeros; for large $k$ the top frequency dominates and forces $2N$ sign changes.
+
+      Each derivative $f^{(k)}$ is again a sum of $\sin$ and $\cos$ of $2\pi jt$ for $1\le j\le N$, with the frequency-$N$ part nonzero. So it is not identically zero. It has period $1$, so we view it on a circle of length $1$.
+
+      **At most $2N$ zeros.** Put $z=e^{2\pi i t}$. A sum $g(t)=\sum_{1\le|j|\le N}c_je^{2\pi ijt}$ equals $z^{-N}Q(z)$ with $Q$ a polynomial of degree at most $2N$, not zero. The map $t\mapsto z$ is a local analytic bijection with nonzero derivative, so zeros of $g$ in $[0,1)$, with multiplicity, match zeros of $Q$ on the unit circle, with multiplicity. Hence $N_k\le2N$ for every $k$.
+
+      **$N_k\le N_{k+1}$.** Let $g=f^{(k)}$ have distinct zeros $t_1<\cdots<t_r$ on the circle, with multiplicities $m_1,\dots,m_r$, so $N_k=\sum m_i$. (If $r=0$ there is nothing to prove.) A zero of multiplicity $m$ of $g$ is a zero of multiplicity $m-1$ of $g'$. Also, $g$ vanishes at both ends of each of the $r$ arcs between neighboring zeros (going around the circle; with $r=1$ the one arc runs from $t_1$ to $t_1+1$). By Rolle, $g'$ has a zero inside each arc. These are new zeros, so
+      $$N_{k+1}\ge\sum_i(m_i-1)+r=N_k .$$
+
+      **The limit is $2N$.** Write $f(t)=\sum_j a_j\sin(2\pi jt)$. Then
+      $$\frac{f^{(k)}(t)}{(2\pi N)^ka_N}=\sin\Big(2\pi Nt+\frac{k\pi}2\Big)+\sum_{j<N}\frac{a_j}{a_N}\Big(\frac jN\Big)^k\sin\Big(2\pi jt+\frac{k\pi}2\Big).$$
+      The sum is at most $\sum_{j<N}\big|\frac{a_j}{a_N}\big|\big(\frac{N-1}{N}\big)^k$ in size, which is below $1$ for large $k$. The main term equals $+1$ and $-1$ alternately at $2N$ equally spaced points around the circle. At those points the whole expression has the same sign as the main term, so it changes sign $2N$ times around the circle and has at least $2N$ zeros. With the upper bound, $N_k=2N$ for all large $k$. Since the sequence is nondecreasing and bounded by $2N$, its limit is $2N$.
+    checked: "proof only; the argument uses Rolle on the circle and the bound for polynomials"
+    status: ready
+
+  - id: B4
+    topic: "Functional equation: doubling the angle forces zero"
+    areas: [analysis]
+    difficulty: 3
+    hints:
+      - 'Put $x=\cos t$. Then $2x^2-1=\cos2t$, and $2x$ looks like a ratio of sines.'
+      - 'Show that $g(t)=f(\cos t)/\sin t$ satisfies $g(2t)=g(t)$ and has period $\pi$. Then use an orbit of doubling that is dense.'
+    solution: |
+      **Key idea:** with $x=\cos t$ the equation says $f(\cos t)/\sin t$ is unchanged when $t$ doubles. Doubling has dense orbits, so that ratio is constant, and a symmetry makes the constant $0$.
+
+      **Easy facts.** At $x=1$: $f(1)=2f(1)$, so $f(1)=0$. Replacing $x$ by $-x$ gives $2xf(x)=-2xf(-x)$, so $f(-x)=-f(x)$ for $x\ne0$, and by continuity $f$ is odd. In particular $f(-1)=0$.
+
+      **The ratio.** For $t$ not a multiple of $\pi$, let $g(t)=\dfrac{f(\cos t)}{\sin t}$. It is continuous there. Using $\cos2t=2\cos^2t-1$ and $\sin 2t=2\sin t\cos t$,
+      $$g(2t)=\frac{f(\cos2t)}{\sin2t}=\frac{2\cos t\,f(\cos t)}{2\sin t\cos t}=g(t)\qquad(\text{when }\cos t\ne0,\ \sin t\ne 0).$$
+      If $\cos t=0$, then $\cos 2t=-1$ and $\sin2t=0$, so $2t$ is outside the domain; we simply never use those $t$. Also, since $f$ is odd, $g(t+\pi)=\frac{f(-\cos t)}{-\sin t}=g(t)$, and $g(-t)=-g(t)$.
+
+      **Constant along a dense orbit.** Measure $t$ in units of $\pi$: write $t=\pi s$ with $s\in(0,1)$. Doubling $t$ modulo $\pi$ is the binary shift $s\mapsto 2s \bmod 1$. Pick $s_0$ whose binary expansion contains every finite block of digits (for example, list all blocks one after another). Then $s_0$ is not a dyadic rational, so its orbit never hits $0$ or $\tfrac12$ (where $\sin t$ or $\cos t$ would vanish), and $g(\pi s_0)=g(2\pi s_0)=\cdots$. The orbit comes arbitrarily close to every $s\in(0,1)$, because the shift brings any chosen block of digits to the front. By continuity, $g$ equals the constant $c=g(\pi s_0)$ on all of $(0,\pi)$.
+
+      **The constant is zero.** For $0<t<\pi$, $g(-t)=-c$, but also $g(-t)=g(\pi-t)=c$ by the period $\pi$. So $c=0$, which means $f(\cos t)=0$ for all $0<t<\pi$, that is, $f=0$ on $(-1,1)$. Together with $f(\pm1)=0$, $f$ vanishes on $[-1,1]$.
+    checked: "proof only"
+    status: ready
+
+  - id: B5
+    topic: "Sets as polynomials mod 2: Pascal's rule"
+    areas: [combinatorics, algebra]
+    difficulty: 3
+    hints:
+      - 'Encode a set $S$ as the polynomial $\sum_{a\in S}x^a$ with coefficients mod $2$. What does one step do to it?'
+      - 'Over the field with two elements, $(1+x)^{2^k}=1+x^{2^k}$.'
+    solution: |
+      **Key idea:** the rule is multiplication by $1+x$ mod $2$, and $(1+x)^{2^k}=1+x^{2^k}$ mod $2$.
+
+      Encode a finite set $S$ of positive integers as $P_S(x)=\sum_{a\in S}x^a$, a polynomial with coefficients in the field $\mathbb F_2$. The coefficient of $x^a$ in $(1+x)P_{S_n}(x)$ is $[a\in S_n]+[a-1\in S_n]$ mod $2$, which is $1$ exactly when one of $a$, $a-1$ is in $S_n$. That is the rule, so
+      $$P_{S_{n+1}}=(1+x)P_{S_n},\qquad P_{S_n}=(1+x)^nP_{S_0}.$$
+      (The new sets contain only positive integers, since $a=0$ would need $0$ or $-1$ in $S_n$.)
+
+      Over $\mathbb F_2$, squaring is additive: $(u+v)^2=u^2+v^2$. Repeating it, $(1+x)^{2^k}=1+x^{2^k}$. So for $N=2^k$,
+      $$P_{S_N}=(1+x^N)P_{S_0}=P_{S_0}+x^NP_{S_0}.$$
+      Choose $k$ so large that $N>\max S_0$. Then the exponents in $P_{S_0}$ and in $x^NP_{S_0}$ do not overlap, nothing cancels, and the right side encodes $S_0\cup\{N+a:a\in S_0\}$. Every large power of $2$ works, so there are infinitely many such $N$.
+    checked: "script: for S0 = {1,3,4} the matching N up to 70 are 4, 8, 16, 32, 64"
+    status: ready
+
+  - id: B6
+    topic: "Combinatorics: equilateral triangles among cube vertices"
+    areas: [combinatorics, geometry]
+    difficulty: 3
+    hints:
+      - 'Three vertices that pairwise differ in exactly two coordinates form an equilateral triangle.'
+      - 'The neighbors of any vertex of the cube (one coordinate flipped) pairwise differ in exactly two coordinates. Count pairs (vertex, neighbor in $B$).'
+    solution: |
+      **Key idea:** the neighbors of a single cube vertex are pairwise the same distance apart. A counting argument gives a vertex with three neighbors in $B$.
+
+      Call two points of $\{\pm1\}^n$ *neighbors* if they differ in exactly one coordinate. If $c$ is any point (in $B$ or not) and $c^{(i)}$ is $c$ with coordinate $i$ flipped, then for $i\ne j$ the points $c^{(i)}$ and $c^{(j)}$ differ in exactly coordinates $i$ and $j$, so their distance is $\sqrt{2^2+2^2}=2\sqrt2$. Hence any three neighbors of one point form an equilateral triangle.
+
+      Now count pairs $(c,b)$ with $b\in B$ and $c$ a neighbor of $b$. Each $b$ has $n$ neighbors, so there are $n|B|>2^{n+1}$ pairs. There are $2^n$ possible $c$, so on average a point $c$ has more than $2$ neighbors in $B$. Some $c$ therefore has at least $3$ neighbors in $B$, and those three points are the vertices of an equilateral triangle.
+    checked: "proof only; the distance claim is a direct computation"
+    status: ready

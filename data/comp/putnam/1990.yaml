@@ -1,0 +1,262 @@
+year: 1990
+edition: 51st
+date: "December 8, 1990"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1990.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Recurrences: splitting a sequence into two famous ones"
+    areas: [algebra, combinatorics]
+    difficulty: 1
+    answer: "$T_n=n!+2^n$"
+    hints:
+      - "Compare the terms with factorials and with powers of $2$."
+      - "The recurrence is linear, so check each piece separately."
+    solution: |
+      **Key idea:** guess $n!+2^n$ from the data, then check that each part satisfies the linear recurrence on its own.
+
+      The values $2,3,6,14,40,152$ are $0!+1,\ 1!+2,\ 2!+4,\ 3!+8,\ 4!+16,\ 5!+32$. The recurrence is linear and determined by three starting values, which match. So it is enough to check that $n!$ and $2^n$ each satisfy it for $n\ge3$.
+
+      **$2^n$:** $(n+4)2^{n-1}-4n\,2^{n-2}+(4n-8)2^{n-3}=2^{n-3}\big(4n+16-8n+4n-8\big)=2^{n-3}\cdot8=2^n$.
+
+      **$n!$:** factor out $(n-3)!$:
+      $$(n+4)(n-1)(n-2)-4n(n-2)+(4n-8)=(n-2)\big[(n+4)(n-1)-4n+4\big]=(n-2)(n^2-n),$$
+      which is $n(n-1)(n-2)$. Times $(n-3)!$ this is $n!$.
+
+      So $T_n=n!+2^n$.
+    checked: "script: the recurrence and n! + 2^n agree for n ≤ 11"
+    status: ready
+
+  - id: A2
+    topic: "Limits: differences of cube roots are dense"
+    areas: [analysis, number-theory]
+    difficulty: 2
+    answer: "Yes"
+    hints:
+      - "Fix $m$ and let $n$ grow. How big are the steps $\\sqrt[3]{n+1}-\\sqrt[3]n$?"
+    solution: |
+      **Key idea:** cube roots grow without bound but in ever smaller steps, so differences $\sqrt[3]n-\sqrt[3]m$ can land as close as we like to any positive number.
+
+      Fix $m\ge1$ and let $n$ run upward from $m$. The values $\sqrt[3]n-\sqrt[3]m$ start at $0$ and increase without bound. By the mean value theorem, for $n\ge m$,
+      $$\sqrt[3]{n+1}-\sqrt[3]n\le\frac1{3n^{2/3}}\le\frac1{3m^{2/3}}.$$
+      So the values pass $\sqrt2$ in steps of at most $\frac1{3m^{2/3}}$, and some $n_m$ satisfies
+      $$\big|\sqrt[3]{n_m}-\sqrt[3]m-\sqrt2\big|\le\frac1{3m^{2/3}}.$$
+      As $m\to\infty$, the sequence $\sqrt[3]{n_m}-\sqrt[3]m$ converges to $\sqrt2$.
+    checked: "proof only"
+    status: ready
+
+  - id: A3
+    topic: "Lattice geometry: smallest convex lattice pentagon"
+    areas: [geometry, combinatorics]
+    difficulty: 3
+    hints:
+      - "Two of the five vertices have coordinates of the same parity. Where is their midpoint?"
+      - "Show every convex lattice pentagon has a lattice point inside, then use Pick's theorem."
+    solution: |
+      **Key idea:** every convex lattice pentagon has a lattice point strictly inside, and then Pick's theorem gives area at least $\frac52$.
+
+      **Claim.** Every convex lattice pentagon (no three vertices collinear) has a lattice point in its interior.
+
+      Suppose not, and among the counterexamples take one, $P$, of smallest area. This is possible because lattice polygons have areas in $\frac12\mathbb Z_{\ge0}$. The parity pattern of $(x,y)$ has only four types, so two of the five vertices share it, and their midpoint $M$ is a lattice point.
+
+      - If the two vertices are not adjacent, $M$ is the midpoint of a diagonal. In a convex pentagon with no three vertices collinear, the inside of a diagonal is in the interior. That contradicts the choice of $P$.
+      - If they are adjacent, say $V_1V_2$, replace $V_1$ by $M$. The pentagon $MV_2V_3V_4V_5$ is $P$ with the triangle $V_1MV_5$ cut off. It is still convex with no three vertices collinear, it has lattice vertices, its interior lies inside $P$ (so it has no interior lattice points), and its area is smaller. That contradicts minimality.
+
+      So the claim holds.
+
+      **Area.** By Pick's theorem, a lattice polygon with $I$ interior and $B$ boundary lattice points has area $I+\frac B2-1$. Here $I\ge1$ and $B\ge5$, so the area is at least $1+\frac52-1=\frac52$. (The pentagon with vertices $(0,0),(1,0),(2,1),(1,2),(0,1)$ shows $\frac52$ occurs.)
+    viz: putnam-1990-a3
+    checked: "script: exhaustive search over convex lattice pentagons in a 4×4 grid; minimum area 2.5"
+    status: ready
+
+  - id: A4
+    topic: "Plane geometry: punches that remove irrational distances"
+    areas: [geometry, number-theory]
+    difficulty: 2
+    answer: "$3$"
+    hints:
+      - "With two centers, look on their perpendicular bisector."
+      - "With three collinear centers, rational distances to two of them force a rational coordinate."
+    solution: |
+      **Key idea:** two punches always miss a point at the same rational distance from both centers; three well-chosen collinear centers leave nothing.
+
+      **Two are not enough.** A point survives a punch when its distance to the center is rational. One punch leaves the center. For two centers $A,B$ at distance $\delta$, a point on the perpendicular bisector of $AB$ can be at any distance $\ge\frac\delta2$ from both. Choose a rational distance; that point survives both punches.
+
+      **Three suffice.** Use centers $A=(0,0)$, $B=(1,0)$ and $C=(c,0)$ with $c=\sqrt[3]2$. Suppose $P=(x,y)$ is at rational distance from all three. Then
+      $$|PA|^2-|PB|^2=2x-1,\qquad |PA|^2-|PC|^2=2cx-c^2$$
+      are rational. The first makes $x$ rational. The second says $c^2-2xc+q=0$ for a rational $q$. But $\sqrt[3]2$ is not a root of any nonzero rational polynomial of degree less than $3$ (its minimal polynomial is $t^3-2$). Contradiction. So every point is removed.
+    checked: "proof only"
+    status: ready
+
+  - id: A5
+    topic: "Linear algebra: a product vanishes but its reverse does not"
+    areas: [linear-algebra]
+    difficulty: 2
+    answer: "No"
+    hints:
+      - "For $2\\times2$ matrices it does follow. Why? So try $3\\times3$."
+      - "Use matrix units $E_{ij}$, with $E_{ij}E_{jk}=E_{ik}$."
+    solution: |
+      **Key idea:** with $3\times3$ matrix units, $AB$ can be a single unit with square $0$, while $BA$ is a chain of two units whose square is not $0$.
+
+      Let $E_{ij}$ be the matrix with a $1$ in place $(i,j)$ and $0$ elsewhere, so $E_{ij}E_{kl}$ is $E_{il}$ if $j=k$ and $0$ otherwise. Take
+      $$A=E_{23}+E_{32},\qquad B=E_{13}+E_{22}.$$
+      Then
+      $$AB=E_{32},\qquad (AB)^2=E_{32}E_{32}=0,$$
+      so $ABAB=0$. But
+      $$BA=E_{12}+E_{23},\qquad (BA)^2=E_{12}E_{23}=E_{13}\ne0 .$$
+      So $BABA\ne0$.
+
+      (For $2\times2$ matrices the implication does hold: $AB$ and $BA$ have the same characteristic polynomial, so if $AB$ is nilpotent then so is $BA$, and a nilpotent $2\times2$ matrix squares to $0$.)
+    checked: "script: found by search over 0/1 matrices; products verified with sympy"
+    status: ready
+
+  - id: A6
+    topic: "Counting: admissible pairs of subsets and Fibonacci numbers"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: "$17711=F_{22}$"
+    hints:
+      - "Fix $|S|=a$ and $|T|=b$. The two sets can then be chosen independently."
+      - "Put $m=n-a-b$ and find the generating function."
+    solution: |
+      **Key idea:** once the sizes are fixed the choices are independent; the resulting double sum has generating function $\frac1{1-3x+x^2}$, which gives every other Fibonacci number.
+
+      Let $|S|=a$ and $|T|=b$. The conditions say $S\subseteq\{b+1,\dots,n\}$ and $T\subseteq\{a+1,\dots,n\}$, and nothing else. So the number of admissible pairs is
+      $$f(n)=\sum_{a,b\ge0}\binom{n-b}a\binom{n-a}b .$$
+      Terms with $a+b>n$ vanish. With $m=n-a-b\ge0$ we have $\binom{n-b}{a}=\binom{m+a}{a}$ and $\binom{n-a}{b}=\binom{m+b}{b}$. So
+      $$f(n)=\sum_{a+b+m=n}\binom{m+a}a\binom{m+b}b .$$
+      Using $\sum_{a\ge0}\binom{m+a}ax^a=(1-x)^{-(m+1)}$, the generating function is
+      $$\sum_{n\ge0}f(n)x^n=\sum_{m\ge0}x^m(1-x)^{-2(m+1)}=\frac{(1-x)^{-2}}{1-\frac{x}{(1-x)^2}}=\frac1{1-3x+x^2}.$$
+      So $f(n)=3f(n-1)-f(n-2)$ with $f(0)=1$, $f(1)=3$. The even-indexed Fibonacci numbers satisfy the same rule ($F_{k+2}=3F_k-F_{k-2}$), so $f(n)=F_{2n+2}$: $1,3,8,21,55,\dots$ For $n=10$ the answer is $F_{22}=17711$.
+    checked: "script: brute force over all pairs of subsets for n ≤ 8 matches F_(2n+2); F_22 = 17711"
+    status: ready
+
+  - id: B1
+    topic: "Integral equations: a square equals an integral"
+    areas: [calculus, analysis]
+    difficulty: 1
+    answer: "$f(x)=\\pm\\sqrt{1990}\\,e^x$"
+    hints:
+      - "Differentiate both sides, then move everything to one side."
+    solution: |
+      **Key idea:** differentiating gives $(f-f')^2=0$.
+
+      Differentiating, $2ff'=f^2+f'^2$, so $(f-f')^2=0$ and $f'=f$. Hence $f=Ce^x$. At $x=0$ the equation says $f(0)^2=1990$, so $C=\pm\sqrt{1990}$.
+
+      Check: with $f=Ce^x$, $C^2=1990$, the right side is $\int_0^x2C^2e^{2t}dt+1990=1990(e^{2x}-1)+1990=1990e^{2x}=f(x)^2$. Both signs work.
+    checked: "algebra checked by hand"
+    status: ready
+
+  - id: B2
+    topic: "Series identities: a telescoping q-product"
+    areas: [analysis, algebra]
+    difficulty: 3
+    hints:
+      - "Compute the first partial sum $1+(1+x)P_1$ and simplify."
+      - "Guess that the $N$-th partial sum is $\\prod_{k=1}^N\\frac{1-zx^k}{z-x^k}$, and prove it by induction."
+    solution: |
+      **Key idea:** the partial sums are the products $R_N=\prod_{k=1}^N\frac{1-zx^k}{z-x^k}$, and these go to $0$ because each factor tends to $\frac1z$.
+
+      Let $S_N=1+\sum_{j=1}^N(1+x^j)P_j$ and $R_N=\prod_{k=1}^N\frac{1-zx^k}{z-x^k}$, with $R_0=S_0=1$. Note $z\ne x^k$ since $|z|>1>|x^k|$.
+
+      **Claim: $S_N=R_N$.** It holds for $N=0$. For the step, compare increments. On one side,
+      $$R_N-R_{N-1}=R_{N-1}\Big(\frac{1-zx^N}{z-x^N}-1\Big)=R_{N-1}\,\frac{(1-z)(1+x^N)}{z-x^N}.$$
+      On the other, $P_N=\frac{(1-z)\prod_{k=1}^{N-1}(1-zx^k)}{\prod_{k=1}^{N}(z-x^k)}=\frac{(1-z)R_{N-1}}{z-x^N}$, so
+      $$S_N-S_{N-1}=(1+x^N)P_N=R_{N-1}\,\frac{(1-z)(1+x^N)}{z-x^N}.$$
+      The increments agree, so $S_N=R_N$ for all $N$.
+
+      **Limit.** As $k\to\infty$, $\frac{1-zx^k}{z-x^k}\to\frac1z$, and $\big|\frac1z\big|<1$. Fix $\rho$ with $\frac1{|z|}<\rho<1$; from some $k_0$ on, every factor has size at most $\rho$. So $|R_N|\le C\rho^{N-k_0}\to0$. Hence the series converges and $1+\sum_{j\ge1}(1+x^j)P_j=0$.
+    checked: "script: partial sums at x = 0.6 + 0.2i, z = 1.5 − 0.7i reach 2e-16 after 200 terms"
+    status: ready
+
+  - id: B3
+    topic: "Pigeonhole: commuting two-by-two matrices with square entries"
+    areas: [linear-algebra, combinatorics]
+    difficulty: 3
+    hints:
+      - "Two matrices of the form $aI+N$ and $a'I+N$ (same $N$) commute."
+      - "So matrices with the same off-diagonal entries and the same difference of diagonal entries commute. How many such classes are there?"
+    solution: |
+      **Key idea:** a matrix is a scalar plus a part determined by its off-diagonal entries and the difference of its diagonal entries; matrices sharing that part commute, and there are too few parts.
+
+      For $X=\begin{pmatrix}a&b\\c&d\end{pmatrix}$ write
+      $$X=d\,I+\begin{pmatrix}a-d&b\\c&0\end{pmatrix}.$$
+      If two matrices $X=dI+N$ and $X'=d'I+N$ share the same $N$, they commute, because scalar matrices commute with everything and $N$ commutes with itself. The matrix $N$ is determined by the triple $(a-d,\ b,\ c)$.
+
+      **Counting triples.** The entries are squares at most $200$, that is $k^2$ for $0\le k\le14$: fifteen values. So $b$ and $c$ take $15$ values each. The difference $a-d$ of two such squares takes only $163$ distinct values (many coincide, such as $25-0=169-144$). So there are at most
+      $$15\cdot15\cdot163=36675$$
+      triples. If $S$ has more than $50387$ elements, then it has more than $36675$, so two different elements of $S$ share a triple, and they commute. (Our bound is stronger than needed: in fact any $36676$ such matrices contain a commuting pair.)
+    checked: "script: counted the distinct differences of squares 0…196: 163"
+    status: ready
+
+  - id: B4
+    topic: "Group theory: an Eulerian circuit in a Cayley graph"
+    areas: [algebra, combinatorics]
+    difficulty: 3
+    answer: "True"
+    hints:
+      - "Draw a directed graph on $G$ with an arrow $g\\to ga$ and an arrow $g\\to gb$ from every $g$."
+      - "A connected directed graph where every vertex has as many arrows in as out has a closed walk using every arrow once."
+    solution: |
+      **Key idea:** the required sequence is an Eulerian circuit in the directed graph with arrows $g\to ga$ and $g\to gb$.
+
+      Build a directed graph with vertex set $G$ and $2n$ arrows: from each $g$, one arrow to $ga$ and one to $gb$ (if $a=b$, two parallel arrows).
+
+      **Degrees.** Every vertex has $2$ arrows out. It also has $2$ arrows in: $h$ receives arrows from $ha^{-1}$ and $hb^{-1}$ (right multiplication by $a$ is a bijection of $G$, and likewise for $b$).
+
+      **Connected.** In a finite group $a^{-1}=a^{k-1}$, where $k$ is the order of $a$, and similarly for $b$. So every element is a product of $a$'s and $b$'s, and following arrows from $g$ reaches $gw$ for every such product $w$. Every vertex can reach every other.
+
+      By Euler's theorem for directed graphs, there is a closed walk using each of the $2n$ arrows exactly once. List the starting vertex of each arrow along the walk: $g_1,g_2,\dots,g_{2n}$. Each step goes from $g_i$ to $g_ia$ or $g_ib$, the walk closes up, and each vertex appears once per outgoing arrow, that is, exactly twice.
+    checked: "proof only"
+    status: ready
+
+  - id: B5
+    topic: "Polynomials: growing a sequence with all real roots"
+    areas: [algebra, analysis]
+    difficulty: 3
+    answer: "Yes"
+    hints:
+      - "Build the coefficients one at a time. Adding a tiny new top term barely changes the old polynomial on a bounded interval."
+      - "Pick test points between the roots where the signs alternate."
+    solution: |
+      **Key idea:** add each new top coefficient so small that the old sign changes survive, and with the right sign so that one more sign change appears far out.
+
+      Start with $a_0=1$, $a_1=-1$: $p_1=1-x$ has the single root $1$. Suppose $p_n$ has $n$ distinct real roots $r_1<\dots<r_n$. Each is a simple root, so $p_n$ changes sign at each one. Choose points
+      $$y_0<r_1<y_1<r_2<\dots<r_n<y_n,$$
+      so $p_n(y_0),\dots,p_n(y_n)$ are nonzero and alternate in sign. Let $\delta=\min_i|p_n(y_i)|>0$ and $Y=\max_i|y_i|$.
+
+      Choose $a_{n+1}\ne0$ with $|a_{n+1}|Y^{n+1}<\delta$, and with sign opposite to that of $p_n(y_n)$. Then $p_{n+1}=p_n+a_{n+1}x^{n+1}$ satisfies:
+
+      - $p_{n+1}(y_i)$ has the same sign as $p_n(y_i)$ for each $i$, so there is a root in each interval $(y_{i-1},y_i)$: $n$ roots.
+      - As $x\to+\infty$, $p_{n+1}(x)$ takes the sign of $a_{n+1}$, the opposite of $p_{n+1}(y_n)$. So there is another root in $(y_n,\infty)$.
+
+      These $n+1$ roots lie in disjoint intervals, so they are distinct, and $p_{n+1}$ has degree $n+1$. Continuing forever gives the sequence.
+    checked: "proof only"
+    status: ready
+
+  - id: B6
+    topic: "Convex geometry: the centroid lies in every middle band"
+    areas: [geometry, analysis]
+    difficulty: 4
+    answer: "$t=\\dfrac13$"
+    hints:
+      - "For a triangle, use barycentric coordinates and the three directions of its sides."
+      - "For the other direction, show the centroid of any convex set is at least a third of the width from each support line."
+    solution: |
+      **Key idea:** a triangle forces $t\ge\frac13$, and the centroid of any planar convex set is in the middle third of every strip between parallel support lines.
+
+      In each direction, the band is the strip of width $tw$ centered between the two support lines. A point lies in it exactly when its distance from each support line is at least $\frac{1-t}2w$ (and at most $\frac{1+t}2w$).
+
+      **$t<\frac13$ fails.** Let $S$ be a triangle, and take $K$ parallel to each side in turn. For a point with barycentric coordinates $(\lambda_1,\lambda_2,\lambda_3)$, $\lambda_1+\lambda_2+\lambda_3=1$, the signed distance to the first side is $\lambda_1$ times the height on that side, and similarly for the others. Being in all three bands requires each $\lambda_i\ge\frac{1-t}2$. Then $1=\sum\lambda_i\ge\frac{3(1-t)}2$, so $t\ge\frac13$.
+
+      **$t=\frac13$ works.** If $S$ is a point or a segment, its midpoint works (it is on every midline). Otherwise $S$ has positive area; let $G$ be its centroid. Fix a direction, put the support lines at heights $0$ and $w$, and let $\ell(y)$ be the length of the cross-section of $S$ at height $y$. By convexity $\ell$ is concave on $[0,w]$: the section at a weighted average of two heights contains the weighted average of the two sections. The height of $G$ is
+      $$\bar y=\frac{\int_0^wy\,\ell(y)\,dy}{\int_0^w\ell(y)\,dy}.$$
+      Compare with the linear function $\lambda(y)=c(w-y)$, where $c$ is chosen so that $\int\lambda=\int\ell$; its own weighted average height is $\frac w3$. The difference $h=\ell-\lambda$ is concave, has integral $0$, and $h(w)=\ell(w)\ge0$. A concave function is nonnegative on an interval, here one containing $w$, say $[y_0,w]$, and negative before it. So $(y-y_0)h(y)\ge0$ everywhere, and
+      $$\int_0^wy\,h(y)\,dy=\int_0^w(y-y_0)h(y)\,dy\ge0 .$$
+      Hence $\bar y\ge\frac w3$. By the same argument from the other side, $\bar y\le\frac{2w}3$. So $G$ is within $\frac w6=\frac{t}{2}w$ of the midline, in every direction, and $G$ lies in every band.
+
+      So the smallest $t$ is $\frac13$.
+    checked: "proof only"
+    status: ready

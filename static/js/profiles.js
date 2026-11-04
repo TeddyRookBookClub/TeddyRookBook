@@ -28,6 +28,7 @@
      trb-art-gallery     the art gallery's filter                   trb-daily-bank, trb-daily-cross  Daily Word Puzzle display
      trb-backup-v1       backup reminders (static/js/backup.js): last family backup file, sessions since, snooze. Covers the
                          whole family, so it is device-wide; never written into a file or read back from one
+     trb-music-v1        background music (static/music/suite/player/player.js): track, position, playlist, volume
    Not trb- and not swapped (device preferences): pref-theme (light/dark), mk-* (markets dashboards),
    teut-en, teut-speed (game settings). The search box and the video "more" links store nothing.
    EXTRA (per learner although not trb-): tt-v1 (Time Thief cases).
@@ -56,7 +57,8 @@
   'use strict';
   var REG = 'trb-profiles-v1', BK = 'trb-backup-v1';
   var SHARED = ['trb-profiles-v1', 'trb-fs', 'trb-units', 'trb-planner-v1', 'trb-planner-days', 'trb-placement-v1',
-    'trb-family-v1', 'trb-meals-v1', 'trb-meals-setup', 'trb-garden-v1', 'trb-art-gallery', 'trb-daily-bank', 'trb-daily-cross', 'trb-backup-v1'];
+    'trb-family-v1', 'trb-meals-v1', 'trb-meals-setup', 'trb-garden-v1', 'trb-art-gallery', 'trb-daily-bank', 'trb-daily-cross', 'trb-backup-v1',
+    'trb-music-v1'];
   var EXTRA = ['tt-v1'];
   var ICONS = ['🦊', '🐻', '🦉', '🐢', '🐬', '🦁', '🐝', '🐧', '🦋', '🐞', '🌻', '🚀', '⭐', '📚', '🎨', '🧩'];
   function isProfileKey(k) { k = String(k); return (k.indexOf('trb-') === 0 && SHARED.indexOf(k) < 0) || EXTRA.indexOf(k) >= 0; }

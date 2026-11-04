@@ -1,0 +1,266 @@
+year: 2009
+edition: 70th
+date: "December 5, 2009"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2009.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Geometry: a function summing to zero on every square"
+    areas: [geometry, algebra]
+    difficulty: 1
+    answer: "Yes, $f$ is zero everywhere"
+    hints:
+      - 'Put a $3\times3$ grid of points around $P$, with $P$ in the middle.'
+      - 'Add the four small squares that touch $P$, then subtract two larger squares.'
+    solution: |
+      **Key idea:** around any point, four small squares minus two big squares leave four copies of the center.
+
+      Fix a point $P$ and use coordinates with $P$ at the origin. Look at the nine points $(i,j)$ with $i,j\in\{-1,0,1\}$. Sort them into the center $P$, the four *edge* points $(\pm1,0),(0,\pm1)$, and the four *corner* points $(\pm1,\pm1)$.
+
+      - The four unit squares that have $P$ as a vertex each use $P$, two edge points and one corner point. Adding their four zero sums gives
+        $$4f(P)+2\,(\text{sum over edge points})+(\text{sum over corner points})=0 .$$
+      - The four corner points form a square, so their sum is $0$.
+      - The four edge points form a square too (tilted by $45^\circ$), so their sum is $0$.
+
+      Substituting, $4f(P)=0$. Since $P$ was arbitrary, $f$ is identically zero.
+    viz: putnam-2009-a1
+    checked: "proof only; the 3×3 bookkeeping was checked by a script that counts how often each grid point is used"
+    status: ready
+
+  - id: A2
+    topic: "Differential equations: a symmetric system solved through a product"
+    areas: [calculus, analysis]
+    difficulty: 2
+    answer: "$f(x)=2^{-1/12}\\,\\dfrac{\\sin^{1/6}(6x+\\pi/4)}{\\cos^{1/3}(6x+\\pi/4)}$"
+    hints:
+      - 'Divide each equation by its own function and add. Which combination appears?'
+      - 'The product $P=fgh$ satisfies $P''=6(P^2+1)$.'
+    solution: |
+      **Key idea:** the logarithmic derivatives add up to an equation for the product $P=fgh$ alone.
+
+      Divide the three equations by $f$, $g$, $h$ and write $P=fgh$:
+      $$\frac{f'}f=2P+\frac1P,\qquad \frac{g'}g=P+\frac4P,\qquad\frac{h'}h=3P+\frac1P .$$
+      Adding gives $\frac{P'}{P}=6P+\frac6P$, so $P'=6(P^2+1)$ with $P(0)=1$. This equation has a unique solution, and $\arctan P=6x+\frac\pi4$ works:
+      $$P(x)=\tan\theta,\qquad\theta=6x+\tfrac\pi4 .$$
+      Now integrate the first equation. With $d\theta=6\,dx$,
+      $$(\ln f)'=2\tan\theta+\cot\theta \quad\Longrightarrow\quad \ln f=-\tfrac13\ln\cos\theta+\tfrac16\ln\sin\theta+C .$$
+      At $x=0$, $\theta=\frac\pi4$ and $\cos\theta=\sin\theta=2^{-1/2}$, so $0=\frac16\ln2-\frac1{12}\ln2+C$, giving $C=-\frac1{12}\ln 2$. Therefore, near $0$,
+      $$f(x)=2^{-1/12}\,\frac{\big(\sin(6x+\frac\pi4)\big)^{1/6}}{\big(\cos(6x+\frac\pi4)\big)^{1/3}} .$$
+      (The same method gives $g$ and $h$, and one can check that the three formulas solve the system.)
+    checked: "script: solved the system numerically (scipy, tolerance 1e-12) and matched the formula at x=0.05 and 0.1 to 11 digits"
+    status: ready
+
+  - id: A3
+    topic: "Linear algebra: determinants of a cosine-filled matrix"
+    areas: [linear-algebra]
+    difficulty: 1
+    answer: "$0$"
+    hints:
+      - 'Use $\cos(\alpha+\beta)=\cos\alpha\cos\beta-\sin\alpha\sin\beta$ on the entries of one row.'
+      - 'Every row is a combination of the same two vectors.'
+    solution: |
+      **Key idea:** every row is a combination of the two vectors $(\cos j)$ and $(\sin j)$, so the rank is at most $2$.
+
+      Number rows by $i=1,\dots,n$ and columns by $j=1,\dots,n$. The entry in row $i$, column $j$ is $\cos\big((i-1)n+j\big)$. By the addition formula,
+      $$\cos\big((i-1)n+j\big)=\cos\big((i-1)n\big)\cos j-\sin\big((i-1)n\big)\sin j .$$
+      So row $i$ equals $\cos((i-1)n)\,\mathbf c-\sin((i-1)n)\,\mathbf s$, where $\mathbf c=(\cos1,\dots,\cos n)$ and $\mathbf s=(\sin1,\dots,\sin n)$. All rows lie in a space of dimension at most $2$. For $n\ge3$ the rows are dependent, so $d_n=0$. The limit is $0$.
+    checked: "script: computed d_n for n=3..10 in floating point; all |d_n| < 1e-12"
+    status: ready
+
+  - id: A4
+    topic: "Number theory: a closed set of rationals missing some"
+    areas: [number-theory]
+    difficulty: 2
+    answer: "No"
+    hints:
+      - 'Look at numerators and denominators modulo $5$.'
+      - 'In lowest terms, $\frac{1}{x(x-1)}$ has a perfect square as its numerator, up to sign.'
+    solution: |
+      **Key idea:** a condition modulo $5$ survives all three rules, and a square is never $\pm2$ modulo $5$.
+
+      Write each rational as $a/b$ in lowest terms with $b>0$. Call it **bad** if $5\mid b$ and $a\equiv\pm2\pmod5$. Let $S$ be the set of rationals that are not bad. We check the rules.
+
+      - $0=0/1$ is not bad, so $0\in S$.
+      - $x\pm1=\frac{a\pm b}{b}$, still in lowest terms with the same denominator. If $5\mid b$, the new numerator is $\equiv a\pmod 5$. So $x\pm1$ is bad exactly when $x$ is. Hence $x\in S$ gives $x\pm1\in S$.
+      - For $x\ne0,1$:
+        $$\frac{1}{x(x-1)}=\frac{b^2}{a(a-b)} .$$
+        This is in lowest terms, because a prime dividing $b$ divides neither $a$ nor $a-b$. After fixing the sign of the denominator, the numerator is $\pm b^2$. Squares modulo $5$ are $0,1,4$, so $\pm b^2$ is $0$ or $\pm1$ modulo $5$, never $\pm2$. So $\frac1{x(x-1)}$ is never bad, and it lies in $S$.
+
+      So $S$ satisfies all three conditions, but $\frac25\notin S$. The answer is no.
+    checked: "script: computed the closure of (0,1) under the three moves on residue pairs mod m for m ≤ 11; mod 5 it misses exactly the classes (±2, 0)"
+    status: ready
+
+  - id: A5
+    topic: "Groups: product of element orders as a power of two"
+    areas: [algebra, number-theory]
+    difficulty: 2
+    answer: "No"
+    hints:
+      - 'The group must be a $2$-group. Write $N_t$ for the number of elements whose order divides $2^t$.'
+      - 'The sum of the base-$2$ logarithms of the orders is $\sum_{t\ge0}(|G|-N_t)$. Work modulo $2^r$, where $2^r=N_1$.'
+    solution: |
+      **Key idea:** the sum of the logarithms of the orders is $\equiv -1$ modulo $N_1$, the number of elements with $g^2=e$, and $2009+1$ is only divisible by $2$ once.
+
+      If $|G|$ had an odd prime factor $p$, Cauchy's theorem would give an element of order $p$, and $p$ would divide the product. So $G$ is a $2$-group, and every order is $2^{\ell(g)}$. We need $\sum_g\ell(g)=2009$.
+
+      Let $N_t$ be the number of $g$ with $g^{2^t}=e$. These elements form a subgroup ($G$ is abelian), so each $N_t$ is a power of $2$, with $N_0=1$, $N_1\mid N_2\mid\cdots$ and $N_t=|G|$ for large $t$. An element has $\ell(g)>t$ exactly when it is not among the $N_t$, so
+      $$\sum_g\ell(g)=\sum_{t\ge0}\#\{g:\ell(g)>t\}=\sum_{t\ge0}\big(|G|-N_t\big).$$
+      Let $N_1=2^r$. For $t\ge1$, both $|G|$ and $N_t$ are multiples of $N_1$. The $t=0$ term is $|G|-1$. So
+      $$\sum_g\ell(g)\equiv-1\pmod{2^r}.$$
+      If the sum were $2009$, then $2^r\mid 2010=2\cdot1005$, so $r\le1$.
+
+      - $r=0$: $G$ is trivial and the sum is $0$.
+      - $r=1$: $G$ has a single element of order $2$, so $G$ is cyclic, $G=\mathbb Z/2^e$. It has $2^{t-1}$ elements of order $2^t$, so the sum is $\sum_{t=1}^e t\,2^{t-1}=(e-1)2^e+1$. We would need $(e-1)2^e=2008=2^3\cdot251$. Then $2^e$ divides $2008$, so $e\le3$, and then $(e-1)2^e\le16$. Impossible.
+
+      So no such group exists.
+    checked: "script: exhaustive search over all abelian 2-groups with sum of log-orders ≤ 2009 found no group reaching 2009"
+    status: ready
+
+  - id: A6
+    topic: "Calculus: must the gradient hit its average value?"
+    areas: [calculus, analysis]
+    difficulty: 2
+    answer: "No (disproved)"
+    hints:
+      - '$b-a$ and $d-c$ are the averages of $f_x$ and $f_y$ over the square.'
+      - 'Look for a function whose gradient circles around the origin and never vanishes.'
+    solution: |
+      **Key idea:** $(b-a,\,d-c)$ is the average gradient, and a gradient that winds once around the origin can average to $0$ without ever being $0$.
+
+      By the fundamental theorem of calculus, $b-a=\int_0^1\!\int_0^1 f_x\,dx\,dy$ and $d-c=\int_0^1\!\int_0^1 f_y\,dy\,dx$, so the question asks whether $\nabla f$ must take its own average value. It need not.
+
+      Take
+      $$f(x,y)=\frac{1}{2\pi}\,e^{2\pi x}\cos(2\pi y).$$
+      It is smooth on the whole plane. Its partial derivatives are
+      $$f_x=e^{2\pi x}\cos(2\pi y),\qquad f_y=-e^{2\pi x}\sin(2\pi y),$$
+      so $|\nabla f|=e^{2\pi x}\ge1$: the gradient is never $(0,0)$.
+
+      Now compute the four integrals. Since $\int_0^1\cos(2\pi y)\,dy=0$, we get $a=b=0$. Since $\cos(2\pi\cdot0)=\cos(2\pi\cdot1)=1$, the functions $f(x,0)$ and $f(x,1)$ are equal, so $c=d$. Hence $b-a=0$ and $d-c=0$. A point with $f_x=f_y=0$ would be needed, and there is none. So the statement is false.
+    checked: "script: numerical integrals give a=b=0 and c=d=(e^{2π}-1)/(4π²); |∇f| = e^{2πx} ≥ 1"
+    status: ready
+
+  - id: B1
+    topic: "Number theory: rationals from factorials of primes"
+    areas: [number-theory]
+    difficulty: 1
+    hints:
+      - 'It is enough to write every prime this way.'
+      - '$p=p!/(p-1)!$, and every factor of $(p-1)!$ is built from smaller primes.'
+    solution: |
+      **Key idea:** $p=\frac{p!}{(p-1)!}$, and $(p-1)!$ only involves smaller primes; strong induction finishes it.
+
+      Call a positive rational *good* if it is a quotient of two products of factorials of primes (an empty product is $1$). Products and quotients of good numbers are good. Every positive rational is a product of primes raised to integer powers, so it suffices to show every prime is good.
+
+      Use strong induction on the prime $p$. For $p=2$: $2=\frac{2!}{1}$. For an odd prime $p$,
+      $$p=\frac{p!}{(p-1)!}=\frac{p!}{2\cdot3\cdots(p-1)} .$$
+      Each of $2,3,\dots,p-1$ factors into primes smaller than $p$, which are good by the induction hypothesis. So $(p-1)!$ is good, $p!$ is good, and so is $p$.
+    checked: "script: built the representation of every prime below 31 by the recursion and multiplied it out exactly"
+    status: ready
+
+  - id: B2
+    topic: "Calculus: costs of jumps as Riemann sums"
+    areas: [calculus, analysis]
+    difficulty: 2
+    answer: "All $c$ with $\\tfrac13<c\\le1$"
+    hints:
+      - 'Each hop from $a$ to $b$ adds $b^2(b-a)$. Set that beside $\int_a^b x^2\,dx$.'
+      - 'For the values in between, slide the jump points continuously.'
+    solution: |
+      **Key idea:** a trip is a right-endpoint Riemann sum for $\int_0^1x^2\,dx=\frac13$, so its cost is above $\frac13$ and at most $1$, and continuity fills in everything between.
+
+      A trip is $0=x_0<x_1<\dots<x_k=1$ (jumps go right, so you can't overshoot $1$). Its cost is
+      $$C=\sum_{i=1}^kx_i^2(x_i-x_{i-1}).$$
+
+      **Bounds.** On each piece, $x^2<x_i^2$ for $x<x_i$, so $x_i^2(x_i-x_{i-1})>\int_{x_{i-1}}^{x_i}x^2\,dx$. Adding, $C>\frac13$. Also $x_i^2\le1$, so $C\le\sum(x_i-x_{i-1})=1$, with equality for the single jump from $0$ to $1$.
+
+      **Every value in between.** Fix $k$ and think of $C$ as a continuous function of $(x_1,\dots,x_{k-1})$ on the set $0<x_1<\dots<x_{k-1}<1$, which is connected (it is convex).
+
+      - With equal steps, $C=\sum_{i=1}^k\frac{i^2}{k^3}=\frac{(k+1)(2k+1)}{6k^2}$, which tends to $\frac13$ as $k\to\infty$.
+      - With all of $x_1,\dots,x_{k-1}$ pushed close to $1$, the first jump costs nearly $1$, so $C$ is close to $1$.
+
+      Given $c$ with $\frac13<c<1$, pick $k$ with the equal-step cost below $c$. By the intermediate value theorem some trip with $k$ jumps costs exactly $c$. With $c=1$ from the single jump, the answer is $\frac13<c\le1$.
+    viz: putnam-2009-b2
+    checked: "script: 20,000 random trips all cost between 1/3 and 1; bisection along a path of 40-jump trips found trips costing 0.5 and 0.9"
+    status: ready
+
+  - id: B3
+    topic: "Combinatorics: sets closed under integer averages"
+    areas: [combinatorics, number-theory]
+    difficulty: 2
+    answer: "$n=2^k-1$ for $k\\ge1$"
+    hints:
+      - '$A(n+1)-A(n)$ counts the good subsets of $\{1,\dots,n+1\}$ that contain $n+1$.'
+      - 'The second difference counts good subsets of $\{1,\dots,n+2\}$ containing both $1$ and $n+2$. What can neighboring gaps in such a set look like?'
+    solution: |
+      **Key idea:** the second difference counts the good sets that contain both $1$ and $m=n+2$, and those are exactly the arithmetic progressions from $1$ to $m$ with odd step.
+
+      Call a set *good* if it has the averaging property.
+
+      **First difference.** A subset of $\{1,\dots,n+1\}$ that misses $n+1$ is good exactly when it is good as a subset of $\{1,\dots,n\}$. So $A(n+1)-A(n)=B(n+1)$, the number of good subsets of $\{1,\dots,n+1\}$ containing $n+1$.
+
+      **Second difference.** Split the good subsets of $\{1,\dots,n+2\}$ that contain $n+2$ by whether they contain $1$. Those without $1$ shift down by one to good subsets of $\{1,\dots,n+1\}$ containing $n+1$, and shifting keeps the averaging property. So
+      $$A(n+2)-2A(n+1)+A(n)=B(n+2)-B(n+1)=\#\{\text{good sets containing }1\text{ and }m\},\quad m=n+2 .$$
+
+      **Which sets those are.** Let $s_1<s_2<\dots<s_r$ be good, with $s_1=1$, $s_r=m$.
+
+      - Every gap $s_{i+1}-s_i$ is odd. Otherwise the average of $s_i$ and $s_{i+1}$ is an integer strictly between them, which must be in the set. It isn't, because they are neighbors.
+      - Neighboring gaps are equal. The gaps around $s_i$ are both odd, so $s_{i+1}-s_{i-1}$ is even. The average of $s_{i-1}$ and $s_{i+1}$ lies strictly between them, so it must be $s_i$.
+
+      So the set is an arithmetic progression $1,1+d,\dots,m$ with $d$ odd and $d\mid m-1$. Conversely such a progression is good: two terms $1+id$, $1+jd$ have an integer average only when $i+j$ is even, and then the average $1+\frac{i+j}2d$ is a term.
+
+      So the second difference equals the number of odd divisors of $m-1=n+1$. It is $1$ exactly when $n+1$ is a power of $2$. Since $n\ge1$, the answer is $n=2^k-1$ with $k\ge1$.
+    checked: "script: brute-force A(n) for n ≤ 15; the second difference is 1 exactly at n = 1, 3, 7 (and the odd-divisor formula matches all n ≤ 13)"
+    status: ready
+
+  - id: B4
+    topic: "Linear algebra: polynomials averaging to zero on circles"
+    areas: [linear-algebra, algebra]
+    difficulty: 1
+    answer: "$2020050$"
+    hints:
+      - 'Split a polynomial into homogeneous parts. How does the circle average of a degree-$d$ part depend on the radius?'
+      - 'Odd degree parts always average to $0$; for each even degree there is exactly one condition.'
+    solution: |
+      **Key idea:** the condition splits by degree, giving one linear condition for each even degree.
+
+      Write $p=\sum_{d=0}^{2009}p_d$ with $p_d$ homogeneous of degree $d$. On the circle of radius $\rho$, $p_d(\rho\cos t,\rho\sin t)=\rho^dp_d(\cos t,\sin t)$. So the average of $p$ on that circle is $\sum_d m_d\rho^d$, where $m_d$ is the average of $p_d$ on the unit circle. This polynomial in $\rho$ vanishes for all $\rho>0$ exactly when every $m_d=0$.
+
+      So $V$ is the direct sum over $d$ of the spaces $\{p_d: m_d=0\}$. The homogeneous polynomials of degree $d$ form a space of dimension $d+1$, and $p_d\mapsto m_d$ is linear.
+
+      - For odd $d$, $p_d(-x,-y)=-p_d(x,y)$, so $m_d=0$ automatically. The full $d+1$ dimensions count.
+      - For even $d$, the map is not identically zero, because $(x^2+y^2)^{d/2}$ has average $1$. Its kernel has dimension $d$.
+
+      Total:
+      $$\sum_{d=0}^{2009}(d+1)\;-\;\#\{\text{even }d\le2009\}=\frac{2010\cdot2011}{2}-1005=2020050 .$$
+    checked: "script: sympy computed the dimension directly for degree bounds up to 7 and matched the formula; arithmetic for 2009"
+    status: ready
+
+  - id: B5
+    topic: "Differential equations: a solution that must grow without bound"
+    areas: [analysis, calculus]
+    difficulty: 2
+    hints:
+      - 'Rewrite the right side as $\frac{1}{1+f^2}-\frac{f^2}{x^2(1+f^2)}$. Each piece is easy to bound.'
+      - 'First show $f$ can never drop much, then show it can''t stay bounded.'
+    solution: |
+      **Key idea:** $f'\ge-1/x^2$ means $f$ almost never goes down, and if $f$ stayed bounded, $f'$ would be bounded below by a positive constant.
+
+      Rewrite the equation:
+      $$f'(x)=\frac{1}{1+f(x)^2}-\frac{f(x)^2}{x^2\,(1+f(x)^2)} .$$
+      The first term is positive, and the second is at most $\frac1{x^2}$. So
+      $$f'(x)\ge-\frac1{x^2},\qquad\text{hence}\qquad f(y)\ge f(x)-\int_x^y\frac{dt}{t^2}>f(x)-\frac1x\quad(1<x<y). \tag{$*$}$$
+
+      **$f$ is unbounded above.** By $(*)$ with $x=2$, $f>f(2)-\frac12$ on $[2,\infty)$, so $f$ is bounded below there. If it were also bounded above, say $|f|\le M$ on $[2,\infty)$, then
+      $$f'(x)\ge\frac1{1+M^2}-\frac1{x^2}\ge\frac1{2(1+M^2)}$$
+      for all large $x$. Then $f$ would grow at least linearly, a contradiction.
+
+      **So $f\to\infty$.** Given $N$, pick $x\ge2$ with $f(x)>N+1$. By $(*)$, $f(y)>N+1-\frac12>N$ for every $y>x$. So $f(y)\to\infty$.
+    checked: "script: integrated the equation numerically from several starting values at x=1.01; f grew without bound in every case"
+    status: ready
+
+  - id: B6
+    topic: "Constructions: reaching any integer with powers and remainders"
+    areas: [number-theory]
+    difficulty: 4
+    status: coming

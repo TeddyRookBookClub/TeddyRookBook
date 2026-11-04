@@ -88,7 +88,10 @@
             {{- end }}
             {{- else if $items }}
             {{- $in := false }}{{ range $items }}{{ $u := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL)) | absLangURL }}{{ if hasPrefix $page_url $u }}{{ $in = true }}{{ end }}{{ end }}
-            <li class="trb-more{{ if lt $gi 2 }} l{{ end }}">
+            {{- /* A group listed in data/menu_sections.yaml (Education) opens as a wide panel: every entry, grouped under small
+               headings, in two columns (one stacked list on phones). Its entries in no section fall into "More". */}}
+            {{- $secs := index (site.Data.menu_sections | default dict) $g }}
+            <li class="trb-more{{ if lt $gi 2 }} l{{ end }}{{ if $secs }} trb-wide{{ end }}">
                 {{- $gu := index (site.Params.menugroupurls | default dict) (lower $g) }}
                 {{- if $gu }}{{ if hasPrefix $page_url ($gu | absLangURL) }}{{ $in = true }}{{ end }}{{ end }}
                 {{- /* The group name links to the group page and sits beside the arrow, not inside it: a link inside <summary> is a
@@ -96,13 +99,43 @@
                 {{- if $gu }}<a class="trb-gl" href="{{ $gu | absLangURL }}"><span{{ if $in }} class="active"{{ end }}>{{ $g }}</span></a>{{ end }}
                 <details>
                     <summary{{ if $gu }} aria-label="More in {{ $g }}" title="More in {{ $g }}"{{ end }}>{{ if not $gu }}<span{{ if $in }} class="active"{{ end }}>{{ $g }}</span>{{ end }}<svg aria-hidden="true" viewBox="0 0 12 12" width="10" height="10"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></summary>
-                    <ul>
-                        {{- range first 10 $items }}
-                        {{- $u := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL)) | absLangURL }}
-                        <li><a href="{{ .URL | absLangURL }}"{{ if hasPrefix $page_url $u }} aria-current="page"{{ end }}><b>{{ .Name }}</b>{{ with .Params.note }}<small>{{ . }}</small>{{ end }}</a></li>
+                    {{- if $secs }}
+                    <div class="trb-panel"><div class="trb-pcols">
+                        {{- $used := slice }}
+                        {{- range $si, $s := $secs }}
+                        {{- $its := slice }}{{ range $s.urls }}{{ $su := . }}{{ range $items }}{{ if eq .URL $su }}{{ $its = $its | append . }}{{ end }}{{ end }}{{ end }}
+                        {{- range $s.urls }}{{ $used = $used | append . }}{{ end }}
+                        {{- with $its }}
+                        <div class="trb-ps" role="group" aria-labelledby="trb-ps-{{ $gi }}-{{ $si }}">
+                            <p class="trb-ph" id="trb-ps-{{ $gi }}-{{ $si }}">{{ $s.name }}</p>
+                            <ul>
+                                {{- range . }}{{ partial "inline/trb-mi.html" (dict "m" . "p" $page_url) }}{{ end }}
+                            </ul>
+                        </div>
                         {{- end }}
-                        {{- with $gu }}<li class="trb-all"><a href="{{ . | absLangURL }}"><b>All of {{ $g }}{{ if gt (len $items) 10 }} ({{ len $items }}){{ end }} →</b></a></li>{{ end }}
+                        {{- end }}
+                        {{- $rest := slice }}{{ range $items }}{{ if not (in $used .URL) }}{{ $rest = $rest | append . }}{{ end }}{{ end }}
+                        {{- with $rest }}
+                        <div class="trb-ps" role="group" aria-labelledby="trb-ps-{{ $gi }}-more">
+                            <p class="trb-ph" id="trb-ps-{{ $gi }}-more">More</p>
+                            <ul>
+                                {{- range . }}{{ partial "inline/trb-mi.html" (dict "m" . "p" $page_url) }}{{ end }}
+                            </ul>
+                        </div>
+                        {{- end }}
+                        </div>
+                        {{- with $gu }}<p class="trb-pall"><a href="{{ . | absLangURL }}"><b>All of {{ $g }} →</b></a></p>{{ end }}
+                    </div>
+                    {{- else }}
+                    {{- /* Every entry is listed (no cut-off), so nothing is reachable only through the group page. */}}
+                    <ul>
+                        {{- range $items }}
+                        {{- $u := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL)) | absLangURL }}
+                        <li><a href="{{ .URL | relLangURL }}"{{ if hasPrefix $page_url $u }} aria-current="page"{{ end }}><b>{{ .Name }}</b></a></li>
+                        {{- end }}
+                        {{- with $gu }}<li class="trb-all"><a href="{{ . | absLangURL }}"><b>All of {{ $g }} →</b></a></li>{{ end }}
                     </ul>
+                    {{- end }}
                 </details>
             </li>
             {{- end }}
@@ -111,3 +144,9 @@
     </nav>
 </header>
 {{- /* The script that keeps the switch's aria-checked in step with the theme is now part 1 of assets/js/site-shell.js. */}}
+{{- /* One entry of the wide menu panel: icon, name and short note (m = menu entry, p = this page's URL). */}}
+{{- define "_partials/inline/trb-mi.html" }}
+{{- with .m }}{{ $u := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL)) | absLangURL }}
+<li><a href="{{ .URL | relLangURL }}"{{ if hasPrefix $.p $u }} aria-current="page"{{ end }}>{{ with .Params.icon }}<span class="trb-mi" aria-hidden="true">{{ . }}</span>{{ end }}<b>{{ .Name }}</b></a></li>
+{{- end }}
+{{- end }}

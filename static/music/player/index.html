@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" data-trb-popout>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Music player · Teddy Rook Book</title>
+<meta name="description" content="Teddy Rook's Continued-Fraction Suite, playing in its own small window while you use the site.">
+<link rel="icon" href="/favicon-32x32.png">
+<script>
+  // light/dark as on the rest of the site (the theme's 'pref-theme', else the system setting)
+  (function () { var t = null; try { t = localStorage.getItem('pref-theme'); } catch (e) { }
+    if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t); })();
+</script>
+<style>
+  :root{--theme:#fff;--entry:#fff;--primary:#1e1e1e;--secondary:#5f5f5f;--tertiary:#e4e4e4;--border:#dcdcdc;color-scheme:light}
+  :root[data-theme="dark"]{--theme:#1d1e20;--entry:#2e2e33;--primary:#dadadb;--secondary:#a3a4a5;--tertiary:#414244;--border:#3a3a3a;color-scheme:dark}
+  html,body{margin:0;background:var(--theme);color:var(--primary);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  main{max-width:520px;margin:0 auto;padding:16px}
+  h1{margin:0 0 .2rem;font-size:.85rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--secondary)}
+  .pp-note{margin:.8rem 0 0;font-size:.85rem;color:var(--secondary)}
+  .pp-note a{color:#004225}
+  :root[data-theme="dark"] .pp-note a{color:#6cc79a}
+</style>
+<link rel="stylesheet" href="/music/suite/player/player.css">
+</head>
+<body>
+<main>
+<h1>Teddy Rook Book · Music</h1>
+<p class="pp-note">Keep this window open and the music keeps playing while you browse in your other tab. Close it to stop. <a href="/music/continued-fraction-suite/" target="_blank" rel="noopener">About the suite and its piano lessons</a></p>
+</main>
+<script src="/music/suite/player/player.js"></script>
+</body>
+</html>

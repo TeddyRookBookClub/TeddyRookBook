@@ -1,0 +1,236 @@
+year: 1988
+edition: 49th
+date: "December 3, 1988"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1988.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Geometry: area of a region cut by absolute values"
+    areas: [geometry]
+    difficulty: 1
+    answer: "$6$"
+    hints:
+      - "The region is symmetric in both axes. Work in the first quadrant."
+    solution: |
+      **Key idea:** by symmetry, find the area in the first quadrant and multiply by $4$.
+
+      Both conditions are unchanged by $x\mapsto-x$ and by $y\mapsto-y$. In the first quadrant they read $x\le1+y$ and $y\le1$. That piece is the trapezoid under the line $x=1+y$ for $0\le y\le1$:
+      $$\int_0^1(1+y)\,dy=\frac32 .$$
+      The whole region is a hexagon with vertices $(\pm1,0)$ and $(\pm2,\pm1)$, and its area is $4\cdot\frac32=6$.
+    checked: "script: numerical integration of the first-quadrant piece, times 4"
+    status: ready
+
+  - id: A2
+    topic: "Differential equations: when the wrong product rule holds"
+    areas: [calculus]
+    difficulty: 2
+    answer: "Yes, e.g. $g(x)=e^x\\sqrt{2x-1}$ on $(\\tfrac12,1)$"
+    hints:
+      - "Write the condition as a first-order equation for $g$."
+      - "Separate variables: $g'/g$ is a rational function of $x$."
+    solution: |
+      **Key idea:** the wrong rule is a separable first-order equation for $g$, which can be solved away from $x=\frac12$.
+
+      With $f=e^{x^2}$ and $f'=2xe^{x^2}$, the condition $f'g+fg'=f'g'$ becomes, after dividing by $e^{x^2}$,
+      $$2xg+g'=2xg' \quad\Longleftrightarrow\quad g'(2x-1)=2xg .$$
+      On an interval where $2x-1\ne0$ and $g\ne0$,
+      $$\frac{g'}{g}=\frac{2x}{2x-1}=1+\frac1{2x-1},\qquad \ln|g|=x+\tfrac12\ln|2x-1|+C .$$
+      So on $(\frac12,1)$ we can take $g(x)=e^x\sqrt{2x-1}$. Check: $g'=e^x\sqrt{2x-1}+\frac{e^x}{\sqrt{2x-1}}=\frac{2x\,e^x}{\sqrt{2x-1}}$, so $(2x-1)g'=2x\,e^x\sqrt{2x-1}=2xg$. Such a $g$ exists.
+    checked: "sympy: (fg)' − f'g' simplifies to 0 for this g"
+    status: ready
+
+  - id: A3
+    topic: "Series: powers of a small trigonometric correction"
+    areas: [analysis]
+    difficulty: 2
+    answer: "$x>\\tfrac12$"
+    hints:
+      - "Expand $\\sin t$ for small $t$ to find the size of $\\frac{t}{\\sin t}-1$."
+    solution: |
+      **Key idea:** with $t=1/n$, the base $\frac t{\sin t}-1$ is about $\frac{t^2}6=\frac1{6n^2}$, so the terms behave like $n^{-2x}$.
+
+      Let $t=1/n$; the base of the power is $c_n=\frac{t}{\sin t}-1$. Since $\sin t=t-\frac{t^3}6+O(t^5)$,
+      $$\frac{t}{\sin t}=\frac1{1-t^2/6+O(t^4)}=1+\frac{t^2}6+O(t^4),\qquad c_n=\frac1{6n^2}+O\Big(\frac1{n^4}\Big).$$
+      So $c_n>0$ and $c_n\cdot6n^2\to1$. Then $c_n^x\big/(6n^2)^{-x}\to1$. By limit comparison with $\sum(6n^2)^{-x}$, the series converges exactly when $2x>1$.
+
+      For $x\le0$ the terms do not go to $0$ (for $x=0$ they are $1$; for $x<0$ they blow up), which agrees.
+    checked: "script: 6n²·c_n = 1.0012, 1.0000117, 1.00000012 for n = 10, 100, 1000"
+    status: ready
+
+  - id: A4
+    topic: "Coloring the plane: three colors versus nine colors"
+    areas: [combinatorics, geometry]
+    difficulty: 2
+    answer: "(a) Yes. (b) No."
+    hints:
+      - "(a) Two unit equilateral triangles sharing a side form a rhombus. What does a good coloring say about its two far corners?"
+      - "(b) Tile the plane with small squares and repeat a $3\\times3$ pattern of colors."
+    solution: |
+      **Key idea:** with three colors, the far corners of a unit rhombus must match, which leads to a contradiction; with nine colors, a periodic pattern of small squares keeps same-colored points either close or far.
+
+      **(a) Yes.** Suppose three colors give no monochromatic pair at distance $1$. Take two points $P,Q$ at distance $\sqrt3$. There are points $R,S$ with $PRS$ and $QRS$ both unit equilateral triangles (a rhombus with long diagonal $PQ$). In each triangle, all three corners have different colors. So $P$ and $Q$ both have the one color that $R$ and $S$ do not use: $P$ and $Q$ have the same color.
+
+      So any two points at distance $\sqrt3$ share a color. Now take a point $O$ and two points $X,Y$ on the circle of radius $\sqrt3$ around $O$ with $|XY|=1$ (the circle has diameter more than $1$). Then $X$ and $Y$ both match $O$, so they match each other, at distance $1$. Contradiction.
+
+      **(b) No.** Cut the plane into half-open squares $[\frac i2,\frac{i+1}2)\times[\frac j2,\frac{j+1}2)$, and give the square $(i,j)$ the color $(i\bmod3,\ j\bmod3)$, nine colors in all.
+
+      - Two points in the same square are less than $\frac{\sqrt2}2<1$ apart.
+      - Two points in different squares of the same color differ in $i$ or in $j$ by a multiple of $3$. Say the $i$'s differ: the $x$-coordinates then lie in intervals of length $\frac12$ that start at least $\frac32$ apart, so they differ by more than $1$.
+
+      Either way, no two points of the same color are exactly $1$ apart.
+    viz: putnam-1988-a4
+    checked: "proof only; the nine-color pattern was checked by sampling random pairs at distance 1"
+    status: ready
+
+  - id: A5
+    topic: "Functional equations: an iterated map forced to be linear"
+    areas: [analysis, algebra]
+    difficulty: 3
+    answer: "$f(x)=2x$"
+    hints:
+      - "Fix $x$ and look at the orbit $x,f(x),f(f(x)),\\dots$. It satisfies a linear recurrence."
+      - "The characteristic roots are $2$ and $-3$. What does positivity rule out?"
+    solution: |
+      **Key idea:** along an orbit the equation is a linear recurrence with roots $2$ and $-3$; positivity kills the $(-3)^n$ part.
+
+      **Existence.** $f(x)=2x$ works: $f(f(x))=4x=6x-2x$.
+
+      **Uniqueness.** Let $f$ be any solution, fix $x>0$, and set $a_0=x$, $a_{n+1}=f(a_n)$. All $a_n>0$, and applying the equation at $a_n$,
+      $$a_{n+2}=6a_n-a_{n+1}.$$
+      The characteristic equation $\lambda^2+\lambda-6=0$ has roots $2$ and $-3$, so
+      $$a_n=\alpha\,2^n+\beta\,(-3)^n$$
+      for some constants $\alpha,\beta$. If $\beta\ne0$, then $a_n/3^n=\alpha(2/3)^n+\beta(-1)^n$, which for large $n$ has the sign of $\beta(-1)^n$, alternating. That contradicts $a_n>0$. So $\beta=0$, $a_n=\alpha2^n$, and $f(x)=a_1=2a_0=2x$.
+    checked: "proof only; the recurrence was checked for f(x) = 2x"
+    status: ready
+
+  - id: A6
+    topic: "Linear algebra: too many eigenvectors forces a scalar"
+    areas: [linear-algebra]
+    difficulty: 2
+    answer: "Yes"
+    hints:
+      - "Use $n$ of the eigenvectors as a basis and expand the last one."
+    solution: |
+      **Key idea:** expand the extra eigenvector in the basis of the others; all its coordinates are nonzero, which forces all eigenvalues to be equal.
+
+      Let $v_1,\dots,v_{n+1}$ be the eigenvectors, with $Av_i=\lambda_iv_i$. The first $n$ form a basis, so $v_{n+1}=\sum_{i=1}^nc_iv_i$. Every $c_i\ne0$: if $c_k=0$, then $v_{n+1}$ and the $v_i$ with $i\ne k$ would be $n$ dependent vectors.
+
+      Apply $A$:
+      $$\lambda_{n+1}\sum_ic_iv_i=Av_{n+1}=\sum_ic_i\lambda_iv_i .$$
+      Comparing coefficients, $c_i\lambda_{n+1}=c_i\lambda_i$, so $\lambda_i=\lambda_{n+1}$ for all $i$. Then $A$ acts as $\lambda_{n+1}$ on a basis, so $A=\lambda_{n+1}I$.
+    checked: "proof only"
+    status: ready
+
+  - id: B1
+    topic: "Number theory: composites from a symmetric quadratic expression"
+    areas: [number-theory, algebra]
+    difficulty: 1
+    hints:
+      - "Try $z=1$ and factor what is left."
+    solution: |
+      **Key idea:** with $z=1$, the expression is $(x+1)(y+1)$.
+
+      Setting $z=1$:
+      $$xy+x+y+1=(x+1)(y+1).$$
+      A composite is $ab$ with $a,b\ge2$, so take $x=a-1\ge1$, $y=b-1\ge1$, $z=1$. All three are positive integers, and the expression equals $ab$.
+    checked: "algebra checked by hand"
+    status: ready
+
+  - id: B2
+    topic: "Inequalities: comparing two quadratics in y"
+    areas: [algebra]
+    difficulty: 2
+    answer: "True"
+    hints:
+      - "Complete the square: $y(y\\pm1)=(y\\pm\\frac12)^2-\\frac14$."
+      - "The function $\\sqrt{t^2+\\frac14}$ changes by less than $1$ when $t$ changes by $1$."
+    solution: |
+      **Key idea:** after completing squares, the claim follows because $h(t)=\sqrt{t^2+\frac14}$ has slope less than $1$ in size.
+
+      If $0\le y\le1$, then $y(y-1)\le0\le x^2$ and we are done. So let $y>1$.
+
+      Note $y(y+1)=(y+\frac12)^2-\frac14$ and $y(y-1)=(y-\frac12)^2-\frac14$. Let $h(t)=\sqrt{t^2+\frac14}$. Since $y+\frac12>0$, the hypothesis says
+      $$y+\tfrac12\le h(x+1).$$
+      Because $|h'(t)|=\frac{|t|}{\sqrt{t^2+1/4}}<1$, the mean value theorem gives $h(x+1)\le h(x)+1$. Hence
+      $$y-\tfrac12\le h(x).$$
+      Both sides are positive, so squaring gives $(y-\frac12)^2\le x^2+\frac14$, which is $y(y-1)\le x^2$.
+    checked: "script: 200,000 random (x, y) found no counterexample"
+    status: ready
+
+  - id: B3
+    topic: "Approximation: integers near multiples of one plus root three"
+    areas: [number-theory, analysis]
+    difficulty: 2
+    answer: "$g=\\dfrac{1+\\sqrt3}{2}$"
+    hints:
+      - "With $c=n-d$, the quantity is $|n-d(1+\\sqrt3)|$."
+      - "Equally spaced points with gap $1+\\sqrt3$: how far can $n$ be from the nearest one?"
+    solution: |
+      **Key idea:** $c-d\sqrt3=n-d(1+\sqrt3)$, so $r_n$ is the distance from $n$ to the nearest multiple of $1+\sqrt3$ among $0,\dots,n(1+\sqrt3)$.
+
+      Let $\omega=1+\sqrt3$. With $c=n-d$, we get $c-d\sqrt3=n-d\omega$ for $d=0,1,\dots,n$. The points $d\omega$ are spaced $\omega$ apart and cover $[0,n\omega]$, which contains $n$. So the nearest one is within $\frac\omega2$:
+      $$r_n\le\frac{1+\sqrt3}2\quad\text{for all }n .$$
+
+      **Nothing smaller works.** We have $r_n=\omega\cdot\|n/\omega\|$, where $\|\cdot\|$ is the distance to the nearest integer (the nearest integer $d$ to $n/\omega$ lies in $[0,n]$). Since $1/\omega$ is irrational, the fractional parts of $n/\omega$ are dense in $[0,1]$, so $\|n/\omega\|$ comes arbitrarily close to $\frac12$. Hence $r_n$ comes arbitrarily close to $\frac\omega2$, and no $g<\frac{1+\sqrt3}2$ is an upper bound. (It is never reached, as $n/\omega$ is never a half-integer, but it is the least upper bound.)
+    checked: "script: max of r_n for n < 200000 is 1.3660228; (1+√3)/2 = 1.3660254"
+    status: ready
+
+  - id: B4
+    topic: "Series: slightly raising the exponent of each term"
+    areas: [analysis]
+    difficulty: 2
+    hints:
+      - "Split the terms into those with $a_n\\ge2^{-(n+1)}$ and the rest."
+    solution: |
+      **Key idea:** either $a_n$ is not tiny, and then raising it to $\frac n{n+1}$ at most doubles it, or it is tiny, and then the new term is below $2^{-n}$.
+
+      Write $a_n^{n/(n+1)}=a_n\cdot a_n^{-1/(n+1)}$.
+
+      - If $a_n\ge2^{-(n+1)}$, then $a_n^{-1/(n+1)}\le2$, so the term is at most $2a_n$.
+      - If $a_n<2^{-(n+1)}$, then $a_n^{n/(n+1)}<2^{-n}$.
+
+      In both cases
+      $$a_n^{n/(n+1)}\le2a_n+2^{-n},$$
+      and the right side has a convergent sum. By comparison, $\sum a_n^{n/(n+1)}$ converges.
+    checked: "proof only"
+    status: ready
+
+  - id: B5
+    topic: "Linear algebra: rank of a skew-symmetric sign matrix"
+    areas: [linear-algebra]
+    difficulty: 3
+    answer: "$\\operatorname{rank}M_n=2n$"
+    hints:
+      - "Why is the determinant of an odd-size skew-symmetric matrix zero?"
+      - "Reduce modulo $2$: all off-diagonal entries become $1$."
+    solution: |
+      **Key idea:** odd size and skew symmetry force rank at most $2n$; modulo $2$, a $2n\times2n$ corner is $J-I$, whose determinant is odd.
+
+      **At most $2n$.** $\det M=\det M^T=\det(-M)=(-1)^{2n+1}\det M$, so $\det M=0$ and the rank is at most $2n$.
+
+      **At least $2n$.** Delete the last row and column, leaving a $2n\times2n$ matrix $N$. Its entries are $0$ on the diagonal and $\pm1$ elsewhere. The determinant is a sum of products of entries, so modulo $2$ we may replace each $-1$ by $1$:
+      $$\det N\equiv\det(J-I)\pmod2,$$
+      where $J$ is the all-ones matrix. The eigenvalues of $J$ are $2n$ (once) and $0$ ($2n-1$ times), so those of $J-I$ are $2n-1$ and $-1$, and
+      $$\det(J-I)=(2n-1)(-1)^{2n-1}=-(2n-1),$$
+      which is odd. So $\det N\ne0$, and the rank is at least $2n$.
+    checked: "script: numerical rank of M_n is 2n for n = 1…6"
+    status: ready
+
+  - id: B6
+    topic: "Number theory: affine maps that preserve triangular numbers"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - "A nonnegative integer $t$ is triangular exactly when $8t+1$ is a perfect square."
+      - "Choose $a$ and $b$ so that $8(at+b)+1$ is a fixed odd square times $8t+1$."
+    solution: |
+      **Key idea:** $t$ is triangular exactly when $8t+1$ is a square, and multiplying by an odd square keeps that property in both directions.
+
+      **Test for triangular numbers.** $8\cdot\frac{k(k+1)}2+1=(2k+1)^2$. Conversely, if $8t+1=m^2$, then $m$ is odd, $m=2k+1$ with $k\ge0$, and $t=\frac{k(k+1)}2$.
+
+      **The pairs.** For each $k\ge1$ let $a=(2k+1)^2$ and $b=\frac{k(k+1)}2$, so that $8b+1=a$. Then
+      $$8(at+b)+1=8at+a=(2k+1)^2(8t+1).$$
+      An integer times an odd square $(2k+1)^2$ is a square exactly when the integer itself is a square. So $at+b$ is triangular exactly when $t$ is. Different $k$ give different pairs, for example $(9,1)$, $(25,3)$, $(49,6)$, so there are infinitely many.
+    checked: "script: for k = 1…4, checked the equivalence for all t < 20000"
+    status: ready

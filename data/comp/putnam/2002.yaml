@@ -1,0 +1,247 @@
+year: 2002
+edition: 63rd
+date: "December 7, 2002"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2002.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Calculus: derivatives of a reciprocal, evaluated at one"
+    areas: [calculus, algebra]
+    difficulty: 1
+    answer: '$P_n(1)=(-k)^n\,n!$'
+    hints:
+      - 'Differentiate $\dfrac{P_n(x)}{(x^k-1)^{n+1}}$ once and read off a recursion for $P_{n+1}$.'
+      - 'At $x=1$ the term with $x^k-1$ in front disappears.'
+    solution: |
+      **Key idea:** differentiate once to get a recursion for $P_n$; at $x=1$ one of its two terms vanishes.
+
+      Start with $P_0=1$. Differentiating $\frac{P_n}{(x^k-1)^{n+1}}$ gives
+      $$\frac{P_n'(x)(x^k-1)-(n+1)kx^{k-1}P_n(x)}{(x^k-1)^{n+2}},$$
+      so $P_{n+1}(x)=(x^k-1)P_n'(x)-(n+1)kx^{k-1}P_n(x)$. At $x=1$ the first term is $0$:
+      $$P_{n+1}(1)=-(n+1)k\,P_n(1).$$
+      Starting from $P_0(1)=1$, this gives $P_n(1)=(-k)^n\,n!$.
+    checked: "script: sympy computed P_n(1) for k ≤ 4, n ≤ 5"
+    status: ready
+
+  - id: A2
+    topic: "Geometry: five points and a closed hemisphere"
+    areas: [geometry]
+    difficulty: 1
+    hints:
+      - 'Draw a great circle through two of the points.'
+    solution: |
+      **Key idea:** a great circle through two of the points splits the sphere into two closed hemispheres, both containing those two; the other three points split between the sides.
+
+      Pick two of the five points and a great circle through both (if they are antipodal, any great circle through them). The great circle bounds two closed hemispheres, and each contains both chosen points. The remaining three points lie in these two hemispheres, so by pigeonhole one hemisphere holds at least two of them. That closed hemisphere contains at least four of the five points.
+    checked: "proof only"
+    status: ready
+
+  - id: A3
+    topic: "Combinatorics: subsets with integer average, a pairing"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'If a set has integer average $m$, what happens to the average when you add or remove the number $m$ itself?'
+    solution: |
+      **Key idea:** toggling the average itself does not change the average, which pairs up all such subsets except the singletons.
+
+      Let $S$ be a nonempty subset of $\{1,\dots,n\}$ with integer average $m$. Then $m$ is between the smallest and largest elements, so $1\le m\le n$. Adding $m$ to a set with average $m$, or removing it, keeps the average equal to $m$.
+
+      So the map $S\mapsto S\,\triangle\,\{m\}$ (remove $m$ if present, else add it) sends sets with integer average $m$ to sets with the same average, and doing it twice gives back $S$. It never fixes a set. The only problem is when the result is empty, which happens exactly for $S=\{m\}$.
+
+      So the sets that are not singletons split into pairs $\{S,\ S\triangle\{m\}\}$, and their number is even. Adding the $n$ singletons (each has an integer average), $T_n=n+\text{even}$. Hence $T_n-n$ is even.
+    checked: "script: T_n − n is even for 2 ≤ n ≤ 15 (direct enumeration)"
+    status: ready
+
+  - id: A4
+    topic: "Games: determinant tic-tac-toe on a 3×3 board"
+    areas: [combinatorics, linear-algebra]
+    difficulty: 3
+    answer: 'Player 0 wins'
+    hints:
+      - 'Player 0 does not need a zero determinant in a clever way: two equal rows are enough, and four zeros at the corners of a rectangle give two equal rows.'
+      - 'If two zeros sit in one column, look at the other four cells in those two rows. Which pairs of them win for player 0?'
+    solution: |
+      **Key idea:** player 0 aims for four zeros at the corners of a "rectangle" (two rows times two columns) or three zeros in a line. Either gives a zero determinant, and player 0 can force one of them.
+
+      **Why these shapes win.** If the zeros fill rows $i,j$ in columns $k,l$, both rows $i$ and $j$ have $1$ in the third column and $0$ elsewhere. Two equal rows make the determinant $0$. A row or column of zeros also makes it $0$.
+
+      **A useful position.** Suppose player 0 has zeros at $(i,k)$ and $(j,k)$ in one column, and the four cells of rows $i,j$ in the other two columns are empty, with player 1 to move and player 0 still to place two zeros. Among those four cells, any two in the same row complete a row of zeros, and any two in the same column complete a rectangle. So player 0 only needs two of the four cells that are not diagonal to each other. Player 1 moves; if that move is one of the four cells, player 0 takes the cell diagonally opposite to it, otherwise any of the four. Player 0's new cell has a row partner and a column partner, both empty. Player 1 can block only one, and player 0 takes the other. The same works with rows and columns swapped.
+
+      **The strategy.** Permuting rows and columns only changes the sign of the determinant, so we may assume player 1 starts at $(1,1)$. Player 0 answers at $(2,2)$. Now look at player 1's second move.
+
+      1. It is not one of $(2,3),(3,2),(3,3)$. Then one of the five-cell sets $\{(2,3),(1,2),(1,3),(3,2),(3,3)\}$ or $\{(3,2),(2,1),(2,3),(3,1),(3,3)\}$ is still empty, because player 1's move lies in at most one of them. Player 0 plays $(2,3)$ in the first case (a pair in row $2$) or $(3,2)$ in the second (a pair in column $2$), reaching the useful position.
+      2. Player 1 played $(3,3)$. Player 0 plays $(2,3)$, threatening $(2,1)$ to finish row $2$, so player 1 must take $(2,1)$. Player 0 plays $(1,2)$, which threatens both $(1,3)$ (rectangle on rows $1,2$, columns $2,3$) and $(3,2)$ (column $2$). One of them is left.
+      3. Player 1 played $(2,3)$. Player 0 plays $(3,2)$, threatening $(1,2)$ to finish column $2$; player 1 must take $(1,2)$. Player 0 plays $(3,1)$, threatening $(3,3)$ (row $3$) and $(2,1)$ (rectangle on rows $2,3$, columns $1,2$). If player 1 played $(3,2)$ instead, use the same moves with rows and columns swapped.
+
+      In every line player 0 ends with a zero row, a zero column, or two equal rows, so the determinant is $0$ and player 0 wins.
+    checked: "script: full game-tree search confirms player 0 wins; the strategy above was played against all 945 sequences of player 1's moves and never lost"
+    status: ready
+
+  - id: A5
+    topic: "Number theory: a recursive sequence lists every positive rational"
+    areas: [number-theory, combinatorics]
+    difficulty: 2
+    hints:
+      - 'If $x=a_{k-1}/a_k$ appears, find indices where $x+1$ and $\dfrac{x}{x+1}$ appear.'
+      - 'Then use induction on numerator plus denominator.'
+    solution: |
+      **Key idea:** the two rules turn a ratio $x$ into $x+1$ and into $\frac x{x+1}$, and every positive rational other than $1$ comes from a simpler one by one of these moves.
+
+      All $a_n$ are positive integers (by induction), so the ratios make sense. Suppose $x=a_{k-1}/a_k$ for some $k\ge1$.
+
+      - Index $2k+1$: $\dfrac{a_{2k}}{a_{2k+1}}=\dfrac{a_{k-1}+a_k}{a_k}=x+1$, using $a_{2k}=a_{2(k-1)+2}=a_{k-1}+a_k$ and $a_{2k+1}=a_k$.
+      - Index $2k$: $\dfrac{a_{2k-1}}{a_{2k}}=\dfrac{a_{k-1}}{a_{k-1}+a_k}=\dfrac{x}{x+1}$, using $a_{2k-1}=a_{k-1}$.
+
+      Now prove by induction on $p+q$ that every $\frac pq$ in lowest terms appears. For $p+q=2$, $\frac11=a_0/a_1$ appears at $n=1$. If $p>q$, then $\frac pq=x+1$ with $x=\frac{p-q}q$, which has a smaller sum. If $p<q$, then $\frac pq=\frac{x}{x+1}$ with $x=\frac p{q-p}$, again a smaller sum. By induction $x$ appears, and by the two rules so does $\frac pq$.
+    checked: "script: the first 5000 ratios contain every p/q with p, q ≤ 11"
+    status: ready
+
+  - id: A6
+    topic: "Series: a digit-count recursion, convergent only in base 2"
+    areas: [analysis, number-theory]
+    difficulty: 4
+    answer: 'only $b=2$'
+    hints:
+      - 'Group $n$ by its number of digits $d$. The block sum of $1/n$ is close to $\ln b$.'
+      - 'The grouped series is $\ln b$ (roughly) times the series itself. Compare $\ln b$ with $1$.'
+    solution: |
+      **Key idea:** grouping by digit count makes the series about $\ln b$ times itself (plus a constant). That forces divergence when $\ln b>1$ and gives a bound when the block sums stay below $1$.
+
+      For $n\ge3$ with $d$ digits, $f(n)=n\,f(d)$. Let $B_d=\sum 1/n$ over the $d$-digit numbers. When $b\ge3$, every $n<b$ has one digit and $f(n)=n$ (this also holds for $n=1,2$), so
+      $$\sum_{n<b^k}\frac1{f(n)}=H_{b-1}+\sum_{d=2}^k\frac{B_d}{f(d)},\qquad H_{b-1}=1+\tfrac12+\cdots+\tfrac1{b-1}.$$
+
+      **$b\ge3$ diverges.** The $d$-digit numbers run from $m=b^{d-1}$ to $bm-1$, so $B_d>\int_m^{bm}\frac{dx}x=\ln b$. If the series converged to $S$, then $\sum_{d\ge2}1/f(d)=S-1$, and
+      $$S\ge H_{b-1}+(\ln b)(S-1),\quad\text{so}\quad S\,(1-\ln b)\ge H_{b-1}-\ln b .$$
+      The right side is positive, because $H_{b-1}>\ln b$ (compare with $\int_1^b dx/x$). The left side is negative, because $\ln b>1$ when $b\ge3$. Contradiction.
+
+      **$b=2$ converges.** Here $n=2$ is special ($f(2)=2$), but for $d\ge3$ every $d$-digit $n$ has $f(n)=n\,f(d)$. The $d$-digit numbers are $m=2^{d-1}$ up to $2m-1$, so $B_d\le\frac1m+\ln\frac{2m-1}m<\frac14+\ln2<0.95$ for $d\ge3$. Let $P_k=\sum_{n<2^k}1/f(n)$. Then $P_k=P_2+\sum_{d=3}^kB_d/f(d)$. Since $d\le k<2^k$, the terms $1/f(d)$ with $3\le d\le k$ are among those in $P_k$, so
+      $$P_k\le P_2+0.95\sum_{d=3}^k\frac1{f(d)}\le P_2+0.95\,P_k,\qquad P_k\le20\,P_2 .$$
+      The partial sums are bounded and the terms are positive, so the series converges.
+    checked: "script: partial sums for b = 2 creep up slowly (1.80, 1.85, 1.88 at 2^3, 2^5, 2^7), for b = 3 they keep growing; the block bounds were checked numerically"
+    status: ready
+
+  - id: B1
+    topic: "Probability: a self-reinforcing shooter, uniform outcome"
+    areas: [probability]
+    difficulty: 1
+    answer: '$\dfrac1{99}$'
+    hints:
+      - 'Compute the distribution of hits after $3$ and $4$ shots. Guess a pattern.'
+    solution: |
+      **Key idea:** after $n$ shots the number of hits is uniform on $1,\dots,n-1$; induction keeps it uniform.
+
+      **Claim.** For $n\ge2$, after $n$ shots the number of hits is equal to each of $1,2,\dots,n-1$ with probability $\frac1{n-1}$.
+
+      For $n=2$ there is exactly one hit, so the claim holds. Suppose it holds for $n$. To have $k$ hits after $n+1$ shots, either there were $k-1$ hits and shot $n+1$ hit (probability $\frac{k-1}n$), or there were $k$ hits and it missed (probability $\frac{n-k}n$). So
+      $$P_{n+1}(k)=\frac1{n-1}\Big(\frac{k-1}n+\frac{n-k}n\Big)=\frac1{n-1}\cdot\frac{n-1}n=\frac1n$$
+      for $1\le k\le n$ (at the ends one of the two cases is impossible, but its formula gives $0$ anyway). This proves the claim. With $n=100$, the probability of exactly $50$ hits is $\frac1{99}$.
+    viz: putnam-2002-b1
+    checked: "script: exact recursion with fractions gives 1/99"
+    status: ready
+
+  - id: B2
+    topic: "Games: signing faces of a polyhedron"
+    areas: [combinatorics, geometry]
+    difficulty: 2
+    answer: 'The first player wins'
+    hints:
+      - 'Use Euler''s formula to show some face has at least four sides.'
+      - 'Sign that face first. Then aim for a neighbor of it that creates two threats at once.'
+    solution: |
+      **Key idea:** some face has at least four neighbors around it; signing it first lets the first player make a double threat on the next move.
+
+      **A face with at least four sides.** Every vertex has degree $3$, so $3V=2E$. If every face were a triangle, also $3F=2E$, so $V=F$ and Euler's formula $V-E+F=2$ would give $F-\tfrac32F+F=2$, i.e. $F=4$. The polyhedron has at least five faces, so some face $F_0$ has $m\ge4$ sides.
+
+      Around $F_0$ the neighboring faces $G_1,\dots,G_m$ come in cyclic order, and at each vertex of $F_0$ the three faces $F_0,G_i,G_{i+1}$ meet (indices mod $m$). (On a convex polyhedron, two faces share at most one edge, so the $G_i$ are distinct.)
+
+      **The play.** The first player signs $F_0$. The second player signs some face; if it is $G_k$, choose $j=k+2$, and if it is not a neighbor of $F_0$, choose any $j$. Since $m\ge4$, none of $G_{j-1},G_j,G_{j+1}$ is the second player's face. The first player signs $G_j$, which threatens to complete $\{F_0,G_j,G_{j-1}\}$ and $\{F_0,G_j,G_{j+1}\}$. The second player can block only one. The first player then signs the other and wins. The second player has signed only two faces by then, so cannot have won first.
+    checked: "proof only"
+    status: ready
+
+  - id: B3
+    topic: "Analysis: how fast (1 − 1/n)^n approaches 1/e"
+    areas: [analysis]
+    difficulty: 2
+    hints:
+      - 'Write $(1-\frac1n)^n=e^{-1}e^{-x}$ where $x=\sum_{k\ge2}\dfrac1{k\,n^{k-1}}$.'
+      - 'Use $x-\tfrac{x^2}2<1-e^{-x}<x$ for $x>0$.'
+    solution: |
+      **Key idea:** take logarithms; the error is $e^{-1}(1-e^{-x})$ with $x$ a little more than $\frac1{2n}$.
+
+      For $n\ge2$, $n\ln(1-\tfrac1n)=-\sum_{k\ge1}\frac1{k\,n^{k-1}}=-1-x$ with
+      $$x=\frac1{2n}+\frac1{3n^2}+\frac1{4n^3}+\cdots>0 .$$
+      So $\frac1e-\big(1-\frac1n\big)^n=\frac1e\big(1-e^{-x}\big)$, and we must show $\frac1{2n}<1-e^{-x}<\frac1n$.
+
+      **Upper bound.** $1-e^{-x}<x$, and
+      $$x\le\frac1{2n}+\frac1{3n^2}\Big(1+\frac1n+\frac1{n^2}+\cdots\Big)=\frac1{2n}+\frac1{3n(n-1)}\le\frac1n$$
+      since $3(n-1)\ge2$.
+
+      **Lower bound.** $1-e^{-x}>x-\frac{x^2}2$, so it suffices that $x-\frac1{2n}>\frac{x^2}2$. The left side is more than $\frac1{3n^2}$. For $n\ge3$ the estimate above gives $x\le\frac1{2n}+\frac1{2n^2}\le\frac2{3n}$, so $\frac{x^2}2\le\frac2{9n^2}<\frac1{3n^2}$. For $n=2$ check directly: $\frac1e-\frac14\approx0.118$ lies between $\frac1{4e}\approx0.092$ and $\frac1{2e}\approx0.184$.
+    checked: "script: both inequalities checked numerically for 2 ≤ n < 200"
+    status: ready
+
+  - id: B4
+    topic: "Strategy: guessing a number in an odd number of tries"
+    areas: [combinatorics, probability]
+    difficulty: 2
+    hints:
+      - 'Think in blocks of three numbers. Can you arrange to win for two out of every three?'
+    solution: |
+      **Key idea:** guess $1,3,4,6,7,9,\dots$; in each block of three consecutive numbers you win on two of them.
+
+      Guess, in order, $1,3,4,6,7,9,\dots$: the $(2k+1)$-st guess is $3k+1$ and the $(2k+2)$-nd guess is $3k+3$, skipping a guess once the answer is pinned down. Each guess is still feasible when made, since all earlier answers were "higher".
+
+      Look at the block $3k+1,\ 3k+2,\ 3k+3$:
+      - $n=3k+1$ is hit on guess $2k+1$, which is odd: win.
+      - $n=3k+2$: guess $2k+1$ says "higher" and guess $2k+2$ says "lower", so only $3k+2$ is left, and it is guess $2k+3$: odd, win.
+      - $n=3k+3$ is hit on guess $2k+2$: lose.
+
+      Now $2002=3\cdot667+1$. The numbers $1,\dots,2001$ form $667$ blocks with $2$ wins each, and $n=2002=3\cdot667+1$ is hit on guess $2\cdot667+1$, a win. That is $1335$ winning values out of $2002$, and
+      $$\frac{1335}{2002}>\frac23\quad\text{because}\quad 3\cdot1335=4005>4004=2\cdot2002 .$$
+    checked: "script: simulated the strategy for every n from 1 to 2002: 1335 wins"
+    status: ready
+
+  - id: B5
+    topic: "Number theory: one number, many three-digit palindromes"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'The digits $a,\,2a,\,a$ in base $b$ give $a(b+1)^2$.'
+      - 'Choose a power of $2$ with many square factors of the form $(b+1)^2$.'
+    solution: |
+      **Key idea:** the palindrome with digits $a,2a,a$ in base $b$ is $a(b+1)^2$, so a number with many large square factors is such a palindrome in many bases.
+
+      In base $b$, the digits $a,\ 2a,\ a$ (valid when $1\le a$ and $2a<b$) give
+      $$ab^2+2ab+a=a(b+1)^2 .$$
+
+      Let $K=3m-1$ with $m=2002$, and let $n=4^K=2^{2K}$. For each $j$ with $2m\le j\le K$, take
+      $$b=2^j-1,\qquad a=4^{K-j}.$$
+      Then $a(b+1)^2=4^{K-j}\cdot4^j=n$. The digit condition $2a<b$ reads $2^{2K-2j+1}<2^j-1$. Since $j\ge2m$ we have $2K-2j+1=6m-1-2j\le j-1$, so $2a\le2^{j-1}\le2^j-2<b$. So $n$ is the three-digit palindrome $(a,2a,a)$ in each of these bases.
+
+      The values of $j$ run from $2m$ to $3m-1$, giving $m=2002$ different bases. So $n=2^{12010}$ works.
+    checked: "script: verified with exact integers that 2^12010 has the palindrome (a, 2a, a) in exactly the 2002 listed bases"
+    status: ready
+
+  - id: B6
+    topic: "Algebra: a Frobenius determinant splits into linear factors"
+    areas: [algebra, number-theory]
+    difficulty: 4
+    hints:
+      - 'Work in $\mathbb F_p[x,y,z]$. If $z=ax+by$ with $a,b\in\mathbb F_p$, how is the third column related to the first two?'
+      - 'Count the linear forms $x$, $y-ax$, $z-ax-by$ and compare with the degree of the determinant.'
+    solution: |
+      **Key idea:** mod $p$, the $p$-th power map is additive and fixes the constants $0,\dots,p-1$. So the determinant vanishes whenever one variable is an $\mathbb F_p$-combination of the others, and that gives enough linear factors to account for the whole degree.
+
+      Work with coefficients mod $p$, in $\mathbb F_p[x,y,z]$, and let $D$ be the determinant. In characteristic $p$, $(u+v)^p=u^p+v^p$, and $c^p=c$ for $c\in\mathbb F_p$.
+
+      **Factors.** Fix $a,b\in\mathbb F_p$ and substitute $z=ax+by$. Then $z^p=ax^p+by^p$ and $z^{p^2}=ax^{p^2}+by^{p^2}$. The third column becomes $a$ times the first plus $b$ times the second, so $D=0$. As a polynomial in $z$ over $\mathbb F_p[x,y]$, $D$ has the root $z=ax+by$, so $z-ax-by$ divides $D$. In the same way (with $z$ absent) $y-ax$ divides $D$ for each $a$, and $x$ divides $D$.
+
+      **All of them at once.** These $p^2+p+1$ linear forms are irreducible and no two are constant multiples of each other. $\mathbb F_p[x,y,z]$ has unique factorization, so their product $\Pi$ divides $D$.
+
+      **Degrees.** Each term of $D$ has degree $1+p+p^2$, which is also the degree of $\Pi$. So $D=c\,\Pi$ for a constant $c$. The monomial $x\,y^p\,z^{p^2}$ has coefficient $1$ in $D$ (the diagonal). In $\Pi$, to get $x\,y^p\,z^{p^2}$ we must take $x$ from the factor $x$, $y$ from each $y-ax$, and $z$ from each $z-ax-by$, so its coefficient is also $1$. Hence $c=1$, and
+      $$D\equiv x\prod_{a}(y-ax)\prod_{a,b}(z-ax-by)\pmod p .$$
+      Each factor has the form $\alpha x+\beta y+\gamma z$ with integers $\alpha,\beta,\gamma$.
+    checked: "script: for p = 3, sympy expanded D minus the product; all coefficients are multiples of 3"
+    status: ready

@@ -1,0 +1,277 @@
+year: 1997
+edition: 58th
+date: "December 6, 1997"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1997.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Triangle centers: recovering a side from the Euler line"
+    areas: [geometry]
+    difficulty: 1
+    answer: '$BC=28$'
+    hints:
+      - 'Put $BC$ on the $x$-axis with $M$ at the origin. Where are $O$, $F$ and $H$?'
+      - 'The centroid $G$ lies on segment $HO$ with $HG=2\,GO$; it is also the average of $A$, $B$, $C$.'
+    solution: |
+      **Key idea:** coordinates plus the Euler-line relation $G=\frac{H+2O}{3}$ find the vertex $A$; then $OA=OB$ gives $B$.
+
+      Put $M=(0,0)$ with $BC$ on the $x$-axis, so $B=(-t,0)$ and $C=(t,0)$. The center $O$ is on the perpendicular bisector of $BC$, so $O=(0,5)$. The altitude from $A$ is vertical through $F$, and $H$ is on it; the rectangle forces $F=(11,0)$ and $H=(11,5)$. So $A=(11,h)$ for some $h$.
+
+      The centroid is $G=\frac{A+B+C}3=\big(\frac{11}3,\frac h3\big)$. On the Euler line, $G=\frac{H+2O}{3}=\big(\frac{11}3,5\big)$. So $h=15$ and $A=(11,15)$.
+
+      Now $OA=OB$: $11^2+10^2=t^2+5^2$, so $t^2=196$ and $t=14$. Hence $BC=2t=28$.
+
+      Check: the altitude from $B=(-14,0)$ is perpendicular to $AC$, whose direction is $(3,-15)$; it is the line $3(x+14)-15y=0$, which at $x=11$ gives $y=5$. So $H=(11,5)$ indeed.
+    checked: "script: with A = (11, 15), B = (−14, 0), C = (14, 0) the orthocenter is (11, 5) and the circumcenter is (0, 5)"
+    status: ready
+
+  - id: A2
+    topic: "Games: passing pennies around a shrinking table"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: 'Every $n=2^m+1$ and every $n=2^m+2$ ($m\ge1$)'
+    hints:
+      - 'Simulate $n=10$. After the first lap, what does the table look like?'
+      - 'With an even number of players, the same players always pass 1 and the same players always pass 2. Follow one full round of draining.'
+    solution: |
+      **Key idea:** once the table has $2^j$ players who all hold the same amount, except a little extra for the next passer, each stretch of laps halves the table and doubles the holdings, until one player is left.
+
+      **The state $T(k,a,b)$:** $k$ players around the table, with $a\ge1$ and $b\ge1$. The player about to pass $1$ holds $a+b$, and everyone else holds $a$.
+
+      **Claim:** if $k$ is even, $T(k,a,b)$ turns into $T(k/2,2a,b)$.
+
+      Number the players $1..k$ starting with the next passer. Passes alternate $1,2,1,2,\dots$; since $k$ is even, odd-numbered players always pass $1$ and receive $2$, and even-numbered ones receive $1$ and pass $2$. So each lap, every odd player gains $1$ and every even player loses $1$. (Player $1$ passes first and receives last, but the net change over a lap is still $+1$.) An even player starting a lap with $c\ge1$ pennies has $c+1\ge2$ when it must pass $2$, so all passes are made in full. During lap $a$ every even player drops to $0$ and leaves, still having made its full pass, so the lap finishes exactly as before. After $a$ laps the $k/2$ odd players remain with $2a$ each, except player $1$, who has $2a+b$ and is next to pass $1$. That is $T(k/2,2a,b)$.
+
+      Applying the claim again and again, $T(2^j,a,b)$ reaches a single player, who then holds every penny.
+
+      **Start with $n=2^m+2$.** Player 1 passes $1$ and leaves; player 2 passes $2$ and leaves; player 3 now holds $3$ and is next to pass $1$, and the other $2^m-1$ players hold $1$. That is $T(2^m,1,2)$.
+
+      **Start with $n=2^m+1$.** Again players 1 and 2 leave and player 3 holds $3$. Now the passes go $1,2,1,2,\dots$ along players $3,4,\dots,n$: each odd player $j\ge3$ receives $2$, holds $3$, passes $1$ and keeps $2$; each even player receives $1$, holds $2$, passes both and leaves. Player $n$ is odd, so it receives $2$ (holding $3$) and is next to pass $1$, to player $3$. The players left are $3,5,\dots,n$, which is $2^{m-1}$ players, all holding $2$ except player $n$ with $3$. That is $T(2^{m-1},2,1)$. (For $n=3$ this already leaves one player.)
+
+      So every $n=2^m+1$ and every $n=2^m+2$ ends with one player holding all $n$ pennies, an infinite set.
+    viz: putnam-1997-a2
+    checked: "script: simulated n ≤ 80; the n that end with one player are exactly 2, 3, 4, 5, 6, 9, 10, 17, 18, 33, 34, 65, 66, matching 2^m + 1 and 2^m + 2"
+    status: ready
+
+  - id: A3
+    topic: "Series: an integral of two power series"
+    areas: [calculus, analysis]
+    difficulty: 2
+    answer: '$\sqrt e$'
+    hints:
+      - 'The first series is a familiar function times $x$.'
+      - 'Integrate the second series term by term against the first: $\int_0^\infty x^{2k+1}e^{-x^2/2}\,dx=2^kk!$.'
+    solution: |
+      **Key idea:** the first factor is $xe^{-x^2/2}$, and integrating term by term against it turns the second series into the series for $e^{1/2}$.
+
+      The first series is $x\sum_{k\ge0}\frac{(-x^2/2)^k}{k!}=xe^{-x^2/2}$. The second is $\sum_{k\ge0}\frac{x^{2k}}{2^{2k}(k!)^2}$, with positive terms.
+
+      Substituting $u=x^2/2$,
+      $$\int_0^\infty x^{2k+1}e^{-x^2/2}\,dx=\int_0^\infty(2u)^ke^{-u}\,du=2^kk! .$$
+      All terms are nonnegative, so we may integrate term by term (monotone convergence):
+      $$\int_0^\infty xe^{-x^2/2}\sum_k\frac{x^{2k}}{4^k(k!)^2}\,dx=\sum_k\frac{2^kk!}{4^k(k!)^2}=\sum_k\frac{(1/2)^k}{k!}=e^{1/2}.$$
+    checked: "mpmath: numerical integral of x·e^(−x²/2)·I0(x) equals 1.6487212707 = √e"
+    status: ready
+
+  - id: A4
+    topic: "Groups: a map respecting triple products is nearly a homomorphism"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Compare the triples $(x,y,(xy)^{-1})$ and $(xy,e,(xy)^{-1})$.'
+      - 'Also compare $(e,x,x^{-1})$ and $(x,e,x^{-1})$ to see that $\varphi(e)$ commutes with every $\varphi(x)$.'
+    solution: |
+      **Key idea:** two cleverly chosen pairs of triples show $\varphi(x)\varphi(y)=\varphi(xy)\varphi(e)$ and that $\varphi(e)$ is central in the image; then $a=\varphi(e)^{-1}$ works.
+
+      Let $c=\varphi(e)$.
+
+      - The triples $(x,y,(xy)^{-1})$ and $(xy,e,(xy)^{-1})$ both multiply to $e$, so $\varphi(x)\varphi(y)\varphi((xy)^{-1})=\varphi(xy)\,c\,\varphi((xy)^{-1})$. Cancelling on the right: $\varphi(x)\varphi(y)=\varphi(xy)\,c$.
+      - The triples $(e,x,x^{-1})$ and $(x,e,x^{-1})$ give $c\,\varphi(x)\varphi(x^{-1})=\varphi(x)\,c\,\varphi(x^{-1})$, so $c\,\varphi(x)=\varphi(x)\,c$.
+
+      Let $a=c^{-1}$ and $\psi(x)=a\varphi(x)$. Then, using that $c^{-1}$ also commutes with each $\varphi(x)$,
+      $$\psi(x)\psi(y)=c^{-1}\varphi(x)c^{-1}\varphi(y)=c^{-1}\varphi(x)\varphi(y)c^{-1}=c^{-1}\varphi(xy)\,c\,c^{-1}=\psi(xy).$$
+      So $\psi$ is a homomorphism.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: A5
+    topic: "Parity: counting Egyptian fraction tuples by symmetry"
+    areas: [number-theory, combinatorics]
+    difficulty: 3
+    answer: '$N_{10}$ is odd'
+    hints:
+      - 'Swapping $a_1$ and $a_2$ pairs up the tuples with $a_1\ne a_2$. So only tuples with $a_1=a_2$ matter for parity.'
+      - 'Keep pairing positions until you reach an equation in two unknowns.'
+    solution: |
+      **Key idea:** swapping two positions is an involution; its unmatched tuples have those positions equal. Repeating this reduces the parity question to a tiny equation.
+
+      If an involution acts on a finite set, the set's size has the same parity as the number of fixed points. Apply this repeatedly.
+
+      1. Swapping $a_1\leftrightarrow a_2$, then $a_3\leftrightarrow a_4$, …, $a_9\leftrightarrow a_{10}$: $N_{10}$ has the parity of the number of solutions with $a_1=a_2,\dots,a_9=a_{10}$, i.e. of $\frac2{b_1}+\dots+\frac2{b_5}=1$.
+      2. Swapping $b_1\leftrightarrow b_2$ and $b_3\leftrightarrow b_4$: the parity of the number of solutions of $\frac4{c_1}+\frac4{c_2}+\frac2{b}=1$.
+      3. Swapping $c_1\leftrightarrow c_2$: the parity of the number of solutions of $\frac8c+\frac2b=1$.
+
+      In the last equation both fractions are below $1$, so $c>8$ and $b>2$, and clearing denominators gives $(c-8)(b-2)=16$. The positive factorizations of $16$ give $5$ solutions: $(c,b)=(9,18),(10,10),(12,6),(16,4),(24,3)$. Since $5$ is odd, $N_{10}$ is odd.
+    checked: "script: the same reduction predicts N_4 odd and N_6 even; exact counts N_4 = 215 and N_6 = 2025462 agree; the 5 final solutions were listed by search"
+    status: ready
+
+  - id: A6
+    topic: "Recurrences: the largest parameter making a sequence terminate"
+    areas: [algebra, combinatorics]
+    difficulty: 4
+    answer: '$x_k=\dbinom{n-1}{k-1}$ (with $c=n-1$)'
+    hints:
+      - 'Turn the recurrence into a differential equation for $F(t)=\sum_k x_kt^k$.'
+      - 'Solve it: $F(t)=t(1-t)^{-A}(1+t)^{B}$ for suitable $A,B$ depending on $c$. When is this a polynomial of degree $n$?'
+    solution: |
+      **Key idea:** the generating function satisfies a first-order linear ODE whose solutions are $t(1-t)^{-A}(1+t)^{B}$; it is a polynomial of degree $n$ exactly at $n$ values of $c$, the largest being $n-1$.
+
+      Let $F(t)=\sum_{k\ge0}x_kt^k$ (as a formal power series). Multiply the recurrence $(k+1)x_{k+2}=cx_{k+1}-(n-k)x_k$ by $t^{k+1}$ and sum over $k\ge0$. With $x_0=0$:
+      $$F'-\frac Ft=cF-ntF+t^2F',\qquad\text{i.e.}\qquad(1-t^2)F'=\Big(\frac1t+c-nt\Big)F .$$
+      Conversely, a series $F=t+\dots$ satisfying this equation has coefficients obeying the recurrence with $x_0=0$, $x_1=1$, so it is the generating function.
+
+      **The roots in $c$.** Each $x_{k+1}$ is a polynomial in $c$ of degree $k$ with leading coefficient $\frac1{k!}$, so $x_{n+1}$ has degree exactly $n$ in $c$. For $j=0,1,\dots,n-1$ put $c_j=n-1-2j$ and
+      $$F_j(t)=t(1-t)^j(1+t)^{n-1-j}.$$
+      Its logarithmic derivative is $\frac1t-\frac{j}{1-t}+\frac{n-1-j}{1+t}=\frac{1}{t}+\frac{c_j-(n-1)t}{1-t^2}$, and multiplying by $1-t^2$ gives $\frac1t-t+c_j-(n-1)t=\frac1t+c_j-nt$. So $F_j$ solves the equation for $c=c_j$. It is a polynomial of degree $n$, so $x_{n+1}=0$ at $c=c_j$.
+
+      These are $n$ different roots of a degree-$n$ polynomial, so they are all of them. The largest is $c=n-1$ ($j=0$), where $F=t(1+t)^{n-1}$. Therefore
+      $$x_k=\binom{n-1}{k-1},\qquad 1\le k\le n .$$
+    checked: "sympy: for n = 7, x_8 as a polynomial in c has roots −6, −4, …, 6; at c = 6 the x_k are 1, 6, 15, 20, 15, 6, 1"
+    status: ready
+
+  - id: B1
+    topic: "Sums: distances to the nearest integer"
+    areas: [number-theory, analysis]
+    difficulty: 1
+    answer: '$F_n=n$'
+    hints:
+      - 'Write $s=\frac m{6n}$. Then the two terms are the distances from $s$ and from $2s$ to the nearest integer.'
+      - 'Sketch $g(s)=\min(\|s\|,\|2s\|)$ on $[0,\frac12]$; it is symmetric about $\frac12$.'
+    solution: |
+      **Key idea:** with $s=\frac m{6n}$ the summand is a simple tent-shaped function $g(s)$, and the sum is two arithmetic series.
+
+      Write $\|t\|$ for the distance to the nearest integer and $s=\frac m{6n}$, so the summand is $g(s)=\min(\|s\|,\|2s\|)$. On $[0,\frac12]$:
+      - for $s\le\frac14$: $\|s\|=s$ and $\|2s\|=2s$, so $g=s$;
+      - for $\frac14\le s\le\frac12$: $\|2s\|=1-2s$, which is $\le s$ exactly when $s\ge\frac13$.
+
+      So $g(s)=s$ on $[0,\frac13]$ and $g(s)=1-2s$ on $[\frac13,\frac12]$. Also $g(1-s)=g(s)$.
+
+      Over $m=1,\dots,3n$ (that is $s\le\frac12$, and $g(\frac12)=0$):
+      $$\sum_{m=1}^{2n}\frac m{6n}+\sum_{m=2n+1}^{3n}\frac{3n-m}{3n}=\frac{2n+1}6+\frac{n-1}6=\frac n2 .$$
+      The terms with $m=3n+1,\dots,6n-1$ mirror those with $m=1,\dots,3n-1$. So $F_n=2\cdot\frac n2=n$.
+    checked: "script: exact rational sums for n ≤ 29 all equal n"
+    status: ready
+
+  - id: B2
+    topic: "ODEs: an energy that cannot grow"
+    areas: [analysis]
+    difficulty: 2
+    hints:
+      - 'Consider $E=f^2+(f'')^2$ and differentiate.'
+      - 'The sign of $E''$ depends on the sign of $x$.'
+    solution: |
+      **Key idea:** the "energy" $E=f^2+f'^2$ decreases as you move away from $0$ in either direction, so it never exceeds $E(0)$.
+
+      Let $E(x)=f(x)^2+f'(x)^2$. Then
+      $$E'=2f'(f+f'')=-2x\,g(x)\,f'(x)^2 .$$
+      Since $g\ge0$: for $x\ge0$, $E'\le0$, so $E(x)\le E(0)$; for $x\le0$, $E'\ge0$, so again $E(x)\le E(0)$.
+
+      Hence $f(x)^2\le E(x)\le E(0)$, i.e. $|f(x)|\le\sqrt{f(0)^2+f'(0)^2}$ for all $x$.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: B3
+    topic: "Harmonic numbers: when the denominator avoids 5"
+    areas: [number-theory]
+    difficulty: 3
+    answer: '$1\le n\le4$, $20\le n\le24$, $100\le n\le104$, $120\le n\le124$'
+    hints:
+      - 'Split $H_n$ into terms with $5\mid k$ and the rest: $H_n=\frac15H_{\lfloor n/5\rfloor}+(\text{rest})$.'
+      - 'Each full block $\frac1{5j+1}+\dots+\frac1{5j+4}$ is divisible by $5$. Track the power of $5$ in $H_n$ ($5$-adic valuation).'
+    solution: |
+      **Key idea:** $H_n=\frac15H_m+X$ with $m=\lfloor n/5\rfloor$; the power of $5$ in $X$ is easy, so whether $H_n$ is "good" depends only on how divisible $H_m$ is by $5$.
+
+      For a rational $q\ne0$ let $v(q)$ be the exponent of $5$ in it (so $5\nmid q_n$ means $v(H_n)\ge0$; set $v(0)=\infty$). Write $n=5m+r$ with $0\le r\le4$:
+      $$H_n=\frac15H_m+X,\qquad X=\sum_{k\le n,\ 5\nmid k}\frac1k .$$
+      **The rest $X$.** Each full block satisfies $\frac1{5j+1}+\frac1{5j+4}=\frac{5(2j+1)}{(5j+1)(5j+4)}$, and similarly for $2,3$, so its $v\ge1$. The partial block is $\equiv H_r$ mod $5$ (in $5$-adic terms). Since $H_1=1$, $H_2=\frac32$, $H_3=\frac{11}6$ have $v=0$, we get $v(X)=0$ if $r\in\{1,2,3\}$ and $v(X)\ge1$ if $r\in\{0,4\}$.
+
+      **Three cases for $m\ge1$.**
+      - $v(H_m)<0$: then $v(\frac15H_m)\le-2<v(X)$, so $v(H_n)<0$.
+      - $v(H_m)=0$: then $v(\frac15H_m)=-1<v(X)$, so $v(H_n)=-1$.
+      - $v(H_m)\ge1$: then both parts have $v\ge0$, so $v(H_n)\ge0$.
+
+      For $m=0$, $H_n=X$ with $v\ge0$. So $n$ is good exactly when $m=0$ or $v(H_m)\ge1$.
+
+      **Running it.** $n=1..4$ are good. Among them only $H_4=\frac{25}{12}$ has $v\ge1$, so next come $n=20..24$. Computing, $v(H_{20})\ge1$ and $v(H_{24})\ge1$ while $H_{21},H_{22},H_{23}$ have $v=0$; so next come $100..104$ and $120..124$. None of these ten has $v\ge1$, so the list stops.
+    checked: "script: exact harmonic numbers for n < 700; the good n are exactly these 19"
+    status: ready
+
+  - id: B4
+    topic: "Generating functions: an alternating trinomial-coefficient sum"
+    areas: [combinatorics, algebra]
+    difficulty: 3
+    hints:
+      - 'Form $\sum_k b_ky^k$ where $b_k$ is the sum in the problem. Swap the order of summation.'
+      - 'You should get $\sum_m y^m(1-y+y^2)^m$, a geometric series.'
+    solution: |
+      **Key idea:** the generating function of the sums is $\frac1{(1-y)(1+y^2)}$, whose coefficients are only $0$ and $1$.
+
+      Let $b_k=\sum_i(-1)^ia_{k-i,i}$. The terms with $i>\lfloor 2k/3\rfloor$ are zero anyway, since $(1+x+x^2)^{k-i}$ has degree $2(k-i)<i$ then. So $b_k=\sum_{i\ge0}(-1)^ia_{k-i,i}$. Now, as formal power series in $y$, with $m=k-i$:
+      $$\sum_kb_ky^k=\sum_{m\ge0}y^m\sum_i a_{m,i}(-y)^i=\sum_{m\ge0}y^m(1-y+y^2)^m=\frac1{1-y+y^2-y^3}.$$
+      Factor: $1-y+y^2-y^3=(1-y)(1+y^2)$. So
+      $$\sum_kb_ky^k=\frac1{1-y}\cdot\frac1{1+y^2},$$
+      and $b_k$ is the sum of the first $k+1$ coefficients of $\frac1{1+y^2}=1-y^2+y^4-\cdots$. Those partial sums are $1,1,0,0,1,1,0,0,\dots$. So $0\le b_k\le1$ for all $k$.
+    checked: "sympy: computed the sums directly for k < 40; all are 0 or 1 in the pattern 1, 1, 0, 0"
+    status: ready
+
+  - id: B5
+    topic: "Power towers: stabilizing modulo n"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'Prove more: for every $m$, the towers $T_k$ satisfy $T_k\equiv T_{k-1}\pmod m$ for all $k\ge m$.'
+      - 'Split $m=2^s t$ with $t$ odd. Mod $t$, use that $2^d\equiv1$ where $d$ is the order of $2$, and $d<m$.'
+    solution: |
+      **Key idea:** strong induction on the modulus: modulo the odd part, the exponents only matter modulo the order of $2$, which is a smaller modulus.
+
+      Let $T_0=1$ and $T_k=2^{T_{k-1}}$ (a tower of $k$ twos). We prove, by strong induction on $m\ge1$:
+
+      $$P(m):\quad T_k\equiv T_{k-1}\pmod m\ \text{ for all }k\ge m .$$
+      $P(1)$ is trivial. Let $m\ge2$, write $m=2^st$ with $t$ odd, and let $k\ge m$.
+
+      **Mod $2^s$.** Both $T_k=2^{T_{k-1}}$ and $T_{k-1}=2^{T_{k-2}}$ are powers of $2$ with exponents at least $s$: indeed $T_j\ge j+1$, and $k-2\ge2^s-2\ge s-1$, so $T_{k-2}\ge s$. Hence both are $\equiv0\pmod{2^s}$.
+
+      **Mod $t$.** If $t=1$ there is nothing to do. Otherwise let $d$ be the order of $2$ modulo $t$; then $d\le t-1<m$. By $P(d)$, since $k-1\ge m-1\ge d$, we have $T_{k-1}\equiv T_{k-2}\pmod d$, so $2^{T_{k-1}}\equiv2^{T_{k-2}}\pmod t$.
+
+      By the Chinese remainder theorem $T_k\equiv T_{k-1}\pmod m$, proving $P(m)$. Taking $m=n$ and $k=n$ gives the statement: the tower of $n$ twos is congruent mod $n$ to the tower of $n-1$ twos.
+    checked: "script: checked the congruence for 2 ≤ n < 300 using exact reduction of exponents"
+    status: ready
+
+  - id: B6
+    topic: "Dissections: four pieces of a 3-4-5 triangle"
+    areas: [geometry]
+    difficulty: 4
+    answer: '$\dfrac{25}{13}$'
+    hints:
+      - 'Find five points of the triangle that are pairwise at least $\frac{25}{13}$ apart. Two must share a piece.'
+      - 'Try the three corners, the point on the long leg at distance $\frac{25}{13}$ from its far end, and the point on the hypotenuse at distance $\frac{25}{13}$ from the end of the short leg.'
+    solution: |
+      **Key idea:** five points spaced $\frac{25}{13}$ apart give the lower bound, and an explicit cut into four pieces meets it.
+
+      Place the right angle at $C=(0,0)$ with $A=(4,0)$ and $B=(0,3)$. Use thirteenths: write $\langle p,q\rangle$ for the point $(\frac p{13},\frac q{13})$, so $A=\langle52,0\rangle$, $B=\langle0,39\rangle$, and the target is $25$ units.
+
+      **Lower bound.** Let $P=\langle27,0\rangle$ on $CA$ (so $AP=25$) and $Q=\langle20,24\rangle$ on $AB$ (so $BQ=25$, as $\overrightarrow{BQ}$ is $25$ times the unit vector $(\frac45,-\frac35)$). Then
+      $$|PQ|^2=7^2+24^2=25^2,\qquad |CP|=27,$$
+      and $|CQ|^2=976$, $|AQ|=40$, so $AP=BQ=PQ=25$ and every other distance among $A,B,C,P,Q$ is larger. So these five points are pairwise at least $\frac{25}{13}$ apart. With four pieces, two of them share a piece, so the diameter is at least $\frac{25}{13}$.
+
+      **Construction.** Also let $W=\langle32,15\rangle$ on $AB$, $X=\langle0,14\rangle$ on $CB$, $Y=\langle13,0\rangle$ on $CA$, and $Z=\langle12,20\rangle$ on segment $XQ$. Cut along $XQ$, $PW$ and $YZ$:
+      - corner $B$: triangle $BQX$, sides $25,25,\sqrt{500}$;
+      - corner $A$: triangle $APW$, sides $25,25,\sqrt{250}$;
+      - corner $C$: quadrilateral $CYZX$, longest distance $|CZ|=\sqrt{544}$;
+      - middle: pentagon $YPWQZ$, longest distances $|PQ|=|PZ|=25$ (others: $|YQ|=25$, $|YW|=\sqrt{586}$, $|ZW|=\sqrt{425}$).
+
+      A polygon's diameter is its largest vertex-to-vertex distance, so every piece has diameter at most $\frac{25}{13}$. The least diameter is $\frac{25}{13}$.
+    viz: putnam-1997-b6
+    checked: "script: verified all vertex distances, that the pieces' areas add to 6, and that Q, W lie on the hypotenuse and Z on XQ; a numerical search for 5 well-spread points also peaks at 1.923"
+    status: ready

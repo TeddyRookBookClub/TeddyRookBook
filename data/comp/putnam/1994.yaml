@@ -1,0 +1,267 @@
+year: 1994
+edition: 55th
+date: "December 3, 1994"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1994.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Series: a term bounded by its two children diverges"
+    areas: [analysis]
+    difficulty: 1
+    hints:
+      - 'Group the terms into blocks $2^k\le n<2^{k+1}$.'
+      - 'Compare the sum over one block with the sum over the block before it.'
+    solution: |
+      **Key idea:** each dyadic block of terms has sum at least the previous block, so every block sums to at least $a_1>0$.
+
+      Let $B_k=\sum_{2^k\le n<2^{k+1}} a_n$. The indices $2n$ and $2n+1$, for $n$ running over block $k-1$, are exactly the indices of block $k$, each used once. So
+      $$B_k=\sum_{2^{k-1}\le n<2^k}(a_{2n}+a_{2n+1}) \ge \sum_{2^{k-1}\le n<2^k} a_n = B_{k-1}.$$
+      By induction $B_k\ge B_0=a_1>0$ for every $k$. The partial sum up to $2^{K+1}-1$ is $B_0+\dots+B_K\ge (K+1)a_1$, which grows without bound. So the series diverges.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: A2
+    topic: "Area: equal sectors of an ellipse"
+    areas: [calculus, geometry]
+    difficulty: 1
+    answer: '$m=\dfrac29$'
+    hints:
+      - 'Squash the plane horizontally by a factor of 3. What does the ellipse become?'
+      - 'Squashing multiplies all areas by the same factor and turns lines through the origin into lines through the origin.'
+    solution: |
+      **Key idea:** the map $(x,y)\mapsto(x/3,y)$ turns the ellipse into the unit circle; areas scale by the same factor, so we just need equal circular sectors.
+
+      Under $u=x/3$, $v=y$, the ellipse $\frac19x^2+y^2=1$ becomes the unit circle $u^2+v^2=1$, and every area is divided by $3$. The line $y=\frac12x$ becomes $v=\frac32u$, and $y=mx$ becomes $v=3mu$.
+
+      - The first region becomes the sector between the $u$-axis and the line $v=\frac32u$: angle $\arctan\frac32$.
+      - The second becomes the sector between the line $v=3mu$ and the $v$-axis: angle $\frac\pi2-\arctan(3m)$.
+
+      Equal areas means equal angles: $\arctan(3m)=\frac\pi2-\arctan\frac32=\arctan\frac23$. So $3m=\frac23$ and $m=\frac29$.
+    checked: "script: numerical integration of both regions for m = 2/9 gives equal areas"
+    status: ready
+
+  - id: A3
+    topic: "Coloring: four colors on a right isosceles triangle"
+    areas: [geometry, combinatorics]
+    difficulty: 3
+    hints:
+      - 'With $d=2-\sqrt2$, call two points far apart if their distance is at least $d$. The three corners are pairwise far apart.'
+      - 'Add the points on the legs at distance $\sqrt2-1$ from the right angle, and the two points on the long side that are directly above or beside them.'
+    solution: |
+      **Key idea:** seven well-chosen points already force two far-apart points of one color.
+
+      Put the triangle at $C=(0,0)$, $A=(1,0)$, $B=(0,1)$ and let $d=2-\sqrt2\approx0.586$, $e=\sqrt2-1\approx0.414$ (so $d+e=1$). Call two points *far* if their distance is at least $d$. Suppose the coloring has no two far points of the same color. Use these points:
+      $$P=(e,0),\quad Q=(0,e),\quad R=(e,d),\quad S=(d,e).$$
+      $R$ and $S$ are on the long side, since $e+d=1$. The distances we need:
+
+      - $A,B,C$ are pairwise far (distances $1,1,\sqrt2$).
+      - $P$ is far from $A$ (distance $d$) and from $B$; likewise $Q$ is far from $A$ and from $B$ (distance $d$).
+      - $|PQ|=e\sqrt2 = 2-\sqrt2=d$, so $P,Q$ are far.
+      - $R$ is far from $A$ ($|RA|=\sqrt2\,d$), from $B$ ($|RB|=\sqrt2\,e=d$), from $C$ (about $0.72$), and from $P$ ($|RP|=d$).
+      - By symmetry, $S$ is far from $A$, $B$, $C$ and $Q$.
+
+      **The contradiction.** $A,B,C$ get three different colors, say 1, 2, 3. $P$ is far from $A$ and $B$, so its color is 3 or 4; the same holds for $Q$. Since $P,Q$ are far, one of them has color 3 and the other color 4.
+
+      - If $P$ has color 4: $R$ is far from $A,B,C,P$, which use all four colors. Impossible.
+      - If $Q$ has color 4: $S$ is far from $A,B,C,Q$. Impossible.
+
+      So some two points of the same color are at least $2-\sqrt2$ apart.
+    viz: putnam-1994-a3
+    checked: "script: a SAT search over 95 candidate points found this 7-point set as a minimal one that cannot be 4-colored; the distances were confirmed numerically"
+    status: ready
+
+  - id: A4
+    topic: "Matrices: integer inverses along an arithmetic progression"
+    areas: [linear-algebra, algebra]
+    difficulty: 2
+    hints:
+      - 'An integer matrix has an integer inverse exactly when its determinant is $\pm1$.'
+      - 'What kind of function of $t$ is $\det(A+tB)$ for $2\times2$ matrices?'
+    solution: |
+      **Key idea:** $\det(A+tB)$ is a polynomial of degree at most $2$ in $t$ that equals $\pm1$ at five points, so it is constant.
+
+      For an integer matrix $M$, an integer inverse exists exactly when $\det M=\pm1$. (If $M^{-1}$ is integral, $\det M\cdot\det M^{-1}=1$ with both integers. Conversely, $M^{-1}=\frac{1}{\det M}\operatorname{adj}M$ has integer entries when $\det M=\pm1$.)
+
+      For $2\times2$ matrices, $f(t)=\det(A+tB)$ is a polynomial in $t$ of degree at most $2$. We know $f(t)\in\{1,-1\}$ for $t=0,1,2,3,4$. Among five values, one of $\pm1$ occurs at least three times. A polynomial of degree $\le2$ that takes the same value at three points is constant. So $f$ is constant, equal to $\pm1$, and in particular $f(5)=\pm1$. Since $A+5B$ has integer entries, it is invertible with an integer inverse.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: A5
+    topic: "Real analysis: sums from a null sequence are nowhere dense"
+    areas: [analysis]
+    difficulty: 3
+    hints:
+      - 'It is enough to show the closure of $S$ is countable.'
+      - 'Take a convergent sequence of sums. Pass to a subsequence where each sorted index either settles down or goes to infinity.'
+    solution: |
+      **Key idea:** limits of such sums are again sums of the same kind with fewer terms, so the closure of $S$ is countable, and a countable closed set contains no interval.
+
+      Let $S_j$ be the set of sums of $j$ terms $r_i$ with distinct indices ($S_0=\{0\}$), so $S=S_{1994}$. Each $S_j$ is countable.
+
+      **Claim:** every limit of a sequence in $S_k$ lies in $S_0\cup S_1\cup\dots\cup S_k$.
+
+      Take sums $s^{(t)}=r_{i^{(t)}_1}+\dots+r_{i^{(t)}_k}$ with $i^{(t)}_1<\dots<i^{(t)}_k$, converging to $L$. For each slot, an integer sequence has a subsequence that is either constant or tends to infinity. Doing this slot by slot, we get a subsequence where each slot is eventually constant or tends to infinity. Since the indices are sorted, once a slot tends to infinity so do all later slots. So for some $j$, slots $1..j$ are eventually constant (giving distinct indices $c_1<\dots<c_j$) and the rest tend to infinity. Because $r_i\to0$, the limit is $L=r_{c_1}+\dots+r_{c_j}\in S_j$.
+
+      So the closure $\overline S$ is countable. Now take any interval $(a,b)$. It is uncountable, so it contains a point $p\notin\overline S$. The complement of $\overline S$ is open, so some $(c,d)$ with $a<c<p<d<b$ misses $\overline S$, and hence misses $S$.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: A6
+    topic: "Group actions: few products of bijections fix a set"
+    areas: [combinatorics, algebra]
+    difficulty: 4
+    hints:
+      - 'Pair up the 1024 functions so that the two in each pair differ in a single exponent. Show at most one in each pair maps $A$ to itself.'
+      - 'If $L\circ f_i\circ R$ and $L\circ R$ both map $A$ to itself, then $f_i$ maps the set $R(A)$ to itself.'
+    solution: |
+      **Key idea:** pair each exponent vector with the one that differs in a carefully chosen position $i$; for both partners to fix $A$, $f_i$ would have to fix a set it does not fix.
+
+      For an exponent vector $e=(e_1,\dots,e_{10})$ write $g_e=f_1^{e_1}\circ\cdots\circ f_{10}^{e_{10}}$, and for each $i$ let
+      $$B_i(e) = f_{i+1}^{e_{i+1}}\circ\cdots\circ f_{10}^{e_{10}}(A),$$
+      which depends only on $e_{i+1},\dots,e_{10}$. Call $i$ *bad* for $e$ if $f_i(B_i(e))\ne B_i(e)$.
+
+      **Some $i$ is bad.** If none were, then going down from $i=10$: $B_{10}=A$ and $f_{10}(A)=A$, so $B_9=A$, and so on; every $f_i$ would map $A$ onto $A$, and so would every $f_i^{-1}$. Pick a composition $h$ of the $f$'s with $h(0)=a\in A$. Then $h^{-1}$ is a composition of inverses, so $0=h^{-1}(a)\in A$. Then every composition maps $0$ into $A$, which is finite, contradicting that they reach every integer.
+
+      **Pairing.** Let $i(e)$ be the largest bad index, and let $e'$ be $e$ with $e_{i}$ flipped. Whether an index $j\ge i$ is bad depends only on $e_{j+1},\dots,e_{10}$, which are unchanged, so $i(e')=i(e)$. Thus $e\leftrightarrow e'$ splits the 1024 vectors into 512 pairs.
+
+      **At most one per pair.** Write $g_e=L\circ f_i^{e_i}\circ R$ with $R(A)=B_i(e)$. If both partners map $A$ onto itself, then $L(f_i(R(A)))=A=L(R(A))$, and since $L$ is a bijection, $f_i(B_i)=B_i$, so $i$ is not bad. Contradiction. Hence at most $512$ of the functions map $A$ to itself.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: B1
+    topic: "Counting: integers near exactly fifteen perfect squares"
+    areas: [number-theory]
+    difficulty: 2
+    answer: '$315\le n\le 325$ and $332\le n\le 350$'
+    hints:
+      - 'The squares within $250$ of $n$ are consecutive: $a^2,(a+1)^2,\dots,(a+14)^2$.'
+      - 'The window has width $500$. The span $(a+14)^2-a^2$ must fit inside, and the neighbors $(a-1)^2$ and $(a+15)^2$ must stay outside.'
+    solution: |
+      **Key idea:** fifteen consecutive squares must fit in a window of width $500$ while their two neighbors do not; that pins $a$ down to $9$ or $10$.
+
+      We count $0$ as a perfect square. The squares in $[n-250,\,n+250]$ are $a^2,\dots,(a+14)^2$ for some $a\ge0$. The conditions are
+      $$n-250\le a^2,\quad (a+14)^2\le n+250,\quad (a-1)^2<n-250\ (\text{if }a\ge1),\quad n+250<(a+15)^2.$$
+
+      - **Span:** $(a+14)^2-a^2=28a+196\le500$ gives $a\le10$.
+      - **Gap:** for $a\ge1$ we need an integer $n$ with $(a-1)^2+251\le n\le(a+15)^2-251$. The difference of the two bounds is $32a+224-502=32a-278$, which is negative for $a\le8$. So $a\ge 9$.
+      - **$a=0$** would need $n+250<225$, impossible for $n\ge1$.
+
+      Now intersect the conditions:
+      - $a=9$: $n\ge\max(23^2-250,\ 8^2+251)=315$ and $n\le\min(9^2+250,\ 24^2-251)=325$.
+      - $a=10$: $n\ge\max(24^2-250,\ 9^2+251)=332$ and $n\le\min(10^2+250,\ 25^2-251)=350$.
+
+      So the answer is $315\le n\le325$ or $332\le n\le350$, which matches the standard answer (it counts $0$ as a square).
+
+      A note on that convention: if $0$ were not counted, then $n=1,2,3,4,5$ would also qualify, since each is within $250$ of exactly the squares $1,4,\dots,225$. With $0$ counted, those $n$ see $16$ squares and drop out.
+    checked: "script: counted squares within 250 of every n up to 3000; exactly these 30 values have 15 (and without 0, n = 1 to 5 join them)"
+    status: ready
+
+  - id: B2
+    topic: "Polynomials: a line cutting a quartic four times"
+    areas: [algebra, calculus]
+    difficulty: 2
+    answer: '$c<\dfrac{243}{8}$'
+    hints:
+      - 'Subtracting a line changes only the linear and constant terms. Shift $x$ to remove the cubic term.'
+      - 'Then the question is about $y^4+py^2$. When does it have a "W" shape?'
+    solution: |
+      **Key idea:** after removing the cubic term, the answer depends only on the sign of the new $y^2$ coefficient.
+
+      A line $y=mx+k$ meets the curve in four distinct points exactly when $x^4+9x^3+cx^2+(9-m)x+(4-k)$ has four distinct real roots. Since $m,k$ are free, the question is whether some choice of the linear and constant terms gives four distinct real roots.
+
+      Substitute $x=y-\frac94$. The cubic term disappears and the $y^2$ coefficient is
+      $$c+6\cdot\tfrac{81}{16}-27\cdot\tfrac94 = c-\tfrac{243}{8}=:p.$$
+      Shifting $x$ does not change the number of distinct real roots, and linear and constant terms in $y$ are still free. So we ask when $y^4+py^2+qy+s$ can have four distinct real roots.
+
+      - If $p\ge0$, then $y^4+py^2$ is convex (second derivative $12y^2+2p\ge0$, zero at most at one point). A convex function minus a linear one is still convex, so it has at most two zeros.
+      - If $p<0$, then $h(y)=y^4+py^2$ has a local maximum $0$ at $y=0$ and minima $-p^2/4$ at $y=\pm\sqrt{-p/2}$. The horizontal line at height $-\varepsilon$ with $0<\varepsilon<p^2/4$ meets $h$ four times.
+
+      So such a line exists exactly when $c<\frac{243}{8}$.
+    checked: "sympy: the y^2 coefficient after the shift is c − 243/8"
+    status: ready
+
+  - id: B3
+    topic: "Calculus: growth forced by f′ > f"
+    areas: [analysis, calculus]
+    difficulty: 2
+    answer: '$k<1$'
+    hints:
+      - 'Look at $e^{-x}f(x)$. Is it increasing?'
+      - 'For $k\ge1$, find a positive $f$ with $f''>f$ that stays below $e^x$.'
+    solution: |
+      **Key idea:** $f'>f$ makes $e^{-x}f$ increasing, which gives $f\ge Ce^x$; and there are such $f$ that stay just below $e^x$.
+
+      **Every $k<1$ works.** $(e^{-x}f)'=e^{-x}(f'-f)>0$, so for $x>0$, $f(x)\ge f(0)e^x$ with $f(0)>0$. Since $k<1$, $f(0)e^{x}/e^{kx}=f(0)e^{(1-k)x}\to\infty$, so $f(x)>e^{kx}$ for all large $x$.
+
+      **No $k\ge1$ works.** Take $f(x)=e^{x-e^{-x}}$. It is positive and differentiable with $f'(x)=f(x)(1+e^{-x})>f(x)$. But $f(x)<e^x\le e^{kx}$ for every $x>0$, so no $N$ works.
+
+      The set is all $k<1$.
+    checked: "reasoning only; the example was checked symbolically"
+    status: ready
+
+  - id: B4
+    topic: "Number theory: gcd of entries of matrix powers minus identity"
+    areas: [number-theory, linear-algebra]
+    difficulty: 3
+    hints:
+      - 'Show $A^n=\begin{pmatrix}a_n&b_n\\2b_n&a_n\end{pmatrix}$ with $a_n+b_n\sqrt2=(3+2\sqrt2)^n$.'
+      - '$3+2\sqrt2=(1+\sqrt2)^2$. Write $a_n-1$ and $b_n$ using $(1+\sqrt2)^n=x_n+y_n\sqrt2$.'
+    solution: |
+      **Key idea:** $3+2\sqrt2$ is a square, and writing it as $(1+\sqrt2)^2$ exposes a large common factor of $a_n-1$ and $b_n$.
+
+      Matrices of the form $\begin{pmatrix}a&b\\2b&a\end{pmatrix}$ multiply like numbers $a+b\sqrt2$, and $A$ has this form with $a+b\sqrt2=3+2\sqrt2$. So $A^n=\begin{pmatrix}a_n&b_n\\2b_n&a_n\end{pmatrix}$ where $a_n+b_n\sqrt2=(3+2\sqrt2)^n$. Then $d_n=\gcd(a_n-1,b_n)$.
+
+      Let $(1+\sqrt2)^n=x_n+y_n\sqrt2$. Then $x_n^2-2y_n^2=(-1)^n$, and squaring,
+      $$a_n=x_n^2+2y_n^2,\qquad b_n=2x_ny_n .$$
+
+      - **$n$ even:** $1=x_n^2-2y_n^2$, so $a_n-1=4y_n^2$. Then $2y_n$ divides both $a_n-1$ and $b_n$, so $d_n\ge 2y_n$.
+      - **$n$ odd:** $1=2y_n^2-x_n^2$, so $a_n-1=2x_n^2$. Then $x_n$ divides both, so $d_n\ge x_n$.
+
+      Both $x_n$ and $y_n$ are positive integers that strictly increase, since $x_{n+1}=x_n+2y_n$ and $y_{n+1}=x_n+y_n$. So they grow without bound, and $d_n\to\infty$.
+    checked: "script: d_1..d_14 = 2, 4, 14, 24, 82, 140, ... increasing, consistent with the bounds"
+    status: ready
+
+  - id: B5
+    topic: "Floor functions: iterating a floor equals flooring a power"
+    areas: [number-theory, analysis]
+    difficulty: 3
+    answer: '$\alpha=1-\dfrac1{n^2}$ works'
+    hints:
+      - 'Choose $\alpha$ just below $1$, so that $\lfloor \alpha m\rfloor=m-1$ for all $m\le n^2$.'
+      - 'For the power, use $1-kx\le(1-x)^k\le1-kx+\binom k2x^2$.'
+    solution: |
+      **Key idea:** with $\alpha=1-\frac1{n^2}$, each floor step lowers the number by exactly one, and $\alpha^k n^2$ stays in the window $[n^2-k,\,n^2-k+1)$.
+
+      Let $x=\frac1{n^2}$ and $\alpha=1-x$.
+
+      **Iterating.** For an integer $1\le m\le n^2$ we have $\alpha m=m-\frac{m}{n^2}\in[m-1,m)$, so $\lfloor\alpha m\rfloor=m-1$. Starting from $n^2$, the values stay between $n^2-n$ and $n^2$, so $f_\alpha^k(n^2)=n^2-k$ for $1\le k\le n$. (For $n=1$ this is $\lfloor0\rfloor=0$, also fine.)
+
+      **The power.** We need $n^2-k\le\alpha^kn^2<n^2-k+1$, that is,
+      $$1-kx\le(1-x)^k<1-(k-1)x .$$
+      The left inequality is Bernoulli's. For the right one, Taylor's theorem gives $(1-x)^k\le1-kx+\binom k2x^2$ for $0\le x\le1$ (the remainder term is $\binom k2(1-\xi)^{k-2}x^2$). So it is enough that $\binom k2x^2<x$, i.e. $k(k-1)<2n^2$, which holds for $k\le n$. For $k=1$ it just says $\alpha<1$.
+
+      So $\lfloor\alpha^kn^2\rfloor=n^2-k=f_\alpha^k(n^2)$ for every $1\le k\le n$.
+    checked: "script: exact rational check of both sides for every n ≤ 39 and k ≤ n"
+    status: ready
+
+  - id: B6
+    topic: "Modular arithmetic: distinct pairwise sums mod 10100"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - '$10100=100\cdot101$. Reduce $n_a$ modulo $100$ and modulo $101$ separately.'
+      - '$2$ is a primitive root mod $101$. Knowing $2^a+2^b$ and $2^a2^b$ pins down $\{2^a,2^b\}$.'
+    solution: |
+      **Key idea:** modulo $100$ the numbers $n_a$ remember $a$; modulo $101$ they remember $2^a$; together they give both the sum and the product of $2^a,2^b$.
+
+      Since $10100=100\cdot101$ with coprime factors, the congruence holds mod $100$ and mod $101$.
+
+      - **Mod 100:** $n_a\equiv a$. So $a+b\equiv c+d\pmod{100}$.
+      - **Mod 101:** $101a\equiv0$ and $-100\equiv1$, so $n_a\equiv 2^a$. So $2^a+2^b\equiv2^c+2^d\pmod{101}$.
+
+      The number $2$ has order $100$ modulo $101$: its order divides $100$, and $2^{50}\equiv-1$, $2^{20}\equiv 95\not\equiv1$, so it is not $1,2,4,5,10,20,25$ or $50$. From $a+b\equiv c+d\pmod{100}$ we get $2^{a+b}\equiv2^{c+d}$, i.e. $2^a2^b\equiv2^c2^d\pmod{101}$.
+
+      So $\{2^a,2^b\}$ and $\{2^c,2^d\}$ are the root multisets of the same quadratic $t^2-st+p$ over the field $\mathbb F_{101}$, hence equal as multisets. Since $a,b,c,d\in\{0,\dots,99\}$ and $2$ has order $100$, the value $2^a$ determines $a$. Therefore $\{a,b\}=\{c,d\}$.
+    checked: "script: all 5050 sums n_a + n_b (a ≤ b) are distinct mod 10100; order of 2 mod 101 is 100"
+    status: ready

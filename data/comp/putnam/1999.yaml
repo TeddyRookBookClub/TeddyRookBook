@@ -1,0 +1,269 @@
+year: 1999
+edition: 60th
+date: "December 4, 1999"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1999.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Piecewise linear: building a function from absolute values"
+    areas: [algebra]
+    difficulty: 1
+    answer: '$f(x)=\frac{3x+3}2,\ g(x)=\frac{5x}2,\ h(x)=-x+\frac12$'
+    hints:
+      - 'The target bends at $x=-1$ and $x=0$. Let $|f|$ create one bend and $|g|$ the other.'
+      - 'The slope changes by $+3$ at $-1$ and by $-5$ at $0$.'
+    solution: |
+      **Key idea:** $|\,\text{linear}\,|$ creates one bend; choose $f$ to vanish at $-1$ and $g$ to vanish at $0$ with the right slope changes, then fix up with a linear $h$.
+
+      The target has slope $0$, then $3$, then $-2$. So the slope jumps by $+3$ at $x=-1$ and by $-5$ at $x=0$.
+
+      - $|f|$ with $f(x)=\frac32(x+1)$ has slope $-\frac32$ then $+\frac32$: a jump of $+3$ at $-1$.
+      - $-|g|$ with $g(x)=\frac52x$ has slope $+\frac52$ then $-\frac52$: a jump of $-5$ at $0$.
+
+      Then $h$ must be linear. For $x>0$ we need $\frac32(x+1)-\frac52x+h(x)=-2x+2$, so $h(x)=-x+\frac12$. Check the other pieces:
+      - $x<-1$: $-\frac32(x+1)+\frac52x-x+\frac12=-1$. ✓
+      - $-1\le x\le0$: $\frac32(x+1)+\frac52x-x+\frac12=3x+2$. ✓
+
+      So $f(x)=\frac{3x+3}{2}$, $g(x)=\frac{5x}{2}$, $h(x)=-x+\frac12$ work.
+    checked: "script: the identity holds to 1e-15 at 10001 points in [−5, 5]"
+    status: ready
+
+  - id: A2
+    topic: "Polynomials: nonnegative means a sum of squares"
+    areas: [algebra]
+    difficulty: 2
+    answer: 'Two squares always suffice'
+    hints:
+      - 'Factor over $\mathbb C$. Real roots must have even multiplicity, and non-real roots come in conjugate pairs.'
+      - 'A product of sums of two squares is a sum of two squares.'
+    solution: |
+      **Key idea:** factor $p$ into a square times quadratics $(x-a)^2+b^2$; each factor is a sum of two squares, and such sums are closed under multiplication.
+
+      If $p=0$ we are done. Otherwise, since $p\ge0$, its leading coefficient $c$ is positive. Each real root has even multiplicity (else $p$ changes sign there), and the non-real roots come in conjugate pairs $a\pm bi$. So
+      $$p(x)=c\,q(x)^2\prod_j\big((x-a_j)^2+b_j^2\big)$$
+      for a real polynomial $q$. Each factor $(x-a_j)^2+b_j^2$ is a sum of two squares of real polynomials, and
+      $$(F^2+G^2)(U^2+V^2)=(FU-GV)^2+(FV+GU)^2 .$$
+      Multiplying the factors together, $\prod_j(\dots)=F^2+G^2$ for real polynomials $F,G$ (an empty product is $1^2+0^2$). Then
+      $$p=\big(\sqrt c\,qF\big)^2+\big(\sqrt c\,qG\big)^2 .$$
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: A3
+    topic: "Recurrences: Pell-type numbers whose squares add up"
+    areas: [number-theory, algebra]
+    difficulty: 2
+    answer: '$m=2n+2$'
+    hints:
+      - 'Find a closed form using $\alpha=1+\sqrt2$ and $\beta=1-\sqrt2$, the roots of $t^2=2t+1$.'
+      - 'Note $\alpha\beta=-1$ and $1+\alpha^2=2\sqrt2\,\alpha$.'
+    solution: |
+      **Key idea:** with the closed form, the cross terms cancel because $\alpha\beta=-1$, and $1+\alpha^2$ is a multiple of $\alpha$.
+
+      The coefficients satisfy $a_n=2a_{n-1}+a_{n-2}$ with $a_0=1$, $a_1=2$. Let $\alpha=1+\sqrt2$, $\beta=1-\sqrt2$ (roots of $t^2-2t-1$). Then
+      $$a_n=\frac{\alpha^{n+1}-\beta^{n+1}}{\alpha-\beta},\qquad\alpha-\beta=2\sqrt2,$$
+      which matches $a_0=1$, $a_1=2$ and the recurrence. Now
+      $$8\big(a_n^2+a_{n+1}^2\big)=\alpha^{2n+2}+\beta^{2n+2}+\alpha^{2n+4}+\beta^{2n+4}-2(\alpha\beta)^{n+1}-2(\alpha\beta)^{n+2}.$$
+      Since $\alpha\beta=-1$, the last two terms cancel. Also $1+\alpha^2=4+2\sqrt2=2\sqrt2\,\alpha$ and $1+\beta^2=4-2\sqrt2=-2\sqrt2\,\beta$. So
+      $$8\big(a_n^2+a_{n+1}^2\big)=2\sqrt2\big(\alpha^{2n+3}-\beta^{2n+3}\big),\qquad a_n^2+a_{n+1}^2=\frac{\alpha^{2n+3}-\beta^{2n+3}}{2\sqrt2}=a_{2n+2}.$$
+      So $m=2n+2$ works.
+    checked: "script: a_n² + a_{n+1}² = a_{2n+2} verified exactly for n < 25"
+    status: ready
+
+  - id: A4
+    topic: "Double series: symmetrizing to a square"
+    areas: [analysis]
+    difficulty: 2
+    answer: '$\dfrac{9}{32}$'
+    hints:
+      - 'Divide top and bottom by $3^{m+n}$ and write everything in terms of $x_k=\frac k{3^k}$.'
+      - 'Add the series to itself with $m$ and $n$ swapped.'
+    solution: |
+      **Key idea:** in terms of $x_k=k/3^k$ the term is $\frac{x_m^2x_n}{x_m+x_n}$; adding the swapped copy gives $x_mx_n$, so the sum is half of $(\sum x_k)^2$.
+
+      Let $x_k=\frac{k}{3^k}$. Dividing numerator and denominator by $3^{2m}3^n$,
+      $$\frac{m^2n}{3^m(n3^m+m3^n)}=\frac{x_m^2x_n}{x_n+x_m}.$$
+      Call the double sum $S$. All terms are positive, so we may reorder freely; swapping the names $m,n$ gives $S=\sum\frac{x_n^2x_m}{x_m+x_n}$. Adding,
+      $$2S=\sum_{m,n}\frac{x_mx_n(x_m+x_n)}{x_m+x_n}=\Big(\sum_kx_k\Big)^2 .$$
+      With $\sum_{k\ge1}kz^k=\frac z{(1-z)^2}$ at $z=\frac13$: $\sum x_k=\frac{1/3}{4/9}=\frac34$. So $S=\frac12\cdot\frac9{16}=\frac9{32}$.
+    checked: "script: exact partial sums up to m, n < 40 give 0.28125 = 9/32"
+    status: ready
+
+  - id: A5
+    topic: "Norms: a value at zero controlled by an integral"
+    areas: [analysis, linear-algebra]
+    difficulty: 3
+    hints:
+      - 'Polynomials of degree at most $1999$ form a finite-dimensional vector space.'
+      - '$\int_{-1}^1|p|$ is a norm on it. Compare it with the coefficient norm using compactness of a sphere.'
+    solution: |
+      **Key idea:** on a finite-dimensional space all norms are comparable; $\int_{-1}^1|p|$ is one norm, and $|p(0)|$ is bounded by another.
+
+      Let $V$ be the space of real polynomials of degree at most $1999$, identified with coefficient vectors $(c_0,\dots,c_{1999})\in\mathbb R^{2000}$ with the Euclidean norm $\|c\|$. Let
+      $$N(p)=\int_{-1}^1|p(x)|\,dx .$$
+      - $N$ is continuous in the coefficients: $|N(p)-N(q)|\le N(p-q)\le2\sum|c_i-d_i|$.
+      - $N(p)>0$ for $p\ne0$: a nonzero polynomial has finitely many roots, so $|p|>0$ on most of $[-1,1]$.
+
+      The unit sphere $\{\|c\|=1\}$ is compact, so $N$ attains a minimum $\mu>0$ on it. By scaling, $N(p)\ge\mu\|c\|$ for every $p$. Finally $|p(0)|=|c_0|\le\|c\|\le\frac1\mu N(p)$. So $C=\frac1\mu$ works.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: A6
+    topic: "Recurrences: a nonlinear sequence divisible by its index"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'Look at ratios $r_n=a_n/a_{n-1}$. The recurrence becomes linear.'
+      - 'You should find $a_n=\prod_{j=1}^{n-1}2^j(2^j-1)$. For an odd part $t$ of $n$, use the order of $2$ mod $t$.'
+    solution: |
+      **Key idea:** the ratios $a_n/a_{n-1}$ satisfy a linear recurrence, giving a product formula; then the factors $2^j-1$ supply every odd divisor.
+
+      Dividing the recurrence by $a_{n-1}$ (all terms turn out positive), the ratios $r_n=\frac{a_n}{a_{n-1}}$ satisfy
+      $$r_n=6r_{n-1}-8r_{n-2},\qquad r_2=2,\ r_3=12 .$$
+      The roots of $t^2-6t+8$ are $2$ and $4$, and fitting the initial values gives $r_n=2^{n-1}(2^{n-1}-1)$ (check: $r_2=2\cdot1$, $r_3=4\cdot3$). Hence
+      $$a_n=\prod_{j=1}^{n-1}2^j\,(2^j-1),$$
+      a positive integer.
+
+      **Divisibility.** For $n=1$, $a_1=1$. For $n\ge2$ write $n=2^st$ with $t$ odd.
+      - The power of $2$ in $a_n$ is at least $1+2+\dots+(n-1)\ge n-1\ge s$ (since $2^s\le n$).
+      - If $t>1$, let $d$ be the order of $2$ modulo $t$. Then $d\le t-1\le n-1$, and $t\mid2^d-1$, which is one of the factors.
+
+      Since $2^s$ and $t$ are coprime and both divide $a_n$, so does $n$.
+    checked: "script: computed a_n exactly for n < 40 from the recurrence; all are integers divisible by n and match the product formula"
+    status: ready
+
+  - id: B1
+    topic: "Trigonometry: a limit in a shrinking right triangle"
+    areas: [geometry, calculus]
+    difficulty: 2
+    answer: '$\dfrac13$'
+    hints:
+      - 'Triangle $ACD$ is isosceles. Find the angle between $CD$ and $CB$.'
+      - 'Use the law of sines in triangle $CDE$ to find $CE$, then similar triangles for $EF$.'
+    solution: |
+      **Key idea:** angle chasing gives triangle $CDE$ with angles $\frac\theta2$, $\theta$ and $\pi-\frac{3\theta}2$; the law of sines then gives $EF$ in closed form.
+
+      Put $C=(0,0)$, $A=(1,0)$ and $B=(0,\tan\theta)$, so $BC$ is the $y$-axis.
+
+      **Angles.** Triangle $ACD$ has $AC=AD=1$ and apex angle $\theta$, so $\angle ACD=\frac\pi2-\frac\theta2$ and $|CD|=2\sin\frac\theta2$. Hence $\angle DCE=\frac\pi2-\angle ACD=\frac\theta2$. In triangle $CDE$ the angle at $D$ is $\theta$, so the angle at $E$ is $\pi-\frac{3\theta}{2}$.
+
+      **Law of sines.**
+      $$|CE|=\frac{|CD|\sin\theta}{\sin\frac{3\theta}2}=\frac{2\sin\frac\theta2\sin\theta}{\sin\frac{3\theta}2}.$$
+      **The perpendicular.** The line through $E$ perpendicular to $BC$ is horizontal at height $|CE|$, and on $AB$ the point at height $y$ has $x=1-\frac{y}{\tan\theta}$. So
+      $$|EF|=1-\frac{|CE|}{\tan\theta}=1-\frac{2\sin\frac\theta2\cos\theta}{\sin\frac{3\theta}{2}}.$$
+      As $\theta\to0$, $\frac{2\sin(\theta/2)}{\sin(3\theta/2)}\to\frac{2\cdot\frac12}{\frac32}=\frac23$, so $|EF|\to1-\frac23=\frac13$.
+    checked: "script: solved the construction numerically for θ = 0.1, 0.01, 0.001; EF = 0.3344, 0.33334, 0.333333"
+    status: ready
+
+  - id: B2
+    topic: "Polynomials: P = QP″ forces distinct roots"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'At a root $r$ of multiplicity $m\ge2$, compare multiplicities on both sides. What must $Q$ be?'
+      - 'If $P(x)=q(x-r)^2P''''(x)$, compare coefficients after moving $r$ to $0$.'
+    solution: |
+      **Key idea:** a repeated root forces $Q$ to be a constant times $(x-r)^2$, and then $P$ must be a single power $(x-r)^n$.
+
+      Since $P$ has at least two distinct roots, $n\ge2$ and $P''\ne0$. Comparing leading coefficients, the leading coefficient of $Q$ is $q=\frac1{n(n-1)}$.
+
+      Suppose $r$ is a root of multiplicity $m\ge2$. Then $r$ is a root of $P''$ of multiplicity exactly $m-2$. Since $P=QP''$, $Q$ must vanish at $r$ to order $2$, so $Q=q(x-r)^2$. Shift so that $r=0$ and write $P=\sum c_kx^k$. The equation $P=qx^2P''$ says
+      $$c_k=q\,k(k-1)\,c_k\quad\text{for all }k,\qquad\text{i.e.}\qquad c_k\big(n(n-1)-k(k-1)\big)=0 .$$
+      For $0\le k\le n$, $k(k-1)=n(n-1)$ only when $k=n$. So $c_k=0$ for $k<n$ and $P=c_nx^n$, which has only one distinct root. Contradiction.
+
+      So every root is simple, and $P$ has $n$ distinct roots.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: B3
+    topic: "Generating functions: lattice points in a cone"
+    areas: [combinatorics, analysis]
+    difficulty: 3
+    answer: '$3$'
+    hints:
+      - 'The pairs with $\frac12\le\frac mn\le2$ are the lattice points in the cone spanned by $(1,2)$ and $(2,1)$.'
+      - 'Every such point is uniquely $a(1,2)+b(2,1)+r(1,1)$ with $a,b\ge0$ integers and $r\in\{0,1,2\}$.'
+    solution: |
+      **Key idea:** the cone's lattice points split into three shifted copies of the lattice generated by $(1,2)$ and $(2,1)$, so $S$ is a rational function with exactly the denominator $(1-xy^2)(1-x^2y)$.
+
+      **Unique representation.** Let $(m,n)$ be a lattice point with $\frac12\le\frac mn\le2$ (or $(0,0)$). Put $u=2n-m\ge0$ and $v=2m-n\ge0$; then $u-v=3(n-m)$, so $u\equiv v\pmod3$. Let $r\in\{0,1,2\}$ be that common residue and $a=\frac{u-r}3$, $b=\frac{v-r}3$, nonnegative integers. Then
+      $$a(1,2)+b(2,1)+r(1,1)=\Big(\frac{u+2v}3,\frac{2u+v}3\Big)=(m,n),$$
+      and $(a,b,r)$ is determined by $(m,n)$. Conversely every such combination lies in the cone.
+
+      **The sum.** Hence, for $0\le x,y<1$,
+      $$1+S(x,y)=\frac{1+xy+x^2y^2}{(1-xy^2)(1-x^2y)},$$
+      where the $1$ accounts for $(0,0)$, which $S$ omits. So
+      $$(1-xy^2)(1-x^2y)S(x,y)=1+xy+x^2y^2-(1-xy^2)(1-x^2y)\longrightarrow3-0=3$$
+      as $(x,y)\to(1,1)$.
+    viz: putnam-1999-b3
+    checked: "script: direct partial sums at points approaching (1, 1) climb toward 3 (2.82 at 0.97, 2.92 at 0.99/0.985)"
+    status: ready
+
+  - id: B4
+    topic: "Inequalities: derivative bounds from f‴ ≤ f"
+    areas: [analysis, calculus]
+    difficulty: 4
+    hints:
+      - 'Show $f''$ and $f''''$ tend to $0$ at $-\infty$.'
+      - 'Prove $(f'')^2<2ff''''$ and $(f'''')^2<2ff''$ by integrating from $-\infty$; then combine.'
+    solution: |
+      **Key idea:** two "energy" estimates, $f'^2<2ff''$ and $f''^2<2ff'$, multiply to give $f'^3<8f^3$.
+
+      **Limits at $-\infty$.** $f'$ is positive and increasing, so it has a limit $L\ge0$ at $-\infty$. If $L>0$, then $f'\ge L$ everywhere and $f(x)\le f(0)+Lx\to-\infty$ as $x\to-\infty$, contradicting $f>0$. So $f'\to0$. The same argument applied to $f'$ (positive, with $f''$ positive and increasing) gives $f''\to0$. Also $f$ is increasing and positive.
+
+      **First estimate.** Fix $x$ and $a_0<x$. For $a<a_0$,
+      $$f'(x)^2-f'(a)^2=\int_a^x2f'f''\,dt\le2f''(a_0)\big(f(a_0)-f(a)\big)+2f''(x)\big(f(x)-f(a_0)\big),$$
+      since $f''$ is increasing. Let $a\to-\infty$ (then $f'(a)\to0$ and $f(a)\ge0$):
+      $$f'(x)^2\le2f''(x)f(x)-2f(a_0)\big(f''(x)-f''(a_0)\big)<2f(x)f''(x).$$
+      **Second estimate.** In the same way, using $f'''\le f$ and that $f$ is increasing,
+      $$f''(x)^2-f''(a)^2=\int_a^x2f''f'''\,dt\le\int_a^x2f''(t)f(t)\,dt\le2f(a_0)\big(f'(a_0)-f'(a)\big)+2f(x)\big(f'(x)-f'(a_0)\big).$$
+      Letting $a\to-\infty$: $f''(x)^2\le2f(x)f'(x)-2f'(a_0)\big(f(x)-f(a_0)\big)<2f(x)f'(x)$.
+
+      **Combine.** Squaring the first and using the second,
+      $$f'^4<4f^2f''^2<8f^3f' ,$$
+      so $f'^3<8f^3$, i.e. $f'(x)<2f(x)$.
+    checked: "script: for the test function f = e^(x/2) + e^(x/3), which meets the hypotheses, both estimates and f′ < 2f hold on a grid"
+    status: ready
+
+  - id: B5
+    topic: "Determinants: identity plus a rank-two cosine matrix"
+    areas: [linear-algebra]
+    difficulty: 2
+    answer: '$1-\dfrac{n^2}4$'
+    hints:
+      - 'Write $\cos(j\theta+k\theta)$ with complex exponentials. The matrix is $\frac12(uu^T+\bar u\bar u^T)$ with $u_j=\omega^j$.'
+      - 'Use $\det(I_n+XY^T)=\det(I_2+Y^TX)$.'
+    solution: |
+      **Key idea:** the matrix has rank at most two, so the $n\times n$ determinant reduces to a $2\times2$ one built from sums of roots of unity.
+
+      Let $\omega=e^{i\theta}$ and $u=(\omega,\omega^2,\dots,\omega^n)^T$. Then $\cos(j\theta+k\theta)=\frac12(\omega^{j+k}+\omega^{-j-k})$, so
+      $$A=XY^T,\qquad X=\tfrac12[\,u\ \ \bar u\,],\quad Y=[\,u\ \ \bar u\,].$$
+      By the identity $\det(I_n+XY^T)=\det(I_2+Y^TX)$, we need the $2\times2$ matrix $Y^TX=\frac12\begin{pmatrix}u^Tu&u^T\bar u\\\bar u^Tu&\bar u^T\bar u\end{pmatrix}$ (plain transposes, no conjugation):
+      - $u^Tu=\sum_{j=1}^n\omega^{2j}=0$, because $\omega^2\ne1$ (as $n\ge3$) and $\omega^{2n}=1$;
+      - likewise $\bar u^T\bar u=0$;
+      - $u^T\bar u=\bar u^Tu=\sum_j1=n$.
+
+      So $\det(I+A)=\det\begin{pmatrix}1&\frac n2\\\frac n2&1\end{pmatrix}=1-\frac{n^2}4$.
+    checked: "numpy: determinant matches 1 − n²/4 for 3 ≤ n ≤ 11"
+    status: ready
+
+  - id: B6
+    topic: "Number theory: a covering set with a prime gcd"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'Let $n$ be the smallest positive integer that shares a factor with every element of $S$.'
+      - 'Some $s\in S$ divides $n$. Pick a prime $p\mid s$ and look at $n/p$.'
+    solution: |
+      **Key idea:** take the smallest $n$ that meets every element of $S$; dividing it by one prime breaks this, and the element that becomes coprime meets $s$ in exactly that prime.
+
+      The product of all elements of $S$ shares a factor with each of them, so there is a smallest positive integer $n$ with $\gcd(s,n)>1$ for all $s\in S$.
+
+      By hypothesis some $s\in S$ has $\gcd(s,n)\in\{1,s\}$; it is not $1$, so $s\mid n$. Let $p$ be a prime factor of $s$; then $p\mid n$. By minimality, $n/p$ fails: some $t\in S$ has $\gcd(t,n/p)=1$.
+
+      - $\gcd(t,n)>1$, but $t$ shares no prime with $n/p$. So the only prime in $\gcd(t,n)$ is $p$, and $p^2\nmid\gcd(t,n)$ (otherwise $p\mid n/p$ and $p\mid t$). Hence $\gcd(t,n)=p$.
+      - $p$ divides both $s$ and $t$, and $\gcd(s,t)$ divides $\gcd(n,t)=p$ because $s\mid n$.
+
+      So $\gcd(s,t)=p$ is prime. (If $s=t$, this says $s=p$ is itself prime, and $\gcd(s,s)=p$.)
+    checked: "script: 300 random sets S with the property (checked for n up to the lcm of S) all contain such a pair"
+    status: ready

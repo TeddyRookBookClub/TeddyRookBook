@@ -1,0 +1,251 @@
+year: 1998
+edition: 59th
+date: "December 5, 1998"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1998.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Solid geometry: a cube standing inside a cone"
+    areas: [geometry]
+    difficulty: 1
+    answer: '$\dfrac{9\sqrt2-6}{7}$'
+    hints:
+      - 'The top corners of the cube touch the cone. How far are they from the axis?'
+      - 'The cone''s radius shrinks linearly with height: at height $h$ it is $1-\frac h3$.'
+    solution: |
+      **Key idea:** the top four corners of the cube lie on the cone, at height $s$ and distance $s/\sqrt2$ from the axis.
+
+      Let the side be $s$. By symmetry the cube is centered on the axis, so its top corners are at height $s$ and at distance half the diagonal, $\frac{s}{\sqrt2}$, from the axis. At height $h$ the cone has radius $1-\frac h3$. The corners touch the cone, so
+      $$\frac s{\sqrt2}=1-\frac s3\quad\Longrightarrow\quad s=\frac{1}{\frac1{\sqrt2}+\frac13}=\frac{3\sqrt2}{3+\sqrt2}=\frac{9\sqrt2-6}{7}\approx0.961 .$$
+    checked: "script: s/√2 and 1 − s/3 both equal 0.679623 for this s"
+    status: ready
+
+  - id: A2
+    topic: "Areas: two regions under a circular arc"
+    areas: [calculus, geometry]
+    difficulty: 1
+    hints:
+      - 'Describe the arc by angles $\alpha<\beta$ and write each area as an integral of $\sqrt{1-t^2}$.'
+      - 'An antiderivative of $\sqrt{1-t^2}$ is $\frac12\big(t\sqrt{1-t^2}+\arcsin t\big)$.'
+    solution: |
+      **Key idea:** compute both areas exactly; the triangle terms cancel and the sector terms add to the arc length.
+
+      Let the arc run from angle $\alpha$ to angle $\beta$, with $0\le\alpha<\beta\le\frac\pi2$; its length is $\beta-\alpha$. Use $G(t)=\frac12\big(t\sqrt{1-t^2}+\arcsin t\big)$, an antiderivative of $\sqrt{1-t^2}$.
+
+      The region below the arc spans $\cos\beta\le x\le\cos\alpha$:
+      $$A=G(\cos\alpha)-G(\cos\beta)=\tfrac12\big(\cos\alpha\sin\alpha-\cos\beta\sin\beta\big)+\tfrac12\big(\beta-\alpha\big),$$
+      using $\arcsin(\cos\theta)=\frac\pi2-\theta$ on $[0,\frac\pi2]$. The region left of the arc spans $\sin\alpha\le y\le\sin\beta$:
+      $$B=G(\sin\beta)-G(\sin\alpha)=\tfrac12\big(\sin\beta\cos\beta-\sin\alpha\cos\alpha\big)+\tfrac12\big(\beta-\alpha\big).$$
+      Adding, the first parts cancel and $A+B=\beta-\alpha$, the length of the arc.
+
+      (Geometrically: each region is a sector of angle $\beta-\alpha$, area $\frac{\beta-\alpha}2$, plus one right triangle minus another; the triangles in $A$ and $B$ are the same two with opposite signs.)
+    viz: putnam-1998-a2
+    checked: "script: numerical A + B equals β − α for random arcs"
+    status: ready
+
+  - id: A3
+    topic: "Derivatives: a product of four derivatives somewhere nonnegative"
+    areas: [analysis, calculus]
+    difficulty: 2
+    hints:
+      - 'If the product is always negative, none of the four functions ever vanishes, so each has a fixed sign.'
+      - 'Show: if $h$, $h''$ and $h''''$ never vanish, then $h$ and $h''''$ have the same sign.'
+    solution: |
+      **Key idea:** a function that never vanishes, with first and second derivatives that never vanish, must have the same sign as its second derivative. Apply this to $f$ and to $f'$.
+
+      **Lemma.** If $h\in C^2(\mathbb R)$ and $h,h',h''$ never vanish, then $hh''>0$.
+
+      *Proof.* Each of $h,h',h''$ has constant sign. Replacing $h$ by $-h$ if needed, assume $h''>0$, so $h$ is convex and lies above each tangent line: $h(x)\ge h(x_0)+h'(x_0)(x-x_0)$. Since $h'(x_0)\ne0$, the right side tends to $+\infty$ as $x\to+\infty$ or $x\to-\infty$. So $h$ takes positive values, and since it never vanishes, $h>0$. Thus $hh''>0$.
+
+      **The problem.** Suppose $f f'f''f'''<0$ everywhere. Then none of $f,f',f'',f'''$ vanishes. The lemma for $h=f$ gives $ff''>0$, and for $h=f'$ (using $f'''$ continuous) gives $f'f'''>0$. Then
+      $$ff'f''f'''=(ff'')(f'f''')>0,$$
+      a contradiction. So the product is $\ge0$ at some point.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: A4
+    topic: "Divisibility: concatenated numbers modulo 11"
+    areas: [number-theory]
+    difficulty: 2
+    answer: '$n\equiv1\pmod 6$'
+    hints:
+      - 'Mod $11$, $10\equiv-1$, so appending a block of $L$ digits multiplies by $(-1)^L$.'
+      - 'The lengths are Fibonacci numbers; their parity repeats with period $3$.'
+    solution: |
+      **Key idea:** modulo $11$, concatenation is $A_n\equiv(-1)^{L_{n-2}}A_{n-1}+A_{n-2}$, where $L$ is the digit length; the residues repeat with period $6$.
+
+      Let $L_n$ be the number of digits of $A_n$. Then $L_1=L_2=1$ and $L_n=L_{n-1}+L_{n-2}$, so $L_n$ is even exactly when $3\mid n$. Since $A_n=A_{n-1}\cdot10^{L_{n-2}}+A_{n-2}$ and $10\equiv-1\pmod{11}$,
+      $$A_n\equiv(-1)^{L_{n-2}}A_{n-1}+A_{n-2}\pmod{11}.$$
+      Compute residues:
+      - $A_1\equiv0$, $A_2\equiv1$;
+      - $A_3\equiv-1+0=-1$, $A_4\equiv1+1=2$, $A_5\equiv2-1=1$ ($L_3$ even), $A_6\equiv-1+2=1$, $A_7\equiv-1+1=0$, $A_8\equiv0+1=1$ ($L_6$ even).
+
+      So $(A_7,A_8)\equiv(A_1,A_2)$. The rule only depends on $n\bmod3$ through the parity of $L_{n-2}$, so from here everything repeats with period $6$. In one period the residues are $0,1,-1,2,1,1$, and only the first is $0$. Hence $11\mid A_n$ exactly when $n\equiv1\pmod6$.
+    checked: "script: computed A_n exactly for n ≤ 25; divisible by 11 for n = 1, 7, 13, 19, 25"
+    status: ready
+
+  - id: A5
+    topic: "Covering: Vitali's lemma for finitely many discs"
+    areas: [geometry, analysis]
+    difficulty: 2
+    hints:
+      - 'Choose greedily: take the largest disc, throw away every disc that meets it, and repeat.'
+      - 'If a disc $D$ meets a chosen disc $D_j$ whose radius is at least that of $D$, then $D\subseteq3D_j$.'
+    solution: |
+      **Key idea:** pick discs greedily from largest to smallest; every discarded disc touches a chosen one at least as large, so it fits inside three times that disc.
+
+      **Greedy choice.** Let $D_1$ be a disc in $\mathcal F$ of largest radius. Remove from $\mathcal F$ every disc that meets $D_1$ (including $D_1$). From what is left, let $D_2$ be one of largest radius, remove all discs meeting $D_2$, and so on until nothing is left. The chosen discs are pairwise disjoint, because each was chosen from discs that do not meet the earlier ones.
+
+      **Covering.** Every disc $D\in\mathcal F$ was removed at some step $j$, because it meets $D_j$ (possibly $D=D_j$). At that step $D$ was still available, so its radius $r$ is at most the radius $r_j$ of $D_j$. If $P,P_j$ are the centers and $z\in D\cap D_j$, then $|PP_j|<r+r_j$, and for any $x\in D$,
+      $$|xP_j|\le|xP|+|PP_j|<r+(r+r_j)\le3r_j .$$
+      So $D\subseteq3D_j$. Hence $E\subseteq\bigcup\mathcal F\subseteq\bigcup_j3D_j$.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: A6
+    topic: "Lattice geometry: a tight inequality forces a square corner"
+    areas: [geometry, number-theory]
+    difficulty: 3
+    hints:
+      - 'Twice the area of a lattice triangle is an integer, and so are the squared side lengths.'
+      - 'Use $2[ABC]\le|AB|\,|BC|$ and $|AB|^2+|BC|^2\ge2|AB|\,|BC|$.'
+    solution: |
+      **Key idea:** split $(a+c)^2=a^2+c^2+2ac$; integrality squeezes $a^2+c^2$ down to $2K$, which forces $a=c$ and a right angle.
+
+      Let $a=|AB|$, $c=|BC|$ and $K=2[ABC]$. For lattice points, $a^2$, $c^2$ and $K$ are integers (the shoelace formula). Also $K=ac\sin B\le ac$.
+
+      The hypothesis is $a^2+c^2+2ac<4K+1$. Since $2ac\ge2K$,
+      $$a^2+c^2<2K+1,\qquad\text{so}\qquad a^2+c^2\le2K$$
+      because both sides are integers. On the other hand $a^2+c^2\ge2ac\ge2K$. So equality holds throughout:
+      $$a^2+c^2=2ac\ \Rightarrow\ a=c,\qquad ac=K=ac\sin B\ \Rightarrow\ \sin B=1 .$$
+      (If $K=0$ the points are collinear; then $(a+c)^2<1$, impossible for distinct lattice points.)
+
+      So $AB=BC$ and the angle at $B$ is a right angle. Then $A$, $B$, $C$ are three vertices of the square whose fourth vertex is $A+C-B$.
+    checked: "script: brute force over all lattice triples in a 7×7 grid; every triple satisfying the inequality is a right isosceles corner"
+    status: ready
+
+  - id: B1
+    topic: "Algebra: minimizing a ratio built from x + 1/x"
+    areas: [algebra]
+    difficulty: 1
+    answer: '$6$'
+    hints:
+      - 'The numerator is a difference of squares: $x^6+x^{-6}+2=(x^3+x^{-3})^2$.'
+    solution: |
+      **Key idea:** the numerator factors as a difference of squares, and one factor cancels the denominator.
+
+      Let $u=(x+\frac1x)^3$ and $w=x^3+\frac1{x^3}$. Since $w^2=x^6+\frac1{x^6}+2$, the numerator is $u^2-w^2=(u-w)(u+w)$, and the denominator is $u+w>0$. So the expression equals
+      $$u-w=\Big(x+\frac1x\Big)^3-\Big(x^3+\frac1{x^3}\Big)=3\Big(x+\frac1x\Big).$$
+      For $x>0$, $x+\frac1x\ge2$ with equality at $x=1$. The minimum is $6$.
+    checked: "script: evaluated on a grid of x in (0.5, 2.5); minimum 6 at x = 1"
+    status: ready
+
+  - id: B2
+    topic: "Optimization: shortest triangle touching two lines"
+    areas: [geometry]
+    difficulty: 2
+    answer: '$\sqrt{2(a^2+b^2)}$'
+    hints:
+      - 'Reflect the given point across each of the two lines.'
+      - 'The perimeter equals a path between the two reflections.'
+    solution: |
+      **Key idea:** reflecting the fixed vertex across both lines turns the perimeter into a broken path between two fixed points.
+
+      Let $P=(a,b)$, and let $X$ be on the $x$-axis and $Y$ on the line $y=x$. Reflect $P$ across the $x$-axis to $P_1=(a,-b)$ and across $y=x$ to $P_2=(b,a)$. Then $|PX|=|P_1X|$ and $|PY|=|P_2Y|$, so
+      $$|PX|+|XY|+|YP|=|P_1X|+|XY|+|YP_2|\ge|P_1P_2|=\sqrt{(a-b)^2+(a+b)^2}=\sqrt{2a^2+2b^2}.$$
+      **Equality is reached.** $P_1$ lies below both lines and $P_2$ lies above both (since $a>b>0$), so the segment $P_1P_2$ crosses the $x$-axis and the line $y=x$. Take $X$ and $Y$ to be those crossings. They are different points, because the segment misses the origin ($P_1$, $P_2$ and $O$ are not collinear: $a\cdot a-(-b)\cdot b=a^2+b^2\ne0$). For this triangle the perimeter is exactly $|P_1P_2|$.
+
+      So the minimum perimeter is $\sqrt{2(a^2+b^2)}$.
+    checked: "script: random search over X and Y for a = 3, b = 1.2 approaches 4.5695 = √(2(a²+b²))"
+    status: ready
+
+  - id: B3
+    topic: "Surface area: a hemisphere above an inscribed pentagon"
+    areas: [geometry, calculus]
+    difficulty: 2
+    answer: '$5\pi\cos\frac\pi5-3\pi$'
+    hints:
+      - 'Subtract the area above the five circular segments outside the pentagon.'
+      - 'Archimedes: on a sphere of radius $1$, the zone between two parallel planes at distance $h$ has area $2\pi h$.'
+    solution: |
+      **Key idea:** remove the five "caps" outside the pentagon; by Archimedes' hat-box theorem each cap's area depends only on its width.
+
+      The hemisphere has area $2\pi$. The part over the disk but outside the pentagon lies over five congruent circular segments. Each is cut off by a side at distance $\cos\frac\pi5$ from the center.
+
+      Take one side and turn the picture so the side is the line $x=\cos\frac\pi5$. The part of the *whole* unit sphere with $x\ge\cos\frac\pi5$ is a cap between parallel planes at distance $1-\cos\frac\pi5$, so its area is $2\pi(1-\cos\frac\pi5)$. The plane $z=0$ cuts it into two mirror-image halves, so the part over our segment (with $z\ge0$) has area $\pi(1-\cos\frac\pi5)$.
+
+      Therefore the area over the pentagon is
+      $$2\pi-5\pi\Big(1-\cos\frac\pi5\Big)=5\pi\cos\frac\pi5-3\pi\approx3.283 .$$
+      In the requested form this is $A\sin\alpha+B\cos\beta$ with, for example, $A=3\pi$, $\alpha=-\frac\pi2$, $B=5\pi$, $\beta=\frac\pi5$.
+    checked: "script: Monte Carlo over 4 million points on the hemisphere gives 3.2831, matching 3.2832"
+    status: ready
+
+  - id: B4
+    topic: "Floor sums: when alternating signs cancel exactly"
+    areas: [number-theory, combinatorics]
+    difficulty: 3
+    answer: 'Exactly when $m$ and $n$ have different powers of $2$ in them'
+    hints:
+      - 'Pair index $i$ with $mn-1-i$. How does the exponent change?'
+      - 'If $m$ and $n$ are both even, group the indices in pairs $2j,2j+1$ to relate the sum to the one for $m/2$, $n/2$.'
+    solution: |
+      **Key idea:** a reflection kills the sum when $m+n$ is odd; halving both relates the even case to a smaller one; when both are odd the sum has an odd number of $\pm1$ terms.
+
+      Let $S(m,n)=\sum_{i=0}^{mn-1}(-1)^{\lfloor i/m\rfloor+\lfloor i/n\rfloor}$, and let $v(k)$ be the exponent of $2$ in $k$. We show $S(m,n)=0$ exactly when $v(m)\ne v(n)$.
+
+      **Reflection.** For $0\le i<mn$, $\lfloor\frac{mn-1-i}{m}\rfloor=n-1-\lfloor\frac im\rfloor$, and similarly for $n$. So the term at $mn-1-i$ is $(-1)^{m+n}$ times the term at $i$. If $m+n$ is odd, $mn$ is even, the pairing $i\leftrightarrow mn-1-i$ has no fixed point, and the terms cancel: $S=0$.
+
+      **Both odd.** Then $S$ is a sum of $mn$ (an odd number of) terms $\pm1$, so $S$ is odd and $S\ne0$.
+
+      **Both even**, $m=2m'$, $n=2n'$. For $i=2j$ or $2j+1$, $\lfloor\frac i{2m'}\rfloor=\lfloor\frac j{m'}\rfloor$. So
+      $$S(m,n)=2\sum_{j=0}^{2m'n'-1}(-1)^{\lfloor j/m'\rfloor+\lfloor j/n'\rfloor}.$$
+      Shifting $j$ by $m'n'$ adds $n'$ and $m'$ to the two floors, so the second half of this sum is $(-1)^{m'+n'}$ times the first half:
+      $$S(m,n)=2\big(1+(-1)^{m'+n'}\big)\,S(m',n').$$
+
+      **Conclusion by induction on $\min(v(m),v(n))$.** If $v(m)=v(n)=0$, both are odd and $S\ne0$. If exactly one is odd, $S=0$. If both are even: when $m'+n'$ is odd we get $S=0$, and indeed $v(m')\ne v(n')$; when it is even, $S=4S(m',n')$ and $v(m')-v(n')=v(m)-v(n)$, so the induction applies.
+    checked: "script: computed the sum for all 1 ≤ m, n < 60; it is zero exactly when the powers of 2 differ"
+    status: ready
+
+  - id: B5
+    topic: "Decimals: a digit of the square root of a repunit"
+    areas: [number-theory, analysis]
+    difficulty: 2
+    answer: '$1$'
+    hints:
+      - '$N=\frac{10^{1998}-1}{9}$, so $\sqrt N=\frac{10^{999}}3\sqrt{1-10^{-1998}}$.'
+      - 'Use $1-\frac y2-\frac{y^2}2\le\sqrt{1-y}\le1-\frac y2$ for small $y>0$.'
+    solution: |
+      **Key idea:** $\sqrt N$ is just below $\frac{10^{999}}3=333\ldots3.333\ldots$, by about $\frac16\cdot10^{-999}$, which changes the 1000th decimal digit from $3$ to $1$.
+
+      $N=\frac{10^{1998}-1}9$, so with $y=10^{-1998}$,
+      $$\sqrt N=\frac{10^{999}}{3}\sqrt{1-y}.$$
+      For $0<y<1$, $1-\frac y2-\frac{y^2}{2}\le\sqrt{1-y}\le1-\frac y2$ (square the bounds). So
+      $$\sqrt N=\frac{10^{999}}3-\varepsilon,\qquad \frac{10^{-999}}6\le\varepsilon\le\frac{10^{-999}}6+10^{-2996}.$$
+      The fractional part of $\frac{10^{999}}3$ is $0.333\ldots$ (all threes). Subtracting $\varepsilon\approx0.1666\ldots\times10^{-999}$:
+      $$0.\underbrace{33\ldots3}_{999}\,3333\ldots-0.\underbrace{00\ldots0}_{999}\,1666\ldots=0.\underbrace{33\ldots3}_{999}\,1666\ldots$$
+      The tiny extra error ($10^{-2996}$) cannot reach the 1000th place. So the 1000th digit after the decimal point is $1$.
+    checked: "script: Python's decimal module with 2100 digits gives ...3333331666... with digit 1000 equal to 1"
+    status: ready
+
+  - id: B6
+    topic: "Number theory: a cubic cannot always be a square"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'Squares are $0$ or $1$ mod $4$, so two squares never differ by $2$ mod $4$.'
+      - 'Compute $P(1)-P(3)$ and $P(2)-P(4)$ modulo $4$.'
+    solution: |
+      **Key idea:** modulo $4$, one of two specific differences of values is $2$, but differences of squares never are.
+
+      Let $P(n)=n^3+an^2+bn+c$, and suppose $\sqrt{P(n)}$ is an integer for every positive $n$. Then each $P(n)$ is a perfect square, so $P(n)\equiv0$ or $1\pmod4$, and any difference $P(n)-P(m)$ is $\equiv 0$, $1$ or $-1\pmod 4$, never $2$.
+
+      Now compute:
+      $$P(1)-P(3)=-26-8a-2b\equiv2-2b\pmod4,$$
+      $$P(2)-P(4)=-56-12a-2b\equiv-2b\pmod4 .$$
+      - If $b$ is even, the first difference is $\equiv2\pmod4$.
+      - If $b$ is odd, the second difference is $\equiv2\pmod4$.
+
+      Either way we have a contradiction. So for some $n\in\{1,2,3,4\}$, $\sqrt{P(n)}$ is not an integer.
+    checked: "script: for all 64 residue choices of a, b, c mod 4, some P(1..4) is 2 or 3 mod 4"
+    status: ready

@@ -1,0 +1,235 @@
+year: 2004
+edition: 65th
+date: "December 4, 2004"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2004.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Discrete continuity: a success rate crossing 80%"
+    areas: [number-theory]
+    difficulty: 1
+    answer: 'Yes'
+    hints:
+      - 'Look at the first attempt $N$ at which the rate reaches at least $80\%$.'
+      - 'One attempt raises $S$ by at most $1$. Multiply by $5$ and use integers.'
+    solution: |
+      **Key idea:** at the first moment the rate reaches $80\%$, it can overshoot by less than one fifth of a shot, and integrality forces it to be exact.
+
+      Let $N$ be the first count after the early moment with $S(N)\ge\frac45N$. Then $S(N-1)<\frac45(N-1)$ and $S(N)\le S(N-1)+1$, so
+      $$\tfrac45N\le S(N)<\tfrac45(N-1)+1=\tfrac45N+\tfrac15 .$$
+      Multiplying by $5$: $4N\le5S(N)<4N+1$. Since $5S(N)$ is an integer, $5S(N)=4N$, i.e. $S(N)$ is exactly $80\%$ of $N$. So yes.
+    checked: "proof only"
+    status: ready
+
+  - id: A2
+    topic: "Geometry: area of a triangle with larger sides, acute case"
+    areas: [geometry]
+    difficulty: 2
+    answer: 'Yes, $A_1\le A_2$'
+    hints:
+      - 'Area $=\frac12\cdot$ (two sides) $\cdot$ sine of the angle between them.'
+      - 'The angles of each triangle add to $180^\circ$, so some angle of $T_1$ is at most the matching angle of $T_2$.'
+    solution: |
+      **Key idea:** some angle of $T_1$ is at most the matching angle of $T_2$, and for angles up to $90^\circ$ a smaller angle has a smaller sine.
+
+      Let $\alpha_i,\beta_i,\gamma_i$ be the angles of $T_i$ opposite $a_i,b_i,c_i$. Both triangles have angle sum $180^\circ$, so it is impossible that every angle of $T_1$ is larger than the matching angle of $T_2$. Say $\gamma_1\le\gamma_2$ (the other cases are the same). $T_2$ is acute, so $\gamma_1\le\gamma_2<90^\circ$, and sine increases on $[0^\circ,90^\circ]$: $\sin\gamma_1\le\sin\gamma_2$. Hence
+      $$A_1=\tfrac12a_1b_1\sin\gamma_1\le\tfrac12a_2b_2\sin\gamma_2=A_2 .$$
+    checked: "proof only"
+    status: ready
+
+  - id: A3
+    topic: "Sequences: a determinant recursion and double factorials"
+    areas: [algebra, number-theory]
+    difficulty: 2
+    hints:
+      - 'Compute the first ten terms. Look at the even and odd positions separately.'
+      - 'Guess $u_n=(n-1)!!$, the product of every second integer down from $n-1$.'
+    solution: |
+      **Key idea:** the terms are double factorials, $u_n=(n-1)!!$, and that formula satisfies the recursion; since each step divides by a nonzero $u_n$, the recursion has only this solution.
+
+      The condition reads $u_nu_{n+3}-u_{n+1}u_{n+2}=n!$, and since every $u_n$ turns out nonzero, it determines $u_{n+3}$ from earlier terms. So it is enough to find integers that satisfy it. The first terms are $1,1,1,2,3,8,15,48,105$, which suggests
+      $$u_{2k}=(2k-1)!!=1\cdot3\cdots(2k-1),\qquad u_{2k+1}=(2k)!!=2\cdot4\cdots(2k)$$
+      (empty products are $1$). Check, using $(2k+2)!!=(2k+2)(2k)!!$ and $(2k+1)!!=(2k+1)(2k-1)!!$:
+      - $n=2k$: $u_{2k}u_{2k+3}-u_{2k+1}u_{2k+2}=(2k-1)!!\,(2k)!!\,\big[(2k+2)-(2k+1)\big]=(2k)!$.
+      - $n=2k+1$: $u_{2k+1}u_{2k+4}-u_{2k+2}u_{2k+3}=(2k)!!\,(2k+1)!!\,\big[(2k+3)-(2k+2)\big]=(2k+1)!$.
+
+      The starting values $u_0=u_1=u_2=1$ match, so by induction the sequence is exactly this one, and every $u_n$ is a positive integer.
+    checked: "script: computed 33 terms with exact division; all integers and equal to (n−1)!!"
+    status: ready
+
+  - id: A4
+    topic: "Algebra: a product as a sum of n-th powers"
+    areas: [algebra, combinatorics]
+    difficulty: 2
+    hints:
+      - 'Sum $\varepsilon_1\cdots\varepsilon_n(\varepsilon_1x_1+\cdots+\varepsilon_nx_n)^n$ over all sign vectors $\varepsilon\in\{\pm1\}^n$.'
+      - 'Which monomials survive the sign averaging?'
+    solution: |
+      **Key idea:** average $(\varepsilon\cdot x)^n$ against the sign product $\varepsilon_1\cdots\varepsilon_n$; every monomial cancels except $x_1x_2\cdots x_n$.
+
+      Consider
+      $$\Sigma=\sum_{\varepsilon\in\{\pm1\}^n}\varepsilon_1\varepsilon_2\cdots\varepsilon_n\,(\varepsilon_1x_1+\cdots+\varepsilon_nx_n)^n .$$
+      Expanding, the monomial $x_1^{k_1}\cdots x_n^{k_n}$ (with $\sum k_i=n$) has coefficient $\binom{n}{k_1,\dots,k_n}\sum_\varepsilon\prod_i\varepsilon_i^{k_i+1}$. The inner sum factors as $\prod_i\big(1+(-1)^{k_i+1}\big)$, which is $0$ unless every $k_i$ is odd. With $\sum k_i=n$ and $n$ variables, that means every $k_i=1$. So
+      $$\Sigma=2^n\,n!\;x_1x_2\cdots x_n .$$
+      Hence $x_1\cdots x_n=\sum_\varepsilon\frac{\varepsilon_1\cdots\varepsilon_n}{2^nn!}(\varepsilon_1x_1+\cdots+\varepsilon_nx_n)^n$, with $N=2^n$ terms, rational $c_i$, and every $a_{ij}=\pm1$.
+    checked: "script: the identity checked numerically at random points for n ≤ 5"
+    status: ready
+
+  - id: A5
+    topic: "Probability: expected number of monochromatic regions"
+    areas: [probability, combinatorics]
+    difficulty: 3
+    hints:
+      - 'For a plane graph, components $=V-E+(\text{number of bounded faces})$.'
+      - 'Use the graph whose vertices are squares and whose edges join same-colored neighbors. A same-colored $2\times2$ block gives a bounded face.'
+    solution: |
+      **Key idea:** count regions with Euler's formula. Regions are at least (squares) $-$ (same-color adjacencies) $+$ (same-color $2\times2$ blocks), and each term has an easy expectation.
+
+      Build a graph $\Gamma$: one vertex at the center of each square, and an edge between side-neighbors of the same color. The regions are the connected components of $\Gamma$. Drawn this way, $\Gamma$ is a plane graph, so Euler's formula for a plane graph with $c$ components gives
+      $$V-E+F=1+c,$$
+      where $F$ counts faces including the outer one. Each same-colored $2\times2$ block gives a $4$-cycle bounding a unit square that contains no other vertex or edge, so it is a bounded face. Hence $F-1\ge Q$, the number of same-colored $2\times2$ blocks, and
+      $$c\ge V-E+Q .$$
+
+      **Expectations.** $V=mn$. There are $m(n-1)+(m-1)n$ adjacent pairs, each same-colored with probability $\frac12$, so $E[E]=mn-\frac{m+n}2$. There are $(m-1)(n-1)$ blocks, each monochromatic with probability $\frac18$. So
+      $$E[c]\ge mn-mn+\frac{m+n}2+\frac{(m-1)(n-1)}8=\frac{mn}8+\frac{3(m+n)}8+\frac18>\frac{mn}8 .$$
+    checked: "script: exact enumeration for 2×2, 2×3, 3×3 boards (expected 2.125, 2.75, 3.504) and simulation for larger boards; all above the bound"
+    status: ready
+
+  - id: A6
+    topic: "Integral inequality: row and column averages of a function"
+    areas: [analysis]
+    difficulty: 3
+    hints:
+      - 'Let $A(y)$ and $B(x)$ be the averages of $f$ along each line and $M$ the overall average.'
+      - 'Expand $\iint\big(f-A(y)-B(x)+M\big)^2\ge0$.'
+    solution: |
+      **Key idea:** remove the row and column averages from $f$ and add back the overall average; the square of what is left integrates to exactly the difference of the two sides.
+
+      Let $A(y)=\int_0^1f(x,y)\,dx$, $B(x)=\int_0^1f(x,y)\,dy$, $M=\iint f$. Note $\int A=\int B=M$. Consider
+      $$0\le\iint\big(f-A(y)-B(x)+M\big)^2\,dx\,dy .$$
+      Expand and use:
+      $\iint fA=\int A^2$, $\iint fB=\int B^2$, $\iint AB=M^2$, $\iint fM=M^2$, $\iint AM=\iint BM=M^2$. The result is
+      $$\iint f^2+\int A^2+\int B^2+M^2-2\int A^2-2\int B^2+2M^2+2M^2-2M^2-2M^2,$$
+      which simplifies to
+      $$\iint f^2+M^2-\int A^2-\int B^2\ge0 .$$
+      That is the inequality.
+    checked: "script: random 40×40 grids satisfy the discrete version"
+    status: ready
+
+  - id: B1
+    topic: "Number theory: partial Horner sums at a rational root"
+    areas: [number-theory, algebra]
+    difficulty: 2
+    hints:
+      - 'Write $r=p/q$ in lowest terms. What denominators can the $k$-th number have?'
+      - 'Divide $P(r)=0$ by $r^{n-k}$ to get a second expression for the same number.'
+    solution: |
+      **Key idea:** each number has a denominator dividing a power of $q$ (from its definition) and a power of $p$ (using $P(r)=0$), so it is an integer.
+
+      If $r=0$ all the numbers are $0$. Otherwise write $r=p/q$ in lowest terms and let
+      $$s_k=c_nr^k+c_{n-1}r^{k-1}+\cdots+c_{n-k+1}r .$$
+      From this formula, $q^ks_k$ is an integer. Dividing $P(r)=0$ by $r^{n-k}$:
+      $$s_k+c_{n-k}+c_{n-k-1}\frac1r+\cdots+c_0\frac1{r^{n-k}}=0,$$
+      so $s_k=-\big(c_{n-k}+c_{n-k-1}\tfrac qp+\cdots+c_0\tfrac{q^{n-k}}{p^{n-k}}\big)$ and $p^{n-k}s_k$ is an integer. Since $\gcd(p,q)=1$, the denominator of $s_k$ divides both $q^k$ and $p^{n-k}$, so it is $1$.
+    checked: "script: 300 random integer polynomials with a rational root; all the numbers were integers"
+    status: ready
+
+  - id: B2
+    topic: "Inequality: one term of a binomial expansion"
+    areas: [combinatorics, algebra]
+    difficulty: 1
+    hints:
+      - 'Rearrange so the left side is $\binom{m+n}m m^mn^n$ and the right side is $(m+n)^{m+n}$.'
+    solution: |
+      **Key idea:** after rearranging, the left side is one term of the binomial expansion of the right side.
+
+      The inequality is equivalent to
+      $$\binom{m+n}{m}m^mn^n<(m+n)^{m+n}.$$
+      By the binomial theorem, $(m+n)^{m+n}=\sum_{k=0}^{m+n}\binom{m+n}km^kn^{m+n-k}$. The left side is the term $k=m$, and the other terms are positive. So the inequality is strict.
+    checked: "proof only"
+    status: ready
+
+  - id: B3
+    topic: "Geometry: region under a graph with perimeter equal to area"
+    areas: [geometry, analysis]
+    difficulty: 2
+    answer: 'exactly the $a>2$'
+    hints:
+      - 'For a constant function the condition is a simple equation.'
+      - 'If $M$ is the maximum of $f$, the area is at most $aM$ and the perimeter is at least $a+2M$.'
+    solution: |
+      **Key idea:** rectangles work exactly when $a>2$, and for $a\le2$ the perimeter always beats the area.
+
+      **$a>2$ works.** With $f\equiv h$ the region is an $a\times h$ rectangle. Perimeter equals area when $2a+2h=ah$, i.e. $h=\frac{2a}{a-2}$, which is positive for $a>2$.
+
+      **$a\le2$ fails.** Let $M=\max f$. If $M=0$ the area is $0$ and the perimeter is at least $2a>0$. Otherwise the area is at most $aM$. The boundary contains the bottom segment of length $a$, plus a path from $(0,0)$ up the left side, along the graph through a highest point $(x^*,M)$, and down to $(a,0)$. That path is at least as long as the two straight segments from $(0,0)$ to $(x^*,M)$ to $(a,0)$, each at least $M$ long. So
+      $$\text{perimeter}\ge a+2M>2M\ge aM\ge\text{area}.$$
+      They can never be equal, so no $k$ exists. The answer is $a>2$.
+    checked: "proof only"
+    status: ready
+
+  - id: B4
+    topic: "Geometry: composing rotations about collinear points"
+    areas: [geometry, algebra]
+    difficulty: 2
+    answer: '$R(x,y)=(x+n,\ y)$'
+    hints:
+      - 'Use complex numbers: a rotation about $k$ is $z\mapsto\omega(z-k)+k$ with $\omega=e^{i\theta}$.'
+      - 'The angles add up to $2\pi$, so the result is a translation. Evaluate $\sum_j j\,\omega^j$ for an $n$-th root of unity.'
+    solution: |
+      **Key idea:** the total angle is $2\pi$, so the composite is a translation; a root-of-unity sum shows it is by $n$.
+
+      With $z=x+iy$ and $\omega=e^{2\pi i/n}$, $R_k(z)=\omega(z-k)+k=\omega z+(1-\omega)k$. Composing $R_1$ first, then $R_2,\dots,R_n$:
+      $$R(z)=\omega^nz+(1-\omega)\sum_{k=1}^nk\,\omega^{n-k}=z+(1-\omega)\sum_{j=0}^{n-1}(n-j)\,\omega^j ,$$
+      using $\omega^n=1$ and $j=n-k$. Since $\sum_{j=0}^{n-1}\omega^j=0$, the sum is $-\sum_j j\omega^j$.
+
+      For $T=\sum_{j=0}^{n-1}j\omega^j$: $\omega T-T=\sum_{j=1}^{n}(j-1)\omega^j-\sum_{j=0}^{n-1}j\omega^j=(n-1)\omega^n-\sum_{j=1}^{n-1}\omega^j=(n-1)+1=n$. So $T=\frac n{\omega-1}$ and
+      $$R(z)=z-(1-\omega)\frac{n}{\omega-1}=z+n .$$
+      So $R(x,y)=(x+n,y)$.
+    viz: putnam-2004-b4
+    checked: "script: composed the rotations numerically for n = 2..8; each moved a test point by exactly (n, 0)"
+    status: ready
+
+  - id: B5
+    topic: "Limits: an infinite product as a Riemann sum"
+    areas: [analysis, calculus]
+    difficulty: 3
+    answer: '$\dfrac2e$'
+    hints:
+      - 'Take logarithms. Shift the index in the sum containing $\ln(1+x^{n+1})$.'
+      - 'The result contains $\sum(x^n-x^{n+1})\ln(1+x^n)$, a Riemann sum for an integral over $[0,1]$.'
+    solution: |
+      **Key idea:** after taking logs and shifting an index, the sum is a Riemann sum for $\int_0^1\ln(1+u)\,du$ with partition points $x^n$.
+
+      For $0<x<1$ let $L(x)=\sum_{n\ge0}x^n\big(\ln(1+x^{n+1})-\ln(1+x^n)\big)$, the log of the product (both sums below converge absolutely). Shifting the index in the first part,
+      $$\sum_{n\ge0}x^n\ln(1+x^{n+1})=\sum_{m\ge1}x^{m-1}\ln(1+x^m),\qquad \sum_{n\ge0}x^n\ln(1+x^n)=\ln2+\sum_{m\ge1}x^m\ln(1+x^m).$$
+      So
+      $$L(x)=\sum_{m\ge1}(x^{m-1}-x^m)\ln(1+x^m)-\ln2=\frac1x\sum_{m\ge1}(x^m-x^{m+1})\ln(1+x^m)-\ln2 .$$
+      The points $x>x^2>x^3>\cdots$ partition $(0,x]$ into pieces of length $x^m-x^{m+1}\le1-x$, and the sum evaluates $\ln(1+u)$ at an endpoint of each piece. As $x\to1^-$ the mesh goes to $0$ and $x\to1$, so the sum tends to
+      $$\int_0^1\ln(1+u)\,du=2\ln2-1 .$$
+      Hence $L(x)\to2\ln2-1-\ln2=\ln2-1$, and the product tends to $e^{\ln2-1}=\frac2e$.
+    checked: "script: the product at x = 0.99, 0.999, 0.9999 is 0.73462, 0.73565, 0.73575; 2/e = 0.73576"
+    status: ready
+
+  - id: B6
+    topic: "Combinatorics: sparse difference sets force zero density"
+    areas: [combinatorics, number-theory]
+    difficulty: 4
+    hints:
+      - 'Two translates $A+s$ and $A+t$ are disjoint when $t-s$ is not a difference of elements of $A$.'
+      - 'Use long gaps in $B$ to build, one at a time, many shifts whose pairwise differences all avoid $B$.'
+    solution: |
+      **Key idea:** long gaps in the set of differences let us choose many shifts of $A$ that do not overlap. If $A$ had positive density, too many disjoint shifted copies would not fit.
+
+      If $A$ is finite, $N(x)/x\to0$ trivially, so assume $A$ is infinite; then $B$ is infinite. Note that $A+s$ and $A+t$ (with $s<t$) are disjoint unless $a+s=a'+t$ for some $a,a'\in A$, which means $t-s=a-a'\in B$.
+
+      **Many good shifts.** We build $0=s_1<s_2<\cdots<s_k$ such that no difference $s_j-s_i$ with $i<j$ lies in $B$. Given $s_1,\dots,s_j$, the gaps of $B$ are unbounded, so there is a gap: an integer $u$ with $u+1,\dots,u+s_j+1$ all outside $B$ (we need a gap longer than $s_j+1$). Put $s_{j+1}=u+1+s_j$. Then for $i\le j$,
+      $$s_{j+1}-s_i=u+1+(s_j-s_i)\in[u+1,\ u+1+s_j],$$
+      which avoids $B$. Repeat until we have $k$ shifts.
+
+      **Counting.** The sets $(A\cap[1,x])+s_i$ for $i=1,\dots,k$ are pairwise disjoint, each has $N(x)$ elements, and all lie in $[1,x+s_k]$. So
+      $$k\,N(x)\le x+s_k,\qquad\limsup_{x\to\infty}\frac{N(x)}x\le\frac1k .$$
+      Since $k$ is arbitrary, $N(x)/x\to0$.
+    checked: "proof only"
+    status: ready

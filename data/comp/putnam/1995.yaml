@@ -1,0 +1,265 @@
+year: 1995
+edition: 56th
+date: "December 2, 1995"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1995.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Algebra: splitting a multiplicative set into two parts"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - 'Suppose neither part is closed. Take two elements of each part whose product lands in the other part.'
+      - 'Multiply all four together and group the product in two ways.'
+    solution: |
+      **Key idea:** if both parts fail, one product of four elements would have to lie in both parts.
+
+      Suppose neither $T$ nor $U$ is closed. Then there are $t_1,t_2\in T$ with $t_1t_2\in U$, and $u_1,u_2\in U$ with $u_1u_2\in T$. Look at $x=t_1t_2u_1u_2$ (the set $S$ is closed under multiplication, and real multiplication is commutative and associative).
+
+      - Grouped as $(t_1t_2)\cdot u_1\cdot u_2$, it is a product of three elements of $U$, so $x\in U$.
+      - Grouped as $t_1\cdot t_2\cdot(u_1u_2)$, it is a product of three elements of $T$, so $x\in T$.
+
+      But $T$ and $U$ are disjoint. So at least one of them is closed under multiplication.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: A2
+    topic: "Improper integrals: convergence of nested square roots"
+    areas: [analysis, calculus]
+    difficulty: 2
+    answer: '$a=b$'
+    hints:
+      - 'Rationalize: $\sqrt{x+a}-\sqrt x=\dfrac{a}{\sqrt{x+a}+\sqrt x}$.'
+      - 'Each square root term behaves like a constant times $x^{-1/4}$. When do the constants cancel?'
+    solution: |
+      **Key idea:** each term is $\sqrt{\text{const}/2}\;x^{-1/4}$ plus something much smaller; $x^{-1/4}$ is not integrable at infinity, so the constants must cancel.
+
+      The integrand is continuous on $[b,\infty)$, so only the behavior at infinity matters. Rationalizing,
+      $$\sqrt{x+a}-\sqrt x=\frac{a}{\sqrt{x+a}+\sqrt x}=\frac{a}{2\sqrt x}\big(1+O(\tfrac1x)\big),$$
+      because $\sqrt{x+a}+\sqrt x=2\sqrt x\,(1+O(\frac1x))$. Taking square roots,
+      $$\sqrt{\sqrt{x+a}-\sqrt x}=\sqrt{\tfrac a2}\;x^{-1/4}\big(1+O(\tfrac1x)\big).$$
+      In the same way $\sqrt{\sqrt x-\sqrt{x-b}}=\sqrt{\frac b2}\,x^{-1/4}(1+O(\frac1x))$. So the integrand is
+      $$\frac{\sqrt a-\sqrt b}{\sqrt2}\,x^{-1/4}+O\big(x^{-5/4}\big).$$
+      The error term is integrable on $[b,\infty)$, but $\int^\infty x^{-1/4}\,dx$ diverges. So the integral converges exactly when $\sqrt a=\sqrt b$, that is, $a=b$.
+    checked: "script: numerical integration converges for a = b = 1 and grows without bound for a = 1, b = 2"
+    status: ready
+
+  - id: A3
+    topic: "Digits: replacing digits to stay divisible by 7"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'Let $D$, $E$ be the two numbers. Add up all nine divisibility conditions.'
+      - 'You should find $E\equiv-D\pmod 7$, and likewise $F\equiv -E$.'
+    solution: |
+      **Key idea:** summing the nine conditions shows each replacement "negates" the number mod $7$; two negations cancel.
+
+      Let $D=\sum_i d_i10^{9-i}$, and similarly $E$ and $F$. Write $w_i=10^{9-i}$. The conditions say
+      $$D+(e_i-d_i)w_i\equiv0\pmod7\quad\text{for each }i.$$
+      Adding all nine: $9D+(E-D)\equiv0$, so $E\equiv-8D\equiv-D\pmod 7$. The same argument for $E$ and $F$ gives $F\equiv-E$.
+
+      Now fix $i$. From the two conditions,
+      $$(e_i-d_i)w_i\equiv-D,\qquad (f_i-e_i)w_i\equiv-E\equiv D .$$
+      Adding: $(f_i-d_i)w_i\equiv0\pmod7$. Since $w_i$ is a power of $10$, which is coprime to $7$, we get $f_i\equiv d_i\pmod7$.
+    checked: "script: random 9-digit trials of the double replacement always gave d_i ≡ f_i mod 7"
+    status: ready
+
+  - id: A4
+    topic: "Combinatorics: cutting a necklace so partial sums stay low"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'Subtract $1$ from every label. The new labels sum to $-1$ and you want every partial sum to be negative.'
+      - 'Start the string right after the place where the running total is at its highest (take the last such place).'
+    solution: |
+      **Key idea:** cut just after the last point where the running total of $(x_i-1)$ is largest; from there every partial sum is negative.
+
+      Label the beads $x_1,\dots,x_n$ around the necklace, and let $y_i=x_i-1$, so $\sum y_i=-1$. We want a starting point from which every partial sum of the $y$'s is at most $-1$ (that is the same as $\sum_{i\le k}x_i\le k-1$).
+
+      Let $s_0=0$ and $s_j=y_1+\dots+y_j$, so $s_n=-1$. Among $s_0,\dots,s_{n-1}$ choose the largest value, and let $j$ be the **last** index in $\{0,\dots,n-1\}$ where it occurs. Start the string at bead $j+1$. Its partial sums are:
+
+      - For $j+k\le n-1$: $s_{j+k}-s_j<0$ because $j$ is the last maximum. Being an integer, it is $\le-1$.
+      - For $j+k=n$: $s_n-s_j=-1-s_j\le-1$, since $s_j\ge s_0=0$.
+      - Past the end (wrapping around to beads $1..m$ with $1\le m\le j$): the sum is $(s_n-s_j)+s_m=-1+(s_m-s_j)\le-1$.
+
+      So every partial sum is at most $-1$, which is what we needed.
+    viz: putnam-1995-a4
+    checked: "script: for 10000 random necklaces the rule's cut point always satisfies all n inequalities"
+    status: ready
+
+  - id: A5
+    topic: "Linear ODEs: decaying solutions of a positive system"
+    areas: [linear-algebra, analysis]
+    difficulty: 3
+    answer: 'Yes, they are linearly dependent'
+    hints:
+      - 'The trace of the matrix is positive. What does that say about its eigenvalues?'
+      - 'If $w^TA=\lambda w^T$, then $y=w\cdot x$ satisfies $y''=\lambda y$.'
+    solution: |
+      **Key idea:** some eigenvalue has positive real part; along the matching left eigenvector the solution must grow or vanish, and decay forces it to vanish.
+
+      Write the system as $x'=Ax$ with $x=(x_1,\dots,x_n)^T$. The trace of $A$ is $\sum a_{ii}>0$, and it equals the sum of the (complex) eigenvalues, so some eigenvalue $\lambda$ has $\operatorname{Re}\lambda>0$. Take a nonzero (complex) row vector $w$ with $wA=\lambda w$, and set $y(t)=w\,x(t)$. Then
+      $$y'=wAx=\lambda y,\qquad\text{so}\qquad y(t)=y(0)e^{\lambda t},\quad |y(t)|=|y(0)|e^{(\operatorname{Re}\lambda)t}.$$
+      But every $x_i(t)\to0$, so $y(t)\to0$. This forces $y(0)=0$, so $w\,x(t)=0$ for all $t$.
+
+      Write $w=u+iv$ with real $u,v$, not both zero. Since the $x_i$ are real, both $u\cdot x(t)=0$ and $v\cdot x(t)=0$ for all $t$. A nonzero one of $u,v$ gives a nontrivial linear relation. So yes, the functions are necessarily linearly dependent.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: A6
+    topic: "Probability: random permutations as a walk on a triangular lattice"
+    areas: [probability, combinatorics]
+    difficulty: 4
+    hints:
+      - 'Subtract $2$ from every entry. Each column becomes a permutation of $(-1,0,1)$: one of six steps on a triangular lattice.'
+      - 'The good event says the walk ends next to the origin. Relate that to returning to the origin one step later.'
+      - 'Bound the number of returns in $2n$ steps from below with Cauchy–Schwarz.'
+    solution: |
+      **Key idea:** the row-sum vector is a random walk with six steps; "ending at a neighbor of the origin" is one step short of "ending at the origin", and returns are too common for the ratio to stay below $4$.
+
+      Subtract $2$ from every entry. A column becomes one of the six permutations of $(-1,0,1)$, and the vector of row sums minus $2n$ is the endpoint of an $n$-step walk with these six steps. Let $N_n(v)$ count the walks ending at $v$ (out of $6^n$).
+
+      - $a=b=c$ means every row sum is $2n$: endpoint $0$.
+      - $b=a+1$, $c=a+2$ means the sums are $2n-1,2n,2n+1$ in some order: the endpoint is one of the six steps $e$.
+
+      By symmetry (permuting rows) the six neighbors are equally likely, so we need $6N_n(e)\ge4N_n(0)$. A walk of $n+1$ steps returns to $0$ exactly when after $n$ steps it is at some neighbor, so $N_{n+1}(0)=6N_n(e)$. We must show $N_{n+1}(0)\ge4N_n(0)$ for some $n\ge1995$.
+
+      Suppose not: $N_{n+1}(0)<4N_n(0)$ for all $n\ge1995$. Then $N_m(0)\le C\cdot4^m$ for all $m$, with $C$ fixed.
+
+      **Lower bound.** Negating a step gives a step, so $N_n(-v)=N_n(v)$. A $2n$-step return is an $n$-step walk to $v$ followed by an $n$-step walk from $v$ back to $0$, so
+      $$N_{2n}(0)=\sum_vN_n(v)N_n(-v)=\sum_vN_n(v)^2\ge\frac{\big(\sum_vN_n(v)\big)^2}{\#\{v\}}\ge\frac{36^n}{(2n+1)^2},$$
+      by Cauchy–Schwarz, since an endpoint is fixed by two coordinates in $[-n,n]$. But $36^n/(2n+1)^2$ eventually exceeds $C\cdot16^n$. Contradiction. So some $n\ge1995$ has the good event at least four times as likely.
+    checked: "script: exact walk counts for n ≤ 59; the ratio 6N(e)/N(0) is above 5.4 throughout and tends toward 6"
+    status: ready
+
+  - id: B1
+    topic: "Pigeonhole: two partitions of nine elements"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'Suppose all nine pairs $(\pi(x),\pi''(x))$ are different. How many elements can have $\pi(x)=s$?'
+      - 'A partition of $9$ uses at most three different part sizes, since $1+2+3+4>9$.'
+    solution: |
+      **Key idea:** if all nine pairs of part sizes were different, each part of $\pi$ would need at most three elements, and the totals cannot reach nine.
+
+      Suppose the pairs $(\pi(x),\pi'(x))$ are all different. A partition of a 9-element set uses at most three different part sizes, because four different sizes would need at least $1+2+3+4=10$ elements. So $\pi'(x)$ takes at most three values.
+
+      Fix a size $s$ and look at the elements with $\pi(x)=s$. Their pairs all start with $s$, so their $\pi'$-values must be different. Hence there are at most $3$ of them. But they form whole parts of size $s$, so their number is a positive multiple of $s$ (when nonzero). Therefore:
+      - $s\le3$, so every part of $\pi$ has size $1$, $2$ or $3$;
+      - at most $3$ elements have $\pi(x)=1$, at most $2$ have $\pi(x)=2$ (a multiple of $2$ that is $\le3$), and at most $3$ have $\pi(x)=3$.
+
+      That accounts for at most $3+2+3=8<9$ elements. Contradiction. So two distinct $x,y$ share both part sizes.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: B2
+    topic: "Arc length: an ellipse rolling along a sine curve"
+    areas: [calculus, geometry]
+    difficulty: 2
+    answer: '$b^2=a^2+c^2$'
+    hints:
+      - 'Rolling without slipping for one full turn means the perimeter equals the arc length of one period.'
+      - 'Parametrize the ellipse by $(a\cos t,b\sin t)$ and the curve by $x=au$. Compare the two integrands.'
+    solution: |
+      **Key idea:** "one turn per period" means equal lengths, and the two length integrals have the same shape.
+
+      Rolling without slipping matches length on the ellipse with length on the curve, so one revolution per period means
+      $$\text{perimeter of ellipse}=\text{arc length of one period}.$$
+      With $(a\cos t,b\sin t)$, the perimeter is
+      $$P=\int_0^{2\pi}\sqrt{a^2\sin^2t+b^2\cos^2t}\,dt=\int_0^{2\pi}\sqrt{a^2+(b^2-a^2)\cos^2t}\,dt.$$
+      For $y=c\sin\frac xa$ over $0\le x\le2\pi a$, substitute $x=au$:
+      $$L=\int_0^{2\pi}\sqrt{1+\tfrac{c^2}{a^2}\cos^2u}\;a\,du=\int_0^{2\pi}\sqrt{a^2+c^2\cos^2u}\,du.$$
+      The function $k\mapsto\int_0^{2\pi}\sqrt{a^2+k\cos^2t}\,dt$ is strictly increasing in $k$, so $P=L$ exactly when $b^2-a^2=c^2$:
+      $$b^2=a^2+c^2 .$$
+      (Here $a$ is the semi-axis that also sets the period of the curve, as in the problem.)
+    checked: "script: numerical perimeter and arc length agree for sample a, c with b = √(a² + c²)"
+    status: ready
+
+  - id: B3
+    topic: "Determinants: summing over all digit matrices"
+    areas: [linear-algebra, combinatorics]
+    difficulty: 2
+    answer: '$45$ for $n=1$, $20250$ for $n=2$, and $0$ for $n\ge3$'
+    hints:
+      - 'Expand the determinant as a sum over permutations, and swap the two sums.'
+      - 'Only the top-left entry has a different range of digits. Group the permutations by whether they use that entry.'
+    solution: |
+      **Key idea:** expanding the determinant turns the big sum into products of independent digit sums, and the signs cancel once $n\ge3$.
+
+      Write $\det M=\sum_\sigma\operatorname{sgn}\sigma\prod_im_{i\sigma(i)}$ and sum over all allowed matrices. For a fixed $\sigma$, the entries in the product range independently, and the other $n^2-n$ entries just multiply by their number of choices. The top-left entry runs over $1..9$ (sum $45$, $9$ choices) and every other entry over $0..9$ (sum $45$, $10$ choices). So
+      - if $\sigma(1)=1$: the contribution is $45^n\cdot10^{n^2-n}$;
+      - if $\sigma(1)\ne1$: the top-left entry is free, giving $45^n\cdot9\cdot10^{n^2-n-1}$.
+
+      Let $s_1=\sum_{\sigma(1)=1}\operatorname{sgn}\sigma$ and $s_2=\sum_{\sigma(1)\ne1}\operatorname{sgn}\sigma=-s_1$ (all signs add to $0$ for $n\ge2$). The first sum is the sign sum over permutations of $n-1$ symbols, which is $0$ when $n-1\ge2$. So for $n\ge3$ the total is $0$.
+
+      - $n=1$: the sum of digits $1..9$ is $45$.
+      - $n=2$: $s_1=1$, $s_2=-1$, so the total is $45^2\cdot10^2-45^2\cdot9\cdot10=202500-182250=20250$.
+    checked: "script: brute force over all 9000 two-by-two digit matrices gives 20250"
+    status: ready
+
+  - id: B4
+    topic: "Continued fractions: an eighth root of a fixed point"
+    areas: [algebra]
+    difficulty: 1
+    answer: '$\dfrac{3+\sqrt5}{2}$'
+    hints:
+      - 'The continued fraction $x$ satisfies $x=2207-\frac1x$, so $x+\frac1x=2207$.'
+      - 'If $y^8=x$, then $(y^4+y^{-4})^2=x+\frac1x+2$. Keep taking square roots.'
+    solution: |
+      **Key idea:** halve the exponent three times using $(t+\frac1t)^2=t^2+\frac1{t^2}+2$.
+
+      The continued fraction is the limit of $x_1=2207$, $x_{k+1}=2207-\frac1{x_k}$. The sequence is decreasing and bounded below by the larger root of $x^2-2207x+1=0$ (if $x_k$ is above that root, so is $x_{k+1}$), so it converges to that root $x$. It satisfies $x+\frac1x=2207$.
+
+      Let $y=x^{1/8}>1$. Then
+      $$\big(y^4+y^{-4}\big)^2=x+\tfrac1x+2=2209=47^2,\quad \big(y^2+y^{-2}\big)^2=47+2=49,\quad \big(y+y^{-1}\big)^2=7+2=9 .$$
+      So $y+\frac1y=3$, and the root greater than $1$ is $y=\frac{3+\sqrt5}2$.
+
+      In the form asked: $a=3$, $b=1$, $c=5$, $d=2$.
+    checked: "script: iterating the continued fraction and taking the eighth root gives 2.6180339887 = (3+√5)/2"
+    status: ready
+
+  - id: B5
+    topic: "Games: bean heaps with nim values"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: 'Move first; take one bean from the heap of 3'
+    hints:
+      - 'Each heap is its own small game. Find the nim value (Grundy value) of a heap of each size.'
+      - 'A position is a loss for the player to move exactly when the XOR of the heap values is $0$.'
+    solution: |
+      **Key idea:** each heap is a short chain of moves, so its nim value is easy to find; the XOR of the four values is not zero, so the first player wins.
+
+      A heap of size $h$ has at most two moves: to $h-1$ (allowed when $h\ge3$) or to "gone" (allowed when $h=2$ or $3$). The player who makes the last move wins, so the Sprague–Grundy theory applies. The value $g(h)$ is the smallest nonnegative integer not among the values of the options (a removed heap counts $0$):
+      - $g(2)=1$ (only option: gone),
+      - $g(3)=2$ (options: $g(2)=1$ and gone $=0$),
+      - $g(4)=0$, $g(5)=1$, $g(6)=0$, and in general $g(h)=(h-1)\bmod 2$ for $h\ge4$.
+
+      The start has XOR $g(3)\oplus g(4)\oplus g(5)\oplus g(6)=2\oplus0\oplus1\oplus0=3\ne0$, so the first player wins. The winning first move is to take one bean from the 3-heap, leaving $2,4,5,6$ with XOR $1\oplus0\oplus1\oplus0=0$.
+
+      **Strategy from then on:** always move to a position with XOR $0$. From XOR $0$ every move changes exactly one heap value, so the XOR becomes nonzero; from nonzero XOR some move restores $0$. Since the game is finite and the empty position has XOR $0$, the first player makes the last move.
+    checked: "script: full game-tree search confirms the first player wins and that 2, 4, 5, 6 is a loss for the player to move"
+    status: ready
+
+  - id: B6
+    topic: "Beatty sequences: no partition into three"
+    areas: [number-theory]
+    difficulty: 4
+    hints:
+      - 'The set containing $1$ has a parameter between $1$ and $2$. What does that say about the gaps left for the other two sets?'
+      - 'Find multiples $m\beta$ and $n\gamma$ that are less than $1$ apart.'
+    solution: |
+      **Key idea:** the set with $1$ leaves no two consecutive integers for the other two sets, but the other two sets always contain elements at most one apart.
+
+      Suppose $\{1,2,3,\dots\}$ is the disjoint union of $S(\alpha),S(\beta),S(\gamma)$. Every parameter is at least $1$, since otherwise $\lfloor\alpha\rfloor=0$ would appear. Say $1\in S(\alpha)$. The smallest element of $S(\alpha)$ is $\lfloor\alpha\rfloor$, so $\lfloor\alpha\rfloor=1$. Also $\alpha\ne1$ (else $S(\alpha)$ is everything). So $1<\alpha<2$.
+
+      **No two consecutive integers outside $S(\alpha)$.** Consecutive elements of $S(\alpha)$ differ by $\lfloor(n+1)\alpha\rfloor-\lfloor n\alpha\rfloor\in\{1,2\}$, and $S(\alpha)$ starts at $1$. So between members of $S(\alpha)$ at most one integer is skipped. Hence $S(\beta)\cup S(\gamma)$ never contains two consecutive integers.
+
+      **But it must.** We find positive integers $m,n$ with $|m\beta-n\gamma|<1$. Then $\lfloor m\beta\rfloor$ and $\lfloor n\gamma\rfloor$ differ by at most $1$. They cannot be equal (the sets are disjoint), so they are consecutive integers in $S(\beta)\cup S(\gamma)$, a contradiction.
+
+      - If $\beta/\gamma=p/q$ is rational, take $m=q$, $n=p$: then $m\beta=n\gamma$.
+      - If $\beta/\gamma$ is irrational, the fractional parts of $m\beta/\gamma$ are dense in $[0,1)$ (Kronecker's theorem). Pick a large $m$ with that fractional part below $1/\gamma$, and let $n=\lfloor m\beta/\gamma\rfloor$, which is positive once $m$ is large. Then $0\le m\beta-n\gamma<1$.
+
+      So no such partition exists.
+    checked: "reasoning only (a proof)"
+    status: ready

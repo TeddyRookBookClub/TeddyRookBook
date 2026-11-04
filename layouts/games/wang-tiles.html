@@ -1,0 +1,74 @@
+{{ define "main" }}
+{{- /* Test page for the Wang-tile idea (not in menus, noindex). Art and code: static/games/wang/wang.js. */ -}}
+<style>
+.wt{--g:#004225;--acc:#004225;--gold:#b8963e;--card:var(--entry);--line:var(--border)}
+html[data-theme="dark"] .wt{--acc:#6cc79a}
+.wt h1{font-size:1.7rem;margin:0 0 .4rem}
+.wt h2{font-size:1.2rem;margin:1.6rem 0 .4rem}
+.wt p{margin:.4rem 0 .7rem;line-height:1.55}
+.wt .note{font-size:.85rem;color:var(--secondary)}
+.wt-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:.6rem 0}
+.wt figure{margin:0;min-width:0}
+.wt figcaption{font-weight:700;font-size:.9rem;margin:0 0 .3rem;color:var(--acc)}
+.wt canvas{display:block;width:100%;height:auto;image-rendering:pixelated;image-rendering:crisp-edges;border:2px solid var(--line);border-radius:6px;background:#6f9a3e}
+.wt #wt-paint{touch-action:none;cursor:crosshair;max-width:640px}
+.wt-bar{display:flex;flex-wrap:wrap;gap:8px;margin:.5rem 0}
+.wt button{font:600 .85rem system-ui,sans-serif;padding:.45rem .8rem;border-radius:999px;border:1.5px solid var(--acc);background:transparent;color:var(--acc);cursor:pointer;min-height:36px}
+.wt button[aria-pressed="true"]{background:var(--acc);color:var(--theme)}
+.wt button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wt-sheet{max-width:640px}
+.wt #wt-sheet{border-radius:4px}
+.wt-nums{display:grid;grid-template-columns:repeat(16,1fr);font:600 .7rem system-ui,sans-serif;color:var(--secondary);text-align:center;margin-top:2px}
+.wt ul{margin:.3rem 0 .8rem 1.2rem}
+.wt li{margin:.2rem 0}
+@media (max-width:600px){.wt-pair{grid-template-columns:1fr}.wt-nums{font-size:.55rem}}
+</style>
+<article class="wt">
+<p class="note"><a href="{{ "games/" | relURL }}">‹ All games</a> · A test page for an idea. It is not part of any game yet.</p>
+<h1>{{ .Title }}</h1>
+<p>Many pixel-art games build their ground from small square tiles. If you drop tiles down at random, the edges don't line up. If you repeat one tile, the eye soon spots the pattern. <b>Wang tiles</b> fix both: every tile's sides are marked, and a tile can only sit next to a tile whose side matches. Pick at random among the tiles that fit, and the ground joins up everywhere without looking repeated.</p>
+<p>This set marks the <b>corners</b> instead of the sides: each corner is either grass or path. Four corners with two choices each make 16 tiles. Every tile and pixel here is drawn by the page's own code.</p>
+
+<h2>1. Random, repeated, or Wang</h2>
+<div class="wt-bar" role="group" aria-label="Left picture">
+  <button type="button" data-wt-a="random" aria-pressed="true">Random tiles</button>
+  <button type="button" data-wt-a="repeat" aria-pressed="false">One patch, repeated</button>
+  <button type="button" id="wt-new">🎲 New ground</button>
+</div>
+<div class="wt-pair">
+  <figure><figcaption id="wt-la">Random tiles</figcaption><canvas id="wt-a" width="192" height="144" role="img" aria-label="Tiles picked at random: paths break off at the tile sides."></canvas></figure>
+  <figure><figcaption>Wang tiles</figcaption><canvas id="wt-b" width="192" height="144" role="img" aria-label="Wang tiles: every path joins its neighbors, and no two patches look the same."></canvas></figure>
+</div>
+<p class="note">Both pictures use the same 16 tiles. The Wang picture first picks grass or path for every corner of the grid, then gives each square the tile that matches its four corners, in one of four looks.</p>
+
+<h2>2. The whole set</h2>
+<div class="wt-sheet"><canvas id="wt-sheet" width="256" height="16" role="img" aria-label="The 16 tiles, numbered 0 to 15."></canvas><div class="wt-nums" id="wt-nums" aria-hidden="true"></div></div>
+<p>A tile's number comes from its corners: top-left counts 1, top-right 2, bottom-right 4 and bottom-left 8. Add up the path corners. Tile 0 is all grass, tile 15 all path, and tile 5 has path in the top-left and bottom-right corners. This is the same counting trick as <i>marching squares</i>, a method for drawing contour lines.</p>
+
+<h2>3. Paint a path</h2>
+<p>Drag on the field to lay a path. The borders fix themselves: each square looks at its four corners and picks its tile. This is called <b>autotiling</b>.</p>
+<div class="wt-bar">
+  <button type="button" id="wt-auto" aria-pressed="true">Autotile</button>
+  <button type="button" id="wt-erase" aria-pressed="false">Erase</button>
+  <button type="button" id="wt-ids" aria-pressed="false">Show numbers</button>
+  <button type="button" id="wt-clear">Clear</button>
+</div>
+<canvas id="wt-paint" width="256" height="160" role="img" aria-label="A field you can paint a path on. Borders are drawn automatically."></canvas>
+<p class="note">Turn off Autotile to see the same path as plain squares. Big games often use a 47-tile "blob" set, which also tells straight sides from inside corners; it costs more art but looks smoother.</p>
+
+<h2>Where this could help</h2>
+<ul>
+<li><b>Ancient Festival Tycoon:</b> soft path borders and grass-to-sand edges on the festival ground.</li>
+<li><b>Hero's Road:</b> ground and cave edges that change shape along the level.</li>
+<li><b>Charioteer:</b> street, garden and water edges in the city map.</li>
+</ul>
+
+<h2>Sources</h2>
+<ul class="note">
+<li>Hao Wang described these tiles in 1961: <a href="https://en.wikipedia.org/wiki/Wang_tile">Wang tile (Wikipedia)</a>.</li>
+<li>M. Cohen, J. Shade, S. Hiller and O. Deussen, “Wang Tiles for Image and Texture Generation,” <i>ACM Transactions on Graphics</i> 22(3), 2003: <a href="https://graphics.uni-konstanz.de/publikationen/Cohen2003WangTilesImage/index.html">University of Konstanz</a>.</li>
+<li>Marching-squares and blob tile sets compared: <a href="https://boristhebrave.com/2013/07/14/tileset-roundup">Tileset Roundup (Boris the Brave)</a>.</li>
+</ul>
+</article>
+<script src="{{ "games/wang/wang.js" | relURL }}?v={{ (os.Stat "static/games/wang/wang.js").ModTime.Unix }}"></script>
+{{ end }}

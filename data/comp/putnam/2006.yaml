@@ -1,0 +1,227 @@
+year: 2006
+edition: 67th
+date: "December 2, 2006"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2006.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Solid geometry: a quartic inequality describes a torus"
+    areas: [geometry, calculus]
+    difficulty: 1
+    answer: '$6\pi^2$'
+    hints:
+      - 'Use $r=\sqrt{x^2+y^2}$ and take a square root of both sides.'
+      - 'Pappus: volume $=$ (area of the cross-section) $\times$ (distance its center travels).'
+    solution: |
+      **Key idea:** in cylindrical coordinates the region is a solid torus; Pappus's theorem gives its volume.
+
+      Let $r=\sqrt{x^2+y^2}$. Both $r^2+z^2+8$ and $6r$ are nonnegative, so the inequality is equivalent to
+      $$r^2+z^2+8\le6r\iff(r-3)^2+z^2\le1 .$$
+      So in each half-plane through the $z$-axis, the region is a disk of radius $1$ centered at distance $3$ from the axis. Spinning it around the axis gives a solid torus. By Pappus's theorem the volume is the disk's area times the length of the circle traced by its center:
+      $$\pi\cdot1^2\cdot2\pi\cdot3=6\pi^2 .$$
+    checked: "algebra: the equivalence is exact; the volume also follows from the shell integral ∫2πr·2√(1−(r−3)²)dr"
+    status: ready
+
+  - id: A2
+    topic: "Games: removing one less than a prime"
+    areas: [combinatorics, number-theory]
+    difficulty: 2
+    hints:
+      - 'Call a heap size losing if the player to move loses. Suppose there were only finitely many losing sizes.'
+      - 'Find a heap size $n$ from which every move to a losing size would need $p-1$ with $p$ composite. Long runs of composite numbers help.'
+    solution: |
+      **Key idea:** if the losing positions were finite, a long run of composite numbers would give a large position with no move to any of them, which makes it losing.
+
+      Call $n$ *losing* if the player about to move from a heap of $n$ loses with best play. Bob wins exactly when $n$ is losing. The empty heap is losing (the previous player took the last stone). A position is losing exactly when no move leads to a losing position.
+
+      Suppose the losing positions were finite, all at most $M$. A move from $n$ to a losing $\ell$ removes $n-\ell=p-1$ stones, so it requires $n-\ell+1$ to be prime. Choose $K\ge M+2$ and let $n=K!+K-1$. For $0\le\ell\le M$,
+      $$n-\ell+1=K!+(K-\ell),\qquad 2\le K-\ell\le K,$$
+      and $K!+j$ is divisible by $j$ (and larger than $j$) for $2\le j\le K$, so it is composite. Thus $n$ has no move to a losing position, so $n$ is losing. But $n>M$, a contradiction. Hence there are infinitely many losing $n$, and for each of them Bob wins.
+    checked: "script: computed the losing sizes below 3000: 0, 3, 8, 11, 32, 35, … (32 of them)"
+    status: ready
+
+  - id: A3
+    topic: "Recurrences: a long run of multiples of 2006"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'Mod $2006$ the recurrence can be run backward, so the sequence of residues is purely periodic.'
+      - 'Run it backward from the start. You first meet a block of $1$s, then a block of $0$s.'
+    solution: |
+      **Key idea:** the recurrence can be reversed, so mod $2006$ the sequence is purely periodic; running it backward from the start produces $2005$ zeros in a row, and periodicity brings them forward.
+
+      **Periodic mod 2006.** Each term determines the earlier one by $x_{k-2005}=x_{k+1}-x_k$. Consider the blocks of $2006$ consecutive residues mod $2006$. Each block determines the next one and the previous one, and there are finitely many possible blocks. So the sequence of residues is purely periodic, and we may extend it to negative indices with the same rule.
+
+      **Running backward.** Use $x_{k-2005}=x_{k+1}-x_k$ for $k=2005,2004,\dots$.
+      - For $k=2005-j$ with $0\le j\le2004$: $x_{-j}=x_{2006-j}-x_{2005-j}=1$, since these are consecutive integers. So $x_{-2004}=\cdots=x_0=1$.
+      - Next, for $k=-j$ with $0\le j\le2004$: $x_{-2005-j}=x_{1-j}-x_{-j}=1-1=0$, since $x_{1-j}$ and $x_{-j}$ are both among $x_{-2004},\dots,x_1$, which all equal $1$.
+
+      So the $2005$ consecutive terms $x_{-4009},\dots,x_{-2005}$ are all $0$. By periodicity, the same block of residues occurs at positive indices, giving $2005$ consecutive terms divisible by $2006$.
+    checked: "script: ran the recurrence backward with exact integers; x_{−4009} … x_{−2005} are all 0 and x_{−2004} … x_0 are all 1"
+    status: ready
+
+  - id: A4
+    topic: "Permutations: expected number of local maxima"
+    areas: [combinatorics, probability]
+    difficulty: 1
+    answer: '$\dfrac{n+1}3$'
+    hints:
+      - 'Linearity of expectation: find the chance that a given position is a local maximum.'
+    solution: |
+      **Key idea:** linearity of expectation; each position's chance depends only on how many neighbors it has.
+
+      For an interior position $1<k<n$, the three values $\pi(k-1),\pi(k),\pi(k+1)$ are equally likely to be in any order, so $\pi(k)$ is the largest with probability $\frac13$. For an end position, $\pi(k)$ beats its one neighbor with probability $\frac12$. Adding,
+      $$2\cdot\frac12+(n-2)\cdot\frac13=\frac{n+1}3 .$$
+      (For $n=2$ this gives $1$, which is right: exactly one end is a maximum.)
+    checked: "script: exact averages over all permutations for n = 2..7"
+    status: ready
+
+  - id: A5
+    topic: "Trigonometry: sum over product of shifted tangents"
+    areas: [algebra]
+    difficulty: 3
+    answer: '$n$ if $n\equiv1\pmod4$, and $-n$ if $n\equiv3\pmod4$'
+    hints:
+      - 'All $n$ angles $\theta+k\pi/n$ have the same value of $\tan(nx)$.'
+      - 'Write $\tan(nx)$ as a ratio of two polynomials in $t=\tan x$ using $(1+it)^n$, and use Vieta.'
+    solution: |
+      **Key idea:** the $a_k$ are exactly the roots of one polynomial equation $\tan(nx)=c$ written in $t=\tan x$, so Vieta gives their sum and product.
+
+      Let $c=\tan(n\theta)$; it is defined and nonzero because $\theta/\pi$ is irrational. Each $x_k=\theta+k\pi/n$ has $\tan(nx_k)=\tan(n\theta+k\pi)=c$, and the $\cos x_k$ are nonzero for the same reason.
+
+      **The polynomial.** For $t=\tan x$, $(1+it)^n=\frac{e^{inx}}{\cos^nx}$, so $\tan(nx)=\frac{\operatorname{Im}(1+it)^n}{\operatorname{Re}(1+it)^n}$. Let
+      $$F(t)=\operatorname{Im}(1+it)^n-c\operatorname{Re}(1+it)^n .$$
+      Then $F(\tan x)=\frac{\sin(nx)-c\cos(nx)}{\cos^nx}$, which vanishes exactly when $nx\equiv n\theta\pmod\pi$. So $F$ vanishes at the $n$ distinct numbers $a_1,\dots,a_n$ (the $x_k$ are distinct mod $\pi$). With $n$ odd, write $n=2m+1$. The coefficients we need are:
+      - $t^n$: from $\operatorname{Im}(i^nt^n)$, it is $(-1)^m$. So $F$ has degree $n$, and the $a_k$ are all its roots.
+      - $t^{n-1}$: from $-c\binom n{n-1}i^{n-1}$, it is $-cn(-1)^m$.
+      - $t^0$: $\operatorname{Im}1=0$ and $\operatorname{Re}1=1$, so it is $-c$.
+
+      **Vieta.** $\sum a_k=-\frac{-cn(-1)^m}{(-1)^m}=cn$, and $\prod a_k=(-1)^n\frac{-c}{(-1)^m}=c(-1)^m$. Hence
+      $$\frac{a_1+\cdots+a_n}{a_1\cdots a_n}=n(-1)^m=n(-1)^{(n-1)/2},$$
+      an integer: $n$ when $n\equiv1\pmod4$ and $-n$ when $n\equiv3\pmod4$.
+    checked: "script: numerical values for n = 1, 3, 5, 7, 9, 11 are 1, −3, 5, −7, 9, −11"
+    status: ready
+
+  - id: A6
+    topic: "Geometric probability: four random points in a disk"
+    areas: [probability, geometry]
+    status: coming
+
+  - id: B1
+    topic: "Algebra: a cubic curve splitting into a line and point"
+    areas: [algebra, geometry]
+    difficulty: 2
+    answer: 'area $\dfrac{3\sqrt3}{2}$'
+    hints:
+      - 'Factor with the identity for $u^3+v^3+w^3-3uvw$, taking $w=-1$.'
+      - 'The second factor is a sum of squares (up to a factor $\frac12$). Where does it vanish?'
+    solution: |
+      **Key idea:** the curve factors into a line and a single isolated point, and the equilateral triangle must use that point and two points of the line.
+
+      The identity
+      $$u^3+v^3+w^3-3uvw=(u+v+w)(u^2+v^2+w^2-uv-vw-wu)$$
+      with $u=x$, $v=y$, $w=-1$ gives
+      $$x^3+3xy+y^3-1=(x+y-1)\big(x^2-xy+y^2+x+y+1\big).$$
+      The second factor equals $\frac12\big[(x-y)^2+(x+1)^2+(y+1)^2\big]$, which is zero only at $(-1,-1)$. So the curve is the line $x+y=1$ together with the point $(-1,-1)$.
+
+      Three points of the line are collinear, so an equilateral triangle must use $(-1,-1)$ and two points of the line. Its height is the distance from $(-1,-1)$ to the line, $\frac{|-1-1-1|}{\sqrt2}=\frac3{\sqrt2}$, and its base is centered at the foot of that perpendicular. So there is exactly one such triangle, with area
+      $$\frac{h^2}{\sqrt3}=\frac{9/2}{\sqrt3}=\frac{3\sqrt3}2 .$$
+    viz: putnam-2006-b1
+    checked: "algebra: the factorization and the sum-of-squares form were expanded by sympy"
+    status: ready
+
+  - id: B2
+    topic: "Pigeonhole: a subset sum close to an integer"
+    areas: [combinatorics, number-theory]
+    difficulty: 2
+    hints:
+      - 'Look at the fractional parts of the partial sums $0,\ x_1,\ x_1+x_2,\ \dots$ together with the number $1$.'
+    solution: |
+      **Key idea:** pigeonhole on the fractional parts of the partial sums, with the point $1$ added; a close pair gives a block of consecutive $x_i$ whose sum is near an integer.
+
+      Let $s_0=0$ and $s_k=x_1+\cdots+x_k$, and let $\{s\}$ be the fractional part. The $n+2$ numbers
+      $$\{s_0\}=0,\ \{s_1\},\ \dots,\ \{s_n\},\ 1$$
+      lie in $[0,1]$. Split $[0,1]$ into $n+1$ closed intervals of length $\frac1{n+1}$. Two of the numbers fall in the same interval, so they differ by at most $\frac1{n+1}$.
+
+      - If they are $\{s_i\}$ and $\{s_j\}$ with $i<j$, then $s_j-s_i=x_{i+1}+\cdots+x_j$ is within $\frac1{n+1}$ of an integer: take $S=\{x_{i+1},\dots,x_j\}$ and $m$ the negative of that integer.
+      - If they are $\{s_k\}$ and $1$, then $k\ne0$, because $0$ and $1$ are more than $\frac1{n+1}$ apart. So $s_k$ is within $\frac1{n+1}$ of an integer, and $S=\{x_1,\dots,x_k\}$ works.
+    checked: "script: 200 random sets with n ≤ 7; the best subset sum was always within 1/(n+1) of an integer"
+    status: ready
+
+  - id: B3
+    topic: "Combinatorial geometry: counting line separations of n points"
+    areas: [combinatorics, geometry]
+    difficulty: 4
+    answer: '$\binom n2+1$'
+    hints:
+      - 'Perturbing the points slightly never destroys a separation, so you may assume no three are collinear.'
+      - 'Turn a separating line until it touches one point on each side. Count (partition, such a line) pairs in two ways.'
+    solution: |
+      **Key idea:** in general position, each nontrivial partition has exactly two "tangent" lines through one point of each part, and each pair of points gives exactly two such (partition, line) combinations. That gives exactly $\binom n2+1$ partitions; perturbation handles the general case.
+
+      **Reduce to general position.** A linear partition has a separating line that misses $S$. If we move each point by less than its distance to the separating lines of all the (finitely many) partitions, every partition stays separated, and different partitions stay different. So $L_S\le L_{S'}$ for a nearby set $S'$ with no three points collinear. It is enough to show $L_{S}=\binom n2+1$ for such sets.
+
+      **Directions that separate.** Fix an ordered nontrivial partition $(A,B)$ and let $\mathcal D$ be the finite set of differences $b-a$ with $a\in A$, $b\in B$. A unit vector $u$ *works* if some line with normal $u$ has $A$ strictly on its negative side and $B$ strictly on its positive side, that is, $u\cdot d>0$ for every $d\in\mathcal D$. Since the partition is linear, some $u_0$ works. For each $d$, the directions with $u\cdot d>0$ form an open half-circle, and all of these half-circles contain $u_0$. So the working directions are an open arc: it is nonempty and not the whole circle, so it has two different endpoints. At an endpoint $u$ we have $u\cdot d\ge0$ for every $d$ (by continuity), and $u\cdot d=0$ for at least one $d$ (otherwise all the strict inequalities would hold near $u$, and $u$ would lie inside the arc). This means $\max_Au\cdot a=\min_Bu\cdot b$, so the line $u\cdot z=\max_Au\cdot a$ has $A$ on one closed side, $B$ on the other, and passes through at least one point of $A$ and one of $B$. In general position it passes through exactly one $a\in A$ and one $b\in B$. Call the two endpoints the two *tangents* of $(A,B)$.
+
+      **Count.** Each of the $2(L_S-1)$ ordered nontrivial partitions has $2$ tangents, and each tangent $u$ comes with its pair of points $(a,b)$ on the line, with $u\perp(b-a)$. Conversely, take an ordered pair of distinct points $(a,b)$ and a unit normal $u\perp(b-a)$ ($2$ choices). The line through $a$ and $b$ contains no other point of $S$. Let $A$ be $a$ together with the points where $u\cdot z<u\cdot a$, and $B$ be $b$ together with the points where $u\cdot z>u\cdot a$. Turning the line by a small angle about the midpoint of $ab$, in the direction that moves $a$ to the negative side, separates $A$ from $B$ strictly, so $(A,B)$ is a nontrivial linear partition. Directions near $u$ on one side work for it, while $u$ itself does not (since $u\cdot(b-a)=0$), so $u$ is one of its tangents, and $a,b$ are the points on that tangent line. The two constructions undo each other: at a tangent $u$ of $(A,B)$ through $a$ and $b$, every other point of $A$ has $u\cdot z<u\cdot a$ and every other point of $B$ has $u\cdot z>u\cdot a$, so the second construction gives back $(A,B)$. This is a one-to-one correspondence between pairs (ordered partition, tangent) and pairs (ordered pair $(a,b)$, choice of $u$). So
+      $$2\cdot2(L_S-1)=2\cdot n(n-1),\qquad L_S=\binom n2+1 .$$
+      (The partition with an empty side is the $+1$.)
+
+      So the maximum of $L_S$ over $n$-point sets is $\binom n2+1$, reached by any set with no three collinear.
+    checked: "script: counted the partitions of random point sets for n ≤ 7: 1, 2, 4, 7, 11, 16, 22"
+    status: ready
+
+  - id: B4
+    topic: "Linear algebra: cube vertices inside a k-dimensional subspace"
+    areas: [linear-algebra, combinatorics]
+    difficulty: 2
+    answer: '$2^k$'
+    hints:
+      - 'Row-reduce a basis of $V$. Some $k$ coordinates determine a vector of $V$ completely.'
+    solution: |
+      **Key idea:** some $k$ coordinates determine each vector of $V$, and on a $0$/$1$ point they have only $2^k$ possible values.
+
+      Write a basis of $V$ as the rows of a $k\times n$ matrix of rank $k$. Some $k$ columns are linearly independent, so the projection of $V$ onto those $k$ coordinates is one-to-one (it is onto $\mathbb R^k$ and $\dim V=k$). Therefore a point of $V$ is determined by those $k$ coordinates. For a point of $Z\cap V$ they are each $0$ or $1$, so there are at most $2^k$ such points.
+
+      The bound is reached by $V$ spanned by the first $k$ coordinate vectors: it contains the $2^k$ points whose last $n-k$ coordinates are $0$.
+    checked: "proof only"
+    status: ready
+
+  - id: B5
+    topic: "Calculus of variations: maximize a pointwise quadratic"
+    areas: [calculus, analysis]
+    difficulty: 1
+    answer: '$\dfrac1{16}$'
+    hints:
+      - 'Write $I(f)-J(f)=\int_0^1x\big(xf-f^2\big)dx$ and maximize the bracket for each $x$ separately.'
+    solution: |
+      **Key idea:** the integrand is a quadratic in the value $f(x)$, so maximize it point by point.
+
+      $$I(f)-J(f)=\int_0^1x\big(x\,f(x)-f(x)^2\big)\,dx .$$
+      For each $x$, the quadratic $xy-y^2$ in $y$ is largest at $y=\frac x2$, with value $\frac{x^2}4$. Since $x\ge0$,
+      $$I(f)-J(f)\le\int_0^1\frac{x^3}4\,dx=\frac1{16},$$
+      with equality for the continuous function $f(x)=\frac x2$. So the maximum is $\frac1{16}$.
+    checked: "script: numerical integration with f(x) = x/2 gives 0.0625"
+    status: ready
+
+  - id: B6
+    topic: "Asymptotics: a recursion with a root step"
+    areas: [analysis]
+    difficulty: 3
+    answer: '$\Big(\dfrac{k+1}{k}\Big)^k$'
+    hints:
+      - 'Heuristically $\frac{da}{dn}=a^{-1/k}$. Which power of $a$ grows linearly?'
+      - 'Show $b_n=a_n^{(k+1)/k}$ has $b_{n+1}-b_n\to\frac{k+1}k$, then average.'
+    solution: |
+      **Key idea:** the power $b_n=a_n^{(k+1)/k}$ grows by almost exactly $\frac{k+1}k$ at each step, so $b_n\approx\frac{k+1}kn$.
+
+      **$a_n\to\infty$.** The sequence increases. If it were bounded by $L$, each step would add at least $L^{-1/k}$, a contradiction.
+
+      **The increments.** Let $r=\frac{k+1}k$ and $b_n=a_n^r$. With $\varepsilon_n=a_n^{-r}\to0$,
+      $$b_{n+1}-b_n=\big(a_n+a_n^{-1/k}\big)^r-a_n^r=a_n^r\Big[\big(1+a_n^{-r}\big)^r-1\Big]=\frac{(1+\varepsilon_n)^r-1}{\varepsilon_n}\to r .$$
+
+      **Average.** If $b_{n+1}-b_n\to r$, then $\frac{b_n}n\to r$ (the average of the increments tends to their limit; this is the Cesàro or Stolz theorem). Finally,
+      $$\frac{a_n^{k+1}}{n^k}=\Big(\frac{b_n}n\Big)^k\to r^k=\Big(\frac{k+1}k\Big)^k .$$
+    checked: "script: iterated 2 million steps for k = 2, 3, 5: 2.25001, 2.37038, 2.48833 against 2.25, 2.37037, 2.48832"
+    status: ready

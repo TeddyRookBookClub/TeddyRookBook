@@ -121,6 +121,8 @@
     },
     play: function (name, when, gain, bus) {
       if (!S.ctx || !S.buffers[name]) return;
+      // tell the background music player (static/music/suite/player/player.js) to duck, at most twice a second
+      var nw = Date.now(); if (!(nw - (S.ssT || 0) < 500) && typeof window !== 'undefined' && window.dispatchEvent) { S.ssT = nw; try { window.dispatchEvent(new Event('trb:sound-start')); } catch (e) { /* ignore */ } }
       var c = S.ctx, src = c.createBufferSource(), g = c.createGain();
       src.buffer = S.buffers[name];
       g.gain.value = gain == null ? 1 : gain;

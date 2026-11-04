@@ -1,0 +1,243 @@
+year: 2008
+edition: 69th
+date: "December 6, 2008"
+links:
+  problems: https://kskedlaya.org/putnam-archive/2008.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Functional equation: a cyclic sum forces a difference"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - 'Plug in three equal arguments, then two equal ones. What do you learn about $f(x,x)$ and $f(y,x)$?'
+      - 'Try $g(x)=f(x,0)$.'
+    solution: |
+      **Key idea:** special values show that $f$ vanishes on the diagonal and is antisymmetric; then the third variable can be pinned at $0$.
+
+      Put $x=y=z$: we get $3f(x,x)=0$, so $f(x,x)=0$ for every $x$.
+
+      Put $z=x$: then $f(x,y)+f(y,x)+f(x,x)=0$, so $f(y,x)=-f(x,y)$.
+
+      Now define $g(t)=f(t,0)$. Use the given relation with $z=0$:
+      $$f(x,y)+f(y,0)+f(0,x)=0 .$$
+      By antisymmetry $f(0,x)=-f(x,0)=-g(x)$, and $f(y,0)=g(y)$. So
+      $$f(x,y)=g(x)-g(y),$$
+      which is exactly the required form.
+    checked: "proof only; the identity was spot-checked with f(x,y)=x^3-y^3"
+    status: ready
+
+  - id: A2
+    topic: "Game: filling a matrix, determinant zero or not"
+    areas: [linear-algebra, combinatorics]
+    difficulty: 1
+    answer: "Barbara (the second player) wins"
+    hints:
+      - 'The second player can win if she can force two columns to be equal.'
+      - 'Pair column $1$ with column $2$, column $3$ with column $4$, and so on.'
+    solution: |
+      **Key idea:** Barbara copies every move into a partner column, so two columns end up equal.
+
+      Pair up the columns as $(1,2),(3,4),\dots,(2007,2008)$; this works because $2008$ is even. Call the cell in the same row and the other column of the pair the *partner* of a cell.
+
+      **Barbara's strategy:** whenever Alan writes a number $t$ in some cell, Barbara writes the same number $t$ in its partner cell.
+
+      **Why she can always do this.** After each of Barbara's moves, every pair of partner cells is either completely empty or completely filled. (This holds at the start, and each round fills exactly one whole pair.) So when Alan writes in a cell, its partner is still empty, and Barbara's reply is legal.
+
+      **Why she wins.** When the board is full, column $1$ equals column $2$, because every entry of column $2$ was copied from column $1$ or the other way round. A matrix with two equal columns has determinant $0$. So Barbara wins whatever Alan does.
+    viz: putnam-2008-a2
+    checked: "script: 200 random games on a 6×6 board with the copying strategy all ended with determinant 0"
+    status: ready
+
+  - id: A3
+    topic: "Number theory: gcd and lcm swaps reach a fixed sequence"
+    areas: [number-theory, combinatorics]
+    difficulty: 2
+    hints:
+      - 'Fix a prime $p$. What happens to the list of exponents of $p$ in the numbers when you swap?'
+      - 'For stopping, compare the whole list in dictionary order before and after a step.'
+    solution: |
+      **Key idea:** for each prime, a step only swaps two exponents; and the list goes down in dictionary order, which can't happen forever.
+
+      **The step keeps the exponents.** For a prime $p$ write $v_p(m)$ for the exponent of $p$ in $m$. Then $v_p(\gcd(a,b))=\min(v_p(a),v_p(b))$ and $v_p(\operatorname{lcm}(a,b))=\max(v_p(a),v_p(b))$. So one step replaces the pair of exponents at positions $j,k$ by the same two numbers in increasing order. For every prime $p$, the multiset of exponents $\{v_p(a_1),\dots,v_p(a_n)\}$ never changes.
+
+      **The process stops.** In a step, the new $a_j$ is $\gcd(a_j,a_k)$. It divides $a_j$ and is not equal to it, since $a_j\nmid a_k$. So $a_j$ strictly decreases while $a_1,\dots,a_{j-1}$ stay the same: the sequence drops in dictionary order. Every entry always divides $\operatorname{lcm}$ of the original numbers (the exponents only move around), so there are finitely many possible sequences. A strictly decreasing chain in a finite ordered set is finite.
+
+      **The end is forced.** The process stops exactly when $a_j\mid a_k$ for all $j<k$. Then for every prime $p$ the exponents $v_p(a_1)\le v_p(a_2)\le\dots\le v_p(a_n)$ are in increasing order. Since the multiset of exponents is the original one, $v_p(a_i)$ must be the $i$-th smallest exponent of $p$ among the original numbers. That fixes every $a_i$, whatever choices were made.
+    checked: "script: random runs with random choices on 2000 lists all ended at the predicted sequence"
+    status: ready
+
+  - id: A4
+    topic: "Series: a function built from iterated logarithms"
+    areas: [analysis]
+    difficulty: 2
+    answer: "No, the series diverges"
+    hints:
+      - 'On $(e, e^e]$ the function is $x\ln x$; on the next range it is $x\ln x\ln\ln x$.'
+      - 'Compute $\int dx/f(x)$ over each such range. The substitution $u=\ln x$ helps.'
+    solution: |
+      **Key idea:** over each range $(E_k,E_{k+1}]$ the integral of $1/f$ is exactly $1$, so the integral test gives divergence.
+
+      Let $E_0=e$ and $E_{k+1}=e^{E_k}$, so the ranges are $(e,e^e]$, $(e^e,e^{e^e}]$, and so on.
+
+      **$f$ is continuous, positive and increasing.** On $(0,e]$ we have $f(x)=x$. If $x\in(E_k,E_{k+1}]$ then $\ln x\in(E_{k-1},E_k]$ (with $E_{-1}=1$), and $f(x)=x\,f(\ln x)$. By induction on $k$, $f$ is positive and increasing on each range, as a product of two positive increasing functions. It is continuous at each $E_k$ too: for example $f(e^+)=e\cdot f(1)=e=f(e)$, and the same induction handles the later points. So $1/f$ is positive and decreasing on $[1,\infty)$.
+
+      **Each range contributes $1$.** With $u=\ln x$, $du=dx/x$:
+      $$\int_{E_k}^{E_{k+1}}\frac{dx}{f(x)}=\int_{E_k}^{E_{k+1}}\frac{dx}{x\,f(\ln x)}=\int_{E_{k-1}}^{E_k}\frac{du}{f(u)} .$$
+      Repeating this brings us down to $\int_1^e\frac{du}{u}=1$. So $\int_1^{E_k}dx/f(x)=k+1\to\infty$.
+
+      **Integral test.** Since $1/f$ is positive and decreasing on $[1,\infty)$, $\sum_{n=1}^{N}\frac1{f(n)}\ge\int_1^{N}\frac{dx}{f(x)}$, which is unbounded. The series diverges, though very slowly.
+    checked: "script: numerical integrals of 1/f over (1,e], (e,e^e], (e^e,e^{e^e}] all equal 1 to 10 digits"
+    status: ready
+
+  - id: A5
+    topic: "Polynomials hitting the vertices of a regular polygon"
+    areas: [algebra]
+    difficulty: 2
+    hints:
+      - 'Combine the two polynomials into one complex polynomial $h=f+ig$.'
+      - 'A polynomial of degree at most $n-2$ has $(n-1)$-th finite difference equal to $0$.'
+    solution: |
+      **Key idea:** the complex polynomial $h=f+ig$ takes values $c+r\omega^k$, and its $(n-1)$-th finite difference cannot vanish.
+
+      Let $h(x)=f(x)+i\,g(x)$, a polynomial with complex coefficients. The points $h(1),\dots,h(n)$ are the vertices of a regular $n$-gon in order, so there are a center $c$ and a nonzero complex number $r$ with
+      $$h(k)=c+r\,\omega^k\qquad(k=1,\dots,n),\qquad \omega=e^{2\pi i/n}.$$
+      Suppose both $f$ and $g$ have degree at most $n-2$. Then so does $h$.
+
+      The forward difference $\Delta p(x)=p(x+1)-p(x)$ lowers the degree of a polynomial by at least one, so $\Delta^{n-1}h=0$. Written out at $x=1$:
+      $$\sum_{j=0}^{n-1}(-1)^{n-1-j}\binom{n-1}{j}h(1+j)=0 .$$
+      Substitute $h(1+j)=c+r\omega^{1+j}$. The constant part gives $c\sum_j(-1)^{n-1-j}\binom{n-1}{j}=c(1-1)^{n-1}=0$, because $n-1\ge 2$. The rest gives, by the binomial theorem,
+      $$r\omega\sum_{j=0}^{n-1}\binom{n-1}{j}\omega^j(-1)^{n-1-j}=r\omega(\omega-1)^{n-1}.$$
+      This is not $0$: $r\ne0$, and $\omega\ne1$ because $n\ge3$. That contradicts $\Delta^{n-1}h(1)=0$. So $h$ has degree at least $n-1$, and therefore $f$ or $g$ does.
+    checked: "script: for n=3..8 the interpolating polynomial of the n-gon has degree exactly n-1 in f or g"
+    status: ready
+
+  - id: A6
+    topic: "Groups: a short list whose sub-products cover everything"
+    areas: [algebra, combinatorics]
+    difficulty: 3
+    hints:
+      - 'Build the list one element at a time. Let $S$ be the set of products of sub-lists so far (the empty product is the identity).'
+      - 'Count pairs $(s,g)$ with $s\in S$ and $sg\notin S$, and average over $g$.'
+    solution: |
+      **Key idea:** a well-chosen new element always adds a fixed fraction of the missing elements to the set of reachable products, and near the end it squares the missing fraction.
+
+      Let $N=|G|\ge2$. Build a list $g_1,g_2,\dots$ and let $S_t$ be the set of products of sub-lists of $g_1,\dots,g_t$, with the empty product $e$ included. So $S_0=\{e\}$, and appending $g$ gives
+      $$S_{t+1}=S_t\cup S_tg .$$
+
+      **A good choice exists.** Let $S=S_t$ and $m=N-|S|$ the number of missing elements. For a fixed $s\in S$, the element $sg$ lies outside $S$ for exactly $m$ values of $g$. So the pairs $(s,g)$ with $sg\notin S$ number $|S|\,m$, and some $g$ gives at least the average $|S|m/N$ new elements. With that $g$,
+      $$m_{\text{new}}\le m-\frac{|S|\,m}{N}=\frac{m^2}{N}. $$
+
+      **Phase 1.** While $|S|\le N/2$, we have $m\ge N/2$, so $|S|$ grows by at least $|S|m/N\ge|S|/2$: it is multiplied by at least $\frac32$. Starting from $|S|=1$, after at most $\log_{3/2}N+1$ steps we get $|S|>N/2$, that is $m/N<\frac12$.
+
+      **Phase 2.** Now $\frac{m_{\text{new}}}{N}\le\big(\frac{m}{N}\big)^2$, so after $j$ more steps $\frac mN<2^{-2^j}$. Once $2^{2^j}\ge N$, we get $m<1$, so $m=0$ and $S=G$. That takes at most $\log_2\log_2N+1$ steps (and at most $1$ when $N\le 4$).
+
+      Every element of $G$ is now a sub-product. The length is at most $\log_{3/2}N+\log_2\log_2 N+3$ (read the middle term as $0$ when $N=2$), which is at most $c\log N$ for a suitable constant $c$, because $\log N\ge\log 2>0$.
+    checked: "script: the greedy construction on cyclic groups and S3, S4, S5 (orders up to 120) used at most 8 elements, well below 3·log2|G|"
+    status: ready
+
+  - id: B1
+    topic: "Geometry: rational points on circles with irrational centers"
+    areas: [geometry, number-theory]
+    difficulty: 1
+    answer: "$2$"
+    hints:
+      - 'Three points determine a circle. How do you find its center?'
+      - 'For the example, put the center on the perpendicular bisector of two simple rational points.'
+    solution: |
+      **Key idea:** three rational points on a circle force a rational center, but two do not.
+
+      **At most two.** Suppose $P_1,P_2,P_3$ are distinct rational points on a circle with center $X$. Then $|X-P_1|^2=|X-P_2|^2$, which expands to the linear equation
+      $$2(P_2-P_1)\cdot X=|P_2|^2-|P_1|^2,$$
+      and similarly for $P_1,P_3$. The coefficients are rational. Three distinct points on a circle are not collinear, so $P_2-P_1$ and $P_3-P_1$ are independent and this $2\times2$ system has exactly one solution. By Cramer's rule it is rational. So a circle with an irrational center carries at most two rational points.
+
+      **Two is possible.** The circle with center $(\tfrac12,\sqrt2)$ through $(0,0)$ also passes through $(1,0)$, by symmetry in the line $x=\tfrac12$. Its center is not rational. So the maximum is $2$.
+    checked: "exact algebra: Cramer's rule; example verified"
+    status: ready
+
+  - id: B2
+    topic: "Calculus: repeated integrals of the logarithm"
+    areas: [calculus, analysis]
+    difficulty: 1
+    answer: "$-1$"
+    hints:
+      - 'Compute $F_1$ and $F_2$ and guess the shape $\frac{x^n}{n!}(\ln x - c_n)$.'
+      - 'The constants $c_n$ are harmonic numbers.'
+    solution: |
+      **Key idea:** $F_n(x)=\frac{x^n}{n!}\big(\ln x-H_n\big)$ with $H_n=1+\frac12+\dots+\frac1n$.
+
+      Check the formula by induction. For $n=0$ it reads $\ln x$ (with $H_0=0$). Suppose it holds for $n$. The candidate $G(x)=\frac{x^{n+1}}{(n+1)!}(\ln x-H_{n+1})$ has
+      $$G'(x)=\frac{x^n}{n!}(\ln x-H_{n+1})+\frac{x^{n+1}}{(n+1)!}\cdot\frac1x=\frac{x^n}{n!}\Big(\ln x-H_{n+1}+\frac1{n+1}\Big)=F_n(x),$$
+      and $G(x)\to0$ as $x\to0^+$ because $x^{n+1}\ln x\to0$. So $G(x)=\int_0^xF_n(t)\,dt=F_{n+1}(x)$.
+
+      Hence $n!\,F_n(1)=-H_n$. Since $H_n=\ln n+O(1)$,
+      $$\lim_{n\to\infty}\frac{n!\,F_n(1)}{\ln n}=-1 .$$
+    checked: "script: sympy integrated F_1..F_5 exactly and matched the formula; -H_n/ln n tends to -1"
+    status: ready
+
+  - id: B3
+    topic: "Geometry: the widest circle inside a 4-dimensional cube"
+    areas: [geometry]
+    difficulty: 2
+    answer: "$\\dfrac{\\sqrt2}{2}$"
+    hints:
+      - 'Write the circle as $c+r(\cos\theta\,u+\sin\theta\,v)$ with $u,v$ orthonormal. How far does coordinate $i$ swing?'
+      - 'Add up the squares of the swings over all four coordinates.'
+    solution: |
+      **Key idea:** coordinate $i$ of the circle swings by $\pm r\sqrt{u_i^2+v_i^2}$, and these amounts have a fixed sum of squares.
+
+      Let the circle be $c+r(\cos\theta\,u+\sin\theta\,v)$, $0\le\theta<2\pi$, with $u,v$ orthonormal in $\mathbb R^4$. Coordinate $i$ equals $c_i+r(u_i\cos\theta+v_i\sin\theta)$, which ranges over the interval $c_i\pm r\sqrt{u_i^2+v_i^2}$. It must stay inside $[0,1]$, so
+      $$2r\sqrt{u_i^2+v_i^2}\le1\qquad(i=1,2,3,4).$$
+      Square and add: $4r^2\sum_i(u_i^2+v_i^2)=4r^2\cdot2\le4$, so $r\le\frac{\sqrt2}{2}$.
+
+      **It is reached.** Take the center $c=(\frac12,\frac12,\frac12,\frac12)$, $u=\frac12(1,1,-1,-1)$ and $v=\frac12(1,-1,1,-1)$, which are orthonormal. Then $u_i^2+v_i^2=\frac12$ for every $i$, so with $r=\frac{\sqrt2}2$ each coordinate swings by exactly $\frac12$ and the circle stays in the cube.
+    checked: "script: sampled the extremal circle at 10^5 angles; all coordinates in [0,1]"
+    status: ready
+
+  - id: B4
+    topic: "Number theory: permutation polynomials lifting to higher prime powers"
+    areas: [number-theory]
+    difficulty: 2
+    hints:
+      - 'Expand $h(a+tp^k)$ by Taylor: $h(a)+tp^kh''(a)+\dots$, where the later terms carry $p^{2k}$.'
+      - 'First show $p\nmid h''(x)$ for every integer $x$.'
+    solution: |
+      **Key idea:** a permutation modulo $p^2$ forces $h'(x)\not\equiv0\pmod p$, and then Taylor expansion lifts it to $p^3$.
+
+      For an integer polynomial, $h(a+m)=\sum_k \frac{h^{(k)}(a)}{k!}m^k$, and each $\frac{h^{(k)}(a)}{k!}$ is an integer. So
+      $$h(a+m)\equiv h(a)+m\,h'(a)\pmod{m^2}. \tag{$*$}$$
+
+      **Step 1: $p\nmid h'(a)$ for every integer $a$.** The value $h'(a)$ modulo $p$ depends only on $a$ modulo $p$, so take $0\le a<p$. If $p\mid h'(a)$, then $(*)$ with $m=p$ gives $h(a+p)\equiv h(a)\pmod{p^2}$. Both $a$ and $a+p$ lie in $\{0,\dots,p^2-1\}$, so this contradicts distinctness modulo $p^2$.
+
+      **Step 2: distinct modulo $p^3$.** Suppose $0\le x,y<p^3$ and $h(x)\equiv h(y)\pmod{p^3}$. Then also modulo $p^2$. Since $h(x)\bmod p^2$ depends only on $x\bmod p^2$, and $h$ is one-to-one on residues modulo $p^2$, we get $y=x+tp^2$ for some integer $t$. Now $(*)$ with $m=tp^2$ gives
+      $$0\equiv h(y)-h(x)\equiv tp^2h'(x)\pmod{p^3}$$
+      (the error term is a multiple of $p^4$). So $p\mid t\,h'(x)$, and by Step 1, $p\mid t$. Then $x\equiv y\pmod{p^3}$, so $x=y$.
+    checked: "script: for p=2,3,5 and 300 random integer polynomials, permutation mod p^2 implied permutation mod p^3"
+    status: ready
+
+  - id: B5
+    topic: "Calculus: smooth functions that preserve every denominator"
+    areas: [analysis, number-theory]
+    difficulty: 2
+    answer: "$f(x)=x+n$ or $f(x)=-x+n$ with $n$ an integer"
+    hints:
+      - 'Look at two fractions $a/b$ and $(a+1)/b$. What can you say about the slope of $f$ between them?'
+      - 'Use the mean value theorem, then continuity of $f''$.'
+    solution: |
+      **Key idea:** slopes between neighbors $a/b$ and $(a+1)/b$ are integers, so $f'$ is an integer constant; then the denominator condition pins it to $\pm1$.
+
+      **$f'$ is an integer constant.** Fix $b\ge1$ and an integer $a$. Both $f(a/b)$ and $f((a+1)/b)$ are fractions with denominator $b$, so the slope
+      $$\frac{f(\frac{a+1}{b})-f(\frac ab)}{1/b}=b\,f(\tfrac{a+1}b)-b\,f(\tfrac ab)$$
+      is an integer. By the mean value theorem it equals $f'(\xi)$ for some $\xi$ between $\frac ab$ and $\frac{a+1}b$. Given any real $x$, choose $a=\lfloor bx\rfloor$; this gives points $\xi_b\to x$ with $f'(\xi_b)$ an integer. Since $f'$ is continuous, $f'(x)$ is a limit of integers, hence an integer. A continuous integer-valued function on $\mathbb R$ is constant, say $f'=k$, so $f(x)=kx+c$.
+
+      **Pinning down $k$ and $c$.** $f(0)=c$ must have denominator $1$, so $c$ is an integer. Then $f(1/b)=\frac{k+cb}{b}$ must have denominator exactly $b$, so $\gcd(k+cb,b)=\gcd(k,b)=1$ for every $b\ge1$. Taking $b=|k|$ (if $|k|\ge2$) or $b=2$ (if $k=0$) shows $k=\pm1$.
+
+      **These work.** For $q=a/b$ in lowest terms, $\pm q+c=\frac{\pm a+cb}{b}$ and $\gcd(\pm a+cb,b)=\gcd(a,b)=1$.
+    checked: "script: tested f(x)=±x+n on all fractions with denominator ≤ 200; other slopes failed"
+    status: ready
+
+  - id: B6
+    topic: "Permutations: parity of the count of short-move permutations"
+    areas: [combinatorics]
+    difficulty: 5
+    status: coming

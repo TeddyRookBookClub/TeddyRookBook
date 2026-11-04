@@ -1,0 +1,267 @@
+year: 1986
+edition: 47th
+date: "December 6, 1986"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1986.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Calculus: maximizing a cubic on a quartic constraint"
+    areas: [calculus, algebra]
+    difficulty: 1
+    answer: "$18$"
+    hints:
+      - "The constraint is a quadratic inequality in $x^2$."
+      - "Where is $x^3-3x$ increasing?"
+    solution: |
+      **Key idea:** the constraint factors, leaving two short intervals on which the cubic is increasing.
+
+      The constraint is $x^4-13x^2+36\le0$, that is $(x^2-4)(x^2-9)\le0$, so $4\le x^2\le9$. The allowed set is $[-3,-2]\cup[2,3]$.
+
+      The derivative of $f(x)=x^3-3x$ is $3(x^2-1)$, which is positive whenever $x^2\ge4$. So $f$ is increasing on both intervals, and the largest value is at a right endpoint: $f(-2)=-2$ and $f(3)=27-9=18$. The maximum is $18$.
+    checked: "script: dense grid over the allowed set; maximum 18 at x = 3"
+    status: ready
+
+  - id: A2
+    topic: "Number theory: units digit of a huge integer quotient"
+    areas: [number-theory, algebra]
+    difficulty: 2
+    answer: "$3$"
+    hints:
+      - "Let $N=10^{100}$. Then $10^{20000}=N^{200}$, and $N+3$ divides $N^{200}-3^{200}$."
+      - "Is $3^{200}$ smaller than $N+3$?"
+    solution: |
+      **Key idea:** divide $N^{200}-3^{200}$ by $N+3$ exactly; the leftover $3^{200}$ is too small to matter.
+
+      Let $N=10^{100}$, so $10^{20000}=N^{200}$. Since $200$ is even, $N^{200}-3^{200}=N^{200}-(-3)^{200}$ is divisible by $N-(-3)=N+3$:
+      $$\frac{N^{200}-3^{200}}{N+3}=Q,\qquad Q=\sum_{k=0}^{199}N^{199-k}(-3)^{k}.$$
+      Then
+      $$\frac{N^{200}}{N+3}=Q+\frac{3^{200}}{N+3}.$$
+      Now $3^{200}=9^{100}<10^{100}<N+3$, so the last fraction is between $0$ and $1$, and the integer part is $Q$.
+
+      **Units digit of $Q$.** Every term with $k<199$ contains a factor $N$, a multiple of $10$. The last term is $(-3)^{199}=-3^{199}$. Powers of $3$ end in $3,9,7,1$ in a cycle of four, and $199\equiv3\pmod4$, so $3^{199}$ ends in $7$. Hence $Q\equiv-7\equiv3\pmod{10}$.
+
+      The units digit is $3$.
+    checked: "script: exact integer division in Python; the quotient ends in 3"
+    status: ready
+
+  - id: A3
+    topic: "Series: a telescoping sum of inverse cotangents"
+    areas: [analysis, calculus]
+    difficulty: 1
+    answer: "$\\dfrac\\pi2$"
+    hints:
+      - "Write the term as an inverse tangent and look for a difference of two inverse tangents."
+      - "$\\tan(\\alpha-\\beta)=\\frac{\\tan\\alpha-\\tan\\beta}{1+\\tan\\alpha\\tan\\beta}$."
+    solution: |
+      **Key idea:** each term is the angle between two consecutive directions $(1,n)$ and $(1,n+1)$, so the sum telescopes.
+
+      For $t>0$, $\operatorname{Arccot}t=\arctan\frac1t$. By the subtraction formula,
+      $$\tan\big(\arctan(n+1)-\arctan n\big)=\frac{(n+1)-n}{1+n(n+1)}=\frac1{n^2+n+1}.$$
+      Both $\arctan(n+1)-\arctan n$ and $\arctan\frac1{n^2+n+1}$ lie in $(0,\frac\pi2)$, so they are equal. The partial sums telescope:
+      $$\sum_{n=0}^{K}\operatorname{Arccot}(n^2+n+1)=\arctan(K+1)-\arctan0\ \longrightarrow\ \frac\pi2 .$$
+      Geometrically, the vector $(1,n)$ turns toward the vertical, and the terms are the angles it turns through at each step.
+    viz: putnam-1986-a3
+    checked: "script: partial sum up to n = 200000 is 1.570791, approaching π/2"
+    status: ready
+
+  - id: A4
+    topic: "Counting: sign matrices with equal transversal sums"
+    areas: [combinatorics, linear-algebra]
+    difficulty: 3
+    answer: "$f(n)=4^n+2\\cdot3^n-4\\cdot2^n+1$"
+    hints:
+      - "Swapping two entries of a transversal shows $a_{ij}+a_{kl}=a_{il}+a_{kj}$. What does that say about the rows?"
+      - "Write $a_{ij}=u_i+v_j$ with $\\min_j v_j=0$, and split by the set of values of $v$."
+    solution: |
+      **Key idea:** all transversal sums are equal exactly when $a_{ij}=u_i+v_j$; then count by the range of $v$.
+
+      **Structure.** For $n=1$ every matrix works, and $f(1)=3$ agrees with the formula. Let $n\ge2$. Take rows $i\ne k$ and columns $j\ne l$. Some transversal uses $(i,j)$ and $(k,l)$; swapping to $(i,l)$ and $(k,j)$ gives another transversal. Equal sums force
+      $$a_{ij}+a_{kl}=a_{il}+a_{kj}.$$
+      With $k=l=1$ this says $a_{ij}=a_{i1}+a_{1j}-a_{11}$, so $a_{ij}=u_i+v_j$ for integers $u_i,v_j$. Conversely, if $a_{ij}=u_i+v_j$, every transversal sums to $\sum u_i+\sum v_j$. We can shift a constant from $v$ to $u$, so make the representation unique by requiring $\min_j v_j=0$.
+
+      **Counting.** Entries are in $\{-1,0,1\}$, so the $v_j$ are at most $2$ apart: each $v_j\in\{0,1,2\}$, and some $v_j=0$.
+
+      - **All $v_j=0$.** Then each $u_i\in\{-1,0,1\}$ is free: $3^n$ matrices.
+      - **Values of $v$ are exactly $\{0,1\}$.** Then $u_i+0$ and $u_i+1$ must both be allowed, so $u_i\in\{-1,0\}$: $2^n$ choices. The vector $v$ uses $0$ and $1$, both: $2^n-2$ choices. Total $2^n(2^n-2)$.
+      - **Values of $v$ include $0$ and $2$.** Then $u_i=-1$ for all $i$. The vector $v\in\{0,1,2\}^n$ must contain both $0$ and $2$: by inclusion-exclusion, $3^n-2\cdot2^n+1$ choices.
+
+      Adding up,
+      $$f(n)=3^n+4^n-2\cdot2^n+3^n-2\cdot2^n+1=4^n+2\cdot3^n-4\cdot2^n+1 .$$
+    checked: "script: brute force over all 3^(n²) matrices for n = 1, 2, 3 gives 3, 19, 87, matching the formula"
+    status: ready
+
+  - id: A5
+    topic: "Vector calculus: fixing a field with constant curl"
+    areas: [analysis, calculus]
+    difficulty: 3
+    hints:
+      - "The constants $c_{ij}$ are antisymmetric. Subtract a linear field with the same constant curl."
+      - "A field on all of $\\mathbb R^n$ with zero curl is a gradient."
+    solution: |
+      **Key idea:** subtract the linear field $\frac12\sum_k c_{ik}x_k$, which has exactly the same "curl" numbers; what is left is curl-free on $\mathbb R^n$, hence a gradient.
+
+      The quantities $c_{ij}$ satisfy $c_{ji}=-c_{ij}$ (swap $i$ and $j$ in their definition). Define the linear functions
+      $$L_i(x)=\frac12\sum_{k=1}^n c_{ik}x_k,\qquad h_i=f_i-L_i .$$
+      Then $\partial L_i/\partial x_j=\frac12c_{ij}$ and $\partial L_j/\partial x_i=\frac12c_{ji}=-\frac12c_{ij}$, so
+      $$\frac{\partial h_i}{\partial x_j}-\frac{\partial h_j}{\partial x_i}=c_{ij}-\Big(\tfrac12c_{ij}+\tfrac12c_{ij}\Big)=0 .$$
+      So $(h_1,\dots,h_n)$ is a continuously differentiable field with symmetric derivative matrix on all of $\mathbb R^n$. On a star-shaped region such as $\mathbb R^n$, such a field is a gradient (the Poincaré lemma). Concretely,
+      $$\varphi(x)=\int_0^1\sum_i h_i(tx)\,x_i\,dt$$
+      satisfies $\partial\varphi/\partial x_i=h_i$; the symmetry is exactly what makes the differentiation under the integral work out.
+
+      Take $g=-\varphi$. Then $f_i+\partial g/\partial x_i=f_i-h_i=L_i$, which is linear.
+    checked: "proof only; the identity for the corrected field was checked symbolically"
+    status: ready
+
+  - id: A6
+    topic: "Polynomials: value at one from repeated differentiation"
+    areas: [algebra, calculus]
+    difficulty: 3
+    answer: "$f(1)=\\dfrac{b_1b_2\\cdots b_n}{n!}$"
+    hints:
+      - "The left side vanishes to order $n$ at $x=1$. Differentiate $k$ times and set $x=1$ for $k=0,1,\\dots,n$."
+      - "Use the polynomial $\\prod_j(b-b_j)$ to combine the conditions."
+    solution: |
+      **Key idea:** the lower derivatives at $x=1$ say that $Q(0)+\sum_i a_iQ(b_i)=0$ for every polynomial $Q$ of degree below $n$; one well-chosen $Q$ then gives the $n$-th derivative.
+
+      Write $(t)_k=t(t-1)\cdots(t-k+1)$, with $(t)_0=1$. The $k$-th derivative of $x^{b}$ at $x=1$ is $(b)_k$.
+
+      **Lower derivatives.** The left side $(1-x)^nf(x)$ has all derivatives of order $k<n$ equal to $0$ at $x=1$. So
+      $$1+\sum_i a_i=0,\qquad \sum_i a_i(b_i)_k=0\quad(1\le k\le n-1).$$
+      Since $(0)_k=0$ for $k\ge1$ and $(0)_0=1$, all of these say $(0)_k+\sum_ia_i(b_i)_k=0$. The $(t)_k$ for $k<n$ span all polynomials of degree below $n$, so
+      $$Q(0)+\sum_ia_iQ(b_i)=0\qquad\text{for every polynomial }Q\text{ with }\deg Q<n .$$
+
+      **The $n$-th derivative.** By Leibniz, the $n$-th derivative of $(1-x)^nf(x)$ at $1$ is $(-1)^nn!\,f(1)$, so
+      $$(-1)^nn!\,f(1)=\sum_ia_i(b_i)_n .$$
+      Let $Q(t)=(t)_n-\prod_{j=1}^n(t-b_j)$. Both products have leading term $t^n$, so $\deg Q<n$. Also $Q(b_i)=(b_i)_n$ and $Q(0)=0-\prod_j(-b_j)=-(-1)^n\prod_jb_j$. The identity above gives
+      $$\sum_ia_i(b_i)_n=(-1)^n\,b_1b_2\cdots b_n .$$
+      Comparing, $f(1)=\dfrac{b_1b_2\cdots b_n}{n!}$.
+
+      (Check: $n=1$ gives $(1-x)f=1-x^{b}$, so $f=1+x+\dots+x^{b-1}$ and $f(1)=b$.)
+    checked: "script: solved for the a_i with sympy for several sets of b_i (e.g. 1, 2, 5) and evaluated f(1)"
+    status: ready
+
+  - id: B1
+    topic: "Geometry: rectangle and triangle in a circle"
+    areas: [geometry]
+    difficulty: 1
+    answer: "$h=\\dfrac25$"
+    hints:
+      - "How far is the rectangle's base from the edge of the circle, measured through the center?"
+    solution: |
+      **Key idea:** the triangle's height is the gap between the rectangle and the top of the circle.
+
+      Center the circle at the origin with the rectangle's sides horizontal and vertical. Its top side is at height $h/2$. The largest isosceles triangle on that side has its apex at the top of the circle, so its height is $1-\frac h2$ and its area is $\frac12b\big(1-\frac h2\big)$.
+
+      Setting this equal to the rectangle's area $bh$ and dividing by $b>0$:
+      $$h=\tfrac12-\tfrac h4\quad\Longrightarrow\quad h=\tfrac25 .$$
+    checked: "sympy solved b·h = b(1 − h/2)/2 for h"
+    status: ready
+
+  - id: B2
+    topic: "Algebra: differences of solutions of a symmetric system"
+    areas: [algebra]
+    difficulty: 2
+    answer: "$(0,0,0),\\ (0,-1,1),\\ (1,0,-1),\\ (-1,1,0)$"
+    hints:
+      - "Subtract the expressions in pairs and factor each difference."
+      - "Write everything in terms of $a=x-y$, $b=y-z$, $c=z-x$."
+    solution: |
+      **Key idea:** the difference of two of the expressions factors with $x-y$ as a factor; in terms of the differences the system is tiny.
+
+      Subtracting the first two expressions:
+      $$x^2-y^2-(x-y)-2z(x-y)=(x-y)(x+y-2z-1).$$
+      Let $a=x-y$, $b=y-z$, $c=z-x$, so $a+b+c=0$. Note $x+y-2z=b-c$. Doing the same for the other pairs, the system becomes
+      $$a(b-c-1)=0,\qquad b(c-a-1)=0,\qquad c(a-b-1)=0 .$$
+      (The third follows from the first two, but it is handy to keep.)
+
+      - If none of $a,b,c$ is zero, then $b-c=c-a=a-b=1$; adding gives $0=3$. Impossible.
+      - If $a=0$: then $c=-b$ and $b(c-1)=-b(b+1)=0$, so $b=0$ or $b=-1$. This gives $(0,0,0)$ and $(0,-1,1)$.
+      - If $b=0$: then $a=-c$ and $c(a-1)=-c(c+1)=0$, giving $(1,0,-1)$ besides $(0,0,0)$.
+      - If $c=0$: then $b=-a$ and $a(b-1)=-a(a+1)=0$, giving $(-1,1,0)$.
+
+      Each triple occurs (for example $x=y=z=0$; $x=y=0$, $z=1$; and so on). So there are exactly four possible triples.
+    checked: "sympy: factored the differences and solved the reduced system; four solutions"
+    status: ready
+
+  - id: B3
+    topic: "Algebra: lifting a factorization modulo higher prime powers"
+    areas: [algebra, number-theory]
+    difficulty: 3
+    hints:
+      - "Work by induction on the exponent. Correct $F$ and $G$ by multiples of $p^k$."
+      - "The relation $rf+sg\\equiv1$ tells you how to split the error between the two factors."
+    solution: |
+      **Key idea:** this is Hensel's lemma: fix the error one power of $p$ at a time, splitting it between the factors with $r$ and $s$.
+
+      We build $F_k,G_k$ with $F_k\equiv f$, $G_k\equiv g\pmod p$ and $F_kG_k\equiv h\pmod{p^k}$. For $k=1$ take $F_1=f$, $G_1=g$.
+
+      Given $F_k,G_k$, the error $h-F_kG_k$ has all coefficients divisible by $p^k$, so $h-F_kG_k=p^kD$ with $D$ in $\Gamma$. Set
+      $$F_{k+1}=F_k+p^ksD,\qquad G_{k+1}=G_k+p^krD .$$
+      These still agree with $f$ and $g$ modulo $p$. Multiplying out,
+      $$F_{k+1}G_{k+1}=F_kG_k+p^kD\,(sG_k+rF_k)+p^{2k}rsD^2 .$$
+      Modulo $p$, $sG_k+rF_k\equiv sg+rf\equiv1$, so $p^kD(sG_k+rF_k)\equiv p^kD\pmod{p^{k+1}}$. The last term is divisible by $p^{2k}$, hence by $p^{k+1}$. Therefore
+      $$F_{k+1}G_{k+1}\equiv F_kG_k+p^kD=h\pmod{p^{k+1}} .$$
+      After reaching $k=n$, $F=F_n$ and $G=G_n$ work.
+    checked: "proof only"
+    status: ready
+
+  - id: B4
+    topic: "Approximation: square roots of a quadratic form"
+    areas: [number-theory, analysis]
+    difficulty: 3
+    answer: "True: the limit exists and is $0$"
+    hints:
+      - "Fix $m=\\lfloor r\\rfloor$ and let $n$ run upward from $0$."
+      - "How big are the jumps between $\\sqrt{m^2+2n^2}$ and $\\sqrt{m^2+2(n+1)^2}$ while $n$ is about $\\sqrt m$?"
+    solution: |
+      **Key idea:** with $m$ fixed near $r$, the numbers $\sqrt{m^2+2n^2}$ climb from $m$ past $m+1$ in steps of size about $1/\sqrt m$.
+
+      Let $r$ be large and $m=\lfloor r\rfloor$, so $m\le r<m+1$. Put $s_n=\sqrt{m^2+2n^2}$. Then $s_0=m$. Let $N=\lceil\sqrt{m+1}\,\rceil$. Then $2N^2\ge2m+2$, so $s_N\ge\sqrt{m^2+2m+2}>m+1$. So $r$ lies between $s_0$ and $s_N$, and some step $[s_n,s_{n+1}]$ with $n<N$ contains $r$. Its length is
+      $$s_{n+1}-s_n=\frac{2(2n+1)}{s_{n+1}+s_n}\le\frac{2(2N+1)}{2m}\le\frac{2\sqrt{m+1}+3}{m}.$$
+      Hence
+      $$0\le G(r)\le\frac{2\sqrt{m+1}+3}{m}\ \longrightarrow\ 0 .$$
+      So the limit exists and equals $0$.
+    checked: "script: computed the worst G(r) on [R, R+1] for R = 10, 100, 1000: 0.12, 0.023, 0.0033"
+    status: ready
+
+  - id: B5
+    topic: "Polynomials: symmetries of a Markov-type cubic"
+    areas: [algebra]
+    difficulty: 3
+    answer: "False"
+    hints:
+      - "Think of $f$ as a quadratic in $z$. What is the other root?"
+      - "Vieta: replace $z$ by $-z-xy$."
+    solution: |
+      **Key idea:** as a quadratic in $z$, $f$ is unchanged when $z$ is replaced by the other root, $-z-xy$.
+
+      For fixed $x,y$, $f=z^2+(xy)z+(x^2+y^2)$. The two roots of $z^2+xyz+c$ add up to $-xy$, which suggests the swap $z\mapsto -z-xy$. Check:
+      $$f(x,y,-z-xy)=x^2+y^2+(z+xy)^2-xy(z+xy)=x^2+y^2+z^2+xyz=f(x,y,z).$$
+      So $(p,q,r)=(x,\,y,\,-z-xy)$ satisfies the identity. The third polynomial has degree $2$, so this is not a signed permutation of $x,y,z$. The assertion is false.
+    checked: "sympy: f(x, y, −z − xy) − f(x, y, z) expands to 0"
+    status: ready
+
+  - id: B6
+    topic: "Linear algebra: a symplectic block matrix identity"
+    areas: [linear-algebra]
+    difficulty: 3
+    hints:
+      - "Put the four matrices into one $2n\\times2n$ block matrix $X$ and let $K=\\begin{pmatrix}0&I\\\\-I&0\\end{pmatrix}$."
+      - "Show $XKX^T=K$; then deduce $X^TKX=K$."
+    solution: |
+      **Key idea:** the hypotheses say $XKX^{T}=K$ for a block matrix $X$; such an $X$ also satisfies $X^{T}KX=K$, and one block of that is the claim.
+
+      Let
+      $$X=\begin{pmatrix}A&B\\C&D\end{pmatrix},\qquad K=\begin{pmatrix}0&I\\-I&0\end{pmatrix}.$$
+      Note $K^2=-I$, so $K^{-1}=-K$. Compute $XK=\begin{pmatrix}-B&A\\-D&C\end{pmatrix}$ and then
+      $$XKX^T=\begin{pmatrix}AB^T-BA^T&AD^T-BC^T\\CB^T-DA^T&CD^T-DC^T\end{pmatrix}.$$
+      Symmetry of $AB^T$ means $AB^T=BA^T$, so the top-left block is $0$; likewise the bottom-right. The top-right block is $I$ by hypothesis, and the bottom-left is minus its transpose, $-I$. So $XKX^T=K$.
+
+      Taking determinants, $\det X\ne0$, so $X$ is invertible and $X^T=K^{-1}X^{-1}K$. Then
+      $$X^TKX=K^{-1}X^{-1}K^2X=K^{-1}X^{-1}(-I)X=-K^{-1}=K .$$
+      Now compute the top-right block of $X^TKX$ directly. With $KX=\begin{pmatrix}C&D\\-A&-B\end{pmatrix}$,
+      $$X^TKX=\begin{pmatrix}A^T&C^T\\B^T&D^T\end{pmatrix}\begin{pmatrix}C&D\\-A&-B\end{pmatrix},$$
+      whose top-right block is $A^TD-C^TB$. Since it equals the top-right block of $K$, we get $A^TD-C^TB=I$. Nothing here used anything special about the field.
+    checked: "script: random symplectic matrices (n = 3) satisfy the hypotheses and the conclusion to 1e-15"
+    status: ready

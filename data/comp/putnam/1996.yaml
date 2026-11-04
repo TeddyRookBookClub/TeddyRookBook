@@ -1,0 +1,282 @@
+year: 1996
+edition: 57th
+date: "December 7, 1996"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1996.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Packing: the smallest rectangle for two squares"
+    areas: [geometry, calculus]
+    difficulty: 2
+    answer: '$A=\dfrac{1+\sqrt2}{2}$'
+    hints:
+      - 'If two axis-parallel squares do not overlap, their shadows on one of the axes do not overlap.'
+      - 'With sides $\cos t\ge\sin t$, maximize $\cos t(\cos t+\sin t)$.'
+    solution: |
+      **Key idea:** the best rectangle for squares of sides $a\ge b$ has area exactly $a(a+b)$; then maximize that over $a^2+b^2=1$.
+
+      **Best rectangle for given squares.** Let the sides be $a\ge b$. Placing them side by side fits them in an $(a+b)\times a$ rectangle. Conversely, take any rectangle $W\times H$ holding both. If the open shadows of the squares on the $x$-axis overlapped *and* those on the $y$-axis overlapped, the open squares would overlap. So in one direction the shadows are disjoint, and that side of the rectangle is at least $a+b$. The other side is at least $a$. So the area is at least $a(a+b)$.
+
+      **Worst case.** Write $a=\cos t$, $b=\sin t$ with $0\le t\le\frac\pi4$. Then
+      $$a(a+b)=\cos^2t+\sin t\cos t=\tfrac12+\tfrac12\big(\cos2t+\sin2t\big)=\tfrac12+\tfrac{\sqrt2}2\sin\!\big(2t+\tfrac\pi4\big),$$
+      whose maximum is $\frac12+\frac{\sqrt2}2$, reached at $t=\frac\pi8$.
+
+      So every pair fits in a rectangle of area $\frac{1+\sqrt2}2$, and the pair with $t=\frac\pi8$ needs that much. The least $A$ is $\frac{1+\sqrt2}{2}\approx1.207$.
+    checked: "script: maximized a(a+b) on a fine grid of t; the maximum is 1.2071068 = (1+√2)/2"
+    status: ready
+
+  - id: A2
+    topic: "Locus: midpoints of segments between two circles"
+    areas: [geometry]
+    difficulty: 1
+    answer: 'The closed annulus centered at the midpoint of the centers, with radii $1$ and $2$'
+    hints:
+      - 'Write $X=O_1+u$ and $Y=O_2+3v$ with unit vectors $u,v$.'
+      - 'Which lengths can $u+3v$ have?'
+    solution: |
+      **Key idea:** the midpoint is the fixed point $\frac{O_1+O_2}2$ plus half of $u+3v$, where $u,v$ are any unit vectors.
+
+      Let $O_1,O_2$ be the centers. Points of the circles are $X=O_1+u$ and $Y=O_2+3v$ with $|u|=|v|=1$, so
+      $$M=\frac{X+Y}2=\frac{O_1+O_2}2+\frac{u+3v}2 .$$
+      The vector $u+3v$ has length between $3-1=2$ and $3+1=4$ by the triangle inequality. Every length in $[2,4]$ and every direction occurs: as the angle between $u$ and $v$ goes from $\pi$ to $0$, the length $|u+3v|=\sqrt{10+6\cos\theta}$ runs continuously from $2$ to $4$, and turning both vectors together rotates the sum.
+
+      So $M$ ranges over all points whose distance from the midpoint of $O_1O_2$ is between $1$ and $2$: a closed annulus. The distance $10$ between the centers plays no role.
+    viz: putnam-1996-a2
+    checked: "script: random X, Y on the circles give midpoint distances filling [1, 2]"
+    status: ready
+
+  - id: A3
+    topic: "Counterexample: course choices with no large agreement"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: 'False'
+    hints:
+      - 'How many 3-element subsets does a 6-element set have?'
+      - 'Let each student take a different set of three courses.'
+    solution: |
+      **Key idea:** let the 20 students take the 20 different 3-course sets.
+
+      There are $\binom63=20$ ways to choose three of the six courses; give each student a different one. Fix two courses $i,j$.
+
+      - Students taking both $i$ and $j$: their third course is one of the other $4$, so there are $4$ of them.
+      - Students taking neither: all three courses come from the other $4$, so there are $\binom43=4$ of them.
+
+      In both cases only $4$ students qualify, never $5$. So the statement is false.
+    checked: "script: checked all 15 pairs of courses for this assignment; the maximum is 4"
+    status: ready
+
+  - id: A4
+    topic: "Orders: cyclic orientation data realized on a line"
+    areas: [combinatorics]
+    difficulty: 3
+    hints:
+      - 'Fix one element $a_0$ and define $b<c$ to mean $(a_0,b,c)\in S$.'
+      - 'Use the third condition with the triples $(a_0,b,c)$ and $(c,d,a_0)$ to get transitivity.'
+    solution: |
+      **Key idea:** "seen from a fixed element $a_0$", the cyclic data become a linear order; placing $a_0$ first gives the map.
+
+      If $|A|\le2$ there is nothing to prove. Fix $a_0\in A$ and for distinct $b,c\ne a_0$ define $b\prec c$ when $(a_0,b,c)\in S$.
+
+      **Exactly one of $b\prec c$, $c\prec b$.** By condition 2, exactly one of $(a_0,b,c)$ and $(c,b,a_0)$ lies in $S$. By condition 1, $(c,b,a_0)\in S$ exactly when $(a_0,c,b)\in S$, i.e. $c\prec b$.
+
+      **Transitive, and more.** Let $b\prec c\prec d$, so $(a_0,b,c)\in S$ and $(a_0,c,d)\in S$; rotating the second, $(c,d,a_0)\in S$. These four elements are distinct ($b\ne d$, since otherwise $b\prec c$ and $c\prec b$). Condition 3 with $(a,b,c,d)=(a_0,b,c,d)$ gives
+      $$(b,c,d)\in S\quad\text{and}\quad(d,a_0,b)\in S .$$
+      Rotating the second, $(a_0,b,d)\in S$, i.e. $b\prec d$. So $\prec$ is a strict total order on $A\setminus\{a_0\}$.
+
+      **The map.** Let $g(a_0)=0$ and number the other elements $1,2,3,\dots$ in $\prec$-order. Suppose $g(a)<g(b)<g(c)$.
+      - If $a=a_0$: then $b\prec c$, i.e. $(a_0,b,c)\in S$.
+      - Otherwise $a\prec b\prec c$, and the step above showed $(a,b,c)\in S$.
+
+      So $g$ is one-to-one and has the required property.
+    checked: "script: for random cyclic orders on up to 8 points (which satisfy the three conditions), the construction always works"
+    status: ready
+
+  - id: A5
+    topic: "Binomial sums: divisibility by p squared"
+    areas: [number-theory]
+    difficulty: 3
+    hints:
+      - 'Show $\frac1p\binom pi\equiv\frac{(-1)^{i-1}}{i}\pmod p$ for $1\le i\le p-1$.'
+      - 'The alternating sum $\sum_{i\le k}\frac{(-1)^{i-1}}i$ equals $H_k-H_{\lfloor k/2\rfloor}$. Pair $i$ with $p-i$.'
+    solution: |
+      **Key idea:** after dividing by $p$ the sum becomes a block of reciprocals $\frac1i$ that is symmetric under $i\mapsto p-i$, so it cancels mod $p$.
+
+      Work in the integers mod $p$, where $1,\dots,p-1$ are invertible. For $1\le i\le p-1$,
+      $$\frac1p\binom pi=\frac{(p-1)(p-2)\cdots(p-i+1)}{i!}\equiv\frac{(-1)^{i-1}(i-1)!}{i!}=\frac{(-1)^{i-1}}{i}\pmod p .$$
+      (Here $\frac1p\binom pi$ is an integer.) So it is enough to show $\sum_{i=1}^k\frac{(-1)^{i-1}}i\equiv0\pmod p$.
+
+      Splitting into all terms minus twice the even terms,
+      $$\sum_{i=1}^k\frac{(-1)^{i-1}}{i}=H_k-2\sum_{j\le k/2}\frac1{2j}=H_k-H_{\lfloor k/2\rfloor}=\sum_{i=j_0+1}^{k}\frac1i,$$
+      with $j_0=\lfloor k/2\rfloor$. Check that $j_0=\lfloor p/3\rfloor$:
+      - $p=3m+1$: $k=2m$, $j_0=m$;
+      - $p=3m+2$: $k=2m+1$, $j_0=m$.
+
+      In both cases $p-(j_0+1)=k$, so the range $j_0+1,\dots,k$ is carried to itself by $i\mapsto p-i$, with no fixed point ($p$ is odd). Pairing $i$ with $p-i$, each pair gives $\frac1i+\frac1{p-i}\equiv\frac1i-\frac1i=0$. So the sum is $0$ mod $p$, and the original sum is divisible by $p^2$.
+    checked: "script: verified directly for every prime 5 ≤ p < 200"
+    status: ready
+
+  - id: A6
+    topic: "Functional equations: continuous f with f(x) = f(x²+c)"
+    areas: [analysis]
+    difficulty: 3
+    answer: 'For $c\le\frac14$: only constants. For $c>\frac14$: $f$ is even and free on $[0,c]$ (continuous with $f(0)=f(c)$), then forced elsewhere'
+    hints:
+      - '$f$ is even. On $x\ge0$, study the map $T(x)=x^2+c$ and its fixed points.'
+      - 'For $c>\frac14$, $T$ has no fixed point, and the orbit $0,c,c^2+c,\dots$ cuts $[0,\infty)$ into pieces that $T$ maps onto each other.'
+    solution: |
+      **Key idea:** $f$ is constant along orbits of $T(x)=x^2+c$. With a fixed point, every orbit piles up at one, so $f$ is constant; without one, a single "fundamental interval" $[0,c]$ can carry any values.
+
+      Since $f(-x)=f((-x)^2+c)=f(x)$, $f$ is even; look at $x\ge0$, where $f=f\circ T$.
+
+      **Case $c\le\frac14$.** $T(x)=x$ has roots $r\le R$ with $r+R=1$, $rR=c$, and $0<r\le\frac12\le R$.
+      - For $0\le x\le R$: $T$ is increasing, $T(x)-x=(x-r)(x-R)$, so the iterates $T^n(x)$ move monotonically toward $r$ and stay in $[0,R]$; they converge to a fixed point, which must be $r$. By continuity $f(x)=f(T^n x)\to f(r)$.
+      - For $x>R$: use $S(x)=\sqrt{x-c}$, which satisfies $f(S(x))=f(T(S(x)))=f(x)$. For $x>R$ we have $R<S(x)<x$, so $S^n(x)$ decreases to a fixed point, which is $R$. So $f(x)=f(R)=f(r)$.
+
+      Hence $f$ is constant, and constants clearly work.
+
+      **Case $c>\frac14$.** Now $T(x)>x$ for all $x$. Let $x_0=0$, $x_{n+1}=T(x_n)$; this increases to $\infty$ (a finite limit would be a fixed point). $T$ maps $[x_n,x_{n+1}]$ increasingly onto $[x_{n+1},x_{n+2}]$.
+
+      *Necessity:* $f$ is determined by $g=f|_{[0,c]}$, which is continuous with $g(0)=f(0)=f(c)=g(c)$.
+
+      *Sufficiency:* given any continuous $g$ on $[0,c]$ with $g(0)=g(c)$, define $f(x)=g(T^{-n}x)$ on $[x_n,x_{n+1}]$, where $T^{-1}(x)=\sqrt{x-c}$, and $f(-x)=f(x)$. At $x_n$ the two definitions give $g(c)$ and $g(0)$, which agree, so $f$ is continuous; and $f(T(x))=f(x)$ holds piece by piece.
+
+      So for $c>\frac14$ the solutions are exactly these: even functions obtained from an arbitrary continuous $g$ on $[0,c]$ with $g(0)=g(c)$.
+    checked: "script: built f from a sample g for c = 1 and confirmed f(x) = f(x²+c) and continuity numerically"
+    status: ready
+
+  - id: B1
+    topic: "Counting: minimal sets that contain their own size"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: 'The Fibonacci number $F_n$ ($F_1=F_2=1$)'
+    hints:
+      - 'Show a selfish set is minimal exactly when its smallest element equals its size.'
+      - 'Count sets of size $k$ whose least element is $k$, and recognize the sum.'
+    solution: |
+      **Key idea:** a selfish set is minimal exactly when its size is also its smallest element; counting those gives a Fibonacci number.
+
+      **Characterization.** Let $S$ be selfish with $|S|=k$, so $k\in S$.
+      - If $S$ has an element $j<k$, then $j$ together with any $j-1$ other elements of $S$ (there are $k-1\ge j-1$ to choose from) is a selfish proper subset. So a minimal $S$ has least element $k$.
+      - If the least element is $k$, a selfish subset $T$ would contain $|T|$, which is $\ge k$, so $|T|\ge k$ and $T=S$. So $S$ is minimal.
+
+      **Count.** Choose $k$ and then $k-1$ more elements from $\{k+1,\dots,n\}$:
+      $$a_n=\sum_{k\ge1}\binom{n-k}{k-1}.$$
+      Splitting by whether $n$ is used (Pascal's rule $\binom{n-k}{k-1}=\binom{n-1-k}{k-1}+\binom{n-1-k}{k-2}$) gives $a_n=a_{n-1}+a_{n-2}$, with $a_1=a_2=1$. So $a_n=F_n$.
+    checked: "script: brute force over all subsets for n ≤ 12 matches F_n"
+    status: ready
+
+  - id: B2
+    topic: "Inequalities: bounding the product of odd numbers"
+    areas: [analysis, calculus]
+    difficulty: 2
+    hints:
+      - 'Take logs and compare $2\ln(2k-1)$ with $\int\ln x\,dx$ over an interval of length $2$.'
+      - 'Use concavity of $\ln$: the midpoint rule overestimates and the trapezoid rule underestimates its integral.'
+    solution: |
+      **Key idea:** compare $\sum2\ln(2k-1)$ with $\int\ln x\,dx=x\ln x-x$, using concavity twice.
+
+      Let $L=\sum_{k=1}^n 2\ln(2k-1)=2\ln\big(1\cdot3\cdots(2n-1)\big)$. Taking logs, the claim is
+      $$(2n-1)\ln(2n-1)-(2n-1) < L < (2n+1)\ln(2n+1)-(2n+1).$$
+      Both sides have the form $G(X)=X\ln X-X=\int_0^X\ln x\,dx$.
+
+      **Lower bound (midpoint rule).** $\ln$ is strictly concave, so its value at the midpoint beats its average: $2\ln(2k-1)>\int_{2k-2}^{2k}\ln x\,dx$. Summing over $k=1..n$, $L>G(2n)$. And $G$ is increasing on $[1,\infty)$ (since $G'=\ln x$), so $G(2n)>G(2n-1)$.
+
+      **Upper bound (trapezoid rule).** By concavity, $\int_{2k-1}^{2k+1}\ln x\,dx>\ln(2k-1)+\ln(2k+1)$. Summing over $k=1..n$,
+      $$\int_1^{2n+1}\ln x\,dx > L+\ln(2n+1)-\ln1 = L+\ln(2n+1).$$
+      Since $\int_0^1\ln x\,dx=-1$, this gives $G(2n+1)>L+\ln(2n+1)-1\ge L$, because $2n+1\ge3>e$.
+
+      Exponentiating both bounds gives the inequality.
+    checked: "script: both inequalities verified in floating point for n ≤ 39"
+    status: ready
+
+  - id: B3
+    topic: "Arrangements: maximizing a cyclic sum of neighbor products"
+    areas: [combinatorics, algebra]
+    difficulty: 3
+    answer: '$\dfrac{2n^3+3n^2-11n+18}{6}$'
+    hints:
+      - 'Remove the largest number $n$ from the circle and join its two neighbors. How does the sum change?'
+      - 'The change is $n^2-(n-a)(n-b)$ for neighbors $a,b$. How large can that be?'
+    solution: |
+      **Key idea:** deleting $n$ from the circle costs at most $n^2-2$, and you can always achieve that, so $M(n)=M(n-1)+n^2-2$.
+
+      Let $M(n)$ be the maximum. Take an arrangement of $1..n$ and let $a,b$ be the neighbors of $n$. Removing $n$ and joining $a$ to $b$ gives an arrangement of $1..n-1$ whose sum is smaller by
+      $$na+nb-ab=n^2-(n-a)(n-b).$$
+      Since $a,b$ are different numbers below $n$, $(n-a)(n-b)\ge1\cdot2=2$. So every arrangement has sum $\le M(n-1)+n^2-2$, i.e. $M(n)\le M(n-1)+n^2-2$.
+
+      **Equality.** We show by induction that an optimal arrangement exists in which $n$ and $n-1$ are neighbors. For $n=2$ the only arrangement has sum $2\cdot1\cdot2=4$. Given an optimal arrangement of $1..n-1$ with $n-1$ next to $n-2$, insert $n$ between them: the sum grows by $n^2-(1)(2)=n^2-2$, so it reaches the bound, and $n$ sits next to $n-1$.
+
+      Therefore $M(2)=4$ and $M(n)=M(n-1)+n^2-2$, so
+      $$M(n)=4+\sum_{k=3}^n(k^2-2)=\frac{2n^3+3n^2-11n+18}{6}.$$
+      (For example $M(3)=11$, $M(4)=25$.)
+    checked: "script: brute force over all permutations for 2 ≤ n ≤ 9 matches the formula"
+    status: ready
+
+  - id: B4
+    topic: "Matrix functions: sine of a matrix cannot be a shear"
+    areas: [linear-algebra]
+    difficulty: 3
+    answer: 'No such matrix exists'
+    hints:
+      - 'If $A$ has two different eigenvalues, it is diagonalizable over $\mathbb C$. What about $\sin A$?'
+      - 'If $A$ has a repeated eigenvalue, write $A=\lambda I+N$ with $N^2=0$.'
+    solution: |
+      **Key idea:** $\sin A$ is diagonalizable when $A$ is, and when $A$ is not, $\sin A=\sin\lambda\,I+\cos\lambda\,N$; neither can equal the target.
+
+      Call the target $J=\begin{pmatrix}1&1996\\0&1\end{pmatrix}$. It is not diagonalizable: its only eigenvalue is $1$, and $J\ne I$.
+
+      **Distinct eigenvalues.** Then $A=PDP^{-1}$ with $D$ diagonal (over $\mathbb C$), and the power series gives $\sin A=P(\sin D)P^{-1}$, which is diagonalizable. So $\sin A\ne J$.
+
+      **Repeated eigenvalue $\lambda$.** For a real $2\times2$ matrix a repeated eigenvalue is real, and $N=A-\lambda I$ satisfies $N^2=0$ (Cayley–Hamilton). Since $\lambda I$ and $N$ commute, the binomial theorem gives $A^k=\lambda^kI+k\lambda^{k-1}N$, and summing the series,
+      $$\sin A=\sin\lambda\;I+\cos\lambda\;N .$$
+      Since $N$ is nilpotent, the only eigenvalue of this matrix is $\sin\lambda$. The only eigenvalue of $J$ is $1$, so equality would need $\sin\lambda=1$, hence $\cos\lambda=0$, and then $\sin A=I\ne J$.
+
+      So no real $2\times2$ matrix has $\sin A=J$.
+    checked: "reasoning only (a proof)"
+    status: ready
+
+  - id: B5
+    topic: "Counting: strings whose substrings stay balanced"
+    areas: [combinatorics]
+    difficulty: 3
+    answer: '$3\cdot2^{n/2}-2$ for even $n$; $2^{(n+3)/2}-2$ for odd $n$'
+    hints:
+      - 'Think of the string as a walk going up for X and down for O. The condition says the walk stays inside a band of width $2$.'
+      - 'Count walks inside each of the three bands that contain the start, then correct for double counting.'
+    solution: |
+      **Key idea:** a string is balanced exactly when its walk stays within three consecutive levels; count walks in each such band.
+
+      Let $p_0=0$ and $p_k$ be $\Delta$ of the first $k$ symbols (up $1$ for X, down $1$ for O). A substring from position $i+1$ to $j$ has $\Delta=p_j-p_i$. So the string is balanced exactly when $\max p-\min p\le2$: the walk stays in some band $\{m,m+1,m+2\}$.
+
+      The bands containing $0$ are $m=-2,-1,0$. Count walks of length $n$ staying in each:
+      - **Start in the middle** ($m=-1$): from the middle you may go either way; from the top or bottom you must return. So you get $2$ choices every other step: $2^{\lceil n/2\rceil}$ walks.
+      - **Start at the bottom or top** ($m=0$ or $m=-2$): the first step is forced to the middle, then the count is as above for $n-1$ steps: $2^{\lceil (n-1)/2\rceil}=2^{\lfloor n/2\rfloor}$ each.
+
+      For $n\ge1$ a walk with range $2$ lies in exactly one band, while a walk with range $1$ (the two alternating strings) lies in two bands. So
+      $$\#\text{balanced}=2^{\lceil n/2\rceil}+2\cdot2^{\lfloor n/2\rfloor}-2 .$$
+      For even $n$ this is $3\cdot2^{n/2}-2$; for odd $n$ it is $2^{(n+1)/2}+2^{(n+1)/2}-2=2^{(n+3)/2}-2$.
+    checked: "script: brute force over all strings for n ≤ 15 matches"
+    status: ready
+
+  - id: B6
+    topic: "Convexity: a weighted sum of polygon vertices vanishing"
+    areas: [analysis, geometry]
+    difficulty: 3
+    hints:
+      - 'Put $x=e^u$, $y=e^v$. The sum is the gradient of $F(u,v)=\sum_i e^{a_iu+b_iv}$.'
+      - 'Because the origin is inside the polygon, $F$ grows in every direction, so it has a minimum.'
+    solution: |
+      **Key idea:** the vector sum is the gradient of a convex function that blows up in every direction; its minimum point gives $x,y$.
+
+      Let $F(u,v)=\sum_i e^{a_iu+b_iv}$. Then
+      $$\nabla F(u,v)=\sum_i(a_i,b_i)\,e^{a_iu+b_iv},$$
+      which is exactly the given sum at $x=e^u$, $y=e^v$. So we need a point where $\nabla F=0$.
+
+      **$F$ grows in every direction.** For a unit vector $w$, some vertex has $(a_i,b_i)\cdot w>0$: otherwise all vertices, and so the whole polygon, would lie in the half-plane $\{p: p\cdot w\le0\}$, and the origin could not be an interior point. The function $w\mapsto\max_i(a_i,b_i)\cdot w$ is continuous and positive on the unit circle, so it has a positive minimum $\delta$. Then for $|(u,v)|=t$,
+      $$F(u,v)\ge e^{\delta t}.$$
+      Choose $t_0$ with $e^{\delta t_0}>F(0,0)$. On the closed disk of radius $t_0$ the continuous $F$ attains a minimum, and it is at most $F(0,0)$, so it is not on the boundary circle. An interior minimum of a differentiable function has $\nabla F=0$.
+
+      Taking $x=e^u$, $y=e^v$ at that point gives positive $x,y$ with the sum equal to $(0,0)$.
+    checked: "script: minimized F numerically for random polygons containing the origin; the gradient vanishes at the minimum"
+    status: ready

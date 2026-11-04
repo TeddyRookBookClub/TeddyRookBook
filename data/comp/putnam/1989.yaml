@@ -1,0 +1,264 @@
+year: 1989
+edition: 50th
+date: "December 2, 1989"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1989.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Number theory: primes made of alternating ones and zeros"
+    areas: [number-theory]
+    difficulty: 1
+    answer: "One ($101$)"
+    hints:
+      - "A number with $k$ ones in this pattern is $\\frac{100^k-1}{99}$."
+      - "Factor $10^{2k}-1=(10^k-1)(10^k+1)$ and split by the parity of $k$."
+    solution: |
+      **Key idea:** $N_k=\frac{(10^k-1)(10^k+1)}{99}$, and the $99$ can be absorbed so that two factors bigger than $1$ remain, except when $k=2$.
+
+      With $k$ ones, $N_k=1+100+\cdots+100^{k-1}=\frac{10^{2k}-1}{99}=\frac{(10^k-1)(10^k+1)}{99}$. $N_1=1$ is not prime. Let $k\ge2$.
+
+      - **$k$ even.** Then $99\mid10^k-1$, and $N_k=\frac{10^k-1}{99}\cdot(10^k+1)$. For $k=2$ this is $1\cdot101$, and $101$ is prime. For $k\ge4$ the first factor is more than $1$, so $N_k$ is composite.
+      - **$k$ odd.** Then $9\mid10^k-1$ and $11\mid10^k+1$ (as $10\equiv-1\pmod{11}$). So $N_k=\frac{10^k-1}9\cdot\frac{10^k+1}{11}$, and for $k\ge3$ both factors are more than $1$.
+
+      So $101$ is the only such prime.
+    checked: "script: primality test for k = 1…39; only k = 2 gives a prime"
+    status: ready
+
+  - id: A2
+    topic: "Double integrals: exponential of a maximum"
+    areas: [calculus]
+    difficulty: 1
+    answer: "$\\dfrac{e^{a^2b^2}-1}{ab}$"
+    hints:
+      - "Split the rectangle along the diagonal where $bx=ay$."
+    solution: |
+      **Key idea:** the diagonal $bx=ay$ splits the rectangle into two triangles, and on each one the maximum is a single term that is easy to integrate.
+
+      On the triangle where $bx\ge ay$, i.e. $0\le y\le\frac{bx}a$, the maximum is $b^2x^2$. Integrating in $y$ first:
+      $$\int_0^a e^{b^2x^2}\cdot\frac{bx}{a}\,dx=\frac{b}{a}\cdot\frac{e^{a^2b^2}-1}{2b^2}=\frac{e^{a^2b^2}-1}{2ab}.$$
+      The other triangle gives the same value by the symmetric computation (swap the roles of $x,a$ and $y,b$). The total is
+      $$\frac{e^{a^2b^2}-1}{ab}.$$
+    checked: "script: numerical double integrals for (a, b) = (1, 1) and (0.7, 1.3)"
+    status: ready
+
+  - id: A3
+    topic: "Complex roots: a polynomial with all roots on the circle"
+    areas: [algebra, analysis]
+    difficulty: 2
+    hints:
+      - "Write the equation as $z^9=\\frac{11-10iz}{11z+10i}$."
+      - "Compare $|11z+10i|^2$ and $|11-10iz|^2$ when $|z|>1$ and when $|z|<1$."
+    solution: |
+      **Key idea:** $z^9$ equals a ratio whose size is less than $1$ exactly when $|z|>1$; so $|z|\ne1$ is impossible.
+
+      Rearrange: $z^9(11z+10i)=11-10iz$. Write $r=|z|$ and $z=x+iy$. A short computation gives
+      $$|11z+10i|^2=121r^2+220y+100,\qquad|11-10iz|^2=121+220y+100r^2,$$
+      so
+      $$|11z+10i|^2-|11-10iz|^2=21(r^2-1).$$
+      - If $r>1$: then $|11-10iz|<|11z+10i|$, so $r^9=\frac{|11-10iz|}{|11z+10i|}<1$, a contradiction. (Here $11z+10i\ne0$, since $|{-10i/11}|<1$.)
+      - If $r<1$: then $|11-10iz|>|11z+10i|\ge0$. If $11z+10i=0$ the equation would give $11-10iz=0$, which is false. Otherwise $r^9>1$, a contradiction.
+
+      So $r=1$.
+    checked: "script: all ten numerical roots have |z| = 1 to 12 digits"
+    status: ready
+
+  - id: A4
+    topic: "Probability: simulating an irrational chance with a fair coin"
+    areas: [probability]
+    difficulty: 2
+    answer: "Yes"
+    hints:
+      - "Coin flips can generate the binary digits of a uniform random number $U$."
+      - "You only need to decide whether $U<\\alpha$, and that is usually settled after a few digits."
+    solution: |
+      **Key idea:** flip coins to produce binary digits of a uniform number $U$, compare them with the digits of $\alpha$, and stop at the first difference.
+
+      Write $\alpha=0.b_1b_2b_3\ldots$ in binary. Flip the coin repeatedly, recording $c_k=1$ for heads and $0$ for tails. Stop at the first $k$ with $c_k\ne b_k$. Player one wins if $c_k=0$ and $b_k=1$, and loses if $c_k=1$ and $b_k=0$.
+
+      **It ends.** The game lasts more than $k$ flips only if the first $k$ flips match fixed digits, which has probability $2^{-k}\to0$.
+
+      **The chance is $\alpha$.** Player one wins with the first difference at step $k$ exactly when the first $k-1$ flips match, $b_k=1$, and the $k$-th flip is tails. That has probability $2^{-k}b_k$. Summing,
+      $$P(\text{win})=\sum_k b_k2^{-k}=\alpha .$$
+      (Equivalently, the flips are the digits of a uniform $U$, and the rule declares a win exactly when $U<\alpha$.)
+    checked: "proof only; the rule was simulated for α = 1/√2"
+    status: ready
+
+  - id: A5
+    topic: "Geometry: two vertex distances that nearly agree"
+    areas: [geometry, combinatorics]
+    difficulty: 3
+    hints:
+      - "There are $2m+1$ distances from $p$ to the vertices. Sort them; their $2m$ gaps add up to the spread."
+      - "The spread is at most the longest diagonal, which is a bit less than $2$."
+    solution: |
+      **Key idea:** pigeonhole on the $2m$ gaps between the sorted distances, using that every distance is at most the longest diagonal $2\cos\frac{\pi}{4m+2}$, which is less than $2$ by about $\frac{1}{m^2}$.
+
+      Let $d_1\le d_2\le\dots\le d_{2m+1}$ be the distances from $p$ to the vertices. The $2m$ gaps $d_{j+1}-d_j$ add up to $d_{2m+1}-d_1\le d_{2m+1}$.
+
+      **The largest distance.** For a fixed vertex $v$, the distance to $v$ is a convex function, so its maximum over the polygon is at a vertex. The longest chord between two vertices of a regular $(2m+1)$-gon in the unit circle is
+      $$2\sin\frac{m\pi}{2m+1}=2\cos\frac{\pi}{4m+2}.$$
+      Using $1-\cos t=2\sin^2\frac t2\ge2\big(\frac t\pi\big)^2$ for $0\le t\le\pi$ (since $\sin u\ge\frac{2u}\pi$ on $[0,\frac\pi2]$), with $t=\frac\pi{4m+2}$ and $4m+2\le6m$:
+      $$1-\cos\frac{\pi}{4m+2}\ge\frac2{(4m+2)^2}\ge\frac1{18m^2}.$$
+      So $d_{2m+1}\le2-\frac1{9m^2}$.
+
+      **Pigeonhole.** The smallest gap is at most the average gap:
+      $$\min_j(d_{j+1}-d_j)\le\frac{2-\frac1{9m^2}}{2m}=\frac1m-\frac1{18m^3}<\frac1m-\frac{A}{m^3}$$
+      with $A=\frac1{20}$. The two vertices giving that smallest gap are distinct, so they work.
+    checked: "script: confirmed cos(π/(4m+2))/m < 1/m − 1/(20m³) for m = 1…9999"
+    status: ready
+
+  - id: A6
+    topic: "Formal power series: a cubic equation over two elements"
+    areas: [algebra, combinatorics]
+    difficulty: 4
+    hints:
+      - "Over the field of two elements, $\\alpha(x)^2=\\alpha(x^2)$."
+      - "Sort the exponents $n$ by their last binary digits: $n$ odd, $n\\equiv2$, and $n\\equiv0\\pmod4$."
+    solution: |
+      **Key idea:** the set of exponents is described by how a binary string ends, which gives $\alpha=\alpha^4+x\alpha^2$; dividing by $\alpha$ gives the cubic.
+
+      Let $E$ be the set of $n\ge0$ with $a_n=1$ (so $0\in E$). Over the field of two elements, squaring is additive, so $\alpha(x)^2=\alpha(x^2)$ and $\alpha(x)^4=\alpha(x^4)$.
+
+      **Sorting by the last digits.** Let $n\ge1$.
+      - $n=2m+1$ odd: the binary string of $n$ is that of $m$ followed by $1$, so it has the same blocks of zeros. Hence $n\in E\iff m\in E$ (this also covers $n=1$, $m=0$).
+      - $n\equiv2\pmod4$: the string ends in a single $0$, a block of odd length. So $n\notin E$.
+      - $n=4m$ with $m\ge1$: the string is that of $m$ followed by $00$, which lengthens the final block of zeros by $2$ (or creates a new block of length $2$). Parities do not change, so $n\in E\iff m\in E$.
+
+      **Translating.** The odd part of $\alpha$ is $\sum_{m\in E}x^{2m+1}=x\,\alpha(x^2)=x\alpha^2$. The part with exponents $0$ and multiples of $4$ is $1+\sum_{m\in E,m\ge1}x^{4m}=\alpha(x^4)=\alpha^4$. Hence
+      $$\alpha=\alpha^4+x\alpha^2,\qquad\text{so}\qquad\alpha\,(\alpha^3+x\alpha+1)=0$$
+      (signs do not matter with two elements). Power series over a field have no zero divisors, and $\alpha\ne0$ since its constant term is $1$. So $\alpha^3+x\alpha+1=0$.
+    checked: "script: multiplied out the series mod 2 up to x^600; α³ + xα + 1 vanishes"
+    status: ready
+
+  - id: B1
+    topic: "Probability: a dart nearer the center than the edges"
+    areas: [probability, geometry, calculus]
+    difficulty: 2
+    answer: "$\\dfrac{4\\sqrt2-5}{3}$"
+    hints:
+      - "By symmetry, work in one eighth of the square, where one edge is the nearest."
+      - "The points equidistant from the center and that edge lie on a parabola."
+    solution: |
+      **Key idea:** in one eighth of the square only one edge matters, and the boundary of the good region is a parabola.
+
+      Take the square $[-1,1]^2$ with center $O$. By symmetry, look at the triangle $0\le y\le x\le1$ (area $\frac12$), where the nearest edge is $x=1$. A point is good when
+      $$\sqrt{x^2+y^2}<1-x\iff y^2<1-2x\iff x<\frac{1-y^2}2 .$$
+      Together with $x\ge y$ this needs $y<\frac{1-y^2}2$, i.e. $y^2+2y-1<0$, so $y<c:=\sqrt2-1$. The good area in the triangle is
+      $$\int_0^c\Big(\frac{1-y^2}2-y\Big)dy=\frac c2-\frac{c^3}6-\frac{c^2}2 .$$
+      Dividing by $\frac12$, the probability is $c-c^2-\frac{c^3}3$. With $c^2=3-2\sqrt2$ and $c^3=5\sqrt2-7$:
+      $$P=(\sqrt2-1)-(3-2\sqrt2)-\frac{5\sqrt2-7}3=\frac{4\sqrt2-5}3\approx0.219 .$$
+    viz: putnam-1989-b1
+    checked: "script: Monte Carlo with 4 million darts gives 0.2192; (4√2 − 5)/3 = 0.2190"
+    status: ready
+
+  - id: B2
+    topic: "Algebra: cancellative semigroups with finite cyclic parts"
+    areas: [algebra]
+    difficulty: 2
+    answer: "Yes"
+    hints:
+      - "For one element $a$, some power repeats: $a^{i+k}=a^i$. Show $e=a^k$ acts as an identity on everything."
+    solution: |
+      **Key idea:** a repeat $a^{i+k}=a^i$ plus cancellation makes $a^k$ a two-sided identity, and then $a^{k-1}$ is an inverse of $a$.
+
+      Pick any $a\in S$. Its powers form a finite set, so $a^{i+k}=a^i$ for some $i,k\ge1$. Let $e=a^k$, so $a^i=a^ie$.
+
+      **$e$ is an identity.** For any $x\in S$, multiply $a^i=a^ie$ on the right by $x$: $a^ix=a^i(ex)$. Cancel $a$ on the left $i$ times to get $x=ex$. Similarly $e a^i=a^i$ (powers of $a$ commute), so $xa^i=xea^i$, and cancelling on the right gives $x=xe$. So $e$ is a two-sided identity. It is unique: two identities $e,e'$ satisfy $e=ee'=e'$.
+
+      **Inverses.** Now every $a$ has $a^k=e$ for some $k\ge1$ by the same argument. If $k=1$, $a=e$ is its own inverse. If $k\ge2$, $a\cdot a^{k-1}=a^{k-1}\cdot a=e$. So $S$ is a group.
+    checked: "proof only"
+    status: ready
+
+  - id: B3
+    topic: "Functional differential equations: moments of a decaying solution"
+    areas: [analysis, calculus]
+    difficulty: 3
+    answer: "$\\mu_n=\\dfrac{n!\\,\\mu_0}{3^n\\prod_{k=1}^n(1-2^{-k})}$"
+    hints:
+      - "Multiply the equation by $x^n$ and integrate. Integrate by parts on the left."
+      - "$\\int_0^\\infty x^nf(2x)\\,dx=2^{-n-1}\\mu_n$."
+    solution: |
+      **Key idea:** integrating against $x^n$ turns the equation into a one-step recursion between $\mu_n$ and $\mu_{n-1}$.
+
+      The bound $|f(x)|\le e^{-\sqrt x}$ makes every $\mu_n$ converge, and the equation gives $|f'(x)|\le9e^{-\sqrt x}$ too.
+
+      **The recursion.** Let $n\ge1$. Integrating by parts, the boundary terms vanish ($x^nf(x)$ is $0$ at $0$ and tends to $0$ at $\infty$), so
+      $$\int_0^\infty x^nf'(x)\,dx=-n\mu_{n-1}.$$
+      On the other side, substituting $u=2x$,
+      $$\int_0^\infty x^n\big(-3f(x)+6f(2x)\big)dx=-3\mu_n+\frac{6}{2^{n+1}}\mu_n=-3\big(1-2^{-n}\big)\mu_n .$$
+      Hence
+      $$\mu_n=\frac{n}{3(1-2^{-n})}\,\mu_{n-1},\qquad \mu_n=\frac{n!\,\mu_0}{3^n\prod_{k=1}^n(1-2^{-k})} .$$
+
+      **(b)** Therefore
+      $$\frac{3^n\mu_n}{n!}=\frac{\mu_0}{\prod_{k=1}^n(1-2^{-k})} .$$
+      The products decrease and converge to $\prod_{k\ge1}(1-2^{-k})>0$, because $\sum2^{-k}<\infty$ (equivalently, $\sum_k-\ln(1-2^{-k})$ converges, as $-\ln(1-t)\le2t$ for $0\le t\le\frac12$). So the sequence converges to $\mu_0/\prod_{k\ge1}(1-2^{-k})\approx3.46\,\mu_0$, which is $0$ only when $\mu_0=0$.
+    checked: "algebra checked by hand; the infinite product was computed numerically (1/∏ ≈ 3.4627)"
+    status: ready
+
+  - id: B4
+    topic: "Set theory: uncountably many almost disjoint subsets"
+    areas: [combinatorics]
+    difficulty: 2
+    answer: "Yes"
+    hints:
+      - "Take the countable set to be all finite strings of $0$s and $1$s."
+      - "For each infinite $0$-$1$ sequence, take the set of its finite beginnings."
+    solution: |
+      **Key idea:** use the finite binary strings as the countable set; each infinite branch of the binary tree gives the set of its prefixes, and two branches share only the prefixes before they split.
+
+      Let $X$ be the set of all finite strings of $0$s and $1$s. It is countable (list them by length). For each infinite sequence $s=s_1s_2s_3\ldots$ of $0$s and $1$s, let
+      $$A_s=\{\,s_1s_2\cdots s_k:\ k\ge1\,\}\subseteq X .$$
+      Each $A_s$ is nonempty. If $s\ne t$, let $j$ be the first place where they differ. A common prefix has length less than $j$, so $A_s\cap A_t$ has fewer than $j$ elements, which is finite. Distinct sequences give distinct sets, and there are uncountably many infinite $0$-$1$ sequences (Cantor's diagonal argument). Since any countably infinite set can be put in bijection with $X$, the answer is yes.
+    checked: "proof only"
+    status: ready
+
+  - id: B5
+    topic: "Geometry: trapezoids in a circle and their diagonals"
+    areas: [geometry]
+    difficulty: 3
+    answer: "$2$, attained exactly when the diagonals are perpendicular (and $AB$ is the longer side)"
+    hints:
+      - "Make the parallel sides horizontal. Their endpoints are $(\\pm\\sin\\alpha,\\cos\\alpha)$ and $(\\pm\\sin\\beta,\\cos\\beta)$."
+      - "The diagonals meet on the vertical axis, and divide the height between the parallel sides in the ratio of their lengths."
+    solution: |
+      **Key idea:** in angle coordinates the ratio simplifies to $\pm2\sin(\alpha-\beta)$, and $|\alpha-\beta|$ is the angle between the diagonals.
+
+      **Coordinates.** A trapezoid inscribed in a circle is symmetric about the line through $O$ perpendicular to its parallel sides. Make that line the $y$-axis. Then the parallel sides have endpoints $(\pm\sin\alpha,\cos\alpha)$ for $AB$ and $(\pm\sin\beta,\cos\beta)$ for $CD$, with $\alpha,\beta\in(0,\pi)$, so $s_1=2\sin\alpha$ and $s_2=2\sin\beta$.
+
+      **Where the diagonals meet.** By symmetry $E$ is on the $y$-axis, say at height $e$. Triangles $EAB$ and $ECD$ are similar with ratio $s_1:s_2$, so the distances from $E$ to the two parallel sides are in that ratio:
+      $$e=\frac{s_2\cos\alpha+s_1\cos\beta}{s_1+s_2}=\frac{\sin\beta\cos\alpha+\sin\alpha\cos\beta}{\sin\alpha+\sin\beta}=\frac{\sin(\alpha+\beta)}{\sin\alpha+\sin\beta}.$$
+      So $d=|e|$, and $d\ne0$ means $\sin(\alpha+\beta)\ne0$.
+
+      **The ratio.** Using $\sin^2\alpha-\sin^2\beta=\sin(\alpha+\beta)\sin(\alpha-\beta)$,
+      $$\frac{s_1-s_2}{d}=\frac{2(\sin\alpha-\sin\beta)(\sin\alpha+\sin\beta)}{|\sin(\alpha+\beta)|}=\pm2\sin(\alpha-\beta),$$
+      with the sign of $\sin(\alpha+\beta)$. Hence the ratio is at most $2$.
+
+      **When it equals $2$.** We need $|\sin(\alpha-\beta)|=1$, i.e. $|\alpha-\beta|=\frac\pi2$, with the sign making the ratio positive, which just means $s_1>s_2$. The legs $AD$ and $BC$ cut off arcs of size $|\alpha-\beta|$ each, and the angle between two chords crossing inside a circle is half the sum of the arcs they cut off. So $|\alpha-\beta|$ is the angle between the diagonals. Thus the bound $2$ is attained, exactly when the diagonals are perpendicular and $AB$ is the longer parallel side. (For example $\alpha=120^\circ$, $\beta=30^\circ$.) Such a trapezoid is never a rectangle, so $d\ne0$ holds automatically.
+    viz: putnam-1989-b5
+    checked: "script: random search gives a supremum of 2.0000; a perpendicular-diagonal example computed from coordinates gives exactly 2"
+    status: ready
+
+  - id: B6
+    topic: "Probability: expected Riemann sum with random partition points"
+    areas: [probability, calculus]
+    difficulty: 3
+    answer: "$P(t)=1-(1-t)^n$"
+    hints:
+      - "The ordered points are the order statistics of $n$ independent uniform points."
+      - "Given that the $k$-th smallest point is at $t$, the expected gap below it is $t/k$."
+    solution: |
+      **Key idea:** condition on where the right end $x_k$ of each interval lies; the expected length of the interval is then $t/k$, and the weights add up to a binomial sum.
+
+      A uniform point of the region $0<x_1<\dots<x_n<1$ is the same as $n$ independent uniform points, sorted. The last term of the sum is $(1-x_n)f(1)=0$. For $k=1,\dots,n$ the remaining terms are $(x_k-x_{k-1})f(x_k)$.
+
+      **One term.** The $k$-th smallest point has density
+      $$\rho_k(t)=\frac{n!}{(k-1)!\,(n-k)!}\,t^{k-1}(1-t)^{n-k}.$$
+      Given $x_k=t$, the $k-1$ smaller points are independent and uniform on $[0,t]$. So $x_{k-1}$ is the largest of $k-1$ uniform points on $[0,t]$, with mean $\frac{k-1}{k}t$ (and $x_0=0$ when $k=1$). Hence $E[x_k-x_{k-1}\mid x_k=t]=\frac tk$, and
+      $$E\big[(x_k-x_{k-1})f(x_k)\big]=\int_0^1f(t)\,\frac tk\,\rho_k(t)\,dt=\int_0^1f(t)\binom nk t^k(1-t)^{n-k}dt .$$
+
+      **Sum.** Adding over $k=1,\dots,n$ and using the binomial theorem,
+      $$E=\int_0^1f(t)\big(1-(1-t)^n\big)dt .$$
+      So $P(t)=1-(1-t)^n$, a polynomial of degree $n$ that does not depend on $f$, with $0\le P(t)\le1$ on $[0,1]$.
+    checked: "script: simulation with f(t) = cos(πt/2) and n = 1, 2, 3, 5 matches ∫ f·P to 3–4 digits"
+    status: ready

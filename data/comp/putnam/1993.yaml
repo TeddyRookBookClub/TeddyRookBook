@@ -1,0 +1,287 @@
+year: 1993
+edition: 54th
+date: "December 4, 1993"
+links:
+  problems: https://kskedlaya.org/putnam-archive/1993.pdf
+  archive: https://kskedlaya.org/putnam-archive/
+problems:
+  - id: A1
+    topic: "Calculus: a horizontal line balancing two areas under a cubic"
+    areas: [calculus]
+    difficulty: 1
+    answer: '$c = \dfrac49$'
+    hints:
+      - 'Equal areas on both sides of the line means one signed integral is zero.'
+      - 'Integrate from $0$ to the right-hand crossing point $b$, then use that $b$ also lies on the curve.'
+    solution: |
+      **Key idea:** the two areas are equal exactly when the signed area between the curve and the line, from $x=0$ to the right crossing point, is zero.
+
+      Let $b$ be the larger $x$ where the line $y=c$ meets $y=2x-3x^3$. On $[0,b]$ the curve starts below the line, crosses it, and ends on it. The left region counts negatively in $\int_0^b(2x-3x^3-c)\,dx$ and the right region counts positively, so the areas match exactly when
+      $$\int_0^b (2x-3x^3-c)\,dx = b^2-\tfrac34 b^4-cb = 0 .$$
+      Since $b>0$, this says $c = b-\tfrac34 b^3$. But $b$ is on the curve, so also $c = 2b-3b^3$. Setting the two equal:
+      $$b - \tfrac34 b^3 = 2b-3b^3 \quad\Longrightarrow\quad \tfrac94 b^3 = b \quad\Longrightarrow\quad b=\tfrac23 .$$
+      Then $c = 2\cdot\frac23 - 3\cdot\frac{8}{27} = \frac43-\frac89 = \frac49$.
+
+      Check that the picture is right: the crossings solve $3x^3-2x+\frac49=0$, which factors as $(x-\frac23)(3x^2+2x-\frac23)=0$. So the line meets the curve at $x=\frac{\sqrt3-1}{3}\approx0.24$ and at $x=\frac23$, both in the first quadrant, as the setup needs.
+    checked: "script: numerical areas of both regions agree for c = 4/9"
+    status: ready
+
+  - id: A2
+    topic: "Recurrences: a quadratic relation that forces a linear one"
+    areas: [algebra]
+    difficulty: 1
+    hints:
+      - 'Write the given relation for two consecutive values of $n$ and subtract.'
+      - 'After subtracting, try to factor so that $x_n$ and $x_{n+1}$ each multiply a sum of two terms.'
+    solution: |
+      **Key idea:** subtracting two copies of the relation shows that $\dfrac{x_{n+1}+x_{n-1}}{x_n}$ does not depend on $n$.
+
+      We have $x_n^2 - x_{n-1}x_{n+1} = 1$ and, one step later, $x_{n+1}^2 - x_n x_{n+2} = 1$. The right sides are equal, so
+      $$x_n^2 + x_n x_{n+2} = x_{n+1}^2 + x_{n-1}x_{n+1},$$
+      that is,
+      $$x_n\,(x_n + x_{n+2}) = x_{n+1}\,(x_{n+1}+x_{n-1}).$$
+      All terms are nonzero, so we may divide by $x_n x_{n+1}$:
+      $$\frac{x_{n+2}+x_n}{x_{n+1}} = \frac{x_{n+1}+x_{n-1}}{x_n}\qquad(n\ge1).$$
+      So the quantity $\dfrac{x_{n+1}+x_{n-1}}{x_n}$ is the same for every $n\ge1$. Call it $a$ (its value at $n=1$ is $a=\frac{x_2+x_0}{x_1}$). Then $x_{n+1}+x_{n-1}=a x_n$, which is the claim.
+    checked: "script: generated sequences satisfying the relation from random x0, x1 and confirmed the ratio is constant"
+    status: ready
+
+  - id: A3
+    topic: "Counting: min-preserving functions on subsets"
+    areas: [combinatorics]
+    difficulty: 2
+    hints:
+      - 'Show that such an $f$ is increasing: if $A\subseteq B$ then $f(A)\le f(B)$.'
+      - 'Every proper subset is an intersection of sets that miss exactly one element. So $f$ is fixed by its values on those $n$ sets and on the whole set.'
+    solution: |
+      **Key idea:** $f$ is completely determined by its values on the $n$ "co-singletons" $S\setminus\{i\}$ and on $S$ itself, and these values are free apart from one inequality.
+
+      Write $S=\{1,\dots,n\}$ and $C_i = S\setminus\{i\}$.
+
+      **Monotone.** If $A\subseteq B$ then $f(A)=f(A\cap B)=\min(f(A),f(B))\le f(B)$.
+
+      **Determined by few values.** A proper subset $A\ne S$ equals $\bigcap_{i\notin A} C_i$. Applying the rule repeatedly,
+      $$f(A) = \min_{i\notin A} f(C_i).$$
+      So $f$ is fixed by the numbers $c_i=f(C_i)$ and $t=f(S)$, and monotonicity forces $t\ge c_i$ for all $i$.
+
+      **Every such choice works.** Pick $t\in\{1,\dots,m\}$ and any $c_1,\dots,c_n\in\{1,\dots,t\}$. Define $f(A)=\min_{i\notin A} c_i$ for $A\ne S$ and $f(S)=t$. Since the complement of $A\cap B$ is the union of the complements, the minimum over it is the smaller of the two minimums, so $f(A\cap B)=\min(f(A),f(B))$ when $A,B\ne S$. If $A=S$, then $f(A\cap B)=f(B)=\min(t,f(B))$ because $t$ is at least every value. So the rule holds.
+
+      **Count.** For each $t=j$ there are $j^n$ choices of $(c_1,\dots,c_n)$, and different choices give different functions. Hence
+      $$c(n,m)=\sum_{j=1}^m j^n.$$
+    checked: "script: brute force over all functions for n ≤ 2, m ≤ 3 and n = 3, m = 2 matches the sum"
+    status: ready
+
+  - id: A4
+    topic: "Pigeonhole: equal subset sums from two bounded lists"
+    areas: [combinatorics, number-theory]
+    difficulty: 3
+    hints:
+      - 'Use running totals of each list. You only need sums of consecutive terms.'
+      - 'For each running total of the shorter-sum list, step along the other list until you first pass it. How far past can you land?'
+    solution: |
+      **Key idea:** compare running totals; the overshoot when one total first catches the other is small, so two overshoots must coincide.
+
+      Let $X_k = x_1+\dots+x_k$ ($0\le k\le 19$) and $Y_l=y_1+\dots+y_l$ ($0\le l\le 93$). Note the pattern: each $x_i$ is at most $93$, the length of the $y$-list, and each $y_j$ is at most $19$, the length of the $x$-list. The setup is symmetric, so we may assume $X_{19}\le Y_{93}$.
+
+      For each $k=0,1,\dots,19$ let $l(k)$ be the smallest $l$ with $Y_l\ge X_k$. It exists because $X_k\le X_{19}\le Y_{93}$. Put $\delta_k = Y_{l(k)}-X_k\ge 0$.
+
+      - $\delta_0=0$ (take $l(0)=0$).
+      - For $k\ge1$ we have $l(k)\ge1$ and $Y_{l(k)-1}<X_k$, so $\delta_k < y_{l(k)}\le 19$, giving $\delta_k\in\{0,1,\dots,18\}$.
+
+      That is $20$ numbers $\delta_0,\dots,\delta_{19}$ taking at most $19$ values. So $\delta_k=\delta_{k'}$ for some $k<k'$. Then
+      $$X_{k'}-X_k = Y_{l(k')}-Y_{l(k)} .$$
+      The left side is $x_{k+1}+\dots+x_{k'}>0$, so the right side is positive too, which forces $l(k)<l(k')$. Thus
+      $$x_{k+1}+\dots+x_{k'} = y_{l(k)+1}+\dots+y_{l(k')},$$
+      two nonempty sums that are equal.
+
+      If instead $Y_{93}\le X_{19}$, run the same argument with the roles swapped: $94$ overshoots, each in $\{0,\dots,92\}$ because every $x_i\le 93$.
+    checked: "script: random tests of the running-total method on lists of the given sizes always found a match"
+    status: ready
+
+  - id: A5
+    topic: "Integrals: a rational value from an order-three substitution"
+    areas: [calculus, algebra]
+    difficulty: 3
+    answer: '$\dfrac{11131110}{107634259}$'
+    hints:
+      - 'The map $x\mapsto \frac{1}{1-x}$ sends $[-100,-10]$ onto the second interval. Where does applying it twice send it?'
+      - 'Let $R(x)=\frac{x^2-x}{x^3-3x+1}$. How does $R$ change under that map?'
+    solution: |
+      **Key idea:** the substitution $T(x)=\frac1{1-x}$ cycles the three intervals and leaves $R(x)=\frac{x^2-x}{x^3-3x+1}$ unchanged, so the three integrals combine into one integral of an exact derivative.
+
+      Let $p(x)=x^3-3x+1$, so the integrand is $R(x)^2$. Note $T(T(x)) = 1-\frac1x$ and $T^3$ is the identity. $T$ maps $[-100,-10]$ onto $[\frac1{101},\frac1{11}]$, and $T^2$ maps it onto $[\frac{101}{100},\frac{11}{10}]$, both increasingly. None of the intervals contains a root of $p$ (the roots are about $-1.88$, $0.35$, $1.53$).
+
+      **$R$ is invariant.** Direct computation gives $T(x)^2-T(x)=\frac{x}{(1-x)^2}$ and
+      $$p(T(x)) = \frac{1-3(1-x)^2+(1-x)^3}{(1-x)^3} = \frac{-p(x)}{(1-x)^3}.$$
+      Dividing, $R(T(x)) = \frac{-x(1-x)}{p(x)} = R(x)$. Hence also $R(T^2(x))=R(x)$.
+
+      **Combine.** Substituting $u=T(x)$ in the second integral and $u=T^2(x)$ in the third (with $T'(x)=\frac1{(1-x)^2}$ and $(T^2)'(x)=\frac1{x^2}$), the total is
+      $$\int_{-100}^{-10} R(x)^2\Big(1+\frac1{(1-x)^2}+\frac1{x^2}\Big)dx .$$
+      A short expansion shows $x^2(1-x)^2+x^2+(1-x)^2 = (x^2-x+1)^2$, so the integrand is $\dfrac{(x^2-x+1)^2}{p(x)^2}$.
+
+      **It is a derivative.** By the quotient rule,
+      $$R'(x)=\frac{(2x-1)p(x)-(x^2-x)(3x^2-3)}{p(x)^2} = \frac{-(x^4-2x^3+3x^2-2x+1)}{p(x)^2} = -\frac{(x^2-x+1)^2}{p(x)^2}.$$
+      So the total is $R(-100)-R(-10) = -\frac{10100}{999699}+\frac{110}{969}$, which is rational. It simplifies to $\frac{11131110}{107634259}\approx 0.10342$.
+    checked: "script: sympy confirms the combined integrand equals -R'(x), and numerical integration of the three original integrals gives 0.1034160508, matching the fraction"
+    status: ready
+
+  - id: A6
+    topic: "Sequences: a self-describing sequence is a Beatty sequence"
+    areas: [number-theory, combinatorics]
+    difficulty: 4
+    answer: '$r = 2+\sqrt3$'
+    hints:
+      - 'Let $p_1<p_2<\dots$ be the positions of the 2s. Express $p_{m+1}$ using the first $m$ terms of the sequence.'
+      - 'If the 2s really sit at $1+\lfloor rm\rfloor$, their density is $1/r$. Average gap considerations give $r=4-\frac1r$.'
+    solution: |
+      **Key idea:** the positions of the 2s are determined by how many 2s appear earlier, and the numbers $1+\lfloor rm\rfloor$ with $r=2+\sqrt3$ satisfy exactly the same rule; so an induction shows they agree.
+
+      Call the sequence $a_1,a_2,\dots$ and let $p_1<p_2<\dots$ be the positions where $a_n=2$. The sequence starts with a 2, so $p_1=1$. The self-describing property says there are $a_j$ threes between the $j$-th and $(j+1)$-th 2, so $p_{j+1}-p_j = a_j+1$. Adding these up,
+      $$p_{m+1} = 1+\sum_{j=1}^m (a_j+1) = 1+4m-N(m),$$
+      where $N(m)$ counts the 2s among $a_1,\dots,a_m$ (each 2 contributes one less than a 3).
+
+      Now let $r=2+\sqrt3$. It satisfies $r^2-4r+1=0$, so $r+\frac1r=4$. Let $q_{k+1}=1+\lfloor rk\rfloor$ for $k\ge0$, and let $N'(m)$ count the $q$'s that are $\le m$. For $m\ge1$, $q_{k+1}\le m$ means $\lfloor rk\rfloor\le m-1$, which means $rk<m$, which means $k<m/r$. So $N'(m)=\lceil m/r\rceil$ (as $m/r$ is irrational). Then
+      $$1+4m-N'(m) = 1+\big\lfloor 4m - \tfrac{m}{r}\big\rfloor = 1+\lfloor rm\rfloor = q_{m+1}.$$
+      So the $q$'s obey the same rule as the $p$'s.
+
+      **Induction.** Claim: $p_j=q_j$ for $j\le m+1$. For $m=0$ both are $1$. Suppose it holds for $j\le m$. Since $p_j\ge j$ and $q_j\ge j$, every $p$ or $q$ that is $\le m$ has index $\le m$, so the two sets agree on $\{1,\dots,m\}$ and $N(m)=N'(m)$. The two formulas then give $p_{m+1}=q_{m+1}$.
+
+      Hence $a_n=2$ exactly when $n=1+\lfloor rm\rfloor$ for some $m\ge0$, with $r=2+\sqrt3$.
+    checked: "script: built the sequence from its own rule to 30000 terms; the 5359 positions of 2 all equal 1 + floor((2+√3)m)"
+    status: ready
+
+  - id: B1
+    topic: "Fractions: the smallest denominator fitting between neighbors"
+    areas: [number-theory]
+    difficulty: 2
+    answer: '$n = 3987$'
+    hints:
+      - 'Which $m$ gives the narrowest interval? Look at $m=1992$.'
+      - 'If $\frac ab<\frac kn<\frac cd$ and $bc-ad=1$, then $n\ge b+d$.'
+    solution: |
+      **Key idea:** for $m=1992$ the two endpoints are neighbors in the Farey sense, which forces $n\ge 1993+1994$; and $k=2m+1$ works for every $m$ when $n=3987$.
+
+      **Lower bound.** Take $m=1992$: we need $\frac{1992}{1993}<\frac kn<\frac{1993}{1994}$. For these endpoints, $1993\cdot1993-1992\cdot1994 = 1$. In general, if $\frac ab<\frac kn<\frac cd$ with $bc-ad=1$, then $kb-na\ge1$ and $nc-kd\ge1$ (positive integers), so
+      $$n = n(bc-ad) = b(nc-kd)+d(kb-na)\ge b+d.$$
+      Here that gives $n\ge 1993+1994=3987$.
+
+      **$n=3987$ works.** Take $k=2m+1$. Then
+      - $\frac m{1993}<\frac{2m+1}{3987}$ means $3987m<3986m+1993$, i.e. $m<1993$;
+      - $\frac{2m+1}{3987}<\frac{m+1}{1994}$ means $3988m+1994<3987m+3987$, i.e. $m<1993$.
+
+      Both hold for every $m$ with $0<m<1993$. So the answer is $n=3987$.
+    checked: "script: checked every n up to 3987 against all m; the first n that works is 3987"
+    status: ready
+
+  - id: B2
+    topic: "Games: discarding cards to hit a multiple"
+    areas: [combinatorics, number-theory]
+    difficulty: 2
+    answer: 'A wins with probability $0$'
+    hints:
+      - 'Add up all $2n$ cards. What happens if nobody hits a multiple before the deck runs out?'
+      - 'On each turn, can the second player make sure the card the first player would need is not in the first player''s hand?'
+    solution: |
+      **Key idea:** the second player B can always keep the "winning card" out of A's hand, and if the game reaches the last card, B wins anyway.
+
+      Work modulo $2n+1$, and let $s$ be the running total. The total of all cards is $n(2n+1)\equiv 0$, so if the game goes the full length, B's last discard makes the total a multiple and B wins. So it is enough to show A can never win.
+
+      **A's first move** is a single card from $1$ to $2n$, never a multiple of $2n+1$.
+
+      **B's strategy.** Suppose it is B's turn, B holds $j$ cards and A holds $j-1$. If B discards $c$, the total becomes $s+c$, and A could then win only with a card $\equiv -(s+c)$. Different choices of $c$ give different "needed residues", so B's $j$ choices give $j$ different residues. At most $j-1$ of them are in A's hand. So B can choose $c$ so that either $s+c\equiv0$ (B wins at once) or A does not hold the card A would need.
+
+      Either way A never wins, so with best play B always wins, whatever the deal. The probability that A wins is $0$.
+    checked: "script: full game-tree search for n = 1, 2, 3, 4 over all deals; A never wins"
+    status: ready
+
+  - id: B3
+    topic: "Probability: parity of the rounded ratio of two uniforms"
+    areas: [probability, calculus]
+    difficulty: 2
+    answer: '$\dfrac{5-\pi}{4}$'
+    hints:
+      - 'For $s\ge1$, find the probability that $x/y>s$. It is a triangle.'
+      - 'The answer becomes an alternating series related to $\frac\pi4 = 1-\frac13+\frac15-\cdots$.'
+    solution: |
+      **Key idea:** each event "the nearest integer is $k$" is a thin triangle in the unit square, and the even ones add up to a Leibniz-type series.
+
+      The point $(x,y)$ is uniform on the unit square. Ties have probability $0$.
+
+      **Nearest integer $0$:** this means $x/y<\frac12$, the triangle under $x=y/2$, with area $\frac14$.
+
+      **Large ratios:** for $s\ge1$, $x/y>s$ means $y<x/s$, a triangle with legs $1$ and $1/s$, area $\frac1{2s}$. So for $k\ge1$,
+      $$P(\text{nearest integer}=k) = P\big(k-\tfrac12<\tfrac xy<k+\tfrac12\big) = \frac1{2k-1}-\frac1{2k+1}.$$
+
+      **Add the even $k$:**
+      $$\sum_{k=2,4,6,\dots}\Big(\frac1{2k-1}-\frac1{2k+1}\Big) = \frac13-\frac15+\frac17-\frac19+\cdots = 1-\frac\pi4,$$
+      using $1-\frac13+\frac15-\cdots=\frac\pi4$. Including $k=0$,
+      $$P = \frac14+1-\frac\pi4 = \frac{5-\pi}{4}\approx 0.4646 .$$
+      In the requested form, $r=\frac54$ and $s=-\frac14$.
+    viz: putnam-1993-b3
+    checked: "script: Monte Carlo with 10^7 points gives 0.4645, close to (5 − π)/4 = 0.46460"
+    status: ready
+
+  - id: B4
+    topic: "Integral operators: a positive kernel swapping two functions"
+    areas: [analysis]
+    difficulty: 3
+    hints:
+      - 'Let $c$ be the minimum of $f/g$ on $[0,1]$. Apply the kernel to $f-cg\ge0$.'
+      - 'A continuous function $h\ge0$ with $\int_0^1 h(y)K(x_0,y)\,dy=0$ must vanish everywhere.'
+    solution: |
+      **Key idea:** look at the smallest ratio $c=\min f/g$; positivity of the kernel turns one touching point into identities on the whole interval.
+
+      Write $(Kh)(x)=\int_0^1 h(y)K(x,y)\,dy$, so $Kf=g$ and $Kg=f$. If $h$ is continuous, $h\ge0$, and $(Kh)(x_0)=0$ for some $x_0$, then $h\equiv0$, because $K(x_0,\cdot)>0$ and a nonnegative continuous function with zero integral against a positive weight is zero.
+
+      Let $c=\min_{[0,1]} f/g$, attained at $x_0$; then $c>0$. So $f-cg\ge0$ with $(f-cg)(x_0)=0$.
+
+      - Applying $K$: $K(f-cg) = g-cf$, and this is $\ge 0$ since $f-cg\ge0$ and $K>0$.
+      - Applying $K$ again: $K(g-cf) = f-cg$. At $x_0$ this is $0$. Since $g-cf\ge0$, the remark above gives $g-cf\equiv 0$.
+      - Then $f-cg = K(g-cf)\equiv 0$ as well.
+
+      So $g=cf$ and $f=cg$, giving $f=c^2f$. As $f>0$, $c^2=1$, so $c=1$ and $f=g$.
+    checked: "reasoning only (a proof; no numerical answer)"
+    status: ready
+
+  - id: B5
+    topic: "Geometry: no four points with all distances odd"
+    areas: [geometry, number-theory, linear-algebra]
+    difficulty: 3
+    hints:
+      - 'Put one point at the origin and look at the $3\times3$ matrix of dot products of the other three position vectors.'
+      - 'An odd square is $1$ mod $8$. What is twice that matrix modulo $8$?'
+    solution: |
+      **Key idea:** a Gram matrix of three vectors in the plane has determinant $0$, but odd distances make (twice) its determinant $4$ mod $8$.
+
+      Suppose four such points exist. Put one at the origin and let $v_1,v_2,v_3$ be the other three. Let $G$ be the Gram matrix $G_{ij}=v_i\cdot v_j$. Three vectors in $\mathbb R^2$ are linearly dependent, so $\det G=0$.
+
+      Now use the distances. By the law of cosines,
+      $$2\,v_i\cdot v_j = |v_i|^2+|v_j|^2-|v_i-v_j|^2 .$$
+      All six distances are odd integers, and every odd square is $\equiv 1 \pmod 8$. So $M=2G$ has integer entries with
+      $$M\equiv\begin{pmatrix}2&1&1\\1&2&1\\1&1&2\end{pmatrix}\pmod 8 .$$
+      The determinant is a polynomial in the entries, so $\det M$ is congruent mod $8$ to the determinant of that matrix, which is $4$. Hence $\det M\equiv4\pmod8$, so $\det M\ne0$. But $\det M=8\det G=0$. This contradiction shows no such four points exist.
+    checked: "script: determinant of the mod-8 pattern matrix is 4"
+    status: ready
+
+  - id: B6
+    topic: "Algorithms: doubling moves that reach zero"
+    areas: [number-theory, combinatorics]
+    difficulty: 3
+    hints:
+      - 'Let $x$ be the smallest number and write $y=qx+r$. Can you subtract exactly $qx$ from $y$?'
+      - 'Use the binary digits of $q$. Each move doubles the smallest number; decide which partner to use by the current digit.'
+    solution: |
+      **Key idea:** with the smallest number $x$, the binary expansion of $q=\lfloor y/x\rfloor$ tells us how to remove exactly $qx$ from $y$, leaving a remainder smaller than $x$. Repeat until something is $0$.
+
+      Let the numbers be $x\le y\le z$ and write $y=qx+r$ with $q\ge1$ and $0\le r<x$. Write $q=\sum_{i=0}^{t}\varepsilon_i2^i$ in binary ($\varepsilon_t=1$). We make $t+1$ moves; before move $i$ the doubled number equals $2^ix$.
+
+      - If $\varepsilon_i=1$, use the pair ($2^ix$, current $y$): $y$ drops by $2^ix$.
+      - If $\varepsilon_i=0$, use the pair ($2^ix$, current $z$): $z$ drops by $2^ix$.
+
+      **The moves are legal.** If $\varepsilon_i=1$, the current $y$ is $y-(q\bmod 2^i)\,x=r+\big(q-(q\bmod 2^i)\big)x$. The number $q-(q\bmod 2^i)$ keeps only the bits of $q$ from position $i$ up, and bit $i$ is $1$, so it is at least $2^i$. Hence the current $y$ is at least $2^ix$. If $\varepsilon_i=0$ (so $i<t$), the current $z$ is at least $z-(2^i-1)x\ge y-(2^i-1)x\ge 2^{i+1}x-(2^i-1)x>2^ix$. In both cases $2^ix$ really is the smaller of the pair.
+
+      After all moves, $y$ has dropped by exactly $qx$, so it equals $r<x$. If $r=0$ we are done. Otherwise the smallest number has gone from $x$ down to $r$, a strictly smaller positive integer.
+
+      Repeating, the smallest number keeps decreasing while it stays positive. That cannot go on forever, so a $0$ appears after finitely many moves.
+    checked: "script: ran the procedure on 20000 random triples up to 10^6; every move was legal and each round lowered the minimum"
+    status: ready

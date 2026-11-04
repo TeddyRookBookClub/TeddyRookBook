@@ -91,6 +91,14 @@ html:not([data-theme="dark"]) .trb-tile:hover{border-color:#00562f}
 .trb-sbtn{background:none;border:0;cursor:pointer;color:#f3ead2;padding:4px 6px;border-radius:6px;margin-left:.35rem;display:inline-flex;align-items:center}
 .trb-sbtn:hover{background:rgba(255,255,255,.14)}
 .trb-sbtn svg{width:18px;height:18px}
+/* background music button (the "Background music" stub in assets/js/site-shell.js; the player is static/music/suite/player/) */
+.trb-mbtn{position:relative;background:none;border:0;cursor:pointer;color:#f3ead2;padding:4px 6px;border-radius:6px;margin-left:.2rem;display:inline-flex;align-items:center}
+.trb-mbtn:hover{background:rgba(255,255,255,.14)}
+.trb-mbtn svg{width:18px;height:18px}
+.trb-mbtn.on::after{content:"";position:absolute;right:2px;top:3px;width:7px;height:7px;border-radius:50%;background:#6cc79a;box-shadow:0 0 0 1.5px #004225}
+@media (max-width:420px){.trb-mbtn{padding:4px 3px;margin-left:0}.trb-mbtn.on::after{right:0}}
+/* under 390px the switches wrap below the site name: keep that row 40px high so it does not slide under the menu */
+@media (max-width:389px){.logo-switches{min-height:0}.logo-switches>*{min-height:40px}}
 .trb-search{position:fixed;inset:0;z-index:900;background:rgba(5,15,10,.55);display:flex;justify-content:center;align-items:flex-start;padding:8vh 12px 12px}
 .trb-search[hidden]{display:none}
 .trb-sbox{width:min(680px,100%);max-height:80vh;display:flex;flex-direction:column;background:var(--theme);border:1px solid var(--border);border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.3);overflow:hidden}
@@ -117,3 +125,32 @@ header.header a:focus-visible,header.header button:focus-visible,header.header s
 #main-content:focus{outline:none}
 /* Links inside running text get an underline, so they are not told apart by color alone (marked .trb-il by assets/js/site-shell.js). */
 .trb-il{text-decoration:underline !important;text-decoration-thickness:1px !important;text-underline-offset:.16em;box-shadow:none !important}
+/* Wide panel: Education's menu shows every entry, grouped under small headings, in two columns (layouts/_partials/header.html,
+   sections in data/menu_sections.yaml). Columns read down, so Tab goes down column 1, then column 2. One stacked list on phones. */
+header.header .header-nav{position:relative}
+#menu .trb-more.trb-wide{position:static}
+#menu .trb-wide .trb-panel{position:absolute;z-index:300;top:calc(100% - 6px);right:var(--gap,24px);width:min(900px,calc(100% - 2 * var(--gap,24px)));box-sizing:border-box;max-height:calc(100vh - 80px);overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth;padding:.55rem .65rem .5rem;background:var(--entry);border:1px solid var(--border);border-top:3px solid #b8963e;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.18);white-space:normal;text-align:left;line-height:1.25}
+#menu .trb-wide .trb-pcols{column-count:2;column-gap:1.1rem;column-rule:1px solid var(--border)}
+#menu .trb-wide .trb-ps{margin:0 0 .4rem}
+#menu .trb-wide .trb-ps:not(:has(li:nth-child(11))){break-inside:avoid}
+#menu .trb-wide .trb-ph{margin:.25rem .5rem .2rem;padding-bottom:.2rem;border-bottom:1px solid var(--border);font:700 11.5px/1.3 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#7a5f1f;break-after:avoid}
+[data-theme="dark"] #menu .trb-wide .trb-ph{color:#d8b860}
+#menu .trb-wide .trb-panel ul{position:static;min-width:0;max-height:none;overflow:visible;margin:0;padding:0;border:0;border-radius:0;box-shadow:none;background:none}
+#menu .trb-wide .trb-panel li{break-inside:avoid}
+#menu .trb-wide .trb-panel ul a{display:grid;grid-template-columns:1.45em minmax(0,1fr);column-gap:.4rem;align-items:start;padding:.24rem .5rem}
+#menu .trb-wide .trb-mi{grid-row:span 2;font-size:16px;line-height:1.2;text-align:center}
+#menu .trb-wide .trb-panel ul b,#menu .trb-wide .trb-panel ul small{grid-column:2}
+#menu .trb-wide .trb-panel ul small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#menu .trb-wide .trb-pall{margin:.15rem 0 0;padding-top:.3rem;border-top:1px solid var(--border)}
+#menu .trb-wide .trb-pall a{display:inline-block;padding:.35rem .5rem;border-radius:8px;font-size:15px !important;line-height:1.25 !important;color:#00562f !important}
+#menu .trb-wide .trb-pall a:hover{background:var(--tertiary)}
+[data-theme="dark"] #menu .trb-wide .trb-pall a{color:#6cc79a !important}
+/* inside the light dropdowns the gold focus ring is too faint, so it turns green there */
+header.header #menu .trb-more details ul a:focus-visible,header.header #menu .trb-pall a:focus-visible{outline-color:#00562f;outline-offset:-2px}
+[data-theme="dark"] header.header #menu .trb-more details ul a:focus-visible,[data-theme="dark"] header.header #menu .trb-pall a:focus-visible{outline-color:#6cc79a}
+/* the short notes show only where the whole two-column panel still fits on screen with them (wide and tall windows) */
+#menu .trb-wide .trb-panel ul small{display:none}
+#menu .trb-wide .trb-mi{grid-row:auto}
+@media (min-width:1200px) and (min-height:1060px){#menu .trb-wide .trb-panel{width:min(1040px,calc(100% - 2 * var(--gap,24px)))}#menu .trb-wide .trb-panel ul small{display:block}#menu .trb-wide .trb-mi{grid-row:span 2}}
+@media (max-width:768px){#menu .trb-wide .trb-panel{left:.5rem;right:.5rem;width:auto;top:100%;max-height:70vh}#menu .trb-wide .trb-pcols{column-count:1;column-rule:0}}
+@media (max-width:700px){#menu .trb-wide .trb-panel{left:0;right:0}}
