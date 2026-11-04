@@ -33,6 +33,11 @@
     <p class="cx-eyebrow">Music · Math · Patterns · Chemistry</p>
     <h1>{{ .Title }}</h1>
     <div class="cx-intro">{{ .Content }}</div>
+    {{- /* front matter deepdives: [{url, icon, title, text}]: long pages that grow out of the diagram (e.g. /connections/rhythm-of-numbers/) */ -}}
+    {{- with .Params.deepdives }}
+    <style>.cx-deep{list-style:none;margin:.8rem 0 0;padding:0;display:grid;gap:.6rem;max-width:46rem}.cx-deep a{display:grid;grid-template-columns:auto 1fr;gap:.1rem .8rem;align-items:center;padding:.75rem 1rem;border:1px solid var(--cx-bd);border-left:4px solid var(--cx-gold);border-radius:12px;background:var(--cx-card);text-decoration:none;color:var(--cx-tx)}.cx-deep a:hover,.cx-deep a:focus-visible{border-color:var(--cx-g)}.cx-deep .cx-deep-i{font-size:1.6rem;grid-row:span 2}.cx-deep b{color:var(--cx-g);font-size:1.05rem}.cx-deep span{font-size:.94rem;color:var(--cx-dim)}</style>
+    <ul class="cx-deep">{{ range . }}<li><a href="{{ .url | relURL }}"><span class="cx-deep-i" aria-hidden="true">{{ .icon }}</span><b>{{ .title }}</b><span>{{ .text }}</span></a></li>{{ end }}</ul>
+    {{- end }}
   </header>
 
   <section class="cx-hero" aria-label="The diagram">

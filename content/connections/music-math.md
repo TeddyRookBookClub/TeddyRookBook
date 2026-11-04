@@ -5,6 +5,7 @@ sets: [music, math]
 weight: 110
 teaser: "Notes that sound good together have frequencies in simple whole-number ratios. Scales are clock arithmetic, and some of the world's favorite rhythms come from an algorithm Euclid wrote down about 2,300 years ago."
 golinks:
+  - { url: "/connections/rhythm-of-numbers/", why: "deep dive: pi as a rhythm, its continued fraction as musical form, and where it meets the primes" }
   - { url: "/physics/physics-2/standing-waves-strings/", why: "why a string makes only certain notes" }
   - { url: "/physics/waves-optics-modern-physics/standing-wave-math/", why: "the math of standing waves" }
   - { url: "/math/grade-6/equivalent-ratios/", why: "what a ratio is" }

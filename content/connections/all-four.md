@@ -5,6 +5,7 @@ sets: [music, math, patterns, chemistry]
 weight: 300
 teaser: "The center of the diagram: a drum, a cathedral window, a snowflake and the periodic table all come from waves and symmetry. An atom's orbitals are three-dimensional standing waves, like the vibrations of a drum."
 golinks:
+  - { url: "/connections/rhythm-of-numbers/", why: "deep dive: pi’s rhythm meets the primes in tuning, hydrogen, quasicrystals and more" }
   - { url: "/physics/waves-optics-modern-physics/particle-in-box/", why: "the simplest trapped wave in quantum physics" }
   - { url: "/physics/waves-optics-modern-physics/exclusion-principle/", why: "why each orbital holds two electrons" }
   - { url: "/chemistry/chemistry/electron-configuration/", why: "the filling order, step by step" }

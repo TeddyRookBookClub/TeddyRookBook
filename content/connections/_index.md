@@ -3,6 +3,8 @@ title: "Where Music, Patterns, Math and Chemistry Meet"
 description: "A four-way Venn diagram of music, patterns, math and chemistry. Tap any of its 15 regions to see where the subjects overlap, with pictures and sounds you can play with: vibrating plates, string ratios, crystal symmetry, the periodic table and more."
 type: connections
 credits: false
+deepdives:
+  - { url: "/connections/rhythm-of-numbers/", icon: "🥁", title: "Deep dive: The Rhythm of Numbers", text: "Play pi as a beat and follow its rhythm to the prime numbers, with a drum machine, a polyrhythm layerer and a composer that writes a piece you can download." }
 cascade:
   - build: { render: never, list: local, publishResources: false }
     target: { kind: page }

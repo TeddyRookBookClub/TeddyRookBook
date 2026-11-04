@@ -1,0 +1,12 @@
+{{- /* The Continued-Fraction Suite's video on /connections/rhythm-of-numbers/. Context: the page. Renders nothing until the
+   page's front matter has video_id: a YouTube video id (11 letters, digits, - or _; one video, never a playlist or a
+   channel). Then it shows the site's click-to-play card (layouts/_partials/video.html): a poster picture, and nothing
+   loads from YouTube until it is pressed, and then only from youtube-nocookie.com. Optional front matter: video_title,
+   video_about. */ -}}
+{{- with .Params.video_id }}{{ $id := trim (string .) " " }}
+{{- if findRE `^[A-Za-z0-9_-]{11}$` $id }}
+<div class="rn-video">
+  {{ partial "video.html" (dict "id" $id "title" ($.Params.video_title | default "The Continued-Fraction Suite, by Teddy Rook") "about" ($.Params.video_about | default "Original music built from the rhythms on this page.") "nolink" true) }}
+</div>
+{{- else }}{{ warnf "%s: video_id %q is not a YouTube video id (11 characters)" $.File.Path $id }}{{ end }}
+{{- end -}}

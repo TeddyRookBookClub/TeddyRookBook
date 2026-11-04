@@ -1,0 +1,528 @@
+{{ define "main" }}
+{{- /* /connections/rhythm-of-numbers/: "The Rhythm of Numbers" (content/connections/rhythm-of-numbers/_index.md).
+   A long page in six chapters. Each section: a short argument, one live instrument, a "Pi ↔ primes" line, and Remix
+   buttons. The page's URL is printed in a YouTube description: never move it.
+   Scripts: static/connections/rhythm/core.js (read its header) loads each chapter's file only when the chapter comes
+   near the screen; formulas ($…$, class rn-tex) are typeset by static/math/core/tex.js, also loaded only when needed.
+   Element ids are the instruments' contract with the scripts: keep them. */ -}}
+{{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
+{{- $v := dict }}{{ range slice "ch1" "ch2" "ch3" "ch4" "ch5" "play" "map" }}{{ $f := printf "static/connections/rhythm/%s.js" . }}{{ if fileExists $f }}{{ $v = merge $v (dict . (os.Stat $f).ModTime.Unix) }}{{ end }}{{ end }}
+{{- $tex := "math/core/tex.js" | relURL }}{{ with os.Stat "static/math/core/tex.js" }}{{ $tex = printf "%s?v=%d" $tex .ModTime.Unix }}{{ end }}
+{{- $texcss := "math/core/core.css" | relURL }}{{ with os.Stat "static/math/core/core.css" }}{{ $texcss = printf "%s?v=%d" $texcss .ModTime.Unix }}{{ end }}
+<article class="rn" data-rn-base="{{ "connections/rhythm/" | relURL }}" data-rn-v="{{ $v | jsonify }}" data-rn-tex="{{ $tex }}" data-rn-texcss="{{ $texcss }}">
+<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Where Music, Patterns, Math and Chemistry Meet</a> <span aria-hidden="true">›</span> <span>Deep dive</span></nav>
+
+<div class="rn-bar" role="region" aria-label="Shared controls">
+  <div class="rn-bar-in">
+    <label for="gNum">Number <select id="gNum">
+      <optgroup label="Constants">
+        <option value="pi" selected>π − 3</option><option value="phi">φ − 1 (golden ratio)</option><option value="sqrt2">√2 − 1</option><option value="sqrt3">√3 − 1</option><option value="sqrt5">√5 − 2</option><option value="cbrt2">∛2 − 1</option><option value="e">e − 2</option><option value="ln2">ln 2</option><option value="pi4">π/4</option><option value="epi">e/π</option><option value="gamma">γ, Euler’s constant</option>
+      </optgroup>
+      <optgroup label="Music and calendars">
+        <option value="fifth">log₂(3/2), the fifth</option><option value="third">log₂(5/4), the major third</option><option value="leapday">leap days per year (0.24219)</option><option value="leapmonth">leap months per year (0.36827)</option>
+      </optgroup>
+      <optgroup label="Your own">
+        <option value="dec">Type a decimal…</option><option value="frac">Type a fraction…</option><option value="terms">Type the terms…</option>
+      </optgroup>
+    </select></label>
+    <input id="gIn" type="text" hidden autocomplete="off" spellcheck="false"><button id="gApply" type="button" class="rn-ghost" hidden>Use it</button>
+    <span class="rn-num" id="gNumV" aria-live="polite"></span>
+    <span class="rn-bar-btns">
+      <button id="gThreadsBtn" type="button" class="rn-ghost" aria-expanded="false" aria-controls="rn-threads">Threads</button>
+      <button id="gSoundBtn" type="button" class="rn-ghost" aria-expanded="false" aria-controls="rn-sound">🔊 Sound</button>
+      <button id="gStop" type="button" class="rn-ghost" aria-label="Stop all sound">■ Stop</button>
+    </span>
+    <p class="rn-msg" id="gMsg" aria-live="polite"></p>
+  </div>
+  <div class="rn-pop" id="rn-threads" role="group" aria-label="Threads: highlight the sections that share an idea"><span class="rn-small rn-sr" id="rn-thread-st" aria-live="polite"></span></div>
+  <div class="rn-pop" id="rn-sound" role="group" aria-label="Sound settings for every instrument">
+    <label for="sKey">Key <select id="sKey"></select></label>
+    <label for="sScale">Scale <select id="sScale"><option value="major">major</option><option value="minor">minor</option><option value="penta">pentatonic</option><option value="whole">whole-tone</option><option value="chrom">12-tone (chromatic)</option></select></label>
+    <label for="sVoice">Voice <select id="sVoice"></select></label>
+    <label for="sTempo">Tempo <input id="sTempo" type="range" min="25" max="200" step="5" value="100"> <output id="sTempoV" for="sTempo"></output></label>
+    <label for="sSwing">Swing <input id="sSwing" type="range" min="0" max="60" step="5" value="0"> <output id="sSwingV" for="sSwing"></output></label>
+    <label for="sVol">Volume <input id="sVol" type="range" min="0" max="100" value="70"> <output id="sVolV" for="sVol"></output></label>
+    <label><input id="sMute" type="checkbox"> Mute</label>
+    <button id="sTest" type="button" class="rn-ghost">▶ Hear the scale</button>
+    <p class="rn-small">These settings apply to every instrument on the page. Sound starts only when you press a play button.</p>
+  </div>
+</div>
+<p class="rn-sr" id="rn-live" aria-live="polite"></p>
+
+<header class="rn-hero rn-s" id="hero" data-mod="ch1">
+  <p class="rn-eyebrow">Deep dive · Music ∩ Math · Pi and the primes, by ear and by eye</p>
+  <h1>{{ .Title }}</h1>
+  <p class="rn-lede">It started with a simple guess of Teddy Rook’s: π ≈ 3 + k/(7k + 1). Put in k = 16 and you get 355/113, a famous fraction for pi. Then play pi as a beat. You hear a rhythm: gaps of 7 beats, with a gap of 8 about every 16th time, and a rare short phrase after 292 longer ones. Each section below follows that rhythm, or the rule that builds it, to a place where it meets the prime numbers.</p>
+  <p class="rn-muted">The number in the bar at the top drives every instrument. Swap pi for another number to see what makes pi special. Each section has a green “Pi ↔ primes” line that names the link.</p>
+  <div class="rn-inst" data-fs>
+    <div class="rn-rings">
+      <div class="rn-ring"><canvas id="r1" width="200" height="200" role="img" aria-label="7 beats on a circle with 1 hit: the rhythm of 22/7"></canvas><div class="rn-cap">22/7 · E(1,7)</div><div class="rn-sub">7 is prime</div></div>
+      <div class="rn-ring"><canvas id="r2" width="200" height="200" role="img" aria-label="71 beats on a circle with 10 hits spread evenly: the rhythm of 223/71"></canvas><div class="rn-cap">223/71 · E(10,71)</div><div class="rn-sub">71 and 223 are prime</div></div>
+      <div class="rn-ring"><canvas id="r3" width="200" height="200" role="img" aria-label="113 beats on a circle with 16 hits spread evenly: the rhythm of 355/113"></canvas><div class="rn-cap">355/113 · E(16,113)</div><div class="rn-sub">113 is prime</div></div>
+    </div>
+    <canvas id="strip" height="70" role="img" aria-label="The first beats of pi's rhythm as a strip: hits every 7 beats, with one gap of 8 marked"></canvas>
+    <div class="rn-controls"><button id="playPi" type="button" class="rn-play">▶ Play the pi rhythm</button><span class="rn-small">A hit falls wherever ⌊n·(π − 3)⌋ steps up by one. The gaps run 7, 7, 7, … with an 8 after every fifteen 7s, so one cycle is 113 beats holding 16 hits: 355/113.</span></div>
+    <div id="heroTeach"></div>
+  </div>
+  <aside class="rn-how" aria-labelledby="rn-how-h">
+    <h2 id="rn-how-h">How to use this page</h2>
+    <ul>
+      <li><b>Try this first:</b> press <b>▶ Play the pi rhythm</b> above. Then open <a href="#poly">the Polyrhythm layerer</a> or <a href="#drums">the drum machine</a> and make some noise.</li>
+      <li><b>Sound starts only when you tap a play button.</b> The <b>🔊 Sound</b> button in the bar sets the key, scale, voice, tempo, swing and volume for everything. <b>■ Stop</b> silences it all.</li>
+      <li><b>For ages:</b> children from about 6 can tap rhythms, play the drum machine and count the beats. From about 10 the fractions and primes make sense. The later chapters (factoring, zeta zeros) are for teenagers and adults.</li>
+      <li><b>Teaching:</b> most players have <b>Step ›</b> (one beat at a time), <b>Slow</b> and <b>Loop</b>. The <b>Remix</b> buttons under a section set up something worth hearing in one tap.</li>
+      <li>Everything is drawn and played in your browser. Nothing you do here is sent anywhere.</li>
+    </ul>
+  </aside>
+  <nav aria-label="Chapters"><ul class="rn-toc">
+    <li><a href="#ch1"><span>Chapter I</span><b>Pi’s machine</b></a></li>
+    <li><a href="#ch2"><span>Chapter II</span><b>Pi and primes in sound</b></a></li>
+    <li><a href="#ch3"><span>Chapter III</span><b>Where pi is made of primes</b></a></li>
+    <li><a href="#ch4"><span>Chapter IV</span><b>Primes in matter</b></a></li>
+    <li><a href="#ch5"><span>Chapter V</span><b>Hunting primes with pi’s tools</b></a></li>
+    <li><a href="#ch6"><span>Chapter VI</span><b>Play and compose</b></a></li>
+    <li><a href="#map"><span>Epilogue</span><b>The map</b></a></li>
+  </ul></nav>
+</header>
+
+<!-- ============ I ============ -->
+<div class="rn-ch" id="ch1"><p class="rn-eyebrow">Chapter I</p><h2>Pi’s machine</h2><p>The continued fraction: the rule that builds pi’s rhythm, and the rule every later section reuses.</p></div>
+
+<section class="rn-s" id="formula" data-mod="ch1" data-tags="cf primes" aria-labelledby="formula-h">
+  <div class="rn-head"><p class="rn-eyebrow">1 · The starting guess</p><h2 id="formula-h">3 + k/(7k + 1) finds pi at <em>k ≈ 16</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose rn-tex">
+    <p>The fraction $\frac{k}{7k+1}$ is the same as $\cfrac{1}{7+\frac{1}{k}}$. Set it equal to π − 3 and solve, and you get k = 15.9966. Round that to 16 and you get 355/113, which matches pi to six decimal places. The Chinese mathematician Zu Chongzhi found the same fraction about AD 480; it is called Milü, “the close ratio.” Put in k = 10 instead and you get 223/71, the lower bound Archimedes proved.</p>
+  </div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>The denominators 7, 71 and 113 of pi’s three classic fractions are all prime. Amber dots mark every k where 7k + 1 is prime. Section 4 tests whether pi favors primes or whether this is luck.</span></div>
+  <div class="rn-inst">
+    <div class="rn-controls"><label for="kS">k <input id="kS" type="range" min="1" max="40" value="16"></label><output class="rn-mono" id="kV" for="kS">16</output></div>
+    <dl class="rn-readout"><div><dt>Fraction</dt><dd id="fF"></dd></div><div><dt>Value</dt><dd id="fD"></dd></div><div><dt>Error vs π</dt><dd id="fE"></dd></div><div><dt>Factors</dt><dd id="fP"></dd></div></dl>
+    <canvas id="kChart" height="220" role="img" aria-label="Chart: how far 3 + k/(7k+1) is from pi for k from 1 to 40, on a log scale; the error is smallest at k = 16"></canvas>
+    <ul class="rn-key"><li style="--c:var(--rn-g)">|error|, log scale</li><li style="--c:var(--rn-prime)">7k + 1 is prime</li><li style="--c:var(--rn-teal)">selected k</li></ul>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"kS":10}}'>Archimedes: k = 10</button> <button type="button" class="rn-ghost" data-remix='{"set":{"kS":1}}'>k = 1: 25/8</button> <button type="button" class="rn-ghost" data-remix='{"set":{"kS":6}}'>k = 6: 7k + 1 = 43, prime</button></p>
+</section>
+
+<section class="rn-s" id="levels" data-mod="ch1" data-tags="cf even" aria-labelledby="levels-h">
+  <div class="rn-head"><p class="rn-eyebrow">2 · The levels</p><h2 id="levels-h">The 16 was the <em>next level down</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose rn-tex"><p>1/(π − 3) = 7.0625, so the gaps between hits are 7 or 8 beats. The leftover 0.0625 is 1/15.9966, which is the k from the guess. It says an 8 comes about once every 16 gaps. Go one level deeper and 15.9966 = 15 + 1/(1 + 1/292.6). Every term of pi’s continued fraction, [7; 15, 1, 292, …], is a repeat count in the rhythm. The table follows the number in the bar.</p></div>
+  <div class="rn-inst">
+    <div class="rn-tablebox"><table>
+      <thead><tr><th scope="col">Level</th><th scope="col">Term</th><th scope="col">Block (beats)</th><th scope="col">Hits</th><th scope="col">Fraction</th><th scope="col">Block length prime?</th><th scope="col">What you hear</th></tr></thead>
+      <tbody id="lvBody"></tbody></table></div>
+    <p class="rn-formula rn-tex">$$\role[next block]{output}{q_{n+1}} = \role[repeat count, the term]{coefficient}{a_{n+1}}\cdot \role[this block]{base}{q_n} + \role[previous block]{index}{q_{n-1}}$$</p>
+    <p class="rn-small">In words: next block = (term × this block) + previous block. It is the textbook rule for continued-fraction denominators, read here as a rule for musical form.</p>
+    <pre class="rn-algo" aria-label="The rhythm algorithm">rhythm(terms a1, a2, a3, …):      # any number between 0 and 1
+  prev = "x"                        # one hit
+  this = "."                        # one rest
+  this, prev = "."×(a1 − 1) + "x", this
+  for each next term a:
+      this, prev = this×a + prev, this
+  return this                       # x = hit, . = rest</pre>
+    <p class="rn-small" id="lvNote">For pi, the level-4 block is 292 phrases of 113 beats followed by one short phrase of 106. Counting the first beat as beat 0, the short phrase starts at beat 32,996 (that is, 292 × 113) and ends the block at beat 33,102. Checked by computer over 140,000 beats: in the first 80,000 beats there are 706 whole phrases of 113 and 2 of 106.</p>
+    <p class="rn-small">Mathematicians call these Sturmian or Christoffel words. They are the most evenly spread rhythms possible, which is why Euclid’s algorithm and Euclidean rhythms (section 6) produce them too. What this page adds is reading the continued fraction as musical form: bar, phrase, section, movement.</p>
+  </div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Each block holds a whole number of hits, and a block’s length and its number of hits never share a factor (because p·q′ − p′·q = ±1 for neighboring fractions). So every level of pi’s rhythm is a pair of coprime numbers, which is what Chapter III builds on.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"num":"phi"}'>The golden ratio: every term is 1</button> <button type="button" class="rn-ghost" data-remix='{"num":"leapday"}'>The calendar: 1/4, 7/29, 8/33 …</button> <button type="button" class="rn-ghost" data-remix='{"num":"pi"}'>Back to pi</button></p>
+</section>
+
+<section class="rn-s" id="composer" data-mod="ch1" data-tags="cf even wave" aria-labelledby="composer-h">
+  <div class="rn-head"><p class="rn-eyebrow">3 · Composer</p><h2 id="composer-h">Hear pi’s form as <em>music</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>The number in the bar plays here, with one voice per level. Hits carry the melody, and the starts of level 2, 3 and 4 blocks play bass, bell and gong. In “gap = interval” mode each hit moves the melody up by its gap in half steps, so pi’s gaps of 7 walk the circle of fifths and each 8 slips by a half step. “Jump to the rarest block” goes straight to pi’s short phrase after the 292 long ones.</p></div>
+  <div class="rn-inst" data-fs>
+    <div class="rn-controls"><label for="terms">Terms <input id="terms" type="text" value="7,15,1,292,1,1,1,2,1,3" aria-describedby="termsHelp"></label><button id="applyTerms" type="button" class="rn-ghost">Use these terms</button></div>
+    <p class="rn-small" id="termsHelp">Whole numbers with commas, like 3,3,3 or 2,1,2,1. Each one is a repeat count. Using them sets the bar’s number too.</p>
+    <dl class="rn-readout"><div><dt>The number</dt><dd id="cVal"></dd></div><div><dt>Block lengths</dt><dd id="cQ"></dd></div><div><dt>Gaps used</dt><dd id="cG"></dd></div><div><dt>Now playing</dt><dd id="cNow">beat 0</dd></div></dl>
+    <div class="rn-controls">
+      <label for="zoom">Show one block of level <select id="zoom"></select></label>
+      <label for="startBeat">Start at beat <input id="startBeat" type="number" min="0" value="0"></label>
+      <button id="jumpGlitch" type="button" class="rn-ghost">Jump to the rarest block</button>
+      <label><input id="cFollow" type="checkbox" checked> Follow the playhead</label>
+    </div>
+    <canvas id="ribbon" height="240" role="img" aria-label="The rhythm's levels as nested blocks, with the hits underneath and a playhead while it plays"></canvas>
+    <ul class="rn-key"><li style="--c:var(--rn-g)">long block</li><li style="--c:var(--rn-prime)">short block</li><li style="--c:var(--rn-ink)">hits</li></ul>
+    <div class="rn-controls">
+      <button id="play" type="button" class="rn-play rn-solid">▶ Play</button>
+      <label for="tempo">Beats per second <input id="tempo" type="range" min="3" max="40" value="14"></label><output class="rn-mono" id="tempoV" for="tempo">14</output>
+      <label for="pitchRule">Melody <select id="pitchRule"><option value="gap">gap = interval</option><option value="scale">walk the chosen scale</option><option value="drum">drums only</option></select></label>
+    </div>
+    <div id="cTeach"></div>
+  </div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Played with each beat as a bar, pi’s form has 7-bar phrases inside a 113-bar cycle, and both lengths are prime. The Continued-Fraction Suite (section 23) grew from this. At one bar every 2.5 seconds, the full form takes about 23 hours to reach its surprise at bar 32,996.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"click":"jumpGlitch"}'>Jump to pi’s rare phrase</button> <button type="button" class="rn-ghost" data-remix='{"num":"fifth","set":{"pitchRule":"scale","tempo":8}}'>The fifth, slowly, in a scale</button> <button type="button" class="rn-ghost" data-remix='{"num":"e","set":{"pitchRule":"drum","tempo":20}}'>e − 2 on drums</button></p>
+</section>
+
+<section class="rn-s" id="ladder" data-mod="ch1" data-tags="cf primes" aria-labelledby="ladder-h">
+  <div class="rn-head"><p class="rn-eyebrow">4 · The ladder</p><h2 id="ladder-h">Are pi’s best fractions <em>unusually prime</em>?</h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Stop the continued fraction after each term and you get the number’s best fractions, called convergents. For pi they are 3, 22/7, 333/106, 355/113, 103993/33102, …. A large term means the fraction before it was unusually good, which is why the 292 makes 355/113 so accurate. Prime numerators and denominators are marked ◆. Switch the bar’s number to compare pi with other constants.</p></div>
+  <div class="rn-inst">
+    <div class="rn-chips" id="cTerms"></div>
+    <div class="rn-tablebox"><table><thead><tr><th scope="col">#</th><th scope="col">Numerator</th><th scope="col">Denominator</th><th scope="col">Error</th></tr></thead><tbody id="cBody"></tbody></table></div>
+    <p class="rn-small" id="cSum"></p>
+  </div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Among pi’s first 400 convergents, 4 denominators are prime: 7, 113, 265,381 and an 18-digit one. If each denominator were prime with the odds of a random number its size (about 1 in ln q), you would expect about 4.5. So pi’s early primes look like luck, not a law. Whether pi has infinitely many prime denominators is an open question.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"num":"phi"}'>φ: the denominators are Fibonacci numbers</button> <button type="button" class="rn-ghost" data-remix='{"num":"sqrt2"}'>√2: the Pell numbers</button> <button type="button" class="rn-ghost" data-remix='{"num":"e"}'>e: a pattern in the terms</button></p>
+</section>
+
+<!-- ============ II ============ -->
+<div class="rn-ch" id="ch2"><p class="rn-eyebrow">Chapter II</p><h2>Pi and primes in sound</h2><p>Tuning, polyrhythm, clocks that fall into step, and the primes as a melody.</p></div>
+
+<section class="rn-s" id="fifths" data-mod="ch2" data-tags="cf coprime primes" aria-labelledby="fifths-h">
+  <div class="rn-head"><p class="rn-eyebrow">5 · The circle of fifths</p><h2 id="fifths-h">12 notes come from the same ladder as <em>22/7</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>A pure fifth is the frequency ratio 3:2, which is log₂(3/2) = 0.58496 of an octave. Its best fractions run 1/2, 3/5, 7/12, 24/41, 31/53. “A fifth is 7 of 12 half steps” is the 7/12 fraction, found by the same rule that finds 22/7 for pi. The 12-note fifth is 1.96 cents flat, and over 12 fifths that small miss adds up to the Pythagorean comma, 23.46 cents. The next good stops are 41 and 53 notes per octave, and 53 is prime.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Stepping around an n-note circle by a step of s visits every note only if s and n share no factor. In a tuning with a prime number of notes (7, 31, 53), every step visits every note. The readout counts the steps that do: Euler’s φ(n).</span></div>
+  <div class="rn-inst">
+    <div class="rn-controls"><label for="nS">Notes per octave <input id="nS" type="range" min="5" max="72" value="12"></label><output class="rn-mono" id="nV" for="nS">12</output><button id="playFifth" type="button">▶ Hear pure vs tempered fifth</button></div>
+    <dl class="rn-readout"><div><dt>Best fifth</dt><dd id="mF"></dd></div><div><dt>Error</dt><dd id="mE"></dd></div><div><dt>Steps that visit all notes</dt><dd id="mG"></dd></div><div><dt>n is prime?</dt><dd id="mP"></dd></div></dl>
+    <div class="rn-grid2"><canvas id="wheel" width="300" height="300" role="img" aria-label="A circle of n notes with the path of stepping by the best fifth"></canvas><canvas id="edoChart" height="240" role="img" aria-label="Bar chart: how far the best fifth misses a pure fifth, in cents, for 5 to 72 notes per octave"></canvas></div>
+    <ul class="rn-key"><li style="--c:var(--rn-g)">fifth error in cents</li><li style="--c:var(--rn-prime)">prime n</li><li style="--c:var(--rn-teal)">selected n</li></ul>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"nS":53}}'>53 notes: a near-perfect fifth</button> <button type="button" class="rn-ghost" data-remix='{"set":{"nS":31}}'>31 notes: Huygens’ tuning</button> <button type="button" class="rn-ghost" data-remix='{"set":{"nS":7}}'>7 notes: every step visits all</button></p>
+</section>
+
+<section class="rn-s" id="euclid" data-mod="ch2" data-tags="even cf coprime primes" aria-labelledby="euclid-h">
+  <div class="rn-head"><p class="rn-eyebrow">6 · Euclid’s algorithm</p><h2 id="euclid-h">One algorithm builds pi’s ladder, finds shared factors, and <em>spreads beats</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Euclid’s algorithm divides and keeps the remainder, again and again. Run it on 355 and 113 and the quotients are 3, 7, 16: pi’s continued fraction, cut off. It ends at the greatest common divisor, the oldest test for whether two numbers share a prime. In 2003 the physicist Eric Bjorklund used the same steps to spread pulses evenly in a particle accelerator, and in 2005 Godfried Toussaint showed that the results are rhythms found in music around the world.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Try “Pi: 16 in 113.” Euclid’s quotients come out as pi’s continued fraction, and the rhythm you hear is the third level of pi’s beat. With a prime number of slots, every pulse count gives a rhythm that never repeats inside the bar.</span></div>
+  <div class="rn-inst">
+    <div class="rn-controls">
+      <label for="bjK">Pulses <input id="bjK" type="number" min="1" max="199" value="16"></label>
+      <label for="bjN">Slots <input id="bjN" type="number" min="2" max="200" value="113"></label>
+      <button id="bjPlay" type="button" class="rn-play">▶ Play</button>
+    </div>
+    <div class="rn-presets"><button type="button" class="rn-ghost" data-bj="16,113">Pi: 16 in 113</button><button type="button" class="rn-ghost" data-bj="1,7">Pi: 1 in 7</button><button type="button" class="rn-ghost" data-bj="3,8">Tresillo, 3 in 8</button><button type="button" class="rn-ghost" data-bj="5,13">5 in 13 (13 is prime)</button><button type="button" class="rn-ghost" data-bj="4,12">4 in 12 (they share 4)</button></div>
+    <div class="rn-grid2"><div class="rn-bj" id="bjSteps"></div><div class="rn-bj" id="bjEuclid"></div></div>
+    <div id="bjTeach"></div>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"bjK":5,"bjN":8}}'>Cinquillo, 5 in 8</button> <button type="button" class="rn-ghost" data-remix='{"set":{"bjK":7,"bjN":12}}'>West African bell, 7 in 12</button> <button type="button" class="rn-ghost" data-remix='{"set":{"bjK":10,"bjN":71}}'>Archimedes: 10 in 71</button></p>
+</section>
+
+<section class="rn-s" id="locking" data-mod="ch2" data-tags="cf coprime wave" aria-labelledby="locking-h">
+  <div class="rn-head"><p class="rn-eyebrow">7 · Mode locking</p><h2 id="locking-h">Clocks lock to fractions, and there are about <em>3N²/π²</em> of them</h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Things that swing or spin and nudge each other fall into step at simple ratios. Christiaan Huygens saw two pendulum clocks on one beam fall into step in 1665. Mercury spins exactly 3 times for every 2 trips around the Sun. Heart cells follow the beat of a pacemaker. A simple model, the circle map, shows all of these: as the coupling K grows, “tongues” open at each fraction p/q, and inside a tongue the motion snaps to that fraction.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Each tongue is a fraction in lowest terms, so p and q share no prime. Counting them up to denominator N gives about 3N²/π², the coprime chance 6/π² again. Pi’s own rotation, 0.14159…, is irrational, so with no coupling it never locks. Raise K and it is dragged down, until the 0/1 tongue captures it at K ≈ 0.89.</span></div>
+  <div class="rn-inst">
+    <div class="rn-controls"><label for="kK">Coupling K <input id="kK" type="range" min="0" max="100" value="100"></label><output class="rn-mono" id="kKV" for="kK">1.00</output><label for="fN">Count tongues up to denominator <input id="fN" type="range" min="2" max="200" value="50"></label><output class="rn-mono" id="fNV" for="fN">50</output></div>
+    <dl class="rn-readout"><div><dt>Tongues (fractions in lowest terms)</dt><dd id="fCount"></dd></div><div><dt>3N²/π²</dt><dd id="fPred"></dd></div></dl>
+    <canvas id="tongues" height="230" role="img" aria-label="Arnold tongues: regions of natural rotation and coupling where the motion locks to a fraction"></canvas>
+    <canvas id="stair" height="230" role="img" aria-label="The devil's staircase: the rotation the system actually makes, against its natural rotation"></canvas>
+    <ul class="rn-key"><li style="--c:var(--rn-g)">locked (darker = smaller denominator)</li><li style="--c:var(--rn-prime)">the bar’s number</li></ul>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"kK":0}}'>No coupling</button> <button type="button" class="rn-ghost" data-remix='{"set":{"kK":89}}'>K = 0.89: pi is captured</button> <button type="button" class="rn-ghost" data-remix='{"num":"phi","set":{"kK":100}}'>The golden ratio resists longest</button></p>
+</section>
+
+<section class="rn-s" id="primemusic" data-mod="ch2" data-tags="primes wave" aria-labelledby="primemusic-h">
+  <div class="rn-head"><p class="rn-eyebrow">8 · Prime music</p><h2 id="primemusic-h">Primes as melody, prime gaps as <em>rhythm</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Number the 12 notes of the octave 0 to 11, starting at C. Every prime above 3 leaves a remainder of 1, 5, 7 or 11 when divided by 12, so it lands on one of four notes: C♯, F, G or B. Play the primes in order and let each gap to the next prime set the note’s length. In 2016 Robert Lemke Oliver and Kannan Soundararajan found that a prime tends not to repeat the remainder of the prime before it. With no memory, repeats would be 25% of pairs. Among the primes up to a million they are 15%, and up to ten million 16.4%. You hear it as fewer repeated notes than chance would give.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>The four notes are the remainders that share no factor with 12, and they are φ(12)/12 = 1/3 of the octave. Average that share, φ(n)/n, over every n and the answer is 6/π², the orchard’s number in section 9. Change the count below and the primes use a different share of the notes, but the average is always set by pi.</span></div>
+  <div class="rn-inst" data-fs>
+    <div class="rn-controls">
+      <label for="pMod">Count mod <select id="pMod"><option>10</option><option selected>12</option><option>5</option><option>7</option></select></label>
+      <label for="pLim">Primes up to <select id="pLim"><option value="100000">100 thousand</option><option value="1000000" selected>1 million</option><option value="10000000">10 million</option></select></label>
+      <label for="pStart">Play from <input id="pStart" type="number" min="2" value="1000003" style="width:13ch"></label>
+      <button id="pPlay" type="button" class="rn-play rn-solid">▶ Play primes</button>
+    </div>
+    <div class="rn-grid2"><div style="display:grid;gap:.5rem;min-width:0"><canvas id="pMat" height="300" role="img" aria-label="A grid of how often each remainder is followed by each remainder among consecutive primes"></canvas><p class="rn-small" id="pStat"></p></div><div style="display:grid;gap:.5rem;min-width:0"><canvas id="pRoll" height="300" role="img" aria-label="A scrolling score of the primes as notes"></canvas><p class="rn-small">A scrolling score. Each row is a note, and each bar’s length is the gap to the next prime. Repeated notes are amber.</p></div></div>
+    <div id="pTeach"></div>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"pMod":"10"}}'>Last digits (mod 10)</button> <button type="button" class="rn-ghost" data-remix='{"set":{"pStart":101}}'>Start small, at 101</button> <button type="button" class="rn-ghost" data-remix='{"set":{"pLim":"10000000"}}'>Count to ten million</button></p>
+</section>
+
+<!-- ============ III ============ -->
+<div class="rn-ch" id="ch3"><p class="rn-eyebrow">Chapter III</p><h2>Where pi is made of primes</h2><p>6/π², π²/6, and the patterns primes leave on pi’s own spirals.</p></div>
+
+<section class="rn-s" id="orchard" data-mod="ch3" data-tags="coprime primes sq" aria-labelledby="orchard-h">
+  <div class="rn-head"><p class="rn-eyebrow">9 · The orchard</p><h2 id="orchard-h">Two random whole numbers share no prime <em>6/π²</em> of the time</h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Stand at the corner of an orchard planted on a square grid. The trees you can see, with no tree in front of them, are the points (a, b) where a and b share no factor. They fill 6/π² ≈ 60.79% of the grid.</p></div>
+  <div class="rn-link rn-tex"><b>Pi ↔ primes</b><span>The chance that a prime p divides both a and b is 1/p², so the chance that no prime divides both is the product of (1 − 1/p²) over every prime. Euler proved that $\prod_p \left(1-\frac{1}{p^2}\right) = \frac{6}{\pi^2}$. Every convergent of pi, such as (113, 16), is one of the visible trees.</span></div>
+  <div class="rn-inst">
+    <div class="rn-controls"><label for="oS">Grid size <input id="oS" type="range" min="8" max="160" value="40"></label><output class="rn-mono" id="oV" for="oS">40</output></div>
+    <dl class="rn-readout"><div><dt>Visible share</dt><dd id="oR"></dd></div><div><dt>6/π²</dt><dd>0.607927</dd></div><div><dt>Product over primes ≤ grid</dt><dd id="oE"></dd></div></dl>
+    <canvas id="orch" height="360" role="img" aria-label="A grid of points; the visible ones (coprime pairs) are colored"></canvas>
+    <ul class="rn-key"><li style="--c:var(--rn-g)">visible (coprime)</li><li style="--c:var(--rn-line)">hidden</li><li style="--c:var(--rn-prime)">pi’s convergents (q, p − 3q)</li></ul>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"oS":12}}'>A small orchard</button> <button type="button" class="rn-ghost" data-remix='{"set":{"oS":120}}'>A big one: 120 × 120</button></p>
+</section>
+
+<section class="rn-s" id="corr" data-mod="ch3" data-tags="coprime primes wave" aria-labelledby="corr-h">
+  <div class="rn-head"><p class="rn-eyebrow">10 · The correlation matrix</p><h2 id="corr-h">Coprime means <em>uncorrelated</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose rn-tex">
+    <p>The orchard is more than a picture that looks like a correlation matrix. It is one. Treat “a hit every a-th beat” as a signal, and give every a from 2 to N its own pulse train. Two pulse trains a and b line up once every lcm(a, b) beats, and their correlation works out to exactly</p>
+    <p class="rn-formula">$$\operatorname{corr}(a,b) = \frac{\role[shared factor]{coefficient}{\gcd(a,b)} - 1}{\sqrt{(a-1)(b-1)}}$$</p>
+    <p>On the diagonal the gcd is a itself, so the correlation is 1. Off the diagonal the correlation is zero exactly when a and b are coprime. So the zero cells of this matrix are the orchard’s visible trees, and they fill 6/π² of it.</p>
+  </div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>A prime’s row is zero except at its own multiples, so the primes are the “independent” pulse trains of arithmetic. The share of uncorrelated pairs tends to 6/π². In music this is polyrhythm: 3 against 4 meet only on the downbeat (correlation 0), while 4 against 6 keep colliding (correlation 0.26).</span></div>
+  <div class="rn-inst" data-fs>
+    <div class="rn-controls">
+      <label for="crN">Pulse trains up to <input id="crN" type="range" min="8" max="120" value="40"></label><output class="rn-mono" id="crNV" for="crN">40</output>
+      <label for="crA">Highlight row a <input id="crA" type="range" min="2" max="120" value="12"></label><output class="rn-mono" id="crAV" for="crA">12</output>
+      <label for="crB">b <input id="crB" type="number" min="2" max="120" value="8"></label>
+      <button id="crPlay" type="button" class="rn-play">▶ Hear a against b</button>
+    </div>
+    <dl class="rn-readout"><div><dt>Uncorrelated pairs</dt><dd id="crZ"></dd></div><div><dt>6/π²</dt><dd>0.607927</dd></div><div><dt>corr(a, b)</dt><dd id="crAB"></dd></div><div><dt>a is prime?</dt><dd id="crP"></dd></div></dl>
+    <div class="rn-grid2"><canvas id="crMat" height="360" role="img" aria-label="The correlation matrix of pulse trains 2 to N"></canvas><canvas id="crRow" height="360" role="img" aria-label="One row of the matrix as a line chart"></canvas></div>
+    <ul class="rn-key"><li style="--c:var(--rn-prime)">positive correlation</li><li style="--c:var(--rn-soft)">zero: coprime</li><li style="--c:var(--rn-ink)">corr = 1 line</li></ul>
+    <div id="crTeach"></div>
+  </div>
+  <div class="rn-spark"><b>Real link</b><span>Finance uses random matrix theory to tell real correlations among stocks from noise (Laloux and colleagues, and Plerou and colleagues, both 1999). It is the same mathematics whose spacings match the zeros of the zeta function (section 15). Stock correlations, heavy nuclei and the primes all show the same family of random-matrix statistics.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"crA":3,"crB":4}}'>3 against 4</button> <button type="button" class="rn-ghost" data-remix='{"set":{"crA":4,"crB":6}}'>4 against 6</button> <button type="button" class="rn-ghost" data-remix='{"set":{"crA":13,"crB":7}}'>Two primes: 13 and 7</button></p>
+</section>
+
+<section class="rn-s" id="hydrogen" data-mod="ch3" data-tags="sq primes wave" aria-labelledby="hydrogen-h">
+  <div class="rn-head"><p class="rn-eyebrow">11 · Chemistry: hydrogen</p><h2 id="hydrogen-h">Hydrogen’s <em>1/n²</em> adds up to π²/6, a product over primes</h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Hydrogen’s energy levels go as −1/n², and its visible lines, the Balmer series, come from the differences 1/4 − 1/n². In wavelengths that is λ = 364.56 · n²/(n² − 4) nanometers, the formula Johann Balmer found in 1885. Electron shells hold 2n² electrons: 2, 8, 18, 32.</p></div>
+  <div class="rn-link rn-tex"><b>Pi ↔ primes</b><span>Add up hydrogen’s squares, 1 + 1/4 + 1/9 + …, and you get π²/6. Euler showed this equals $\frac{1}{1-1/4}\cdot\frac{1}{1-1/9}\cdot\frac{1}{1-1/25}\cdots$, with one factor for each prime. It is the orchard’s 6/π² turned upside down. The match is in the formulas: hydrogen doesn’t know about primes, but its 1/n² is the same series.</span></div>
+  <div class="rn-inst">
+    <div class="rn-controls"><label for="hN">Terms <input id="hN" type="range" min="1" max="40" value="8"></label><output class="rn-mono" id="hNV" for="hN">8</output><button id="hPlay" type="button">▶ Hear the Balmer series, scaled down</button></div>
+    <canvas id="balmer" height="90" role="img" aria-label="Hydrogen's Balmer lines as colored lines on a dark spectrum"></canvas>
+    <canvas id="zeta2" height="230" role="img" aria-label="Two bars growing toward pi squared over 6: the sum of 1 over n squared, and the product over primes"></canvas>
+    <dl class="rn-readout"><div><dt>Σ 1/n²</dt><dd id="hS"></dd></div><div><dt>Π over primes</dt><dd id="hP"></dd></div><div><dt>π²/6</dt><dd>1.644934</dd></div></dl>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"hN":1}}'>One term</button> <button type="button" class="rn-ghost" data-remix='{"set":{"hN":40}}'>Forty terms</button></p>
+</section>
+
+<section class="rn-s" id="sunflower" data-mod="ch3" data-tags="rot cf primes coprime" aria-labelledby="sunflower-h">
+  <div class="rn-head"><p class="rn-eyebrow">12 · Pi’s sunflower, seeded with primes</p><h2 id="sunflower-h">Primes avoid the arms that <em>share a factor</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Place seed number k at k × (the bar’s number) turns around a circle, at a distance √k from the center. For π − 3 the seeds fall into 7 spokes that curl into 113 arms, because those are pi’s block lengths. Now light up only the seeds whose numbers are prime.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Arm j of q arms holds the seeds k that leave remainder j when divided by q. Primes stay out of every arm whose j shares a factor with q, and fill the rest equally, as Dirichlet proved in 1837. Pi’s 7 and 113 are prime, so primes avoid just one of the 7 spokes and one of the 113 arms. Try the 106 arms (2 × 53) with more seeds, and half the arms go dark.</span></div>
+  <div class="rn-inst" data-fs>
+    <div class="rn-controls"><label for="sfN">Seeds <input id="sfN" type="range" min="100" max="8000" step="50" value="3000"></label><output class="rn-mono" id="sfNV" for="sfN">3000</output>
+      <label for="sfMode">Show <select id="sfMode"><option value="all">all seeds</option><option value="primes" selected>prime seeds only</option></select></label>
+      <label for="sfQ">Color by arms <select id="sfQ"></select></label></div>
+    <canvas id="sf" height="460" role="img" aria-label="A sunflower spiral of seeds, colored by arm"></canvas>
+    <p class="rn-small" id="sfNote"></p>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"sfQ":"106","sfN":8000}}'>106 arms, 8,000 seeds</button> <button type="button" class="rn-ghost" data-remix='{"num":"phi","set":{"sfN":3000}}'>A real sunflower: the golden angle</button> <button type="button" class="rn-ghost" data-remix='{"set":{"sfMode":"all"}}'>All seeds</button></p>
+</section>
+
+<section class="rn-s" id="wrapv" data-mod="ch3" data-tags="primes coprime even" aria-labelledby="wrapv-h">
+  <div class="rn-head"><p class="rn-eyebrow">13 · Sieves and hidden periods</p><h2 id="wrapv-h">Wrap the line, and hidden periods <em>stand up</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>The sunflower, straightened out. Lay the numbers in rows of a chosen width. When the width matches a hidden period, the hits line up in straight columns. When it is slightly off, the columns lean, and the lean shows the error. Pi’s rhythm stands up at its block lengths 7, 106 and 113. The primes line up in the columns that share no factor with the width.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>At width 113, pi’s rhythm forms 16 nearly straight columns, and the primes fill 112 columns, all but the zero column, because 113 is prime. At width 30, primes use only 8 of the 30 columns. Prime sieves use this trick, called wheel factorization, to skip 73% of numbers without checking them.</span></div>
+  <div class="rn-inst">
+    <div class="rn-controls"><label for="wSrc">Source <select id="wSrc"><option value="primes">primes</option><option value="num">the bar’s number</option><option value="twins">twin primes</option></select></label><label for="wW">Row width <input id="wW" type="range" min="2" max="240" value="30"></label><output class="rn-mono" id="wWV" for="wW">30</output></div>
+    <div class="rn-presets" id="wJumps"></div>
+    <canvas id="wcan" height="400" role="img" aria-label="Numbers laid out in rows; the marked ones form columns"></canvas>
+    <p class="rn-small" id="wNote"></p>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"wSrc":"num","wW":113}}'>Pi’s rhythm at width 113</button> <button type="button" class="rn-ghost" data-remix='{"set":{"wSrc":"primes","wW":210}}'>Primes at width 210</button> <button type="button" class="rn-ghost" data-remix='{"set":{"wSrc":"twins","wW":30}}'>Twin primes at width 30</button></p>
+</section>
+
+<!-- ============ IV ============ -->
+<div class="rn-ch" id="ch4"><p class="rn-eyebrow">Chapter IV</p><h2>Primes in matter</h2><p>X-ray diffraction and nuclear physics both treat pi’s rhythm and the primes as the same kind of object.</p></div>
+
+<section class="rn-s" id="quasi" data-mod="ch4" data-tags="wave even primes" aria-labelledby="quasi-h">
+  <div class="rn-head"><p class="rn-eyebrow">14 · Chemistry: quasicrystals</p><h2 id="quasi-h">Pi’s rhythm and the primes both <em>diffract like crystals</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>In 1982 Dan Shechtman found a crystal that was ordered but never repeated, a quasicrystal. Many scientists doubted it at first; it won him the 2011 Nobel Prize in Chemistry. Crystallographers read order from diffraction, which is the Fourier transform of where the atoms sit. Pi’s rhythm is a one-dimensional quasicrystal: its diffraction has sharp spikes at multiples of π − 3, wrapped around 1.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Put atoms at the primes and diffract them, and you also get sharp spikes, at fractions with square-free denominators: 1/2, 1/3, 1/6, 1/5, but never 1/4 or 1/9. Salvatore Torquato and colleagues reported this in 2018 and called the primes “effectively limit-periodic.” Freeman Dyson had suggested that classifying one-dimensional quasicrystals might lead to a proof of the Riemann hypothesis.</span></div>
+  <div class="rn-inst">
+    <div class="rn-controls"><label for="qSrc">Atoms at <select id="qSrc"><option value="num">the bar’s number (pi’s rhythm)</option><option value="primes">the primes</option></select></label><label for="qN">Length <input id="qN" type="range" min="500" max="8000" step="250" value="3000"></label><output class="rn-mono" id="qNV" for="qN">3000</output><label><input id="qRand" type="checkbox"> overlay a random row</label></div>
+    <canvas id="qRow" height="40" role="img" aria-label="The row of atoms"></canvas>
+    <canvas id="qDiff" height="260" role="img" aria-label="The diffraction pattern: intensity against frequency, with the predicted spikes marked"></canvas>
+    <ul class="rn-key"><li style="--c:var(--rn-g)">diffraction intensity</li><li style="--c:var(--rn-prime)">predicted spikes</li><li style="--c:var(--rn-muted)">random row</li></ul>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"qSrc":"primes","qRand":true}}'>Primes against a random row</button> <button type="button" class="rn-ghost" data-remix='{"num":"phi","set":{"qSrc":"num"}}'>The Fibonacci quasicrystal</button></p>
+</section>
+
+<section class="rn-s" id="zeros" data-mod="ch4" data-tags="wave primes" aria-labelledby="zeros-h">
+  <div class="rn-head"><p class="rn-eyebrow">15 · Nuclear physics: zeta zeros</p><h2 id="zeros-h">The primes are a sum of waves, tuned like <em>heavy nuclei</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Bernhard Riemann’s explicit formula rebuilds the prime staircase, which climbs by log p at every prime power, from waves whose frequencies are the zeros of the zeta function: 14.13, 21.02, 25.01, …. Add more zeros and the curve snaps to the steps. In 1972 Hugh Montgomery and Freeman Dyson noticed that the spacings between the zeros follow the same statistics as the energy levels of heavy atomic nuclei. No one yet knows why.</p></div>
+  <div class="rn-link rn-tex"><b>Pi ↔ primes</b><span>The formula is $\psi(x) = x - \sum_\rho \frac{x^\rho}{\rho} - \log 2\pi - \tfrac12\log\left(1-x^{-2}\right)$, so pi sits inside the formula that turns waves into primes. The zeta function at 2 is π²/6, the hydrogen sum of section 11. This is the sound version: the primes as a chord.</span></div>
+  <div class="rn-inst">
+    <div class="rn-controls"><label for="zS">Zeros used <input id="zS" type="range" min="0" max="150" value="20"></label><output class="rn-mono" id="zV" for="zS">20</output><button id="playZ" type="button">▶ Play the first 12 zeros</button></div>
+    <canvas id="zChart" height="250" role="img" aria-label="The prime staircase and the curve rebuilt from zeta zeros, for x up to 50"></canvas>
+    <ul class="rn-key"><li style="--c:var(--rn-ink)">true prime staircase ψ(x)</li><li style="--c:var(--rn-g)">rebuilt from zeta zeros</li><li style="--c:var(--rn-prime)">primes</li></ul>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"zS":0}}'>No waves: just x</button> <button type="button" class="rn-ghost" data-remix='{"set":{"zS":3}}'>Three waves</button> <button type="button" class="rn-ghost" data-remix='{"set":{"zS":150}}'>150 waves</button></p>
+</section>
+
+<!-- ============ V ============ -->
+<div class="rn-ch" id="ch5"><p class="rn-eyebrow">Chapter V</p><h2>Hunting primes with pi’s tools</h2><p>The continued fraction, the rhythm and the necklace, each tried on the primes, with the results.</p></div>
+
+<section class="rn-s" id="cfrac" data-mod="ch5" data-tags="cf primes" aria-labelledby="cfrac-h">
+  <div class="rn-head"><p class="rn-eyebrow">16 · Factoring</p><h2 id="cfrac-h">The machine that finds 355/113 also <em>splits numbers into primes</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>In 1975 Michael Morrison and John Brillhart published how they used continued fractions to factor 2¹²⁸ + 1. Run the continued fraction of √N, the same steps as pi’s ladder. Each step gives a small number Q that matches a perfect square, counting remainders after dividing by N. When Q is itself a perfect square, one gcd splits N. This page runs the simple version that D. H. Lehmer and R. E. Powers described in 1931.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>This is the clearest case of pi’s machine doing prime work. Run on π, it gives 22/7 and 355/113. Run on √N, it finds N’s prime factors. Try 2³² + 1, which Euler showed in 1732 is not prime.</span></div>
+  <div class="rn-inst">
+    <div class="rn-controls"><label for="cfN">N <input id="cfN" type="text" value="4294967297" style="width:24ch" inputmode="numeric"></label><button id="cfRun" type="button" class="rn-solid">Factor it</button></div>
+    <div class="rn-presets"><button type="button" class="rn-ghost" data-cf="4294967297">2³² + 1</button><button type="button" class="rn-ghost" data-cf="999985999949">999983 × 1000003</button><button type="button" class="rn-ghost" data-cf="600851475143">600851475143</button><button type="button" class="rn-ghost" data-cf="18446744073709551617">2⁶⁴ + 1</button></div>
+    <dl class="rn-readout" aria-live="polite"><div><dt>Result</dt><dd id="cfRes">—</dd></div><div><dt>Steps of √N’s fraction</dt><dd id="cfSteps">—</dd></div><div><dt>Multiplier</dt><dd id="cfMul">—</dd></div></dl>
+    <div class="rn-tablebox"><table><thead><tr><th scope="col">Step</th><th scope="col">Term a</th><th scope="col">Q (matches a square)</th><th scope="col">Square?</th></tr></thead><tbody id="cfBody"></tbody></table></div>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"cfN":"1000000016000000063"},"click":"cfRun"}'>Two 10-digit primes multiplied</button> <button type="button" class="rn-ghost" data-remix='{"set":{"cfN":"2047"},"click":"cfRun"}'>2¹¹ − 1</button></p>
+</section>
+
+<section class="rn-s" id="mersenne" data-mod="ch5" data-tags="rot primes" aria-labelledby="mersenne-h">
+  <div class="rn-head"><p class="rn-eyebrow">17 · Mersenne circles</p><h2 id="mersenne-h">Doubling on a 2<sup>p</sup> − 1 clock <em>rotates rhythms</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>A times-table circle joins each point x to 2x. Use 2<sup>p</sup> − 1 points and doubling does something exact: write x in binary with p digits, and doubling just rotates the digits one place. So each orbit is one p-beat rhythm and all of its rotations, a necklace. When p is prime, every orbit has exactly p members, so p divides 2<sup>p</sup> − 2. That is Fermat’s little theorem, proved with rhythms. It does not make 2<sup>p</sup> − 1 prime, though: try p = 11, where 2047 = 23 × 89. The real test is the Lucas–Lehmer test. The largest prime known, 2<sup>136,279,841</sup> − 1, with 41,024,320 digits, was found with it in October 2024 by the Great Internet Mersenne Prime Search.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Every orbit here is a rhythm, as pi’s beat is. The all-hit rhythms 2<sup>p</sup> − 1 with prime p are prime far more often than random numbers of their size, which is why the record primes are Mersenne primes.</span></div>
+  <div class="rn-inst">
+    <div class="rn-controls"><label for="mS">p <input id="mS" type="range" min="2" max="11" value="7"></label><output class="rn-mono" id="mV" for="mS">7</output></div>
+    <dl class="rn-readout"><div><dt>2<sup>p</sup> − 1</dt><dd id="mM"></dd></div><div><dt>Prime?</dt><dd id="mPr"></dd></div><div><dt>Orbits</dt><dd id="mO"></dd></div><div><dt>Orbit lengths</dt><dd id="mL"></dd></div></dl>
+    <canvas id="mCirc" height="380" role="img" aria-label="Points on a circle joined by doubling, each orbit in its own color"></canvas>
+    <p class="rn-small">Each necklace below is one orbit. Tap one to hear it as a rhythm.</p>
+    <div class="rn-neck" id="neck"></div>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"mS":11}}'>p = 11: not prime</button> <button type="button" class="rn-ghost" data-remix='{"set":{"mS":6}}'>p = 6: orbits of mixed lengths</button></p>
+</section>
+
+<section class="rn-s" id="reverse" data-mod="ch5" data-tags="rot primes even cf" aria-labelledby="reverse-h">
+  <div class="rn-head"><p class="rn-eyebrow">18 · Music in, numbers out</p><h2 id="reverse-h">Tap a rhythm, read its <em>primes</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>A rhythm of n beats is also an n-digit binary number, with a hit as 1 and a rest as 0. The readout tests it for being prime, lists its rotations that are prime, finds the continued fraction of its density (hits per beat), and checks whether it is spread as evenly as possible. A rhythm needs a hit on its last beat to be an odd number.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Tap 1 hit in 7 and the density’s fraction matches pi’s first term. An evenly spread rhythm is an early stage of some number’s rhythm, and the readout names which constant yours starts like.</span></div>
+  <div class="rn-inst">
+    <div class="rn-controls"><label for="rN">Beats <input id="rN" type="range" min="3" max="32" value="7"></label><output class="rn-mono" id="rNV" for="rN">7</output><button id="rEuc" type="button" class="rn-ghost">Make it even</button><button id="rPrime" type="button" class="rn-ghost">Rotate to a prime</button><button id="rPlay" type="button" class="rn-play">▶ Loop</button></div>
+    <div class="rn-steps" id="rSteps" role="group" aria-label="Beats: press a beat to switch it between hit and rest"></div>
+    <dl class="rn-readout"><div><dt>Binary</dt><dd id="rBin"></dd></div><div><dt>Number</dt><dd id="rDec"></dd></div><div><dt>Even spacing?</dt><dd id="rBal"></dd></div><div><dt>Density</dt><dd id="rDen"></dd></div></dl>
+    <div style="display:grid;gap:.35rem"><span class="rn-small">Rotations (amber = prime):</span><div class="rn-chips" id="rRot"></div></div>
+    <p class="rn-small" id="rMatch" aria-live="polite"></p>
+    <div id="rTeach"></div>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"rN":8},"click":"rEuc"}'>Tresillo as a number</button> <button type="button" class="rn-ghost" data-remix='{"set":{"rN":13},"click":"rEuc"}'>13 beats, made even</button></p>
+</section>
+
+<section class="rn-s" id="hunt" data-mod="ch5" data-tags="primes cf" aria-labelledby="hunt-h">
+  <div class="rn-head"><p class="rn-eyebrow">19 · The prime hunt</p><h2 id="hunt-h">Does pi’s rhythm <em>attract primes</em>?</h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Read the first n beats of the bar’s number as one long binary number, and test it for being prime as n grows. Compare with what chance predicts: an odd number with n binary digits is prime about 2 times in n·ln 2.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Over 1,500 beats, π − 3 gave 1 prime (at beat 49) against 2.4 expected. e − 2 gave 14 against 14, √2 − 1 gave 11 against 9, and φ − 1 gave 13 against 12. Pi’s rhythm doesn’t attract primes. A construction that clearly beat its chance count here would be a real discovery; Mersenne numbers passed that kind of test long ago.</span></div>
+  <div class="rn-inst">
+    <div class="rn-controls"><label for="hMax">Beats to scan <input id="hMax" type="range" min="100" max="2000" step="50" value="800"></label><output class="rn-mono" id="hMaxV" for="hMax">800</output><button id="hRun" type="button" class="rn-solid">Run the hunt</button></div>
+    <canvas id="hcan" height="150" role="img" aria-label="Chart: primes found against primes expected by chance, as more beats are read"></canvas>
+    <dl class="rn-readout" aria-live="polite"><div><dt>Prime prefixes at beat</dt><dd id="hFound">—</dd></div><div><dt>Found vs chance</dt><dd id="hCmp">—</dd></div><div><dt>Progress</dt><dd id="hProg">ready</dd></div></dl>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"num":"e","set":{"hMax":1500},"click":"hRun"}'>Hunt in e − 2</button> <button type="button" class="rn-ghost" data-remix='{"num":"sqrt2","set":{"hMax":1500},"click":"hRun"}'>Hunt in √2 − 1</button></p>
+</section>
+
+<!-- ============ VI ============ -->
+<div class="rn-ch" id="ch6"><p class="rn-eyebrow">Chapter VI</p><h2>Play and compose</h2><p>Stack the rhythms, drum with them, and write a whole piece from a number.</p></div>
+
+<section class="rn-s" id="poly" data-mod="play" data-tags="cf even coprime" aria-labelledby="poly-h">
+  <div class="rn-head"><p class="rn-eyebrow">20 · The polyrhythm layerer</p><h2 id="poly-h">Stack the levels of a number, <em>one ring each</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Each ring is one track: a convergent p/q played as p hits spread evenly over q slots, all rings taking the same time to go around. Stack pi’s 1/7, 15/106 and 16/113 and you hear three versions of the same beat drift and meet. Or layer different constants. Each track has its own voice, a mute and a solo.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Two rings meet only where their slot counts share a factor. A 7-slot ring and a 113-slot ring, both prime, meet only on the downbeat, the polyrhythm version of an uncorrelated pair from section 10.</span></div>
+  <div class="rn-inst" data-fs>
+    <div class="rn-controls">
+      <label for="plSrc">Add a track from <select id="plSrc"></select></label>
+      <label for="plLv">level <select id="plLv"></select></label>
+      <button id="plAdd" type="button" class="rn-ghost">+ Add track</button>
+      <button id="plPlay" type="button" class="rn-play rn-solid">▶ Play</button>
+      <label for="plLoop">One turn takes <input id="plLoop" type="range" min="2" max="16" step="0.5" value="5"></label><output class="rn-mono" id="plLoopV" for="plLoop">5 s</output>
+      <label><input id="plFollow" type="checkbox"> Follow (turn the rings)</label>
+    </div>
+    <div class="rn-tracks" id="plTracks" aria-live="polite"></div>
+    <canvas id="plCan" height="420" role="img" aria-label="Concentric rings, one per track, with hits as dots and a playhead"></canvas>
+    <div id="plTeach"></div>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"click":"plPi"}'>Pi’s three levels</button> <button type="button" class="rn-ghost" data-remix='{"click":"plConst"}'>Pi, e and φ together</button> <button type="button" class="rn-ghost" data-remix='{"click":"plThree"}'>3 against 4 against 5</button></p>
+  <p class="rn-sr"><button type="button" id="plPi" tabindex="-1">Pi</button><button type="button" id="plConst" tabindex="-1">Constants</button><button type="button" id="plThree" tabindex="-1">Three</button></p>
+</section>
+
+<section class="rn-s" id="drums" data-mod="play" data-tags="even coprime cf" aria-labelledby="drums-h">
+  <div class="rn-head"><p class="rn-eyebrow">21 · The Euclidean drum machine</p><h2 id="drums-h">Four drums, each spread as <em>evenly as possible</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Pick how many hits (pulses) and how many slots each drum gets, and the machine spreads the hits as evenly as it can with Bjorklund’s method from section 6. Rotate a track to start it on a different hit. Tracks of different lengths drift against each other and line up again after their least common multiple. Each track shows the continued fraction of slots/pulses and whether the two numbers are coprime.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>When pulses and slots are coprime, the pattern never repeats inside its own bar. With a prime number of slots that is true for every pulse count, as in pi’s 7 and 113.</span></div>
+  <div class="rn-inst" data-fs>
+    <div class="rn-presets" id="drPresets" role="group" aria-label="Presets from world rhythms"></div>
+    <div class="rn-tracks" id="drTracks"></div>
+    <div class="rn-controls"><button id="drPlay" type="button" class="rn-play rn-solid">▶ Play</button><label for="drBpm">Steps per minute <input id="drBpm" type="range" min="120" max="720" step="10" value="420"></label><output class="rn-mono" id="drBpmV" for="drBpm">420</output></div>
+    <canvas id="drCan" height="200" role="img" aria-label="Each drum track as a row of steps, with the playhead"></canvas>
+    <p class="rn-small" id="drNote" aria-live="polite"></p>
+    <div id="drTeach"></div>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"click":"drPiBtn"}'>Pi’s drums: 1 in 7, 15 in 106, 16 in 113</button> <button type="button" class="rn-ghost" data-remix='{"click":"drPoly"}'>Drifting: 3 in 7, 5 in 11, 7 in 13</button></p>
+  <p class="rn-sr"><button type="button" id="drPiBtn" tabindex="-1">Pi drums</button><button type="button" id="drPoly" tabindex="-1">Drift</button></p>
+</section>
+
+<section class="rn-s" id="compose" data-mod="play" data-tags="cf even wave" aria-labelledby="compose-h">
+  <div class="rn-head"><p class="rn-eyebrow">22 · Compose a piece</p><h2 id="compose-h">Write a piece from a number, then <em>keep it</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>This is Teddy Rook’s idea grown into a small composing machine. The number’s rhythm gives the beats. Its levels give the form: the shortest blocks are bars, the next level up gives phrases, and the next gives sections. (A level that only adds one beat is skipped, so for pi the bars are 7 beats, the phrases 113, and the sections 33,102.) Each level gets a voice: melody on the hits, a bass note at each bar, a chord at each phrase, and a cymbal and key change at each section. Choose the number, the scale, the voices and the length, then play it, look at the score, and download it as a MIDI file for any music program, or as a WAV sound file.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>For pi the bars are 7 beats long and the phrases 106 or 113, so the form itself is built from primes: 7 and 113 are prime and 106 is 2 × 53.</span></div>
+  <div class="rn-inst" data-fs>
+    <div class="rn-controls">
+      <label for="cpNum">Number <select id="cpNum"></select></label>
+      <label for="cpForm">Form <select id="cpForm"><option value="1">bars only</option><option value="2">bars and phrases</option><option value="3" selected>bars, phrases and sections</option></select></label>
+      <label for="cpScale">Scale <select id="cpScale"><option value="major">major</option><option value="minor" selected>minor</option><option value="penta">pentatonic</option><option value="whole">whole-tone</option><option value="chrom">12-tone</option></select></label>
+      <label for="cpKey">Key <select id="cpKey"></select></label>
+    </div>
+    <div class="rn-controls" role="group" aria-label="Voices">
+      <label><input id="cpMel" type="checkbox" checked> Melody</label>
+      <label><input id="cpBass" type="checkbox" checked> Bass</label>
+      <label><input id="cpChord" type="checkbox" checked> Chords</label>
+      <label><input id="cpDrum" type="checkbox" checked> Drums</label>
+      <label for="cpMelV">Melody voice <select id="cpMelV"></select></label>
+    </div>
+    <div class="rn-controls">
+      <label for="cpBpm">Beats per minute <input id="cpBpm" type="range" min="60" max="480" step="10" value="300"></label><output class="rn-mono" id="cpBpmV" for="cpBpm">300</output>
+      <label for="cpLen">Length <select id="cpLen"><option value="226">226 beats (2 pi cycles)</option><option value="452" selected>452 beats</option><option value="904">904 beats</option><option value="1808">1,808 beats</option></select></label>
+      <label><input id="cpRare" type="checkbox"> Start just before the rarest block</label>
+    </div>
+    <div class="rn-controls">
+      <button id="cpPlay" type="button" class="rn-play rn-solid">▶ Play the piece</button>
+      <button id="cpMidi" type="button">⬇ MIDI file</button>
+      <button id="cpWav" type="button">⬇ WAV file</button>
+      <label><input id="cpFollow" type="checkbox" checked> Follow the playhead</label>
+    </div>
+    <p class="rn-small" id="cpInfo" aria-live="polite"></p>
+    <div class="rn-score" id="cpScore" tabindex="0" aria-label="The score as a piano roll; scroll sideways to see it all"><canvas id="cpRoll" height="260" role="img" aria-label="A piano roll of the piece: melody, bass, chords and drums over time"></canvas></div>
+    <div class="rn-share"><label for="cpLink">Share this piece</label><input id="cpLink" type="text" readonly><button id="cpCopy" type="button" class="rn-ghost">Copy link</button></div>
+    <p class="rn-small">The link holds only the settings above, nothing about you. Opening it rebuilds the same piece.</p>
+    <div id="cpTeach"></div>
+  </div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"cpNum":"pi","cpRare":true,"cpScale":"minor"}}'>Pi’s surprise, in minor</button> <button type="button" class="rn-ghost" data-remix='{"set":{"cpNum":"phi","cpScale":"penta","cpBpm":240}}'>Golden, pentatonic</button> <button type="button" class="rn-ghost" data-remix='{"set":{"cpNum":"sqrt2","cpScale":"whole","cpForm":"2"}}'>√2 in whole tones</button></p>
+</section>
+
+<section class="rn-s" id="suite" aria-labelledby="suite-h" data-tags="cf wave">
+  <div class="rn-head"><p class="rn-eyebrow">23 · The Continued-Fraction Suite</p><h2 id="suite-h">Original music from <em>these rhythms</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Teddy Rook used the ideas on this page to compose original music based on continued fractions: pieces whose bars, phrases and sections follow the levels of pi and other numbers, the way the Composer and “Compose a piece” do. The page came first, as the workshop, and the music grew out of it.</p></div>
+  {{ partial "connections/rhythm-video.html" . }}
+  <div class="rn-link"><b>Pi ↔ primes</b><span>A piece built on pi’s levels has 7-bar phrases inside 113-bar cycles. Both are prime, so no shorter pattern divides them evenly, and the music keeps its surprises.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"cpNum":"pi","cpForm":"3","cpScale":"minor","cpBpm":300},"go":"compose"}'>Set up a pi movement in Compose</button></p>
+</section>
+
+<!-- ============ EPILOGUE ============ -->
+<div class="rn-ch" id="map"><p class="rn-eyebrow">Epilogue</p><h2>The map</h2><p>Every section, joined wherever two share an idea. Pick a thread in the bar to see its web, and press a dot to jump to it.</p></div>
+<section class="rn-s" id="mapSec" data-mod="map" aria-label="The map of sections">
+  <div class="rn-inst rn-map">
+    <canvas id="mapCan" height="560" tabindex="0" role="img" aria-label="A circle of all the sections, with lines between sections that share a thread. Use the arrow keys to move between sections and Enter to jump to one."></canvas>
+    <ul class="rn-key" id="mapKey"></ul>
+    <p class="rn-small" id="mapNote" aria-live="polite">Hover or tap a dot to see what it connects to.</p>
+  </div>
+  <div class="rn-prose">
+    <h3>Threads to pull</h3>
+    <p class="rn-small">Questions this page raises about pi and the primes. Some are open, some are known, and some are experiments to try. Treat them as starting points, not results.</p>
+    <div class="rn-threadlist">
+      <div class="rn-thr"><span class="rn-tag rn-open">Open</span><h4 class="rn-h4">Prime convergents</h4><p>Does pi’s continued fraction have infinitely many prime denominators? No one knows. The same question for φ is the Fibonacci prime problem, and for √2 it is the Pell primes. Both are unsolved. A good experiment: count prime convergents for many constants and compare each count with chance.</p></div>
+      <div class="rn-thr"><span class="rn-tag rn-open">Open</span><h4 class="rn-h4">Primes and nuclei</h4><p>The Montgomery–Dyson match (section 15) remains one of the strangest links in science. Hearing the zeros’ spacings next to random and nuclear spacings is a good way to sense why mathematicians take it seriously.</p></div>
+      <div class="rn-thr"><span class="rn-tag rn-known">Known</span><h4 class="rn-h4">Rhythm necklaces count primes</h4><p>The rhythm proof of Fermat’s little theorem in section 17 is classical. Counting necklaces also gives the number of irreducible polynomials, and the number of different p-beat rhythms up to rotation.</p></div>
+      <div class="rn-thr"><span class="rn-tag rn-try">Try</span><h4 class="rn-h4">Constants as composed music</h4><p>Each convergent of pi is a Euclidean rhythm, and each refines the last: E(1,7), then E(16,113), then a 33,102-beat cycle. Layer them in the Polyrhythm layerer. The same works for any constant: √2 makes a rhythm built only from 2s, and e’s rhythm has a growing pattern.</p></div>
+      <div class="rn-thr"><span class="rn-tag rn-try">Try</span><h4 class="rn-h4">Tunings with a prime number of notes</h4><p>7 notes in a scale, the 31-note tuning Christiaan Huygens favored (its major third is within a cent of pure), and 127 are all Mersenne primes. 12, 41 and 53 come from the fifth’s ladder. Rank every tuning up to 200 notes by how well it does the fifth, the third and the seventh at once, then see whether prime sizes stand out. They probably won’t, but a clear “no” is still a result.</p></div>
+      <div class="rn-thr"><span class="rn-tag rn-try">Try</span><h4 class="rn-h4">The correlation spectrum</h4><p>Find the eigenvalues of the correlation matrix in section 10. They are the arithmetic version of a stock-market correlation spectrum. How far do they sit from random noise, and does the gap involve 6/π²?</p></div>
+      <div class="rn-thr"><span class="rn-tag rn-try">Try</span><h4 class="rn-h4">Two diffraction patterns at once</h4><p>Diffract the primes and pi’s rhythm on one strip (section 14). The primes peak at fractions with small square-free denominators, and pi peaks near multiples of 1/7. Where do the two patterns line up?</p></div>
+      <div class="rn-thr"><span class="rn-tag rn-try">Try</span><h4 class="rn-h4">A golden sunflower of primes</h4><p>Set the bar to φ − 1 and seed the sunflower of section 12 with primes. Its arms come in Fibonacci numbers, and primes skip the arms that share a factor with the arm count. The arm counts that are prime (2, 3, 5, 13, 89, 233, …) leave just one arm empty.</p></div>
+      <div class="rn-thr"><span class="rn-tag rn-try">Try</span><h4 class="rn-h4">Squares, shells and the zeta sum</h4><p>Shells hold 2, 8, 18, 32 electrons; hydrogen’s levels go as 1/n²; and ζ(2) = Σ 1/n² = π²/6 = Π 1/(1 − p⁻²). One picture could show the squares stacked as shells, their reciprocals adding up to π²/6, and the prime product beside them, labeled clearly as a shared formula rather than shared physics.</p></div>
+      <div class="rn-thr"><span class="rn-tag rn-try">Try</span><h4 class="rn-h4">A 113-note movement</h4><p>Write a pi movement of the Continued-Fraction Suite in a tuning with 113 notes per octave. 113 is prime, so every step size walks all 113 notes.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="rn-notes" aria-labelledby="rn-notes-h">
+  <h2 id="rn-notes-h" class="rn-h3">Notes and sources</h2>
+  <p class="rn-small">Every number on this page was computed for it (Python with mpmath and sympy) and checked against the page’s own code: continued fractions to 600 digits, the block lengths and phrase counts over 140,000 beats, prime counts, remainder pairs among the primes up to ten million, and the prime hunt.</p>
+  <ul>
+    <li>Approximations of π and Zu Chongzhi’s Milü: <a href="https://grokipedia.com/page/Mil%C3%BC" rel="noopener">Milü (Grokipedia)</a>, <a href="https://grokipedia.com/page/Zu_Chongzhi" rel="noopener">Zu Chongzhi (Grokipedia)</a>.</li>
+    <li>Continued fractions and convergents: <a href="https://grokipedia.com/page/Continued_fraction" rel="noopener">Continued fraction (Grokipedia)</a>; Sturmian words: M. Lothaire, <i>Algebraic Combinatorics on Words</i>, chapter 2 (Cambridge, 2002), and <a href="https://en.wikipedia.org/wiki/Sturmian_word" rel="noopener">Sturmian word (Wikipedia)</a>.</li>
+    <li>Euclidean rhythms: G. Toussaint, “The Euclidean Algorithm Generates Traditional Musical Rhythms,” Bridges 2005 (<a href="https://cgm.cs.mcgill.ca/~godfried/publications/banff.pdf" rel="noopener">paper</a>); E. Bjorklund, “The theory of rep-rate pattern generation in the SNS timing system,” 2003; <a href="https://grokipedia.com/page/Euclidean_rhythm" rel="noopener">Euclidean rhythm (Grokipedia)</a>, <a href="https://grokipedia.com/page/Tresillo_(rhythm)" rel="noopener">Tresillo</a>, <a href="https://grokipedia.com/page/Clave_(rhythm)" rel="noopener">Clave</a>.</li>
+    <li>Tuning: <a href="https://grokipedia.com/page/Pythagorean_comma" rel="noopener">Pythagorean comma</a>, <a href="https://grokipedia.com/page/31_equal_temperament" rel="noopener">31 equal temperament</a> (Grokipedia).</li>
+    <li>Mode locking: <a href="https://grokipedia.com/page/Arnold_tongue" rel="noopener">Arnold tongue (Grokipedia)</a>; <a href="https://grokipedia.com/page/Farey_sequence" rel="noopener">Farey sequence</a>.</li>
+    <li>Prime remainders: R. J. Lemke Oliver and K. Soundararajan, “Unexpected biases in the distribution of consecutive primes,” <i>PNAS</i> 113 (2016).</li>
+    <li>Coprime pairs and the Basel problem: <a href="https://grokipedia.com/page/Coprime_integers" rel="noopener">Coprime integers</a>, <a href="https://grokipedia.com/page/Basel_problem" rel="noopener">Basel problem</a>, <a href="https://grokipedia.com/page/Balmer_series" rel="noopener">Balmer series</a>, <a href="https://grokipedia.com/page/Dirichlet's_theorem_on_arithmetic_progressions" rel="noopener">Dirichlet’s theorem</a>, <a href="https://grokipedia.com/page/Wheel_factorization" rel="noopener">Wheel factorization</a> (Grokipedia).</li>
+    <li>Random matrices in finance: L. Laloux, P. Cizeau, J.-P. Bouchaud and M. Potters, and V. Plerou and colleagues, <i>Physical Review Letters</i> 83 (1999).</li>
+    <li>Quasicrystals: <a href="https://grokipedia.com/page/Quasicrystal" rel="noopener">Quasicrystal (Grokipedia)</a>; S. Torquato, G. Zhang and M. de Courcy-Ireland, “Uncovering multiscale order in the prime numbers via scattering,” <i>J. Stat. Mech.</i> (2018); F. Dyson, “Birds and Frogs,” <i>Notices of the AMS</i> (2009).</li>
+    <li>Zeta zeros: <a href="https://grokipedia.com/page/Montgomery's_pair_correlation_conjecture" rel="noopener">Montgomery’s pair correlation conjecture</a>, <a href="https://grokipedia.com/page/Explicit_formulae_for_L-functions" rel="noopener">explicit formulae</a> (Grokipedia); zeros from mpmath.</li>
+    <li>Factoring: M. A. Morrison and J. Brillhart, “A method of factoring and the factorization of F₇,” <i>Mathematics of Computation</i> 29 (1975); D. H. Lehmer and R. E. Powers, “On factoring large numbers,” <i>Bulletin of the AMS</i> 37 (1931); <a href="https://en.wikipedia.org/wiki/Continued_fraction_factorization" rel="noopener">Continued fraction factorization (Wikipedia)</a>.</li>
+    <li>Mersenne primes: <a href="https://grokipedia.com/page/Largest_known_prime_number" rel="noopener">Largest known prime number</a>, <a href="https://grokipedia.com/page/Lucas%E2%80%93Lehmer_primality_test" rel="noopener">Lucas–Lehmer test</a>, <a href="https://grokipedia.com/page/Great_Internet_Mersenne_Prime_Search" rel="noopener">GIMPS</a> (Grokipedia).</li>
+  </ul>
+</footer>
+</article>
+{{ partial "inline/ml-js.html" "connections/rhythm/core.js" }}
+{{ end }}
