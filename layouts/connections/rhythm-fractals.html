@@ -1,0 +1,255 @@
+{{ define "main" }}
+{{- /* /connections/rhythm-of-numbers/fractals/: Chapter VII of "The Rhythm of Numbers", "Fractals: the same rule at every
+   scale" (content/connections/rhythm-of-numbers/fractals.md). Its own page because the hub is already long; the hub
+   links it from its chapter list, a card (#ch7) and its map. It shares the hub's bar, styles and core
+   (static/connections/rhythm/core.js: read its header); this page's instruments are fr1.js, fr2.js and fr3.js, each
+   loaded when its first section comes near the screen. Element ids are the instruments' contract with the scripts.
+   Every number on the page was checked by script: see the Notes and sources at the bottom. */ -}}
+{{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
+{{- $v := dict }}{{ range slice "fr1" "fr2" "fr3" }}{{ $f := printf "static/connections/rhythm/%s.js" . }}{{ if fileExists $f }}{{ $v = merge $v (dict . (os.Stat $f).ModTime.Unix) }}{{ end }}{{ end }}
+{{- $tex := "math/core/tex.js" | relURL }}{{ with os.Stat "static/math/core/tex.js" }}{{ $tex = printf "%s?v=%d" $tex .ModTime.Unix }}{{ end }}
+{{- $texcss := "math/core/core.css" | relURL }}{{ with os.Stat "static/math/core/core.css" }}{{ $texcss = printf "%s?v=%d" $texcss .ModTime.Unix }}{{ end }}
+{{- $hub := "connections/rhythm-of-numbers/" | relURL }}
+<article class="rn rn-fr" data-rn-base="{{ "connections/rhythm/" | relURL }}" data-rn-v="{{ $v | jsonify }}" data-rn-tex="{{ $tex }}" data-rn-texcss="{{ $texcss }}">
+<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Where Music, Patterns, Math and Chemistry Meet</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <span>Chapter VII</span></nav>
+
+{{ partial "connections/rhythm-bar.html" . }}
+
+<header class="rn-hero rn-s" id="frHero" data-mod="fr1" data-tags="cf self">
+  <p class="rn-eyebrow">The Rhythm of Numbers · Chapter VII</p>
+  <h1>Fractals: the same rule at <em>every scale</em></h1>
+  <p class="rn-lede">Teddy Rook’s way of picturing it: pi is a number, then a smaller number after it, then a smaller one after that, and so on forever. Do fractals fit that picture? They do, and this chapter shows how.</p>
+  <div class="rn-prose rn-tex">
+    <p><b>The precise version.</b> Write a number as its whole part plus a leftover, and turn the leftover upside down: $x = a_0 + \frac{1}{x_1}$. Then do the same to $x_1$: $x_1 = a_1 + \frac{1}{x_2}$, and again, forever. For pi that gives</p>
+    <p class="rn-formula">$$\pi = 3 + \cfrac{1}{7 + \cfrac{1}{15 + \cfrac{1}{1 + \cfrac{1}{292 + \cdots}}}}$$</p>
+    <p>Here is the fractal idea. The part after the first “1 over” is itself a continued fraction, built by the same rule. So is the part after the next one. Zoom into the “smaller number after it” and you find the same kind of object again. Seeing the same thing at every scale is called <b>self-similarity</b>, and it is what makes a fractal a fractal.</p>
+    <p>Each step also gets smaller, as Teddy Rook guessed. Stopping after each level gives a fraction $p/q$ (a <b>convergent</b>: 3, 22/7, 333/106, 355/113, …), and each one misses by less than $1/q^2$. For 22/7 that is less than 1/49; it misses by 0.00126. For 355/113 it is less than 1/12,769; it misses by 0.000000267.</p>
+  </div>
+  <div class="rn-inst" data-fs>
+    <canvas id="zoomCan" height="380" role="img" aria-label="Zooming into the number: each row is the gap between two convergents, stretched to full width, with the next row's gap marked inside it"></canvas>
+    <div class="rn-controls">
+      <label for="zLev">Zoom levels <input id="zLev" type="range" min="3" max="8" value="6"></label><output class="rn-mono" id="zLevV" for="zLev">6</output>
+      <button id="zPlay" type="button" class="rn-play">▶ Hear the levels</button>
+    </div>
+    <dl class="rn-readout"><div><dt>Terms</dt><dd id="zTerms"></dd></div><div><dt>Does each zoom look the same?</dt><dd id="zSelf" class="rn-ddtext"></dd></div></dl>
+    <p class="rn-small">Each row is the stretch between two convergents, blown up to fill the width. Its ticks are the in-between fractions, one for each step of the next term; the amber stretch is where the number hides, and the row below zooms into it. The zoom factor is on the right.</p>
+  </div>
+  <div class="rn-prose"><p><b>Where it is exact, and where it is not.</b> Try the golden ratio, φ = [1; 1, 1, 1, …], or √2 = [1; 2, 2, 2, …], in the bar. Their terms repeat, so the tail is the number itself again, and every row of the zoom is the same picture (flipped left to right on every other row, because the convergents land on alternate sides). Pi’s terms, 7, 15, 1, 292, 1, 1, 1, 2, …, show no pattern that anyone has found. Pi uses the same rule at every level, but the levels never repeat. It is self-similar in its <i>rule</i>, not in its <i>shape</i>. That is not a flaw in the picture; it is one of the most interesting things about pi.</p></div>
+  <div class="rn-link"><b>Pi ↔ fractals</b><span>A fractal is a shape that holds a copy of its own rule at every scale. A continued fraction is a number that holds a copy of its own rule after every term. Each section below turns that rule into a picture.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"num":"phi"}'>φ: every zoom the same</button> <button type="button" class="rn-ghost" data-remix='{"num":"sqrt2"}'>√2: twos all the way down</button> <button type="button" class="rn-ghost" data-remix='{"num":"pi"}'>Pi: same rule, new shape</button> <button type="button" class="rn-ghost" data-remix='{"num":"e"}'>e: a growing pattern</button></p>
+  <aside class="rn-how" aria-labelledby="fr-how-h">
+    <h2 id="fr-how-h">How to use this page</h2>
+    <ul>
+      <li>The number in the bar at the top drives most of the pictures. Pick φ or √2 to see exact self-similarity, then go back to pi.</li>
+      <li>Sound starts only when you press a play button. <b>🔊 Sound</b> sets the key, scale and voice; <b>■ Stop</b> silences everything.</li>
+      <li>Zoomable pictures work with the buttons, a tap or click, or the keyboard: focus the picture, then <b>+</b> and <b>−</b> zoom and the arrow keys move.</li>
+      <li>For ages: from about 10, the circles, the tree and the Mandelbrot bulbs. The dust, the question-mark function and the statistics are for teenagers and adults.</li>
+      <li>This is Chapter VII of <a href="{{ $hub }}">The Rhythm of Numbers</a>. The first six chapters are on that page.</li>
+    </ul>
+  </aside>
+  <nav aria-label="Sections in this chapter"><ul class="rn-toc">
+    <li><a href="#patterns"><span>24</span><b>Pi’s patterned fractions</b></a></li>
+    <li><a href="#ford"><span>25</span><b>Ford circles</b></a></li>
+    <li><a href="#sb"><span>26</span><b>The Stern–Brocot tree</b></a></li>
+    <li><a href="#mink"><span>27</span><b>The question-mark function</b></a></li>
+    <li><a href="#stair"><span>28</span><b>The devil’s staircase</b></a></li>
+    <li><a href="#dust"><span>29</span><b>Cantor dust</b></a></li>
+    <li><a href="#bulbs"><span>30</span><b>The Mandelbrot set’s bulbs</b></a></li>
+    <li><a href="#fibword"><span>31</span><b>The Fibonacci word fractal</b></a></li>
+    <li><a href="#gauss"><span>32</span><b>Is pi typical?</b></a></li>
+    <li><a href="#frNotes"><span>33</span><b>Threads and sources</b></a></li>
+  </ul></nav>
+</header>
+
+<section class="rn-s" id="patterns" data-mod="fr1" data-tags="cf self" aria-labelledby="patterns-h">
+  <div class="rn-head"><p class="rn-eyebrow">24 · A twist</p><h2 id="patterns-h">Pi <em>does</em> have a pattern, if the tops can change</h2><div class="rn-tags"></div></div>
+  <div class="rn-prose rn-tex">
+    <p>In an ordinary continued fraction every top number is 1. Let the tops be other numbers and you get a <b>generalized continued fraction</b>, and then pi has beautiful patterns. Teddy Rook’s “never-ending string of continued fractions” is exactly right here, with a clean rule all the way down.</p>
+    <p><b>Brouncker’s fraction</b>, found by William Brouncker about AD 1655 and published by John Wallis in 1656:</p>
+    <p class="rn-formula">$$\frac{4}{\pi} = 1 + \cfrac{1^2}{2 + \cfrac{3^2}{2 + \cfrac{5^2}{2 + \cfrac{7^2}{2 + \cdots}}}}$$</p>
+    <p><b>Lange’s fraction</b> (L. J. Lange, 1999), with the same odd squares on top and 6s below:</p>
+    <p class="rn-formula">$$\pi = 3 + \cfrac{1^2}{6 + \cfrac{3^2}{6 + \cfrac{5^2}{6 + \cdots}}}$$</p>
+    <p><b>The arctangent fraction</b>, from the continued fraction for the arctangent (a close cousin of the fraction for the tangent that Johann Lambert used to prove that pi is irrational, in a paper read in 1761 and printed in 1768):</p>
+    <p class="rn-formula">$$\pi = \cfrac{4}{1 + \cfrac{1^2}{3 + \cfrac{2^2}{5 + \cfrac{3^2}{7 + \cdots}}}}$$</p>
+  </div>
+  <div class="rn-inst">
+    <div class="rn-controls"><label for="pcN">Levels <input id="pcN" type="range" min="1" max="60" value="10"></label><output class="rn-mono" id="pcNV" for="pcN">10</output></div>
+    <div class="rn-tablebox"><table><thead><tr><th>Fraction</th><th>Value after these levels</th><th>Digits right</th></tr></thead><tbody id="pcRows"></tbody></table></div>
+    <canvas id="pcErr" height="240" role="img" aria-label="How far each fraction is from pi after each level, on a scale where each line down is ten times closer"></canvas>
+    <ul class="rn-key"><li style="--c:var(--rn-prime)">Brouncker</li><li style="--c:var(--rn-teal)">Lange</li><li style="--c:var(--rn-g)">arctangent</li></ul>
+  </div>
+  <div class="rn-prose"><p>All three follow a rule, and they show three speeds. Brouncker’s gains a digit only when the number of levels grows ten times: after 1,000 levels it is still off by 0.001. In fact its stopping points are exactly the sums 4(1 − 1/3 + 1/5 − …), the famous slow series for pi. Lange’s stopping points are exactly the sums of Nilakantha’s series, 3 + 4/(2·3·4) − 4/(4·5·6) + …, and gain three digits for each tenfold. The arctangent fraction shrinks its error about 5.8 times at every level, so it gains about three digits every four levels: 20 levels give 15 digits.</p></div>
+  <div class="rn-link"><b>Pi ↔ fractals</b><span>With tops of 1, pi’s fraction looks random. With tops of 1², 3², 5², …, it repeats one rule exactly at every depth, the way a fractal does. Same number, two kinds of self-similarity.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"pcN":1}}'>One level</button> <button type="button" class="rn-ghost" data-remix='{"set":{"pcN":20}}'>20 levels: 15 digits</button> <button type="button" class="rn-ghost" data-remix='{"set":{"pcN":60}}'>60 levels</button></p>
+</section>
+
+<section class="rn-s" id="ford" data-mod="fr1" data-tags="cf self coprime" aria-labelledby="ford-h">
+  <div class="rn-head"><p class="rn-eyebrow">25 · Ford circles</p><h2 id="ford-h">A circle on every fraction, and the same picture at <em>every zoom</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose rn-tex"><p>In 1938 Lester R. Ford drew a circle resting on the number line at every fraction $p/q$ (in lowest terms), with radius $1/(2q^2)$. Big denominators make small circles. The circles never overlap, and two of them touch exactly when $|ps - qr| = 1$, which is when the two fractions are neighbors in a Farey sequence. Between any two touching circles sits a third that touches both, at the fraction $(p+r)/(q+s)$. Zoom in anywhere and you see the same picture again.</p></div>
+  <div class="rn-inst" data-fs>
+    <canvas id="fordCan" height="340" tabindex="0" role="img" aria-label="Ford circles. Focus and use plus and minus to zoom, the arrow keys to move, and 0 to go back to the start."></canvas>
+    <div class="rn-controls">
+      <button id="fDive" type="button" class="rn-play">Dive toward the number ›</button>
+      <button id="fOut" type="button" class="rn-ghost">− Zoom out</button>
+      <button id="fHome" type="button" class="rn-ghost">Start over</button>
+      <label><input id="fConv" type="checkbox" checked> Mark the number and its convergents</label>
+    </div>
+    <dl class="rn-readout"><div><dt>View</dt><dd id="fView"></dd></div><div><dt>Circles the line passes through</dt><dd id="fHit"></dd></div><div><dt>Tapped circle</dt><dd id="fTap">tap or click a circle</dd></div></dl>
+    <ul class="rn-key"><li style="--c:var(--rn-g)">a convergent of the bar’s number</li><li style="--c:var(--rn-prime)">the number</li><li style="--c:var(--rn-teal)">the tapped circle and the circles it touches</li></ul>
+  </div>
+  <div class="rn-prose rn-tex"><p>Now drop a straight line down onto the bar’s number. Every circle the line passes through belongs to a convergent: if $|x - p/q| < 1/(2q^2)$, then $p/q$ is a convergent (Legendre’s theorem). And of any two convergents in a row, at least one has its circle pierced. For pi − 3, the line goes through the circles of 1/7 and 16/113 (that is 22/7 and 355/113), slips past 15/106, and goes on through 4703/33215. Keep pressing <b>Dive</b>: the circles get smaller and the pattern stays the same.</p></div>
+  <div class="rn-link"><b>Pi ↔ fractals</b><span>The best fractions for pi are the circles you fall through on the way down to it. Pi’s huge term 292 shows up as a long fall: after 355/113 the next pierced circle is far smaller, because 355/113 is so close.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"num":"pi","click":"fHome"}'>Pi from the top</button> <button type="button" class="rn-ghost" data-remix='{"num":"phi","click":"fHome"}'>The golden ratio: every circle pierced</button> <button type="button" class="rn-ghost" data-remix='{"num":"sqrt2","click":"fHome"}'>√2</button></p>
+</section>
+
+<section class="rn-s" id="sb" data-mod="fr2" data-tags="cf self even" aria-labelledby="sb-h">
+  <div class="rn-head"><p class="rn-eyebrow">26 · The Stern–Brocot tree</p><h2 id="sb-h">Every fraction once, and the way down <em>spells the continued fraction</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Start with 0/1 and 1/0. Between two neighbors, put their <b>mediant</b>: add the tops and add the bottoms. 1/1 comes first, then 1/2 and 2/1, then 1/3, 2/3, 3/2, 3/1, and so on. Moritz Stern described this tree in 1858. Achille Brocot, a French clockmaker, found it again in 1861 and used it to choose gear sizes for clocks. Every positive fraction appears in the tree exactly once, already in lowest terms.</p>
+  <p>To find a number, start at the top and go left (L) if the number is smaller, right (R) if it is bigger. The way down is a string of runs, and the run lengths are the continued fraction: 355/113 = [3; 7, 16] is R³ L⁷ R¹⁵ (the last run is one short, because you stop on the fraction itself). Pi is R³ L⁷ R¹⁵ L R²⁹² …, and the golden ratio is R L R L R L … forever.</p></div>
+  <div class="rn-inst" data-fs>
+    <canvas id="sbCan" height="360" role="img" aria-label="The Stern–Brocot tree, five rows deep from the chosen node, with the path toward the bar's number highlighted"></canvas>
+    <div class="rn-controls">
+      <label for="sbAt">Start the picture after step <input id="sbAt" type="range" min="0" max="40" value="0"></label><output class="rn-mono" id="sbAtV" for="sbAt">0</output>
+      <button id="sbPlay" type="button" class="rn-play">▶ Hear the path</button>
+    </div>
+    <div id="sbTeach"></div>
+    <dl class="rn-readout"><div><dt>The way down (for the whole number)</dt><dd id="sbPath"></dd></div><div><dt>Picture starts at</dt><dd id="sbNode"></dd></div></dl>
+    <p class="rn-small">Slide the start down the path and the tree below looks like the whole tree again, with the same branching and only the fractions changed. The sound plays a low note for each L and a high note for each R, so the runs become phrases.</p>
+  </div>
+  <div class="rn-link"><b>Pi ↔ fractals</b><span>Every branch of the tree is a copy of the whole tree. Pi’s path makes long runs (seven Ls, fifteen Rs, 292 Rs), the golden ratio zigzags, and √2 goes R, then L L, R R, L L, … in pairs.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"num":"pi","set":{"sbAt":0}}'>Pi’s path</button> <button type="button" class="rn-ghost" data-remix='{"num":"frac","set":{"gIn":"355/113","sbAt":0},"click":"gApply"}'>355/113: R³ L⁷ R¹⁵</button> <button type="button" class="rn-ghost" data-remix='{"num":"phi","set":{"sbAt":6}}'>φ, six steps down: the same picture</button></p>
+</section>
+
+<section class="rn-s" id="mink" data-mod="fr2" data-tags="cf self" aria-labelledby="mink-h">
+  <div class="rn-head"><p class="rn-eyebrow">27 · Minkowski’s question-mark function</p><h2 id="mink-h">Continued fractions in, binary out: a <em>fractal staircase</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose rn-tex"><p>In 1904 Hermann Minkowski defined a function, written $?(x)$, that turns a continued fraction into a binary number. For $x = [0; a_1, a_2, a_3, \ldots]$ the binary digits of $?(x)$ are $a_1 - 1$ zeros, then $a_2$ ones, then $a_3$ zeros, then $a_4$ ones, and so on: each term becomes one run of digits. As a formula,</p>
+  <p class="rn-formula">$$?(x) = 2\left(2^{-a_1} - 2^{-(a_1+a_2)} + 2^{-(a_1+a_2+a_3)} - \cdots\right)$$</p>
+  <p>It climbs from 0 to 1 and always goes up, yet it is flat almost everywhere: pick a point at random, and the slope there is zero. All the climbing happens on a thin dust of points. The left half of the graph is the whole graph, squashed by half, because $?(x/(x+1)) = ?(x)/2$. Repeating numbers come out as fractions: $?(φ - 1) = 2/3$, $?(\sqrt2 - 1) = 2/5$, $?(\sqrt3 - 1) = 6/7$.</p></div>
+  <div class="rn-inst" data-fs>
+    <canvas id="mkCan" height="320" tabindex="0" role="img" aria-label="Minkowski's question-mark function. Focus and use plus and minus to zoom around the bar's number."></canvas>
+    <div class="rn-controls">
+      <button id="mkIn" type="button" class="rn-play">Zoom in on the number ×4</button>
+      <button id="mkOut" type="button" class="rn-ghost">− Zoom out</button>
+      <button id="mkHome" type="button" class="rn-ghost">Whole graph</button>
+      <button id="mkPlay" type="button" class="rn-ghost">▶ Hear the staircase</button>
+    </div>
+    <dl class="rn-readout"><div><dt>?(the bar’s number)</dt><dd id="mkVal"></dd></div><div><dt>In binary</dt><dd id="mkBin"></dd></div></dl>
+    <p class="rn-small">The dashed line is y = x. “Hear the staircase” walks across the view in 48 steps and plays ?(x) as pitch: long flat stretches are repeated notes, and the climbs come in bursts.</p>
+  </div>
+  <div class="rn-link"><b>Pi ↔ fractals</b><span>Pi − 3 = [0; 7, 15, 1, 292, …] starts with six 0s in binary, then fifteen 1s: ?(π − 3) is just under 1/64. Each term of pi becomes one run of binary digits, so pi’s rhythm and its binary staircase are the same list.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"num":"phi","click":"mkHome"}'>φ − 1 ↦ 2/3</button> <button type="button" class="rn-ghost" data-remix='{"num":"sqrt2","click":"mkHome"}'>√2 − 1 ↦ 2/5</button> <button type="button" class="rn-ghost" data-remix='{"num":"pi","click":"mkIn"}'>Zoom in on pi</button></p>
+</section>
+
+<section class="rn-s" id="stair" data-mod="fr2" data-tags="cf self coprime wave" aria-labelledby="stair-h">
+  <div class="rn-head"><p class="rn-eyebrow">28 · The devil’s staircase</p><h2 id="stair-h">Plateaus inside plateaus, labeled by <em>Farey fractions</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Section 7 on the <a href="{{ $hub }}#locking">first page</a> showed clocks locking to fractions. Here is the same circle map, θ → θ + Ω − (K/2π) sin 2πθ, with its staircase: across is the natural rotation Ω, up is the rotation the system really makes. Each flat step is a locked fraction p/q. At full coupling (K = 1) the steps fill the whole line except for a dust of points, and that dust is a fractal of dimension about 0.87 (Jensen, Bak and Bohr, 1983). Tap between two steps to zoom in: the biggest step between two neighboring steps p/q and r/s is their Farey sum, (p + r)/(q + s), and the zoomed picture looks like the whole again.</p></div>
+  <div class="rn-inst" data-fs>
+    <canvas id="stCan" height="320" tabindex="0" role="img" aria-label="The devil's staircase of the circle map. Tap or press plus to zoom in, minus to zoom out, arrows to move."></canvas>
+    <div class="rn-controls">
+      <label for="stK">Coupling K <input id="stK" type="range" min="0" max="100" value="100"></label><output class="rn-mono" id="stKV" for="stK">1.00</output>
+      <button id="stOut" type="button" class="rn-ghost">− Zoom out</button>
+      <button id="stHome" type="button" class="rn-ghost">Whole staircase</button>
+      <button id="stPlay" type="button" class="rn-ghost">▶ Hear the staircase</button>
+    </div>
+    <dl class="rn-readout"><div><dt>View</dt><dd id="stView"></dd></div><div><dt>Widest steps here</dt><dd id="stInfo"></dd></div></dl>
+  </div>
+  <div class="rn-link"><b>Pi ↔ fractals</b><span>At K = 1 the 0/1 step is 1/(2π) wide on each side of 0. Pi − 3 = 0.14159 is just inside it, which is why section 7 found pi captured at full coupling. The golden ratio sits in the dust, as far from every step as a number can be.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"stK":100},"click":"stHome"}'>Full coupling</button> <button type="button" class="rn-ghost" data-remix='{"set":{"stK":50},"click":"stHome"}'>K = 0.5: gaps open</button> <button type="button" class="rn-ghost" data-remix='{"set":{"stK":0},"click":"stHome"}'>No coupling: a straight line</button></p>
+</section>
+
+<section class="rn-s" id="dust" data-mod="fr3" data-tags="cf self" aria-labelledby="dust-h">
+  <div class="rn-head"><p class="rn-eyebrow">29 · Cantor dust</p><h2 id="dust-h">Allow only small terms and the numbers <em>crumble into dust</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Which numbers between 0 and 1 have a continued fraction that uses only 1s and 2s? Each term you fix keeps a few small pieces of the line and throws away the rest. Do it forever and what is left is a dust, like the Cantor set: no length at all, but more than a point’s worth. Its fractal (Hausdorff) dimension is 0.531280506…, a number I. J. Good pinned between 0.5306 and 0.5320 in 1941, and Oliver Jenkinson and Mark Pollicott found to 25 places in 2001 and later proved to 100. Choose the allowed terms below; the dimension shown was computed for this page by the same kind of method.</p></div>
+  <div class="rn-inst" data-fs>
+    <fieldset class="rn-controls rn-fs-terms"><legend class="rn-small">Allowed terms</legend>
+      <label><input type="checkbox" id="dA1" checked> 1</label><label><input type="checkbox" id="dA2" checked> 2</label><label><input type="checkbox" id="dA3"> 3</label><label><input type="checkbox" id="dA4"> 4</label><label><input type="checkbox" id="dA5"> 5</label><label><input type="checkbox" id="dA6"> 6</label>
+    </fieldset>
+    <div class="rn-controls"><label for="dView">View <select id="dView"><option value="all">all of 0 to 1</option><option value="zoom">zoom into the first piece</option><option value="zoom2">zoom two pieces deep</option></select></label></div>
+    <canvas id="dustCan" height="300" role="img" aria-label="Rows of intervals: each row keeps the numbers whose first terms are all allowed; the bottom row is the dust"></canvas>
+    <dl class="rn-readout"><div><dt>Fractal dimension</dt><dd id="dDim"></dd></div><div><dt>Pieces in the bottom row</dt><dd id="dCount"></dd></div><div><dt>The bar’s number</dt><dd id="dNum"></dd></div></dl>
+  </div>
+  <div class="rn-link"><b>Pi ↔ fractals</b><span>Pi − 3 starts with a 7, so it is not in the 1-and-2 dust; with a 292 at the fourth term it is not in any dust with small terms. The golden ratio (all 1s) and √2 − 1 (all 2s) are each a single point of the 1-and-2 dust.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"dA1":true,"dA2":true,"dA3":false,"dA4":false,"dA5":false,"dA6":false,"dView":"all"}}'>1s and 2s: 0.5313</button> <button type="button" class="rn-ghost" data-remix='{"set":{"dA1":true,"dA2":true,"dA3":false,"dA4":false,"dA5":false,"dA6":false,"dView":"zoom2"}}'>Zoom in: the same dust</button> <button type="button" class="rn-ghost" data-remix='{"set":{"dA1":false,"dA2":true,"dA3":true,"dA4":false,"dA5":false,"dA6":false,"dView":"all"}}'>Only 2s and 3s</button> <button type="button" class="rn-ghost" data-remix='{"set":{"dA1":true,"dA2":true,"dA3":true,"dA4":true,"dA5":true,"dA6":true,"dView":"all"}}'>1 to 6: thicker dust</button></p>
+</section>
+
+<section class="rn-s" id="bulbs" data-mod="fr3" data-tags="cf self rot" aria-labelledby="bulbs-h">
+  <div class="rn-head"><p class="rn-eyebrow">30 · The Mandelbrot set</p><h2 id="bulbs-h">Its bulbs are fractions, in <em>Farey order</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>The <a href="{{ "math/gallery/mandelbrot/" | relURL }}">Mandelbrot set</a> has a heart-shaped main body with bulbs all around its edge. Each bulb is named by a fraction p/q: walk p/q of the way around the heart and that bulb is attached there. Inside the p/q bulb, the rule z → z² + c settles into a cycle of exactly q points, which jump around p/q of a turn at each step, and the bulb’s antenna usually has q spokes. Between the 1/2 bulb and the 1/3 bulb the biggest bulb is 2/5, the Farey sum. Between 2/5 and 1/3 it is 3/8, and the Fibonacci numbers appear: 1/2, 1/3, 2/5, 3/8, 5/13, … (Robert Devaney, 1999, measures “biggest” by the share of the set’s outside that leads into each limb, 1/(2<sup>q</sup> − 1); by area the rule holds for most bulbs but not all.)</p></div>
+  <div class="rn-inst" data-fs>
+    <canvas id="mbCan" height="380" role="img" aria-label="The Mandelbrot set with its main bulbs labeled by fractions; the chosen bulb, its two Farey parents and its cycle are marked"></canvas>
+    <div class="rn-controls">
+      <label for="mbPick">Bulb <select id="mbPick"></select></label>
+      <button id="mbPlay" type="button" class="rn-play">▶ Hear its cycle</button>
+    </div>
+    <dl class="rn-readout"><div><dt>Farey parents</dt><dd id="mbPar"></dd></div><div><dt>Cycle</dt><dd id="mbCyc"></dd></div><div><dt>Its share of the outside</dt><dd id="mbSize"></dd></div></dl>
+    <ul class="rn-key"><li style="--c:var(--rn-prime)">the chosen bulb and its cycle of q points</li><li style="--c:var(--rn-teal)">its Farey parents</li><li style="--c:var(--rn-g)">the bar’s number, walked around the heart</li></ul>
+  </div>
+  <div class="rn-link"><b>Pi ↔ fractals</b><span>Walk π − 3 = 0.14159 of the way around the heart (the green mark). Pi’s convergents 1/7, 15/106 and 16/113 are bulbs near that spot, each much smaller and much closer than the last.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"mbPick":"2/5"}}'>2/5, between 1/2 and 1/3</button> <button type="button" class="rn-ghost" data-remix='{"set":{"mbPick":"5/13"}}'>5/13, the Fibonacci path</button> <button type="button" class="rn-ghost" data-remix='{"set":{"mbPick":"1/7"},"num":"pi"}'>1/7, pi’s first bulb</button></p>
+</section>
+
+<section class="rn-s" id="fibword" data-mod="fr3" data-tags="cf self even rot" aria-labelledby="fibword-h">
+  <div class="rn-head"><p class="rn-eyebrow">31 · The Fibonacci word fractal</p><h2 id="fibword-h">Walk the golden rhythm and it <em>draws a fractal</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>The first page played each number as a beat: hit, rest, hit, hit, rest, … For the golden ratio that pattern is the Fibonacci word. In 2009 Alexis Monnerot-Dumaine turned it into a drawing: take one step forward for every beat, and on a hit turn a quarter turn, left on even beats and right on odd ones. The golden rhythm draws a curve made of smaller copies of itself, with fractal dimension 3 log φ / log(1 + √2) ≈ 1.638. Change the number in the bar and see which rhythms make clean fractals.</p></div>
+  <div class="rn-inst" data-fs>
+    <canvas id="fwCan" height="420" role="img" aria-label="The path drawn by the bar's number's rhythm: a step for every beat and a quarter turn on every hit"></canvas>
+    <div class="rn-controls">
+      <label for="fwN">Beats <input id="fwN" type="range" min="6" max="17" value="13"></label><output class="rn-mono" id="fwNV" for="fwN"></output>
+      <button id="fwPlay" type="button" class="rn-play">▶ Draw it step by step</button>
+    </div>
+    <dl class="rn-readout"><div><dt>Number</dt><dd id="fwName"></dd></div><div><dt>The path</dt><dd id="fwInfo"></dd></div></dl>
+  </div>
+  <div class="rn-link"><b>Pi ↔ fractals</b><span>Pi’s rhythm turns on every 7th or 8th beat, and the turns nearly cancel, so its path is a long, thin zigzag. Give it 131,072 beats and the zigzag itself turns corners, tens of thousands of beats apart. Same rule at every level, but the levels are so different (7, 15, 1, 292) that no single shape repeats. √2 does something else again: it weaves a grid.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"num":"phi","set":{"fwN":13}}'>The golden word</button> <button type="button" class="rn-ghost" data-remix='{"num":"sqrt2","set":{"fwN":14}}'>√2: a woven grid</button> <button type="button" class="rn-ghost" data-remix='{"num":"sqrt3","set":{"fwN":14}}'>√3</button> <button type="button" class="rn-ghost" data-remix='{"num":"pi","set":{"fwN":17}}'>Pi: a zigzag that turns corners</button></p>
+</section>
+
+<section class="rn-s" id="gauss" data-mod="fr3" data-tags="cf primes" aria-labelledby="gauss-h">
+  <div class="rn-head"><p class="rn-eyebrow">32 · The Gauss map</p><h2 id="gauss-h">Is pi a <em>typical</em> number?</h2><div class="rn-tags"></div></div>
+  <div class="rn-prose rn-tex"><p>The machine that reads off the terms is one map, done over and over: $x \to 1/x - \lfloor 1/x \rfloor$. Each pass drops the whole part, which is the next term, and keeps the leftover. Gauss guessed, and Rodion Kuzmin proved in 1928, that for almost every number the terms come out with fixed odds: a term equals $k$ with probability</p>
+  <p class="rn-formula">$$P(k) = -\log_2\!\left(1 - \frac{1}{(k+1)^2}\right)$$</p>
+  <p>That is 41.5% ones, 17.0% twos, 9.3% threes, and so on. Aleksandr Khinchin showed in 1935 that for almost every number the terms’ geometric mean tends to the same constant, 2.685452…. Nobody has proved that pi is “almost every number”. But we can count. Here are pi’s first 10,000 terms, computed for this page.</p></div>
+  <div class="rn-inst" data-fs>
+    <div class="rn-grid2">
+      <canvas id="gkCob" height="280" role="img" aria-label="The Gauss map x to 1/x minus its whole part, with the path of the bar's number bouncing across it"></canvas>
+      <canvas id="gkBars" height="280" role="img" aria-label="How often each term from 1 to 12 appears, against the Gauss–Kuzmin law"></canvas>
+    </div>
+    <div class="rn-controls">
+      <button id="gkStep" type="button" class="rn-play">Step › read the next term</button>
+      <button id="gkReset" type="button" class="rn-ghost">Start over</button>
+      <label for="gkSrc">Count the terms of <select id="gkSrc"><option value="pi">pi (10,000 terms)</option><option value="rand">a random 4,000-digit number (3,800 terms)</option><option value="e">e (10,000 terms)</option><option value="bar">the bar’s number</option></select></label>
+      <button id="gkRoll" type="button" class="rn-ghost">🎲 Roll another</button>
+    </div>
+    <dl class="rn-readout"><div><dt>Terms read (left)</dt><dd id="gkRead"></dd></div><div><dt>Share of 1s</dt><dd id="gkOnes"></dd></div><div><dt>Geometric mean</dt><dd id="gkMean"></dd></div><div><dt>Fit to the law</dt><dd id="gkFit"></dd></div></dl>
+    <ul class="rn-key"><li style="--c:var(--rn-g)">counted</li><li style="--c:var(--rn-prime)">the Gauss–Kuzmin law</li></ul>
+  </div>
+  <div class="rn-prose"><p>Pi passes. Its 10,000 terms have 4,206 ones (42.1%, against 41.5%), 1,672 twos and 882 threes; a standard fit test over the 13 groups in the chart puts it well within chance (p ≈ 0.33). Its geometric mean is 2.663, near Khinchin’s 2.685 and wandering the way a random number’s does. Its biggest term so far is 20,776, at position 431. The number e fails on purpose: its terms are 1, 2, 1, 1, 4, 1, 1, 6, …, far too many 1s and a mean that keeps growing. So does every repeating number, like φ and √2.</p></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>The prime hunt on the <a href="{{ $hub }}#hunt">first page</a> found that pi’s rhythm does not attract primes more than chance. Its terms tell the same story: as far as anyone can count, pi behaves like a typical number, with no hidden favorites.</span></div>
+  <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"gkSrc":"pi"}}'>Pi’s 10,000 terms</button> <button type="button" class="rn-ghost" data-remix='{"set":{"gkSrc":"rand"},"click":"gkRoll"}'>A random number</button> <button type="button" class="rn-ghost" data-remix='{"set":{"gkSrc":"e"}}'>e breaks the law</button></p>
+</section>
+
+<footer class="rn-notes" id="frNotes" aria-labelledby="fr-notes-h">
+  <p class="rn-eyebrow">33 · Threads and sources</p>
+  <h2 id="fr-notes-h" class="rn-h3">Threads to pull</h2>
+  <div class="rn-threadlist">
+    <div class="rn-thr"><span class="rn-tag rn-open">Open</span><h3 class="rn-h4">Is pi typical?</h3><p>Nobody knows whether pi’s terms follow the Gauss–Kuzmin law forever, or whether they are even unbounded. Every count so far says “typical”.</p></div>
+    <div class="rn-thr"><span class="rn-tag rn-known">Known</span><h3 class="rn-h4">Repeating means quadratic</h3><p>A continued fraction repeats exactly when the number solves a quadratic equation with whole-number coefficients (Euler and Lagrange). Those are the numbers with exactly self-similar pictures, and Minkowski’s function sends each of them to a fraction.</p></div>
+    <div class="rn-thr"><span class="rn-tag rn-try">Try</span><h3 class="rn-h4">Your own terms</h3><p>Choose “Type the terms…” in the bar and enter a pattern, like 1, 2, 1, 2 or 3, 3, 3. Then visit each picture: the circles, the tree, the staircase, the dust and the path all show the pattern.</p></div>
+  </div>
+  <h2 class="rn-h3">Notes and sources</h2>
+  <p class="rn-small">Every number on this page was computed for it in Python (mpmath, NumPy, SciPy) and checked against the page’s own code: pi’s first 10,000 terms from 11,500 digits, the three patterned fractions to 60 digits, the Stern–Brocot paths, the question-mark values, the staircase step widths, the dust dimensions (a transfer-operator method that matches the published 0.5312805062772 to 13 places), and the period of every Mandelbrot bulb with q up to 12.</p>
+  <ul>
+    <li>Continued fractions: <a href="https://grokipedia.com/page/Continued_fraction" rel="noopener">Continued fraction</a>; generalized fractions for pi: <a href="https://grokipedia.com/page/Approximations_of_%CF%80" rel="noopener">Approximations of π</a> (Grokipedia); L. J. Lange, “An Elegant Continued Fraction for π,” <i>American Mathematical Monthly</i> 106 (1999) 456–458; Brouncker and Wallis: <a href="https://mathshistory.st-andrews.ac.uk/Biographies/Brouncker/" rel="noopener">MacTutor</a>; Lambert: <a href="https://grokipedia.com/page/Johann_Heinrich_Lambert" rel="noopener">Johann Heinrich Lambert (Grokipedia)</a>.</li>
+    <li>Ford circles: L. R. Ford, “Fractions,” <i>American Mathematical Monthly</i> 45 (1938) 586–601; <a href="https://grokipedia.com/page/Ford_circle" rel="noopener">Ford circle</a>, <a href="https://grokipedia.com/page/Farey_sequence" rel="noopener">Farey sequence</a> (Grokipedia).</li>
+    <li>Stern–Brocot tree: <a href="https://grokipedia.com/page/Stern%E2%80%93Brocot_tree" rel="noopener">Stern–Brocot tree (Grokipedia)</a>; B. Hayes and the AMS Feature Column, <a href="https://www.ams.org/featurecolumn/archive/stern-brocot.html" rel="noopener">“Trees, Teeth, and Time”</a>.</li>
+    <li>Question-mark function: H. Minkowski, “Zur Geometrie der Zahlen,” Third International Congress of Mathematicians, Heidelberg (1904); <a href="https://grokipedia.com/page/Minkowski's_question-mark_function" rel="noopener">Minkowski’s question-mark function (Grokipedia)</a>.</li>
+    <li>Devil’s staircase: M. H. Jensen, P. Bak and T. Bohr, “Complete devil’s staircase, fractal dimension, and universality of mode-locking structure in the circle map,” <i>Physical Review Letters</i> 50 (1983) 1637; <a href="https://grokipedia.com/page/Arnold_tongue" rel="noopener">Arnold tongue (Grokipedia)</a>.</li>
+    <li>Cantor dust: O. Jenkinson and M. Pollicott, <i>Ergodic Theory and Dynamical Systems</i> 21 (2001), and “Rigorous effective bounds on the Hausdorff dimension of continued fraction Cantor sets” (<a href="https://arxiv.org/abs/1611.09276" rel="noopener">arXiv 1611.09276</a>); <a href="https://grokipedia.com/page/Hausdorff_dimension" rel="noopener">Hausdorff dimension (Grokipedia)</a>.</li>
+    <li>Mandelbrot bulbs: R. L. Devaney, “The Mandelbrot Set, the Farey Tree, and the Fibonacci Sequence,” <i>American Mathematical Monthly</i> 106 (1999) 289–302; <a href="https://grokipedia.com/page/Mandelbrot_set" rel="noopener">Mandelbrot set (Grokipedia)</a>.</li>
+    <li>Fibonacci word fractal: A. Monnerot-Dumaine, “The Fibonacci Word fractal,” HAL preprint hal-00367972 (2009); <a href="https://grokipedia.com/page/Fibonacci_word" rel="noopener">Fibonacci word (Grokipedia)</a>.</li>
+    <li>Gauss map and the law of the terms: <a href="https://grokipedia.com/page/gauss_iterated_map" rel="noopener">Gauss iterated map</a>, <a href="https://grokipedia.com/page/Khinchin's_constant" rel="noopener">Khinchin’s constant</a> (Grokipedia); <a href="https://en.wikipedia.org/wiki/Gauss%E2%80%93Kuzmin_distribution" rel="noopener">Gauss–Kuzmin distribution (Wikipedia)</a>.</li>
+  </ul>
+  <p><a href="{{ $hub }}">← Back to The Rhythm of Numbers</a> · <a href="{{ $hub }}#map">the map of every section</a></p>
+</footer>
+</article>
+{{ partial "inline/ml-js.html" "connections/rhythm/core.js" }}
+{{ end }}

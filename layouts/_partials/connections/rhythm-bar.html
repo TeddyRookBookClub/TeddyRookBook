@@ -1,0 +1,39 @@
+{{- /* The shared bar of The Rhythm of Numbers (number, threads, sound) and its live region, used by the hub
+   (layouts/connections/rhythm.html) and Chapter VII (layouts/connections/rhythm-fractals.html). The element ids are
+   static/connections/rhythm/core.js's contract: keep them. */ -}}
+<div class="rn-bar" role="region" aria-label="Shared controls">
+  <div class="rn-bar-in">
+    <label for="gNum">Number <select id="gNum">
+      <optgroup label="Constants">
+        <option value="pi" selected>π − 3</option><option value="phi">φ − 1 (golden ratio)</option><option value="sqrt2">√2 − 1</option><option value="sqrt3">√3 − 1</option><option value="sqrt5">√5 − 2</option><option value="cbrt2">∛2 − 1</option><option value="e">e − 2</option><option value="ln2">ln 2</option><option value="pi4">π/4</option><option value="epi">e/π</option><option value="gamma">γ, Euler’s constant</option>
+      </optgroup>
+      <optgroup label="Music and calendars">
+        <option value="fifth">log₂(3/2), the fifth</option><option value="third">log₂(5/4), the major third</option><option value="leapday">leap days per year (0.24219)</option><option value="leapmonth">leap months per year (0.36827)</option>
+      </optgroup>
+      <optgroup label="Your own">
+        <option value="dec">Type a decimal…</option><option value="frac">Type a fraction…</option><option value="terms">Type the terms…</option>
+      </optgroup>
+    </select></label>
+    <input id="gIn" type="text" hidden autocomplete="off" spellcheck="false"><button id="gApply" type="button" class="rn-ghost" hidden>Use it</button>
+    <span class="rn-num" id="gNumV" aria-live="polite"></span>
+    <span class="rn-bar-btns">
+      <button id="gThreadsBtn" type="button" class="rn-ghost" aria-expanded="false" aria-controls="rn-threads">Threads</button>
+      <button id="gSoundBtn" type="button" class="rn-ghost" aria-expanded="false" aria-controls="rn-sound">🔊 Sound</button>
+      <button id="gStop" type="button" class="rn-ghost" aria-label="Stop all sound">■ Stop</button>
+    </span>
+    <p class="rn-msg" id="gMsg" aria-live="polite"></p>
+  </div>
+  <div class="rn-pop" id="rn-threads" role="group" aria-label="Threads: highlight the sections that share an idea"><span class="rn-small rn-sr" id="rn-thread-st" aria-live="polite"></span></div>
+  <div class="rn-pop" id="rn-sound" role="group" aria-label="Sound settings for every instrument">
+    <label for="sKey">Key <select id="sKey"></select></label>
+    <label for="sScale">Scale <select id="sScale"><option value="major">major</option><option value="minor">minor</option><option value="penta">pentatonic</option><option value="whole">whole-tone</option><option value="chrom">12-tone (chromatic)</option></select></label>
+    <label for="sVoice">Voice <select id="sVoice"></select></label>
+    <label for="sTempo">Tempo <input id="sTempo" type="range" min="25" max="200" step="5" value="100"> <output id="sTempoV" for="sTempo"></output></label>
+    <label for="sSwing">Swing <input id="sSwing" type="range" min="0" max="60" step="5" value="0"> <output id="sSwingV" for="sSwing"></output></label>
+    <label for="sVol">Volume <input id="sVol" type="range" min="0" max="100" value="70"> <output id="sVolV" for="sVol"></output></label>
+    <label><input id="sMute" type="checkbox"> Mute</label>
+    <button id="sTest" type="button" class="rn-ghost">▶ Hear the scale</button>
+    <p class="rn-small">These settings apply to every instrument on the page. Sound starts only when you press a play button.</p>
+  </div>
+</div>
+<p class="rn-sr" id="rn-live" aria-live="polite"></p>

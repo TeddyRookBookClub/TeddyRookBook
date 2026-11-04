@@ -1,6 +1,7 @@
 {{ define "main" }}
 {{- /* /connections/rhythm-of-numbers/: "The Rhythm of Numbers" (content/connections/rhythm-of-numbers/_index.md).
-   A long page in six chapters. Each section: a short argument, one live instrument, a "Pi ↔ primes" line, and Remix
+   A long page in six chapters; Chapter VII (fractals) is its own page, /connections/rhythm-of-numbers/fractals/
+   (layouts/connections/rhythm-fractals.html), with a short card here (#ch7). Each section: a short argument, one live instrument, a "Pi ↔ primes" line, and Remix
    buttons. The page's URL is printed in a YouTube description: never move it.
    Scripts: static/connections/rhythm/core.js (read its header) loads each chapter's file only when the chapter comes
    near the screen; formulas ($…$, class rn-tex) are typeset by static/math/core/tex.js, also loaded only when needed.
@@ -12,42 +13,7 @@
 <article class="rn" data-rn-base="{{ "connections/rhythm/" | relURL }}" data-rn-v="{{ $v | jsonify }}" data-rn-tex="{{ $tex }}" data-rn-texcss="{{ $texcss }}">
 <nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Where Music, Patterns, Math and Chemistry Meet</a> <span aria-hidden="true">›</span> <span>Deep dive</span></nav>
 
-<div class="rn-bar" role="region" aria-label="Shared controls">
-  <div class="rn-bar-in">
-    <label for="gNum">Number <select id="gNum">
-      <optgroup label="Constants">
-        <option value="pi" selected>π − 3</option><option value="phi">φ − 1 (golden ratio)</option><option value="sqrt2">√2 − 1</option><option value="sqrt3">√3 − 1</option><option value="sqrt5">√5 − 2</option><option value="cbrt2">∛2 − 1</option><option value="e">e − 2</option><option value="ln2">ln 2</option><option value="pi4">π/4</option><option value="epi">e/π</option><option value="gamma">γ, Euler’s constant</option>
-      </optgroup>
-      <optgroup label="Music and calendars">
-        <option value="fifth">log₂(3/2), the fifth</option><option value="third">log₂(5/4), the major third</option><option value="leapday">leap days per year (0.24219)</option><option value="leapmonth">leap months per year (0.36827)</option>
-      </optgroup>
-      <optgroup label="Your own">
-        <option value="dec">Type a decimal…</option><option value="frac">Type a fraction…</option><option value="terms">Type the terms…</option>
-      </optgroup>
-    </select></label>
-    <input id="gIn" type="text" hidden autocomplete="off" spellcheck="false"><button id="gApply" type="button" class="rn-ghost" hidden>Use it</button>
-    <span class="rn-num" id="gNumV" aria-live="polite"></span>
-    <span class="rn-bar-btns">
-      <button id="gThreadsBtn" type="button" class="rn-ghost" aria-expanded="false" aria-controls="rn-threads">Threads</button>
-      <button id="gSoundBtn" type="button" class="rn-ghost" aria-expanded="false" aria-controls="rn-sound">🔊 Sound</button>
-      <button id="gStop" type="button" class="rn-ghost" aria-label="Stop all sound">■ Stop</button>
-    </span>
-    <p class="rn-msg" id="gMsg" aria-live="polite"></p>
-  </div>
-  <div class="rn-pop" id="rn-threads" role="group" aria-label="Threads: highlight the sections that share an idea"><span class="rn-small rn-sr" id="rn-thread-st" aria-live="polite"></span></div>
-  <div class="rn-pop" id="rn-sound" role="group" aria-label="Sound settings for every instrument">
-    <label for="sKey">Key <select id="sKey"></select></label>
-    <label for="sScale">Scale <select id="sScale"><option value="major">major</option><option value="minor">minor</option><option value="penta">pentatonic</option><option value="whole">whole-tone</option><option value="chrom">12-tone (chromatic)</option></select></label>
-    <label for="sVoice">Voice <select id="sVoice"></select></label>
-    <label for="sTempo">Tempo <input id="sTempo" type="range" min="25" max="200" step="5" value="100"> <output id="sTempoV" for="sTempo"></output></label>
-    <label for="sSwing">Swing <input id="sSwing" type="range" min="0" max="60" step="5" value="0"> <output id="sSwingV" for="sSwing"></output></label>
-    <label for="sVol">Volume <input id="sVol" type="range" min="0" max="100" value="70"> <output id="sVolV" for="sVol"></output></label>
-    <label><input id="sMute" type="checkbox"> Mute</label>
-    <button id="sTest" type="button" class="rn-ghost">▶ Hear the scale</button>
-    <p class="rn-small">These settings apply to every instrument on the page. Sound starts only when you press a play button.</p>
-  </div>
-</div>
-<p class="rn-sr" id="rn-live" aria-live="polite"></p>
+{{ partial "connections/rhythm-bar.html" . }}
 
 <header class="rn-hero rn-s" id="hero" data-mod="ch1">
   <p class="rn-eyebrow">Deep dive · Music ∩ Math · Pi and the primes, by ear and by eye</p>
@@ -81,6 +47,7 @@
     <li><a href="#ch4"><span>Chapter IV</span><b>Primes in matter</b></a></li>
     <li><a href="#ch5"><span>Chapter V</span><b>Hunting primes with pi’s tools</b></a></li>
     <li><a href="#ch6"><span>Chapter VI</span><b>Play and compose</b></a></li>
+    <li><a href="{{ "connections/rhythm-of-numbers/fractals/" | relURL }}"><span>Chapter VII · its own page</span><b>Fractals: the same rule at every scale</b></a></li>
     <li><a href="#map"><span>Epilogue</span><b>The map</b></a></li>
   </ul></nav>
 </header>
@@ -478,6 +445,15 @@
   <div class="rn-prose"><p><b>Play it yourself.</b> The score of all six movements is free: <a href="{{ "pdfs/Continued-Fraction-Suite-score.pdf" | relURL }}" download>download the score (PDF, 16 pages, 1.7 MB)</a>. Each movement has its own piano lesson in the Music section: <a href="{{ "music/continued-fraction-suite/" | relURL }}">the Continued-Fraction Suite</a>, from Golden and Silver to Pi and the rare block at bar 32,996.</p></div>
   <div class="rn-link"><b>Pi ↔ primes</b><span>A piece built on pi’s levels has 7-bar phrases inside 113-bar cycles. Both are prime, so no shorter pattern divides them evenly, and the music keeps its surprises.</span></div>
   <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"set":{"cpNum":"pi","cpForm":"3","cpScale":"minor","cpBpm":300},"go":"compose"}'>Set up a pi movement in Compose</button></p>
+</section>
+
+<!-- ============ VII: its own page ============ -->
+<div class="rn-ch" id="ch7"><p class="rn-eyebrow">Chapter VII</p><h2>Fractals: the same rule at every scale</h2><p>Zoom into a continued fraction and you find another one. This chapter has its own page.</p></div>
+<section class="rn-s" id="fractals" data-tags="cf self" aria-labelledby="fractals-h">
+  <div class="rn-head"><p class="rn-eyebrow">24–33 · On the next page</p><h2 id="fractals-h">A number, then a smaller one, then a smaller one <em>after that</em></h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Teddy Rook’s way of picturing pi: a number, then a smaller number after it, then a smaller one after that, on and on. That is the continued fraction, and it is also the idea behind fractals: the same rule at every scale. The chapter follows it through Ford circles, the Stern–Brocot tree, Minkowski’s question-mark function, the devil’s staircase, Cantor dust, the Mandelbrot set’s bulbs, the Fibonacci word fractal, and the statistics of pi’s own terms.</p></div>
+  <a class="rn-fclink" href="{{ "connections/rhythm-of-numbers/fractals/" | relURL }}"><svg class="rn-fcsvg" viewBox="0 0 600 150" role="img" aria-label="Ford circles: a circle resting on the line at every fraction, smaller for bigger denominators, each touching its neighbors"><line x1="0" y1="150" x2="600" y2="150" class="rn-fc-l"/><circle class="rn-fc-k" cx="0.00" cy="-150.00" r="300.00"/><circle class="rn-fc" cx="600.00" cy="-150.00" r="300.00"/><circle class="rn-fc" cx="300.00" cy="75.00" r="75.00"/><circle class="rn-fc" cx="200.00" cy="116.67" r="33.33"/><circle class="rn-fc" cx="400.00" cy="116.67" r="33.33"/><circle class="rn-fc" cx="150.00" cy="131.25" r="18.75"/><circle class="rn-fc" cx="450.00" cy="131.25" r="18.75"/><circle class="rn-fc" cx="120.00" cy="138.00" r="12.00"/><circle class="rn-fc" cx="240.00" cy="138.00" r="12.00"/><circle class="rn-fc" cx="360.00" cy="138.00" r="12.00"/><circle class="rn-fc" cx="480.00" cy="138.00" r="12.00"/><circle class="rn-fc" cx="100.00" cy="141.67" r="8.33"/><circle class="rn-fc" cx="500.00" cy="141.67" r="8.33"/><circle class="rn-fc-k" cx="85.71" cy="143.88" r="6.12"/><circle class="rn-fc" cx="171.43" cy="143.88" r="6.12"/><circle class="rn-fc" cx="257.14" cy="143.88" r="6.12"/><circle class="rn-fc" cx="342.86" cy="143.88" r="6.12"/><circle class="rn-fc" cx="428.57" cy="143.88" r="6.12"/><circle class="rn-fc" cx="514.29" cy="143.88" r="6.12"/><circle class="rn-fc" cx="75.00" cy="145.31" r="4.69"/><circle class="rn-fc" cx="225.00" cy="145.31" r="4.69"/><circle class="rn-fc" cx="375.00" cy="145.31" r="4.69"/><circle class="rn-fc" cx="525.00" cy="145.31" r="4.69"/><circle class="rn-fc" cx="66.67" cy="146.30" r="3.70"/><circle class="rn-fc" cx="133.33" cy="146.30" r="3.70"/><circle class="rn-fc" cx="266.67" cy="146.30" r="3.70"/><circle class="rn-fc" cx="333.33" cy="146.30" r="3.70"/><circle class="rn-fc" cx="466.67" cy="146.30" r="3.70"/><circle class="rn-fc" cx="533.33" cy="146.30" r="3.70"/><circle class="rn-fc" cx="60.00" cy="147.00" r="3.00"/><circle class="rn-fc" cx="180.00" cy="147.00" r="3.00"/><circle class="rn-fc" cx="420.00" cy="147.00" r="3.00"/><circle class="rn-fc" cx="540.00" cy="147.00" r="3.00"/><circle class="rn-fc" cx="54.55" cy="147.52" r="2.48"/><circle class="rn-fc" cx="109.09" cy="147.52" r="2.48"/><circle class="rn-fc" cx="163.64" cy="147.52" r="2.48"/><circle class="rn-fc" cx="218.18" cy="147.52" r="2.48"/><circle class="rn-fc" cx="272.73" cy="147.52" r="2.48"/><circle class="rn-fc" cx="327.27" cy="147.52" r="2.48"/><circle class="rn-fc" cx="381.82" cy="147.52" r="2.48"/><circle class="rn-fc" cx="436.36" cy="147.52" r="2.48"/><circle class="rn-fc" cx="490.91" cy="147.52" r="2.48"/><circle class="rn-fc" cx="545.45" cy="147.52" r="2.48"/><circle class="rn-fc" cx="50.00" cy="147.92" r="2.08"/><circle class="rn-fc" cx="250.00" cy="147.92" r="2.08"/><circle class="rn-fc" cx="350.00" cy="147.92" r="2.08"/><circle class="rn-fc" cx="550.00" cy="147.92" r="2.08"/><line x1="84.96" y1="0" x2="84.96" y2="150" class="rn-fc-x"/></svg><span>Open Chapter VII: Fractals →</span></a>
+  <div class="rn-link"><b>Pi ↔ fractals</b><span>Pi uses the same rule at every level, but its levels never repeat: 7, 15, 1, 292, … So pi is self-similar in its rule, not in its shape.</span></div>
 </section>
 
 <!-- ============ EPILOGUE ============ -->

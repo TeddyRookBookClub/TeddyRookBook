@@ -10,6 +10,7 @@ ladder_links:
   - { url: "/math/complex-analysis/modulus-conjugate/", why: "the size of a complex number" }
   - { url: "/math/algebra-2/recursive-sequences/", why: "rules that feed their answer back in" }
   - { url: "/math/calculus-2/sequences/", why: "when a sequence settles, and when it runs away" }
+  - { url: "/connections/rhythm-of-numbers/fractals/", why: "the bulbs are labeled by fractions in Farey order, and other fractals made from continued fractions" }
 credits:
   - { name: "Our own picture", what: "drawn in your browser by code written for this page; the colors are our own" }
   - { name: "Mandelbrot set (Grokipedia)", url: "https://grokipedia.com/page/Mandelbrot_set", what: "history and the known facts about the set" }

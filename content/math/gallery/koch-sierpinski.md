@@ -10,6 +10,7 @@ ladder_links:
   - { url: "/math/algebra-2/logarithms/", why: "solving for the dimension" }
   - { url: "/math/geometry/scaling-solids/", why: "how length, area and volume scale" }
   - { url: "/math/calculus-2/sequences/", why: "limits of sequences" }
+  - { url: "/connections/rhythm-of-numbers/fractals/", why: "fractals made from continued fractions: Ford circles, Cantor dust with dimension 0.5313, and a curve drawn by the golden ratio" }
 credits:
   - { name: "Our own picture", what: "drawn in your browser by code written for this page" }
   - { name: "Helge von Koch, Sur une courbe continue sans tangente (1904)", what: "the original snowflake curve" }

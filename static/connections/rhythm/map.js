@@ -3,7 +3,7 @@
 (function (RN) {
   'use strict';
   var $ = RN.$, c = RN.c, F = RN.font, D = document;
-  var SHORT = { formula: 'The starting guess', levels: 'The levels', composer: 'Composer', ladder: 'The ladder', fifths: 'Circle of fifths', euclid: 'Euclid & Bjorklund', locking: 'Mode locking', primemusic: 'Prime music', orchard: 'The orchard (6/π²)', corr: 'Correlation matrix', hydrogen: 'Hydrogen 1/n²', sunflower: 'Prime sunflower', wrapv: 'Sieves & periods', quasi: 'Quasicrystals', zeros: 'Zeta zeros & nuclei', cfrac: 'Factoring', mersenne: 'Mersenne circles', reverse: 'Rhythm → number', hunt: 'Prime hunt', poly: 'Polyrhythm layerer', drums: 'Drum machine', compose: 'Compose a piece', suite: 'The Suite' };
+  var SHORT = { formula: 'The starting guess', levels: 'The levels', composer: 'Composer', ladder: 'The ladder', fifths: 'Circle of fifths', euclid: 'Euclid & Bjorklund', locking: 'Mode locking', primemusic: 'Prime music', orchard: 'The orchard (6/π²)', corr: 'Correlation matrix', hydrogen: 'Hydrogen 1/n²', sunflower: 'Prime sunflower', wrapv: 'Sieves & periods', quasi: 'Quasicrystals', zeros: 'Zeta zeros & nuclei', cfrac: 'Factoring', mersenne: 'Mersenne circles', reverse: 'Rhythm → number', hunt: 'Prime hunt', poly: 'Polyrhythm layerer', drums: 'Drum machine', compose: 'Compose a piece', suite: 'The Suite', fractals: 'Fractals (Ch. VII)' };
   var nodes = [], hover = -1, sel = -1;
   function draw() {
     var cv = $('mapCan'), w0 = cv.clientWidth, H0 = Math.max(380, Math.min(620, w0 * 0.78)), r = RN.setup(cv, H0), x = r[0], w = r[1], H = r[2]; x.clearRect(0, 0, w, H);

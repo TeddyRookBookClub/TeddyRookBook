@@ -4,6 +4,8 @@
      ch1.js hero, formula, levels, composer, ladder   ch2.js fifths, euclid, locking, primemusic
      ch3.js orchard, corr, hydrogen, sunflower, wrapv  ch4.js quasi, zeros   ch5.js cfrac, mersenne, reverse, hunt
      play.js poly, drums, compose (with the MIDI and WAV writers)   map.js the epilogue map
+     Chapter VII has its own page (/connections/rhythm-of-numbers/fractals/, layouts/connections/rhythm-fractals.html):
+     fr1.js frHero, patterns, ford   fr2.js sb, mink, stair   fr3.js dust, bulbs, fibword, gauss
    A section is <section class="rn-s" id="<id>" data-mod="<file>">. Its file calls RN.def('<id>', { init(el), redraw(),
    number(), show(visible) }). init runs once, when the section is near the screen; redraw on resize and theme change;
    number when the shared number changes; show when it scrolls in or out (players stop drawing off-screen).
@@ -345,7 +347,7 @@
   }, { rootMargin: '0px' });
 
   /* ---------- threads (highlight the sections that share an idea) ---------- */
-  var THREADS = RN.THREADS = { cf: ['Continued fractions', '--rn-g'], even: ['Even spacing', '--rn-teal'], coprime: ['Coprime', '--rn-violet'], wave: ['Waves', '--rn-rose'], rot: ['Rotation', '--rn-blue'], primes: ['Primes', '--rn-prime'], sq: ['1/n²', '--rn-muted'] };
+  var THREADS = RN.THREADS = { cf: ['Continued fractions', '--rn-g'], even: ['Even spacing', '--rn-teal'], coprime: ['Coprime', '--rn-violet'], wave: ['Waves', '--rn-rose'], rot: ['Rotation', '--rn-blue'], primes: ['Primes', '--rn-prime'], sq: ['1/n²', '--rn-muted'], self: ['Self-similar', '--rn-gold'] };
   RN.thread = null;
   function applyThread() {
     D.querySelectorAll('#rn-threads button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.t === RN.thread)); });
