@@ -142,4 +142,25 @@ problems:
     topic: "Altitude feet, touch points, and reflected lines meeting the incircle"
     areas: [geometry]
     difficulty: 5
-    status: coming
+    hints:
+      - 'The line $L_1L_2$ is perpendicular to the bisector of the angle at $A_3$. The line $K_1K_2$ is the side $A_1A_2$ flipped in that bisector and shrunk toward $A_3$ by the factor $\cos A_3$.'
+      - 'Two reflections in perpendicular directions make a half turn. Show that the reflected line is the image of $A_1A_2$ under the homothety with center $I$ and ratio $-\cos A_3$.'
+    solution: |
+      Let $\alpha_1,\alpha_2,\alpha_3$ be the angles at $A_1,A_2,A_3$, $I$ and $r$ the incenter and inradius, $O$ and $R$ the circumcenter and circumradius.
+
+      **Key idea:** the reflection of $K_1K_2$ in $L_1L_2$ is the image of the side $A_1A_2$ under the homothety with center $I$ and ratio $-\cos\alpha_3$. So the three new lines are the sides of a copy of the triangle, scaled by $\frac rR$ and turned half around, whose corners lie at distance $r$ from $I$.
+
+      **Step 1: a map that sends $A_1A_2$ to $K_1K_2$.** Let $\phi$ be the reflection in the bisector of the angle at $A_3$, followed by the homothety with center $A_3$ and ratio $\cos\alpha_3$ (positive, as the triangle is acute). The reflection moves $A_1$ onto ray $A_3A_2$, and the homothety brings it to distance $A_3A_1\cos\alpha_3$ from $A_3$. In the right triangle $A_1K_1A_3$ that distance is $A_3K_1$, so $\phi(A_1)=K_1$. Likewise $\phi(A_2)=K_2$, so $\phi$ maps line $A_1A_2$ onto line $K_1K_2$. The incenter is on the bisector, so $\phi(I)=I^*$, the point of segment $A_3I$ with $A_3I^*=A_3I\cos\alpha_3$.
+
+      **Step 2: the reflection in $L_1L_2$.** Since $A_3L_1=A_3L_2$, the line $L_1L_2$ is perpendicular to the bisector $A_3I$. In the right triangle $A_3L_1I$, $A_3L_1=A_3I\cos\frac{\alpha_3}2$, so $L_1L_2$ crosses the bisector at distance $A_3L_1\cos\frac{\alpha_3}2=A_3I\cos^2\frac{\alpha_3}2$ from $A_3$. Let $\sigma$ be the reflection in $L_1L_2$. On the bisector it sends the point at distance $d$ from $A_3$ to the point at distance $2A_3I\cos^2\frac{\alpha_3}2-d=A_3I\,(1+\cos\alpha_3)-d$. In particular $\sigma(I^*)=I$.
+
+      **Step 3: the composite is a homothety at $I$.** $\sigma\circ\phi$ is a similarity. Its linear part is a reflection in the direction of the bisector, then a reflection in the perpendicular direction, times $\cos\alpha_3$. Two reflections in perpendicular lines make a half turn, so the linear part is $-\cos\alpha_3$ times the identity. A similarity with this linear part that fixes $I$ is the homothety $H_3$ with center $I$ and ratio $-\cos\alpha_3$. Therefore
+      $$\sigma(K_1K_2)=\sigma\big(\phi(A_1A_2)\big)=H_3(A_1A_2).$$
+      The new line is parallel to $A_1A_2$, at distance $r\cos\alpha_3$ from $I$, on the side of $I$ toward $A_3$ (the line $A_1A_2$ is at distance $r$ from $I$, on the other side).
+
+      **Step 4: the new triangle.** Let $h(X)=I-\frac rR\,(X-O)$. Because the triangle is acute, $O$ lies inside it at distance $R\cos\alpha_3$ from $A_1A_2$. So $h$ maps line $A_1A_2$ to the line parallel to it at distance $\frac rR\cdot R\cos\alpha_3=r\cos\alpha_3$ from $I$, on the side toward $A_3$. That is the line from Step 3. The same holds for the other two pairs of lines. So the three new lines are the sides of the triangle $h(A_1)h(A_2)h(A_3)$, and
+      $$|h(A_i)-I|=\tfrac rR\,|A_i-O|=r .$$
+      The three new lines form a triangle whose vertices lie on the incircle. $\blacksquare$
+    checked: "numeric: 2000 random acute triangles; the pairwise meeting points of the three reflected lines lie at distance r from I (error below 1e-12), and each reflected line matches the homothety image of the side"
+    viz: imo-2000-p6
+    status: ready

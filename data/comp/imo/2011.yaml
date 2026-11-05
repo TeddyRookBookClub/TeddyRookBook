@@ -144,4 +144,45 @@ problems:
     topic: "Reflected tangent lines and a circle tangent to the circumcircle"
     areas: [geometry]
     difficulty: 5
-    status: coming
+    hints:
+      - 'Use complex numbers with $\Gamma$ the unit circle, and turn the picture so the tangent line touches $\Gamma$ at $1$. Reflection in the chord $BC$ is $z\mapsto b+c-bc\,\bar z$.'
+      - 'With $\sigma_1,\sigma_2,\sigma_3$ the symmetric functions of $a,b,c$ and $P=(a+b)(b+c)(c+a)$, test the point $Q=(\sigma_3-\sigma_2)^2/P$ as the circumcenter of the new triangle.'
+    solution: |
+      **Key idea:** in complex coordinates the corners of the new triangle and its circumcenter are short formulas in $a,b,c$. The distance between the two centers and the two radii then turn out to be three numbers $|u|$, $|y|$, $|u+y|$ built from two real numbers $u,y$, and that forces tangency.
+
+      Let $\Gamma$ be the unit circle and $a,b,c$ the vertices, so $\bar a=1/a$, and so on. Turn the picture so that $\ell$ touches $\Gamma$ at $1$; then $\ell$ is the line $z+\bar z=2$. Put
+      $$\sigma_1=a+b+c,\quad\sigma_2=ab+bc+ca,\quad\sigma_3=abc,\quad P=(a+b)(b+c)(c+a)=\sigma_1\sigma_2-\sigma_3 .$$
+      Then $|\sigma_3|=1$, $\bar\sigma_1=\sigma_2/\sigma_3$ and $\bar\sigma_2=\sigma_1/\sigma_3$. The triangle is acute, so no side is a diameter: $a+b$, $b+c$, $c+a$ and $P$ are nonzero.
+
+      **The reflected lines.** Reflection in line $BC$ is $z\mapsto w=b+c-bc\,\bar z$ (it fixes $b$ and $c$ and reverses orientation). Then $z=b+c-bc\,\bar w$. Putting this into $z+\bar z=2$ and multiplying by $bc$:
+      $$\ell_a:\quad w+b^2c^2\,\bar w=(b+c)(1+bc)-2bc,$$
+      and $\ell_b$, $\ell_c$ come from cycling $a\to b\to c\to a$.
+
+      **The corners.** Let $A'$ be the meeting point of $\ell_b$ and $\ell_c$. Subtracting their equations,
+      $$a^2(c^2-b^2)\,\bar w=(c-b)\,\big(1+a(b+c)+a^2-2a\big).$$
+      Divide by $a^2(c-b)(c+b)$, take conjugates and multiply out:
+      $$A'=\frac{\sigma_2-2\sigma_3+a\sigma_3}{b+c},$$
+      and cyclically for $B'$, $C'$.
+
+      **The circumcenter.** Let $Q=\dfrac{(\sigma_3-\sigma_2)^2}{P}$. Since $(a+b)(a+c)=a^2+\sigma_2$,
+      $$P\,(Q-A')=(\sigma_3-\sigma_2)^2-(\sigma_2-2\sigma_3+a\sigma_3)(a^2+\sigma_2).$$
+      Expanding, and using $a^2-a\sigma_1+\sigma_2=bc$ (so that $\sigma_3-a^3-a\sigma_2=-a^2\sigma_1$), this equals $-a^2Z$ with
+      $$Z=\sigma_1\sigma_3-2\sigma_3+\sigma_2 .$$
+      Both $Z$ and $P$ are symmetric in $a,b,c$, so $|Q-A'|=|Q-B'|=|Q-C'|=|Z|/|P|$. So $Q$ is the circumcenter of the new triangle and its radius is $\rho=|Z|/|P|$. (If $Z=0$ the three lines go through one point and there is no triangle.)
+
+      **Two real numbers.** Let $X=\sigma_3-\sigma_2$. Then $\bar X=(1-\sigma_1)/\sigma_3$, that is, $\sigma_1=1-\sigma_3\bar X$. So
+      $$Z=\sigma_3(\sigma_1-1)-X=-\big(X+\sigma_3^2\bar X\big)=\sigma_3\,y,\qquad y=-\Big(\frac X{\sigma_3}+\overline{\Big(\frac X{\sigma_3}\Big)}\Big),$$
+      and $y$ is real. Also, with $u=|X|^2$,
+      $$P=\sigma_1(\sigma_3-X)-\sigma_3=\sigma_3(\sigma_1-1)-\sigma_1X=Z+\sigma_3|X|^2=\sigma_3\,(u+y).$$
+      Let $d=|Q|$ be the distance between the centers. Since $|\sigma_3|=1$,
+      $$d\,|P|=u,\qquad \rho\,|P|=|y|,\qquad |P|=|u+y| .$$
+
+      **Tangency.** The real numbers $u\ge0$ and $y$ satisfy $u=(u+y)-y$. So:
+      - if $y\le0\le u+y$, then $u=|u+y|+|y|$ and $d=1+\rho$: the circles touch from outside;
+      - if $y>0$, then $u=|u+y|-|y|$ and $d=1-\rho$: the new circle touches $\Gamma$ from inside;
+      - if $u+y<0$, then $u=|y|-|u+y|$ and $d=\rho-1$: $\Gamma$ touches the new circle from inside.
+
+      In every case the circumcircle of the triangle formed by $\ell_a,\ell_b,\ell_c$ is tangent to $\Gamma$.
+    viz: imo-2011-p6
+    checked: "sympy: the corner and circumcenter formulas and the identity for P(Q − A′) checked symbolically; numerically, 20,000 random configurations matched every formula and the tangency relation (all three cases occur)"
+    status: ready

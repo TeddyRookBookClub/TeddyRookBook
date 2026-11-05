@@ -24,7 +24,7 @@ html[data-theme="dark"] .wt{--acc:#6cc79a}
 @media (max-width:600px){.wt-pair{grid-template-columns:1fr}.wt-nums{font-size:.55rem}}
 </style>
 <article class="wt">
-<p class="note"><a href="{{ "games/" | relURL }}">‹ All games</a> · A test page for an idea. It is not part of any game yet.</p>
+<p class="note"><a href="{{ "games/" | relURL }}">‹ All games</a> · A test page for an idea that two of our games now use.</p>
 <h1>{{ .Title }}</h1>
 <p>Many pixel-art games build their ground from small square tiles. If you drop tiles down at random, the edges don't line up. If you repeat one tile, the eye soon spots the pattern. <b>Wang tiles</b> fix both: every tile's sides are marked, and a tile can only sit next to a tile whose side matches. Pick at random among the tiles that fit, and the ground joins up everywhere without looking repeated.</p>
 <p>This set marks the <b>corners</b> instead of the sides: each corner is either grass or path. Four corners with two choices each make 16 tiles. Every tile and pixel here is drawn by the page's own code.</p>
@@ -56,12 +56,13 @@ html[data-theme="dark"] .wt{--acc:#6cc79a}
 <canvas id="wt-paint" width="256" height="160" role="img" aria-label="A field you can paint a path on. Borders are drawn automatically."></canvas>
 <p class="note">Turn off Autotile to see the same path as plain squares. Big games often use a 47-tile "blob" set, which also tells straight sides from inside corners; it costs more art but looks smoother.</p>
 
-<h2>Where this could help</h2>
+<h2>How it works in our games</h2>
 <ul>
-<li><b>Ancient Festival Tycoon:</b> soft path borders and grass-to-sand edges on the festival ground.</li>
-<li><b>Hero's Road:</b> ground and cave edges that change shape along the level.</li>
-<li><b>Charioteer:</b> street, garden and water edges in the city map.</li>
+<li><b><a href="{{ "games/hero/" | relURL }}">Hero's Road</a>:</b> every ground square checks its four sides. An open top gets grass, an open side becomes a cliff edge, two open sides meet in a rounded corner, and an open bottom (a cave roof) gets little drips. That is 16 shapes, and each one comes in four looks. The looks share the same rule at their sides (grass depth, rock courses), so they always join, and long stretches of ground stop looking stamped. The tiles are drawn once into small hidden canvases and reused.</li>
+<li><b><a href="{{ "games/festival/" | relURL }}">Ancient Festival Tycoon</a>:</b> each path square rounds a corner when neither side next to it has a path, and fills inside corners with a small curve. The border wobbles a little, but always ends where the next square's border starts, so it runs on without a step. Grass leans over the edge here and there.</li>
+<li><b>Maybe later:</b> street, garden and water edges in Charioteer's city map.</li>
 </ul>
+<p class="note">Only the drawing changed. The games play the same, and saved games load as before.</p>
 
 <h2>Sources</h2>
 <ul class="note">

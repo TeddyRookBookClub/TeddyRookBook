@@ -83,7 +83,31 @@ problems:
     difficulty: 3
     hints:
       - 'The smallest altitude is twice the area divided by the longest side. Start with the case where $X$ is inside triangle $ABC$.'
-    status: coming
+      - 'The smallest altitude is also the width of the triangle: the narrowest strip between two parallel lines that holds it. A triangle inside another has smaller width.'
+    solution: |
+      **Key idea:** $m$ is the *width* of the triangle, the narrowest strip between two parallel lines that holds it, so it can only grow when the triangle grows. When $X$ is inside $ABC$, an area count settles it; the other positions reduce to that case.
+
+      For a triangle with area $S$ and longest side $c$, the shortest altitude is the one to the longest side, so $m=\frac{2S}c$. For collinear points $m=0$.
+
+      **Lemma (width).** Every strip that holds a triangle $T$ has width at least $m(T)$. *Proof.* Let the strip have width $w$, and order the vertices $V_1,V_2,V_3$ by their distance from one edge of the strip. The line through $V_2$ parallel to the strip meets $V_1V_3$ at a point $Z$. The segment $V_2Z$ lies in $T$, so $V_2Z\le c$ (no segment in a triangle is longer than its longest side). It cuts $T$ into two triangles whose heights from $V_1$ and $V_3$ add up to at most $w$:
+      $$S=\tfrac12\,V_2Z\,(h_1+h_3)\le\tfrac12\,c\,w,$$
+      so $w\ge\frac{2S}c=m(T)$. $\square$
+
+      The strip bounded by the longest side and the parallel line through the opposite vertex has width exactly $m(T)$. So if a triangle $T$ lies inside a triangle $T'$, then $m(T)\le m(T')$: a strip that holds $T'$ also holds $T$.
+
+      We may assume $A,B,C$ are not collinear (otherwise the left side is $0$). Let $c$ be the longest side of $ABC$.
+
+      **Case 1: $X$ in triangle $ABC$ (boundary included).** The three small triangles fill $ABC$, so $[ABX]+[AXC]+[XBC]=[ABC]$. Each small triangle lies in $ABC$, so its longest side is at most $c$, and $m(\text{small})\ge\frac{2[\text{small}]}c$ (also when it is flat and both sides are $0$). Adding up,
+      $$m(ABX)+m(AXC)+m(XBC)\ge\frac{2[ABC]}c=m(ABC).$$
+
+      **Case 2: $X$ outside.** Then $X$ is a corner of the convex hull of $A,B,C,X$.
+      - If one of $A,B,C$ is not a corner of the hull, it lies in the triangle formed by the other three points, which include $X$; say $A$ lies in $XBC$. Then $ABC$ lies in $XBC$, and $m(ABC)\le m(XBC)$.
+      - Otherwise the four points form a convex quadrilateral, with $X$ opposite one of $A,B,C$; say the order is $A,B,X,C$. The diagonals $AX$ and $BC$ cross at a point $Y$ of segment $BC$. Case 1 for $Y$ (where $m(YBC)=0$), and then the width lemma for $ABY\subseteq ABX$ and $AYC\subseteq AXC$, give
+      $$m(ABC)\le m(ABY)+m(AYC)\le m(ABX)+m(AXC).$$
+
+      In every case $m(ABC)\le m(ABX)+m(AXC)+m(XBC)$.
+    checked: "numeric: 200,000 random sets of four points satisfy the inequality; for 300 triangles, the narrowest strip found by rotating matches the smallest altitude"
+    status: ready
 
   - id: P5
     day: 2

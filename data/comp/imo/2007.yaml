@@ -61,7 +61,31 @@ problems:
     topic: "Splitting friends into two rooms with equal largest cliques"
     areas: [combinatorics]
     difficulty: 5
-    status: coming
+    hints:
+      - 'Start with a largest clique $K$ (size $2m$) alone in one room. Move its members across one at a time. Moving one person changes each room''s largest clique by at most $1$.'
+      - 'If you overshoot, so that the rooms have largest cliques $a$ and $a+1$, move people who are not in $K$ back. Move only people who are friends with every member of $K$ in the second room. Why can the first room then never get a clique of size $a+1$?'
+    solution: |
+      **Key idea:** first shift members of a largest clique until the two rooms are within $1$ of each other. If the second room is still ahead by one, move outsiders back one at a time, choosing them so that they are friends with all the clique members left behind. A clique that grew too big in the first room would then extend to a clique larger than the largest one.
+
+      For a group $X$ write $\omega(X)$ for the size of its largest clique. Moving one person from one room to the other changes each room's $\omega$ by at most $1$. If there is at least one competitor, the largest clique size is at least $1$, and being even it is $2m$ with $m\ge1$. Fix a clique $K$ with $|K|=2m$.
+
+      **Phase 1.** Put $K$ in room $A$ and everybody else in room $B$. While $\omega(A)>\omega(B)$, move one member of $K$ from $A$ to $B$. Room $A$ always consists of members of $K$, so $\omega(A)=|A|$. Once $|A|=m$, room $B$ holds $m$ members of $K$, so $\omega(B)\ge m=|A|$. So the process stops with $|A|=a\ge m$.
+
+      If no one was moved, then $\omega(B)\ge2m$, and since no clique is larger, $\omega(B)=2m=\omega(A)$: done. Otherwise, just before the last move we had $a+1>\omega(B_{\text{before}})$, and the move added at most $1$, so $a\le\omega(B)\le a+1$. If $\omega(B)=a$ we are done. So assume $\omega(A)=a$ and $\omega(B)=a+1$.
+
+      Let $S=B\cap K$, the clique members in room $B$. Then $|S|=2m-a\le m\le a$.
+
+      **Phase 2.** Repeat the following.
+      - **(i)** If some clique $C\subseteq B$ of size $a+1$ misses a member $s$ of $S$, move $s$ to $A$. Room $A$ now contains the clique $(A\cap K)\cup\{s\}$ of size $a+1$, and $\omega(A)$ grew by at most $1$, so $\omega(A)=a+1$. Room $B$ still contains $C$, so $\omega(B)=a+1$. Done.
+      - **(ii)** Otherwise every clique of size $a+1$ in $B$ contains all of $S$. Take one, $C$. Since $|C|=a+1>|S|$, it has a member $x\notin K$, and $x$ is friends with everyone in $S$. Move $x$ to $A$.
+
+      **Room $A$ never gets a clique of size $a+1$ in step (ii).** Room $A$ consists of the $a$ members of $A\cap K$ plus people moved in step (ii), and each of those is friends with all of $S$. (The set $S$ does not change during Phase 2.) Suppose $Q\subseteq A$ were a clique of size $a+1$. Its members from $K$ are friends with $S$ because $K$ is a clique, and its other members are friends with $S$ by the choice in (ii). So $Q\cup S$ is a clique of size
+      $$(a+1)+(2m-a)=2m+1,$$
+      larger than the largest clique. Impossible. So after each step (ii), $\omega(A)=a$ (it can't drop, since $A\cap K$ stays), and $\omega(B)$ is $a$ or $a+1$. If it is $a$, we are done; otherwise repeat.
+
+      **The process ends.** Each step (ii) removes from $B$ someone outside $K$. If $B$ ever held only $S$, we would have $\omega(B)=|S|\le a$. So after finitely many steps one of the stopping cases happens, and the two rooms have equal largest cliques.
+    checked: "script: the two-phase procedure run with random choices on 10,320 random graphs (up to 12 vertices) and on every graph with at most 6 vertices; it always ended with equal largest cliques, and room A never exceeded a in step (ii)"
+    status: ready
 
   - id: P4
     day: 2

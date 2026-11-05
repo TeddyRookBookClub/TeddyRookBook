@@ -82,7 +82,41 @@ problems:
     topic: "Largest similar triangle circumscribed about a given triangle"
     areas: [geometry]
     difficulty: 4
-    status: coming
+    answer: 'Let $M$ be the point inside $A_0B_0C_0$ with $\angle B_0MC_0=180^\circ-\angle A_1$, $\angle C_0MA_0=180^\circ-\angle B_1$, $\angle A_0MB_0=180^\circ-\angle C_1$. The largest triangle is the one whose sides pass through $A_0,B_0,C_0$ perpendicular to $MA_0,MB_0,MC_0$; its vertices are the points diametrically opposite $M$ on the circles $MB_0C_0$, $MC_0A_0$, $MA_0B_0$. It is unique.'
+    hints:
+      - 'In an allowed triangle, $\angle B_0AC_0=\angle A_1$. So the vertex $A$ always lies on one fixed circle through $B_0$ and $C_0$.'
+      - 'Take two circles that meet at $C_0$, and a line through $C_0$ that meets them again at $A$ and $B$. Project the two centers onto the line: $AB$ is twice the projection of the segment joining the centers.'
+    solution: |
+      Write $\alpha,\beta,\gamma$ for the angles of $A_1B_1C_1$. Call a triangle $ABC$ *allowed* if it is similar to $A_1B_1C_1$ (in this vertex order) and $A_0,B_0,C_0$ lie on the sides $BC,CA,AB$ (endpoints allowed). All allowed triangles have the same shape, so the one with the longest side $AB$ has the largest area.
+
+      **Key idea:** each vertex of an allowed triangle moves on a fixed circle, and the three circles share a point $M$. A segment through a common point of two circles, with its ends on the circles, is longest when it is parallel to the line of centers. That happens exactly when $A,B,C$ are the points opposite $M$ on the circles.
+
+      **Step 1: the point $M$.** The angles $p=180^\circ-\alpha$, $q=180^\circ-\beta$, $r=180^\circ-\gamma$ add up to $360^\circ$, and each is more than $90^\circ$, so more than the matching angle of the acute triangle $A_0B_0C_0$. (This is where both triangles being acute is used.) We show there is a point $M$ inside $A_0B_0C_0$ with $\angle B_0MC_0=p$, $\angle C_0MA_0=q$, $\angle A_0MB_0=r$.
+
+      Write $x,y,z$ for the angles of $A_0B_0C_0$ at $A_0,B_0,C_0$. The points $Q$ on $A_0$'s side of $B_0C_0$ with $\angle B_0QC_0=p$ form an arc from $B_0$ to $C_0$; label them by $\varphi=\angle QB_0C_0\in(0^\circ,180^\circ-p)$. Such a $Q$ is inside the triangle exactly when $\varphi<y$ and $180^\circ-p-\varphi<z$. That is an interval $J$ of values of $\varphi$, and it is not empty because $p>x$. Inside the triangle, $\angle C_0QA_0+\angle A_0QB_0=360^\circ-p$, so we only need $g=\angle A_0QB_0$ to equal $r$.
+      - At the lower end of $J$, $Q$ tends to $C_0$ (then $g\to z<r$) or to a point of side $C_0A_0$ (then $\angle C_0QA_0\to180^\circ$, so $g\to180^\circ-p<r$, because $q<180^\circ$).
+      - At the upper end, $Q$ tends to $B_0$ (then $\angle C_0QA_0\to y<q$, so $g\to360^\circ-p-y>r$) or to a point of side $A_0B_0$ (then $g\to180^\circ>r$).
+
+      By continuity $g=r$ somewhere in $J$. That point is $M$.
+
+      **Step 2: three fixed circles.** Let $\omega_A,\omega_B,\omega_C$ be the circles $MB_0C_0$, $MC_0A_0$, $MA_0B_0$, with centers $O_A,O_B,O_C$. For every allowed triangle, $A\in\omega_A$. If $A$ is $B_0$ or $C_0$ this is clear. Otherwise $B_0,C_0$ lie on the rays $AC,AB$, so $\angle B_0AC_0=\alpha$. The line $B_0C_0$ cuts off the corner $A$ from the side $BC$, which contains $A_0$, and $M$ is on $A_0$'s side. So $A$ and $M$ are on opposite sides of $B_0C_0$ with $\angle B_0AC_0+\angle B_0MC_0=180^\circ$, and $A,B_0,M,C_0$ are concyclic. In the same way $B\in\omega_B$ and $C\in\omega_C$.
+
+      **Step 3: the bound.** Drop perpendiculars from $O_A$ and $O_B$ to the line $AB$. Since $A$ and $C_0$ are on $\omega_A$, the first foot is the midpoint of $AC_0$; likewise the second foot is the midpoint of $C_0B$. These midpoints are $\frac12AB$ apart, so
+      $$AB=2\cdot\big(\text{length of the projection of }O_AO_B\text{ on line }AB\big)\le2\,O_AO_B,$$
+      with equality exactly when $AB\parallel O_AO_B$. (If $A=C_0$, the tangent-chord angle shows that line $AB$ touches $\omega_A$ at $C_0$, and the same formula holds.)
+
+      **Step 4: the triangle that reaches the bound.** Let $A^*,B^*,C^*$ be the points diametrically opposite $M$ on $\omega_A,\omega_B,\omega_C$. By Thales, $\angle MB_0A^*=\angle MC_0A^*=90^\circ$. So the three lines through $A_0,B_0,C_0$ perpendicular to $MA_0,MB_0,MC_0$ form the triangle $A^*B^*C^*$.
+      - *Its angles.* The chord $B_0C_0$ is seen from $M$ at the obtuse angle $p$, so the center $O_A$, and with it $A^*=2O_A-M$, lies on the far side of $B_0C_0$ from $M$. So $MB_0A^*C_0$ is a convex quadrilateral with right angles at $B_0$ and $C_0$, and its angle at $A^*$ is $180^\circ-p=\alpha$. In the same way the angles at $B^*$ and $C^*$ are $\beta$ and $\gamma$.
+      - *The points are inside the sides.* From the convex quadrilaterals $MA_0B^*C_0$ and $MA_0C^*B_0$, $B^*$ lies on $C_0$'s side of line $MA_0$ and $C^*$ on $B_0$'s side. Since $M$ is inside $A_0B_0C_0$, line $MA_0$ separates $B_0$ from $C_0$. So $A_0$ lies strictly between $B^*$ and $C^*$. The same holds for $B_0$ and $C_0$.
+
+      So $A^*B^*C^*$ is allowed. Its side $A^*B^*$ is perpendicular to $MC_0$, the common chord of $\omega_A$ and $\omega_B$, so it is parallel to $O_AO_B$, and $A^*B^*=2\,O_AO_B$.
+
+      **Conclusion.** Every allowed triangle has $AB\le A^*B^*$, so its area is at most that of $A^*B^*C^*$. Equality forces $AB\parallel O_AO_B$. That fixes the line $AB$ through $C_0$, hence $A=A^*$, $B=B^*$, and then $C=C^*$. So the maximum is reached by $A^*B^*C^*$ only.
+
+      **Construction.** On $B_0C_0$, on the side of $A_0$, draw the arc of points that see $B_0C_0$ at the angle $180^\circ-\angle A_1$. Do the same on $C_0A_0$ with $180^\circ-\angle B_1$. The arcs meet inside the triangle at $M$ (the third arc passes through it as well). Draw the lines through $A_0,B_0,C_0$ perpendicular to $MA_0,MB_0,MC_0$.
+    checked: "script: 120 random pairs of acute triangles; a scan of all allowed triangles finds the largest area equal to that of the triangle built from M (relative gap below 1e-6), and that triangle is always allowed"
+    viz: imo-1967-p4
+    status: ready
 
   - id: P5
     day: 2

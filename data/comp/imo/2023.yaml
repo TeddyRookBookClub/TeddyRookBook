@@ -190,4 +190,53 @@ problems:
     topic: "Equilateral triangle, three apex points, circles sharing two points"
     areas: [geometry]
     difficulty: 5
-    status: coming
+    hints:
+      - 'Write the three apex angles as $2x,2y,2z$, so $x+y+z=240^\circ$ and each lies between $60^\circ$ and $90^\circ$. Show that $\angle BA_2C=x$, so $A_1$ is the centre of the circle $BCA_2$.'
+      - 'Two of the circles meet: $A_1,B_1,A_2,B_2$ are concyclic and the chords $A_1A_2$, $B_1B_2$ cross. For the third circle, find numbers $\lambda_A,\lambda_B,\lambda_C$ with sum $0$ such that $\lambda_A\,\mathrm{pow}_A+\lambda_B\,\mathrm{pow}_B+\lambda_C\,\mathrm{pow}_C$ is identically $0$. Try $\lambda_A=\sin x\sin(z-y)$.'
+    solution: |
+      **Key idea:** first show that two of the circles cross, using a point $R$ that has the same negative power with respect to both. Then show, with coordinates, that the three "power functions" satisfy a linear relation whose weights add up to $0$. Any point on two of the circles is then on the third.
+
+      Throughout, $\mathrm{pow}_A(W)$ is the power of a point $W$ with respect to the circle $\omega_A=(AA_1A_2)$, and likewise for $\omega_B=(BB_1B_2)$ and $\omega_C=(CC_1C_2)$. Let $O$ be the centre of $ABC$ and take the circumradius as $1$, so each side is $\sqrt3$.
+
+      **Step 0: the angles.** Let $\angle BA_1C=2x$, $\angle CB_1A=2y$, $\angle AC_1B=2z$, so $x+y+z=240^\circ$. A point inside the triangle on the perpendicular bisector of $BC$ sees $BC$ at an angle between $60^\circ$ and $180^\circ$, so $x<90^\circ$, and then $x=240^\circ-y-z>60^\circ$. So $x,y,z\in(60^\circ,90^\circ)$.
+
+      The base angles are $\angle A_1BC=\angle A_1CB=90^\circ-x$, and similarly for $B_1$ and $C_1$. Since $A_2=BC_1\cap CB_1$,
+      $$\angle A_2BC=60^\circ-(90^\circ-z)=z-30^\circ,\qquad \angle A_2CB=y-30^\circ,\qquad \angle BA_2C=240^\circ-y-z=x .$$
+      $A_2$ is on the same side of $BC$ as $A_1$ and sees $BC$ at half the angle, so **$A_1$ is the centre of circle $BCA_2$**: $A_1A_2=A_1B=A_1C$. In the same way $B_1$ is the centre of circle $CAB_2$ and $C_1$ of circle $ABC_2$.
+
+      If triangle $A_1B_1C_1$ is scalene, then $x,y,z$ are all different: if $x=y$, the reflection in the axis through $C$ swaps $A_1$ and $B_1$ and fixes $C_1$, so $C_1A_1=C_1B_1$.
+
+      **Step 1: $\omega_A$ and $\omega_B$ meet in two points.** Let $\gamma=\angle A_1CB_1=60^\circ-(90^\circ-x)-(90^\circ-y)=120^\circ-z$, which is between $30^\circ$ and $60^\circ$. The point $A_2$ is on ray $CB_1$, and $CA_2$ is a chord of the circle about $A_1$ with radius $CA_1$, making the angle $\gamma$ with that radius. So $CA_2=2\,CA_1\cos\gamma$. Likewise $B_2$ is on ray $CA_1$ and $CB_2=2\,CB_1\cos\gamma$. Hence
+      $$CA_1\cdot CB_2=CB_1\cdot CA_2,$$
+      and $A_1,B_1,A_2,B_2$ lie on one circle $\Psi$ (converse of the power of a point).
+
+      Next, $CA_2>CB_1$. Since $CA_1=\frac{\sqrt3}{2\sin x}$ and $CB_1=\frac{\sqrt3}{2\sin y}$, this says $2\sin y\cos(120^\circ-z)>\sin x$. The left side equals $\sin(120^\circ+y-z)+\sin(120^\circ-x)$, using $y+z-120^\circ=120^\circ-x$. Now $\sin x-\sin(120^\circ-x)=\sin(x-60^\circ)<\tfrac12$, while $120^\circ+y-z$ is between $90^\circ$ and $150^\circ$, so $\sin(120^\circ+y-z)>\tfrac12$. The same argument gives $CB_2>CA_1$.
+
+      So $B_1$ lies between $C$ and $A_2$, and $A_1$ lies between $C$ and $B_2$. In triangle $CA_2B_2$ the segments $A_2A_1$ and $B_2B_1$ join two vertices to inner points of the opposite sides, so they cross at a point $R$ inside both segments. By intersecting chords,
+      $$\mathrm{pow}_A(R)=-RA_1\cdot RA_2=\mathrm{pow}_\Psi(R)=-RB_1\cdot RB_2=\mathrm{pow}_B(R)<0 .$$
+      So $R$ is inside both circles and on their radical axis. That line meets $\omega_A$ in two points $X,Y$, and since $\mathrm{pow}_B=\mathrm{pow}_A=0$ there, $X$ and $Y$ lie on $\omega_B$ too. (If the two circles were the same, any two of its points would do.) Note that $\omega_A$ is a true circle: by Step 2, $A_2$ is off the line $AA_1$ because $y\ne z$.
+
+      **Step 2: the centre of $\omega_A$.** Let $u_A$ be the unit vector from $O$ to $A$, and $e_A=\frac{B-C}{\sqrt3}$, which is perpendicular to it. Then
+      $$A=u_A,\qquad A_1=h_Au_A\ \text{ with }\ h_A=-\tfrac12+\tfrac{\sqrt3}2\cot x,\qquad \rho_A=A_1B=\frac{\sqrt3}{2\sin x}.$$
+      From $A_1$, the direction to $B$ makes the angle $180^\circ-x$ with $u_A$, and $\angle BA_1A_2=2\angle BCA_2=2y-60^\circ$, turning toward $u_A$. So, with $\delta_A=z-y$,
+      $$A_2=A_1+\rho_A\big(\cos\delta_A\,u_A+\sin\delta_A\,e_A\big).$$
+      The centre $O_A$ is on the perpendicular bisector of $AA_1$, so $O_A=\frac{1+h_A}2u_A+t_Ae_A$ for some $t_A$. The condition $|O_A-A_1|=|O_A-A_2|$ reads $(1-h_A)\cos\delta_A+2t_A\sin\delta_A=\rho_A$. Using $\cos x-\sqrt3\sin x=2\cos(x+60^\circ)$ and $\sin x+\sqrt3\cos x=2\sin(x+60^\circ)$, this gives
+      $$O_A=\frac{\sin(x+60^\circ)}{2\sin x}\,u_A+\frac{\sqrt3\,\big(1+2\cos\delta_A\cos(x+60^\circ)\big)}{4\sin x\sin\delta_A}\,e_A .$$
+      Also $\mathrm{pow}_A(O)=OA\cdot OA_1$ (with signs along $u_A$), which is $h_A$.
+
+      The same formulas hold for $\omega_B$ and $\omega_C$ after the cyclic change $A\to B\to C\to A$, $x\to y\to z\to x$. So $e_B=\frac{C-A}{\sqrt3}$, $e_C=\frac{A-B}{\sqrt3}$, $\delta_B=x-z$ and $\delta_C=y-x$.
+
+      **Step 3: a linear relation.** Put $\lambda_A=\sin x\sin(z-y)$, $\lambda_B=\sin y\sin(x-z)$, $\lambda_C=\sin z\sin(y-x)$; all are nonzero. Write $p_x=\cos(2x+60^\circ)$, and similarly $p_y,p_z$. Product-to-sum formulas and $x+y+z=240^\circ$ give
+      $$\lambda_A=\tfrac12\big(\cos(240^\circ-2z)-\cos(240^\circ-2y)\big),\qquad \lambda_AO_A=\tfrac14\Big((p_z-p_y)\,u_A+\sqrt3\,(1+p_y+p_z)\,e_A\Big).$$
+      Now sum cyclically.
+      - $\sum\lambda=0$, because the differences $\cos(240^\circ-2z)-\cos(240^\circ-2y)$ cancel around the cycle.
+      - In $\sum\lambda O$, the constant part is $\frac{\sqrt3}4(e_A+e_B+e_C)=0$. The coefficient of $p_x$ is $\frac14\big(u_B-u_C+\sqrt3(e_B+e_C)\big)=\frac14\big((B-C)+(C-B)\big)=0$, and the same holds for $p_y$ and $p_z$. So $\sum\lambda O=0$.
+      - $\sum\lambda h=-\tfrac12\sum\lambda+\tfrac{\sqrt3}2\sum\cos x\sin(z-y)$, and $\cos x\sin(z-y)=\tfrac12\big(\sin(240^\circ-2y)-\sin(240^\circ-2z)\big)$ also cancels around the cycle. So $\sum\lambda h=0$.
+
+      For any point $W$ (with $O$ as origin), $\mathrm{pow}_A(W)=|W|^2-2\,W\cdot O_A+\mathrm{pow}_A(O)$, and similarly for $B$ and $C$. Therefore
+      $$\lambda_A\,\mathrm{pow}_A(W)+\lambda_B\,\mathrm{pow}_B(W)+\lambda_C\,\mathrm{pow}_C(W)=\Big(\sum\lambda\Big)|W|^2-2\,W\cdot\sum\lambda O+\sum\lambda h=0 .$$
+
+      **Conclusion.** At $X$ and $Y$ the first two powers vanish, so $\lambda_C\,\mathrm{pow}_C=0$ there, and $\lambda_C\ne0$. So $X$ and $Y$ lie on all three circles.
+    viz: imo-2023-p6
+    checked: "script: 3,000 random configurations; the closed forms for A₁, A₂ and the centres match direct computation to 1e-12, the three linear identities hold to 1e-12, the key inequality always holds, R always lies inside both chords, and the three circles share two points (relative error below 1e-11)"
+    status: ready

@@ -61,7 +61,36 @@ problems:
     topic: "Right angles at B and D and a tangent circle"
     areas: [geometry]
     difficulty: 5
-    status: coming
+    hints:
+      - 'Each angle condition says something simple about a circle through $C$ and $H$. Draw the line through $C$ perpendicular to $CS$ and let it meet line $AB$.'
+      - 'The circle $CHS$ has its centre $K$ on $AB$, and the circle $CHT$ has its centre $L$ on $AD$. The tangency means the centre of circle $HST$ is on $AH$. Use angle bisectors in triangles $AKH$ and $ALH$.'
+    solution: |
+      **Key idea:** the strange angle conditions just say that the circles $CHS$ and $CHT$ have their centres on $AB$ and $AD$. Then the centre of circle $HST$ is where two angle bisectors cross line $AH$, and a short trigonometric computation shows the two crossings are the same point.
+
+      Since $AH\perp BD$, the line $BD$ is tangent to circle $HST$ at $H$ exactly when the centre of that circle lies on line $AH$. That is what we prove.
+
+      **Step 1: centres on the sides.** Let $Q$ be the point of line $AB$ with $\angle SCQ=90^\circ$. Triangle $SBC$ has a right angle at $B$, so $\angle CSB$ is acute and $Q$ lies on ray $SB$, beyond $B$. In triangle $SCQ$, $\angle SQC=90^\circ-\angle CSB$. The condition says $\angle SHC=90^\circ+\angle CSB$, so $\angle SQC+\angle SHC=180^\circ$. Segment $SC$ cuts the quadrilateral into triangle $SBC$ and a piece containing $A$ and $T$. $H$ is inside triangle $SCT$, so $H$ is on the side of line $SC$ away from $Q$. Hence $S,H,C,Q$ are concyclic, and since $\angle SCQ=90^\circ$, $SQ$ is a diameter.
+
+      So the centre $K$ of circle $SHC$ is the midpoint of $SQ$. It lies on line $AB$, on the ray from $S$ through $B$, so $S$ lies between $A$ and $K$ (or $S=A$). In the same way, the centre $L$ of circle $THC$ lies on line $AD$, and $T$ lies between $A$ and $L$. In particular
+      $$KS=KH=KC,\qquad LT=LH=LC .$$
+
+      **Step 2: the centre of $HST$.** The perpendicular bisector of $HS$ passes through $K$ and bisects angle $SKH$, which is angle $AKH$ (ray $KS$ is ray $KA$). By the angle bisector theorem in triangle $AKH$, it meets segment $AH$ at the point $P$ with $\dfrac{AP}{PH}=\dfrac{AK}{KH}$. Likewise the perpendicular bisector of $HT$ meets $AH$ at $P'$ with $\dfrac{AP'}{P'H}=\dfrac{AL}{LH}$.
+
+      If $\dfrac{AK}{KH}=\dfrac{AL}{LH}$, then $P=P'$ is equally far from $H$, $S$ and $T$, so it is the centre of circle $HST$, and it is on $AH$. Since $KH=KC$ and $LH=LC$, it remains to prove
+      $$\frac{KC}{AK}=\frac{LC}{AL}.$$
+
+      **Step 3: the computation.** $B$ and $D$ lie on the circle with diameter $AC$; take $AC=1$. Let $\alpha=\angle BAC$ and $\delta=\angle DAC$. Then $AB=\cos\alpha$ and $AD=\cos\delta$. Also $\angle ABD=\angle ACD=90^\circ-\delta$, so in the right triangle $ABH$ we get $\angle BAH=\delta$ and $AH=\cos\alpha\cos\delta$; similarly $\angle DAH=\alpha$.
+
+      Let $k=AK$, with $K$ on ray $AB$. The law of cosines in triangles $AKC$ and $AKH$ gives
+      $$KC^2=k^2-2k\cos\alpha+1,\qquad KH^2=k^2-2k\cos\alpha\cos^2\delta+\cos^2\alpha\cos^2\delta .$$
+      Setting them equal: $2k\cos\alpha\sin^2\delta=1-\cos^2\alpha\cos^2\delta$. Call the right side $N$; it is positive, so $k>0$ as assumed. Then
+      $$KC^2=k^2+1-\frac N{\sin^2\delta}=k^2-\frac{\sin^2\alpha\cos^2\delta}{\sin^2\delta},$$
+      because $\sin^2\delta-N=\cos^2\alpha\cos^2\delta-\cos^2\delta=-\sin^2\alpha\cos^2\delta$. Using $k\sin\delta=\dfrac N{2\cos\alpha\sin\delta}$,
+      $$\frac{KC^2}{AK^2}=1-\Big(\frac{\sin\alpha\cos\delta}{k\sin\delta}\Big)^2=1-\Big(\frac{2\sin\alpha\cos\alpha\sin\delta\cos\delta}{N}\Big)^2 .$$
+      This is symmetric in $\alpha$ and $\delta$, and $N$ is too. The same computation for $L$ (swap the roles of $B$ and $D$) gives the same value for $\dfrac{LC^2}{AL^2}$. So $\dfrac{KC}{AK}=\dfrac{LC}{AL}$, and we are done.
+    viz: imo-2014-p3
+    checked: "script: 5,000 random configurations built from the angle conditions; BD is tangent to circle TSH to 1e-14, AK/AL = KH/LH holds to 1e-11, and the formula for AK was checked separately"
+    status: ready
 
   - id: P4
     day: 2
@@ -122,4 +151,25 @@ problems:
     topic: "Coloring many lines so no bounded region is all blue"
     areas: [combinatorics, geometry]
     difficulty: 5
-    status: coming
+    hints:
+      - 'Make the blue set as large as you can in the greedy sense: no bounded region is all blue, but making any other line blue would create one. Say $k$ lines are blue.'
+      - 'For each red line pick a bounded region whose only red side lies on it, and charge the line to a corner of that region where two blue lines cross. Show that each crossing is charged at most twice, so $n-k\le k(k-1)$.'
+    solution: |
+      **Key idea:** take a blue set that cannot be enlarged. Every red line then "almost closes" a blue region, and we charge it to a crossing of two blue lines. A careful look at the four corners at a crossing shows each crossing is charged at most twice, so $n-k\le 2\binom k2$, which gives $k\ge\sqrt n$. This works for every $n$, not only large ones.
+
+      **A maximal blue set.** Call a set of lines *good* if no bounded region (of the arrangement of all $n$ lines) has all its sides on lines of the set. The empty set is good. Choose a good set $B$ that is maximal: adding any other line makes it bad. Colour $B$ blue and the rest red; let $k=|B|$. We show $n\le k^2$.
+
+      **Each red line closes a region.** Let $\ell$ be red. Since $B\cup\{\ell\}$ is bad but $B$ is good, there is a bounded region $R_\ell$ with all sides on lines of $B\cup\{\ell\}$, one of them on $\ell$. A bounded region is a convex polygon with at least $3$ sides, each on a different line. So $R_\ell$ has exactly one red side, on $\ell$, and at least two blue sides.
+
+      **The charge.** Walk around $R_\ell$ counterclockwise. After the side on $\ell$ comes a side on a blue line $m$, and its far end $P_\ell$ is a corner where $m$ meets the next side's line, which is blue (it is not $\ell$, because each line gives at most one side). So $P_\ell$ is a crossing of two blue lines. Charge $\ell$ to $P_\ell$; note that $R_\ell$ is one of the four regions with a corner at $P_\ell$, and in the counterclockwise walk around $R_\ell$ we *arrive* at $P_\ell$ along $m$, coming from the point where $m$ meets $\ell$.
+
+      **Each crossing is charged at most twice.** Let $P$ be a crossing of two lines. Its four rays cut the plane near $P$ into four corners. For a corner bounded by rays $r$ and $r'$, with $r'$ the next ray counterclockwise after $r$, a counterclockwise walk around the region in that corner arrives at $P$ along $r'$ and leaves along $r$. So two neighbouring corners, which share a ray $r$, use it in opposite ways: one arrives along $r$, the other leaves along $r$.
+
+      Suppose two neighbouring corners were the regions $R_\ell$ and $R_{\ell'}$ of two red lines charged to $P$, sharing the ray $r$. Say $R_\ell$ arrives along $r$. Its side on $r$ is the edge from $P$ to the next crossing $X$ on $r$, and $X$ lies on $\ell$ (the side before it is on $\ell$). The other region $R_{\ell'}$ leaves $P$ along the same edge $PX$, and at $X$ it turns onto the other line through $X$, which is $\ell$. So $\ell$ is a side of $R_{\ell'}$. But the only red side of $R_{\ell'}$ is on $\ell'$, so $\ell=\ell'$. That is impossible, because each red line was charged once, through one region. So no two neighbouring corners are used, and at most two of the four corners (opposite ones) are.
+
+      **Counting.** There are $\binom k2$ crossings of blue lines, each charged at most twice, and each of the $n-k$ red lines is charged once. So
+      $$n-k\le 2\binom k2=k^2-k,$$
+      that is, $n\le k^2$ and $k\ge\sqrt n$. The blue set $B$ has at least $\sqrt n$ lines and no bounded region with an all-blue boundary.
+    viz: imo-2014-p6
+    checked: "script: 300 random arrangements of 3 to 30 lines; bounded regions traced exactly ((n−1)(n−2)/2 each), random maximal blue sets always had k² ≥ n, and with a random choice of region for each red line no crossing was charged more than twice"
+    status: ready

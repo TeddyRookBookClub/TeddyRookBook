@@ -133,4 +133,38 @@ problems:
     topic: "A circle tangent to four lines and two incircles"
     areas: [geometry]
     difficulty: 5
-    status: coming
+    hints:
+      - 'First find where $\omega$ touches lines $AD$ and $CD$: beyond $D$. Tangent lengths then give $AB+AD=CB+CD$. So the two incircles touch $AC$ at points symmetric about its midpoint.'
+      - 'Let $K$ be the point of $\omega$ closest to line $AC$. Using homotheties at $B$ and at $D$ (and the excircles opposite $B$ and $D$), show that $K$ lies on two lines that both pass through the external center of similitude of $\omega_1$ and $\omega_2$.'
+    solution: |
+      **Key idea:** the point $K$ of $\omega$ nearest to $AC$ is the external center of similitude of the two incircles. Homotheties at $B$ and at $D$ put $K$ on two lines through that center.
+
+      Measure "height" as signed distance from line $AC$, positive on $D$'s side, so $B$ has negative height. Let $\omega_1$, $\omega_2$ (radii $r_1$, $r_2$) touch $AC$ at $T_1$, $T_2$. Let $T_1'$ be the lowest point of $\omega_1$ (opposite $T_1$) and $T_2'$ the highest point of $\omega_2$ (opposite $T_2$). Let $\omega$ have radius $r$ and touch lines $BA$, $BC$, $AD$, $CD$ at $P$, $Q$, $R$, $S$.
+
+      **Step 1: $\omega$ sits beyond $D$.**
+      - $\omega$ lies on one side of its tangent line $AB$, and it contains $Q$, which is on $C$'s side. By convexity, $C$ and $D$ are on the same side of $AB$.
+      - $AD$ is the other tangent from $A$. If $\omega$ were on $B$'s side of $AD$, it would lie in the angle $DAB$, and its touching point with line $AB$ would be on ray $AB$. But $P$ is on the opposite ray, beyond $A$. So $\omega$ is on the side of $AD$ away from $B$, and hence away from $C$ (convexity puts $B$, $C$ on one side of $AD$).
+      - In the same way, $\omega$ is on the side of $CD$ away from $B$, hence away from $A$.
+
+      So $\omega$ lies in the angle vertical to angle $ADC$. Every point of that angle other than $D$ is higher than $D$, so $\omega$ lies entirely above $D$, and $R$, $S$ lie on rays $AD$, $CD$ beyond $D$.
+
+      **Step 2: $AB+AD=CB+CD$.** Tangent segments from one point are equal, so
+      $$BA+AD+DR=BA+AR=BA+AP=BP=BQ=BC+CQ=BC+CS=BC+CD+DS,$$
+      and $DR=DS$. Hence $AB-CB=CD-AD$, and the incircle tangent lengths give
+      $$AT_1=\tfrac12(AB+AC-BC)=\tfrac12(CD+AC-AD)=CT_2 .$$
+      So $T_1$ and $T_2$ are symmetric about the midpoint of $AC$. They are different points, since $T_1$ is the midpoint only if $AB=BC$.
+
+      **Step 3: two lines through $K$.** Let $K$ be the lowest point of $\omega$.
+      - *Homothety at $B$, $\omega_1\to\omega$.* Both circles touch both rays from $B$, so a homothety with center $B$ and positive ratio maps $\omega_1$ to $\omega$. It keeps lines parallel to $AC$ parallel and keeps their order by height, so it maps the lowest point $T_1'$ to the lowest point $K$. So $B$, $T_1'$, $K$ are collinear.
+      - *Homothety at $B$, $\omega_1\to$ excircle.* The excircle of $ABC$ opposite $B$ touches $AC$ at the point $E$ with $AE=\tfrac12(BC+CA-AB)=CT_1$. By Step 2, $AT_2=CT_1$, so $E=T_2$. The positive homothety at $B$ taking $\omega_1$ to this excircle maps the lowest point $T_1'$ to the excircle's lowest point, which is $E=T_2$. So $B$, $T_1'$, $T_2$ are collinear.
+      - *Homothety at $D$, $\omega_2\to\omega$.* $\omega_2$ lies in angle $ADC$ and $\omega$ in the vertical angle, both touching both lines. So the homothety with center $D$ and ratio $-r/r_2$ maps $\omega_2$ to $\omega$. It sends height $y$ to $d+\tfrac r{r_2}(d-y)$, where $d$ is the height of $D$. That reverses the order, so the highest point $T_2'$ goes to the lowest point $K$. So $D$, $T_2'$, $K$ are collinear.
+      - *Homothety at $D$, $\omega_2\to$ excircle.* The excircle of $ADC$ opposite $D$ touches $AC$ at $E'$ with $CE'=\tfrac12(DA+AC-DC)=AT_2=CT_1$, so $E'=T_1$. The positive homothety at $D$ maps the highest point $T_2'$ of $\omega_2$ to the highest point of that excircle, which is $E'=T_1$. So $D$, $T_2'$, $T_1$ are collinear.
+
+      Together: line $T_1'T_2$ passes through $K$ (it is line $BT_1'$), and line $T_1T_2'$ passes through $K$ (it is line $DT_2'$). These lines differ: otherwise $T_1,T_1',T_2,T_2'$ would lie on one line perpendicular to $AC$, forcing $T_1=T_2$.
+
+      **Step 4: the external center is $K$.** The circles $\omega_1$, $\omega_2$ lie on opposite sides of $AC$ and touch it at different points, so they are disjoint. If $r_1=r_2$, the translation taking $\omega_1$ to $\omega_2$ maps $T_1'\mapsto T_2$ and $T_1\mapsto T_2'$, so lines $T_1'T_2$ and $T_1T_2'$ would be parallel. But they are different lines through $K$. So $r_1\ne r_2$. The homothety with positive ratio $r_2/r_1$ taking $\omega_1$ to $\omega_2$ sends lowest point to lowest point ($T_1'\mapsto T_2$) and highest to highest ($T_1\mapsto T_2'$). So its center lies on both lines, and it must be their common point $K$.
+
+      That center is where the two external common tangents meet. So they meet at $K$, which is on $\omega$.
+    viz: imo-2008-p6
+    checked: "script: 16,648 random configurations built from ω and the four tangent lines (convex, BA ≠ BC); the external center was on ω to 10⁻¹³, equal to the lowest point K to 10⁻¹³, and AB + AD = CB + CD held"
+    status: ready

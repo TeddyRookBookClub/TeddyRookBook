@@ -439,27 +439,83 @@
     var L0 = A.P(0, N, 0), B0 = A.P(N, N, 0), R0 = A.P(N, 0, 0);
     A.poly(c, [L0, B0, [B0[0], B0[1] + 22], [L0[0], L0[1] + 22]], '#9c7b52'); A.poly(c, [B0, R0, [R0[0], R0[1] + 22], [B0[0], B0[1] + 22]], '#7e623f');
     c.fillStyle = 'rgba(0,0,0,.08)'; c.fillRect(L0[0], L0[1] + 10, B0[0] - L0[0], 2);
-    // Every tile's look comes from its own coordinates and the save's seed, so laying a path never changes another tile.
+    // Every tile's look comes from its own coordinates and the save's seed. Grass goes down everywhere first;
+    // the paths are laid over it as one shape (see drawPaths), so they blend in with rounded corners.
     for (var y = 0; y < N; y++) for (var x = 0; x < N; x++) {
-      var i = idx(x, y), pts = [A.P(x, y), A.P(x + 1, y), A.P(x + 1, y + 1), A.P(x, y + 1)], g = C.groundTile(x, y, seed, p.grass.length);
-      if (pathG[i]) {
-        A.poly(c, pts, A.shade(p.path, g.shade));
-        for (var k = 0; k < 4; k++) { var sp = g.specks[k], q = A.P(x + 0.15 + sp[0] * 0.7, y + 0.15 + sp[1] * 0.7); c.fillStyle = A.shade(p.path, (sp[2] - 0.5) * 0.3); c.fillRect(q[0] - 2, q[1] - 1, 4 + sp[3] * 3, 2); }
-        c.strokeStyle = p.pathD; c.lineWidth = 1.2;
-        [[0, -1, 0, 1], [1, 0, 1, 2], [0, 1, 2, 3], [-1, 0, 3, 0]].forEach(function (e) {
-          var nx = x + e[0], ny = y + e[1];
-          if (!inb(nx, ny) || !pathG[idx(nx, ny)]) { c.beginPath(); c.moveTo(pts[e[2]][0], pts[e[2]][1]); c.lineTo(pts[e[3]][0], pts[e[3]][1]); c.stroke(); }
-        });
-      } else {
-        var gcol = p.grass[g.grass];
-        if (!inb(x, y)) gcol = A.shade(gcol, -0.3 - ((x * 5 + y * 3) % 3) * 0.04);
-        A.poly(c, pts, gcol);
-        if (g.tuft) { var t = A.P(x + g.tx, y + g.ty); c.fillStyle = A.shade(gcol, -0.15); c.fillRect(t[0], t[1] - 3, 1, 3); c.fillRect(t[0] + 2, t[1] - 4, 1, 4); }
-      }
+      var pts = [A.P(x, y), A.P(x + 1, y), A.P(x + 1, y + 1), A.P(x, y + 1)], g = C.groundTile(x, y, seed, p.grass.length);
+      var gcol = p.grass[g.grass];
+      if (!inb(x, y)) gcol = A.shade(gcol, -0.3 - ((x * 5 + y * 3) % 3) * 0.04);
+      A.poly(c, pts, gcol);
+      if (g.tuft && !pathG[idx(x, y)]) { var t = A.P(x + g.tx, y + g.ty); c.fillStyle = A.shade(gcol, -0.15); c.fillRect(t[0], t[1] - 3, 1, 3); c.fillRect(t[0] + 2, t[1] - 4, 1, 4); }
     }
+    drawPaths(c, p, seed);
     var bd = LAND[S.land || 0], cs = [A.P(bd[0], bd[1]), A.P(bd[2] + 1, bd[1]), A.P(bd[2] + 1, bd[3] + 1), A.P(bd[0], bd[3] + 1)];
     if ((S.land || 0) < 3) { c.setLineDash([10, 6]); A.poly(c, cs, null, 'rgba(255,248,220,.85)', 2.5); c.setLineDash([]); }
     c.restore(); groundDirty = false;
+  }
+  // Autotiled paths (corner Wang tiles). Each path tile is a square in its own tile space, mapped onto the
+  // diamond. A corner is rounded when neither side next to it has a path, square when one or both do, and
+  // where two paths meet at an inside corner a small curve fills the gap. An open side gets a gentle wobble
+  // that is zero at both ends, so the border runs on into the next tile without a step. All tiles go into one
+  // shape: its outline is drawn once (a soft shadow and the dark border), then filled, so inner seams vanish.
+  var PATH_R = [0.3, 0.42], PATH_FILLET = 0.24, PATH_WOB = 0.045;
+  function drawPaths(c, p, seed) {
+    var list = [], i, x, y;
+    for (i = 0; i < N * N; i++) if (pathG[i]) list.push(i);
+    if (!list.length) return;
+    function isP(x, y) { return x >= 0 && y >= 0 && x < N && y < N && pathG[idx(x, y)] > 0; }
+    function toTile(x, y) { var o = A.P(x, y); c.setTransform(1, 0, 0, 1, 0, 0); c.translate(GOX, GOY); c.transform(TW / 2, TH / 2, -TW / 2, TH / 2, o[0], o[1]); }
+    function shape(x, y) { // adds this tile's outline (and its inside-corner curves) to the current path
+      var n = isP(x, y - 1), e = isP(x + 1, y), so = isP(x, y + 1), w = isP(x - 1, y);
+      var h = function (k) { return C.hash(x, y, 40 + k, seed); };
+      var r = function (k) { return PATH_R[0] + h(k) * (PATH_R[1] - PATH_R[0]); };
+      var tl = !n && !w ? r(0) : 0, tr = !n && !e ? r(1) : 0, br = !so && !e ? r(2) : 0, bl = !so && !w ? r(3) : 0;
+      // a side: from (ax,ay) to (bx,by), pushed out along (nx,ny) by a wobble if the side is open
+      function side(open, ax, ay, bx, by, nx, ny, k) {
+        if (!open) { c.lineTo(bx, by); return; }
+        var a = (h(k) - 0.5) * 2 * PATH_WOB, b2 = (h(k + 1) - 0.5) * PATH_WOB;
+        for (var j = 1; j <= 6; j++) { var u = j / 6, d = a * Math.sin(Math.PI * u) + b2 * Math.sin(2 * Math.PI * u); c.lineTo(ax + (bx - ax) * u + nx * d, ay + (by - ay) * u + ny * d); }
+      }
+      toTile(x, y);
+      c.moveTo(tl, 0);
+      side(!n, tl, 0, 1 - tr, 0, 0, -1, 10); if (tr) c.quadraticCurveTo(1, 0, 1, tr);
+      side(!e, 1, tr, 1, 1 - br, 1, 0, 12); if (br) c.quadraticCurveTo(1, 1, 1 - br, 1);
+      side(!so, 1 - br, 1, bl, 1, 0, 1, 14); if (bl) c.quadraticCurveTo(0, 1, 0, 1 - bl);
+      side(!w, 0, 1 - bl, 0, tl, -1, 0, 16); if (tl) c.quadraticCurveTo(0, 0, tl, 0);
+      c.closePath();
+      // inside corners: both sides have a path but the diagonal does not
+      var f = PATH_FILLET;
+      [[n, w, -1, -1, 0, 0], [n, e, 1, -1, 1, 0], [so, e, 1, 1, 1, 1], [so, w, -1, 1, 0, 1]].forEach(function (q) {
+        if (!q[0] || !q[1] || isP(x + q[2], y + q[3])) return;
+        var cx = q[4], cy = q[5], dx = q[2], dy = q[3];
+        c.moveTo(cx, cy); c.lineTo(cx + dx * f, cy); c.quadraticCurveTo(cx, cy, cx, cy + dy * f); c.closePath();
+      });
+    }
+    c.save();
+    c.beginPath(); list.forEach(function (i) { shape(i % N, (i / N) | 0); });
+    c.setTransform(1, 0, 0, 1, 0, 0); c.lineJoin = 'round';
+    c.strokeStyle = 'rgba(60,45,20,.13)'; c.lineWidth = 7; c.stroke();
+    c.strokeStyle = p.pathD; c.lineWidth = 2.6; c.stroke();
+    c.fillStyle = p.path; c.fill();
+    // each tile's own shade, specks and pebbles, kept inside the path shape
+    c.clip();
+    list.forEach(function (i) {
+      var x = i % N, y = (i / N) | 0, g = C.groundTile(x, y, seed, p.grass.length);
+      c.globalAlpha = 0.85; A.poly(c, [A.P(x, y), A.P(x + 1, y), A.P(x + 1, y + 1), A.P(x, y + 1)].map(function (q) { return [q[0] + GOX, q[1] + GOY]; }), A.shade(p.path, g.shade)); c.globalAlpha = 1;
+      for (var k = 0; k < 4; k++) { var sp = g.specks[k], q = A.P(x + 0.15 + sp[0] * 0.7, y + 0.15 + sp[1] * 0.7); c.fillStyle = A.shade(p.path, (sp[2] - 0.5) * 0.3); c.fillRect(q[0] + GOX - 2, q[1] + GOY - 1, 4 + sp[3] * 3, 2); }
+      if (C.hash(x, y, 50, seed) < 0.3) { var pb = A.P(x + 0.2 + C.hash(x, y, 51, seed) * 0.6, y + 0.2 + C.hash(x, y, 52, seed) * 0.6); c.fillStyle = p.pathD; c.beginPath(); c.ellipse(pb[0] + GOX, pb[1] + GOY, 2.2, 1.2, 0, 0, 7); c.fill(); }
+    });
+    c.restore();
+    // grass tufts that lean over the border here and there
+    list.forEach(function (i) {
+      var x = i % N, y = (i / N) | 0;
+      [[0, -1, 0.5, 0], [1, 0, 1, 0.5], [0, 1, 0.5, 1], [-1, 0, 0, 0.5]].forEach(function (d, k) {
+        if (isP(x + d[0], y + d[1]) || C.hash(x, y, 60 + k, seed) > 0.45) return;
+        var t = (C.hash(x, y, 64 + k, seed) - 0.5) * 0.5, q = A.P(x + d[2] + (d[1] ? t : 0), y + d[3] + (d[0] ? t : 0));
+        var col = p.grass[(C.hash(x, y, 68 + k, seed) * p.grass.length) | 0];
+        c.fillStyle = A.shade(col, -0.12); c.beginPath(); c.moveTo(q[0] - 4, q[1] + 1); c.lineTo(q[0] - 2, q[1] - 4); c.lineTo(q[0], q[1] + 0.5); c.lineTo(q[0] + 2, q[1] - 5); c.lineTo(q[0] + 4, q[1] + 1); c.fill();
+      });
+    });
   }
   function screenToTile(sx, sy) {
     var wx = (sx - cv.clientWidth / 2) / cam.z + cam.x, wy = (sy - cv.clientHeight / 2) / cam.z + cam.y;

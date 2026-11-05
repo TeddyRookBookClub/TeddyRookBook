@@ -79,7 +79,40 @@ problems:
     topic: "Shortest closed path around four tetrahedron edges"
     areas: [geometry]
     difficulty: 4
-    status: coming
+    hints:
+      - 'Unfold the four faces the path crosses into one flat strip. The last face is a copy of the first, moved by one rigid motion of the plane.'
+      - 'Walk along the zigzag of edges in the strip and add up the turns. The motion is a slide (translation) exactly when the two angle sums are equal.'
+    solution: |
+      **Key idea:** lay the four faces crossed by the path flat in a strip. A closed path becomes a broken line from a point $X$ to a copy $X'$ of it, where the copy comes from one rigid motion $R$ of the plane. If $R$ turns, a shortest path is impossible; if $R$ slides by a vector $v$, every path is at least $|v|$ long and many straight ones reach it.
+
+      **The unfolding.** Put face $DAB$ in the plane. Attach $ABC$ along $AB$, then $BCD$ along $BC$, then $CDA$ along $CD$, then a second copy of $DAB$ along $DA$, each new face on the far side of the shared edge. Call the points $D_1,A_1,B_1$ (first copy), $C$, $D'$, $A_2$, $B_2$. The strip consists of the triangles $A_1B_1C$, $B_1CD'$, $CD'A_2$, $D'A_2B_2$. The two copies of $DAB$ are related by a motion $R$ of the plane that keeps orientation, with $R(A_1)=A_2$ and $R(B_1)=B_2$.
+
+      A path $XYZTX$ becomes the broken line $X\,Y\,Z\,T_2\,X'$, where $X'=R(X)$ and $T_2$ is $T$ on $D'A_2$. Each piece lies in one face, so the length is unchanged.
+
+      **How much $R$ turns.** Walk along $A_1\to B_1\to C\to D'\to A_2\to B_2$. Each triangle of the strip has two consecutive steps of the walk as sides, and the triangles lie alternately on the left and on the right. So the walk turns left by $180^\circ$ minus $\angle ABC$, right by $180^\circ$ minus $\angle BCD$, left by $180^\circ$ minus $\angle CDA$, right by $180^\circ$ minus $\angle DAB$. The direction of $A_2B_2$ differs from that of $A_1B_1$ by
+      $$\theta=(\angle DAB+\angle BCD)-(\angle ABC+\angle CDA).$$
+      Each sum is between $0^\circ$ and $360^\circ$, so $R$ is a translation if the sums are equal and a rotation by $\theta\ne0$ otherwise.
+
+      **(a) Unequal sums.** Suppose a shortest path exists. Fix $X,Z,T$ and move $Y$ along edge $BC$. In the unfolding of the two faces at $BC$, $|XY|+|YZ|$ is a convex function of $Y$ on line $BC$, smallest only where segment $XZ$ crosses that line. As $Y$ is an inner point of the edge and gives a minimum, $X,Y,Z$ are collinear in the unfolding. The same holds at $Z$, at $T$, and at $X$ (unfold $DAB$ and $ABC$ along $AB$). So $XYZT_2X'$ is one straight segment with some direction $u$. The condition at $X$ says that $T_1X$ in the first copy (where $T_1$ is $T$ on $D_1A_1$) also has direction $u$. The motion $R$ carries $T_1X$ to $T_2X'$, so its turning part fixes the direction $u$, and $\theta=0$. Hence with unequal sums there is no shortest path.
+
+      **(b) Equal sums.** Now $R$ is the translation by a vector $v$, and every path has length at least $|XX'|=|v|$.
+
+      *The length of $v$.* Use coordinates with $A_1$ at the origin, $A_1B_1$ along the positive $x$-axis, and $C$ above it. Let $a_1=\angle BAC$, $a_2=\angle CAD$, $a_3=\angle DAB$, so $\alpha=a_1+a_2+a_3$. Ray $A_1C$ has direction angle $a_1$. A translation keeps directions, so $A_2B_2$ points along the $x$-axis and $A_2D'$ has direction $-a_3$, like $A_1D_1$. Since $C$ is across line $A_2D'$ from $B_2$, ray $A_2C$ has direction $-(a_2+a_3)$. Therefore
+      $$v=(C-A_1)-(C-A_2)=AC\big[(\cos a_1,\sin a_1)-(\cos(a_2+a_3),\,-\sin(a_2+a_3))\big]=2\,AC\sin\tfrac{\alpha}{2}\,(\sin\delta,\cos\delta),$$
+      with $\delta=\frac12(a_2+a_3-a_1)$. So $|v|=2\,AC\sin\frac{\alpha}{2}$, which is positive because $\alpha<360^\circ$.
+
+      *Many straight paths.* All faces are acute, so every $a_i<90^\circ$, $|\delta|<90^\circ$, and $v$ points upward. Measure each point's offset across the direction of $v$ by $o(P)=P\cdot(\cos\delta,-\sin\delta)$. Then $o(A_1)=o(A_2)=0$, $o(B_1)=o(B_2)=AB\cos\delta>0$, and
+      $$o(C)=AC\cos\tfrac{\alpha}{2},\qquad o(D')=AD\cos\tfrac{a_1+a_3-a_2}{2}>0.$$
+      We claim $o(C)<o(B_1)$ and $o(C)<o(D')$. Let $b=\angle ABC$ and $c=\angle ACB$. The law of sines gives $AC=AB\sin b/\sin(a_1+b)$, and expanding,
+      $$o(B_1)-o(C)=\frac{AB\sin a_1}{\sin(a_1+b)}\,\cos(b-\delta).$$
+      Here $b-\delta>-90^\circ$. Also $b-\delta<90^\circ$ is the same as $b-c<a_2+a_3$, which holds because $b-c<180^\circ-b-c=a_1<a_2+a_3$. (We used $b<90^\circ$, and the fact that a face angle at a corner of a tetrahedron is less than the sum of the other two.) The second claim is the same computation in face $ACD$, using $\angle ADC<90^\circ$.
+
+      So the interval $\big(\max(0,o(C)),\ \min(o(B_1),o(D'))\big)$ is not empty. Pick any $X$ on $A_1B_1$ with $o(X)$ in it; there are infinitely many. The line through $X$ in direction $v$ has $A_1,C,A_2$ strictly on one side and $B_1,D',B_2$ strictly on the other. Starting at $X$, it enters triangle $A_1B_1C$ and must leave through $B_1C$ (both ends of $A_1C$ are on the same side). Then it crosses $B_1CD'$ and leaves through $CD'$, crosses $CD'A_2$ and leaves through $D'A_2$, and leaves $D'A_2B_2$ through $A_2B_2$ at the point $X+v$. Folding the strip back gives a closed path with inner points on the four edges and length $|v|$, the least possible.
+
+      So there are infinitely many shortest paths, all of length $2\,AC\sin\frac{\alpha}{2}$.
+    checked: "script: 3000 random acute-faced tetrahedra with equal sums (built numerically): the unfolding is a translation, |v| = 2·AC·sin(α/2), and straight closed paths exist for every one; 2000 random tetrahedra confirm the turning formula"
+    viz: imo-1971-p4
+    status: ready
 
   - id: P5
     day: 2

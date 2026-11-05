@@ -52,7 +52,31 @@ problems:
     difficulty: 4
     hints:
       - 'Color the board like a chessboard. A cell only has neighbors of the other color, so the two colors can be handled separately.'
-    status: coming
+      - 'Two white cells have a common neighbor exactly when they are at distance 2. Look for many white cells, no two at distance 2, on every other square ring of the board.'
+    answer: '$N=\dfrac{n(n+2)}4$'
+    solution: |
+      Let $n=2k$. Number rows and columns $1,\dots,n$, and call cell $(i,j)$ black if $i+j$ is even and white if $i+j$ is odd.
+
+      **Key idea:** neighbors have opposite colors, so the black marks must serve the white cells and the white marks must serve the black cells. Each half needs exactly $1+2+\dots+k=\frac{k(k+1)}2$ marks, so $N=k(k+1)=\frac{n(n+2)}4$.
+
+      The mirror map $(i,j)\mapsto(i,\,n+1-j)$ keeps neighbors as neighbors and swaps the colors (because $n$ is even). So it is enough to show that the least number of black cells such that every white cell has one of them as a neighbor is $\frac{k(k+1)}2$.
+
+      **Lower bound.** Two white cells share a black neighbor exactly when their distance (counting row steps plus column steps) is $2$: two apart in a line, or diagonal neighbors. So if $S$ is a set of white cells with no two at distance $2$, each cell of $S$ needs its own marked neighbor, and at least $|S|$ black cells are marked.
+
+      Number the square rings from the outside: cell $(i,j)$ is in ring $t=\min(i,\,j,\,n+1-i,\,n+1-j)$. Let
+      $$S=\{\text{white cells }(i,j)\text{ with } i-j\equiv3\pmod4\text{ in a ring with odd number}\}.$$
+      - *No two at distance 2.* For two cells of $S$, the values of $i-j$ differ by a multiple of $4$. A step $(\pm2,0)$, $(0,\pm2)$ or $(\pm1,\mp1)$ changes $i-j$ by $2$, so the two cells would differ by $\pm(1,1)$. Write $\mu=\min(i,j)$ and $\nu=\min(n+1-i,n+1-j)$ for the lower cell, so its ring is $\min(\mu,\nu)$. The step $(1,1)$ raises $\mu$ by $1$ and lowers $\nu$ by $1$. The ring numbers differ by at most $1$ and are both odd, so they are equal, and that happens only when $\nu=\mu+1$. Then $\min(i,j)=\mu$ and $\max(i,j)=n-\mu$, so $i+j=n$ is even and the cell is black, not white. So no two cells of $S$ are at distance $2$.
+      - *Its size.* Ring $t$ is a square frame of side $2m$ with $m=k+1-t$, and it has $4m-2$ white cells. Going around the frame, consecutive white cells differ by $(0,\pm2)$ or $(\pm2,0)$ along a side, and by $(\pm1,\mp1)$ at the two black corners. Each such step changes $i-j$ by $2$, so $i-j \bmod 4$ alternates between $1$ and $3$, and exactly $2m-1$ of the white cells of the ring have $i-j\equiv3$. The odd rings have $m=k,\,k-2,\,k-4,\dots$, so
+      $$|S|=(2k-1)+(2k-5)+\dots=\big(k+(k-1)\big)+\big((k-2)+(k-3)\big)+\dots=\frac{k(k+1)}2.$$
+
+      **Construction.** Mark the black cells $(i,j)$ with $i+j$ divisible by $4$ that have both coordinates odd when $i+j\le n$, and both coordinates even when $i+j\ge n+2$.
+      - *Every white cell is served.* For a white cell $(i,j)$, $i+j$ is odd, so one of $i+j\pm1$ is divisible by 4; call it $\sigma$. The cell has two neighbors with coordinate sum $\sigma$: $(i+1,j),(i,j+1)$ or $(i-1,j),(i,j-1)$. Exactly one of $i,j$ is odd, so one of these two neighbors has both coordinates odd and the other has both even. Take the odd one if $\sigma\le n$ and the even one if $\sigma\ge n+2$; it is marked. It is on the board: a coordinate $n+1$ (odd) together with another coordinate at least $1$ would give $\sigma\ge n+2$, and a coordinate $0$ (even) together with another at most $n$ would give $\sigma\le n$.
+      - *The count.* On the line $i+j=\sigma\le n$ there are $\frac\sigma2$ cells with both coordinates odd; here $\frac\sigma2$ runs over the even numbers up to $k$. On the line $i+j=\sigma\ge n+2$ there are $n+1-\frac\sigma2$ cells with both coordinates even; here $n+1-\frac\sigma2$ runs over the odd numbers up to $k$. In total $1+2+\dots+k=\frac{k(k+1)}2$.
+
+      Mirroring this set gives the white marks. So the smallest possible value is $N=k(k+1)=\frac{n(n+2)}4$.
+    checked: "script: exhaustive search for n ≤ 8 gives k(k+1)/2 marks per color; the marking and the set S were checked by computer for every even n ≤ 60"
+    viz: imo-1999-p3
+    status: ready
 
   - id: P4
     day: 2

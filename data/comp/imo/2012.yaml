@@ -58,7 +58,31 @@ problems:
     topic: "A guessing game against a player allowed to lie"
     areas: [combinatorics]
     difficulty: 5
-    status: coming
+    hints:
+      - 'Part 1: among any $2^k+1$ candidates, B can rule one out. Keep asking about one special candidate until there are $k+1$ "no" answers in a row or a "yes"; after a "yes", ask about the $k$ binary digits of a label.'
+      - 'Part 2: for each candidate $i$, let $m_i$ be the length of the current run of answers that would be lies if $x=i$. A answers so as to keep $\sum_i\lambda^{m_i}$ small, for a $\lambda$ a little below $2$.'
+    solution: |
+      **Key idea:** in part 1, a "yes" followed by $k$ binary questions makes one candidate impossible, because it would need $k+1$ lies in a row. In part 2, A answers greedily to keep a weighted count of lie runs below a threshold, so that no candidate is ever ruled out.
+
+      **Part 1.** It is enough to show: whenever B knows that $x$ is in a set $T$ with more than $2^k$ elements, he can find an element of $T$ that is surely not $x$. Repeating this (each round uses finitely many questions) shrinks the set of candidates to at most $2^k\le n$ numbers, and B names them.
+
+      Take $2^k+1$ elements of $T$: one special element $e$ and $2^k$ others, labeled by the $2^k$ binary strings of length $k$. B asks "is $x=e$?" over and over.
+      - If A says "no" $k+1$ times in a row, one of these answers is true, so $x\ne e$.
+      - Otherwise A says "yes" at some point. Right after it, B asks $k$ questions: the $j$-th asks whether $x$ is among the elements whose label has digit $1$ in place $j$. Let $u$ be the element whose label disagrees with all $k$ answers. If $x$ were $u$, then the "yes" (as $u\ne e$) and the $k$ answers after it would be $k+1$ lies in a row. So $x\ne u$.
+
+      Either way one candidate is ruled out.
+
+      **Part 2.** Let $N=n+1$ and fix $\lambda$ with $1<\lambda<2$. At each moment of the game and for each $i\in\{1,\dots,N\}$, let $m_i$ be the number of most recent answers in a row that would be false if $x$ were $i$. If A can keep every $m_i\le k$, B cannot win: whatever $n$ numbers he names, some $i\le N$ is missing, and A could have chosen $x=i$ at the start and given exactly the same answers legally.
+
+      A keeps $\Phi=\sum_i\lambda^{m_i}$ small. For a question $S$, let $p=\sum_{i\in S}\lambda^{m_i}$ and $q=\sum_{i\notin S}\lambda^{m_i}$, so $p+q=\Phi$. A "yes" resets the runs of $i\in S$ to $0$ and lengthens the others by one, giving $\Phi_{\text{yes}}=|S|+\lambda q$. A "no" gives $\Phi_{\text{no}}=(N-|S|)+\lambda p$. A picks the smaller, so the new value is at most
+      $$\tfrac12\big(\Phi_{\text{yes}}+\Phi_{\text{no}}\big)=\tfrac12\big(N+\lambda\Phi\big).$$
+      Now suppose $N\le(2-\lambda)\lambda^{k+1}$. At the start $\Phi=N<\lambda^{k+1}$. And if $\Phi<\lambda^{k+1}$, the next value is less than $\tfrac12\big((2-\lambda)\lambda^{k+1}+\lambda^{k+2}\big)=\lambda^{k+1}$. So $\Phi<\lambda^{k+1}$ for the whole game, which forces every $m_i\le k$.
+
+      Finally take $\lambda=1.995$ and $n=\lceil1.99^k\rceil$. Then $N\le1.99^k+2$, while
+      $$(2-\lambda)\lambda^{k+1}=0.005\cdot1.995\cdot1.995^k,$$
+      and $(1.995/1.99)^k\to\infty$. So for all large $k$ the condition holds, and with this $n\ge1.99^k$ B cannot be sure to win.
+    checked: "simulation: B's strategy against random liars (k ≤ 4, N ≤ 40, 5,000 games) never ruled out x and always won; A's weighted strategy kept every run ≤ k against random questions for k = 6 to 12"
+    status: ready
 
   - id: P4
     day: 2
@@ -123,4 +147,32 @@ problems:
     topic: "Unit fractions in two bases that both sum to one"
     areas: [number-theory, combinatorics]
     difficulty: 5
-    status: coming
+    answer: '$n\equiv1$ or $n\equiv2\pmod 4$'
+    hints:
+      - 'Clear the denominators in the second sum with a power of $3$ and look at what is left mod $2$.'
+      - 'Splitting one term $\frac{v}{3^a}$ into $\frac{p}{3^{a+1}}+\frac{q}{3^{a+1}}$ with $p+q=3v$ (and $\frac1{2^a}$ into two halves) keeps both sums. Find a few such splits that add the eight labels $n+1,\dots,n+8$ at once.'
+    solution: |
+      **Key idea:** the parity of the second equation gives the condition. For the construction, any term can be split in two without changing either sum, and six simple splitting moves add eight new labels at once.
+
+      **Necessity.** Let $A$ be the largest $a_k$. Multiplying the second equation by $3^A$ gives $\sum_k k\cdot3^{A-a_k}=3^A$. Powers of $3$ are odd, so mod $2$ this says $1+2+\dots+n\equiv1$, that is, $\frac{n(n+1)}2$ is odd. That happens exactly when $n\equiv1$ or $2\pmod4$.
+
+      **The splitting move.** Think of label $k$ with exponent $a_k$ as a token of value $k$ at depth $a_k$. Replace a token of value $v$ at depth $a$ by two tokens of values $p,q$ at depth $a+1$, where $p+q=3v$. Since
+      $$\frac1{2^a}=\frac1{2^{a+1}}+\frac1{2^{a+1}},\qquad\frac v{3^a}=\frac{p+q}{3^{a+1}},$$
+      both sums stay the same. If after some moves the token values are exactly $1,2,\dots,n'$, each once, their depths solve the problem for $n'$. We use two kinds of moves:
+      - **Double** $D(x)$: replace $x$ by $x$ and $2x$. This adds the value $2x$.
+      - **Pair** $P(y)$: replace $y$ by $2y-1$ and $y+1$, then replace one of the two tokens $y+1$ by $y$ and $2y+3$. (Check: $(2y-1)+(y+1)=3y$ and $y+(2y+3)=3(y+1)$.) Now $y$ and $y+1$ are each there once again, and $2y-1$ and $2y+3$ are new.
+
+      **From $n$ to $n+8$.** Take a solution for some $n\ge9$. Among $n+1,\dots,n+8$ there are four even numbers $2x$ and four odd numbers $2y-1,\,2y+1,\,2y+3,\,2y+5$. Apply $P(y)$, then $P(y+1)$, then the four doubles $D(x)$. $P(y)$ adds $2y-1$ and $2y+3$, $P(y+1)$ adds $2y+1$ and $2y+5$, and the doubles add the even ones. Every token we start from has value at most $\frac{n+8}2\le n$, so it exists, and at the end the values are exactly $1,\dots,n+8$. This solves the problem for $n+8$.
+
+      **Starting cases.** Here are exponent lists $(a_1,\dots,a_n)$:
+      - $n=1$: $(0)$; $n=2$: $(1,1)$;
+      - $n=5$: $(2,2,2,3,3)$; $n=6$: $(2,2,3,3,3,3)$;
+      - $n=9$: $(2,3,2,4,4,4,4,4,4)$; $n=10$: $(2,3,3,3,4,4,4,4,4,4)$;
+      - $n=13$: $(2,4,2,3,5,4,4,5,6,5,5,6,5)$;
+      - $n=14$: $(2,4,2,3,5,5,4,4,6,5,5,6,6,6)$.
+
+      For example, for $n=5$: $\frac34+\frac28=1$ and $\frac{1+2+3}9+\frac{4+5}{27}=1$. Every $n\equiv1,2\pmod4$ with $n\ge17$ is $8$ more than a smaller such number that is at least $9$, so the step reaches it.
+
+      So solutions exist exactly when $n\equiv1$ or $2\pmod4$.
+    checked: "exact arithmetic: all eight starting lists checked, and the n → n+8 construction run and checked for every n < 400 with n ≡ 1, 2 (mod 4); an exhaustive search (exponents up to n+2) also finds nothing for n = 3, 4, 7, 8"
+    status: ready

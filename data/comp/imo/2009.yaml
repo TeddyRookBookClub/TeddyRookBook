@@ -144,4 +144,28 @@ problems:
     topic: "A grasshopper avoiding a forbidden set of landing points"
     areas: [combinatorics]
     difficulty: 5
-    status: coming
+    hints:
+      - 'Use strong induction on $n$. If the grasshopper has made $j$ jumps safely and has at least $j$ forbidden points behind it, the rest is a smaller case of the same problem.'
+      - 'Let $A$ be the longest jump and $m$ the smallest forbidden point. If $m<A$, try $A$ first, or a short jump followed by $A$ (count how many such starts a forbidden point can spoil). If $m\ge A$, plan the short jumps by induction against the forbidden points shifted down by $A$, then decide where to slot in $A$.'
+    solution: |
+      **Key idea:** strong induction, always looking at the longest jump $A$. The grasshopper is out of trouble as soon as it has passed at least as many forbidden points as it has used jumps, because what is left is a smaller copy of the problem.
+
+      Write $s$ for the total. "The claim for $k$" means: for $k$ distinct jump lengths and at most $k-1$ forbidden points, none equal to the total, a safe order exists. Fewer forbidden points only make it easier, and for $k=1$ there are none.
+
+      **The reduction.** Suppose the grasshopper has made $j$ jumps safely and stands at $p\notin M$. The other $n-j$ jumps take it from $p$ to $s$, and only the points of $M$ strictly between $p$ and $s$ matter. If there are at most $n-j-1$ of them, the claim for $n-j$ (with everything shifted by $p$) finishes the walk. This happens whenever at least $j$ points of $M$ lie below $p$.
+
+      Let $A$ be the largest jump and $m$ the smallest point of $M$ (if $M$ is empty there is nothing to do). All other jumps are shorter than $A$.
+
+      **Case 1: $m<A$ and $A\notin M$.** Jump $A$ first. The point $m$ is behind, so the reduction works with $j=1$.
+
+      **Case 2: $m<A$ and $A\in M$.** For each of the $n-1$ shorter jumps $a$, look at the start "jump $a$, then jump $A$". It lands on $a$ and on $a+A$. Call it spoiled if one of these is in $M$. A point $x\in M$ other than $A$ spoils at most one start: if $x<A$ it can equal only one $a$, and if $x>A$ it can equal only one $a+A$. So at most $n-2$ starts are spoiled, and one start is safe. After it the grasshopper stands at $a+A$, with the two points $m$ and $A$ of $M$ behind it, after two jumps. The reduction works with $j=2$.
+
+      **Case 3: $m\ge A$.** Now every point of $M$ is at least $A$. Apply the claim to the $n-1$ shorter jumps (total $s-A$) with the forbidden set
+      $$F=\{x-A:\ x\in M,\ x\ne m\}.$$
+      These are $n-2$ positive integers, and $s-A\notin F$ because $s\notin M$. We get an order of the short jumps whose landing points $0=q_0<q_1<\dots<q_{n-1}=s-A$ satisfy $q_k\notin F$ for $k\ge1$.
+      - **If $m-A$ is not one of the $q_k$:** jump $A$ first, then follow this order. The landing points are $q_k+A$. For $k\ge1$ they miss $M\setminus\{m\}$ because $q_k\notin F$; for $k=0$ the point $A$ could only be in $M$ if $A=m$. None equals $m$, by assumption.
+      - **If $m-A=q_i$:** then $i\le n-2$, because $q_{n-1}+A=s\ne m$. Follow the order up to $q_{i+1}$, then jump $A$, then finish the order. The early landing points are at most $q_{i+1}=q_i+(\text{a jump shorter than }A)<m$, so they miss $M$. The later ones are $q_k+A$ with $k\ge i+1$: they miss $M\setminus\{m\}$ as before, and miss $m$ because $q_k\ne q_i$.
+
+      The three cases cover everything, so the induction is complete.
+    checked: "script: the proof coded as a recursive algorithm; its order was checked on every instance with n ≤ 4 and jumps ≤ 8 (58,892 cases) and on 200,000 random instances with n ≤ 8"
+    status: ready

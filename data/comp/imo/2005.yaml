@@ -10,7 +10,32 @@ problems:
     topic: "Equal-sided hexagon in an equilateral triangle; three diagonals concur"
     areas: [geometry]
     difficulty: 3
-    status: coming
+    hints:
+      - 'Treat the six sides as vectors of the same length $s$ that add up to $0$. The three sides lying on the triangle already add up to $0$. What does that say about the other three?'
+      - 'Show that a $120^\circ$ rotation maps the hexagon to itself, sending $A_1\to B_1\to C_1$. Then find where its center sits.'
+    solution: |
+      **Key idea:** the hexagon has $120^\circ$ rotational symmetry. Its center lies on $A_1B_2$, and the rotation carries this line to the other two.
+
+      Go around the hexagon counterclockwise (reflect the figure if needed), and let $s$ be the common side length. Name the side vectors
+      $$a=\overrightarrow{A_1A_2},\ x=\overrightarrow{A_2B_1},\ b=\overrightarrow{B_1B_2},\ y=\overrightarrow{B_2C_1},\ c=\overrightarrow{C_1C_2},\ z=\overrightarrow{C_2A_1}.$$
+
+      **Step 1: $a+b+c=0$.** The interior of the hexagon is to the left of each side and lies inside the triangle. So $a$ points along line $BC$ in the direction that has $A$ on its left; likewise $b$ along $CA$ with $B$ on its left, and $c$ along $AB$ with $C$ on its left. If $ABC$ is counterclockwise these are the directions of $\overrightarrow{BC},\overrightarrow{CA},\overrightarrow{AB}$; if clockwise, of their opposites. In both cases $a,b,c$ are the triangle's side vectors scaled by the same factor, so $a+b+c=0$.
+
+      **Step 2: $x+y+z=0$, and both triples turn by $120^\circ$.** All six vectors add to $0$, so $x+y+z=0$. Three vectors of equal length with sum $0$ form an equilateral triangle, so the angle from one to the next is $120^\circ$ or $240^\circ$.
+
+      Now use convexity. Walking around, we turn left at each vertex by an angle strictly between $0^\circ$ and $180^\circ$, and the six turns add up to $360^\circ$. The turn from $a$ to $b$ is the sum of two of them, and the same goes for $b\to c$ and $c\to a$. These three totals are each $120^\circ$ or $240^\circ$ and add to $360^\circ$, so each is $120^\circ$. The same argument works for $x\to y\to z\to x$. So with $\rho_0$ the rotation by $120^\circ$ counterclockwise,
+      $$b=\rho_0(a),\quad c=\rho_0(b),\quad y=\rho_0(x),\quad z=\rho_0(y).$$
+
+      **Step 3: a symmetry.** Let $\rho$ be the rotation by $120^\circ$ counterclockwise, about the point $O$ chosen so that $\rho(A_1)=B_1$. Since $\rho$ turns every vector by $120^\circ$,
+      $$\rho(A_2)=B_1+\rho_0(a)=B_1+b=B_2,\qquad \rho(B_1)=B_2+\rho_0(x)=B_2+y=C_1,$$
+      and in the same way $\rho(B_2)=C_2$, $\rho(C_1)=A_1$, $\rho(C_2)=A_2$. So $\rho$ maps line $A_1B_2$ to $B_1C_2$, and $B_1C_2$ to $C_1A_2$. It is enough to show that $O$ lies on $A_1B_2$; the rotation then puts $O$ on the other two lines as well.
+
+      **Step 4: $O$ is on $A_1B_2$.** $A_1B_1C_1$ is an equilateral triangle with center $O$, so $O$ lies inside the hexagon. Seen from an interior point of a convex polygon, the vertices appear in order of increasing angle. Say $A_1$, $B_1$, $C_1$ are at angles $\theta$, $\theta+120^\circ$, $\theta+240^\circ$. Then $A_2$ is at an angle strictly between $\theta$ and $\theta+120^\circ$.
+
+      Also $A_1A_2=A_2B_1=s$, so $A_2$ is on the perpendicular bisector of $A_1B_1$. That line passes through $O$ in the directions $\theta+60^\circ$ and $\theta+240^\circ$. So $A_2$ is in direction $\theta+60^\circ$ from $O$, and $B_2=\rho(A_2)$ is in direction $\theta+180^\circ$, exactly opposite $A_1$. Hence $O$ lies on segment $A_1B_2$, and the three lines meet at $O$.
+    viz: imo-2005-p1
+    checked: "script: 602 random hexagons solved numerically from the equal-side conditions; the three lines met within 6·10⁻¹¹ every time"
+    status: ready
 
   - id: P2
     day: 1

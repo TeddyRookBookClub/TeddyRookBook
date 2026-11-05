@@ -41,6 +41,7 @@ const SECTIONS = [
   ['/games/siege/', 'exact'], ['/games/thief/', 'exact'], ['/games/hero/', 'exact'],
   ['/games/thermopylae/', 'exact'], ['/games/daily/', 'exact'],
   ['/october-sky/', 'tree'],                       // the Rocket Boys story: each page lists its sources
+  ['/history/', 'under'],                          // World History pages: each lists its sources (the hub uses none)
 ];
 
 // Known gaps, with the reason. A prefix ending in "*" covers everything under it.

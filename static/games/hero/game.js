@@ -5,6 +5,14 @@
    Every Greek and Latin word comes from Mosaic Match's list: Latin in its dictionary form, every Greek word found in the New Testament. */
 (function (W, D) {
   'use strict';
+  // ---------- jump feel (seconds and tiles per second) ----------
+  // Coyote time: a jump still works this long after running off a ledge. It only applies after walking off,
+  // never after a jump, so it can't give a second jump in the air.
+  // Jump buffer: a jump pressed this long before landing fires on landing.
+  // Variable height: while the jump key is held and the hero is still rising, gravity is lighter, so a tap
+  // gives a short hop (about 2 tiles) and a held jump a full one (about 4 tiles).
+  var COYOTE_TIME = 0.1, JUMP_BUFFER = 0.12;
+  var JUMP_SPEED = 15, JUMP_RUN_BONUS = 1.6, GRAVITY = 55, GRAVITY_HELD = 28, MAX_FALL = 18;
   var root = D.getElementById('hr'); if (!root) return;
   var $ = function (s) { return root.querySelector(s); };
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -340,12 +348,12 @@
     if (p.star > 0) max *= 1.15;
     if (dir) { p.face = dir; if (p.vx * dir < max) p.vx += dir * acc * dt * (p.vx * dir < 0 ? 1.8 : 1); if (p.vx * dir > max) p.vx -= dir * 18 * dt; }
     else if (p.on) { var dec = 24 * dt; if (Math.abs(p.vx) <= dec) p.vx = 0; else p.vx -= Math.sign(p.vx) * dec; }
-    // jump: a little coyote time and a jump buffer make it forgiving
-    p.coy = p.on ? 0.1 : Math.max(0, (p.coy || 0) - dt);
-    p.buf = keys.jumpPressed ? 0.12 : Math.max(0, (p.buf || 0) - dt); keys.jumpPressed = false;
-    if (p.buf > 0 && p.coy > 0) { p.vy = -(15 + 1.6 * Math.min(1, Math.abs(p.vx) / 8.6)); p.coy = 0; p.buf = 0; p.on = false; p.plat = null; sfx('jump'); }
-    var g = p.vy < 0 && keys.jump ? 28 : 55;
-    p.vy = Math.min(18, p.vy + g * dt);
+    // jump: coyote time and a jump buffer make it forgiving (values at the top of the file)
+    p.coy = p.on ? COYOTE_TIME : p.vy < 0 ? 0 : Math.max(0, (p.coy || 0) - dt); // rising (a jump or a bounce) ends it
+    p.buf = keys.jumpPressed ? JUMP_BUFFER : Math.max(0, (p.buf || 0) - dt); keys.jumpPressed = false;
+    if (p.buf > 0 && p.coy > 0) { p.vy = -(JUMP_SPEED + JUMP_RUN_BONUS * Math.min(1, Math.abs(p.vx) / 8.6)); p.coy = 0; p.buf = 0; p.on = false; p.plat = null; sfx('jump'); }
+    var g = p.vy < 0 && keys.jump ? GRAVITY_HELD : GRAVITY;
+    p.vy = Math.min(MAX_FALL, p.vy + g * dt);
     // throw
     p.cool -= dt;
     if (keys.throwPressed && p.power === 2 && p.cool <= 0 && G.ents.filter(function (e) { return e.k === 'stone'; }).length < 2) {
@@ -654,11 +662,9 @@
   function drawTile(ch, x, y, P, dy) {
     var X = sx(x), Y = sy(y + (dy || 0)), s = S, t = G.t;
     if (ch === '#') {
-      var above = tile(x, y - 1), cave = G.L.kind === 'cave' || G.L.kind === 'castle';
-      c.fillStyle = P.soil; c.fillRect(X, Y, s + 1, s + 1);
-      if (cave) { c.strokeStyle = P.soilD; c.lineWidth = 1; c.strokeRect(X + 0.5, Y + 0.5, s - 1, s - 1); c.fillStyle = P.top; c.fillRect(X + 1, Y + 1, s - 2, s * 0.12); return; }
-      c.fillStyle = P.soilD; c.fillRect(X + s * ((x * 7 + y * 3) % 5) / 6, Y + s * ((x * 3 + y * 5) % 4) / 5 + s * 0.3, s * 0.18, s * 0.12);
-      if (above === '.' || above === 'o' || above === '-') { c.fillStyle = P.top; c.fillRect(X, Y, s + 1, s * 0.28); c.fillStyle = 'rgba(255,255,255,.15)'; c.fillRect(X, Y, s + 1, s * 0.07); }
+      // autotiled ground: the tile is chosen by which sides are open, in one of a few looks (see groundTile)
+      var gt = groundTile(P, groundMask(x, y), (hash2(x, y) * GT_VARS) | 0);
+      c.drawImage(gt, X, Y - gt.m, s + 1, s + 1 + gt.m * 2);
     } else if (ch === 'B') {
       c.fillStyle = P.brick; c.fillRect(X, Y, s, s); c.strokeStyle = P.mortar; c.lineWidth = Math.max(1, s * 0.05);
       c.beginPath(); c.moveTo(X, Y + s / 2); c.lineTo(X + s, Y + s / 2); c.moveTo(X + s / 2, Y); c.lineTo(X + s / 2, Y + s / 2); c.moveTo(X + s / 4, Y + s / 2); c.lineTo(X + s / 4, Y + s); c.moveTo(X + s * 0.75, Y + s / 2); c.lineTo(X + s * 0.75, Y + s); c.stroke(); c.strokeRect(X, Y, s, s);
@@ -687,6 +693,95 @@
     } else if (ch === 'b') {
       c.fillStyle = '#7a4a22'; c.fillRect(X, Y, s + 1, s * 0.45); c.fillStyle = '#5a3416'; c.fillRect(X + s * 0.45, Y, s * 0.08, s * 0.45); c.fillStyle = '#c9a25a'; c.fillRect(X, Y - s * 0.12, s + 1, s * 0.06);
     }
+  }
+  // ---------- autotiled ground (Wang tiles) ----------
+  // Each ground tile looks at its four neighbours: N 1, E 2, S 4, W 8 (a bit is set when that side is open).
+  // The 16 masks give flat tops, cliff edges, rounded corners and cave ceilings. Every mask is drawn in GT_VARS
+  // looks; the sides of every look are drawn to the same rule (grass depth, rock courses), so any two neighbours
+  // join without a seam, and a long run of ground doesn't repeat. Tiles are drawn once into small canvases and
+  // reused until the screen size or the level's palette changes.
+  var GT_VARS = 4, gtCache = {}, gtKey = '';
+  function hash2(x, y) { var h = Math.imul(x | 0, 374761393) ^ Math.imul((y | 0) + 7, 668265263); h = Math.imul(h ^ (h >>> 13), 1274126177); h ^= h >>> 16; return (h >>> 0) / 4294967296; }
+  function openSide(x, y) { if (y < 0 || y >= ROWS || x < 0 || x >= G.L.g.length) return false; return !solid(G.L.g[x][y]); }
+  function groundMask(x, y) { return (openSide(x, y - 1) ? 1 : 0) | (openSide(x + 1, y) ? 2 : 0) | (openSide(x, y + 1) ? 4 : 0) | (openSide(x - 1, y) ? 8 : 0); }
+  function shadeHex(hex, f) { // f < 0 darker, f > 0 lighter
+    var n = parseInt(hex.slice(1), 16), r = n >> 16, g = n >> 8 & 255, b = n & 255, t = f < 0 ? 0 : 255, a = Math.abs(f);
+    return 'rgb(' + Math.round(r + (t - r) * a) + ',' + Math.round(g + (t - g) * a) + ',' + Math.round(b + (t - b) * a) + ')';
+  }
+  function groundTile(P, mask, v) {
+    var key = G.set + G.L.kind + S + '@' + dpr;
+    if (key !== gtKey) { gtCache = {}; gtKey = key; }
+    var id = mask * GT_VARS + v; if (gtCache[id]) return gtCache[id];
+    var s = S, m = Math.ceil(s * 0.25), cave = G.L.kind === 'cave' || G.L.kind === 'castle';
+    var cvT = D.createElement('canvas'); cvT.width = Math.ceil((s + 1) * dpr); cvT.height = Math.ceil((s + 1 + m * 2) * dpr); cvT.m = m;
+    var g = cvT.getContext('2d'); g.scale(dpr, dpr); g.translate(0, m);
+    var seed = mask * 97 + v * 389 + (cave ? 7 : 3), rs = function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+    var oN = mask & 1, oE = mask & 2, oS = mask & 4, oW = mask & 8, R = s * 0.26, w = oE ? s : s + 1, h = oS ? s : s + 1;
+    // body, with rounded corners where two open sides meet
+    function body() {
+      var tl = oN && oW ? R : 0, tr = oN && oE ? R : 0, br = oS && oE ? R : 0, bl = oS && oW ? R : 0;
+      g.beginPath(); g.moveTo(tl, 0); g.lineTo(w - tr, 0); if (tr) g.quadraticCurveTo(w, 0, w, tr); g.lineTo(w, h - br); if (br) g.quadraticCurveTo(w, h, w - br, h);
+      g.lineTo(bl, h); if (bl) g.quadraticCurveTo(0, h, 0, h - bl); g.lineTo(0, tl); if (tl) g.quadraticCurveTo(0, 0, tl, 0); g.closePath();
+    }
+    // a wobble that is zero at both ends, so a line drawn with it meets the same line in the next tile
+    function wob(u, a1, a2) { return a1 * Math.sin(Math.PI * u) + a2 * Math.sin(2 * Math.PI * u); }
+    var k1 = (rs() - 0.5) * 0.09, k2 = (rs() - 0.5) * 0.06, i, u;
+    body(); g.fillStyle = P.soil; g.fill();
+    g.save(); body(); g.clip();
+    if (cave) {
+      // rock courses: joints along v = 0 and v = 0.5 run the whole width (they match every neighbour);
+      // the upright joints sit at random places inside each course, so the wall never shows a grid
+      g.strokeStyle = P.soilD; g.lineWidth = Math.max(1, s * 0.045);
+      g.beginPath(); g.moveTo(0, 0.5); for (u = 0; u <= 1.001; u += 0.125) g.lineTo(u * w, 0.5 + wob(u, k1 * s * 0.3, k2 * s * 0.3));
+      if (v < 3) { var xx = s * (0.2 + rs() * 0.6); g.moveTo(xx, 1); g.lineTo(xx + (rs() - 0.5) * s * 0.08, s); }
+      g.stroke();
+      // a few chips and a lighter stone here and there
+      for (i = 0; i < 3; i++) { g.fillStyle = rs() < 0.5 ? 'rgba(255,255,255,.07)' : 'rgba(0,0,0,.12)'; g.fillRect(s * (0.1 + rs() * 0.75), s * (0.1 + rs() * 0.8), s * (0.06 + rs() * 0.12), s * 0.05); }
+      if (rs() < 0.35) { g.fillStyle = 'rgba(255,255,255,.05)'; g.fillRect(s * (0.1 + rs() * 0.4), s * (rs() < 0.5 ? 0.06 : 0.56), s * 0.35, s * 0.38); }
+    } else {
+      // soil: two faint layers that cross every tile at the same height, then the pebbles of this look
+      g.strokeStyle = shadeHex(P.soil, -0.07); g.lineWidth = Math.max(1, s * 0.05);
+      [0.55, 0.82].forEach(function (lv, j) { g.beginPath(); for (u = 0; u <= 1.001; u += 0.125) { var yy = s * lv + wob(u, (j ? k2 : k1) * s, k1 * s * 0.5); if (u === 0) g.moveTo(0, yy); else g.lineTo(u * w, yy); } g.stroke(); });
+      var np = Math.floor(rs() * 2.6);
+      for (i = 0; i < np; i++) {
+        var px = s * (0.12 + rs() * 0.76), py = s * (0.38 + rs() * 0.52), pr = s * (0.04 + rs() * 0.05);
+        g.fillStyle = shadeHex(P.soil, -0.12); g.beginPath(); g.ellipse(px, py, pr * 1.5, pr, 0, 0, 7); g.fill();
+        g.fillStyle = 'rgba(255,255,255,.18)'; g.fillRect(px - pr * 0.8, py - pr * 0.7, pr * 0.9, Math.max(1, pr * 0.4));
+      }
+      if (rs() < 0.3) { g.fillStyle = 'rgba(255,255,255,.12)'; g.fillRect(s * (0.15 + rs() * 0.6), s * (0.45 + rs() * 0.4), s * 0.12, Math.max(1, s * 0.04)); }
+    }
+    // open sides: a shaded face, so pits and ledges read as edges
+    var sd = Math.max(2, s * 0.2), gr;
+    if (oW) { gr = g.createLinearGradient(0, 0, sd, 0); gr.addColorStop(0, 'rgba(0,0,0,.28)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, sd, h); }
+    if (oE) { gr = g.createLinearGradient(w, 0, w - sd, 0); gr.addColorStop(0, 'rgba(0,0,0,.28)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(w - sd, 0, sd, h); }
+    if (oS) { gr = g.createLinearGradient(0, h, 0, h - sd); gr.addColorStop(0, 'rgba(0,0,0,.35)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, h - sd, w, sd); }
+    // the top: grass in the open air, a worn rim underground
+    if (oN) {
+      var d0 = cave ? 0.13 : 0.28, a1 = (rs() - 0.5) * (cave ? 0.04 : 0.1), a2 = (rs() - 0.5) * 0.06;
+      g.fillStyle = P.top; g.beginPath(); g.moveTo(0, 0); g.lineTo(w, 0);
+      // grass runs down an open side a little way, round the corner
+      if (oE) { g.lineTo(w, s * (d0 + 0.22)); g.quadraticCurveTo(w - s * 0.05, s * (d0 + 0.05), w - s * 0.16, s * d0); }
+      for (u = 1; u >= -0.001; u -= 0.0625) {
+        var dd = s * (d0 + wob(u, a1, a2)) + (cave ? 0 : (Math.floor(u * 16 + v) % 2) * s * 0.035);
+        if ((oE && u > 0.84) || (oW && u < 0.16)) continue;
+        g.lineTo(u * w, dd);
+      }
+      if (oW) { g.lineTo(s * 0.16, s * d0); g.quadraticCurveTo(s * 0.05, s * (d0 + 0.05), 0, s * (d0 + 0.22)); }
+      g.closePath(); g.fill();
+      g.fillStyle = 'rgba(255,255,255,.15)'; g.fillRect(0, 0, w, Math.max(1, s * 0.07));
+    }
+    g.restore();
+    // things that stick out past the tile: grass tufts on top, drips under a ceiling
+    if (oN && !cave) {
+      g.fillStyle = shadeHex(P.top, 0.12); var nt = 1 + Math.floor(rs() * 3);
+      for (i = 0; i < nt; i++) { var tx = s * (0.18 + rs() * 0.64), th = s * (0.1 + rs() * 0.1); g.beginPath(); g.moveTo(tx - s * 0.06, 1); g.lineTo(tx - s * 0.03, -th); g.lineTo(tx, 1); g.lineTo(tx + s * 0.04, -th * 0.75); g.lineTo(tx + s * 0.07, 1); g.fill(); }
+      if (rs() < 0.25) { g.fillStyle = G.set === 'ro' ? '#f2d16b' : '#f4f1e8'; var fx = s * (0.25 + rs() * 0.5); g.beginPath(); g.arc(fx, -s * 0.06, Math.max(1.5, s * 0.05), 0, 7); g.fill(); }
+    }
+    if (oS && cave) {
+      g.fillStyle = P.soil; var nd = 1 + Math.floor(rs() * 2);
+      for (i = 0; i < nd; i++) { var dx = s * (0.2 + rs() * 0.6), dh = s * (0.1 + rs() * 0.14); g.beginPath(); g.moveTo(dx - s * 0.08, h - 1); g.lineTo(dx, h + dh); g.lineTo(dx + s * 0.08, h - 1); g.fill(); }
+    }
+    gtCache[id] = cvT; return cvT;
   }
   function amphora(cx, cy, r, col) {
     c.fillStyle = col; c.beginPath(); c.ellipse(cx, cy, r * 0.62, r * 0.85, 0, 0, 7); c.fill();

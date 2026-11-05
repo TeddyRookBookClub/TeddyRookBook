@@ -127,4 +127,26 @@ problems:
     topic: "Path covering a square's boundary nearly returns on itself"
     areas: [geometry, combinatorics]
     difficulty: 5
-    status: coming
+    hints:
+      - 'Pick a corner $W$ and a moment when the path is near $W$. If some point of the two sides away from $W$ is approached both before and after that moment, you are done: the detour to $W$ and back is long.'
+      - 'Which corner? Avoid the corner the path reaches first and the corner it leaves last. Then use that the two far sides form a connected set.'
+    solution: |
+      **Key idea:** find a moment when the path is near a corner $W$, while some point $P$ on the two sides away from $W$ is approached both before and after that moment. Going from near $P$ to near $W$ and back costs at least $2\cdot 99$.
+
+      Let the path have length $\ell$ and parametrize it by arc length, $L(t)$ for $0\le t\le\ell$, from $A_0$ to $A_n$. The path does not meet itself and $A_0\ne A_n$, so each of its points has exactly one parameter. The part between $L(s)$ and $L(t)$ is $L([s,t])$, of length $|t-s|$.
+
+      For a corner $V$ let $f(V)$ and $g(V)$ be the first and the last time $t$ with $|L(t)-V|\le\frac12$. They exist: the set of such times is closed and, by the hypothesis, not empty.
+
+      **Choosing the corner.** Let $V_1$ be a corner with the smallest $f$, and $V_2$ a corner with the largest $g$. Pick a corner $W$ different from both (there are four corners), and let $\tau=f(W)$. Then
+      - $f(V_1)\le f(W)=\tau$: the path is near the corner $V_1\ne W$ at some time $\le\tau$;
+      - $g(V_2)\ge g(W)\ge\tau$: the path is near the corner $V_2\ne W$ at some time $\ge\tau$.
+
+      **The far sides.** Let $K$ be the union of the two sides of the square that do not contain $W$. It is a connected broken line through the other three corners, and each of its points is at distance at least $100$ from $W$. Put
+      $$K_-=\{P\in K:\ |P-L(t)|\le\tfrac12\ \text{for some } t\le\tau\},\qquad K_+=\{P\in K:\ |P-L(t)|\le\tfrac12\ \text{for some } t\ge\tau\}.$$
+      Each is closed (the points of $K$ within $\frac12$ of a compact piece of the path). By the hypothesis $K_-\cup K_+=K$. Also $V_1\in K_-$ and $V_2\in K_+$, so neither is empty. A connected set cannot be split into two disjoint nonempty closed sets, so some point $P$ lies in both.
+
+      **The two points.** Choose $t_1\le\tau\le t_2$ with $|L(t_1)-P|\le\frac12$ and $|L(t_2)-P|\le\frac12$, and let $X=L(t_1)$, $Y=L(t_2)$. Then $XY\le1$. Since $|L(\tau)-W|\le\frac12$ and $PW\ge100$,
+      $$|X-L(\tau)|\ge100-\tfrac12-\tfrac12=99,\qquad |L(\tau)-Y|\ge99.$$
+      The part of $L$ from $X$ to $Y$ passes through $L(\tau)$, and a path is at least as long as the straight segments joining its points in order. So that part has length at least $99+99=198$.
+    checked: "proof checked step by step (no numerical answer to test)"
+    status: ready

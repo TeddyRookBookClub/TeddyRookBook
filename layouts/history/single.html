@@ -1,0 +1,20 @@
+{{- /* /history/<page>/: one World History page. The page's content is an HTML content file in content/history/; its
+   styles are static/history/history.css and any scripts it names in front matter (scripts: [paths under static/]).
+   The page lists its own sources, so the "Sources and credits" block adds only the extra items from data/credits.yaml. */ -}}
+{{ define "main" }}
+{{- .Store.Set "trbOwnSources" true -}}
+<link rel="stylesheet" href="{{ "history/history.css" | relURL }}?v={{ (os.Stat "static/history/history.css").ModTime.Unix }}">
+<article class="wh">
+  <nav class="wh-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "history/" | relURL }}">World History</a> › {{ .Params.short | default .Title }}</nav>
+  <header class="wh-hero">
+    <p class="wh-eyebrow">{{ .Params.eyebrow | default "World History" }}</p>
+    <h1>{{ .Params.heading | default .Title }}</h1>
+    {{ with .Params.lead }}<p>{{ . }}</p>{{ end }}
+    {{ with .Params.ages }}<p class="wh-ages">{{ . }}</p>{{ end }}
+  </header>
+  {{ .Content }}
+</article>
+{{- range .Params.scripts }}
+<script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+{{- end }}
+{{ end }}

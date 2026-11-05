@@ -78,7 +78,31 @@ problems:
     difficulty: 3
     hints:
       - 'Draw the circle about $A$ of radius $AD$, the circle about $B$ of radius $BC$, and the circle about $P$ of radius $h$. How are they placed?'
-    status: coming
+      - 'Look at the angles at $P$ between $PA$, $PB$ and the perpendicular from $P$ to line $CD$. Show first that this perpendicular, extended away from $CD$, crosses side $AB$.'
+    solution: |
+      Write $a=AD$, $b=BC$, and $\ell$ for the line $CD$.
+
+      **Key idea:** since $AB=a+b$, $AP=a+h$ and $BP=b+h$, the circles about $A$, $B$, $P$ with radii $a$, $b$, $h$ touch each other from outside. The line $\ell$ touches the circle about $P$ and comes within $a$ of $A$ and within $b$ of $B$. Turning this into angles at $P$ gives $\angle APB\ge\alpha+\beta$ for two explicit angles, and the half-angle formula finishes.
+
+      **Step 1: the perpendicular from $P$ crosses $AB$.** Let $u$ be the unit vector at $P$ perpendicular to $\ell$ and pointing away from $\ell$. The ray from $P$ in direction $u$ leaves the convex quadrilateral at a boundary point $E$, at distance $e=h+PE$ from $\ell$. It is not on $CD$, which lies on $\ell$. Suppose $E$ were on side $BC$. As $C$ lies on $\ell$, $EC\ge e$, so $EB=b-EC\le b-e$ and
+      $$PB\le PE+EB\le(e-h)+(b-e)=b-h<b+h=PB,$$
+      which is impossible. In the same way $E$ is not on $DA$. So $E$ is on $AB$, and $u$ points into the angle $APB$:
+      $$\angle(u,PA)+\angle(u,PB)=\angle APB.$$
+
+      **Step 2: two angle bounds.** $A$ is on $P$'s side of $\ell$, at distance at most $AD=a$ from it, and that distance equals $h+(a+h)\cos\angle(u,PA)$. Hence
+      $$\cos\angle(u,PA)\le\frac{a-h}{a+h}=\cos\alpha,$$
+      where $\alpha$ is the angle in $(0^\circ,180^\circ)$ with this cosine. Since $\tan^2\frac\alpha2=\frac{1-\cos\alpha}{1+\cos\alpha}=\frac ha$, we have $\tan\frac\alpha2=\sqrt{h/a}$. So $\angle(u,PA)\ge\alpha$. Likewise $\angle(u,PB)\ge\beta$ with $\tan\frac\beta2=\sqrt{h/b}$. With Step 1, $\gamma=\angle APB\ge\alpha+\beta$.
+
+      **Step 3: the triangle $APB$.** Its sides are $a+h$, $b+h$, $a+b$ and its half-perimeter is $s=a+b+h$. The half-angle formula gives
+      $$\tan\frac\gamma2=\sqrt{\frac{(s-PA)(s-PB)}{s\,(s-AB)}}=\sqrt{\frac{ab}{h\,(a+b+h)}}.$$
+      As $\gamma<180^\circ$, also $\alpha+\beta<180^\circ$, and tangent increases on $(0^\circ,90^\circ)$, so
+      $$\tan\frac\gamma2\ \ge\ \tan\frac{\alpha+\beta}2=\frac{\sqrt{h/a}+\sqrt{h/b}}{1-h/\sqrt{ab}}.$$
+      Put $x=\sqrt h$, $p=\sqrt a$, $q=\sqrt b$ (the denominator above is positive, so $x^2<pq$). The inequality says $\Phi(x)\ge0$, where
+      $$\Phi(x)=\frac{pq}{x\sqrt{p^2+q^2+x^2}}-\frac{x(p+q)}{pq-x^2}.$$
+      The first term decreases as $x$ grows and the second increases, so $\Phi$ is decreasing. At $x_0=\frac{pq}{p+q}$ both terms equal $\frac{(p+q)^2}{p^2+pq+q^2}$; this uses the identity $(p^2+q^2)(p+q)^2+p^2q^2=(p^2+pq+q^2)^2$. So $\Phi(x_0)=0$, and $\Phi(x)\ge0$ forces $x\le x_0$, that is,
+      $$\frac1{\sqrt h}\ \ge\ \frac{p+q}{pq}=\frac1{\sqrt{AD}}+\frac1{\sqrt{BC}}.$$
+    checked: "numeric: 13,000 random configurations meeting all the conditions; the inequality always holds and the perpendicular from P always meets AB as in Step 1"
+    status: ready
 
   - id: P5
     day: 2

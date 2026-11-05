@@ -27,7 +27,44 @@ problems:
     topic: "Cutting a cyclic quadrilateral into n cyclic pieces"
     areas: [geometry]
     difficulty: 3
-    status: coming
+    hints:
+      - 'Two handy pieces: join the incenter of a triangle to its three touch points to get three cyclic kites, and cut an isosceles trapezoid by lines parallel to its bases to get as many isosceles trapezoids as you like.'
+      - 'For exactly four pieces, join an inner point $P$ to one point on each side, so that the four joining segments meet their sides at the same angle, measured the same way round.'
+    solution: |
+      **Key idea:** three kinds of pieces do all the work. A triangle splits into three cyclic kites, an isosceles trapezoid splits into any number of isosceles trapezoids, and a "pinwheel" around one inner point gives four cyclic pieces at once.
+
+      Let $ABCD$ be the cyclic quadrilateral, with angles $A,B,C,D$, so $A+C=B+D=180^\circ$. Recall that a quadrilateral is cyclic when two opposite angles add up to $180^\circ$.
+
+      **Tools.**
+      1. *Triangle into 3.* In a triangle, the incenter, two touch points, and the vertex between them form a quadrilateral with right angles at the touch points. It is cyclic, and three of them fill the triangle.
+      2. *Isosceles trapezoid into any number.* Lines parallel to the bases cut it into thinner trapezoids with the same base angles. These are isosceles, hence cyclic. (A rectangle is a special case.)
+      3. *Parallel cut.* If $E$ is on $AD$, $F$ is on $BC$, and $EF\parallel DC$, then $\angle AEF=\angle ADC$, so $\angle AEF+\angle ABF=D+B=180^\circ$ and $ABFE$ is cyclic.
+
+      **Five or more pieces.** If $ABCD$ is a rectangle, use tool 2. Otherwise two neighboring angles differ; label so that $C>D$. Take $E$ on $AD$ close to $D$, then $F$ on $BC$ with $EF\parallel DC$, and $G$ on $DC$ with $\angle EGC=C$. (As $E$ approaches $D$, $F$ approaches $C$ and $G$ approaches $D$, so for $E$ close enough all three points are inside their sides.) Now:
+      - $ABFE$ is cyclic, by tool 3;
+      - $EFCG$ has $EF\parallel GC$ and equal base angles $\angle EGC=\angle FCG=C$, so it is an isosceles trapezoid; cut it into $n-4$ pieces with tool 2;
+      - triangle $EDG$ has angles $D$, $180^\circ-C$ and $C-D>0$; cut it into 3 pieces with tool 1.
+
+      That makes $1+(n-4)+3=n$ cyclic pieces.
+
+      **Exactly four pieces: the pinwheel.** Take a point $P$ inside a convex quadrilateral and an angle $x$ between $0^\circ$ and $180^\circ$. Go around the quadrilateral counterclockwise. On each side $VW$ ($V$ first) mark the point $X$ with $\angle PXV=x$, and join it to $P$. The piece around vertex $A$ is $P\,X_{DA}\,A\,X_{AB}$. Its angles at the two marked points are $180^\circ-x$ and $x$, which add up to $180^\circ$, so it is cyclic. The same is true for all four pieces, and they tile the quadrilateral, as long as every marked point lies inside its side.
+
+      *When are the marked points inside the sides?* At each vertex $V$, the segment $VP$ splits the angle into a forward part $f_V$ (toward the next vertex) and a backward part $g_V$. As $X$ runs along side $VW$ from $V$ to $W$, the angle $\angle PXV$ falls from $180^\circ-f_V$ to $g_W$. So we need
+      $$\max_V g_V<x<180^\circ-\max_V f_V,$$
+      and such an $x$ exists exactly when $g_V+f_W<180^\circ$ for every pair of vertices $V,W$.
+
+      *Choosing $P$.* Label so that $D\le90^\circ$ (then $B\ge90^\circ$). Let $P$ be the point of the diagonal $AC$ with $\angle PBC=\angle ABD$, so that also $\angle PBA=\angle DBC$. For $V=W$ the sum is the angle $V<180^\circ$. The twelve other sums:
+      - Six are two angles of one triangle: $g_A+f_C$ (triangle $ACD$), $g_C+f_A$ ($ABC$), $g_A+f_D$ ($APD$), $g_B+f_A$ ($ABP$), $g_C+f_B$ ($BPC$), $g_D+f_C$ ($CPD$).
+      - $(g_B+f_D)+(g_D+f_B)=B+D=180^\circ$ and all four parts are positive, so both sums are below $180^\circ$.
+      - With inscribed angles, $\angle CAD=\angle CBD$ and $\angle ACD=\angle ABD$. So $g_A+f_B=\angle CBD+\angle ABD=B$ and $g_B+f_C=\angle DBC+\angle ABD=B$, both below $180^\circ$.
+      - $g_C+f_D$ and $g_D+f_A$: here $f_D,g_D<D\le90^\circ$, while $g_C=\angle ACB$ and $f_A=\angle CAB$ are less than $180^\circ-B=D\le90^\circ$.
+
+      So a suitable $x$ exists, and the pinwheel cuts $ABCD$ into four cyclic quadrilaterals. (Each piece is convex: its angles are $x$, $180^\circ-x$, the vertex angle, and, at $P$, $180^\circ$ minus the vertex angle.)
+
+      Together, every cyclic quadrilateral can be cut into $n$ cyclic quadrilaterals for each $n\ge4$.
+    checked: "script: 20,000 random cyclic quadrilaterals for the pinwheel (all marked points inside the sides, all pieces cyclic) and 5000 for the five-or-more construction"
+    viz: imo-1972-p2
+    status: ready
 
   - id: P3
     day: 1

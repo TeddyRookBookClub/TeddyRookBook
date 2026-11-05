@@ -1,0 +1,27 @@
+{{- /* /history/: the World History hub. Lists the pages in content/history/ (their title, lead and front-matter "card")
+   and points to the site's other history: Stories from History, the Timeline, Egypt and the American History ladder. */ -}}
+{{ define "main" }}
+<link rel="stylesheet" href="{{ "history/history.css" | relURL }}?v={{ (os.Stat "static/history/history.css").ModTime.Unix }}">
+<article class="wh">
+  <nav class="wh-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › World History</nav>
+  <header class="wh-hero">
+    <p class="wh-eyebrow">Teddy Rook Book</p>
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.lead }}<p>{{ . }}</p>{{ end }}
+  </header>
+  {{ .Content }}
+  <h2>Pages</h2>
+  <ul class="wh-cards">
+    {{- range .RegularPages.ByWeight }}
+    <li><a href="{{ .RelPermalink }}"><b>{{ .Title }}</b><span>{{ .Params.card | default .Description }}</span>{{ with .Params.ages }}<em>{{ . }}</em>{{ end }}</a></li>
+    {{- end }}
+  </ul>
+  <h2>More history on the site</h2>
+  <ul class="wh-cards">
+    <li><a href="{{ "american-history/stories-from-history/" | relURL }}"><b>Stories from History</b><span>The world's story for ages 9 and 10, from the first farmers to the year 2000.</span></a></li>
+    <li><a href="{{ "timeline/" | relURL }}"><b>Timeline</b><span>The ancient world from the first kings of Egypt to the fall of Rome, with a few later moments.</span></a></li>
+    <li><a href="{{ "egypt/" | relURL }}"><b>Egypt</b><span>Ancient Egypt: its kings, its writing and its monuments.</span></a></li>
+    <li><a href="{{ "american-history/" | relURL }}"><b>American History &amp; Civics</b><span>Courses from the first Americans to the present, and the Constitution.</span></a></li>
+  </ul>
+</article>
+{{ end }}

@@ -62,7 +62,42 @@ problems:
     topic: "Tiling rectangles with six-square hooks"
     areas: [combinatorics]
     difficulty: 5
-    status: coming
+    answer: "Exactly when $3\\mid m$ and $4\\mid n$, or $12\\mid m$ and $n\\notin\\{1,2,5\\}$, or the same with $m$ and $n$ swapped"
+    hints:
+      - 'Each hook has a "pocket": a cell outside the hook with three of its four neighbors in the hook. Which hook can fill it? Show that hooks come in pairs, and that each pair is a $3\times4$ rectangle or one other 12-cell shape.'
+      - 'For $m\equiv n\equiv2\pmod 4$, mark the cells $(i,j)$ where exactly one of $i,j$ is a multiple of $4$. For width $5$, look at the middle row.'
+    solution: |
+      **Key idea:** hooks always pair up. Each hook's pocket is filled by a partner hook whose pocket the first one fills. So a tiling by hooks is really a tiling by 12-cell pieces of two shapes. A coloring and a middle-row count then rule out every other rectangle.
+
+      Number rows and columns from $0$ and write cells as $(\text{row},\text{column})$.
+
+      **Step 1: hooks pair up.** Place a hook $H$ in the $3\times3$ box with rows and columns $0,1,2$ so that it fills row $0$, column $0$ and the cell $(1,2)$. Its pocket $c=(1,1)$ is not in $H$, but three of its neighbors are. Two of them are its left and right neighbors, so $c$ lies inside the rectangle and is covered by another hook $H'$. Inside $H'$, the cell $c$ can have only one neighbor, $d=(2,1)$.
+
+      A hook is a path of six cells. Walking from one end it goes $1$ step, turns, $2$ steps, turns the same way, $2$ steps. From the other end the pattern is $2,2,1$. In $H'$ the walk starts at $c$ and goes down to $d$. That leaves four possibilities:
+      - $1,2,2$ turning toward column $0$: it hits $(2,0)\in H$. Impossible.
+      - $1,2,2$ turning the other way: $H'=\{(1,1),(2,1),(2,2),(2,3),(1,3),(0,3)\}$. Its pocket $(1,2)$ is in $H$, and $H\cup H'$ is the $3\times4$ rectangle on rows $0$–$2$, columns $0$–$3$.
+      - $2,2,1$ turning toward larger columns: $H'=\{(1,1),(2,1),(3,1),(3,2),(3,3),(2,3)\}$. Now the cell $(2,2)$ is uncovered, but all four of its neighbors, $(1,2)$, $(2,1)$, $(3,2)$, $(2,3)$, are taken. It lies inside the rectangle, and no hook can reach it. Impossible.
+      - $2,2,1$ turning toward smaller columns: $H'=\{(1,1),(2,1),(3,1),(3,0),(3,-1),(2,-1)\}$. Its pocket $(2,0)$ is in $H$, and $H\cup H'$ is a **step**: four rows of three cells, the top two over columns $0$–$2$ and the bottom two over columns $-1$–$1$.
+
+      In both possible cases each hook fills the other's pocket. So "the hook filling my pocket" pairs the hooks up, and the rectangle is tiled by $3\times4$ rectangles and steps (in any orientation). Conversely a $3\times4$ rectangle is two hooks.
+
+      **Step 2: $12\mid mn$.** Each piece has $12$ cells.
+
+      **Step 3: $m$ and $n$ are not both $\equiv2\pmod 4$.** Mark the cell $(i,j)$ if exactly one of $i,j$ is a multiple of $4$. Modulo $2$, the number of marked cells in a set is (cells with $4\mid i$) $+$ (cells with $4\mid j$).
+      - A $3\times4$ rectangle (3 rows, 4 columns): exactly one of its columns has $4\mid j$, giving $3$ cells. The cells with $4\mid i$ form $0$ or $4$ cells. Total odd.
+      - A step with rows of three cells: exactly one of its four rows has $4\mid i$, giving $3$ cells. Its four columns hold $2,4,4,2$ cells, so the cells with $4\mid j$ number $2$ or $4$. Total odd.
+      - The turned versions are the same with rows and columns swapped.
+
+      So every piece covers an odd number of marked cells. If $m=2m'$ and $n=2n'$ with $m',n'$ odd, there are $mn/12=m'n'/3$ pieces, an odd number, so the marked cells would be odd in number. But in the rectangle the cells with $4\mid i$ fill whole rows of even length $n$, and those with $4\mid j$ fill whole columns of even length $m$. That gives an even count. Contradiction.
+
+      **Step 4: no side of length $1$, $2$ or $5$.** A hook needs three rows and three columns, so $1$ and $2$ are out. Suppose there are $5$ rows. Every piece spans $3$ or $4$ consecutive rows, so it meets the middle row. There it has at least $3$ cells: a rectangle has $4$ or $3$ cells in each of its rows; a step with rows of three has $3$; a turned step has rows of $2,4,4,2$ cells, and the middle row is one of its inner rows, giving $4$. With $T=5n/12$ pieces, the middle row would need $n\ge3T=\tfrac54n$ cells. Contradiction.
+
+      **Step 5: the answer.** Since $4\mid mn$, Step 3 shows that $4$ divides $m$ or $n$; say $4\mid n$. If $3\mid m$ we are in the first case. If not, Step 2 forces $3\mid n$, so $12\mid n$, and Step 4 gives $m\notin\{1,2,5\}$.
+
+      **These work.** If $3\mid m$ and $4\mid n$, use $3\times4$ rectangles. If $12\mid m$ and $n\notin\{1,2,5\}$, write $n=3x+4y$ with $x,y\ge0$ (possible for $n=3,4,6,7,8$, and then add $3$s). Cut the rectangle into strips of width $3$ and $4$. A strip $m\times3$ is a stack of $4\times3$ rectangles, and a strip $m\times4$ is a stack of $3\times4$ rectangles.
+    viz: imo-2004-p3
+    checked: "script: all placements of a second hook through the pocket listed by computer (three, as in Step 1); a profile search tiled every rectangle with short side ≤ 13 and long side ≤ 36 exactly as the answer predicts; the coloring found and confirmed by exhaustive search over 4×4-periodic patterns"
+    status: ready
 
   - id: P4
     day: 2
@@ -94,11 +129,68 @@ problems:
     topic: "Isogonal-style point inside a quadrilateral and equal distances"
     areas: [geometry]
     difficulty: 4
-    status: coming
+    hints:
+      - '$BP$ is the mirror image of $BD$ in the bisector of angle $B$, and $DP$ is the mirror image of $DB$ in the bisector of angle $D$. Watch where all these lines cross the perpendicular bisector $\ell$ of $AC$.'
+      - 'Show: if $BD$ crosses $\ell$ at $M$, then $BP$ crosses $\ell$ at the inverse of $M$ in the circle $ABC$. The same holds at $D$ with the circle $ADC$.'
+    solution: |
+      **Key idea:** $AP=CP$ means that $P$ lies on the perpendicular bisector $\ell$ of $AC$. Both circles $ABC$ and $ADC$ have their centers on $\ell$. Reflecting a line through $B$ in the bisector of angle $B$ moves its crossing point with $\ell$ to the inverse point in circle $ABC$. So $P$ lands on $\ell$ exactly when the two circles give the same inverse, which forces them to be one circle.
+
+      Let $\Gamma$ be the circle $ABC$ and $\Gamma'$ the circle $ADC$. We add one point at infinity to $\ell$: a line parallel to $\ell$ "meets" it there. Inversion in a circle with center $O$ on $\ell$ maps $\ell$ to itself, swapping $O$ and the point at infinity. Directed angles between lines are taken mod $180^\circ$.
+
+      **Lemma.** Let $XYZ$ be a triangle with circumcircle $\omega$ (center $O$), let $\ell$ be the perpendicular bisector of $XZ$, and let $m\ne\ell$ be a line through $Y$. Let $m^*$ be the mirror image of $m$ in the bisector of angle $XYZ$. If $m$ meets $\ell$ at $M$, then $m^*$ meets $\ell$ at the inverse $M^*$ of $M$ in $\omega$.
+
+      *Proof.* If $Y\in\ell$, then $\ell$ is the angle bisector, and $m^*\ne\ell$ passes through $Y$. So it meets $\ell$ at $Y=M$, which is its own inverse. Now let $Y\notin\ell$. We use a classical fact: $YO$ and the altitude from $Y$ are mirror images in the bisector of angle $Y$. Since that altitude is parallel to $\ell$, this reads
+      $$\angle(YX,YO)=\angle(\ell,YZ).\qquad(1)$$
+      This settles $M=O$ (then $m^*$ is parallel to $\ell$) and $M$ at infinity (then $m^*=YO$). Otherwise $M$ and $M^*$ lie on the same ray from $O$ with $OM\cdot OM^*=OY^2$. So triangles $OYM$ and $OM^*Y$ are similar with opposite orientation (common angle at $O$), which gives $\angle(YO,YM)=\angle(M^*Y,\ell)$. Adding (1),
+      $$\angle(YX,YM)=\angle(YX,YO)+\angle(YO,YM)=\angle(\ell,YZ)+\angle(M^*Y,\ell)=\angle(M^*Y,YZ).$$
+      That says $YM^*$ is the mirror image of $m$ in the bisector, so $m^*=YM^*$. $\square$
+
+      **Setting up.** The rays $BD$ and $BP$ lie inside angle $ABC$, and $\angle PBC=\angle DBA$. So line $BP$ is the mirror image of $BD$ in the bisector of angle $B$. In the same way $DP$ is the mirror image of $DB$ in the bisector of angle $D$. Three remarks:
+      - $P$ is not on $BD$; otherwise $BD$ would be its own mirror image, so it would bisect angle $B$. So $BP\ne DP$, and these lines meet only at $P$.
+      - $BD\ne\ell$: otherwise $B\in\ell$, so $\ell$ bisects angle $B$, and $BD$ would bisect it.
+      - $BP\ne\ell$ and $DP\ne\ell$, for the same reason: if $BP=\ell$, then $\ell$ bisects angle $B$ and $BD$, the mirror image of $BP$, is that bisector too.
+
+      Let $M$ be where $BD$ meets $\ell$, and let $Z_1$, $Z_2$ be where $BP$, $DP$ meet $\ell$. By the lemma (in triangle $ABC$ with $m=BD$, and in triangle $ADC$ with $m=DB$), $Z_1$ is the inverse of $M$ in $\Gamma$ and $Z_2$ is the inverse of $M$ in $\Gamma'$.
+
+      **$AP=CP$ exactly when $Z_1=Z_2$.** If $P\in\ell$, then $P$ is the crossing point of $\ell$ with $BP$ and with $DP$, so $Z_1=P=Z_2$. Conversely, if $Z_1=Z_2=Z$, then $Z$ lies on both $BP$ and $DP$. It is not at infinity, since two lines through $P$ parallel to $\ell$ would coincide. So $Z=P$, and $P\in\ell$.
+
+      **$Z_1=Z_2$ exactly when $\Gamma=\Gamma'$.** If the circles agree, so do the inverses. Suppose the centers differ. Put a coordinate on $\ell$ with $0$ at the midpoint of $AC$, and let $h=\tfrac12AC$. The circle through $A$, $C$ with center at coordinate $o$ has radius squared $o^2+h^2$. So $y$ is the inverse of $x$ when
+      $$(x-o)(y-o)=o^2+h^2,\quad\text{that is}\quad xy-o(x+y)=h^2 .$$
+      If one point $x$ had the same inverse $y$ for two centers $o\ne o'$, subtracting would give $x+y=0$, and then $-x^2=h^2>0$, which is impossible. The cases with a point at infinity fail too: $x$ at infinity has inverse $o$, which differs from $o'$, and $y$ at infinity forces $x=o$ and $x=o'$.
+
+      **Conclusion.** $AP=CP$ $\iff$ $Z_1=Z_2$ $\iff$ $\Gamma=\Gamma'$ $\iff$ $D$ lies on circle $ABC$, that is, $ABCD$ is cyclic.
+    viz: imo-2004-p5
+    checked: "script: 4,992 random cyclic quadrilaterals give |AP − CP| < 2·10⁻¹²; 1,053 random non-cyclic ones all have AP ≠ CP; the lemma (product of distances from O equals R²) and the two angle identities checked on random data to 10⁻¹²"
+    status: ready
 
   - id: P6
     day: 2
     topic: "Which numbers have a multiple with alternating digit parity?"
     areas: [number-theory]
     difficulty: 5
-    status: coming
+    answer: "All $n$ not divisible by $20$"
+    hints:
+      - 'A multiple of $20$ ends in two even digits. For the converse, split $n=2^a5^bq$ with $q$ coprime to $10$.'
+      - 'Build an alternating multiple of a large power of $2$ (or of $5$, ending in $0$) one digit at a time from the right. Then repeat a block to take care of $q$.'
+    solution: |
+      **Key idea:** choose digits from the right, one at a time, so that a power of $2$ (or of $5$) keeps dividing the number. Then repeat that block many times to make it divisible by the part of $n$ that is coprime to $10$.
+
+      **Multiples of $20$ never work.** They end in $00$, $20$, $40$, $60$ or $80$: two even digits in a row.
+
+      Now let $20\nmid n$ and write $n=2^a5^bq$ with $\gcd(q,10)=1$. Then $b=0$ or $a\le1$. Write $c_0$ for the units digit, $c_1$ for the tens digit, and so on, and let $X_i$ be the number formed by the last $i$ digits $c_{i-1}\dots c_0$.
+
+      **Block A (powers of $2$).** Use even digits in even positions and odd digits in odd positions. We keep this rule: for odd $i$, $X_i=2^i t$ with $t$ odd. Start with $c_0=2$, so $X_1=2$.
+      - *Odd $i$:* $X_{i+1}=X_i+c_i10^i=2^i(t+5^ic_i)$. Since $5^i\equiv1\pmod 4$, pick an odd digit $c_i\equiv-t\pmod 4$ (from $1,5,9$ or from $3,7$). Then $4\mid t+5^ic_i$, so $2^{i+2}\mid X_{i+1}$.
+      - *Next, even position $i+1$:* write $X_{i+1}=2^{i+2}s$. Then $X_{i+2}=2^{i+1}(2s+5^{i+1}c_{i+1})$, and for an even digit $5^{i+1}c_{i+1}\equiv c_{i+1}\pmod 4$. Pick $c_{i+1}\in\{2,6\}$ if $s$ is even and $c_{i+1}\in\{4,8\}$ if $s$ is odd. Then $2s+c_{i+1}\equiv2\pmod 4$, so $X_{i+2}=2^{i+2}\cdot(\text{odd})$, and the rule holds again.
+
+      Stopping after $2r$ digits gives an alternating number with exactly $2r$ digits, first digit odd, last digit even, divisible by $2^{2r+1}$.
+
+      **Block B (powers of $5$).** Now use $c_0=0$, with odd digits in odd positions and even digits in even positions. Keep $5^i\mid X_i$; this holds for $X_1=0$. If $X_i=5^it$, then $X_{i+1}=5^i(t+2^ic_i)$. The even digits $0,2,4,6,8$ leave all five remainders mod $5$, and so do the odd digits $1,3,5,7,9$. So we can choose $c_i$ of the required parity with $c_i\equiv-t\cdot2^{-i}\pmod5$, and then $5^{i+1}\mid X_{i+1}$. After $2r$ digits the first digit is odd (so not $0$), the last is $0$, and the number is divisible by $5^{2r}$ and by $10$.
+
+      **Repeating a block.** Let $X$ be alternating with $L$ digits, whose first and last digits have different parity. Writing $X$ out $k$ times in a row gives an alternating number equal to
+      $$X\,(1+10^L+\dots+10^{L(k-1)})=X\cdot\frac{10^{Lk}-1}{10^L-1}.$$
+      Let $N=q\,(10^L-1)$, which is coprime to $10$, and take $k=\varphi(N)$. By Euler's theorem $10^{\varphi(N)}\equiv1\pmod N$, so $N\mid 10^{Lk}-1$, and $q$ divides the fraction.
+
+      **Finish.** If $b=0$, take block A with $2r\ge a$ and repeat it: the result is divisible by $2^aq=n$. If $a\le1$, take block B with $2r\ge b$: it is divisible by $2\cdot5^b$, and after repeating, by $2\cdot5^bq$, a multiple of $n$.
+    checked: "script: breadth-first search over remainders confirms that for every n ≤ 3000 an alternating multiple exists exactly when 20 ∤ n; both block constructions run for r ≤ 29 with all claimed properties"
+    status: ready

@@ -66,7 +66,37 @@ problems:
     topic: "A self-counting sequence has an eventually periodic half"
     areas: [combinatorics]
     difficulty: 5
-    status: coming
+    hints:
+      - 'Let $M$ be at least $N$ and at least every one of $a_1,\dots,a_N$. Show that a number bigger than $M$ can appear at most $M$ times. Then the terms eventually alternate between "small" numbers $1,\dots,k$ that appear forever and "big" numbers that appear only a few times.'
+      - 'The small term after a big term is the rank of the previous small number by how often it has appeared so far. Show that the counts of the small numbers stay within a bounded distance of each other; then the process has finitely many states.'
+    solution: |
+      **Key idea:** big numbers can only appear a bounded number of times, so eventually small and big terms alternate. The small terms then follow a simple rule: the next small term is the rank of the current one by count. If the counts ever spread far apart, the process would get trapped among some of the small numbers, which can't happen. So the counts stay close, there are finitely many states, and the small terms repeat.
+
+      Write $c_n(v)$ for the number of times $v$ occurs among $a_1,\dots,a_n$. The rule says $a_{n+1}=c_n(a_n)$ for $n\ge N$: **the term after an occurrence of $v$ is the number of that occurrence.** Fix $M\ge N$ with $M\ge a_1,\dots,a_N$. Numbers $\le M$ are *small*, the others *big*.
+
+      **Step 1: a big number appears at most $M$ times.** A big number $V$ is not among $a_1,\dots,a_N$, so each occurrence of $V$, at some position $p$, comes right after the $V$-th occurrence of the number $u=a_{p-1}$. Different occurrences of $V$ give different $u$. Suppose some big number appears $M+1$ times, and take the first position where this happens, for the number $V$. The $M+1$ numbers $u$ behind its occurrences each had at least $V>M$ occurrences earlier. A big $u$ among them would have reached $M+1$ occurrences earlier, which is excluded. So all of them are small, but there are only $M$ small numbers. Contradiction.
+
+      **Step 2: alternation.** If only finitely many numbers occurred, one would occur infinitely often, and the terms after its occurrences would be $1,2,3,\dots$ without bound. So infinitely many big numbers occur. The term after a big term is a count of a big number, so it is small by Step 1. Hence some small numbers occur infinitely often; let $S$ be the set of them and $k=|S|$.
+
+      Let $W\ge M$ be larger than the total count of every small number outside $S$. Choose $T>N$ so late that no small number outside $S$ occurs from $T$ on, and every number of $S$ already has more than $W$ occurrences. From $T$ on, a term in $S$ is followed by its count, which is $>W$, so by a big term; a big term is followed by a small term, which must be in $S$. **So from $T$ on the terms alternate between $S$ and big numbers**, and the terms from $S$ fill one of the two parity classes. We show that those terms are eventually periodic.
+
+      **Step 3: $S=\{1,\dots,k\}$.** Take a big $V>W$. Its occurrences correspond one to one to the numbers $u$ that reach $V$ occurrences, and such a $u$ must be in $S$ (big numbers occur at most $M$ times, the others at most $W$). Every $u\in S$ reaches $V$, so $V$ occurs exactly $k$ times, followed by $1,2,\dots,k$. There are infinitely many such $V$, so $1,\dots,k$ all occur infinitely often, and $S=\{1,\dots,k\}$.
+
+      **Step 4: the rule for small terms.** Let $s_1,s_2,\dots$ be the terms from $S$ after $T$, and let $x^{(j)}=(x_1,\dots,x_k)$ be the counts of $1,\dots,k$ just after $s_j$ occurs. The next term is the big number $V=x_{s_j}$, and the term after it is the number of occurrences of $V$ so far, which is the number of $u\in S$ that have reached $V$:
+      $$s_{j+1}=\#\{u:\ x_u\ge x_{s_j}\},\qquad x^{(j+1)}=x^{(j)}+(\text{one more for } s_{j+1}).$$
+      So $s_{j+1}$ is the rank of $s_j$ by count, with ties counted in its favour.
+
+      **Step 5: number $i$ has about the $i$-th largest count.** Let $\lambda^{(j)}_1\ge\dots\ge\lambda^{(j)}_k$ be the counts $x^{(j)}$ sorted. Going from $x^{(j-1)}$ to $x^{(j)}$ one count rises by $1$, so exactly one place of the sorted list rises by $1$. We claim that this place is $s_{j+1}$. Say the count of $s_j$ went from $V-1$ to $V$, and let $r=\#\{u:\ x^{(j)}_u\ge V\}$, which is $s_{j+1}$ by Step 4. Afterwards $r$ counts are at least $V$, so $\lambda^{(j)}_r\ge V$; before, only $r-1$ were, so $\lambda^{(j-1)}_r\le V-1$. So place $r$ is the one that rose.
+
+      Hence $s_{j+1}=i$ exactly when place $i$ of the sorted list rose at step $j$. Fix a starting step $j_0$. For $j\ge j_0$, the number of times $i$ occurs among $s_{j_0+2},\dots,s_{j+1}$ equals the number of rises of place $i$ during steps $j_0+1,\dots,j$, which is $\lambda^{(j)}_i-\lambda^{(j_0)}_i$. So $x^{(j+1)}_i-\lambda^{(j)}_i$ is a constant $e_i$. Since $\lambda^{(j+1)}$ and $\lambda^{(j)}$ differ by at most $1$ in each place, $E=1+\max_i|e_i|$ satisfies $|x_i-\lambda_i|\le E$ for all $i$ at every step after $j_0$.
+
+      **Step 6: the counts stay close.** Suppose that at some step $\lambda_m-\lambda_{m+1}>2E$ for some $m<k$, and the current $s_j$ is one of the $m$ numbers with the largest counts. For $i\le m$, $x_i\ge\lambda_m-E$, and for $i>m$, $x_i\le\lambda_{m+1}+E<\lambda_m-E$. So the $m$ numbers above the gap are exactly $1,\dots,m$. Then $s_{j+1}$, the number of $u$ with $x_u\ge x_{s_j}$, is at most $m$, so $s_{j+1}$ is again above the gap, and the gap does not shrink. Forever after, only $1,\dots,m$ occur among the small terms, but $m+1\in S$ occurs infinitely often. Contradiction.
+
+      Now look at the gap $g=\lambda_m-\lambda_{m+1}$ over time. One count goes up by $1$ at each step. If $g$ goes up, the number that just went up, which is the current small term, sits above the gap. By the paragraph above, the new $g$ is at most $2E$. So $g$ never exceeds the larger of its value at the start and $2E$. Hence all gaps are bounded, and so is the spread $\lambda_1-\lambda_k$, say by $D$.
+
+      **Step 7: finitely many states.** The rule in Step 4 only looks at differences of counts. So the pair (the counts minus their minimum, the current $s_j$) determines the next pair. There are at most $(D+1)^k\cdot k$ such pairs, so the pairs, and with them the small terms $s_j$, are eventually periodic. These terms make up one of $a_1,a_3,a_5,\dots$ and $a_2,a_4,a_6,\dots$ from some point on, which proves the claim.
+    checked: "script: 300 random starting blocks (N ≤ 12, values ≤ 15) run to 60,000 terms; big numbers never appear more than M times, the tail alternates, the small set is always {1,…,k}, the rank rule of Step 4 holds at every step, |x_i − λ_i| stays bounded, and the small terms are periodic (period k in every run)"
+    status: ready
 
   - id: P4
     day: 2

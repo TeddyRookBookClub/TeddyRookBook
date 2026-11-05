@@ -134,4 +134,32 @@ problems:
     topic: "Largest triangles on the sides of a convex polygon"
     areas: [geometry]
     difficulty: 5
-    status: coming
+    hints:
+      - 'The best triangle on side $b$ has area $\tfrac12|b|\,w(b)$, where $w(b)$ is the width of the polygon measured across $b$.'
+      - 'Look at the difference set $Q=\{x-y: x,y\in P\}$. Show that its area equals $\sum|b|\,w(b)$, and that it is at least $4$ times the area of $P$. For the second part, cut both shapes into horizontal slices.'
+    solution: |
+      **Key idea:** the sum of the assigned areas is exactly half the area of the difference set $Q=\{x-y:x,y\in P\}$. Slicing shows $Q$ has at least four times the area of $P$.
+
+      Write $|P|$ for area. For a unit vector $u$, let $W(u)=\max_{x\in P}x\cdot u-\min_{x\in P}x\cdot u$ be the width of $P$ in direction $u$.
+
+      **Step 1: the assigned area.** A triangle with side $b$ inside $P$ has its third vertex in $P$, so its area is $\tfrac12|b|$ times that vertex's distance from line $b$. The polygon lies on one side of that line, so the largest distance is the width across $b$. With $u_b$ the outward unit normal of side $b$, the assigned area is
+      $$S(b)=\tfrac12|b|\,W(u_b).$$
+
+      **Step 2: the shape of $Q$.** $Q$ is a convex polygon, symmetric about the origin. For a unit vector $u$:
+      - The largest value of $q\cdot u$ on $Q$ is $\max_P x\cdot u-\min_P y\cdot u=W(u)$. So the side of $Q$ facing $u$ (if any) is at distance $W(u)$ from the origin.
+      - The points of $Q$ where $q\cdot u$ is largest are the differences $x-y$ with $x$ maximizing $x\cdot u$ on $P$ and $y$ minimizing it. Let $\lambda(u)$ be the length of the side of $P$ with outward normal $u$ ($0$ if there is none). Then the side of $Q$ facing $u$ has length $\lambda(u)+\lambda(-u)$.
+
+      **Step 3: $|Q|=\sum_b|b|\,W(u_b)$.** Cut $Q$ into triangles from the origin to its sides. Let $U$ be the set of the normals $u_b$ and their negatives; these are the directions in which $Q$ has a side. Then
+      $$|Q|=\sum_{u\in U}\tfrac12\big(\lambda(u)+\lambda(-u)\big)W(u).$$
+      In the part with $\lambda(-u)$, rename $-u$ as $u$; since $W(-u)=W(u)$, it equals the part with $\lambda(u)$. So $|Q|=\sum_{u}\lambda(u)W(u)=\sum_b|b|\,W(u_b)$. By Step 1,
+      $$\sum_b S(b)=\tfrac12|Q| .$$
+
+      **Step 4: $|Q|\ge4|P|$.** Put $P$ between heights $\alpha$ and $\beta$, and let $f(y)$ be the length of its horizontal chord at height $y$. By convexity $f$ is continuous, and positive for $\alpha<y<\beta$. Let $A=|P|$. For $0<t<1$ choose heights $y_1(t)$ and $y_2(t)$ so that the part of $P$ below $y_1$ has area $tA$ and the part above $y_2$ has area $tA$. Then
+      $$y_1'=\frac{A}{f(y_1)},\qquad y_2'=-\frac{A}{f(y_2)} .$$
+      At height $Y=y_1-y_2$, the chord of $Q$ contains every difference of a point on the chord of $P$ at $y_1$ and a point on the chord at $y_2$. These differences form a segment of length $f(y_1)+f(y_2)$. As $t$ runs from $0$ to $1$, $Y(t)$ increases from $\alpha-\beta$ to $\beta-\alpha$, with $Y'=A/f(y_1)+A/f(y_2)$. Adding up chord lengths,
+      $$|Q|\ge\int_0^1\big(f(y_1)+f(y_2)\big)\Big(\frac{A}{f(y_1)}+\frac{A}{f(y_2)}\Big)dt\ge\int_0^1 4A\,dt=4A,$$
+      because $(p+q)\big(\tfrac1p+\tfrac1q\big)\ge4$ for positive $p,q$.
+
+      **Conclusion.** $\sum_b S(b)=\tfrac12|Q|\ge2|P|$. (Equality holds for centrally symmetric polygons, where $Q$ is $P$ scaled by $2$.)
+    checked: "script: 3,000 random convex polygons (some centrally symmetric); the area of P − P matched the sum of |b|·w(b) to 10⁻¹⁴, and the ratio to the area of P was never below 4"
+    status: ready

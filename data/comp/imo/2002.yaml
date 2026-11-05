@@ -143,4 +143,29 @@ problems:
     topic: "Unit circles that no line meets three at once"
     areas: [geometry, combinatorics]
     difficulty: 5
-    status: coming
+    hints:
+      - 'Fix a direction and project all the centers onto a line perpendicular to it. A line in that direction meets a circle exactly when it passes within $1$ of that circle''s projected center. What does the condition say about the projected points?'
+      - 'For each direction, count the pairs of projected centers that are at most $2$ apart. Bound that count, then average it over all directions.'
+    solution: |
+      **Key idea:** look at the picture from every direction at once. In each direction, at most $n-1$ pairs of circles can "overlap" when projected. A pair at distance $d$ overlaps for directions filling an angle of $2\arcsin(2/d)>4/d$. Adding up over all directions gives the bound.
+
+      Write $d_{ij}=O_iO_j$. A line meets a unit circle exactly when its distance from the center is at most $1$.
+
+      **Step 1: the centers are more than $2$ apart.** If $d_{ij}\le2$, the midpoint $X$ of $O_iO_j$ is within $1$ of both centers. A line through $X$ and a third center $O_k$ (any line through $X$ if $O_k=X$) then meets three circles. So every $d_{ij}>2$.
+
+      **Step 2: one direction.** Fix an angle $\theta\in[0,\pi)$, and let $u$ be a unit vector perpendicular to direction $\theta$. Project the centers: $p_i=O_i\cdot u$. The lines with direction $\theta$ are the sets $\{x: x\cdot u=c\}$, and such a line meets circle $i$ exactly when $|c-p_i|\le1$.
+
+      Sort the projections: $q_1\le q_2\le\dots\le q_n$. If $q_{k+2}-q_k\le2$ for some $k$, take $c=\tfrac12(q_k+q_{k+2})$. It is within $1$ of $q_k$, of $q_{k+2}$, and of $q_{k+1}$, which lies between them. That line meets three circles, which is not allowed. So $q_{k+2}-q_k>2$ for every $k$.
+
+      Hence if two projections are at most $2$ apart, they sit next to each other in the sorted list. Let $N(\theta)$ be the number of pairs $\{i,j\}$ with $|p_i-p_j|\le2$. Then
+      $$N(\theta)\le n-1 .$$
+
+      **Step 3: one pair, all directions.** If $O_iO_j$ makes angle $\varphi$ with a fixed axis, then $|p_i-p_j|=d_{ij}\,|\sin(\theta-\varphi)|$. As $\theta$ runs over an interval of length $\pi$, the condition $|\sin(\theta-\varphi)|\le 2/d_{ij}$ holds on a set of total length $2\arcsin(2/d_{ij})$. (By Step 1, $2/d_{ij}<1$.)
+
+      **Step 4: add up.** Integrating $N(\theta)$ counts each pair for exactly the directions in which it overlaps:
+      $$\sum_{i<j}2\arcsin\frac{2}{d_{ij}}=\int_0^\pi N(\theta)\,d\theta\le(n-1)\pi .$$
+      Since $\arcsin x\ge x$ for $0\le x\le1$, the left side is at least $\sum_{i<j}\frac4{d_{ij}}$. Dividing by $4$,
+      $$\sum_{i<j}\frac1{O_iO_j}\le\frac{(n-1)\pi}4 .$$
+    viz: imo-2002-p6
+    checked: "script: 999 random valid configurations (3 to 6 centers, condition tested in 800 directions); the sum of 2·arcsin(2/d) never exceeded (n−1)π, and the target ratio stayed below 0.77"
+    status: ready

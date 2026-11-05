@@ -34,7 +34,29 @@ problems:
     topic: "Incenter, equal-angle cevians, and a meeting on the circumcircle"
     areas: [geometry]
     difficulty: 4
-    status: coming
+    hints:
+      - 'Bring in the excenter $J$ opposite $A$. The point $D$ is the midpoint of $IJ$, so $DG$ is parallel to $JF$.'
+      - 'Show $AF\cdot AE=AB\cdot AC=AI\cdot AJ$. Which two triangles does that make similar?'
+    solution: |
+      **Key idea:** add the excenter $J$ opposite $A$. The midline $DG$ is parallel to $JF$, and a pair of similar triangles shows that the line from $D$ to the second point of $EI$ on $\Gamma$ is parallel to $JF$ as well.
+
+      Let $\alpha,\beta,\gamma$ be the angles of the triangle and $J$ the excenter opposite $A$; it lies on ray $AI$ beyond $D$. We use directed angles between lines, mod $180^\circ$, written $\angle(m,n)$. The angle $\angle CAE$ is positive and less than $\tfrac\alpha2$, so $E\ne C$ and $E\ne D$.
+
+      **Step 1: $DG\parallel JF$.** We have $\angle DBI=\angle DBC+\angle CBI=\tfrac\alpha2+\tfrac\beta2$ (as $\angle DBC=\angle DAC$), and $\angle DIB=\tfrac\alpha2+\tfrac\beta2$ as an exterior angle of triangle $ABI$. So $DB=DI$. The two bisectors at $B$ are perpendicular, so $\angle IBJ=90^\circ$, and the point $D$ of the hypotenuse $IJ$ with $DB=DI$ is its midpoint. Since $G$ is the midpoint of $IF$, the midline $DG$ of triangle $IFJ$ is parallel to $JF$.
+
+      **Step 2: two similar triangles.** Triangles $ABF$ and $AEC$ are similar: $\angle BAF=\angle EAC$, and $\angle ABF=\angle ABC=\angle AEC$ (inscribed angles on arc $AC$). So $AF\cdot AE=AB\cdot AC$. Triangles $ABJ$ and $AIC$ are similar too: $\angle BAJ=\angle IAC=\tfrac\alpha2$, and $\angle ABJ=\beta+\tfrac{180^\circ-\beta}2=90^\circ+\tfrac\beta2=\angle AIC$. So $AI\cdot AJ=AB\cdot AC$. Hence
+      $$\frac{AI}{AF}=\frac{AE}{AJ}.$$
+      The rays $AF$ and $AE$ are mirror images in the bisector $AI$, so $\angle IAE=\angle FAJ$. Both angles turn the same way (from $AI$ toward $AC$, and from $AF$ toward $AC$). So triangles $AIE$ and $AFJ$ are similar with the same orientation, and
+      $$\angle(EA,EI)=\angle(JA,JF).\qquad(\ast)$$
+
+      **Step 3: the meeting point.** Let line $EI$ meet $\Gamma$ again at $X$. Since $E\ne D$, the point $X$ is not $A$ or $D$. Inscribed angles on the chord $ED$ give
+      $$\angle(XI,XD)=\angle(XE,XD)=\angle(AE,AD)=\angle(AE,AJ).$$
+      On the other hand, using $(\ast)$,
+      $$\angle(XI,JF)=\angle(EI,EA)+\angle(EA,AJ)+\angle(AJ,JF)=-\angle(JA,JF)+\angle(AE,AJ)+\angle(JA,JF)=\angle(AE,AJ).$$
+      So the lines $XD$ and $JF$ make the same angle with line $XI$, which means they are parallel. By Step 1, $XD$ is then parallel to $DG$, and both pass through $D$: they are the same line. So $X$ is on $DG$, and $DG$ and $EI$ meet at the point $X$ of $\Gamma$.
+    viz: imo-2010-p2
+    checked: "script: 20,000 random triangles and angles; the second point of EI on the circumcircle was within 2e-12 of line DG"
+    status: ready
 
   - id: P3
     day: 1
@@ -127,4 +149,24 @@ problems:
     topic: "A max-plus recursion becomes eventually additive"
     areas: [algebra, combinatorics]
     difficulty: 5
-    status: coming
+    hints:
+      - 'First show that for $n>s$ the maximum is already reached with a short first part: $a_n=\max_{1\le k\le s}(a_k+a_{n-k})$.'
+      - 'Pick $\ell\le s$ with the largest ratio $a_\ell/\ell$ and look at $b_n=a_n-n\,a_\ell/\ell$. It follows the same rule, is never positive, never decreases in steps of $\ell$, and can take only finitely many values above any bound.'
+    solution: |
+      **Key idea:** subtract the best growth rate among the first $s$ terms. What is left never goes above $0$, never drops when the index grows by $\ell$, and has only finitely many possible values. So it must settle down.
+
+      **Step 1: a short first part is enough.** We show by strong induction that for every $n>s$,
+      $$a_n=\max_{1\le k\le s}\,(a_k+a_{n-k}).\qquad(1)$$
+      The right side is at most $a_n$ by the rule. For the other direction, pick $k$ with $a_n=a_k+a_{n-k}$. If $k\le s$ or $n-k\le s$ we are done (the rule is symmetric in $k$ and $n-k$). Otherwise $k>s$, and by induction $a_k=a_j+a_{k-j}$ for some $j\le s$. Now $n-j=(k-j)+(n-k)$ with both parts positive and $n-j>n-k>s$, so the rule gives $a_{n-j}\ge a_{k-j}+a_{n-k}$. Hence $a_n=a_j+a_{k-j}+a_{n-k}\le a_j+a_{n-j}$.
+
+      **Step 2: subtract a linear term.** Choose $\ell\in\{1,\dots,s\}$ with $a_\ell/\ell$ as large as possible, put $\theta=a_\ell/\ell$ and $b_n=a_n-n\theta$. Since $b_k+b_{n-k}=a_k+a_{n-k}-n\theta$, the sequence $b$ follows the same rule for $n>s$, and (1) holds for it too. Also $b_i\le0$ for $i\le s$, and $b_\ell=0$. Then:
+      - $b_n\le0$ for all $n$ (for $n>s$, $b_n$ is a sum of two earlier terms);
+      - $b_n\ge b_\ell+b_{n-\ell}=b_{n-\ell}$ for all $n>s$.
+
+      **Step 3: few possible values.** Using (1) again and again (on $n$, then on the second index while it exceeds $s$) writes each $b_n$ as a sum of terms from the list $b_1,\dots,b_s$, all $\le0$. If none of them is negative, $b_n=0$ for all $n$. Otherwise let $\delta>0$ be the smallest size of a negative one. A sum that is at least $-C$ contains at most $C/\delta$ negative terms, so such sums take only finitely many values.
+
+      **Step 4: it settles.** Fix a residue class mod $\ell$ and its first index $n_0>s$. Along $n_0,n_0+\ell,n_0+2\ell,\dots$ the values $b_n$ never decrease (Step 2), so they stay $\ge b_{n_0}$, and by Step 3 they take finitely many values. So they are constant from some point on. Taking the latest of these points over the $\ell$ classes gives an $N$ with $b_n=b_{n-\ell}$ for all $n\ge N$. Adding back $n\theta=\ell\theta+(n-\ell)\theta$:
+      $$a_n=a_\ell+a_{n-\ell}\qquad\text{for all }n\ge N,$$
+      with $\ell\le s$. (The positivity of the $a_n$ is not even needed.)
+    checked: "script: 300 random rational starts with s ≤ 7, 250 terms each; identity (1) held throughout, and the ℓ with the largest a_ℓ/ℓ gave a_n = a_ℓ + a_{n−ℓ} from some point on"
+    status: ready

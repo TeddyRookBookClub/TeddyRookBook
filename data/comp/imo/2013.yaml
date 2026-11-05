@@ -58,7 +58,34 @@ problems:
     topic: "Excircle touch points; circumcenter on circumcircle forces a right angle"
     areas: [geometry]
     difficulty: 4
-    status: coming
+    hints:
+      - 'Let $A_0$ be the midpoint of the arc $BAC$. Since $BC_1=CB_1$ and $A_0B=A_0C$, the point $A_0$ is equally far from $B_1$ and $C_1$.'
+      - 'If the circumcenter $Q$ of $A_1B_1C_1$ is on the circumcircle but differs from the three arc midpoints, the perpendicular bisectors of $A_1B_1C_1$ are the lines from $Q$ to those midpoints. Work out the angles of $A_1B_1C_1$.'
+    solution: |
+      **Key idea:** the perpendicular bisectors of the sides of $A_1B_1C_1$ pass through the midpoints of the arcs $BAC$, $CBA$, $ACB$. If the circumcenter $Q$ were on the circumcircle and away from these three points, $A_1B_1C_1$ would be acute, so $Q$ would lie inside it, which is impossible. So $Q$ is one of the arc midpoints, and a length computation then forces a right angle.
+
+      Let $a,b,c$ be the sides, $s$ the semiperimeter, $\alpha,\beta,\gamma$ the angles, and $\Gamma$ the circumcircle with radius $R$. Equal tangents give
+      $$BA_1=s-c,\ \ CA_1=s-b,\qquad CB_1=s-a,\ \ AB_1=s-c,\qquad AC_1=s-b,\ \ BC_1=s-a .$$
+      Let $A_0$ be the midpoint of the arc $BAC$ of $\Gamma$, and define $B_0$, $C_0$ in the same way. These are three different points.
+
+      **Step 1: $A_0B_1=A_0C_1$.** Compare triangles $A_0BC_1$ and $A_0CB_1$. We have $A_0B=A_0C$ and $BC_1=CB_1=s-a$. Also $\angle A_0BC_1=\angle A_0BA=\angle A_0CA=\angle A_0CB_1$, as inscribed angles on the chord $A_0A$ ($B$ and $C$ are on the same side of it; if $A_0=A$, then $b=c$ and the claim is clear). So the triangles are congruent and $A_0B_1=A_0C_1$. Thus $A_0$ is on the perpendicular bisector of $B_1C_1$. In the same way $B_0$ is on the one of $C_1A_1$, and $C_0$ on the one of $A_1B_1$.
+
+      **Step 2: $Q$ is $A_0$, $B_0$ or $C_0$.** Suppose $Q$ is on $\Gamma$ but is none of them. Then the perpendicular bisectors of $B_1C_1$ and $C_1A_1$ are the lines $QA_0$ and $QB_0$. The angle of $A_1B_1C_1$ at $C_1$ equals an angle between these two lines (each side is perpendicular to one of them), so it is the inscribed angle on the chord $A_0B_0$ or its supplement. That chord cuts off an arc of $2\big(\tfrac\alpha2+\tfrac\beta2\big)=\alpha+\beta$: indeed $A_0$, $B_0$ are the points opposite the midpoints of the arcs $BC$ and $CA$ that avoid $A$ and $B$, and those midpoints are $\alpha+\beta$ apart (through $C$). So the angle at $C_1$ is $90^\circ-\tfrac\gamma2$ or $90^\circ+\tfrac\gamma2$. In the same way the angles at $A_1$ and $B_1$ are $90^\circ\mp\tfrac\alpha2$ and $90^\circ\mp\tfrac\beta2$.
+
+      With all minus signs the three angles add up to $270^\circ-90^\circ=180^\circ$, and each plus sign would add something positive. So all signs are minus and $A_1B_1C_1$ is acute. Then its circumcenter $Q$ lies inside it, hence inside triangle $ABC$ (on whose sides $A_1,B_1,C_1$ lie), hence strictly inside $\Gamma$. That contradicts $Q\in\Gamma$.
+
+      **Step 3: if $Q=A_0$, the angle at $A$ is right.** We compute $A_0A_1^2-A_0B_1^2$.
+      - $A_1$ is on the chord $BC$ and $A_0B=A_0C$, so $A_0A_1^2=A_0C^2-BA_1\cdot A_1C=A_0C^2-(s-b)(s-c)$. (Drop the perpendicular from $A_0$ to the midpoint of $BC$ and use Pythagoras twice.)
+      - In triangle $A_0CB_1$, by the law of cosines, $A_0B_1^2=A_0C^2+(s-a)^2-2(s-a)\cdot A_0C\cos\angle A_0CA$. Here $A_0C=2R\cos\tfrac\alpha2$ (the arc $A_0C$ is $180^\circ-\alpha$) and $\angle A_0CA=\tfrac{|\beta-\gamma|}2$ (the arc $AA_0$ is $|\beta-\gamma|$). So
+      $$A_0C\cos\angle A_0CA=2R\cos\tfrac\alpha2\cos\tfrac{\beta-\gamma}2=R(\sin\beta+\sin\gamma)=\tfrac{b+c}2,$$
+      and $A_0B_1^2=A_0C^2+(s-a)^2-(s-a)(b+c)$.
+
+      Subtracting, and using $b+c-(s-a)=s$:
+      $$A_0A_1^2-A_0B_1^2=s(s-a)-(s-b)(s-c)=\frac{b^2+c^2-a^2}2=bc\cos\alpha .$$
+      If $Q=A_0$, then $A_0A_1=A_0B_1$, so $\cos\alpha=0$ and the angle at $A$ is right. If $Q=B_0$ or $Q=C_0$, the angle at $B$ or at $C$ is right.
+    viz: imo-2013-p3
+    checked: "script: 20,000 random triangles: A₀B₁ = A₀C₁ and A₀A₁² − A₀B₁² = (b² + c² − a²)/2 to 1e-10; for right triangles the circumcenter of A₁B₁C₁ is A₀ (error 1e-15)"
+    status: ready
 
   - id: P4
     day: 2
@@ -116,4 +143,37 @@ problems:
     topic: "Counting beautiful labelings of points on a circle"
     areas: [combinatorics, number-theory]
     difficulty: 5
-    status: coming
+    hints:
+      - 'For a real number $\alpha$, put label $k$ at the point $k\alpha$ (mod $1$) of a circle of length $1$. Why is the resulting order beautiful? Look at the reflection $t\mapsto(a+d)\alpha-t$.'
+      - 'Prove by induction on $n$ that every beautiful labelling arises this way. Then count: the order changes exactly when $\alpha$ passes a fraction whose denominator is at most $n$.'
+    solution: |
+      **Key idea:** the beautiful labellings are exactly the circular orders of the points $0,\alpha,2\alpha,\dots,n\alpha$ (mod $1$). These orders change exactly when $\alpha$ passes a fraction $p/q$ with $q\le n$, and such fractions match the pairs $(x,y)$ counted by $N$. The fractions cut $(0,1)$ into $N+1$ pieces.
+
+      Work on a circle of length $1$, with positions read mod $1$ and "clockwise" meaning increasing. A labelling up to rotation is just the clockwise circular order of the labels, and whether two chords cross depends only on that order. Write $\{t\}$ for the fractional part and $\mathrm d(x,y)\in[0,1)$ for the clockwise distance from $x$ to $y$.
+
+      **Setup.** Let $F_n$ be the set of fractions in $(0,1)$ whose lowest-terms denominator is at most $n$. The map $(x,y)\mapsto\frac x{x+y}$ is a bijection from the pairs counted by $N$ onto $F_n$, since $\gcd(x,x+y)=\gcd(x,y)$. The points of $F_n$ cut $(0,1)$ into $N+1$ open intervals; call them the intervals of order $n$. For $\alpha$ in such an interval the points $k\alpha$ ($0\le k\le n$) are distinct; their order is the **$\alpha$-order**.
+
+      **Fact 1: $\alpha$-orders are beautiful.** If $a+d=b+c$, the reflection $t\mapsto(a+d)\alpha-t$ of the circle swaps $a\alpha$ with $d\alpha$ and $b\alpha$ with $c\alpha$. A chord joining a point to its mirror image is perpendicular to the mirror line. So the chords $ad$ and $bc$ are parallel, and they do not cross.
+
+      **Fact 2: the order is constant on each interval.** Two points $j\alpha$ and $k\alpha$ meet only when $(k-j)\alpha$ is an integer, that is, at a fraction with denominator at most $n$. Inside an interval of order $n$ the points move continuously and never meet, so their order does not change.
+
+      **Fact 3: splitting.** Between $\frac pn$ and $\frac{p+1}n$ (for $1\le p\le n-2$) lies $\frac p{n-1}$. So an interval $I$ of order $n-1$ contains at most one fraction $\frac pn$ in lowest terms. If it does, $I$ is cut into two intervals of order $n$. When $\alpha$ crosses $\frac pn$, the only two points that meet are $0$ and $n\alpha$ (since $n$ must divide $k-j$), so $n\alpha$ jumps from just before $0$ to just after $0$.
+
+      **Fact 4: different intervals give different orders.** Induction on $n$; for $n=1$ there is one interval. If two intervals of order $n$ give the same order, they give the same order of $0,\dots,n-1$, so by induction they lie in one interval $I$ of order $n-1$. By Fact 3 they are the two halves of $I$, and the label $n$ is just before $0$ in one and just after $0$ in the other. That is a contradiction.
+
+      **Fact 5: if $n\alpha$ is next to $0$, the interval $I$ of order $n-1$ containing $\alpha$ holds some $\frac pn$.** Suppose not. Then by Fact 2 (for order $n$) the order of $0,\dots,n$ is the same on all of $I=(r_1,r_2)$. Say $n\alpha$ comes right after $0$, so $\{n\alpha\}<\{k\alpha\}$ for $1\le k\le n-1$. Write $r_1=\frac uq$ in lowest terms, with $1\le q\le n-1$. As $\alpha$ decreases to $r_1$, $\{q\alpha\}=q(\alpha-r_1)\to0$. If $q\nmid n$, then $\{n\alpha\}\to\{nu/q\}\ge\frac1q$. If $q\mid n$, then $\{n\alpha\}=n(\alpha-r_1)>q(\alpha-r_1)$. Either way $\{n\alpha\}>\{q\alpha\}$ for $\alpha$ close to $r_1$, a contradiction. If $n\alpha$ comes right before $0$, the same argument works at $r_2$.
+
+      **Fact 6: every beautiful labelling is an $\alpha$-order.** Induction on $n$; for $n=1$ there is one labelling. Let $L$ be beautiful on $0,\dots,n$. Removing $n$ leaves a beautiful labelling of $0,\dots,n-1$, which by induction is the $\alpha$-order for all $\alpha$ in some interval $I$ of order $n-1$. Fix such an $\alpha$ that is not of the form $\frac pn$, and put $\pi=(n-1)\alpha$.
+
+      The only quadruples we need are $j<j+1<n-1<n$ with $0\le j\le n-3$: since $j+n=(j+1)+(n-1)$, the chords $\{j,n\}$ and $\{j+1,n-1\}$ may not cross. In clockwise order, this forbids the patterns $j,\,n-1,\,n,\,j+1$ and $n-1,\,j,\,j+1,\,n$.
+
+      In $L$, the label $n$ sits in some gap between neighbouring labels of $0,\dots,n-1$. Suppose this gap is not the one containing the point $n\alpha$, take a point $g$ in it, and suppose some label $k\ne0$ has $\mathrm d(\pi,k\alpha)$ strictly between $\mathrm d(\pi,g)$ and $\alpha=\mathrm d(\pi,n\alpha)$. Note $k\ne n-1$, so $1\le k\le n-2$; let $j=k-1$.
+      - If $\mathrm d(\pi,g)<\alpha$: going clockwise from $j\alpha=k\alpha-\alpha$, we meet $\pi$ (at distance $\alpha-\mathrm d(\pi,k\alpha)$), then $g$, then $k\alpha$ (at distance $\alpha$). That is the forbidden pattern $j,\,n-1,\,n,\,j+1$.
+      - If $\mathrm d(\pi,g)>\alpha$: going clockwise from $\pi$, we meet $j\alpha$ (at distance $\mathrm d(\pi,k\alpha)-\alpha$), then $k\alpha$, then $g$. That is the forbidden pattern $n-1,\,j,\,j+1,\,n$.
+
+      So between the gap of $n$ in $L$ and the point $n\alpha$ there is no label at all, or only the label $0$. The first case cannot happen, since the gap of $n$ would then be the one containing $n\alpha$ (and if it is that gap, $L$ is the $\alpha$-order). In the second case the gap of $n$ and the point $n\alpha$ are on the two sides of $0$, right next to it. Then $n\alpha$ is next to $0$, so by Fact 5 the interval $I$ contains some $\frac pn$; for $\alpha'$ in $I$ on the other side of $\frac pn$, the point $n\alpha'$ is on the other side of $0$ (Fact 3), and $L$ is the $\alpha'$-order.
+
+      **Counting.** By Facts 1 and 6 the beautiful labellings are exactly the $\alpha$-orders, and by Facts 2 and 4 there is exactly one for each of the $N+1$ intervals of order $n$. So $M=N+1$.
+    viz: imo-2013-p6
+    checked: "script: for every n ≤ 9, all labellings were tested by brute force; the beautiful ones are exactly the α-orders, one per interval, and there are N + 1 of them"
+    status: ready
