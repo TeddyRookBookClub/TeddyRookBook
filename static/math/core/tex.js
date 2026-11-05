@@ -840,6 +840,7 @@
             if (r.roles.length && !noR) anyRole = true;
             if (r.errors.length) { var bad = doc.createElement('span'); bad.className = 'ml-notex ml-texerr'; bad.textContent = sg.raw; bad.title = 'This math could not be read: ' + r.errors[0]; frag.appendChild(bad); return; }
             var box = doc.createElement('span'); box.className = sg.display ? 'ml-md' : 'ml-m';
+            box.setAttribute('data-tex', sg.tex); // the source, for read aloud (static/js/read-aloud.js)
             box.innerHTML = glue(r.html, sg.punct);
             frag.appendChild(box);
           });
@@ -996,7 +997,7 @@
         var tex = sg.tex.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&#39;/g, '\'').replace(/&amp;/g, '&');
         var r = render(tex, { display: sg.display, split: true });
         if (r.errors.length) return '<span class="ml-notex ml-texerr">' + esc(sg.raw) + '</span>';
-        return '<span class="' + (sg.display ? 'ml-md' : 'ml-m') + '">' + glue(r.html, sg.punct) + '</span>';
+        return '<span class="' + (sg.display ? 'ml-md' : 'ml-m') + '" data-tex="' + esc(tex) + '">' + glue(r.html, sg.punct) + '</span>';
       }).join('');
     } catch (e) { return String(s); }
   };

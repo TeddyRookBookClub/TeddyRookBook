@@ -58,7 +58,7 @@
   var REG = 'trb-profiles-v1', BK = 'trb-backup-v1';
   var SHARED = ['trb-profiles-v1', 'trb-fs', 'trb-units', 'trb-planner-v1', 'trb-planner-days', 'trb-placement-v1',
     'trb-family-v1', 'trb-meals-v1', 'trb-meals-setup', 'trb-garden-v1', 'trb-art-gallery', 'trb-daily-bank', 'trb-daily-cross', 'trb-backup-v1',
-    'trb-music-v1'];
+    'trb-music-v1', 'trb-voice-v1'];
   var EXTRA = ['tt-v1'];
   var ICONS = ['🦊', '🐻', '🦉', '🐢', '🐬', '🦁', '🐝', '🐧', '🦋', '🐞', '🌻', '🚀', '⭐', '📚', '🎨', '🧩'];
   function isProfileKey(k) { k = String(k); return (k.indexOf('trb-') === 0 && SHARED.indexOf(k) < 0) || EXTRA.indexOf(k) >= 0; }
