@@ -272,6 +272,31 @@ problems:
 
   - id: B6
     topic: "Number theory: values of a factorial-weighted polynomial mod p"
-    areas: [number-theory]
+    areas: [number-theory, algebra]
     difficulty: 4
-    status: coming
+    hints:
+      - 'For $n\not\equiv0$, use $n^{p-1}\equiv1$ and Wilson''s theorem to rewrite the sum as $\sum_j t^j/j!$ (taken mod $p$) at $t=-1/n$.'
+      - 'This truncated exponential $E$ satisfies $E''=E+t^{p-1}$. Show that every nonzero root of $E$ is a double root of $E(t)+t^p-t$.'
+    solution: |
+      **Key idea:** after replacing $n$ by $t=-1/n$, the sum becomes the exponential series cut off at degree $p-1$. Its derivative is almost itself, and that forces each nonzero root to be a *double* root of one fixed polynomial of degree $p$. So there can be at most $p/2$ such roots.
+
+      Work in the field $\mathbb F_p$ and let $F(n)=\sum_{k=0}^{p-1}k!\,n^k$. Since $F(0)=1\ne0$, it is enough to show that $F$ has at most $\frac{p-1}2$ roots among $n=1,\dots,p-1$. Then at least $p-\frac{p-1}2=\frac{p+1}2$ values of $n$ give a sum not divisible by $p$.
+
+      **A Wilson identity.** For $0\le j\le p-1$, $(p-1)!=j!\cdot(j+1)(j+2)\cdots(p-1)$, and modulo $p$ each factor $i$ in the second product is $-(p-i)$. So $(j+1)\cdots(p-1)\equiv(-1)^{p-1-j}(p-1-j)!$. With Wilson's theorem $(p-1)!\equiv-1$ and $p-1$ even, this gives
+      $$(p-1-j)!\equiv\frac{-(-1)^{j}}{j!}\pmod p .$$
+
+      **Rewriting the sum.** Let $n\ne0$. Then $n^{p-1}=1$, so $n^k=n^{-(p-1-k)}$. Substituting $j=p-1-k$,
+      $$F(n)=\sum_{j=0}^{p-1}(p-1-j)!\,n^{-j}=-\sum_{j=0}^{p-1}\frac{(-1/n)^j}{j!}=-E(-1/n),\qquad E(t)=\sum_{j=0}^{p-1}\frac{t^j}{j!},$$
+      where $1/j!$ means the inverse of $j!$ in $\mathbb F_p$ (it exists because $j<p$). The map $n\mapsto-1/n$ permutes the nonzero elements. So we must show that $E$ has at most $\frac{p-1}2$ nonzero roots.
+
+      **The derivative.** Differentiating term by term,
+      $$E'(t)=\sum_{j=1}^{p-1}\frac{t^{j-1}}{(j-1)!}=E(t)-\frac{t^{p-1}}{(p-1)!}=E(t)+t^{p-1},$$
+      again by Wilson's theorem.
+
+      **Double roots.** Let $D(t)=E(t)+t^p-t$. It has degree $p$ and leading coefficient $1$, so it isn't zero. Its derivative is $D'(t)=E'(t)+p\,t^{p-1}-1=E(t)+t^{p-1}-1$. If $a\ne0$ is a root of $E$, then $a^p=a$ and $a^{p-1}=1$ by Fermat's little theorem, so
+      $$D(a)=0+a-a=0,\qquad D'(a)=0+1-1=0 .$$
+      So $(t-a)^2$ divides $D$. (Write $D=(t-a)Q$; then $D'(a)=Q(a)$, so $Q(a)=0$.) If $E$ has $r$ nonzero roots, then $D$ has at least $2r$ roots counted with multiplicity, so $2r\le p$. As $p$ is odd, $r\le\frac{p-1}2$, which is what we needed.
+
+      In fact $E$ rarely has many roots. For the primes below $80$ the number of bad $n$ is never more than $4$ (that happens at $p=37$).
+    checked: "script: for all odd primes p < 400, checked F(n) = −E(−1/n), that D and D′ vanish at every nonzero root of E, and that the number of roots is at most (p − 1)/2"
+    status: ready

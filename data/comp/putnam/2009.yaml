@@ -263,4 +263,41 @@ problems:
     topic: "Constructions: reaching any integer with powers and remainders"
     areas: [number-theory]
     difficulty: 4
-    status: coming
+    hints:
+      - 'Only a bounded number of steps is allowed, so the target has to be hidden in an exponent. Remainders can then pull it out: modulo $c=2^m-d$, the number $2^m$ behaves like $d$.'
+      - 'Try $d=1+2^j$ and expand $(1+2^j)^k$ with the binomial theorem.'
+    solution: |
+      **Key idea:** if $c=2^m-2^j-1$, then $2^m\equiv1+2^j\pmod c$. So one remainder turns the single power $2^{mk}$ into $(1+2^j)^k$. Two more remainders reduce that to $1+k$. The number $k$, stored in an exponent where it costs one step, comes out as an ordinary number. Only $12$ steps are needed, and the rest is padding.
+
+      **Choosing the parameters.** Let $n\ge1$ be the target and put $k=n-1$. Choose $j$ with $2^j-1>n$, and then $m$ so large that $(1+2^j)^k<2^m-2^j-1$ (for instance $m=(j+1)k+j+2$).
+
+      **The sequence.** Each term is built from earlier ones:
+
+      | term | how it's made | value |
+      |---|---|---|
+      | $a_0$ | given | $0$ |
+      | $a_1$ | $a_0+2^j$ | $2^j$ |
+      | $a_2$ | $a_1+2^0$ | $2^j+1$ |
+      | $a_3$ | $a_2+2^m$ | $2^m+2^j+1$ |
+      | $a_4$ | $a_0+2^{m+1}$ | $2^{m+1}$ |
+      | $a_5$ | $a_4 \bmod a_3$ | $2^m-2^j-1$ |
+      | $a_6$ | $a_0+2^{mk}$ | $2^{mk}$ |
+      | $a_7$ | $a_6 \bmod a_5$ | $(1+2^j)^k$ |
+      | $a_8$ | $a_0+2^{2j}$ | $2^{2j}$ |
+      | $a_9$ | $a_7 \bmod a_8$ | $1+k\,2^j$ |
+      | $a_{10}$ | $a_0+2^{j+1}$ | $2^{j+1}$ |
+      | $a_{11}$ | $a_{10} \bmod a_2$ | $2^j-1$ |
+      | $a_{12}$ | $a_9 \bmod a_{11}$ | $n$ |
+
+      Then let $a_{13}=a_{14}=\cdots=a_{2009}=a_{12}\bmod a_4=n$, which is fine since $n<2^{m+1}$.
+
+      **Why each remainder is right.** Every term used as $b$ or $c$ is positive.
+      - $a_5$: $2^{m+1}=1\cdot(2^m+2^j+1)+(2^m-2^j-1)$, and $0<2^m-2^j-1<2^m+2^j+1$.
+      - $a_7$: modulo $a_5$ we have $2^m\equiv1+2^j$, so $2^{mk}\equiv(1+2^j)^k$. The right side is already smaller than $a_5$ by the choice of $m$.
+      - $a_9$: by the binomial theorem $(1+2^j)^k=1+k\,2^j+(\text{a multiple of }2^{2j})$. Since $k<2^j$, we have $1+k\,2^j<2^{2j}$, so this is the remainder.
+      - $a_{11}$: $2^{j+1}=1\cdot(2^j+1)+(2^j-1)$.
+      - $a_{12}$: modulo $2^j-1$ we have $2^j\equiv1$, so $1+k\,2^j\equiv1+k=n$, and $n<2^j-1$.
+
+      **A small example.** For $n=2$: $k=1$, $j=2$, $m=7$. The terms are $0,\ 4,\ 5,\ 133,\ 256,\ 123,\ 128,\ 5,\ 16,\ 5,\ 8,\ 3,\ 2$, and the last one is $5 \bmod 3=2$.
+    checked: "script: built the full 2010-term sequence for n = 1…199, 255, 256, 257 and 500 with exact big integers and checked that every step is legal and the last term is n"
+    status: ready

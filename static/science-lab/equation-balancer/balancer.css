@@ -1,0 +1,56 @@
+/* Equation Balancer (/science-lab/equation-balancer/): its own bits on top of the Science Lab look (/games/lab/lab.css). */
+.eb-left{min-width:0;display:flex;flex-direction:column;gap:.55rem}
+.lab-view.eb-view{height:auto;min-height:0}
+.lab-view.eb-view canvas{outline:none}
+.lab-view.eb-view canvas:focus-visible{box-shadow:inset 0 0 0 3px #ffd479}
+.eb-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2rem .7rem}
+.eb-head h2{margin:0;font:700 1.25rem Georgia,serif;color:var(--acc)}
+.eb-level{font:700 .7rem system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--gt);border:1px solid var(--line);border-radius:999px;padding:.1rem .5rem}
+.eb-names{margin:0;font-size:.88rem;color:var(--muted)}
+.eb-eq{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.35rem .3rem;padding:.55rem .6rem;border-radius:12px;background:var(--paper);border:1px solid var(--line);font:1.15rem "Cambria Math","STIX Two Math",Georgia,serif}
+.eb-term{display:inline-flex;align-items:center;gap:.15rem;white-space:nowrap}
+.eb-c{min-width:1.3em;text-align:right;font:700 1.1rem system-ui,sans-serif;color:var(--gt)}
+.eb-f{margin-right:.1rem}
+.eb-step{width:2rem;height:2rem;min-width:32px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 1rem system-ui,sans-serif;cursor:pointer;line-height:1;padding:0}
+.eb-step:hover:not(:disabled){border-color:var(--acc)}
+.eb-step:disabled{opacity:.35;cursor:default}
+.eb-arrow,.eb-plus{color:var(--muted);padding:0 .15rem}
+.eb-arrow{font-size:1.3rem}
+.eb-tab{width:100%;border-collapse:collapse;font-size:.88rem}
+.eb-tab th,.eb-tab td{padding:.3rem .35rem;border-bottom:1px solid var(--line);text-align:left}
+.eb-tab thead th{font:700 .72rem system-ui,sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.eb-tab td{font:600 .95rem ui-monospace,Menlo,Consolas,monospace;text-align:center}
+.eb-tab th i{display:inline-block;width:.8rem;height:.8rem;border-radius:50%;border:1px solid rgba(0,0,0,.35);margin-right:.35rem;vertical-align:-.1rem}
+.eb-tab th small{color:var(--muted);font-weight:400}
+.eb-tab td.eb-st{font:600 .78rem system-ui,sans-serif;text-align:left;color:var(--muted)}
+.eb-tab tr.ok td.eb-st span{color:#2f9e6f}
+html[data-theme="dark"] .eb-tab tr.ok td.eb-st span{color:#6cc79a}
+.eb-tab tr.off td.eb-st span{color:#c0392b}
+html[data-theme="dark"] .eb-tab tr.off td.eb-st span{color:#ff8787}
+.eb-tab tr.better{background:rgba(47,158,111,.14)}
+.eb-tab tr.worse{background:rgba(224,49,49,.1)}
+.eb-tab em{font-style:normal;font-weight:700}
+.eb-tab tr.better em{color:#2f9e6f}
+.eb-tab tr.worse em{color:#c0392b}
+.eb-all{margin:0;font-size:.85rem;color:var(--muted)}
+.eb-all.ok{color:#2f9e6f;font-weight:600}
+html[data-theme="dark"] .eb-all.ok{color:#6cc79a}
+.eb-result{margin:0;font-size:.9rem;line-height:1.5}
+.eb-result:empty{display:none}
+.eb-result.yes{padding:.55rem .7rem;border-radius:10px;background:var(--soft);border-left:4px solid #2f9e6f}
+.eb-result.no{padding:.55rem .7rem;border-radius:10px;background:var(--paper);border-left:4px solid var(--gold)}
+.eb-ans{display:block;margin:.35rem 0;font:1.1rem "Cambria Math","STIX Two Math",Georgia,serif;font-weight:700}
+.eb-fact{display:block;color:var(--muted);font-size:.85rem}
+.eb-nav{display:flex;gap:.4rem;align-items:center}
+.eb-nav select{flex:1;min-width:0;min-height:40px}
+.eb-nav .lab-btn{min-height:40px;min-width:40px}
+.eb-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.cb-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.eb-keys{font-size:.82rem;color:var(--muted);line-height:1.5}
+.eb-keys kbd{font:600 .75rem ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 .3rem;background:var(--card);color:var(--ink)}
+.eb-keyrow{display:flex;flex-wrap:wrap;gap:.25rem .8rem;font-size:.82rem;color:var(--muted)}
+.eb-keyrow span{display:inline-flex;align-items:center;gap:.3rem}
+.eb-keyrow i{display:inline-block;width:.75rem;height:.75rem;border-radius:50%;border:1px solid rgba(0,0,0,.35)}
+#eb-lab .lab-stage>*{min-width:0}
+#eb-lab .eb-nav select{width:100%}
+@media (max-width:860px){#eb-lab .lab-stage{grid-template-columns:minmax(0,1fr)}}

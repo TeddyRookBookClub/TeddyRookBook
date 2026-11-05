@@ -1,0 +1,433 @@
+\chapter{Working on the open questions}\label{ch:openq}
+
+Section~\ref{sec:open} ended with six open questions. This chapter reports what happened when we went back to them. Most of them are famous problems, and we did not solve them. Whether $\pi$ has infinitely many prime convergent denominators, whether there are infinitely many Fibonacci or Pell primes, and whether $\pi$'s terms obey the Gauss--Kuzmin law are all still open. What we can offer is new computation, sharper heuristics, and some results that we can actually prove.
+
+\paragraph{How to read the labels.} In this chapter, a \emph{Theorem} or \emph{Proposition} with no citation in its heading is proved here, in full, from results that are cited. One with a citation is quoted from the literature. When a proof leans on a deep cited theorem, we say so in the statement. A \emph{Heuristic} predicts without proving. Numbers from computation are \emph{numerical evidence}: they can support a conjecture, never prove it. ``Prime'' for a large number means a Baillie--PSW probable prime (Appendix~\ref{app:methods}); no composite number is known to pass that test, but passing it is not a proof.
+
+\section{Twelve million terms of pi}\label{sec:twelve}
+
+Every question about $\pi$ starts with its terms. Chapter~\ref{ch:cf} used the first \NT{}. Here we use the first \OqNT, enough to reach the term $878{,}783{,}625$ at position $11{,}504{,}930$.
+
+\paragraph{Method.} We take $\pi$ from mpmath, accurate to the last binary place, as an interval $[(m-2)/2^b, (m+2)/2^b]$ with $b$ about $43$ million bits. A divide-and-conquer version of Euclid's algorithm then keeps exactly the terms that every real number in the interval shares. It expands the interval cut to its top half, which gives a prefix of the terms and the matrix $\left(\begin{smallmatrix}p_k & p_{k-1}\\ q_k & q_{k-1}\end{smallmatrix}\right)$ of \eqref{eq:matrix}; it applies the inverse of that matrix to the full interval; and it repeats on what is left. Since the set of reals that share a given prefix is an interval, a term shared by both endpoints is a term of $\pi$. The computation is done twice, at two precisions $4{,}096$ bits apart, and the two lists must agree. It takes under two minutes on one core.
+
+\paragraph{Checks.} The first \NT{} terms agree with those of Chapter~\ref{ch:cf}, which were found by a different method. The record terms of our list, and their positions ($292$ at position 4, then $436$, $20{,}776$, $78{,}629$, $179{,}136$, $528{,}210$, $12{,}996{,}958$ and $878{,}783{,}625$ at positions 307, 431, 28,421, 156,381, 267,313, 453,293 and 11,504,930), agree with the OEIS tables of record terms \citep{OEIS_A033089}, which come from much longer computations. The script stops if any of these checks fails.
+
+\paragraph{Prior computations.} We are far from the first. Gosper computed about 17 million terms in 1977; Havermann reached 20 million in 1999 and 180 million in 2002; Bickford 458 million in 2010; Weisstein 15 billion by 2013; Fahad 30 billion in 2021; and Frank 653.52 billion in 2025 \citep{MathWorldPiCF,OEIS_A001203}. Our twelve million are a small, independent, self-checking sample, enough for the statistics below and for every prime-convergent search we can afford.
+
+\section{Question 1: the prime convergents of pi}\label{sec:oq1}
+
+\paragraph{The search.} We tested $q_n$ and $p_n$ for every $n \le \OqPiN$; the largest of these numbers have about \OqPiDigitsN{} digits. Each number first goes through trial division by the primes below $10^5$ and then the Baillie--PSW test. The prime denominators occur at
+\[
+  n = \OqPiQIdx,
+\]
+so \OqPiQn{} in all, and none between $n = 6{,}926$ and $n = \OqPiN$. This agrees with OEIS A259490, whose index $k$ is our $n + 1$ and which records that there are no more below $k = 25{,}000$ \citep{OEIS_A259490}. The prime numerators occur at
+\[
+  n = \OqPiPIdx,
+\]
+\OqPiPn{} in all, and none between $n = 8{,}751$ and $n = \OqPiN$. The first thirteen are the ones of Chapter~\ref{ch:primeconv}; the two beyond $n = 5{,}000$ are at $n = \OqPiNewP$. The OEIS list of prime numerators, A086785, holds 15 terms \citep{OEIS_A086785}, the same number as ours; we compared the first thirteen values.
+
+\paragraph{The comparison.} \Cref{heur:primeconv} gives each $q_n$ a chance $\zeta(2)/\ln q_n$ of being prime, and each $p_n$ a chance $\zeta(2)/\ln p_n$. If these were independent events, the count would follow a Poisson-binomial law, which we compute exactly. \Cref{tab:oq-pi} and \cref{fig:oq-pi} compare. Both counts sit inside the central 95\% range of the heuristic at every checkpoint. The denominators run on the low side (the share of the law at or below the observed count is between $0.1$ and $0.35$), and the numerators on the high side (about $0.83$). A low count for one and a high count for the other is what chance alone often produces, and nothing in the table is unusual.
+
+\begin{table}[t]
+\centering
+\caption[Pi's prime convergents against the heuristic]{Probable primes among $\pi$'s convergents, $n \le N$: the observed count, the expected count $\sum \zeta(2)/\ln$ of \cref{heur:primeconv}, the central 95\% range of the Poisson-binomial law with those chances, and the share of that law at or below the observed count.}
+\label{tab:oq-pi}
+\begin{tabular}{rrrrrrrrr}
+\toprule
+& \multicolumn{4}{c}{denominators $q_n$} & \multicolumn{4}{c}{numerators $p_n$} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+$N$ & obs. & exp. & 95\% range & share & obs. & exp. & 95\% range & share \\
+\midrule
+\OqPiTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{openq_pi_primes}
+\caption[Pi's prime convergents to $n = 20{,}000$]{Probable-prime denominators (left) and numerators (right) of $\pi$'s convergents up to $n = \OqPiN$ (green steps), the expected count of \cref{heur:primeconv} (gold, dashed) and the central 95\% range of the heuristic (shaded).}
+\label{fig:oq-pi}
+\end{figure}
+
+\paragraph{Both at once.} Only $n = 8$ gives a convergent, $833{,}719/265{,}381$, whose numerator and denominator are both prime. For a typical number this is expected to happen only finitely often; \cref{thm:oq-ae}(iv) below proves it for almost every real number. The same local reasoning as in \cref{heur:primeconv} gives a correction factor $\zeta(2)$ for the pair (the pair $(p_n, q_n)$ modulo a prime $\ell$ is equidistributed over the $\ell^2 - 1$ nonzero pairs, by the theorem of Jager and Liardet \citep{JagerLiardet1988}), and the expected number of further cases beyond $n = 8$ is then only about $\OqBothTail$.
+
+\paragraph{The number $e$.} The earlier count for $e$ (Chapter~\ref{ch:primeconv}) was \OqEobs{} prime denominators up to $n = 3{,}000$, the last at $n = \OqElast$. The terms of $e$ are not typical, so \cref{heur:primeconv} does not apply. What replaces it? One piece can be proved.
+
+\begin{proposition}\label{prop:oq-e}
+Let $q_n$ be the convergent denominators of $e$ and $\ell$ a prime. The sequence $q_n \bmod \ell$ is purely periodic. Hence the share $f_\ell$ of $n$ with $\ell \mid q_n$ exists and equals the share of zeros in one period.
+\end{proposition}
+
+\begin{proof}
+The terms of $e$ are $a_{3k-2} = a_{3k} = 1$ and $a_{3k-1} = 2k$, so $a_n \bmod \ell$ depends only on $n \bmod 3\ell$. The state $(n \bmod 3\ell,\, q_{n-1} \bmod \ell,\, q_n \bmod \ell)$ therefore determines the next state, by $q_{n+1} = a_{n+1}q_n + q_{n-1}$. This map is a bijection of a finite set (it can be run backward, since $q_{n-1} = q_{n+1} - a_{n+1} q_n$), so every orbit is a cycle.
+\end{proof}
+
+For every prime $\ell < \OqElim$ our script finds that the period divides $6\ell$ (we have not proved this in general), and computes $f_\ell$ exactly: $f_2 = \OqEdTwo$, $f_3 = \OqEdThree$, $f_5 = \OqEdFive$, $f_7 = \OqEdSeven$, $f_{11} = \OqEdEleven$, $f_{13} = \OqEdThirteen$, $f_{17} = \OqEdSeventeen$. A typical number would have $f_\ell = 1/(\ell+1)$ (\cref{cor:divisible}). For $e$, the average of $\ell f_\ell$ over the odd primes below \OqElim{} is \OqEavg: its denominators are divisible by a given small prime about twice as often as random integers. If the events ``$\ell \mid q_n$'' were independent across $\ell$, the correction factor would be $\prod_\ell (1 - f_\ell)/(1 - 1/\ell)$, which falls from \OqSeA{} (primes below 100) to \OqSeB{} (below 1{,}000) and \OqSeC{} (below 3{,}000) and does not settle. But they are far from independent. Among $e$'s first 3{,}000 denominators, the share with no prime factor below 1{,}000 is \OqEsieveEmp, against \OqEsieveInd{} if the events were independent and \OqEsieveRnd{} for random integers (below 100: \OqEsieveEmpH, \OqEsieveIndH{} and \OqEsieveRndH). The same denominators are divisible by many small primes at once, and the rest are almost as free of small factors as random integers. Using the observed ratio \OqEratio{} as the correction gives $\OqEexpEmp$ expected prime denominators up to $n = 3{,}000$, against \OqEobs{} found; the typical-number factor $\zeta(2)$ gives \OqEexpTyp, and the independent product gives \OqEexpInd. We offer the first as a rough guide, not a heuristic with a constant.
+
+The growth of $e$'s denominators is easy to pin down: since $\prod_{k \le n} a_k \le q_n \le \prod_{k \le n}(a_k + 1)$, we get $\ln q_n = \tfrac{n}{3}\ln n\,(1 + o(1))$, much faster than Lévy's linear rate. Any heuristic of the form ``prime with chance $c/\ln q_n$'' then predicts about $3c\ln\ln N$ prime denominators up to $N$. So $e$ should have infinitely many, but very few: with $c = \OqEratio$, about two more between $n = 3{,}000$ and $n = 10^6$.
+
+\paragraph{Status.} Open. The new computation quadruples the range searched; everything still looks typical.
+
+\section{Question 2: Fibonacci and Pell primes}\label{sec:oq2}
+
+For $\varphi = \cf{1; 1, 1, \dots}$ the convergent denominators are the Fibonacci numbers, $q_n = F_{n+1}$; for $\sqrt 2 = \cf{1; 2, 2, \dots}$ they are the Pell numbers, $q_n = P_{n+1}$ ($P_1 = 1$, $P_2 = 2$, $P_{n+1} = 2P_n + P_{n-1}$). Whether either sequence has infinitely many primes is a famous open problem.
+
+\begin{proposition}[classical]\label{prop:oq-fib}
+If $F_n$ is prime then $n = 4$ or $n$ is prime. If $P_n$ is prime then $n$ is prime.
+\end{proposition}
+
+\begin{proof}
+Both sequences ($u_n = F_n$ or $u_n = P_n$, with $u_0 = 0$, $u_1 = 1$) satisfy $u_{m+k} = u_m u_{k+1} + u_{m-1}u_k$ for $m \ge 1$, $k \ge 0$: it holds for $k = 0$ and $k = 1$, and both sides obey the sequence's recurrence in $k$. Taking $k = m$ and $m$ replaced by $jm$ gives $u_{(j+1)m} = u_{jm}u_{m+1} + u_{jm-1}u_m$, so by induction on $j$, $u_m \mid u_{jm}$. If $n = jm$ with $1 < m < n$, then $u_m$ divides $u_n$. For Fibonacci numbers $1 < F_m < F_n$ unless $m \le 2$; a composite $n \ne 4$ has a divisor $m$ with $3 \le m < n$, so $F_n$ is composite. For Pell numbers $P_m > 1$ for every $m \ge 2$, and every composite $n$ has such a divisor.
+\end{proof}
+
+The proposition is why the typical-number heuristic fails for these two numbers: their denominators are divisibility sequences, not random-looking integers. Grantham and Granville give the heuristic that replaces it. For a Lucas sequence $u_n = (\alpha^n - \beta^n)/(\alpha - \beta)$ with $\alpha > |\beta|$, they predict
+\begin{equation}\label{eq:oq-gg}
+  \#\{n \le N : u_n \text{ prime}\} \sim e^{\gamma}\log_\alpha N
+\end{equation}
+\citep{GranthamGranville2024}. The Fibonacci numbers have $\alpha = \varphi$. The Pell numbers are the Lucas sequence with $\alpha = 1 + \sqrt 2$, so the same formula applies to them, though Grantham and Granville do not discuss them by name.
+
+\paragraph{What is known.} OEIS A001605 lists \OqFibCount{} indices of Fibonacci primes up to $n = 3{,}340{,}367$; the first 37 (up to $n = 201{,}107$) are proven primes and the rest probable primes, and later searches added five more and then $n = 11{,}964{,}299$ in 2025 \citep{OEIS_A001605}. OEIS A096650 lists \OqPellCount{} indices of Pell primes below $10^5$, and records that there are no others below $10^5$; those above 523 are probable primes \citep{OEIS_A096650}. Our own lists, up to index 3{,}001, agree with both (Chapter~\ref{ch:primeconv}). \Cref{tab:oq-fib} compares the counts with \eqref{eq:oq-gg}.
+
+\begin{table}[t]
+\centering
+\caption[Fibonacci and Pell primes against the heuristic]{The number of Fibonacci primes $F_n$ and Pell primes $P_n$ with $n \le N$, from the OEIS lists, against the Grantham--Granville prediction $e^\gamma \log_\alpha N$ with $\alpha = \varphi$ and $\alpha = 1 + \sqrt 2$. The Pell list is complete only below $10^5$.}
+\label{tab:oq-fib}
+\begin{tabular}{rrrrr}
+\toprule
+& \multicolumn{2}{c}{Fibonacci} & \multicolumn{2}{c}{Pell} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+$N$ & found & predicted & found & predicted \\
+\midrule
+\OqFibTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+The Fibonacci counts run steadily below the prediction, by about a sixth at the larger $N$, as Grantham and Granville note themselves; the Pell counts run above it, by about a third at $10^5$. For counts this small and this slowly growing, such gaps are not alarming, and the constant in such heuristics is the least certain part. Both lists are consistent with infinitely many primes and a count that grows like $\log N$; that is as far as the data go.
+
+\paragraph{Status.} Open, and not touched by anything in this work; the heuristic and the data agree to within the accuracy one can expect.
+
+\section{Question 3: a theorem in the model}\label{sec:oq3}
+
+Here we can prove something. Pick $x$ at random, uniformly in $(0,1)$, and write $q_n = q_n(x)$. Recall that the set of $x$ whose first $n$ terms are $a_1, \dots, a_n$ is an interval (a \emph{cylinder}) of length
+\begin{equation}\label{eq:oq-cyl}
+  \frac{1}{q_n(q_n + q_{n-1})}
+\end{equation}
+\citep[Ch.~III]{Khinchin1964}, and that, by \eqref{eq:matrix}, $q_n/q_{n-1} = \cf{a_n; a_{n-1}, \dots, a_1}$ (the ``mirror formula'': $q_n/q_{n-1} = a_n + q_{n-2}/q_{n-1}$, and induct).
+
+\begin{theorem}[the exact expected count]\label{thm:oq-exact}
+For every integer $q \ge 2$,
+\begin{equation}\label{eq:oq-exact}
+  \mathbb{E}\,\#\{n \ge 1 : q_n(x) = q\} = \frac{2}{q}\sum_{\substack{1 \le r < q\\ \gcd(r,q) = 1}} \frac{1}{q + r}.
+\end{equation}
+For a prime $p$ this is $\frac{2}{p}(H_{2p-1} - H_p)$, where $H_m = 1 + \frac12 + \dots + \frac1m$. Consequently
+\begin{equation}\label{eq:oq-exactX}
+  \mathbb{E}\,\#\{n \ge 1: q_n(x) \text{ is prime and } q_n(x) \le X\} = \sum_{p \le X}\frac{2}{p}\left(H_{2p-1} - H_p\right) = 2\ln 2 \cdot \ln\ln X + B_0 + o(1)
+\end{equation}
+as $X \to \infty$, with $B_0 = 2\ln 2 \cdot M - C_1 = \OqBzero\ldots$, where $M = \OqMertens\ldots$ is the Meissel--Mertens constant and $C_1 = \sum_p \frac{2}{p}\left(\ln 2 - H_{2p-1} + H_p\right) = \OqCone\ldots$
+\end{theorem}
+
+\begin{proof}
+Sequences $(a_1, \dots, a_n)$ of positive integers correspond to pairs $(q_{n-1}, q_n)$. By the mirror formula, the sequence read backward is a continued fraction expansion of the rational number $q_n/q_{n-1}$, all of whose terms are at least 1. Conversely, every rational $q/r$ with $q \ge 2$, $1 \le r < q$ and $\gcd(r,q) = 1$ has exactly two such expansions, one ending in a term at least 2 and one ending in 1 (for instance $7/2 = \cf{3; 2} = \cf{3; 1, 1}$), and each, read backward, is a sequence $(a_1, \dots, a_n)$ with $q_{n-1} = r$ and $q_n = q$ (the two lengths differ by one). So the cylinders with $q_n = q$, for all $n$ together, are exactly two for each $r$, each of length $1/(q(q+r))$ by \eqref{eq:oq-cyl}. Summing the lengths over $n$ gives the expected number of $n$ with $q_n = q$, which is \eqref{eq:oq-exact}. For a prime $p$ every $r$ from 1 to $p-1$ is coprime to $p$, and $\sum_{r=1}^{p-1} 1/(p + r) = H_{2p-1} - H_p$.
+
+For the asymptotic, $H_{2p-1} - H_p = \ln 2 + O(1/p)$, so the series defining $C_1$ converges absolutely, and $\sum_{p \le X} \frac2p(H_{2p-1} - H_p) = 2\ln 2\sum_{p \le X}\frac1p - C_1 + O(1/X)$. Mertens' theorem $\sum_{p \le X} 1/p = \ln\ln X + M + o(1)$ \citep[Thm.~427]{HardyWright2008} finishes the proof.
+\end{proof}
+
+Our script checks \eqref{eq:oq-exact} against a direct search over all sequences with $q_n = q$ for every $q < 40$, in exact rational arithmetic, and computes $C_1$ from the primes below $10^7$ (the omitted tail is below $10^{-7}$).
+
+\paragraph{Where $\zeta(2)$ comes from.} \Cref{thm:oq-exact} shows the correction factor of Chapter~\ref{ch:primeconv} at work, now as an identity. A prime $q$ gets weight about $2\ln 2/q$, because all $q - 1$ numbers $r < q$ are coprime to it. A general $q$ gets about $\frac{\varphi(q)}{q}\cdot \frac{2\ln 2}{q}$, and $\varphi(q)/q$ averages $6/\pi^2$. Relative to all integers, primes are favored by exactly $\pi^2/6 = \zeta(2)$. (Summed over $q \le X$, the general weight gives about $\frac{12\ln 2}{\pi^2}\ln X = (\ln X)/L$ convergents up to $X$, which matches Lévy's theorem.)
+
+\begin{corollary}\label{cor:oq-N}
+For $x$ uniform in $(0,1)$,
+\[
+  \mathbb{E}\,\#\{n \le N : q_n(x) \text{ prime}\} = 2\ln 2 \cdot \ln N + O(1).
+\]
+\end{corollary}
+
+\begin{proof}
+\emph{Lower bound.} Since $q_n \ge F_{n+1} \ge \varphi^{n-1}$, any $n$ with $q_n \le \varphi^{N/2}$ has $n \le N/2 + 1 \le N$ (for $N \ge 2$). So the count is at least the number of $n$ with $q_n$ prime and at most $X = \varphi^{N/2}$, and by \eqref{eq:oq-exactX} its expectation is at least $2\ln 2 \cdot \ln(N \ln\varphi/2) + B_0 + o(1)$.
+
+\emph{Upper bound.} Let $C = 2\ln\mu + 2 = \OqCbig\ldots$, where $\mu = \sum_{k \ge 1} 2/(k\sqrt{k+1}) = \OqMu\ldots$. If $n \le N$ and $q_n$ is prime, then either $q_n \le e^{CN}$, or $q_N \ge q_n > e^{CN}$. Hence the count is at most $\#\{n : q_n \text{ prime},\, q_n \le e^{CN}\} + N\cdot\mathbf{1}[q_N > e^{CN}]$. The first term has expectation $2\ln 2 \cdot\ln(CN) + B_0 + o(1)$ by \eqref{eq:oq-exactX}. For the second, the cylinder lengths give, for the conditional chance of the next term,
+\[
+  \Pr(a_{n+1} = k \mid a_1, \dots, a_n) = \frac{1 + s}{(k+s)(k+1+s)} \le \frac{2}{k(k+1)}, \qquad s = q_{n-1}/q_n \in [0, 1],
+\]
+so $\mathbb{E}[(1 + a_{n+1})^{1/2} \mid a_1, \dots, a_n] \le \mu$. Since $q_N \le \prod_{k \le N}(1 + a_k)$, conditioning one term at a time gives $\mathbb{E}\,q_N^{1/2} \le \mu^N$, and Markov's inequality gives $\Pr(q_N > e^{CN}) \le \mu^N e^{-CN/2} = e^{-N}$. So the second term has expectation at most $N e^{-N}$.
+\end{proof}
+
+So, in expectation, \cref{heur:primeconv} is a theorem, with exactly the constant $2\ln 2$. To the best of our search we did not find \cref{thm:oq-exact} or \cref{cor:oq-N} stated in the literature, although the counting behind them is classical. What about almost every $x$, which is what the heuristic actually claims? Here deep recent theorems carry us part of the way. Write $\theta_n = q_n^2\,|x - p_n/q_n|$; every convergent has $\theta_n < 1$, and by Legendre's theorem, any fraction $a/q$ in lowest terms with $|x - a/q| < 1/(2q^2)$ is a convergent of $x$ \citep[Thm.~184]{HardyWright2008}.
+
+\begin{theorem}[almost every $x$; parts (i)--(iii) rest on cited theorems]\label{thm:oq-ae}
+For almost every real $x$:
+\begin{enumerate}[label=(\roman*)]
+\item infinitely many $q_n$ are prime, and infinitely many $p_n$ are prime;
+\item the number of $n \le N$ with $q_n$ prime and $\theta_n < 1/2$ is $(1 + o(1))\ln N$;
+\item hence $\displaystyle 1 \le \liminf_{N\to\infty}\frac{\#\{n \le N: q_n \text{ prime}\}}{\ln N} \le \limsup_{N\to\infty}\frac{\#\{n \le N: q_n \text{ prime}\}}{\ln N} \le 2$;
+\item only finitely many $n$ have both $p_n$ and $q_n$ prime.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) Erdős proved that if $n_1 < n_2 < \cdots$ are integers with $\sum \varphi(n_i)/n_i^2 = \infty$, then for almost every $x$ infinitely many $n_i$ are convergent denominators of $x$ \citep{Erdos1970}. For the primes, $\sum_p (p-1)/p^2 = \infty$. For numerators, note that the convergents of $1/x$ are the reciprocals of those of $x$ (if $x > 1$, then $1/x = \cf{0; a_0, a_1, \dots}$; if $0 < x < 1$, then $1/x = \cf{a_1; a_2, \dots}$), so the numerators of $x$ are, up to a shift of index, the denominators of $1/x$; and the map $x \mapsto 1/x$ sends sets of measure zero to sets of measure zero.
+
+(ii) Koukoulopoulos, Maynard and Yang proved the following quantitative form of the Duffin--Schaeffer conjecture \citep{KMY2024}, extending \citep{KoukoulopoulosMaynard2020}. Let $\psi$ take the positive integers to $[0, 1/2]$, and suppose that
+\[
+  \Psi(Q) = \sum_{q \le Q}\frac{2\varphi(q)\psi(q)}{q} \to \infty.
+\]
+Then for almost every $x$ the number of coprime pairs $(a, q)$ with $q \le Q$ and $|x - a/q| < \psi(q)/q$ is $\Psi(Q)(1 + o(1))$. Take $\psi(q) = 1/(2q)$ when $q$ is prime and $0$ otherwise; then $\Psi(Q) = \sum_{p \le Q}(p-1)/p^2 = \ln\ln Q + O(1)$. By Legendre's theorem the pairs counted are exactly the convergents with $q_n$ prime, $q_n \le Q$ and $\theta_n < 1/2$, one for each such $n$. To pass from $q_n \le Q$ to $n \le N$, use Lévy's theorem: for almost every $x$ and any $\varepsilon > 0$, $e^{(L-\varepsilon)n} \le q_n \le e^{(L+\varepsilon)n}$ for all large $n$, with $L = \pi^2/(12\ln 2)$. Then for large $N$, every $n$ with $q_n \le e^{(L-\varepsilon)N}$ has $n \le N$, and every $n \le N$ has $q_n \le e^{(L+\varepsilon)N}$; and $\ln\ln e^{(L\pm\varepsilon)N} = \ln N + O(1)$.
+
+(iii) The lower bound is (ii). For the upper bound, use the same theorem with $\psi(q) = 1/q$ for prime $q$ (so $\Psi(Q) = 2\ln\ln Q + O(1)$): every convergent with $q_n$ prime has $|x - p_n/q_n| < 1/q_n^2$, so it is one of the pairs counted. Convert from $Q$ to $N$ as before.
+
+(iv) This part is elementary, and we give it for $0 < x < 1$ (for other $x$, replace the bound on $\pi(q)$ below by the Brun--Titchmarsh inequality \citep{MontgomeryVaughan1973}). If $p_n = a$ and $q_n = q$ are both prime, then $x$ lies within $1/q^2$ of $a/q$ with $a < q$ prime. For each prime $q$, the set of such $x$ has measure at most $2\pi(q)/q^2 \le C'/(q\ln q)$ by Chebyshev's bound $\pi(q) = O(q/\ln q)$ \citep[Thm.~7]{HardyWright2008}, and $\sum_p 1/(p\ln p) < \infty$. By the Borel--Cantelli lemma almost every $x$ lies in only finitely many of these sets, so only finitely many primes $q$ can occur, and each value $q_n$ occurs for at most two $n$.
+\end{proof}
+
+\paragraph{Where the argument stops.} The conjecture behind Question 3 sits strictly inside \cref{thm:oq-ae}(iii): $2\ln 2 \approx \CconstVal$ is between 1 and 2. And it matches the theorem in a precise way. For almost every $x$, the share of $n$ with $\theta_n < 1/2$ is $1/(2\ln 2)$ (the Doeblin--Lenstra law, proved by Bosma, Jager and Wiedijk \citep{BosmaJagerWiedijk1983}), and $2\ln 2 \times 1/(2\ln 2) = 1$, which is exactly the constant in (ii). The missing piece is the convergents with $\theta_n \ge 1/2$. The set of $x$ for which a given fraction $a/q$ is a convergent is an interval around $a/q$ whose two halves have lengths $1/(q(q+r))$ and $1/(q(2q - r))$, where $r$ is determined by $a$ ($ar \equiv \pm 1 \pmod q$). The Duffin--Schaeffer machinery counts approximations whose target interval depends only on $q$; here it depends on $a$ too, through a modular inverse. A second-moment bound for these events would give the full almost-everywhere statement, and that is what we cannot supply. Note also that \cref{cor:oq-N} alone, with Markov's inequality and the Borel--Cantelli lemma along $N_k = e^{2^k}$, gives the weaker but elementary bound $O(\ln N\,(\ln\ln N)^{1+\varepsilon})$ for almost every $x$, without the deep theorem.
+
+\paragraph{The numbers.} \Cref{tab:oq-sim} and \cref{fig:oq-model} check \cref{thm:oq-exact} on \OqSimM{} random reals, each given by a random fraction with 2{,}600 binary digits. The simulated means agree with the exact values within two standard errors at every $X$ (the six values are cumulative, so their deviations are strongly correlated), for all prime denominators and for those with $\theta_n < 1/2$; the ratio of the two is close to $1/(2\ln 2) \approx 0.72$, as the Doeblin--Lenstra law predicts. The counts by index (second part of the table) grow by $2\ln 2$ per $e$-fold, as \cref{cor:oq-N} says; their level lies a constant below $2\ln 2 \cdot \ln N$, as the $O(1)$ allows. The variance is a little below the mean, as for a sum of independent events with these chances (a Poisson-binomial count has variance below its mean).
+
+\begin{table}[t]
+\centering
+\caption[The exact expectation against simulation]{Simulation of \OqSimM{} uniform random reals. Top: the mean number of prime $q_n \le X$, with its standard error, against \eqref{eq:oq-exactX}; and the same for prime $q_n \le X$ with $\theta_n < 1/2$, against $\sum_{p \le X}(p-1)/p^2$. Bottom: the mean number of prime $q_n$ with $n \le N$, its standard error and variance, and $2\ln 2\cdot\ln N$.}
+\label{tab:oq-sim}
+\begin{tabular}{rrrrrrr}
+\toprule
+$X$ & mean & s.e. & exact & mean, $\theta_n < \frac12$ & s.e. & exact \\
+\midrule
+\OqSimTable
+\midrule
+$N$ & mean & s.e. & variance & $2\ln 2\cdot \ln N$ & & \\
+\midrule
+\OqSimNTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.78\textwidth]{openq_model}
+\caption[A theorem checked by simulation]{\Cref{thm:oq-exact} against simulation: the mean number of prime convergent denominators up to $X$ (green, with two standard errors) and of those with $\theta_n < 1/2$ (gold), for \OqSimM{} random reals, with the exact expectations.}
+\label{fig:oq-model}
+\end{figure}
+
+\paragraph{Status.} Partly answered. In expectation the heuristic's constant is now a theorem (\cref{cor:oq-N}). For almost every $x$ the count is between $\ln N$ and $2\ln N$ asymptotically, using the recent quantitative Duffin--Schaeffer theorem; that it is $2\ln 2\cdot\ln N$ remains a conjecture. Nothing here applies to $\pi$, which is one number and may or may not be typical.
+
+\section{Question 4: is pi typical?}\label{sec:oq4}
+
+The Gauss--Kuzmin law, Khinchin's constant and Lévy's constant are laws for almost every number. Whether $\pi$ obeys them is open; it is not even known whether $\pi$'s terms are bounded. All we can do is test, and every test has to be careful about two things. First, the terms of a typical number are weakly dependent, so textbook chi-square $p$-values, which assume independence, are only approximate. We therefore calibrated every statistic on \OqCalN{} random reals with \OqCalLen{} terms each, expanded exactly. Second, a $p$-value is not a probability that $\pi$ is typical; a pass is evidence of the absence of a large deviation, not proof of typicality.
+
+\paragraph{Results.} On the first \OqNT{} terms (\cref{fig:oq-gk}):
+\begin{itemize}
+\item \emph{Values 1 to 100 and above 100} (101 cells): $\chi^2 = \OqChi$ on 100 degrees of freedom, textbook $p = \OqChiP$, calibrated $p = \OqChiPmc$. The ones make up $\OqOnesPct\%$, against $\OqOnesLaw\%$ for the law.
+\item \emph{The tail}, in the dyadic cells $[2^j, 2^{j+1})$, $j = 0, \dots, 19$, and $[2^{20}, \infty)$: $\chi^2 = \OqDy$ on 20 degrees of freedom, $p = \OqDyP$.
+\item \emph{Pairs} $(a_n, a_{n+1})$ with values $1, \dots, 5$ and ``6 or more'' (36 cells, probabilities from the Gauss measure of the two-term cylinders): $\chi^2 = \OqPair$ on 35 degrees of freedom, textbook $p = \OqPairP$, calibrated $p = \OqPairPmc$. The calibration matters here: for random reals the textbook test rejects at the 5\% level \OqCalPair{} of the time, more than it should (for single values, \OqCalChi).
+\item \emph{Blocks.} Cut into \OqBlocks{} blocks of $100{,}000$ terms, the 120 block $p$-values look uniform (Kolmogorov--Smirnov $p = \OqBlockKS$), as they should if no stretch of $\pi$'s expansion is unusual.
+\item \emph{Khinchin.} The geometric mean of the terms is $\OqGeo$, against $K_0 = \OqKzero\ldots$; measured in the standard deviation that random reals show at this length, the deviation is $\OqGeoZ$.
+\item \emph{Lévy.} $\ln q_n/n = \OqLevy$ at $n = 12$ million, against $\pi^2/(12\ln 2) = \OqLevyConst\ldots$, a deviation of $\OqLevyZ$ standard deviations. The two standardized curves in \cref{fig:oq-khinchin} move almost together, because $\ln q_n$ is $\sum_{k \le n}\ln a_k$ plus a sum of corrections $\ln(1 + q_{k-2}/(a_k q_{k-1}))$, each between 0 and $\ln 2$, so the two sums rise and fall with the same large terms.
+\item \emph{Largest terms.} Galambos proved that for almost every $x$, the largest of the first $n$ terms, $M_n$, satisfies $\Pr(M_n \le n t/\ln 2) \to e^{-1/t}$ \citep{Galambos1972}. \Cref{tab:oq-gal} gives the percentile $e^{-n/(M_n\ln 2)}$ at several $n$. They wander over the whole range, as they should; the term $878{,}783{,}625$ at position $11{,}504{,}930$ is large (98th percentile at $n = 12$ million), but not extreme.
+\item \emph{Missing values.} The smallest positive integer that does not occur among the first 12 million terms is $\OqFirstMissing$. A value near $2{,}000$ is expected about $12\cdot 10^6/(k^2\ln 2) \approx 4$ times, so a first gap in this range is ordinary.
+\end{itemize}
+
+\begin{table}[t]
+\centering
+\caption[The largest term against Galambos's law]{The largest of $\pi$'s first $n$ terms, its position, and its percentile under Galambos's law $e^{-n/(M_n\ln 2)}$.}
+\label{tab:oq-gal}
+\begin{tabular}{rrrr}
+\toprule
+$n$ & largest term $M_n$ & position & percentile \\
+\midrule
+\OqGalTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{openq_gk}
+\caption[Twelve million terms against Gauss--Kuzmin]{$\pi$'s first \OqNT{} terms against the Gauss--Kuzmin law. Left: standardized differences between observed and expected counts for the values 1 to 30; under the law they behave roughly like standard normal variables. Right: the share of terms at least $m$, out to the largest term, against the law's $\log_2(1 + 1/m)$.}
+\label{fig:oq-gk}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{openq_khinchin}
+\caption[Khinchin, Lévy and the records of pi]{Left: the running deviation of the geometric mean of $\pi$'s terms from Khinchin's constant, and of $\ln q_n/n$ from Lévy's constant, in units of the standard deviation that random reals show after $n$ terms; the dotted lines are $\pm 2$. Right: the record terms of $\pi$ against the median and the 5\%--95\% band of Galambos's law for the largest term.}
+\label{fig:oq-khinchin}
+\end{figure}
+
+The much longer computations behind the record tables and MathWorld's plots of the running Khinchin and Lévy means \citep{MathWorldPiCF,OEIS_A033089} show the same picture, and we know of no published statistic of $\pi$'s terms that looks atypical.
+
+\paragraph{Status.} Open. All statistics we computed on 12 million terms are consistent with $\pi$ being a typical number for the Gauss measure. That is evidence, and the evidence is good; it is not a proof, and no method we know of could turn it into one.
+
+\section{Question 5: the spectrum of the correlation matrix}\label{sec:oq5}
+
+The matrix of Section~\ref{sec:corr}, for periods $2, \dots, m$, is
+\[
+  C_m = \left[\frac{\gcd(a,b) - 1}{\sqrt{(a-1)(b-1)}}\right]_{a, b = 2}^{m},
+\]
+an $(m-1) \times (m-1)$ matrix with ones on the diagonal (Section~\ref{sec:corr} used $m = 40$). Its structure is cleaner than its look.
+
+\begin{proposition}[structure]\label{prop:oq-gram}
+Let $V$ be the $(m-1)\times(m-1)$ matrix with $V_{ad} = 1$ if $d \mid a$ and $0$ otherwise ($a, d = 2, \dots, m$), $\Phi = \operatorname{diag}(\varphi(d))$ and $D = \operatorname{diag}(1/\sqrt{a-1})$. Then
+\begin{enumerate}[label=(\roman*)]
+\item $C_m = D V \Phi V^{\mathsf T} D$, so $C_m$ is positive definite;
+\item $\det C_m = \prod_{a=2}^{m}\varphi(a)/(a-1)$;
+\item $(\det C_m)^{1/(m-1)}$, the geometric mean of the eigenvalues, tends to $\exp\bigl(\sum_p \frac1p\ln(1 - \frac1p)\bigr) = \OqGeoLim\ldots$;
+\item for every prime $p$ with $m/2 < p \le m$, the unit vector $e_p$ is an eigenvector with eigenvalue 1.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) Gauss's identity $\sum_{d \mid g}\varphi(d) = g$ gives $\gcd(a,b) - 1 = \sum_{d \mid a,\ d\mid b,\ d \ge 2}\varphi(d) = (V\Phi V^{\mathsf T})_{ab}$. The matrix $V$ is lower triangular with ones on the diagonal (a divisor $d$ of $a$ is at most $a$), so it is invertible, and $\Phi$ has positive entries; hence $C_m$ is a Gram matrix of independent vectors. (ii) $\det V = 1$, so $\det C_m = \det(D)^2\prod\varphi(d)$. This is the analogue of Smith's determinant $\det[\gcd(i,j)] = \prod\varphi(k)$ \citep{Smith1875}. (iii) Since $\ln(\varphi(a)/a) = \sum_{p \mid a}\ln(1 - 1/p)$ and a prime $p$ divides a share $1/p$ of integers, the average of $\ln(\varphi(a)/a)$ over $a \le m$ tends to $\sum_p p^{-1}\ln(1 - 1/p)$; the extra factor $\prod a/(a-1) = m$ contributes $\ln m/(m-1) \to 0$. (iv) For such $p$, the only multiple of $p$ in range is $p$ itself, so $\gcd(p, b) = 1$ for $b \ne p$, and row $p$ of $C_m$ is $e_p$.
+\end{proof}
+
+For $m = 40$, $\det C_{40} = \OqDetForty$. Part (iv) gives at least $\pi(m) - \pi(m/2)$ eigenvalues equal to 1, and in every case we computed the multiplicity of the eigenvalue 1 is exactly that.
+
+\begin{theorem}[the bulk: mean 1 and variance 2]\label{thm:oq-moments}
+$\operatorname{tr} C_m = m - 1$, and $\operatorname{tr} C_m^2 = 3m + O(\ln^3 m)$. So the eigenvalues of $C_m$ have mean 1 and, in the limit, mean square 3 and variance 2.
+\end{theorem}
+
+\begin{proof}
+The trace is clear. For the square, let $T(m) = \sum_{a, b \le m}\gcd(a,b)^2/(ab)$. Writing $a = ga'$, $b = gb'$ with $\gcd(a',b') = 1$,
+\[
+  T(m) = \sum_{\gcd(a', b') = 1}\frac{1}{a'b'}\left\lfloor\frac{m}{\max(a',b')}\right\rfloor = m\sum_{\substack{\gcd(a',b')=1\\ \max(a',b') \le m}}\frac{1}{a'b'\max(a',b')} + O(\ln^2 m).
+\]
+Over all pairs, $\sum_{a,b \ge 1} 1/(ab\max(a,b)) = \zeta(3) + 2\sum_{a}H_{a-1}/a^2 = \zeta(3) + 2\zeta(3) = 3\zeta(3)$, by Euler's identity $\sum_{a} H_a/a^2 = 2\zeta(3)$ \citep{FlajoletSalvy1998}. The summand is homogeneous of degree $-3$, so restricting to coprime pairs divides by $\zeta(3)$ (Möbius inversion), giving $3$; the pairs with $\max(a', b') > m$ contribute $O(\ln m/m)$. So $T(m) = 3m + O(\ln^2 m)$. Finally, $\operatorname{tr}C_m^2 = \sum_{a,b=2}^m (\gcd(a,b)-1)^2/((a-1)(b-1))$ differs from $T(m)$ by $O(\ln^3 m)$: expanding, the difference is bounded by a constant times $\sum \gcd(a,b)/(ab) + \sum 1/(ab) + \sum\gcd(a,b)^2(a+b)/(a^2b^2)$ over $a, b \le m$, and these sums are $O(\ln^3 m)$, $O(\ln^2 m)$ and $O(\ln^2 m)$ by the same substitution.
+\end{proof}
+
+Numerically $\operatorname{tr}C_m^2/(m-1)$ is $2.95$ at $m = 6{,}000$ and $\OqTrBig$ at $m = 20{,}000$, closing in on 3 at the rate the error term allows. Note that $\zeta(3)$ appears and cancels; $6/\pi^2$ does not appear in these moments.
+
+\begin{theorem}[the top eigenvalue: a lower bound]\label{thm:oq-top}
+$\lambda_{\max}(C_m) \ge \dfrac{2}{\pi^2}\ln^2 m\,(1 + o(1)) = \dfrac13\cdot\dfrac{6}{\pi^2}\ln^2 m\,(1 + o(1))$.
+\end{theorem}
+
+\begin{proof}
+Take the test vector $x_a = 1/\sqrt{a - 1}$. Then $x^{\mathsf T}x = H_{m-1} = \ln m + O(1)$, and
+\[
+  x^{\mathsf T}C_m x = \sum_{a,b=2}^{m}\frac{\gcd(a,b)-1}{(a-1)(b-1)} \ge \sum_{a,b \le m}\frac{\gcd(a,b)}{ab} - H_m^2 - 2H_m.
+\]
+With $a = ga'$, $b = gb'$ as before, $\sum_{a,b\le m}\gcd(a,b)/(ab) = \sum_{g \le m} g^{-1} S(m/g)$, where, by Möbius inversion,
+\[
+  S(y) = \sum_{\substack{a', b' \le y\\ \gcd(a',b')=1}} \frac{1}{a'b'} = \sum_{d \le y}\frac{\mu(d)}{d^2}H_{\lfloor y/d\rfloor}^2 = \frac{6}{\pi^2}\ln^2 y + O(\ln y + 1).
+\] Then $\sum_{g \le m} g^{-1}\frac{6}{\pi^2}\ln^2(m/g) = \frac{6}{\pi^2}\cdot\frac{\ln^3 m}{3} + O(\ln^2 m)$. Dividing by $x^{\mathsf T}x$ gives the bound, since $\lambda_{\max} \ge x^{\mathsf T}C_mx/x^{\mathsf T}x$.
+\end{proof}
+
+\begin{table}[t]
+\centering
+\caption[The spectrum of the correlation matrix]{The spectrum of $C_m$ (dense diagonalization): $\operatorname{tr}C_m^2/(m-1)$ (limit 3), the geometric mean of the eigenvalues (limit \OqGeoLim), the smallest eigenvalue, the multiplicity of the eigenvalue 1 and the lower bound $\pi(m) - \pi(m/2)$, the largest eigenvalue, and the mean spacing ratio $\langle r\rangle$ in the central 80\% of the spectrum (Poisson $0.386$, GOE $0.531$).}
+\label{tab:oq-mat}
+\begin{tabular}{rrrrrrrr}
+\toprule
+$m$ & $\operatorname{tr}C^2/(m-1)$ & geo.\ mean & $\lambda_{\min}$ & mult.\ of 1 & bound & $\lambda_{\max}$ & $\langle r\rangle$ \\
+\midrule
+\OqMatTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption[The largest eigenvalue for large $m$]{The largest eigenvalue of $C_m$, computed by the Lanczos method with a matrix-vector product of cost $O(m\log m)$ from \cref{prop:oq-gram}(i); the Rayleigh quotient of the test vector of \cref{thm:oq-top}; and $(2/\pi^2)\ln^2 m$.}
+\label{tab:oq-top}
+\begin{tabular}{rrrr}
+\toprule
+$m$ & $\lambda_{\max}$ & test vector & $(2/\pi^2)\ln^2 m$ \\
+\midrule
+\OqTopTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{openq_matrix}
+\caption[The spectrum of the arithmetic correlation matrix]{Left: the distribution of the eigenvalues of $C_m$ for three sizes (the curves almost coincide), against the Marchenko--Pastur law with the same mean and variance (which puts half its mass at 0). Right: the largest eigenvalue up to $m = 10^6$, the proven lower bound from the test vector, and $(2/\pi^2)\ln^2 m$.}
+\label{fig:oq-matrix}
+\end{figure}
+
+\paragraph{Comparison with random-matrix benchmarks.} \Cref{tab:oq-mat,tab:oq-top} and \cref{fig:oq-matrix} give the numbers.
+\begin{itemize}
+\item \emph{Not Marchenko--Pastur.} A sample correlation matrix of independent noise follows the Marchenko--Pastur law \citep{MarchenkoPastur1967}, with bounded support. With the same mean 1 and variance 2, that law would put half of all eigenvalues at 0 and none above $(1 + \sqrt 2)^2 \approx 5.8$. Our matrix has no eigenvalue at 0 (the smallest is about $0.01$ at $m = 6{,}000$ and shrinks slowly), about two thirds of its eigenvalues below 1, the eigenvalue 1 exactly at the large primes, and a top eigenvalue that grows without bound. It is not a noisy correlation matrix, and the comparison mainly shows how much arithmetic structure it carries.
+\item \emph{Not a semicircle.} The GOE's semicircle is symmetric about its center; this spectrum is positive and strongly skewed.
+\item \emph{But GOE-like locally.} The mean ratio of consecutive spacings, $\langle r\rangle$, needs no unfolding and is about $0.386$ for uncorrelated (Poisson) levels and $0.531$ for the GOE \citep{Atas2013}. In the bulk of our spectrum it is $0.51$ to $0.54$ for $m \ge 1{,}000$ (\OqRsix{} at $m = 6{,}000$), close to the GOE value: neighboring eigenvalues repel each other as in a random symmetric matrix. We report this as an observation; we have no explanation for it.
+\item \emph{The top eigenvalue.} It grows faster than our lower bound: the ratio $\lambda_{\max}/\ln^2 m$ rises from about $0.39$ at $m = 1{,}000$ to $0.53$ at $m = 10^6$. The test vector's quotient tracks $(2/\pi^2)\ln^2 m$ closely, as the proof says, but the true top eigenvector puts extra weight on numbers with many small factors. GCD matrices of this kind are studied in the literature on GCD sums and on eigenvalues of GCD matrices \citep{LindqvistSeip1998,HongLoewy2004}; we did not find the asymptotic for this particular matrix, and we do not know it.
+\end{itemize}
+
+\paragraph{Status.} Partly answered. The matrix is a Gram matrix with an exact determinant; its spectrum has mean 1 and variance tending to 2 (proved); its geometric mean converges to an explicit constant (proved); its top eigenvalue is at least $(2/\pi^2)\ln^2 m$, which is where $6/\pi^2$ appears (proved), but grows faster in our data. It is far from the Marchenko--Pastur and semicircle laws, yet its level spacings look like those of the GOE (numerical evidence). Whether $6/\pi^2$ appears in the limiting bulk distribution is open; it does not appear in its first two moments.
+
+\section{Question 6: ranking the equal temperaments}\label{sec:oq6}
+
+\paragraph{The measures.} For each $n$ from 5 to 200 we measured how well the $n$-note equal temperament approximates two sets of just intervals: the 5-limit consonances $3/2$, $5/4$, $6/5$, and the 7-limit set that adds $7/4$, $7/5$, $7/6$ (their inversions have the same errors). We used four measures:
+\begin{description}
+\item[RMS:] the root-mean-square error in cents, each interval approximated by its nearest step;
+\item[relative:] the RMS error in units of one step, that is RMS $\times\, n/1200$. Large $n$ wins any absolute measure simply by having small steps; the relative error asks how good the temperament is for its size;
+\item[TOP:] Erlich's Tenney-optimal error \citep{Erlich2006}: map each prime $2, 3, 5$ (and 7) to its nearest number of steps, weight the error at the prime $p$ by $1/\log_2 p$, allow the octave to be stretched, and take the smallest possible maximum weighted error, in cents per octave;
+\item[TOP relative:] TOP in units of one step.
+\end{description}
+
+\begin{table}[t]
+\centering
+\caption[The best equal temperaments, 5 to 200 notes]{The top 20 equal temperaments between 5 and 200 notes for each measure, best first. Prime sizes are in bold.}
+\label{tab:oq-edo-top}
+\small
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+measure & best 20 \\
+\midrule
+\OqEdoTopTable
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{The ranking.} \Cref{tab:oq-edo-top} lists the top 20 for each measure. The familiar names are all there: 171, 118, 99, 72, 53, 41, 31, 19 and 12, and 140 and 130. Of the 16 sizes between 5 and 200 that Gene Ward Smith singled out by the peaks of the Riemann zeta function on the critical line (\OqZetaEdos; \citealp{OEIS_A117536}), \OqZetaInTop{} are in the top 20 of the 7-limit RMS list and most are high in the relative lists. The winner on almost every measure is 171.
+
+\paragraph{Do prime sizes stand out?} No. Of the \OqEdoCount{} sizes, \OqEdoPrimes{} are prime, so a random top 20 would hold about \OqEdoExpTop{} primes. \Cref{tab:oq-edo-test} compares the mean score of prime and composite sizes with a permutation test and a Mann--Whitney test, and counts primes in each top 20 against the hypergeometric law. No test comes near significance for the scale-free (relative) measures. On the absolute measures the primes look slightly worse on average, but that is because primes are more common among small $n$, whose steps are large; the difference is not significant either. \Cref{fig:oq-edo} shows the relative error for every size.
+
+\begin{table}[t]
+\centering
+\caption[Prime against composite sizes]{Prime against composite sizes $n = 5, \dots, 200$: mean score of each group (smaller is better), two-sided $p$-values of a permutation test (100{,}000 permutations) and of the Mann--Whitney test, the number of primes in the top 20, and the chance of at least that many in a random 20.}
+\label{tab:oq-edo-test}
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+measure & primes & composites & $p$ (perm.) & $p$ (M--W) & top-20 primes & $p$ \\
+\midrule
+\OqEdoTestTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{openq_edo}
+\caption[Prime sizes do not stand out]{The relative 7-limit error (in steps) of every equal temperament from 5 to 200 notes, prime sizes in green (left), and the distributions for prime and composite sizes (right).}
+\label{fig:oq-edo}
+\end{figure}
+
+There is a theorem behind this answer. The relative errors of $n$-EDO depend only on the fractional parts of $n\log_2 3$, $n\log_2 5$ and $n\log_2 7$. The numbers $1, \log_2 3, \log_2 5, \log_2 7$ are linearly independent over the rationals (a relation would give $2^a 3^b 5^c 7^d = 1$), and by Vinogradov's theorem on exponential sums over primes, the vectors $(p\log_2 3, p\log_2 5, p\log_2 7) \bmod 1$, $p$ prime, are equidistributed in the cube \citep{Vinogradov1954}, exactly as they are for all integers $n$ by Weyl's theorem. So in the long run, the relative errors of prime-sized temperaments have the same distribution as those of all temperaments. Prime sizes do have one real musical property, noted in Chapter~\ref{ch:music}: every step size generates the whole scale. That is a fact about the scale's structure, not about its tuning accuracy.
+
+\paragraph{Status.} Answered: no. Prime sizes do not stand out in tuning accuracy, by any of the eight measures, and an equidistribution theorem says they cannot stand out in the long run.
+
+\section{Status after this work}\label{sec:oq-status}
+
+\Cref{tab:oq-status} sums up where the six questions stand.
+
+\noindent\begin{minipage}{\textwidth}
+\centering
+\fixedtablecaption[Status of the six questions]{The six questions of Section~\ref{sec:open} after this chapter.}
+\label{tab:oq-status}
+\small
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+question & what we did & status \\
+\midrule
+1. Prime convergents of $\pi$ & 12 million certified terms; $q_n$ and $p_n$ tested to $n = \OqPiN$; \OqPiPn{} prime numerators, \OqPiQn{} denominators; counts inside the heuristic's 95\% range; $e$'s divisibility analyzed & open; data typical \\
+2. Fibonacci and Pell primes & known lists compared with the Grantham--Granville heuristic; divisibility facts proved & open \\
+3. The heuristic in a model & exact expectation proved, so the constant $2\ln 2$ holds in expectation; for almost every $x$ the count lies between $\ln N$ and $2\ln N$ (using deep cited theorems); finitely many $n$ with $p_n, q_n$ both prime (proved) & partly answered \\
+4. Gauss--Kuzmin for $\pi$ & calibrated tests on 12 million terms: values, tail, pairs, blocks, Khinchin, Lévy, records & open; data typical \\
+5. Spectrum of the correlation matrix & Gram structure, determinant, mean and variance, geometric mean, lower bound for the top eigenvalue proved; GOE-like spacings observed & partly answered \\
+6. Prime-sized temperaments & eight measures, top-20 lists, permutation tests & answered: no \\
+\bottomrule
+\end{tabularx}
+\end{minipage}
+\medskip
+
+\video{Open with the six questions on screen and a stamp for each: two ``still open'' (Fibonacci primes, Gauss--Kuzmin for $\pi$), one ``open, more data'' ($\pi$'s primes), two ``partly answered'' and one ``answered: no.'' Spend most of the time on Question 3: the cylinder picture, the two expansions of $7/2$, and the line ``in expectation, the constant is exactly $2\ln 2$.'' Then the matrix: mean 1, variance 2, and the eigenvalue 1 at the large primes. End with the temperaments: 171 wins, and primes are not special. About 12 minutes.}

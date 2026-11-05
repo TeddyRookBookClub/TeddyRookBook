@@ -1,0 +1,26 @@
+/* Circuit Bench (/science-lab/circuit-bench/): its own bits on top of the Science Lab look (/games/lab/lab.css). */
+.cb-left{min-width:0;display:flex;flex-direction:column;gap:.5rem}
+.lab-view.cb-view{height:auto;min-height:0}
+.lab-view.cb-view canvas{outline:none}
+.lab-view.cb-view canvas:focus-visible{box-shadow:inset 0 0 0 3px #ffd479}
+.lab-view.cb-view .lab-tools{top:auto;right:auto;left:.6rem;bottom:.55rem}
+.cb-warn{position:absolute;left:.6rem;right:.6rem;top:.6rem;background:rgba(120,20,20,.92);border:1px solid #ff8787;color:#fff;border-radius:10px;padding:.45rem .7rem;font:600 .85rem/1.4 system-ui,sans-serif;pointer-events:none}
+.cb-tray{display:grid;grid-template-columns:repeat(auto-fill,minmax(3.8rem,1fr));gap:.35rem}
+.cb-tb{display:flex;flex-direction:column;align-items:center;gap:.1rem;padding:.3rem .2rem .35rem;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 .72rem system-ui,sans-serif;cursor:grab;user-select:none;-webkit-user-select:none}
+.cb-tb:hover,.cb-tb:focus-visible{border-color:var(--acc)}
+.cb-tb canvas{width:56px;height:36px;background:#0b1b27;border-radius:6px}
+.cb-status{margin:0;font-size:.9rem;line-height:1.45;padding:.5rem .7rem;border-radius:10px;background:var(--paper);border:1px solid var(--line);min-height:2.6em}
+.cb-goal{font-size:.9rem;line-height:1.5;margin:0;padding:.55rem .7rem;border-radius:10px;background:var(--soft);border-left:4px solid var(--acc)}
+.cb-goal.done{border-left-color:#2f9e6f}
+.cb-goal.done::after{content:" ✓ Done";font-weight:700;color:#2f9e6f}
+.cb-note{margin:0;font-size:.85rem;color:var(--muted);line-height:1.45}
+.cb-note:empty{display:none}
+.cb-sel p{margin:0 0 .4rem;font-size:.88rem;line-height:1.45}
+.cb-sel .lab-row{margin-top:.45rem;align-items:flex-end}
+.cb-sel .lab-btn{min-height:40px}
+.cb-sel .lab-field select{min-height:40px}
+.cb-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.cb-keys{font-size:.82rem;color:var(--muted);line-height:1.5}
+.cb-keys kbd{font:600 .75rem ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 .3rem;background:var(--card);color:var(--ink)}
+#cb-missions li span{font-size:.78rem}
+@media (max-width:860px){.lab-view.cb-view{height:auto;min-height:0}}

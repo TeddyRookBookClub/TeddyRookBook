@@ -15,4 +15,11 @@ python3 c7b_primeconv_figs.py
 python3 c8_suite.py
 python3 c9_misc_figs.py
 python3 c10_connections.py
+python3 c11_openq_picf.py           # 12 million certified terms of pi (about 2 minutes)
+python3 c11_openq_pisearch.py 20000 # prime convergents of pi to n = 20,000 (about 45 minutes, resumable)
+python3 c11_openq_stats.py
+python3 c11_openq_model.py
+python3 c11_openq_matrix.py
+python3 c11_openq_edo.py
+python3 c11_openq_primes.py
 echo "all numbers and figures rebuilt"

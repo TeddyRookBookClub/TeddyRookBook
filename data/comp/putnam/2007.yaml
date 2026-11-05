@@ -123,7 +123,45 @@ problems:
   - id: A6
     topic: "Combinatorial geometry: bounded size of admissible triangulations"
     areas: [combinatorics, geometry]
-    status: coming
+    difficulty: 4
+    answer: 'One can take $M_n=n^2$'
+    hints:
+      - 'Use Euler''s formula. If every inside vertex meets at least six triangles, the corners along the boundary must carry few triangles: think of the boundary as turning through a full circle.'
+      - 'Strip off every triangle that touches the boundary. Show the new boundary is at least $6$ edges shorter, after first cutting off any triangle that has two boundary edges.'
+    solution: |
+      **Key idea:** Euler's formula works like a discrete Gauss–Bonnet theorem. An inside vertex with six triangles is "flat" and one with more is "saddle-shaped," so all the turning of a full circle has to happen at the boundary. That forces the boundary corners to hold few triangles. Then peeling off the outer layer shortens the boundary by at least $6$ edges, and induction on the boundary length bounds everything.
+
+      **Setting up.** Every side of $P$ is a side of exactly one triangle, so no vertex sits in the middle of a side, and the boundary of $P$ consists of exactly $n$ triangle edges. (Without this rule the statement would fail: a large patch of the equilateral triangle grid fills a hexagon.) Peeling can produce shapes that are pinched or fall into pieces, so we prove a more flexible statement.
+
+      Call a finite nonempty set $K$ of triangles a *patch* if any two of them meet in nothing, a common vertex, or a common side, and their union $|K|$ has no holes (the part of the plane outside $|K|$ is connected). A *boundary edge* is a side of exactly one triangle of $K$; let $L(K)$ be their number. A vertex on a boundary edge is a *boundary vertex*; the other vertices are *inside vertices*. The patch is *admissible* if every inside vertex lies in at least $6$ triangles.
+
+      **Claim.** An admissible patch has at most $L(K)^2$ triangles. The triangulation of $P$ is an admissible patch with $L=n$, so $M_n=n^2$ works.
+
+      **Step 1: the turning count.** Around a boundary vertex $v$, the triangles at $v$ fall into *fans*: maximal runs in which consecutive triangles share a side through $v$. Each fan is closed off by two boundary edges at $v$, and each end of a boundary edge closes exactly one fan. So the fans, which we call *corners*, number exactly $L$ in total. Let $t_\kappa\ge1$ be the number of triangles in corner $\kappa$. Then
+      $$\sum_{\text{corners }\kappa}(3-t_\kappa)\ \ge\ 6 .$$
+      *Proof.* Let $V,E,F$ count vertices, edges and triangles, and let $c\ge1$ be the number of connected pieces of $|K|$. The edges form a plane graph. Its bounded faces are exactly the triangles: a face that isn't the inside of a triangle lies outside $|K|$, and the outside is connected and unbounded. Euler's formula for a plane graph with $c$ components gives $V-E+(F+1)=1+c$. Counting sides, $3F=2E-L$, because inside edges belong to two triangles and boundary edges to one. Together these give
+      $$\sum_v(6-d_v)=6V-2E=6c+2L,$$
+      where $d_v$ is the number of edges at $v$. For an inside vertex, $6-d_v\le0$. A boundary vertex with corners $\kappa_1,\dots,\kappa_r$ has $d_v=\sum_i t_{\kappa_i}+r$, since a fan of $t$ triangles has $t+1$ edges and different fans share no edge. So $6-d_v=\sum_i(3-t_{\kappa_i})+6-4r$. Summing over the $B$ boundary vertices, where the $r$'s add up to $L$:
+      $$\sum_\kappa(3-t_\kappa)=6c+6(L-B)+\sum_{\text{inside }v}(d_v-6)\ \ge\ 6,$$
+      because $L\ge B$ (every boundary vertex has a corner) and every $d_v-6\ge0$. $\square$
+
+      **Step 2: cutting off an ear.** Suppose some triangle $\tau$ has two or three boundary edges. Remove it. What remains, if anything, is still a patch: $\tau$ touches the outside along a boundary edge, so removing it opens no hole. It is still admissible, because a vertex surrounded by a full ring of remaining triangles had the same ring before (a full ring can't be enlarged without overlap). The boundary gets shorter: two boundary edges become one, so $L$ drops by $1$; or, for an isolated triangle, by $3$.
+
+      **Step 3: peeling a layer.** Now suppose no triangle has two boundary edges. Let the *rim* $S$ be the triangles with at least one boundary vertex, let $R$ be the rest, and let $N_j$ count rim triangles with exactly $j$ boundary vertices. Each triangle at a boundary vertex lies in exactly one corner there, so by Step 1
+      $$N_1+2N_2+3N_3=\sum_\kappa t_\kappa\le 3L-6 .$$
+      Each boundary edge lies in a rim triangle with at least two boundary vertices, and by assumption no triangle holds two boundary edges. So $L\le N_2+N_3$. Therefore
+      $$|S|\le 3L-6\qquad\text{and}\qquad N_1\le 3L-6-2(N_2+N_3)\le L-6 .$$
+      If $R$ is empty, $K$ has at most $3L-6\le L^2$ triangles. Otherwise $R$ is an admissible patch with $L(R)\le N_1\le L-6$:
+      - *Boundary.* Take a boundary edge $e$ of $R$. Its ends aren't boundary vertices of $K$, so $e$ lies in two triangles of $K$, and the one outside $R$ is a rim triangle whose only boundary vertex is the corner opposite $e$. Different edges $e$ give different such triangles, so $L(R)\le N_1$.
+      - *Admissible.* A vertex surrounded by a full ring of $R$-triangles has that same full ring in $K$ and isn't a boundary vertex of $K$, so it lies in at least $6$ triangles.
+      - *No holes.* A rim triangle meets $|R|$ only in vertices or a side that avoid its boundary vertex $w$. From any point of it outside $|R|$, walk straight to $w$, then along a boundary edge at $w$, and step off that edge to the uncovered side. This path avoids $|R|$, so every point outside $|R|$ connects to the unbounded outside.
+
+      **Step 4: induction on $L$.** Assume the claim for patches with fewer boundary edges. In Step 2, $K$ has at most $1+(L-1)^2\le L^2$ triangles (or just $1$). In Step 3, $K$ has at most $(3L-6)+(L-6)^2=L^2-9L+30\le L^2$ triangles (in Step 3, $N_1\ge0$ forces $L\ge6$). Every admissible patch falls under Step 2 or Step 3, which proves the claim. So an admissible triangulation of an $n$-gon has at most $n^2$ triangles.
+
+      For comparison, peeling a hexagonal patch of the triangle grid with side $s$ (boundary $6s$, $6s^2$ triangles) shortens its boundary by exactly $6$ each time. That is the flat case, where $N_1=L-6$ holds with equality.
+    viz: putnam-2007-a6
+    checked: "script: on 300 random hole-free patches of the triangle grid (some pinched or in pieces), checked the corner identity, the ear and rim steps (|S| ≤ 3L − 6, new boundary ≤ L − 6, still hole-free) and the n² bound at every stage"
+    status: ready
 
   - id: B1
     topic: "Number theory: divisibility after one iteration of a polynomial"
@@ -234,4 +272,33 @@ problems:
   - id: B6
     topic: "Asymptotics: making n! cents from factorial coins"
     areas: [combinatorics, analysis]
-    status: coming
+    difficulty: 3
+    answer: 'Holds with $C=3$ for every $n\ge2$'
+    hints:
+      - 'Once you decide how many coins worth $2!,3!,\dots,n!$ cents to use (with total at most $n!$), the number of $1$-cent coins is forced.'
+      - 'Trap the count between two boxes of lattice points, then compare $\sum j\ln j$ with $\int x\ln x\,dx$.'
+    solution: |
+      **Key idea:** the pennies are never a real choice. So $f(n)$ counts lattice points in a simplex-like region, and two boxes, one inside it and one around it, already pin down $\ln f(n)$ to within $O(n\ln n)$.
+
+      **A remark on small $n$.** For $n=1$ both bounds equal $e^{-1/4}$ for every $C$, while $f(1)=1$. So the inequalities can only hold from $n=2$ on, and we prove them there with $C=3$.
+
+      **Counting.** Let $c_k$ be the number of coins worth $k!$ cents. A way to pay is a choice of $c_2,\dots,c_n\ge0$ with $\sum_{k=2}^n c_k\,k!\le n!$; the pennies make up the rest. So
+      $$f(n)=\#\Big\{(c_2,\dots,c_n)\in\mathbb Z_{\ge0}^{\,n-1}:\ \sum_{k=2}^n c_k\,k!\le n!\Big\}.$$
+      Let $P=\prod_{k=2}^{n}\frac{n!}{k!}$.
+
+      **Box around it.** Each $c_k\le n!/k!$, and an interval $[0,x]$ with $x\ge1$ holds at most $x+1\le2x$ integers. So $f(n)\le 2^{n-1}P$.
+
+      **Box inside it.** If $0\le c_k\le\frac{n!}{(n-1)\,k!}$ for each of the $n-1$ values of $k$, the total is at most $(n-1)\cdot\frac{n!}{n-1}=n!$. An interval $[0,x]$ holds $\lfloor x\rfloor+1\ge x$ integers, so $f(n)\ge P/(n-1)^{n-1}$.
+
+      **Size of $P$.** Since $\frac{n!}{k!}=(k+1)(k+2)\cdots n$, the factor $j$ appears once for each $k<j$ with $k\ge2$, that is $j-2$ times. So
+      $$P=\prod_{j=3}^{n}j^{\,j-2},\qquad \ln P=\sum_{j=1}^{n}j\ln j-2\ln n! .$$
+      The function $x\ln x$ is increasing on $[1,\infty)$, so comparing each term with the integral on the neighboring unit interval gives
+      $$\int_1^n x\ln x\,dx\ \le\ \sum_{j=1}^n j\ln j\ \le\ \int_1^n x\ln x\,dx+n\ln n,\qquad \int_1^n x\ln x\,dx=\frac{n^2}{2}\ln n-\frac{n^2}{4}+\frac14 .$$
+      Also $0\le\ln n!\le n\ln n$.
+
+      **Putting it together** (for $n\ge2$, where $\ln n\ge\ln2$ and $n\ln n\ge1$):
+      $$\ln f(n)\le (n-1)\ln2+\frac{n^2}{2}\ln n-\frac{n^2}{4}+\frac14+n\ln n\le\Big(\frac{n^2}{2}+3n\Big)\ln n-\frac{n^2}{4},$$
+      $$\ln f(n)\ge \frac{n^2}{2}\ln n-\frac{n^2}{4}+\frac14-2n\ln n-(n-1)\ln(n-1)\ge\Big(\frac{n^2}{2}-3n\Big)\ln n-\frac{n^2}{4}.$$
+      Exponentiating gives $n^{n^2/2-3n}e^{-n^2/4}\le f(n)\le n^{n^2/2+3n}e^{-n^2/4}$ for all $n\ge2$.
+    checked: "script: exact f(n) by coin-change counting for n ≤ 9 (f(9) = 49130011692806196131) lies between both boxes and between the final bounds with C = 3; n = 1 fails, as noted"
+    status: ready

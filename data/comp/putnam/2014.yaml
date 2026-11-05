@@ -94,13 +94,48 @@ problems:
     topic: "Polynomials: derivatives of geometric sums share no roots"
     areas: [algebra]
     difficulty: 4
-    status: coming
+    hints:
+      - 'Multiply $P_n$ by $(x-1)^2$ to get a short closed form, then substitute $z=1/x$.'
+      - 'A common root gives a $z$ with $z^N=1+N(z-1)$ for four integers $N\ge0$. Take squared absolute values and let $N$ be a real variable.'
+    solution: |
+      **Key idea:** a common root produces a number $z$ for which the exponential $|z|^{2t}$ agrees with a quadratic in $t$ at four points. An exponential minus a quadratic has a nonvanishing third derivative, so it has at most three zeros.
+
+      **Closed form.** $P_n$ is the derivative of $1+x+\dots+x^n=\dfrac{x^{n+1}-1}{x-1}$. Differentiating the quotient gives
+      $$(x-1)^2P_n(x)=nx^{n+1}-(n+1)x^n+1 .$$
+      Two polynomials are relatively prime exactly when they have no common complex root. Suppose $\alpha$ is a root of both $P_j$ and $P_k$, where $1\le j<k$. Then $\alpha\ne0$, since $P_n(0)=1$, and $\alpha\ne1$, since $P_n(1)=n(n+1)/2$. Put $z=1/\alpha$, so $z\ne0,1$. Dividing $n\alpha^{n+1}-(n+1)\alpha^n+1=0$ by $\alpha^{n+1}$ gives $n-(n+1)z+z^{n+1}=0$, that is,
+      $$z^N=1+N(z-1)\qquad\text{for }N=j+1\text{ and }N=k+1 .$$
+      The same equation holds trivially for $N=0$ and $N=1$.
+
+      **Four zeros.** Let $w=z-1\ne0$ and $\rho=|z|^2>0$, and define, for real $t$,
+      $$F(t)=\rho^t-1-2t\,\mathrm{Re}\,w-t^2|w|^2 .$$
+      For each of the four values $N=0,1,j+1,k+1$ we have $\rho^N=|z^N|^2=|1+Nw|^2=1+2N\,\mathrm{Re}\,w+N^2|w|^2$, so $F(N)=0$. These four values are distinct, because $j+1\ge2$.
+      - If $\rho\ne1$: by Rolle's theorem, $F'$ has at least three zeros, $F''$ at least two, and $F'''$ at least one. But $F'''(t)=(\ln\rho)^3\rho^t$ is never zero. Contradiction.
+      - If $\rho=1$: $F(t)=-t\,(2\,\mathrm{Re}\,w+t|w|^2)$. The zeros at $t=1$ and $t=j+1$ give $2\,\mathrm{Re}\,w+|w|^2=0$ and $2\,\mathrm{Re}\,w+(j+1)|w|^2=0$. Subtracting, $j|w|^2=0$, so $w=0$. Contradiction.
+
+      So $P_j$ and $P_k$ have no common root, and they are relatively prime.
+    checked: "sympy: the closed form for n < 30, and gcd(P_j, P_k) = 1 for all 1 ≤ j < k ≤ 40; numerically, roots of P_5 and P_9 satisfy z^N = 1 + N(z − 1)"
+    status: ready
 
   - id: A6
     topic: "Matrices: products with a zero diagonal entry exactly off-diagonal"
     areas: [linear-algebra, combinatorics]
     difficulty: 5
-    status: coming
+    answer: "$k=n^n$"
+    hints:
+      - 'For examples, let row $r$ of $M_i$ and column $r$ of $N_j$ be standard basis vectors.'
+      - 'For the bound: the product of the diagonal entries of $M_iN_j$ is a dot product of two vectors in a space of dimension $n^n$.'
+    solution: |
+      **Key idea:** "some diagonal entry is zero" means "the product of the diagonal entries is zero", and that product is a dot product of two Kronecker products in $\mathbb R^{n^n}$. A $k\times k$ diagonal matrix with nonzero diagonal has rank $k$, so $k\le n^n$.
+
+      The $r$-th diagonal entry of $MN$ is (row $r$ of $M$) $\cdot$ (column $r$ of $N$). Let $d(i,j)$ be the product of the diagonal entries of $M_iN_j$. The requirement is: $d(i,j)\ne0$ exactly when $i=j$.
+
+      **Examples with $k=n^n$.** Index the pairs by words $\omega=(\omega_1,\dots,\omega_n)$ with every $\omega_r\in\{1,\dots,n\}$; there are $n^n$ of them. Let row $r$ of $M_\omega$ be the standard basis row $e_{\omega_r}^{T}$, and let $N_\omega=M_\omega^{T}$. Then the $r$-th diagonal entry of $M_\omega N_\eta$ is $e_{\omega_r}\cdot e_{\eta_r}$, which is $1$ if $\omega_r=\eta_r$ and $0$ otherwise. So every diagonal entry is nonzero exactly when $\omega=\eta$.
+
+      **The bound.** The Kronecker product of vectors satisfies
+      $$(x_1\otimes\cdots\otimes x_n)\cdot(y_1\otimes\cdots\otimes y_n)=\prod_{r=1}^n x_r\cdot y_r .$$
+      Let $u_i\in\mathbb R^{n^n}$ be the Kronecker product of the rows of $M_i$, and $v_j$ that of the columns of $N_j$. Then $u_i\cdot v_j=d(i,j)$. Let $U$ and $V$ be the $n^n\times k$ matrices with columns $u_i$ and $v_j$. The $k\times k$ matrix $U^TV$ has entries $d(i,j)$, so it is diagonal with nonzero diagonal entries, and its rank is $k$. But its rank is at most the number of rows of $U$, which is $n^n$. So $k\le n^n$, and the largest $k$ is $n^n$.
+    checked: "script: the 0–1 examples verified for n ≤ 3 (k = 1, 4, 27); the Kronecker-product identity checked on random matrices"
+    status: ready
 
   - id: B1
     topic: "Number bases: digits allowed to reach ten"

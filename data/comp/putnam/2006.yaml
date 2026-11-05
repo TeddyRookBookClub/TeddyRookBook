@@ -106,7 +106,39 @@ problems:
   - id: A6
     topic: "Geometric probability: four random points in a disk"
     areas: [probability, geometry]
-    status: coming
+    difficulty: 4
+    answer: '$1-\dfrac{35}{12\pi^2}\approx 0.7045$'
+    hints:
+      - 'The four points fail only when one of them lands inside the triangle made by the other three. So everything depends on the average area of a random triangle in the disk.'
+      - 'For that average, describe two of the points by the line through them (its angle and its distance from the center) and their positions along that line.'
+    solution: |
+      **Key idea:** a bad quadrilateral happens exactly when one point falls inside the triangle of the other three. So the answer comes from the average area of a random triangle in the disk, and that average is a calculus exercise once we organize it around the line through two of the points.
+
+      **Reducing to an average area.** Scale the disk to radius $1$, so its area is $\pi$. With probability $1$ no three of the points are collinear. Then the points are vertices of a convex quadrilateral unless one of them lies inside the triangle of the other three. Two of these events can't happen together: if $D$ is inside triangle $ABC$, then any triangle made of $D$ and two of $A,B,C$ lies inside $ABC$ and can't contain the third of them. Once $A,B,C$ are placed, $D$ lands in their triangle with probability $\operatorname{area}(ABC)/\pi$. By symmetry among the four points,
+      $$P(\text{not convex})=\frac{4\,\mathcal A}{\pi},$$
+      where $\mathcal A$ is the expected area of a triangle whose three vertices are independent uniform points of the disk.
+
+      **Coordinates built on a line.** Describe the pair $A,B$ by the line through them. Let $(\cos\theta,\sin\theta)$ be its unit normal with $0\le\theta<\pi$, let $p\in(-1,1)$ be its signed distance from the center, and let $t_1,t_2$ be the positions of $A,B$ along it:
+      $$A=p(\cos\theta,\sin\theta)+t_1(-\sin\theta,\cos\theta),\qquad B=p(\cos\theta,\sin\theta)+t_2(-\sin\theta,\cos\theta).$$
+      Away from a set of measure zero this is a one-to-one change of variables from $(p,\theta,t_1,t_2)$ to the four coordinates of $A$ and $B$. Expanding the $4\times4$ Jacobian gives absolute value $|t_1-t_2|$, so $dA\,dB=|t_1-t_2|\,dt_1\,dt_2\,dp\,d\theta$. The line meets the disk in a chord of half-length $h=\sqrt{1-p^2}$, so $t_1,t_2\in[-h,h]$.
+
+      The triangle's area is $\tfrac12|AB|$ times the distance from $C$ to the line, and $|AB|=|t_1-t_2|$. The point $C$ is independent of $A,B$. Rotating so the line is $x=p$, its average distance from the line is
+      $$g(p)=\frac1\pi\int_{-1}^{1}|x-p|\,2\sqrt{1-x^2}\,dx .$$
+      Putting this together (the density of the pair is $1/\pi^2$):
+      $$\mathcal A=\frac1{\pi^2}\int_0^\pi\!\!\int_{-1}^{1}\iint_{[-h,h]^2}\tfrac12(t_1-t_2)^2\,g(p)\,dt_1\,dt_2\,dp\,d\theta .$$
+      Two independent uniform points on an interval of length $\ell$ have $E[(t_1-t_2)^2]=\ell^2/6$, so the inner double integral is $(2h)^2\cdot\frac{(2h)^2}{6}=\frac{8}{3}(1-p^2)^2$. The $\theta$ integral gives a factor $\pi$, and
+      $$\mathcal A=\frac{4}{3\pi}\int_{-1}^{1}(1-p^2)^2g(p)\,dp=\frac{4}{3\pi^2}\int_{-1}^{1}2\sqrt{1-x^2}\,J(x)\,dx,\qquad J(x)=\int_{-1}^{1}(1-p^2)^2|x-p|\,dp .$$
+
+      **The kernel $J$.** Split at $p=x$: $J(x)=\int_{-1}^{x}(x-p)q(p)\,dp+\int_{x}^{1}(p-x)q(p)\,dp$ with $q(p)=(1-p^2)^2$. Differentiating twice gives $J''(x)=2q(x)=2-4x^2+2x^4$. Also $J$ is even, and $J(0)=2\int_0^1p(1-p^2)^2\,dp=\frac13$. Integrating twice,
+      $$J(x)=\frac13+x^2-\frac{x^4}{3}+\frac{x^6}{15}\qquad(-1\le x\le1).$$
+
+      **The last integral.** Using $\int_{-1}^{1}x^{2m}\sqrt{1-x^2}\,dx=\frac\pi2,\ \frac\pi8,\ \frac\pi{16},\ \frac{5\pi}{128}$ for $m=0,1,2,3$:
+      $$\int_{-1}^{1}2\sqrt{1-x^2}\,J(x)\,dx=2\pi\Big(\frac16+\frac18-\frac1{48}+\frac1{384}\Big)=2\pi\cdot\frac{105}{384}=\frac{35\pi}{64}.$$
+      So $\mathcal A=\frac{4}{3\pi^2}\cdot\frac{35\pi}{64}=\frac{35}{48\pi}$, about $0.2321$ (the disk has area $\pi$, so a random triangle covers about $7.4\%$ of it). Finally
+      $$P(\text{convex})=1-\frac4\pi\cdot\frac{35}{48\pi}=1-\frac{35}{12\pi^2}\approx0.7045 .$$
+    viz: putnam-2006-a6
+    checked: "sympy: Jacobian |t1 − t2|, J(x) and the integral 35π/64; Monte Carlo with 2×10^7 samples gives 0.70454 ± 0.0001 against 0.70448"
+    status: ready
 
   - id: B1
     topic: "Algebra: a cubic curve splitting into a line and point"

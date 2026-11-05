@@ -247,4 +247,33 @@ problems:
     topic: "Combinatorial game: placing and splitting stones in a row"
     areas: [combinatorics]
     difficulty: 5
-    status: coming
+    answer: "Only one: a stone in the middle space, number $(n+1)/2$"
+    hints:
+      - 'Number the spaces $1,\dots,n$ and add up the numbers of the occupied spaces, modulo $n+1$. Can any move leave this sum unchanged?'
+      - 'The boards with at most one empty space form a trap. Once the game enters them, exactly $n$ more moves are played.'
+    solution: |
+      **Key idea:** number the spaces $1,\dots,n$, put $m=n+1$, and let $\sigma$ be the sum of the numbers of the occupied spaces, taken mod $m$. Every move changes $\sigma$, and a player can always bring it back to $m/2$. The player who keeps $\sigma\equiv m/2$ forces the opponent to be the one who nearly fills the board, and that player loses. The middle space has number $m/2$, so Alice must start there.
+
+      If $n=1$, Alice's only move is to place the stone, and Bob cannot move (removing it would bring back the empty board). So the answer holds; from now on $n\ge3$. Let $k$ be the number of stones.
+
+      **1. The end zone.** Call a board *nearly full* if it has at most one empty space: the full board $F$, and the boards $H_i$ where only space $i$ is empty. From $F$, a split at $i$ only empties $i$ (no empty space exists on either side), giving $H_i$. From $H_i$, placing at $i$ gives $F$; a split at $s\ne i$ fills $i$ (the one empty space, on one side of $s$) and empties $s$, giving $H_s$. So each of these $n+1$ boards can move to each other one, and no move leaves them. The game starts outside this set, so when a player first enters it, none of its boards has occurred. From then on, a move to an unused nearly full board is always available until all $n+1$ are used. So exactly $n$ more moves are played, and since $n$ is odd, the opponent of the player who entered makes the last one. **Entering the end zone loses.**
+
+      **2. Open boards never repeat.** Call a board *open* if it has at least two empty spaces. Let $\ell$ be the length of the block of stones touching the left end ($0$ if space $1$ is empty) and $r$ the same at the right end. Consider a move from an open board to an open board:
+      - a placement, or a split with empty spaces on both sides, raises $k$ by one;
+      - a split with an empty space on only one side keeps $k$. Say the block touches the left end, so the split is at some $s\le\ell$: it empties $s$ and fills $\ell+1$. Now $\ell$ drops to $s-1$. And $r$ stays the same, since $\ell+1$ was not the only empty space;
+      - a split with no empty space on either side needs a full board, which is not open.
+
+      So the pair $(k,\,-\ell-r)$ strictly increases (comparing $k$ first) along any run of open boards. Hence open boards never repeat, open play cannot go on forever, and a player at an open board always has a legal move: a placement reaches either a new open board or the unused end zone.
+
+      **3. Every move changes $\sigma$.** A placement at $t$ adds $t\in\{1,\dots,n\}$, which is not $0$ mod $m$. For a split at $s$, let $a$ be the nearest empty space left of $s$, or $a=0$ if there is none, and $b$ the nearest empty space right of $s$, or $b=m$ if there is none. The split removes $s$ and adds $a$ and $b$; a missing side adds nothing, which matches $a=0$ or $b=m\equiv0$. So $\sigma$ changes by $a+b-s$. Since $0\le a\le s-1$ and $s+1\le b\le m$, this lies between $1$ and $m-1$, so it is never $0$ mod $m$.
+
+      **4. Getting back to $\sigma\equiv m/2$.** Let $c=m/2$, and call an open board *good* if $\sigma\equiv c$. From an open board that is not good, some move reaches a good open board:
+      - If $k\le n-3$: let $d\in\{1,\dots,n\}$ with $d\equiv c-\sigma$. If space $d$ is empty, place a stone there. If not, $d$ lies in a block of stones filling $a+1,\dots,b-1$ (with $a,b$ as in Step 3). Split at $s=a+b-d$, which lies in the same block; $\sigma$ changes by $a+b-s=d$. Either way $k$ grows by at most one, so the board stays open.
+      - If $k=n-2$: let the empty spaces be $e<f$. Since $1+2+\dots+n=c(m-1)\equiv c$, we get $\sigma\equiv c-e-f$, so the board is good exactly when $e+f=m$. If $e+f<m$, split at $s=m-e$; it satisfies $f<s\le n$, so it is a stone with no empty space to its right, and the split moves the empty space $f$ to $s$. If $e+f>m$, split at $s=m-f$, which satisfies $1\le s<e$, and the split moves $e$ to $s$. Either way $k$ stays $n-2$ and the two empty spaces now add up to $m$.
+
+      **5. Who wins.** Suppose a player moves to a good open board. The opponent must either enter the end zone, and lose, or move to an open board that is not good (Step 3). The player then returns to a good open board (Step 4); the move is legal because open boards never repeat (Step 2). Open play is finite, so in the end the opponent has to enter the end zone, and loses.
+
+      Alice's first move places a stone at some space $t$. The board is open (as $n\ge3$) and $\sigma=t$. If $t=c=(n+1)/2$, the board is good and Alice wins. Otherwise it is not good, and Bob wins by moving to a good board and following the same plan. So placing a stone in the middle space is Alice's only winning first move.
+    viz: putnam-2013-b6
+    checked: "script: full game search with the no-repeat rule for n ≤ 5; for odd n ≤ 13 the winning boards before the end zone are exactly those with σ ≡ (n+1)/2; Steps 1–4 checked board by board for odd n ≤ 11"
+    status: ready

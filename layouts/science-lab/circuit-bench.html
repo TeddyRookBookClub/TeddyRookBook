@@ -1,0 +1,144 @@
+{{ define "main" }}
+{{- /* /science-lab/circuit-bench/: Circuit Bench (content/science-lab/circuit-bench.md). Scripts, all written for this site:
+   /js/rule-drag.js (dragging that only lands on allowed spots), static/science-lab/circuit-bench/model.js (parts, the
+   nodal-analysis solver and the ten challenges) and bench.js (screen and controls). Tests: scripts/circuit-bench/
+   test-model.js (solver values) and verify-challenges.js (a recorded solution for every challenge, run in a browser).
+   Element ids are bench.js's contract. */ -}}
+{{ partial "lab-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/circuit-bench/bench.css" | relURL }}?v={{ (os.Stat "static/science-lab/circuit-bench/bench.css").ModTime.Unix }}">
+<div class="lab" id="cb-lab">
+  <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Circuit Bench</nav>
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Science Lab · Physics</p>
+    <h1>Circuit Bench</h1>
+    <p>A workbench where every part has brass terminals, and a wire can only end on a terminal. While you drag a wire, the bench shows what it would do before you let go: green terminals finish a circuit, red ones would short the battery. Ten challenges take you from one bulb to Morse’s telegraph and the staircase switch.</p>
+    <span class="lab-mark" aria-hidden="true">🔋</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="cb-left">
+      <div class="lab-view cb-view" id="cb-view">
+        <canvas id="cb-cv" tabindex="0" role="application" aria-roledescription="circuit bench" aria-describedby="cb-keys" aria-label="Circuit bench: parts on a grid of spots, with brass terminals and wires between them."></canvas>
+        <div class="lab-tools">
+          <button type="button" id="cb-sound" aria-pressed="true" aria-label="Sound on" title="Sound on">🔊</button>
+          <button type="button" id="cb-clear" aria-label="Start again" title="Start again">↺</button>
+        </div>
+        <div class="cb-warn" id="cb-warn" role="alert" hidden></div>
+      </div>
+      <div class="cb-tray" id="cb-tray" role="group" aria-label="Parts: tap one to add it, or drag it onto the bench"></div>
+      <p class="cb-status" id="cb-status"></p>
+      <p class="cb-sr" id="cb-live" aria-live="polite"></p>
+    </div>
+
+    <div class="lab-panel" id="cb-panel">
+      <h2>Challenge</h2>
+      <p class="cb-goal" id="cb-goal"></p>
+      <p class="cb-note" id="cb-note" aria-live="polite"></p>
+      <h2>Selected</h2>
+      <div class="cb-sel" id="cb-sel"></div>
+      <label class="lab-chk"><input type="checkbox" id="cb-nums"> Volts and amps on every part</label>
+      <div>
+        <h2>Challenges</h2>
+        <p class="lab-progress"></p>
+        <ol class="lab-missions" id="cb-missions"></ol>
+        <div class="lab-row" style="margin-top:.5rem"><button type="button" class="lab-btn" id="cb-free">Free bench (empty)</button></div>
+      </div>
+    </div>
+  </div>
+  <p class="cb-keys" id="cb-keys"><b>How to build.</b> Drag from one brass terminal to another to add a wire. Drag a part to move it to a free spot, or onto the bin to remove it. Tap a switch to flip it, and press the telegraph key’s lever to close it. Tap a wire to select it, then drag either end. <b>Keyboard:</b> click the bench or tab to it, then <kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd><kbd>↓</kbd> move between parts, terminals and wires; <kbd>Enter</kbd> picks up a part (or starts a wire from a terminal) and drops it; the arrow keys move what you hold between the spots it is allowed; <kbd>Esc</kbd> puts it back; <kbd>Space</kbd> flips a switch or holds the key down; <kbd>+</kbd> <kbd>−</kbd> change cells or a resistor; <kbd>F</kbd> turns an LED around; <kbd>Delete</kbd> removes; <kbd>N</kbd> shows the numbers. In the tray, <kbd>Enter</kbd> adds a part.</p>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p>The bench is a grid of spots. Each part sits in one spot, with its terminals at the bottom corners. Wires hang between terminals. A wire carrying current glows gold, and the gold dots move the way <b>conventional current</b> flows: out of the battery’s + end, around the loop and back into its − end.</p>
+      <p>When no current flows, the bench points to the gap in red: an open switch, a terminal with nothing on it, or an LED that is the wrong way round. A short circuit, where the battery’s two ends are joined by wire alone, turns the wire red and shows a warning.</p>
+      <p>The rule for dragging: a part may only land on a free spot or the bin, and a wire end may only land on a terminal. Dragging only ever moves between allowed states. While you drag a wire, the bench solves the circuit for every terminal you could reach and colors it: green completes a circuit, red would make a short circuit. The idea comes from a research paper, “Declarative Dragging” by Joshua Horowitz, Andrew Blinn and Jeffrey Heer (2026); the bench’s code is our own.</p>
+      <p>For a free-form breadboard with more parts, a 9 V battery and electrons you can watch, try the <a href="{{ "science-lab/circuits/" | relURL }}">Circuit Builder</a>.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="science">
+    <h2>The science</h2>
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">A complete loop</h3>
+        <p>A battery pushes charge out of one end, and the charge must be able to get all the way around and back into the other end. A gap anywhere in the loop stops the current everywhere in it. A switch is a gap you can open and close.</p>
+        <h3 class="lab-h">Series and parallel</h3>
+        <p>In <b>series</b> the parts are in one line, so the same current goes through each one and their resistances add. In <b>parallel</b> each part has its own path across the battery, so each gets the whole voltage and the currents add.</p>
+        <div class="lab-formula">Series: R = R₁ + R₂ &nbsp;&nbsp;&nbsp; Parallel: 1/R = 1/R₁ + 1/R₂ &nbsp;&nbsp;&nbsp; Ohm’s law: V = I · R</div>
+        <div class="lab-tw"><table class="lab-table">
+          <thead><tr><th>Two cells (3 V) and…</th><th>Battery current</th><th>Each bulb</th></tr></thead>
+          <tbody>
+            <tr><td>one bulb</td><td>3 ÷ 10.4 = 0.288 A</td><td>0.83 W, 92%</td></tr>
+            <tr><td>two bulbs in series</td><td>3 ÷ 20.4 = 0.147 A</td><td>0.22 W, 24%</td></tr>
+            <tr><td>two bulbs in parallel</td><td>3 ÷ 5.4 = 0.556 A</td><td>0.77 W, 86%</td></tr>
+          </tbody>
+        </table></div>
+        <p class="lab-small">Each bulb is 10 Ω, made for 3 V and 0.3 A (0.9 W). Each cell is 1.5 V with 0.2 Ω inside it.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">An LED and its resistor</h3>
+        <p>An LED (light-emitting diode) lets current through only one way: in at its + leg, the longer one, and out at its − leg. A red LED needs about 2 V before it lights, and above that its current climbs very fast. So it always gets a resistor in series to set the current. Small LEDs usually run at about 20 mA:</p>
+        <div class="lab-formula">R = (V<sub>battery</sub> − V<sub>LED</sub>) ÷ I = (4.5 V − 2 V) ÷ 0.020 A = 125 Ω</div>
+        <p>Resistors come in standard sizes, so you pick a near one: 120 Ω gives 20.7 mA on the bench, and 150 Ω gives 16.9 mA. With no resistor, three cells would push about 460 mA through it, and a real LED would burn out.</p>
+        <h3 class="lab-h">Short circuits</h3>
+        <p>Join a battery’s two ends with a bare wire and the only thing holding the current back is the battery’s own small resistance: 1.5 V ÷ 0.2 Ω = 7.5 A for one cell. All that energy turns into heat in the wire and the battery. A real wire gets hot within seconds and the battery runs down fast, so never connect a real battery’s ends with just a wire.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Electromagnets and the telegraph</h3>
+        <p>Current in a coil of wire makes a magnetic field, and an iron core inside makes it much stronger. Its strength grows with the current and with the number of turns, so engineers count <b>ampere-turns</b>: 100 turns carrying 0.5 A give 50 ampere-turns. On the bench the coil has 100 turns and 3 Ω, so one cell gives about 47 ampere-turns and three cells about 125.</p>
+        <p>Samuel Morse’s telegraph is a battery, a key (a springy switch), a long wire and a <b>sounder</b>: an electromagnet that pulls down an iron bar with a click while the key is held. In 1844 Morse sent “What hath God wrought” from Washington to Baltimore this way. In Morse code a dash lasts three times as long as a dot. SOS is · · · — — — · · ·. Read more in <a href="{{ "inventors/from-scratch/telegraph/" | relURL }}">A Telegraph, Like Morse’s</a> and <a href="{{ "inventors/from-scratch/electromagnet/" | relURL }}">A Nail Electromagnet</a>.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">The staircase switch</h3>
+        <p>A two-way switch joins its middle terminal to one of two contacts. Put one at the top of the stairs and one at the bottom, and run two wires between their contacts. The light is on when both switches pick the same wire, and off when they pick different ones, so flipping either switch always changes it.</p>
+        <h3 class="lab-h">Motors turn both ways</h3>
+        <p>A small motor spins because the current in its coil feels a push from a magnet. Reverse the current and the push reverses, so the motor turns the other way. Swapping the two wires on a battery-powered motor does exactly that.</p>
+        <h3 class="lab-h">Finding a fault with a voltmeter</h3>
+        <p>When a series loop is broken, no current flows, so a good bulb has no voltage across it (V = I · R = 0). The whole battery voltage appears across the gap. Touch the voltmeter’s leads across each part in turn: the one that reads the full battery voltage is the broken one.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>How the bench works it out</h2>
+    <div class="lab-cols">
+      <p>After every change the bench solves the circuit by <b>nodal analysis</b>. Every terminal is a node. For each node, the currents flowing in must add up to zero (Kirchhoff’s junction rule), and each connection between two nodes passes a current set by Ohm’s law. That gives one equation per node, solved together by Gaussian elimination.</p>
+      <p>The parts: a cell is 1.5 V with 0.2 Ω inside it (a fresh AA alkaline cell is about 0.15 to 0.3 Ω); a bulb is a steady 10 Ω; the coil 3 Ω; the motor 8 Ω; the buzzer 150 Ω; a wire, a closed switch and the ammeter 0.1 mΩ; the voltmeter 10 MΩ, like a typical digital meter. The LED is a 1.9 V step and 5 Ω when it conducts, about 2.0 V at 20 mA, and passes nothing the other way; the bench tries each LED on and off until the answer agrees with itself.</p>
+      <p><b>Simplified on purpose:</b> real bulb filaments have much less resistance when cold; a real motor draws less current once it is spinning; batteries here never run down; and nothing heats up or wears out. The broken bulb in the last challenge is the only part that can fail.</p>
+    </div>
+    <h3 class="lab-h">How it was checked</h3>
+    <div class="lab-tw"><table class="lab-table">
+      <thead><tr><th>Test</th><th>Worked by hand</th><th>Bench</th></tr></thead>
+      <tbody>
+        <tr><td>One bulb on two cells</td><td>3 ÷ 10.4 = 0.28846 A</td><td>0.28846 A</td></tr>
+        <tr><td>Two bulbs in series / in parallel</td><td>0.147059 A / 0.555556 A</td><td>same, to 4 digits or better</td></tr>
+        <tr><td>100 Ω + (220 Ω ∥ 470 Ω) on two holders, 9 V</td><td>35.849 mA, split 470 : 220</td><td>35.849 mA, split 2.13636</td></tr>
+        <tr><td>Red LED + 120 Ω on 4.5 V</td><td>(4.5 − 1.9) ÷ 125.6 = 20.70 mA</td><td>20.70 mA</td></tr>
+        <tr><td>LED turned around</td><td>no current; reported as the gap</td><td>yes</td></tr>
+        <tr><td>Wire across one cell</td><td>1.5 ÷ 0.2 = 7.5 A</td><td>7.5 A, flagged as a short</td></tr>
+        <tr><td>Voltmeter ÷ ammeter on a bulb</td><td>10 Ω</td><td>9.99999 Ω</td></tr>
+        <tr><td>Coil on 1 cell / 3 cells</td><td>46.9 / 125 ampere-turns</td><td>same</td></tr>
+        <tr><td>Two two-way switches</td><td>on when they match</td><td>all four settings right</td></tr>
+        <tr><td>Every challenge</td><td>a recorded solution</td><td>all ten solved in a test run</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>OpenStax, <i>University Physics Volume 2</i>: <a href="https://openstax.org/books/university-physics-volume-2/pages/9-4-ohms-law">9.4 Ohm’s Law</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/10-1-electromotive-force">10.1 Electromotive Force</a> (internal resistance), <a href="https://openstax.org/books/university-physics-volume-2/pages/10-2-resistors-in-series-and-parallel">10.2 Resistors in Series and Parallel</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/10-3-kirchhoffs-rules">10.3 Kirchhoff’s Rules</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/10-4-electrical-measuring-instruments">10.4 Electrical Measuring Instruments</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/12-6-solenoids-and-toroids">12.6 Solenoids and Toroids</a> (the field of a coil grows with turns and current).</li>
+      <li>Energizer E91 AA alkaline data sheet, internal resistance 150 to 300 mΩ when fresh, as hosted for a <a href="https://courses.egr.uh.edu/ECE/ECE2100/Archive/Spring%202024%20Honors/E91.pdf">University of Houston electrical engineering course</a>.</li>
+      <li>The University of Sydney, School of Physics, <a href="https://www.physics.usyd.edu.au/super/physics_tut/activities/Quantum_Physics/Light_Emitting_Diodes.pdf">Light Emitting Diodes</a> (red LEDs turn on near 2 V).</li>
+      <li>Library of Congress, <a href="https://www.loc.gov/item/mcc.019/">First telegraph message, 24 May 1844</a>, and <a href="https://www.loc.gov/collections/samuel-morse-papers/articles-and-essays/invention-of-the-telegraph/">Invention of the Telegraph</a>.</li>
+      <li>J. Horowitz, A. Blinn and J. Heer, <a href="https://declarative-dragging.github.io/">“Declarative Dragging”</a>, UIST 2026: the idea of dragging only between allowed states.</li>
+    </ul>
+  </section>
+
+  <nav class="lab-pn" aria-label="More"><a href="{{ "science-lab/" | relURL }}">← Science Lab</a><a href="{{ "science-lab/circuits/" | relURL }}">Circuit Builder →</a></nav>
+</div>
+<script src="{{ "js/rule-drag.js" | relURL }}?v={{ (os.Stat "static/js/rule-drag.js").ModTime.Unix }}"></script>
+<script src="{{ "science-lab/circuit-bench/model.js" | relURL }}?v={{ (os.Stat "static/science-lab/circuit-bench/model.js").ModTime.Unix }}"></script>
+<script src="{{ "science-lab/circuit-bench/bench.js" | relURL }}?v={{ (os.Stat "static/science-lab/circuit-bench/bench.js").ModTime.Unix }}"></script>
+{{ end }}

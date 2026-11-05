@@ -25,7 +25,9 @@ editions:
 notes: "2 copies"
 ---
 # Pride and Prejudice
+
 **Jane Austen • 1813 • 432 pages**
+
 A timeless romance of manners, wit, and the perils of first impressions. Elizabeth Bennet and Mr. Darcy navigate love, class, and personal growth in Regency England.
 ## Key Quotes
 > "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife."

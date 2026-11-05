@@ -1,0 +1,98 @@
+{{ define "main" }}
+{{- /* /science-lab/equation-balancer/: Equation Balancer (content/science-lab/equation-balancer.md). Scripts, all written for
+   this site: /js/rule-drag.js (dragging that only lands on allowed spots), static/science-lab/equation-balancer/model.js
+   (substances, molecule drawings, the 27 reactions, tallies and an exact solver) and balancer.js (screen and controls).
+   Tests: scripts/equation-balancer/test-model.js and verify.js. Element ids are balancer.js's contract. */ -}}
+{{ partial "lab-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/equation-balancer/balancer.css" | relURL }}?v={{ (os.Stat "static/science-lab/equation-balancer/balancer.css").ModTime.Unix }}">
+<div class="lab" id="eb-lab">
+  <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Equation Balancer</nav>
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Science Lab · Chemistry</p>
+    <h1>Equation Balancer</h1>
+    <p>In a chemical reaction no atom is made or destroyed; the atoms only change partners. Drag whole molecules onto each side until every element has the same count on the left and the right. You can only add or take away whole molecules, never change one, just as a real equation only lets you change the numbers in front.</p>
+    <span class="lab-mark" aria-hidden="true">⚖️</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="eb-left">
+      <div class="eb-head"><h2 id="eb-title">Equation</h2><span class="eb-level" id="eb-level"></span></div>
+      <p class="eb-names" id="eb-names"></p>
+      <div class="eb-eq" id="eb-eq" role="group" aria-label="The equation: the number in front of each substance, with buttons for one fewer and one more"></div>
+      <div class="lab-view eb-view" id="eb-view">
+        <canvas id="eb-cv" tabindex="0" role="application" aria-roledescription="equation balancer" aria-describedby="eb-keys" aria-label="Two boxes, reactants and products, each holding molecules drawn as colored balls, with a shelf of each substance under its box."></canvas>
+      </div>
+      <div class="eb-keyrow" id="eb-key" aria-hidden="true"></div>
+      <p class="eb-sr" id="eb-live" aria-live="polite"></p>
+    </div>
+
+    <div class="lab-panel" id="eb-panel">
+      <h2 id="eb-pick-h">Equation</h2>
+      <div class="eb-nav">
+        <button type="button" class="lab-btn" id="eb-prev" aria-label="Previous equation">‹</button>
+        <select id="eb-pick" aria-labelledby="eb-pick-h"></select>
+        <button type="button" class="lab-btn" id="eb-next" aria-label="Next equation">›</button>
+      </div>
+      <p class="lab-progress" id="eb-progress"></p>
+      <h2>Atom tally</h2>
+      <div id="eb-tally"></div>
+      <p class="eb-all" id="eb-all"></p>
+      <div class="lab-row"><button type="button" class="lab-btn pri" id="eb-check">✓ Check</button><button type="button" class="lab-btn" id="eb-reset">Start over</button></div>
+      <p class="eb-result" id="eb-result" aria-live="polite"></p>
+      <h2 id="eb-mode-h">Dragging</h2>
+      <div class="lab-seg" id="eb-mode" role="group" aria-labelledby="eb-mode-h">
+        <button type="button" data-m="rule" aria-pressed="true">Rule drag: show hints</button>
+        <button type="button" data-m="own" aria-pressed="false">On my own</button>
+      </div>
+      <p class="lab-small">With hints on, while you hold a molecule its drop zone glows green if it brings its elements closer to balance, gold if it makes no difference, and red if it makes things worse. The tally marks each element ↓ closer or ↑ further.</p>
+    </div>
+  </div>
+  <p class="eb-keys" id="eb-keys"><b>How to play.</b> Drag a molecule from a shelf up into its box to add one, or drag one out of a box back onto its shelf to take it away. A molecule can only go on its own side of the arrow, and every substance keeps at least one. The − and + buttons in the equation do the same. <b>Keyboard:</b> click the picture or tab to it, then <kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd><kbd>↓</kbd> move between the shelves and the boxes; <kbd>Enter</kbd> picks up a molecule, the arrow keys carry it to the places it may go, and <kbd>Enter</kbd> drops it; <kbd>Esc</kbd> puts it back; <kbd>+</kbd> and <kbd>−</kbd> add or take one away; <kbd>C</kbd> checks.</p>
+
+  <section class="lab-sec" id="why">
+    <h2>Why equations must balance</h2>
+    <div class="lab-cols">
+      <p>Atoms are not made or destroyed in a chemical reaction. They come apart and join up in new ways. So a correct equation has the same number of each kind of atom on both sides. This is the <b>law of conservation of mass</b>, and it is why a sealed jar weighs the same before and after a reaction inside it.</p>
+      <p>The small numbers in a formula, the <b>subscripts</b>, say what a substance is. H₂O is water; H₂O₂ is hydrogen peroxide, a different substance. So you never change a subscript to balance an equation. You change the big numbers in front, the <b>coefficients</b>, which say how many molecules take part. That is all the balancer lets you do: add or take away whole molecules.</p>
+      <p>A balanced equation uses the <b>smallest whole numbers</b> that work. 4 H₂ + 2 O₂ → 4 H₂O balances, but every number can be halved, so the answer is 2 H₂ + O₂ → 2 H₂O. Press Check and the balancer tells you the smallest set.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="how">
+    <h2>A way to balance any of them</h2>
+    <div class="lab-cols">
+      <ol>
+        <li>Count each element on both sides. The tally does this for you.</li>
+        <li>Start with an element that appears in only one substance on each side, often a metal or carbon.</li>
+        <li>Leave elements that stand alone, like O₂, H₂ or a metal, for last. You can change their number without upsetting anything else.</li>
+        <li>If a group such as SO₄ or NO₃ goes through unchanged, count it as one unit.</li>
+        <li>If you need half a molecule, as with 3½ O₂ for burning ethane, double every number.</li>
+        <li>Check every element again at the end.</li>
+      </ol>
+      <div class="lab-try"><b>Try this.</b> Propane, C₃H₈, has 3 carbons, so it makes 3 CO₂. It has 8 hydrogens, so it makes 4 H₂O. Now the right side has 3 × 2 + 4 = 10 oxygen atoms, and 5 O₂ supply exactly 10: C₃H₈ + 5 O₂ → 3 CO₂ + 4 H₂O.</div>
+      <p>The ball colors follow a long custom among chemists, the CPK colors: hydrogen white, carbon gray, nitrogen blue, oxygen red, chlorine green, sulfur yellow. The colors here are close to the defaults of the free Jmol viewer. The pictures show which atoms join, not the true shape or size of each molecule; the metal compounds, such as salt and rust, are really crystals, drawn here as one small unit of the crystal.</p>
+      <p>For practice with numbers and more examples, see <a href="{{ "chemistry/chemistry/balancing-equations/" | relURL }}">Balancing Equations</a> on the Chemistry Ladder, and watch acids and bases react in the <a href="{{ "science-lab/chem-lab/" | relURL }}">Mixing Lab</a>.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="drag">
+    <h2>How the dragging works</h2>
+    <p>A molecule you drag doesn’t just follow your finger. The balancer knows the places it is allowed to be: inside its own box, or on its own shelf. It shows the allowed spot nearest your finger, so a reactant stops at the edge of its box and never crosses the arrow, and a substance’s last molecule can’t leave. While you drag, it works out what dropping there would do to every element’s count. The idea of dragging only between allowed states comes from a research paper, “Declarative Dragging” by Joshua Horowitz, Andrew Blinn and Jeffrey Heer (2026); the balancer’s code is our own. Every one of the 27 answers was also worked out separately from the atom counts with exact fractions, and the two agree.</p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>OpenStax, <i>Chemistry 2e</i>, <a href="https://openstax.org/books/chemistry-2e/pages/4-1-writing-and-balancing-chemical-equations">4.1 Writing and Balancing Chemical Equations</a> (coefficients, not subscripts; methane, ethane, ammonia and other examples).</li>
+      <li>OpenStax, <i>Biology 2e</i>, <a href="https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis">8.1 Overview of Photosynthesis</a> (the overall equation of photosynthesis).</li>
+      <li>Jmol, <a href="https://jmol.sourceforge.net/jscolors">Jmol colors</a> (the default CPK-style element colors).</li>
+      <li>J. Horowitz, A. Blinn and J. Heer, <a href="https://declarative-dragging.github.io/">“Declarative Dragging”</a>, UIST 2026: the idea of dragging only between allowed states.</li>
+    </ul>
+  </section>
+
+  <nav class="lab-pn" aria-label="More"><a href="{{ "science-lab/" | relURL }}">← Science Lab</a><a href="{{ "chemistry/chemistry/balancing-equations/" | relURL }}">Balancing Equations lesson →</a></nav>
+</div>
+<script src="{{ "js/rule-drag.js" | relURL }}?v={{ (os.Stat "static/js/rule-drag.js").ModTime.Unix }}"></script>
+<script src="{{ "science-lab/equation-balancer/model.js" | relURL }}?v={{ (os.Stat "static/science-lab/equation-balancer/model.js").ModTime.Unix }}"></script>
+<script src="{{ "science-lab/equation-balancer/balancer.js" | relURL }}?v={{ (os.Stat "static/science-lab/equation-balancer/balancer.js").ModTime.Unix }}"></script>
+{{ end }}

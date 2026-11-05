@@ -21,13 +21,18 @@ Requirements: Python 3 with mpmath, sympy, gmpy2, numpy, scipy, matplotlib and p
 latexmk, BibTeX, memoir, natbib, algorithm2e, cleveref, siunitx and the Latin Modern OpenType fonts.
 
     cd compute && sh run_all.sh          # every number and figure; the 5,000 zeta zeros take about an hour,
-                                         # the prime-convergent sample several minutes
+                                         # the prime-convergent sample several minutes, and the search of pi's
+                                         # convergents to n = 20,000 (c11_openq_pisearch.py) about 45 minutes
     cd ../paper && latexmk -xelatex main.tex
     cp main.pdf ../../../../static/pdfs/The-Rhythm-of-Numbers-paper.pdf
+
+The `c11_openq_*.py` scripts belong to Chapter 15 ("Working on the open questions"): 12 million certified terms of pi
+(`c11_openq_picf.py`, from about 43 million bits of pi), the prime search, the calibrated statistics,
+the exact expectation and its simulation, the correlation-matrix spectra and the equal-temperament ranking.
 
 `c8_suite.py` reads `data/music/suite.yaml` from this repository. Random choices use fixed seeds. Scripts stop with an
 error if any asserted fact (for example 292 × 113 = 32,996, or the OEIS lists of prime convergents of pi) fails.
 
 After rebuilding, update `pdf_size` (pages and size) in content/connections/rhythm-of-numbers/paper/_index.md and the
-"86 pages" mentions on the hub card (layouts/connections/rhythm.html), the fractals page card
+page and figure counts ("106 pages", "40 figures") on the hub card (layouts/connections/rhythm.html), the fractals page card
 (layouts/connections/rhythm-fractals.html) and the Connections hub (content/connections/_index.md).

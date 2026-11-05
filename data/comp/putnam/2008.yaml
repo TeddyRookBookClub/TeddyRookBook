@@ -238,6 +238,28 @@ problems:
 
   - id: B6
     topic: "Permutations: parity of the count of short-move permutations"
-    areas: [combinatorics]
-    difficulty: 5
-    status: coming
+    areas: [combinatorics, linear-algebra]
+    difficulty: 4
+    hints:
+      - 'The count is the permanent of a $0$–$1$ band matrix. Modulo $2$ a permanent equals the determinant.'
+      - 'So ask when the band matrix kills a nonzero vector over the field with two elements. Subtract consecutive equations: such a vector must repeat with period $2k+1$.'
+    solution: |
+      **Key idea:** parity turns counting into linear algebra. Modulo $2$ the count is the determinant of a band matrix, and a vector in its kernel is forced to repeat with period $2k+1$. Whether a nonzero repeating vector fits depends only on $n \bmod (2k+1)$.
+
+      **From permutations to a determinant.** Let $A$ be the $n\times n$ matrix with $A_{ij}=1$ when $|i-j|\le k$ and $A_{ij}=0$ otherwise. A product $A_{1\sigma(1)}\cdots A_{n\sigma(n)}$ is $1$ exactly when $\sigma$ is $k$-limited, so the count is the permanent $\sum_\sigma\prod_i A_{i\sigma(i)}$. The determinant has the same terms with signs $\pm1$, and signs don't matter mod $2$. So the count is odd exactly when $\det A$ is odd, that is, when $A$ is invertible over the two-element field $\mathbb F_2$. That happens exactly when $Ax=0$ has only the solution $x=0$ in $\mathbb F_2^n$.
+
+      **Kernel vectors repeat.** Write $p=2k+1$. Given $x\in\mathbb F_2^n$, set $x_j=0$ for every index $j$ outside $1,\dots,n$. Then the $i$-th entry of $Ax$ is the sum of the $p$ consecutive entries $s_i=x_{i-k}+\cdots+x_{i+k}$. The system $Ax=0$ is the same as
+      $$s_1=0\qquad\text{and}\qquad s_{i+1}-s_i=x_{i+k+1}-x_{i-k}=0\quad(1\le i\le n-1).$$
+      The second family says $x_{m+p}=x_m$ for every pair of indices $m,m+p$ in the stretch from $1-k$ to $n+k$. That stretch has length $n+2k\ge p$, so on it $x$ is periodic: $x_j=y_{j\bmod p}$ for a function $y$ on the residues mod $p$. Conversely, any $y$ defines such a periodic stretch. The remaining conditions are:
+      - $x$ vanishes at the $k$ indices $1-k,\dots,0$ and at the $k$ indices $n+1,\dots,n+k$, so $y$ vanishes on their residues;
+      - $s_1=0$, and $s_1$ is a sum over $p$ consecutive indices, so $\sum_r y_r=0$.
+
+      Let $f$ be the number of residues not covered by those two blocks. The blocks have $2k$ indices in all, so $f\ge1$. The kernel consists of the choices of $y$ on these $f$ residues whose sum is $0$, so it has $2^{f-1}$ elements. Hence $A$ is invertible over $\mathbb F_2$ exactly when $f=1$, that is, when the two blocks of $k$ residues don't overlap.
+
+      **When the blocks miss each other.** The first block is $\{-k+1,\dots,0\}$, and its complement is the run $\{1,2,\dots,k+1\}$ of $k+1$ consecutive residues. The second block is a run of $k$ consecutive residues starting at $n+1$. It avoids the first block exactly when it fits inside $\{1,\dots,k+1\}$, that is, when it starts at $1$ or at $2$:
+      $$n+1\equiv1\ \text{or}\ 2\pmod{2k+1}\iff n\equiv0\ \text{or}\ 1\pmod{2k+1}.$$
+      So the number of $k$-limited permutations is odd exactly in these cases.
+
+      *Example:* $k=1$, $n=3$. The residues mod $3$ hit by the blocks are $\{0\}$ and $\{1\}$, so $f=1$ and the count is odd. Indeed the $1$-limited permutations of $\{1,2,3\}$ are $123$, $213$ and $132$.
+    checked: "script: exact counts by dynamic programming (matched brute force for n ≤ 7) agree with the rule for k ≤ 5, n < 60; the kernel size 2^(f−1) matched GF(2) rank computations for k ≤ 6, n < 80"
+    status: ready

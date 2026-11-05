@@ -7,7 +7,8 @@
   {{- with index $W .topic -}}
     {{- range .words -}}
       {{- if eq .word $row.word -}}
-        {{- $slug := $row.word | urlize -}}
+        {{- /* urlize percent-encodes accents (blasé → blas%C3%A9); decode it so the folder is "blasé" and the encoded links resolve. */ -}}
+        {{- $slug := strings.TrimPrefix "/" (urls.Parse (printf "/%s" ($row.word | urlize))).Path -}}
         {{- $.AddPage (dict "path" $slug "kind" "page" "type" "vocabulary" "layout" "word" "title" $row.word "description" (printf "%s (%s): %s. Meaning, pronunciation, a picture and memory hook, examples in context, synonyms, opposites and roots, from the Vocabulary Ladder." $row.word $row.pos .def) "params" (dict "word" $row.word "topic" $row.topic "n" $row.n) "weight" $row.n) -}}
       {{- end -}}
     {{- end -}}

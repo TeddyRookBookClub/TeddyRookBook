@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{- /* /connections/rhythm-of-numbers/paper/: the thesis-style paper "The Rhythm of Numbers: Continued Fractions, Primes,
    Music and Self-Similarity" by Teddy Rook (content/connections/rhythm-of-numbers/paper/_index.md holds the abstract,
-   the chapter list with links to the instruments, and the PDF's size). The PDF is static/pdfs/The-Rhythm-of-Numbers-paper.pdf;
+   the chapter list with links to the instruments, the PDF's size, and the 'What we found' box (found_intro, found)). The PDF is static/pdfs/The-Rhythm-of-Numbers-paper.pdf;
    its source is docs/papers/rhythm-of-numbers/. Uses the hub's styles (rn.css) plus paper.css; no scripts. */ -}}
 {{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
 {{ partial "inline/ml-css.html" "connections/rhythm/paper.css" }}
@@ -14,10 +14,25 @@
   <p class="rn-eyebrow">The Rhythm of Numbers · The paper</p>
   <h1>The Rhythm of Numbers: <em>Continued Fractions, Primes, Music and Self-Similarity</em></h1>
   <p class="rp-by">Teddy Rook · {{ .Params.year }}</p>
-  <p class="rn-lede">Everything on the Rhythm of Numbers pages, written up as one long paper, like a thesis: definitions, theorems and proofs, 34 figures, numbered equations and a full bibliography. It also goes further than the pages, with new computations on prime convergents and on the zeros of the zeta function.</p>
+  <p class="rn-lede">Everything on the Rhythm of Numbers pages, written up as one long paper, like a thesis: definitions, theorems and proofs, 40 figures, numbered equations and a full bibliography. It also goes further than the pages, with new computations on prime convergents and on the zeros of the zeta function, and a last chapter of new work on six open questions.</p>
   <p class="rp-btns"><a class="rp-btn rp-pri" href="{{ $pdf }}" download>⬇ Download the paper (PDF, {{ .Params.pdf_size }})</a><a class="rp-btn" href="{{ $pdf }}" target="_blank" rel="noopener">Open it in a new tab</a></p>
   <p class="rn-small rn-muted">The paper is written for a strong college student or a curious adult: calculus and a first taste of number theory help. Every chapter has a short note on what to show if it is read aloud or filmed.</p>
 </header>
+
+{{- with .Params.found }}
+<section class="rn-s rp-sec" aria-labelledby="rp-found-h">
+  <h2 id="rp-found-h">What we found on the open questions</h2>
+  <div class="rp-found">
+    <p>{{ $.Params.found_intro }}</p>
+    <ol class="rp-found-list">
+      {{- range . }}
+      <li><h3>{{ .q }} <span class="rp-status">{{ .status }}</span></h3><p>{{ .text }}</p></li>
+      {{- end }}
+    </ol>
+    <p class="rn-small rn-muted">Details, proofs and sources are in Chapter 15 of the paper.</p>
+  </div>
+</section>
+{{- end }}
 
 <section class="rn-s rp-sec" aria-labelledby="rp-abs-h">
   <h2 id="rp-abs-h">Abstract</h2>

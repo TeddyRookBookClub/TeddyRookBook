@@ -8,6 +8,8 @@
 
 \paragraph{Primality.} A number is called prime if it is below $3{,}000$ and in the list of small primes, or if it has no prime factor below $3{,}000$ (one gcd with the primorial) and passes the Baillie--PSW probable-prime test of gmpy2. For the Fibonacci and Pell indices our lists agree with the OEIS \citep{OEIS_A001605,OEIS_A096650}, and for $\pi$ with \citep{OEIS_A086788,OEIS_A086785}.
 
+\paragraph{Long expansions.} Chapter~\ref{ch:openq} uses $12{,}000{,}001$ terms of $\pi$, from a 43-million-bit interval around $\pi$ expanded by a divide-and-conquer form of Euclid's algorithm that keeps only the terms common to both ends of the interval (Section~\ref{sec:twelve}); the expansion is repeated at a second precision and checked against the published record terms. Primality tests there use trial division by the primes below $10^5$ before Baillie--PSW. Random reals in that chapter are random fractions with $2{,}600$ or more binary digits, expanded exactly.
+
 \paragraph{Random reals.} A random real is represented by $r/10^D$ with $r$ a uniformly random integer of $D = 1{,}620$ digits (Algorithm~\ref{alg:randconv}). Its first $1{,}000$ terms are shared by every real in $[r/10^D, (r+1)/10^D)$, as explained in Chapter~\ref{ch:primeconv}. The generator is Python's \texttt{random.Random} with a fixed seed, so the sample is reproducible.
 
 \paragraph{Zeta zeros.} The first \NZeros{} zeros were computed with \texttt{mpmath.zetazero} at 20 digits; the script checks that \texttt{mpmath.nzeros} counts exactly \NZeros{} zeros up to the last one, so none is missing, and recomputes a few at higher precision. The explicit-formula figure uses the first 100 zeros.

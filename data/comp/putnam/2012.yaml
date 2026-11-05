@@ -124,7 +124,32 @@ problems:
     topic: "Integrals: functions vanishing on every unit-area rectangle"
     areas: [analysis]
     difficulty: 4
-    status: coming
+    answer: "Yes: $f$ must be identically zero"
+    hints:
+      - 'Keep one corner of a unit-area rectangle fixed and let its side lengths be $a$ and $1/a$. Differentiate the integral with respect to $a$.'
+      - 'You should learn that the two sides meeting at the far corner give $f$ the same average. Use this twice at one point, with the long side pointing in opposite directions.'
+    solution: |
+      **Key idea:** stretch a unit-area rectangle while keeping its area. The derivative of the (zero) integral says that at every corner, $f$ has the same average on the two sides through that corner. That makes $f$ symmetric about every point, so $f$ is constant, and the constant is $0$.
+
+      Rectangles may be turned at any angle. We show that $f$ must be $0$ everywhere.
+
+      **Step 1: equal averages at a corner.** Fix a point $p$ and perpendicular unit vectors $u,v$. For $a>0$ the rectangle with corner $p$ and sides $au$ and $\tfrac1a v$ has area $1$, so
+      $$H(a)=\int_0^a\!\!\int_0^{1/a} f(p+su+tv)\,dt\,ds=0\qquad\text{for all }a>0 .$$
+      Let $\Phi(x,y)=\int_0^x\!\int_0^y f(p+su+tv)\,dt\,ds$. Since $f$ is continuous, $\Phi$ has continuous partial derivatives
+      $$\Phi_x(x,y)=\int_0^y f(p+xu+tv)\,dt,\qquad \Phi_y(x,y)=\int_0^x f(p+su+yv)\,ds .$$
+      So $H(a)=\Phi(a,1/a)$ is differentiable, and the chain rule gives
+      $$0=H'(a)=\int_0^{1/a} f(p+au+tv)\,dt-\frac1{a^2}\int_0^{a} f\big(p+su+\tfrac1a v\big)\,ds .$$
+      The first integral runs along a side of length $1/a$ and the second along a side of length $a$. Both sides end at the corner $q=p+au+\tfrac1a v$. If $\mu_1$ and $\mu_2$ are the average values of $f$ on these two sides, the equation says $\mu_1/a-\mu_2/a=0$, so $\mu_1=\mu_2$.
+
+      Any unit-area rectangle, with any chosen corner $q$, arises this way: let $p$ be the corner opposite $q$. So **at every corner of a unit-area rectangle, the two sides through that corner give $f$ the same average.**
+
+      **Step 2: symmetry about every point.** Take a point $A$, a unit vector $e$, and $L>0$. Let $e^\perp$ be $e$ turned through a right angle, and $B=A+\tfrac1L e^\perp$. The segment $AB$ has length $1/L$. Together with the segment from $A$ to $A+Le$ it spans a unit-area rectangle with corner $A$, and the same is true for the segment from $A$ to $A-Le$. By Step 1, each of these two segments has the same average as $AB$. Both have length $L$, so
+      $$\int_0^L f(A+te)\,dt=\int_0^L f(A-te)\,dt\qquad\text{for all }L>0 .$$
+      Both sides are differentiable in $L$, and differentiating gives $f(A+Le)=f(A-Le)$.
+
+      **Step 3: finish.** For any two points $x\ne y$, let $A$ be their midpoint; Step 2 gives $f(x)=f(y)$. So $f$ is a constant $c$. The integral over a unit square is then $c$, so $c=0$.
+    checked: "numerical check of the Step 1 identity H′(a) = (μ₁ − μ₂)/a for a sample function on a tilted rectangle (finite differences vs. quadrature); the rest is exact reasoning"
+    status: ready
 
   - id: B1
     topic: "Function classes: products from sums, compositions and differences"
