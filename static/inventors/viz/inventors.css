@@ -1,0 +1,34 @@
+/* Inventors Ladder visuals (static/inventors/viz/inventors.js) and lesson boxes (note blocks made by scripts/inventors/build.py:
+   quotations .iv-quote, "Story or history?" .iv-legend, "Build it yourself" .iv-try, Great Books links .iv-gb, library links
+   .iv-lib, safety .iv-safe). Light and dark themes; colors from the site palette. */
+.ml-viz.ivv .ml-cv{touch-action:pan-y;box-shadow:inset 0 0 0 1px var(--mv-line)}
+.ivv .ivv-wrap{max-width:100%}
+.ivv .ivv-ctl{align-items:center}
+.ivv .ivv-play{min-width:5.6rem}
+.ivv .ml-sl{min-width:min(100%,12rem);flex:1 1 12rem}
+.ivv .ivv-text,.ivv .ivv-sel{font:inherit;font-size:1rem;padding:.4rem .6rem;border:1px solid var(--mv-line,#c9d3cd);border-radius:8px;background:rgba(127,127,127,.08);color:inherit;min-width:0;flex:1 1 12rem;max-width:100%}
+.ivv .ivv-key{touch-action:none;user-select:none;-webkit-user-select:none;min-width:7rem}
+.ivv .ml-seg{flex-wrap:wrap}
+/* boxes inside lessons */
+.mlp-note:has(>.iv-quote),.mlp-note:has(>.iv-legend),.mlp-note:has(>.iv-try),.mlp-note:has(>.iv-gb),.mlp-note:has(>.iv-lib),.mlp-note:has(>.iv-safe){border-left:0;padding:0;background:none;color:inherit;font-size:1rem}
+.iv-quote{margin:1.2rem 0;padding:.9rem 1.1rem;background:rgba(138,31,176,.05);border:1px solid rgba(138,31,176,.18);border-left:5px solid #b8963e;border-radius:0 12px 12px 0}
+.iv-quote blockquote{margin:0;font:1.05rem/1.6 Georgia,"Times New Roman",serif}
+.iv-quote blockquote p{margin:0 0 .6rem}.iv-quote blockquote p:last-child{margin-bottom:0}
+.iv-quote figcaption{margin-top:.55rem;font-size:.84rem;opacity:.8;line-height:1.45}
+.iv-q-note{font-style:italic}
+.iv-box-lab{margin:0 0 .35rem;font-weight:700;font-size:.92rem}
+.iv-legend,.iv-try,.iv-gb,.iv-lib,.iv-safe{margin:1.1rem 0;padding:.7rem .95rem;border-radius:10px}
+.iv-legend p:last-child,.iv-lib p:last-child,.iv-safe p:last-child{margin-bottom:0}
+.iv-legend{background:rgba(184,150,62,.1);border-left:4px solid #b8963e}
+.iv-try{background:rgba(0,86,47,.06);border-left:4px solid #00562f}
+.iv-gb{background:rgba(122,74,16,.07);border-left:4px solid #7a4a10}
+.iv-lib{background:rgba(138,31,176,.06);border-left:4px solid #8a1fb0}
+.iv-safe{background:rgba(214,51,108,.07);border-left:4px solid #c92a2a}
+.iv-try ul,.iv-gb ul{margin:.2rem 0 0 1.1rem;padding:0}
+.iv-try li,.iv-gb li{margin:.15rem 0}
+html[data-theme="dark"] .iv-quote{background:rgba(199,125,255,.07);border-color:rgba(199,125,255,.22);border-left-color:#b8963e}
+html[data-theme="dark"] .iv-try{background:rgba(108,199,154,.08);border-left-color:#6cc79a}
+html[data-theme="dark"] .iv-gb{background:rgba(227,184,103,.08);border-left-color:#e3b867}
+html[data-theme="dark"] .iv-lib{background:rgba(199,125,255,.08);border-left-color:#c77dff}
+html[data-theme="dark"] .iv-safe{background:rgba(255,135,135,.08);border-left-color:#ff8787}
+@media print{.iv-quote,.iv-legend,.iv-try,.iv-gb,.iv-lib,.iv-safe{break-inside:avoid}}

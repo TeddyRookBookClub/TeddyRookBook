@@ -265,7 +265,7 @@
     (function fr(ts) {
       var dt = Math.min(0.1, (ts - last) / 1000); last = ts;
       if (sec && sec._rnVis !== false && !D.hidden) {
-        var C = camera(S, N(), w, H, camS), per = Math.max(0.55, Math.log(S.x[C.k]) / 0.85) / (RN.snd.tempo || 1);
+        var C = camera(S, N(), w, H, camS), per = 4 * Math.max(0.55, Math.log(S.x[C.k]) / 0.85) / (RN.snd.tempo || 1);
         if (C.k !== lastK) { lastK = C.k; levelNotes(C.k, per); }
         camS += dt / per;
         if (camS >= S.kmax) { camS = s0(); }

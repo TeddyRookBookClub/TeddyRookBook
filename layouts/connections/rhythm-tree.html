@@ -1,0 +1,112 @@
+{{ define "main" }}
+{{- /* /connections/rhythm-of-numbers/tree/: "Drag the tree", a companion to The Rhythm of Numbers and its Chapter VII
+   (content/connections/rhythm-of-numbers/tree/_index.md). One instrument: drag a point on a number line and see its
+   continued fraction, its Stern–Brocot path, its convergents as nested brackets and its rhythm. Uses the hub's styles
+   (rn.css) plus tree.css; its own script static/connections/rhythm/tree.js with /js/rule-drag.js (no core.js, no bar).
+   Element ids are the script's contract. */ -}}
+{{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
+{{ partial "inline/ml-css.html" "connections/rhythm/tree.css" }}
+{{- $hub := "connections/rhythm-of-numbers/" | relURL }}
+{{- $fr := "connections/rhythm-of-numbers/fractals/" | relURL }}
+<article class="rn rn-tree">
+<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Where Music, Patterns, Math and Chemistry Meet</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <span>Drag the tree</span></nav>
+
+<header class="rn-hero rn-s">
+  <p class="rn-eyebrow">The Rhythm of Numbers · Drag the tree</p>
+  <h1>Drag a number, and watch its <em>continued fraction</em> change</h1>
+  <p class="rn-lede">Every number has a continued fraction: a whole number, then a smaller one after it, then a smaller one after that. Here you can take hold of a number and move it. The terms, the way down the Stern–Brocot tree and the best fractions all follow your finger.</p>
+</header>
+
+<section class="rn-s" id="drag" aria-labelledby="drag-h">
+  <div class="rn-head"><p class="rn-eyebrow">The instrument</p><h2 id="drag-h">One number, <em>four pictures</em></h2></div>
+  <div class="rn-inst tr-inst">
+    <div class="tr-presets" role="group" aria-label="Jump to a number">
+      <span class="tr-lab">Jump to</span>
+      <button type="button" class="rn-ghost" data-pre="pi">π</button>
+      <button type="button" class="rn-ghost" data-pre="e">e</button>
+      <button type="button" class="rn-ghost" data-pre="sqrt2">√2</button>
+      <button type="button" class="rn-ghost" data-pre="phi">φ</button>
+      <button type="button" class="rn-ghost" data-pre="sqrt3">√3</button>
+      <button type="button" class="rn-ghost" data-frac="355/113">355/113</button>
+      <button type="button" class="rn-ghost" data-frac="22/7">22/7</button>
+    </div>
+    <dl class="rn-readout tr-read">
+      <div><dt>The number</dt><dd id="trVal" class="rn-mono"></dd></div>
+      <div><dt>Continued fraction <span class="tr-hint">(tap a term to lock it)</span></dt><dd id="trCF" class="tr-cf"></dd></div>
+      <div><dt>The way down the tree</dt><dd id="trPath" class="rn-mono"></dd></div>
+    </dl>
+    <canvas id="trCan" height="440" tabindex="0" role="application" aria-roledescription="number line and tree" aria-label="The Stern–Brocot tree above a number line from 0 to 5. Drag the point, or a node of the tree. Keyboard: left and right arrows move the point, up goes to the parent in the tree, plus and minus zoom, zero shows 0 to 5 again."></canvas>
+    <div class="rn-controls tr-ctl">
+      <button type="button" class="rn-ghost" id="trOut" aria-label="Zoom out">− Zoom out</button>
+      <button type="button" class="rn-play" id="trIn" aria-label="Zoom in on the point">+ Zoom in</button>
+      <button type="button" class="rn-ghost" id="trFit">0 to 5</button>
+      <button type="button" class="rn-ghost" id="trLockFit" hidden>Zoom to the locked interval</button>
+      <button type="button" class="rn-ghost" id="trUnlock" hidden>Unlock</button>
+    </div>
+    <p class="tr-lock rn-small" id="trLock" aria-live="polite"></p>
+    <p class="rn-small tr-note" id="trNote"></p>
+    <dl class="rn-readout tr-read2">
+      <div><dt>Best fractions (convergents)</dt><dd id="trConv" class="rn-mono"></dd></div>
+    </dl>
+    <div class="tr-rhythm">
+      <p class="rn-small"><b>Its rhythm.</b> <span id="trRhyText"></span></p>
+      <canvas id="trRhy" height="46" role="img" aria-label="The number's rhythm: one cell per beat, filled where a hit falls"></canvas>
+    </div>
+    <p class="rn-sr" id="trLive" aria-live="polite"></p>
+  </div>
+  <div class="rn-prose">
+    <p><b>How the point moves.</b> The point never sits on just any decimal. As you drag, it lands on the <b>simplest fraction within reach</b>: the one with the smallest bottom number inside the little stretch of line under your finger. Zoomed out, that is a fraction like 3/1 or 7/2. Zoom in and finer fractions come within reach, like 22/7, then 333/106, then 355/113. Finding the simplest fraction between two numbers is the same as walking down the Stern–Brocot tree until you first land between them, so the tree above the line is the map the point is using.</p>
+    <p>You can also drag along the tree itself: the point jumps from node to node, so it only ever visits fractions that are in the picture.</p>
+  </div>
+</section>
+
+<section class="rn-s" id="tree" aria-labelledby="tree-h">
+  <div class="rn-head"><p class="rn-eyebrow">The path</p><h2 id="tree-h">Run lengths down the tree <em>are</em> the terms</h2></div>
+  <div class="rn-prose">
+    <p>Start at 1/1 at the top. Go right (R) if the number is bigger, left (L) if it is smaller, and keep going. The moves come in runs, and the runs are the continued fraction: first a₀ moves right, then a₁ left, then a₂ right, and so on. 355/113 = [3; 7, 16] is R³ L⁷ R¹⁵ (the last run is one short, because you stop on the fraction itself), the same rule as in <a href="{{ $fr }}#sb">section 26</a>.</p>
+    <p>The tree in the picture always starts at the deepest node whose branch still covers what you can see. Zoom in and the picture walks down the tree, and what you see below is a copy of the whole tree with different fractions: the same rule at every scale.</p>
+  </div>
+</section>
+
+<section class="rn-s" id="brackets" aria-labelledby="brackets-h">
+  <div class="rn-head"><p class="rn-eyebrow">The brackets</p><h2 id="brackets-h">Each best fraction is a bracket, and the brackets <em>nest</em></h2></div>
+  <div class="rn-prose">
+    <p>Under the line, each bracket joins two neighboring convergents. The number is always inside, the next bracket is always inside the last one, and the convergents land on alternate sides. Each convergent p/q misses the number by less than 1/q², which is why 355/113 is so good: the next term, 292, is large, so the next bracket is tiny.</p>
+  </div>
+</section>
+
+<section class="rn-s" id="lock" aria-labelledby="lock-h">
+  <div class="rn-head"><p class="rn-eyebrow">Locking</p><h2 id="lock-h">Each term <em>pins the number down</em></h2></div>
+  <div class="rn-prose">
+    <p>Tap a term in the continued fraction to lock everything up to it. Now try to drag: the point can only reach numbers whose continued fraction starts the same way. Those numbers fill one interval, shaded on the line. Lock [3; 7] and the interval runs from 22/7 to 25/8, 1/56 wide. Lock one more term and it shrinks inside the last one. In general the interval after locking the term with convergent p/q is 1/(q(q + q′)) wide, where q′ is the denominator before it. Each term chooses one of the interval's pieces, and the pieces of each piece, forever: that is what a continued fraction is.</p>
+  </div>
+</section>
+
+<section class="rn-s" id="patterns" aria-labelledby="patterns-h">
+  <div class="rn-head"><p class="rn-eyebrow">Four famous numbers</p><h2 id="patterns-h">Patterns you can <em>see in the path</em></h2></div>
+  <div class="rn-prose">
+    <ul>
+      <li><b>The golden ratio,</b> φ = [1; 1, 1, 1, …]. Every term is 1, so the path zigzags R L R L … forever, and its convergents are ratios of Fibonacci numbers: 2/1, 3/2, 5/3, 8/5, ….</li>
+      <li><b>√2</b> = [1; 2, 2, 2, …]. The path goes R, then L L, R R, L L, … in pairs; the convergents 3/2, 7/5, 17/12, 41/29 use the Pell numbers.</li>
+      <li><b>e</b> = [2; 1, 2, 1, 1, 4, 1, 1, 6, …]. A pattern that keeps stretching: every third term grows by 2.</li>
+      <li><b>π</b> = [3; 7, 15, 1, 292, 1, 1, 1, 2, …]. No one has found a pattern. Its path has long runs (seven Ls, fifteen Rs, 292 Rs), and each long run means the fraction just before it was unusually good.</li>
+    </ul>
+    <p>A continued fraction repeats exactly when the number solves a quadratic equation with whole-number coefficients, like φ, √2 and √3. Those are the numbers whose pictures look the same at every zoom.</p>
+  </div>
+  <div class="rn-link"><b>Tree ↔ rhythm</b><span>The rhythm under the instrument is the one the <a href="{{ $hub }}#levels">Rhythm of Numbers</a> plays: a hit each time a running total passes a whole number. Its gaps are a₁ or a₁ + 1 beats, its blocks are as long as the convergents’ denominators, and a fraction p/q gives a rhythm that repeats every q beats. Locking a term fixes one more level of the rhythm’s form.</span></div>
+</section>
+
+<footer class="rn-notes" aria-labelledby="tr-notes-h">
+  <h2 id="tr-notes-h" class="rn-h3">Notes and sources</h2>
+  <ul>
+    <li>Continued fractions and convergents: <a href="https://grokipedia.com/page/Continued_fraction" rel="noopener">Continued fraction (Grokipedia)</a>.</li>
+    <li>The Stern–Brocot tree and its paths: <a href="https://grokipedia.com/page/Stern%E2%80%93Brocot_tree" rel="noopener">Stern–Brocot tree (Grokipedia)</a>; B. Hayes and the AMS Feature Column, <a href="https://www.ams.org/featurecolumn/archive/stern-brocot.html" rel="noopener">“Trees, Teeth, and Time”</a>.</li>
+    <li>Dragging only between allowed states: J. Horowitz, A. Blinn and J. Heer, <a href="https://declarative-dragging.github.io/" rel="noopener">“Declarative Dragging”</a>, UIST 2026. The idea inspired this page; the code is our own.</li>
+    <li>The terms of π, e, √2, √3 and φ are the ones used across <a href="{{ $hub }}">The Rhythm of Numbers</a>, checked there to 600 digits.</li>
+  </ul>
+  <p><a href="{{ $hub }}">← Back to The Rhythm of Numbers</a> · <a href="{{ $fr }}">Chapter VII: Fractals</a> · <a href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}">The paper</a></p>
+</footer>
+</article>
+<script src="{{ "js/rule-drag.js" | relURL }}?v={{ (os.Stat "static/js/rule-drag.js").ModTime.Unix }}" defer></script>
+{{ partial "inline/ml-js.html" "connections/rhythm/tree.js" }}
+{{ end }}

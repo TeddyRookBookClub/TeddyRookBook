@@ -1,0 +1,61 @@
+{{ define "main" }}
+{{- /* /connections/shells/: the deep dive "Shells: vaults, viruses and spheres" (content/connections/shells/_index.md).
+   Its own page, linked from the Connections hub's deepdives list. Uses the hub's look (cx.css) and visuals contract
+   (static/connections/core.js: Cx.viz) but not its Venn hub: the small loader at the bottom loads each figure's script
+   (static/connections/v/sh-*.js) when the figure comes near the screen. Body: markdown with TeX in $…$; a paragraph that
+   is only [[viz:<id>|caption]] becomes a figure, as on the hub. Credits come from front matter (the site-wide block). */ -}}
+{{ partial "inline/ml-css.html" "math/core/core.css" }}
+{{ partial "inline/ml-css.html" "connections/cx.css" }}
+{{ partial "inline/ml-css.html" "connections/shells/sh.css" }}
+{{ partial "inline/ml-js.html" "math/core/tex.js" }}
+{{ partial "inline/ml-js.html" "connections/core.js" }}
+{{- $SN := dict "music" "Music" "math" "Math" "patterns" "Patterns" "chemistry" "Chemistry" -}}
+{{- $h := partial "comp/md.html" (dict "s" .RawContent "p" .) | string -}}
+{{- range findRESubmatch `<p>\[\[viz:([a-z0-9-]+)(?:\|([^\]<]*))?\]\]</p>` $h -}}
+  {{- $vid := index . 1 }}{{ $f := printf "static/connections/v/%s.js" $vid -}}
+  {{- $src := printf "connections/v/%s.js" $vid | relURL }}{{ if fileExists $f }}{{ $src = printf "%s?v=%d" $src (os.Stat $f).ModTime.Unix }}{{ else }}{{ warnf "connections/shells: missing %s" $f }}{{ end -}}
+  {{- $fig := printf `<figure class="cx-viz" data-viz="%s" data-src="%s"><div class="cx-stage"></div><div class="cx-bar"></div><p class="cx-live cx-sr" aria-live="polite"></p>%s<noscript><p class="cx-err">This picture needs JavaScript. The text around it does not.</p></noscript></figure>` $vid $src (cond (ne (index . 2) "") (printf `<figcaption>%s</figcaption>` (index . 2)) "") -}}
+  {{- $h = replace $h (index . 0) $fig -}}
+{{- end }}
+<article class="sh">
+  <nav class="sh-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Where Music, Patterns, Math and Chemistry Meet</a> <span aria-hidden="true">›</span> <span>Deep dive</span></nav>
+  <header class="sh-head">
+    <p class="cx-eyebrow">Deep dive · {{ range $k, $s := .Params.sets }}{{ if $k }} · {{ end }}{{ index $SN $s }}{{ end }}</p>
+    <h1>{{ .Title }}</h1>
+  </header>
+  <div class="cx-rbody sh-body" data-tex>{{ safeHTML $h }}</div>
+  {{- with .Params.golinks }}
+  <div class="cx-deeper">
+    <h2>Go deeper</h2>
+    <ul>
+      {{- range . }}{{ $u := .url }}{{ $t := .title }}
+      {{- if not $t }}{{ with site.GetPage (strings.TrimSuffix "/" (index (split $u "#") 0)) }}{{ $t = .Title }}{{ else }}{{ warnf "connections/shells: link %s not found" $u }}{{ end }}{{ end }}
+      <li><a href="{{ $u | relURL }}">{{ $t | default $u }}</a>{{ with .why }}<span class="cx-why">: {{ . }}</span>{{ end }}</li>
+      {{- end }}
+    </ul>
+  </div>
+  {{- end }}
+  <p class="sh-back"><a href="{{ "connections/" | relURL }}">← Back to the Connections diagram</a></p>
+</article>
+<script>
+(function (W, D) {
+  'use strict';
+  function go() {
+    var body = D.querySelector('.sh-body');
+    if (body && W.MathLadder && W.MathLadder.typeset) { try { W.MathLadder.typeset(body); } catch (e) { } }
+    var figs = D.querySelectorAll('.sh .cx-viz'), loaded = {};
+    function want(f) {
+      if (f._want) return; f._want = true; var id = f.getAttribute('data-viz');
+      if (loaded[id]) return; loaded[id] = true;
+      var s = D.createElement('script'); s.src = f.getAttribute('data-src'); s.async = true; D.head.appendChild(s);
+    }
+    if (!('IntersectionObserver' in W)) { [].forEach.call(figs, want); return; }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { var f = e.target; if (e.isIntersecting) want(f); if (f._cx) f._cx._show(e.isIntersecting); });
+    }, { rootMargin: '250px 0px' });
+    [].forEach.call(figs, function (f) { io.observe(f); });
+  }
+  if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', go); else go();
+})(window, document);
+</script>
+{{ end }}

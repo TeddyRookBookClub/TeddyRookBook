@@ -6,6 +6,7 @@ credits: false
 deepdives:
   - { url: "/connections/rhythm-of-numbers/", icon: "🥁", title: "Deep dive: The Rhythm of Numbers", text: "Play pi as a beat and follow its rhythm to the prime numbers, with a drum machine, a polyrhythm layerer and a composer that writes a piece you can download." }
   - { url: "/connections/rhythm-of-numbers/paper/", icon: "📄", title: "The paper: The Rhythm of Numbers", text: "The deep dive written up like a thesis: continued fractions, primes, music and self-similarity, with proofs, 34 figures and new computations. Free PDF, 86 pages." }
+  - { url: "/connections/shells/", icon: "🦠", title: "Deep dive on shells: vaults, viruses and spheres", text: "Why nature builds hollow shells from many copies of one protein: virus shells and the numbers T = h² + hk + k², barrel-shaped vaults, and a 2026 study of vaults made by viruses of bacteria." }
 cascade:
   - build: { render: never, list: local, publishResources: false }
     target: { kind: page }

@@ -1,6 +1,6 @@
 ---
 title: "Navier–Stokes: air over a wing"
-summary: "The equations of flowing air and water, solved live around a wing you can tilt, reshape and turn upside down like a race car's."
+summary: "The equations of flowing air and water, solved live around a wing you can tilt, reshape and turn upside down like a race car's. A second scene follows the thin film of air under a spinning Euler's disk as it whirrs to a stop."
 emoji: "🌬️"
 gtags: [famous-problems, chaos]
 weight: 340
@@ -18,6 +18,7 @@ ladder_links:
   - { url: "/math/gallery/mandelbrot/", why: "simple rules, endless detail" }
 credits:
   - { name: "Our own simulation", what: "a lattice Boltzmann flow solver, wing shapes and drawing, written for this page and run in your browser" }
+  - { name: "Our own Euler's disk model", what: "the disk drawing, the air-film calculation (lubrication theory, solved in your browser), the graph and the synthesized whirr, made for this page from the formulas in Moffatt's paper" }
   - { name: "S. Chen and G. D. Doolen, Lattice Boltzmann Method for Fluid Flows, Annual Review of Fluid Mechanics 30 (1998)", url: "https://doi.org/10.1146/annurev.fluid.30.1.329", what: "the method our solver uses (the D2Q9 lattice with BGK collisions and bounce-back walls)" }
   - { name: "Jos Stam, Stable Fluids, SIGGRAPH 1999", url: "https://doi.org/10.1145/311535.311548", what: "the backward-tracing step we use to carry the smoke along with the flow" }
   - { name: "Lattice Boltzmann methods (Grokipedia)", url: "https://grokipedia.com/page/Lattice_Boltzmann_methods", what: "background on the method" }
@@ -32,6 +33,16 @@ credits:
   - { name: "The Race, The aero restrictions each F1 team will face in 2026 (December 19, 2025)", url: "https://the-race.com/formula-1/the-aero-restrictions-each-f1-team-will-face-in-2026", what: "how the Aerodynamic Testing Restrictions work (the sliding scale, reset twice a year)" }
   - { name: "Quanta Magazine, September 8, 2026", url: "https://www.quantamagazine.org/ai-has-solved-one-of-maths-1-million-millennium-prize-problems-20260908/", what: "report on the announced proof of a singularity" }
   - { name: "The Decoder, September 14, 2026: the Clay Mathematics Institute's statement", url: "https://the-decoder.com/clay-mathematics-institute-says-the-navier-stokes-millennium-prize-problem-has-apparently-been-settled/", what: "quotes the institute: the problem has \"apparently been settled\" and the review is \"deliberately unhurried\"" }
+  - { name: "Euler's Disk (Grokipedia)", url: "https://grokipedia.com/page/Euler%27s_Disk", what: "the toy, its inventor Joseph Bendik, and the research it led to" }
+  - { name: "Lubrication theory (Grokipedia)", url: "https://grokipedia.com/page/Lubrication_theory", what: "flow in a thin film and the Reynolds equation we solve under the disk" }
+  - { name: "H. K. Moffatt, Euler's disk and its finite-time singularity, Nature 404, 833–834 (2000)", url: "https://doi.org/10.1038/35009017", what: "the air-film model, the finite-time singularity and its resolution" }
+  - { name: "Keith Moffatt (Wikipedia; no Grokipedia article)", url: "https://en.wikipedia.org/wiki/Keith_Moffatt", what: "his career at Cambridge" }
+  - { name: "Keith Moffatt, Research since 2000 (his own website)", url: "https://www.keithmoffatt.com/since-2000", what: "his summary: the singular time of about 100 seconds, resolved in milliseconds, and the link to the Navier–Stokes question" }
+  - { name: "J. Bland-Hawthorn and R. Sudiwala, Student project: Of spinning coins and merging black holes (arXiv 1611.00070)", url: "https://arxiv.org/abs/1611.00070", what: "a worked account of Moffatt's formulas (the wobble rate, the energy and the cube-root law)" }
+  - { name: "G. van den Engh, P. Nelson and J. Roach, Numismatic gyrations, Nature 408, 540 (2000)", url: "https://doi.org/10.1038/35046209", what: "coins spun in a vacuum" }
+  - { name: "K. Easwar, F. Rouyer and N. Menon, Speeding to a stop: the finite-time singularity of a spinning disk, Physical Review E 66, 045102 (2002)", url: "https://doi.org/10.1103/PhysRevE.66.045102", what: "high-speed video of disks and rings on different surfaces" }
+  - { name: "C. Le Saux, R. I. Leine and C. Glocker, Dynamics of a rolling disk in the presence of dry friction, Journal of Nonlinear Science 15, 27–61 (2005)", url: "https://doc.rero.ch/record/319317", what: "a model of the disk with sliding, pivoting and rolling friction" }
+  - { name: "R. I. Leine, Experimental and theoretical investigation of the energy dissipation of a rolling disk during its final stage of motion, Archive of Applied Mechanics 79, 1063–1082 (2009)", url: "https://doi.org/10.1007/s00419-008-0278-6", what: "high-speed video measurements of the last seconds" }
   - { name: "Clay Mathematics Institute, Rules for the Millennium Prize Problems", url: "https://claymath.org/millennium-problems/rules", what: "publication and two-year waiting rule for an award" }
 ---
 ## What you're seeing
@@ -45,6 +56,8 @@ Wind blows from left to right past a slice of a wing. The computer is solving th
 At a gentle angle the air splits at the nose and slides smoothly along both surfaces. It hurries over the curved top, where the pressure drops, and the wing is pulled upward. Tilt it too far and the air can no longer follow the top surface. It tears away, and the space behind the wing fills with tumbling swirls. That is a **stall**.
 
 Turn the wing upside down and the low pressure moves to the underside. Now the force points down. That is what the wings on a race car do.
+
+Press **Euler's disk** above the picture for a second scene: a heavy metal disk rolling on its edge as it settles onto a table. Panel (a) shows the disk, (b) the thin layer of air trapped beneath it, and (c) a graph of how its tilt shrinks while its wobble speeds up. You can turn on the sound of its whirr. It is explained in [Euler's disk](#eulers-disk-a-singularity-on-a-tabletop) below.
 
 ## Why it works
 
@@ -96,6 +109,43 @@ In September 2026 a proof was announced that the answer is no. In three-dimensio
 
 The result does not change how engineers design wings. Real air is made of molecules, and long before a flow could reach infinite speed, the smooth-fluid picture would stop being a good description. The question is about the equations themselves.
 
+## Euler's disk: a singularity on a tabletop
+
+Spin a coin on a table. As it slows, it leans over further and further. Its wobble gets faster, the sound rises to a whirr, and then, quite suddenly, it slaps flat and is still. **Euler's Disk** is a desk toy that shows this off. It is a thick, heavy steel disk that spins on a smooth, slightly curved mirror base, often for two minutes or more. It was invented by Joseph Bendik, an engineer at Hughes Aircraft in California, between 1987 and 1990, and named after Leonhard Euler, who worked out the mechanics of spinning bodies in the 1700s AD.
+
+**Keith Moffatt** is a British mathematician of the University of Cambridge, where he was Professor of Mathematical Physics from 1980 to 2002. He is known for his work on fluid flow and turbulence. In 2000 he wrote a short paper in *Nature*, "Euler's disk and its finite-time singularity." He asked what makes the disk stop, and why the end comes so fast.
+
+**Two motions.** Watch the green dot in panel (a). It marks where the disk touches the table. As the disk rolls around on its edge, this **contact point** runs around a circle. Call its rate $\Omega$ (radians per second). The disk itself turns much more slowly: the gold mark on its face barely moves. What you see and hear speeding up is the contact point, not the disk spinning.
+
+**Tilt and speed are tied together.** Let $\alpha$ be the angle between the disk and the table, $a$ the disk's radius and $g$ the pull of gravity. For a thin disk that rolls without slipping, steady rolling needs
+
+$$\Omega^2 = \frac{4g}{a\sin\alpha} \approx \frac{4g}{a\,\alpha} \quad \text{for small } \alpha .$$
+
+So as the disk leans over, $\Omega$ grows. Halve the tilt and the wobble goes about 1.4 times as fast.
+
+**Where the energy goes.** For a small tilt, the disk's energy (lifting its center, plus its motion) is about $\tfrac{3}{2} M g a \alpha$, where $M$ is its mass. Lose energy and the tilt must shrink. Moffatt looked at one way to lose it: the **air** caught between the disk and the table. Near the contact point the gap is very thin. As the low side of the disk sweeps around, it squeezes air out ahead of it, and air rushes into the gap opening behind it. Air is a little sticky (its viscosity $\mu$ is small but not zero). Pushing it through a thin gap fast takes work, and that work turns into heat. This is the viscous term of the Navier–Stokes equations at work.
+
+When he worked out the rate of this loss and set it against the energy, Moffatt found
+
+$$\alpha^3 = \frac{2\pi\mu a}{M}\,(t_0 - t), \qquad \text{so} \qquad \alpha \propto (t_0-t)^{1/3}, \quad \Omega \propto (t_0-t)^{-1/6} .$$
+
+The tilt reaches zero at a definite moment $t_0$, and at that same moment $\Omega$ becomes infinite. That is a **finite-time singularity**: a quantity that blows up not "eventually" but at a time you can name. For his disk, Moffatt put $t_0$ about 100 seconds away.
+
+**The real disk does not reach infinity.** The formulas stop describing it a few milliseconds before $t_0$. Near the end, the disk's rim would have to bob up and down faster than gravity can pull it back, so it cannot stay in steady rolling contact with the table. The smooth motion breaks down, the disk clatters, and it stops. Panel (c) shows the cut-off as a red line. Switch the graph to **log scales** and the two laws become straight lines, the tilt sloping down and the wobble rate sloping up.
+
+**What our picture shows.** The scene runs Moffatt's formulas for a disk 4 cm in radius, starting at 10° and timed so that $t_0$ is 100 seconds. Panel (b) is our own model of the air film, made with **lubrication theory**, the thin-film form of the Navier–Stokes equations. In a thin gap the air moves almost parallel to the walls. It is still where it touches the disk and the table, and fastest halfway between. The pressure obeys one equation (Reynolds' equation), which we solve under the disk. Red marks air being squeezed, blue marks suction, and the arrows show the flow along the gold line. The heights are stretched a great deal, or the gap would be invisible. The sound is a synthesized whirr whose pitch follows the contact point. It is raised by three octaves (eight times the frequency), because near the start the real rate is too low to hear as a note.
+
+**Is it really the air?** Moffatt's paper started a lively debate, and the answer is still not settled in every detail.
+
+- Later in 2000, Ger van den Engh, Peter Nelson and Jared Roach spun coins in a vacuum. Air made only a small difference to the final motion. They suggested that slipping and friction where the rim meets the table could account for the shuddering end.
+- In 2002, K. Easwar, F. Rouyer and N. Menon filmed disks and rings with a high-speed camera on different surfaces. The wobble rate did rise toward a singularity as a power law, but the way it depended on the surface pointed to **rolling friction** as the main loss, not air drag.
+- In 2005, C. Le Saux, R. I. Leine and C. Glocker built a computer model of the disk with several kinds of friction at the contact: sliding, pivoting and rolling. They compared how the energy runs out in each case with the experiments.
+- In 2009, Leine measured the last seconds with a high-speed camera and concluded that friction at the rim is likely to govern the motion at the very end.
+
+Most later work agrees that for a heavy disk on a hard surface, friction at the contact usually matters more than the air, while the air may still play a part at the smallest tilts. Moffatt himself noted that other losses are likely present, and that the air was the one he had worked out in detail. Either way, the toy shows a finite-time singularity you can hold in your hand, and the way nature dodges it at the last moment.
+
+**A link to the Millennium Problem.** Moffatt has pointed out the family resemblance. The Navier–Stokes question above asks whether a smooth flow can blow up in a finite time. Euler's disk is a small, everyday case where a simple model really does blow up, and where the physics left out of the model takes over just before the end.
+
 ## Try this
 
 - Press **Smooth flight**, then drag the angle up slowly. Around what angle does the smoke stop hugging the top surface?
@@ -104,3 +154,6 @@ The result does not change how engineers design wings. Real air is made of molec
 - Set the camber to 0% and the angle to 0°. Why is there no lift? Now tilt it to 5°.
 - Lower the Reynolds number to 50 and then raise it to 800. Which looks more like syrup, and which more like air?
 - Make the wing very thick (24%) and compare the drag with a thin one (6%) at the same angle.
+- Switch to **Euler's disk**, turn on the sound and press **Play**. When does the pitch start to climb quickly?
+- In the disk scene, set the graph to **time left, log scales**. The tilt drops by one power of ten while the time left drops by three. Can you see it on the graph?
+- Click the disk picture and press the right arrow key a few times. Each press halves the time left. How much faster is the contact point going after six presses? (The rule $\Omega \propto (t_0-t)^{-1/6}$ says: twice as fast.)

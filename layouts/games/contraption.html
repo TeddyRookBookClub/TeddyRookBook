@@ -1,0 +1,59 @@
+{{ define "main" }}
+{{- /* /games/contraption/: Contraption Workshop, a chain-reaction machine builder with simple machines
+   (content/games/contraption.md). Scripts, all written for this site: /js/rule-drag.js (dragging that only lands on
+   allowed spots), static/games/contraption/engine.js (parts and physics), levels.js, workshop.js (screen and controls).
+   Every level's solution is checked by scripts/contraption/verify-levels.js. Element ids are the script's contract. */ -}}
+<link rel="stylesheet" href="{{ "games/contraption/contraption.css" | relURL }}?v={{ (os.Stat "static/games/contraption/contraption.css").ModTime.Unix }}">
+{{ partial "game-shell.html" . }}
+<div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div>
+<div class="cw gbox" id="cw">
+  <div class="cw-top">
+    <h2>Contraption Workshop</h2>
+    <label class="cw-sr" for="cw-level">Level</label>
+    <select id="cw-level"></select>
+    <div class="cw-goal" id="cw-goal"></div>
+    <button type="button" class="cw-btn" id="cw-help" aria-label="How to play">?</button>
+  </div>
+  <div class="cw-main">
+    <div class="cw-stage">
+      <canvas id="cw-can" tabindex="0" role="application" aria-roledescription="machine builder" aria-label="Building stage. Drag parts to move them. Keyboard: N picks a part, arrow keys move it, R turns it, plus and minus resize it, Delete removes it, Space runs the machine."></canvas>
+      <div class="cw-note" id="cw-note" hidden></div>
+    </div>
+    <div class="cw-side">
+      <p class="cw-h" id="cw-palh">Parts</p>
+      <div class="cw-pal" id="cw-pal" role="group" aria-labelledby="cw-palh"></div>
+      <p class="cw-selname" id="cw-selname"></p>
+      <div class="cw-tools" id="cw-tools" hidden>
+        <button type="button" class="cw-btn" id="cw-turn">↻ Turn</button>
+        <button type="button" class="cw-btn" id="cw-smaller" aria-label="Smaller">−</button>
+        <button type="button" class="cw-btn" id="cw-bigger" aria-label="Bigger">+</button>
+        <button type="button" class="cw-btn" id="cw-del">Remove</button>
+      </div>
+    </div>
+  </div>
+  <div class="cw-bar">
+    <button type="button" class="cw-btn cw-pri" id="cw-run">▶ Run</button>
+    <button type="button" class="cw-btn" id="cw-step">Step</button>
+    <button type="button" class="cw-btn" id="cw-reset">Reset</button>
+    <label><input type="checkbox" id="cw-slow"> Slow motion</label>
+    <button type="button" class="cw-btn" id="cw-path" aria-pressed="true">Show path</button>
+    <button type="button" class="cw-btn" id="cw-clear">Clear</button>
+    <button type="button" class="cw-btn" id="cw-share">Share</button>
+    <span class="cw-time" id="cw-time" aria-label="Time">0.0 s</span>
+  </div>
+  <div class="cw-info">
+    <div class="cw-mach" id="cw-mach"></div>
+    <div class="cw-chain" id="cw-chain" aria-live="polite"></div>
+  </div>
+  <p class="cw-sr" id="cw-live" aria-live="polite"></p>
+  <div class="cw-ov" id="cw-ov" hidden></div>
+  <noscript>This game needs JavaScript.</noscript>
+</div></div>
+<div class="cw-about" style="max-width:46rem;margin:1.4rem auto 0;line-height:1.6">
+  {{ .Content }}
+</div>
+<script src="{{ "js/rule-drag.js" | relURL }}?v={{ (os.Stat "static/js/rule-drag.js").ModTime.Unix }}"></script>
+<script src="{{ "games/contraption/engine.js" | relURL }}?v={{ (os.Stat "static/games/contraption/engine.js").ModTime.Unix }}"></script>
+<script src="{{ "games/contraption/levels.js" | relURL }}?v={{ (os.Stat "static/games/contraption/levels.js").ModTime.Unix }}"></script>
+<script src="{{ "games/contraption/workshop.js" | relURL }}?v={{ (os.Stat "static/games/contraption/workshop.js").ModTime.Unix }}"></script>
+{{ end }}

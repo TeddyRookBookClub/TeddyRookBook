@@ -1,0 +1,78 @@
+# Inventors Ladder courses, oldest inventors first (the order of this list is the ladder).
+# Skill maps: data/inventors/topics/<key>.json; lessons: data/inventors/lessons/<key>.json; generators: static/inventors/gen/<key>.js;
+# visuals: static/inventors/viz/inventors.js (names iv-…). The people courses are built by scripts/inventors/build.py (builder inv):
+# edit that script or scripts/inventors/src/<key>.py and run python3 scripts/inventors/build.py.
+# The From Scratch course (key from-scratch) is written separately (builder invlab): its topic, lesson, gen and viz files are
+# data/inventors/{topics,lessons}/from-scratch.json, static/inventors/gen/from-scratch.js and static/inventors/viz/from-scratch.{js,css};
+# build.py never writes them. Its topic keys, in order: lemon-battery, electromagnet, simple-motor, hand-generator, telegraph,
+# filament-bulb, crystal-radio, printing-press (ids from-scratch.<key>, slugs the same as the keys).
+- key: invancient
+  slug: ancient-and-medieval
+  title: "Ancient and Medieval Inventors"
+  short: "Ancient"
+  band: "Middle school"
+  grade: "5–9"
+  icon: "🏛️"
+  color: "#8a5a00"
+  blurb: "Archimedes and his lever, Hero of Alexandria and his steam toy, and Ibn al-Haytham, who tested ideas about light in a dark room."
+  after: []
+- key: invren
+  slug: renaissance-and-printing
+  title: "Renaissance and the Printing Press"
+  short: "Renaissance"
+  band: "Middle school"
+  grade: "5–9"
+  icon: "📜"
+  color: "#9a3412"
+  blurb: "Gutenberg's movable type, ink and press, and Leonardo da Vinci's notebooks full of flying machines, most never built in his lifetime."
+  after: [invancient]
+- key: invsci
+  slug: scientific-revolution
+  title: "The Scientific Revolution"
+  short: "Science"
+  band: "Middle school"
+  grade: "6–10"
+  icon: "🔭"
+  color: "#1d4ed8"
+  blurb: "Galileo's telescope and rolling balls, and Newton's prism, reflecting telescope and laws of motion."
+  after: [invren]
+- key: invelec
+  slug: age-of-electricity
+  title: "The Age of Electricity"
+  short: "Electricity"
+  band: "Middle school"
+  grade: "6–10"
+  icon: "⚡"
+  color: "#7e22ce"
+  blurb: "Franklin's kite and lightning rod, Volta's pile, Faraday's motor and generator, Morse's telegraph, Bell's telephone, Edison's lab and Tesla's motor."
+  after: [invsci]
+- key: invflight
+  slug: flight
+  title: "Flight"
+  short: "Flight"
+  band: "Middle school"
+  grade: "6–10"
+  icon: "✈️"
+  color: "#0369a1"
+  blurb: "How two bicycle makers from Dayton, Ohio, studied birds, built a wind tunnel, fixed the tables everyone used, and flew in 1903."
+  after: [invelec]
+- key: invmodern
+  slug: modern-explainers
+  title: "Modern Explainers"
+  short: "Explainers"
+  band: "High school"
+  grade: "8–12"
+  icon: "🌌"
+  color: "#4338ca"
+  blurb: "Reading guides to Stephen Hawking's and Carl Sagan's books: what each chapter says in our own words, and where to borrow the books."
+  after: [invsci]
+- key: from-scratch
+  slug: from-scratch
+  title: "From Scratch"
+  short: "From Scratch"
+  band: "Middle school"
+  grade: "4–9"
+  icon: "🔧"
+  color: "#047857"
+  blurb: "Build what the inventors built, with safe household parts: a lemon battery, an electromagnet, a motor, a generator, a telegraph, a light bulb, a crystal radio and a printing press."
+  after: [invancient]

@@ -1,0 +1,147 @@
+{
+ "course": "from-scratch",
+ "units": [
+  {
+   "key": "power",
+   "title": "Batteries, Magnets and Motors",
+   "blurb": "Make electricity from a lemon, turn it into magnetism, then motion, then back into electricity, the way Volta, Henry and Faraday did."
+  },
+  {
+   "key": "signals",
+   "title": "Messages, Light and Radio",
+   "blurb": "Send a message down a wire, make a wire glow, and hear a radio with no battery at all."
+  },
+  {
+   "key": "press",
+   "title": "The Printing Press",
+   "blurb": "Set type, ink it and pull the press, and see why one machine changed how the world shared ideas."
+  }
+ ],
+ "topics": [
+  {
+   "id": "from-scratch.lemon-battery",
+   "slug": "lemon-battery",
+   "unit": "power",
+   "title": "A Lemon Battery, Like Volta's Pile",
+   "short": "Two different metals in a sour juice make a small voltage; cells in series add their voltages.",
+   "prereqs": [
+    "sciexp.circuits",
+    "invelec.volta"
+   ],
+   "xp": 2,
+   "trouble": "Builders use two pieces of the same metal, or let the zinc and copper touch inside the lemon, and get nothing.",
+   "viz": [
+    "fs-lemon"
+   ],
+   "lab": "/science-lab/circuits/"
+  },
+  {
+   "id": "from-scratch.electromagnet",
+   "slug": "electromagnet",
+   "unit": "power",
+   "title": "A Nail Electromagnet, Like Sturgeon's and Henry's",
+   "short": "Current in a coil makes a magnet; more turns and more current make it stronger, and an iron core multiplies it.",
+   "prereqs": [
+    "from-scratch.lemon-battery"
+   ],
+   "xp": 2,
+   "trouble": "Builders leave the enamel on magnet-wire ends, so no current flows, or hold the connection so long the wire gets hot.",
+   "viz": [
+    "fs-magnet"
+   ]
+  },
+  {
+   "id": "from-scratch.simple-motor",
+   "slug": "simple-motor",
+   "unit": "power",
+   "title": "A Homopolar Motor, Faraday's 1821 Idea",
+   "short": "A current crossing a magnetic field feels a push, F = BIL; arranged right, the push keeps a wire spinning.",
+   "prereqs": [
+    "from-scratch.electromagnet",
+    "invelec.faraday"
+   ],
+   "xp": 2,
+   "trouble": "Builders squeeze the wire tight against the battery so it can't turn, or use a magnet narrower than the battery.",
+   "viz": [
+    "fs-motor"
+   ]
+  },
+  {
+   "id": "from-scratch.hand-generator",
+   "slug": "hand-generator",
+   "unit": "power",
+   "title": "A Hand Generator, Faraday's 1831 Discovery",
+   "short": "A changing magnetic field through a coil makes a voltage; faster changes and more turns make more.",
+   "prereqs": [
+    "from-scratch.simple-motor"
+   ],
+   "xp": 2,
+   "trouble": "Learners expect a magnet sitting still inside a coil to make current, or expect a few turns to light an LED.",
+   "viz": [
+    "fs-induct"
+   ]
+  },
+  {
+   "id": "from-scratch.telegraph",
+   "slug": "telegraph",
+   "unit": "signals",
+   "title": "A Telegraph, Like Morse's",
+   "short": "A key closes a circuit; an electromagnet far away clicks; dots and dashes carry letters.",
+   "prereqs": [
+    "from-scratch.electromagnet",
+    "invelec.morse"
+   ],
+   "xp": 2,
+   "trouble": "Learners send letters with no gaps between them, so the receiver can't tell where one letter ends.",
+   "viz": [
+    "fs-morse"
+   ]
+  },
+  {
+   "id": "from-scratch.filament-bulb",
+   "slug": "filament-bulb",
+   "unit": "signals",
+   "title": "A Glowing Filament, Edison's and Swan's Problem",
+   "short": "Current heats a thin filament until it glows; in air it burns away, so lamps need a vacuum or a gas without oxygen.",
+   "prereqs": [
+    "from-scratch.lemon-battery",
+    "invelec.edison"
+   ],
+   "xp": 2,
+   "trouble": "Learners think the bulb's glass makes the light, or that a brighter filament in air would simply last longer.",
+   "viz": [
+    "fs-filament"
+   ]
+  },
+  {
+   "id": "from-scratch.crystal-radio",
+   "slug": "crystal-radio",
+   "unit": "signals",
+   "title": "A Crystal Radio with No Battery",
+   "short": "A coil and capacitor pick one station; a diode turns its radio wave back into sound you can hear in a sensitive earphone.",
+   "prereqs": [
+    "from-scratch.hand-generator"
+   ],
+   "xp": 3,
+   "trouble": "Builders use ordinary earbuds, which are far too hungry for current, or a short antenna indoors far from any AM station.",
+   "viz": [
+    "fs-radio"
+   ]
+  },
+  {
+   "id": "from-scratch.printing-press",
+   "slug": "printing-press",
+   "unit": "press",
+   "title": "A Printing Press, Gutenberg's Way",
+   "short": "Backward metal letters, set and justified, inked and pressed, print a page the right way round, hundreds of times a day.",
+   "prereqs": [
+    "invren.gutenberg"
+   ],
+   "xp": 2,
+   "trouble": "Learners set the letters forward, so the page prints backward, or forget that every line must be filled out exactly to lock up.",
+   "viz": [
+    "fs-press"
+   ]
+  }
+ ]
+}

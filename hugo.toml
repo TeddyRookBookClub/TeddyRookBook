@@ -359,6 +359,16 @@ note = "From a cardboard arm to Arduino, Raspberry Pi, PID, ROS 2 and robot visi
 icon = "🤖"
 
 [[menu.main]]
+name = "Inventors Ladder"
+identifier = "inventors-edu"
+url = "/inventors/"
+weight = 28
+[menu.main.params]
+group = "Education"
+note = "How the great inventors did it, in their own words, plus projects to build"
+icon = "💡"
+
+[[menu.main]]
 name = "October Sky"
 url = "/october-sky/"
 weight = 34
@@ -421,6 +431,15 @@ weight = 32
 group = "Games"
 note = "A platformer through Greece, Rome and the Odyssey"
 icon = "🏺"
+
+[[menu.main]]
+name = "Contraption Workshop"
+url = "/games/contraption/"
+weight = 32
+[menu.main.params]
+group = "Games"
+note = "Build a chain-reaction machine from simple machines"
+icon = "⚙️"
 
 [[menu.main]]
 name = "Ancient Festival Tycoon"
@@ -877,6 +896,9 @@ note = "Save sections to use without the internet, and keep them up to date"
   [segments.robotics]
     [[segments.robotics.includes]]
       path = '{/robotics,/robotics/**}'
+  [segments.inventors]
+    [[segments.inventors.includes]]
+      path = '{/inventors,/inventors/**}'
   [segments.memory]
     [[segments.memory.includes]]
       path = '{/memory,/memory/**}'
