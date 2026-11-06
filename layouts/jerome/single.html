@@ -47,8 +47,8 @@
   <section class="jc-sec">
     <h2>New core words</h2>
     <div class="jc-new">
-      <div class="g"><h4>Greek</h4>{{ with $p.ng }}<div class="jc-chips">{{ range . }}<a class="jc-chip" href="{{ printf "%sgreek/%s/" $root .s | relURL }}"><b lang="grc">{{ .w }}</b> {{ .m }}</a>{{ end }}</div>{{ else }}<p class="jc-small">None new in this passage.</p>{{ end }}</div>
-      <div class="l"><h4>Latin</h4>{{ with $p.nl }}<div class="jc-chips">{{ range . }}<a class="jc-chip" href="{{ printf "%slatin/%s/" $root .s | relURL }}"><b lang="la">{{ .w }}</b> {{ .m }}</a>{{ end }}</div>{{ else }}<p class="jc-small">None new in this passage.</p>{{ end }}</div>
+      <div class="g"><h3>Greek</h3>{{ with $p.ng }}<div class="jc-chips">{{ range . }}<a class="jc-chip" href="{{ printf "%sgreek/%s/" $root .s | relURL }}"><b lang="grc">{{ .w }}</b> {{ .m }}</a>{{ end }}</div>{{ else }}<p class="jc-small">None new in this passage.</p>{{ end }}</div>
+      <div class="l"><h3>Latin</h3>{{ with $p.nl }}<div class="jc-chips">{{ range . }}<a class="jc-chip" href="{{ printf "%slatin/%s/" $root .s | relURL }}"><b lang="la">{{ .w }}</b> {{ .m }}</a>{{ end }}</div>{{ else }}<p class="jc-small">None new in this passage.</p>{{ end }}</div>
     </div>
     {{ $mg := index $p.met 0 }}{{ $ml := index $p.met 1 }}
     <div class="jc-met">
@@ -86,7 +86,7 @@
   <div class="jc-tables">
     {{ range . }}
     <div class="jc-ftab">
-      {{ with .title }}<h3>{{ . }}</h3>{{ end }}
+      {{ with .title }}<h2>{{ . }}</h2>{{ end }}
       <div class="jc-tw"><table lang="{{ $lc }}">
         <thead><tr>{{ range .head }}<th>{{ . }}</th>{{ end }}</tr></thead>
         <tbody>{{ range .rows }}<tr>{{ range . }}<td>{{ . | safeHTML }}</td>{{ end }}</tr>{{ end }}</tbody>

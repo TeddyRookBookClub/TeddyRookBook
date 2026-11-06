@@ -3,7 +3,7 @@
    "endnote" (the reading's boundary.end sentence, set after the text and before its footnotes).
    Schema v1.1: footnote items are {n, s, mark, page} with n a running number (shown); [^n] links to item n.
    A block's "pg" (the printed page it begins on) becomes a quiet page number in the margin when the page changes.
-   Headings inside the reading are h3–h5 (the page has h1 for the day and h2 for each reading). */ -}}
+   Headings inside the reading look like h3–h5 (class v3–v5); their tags step down one level at most (the page has h1 for the day and h2 for each reading). */ -}}
 {{- $pre := .pre -}}
 {{- $sc := newScratch -}}
 {{- $endnote := "" -}}{{- with .endnote -}}{{- $endnote = printf "<p class=\"hc-bound\">%s</p>\n" (htmlEscape .) -}}{{- end -}}
@@ -15,6 +15,7 @@
 {{- $out := "" -}}
 {{- $fk := 0 -}}
 {{- $lastpg := "" -}}
+{{- $prevh := 2 -}}
 {{- range .blocks -}}
   {{- $t := .t -}}
   {{- $pm := "" -}}
@@ -23,7 +24,9 @@
     {{- $out = printf "%s<p>%s%s</p>\n" $out $pm (partial "harvard-classics/inline.html" (dict "s" .s "pre" $pre "sc" $sc)) -}}
   {{- else if eq $t "heading" -}}
     {{- $lv := add (int (.level | default 2)) 1 -}}{{- if lt $lv 3 }}{{ $lv = 3 }}{{ end -}}{{- if gt $lv 5 }}{{ $lv = 5 }}{{ end -}}
-    {{- $out = printf "%s<h%d class=\"hc-h\">%s%s</h%d>\n" $out $lv $pm (partial "harvard-classics/inline.html" (dict "s" .s "pre" $pre "sc" $sc)) $lv -}}
+    {{- /* $lv sets the look (class v3–v5); the tag never skips a level below the previous heading. */ -}}
+    {{- $tag := $lv -}}{{- if gt $tag (add $prevh 1) }}{{ $tag = add $prevh 1 }}{{ end -}}{{- $prevh = $tag -}}
+    {{- $out = printf "%s<h%d class=\"hc-h v%d\">%s%s</h%d>\n" $out $tag $lv $pm (partial "harvard-classics/inline.html" (dict "s" .s "pre" $pre "sc" $sc)) $tag -}}
   {{- else if eq $t "quote" -}}
     {{- $out = printf "%s<blockquote class=\"hc-q\"><p>%s%s</p></blockquote>\n" $out $pm (partial "harvard-classics/inline.html" (dict "s" .s "pre" $pre "sc" $sc)) -}}
   {{- else if eq $t "verse" -}}

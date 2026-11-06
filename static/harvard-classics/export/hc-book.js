@@ -152,7 +152,7 @@
      and for "book": notes (footnotes at the end of the reading), pages (the volume's page numbers and the page notes),
      epub (EPUB semantics), htag: "h" for real headings (EPUB) or "p" (print, so the PDF outline lists only the days)}. */
   function text(blocks, o) {
-    var web = o.mode === 'web', st = noteState(blocks), out = '', fk = 0, last = '', endnote = '';
+    var web = o.mode === 'web', st = noteState(blocks), out = '', fk = 0, last = '', endnote = '', prevh = 2;
     var I = function (s) { return inline(s, st, o); };
     if (o.endnote) endnote = web ? '<p class="hc-bound">' + esc(o.endnote) + '</p>\n' : o.pages ? '<p class="bound">' + xml(o.endnote) + '</p>\n' : '';
     (blocks || []).forEach(function (b) {
@@ -170,7 +170,7 @@
         var lv = Math.floor(+b.level || 2) + 1;
         if (lv < 3) lv = 3;
         if (lv > 5) lv = 5;
-        if (web) out += '<h' + lv + ' class="hc-h">' + pm + I(b.s) + '</h' + lv + '>\n';
+        if (web) { var tg = Math.min(lv, prevh + 1); prevh = tg; out += '<h' + tg + ' class="hc-h v' + lv + '">' + pm + I(b.s) + '</h' + tg + '>\n'; }
         else if (o.htag === 'p') out += '<p class="h h' + lv + '">' + pm + I(b.s) + '</p>\n';
         else out += '<h' + lv + ' class="h">' + pm + I(b.s) + '</h' + lv + '>\n';
       } else if (t === 'quote') out += web ? '<blockquote class="hc-q"><p>' + pm + I(b.s) + '</p></blockquote>\n' : '<blockquote class="q"><p>' + pm + I(b.s) + '</p></blockquote>\n';

@@ -25,8 +25,8 @@ main.main:has(.bc){max-width:1200px}
 .bc-btns button[aria-pressed="true"]{background:#1f5c4e;border-color:#63e6be}
 .bc-panel,.bc-lab{position:absolute;top:6.4rem;width:265px;max-height:calc(100% - 10.4rem);overflow:auto;background:rgba(8,20,30,.86);border:1px solid rgba(120,170,200,.25);border-radius:12px;padding:.55rem .7rem;backdrop-filter:blur(6px)}
 .bc-panel{right:.7rem}.bc-lab{left:.7rem}
-.bc-panel h3,.bc-lab h3{margin:.1rem 0 .4rem;font:700 .95rem Georgia,serif;color:#fff}
-.bc-panel h3 small,.bc-lab h3 small{font:400 .72rem system-ui,sans-serif;color:#8fb3c6;margin-left:.3rem}
+.bc-panel h3,.bc-lab h3,.bc-panel h2,.bc-lab h2{margin:.1rem 0 .4rem;font:700 .95rem Georgia,serif;color:#fff}
+.bc-panel h3 small,.bc-lab h3 small,.bc-panel h2 small,.bc-lab h2 small{font:400 .72rem system-ui,sans-serif;color:#8fb3c6;margin-left:.3rem}
 .bc-vals{display:grid;grid-template-columns:auto auto;gap:.08rem .6rem;margin:0;font-size:.8rem}
 .bc-vals dt{color:#9ab7c8}.bc-vals dd{margin:0;text-align:right;font-family:ui-monospace,Menlo,Consolas,monospace;color:#f2f7fa;white-space:nowrap}
 .bc-vals dt.sec{grid-column:1/-1;margin-top:.35rem;color:#63e6be;font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em}
@@ -83,7 +83,7 @@ main.main:has(.bc){max-width:1200px}
 .bc-fact{border-left:3px solid #63e6be;padding:.3rem .6rem;background:rgba(99,230,190,.07);border-radius:6px}
 .bc-panel,.bc-lab,.bc-card{touch-action:pan-y;overscroll-behavior:contain}
 .bc-fold{float:right;width:1.7rem;height:1.5rem;padding:0;border-radius:6px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#cfe7f3;font-size:.85rem;line-height:1}
-.bc-lab.fold>:not(h3){display:none}
+.bc-lab.fold>:not(h2,h3){display:none}
 .bc-lab.fold .bc-fold{transform:rotate(-90deg)}
 .bc-help{font-size:.82rem;color:inherit;opacity:.75;margin:.3rem 0 1rem}
 @media (max-width:900px){

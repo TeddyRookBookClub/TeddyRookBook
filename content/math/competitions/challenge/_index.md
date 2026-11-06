@@ -5,7 +5,7 @@ type: comp
 layout: chal
 ---
 
-### How to approach hard problems
+## How to approach hard problems
 
 A hard problem rarely gives way to the first thing you try. These habits help:
 

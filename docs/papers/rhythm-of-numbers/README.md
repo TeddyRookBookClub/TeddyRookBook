@@ -6,7 +6,7 @@ The built PDF is `static/pdfs/The-Rhythm-of-Numbers-paper.pdf`; its page is `/co
 
 ## Layout
 
-- `paper/` – the LaTeX source: `main.tex` (preamble and chapter list), `front.tex`, `ch01_intro.tex` … `ch14_discussion.tex`,
+- `paper/` – the LaTeX source: `main.tex` (preamble and chapter list), `front.tex`, `ch01_intro.tex` … `ch16_openq2.tex`,
   `appA_algorithms.tex`, `appB_methods.tex`, `appC_repro.tex`, and `refs.bib` (every entry checked against a publisher
   page, catalogue or citing source; fields that could not be confirmed were left out).
 - `paper/gen/` – LaTeX macros written by the scripts. The text uses only these macros for computed values, so never edit
@@ -29,6 +29,12 @@ latexmk, BibTeX, memoir, natbib, algorithm2e, cleveref, siunitx and the Latin Mo
 The `c11_openq_*.py` scripts belong to Chapter 15 ("Working on the open questions"): 12 million certified terms of pi
 (`c11_openq_picf.py`, from about 43 million bits of pi), the prime search, the calibrated statistics,
 the exact expectation and its simulation, the correlation-matrix spectra and the equal-temperament ranking.
+`c12_openq2.py` belongs to Chapter 16 ("A second look at the open questions"): the overlap check behind the
+almost-everywhere theorem, e modulo primes, the correlation matrix's near-copies and bounds, the commas of 171, and two
+more tests of pi's terms.
+
+Dates of additions: the paper marks each addition with the UTC date it was published. The dates are TeX macros in
+`paper/main.tex` (`\revO`, `\revA`, `\revB`), so a date can be corrected in one line.
 
 `c8_suite.py` reads `data/music/suite.yaml` from this repository. Random choices use fixed seeds. Scripts stop with an
 error if any asserted fact (for example 292 × 113 = 32,996, or the OEIS lists of prime convergents of pi) fails.

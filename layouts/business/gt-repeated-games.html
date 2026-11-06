@@ -18,15 +18,15 @@
       <noscript><p class="lab-small">This interactive needs JavaScript.</p></noscript>
     </div>
     <div class="lab-panel">
-      <h3>View</h3>
+      <h2>View</h2>
       <div class="lab-seg" role="group" aria-label="View" id="gt7-tab"><button type="button" data-t="tour" aria-pressed="true">Tournament</button><button type="button" data-t="evo" aria-pressed="false">Evolution</button><button type="button" data-t="match" aria-pressed="false">One match</button></div>
       <div class="lab-row"><button type="button" class="lab-btn pri" id="gt7-go">▶ Run the tournament</button></div>
       <p id="gt7-msg" aria-live="polite"></p>
       <div id="gt7-sbox" hidden><div class="lab-seg" role="group" aria-label="Starting population" id="gt7-start"><button type="button" data-s="equal" aria-pressed="true">Equal shares</button><button type="button" data-s="hostile" aria-pressed="false">Hostile world: 90% ALLD</button></div></div>
       <div id="gt7-mbox" class="gt7-sel" hidden><select id="gt7-ma" aria-label="First strategy"><option value="allc">Always cooperate</option><option value="alld">Always defect</option><option value="tft" selected>Tit for tat</option><option value="grim">Grim trigger</option><option value="wsls">Win-stay, lose-shift</option><option value="gtft">Generous tit for tat</option><option value="tf2t">Tit for two tats</option><option value="rand">Random</option><option value="yours">Your strategy</option></select><span>vs</span><select id="gt7-mb" aria-label="Second strategy"><option value="allc">Always cooperate</option><option value="alld">Always defect</option><option value="tft" selected>Tit for tat</option><option value="grim">Grim trigger</option><option value="wsls">Win-stay, lose-shift</option><option value="gtft">Generous tit for tat</option><option value="tf2t">Tit for two tats</option><option value="rand">Random</option><option value="yours">Your strategy</option></select></div>
-      <h3>Lineup</h3>
+      <h2>Lineup</h2>
       <div class="gt7-line" id="gt7-line" role="group" aria-label="Strategies in the tournament"><button type="button" data-k="allc"><i style="background:#63e6be"></i>ALLC</button><button type="button" data-k="alld"><i style="background:#ff8787"></i>ALLD</button><button type="button" data-k="tft"><i style="background:#74c0fc"></i>TFT</button><button type="button" data-k="grim"><i style="background:#b197fc"></i>GRIM</button><button type="button" data-k="wsls"><i style="background:#ffd479"></i>WSLS</button><button type="button" data-k="gtft"><i style="background:#38d9a9"></i>GTFT</button><button type="button" data-k="tf2t"><i style="background:#a5d8ff"></i>TF2T</button><button type="button" data-k="rand"><i style="background:#adb5bd"></i>RAND</button><button type="button" data-k="yours"><i style="background:#f9a8d4"></i>YOURS</button></div>
-      <h3>Your strategy</h3>
+      <h2>Your strategy</h2>
       <div class="gt7-design">
         <div><span>First move</span><span class="lab-seg" id="gt7-first"><button type="button" data-v="0">C</button><button type="button" data-v="1">D</button></span></div>
         <div id="gt7-after">
@@ -39,12 +39,12 @@
         </div>
         <label class="lab-chk"><input type="checkbox" id="gt7-grudge"> Never forgive: once they defect, defect forever</label>
       </div>
-      <h3>Rules of the game</h3>
+      <h2>Rules of the game</h2>
       <div class="lab-field"><span><label for="gt7-noise">Noise: chance a move comes out wrong</label><output id="gt7-noise-o" for="gt7-noise"></output></span><input type="range" id="gt7-noise" min="0" max="10" step="1" value="0"></div>
       <div class="lab-seg" role="group" aria-label="Match length" id="gt7-len"><button type="button" data-l="fixed" aria-pressed="true">200 rounds</button><button type="button" data-l="uncertain" aria-pressed="false">Uncertain end</button></div>
       <div class="lab-field" id="gt7-wbox" hidden><span><label for="gt7-w">Chance of another round, <i>w</i></label><output id="gt7-w-o" for="gt7-w"></output></span><input type="range" id="gt7-w" min="0.3" max="0.99" step="0.01" value="0.99"></div>
       <dl class="lab-readout" id="gt7-read" aria-live="polite"></dl>
-      <h3>Missions</h3>
+      <h2>Missions</h2>
       <p class="lab-progress"></p>
       <ol class="lab-missions" id="gt7-missions"></ol>
     </div>

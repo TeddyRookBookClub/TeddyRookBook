@@ -1,0 +1,273 @@
+\chapter{A second look at the open questions}\label{ch:openq2}
+\addednote{\revB}
+
+Chapter~\ref{ch:openq} left several loose ends: a second-moment estimate that would settle Question~3 for almost every number, an observation about $e$ that was checked but not proved, a top eigenvalue whose growth we could bound only from below, a level-spacing statistic we could not explain, and a winning temperament we did not account for. This chapter goes back to each of them. The labels mean what they meant in Chapter~\ref{ch:openq}: a Theorem or Proposition without a citation in its heading is proved here from cited results; numbers from computation are numerical evidence.
+
+The main result is \cref{thm:ob-ae}: \cref{heur:primeconv} is true for almost every real number. It says nothing about $\pi$, which is a single number and may or may not be typical.
+
+\section{Question 3: the heuristic for almost every number}\label{sec:ob3}
+
+For an integer $q \ge 2$ let $E_q$ be the set of $x \in (0,1)$ for which $q$ is a convergent denominator, and write $\lambda$ for length (Lebesgue measure). \Cref{thm:oq-exact} says that $\lambda(E_q) = \frac{2}{q}\sum_{r} \frac{1}{q + r}$, the sum over $1 \le r < q$ with $\gcd(r,q) = 1$. Chapter~\ref{ch:openq} stopped because the pieces of $E_q$ are not all the same size. The way forward is to describe the sizes exactly and show that they are spread out evenly.
+
+\begin{lemma}[the pieces of $E_q$]\label{lem:ob-pieces}
+Let $0 < a < q$ with $\gcd(a, q) = 1$, and let $s$ be the denominator of the convergent just before $a/q$ in the expansion of $a/q$ whose last term is at least 2. The set of $x \in (0,1)$ that have $a/q$ as a convergent is an interval with $a/q$ inside it, of length
+\[
+  \frac{1}{q(q+s)} + \frac{1}{q(2q - s)} = \frac{g(s/q)}{q^2}, \qquad g(u) = \frac{1}{1+u} + \frac{1}{2-u}.
+\]
+Here $as \equiv \pm 1 \pmod q$, and since $g(u) = g(1-u)$, the length depends only on the inverse of $a$ modulo $q$. The pieces for different $a$ do not overlap, and $E_q$ is their union.
+\end{lemma}
+
+\begin{proof}
+The rational $a/q$ has two expansions, $\cf{0; c_1, \dots, c_k}$ with $c_k \ge 2$ and $\cf{0; c_1, \dots, c_k - 1, 1}$ (the proof of \cref{thm:oq-exact}). In the first, the last two denominators are $s$ and $q$; in the second they are $q - s$ and $q$. By \eqref{eq:oq-cyl} the two cylinders have lengths $1/(q(q+s))$ and $1/(q(2q-s))$. A cylinder of length $n$ consists of the points $(p_n + tp_{n-1})/(q_n + tq_{n-1})$ with $0 \le t < 1$, so it has $p_n/q_n$ at one end and lies on the side given by the sign of $p_{n-1}q_n - p_nq_{n-1} = (-1)^n$. The two expansions have lengths of opposite parity, so the two cylinders lie on opposite sides of $a/q$ and together form an interval. The relation $p_kq_{k-1} - p_{k-1}q_k = \pm 1$ gives $as \equiv \pm 1 \pmod q$. Finally, $q_n$ increases strictly with $n \ge 1$, so a given $x$ has at most one convergent with denominator $q$.
+\end{proof}
+
+Summing the lengths over $a$ gives \cref{thm:oq-exact} again. The function $g$ lies between $4/3$ and $3/2$, so the pieces differ in size by at most $12\%$, and its average over $(0,1)$ is $\int_0^1 g = 2\ln 2$.
+
+\begin{lemma}[overlaps]\label{lem:ob-overlap}
+Let $q < r$ be primes. Then
+\begin{enumerate}[label=(\roman*)]
+\item $\lambda(E_q \cap E_r) \le 8/(qr)$;
+\item $\bigl|\lambda(E_q \cap E_r) - \lambda(E_q)\lambda(E_r)\bigr| \le C\,q\,r^{-3/2}\ln^2 r$, with an absolute constant $C$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Every convergent satisfies $|x - a/q| < 1/q^2$, so the piece for $a/q$ lies within $1/q^2$ of $a/q$, and the piece for $b/r$ within $1/r^2$ of $b/r$. Two such pieces can meet only if $|a/q - b/r| < 2/q^2$, that is $|ar - bq| < 2r/q$. The integer $k = ar - bq$ is not 0 (since $a/q \ne b/r$), and it determines the pair: $a \equiv k r^{-1} \pmod q$ fixes $a$, and then $b = (ar - k)/q$. So at most $4r/q$ pairs of pieces meet, each in a set of length at most $2/r^2$.
+
+(ii) Fix a piece $I$ of $E_q$. The integers $b$ with $b/r \in I$ form a run of $N = r\lambda(I) + O(1)$ consecutive integers, all prime to $r$. By \cref{lem:ob-pieces} the piece of $E_r$ at $b/r$ has length $g(\bar b/r)/r^2$, where $\bar b$ is the inverse of $b$ modulo $r$. Weil's bound for Kloosterman sums \citep{Weil1948}, by the standard completion argument \citep[Ch.~11]{IwaniecKowalski2004}, gives $\bigl|\sum_b e^{2\pi i h\bar b/r}\bigr| \le 2\sqrt r\,(1 + \ln r) + 1$ for every run of $b$ and every $h$ not divisible by $r$. The Erdős--Turán inequality with $H = r - 1$ then shows that the $N$ points $\bar b/r$ have discrepancy at most $C\sqrt r\ln^2 r/N$, and Koksma's inequality (the total variation of $g$ is $1/3$) gives $\sum_b g(\bar b/r) = 2\ln 2 \cdot N + O(\sqrt r\ln^2 r)$ \citep[Ch.~1--2]{KuipersNiederreiter1974}. At most two pieces of $E_r$ cross an end of $I$, each of length at most $3/(2r^2)$. Hence
+\[
+  \lambda(I \cap E_r) = \frac{2\ln 2\cdot r\lambda(I)}{r^2} + O\!\left(\frac{\sqrt r\ln^2 r}{r^2}\right).
+\]
+Summing over the $q - 1$ pieces of $E_q$ gives $\lambda(E_q\cap E_r) = (2\ln 2/r)\,\lambda(E_q) + O(q\sqrt r\ln^2 r/r^2)$, and $\lambda(E_r) = (2/r)(H_{2r-1} - H_r) = 2\ln 2/r + O(1/r^2)$.
+\end{proof}
+
+So the events ``$q$ is a convergent denominator'' and ``$r$ is a convergent denominator'' are nearly independent when $r$ is much larger than $q$, and never strongly dependent. That is exactly what a second-moment argument needs. We use it in the following form.
+
+\begin{lemma}[{a variance lemma; \citealp[Lemma~1.5]{Harman1998}}]\label{lem:ob-harman}
+Let $f_k \ge 0$ be measurable functions on a probability space, and $0 \le \varphi_k \le 1$ numbers with $\int f_k = \varphi_k$. Write $\Phi(N) = \sum_{k \le N}\varphi_k$. If there is a constant $C$ with
+$\int \bigl(\sum_{M < k \le N}(f_k - \varphi_k)\bigr)^2 \le C\sum_{M < k \le N}\varphi_k$ for all $M < N$, then for every $\varepsilon > 0$ and almost every point,
+$\sum_{k \le N} f_k = \Phi(N) + O\bigl(\Phi(N)^{1/2}(\ln \Phi(N))^{3/2+\varepsilon} + 1\bigr)$.
+\end{lemma}
+
+(Harman states the lemma with $0 \le f_k \le \varphi_k \le 1$ for the means and a general measure; our case, indicator functions and their measures, is the simplest one.)
+
+\begin{theorem}[\cref{heur:primeconv} for almost every number]\label{thm:ob-ae}
+Let $\Psi(Q) = \sum_{p \le Q}\lambda(E_p) = 2\ln 2\cdot\ln\ln Q + B_0 + o(1)$ (\cref{thm:oq-exact}). For every $\varepsilon > 0$ and almost every real $x$:
+\begin{enumerate}[label=(\roman*)]
+\item the number of primes $p \le Q$ that are convergent denominators of $x$ is
+\[
+  \Psi(Q) + O\bigl(\Psi(Q)^{1/2}(\ln\Psi(Q))^{3/2+\varepsilon}\bigr);
+\]
+\item the number of $n \le N$ with $q_n$ prime is
+\[
+  2\ln 2\cdot\ln N + O\bigl((\ln N)^{1/2}(\ln\ln N)^{3/2+\varepsilon}\bigr);
+\]
+\item the same holds for the numerators: the number of $n \le N$ with $p_n$ prime has the same asymptotic formula.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+It is enough to take $x \in (0,1)$, since adding an integer to $x$ does not change the denominators.
+
+(i) Number the primes $p_1 < p_2 < \cdots$ and apply \cref{lem:ob-harman} with $f_k$ the indicator of $E_{p_k}$ and $\varphi_k = \lambda(E_{p_k})$. Expanding the square, the integral in the lemma is $\sum_k \varphi_k(1 - \varphi_k) + 2\sum_{j<k}\bigl(\lambda(E_{p_j}\cap E_{p_k}) - \varphi_j\varphi_k\bigr)$, both sums over $M < j < k \le N$. Fix $q = p_j$. For the primes $r$ with $q < r \le q^5$, \cref{lem:ob-overlap}(i) bounds the terms by $\sum_{q < r \le q^5} 8/(qr) \le 8c_0/q$, where $c_0 = \sup_q \sum_{q < r \le q^5} 1/r$ is finite by Mertens' theorem ($\sum_{q < r \le q^5} 1/r \to \ln 5$). For $r > q^5$, \cref{lem:ob-overlap}(ii) bounds them by $Cq\sum_{r > q^5} r^{-3/2}\ln^2 r \le C'q^{-3/2}\ln^2 q$. Both are at most a constant times $1/q$, and $\lambda(E_q) \ge \frac2q\cdot\frac{q-1}{2q-1} \ge \frac{2}{3q}$, so both are at most a constant times $\varphi_j$. Summing over $j$ gives the hypothesis of the lemma, and its conclusion is (i).
+
+(ii) The denominators $q_n$, $n \ge 1$, increase strictly and $q_0 = 1$ is not prime, so the primes among $q_1, \dots, q_N$ are exactly the primes $p \le q_N$ that are convergent denominators. By Lévy's theorem \citep{Levy1936}, $\ln q_N = LN(1 + o(1))$ for almost every $x$, with $L = \pi^2/(12\ln 2)$, so $\Psi(q_N) = 2\ln 2\cdot(\ln N + \ln L + o(1)) + B_0 + o(1) = 2\ln 2\cdot\ln N + O(1)$. Put $Q = q_N$ in (i).
+
+(iii) As in the proof of \cref{thm:oq-ae}(i), the numerators of $x$ are, up to a shift of index, the denominators of $1/x$, and $x \mapsto 1/x$ preserves sets of measure zero.
+\end{proof}
+
+\paragraph{What this settles.} \Cref{thm:ob-ae} answers Question~3 in the form it was asked: for almost every $x$, the number of $n \le N$ with $q_n$ prime is asymptotic to $2\ln 2\cdot\ln N$, with the heuristic's constant, and the same for $p_n$. It sharpens \cref{thm:oq-ae}(iii) from ``between $\ln N$ and $2\ln N$'' to the exact constant, and it does not need the quantitative Duffin--Schaeffer theorem. The deep inputs are Weil's bound for Kloosterman sums, Lévy's theorem and the variance lemma. Combined with \cref{thm:oq-ae}(ii), it also shows that for almost every $x$ a share $1/(2\ln 2) \approx 72\%$ of the prime denominators have $\theta_n < 1/2$, the same share as for all convergents (the Doeblin--Lenstra law).
+
+\paragraph{What it does not settle.} It does not tell us anything about $\pi$, $e$, $\sqrt 2$ or any other single number: a set of measure zero can contain all of them. For $\varphi$ and $\sqrt 2$ the count is a different problem (Section~\ref{sec:oq2}), and for $e$ it grows only like $\ln\ln N$ (Section~\ref{sec:oq1}). Question~1, about $\pi$, is as open as before.
+
+\paragraph{Prior work.} Overlap estimates of this kind are the bread and butter of metric Diophantine approximation \citep{Harman1998}, and the equidistribution of modular inverses is classical. We did not find \cref{thm:ob-ae}, or the expected-value version \cref{cor:oq-N}, stated anywhere, but the argument is short enough that specialists may well know it, and we would be glad to learn of a reference.
+
+\paragraph{The numbers.} \Cref{tab:ob-ovl} computes every overlap $\lambda(E_q \cap E_r)$ exactly (as lengths of intervals) for the \ObOvlPairs{} pairs of primes $q < r < \ObOvlQ$, grouped by the ratio $r/q$. The script also checks \cref{lem:ob-pieces} piece by piece and the bound of \cref{lem:ob-overlap}(i) for every pair. When $r < 2q$ the two events repel each other (the ratio is about $0.69$); from $r > 4q$ on, the ratio is within about $1\%$ of 1, as \cref{lem:ob-overlap}(ii) predicts. Over all these primes, $\Psi = \ObPsi$ and the sum of the covariances is $\ObCov$: the count has variance below its mean, as the simulation of Chapter~\ref{ch:openq} also showed.
+
+\begin{table}[t]
+\centering
+\caption[Overlaps of the sets $E_q$ and $E_r$]{Exact overlaps for the \ObOvlNp{} primes below \ObOvlQ: for each range of $r/q$, the number of pairs of primes $q < r$ and the ratio $\sum\lambda(E_q\cap E_r)\big/\sum\lambda(E_q)\lambda(E_r)$. A ratio of 1 means independence.}
+\label{tab:ob-ovl}
+\begin{tabular}{lrr}
+\toprule
+$r/q$ & pairs & ratio \\
+\midrule
+\ObOvlTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Status.} Answered for almost every number (theorem). For $\pi$ itself, open.
+
+\section{Question 1: e modulo a prime}\label{sec:ob1}
+
+Section~\ref{sec:oq1} proved that $e$'s convergent denominators are periodic modulo every prime $\ell$, and observed that the period divides $6\ell$. Here is a proof.
+
+\begin{proposition}\label{prop:ob-e}
+Let $q_n$ be the convergent denominators of $e$ and $\ell$ a prime. Then $q_{n + 6\ell} \equiv q_n \pmod \ell$ for every $n \ge 0$. The same holds for the numerators $p_n$.
+\end{proposition}
+
+\begin{proof}
+Write $v_n = (q_n, q_{n-1})^{\mathsf T}$ (with $q_{-1} = 0$) and $A(a) = \left(\begin{smallmatrix} a & 1\\ 1 & 0\end{smallmatrix}\right)$, so that $v_n = A(a_n)v_{n-1}$. The terms come in blocks $(a_{3k-2}, a_{3k-1}, a_{3k}) = (1, 2k, 1)$, so $v_{3k} = B(k)v_{3k-3}$ with
+\[
+  B(k) = A(1)A(2k)A(1) = \begin{pmatrix} 2k+2 & 2k+1 \\ 2k+1 & 2k\end{pmatrix}, \qquad \det B(k) = -1.
+\]
+For $\ell = 2$, $B(k) \equiv \left(\begin{smallmatrix} 0 & 1\\ 1 & 0\end{smallmatrix}\right)$, whose square is the identity, so $v_{3k+6} \equiv v_{3k}$. Let $\ell$ be odd, and work modulo $\ell$, where $B(k)$ depends only on $k \bmod \ell$. For $c$ modulo $\ell$ let $P(c) = B(c)B(c+1)\cdots B(c+\ell-1)$, a product over one full cycle.
+\begin{enumerate}[label=(\alph*)]
+\item \emph{The trace of $P(c)$ does not depend on $c$.} Since $B(c + \ell) = B(c)$, we have $P(c+1) = B(c)^{-1}P(c)B(c)$, and conjugate matrices have equal traces. Call the common trace $\kappa$.
+\item \emph{$\kappa = 0$.} With $W = \left(\begin{smallmatrix} 0 & 1\\ 1 & 0\end{smallmatrix}\right)$ one checks $B(-1-k) = -WB(k)W$. Multiplying over $k = c, c+1, \dots, c+\ell-1$ gives $B(-1-c)B(-2-c)\cdots B(-\ell-c) = (-1)^\ell\,W P(c)W$. The matrices $B$ are symmetric, so the left side is the transpose of $B(-\ell-c)\cdots B(-1-c) = P(-\ell-c)$, whose trace is $\kappa$. The right side has trace $-\kappa$, since $\ell$ is odd. So $\kappa = -\kappa$, and $\kappa = 0$.
+\item \emph{$P(c)^2 = I$.} By the Cayley--Hamilton theorem, $P^2 = (\operatorname{tr}P)P - (\det P)I = 0 - (-1)^\ell I = I$.
+\end{enumerate}
+The matrix carrying $v_{3k}$ to $v_{3k+3\ell}$ is $B(k+\ell)\cdots B(k+1)$, the transpose of $P(k+1)$, so its square is also $I$, and $v_{3k+6\ell} \equiv v_{3k}$ for every $k \ge 0$. The terms $a_n$ modulo $\ell$ repeat with period $3\ell$ (for $n \ge 1$), so the steps from $v_{3k}$ to $v_{3k+1}$ and $v_{3k+2}$ repeat too, and $v_{n+6\ell} \equiv v_n$ for every $n \ge 0$. The numerators satisfy the same recurrence, with other starting values, so the argument applies to them unchanged.
+\end{proof}
+
+The script confirms the proposition for every prime $\ell < \ObElim$ and checks step (b) directly for every starting block and every prime below \ObTlim. In every case computed, the period is exactly $6\ell$ for odd $\ell$ (and 6 for $\ell = 2$); we have not proved that it is never shorter.
+
+\paragraph{Status.} Unchanged: open for $\pi$. The structure of $e$ is now fully proved; the densities $f_\ell$ of Section~\ref{sec:oq1} are exact counts over one period of length $6\ell$.
+
+\section{Question 5: the correlation matrix again}\label{sec:ob5}
+
+\paragraph{The top eigenvalue.} Chapter~\ref{ch:openq} proved $\lambda_{\max}(C_m) \ge (2/\pi^2)\ln^2 m\,(1 + o(1))$ and found the true value larger. In fact no power of $\ln m$ is enough.
+
+\begin{theorem}[the top eigenvalue]\label{thm:ob-top}
+As $m \to \infty$,
+\[
+  \exp\!\left((2 + o(1))\frac{\sqrt{\ln m}}{\ln\ln m}\right) \le \lambda_{\max}(C_m) \le \exp\!\left((\ln 2 + o(1))\frac{\ln m}{\ln\ln m}\right).
+\]
+So the top eigenvalue grows faster than every power of $\ln m$ and slower than every power of $m$.
+\end{theorem}
+
+\begin{proof}
+\emph{Lower bound.} Let $y$ be the largest prime with $P = \prod_{p \le y} p \le m$, and let $k = \pi(y)$. For square-free $d, e$ dividing $P$,
+\[
+  \frac{\gcd(d,e)}{\sqrt{de}} = \prod_{p \le y} t_p, \qquad t_p = \begin{cases} 1 & \text{if } p \text{ divides both or neither,}\\ p^{-1/2} & \text{if } p \text{ divides exactly one,}\end{cases}
+\]
+so the matrix $[\gcd(d,e)/\sqrt{de}]$ over the $2^k$ divisors of $P$ is a tensor product of the $2 \times 2$ matrices $\left(\begin{smallmatrix} 1 & p^{-1/2}\\ p^{-1/2} & 1\end{smallmatrix}\right)$, and the sum of its entries is $\prod_{p \le y}(2 + 2p^{-1/2}) = 2^k\Pi$, with $\Pi = \prod_{p \le y}(1 + p^{-1/2})$. Take the test vector that is 1 on the divisors $d \ge 2$ of $P$ and 0 elsewhere. Since $(d-1)(e-1) \le de$,
+\[
+  \sum_{\substack{d, e \mid P\\ d, e \ge 2}}\frac{\gcd(d,e) - 1}{\sqrt{(d-1)(e-1)}} \ge \sum_{\substack{d, e \mid P\\ d, e \ge 2}}\frac{\gcd(d,e) - 1}{\sqrt{de}} = 2^k\Pi - \Pi^2,
+\]
+because the terms with $d = 1$ or $e = 1$ are zero and $\sum_{d,e\mid P}1/\sqrt{de} = \Pi^2$. Dividing by the squared length $2^k - 1$ gives $\lambda_{\max}(C_m) \ge \Pi\,(1 - \Pi/2^k)$, which is $\Pi\,(1 - o(1))$ because $\Pi/2^k = \prod_{p \le y}\frac{1 + p^{-1/2}}{2} \to 0$. Finally $\ln \Pi = \sum_{p \le y}p^{-1/2} + O(1) = (2 + o(1))\sqrt y/\ln y$ by the prime number theorem, and $y \sim \ln m$ because $\sum_{p \le y}\ln p \sim y$.
+
+\emph{Upper bound.} For $a \ge 2$, $a - 1 \ge a/2$, so every entry of $C_m$ is at most $2\gcd(a,b)/\sqrt{ab}$. Both matrices have nonnegative entries, so the largest eigenvalue of $C_m$ is at most twice that of $G_m = [\gcd(a,b)/\sqrt{ab}]_{a,b \le m}$ (Perron--Frobenius). For $G_m$ use Schur's test with the weights $b^{-1/2}$: by Gauss's identity of \cref{prop:oq-gram},
+\[
+  \sum_{b \le m}\frac{\gcd(a,b)}{\sqrt{ab}}\,b^{-1/2} = a^{-1/2}\sum_{d \mid a}\varphi(d)\sum_{j \le m/d}\frac{1}{dj} \le a^{-1/2}(1 + \ln m)\sum_{d \mid a}\frac{\varphi(d)}{d} \le a^{-1/2}(1 + \ln m)\,\tau(a),
+\]
+where $\tau(a)$ is the number of divisors of $a$. So $\lambda_{\max}(C_m) \le 2(1 + \ln m)\max_{a \le m}\tau(a)$, and $\tau(a) \le 2^{(1 + o(1))\ln a/\ln\ln a}$ \citep[Thm.~317]{HardyWright2008}.
+\end{proof}
+
+The lower bound uses the same square-free construction that drives the theory of GCD sums, where sums of $\gcd(m,n)/\sqrt{mn}$ over arbitrary sets of $N$ integers are known to grow roughly like $e^{c\sqrt{\ln N}}$ up to iterated logarithms \citep{AistleitnerBerkesSeip2015,BondarenkoSeip2015}. Here the set is fixed (all integers up to $m$), and the true order lies somewhere between our two bounds; we do not know where.
+
+The bounds say little at sizes we can compute. At $m = 10^6$ the lower bound is $\ObBoxVal$ (with $y = \ObBoxY$), the upper bound is $\ObSchur$, and the true value is $\ObTopMillion$. Over the range we computed, the data follow $(2/\pi^2)\ln^2 m\cdot\ln\ln m$ closely (\cref{tab:ob-fit}: the ratio stays between $\ObFitMin$ and $\ObFitMax$). That is a description of the data, not a law: by \cref{thm:ob-top} it must fail for large $m$, though only when $\ln m$ is in the thousands.
+
+\begin{table}[t]
+\centering
+\caption[The top eigenvalue against an empirical fit]{The largest eigenvalue of $C_m$ (from \cref{tab:oq-top}) against $(2/\pi^2)\ln^2 m\cdot\ln\ln m$. The fit is empirical and cannot hold for all $m$ (\cref{thm:ob-top}).}
+\label{tab:ob-fit}
+\begin{tabular}{rrrr}
+\toprule
+$m$ & $\lambda_{\max}$ & $(2/\pi^2)\ln^2 m\,\ln\ln m$ & ratio \\
+\midrule
+\ObFitTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Near-copies in the spectrum.} \Cref{prop:oq-gram}(iv) found the eigenvalue 1 once for each prime between $m/2$ and $m$. That is the first case of a general pattern. Let
+\[
+  M_K = \left[\frac{\gcd(k,k')}{\sqrt{kk'}}\right]_{k, k' \le K},
+\]
+the $K \times K$ corner of the matrix $G_m$ above.
+
+\begin{proposition}[near-copies]\label{prop:ob-copies}
+Fix $K \ge 1$. Let $F$ be the set of primes $p > \sqrt m$ with $\lfloor m/p\rfloor = K$, let $p_0$ be the smallest of them, and let $\mu$ be an eigenvalue of $M_K$ of multiplicity $\nu$. Then $C_m$ has at least $\nu(|F| - K)$ eigenvalues within $c_K/p_0$ of $\mu$, where $c_K$ depends only on $K$.
+\end{proposition}
+
+\begin{proof}
+For $p \in F$ the multiples of $p$ up to $m$ are $kp$, $1 \le k \le K$, and $K < \sqrt m < p$, so $p \nmid k$. Take an eigenvector $v$ of $M_K$ for $\mu$, and numbers $\alpha_p$ ($p \in F$) with $\sum_{p \in F}\alpha_p(kp - 1)^{-1/2} = 0$ for $k = 1, \dots, K$: these $K$ conditions leave a space of dimension at least $|F| - K$. Put $u = \sum_{p \in F}\sum_{k \le K}\alpha_p v_k\, e_{kp}$. If $b$ is not a multiple of any $p \in F$, then $\gcd(kp, b) = \gcd(k, b)$, so
+\[
+  (C_m u)_b = \sum_{k}v_k\frac{\gcd(k,b) - 1}{\sqrt{b-1}}\sum_{p}\frac{\alpha_p}{\sqrt{kp-1}} = 0.
+\]
+If $b = k'p'$ with $p' \in F$, the terms with $p = p'$ give
+\[
+  \alpha_{p'}\sum_k v_k\frac{p'\gcd(k,k') - 1}{\sqrt{(kp'-1)(k'p'-1)}} = \alpha_{p'}\bigl(\mu v_{k'} + O_K(1/p')\bigr),
+\]
+and the terms with $p \ne p'$, where $\gcd(kp, k'p') = \gcd(k,k')$, give
+\begin{align*}
+  \frac{1}{\sqrt{k'p'-1}}\sum_k v_k\bigl(\gcd(k,k') - 1\bigr)\sum_{p \ne p'}\frac{\alpha_p}{\sqrt{kp-1}}
+  &= -\frac{1}{\sqrt{k'p'-1}}\sum_k v_k\bigl(\gcd(k,k')-1\bigr)\frac{\alpha_{p'}}{\sqrt{kp'-1}}\\
+  &= O_K\!\left(\frac{\alpha_{p'}}{p'}\right),
+\end{align*}
+by the choice of $\alpha$. So $\|(C_m - \mu)u\| \le (c_K/p_0)\|u\|$ on a space of dimension at least $\nu(|F| - K)$ (one copy for each of $\nu$ orthogonal eigenvectors $v$), and the min-max principle gives the eigenvalues. For $K = 1$ the error terms vanish and $\mu = 1$, which is \cref{prop:oq-gram}(iv).
+\end{proof}
+
+So the spectrum of $C_m$ contains, for every $K$, about $|F| \approx m/(K(K+1)\ln m)$ near-copies of each eigenvalue of the small matrix $M_K$: the matrix contains many nearly decoupled small copies of its own corner. For $m = 4{,}000$ and $K = 2$, there are \ObFtwo{} such primes, and we find \ObFtwoFound{} eigenvalues within $\ObDeltaTwo$ of $1 \mp 1/\sqrt 2$, the eigenvalues of $M_2$; for $K = 3$ there are \ObFthree{} primes and \ObFthreeFound{} eigenvalues near $\ObMuThree$.
+
+\paragraph{The spacing ratio revisited.} These families are clusters of nearly equal eigenvalues, the opposite of level repulsion, so they distort any spacing statistic. \Cref{tab:ob-loc} separates them out. We call an eigenvector \emph{localized} if more than $90\%$ of its weight sits on indices $a$ with a prime factor above $\sqrt m$ (the indices of the families); about $40\%$ of all eigenvectors are. Among the rest, the mean spacing ratio $\langle r\rangle$ is $\ObRrestFour$ at $m = 4{,}000$ and slowly falling, between the Poisson value $0.386$ and the GOE value $0.531$. The near-GOE value for the whole spectrum ($\ObRallFour$) comes partly from mixing the families with the rest: inside a tight cluster, consecutive ratios of tiny spacings take all values. So the GOE-like look reported in Section~\ref{sec:oq5} was, at least in part, an artifact. What remains is a real but weaker repulsion among the delocalized eigenvalues, which is what one expects of a real symmetric matrix with no remaining symmetry; we have no finer explanation, and we cannot tell from these sizes whether it tends to the GOE value, to the Poisson value or to something in between. This is numerical evidence only.
+
+\begin{table}[t]
+\centering
+\caption[Localized eigenvectors and the spacing ratio]{The spectrum of $C_m$ with the eigenvalue 1 removed: the number of eigenvalues, how many eigenvectors are localized (over $90\%$ of the weight on indices with a prime factor above $\sqrt m$), the mean spacing ratio $\langle r\rangle$ in the central $80\%$ for all eigenvalues and for the delocalized ones only (Poisson $0.386$, GOE $0.531$), and the number of spacings below $10^{-6}$.}
+\label{tab:ob-loc}
+\begin{tabular}{rrrrrr}
+\toprule
+$m$ & eigenvalues & localized & $\langle r\rangle$, all & $\langle r\rangle$, rest & spacings $< 10^{-6}$ \\
+\midrule
+\ObLocTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Status.} Still partly answered, with more proved. The top eigenvalue grows faster than every power of $\ln m$ and slower than every power of $m$ (proved); its exact order is open. The spectrum contains near-copies of every small gcd matrix (proved), and the GOE-like spacing was partly caused by them (numerical evidence). Whether $6/\pi^2$ appears in the limiting bulk distribution is still open.
+
+\section{Question 6: why 171 wins}\label{sec:ob6}
+
+Section~\ref{sec:oq6} found that the 171-note equal temperament wins seven of the eight measures. Tuning theorists know this temperament well: the Xenharmonic Wiki notes that 171 has a lower relative error in the 7-limit than any smaller equal temperament, and that it tempers out three tiny intervals (commas) \citep{Xen171,XenEnnealimmal}. Those three commas explain the win completely.
+
+A comma is a ratio of small primes very close to 1. Write it by its exponents of $2, 3, 5, 7$: the schisma $32805/32768 = 3^8\cdot 5/2^{15}$ is $(-15, 8, 1, 0)$ and measures $\ObSchismaC$ cents; the breedsma $2401/2400 = 7^4/(2^5\cdot 3\cdot 5^2)$ is $(-5, -1, -2, 4)$ and measures $\ObBreedsmaC$ cents; the ragisma $4375/4374 = 5^4\cdot 7/(2\cdot 3^7)$ is $(-1, -7, 4, 1)$ and measures $\ObRagismaC$ cents. An $n$-note temperament maps each prime $p$ to a whole number of steps $v_p$, and it \emph{tempers out} a comma when the steps add up to zero. Put the three commas and the octave $(1, 0, 0, 0)$ in the rows of a $4 \times 4$ matrix $M$. Then $\det M = 171$, and the adjugate of $M$ is
+\[
+  \operatorname{adj} M = \begin{pmatrix} \ObAdjRows \end{pmatrix}.
+\]
+Its last column, $(171, 271, 397, 480)$, is the 171-note temperament: $171\log_2 p$ rounded for $p = 2, 3, 5, 7$. It is, up to multiples, the only way to map the four primes to steps that tempers out all three commas.
+
+Why is it so accurate? Let $J = (\log_2 2, \log_2 3, \log_2 5, \log_2 7)$ and let $\varepsilon_1, \varepsilon_2, \varepsilon_3$ be the sizes of the three commas in octaves. Then $MJ = (\varepsilon_1, \varepsilon_2, \varepsilon_3, 1)$, so $171\,J = \operatorname{adj}M\,(\varepsilon_1, \varepsilon_2, \varepsilon_3, 1)$, which gives the identity
+\[
+  171\log_2 p - v_p = \text{(row $p$ of $\operatorname{adj} M$)}\cdot(\varepsilon_1, \varepsilon_2, \varepsilon_3, 0).
+\]
+The errors, in steps, are small whole-number combinations of three tiny numbers: for 3, $18\varepsilon_1 + \varepsilon_2 - 4\varepsilon_3 = \ObErrThree$ steps; for 5, $\ObErrFive$; for 7, $\ObErrSeven$. All three have the same sign and are nearly proportional to $\log_2 p$ (divided by $\log_2 p$ they are $\ObWThree$, $\ObWFive$ and $\ObWSeven$), so a slightly stretched octave, which the TOP measure allows, absorbs most of what is left.
+
+This is the same mechanism as a convergent of a continued fraction, one dimension up. A convergent $p_n/q_n$ is good because it is pinned by a small quantity, $|q_n\alpha - p_n|$; here the temperament is pinned by three small commas. The family even grows by adding: the mappings of 27, 72 and 99 notes satisfy $27 + 72 = 99$ and $72 + 99 = 171$ in every coordinate, like mediants in the Stern--Brocot tree. All of this is known in regular temperament theory; what we add is the explicit adjugate identity for the errors, which is Cramer's rule.
+
+\paragraph{Status.} Answered (no, prime sizes do not stand out), and the winner is explained. The explanation is known to tuning theorists.
+
+\section{Question 4: two more tests of pi}\label{sec:ob4}
+
+Chapter~\ref{ch:openq} tested the values of $\pi$'s terms, their pairs, their tail, Khinchin's and Lévy's constants (the growth of $q_n^{1/n}$) and the records. Two typical-number laws were not yet tested.
+
+\begin{itemize}
+\item \emph{The Doeblin--Lenstra law.} For almost every $x$, the share of $n$ with $\theta_n = q_n^2|x - p_n/q_n| \le t$ tends to $t/\ln 2$ for $t \le 1/2$ and to $(1 - t + \ln 2t)/\ln 2$ for $1/2 \le t \le 1$ \citep{BosmaJagerWiedijk1983}. This is the law behind the ratio $1/(2\ln 2)$ in Section~\ref{sec:oq3}. For the first \ObThN{} convergents of $\pi$, in 20 equal bins of $\theta$: $\chi^2 = \ObDl$ on 19 degrees of freedom, textbook $p = \ObDlP$, calibrated $p = \ObDlPmc$ (from \ObCalN{} random reals with \ObCalLen{} terms each; for them the textbook test rejects at the $5\%$ level a share $\ObCalDl$ of the time). The share with $\theta_n < 1/2$ is $\ObHalf$, against $1/(2\ln 2) = \ObHalfLaw$, a deviation of $\ObHalfZ$ standard deviations.
+\item \emph{Serial correlation.} Under the Gauss measure, consecutive terms are weakly dependent: the correlation of $\ln a_n$ and $\ln a_{n+1}$ is about $\ObCOneNull$ (estimated from the random reals, standard error $\ObCOneNullSe$), and at lag 2 about $\ObCTwoNull$. For $\pi$ the two correlations are $\ObCOne$ and $\ObCTwo$, deviations of $\ObCOneZ$ and $\ObCTwoZ$ standard deviations.
+\end{itemize}
+
+\paragraph{Status.} Open; both new tests are consistent with $\pi$ being typical. As before, this is evidence, not proof.
+
+\section{Status after the second look}\label{sec:ob-status}
+
+\noindent\begin{minipage}{\textwidth}
+\centering
+\fixedtablecaption[Status of the six questions after the second look]{The six questions of Section~\ref{sec:open} after Chapter~\ref{ch:openq2}. Proved results are labeled as such; everything else is numerical evidence or known.}
+\label{tab:ob-status}
+\small
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+question & new in this chapter & status \\
+\midrule
+1. Prime convergents of $\pi$ & period of $e$'s denominators modulo $\ell$ divides $6\ell$ (proved) & open \\
+2. Fibonacci and Pell primes & nothing new & open \\
+3. The heuristic in a model & $2\ln 2\cdot\ln N$ prime denominators and numerators for almost every $x$, with an error term (proved) & answered for almost every $x$ \\
+4. Gauss--Kuzmin for $\pi$ & Doeblin--Lenstra law and serial correlation tested & open; data typical \\
+5. Spectrum of the correlation matrix & top eigenvalue between $e^{c\sqrt{\ln m}/\ln\ln m}$ and $m^{o(1)}$ (proved); near-copies of small gcd matrices (proved); GOE-like spacing partly an artifact (evidence) & partly answered \\
+6. Prime-sized temperaments & 171 explained by three commas (known to tuning theorists) & answered: no \\
+\bottomrule
+\end{tabularx}
+\end{minipage}
+\medskip

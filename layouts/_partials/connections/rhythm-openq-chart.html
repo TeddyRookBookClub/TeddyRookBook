@@ -1,0 +1,63 @@
+{{- /* The chart under question 1 of "Working on the open questions" (layouts/_partials/connections/rhythm-openq.html):
+   pi's prime convergent denominators and numerators to n = 20,000 against the heuristic, two small inline SVGs.
+   Data: data/rhythm/openq_pi.json (scripts/rhythm/openq-chart-data.py; rows are [N, expected, lo95, hi95]).
+   x = log of N from 1 to 20,000; y = count from 0 to 20. Hover or long-press a dot for its fraction number. */ -}}
+{{- $d := site.Data.rhythm.openq_pi }}
+{{- if $d }}
+{{- $L := 36.0 }}{{ $R := 312.0 }}{{ $T := 12.0 }}{{ $B := 172.0 }}{{ $YM := 20.0 }}
+{{- $lmax := math.Log (float $d.N) }}
+{{- $w := sub $R $L }}{{ $h := sub $B $T }}
+<figure class="rn-oq-fig">
+  <div class="rn-oq-charts">
+  {{- range $panel := slice (dict "key" "q" "idx" $d.q_idx "title" "Prime denominators" "what" "denominator") (dict "key" "p" "idx" $d.p_idx "title" "Prime numerators" "what" "numerator") }}
+  {{- $rows := index $d $panel.key }}
+  {{- $idx := $panel.idx }}
+  {{- $last := index $rows (sub (len $rows) 1) }}
+  <svg class="rn-oq-svg" viewBox="0 0 320 200" role="img" aria-labelledby="oqc-{{ $panel.key }}-t oqc-{{ $panel.key }}-d">
+    <title id="oqc-{{ $panel.key }}-t">{{ $panel.title }} of pi’s fractions, up to fraction number {{ lang.FormatNumber 0 $d.N }}</title>
+    <desc id="oqc-{{ $panel.key }}-d">Pi has {{ len $idx }} so far. A typical number would have about {{ printf "%.1f" (index $last 1) }}, and 95% of the time between {{ index $last 2 }} and {{ index $last 3 }}.</desc>
+    {{- /* grid */}}
+    {{- range $v := slice 0 5 10 15 20 }}{{ $y := sub $B (mul $h (div (float $v) $YM)) }}
+    <line class="rn-oq-grid" x1="{{ $L }}" x2="{{ $R }}" y1="{{ printf "%.1f" $y }}" y2="{{ printf "%.1f" $y }}"/><text class="rn-oq-tick" x="{{ sub $L 5 }}" y="{{ printf "%.1f" (add $y 3.5) }}" text-anchor="end">{{ $v }}</text>
+    {{- end }}
+    {{- range $t := slice (slice 1 "1") (slice 10 "10") (slice 100 "100") (slice 1000 "1,000") (slice 10000 "10,000") }}{{ $x := add $L (mul $w (div (math.Log (float (index $t 0))) $lmax)) }}
+    <line class="rn-oq-grid" x1="{{ printf "%.1f" $x }}" x2="{{ printf "%.1f" $x }}" y1="{{ $T }}" y2="{{ $B }}"/><text class="rn-oq-tick" x="{{ printf "%.1f" $x }}" y="{{ add $B 13 }}" text-anchor="middle">{{ index $t 1 }}</text>
+    {{- end }}
+    {{- /* the 95% range, as steps */}}
+    <g class="rn-oq-band" shape-rendering="crispEdges">
+    {{- range $i, $r := $rows }}{{ if lt (add $i 1) (len $rows) }}{{ $nx := index (index $rows (add $i 1)) 0 }}
+      {{- $x1 := add $L (mul $w (div (math.Log (float (index $r 0))) $lmax)) }}{{ $x2 := add $L (mul $w (div (math.Log (float $nx)) $lmax)) }}
+      {{- $y1 := sub $B (mul $h (div (float (index $r 3)) $YM)) }}{{ $y2 := sub $B (mul $h (div (float (index $r 2)) $YM)) }}
+      <rect x="{{ printf "%.2f" $x1 }}" y="{{ printf "%.2f" $y1 }}" width="{{ printf "%.2f" (sub $x2 $x1) }}" height="{{ printf "%.2f" (math.Max 0.5 (sub $y2 $y1)) }}"/>
+    {{- end }}{{ end }}
+    </g>
+    {{- /* 2 ln 2 · ln N, a straight line on this scale */}}
+    {{- $ye := sub $B (mul $h (div (mul (mul 2 (math.Log 2)) $lmax) $YM)) }}
+    <line class="rn-oq-law" x1="{{ $L }}" y1="{{ $B }}" x2="{{ $R }}" y2="{{ printf "%.1f" $ye }}"/>
+    {{- /* expected count for a typical number */}}
+    {{- $pts := slice }}{{ range $rows }}{{ $pts = $pts | append (printf "%.1f,%.1f" (add $L (mul $w (div (math.Log (float (index . 0))) $lmax))) (sub $B (mul $h (div (float (index . 1)) $YM)))) }}{{ end }}
+    <polyline class="rn-oq-exp" points="{{ delimit $pts " " }}"/>
+    {{- /* pi's count, as steps */}}
+    {{- $path := printf "M%.1f,%.1f" $L $B }}
+    {{- range $k, $n := $idx }}{{ $x := add $L (mul $w (div (math.Log (float $n)) $lmax)) }}
+      {{- $path = printf "%s H%.1f V%.1f" $path $x (sub $B (mul $h (div (float (add $k 1)) $YM))) }}
+    {{- end }}
+    {{- $path = printf "%s H%.1f" $path $R }}
+    <path class="rn-oq-pi" d="{{ $path }}"/>
+    {{- range $k, $n := $idx }}{{ $x := add $L (mul $w (div (math.Log (float $n)) $lmax)) }}
+    <circle class="rn-oq-dot" cx="{{ printf "%.1f" $x }}" cy="{{ printf "%.1f" (sub $B (mul $h (div (float (add $k 1)) $YM))) }}" r="3.2"><title>Prime {{ $panel.what }} number {{ add $k 1 }}: fraction number {{ lang.FormatNumber 0 $n }}</title></circle>
+    {{- end }}
+    <text class="rn-oq-ttl" x="{{ $L }}" y="9">{{ $panel.title }}: pi has {{ len $idx }}, a typical number about {{ printf "%.1f" (index $last 1) }}</text>
+    <text class="rn-oq-tick" x="{{ $R }}" y="198" text-anchor="end">fraction number n (log scale)</text>
+  </svg>
+  {{- end }}
+  </div>
+  <ul class="rn-key rn-oq-key">
+    <li><span class="rn-oq-sw rn-oq-sw-pi"></span>pi: the count so far</li>
+    <li><span class="rn-oq-sw rn-oq-sw-exp"></span>expected for a typical number</li>
+    <li><span class="rn-oq-sw rn-oq-sw-band"></span>where 95% of typical counts fall</li>
+    <li><span class="rn-oq-sw rn-oq-sw-law"></span>2 ln 2 · ln n</li>
+  </ul>
+  <figcaption class="rn-small">How many of pi’s first n fractions have a prime bottom number (the first chart) or top number (the second). The green steps are pi. The gold dashed curve is what the paper’s rule predicts for a typical number, and the shaded band is the range a typical number lands in 95% of the time. Pi stays inside the band all the way to n = {{ lang.FormatNumber 0 $d.N }}. For a typical number the count grows like 2 ln 2 · ln n (the thin dotted line climbs at the same rate); Chapter 16 proves that for almost every number. Hover over a dot, or press and hold it, to see where each prime falls.</figcaption>
+</figure>
+{{- end }}

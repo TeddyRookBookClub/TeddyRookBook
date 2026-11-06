@@ -81,7 +81,13 @@
 \DeclareMathOperator{\lcm}{lcm}
 \newcommand{\hit}{\texttt{x}}
 \newcommand{\rest}{\texttt{.}}
-\newcommand{\video}[1]{\par\smallskip\noindent\fbox{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{\small\textbf{For the video.} #1}}\par\smallskip}
+% revision dates (UTC): \revO the first version, \revA the first addition, \revB the second.
+% Each is the UTC date of the commit that published it; change the date here and every mark follows.
+\newcommand{\revO}{2026-11-04}
+\newcommand{\revA}{2026-11-05}
+\newcommand{\revB}{2026-11-06}
+\newcommand{\addedon}[1]{\textcolor{gray}{\footnotesize\,[Added #1 (UTC)]}}
+\newcommand{\addednote}[1]{\par\noindent{\color{gray}\small\itshape Added #1 (UTC).}\par\medskip}
 
 % numbers computed by the scripts in compute/ (never typed by hand)
 \input{gen/c1_cf.tex}
@@ -99,6 +105,7 @@
 \input{gen/c11_openq_matrix.tex}
 \input{gen/c11_openq_edo.tex}
 \input{gen/c11_openq_primes.tex}
+\input{gen/c12_openq2.tex}
 
 \graphicspath{{figures/}}
 
@@ -121,6 +128,7 @@
 \input{ch13_new}
 \input{ch14_discussion}
 \input{ch15_openq}
+\input{ch16_openq2}
 \appendix
 \input{appA_algorithms}
 \input{appB_methods}

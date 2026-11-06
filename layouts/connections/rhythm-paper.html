@@ -2,7 +2,9 @@
 {{- /* /connections/rhythm-of-numbers/paper/: the thesis-style paper "The Rhythm of Numbers: Continued Fractions, Primes,
    Music and Self-Similarity" by Teddy Rook (content/connections/rhythm-of-numbers/paper/_index.md holds the abstract,
    the chapter list with links to the instruments, the PDF's size, and the 'What we found' box (found_intro, found)). The PDF is static/pdfs/The-Rhythm-of-Numbers-paper.pdf;
-   its source is docs/papers/rhythm-of-numbers/. Uses the hub's styles (rn.css) plus paper.css; no scripts. */ -}}
+   its source is docs/papers/rhythm-of-numbers/. Contents: each chapter links to its PDF page (#page=N, from
+   data/rhythm/paper_pages.yaml; scripts/rhythm/check-paper-links.py checks them) and, by its site: field, to the site.
+   Uses the hub's styles (rn.css) plus paper.css; no scripts. */ -}}
 {{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
 {{ partial "inline/ml-css.html" "connections/rhythm/paper.css" }}
 {{- $hub := "connections/rhythm-of-numbers/" | relURL }}
@@ -14,9 +16,9 @@
   <p class="rn-eyebrow">The Rhythm of Numbers · The paper</p>
   <h1>The Rhythm of Numbers: <em>Continued Fractions, Primes, Music and Self-Similarity</em></h1>
   <p class="rp-by">Teddy Rook · {{ .Params.year }}</p>
-  <p class="rn-lede">Everything on the Rhythm of Numbers pages, written up as one long paper, like a thesis: definitions, theorems and proofs, 40 figures, numbered equations and a full bibliography. It also goes further than the pages, with new computations on prime convergents and on the zeros of the zeta function, and a last chapter of new work on six open questions.</p>
+  <p class="rn-lede">Everything on the Rhythm of Numbers pages, written up as one long paper, like a thesis: definitions, theorems and proofs, 40 figures, numbered equations and a full bibliography. It also goes further than the pages, with new computations on prime convergents and on the zeros of the zeta function, and two last chapters of new work on six open questions.</p>
   <p class="rp-btns"><a class="rp-btn rp-pri" href="{{ $pdf }}" download>⬇ Download the paper (PDF, {{ .Params.pdf_size }})</a><a class="rp-btn" href="{{ $pdf }}" target="_blank" rel="noopener">Open it in a new tab</a></p>
-  <p class="rn-small rn-muted">The paper is written for a strong college student or a curious adult: calculus and a first taste of number theory help. Every chapter has a short note on what to show if it is read aloud or filmed.</p>
+  <p class="rn-small rn-muted">The paper is written for a strong college student or a curious adult: calculus and a first taste of number theory help.</p>
 </header>
 
 {{- with .Params.found }}
@@ -24,12 +26,15 @@
   <h2 id="rp-found-h">What we found on the open questions</h2>
   <div class="rp-found">
     <p>{{ $.Params.found_intro }}</p>
+    {{- with $.Params.found_dates }}<p class="rp-dates rn-small rn-muted">{{ . }}</p>{{ end }}
     <ol class="rp-found-list">
       {{- range . }}
-      <li><h3>{{ .q }} <span class="rp-status">{{ .status }}</span></h3><p>{{ .text }}</p></li>
+      <li><h3>{{ .q }} <span class="rp-status">{{ .status }}</span></h3><p>{{ .text }}</p>{{ if .update }}<p class="rp-upd"><span class="rp-upd-d">Update, added {{ .update_date }} (UTC):</span> {{ .update }}</p>{{ end }}</li>
       {{- end }}
     </ol>
-    <p class="rn-small rn-muted">Details, proofs and sources are in Chapter 15 of the paper.</p>
+    {{- $cp := site.Data.rhythm.paper_pages.chapters }}
+    <p class="rp-go"><a class="rp-site" href="{{ "connections/rhythm-of-numbers/#open-questions" | relURL }}">See what was found, with a chart, on the Rhythm of Numbers page <span aria-hidden="true">→</span></a></p>
+    <p class="rn-small rn-muted">Details, proofs and sources are in <a href="{{ $pdf }}#page={{ index $cp "15" }}" target="_blank" rel="noopener">Chapter 15 (page {{ index $cp "15" }})</a> and <a href="{{ $pdf }}#page={{ index $cp "16" }}" target="_blank" rel="noopener">Chapter 16 (page {{ index $cp "16" }})</a> of the paper.</p>
   </div>
 </section>
 {{- end }}
@@ -41,10 +46,15 @@
 
 <section class="rn-s rp-sec" aria-labelledby="rp-toc-h">
   <h2 id="rp-toc-h">Contents</h2>
-  <p class="rn-muted">Each chapter with a one-line summary, and the places on the site where you can play with its ideas.</p>
+  <p class="rn-muted">Each chapter with a one-line summary. Press a chapter’s title to open the PDF at that chapter, or “On the site” to go to the place on the site where you can play with its ideas.</p>
+  {{- /* Chapter pages come from data/rhythm/paper_pages.yaml, checked against the PDF by scripts/rhythm/check-paper-links.py. */}}
+  {{- $pages := site.Data.rhythm.paper_pages.chapters }}
   <ol class="rp-toc">
     {{- range .Params.chapters }}
-    <li><span class="rp-n">{{ .num }}</span><div><h3>{{ .title }}</h3><p>{{ .text }}</p>{{ with .links }}<p class="rp-links"><span class="rn-sr">Try it on the site: </span>{{ range $i, $l := . }}{{ if $i }} · {{ end }}<a href="{{ $l.url | relURL }}">{{ $l.label }}</a>{{ end }}</p>{{ end }}</div></li>
+    {{- $c := . }}{{ $key := index (split .num "–") 0 }}{{ $pg := index $pages $key }}
+    <li id="rp-ch-{{ $key | lower }}"><span class="rp-n">{{ .num }}</span><div><h3>{{ if $pg }}<a href="{{ $pdf }}#page={{ $pg }}" target="_blank" rel="noopener">{{ .title }}</a>{{ else }}{{ .title }}{{ end }}</h3><p>{{ .text }}</p>
+      <p class="rp-go">{{ with $pg }}<a href="{{ $pdf }}#page={{ . }}" target="_blank" rel="noopener" aria-label="{{ $c.title }}: open the PDF at page {{ . }}">PDF, page {{ . }} <span aria-hidden="true">↗</span></a>{{ end }}{{ with $c.site }}<a class="rp-site" href="{{ . | relURL }}" aria-label="On the site: {{ $c.site_label }}">On the site <span aria-hidden="true">→</span></a>{{ end }}</p>
+      {{- with .links }}<p class="rp-links"><span class="rn-sr">Try it on the site: </span>{{ range $i, $l := . }}{{ if $i }} · {{ end }}<a href="{{ $l.url | relURL }}">{{ $l.label }}</a>{{ end }}</p>{{ end }}</div></li>
     {{- end }}
   </ol>
 </section>

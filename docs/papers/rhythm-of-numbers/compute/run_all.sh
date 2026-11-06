@@ -22,4 +22,5 @@ python3 c11_openq_model.py
 python3 c11_openq_matrix.py
 python3 c11_openq_edo.py
 python3 c11_openq_primes.py
+python3 c12_openq2.py               # Chapter 16: a second look (about 3 minutes)
 echo "all numbers and figures rebuilt"

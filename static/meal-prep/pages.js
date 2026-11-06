@@ -67,7 +67,7 @@
       $('#rp-reset').hidden = Math.abs(n - r.servings) < 0.01;
       var sc = M.scaleRecipe(r, n, data.cat), grp = '', h = '';
       sc.forEach(function (s) {
-        if (s.ing.group && s.ing.group !== grp) { grp = s.ing.group; h += '<li class="mp-ingg"><h4>' + C.esc(grp) + '</h4></li>'; }
+        if (s.ing.group && s.ing.group !== grp) { grp = s.ing.group; h += '<li class="mp-ingg"><h3>' + C.esc(grp) + '</h3></li>'; }
         var ge = s.item && data.G.byItem[s.item.id], gk = ge ? ge.key : null;
         h += '<li>' + C.ingLine(s) + (gk ? ' <a class="mp-tag mp-grow" href="' + C.esc(data.gardenURL + (ge.animal ? '?' + gk + '=on' : '?crops=' + gk + '&mode=only') + '&from=meals') + '" aria-label="Grow it: ' + C.esc(C.growName(data, gk)) + ', in the Food Garden Planner">🌱 Grow it</a>' : '') + '</li>';
       });

@@ -11,7 +11,7 @@
 .rp-toc{list-style:none;margin:0;padding:0;display:grid;gap:.55rem}
 .rp-toc li{display:grid;grid-template-columns:2.6rem 1fr;gap:.2rem .6rem;padding:.6rem .8rem;border:1px solid var(--rn-line);border-left:4px solid var(--rn-gold);border-radius:10px;background:var(--rn-panel)}
 .rp-n{font-weight:700;color:var(--rn-gold-t);font-size:1.05rem}
-.rp-toc h3{font-size:1rem;margin:0 0 .15rem}
+.rp-toc h3{font-size:1rem;margin:0 0 .15rem;line-height:1.6}
 .rp-toc p{max-width:none}
 .rp-links{font-size:.9rem;margin-top:.25rem!important}
 .rp-cite{border:1px solid var(--rn-line);border-radius:10px;padding:.7rem .9rem;background:var(--rn-soft);overflow-wrap:anywhere;max-width:none!important}
@@ -23,4 +23,13 @@
 .rp-found-list{margin:0;padding-left:1.3rem;display:grid;gap:.6rem}
 .rp-found-list h3{font-size:1rem;margin:0 0 .15rem;display:flex;flex-wrap:wrap;align-items:baseline;gap:.2rem .5rem}
 .rp-status{font-size:.74rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--rn-gold-t);border:1px solid var(--rn-gold);border-radius:999px;padding:0 .5rem}
+.rp-found .rp-upd{margin-top:.35rem;padding-left:.6rem;border-left:2px solid var(--rn-gold)}
+.rp-upd-d{font-size:.8rem;font-weight:700;color:var(--rn-gold-t)}
+/* contents: each chapter's title opens the PDF at its page; "On the site" goes to the matching section */
+.rp-toc h3 a{color:var(--rn-ink);text-decoration:none}
+.rp-toc h3 a:hover,.rp-toc h3 a:focus-visible{color:var(--rn-g);text-decoration:underline}
+.rp-go{display:flex;flex-wrap:wrap;gap:.3rem .9rem;font-size:.9rem;margin-top:.3rem!important}
+.rp-go a{font-weight:600;text-decoration:none}
+.rp-go a:hover,.rp-go a:focus-visible{text-decoration:underline}
+.rp-toc li{scroll-margin-top:4rem}
 @media print{.rp-found li{break-inside:avoid}.rp-btns{display:none}.rp-toc li{break-inside:avoid}}

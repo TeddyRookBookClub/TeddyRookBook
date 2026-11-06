@@ -40,7 +40,7 @@
       <li>Everything is drawn and played in your browser. Nothing you do here is sent anywhere.</li>
     </ul>
   </aside>
-  <a class="rn-papercard" href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}"><span class="rn-papercard-i" aria-hidden="true">📄</span><b>Read the paper</b><span>The whole story written up like a thesis, with proofs, 40 figures, new computations on prime convergents and zeta zeros, and new work on six open questions. Free PDF, 106 pages.</span></a>
+  <a class="rn-papercard" href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}"><span class="rn-papercard-i" aria-hidden="true">📄</span><b>Read the paper</b><span>The whole story written up like a thesis, with proofs, 40 figures, new computations on prime convergents and zeta zeros, and new work on six open questions. Free PDF, 115 pages.</span></a>
   <nav aria-label="Chapters"><ul class="rn-toc">
     <li><a href="#ch1"><span>Chapter I</span><b>Pi’s machine</b></a></li>
     <li><a href="#ch2"><span>Chapter II</span><b>Pi and primes in sound</b></a></li>
@@ -49,6 +49,7 @@
     <li><a href="#ch5"><span>Chapter V</span><b>Hunting primes with pi’s tools</b></a></li>
     <li><a href="#ch6"><span>Chapter VI</span><b>Play and compose</b></a></li>
     <li><a href="{{ "connections/rhythm-of-numbers/fractals/" | relURL }}"><span>Chapter VII · its own page</span><b>Fractals: the same rule at every scale</b></a></li>
+    <li><a href="#open-questions"><span>From the paper</span><b>Working on the open questions</b></a></li>
     <li><a href="#map"><span>Epilogue</span><b>The map</b></a></li>
   </ul></nav>
 </header>
@@ -128,7 +129,7 @@
     <div class="rn-tablebox"><table><thead><tr><th scope="col">#</th><th scope="col">Numerator</th><th scope="col">Denominator</th><th scope="col">Error</th></tr></thead><tbody id="cBody"></tbody></table></div>
     <p class="rn-small" id="cSum"></p>
   </div>
-  <div class="rn-link"><b>Pi ↔ primes</b><span>Among pi’s first 400 convergents, 4 denominators are prime: 7, 113, 265,381 and an 18-digit one. A fair estimate uses the odds of a random number that size (about 1 in ln q), raised a little because a convergent’s denominator never shares a factor with its numerator. That predicts about 7.4. Over the first 5,000 convergents the count is 9 prime denominators against about 10.9 expected (see the paper). So pi looks like a typical number here: its early primes are luck, not a law. Whether pi has infinitely many prime denominators is an open question.</span></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Among pi’s first 400 convergents, 4 denominators are prime: 7, 113, 265,381 and an 18-digit one. A fair estimate uses the odds of a random number that size (about 1 in ln q), raised a little because a convergent’s denominator never shares a factor with its numerator. That predicts about 7.4. Over the first 5,000 convergents the count is 9 prime denominators against about 10.9 expected (see the paper). So pi looks like a typical number here: its early primes are luck, not a law. Whether pi has infinitely many prime denominators is an open question (<a href="#oq-1">what we found</a>).</span></div>
   <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"num":"phi"}'>φ: the denominators are Fibonacci numbers</button> <button type="button" class="rn-ghost" data-remix='{"num":"sqrt2"}'>√2: the Pell numbers</button> <button type="button" class="rn-ghost" data-remix='{"num":"e"}'>e: a pattern in the terms</button></p>
 </section>
 
@@ -459,6 +460,9 @@
   <p class="rn-small"><a href="{{ "connections/rhythm-of-numbers/tree/" | relURL }}">Drag the tree →</a> Take hold of a number and move it: its terms, its way down the Stern–Brocot tree and its convergents follow your finger.</p>
 </section>
 
+<!-- ============ FROM THE PAPER: the open questions (layouts/_partials/connections/rhythm-openq.html) ============ -->
+{{ partial "connections/rhythm-openq.html" . }}
+
 <!-- ============ EPILOGUE ============ -->
 <div class="rn-ch" id="map"><p class="rn-eyebrow">Epilogue</p><h2>The map</h2><p>Every section, joined wherever two share an idea. Pick a thread in the bar to see its web, and press a dot to jump to it.</p></div>
 <section class="rn-s" id="mapSec" data-mod="map" aria-label="The map of sections">
@@ -468,10 +472,10 @@
     <p class="rn-small" id="mapNote" aria-live="polite">Hover or tap a dot to see what it connects to.</p>
   </div>
   <div class="rn-prose">
-    <h3>Threads to pull</h3>
-    <p class="rn-small">Questions this page raises about pi and the primes. Some are open, some are known, and some are experiments to try. Treat them as starting points, not results.</p>
+    <h3 id="threads">Threads to pull</h3>
+    <p class="rn-small">Questions this page raises about pi and the primes. Some are open, some are known, and some are experiments to try. Treat them as starting points, not results. Several of them (prime convergents, tunings with a prime number of notes, the correlation spectrum) are among the six questions we went back to: see <a href="#open-questions">Working on the open questions</a> for what was found.</p>
     <div class="rn-threadlist">
-      <div class="rn-thr"><span class="rn-tag rn-open">Open</span><h4 class="rn-h4">Prime convergents</h4><p>Does pi’s continued fraction have infinitely many prime denominators? No one knows. The same question for φ is the Fibonacci prime problem, and for √2 it is the Pell primes. Both are unsolved. A good experiment: count prime convergents for many constants and compare each count with chance.</p></div>
+      <div class="rn-thr"><span class="rn-tag rn-open">Open</span><h4 class="rn-h4">Prime convergents</h4><p>Does pi’s continued fraction have infinitely many prime denominators? No one knows. The same question for φ is the Fibonacci prime problem, and for √2 it is the Pell primes. Both are unsolved. A good experiment: count prime convergents for many constants and compare each count with chance. <a href="#oq-1">What we found →</a></p></div>
       <div class="rn-thr"><span class="rn-tag rn-open">Open</span><h4 class="rn-h4">Primes and nuclei</h4><p>The Montgomery–Dyson match (section 15) remains one of the strangest links in science. Hearing the zeros’ spacings next to random and nuclear spacings is a good way to sense why mathematicians take it seriously.</p></div>
       <div class="rn-thr"><span class="rn-tag rn-known">Known</span><h4 class="rn-h4">Rhythm necklaces count primes</h4><p>The rhythm proof of Fermat’s little theorem in section 17 is classical. Counting necklaces also gives the number of irreducible polynomials, and the number of different p-beat rhythms up to rotation.</p></div>
       <div class="rn-thr"><span class="rn-tag rn-try">Try</span><h4 class="rn-h4">Constants as composed music</h4><p>Each convergent of pi is a Euclidean rhythm, and each refines the last: E(1,7), then E(16,113), then a 33,102-beat cycle. Layer them in the Polyrhythm layerer. The same works for any constant: √2 makes a rhythm built only from 2s, and e’s rhythm has a growing pattern.</p></div>

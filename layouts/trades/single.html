@@ -24,15 +24,17 @@
   <nav aria-label="In this lesson"><ul class="tr-toc">{{ range $L.toc }}<li><a href="#{{ .id }}">{{ .h }}</a></li>{{ end }}<li><a href="#check">Check yourself</a></li><li><a href="#sources">Sources</a></li></ul></nav>
 
   <div class="tr-body">
+  {{- $sawh2 := false }}
   {{- range $L.blocks }}
-    {{- if eq .t "sec" }}
+    {{- if eq .t "sec" }}{{ $sawh2 = true }}
     <section class="hs-sec" id="{{ .id }}"><h2>{{ .h }}</h2>{{ replace .html "%BASE%" $B | safeHTML }}</section>
     {{- else if eq .t "fig" }}
     <figure class="tr-fig" data-nounits><div class="tr-fig-box">{{ .svg | safeHTML }}</div><figcaption>{{ .cap }}</figcaption></figure>
     {{- else if eq .t "formula" }}
     <p class="tr-formula">{{ .html | safeHTML }}</p>
     {{- else if eq .t "call" }}
-    <div class="tr-call {{ .k }}"><h3><span class="tr-call-k">{{ index (dict "safe" "You can" "stop" "Stop" "why" "Why" "note" "Note") .k }}</span>{{ .h }}</h3>{{ replace .html "%BASE%" $B | safeHTML }}</div>
+    {{- /* A call box before the first section heading is an h2 (styled like the h3 ones), so no heading level is skipped. */}}
+    <div class="tr-call {{ .k }}">{{ if $sawh2 }}<h3>{{ else }}<h2 class="tr-callh">{{ end }}<span class="tr-call-k">{{ index (dict "safe" "You can" "stop" "Stop" "why" "Why" "note" "Note") .k }}</span>{{ .h }}{{ if $sawh2 }}</h3>{{ else }}</h2>{{ end }}{{ replace .html "%BASE%" $B | safeHTML }}</div>
     {{- else if eq .t "parts" }}
     <section class="hs-sec"><div class="hs-tablewrap"><table class="hs-table tr-parts"><caption>{{ .cap }}</caption><thead><tr><th scope="col">Part</th><th scope="col">What it does</th><th scope="col">Signs of trouble</th></tr></thead><tbody>{{ range .rows }}<tr><td>{{ index . 0 }}</td><td>{{ index . 1 }}</td><td>{{ index . 2 }}</td></tr>{{ end }}</tbody></table></div></section>
     {{- else if eq .t "table" }}

@@ -45,7 +45,7 @@ Inside many of your cells float tiny hollow barrels called **vaults**. Around th
 
 This page looks at why nature builds that way, the math that decides which shells are possible, and a 2026 study that found vaults made by viruses of bacteria.
 
-### Many copies of one piece
+## Many copies of one piece
 
 A small virus carries very few genes. In 1956 Francis Crick and James Watson pointed out that such a virus can't hold the instructions for a big shell made of many different proteins. It is far cheaper to write the recipe for one small protein and make lots of copies.
 
@@ -53,7 +53,7 @@ Then comes a second idea. If every copy is the same and each one meets its neigh
 
 Nobody has to build these shells. The pieces build themselves. Their shapes and sticky patches make them snap together in only one way, much as salt crystals grow out of salt water. This is called **self-assembly**. In 1955 Heinz Fraenkel-Conrat and Robley Williams pulled tobacco mosaic virus apart into its protein and its RNA, mixed them again in a test tube, and got working virus back.
 
-### Virus shells: the twenty-sided ball
+## Virus shells: the twenty-sided ball
 
 An **icosahedron** has 20 triangle faces, 12 corners and 30 edges. Spin it on an axis through two opposite corners and it looks the same 5 times in one full turn, so that is a **5-fold axis**. There are 6 of those. An axis through the centers of two opposite faces is **3-fold**, and there are 10. An axis through the middles of two opposite edges is **2-fold**, and there are 15.
 
@@ -85,7 +85,7 @@ Real shells bend the rules a little. In phage HK97 and herpes virus, one of the 
 
 When $h$ and $k$ are different and neither is 0, as for $T = 7$, the walk can turn left or right. The shell comes in two mirror-image forms, like a left and a right hand.
 
-### Vaults: barrels inside the cell
+## Vaults: barrels inside the cell
 
 In 1986 Nancy Kedersha and Leonard Rome found a new particle in rat liver cells. Under the electron microscope its arches reminded them of the vaulted ceilings of a cathedral, so they called it a **vault**. Vaults turned up in humans and in many other animals and some single-celled organisms. Yeast and fruit flies don't have them.
 
@@ -106,7 +106,7 @@ Vault proteins now turn up in animals, bacteria and archaea, the three great bra
 
 > **A preprint is not the final word.** bioRxiv is a server where scientists share reports before other experts have checked them (peer review). The numbers above come from the report itself and from news coverage of it. They may change when the work is reviewed and published.
 
-### Barrels versus balls
+## Barrels versus balls
 
 A vault and a virus shell use two different kinds of symmetry.
 
@@ -116,7 +116,7 @@ A ring can grow one copy at a time. Add a copy and the ring gets a little wider;
 
 [[viz:sh-barrel|A simple geometric model, not a real structure: every copy is the same width, so the ring's size follows from how many copies it has, and the barrel's length from how many segments each protein has.]]
 
-### Other shells in nature
+## Other shells in nature
 
 - **Ferritin** stores iron in almost every living thing. It is a hollow ball about 12 nanometers across, made of **24** proteins. It has the symmetry of a cube (octahedral symmetry), which has exactly 24 turns. One ferritin can hold up to about 4,500 iron atoms.
 - **Clathrin** is a three-legged protein (a triskelion). The legs weave into cages of hexagons and pentagons around bits of cell membrane that the cell is pulling inside.

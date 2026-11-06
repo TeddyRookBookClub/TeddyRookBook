@@ -36,7 +36,7 @@
         <ul class="mp-ings" id="rp-ings">
           {{ $grp := "" }}
           {{ range $r.ingredients }}{{ $it := index $cat .item }}
-          {{ if and .group (ne .group $grp) }}{{ $grp = .group }}<li class="mp-ingg"><h4>{{ .group }}</h4></li>{{ end }}
+          {{ if and .group (ne .group $grp) }}{{ $grp = .group }}<li class="mp-ingg"><h3>{{ .group }}</h3></li>{{ end }}
           <li>{{ if .amount }}<b>{{ partial "meal-prep/amt.html" .amount }} {{ if ne .unit "each" }}{{ replace .unit "-" " " }}{{ end }}</b> {{ end }}{{ with $it }}{{ .name }}{{ end }}{{ with .prep }}, {{ . }}{{ end }}{{ if .optional }} <i>(optional)</i>{{ end }}{{ if .to_taste }} <i>(to taste)</i>{{ end }}</li>
           {{ end }}
         </ul>
