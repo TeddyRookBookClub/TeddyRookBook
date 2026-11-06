@@ -1,6 +1,6 @@
 ---
 title: "Navier–Stokes: air over a wing"
-summary: "The equations of flowing air and water, solved live around a wing you can tilt, reshape and turn upside down like a race car's. A second scene follows the thin film of air under a spinning Euler's disk as it whirrs to a stop."
+summary: "The equations of flowing air and water, solved live around a wing you can tilt, reshape and turn upside down like a race car's. More scenes put balls, cars, animals and buildings in the wind, set shape challenges in the Shape Lab, and follow the thin film of air under a spinning Euler's disk as it whirrs to a stop."
 emoji: "🌬️"
 gtags: [famous-problems, chaos]
 weight: 340
@@ -18,6 +18,7 @@ ladder_links:
   - { url: "/math/gallery/mandelbrot/", why: "simple rules, endless detail" }
 credits:
   - { name: "Our own simulation", what: "a lattice Boltzmann flow solver, wing shapes and drawing, written for this page and run in your browser" }
+  - { name: "Our own shapes, cars, animals and Shape Lab", what: "every outline (generic drawings from general proportions, not copied from any real car, photo or plan), the shared flow solver with its rolling road, the force measurements, the challenges and their scoring, made for this page" }
   - { name: "Our own Euler's disk model", what: "the disk drawing, the air-film calculation (lubrication theory, solved in your browser), the graph and the synthesized whirr, made for this page from the formulas in Moffatt's paper" }
   - { name: "S. Chen and G. D. Doolen, Lattice Boltzmann Method for Fluid Flows, Annual Review of Fluid Mechanics 30 (1998)", url: "https://doi.org/10.1146/annurev.fluid.30.1.329", what: "the method our solver uses (the D2Q9 lattice with BGK collisions and bounce-back walls)" }
   - { name: "Jos Stam, Stable Fluids, SIGGRAPH 1999", url: "https://doi.org/10.1145/311535.311548", what: "the backward-tracing step we use to carry the smoke along with the flow" }
@@ -43,6 +44,16 @@ credits:
   - { name: "K. Easwar, F. Rouyer and N. Menon, Speeding to a stop: the finite-time singularity of a spinning disk, Physical Review E 66, 045102 (2002)", url: "https://doi.org/10.1103/PhysRevE.66.045102", what: "high-speed video of disks and rings on different surfaces" }
   - { name: "C. Le Saux, R. I. Leine and C. Glocker, Dynamics of a rolling disk in the presence of dry friction, Journal of Nonlinear Science 15, 27–61 (2005)", url: "https://doc.rero.ch/record/319317", what: "a model of the disk with sliding, pivoting and rolling friction" }
   - { name: "R. I. Leine, Experimental and theoretical investigation of the energy dissipation of a rolling disk during its final stage of motion, Archive of Applied Mechanics 79, 1063–1082 (2009)", url: "https://doi.org/10.1007/s00419-008-0278-6", what: "high-speed video measurements of the last seconds" }
+  - { name: "Drag (physics) (Grokipedia)", url: "https://grokipedia.com/page/Drag_(physics)", what: "pressure drag, skin friction, separation and the wake" }
+  - { name: "Drag coefficient (Grokipedia)", url: "https://grokipedia.com/page/Drag_coefficient", what: "typical drag coefficients (ball about 0.47, teardrop about 0.05) and how they change with the Reynolds number" }
+  - { name: "Automotive aerodynamics (Grokipedia)", url: "https://grokipedia.com/page/Automotive_aerodynamics", what: "the teardrop as the low-drag ideal, the Kamm tail, and moving-belt floors in wind tunnels" }
+  - { name: "History of Formula One (Grokipedia)", url: "https://grokipedia.com/page/History_of_Formula_One", what: "dates: front-engined cars to the late 1950s, wings in 1968, ground effect from 1977, flat floors from 1983" }
+  - { name: "Open-wheel car (Grokipedia)", url: "https://grokipedia.com/page/Open-wheel_car", what: "how much downforce comes from the floor on today's open-wheel racing cars" }
+  - { name: "Golf ball (Grokipedia)", url: "https://grokipedia.com/page/Golf_ball", what: "how dimples shrink the wake and about halve the drag" }
+  - { name: "Penguin (Grokipedia)", url: "https://grokipedia.com/page/Penguin", what: "the streamlined body and swimming speeds" }
+  - { name: "Oceanic dolphin (Grokipedia)", url: "https://grokipedia.com/page/Oceanic_dolphin", what: "the tapered, streamlined body, horizontal flukes and dorsal fin" }
+  - { name: "Fastest animals (Grokipedia)", url: "https://grokipedia.com/page/Fastest_animals", what: "the peregrine falcon's dive with folded wings" }
+  - { name: "Tacoma Narrows Bridge (1940) (Grokipedia)", url: "https://grokipedia.com/page/Tacoma_Narrows_Bridge_(1940)", what: "the 1940 collapse and wind-tunnel testing of bridge decks since" }
   - { name: "Clay Mathematics Institute, Rules for the Millennium Prize Problems", url: "https://claymath.org/millennium-problems/rules", what: "publication and two-year waiting rule for an award" }
 ---
 ## What you're seeing
@@ -57,7 +68,11 @@ At a gentle angle the air splits at the nose and slides smoothly along both surf
 
 Turn the wing upside down and the low pressure moves to the underside. Now the force points down. That is what the wings on a race car do.
 
-Press **Euler's disk** above the picture for a second scene: a heavy metal disk rolling on its edge as it settles onto a table. Panel (a) shows the disk, (b) the thin layer of air trapped beneath it, and (c) a graph of how its tilt shrinks while its wobble speeds up. You can turn on the sound of its whirr. It is explained in [Euler's disk](#eulers-disk-a-singularity-on-a-tabletop) below.
+Press **Shapes, cars & animals** for a wind tunnel you can fill. Pick a group (shapes, cars, animals and people, or other things such as a tall building and a bridge deck) and an object. Tilt it with the angle slider, or by dragging up and down on the picture, and change the wind speed. Cars sit on a floor. With **Rolling road** on, the floor moves backward at the wind speed, as the road does under a real car. The small chart under the picture tracks the drag and the lift as they settle. Below zero, lift has become **downforce**. All the outlines are our own simple drawings. The cars stand for eras and kinds of car, not any real make or team.
+
+Press **Shape Lab** for five challenges with a score: shape a body for the least drag, set a racing car's rear wing for the most downforce on a drag budget, find a wing's best glide angle, rank a penguin, a ball and a teardrop, and test a rolling road against a still floor. Each trial runs the same number of steps from the same start, so a design always earns the same score. Your best scores stay in this browser.
+
+Press **Euler's disk** above the picture for one more scene: a heavy metal disk rolling on its edge as it settles onto a table. Panel (a) shows the disk, (b) the thin layer of air trapped beneath it, and (c) a graph of how its tilt shrinks while its wobble speeds up. You can turn on the sound of its whirr. It is explained in [Euler's disk](#eulers-disk-a-singularity-on-a-tabletop) below.
 
 ## Why it works
 
@@ -98,6 +113,41 @@ Here $U$ is the speed of the oncoming air and $L$ is the size of the object (for
 **Race car wings.** A Formula 1 car's wings are shaped like aircraft wings turned upside down. They make **downforce**, which presses the tires into the road so the car can corner faster without sliding. The car's floor is shaped to speed up the air flowing beneath it. Faster air means lower pressure, so the car is sucked toward the track. This is called **ground effect**. Behind every car trails a turbulent wake, often called **"dirty air."** A car following closely gets less downforce from its own wings in that wake, which makes passing harder.
 
 The rules limit how much each team may test. Under the FIA's **Aerodynamic Testing Restrictions**, in use since 2021, each team gets a set number of wind-tunnel runs and CFD simulations. It is a sliding scale: teams higher in the championship standings get less, and lower teams get more. The amounts are reset twice a year.
+
+## Why shape matters
+
+**Two kinds of drag.** Air pushes on a moving body in two ways. Along the surface, the air rubs: that is **skin friction**. And the pressure on the front can be higher than on the back: that is **pressure drag**. Pressure drag comes from **separation**. Air flowing around a blunt body can't follow its back side. It breaks away and leaves a **wake**, a region of low pressure full of swirls, which pulls the body backward. The bigger the wake, the bigger the drag. For blunt bodies, pressure drag is most of the total.
+
+**The teardrop.** A round nose lets the air split gently. A long, slowly tapering tail lets it close up again behind the body without breaking away, so the wake stays thin. That is why the teardrop is the classic low-drag shape. Real-world figures show how much it matters: a ball has a drag coefficient of about 0.47, and a well-shaped teardrop body about 0.05, roughly a tenth. A tail that long doesn't fit a car, so many cars cut the tail short with a flat back. This is called a **Kamm tail**, after Wunibald Kamm, who studied it in the 1930s, and it keeps much of the benefit.
+
+Our 2D model shows the same order, at its own low Reynolds number. With the height facing the wind as the yardstick, it gives these drag coefficients:
+
+| Shape | Drag coefficient in our model |
+|---|---|
+| Teardrop | about 1.3 |
+| Ball (circle) | about 1.5 |
+| Half-cylinder, curved side first | about 1.55 |
+| Square | about 1.9 |
+| Half-cylinder, flat side first | about 2.2 |
+| Flat plate, broadside | about 2.5 |
+
+The teardrop wins, but only by about 12 percent. At low Reynolds numbers the air is "sticky," skin friction is a large share of the drag, and a long body has more skin to rub. At highway speeds friction matters much less, and streamlining pays off far more. The **dimpled ball** shows the same limit. On a real golf ball the dimples stir the thin layer of air next to the surface into turbulence. That layer clings to the ball longer, the wake shrinks, and the drag drops to about half that of a smooth ball. It only works at the ball's real speeds. In our slow, syrupy model the dimples make no difference.
+
+**Wings and downforce on racing cars.** In open-wheel Grand Prix racing, the cars of the 1950s had the engine in front and a long, rounded body. Engines moved behind the driver around 1959–1961. High wings appeared in 1968, and wedge-shaped bodies with lower wings soon followed. From 1977, designers shaped the car's floor as an upside-down wing, so the air rushing underneath sucked the car down. This is **ground effect**. It was cut back in 1983, when flat floors became the rule, and returned in a new form in 2022. On today's cars the floor and diffuser make about half of the downforce. Downforce always costs drag, which slows a car on the straights, so teams set their wing angles track by track. Our three racing cars are our own simple outlines of these eras, drawn from general proportions.
+
+Wind tunnels for cars often have a moving belt for a floor, running at the wind speed. A still floor grows its own slow layer of air, which the real road doesn't have, and that changes the flow under the car. Try the **Rolling road or still floor?** challenge to see how much difference it makes in our model.
+
+**Animal shapes.** Penguins and dolphins are fast, efficient swimmers, and both have streamlined bodies: a rounded front, a thick middle and a long taper toward the tail. Penguins can reach about 36 km/h underwater. A dolphin's tail ends in horizontal flukes, and its dorsal fin keeps it steady. A peregrine falcon hunts by diving. It folds its wings tight against its body to cut drag and can reach about 320 km/h, the fastest speed of any animal. In the Shape Lab, our penguin outline beats both the teardrop and the ball when all three have the same area. Its body is a little longer and slimmer than our teardrop.
+
+**Buildings and bridges.** Wind sheds swirls off buildings and bridges too, first from one side and then the other. In 1940 the first Tacoma Narrows Bridge in Washington State twisted itself apart in a wind of about 42 mph (68 km/h). Since then, engineers test bridge decks in wind tunnels and give them shapes and openings the wind can't catch.
+
+### What a 2D simulation can and can't tell you
+
+Our simulation is a thin slice of the world. Every shape in it is really an endless bar, the same all the way across. A ball here is a long rod, and a car is a car as wide as the world. Air can't go around the sides, only over and under. That is why we leave the wheels out of the flow: in a slice they would wall off the air under the car.
+
+It also runs at a low **Reynolds number**, between about 100 and 1,400 here, by the object's length. A car on the highway is in the millions. So the numbers it gives are not real-world numbers. Its drag coefficients are measured per unit of width, using the height facing the wind (or the chord, for wing sections), and they are larger than the 3D figures quoted above.
+
+What it does show well are the patterns. Blunt bodies leave wide wakes and shed swirls by turns. A tapering tail keeps the wake thin. Tilt a wing too far and the flow tears away: the drag climbs fast and the lift stops keeping up. These patterns, and the ranking of shapes from low drag to high, carry over to the real world. Engineers work the same way, with simple models first and 3D simulations and wind tunnels to check.
 
 ## Where it stands today
 
@@ -154,6 +204,11 @@ Most later work agrees that for a heavy disk on a hard surface, friction at the 
 - Set the camber to 0% and the angle to 0°. Why is there no lift? Now tilt it to 5°.
 - Lower the Reynolds number to 50 and then raise it to 800. Which looks more like syrup, and which more like air?
 - Make the wing very thick (24%) and compare the drag with a thin one (6%) at the same angle.
+- In **Shapes, cars & animals**, compare the ball, the teardrop and the flat plate. Which leaves the widest wake? Switch the colors to **swirl** to see the swirls shed by turns.
+- Turn the half-cylinder to 180° so the flat side faces the wind. What happens to the drag?
+- Pick the **Modern open-wheel racer** and turn **Rolling road** off and on. Watch the downforce in the chart.
+- In the **Shape Lab**, start from the circle and stretch it into a long, smooth shape. How low can you get the drag? Does stretching it further always help?
+- In **Best glide angle**, test angles from 0° to 25°. Where is lift ÷ drag best, and what happens to the drag past 20°?
 - Switch to **Euler's disk**, turn on the sound and press **Play**. When does the pitch start to climb quickly?
 - In the disk scene, set the graph to **time left, log scales**. The tilt drops by one power of ten while the time left drops by three. Can you see it on the graph?
 - Click the disk picture and press the right arrow key a few times. Each press halves the time left. How much faster is the contact point going after six presses? (The rule $\Omega \propto (t_0-t)^{-1/6}$ says: twice as fast.)
