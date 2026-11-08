@@ -51,6 +51,9 @@
     <h2>🛠 Next steps: The Trades</h2>
     <p>Ready to go further than the basics? <a href="{{ "trades/" | relURL }}">The Trades</a> teach how things work and how to fix them, the way a trade school would start: every part and how the parts fit together, troubleshooting by symptom, which jobs you can safely do yourself, and when to call a professional. There are full courses on <a href="{{ "trades/cars/" | relURL }}">cars</a>, <a href="{{ "trades/plumbing/" | relURL }}">plumbing</a>, <a href="{{ "trades/electrical/" | relURL }}">electrical</a>, <a href="{{ "trades/hvac/" | relURL }}">heating and cooling (HVAC)</a>, and <a href="{{ "trades/construction/" | relURL }}">construction</a>.</p>
   </section>
+  {{ with site.GetPage "/life-planner" }}<section class="hs-sec hs-noprint">
+    <a class="hs-card" href="{{ .RelPermalink }}"><span class="big" aria-hidden="true">🗓️</span><h2>Life Planner</h2><p>Keep up with chores, reading, exercise, learning and meals: a daily list built around your free time, with how often each chore should be done, and a year you can print or add to your calendar.</p><span class="go">Plan your days →</span></a>
+  </section>{{ end }}
   <section class="hs-sec hs-note hs-noprint">
     <h2>More hands-on skills</h2>
     <p>Grow food with the <a href="{{ "garden/" | relURL }}">Food Garden Planner</a>, keep clothes going with <a href="{{ "sewing/" | relURL }}">Sewing &amp; Knitting</a>, and learn knots, fire, navigation and signaling in <a href="{{ "homeschool/outdoor-skills/" | relURL }}">Outdoor Skills</a>. For school subjects, start at <a href="{{ "homeschool/" | relURL }}">Homeschool</a>.</p>

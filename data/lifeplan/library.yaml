@@ -1,0 +1,83 @@
+# The Life Planner's starter library (layouts/life-planner/list.html, static/life-planner/lp.js).
+# Every item can be added as a track, then changed: name, how often, minutes, start and end.
+#   key (saved in people's plans: don't rename), cat, name, icon, mins (a rough time estimate for one time),
+#   f: how often (the format is in static/life-planner/lp-core.js, "FREQUENCIES"):
+#     {k: daily} {k: weekdays} {k: days, d: [0-6, Sunday = 0]} {k: times, n: N}  (N times a week, on the days with room)
+#     {k: weeks, n: N}  (every N weeks, on a day with room)   {k: months, every: N, "on": flex | {day: D} | {nth: N, dow: D}}
+#     {k: months, months: [4, 10]}  (in those months, on a day with room)
+#   ("n" and "on" are quoted: bare, YAML reads them as no and yes)
+#   range: what the guidance says when it varies (shown next to the default; everything is adjustable)
+#   src: [{name, url}] where the frequency comes from; none = our own rough default, and the page says so
+#   note: one short line shown with the item. type (exercise): moderate | vigorous | strength | stretch
+sources:
+  ufifas: &ufifas {name: "University of Florida IFAS Extension, Keeping It Clean: Plan Your Cleaning (FY787)", url: "https://ask.ifas.ufl.edu/publication/fy787"}
+  uga: &uga {name: "University of Georgia Extension, Home Maintenance Checklist (Circular 1082)", url: "https://fieldreport.caes.uga.edu/publications/C1082/home-maintenance-checklist/"}
+  fda: &fda {name: "U.S. Food and Drug Administration, Are You Storing Food Safely?", url: "https://www.fda.gov/consumers/consumer-updates/are-you-storing-food-safely"}
+  ars: &ars {name: "USDA Agricultural Research Service, Best Ways to Clean Kitchen Sponges (2007)", url: "https://www.ars.usda.gov/news-events/news/research-news/2007/best-ways-to-clean-kitchen-sponges/"}
+  sleep: &sleep {name: "Sleep Foundation, How Often Should You Wash Your Sheets?", url: "https://www.sleepfoundation.org/bed-sheets/how-often-should-you-wash-your-sheets"}
+  towels: &towels {name: "Houston Methodist, How Often Should You Wash Your Bath Towel?", url: "https://houstonmethodist.org/blog/articles/2023/dec/how-often-should-you-wash-your-bath-towel"}
+  usfa: &usfa {name: "U.S. Fire Administration, Clothes Dryer Fire Safety", url: "https://www.usfa.fema.gov/downloads/pdf/publications/clothes_dryer_fire_safety_flyer.pdf"}
+  massdfs: &massdfs {name: "Massachusetts Department of Fire Services, Dryer Fire Safety", url: "https://www.mass.gov/service-details/dryer-fire-safety"}
+  smoke: &smoke {name: "Honolulu Fire Department, Smoke Alarms (following NFPA 72)", url: "https://fire.honolulu.gov/fire-and-life-safety/homeowners/smoke-alarms/"}
+  nfpaco: &nfpaco {name: "National Fire Protection Association, Carbon Monoxide Safety", url: "https://www.nfpa.org/education-and-research/home-fire-safety/carbon-monoxide"}
+  estar: &estar {name: "ENERGY STAR, Heating and Cooling Maintenance Checklist", url: "https://www.energystar.gov/saveathome/heating-cooling/maintenance-checklist"}
+  ge: &ge {name: "GE Appliances, Draining and Flushing the Water Heater", url: "https://products.geappliances.com/appliance/gea-support-search-content?contentId=39723"}
+  nhtsa: &nhtsa {name: "National Highway Traffic Safety Administration, Tires", url: "https://www.nhtsa.gov/vehicle-safety/tires"}
+  pag: &pag {name: "U.S. Department of Health and Human Services, Physical Activity Guidelines for Americans, 2nd edition (2018)", url: "https://odphp.health.gov/sites/default/files/2019-10/PAG_ExecutiveSummary.pdf"}
+
+chores:
+# ---- Kitchen
+- {key: dishes, cat: kitchen, name: "Dishes and the dishwasher", icon: "🍽️", mins: 20, f: {k: daily}, range: "after meals", src: [*ufifas]}
+- {key: counters, cat: kitchen, name: "Wipe counters, table and stovetop", icon: "🧽", mins: 10, f: {k: daily}, range: "after each use", src: [*ufifas]}
+- {key: sponge, cat: kitchen, name: "Clean the kitchen sponge", icon: "🧽", mins: 2, f: {k: times, "n": 3}, range: "every day or two", src: [*ars], note: "Run it through the dishwasher with a drying cycle, and replace it often."}
+- {key: fridge-check, cat: kitchen, name: "Fridge check: toss old food, check it’s at 40°F or below", icon: "🧊", mins: 10, f: {k: weeks, "n": 1}, range: "weekly", src: [*fda]}
+- {key: fridge-clean, cat: kitchen, name: "Wipe out the fridge shelves and drawers", icon: "🧊", mins: 30, f: {k: months, every: 1, "on": flex}, range: "regularly; wipe spills right away", src: [*fda]}
+- {key: kitchen-clean, cat: kitchen, name: "Kitchen clean: sink, appliance fronts, microwave, floor", icon: "✨", mins: 40, f: {k: weeks, "n": 1}, range: "weekly"}
+- {key: oven, cat: kitchen, name: "Clean the oven", icon: "🔥", mins: 45, f: {k: months, every: 3, "on": flex}, range: "every 3 to 6 months, or as its manual says"}
+- {key: hood, cat: kitchen, name: "Clean the range hood filter", icon: "💨", mins: 15, f: {k: months, every: 3, "on": flex}, range: "as the hood’s manual says"}
+- {key: trash, cat: kitchen, name: "Trash and recycling out", icon: "🗑️", mins: 10, f: {k: days, d: [2]}, range: "on your pickup day"}
+# ---- Bathroom
+- {key: bathroom, cat: bath, name: "Clean the bathroom: toilet, sink, tub or shower, mirror", icon: "🛁", mins: 30, f: {k: weeks, "n": 1}, range: "weekly", src: [*ufifas]}
+# ---- Laundry and beds
+- {key: laundry, cat: laundry, name: "Laundry: wash, dry, fold, put away", icon: "🧺", mins: 45, f: {k: times, "n": 2}, range: "weekly or more often", src: [*ufifas, *usfa], note: "Clean the dryer’s lint filter with every load."}
+- {key: sheets, cat: laundry, name: "Wash the sheets", icon: "🛏️", mins: 20, f: {k: weeks, "n": 1}, range: "weekly, or every 2 weeks", src: [*ufifas, *sleep]}
+- {key: towels, cat: laundry, name: "Wash bath towels", icon: "🛀", mins: 10, f: {k: times, "n": 2}, range: "after about every 3 uses", src: [*towels]}
+# ---- Around the house
+- {key: tidy, cat: house, name: "Ten-minute tidy", icon: "🧹", mins: 10, f: {k: daily}, range: "clean as you go", src: [*ufifas]}
+- {key: dust, cat: house, name: "Dust", icon: "🪶", mins: 20, f: {k: weeks, "n": 1}, range: "weekly", src: [*ufifas]}
+- {key: vacuum, cat: house, name: "Vacuum and sweep", icon: "🧹", mins: 30, f: {k: weeks, "n": 1}, range: "weekly; busy areas more often"}
+- {key: mop, cat: house, name: "Mop hard floors", icon: "🪣", mins: 30, f: {k: weeks, "n": 2}, range: "every 1 to 2 weeks"}
+- {key: windows, cat: house, name: "Wash the windows", icon: "🪟", mins: 60, f: {k: months, months: [4, 10]}, range: "twice a year"}
+# ---- Home safety and upkeep
+- {key: alarms, cat: safety, name: "Test smoke and carbon monoxide alarms", icon: "🔔", mins: 10, f: {k: months, every: 1, "on": {nth: 1, dow: 6}}, range: "at least once a month", src: [*smoke, *nfpaco]}
+- {key: alarm-year, cat: safety, name: "Alarm check: dates on the back, replaceable batteries", icon: "🔋", mins: 20, f: {k: months, months: [11], "on": {nth: 1, dow: 6}}, range: "once a year", src: [*smoke, *nfpaco], note: "Replace smoke alarms when they are 10 years old, and CO alarms when their maker says. Change batteries yearly in alarms that use replaceable ones."}
+- {key: extinguisher, cat: safety, name: "Check the fire extinguisher’s gauge", icon: "🧯", mins: 2, f: {k: months, every: 1, "on": {nth: 1, dow: 6}}, range: "monthly", src: [*uga]}
+- {key: filter, cat: safety, name: "Change the furnace or AC air filter", icon: "🌀", mins: 10, f: {k: months, every: 3, "on": flex}, range: "every 1 to 3 months, or as the filter’s maker says", src: [*estar], note: "ENERGY STAR suggests checking it every month and changing it when it looks dirty."}
+- {key: hvac, cat: safety, name: "Book a heating and cooling check-up", icon: "🛠️", mins: 15, f: {k: months, months: [3, 9]}, range: "cooling in spring, heating in fall", src: [*estar]}
+- {key: water-heater, cat: safety, name: "Drain and flush the water heater (as its manual says, or have a plumber do it)", icon: "🚿", mins: 60, f: {k: months, months: [5]}, range: "once a year, or as its manual says", src: [*ge]}
+- {key: dryer-vent, cat: safety, name: "Clean the dryer vent and duct", icon: "🌬️", mins: 45, f: {k: months, months: [6]}, range: "once or twice a year", src: [*massdfs, *usfa]}
+- {key: fridge-coils, cat: safety, name: "Vacuum the fridge coils", icon: "🧊", mins: 20, f: {k: months, months: [8]}, range: "once or twice a year, or as its manual says", src: [*uga]}
+- {key: gutters, cat: safety, name: "Clean the gutters and downspouts", icon: "🍂", mins: 90, f: {k: months, months: [4, 11]}, range: "spring and fall; more often under trees", src: [*uga]}
+# ---- Car
+- {key: tires, cat: car, name: "Check tire pressure, spare included", icon: "🚗", mins: 10, f: {k: months, every: 1, "on": {nth: 1, dow: 0}}, range: "at least once a month, with the tires cold", src: [*nhtsa]}
+- {key: oil, cat: car, name: "Oil change (or book one)", icon: "🛢️", mins: 60, f: {k: months, every: 6, "on": flex}, range: "as the owner’s manual says (miles or months)"}
+
+exercise:
+- {key: walk5, name: "Brisk walk", icon: "🚶", mins: 30, f: {k: times, "n": 5}, type: moderate, blurb: "30 minutes, 5 days a week: 150 minutes of moderate activity"}
+- {key: walk-daily, name: "Walk", icon: "🚶", mins: 25, f: {k: daily}, type: moderate, blurb: "25 minutes every day: about 175 minutes a week"}
+- {key: bike3, name: "Bike or swim", icon: "🚲", mins: 50, f: {k: times, "n": 3}, type: moderate, blurb: "50 minutes, 3 days a week: 150 minutes of moderate activity"}
+- {key: vig3, name: "Run or another vigorous activity", icon: "🏃", mins: 25, f: {k: times, "n": 3}, type: vigorous, blurb: "25 minutes, 3 days a week: 75 minutes of vigorous activity"}
+- {key: strength2, name: "Strength training", icon: "🏋️", mins: 30, f: {k: times, "n": 2}, type: strength, blurb: "30 minutes, 2 days a week, working all the major muscle groups"}
+- {key: stretch, name: "Stretch", icon: "🧘", mins: 10, f: {k: daily}, type: stretch, blurb: "10 minutes every day"}
+
+meals:
+- {key: meal-plan, name: "Plan the week’s meals", icon: "📝", mins: 30, f: {k: days, d: [6]}, blurb: "Pick the week’s recipes in Meal Prep"}
+- {key: shop, name: "Grocery shopping", icon: "🛒", mins: 60, f: {k: days, d: [0]}, blurb: "With the shopping list from the meal planner"}
+- {key: cook, name: "Cook dinner", icon: "🍳", mins: 45, f: {k: daily}, cook: dinner, blurb: "Uses the recipes and cook times from your Meal Prep plan on the days it covers"}
+- {key: batch, name: "Cook ahead for the week", icon: "🥘", mins: 90, f: {k: days, d: [0]}, blurb: "A batch-cooking session"}
+
+learn:
+- {key: lang, name: "Learn a language", icon: "🗣️", mins: 20, f: {k: daily}, blurb: "Twenty minutes a day", url: /languages/}
+- {key: instrument, name: "Practice an instrument", icon: "🎹", mins: 20, f: {k: times, "n": 5}, blurb: "Twenty minutes, 5 days a week", url: /music/}
+- {key: sew, name: "Sewing or knitting", icon: "🧵", mins: 30, f: {k: times, "n": 2}, blurb: "Thirty minutes, twice a week", url: /sewing/}
+- {key: adult101, name: "A Being an Adult 101 skill", icon: "🔧", mins: 30, f: {k: weeks, "n": 1}, blurb: "One guide a week", url: /being-an-adult/}

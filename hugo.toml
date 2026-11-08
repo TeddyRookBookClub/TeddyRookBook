@@ -596,6 +596,15 @@ note = "Backgammon in Roman dress"
 icon = "🎲"
 
 [[menu.main]]
+name = "Life Planner"
+url = "/life-planner/"
+weight = 59
+[menu.main.params]
+group = "Miscellaneous"
+note = "Chores, reading, exercise and meals in one daily plan"
+icon = "🗓️"
+
+[[menu.main]]
 name = "Being an Adult 101"
 url = "/being-an-adult/"
 weight = 60
@@ -921,6 +930,9 @@ note = "Save sections to use without the internet, and keep them up to date"
   [segments.culinary]
     [[segments.culinary.includes]]
       path = '{/culinary,/culinary/**}'
+  [segments.lifeplan]
+    [[segments.lifeplan.includes]]
+      path = '{/life-planner,/life-planner/**}'
   [segments.memory]
     [[segments.memory.includes]]
       path = '{/memory,/memory/**}'

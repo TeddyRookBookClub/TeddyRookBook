@@ -43,6 +43,7 @@ const SECTIONS = [
   ['/games/thermopylae/', 'exact'], ['/games/daily/', 'exact'],
   ['/october-sky/', 'tree'],                       // the Rocket Boys story: each page lists its sources
   ['/history/', 'under'],                          // World History pages: each lists its sources (the hub uses none)
+  ['/life-planner/', 'tree'],                      // chore, exercise and reading sources (data/lifeplan/library.yaml)
 ];
 
 // Known gaps, with the reason. A prefix ending in "*" covers everything under it.
