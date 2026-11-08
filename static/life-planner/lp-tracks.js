@@ -27,6 +27,8 @@
   if (typeof module === 'object' && module.exports) module.exports = api; else root.LPTracks = api;
 })(this, function (C) {
   'use strict';
+  function maxR(L) { var m = -1; L.forEach(function (it) { if (it.r1 != null && it.r1 > m) m = it.r1; }); return m; }
+  function fmtAmt(x) { return x >= 10 ? String(Math.round(x)) : String(Math.round(x * 10) / 10); }
   function hrs(m) { var h = m / 60; return h >= 10 ? Math.round(h) + ' hours' : (Math.round(h * 10) / 10) + (h === 1 ? ' hour' : ' hours'); }
   function plural(n, one, many) { return n + ' ' + (n === 1 ? one : (many || one + 's')); }
 
@@ -72,17 +74,83 @@
     return out;
   }
 
+  /* PACED TRACKS (the resolution builder): opt.per = items per session (a fraction is fine). Session k covers the items
+     between k × per and (k + 1) × per, so the last of N sessions ends exactly at the last item. pace(k, per, total) →
+     { i0, i1 (items touched, 0-based), fin: [items finished in this session], part: share of the session's items } */
+  function pace(k, per, total) {
+    var a = k * per, b = Math.min(total, (k + 1) * per); if (a >= total - 1e-9) return null;
+    var i0 = Math.floor(a + 1e-9), i1 = Math.max(i0, Math.ceil(b - 1e-9) - 1), fin = [], ov = [];
+    for (var i = i0; i <= i1; i++) { ov.push(Math.min(b, i + 1) - Math.max(a, i)); if (i + 1 <= b + 1e-9) fin.push(i); }
+    return { i0: i0, i1: i1, fin: fin, ov: ov };
+  }
+  /* TRANSLATE IN A YEAR (D.tr, /languages/translate/plan.json): each work is a list of chunks [first ref, weight] (a chunk is
+     the smallest piece a day may end on: verse ends at a sentence end, prose is one sentence; weight = lines or words).
+     trSplit(w, a, b, N) shares chunks a..b−1 out over M = min(N, b − a) sessions by weight and returns each session's end
+     (exclusive): session k covers chunks [k ? e[k−1] : a, e[k]). Every chunk is in exactly one session, none is empty, and
+     the last ends at b. The same function makes the reader's day plans (static/languages/translate/tr.js), so a 365-day
+     track lines up with the reader's days. */
+  function trSplit(w, a, b, N) {
+    var n = b - a, M = Math.max(1, Math.min(N, n)), W = 0, cum = [0], out = [], prev = 0, k, j;
+    for (k = a; k < b; k++) { W += w[k]; cum.push(W); }
+    for (k = 0; k < M; k++) {
+      if (k === M - 1) { out.push(b); break; }
+      var t = (k + 1) * W / M; j = prev + 1;
+      while (j < n && cum[j] < t) j++;
+      if (j > prev + 1 && t - cum[j - 1] <= cum[j] - t) j--;
+      j = Math.max(prev + 1, Math.min(n - (M - 1 - k), j));
+      out.push(a + j); prev = j;
+    }
+    return out;
+  }
+  // the last ref of chunk j of a work (verse: the line before the next chunk, or the book's last line; prose: the chunk itself)
+  function trEnd(Wk, j) {
+    if (Wk.x && Wk.x[j]) return Wk.x[j];
+    if (Wk.unit !== 'line') return Wk.c[j][0];
+    var nx = Wk.c[j + 1], cur = Wk.c[j][0].split('.');
+    if (nx) { var p = nx[0].split('.'); if (p[0] === cur[0] && /^\d+$/.test(p[1])) return p[0] + '.' + (+p[1] - 1); }
+    return Wk.last[cur[0]] || Wk.c[j][0];
+  }
+  function trRef(r) { return String(r).replace(/[a-z]$/, ''); }
+  // a range for people: 1.1–33 in one book (verse), else 1.1–2.5 (prose sentence letters dropped)
+  function trRange(r0, r1) { var a = trRef(r0), b = trRef(r1); if (a === b) return a; var p = a.split('.'), q = b.split('.'); return p.length === 2 && q.length === 2 && p[0] === q[0] ? a + '–' + q[1] : a + '–' + b; }
+  // the resolution's lists (D.extra: { latin, asl, memory: [[title, url, minutes]] }; recipes from Meal Prep)
+  function list(D, key) {
+    if (key === 'recipes') {
+      if (!D.meals) return null;
+      if (!D._recipes) D._recipes = Object.keys(D.meals.r).map(function (id) { var r = D.meals.r[id]; return [r[0], r[2], r[1], r[3] || '']; })
+        .filter(function (r) { return (r[3] === 'dinner' || r[3] === 'lunch') && r[2] >= 20 && r[2] <= 120; })
+        .sort(function (p, q) { return p[2] - q[2] || (p[0] < q[0] ? -1 : 1); });
+      return D._recipes;
+    }
+    if (/^trade:/.test(key)) { var tr = D.trades && D.trades[key.slice(6)]; return tr ? tr.ls : null; }
+    return D.extra && D.extra[key];
+  }
   function provider(tr, D, P, ctx) {
     var o = tr.opt || {}; ctx = ctx || {};
     switch (tr.kind) {
       case 'bible':
         var B = D.bible && D.bible[o.ver === '66' ? '66' : '73'], ver = o.ver === '66' ? '66' : '73', b0 = C.dnOf(o.bstart);
         if (!B) return null;
+        if (o.per) {
+          var f0 = Math.max(1, +o.from || 1), tot = B.length - f0 + 1;
+          return {
+            item: function (k) {
+              var x = pace(k, +o.per, tot); if (!x) return null;
+              var m = 0, names = [];
+              for (var i = x.i0; i <= x.i1; i++) { m += x.ov[i - x.i0] * B[f0 + i - 1][1]; if (x.fin.indexOf(i) >= 0) names.push('Day ' + (f0 + i)); }
+              var d1 = f0 + x.i0, d2 = f0 + x.i1;
+              return { label: (d1 === d2 ? 'Day ' + d1 : 'Days ' + d1 + '–' + d2) + ': ' + B[d1 - 1][0].split(' · ')[0] + (d2 > d1 ? ' … ' + B[d2 - 1][0].split(' · ')[0] : ''),
+                mins: Math.max(5, Math.round(m)), url: ctx.base + 'bible-in-a-year/#day-' + d1 + '-' + ver, ref: x.fin.map(function (i) { return f0 + i; }), r0: d1, r1: x.fin.length ? f0 + x.fin[x.fin.length - 1] : d1 - 1,
+                sub: x.fin.length ? '' : 'part of a day' };
+            },
+            done: function (it) { var t = P.bible ? P.bible(ver) : {}; return !!(it.ref && it.ref.length && it.ref.every(function (n) { return t[n]; })); }
+          };
+        }
         return {
           item: function (k, dn) {
             var n = o.mode === 'dates' && b0 != null ? dn - b0 + 1 : (+o.from || 1) + k;
             if (n < 1 || n > B.length) return null;
-            return { label: 'Day ' + n + ': ' + B[n - 1][0], mins: B[n - 1][1], url: ctx.base + 'bible-in-a-year/#day-' + n + '-' + ver, ref: n };
+            return { label: 'Day ' + n + ': ' + B[n - 1][0], mins: B[n - 1][1], url: ctx.base + 'bible-in-a-year/#day-' + n + '-' + ver, ref: n, r0: n, r1: n };
           },
           done: function (it) { return !!(P.bible && P.bible(ver)[it.ref]); }
         };
@@ -106,6 +174,17 @@
       case 'ladder':
         var ch = chain(D, o), st = Math.max(0, +o.from || 0);
         if (!ch.length) return null;
+        if (o.per) {
+          var lim = Math.min(ch.length - st, +o.n || ch.length);
+          return {
+            item: function (k) {
+              var x = pace(k, +o.per, lim); if (!x) return null;
+              var a = ch[st + x.i0], fins = x.fin.map(function (i) { return ch[st + i].id; }), m = 0; x.ov.forEach(function (v) { m += v * (+tr.unit || 30); });
+              return { label: a.ct + ': ' + a.t + (x.i1 > x.i0 ? ' + ' + (x.i1 - x.i0) + ' more' : ''), url: ctx.base.replace(/\/$/, '') + a.u, ref: fins.length ? fins : null, mins: Math.max(5, Math.round(m)), r1: x.fin.length ? x.fin[x.fin.length - 1] : -1, sub: x.fin.length ? '' : 'part of a lesson' };
+            },
+            done: function (it) { return !!(it.ref && P.passed && it.ref.every(P.passed)); }
+          };
+        }
         return {
           item: function (k) { var x = ch[st + k]; if (!x) return null; return { label: x.ct + ': ' + x.t, url: ctx.base.replace(/\/$/, '') + x.u, ref: x.id }; },
           done: function (it) { return !!(P.passed && P.passed(it.ref)); }
@@ -114,6 +193,41 @@
         var T = D.trades && D.trades[o.tr], s2 = Math.max(0, +o.from || 0);
         if (!T) return null;
         return { item: function (k) { var x = T.ls[s2 + k]; if (!x) return null; return { label: 'Lesson ' + (s2 + k + 1) + ': ' + x[0], url: ctx.base.replace(/\/$/, '') + x[1], mins: +x[2] || tr.mins }; } };
+      case 'lessons':
+        var Ls = list(D, o.list), lim2 = Ls ? Math.min(Ls.length, +o.n || Ls.length) : 0;
+        if (!Ls || !lim2) return null;
+        return {
+          item: function (k) {
+            var x = pace(k, +o.per || 1, lim2); if (!x) return null;
+            var a = Ls[x.i0], m = 0; x.ov.forEach(function (v, j) { m += v * (+tr.unit || +Ls[x.i0 + j][2] || 30); });
+            var cont = x.fin.indexOf(x.i0) < 0 || (k > 0 && pace(k - 1, +o.per || 1, lim2).i1 === x.i0);
+            return { label: (o.word ? o.word + ' ' + (x.i0 + 1) + ': ' : '') + a[0] + (x.i1 > x.i0 ? ' + ' + (x.i1 - x.i0) + ' more' : ''), url: /^https?:/.test(a[1]) ? a[1] : ctx.base.replace(/\/$/, '') + a[1], mins: Math.max(5, Math.round(m)), r1: x.fin.length ? x.fin[x.fin.length - 1] : -1, sub: cont ? 'continued' : '' };
+          }
+        };
+      case 'translate':
+        // opt { w: work key, a, b: chunk range, n: sessions }  (lp-resolve.js and the library set these from plan.json)
+        var Wk = D.tr && D.tr.works && D.tr.works[o.w]; if (!Wk) return null;
+        var ta = Math.max(0, +o.a || 0), tb = Math.min(Wk.c.length, o.b == null ? Wk.c.length : +o.b), wts = Wk.c.map(function (c) { return c[1]; });
+        if (tb <= ta) return null;
+        var ends = trSplit(wts, ta, tb, Math.max(1, +o.n || 365)), un = Wk.unit === 'line' ? ['line', 'lines'] : ['word', 'words'];
+        return {
+          item: function (k) {
+            if (k >= ends.length) return null;
+            var c0 = k ? ends[k - 1] : ta, c1 = ends[k] - 1, amt = 0; for (var i = c0; i <= c1; i++) amt += wts[i];
+            var r0 = Wk.c[c0][0], r1 = trEnd(Wk, c1);
+            return { label: Wk.s + ' ' + trRange(r0, r1) + ' (' + (Wk.unit === 'line' ? '' : 'about ') + amt + ' ' + (amt === 1 ? un[0] : un[1]) + ')',
+              mins: Math.max(5, Math.round(amt * (+Wk.mpu || 1))), url: ctx.base.replace(/\/$/, '') + Wk.u + '#r=' + r0 + '-' + r1, r0: c0, r1: c1, sub: 'Day ' + (k + 1) + ' of ' + ends.length };
+          }
+        };
+      case 'amount':
+        var tot2 = +o.amount || 0; if (!tot2) return null;
+        return {
+          item: function (k) {
+            var x = pace(k, +o.per, tot2); if (!x) return null;
+            var amt = Math.min(tot2, (k + 1) * o.per) - k * o.per, m = amt * (+o.mpu || 60);
+            return { label: tr.name + ': ' + fmtAmt(amt) + ' ' + (o.unit || ''), mins: Math.max(5, Math.round(m)), r1: Math.min(tot2, (k + 1) * o.per) };
+          }
+        };
       case 'cook':
         var meals = mealDays(P.meals, o.slot || 'dinner', D.meals);
         return {
@@ -167,8 +281,9 @@
       switch (tr.kind) {
         case 'bible':
           if (!L.length) break;
-          var n0 = first.ref, n1 = last.ref, B = D.bible[o.ver === '66' ? '66' : '73'];
+          var n0 = first.r0, n1 = last.r1, B = D.bible[o.ver === '66' ? '66' : '73'];
           var read = P.bible ? Object.keys(P.bible(o.ver === '66' ? '66' : '73')).length : 0;
+          if (!(n1 >= 1)) { r.text.push('Started on day ' + n0); break; }
           r.text.push(n0 === 1 && n1 === B.length ? 'The whole Bible: all ' + B.length + ' days' : 'Days ' + n0 + '–' + n1 + ' of ' + B.length + (n1 === B.length ? ', to the end of the Bible' : ', through ' + B[n1 - 1][0].split(' · ')[0].split(';')[0]));
           if (read) r.text.push(plural(read, 'day') + ' already ticked on Bible in a Year');
           break;
@@ -192,15 +307,35 @@
           }
           break;
         case 'hc': r.text.push(plural(L.length, 'reading') + ' from the Five Foot Shelf, about ' + hrs(m)); break;
+        case 'lessons':
+          if (!L.length) break;
+          var LL = list(D, o.list) || [], lim3 = Math.min(LL.length, +o.n || LL.length), r1 = maxR(L);
+          r.text.push(r1 + 1 >= lim3 ? 'All ' + lim3 + ' ' + (o.many || 'lessons') : (r1 + 1) + ' of ' + lim3 + ' ' + (o.many || 'lessons') + (r1 >= 0 ? ', through ' + LL[r1][0] : ''));
+          break;
+        case 'translate':
+          var Wt = D.tr && D.tr.works && D.tr.works[o.w]; if (!L.length || !Wt) break;
+          var t0 = Math.max(0, +o.a || 0), t1 = Math.min(Wt.c.length, o.b == null ? Wt.c.length : +o.b), all = 0, upto = 0, rr = maxR(L);
+          for (var q = t0; q < t1; q++) { all += Wt.c[q][1]; if (q <= rr) upto += Wt.c[q][1]; }
+          var unl = Wt.unit === 'line' ? ' lines' : ' words', fmtn = function (x) { return String(x).replace(/\B(?=(\d{3})+(?!\d))/g, ','); };
+          r.text.push(rr >= t1 - 1 ? Wt.s + ': all ' + fmtn(all) + unl + ' translated' : Wt.s + ': ' + fmtn(upto) + ' of ' + fmtn(all) + unl + ', through ' + trRef(trEnd(Wt, rr)));
+          break;
+        case 'amount':
+          if (L.length) r.text.push(fmtAmt(last.r1) + ' of ' + fmtAmt(+o.amount) + ' ' + (o.unit || '') + (last.r1 >= +o.amount - 1e-6 ? ': the whole goal' : ''));
+          break;
         case 'ladder':
           if (!L.length) break;
+          if (o.per) {
+            var chp = chain(D, o), stp = Math.max(0, +o.from || 0), limp = Math.min(chp.length - stp, +o.n || chp.length), rr = maxR(L);
+            r.text.push(rr + 1 >= limp ? 'All ' + limp + ' lessons' + (o.n ? '' : ' of ' + chp[stp].ct) : (rr + 1) + ' of ' + limp + ' lessons' + (rr >= 0 ? ', through ' + chp[stp + rr].t : ''));
+            break;
+          }
           var ch = chain(D, o), st = Math.max(0, +o.from || 0), idx = st + last.k, fin = [];
           for (var j = st + first.k; j <= idx; j++) { if (ch[j] && (!ch[j + 1] || ch[j + 1].c !== ch[j].c)) fin.push(ch[j].ct); }
           r.text.push(plural(L.length, 'lesson') + ', through ' + last.label);
           if (fin.length) r.text.push('Finishes ' + fin.join(', '));
           break;
         case 'trade': if (L.length) r.text.push(plural(L.length, 'lesson') + ', through ' + last.label); break;
-        case 'exercise': r.text.push(plural(L.length, 'session') + ' = ' + hrs(m) + ' of activity'); ex.push(tr); break;
+        case 'exercise': r.text.push(plural(L.length, 'session') + ' = ' + hrs(m) + ' of activity'); if (o.miles) r.text.push('≈ ' + Math.round(m / (+o.mpm || 20)) + ' miles at about ' + Math.round(60 / (+o.mpm || 20) * 10) / 10 + ' miles an hour'); ex.push(tr); break;
         case 'holiday': var cooks = L.filter(function (it) { return /: cook$/.test(it.label); }).length; r.text.push(cooks ? plural(cooks, 'holiday meal') + ', planned and shopped for ahead' : plural(L.length, 'step') + ' to get ready'); break;
         default: r.text.push(L.length + ' × ' + tr.name + (m ? ' (' + hrs(m) + ')' : ''));
       }
@@ -225,5 +360,5 @@
     return out;
   }
 
-  return { provider: provider, summary: summary, holidayDates: holidayDates, HOL: HOL, PARTS: PARTS, mealDays: mealDays, chain: chain, gbCum: gbCum, hrs: hrs, plural: plural };
+  return { trSplit: trSplit, trEnd: trEnd, trRange: trRange, pace: pace, list: list, provider: provider, summary: summary, holidayDates: holidayDates, HOL: HOL, PARTS: PARTS, mealDays: mealDays, chain: chain, gbCum: gbCum, hrs: hrs, plural: plural };
 });

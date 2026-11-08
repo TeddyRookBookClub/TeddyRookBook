@@ -48,6 +48,14 @@
       <p>Matthew, Mark, Luke and John in full, in Koine Greek and the Latin Vulgate, side by side. Hover or tap any word for its dictionary form, meaning, case, tense, mood and role in the sentence.</p>
       <span class="go">Open the reader →</span>
     </a>
+    {{- with site.GetPage "/languages/translate" }}
+    <a class="lang-card" href="{{ .RelPermalink }}">
+      <span class="big" aria-hidden="true">🏺</span>
+      <h2>Translate in a Year</h2>
+      <p>The books Harvard once asked every new student to read: Virgil’s Aeneid, Caesar, Cicero, Xenophon and Homer, plus the Gospel of John. Public-domain Latin and Greek in daily passages, with word help, a box for your translation and an English translation to check against.</p>
+      <span class="go">Pick a book →</span>
+    </a>
+    {{- end }}
     <a class="lang-card" href="{{ "languages/trees/" | relURL }}">
       <span class="big" aria-hidden="true">🌳</span>
       <h2>Sentence Trees</h2>

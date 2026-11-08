@@ -40,7 +40,7 @@
       case 'month': b = addMonths(a, 1) - 1; break;
       case 'quarter': b = addMonths(a, 3) - 1; break;
       case 'half': b = addMonths(a, 6) - 1; break;
-      case 'custom': b = C.dnOf(pl.to); if (b == null || b < a) b = a + 6; if (b - a > 365) b = a + 365; break;
+      case 'custom': b = C.dnOf(pl.to); if (b == null || b < a) b = a + 6; if (b - a > 399) b = a + 399; break;
       default: b = addMonths(a, 12) - 1;
     }
     return [a, b];
@@ -109,8 +109,9 @@
     var n = {};
     st.tracks.forEach(function (t) {
       if (t.off) return;
-      if (t.kind === 'bible') n.bible = 1; if (t.kind === 'gb') n.gb = 1; if (t.kind === 'hc') n.hc = 1;
+      if (t.kind === 'bible') n.bible = 1; if (t.kind === 'gb') n.gb = 1; if (t.kind === 'hc') n.hc = 1; if (t.kind === 'translate') n.tr = 1;
       if (t.kind === 'ladder' && t.opt.l) n['lad:' + t.opt.l] = 1; if (t.kind === 'trade') n.trades = 1; if (t.kind === 'cook') n.meals = 1;
+      if (t.kind === 'lessons') { if (t.opt.list === 'recipes') n.meals = 1; else if (/^trade:/.test(t.opt.list)) n.trades = 1; else n.extra = 1; }
     });
     return Object.keys(n);
   }
@@ -133,6 +134,7 @@
     if (k === 'hc') Object.keys(j).forEach(function (d) { j[d] = tup(j[d]); });
     if (k === 'trades') Object.keys(j).forEach(function (t) { j[t].ls = j[t].ls.map(tup); });
     if (k.indexOf('lad:') === 0) Object.keys(j.c).forEach(function (c) { j.c[c].ts = j.c[c].ts.map(tup); });
+    if (k === 'extra') Object.keys(j).forEach(function (l) { j[l] = j[l].map(tup); });
   }
   function ensure(cb) {
     var miss = needs().filter(function (k) { return !have(k); });
@@ -142,32 +144,34 @@
 
   // ---------- the schedule ----------
   var S = null, PV = {}, RANGE = [TODAY, TODAY + 364];
-  function compute() {
+  // the schedule for a saved state s (the resolution builder previews plans that aren't saved yet)
+  function computeFor(s) {
     refreshProgress();
-    RANGE = planRange(st.plan);
-    var plan = { from: C.isoOf(RANGE[0]), to: C.isoOf(RANGE[1]), budget: st.plan.budget, off: st.plan.off };
-    PV = {};
-    var tracks = st.tracks.map(function (t) {
+    var R = planRange(s.plan), pvs = {};
+    var plan = { from: C.isoOf(R[0]), to: C.isoOf(R[1]), budget: s.plan.budget, off: s.plan.off };
+    var RANGE = R, PV = pvs;
+    var tracks = s.tracks.map(function (t) {
       var ctx = { base: BASE };
       if (t.kind === 'holiday') {
         ctx.hol = T.holidayDates(t.opt.h, RANGE[0], RANGE[1], CFG.holTables);
         t = Object.assign({}, t, { f: { k: 'dates', dates: ctx.hol.map(function (x) { return C.isoOf(x.dn); }) } });
       }
       var pv = T.provider(t, DATA, P, ctx); if (pv) PV[t.id] = pv;
-      if (['bible', 'gb', 'hc', 'ladder', 'trade'].indexOf(t.kind) >= 0 && !pv) t = Object.assign({}, t, { off: true });
+      if (['bible', 'gb', 'hc', 'ladder', 'trade', 'lessons', 'amount', 'translate'].indexOf(t.kind) >= 0 && !pv) t = Object.assign({}, t, { off: true });
       return t;
     });
-    S = C.schedule(plan, tracks, PV);
-    S.tracks = tracks;
+    var sc = C.schedule(plan, tracks, pvs); sc.tracks = tracks;
+    return { S: sc, PV: pvs, RANGE: R };
   }
+  function compute() { var r = computeFor(st); S = r.S; PV = r.PV; RANGE = r.RANGE; }
   function tickKey(it) { return it.id + '|' + C.isoOf(it.dn); }
   function isDone(it) { var pv = PV[it.id]; return !!st.ticks[tickKey(it)] || !!(pv && pv.done && pv.done(it)); }
   function setDone(it, on) {
     var tr = trackById(it.id);
-    if (tr && tr.kind === 'bible' && it.ref) {
+    if (tr && tr.kind === 'bible' && it.ref && (!Array.isArray(it.ref) || it.ref.length)) {
       var h = load(HS); if (!h || !h.done) h = { done: {} };
       var key = 'bible-' + (tr.opt.ver === '66' ? '66' : '73'), c = h.done[key] || (h.done[key] = {});
-      if (on) c[it.ref] = 1; else delete c[it.ref];
+      (Array.isArray(it.ref) ? it.ref : [it.ref]).forEach(function (n) { if (on) c[n] = 1; else delete c[n]; });
       if (!store(HS, h)) msg('That tick couldn’t be saved: this browser’s storage is full or blocked.');
       return;
     }
@@ -235,12 +239,24 @@
   });
 
   // ---------- stats strip ----------
+  /* "On track?": the resolution's sessions up to yesterday, done or not. Never a scolding: when some are open, it offers to
+     spread them over the next week, or to move the finish date (lp-res.js re-paces the plan). */
+  function onTrack() {
+    if (!st.res || !S || TODAY <= S.from) return '';
+    var due = 0, done = 0, mins = 0;
+    for (var x = S.from; x < Math.min(TODAY, S.to + 1); x++) S.byDn[x].items.forEach(function (it) { var t = trackById(it.id); if (!t || !t.opt.res) return; due++; if (isDone(it)) done++; else mins += it.mins; });
+    if (!due) return '';
+    if (done >= due) return '<p class="lp-ontrack good">🎯 On track: all ' + due + ' resolution sessions so far are done.</p>';
+    var left = due - done;
+    return '<p class="lp-ontrack">🎯 ' + done + ' of ' + due + ' resolution sessions done so far. To catch up over the next week, add about ' + fm(Math.ceil(mins / 7)) + ' a day (the open ones are under “Still open” on the Today list), or <button type="button" class="hs-btn ghost" id="lp-movefin">move the finish date a week later</button>.' + (left > 30 ? ' A smaller target is fine too: Change a track any time.' : '') + '</p>';
+  }
   function renderStats() {
     var tot = 0, overD = 0, overW = 0; S.days.forEach(function (d) { tot += d.load; if (d.over && d.load) overD++; }); S.weeks.forEach(function (w) { if (w.over) overW++; });
     var wk = tot / ((S.to - S.from + 1) / 7);
     $('#lp-stats').innerHTML = '<span><b>' + hrs(wk) + '</b> a week on average</span><span><b>' + hrs(tot) + '</b> in all</span><span><b>' + st.tracks.filter(function (t) { return !t.off; }).length + '</b> tracks</span>' +
-      (overD ? '<span class="lp-bad"><b>' + overD + '</b> overloaded day' + (overD === 1 ? '' : 's') + (overW ? ', ' + overW + ' week' + (overW === 1 ? '' : 's') : '') + '</span>' : '<span class="lp-good">Every day fits your time</span>');
+      (overD ? '<span class="lp-bad"><b>' + overD + '</b> overloaded day' + (overD === 1 ? '' : 's') + (overW ? ', ' + overW + ' week' + (overW === 1 ? '' : 's') : '') + '</span>' : '<span class="lp-good">Every day fits your time</span>') + onTrack();
   }
+  $('#lp-stats').addEventListener('click', function (e) { if (e.target.id === 'lp-movefin' && W.LPRes && W.LPRes.moveFinish) W.LPRes.moveFinish(7); });
 
   // ---------- views ----------
   function itemHTML(it, opt) {
@@ -490,6 +506,7 @@
           if (CFG.urls.bible) h += '<li class="lp-lib"><span class="lp-tric" aria-hidden="true">📖</span><span class="lp-trtx"><b>Bible in a Year</b><small>A reading every day, about 15 to 20 minutes. Shares its ticks with the Bible in a Year page.</small></span><button type="button" class="hs-btn" data-add="bible">Add</button></li>';
           if (CFG.urls.gb) h += '<li class="lp-lib"><span class="lp-tric" aria-hidden="true">📚</span><span class="lp-trtx"><b>Great Books</b><small>Follows the Great Books in a Year plan rung by rung.</small><label class="lp-inl">Minutes a day <input type="number" id="lp-gbmin" min="5" max="120" step="5" value="15"></label></span><button type="button" class="hs-btn" data-add="gb">Add</button></li>';
           if (CFG.urls.hc) h += '<li class="lp-lib"><span class="lp-tric" aria-hidden="true">📜</span><span class="lp-trtx"><b>Harvard Classics, fifteen minutes a day</b><small>The 1930 Reading Guide’s reading for each date.</small></span><button type="button" class="hs-btn" data-add="hc">Add</button></li>';
+          if (CFG.urls.tr && CFG.trGoals && CFG.trGoals.length) h += '<li class="lp-lib"><span class="lp-tric" aria-hidden="true">🏺</span><span class="lp-trtx"><b>Translate in a Year</b><small>A Latin or Greek classic, a passage a day, following the day plan in the reader (word help and a translation to check against).</small><label class="lp-inl">Work <select id="lp-trw">' + CFG.trGoals.map(function (g) { return '<option value="' + esc(g.k) + '">' + esc(g.t.replace(/^Translate /, '')) + ': ' + g.days + ' days, about ' + fm(g.mins) + ' a day</option>'; }).join('') + '</select></label></span><button type="button" class="hs-btn" data-add="translate">Add</button></li>';
           h += '</ul>';
         } else if (t === 'learn') {
           var groups = {}; CFG.courses.forEach(function (c) { (groups[c.lt] = groups[c.lt] || []).push(c); });
@@ -522,6 +539,7 @@
         else if (b.dataset.add === 'bible') t = bibleTrack();
         else if (b.dataset.add === 'gb') t = gbTrack(Math.max(5, Math.min(120, +$('#lp-gbmin', f).value || 15)));
         else if (b.dataset.add === 'hc') t = hcTrack();
+        else if (b.dataset.add === 'translate') { var tg = CFG.trGoals.filter(function (g) { return g.k === $('#lp-trw', f).value; })[0] || CFG.trGoals[0]; t = mk({ kind: 'translate', name: tg.t.replace(/^Translate /, ''), icon: tg.la === 'grc' ? '🏛️' : '🏺', mins: tg.mins, f: { k: 'daily' }, opt: { w: tg.w, a: tg.a, b: tg.b, n: tg.days }, lib: 'read:tr-' + tg.k }); }
         else if (b.dataset.add === 'ladder') {
           var v = $('#lp-course', f).value.split('|'), c = courseInfo(v[0], v[1]), n = Math.max(1, Math.min(7, +$('#lp-cn', f).value || 3));
           t = mk({ kind: 'ladder', name: c.lt + ': ' + c.t, icon: c.li || '🪜', mins: c.m, f: { k: 'times', n: n }, opt: { l: c.l, c: c.k, from: 0 } });
@@ -672,8 +690,18 @@
   }
 
   // print: a summary page, then the period month by month or week by week
+  // the resolution's cover page (st.res, made by lp-res.js): the goals, their pace and the commitment
+  function coverHTML() {
+    var r = st.res; if (!r) return '';
+    var y = C.ymd(RANGE[0]), title = r.title || ('My resolution for ' + (y.m >= 10 && y.d > 1 ? y.y + 1 : y.y));
+    return '<section class="lpp-page lpp-cover"><p class="lpp-sub">Teddy Rook Book · Life Planner</p><h1 class="lpp-big">' + esc(title) + '</h1>' +
+      '<p class="lpp-when">' + esc(fd(RANGE[0], { month: 'long', day: 'numeric', year: 'numeric' })) + ' – ' + esc(fd(RANGE[1], { month: 'long', day: 'numeric', year: 'numeric' })) + ' · ' + esc(r.daysText || '') + (r.mins ? ' · about ' + fm(r.mins) + ' a day' : '') + '</p>' +
+      '<h2>This year I will</h2><ol class="lpp-goals">' + (r.goals || []).map(function (g) { return '<li><b>' + esc(g.icon || '') + ' ' + esc(g.title) + '</b>' + (g.pace ? '<br><span>' + esc(g.pace) + '</span>' : '') + '</li>'; }).join('') + '</ol>' +
+      (r.milestones && r.milestones.length ? '<h2>Milestones</h2><table class="lpp-ms"><tbody>' + r.milestones.map(function (m) { return '<tr><th scope="row">' + esc(m.when) + '</th><td>' + m.lines.map(esc).join('<br>') + '</td></tr>'; }).join('') + '</tbody></table>' : '') +
+      '<p class="lpp-commit">I’ll take it one day at a time. When I miss a day, I’ll pick up where I left off.</p><p class="lpp-sign">Signed ______________________________ &nbsp; Date ______________</p></section>';
+  }
   function printHTML(a, b, layout) {
-    var h = '<section class="lpp-page lpp-sum"><h1>Life plan <small>' + esc(fd(a, { month: 'long', day: 'numeric', year: 'numeric' })) + ' – ' + esc(fd(b, { month: 'long', day: 'numeric', year: 'numeric' })) + '</small></h1>' +
+    var h = coverHTML() + '<section class="lpp-page lpp-sum"><h1>Life plan <small>' + esc(fd(a, { month: 'long', day: 'numeric', year: 'numeric' })) + ' – ' + esc(fd(b, { month: 'long', day: 'numeric', year: 'numeric' })) + '</small></h1>' +
       '<p class="lpp-sub">Teddy Rook Book · Life Planner · time per day: ' + [1, 2, 3, 4, 5, 6, 0].map(function (d) { return C.DOWS[d] + ' ' + st.plan.budget[d]; }).join(', ') + ' min</p>' +
       '<h2>If you stick to it</h2>' + sumHTML(a, b, true) + '<h2>At a glance</h2>' + glance(a, b, true) + '</section>';
     var daily = S.tracks.filter(function (t) { return !t.off && t.kind !== 'bible' && (t.f.k === 'daily' || t.f.k === 'weekdays'); });
@@ -833,6 +861,20 @@
       renderPeriod(); renderStats(); renderView(); renderTracks(); renderBudget();
     });
   }
+  // for the resolution builder (lp-res.js)
+  W.LPApp = {
+    CFG: CFG, DATA: DATA, P: P, TODAY: TODAY, COLORS: COLORS,
+    get: function () { return st; }, set: function (s) { st = fix(s); save(); view.cur = Math.max(TODAY, C.dnOf(st.plan.from)); all(); },
+    valid: valid, mk: function (o) { return mk(o); }, fromLib: function (c, k, x) { return fromLib(c, k, x); }, nid: function () { return nid(); },
+    ensureFor: function (s, cb) { var keep = st; st = s; var miss = needs().filter(function (k) { return !have(k); }); st = keep; if (!miss.length) cb(); else Promise.all(miss.map(fetchData)).then(cb); },
+    preview: function (s) { return computeFor(s); },
+    load: function (keys, cb) { var miss = keys.filter(function (k) { return !have(k); }); if (!miss.length) cb(); else Promise.all(miss.map(fetchData)).then(cb); },
+    // print or export a state that isn't saved (or the saved one): swap it in, build the output, swap back
+    withState: function (s, fn) { var o = [st, S, PV, RANGE]; st = s; compute(); try { return fn(S); } finally { st = o[0]; S = o[1]; PV = o[2]; RANGE = o[3]; } },
+    printHTML: function (a, b, lay) { return printHTML(a, b, lay); }, doPrint: function (a, b, lay) { doPrint(a, b, lay); },
+    icsText: function (a, b, o) { return icsText(a, b, o); }, download: download, msg: msg, fm: fm, hrs: hrs, esc: esc, fd: fd, planRange: planRange, addMonths: addMonths,
+    sumHTML: function (a, b, pr) { return sumHTML(a, b, pr); }, summary: function (a, b) { return T.summary(S, S.tracks, DATA, P, a, b); }, refresh: function () { all(); }
+  };
   W.addEventListener('storage', function (e) { if ([KEY, HS, ML, MEALS, BY].indexOf(e.key) >= 0) { if (e.key === KEY) { var s = load(KEY); if (valid(s)) st = fix(s); } all(); } });
   if (!valid(load(KEY))) save();
   all();

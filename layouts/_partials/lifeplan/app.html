@@ -1,0 +1,195 @@
+{{- /* The Life Planner page body, shared by /life-planner/ (list.html, res false) and the resolution builder
+   /life-planner/resolution/ (single.html, res true). Called with (dict "res" bool "page" .). */ -}}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "life-planner/lp.css" | relURL }}?v={{ (os.Stat "static/life-planner/lp.css").ModTime.Unix }}">
+{{- /* The Life Planner (/life-planner/). The page carries the small things inline (#lp-cfg: the starter library from
+   data/lifeplan/library.yaml, the list of ladder courses, the trades list, the URLs below). The bigger data is built here
+   as separate JSON files, and static/life-planner/lp.js fetches each one only when a track needs it:
+     bible.json   both versions of Bible in a Year: [label, minutes] a day (minutes ≈ verses ÷ 6, so 12 to 21; the Bible
+                  page says most days take fifteen to twenty minutes)
+     gb.json      the 365 days of Great Books in a Year: [kind, title, url, minutes, [rung ids]]. Minutes: reading the
+                  rung's "For teens and adults" lesson at 200 words a minute on its first day, plus half a minute per question
+     hc.json      Harvard Classics: [title, minutes (the Reading Guide's estimate in data/harvard/days), url] by MM-DD
+     lad-<key>.json  one ladder's courses and topics in order (topics with a written lesson only)
+     trades.json  The Trades: each course's lessons with their reading minutes
+     meals.json   Meal Prep recipes: [name, prep + cook minutes, url], plus the holiday dates kept in the collections */ -}}
+{{- $lib := site.Data.lifeplan.library -}}
+{{- $base := "" | relURL -}}
+{{- /* ---- Bible in a Year ---- */ -}}
+{{- $bd := site.Data.bibleyear -}}{{- $bible := dict -}}
+{{- if and $bd (site.GetPage "/bible-in-a-year") -}}
+  {{- $bn := dict -}}{{- range $bd.books }}{{ $bn = merge $bn (dict .k .n) }}{{ end -}}
+  {{- range $ver := slice "73" "66" -}}
+    {{- $days := slice -}}
+    {{- range $day := index $bd.plans $ver -}}
+      {{- $parts := slice -}}
+      {{- range (slice $day.r $day.p) -}}{{- $grp := slice -}}{{- range . -}}
+        {{- $s := printf "%s %v" (cond (eq .b "Ps") "Psalm" (index $bn .b)) .f -}}
+        {{- if and (in (slice "Obad" "Phlm" "2John" "3John" "Jude") .b) (not .vr) }}{{ $s = index $bn .b }}{{ end -}}
+        {{- with .t }}{{ $s = printf "%s–%v" $s . }}{{ end -}}
+        {{- with .vr }}{{ $s = printf "%s:%v–%v" $s (index . 0) (index . 1) }}{{ end -}}
+        {{- $grp = $grp | append $s -}}
+      {{- end -}}{{- $parts = $parts | append (delimit $grp "; ") -}}{{- end -}}
+      {{- $days = $days | append (dict "a" (delimit $parts " · ") "b" (math.Max 10 (math.Round (div (float $day.v) 6)))) -}}
+    {{- end -}}
+    {{- $bible = merge $bible (dict $ver $days) -}}
+  {{- end -}}
+{{- end -}}
+{{- $bibleURL := "" -}}{{- if $bible }}{{ $bibleURL = (resources.FromString "life-planner/bible.json" ($bible | jsonify) | fingerprint "md5").RelPermalink }}{{ end -}}
+{{- /* ---- Great Books in a Year ---- */ -}}
+{{- $gbURL := "" -}}
+{{- with site.Data.greatbooks -}}{{- if and .year (site.GetPage "/great-books/year") -}}
+  {{- $words := dict -}}
+  {{- range $file := .lessons -}}{{- range $id, $L := $file -}}
+    {{- $mode := "" -}}{{- $w := 0 -}}
+    {{- range $L.blocks -}}
+      {{- $h := .html | default "" -}}
+      {{- if in $h "id=\"path-full\"" }}{{ $mode = "full" }}{{ else if in $h "id=\"path-deep\"" }}{{ $mode = "deep" }}{{ else if eq $mode "full" }}{{ $w = add $w (countwords (plainify (printf "%v" .))) }}{{ end -}}
+    {{- end -}}
+    {{- $words = merge $words (dict $id $w) -}}
+  {{- end -}}{{- end -}}
+  {{- $R := .year.rungs -}}{{- $days := slice -}}
+  {{- range .year.plan -}}
+    {{- $q := 10 -}}{{- with .q }}{{ $q = index . 1 }}{{ end -}}{{- $r := 0 -}}{{- with .r }}{{ $r = index . 1 }}{{ end -}}
+    {{- $m := mul (add $q $r) 0.5 -}}{{- $t := "" -}}{{- $u := "/great-books/year/" -}}{{- $ids := slice -}}
+    {{- with .id -}}
+      {{- $ids = slice . -}}{{- with index $R . }}{{ $t = .t }}{{ $u = .u }}{{ end -}}
+    {{- end -}}
+    {{- with .ids }}{{ $ids = . }}{{ end -}}
+    {{- if and .id (in (slice "a" "one") .k) }}{{ $m = add $m (div (float (index $words .id | default 800)) 200) }}{{ end -}}
+    {{- if eq .k "end" }}{{ $m = 15 }}{{ end -}}
+    {{- $days = $days | append (dict "a" .k "b" $t "c" $u "d" (math.Max 5 (math.Round $m)) "e" $ids) -}}
+  {{- end -}}
+  {{- $gbURL = (resources.FromString "life-planner/gb.json" (dict "days" $days | jsonify) | fingerprint "md5").RelPermalink -}}
+{{- end -}}{{- end -}}
+{{- /* ---- Harvard Classics ---- */ -}}
+{{- $hcURL := "" -}}
+{{- with site.GetPage "/harvard-classics/days" -}}
+  {{- $hc := dict -}}
+  {{- range .Pages -}}{{- $p := . -}}{{- with .Params.hcid -}}
+    {{- $mins := 15 -}}{{- with index site.Data.harvard.days . }}{{ with .minutes }}{{ $mins = . }}{{ end }}{{ end -}}
+    {{- $hc = merge $hc (dict . (dict "a" (printf "Harvard Classics: %s" (replaceRE "^[^:]+:\\s*" "" $p.Title)) "b" $mins "c" $p.RelPermalink)) -}}
+  {{- end -}}{{- end -}}
+  {{- $hcURL = (resources.FromString "life-planner/hc.json" ($hc | jsonify) | fingerprint "md5").RelPermalink -}}
+{{- end -}}
+{{- /* ---- the ladders: one file each, and the course list inline. Minutes a lesson: the lesson planner's estimate
+   (data/hs_planner.yaml "mins" for that course), else 30 ---- */ -}}
+{{- $pm := dict -}}
+{{- range site.Data.hs_planner.subjects }}{{ range .courses }}{{ if and .ladder .lc .mins }}{{ $pm = merge $pm (dict (printf "%s.%s" .ladder .lc) .mins) }}{{ end }}{{ end }}{{ end -}}
+{{- $courses := slice -}}{{- $ladURLs := dict -}}
+{{- range partial "inline/ml-ladders.html" "x" -}}
+  {{- $L := . -}}{{- $LD := index site.Data $L.dir | default dict -}}
+  {{- $all := $LD.topics | default dict -}}{{- $les := $LD.lessons | default dict -}}
+  {{- $order := slice -}}{{- $cs := dict -}}
+  {{- range $LD.courses | default slice -}}
+    {{- $c := . -}}{{- $lc := index $les .key | default dict -}}{{- $ts := slice -}}
+    {{- with index $all .key -}}{{- range .topics -}}{{- if index $lc .id }}{{ $ts = $ts | append (dict "a" .id "b" .title "c" .slug) }}{{ end -}}{{- end -}}{{- end -}}
+    {{- if and $ts (site.GetPage (printf "/%s/%s" $L.slug $c.slug)) -}}
+      {{- $order = $order | append .key -}}
+      {{- $cs = merge $cs (dict .key (dict "t" .title "u" (printf "/%s/%s/" $L.slug $c.slug) "ts" $ts)) -}}
+      {{- $courses = $courses | append (dict "l" $L.key "lt" $L.title "li" $L.icon "k" .key "t" .title "n" (len $ts) "m" (index $pm (printf "%s.%s" $L.key .key) | default 30) "g" (string (.grade | default ""))) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if $order -}}
+    {{- $ladURLs = merge $ladURLs (dict $L.key (resources.FromString (printf "life-planner/lad-%s.json" $L.key) (dict "order" $order "c" $cs | jsonify) | fingerprint "md5").RelPermalink) -}}
+  {{- end -}}
+{{- end -}}
+{{- /* ---- The Trades ---- */ -}}
+{{- $trades := dict -}}{{- $tradeList := slice -}}
+{{- range $tk, $T := site.Data.trades -}}{{- if and $T.lessons (site.GetPage (printf "/trades/%s" $tk)) -}}
+  {{- $ls := slice -}}{{- range $T.lessons }}{{ $ls = $ls | append (dict "a" .title "b" (printf "/trades/%s/%s/" $tk .key) "c" (.minutes | default 30)) }}{{ end -}}
+  {{- $trades = merge $trades (dict $tk (dict "t" $T.course.title "u" (printf "/trades/%s/" $tk) "ls" $ls)) -}}
+  {{- $tradeList = $tradeList | append (dict "k" $tk "t" $T.course.title "n" (len $ls)) -}}
+{{- end -}}{{- end -}}
+{{- $tradesURL := "" -}}{{- if $trades }}{{ $tradesURL = (resources.FromString "life-planner/trades.json" ($trades | jsonify) | fingerprint "md5").RelPermalink }}{{ end -}}
+{{- /* ---- Meal Prep ---- */ -}}
+{{- $mealsURL := "" -}}{{- $hol := dict -}}
+{{- if and site.Data.meals (site.GetPage "/meal-prep/plan") -}}
+  {{- $r := dict -}}
+  {{- range partialCached "meal-prep/recipes-all.html" "r" -}}{{- if .id -}}
+    {{- $t := .times | default dict -}}
+    {{- $r = merge $r (dict .id (slice .name (add ($t.prep | default 0) ($t.cook | default 0)) (printf "/meal-prep/recipes/%s/" .id) (index (.meal | default (slice "")) 0))) -}}
+  {{- end -}}{{- end -}}
+  {{- $mealsURL = (resources.FromString "life-planner/meals.json" (dict "r" $r | jsonify) | fingerprint "md5").RelPermalink -}}
+  {{- range $h := slice "hanukkah" "lunar-new-year" -}}{{- with index site.Data.meals.recipes $h -}}{{- with .collection -}}
+    {{- $ds := slice -}}{{- range .dates }}{{ $ds = $ds | append (index . 0) }}{{ end -}}
+    {{- $hol = merge $hol (dict $h $ds) -}}
+  {{- end -}}{{- end -}}{{- end -}}
+{{- end -}}
+{{- /* ---- the resolution builder's lists (extra.json): D'Ooge's Latin for Beginners, Lifeprint's ASL lessons (links out),
+   and the Memory Challenges. Only the ones whose pages are in the build. ---- */ -}}
+{{- $extra := dict -}}
+{{- if site.GetPage "/homeschool/latin/latin-for-beginners" -}}{{- with site.Data.hs_dooge -}}
+  {{- $ls := slice -}}{{- range $i, $l := .lessons }}{{ $ls = $ls | append (dict "a" $l.title "b" (printf "/homeschool/latin/latin-for-beginners/lesson-%d/" (add $i 1)) "c" ($l.mins | default 35)) }}{{ end -}}
+  {{- $extra = merge $extra (dict "latin" $ls) -}}
+{{- end -}}{{- end -}}
+{{- if site.GetPage "/asl" -}}{{- with site.Data.hs_lifeprint -}}
+  {{- $ls := slice -}}{{- range .lessons }}{{ $ls = $ls | append (dict "a" (printf "%s: %s" .course .title) "b" .url "c" 30) }}{{ end -}}
+  {{- $extra = merge $extra (dict "asl" $ls) -}}
+{{- end -}}{{- end -}}
+{{- with site.Data.memory.lists -}}
+  {{- $ls := slice -}}{{- range $slug, $l := . }}{{ if site.GetPage (printf "/memory/challenges/%s" $slug) }}{{ $ls = $ls | append (dict "a" $l.title "b" (printf "/memory/challenges/%s/" $slug) "c" 60) }}{{ end }}{{ end -}}
+  {{- $extra = merge $extra (dict "memory" $ls) -}}
+{{- end -}}
+{{- $extraURL := "" -}}{{- if $extra }}{{ $extraURL = (resources.FromString "life-planner/extra.json" ($extra | jsonify) | fingerprint "md5").RelPermalink }}{{ end -}}
+{{- /* ---- Translate in a Year: static/languages/translate/plan.json (built by scripts/translate/build.py), fetched only for
+   translate tracks; its goal list (titles, days, minutes) goes inline for the library ---- */ -}}
+{{- $trURL := "" -}}{{- $trGoals := slice -}}
+{{- $trF := "static/languages/translate/plan.json" -}}
+{{- if and (fileExists $trF) (site.GetPage "/languages/translate") -}}
+  {{- $trURL = printf "%s?v=%d" ("languages/translate/plan.json" | relURL) (os.Stat $trF).ModTime.Unix -}}
+  {{- $trGoals = (os.ReadFile $trF | transform.Unmarshal).goals -}}
+{{- end -}}
+{{- $hols := slice -}}
+{{- range $h := slice "thanksgiving" "christmas" "easter" "cookout" "hanukkah" "lunar-new-year" -}}{{- if site.GetPage (printf "/meal-prep/%s" $h) }}{{ $hols = $hols | append $h }}{{ end -}}{{- end -}}
+{{- $cfg := dict "base" $base "lib" (dict "chores" $lib.chores "exercise" $lib.exercise "meals" $lib.meals "learn" $lib.learn) "courses" $courses "trades" $tradeList "hols" $hols "holTables" $hol
+   "urls" (dict "bible" $bibleURL "gb" $gbURL "hc" $hcURL "lad" $ladURLs "trades" $tradesURL "meals" $mealsURL "extra" $extraURL "tr" $trURL) "trGoals" $trGoals "res" $.res "planURL" ("life-planner/" | relURL) "resURL" ("life-planner/resolution/" | relURL) -}}
+<div class="hs lp" id="lp">
+  <nav class="hs-crumbs hs-noprint" aria-label="Breadcrumb"><a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> › {{ if $.res }}<a href="{{ "life-planner/" | relURL }}">Life Planner</a> › New Year’s resolution{{ else }}Life Planner{{ end }}</nav>
+  {{ if $.res }}<header class="hs-hero lp-hero hs-noprint">
+    <p class="hs-eyebrow">Life Planner · Resolution builder</p>
+    <h1>Make a resolution plan</h1>
+    <p>Pick what you’d like to get done this year, say which days and how much time you have, and get a day-by-day plan that finishes on time, with a gentle pace and a picture of where you’ll be each season.</p>
+  </header>{{ else }}<header class="hs-hero lp-hero hs-noprint">
+    <p class="hs-eyebrow">Plan your days · Free, nothing to sign up for</p>
+    <h1>Life Planner</h1>
+    <p>Put the things you mean to do in one plan: reading, learning, exercise, chores and meals. Tell it how much time you have each day, and it spreads everything out, shows you today’s list, and adds up what a whole year of sticking with it gets you.</p>
+    <p class="lp-herobtn"><a class="hs-btn big lp-resbtn" href="{{ "life-planner/resolution/" | relURL }}">🎯 Make a resolution plan</a></p>
+  </header>{{ end }}
+
+  {{ if not $.res }}<section class="hs-sec lp-how hs-noprint" aria-labelledby="lp-how-h">
+    <h2 id="lp-how-h">How it works</h2>
+    <ol class="lp-steps">
+      <li><b>Pick your tracks.</b> Start from the starter plan, or add from the library: Bible in a Year, Great Books, a ladder course, walking, chores, meals, or anything of your own.</li>
+      <li><b>Set your time.</b> Say how many minutes you have each day of the week and mark days off. Tasks that can move (“bathroom once a week”) go to the days with room.</li>
+      <li><b>Follow it.</b> Tick things off on the Today list. Print a week, a month or a whole year, or add it to your calendar.</li>
+    </ol>
+    <p class="hs-small">Time estimates are rough. Change any of them to fit how fast you read, clean or cook. Your plan stays in this browser (for each learner, if you use learner profiles), and nothing is sent anywhere.</p>
+  </section>{{ end }}
+
+  <div id="lp-res" class="lp-res"{{ if not $.res }} hidden{{ end }}></div>
+  <div id="lp-app" class="lp-app"{{ if $.res }} hidden{{ end }}>
+    <p class="lp-loading">Loading the planner…</p>
+  </div>
+  <noscript><p class="hs-note">The Life Planner needs JavaScript turned on.</p></noscript>
+
+  <section class="hs-sec lp-about hs-noprint" aria-labelledby="lp-about-h">
+    <h2 id="lp-about-h">About the estimates and sources</h2>
+    <ul class="lp-notes">
+      <li><b>Bible in a Year</b> follows the <a href="{{ "bible-in-a-year/" | relURL }}">Bible in a Year</a> plan and shares its ticks: tick a day here or there and it shows in both. Each day is estimated from its number of verses (about 15 to 20 minutes).</li>
+      <li><b>Great Books</b> follows the <a href="{{ "great-books/year/" | relURL }}">Great Books in a Year</a> plan, rung by rung, for as many minutes a day as you choose. A rung’s time is its “For teens and adults” lesson at about 200 words a minute, plus about half a minute a practice question.</li>
+      <li><b>Harvard Classics</b> uses the minutes the 1930 Reading Guide gives each day’s reading on <a href="{{ "harvard-classics/" | relURL }}">Harvard Classics, Fifteen Minutes a Day</a>.</li>
+      <li><b>Translate in a Year</b> shares a Latin or Greek work out by lines (poetry) or words (prose), always ending a session at the end of a sentence, and links each session to that passage in the <a href="{{ "languages/translate/" | relURL }}">reader</a>. Time is a rough guess for someone who has finished a first-year grammar: about 2 minutes a line of Virgil or Homer and about 3 words a minute of prose (5 for John).</li>
+      <li><b>Ladder courses</b> use the lesson planner’s minutes for each topic, which includes practice. Topics you pass on a ladder are ticked here too.</li>
+      <li><b>Meals</b> read the recipes you planned in the <a href="{{ "meal-prep/plan/" | relURL }}">Meal Planner</a> and use each recipe’s prep and cook time. Holidays come from the Meal Prep collections.</li>
+      <li><b>Exercise</b> plans follow the U.S. Physical Activity Guidelines for Americans (2nd edition, 2018): for adults, 150 to 300 minutes a week of moderate activity such as brisk walking, or 75 to 150 minutes of vigorous activity, or a mix, plus muscle-strengthening activity on 2 or more days a week. The guidelines advise people with a chronic health condition or symptoms to be under the care of a health care provider, and anyone who hasn’t been active to start slowly and build up over time. The planner schedules time; it doesn’t give workout instructions.</li>
+      <li><b>Chores</b> list a default with the range the guidance gives, and the source for each where there is one. Where no source is listed, the frequency is our own rough default. Your appliance manuals and your own home come first.</li>
+    </ul>
+  </section>
+  <script type="application/json" id="lp-cfg">{{ $cfg | jsonify | safeJS }}</script>
+</div>
+<script src="{{ "life-planner/lp-core.js" | relURL }}?v={{ (os.Stat "static/life-planner/lp-core.js").ModTime.Unix }}" defer></script>
+<script src="{{ "life-planner/lp-tracks.js" | relURL }}?v={{ (os.Stat "static/life-planner/lp-tracks.js").ModTime.Unix }}" defer></script>
+<script src="{{ "life-planner/lp.js" | relURL }}?v={{ (os.Stat "static/life-planner/lp.js").ModTime.Unix }}" defer></script>
+<script src="{{ "life-planner/lp-resolve.js" | relURL }}?v={{ (os.Stat "static/life-planner/lp-resolve.js").ModTime.Unix }}" defer></script>
+<script src="{{ "life-planner/lp-res.js" | relURL }}?v={{ (os.Stat "static/life-planner/lp-res.js").ModTime.Unix }}" defer></script>

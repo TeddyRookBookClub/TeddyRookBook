@@ -39,6 +39,7 @@ eq(iso(ex({ k: 'months', months: [2], on: { day: 31 } }).fixed[0]), '2027-02-28'
 eq(ex({ k: 'dates', dates: ['2027-03-01', '2026-01-01', '2027-03-01', 'x'] }).fixed.map(iso), ['2027-03-01'], 'dates: inside the range, no repeats');
 eq(C.freqText({ k: 'times', n: 2 }), 'Twice a week', 'freq text');
 eq(C.freqText({ k: 'months', months: [4, 10] }), 'In Apr, Oct', 'freq text months');
+eq(C.freqText({ k: 'dates', dates: ['2027-01-01', '2027-01-02'] }), 'On 2 set days', 'freq text dates');
 
 // ---- scheduler
 const budget = [0, 60, 60, 60, 60, 60, 120]; // Sunday 0
@@ -134,5 +135,56 @@ eq(T.holidayDates('hanukkah', dn('2026-11-01'), dn('2027-01-31'), { hanukkah: ['
 const md = T.mealDays({ plans: [{ start: '2027-01-04', days: 7, cells: { '0|dinner': [{ r: 'r1' }], '1|lunch': [{ r: 'r1' }], '2|dinner': [{ r: 'r1' }, { r: 'r2' }] } }] }, 'dinner', { r: { r1: ['Soup', 40, '/meal-prep/recipes/r1/'], r2: ['Bread', 30, '/x/'] } });
 eq([md[dn('2027-01-04')].names, md[dn('2027-01-06')].mins, md[dn('2027-01-05')]], [['Soup'], 70, undefined], 'meal planner recipes and minutes by date');
 
+
+// ---- the resolution builder: every goal finishes by the plan's last day, on the chosen days, around days off
+const RS = require(path.join(__dirname, '../../static/life-planner/lp-resolve.js'));
+const DR = {
+  bible: { '73': Array.from({ length: 365 }, (_, i) => ['Genesis ' + (i + 1), 16]), '66': Array.from({ length: 365 }, (_, i) => ['G' + (i + 1), 14]) },
+  gb: { days: Array.from({ length: 365 }, (_, i) => i % 7 === 6 ? ['review', '', '/g/', 8, []] : [i % 2 ? 'b' : 'a', 'Rung ' + (i >> 1), '/g/' + (i >> 1) + '/', 10, ['gb.' + (i >> 1)]]) },
+  lad: { math: { order: ['g3', 'g4'], c: { g3: { t: 'Grade 3', u: '/math/g3/', ts: Array.from({ length: 120 }, (_, i) => ['g3.t' + i, 'Topic ' + i, 't' + i]) }, g4: { t: 'Grade 4', u: '/math/g4/', ts: [['g4.a', 'A', 'a']] } } } },
+  trades: { cars: { t: 'Cars', u: '/trades/cars/', ls: Array.from({ length: 15 }, (_, i) => ['Lesson ' + i, '/trades/cars/l' + i + '/', 8]) } },
+  meals: { r: Object.fromEntries(Array.from({ length: 80 }, (_, i) => ['r' + i, ['Recipe ' + i, 20 + i, '/meal-prep/recipes/r' + i + '/', i % 3 ? 'dinner' : 'snack']])) },
+  extra: { latin: Array.from({ length: 79 }, (_, i) => ['L' + i, '/l/' + i + '/', 35]), asl: Array.from({ length: 60 }, (_, i) => ['A' + i, 'https://x/' + i, 30]), memory: Array.from({ length: 43 }, (_, i) => ['M' + i, '/m/' + i + '/', 60]) }
+};
+let nidr = 0;
+const ENV = { D: DR, P: { bible: () => ({}), passed: () => false }, courses: [{ l: 'math', lt: 'Math Ladder', k: 'g3', t: 'Grade 3', n: 120, m: 70 }], trades: [{ k: 'cars', t: 'Cars', n: 15 }], colors: ['#111'],
+  mk: o => Object.assign({ id: 't' + (++nidr), opt: {}, f: { k: 'daily' }, mins: 15, pref: [] }, o),
+  fromLib: (c, k, x) => Object.assign({ id: 'c' + k, kind: 'chore', name: k, mins: 20, f: { k: 'weeks', n: 1 }, opt: {}, pref: [] }, x) };
+const ALL = { bible: { on: true }, gb: { on: true, n: 52 }, ladder: { on: true, c: 'math|g3' }, trade: { on: true, tr: 'cars' }, cook: { on: true, n: 26 }, active: { on: true }, walk: { on: true, n: 300 },
+  chores: { on: true }, memory: { on: true, n: 12 }, latin: { on: true }, asl: { on: true }, custom: { on: true, name: 'Guitar', amount: 100, unit: 'hours', mpu: 60 } };
+[[[0, 1, 2, 3, 4, 5, 6], []], [[1, 2, 3, 4, 5], [{ from: '2027-07-05', to: '2027-07-16', label: 'Trip' }]], [[1, 3, 5], [{ from: '2027-12-20', to: '2027-12-31' }]], [[6], []]].forEach(([days, off]) => {
+  const dr = { goals: JSON.parse(JSON.stringify(ALL)), days, start: '2027-01-01', mins: 600, off };
+  const b = RS.build(dr, ENV), st = b.state, PVr = {}, ctx = { base: '/' };
+  st.tracks.forEach(t => { const pv = T.provider(t, DR, ENV.P, ctx); if (pv) PVr[t.id] = pv; });
+  const Sr = C.schedule(st.plan, st.tracks, PVr), offs = C.offSet(off), tag = days.length + ' days/week' + (off.length ? ' + days off' : '');
+  eq([iso(Sr.from), iso(Sr.to)], ['2027-01-01', '2027-12-31'], tag + ': 365 days from January 1');
+  ok(b.sessions.every(d => days.indexOf(C.dow(d)) >= 0 && !offs[d]), tag + ': sessions are the chosen days, minus days off');
+  const its = id => Sr.items[id] || [], lastOf = id => its(id)[its(id).length - 1];
+  ok(st.tracks.filter(t => t.kind !== 'chore').every(t => its(t.id).every(it => days.indexOf(C.dow(it.dn)) >= 0 && !offs[it.dn])), tag + ': goal sessions only on chosen days, never on days off');
+  eq(lastOf('r-bible-0').r1, 365, tag + ': the Bible ends on day 365');
+  eq(lastOf('r-ladder-0').r1, 119, tag + ': the ladder course: all 120 lessons');
+  eq(lastOf('r-trade-0').r1, 14, tag + ': the trade: all 15 lessons');
+  eq(lastOf('r-latin-0').r1, 78, tag + ': Latin: all 79 lessons');
+  eq(lastOf('r-asl-0').r1, 59, tag + ': ASL: all 60 lessons');
+  eq(lastOf('r-memory-0').r1, 11, tag + ': 12 memory lists');
+  eq(its('r-cook-0').length, 26, tag + ': 26 recipes');
+  ok(Math.abs(lastOf('r-custom-0').r1 - 100) < 1e-6, tag + ': custom: 100 hours');
+  const walked = its('r-walk-0').reduce((s, it) => s + it.mins, 0) / RS.MPM; ok(walked >= 300, tag + ': at least 300 miles (' + Math.round(walked) + ')');
+  const gbm = its('r-gb-0').reduce((s, it) => s + it.mins, 0); ok(gbm >= RS.gbFor(DR, 52).mins, tag + ': Great Books: enough minutes for 52 rungs');
+  ok(st.tracks.every(t => its(t.id).every(it => it.dn <= Sr.to)), tag + ': nothing after the last day');
+  if (days.length >= 2) { const Rr = T.summary(Sr, st.tracks, DR, ENV.P, Sr.from, Sr.to); ok(days.length < 3 || Rr.activity.met === Rr.activity.weeks || off.length, tag + ': Get active meets the guideline every full week'); }
+});
+// overload: the same goals in 30 minutes a day don't fit
+{ const b = RS.build({ goals: JSON.parse(JSON.stringify(ALL)), days: [1, 2, 3, 4, 5], start: '2027-01-01', mins: 30, off: [] }, ENV); const PVr = {};
+  b.state.tracks.forEach(t => { const pv = T.provider(t, DR, ENV.P, { base: '/' }); if (pv) PVr[t.id] = pv; });
+  const Sr = C.schedule(b.state.plan, b.state.tracks, PVr); ok(Sr.days.filter(d => d.over && d.load).length > 100, 'twelve goals in 30 minutes a day: overloaded days flagged');
+  const b2 = RS.build({ goals: { bible: { on: true } }, days: [0, 1, 2, 3, 4, 5, 6], start: '2027-01-01', mins: 30, off: [] }, ENV); const P2 = {};
+  b2.state.tracks.forEach(t => { P2[t.id] = T.provider(t, DR, ENV.P, { base: '/' }); });
+  ok(C.schedule(b2.state.plan, b2.state.tracks, P2).days.every(d => !d.over), 'the Bible alone in 30 minutes a day fits'); }
+eq(RS.spread([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5), [2, 4, 6, 8, 10], 'spread picks sessions evenly, ending on the last one');
+eq(RS.range({ start: '2027-01-01', extend: 7 }).map(iso), ['2027-01-01', '2028-01-07'], 'moving the finish date adds days');
+eq(T.pace(0, 2.5, 5), { i0: 0, i1: 2, fin: [0, 1], ov: [1, 1, 0.5] }, 'pace: 2.5 items a session');
+eq(T.pace(1, 2.5, 5).fin, [2, 3, 4], 'pace: the second session finishes the rest');
+eq(T.pace(2, 2.5, 5), null, 'pace: nothing after the end');
 console.log(pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

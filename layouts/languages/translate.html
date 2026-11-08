@@ -1,0 +1,53 @@
+{{ define "main" }}
+{{- /* Translate in a Year: one work's reader (content/languages/translate/<work>.md). Params: work (the data file's key),
+   la (lat | grc), orig (the title in the original), plans [{t, days, from, to}], notes [things to watch for], grammar
+   [{t, u}]. The text loads from static/languages/translate/<work>*.json (static/languages/translate/tr.js). */ -}}
+{{ partial "lang-head.html" . }}
+<link rel="stylesheet" href="{{ "languages/translate/tr.css" | relURL }}?v={{ (os.Stat "static/languages/translate/tr.css").ModTime.Unix }}">
+{{ $grc := eq .Params.la "grc" }}
+<div class="lang trn{{ if $grc }} grk{{ end }}" id="trn" data-work="{{ .Params.work }}" data-base="{{ "languages/translate/" | relURL }}" data-plans="{{ .Params.plans | jsonify }}">
+  <header class="lang-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · <a href="{{ "languages/translate/" | relURL }}" style="color:inherit">Translate in a Year</a></p>
+    <h1>{{ .Params.short | default .Title }} · <span class="{{ if $grc }}grc{{ else }}lat{{ end }}">{{ .Params.orig }}</span></h1>
+    <p>{{ .Params.lead }}</p>
+  </header>
+  <details class="lang-help">
+    <summary>❓ How the reader works</summary>
+    <ol>
+      <li><b>Pick a plan</b>, then work through it a day at a time with ‹ ›, or pick a day from the list. <i>Go to</i> jumps to the day where a {{ if eq .Params.work "john" }}chapter{{ else }}book{{ end }} starts.</li>
+      <li><b>Read the {{ if $grc }}Greek{{ else }}Latin{{ end }}</b> aloud once, then translate it. {{ if eq .Params.work "aeneid" "iliad" }}The numbers are line numbers in each book, so 1.33 is Book 1, line 33; every fifth is in bold.{{ else if eq .Params.work "john" }}The small numbers are verses.{{ else if eq .Params.work "catiline" }}The small numbers are the speech’s sections (§1 to §33).{{ else }}The small numbers are chapter and section, so 3.4 is chapter 3, section 4.{{ end }}</li>
+      <li><b>Tap any word</b> for links to the dictionaries: the Perseus Word Study Tool (which lists the possible forms and opens {{ if $grc }}Liddell and Scott{{ else }}Lewis and Short{{ end }}) and Logeion.</li>
+      <li><b>Write your translation</b> in the box. It saves in this browser as you type (one box for each day). Print the day, or save all your translations as a text file.</li>
+      <li><b>Check your translation</b> shows a public-domain English translation of the same lines. It is one translator’s choice of words, not the only right answer.</li>
+      <li><b>Done</b> marks the day; the count at the top shows how many you have finished. A Life Planner session opens the reader at exactly its lines.</li>
+    </ol>
+  </details>
+  <p class="trn-nostore" id="trn-nostore" hidden role="note">This browser isn’t letting the page save, so your translations and ticks won’t be kept. Copy your work somewhere safe before you leave.</p>
+  <div class="trn-bar" role="group" aria-label="Plan and day">
+    <label>Plan <select id="trn-plan"></select></label>
+    <button class="cbtn" id="trn-prev" type="button" aria-label="Previous day">‹</button>
+    <select id="trn-day" aria-label="Day"></select>
+    <button class="cbtn" id="trn-next" type="button" aria-label="Next day">›</button>
+    <label>Go to <select id="trn-book" aria-label="Go to"></select></label>
+    <span class="trn-prog" id="trn-prog"></span>
+  </div>
+  <div class="trn-range" id="trn-range" hidden><span id="trn-range-t"></span><button type="button" class="cbtn" id="trn-back">Show the day plan</button></div>
+  <div class="lang-grid">
+    <article class="trn-main" id="trn-text" aria-live="polite"><p class="muted">Loading…</p></article>
+    <aside class="side">
+      <div class="box"><h2 class="bx">Word help</h2><div class="wpanel" id="trn-word"><p class="wp-empty">Tap a word in the passage for dictionary links.</p></div></div>
+      {{ with .Params.notes }}<div class="box"><h2 class="bx">Things to watch for</h2><ul class="trn-notes">{{ range . }}<li>{{ . | markdownify }}</li>{{ end }}</ul></div>{{ end }}
+      {{ with .Params.grammar }}<div class="box"><h2 class="bx">Grammar help</h2><ul class="trn-links">{{ range . }}<li><a href="{{ if hasPrefix .u "http" }}{{ .u }}{{ else }}{{ .u | relURL }}{{ end }}"{{ if hasPrefix .u "http" }} target="_blank" rel="noopener"{{ end }}>{{ .t }}</a>{{ with .s }}<small>{{ . }}</small>{{ end }}</li>{{ end }}</ul></div>{{ end }}
+    </aside>
+  </div>
+  <section class="trn-about">
+    {{ .Content }}
+  </section>
+  <footer class="lang-credits">
+    <p><b>Text:</b> {{ .Params.edition | markdownify }}</p>
+    <p><b>English:</b> {{ .Params.english | markdownify }}</p>
+    <p>{{ .Params.license | markdownify }} The texts were divided into daily portions here. Dictionary links go to the Perseus Digital Library (Tufts University) and Logeion (University of Chicago).</p>
+  </footer>
+</div>
+<script src="{{ "languages/translate/tr.js" | relURL }}?v={{ (os.Stat "static/languages/translate/tr.js").ModTime.Unix }}"></script>
+{{ end }}

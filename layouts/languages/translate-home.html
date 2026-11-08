@@ -1,0 +1,40 @@
+{{ define "main" }}
+{{- /* Translate in a Year: the hub (content/languages/translate/_index.md). Cards for the works (the section's reader pages,
+   by weight), then the page's own text. */ -}}
+{{ partial "lang-head.html" . }}
+<link rel="stylesheet" href="{{ "languages/translate/tr.css" | relURL }}?v={{ (os.Stat "static/languages/translate/tr.css").ModTime.Unix }}">
+<div class="lang trn">
+  <header class="lang-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · Translate in a Year</p>
+    <h1>Translate in a Year · <span class="lat">Arma virumque cano</span></h1>
+    <p>{{ .Params.lead }}</p>
+  </header>
+  <section class="lang-cards trn-works" aria-label="The works">
+    {{ range where .Pages.ByWeight "Params.work" "!=" nil }}
+    <a class="lang-card {{ .Params.la }}" href="{{ .RelPermalink }}">
+      <span class="big" aria-hidden="true">{{ .Params.icon }}</span>
+      <h2>{{ .Params.short | default .Title }}</h2>
+      <span class="orig" lang="{{ if eq .Params.la "grc" }}grc{{ else }}la{{ end }}">{{ .Params.orig }}</span>
+      <span class="meta">{{ .Params.size }}</span>
+      <p>{{ .Params.card }}</p>
+      <span class="go">Start translating →</span>
+    </a>
+    {{ end }}
+    {{ with site.GetPage "/languages/translate/harvard" }}
+    <a class="lang-card" href="{{ .RelPermalink }}">
+      <span class="big" aria-hidden="true">🎓</span>
+      <h2>The old Harvard list</h2>
+      <span class="meta">1642 to 1946</span>
+      <p>What Harvard once asked of every new student in Latin and Greek, with the books from its own catalogues, and a suggested order for teaching yourself.</p>
+      <span class="go">Read the history →</span>
+    </a>
+    {{ end }}
+  </section>
+  <section class="trn-about">
+    {{ .Content }}
+  </section>
+  <footer class="lang-credits">
+    <p><b>Texts and translations:</b> from the <a href="https://www.perseus.tufts.edu" target="_blank" rel="noopener">Perseus Digital Library</a> (Tufts University), whose digital editions are shared under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>; the printed editions behind them are in the public domain. The Gospel of John uses the site’s Nestle 1904 Greek text and the King James Version (both public domain). Each reader names its edition and translation.</p>
+  </footer>
+</div>
+{{ end }}

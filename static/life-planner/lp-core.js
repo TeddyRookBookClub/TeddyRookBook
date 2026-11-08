@@ -144,7 +144,7 @@
     providers = providers || {};
     var A = dnOf(plan.from), B = dnOf(plan.to), budget = plan.budget || [60, 45, 45, 45, 45, 45, 120];
     if (A == null || B == null || B < A) return null;
-    if (B - A > 370) B = A + 370;
+    if (B - A > 400) B = A + 400;
     var off = offSet(plan.off), days = [], byDn = {};
     for (var dn = A; dn <= B; dn++) { var o = { dn: dn, cap: off[dn] ? 0 : Math.max(0, +budget[dow(dn)] || 0), load: 0, off: off[dn] || '', items: [] }; days.push(o); byDn[dn] = o; }
     var items = {}, missed = {}, jobs = [];
@@ -166,7 +166,7 @@
       });
       ex.jobs.forEach(function (j) { jobs.push({ t: t, tr: tr, from: j.from, to: j.to, n: j.n, d: j.d }); });
     });
-    function apply(it, x) { if (x.label != null) it.label = x.label; if (x.mins != null) it.mins = x.mins; if (x.url) it.url = x.url; if (x.ref != null) it.ref = x.ref; if (x.sub) it.sub = x.sub; }
+    function apply(it, x) { for (var q in x) if (Object.prototype.hasOwnProperty.call(x, q) && x[q] != null && q !== 't' && q !== 'id' && q !== 'dn' && q !== 'k') it[q] = x[q]; }
     // 3. flexible jobs
     jobs.sort(function (p, q) { return p.to - q.to || (p.to - p.from) - (q.to - q.from) || (+q.tr.mins || 0) - (+p.tr.mins || 0) || p.t - q.t; });
     function has(d, id) { var L = byDn[d].items; for (var i = 0; i < L.length; i++) if (L[i].id === id) return true; return false; }
@@ -237,7 +237,7 @@
         if (f.every && !(f.months && f.months.length)) return (+f.every === 1 ? 'Monthly' : +f.every === 12 ? 'Once a year' : 'Every ' + f.every + ' months') + on;
         var ms = f.months || [];
         return (ms.length === 12 ? 'Monthly' : ms.length === 1 ? 'Every ' + MON[ms[0] - 1] : 'In ' + ms.map(function (m) { return MON[m - 1].slice(0, 3); }).join(', ')) + on;
-      case 'dates': return (f.dates || []).length + ' date' + ((f.dates || []).length === 1 ? '' : 's');
+      case 'dates': return 'On ' + (f.dates || []).length + ' set day' + ((f.dates || []).length === 1 ? '' : 's');
     }
     return '';
   }

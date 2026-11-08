@@ -1,0 +1,15 @@
+{{ define "main" }}
+{{- /* Translate in a Year: a page of text (content/languages/translate/harvard.md). */ -}}
+{{ partial "lang-head.html" . }}
+<link rel="stylesheet" href="{{ "languages/translate/tr.css" | relURL }}?v={{ (os.Stat "static/languages/translate/tr.css").ModTime.Unix }}">
+<div class="lang trn">
+  <header class="lang-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · <a href="{{ "languages/translate/" | relURL }}" style="color:inherit">Translate in a Year</a></p>
+    <h1>{{ .Title }}</h1>
+    <p>{{ .Params.lead }}</p>
+  </header>
+  <article class="trn-about">
+    {{ .Content }}
+  </article>
+</div>
+{{ end }}

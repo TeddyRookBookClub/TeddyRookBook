@@ -1,0 +1,85 @@
+/* Translate in a Year (/languages/translate/): the reader and its pages. Builds on static/lang/lang.css (.lang tokens). */
+.trn .lang-hero::after{content:"SPQR"}
+.trn.grk .lang-hero::after{content:"Α Ω"}
+.trn-bar{display:flex;flex-wrap:wrap;gap:.5rem .7rem;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.6rem .8rem;margin:0 0 1rem}
+.trn-bar label{display:inline-flex;align-items:center;gap:.35rem;font-size:.9rem;color:var(--muted)}
+.trn-bar label[hidden]{display:none}
+.trn-bar select{font:inherit;font-size:.9rem;padding:.3rem .4rem;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);max-width:100%}
+.trn-bar .cbtn:disabled{opacity:.4;cursor:default}
+.trn-prog{margin-left:auto;font-size:.85rem;color:var(--muted)}
+.trn-range{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;background:var(--soft);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:10px;padding:.55rem .8rem;margin:0 0 1rem;font-size:.92rem}
+.trn-range[hidden]{display:none}
+.trn-nostore{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--wine);border-radius:10px;padding:.55rem .8rem;margin:0 0 1rem;font-size:.9rem}
+.trn-nostore[hidden]{display:none}
+.trn .lang-grid{align-items:start}
+.trn-main{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.2rem;min-width:0}
+.trn-head{display:flex;gap:.6rem;align-items:baseline;justify-content:space-between;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:.45rem;margin-bottom:.6rem}
+.trn-head h2{margin:0;font:700 1.05rem/1.35 Georgia,serif;color:var(--g)}
+html[data-theme="dark"] .trn-head h2{color:#a8d5b8}
+.trn-done{font-size:.9rem;color:var(--muted);display:inline-flex;gap:.3rem;align-items:center;white-space:nowrap}
+.trn-book{margin:.4rem 0 .3rem;font:700 .8rem/1.2 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+html[data-theme="dark"] .trn-book{color:#e0c070}
+.trn-pass.verse .tl{display:grid;grid-template-columns:2.6rem 1fr;gap:.4rem;align-items:baseline}
+.trn-pass .ln{font:.72rem/1 system-ui,sans-serif;color:var(--muted);text-align:right;user-select:none}
+.trn-pass .ln.five{font-weight:700;color:var(--ink)}
+.trn-pass.prose{line-height:1.85}
+.trn-pass .sn{font:700 .68rem/1 system-ui,sans-serif;color:var(--gold);margin-right:.15rem;vertical-align:super}
+html[data-theme="dark"] .trn-pass .sn{color:#e0c070}
+.trn-pass .tw{all:unset;cursor:pointer;border-radius:4px;padding:0 .04em;font:inherit;color:inherit}
+.trn-pass .tw:hover,.trn-pass .tw:focus-visible{background:var(--soft);outline:2px solid transparent;box-shadow:0 0 0 2px var(--soft)}
+.trn-pass .tw:focus-visible{box-shadow:0 0 0 2px var(--gold)}
+.trn-pass .tw.sel{background:var(--gold-l);color:#1d2320}
+html[data-theme="dark"] .trn-pass .tw.sel{background:#6b5a26;color:#fff}
+.trn-mine{margin-top:1rem;border-top:1px solid var(--line);padding-top:.8rem}
+.trn-mine textarea{display:block;width:100%;box-sizing:border-box;margin:.4rem 0 .2rem;font:1rem/1.55 Georgia,serif;padding:.6rem .7rem;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);resize:vertical}
+.trn-saved{min-height:1.2em;margin:0;color:var(--muted)}
+.trn-acts{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.4rem}
+.trn .cbtn{width:auto;height:auto;min-height:2.4rem;border-radius:999px;padding:.35rem .9rem;font-size:.9rem}
+.trn .cbtn.trn-check{background:var(--g);color:#fff;border-color:var(--g)}
+html[data-theme="dark"] .trn .cbtn.trn-check{background:#6cc79a;color:#0e1a13;border-color:#6cc79a}
+.trn-key{margin-top:.9rem;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem}
+.trn-key[hidden]{display:none}
+.trn-keyh{margin:0 0 .5rem;font-size:.8rem;color:var(--muted)}
+.trn-kb{margin:0 0 .7rem}
+.trn-kr{margin:0;font:700 .72rem/1.2 system-ui,sans-serif;color:var(--gold);letter-spacing:.06em}
+html[data-theme="dark"] .trn-kr{color:#e0c070}
+.trn-kt{margin:.15rem 0 0;white-space:pre-line;line-height:1.6}
+.trn-kn{margin:.3rem 0 0;color:var(--muted)}
+.trn-err{color:var(--wine)}
+html[data-theme="dark"] .trn-err{color:#e08a9e}
+.trn-links{list-style:none;margin:.4rem 0;padding:0}
+.trn-links li{margin:0 0 .5rem}
+.trn-links a{font-weight:600;color:var(--g)}
+html[data-theme="dark"] .trn-links a{color:#6cc79a}
+.trn-links small{display:block;color:var(--muted);font-size:.8rem}
+.trn-notes{margin:.3rem 0 0;padding-left:1.1rem;font-size:.9rem;line-height:1.5}
+.trn-notes li{margin:0 0 .45rem}
+.trn .box{margin-bottom:1rem}
+.trn-about{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.3rem;margin-top:1rem;line-height:1.6}
+.trn-about h2{font:700 1.25rem Georgia,serif;color:var(--g);margin:.6rem 0 .4rem}
+.trn-about h3{font:700 1.05rem Georgia,serif;color:var(--g);margin:.8rem 0 .3rem}
+html[data-theme="dark"] .trn-about h2,html[data-theme="dark"] .trn-about h3{color:#a8d5b8}
+.trn-about a{color:var(--g)}
+html[data-theme="dark"] .trn-about a{color:#6cc79a}
+.trn-about table{border-collapse:collapse;width:100%;font-size:.92rem;display:block;overflow-x:auto}
+.trn-about th,.trn-about td{border:1px solid var(--line);padding:.35rem .5rem;text-align:left;vertical-align:top}
+.trn-about th{background:var(--soft)}
+.trn-about blockquote{margin:.6rem 0;padding:.5rem .9rem;border-left:4px solid var(--gold);background:var(--paper);border-radius:0 10px 10px 0}
+.trn-works .lang-card .meta{display:block;font-size:.82rem;color:var(--muted);margin:-.1rem 0 .5rem}
+.trn-works .lang-card .orig{font-family:"Gentium Book Plus",Georgia,serif;color:var(--c-g);font-size:1.05rem}
+.trn-works .lang-card.lat .orig{color:var(--c-l)}
+.trn .lang-help{margin:0 0 1rem}
+@media (max-width:560px){
+  .trn-main{padding:.8rem .8rem}
+  .trn-pass.verse .tl{grid-template-columns:2rem 1fr;gap:.3rem}
+  .trn-prog{margin-left:0;width:100%}
+  .trn-about{padding:.8rem .9rem}
+}
+@media print{
+  .trn .lang-hero,.trn-bar,.trn-range,.trn .side,.trn-acts,.trn-saved,.trn-about,.trn .lang-help,.trn-nostore,.trn-done,.lang-credits,header.header,footer.footer,.hs-crumbs{display:none!important}
+  .trn .lang-grid{display:block}
+  .trn-main{border:0;padding:0}
+  .trn-pass .tw{color:#000}
+  .trn-mine textarea{border:1px solid #999;height:auto;min-height:12rem;overflow:visible}
+  .trn-key:not([hidden]){break-before:auto}
+}
