@@ -33,7 +33,7 @@
       return;
     }
     if (go) { go.textContent = 'Continue practicing'; }
-    if (find && E.placed()) find.textContent = 'Redo placement';
+    if (find) find.textContent = E.placed() ? 'Redo placement' : 'Find your rung';
     var c = ui.course(cur), xp = E.xpToday(), goal = E.goal(), due = graphOK ? E.dueCount() : 0, t = graphOK ? E.next() : null, streak = E.streak();
     cont.className = 'mlp-continue';
     cont.innerHTML = ui.ring(xp, goal, 70) +

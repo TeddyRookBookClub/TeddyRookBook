@@ -7,7 +7,8 @@
              pl: { d: day, c: start, k: known count } | null (the last placement), d0: first day }
            rec = { s: 0 unseen | 1 learning | 2 passed, p: right answers this lesson, st: streak (unhinted right answers in a row),
                    n: answers, c: right answers, iv: review step 0…6, due: day, last: day, lap: lapses,
-                   pz: day the topic was paused (only while paused; the one field added to the spec's record) }
+                   pz: day the topic was paused (only while paused; the one field added to the spec's record),
+                   pf: 1 when the topic was passed by the placement check (not by answering its lesson; only on passed records) }
            A day is a local calendar day counted from 2020-01-01 (day 0).
    GRAPH   E.setGraph(g)            g = { partial?: true, courses: [{ key, slug, title, short, band, grade, icon, color, after, url, ladder? }],
                                           topics: [{ id, course, unit, title, short, url, prereqs, xp, soon? }] }   topics in teaching order;
@@ -46,7 +47,19 @@
              .skip(id) → that question can't be shown (no generator): pick another
              .progress() → { asked, max, frac, stage }          .result() → { course, window, known, unknown, guessed, asked }
              .apply() → commits: known window topics passed at step 1 (due in about 3 days, at most 8 a day); current course =
-                        the first course with an unknown topic (earlier courses need no records, see MET above)
+                        the first course with an unknown topic (earlier courses need no records, see MET above).
+                        Each topic it passes is tagged pf: 1 (see RESET).
+   RESET   E.resetTopics(ids) → n   each listed topic back to unseen: its record is deleted (so no review is due and next() offers
+                                    it as a lesson again), it leaves rp and the checkpoint count cp; XP history is kept. Emits.
+           E.resetCourse(key) → n   resetTopics(every topic of that course with a record); the ladder's current course stays as it is
+                                    (a learner who starts the current course over still wants to study it)
+           E.placedTopics(ladder?) → ids passed by placement only, on that ladder (default: the active one; a topic placed from
+                                    another ladder's check, rec.o, belongs to that ladder): passed records with pf, plus, for data
+                                    saved before pf existed, passed records with n === 0 (apply() writes passes without answers)
+           E.undoPlacement(ladder?) → n   resetTopics(placedTopics(ladder)) and clears that ladder's placement record (pl / pls[L]),
+                                    so the hub offers "Find your rung" again. If the ladder's current course is then left with no
+                                    record at all, it is cleared too (it was the placement's choice), so the learner picks a
+                                    course; otherwise it stays. Records without pf load unchanged; save codes keep pf.
    SAVE    E.exportCode() → Promise('ML1.' + base64url(deflate-raw(JSON)); plain JSON when CompressionStream is missing)
            E.readCode(code) → Promise({ ok, state, info: { passed, xp, days }, msg })    E.replace(state)    E.reset()
            E.exportJSON() → string
@@ -116,6 +129,7 @@
       if (x.c > x.n) x.n = x.c;
       if (r.pz && x.s === 1) x.pz = int(r.pz, 0, 1e6, 0);
       if (typeof r.o === 'string' && LK_RE.test(r.o)) x.o = r.o; // learned from another ladder's page
+      if (r.pf && x.s === 2) x.pf = 1; // passed by the placement check
       if (x.s === 2 && !x.due) x.due = today() + 1;
       return x;
     }
@@ -617,7 +631,7 @@
           // topics in earlier courses need no records: next() and status() treat untouched earlier-course topics as known
           res.known.forEach(function (id) {
             if (passed(id)) return;
-            var r = rec(id, true); r.s = 2; r.iv = 1; r.due = d + STEPS[1] + Math.floor(n / 8); r.p = 0; r.st = 0; delete r.pz; n++;
+            var r = rec(id, true); r.s = 2; r.iv = 1; r.due = d + STEPS[1] + Math.floor(n / 8); r.p = 0; r.st = 0; r.pf = 1; delete r.pz; n++;
             if (!same(courseOf(id))) r.o = PL; unfocus(id);
           });
           setCur(PL, res.course);
@@ -627,6 +641,38 @@
         }
       };
       return S2;
+    }
+
+    /* ---------- starting over: topics, a course, a placement ---------- */
+    function drop(ids) { // no save
+      var gone = {}, n = 0;
+      (ids || []).forEach(function (id) {
+        if (typeof id !== 'string') return;
+        gone[id] = 1; delete sit[id]; delete rv[id];
+        if (own(S.t, id)) { delete S.t[id]; n++; }
+      });
+      var tail = S.cp ? S.rp.slice(-S.cp) : [], k = tail.filter(function (x) { return gone[x]; }).length;
+      S.cp = Math.max(0, S.cp - k);
+      S.rp = S.rp.filter(function (x) { return !gone[x]; });
+      return n;
+    }
+    function resetTopics(ids) { var n = drop(ids); save(); return n; }
+    function courseRecs(key) { return Object.keys(S.t).filter(function (id) { return courseOf(id) === key; }); }
+    function resetCourse(key) { return typeof key === 'string' && key ? resetTopics(courseRecs(key)) : 0; }
+    function placedTopics(L) {
+      L = L || act; var out = [];
+      for (var id in S.t) if (own(S.t, id)) {
+        var r = S.t[id]; if (r.s !== 2 || !(r.pf || r.n === 0)) continue;
+        if ((r.o || topicLadder(id)) === L) out.push(id);
+      }
+      return out.sort(function (a, b) { return (G.T[a] ? G.T[a].i : 1e9) - (G.T[b] ? G.T[b].i : 1e9) || (a < b ? -1 : a > b ? 1 : 0); });
+    }
+    function undoPlacement(L) {
+      L = L || act;
+      var n = drop(placedTopics(L));
+      if (L === 'math') S.pl = null; else if (S.pls) { delete S.pls[L]; if (!Object.keys(S.pls).length) delete S.pls; }
+      var cu = curOf(L); if (cu && !courseRecs(cu).length) setCur(L, null);
+      save(); return n;
     }
 
     /* ---------- save codes ---------- */
@@ -688,6 +734,7 @@
       course: function (L) { return curOf(L); },
       setCourse: function (k) { k = typeof k === 'string' && CK_RE.test(k) ? k : null; var L = k && G.C[k] ? ladderOf(k) : act; setCur(L, k); save(); return curOf(L); },
       placement: placement,
+      resetTopics: resetTopics, resetCourse: resetCourse, placedTopics: placedTopics, undoPlacement: undoPlacement,
       exportCode: exportCode, exportJSON: exportJSON, readCode: readCode, replace: replace, reset: reset,
       on: function (f) { fns.push(f); return function () { fns = fns.filter(function (g) { return g !== f; }); }; }
     };

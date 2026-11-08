@@ -1,6 +1,8 @@
 /* Progress (/<ladder>/progress/): totals and streak, XP by day for the last 30 days (canvas bars with a hover tooltip and a
    table for screen readers), course progress on EVERY ladder (this page's ladder first), reviews coming due this week on
-   every ladder, the save code, and reset. All ladders share one progress (one localStorage key). */
+   every ladder, the save code, and reset. All ladders share one progress (one localStorage key).
+   Starting over in parts: "Start over" on each started course (ML.engine.resetCourse) and "Undo my placement" for this page's
+   ladder (ML.engine.undoPlacement), each with a confirm step, beside the whole-ladder erase. */
 (function (W, D) {
   'use strict';
   var ML = W.MathLadder, E = ML.engine, ui = ML.ui, base = ML.cfg.base, el = ui.el, esc = ui.esc;
@@ -78,7 +80,8 @@
     var heads = groups.length > 1 || ME !== 'math';
     coursesEl.innerHTML = groups.length ? groups.map(function (g) {
       return (heads ? '<p class="mlp-due-day mlp-lhead"><a href="' + g.l.url + '"><span aria-hidden="true">' + g.l.icon + '</span> ' + esc(g.l.title) + '</a></p>' : '') + g.list.map(function (r) {
-        return '<a class="mlp-crow" href="' + r.c.url + '" style="--c:' + r.c.color + '"><span aria-hidden="true">' + r.c.icon + '</span><span>' + esc(r.c.title) + (r.c.key === g.cur ? ' <span class="mlp-tag">Current</span>' : '') + '</span><small>' + r.p.passed + ' / ' + r.p.total + '</small><span class="mlp-rung-bar" role="progressbar" aria-label="' + esc(r.c.title) + ' topics passed" aria-valuemin="0" aria-valuemax="' + r.p.total + '" aria-valuenow="' + r.p.passed + '"><b style="width:' + r.p.pct + '%"></b></span></a>';
+        var started = r.p.passed + r.p.learning;
+        return '<div class="mlp-crow-w"><a class="mlp-crow" href="' + r.c.url + '" style="--c:' + r.c.color + '"><span aria-hidden="true">' + r.c.icon + '</span><span>' + esc(r.c.title) + (r.c.key === g.cur ? ' <span class="mlp-tag">Current</span>' : '') + '</span><small>' + r.p.passed + ' / ' + r.p.total + '</small><span class="mlp-rung-bar" role="progressbar" aria-label="' + esc(r.c.title) + ' topics passed" aria-valuemin="0" aria-valuemax="' + r.p.total + '" aria-valuenow="' + r.p.passed + '"><b style="width:' + r.p.pct + '%"></b></span></a>' + (started ? '<button type="button" class="mlp-linkbtn" data-over="' + esc(r.c.key) + '" aria-label="Start ' + esc(r.c.title) + ' over">Start over</button>' : '') + '</div>';
       }).join('');
     }).join('') : '<p class="mlp-small">No courses started yet. <a href="' + base + 'placement/">Find your rung</a> or pick a course on the <a href="' + base + '">ladder</a>.</p>';
   }
@@ -99,7 +102,29 @@
     E.dueAll().forEach(function (id) { var l = lOf(id); if (seen[l.key]) return; seen[l.key] = 1; out += '<a class="mlp-btn small' + (out ? '' : ' pri') + '" href="' + l.url + 'practice/">Reviews on the ' + esc(l.title) + '</a>'; });
     return out;
   }
-  function paint() { stats(); goal(); chart(); courses(); reviews(); }
+  var cmsg = el('p', 'mlp-small mlp-cmsg'); cmsg.setAttribute('aria-live', 'polite'); coursesEl.parentNode.appendChild(cmsg);
+  coursesEl.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('button[data-over]'); if (!b) return;
+    var k = b.dataset.over, c = ui.course(k), t = esc(c ? c.title : k), p = E.courseProgress(k), n = p.passed + p.learning; if (!n) return;
+    cmsg.textContent = '';
+    ui.confirm(b, '<p><b>Start ' + t + ' over?</b></p><p>This marks the ' + ui.plural(n, 'topic') + ' you have passed or started in ' + t + ' as not learned yet. Their reviews stop. Other courses don’t change. Your XP and streak stay.</p>', 'Yes, start over', function () {
+      E.resetCourse(k); cmsg.textContent = (c ? c.title : k) + ' starts fresh. Your XP and streak stay.';
+    }, { after: b.parentNode, onNo: function () { cmsg.textContent = 'Nothing changed.'; } });
+  });
+  // undo this ladder's placement (only while placement-passed topics exist)
+  var undoP = el('div', 'mlp-pundo'), undoB = el('button', 'mlp-btn small', 'Undo my placement…'), undoM = el('p', 'mlp-small'); undoB.type = 'button'; undoM.setAttribute('aria-live', 'polite');
+  undoP.innerHTML = '<p>Placed further along than you wanted? Undo the placement check and keep everything you passed by answering questions.</p>';
+  undoP.appendChild(undoB); undoP.appendChild(undoM);
+  var resetBtn = D.getElementById('mlp-reset'); resetBtn.parentNode.insertBefore(undoP, resetBtn.previousElementSibling);
+  undoB.addEventListener('click', function () {
+    var n = E.placedTopics(ME).length; if (!n) return;
+    undoM.textContent = '';
+    ui.confirm(undoB, '<p><b>Undo your placement' + (ME !== 'math' || otherLadders() ? ' on the ' + esc(ui.ladder().title) : '') + '?</b></p><p>This marks the ' + ui.plural(n, 'topic') + ' the placement check counted as known as not learned yet. Topics you passed by answering questions stay. Your XP and streak stay.</p>', 'Yes, undo it', function () {
+      var k = E.undoPlacement(ME); undoM.textContent = 'Placement undone: ' + ui.plural(k, 'topic') + ' back to not learned. Your XP and streak stay.';
+    }, { onNo: function () { undoM.textContent = 'Nothing changed.'; } });
+  });
+  function undoState() { var n = graphOK ? E.placedTopics(ME).length : 0, armed = !!undoB.dataset.armed; undoB.hidden = !n || armed; undoP.hidden = !n && !armed && !undoM.textContent; }
+  function paint() { stats(); goal(); chart(); courses(); reviews(); undoState(); }
 
   ui.savePanel(D.getElementById('mlp-save'), { full: true, onLoad: paint });
   var reset = D.getElementById('mlp-reset'), msg = D.getElementById('mlp-reset-msg');

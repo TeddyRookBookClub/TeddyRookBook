@@ -1,6 +1,7 @@
 /* A ladder's placement (/<ladder>/placement/): pick a starting point (a course, or "not sure"), the adaptive check
    (ML.engine.placement with the problem card in 'place' mode; per ladder, and it may ask about a skill from another ladder
-   that blocks this one's courses), then the result and a start button. Topics still being written are never asked. */
+   that blocks this one's courses), then the result and a start button. Topics still being written are never asked.
+   "Undo my placement" (ML.engine.undoPlacement) on the result and under the last-placement note, while placed topics exist. */
 (function (W, D) {
   'use strict';
   var ML = W.MathLadder, E = ML.engine, ui = ML.ui, cfg = ML.cfg, base = cfg.base, el = ui.el, esc = ui.esc;
@@ -18,6 +19,25 @@
   function same(k) { var c = ui.course(k); return !!c && (c.ladder || 'math') === LAD.key; }
   function show(s) { [pick, runS, resS].forEach(function (x) { x.hidden = x !== s; }); try { W.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { } }
 
+  // undo the placement: a quiet link appended to `host` (inline when host is a paragraph), with a confirm step; afterwards
+  // a short "undone" card
+  function undoLink(host) {
+    var n0 = E.placedTopics(LAD.key).length; if (!n0) return;
+    var inl = host.tagName === 'P', p = inl ? host : el('p', 'mlp-pundo'), b = el('button', 'mlp-linkbtn', 'Undo my placement'); b.type = 'button';
+    if (inl) p.appendChild(D.createTextNode(' ')); p.appendChild(b); if (!inl) host.appendChild(p);
+    b.addEventListener('click', function () {
+      var n = E.placedTopics(LAD.key).length; if (!n) return;
+      ui.confirm(b, '<p><b>Undo your placement?</b></p><p>This marks the ' + ui.plural(n, 'topic') + ' the placement check counted as known as not learned yet. Topics you passed by answering questions stay. Your XP and streak stay.</p>', 'Yes, undo it', function () {
+        var k = E.undoPlacement(LAD.key), cur = ui.course(E.course());
+        show(resS);
+        resS.innerHTML = '<div class="mlp-result"><p class="mlp-eyebrow">Find your rung</p><h2 tabindex="-1">Placement undone</h2><p><b>' + ui.plural(k, 'topic') + '</b> ' + (k === 1 ? 'is' : 'are') + ' back to not learned, and ' + (k === 1 ? 'its reviews' : 'their reviews') + ' stopped. Your XP and streak stay.' + (cur ? ' You are still working in <b>' + esc(cur.title) + '</b>.' : ' Pick the course you want to start from on the ladder, and its lessons come up in order.') + '</p>' +
+          '<div class="mlp-acts"><a class="mlp-btn pri" href="' + base + '">See the ladder</a><button type="button" class="mlp-btn" id="mlp-pl-again">Take the check again</button></div></div>';
+        D.getElementById('mlp-pl-again').addEventListener('click', function () { choices(); show(pick); });
+        var h = resS.querySelector('h2'); if (h) h.focus({ preventScroll: true });
+      }, { after: p });
+    });
+  }
+
   function choices() {
     grid.innerHTML = '';
     var unsure = el('button', 'mlp-pl-opt mlp-pl-unsure', '<span aria-hidden="true">🧭</span><span>Not sure<small>Start in the middle and let the questions find your level</small></span>');
@@ -34,7 +54,7 @@
       });
       sec.appendChild(g); grid.appendChild(sec);
     });
-    if (E.placed() && ui.course(E.course())) grid.insertAdjacentHTML('afterbegin', '<p class="mlp-pnote">Your last check placed you in <b>' + esc(ui.course(E.course()).title) + '</b>. Taking it again only adds what you know; it never erases progress.</p>');
+    if (E.placed() && ui.course(E.course())) { grid.insertAdjacentHTML('afterbegin', '<p class="mlp-pnote">Your last check placed you in <b>' + esc(ui.course(E.course()).title) + '</b>. Taking it again only adds what you know; it never erases progress.</p>'); undoLink(grid.firstChild); }
     if (!ui.courses().some(function (c) { return readyN(c) > 0; })) {
       grid.innerHTML = '<div class="mlp-result"><p class="mlp-eyebrow">Find your rung</p><h2>The check for the ' + esc(LAD.title) + ' is coming soon</h2><p>It asks questions from the ladder’s own practice problems, and those are being written now. Meanwhile, the skill maps show every topic and what it builds on.</p><div class="mlp-acts"><a class="mlp-btn pri" href="' + base + 'map/">Explore the skill maps</a><a class="mlp-btn" href="' + base + '">See the ladder</a></div></div>';
       var h = D.getElementById('mlp-pl-h1'); if (h) h.hidden = true; var sub = pick.querySelector('.mlp-sub'); if (sub) sub.hidden = true;
@@ -84,6 +104,7 @@
       (units ? '<ul class="mlp-result-units">' + units + '</ul>' : '') +
       '<div class="mlp-acts"><a class="mlp-btn pri big" href="' + base + 'practice/">Start learning →</a>' + (c.url ? '<a class="mlp-btn" href="' + c.url + '">See ' + esc(c.title) + '</a>' : '') + '<button type="button" class="mlp-btn ghost" id="mlp-pl-redo">Redo the check</button></div></div>';
     D.getElementById('mlp-pl-redo').addEventListener('click', function () { choices(); show(pick); });
+    undoLink(resS.querySelector('.mlp-result'));
     var go = resS.querySelector('.mlp-btn.pri'); if (go) go.focus({ preventScroll: true });
   }
 

@@ -1,5 +1,6 @@
 /* A ladder's course page: topic chips colored by state, progress, Start or Continue, and the next topic up (a topic that
-   is still being written is never offered as the next one). */
+   is still being written is never offered as the next one), and "Start this course over" (ML.engine.resetCourse) once the
+   learner has passed or started a topic in it. */
 (function (W, D) {
   'use strict';
   var ML = W.MathLadder, E = ML.engine, ui = ML.ui, base = ML.cfg.base;
@@ -10,6 +11,19 @@
   E.setFilter(function (id) { var T0 = E.graph().T[id]; return !soon[id] && !(T0 && T0.soon); });
   var ids = d.topics.filter(function (t) { return t.course === key; }).map(function (t) { return t.id; });
   var T = {}; d.topics.forEach(function (t) { T[t.id] = t; });
+
+  // start this course over: a quiet link under the "next up" line, with a confirm step
+  var cr = ui.el('div', 'mlp-creset'), crb = ui.el('button', 'mlp-linkbtn', 'Start this course over'), crm = ui.el('p', 'mlp-small mlp-creset-msg');
+  crb.type = 'button'; crm.setAttribute('aria-live', 'polite'); cr.appendChild(crb); cr.appendChild(crm);
+  var cnx = D.getElementById('mlp-cnext'); if (cnx) cnx.parentNode.insertBefore(cr, cnx.nextSibling); else root.appendChild(cr);
+  function started() { return ids.filter(function (id) { return E.rec(id).s > 0; }).length; }
+  crb.addEventListener('click', function () {
+    var n = started(), t = ui.esc(d.title); if (!n) return;
+    crm.textContent = '';
+    ui.confirm(crb, '<p><b>Start ' + t + ' over?</b></p><p>This marks the ' + ui.plural(n, 'topic') + ' you have passed or started in ' + t + ' as not learned yet. Their reviews stop, and the lessons come up again in order. Your XP and streak stay.</p>', 'Yes, start over', function () {
+      E.resetCourse(key); crm.textContent = d.title + ' starts fresh. Your XP and streak stay.';
+    }, { after: crb, onNo: function () { crm.textContent = 'Nothing changed.'; } });
+  });
 
   function paint() {
     ui.paintChips(root, key);
@@ -27,6 +41,7 @@
     // the next topic: the engine's choice for this course (a started-but-unpassed earlier skill comes first)
     var nx0 = E.courseNext(key), nextId = nx0 && nx0.id, nl = nextId ? ui.ladderOf(String(nextId).split('.')[0]) : null;
     var why = !nx0 ? '' : nx0.reason === 'prereq' ? (nl && nl.key !== ui.ladder().key ? 'First, from the ' + nl.title + ':' : 'First, from an earlier course:') : nx0.reason === 'continue' || nx0.reason === 'retry' ? 'Keep going with' : 'Next up:';
+    if (!crb.dataset.armed) crb.hidden = !(passed || learning);
     var start = D.getElementById('mlp-cstart'), nx = D.getElementById('mlp-cnext');
     if (start) start.textContent = passed || learning ? (E.course() === key ? 'Continue' : 'Continue this course') : 'Start this course';
     if (nx) {

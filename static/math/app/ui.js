@@ -13,7 +13,11 @@
    ui.dayName(day)              "Thu, Oct 15"     ui.inDays(n)  "today", "tomorrow", "in 3 days"
    ui.taskLine(task)            a short sentence for ML.engine.next()
    ui.savePanel(el, o)          save code: show, copy, download a .txt; paste one in (asks before replacing)
-   ui.graph()                   Promise: the full graph (ML.engine.loadGraph), cached                                       */
+   ui.graph()                   Promise: the full graph (ML.engine.loadGraph), cached
+   ui.confirm(trigger, html, yes, onYes, o)   the "are you sure" box (.mlp-confirm) for starting over: hides `trigger`, shows html
+                                with a warn button `yes` and "No, keep it"; o.after: insert the box after this element (default
+                                trigger), o.onNo. Either answer removes the box and shows the trigger again.
+   ui.plural(n, word)           "1 topic", "3 topics"                                                                       */
 (function (W, D) {
   'use strict';
   var ML = W.MathLadder = W.MathLadder || {}, E = ML.engine;
@@ -53,6 +57,18 @@
       case 'done': return 'All caught up' + (C[t.course] ? ' in ' + esc(C[t.course].title) : '') + '.';
       default: return 'Find your rung, or pick a course to start.';
     }
+  }
+  function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+  function confirmBox(trigger, html, yes, onYes, o) {
+    o = o || {};
+    var after = o.after || trigger, box = el('div', 'mlp-confirm', html), row = el('div', 'mlp-save-row');
+    function close() { box.remove(); trigger.hidden = false; delete trigger.dataset.armed; }
+    if (trigger.dataset.armed) return null;
+    trigger.dataset.armed = '1'; trigger.hidden = true;
+    row.appendChild(btn(yes, 'warn small', function () { close(); onYes(); }));
+    row.appendChild(btn('No, keep it', 'ghost small', function () { close(); try { trigger.focus(); } catch (e) { } if (o.onNo) o.onNo(); }));
+    box.appendChild(row); after.parentNode.insertBefore(box, after.nextSibling); row.querySelector('button').focus();
+    return box;
   }
   var gp = null;
   function graph() { if (!gp) gp = E.loadGraph(ML.cfg.graph).catch(function (e) { gp = null; throw e; }); return gp; }
@@ -110,5 +126,5 @@
   }
 
   ML.ui = { course: function (k) { return C[k]; }, courses: function () { return MINE; }, allCourses: function () { return ML.cfg.courses || []; },
-    ladder: function () { return LADS[LAD] || LLIST[0]; }, ladders: function () { return LLIST; }, ladderOf: ladderOf, data: data, el: el, esc: esc, btn: btn, LABEL: LABEL, paintChips: paintChips, ring: ring, dayName: dayName, inDays: inDays, taskLine: taskLine, savePanel: savePanel, graph: graph, topicTitle: topicTitle };
+    ladder: function () { return LADS[LAD] || LLIST[0]; }, ladders: function () { return LLIST; }, ladderOf: ladderOf, data: data, el: el, esc: esc, btn: btn, LABEL: LABEL, paintChips: paintChips, ring: ring, dayName: dayName, inDays: inDays, taskLine: taskLine, savePanel: savePanel, graph: graph, topicTitle: topicTitle, confirm: confirmBox, plural: plural };
 })(window, document);
