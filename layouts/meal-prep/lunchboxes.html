@@ -1,0 +1,133 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/occasions.css" | relURL }}?v={{ (os.Stat "static/meal-prep/occasions.css").ModTime.Unix }}">
+{{- /* Back-to-school lunchboxes: data/meals/recipes/lunchboxes.json (built by scripts/meals/src/build_lunchboxes.py) holds the new
+   recipes and the page plan; courses mix them with lunchbox recipes from elsewhere in Meal Prep, by id.
+   static/meal-prep/occasions.js runs the menu; lunchboxes.js runs the 4-week rotation, its shopping list and planner link. */ -}}
+{{ $all := partialCached "meal-prep/recipes-all.html" "r" }}
+{{ $R := dict }}{{ range $all }}{{ $R = merge $R (dict .id .) }}{{ end }}
+{{ $S := dict }}{{ range site.Data.meals.scratch.recipes }}{{ $S = merge $S (dict .id .) }}{{ end }}
+{{ $T := site.Data.meals.recipes.lunchboxes.collection }}
+{{ $src := partial "meal-prep/data.html" . }}
+{{ $mini := dict }}{{ range $T.courses }}{{ $cid := .id }}{{ range .items }}{{ $p := split . ":" }}{{ if eq (index $p 0) "r" }}{{ with index $R (index $p 1) }}{{ $pl := index $T.pool .id | default (slice "side" "cold") }}{{ $pd := .prep_day | default dict }}{{ $mini = merge $mini (dict .id (dict "n" .name "e" .emoji "s" .servings "c" $cid "al" .allergens "ro" (index $pl 0) "pk" (index $pl 1) "pa" ($pd.ahead | default "") "kd" ($pd.keeps_days | default 3) "veg" (in .diet "vegetarian"))) }}{{ end }}{{ end }}{{ end }}{{ end }}
+<div class="hs mp" id="oc-page" data-src="{{ $src }}" data-plan="{{ "meal-prep/plan/" | relURL }}" data-rbase="{{ "meal-prep/recipes/" | relURL }}" data-guests="2">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Back-to-school lunchboxes")) }}
+  <header class="hs-hero mp-hero oc-hero">
+    <p class="hs-eyebrow">Meal Prep · A collection</p>
+    <h1>Back-to-school lunchboxes</h1>
+    <p>Packed lunches kids will eat: sandwiches and wraps, bento boxes, pasta salads, hot lunches in a thermos, and muffins and bites to bake on the weekend. Pick the lunches your kids like, and the rotation planner lays out four weeks of school days without repeats, with a shopping list for each week and a Sunday prep plan. Nut-free choices are marked for nut-free schools.</p>
+    <nav class="oc-jump hs-noprint" aria-label="On this page">
+      <a href="#your-menu">🧾 Pick lunches</a><a href="#rotation">🗓 4-week rotation</a><a href="#safety">🧊 Keep it safe</a><a href="#nutfree">🥜 Nut-free schools</a><a href="#sandwiches">🥪 Sandwiches</a><a href="#bento">🍱 Bento</a><a href="#hot">🫙 Thermos</a><a href="#snacks">🧁 Snacks</a><a href="#prep">📋 Prep ahead</a>
+    </nav>
+  </header>
+
+  {{ partial "meal-prep/occ-menu.html" (dict "T" $T "R" $R "title" "Lunches your kids like" "people" "<b>Kids</b> packing lunch" "guests" 2 "nutbadge" true "skip" (slice)
+     "intro" "Check the lunches and extras your family likes. The rotation below uses only what’s checked; the more you check, the less it repeats."
+     "note" "The shopping list and the planner button follow the week you pick in the rotation. The planner fills lunch (and the snack slot, for the extra) on five days in a row, starting from the day you tap."
+     "planLabel" "Put this week in my meal planner" "printLabel" "Print the rotation and shopping list") }}
+
+  <section class="hs-sec mp-box oc-tool" id="rotation" aria-labelledby="oc-rh">
+    <h2 id="oc-rh">🗓 Four-week lunch rotation</h2>
+    <p>Twenty school days: a main, an extra and something fresh each day. No main repeats within a week when you’ve checked at least five. Tap ↻ to swap one day, or shuffle the whole month.</p>
+    <div class="oc-opts">
+      <label class="mp-cb"><input type="checkbox" id="lr-nut"> Nut-free school (leave out peanuts and tree nuts)</label>
+      <label class="mp-cb"><input type="checkbox" id="lr-hot" checked> Include hot thermos lunches</label>
+      <label class="mp-cb"><input type="checkbox" id="lr-veg"> Vegetarian only</label>
+    </div>
+    <div class="oc-cta hs-noprint" style="margin-top:0"><button type="button" class="hs-btn" id="lr-shuffle">🔀 Shuffle the month</button></div>
+    <div class="oc-tabs hs-noprint" role="group" aria-label="Pick a week for the shopping list and planner" id="lr-tabs"></div>
+    <div id="lr-out" aria-live="polite"><p class="mp-pending">Loading the rotation…</p></div>
+    <p class="mp-warn" id="lr-warn" hidden></p>
+    <h3>Prep plan for the picked week</h3>
+    <ul id="lr-prep"><li>Pick a week.</li></ul>
+    <p class="hs-small">🧊 needs two cold sources · 🫙 hot, in a preheated insulated jar · 🎒 fine without a cold source. Everything else in the box still gets ice packs if it’s perishable.</p>
+  </section>
+
+  <section class="hs-sec mp-box" id="safety" aria-labelledby="oc-sh">
+    <h2 id="oc-sh">🧊 Keeping packed lunches safe</h2>
+    <div class="oc-cols">
+      <div>
+        <h3>Cold lunches (USDA)</h3>
+        <ul>
+          <li>Use an <b>insulated, soft-sided lunch bag</b> or box.</li>
+          <li>Pack <b>at least two cold sources</b> with anything perishable: two frozen gel packs, or one gel pack and a frozen juice box or bottle of water. Put one <b>on top</b> of the food and one <b>underneath</b>.</li>
+          <li>Meat, poultry, eggs, dairy, cut fruit and pasta or grain salads are perishable. Cook and chill them ahead, in the refrigerator, in shallow containers.</li>
+          <li>Whole fruits and vegetables, hard cheese, unopened canned meat or fish, bread, crackers, peanut or seed butter, jelly, mustard and pickles don’t need a cold source.</li>
+          <li>Pack just what your child will eat at lunch. Make it the night before, but put the bag together right before leaving.</li>
+          <li>You can freeze plain sandwiches to help keep them cold; add mayonnaise, lettuce and tomato separately.</li>
+          <li>If there’s a refrigerator at school, store the bag there with the lid open.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Hot lunches (USDA)</h3>
+        <ol>
+          <li>Fill the insulated food jar with <b>boiling water</b>, close it and let it stand a few minutes.</li>
+          <li>Heat the food until it’s steaming, <b>165°F</b> on a food thermometer.</li>
+          <li>Empty the jar, fill it with the hot food and <b>keep it closed until lunch</b>, so the food stays at 140°F or above.</li>
+        </ol>
+        <h3>After lunch</h3>
+        <p>Throw away leftover food, used bags and wrappers. Don’t reuse packaging (USDA). Wash reusable containers, gel packs and the bag every day.</p>
+        <h3>For little ones</h3>
+        <p>For toddlers and preschoolers, cut grapes, cherry tomatoes and hot dogs into small pieces; whole, they are choking hazards for young children (CDC).</p>
+        <h3>Hands and counters</h3>
+        <p>Wash your hands for 20 seconds before packing, and wash cutting boards and counters between foods (USDA).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hs-sec hs-note" id="nutfree" aria-labelledby="oc-nh">
+    <h2 id="oc-nh">🥜 Nut-free schools and allergies</h2>
+    <p>Many schools and classrooms are nut-free because of children with peanut or tree-nut allergies. Follow your school’s policy; it may also cover other foods.</p>
+    <ul>
+      <li>Turn on <b>Nut-free school</b> in the rotation to leave out every dish with peanuts or tree nuts. Dishes with nuts are marked “(has nuts)” in the list above.</li>
+      <li><b>Sunflower seed butter</b> stands in for peanut butter in the roll-ups, energy bites and PB&amp;J. Some schools ask for no look-alike spreads; check first.</li>
+      <li><b>Read labels every time.</b> Ingredients change. Packaged foods must list the nine major allergens: milk, eggs, fish, crustacean shellfish, tree nuts, peanuts, wheat, soybeans and sesame (FDA). Watch for chocolate chips, granola, crackers and cereal bars, which sometimes contain nuts.</li>
+      <li>Each recipe page lists its allergens and swaps for milk, eggs, wheat and more.</li>
+    </ul>
+  </section>
+
+  {{ partial "meal-prep/occ-courses.html" (dict "T" $T "R" $R "S" $S "slug" "lunchboxes" "scratchIntro" "Bake the bread, roll the tortillas and pitas, make crackers, applesauce, granola and yogurt. Each page scales to what your plan needs.") }}
+
+  <section class="hs-sec" id="prep" aria-labelledby="oc-ph">
+    <h2 id="oc-ph">📋 Prep ahead: an hour on Sunday</h2>
+    <div class="oc-cols">
+      <div>
+        <h3>On the weekend</h3>
+        <ul>
+          <li><b>Bake one thing</b>: muffins, pizza pinwheels or corn dog muffins. Freeze most of them; a frozen muffin thaws in the lunch box by lunchtime.</li>
+          <li><b>Cook one big thing</b>: a pasta salad, a grain bowl, or meatballs. Chill it in shallow containers; it keeps 3 to 4 days.</li>
+          <li><b>Hard-cook six eggs.</b> They keep a week in the refrigerator.</li>
+          <li><b>Wash and cut</b> carrots, celery, cucumbers and peppers. Store them in containers with a damp paper towel.</li>
+          <li><b>Mix a batch of energy bites</b> and freeze a pan of yogurt bark.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Each school night (10 minutes)</h3>
+        <ul>
+          <li>Freeze the gel packs (or a juice box or water bottle) overnight.</li>
+          <li>Make the sandwich or wrap and refrigerate it.</li>
+          <li>Put the extras and fresh food in containers.</li>
+          <li>In the morning: bag it up with the cold sources, or heat the thermos lunch.</li>
+        </ul>
+        <h3>Get kids packing</h3>
+        <p>Kids pack lunches they will eat. A simple rule helps: one main, one fruit, one vegetable, one extra. Younger kids can choose from two options you set out; older kids can pack it all.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hs-sec hs-note" id="history" aria-labelledby="oc-hh">
+    <h2 id="oc-hh">📜 Lunch boxes, then and now</h2>
+    <p>In the 1800s, miners and factory workers carried their midday meal in tin pails with lids and handles, or in reused lard buckets. In 1950 a metal lunch box decorated with a cowboy hero of radio, film and television became a hit, and for the next two decades picture lunch boxes were a back-to-school tradition in the United States. Plastic boxes and insulated soft bags came later.</p>
+    <p>In Japan, the <i>bento</i>, a boxed meal of rice and small side dishes, goes back centuries; travelers in the Kamakura period (1185–1333) carried dried rice called <i>hoshi-ii</i>. Today’s divided lunch boxes borrow the idea: small portions of several foods, each in its own section.</p>
+    <p class="mp-glinks hs-noprint"><a class="mp-glink" href="https://grokipedia.com/page/Lunchbox" rel="noopener">Lunchbox (Grokipedia)</a><a class="mp-glink" href="https://grokipedia.com/page/Bento" rel="noopener">Bento (Grokipedia)</a></p>
+  </section>
+
+  <div class="oc-printout" id="oc-printout" aria-hidden="true"></div>
+</div>
+<script type="application/json" id="oc-data">{{ dict "slug" "lunchboxes" "title" "Back-to-school lunchboxes" "unit" (slice "kid" "kids") "def" $T.default_menu "half" (slice) "fresh" $T.fresh "r" $mini | jsonify | safeJS }}</script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/occasions.js" | relURL }}?v={{ (os.Stat "static/meal-prep/occasions.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/lunchboxes.js" | relURL }}?v={{ (os.Stat "static/meal-prep/lunchboxes.js").ModTime.Unix }}" defer></script>
+{{ end }}

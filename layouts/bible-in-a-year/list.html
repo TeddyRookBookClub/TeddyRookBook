@@ -1,0 +1,75 @@
+{{ define "main" }}
+{{- /* /bible-in-a-year/: our own 365-day Bible reading plan (data/bibleyear.json, made by scripts/bibleyear/build.py).
+   The year's table is drawn in the browser by static/bibleyear/by.js from the JSON below, in the version picked
+   (73 books or 66), with dates from the start date picked. Ticks share the homeschool store (trb-homeschool-v1) under the
+   course keys "bible-73" and "bible-66", the same keys the lesson planner's "Bible in a Year" subject uses; the version
+   and start date are kept in 'trb-bibleyear-v1'. A link like #day-12-66 opens that day in that version. */ -}}
+{{- $d := site.Data.bibleyear -}}
+{{- $s73 := index $d.stats "73" -}}{{- $s66 := index $d.stats "66" -}}
+<link rel="stylesheet" href="{{ "bibleyear/by.css" | relURL }}?v={{ (os.Stat "static/bibleyear/by.css").ModTime.Unix }}">
+<div class="by" id="by" data-planner="{{ "homeschool/planner/" | relURL }}">
+  <nav class="by-crumbs by-noprint" aria-label="Breadcrumb"><a href="{{ "books/" | relURL }}">Library</a> › Bible in a Year</nav>
+  <header class="by-hero">
+    <p class="by-eye by-noprint">A reading plan</p>
+    <h1>Bible in a Year</h1>
+    <p class="by-lead by-noprint">Read the whole Bible in 365 days. Each day has a reading that follows the story of the Bible in the order things happened, and a short reading from Psalms or Proverbs. Most days take fifteen to twenty minutes. Pick your Bible (73 books or 66), pick a start date, and tick off each day as you go.</p>
+    <p class="by-credit">Inspired by narrative Bible-in-a-year plans; this plan is our own arrangement. To follow the podcast’s exact schedule, use <a href="https://ascensionpress.com/bibleinayear" target="_blank" rel="noopener">Ascension’s official reading plan</a>.</p>
+  </header>
+
+  <div class="by-tools by-noprint" id="by-tools" hidden>
+    <div class="by-tool">
+      <span class="by-tl" id="by-vl">Your Bible</span>
+      <span class="by-seg" role="group" aria-labelledby="by-vl"><button type="button" data-v="73" aria-pressed="true">73 books <small>Catholic</small></button><button type="button" data-v="66" aria-pressed="false">66 books <small>most Protestant</small></button></span>
+    </div>
+    <div class="by-tool">
+      <label class="by-tl" for="by-start">Day 1 is</label>
+      <span class="by-row"><input type="date" id="by-start"> <button type="button" class="by-btn" id="by-jan1">January 1</button> <button type="button" class="by-btn" id="by-today0">Today</button></span>
+    </div>
+    <div class="by-tool by-prog">
+      <span class="by-tl">Your progress</span>
+      <span class="by-bar" aria-hidden="true"><i id="by-barfill"></i></span>
+      <span id="by-progtxt" aria-live="polite"></span>
+    </div>
+    <div class="by-tool by-acts">
+      <button type="button" class="by-btn pri" id="by-gotoday">Go to today</button>
+      <button type="button" class="by-btn" id="by-next">Next unread day</button>
+      <button type="button" class="by-btn" id="by-print">Print or save as PDF</button>
+    </div>
+  </div>
+
+  <p class="by-legend"><span class="by-badge">{{ $d.badge }}</span> marks a reading found only in Catholic Bibles. <a class="by-noprint" href="#canon">Why do Bibles differ?</a> <span class="by-only66">In the 66-book version these readings are left out and the other days are spaced again, so it still ends on day 365.</span></p>
+  <p class="by-printhead" id="by-printhead"></p>
+  <div id="by-plan" class="by-plan"><noscript><p>The year’s readings are drawn by a small script. Turn on JavaScript to see them.</p></noscript></div>
+
+  <section class="by-notes by-noprint" aria-labelledby="by-how">
+    <h2 id="by-how">How the plan works</h2>
+    <p>The main reading walks through the Bible’s story in the order events happened: from Genesis through the patriarchs, Moses, the judges and the kings, to the exile, the return, the Gospels and Acts. Other books are read beside the part of the story they belong to. Job comes early, since many readers place his story in the age of the patriarchs. Ecclesiastes, the Song of Songs and Wisdom come with Solomon. The prophets come with the kings they spoke to, and with the exile. The New Testament letters come between the chapters of Acts they are usually linked with.</p>
+    <p>Alongside, there is a short reading every day: one psalm a day for the first {{ $d.ps_days }} days (Psalm 119, the longest, one eight-verse stanza a day, by its Hebrew letters), then a few verses of Proverbs a day to the end of the year.</p>
+    <p>The days were cut so each one has about the same amount to read. Counting verses, the 73-book plan has {{ $s73.min }} to {{ $s73.max }} verses a day (about {{ $s73.median }} on a typical day), and the 66-book plan {{ $s66.min }} to {{ $s66.max }} (about {{ $s66.median }}). Every chapter is read once: {{ lang.FormatNumber 0 $s73.chapters }} chapters in the 73-book Bible and {{ lang.FormatNumber 0 $s66.chapters }} in the 66-book Bible.</p>
+    <p>Missed a day? Pick up where you left off. The “Next unread day” button finds it. You can also change “Day 1 is” to a later date to move the whole calendar.</p>
+
+    <h2 id="canon">Why do Bibles have 73 or 66 books?</h2>
+    <p>Nearly all Christians agree on the 27 books of the New Testament, but not on every book of the Old. Many early Christians read the Old Testament in the Septuagint, a Greek translation made by Jews in the centuries before Christ. It includes some books and passages that are not in the Hebrew Bible. Saint Jerome, translating the Bible into Latin around AD 400, noted that these books were not in the Hebrew, yet he translated Tobit and Judith, and the others stayed in the Latin Bible from older translations. In 1534 Martin Luther printed them in a separate section called the Apocrypha, “not held equal to the Holy Scriptures, but useful and good to read,” and most Protestant churches came to use the 39 books of the Hebrew Bible as their Old Testament. In 1546 the Council of Trent confirmed the longer list for the Catholic Church, which calls these books deuterocanonical (“of the second canon”). Orthodox churches include them, and a few more, such as 1 Esdras, 3 Maccabees and the Prayer of Manasseh. Some Protestant Bibles still print these books in a separate Apocrypha section, between the Testaments or at the end. Sources: <a href="https://grokipedia.com/page/Deuterocanonical_books" target="_blank" rel="noopener">Deuterocanonical books</a> and <a href="https://grokipedia.com/page/Biblical_apocrypha" target="_blank" rel="noopener">Biblical apocrypha</a> (Grokipedia).</p>
+    <p>The readings marked <span class="by-badge">{{ $d.badge }}</span> are the books of Tobit, Judith, 1 and 2 Maccabees, Wisdom, Sirach and Baruch (its last chapter is the Letter of Jeremiah), the Greek additions to Esther, and three passages in Daniel: the Prayer of Azariah and the Song of the Three Young Men (Daniel 3:24–90), Susanna (Daniel 13), and Bel and the Dragon (Daniel 14).</p>
+
+    <h2 id="v66">The 66-book version</h2>
+    <p>Choose “66 books” and the plan keeps the same order with the Catholic-only readings taken out. Rather than leave gaps, the remaining chapters are spaced again across all 365 days, so each day is a little shorter and the plan still ends on day 365. The Psalms and Proverbs readings stay on the same days in both versions; the main readings fall on different days, so each version keeps its own ticks.</p>
+
+    <h2 id="numbers">Numbers that differ between Bibles</h2>
+    <ul>
+      <li><b>Psalms.</b> This plan numbers the psalms as most modern Bibles do (the Hebrew numbering), including Catholic Bibles such as the NABRE and RSV-2CE. The Douay-Rheims and other Bibles that follow the Greek and Latin numbering count most psalms one lower: our Psalm 23 is their Psalm 22. The Douay-Rheims links in the plan go to the right psalm. Some Bibles also count a psalm’s title as verse 1.</li>
+      <li><b>Esther.</b> Catholic Bibles include six Greek additions to Esther. The NABRE prints them where they belong in the story, as chapters A to F; that is the order used here. The Douay-Rheims prints them together at the end, as chapters 10:4 to 16; the links take you there.</li>
+      <li><b>Daniel.</b> In Catholic Bibles, Daniel 3 has 100 verses, because it includes the prayer and song (verses 24–90). In 66-book Bibles, Daniel 3 has 30 verses and Daniel has 12 chapters.</li>
+      <li><b>Joel and Malachi.</b> This plan uses the chapters in most Bibles (Joel 1–3, Malachi 1–4). The NABRE divides them as Joel 1–4 and Malachi 1–3, with the same words.</li>
+    </ul>
+
+    <h2 id="read">Reading online for free</h2>
+    <p>Each reading links to a free public-domain translation on <a href="https://www.biblegateway.com/" target="_blank" rel="noopener">Bible Gateway</a>: the Douay-Rheims (1899 American edition) for the 73-book version and the World English Bible for the 66-book version. Any Bible you like works just as well; most families read from their own.</p>
+
+    <h2 id="planner">In the lesson planner</h2>
+    <p>The <a href="{{ "homeschool/planner/" | relURL }}">lesson planner</a> has “Bible in a Year” under <b>More subjects</b>. Switch it on for a child (or for yourself), pick the 73-book or 66-book version in its Book menu, and each school week gets seven days of readings. On a five-day week, Thursday and Friday each have two; tick Saturday and Sunday as school days to read one a day. Ticks in the planner and on this page are shared.</p>
+  </section>
+  <script type="application/json" id="by-data">{{ $d | jsonify | safeJS }}</script>
+</div>
+<script src="{{ "bibleyear/by.js" | relURL }}?v={{ (os.Stat "static/bibleyear/by.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -11,7 +11,8 @@
     {{ end }}
     {{- /* Thanksgiving dinner (thanksgiving.json): its USDA, fire-service and Grokipedia sources in Sources and credits */ -}}
     {{ with .credits }}{{ $params = merge $params (dict "credits" .) }}{{ end }}
-    {{ with .collection }}{{ $params = merge $params (dict "keywords" (slice "Thanksgiving" "Thanksgiving dinner" "holiday" "turkey")) }}{{ end }}
+    {{- /* other collections: keywords from collection.meta in data/meals/recipes/<slug>.json */ -}}
+    {{ with .collection }}{{ $kw := slice "Thanksgiving" "Thanksgiving dinner" "holiday" "turkey" }}{{ with index site.Data.meals.recipes . }}{{ with .collection }}{{ with .meta }}{{ with .keywords }}{{ $kw = . }}{{ end }}{{ end }}{{ end }}{{ end }}{{ $params = merge $params (dict "keywords" $kw) }}{{ end }}
     {{ $.AddPage (dict
       "kind" "page"
       "path" .id

@@ -227,6 +227,16 @@
           });
         }
         if (!items.length) return;
+        if (c0.wk7) { // Bible in a Year: seven readings a school week, whatever its minutes; extra readings go to the week's last days
+          var wp = [], qi = 0, base = Math.floor(7 / nd), extra = 7 % nd;
+          while (qi < items.length && wp.length < 4000) {
+            var cnt = base + (wp.length % nd >= nd - extra ? 1 : 0), dl = [];
+            for (var z = 0; z < cnt && qi < items.length; z++, qi++) dl.push({ it: items[qi], cont: false, fin: true, m: x.mins / 7 });
+            wp.push(dl);
+          }
+          tracks.push({ k: ki, s: s, items: items, per: x.mins / nd, plan: wp, days: wp.length, hw: +x.hw || 0 });
+          return;
+        }
         var per = x.mins / nd, plan = [], q = 0, rem = items.length ? items[0].e - items[0].s : 0, acc = 0;
         // fill each school day with about `per` minutes: finish a lesson if only a little is left, never start one in a tiny leftover
         while (q < items.length && plan.length < 4000) {
@@ -292,7 +302,7 @@
   function dayTotals(groups) { var l = 0, h = 0; groups.forEach(function (g) { l += g.m; h += g.hw; }); return { l: l, h: h }; }
   function units(c) { return (c.w || 'Lesson').toLowerCase() + 's'; } // "lessons", "chapters", "sessions"
   function lessonText(e) { return (e.it.c.w || 'Lesson') + ' ' + e.it.l[0] + (e.it.l[1] ? ': ' + e.it.l[1] : ''); }
-  function lessonURL(e) { return e.it.l[3] || e.it.c.url + 'lesson-' + e.it.l[0] + '/'; } // Hannah Ward's lessons are PDFs on her site
+  function lessonURL(e) { return e.it.l[3] || e.it.c.url + (e.it.c.ver ? '#day-' + e.it.l[0] + '-' + e.it.c.ver : 'lesson-' + e.it.l[0] + '/'); } // Hannah Ward's lessons are PDFs on her site
   function absURL(e) { var u = lessonURL(e); return /^https?:/.test(u) ? u : location.origin + u; }
 
   // ---------- today: the active learner's lessons, and a digest for the "What's next" card ----------

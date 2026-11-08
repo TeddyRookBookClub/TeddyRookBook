@@ -1,0 +1,95 @@
+/* Bible in a Year (/bible-in-a-year/): layouts/bible-in-a-year/list.html, static/bibleyear/by.js */
+.by{--g:#004225;--g2:#00562f;--gold:#9a7a2c;--goldbg:#fbf3dc;--goldln:#e3cf95;--ink:#1d2320;--muted:#5d6862;--line:#dde5df;--card:#fff;--row:#f6f9f7;--hi:#fff6d8;
+  --ui:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);font-family:var(--ui)}
+html[data-theme="dark"] .by{--g:#6cc79a;--g2:#8fd6b0;--gold:#d9bd73;--goldbg:#2a2513;--goldln:#6b5a2a;--ink:#e3e9e5;--muted:#a3b3aa;--line:#2a4636;--card:#12261b;--row:#0f2017;--hi:#2c2a14}
+main.main:has(.by){max-width:1100px}
+.by a{box-shadow:none;color:var(--g)}
+.by-crumbs{font-size:.85rem;color:var(--muted);margin:0 0 1rem}
+.by-crumbs a{text-decoration:none}.by-crumbs a:hover{text-decoration:underline}
+.by-eye{font:600 .74rem/1.4 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 .3rem}
+.by-hero h1{font-family:Georgia,"Iowan Old Style",serif;font-size:clamp(1.9rem,5vw,2.6rem);line-height:1.15;color:var(--g);margin:0 0 .6rem}
+.by-lead{font-size:1.05rem;line-height:1.6;max-width:46rem;margin:0 0 .8rem}
+.by-credit{font-size:.92rem;line-height:1.5;color:var(--muted);border-left:3px solid var(--gold);padding:.15rem 0 .15rem .8rem;margin:0 0 1.2rem;max-width:46rem}
+.by-btn{display:inline-flex;align-items:center;min-height:40px;padding:.4rem .95rem;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 .9rem/1.2 var(--ui);cursor:pointer}
+.by-btn:hover{border-color:var(--g)}
+.by-btn.pri{background:#004225;border-color:#004225;color:#fff}
+.by-btn.pri:hover{background:#00562f}
+.by-btn:disabled{opacity:.5;cursor:default}
+.by :focus-visible{outline:3px solid #d8b860;outline-offset:2px}
+.by-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.8rem 1.2rem;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1rem 1.1rem;margin:0 0 1rem}
+.by-tool{display:flex;flex-direction:column;gap:.35rem;min-width:0}
+.by-tl{font:600 .75rem/1.3 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.by-row{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.by-row input[type=date]{min-height:40px;padding:.3rem .5rem;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit}
+.by-seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;align-self:flex-start;max-width:100%}
+.by-seg button{border:0;background:var(--card);color:var(--ink);font:600 .9rem/1.2 var(--ui);padding:.5rem .9rem;cursor:pointer;min-height:40px}
+.by-seg button small{display:block;font-weight:400;font-size:.72rem;color:var(--muted)}
+.by-seg button[aria-pressed=true]{background:#004225;color:#fff}
+.by-seg button[aria-pressed=true] small{color:#d4e6dc}
+.by-seg button+button{border-left:1px solid var(--line)}
+.by-bar{display:block;height:10px;border-radius:5px;background:var(--row);border:1px solid var(--line);overflow:hidden}
+.by-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#004225,#00562f)}
+html[data-theme="dark"] .by-bar i{background:#6cc79a}
+#by-progtxt{font-size:.9rem}
+.by-acts{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;align-items:center;gap:.5rem}
+.by-legend{font-size:.92rem;line-height:1.6;margin:0 0 1rem}
+.by-only66{display:none}.by.v66 .by-only66{display:inline}
+.by-badge{display:inline-block;font:600 .72rem/1.3 var(--ui);color:#6b5413;background:var(--goldbg);border:1px solid var(--goldln);border-radius:999px;padding:.08rem .5rem;vertical-align:.08em;white-space:normal}
+html[data-theme="dark"] .by-badge{color:#ecd58e}
+.by-printhead{display:none}
+.by-era h2{font-family:Georgia,"Iowan Old Style",serif;color:var(--g);font-size:1.35rem;margin:1.6rem 0 .5rem;padding-bottom:.25rem;border-bottom:2px solid var(--gold)}
+.by-era h2 small{font:400 .85rem var(--ui);color:var(--muted);margin-left:.4rem}
+.by-tab{width:100%;border-collapse:collapse;font-size:.95rem;line-height:1.45;table-layout:auto;display:table}
+.by-tab th,.by-tab td{text-align:left;vertical-align:top;padding:.45rem .5rem;border-bottom:1px solid var(--line)}
+.by-tab thead th{font:600 .74rem/1.3 var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:none}
+.by-tab tbody tr:nth-child(even){background:var(--row)}
+.by-tab tr.today{background:var(--hi)!important;box-shadow:inset 4px 0 0 var(--gold)}
+.by-tab tr.flash{animation:by-fl 1.6s ease}
+@keyframes by-fl{0%,40%{background:var(--goldbg)}}
+.by-tab tr.done .by-main a,.by-tab tr.done .by-par a{color:var(--muted)}
+.by-ck{width:2.2rem}
+.by-ck input{width:1.25rem;height:1.25rem;accent-color:#004225;margin:.1rem 0 0}
+html[data-theme="dark"] .by-ck input{accent-color:#6cc79a}
+.by-day{white-space:nowrap;font-weight:700;width:7.5rem}
+.by-day small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+.by-par{width:26%}
+.by-it{display:block}
+.by-sep{display:none}
+.by-tab a{text-decoration:none}.by-tab a:hover{text-decoration:underline}
+.by-add{font-size:.85em;color:var(--muted)}
+.by-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.by-notes{max-width:46rem;margin:2.2rem 0 0;line-height:1.6}
+.by-notes h2{font-family:Georgia,"Iowan Old Style",serif;color:var(--g);font-size:1.3rem;margin:1.6rem 0 .5rem}
+.by-notes p{margin:0 0 .9rem}
+.by-notes li{margin:0 0 .5rem}
+/* phones: each day becomes a small card */
+@media (max-width:640px){
+  .by-tab,.by-tab tbody{display:block}
+  .by-tab thead{display:none}
+  .by-tab tr{display:grid;grid-template-columns:2rem 1fr;gap:.15rem .5rem;padding:.55rem .35rem;border-bottom:1px solid var(--line)}
+  .by-tab th,.by-tab td{border:0;padding:0}
+  .by-ck{grid-row:1/4;width:auto}
+  .by-day{width:auto;white-space:normal}
+  .by-day small{display:inline;margin-left:.35rem}
+  .by-par{width:auto;font-size:.9rem}
+  .by-par::before{content:"Also: ";color:var(--muted)}
+}
+@media print{
+  .by-noprint,.by-tools,.by-notes,header.header,footer,.footer,#menu{display:none!important}
+  .by{--ink:#000;--muted:#444;--line:#bbb;--row:#fff;--hi:#fff;--goldbg:#fff;--goldln:#888;--g:#004225}
+  .by a{color:#000;text-decoration:none}
+  .by-hero h1{font-size:18pt;margin:0}
+  .by-credit{font-size:8.5pt;margin:.2rem 0 .4rem}
+  .by-printhead{display:block;font-size:9pt;margin:0 0 .3rem}
+  .by-legend{font-size:8.5pt;margin:0 0 .3rem}
+  .by-badge{font-size:7pt;color:#000;padding:0 .3rem}
+  .by-era{break-inside:auto}
+  .by-era h2{font-size:12pt;margin:.6rem 0 .2rem;break-after:avoid}
+  .by-tab{font-size:8.5pt;line-height:1.3}
+  .by-tab th,.by-tab td{padding:.12rem .3rem}
+  .by-tab tr{break-inside:avoid}
+  .by-tab tr.today{box-shadow:none}
+  .by-ck input{width:9pt;height:9pt}
+  .by-day small{font-size:7.5pt}
+  .by-par::before{content:none}
+}

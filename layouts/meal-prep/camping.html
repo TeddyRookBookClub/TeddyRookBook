@@ -1,0 +1,157 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/occasions.css" | relURL }}?v={{ (os.Stat "static/meal-prep/occasions.css").ModTime.Unix }}">
+{{- /* Camping and campfire cooking: data/meals/recipes/camping.json (built by scripts/meals/src/build_camping.py) holds the new recipes
+   and the page plan; courses mix them with recipes from elsewhere in Meal Prep (the s'mores among them), by id.
+   static/meal-prep/occasions.js runs the menu; camping.js runs the camp meal plan, the cooler list and the Dutch-oven coal calculator. */ -}}
+{{ $all := partialCached "meal-prep/recipes-all.html" "r" }}
+{{ $R := dict }}{{ range $all }}{{ $R = merge $R (dict .id .) }}{{ end }}
+{{ $S := dict }}{{ range site.Data.meals.scratch.recipes }}{{ $S = merge $S (dict .id .) }}{{ end }}
+{{ $T := site.Data.meals.recipes.camping.collection }}
+{{ $src := partial "meal-prep/data.html" . }}
+{{ $mini := dict }}{{ range $T.courses }}{{ $cid := .id }}{{ range .items }}{{ $p := split . ":" }}{{ if eq (index $p 0) "r" }}{{ with index $R (index $p 1) }}{{ $pl := index $T.plan .id | default (slice "snack" "home" false) }}{{ $mini = merge $mini (dict .id (dict "n" .name "e" .emoji "s" .servings "c" $cid "al" .allergens "sl" (index $pl 0) "how" (index $pl 1) "ice" (index $pl 2))) }}{{ end }}{{ end }}{{ end }}{{ end }}
+<div class="hs mp" id="oc-page" data-src="{{ $src }}" data-plan="{{ "meal-prep/plan/" | relURL }}" data-rbase="{{ "meal-prep/recipes/" | relURL }}" data-guests="4">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Camping and campfire cooking")) }}
+  <header class="hs-hero mp-hero oc-hero">
+    <p class="hs-eyebrow">Meal Prep · A collection</p>
+    <h1>Camping and campfire cooking</h1>
+    <p>Food for a weekend outdoors: foil-packet dinners in the coals, a pot of campfire chili, skillet breakfasts and pancakes from a bottle, bannock on a stick, trail mix, a Dutch-oven cobbler and s’mores. Pick your favorites and the camp meal planner lays out every meal of the trip, with one shopping list and a cooler list. Plus campfire and camp-stove safety, keeping the cooler cold, and Leave No Trace.</p>
+    <nav class="oc-jump hs-noprint" aria-label="On this page">
+      <a href="#your-menu">🧾 Menu</a><a href="#camp-plan">🗓 Camp meal plan</a><a href="#fire">🔥 Fire and stove safety</a><a href="#cooler">🧊 The cooler</a><a href="#lnt">🌲 Leave No Trace</a><a href="#foil">🔥 Foil packets</a><a href="#desserts">🍑 Desserts</a><a href="#dutch">🍲 Dutch-oven coals</a>
+    </nav>
+  </header>
+
+  {{ partial "meal-prep/occ-menu.html" (dict "T" $T "R" $R "people" "<b>Campers</b>" "guests" 4 "skip" (slice)
+     "intro" "Check the dishes you’d like at camp. The meal plan below spreads them over your trip, and the shopping list covers every meal for your campers."
+     "note" "The planner button sends the whole trip to the meal planner, one day per tap-day: tap the day you leave, and the days after it fill in. Desserts and cocoa go in the snack slot."
+     "planLabel" "Put the trip in my meal planner" "printLabel" "Print the trip plan and shopping list") }}
+
+  <section class="hs-sec mp-box oc-tool" id="camp-plan" aria-labelledby="oc-ch">
+    <h2 id="oc-ch">🗓 Camp meal plan</h2>
+    <p>Choose how long you’re staying and when you arrive. The plan uses the dishes you checked, puts the meals that need the cooler early in the trip, and saves shelf-stable ones for the end.</p>
+    <div class="oc-form">
+      <label class="mp-f"><span>Nights</span><select id="cp-nights"><option value="1">1 night</option><option value="2" selected>2 nights</option><option value="3">3 nights</option><option value="4">4 nights</option><option value="5">5 nights</option></select></label>
+      <label class="mp-f"><span>First meal at camp</span><select id="cp-first"><option value="lunch">Lunch on arrival day</option><option value="dinner" selected>Dinner on arrival day</option></select></label>
+      <label class="mp-f"><span>Last meal at camp</span><select id="cp-last"><option value="breakfast" selected>Breakfast on the last day</option><option value="lunch">Lunch on the last day</option></select></label>
+    </div>
+    <div class="oc-opts"><label class="mp-cb"><input type="checkbox" id="cp-fire" checked> Campfires are allowed (if there’s a fire ban, the plan uses only camp-stove and no-cook dishes)</label></div>
+    <p class="mp-warn" id="cp-warn" hidden></p>
+    <div id="cp-out" class="oc-grid days" aria-live="polite"><p class="mp-pending">Loading the plan…</p></div>
+    <h3>Cooler list</h3>
+    <div id="cp-cool" aria-live="polite"></div>
+    <p class="hs-small">🔥 campfire · 🍳 camp stove · 🏠 made at home · 🥪 no cooking · 🧊 rides in the cooler. Tap ↻ to swap a dish.</p>
+  </section>
+
+  <section class="hs-sec mp-box" id="fire" aria-labelledby="oc-fh">
+    <h2 id="oc-fh">🔥 Campfire and camp-stove safety</h2>
+    <div class="oc-cols">
+      <div>
+        <h3>The campfire (Smokey Bear, USDA Forest Service)</h3>
+        <ul>
+          <li><b>Check the rules first.</b> Campgrounds and parks post fire restrictions; during a fire ban, cook on a stove.</li>
+          <li><b>Use an established fire ring</b> or fire pit where one exists. Keep the fire at least 15 feet from tents, bushes and low branches, with open sky above.</li>
+          <li><b>Have water and a shovel ready</b> before you light it.</li>
+          <li><b>Keep it small</b>, and burn only wood. Never burn trash, cans, glass, batteries or aerosol cans.</li>
+          <li><b>Never leave it</b>, even for a minute. A grown-up stays with the fire, and kids stay a safe distance back.</li>
+          <li><b>Put it out completely:</b> drown it with water until the hissing stops, stir the ashes and embers with the shovel, drown it again, and feel for heat with the back of your hand held above the ashes. If it’s too hot to touch, it’s too hot to leave.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Camp stoves, grills and carbon monoxide (CDC)</h3>
+        <p><b>Never use a camp stove, charcoal grill, hibachi or fuel-burning lantern inside a tent, camper or other enclosed space.</b> They give off carbon monoxide, an odorless gas that can build up in enclosed or partly enclosed spaces and is deadly. Cook outdoors, in the open air.</p>
+        <h3>Cooking over coals</h3>
+        <ul>
+          <li>Cook over glowing coals, not tall flames; they give steady heat and burn food less.</li>
+          <li>Use long tongs, a lid lifter for the Dutch oven, and heat-proof gloves.</li>
+          <li>Open foil packets away from your face: the steam is very hot.</li>
+          <li>Set the stove on a flat, stable surface, and let it cool before you pack it.</li>
+          <li>Use a food thermometer: ground beef 160°F, chicken 165°F, steaks and chops 145°F with a 3-minute rest, precooked sausages and hot dogs 165°F (USDA).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="hs-sec mp-box" id="cooler" aria-labelledby="oc-kh">
+    <h2 id="oc-kh">🧊 Keeping the cooler cold (USDA)</h2>
+    <div class="oc-cols">
+      <div>
+        <ul>
+          <li>Keep perishable food at <b>40°F or below</b>. A cooler thermometer tells you.</li>
+          <li><b>Block ice lasts longer than cubes.</b> Freeze water in clean jugs at home, or use frozen gel packs. Frozen meals (chili, seasoned chicken, patties) work as ice for the first day.</li>
+          <li>Bring <b>two coolers if you can</b>: one for drinks and snacks, which gets opened all day, and one for perishable food, which stays shut.</li>
+          <li>Pack <b>raw meat sealed, at the bottom</b>, below ready-to-eat food, so juices can’t drip on it.</li>
+          <li>Keep the cooler <b>closed, in the shade</b>, and covered with a blanket or tarp. Store food in watertight containers so it doesn’t sit in melt water.</li>
+          <li>When the ice is gone, <b>throw out the perishable food</b>; leftovers are safe only while the cooler still has ice.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>The 2-hour rule, outdoors</h3>
+        <p>Perishable food shouldn’t sit out more than <b>2 hours</b>, or <b>1 hour</b> when it’s above 90°F. Put it back in the cooler as soon as you’ve served it.</p>
+        <h3>Water</h3>
+        <p>Bring drinking water from home or the campground tap. Don’t drink lake or stream water unless it’s treated: bring it to a rolling boil for 1 minute (longer at high elevations), or use a filter rated 1 micron absolute or smaller.</p>
+        <h3>Clean hands</h3>
+        <p>Wash hands before and after handling food. If there’s no running water, bring soap and a jug of water, or disposable wipes.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hs-sec hs-note" id="lnt" aria-labelledby="oc-lh">
+    <h2 id="oc-lh">🌲 Leave No Trace</h2>
+    <p>Leave No Trace’s seven principles are a simple code for enjoying the outdoors without harming it. Here they are, with what they mean in the camp kitchen.</p>
+    <ol class="oc-lnt">
+      <li><b>Plan ahead and prepare.</b> Know the site’s rules and fire restrictions. Repackage food at home to cut down on trash.</li>
+      <li><b>Travel and camp on durable surfaces.</b> Use existing campsites and trails; camp at least 200 feet from lakes and streams where you can.</li>
+      <li><b>Dispose of waste properly.</b> Pack out all trash and leftover food. Wash dishes with a little biodegradable soap, at least 200 feet from water, and scatter the strained dishwater.</li>
+      <li><b>Leave what you find.</b> Leave rocks, plants and natural objects as they are.</li>
+      <li><b>Minimize campfire impacts.</b> Cook on a stove when you can. Where fires are allowed, use established fire rings, keep fires small, burn only dead and down wood you can break by hand, and put fires out completely.</li>
+      <li><b>Respect wildlife.</b> Never feed animals. Store food and trash securely, away from wildlife.</li>
+      <li><b>Be considerate of other visitors.</b> Keep noise down and share the space kindly.</li>
+    </ol>
+    <p class="hs-small">Principles from the Leave No Trace Center for Outdoor Ethics, as published by the National Park Service.</p>
+  </section>
+
+  {{ partial "meal-prep/occ-courses.html" (dict "T" $T "R" $R "S" $S "slug" "camping" "scratchIntro" "Make the s’mores from scratch (marshmallows, graham crackers, even chocolate), and the pancake mix, granola, tortillas and seasonings to take along.") }}
+
+  <section class="hs-sec mp-box" id="dutch" aria-labelledby="oc-dh">
+    <h2 id="oc-dh">🍲 How many coals for a Dutch oven?</h2>
+    <p>A camp Dutch oven (the kind with legs and a flat, rimmed lid) bakes with charcoal briquettes underneath and on top. A widely taught rule of thumb: <b>double the oven’s diameter in inches</b> for about 325°F, <b>add or take away 2 briquettes for each 25°F</b>, and for baking put <b>about two-thirds on the lid and one-third underneath</b> (Missouri Department of Conservation). Wind, cold and shade change it, so check early.</p>
+    <div class="oc-cols">
+      <div>
+        <div class="oc-form">
+          <label class="mp-f"><span>Oven size</span><select id="do-size"><option value="8">8-inch</option><option value="10">10-inch</option><option value="12" selected>12-inch</option><option value="14">14-inch</option></select></label>
+          <label class="mp-f"><span>Temperature</span><select id="do-temp"><option value="300">300°F</option><option value="325">325°F</option><option value="350" selected>350°F</option><option value="375">375°F</option><option value="400">400°F</option><option value="425">425°F</option></select></label>
+        </div>
+        <div class="oc-out" id="do-out" aria-live="polite"><p>…</p></div>
+      </div>
+      <figure class="oc-fig">
+        <svg viewBox="0 0 320 200" role="img" aria-labelledby="do-t do-d" class="oc-svg">
+          <title id="do-t">Coals on a Dutch oven for baking</title>
+          <desc id="do-d">A side view of a camp Dutch oven on short legs, with a ring of briquettes on its flat lid and fewer briquettes in a ring underneath.</desc>
+          <g id="do-top"></g>
+          <rect x="70" y="58" width="180" height="12" rx="4" class="oc-pot"/>
+          <path d="M80 70 h160 v62 q0 16 -16 16 h-128 q-16 0 -16 -16 z" class="oc-pot"/>
+          <path d="M100 148 v18 M220 148 v18 M160 148 v18" stroke="#555" stroke-width="5"/>
+          <g id="do-bot"></g>
+          <text x="160" y="196" text-anchor="middle">fewer coals underneath</text>
+          <text x="160" y="20" text-anchor="middle">more coals on the lid</text>
+        </svg>
+      </figure>
+    </div>
+    <p class="hs-small">Light the briquettes in a chimney starter, in the fire ring or on bare ground cleared of anything that burns; they’re ready when coated in gray ash. Turn the oven a quarter turn one way and the lid a quarter turn the other every 15 minutes for even baking. Put spent coals in the fire ring and put them out completely.</p>
+  </section>
+
+  <section class="hs-sec hs-note" id="history" aria-labelledby="oc-hh">
+    <h2 id="oc-hh">📜 About bannock</h2>
+    <p>Bannock began as a flat Scottish bread of oats or barley; the name comes from the Scottish Gaelic <i>bannach</i>, a morsel. Scottish fur traders carried it to North America in the 1700s and 1800s, and many Indigenous communities in Canada and the northern United States made it their own with wheat flour and baking powder, cooking it in skillets or on sticks over the fire. Before that, many Indigenous peoples made their own breads from corn, roots and seeds. Today it remains an everyday bread in many Indigenous communities in Canada and the United States, and a favorite at campfires everywhere.</p>
+    <p class="mp-glinks hs-noprint"><a class="mp-glink" href="https://grokipedia.com/page/Bannock_(Indigenous_American_food)" rel="noopener">Bannock, Indigenous American food (Grokipedia)</a><a class="mp-glink" href="https://grokipedia.com/page/Bannock_(British_and_Irish_food)" rel="noopener">Bannock, British and Irish food</a><a class="mp-glink" href="https://grokipedia.com/page/Leave_No_Trace" rel="noopener">Leave No Trace</a><a class="mp-glink" href="https://grokipedia.com/page/Smokey_Bear" rel="noopener">Smokey Bear</a></p>
+  </section>
+
+  <div class="oc-printout" id="oc-printout" aria-hidden="true"></div>
+</div>
+<script type="application/json" id="oc-data">{{ dict "slug" "camping" "title" "Camping trip" "unit" (slice "camper" "campers") "def" $T.default_menu "half" (slice) "r" $mini | jsonify | safeJS }}</script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/occasions.js" | relURL }}?v={{ (os.Stat "static/meal-prep/occasions.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/camping.js" | relURL }}?v={{ (os.Stat "static/meal-prep/camping.js").ModTime.Unix }}" defer></script>
+{{ end }}

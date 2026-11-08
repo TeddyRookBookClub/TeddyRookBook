@@ -1,0 +1,88 @@
+/* Meal Prep: the holiday collection pages (layouts/meal-prep/feast.html). Builds on meals.css and the .hs colors. */
+.fe-hero{border-left:5px solid var(--gold)}
+.fe-jump{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.8rem}
+.fe-jump a{display:inline-block;padding:.3rem .7rem;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--g);font:600 .88rem system-ui,sans-serif;text-decoration:none}
+.fe-jump a:hover{border-color:var(--g)}
+.fe-menu h2,.fe-tl h2{margin-top:0}
+.fe-menurow{display:flex;flex-wrap:wrap;gap:.6rem 1.5rem;align-items:center;margin:.6rem 0}
+.fe-guests{gap:.8rem;margin:0}
+.fe-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.6rem;margin:.8rem 0}
+.fe-pick .mp-fs{display:flex;flex-direction:column;gap:.1rem}
+.fe-pick legend{font-size:.95rem;line-height:1.25}
+.fe-pick .mp-cb{align-items:flex-start;min-height:1.7rem;line-height:1.3}
+.fe-pick .mp-cb input{margin-top:.15rem}
+.fe-shop{margin-top:1rem;border-top:1px solid var(--line);padding-top:.6rem}
+.fe-shop>summary{cursor:pointer;color:var(--g)}
+.fe-shoplist{columns:2 260px;column-gap:1.5rem}
+.fe-shoplist h3{font:700 .95rem system-ui,sans-serif;color:var(--g);margin:.7rem 0 .2rem;break-after:avoid}
+.fe-shoplist ul{list-style:none;margin:0;padding:0}
+.fe-shoplist li{padding:.2rem 0;border-bottom:1px dotted var(--line);break-inside:avoid;font-size:.93rem}
+.fe-shoplist li span{color:var(--ink)}
+.fe-shoplist li span::before{content:" · "}
+.fe-shoplist li small{display:block;color:var(--muted);font-size:.78rem}
+.fe-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.4rem 1rem;margin:.6rem 0 1rem}
+.fe-form input,.fe-form select{width:100%}
+.fe-steps{list-style:none;margin:0;padding:0}
+.fe-steps .fe-day{font:700 1.02rem Georgia,serif;color:var(--g);margin:1rem 0 .3rem;padding-bottom:.2rem;border-bottom:2px solid var(--gold)}
+.fe-steps .fe-day:first-child{margin-top:0}
+.fe-s{display:grid;grid-template-columns:6.6rem minmax(0,1fr);gap:.6rem;padding:.35rem 0 .35rem .6rem;border-left:4px solid var(--line);margin:.15rem 0}
+.fe-s time{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink)}
+.fe-s.roast{border-left-color:#b8963e}
+.fe-s.oven{border-left-color:#c0602a}
+.fe-s.stove{border-left-color:#3d7fa8}
+.fe-s.thaw,.fe-s.brine{border-left-color:#5a8fb8}
+.fe-s.ahead{border-left-color:#7a9a5a}
+.fe-s.dinner{border-left-color:#004225;font-weight:700}
+html[data-theme="dark"] .fe-s.dinner{border-left-color:#6cc79a}
+.fe-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.6rem;margin:.6rem 0 1rem}
+.fe-facts .mp-tip{margin:0}
+.fe-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem 2rem}
+.fe-cols h3{color:var(--g);margin:.8rem 0 .3rem}
+.fe-cols>div>h3:first-child{margin-top:0}
+.fe-table{border-collapse:collapse;width:100%;margin:0 0 1rem;font-size:.92rem}
+.fe-table caption{text-align:left;font-weight:700;color:var(--g);padding-bottom:.3rem}
+.fe-table th,.fe-table td{border-bottom:1px solid var(--line);padding:.35rem .5rem;text-align:left}
+.fe-table thead th{background:var(--soft)}
+.fe-ahead li{margin:.3rem 0}
+.fe-printout{display:none}
+@media (max-width:520px){.fe-s{grid-template-columns:5.4rem minmax(0,1fr);gap:.4rem}.fe-s time{font-size:.9rem}.fe-jump a{font-size:.82rem}}
+@media print{
+  #mp-feast>:not(.fe-printout){display:none!important}
+  .fe-printout{display:block;color:#000;font-size:11pt}
+  .fe-printout h1{font:700 20pt Georgia,serif;margin:0 0 .2rem}
+  .fe-printout h2{font:700 14pt Georgia,serif;border-bottom:2px solid #b8963e;margin:1rem 0 .3rem;break-after:avoid}
+  .fe-printout h3{font:700 10.5pt system-ui,sans-serif;margin:.5rem 0 .1rem;break-after:avoid}
+  .fe-pm{columns:2;margin:0;padding-left:1.1rem}
+  .fe-pt{list-style:none;padding:0;margin:0}.fe-pt li{margin:.1rem 0;break-inside:avoid}.fe-pt .fe-day{font-weight:700;margin-top:.5rem}
+  .fe-ps{columns:2}.fe-ps ul{list-style:none;padding:0;margin:0}.fe-ps li{break-inside:avoid}
+}
+.fe-cols ul,.fe-tl ul{padding-left:1.3rem;margin:.3rem 0}
+.mp-tablewrap .fe-table{width:100%;display:table}
+.fe-sub{color:var(--g);margin:1.2rem 0 .2rem}
+.fe-cookies{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:.3rem 1.2rem;margin:.5rem 0 .8rem}
+.fe-crow{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.25rem 0;border-bottom:1px dotted var(--line)}
+.fe-cname{font-size:.93rem;line-height:1.3;min-width:0}
+.fe-cname small{color:var(--muted)}
+.fe-cta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.fe-out{margin-top:.6rem}
+.fe-out ul{padding-left:1.2rem;margin:.3rem 0}
+.fe-out li{margin:.3rem 0}
+.fe-fig{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:.8rem}
+.fe-fig svg{width:100%;height:auto;display:block}
+.fe-fig figcaption{margin-top:.4rem}
+.fe-folds{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:.6rem 0}
+.fe-folds h3{margin:.4rem 0 .2rem;color:var(--g);font-size:1rem}
+.fe-folds ol{margin:.2rem 0;padding-left:1.2rem;font-size:.93rem}
+.fe-sym{width:100%;border-collapse:collapse;font-size:.93rem}
+.fe-sym th,.fe-sym td{border-bottom:1px solid var(--line);padding:.4rem .5rem;text-align:left;vertical-align:top}
+.fe-sym thead th{background:var(--soft)}
+.fe-dyes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;margin:.6rem 0}
+.fe-dye{display:flex;gap:.6rem;align-items:flex-start;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.55rem .7rem;font-size:.92rem}
+.fe-dot{flex:none;width:1.6rem;height:1.6rem;border-radius:50%;border:2px solid rgba(0,0,0,.15)}
+
+.fe-w circle:not(.fe-fill),.fe-w path:not(.fe-seam):not(.fe-arrow){fill:#f6ecd6;stroke:#b8963e;stroke-width:2.5}
+.fe-w .fe-fill{fill:#a9764a;stroke:#7a4f2c}
+.fe-seam{fill:none;stroke:#8a6a3a;stroke-width:2.5;stroke-linecap:round}
+.fe-arrow{fill:none;stroke:var(--g);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none}
+.fe-lbl text{fill:var(--ink);font:600 17px system-ui,sans-serif;text-anchor:middle}
+html[data-theme="dark"] .fe-w circle:not(.fe-fill),html[data-theme="dark"] .fe-w path:not(.fe-seam):not(.fe-arrow){fill:#e9dcc0}

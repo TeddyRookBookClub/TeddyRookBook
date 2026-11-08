@@ -1,0 +1,102 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/feast.css" | relURL }}?v={{ (os.Stat "static/meal-prep/feast.css").ModTime.Unix }}">
+{{- /* Holiday collections (Christmas, Easter, Lunar New Year): one layout for all three. The page's front matter names its
+   collection (data/meals/recipes/<collection>.json, built by scripts/meals/src/build_<collection>.py). Courses mix the
+   collection's new recipes with recipes and from-scratch pages from elsewhere in Meal Prep, by id. The sections only
+   this holiday needs (safety, guides, history) live in layouts/partials/meal-prep/feast/<collection>.html.
+   static/meal-prep/feast.js runs the menu (shopping list, print, add to the planner) and the planning tool. */ -}}
+{{ $key := .Params.collection }}
+{{ $F := index site.Data.meals.recipes $key }}
+{{ $C := $F.collection }}
+{{ $all := partialCached "meal-prep/recipes-all.html" "r" }}
+{{ $R := dict }}{{ range $all }}{{ $R = merge $R (dict .id .) }}{{ end }}
+{{ $S := dict }}{{ range site.Data.meals.scratch.recipes }}{{ $S = merge $S (dict .id .) }}{{ end }}
+{{ $src := partial "meal-prep/data.html" . }}
+{{ $mini := dict }}{{ range $C.courses }}{{ $cid := .id }}{{ $mode := .mode | default "dinner" }}{{ range .items }}{{ $p := split . ":" }}{{ if eq (index $p 0) "r" }}{{ with index $R (index $p 1) }}{{ $mini = merge $mini (dict .id (dict "n" .name "e" .emoji "s" .servings "c" $cid "m" $mode "a" .make_ahead)) }}{{ end }}{{ end }}{{ end }}{{ end }}
+{{ $menuCourses := slice }}{{ $cookieCourses := slice }}{{ range $C.courses }}{{ if eq .mode "cookies" }}{{ $cookieCourses = $cookieCourses | append . }}{{ else if ne .id "leftovers" }}{{ $menuCourses = $menuCourses | append . }}{{ end }}{{ end }}
+{{ $defc := $C.default_cookies | default slice }}
+<div class="hs mp" id="mp-feast" data-key="{{ $key }}" data-title="{{ .Title }}" data-src="{{ $src }}" data-plan="{{ "meal-prep/plan/" | relURL }}" data-tool="{{ $C.tool }}">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" .Title)) }}
+  <header class="hs-hero mp-hero fe-hero">
+    <p class="hs-eyebrow">Meal Prep · A holiday collection</p>
+    <h1><span aria-hidden="true">{{ $C.meta.icon }}</span> {{ .Title }}</h1>
+    <p>{{ .Params.intro }}</p>
+    <nav class="fe-jump hs-noprint" aria-label="On this page">
+      <a href="#fe-menu">🧾 Menu and shopping list</a>{{ if $cookieCourses }}<a href="#swap">🎀 Cookie swap</a>{{ end }}<a href="#plan">⏰ {{ .Params.tool_title | default "Timeline" }}</a>{{ range $C.courses }}<a href="#{{ .id }}">{{ .icon }} {{ .title }}</a>{{ end }}{{ range .Params.jump }}<a href="#{{ .id }}">{{ .t }}</a>{{ end }}
+    </nav>
+  </header>
+
+  <section class="hs-sec mp-box fe-menu" id="fe-menu" aria-labelledby="fe-mh">
+    <h2 id="fe-mh">🧾 Your menu</h2>
+    <p>{{ .Params.menu_intro | default "Check the dishes you’re making. The shopping list adds them all up for your number of guests. A typical spread is checked to start." }}</p>
+    <div class="fe-menurow">
+      <div class="mp-dlgrow fe-guests"><span><b>Guests</b> (everyone at the table)</span><span class="mp-step"><button type="button" id="fe-gm" aria-label="One fewer guest">−</button><output id="fe-g" aria-live="polite">8</output><button type="button" id="fe-gp" aria-label="One more guest">＋</button></span></div>
+      <label class="mp-cb"><input type="checkbox" id="fe-half" checked> Smaller portions of sides and desserts (half servings each, since everyone takes a little of everything)</label>
+    </div>
+    <div class="fe-pick" id="fe-pick">
+      {{ range $menuCourses }}
+      <fieldset class="mp-fs"><legend><span aria-hidden="true">{{ .icon }}</span> {{ .title }}</legend>
+        {{ range .items }}{{ $p := split . ":" }}{{ if eq (index $p 0) "r" }}{{ with index $R (index $p 1) }}
+        <label class="mp-cb"><input type="checkbox" value="{{ .id }}"{{ if in $C.default_menu .id }} checked{{ end }}> <span aria-hidden="true">{{ .emoji }}</span> {{ .name }}</label>
+        {{ end }}{{ end }}{{ end }}
+      </fieldset>
+      {{ end }}
+    </div>
+    {{ with $cookieCourses }}
+    <h3 class="fe-sub">🍪 Baking: cookies and candy, by the batch</h3>
+    <p class="hs-small">Each batch makes the number shown. Set how many batches of each you’ll bake; the cookie-swap planner below can work it out for you.</p>
+    <div class="fe-cookies" id="fe-cookies">
+      {{ range . }}{{ range .items }}{{ $p := split . ":" }}{{ if eq (index $p 0) "r" }}{{ with index $R (index $p 1) }}
+      <div class="fe-crow" data-id="{{ .id }}"><span class="fe-cname"><span aria-hidden="true">{{ .emoji }}</span> {{ .name }} <small>({{ index ($C.cookie_yield | default dict) .id | default .servings }} a batch)</small></span><span class="mp-step"><button type="button" data-d="-1" aria-label="One fewer batch of {{ .name }}">−</button><output aria-live="polite">{{ if in $defc .id }}1{{ else }}0{{ end }}</output><button type="button" data-d="1" aria-label="One more batch of {{ .name }}">＋</button></span></div>
+      {{ end }}{{ end }}{{ end }}{{ end }}
+    </div>
+    {{ end }}
+    <div class="fe-cta hs-noprint">
+      <button type="button" class="hs-btn pri" id="fe-print">🖨 Print menu and shopping list</button>
+      <a class="hs-btn" id="fe-plan" href="{{ "meal-prep/plan/" | relURL }}">📅 Put this menu in my meal planner</a>
+      <button type="button" class="hs-btn ghost" id="fe-copy">📋 Copy the shopping list</button>
+    </div>
+    <p class="hs-small">The meal planner takes your whole menu in one tap: pick the day on its calendar, then set how many people are coming. From there you can print recipe cards and the list by store section, and mark what you already have.</p>
+    <details class="fe-shop" open>
+      <summary><b>Shopping list</b> <span class="hs-small" id="fe-shopsum"></span></summary>
+      <div id="fe-shop" aria-live="polite"><p class="mp-pending">The shopping list appears here once the recipes load.</p></div>
+      <p class="hs-small">Amounts round up to what stores sell. Check your pantry for spices and staples.</p>
+    </details>
+  </section>
+
+  {{ partial (printf "meal-prep/feast/%s-tool.html" $key) (dict "page" . "C" $C "R" $R) }}
+
+  {{ range $C.courses }}
+  <section class="hs-sec" id="{{ .id }}">
+    <h2><span aria-hidden="true">{{ .icon }}</span> {{ .title }}</h2>
+    {{ with .intro }}<p>{{ . }}</p>{{ end }}
+    <div class="mp-rgrid">
+      {{ range .items }}{{ $p := split . ":" }}{{ $id := index $p 1 }}
+      {{ if eq (index $p 0) "r" }}{{ with index $R $id }}
+      <a class="mp-rcard" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .summary }}</small><small>{{ partial "meal-prep/mins.html" .times.total }} · serves {{ .servings }}{{ if ne .collection $key }} · from our recipes{{ end }}</small></span></a>
+      {{ end }}{{ else }}{{ with index $S $id }}
+      <a class="mp-rcard" href="{{ printf "meal-prep/scratch/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .summary }}</small><small>{{ partial "meal-prep/mins.html" .times.total }} · make it from scratch</small></span></a>
+      {{ end }}{{ end }}{{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  <section class="hs-sec" id="scratch">
+    <h2>🧑‍🍳 Make it from scratch</h2>
+    <p>{{ .Params.scratch_intro | default "Want to make the parts most people buy? These from-scratch pages scale to what your menu needs." }}</p>
+    <div class="mp-rgrid">
+      {{ range $C.scratch }}{{ with index $S . }}<a class="mp-rcard" href="{{ printf "meal-prep/scratch/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .yield }}</small></span></a>{{ end }}{{ end }}
+    </div>
+  </section>
+
+  {{ partial (printf "meal-prep/feast/%s.html" $key) (dict "page" . "C" $C "R" $R) }}
+
+  <div class="fe-printout" id="fe-printout" aria-hidden="true"></div>
+</div>
+<script type="application/json" id="fe-data">{{ dict "key" $key "title" .Title "day" $C.day "roasts" ($C.roasts | default dict) "def" $C.default_menu "defc" $defc "yield" ($C.cookie_yield | default dict) "party" ($C.party | default dict) "dates" ($C.dates | default slice) "r" $mini | jsonify | safeJS }}</script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/feast.js" | relURL }}?v={{ (os.Stat "static/meal-prep/feast.js").ModTime.Unix }}" defer></script>
+{{ end }}

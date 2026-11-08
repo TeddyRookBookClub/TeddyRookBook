@@ -1,0 +1,154 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/occasions.css" | relURL }}?v={{ (os.Stat "static/meal-prep/occasions.css").ModTime.Unix }}">
+{{- /* Birthday parties: data/meals/recipes/birthday.json (built by scripts/meals/src/build_birthday.py) holds the new recipes and the
+   page plan; courses mix them with party recipes from elsewhere in Meal Prep, by id. static/meal-prep/occasions.js runs the menu;
+   birthday.js runs the party planner: how much to make, the cake calculator and the countdown. */ -}}
+{{ $all := partialCached "meal-prep/recipes-all.html" "r" }}
+{{ $R := dict }}{{ range $all }}{{ $R = merge $R (dict .id .) }}{{ end }}
+{{ $S := dict }}{{ range site.Data.meals.scratch.recipes }}{{ $S = merge $S (dict .id .) }}{{ end }}
+{{ $T := site.Data.meals.recipes.birthday.collection }}
+{{ $src := partial "meal-prep/data.html" . }}
+{{ $mini := dict }}{{ range $T.courses }}{{ $cid := .id }}{{ range .items }}{{ $p := split . ":" }}{{ if eq (index $p 0) "r" }}{{ with index $R (index $p 1) }}{{ $mini = merge $mini (dict .id (dict "n" .name "e" .emoji "s" .servings "c" $cid "al" .allergens)) }}{{ end }}{{ end }}{{ end }}{{ end }}
+<div class="hs mp" id="oc-page" data-src="{{ $src }}" data-plan="{{ "meal-prep/plan/" | relURL }}" data-rbase="{{ "meal-prep/recipes/" | relURL }}" data-guests="12">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Birthday parties")) }}
+  <header class="hs-hero mp-hero oc-hero">
+    <p class="hs-eyebrow">Meal Prep · A collection</p>
+    <h1>Birthday parties</h1>
+    <p>A birthday cake from scratch (vanilla or chocolate layers, a sheet cake for a crowd, cupcakes, and an egg-free, dairy-free cake), buttercream and simple decorating, plus pizza and party food kids love. Tell the planner how many are coming and when, and it works out how much to make, how many cakes to bake, and a countdown from two weeks out to cleanup.</p>
+    <nav class="oc-jump hs-noprint" aria-label="On this page">
+      <a href="#your-menu">🧾 Menu and shopping list</a><a href="#planner">🎈 Party planner</a><a href="#cakes">🎂 Cakes</a><a href="#decorate">🎨 Decorating</a><a href="#mains">🍕 Party food</a><a href="#allergies">🥚 Allergy-friendly</a><a href="#safety">🌡 Food safety</a>
+    </nav>
+  </header>
+
+  {{ partial "meal-prep/occ-menu.html" (dict "T" $T "R" $R "people" "<b>Guests</b> (kids and grown-ups)" "guests" 12 "skip" (slice)
+     "half" "Smaller portions of the party food (half servings each, since everyone tries a little of everything)"
+     "intro" "Check what you’re serving. The shopping list adds it all up for your guests: one serving of cake each, and the party food scaled to the crowd. A simple spread is checked to start."
+     "note" "The meal planner takes the whole menu in one tap: pick the party day on its calendar, then set how many are coming. From there you can print recipe cards and the list by store section.") }}
+
+  <section class="hs-sec mp-box oc-tool" id="planner" aria-labelledby="oc-ph">
+    <h2 id="oc-ph">🎈 Party planner</h2>
+    <p>Enter the day, the time and who’s coming. The amounts are planning guides from common party practice; round up if your crowd has big appetites.</p>
+    <div class="oc-form">
+      <label class="mp-f"><span>Party date</span><input type="date" id="bp-date"></label>
+      <label class="mp-f"><span>Start time</span><input type="time" id="bp-time" value="14:00" step="900"></label>
+      <label class="mp-f"><span>How long</span><select id="bp-len"><option value="90">1½ hours</option><option value="120" selected>2 hours</option><option value="150">2½ hours</option><option value="180">3 hours</option></select></label>
+      <label class="mp-f"><span>Of the guests, grown-ups</span><input type="number" id="bp-adults" value="4" min="0" max="60" step="1" inputmode="numeric"></label>
+      <label class="mp-f"><span>The cake</span><select id="bp-cake">{{ range $T.cakes }}{{ with index $R .id }}<option value="{{ .id }}">{{ .name }}</option>{{ end }}{{ end }}</select></label>
+      <label class="mp-f"><span>Slices</span><select id="bp-slice"><option value="0" selected>Generous</option><option value="1">Party-size (thinner)</option></select></label>
+    </div>
+    <div class="oc-cols">
+      <div class="oc-out" id="bp-amounts" aria-live="polite"><p>Loading…</p></div>
+      <div class="oc-out" id="bp-cakeout" aria-live="polite"><p>Loading…</p></div>
+    </div>
+    <h3>Countdown</h3>
+    <ol class="oc-steps" id="bp-out" aria-live="polite"><li>Loading the plan…</li></ol>
+    <p class="hs-small">The countdown uses the dishes checked in your menu. Oven times are for one oven, latest first; bake cakes the day before so the party day is easier.</p>
+  </section>
+
+  {{ partial "meal-prep/occ-courses.html" (dict "T" $T "R" $R "S" $S "slug" "birthday" "scratchIntro" "Make the pizza dough, the cake flour and powdered sugar, butter, whipped cream, marinara and ranch from scratch. Each page scales to what your plan needs.") }}
+
+  <section class="hs-sec" id="decorate" aria-labelledby="oc-dh">
+    <h2 id="oc-dh">🎨 Frost and decorate, simply</h2>
+    <div class="oc-cols">
+      <figure class="oc-fig">
+        <svg viewBox="0 0 440 260" role="img" aria-labelledby="bd-t bd-d" class="oc-svg">
+          <title id="bd-t">How a frosted layer cake is built</title>
+          <desc id="bd-d">A side view of a two-layer cake on a plate: the bottom layer, a layer of frosting, the top layer upside down, a thin crumb coat all over, then the final coat of frosting.</desc>
+          <ellipse cx="200" cy="232" rx="170" ry="18" class="oc-plate"/>
+          <rect x="70" y="58" width="260" height="170" rx="16" class="oc-frost"/>
+          <rect x="84" y="72" width="232" height="148" rx="10" class="oc-crumb"/>
+          <rect x="92" y="150" width="216" height="64" rx="6" class="oc-cake1"/>
+          <rect x="92" y="136" width="216" height="14" rx="4" class="oc-frost"/>
+          <rect x="92" y="78" width="216" height="58" rx="6" class="oc-cake1"/>
+          <g class="oc-lbl">
+            <text x="342" y="66">final coat</text><path d="M338 62 L318 64" stroke="currentColor" fill="none"/>
+            <text x="342" y="96">crumb coat</text><path d="M338 92 L318 92" stroke="currentColor" fill="none"/>
+            <text x="342" y="112">top layer,</text><text x="342" y="127">flat side up</text>
+            <text x="342" y="148">filling</text><path d="M338 144 L310 143" stroke="currentColor" fill="none"/>
+            <text x="342" y="186">bottom layer</text><path d="M338 182 L310 182" stroke="currentColor" fill="none"/>
+          </g>
+        </svg>
+        <figcaption class="hs-small">Side view. A thin crumb coat first traps the crumbs, so the final coat stays clean.</figcaption>
+      </figure>
+      <div>
+        <h3>Frost a layer cake</h3>
+        <ol>
+          <li><b>Cool completely.</b> Warm cake melts frosting. Trim a domed top flat with a serrated knife if you like.</li>
+          <li><b>Anchor it.</b> Dab frosting on the plate and set the bottom layer on it. Slide strips of parchment under the edges to keep the plate clean.</li>
+          <li><b>Fill.</b> Spread about ¾ cup of frosting over the bottom layer. Set the top layer on it <b>upside down</b>, so the flat bottom is on top.</li>
+          <li><b>Crumb coat.</b> Spread a very thin layer over the top and sides. It’s fine if crumbs show. Refrigerate 20 minutes.</li>
+          <li><b>Final coat.</b> Pile frosting on top and push it out to the edges and down the sides. Smooth with an offset spatula or a butter knife, or make swirls with the back of a spoon. Pull out the parchment.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="oc-facts">
+      <div class="mp-tip"><b>A piping bag from a zip-top bag</b>Spoon frosting into a sturdy zip-top bag, push it into one corner, twist the top and snip off a small corner. Squeeze from the top. Great for cupcake swirls, dots and writing names.</div>
+      <div class="mp-tip"><b>Color</b>Gel food coloring gives bright colors with a drop or two. Start small; colors deepen as they sit.</div>
+      <div class="mp-tip"><b>Easy decorations</b>A ring of berries, a border of sprinkles pressed onto the sides, chocolate chips in the shape of the age, or a paper stencil dusted with powdered sugar or cocoa.</div>
+      <div class="mp-tip"><b>Let the kids decorate</b>Frost the cupcakes and set out bowls of sprinkles and fruit. Each guest decorates one; it doubles as a party activity.</div>
+      <div class="mp-tip"><b>Candles</b>A grown-up lights the candles and stays close. Keep hair, sleeves and paper decorations back, and blow them out and take them off before cutting.</div>
+      <div class="mp-tip"><b>Cutting a round cake</b>For thinner party slices, cut a circle about 2 inches in from the edge, slice the outer ring into 1-inch slices, then cut the inner circle into wedges.</div>
+    </div>
+  </section>
+
+  <section class="hs-sec hs-note" id="allergies" aria-labelledby="oc-ah">
+    <h2 id="oc-ah">🥚 Allergy-friendly swaps</h2>
+    <p>Ask families about food allergies when you send invitations, and plan at least one cake everyone can eat. Packaged foods must list the nine major allergens: milk, eggs, fish, crustacean shellfish, tree nuts, peanuts, wheat, soybeans and sesame. Ingredients change, so read every label, every time (FDA). Bakery and unpackaged foods may not be labeled; ask.</p>
+    <div class="mp-tablewrap"><table class="oc-table">
+      <caption>Swaps for the cakes and frosting</caption>
+      <thead><tr><th scope="col">Avoiding</th><th scope="col">Try this</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Eggs and milk</th><td>The <a href="{{ "meal-prep/recipes/egg-free-chocolate-cake/" | relURL }}">egg-free, dairy-free chocolate cake</a> has neither (it does have wheat). Doubled, it makes about 20 cupcakes.</td></tr>
+        <tr><th scope="row">Milk</th><td>Make the chocolate cake or cupcakes with a plant milk. For frosting, use vegetable shortening or a plant-based butter stick and plant milk. Check labels: some margarines contain milk.</td></tr>
+        <tr><th scope="row">Wheat or gluten</th><td>A cup-for-cup gluten-free flour blend that contains xanthan gum works in the vanilla cake and cupcakes. Use clean pans and utensils.</td></tr>
+        <tr><th scope="row">Peanuts and tree nuts</th><td>Every cake and frosting here is made without nuts. Check chocolate chips, sprinkles and candies for nuts or “may contain” warnings, and leave pecans off the sheet cake.</td></tr>
+        <tr><th scope="row">Sesame</th><td>Hummus contains sesame (tahini). Use ranch or another dip, and check bread and bun labels.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="hs-small">Keep the allergy-safe cake on its own plate with its own knife, and serve it first. Label dishes on the table so guests and parents can check.</p>
+  </section>
+
+  <section class="hs-sec mp-box" id="safety" aria-labelledby="oc-sh">
+    <h2 id="oc-sh">🌡 Party food safety</h2>
+    <div class="oc-cols">
+      <div>
+        <h3>On the table (USDA)</h3>
+        <ul>
+          <li>Food sits out for <b>no more than 2 hours</b>. After that, refrigerate it or throw it away. The planner shows the time.</li>
+          <li>Keep <b>hot food at 140°F or warmer</b> (a slow cooker or warming tray helps) and <b>cold food at 40°F or colder</b> (set dishes in bowls of ice).</li>
+          <li>Serve on several <b>small platters</b>. When one empties, swap in a fresh one from the kitchen rather than adding food to a platter that’s been out.</li>
+        </ul>
+        <h3>While baking (FDA)</h3>
+        <p>Don’t eat or taste raw cake batter or cookie dough, and don’t let kids lick the spoon: raw flour and raw eggs can carry germs. The same goes for using raw dough as play clay.</p>
+      </div>
+      <div>
+        <h3>Cooking temperatures (USDA)</h3>
+        <ul>
+          <li>Chicken tenders: <b>165°F</b>.</li>
+          <li>Hot dogs, and leftovers reheated: <b>165°F</b>, steaming hot.</li>
+          <li>Burgers: <b>160°F</b>.</li>
+        </ul>
+        <h3>Little guests</h3>
+        <p>For toddlers and preschoolers, cut hot dogs, grapes and cherry tomatoes into small pieces; whole, they are choking hazards for young children (CDC). Have kids sit down to eat.</p>
+        <h3>After the party</h3>
+        <p>Refrigerate leftovers within 2 hours, in shallow containers, and eat them within 3 to 4 days. A cake with cream cheese frosting goes in the refrigerator.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hs-sec hs-note" id="history" aria-labelledby="oc-hh">
+    <h2 id="oc-hh">📜 Cake and candles</h2>
+    <p>Children’s birthday parties with a cake and candles, called <i>Kinderfest</i>, were a custom in Germany by the 18th century, with a candle for each year. The custom spread to Britain and America in the 1800s, as cheaper sugar, baking powder and home ovens made frosted layer cakes possible in ordinary kitchens.</p>
+    <p class="mp-glinks hs-noprint"><a class="mp-glink" href="https://grokipedia.com/page/Birthday_cake" rel="noopener">Birthday cake (Grokipedia)</a><a class="mp-glink" href="https://grokipedia.com/page/Buttercream" rel="noopener">Buttercream</a><a class="mp-glink" href="https://grokipedia.com/page/Wacky_cake" rel="noopener">Wacky cake</a></p>
+  </section>
+
+  <div class="oc-printout" id="oc-printout" aria-hidden="true"></div>
+</div>
+<script type="application/json" id="oc-data">{{ dict "slug" "birthday" "title" "Birthday party" "unit" (slice "guest" "guests") "def" $T.default_menu "half" (slice "mains" "finger" "fresh") "cakes" $T.cakes "day" $T.day "r" $mini | jsonify | safeJS }}</script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/occasions.js" | relURL }}?v={{ (os.Stat "static/meal-prep/occasions.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/birthday.js" | relURL }}?v={{ (os.Stat "static/meal-prep/birthday.js").ModTime.Unix }}" defer></script>
+{{ end }}

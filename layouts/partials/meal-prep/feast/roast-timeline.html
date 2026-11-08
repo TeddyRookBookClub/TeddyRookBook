@@ -1,0 +1,15 @@
+{{- /* The roast timeline for the Christmas and Easter pages (feast.js fills #tl-out). Called with (dict "page" . "C" $C "R" $R "title" "…" "intro" "…"). */ -}}
+{{ $C := .C }}{{ $R := .R }}
+<section class="hs-sec mp-box fe-tl" id="plan" aria-labelledby="fe-th">
+  <h2 id="fe-th">⏰ {{ .title }}</h2>
+  <p>{{ .intro }}</p>
+  <div class="fe-form">
+    <label class="mp-f"><span>Dinner date</span><input type="date" id="tl-date"></label>
+    <label class="mp-f"><span>Dinner time</span><input type="time" id="tl-time" value="{{ .time | default "17:00" }}" step="900"></label>
+    <label class="mp-f"><span>The roast</span><select id="tl-roast">{{ range $k, $v := $C.roasts }}<option value="{{ $k }}"{{ if eq $k $.first }} selected{{ end }}>{{ $v.label }}</option>{{ end }}</select></label>
+    <label class="mp-f"><span>Weight (lb, as bought)</span><input type="number" id="tl-lb" value="{{ .lb | default 6 }}" min="2" max="20" step="0.5" inputmode="decimal"></label>
+  </div>
+  <p class="mp-warn" id="tl-warn" hidden></p>
+  <ol class="fe-steps" id="tl-out" aria-live="polite"><li>Loading the plan…</li></ol>
+  <p class="hs-small">Times are planning guides from USDA’s roasting tables. The roast is done when a food thermometer in the thickest part, away from bone, reads the temperature shown, whatever the clock says. The side dishes go in the oven while the roast rests under foil, and the plan fits them on two racks.</p>
+</section>

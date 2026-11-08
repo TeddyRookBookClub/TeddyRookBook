@@ -1,0 +1,50 @@
+{{- /* Page-specific sections for /meal-prep/game-day/ (layouts/meal-prep/occasion.html calls this twice: where = "top", then "bottom").
+   Safety: FoodSafety.gov game-day party guidance, USDA FSIS (temperatures, holding hot food at 140°F), U.S. Fire Administration and the
+   Cambridge Fire Department (NFPA-based) for frying. */ -}}
+{{ if eq .where "top" }}
+<section class="hs-sec mp-box oc-info" id="safety" aria-labelledby="gd-sh">
+  <h2 id="gd-sh">🌡 Party food safety, from kickoff to the final whistle</h2>
+  <div class="oc-cols">
+    <div>
+      <h3>A game lasts longer than the 2-hour rule</h3>
+      <p>Pregame, four quarters and halftime add up to four hours or more, but perishable food shouldn’t sit out longer than <b>2 hours</b>. So plan in waves:</p>
+      <ul>
+        <li>Put out food in <b>batches</b>. Keep the rest hot in the oven or cold in the refrigerator, and bring out fresh platters around halftime.</li>
+        <li>After 2 hours at room temperature, refrigerate dishes or throw them out; don’t just top up an old bowl.</li>
+        <li>Keep <b>hot dips and chili</b> in a slow cooker on warm or low (140°F or above).</li>
+        <li>Set <b>cold dips</b> in a bowl nested in a bigger bowl of ice, and swap the ice as it melts.</li>
+        <li>Snack mix, chips, pretzels and cookies can stay out all game; they fill the gaps between hot batches.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="mp-tablewrap"><table class="oc-table">
+        <caption>Cook and reheat to (USDA)</caption>
+        <thead><tr><th scope="col">Food</th><th scope="col">Temperature</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Chicken wings and chicken dip</th><td>165°F</td></tr>
+          <tr><th scope="row">Burgers, sliders and meatballs (ground beef)</th><td>160°F</td></tr>
+          <tr><th scope="row">Chili and other dishes made ahead, reheated</th><td>165°F</td></tr>
+          <tr><th scope="row">Hot dishes held for serving</th><td>140°F or above</td></tr>
+          <tr><th scope="row">Cold dishes held for serving</th><td>40°F or below</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Frying wings safely</h3>
+      <ul>
+        <li>Stay with the pot the whole time. If you have to leave the kitchen, turn the burner off.</li>
+        <li>Use a deep, heavy pot with plenty of room above the oil and a deep-fry thermometer. If the oil smokes, turn off the heat.</li>
+        <li>Keep a lid or sheet pan beside the stove. If the oil catches fire, turn off the burner and slide the lid over the pot. <b>Never pour water on a grease fire.</b></li>
+        <li>Turn pot handles toward the back of the stove, and keep kids back from it.</li>
+        <li>Prefer less fuss? The <a href="{{ "meal-prep/recipes/crispy-baked-buffalo-wings/" | relURL }}">baked wings</a> come out crisp with no pot of oil.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+{{ else }}
+<section class="hs-sec hs-note oc-info" id="history" aria-labelledby="gd-hh">
+  <h2 id="gd-hh">📜 Where the party food came from</h2>
+  <p><b>Buffalo wings</b> are usually traced to the Anchor Bar in Buffalo, New York, where Teressa Bellissimo is said to have fried chicken wings and tossed them in hot sauce and butter one night in 1964, serving them with celery and blue cheese dressing. Another Buffalo restaurateur, John Young, was serving breaded wings around the same time, so the city has more than one claim.</p>
+  <p><b>Nachos</b> are credited to Ignacio “Nacho” Anaya, a restaurant host in Piedras Negras, Mexico, just across the border from Eagle Pass, Texas. In 1943 he topped tortilla chips with cheese and pickled jalapeños for a group of late-arriving guests. They spread to American ballparks and stadiums in the 1970s.</p>
+  <p><b>Chili con carne</b> grew up in Texas in the 1800s, and every family seems to have its own version. Beans or no beans is still a friendly argument.</p>
+  <p class="mp-glinks hs-noprint"><a class="mp-glink" href="https://grokipedia.com/page/Buffalo_wing" rel="noopener">Buffalo wing (Grokipedia)</a><a class="mp-glink" href="https://grokipedia.com/page/Nachos" rel="noopener">Nachos</a><a class="mp-glink" href="https://grokipedia.com/page/Ignacio_Anaya" rel="noopener">Ignacio Anaya</a><a class="mp-glink" href="https://grokipedia.com/page/Chili_con_carne" rel="noopener">Chili con carne</a><a class="mp-glink" href="https://grokipedia.com/page/Seven-layer_dip" rel="noopener">Seven-layer dip</a></p>
+</section>
+{{ end }}

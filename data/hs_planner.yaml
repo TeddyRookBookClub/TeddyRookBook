@@ -15,6 +15,8 @@
 #   unit: <data/science_units key>            Science Lab and Business units, chapter by chapter
 #   lab: young | teen                         Science Lab play ideas (data/hs_planner_lab.yaml), dealt out one lab after another
 #   trade: <data/trades key>   adult: [<data/adult keys>]
+#   bible: '73' | '66'                       Bible in a Year (data/bibleyear.json): seven readings a school week, whatever the
+#     number of school days (five days: Thursday and Friday have two), each linking to its day on /bible-in-a-year/
 #   whole: true  lessons are never split across days: a lesson waits until the subject's minutes add up to it
 #     (Science Lab: 40 minutes a week of 20-minute sessions = two sessions a week).
 # A course whose pages are missing from the build is left out of the planner. Course keys are saved in people's plans:
@@ -2035,3 +2037,32 @@ subjects:
     from: 9
     to: 99
     rep: 1
+- key: bibleyear
+  name: Bible in a Year
+  icon: 📖
+  on_ages: []
+  rank: [[99, 119]]
+  mins: [[99, 105]]
+  hw: [[99, 0]]
+  note: 'The whole Bible in 365 days, in the order of its story, with a short psalm or proverbs reading each day. Seven readings a school week; on a five-day week, Thursday and Friday have two (tick Saturday and Sunday in step 2 to read one a day). Pick 73 books (Catholic Bibles) or 66 books (most Protestant Bibles) in the Book menu; "From lesson" is the day to start on.'
+  link: {url: /bible-in-a-year/, text: 'The whole plan, with free links to read each day →'}
+  courses:
+  - key: bible-73
+    bible: '73'
+    name: 'Bible in a Year: 73 books (Catholic)'
+    url: /bible-in-a-year/
+    w: Day
+    from: 3
+    to: 99
+    rep: 1
+    mins: 15
+  - key: bible-66
+    bible: '66'
+    name: 'Bible in a Year: 66 books'
+    url: /bible-in-a-year/
+    w: Day
+    from: 3
+    to: 99
+    rep: 1
+    mins: 15
+    alt: true

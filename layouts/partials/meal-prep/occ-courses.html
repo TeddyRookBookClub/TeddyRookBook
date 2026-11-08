@@ -1,0 +1,24 @@
+{{- /* The recipe cards for an occasion collection, one section per course, then "Make it from scratch".
+   Takes dict: T (the collection plan), R (recipes by id), S (from-scratch pages by id), scratchIntro */ -}}
+{{ $R := .R }}{{ $S := .S }}
+{{ range .T.courses }}
+<section class="hs-sec" id="{{ .id }}">
+  <h2><span aria-hidden="true">{{ .icon }}</span> {{ .title }}</h2>
+  {{ with .intro }}<p>{{ . }}</p>{{ end }}
+  <div class="mp-rgrid">
+    {{ range .items }}{{ $p := split . ":" }}{{ $id := index $p 1 }}
+    {{ if eq (index $p 0) "r" }}{{ with index $R $id }}
+    <a class="mp-rcard" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .summary }}</small><small>{{ partial "meal-prep/mins.html" .times.total }} · serves {{ .servings }}{{ if ne .collection $.slug }} · from our recipes{{ end }}</small></span></a>
+    {{ end }}{{ else }}{{ with index $S $id }}
+    <a class="mp-rcard" href="{{ printf "meal-prep/scratch/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .summary }}</small><small>{{ partial "meal-prep/mins.html" .times.total }} · make it from scratch</small></span></a>
+    {{ end }}{{ end }}{{ end }}
+  </div>
+</section>
+{{ end }}
+<section class="hs-sec" id="scratch">
+  <h2>🧑‍🍳 Make it from scratch</h2>
+  <p>{{ .scratchIntro }}</p>
+  <div class="mp-rgrid">
+    {{ range .T.scratch }}{{ with index $S . }}<a class="mp-rcard" href="{{ printf "meal-prep/scratch/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .yield }}</small></span></a>{{ end }}{{ end }}
+  </div>
+</section>

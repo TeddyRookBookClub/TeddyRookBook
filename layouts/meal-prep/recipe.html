@@ -8,7 +8,14 @@
 {{ $alname := dict }}{{ range $m.meta.allergens }}{{ $alname = merge $alname (dict .id (.name | default .id)) }}{{ end }}
 <div class="hs mp" id="mp-recipe" data-src="{{ $src }}" data-id="{{ $id }}" data-plan="{{ "meal-prep/plan/" | relURL }}">
   {{ $tg := slice }}{{ with site.Data.meals.recipes }}{{ with .thanksgiving }}{{ $tg = .collection.all }}{{ end }}{{ end }}
-  {{ if $r.origin }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "From the great kitchens" "u" "meal-prep/classics/") (dict "t" $r.name)) }}{{ else if $r.collection }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Thanksgiving dinner" "u" "meal-prep/thanksgiving/") (dict "t" $r.name)) }}{{ else if $r.plate }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Simple plates, all day" "u" "meal-prep/simple-plates/") (dict "t" $r.name)) }}{{ else }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Recipes" "u" "meal-prep/recipes/") (dict "t" $r.name)) }}{{ end }}
+  {{- /* other collections (data/meals/recipes/<slug>.json with collection.meta {title, url, icon, keywords}): the crumb for a
+     recipe written for one, and a link to every collection page that lists it (collection.all) */ -}}
+  {{ $cm := dict "title" "Thanksgiving dinner" "url" "meal-prep/thanksgiving/" "blurb" "Thanksgiving dinner" }}{{ $inColl := slice }}
+  {{ range $k, $v := site.Data.meals.recipes }}{{ if and (reflect.IsMap $v) (isset $v "collection") }}{{ with $v.collection.meta }}
+    {{ if eq $k $r.collection }}{{ $cm = . }}{{ end }}
+    {{ if in $v.collection.all $id }}{{ $inColl = $inColl | append . }}{{ end }}
+  {{ end }}{{ end }}{{ end }}
+  {{ if $r.origin }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "From the great kitchens" "u" "meal-prep/classics/") (dict "t" $r.name)) }}{{ else if $r.collection }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" $cm.title "u" $cm.url) (dict "t" $r.name)) }}{{ else if $r.plate }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Simple plates, all day" "u" "meal-prep/simple-plates/") (dict "t" $r.name)) }}{{ else }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Recipes" "u" "meal-prep/recipes/") (dict "t" $r.name)) }}{{ end }}
   <header class="hs-hero mp-hero">
     <p class="hs-eyebrow">{{ delimit (apply $r.meal "strings.FirstUpper" ".") " · " }}{{ with $r.protein }}{{ if ne . "vegetarian" }} · {{ strings.FirstUpper . }}{{ end }}{{ end }}</p>
     <h1><span aria-hidden="true">{{ $r.emoji }}</span> {{ $r.name }}</h1>
@@ -20,6 +27,7 @@
       {{ range $r.diet }}<span class="mp-badge">{{ replace . "-" " " }}</span>{{ end }}
     </div>
     {{ if in $tg $id }}<p class="mp-glinks hs-noprint"><a class="mp-glink" href="{{ "meal-prep/thanksgiving/" | relURL }}#menu"><span aria-hidden="true">🦃</span> Part of our Thanksgiving dinner: menu, timeline and shopping list →</a></p>{{ end }}
+    {{ with $inColl }}<p class="mp-glinks hs-noprint">{{ range . }}<a class="mp-glink" href="{{ .url | relURL }}#{{ .anchor | default "menu" }}"><span aria-hidden="true">{{ .icon }}</span> In our collection {{ .title }}: menu and shopping list →</a>{{ end }}</p>{{ end }}
     {{ if $r.plate }}<p class="mp-glinks hs-noprint"><a class="mp-glink" href="{{ "meal-prep/simple-plates/" | relURL }}"><span aria-hidden="true">🍽</span> One of our simple plates: kids’ portions and batch-cooking a week →</a></p>{{ end }}
     <div class="mp-cta hs-noprint"><a class="hs-btn" id="rp-add" href="{{ "meal-prep/plan/" | relURL }}?add={{ $id }}">📅 Add to my plan</a><button type="button" class="hs-btn ghost" id="rp-print">🖨 Print this recipe</button></div>
   </header>
@@ -100,7 +108,7 @@
       {{ end }}
     </div>
   </div>
-  <p class="hs-small">{{ if $r.origin }}Our own adaptation of a public-domain recipe, in our own words.{{ else if $r.collection }}An original Teddy Rook Book recipe, written for our Thanksgiving dinner; safety steps follow USDA.{{ else }}An original Teddy Rook Book recipe.{{ end }} Nutrition is estimated from USDA FoodData Central and changes with brands and portions.</p>
+  <p class="hs-small">{{ if $r.origin }}Our own adaptation of a public-domain recipe, in our own words.{{ else if $r.collection }}An original Teddy Rook Book recipe, written for our {{ if $cm.blurb }}{{ $cm.blurb }}{{ else }}{{ $cm.title }} collection{{ end }}; safety steps follow USDA.{{ else }}An original Teddy Rook Book recipe.{{ end }} Nutrition is estimated from USDA FoodData Central and changes with brands and portions.</p>
 </div>
 <script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
 <script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>

@@ -1,0 +1,21 @@
+{{- /* Christmas: the roast timeline and the cookie-swap planner (feast.js). */ -}}
+{{ $C := .C }}{{ $R := .R }}
+{{ partial "meal-prep/feast/roast-timeline.html" (dict "C" $C "R" $R "first" "standing-rib-roast" "lb" 5.5 "time" "17:00" "title" "Roast timeline: when the roast goes in" "intro" "Enter when you want to eat, pick the roast and its weight. The plan works backward from dinner with USDA’s minutes per pound, then fits the Yorkshire puddings, potatoes and other oven dishes in while the roast rests.") }}
+<section class="hs-sec mp-box" id="swap" aria-labelledby="fe-sw">
+  <h2 id="fe-sw">🎀 Cookie swap planner</h2>
+  <p>At a cookie swap, everyone bakes one kind of cookie in quantity and goes home with a mix of all of them. Tell the planner how many people are swapping and how many cookies each person takes from each baker.</p>
+  <div class="fe-form">
+    <label class="mp-f"><span>People swapping (you included)</span><input type="number" id="sw-bakers" value="6" min="2" max="40" step="1" inputmode="numeric"></label>
+    <label class="mp-f"><span>Cookies each person takes from each baker</span><select id="sw-each"><option value="6">6 (half a dozen)</option><option value="12" selected>12 (a dozen)</option><option value="24">24 (two dozen)</option></select></label>
+    <label class="mp-f"><span>The cookie you’ll bake</span><select id="sw-cookie">{{ range $k, $v := $C.cookie_yield }}{{ with index $R $k }}<option value="{{ .id }}"{{ if eq .id "butter-shortbread" }} selected{{ end }}>{{ .name }}</option>{{ end }}{{ end }}</select></label>
+  </div>
+  <label class="mp-cb"><input type="checkbox" id="sw-extra" checked> Bake an extra dozen for a tasting plate at the party</label>
+  <div class="fe-out" id="sw-out" aria-live="polite"></div>
+  <p class="hs-noprint"><button type="button" class="hs-btn" id="sw-use">Use this in my shopping list</button></p>
+  <div class="mp-tips">
+    <div class="mp-tip"><b>Pick a sturdy cookie</b>Shortbread, snickerdoodles, gingerbread, crinkles and fudge travel well. Delicate iced cookies need a flat box, one layer deep.</div>
+    <div class="mp-tip"><b>Bake ahead</b>Most doughs freeze for 3 months. Bake a batch an evening over the week before, or freeze baked cookies and thaw them in their container.</div>
+    <div class="mp-tip"><b>Label every box</b>Write the cookie’s name and what it contains (wheat, milk, eggs, nuts, peanuts, soy), so guests with allergies can choose safely.</div>
+    <div class="mp-tip"><b>Share the recipe</b>Print the recipe card from the recipe page and tuck one in each box.</div>
+  </div>
+</section>

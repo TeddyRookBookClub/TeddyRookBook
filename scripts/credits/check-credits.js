@@ -31,6 +31,7 @@ const SECTIONS = [
   ['/homeschool/outdoor-skills/', 'tree'], ['/homeschool/old-exams/', 'under'], ['/homeschool/language-mix/', 'exact'],
   ['/homeschool/actual-reading/', 'tree'],          // Hannah Ward (Phonics Practice is original: see EXCEPTIONS)
   ['/harvard-classics/', 'tree'],
+  ['/bible-in-a-year/', 'tree'],                   // our own plan; verse counts and the linked texts are credited
   ['/american-history/federalist-papers/', 'tree'], ['/american-history/anti-federalist-papers/', 'tree'], ['/american-history/ratification-debate/', 'exact'],
   ['/languages/', 'tree'],
   ['/geography/', 'tree'], ['/egypt/', 'tree'], ['/egyptology/', 'tree'], ['/art/gallery/', 'exact'], ['/art/flashcards/', 'exact'],

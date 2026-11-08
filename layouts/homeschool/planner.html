@@ -4,7 +4,7 @@
 {{- /* Course kinds (data/hs_planner.yaml): data (a book on this site), ar (Hannah Ward's PDFs), ext (a course elsewhere),
    ladder + lc (a Math Ladder or other ladder course: one lesson per topic, URLs built in planner.js from base + slug),
    practice + sessions (a practice page: one session per school day), section (a section's chapters, by weight),
-   unit (a Science Lab or Business unit, data/science_units), trade (data/trades/<key>.json), adult (Being an Adult 101),
+   unit (a Science Lab or Business unit, data/science_units), bible (Bible in a Year, data/bibleyear.json), trade (data/trades/<key>.json), adult (Being an Adult 101),
    lab (Science Lab play ideas, data/hs_planner_lab.yaml; "x"/"xt" = the ladder topic an idea goes with).
    Subjects: "ages" = on_ages (switched on by default), "rank" = [age up to, rank] rows that order the list (100+ = More subjects).
    A course whose pages aren't in this build is left out. "p" = where its progress lives (u: music chapters). */ -}}
@@ -59,6 +59,27 @@
       {{- if site.GetPage "/being-an-adult" -}}
         {{- range .adult -}}{{- range (index site.Data.adult .).guides -}}{{- $i = add $i 1 -}}{{- $ls = $ls | append (dict "n" $i "t" .name "m" $m "u" (printf "/being-an-adult/%s/" .key | relURL)) -}}{{- end -}}{{- end -}}
       {{- else -}}{{- $ok = false -}}{{- end -}}
+    {{- else if .bible -}}
+      {{- /* Bible in a Year (data/bibleyear.json, version "73" or "66"): one lesson per day of the plan, titled with its
+         readings; planner.js links each to /bible-in-a-year/#day-N-<version> and deals out seven a school week ("wk7") */ -}}
+      {{- $m := .mins -}}{{- $bd := site.Data.bibleyear -}}
+      {{- if and $bd (site.GetPage "/bible-in-a-year") -}}
+        {{- $bn := dict -}}{{- range $bd.books }}{{ $bn = merge $bn (dict .k .n) }}{{ end -}}
+        {{- range $j, $day := index $bd.plans .bible -}}
+          {{- $parts := slice -}}
+          {{- range (slice $day.r $day.p) -}}{{- $grp := slice -}}{{- range . -}}
+            {{- $s := printf "%s %v" (cond (eq .b "Ps") "Psalm" (index $bn .b)) .f -}}
+            {{- if and (in (slice "Obad" "Phlm" "2John" "3John" "Jude") .b) (not .vr) }}{{ $s = index $bn .b }}{{ end -}}
+            {{- with .t }}{{ $s = printf "%s–%v" $s . }}{{ end -}}
+            {{- with .vr }}{{ $s = printf "%s:%v–%v" $s (index . 0) (index . 1) }}{{ end -}}
+            {{- if eq (printf "%T" .f) "string" }}{{ $s = print $s " (Greek addition, Catholic Bibles only)" }}
+            {{- else if .dc }}{{ $s = print $s " (Catholic Bibles only)" }}{{ end -}}
+            {{- with .dcp }}{{ $s = printf "%s (verses %s in Catholic Bibles only)" $s . }}{{ end -}}
+            {{- $grp = $grp | append $s -}}
+          {{- end -}}{{- $parts = $parts | append (delimit $grp "; ") -}}{{- end -}}
+          {{- $ls = $ls | append (dict "n" (add $j 1) "t" (delimit $parts " · ") "m" $m) -}}
+        {{- end -}}
+      {{- else -}}{{- $ok = false -}}{{- end -}}
     {{- else if .ar -}}
       {{- /* Hannah Ward's Actual Reading: each lesson is a PDF on her site (data/hs_hannah.yaml) */ -}}
       {{- $m := .mins -}}
@@ -78,6 +99,7 @@
       {{- $c := dict "key" .key "name" $name "url" ($url | relURL) "from" .from "to" .to "rep" .rep "alt" (.alt | default false) "word" $word "lessons" $ls -}}
       {{- with .w }}{{ $c = merge $c (dict "w" .) }}{{ end -}}
       {{- with .whole }}{{ $c = merge $c (dict "whole" true) }}{{ end -}}
+      {{- with .bible }}{{ $c = merge $c (dict "wk7" true "ver" .) }}{{ end -}}
       {{- with $bar }}{{ $c = merge $c (dict "bar" .) }}{{ end -}}
       {{- with $base }}{{ $c = merge $c (dict "base" . "pp" $pp) }}{{ end -}}
       {{- if $n }}{{ $c = merge $c (dict "sessions" $n "daily" true "sm" .mins) }}{{ end -}}

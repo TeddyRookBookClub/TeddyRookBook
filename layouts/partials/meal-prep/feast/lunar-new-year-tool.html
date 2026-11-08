@@ -1,0 +1,17 @@
+{{- /* Lunar New Year: the dumpling-party planner and the countdown to the reunion dinner (feast.js, tool "party"). */ -}}
+{{ $C := .C }}
+<section class="hs-sec mp-box fe-tl" id="plan" aria-labelledby="fe-th">
+  <h2 id="fe-th">⏰ Dumpling party and dinner plan</h2>
+  <p>How many dumplings to fold for your guests (set above), how many wrappers to buy, how long folding takes, and a countdown to the reunion dinner on New Year’s Eve. The date starts on the eve of the next New Year{{ with $C.dates }}{{ with index . 0 }} ({{ index . 1 }} begins {{ (time.AsTime (index . 0)).Format "January 2, 2006" }}){{ end }}{{ end }}.</p>
+  <div class="fe-form">
+    <label class="mp-f"><span>Dumplings are</span><select id="pp-role"><option value="main" selected>the main dish</option><option value="feast">one dish of several</option></select></label>
+    <label class="mp-f"><span>People folding</span><input type="number" id="pp-folders" value="3" min="1" max="20" step="1" inputmode="numeric"></label>
+    <label class="mp-f"><span>Folders are</span><select id="pp-skill"><option value="new" selected>mostly beginners</option><option value="pro">practiced</option></select></label>
+    <label class="mp-f"><span>Dinner date</span><input type="date" id="tl-date"></label>
+    <label class="mp-f"><span>Dinner time</span><input type="time" id="tl-time" value="18:30" step="900"></label>
+  </div>
+  <div class="fe-out" id="pp-out" aria-live="polite"></div>
+  <p class="mp-warn" id="tl-warn" hidden></p>
+  <ol class="fe-steps" id="tl-out" aria-live="polite"><li>Loading the plan…</li></ol>
+  <p class="hs-small">The plan includes the dishes checked on your menu. Dates of the coming New Years: {{ range $i, $d := $C.dates }}{{ if $i }}; {{ end }}{{ (time.AsTime (index $d 0)).Format "January 2, 2006" }} ({{ index $d 1 }}){{ end }}. The festival lasts 15 days and ends with the Lantern Festival.</p>
+</section>

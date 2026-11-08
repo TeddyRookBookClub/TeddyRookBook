@@ -1,0 +1,52 @@
+{{- /* Page-specific sections for /meal-prep/cookout/ (layouts/meal-prep/occasion.html calls this twice: where = "top", then "bottom").
+   Safety: USDA FSIS (Grilling Food Safely; Safe Temperature Chart; Tailgating Food Safety), U.S. Fire Administration (grills), CDC (CO). */ -}}
+{{ if eq .where "top" }}
+<section class="hs-sec mp-box oc-info" id="safety" aria-labelledby="ck-sh">
+  <h2 id="ck-sh">🌡 Picnic and cookout food safety</h2>
+  <div class="oc-cols">
+    <div>
+      <h3>Cold food cold, hot food hot</h3>
+      <ul>
+        <li>Keep cold food at <b>40°F or below</b> until it’s served: in the refrigerator, or in a cooler packed with ice or ice packs. A thermometer in the cooler tells you it’s working.</li>
+        <li>Pack drinks and food in <b>separate coolers</b>, so the food cooler isn’t opened every few minutes. Keep coolers in the shade with the lids closed.</li>
+        <li>Take raw meat out of the refrigerator or cooler only when it’s going straight onto the grill. Marinate in the refrigerator, never on the counter.</li>
+        <li>Keep cooked food hot, at <b>140°F or above</b>: move it to the side of the grill, away from the coals, or into a 200°F oven or a slow cooker.</li>
+        <li>Use clean platters and tongs for cooked food, never the ones that held it raw.</li>
+        <li>Grill meat and poultry all the way through at once. Never partly grill it and finish it later.</li>
+      </ul>
+      <h3>The 2-hour rule</h3>
+      <p>Perishable food shouldn’t sit out more than <b>2 hours</b>, or <b>1 hour when it’s above 90°F</b> outside. After that, throw it out. Set out salads and desserts in small batches and keep the rest cold, and the countdown above will remind you when to swap platters.</p>
+    </div>
+    <div>
+      <div class="mp-tablewrap"><table class="oc-table">
+        <caption>Safe internal temperatures (USDA)</caption>
+        <thead><tr><th scope="col">Food</th><th scope="col">Cook to</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Burgers and other ground beef, pork or lamb</th><td>160°F</td></tr>
+          <tr><th scope="row">Chicken and turkey, whole, pieces or ground</th><td>165°F</td></tr>
+          <tr><th scope="row">Steaks, chops, roasts and ribs of beef, pork or lamb</th><td>145°F, then rest 3 minutes</td></tr>
+          <tr><th scope="row">Fish and shellfish</th><td>145°F</td></tr>
+          <tr><th scope="row">Hot dogs and other fully cooked meats, reheated</th><td>165°F or steaming hot</td></tr>
+        </tbody>
+      </table></div>
+      <p class="hs-small">Color isn’t a reliable test: a burger can brown before it’s safe. Check the thickest part with a food thermometer.</p>
+      <h3>Grill fire safety</h3>
+      <ul>
+        <li>Use charcoal, gas and pellet grills <b>outdoors only</b>. Never use one inside a home, garage, tent or camper: it can start a fire and its carbon monoxide can build up in enclosed spaces.</li>
+        <li>Set the grill well away from siding and deck railings, and out from under eaves and overhanging branches.</li>
+        <li>Keep a <b>3-foot safe zone</b> around the grill for kids and pets.</li>
+        <li>Open a gas grill’s lid before lighting it. Never leave a lit grill unattended.</li>
+        <li>Clean grease off the grill after each use so it can’t catch fire.</li>
+        <li>Let charcoal cool completely, then put it in a metal can with a lid.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+{{ else }}
+<section class="hs-sec hs-note oc-info" id="history" aria-labelledby="ck-hh">
+  <h2 id="ck-hh">📜 The Fourth of July in brief</h2>
+  <p>Independence Day marks July 4, 1776, when the Second Continental Congress adopted the Declaration of Independence in Philadelphia. Congress first made the Fourth a legal holiday for federal workers in Washington, D.C., in 1870. From early on, Americans have marked the day outdoors: parades, speeches, music, fireworks and picnics.</p>
+  <p>Cookouts grew with backyards and parks. Hot dogs and hamburgers became popular American foods in the late 1800s and early 1900s, and regional barbecue styles, from Carolina pulled pork to Texas brisket and Kansas City ribs, each have their own long history. The menu on this page borrows from all of them; summer weekends and Memorial Day and Labor Day cookouts work just as well.</p>
+  <p class="mp-glinks hs-noprint"><a class="mp-glink" href="https://grokipedia.com/page/Independence_Day_(United_States)" rel="noopener">Independence Day (Grokipedia)</a><a class="mp-glink" href="https://grokipedia.com/page/Hot_dog" rel="noopener">Hot dog</a><a class="mp-glink" href="https://grokipedia.com/page/Hamburger" rel="noopener">Hamburger</a><a class="mp-glink" href="https://grokipedia.com/page/Barbecue_in_the_United_States" rel="noopener">Barbecue in the United States</a><a class="mp-glink" href="https://grokipedia.com/page/Watermelon" rel="noopener">Watermelon</a></p>
+</section>
+{{ end }}

@@ -1,0 +1,64 @@
+/* Meal Prep: holiday and party collection pages (layouts/meal-prep/occasion.html). Builds on meals.css and the .hs colors. */
+.oc-hero{border-left:5px solid var(--gold)}
+.oc-jump{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.8rem}
+.oc-jump a{display:inline-block;padding:.3rem .7rem;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--g);font:600 .88rem system-ui,sans-serif;text-decoration:none}
+.oc-jump a:hover{border-color:var(--g)}
+.oc-menu h2,.oc-tl h2{margin-top:0}
+.oc-menurow{display:flex;flex-wrap:wrap;gap:.6rem 1.5rem;align-items:center;margin:.6rem 0}
+.oc-guests{gap:.8rem;margin:0}
+.oc-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.6rem;margin:.8rem 0}
+.oc-pick .mp-fs{display:flex;flex-direction:column;gap:.1rem}
+.oc-pick legend{font-size:.95rem;line-height:1.25}
+.oc-pick .mp-cb{align-items:flex-start;min-height:1.7rem;line-height:1.3}
+.oc-pick .mp-cb input{margin-top:.15rem}
+.oc-cta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.oc-kosher{margin:.6rem 0 0}
+.oc-shop{margin-top:1rem;border-top:1px solid var(--line);padding-top:.6rem}
+.oc-shop>summary{cursor:pointer;color:var(--g)}
+.oc-shoplist{columns:2 260px;column-gap:1.5rem}
+.oc-shoplist h3{font:700 .95rem system-ui,sans-serif;color:var(--g);margin:.7rem 0 .2rem;break-after:avoid}
+.oc-shoplist ul{list-style:none;margin:0;padding:0}
+.oc-shoplist li{padding:.2rem 0;border-bottom:1px dotted var(--line);break-inside:avoid;font-size:.93rem}
+.oc-shoplist li span::before{content:" · "}
+.oc-shoplist li small{display:block;color:var(--muted);font-size:.78rem}
+.oc-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.4rem 1rem;margin:.6rem 0 1rem;align-items:end}
+.oc-form input[type=date],.oc-form input[type=time],.oc-form input[type=number]{width:100%}
+.oc-hot{margin-bottom:.45rem}
+.oc-steps{list-style:none;margin:0;padding:0}
+.oc-steps .oc-day{font:700 1.02rem Georgia,serif;color:var(--g);margin:1rem 0 .3rem;padding-bottom:.2rem;border-bottom:2px solid var(--gold)}
+.oc-steps .oc-day:first-child{margin-top:0}
+.oc-s{display:grid;grid-template-columns:6.6rem minmax(0,1fr);gap:.6rem;padding:.35rem 0 .35rem .6rem;border-left:4px solid var(--line);margin:.15rem 0}
+.oc-s time{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.oc-s.ahead{border-left-color:#7a9a5a}
+.oc-s.oven{border-left-color:#c0602a}
+.oc-s.grill,.oc-s.fry{border-left-color:#b8963e}
+.oc-s.stove{border-left-color:#3d7fa8}
+.oc-s.cold{border-left-color:#5a8fb8}
+.oc-s.safe{border-left-color:#8a4a9a}
+.oc-s.serve{border-left-color:#004225;font-weight:700}
+html[data-theme="dark"] .oc-s.serve{border-left-color:#6cc79a}
+.oc-table{border-collapse:collapse;width:100%;margin:0 0 1rem;font-size:.92rem}
+.oc-table caption{text-align:left;font-weight:700;color:var(--g);padding-bottom:.3rem}
+.oc-table th,.oc-table td{border-bottom:1px solid var(--line);padding:.35rem .5rem;text-align:left;vertical-align:top}
+.oc-table thead th{background:var(--soft)}
+.oc-table .oc-amt{font-weight:700;white-space:nowrap}
+.mp-tablewrap .oc-table{display:table}
+@media (max-width:560px){#oc-hm th:nth-child(2),#oc-hm td:nth-child(2){display:none}#oc-hm{font-size:.86rem}}
+.oc-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1rem 2rem}
+.oc-cols h3{color:var(--g);margin:.8rem 0 .3rem}
+.oc-cols>div>h3:first-child{margin-top:0}
+.oc-cols ul,.oc-info ul{padding-left:1.3rem;margin:.3rem 0}
+.oc-cols li,.oc-info li{margin:.25rem 0}
+.oc-info h3{color:var(--g)}
+.oc-printout{display:none}
+@media (max-width:520px){.oc-s{grid-template-columns:5.4rem minmax(0,1fr);gap:.4rem}.oc-s time{font-size:.9rem}.oc-jump a{font-size:.82rem}}
+@media print{
+  #mp-occ>:not(.oc-printout){display:none!important}
+  .oc-printout{display:block;color:#000;font-size:11pt}
+  .oc-printout h1{font:700 20pt Georgia,serif;margin:0 0 .2rem}
+  .oc-printout h2{font:700 14pt Georgia,serif;border-bottom:2px solid #b8963e;margin:1rem 0 .3rem;break-after:avoid}
+  .oc-printout h3{font:700 10.5pt system-ui,sans-serif;margin:.5rem 0 .1rem;break-after:avoid}
+  .oc-pm{columns:2;margin:0;padding-left:1.1rem}
+  .oc-pt{list-style:none;padding:0;margin:0}.oc-pt li{margin:.1rem 0;break-inside:avoid}.oc-pt .oc-day{font-weight:700;margin-top:.5rem}
+  .oc-ps{columns:2}.oc-ps ul{list-style:none;padding:0;margin:0}.oc-ps li{break-inside:avoid}
+}

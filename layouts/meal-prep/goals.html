@@ -8,6 +8,8 @@
 {{ $G := site.Data.meals.goals }}
 {{ $ex := slice }}{{ range $k, $v := $G.exclude }}{{ range $v }}{{ $ex = $ex | append . }}{{ end }}{{ end }}
 {{ $hol := slice }}{{ with site.Data.meals.recipes.thanksgiving }}{{ range .collection.courses }}{{ if in $G.exclude_courses .id }}{{ range .items }}{{ $p := split . ":" }}{{ if eq (index $p 0) "r" }}{{ $hol = $hol | append (index $p 1) }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
+{{- /* the other holiday collections list their party and dessert dishes in collection.goals_exclude */ -}}
+{{ range $k, $v := site.Data.meals.recipes }}{{ if and (reflect.IsMap $v) (isset $v "collection") }}{{ range $v.collection.goals_exclude }}{{ $hol = $hol | append . }}{{ end }}{{ end }}{{ end }}
 {{ $src := partial "meal-prep/data.html" . }}
 <div class="hs mp" id="mp-goals" data-src="{{ $src }}" data-plan="{{ "meal-prep/plan/" | relURL }}" data-rbase="{{ "meal-prep/recipes/" | relURL }}">
   {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Meet your goals")) }}

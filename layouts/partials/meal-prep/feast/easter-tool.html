@@ -1,0 +1,12 @@
+{{- /* Easter: the ham and lamb timeline and the egg plan (feast.js). */ -}}
+{{ $C := .C }}{{ $R := .R }}
+{{ partial "meal-prep/feast/roast-timeline.html" (dict "C" $C "R" $R "first" "bone-in-glazed-ham" "lb" 7 "time" "13:00" "title" "Ham and lamb timeline" "intro" "Enter when you want to eat, pick the ham or lamb and its weight. The plan works backward from dinner with USDA’s minutes per pound and fits the scalloped potatoes, rolls and other oven dishes around it. The date starts on the next Easter Sunday.") }}
+<section class="hs-sec mp-box" id="egg-plan" aria-labelledby="fe-eg">
+  <h2 id="fe-eg">🥚 Egg plan</h2>
+  <p>How many eggs to cook, and when, so they’re dyed in time and still good to eat. It uses the dinner date above.</p>
+  <div class="fe-form">
+    <label class="mp-f"><span>Eggs to dye and eat (deviled, egg salad)</span><input type="number" id="eg-eat" value="12" min="0" max="72" step="1" inputmode="numeric"></label>
+    <label class="mp-f"><span>Children hunting real eggs</span><input type="number" id="eg-kids" value="0" min="0" max="40" step="1" inputmode="numeric"></label>
+  </div>
+  <div class="fe-out" id="eg-out" aria-live="polite"></div>
+</section>

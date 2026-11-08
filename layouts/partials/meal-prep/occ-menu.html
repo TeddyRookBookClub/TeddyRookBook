@@ -1,0 +1,33 @@
+{{- /* The menu box for an occasion collection (lunchboxes, birthday, camping): checkboxes by course, a people stepper, print,
+   copy and "put this menu in my meal planner". static/meal-prep/occasions.js runs it.
+   Takes dict: T (the collection plan), R (recipes by id), people (stepper label), half (optional checkbox label), intro, note,
+   skip (course ids left out of the picker), nutbadge (true: mark dishes with peanuts or tree nuts) */ -}}
+{{ $T := .T }}{{ $R := .R }}{{ $skip := .skip | default slice }}
+<section class="hs-sec mp-box oc-menu" id="your-menu" aria-labelledby="oc-mh">
+  <h2 id="oc-mh">🧾 {{ .title | default "Your menu" }}</h2>
+  <p>{{ .intro }}</p>
+  <div class="oc-menurow">
+    <div class="mp-dlgrow"><span>{{ .people | safeHTML }}</span><span class="mp-step"><button type="button" id="oc-gm" aria-label="One fewer">−</button><output id="oc-g" aria-live="polite">{{ .guests | default 8 }}</output><button type="button" id="oc-gp" aria-label="One more">＋</button></span></div>
+    {{ with .half }}<label class="mp-cb"><input type="checkbox" id="oc-half" checked> {{ . }}</label>{{ end }}
+  </div>
+  <div class="oc-pick" id="oc-pick">
+    {{ range $T.courses }}{{ if not (in $skip .id) }}
+    <fieldset class="mp-fs"><legend><span aria-hidden="true">{{ .icon }}</span> {{ .title }}</legend>
+      {{ range .items }}{{ $p := split . ":" }}{{ if eq (index $p 0) "r" }}{{ with index $R (index $p 1) }}
+      <label class="mp-cb"><input type="checkbox" value="{{ .id }}"{{ if in $T.default_menu .id }} checked{{ end }}> <span><span aria-hidden="true">{{ .emoji }}</span> {{ .name }}{{ if $.nutbadge }}{{ if or (in .allergens "peanuts") (in .allergens "tree-nuts") }} <span class="oc-nut">(has nuts)</span>{{ end }}{{ end }}</span></label>
+      {{ end }}{{ end }}{{ end }}
+    </fieldset>
+    {{ end }}{{ end }}
+  </div>
+  <div class="oc-cta hs-noprint">
+    <button type="button" class="hs-btn pri" id="oc-print">🖨 {{ .printLabel | default "Print menu and shopping list" }}</button>
+    <a class="hs-btn" id="oc-plan" href="{{ "meal-prep/plan/" | relURL }}">📅 {{ .planLabel | default "Put this menu in my meal planner" }}</a>
+    <button type="button" class="hs-btn ghost" id="oc-copy">📋 Copy the shopping list</button>
+  </div>
+  <p class="hs-small">{{ .note }}</p>
+  <details class="oc-shop" id="oc-shopwrap" open>
+    <summary><b>Shopping list</b> <span class="hs-small" id="oc-shopsum"></span></summary>
+    <div id="oc-shop" aria-live="polite"><p class="mp-pending">The shopping list appears here once the recipes load.</p></div>
+    <p class="hs-small">Amounts round up to what stores sell. Check your pantry for spices and staples.</p>
+  </details>
+</section>

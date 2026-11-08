@@ -1,0 +1,59 @@
+{{- /* Page-specific sections for /meal-prep/hanukkah/ (layouts/meal-prep/occasion.html calls this twice: where = "top", then "bottom").
+   Context: Grokipedia (Hanukkah, Latke, Sufganiyah, Brisket (Jewish dish)); dates: Hebcal (collection.dates in hanukkah.json).
+   Frying: U.S. Fire Administration and the Cambridge Fire Department (NFPA-based). Temperatures: USDA FSIS. */ -}}
+{{ $T := .T }}
+{{ if eq .where "top" }}
+<section class="hs-sec hs-note oc-info" id="about" aria-labelledby="hk-ah">
+  <h2 id="hk-ah">🕎 About Hanukkah and its foods</h2>
+  <div class="oc-cols">
+    <div>
+      <p>Hanukkah is an eight-day Jewish festival, also called the Festival of Lights. The name comes from a Hebrew word for <i>dedication</i>. It remembers the rededication of the Temple in Jerusalem in 164 BC, after the Maccabees, a small Jewish force, won back the city from the Seleucid king Antiochus IV, who had banned Jewish practice and set up a pagan altar in the Temple.</p>
+      <p>The Talmud, compiled centuries later, tells that the Maccabees found only one small jar of pure oil for the Temple’s lamp, enough for a single day, and that it burned for eight days. Families light candles on a nine-branched menorah, one more each night, and set it where it can be seen from outside.</p>
+      <p><b>Why fried foods?</b> Foods cooked in oil recall the oil in that story. In many Ashkenazi homes (families with roots in Central and Eastern Europe) that means <b>latkes</b>, potato pancakes, with applesauce or sour cream. Potatoes came to Europe from the Americas in the 1500s, so earlier latkes were made from cheese or other ingredients. In Israel the favorite is <b>sufganiyot</b>, jelly doughnuts, and Sephardic and Middle Eastern families have their own fried treats, such as <b>bimuelos</b> and <b>sfenj</b>. Some families also eat cheese and dairy foods during the holiday, a custom tied to the story of Judith.</p>
+      <p>Customs differ from family to family and community to community. This page gathers foods many families enjoy; it isn’t a guide to religious practice.</p>
+    </div>
+    <div>
+      <div class="mp-tablewrap"><table class="oc-table">
+        <caption>When Hanukkah falls</caption>
+        <thead><tr><th scope="col">Begins at sundown</th><th scope="col">Ends at nightfall</th></tr></thead>
+        <tbody>{{ range $T.dates }}<tr><td>{{ (time.AsTime (index . 0)).Format "Monday, January 2, 2006" }}</td><td>{{ (time.AsTime (index . 1)).Format "Monday, January 2, 2006" }}</td></tr>{{ end }}</tbody>
+      </table></div>
+      <p class="hs-small">Dates from Hebcal. Hanukkah begins on the 25th of the Hebrew month of Kislev; the Hebrew calendar follows the moon, so the date moves around on the everyday calendar, from late November to late December.</p>
+      <div class="mp-tip"><b>Meat and dairy</b>Families who keep kosher don’t serve meat and dairy at the same meal. At a brisket or chicken dinner, latkes come with applesauce and are fried in oil; sour cream, blintzes and noodle kugel belong to a dairy meal. The menu above points it out if your choices mix the two.</div>
+      <h3>Frying safely</h3>
+      <ul>
+        <li>Stay with the pan the whole time. If you have to leave the kitchen, turn the burner off.</li>
+        <li>Squeeze grated potatoes dry and pat doughnuts free of loose flour; water and crumbs make oil spatter and smoke.</li>
+        <li>Keep the oil below smoking, about 350 to 375°F. If it smokes, turn off the heat.</li>
+        <li>Keep a lid or sheet pan beside the stove. If oil catches fire, turn off the burner and slide the lid over the pan. <b>Never pour water on a grease fire.</b></li>
+        <li>Turn handles toward the back and keep children back from the stove. Let used oil cool completely before throwing it away in a sealed container.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="mp-glinks hs-noprint"><a class="mp-glink" href="https://grokipedia.com/page/Hanukkah" rel="noopener">Hanukkah (Grokipedia)</a><a class="mp-glink" href="https://grokipedia.com/page/Latke" rel="noopener">Latke</a><a class="mp-glink" href="https://grokipedia.com/page/Sufganiyah" rel="noopener">Sufganiyah</a><a class="mp-glink" href="https://grokipedia.com/page/Brisket_(Jewish_dish)" rel="noopener">Brisket (Jewish dish)</a><a class="mp-glink" href="https://grokipedia.com/page/Kugel" rel="noopener">Kugel</a><a class="mp-glink" href="https://www.hebcal.com/holidays/chanukah-2026" rel="noopener">Hanukkah dates (Hebcal)</a></p>
+</section>
+{{ else }}
+<section class="hs-sec oc-info" id="ahead" aria-labelledby="hk-mh">
+  <h2 id="hk-mh">📋 Eight nights, a little at a time</h2>
+  <div class="oc-cols">
+    <div>
+      <h3>Make ahead</h3>
+      <ul>
+        <li><b>Weeks ahead:</b> fry a big batch of latkes, cool them on racks and freeze them flat. They recrisp in a 400°F oven in about 12 minutes.</li>
+        <li><b>2 to 3 days ahead:</b> make the applesauce (it keeps a week), bake the tzimmes, and roll the blintzes.</li>
+        <li><b>The day before:</b> braise the brisket, chill it, then lift off the fat and slice it cold. Bake the challah. Make the doughnut dough and let it rise slowly in the refrigerator.</li>
+        <li><b>On the night:</b> reheat the brisket to 165°F, bake the kugel, and fry the latkes last so they’re hot and crisp.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Leftovers</h3>
+      <ul>
+        <li>Refrigerate leftovers <b>within 2 hours</b> in shallow containers, and eat them within 3 to 4 days, or freeze them (USDA).</li>
+        <li>Reheat brisket, kugel and other cooked dishes to <b>165°F</b>.</li>
+        <li>Recrisp latkes on a rack in a hot oven; the microwave makes them soggy.</li>
+        <li>Next-day favorite: <a href="{{ "meal-prep/recipes/brisket-challah-sandwiches/" | relURL }}">brisket sandwiches on challah</a>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+{{ end }}
