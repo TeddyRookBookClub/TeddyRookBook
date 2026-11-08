@@ -1,0 +1,15 @@
+{
+ "note": "Settings for the goal planner at /meal-prep/goals/ (static/meal-prep/goals-core.js does the math; scripts/meals/goals.test.js checks it). Hand-edited. exclude: recipes the planner never suggests (they stay in the recipe finder). exclude_courses: Thanksgiving courses (data/meals/recipes/thanksgiving.json) left out as holiday dishes.",
+ "presets": [
+  {"id": "dv", "label": "2,000 calories, 50 g protein", "kcal": 2000, "protein": 50, "note": "The reference amounts on Nutrition Facts labels (the Daily Values)."},
+  {"id": "p100", "label": "2,000 calories, 100 g protein", "kcal": 2000, "protein": 100, "note": "The same calories with more protein."},
+  {"id": "p120", "label": "2,400 calories, 120 g protein", "kcal": 2400, "protein": 120, "note": "A common range for active adults."},
+  {"id": "p150", "label": "2,800 calories, 150 g protein", "kcal": 2800, "protein": 150, "note": "For a bigger, very active adult."},
+  {"id": "p180", "label": "3,400 calories, 180 g protein", "kcal": 3400, "protein": 180, "note": "For a large adult doing hard training most days."}
+ ],
+ "exclude_courses": ["turkey", "gravy", "stuffing", "cranberry", "desserts"],
+ "exclude": {
+  "desserts and treats": ["apple-pear-crisp", "apple-pie", "baked-alaska", "mixed-berry-cobbler", "oatmeal-raisin-walnut-cookies", "peach-cobbler", "peach-melba", "pears-belle-helene", "pecan-pie", "pumpkin-pie", "pumpkin-pie-parfaits", "stone-fruit-crisp", "smores-from-scratch", "mini-cheesecakes", "peanut-butter-cookies", "crepes-suzette", "grapefruit-granita", "watermelon-lime-pops", "berry-oat-crumble-bars", "plum-kuchen", "cherry-clafoutis", "watermelon-fruit-pizza", "baked-pears-walnuts", "no-bake-oat-bites", "berry-yogurt-pops"],
+  "sauces, spreads and pickles": ["bechamel-sauce", "hollandaise-sauce", "espagnole-demi-glace", "escoffier-tomato-sauce", "chicken-veloute", "buttermilk-ranch", "berry-chia-jam", "herb-cream-cheese-spread", "mango-salsa", "quick-pickled-beets", "quick-pickled-radishes", "melba-toast"]
+ }
+}

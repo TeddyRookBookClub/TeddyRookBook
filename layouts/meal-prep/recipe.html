@@ -7,7 +7,8 @@
 {{ $src := partial "meal-prep/data.html" . }}
 {{ $alname := dict }}{{ range $m.meta.allergens }}{{ $alname = merge $alname (dict .id (.name | default .id)) }}{{ end }}
 <div class="hs mp" id="mp-recipe" data-src="{{ $src }}" data-id="{{ $id }}" data-plan="{{ "meal-prep/plan/" | relURL }}">
-  {{ if $r.origin }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "From the great kitchens" "u" "meal-prep/classics/") (dict "t" $r.name)) }}{{ else }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Recipes" "u" "meal-prep/recipes/") (dict "t" $r.name)) }}{{ end }}
+  {{ $tg := slice }}{{ with site.Data.meals.recipes }}{{ with .thanksgiving }}{{ $tg = .collection.all }}{{ end }}{{ end }}
+  {{ if $r.origin }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "From the great kitchens" "u" "meal-prep/classics/") (dict "t" $r.name)) }}{{ else if $r.collection }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Thanksgiving dinner" "u" "meal-prep/thanksgiving/") (dict "t" $r.name)) }}{{ else if $r.plate }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Simple plates, all day" "u" "meal-prep/simple-plates/") (dict "t" $r.name)) }}{{ else }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Recipes" "u" "meal-prep/recipes/") (dict "t" $r.name)) }}{{ end }}
   <header class="hs-hero mp-hero">
     <p class="hs-eyebrow">{{ delimit (apply $r.meal "strings.FirstUpper" ".") " · " }}{{ with $r.protein }}{{ if ne . "vegetarian" }} · {{ strings.FirstUpper . }}{{ end }}{{ end }}</p>
     <h1><span aria-hidden="true">{{ $r.emoji }}</span> {{ $r.name }}</h1>
@@ -18,6 +19,8 @@
       {{ range $r.tags }}<span class="mp-badge">{{ replace . "-" " " }}</span>{{ end }}
       {{ range $r.diet }}<span class="mp-badge">{{ replace . "-" " " }}</span>{{ end }}
     </div>
+    {{ if in $tg $id }}<p class="mp-glinks hs-noprint"><a class="mp-glink" href="{{ "meal-prep/thanksgiving/" | relURL }}#menu"><span aria-hidden="true">🦃</span> Part of our Thanksgiving dinner: menu, timeline and shopping list →</a></p>{{ end }}
+    {{ if $r.plate }}<p class="mp-glinks hs-noprint"><a class="mp-glink" href="{{ "meal-prep/simple-plates/" | relURL }}"><span aria-hidden="true">🍽</span> One of our simple plates: kids’ portions and batch-cooking a week →</a></p>{{ end }}
     <div class="mp-cta hs-noprint"><a class="hs-btn" id="rp-add" href="{{ "meal-prep/plan/" | relURL }}?add={{ $id }}">📅 Add to my plan</a><button type="button" class="hs-btn ghost" id="rp-print">🖨 Print this recipe</button></div>
   </header>
   {{ with $r.allergens }}<p class="mp-tip"><b>Contains</b>{{ range $i, $a := . }}{{ if $i }}, {{ end }}{{ index $alname $a | default $a }}{{ end }}. Check the labels on what you buy; brands differ.</p>{{ else }}<p class="hs-small">None of the nine major allergens are in the usual versions of these ingredients. Check labels anyway; brands differ.</p>{{ end }}
@@ -97,7 +100,7 @@
       {{ end }}
     </div>
   </div>
-  <p class="hs-small">{{ if $r.origin }}Our own adaptation of a public-domain recipe, in our own words.{{ else }}An original Teddy Rook Book recipe.{{ end }} Nutrition is estimated from USDA FoodData Central and changes with brands and portions.</p>
+  <p class="hs-small">{{ if $r.origin }}Our own adaptation of a public-domain recipe, in our own words.{{ else if $r.collection }}An original Teddy Rook Book recipe, written for our Thanksgiving dinner; safety steps follow USDA.{{ else }}An original Teddy Rook Book recipe.{{ end }} Nutrition is estimated from USDA FoodData Central and changes with brands and portions.</p>
 </div>
 <script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
 <script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>

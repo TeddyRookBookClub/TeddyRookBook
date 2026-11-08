@@ -148,6 +148,9 @@ whole-chicken | Whole chicken | meat | fridge | | each=1800#4-lb chicken | ~each
 ground-chicken | Ground chicken | meat | fridge | 225 | | 1-lb package=1 lb | | gf | | Chicken, ground, raw | | |
 ground-turkey | Ground turkey, 93% lean | meat | fridge | 225 | | 1-lb package=1 lb; 3-lb package=3 lb | | gf | | Turkey, ground, 93% lean, 7% fat, raw | | |
 turkey-breast | Turkey breast, bone-in | meat | fridge |  |  | ~lb 0.5 |  | gf |  | Turkey, whole, breast, meat only, raw |  |  | Weights are as bought, bone included, so nutrition estimates run a little high.
+whole-turkey | Whole turkey | meat | fridge |  |  | ~lb 1 |  | gf | 171081 | Turkey, whole, meat and skin, raw |  | Thanksgiving turkey | Sold fresh or frozen by weight. A basted, self-basting, enhanced or kosher turkey already has salt added, so don't brine it.
+turkey-necks | Turkey necks or wings | meat | fridge |  |  | ~lb 0.5 |  | gf | 171086 | Turkey, whole, neck, meat only, raw |  | turkey wings, turkey backs | For stock and make-ahead gravy. Weights include the bone.
+cooked-turkey | Cooked turkey (leftover) | meat | fridge | 140 |  | ~lb 0.25 |  | gf | 171481 | Turkey, whole, meat only, cooked, roasted |  | leftover turkey, roast turkey | Leftover roast turkey, light and dark meat; deli roast turkey works too.
 pork-chops | Pork chops, boneless | meat | fridge | | chop=170#boneless pork chop | ~lb 0.25 | | gf | | Pork, fresh, loin, center loin (chops), boneless, separable lean and fat, raw | | loin chops |
 pork-chops-bone-in | Pork chops, bone-in | meat | fridge | | chop=225#bone-in pork chop | ~lb 0.25 | | gf | | Pork, fresh, loin, center loin (chops), bone-in, separable lean and fat, raw | | |
 pork-shoulder | Pork shoulder (Boston butt) | meat | fridge | | | ~lb 0.5 | | gf | | Pork, fresh, shoulder, whole, separable lean and fat, raw | | pork butt |
@@ -175,7 +178,10 @@ chicken-sausage | Chicken sausage (fully cooked)* | meat | fridge | | link=85#li
 catfish | Catfish fillets | meat | fridge | | fillet=140#fillet | ~lb 0.25 | fish | gf | | Fish, catfish, channel, farmed, raw | | |
 scallops | Sea scallops | meat | fridge | | each=30#scallop | ~lb 0.25 | shellfish | gf | | Mollusks, scallop, mixed species, raw | | | Scallops are mollusks; FDA's major allergen rule covers crustacean shellfish, but many people allergic to shellfish avoid both.
 lobster | Lobster meat, cooked | meat | fridge | 145 | each=140#lobster's meat (a 1¼-lb lobster) | ~lb 0.5 | shellfish | gf | 174209 | Crustaceans, lobster, northern, cooked, moist heat | | lobster tails, lobster meat | A 1¼-lb live lobster gives about 5 oz of meat; frozen tails or cooked meat from the seafood counter work too.
+oysters | Shucked oysters | meat | fridge | 248 | each=14#oyster | 1-pint container=1 pint | shellfish | gf | 171978 | Mollusks, oyster, eastern, wild, raw |  | oysters in their liquor | Oysters are mollusks; FDA's major allergen rule covers crustacean shellfish, but many people allergic to shellfish avoid both.
 # ---------- DELI ----------
+leftover-stuffing | Leftover stuffing or dressing | deli | fridge | 200 |  | ~cup 1 | wheat milk |  | 174931 | Bread, stuffing, dry mix, prepared |  | dressing | From your holiday dinner; nutrition is USDA's for prepared bread stuffing.
+leftover-mashed-potatoes | Leftover mashed potatoes | deli | fridge | 210 |  | ~cup 1 | milk | v gf | 168555 | Potatoes, mashed, home-prepared, whole milk and butter added |  | mashed potatoes | From your holiday dinner, or freshly made.
 deli-turkey | Sliced turkey (deli)* | deli | fridge | 140 | slice=28#slice | ~lb 0.25; 8-oz package=8 oz | | | | Turkey breast, sliced, prepackaged | | lunch meat, sandwich turkey |
 deli-ham | Sliced ham (deli)* | deli | fridge | 140 | slice=28#slice | ~lb 0.25; 8-oz package=8 oz | | | | Ham, sliced, pre-packaged, deli meat (96%fat free, water added) | | |
 deli-roast-beef | Sliced roast beef (deli)* | deli | fridge |  | slice=28#slice | ~lb 0.25 |  |  | 174570 | Roast beef, deli style, prepackaged, sliced |  |  | 
@@ -310,7 +316,9 @@ refried-beans-veg | Vegetarian refried beans* | canned | pantry | 250 | can=454#
 baked-beans | Baked beans* | canned | pantry | 254 | can=794#28-oz can; small-can=454#16-oz can | 28-oz can=1 can; 16-oz can=1 small-can | | v gf | | Beans, baked, canned, plain or vegetarian | | |
 canned-corn | Corn (canned) | canned | pantry | 165 | can=432#15.25-oz can | 15.25-oz can=1 can | | vg gf | | Corn, sweet, yellow, canned, whole kernel, drained solids | | |
 canned-green-beans | Green beans (canned) | canned | pantry | 135 | can=411#14.5-oz can | 14.5-oz can=1 can | | vg gf | | Beans, snap, green, canned, regular pack, drained solids | | |
+turkey-gravy | Turkey gravy* | canned | pantry | 238 |  | 12-oz jar=12 fl-oz | wheat |  | 171568 | Gravy, turkey, canned, ready-to-serve |  | leftover gravy | Leftover homemade gravy or a jar. Refrigerate homemade gravy and use it within 1 to 2 days.
 chicken-broth | Chicken broth* | canned | pantry | 240 | | 32-oz carton=1 quart; 14.5-oz can=14.5 fl-oz | | gf | | Soup, chicken broth, ready-to-serve | differences#stock-broth | chicken stock |
+turkey-broth | Turkey broth or stock* | canned | pantry | 240 |  | 32-oz carton=1 quart |  | gf | proxy:chicken-broth | Soup, chicken broth, ready-to-serve | differences#stock-broth | turkey stock | Nutrition is estimated from chicken broth.
 beef-broth | Beef broth* | canned | pantry | 240 |  | 32-oz carton=1 quart; 14.5-oz can=14.5 fl-oz |  | gf |  | Soup, beef broth or bouillon canned, ready-to-serve | differences#stock-broth | beef stock | 
 vegetable-broth | Vegetable broth* | canned | pantry | 240 | | 32-oz carton=1 quart | | vg gf | | Soup, vegetable broth, ready to serve | differences#stock-broth | |
 cream-of-mushroom | Condensed cream of mushroom soup* | canned | pantry | 251 | can=298#10.5-oz can | 10.5-oz can=1 can | wheat milk | v | | Soup, cream of mushroom, canned, condensed | | |
@@ -554,7 +562,7 @@ coconut-water | Coconut water | beverages | pantry | 240 | | 33.8-oz carton=33.8
 water | Water | beverages | pantry | 237 | | | | vg gf | none | | | tap water |
 """
 
-EDIBLE = {'whole-chicken': (0.61, 'USDA SR Legacy: 1 lb ready-to-cook chicken yields 276 g meat and skin'), 'pork-chops-bone-in': (0.77, 'USDA SR Legacy: a 259 g raw chop yields 199 g without bone')}
+EDIBLE = {'whole-turkey': (0.61, 'Estimate: USDA SR Legacy gives no yield for whole turkey, so this uses its whole-chicken yield (276 g meat and skin per 1 lb ready-to-cook bird)'), 'whole-chicken': (0.61, 'USDA SR Legacy: 1 lb ready-to-cook chicken yields 276 g meat and skin'), 'pork-chops-bone-in': (0.77, 'USDA SR Legacy: a 259 g raw chop yields 199 g without bone')}
 
 ALLERGENS = ['milk', 'eggs', 'fish', 'shellfish', 'tree-nuts', 'peanuts', 'wheat', 'soybeans', 'sesame']
 ALLERGEN_NAMES = {'milk': 'Milk', 'eggs': 'Eggs', 'fish': 'Fish', 'shellfish': 'Crustacean shellfish', 'tree-nuts': 'Tree nuts',

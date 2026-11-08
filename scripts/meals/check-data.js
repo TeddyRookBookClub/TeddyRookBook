@@ -149,7 +149,7 @@ for (const r of recipes) {
     if (!(isNum(ing.amount) && ing.amount > 0)) err(`${w}: ${ing.item} bad amount`);
     const g = toGrams(it, ing.amount, ing.unit);
     if (g === null) { err(`${w}: ${ing.amount} ${ing.unit} ${ing.item} not convertible`); continue; }
-    if (g > 5000) err(`${w}: ${ing.item} is ${g.toFixed(0)} g, too much?`);
+    if (g > 5000 && ing.in_nutrition !== false) err(`${w}: ${ing.item} is ${g.toFixed(0)} g, too much?`); // brine and frying oil (not eaten) may be more
     for (const ref of it.guides) if (!guideRefs.includes(ref)) guideRefs.push(ref);
     if (ing.optional) continue;
     it.allergens.forEach(a => reqAllergens.add(a));

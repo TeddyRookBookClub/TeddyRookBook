@@ -1,0 +1,184 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/goals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/goals.css").ModTime.Unix }}">
+{{- /* Meet your goals: a goal planner and a recipe finder over every Meal Prep recipe. The math is in
+   static/meal-prep/goals-core.js (tested by scripts/meals/goals.test.js); the page script is static/meal-prep/goals.js.
+   Settings (presets, recipes the planner leaves out) come from data/meals/goals.json. */ -}}
+{{ $G := site.Data.meals.goals }}
+{{ $ex := slice }}{{ range $k, $v := $G.exclude }}{{ range $v }}{{ $ex = $ex | append . }}{{ end }}{{ end }}
+{{ $hol := slice }}{{ with site.Data.meals.recipes.thanksgiving }}{{ range .collection.courses }}{{ if in $G.exclude_courses .id }}{{ range .items }}{{ $p := split . ":" }}{{ if eq (index $p 0) "r" }}{{ $hol = $hol | append (index $p 1) }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
+{{ $src := partial "meal-prep/data.html" . }}
+<div class="hs mp" id="mp-goals" data-src="{{ $src }}" data-plan="{{ "meal-prep/plan/" | relURL }}" data-rbase="{{ "meal-prep/recipes/" | relURL }}">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Meet your goals")) }}
+  <header class="hs-hero mp-hero gl-hero">
+    <p class="hs-eyebrow">Meal Prep · For adults with a nutrition goal</p>
+    <h1>Meet your goals</h1>
+    <p>Trying to eat a certain number of calories or grams of protein? Enter your targets and the planner picks a day or a week of our family recipes that lands close to them, with every meal’s numbers in plain view. The same meals feed the whole family; children simply eat kid-sized portions.</p>
+    <nav class="gl-jump hs-noprint" aria-label="On this page">
+      <a href="#planner">🎯 Plan to a goal</a><a href="#how">⚙️ How it picks</a><a href="#finder">🔎 Find recipes by protein</a><a href="#guide">📘 Protein and calories</a><a href="#labels">🏷 Reading labels</a><a href="#care">💚 Eat well, stay well</a>
+    </nav>
+  </header>
+
+  <p class="mp-tip gl-care-top"><b>For adults.</b> Targets here are for grown-ups; please don’t set calorie or protein targets for children. If you have a medical condition, are pregnant or breastfeeding, or have a history of disordered eating, set your goals with your doctor or a registered dietitian.</p>
+
+  <section class="hs-sec mp-box gl-plan" id="planner" aria-labelledby="gl-ph">
+    <h2 id="gl-ph">🎯 Plan meals to a goal</h2>
+    <p>Pick a starting point or type your own numbers. Only calories are required.</p>
+    <div class="gl-presets" role="group" aria-label="Starting points">
+      {{ range $G.presets }}<button type="button" class="gl-preset" data-kcal="{{ .kcal }}" data-protein="{{ .protein }}" title="{{ .note }}"><b>{{ .label }}</b><small>{{ .note }}</small></button>{{ end }}
+    </div>
+    <div class="gl-form">
+      <label class="mp-f"><span>Calories a day</span><input type="number" id="gl-kcal" min="1200" max="5000" step="50" value="2000" inputmode="numeric"></label>
+      <label class="mp-f"><span>Protein (g a day)</span><input type="number" id="gl-protein" min="0" max="440" step="5" value="100" inputmode="numeric"></label>
+      <div class="mp-f gl-people"><span>People eating these meals</span><span class="mp-step"><button type="button" id="gl-pm" aria-label="One fewer person">−</button><output id="gl-people" aria-live="polite">1</output><button type="button" id="gl-pp" aria-label="One more person">＋</button></span></div>
+    </div>
+    <details class="gl-more">
+      <summary>More targets (optional): carbohydrate, fat, fiber</summary>
+      <div class="gl-form">
+        <label class="mp-f"><span>Carbohydrate (g)</span><input type="number" id="gl-carb" min="0" max="900" step="5" placeholder="any" inputmode="numeric"></label>
+        <label class="mp-f"><span>Fat (g)</span><input type="number" id="gl-fat" min="0" max="250" step="5" placeholder="any" inputmode="numeric"></label>
+        <label class="mp-f"><span>Fiber (g, at least)</span><input type="number" id="gl-fiber" min="0" max="70" step="1" placeholder="any" inputmode="numeric"></label>
+      </div>
+      <p class="hs-small">The planner keeps carbohydrate at 45 to 65% of calories, fat at 20 to 35% and protein at 10 to 35%, the ranges the National Academies set for adults. A common fiber goal is 14 g for every 1,000 calories.</p>
+    </details>
+    <details class="gl-more" id="gl-helper">
+      <summary>Help me pick a protein number from body weight</summary>
+      <div class="gl-form">
+        <label class="mp-f"><span>Body weight</span><input type="number" id="gl-wt" min="60" max="700" step="1" placeholder="e.g. 170" inputmode="decimal"></label>
+        <label class="mp-f"><span>Units</span><select id="gl-wu"><option value="lb" selected>pounds</option><option value="kg">kilograms</option></select></label>
+        <label class="mp-f"><span>Grams per kilogram</span><select id="gl-gpk">
+          <option value="0.8">0.8: the RDA, enough for most adults</option>
+          <option value="1.2" selected>1.2: low end of the 2025–2030 Guidelines range</option>
+          <option value="1.6">1.6: high end of the Guidelines range</option>
+          <option value="2.0">2.0: top of the range for regular strength training</option>
+        </select></label>
+      </div>
+      <p class="gl-helpout" id="gl-helpout" aria-live="polite">Enter a weight to see a protein number.</p>
+      <button type="button" class="hs-btn ghost" id="gl-useprot" disabled>Use this protein number</button>
+      <p class="hs-small">Your weight is used only for this sum, on this page. See <a href="#guide">Protein and calories</a> for where these numbers come from.</p>
+    </details>
+    <fieldset class="mp-fs gl-diet"><legend>Leave out</legend>
+      <label class="mp-cb"><input type="checkbox" data-av="vegetarian"> Meat and fish (vegetarian)</label>
+      <label class="mp-cb"><input type="checkbox" data-av="fish"> Fish and shellfish</label>
+      <label class="mp-cb"><input type="checkbox" data-av="glutenFree"> Gluten</label>
+      <label class="mp-cb"><input type="checkbox" data-av="dairyFree"> Dairy</label>
+      <label class="mp-cb"><input type="checkbox" data-av="eggs"> Eggs</label>
+      <label class="mp-cb"><input type="checkbox" data-av="nuts"> Peanuts and tree nuts</label>
+      <label class="mp-cb"><input type="checkbox" data-av="soy"> Soy</label>
+    </fieldset>
+    <div class="gl-cta hs-noprint">
+      <button type="button" class="hs-btn pri" id="gl-day">🍽 Plan a day</button>
+      <button type="button" class="hs-btn" id="gl-week">📅 Plan a week</button>
+      <button type="button" class="hs-btn ghost" id="gl-again" disabled>🔀 Try other meals</button>
+    </div>
+    <div id="gl-notes" class="gl-notes" aria-live="polite"></div>
+    <div id="gl-out" class="gl-out" aria-live="polite"><p class="mp-pending">Loading the recipes…</p></div>
+  </section>
+
+  <section class="hs-sec" id="how" aria-labelledby="gl-hh">
+    <h2 id="gl-hh">⚙️ How the planner picks meals</h2>
+    <ol class="gl-how">
+      <li><b>It checks your numbers.</b> Calories stay between 1,200 and 5,000 a day. Below 1,200 it is hard to get the nutrients you need from food, and very low-calorie diets call for a doctor’s care; above 5,000 is far past what nearly any adult needs. Protein, carbohydrate and fat stay inside the ranges the National Academies give for adults. If a number is outside, the planner moves it to the nearest edge and tells you.</li>
+      <li><b>It fills meal slots.</b> Breakfast, lunch, dinner, a side with dinner and a snack (plus a second snack from 2,800 calories). Each slot uses only recipes made for that meal. Holiday dishes, sauces and desserts are left out of the plan, though you can still find them below.</li>
+      <li><b>It sets portions.</b> Each meal can be ½ to 2 servings, in quarter steps. A side or snack can be skipped.</li>
+      <li><b>It scores the day.</b> The score adds up how far the day is from your targets. Calories within 5% cost nothing. Falling short on protein costs more than going over. It also counts the Dietary Guidelines limits for saturated fat (under 10% of calories) and sodium (under 2,300 mg), and a little for portions far from one serving.</li>
+      <li><b>It improves one meal at a time.</b> Starting from a few good guesses, it tries every recipe and portion in each slot and keeps any change that lowers the score, until nothing helps. It keeps the best day it found. “Try other meals” starts from different guesses.</li>
+    </ol>
+    <p>A week is planned one day at a time, leaving out lunches and dinners from the three days before and breakfasts and snacks from the day before, so meals don’t repeat too often. In the meal planner you can then set your household, swap anything, and print the shopping list.</p>
+  </section>
+
+  <section class="hs-sec mp-box" id="finder" aria-labelledby="gl-fh">
+    <h2 id="gl-fh">🔎 Find recipes by protein, calories or fiber</h2>
+    <p>Our everyday recipes, per serving (the Thanksgiving turkeys, stuffings and pies are on the <a href="{{ "meal-prep/thanksgiving/" | relURL }}">Thanksgiving page</a>). “Protein per 100 calories” shows how much protein a dish gives for its calories: 8 g or more is a lot.</p>
+    <div class="gl-fform">
+      <label class="mp-f"><span>Meal</span><select id="gf-meal"><option value="">Any meal</option><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option><option value="side">Side</option><option value="snack">Snack</option></select></label>
+      <label class="mp-f"><span>Sort by</span><select id="gf-sort">
+        <option value="protein:-1" selected>Most protein</option>
+        <option value="ppk:-1">Most protein per 100 calories</option>
+        <option value="kcal:1">Fewest calories</option>
+        <option value="kcal:-1">Most calories</option>
+        <option value="fiber:-1">Most fiber</option>
+        <option value="sodium:1">Least sodium</option>
+      </select></label>
+      <label class="mp-f"><span>At least this much protein (g)</span><input type="number" id="gf-minp" min="0" max="100" step="5" placeholder="any" inputmode="numeric"></label>
+      <label class="mp-f"><span>At most this many calories</span><input type="number" id="gf-maxk" min="50" max="1500" step="50" placeholder="any" inputmode="numeric"></label>
+      <label class="mp-f"><span>Search</span><input type="search" id="gf-q" placeholder="chicken, beans, oats…"></label>
+    </div>
+    <p class="hs-small" id="gf-count" aria-live="polite"></p>
+    <ol class="gl-flist" id="gf-list"><li class="mp-pending">Loading the recipes…</li></ol>
+    <p class="hs-noprint"><button type="button" class="hs-btn ghost" id="gf-more" hidden>Show more</button></p>
+  </section>
+
+  <section class="hs-sec" id="guide" aria-labelledby="gl-gh">
+    <h2 id="gl-gh">📘 Protein and calories: the well-established numbers</h2>
+    <div class="gl-cols">
+      <div>
+        <h3>Protein</h3>
+        <ul>
+          <li><b>0.8 g per kilogram of body weight</b> a day is the Recommended Dietary Allowance for adults: enough for nearly all healthy adults (National Academies). That is about 0.36 g per pound, or about 62 g for someone who weighs 170 lb.</li>
+          <li><b>1.2 to 1.6 g per kilogram</b> is the goal in the current <i>Dietary Guidelines for Americans, 2025–2030</i>, adjusted to your calorie needs.</li>
+          <li><b>1.2 to 2.0 g per kilogram</b> is the range for athletes in the 2016 joint position of the Academy of Nutrition and Dietetics, Dietitians of Canada and the American College of Sports Medicine; the International Society of Sports Nutrition gives <b>1.4 to 2.0 g per kilogram</b> for most people who exercise to build or keep muscle.</li>
+          <li>Spreading protein across the day’s meals is an easy way to reach a goal, which is why the planner gives every meal some.</li>
+        </ul>
+        <p class="hs-small">To turn pounds into kilograms, divide by 2.2.</p>
+      </div>
+      <div>
+        <h3>Calories</h3>
+        <p>How many calories you need depends on your age, sex, height, weight and how active you are. The 2025–2030 Guidelines don’t print a calorie table. The previous edition (2020–2025) estimated, for adults:</p>
+        <div class="mp-tablewrap"><table class="gl-table">
+          <caption>Estimated calories a day (Dietary Guidelines 2020–2025)</caption>
+          <thead><tr><th scope="col">Adults</th><th scope="col">Not active</th><th scope="col">Moderately active</th><th scope="col">Active</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Women</th><td>1,600 to 2,000</td><td>1,800 to 2,200</td><td>2,000 to 2,400</td></tr>
+            <tr><th scope="row">Men</th><td>2,000 to 2,600</td><td>2,200 to 2,800</td><td>2,400 to 3,000</td></tr>
+          </tbody>
+        </table></div>
+        <p class="hs-small">Younger adults are toward the top of each range and older adults toward the bottom. These are estimates; your needs may differ.</p>
+      </div>
+    </div>
+    <h3>Limits in the Dietary Guidelines, 2025–2030</h3>
+    <ul class="gl-limits">
+      <li><b>Saturated fat:</b> no more than 10% of calories (about 22 g at 2,000 calories). Unchanged from the 2020–2025 edition.</li>
+      <li><b>Sodium:</b> less than 2,300 mg a day for people 14 and older. Also unchanged.</li>
+      <li><b>Added sugars:</b> the new edition recommends no amount of added sugars and sets a limit of 10 g per meal. The 2020–2025 edition said less than 10% of calories. Our nutrition numbers show total sugars, which include the natural sugars in fruit and milk.</li>
+    </ul>
+    <p class="hs-small">The planner flags a day that goes over the saturated fat or sodium limit. It can’t check added sugars, because ingredient databases list total sugars.</p>
+  </section>
+
+  <section class="hs-sec" id="labels" aria-labelledby="gl-lh">
+    <h2 id="gl-lh">🏷 Reading a Nutrition Facts label</h2>
+    <div class="gl-cols">
+      <ol class="gl-label-steps">
+        <li><b>Start with the serving size</b> and servings per container. Every number below is for one serving; eat two and double them.</li>
+        <li><b>Check the calories</b> for that serving.</li>
+        <li><b>Look at the % Daily Value.</b> It compares one serving with a 2,000-calorie day. As a quick guide from the FDA, <b>5% or less is low</b> and <b>20% or more is high</b>.</li>
+        <li><b>Aim high or low on purpose:</b> more fiber, vitamin D, calcium, iron and potassium; less saturated fat, sodium and added sugars.</li>
+        <li><b>Protein</b> is listed in grams; the %DV for protein is often left off adult food labels.</li>
+      </ol>
+      <div class="hs-note">
+        <h3>How our numbers work</h3>
+        <p>Every recipe’s nutrition is an <b>estimate</b> added up from USDA FoodData Central, the government’s food composition database: each ingredient’s numbers per 100 g, times the amount in the recipe, divided by the servings. Optional ingredients and water aren’t counted.</p>
+        <p>Real food varies: brands, the size of a chicken breast, how much oil stays in the pan. Treat the numbers as close guides, not lab results. For packaged foods, the label on the package is the best number.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hs-sec hs-note" id="care" aria-labelledby="gl-ch">
+    <h2 id="gl-ch">💚 Eat well, stay well</h2>
+    <ul>
+      <li><b>Food first, and enough of it.</b> These plans use ordinary family meals. There are no very low-calorie plans here, no extreme diets and no supplement advice.</li>
+      <li><b>For adults only.</b> Children need enough food to grow, and their needs change fast. Don’t set calorie or protein targets for them. Kids can eat the same meals as everyone else, in kid-sized portions, and their appetite is a good guide; their doctor can answer questions.</li>
+      <li><b>Talk with a professional first</b> if you have a medical condition (such as kidney disease or diabetes), are pregnant or breastfeeding, or have a history of disordered eating. A doctor or registered dietitian can help you pick goals that fit you.</li>
+      <li><b>Bodies come in all sizes.</b> This page doesn’t judge weight or tell anyone what they should weigh. A goal here is just a number to plan meals around.</li>
+      <li><b>Slow down if something feels off.</b> If tracking numbers starts to feel stressful, set it aside and simply eat regular, balanced meals.</li>
+    </ul>
+    <p class="mp-glinks hs-noprint"><a class="mp-glink" href="{{ "meal-prep/simple-plates/" | relURL }}">🍽 Simple plates, all day</a><a class="mp-glink" href="{{ "meal-prep/plan/" | relURL }}">📅 Meal planner</a><a class="mp-glink" href="{{ "meal-prep/recipes/" | relURL }}">📖 All recipes</a></p>
+  </section>
+</div>
+<script type="application/json" id="gl-data">{{ dict "exclude" (uniq ($ex | append $hol)) "holiday" (uniq $hol) | jsonify | safeJS }}</script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/goals-core.js" | relURL }}?v={{ (os.Stat "static/meal-prep/goals-core.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/goals.js" | relURL }}?v={{ (os.Stat "static/meal-prep/goals.js").ModTime.Unix }}" defer></script>
+{{ end }}

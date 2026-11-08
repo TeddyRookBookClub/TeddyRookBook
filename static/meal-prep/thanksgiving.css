@@ -1,0 +1,84 @@
+/* Meal Prep: the Thanksgiving dinner page (/meal-prep/thanksgiving/). Builds on meals.css and the .hs colors. */
+.tg-hero{border-left:5px solid var(--gold)}
+.tg-jump{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.8rem}
+.tg-jump a{display:inline-block;padding:.3rem .7rem;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--g);font:600 .88rem system-ui,sans-serif;text-decoration:none}
+.tg-jump a:hover{border-color:var(--g)}
+.tg-menu h2,.tg-tl h2{margin-top:0}
+.tg-menurow{display:flex;flex-wrap:wrap;gap:.6rem 1.5rem;align-items:center;margin:.6rem 0}
+.tg-guests{gap:.8rem;margin:0}
+.tg-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.6rem;margin:.8rem 0}
+.tg-pick .mp-fs{display:flex;flex-direction:column;gap:.1rem}
+.tg-pick legend{font-size:.95rem;line-height:1.25}
+.tg-pick .mp-cb{align-items:flex-start;min-height:1.7rem;line-height:1.3}
+.tg-pick .mp-cb input{margin-top:.15rem}
+.tg-shop{margin-top:1rem;border-top:1px solid var(--line);padding-top:.6rem}
+.tg-shop>summary{cursor:pointer;color:var(--g)}
+.tg-shoplist{columns:2 260px;column-gap:1.5rem}
+.tg-shoplist h3{font:700 .95rem system-ui,sans-serif;color:var(--g);margin:.7rem 0 .2rem;break-after:avoid}
+.tg-shoplist ul{list-style:none;margin:0;padding:0}
+.tg-shoplist li{padding:.2rem 0;border-bottom:1px dotted var(--line);break-inside:avoid;font-size:.93rem}
+.tg-shoplist li span{color:var(--ink)}
+.tg-shoplist li span::before{content:" · "}
+.tg-shoplist li small{display:block;color:var(--muted);font-size:.78rem}
+.tg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.4rem 1rem;margin:.6rem 0 1rem}
+.tg-form input,.tg-form select{width:100%}
+.tg-steps{list-style:none;margin:0;padding:0}
+.tg-steps .tg-day{font:700 1.02rem Georgia,serif;color:var(--g);margin:1rem 0 .3rem;padding-bottom:.2rem;border-bottom:2px solid var(--gold)}
+.tg-steps .tg-day:first-child{margin-top:0}
+.tg-s{display:grid;grid-template-columns:6.6rem minmax(0,1fr);gap:.6rem;padding:.35rem 0 .35rem .6rem;border-left:4px solid var(--line);margin:.15rem 0}
+.tg-s time{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink)}
+.tg-s.turkey{border-left-color:#b8963e}
+.tg-s.oven{border-left-color:#c0602a}
+.tg-s.stove{border-left-color:#3d7fa8}
+.tg-s.thaw,.tg-s.brine{border-left-color:#5a8fb8}
+.tg-s.ahead{border-left-color:#7a9a5a}
+.tg-s.dinner{border-left-color:#004225;font-weight:700}
+html[data-theme="dark"] .tg-s.dinner{border-left-color:#6cc79a}
+.tg-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.6rem;margin:.6rem 0 1rem}
+.tg-facts .mp-tip{margin:0}
+.tg-fry{margin-top:1rem}
+.tg-stuff{margin-top:1rem}
+.tg-stuff h3{margin-top:0;color:var(--g)}
+.tg-stuff ul{margin:.3rem 0 0;padding-left:1.2rem}
+.tg-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem 2rem}
+.tg-cols h3{color:var(--g);margin:.8rem 0 .3rem}
+.tg-cols>div>h3:first-child{margin-top:0}
+.tg-table{border-collapse:collapse;width:100%;margin:0 0 1rem;font-size:.92rem}
+.tg-table caption{text-align:left;font-weight:700;color:var(--g);padding-bottom:.3rem}
+.tg-table th,.tg-table td{border-bottom:1px solid var(--line);padding:.35rem .5rem;text-align:left}
+.tg-table thead th{background:var(--soft)}
+.tg-carve{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:1rem 2rem;align-items:start}
+@media (max-width:760px){.tg-carve{grid-template-columns:1fr}}
+.tg-fig{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:.8rem}
+.tg-svg{width:100%;height:auto;display:block}
+.tg-board{fill:#c9a36a;stroke:#8a6a3a;stroke-width:2}
+.tg-body{fill:#d9984a;stroke:#9a5f22;stroke-width:3}
+.tg-leg{fill:#cf8a3c;stroke:#9a5f22;stroke-width:3}
+.tg-bone{fill:#f3ead8;stroke:#9a5f22;stroke-width:2}
+.tg-keel{stroke:#9a5f22;stroke-width:2;stroke-dasharray:3 5;fill:none}
+.tg-cut{stroke:#7a2338;stroke-width:4;stroke-dasharray:9 6;fill:none;stroke-linecap:round}
+.tg-cut.thin{stroke-width:3}
+.tg-num circle{fill:#004225;stroke:#fff;stroke-width:2}
+.tg-num text{fill:#fff;font:700 15px system-ui,sans-serif;text-anchor:middle}
+html[data-theme="dark"] .tg-board{fill:#7a5f38;stroke:#c9a36a}
+html[data-theme="dark"] .tg-cut{stroke:#f08aa0}
+html[data-theme="dark"] .tg-num circle{fill:#6cc79a;stroke:#0f1a14}
+html[data-theme="dark"] .tg-num text{fill:#0f1a14}
+.tg-carvesteps{margin:0;padding-left:1.4rem}
+.tg-carvesteps li{margin:.35rem 0}
+.tg-ahead li{margin:.3rem 0}
+.tg-printout{display:none}
+@media (max-width:520px){.tg-s{grid-template-columns:5.4rem minmax(0,1fr);gap:.4rem}.tg-s time{font-size:.9rem}.tg-jump a{font-size:.82rem}}
+@media print{
+  #mp-tday>:not(.tg-printout){display:none!important}
+  .tg-printout{display:block;color:#000;font-size:11pt}
+  .tg-printout h1{font:700 20pt Georgia,serif;margin:0 0 .2rem}
+  .tg-printout h2{font:700 14pt Georgia,serif;border-bottom:2px solid #b8963e;margin:1rem 0 .3rem;break-after:avoid}
+  .tg-printout h3{font:700 10.5pt system-ui,sans-serif;margin:.5rem 0 .1rem;break-after:avoid}
+  .tg-pm{columns:2;margin:0;padding-left:1.1rem}
+  .tg-pt{list-style:none;padding:0;margin:0}.tg-pt li{margin:.1rem 0;break-inside:avoid}.tg-pt .tg-day{font-weight:700;margin-top:.5rem}
+  .tg-ps{columns:2}.tg-ps ul{list-style:none;padding:0;margin:0}.tg-ps li{break-inside:avoid}
+}
+.tg-cols ul,.tg-tl ul{padding-left:1.3rem;margin:.3rem 0}
+.mp-tablewrap .tg-table{width:100%;display:table}
+.tg-lo{margin:.6rem 0 1rem}.tg-lo h3{margin-top:0;color:var(--g)}.tg-lorule{margin:0}.tg-lorule ul{margin:.3rem 0 0;padding-left:1.2rem}

@@ -306,7 +306,7 @@ async function shot(pg, name, full) { await pg.screenshot({ path: path.join(OUT,
     ok(await pg.locator('[data-f="garden"]').count() === 1, tg + ': the library has a “From my garden” filter');
     await tap(pg, '[data-f="garden"]'); await pg.waitForTimeout(150);
     var nrec = await pg.locator('#mp-lib-list .mp-rec').count();
-    ok(nrec > 0 && nrec < 40, tg + ': it shows recipes using what you grow (' + nrec + ')');
+    ok(nrec > 0 && nrec < 60, tg + ': it shows recipes using what you grow (' + nrec + ')');
     await pg.ctx.close();
 
     // garden hand-off both ways

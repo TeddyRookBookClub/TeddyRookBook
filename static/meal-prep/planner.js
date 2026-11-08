@@ -341,11 +341,11 @@
   // ---------- placing (tap, keyboard, and the menus' Move / Copy / Swap) ----------
   function startPlacing(o) {
     placing = o; closeLib();
-    var verb = { add: 'Tap a meal slot to add ', move: 'Tap where to move ', copy: 'Tap each meal slot to copy ', swap: 'Tap the meal to swap with ', lo: 'Tap the meal for ', copyday: 'Tap each day to copy ', swapday: 'Tap the day to swap with ' }[o.kind];
-    $('#mp-placetxt').textContent = verb + o.label + (o.kind === 'add' ? ' (as many as you like)' : '') + '.';
+    var verb = { add: 'Tap a meal slot to add ', move: 'Tap where to move ', copy: 'Tap each meal slot to copy ', swap: 'Tap the meal to swap with ', lo: 'Tap the meal for ', copyday: 'Tap each day to copy ', swapday: 'Tap the day to swap with ', addday: 'Tap a day to add ' }[o.kind];
+    $('#mp-placetxt').textContent = verb + o.label + (o.kind === 'add' && !o.once ? ' (as many as you like)' : '') + '.';
     $('#mp-placebar').hidden = false;
     root.classList.add('placing'); markTargets();
-    var first = o.from ? $('.mp-cell[data-k="' + o.from.k + '"]') : o.days ? $('.mp-day[data-day="' + o.d + '"]') : $('.mp-cell');
+    var first = o.from ? $('.mp-cell[data-k="' + o.from.k + '"]') : o.days ? $('.mp-day[data-day="' + Math.max(0, o.d) + '"]') : $('.mp-cell');
     if (first) first.focus({ preventScroll: !!(o.from || o.days) });
   }
   function markTargets() {
@@ -364,13 +364,22 @@
     if (o.days) {
       var d = +el.dataset.day; if (d === o.d) return;
       snapshot();
-      if (o.kind === 'copyday') { p.cells = M.copyDay(p, o.d, d); msg('Copied to ' + C.dayLabel(p, d, true) + '.', true); }
+      if (o.kind === 'addday') {
+        var on = slotsOn(p), nd = 0;
+        o.groups.forEach(function (g, gi) {
+          var dd = d + gi; if (dd >= p.days) return; nd++;
+          g.forEach(function (x) { var s = on.indexOf(x.s) >= 0 ? x.s : on.indexOf('dinner') >= 0 ? 'dinner' : on[0], k = M.cellKey(dd, s); (p.cells[k] = p.cells[k] || []).push({ r: x.r }); });
+        });
+        msg('Added ' + (nd === 1 ? 'the meals to ' + C.dayLabel(p, d, true) : nd + ' days of meals, starting ' + C.dayLabel(p, d, true)) + (nd < o.groups.length ? '. The plan ran out of days; make it longer in Setup to fit the rest' : '') + '.', true);
+      }
+      else if (o.kind === 'copyday') { p.cells = M.copyDay(p, o.d, d); msg('Copied to ' + C.dayLabel(p, d, true) + '.', true); }
       else { var sw = M.swapDays(p, o.d, d); p.cells = sw.cells; p.guests = sw.guests; msg('Swapped ' + C.dayLabel(p, o.d, true) + ' and ' + C.dayLabel(p, d, true) + '.', true); }
     } else {
       var k = el.dataset.k;
       if (o.from && k === o.from.k && o.kind !== 'add') { if (o.once) stopPlacing(); return; }
       snapshot();
-      if (o.kind === 'add') { (p.cells[k] = p.cells[k] || []).push({ r: o.r }); msg('Added ' + ALL[o.r].name + ' to ' + cellName(k) + '.', true); }
+      if (o.kind === 'add' && o.rs) { p.cells[k] = p.cells[k] || []; o.rs.forEach(function (r) { p.cells[k].push({ r: r }); }); msg('Added ' + o.rs.length + ' dishes to ' + cellName(k) + '. Tap a dish to set how many people are coming.', true); }
+      else if (o.kind === 'add') { (p.cells[k] = p.cells[k] || []).push({ r: o.r }); msg('Added ' + ALL[o.r].name + ' to ' + cellName(k) + '.', true); }
       else if (o.kind === 'move' || o.kind === 'copy') { p.cells = M.moveEntry(p, o.from.k, o.from.i, k, o.kind === 'copy'); msg((o.kind === 'move' ? 'Moved to ' : 'Copied to ') + cellName(k) + '.', true); }
       else if (o.kind === 'lo') { p.cells = M.addLeftovers(p, o.from.k, o.r, k); msg('Leftovers of ' + ALL[o.r].name + ' for ' + cellName(k) + '.', true); }
       else if (o.kind === 'swap') {
@@ -598,9 +607,23 @@
     if (err) { $('#mp-weeks').innerHTML = '<p class="mp-warn">The recipes didn’t load (' + esc(err.message) + '). Check your connection and reload the page.</p>'; return; }
     data = d; refreshRecipes();
     // arriving from a recipe page with ?add=<id>
-    var m = /[?&]add=([a-z0-9-]+)/.exec(location.search);
+    // or a whole menu with ?add=<id>,<id>,… (the Thanksgiving page sends one): one tap puts every dish in that meal
+    var m = /[?&]add=([a-z0-9,-]+)/.exec(location.search), ms = m ? m[1].split(',').filter(function (x, i, a) { return ALL[x] && a.indexOf(x) === i; }) : [];
     renderAll();
-    if (m && ALL[m[1]]) { setView('cal'); startPlacing({ kind: 'add', r: m[1], label: C.emoji(ALL[m[1]]) + ' ' + ALL[m[1]].name }); try { history.replaceState(null, '', location.pathname); } catch (e) { } }
+    if (ms.length === 1) { setView('cal'); startPlacing({ kind: 'add', r: ms[0], label: C.emoji(ALL[ms[0]]) + ' ' + ALL[ms[0]].name }); }
+    else if (ms.length > 1) { setView('cal'); startPlacing({ kind: 'add', rs: ms, once: true, label: 'your menu (' + ms.length + ' dishes)' }); }
+    if (m) { try { history.replaceState(null, '', location.pathname); } catch (e) { } }
+    // whole days from the goal planner: ?day=breakfast:<id>,lunch:<id>,dinner:<id>,snack:<id>|… (one group per day);
+    // one tap on a day fills it (and the days after it, for a week) meal by meal
+    var dq = /[?&]day=([a-z0-9,:|%-]+)/i.exec(location.search);
+    if (dq) {
+      var dgs = []; try { dgs = decodeURIComponent(dq[1]).split('|'); } catch (e) { }
+      dgs = dgs.map(function (g) {
+        return g.split(',').map(function (x) { var q = x.split(':'); return { s: q[0], r: q[1] }; }).filter(function (x) { return M.SLOTS.indexOf(x.s) >= 0 && ALL[x.r]; });
+      }).filter(function (g) { return g.length; });
+      if (dgs.length) { setView('cal'); startPlacing({ kind: 'addday', days: true, d: -1, groups: dgs, once: true, label: dgs.length === 1 ? 'your day of meals' : 'your ' + dgs.length + ' days of meals (that day and the ones after it)' }); }
+      try { history.replaceState(null, '', location.pathname); } catch (e) { }
+    }
     // arriving from the Food Garden Planner with ?harvest=tomatoes:6-10,cucumbers:5-9,hens:1-12 (crop keys from data/garden, months 1-12)
     var hv = /[?&]harvest=([^&#]*)/.exec(location.search);
     if (hv) {

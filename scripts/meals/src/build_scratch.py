@@ -517,6 +517,33 @@ R.append(dict(
     src=['umn-storage', 'ndsu-fn579', 'fsis-leftovers', 'fdc']))
 
 R.append(dict(
+    id='turkey-stock', name='Turkey stock', emoji='🦃', kind='scratch', group='Stocks and sauces',
+    summary='The turkey’s neck and giblets, or turkey wings, simmered with vegetables for gravy, stuffing and soup.',
+    makes=[{'item': 'turkey-broth', 'by': 'cup', 'n': 8, 'label': 'cups'}],
+    yield_='About 2 quarts (8 cups).',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('turkey-necks', 2.5, 'lb', 'the neck and giblets from your bird (not the liver) plus turkey wings or necks to make up the weight'), I('vegetable-oil', 1, 'tbsp'),
+                 I('onion', 1, 'each', 'quartered, skin on'), I('carrot', 2, 'each', 'in chunks'), I('celery', 2, 'stalk', 'in chunks'), I('bay-leaves', 2, 'leaf'),
+                 I('thyme', 4, 'sprig', 'or ½ teaspoon dried'), I('black-pepper', 0.5, 'tsp', 'whole peppercorns if you have them'), I('water', 12, 'cup', 'cold')],
+    equipment=['large heavy pot (8 quarts)', 'fine strainer', 'shallow containers'],
+    steps=[
+        'Pat the neck, giblets and wings dry. Leave out the liver: it turns stock bitter. Cook it separately or save it for another use.',
+        'Heat the oil in the pot over medium-high heat and brown the turkey pieces well on all sides, in batches if needed, 10 to 15 minutes. Add the onion, carrots and celery for the last 5 minutes.',
+        'Pour in the cold water and scrape up the browned bits. Bring it slowly just to a boil, turn it down to the barest simmer, and skim off the foam for the first 15 minutes.',
+        'Add the bay leaves, thyme and pepper. Simmer uncovered 2½ to 3 hours, with only a bubble or two breaking the surface.',
+        'Strain it, cool it quickly in shallow containers, and refrigerate within 2 hours. Lift off the fat once it hardens; a spoonful of it makes good gravy roux.',
+        'Leave it unsalted, and salt the gravy or stuffing you use it in.',
+        'After dinner, the roasted carcass makes a second batch: break it up, cover it with cold water, and simmer it the same way with fresh vegetables.'],
+    stages=[st('Brown the turkey and vegetables', active=20, station='stove'), st('Start the stock and skim it', active=15, station='stove'),
+            st('Simmer', cook=165, station='simmer', bg=True), st('Strain and cool in shallow containers', active=15, wait=60, bg=True)],
+    plan={'keep_days': 2, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw in the refrigerator, then bring to a rolling boil.'},
+    keeps=['Refrigerator: 1 to 2 days (the University of Minnesota’s figure for meat broth; NDSU allows 3 to 4), so freeze what you won’t use soon.', 'Freezer: 2 to 3 months (University of Minnesota). Freeze it in 1- and 2-cup containers, leaving room for it to expand.'],
+    scaling='Scale the turkey, vegetables and water together; keep the water just covering the bones.',
+    old_way=None, safety=STOCK_SAFETY, notes=['Turkey wings and necks are sold in many stores in November. Make the stock a week or more ahead and freeze it, and gravy day is easy.'],
+    nutrition={'from': 'usda', 'fdc': 172884, 'why': 'The turkey and vegetables are strained out. USDA has no entry for turkey stock, so the numbers are its home-made chicken stock, the closest match.'},
+    src=['umn-storage', 'ndsu-fn579', 'fsis-leftovers', 'fdc']))
+
+R.append(dict(
     id='beef-stock', name='Beef stock', emoji='🍲', kind='scratch', group='Stocks and sauces',
     summary='Roasted beef bones simmered for hours into a rich, brown stock.',
     makes=[{'item': 'beef-broth', 'by': 'cup', 'n': 12, 'label': 'cups'}],
@@ -810,6 +837,31 @@ R.append(dict(
     scaling='Plan on about 3 lb of apples per quart (NCHFP’s average). Tart apples make a tangier sauce; 1 to 2 lb of tart apples per 3 lb of sweet ones balances it.',
     old_way=None, safety=['To can applesauce, follow NCHFP’s tested recipe; this one is for the refrigerator and freezer.'], notes=[],
     nutrition={'from': 'item', 'why': 'The peels and cores are left behind, so the numbers are USDA’s for unsweetened applesauce (sugar, if you add it, isn’t counted).'}, src=['nchfp-applesauce', 'ndsu-fn579', 'nchfp-headspace', 'nchfp-frozen', 'nchfp']))
+
+R.append(dict(
+    id='pumpkin-puree', name='Pumpkin purée from a pie pumpkin', emoji='🎃', kind='scratch', group='Pantry mixes',
+    summary='A small pie pumpkin roasted soft and puréed: the from-scratch start for pumpkin pie, bread and muffins.',
+    makes=[{'item': 'pumpkin-puree', 'by': 'cup', 'n': 3.5, 'label': 'cups'}],
+    yield_='About 3 to 4 cups from one 4-lb pie pumpkin. One 15-oz can is about 1¾ cups.',
+    batch={'step': 1, 'min': 1},
+    ingredients=[I('pumpkin', 1, 'each', 'a 4-lb pie (sugar) pumpkin, not a carving pumpkin'), I('vegetable-oil', 1, 'tsp', 'for the cut sides', True)],
+    equipment=['large sharp knife', 'sturdy spoon', 'rimmed baking sheet lined with parchment', 'food processor or blender', 'fine strainer or cheesecloth (helpful)'],
+    steps=[
+        'Heat the oven to 400°F. Wash the pumpkin, set it on a damp towel so it can’t roll, and cut it in half from the stem down. Scrape out the seeds and strings (save the seeds to roast).',
+        'Brush the cut sides lightly with oil if you like and lay the halves cut side down on the lined baking sheet.',
+        'Roast 45 to 60 minutes, until a knife slides easily through the skin and the flesh is very soft.',
+        'Cool until you can handle it, then scoop the flesh away from the skin.',
+        'Purée in a food processor or blender until smooth.',
+        'For pie, it should be as thick as canned pumpkin. If it looks wet, set it in a strainer lined with cheesecloth or a coffee filter over a bowl in the refrigerator for 1 to 2 hours, or stir it in a wide pan over low heat until thick.',
+        'Cool in shallow containers and refrigerate within 2 hours.'],
+    stages=[st('Cut and seed the pumpkin', active=15), st('Roast at 400°F', cook=55, station='oven', temp=400), st('Cool, scoop and purée', active=15, wait=30), st('Drain if wet', wait=90, station='fridge', bg=True)],
+    plan={'keep_days': 3, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw in the refrigerator and stir well; pour off any liquid that separates.'},
+    keeps=['Refrigerator: 3 to 4 days, as for cooked leftovers (USDA).', 'Freezer: pack in rigid containers, leaving ½ inch of space at the top of a pint, and freeze up to 8 to 12 months for best quality (NCHFP). Freeze it in 1¾-cup portions, one can’s worth each.'],
+    scaling='One pumpkin per batch. Two pie pumpkins fit on one large baking sheet.',
+    old_way=None, safety=['Home canning of mashed or puréed pumpkin isn’t recommended (NCHFP); freeze it instead.'],
+    notes=['Big carving pumpkins are stringy and watery. Look for pumpkins sold as pie or sugar pumpkins, 2 to 5 lb.', 'Butternut squash makes a smooth purée the same way and works in any pumpkin recipe.'],
+    nutrition={'from': 'item', 'why': 'Roasted pumpkin without the skin and seeds is close to canned pumpkin, so the numbers are USDA’s for canned pumpkin.'},
+    src=['fsis-leftovers', 'nchfp-headspace', 'nchfp-frozen', 'nchfp']))
 
 R.append(dict(
     id='simple-syrup', name='Simple syrup', emoji='🍯', kind='scratch', group='Pantry mixes',

@@ -9,6 +9,9 @@
       {{ else }}{{ range first 1 .links }}{{ $cr = slice (dict "name" (printf "%s (Grokipedia)" .label) "url" .url "what" "the origin story") }}{{ end }}{{ end }}
       {{ $params = merge $params (dict "keywords" (slice .chef .place .book "classic" "restaurant" "great kitchens" "public domain") "credits" $cr) }}
     {{ end }}
+    {{- /* Thanksgiving dinner (thanksgiving.json): its USDA, fire-service and Grokipedia sources in Sources and credits */ -}}
+    {{ with .credits }}{{ $params = merge $params (dict "credits" .) }}{{ end }}
+    {{ with .collection }}{{ $params = merge $params (dict "keywords" (slice "Thanksgiving" "Thanksgiving dinner" "holiday" "turkey")) }}{{ end }}
     {{ $.AddPage (dict
       "kind" "page"
       "path" .id

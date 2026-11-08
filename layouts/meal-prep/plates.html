@@ -1,0 +1,125 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/goals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/goals.css").ModTime.Unix }}">
+{{- /* Simple plates, all day: data/meals/recipes/plates.json (built by scripts/meals/src/build_plates.py) holds the new plate
+   recipes and the page plan; groups mix them with recipes from elsewhere in Meal Prep, by id. Per-serving numbers are worked
+   out by the build script from the catalog, the same way the recipe pages do. No script needed on this page. */ -}}
+{{ $all := partialCached "meal-prep/recipes-all.html" "r" }}
+{{ $R := dict }}{{ range $all }}{{ $R = merge $R (dict .id .) }}{{ end }}
+{{ $PL := site.Data.meals.recipes.plates.plates }}
+{{ $N := $PL.nutr }}
+{{ $src := dict }}{{ range $PL.sources }}{{ $src = merge $src (dict .id .) }}{{ end }}
+<div class="hs mp" id="mp-plates">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Simple plates, all day")) }}
+  <header class="hs-hero mp-hero gl-hero">
+    <p class="hs-eyebrow">Meal Prep · A collection</p>
+    <h1>Simple plates, all day</h1>
+    <p>A piece of meat or fish, a starch and a vegetable: the plainest kind of meal, and one of the most useful. Some actors and athletes eat this way several times a day when building muscle; one widely reported example is the plan Dwayne Johnson described for film roles (sources at the end of this page). Each plate on its own is a good, simple meal for kids and families, and they are easy to cook in batches for the week.</p>
+    <nav class="gl-jump hs-noprint" aria-label="On this page">
+      <a href="#plates">🍽 The plates</a><a href="#build">🧩 Build your own</a><a href="#kids">🧒 Kids’ portions</a><a href="#batch">📦 Batch-cook a week</a><a href="#day">📊 A whole day of plates</a><a href="#reported">📰 The reported plan</a>
+    </nav>
+  </header>
+
+  <section class="hs-sec" id="plates" aria-labelledby="pl-ph">
+    <h2 id="pl-ph">🍽 The plates</h2>
+    <p>Every plate below is one recipe for 4, with nutrition per plate. New ones were written for this page; the others are close matches from our recipes.</p>
+    {{ range $PL.groups }}
+    <h3 class="pl-gh" id="pl-{{ .id }}"><span aria-hidden="true">{{ .icon }}</span> {{ .title }}</h3>
+    <div class="mp-rgrid">
+      {{ range .items }}{{ with index $R . }}{{ $n := index $N .id }}
+      <a class="mp-rcard" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .summary }}</small><small class="pl-n">{{ $n.kcal }} calories · {{ $n.protein }} g protein · {{ partial "meal-prep/mins.html" .times.total }}{{ if not .plate }} · from our recipes{{ end }}</small></span></a>
+      {{ end }}{{ end }}
+    </div>
+    {{ end }}
+  </section>
+
+  <section class="hs-sec mp-box" id="build" aria-labelledby="pl-bh">
+    <h2 id="pl-bh">🧩 Build your own plate</h2>
+    <p>Pick one from each column. Cook a plain protein (bake, grill or pan-sear it to the safe temperature), then add a starch and a vegetable from our side dishes.</p>
+    <div class="pl-build">
+      <div class="pl-col"><h3>🍗 A protein</h3>
+        <ul class="pl-list">
+          <li>Chicken breast or thighs <small>to 165°F</small></li>
+          <li>Fish: cod, salmon, tilapia <small>to 145°F</small></li>
+          <li>Steak: sirloin, flank <small>to 145°F, rest 3 minutes</small></li>
+          <li>Lean ground beef or turkey <small>beef 160°F, turkey 165°F</small></li>
+          <li>Eggs <small>until firm; egg dishes 160°F</small></li>
+          <li>Beans, lentils or tofu <small>for a meatless plate</small></li>
+        </ul>
+      </div>
+      <div class="pl-col"><h3>🍚 A starch</h3>
+        <ul class="pl-list">{{ range $PL.sides.starch }}{{ with index $R . }}<li><a href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}">{{ .name }}</a> <small>{{ (index $N .id).kcal }} cal</small></li>{{ end }}{{ end }}<li>Oatmeal or toast <small>for breakfast plates</small></li></ul>
+      </div>
+      <div class="pl-col"><h3>🥦 A vegetable</h3>
+        <ul class="pl-list">{{ range $PL.sides.veg }}{{ with index $R . }}<li><a href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}">{{ .name }}</a> <small>{{ (index $N .id).kcal }} cal</small></li>{{ end }}{{ end }}<li>Steamed broccoli, asparagus or green beans <small>about 5 minutes</small></li></ul>
+      </div>
+    </div>
+    <p class="hs-small">Safe minimum internal temperatures are USDA’s; check them with a food thermometer.</p>
+  </section>
+
+  <section class="hs-sec" id="kids" aria-labelledby="pl-kh">
+    <h2 id="pl-kh">🧒 Kids’ portions</h2>
+    <div class="gl-cols">
+      <div>
+        <p>Children eat the same plates, just less of them. Start small, about half an adult plate for school-age kids and less for little ones, and let them ask for more. Appetites go up and down from day to day, and that’s normal.</p>
+        <p>Each plate’s recipe page has its own kids’ note: how big a kids’ plate is and what children can help with.</p>
+      </div>
+      <ul class="mp-tip pl-kidtips">
+        <li>Cut meat into small pieces and flake fish (check for bones) for young children.</li>
+        <li>Cut grapes and other small round foods into small pieces for children under 4.</li>
+        <li>Keep food plain on the side if a child likes foods not touching; it’s the same meal.</li>
+        <li>No honey for babies under 1 year.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="hs-sec mp-box" id="batch" aria-labelledby="pl-bc">
+    <h2 id="pl-bc">📦 Batch-cook a week of plates</h2>
+    <p>One afternoon of cooking can fill the refrigerator with plates for lunches and dinners. The cooling and storage times are USDA’s.</p>
+    <ol class="pl-steps">
+      <li><b>Pick two or three plates</b> your family likes, such as the chicken and sweet potato sheet pan, the beef and pepper rice and the cod with asparagus. Add their recipes to the <a href="{{ "meal-prep/plan/" | relURL }}">meal planner</a> for one shopping list.</li>
+      <li><b>Cook the starches in big batches.</b> A large pot of rice or quinoa, a tray of sweet potatoes, a pan of baked potatoes. They take the longest and keep well.</li>
+      <li><b>Roast proteins and vegetables on sheet pans</b> at the same time. Cook every protein to its safe temperature: poultry 165°F, ground meat 160°F, steaks and fish 145°F (with a 3-minute rest for steaks).</li>
+      <li><b>Cool it quickly.</b> Divide food into shallow containers so it cools fast, and get everything into the refrigerator <b>within 2 hours</b> of cooking (1 hour if it’s hotter than 90°F out). It’s fine to refrigerate food while it’s still warm.</li>
+      <li><b>Pack plates and label them</b> with the date. Keep the refrigerator at 40°F or below.</li>
+      <li><b>Eat refrigerated plates within 3 to 4 days.</b> For the rest of the week, freeze plates right away; frozen leftovers keep their best quality for about 3 to 4 months.</li>
+      <li><b>Thaw and reheat safely.</b> Thaw frozen plates in the refrigerator overnight, or in the microwave. Reheat until steaming hot, <b>165°F</b>, stirring once or twice in the microwave.</li>
+    </ol>
+    <div class="mp-tip"><b>A week, made simple</b>Cook on Sunday: plates for Monday to Wednesday go in the refrigerator, plates for Thursday and Friday go in the freezer. Move Thursday’s plates to the refrigerator on Wednesday night to thaw.</div>
+  </section>
+
+  <section class="hs-sec" id="day" aria-labelledby="pl-dh">
+    <h2 id="pl-dh">📊 A whole day of plates</h2>
+    <p>Here is what seven of our plates add up to, one at every meal from breakfast to a late snack, at one serving each:</p>
+    <div class="mp-tablewrap"><table class="gl-table pl-daytab">
+      <caption>Seven family plates in one day (per adult serving)</caption>
+      <thead><tr><th scope="col">Plate</th><th scope="col">Calories</th><th scope="col">Protein</th></tr></thead>
+      <tbody>
+        {{ range $i, $id := $PL.day }}{{ with index $R $id }}<tr><th scope="row">{{ add $i 1 }}. <a href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}">{{ .name }}</a></th><td>{{ (index $N .id).kcal }}</td><td>{{ (index $N .id).protein }} g</td></tr>{{ end }}{{ end }}
+      </tbody>
+      <tfoot><tr><th scope="row">The day</th><td>{{ lang.FormatNumber 0 $PL.day_total.kcal }}</td><td>{{ $PL.day_total.protein }} g</td></tr></tfoot>
+    </table></div>
+    <p>That is more than most adults need: the Dietary Guidelines (2020–2025) estimate about 1,600 to 2,400 calories a day for adult women and 2,000 to 3,000 for adult men, depending on age and activity. For most families, two or three of these plates a day, as ordinary meals, is plenty. To plan plates around your own calorie or protein goal, use <a href="{{ "meal-prep/goals/" | relURL }}">Meet your goals</a>.</p>
+  </section>
+
+  <section class="hs-sec hs-note" id="reported" aria-labelledby="pl-rh">
+    <h2 id="pl-rh">📰 The reported plan behind the idea</h2>
+    <p>In 2015, Muscle &amp; Fitness magazine published a day of eating that Dwayne Johnson described, much like the diet he followed for the film <i>Hercules</i>, and many outlets reported it. It was seven meals spread through the day, almost all of them a protein, a starch and a vegetable. The versions differ by film and year: a 2014 version for <i>Hercules</i> reported by Men’s Health used chicken, halibut, egg whites, white rice, baked potatoes, oatmeal, broccoli and asparagus. Here is the 2015 list as reported, with our estimate of each meal from USDA FoodData Central:</p>
+    <div class="mp-tablewrap"><table class="gl-table pl-reptab">
+      <caption>One reported day (Muscle &amp; Fitness, 2015, as reported by E! Online and FiveThirtyEight)</caption>
+      <thead><tr><th scope="col">Meal</th><th scope="col">Foods, as reported</th><th scope="col">Calories</th><th scope="col">Protein</th><th scope="col">Our family plate</th></tr></thead>
+      <tbody>
+        {{ range $PL.reported.meals }}<tr><th scope="row">{{ .n }}</th><td>{{ .foods }}<small>{{ .how }}</small></td><td>{{ lang.FormatNumber 0 .kcal }}</td><td>{{ .protein }} g</td><td>{{ with index $R .plate }}<a href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}">{{ .name }}</a>{{ end }}</td></tr>{{ end }}
+      </tbody>
+      <tfoot><tr><th scope="row">Total</th><td>the foods only</td><td>about {{ lang.FormatNumber 0 $PL.reported.kcal }}</td><td>about {{ $PL.reported.protein }} g</td><td></td></tr></tfoot>
+    </table></div>
+    <p>Our estimate counts the foods as listed, cooked plain without oil or butter, and leaves out the protein shake and fish oil (we don’t give advice on supplements). Published estimates range from about 4,100 (E! Online) to 5,200 calories (FiveThirtyEight, counting everything). Either way, it is <b>an example for a very large, very active adult training hard for a role</b>, about twice what most adults need. It isn’t a target for most people, and it isn’t for children. The simple-plate idea is what carries over to a family kitchen.</p>
+    <h3>Sources</h3>
+    <ul class="pl-src">
+      {{ range $PL.sources }}<li><a href="{{ .url }}" rel="noopener">{{ .title }}</a>, {{ .publisher }}</li>{{ end }}
+    </ul>
+    <p class="hs-small">Teddy Rook Book isn’t connected with Dwayne Johnson or these publications. The list is a reported fact, summarized in our own words; the recipes are our own.</p>
+  </section>
+</div>
+{{ end }}

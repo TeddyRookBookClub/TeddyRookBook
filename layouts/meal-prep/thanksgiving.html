@@ -1,0 +1,267 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/thanksgiving.css" | relURL }}?v={{ (os.Stat "static/meal-prep/thanksgiving.css").ModTime.Unix }}">
+{{- /* Thanksgiving dinner: data/meals/recipes/thanksgiving.json (built by scripts/meals/src/build_thanksgiving.py) holds the new
+   recipes and the page plan. Courses mix those with recipes and from-scratch pages from elsewhere in Meal Prep, by id.
+   static/meal-prep/thanksgiving.js runs the menu (shopping list, print, add to the planner) and the timeline tool. */ -}}
+{{ $all := partialCached "meal-prep/recipes-all.html" "r" }}
+{{ $R := dict }}{{ range $all }}{{ $R = merge $R (dict .id .) }}{{ end }}
+{{ $S := dict }}{{ range site.Data.meals.scratch.recipes }}{{ $S = merge $S (dict .id .) }}{{ end }}
+{{ $T := site.Data.meals.recipes.thanksgiving.collection }}
+{{ $src := partial "meal-prep/data.html" . }}
+{{- /* the small facts the script needs: names, emoji, servings, course, oven times, USDA tables */ -}}
+{{ $mini := dict }}{{ range $T.courses }}{{ $cid := .id }}{{ range .items }}{{ $p := split . ":" }}{{ if eq (index $p 0) "r" }}{{ with index $R (index $p 1) }}{{ $mini = merge $mini (dict .id (dict "n" .name "e" .emoji "s" .servings "c" $cid "t" .times.total "a" .make_ahead)) }}{{ end }}{{ end }}{{ end }}{{ end }}
+<div class="hs mp" id="mp-tday" data-src="{{ $src }}" data-plan="{{ "meal-prep/plan/" | relURL }}" data-rbase="{{ "meal-prep/recipes/" | relURL }}">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Thanksgiving dinner")) }}
+  <header class="hs-hero mp-hero tg-hero">
+    <p class="hs-eyebrow">Meal Prep · A holiday collection</p>
+    <h1>Thanksgiving dinner</h1>
+    <p>Every dish of a traditional American Thanksgiving in one place: the turkey seven ways, stuffing and dressing, gravy, potatoes, cranberry sauce, rolls, vegetables and pies. Some recipes are new; others live elsewhere in Meal Prep and are gathered here. Pick your menu, get one shopping list, and let the timeline tool work out when to thaw, brine and start the oven.</p>
+    <nav class="tg-jump hs-noprint" aria-label="On this page">
+      <a href="#menu">🧾 Menu and shopping list</a><a href="#timeline">⏰ Timeline</a><a href="#turkey">🦃 Turkey</a><a href="#stuffing">🍞 Stuffing</a><a href="#potatoes">🥔 Sides</a><a href="#desserts">🥧 Pies</a><a href="#safety">🌡 Safety</a><a href="#carving">🔪 Carving</a><a href="#ahead">📋 Make ahead</a><a href="#leftovers">🍜 Leftovers</a><a href="#creative">✨ Creative leftovers</a><a href="#history">📜 History</a>
+    </nav>
+  </header>
+
+  <section class="hs-sec mp-box tg-menu" id="menu" aria-labelledby="tg-mh">
+    <h2 id="tg-mh">🧾 Your menu</h2>
+    <p>Check the dishes you’re making. The shopping list adds them all up for your number of guests. A typical spread is checked to start.</p>
+    <div class="tg-menurow">
+      <div class="mp-dlgrow tg-guests"><span><b>Guests</b> (everyone at the table)</span><span class="mp-step"><button type="button" id="tg-gm" aria-label="One fewer guest">−</button><output id="tg-g" aria-live="polite">10</output><button type="button" id="tg-gp" aria-label="One more guest">＋</button></span></div>
+      <label class="mp-cb"><input type="checkbox" id="tg-half" checked> Smaller portions of sides and desserts (half servings each, since everyone takes a little of everything)</label>
+    </div>
+    <div class="tg-pick" id="tg-pick">
+      {{ range $T.courses }}{{ if not (in (slice "leftovers" "creative") .id) }}
+      <fieldset class="mp-fs"><legend><span aria-hidden="true">{{ .icon }}</span> {{ .title }}</legend>
+        {{ range .items }}{{ $p := split . ":" }}{{ if eq (index $p 0) "r" }}{{ with index $R (index $p 1) }}
+        <label class="mp-cb"><input type="checkbox" value="{{ .id }}"{{ if in $T.default_menu .id }} checked{{ end }}> <span aria-hidden="true">{{ .emoji }}</span> {{ .name }}</label>
+        {{ end }}{{ end }}{{ end }}
+      </fieldset>
+      {{ end }}{{ end }}
+    </div>
+    <p class="mp-warn" id="tg-twoturkeys" hidden>You’ve checked more than one turkey. That’s fine for a big crowd; the timeline plans for the first one.</p>
+    <div class="tg-cta hs-noprint" style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem">
+      <button type="button" class="hs-btn pri" id="tg-print">🖨 Print menu and shopping list</button>
+      <a class="hs-btn" id="tg-plan" href="{{ "meal-prep/plan/" | relURL }}">📅 Put this menu in my meal planner</a>
+      <button type="button" class="hs-btn ghost" id="tg-copy">📋 Copy the shopping list</button>
+    </div>
+    <p class="hs-small">The meal planner takes your whole menu in one tap: pick Thanksgiving dinner on its calendar, then set how many people are coming. From there you can print the week, recipe cards and the list by store section, and mark what you already have.</p>
+    <details class="tg-shop" id="tg-shopwrap" open>
+      <summary><b>Shopping list</b> <span class="hs-small" id="tg-shopsum"></span></summary>
+      <div id="tg-shop" aria-live="polite"><p class="mp-pending">The shopping list appears here once the recipes load.</p></div>
+      <p class="hs-small">Amounts round up to what stores sell. Check your pantry for spices and staples. The turkey line is the bird’s weight as bought.</p>
+    </details>
+  </section>
+
+  <section class="hs-sec mp-box tg-tl" id="timeline" aria-labelledby="tg-th">
+    <h2 id="tg-th">⏰ Timeline: when to thaw, brine and start the oven</h2>
+    <p>Enter when you want to eat and how big your turkey is. The plan works backward from dinner, using USDA’s thawing and roasting times, and fits your oven dishes into one oven after the turkey comes out.</p>
+    <div class="tg-form">
+      <label class="mp-f"><span>Dinner date</span><input type="date" id="tl-date"></label>
+      <label class="mp-f"><span>Dinner time</span><input type="time" id="tl-time" value="16:00" step="900"></label>
+      <label class="mp-f"><span>Turkey weight (lb)</span><input type="number" id="tl-lb" value="14" min="4" max="24" step="0.5" inputmode="decimal"></label>
+      <label class="mp-f"><span>How you’ll cook it</span><select id="tl-method">{{ range $k := slice "classic-roast-turkey" "herb-butter-roast-turkey" "stuffed" "dry-brined-turkey" "wet-brined-turkey" "spatchcocked-turkey" "smoked-turkey" "deep-fried-turkey" "herb-roast-turkey-breast" }}{{ with index $T.methods $k }}<option value="{{ $k }}"{{ if eq $k "classic-roast-turkey" }} selected{{ end }}>{{ .label }}</option>{{ end }}{{ end }}</select></label>
+      <label class="mp-f"><span>Your turkey is</span><select id="tl-thaw"><option value="fridge" selected>Frozen: thaw in the refrigerator</option><option value="water">Frozen: thaw in cold water</option><option value="fresh">Fresh (not frozen)</option></select></label>
+    </div>
+    <p class="mp-warn" id="tl-warn" hidden></p>
+    <ol class="tg-steps" id="tl-out" aria-live="polite"><li>Loading the plan…</li></ol>
+    <p class="hs-small">Times are planning guides. The turkey is done when a food thermometer reads 165°F in the breast, the innermost thigh and the innermost wing, whatever the clock says. If it’s done early, tent it with foil: it stays hot 40 minutes or more, and the oven is free for the sides sooner.</p>
+  </section>
+
+  {{ range $T.courses }}{{ $c := . }}
+  <section class="hs-sec" id="{{ .id }}">
+    <h2><span aria-hidden="true">{{ .icon }}</span> {{ .title }}</h2>
+    {{ with .intro }}<p>{{ . }}</p>{{ end }}
+    {{ if eq .id "turkey" }}
+    <div class="tg-facts">
+      <div class="mp-tip"><b>How much turkey?</b>USDA plans on about 1 pound of whole turkey per person. Buy 1½ pounds per person if you want plenty of leftovers. A 14-lb bird feeds about 10 with sandwiches the next day.</div>
+      <div class="mp-tip"><b>Fresh or frozen?</b>A fresh turkey goes in the refrigerator and should be cooked within 1 to 2 days. A frozen one needs days to thaw: see the table under Safety, or let the timeline count for you.</div>
+      <div class="mp-tip"><b>Read the label</b>A turkey sold as basted, self-basting, enhanced or kosher already has salt added. Roast it as it is; don’t brine it.</div>
+    </div>
+    {{ end }}
+    {{ if eq .id "creative" }}
+    <div class="tg-cols tg-lo">
+      <div class="hs-note">
+        <h3>🥪 The sandwich from Friends</h3>
+        <p>In a 1998 episode of the TV comedy <i>Friends</i>, “The One with Ross’s Sandwich” (season 5), Ross is upset when a coworker eats the leftover Thanksgiving sandwich he brought to work. Its secret is an extra slice of bread soaked in gravy in the middle, which he calls the “Moist Maker.” Many fans make it with their own leftovers. Here is <a href="{{ "meal-prep/recipes/moist-maker-sandwich/" | relURL }}">our version</a>: turkey, cranberry sauce, stuffing and that gravy-soaked middle slice.</p>
+      </div>
+      <div class="mp-tip tg-lorule"><b>🌡 Leftover rules (USDA)</b>
+        <ul>
+          <li>Refrigerate leftovers <strong>within 2 hours</strong> of dinner, in shallow containers. Carve the turkey off the bone first.</li>
+          <li>Eat them <strong>within 3 to 4 days</strong>, or freeze them. Homemade gravy: 1 to 2 days.</li>
+          <li>Reheat to <strong>165°F</strong>, and bring gravy to a rolling boil.</li>
+          <li>A dish made from leftovers doesn’t restart the clock: count the days from Thanksgiving.</li>
+        </ul>
+      </div>
+    </div>
+    {{ end }}
+    <div class="mp-rgrid">
+      {{ range .items }}{{ $p := split . ":" }}{{ $id := index $p 1 }}
+      {{ if eq (index $p 0) "r" }}{{ with index $R $id }}
+      <a class="mp-rcard" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .summary }}</small><small>{{ partial "meal-prep/mins.html" .times.total }} · serves {{ .servings }}{{ if not .collection }} · from our recipes{{ end }}</small></span></a>
+      {{ end }}{{ else }}{{ with index $S $id }}
+      <a class="mp-rcard" href="{{ printf "meal-prep/scratch/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .summary }}</small><small>{{ partial "meal-prep/mins.html" .times.total }} · make it from scratch</small></span></a>
+      {{ end }}{{ end }}{{ end }}
+    </div>
+    {{ if eq .id "turkey" }}
+    <div class="mp-warn tg-fry"><b>Frying a turkey?</b> It happens outdoors only, with a fully thawed, dry bird of 12 lb or less, on level ground away from buildings and decks, never in a garage or under a roof. Measure the oil with water first, turn the burner off while you lower the bird, and keep a grease-rated fire extinguisher close. The <a href="{{ "meal-prep/recipes/deep-fried-turkey/" | relURL }}">deep-fried turkey recipe</a> walks through every step.</div>
+    {{ end }}
+    {{ if eq .id "stuffing" }}
+    <div class="hs-note tg-stuff">
+      <h3>Stuffing the bird safely (USDA)</h3>
+      <ul>
+        <li><b>Safest:</b> bake the stuffing in a dish (dressing). It cooks evenly and gets a crisp top.</li>
+        <li>If you stuff the turkey, mix the wet and dry ingredients <b>just before</b> stuffing, never the night before.</li>
+        <li>Spoon it in <b>loosely</b>, about ¾ cup per pound of turkey, and roast right away.</li>
+        <li>The <b>center of the stuffing must reach 165°F</b> on a food thermometer, even if the turkey is done. A stuffed bird takes longer to roast.</li>
+        <li>Cook raw sausage, meat or oysters <b>before</b> they go into the stuffing.</li>
+        <li>Let the turkey stand 20 minutes before taking the stuffing out.</li>
+      </ul>
+    </div>
+    {{ end }}
+  </section>
+  {{ end }}
+
+  <section class="hs-sec" id="scratch">
+    <h2>🧑‍🍳 Make it from scratch</h2>
+    <p>Want to make the parts most people buy? These from-scratch pages scale to what your menu needs: stock from the turkey’s neck and giblets, pumpkin purée from a real pie pumpkin, a butter crust, whipped cream, bread for the stuffing, rolls, cornbread and marshmallows for the sweet potatoes.</p>
+    <div class="mp-rgrid tg-scratch">
+      {{ range $T.scratch }}{{ with index $S . }}<a class="mp-rcard" href="{{ printf "meal-prep/scratch/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .yield }}</small></span></a>{{ end }}{{ end }}
+    </div>
+  </section>
+
+  <section class="hs-sec mp-box" id="safety" aria-labelledby="tg-sh">
+    <h2 id="tg-sh">🌡 Food safety: the numbers that matter</h2>
+    <div class="tg-cols">
+      <div>
+        <h3>Done is 165°F</h3>
+        <p>A turkey is safe to eat when a food thermometer reads <b>165°F</b> in all three of these spots, without touching bone (USDA):</p>
+        <ul><li>the thickest part of the breast,</li><li>the innermost part of the thigh,</li><li>the innermost part of the wing.</li></ul>
+        <p>A pop-up timer or the color of the juices isn’t a reliable test. Then let it <b>rest 20 minutes</b> before carving. Roast at <b>325°F or higher</b>; USDA advises against lower oven temperatures.</p>
+        <h3>Thawing</h3>
+        <ul>
+          <li><b>In the refrigerator</b> (the easiest way): about 24 hours for every 4 to 5 lb. Keep it in its wrapper on a tray. A thawed turkey keeps 1 to 2 more days in the refrigerator.</li>
+          <li><b>In cold water:</b> about 30 minutes per lb. Keep it in its wrapper, submerged, and change the water every 30 minutes. Cook it as soon as it’s thawed.</li>
+          <li><b>In the microwave:</b> follow the oven maker’s directions, and cook it right away.</li>
+          <li>Never thaw on the counter or in hot water. Forgot to thaw? You can roast it frozen; it takes about 50% longer.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="mp-tablewrap"><table class="tg-table">
+          <caption>Thawing times (USDA rates)</caption>
+          <thead><tr><th scope="col">Turkey</th><th scope="col">Refrigerator</th><th scope="col">Cold water</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">4 to 12 lb</th><td>1 to 3 days</td><td>2 to 6 hours</td></tr>
+            <tr><th scope="row">12 to 16 lb</th><td>3 to 4 days</td><td>6 to 8 hours</td></tr>
+            <tr><th scope="row">16 to 20 lb</th><td>4 to 5 days</td><td>8 to 10 hours</td></tr>
+            <tr><th scope="row">20 to 24 lb</th><td>5 to 6 days</td><td>10 to 12 hours</td></tr>
+          </tbody>
+        </table></div>
+        <div class="mp-tablewrap"><table class="tg-table">
+          <caption>Roasting at 325°F (USDA guide times)</caption>
+          <thead><tr><th scope="col">Turkey</th><th scope="col">Unstuffed</th><th scope="col">Stuffed</th></tr></thead>
+          <tbody>
+            {{ range $i, $u := $T.roast_unstuffed }}{{ $s := index $T.roast_stuffed $i }}
+            <tr><th scope="row">{{ index $u 0 }} to {{ index $u 1 }} lb</th><td>{{ partial "meal-prep/mins.html" (int (mul (index $u 2) 60)) }} to {{ partial "meal-prep/mins.html" (int (mul (index $u 3) 60)) }}</td><td>{{ partial "meal-prep/mins.html" (int (mul (index $s 2) 60)) }} to {{ partial "meal-prep/mins.html" (int (mul (index $s 3) 60)) }}</td></tr>
+            {{ end }}
+            {{ with index $T.breast 0 }}<tr><th scope="row">Breast, {{ index . 0 }} to {{ index . 1 }} lb</th><td>{{ partial "meal-prep/mins.html" (int (mul (index . 2) 60)) }} to {{ partial "meal-prep/mins.html" (int (mul (index . 3) 60)) }}</td><td>not usual</td></tr>{{ end }}
+          </tbody>
+        </table></div>
+        <h3>After dinner</h3>
+        <p>Refrigerate leftovers <b>within 2 hours</b>. Carve the meat off the bones and divide everything into shallow containers so it cools fast. Use leftovers within <b>3 to 4 days</b>, or freeze them. Reheat to <b>165°F</b>, and bring gravy to a rolling boil (USDA).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hs-sec" id="carving" aria-labelledby="tg-ch">
+    <h2 id="tg-ch">🔪 Carving, step by step</h2>
+    <p>Carve on a board with a groove to catch the juices, with a long sharp knife and a carving fork. Let the turkey rest 20 minutes first; it carves more neatly.</p>
+    <div class="tg-carve">
+      <figure class="tg-fig">
+        <svg viewBox="0 20 420 260" role="img" aria-labelledby="tg-svgt tg-svgd" class="tg-svg">
+          <title id="tg-svgt">Where to cut a roast turkey</title>
+          <desc id="tg-svgd">A roast turkey seen from above, breast side up, with numbered cut lines: 1 between leg and body, 2 the thigh and drumstick joint, 3 the wing joint, 4 along the breastbone, 5 slices across the breast.</desc>
+          <rect x="14" y="236" width="392" height="34" rx="14" class="tg-board"/>
+          <path d="M96 128 Q70 120 56 146 Q66 162 100 156 Z" class="tg-leg"/>
+          <path d="M324 128 Q350 120 364 146 Q354 162 320 156 Z" class="tg-leg"/>
+          <ellipse cx="210" cy="150" rx="118" ry="92" class="tg-body"/>
+          <path d="M210 62 L210 238" class="tg-keel"/>
+          <ellipse cx="128" cy="196" rx="50" ry="36" class="tg-leg" transform="rotate(-30 128 196)"/>
+          <ellipse cx="292" cy="196" rx="50" ry="36" class="tg-leg" transform="rotate(30 292 196)"/>
+          <path d="M104 214 Q84 236 74 256 Q86 268 98 254 Q110 238 126 224 Z" class="tg-leg"/>
+          <path d="M316 214 Q336 236 346 256 Q334 268 322 254 Q310 238 294 224 Z" class="tg-leg"/>
+          <circle cx="80" cy="260" r="10" class="tg-bone"/><circle cx="340" cy="260" r="10" class="tg-bone"/>
+          <path d="M176 164 Q150 168 142 226" class="tg-cut"/>
+          <path d="M98 206 L122 228" class="tg-cut"/>
+          <path d="M100 132 L106 158" class="tg-cut"/>
+          <path d="M222 66 L222 234" class="tg-cut"/>
+          <path d="M236 100 L300 112 M238 128 L310 142 M240 156 L310 172" class="tg-cut thin"/>
+          <g class="tg-num"><circle cx="186" cy="198" r="13"/><text x="186" y="203">1</text></g>
+          <g class="tg-num"><circle cx="86" cy="206" r="13"/><text x="86" y="211">2</text></g>
+          <g class="tg-num"><circle cx="122" cy="118" r="13"/><text x="122" y="123">3</text></g>
+          <g class="tg-num"><circle cx="222" cy="44" r="13"/><text x="222" y="49">4</text></g>
+          <g class="tg-num"><circle cx="330" cy="104" r="13"/><text x="330" y="109">5</text></g>
+        </svg>
+        <figcaption class="hs-small">Seen from above, breast side up. Do one side, then the other.</figcaption>
+      </figure>
+      <ol class="tg-carvesteps">
+        <li><b>Legs off.</b> Cut through the skin between the leg and the body. Pull the leg out and down until the hip joint pops, then cut through the joint to free the whole leg.</li>
+        <li><b>Thigh and drumstick.</b> Set the leg skin side down and cut through the joint between them; you’ll feel where the knife slips through. Slice the thigh meat off the bone.</li>
+        <li><b>Wings.</b> Pull each wing out from the body and cut through the shoulder joint.</li>
+        <li><b>Breast off in one piece.</b> Cut down along one side of the breastbone, keeping the knife against the ribs, and lift the whole half breast off. Repeat on the other side.</li>
+        <li><b>Slice across.</b> Lay each breast half flat and slice it crosswise, across the grain, about ¼ inch thick, so every slice has some skin.</li>
+        <li><b>Platter and bones.</b> Arrange dark and white meat with the drumsticks and wings. Save the carcass for <a href="{{ "meal-prep/scratch/turkey-stock/" | relURL }}">turkey stock</a> and soup, and refrigerate the meat within 2 hours.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="hs-sec" id="ahead" aria-labelledby="tg-ah">
+    <h2 id="tg-ah">📋 Make ahead, and one oven</h2>
+    <div class="tg-cols">
+      <div>
+        <h3>What you can do before the day</h3>
+        <ul class="tg-ahead">
+          <li><b>Weeks ahead:</b> make and freeze turkey stock, make-ahead gravy, pie dough, Parker House rolls (baked) and the cornbread for dressing.</li>
+          <li><b>3 to 4 days ahead:</b> start thawing a frozen turkey in the refrigerator (sooner for a big one). Shop for everything else.</li>
+          <li><b>2 to 3 days ahead:</b> make cranberry sauce (it keeps a week). Dry-brine the turkey. Make the make-ahead mashed potatoes. Hard-cook the eggs for deviled eggs.</li>
+          <li><b>1 day ahead:</b> bake the pies. Dry the bread cubes and cook the onions and celery for stuffing (keep them apart from the broth and eggs). Blanch green beans and make their sauce. Mash the sweet potatoes. Cut the relish tray. Set the table. Start a wet brine.</li>
+          <li><b>The morning of:</b> take the giblets out, set up the roasting pan, and put the turkey in on time. Whip the cream. Mix the stuffing just before it bakes.</li>
+        </ul>
+        <p class="hs-small">Keep make-ahead dishes in the refrigerator and reheat them to 165°F.</p>
+      </div>
+      <div>
+        <h3>Sharing one oven</h3>
+        <ul>
+          <li><b>Bake pies the day before.</b> That frees the morning.</li>
+          <li><b>Use the turkey’s rest.</b> It needs at least 20 minutes, and it stays hot under foil for 40 or more. Turn the oven up and bake the casseroles and rolls then.</li>
+          <li><b>Two racks:</b> bake on both, with the racks spaced so air can move. Swap the dishes between racks halfway so both brown.</li>
+          <li><b>Different temperatures:</b> most casseroles are forgiving. Bake at the higher temperature and check them a little early.</li>
+          <li><b>Move dishes out of the oven:</b> mashed potatoes keep warm in a slow cooker; cranberry sauce, salads and the relish tray need no oven at all; spatchcocked, smoked or fried turkey frees the oven for hours.</li>
+          <li><b>Keep hot food hot</b> (140°F or above) and cold food cold until serving (USDA).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="hs-sec hs-note" id="history" aria-labelledby="tg-hh">
+    <h2 id="tg-hh">📜 Thanksgiving in brief</h2>
+    <p><b>1621, Plymouth.</b> After their first harvest, the English colonists at Plymouth held a celebration of about three days. Massasoit, a leader of the Wampanoag people, came with some 90 men. The only eyewitness account is a few lines in a letter by the colonist Edward Winslow, printed in London in 1622 in the book known as <i>Mourt’s Relation</i>:</p>
+    <blockquote class="mp-quote"><p>“Our harvest being gotten in, our governor sent four men on fowling, that so we might after a special manner rejoice together, after we had gathered the fruits of our labors; they four in one day killed as much fowl, as with a little help beside, served the Company almost a week, at which time amongst other Recreations, we exercised our Arms, many of the Indians coming amongst us, and amongst the rest their greatest king Massasoit, with some ninety men, whom for three days we entertained and feasted, and they went out and killed five Deer, which they brought to the Plantation and bestowed on our Governor, and upon the Captain and others.”</p></blockquote>
+    <p class="hs-small">Edward Winslow, 1621, in modern spelling (public domain), as given by the Pilgrim Hall Museum.</p>
+    <p><b>What they likely ate.</b> Winslow names wild fowl and deer. Governor William Bradford wrote later of waterfowl, “great store of wild turkeys,” venison and Indian corn that autumn. So turkey may well have been there, along with ducks or geese, corn, and whatever the season offered. Mashed potatoes and pumpkin pie as we know them came much later. The colonists didn’t call the 1621 event a thanksgiving; to them that word meant a day of prayer.</p>
+    <p><b>Sarah Josepha Hale.</b> The editor of <i>Godey’s Lady’s Book</i> (and author of “Mary Had a Little Lamb”) campaigned for a national Thanksgiving Day for about 17 years, from 1846, with editorials and letters to presidents. Many states already kept their own Thanksgiving days, on different dates.</p>
+    <p><b>1863, Lincoln’s proclamation.</b> On October 3, 1863, President Abraham Lincoln proclaimed a national day of thanksgiving. From the proclamation (public domain):</p>
+    <blockquote class="mp-quote"><p>“I do therefore invite my fellow citizens in every part of the United States, and also those who are at sea and those who are sojourning in foreign lands, to set apart and observe the last Thursday of November next, as a day of Thanksgiving and Praise to our beneficent Father who dwelleth in the Heavens.”</p></blockquote>
+    <p><b>1941, the fourth Thursday.</b> Presidents proclaimed the day each year after that. In 1939 the date was moved a week earlier, and states disagreed about which Thursday to keep. Congress settled it by law, signed on December 26, 1941: Thanksgiving is the fourth Thursday in November.</p>
+    <p class="hs-small">Families mark the day in different ways. Many Wampanoag people and other Native Americans see the 1621 story differently from the familiar school-pageant version, and museums in Plymouth today tell it from both the colonists’ and the Wampanoag side.</p>
+    <p class="mp-glinks hs-noprint"><a class="mp-glink" href="https://grokipedia.com/page/Thanksgiving_(United_States)" rel="noopener">Thanksgiving (Grokipedia)</a><a class="mp-glink" href="https://grokipedia.com/page/Sarah_Josepha_Hale" rel="noopener">Sarah Josepha Hale</a><a class="mp-glink" href="https://grokipedia.com/page/Massasoit" rel="noopener">Massasoit</a><a class="mp-glink" href="https://grokipedia.com/page/Wampanoag" rel="noopener">Wampanoag</a><a class="mp-glink" href="https://www.pilgrimhall.org/primary-sources-for-the-first-thanksgiving-at-plymouth/" rel="noopener">Primary sources (Pilgrim Hall Museum)</a><a class="mp-glink" href="https://www.docsteach.org/documents/document/lincoln-thanksgiving-proclamation" rel="noopener">Lincoln’s proclamation (National Archives)</a></p>
+  </section>
+
+  {{- /* filled in by thanksgiving.js when you print: the menu card, the timeline and the shopping list */ -}}
+  <div class="tg-printout" id="tg-printout" aria-hidden="true"></div>
+</div>
+<script type="application/json" id="tg-data">{{ dict "coll" (dict "day" $T.day "methods" $T.methods "ru" $T.roast_unstuffed "rs" $T.roast_stuffed "rb" $T.breast "def" $T.default_menu) "r" $mini | jsonify | safeJS }}</script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/thanksgiving.js" | relURL }}?v={{ (os.Stat "static/meal-prep/thanksgiving.js").ModTime.Unix }}" defer></script>
+{{ end }}
