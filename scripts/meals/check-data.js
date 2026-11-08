@@ -132,7 +132,7 @@ for (const r of recipes) {
   for (const k of ['name', 'emoji', 'summary', 'serving_size']) if (!r[k]) err(`${w}: missing ${k}`);
   if (!(Number.isInteger(r.servings) && r.servings > 0 && r.servings <= 24)) err(`${w}: bad servings`);
   for (const m of r.meal) if (!T.meal.includes(m)) err(`${w}: bad meal ${m}`);
-  if (!T.protein.includes(r.protein)) err(`${w}: bad protein ${r.protein}`);
+  if (r.protein !== '' && !T.protein.includes(r.protein)) err(`${w}: bad protein ${r.protein}`);
   for (const m of r.method) if (!T.method.includes(m)) err(`${w}: bad method ${m}`);
   for (const t of r.tags) if (!T.other.includes(t)) err(`${w}: bad tag ${t}`);
   const tm = r.times;

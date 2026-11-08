@@ -25,6 +25,7 @@
       {{ range where $sc.recipes "group" $g }}
       <a class="mp-rcard" href="{{ printf "meal-prep/scratch/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .summary }}</small><small>⏱ {{ partial "meal-prep/mins.html" .times.active }} hands-on · {{ partial "meal-prep/mins.html" .times.total }} in all{{ if eq .kind "stand-in" }} · a stand-in{{ end }}</small>{{ with .makes }}<small>Instead of: {{ range $i, $m := . }}{{ if $i }}, {{ end }}{{ with index $cat $m.item }}{{ partial "meal-prep/lcname.html" .name }}{{ end }}{{ end }}</small>{{ end }}</span></a>
       {{ end }}
+      {{ with index ($sc.group_links | default dict) $g }}{{ range . }}<a class="mp-rcard" href="{{ .url | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .title }}</b><small>{{ .text }}</small></span></a>{{ end }}{{ end }}
     </div>
   </section>
   {{ end }}

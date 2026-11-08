@@ -1,0 +1,532 @@
+{
+ "cupastry.bakers-percent": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Bakers write formulas, not recipes. Every ingredient is a percentage of the flour, so any batch size is one multiplication away."
+   },
+   {
+    "t": "key",
+    "html": "<b>Baker's percentage:</b> flour = <b>100%</b>; every other ingredient = its weight ÷ flour weight × 100. If there are two flours, their total is 100%. To make a batch, multiply each percent by the flour weight. To make a set amount of dough, flour weight = dough weight ÷ (total of all the percents ÷ 100)."
+   },
+   {
+    "t": "viz",
+    "name": "cu-bakers",
+    "opts": {
+     "preset": "lean"
+    },
+    "cap": "Pick a formula and a flour weight or dough weight, and every ingredient is worked out for you."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Ingredient",
+     "Baker's %",
+     "For 1,000 g flour"
+    ],
+    "rows": [
+     [
+      "Bread flour",
+      "100%",
+      "1,000 g"
+     ],
+     [
+      "Water",
+      "68%",
+      "680 g"
+     ],
+     [
+      "Salt",
+      "2%",
+      "20 g"
+     ],
+     [
+      "Instant yeast",
+      "1%",
+      "10 g"
+     ],
+     [
+      "Total",
+      "171%",
+      "1,710 g"
+     ]
+    ],
+    "cap": "A simple lean bread"
+   },
+   {
+    "t": "why",
+    "html": "The percents add up to more than 100%, and that is the point: they compare everything to flour, so you can see at a glance that one bread is wetter (higher water %) or saltier than another."
+   },
+   {
+    "t": "ex",
+    "title": "Ingredient from percent",
+    "q": "A formula has 2.2% salt. How much salt for 1,500 g of flour?",
+    "steps": [
+     "$1500 \\times 0.022 = 33$ g."
+    ],
+    "a": "33 g."
+   },
+   {
+    "t": "ex",
+    "title": "Flour from dough weight",
+    "q": "You need 1,800 g of the 171% dough above. How much flour?",
+    "steps": [
+     "$1800 \\div 1.71 \\approx 1052.6$ g."
+    ],
+    "a": "About 1,053 g of flour."
+   },
+   {
+    "t": "mistake",
+    "html": "Making the percents total 100. In baker's math only the flour is 100%."
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-drill\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🏠</span> Practice at home</p><ul><li>Take a bread recipe written in cups, weigh each ingredient as you measure it, and rewrite it in baker's percentages.</li></ul></div>"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-mp\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🍲</span> In Meal Prep</p><ul><li><a href=\"/meal-prep/scratch/sandwich-bread/\">Sandwich bread</a>: a good first loaf</li><li><a href=\"/meal-prep/scratch/crusty-loaf/\">French bread and baguettes</a>: a lean dough</li></ul></div>"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grokipedia, Baker percentage",
+    "url": "https://grokipedia.com/page/Baker_percentage"
+   },
+   {
+    "name": "The Culinary Institute of America, Culinary Arts (AOS) curriculum (course list)",
+    "url": "https://catalog.ciachef.edu/node/1273"
+   }
+  ]
+ },
+ "cupastry.lean-dough": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A lean dough is just flour, water, salt and yeast. Every great baguette and country loaf starts there."
+   },
+   {
+    "t": "key",
+    "html": "<b>The steps:</b> mix; knead (or fold) to develop <b>gluten</b>, the stretchy network that traps gas; <b>bulk ferment</b> until about doubled; divide and pre-shape; rest; shape; <b>proof</b>; score; bake with steam, then dry heat. <b>Hydration</b> is water as a percent of flour: about 60% to 65% makes a firm dough (bagels are lower), 68% to 75% a soft, open loaf, and 75% to 80% or more an open, holey loaf like ciabatta."
+   },
+   {
+    "t": "viz",
+    "name": "cu-bakers",
+    "opts": {
+     "preset": "lean"
+    },
+    "cap": "Change the hydration and see the water change."
+   },
+   {
+    "t": "list",
+    "items": [
+     "Salt is usually about 2% of the flour; it seasons, strengthens gluten and slows yeast.",
+     "Instant yeast is often about 0.5% to 1.5%; less yeast and longer, cooler fermentation give more flavor.",
+     "Proofed dough springs back slowly when pressed with a floured finger; under-proofed springs back fast; over-proofed doesn't spring back.",
+     "Bake to an internal temperature of about 200°F to 210°F for lean breads; the crust should sound hollow when tapped."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "Yeast eats sugars in the flour and gives off carbon dioxide and alcohol. Gluten stretches around the gas like a balloon. In the oven the gas expands, the yeast dies, and the starch and gluten set the shape."
+   },
+   {
+    "t": "ex",
+    "title": "Hydration",
+    "q": "A dough has 500 g flour and 375 g water. What is its hydration?",
+    "steps": [
+     "$375 \\div 500 = 0.75 = 75\\%$."
+    ],
+    "a": "75%."
+   },
+   {
+    "t": "mistake",
+    "html": "Judging proof by the clock. Warm kitchens proof fast and cool ones slow; use the poke test."
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-drill\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🏠</span> Practice at home</p><ul><li>Make the same lean dough at 65% and 75% hydration. Compare how they feel, how they shape, and the crumb after baking.</li></ul></div>"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-mp\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🍲</span> In Meal Prep</p><ul><li><a href=\"/meal-prep/scratch/crusty-loaf/\">French bread and baguettes</a></li><li><a href=\"/meal-prep/scratch/ciabatta/\">Ciabatta</a>: a very wet dough</li><li><a href=\"/meal-prep/scratch/pizza-dough/\">Pizza dough</a>: a lean dough with a little oil</li></ul></div>"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-sci\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🔬</span> The science behind it</p><ul><li><a href=\"/biology/high-school-biology/fermentation/\">Fermentation</a>: what yeast does with sugar</li></ul></div>"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grokipedia, Baker percentage",
+    "url": "https://grokipedia.com/page/Baker_percentage"
+   },
+   {
+    "name": "The Culinary Institute of America, Culinary Arts (AOS) curriculum (course list)",
+    "url": "https://catalog.ciachef.edu/node/1273"
+   }
+  ]
+ },
+ "cupastry.enriched-laminated": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Add butter, eggs, milk and sugar to dough and it becomes soft and rich. Fold butter into it in layers and it becomes flaky."
+   },
+   {
+    "t": "key",
+    "html": "<b>Enriched doughs</b> (brioche, challah, milk bread, cinnamon rolls) contain fat, eggs, dairy or sugar, which tenderize the crumb, brown the crust and slow the yeast. <b>Laminated doughs</b> have a block of butter folded into the dough and rolled and folded again and again to build hundreds of thin layers: <b>croissant</b> and <b>Danish</b> (yeasted), <b>puff pastry</b> (no yeast). In the oven, water in the butter turns to steam and pushes the layers apart."
+   },
+   {
+    "t": "list",
+    "items": [
+     "Keep everything cold when laminating; chill the dough between folds.",
+     "A \"letter fold\" (three layers) triples the layers each time: three letter folds give 27 layers of butter.",
+     "Brioche can be 50% butter or more by baker's percentage; add soft butter slowly after the gluten is built.",
+     "Proof croissants somewhere warm but cool enough that the butter stays solid (below about 78°F)."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "If the butter melts into the dough, there are no separate layers left to puff. That's why pastry kitchens are kept cool and why croissant dough rests in the refrigerator between folds."
+   },
+   {
+    "t": "ex",
+    "title": "Count the layers",
+    "q": "How many layers of butter after four letter folds (each fold triples them), starting from one?",
+    "steps": [
+     "$3^4 = 81$."
+    ],
+    "a": "81 layers."
+   },
+   {
+    "t": "mistake",
+    "html": "Letting the butter get too warm or too cold. Too warm, it smears into the dough; too cold, it shatters into pieces instead of rolling out in sheets."
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-drill\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🏠</span> Practice at home</p><ul><li>Make brioche buns. Then, on a cool day, make croissants over two days, following the Meal Prep recipe's chilling times exactly.</li></ul></div>"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-mp\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🍲</span> In Meal Prep</p><ul><li><a href=\"/meal-prep/scratch/brioche/\">Brioche</a></li><li><a href=\"/meal-prep/scratch/challah/\">Challah</a></li><li><a href=\"/meal-prep/scratch/croissants/\">Croissants</a>: laminated dough, step by step</li></ul></div>"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grokipedia, Laminated dough; Choux pastry; Shortcrust pastry",
+    "url": "https://grokipedia.com/page/Laminated_dough"
+   },
+   {
+    "name": "The Culinary Institute of America, Culinary Arts (AOS) curriculum (course list)",
+    "url": "https://catalog.ciachef.edu/node/1273"
+   }
+  ]
+ },
+ "cupastry.pastry-doughs": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Three pastry doughs cover pies, tarts and cream puffs. Each gets its texture from a different method."
+   },
+   {
+    "t": "key",
+    "html": "<b>Pie dough (pâte brisée):</b> the classic <b>3-2-1</b> ratio by weight: 3 parts flour, 2 parts cold fat, 1 part ice water, plus salt. Cut the fat in until pea-sized, add water just until it holds, rest cold. <b>Sweet tart dough (pâte sucrée):</b> butter and sugar creamed, egg added, then flour: crisp and cookie-like. <b>Choux paste (pâte à choux):</b> water or milk, butter and salt brought to a boil, flour stirred in and cooked into a ball, then eggs beaten in one at a time; it puffs in a hot oven into hollow shells for éclairs and cream puffs."
+   },
+   {
+    "t": "viz",
+    "name": "cu-bakers",
+    "opts": {
+     "preset": "pie"
+    },
+    "cap": "The 3-2-1 pie dough as a formula."
+   },
+   {
+    "t": "why",
+    "html": "In pie dough, flat pieces of cold fat melt in the oven and leave flakes; minimal mixing keeps gluten low so the crust is tender. In choux, steam from the eggs and water puffs the shell, and the cooked starch and egg set it hollow."
+   },
+   {
+    "t": "ex",
+    "title": "3-2-1",
+    "q": "How much fat and water for 450 g of flour in 3-2-1 pie dough?",
+    "steps": [
+     "One part is $450 \\div 3 = 150$ g.",
+     "Fat: 2 parts = 300 g. Water: 1 part = 150 g."
+    ],
+    "a": "300 g fat and 150 g water."
+   },
+   {
+    "t": "mistake",
+    "html": "Overworking pie dough, or adding too much water. It shrinks in the pan and bakes tough."
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-drill\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🏠</span> Practice at home</p><ul><li>Make 3-2-1 pie dough with all butter, rest it overnight, and blind-bake a shell with pie weights.</li><li>Make a small batch of choux and bake half; fill the puffs with whipped cream.</li></ul></div>"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-mp\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🍲</span> In Meal Prep</p><ul><li><a href=\"/meal-prep/scratch/pie-crust/\">Butter pie crust</a>: the full recipe</li><li><a href=\"/meal-prep/recipes/pears-belle-helene/\">Pears Belle-Hélène</a>: a classic plated dessert</li></ul></div>"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grokipedia, Laminated dough; Choux pastry; Shortcrust pastry",
+    "url": "https://grokipedia.com/page/Laminated_dough"
+   },
+   {
+    "name": "The Culinary Institute of America, Culinary Arts (AOS) curriculum (course list)",
+    "url": "https://catalog.ciachef.edu/node/1273"
+   }
+  ]
+ },
+ "cupastry.custards": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Custards are liquids set with egg. Two are the backbone of the pastry kitchen."
+   },
+   {
+    "t": "key",
+    "html": "<b>Crème anglaise</b> (vanilla custard sauce): milk (and often cream) heated with vanilla, whisked slowly into yolks and sugar, then stirred over gentle heat until it thickens enough to <b>coat the back of a spoon</b> (nappe), about 170°F to 180°F; strained and chilled. It must not boil. <b>Pastry cream</b> (crème pâtissière): the same base with cornstarch or flour added; it <b>must be brought to a boil</b> and whisked for about a minute, so the starch thickens fully; finished with butter and chilled."
+   },
+   {
+    "t": "list",
+    "items": [
+     "Temper: whisk a little hot milk into the yolks first, then return everything to the pan.",
+     "Anglaise: stir constantly with a spatula; a finger drawn across the coated spoon leaves a clean line.",
+     "Pastry cream: whisk hard as it boils; it will be very thick.",
+     "Chill both quickly in a shallow container with plastic wrap pressed on the surface, by the two-stage cooling rule."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "Without starch, yolks thicken a sauce gently and then curdle if heated much past about 180°F. Starch protects the eggs from curdling, which is why pastry cream can and must boil."
+   },
+   {
+    "t": "ex",
+    "title": "Boil or not?",
+    "q": "A custard made with milk, yolks, sugar and cornstarch.",
+    "steps": [
+     "Starch is present: it must reach a boil to thicken fully."
+    ],
+    "a": "Bring it to a boil (it's pastry cream)."
+   },
+   {
+    "t": "mistake",
+    "html": "Pulling pastry cream off the heat before it boils. It looks thick, then thins out in the refrigerator."
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-drill\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🏠</span> Practice at home</p><ul><li>Make a crème anglaise with a thermometer and note the temperature when it coats the spoon.</li><li>Make pastry cream and fill the choux puffs from the last lesson.</li></ul></div>"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-mp\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🍲</span> In Meal Prep</p><ul><li><a href=\"/meal-prep/recipes/peach-melba/\">Peach Melba</a>: Escoffier's dessert from the Savoy</li><li><a href=\"/meal-prep/recipes/baked-alaska/\">Baked Alaska</a>: a classic from Delmonico's</li></ul></div>"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grokipedia, Crème anglaise",
+    "url": "https://grokipedia.com/page/Crème_anglaise"
+   },
+   {
+    "name": "The Culinary Institute of America, Culinary Arts (AOS) curriculum (course list)",
+    "url": "https://catalog.ciachef.edu/node/1273"
+   }
+  ]
+ },
+ "cupastry.chocolate": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Melt a chocolate bar and let it set, and it often comes out dull, soft and streaky. Tempering keeps it shiny and crisp."
+   },
+   {
+    "t": "key",
+    "html": "Cocoa butter can set in several crystal forms; only one is stable, shiny and snaps cleanly. <b>Tempering</b> controls the temperature so that form wins: <b>melt</b> completely, <b>cool</b> while stirring so stable crystals start to form, then <b>rewarm</b> slightly to melt any unstable ones, and hold at the working temperature. Typical working temperatures are about 88°F to 90°F for dark chocolate, 86°F to 88°F for milk and 82°F to 84°F for white; makers print their own on the package, and those come first."
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Seeding method:</b> melt two-thirds of the chocolate, then stir in the remaining third, finely chopped, to cool it and add stable crystals.",
+     "Keep water and steam away: a few drops can make melted chocolate seize into a thick paste.",
+     "Test: smear a little on foil or a knife tip; tempered chocolate sets shiny and firm in a few minutes at cool room temperature.",
+     "Store finished chocolate cool and dry, not in the refrigerator, where moisture can bloom on it."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "Untempered chocolate sets with a mix of unstable crystals, which melt at lower temperatures and let fat rise to the surface as gray streaks (fat bloom)."
+   },
+   {
+    "t": "ex",
+    "title": "Seeding",
+    "q": "You have 600 g of chocolate for the seeding method (melt two-thirds). How much do you melt first?",
+    "steps": [
+     "$600 \\times \\tfrac23 = 400$ g melted; 200 g chopped for seeding."
+    ],
+    "a": "400 g."
+   },
+   {
+    "t": "mistake",
+    "html": "Covering melting chocolate with a lid over steam. Condensation drips in and it seizes."
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-drill\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🏠</span> Practice at home</p><ul><li>Temper 300 g of dark chocolate by seeding with an accurate thermometer. Dip strawberries or make bark, and leave one smear untempered to compare.</li></ul></div>"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-mp\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🍲</span> In Meal Prep</p><ul><li><a href=\"/meal-prep/scratch/chocolate-from-cocoa/\">Chocolate from cocoa powder and cocoa butter</a>: with tempering</li><li><a href=\"/meal-prep/scratch/bean-to-bar-chocolate/\">Bean-to-bar chocolate</a>: the whole process</li><li><a href=\"/meal-prep/recipes/smores-from-scratch/\">S'mores from Scratch</a>: chocolate, marshmallows and graham crackers you make yourself</li></ul></div>"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "The Culinary Institute of America, Culinary Arts (AOS) curriculum (course list)",
+    "url": "https://catalog.ciachef.edu/node/1273"
+   }
+  ]
+ },
+ "cupastry.sugar": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Boil sugar and water and something remarkable happens: as water boils off, the syrup's temperature climbs steadily, and each temperature makes a different candy."
+   },
+   {
+    "t": "key",
+    "html": "<b>Sugar stages</b> (at sea level, from the Exploratorium): <b>thread</b> 230°F to 235°F; <b>soft ball</b> 235°F to 240°F (fudge, fondant); <b>firm ball</b> 245°F to 250°F (caramels); <b>hard ball</b> 250°F to 265°F (nougat, marshmallows); <b>soft crack</b> 270°F to 290°F (taffy, butterscotch); <b>hard crack</b> 300°F to 310°F (lollipops, brittle, spun sugar); then <b>caramel</b>, from clear liquid near 320°F to brown near 338°F, and burnt by about 350°F. At high altitude, subtract about 1°F for every 500 feet."
+   },
+   {
+    "t": "viz",
+    "name": "cu-sugar",
+    "cap": "Drag the thermometer. The stage, its use and how much water is left all change together."
+   },
+   {
+    "t": "why",
+    "html": "The temperature of a sugar syrup tells you how concentrated it is. The less water left, the higher the boiling point and the harder the candy when it cools."
+   },
+   {
+    "t": "ex",
+    "title": "Altitude",
+    "q": "A caramel recipe says firm ball, 248°F. You live at 5,000 feet. What temperature?",
+    "steps": [
+     "$5000 \\div 500 = 10$, so 10°F lower.",
+     "$248 - 10 = 238$."
+    ],
+    "a": "About 238°F."
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-safe\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🛡️</span> Safety</p><ul><li>Cooked sugar is far hotter than boiling water and sticks to skin. Use a heavy, deep pan, long-handled tools and an accurate candy thermometer, and keep children and pets well away.</li><li>Add cream or butter to hot caramel slowly and stand back; it bubbles up hard.</li></ul></div>"
+   },
+   {
+    "t": "mistake",
+    "html": "Stirring a syrup that has started to crystallize, or splashing syrup on the sides of the pan. Brush the sides with a wet pastry brush and swirl instead of stirring."
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-drill\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🏠</span> Practice at home</p><ul><li>Check your candy thermometer in boiling water first: at sea level it should read 212°F (lower at altitude).</li><li>Make caramel sauce: cook sugar to amber, then whisk in warm cream off the heat.</li></ul></div>"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-mp\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🍲</span> In Meal Prep</p><ul><li><a href=\"/meal-prep/scratch/marshmallows/\">Marshmallows</a>: a hot sugar syrup whipped into gelatin</li><li><a href=\"/meal-prep/scratch/simple-syrup/\">Simple syrup</a>: the gentlest sugar cooking</li></ul></div>"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-sci\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🔬</span> The science behind it</p><ul><li><a href=\"/chemistry/general-chemistry-1/freezing-boiling-points/\">Boiling point elevation</a>: why a syrup boils hotter as it concentrates</li></ul></div>"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Exploratorium, The Accidental Scientist: Science of Cooking, Sugar Stages",
+    "url": "https://annex.exploratorium.edu/cooking/candy/sugar-stages.html"
+   },
+   {
+    "name": "The Culinary Institute of America, Culinary Arts (AOS) curriculum (course list)",
+    "url": "https://catalog.ciachef.edu/node/1273"
+   }
+  ]
+ },
+ "cupastry.plated-desserts": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A plated dessert is the last thing a guest eats, and many restaurants give it as much thought as the main course."
+   },
+   {
+    "t": "key",
+    "html": "A plated dessert is usually built from <b>parts</b>: a <b>main item</b> (a tart, mousse, cake, poached fruit), a <b>sauce</b> (anglaise, fruit coulis, caramel), something <b>crisp</b> (tuile, crumble, brittle), something <b>cold</b> (ice cream or sorbet) and a <b>garnish</b> that belongs (fresh fruit from the dish, not a stray mint leaf). The parts contrast in <b>temperature, texture, sweetness and color</b>."
+   },
+   {
+    "t": "list",
+    "items": [
+     "Plan parts that can be made ahead: sauces, crisp elements and ice creams keep.",
+     "Plate cold parts last so they don't melt.",
+     "Balance sweetness with acid (citrus, berries) or bitterness (dark chocolate, coffee).",
+     "Keep portions modest at the end of a long meal."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "Contrast is what makes a dessert interesting: a warm tart with cold ice cream, a soft mousse with a crisp tuile, a sweet custard with a sharp fruit sauce."
+   },
+   {
+    "t": "ex",
+    "title": "What's missing?",
+    "q": "A plate of chocolate mousse with chocolate sauce and chocolate shavings.",
+    "steps": [
+     "All soft, all chocolate, all similar temperature.",
+     "Add crunch, acid or cold: a hazelnut crisp, raspberries, a scoop of sorbet."
+    ],
+    "a": "Contrast: something crisp, something sharp or cold."
+   },
+   {
+    "t": "mistake",
+    "html": "Garnishing for looks alone. Every part should taste good with the rest."
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-drill\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🏠</span> Practice at home</p><ul><li>Build a plated dessert from things you have made in this course: a pastry cream tart, a caramel sauce and a crisp. Sketch it first; then plate four identical portions.</li></ul></div>"
+   },
+   {
+    "t": "note",
+    "html": "<div class=\"cu-box cu-mp\"><p class=\"cu-box-lab\"><span aria-hidden=\"true\">🍲</span> In Meal Prep</p><ul><li><a href=\"/meal-prep/recipes/peach-melba/\">Peach Melba</a></li><li><a href=\"/meal-prep/recipes/pears-belle-helene/\">Pears Belle-Hélène</a></li><li><a href=\"/meal-prep/recipes/crepes-suzette/\">Crêpes Suzette</a></li><li><a href=\"/meal-prep/recipes/baked-alaska/\">Baked Alaska</a></li></ul></div>"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "The Culinary Institute of America, Culinary Arts (AOS) curriculum (course list)",
+    "url": "https://catalog.ciachef.edu/node/1273"
+   },
+   {
+    "name": "Grokipedia, Food presentation",
+    "url": "https://grokipedia.com/page/Food_presentation"
+   }
+  ]
+ }
+}

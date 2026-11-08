@@ -369,6 +369,16 @@ note = "How the great inventors did it, in their own words, plus projects to bui
 icon = "💡"
 
 [[menu.main]]
+name = "Culinary Ladder"
+identifier = "culinary-edu"
+url = "/culinary/"
+weight = 28
+[menu.main.params]
+group = "Education"
+note = "From your first knife cut to what a fine-dining cook knows"
+icon = "👨‍🍳"
+
+[[menu.main]]
 name = "October Sky"
 url = "/october-sky/"
 weight = 34
@@ -899,6 +909,9 @@ note = "Save sections to use without the internet, and keep them up to date"
   [segments.inventors]
     [[segments.inventors.includes]]
       path = '{/inventors,/inventors/**}'
+  [segments.culinary]
+    [[segments.culinary.includes]]
+      path = '{/culinary,/culinary/**}'
   [segments.memory]
     [[segments.memory.includes]]
       path = '{/memory,/memory/**}'

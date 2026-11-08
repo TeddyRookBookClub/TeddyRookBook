@@ -7,7 +7,7 @@
 {{ $src := partial "meal-prep/data.html" . }}
 {{ $alname := dict }}{{ range $m.meta.allergens }}{{ $alname = merge $alname (dict .id (.name | default .id)) }}{{ end }}
 <div class="hs mp" id="mp-recipe" data-src="{{ $src }}" data-id="{{ $id }}" data-plan="{{ "meal-prep/plan/" | relURL }}">
-  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Recipes" "u" "meal-prep/recipes/") (dict "t" $r.name)) }}
+  {{ if $r.origin }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "From the great kitchens" "u" "meal-prep/classics/") (dict "t" $r.name)) }}{{ else }}{{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Recipes" "u" "meal-prep/recipes/") (dict "t" $r.name)) }}{{ end }}
   <header class="hs-hero mp-hero">
     <p class="hs-eyebrow">{{ delimit (apply $r.meal "strings.FirstUpper" ".") " · " }}{{ with $r.protein }}{{ if ne . "vegetarian" }} · {{ strings.FirstUpper . }}{{ end }}{{ end }}</p>
     <h1><span aria-hidden="true">{{ $r.emoji }}</span> {{ $r.name }}</h1>
@@ -56,6 +56,19 @@
         <h2 id="rp-nh">Nutrition</h2>
         <div id="rp-nutr"><p class="mp-pending">Nutrition coming: the USDA numbers for these ingredients are being added.</p></div>
       </section>
+      {{- /* "From the great kitchens" recipes (data/meals/recipes/classics.json): the chef, the public-domain book and a short quotation */ -}}
+      {{ with $r.origin }}
+      <section class="mp-box mp-origin" aria-labelledby="rp-oh">
+        <h2 id="rp-oh">📜 Where it comes from</h2>
+        <p><b>{{ .chef }}</b>, {{ .place }}.</p>
+        {{ if .ref }}<p class="hs-small"><i>{{ .book }}</i> ({{ .edition }}), {{ .ref }}{{ with .title }}: “{{ . }}”{{ end }}.</p>{{ end }}
+        {{ with .excerpt }}<blockquote class="mp-quote"><p>“{{ . }}”</p></blockquote><p class="hs-small">The original text, quoted as printed; it is in the public domain.</p>{{ end }}
+        {{ with .story }}<p>{{ . }}</p>{{ end }}
+        {{ with .changes }}<p><b>What we changed:</b> {{ . }}</p>{{ end }}
+        {{ with .stars }}<p class="hs-small">{{ . }}</p>{{ end }}
+        <p class="mp-glinks hs-noprint">{{ if .ref }}{{ range .scans }}<a class="mp-glink" href="{{ .url }}" rel="noopener">{{ .label }}</a>{{ end }}{{ end }}{{ with .about }}<a class="mp-glink" href="{{ .url }}" rel="noopener">{{ .label }}</a>{{ end }}{{ range .links }}<a class="mp-glink" href="{{ .url }}" rel="noopener">{{ .label }}</a>{{ end }}<a class="mp-glink" href="{{ "meal-prep/classics/" | relURL }}">More from the great kitchens →</a></p>
+      </section>
+      {{ end }}
     </div>
     <div>
       <section class="mp-box" aria-labelledby="rp-sh">
@@ -84,7 +97,7 @@
       {{ end }}
     </div>
   </div>
-  <p class="hs-small">An original Teddy Rook Book recipe. Nutrition is estimated from USDA FoodData Central and changes with brands and portions.</p>
+  <p class="hs-small">{{ if $r.origin }}Our own adaptation of a public-domain recipe, in our own words.{{ else }}An original Teddy Rook Book recipe.{{ end }} Nutrition is estimated from USDA FoodData Central and changes with brands and portions.</p>
 </div>
 <script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
 <script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>

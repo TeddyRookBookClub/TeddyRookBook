@@ -1,0 +1,125 @@
+# Culinary Ladder courses, bottom rung to top rung (the order of this list is the ladder).
+# Skill maps: data/culinary/topics/<key>.json; lessons: data/culinary/lessons/<key>.json; generators: static/culinary/gen/<key>.js;
+# visuals: static/culinary/viz/culinary.js (names cu-…). All of these are built by scripts/culinary/build.py from
+# scripts/culinary/src/<key>.py (lessons) and scripts/culinary/gen/<key>.js (generators): edit those and run the script.
+# The "Teach Yourself to Cook" guide is /culinary/teach-yourself/ (data/culinary/guide.yaml, layouts/math/cuguide.html).
+- key: cufound
+  slug: kitchen-foundations
+  title: "Kitchen Foundations"
+  short: "Foundations"
+  band: "High school"
+  grade: "9–10"
+  icon: "🍳"
+  color: "#b71c1c"
+  blurb: "The kitchen and every common tool in it: stations and ovens, knives and boards, pans and their metals, thermometers, scales and machines; measuring by weight, scaling a recipe, and mise en place."
+  after: []
+- key: cuknife
+  slug: knife-skills
+  title: "Knife Skills"
+  short: "Knives"
+  band: "High school"
+  grade: "9–10"
+  icon: "🔪"
+  color: "#8d3a2c"
+  blurb: "The pinch grip and the claw, dicing an onion, the classic cuts at true size, chiffonade and tourné, honing versus sharpening at the right angle, whetstones and knife care."
+  after: [cufound]
+- key: cusafe
+  slug: food-safety-and-sanitation
+  title: "Food Safety and Sanitation"
+  short: "Food Safety"
+  band: "High school"
+  grade: "10–11"
+  icon: "🧼"
+  color: "#1f6f8b"
+  blurb: "Established rules from the FDA Food Code and USDA: the danger zone, safe cooking temperatures, two-stage cooling, holding and date marking, cross-contamination, the nine major allergens, handwashing, cleaning and sanitizing, and HACCP."
+  after: [cufound]
+- key: cuheat
+  slug: heat-and-cooking-methods
+  title: "Heat and Cooking Methods"
+  short: "Heat"
+  band: "High school"
+  grade: "11–12"
+  icon: "🔥"
+  color: "#c2410c"
+  blurb: "How heat moves, why food browns, and every method: sauté, pan-fry, deep-fry with fire safety, roast, grill, broil, poach, simmer, steam, braise, stew and sous vide."
+  after: [cuknife, cusafe, physsci]
+- key: cusauce
+  slug: stocks-sauces-and-soups
+  title: "Stocks, Sauces and Soups"
+  short: "Sauces"
+  band: "College"
+  grade: "College"
+  icon: "🥣"
+  color: "#9a6b00"
+  blurb: "Escoffier's foundations: stocks, roux and liaisons, the five mother sauces and their children, emulsions, pan sauces and reductions, and soups, linked to the classic recipes in Meal Prep."
+  after: [cuheat]
+- key: cuprot
+  slug: proteins
+  title: "Proteins"
+  short: "Proteins"
+  band: "College"
+  grade: "College"
+  icon: "🥩"
+  color: "#a3243b"
+  blurb: "Muscle and tenderness, the primal cuts, brines, breaking down a chicken, filleting a fish, shellfish, doneness and carryover cooking, and the French and American omelets."
+  after: [cuheat]
+- key: cuveg
+  slug: vegetables-grains-and-pasta
+  title: "Vegetables, Grains, Legumes and Pasta"
+  short: "Vegetables"
+  band: "College"
+  grade: "College"
+  icon: "🥕"
+  color: "#3f7d20"
+  blurb: "Blanching and shocking, glazing, roasting and purées, starchy and waxy potatoes, rice and risotto, fresh pasta from scratch, and beans and lentils."
+  after: [cuheat]
+- key: cupastry
+  slug: baking-and-pastry
+  title: "Baking and Pastry"
+  short: "Pastry"
+  band: "College"
+  grade: "College"
+  icon: "🥐"
+  color: "#9c4f96"
+  blurb: "Baker's percentages, lean, enriched and laminated doughs, pie dough, pâte sucrée and choux, crème anglaise and pastry cream, tempering chocolate, the sugar stages, and plated desserts."
+  after: [cuheat]
+- key: cugarde
+  slug: garde-manger-and-preservation
+  title: "Garde Manger and Preservation"
+  short: "Garde Manger"
+  band: "College"
+  grade: "College"
+  icon: "🥗"
+  color: "#2e7d6b"
+  blurb: "The cold kitchen: salads and dressings, canapés, quick pickles, confit and terrines, and how charcuterie and cheese boards are made and served, within established safety."
+  after: [cusauce]
+- key: cuflavor
+  slug: flavor-seasoning-and-menus
+  title: "Flavor, Seasoning and Menu Design"
+  short: "Flavor"
+  band: "College"
+  grade: "College"
+  icon: "🧂"
+  color: "#6a4c93"
+  blurb: "The basic tastes and aroma, salt, acid, fat and heat, tasting and adjusting, herbs and spices, cooking with the seasons, and writing and pricing a menu."
+  after: [cusauce, cuprot]
+- key: cuplate
+  slug: plating-and-service
+  title: "Plating and Service"
+  short: "Plating"
+  band: "College"
+  grade: "College"
+  icon: "🍽️"
+  color: "#3b5ba5"
+  blurb: "Plate composition, sauce work and garnish, the formal place setting and what every utensil and glass is for, the courses of a tasting menu, service styles, and the pass."
+  after: [cuflavor]
+- key: cupro
+  slug: the-professional-kitchen
+  title: "The Professional Kitchen"
+  short: "Pro Kitchen"
+  band: "College"
+  grade: "College"
+  icon: "👨‍🍳"
+  color: "#4a4a4a"
+  blurb: "Escoffier's brigade, kitchen language, prep lists and par levels, ordering and inventory, recipe costing and food cost, timing a service, cleaning schedules, working safely, what Michelin stars mean, careers, and a capstone tasting menu."
+  after: [cuplate, cupastry, cugarde]

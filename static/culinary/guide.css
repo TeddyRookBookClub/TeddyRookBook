@@ -1,0 +1,30 @@
+/* Culinary Ladder: Teach Yourself guide (layouts/math/cuguide.html). Uses the ladder page tokens from math/math.css
+   (--ink, --muted, --line, --card, --paper, --g, --gold), so light and dark themes follow html[data-theme]. */
+.cug .cug-sec{margin:0 0 2rem}
+.cug p,.cug li,.cug dd{line-height:1.6}
+.cug h3{font-size:1.08rem;margin:0 0 .35rem;color:var(--ink)}
+.cug-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.8rem;margin:1rem 0}
+.cug-card{min-width:0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.9rem 1rem}
+.cug-card p{margin:0}
+.cug-phases{list-style:none;margin:0;padding:0;display:grid;gap:.9rem;counter-reset:ph}
+.cug-phase{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--mc);border-radius:12px;padding:.9rem 1.1rem}
+.cug-weeks{margin:0;font-size:.85rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--goldtx)}
+.cug-courses{margin:.1rem 0 .5rem}
+.cug-lbl{font-weight:700;margin-right:.3rem}
+.cug-phase dl{display:grid;grid-template-columns:minmax(7rem,max-content) 1fr;gap:.3rem .9rem;margin:0}
+.cug-phase dt{font-weight:700;color:var(--muted)}
+.cug-phase dd{margin:0}
+
+.cug-x{margin:.3rem 0 0 1.2rem;padding:0}
+.cug-price{font-weight:600;color:var(--muted);font-size:.95rem;margin-left:.3rem}
+.cug-tbl{overflow-x:auto;max-width:100%;border:1px solid var(--line);border-radius:12px}
+.cug-tbl table{border-collapse:collapse;width:100%;min-width:34rem;font-size:.95rem}
+.cug-tbl th,.cug-tbl td{padding:.55rem .7rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cug-tbl thead th{background:var(--paper)}
+.cug-tbl tbody th{font-weight:700}
+.cug-tbl tr:last-child th,.cug-tbl tr:last-child td{border-bottom:0}
+.cug-safe{border-left:4px solid var(--gold);padding:.6rem .9rem;background:var(--goldbg);border-radius:8px}
+.cug-start{display:flex;flex-wrap:wrap;gap:.6rem}
+@media (max-width:560px){.cug-phase dl{grid-template-columns:1fr}.cug-phase dt{margin-top:.3rem}}
+@media print{.cug-start,.mlp-crumbs{display:none}.cug-phase,.cug-card{min-width:0;break-inside:avoid}.cug-tbl{overflow:visible;border:0}}
+.cug .cug-sec>p{margin:0 0 .8rem}

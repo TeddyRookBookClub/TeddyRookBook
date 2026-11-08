@@ -68,19 +68,26 @@ SOURCES = [
     ('nchfp', 'National Center for Home Food Preservation (tested canning recipes)', 'University of Georgia', 'https://nchfp.uga.edu/'),
     ('ucd-butter', 'Making Goat Milk Butter at Home', 'UC Davis Dairy Research and Information Center', 'https://drinc.ucdavis.edu/goat-dairy-foods/making-goat-milk-butter-home'),
     ('uky-cultured', 'Dairy Foods Unit 4: Cultured Dairy Products', 'University of Kentucky Cooperative Extension Service, 1998', 'https://publications.mgcafe.uky.edu/sites/publications.ca.uky.edu/files/4ji04pa.pdf'),
-    ('wiki-brown', 'Brown sugar', 'Wikipedia', 'https://en.wikipedia.org/wiki/Brown_sugar'),
-    ('wiki-powdered', 'Powdered sugar', 'Wikipedia', 'https://en.wikipedia.org/wiki/Powdered_sugar'),
-    ('wiki-masa', 'Masa', 'Wikipedia', 'https://en.wikipedia.org/wiki/Masa'),
-    ('wiki-buttermilk', 'Buttermilk', 'Wikipedia', 'https://en.wikipedia.org/wiki/Buttermilk'),
-    ('wiki-fleischmann', 'Charles Louis Fleischmann', 'Wikipedia', 'https://en.wikipedia.org/wiki/Charles_Louis_Fleischmann'),
-    ('wiki-lyeroll', 'Lye roll', 'Wikipedia', 'https://en.wikipedia.org/wiki/Lye_roll'),
-    ('wiki-bicarbonate', 'Sodium bicarbonate', 'Wikipedia', 'https://en.wikipedia.org/wiki/Sodium_bicarbonate'),
-    ('wiki-carbonate', 'Sodium carbonate', 'Wikipedia', 'https://en.wikipedia.org/wiki/Sodium_carbonate'),
+    ('wiki-brown', 'Brown sugar', 'Grokipedia', 'https://grokipedia.com/page/Brown_sugar'),
+    ('wiki-powdered', 'Powdered sugar', 'Grokipedia', 'https://grokipedia.com/page/Powdered_sugar'),
+    ('wiki-masa', 'Masa', 'Grokipedia', 'https://grokipedia.com/page/Masa'),
+    ('wiki-buttermilk', 'Buttermilk', 'Grokipedia', 'https://grokipedia.com/page/Buttermilk'),
+    ('wiki-fleischmann', 'Charles Louis Fleischmann', 'Grokipedia', 'https://grokipedia.com/page/Charles_Louis_Fleischmann'),
+    ('wiki-lyeroll', 'Lye roll', 'Grokipedia', 'https://grokipedia.com/page/Lye_roll'),
+    ('wiki-bicarbonate', 'Sodium bicarbonate', 'Grokipedia', 'https://grokipedia.com/page/Sodium_bicarbonate'),
+    ('wiki-carbonate', 'Sodium carbonate', 'Grokipedia', 'https://grokipedia.com/page/Sodium_carbonate'),
     ('niosh-naoh', 'NIOSH Pocket Guide to Chemical Hazards: Sodium hydroxide', 'Centers for Disease Control and Prevention (NIOSH)', 'https://www.cdc.gov/niosh/npg/npgd0565.html'),
     ('clemson-sourdough', 'How to Make, Feed, and Bake With a Sourdough Starter: Sourdough 101 Guide', 'Clemson Cooperative Extension, Home & Garden Information Center, 2025', 'https://hgic.clemson.edu/how-to-make-feed-and-bake-with-a-sourdough-starter-sourdough-101-guide/'),
     ('uaf-sourdough', 'Sourdough (FNH-00061)', 'University of Alaska Fairbanks Cooperative Extension Service, 2024', 'https://www.uaf.edu/ces/publications/database/food/sourdough.php'),
     ('ucanr-starter', 'Can This Sourdough Starter Be Saved? Or Is This Starter a Goner?', 'UC Agriculture and Natural Resources, Master Food Preservers of San Luis Obispo and Santa Barbara Counties, 2020', 'https://ucanr.edu/blog/master-food-preserver-slo-sb-counties/article/can-sourdough-starter-be-saved-or-starter-goner'),
     ('isu-tangzhong', 'Tangzhong', 'Iowa State University Extension and Outreach, AnswerLine, 2018', 'https://blogs.extension.iastate.edu/answerline/2018/07/30/tangzhong/'),
+    ('csu-candy', 'Candy Making at High Elevation', 'Colorado State University Extension', 'https://extension.colostate.edu/resource/candy-making-at-high-elevation/'),
+    ('exploratorium-sugar', 'Candy: Sugar Stages', 'Exploratorium, The Accidental Scientist: Science of Cooking', 'https://annex.exploratorium.edu/cooking/candy/sugar-stages.html'),
+    ('usu-candy', 'The Art of Candy Making', 'Utah State University Extension', 'https://extension.usu.edu/utah/files/recipes-cooking-canning/The-art-of-Candy-Making.pdf'),
+    ('guittard-temper', 'Chocolate Handling and Tempering', 'Guittard Chocolate Company (technical guide)', 'https://guittard.com/blog/chocolate-handling-and-tempering'),
+    ('grok-marshmallow', 'Marshmallow', 'Grokipedia', 'https://grokipedia.com/page/Marshmallow'),
+    ('grok-chocolate', 'Chocolate', 'Grokipedia', 'https://grokipedia.com/page/Chocolate'),
+    ('grok-graham', 'Sylvester Graham', 'Grokipedia', 'https://grokipedia.com/page/Sylvester_Graham'),
     ('fdc', 'FoodData Central (SR Legacy)', 'USDA Agricultural Research Service', 'https://fdc.nal.usda.gov/'),
 ]
 
@@ -1552,15 +1559,142 @@ R.append(dict(
     scaling='Thinner dough makes crisper crackers; thick spots stay soft, so roll evenly.', old_way=None, safety=[FLOUR_SAFETY], notes=['Discard from a sourdough starter can replace up to half the water and some flour.'],
     nutrition={'from': 'ingredients'}, src=['ndsu-fn579', 'fda-flour']))
 
+# ------------------------------------------------------------------ s'mores from scratch: marshmallows, chocolate, graham crackers
+SUGAR_SAFETY = 'Hot sugar syrup is far hotter than boiling water and sticks to skin. Keep children back while it cooks and while you pour it, use a deep pan, and don’t taste it until it cools.'
+CANDY_THERMO = 'Test your candy thermometer first: in boiling water it should read 212°F at sea level. Above sea level, cook to 2°F less for every 1,000 feet (Colorado State University Extension).'
+R.append(dict(
+    id='marshmallows', name='Marshmallows', emoji='☁️', kind='scratch', group='S’mores from scratch',
+    summary='Soft vanilla marshmallows from gelatin, sugar and syrup, whipped, set in a pan and cut into squares.',
+    makes=[{'item': 'marshmallows', 'by': 'g', 'n': 560, 'label': 'g of marshmallows (about forty 1½-inch squares)'}],
+    yield_='About 40 marshmallows, 1½ inches square (a 9 × 13-inch pan).',
+    batch={'step': 0.5, 'min': 0.5, 'pans': [{'id': '9x13', 'label': '9 × 13-inch pan', 'f': 1}, {'id': '8x8', 'label': '8 × 8-inch pan (thicker squares)', 'f': 0.5}]},
+    ingredients=[I('gelatin', 3, 'package', 'unflavored, ¼-oz envelopes (about 2 tablespoons)'), I('water', 1, 'cup', 'cold, divided'), I('sugar', 400, 'g'),
+                 I('corn-syrup', 0.67, 'cup', 'or golden syrup'), I('salt', 1.5, 'g'), I('vanilla', 1, 'tbsp'),
+                 I('powdered-sugar', 0.25, 'cup', 'for dusting'), I('cornstarch', 0.25, 'cup', 'for dusting'), I('vegetable-oil', 1, 'tsp', 'for the pan', eaten=False)],
+    equipment=['9 × 13-inch pan', 'stand mixer with whisk (or a strong hand mixer)', 'heavy 3-quart saucepan', 'candy thermometer', 'oiled spatula', 'sharp knife or pizza cutter'],
+    steps=[
+        'Oil the pan lightly. Sift the powdered sugar and cornstarch together; dust the pan with about 2 tablespoons of the mix.',
+        'Pour ½ cup of the cold water into the mixer bowl and sprinkle the gelatin over it. Let it soak (bloom) while you make the syrup.',
+        'In the saucepan, stir the sugar, corn syrup, salt and the other ½ cup water over medium heat until the sugar dissolves. Clip on the thermometer and boil without stirring to 240°F (115°C), the soft-ball stage, about 10 to 12 minutes.',
+        'Turn the mixer to low. Pour the hot syrup in a thin stream down the side of the bowl, away from the whisk, so it doesn’t spatter.',
+        'Turn the mixer to high and whip 10 to 12 minutes, until the mixture is thick, white, glossy and just warm, and holds a ribbon. Whip in the vanilla for the last minute.',
+        'Scrape it into the pan with the oiled spatula and smooth the top with an oiled hand or spatula. Dust the top.',
+        'Leave it uncovered at room temperature at least 4 hours, or overnight, to set.',
+        'Turn the slab out onto a board dusted with the sugar mix. Cut into 1½-inch squares with an oiled knife or pizza cutter, and toss the cut sides in the rest of the mix so they don’t stick.'],
+    stages=[st('Bloom the gelatin and cook the syrup to 240°F', active=10, cook=12, station='stove'), st('Whip', active=12), st('Set in the pan', wait=240, bg=True), st('Cut and dust', active=15)],
+    plan={'keep_days': 14, 'freeze': False, 'lead_days': 1, 'thaw': ''},
+    keeps=['Pantry: airtight, dusted, at room temperature. NDSU gives opened marshmallows about 1 month; homemade ones are softest in the first week or two.'],
+    scaling='An 8 × 8-inch pan takes half a batch (and gives thicker squares); the syrup still cooks to 240°F, a little faster. Small batches are hard to read on a thermometer, so use a small, deep pan.',
+    old_way='The name comes from the marsh mallow plant: its root sap was once whipped with sugar into a soft candy. Gelatin took the root’s place in the late 1800s, and that is the marshmallow we know.',
+    safety=[SUGAR_SAFETY, CANDY_THERMO],
+    notes=['Golden syrup or light corn syrup both work; the syrup keeps the sugar from crystallizing.',
+           'Some recipes cook the syrup a little higher, to 245 or 250°F, for a firmer marshmallow.',
+           'For toasting, cut them bigger (2 inches) and let them dry, uncovered, a few extra hours; drier marshmallows hold their shape over a fire.'],
+    nutrition={'from': 'ingredients'}, src=['csu-candy', 'exploratorium-sugar', 'usu-candy', 'ndsu-fn579', 'grok-marshmallow']))
+
+TEMPER_NOTE = ('Tempering is what gives chocolate a snap and a shine. Seed method: melt dark chocolate to 120 to 122°F (milk chocolate to 115 to 117°F), '
+               'then stir in chopped tempered chocolate, about a quarter of the weight, until it cools to 88 to 90°F for dark (86 to 88°F for milk). '
+               'Fish out any unmelted pieces. Test a smear on foil: at room temperature it should set firm and glossy in about 5 minutes.')
+R.append(dict(
+    id='chocolate-from-cocoa', name='Chocolate from cocoa powder and cocoa butter', emoji='🍫', kind='scratch', group='S’mores from scratch',
+    summary='The easy way: melt cocoa butter, whisk in cocoa powder and sugar, and pour it into bars. Reliable, about 30 minutes.',
+    makes=[{'item': 'dark-chocolate', 'by': 'g', 'n': 230, 'label': 'g of dark chocolate (about two 4-oz bars)'}],
+    yield_='About 8 oz (230 g) of dark chocolate, roughly 60 percent cocoa.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('cocoa-butter', 100, 'g', 'food grade, chopped'), I('cocoa', 60, 'g', 'natural or Dutch-process, sifted'), I('powdered-sugar', 70, 'g', 'sifted'),
+                 I('salt', 0.5, 'g'), I('vanilla', 0.25, 'tsp', '', True)],
+    equipment=['heatproof bowl over a pan of barely simmering water (or a microwave)', 'instant-read thermometer', 'whisk and silicone spatula', 'fine sieve', 'chocolate mold, small loaf pan or parchment-lined dish'],
+    steps=[
+        'Melt the cocoa butter in the bowl over barely simmering water, stirring, until it is clear and about 115 to 120°F. Keep every drop of water and steam out: a little water makes chocolate seize, turning it thick and grainy.',
+        'Take the bowl off the heat. Whisk in the sifted cocoa, powdered sugar and salt a spoonful at a time until it is completely smooth, 3 to 4 minutes. Add the vanilla if you like.',
+        'Stir now and then as it cools to about 90°F so the cocoa stays mixed in. For snap and shine, temper it now by the seed method in the note below; otherwise go on.',
+        'Pour it into the mold or lined pan and tap it on the counter to pop the bubbles.',
+        'Let it set at cool room temperature, about 1 hour, or 20 minutes in the refrigerator. Unmold and break into pieces.'],
+    stages=[st('Melt the cocoa butter', active=5, cook=8, station='stove'), st('Whisk in the cocoa and sugar, and cool while stirring', active=15), st('Set', wait=60, bg=True)],
+    plan={'keep_days': 60, 'freeze': False, 'lead_days': 0, 'thaw': ''},
+    keeps=['Cool, dry place, wrapped, at 60 to 70°F, away from strong smells. NDSU gives opened chocolate about 1 year; homemade chocolate without emulsifiers can turn dull or streaky sooner, which is harmless.'],
+    scaling='Keep the weights in proportion: about 40 percent cocoa butter, 25 percent cocoa and 30 percent sugar. More sugar makes it sweeter and milder.',
+    old_way='Solid eating chocolate is younger than you might think. In 1828 Coenraad van Houten patented a press that squeezed cocoa butter out of ground cocoa beans, leaving cocoa powder; putting extra cocoa butter back in is what made smooth bars possible.',
+    safety=[],
+    notes=[TEMPER_NOTE,
+           'Untempered, this chocolate still tastes good: it sets soft and matte and melts at warm room temperature. For s’mores, which melt it anyway, that is fine.',
+           'Milk chocolate: use 100 g cocoa butter, 30 g cocoa, 40 g whole milk powder and 80 g powdered sugar, and temper to 86 to 88°F.',
+           'Granulated sugar stays gritty; powdered sugar (or sugar ground fine in a blender) melts in smoothly.'],
+    nutrition={'from': 'ingredients'}, src=['guittard-temper', 'usu-candy', 'ndsu-fn579', 'grok-chocolate']))
+
+R.append(dict(
+    id='bean-to-bar-chocolate', name='Bean-to-bar chocolate', emoji='🫘', kind='scratch', group='S’mores from scratch',
+    summary='The hard way, for the curious: roast cocoa beans, crack and winnow them, grind and refine them with sugar, then temper. A project, not a weeknight.',
+    makes=[{'item': 'dark-chocolate', 'by': 'g', 'n': 380, 'label': 'g of 75 percent dark chocolate'}],
+    yield_='About 13 oz (380 g) of 75 percent dark chocolate.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('cacao-nibs', 300, 'g', 'roasted nibs, or about 375 g of whole cocoa beans to roast and shell'), I('sugar', 100, 'g'),
+                 I('cocoa-butter', 30, 'g', 'helps a home grinder; leave out for a stiffer bar', True), I('dry-milk', 60, 'g', 'for milk chocolate', True)],
+    equipment=['rimmed baking sheet (for whole beans)', 'rolling pin and zip-top bag', 'hair dryer or a fan, and two bowls (for winnowing)', 'stone melanger (best), or a high-powered blender or food processor', 'instant-read thermometer', 'chocolate mold or parchment-lined dish'],
+    steps=[
+        'Buy cocoa beans or nibs sold as food. If you start with whole beans, roast them in one layer at about 300°F for 20 to 30 minutes, until they smell like brownies and the shells crackle and loosen. Roasts vary by bean; taste a cooled bean and adjust next time.',
+        'Cool the beans, put them in the bag and crack them with the rolling pin into pieces the size of a lentil.',
+        'Winnow: outdoors or over a sink, pour the cracked beans slowly from one bowl to the other while a hair dryer on cool (or a fan) blows across the stream. The light papery shells blow away; the heavy nibs fall into the bowl. Repeat until the nibs are clean.',
+        'Grind: blend the nibs (and the cocoa butter, if using) in short bursts, scraping down often, until the friction warms them into a thick, gritty paste, cocoa liquor. Let the motor rest between bursts so it doesn’t overheat.',
+        'Refine: in a melanger, add the paste and sugar (and milk powder for milk chocolate) and let it run 24 to 72 hours, tasting now and then, until it feels smooth on your tongue. With only a blender, grind the sugar fine first, blend it in for 10 to 15 minutes, and expect a rustic, slightly gritty bar.',
+        'Temper by the seed method: warm the chocolate to 120°F, then stir in about a quarter of its weight of chopped tempered chocolate (from an earlier batch or a good store bar) until it cools to 88 to 90°F (86 to 88°F for milk). Test a smear on foil: it should set glossy and firm in about 5 minutes.',
+        'Pour into molds, tap out the bubbles, and let it set at cool room temperature, about 1 hour.'],
+    stages=[st('Roast whole beans at 300°F', active=5, cook=25, station='oven', temp=300), st('Cool, crack and winnow', active=30, wait=15),
+            st('Grind into cocoa liquor', active=20), st('Refine in a melanger (skip for a rustic bar)', active=10, wait=1440, bg=True),
+            st('Temper and mold', active=30), st('Set', wait=60, bg=True)],
+    plan={'keep_days': 60, 'freeze': False, 'lead_days': 2, 'thaw': ''},
+    keeps=['Cool, dry place, wrapped, at 60 to 70°F, away from strong smells. NDSU gives opened chocolate about 1 year.'],
+    scaling='Melangers have a minimum load (often about 1 lb of nibs); a blender works best with 1 to 2 cups of nibs at a time. Keep the sugar at about a quarter of the weight for a 75 percent bar.',
+    old_way='For most of its history chocolate was a drink: roasted beans ground on a warm stone and whisked with water and spices. Bars came only in the 1800s, once presses and refining machines could make the paste smooth.',
+    safety=['A blender jar and a melanger drum get hot as they run; handle them with care, and keep fingers out of a running machine.'],
+    notes=[TEMPER_NOTE,
+           'Realistic expectations: a blender can’t grind sugar and cocoa as fine as a factory, so the first bars are often grainy. A melanger, a small stone grinder made for nut butters and chocolate, is what makes home bars smooth.',
+           'No seed chocolate? Pour two-thirds of the melted chocolate onto a clean marble or granite slab, spread and scrape it back and forth until it thickens, then stir it back into the rest; this tabling method is how chocolatiers temper by hand.'],
+    nutrition={'from': 'ingredients'}, src=['guittard-temper', 'usu-candy', 'ndsu-fn579', 'grok-chocolate']))
+
+R.append(dict(
+    id='graham-crackers', name='Graham crackers', emoji='🍪', kind='scratch', group='S’mores from scratch',
+    summary='Honey graham crackers from whole-wheat flour, brown sugar, a spoonful of molasses and cinnamon.',
+    makes=[{'item': 'graham-crackers', 'by': 'sheet', 'n': 24, 'label': 'full sheets (about 2½ × 5 inches)'}],
+    yield_='About 24 full sheets, 2½ × 5 inches (48 squares).',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('whole-wheat-flour', 180, 'g', 'or graham flour'), I('flour', 125, 'g'), I('brown-sugar', 100, 'g', 'packed'), I('baking-soda', 0.5, 'tsp'),
+                 I('baking-powder', 0.5, 'tsp'), I('salt', 3, 'g'), I('cinnamon', 1, 'tsp'), I('unsalted-butter', 113, 'g', 'cold, cubed'),
+                 I('honey', 3, 'tbsp'), I('molasses', 1, 'tbsp'), I('whole-milk', 3, 'tbsp'), I('vanilla', 1, 'tsp'),
+                 I('sugar', 1, 'tbsp', 'mixed with ¼ teaspoon cinnamon, for the tops', True)],
+    equipment=['food processor or bowl and pastry cutter', 'rolling pin', 'parchment paper', '2 baking sheets', 'pizza cutter or knife', 'fork'],
+    steps=[
+        'Pulse the flours, brown sugar, baking soda, baking powder, salt and cinnamon in the food processor. Add the butter and pulse until it looks like coarse crumbs.',
+        'Stir the honey, molasses, milk and vanilla together, pour in, and pulse just until the dough clumps. Press it into two flat squares, wrap, and chill 30 minutes.',
+        'Heat the oven to 350°F. Roll each square between two sheets of parchment to about ⅛ inch thick, a rough 10 × 12-inch rectangle. Peel off the top sheet.',
+        'Trim the edges, cut into 2½ × 5-inch rectangles, and score each across the middle. Prick them with a fork in rows, and sprinkle with cinnamon sugar if you like. Slide the parchment onto a baking sheet; the crackers can touch.',
+        'Bake 14 to 18 minutes, until browned at the edges and firm in the middle. Cool on the pan; they crisp as they cool. Re-cut along the lines while still warm.'],
+    stages=[st('Mix the dough', active=10), st('Chill', wait=30, bg=True), st('Roll, cut and prick', active=20), st('Bake at 350°F', cook=16, station='oven', temp=350), st('Cool', wait=20)],
+    plan={'keep_days': 14, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw in the container on the counter, about 30 minutes.'},
+    keeps=['Pantry: airtight once completely cool, 2 to 3 weeks (NDSU’s time for homemade cookies).', 'Freezer: the wrapped dough or the baked crackers, about 3 months.'],
+    scaling='Roll evenly: thin spots burn and thick ones stay soft. Scraps can be re-rolled once.',
+    old_way='Sylvester Graham, a minister and diet reformer of the 1830s, urged people to eat bread made from coarse, unsifted whole-wheat flour, which came to be called graham flour. The sweet graham crackers sold today came later and are quite different from the plain ones his followers ate.',
+    safety=[FLOUR_SAFETY],
+    notes=['Graham flour is coarsely ground whole-wheat flour; regular whole-wheat flour works nearly the same.',
+           'For s’mores, bake them a little thinner and crisper so they snap cleanly.'],
+    nutrition={'from': 'ingredients'}, src=['ndsu-fn579', 'fda-flour', 'grok-graham']))
+
 GROUPS = ['Yeast breads', 'Enriched breads', 'Sourdough', 'Flatbreads and tortillas', 'Quick breads', 'Boiled breads: pretzels and bagels', 'Pastry and crackers',
-          'Pasta and noodles', 'Dairy', 'Stocks and sauces', 'Dressings and spreads', 'Pantry mixes', 'Seasonings and stand-ins', 'Beans']
+          'Pasta and noodles', 'Dairy', 'Stocks and sauces', 'Dressings and spreads', 'Pantry mixes', 'Seasonings and stand-ins', 'Beans', 'S’mores from scratch']
 FIRST = ['sandwich-bread', 'whole-wheat-sandwich-bread', 'whole-wheat-bread']  # the all whole-wheat loaf is the one the planner makes for whole-wheat bread
 R.sort(key=lambda r: (GROUPS.index(r['group']), FIRST.index(r['id']) if r['id'] in FIRST else len(FIRST)))
 
 OMITTED = [
     {'name': 'Sour cream and crème fraîche', 'why': 'The home methods we found culture cream at room temperature for many hours. The one extension method (University of Kentucky) gives no storage time, and the popular “cream plus buttermilk on the counter” method has no tested food-safety guidance behind it, so we left both out.', 'src': ['uky-cultured']},
+    {'name': 'Gelatin-free (vegan) marshmallows', 'why': 'Versions made with aquafaba (chickpea liquid) and agar are much less dependable at home: they weep, deflate or set rubbery, and we found no method reliable enough to share. Our marshmallows use gelatin, so they are not vegetarian.', 'src': []},
     {'name': 'Home-canned anything', 'why': 'Canning is safe only with tested recipes and times. For canned tomatoes, sauce, salsa, pickles and applesauce, use the National Center for Home Food Preservation’s recipes.', 'src': ['nchfp']},
 ]
+
+
+# links shown under a group on /meal-prep/scratch/ (pages outside scratch.json that finish what the group starts)
+GROUP_LINKS = {'S’mores from scratch': [
+    {'emoji': '🔥', 'title': 'S’mores from scratch: put them together', 'url': 'meal-prep/recipes/smores-from-scratch/',
+     'text': 'Your own marshmallows, chocolate and graham crackers, toasted over a campfire or under the broiler, plus a restaurant-style plate.'}]}
 
 
 # ------------------------------------------------------------------ build
@@ -1598,7 +1732,7 @@ def main():
     srcs = [s for s in srcs if s['id'] in used]
     data = {'version': 1, 'updated': ACCESSED,
             'note': 'From-scratch recipes for /meal-prep/scratch/. Edit scripts/meals/src/build_scratch.py, not this file.',
-            'sources': srcs, 'omitted': OMITTED, 'recipes': out}
+            'sources': srcs, 'omitted': OMITTED, 'group_links': GROUP_LINKS, 'recipes': out}
     with open(os.path.join(SITE, 'data/meals/scratch.json'), 'w') as fh:
         json.dump(data, fh, indent=1, ensure_ascii=False)
         fh.write('\n')

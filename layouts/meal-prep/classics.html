@@ -1,0 +1,72 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+{{- /* "From the great kitchens": the recipes in data/meals/recipes/classics.json (built by scripts/meals/src/build_classics.py),
+   grouped by kitchen, with each public-domain book and why it is public domain. */ -}}
+{{ $all := partialCached "meal-prep/recipes-all.html" "r" }}
+{{ $cl := slice }}{{ range $all }}{{ if .origin }}{{ $cl = $cl | append . }}{{ end }}{{ end }}
+{{ $K := dict }}{{ with site.Data.meals.recipes }}{{ with .classics }}{{ $K = .kitchens }}{{ end }}{{ end }}
+<div class="hs mp" id="mp-classics">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "From the great kitchens")) }}
+  <header class="hs-hero mp-hero">
+    <p class="hs-eyebrow">Meal Prep · Classic restaurant recipes</p>
+    <h1>From the great kitchens</h1>
+    <p>{{ len $cl }} dishes from famous restaurant and hotel kitchens of the 1890s to the 1910s, taken from cookbooks that are now in the public domain. Each one is our own home-kitchen version, with modern measurements and safe temperatures, and each page quotes the original so you can see how the chef wrote it.</p>
+  </header>
+
+  <section class="hs-sec hs-note">
+    <h2>A word about Michelin stars</h2>
+    <p>The Michelin Guide started in France in 1900 as a free book for motorists. It began giving stars to restaurants in 1926 and settled on its one-to-three-star scale in 1931. The kitchens on this page did their famous work before that, so none of them held stars. They are here because they shaped the cooking that starred restaurants still build on: Escoffier’s sauces and kitchen system above all.</p>
+    <p>Many of today’s starred chefs have shared recipes online and in books. Those recipes, their wording and photos belong to the chefs, so we don’t copy them here. Everything on this page comes from books whose copyright has run out.</p>
+  </section>
+
+  {{ $sauces := where $cl "origin.group" "sauces" }}
+  {{ with $sauces }}
+  <section class="hs-sec" id="sauces">
+    <h2>The foundations: Escoffier’s basic sauces</h2>
+    <p>Escoffier built his cooking on five basic sauces, often called the mother sauces today. Learn these and you can make hundreds of others. Most start with a good stock: <a href="{{ "meal-prep/scratch/chicken-stock/" | relURL }}">chicken stock</a> or <a href="{{ "meal-prep/scratch/beef-stock/" | relURL }}">beef stock</a> from our from-scratch recipes.</p>
+    <div class="mp-rgrid">
+      {{ range . }}<a class="mp-rcard" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .summary }}</small><small>{{ partial "meal-prep/mins.html" .times.total }} · {{ .serving_size }}</small></span></a>{{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  {{ range $key := slice "escoffier" "delmonicos" "waldorf" "st-francis" }}
+  {{ $k := index $K $key }}
+  {{ $list := where (where $cl "origin.kitchen" $key) "origin.group" "dishes" }}
+  {{ with $list }}
+  <section class="hs-sec" id="{{ $key }}">
+    <h2>{{ $k.place | strings.FirstUpper }}</h2>
+    <p><b>{{ $k.chef }}</b>. <i>{{ $k.book }}</i> ({{ $k.edition }}).</p>
+    <div class="mp-rgrid">
+      {{ range . }}<a class="mp-rcard" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .summary }}</small><small>{{ partial "meal-prep/mins.html" .times.total }} · serves {{ .servings }}</small></span></a>{{ end }}
+    </div>
+  </section>
+  {{ end }}{{ end }}
+
+  <section class="hs-sec hs-note" id="smores">
+    <h2>Had a fancy s’more?</h2>
+    <p>Restaurants love to dress up campfire treats. Make every part yourself, marshmallows, chocolate and graham crackers, and plate it up: <a href="{{ "meal-prep/recipes/smores-from-scratch/" | relURL }}">s’mores from scratch</a>, or start with the pieces in <a href="{{ "meal-prep/scratch/" | relURL }}">From scratch</a>.</p>
+  </section>
+
+  <section class="hs-sec" id="books">
+    <h2>The books, and why they’re public domain</h2>
+    <ul class="mp-src">
+      {{ range $key := slice "escoffier" "delmonicos" "waldorf" "st-francis" }}{{ $k := index $K $key }}
+      <li><b><i>{{ $k.book }}</i></b>, {{ $k.chef }}; {{ $k.edition }}. {{ $k.status }} {{ range $i, $s := $k.scans }}{{ if $i }} · {{ end }}<a href="{{ $s.url }}" rel="noopener">{{ $s.label }}</a>{{ end }}</li>
+      {{ end }}
+    </ul>
+    <p class="hs-small">In the United States, books published in 1930 or earlier are now in the public domain. A list of ingredients can’t be copyrighted, but the way a recipe is written can be, so our steps are in our own words and the quotations come only from these old books.</p>
+  </section>
+
+  <section class="hs-sec hs-note">
+    <h2>What isn’t here, and why</h2>
+    <ul>
+      <li><b>Escoffier’s <i>Ma Cuisine</i></b> (1934) and its English translation (1965): still under copyright in the United States until 2030.</li>
+      <li><b>Louis Diat’s recipes</b>, including his vichyssoise from the Ritz-Carlton in New York: his books date from the 1940s on, so we use Escoffier’s hot potato and leek soup instead.</li>
+      <li><b>Fernand Point’s <i>Ma Gastronomie</i></b> (1969) and other books by chefs of the Michelin era: under copyright.</li>
+      <li><b>Wine and liqueurs.</b> Several originals cook with sherry, Madeira, white wine or orange liqueur. Our versions leave them out, and each page says what the chef used.</li>
+    </ul>
+  </section>
+</div>
+{{ end }}

@@ -174,6 +174,7 @@ turkey-bacon | Turkey bacon* | meat | fridge |  | strip=15#slice | 12-oz package
 chicken-sausage | Chicken sausage (fully cooked)* | meat | fridge | | link=85#link | 12-oz package=12 oz | | | | Sausage, chicken, beef, pork, skinless, smoked | | | FDC's closest entry mixes chicken, beef and pork; treat as rough.
 catfish | Catfish fillets | meat | fridge | | fillet=140#fillet | ~lb 0.25 | fish | gf | | Fish, catfish, channel, farmed, raw | | |
 scallops | Sea scallops | meat | fridge | | each=30#scallop | ~lb 0.25 | shellfish | gf | | Mollusks, scallop, mixed species, raw | | | Scallops are mollusks; FDA's major allergen rule covers crustacean shellfish, but many people allergic to shellfish avoid both.
+lobster | Lobster meat, cooked | meat | fridge | 145 | each=140#lobster's meat (a 1¼-lb lobster) | ~lb 0.5 | shellfish | gf | 174209 | Crustaceans, lobster, northern, cooked, moist heat | | lobster tails, lobster meat | A 1¼-lb live lobster gives about 5 oz of meat; frozen tails or cooked meat from the seafood counter work too.
 # ---------- DELI ----------
 deli-turkey | Sliced turkey (deli)* | deli | fridge | 140 | slice=28#slice | ~lb 0.25; 8-oz package=8 oz | | | | Turkey breast, sliced, prepackaged | | lunch meat, sandwich turkey |
 deli-ham | Sliced ham (deli)* | deli | fridge | 140 | slice=28#slice | ~lb 0.25; 8-oz package=8 oz | | | | Ham, sliced, pre-packaged, deli meat (96%fat free, water added) | | |
@@ -187,7 +188,8 @@ fresh-salsa | Fresh salsa (refrigerated)* | deli | fridge | 260 | | 16-oz contai
 # ---------- DAIRY AND EGGS ----------
 eggs | Eggs, large | dairy | fridge | 243 | each=50#large egg | dozen=12 each; 18-count=18 each | eggs | v gf | | Egg, whole, raw, fresh | | |
 pasteurized-eggs | Pasteurized eggs (in shell), large | dairy | fridge | 243 | each=50#large pasteurized egg | dozen=12 each | eggs | v gf | proxy:eggs | Egg, whole, raw, fresh | | pasteurized shell eggs | Heated in the shell to kill Salmonella; FDA advises them for anything served with raw egg, like homemade mayonnaise. Nutrition as for fresh eggs.
-egg-whites | Liquid egg whites | dairy | fridge | 243 | | 16-oz carton=16 oz | eggs | v gf | | Egg, white, raw, fresh | | |
+egg-whites | Liquid egg whites | dairy | fridge | 243 | each=33#large egg white | 16-oz carton=16 oz | eggs | v gf | | Egg, white, raw, fresh | | |
+egg-yolks | Egg yolks | dairy | fridge | 243 | each=17#large egg yolk | dozen=12 each | eggs | v gf | 172184 | Egg, yolk, raw, fresh | | yolks | Buy whole eggs: each large egg gives one yolk. Raw whites keep, covered, in the refrigerator 2 to 4 days (FoodSafety.gov).
 whole-milk | Whole milk | dairy | fridge | 244 | | half gallon=0.5 gallon; gallon=1 gallon | milk | v gf | | Milk, whole, 3.25% milkfat, with added vitamin D | | milk |
 milk-2 | 2% milk | dairy | fridge | 244 | | half gallon=0.5 gallon; gallon=1 gallon | milk | v gf | | Milk, reduced fat, fluid, 2% milkfat, with added vitamin A and vitamin D | | reduced-fat milk |
 milk-1 | 1% milk | dairy | fridge | 244 | | half gallon=0.5 gallon; gallon=1 gallon | milk | v gf | | Milk, lowfat, fluid, 1% milkfat, with added vitamin A and vitamin D | | low-fat milk |
@@ -387,6 +389,10 @@ cake-flour | Cake flour | baking | pantry | 114 | | 2-lb box=2 lb | wheat | vg |
 almond-flour | Almond flour | baking | pantry | 96 | | 16-oz bag=16 oz | tree-nuts | vg gf | | Nuts, almonds, blanched | | almond meal | FDC has blanched almonds; almond flour is ground blanched almonds.
 white-chocolate-chips | White chocolate chips* | baking | pantry | 170 | | 11-oz bag=11 oz | milk soybeans | v gf | | Candies, white chocolate | | |
 gelatin | Unflavored gelatin | baking | pantry | 150 | package=7#1/4-oz envelope | 4-envelope box=4 package | | gf | | Gelatins, dry powder, unsweetened | | | Made from animal collagen, so it is not vegetarian.
+corn-syrup | Light corn syrup | baking | pantry | 328 | | 16-oz bottle=16 fl-oz | | vg gf | 168837 | Syrups, corn, light | | clear corn syrup | Not the same as high-fructose corn syrup.
+cocoa-butter | Cocoa butter (food grade) | baking | pantry | 218 | | 8-oz bag=8 oz | | vg gf | 171421 | Oil, cocoa butter | | cacao butter | Sold as wafers or chunks for baking and candy making; buy food grade, not cosmetic.
+cacao-nibs | Cacao nibs | baking | pantry | 120 | | 8-oz bag=8 oz | | vg gf | 167568 | Baking chocolate, unsweetened, squares | | cocoa nibs | Roasted, cracked cocoa beans. USDA has no entry for nibs, so the nutrition is USDA's for unsweetened baking chocolate, which is ground nibs.
+dry-milk | Whole dry milk powder | baking | pantry | 128 | | 12-oz bag=12 oz | milk | v gf | 170876 | Milk, dry, whole, with added vitamin D | | whole milk powder | Whole milk powder, not nonfat; it is what makes milk chocolate.
 # ---------- SPICES AND HERBS ----------
 salt | Table salt | spices | pantry | 292 | | 26-oz canister=26 oz | | vg gf | | Salt, table | differences#salt | iodized salt, fine salt | Recipes here mean table salt; see the salt guide before using kosher salt.
 kosher-salt | Kosher salt | spices | pantry | 230 | | 3-lb box=3 lb | | vg gf | proxy:salt | Salt, table | differences#salt | coarse salt | Weight per teaspoon varies by brand; the catalog uses the denser flake kind (about 4.8 g per teaspoon).
@@ -699,7 +705,7 @@ def main():
      'diets': [{'id': 'vegetarian', 'name': 'Vegetarian'}, {'id': 'vegan', 'name': 'Vegan'},
                {'id': 'gluten-free', 'name': 'Gluten-free'}, {'id': 'dairy-free', 'name': 'Dairy-free'}],
      'tags': {
-       'protein': ['beef', 'chicken', 'pork', 'turkey', 'fish', 'vegetarian'],
+       'protein': ['beef', 'chicken', 'pork', 'turkey', 'lamb', 'fish', 'vegetarian'],
        'meal': ['breakfast', 'lunch', 'dinner', 'snack', 'side'],
        'method': ['stovetop', 'oven', 'sheet-pan', 'one-pot', 'slow-cooker', 'grill', 'no-cook'],
        'other': ['budget', 'quick', 'kid-friendly', 'freezer-friendly', 'make-ahead', 'lunchbox', 'leftovers'],

@@ -1,12 +1,20 @@
 {{/* One page per recipe, from data/meals/recipes.json and data/meals/recipes/*.json */}}
 {{ with partialCached "meal-prep/recipes-all.html" "r" }}
   {{ range . }}
+    {{ $params := dict "recipe" .id "description" (printf "%s: a family recipe that scales to your household, with nutrition, make-ahead and freezer notes. %s" .name (.summary | default "")) }}
+    {{- /* "From the great kitchens" (classics.json): search words and the public-domain book in Sources and credits */ -}}
+    {{ with .origin }}
+      {{ $cr := slice }}
+      {{ if .ref }}{{ $cr = slice (dict "name" (printf "%s (%s)" .book .edition) "url" (index .scans 0).url "what" "the original recipe this page adapts and quotes" "licence" "public domain") }}
+      {{ else }}{{ range first 1 .links }}{{ $cr = slice (dict "name" (printf "%s (Grokipedia)" .label) "url" .url "what" "the origin story") }}{{ end }}{{ end }}
+      {{ $params = merge $params (dict "keywords" (slice .chef .place .book "classic" "restaurant" "great kitchens" "public domain") "credits" $cr) }}
+    {{ end }}
     {{ $.AddPage (dict
       "kind" "page"
       "path" .id
       "title" .name
       "layout" "recipe"
-      "params" (dict "recipe" .id "description" (printf "%s: a family recipe that scales to your household, with nutrition, make-ahead and freezer notes. %s" .name (.summary | default "")))
+      "params" $params
       "dates" (dict "date" (time.AsTime "2026-10-25"))
     ) }}
   {{ end }}

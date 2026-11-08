@@ -1,0 +1,75 @@
+/* Culinary Ladder visuals (static/culinary/viz/culinary.js) and lesson boxes. Small additions to math/viz/viz.css; light
+   and dark themes come from the shared --mv-* tokens and html[data-theme="dark"]. */
+.ml-viz.cuv .ml-cv{touch-action:pan-y;box-shadow:inset 0 0 0 1px var(--mv-line)}
+.cuv .cuv-wrap{max-width:100%;min-width:0}
+.cuv .cuv-ctl{align-items:center;flex-wrap:wrap}
+.cuv .ml-sl{min-width:min(100%,12rem);flex:1 1 12rem}
+.cuv .cuv-row{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:flex-end;margin:.2rem 0 .6rem}
+.cuv .cuv-num{display:flex;flex-direction:column;gap:.15rem;font-size:.85rem;color:var(--mv-muted);min-width:0}
+.cuv .cuv-num input,.cuv .cuv-num select{font:600 1rem system-ui,sans-serif;padding:.35rem .5rem;border:1px solid var(--mv-line);border-radius:8px;background:var(--mv-card);color:var(--mv-ink);min-height:36px;max-width:12rem}
+.cuv .cuv-out{margin:.4rem 0;min-width:0}
+.cuv .cuv-scroll{overflow-x:auto;max-width:100%}
+.cuv .cuv-tbl{border-collapse:collapse;width:100%;font-size:.92rem}
+.cuv .cuv-tbl th,.cuv .cuv-tbl td{padding:.35rem .45rem;border-bottom:1px solid var(--mv-line);text-align:left;vertical-align:middle}
+.cuv .cuv-tbl thead th{color:var(--mv-muted);font-weight:600;font-size:.82rem}
+.cuv .cuv-tbl tbody th{font-weight:600}
+.cuv .cuv-tbl input{width:4.6rem;font:600 .92rem system-ui,sans-serif;padding:.2rem .3rem;border:1px solid var(--mv-line);border-radius:6px;background:var(--mv-card);color:var(--mv-ink)}
+.cuv .cuv-cost{min-width:30rem}
+.cuv .cuv-big{font-size:1rem;margin:.4rem 0}
+.cuv .cuv-note{font-size:.85rem;color:var(--mv-muted);margin:.4rem 0;line-height:1.45}
+.cuv .cuv-bad{color:#b02a2a}
+html[data-theme="dark"] .cuv .cuv-bad{color:#ff8787}
+.cuv .cuv-fb{min-height:1.4em;margin:.4rem 0}
+.cuv .cuv-btns{display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0}
+.cuv .ml-btn.cuv-ok{border-color:#2f9e44;background:rgba(47,158,68,.15)}
+.cuv .ml-btn.cuv-no{border-color:#c92a2a;background:rgba(201,42,42,.12)}
+.cuv .ml-btn[aria-pressed="true"],.cuv .cuv-br[aria-pressed="true"]{border-color:var(--mv-acc);background:var(--mv-acc);color:var(--mv-card)}
+.cuv .cuv-card{border:1px solid var(--mv-line);border-radius:10px;background:var(--mv-card);padding:.6rem .8rem;margin:.5rem 0}
+.cuv .cuv-card h4{margin:0 0 .3rem;font-size:1rem}
+.cuv .cuv-card p{margin:.25rem 0}
+.cuv .cuv-card ul{margin:.2rem 0 .3rem 1.1rem;padding:0}
+.cuv .cuv-eq{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.cuv .cuv-eq span{border:1px solid var(--mv-line);border-radius:999px;padding:.15rem .6rem;background:var(--mv-paper)}
+.cuv .cuv-shelf{list-style:decimal;margin:.3rem 0 .4rem 1.4rem;padding:0}
+.cuv .cuv-shelf-row{display:flex;align-items:center;gap:.4rem;padding:.3rem .2rem;border-bottom:1px solid var(--mv-line)}
+.cuv .cuv-shelf-lab{flex:1 1 auto;min-width:0}
+.cuv .cuv-shelf-row .ml-btn{min-width:2.4rem;padding:.25rem .5rem}
+.cuv .cuv-svgbox{max-width:520px;margin:0 auto}
+.cuv .cuv-svg{display:block;width:100%;height:auto;background:var(--mv-card);border-radius:10px;box-shadow:inset 0 0 0 1px var(--mv-line)}
+.cuv .cuv-svg .s-plate{fill:#fff;stroke:#8a958f;stroke-width:1.5}
+.cuv .cuv-svg .s-rim{fill:none;stroke:#d5dbd7;stroke-width:1.2}
+.cuv .cuv-svg .s-cloth{fill:#c9e3d3;stroke:#5d8a6f;stroke-width:1.2}
+.cuv .cuv-svg .s-metal{fill:#9aa5ad;stroke:#5f6b73;stroke-width:.8}
+.cuv .cuv-svg .s-tine{fill:none;stroke:#5f6b73;stroke-width:1.6;stroke-linecap:round}
+.cuv .cuv-svg .s-glass{fill:rgba(140,190,230,.25);stroke:#5b7f99;stroke-width:1.4}
+.cuv .cuv-svg .s-stem{stroke:#5b7f99;stroke-width:1.6;stroke-linecap:round}
+html[data-theme="dark"] .cuv .cuv-svg .s-plate{fill:#e9ece9;stroke:#a9b8af}
+html[data-theme="dark"] .cuv .cuv-svg .s-cloth{fill:#2f5a42;stroke:#6cc79a}
+html[data-theme="dark"] .cuv .cuv-svg .s-metal{fill:#b9c3ca;stroke:#e6ece8}
+html[data-theme="dark"] .cuv .cuv-svg .s-tine{stroke:#e6ece8}
+html[data-theme="dark"] .cuv .cuv-svg .s-glass{fill:rgba(116,192,252,.18);stroke:#74c0fc}
+html[data-theme="dark"] .cuv .cuv-svg .s-stem{stroke:#74c0fc}
+.cuv .cuv-it{cursor:pointer;outline:none}
+.cuv .cuv-it:hover>*,.cuv .cuv-it:focus>*{stroke:#b8963e;stroke-width:2.4}
+.cuv .cuv-it.on>*{stroke:#d6336c;stroke-width:2.6}
+.cuv .cuv-tree{display:flex;flex-direction:column;gap:.45rem;align-items:center;text-align:center}
+.cuv .cuv-lvl{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center}
+.cuv .cuv-lvl-lab{margin:.2rem 0 0;font-size:.82rem;color:var(--mv-muted)}
+.cuv .cuv-br{font:600 .85rem system-ui,sans-serif;min-height:36px;padding:.3rem .7rem;border-radius:10px;border:1px solid var(--mv-line);background:var(--mv-card);color:var(--mv-ink);cursor:pointer}
+.cuv .cuv-br:hover{border-color:var(--mv-acc)}
+/* lesson boxes (note blocks): practice at home, safety, Meal Prep links, science links, quotations */
+.mlp-lesson .cu-box{border-left:4px solid #00562f;padding:.55rem .8rem;background:rgba(0,86,47,.06);border-radius:8px}
+.mlp-lesson .cu-box ul{margin:.35rem 0 0 1.1rem;padding:0}
+.mlp-lesson .cu-box li{margin:.2rem 0}
+.mlp-lesson .cu-box-lab{margin:0;font-weight:700}
+.mlp-lesson .cu-safe{border-left-color:#b8963e;background:rgba(184,150,62,.10)}
+.mlp-lesson .cu-mp{border-left-color:#b71c1c;background:rgba(183,28,28,.05)}
+.mlp-lesson .cu-sci{border-left-color:#2d5596;background:rgba(45,85,150,.06)}
+html[data-theme="dark"] .mlp-lesson .cu-drill{border-left-color:#6cc79a;background:rgba(108,199,154,.08)}
+html[data-theme="dark"] .mlp-lesson .cu-mp{border-left-color:#ff8a80;background:rgba(255,138,128,.07)}
+html[data-theme="dark"] .mlp-lesson .cu-sci{border-left-color:#8fb1ea;background:rgba(143,177,234,.08)}
+.mlp-lesson .cu-quote{margin:0}
+.mlp-lesson .cu-quote blockquote{margin:0;padding:.2rem 0 .2rem .9rem;border-left:3px solid #b8963e;font-style:italic}
+.mlp-lesson .cu-quote figcaption{font-size:.85rem;margin-top:.3rem}
+.cuv .ml-btn:disabled{opacity:.35;cursor:default}
+.cuv .cuv-tbl td b{white-space:nowrap}

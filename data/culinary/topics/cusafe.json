@@ -1,0 +1,160 @@
+{
+ "course": "cusafe",
+ "units": [
+  {
+   "key": "hazards",
+   "title": "What Makes Food Unsafe",
+   "blurb": "Germs, chemicals and objects; time and temperature."
+  },
+  {
+   "key": "temps",
+   "title": "Time and Temperature",
+   "blurb": "Cooking, cooling, holding, reheating and date marking, by the FDA Food Code and USDA."
+  },
+  {
+   "key": "people",
+   "title": "People, Surfaces and Systems",
+   "blurb": "Cross-contamination, allergens, hygiene, cleaning and sanitizing, and HACCP."
+  }
+ ],
+ "topics": [
+  {
+   "id": "cusafe.hazards",
+   "slug": "hazards",
+   "unit": "hazards",
+   "title": "Biological, Chemical and Physical Hazards",
+   "short": "Germs (bacteria, viruses, parasites), chemicals (cleaners, pesticides, allergens) and objects (glass, bone, metal) can all make food unsafe; bacteria need food, warmth, time and moisture.",
+   "prereqs": [],
+   "xp": 1,
+   "trouble": "People think food that smells and looks fine is safe; the germs that cause illness usually don't change smell or look.",
+   "viz": []
+  },
+  {
+   "id": "cusafe.danger-zone",
+   "slug": "danger-zone",
+   "unit": "hazards",
+   "title": "The Temperature Danger Zone",
+   "short": "Bacteria grow fastest between 41°F and 135°F, the FDA Food Code's limits for restaurants; USDA tells home cooks 40°F to 140°F. Keep cold food cold and hot food hot.",
+   "prereqs": [
+    "cusafe.hazards",
+    "lifesci.bacteria-growth"
+   ],
+   "xp": 1,
+   "trouble": "Learners think the two sets of numbers disagree; they come from different documents, and both tell you to keep food out of the middle.",
+   "viz": [
+    "cu-cool"
+   ]
+  },
+  {
+   "id": "cusafe.cooking-temps",
+   "slug": "cooking-temps",
+   "unit": "temps",
+   "title": "Safe Minimum Internal Temperatures",
+   "short": "Poultry 165°F; ground meat 160°F (USDA) or 155°F for 17 seconds (Food Code); whole cuts of beef, pork, veal and lamb and fish 145°F; check with a thermometer in the thickest part.",
+   "prereqs": [
+    "cusafe.danger-zone"
+   ],
+   "xp": 2,
+   "trouble": "Cooks judge chicken by the color of its juices; only a thermometer tells you it reached 165°F.",
+   "viz": [
+    "cu-temps"
+   ]
+  },
+  {
+   "id": "cusafe.cooling",
+   "slug": "cooling",
+   "unit": "temps",
+   "title": "Cooling Food Safely",
+   "short": "The Food Code's two stages: from 135°F to 70°F within 2 hours, then to 41°F or below within 4 more hours. Shallow pans, ice baths and small portions make it work.",
+   "prereqs": [
+    "cusafe.danger-zone"
+   ],
+   "xp": 2,
+   "trouble": "Cooks put a full stockpot of hot soup straight in the walk-in; the middle can stay warm for many hours.",
+   "viz": [
+    "cu-cool"
+   ]
+  },
+  {
+   "id": "cusafe.holding-dating",
+   "slug": "holding-dating",
+   "unit": "temps",
+   "title": "Holding, Reheating, Labeling and Date Marking",
+   "short": "Hold hot food at 135°F or above and cold food at 41°F or below; reheat for hot holding to 165°F within 2 hours; label and date, and use ready-to-eat food within 7 days; first in, first out.",
+   "prereqs": [
+    "cusafe.cooling"
+   ],
+   "xp": 2,
+   "trouble": "Cooks reheat soup slowly in a steam table, which is built to hold food hot, not to heat it.",
+   "viz": []
+  },
+  {
+   "id": "cusafe.cross-contamination",
+   "slug": "cross-contamination",
+   "unit": "people",
+   "title": "Cross-Contamination and Storage Order",
+   "short": "Keep raw animal foods away from ready-to-eat food: separate boards, clean tools, and a refrigerator stored top to bottom by the temperature each food must be cooked to.",
+   "prereqs": [
+    "cusafe.hazards"
+   ],
+   "xp": 1,
+   "trouble": "People store raw chicken above the salad greens, so its juices can drip down.",
+   "viz": [
+    "cu-shelf"
+   ]
+  },
+  {
+   "id": "cusafe.allergens",
+   "slug": "allergens",
+   "unit": "people",
+   "title": "The Nine Major Food Allergens",
+   "short": "Milk, eggs, fish, crustacean shellfish, tree nuts, peanuts, wheat, soybeans and sesame (added in 2023). Cooking does not remove an allergen; separate tools and honest answers do.",
+   "prereqs": [
+    "cusafe.cross-contamination"
+   ],
+   "xp": 1,
+   "trouble": "Cooks think picking the nuts off a plate makes it safe, or that the fryer oil can be shared with a shrimp order.",
+   "viz": []
+  },
+  {
+   "id": "cusafe.hygiene",
+   "slug": "hygiene",
+   "unit": "people",
+   "title": "Handwashing, Gloves and Personal Hygiene",
+   "short": "Wash hands for at least 20 seconds before work, after raw meat, the restroom, touching your face or trash, and before gloving; gloves don't replace handwashing; sick workers stay home.",
+   "prereqs": [
+    "cusafe.hazards"
+   ],
+   "xp": 1,
+   "trouble": "Cooks put on gloves and then touch everything: raw meat, the phone, then the lettuce.",
+   "viz": []
+  },
+  {
+   "id": "cusafe.clean-sanitize",
+   "slug": "clean-sanitize",
+   "unit": "people",
+   "title": "Cleaning and Sanitizing",
+   "short": "Cleaning removes dirt and food; sanitizing reduces germs to safe levels on a surface that is already clean. Three-compartment sink: wash, rinse, sanitize, air-dry. Mix sanitizer by the label and check with test strips.",
+   "prereqs": [
+    "cusafe.hygiene"
+   ],
+   "xp": 1,
+   "trouble": "People spray sanitizer on a dirty board; food and grease shield germs, so the surface must be cleaned first.",
+   "viz": []
+  },
+  {
+   "id": "cusafe.haccp",
+   "slug": "haccp",
+   "unit": "people",
+   "title": "HACCP: A Plan for Safe Food",
+   "short": "Hazard Analysis and Critical Control Points: seven principles that find where food could become unsafe, set limits there, check them and write it down.",
+   "prereqs": [
+    "cusafe.holding-dating",
+    "cusafe.clean-sanitize"
+   ],
+   "xp": 2,
+   "trouble": "Learners think a critical control point is any step; it is a step where control is essential to stop a hazard, such as cooking or cooling.",
+   "viz": []
+  }
+ ]
+}

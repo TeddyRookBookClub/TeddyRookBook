@@ -1,0 +1,72 @@
+{{- /* Culinary Ladder: "Teach Yourself to Cook Like a Professional" (/culinary/teach-yourself/, content/culinary/teach-yourself.md,
+   layout: cuguide). Everything on the page comes from data/culinary/guide.yaml; course links come from data/culinary/courses.yaml.
+   Plain HTML, styled by static/culinary/guide.css (light and dark, print). No scripts. */ -}}
+{{ define "main" }}
+{{ partial "inline/ml-head.html" . }}
+{{ partial "inline/ml-css.html" "culinary/guide.css" }}
+{{- $L := partial "inline/ml-ladder.html" "culinary" -}}
+{{- $D := site.Data.culinary -}}
+{{- $G := $D.guide | default dict -}}
+{{- $cs := dict }}{{ range $D.courses }}{{ $cs = merge $cs (dict .slug .) }}{{ end -}}
+<div class="mlp cug" style="--mc:{{ $L.color | default "#b71c1c" }}">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ $L.url }}">{{ $L.short }}</a> <span aria-hidden="true">›</span> <span>Teach Yourself</span></nav>
+  <header class="mlp-thead">
+    <p class="mlp-eyebrow"><span>Culinary Ladder</span><span>An honest guide</span></p>
+    <h1>{{ .Title }}</h1>
+    <p class="mlp-short">What a year of practice at home can teach you, what only a real kitchen can, and how to make the most of both.</p>
+  </header>
+
+  <section class="cug-sec" aria-labelledby="cug-honest">
+    <h2 id="cug-honest">This can't replace kitchen training</h2>
+    {{ range $G.intro }}<p>{{ . | safeHTML }}</p>{{ end }}
+    <div class="cug-grid">
+      {{ range $G.honest }}<div class="cug-card"><h3>{{ .h }}</h3><p>{{ .t }}</p></div>{{ end }}
+    </div>
+  </section>
+
+  <section class="cug-sec" aria-labelledby="cug-plan">
+    <h2 id="cug-plan">A year of practice, course by course</h2>
+    <p>About six to eight hours a week. Go faster or slower as you need; the ladder keeps your place and brings old topics back for review.</p>
+    <ol class="cug-phases">
+      {{ range $G.phases }}
+      <li class="cug-phase">
+        <p class="cug-weeks">{{ .weeks }}</p>
+        <h3>{{ .title }}</h3>
+        <p class="cug-courses"><span class="cug-lbl">Courses</span> {{ range $i, $s := .courses }}{{ if $i }}, {{ end }}{{ with index $cs $s }}<a href="{{ printf "/culinary/%s/" $s | relURL }}">{{ .icon }} {{ .title }}</a>{{ end }}{{ end }}</p>
+        <dl>
+          <dt>Practice</dt><dd>{{ .practice }}</dd>
+          <dt>Project</dt><dd>{{ .project }}</dd>
+          <dt>Ready to move on when</dt><dd>{{ .check }}</dd>
+        </dl>
+      </li>
+      {{ end }}
+    </ol>
+  </section>
+
+  <section class="cug-sec" aria-labelledby="cug-week">
+    <h2 id="cug-week">A sample week</h2>
+    <p>{{ $G.week.intro }}</p>
+    <div class="cug-tbl" role="region" aria-labelledby="cug-week" tabindex="0">
+      <table><thead><tr>{{ range $G.week.head }}<th scope="col">{{ . }}</th>{{ end }}</tr></thead>
+      <tbody>{{ range $G.week.rows }}<tr>{{ range $i, $c := . }}{{ if eq $i 0 }}<th scope="row">{{ $c }}</th>{{ else }}<td>{{ $c }}</td>{{ end }}{{ end }}</tr>{{ end }}</tbody></table>
+    </div>
+  </section>
+
+  <section class="cug-sec" aria-labelledby="cug-stage">
+    <h2 id="cug-stage">Staging: a day in a real kitchen</h2>
+    {{ range $G.stage }}<p>{{ . | safeHTML }}</p>{{ end }}
+    <p>Read <a href="{{ "/culinary/the-professional-kitchen/kitchen-language/" | relURL }}">Kitchen Language</a> and <a href="{{ "/culinary/the-professional-kitchen/careers/" | relURL }}">Stages, Careers and Certifications</a> first.</p>
+  </section>
+
+  <section class="cug-sec" aria-labelledby="cug-buy">
+    <h2 id="cug-buy">What to buy first</h2>
+    <div class="cug-grid">
+      {{ range $G.costs }}<div class="cug-card"><h3>{{ .tier }} <span class="cug-price">{{ .price }}</span></h3><p>{{ .items }}</p></div>{{ end }}
+    </div>
+    <p class="mlp-small">{{ $G.costs_note }}</p>
+    <p class="cug-more">For what each tool is for, see <a href="{{ "/meal-prep/kitchen/tools/" | relURL }}">What's in the Kitchen</a> and <a href="{{ "/culinary/kitchen-foundations/" | relURL }}">Kitchen Foundations</a>.</p>
+  </section>
+
+  <p class="cug-start"><a class="mlp-btn pri" href="{{ $L.url }}">Start climbing the Culinary Ladder</a> <a class="mlp-btn ghost" href="{{ "/culinary/placement/" | relURL }}">Find your rung</a></p>
+</div>
+{{ end }}

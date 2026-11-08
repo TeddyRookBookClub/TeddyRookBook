@@ -1,0 +1,180 @@
+{
+ "course": "cupro",
+ "units": [
+  {
+   "key": "people",
+   "title": "The Brigade and Its Language",
+   "blurb": "Escoffier's brigade, titles and roles, and how cooks talk."
+  },
+  {
+   "key": "ops",
+   "title": "Running a Kitchen",
+   "blurb": "Stations and prep lists, ordering and inventory, costing, timing, cleaning and safety."
+  },
+  {
+   "key": "career",
+   "title": "Stars, Careers and the Capstone",
+   "blurb": "What Michelin stars mean, how cooks build careers, and a tasting menu to cook at home."
+  }
+ ],
+ "topics": [
+  {
+   "id": "cupro.brigade",
+   "slug": "brigade",
+   "unit": "people",
+   "title": "The Brigade System",
+   "short": "Escoffier organized big kitchens into stations under one chef: chef de cuisine, sous-chef, chefs de partie such as saucier and pâtissier, cooks, commis and dishwashers.",
+   "prereqs": [
+    "cufound.kitchen-tour"
+   ],
+   "xp": 1,
+   "trouble": "Learners think every restaurant has the full classical brigade; most kitchens today combine stations.",
+   "viz": [
+    "cu-brigade"
+   ]
+  },
+  {
+   "id": "cupro.kitchen-language",
+   "slug": "kitchen-language",
+   "unit": "people",
+   "title": "Kitchen Language",
+   "short": "Short calls keep people safe and orders moving: \"behind\", \"corner\", \"hot\", \"sharp\", \"heard\", \"fire\", \"all day\", \"86\" and \"on the fly\".",
+   "prereqs": [
+    "cupro.brigade"
+   ],
+   "xp": 1,
+   "trouble": "New cooks stay silent when they walk behind someone carrying a hot pan.",
+   "viz": []
+  },
+  {
+   "id": "cupro.station-prep",
+   "slug": "station-prep",
+   "unit": "ops",
+   "title": "Station Setup, Prep Lists and Par Levels",
+   "short": "A par level is how much you need on hand for a service; the prep list is par minus what you have; a station is set up so every item is in reach.",
+   "prereqs": [
+    "cufound.mise-en-place",
+    "cupro.brigade"
+   ],
+   "xp": 2,
+   "trouble": "Cooks prep by habit instead of by par, and run out of one thing while throwing away another.",
+   "viz": []
+  },
+  {
+   "id": "cupro.ordering-inventory",
+   "slug": "ordering-inventory",
+   "unit": "ops",
+   "title": "Ordering, Receiving and Inventory",
+   "short": "Order from pars, check deliveries for temperature, quality and count, rotate stock first in, first out, and count inventory on a schedule.",
+   "prereqs": [
+    "cupro.station-prep",
+    "cusafe.holding-dating"
+   ],
+   "xp": 2,
+   "trouble": "Receivers sign for a delivery without checking that cold food arrived cold.",
+   "viz": []
+  },
+  {
+   "id": "cupro.recipe-costing",
+   "slug": "recipe-costing",
+   "unit": "ops",
+   "title": "Recipe Costing, Yield Tests and Food Cost",
+   "short": "Usable cost = purchase cost ÷ yield; add up a recipe, divide by portions, and food cost percent = cost ÷ menu price.",
+   "prereqs": [
+    "cupro.ordering-inventory",
+    "g6.percent-of-a-number"
+   ],
+   "xp": 3,
+   "trouble": "Cooks cost a recipe from the purchase price and forget the trim they throw away.",
+   "viz": [
+    "cu-cost"
+   ]
+  },
+  {
+   "id": "cupro.timing-service",
+   "slug": "timing-service",
+   "unit": "ops",
+   "title": "Timing a Service",
+   "short": "Work backward from the time food must leave the pass; know your ticket times; fire long-cooking items first so a table's plates finish together.",
+   "prereqs": [
+    "cupro.station-prep",
+    "cuplate.the-pass"
+   ],
+   "xp": 2,
+   "trouble": "Cooks start everything at once, so the fast items wait and die under the heat lamp.",
+   "viz": [
+    "cu-plan"
+   ]
+  },
+  {
+   "id": "cupro.cleaning-maintenance",
+   "slug": "cleaning-maintenance",
+   "unit": "ops",
+   "title": "Cleaning Schedules and Equipment Care",
+   "short": "Clean as you go, a closing clean every night, and a deep-cleaning schedule; hoods, filters, fryers, ice machines and ovens are cleaned and serviced on the schedule set by the manufacturer and local code.",
+   "prereqs": [
+    "cusafe.clean-sanitize"
+   ],
+   "xp": 1,
+   "trouble": "Kitchens let hood filters fill with grease, which is a fire risk.",
+   "viz": []
+  },
+  {
+   "id": "cupro.working-safely",
+   "slug": "working-safely",
+   "unit": "ops",
+   "title": "Working Safely: Cuts, Burns, Slips and Lifting",
+   "short": "Prevention habits: sharp knives used with care, dry towels for hot handles, calls when moving, closed non-slip shoes, spills cleaned at once, and help with heavy pots.",
+   "prereqs": [
+    "cupro.kitchen-language",
+    "cuheat.deep-fry"
+   ],
+   "xp": 1,
+   "trouble": "Cooks grab a hot pan handle with a wet towel; water carries heat straight through to the hand.",
+   "viz": []
+  },
+  {
+   "id": "cupro.michelin",
+   "slug": "michelin",
+   "unit": "career",
+   "title": "What Michelin Stars Mean",
+   "short": "Anonymous inspectors award one star (\"worth a stop\"), two (\"worth a detour\") or three (\"worth a special journey\") for the food on the plate, judged on five published criteria.",
+   "prereqs": [
+    "cuplate.tasting-menu"
+   ],
+   "xp": 1,
+   "trouble": "People think stars reward fancy rooms and service; Michelin says the stars are for the cooking.",
+   "viz": []
+  },
+  {
+   "id": "cupro.careers",
+   "slug": "careers",
+   "unit": "career",
+   "title": "Stages, Careers and Certifications",
+   "short": "Most chefs learn by working, often starting as line cooks; staging (working a short trial), culinary programs, apprenticeships and ACF certification are other steps. Figures from the BLS.",
+   "prereqs": [
+    "cupro.brigade"
+   ],
+   "xp": 1,
+   "trouble": "People think a culinary degree alone makes you a chef; most chefs and head cooks have years of kitchen work behind them.",
+   "viz": []
+  },
+  {
+   "id": "cupro.capstone",
+   "slug": "capstone",
+   "unit": "career",
+   "title": "Capstone: Cook a Tasting Menu at Home",
+   "short": "Plan, cost, prep and cook a five-course tasting menu for four to six people, with a timeline that starts three days ahead.",
+   "prereqs": [
+    "cupro.timing-service",
+    "cupro.recipe-costing",
+    "cuplate.tasting-menu"
+   ],
+   "xp": 3,
+   "trouble": "First tasting menus try too many new techniques at once; cook each dish once before the big night.",
+   "viz": [
+    "cu-plan"
+   ]
+  }
+ ]
+}

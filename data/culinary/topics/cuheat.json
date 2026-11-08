@@ -1,0 +1,132 @@
+{
+ "course": "cuheat",
+ "units": [
+  {
+   "key": "science",
+   "title": "How Heat Cooks",
+   "blurb": "Conduction, convection and radiation; browning reactions."
+  },
+  {
+   "key": "dry",
+   "title": "Dry-Heat Methods",
+   "blurb": "Sautéing, pan-frying, deep-frying, roasting, grilling and broiling."
+  },
+  {
+   "key": "moist",
+   "title": "Moist and Combination Methods",
+   "blurb": "Poaching, simmering, boiling, steaming, braising, stewing and sous vide."
+  }
+ ],
+ "topics": [
+  {
+   "id": "cuheat.heat-transfer",
+   "slug": "heat-transfer",
+   "unit": "science",
+   "title": "Conduction, Convection and Radiation",
+   "short": "Pans conduct heat into food, air and liquids carry it by convection, and broilers and grills radiate it; most cooking uses all three.",
+   "prereqs": [
+    "cufound.pans-materials",
+    "physsci.heat-transfer"
+   ],
+   "xp": 1,
+   "trouble": "People think a hotter oven always cooks faster without a cost; the outside overcooks before heat reaches the center.",
+   "viz": []
+  },
+  {
+   "id": "cuheat.browning",
+   "slug": "browning",
+   "unit": "science",
+   "title": "Browning: the Maillard Reaction and Caramelization",
+   "short": "Above about 280°F to 300°F, proteins and sugars react to make brown color and roasted flavor (Maillard); sugar alone browns as it breaks down (caramelization). Water keeps the surface too cool, so dry the food.",
+   "prereqs": [
+    "cuheat.heat-transfer"
+   ],
+   "xp": 2,
+   "trouble": "Cooks crowd a wet pan and wonder why the meat steams gray instead of browning.",
+   "viz": []
+  },
+  {
+   "id": "cuheat.saute-panfry",
+   "slug": "saute-panfry",
+   "unit": "dry",
+   "title": "Sautéing, Stir-Frying and Pan-Frying",
+   "short": "Sauté: a little fat, a hot pan, small pieces moving. Pan-fry: more fat, often a breading, cooked on one side and then the other.",
+   "prereqs": [
+    "cuheat.browning"
+   ],
+   "xp": 2,
+   "trouble": "Beginners put food in a cold pan with cold oil, so it sticks and soaks up fat.",
+   "viz": []
+  },
+  {
+   "id": "cuheat.deep-fry",
+   "slug": "deep-fry",
+   "unit": "dry",
+   "title": "Deep-Frying and Oil Safety",
+   "short": "Food submerged in oil at about 325°F to 375°F; dry the food, fry in small batches, and know the fire rules: never water on a grease fire, smother it with a lid, Class K extinguishers in commercial kitchens.",
+   "prereqs": [
+    "cuheat.saute-panfry"
+   ],
+   "xp": 2,
+   "trouble": "People drop wet or frozen food with ice crystals into hot oil, which spatters and can boil over.",
+   "viz": []
+  },
+  {
+   "id": "cuheat.dry-oven",
+   "slug": "dry-oven",
+   "unit": "dry",
+   "title": "Roasting, Grilling and Broiling",
+   "short": "Roast in hot air, grill over the heat, broil under it; sear, then finish at a lower temperature for large pieces, and use a thermometer.",
+   "prereqs": [
+    "cuheat.browning"
+   ],
+   "xp": 2,
+   "trouble": "Cooks cut into meat to check it and lose the juices; a probe thermometer answers without a cut.",
+   "viz": [
+    "cu-carry"
+   ]
+  },
+  {
+   "id": "cuheat.moist-heat",
+   "slug": "moist-heat",
+   "unit": "moist",
+   "title": "Poaching, Simmering, Boiling and Steaming",
+   "short": "Poach at about 160°F to 180°F, simmer at about 185°F to 205°F, boil at 212°F at sea level; steam cooks by condensing vapor. Water boils at a lower temperature high in the mountains.",
+   "prereqs": [
+    "cuheat.heat-transfer",
+    "gchem1.freezing-boiling-points"
+   ],
+   "xp": 2,
+   "trouble": "Cooks boil what should be poached, which toughens fish and breaks up eggs.",
+   "viz": []
+  },
+  {
+   "id": "cuheat.braise-stew",
+   "slug": "braise-stew",
+   "unit": "moist",
+   "title": "Braising and Stewing",
+   "short": "Brown first, then cook slowly, partly covered in liquid, until tough connective tissue turns to gelatin. Braises use large pieces in a little liquid; stews use smaller pieces covered in liquid.",
+   "prereqs": [
+    "cuheat.browning",
+    "cuheat.moist-heat"
+   ],
+   "xp": 2,
+   "trouble": "People braise at a hard boil, which dries the meat even though it sits in liquid.",
+   "viz": []
+  },
+  {
+   "id": "cuheat.sous-vide",
+   "slug": "sous-vide",
+   "unit": "moist",
+   "title": "Sous Vide: Precise Low-Temperature Cooking",
+   "short": "Food sealed in a bag and cooked in a water bath held at an exact temperature. Safety comes from time at temperature: reach a safe minimum temperature, or hold long enough by a published table.",
+   "prereqs": [
+    "cuheat.moist-heat",
+    "cusafe.cooking-temps"
+   ],
+   "xp": 3,
+   "trouble": "Cooks think a low bath temperature is safe because the food is sealed; time at temperature is what makes it safe.",
+   "viz": []
+  }
+ ]
+}

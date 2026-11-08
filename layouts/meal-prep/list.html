@@ -26,10 +26,10 @@
         <p class="mh-links"><a href="{{ "meal-prep/ingredients/" | relURL }}#mi-pick">What can I make with…?</a>{{ with $I }}{{ range where .ingredients "id" "in" (slice "chicken" "ground-beef" "bananas" "zucchini") }}<a href="{{ printf "meal-prep/ingredients/%s/" .id | relURL }}">{{ .name }}</a>{{ end }}{{ end }}</p></div>
       <div class="mh-card"><h3><span class="mh-emo" aria-hidden="true">📖</span><a href="{{ "meal-prep/recipes/" | relURL }}">Find a recipe</a></h3>
         <p>{{ len $rs }} family recipes you can search and filter: quick, budget, kid-friendly, freezer meals and more.</p>
-        <p class="mh-links"><a href="{{ "meal-prep/recipes/" | relURL }}#dinner">Dinners</a><a href="{{ "meal-prep/recipes/" | relURL }}#breakfast">Breakfasts</a><a href="{{ "meal-prep/recipes/" | relURL }}#lunch">Lunches</a><a href="{{ "meal-prep/recipes/" | relURL }}">All recipes →</a></p></div>
+        <p class="mh-links"><a href="{{ "meal-prep/recipes/" | relURL }}#dinner">Dinners</a><a href="{{ "meal-prep/recipes/" | relURL }}#breakfast">Breakfasts</a><a href="{{ "meal-prep/recipes/" | relURL }}#lunch">Lunches</a><a href="{{ "meal-prep/classics/" | relURL }}">From the great kitchens</a><a href="{{ "meal-prep/recipes/" | relURL }}">All recipes →</a></p></div>
       <div class="mh-card"><h3><span class="mh-emo" aria-hidden="true">🥣</span><a href="{{ "meal-prep/scratch/" | relURL }}">Make it from scratch</a></h3>
         <p>Bread, tortillas, pasta, butter, yogurt, stock and sauces, scaled to what your meal plan needs.</p>
-        <p class="mh-links"><a href="{{ "meal-prep/scratch/" | relURL }}">See the from-scratch recipes →</a></p></div>
+        <p class="mh-links"><a href="{{ "meal-prep/scratch/" | relURL }}#smores-from-scratch">S’mores from scratch</a><a href="{{ "meal-prep/scratch/" | relURL }}">See the from-scratch recipes →</a></p></div>
       <div class="mh-card"><h3><span class="mh-emo" aria-hidden="true">🌱</span><a href="{{ "garden/" | relURL }}">Grow your own</a></h3>
         <p>See how much garden a year of your meals would take, and when each crop comes in, in the Food Garden Planner.</p>
         <p class="mh-links"><a href="{{ "garden/" | relURL }}">Open the garden planner →</a></p></div>
