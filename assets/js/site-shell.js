@@ -261,10 +261,10 @@ document.addEventListener('click', function (e) {
 })();
 /* Offline: only for people who saved sections on /offline/. Keeps the service worker registered and shows "Update available". */
 try{if(localStorage.getItem('trb-off')&&'serviceWorker' in navigator){var s=document.createElement('script');s.src='{{ "js/offline-notice.js" | relURL }}?v={{ (os.Stat "static/js/offline-notice.js").ModTime.Unix }}';s.defer=true;document.head.appendChild(s)}}catch(e){}
-/* Read aloud: on lessons and guides (the same list as ROOTS in assets/js/read-aloud.js), and only where the browser can speak,
+/* Read aloud: on lessons and guides (the same list as ROOTS in assets/js/read-aloud.js, plus #hc-slot, where today's Harvard Classics reading arrives later), and only where the browser can speak,
    load assets/js/read-aloud.js and assets/css/read-aloud.css (speaker buttons beside section headings, a player bar). */
 {{- $raJS := resources.Get "js/read-aloud.js" | resources.Minify | fingerprint "md5" }}{{ $raCSS := resources.Get "css/read-aloud.css" | resources.Minify | fingerprint "md5" }}
-(function(){try{if(!window.speechSynthesis||!window.SpeechSynthesisUtterance||!document.querySelector('article.mlp-lesson,.gbi,article.sh,article.rn,.cx-regions,article.wh,div[class="hs"],.hs-lesson,article.cp,article.gx'))return;var l=document.createElement('link');l.rel='stylesheet';l.href='{{ $raCSS.RelPermalink }}';document.head.appendChild(l);var s=document.createElement('script');s.src='{{ $raJS.RelPermalink }}';s.defer=true;document.head.appendChild(s)}catch(e){}})();
+(function(){try{if(!window.speechSynthesis||!window.SpeechSynthesisUtterance||!document.querySelector('article.mlp-lesson,.gbi,article.sh,article.rn,.cx-regions,article.wh,div[class="hs"],.hs-lesson,article.cp,article.gx,article.hc-day,#hc-slot'))return;var l=document.createElement('link');l.rel='stylesheet';l.href='{{ $raCSS.RelPermalink }}';document.head.appendChild(l);var s=document.createElement('script');s.src='{{ $raJS.RelPermalink }}';s.defer=true;document.head.appendChild(s)}catch(e){}})();
 /* Background music (Teddy Rook's Continued-Fraction Suite): a ♪ button beside Aa, and buttons with data-trb-music="play".
    This stub only loads the player (static/music/suite/player/player.js and .css) when one is pressed, or when trb-music-v1
    says music was playing on the last page (under 30 minutes ago, and not in the pop-out window). Sound never starts by itself

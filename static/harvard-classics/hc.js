@@ -69,6 +69,7 @@
         slot.appendChild(D.importNode(art, true));
         D.title = dateName(tid) + ': ' + d[2] + ' · Harvard Classics';
         watchEnd(slot.querySelector('.hc-day'));
+        try { if (W.TRBSay) W.TRBSay.scan(); } catch (e) { } // add Listen buttons to the reading that just arrived
       }).catch(function () {
         slot.innerHTML = '<p class="hc-loading">The reading couldn’t be loaded just now. <a href="' + esc(link(d)) + '">Open ' + esc(dateName(tid)) + ': ' + esc(d[2]) + ' →</a></p>';
       });

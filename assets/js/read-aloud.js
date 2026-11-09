@@ -21,10 +21,10 @@
   var SS = W.speechSynthesis;
   if (!SS || !W.SpeechSynthesisUtterance || W.TRBSay) return;
   var KEY = 'trb-voice-v1', RATES = [0.75, 1, 1.25, 1.5];
-  var ROOTS = 'article.mlp-lesson,.gbi,article.sh,article.rn,.cx-regions,article.wh,div[class="hs"],.hs-lesson,article.cp,article.gx';
+  var ROOTS = 'article.mlp-lesson,.gbi,article.sh,article.rn,.cx-regions,article.wh,div[class="hs"],.hs-lesson,article.cp,article.gx,article.hc-day';
   var SKIP = 'script,style,pre,code,kbd,canvas,svg,img,picture,iframe,video,audio,button,form,input,select,' +
     'textarea,label,nav,header.header,footer,aside.trb-cr,.trb-cr,.mlp-sources,.mlp-practice,.mlp-try,.mlp-rel,.gb-rel,.mlp-crumbs,' +
-    '.xa-bar,.trb-say-b,[aria-hidden="true"],[hidden],.ml-viz,[data-viz],.sr-only,[role="toolbar"],[role="tablist"],' +
+    '.hc-src,.hc-raw,.hc-crumbs,.hc-intro-src,.xa-bar,.trb-say-b,[aria-hidden="true"],[hidden],.ml-viz,[data-viz],.sr-only,[role="toolbar"],[role="tablist"],' +
     '[role="img"],.hs-cards,.trb-video-play,.ml-rkey,figure:has(canvas,svg,.ml-viz,[data-viz],iframe)';
   var BLOCK = /^(P|LI|DIV|SECTION|ARTICLE|ASIDE|BLOCKQUOTE|H[1-6]|DT|DD|TD|TH|TR|FIGCAPTION|FIGURE|UL|OL|DL|TABLE|BR|HR|DETAILS|SUMMARY|HEADER)$/;
   var BR = '\u2029', AT = '\uFFFC';
