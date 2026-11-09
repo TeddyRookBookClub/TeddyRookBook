@@ -1,0 +1,100 @@
+{{ define "main" }}
+{{- /* Lepanto trainer: data/memory/lepanto.yaml (the poem, its chunks, glossary and memory palace); static/memory/challenges/lepanto.js
+   adds the practice modes. The poem, palace, glossary and notes are plain HTML (they print and work without scripts). */ -}}
+{{- $D := site.Data.memory.lepanto -}}
+{{- $sys := "memory/memory-systems/" }}{{ $sk := "memory/memory-skills/" -}}
+{{- with site.Data.memory.courses }}{{ range . }}{{ if eq .key "memsys" }}{{ $sys = printf "memory/%s/" .slug }}{{ end }}{{ if eq .key "memsk" }}{{ $sk = printf "memory/%s/" .slug }}{{ end }}{{ end }}{{ end -}}
+{{- $roman := slice "I" "II" "III" "IV" "V" "VI" "VII" "VIII" "IX" "X" -}}
+{{- $n := len $D.lines -}}
+<link rel="stylesheet" href="{{ "memory/challenges/engine.css" | relURL }}?v={{ (os.Stat "static/memory/challenges/engine.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "memory/challenges/lepanto.css" | relURL }}?v={{ (os.Stat "static/memory/challenges/lepanto.css").ModTime.Unix }}">
+<article class="mc mc-lep">
+<nav class="mc-crumbs" aria-label="Breadcrumb"><a href="{{ "memory/" | relURL }}">Memory</a> › <a href="{{ "memory/challenges/" | relURL }}">Challenges</a> › <span>Lepanto</span></nav>
+<header class="mc-head">
+  <h1>{{ .Title }}</h1>
+  <p class="mc-meta"><span>G. K. Chesterton, 1911</span> · <span>{{ $n }} lines</span> · <span>about {{ lang.FormatNumber 0 (math.Round (div $D.words 50.0) | mul 50) }} words</span> · <span>{{ len $D.scenes }} scenes, {{ len $D.chunks }} chunks</span> · <span>Ages 12+</span> · <span>9 to 12 minutes aloud</span></p>
+  <p class="mc-intro">Chesterton’s <i>Lepanto</i> tells the story of a sea battle of 1571 in drums, trumpets and galloping rhythm, and it has long been a poem people learn by heart and say out loud. It is long, about ten minutes from first line to last, but it is built for memory: eight vivid scenes, a refrain that keeps coming back (“Don John of Austria …”), strong rhymes in pairs, and lines that sound like the things they describe. Learn it a few lines at a time, and in a few months the whole thing is yours.</p>
+  <div class="mc-how"><b>How to learn it</b>
+    <p>The poem comes in {{ len $D.chunks }} chunks of four to seven lines, one small bite of the {{ len $D.scenes }} scenes. For each chunk: <b>read</b> it aloud and picture it; say it from <b>first letters</b> only; fill in the <b>gaps</b> as more and more words disappear; then <b>recall</b> it with nothing showing, by typing or saying it. Once you get a chunk word for word it is learned, and it comes back for review on day 1, 3, 7 and 21. Every so often, <b>chain</b> it to the chunks before it, so each line pulls the next. Last of all, the <b>recital</b>: the whole poem, aloud, against the clock.</p>
+    <p class="mc-sys"><span class="mc-e">Encode</span> picture each scene → <span class="mc-s">Space</span> review on day 1, 3, 7, 21 → <span class="mc-r">Retrieve</span> say it with the page covered. From the infographic <a href="{{ "infographics/remember-it-on-purpose/" | relURL }}">Remember It on Purpose</a>. The methods step by step: <a href="{{ printf "%spoem-by-line/" $sys | relURL }}">learning a poem line by line</a>, <a href="{{ printf "%sfirst-letters/" $sys | relURL }}">first-letter cues</a> and <a href="{{ printf "%spalace-basics/" $sk | relURL }}">the memory palace</a>.</p>
+  </div>
+</header>
+
+<div id="lep" class="lep" aria-live="polite"><noscript><p>The practice modes need JavaScript. The whole poem is below; cover it a few lines at a time and say them aloud.</p></noscript></div>
+
+<section class="lep-text" id="poem" aria-labelledby="lep-poem-h">
+  <h2 id="lep-poem-h">The poem</h2>
+  <div class="mc-row" id="lep-view" hidden></div>
+  <div class="lep-poem" id="lep-poem">
+  <p class="lep-title">Lepanto <span>by G. K. Chesterton</span></p>
+  {{- range $si, $s := $D.scenes }}
+  <h3 class="lep-sh"><span>{{ index $roman $si }}.</span> {{ $s.title }} <small>lines {{ $s.from }}–{{ $s.to }}</small></h3>
+  <ol class="lep-lines lep-full" start="{{ $s.from }}">
+    {{- range $i := seq $s.from $s.to }}{{ $first := false }}{{ range $D.chunks }}{{ if and (eq .from $i) (ne $i $s.from) }}{{ $first = true }}{{ end }}{{ end }}
+    <li id="l-{{ $i }}"{{ if $first }} class="lep-cb"{{ end }}><span class="lep-t">{{ index $D.lines (sub $i 1) }}</span></li>
+    {{- end }}
+  </ol>
+  {{- end }}
+  </div>
+  <p class="mc-small">Text: {{ $D.source.printing }}, as transcribed and proofread on <a href="{{ $D.source.url }}" rel="noopener">Wikisource</a> (<a href="{{ $D.source.scan }}" rel="noopener">scan of the book</a>). The poem is in the public domain. A thin line marks where each chunk starts.</p>
+</section>
+
+<section class="lep-sec" id="palace" aria-labelledby="lep-pal-h">
+  <h2 id="lep-pal-h">A memory palace for Lepanto</h2>
+  <p>The poem’s eight scenes jump from place to place: the Sultan’s court, a winding hill road, a fairy-tale paradise, a mountain in France, a king’s closet, the Pope’s chapel, the battle itself, and Cervantes on his galley. A memory palace keeps them in order. Pick a walk you know with your eyes shut, such as the rooms of your home, and put one scene in each room, as big and strange as you can make it. Then, before each scene, walk into its room in your mind, and the first lines will be waiting. Here is one way to set it up in a house; your own pictures will stick better. (How it works: <a href="{{ printf "%spalace-basics/" $sk | relURL }}">the memory palace</a>, <a href="{{ printf "%spalace-route/" $sk | relURL }}">choosing a route</a>, <a href="{{ printf "%sspeech-outline/" $sys | relURL }}">speaking from a journey</a>.)</p>
+  <ol class="lep-palace">
+    {{- range $i, $p := $D.palace }}{{ $s := index $D.scenes $i }}
+    <li><b>{{ $p.locus }}</b> <span class="mc-small">Scene {{ index $roman $i }}, {{ $s.title }} · <a href="#l-{{ $p.from }}">lines {{ $p.from }}–{{ $p.to }}</a></span><br>{{ $p.picture }}</li>
+    {{- end }}
+  </ol>
+  <p class="mc-small">The refrain helps too. Five scenes end with a short four-line refrain, closing on “Don John of Austria” and what he is doing now: riding to the sea (II), gone by Alcalar (IV), shouting to the ships (V), loosing the cannonade (VI) and setting his people free (VII). The last line of all brings him home from the Crusade. Say those endings in order and you have the poem’s skeleton.</p>
+</section>
+
+<section class="lep-sec" id="about" aria-labelledby="lep-ab-h">
+  <h2 id="lep-ab-h">About the poem</h2>
+  <h3>The poet</h3>
+  <p>G. K. Chesterton (1874–1936) was an English writer of almost everything: newspaper columns, essays, novels, the Father Brown detective stories, books on faith such as <i>Orthodoxy</i> (1908), and poems. He wrote <i>Lepanto</i> in 1911, when he was 37; it first appeared that October in <i>The Eye-Witness</i>, a London weekly, and was collected in his <i>Poems</i> of 1915. He joined the Catholic Church in 1922, eleven years after writing it.</p>
+  <h3>The battle</h3>
+  <p>On 7 October 1571 AD, two great fleets of oared warships, called galleys, met in the Gulf of Patras off western Greece. On one side was the Holy League, an alliance of Spain, the Republic of Venice, the Papal States and other Catholic states, formed by Pope Pius V after the Ottoman Empire attacked Venetian Cyprus in 1570. On the other was the Ottoman fleet under Ali Pasha. The League’s commander was Don John of Austria, half-brother of King Philip II of Spain, then 24 years old. More than 200 galleys fought on each side. The League won: most of the Ottoman galleys were captured or sunk, Ali Pasha was killed, and thousands of Christian captives who had been rowing the Ottoman ships were set free. Losses were heavy on both sides. The Ottomans rebuilt their fleet within about a year, and in 1573 Venice made peace and gave up Cyprus. A young Spanish soldier named Miguel de Cervantes fought on the League side and was wounded; he later wrote <i>Don Quixote</i>, and the poem ends with him.</p>
+  <h3>Whose story it tells</h3>
+  <p class="lep-view">The poem tells the battle from the Holy League’s side, as its author saw it in 1911, and its pictures of the Ottomans and of Islam come from old European legend and insult (such as the medieval name “Mahound”), not from what Muslims believe (<a href="https://grokipedia.com/page/Mahound" rel="noopener">Grokipedia: Mahound</a>).</p>
+</section>
+
+<section class="lep-sec" id="glossary" aria-labelledby="lep-gl-h">
+  <h2 id="lep-gl-h">Names and odd words</h2>
+  <dl class="lep-gloss">
+    {{- range $D.glossary }}
+    <dt>{{ .term }} <span class="mc-small">{{ $ln := .lines }}{{ $m := findRE `^\d+` $ln 1 }}{{ with $m }}<a href="#l-{{ index . 0 }}">line{{ if or (in $ln ",") (in $ln "–") (in $ln "and") }}s{{ end }} {{ $ln }}</a>{{ else }}{{ $ln }}{{ end }}</span></dt>
+    <dd>{{ .text }}{{ with .url }} <a href="{{ . }}" rel="noopener" class="lep-more">More</a>{{ end }}</dd>
+    {{- end }}
+  </dl>
+</section>
+
+<section class="lep-sec" id="who" aria-labelledby="lep-who-h">
+  <h2 id="lep-who-h">Who has known it by heart?</h2>
+  <ul class="lep-facts">
+    <li><b>John Buchan</b>, the Scottish novelist, wrote to Chesterton in June 1915, during the First World War: “The other day in the trenches we shouted your Lepanto.” (Quoted in Ian Ker’s biography of Chesterton, 2011.)</li>
+    <li><b>J. R. R. Tolkien</b> admired the poem, and his daughter Priscilla remembered that he enjoyed reciting it (Holly Ordway, <a href="https://www.chesterton.org/tolkiens-reading-of-chesterton/" rel="noopener">“Tolkien’s Reading of Chesterton”</a>). We found no record that says whether he could say all {{ $n }} lines from memory.</li>
+    <li><b>Alice Roosevelt Longworth</b>, Theodore Roosevelt’s daughter, is said to have known the whole poem by heart. It is a good story, but we could not find it in a source we could check, so we leave it as a story.</li>
+    <li><b>How long it takes:</b> the poem has {{ lang.FormatNumber 0 $D.words }} words. Dramatic poetry is usually read aloud at about 110 to 150 words a minute, which gives 9 to 12 minutes; a brisk, galloping recital takes about 8. The LibriVox recording of Chesterton’s <i>Poems</i> gives <i>Lepanto</i> a track of 9 minutes 40 seconds, short spoken introduction included.</li>
+  </ul>
+</section>
+
+<section class="mc-sources">
+  <h2>Sources</h2>
+  <ul>
+    <li>The text: <a href="{{ $D.source.url }}" rel="noopener">Wikisource, “Lepanto” in Poems (1915)</a>, proofread page by page against the scan; checked against scans of the 1915 New York and 1917 London printings at the <a href="{{ $D.source.scan }}" rel="noopener">Internet Archive</a>.</li>
+    <li>First printing: <a href="https://archive.org/details/sim_living-age_1911-11-11_271_3514" rel="noopener">The Living Age, 11 November 1911</a>, reprinting the poem from <i>The Eye-Witness</i> (the 1911 wording differs a little: “in the face of all men feared,” “Holding of his head up,” “small and very drear”).</li>
+    <li>Later printings: <a href="https://archive.org/details/collectedpoemsof00ches" rel="noopener">Collected Poems (Dodd, Mead, 1932)</a> has “the sunset and the seas,” “may hide,” “stairways” and “forever.” We follow the 1915 book.</li>
+    <li>Reading time: <a href="https://archive.org/details/poems_1102_librivox" rel="noopener">LibriVox, Poems by G. K. Chesterton</a>.</li>
+    <li>Buchan’s letter: Ian Ker, <i>G. K. Chesterton: A Biography</i> (Oxford University Press, 2011), page 294.</li>
+    <li>Tolkien: Holly Ordway, <a href="https://www.chesterton.org/tolkiens-reading-of-chesterton/" rel="noopener">“Tolkien’s Reading of Chesterton”</a>, Gilbert Magazine, 2021.</li>
+    <li>Background: Grokipedia on the <a href="https://grokipedia.com/page/Battle_of_Lepanto" rel="noopener">Battle of Lepanto</a>, <a href="https://grokipedia.com/page/Lepanto_(poem)" rel="noopener">the poem</a>, <a href="https://grokipedia.com/page/G._K._Chesterton" rel="noopener">G. K. Chesterton</a>, <a href="https://grokipedia.com/page/John_of_Austria" rel="noopener">John of Austria</a> and <a href="https://grokipedia.com/page/Miguel_de_Cervantes" rel="noopener">Miguel de Cervantes</a>.</li>
+  </ul>
+  <p class="mc-small">More: <a href="{{ "memory/challenges/" | relURL }}">all memory challenges</a> · <a href="{{ "memory/challenges/gettysburg-address/" | relURL }}">the Gettysburg Address</a> · <a href="{{ "memory/games/" | relURL }}">memory games</a>.</p>
+</section>
+</article>
+<script type="application/json" id="lep-data">{{ dict "lines" $D.lines "chunks" $D.chunks "scenes" $D.scenes "words" $D.words | jsonify | safeJS }}</script>
+<script src="{{ "memory/challenges/core.js" | relURL }}?v={{ (os.Stat "static/memory/challenges/core.js").ModTime.Unix }}"></script>
+<script src="{{ "memory/challenges/lepanto.js" | relURL }}?v={{ (os.Stat "static/memory/challenges/lepanto.js").ModTime.Unix }}"></script>
+{{ end }}

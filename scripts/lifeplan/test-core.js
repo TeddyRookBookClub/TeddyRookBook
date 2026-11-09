@@ -144,14 +144,15 @@ const DR = {
   lad: { math: { order: ['g3', 'g4'], c: { g3: { t: 'Grade 3', u: '/math/g3/', ts: Array.from({ length: 120 }, (_, i) => ['g3.t' + i, 'Topic ' + i, 't' + i]) }, g4: { t: 'Grade 4', u: '/math/g4/', ts: [['g4.a', 'A', 'a']] } } } },
   trades: { cars: { t: 'Cars', u: '/trades/cars/', ls: Array.from({ length: 15 }, (_, i) => ['Lesson ' + i, '/trades/cars/l' + i + '/', 8]) } },
   meals: { r: Object.fromEntries(Array.from({ length: 80 }, (_, i) => ['r' + i, ['Recipe ' + i, 20 + i, '/meal-prep/recipes/r' + i + '/', i % 3 ? 'dinner' : 'snack']])) },
-  extra: { latin: Array.from({ length: 79 }, (_, i) => ['L' + i, '/l/' + i + '/', 35]), asl: Array.from({ length: 60 }, (_, i) => ['A' + i, 'https://x/' + i, 30]), memory: Array.from({ length: 43 }, (_, i) => ['M' + i, '/m/' + i + '/', 60]) }
+  extra: { latin: Array.from({ length: 79 }, (_, i) => ['L' + i, '/l/' + i + '/', 35]), asl: Array.from({ length: 60 }, (_, i) => ['A' + i, 'https://x/' + i, 30]), memory: Array.from({ length: 43 }, (_, i) => ['M' + i, '/m/' + i + '/', 60]),
+    lepanto: [6, 4, 4, 4, 4, 6, 7, 6, 6, 4, 4, 4, 4, 4, 6, 4, 4, 4, 6, 4, 6, 6, 4, 4, 4, 4, 4, 4, 6, 6].map((n, i) => ['Lepanto chunk ' + (i + 1), '/memory/challenges/lepanto/#c' + (i + 1), 20, n]) }
 };
 let nidr = 0;
 const ENV = { D: DR, P: { bible: () => ({}), passed: () => false }, courses: [{ l: 'math', lt: 'Math Ladder', k: 'g3', t: 'Grade 3', n: 120, m: 70 }], trades: [{ k: 'cars', t: 'Cars', n: 15 }], colors: ['#111'],
   mk: o => Object.assign({ id: 't' + (++nidr), opt: {}, f: { k: 'daily' }, mins: 15, pref: [] }, o),
   fromLib: (c, k, x) => Object.assign({ id: 'c' + k, kind: 'chore', name: k, mins: 20, f: { k: 'weeks', n: 1 }, opt: {}, pref: [] }, x) };
 const ALL = { bible: { on: true }, gb: { on: true, n: 52 }, ladder: { on: true, c: 'math|g3' }, trade: { on: true, tr: 'cars' }, cook: { on: true, n: 26 }, active: { on: true }, walk: { on: true, n: 300 },
-  chores: { on: true }, memory: { on: true, n: 12 }, latin: { on: true }, asl: { on: true }, custom: { on: true, name: 'Guitar', amount: 100, unit: 'hours', mpu: 60 } };
+  chores: { on: true }, memory: { on: true, n: 12 }, lepanto: { on: true, n: 5 }, latin: { on: true }, asl: { on: true }, custom: { on: true, name: 'Guitar', amount: 100, unit: 'hours', mpu: 60 } };
 [[[0, 1, 2, 3, 4, 5, 6], []], [[1, 2, 3, 4, 5], [{ from: '2027-07-05', to: '2027-07-16', label: 'Trip' }]], [[1, 3, 5], [{ from: '2027-12-20', to: '2027-12-31' }]], [[6], []]].forEach(([days, off]) => {
   const dr = { goals: JSON.parse(JSON.stringify(ALL)), days, start: '2027-01-01', mins: 600, off };
   const b = RS.build(dr, ENV), st = b.state, PVr = {}, ctx = { base: '/' };
@@ -167,6 +168,9 @@ const ALL = { bible: { on: true }, gb: { on: true, n: 52 }, ladder: { on: true, 
   eq(lastOf('r-latin-0').r1, 78, tag + ': Latin: all 79 lessons');
   eq(lastOf('r-asl-0').r1, 59, tag + ': ASL: all 60 lessons');
   eq(lastOf('r-memory-0').r1, 11, tag + ': 12 memory lists');
+  eq(lastOf('r-lepanto-0').r1, 29, tag + ': Lepanto: all 30 chunks');
+  ok(lastOf('r-lepanto-0').dn <= C.dnOf('2027-01-01') + Math.round(143 / 5 * 7), tag + ': Lepanto at 5 lines a week done within about 29 weeks');
+  ok(its('r-lepanto-0')[0].url.indexOf('/memory/challenges/lepanto/#c1') >= 0, tag + ': Lepanto sessions link to their chunk');
   eq(its('r-cook-0').length, 26, tag + ': 26 recipes');
   ok(Math.abs(lastOf('r-custom-0').r1 - 100) < 1e-6, tag + ': custom: 100 hours');
   const walked = its('r-walk-0').reduce((s, it) => s + it.mins, 0) / RS.MPM; ok(walked >= 300, tag + ': at least 300 miles (' + Math.round(walked) + ')');

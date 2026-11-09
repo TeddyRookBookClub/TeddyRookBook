@@ -20,6 +20,9 @@
   <div class="mc-grid">
     <a class="mc-card mc-card-big" href="{{ "memory/challenges/deck-of-cards/" | relURL }}" data-best="deck"><span class="mc-ico" aria-hidden="true">🂡</span><b>Deck of cards</b><span>Memorize a shuffled deck (or 10, 20 or 26 cards), then rebuild the order. PAO and journey help.</span><em class="mc-prog"></em></a>
     <a class="mc-card mc-card-big" href="{{ "memory/challenges/pi/" | relURL }}" data-best="pi"><span class="mc-ico" aria-hidden="true">π</span><b>Digits of pi</b><span>The first 1,000 digits in chunks, typed back with live checking. Also e to 100 decimals.</span><em class="mc-prog"></em></a>
+    {{- with site.Data.memory.lepanto }}
+    <a class="mc-card mc-card-big" href="{{ "memory/challenges/lepanto/" | relURL }}" data-slug="lepanto" data-n="{{ len .lines }}"><span class="mc-ico" aria-hidden="true">⚓</span><b>Lepanto, by heart</b><span>Chesterton’s galloping poem of 1571, all {{ len .lines }} lines in {{ len .chunks }} chunks: first-letter cues, gaps, typed or spoken recall, chains and a timed recital.</span><span class="mc-bar" aria-hidden="true"><i></i></span><em class="mc-prog">Not started</em></a>
+    {{- end }}
     <a class="mc-card mc-card-big" href="{{ "memory/games/" | relURL }}"><span class="mc-ico" aria-hidden="true">🏛️</span><b>Memory games</b><span>Memory Palace Builder, Chunk It, Story Chain, Card Pairs and a daily warm-up.</span></a>
   </div>
 </section>

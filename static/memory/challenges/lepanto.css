@@ -1,0 +1,77 @@
+/* Lepanto trainer (/memory/challenges/lepanto/), prefix lep-, on top of engine.css. Light and dark themes. */
+.mc-lep{--lep-gap:#efe7d2;--lep-cb:#c9b88a}
+[data-theme="dark"] .mc-lep{--lep-gap:#3a3220;--lep-cb:#6d5f3b}
+.lep{min-height:14rem}
+.lep-seg{flex-wrap:wrap}
+.lep-pick{flex-wrap:nowrap}
+.lep-pick .lep-sel{flex:1 1 14rem;min-width:0;width:0}
+.lep-pick .mc-btn{min-width:44px}
+.lep-form{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.4rem .6rem;align-items:center;margin:.5rem 0;max-width:40rem}
+.lep-form .mc-sel{width:100%;min-width:0}
+.lep-stage{margin:.4rem 0}
+.lep-lines{margin:.5rem 0;padding-left:2.6rem;line-height:1.7;font-size:1.05rem}
+.lep-lines li{padding-left:.3rem;overflow-wrap:anywhere}
+.lep-lines li::marker{color:var(--mc-dim);font-size:.75em;font-variant-numeric:tabular-nums}
+.lep-hook{background:var(--mc-duebg);border-left:3px solid var(--mc-gold);padding:.45rem .7rem;border-radius:4px;line-height:1.5}
+.lep-before{color:var(--mc-dim);font-style:italic;margin:.3rem 0;overflow-wrap:anywhere}
+.lep-before .mc-small{font-style:normal}
+.lep-cue{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.95rem;color:var(--mc-dim);margin:.3rem 0;overflow-wrap:anywhere}
+.lep-cues li{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.95rem;letter-spacing:.04em}
+.lep-cueline{font:inherit;letter-spacing:inherit;text-align:left;background:none;border:0;border-bottom:1px dashed var(--mc-bd);color:var(--mc-tx);padding:.1rem 0;cursor:pointer;width:100%;overflow-wrap:anywhere}
+.lep-cueline[aria-pressed="true"]{font-family:var(--lep-serif,inherit);letter-spacing:0;color:var(--mc-g)}
+.lep-gap{font:inherit;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;letter-spacing:.02em;background:var(--lep-gap);color:var(--mc-dim);border:0;border-radius:4px;padding:0 .15rem;cursor:pointer;max-width:100%}
+.lep-gap.is-shown{font-family:inherit;font-size:1em;letter-spacing:0;color:var(--mc-g);background:var(--mc-okbg);cursor:default}
+.lep-gap:focus-visible,.lep-cueline:focus-visible,.lep-cell:focus-visible{outline:3px solid var(--mc-gold);outline-offset:2px}
+.lep-ta{min-height:9rem;font-size:1rem}
+.lep-live{min-height:1.2em}
+.lep-w{border-radius:3px;padding:0 .1rem}
+.lep-w.is-ok{color:var(--mc-ok)}
+.lep-w.is-near{background:var(--mc-duebg);color:var(--mc-due);text-decoration:underline dotted}
+.lep-w.is-miss{background:var(--mc-nobg);color:var(--mc-no);font-weight:700;text-decoration:line-through}
+.lep-key .lep-w{display:inline-block;margin-right:.3rem}
+.lep-ok{color:var(--mc-ok);font-weight:600}
+.lep-no{color:var(--mc-no);font-weight:600}
+/* recital */
+.lep-clock{font-size:clamp(2.6rem,12vw,4rem);font-weight:700;color:var(--mc-g);font-variant-numeric:tabular-nums;line-height:1.1;margin:.6rem 0 .3rem}
+.lep-pace{height:10px;border-radius:5px;background:var(--mc-bd);overflow:hidden;max-width:30rem}
+.lep-pace i{display:block;height:100%;width:0;background:var(--mc-g);transition:width .25s linear}
+.lep-pace.is-over i{background:var(--mc-gold)}
+.lep-peek{border:1px solid var(--mc-bd);border-radius:10px;padding:.4rem .8rem;margin:.6rem 0;max-height:24rem;overflow:auto;background:var(--mc-card)}
+/* progress */
+.lep-bar{max-width:30rem;height:8px}
+.lep-grid{list-style:none;padding:0;margin:.8rem 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(4.2rem,1fr));gap:.4rem}
+.lep-cell{font:inherit;width:100%;min-height:3.4rem;border-radius:9px;border:1.5px solid var(--mc-bd);background:var(--mc-card);color:var(--mc-tx);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.05rem;padding:.2rem}
+.lep-cell b{font-size:1.05rem}
+.lep-cell small{font-size:.68rem;color:var(--mc-dim)}
+.lep-cell.is-learned,.lep-cell-k.is-learned{border-color:var(--mc-ok);background:var(--mc-okbg)}
+.lep-cell.is-kept,.lep-cell-k.is-kept{border-color:var(--mc-g);background:var(--mc-g);color:#fff}
+.lep-cell.is-kept small{color:#fff}
+[data-theme="dark"] .lep-cell.is-kept,[data-theme="dark"] .lep-cell-k.is-kept,[data-theme="dark"] .lep-cell.is-kept small{color:#0b1a13}
+.lep-cell.is-due,.lep-cell-k.is-due{border-color:var(--mc-gold);background:var(--mc-duebg)}
+.lep-cell-k{display:inline-block;font-size:.78rem;padding:0 .4rem;border:1.5px solid var(--mc-bd);border-radius:6px;margin:.1rem .2rem .1rem 0}
+/* the poem and notes */
+.lep-text,.lep-sec{margin-top:2rem}
+.lep-poem{background:var(--mc-card);border:1px solid var(--mc-bd);border-radius:12px;padding:.6rem 1rem 1rem}
+.lep-title{font-size:1.3rem;font-weight:700;margin:.4rem 0 0}
+.lep-title span{font-size:.9rem;font-weight:400;color:var(--mc-dim)}
+.lep-sh{font-size:1rem;margin:1.3rem 0 .2rem;color:var(--mc-g)}
+.lep-sh small{font-weight:400;color:var(--mc-dim);font-size:.8rem;margin-left:.3rem}
+.lep-full{margin:.2rem 0}
+.lep-full li.lep-cb{border-top:1px solid var(--lep-cb);margin-top:.25rem;padding-top:.15rem}
+.lep-full li:target{background:var(--mc-duebg)}
+.lep-palace{padding-left:1.4rem;line-height:1.55}
+.lep-palace li{margin:.55rem 0}
+.lep-palace a,.lep-gloss a,.lep-facts a,.lep-sec p a{color:var(--mc-g)}
+.lep-gloss dt{font-weight:700;margin-top:.7rem}
+.lep-gloss dd{margin:.15rem 0 0 1rem;line-height:1.55}
+.lep-more{font-size:.85rem}
+.lep-facts{padding-left:1.2rem;line-height:1.6}
+.lep-facts li{margin:.5rem 0}
+.lep-view{background:var(--mc-card);border-left:3px solid var(--mc-gold);padding:.5rem .8rem;border-radius:4px}
+.lep-sec p{line-height:1.65}
+@media (max-width:520px){.lep-lines{padding-left:2.1rem;font-size:1rem}.lep-poem{padding:.5rem .7rem .8rem}.lep-gloss dd{margin-left:.4rem}}
+@media print{
+  .lep,#lep-view,.mc-crumbs,.mc-how,.mc-sources{display:none!important}
+  .lep-poem{border:0;padding:0}
+  .lep-full li{break-inside:avoid}
+}

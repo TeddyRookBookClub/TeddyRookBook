@@ -85,6 +85,9 @@
     { key: 'memory', icon: '🧠', need: ['extra'], def: { n: 12 },
       title: function (g) { return 'Learn ' + g.n + ' lists by heart'; },
       finish: 'Memory Challenges: the books of the Bible, the presidents, the elements and more. 12 is one a month, studied in four short sessions each.' },
+    { key: 'lepanto', icon: '⚓', need: ['extra'], def: { n: 5 },
+      title: function (g) { return 'Memorize Lepanto, ' + g.n + (+g.n === 1 ? ' line' : ' lines') + ' a week'; },
+      finish: 'All 143 lines of G. K. Chesterton’s poem by heart, a chunk of four to seven lines at a time with spaced review. 5 lines a week takes about 29 weeks; 3 a week takes most of the year.' },
     { key: 'latin', icon: '🏛️', need: ['extra'], def: {},
       title: function () { return 'Learn Latin basics: Latin for Beginners'; },
       finish: 'All 79 lessons of D’Ooge’s Latin for Beginners, with a step-by-step guide for each.' },
@@ -199,6 +202,17 @@
           var nm = Math.max(1, Math.min(ML.length, +g.n || 12)), M3 = Math.min(N, nm * 4);
           made.push(mk(G, { kind: 'lessons', name: 'Memory challenge', icon: '🧠', mins: Math.max(5, Math.round(60 * nm / M3)), unit: 60, f: dated(M3), opt: { list: 'memory', per: nm / M3, n: nm, many: 'lists' } }));
           pace = 'A list about every ' + rate(weeks / nm, 'week', 'weeks') + ', in short sessions of about ' + fm(60 * nm / M3);
+          break;
+        case 'lepanto':
+          // the poem's chunks (D.extra.lepanto: [label, url, minutes, lines]) spread over the weeks that `n` lines a week needs
+          // (or the whole plan, if that's shorter); each chunk over two sessions: learn it, then recall and chain it
+          var LP = D.extra && D.extra.lepanto; if (!LP || !LP.length) return;
+          var lines = 0; LP.forEach(function (q) { lines += +q[3] || 5; });
+          var lpw = Math.max(1, Math.min(lines, +g.n || 5)), wk = Math.min(weeks, lines / lpw), lim6 = R[0] + Math.round(wk * 7) - 1;
+          var s6 = ss.filter(function (d) { return d <= lim6; }); if (!s6.length) s6 = ss.slice(0, 1);
+          var M6 = Math.min(s6.length, LP.length * 2), x6 = spread(s6, M6), cm = +LP[0][2] || 20;
+          made.push(mk(G, { kind: 'lessons', name: 'Memorize Lepanto', icon: G.icon, mins: Math.max(5, Math.round(cm * LP.length / M6)), unit: cm, f: { k: 'dates', dates: x6.map(iso) }, opt: { list: 'lepanto', per: LP.length / M6, n: LP.length, many: 'chunks' } }));
+          pace = 'About ' + rate(lines / wk, 'line', 'lines') + ' a week, all ' + lines + ' in about ' + rate(wk, 'week', 'weeks') + '; about ' + fm(cm * LP.length / M6) + ' a session, plus the quick reviews the trainer brings back';
           break;
         case 'latin': case 'asl':
           var XL = D.extra && D.extra[G.key]; if (!XL) return;

@@ -131,6 +131,15 @@
   {{- $ls := slice -}}{{- range $slug, $l := . }}{{ if site.GetPage (printf "/memory/challenges/%s" $slug) }}{{ $ls = $ls | append (dict "a" $l.title "b" (printf "/memory/challenges/%s/" $slug) "c" 60) }}{{ end }}{{ end -}}
   {{- $extra = merge $extra (dict "memory" $ls) -}}
 {{- end -}}
+{{- /* Memorize Lepanto: its chunks (label, link to the chunk on the trainer, minutes to learn it, its lines) */ -}}
+{{- with site.Data.memory.lepanto -}}{{- if site.GetPage "/memory/challenges/lepanto" -}}
+  {{- $lines := .lines -}}{{- $ls := slice -}}
+  {{- range $i, $c := .chunks -}}
+    {{- $start := delimit (first 4 (split (replaceRE `^\(` "" (index $lines (sub $c.from 1))) " ")) " " | replaceRE `[,;:.!—]+$` "" -}}
+    {{- $ls = $ls | append (dict "a" (printf "Lepanto lines %d–%d: %s…" $c.from $c.to $start) "b" (printf "/memory/challenges/lepanto/#c%d" (add $i 1)) "c" 20 "d" (add (sub $c.to $c.from) 1)) -}}
+  {{- end -}}
+  {{- $extra = merge $extra (dict "lepanto" $ls) -}}
+{{- end -}}{{- end -}}
 {{- $extraURL := "" -}}{{- if $extra }}{{ $extraURL = (resources.FromString "life-planner/extra.json" ($extra | jsonify) | fingerprint "md5").RelPermalink }}{{ end -}}
 {{- /* ---- Translate in a Year: static/languages/translate/plan.json (built by scripts/translate/build.py), fetched only for
    translate tracks; its goal list (titles, days, minutes) goes inline for the library ---- */ -}}

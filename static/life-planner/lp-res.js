@@ -23,7 +23,7 @@
     var u = CFG.urls;
     if (G.key === 'bible') return !!u.bible; if (G.key === 'gb') return !!u.gb; if (G.key === 'ladder') return CFG.courses.length > 0;
     if (G.key === 'trade') return CFG.trades.length > 0 && !!u.trades; if (G.key === 'cook') return !!u.meals;
-    if (G.key === 'memory' || G.key === 'latin' || G.key === 'asl') return !!u.extra;
+    if (G.key === 'memory' || G.key === 'latin' || G.key === 'asl' || G.key === 'lepanto') return !!u.extra;
     if (G.key === 'trla' || G.key === 'trgr') return !!u.tr;
     return true;
   }
@@ -73,6 +73,7 @@
       case 'cook': return '<label>Recipes <input type="number" min="1" max="156" data-g="cook" data-f="n" value="' + o.n + '"></label>';
       case 'walk': return '<label>Miles <input type="number" min="10" max="3000" step="10" data-g="walk" data-f="n" value="' + o.n + '"></label>';
       case 'memory': return '<label>Lists <input type="number" min="1" max="43" data-g="memory" data-f="n" value="' + o.n + '"></label>';
+      case 'lepanto': return '<label>Lines a week <input type="number" min="1" max="30" data-g="lepanto" data-f="n" value="' + o.n + '"></label><p class="hs-small lp-wide"><a href="' + esc(CFG.base) + 'memory/challenges/lepanto/">About the Lepanto challenge</a></p>';
       case 'trla': case 'trgr':
         var la = k === 'trla' ? 'lat' : 'grc', TRk = Object.keys(R.TR).filter(function (w) { return R.TR[w][0] === la; }), mo = +o.mo || 0, usual = (R.TR[o.w] || R.TR[TRk[0]])[2];
         return '<label class="lp-wide">Work <select data-g="' + k + '" data-f="w">' + TRk.map(function (w) { return '<option value="' + w + '"' + (o.w === w ? ' selected' : '') + '>' + esc(R.TR[w][1].replace(/^Translate /, '')) + '</option>'; }).join('') + '</select></label>' +
