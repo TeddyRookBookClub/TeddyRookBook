@@ -1,0 +1,71 @@
+{{ define "main" }}
+{{- /* /connections/rhythm-of-numbers/large-and-small/: Chapter 18 of the paper in plain words (physics and astronomy).
+   All text is in the page's front matter: short, try (the two instruments), sections (id, h, paras, optional table
+   {caption, head, rows, note} and after), ours (three lists) and notes. Keep every claim as the paper states it.
+   Styles: rn.css and prime.css; no scripts. */ -}}
+{{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
+{{ partial "inline/ml-css.html" "connections/rhythm/prime.css" }}
+{{- $hub := "connections/rhythm-of-numbers/" | relURL }}
+<article class="rn rn-np">
+<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Connections</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <span>Large and small</span></nav>
+
+<header class="rn-hero">
+  <p class="rn-eyebrow">The Rhythm of Numbers · Physics · In plain words · added {{ partial "connections/rn-date.html" .Params.added }}</p>
+  <h1>Large and small: <em>the same patterns in atoms and in orbits</em></h1>
+  <p class="rn-lede">{{ .Params.lede }}</p>
+</header>
+
+<section class="np-short" aria-labelledby="ls-short-h">
+  <h2 id="ls-short-h" class="rn-h3">The short version</h2>
+  <ul>{{ range .Params.short }}<li>{{ . | markdownify }}</li>{{ end }}</ul>
+</section>
+
+<section class="np-sec" id="try" aria-labelledby="ls-try-h">
+  <h2 id="ls-try-h">Two instruments to play with</h2>
+  <div class="np-cards">
+    {{- range .Params.try }}
+    <a class="np-card ls-try" href="{{ .url | relURL }}"><h3><span aria-hidden="true">{{ .icon }}</span> {{ .title }}</h3><p>{{ .text }}</p></a>
+    {{- end }}
+  </div>
+</section>
+
+{{- range .Params.sections }}
+<section class="np-sec" id="{{ .id }}" aria-labelledby="{{ .id }}-h">
+  <h2 id="{{ .id }}-h">{{ .h }}</h2>
+  {{- with .paras }}<div class="np-prose">{{ range . }}<p>{{ . | markdownify }}</p>{{ end }}</div>{{ end }}
+  {{- with .table }}
+  <div class="ls-tw" role="region" aria-label="{{ .caption }}" tabindex="0">
+    <table class="ls-t">
+      <caption>{{ .caption }}</caption>
+      <thead><tr>{{ range .head }}<th scope="col">{{ . }}</th>{{ end }}</tr></thead>
+      <tbody>{{ range .rows }}<tr>{{ range $i, $c := . }}{{ if $i }}<td>{{ $c }}</td>{{ else }}<th scope="row">{{ $c }}</th>{{ end }}{{ end }}</tr>{{ end }}</tbody>
+    </table>
+  </div>
+  {{- with .note }}<p class="rn-small rn-muted">{{ . | markdownify }}</p>{{ end }}
+  {{- end }}
+  {{- with .after }}<div class="np-prose">{{ range . }}<p>{{ . | markdownify }}</p>{{ end }}</div>{{ end }}
+</section>
+{{- end }}
+
+<section class="np-sec" id="ours" aria-labelledby="ls-ours-h">
+  <h2 id="ls-ours-h">What is known and what is ours</h2>
+  <p class="rn-small rn-muted">{{ .Params.ours_intro }}</p>
+  <div class="np-two">
+    <div><h3><span class="np-tag">Known physics and history</span></h3><ul>{{ range .Params.ours.known }}<li>{{ . | markdownify }}</li>{{ end }}</ul></div>
+    <div><h3><span class="np-tag np-proved">New here</span></h3><ul>{{ range .Params.ours.new }}<li>{{ . | markdownify }}</li>{{ end }}</ul></div>
+  </div>
+  <div class="np-short"><h3 class="rn-h3">Tested, and not established</h3><ul>{{ range .Params.ours.not }}<li>{{ . | markdownify }}</li>{{ end }}</ul></div>
+</section>
+
+<section class="np-sec" aria-labelledby="ls-more-h">
+  <h2 id="ls-more-h">Read more</h2>
+  <p class="np-next"><a href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}">The paper, Chapter 18 →</a><a href="{{ "connections/rhythm-of-numbers/what-it-means/" | relURL }}">The open questions in plain words →</a><a href="{{ $hub }}#poly">The polyrhythm layerer, with orbits →</a><a href="{{ "connections/" | relURL }}">Where the subjects meet →</a></p>
+</section>
+
+<footer class="rn-notes" aria-labelledby="ls-n-h">
+  <h2 id="ls-n-h" class="rn-h3">Notes and sources</h2>
+  <ul>{{ range .Params.notes }}<li>{{ . | markdownify }}</li>{{ end }}</ul>
+  <p><a href="{{ $hub }}">← Back to The Rhythm of Numbers</a></p>
+</footer>
+</article>
+{{ end }}

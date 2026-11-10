@@ -1,0 +1,43 @@
+{{ define "main" }}
+{{- /* /connections/rhythm-of-numbers/keplers-figures/ and /butterfly/: the two instruments of Chapter 18 of the paper.
+   Front matter: inst (kepler or butterfly), eyebrow, lede, added, how (list), notes (list). The panels, styles and
+   script are written by scripts/rhythm/port-instrument.py from Teddy Rook's own instrument files in
+   docs/papers/rhythm-of-numbers/instruments/; edit there and rerun it. */ -}}
+{{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
+{{ partial "inline/ml-css.html" "connections/rhythm/prime.css" }}
+{{ partial "inline/ml-css.html" (printf "connections/rhythm/inst/%s.css" .Params.inst) }}
+{{- $hub := "connections/rhythm-of-numbers/" | relURL }}{{ $ls := "connections/rhythm-of-numbers/large-and-small/" | relURL }}
+<article class="rn rn-np">
+<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Connections</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <a href="{{ $ls }}">Large and small</a> <span aria-hidden="true">›</span> <span>{{ .LinkTitle }}</span></nav>
+
+<header class="rn-hero">
+  <p class="rn-eyebrow">{{ .Params.eyebrow }} · added {{ partial "connections/rn-date.html" .Params.added }}</p>
+  <h1>{{ .Title }}</h1>
+  <p class="rn-lede">{{ .Params.lede }}</p>
+</header>
+
+{{- with .Params.how }}
+<section class="np-short" aria-labelledby="ri-how-h">
+  <h2 id="ri-how-h" class="rn-h3">How to use it</h2>
+  <ul>{{ range . }}<li>{{ . | markdownify }}</li>{{ end }}</ul>
+</section>
+{{- end }}
+
+<div class="rni">
+{{ partial (printf "connections/inst-%s.html" .Params.inst) . }}
+</div>
+{{- $js := printf "static/connections/rhythm/inst/%s.js" .Params.inst }}
+<script src="{{ printf "connections/rhythm/inst/%s.js" .Params.inst | relURL }}?v={{ partialCached "fv.html" $js $js }}" defer></script>
+
+<section class="np-sec" aria-labelledby="ri-more-h">
+  <h2 id="ri-more-h">Read more</h2>
+  <p class="np-next"><a href="{{ $ls }}">Large and small, in plain words →</a>{{ with .Params.other }}<a href="{{ .url | relURL }}">{{ .label }} →</a>{{ end }}<a href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}">The paper, Chapter 18 →</a></p>
+</section>
+
+<footer class="rn-notes" aria-labelledby="ri-n-h">
+  <h2 id="ri-n-h" class="rn-h3">Notes and sources</h2>
+  <ul>{{ range .Params.notes }}<li>{{ . | markdownify }}</li>{{ end }}</ul>
+  <p><a href="{{ $hub }}">← Back to The Rhythm of Numbers</a></p>
+</footer>
+</article>
+{{ end }}

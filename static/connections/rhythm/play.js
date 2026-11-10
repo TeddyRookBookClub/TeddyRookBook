@@ -114,6 +114,10 @@
       $('plPi').addEventListener('click', function () { plPreset([[1, 7, 'π − 3, level 1'], [15, 106, 'π − 3, level 2'], [16, 113, 'π − 3, level 3']]); });
       $('plConst').addEventListener('click', function () { plPreset([[16, 113, 'π − 3', 'mallet'], deepest('e', 120).concat(['pluck']), deepest('phi', 120).concat(['organ'])]); });
       $('plThree').addEventListener('click', function () { plPreset([[3, 3, '3 even beats', 'd:kick'], [4, 4, '4 even beats', 'mallet'], [5, 5, '5 even beats', 'd:bell']]); });
+      /* orbits in resonance (Chapter 18 of the paper): turns made in the same time, one ring each */
+      $('plMoons').addEventListener('click', function () { plPreset([[4, 4, 'Io: 4 turns', 'mallet'], [2, 2, 'Europa: 2 turns', 'pluck'], [1, 1, 'Ganymede: 1 turn', 'd:bell']]); });
+      $('plHD').addEventListener('click', function () { plPreset([[54, 54, 'planet b: 54 turns', 'd:hat'], [36, 36, 'c: 36', 'mallet'], [24, 24, 'd: 24', 'pluck'], [16, 16, 'e: 16', 'sine'], [12, 12, 'f: 12', 'organ'], [9, 9, 'g: 9', 'd:bell']]); });
+      $('plTrap').addEventListener('click', function () { plPreset([[24, 24, 'planet b: about 24 turns', 'd:hat'], [15, 15, 'c: 15', 'mallet'], [9, 9, 'd: 9', 'pluck'], [6, 6, 'e: 6', 'sine'], [4, 4, 'f: 4', 'organ'], [3, 3, 'g: 3', 'd:bell']]); });
       PL.P = RN.player({ sec: $('poly'), btn: $('plPlay'), teach: $('plTeach'), swing: false,
         len: function () { return PL.ev.length; }, reset: plEvents,
         dur: function (i) { var a = PL.ev[i], b = PL.ev[i + 1]; return ((b ? b.f : 1) - a.f) * PL.T; },

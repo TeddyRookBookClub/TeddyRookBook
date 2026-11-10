@@ -1,0 +1,709 @@
+% Chapter 18: large and small. From Teddy Rook's chapter18.tex (November 2026), adapted to the paper's labels, macros and
+% citation keys. Every printed number is recomputed by compute/c13_large_verify.py (his verify_ch18.py).
+\chapter{Large and small: the same patterns in atoms and in orbits}\label{ch:large-small}
+
+\addednote{\revD}
+
+The Connections diagram of Chapter~\ref{ch:connections} has four subjects: music, patterns, mathematics and chemistry. This
+chapter adds physics and astrophysics, and asks one question of them: where do the structures of the
+earlier chapters appear both in very small things and in very large ones? We found four places where the
+answer is exact or measurable, and a fifth section returns to Kepler, whose work runs through all of them.
+None of the physics is ours. What we add is the reading through the continued fraction, several
+computations, and two new exact statements about the correlation matrix
+(Propositions~\ref{prop:18mirror} and~\ref{prop:18harmonic}).
+
+A warning first. This subject is full of numerology: the Titius--Bode ``law'' of planetary distances and
+Dirac's large-number coincidences are the classic cases of patterns that explain nothing. The discipline
+of the earlier chapters applies. A pattern is reported with its test, and a coincidence is called one.
+
+%-------------------------------------------------------------------------------------------------------
+\section{The atom and the solar system are one problem}\label{sec:18kepler}
+
+Section~\ref{sec:hydrogen} called the link between hydrogen's $1/n^{2}$ and $\zeta(2)$ ``a shared formula, not shared
+physics,'' and Section~\ref{sec:shells} said the same of the shell sizes $2,8,18,32$. There is a neighbouring link
+that \emph{is} shared physics, and it strengthens the chemistry corner of the diagram.
+
+Gravity and the electric force both fall off as the inverse square of the distance. So a planet round the
+Sun and, in Bohr's model, an electron round a proton obey the same law of periods.
+
+\begin{proposition}[Kepler's third law, twice; classical]\label{prop:18kepler}
+For a circular orbit of radius $r$ and period $T$,
+\[
+  T^{2}=\frac{4\pi^{2}}{GM}\,r^{3}\quad\text{(planet round a mass $M$)},\qquad
+  T^{2}=\frac{4\pi^{2}m_e}{k e^{2}}\,r^{3}\quad\text{(electron round a proton)}.
+\]
+In Bohr's model the allowed orbits have $r_n=a_0n^{2}$ and therefore $T_n=T_1n^{3}$, with
+$a_0=5.292\times10^{-11}$\,m and $T_1=1.520\times10^{-16}$\,s.
+\end{proposition}
+
+\begin{proof}
+Set the attracting force equal to the centripetal force $m(2\pi/T)^{2}r$, with force $GMm/r^{2}$ in one
+case and $ke^{2}/r^{2}$ in the other. Bohr's condition, angular momentum $n\hbar$, gives
+$r_n=n^{2}\hbar^{2}/(m_eke^{2})$.
+\end{proof}
+
+Our script checks both. For the Earth, $T^{2}/r^{3}$ and $4\pi^{2}/(GM_\odot)$ are both
+$2.9747\times10^{-19}$ in SI units; for the electron in its lowest orbit both sides are $0.15588$. The two
+constants differ by a factor of $5\times10^{17}$, and the law is the same.
+
+\paragraph{The rhythm of an atom, heard by a radio telescope.} An electron in a very high orbit behaves
+almost classically, and the light it emits when it drops $k$ levels has $k$ times its orbital frequency:
+the $k$-th harmonic of its rhythm. Astronomers have detected carbon atoms in interstellar space with
+$n\approx1009$, through transitions with $k=4$ near $26$\,MHz \cite{stepkin2007}. The numbers fit. At
+$n=1009$ the orbit has radius $a_0n^{2}=54\,\mu$m, so the atom is about a tenth of a millimetre across,
+a million times the size of an ordinary atom; its orbital period is $T_1n^{3}=1.56\times10^{-7}$\,s, an
+orbital frequency of $6.41$\,MHz; and the transition $n=1013\to1009$ has frequency $25.5$\,MHz, which is
+$4.000$ times the orbital frequency at $n=1011$. A dish on Earth is listening to the fourth harmonic of
+an electron's orbit.
+
+\paragraph{The hidden symmetry, and the periodic table.} An inverse-square force has a conserved quantity
+beyond energy and angular momentum, the Laplace--Runge--Lenz vector, which points along the long axis of
+the ellipse. It is the reason planetary orbits are closed ellipses that do not precess. Pauli (1926) and
+Fock (1935) showed that the same conserved vector gives the hydrogen atom a four-dimensional rotational
+symmetry, and that this symmetry is why all $n^{2}$ states of level $n$ have the same energy
+\cite{pauli1926,fock1935}. With two spin states each, that is $2n^{2}$: the shell sizes $2,8,18,32$. So
+the squares of Section~\ref{sec:shells} come from the symmetry that keeps the planets on closed ellipses. In atoms
+with many electrons the other electrons screen the nucleus, the force is no longer exactly inverse-square,
+and the symmetry is broken; the rows of the periodic table then have lengths $2,8,8,18,18,32,32$, each
+shell size after the first appearing twice. The periodic table is hydrogen's symmetry, broken.
+
+\paragraph{A historical echo, and a caution.} Kepler published his third law in \emph{Harmonices Mundi}
+(1619), a book whose subject is the music of the planets: he assigned each planet a melody from the ratio
+of its fastest and slowest speeds. And the exponent in $T\propto r^{3/2}$ is the ratio of a musical
+fifth. That last fact is a coincidence of small numbers and nothing more.
+
+%-------------------------------------------------------------------------------------------------------
+\section{Resonance as rhythm}\label{sec:18resonance}
+
+Section~\ref{sec:locking} treated mode locking: coupled oscillators fall into step at simple frequency ratios. Orbits do
+the same. Two bodies whose periods are near a ratio $p/q$ meet in the same configuration every $q$ turns
+of one and $p$ of the other, and the repeated tug can lock the ratio. The table of convergents of Chapter
+2 turns out to be a detector for this.
+
+\paragraph{The big-term test.} Expand the ratio of two periods as a continued fraction. If it is locked
+to $p/q$, then $p/q$ is a convergent and \emph{the next term is large}, for the reason that $292$ follows
+$355/113$ in $\pi$. Table~\ref{tab:18res} applies this to four systems. The planets' periods are their long-term mean
+periods \cite{standish1992}, the moons' are from NASA's fact sheets \cite{nasafact}, and the others are
+from the discovery papers \cite{agol2021,luque2023}.
+
+\begin{table}[ht]
+\centering
+\caption{Neighbouring period ratios (outer over inner): the expansion, the nearest fraction with
+denominator at most $8$, the normalized error $q^{2}|r-p/q|$ of \cref{tab:pi-conv}, and the term that follows
+$p/q$. The last line of each block compares the mean normalized error with that of random ratios drawn
+log-uniformly from $[1.25,3]$.}\label{tab:18res}
+\small
+\begin{tabular}{llllrr}
+\hline
+pair & ratio & expansion & nearest & $q^{2}\times$error & next term\\
+\hline
+Venus/Mercury & 2.5543 & $[2;1,1,4,\ldots]$ & 5/2 & 0.217 & 4\\
+Earth/Venus & 1.6255 & $[1;1,1,1,2,\ldots]$ & 13/8 & 0.033 & 29\\
+Mars/Earth & 1.8808 & $[1;1,7,2,\ldots]$ & 2/1 & 0.119 & 7\\
+Jupiter/Mars & 6.3067 & $[6;3,3,1,\ldots]$ & 19/3 & 0.239 & 3\\
+Saturn/Jupiter & 2.4833 & $[2;2,14,2,\ldots]$ & 5/2 & 0.067 & 14\\
+Uranus/Saturn & 2.8521 & $[2;1,5,1,\ldots]$ & 3/1 & 0.148 & 5\\
+Neptune/Uranus & 1.9614 & $[1;1,24,1,\ldots]$ & 2/1 & 0.039 & 24\\
+Pluto/Neptune & 1.5046 & $[1;1,1,53,\ldots]$ & 3/2 & 0.018 & 53\\
+\multicolumn{6}{l}{\emph{Solar system: mean $0.110$; random $0.146$; chance of being this close $0.14$}}\\
+\hline
+Europa/Io & 2.0073 & $[2;137,\ldots]$ & 2/1 & 0.007 & 137\\
+Ganymede/Europa & 2.0147 & $[2;68,\ldots]$ & 2/1 & 0.015 & 68\\
+Callisto/Ganymede & 2.3326 & $[2;3,160,\ldots]$ & 7/3 & 0.006 & 160\\
+\multicolumn{6}{l}{\emph{Jupiter's moons: mean $0.009$; chance $0.0001$}}\\
+\hline
+TRAPPIST-1 c/b & 1.6031 & $[1;1,1,1,\ldots]$ & 8/5 & 0.076 & 12\\
+d/c & 1.6719 & $[1;1,2,20,\ldots]$ & 5/3 & 0.047 & 20\\
+e/d & 1.5067 & $[1;1,1,36,\ldots]$ & 3/2 & 0.027 & 36\\
+f/e & 1.5092 & $[1;1,1,26,\ldots]$ & 3/2 & 0.037 & 26\\
+g/f & 1.3416 & $[1;2,1,12,\ldots]$ & 4/3 & 0.074 & 12\\
+h/g & 1.5198 & $[1;1,1,12,\ldots]$ & 3/2 & 0.079 & 12\\
+\multicolumn{6}{l}{\emph{TRAPPIST-1: mean $0.057$; chance $0.005$}}\\
+\hline
+HD 110067 c/b & 1.5003 & $[1;1,1,\ldots]$ & 3/2 & 0.001 & $>300$\\
+d/c & 1.5007 & $[1;1,1,\ldots]$ & 3/2 & 0.003 & $>300$\\
+e/d & 1.5007 & $[1;1,1,\ldots]$ & 3/2 & 0.003 & $>300$\\
+f/e & 1.3334 & $[1;2,1,\ldots]$ & 4/3 & 0.000 & $>300$\\
+g/f & 1.3339 & $[1;2,1,\ldots]$ & 4/3 & 0.006 & 180\\
+\multicolumn{6}{l}{\emph{HD 110067: mean $0.0025$; chance below $0.0001$}}\\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{What the table shows.} The true resonances announce themselves with large terms: $53$ for
+Pluto and Neptune (locked at $3/2$), $137$, $68$ and $160$ for Jupiter's moons, and from $180$ to over
+$3000$ for HD~110067. (Of the three for Jupiter, $137$ and $68$
+belong to the locked trio Io, Europa and Ganymede. Callisto's $160$ marks a very near miss of $7/3$ that
+is not known to be a dynamical lock, a reminder that a large term is evidence and not proof.) Three pairs of Saturn's moons
+do the same: Tethys/Mimas $[2;318,\ldots]$, Dione/Enceladus $[1;1,388,\ldots]$ and Hyperion/Titan
+$[1;2,1,109,\ldots]$. The planets of the solar system taken together are \emph{not} significantly closer
+to simple fractions than random ratios would be ($p=0.14$); the chains of TRAPPIST-1 and HD~110067 are,
+beyond doubt. Two near-misses in the solar system are famous for their consequences and not locked:
+Saturn/Jupiter, $[2;2,14,\ldots]$, near $5/2$, drives a swing in the motions of the two planets with a
+period of $883$ years, known as the great inequality, and
+Neptune/Uranus sits near $2/1$. Earth/Venus is $[1;1,1,1,2,\ldots]$, the start of the golden ratio's
+expansion, with convergents $8/5$ and $13/8$: the reason Venus traces a five-petalled figure in our sky
+every eight years. It is not a resonance in the dynamical sense. (The $137$ of Io and Europa has nothing
+to do with the $137$ of atomic physics.)
+
+\paragraph{Three bodies in step.} For Io, Europa and Ganymede the mean motions (degrees per day) satisfy
+$n_1-3n_2+2n_3=-0.00003$, zero to the accuracy of the data, while the two-body near-misses $n_1-2n_2$ and
+$n_2-2n_3$ are both $0.7395$: the two pairs drift off the exact ratio $2/1$ at the same rate, so the
+three-body pattern repeats exactly. This is Laplace's resonance. As a polyrhythm it is $4$ against $2$
+against $1$ with a slow common drift.
+
+\paragraph{As music.} The resonant chains are stacked intervals in the sense of Section~\ref{sec:tuning}. HD~110067 is
+three fifths and two fourths ($3/2,3/2,3/2,4/3,4/3$): while the outermost planet goes round $9$ times the
+others go round $12$, $16$, $24$, $36$ and $54$ times. TRAPPIST-1 is looser: while its outermost planet
+goes round twice the others make $3.04$, $4.08$, $6.15$, $9.27$, $15.5$ and $24.9$ turns, close to
+$3:4:6:9:15:24$. Either can be loaded into the polyrhythm instrument of the companion site as it stands.
+
+\paragraph{Where resonance removes instead of locks.} Kepler's third law puts the orbits whose periods
+are $1/3$, $2/5$, $3/7$ and $1/2$ of Jupiter's at $2.500$, $2.824$, $2.957$ and $3.277$ astronomical
+units. Those are the Kirkwood gaps of the asteroid belt, where almost no asteroids are found. (A commonly
+quoted set of positions is $2.502$, $2.825$, $2.958$ and $3.279$. It comes from scaling Jupiter's distance
+instead of using its period, which adds about $0.0015$ units: Jupiter's own mass enters its orbit but not
+the asteroid's, and the value taken for Jupiter's distance varies. A resonance is a statement about
+periods, so we give the period-based figures.) In the same way an orbit with half the period of Saturn's
+moon Mimas lies, by Kepler's law, $116{,}780$\,km from Saturn's centre. The bright B ring ends and the
+Cassini Division begins at $117{,}580$\,km, $0.7$ per cent further out. The difference is Saturn's
+flattened shape, which Kepler's law ignores: with the measured flattening put into the calculation the
+resonance moves to $117{,}530$\,km, within $50$\,km of the edge. So simple fractions sometimes lock an orbit
+(Pluto, the moons) and sometimes empty it (the gaps). The theorem behind the second case is that of
+Kolmogorov, Arnold and Moser: an orbit survives small disturbances when its frequency ratio is hard to
+approximate by fractions, that is, when its continued fraction has small terms. The golden ratio, all of
+whose terms are $1$, is the hardest number of all to approximate (Chapter~\ref{ch:cf}); a number with a $292$ in it
+is easy to approximate by the fraction that precedes the $292$.
+
+%-------------------------------------------------------------------------------------------------------
+\section{The mirror in the correlation matrix}\label{sec:18mirror}
+
+\Cref{thm:th-top,thm:th-min} say that the largest eigenvalue of the correlation matrix $C_m$ and the reciprocal
+of the smallest grow at the same rate. Is there an exact symmetry behind that? There is, in two parts.
+
+\begin{proposition}[the sign mirror]\label{prop:18mirror}
+Let $\lambda(a)=(-1)^{\Omega(a)}$ be Liouville's function, where $\Omega(a)$ counts the prime factors of
+$a$ with multiplicity. For $2\le a,b\le m$,
+\[
+  \bigl(C_m^{-1}\bigr)_{ab}=\lambda(a)\lambda(b)\,\sqrt{(a-1)(b-1)}
+     \sum_{\substack{d\le m,\ \operatorname{lcm}(a,b)\mid d\\ d/a,\ d/b\ \text{square-free}}}\frac{1}{\varphi(d)} .
+\]
+Hence, with $S=\operatorname{diag}(\lambda(a))$, every entry of $SC_m^{-1}S$ is non-negative; $1/\lambda_{\min}(C_m)$
+is the Perron eigenvalue of that non-negative matrix; and an eigenvector of $C_m$ for its smallest
+eigenvalue can be chosen of the form $\lambda(a)w_a$ with every $w_a\ge0$.
+\end{proposition}
+
+\begin{proof}
+In the formula of \cref{prop:th-inv} a term is non-zero only when $d/a$ and $d/b$ are square-free, and then
+$\mu(d/a)=\lambda(d/a)=\lambda(d)\lambda(a)$, because $\lambda$ is completely multiplicative and
+$\lambda(a)^{2}=1$. So $\mu(d/a)\mu(d/b)=\lambda(a)\lambda(b)$ for every term. The rest is the
+Perron--Frobenius theorem.
+\end{proof}
+
+So the two ends of the spectrum are tied by a change of sign. The top eigenvector has no negative entries: all the
+pulse trains in phase. The bottom one is a positive vector with the sign $\lambda(a)$: every pulse train
+flipped once for each prime factor. And the two matrices are built in mirrored ways. An entry of $C_m$ is
+a sum of $\varphi(d)$ over the \emph{common divisors} $d$ of $a$ and $b$ (\cref{prop:oq-gram}); an entry of
+the inverse is, up to sign, a sum of $1/\varphi(d)$ over their \emph{common multiples} up to $m$. What two
+rhythms share below, against where they meet again above: $\gcd$ against $\operatorname{lcm}$.
+
+\begin{proposition}[one prime at a time; classical]\label{prop:18chain}
+Let $G=[\gcd(a,b)/\sqrt{ab}]$, the matrix of Chapter~\ref{ch:third} that differs from $C_m$ only in the shift
+from $\gcd$ to $\gcd-1$. Restricted to the powers $1,p,p^{2},\ldots$ of one prime $p$, it is $K=[r^{|i-j|}]$ with
+$r=p^{-1/2}$, the correlation matrix of a chain with correlation $r$ between neighbours. Its inverse is
+tridiagonal. On the infinite chain its spectrum is the interval $[1/M,M]$ with $M=(\sqrt p+1)/(\sqrt p-1)$,
+and the map
+\[
+  \lambda\;\longmapsto\;\frac{\lambda}{2c\lambda-1},\qquad c=\frac{p+1}{p-1},
+\]
+carries the spectrum to itself and exchanges its two ends.
+\end{proposition}
+
+\begin{proof}
+On the infinite chain $K$ is convolution with $r^{|k|}$, whose Fourier series is the Poisson kernel
+$P(\theta)=(1-r^{2})/(1-2r\cos\theta+r^{2})$, with range $[(1-r)/(1+r),(1+r)/(1-r)]$. Then
+$1/P(\theta)+1/P(\theta+\pi)=2(1+r^{2})/(1-r^{2})=2c$, which is the stated map, and $1/P$ has only the
+frequencies $0,\pm1$, which is the tridiagonal inverse.
+\end{proof}
+
+The shift $\theta\mapsto\theta+\pi$ is multiplication by $(-1)^{k}$, Liouville's sign on the powers of
+$p$. So prime by prime the mirror is exact, and it is a fractional-linear map, the same kind of map that
+drives continued fractions. Because $\gcd(a,b)/\sqrt{ab}$ is multiplicative, the full matrix $G$ is the product of these chains over
+all primes, cut off at $m$. Without the cut-off the top would be $\prod_pM_p=\infty$ and the bottom $0$;
+the cut-off makes both finite, and \cref{thm:th-top,thm:th-min} say that for $C_m$ it treats them alike to
+leading order. It does not treat them exactly alike: $1/\lambda_{\min}$ is about $2.6$ times $\lambda_{\max}$
+(Table~\ref{tab:18ratio} below), and the mean of the eigenvalues is $1$ while the mean of their reciprocals
+tends to $3.28$ (\cref{prop:th-trace}).
+
+\paragraph{The numbers.} At $m=400$ the smallest entry of $SC_m^{-1}S$ is $-9\times10^{-15}$, zero to
+rounding, and the formula of Proposition~\ref{prop:18mirror} matches a dense inverse to $10^{-14}$. At
+$m=20{,}000$ the bottom eigenvector times $\lambda(a)$ is non-negative on every index. The two vectors
+live in different places: the top one is largest at $a=60,120,180,24,12,\ldots$, numbers with many
+repeated small factors, and the bottom one at $a=30,6,60,42,12,210,\ldots$, led by the products of the
+first few distinct primes.
+
+\paragraph{In physics.} The chain of Proposition~\ref{prop:18chain} is the correlation matrix of the
+one-dimensional Ising model of magnetism, and of a damped random walk; a tridiagonal inverse is the
+statement that each site depends only on its neighbours. So the arithmetic correlation matrix is a
+lattice of such chains, one direction for each prime, and its inverse is local: the entry for $a$ and $b$
+vanishes unless they have a common multiple $d\le m$ with $d/a$ and $d/b$ square-free. Physics has exact
+small-to-large symmetries of this kind, the best known being the duality that exchanges high and low
+temperature in the two-dimensional Ising model. We claim only the analogy.
+
+\paragraph{Both ends, written with common beats.} Proposition~\ref{prop:18mirror} wrote the bottom of the
+spectrum as a sum over common multiples. The top can be written the same way.
+
+\begin{proposition}[the harmonic form]\label{prop:18harmonic}
+$C_m$ has the same eigenvalues as the non-negative matrix
+\[
+  T_m=\Bigl[\sqrt{\varphi(a)\varphi(b)}\sum_{\substack{n\le m\\ \operatorname{lcm}(a,b)\mid n}}\frac{1}{n-1}\Bigr]_{2\le a,b\le m},
+\]
+and $G_m=[\gcd(a,b)/\sqrt{ab}]_{1\le a,b\le m}$ has the same eigenvalues as
+\[
+  \Bigl[\frac{\sqrt{\varphi(a)\varphi(b)}}{\operatorname{lcm}(a,b)}\;H_{\lfloor m/\operatorname{lcm}(a,b)\rfloor}\Bigr]_{1\le a,b\le m},
+  \qquad H_k=1+\tfrac12+\cdots+\tfrac1k .
+\]
+\end{proposition}
+
+\begin{proof}
+By \cref{prop:oq-gram}, $C_m=DV\Phi V^{T}D=B^{T}B$ with $B=\Phi^{1/2}V^{T}D$, a square matrix. So $C_m$ and
+$BB^{T}$ have the same eigenvalues, and the $(a,b)$ entry of $BB^{T}$ is
+$\sqrt{\varphi(a)\varphi(b)}\sum_{n}[a\mid n][b\mid n]/(n-1)$. For $G_m$ the weight $1/(n-1)$ becomes $1/n$,
+and the sum of $1/n$ over the multiples of $L$ up to $m$ is $H_{\lfloor m/L\rfloor}/L$.
+\end{proof}
+
+The number $\operatorname{lcm}(a,b)$ is the beat on which the pulse trains $a$ and $b$ first coincide, the
+length of their polyrhythm (Section~\ref{sec:polyrhythm}), and its multiples are their later coincidences. So both ends of
+the spectrum are Perron eigenvalues of matrices that count coincidences up to the horizon $m$. For the top
+every coincidence $n$ counts, with weight $1/(n-1)$. For the bottom
+(Proposition~\ref{prop:18mirror}) the weight is $1/\varphi(n)$, and a coincidence counts only if $n/a$ and
+$n/b$ are square-free. In the gcd matrix the first of these is the harmonic series itself: the entry for
+two rhythms is a harmonic number, $H_k$, where $k$ is how many times they coincide before the horizon.
+
+\paragraph{How far apart are the two ends?} With these forms the two ends can be computed for much larger
+matrices (the divisor sums are done one prime at a time). Table~\ref{tab:18ratio} gives the result.
+
+\begin{table}[ht]
+\centering
+\caption{The two ends of the spectrum and their ratio $(1/\lambda_{\min})/\lambda_{\max}$, for the
+correlation matrix $C_m$ and, in the last column, for the gcd matrix $G_m$.}\label{tab:18ratio}
+\small
+\begin{tabular}{rrrrr}
+\hline
+$m$ & $\lambda_{\max}(C_m)$ & $1/\lambda_{\min}(C_m)$ & ratio for $C_m$ & ratio for $G_m$\\
+\hline
+$10^{2}$ & 8.096 & 21.967 & 2.713 & 2.515\\
+$10^{3}$ & 18.773 & 50.976 & 2.715 & 2.550\\
+$10^{4}$ & 36.429 & 97.857 & 2.686 & 2.570\\
+$10^{5}$ & 63.078 & 167.104 & 2.649 & 2.572\\
+$10^{6}$ & 101.252 & 265.276 & 2.620 & 2.570\\
+$10^{7}$ & 154.040 & 400.477 & 2.600 & 2.568\\
+$3\times10^{7}$ & 185.434 & 480.554 & 2.592 & 2.565\\
+\hline
+\end{tabular}
+\end{table}
+
+Three things stand out. First, for the gcd matrix every value we computed from $m=2\times10^{4}$ to $3\times10^{7}$, some fifty
+sizes in all, lies between $2.565$ and $2.573$, while both eigenvalues grew fourfold. Second, the ratio for $C_m$
+is falling towards the ratio for $G_m$: the difference between them is $0.165$, $0.117$, $0.077$, $0.050$,
+$0.032$ and $0.026$ down the table from $10^{3}$. So the question is really one about $G_m$. Third,
+neither ratio has settled: since $10^{5}$ the ratio for $G_m$ has been drifting down by about $0.002$ for
+each tenfold increase in $m$.
+
+\begin{proposition}[two cases where the ratio is exact]\label{prop:18exact}
+(i) Let $n$ be square-free. On the divisors of $n$ the gcd matrix has
+$\lambda_{\max}=\prod_{p\mid n}(1+p^{-1/2})$ and $\lambda_{\min}=\prod_{p\mid n}(1-p^{-1/2})$, so
+\[
+  \frac{1/\lambda_{\min}}{\lambda_{\max}}=\prod_{p\mid n}\frac{p}{p-1}=\frac{n}{\varphi(n)} .
+\]
+(ii) On the powers $1,p,\ldots,p^{k-1}$ of one prime the ratio is $p/(p-1)$ for $k=2$ and for $k=3$, and it
+tends to $1$ as $k\to\infty$.
+\end{proposition}
+
+\begin{proof}
+(i) The matrix is the Kronecker product of the $2\times2$ matrices with rows $(1,r)$ and $(r,1)$,
+$r=p^{-1/2}$, whose eigenvalues are $1\pm r$. (ii) For $k=3$ the eigenvalues of
+Proposition~\ref{prop:18chain}'s matrix are $1-r^{2}$ and $\tfrac12\bigl(2+r^{2}\pm r\sqrt{r^{2}+8}\bigr)$; the
+last two are the extreme ones and their product is $1-r^{2}$. As $k\to\infty$ the extremes tend to $M$ and
+$1/M$.
+\end{proof}
+
+So the ratio measures how short the chains are. Where each prime is used once, it is the totient ratio
+$n/\varphi(n)$ of Chapter~\ref{ch:coprime}; where a prime is used to a high power, it falls back to $1$. Computing with
+only the numbers built from the primes up to a bound $y$ shows how the two effects combine
+(Table~\ref{tab:18smooth}).
+
+\begin{table}[ht]
+\centering
+\caption{The gcd matrix on the numbers up to $10^{7}$ whose prime factors are all at most $y$. With a
+fixed set of primes both ends have the same ceiling, $\prod_{p\le y}M_p$.}\label{tab:18smooth}
+\small
+\begin{tabular}{rrrrrr}
+\hline
+$y$ & numbers & $\lambda_{\max}$ & $1/\lambda_{\min}$ & ratio & ceiling\\
+\hline
+2 & 24 & 5.335 & 5.805 & 1.088 & 5.83\\
+3 & 190 & 15.735 & 21.056 & 1.338 & 21.8\\
+5 & 768 & 29.841 & 50.513 & 1.693 & 56.9\\
+7 & 2\,155 & 45.430 & 94.498 & 2.080 & 126.2\\
+13 & 8\,289 & 69.097 & 175.848 & 2.545 & 415.5\\
+29 & 37\,627 & 96.862 & 261.104 & 2.696 & 2\,418\\
+97 & 269\,882 & 127.264 & 338.751 & 2.662 & $1.3\times10^{5}$\\
+997 & 2\,028\,358 & 150.352 & 391.162 & 2.602 & \\
+all & $10^{7}$ & 157.790 & 405.157 & 2.568 & $\infty$\\
+\hline
+\end{tabular}
+\end{table}
+
+The table shows the mechanism. \emph{The bottom reaches its ceiling sooner than the top.} With the powers
+of $2$ alone, $24$ levels bring the bottom to within half a per cent of the ceiling $3+2\sqrt2=5.83$,
+while the top is still more than eight per cent short. Each further small prime adds to the bottom's lead, up to
+about $2.7$ near $y=29$. The large primes then take a little of it back, because they still add to the
+top while the bottom has less left to gain. The same picture shows in the eigenvectors. At $m=10^{6}$
+half the weight of the top vector lies on indices above $47{,}000$, and half the weight of the bottom
+vector on indices below $600$: the bottom is made by a few small rhythms, the top by many large ones.
+
+For any fixed set of primes the ratio falls to $1$ as $m$ grows: with powers of $2$ only it is $1.200$,
+$1.117$ and $1.088$ at $m=10^{4}$, $10^{6}$ and $10^{7}$. With all primes it stays near $2.57$, because new
+primes keep arriving as the old ones saturate. Whether that balance has a limit is the open question, and
+the computation cannot decide it. A limit near $2.5$ and a very slow decline are both consistent with
+Table~\ref{tab:18ratio}. We did not recognize $2.57$ as any known constant, and at these sizes it would be
+numerology to try.
+
+%-------------------------------------------------------------------------------------------------------
+\section{The butterfly of a number}\label{sec:18butterfly}
+
+An electron moving on a square crystal lattice in a magnetic field obeys Harper's equation
+\[
+  \psi_{k+1}+\psi_{k-1}+2\cos(2\pi k\alpha+\nu)\,\psi_k=E\,\psi_k ,
+\]
+where $\alpha$ is the magnetic flux through one cell of the lattice in natural units. Hofstadter (1976)
+found that when $\alpha=p/q$ the allowed energies form $q$ bands, and that the picture over all $\alpha$
+is a fractal, the ``butterfly'' \cite{hofstadter1976}. It was observed in graphene superlattices in 2013
+\cite{dean2013}. For irrational $\alpha$ the spectrum is a Cantor set \cite{avila2009}, like the dust of
+Section~\ref{sec:dust}.
+
+The spectrum of $\alpha$ is approached through the convergents of $\alpha$, so the continued fraction
+organizes it. We computed the bands at the convergents of the five numbers of the Suite
+(Table~\ref{tab:18bands}).
+
+\begin{table}[ht]
+\centering
+\caption{Energy bands of Harper's equation at convergents $p/q$: the sizes of the groups into which the
+widest gaps divide the $q$ bands, and the total width of the bands against Thouless's estimate
+$32G/(\pi q)=9.33/q$ ($G$ is Catalan's constant).}\label{tab:18bands}
+\small
+\begin{tabular}{llllr}
+\hline
+number & $p/q$ & groups & total width & $9.33/q$\\
+\hline
+$\pi-3$ & 1/7 & $1,1,1,1,1,1,1$ & 1.2845 & 1.3329\\
+ & 15/106 & $15,15,15,16,15,15,15$ & 0.0888 & 0.0880\\
+ & 16/113 & $16,16,16,17,16,16,16$ & 0.0825 & 0.0826\\
+$\varphi-1$ & 8/13 & $5,3,5$ & 0.7116 & 0.7177\\
+ & 13/21 & $8,5,8$ & 0.4438 & 0.4443\\
+ & 21/34 & $13,8,13$ & 0.2753 & 0.2744\\
+$\sqrt2-1$ & 12/29 & $5,7,5,7,5$ & 0.3216 & 0.3217\\
+ & 29/70 & $12,17,12,17,12$ & 0.1333 & 0.1333\\
+$e-2$ & 51/71 & $20,31,20$ & 0.1314 & 0.1314\\
+$\log_2(3/2)$ & 7/12 & $2,3,2,3,2$ & 0.7832 & 0.7775\\
+ & 31/53 & $9,13,9,13,9$ & 0.1760 & 0.1760\\
+\hline
+\end{tabular}
+\end{table}
+
+For $\pi$ the $113$ bands fall into seven groups of $16$, with one of $17$ in the middle: the bar of $7$
+and the phrase of $113$ of Chapter~\ref{ch:rhythm}, as an energy spectrum. For the golden ratio the groups are
+Fibonacci numbers, for $\sqrt2$ they are built from the Pell numbers $2,5,12,29$ (with $7=5+2$ and $17=12+5$), and for the fifth the twelve bands of
+$7/12$ divide as $2,3,2,3,2$. The total width shrinks like $9.33/q$ \cite{thouless1983}, which is the
+Cantor dust appearing.
+
+Each gap carries a whole number. If $r$ bands lie below a gap, there is exactly one pair of integers
+$(s,t)$ with $|t|\le q/2$ and
+\[
+  r=q\,s+p\,t ,
+\]
+found by Euclid's algorithm, and $t$ is the Hall conductance of the electron gas when the gap is at the
+Fermi energy, in units of $e^{2}/h$ \cite{tknn1982}. For the six widest gaps of $16/113$ these integers
+are $1,2,3,-3,-2,-1$. So the oldest algorithm in the book produces a quantity that laboratories measure
+to parts in a billion.
+
+An interactive version, in which any continued fraction can be entered, its levels marked on the
+butterfly and its bands played from low energy to high, accompanies this chapter.
+
+%-------------------------------------------------------------------------------------------------------
+\section{Kepler, continued}\label{sec:18keplercont}
+
+Kepler has now appeared twice: his third law in Section~\ref{sec:18kepler} and his harmony of the world
+in Section~\ref{sec:18resonance}. Three more pieces of his work meet the methods of this paper, and in
+each the continued fraction adds something he did not have.
+
+\paragraph{The trigon is a continued fraction.} On 19 July 1595 Kepler drew for his class in Graz the places
+in the zodiac where Jupiter and Saturn meet, about every twenty years \cite{gingerich1973}. Each meeting falls roughly two thirds of
+the way round from the last, so three of them make a triangle, the \emph{trigon}, and the triangle slowly
+turns. The drawing gave him the idea for his first book \cite{kepler1596}. It is a picture of a continued
+fraction.
+
+\begin{proposition}[conjunction figures]\label{prop:18conj}
+Let two bodies move on circular orbits in one plane with periods $T_1<T_2$, and let $r=T_2/T_1$.
+Successive conjunctions are separated by the time $T_1T_2/(T_2-T_1)$, and each lies
+\[
+  \alpha=\frac{1}{r-1}
+\]
+of a turn beyond the last. Hence:\\
+(i) the first $N$ conjunctions cut the circle into arcs of at most three different lengths, for every
+$N$;\\
+(ii) if $p/q$ is a convergent of the fractional part of $\alpha$ and $a$ is the term that follows it, then
+every $q$ conjunctions nearly close a figure with $q$ points, which has turned by $q\alpha-p$ of a circle;
+and the figure has turned through the spacing of its own points, $1/q$ of a circle, after
+$1/(q^{2}|\alpha-p/q|)$ rounds, a number between $a$ and $a+2$.
+\end{proposition}
+
+\begin{proof}
+Between conjunctions the inner body gains one turn on the outer, so the time $t$ satisfies
+$t/T_1-t/T_2=1$, and in that time the outer body moves $t/T_2=1/(r-1)$ turns. The conjunction points are
+therefore the orbit of a rotation by $\alpha$. (i) is the three-gap theorem of Section~\ref{sec:three-gaps}, and (ii) is
+the bound $1/(q(q'+q))<|\alpha-p/q|<1/(qq')$ of Chapter~\ref{ch:cf}, where $q'=aq+q''$ is the next denominator and
+$q''\le q$ the previous one.
+\end{proof}
+
+So the figure is the convergent, and \emph{the next term counts how many times the figure is drawn before
+it has turned by one point}. This is the normalized error of \cref{tab:pi-conv} again. Table~\ref{tab:18conj}
+applies it to the planets, with long-term mean periods; real orbits are not circles, so real conjunctions wander a
+few degrees about these places.
+
+\begin{table}[ht]
+\centering
+\caption{Conjunction figures from mean periods. Each line gives the step $\alpha$ between meetings, its
+expansion, and the cycles that the convergents produce. An opposition of an outer planet is a conjunction
+of the Earth with it, seen from the Sun.}\label{tab:18conj}
+\small
+\begin{tabular}{llp{0.47\textwidth}}
+\hline
+pair & step $\alpha$ & cycles\\
+\hline
+Jupiter, Saturn & $0.6742=[0;1,2,14,2,\ldots]$ & $2/3$: a triangle every $59.6$ years, turned by
+$8.1^{\circ}$; by $120^{\circ}$ after $14.8$ rounds, $883$ years. $29/43$: $853.9$ years.\\
+Venus, Earth & $0.5987=[0;1,1,2,29,2,\ldots]$ & $3/5$: a five-pointed star every $7.99$ years, turned
+by $2.4^{\circ}$; by $72^{\circ}$ after $29.9$ rounds. $88/147$: $235.0$ years. $91/152$: $243.00$ years.\\
+Earth, Mars & $0.1353=[0;7,2,1,1,3,\ldots]$ & $7$ oppositions in $14.95$ years; $15$ in $32.0$; $22$ in
+$47.0$; $37$ in $79.01$.\\
+Earth, Jupiter & $0.0921=[0;10,1,6,4,\ldots]$ & $11$ oppositions in $12.01$ years; $76$ in $83.00$.\\
+Earth, Saturn & $0.0351=[0;28,2,5,\ldots]$ & $28$ oppositions in $29.0$ years; $57$ in $59.00$.\\
+Mercury, Earth & $0.3172=[0;3,6,1,1,2,1,\ldots]$ & $22$ meetings in $6.98$ years; $41$ in $13.01$; $104$
+in $32.99$; $145$ in $46.00$.\\
+\hline
+\end{tabular}
+\end{table}
+
+The first line is Kepler's trigon. The convergent $2/3$ is the triangle; the term $14$ that follows says
+the triangle is drawn about fifteen times before it has turned onto itself, which takes $883$ years. That
+is exactly the period of the great inequality of Section~\ref{sec:18resonance}: the turning of the trigon
+and the slow swing of Jupiter and Saturn are one beat, with frequency $5n_S-2n_J$ in the two mean
+motions, seen in two ways. This is the ``great cycle'' of the conjunctions, which medieval astrologers
+put at $960$ years and Kepler at $794$. Kepler's figure is forty conjunctions ($794.4$ years), and $27/40$
+is an intermediate fraction, the last step before the next convergent $29/43$. The term $14$ is delicate.
+Jupiter disturbs Saturn's motion, and with the period of Saturn's present orbit in place of its long-term
+mean the term is $13$ and the turn takes $842$ years. The second line is the five-pointed star of Venus,
+with the large term $29$ behind it; the fraction $91/152$, the first intermediate step beyond the
+convergent $88/147$, gives $243.00$ years, the period after which transits of Venus across
+the Sun repeat. Kepler predicted the transit of Venus of 1631. The remaining lines
+reproduce periods that Babylonian astronomers already used to predict the planets: $8$ years for Venus,
+$46$ for Mercury, $47$ and $79$ for Mars, $83$ for Jupiter and $59$ for Saturn \cite{gray2009}.
+Their second period for Jupiter, $71$ years, is $65$ oppositions: the fraction $6/65$ is not a convergent
+but an intermediate fraction, the fifth of the six steps that lead from $1/10$ to $7/76$, on one of the
+veins of Section~\ref{sec:th6}.
+
+The figures themselves are Kepler's too. In the first two books of \emph{Harmonices Mundi} he studied the
+regular polygons, star polygons among them, and how they fit together; the figure for a convergent $p/q$
+is the star polygon with $q$ points joined $p$ apart.
+He had both halves, the stars and the conjunctions; the continued fraction is what joins them. For
+Jupiter's moons the same proposition gives the resonance of Section~\ref{sec:18resonance}: the meeting
+points of Io with Europa, and of Europa with Ganymede, step backwards round Jupiter at the same rate,
+$0.7395^{\circ}$ a day, once round in $487$ days.
+
+An interactive version, ``Kepler's Figures'', accompanies this section: any two bodies can be chosen and
+their meetings watched as they draw the figure and turn it. With Kepler's ellipses in place of circles it
+puts the meeting of Venus and the Earth at $2012.43$, the transit of June 2012, and the meeting of Jupiter
+and Saturn as seen from the Sun at $2020.84$, seven weeks before the two were seen together from the
+Earth.
+
+\paragraph{Kepler's harmonies, tested.} In Book V of \emph{Harmonices Mundi} \cite{kepler1619} Kepler
+compared each planet's fastest angular speed as seen from the Sun, at perihelion, with its slowest, at
+aphelion, and heard a musical interval in each ratio. For an orbit of eccentricity $e$ the ratio is
+$((1+e)/(1-e))^{2}$. He printed the speeds he used (for Saturn $1'46''$ and $2'15''$ of arc a day, for the
+Earth $57'3''$ and $61'18''$), and he printed his own misses beside them: Saturn's ratio exceeds a major
+third by $53:54$, Mars falls short of a fifth by $29:30$. Table~\ref{tab:18harm} sets three versions side
+by side: his own figures, the orbits as they were in 1600, and the orbits of today \cite{standish1992}.
+
+\begin{table}[ht]
+\centering
+\caption{Kepler's intervals for the single planets, and by how much the ratio of fastest to slowest
+angular speed misses each one, in cents (a semitone of the piano is $100$ cents). The orbits of 1600 and
+2000 are mean orbits from one formula valid from 3000 BC to 3000 AD.}\label{tab:18harm}
+\small
+\begin{tabular}{llrrrr}
+\hline
+planet & Kepler's interval & his figures & 1600 & 2000 & $e$ in 2000\\
+\hline
+Saturn & $5:4$, major third & $+32$ & $+7$ & $-2$ & 0.0555\\
+Jupiter & $6:5$, minor third & $+32$ & $+16$ & $+21$ & 0.0485\\
+Mars & $3:2$, fifth & $-60$ & $-56$ & $-53$ & 0.0934\\
+Earth & $16:15$, semitone & $+13$ & $+5$ & $+4$ & 0.0167\\
+Venus & $25:24$, diesis & $-21$ & $-22$ & $-24$ & 0.0068\\
+Mercury & $12:5$, octave + minor third & $-43$ & $-72$ & $-71$ & 0.2056\\
+\hline
+mean miss & & 33 & 30 & 29 & \\
+chance of doing as well & & 0.22 & 0.15 & 0.14 & \\
+\hline
+\end{tabular}
+\end{table}
+
+The last line is the test of Section~\ref{sec:18resonance}: six ratios drawn at random between a unison
+and a twelfth, each matched to the nearest of sixteen intervals of the just scale (the kinds Kepler drew
+on), miss by $47$ cents on average and do as well as the planets about one time in six. By that test the
+harmonies of the single planets are not established, in his figures or in ours. The Earth's semitone,
+the ``mi, fa, mi'' that Kepler heard as misery and famine, and Saturn's major third are the close fits;
+Mars and Mercury miss by half a semitone or more.
+
+\emph{Did they fit better in his day?} No. The sky of 1600 held the same six planets on almost the same
+orbits: the eccentricities have changed in the fourth decimal place, and the fastest mover, Saturn's
+interval, drifts by about $2$ cents a century. The columns for 1600 and 2000 differ by $9$ cents for
+Saturn and by $5$ or less for the rest. Where Kepler's own column differs from the orbit of 1600 the cause
+is his data, and it cuts both ways. His figure for Saturn's slowest motion, $1'46''$ where the orbit of 1600 gives $1'48''$, cost him $25$
+cents. His eccentricity for Mercury, $0.2095$ against a true $0.2056$, made Mercury fit $29$ cents better
+than it should. For Mars, the Earth and Venus his speeds are within a quarter of a per cent of the modern
+reconstruction, a tribute to Tycho Brahe's observations. (One caution about Saturn: Jupiter
+disturbs its orbit so strongly that its eccentricity depends on the span averaged over. A fit to the years
+1800 to 2050 alone gives a miss of $-13$ cents where the long formula gives $-2$.)
+
+\emph{Why they cannot hold.} Nothing fixes an eccentricity at a musical value. The planets trade
+eccentricity among themselves over tens and hundreds of thousands of years. The Earth's has ranged from
+nearly $0$ to $0.068$ \cite{laskar2011}, which carries its ``semitone'' from a unison to within a
+quarter-tone of a perfect fourth. On the present trend the Earth will sing a true $16:15$ around the year
+3600, and Saturn's major third is passing through exactness about now. Period ratios are different: a
+resonance holds them (Section~\ref{sec:18resonance}). The harmony Kepler was looking for exists where
+there is something to hold it. One such place is the family of Jupiter's moons, which he was among the
+first to study and for which he coined the word \emph{satellite}.
+
+\emph{Two planets at a time.} Kepler set more store by the intervals between neighbours: the slowest motion
+of the outer planet against the fastest of the inner (``diverging'') and the fastest of the outer against
+the slowest of the inner (``converging''), ten intervals in all, such as $1:2$ for Saturn and Jupiter
+converging and $2:3$ for Mars and the Earth. Here the test comes out differently. With the orbits of 2000
+the ten intervals miss his consonances by $33$ cents on average, where random intervals miss the nearest
+consonance by $57$; the chance of doing as well is about $0.03$. It is $0.015$ if the same six
+eccentricities are dealt to the planets in a different order (all $720$ orders), and $0.03$ if the
+eccentricities are drawn at random. As Kepler himself concluded, the converging intervals fit best ($23$
+cents) and the diverging ones worst ($42$). Mars and the Earth converging make a fifth to within $2$
+cents.
+
+That would be a modest result in Kepler's favour, if it were the end of the evidence. It is not, because
+planets were found after he died, and they are a test his scheme never had: Uranus (1781), Neptune
+(1846), and the smaller bodies Ceres (1801) and Pluto (1930). As single voices Uranus and Neptune do
+about as well as Jupiter and Venus ($9$ cents from a minor third and from a diesis), while Ceres and
+Pluto miss by $47$ and $62$. But the four new intervals between neighbours, for Saturn with Uranus and
+Uranus with Neptune, miss the nearest consonance by $86$, $55$, $154$ and $90$ cents, worse than chance.
+With all fourteen intervals the mean miss is $51$ cents and the chance of doing as well is $0.29$. Kepler
+also arrived at the angular speeds seen from the Sun only after trying and rejecting distances, periods
+and linear speeds, which weakens any single test. So the fair verdict is that his two-planet harmonies
+were a real feature of the six planets he knew, at about the level of one chance in thirty, and that the
+planets he did not know do not continue it. (A further planet far beyond Neptune has been proposed since
+2016. None had been found when this was written, so it cannot be tested.)
+
+\paragraph{The second law in the atom.} Kepler's second law, equal areas in equal times, is the
+conservation of angular momentum: a body of mass $m$ and angular momentum $L$ sweeps area at the rate
+$L/(2m)$. Bohr's rule for the atom is $L=n\hbar$. So the electron in orbit $n$ sweeps area at
+\[
+  n\cdot\frac{\hbar}{2m_e}=n\times5.79\times10^{-5}\ \text{m}^{2}\text{/s},
+\]
+a whole number of times one fixed rate. (The Earth sweeps $2.2\times10^{15}$\,m$^{2}$/s.) Kepler's second
+law is what Bohr quantized. In Sommerfeld's refinement of 1916 \cite{sommerfeld1916} the electron moves on
+Kepler ellipses, and the ellipses allowed at level $n$ are those whose short and long axes are in the
+ratio $k/n$, $k=1,\ldots,n$: the shapes of the orbits are fractions. That picture was replaced by quantum
+mechanics ten years later, but the count of states and the symmetry of
+Section~\ref{sec:18kepler} survived the change.
+
+\paragraph{What else of Kepler's belongs here.} Five more pieces of his work touch the subjects of this
+paper.
+
+\emph{The golden ladder.} In his essay on the six-cornered snowflake \cite{kepler1611} Kepler observed
+that the ratios of neighbouring Fibonacci numbers, $5:8$, $8:13$, $13:21$, come ever closer to the golden
+section. Those ratios are the convergents of $[1;1,1,1,\ldots]$ (Chapter~\ref{ch:cf}): the golden movement of the
+Suite, three centuries early.
+
+\emph{Consonance and the totient.} In the first three books of \emph{Harmonices Mundi} Kepler derived the
+consonances from the regular polygons that can be constructed with ruler and compass. The triangle,
+square, pentagon, hexagon and octagon give the consonant ratios; the heptagon cannot be constructed and,
+he argued, that is why $7$ gives no consonance \cite{gingerich1973}. Gauss and Wantzel later settled which polygons can be
+constructed: the $n$-gon can exactly when $\varphi(n)$ is a power of $2$. That is the totient of
+Chapter~\ref{ch:coprime}, the same function that weights the correlation matrix (\cref{prop:oq-gram}) and that appeared in
+the ratio $n/\varphi(n)$ of Proposition~\ref{prop:18exact}. The polygons Kepler called knowable, with
+$3,4,5,6,8,10,12,\ldots$ sides, are in modern terms among those with $\varphi(n)$ a power of $2$.
+
+\emph{Tilings that never repeat.} Book II of \emph{Harmonices Mundi} lists the eleven tilings of the plane
+by regular polygons, and draws a pattern of pentagons and stars that anticipates the non-repeating
+tilings of Penrose (1974). In those tilings the two kinds of tile occur in the golden ratio, and since 1984 patterns of
+this kind have been known in real materials, the quasicrystals \cite{Shechtman1984}. The equation of Section~\ref{sec:18butterfly} is the standard model
+of an electron in a one-dimensional pattern of this kind.
+
+\emph{Packing, and $\pi$.} The snowflake essay also asserts that no packing of equal spheres is denser
+than the greengrocer's pile, which fills $\pi/\sqrt{18}=0.7405$ of space. That is how the atoms sit in
+many metals. The claim was proved by Hales \cite{hales2005}.
+
+\emph{The first inverse-square law.} In his optics of 1604 Kepler stated that the brightness of a light
+falls off as the square of the distance. The forces of Section~\ref{sec:18kepler} follow the same law,
+and it is the reason an orbit in the atom and an orbit in the sky are one problem.
+
+Two tools of his are also at work in the instrument that accompanies this section. Kepler's equation,
+$M=E-e\sin E$, gives the place of a planet on its ellipse at a given time; the instrument solves it for
+every frame it draws. And his logarithms of 1624 are the natural measure of a musical interval: the cents
+used above are a logarithm, and $\log_2(3/2)$ is one of the five numbers of the Suite.
+
+%-------------------------------------------------------------------------------------------------------
+\section{What is known and what is ours}\label{sec:18audit}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{p{0.34\textwidth}p{0.16\textwidth}p{0.42\textwidth}}
+\hline
+idea & class & notes\\
+\hline
+Kepler's law in the atom; the $2n^{2}$ shells from the Runge--Lenz symmetry & classical & Pauli, Fock.
+The reading as a repair of the ``shared formula'' caveat of Chapters~\ref{ch:coprime} and~\ref{ch:connections} is ours.\\
+Atoms with $n\approx1009$ and the fourth harmonic & specialist & Stepkin et al.; the arithmetic of the
+harmonic is our check.\\
+Orbital resonances, Kirkwood gaps, KAM & classical & Standard celestial mechanics.\\
+The big-term test and Table~\ref{tab:18res} & new presentation & Continued fractions of period ratios are
+an old device; the test against random ratios is our computation.\\
+The sign mirror, Proposition~\ref{prop:18mirror} & new, as far as we found & A two-line consequence of
+\cref{prop:th-inv}. May well be known for GCD matrices.\\
+The one-prime chain and its mirror map & classical & The Kac--Murdock--Szeg\H{o} matrix and the Poisson
+kernel.\\
+Hofstadter's butterfly, Hall integers, Cantor spectrum & specialist & Hofstadter; Thouless et al.; Avila
+and Jitomirskaya.\\
+The butterfly read as a number's musical form; the instrument & new presentation & Our computation and
+instrument.\\
+The harmonic form, Proposition~\ref{prop:18harmonic} & new, as far as we found & One line from
+\cref{prop:oq-gram}. The harmonic numbers make it worth stating.\\
+The ratio of the two ends, Tables~\ref{tab:18ratio} and~\ref{tab:18smooth} & new computation & To
+$m=3\times10^{7}$. The exact cases of Proposition~\ref{prop:18exact} are elementary.\\
+Conjunction figures, Proposition~\ref{prop:18conj} & new presentation & The cycles are ancient and the
+three-gap theorem is classical; reading the trigon as a convergent and its drift as the next term is ours.\\
+Kepler's harmonies tested, Table~\ref{tab:18harm} & new computation & Others have re-examined them; the
+tests against random ratios, the comparison of 1600 with 2000, and the test on the planets found later
+are ours.\\
+Constructible polygons and $\varphi(n)$; quasicrystals; sphere packing & classical & Gauss, Wantzel;
+Penrose, Shechtman; Hales. Only the pointers to this paper are ours.\\
+The second law in Bohr's atom; Sommerfeld's ellipses & classical & Bohr 1913, Sommerfeld 1916.\\
+\hline
+\end{tabular}
+\end{table}
+
+Still open, and the one item here that could become a theorem: does the ratio of $1/\lambda_{\min}$ to
+$\lambda_{\max}$ tend to a limit, and if so to what? Propositions~\ref{prop:18mirror}
+and~\ref{prop:18harmonic} reduce it to comparing the Perron eigenvalues of two explicit non-negative
+matrices of the same kind, both built from the common multiples of pairs of rhythms. The computation of
+Section~\ref{sec:18mirror} says the answer for the gcd matrix is close to $2.57$ at every size we can
+reach, that the correlation matrix is converging on the same value from above, and that for any fixed
+set of primes the answer is $1$.

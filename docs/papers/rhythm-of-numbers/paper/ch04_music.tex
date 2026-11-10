@@ -2,7 +2,7 @@
 
 The continued fraction is not only a rhythm generator. The same ladder of fractions decides how musical scales are tuned, the same algorithm spreads drum hits around the world's traditional rhythms, and the same fractions are where coupled oscillators lock together. This chapter retells these classical connections in the language of Chapters~\ref{ch:cf} and~\ref{ch:rhythm}.
 
-\section{Tuning: the fifth and its convergents}
+\section{Tuning: the fifth and its convergents}\label{sec:tuning}
 
 Two notes sound smooth together when their frequencies are in a simple ratio. The octave is $2:1$ and the fifth is $3:2$. Measured in octaves, a fifth is
 \[
@@ -57,7 +57,7 @@ This is known; Gómez-Martín, Taslakian and Toussaint relate Euclidean rhythms 
 \label{fig:euclid}
 \end{figure}
 
-\section{Polyrhythm and coprimality}
+\section{Polyrhythm and coprimality}\label{sec:polyrhythm}
 
 Two pulse trains, one with a hit every $a$ steps and one every $b$ steps, coincide every $\lcm(a,b)$ steps. When $a$ and $b$ are coprime, they meet only once per cycle of $ab$ steps: three against four meet only on the downbeat of a 12-step cycle. When they share a factor, they meet more often; four against six meet every 12 steps, twice per cycle of 24. The Polyrhythm layerer on the site stacks the rhythms of several convergents as concentric rings; for $\pi$, the rings $1/7$, $15/106$ and $16/113$ play three versions of one beat that drift apart and realign. Because $\gcd(7, 113) = 1$, the 7-ring and 113-ring meet only at the start of their common cycle. Chapter~\ref{ch:coprime} turns ``meeting less often'' into an exact correlation.
 
@@ -79,4 +79,6 @@ where $\Omega$ is the natural rotation per step and $K \ge 0$ the strength of th
 The $0/1$ tongue can be computed exactly. A fixed point of \eqref{eq:circle-map} (modulo 1) needs $\Omega = (K/2\pi)\sin(2\pi\theta)$, which has a solution if and only if $|\Omega| \le K/(2\pi)$. So at $K = 1$ the $0/1$ step extends $1/(2\pi) = \InvTwoPi$ on each side of 0; our numerical staircase gives $\ZeroTongueHalf$. The number $\pi - 3 = 0.14159\ldots$ is inside it, so a system whose natural rotation is $\pi - 3$ is captured into the $0/1$ lock once $K \ge 2\pi(\pi-3) = \CaptureK$. Numerically, at $K = 1$ the $1/2$ step is $\HalfTongue$ wide and the $1/3$ step $\ThirdTongue$, and the steps with denominators up to 10 already cover a fraction $\PlateauSum$ of the interval $[0,1]$.
 
 \paragraph{Counting the tongues.} Each tongue belongs to a fraction $p/q$ in lowest terms, so the number of tongues with $0 \le p/q \le 1$ and $q \le N$ is $1 + \sum_{q \le N}\varphi(q)$, the length of the Farey sequence of order $N$. A classical theorem \citep[Thm.~330]{HardyWright2008} gives $\sum_{q\le N}\varphi(q) \sim 3N^2/\pi^2$. For $N = 50$, 100 and 200 our counts are \FareyFifty, \FareyHundred{} and \FareyTwoHundred, against $3N^2/\pi^2 \approx \FareyExpFifty$, \FareyExpHundred{} and \FareyExpTwoHundred. Here $\pi$ appears through $6/\pi^2$, the subject of the next chapter.
+
+Sections~\ref{sec:18resonance} and~\ref{sec:18keplercont} apply this to orbits, where the locked ratios are resonances between periods. \addedon{\revD}
 

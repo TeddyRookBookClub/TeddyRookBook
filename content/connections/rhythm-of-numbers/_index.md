@@ -19,7 +19,7 @@ video_id: "K0l47YsgopE"
 # sec: the paper's section numbers; their PDF pages are in data/rhythm/paper_pages.yaml (checked by
 # scripts/rhythm/check-paper-links.py). The chart under question 1 reads data/rhythm/openq_pi.json
 # (scripts/rhythm/openq-chart-data.py).
-openq_intro: "The paper’s Discussion ended with six open questions. We went back to them three times: Chapter 15 of the paper (added 2026-11-05), Chapter 16, a second look (added 2026-11-06) and Chapter 17, a third look (added 2026-11-10), which brought five new probable primes and the proofs in Teddy Rook’s notes. Most of them are famous unsolved problems, and they are still unsolved. Here is what we found, in plain words."
+openq_intro: "The paper’s Discussion ended with six open questions. We went back to them three times: Chapter 15 of the paper (added 2026-11-05), Chapter 16, a second look (added 2026-11-06) and Chapter 17, a third look (added 2026-11-10), which brought five new probable primes and the proofs in Teddy Rook’s notes. Chapter 18 (also added 2026-11-10) carries the same patterns into physics: see [Large and small](/connections/rhythm-of-numbers/large-and-small/). Most of them are famous unsolved problems, and they are still unsolved. Here is what we found, in plain words."
 openq:
   - id: "oq-1"
     q: "Does pi have infinitely many prime fractions?"
@@ -71,7 +71,7 @@ openq:
     status: "Extremes answered"
     kind: "partly"
     ask: "Section 10’s matrix holds the correlation of every pair of pulse trains. What do its eigenvalues look like, and does 6/π² show up?"
-    sec: ["15.6", "16.3", "17.1", "17.2", "17.3"]
+    sec: ["15.6", "16.3", "17.1", "17.2", "17.3", "18.3"]
     site: "/connections/rhythm-of-numbers/#corr"
     items:
       - { date: "2026-11-05", kind: "Proved", text: "Take the matrix for the periods up to m. Its eigenvalues average exactly 1, and their spread (variance) tends to 2. Its determinant has an exact formula. Its largest eigenvalue is at least (2/π²) · ln² m, which is one third of 6/π² times ln² m: that is where 6/π² appears." }
@@ -80,6 +80,8 @@ openq:
       - { date: "2026-11-06", kind: "Evidence", text: "Those near-copies explain part of the random-matrix look. Without them the spacings are in between random-matrix and fully random." }
       - { date: "2026-11-10", kind: "Proved", text: "Following Teddy Rook’s notes: the largest eigenvalue grows like e raised to the power 2√(ln m / ln ln m), up to a factor that fades as m grows, and the smallest shrinks toward 0 at exactly the mirror rate. The whole spread of eigenvalues settles down to a fixed limiting shape as m grows, and the reciprocals of the eigenvalues average a fixed number, about 3.28. Four exact constants of the spread are now known (1, 3, 0.5599 and 3.2796), and none of them is 6/π²." }
       - { date: "2026-11-10", kind: "Known", text: "The method behind the largest eigenvalue is the “resonance method” that Soundararajan (2008) and Bondarenko and Seip used for the zeta function. We did not find the result stated for this matrix, but a specialist would regard it as a corollary of those techniques." }
+      - { date: "2026-11-10b", kind: "Proved", text: "Following Teddy Rook’s notes: a mirror between the two ends. Flip the sign of each pulse train once for every prime factor of its period, and the inverse of the matrix has no negative entries. So the smallest eigenvalue, like the largest, is the leading value of a matrix of counts. Both count the beats where two rhythms coincide: the largest gives every shared beat a weight, the smallest only some of them." }
+      - { date: "2026-11-10b", kind: "Evidence", text: "How far apart are the two ends? One over the smallest eigenvalue is between 2.6 and 2.7 times the largest at every size computed, up to 30 million, and about 2.57 for the matrix’s close cousin, the gcd matrix. We could not tell whether that ratio settles on a limit, and we did not recognize 2.57 as any known constant." }
     note: "Still open: the shape of the limiting law of the eigenvalues (a formula, whether it has a density, how it behaves near 0). 6/π² does not appear in any of its four known exact constants."
   - id: "oq-6"
     q: "Scales with a prime number of notes"

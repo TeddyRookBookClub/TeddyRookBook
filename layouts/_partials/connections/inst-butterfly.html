@@ -1,0 +1,38 @@
+{{- /* butterfly instrument panels: written by scripts/rhythm/port-instrument.py from butterfly-instrument.html. Do not edit here. */ -}}
+<div class="wrap">
+
+  <section class="panel" aria-label="Choose a number">
+    <div class="row" id="presets"></div>
+    <div class="terms">
+      <label for="termsInput">or type the terms of a continued fraction</label>
+      <input id="termsInput" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="7, 15, 1, 292">
+      <button class="chip" id="useTerms" type="button">Use these terms</button>
+    </div>
+    <div class="readout" id="numLine"></div>
+  </section>
+
+  <section class="panel" aria-label="The butterfly">
+    <h2>The butterfly, with this number's levels marked</h2>
+    <canvas id="fly" width="1600" height="1000" role="img" aria-label="Hofstadter butterfly: allowed energies across, magnetic flux up"></canvas>
+    <p class="cap">Across: energy, from −4 to 4. Up: flux from 0 to 1. Each green row is one fraction p/q with q up to 40. Gold rows are this number's own fractions; the dashed line is the number itself.</p>
+  </section>
+
+  <section class="panel" aria-label="One level">
+    <h2>One level at a time</h2>
+    <div class="row" id="levels"></div>
+    <canvas id="strip" width="1600" height="220" role="img" aria-label="Energy bands of the chosen fraction"></canvas>
+    <div class="readout" id="levelLine"></div>
+    <div class="row">
+      <button class="play" id="play" type="button">▶ Play the bands</button>
+      <span class="cap">Low energy to high. Each band is one note; the gaps are the rests.</span>
+    </div>
+  </section>
+
+  <section class="panel" aria-label="All levels">
+    <h2>All levels of this number</h2>
+    <div class="tablewrap"><table id="tbl"><thead><tr><th>fraction</th><th>bands</th><th>grouped by the widest gaps</th><th>total width</th></tr></thead><tbody></tbody></table></div>
+    <p class="cap">Total width is the combined length of all bands. It shrinks like 9.33/q, so for an irrational flux nothing solid is left: the allowed energies form a dust, like the Cantor sets of the fractals chapter.</p>
+  </section>
+
+  <p class="note">What is known and what is ours. The spectrum is Hofstadter's (1976); the splitting of bands by the continued fraction, and the whole numbers attached to the gaps (they set the measured Hall conductance), are established physics, seen in graphene superlattices in 2013. Reading the levels as the bars, phrases and sections of a number's rhythm is this project's addition.</p>
+</div>

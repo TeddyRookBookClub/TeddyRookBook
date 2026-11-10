@@ -1,0 +1,31 @@
+/* butterfly: ported from docs/papers/rhythm-of-numbers/instruments/butterfly-instrument.html by scripts/rhythm/port-instrument.py. Edit the source, then rerun. */
+.rni{--bg:#ffffff;--surface:var(--entry,#fff);--ink:var(--primary,#1e1e1e);--muted:#566159;--line:#d5ddd8;--band:#00562f;--band-soft:#9fd3b9;--gold:#b8963e;--gold-soft:#f1e6c8;--gold-t:#7a5b12;--on:#ffffff;--focus:#0b5cad;--sun:#b8963e;--display:inherit;--body:inherit;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+[data-theme="dark"] .rni{--bg:#10261a;--surface:var(--entry,#18201c);--ink:var(--primary,#e6ece8);--muted:#a9b5ae;--line:#3a4640;--band:#6cc79a;--band-soft:#2f6b55;--gold:#e2c072;--gold-soft:#4a3a16;--gold-t:#e2c072;--on:#10261a;--focus:#86b4ff;--sun:#e2c072}
+.rni .wrap{max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px;}
+.rni h1{font-family: var(--display); font-weight: 600; font-size: clamp(26px, 5vw, 38px); line-height: 1.1; margin: 0; text-wrap: balance;}
+.rni h2{font-family: var(--display); font-weight: 600; font-size: 19px; margin: 0;}
+.rni p{margin: 0; max-width: 68ch;}
+.rni .lede{color: var(--muted);}
+.rni .eyebrow{font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold);}
+.rni .row{display: flex; flex-wrap: wrap; gap: 8px; align-items: center;}
+.rni button, .rni input{font: inherit;}
+.rni .chip{border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 6px 13px; cursor: pointer;}
+.rni .chip[aria-pressed="true"]{background: var(--band); border-color: var(--band); color: var(--bg); font-weight: 600;}
+.rni .chip:focus-visible, .rni input:focus-visible, .rni .play:focus-visible{outline: 2px solid var(--focus); outline-offset: 2px;}
+.rni .terms{display: flex; flex-wrap: wrap; gap: 8px; align-items: center;}
+.rni .terms label{color: var(--muted); font-size: 13px;}
+.rni .terms input{min-width: 0; flex: 1 1 200px; max-width: 320px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 7px 10px; font-family: var(--mono); font-size: 13px;}
+.rni .panel{background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 12px; min-width: 0;}
+.rni canvas{display: block; width: 100%; height: auto; max-width: 100%;}
+.rni .cap{color: var(--muted); font-size: 13px;}
+.rni .readout{font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere;}
+.rni .readout b{color: var(--band); font-weight: 500;}
+.rni .readout .g{color: var(--gold);}
+.rni .play{border: 0; background: var(--gold); color: var(--bg); font-weight: 600; border-radius: 8px; padding: 8px 16px; cursor: pointer;}
+.rni .tablewrap{overflow-x: auto;}
+.rni table{border-collapse: collapse; width: 100%; font-size: 13.5px; font-variant-numeric: tabular-nums;}
+.rni th, .rni td{text-align: left; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line); vertical-align: top;}
+.rni th{color: var(--muted); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: .05em;}
+.rni td.mono{font-family: var(--mono); font-size: 12.5px;}
+.rni .note{border-left: 3px solid var(--gold); padding-left: 12px; color: var(--muted);}
+.rni{display:block;min-width:0;max-width:100%;color:var(--ink);font-size:.97rem;line-height:1.55;margin-top:1.2rem}.rni .wrap>*,.rni .panel>*{min-width:0;max-width:100%}.rni .readout{overflow-wrap:anywhere}.rni *{box-sizing:border-box}.rni .wrap{max-width:none}.rni h2{color:var(--ink)}.rni .eyebrow,.rni .readout .g{color:var(--gold-t)}.rni .play{background:var(--band);color:var(--on)}.rni .chip[aria-pressed="true"]{color:var(--on)}.rni button{min-height:2.4rem}.rni .note{color:var(--muted);border-left-color:var(--gold)}

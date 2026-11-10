@@ -6,7 +6,7 @@ The built PDF is `static/pdfs/The-Rhythm-of-Numbers-paper.pdf`; its page is `/co
 
 ## Layout
 
-- `paper/` – the LaTeX source: `main.tex` (preamble and chapter list), `front.tex`, `ch01_intro.tex` … `ch16_openq2.tex`, `ch17_thirdlook.tex`,
+- `paper/` – the LaTeX source: `main.tex` (preamble and chapter list), `front.tex`, `ch01_intro.tex` … `ch16_openq2.tex`, `ch17_thirdlook.tex`, `ch18_largesmall.tex`,
   `appA_algorithms.tex`, `appB_methods.tex`, `appC_repro.tex`, `appD_prime.tex`, and `refs.bib` (every entry checked against a publisher
   page, catalogue or citing source; fields that could not be confirmed were left out).
 - `paper/gen/` – LaTeX macros written by the scripts. The text uses only these macros for computed values, so never edit
@@ -57,3 +57,9 @@ error if any asserted fact (for example 292 × 113 = 32,996, or the OEIS lists o
 After rebuilding, update `pdf_size` (pages and size) in content/connections/rhythm-of-numbers/paper/_index.md and the
 page and figure counts ("147 pages", "40 figures") on the hub card (layouts/connections/rhythm.html), the fractals page card
 (layouts/connections/rhythm-fractals.html) and the Connections hub (content/connections/_index.md).
+
+`compute/c13_large/` belongs to Chapter 18 ("Large and small: the same patterns in atoms and in orbits"). These are Teddy
+Rook's own scripts, kept as he wrote them (November 2026): `verify_ch18.py` recomputes every number printed in the
+chapter (250 checks, about two minutes; it builds `tr.so` from `tr.c` by itself; `--big` adds the 3 x 10^7 row of
+Table 18.2 and needs about 4 GB of memory). Unlike the other chapters, Chapter 18's numbers are typed in its text and
+not inserted from `paper/gen/`. `indep_check.py` is a separate spot check written without his scripts.

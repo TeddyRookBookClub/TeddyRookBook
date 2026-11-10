@@ -1,0 +1,42 @@
+{{- /* kepler instrument panels: written by scripts/rhythm/port-instrument.py from kepler-figures-instrument.html. Do not edit here. */ -}}
+<div class="wrap">
+
+  <section class="panel" aria-label="Choose two bodies">
+    <div class="row" id="presets"></div>
+    <div class="fields">
+      <label for="p1">or two periods of your own: inner</label>
+      <input id="p1" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="1">
+      <label for="p2">outer</label>
+      <input id="p2" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="1.618034">
+      <button class="chip" id="usePeriods" type="button">Use these periods</button>
+    </div>
+    <div class="readout" id="numLine"></div>
+  </section>
+
+  <section class="panel" aria-label="The figure">
+    <h2 id="figTitle">The meetings, seen from the centre</h2>
+    <div class="stage"><canvas id="sky" width="1240" height="1240" role="img" aria-label="Two orbits seen from above; each meeting of the two bodies is marked on the outer circle and joined to the one before"></canvas></div>
+    <div class="row">
+      <button class="play" id="play" type="button">▶ Play</button>
+      <button class="chip" id="step" type="button">Next meeting</button>
+      <button class="chip" id="skip" type="button">Draw 50 more</button>
+      <button class="chip" id="reset" type="button">Start again</button>
+      <span class="speed"><label for="speed">speed</label><input id="speed" type="range" min="0" max="100" value="38"></span>
+    </div>
+    <div class="row">
+      <button class="chip" id="mCirc" type="button" aria-pressed="true">Circles, steady motion</button>
+      <button class="chip" id="mEll" type="button" aria-pressed="false">Ellipses, Kepler's laws</button>
+      <button class="chip" id="sound" type="button" aria-pressed="false">Sound: off</button>
+    </div>
+    <div class="readout" id="liveLine"></div>
+    <p class="cap" id="skyCap"></p>
+  </section>
+
+  <section class="panel" aria-label="The ladder">
+    <h2>The ladder behind the figure</h2>
+    <div class="tablewrap"><table id="tbl"><thead><tr><th>fraction</th><th>figure</th><th>one round</th><th>turn per round</th><th>rounds to turn by one point</th><th>next term</th></tr></thead><tbody></tbody></table></div>
+    <p class="cap">Each meeting falls a fixed step further round the circle. The fractions closest to that step are the rungs of its continued fraction. A fraction p/q is a figure with q points, each joined to the one p places on. Choose a rung to colour the picture by its rounds: the current round is gold, earlier ones green. The number of rounds before the figure has turned by one of its own points always lies between the next term and the next term plus two.</p>
+  </section>
+
+  <p class="note">What is known and what is ours. The cycles are ancient: 8 years for Venus, 59 for Saturn, 79 for Mars and 83 for Jupiter were used in Babylon, and Kepler drew the Jupiter and Saturn triangle himself. He put its full turn at 794 years, which is 40 meetings; with the long-term mean motions used here it is 883 years, the same as the period of the slow swing of Jupiter and Saturn that astronomers call the great inequality. That meetings step round the circle by 1/(r − 1) of a turn, where r is the ratio of the periods, is elementary. Reading the figure as a rung of the continued fraction, and its slow turning as the next term, is this project's addition. Years shown are for meetings seen from the Sun, from mean orbits, and are approximate.</p>
+</div>
