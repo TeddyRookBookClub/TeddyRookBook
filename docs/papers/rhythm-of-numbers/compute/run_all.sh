@@ -23,4 +23,8 @@ python3 c11_openq_matrix.py
 python3 c11_openq_edo.py
 python3 c11_openq_primes.py
 python3 c12_openq2.py               # Chapter 16: a second look (about 3 minutes)
+python3 c12_third_pisearch.py       # Chapter 17: q_n for 20,000 < n <= 25,332 (about an hour, resumable)
+python3 c12_third_pi.py             # Chapter 17: the probable prime q_25332 and the heuristic (about 3 minutes)
+python3 c12_third_e.py              # Chapter 17: e completed (seconds)
+python3 c12_third_matrix.py         # Chapter 17: extreme eigenvalues of the correlation matrix (about a minute)
 echo "all numbers and figures rebuilt"

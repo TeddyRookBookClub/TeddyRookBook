@@ -2,15 +2,20 @@
 
 The full source of this work, including the \LaTeX{} files, the bibliography and every script, is kept with the companion site's source under \texttt{docs/papers/rhythm-of-numbers/}. Running the scripts in order regenerates every figure (\texttt{paper/figures/}) and every number in the text: each script writes a file of \LaTeX{} macros to \texttt{paper/gen/}, and the text uses only those macros for computed values. Scripts stop with an error if any asserted fact fails.
 
-\begin{table}[h]
-\centering
-\caption[The scripts]{The scripts, in the order \texttt{run\_all.sh} runs them, with what each computes.}
-\label{tab:scripts}
-\small
-\begin{tabularx}{\textwidth}{lX}
+{\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.36\textwidth}>{\raggedright\arraybackslash}p{0.6\textwidth}@{}}
+\caption[The scripts]{The scripts, in the order \texttt{run\_all.sh} runs them, with what each computes.}\label{tab:scripts}\\
 \toprule
 script & computes \\
 \midrule
+\endfirsthead
+\multicolumn{2}{@{}l}{\footnotesize\itshape \Cref{tab:scripts}, continued}\\
+\toprule
+script & computes \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
 \texttt{common.py} & shared helpers: certified continued fractions, convergents, standard words, the floor rule, macro output, figure style \\
 \texttt{c1\_cf.py} & terms of $\pi$, $e$, $\sqrt2$, $\varphi$, $\log_2(3/2)$; the starting guess; convergent table; Legendre and best-approximation checks; nested-block checks; beats 32,996 and 33,102; three-gap check; Gauss--Kuzmin, Khinchin and Lévy statistics \\
 \texttt{c2\_music.py} & equal temperaments, comma, thirds; Bjorklund vs.\ Christoffel; Euclidean table; circle map, tongues, staircase and Farey rule; Farey counts \\
@@ -29,9 +34,10 @@ script & computes \\
 \texttt{c11\_openq\_matrix.py} \addedon{\revA} & spectra of the correlation matrix to $m = 6{,}000$, the top eigenvalue to $m = 10^6$ (about 2 minutes) \\
 \texttt{c11\_openq\_edo.py}, \texttt{c11\_openq\_primes.py} \addedon{\revA} & equal-temperament rankings and tests; tables and figure for $\pi$'s prime convergents and for Fibonacci and Pell primes \\
 \texttt{c12\_openq2.py} \addedon{\revB} & Chapter~\ref{ch:openq2}: the sets $E_q$ and their overlaps for primes below 3{,}000; $e$ modulo primes; near-copies, spacing ratios and bounds for the correlation matrix; the commas of 171; the Doeblin--Lenstra and serial-correlation tests, calibrated on 300 random reals (about 3 minutes) \\
-\bottomrule
-\end{tabularx}
-\end{table}
+\texttt{c12\_third\_pisearch.py} \addedon{\revC} & Chapter~\ref{ch:third}: the search of $q_n$, $20{,}000 < n \le 25{,}332$, after Teddy Rook's own search (resumable; about an hour) \\
+\texttt{c12\_third\_pi.py} \addedon{\revC} & $q_{25332}$ rebuilt from two independent sources of $\pi$, checked against the site's copy and tested; the heuristic to $n = 25{,}332$; the digits of Appendix~\ref{app:prime} (about 3 minutes) \\
+\texttt{c12\_third\_e.py}, \texttt{c12\_third\_matrix.py} \addedon{\revC} & closed forms, forced divisors and periods for $e$; extreme eigenvalues, bounds and the trace of the inverse of the correlation matrix to $m = 10^6$ (about a minute) \\
+\end{longtable}}
 
 \paragraph{Building.} With Python 3 and the packages of Appendix~\ref{app:methods} installed, run \texttt{sh run\_all.sh} in \texttt{compute/}, then \texttt{latexmk -xelatex main.tex} in \texttt{paper/}. Random choices use fixed seeds, so a rebuild reproduces the same numbers, except that the GUE samples (seeded too) and timings may differ across library versions in the last digit.
 

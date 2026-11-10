@@ -1,0 +1,59 @@
+{{ define "main" }}
+{{- /* /connections/rhythm-of-numbers/what-it-means/: "What it all means", a plain-words summary of the work on the open
+   questions (Chapters 15-17 of the paper) for readers who don't follow the math. All text is in
+   content/connections/rhythm-of-numbers/what-it-means/_index.md: short (the short version), questions (the six open
+   questions in everyday terms, with status), and sections (heading, paragraphs, optional proved/evidence lists).
+   Keep every claim as the paper states it. Styles: rn.css and prime.css; no scripts. */ -}}
+{{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
+{{ partial "inline/ml-css.html" "connections/rhythm/prime.css" }}
+{{- $hub := "connections/rhythm-of-numbers/" | relURL }}
+<article class="rn rn-np">
+<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Where Music, Patterns, Math and Chemistry Meet</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <span>What it all means</span></nav>
+
+<header class="rn-hero">
+  <p class="rn-eyebrow">The Rhythm of Numbers · In plain words · added {{ .Params.added }} (UTC)</p>
+  <h1>What it all means: <em>the open questions in plain words</em></h1>
+  <p class="rn-lede">{{ .Params.lede }}</p>
+</header>
+
+<section class="np-short" aria-labelledby="np-short-h">
+  <h2 id="np-short-h" class="rn-h3">The short version</h2>
+  <ul>{{ range .Params.short }}<li>{{ . | markdownify }}</li>{{ end }}</ul>
+</section>
+
+<section class="np-sec" id="questions" aria-labelledby="np-q-h">
+  <h2 id="np-q-h">The six questions, in everyday terms</h2>
+  <p class="rn-small rn-muted">{{ .Params.questions_intro }}</p>
+  <div class="np-cards">
+    {{- range $i, $q := .Params.questions }}
+    <div class="np-card"><h3>{{ add $i 1 }}. {{ $q.q }} <span class="np-tag{{ if $q.solved }} np-proved{{ end }}">{{ $q.status }}</span></h3><p>{{ $q.text | markdownify }}</p></div>
+    {{- end }}
+  </div>
+</section>
+
+{{- range .Params.sections }}
+<section class="np-sec" id="{{ .id }}" aria-labelledby="{{ .id }}-h">
+  <h2 id="{{ .id }}-h">{{ .h }}</h2>
+  {{- with .paras }}<div class="np-prose">{{ range . }}<p>{{ . | markdownify }}</p>{{ end }}</div>{{ end }}
+  {{- with .proved }}
+  <div class="np-two">
+    <div><h3><span class="np-tag np-proved">Proved</span></h3><ul>{{ range . }}<li>{{ . | markdownify }}</li>{{ end }}</ul></div>
+    <div><h3><span class="np-tag">Evidence, not proof</span></h3><ul>{{ range $.Params.evidence }}<li>{{ . | markdownify }}</li>{{ end }}</ul></div>
+  </div>
+  {{- end }}
+  {{- with .after }}<div class="np-prose">{{ range . }}<p>{{ . | markdownify }}</p>{{ end }}</div>{{ end }}
+</section>
+{{- end }}
+
+<section class="np-sec" aria-labelledby="np-more-h">
+  <h2 id="np-more-h">Read more</h2>
+  <p class="np-next"><a href="{{ "connections/rhythm-of-numbers/new-prime/" | relURL }}">The new probable prime, all {{ .Params.digits }} digits →</a><a href="{{ $hub }}#open-questions">Working on the open questions →</a><a href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}">The paper →</a></p>
+</section>
+
+<footer class="rn-notes" aria-labelledby="np-mn-h">
+  <h2 id="np-mn-h" class="rn-h3">Notes and sources</h2>
+  <ul>{{ range .Params.notes }}<li>{{ . | markdownify }}</li>{{ end }}</ul>
+  <p><a href="{{ $hub }}">← Back to The Rhythm of Numbers</a></p>
+</footer>
+</article>
+{{ end }}

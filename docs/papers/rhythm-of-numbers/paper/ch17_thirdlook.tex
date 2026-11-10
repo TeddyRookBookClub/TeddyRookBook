@@ -1,0 +1,364 @@
+\chapter{A third look at the open questions}\label{ch:third}
+\addednote{\revC}
+
+This round settles two loose ends from Chapter~\ref{ch:openq2} with proofs, adds a structural theorem about $e$, and finds one new probable prime for $\pi$. It follows Teddy Rook's notes and scripts (November 2026): the statements and proofs are his, edited into the style of this paper, and every one was checked again for this chapter, line by line and with independent scripts (\texttt{c12\_third\_*.py}, Appendix~\ref{app:repro}). Questions 2, 3, 4 and 6 are untouched.
+\begin{itemize}
+\item \emph{Question 5, proved.} The largest eigenvalue of the correlation matrix satisfies $\ln\lambda_{\max}(C_m) = (2 + o(1))\sqrt{\ln m/\ln\ln m}$. \Cref{thm:ob-top} had left the order open between $\sqrt{\ln m}/\ln\ln m$ and $\ln m/\ln\ln m$.
+\item \emph{Question 5, proved.} The smallest eigenvalue obeys the mirror law $\ln(1/\lambda_{\min}(C_m)) = (2 + o(1))\sqrt{\ln m/\ln\ln m}$.
+\item \emph{Question 5, proved.} The eigenvalue distribution converges to a limiting law as $m \to \infty$, and the mean of $1/\lambda$ tends to $\prod_p(1 + 2/(p(p-1))) = \ThKappa\ldots$ None of the four exact bulk constants now known is $6/\pi^2$.
+\item \emph{Question 1, proved (for $e$).} Modulo an odd prime $\ell$, $e$'s denominators change sign every $3\ell$ steps and its numerators repeat, so the periods are exactly $6\ell$ and $3\ell$. Every integer $m$ divides $q_{3m-1}$, $q_{3m-3}$ and $q_{3m-7}$, so a denominator of $e$ can be prime only at $n = 2$ or $n \equiv 1 \pmod 3$.
+\item \emph{Question 1, evidence (for $\pi$).} The denominator of $\pi$'s convergent number $25{,}332$ is a \ThDigits-digit probable prime, found by Teddy Rook: the eleventh prime denominator, and the first beyond the limit recorded in the OEIS.
+\end{itemize}
+Nothing here proves anything about $\pi$. The labels mean what they meant in Chapter~\ref{ch:openq}: a Theorem, Proposition or Lemma without a citation in its heading is proved here from cited results; \emph{Known} marks what others found first; numbers from computation are numerical evidence.
+
+\section{Question 5: the largest eigenvalue, settled to leading order}\label{sec:th-top}
+\addednote{\revC}
+
+\Cref{thm:ob-top} trapped the top eigenvalue of $C_m = [(\gcd(a,b)-1)/\sqrt{(a-1)(b-1)}]_{a,b=2}^m$ between $\exp(2\sqrt{\ln m}/\ln\ln m)$ and $\exp(\ln 2\cdot\ln m/\ln\ln m)$. The true rate is strictly between the two, and both the order and the constant can be pinned down. Write $G_m = [\gcd(a,b)/\sqrt{ab}]_{a,b=1}^m$, as in that theorem.
+
+\begin{theorem}\label{thm:th-top}
+As $m \to \infty$,
+\[
+  \ln\lambda_{\max}(C_m) = (2 + o(1))\sqrt{\frac{\ln m}{\ln\ln m}},
+\]
+and the same holds for $G_m$.
+\end{theorem}
+
+So the exponent is larger than the old lower bound by a factor $\sqrt{\ln\ln m}$, and far below the old upper bound. The proof has two halves that meet: a Schur test with multiplicative weights from above, and a multiplicative test vector (a ``resonator'') from below. We use standard consequences of the prime number theorem \citep[Ch.~XXII]{HardyWright2008}: as $y \to \infty$ and $\ln z/\ln y \to \infty$,
+\begin{equation}\label{eq:th-pnt}
+  \sum_{y < p \le z}\frac{1}{p\ln p} \sim \frac{1}{\ln y}, \qquad \sum_{y < p \le z}\frac{1}{p\ln^2 p} \sim \frac{1}{2\ln^2 y}, \qquad \sum_{y < p \le z}\frac1p = \ln\frac{\ln z}{\ln y} + o(1),
+\end{equation}
+and the first two hold with $z = \infty$ as well.
+
+\paragraph{The upper bound.}
+
+\begin{lemma}[valid for every $m$]\label{lem:th-upper}
+Let $\sigma > 0$ and $y \ge 1$ be such that $p(p^\sigma - 1) > 1$ for every prime $p > y$. Then
+\[
+  \lambda_{\max}(G_m) \le m^\sigma\prod_{p \le y}\bigl(1 - p^{-1/2}\bigr)^{-2}\prod_{p > y}\Bigl(1 - \frac{1}{p\,(p^\sigma - 1)}\Bigr)^{-1}.
+\]
+\end{lemma}
+
+\begin{proof}
+$G_m$ is symmetric with non-negative entries, so for any positive weights $w$, $\lambda_{\max}(G_m) \le \max_{a \le m}(G_mw)_a/w_a$ (Schur's test:
+\[
+  |x^{\mathsf T}Ax| \le \sum_{a,b}A_{ab}\tfrac12\bigl(x_a^2w_b/w_a + x_b^2w_a/w_b\bigr) = \sum_a x_a^2(Aw)_a/w_a\text{).}
+\] Take $w$ completely multiplicative with $w(p) = t_p$, where $t_p = 1$ for $p \le y$ and $t_p = p^{-1/2}/(1 - p^{-\sigma})$ for $p > y$. Since $(m/b)^\sigma \ge 1$ for $b \le m$, extending the sum to all $b$ gives, for $a = \prod p^{e_p}$,
+\[
+  \frac{(G_mw)_a}{w(a)} \le m^\sigma\prod_p E_p(e_p), \qquad E_p(e) = \frac{1}{(\sqrt p\,t_p)^e}\sum_{k \ge 0}p^{\min(k,e)}\bigl(t_pp^{-1/2-\sigma}\bigr)^k.
+\]
+Write $s = p^{-\sigma}$ and $x_p = t_pp^{-1/2-\sigma}$. Splitting the sum at $k = e$, $E_p(e) = \sum_{k<e}(\sqrt p\,t_p)^{k-e}s^k + s^e/(1 - x_p)$. For $p > y$ the choice of $t_p$ makes $1/(\sqrt p\,t_p) = 1 - s$, so $E_p(e) \le \frac{1}{1-x_p}\sum_{k=0}^{e}\binom{e}{k}(1-s)^{e-k}s^k = \frac{1}{1-x_p}$ with $x_p = 1/(p(p^\sigma-1))$: every such prime dividing $a$ contributes no more than if it did not. For $p \le y$, $x_p \le p^{-1/2}$ and the first sum is at most $\sum_{j\ge1}p^{-j/2}$, so $E_p(e) \le (1 + p^{-1/2})/(1 - p^{-1/2}) \le (1 - p^{-1/2})^{-2}$. Multiplying over $p$ gives the lemma.
+\end{proof}
+
+\begin{proof}[Upper bound in \cref{thm:th-top}]
+Put $L = \sqrt{\ln m\cdot\ln\ln m}$, $\sigma = 1/L$ and $y = L^2/(\ln L)^4$. For $p > y$, $p^\sigma - 1 \ge \sigma\ln p$, so $1/(p(p^\sigma - 1)) \le L/(p\ln p) \le L/(y\ln y) \to 0$, and by \eqref{eq:th-pnt} the second product is $\exp((1 + o(1))L/\ln y) = \exp((1 + o(1))L/(2\ln L))$. The first product is $\exp(O(\sqrt y/\ln y)) = \exp(O(L/\ln^3L))$, and $m^\sigma = \exp(\ln m/L)$. Since $\ln L = (\tfrac12 + o(1))\ln\ln m$, both $\ln m/L$ and $L/(2\ln L)$ equal $(1 + o(1))\sqrt{\ln m/\ln\ln m}$. Finally every entry of $C_m$ is at most twice the matching entry of $G_m$ (proof of \cref{thm:ob-top}), so $\lambda_{\max}(C_m) \le 2\lambda_{\max}(G_m)$.
+\end{proof}
+
+\paragraph{The lower bound.}
+
+\begin{lemma}[valid for every $m$]\label{lem:th-lower}
+Let $f$ be multiplicative, supported on square-free integers, with $f(p) = f_p \ge 0$ and only finitely many $f_p \ne 0$. For every $\sigma > 0$, $\lambda_{\max}(C_m)$ is at least
+\[
+  \prod_p\Bigl(1 + \frac{2f_p}{\sqrt p\,(1 + f_p^2)}\Bigr)\Bigl[1 - \frac{2}{m^\sigma}\prod_p\Bigl(1 + (p^\sigma - 1)\Bigl(f_p^2 + \frac{f_p}{\sqrt p}\Bigr)\Bigr) - \prod_p\frac{(1 + f_p/\sqrt p)^2}{1 + f_p^2 + 2f_p/\sqrt p}\Bigr].
+\]
+\end{lemma}
+
+\begin{proof}
+Use the test vector $x_a = f(a)$, $2 \le a \le m$. Because $\gcd(a,b) - 1 \ge 0$ and $(a-1)(b-1) \le ab$,
+\[
+  x^{\mathsf T}C_mx \ge \sum_{a,b \le m}f(a)f(b)\frac{\gcd(a,b) - 1}{\sqrt{ab}} = \sum_{a,b \le m}f(a)f(b)\frac{\gcd(a,b)}{\sqrt{ab}} - \Bigl(\sum_{a \le m}\frac{f(a)}{\sqrt a}\Bigr)^2
+\]
+(the terms with $a = 1$ or $b = 1$ vanish). Over all $a, b \ge 1$ the first sum is the Euler product $S_\infty = \prod_p(1 + f_p^2 + 2f_p/\sqrt p)$, because $\gcd(a,b)/\sqrt{ab}$ factors over primes for square-free $a, b$. The pairs with $a > m$ contribute at most $m^{-\sigma}\sum a^\sigma f(a)f(b)\gcd(a,b)/\sqrt{ab} = m^{-\sigma}\prod_p(1 + p^\sigma f_p^2 + (1 + p^\sigma)f_p/\sqrt p)$, which is at most $m^{-\sigma}S_\infty\prod_p(1 + (p^\sigma - 1)(f_p^2 + f_p/\sqrt p))$; the same holds for $b > m$. The subtracted square is at most $\prod_p(1 + f_p/\sqrt p)^2$, and $x^{\mathsf T}x < \prod_p(1 + f_p^2)$. Divide.
+\end{proof}
+
+\begin{proof}[Lower bound in \cref{thm:th-top}]
+Fix $0 < c < 1$, put $L = \sqrt{c\ln m\cdot\ln\ln m}$, and take $f_p = L/(\sqrt p\ln p)$ for $L^2 < p \le \exp(\ln^2L)$ and $f_p = 0$ otherwise; let $\sigma = (\ln L)^{-3}$. This is Soundararajan's resonator \citep{Soundararajan2008}. On this range $f_p \le 1/(2\ln L)$, and:
+\begin{itemize}
+\item the main product has logarithm $(1 + o(1))\sum 2L/(p\ln p) = (1 + o(1))L/\ln L = (2\sqrt c + o(1))\sqrt{\ln m/\ln\ln m}$, by \eqref{eq:th-pnt};
+\item $\sigma\ln p \le 1/\ln L \to 0$ on the range, so $p^\sigma - 1 \le (1 + o(1))\sigma\ln p$, and the second product is at most $\exp((1 + o(1))\sigma L^2/(2\ln L)) = \exp((c + o(1))\sigma\ln m)$ (the part with $f_p/\sqrt p$ adds only $O(\sigma L\ln\ln L)$); so $m^{-\sigma}$ times it tends to $0$, because $\sigma\ln m \to \infty$;
+\item the third product is at most $\exp(-\sum f_p^2(1 - 1/p)/(1 + f_p^2 + 2f_p/\sqrt p)) \le \exp(-\sum f_p^2/8) \to 0$, because $\sum f_p^2$ is of order $L^2/\ln^2L$.
+\end{itemize}
+So the bracket tends to 1, and letting $c \to 1$ gives the lower bound. The same vector gives it for $G_m$.
+\end{proof}
+
+\paragraph{Known, and how this relates to it.} The method is the resonance method. Soundararajan's Theorem~2.1 evaluates the analogous maximum for the one-sided form $\sum r(m)r(mk)/\sqrt k$ over $mk \le N$ as $\exp((1 + o(1))\sqrt{\ln N/\ln\ln N})$ \citep{Soundararajan2008}. $G_m$ is, up to a logarithmic weight, that divisor matrix times its transpose, which is why the exponent here is exactly twice his. For arbitrary sets of $N$ integers instead of an interval, the largest possible GCD sum is bigger, of order $\exp(A\sqrt{\ln N\cdot\ln\ln\ln N/\ln\ln N})$ \citep{AistleitnerBerkesSeip2015,BondarenkoSeip2015,BondarenkoSeip2017}. Hilberdink stated that $\ln\lambda_{\max}(G_m)$ lies between two constant multiples of $\sqrt{\ln m/\ln\ln m}$, without giving the constants \citep{Hilberdink2009}. We did not find \cref{thm:th-top} stated for this matrix, but a specialist would regard it as a corollary of those techniques.
+
+\paragraph{Evidence, with a warning.} At $m = 10^6$ the formula $\exp(2\sqrt{\ln m/\ln\ln m})$ gives $\ThPredSix$ against the true $\ThLmaxSix$, but that agreement is an accident. At sizes one can compute, the primes below about 30 contribute most of the eigenvalue, and they sit inside the $o(1)$; the ratio $\ln\lambda_{\max}/\sqrt{\ln m/\ln\ln m}$ climbs from $1.55$ at $m = 1{,}000$ to $2.01$ at $m = 10^6$ (\cref{tab:th-mat}). The explicit bound of \cref{lem:th-upper} at $m = 10^4$, optimized over $\sigma$ and $y$, is $\ThLemmaTwoFour$ for $G_m$, against a true value of $\ThGmaxFour$; evaluating Schur's ratio for the same kind of weights by computer does much better ($\lambda_{\max}(C_m) \le \ThSchurSix$ at $m = 10^6$, a bound checked by computation, not by hand). \Cref{lem:th-lower}, evaluated for a small family of resonators at the sizes of the table, never exceeds $\ThExplowMax$, while $\lambda_{\max} \ge 18$ there: the asymptotic regime starts far beyond what we can compute. The empirical fit $(2/\pi^2)\ln^2m\cdot\ln\ln m$ of \cref{tab:ob-fit} remains the better description of the computable range; \cref{thm:th-top} says what replaces it eventually.
+
+\begin{table}[t]
+\centering
+\caption[The top eigenvalue of $C_m$ and its bounds]{The largest eigenvalue of $C_m$ (Lanczos method): the best Rayleigh quotient of a resonator test vector (a lower bound); $\lambda_{\max}$; $\exp(2\sqrt{L/\ln L})$ with $L = \ln m$; twice Schur's ratio for $G_m$ evaluated by computer, and twice the bound of \cref{lem:th-upper} (both upper bounds); the ratios $\ln\lambda_{\max}/\sqrt{L/\ln L}$ and $\ln(1/\lambda_{\min})/\sqrt{L/\ln L}$, which both tend to 2; and $\operatorname{tr}C_m^{-1}/(m-1)$, which tends to $\kappa = \ThKappa\ldots$}
+\label{tab:th-mat}
+\small
+\begin{tabular}{rrrrrrrrr}
+\toprule
+$m$ & resonator & $\lambda_{\max}$ & $e^{2\sqrt{L/\ln L}}$ & Schur & \cref{lem:th-upper} & $\frac{\ln\lambda_{\max}}{\sqrt{L/\ln L}}$ & $\frac{\ln(1/\lambda_{\min})}{\sqrt{L/\ln L}}$ & $\frac{\operatorname{tr}C^{-1}}{m-1}$ \\
+\midrule
+\ThMatTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Question 5: the smallest eigenvalue mirrors the largest}\label{sec:th-min}
+\addednote{\revC}
+
+Chapter~\ref{ch:openq} noted that the smallest eigenvalue ``shrinks slowly''. It shrinks at exactly the rate at which the largest grows.
+
+\begin{proposition}[the inverse]\label{prop:th-inv}
+For $2 \le a, b \le m$,
+\[
+  (C_m^{-1})_{ab} = \sqrt{(a-1)(b-1)}\sum_{\substack{d \le m\\ a \mid d,\ b \mid d}}\frac{\mu(d/a)\,\mu(d/b)}{\varphi(d)}.
+\]
+\end{proposition}
+
+\begin{proof}
+By \cref{prop:oq-gram}, $C_m = DV\Phi V^{\mathsf T}D$, and the inverse of the divisor matrix $V$ is the Möbius matrix with entries $\mu(a/d)$ for $d \mid a$ (restricting to $2, \dots, m$ does not change this, because the index 1 sits in a separate block of the triangular matrix).
+\end{proof}
+
+\begin{theorem}[the mirror law]\label{thm:th-min}
+As $m \to \infty$,
+\[
+  \ln\frac{1}{\lambda_{\min}(C_m)} = (2 + o(1))\sqrt{\frac{\ln m}{\ln\ln m}},
+\]
+so the condition number of $C_m$ is $\exp((4 + o(1))\sqrt{\ln m/\ln\ln m})$.
+\end{theorem}
+
+\begin{proof}[Proof of the upper bound for $\lambda_{\max}(C_m^{-1}) = 1/\lambda_{\min}(C_m)$]
+The absolute values of the entries of $C_m^{-1}$ are at most $N_{ab} = \sqrt{ab}\sum_d\mu^2(d/a)\mu^2(d/b)/\varphi(d)$, the sum over $d \le m$ divisible by $a$ and $b$, so $\lambda_{\max}(C_m^{-1}) \le \lambda_{\max}(N)$ (for any $x$, $|x^{\mathsf T}C_m^{-1}x| \le |x|^{\mathsf T}N|x|$), and Schur's test applies to $N$. Take $w$ completely multiplicative, $w(p) = t_p$, and use $(m/d)^\sigma \ge 1$. If $p^e$ exactly divides $a$, only the exponents $e$ and $e + 1$ of $p$ in $d$ occur, and for each, only the exponents $k - 1$ and $k$ in $b$, because $d/a$ and $d/b$ must be square-free. With $s = p^{-\sigma}$ and $c = p^{-1/2}/t_p$ the local factor is
+\[
+  E_p(0) = 1 + \frac{s}{p-1} + \frac{s}{(p-1)c}, \qquad E_p(e) = s^e\,\frac{p(1 + c)}{p-1} + s^{e+1}\Bigl(\frac{1}{p-1} + \frac{1}{(p-1)c}\Bigr) \quad (e \ge 1).
+\]
+For $p > y$ choose $c = p^\sigma(1 - 1/p) - 1$, which is positive once $(p-1)\sigma\ln p > 1$. Then $s\,p(1+c)/(p-1) = 1$, so $E_p(e) \le s^{e-1} + s^{e+1}(E_p(0) - 1)/s \le E_p(0)$ for all $e \ge 1$, and $c \ge (1 - o(1))\sigma\ln p$. For $p \le y$ take $t_p = 1$; then $E_p(e)$ and $E_p(0)$ are at most $(1 + p^{-1/2})/(1 - p^{-1/2}) = 1 + O(p^{-1/2})$. With $\sigma = 1/L$, $y = L^2/(\ln L)^4$ and $L = \sqrt{\ln m\cdot\ln\ln m}$ as before, the sum of $s/((p-1)c)$ over $p > y$ is at most $(1 + o(1))L/\ln y$, exactly as for the largest eigenvalue, and the only new term is $\sum_{p > y}p^{-\sigma}/(p-1) = O(\ln L)$, which is negligible. The total is again $\exp((2 + o(1))\sqrt{\ln m/\ln\ln m})$.
+\end{proof}
+
+\begin{proof}[Proof of the lower bound]
+By \cref{prop:th-inv},
+\[
+  x^{\mathsf T}C_m^{-1}x = \sum_{d \le m}\frac{1}{\varphi(d)}\Bigl(\sum_{a \mid d}\mu(d/a)\sqrt{a-1}\,x_a\Bigr)^2.
+\] Take $x_a = \mu(a)f(a)\sqrt{a/(a-1)}$ with the same $f$ as in the proof of \cref{thm:th-top}. For square-free $d$ built from the primes carrying $f$, every divisor $a \ge 2$ of $d$ is in range and $\mu(d/a)\mu(a) = \mu(d)$, so the inner sum is $\mu(d)(F(d) - 1)$ with $F(d) = \prod_{p \mid d}(1 + f_p\sqrt p)$. Keeping only those $d$, and using $(F - 1)^2 \ge F^2 - 2F$,
+\[
+  x^{\mathsf T}C_m^{-1}x \ge \sum_{d}\frac{F(d)^2 - 2F(d)}{\varphi(d)}, \qquad \text{where}\quad \frac{(1 + f_p\sqrt p)^2}{p-1} \ge f_p^2 + \frac{2f_p}{\sqrt p}.
+\]
+The cut $d \le m$ and the subtracted sum are handled exactly as in \cref{lem:th-lower} (the subtracted sum is small compared with the main one because $f_p\sqrt p = L/\ln p \to \infty$ on the range), and $x^{\mathsf T}x \le 2\prod(1 + f_p^2)$. The quotient is at least $(\frac12 - o(1))\prod_p(1 + 2f_p/(\sqrt p(1 + f_p^2)))$, the same product as before.
+\end{proof}
+
+\paragraph{Our checks.} The script evaluates Schur's ratio for $N$ with these weights: at $m = 10^4$ it is $\ThInvSchurFour$, between $1/\lambda_{\min} = \ThImaxFour$ and the product bound $\ThInvBoundFour$, and at $m = 10^5$ it is $\ThInvSchurFive$, between $\ThImaxFive$ and $\ThInvBoundFive$. It also checks the formula of \cref{prop:th-inv} against a dense inverse at $m = 1{,}000$.
+
+\paragraph{Evidence.} The two extremes track each other closely at computable sizes (\cref{tab:th-ratio}): $1/\lambda_{\min}$ is about $\ThRatioLo$ to $\ThRatioHi$ times $\lambda_{\max}$ from $m = 500$ to $3\times10^6$, the ratio drifting down slowly. We have no proof that the ratio stays bounded; \cref{thm:th-top,thm:th-min} only say that the two logarithms are asymptotically equal.
+
+\begin{table}[t]
+\centering
+\caption[The two extreme eigenvalues of $C_m$]{The largest and smallest eigenvalues of $C_m$ (Lanczos method, for $C_m$ and for $C_m^{-1}$ in the form of \cref{prop:th-inv}), the ratio $(1/\lambda_{\min})/\lambda_{\max}$, and the mean of $1/\lambda$, $\operatorname{tr}C_m^{-1}/(m-1)$. The $\lambda_{\max}$ column reproduces \cref{tab:oq-top}.}
+\label{tab:th-ratio}
+\begin{tabular}{rrrrrr}
+\toprule
+$m$ & $\lambda_{\max}$ & $\lambda_{\min}$ & $1/\lambda_{\min}$ & ratio & mean of $1/\lambda$ \\
+\midrule
+\ThRatioTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Question 5: the bulk has a limiting law}\label{sec:th-bulk}
+\addednote{\revC}
+
+The curves in \cref{fig:oq-matrix} ``almost coincide'' because they converge.
+
+\begin{theorem}[a limiting law]\label{thm:th-law}
+Let $\nu_m$ be the distribution that puts mass $1/(m-1)$ on each eigenvalue of $C_m$. There is a probability distribution $\nu$ on $[0, \infty)$ such that $\nu_m \to \nu$ as $m \to \infty$, both weakly and with convergence of second moments. It has mean 1 and variance 2.
+\end{theorem}
+
+\begin{proof}
+The key is that $\gcd(a,b)/\sqrt{ab}$ depends only on the ratio $b/a$: if $b/a = u/v$ in lowest terms, the entry is $\psi(u/v) = 1/\sqrt{uv}$. Three steps.
+\begin{enumerate}
+\item \emph{Close matrices have close spectra.} For symmetric $n\times n$ matrices $A$ and $B$ with eigenvalues in increasing order, $\sum_i(\lambda_i(A) - \lambda_i(B))^2 \le \|A - B\|_F^2$ \citep{HoffmanWielandt1953}. So the Wasserstein-2 distance between the two eigenvalue distributions is at most $\|A - B\|_F/\sqrt n$.
+\item \emph{Truncate the ratios.} $C_m$ differs from $G_m$ (rows and columns $2$ to $m$) by $O(\ln^2m)$ in squared Frobenius norm: the difference of the entries is $\gcd(a,b)\bigl(((a-1)(b-1))^{-1/2} - (ab)^{-1/2}\bigr) - ((a-1)(b-1))^{-1/2}$, and the squares sum to $O(\ln^2m)$ by the substitution $a = ga'$, $b = gb'$ of the proof of \cref{thm:oq-moments}. For a finite set $S$ of ratios, closed under inversion, let $G_m^S$ keep the entries of $G_m$ with $b/a \in S$ and set the rest to 0. The ratio $u/v$ occurs for the pairs $a = vk$, $b = uk$ with $k \le m/\max(u,v)$, so
+\[
+  \frac{1}{m}\|G_m - G_m^S\|_F^2 \le \sum_{u/v \notin S}\frac{1}{uv\max(u,v)} =: \varepsilon(S),
+\]
+the sum over coprime pairs, and $\varepsilon(S) \to 0$ as $S$ grows, because the full sum over coprime pairs is 3 (proof of \cref{thm:oq-moments}). The bound does not depend on $m$.
+\item \emph{Each truncation converges.} $G_m^S$ has at most $|S|$ non-zero entries per row, each at most 1, so its eigenvalues lie in $[-|S|, |S|]$. Its $k$th moment is $1/m$ times a sum over closed walks $a \to aq_1 \to aq_1q_2 \to \cdots$ with $q_i \in S$ and $q_1\cdots q_k = 1$. A given walk is allowed exactly when $a$ is divisible by the least common denominator $V$ of the partial products and $a$ times the largest partial product $Q$ is at most $m$, which holds for $m/(VQ) + O(1)$ values of $a$. So every moment converges, and since the spectra are uniformly bounded, the eigenvalue distribution of $G_m^S$ converges to a limit $\nu^S$.
+\end{enumerate}
+By steps 1 and 2 the $\nu^S$ form a Cauchy family in Wasserstein-2 distance, with a limit $\nu$, and $\nu_m$ is within $\sqrt{\varepsilon(S)} + o(1)$ of $\nu^S$ for every $S$. The mean and variance come from \cref{thm:oq-moments}, since Wasserstein-2 convergence carries the first two moments.
+\end{proof}
+
+The proof also says what $\nu$ is: the average spectral measure, at the starting point, of the operator ``convolve with $\psi$ on the positive rationals'', cut down to the rationals $q$ for which $aq$ is an integer at most $m$, for a random integer $a \le m$. The cut at $m$ is what stops the limit from being an Euler product: without it, each prime would contribute an independent factor.
+
+\begin{proposition}[the mean of $1/\lambda$]\label{prop:th-trace}
+\[
+  \frac{1}{m-1}\operatorname{tr}C_m^{-1} = \kappa + O\Bigl(\frac{\ln^2m}{m}\Bigr), \qquad \kappa = \prod_p\Bigl(1 + \frac{2}{p(p-1)}\Bigr) = \ThKappa\ldots
+\]
+\end{proposition}
+
+\begin{proof}
+By \cref{prop:th-inv} the diagonal entry of the inverse at $a$ is $(a-1)\sum\mu^2(k)/\varphi(ak)$ over $k \le m/a$. Summing over $a$ and writing $d = ak$,
+\[
+  \operatorname{tr}C_m^{-1} = \sum_{d=2}^{m}\frac{1}{\varphi(d)}\sum_{\substack{a \mid d\\ d/a\ \text{square-free}}}(a - 1) = \sum_{d=2}^{m}\Bigl(h(d) - \frac{2^{\omega(d)}}{\varphi(d)}\Bigr), \qquad h(d) = \prod_{p \mid d}\frac{p+1}{p-1},
+\]
+because $\sum a = d\prod_{p\mid d}(1 + 1/p)$ over the $a$ with $d/a$ square-free, there are $2^{\omega(d)}$ such $a$, and the term $a = 1$ contributes $0$ either way. The second sum is $O(\ln^2m)$. Write $h = 1 * g$ (Dirichlet convolution), where $g$ is supported on square-free numbers with $g(p) = 2/(p-1)$, so $g(k) = 2^{\omega(k)}/\varphi(k)$ for square-free $k$. Then
+\[
+  \sum_{d \le m}h(d) = \sum_{k \le m}g(k)\Bigl\lfloor\frac mk\Bigr\rfloor = m\sum_{k \ge 1}\frac{g(k)}{k} - m\sum_{k > m}\frac{g(k)}{k} + O\Bigl(\sum_{k\le m}g(k)\Bigr),
+\]
+with $\sum_k g(k)/k = \prod_p(1 + g(p)/p) = \kappa$; since $\sum_{k \le x}g(k) = O(\ln^2x)$, partial summation bounds the other two terms by $O(\ln^2m)$.
+\end{proof}
+
+Teddy Rook's notes reach the same constant by a different route: for square-free $k$, the mean of $a/\varphi(ak)$ over $a$ is $\varphi(k)^{-1}\prod_{p \nmid k}(1 + 1/(p(p-1)))$ (a prime dividing $k$ contributes 1 whether or not it divides $a$), and summing over $a \le m/k$ and then $k$ gives $m\kappa$. The version above, written out in checking, gives the error term. Numerically $\operatorname{tr}C_m^{-1}/(m-1)$ is $\ThTrFour$ at $m = 10^4$, $\ThTrFive$ at $10^5$ and $\ThTrBig$ at $3\times10^6$ (\cref{tab:th-ratio}).
+
+\paragraph{Where this leaves $6/\pi^2$.} Four exact statistics of the eigenvalues of $C_m$ now have known limits, and each is a different product over primes:
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+statistic of the eigenvalues & limit & value \\
+\midrule
+mean & $1$ (\cref{thm:oq-moments}) & $1$ \\
+mean square & $3\zeta(3)/\zeta(3)$ (\cref{thm:oq-moments}) & $3$ \\
+geometric mean & $\prod_p(1 - 1/p)^{1/p}$ (\cref{prop:oq-gram}) & $\OqGeoLim$ \\
+mean of $1/\lambda$ & $\prod_p(1 + 2/(p(p-1)))$ (\cref{prop:th-trace}) & $\ThKappa$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+None is $6/\pi^2 = \prod_p(1 - 1/p^2)$ or a simple function of it. So the answer to ``does $6/\pi^2$ shape the bulk?'' is now: a limiting bulk law exists, and $6/\pi^2$ enters the matrix as the share of zero entries and as the constant in the first test vector (\cref{thm:oq-top}), but it does not appear in any exact bulk statistic found so far.
+
+One caution, added in checking. The first two statistics are statistics of $\nu$ itself (\cref{thm:th-law}). Weak convergence does not carry the last two over, because $\ln\lambda$ and $1/\lambda$ are unbounded near 0, where the smallest eigenvalues go. For $\nu$ itself Fatou's lemma gives only $\int\lambda^{-1}\,d\nu \le \kappa$; equality would need the eigenvalues near 0 to carry a vanishing share of the sum of the $1/\lambda$. So the last two rows are exact limits of statistics of $C_m$, and statistics of $\nu$ only if that holds. Still open: a formula for $\nu$, whether $\nu$ has a density, and whether the weak level repulsion of Section~\ref{sec:ob5} survives in the limit.
+
+\paragraph{Status of Question 5.} The extremes are answered to leading order (\cref{thm:th-top,thm:th-min}, proved), a limiting law exists (\cref{thm:th-law}, proved), and the mean of $1/\lambda$ tends to $\kappa$ (\cref{prop:th-trace}, proved). The shape of the bulk law is open.
+
+\section{Question 1: the number e, completed}\label{sec:th2}
+\addednote{\revC}
+
+Section~\ref{sec:ob1} showed that $e$'s denominators repeat modulo a prime $\ell$ with a period dividing $6\ell$, and left open whether the period can be shorter. It cannot, and the reason is a sign flip that also explains why $e$'s denominators are so often divisible by small primes. This section follows Teddy Rook's notes. Notation as in the paper: $e = \cf{2; 1, 2, 1, 1, 4, 1, \dots}$, so $a_{3k-2} = a_{3k} = 1$ and $a_{3k-1} = 2k$, with convergents $p_n/q_n$, $q_0 = q_1 = 1$, $p_{-1} = 1$, $q_{-1} = 0$.
+
+\paragraph{The closed forms (known).} The tool is the classical closed form for $e$'s convergents, which comes from Hermite's integrals \citep{Hermite1873} as used in Cohn's short proof of Euler's expansion of $e$ \citep{Cohn2006}. For $n \ge 1$,
+\begin{equation}\label{eq:th-closed}
+\begin{aligned}
+  p_{3n-2} &= \sum_{j=0}^{n}\binom{n}{j}\frac{(n+j)!}{n!}, & q_{3n-2} &= \sum_{j=0}^{n}(-1)^{n+j}\binom{n}{j}\frac{(n+j)!}{n!},\\
+  p_{3n-1} &= \sum_{j=0}^{n}\binom{n}{j}\frac{(n+1+j)!}{n!}, & q_{3n-1} &= \sum_{j=0}^{n+1}(-1)^{n+1+j}\binom{n+1}{j}\frac{(n+j)!}{n!},\\
+  p_{3n} &= \sum_{j=0}^{n+1}\binom{n+1}{j}\frac{(n+j)!}{n!}, & q_{3n} &= \sum_{j=0}^{n}(-1)^{n+j}\binom{n}{j}\frac{(n+1+j)!}{n!}.
+\end{aligned}
+\end{equation}
+For completeness, here is the derivation. Let $A_n$, $B_n$, $C_n$ be $\int_0^1 x^n(x-1)^ne^x\,dx/n!$, $\int_0^1 x^{n+1}(x-1)^ne^x\,dx/n!$ and $\int_0^1 x^n(x-1)^{n+1}e^x\,dx/n!$. Cohn's Proposition~1, translated to our indexing (his expansion starts $\cf{1; 0, 1, 1, 2, \dots}$, so his index $3n$ is our $3n - 2$), says $A_n = q_{3n-2}e - p_{3n-2}$, $B_n = p_{3n-1} - q_{3n-1}e$ and $C_n = p_{3n} - q_{3n}e$. Integration by parts gives $\int_0^1 x^ke^x\,dx = e\,u_k + (-1)^{k+1}k!$ and $\int_0^1 x^ke^{-x}\,dx = k! - e^{-1}w_k$ with integers $u_k, w_k$. Since $e$ is irrational, a number $r + se$ with integers $r, s$ determines $r$ and $s$. Expanding $(x-1)^n$ by the binomial theorem gives the integer parts, hence the $p$'s; substituting $x \mapsto 1 - x$ first (for instance $A_n = (-1)^ne\int_0^1 x^n(1-x)^ne^{-x}\,dx/n!$) gives the coefficients of $e$, hence the $q$'s. The numbers $p_1, p_4, p_7, \ldots = 3, 19, 193, \ldots$ are the values $y_n(2)$ of the Bessel polynomials, and $q_{3n-2} = (-1)^ny_n(-2)$; the first sequence is OEIS A001517 \citep{OEIS_A001517}. Our script checks all six formulas for $n < \ThEclosed$.
+
+\begin{proposition}[the sign flip]\label{prop:th-flip}
+Let $\ell$ be an odd prime. For every $n \ge 0$,
+\[
+  q_{n+3\ell} \equiv -q_n \quad\text{and}\quad p_{n+3\ell} \equiv p_n \pmod \ell .
+\]
+The period of $q_n \bmod \ell$ is exactly $6\ell$, and the period of $p_n \bmod \ell$ is exactly $3\ell$. For $\ell = 2$ both periods are 6.
+\end{proposition}
+
+\begin{proof}
+Put $n = \ell$ in \eqref{eq:th-closed}. Modulo $\ell$ the binomial coefficient $\binom{\ell}{j}$ vanishes unless $j = 0$ or $\ell$, and $(\ell+j)!/\ell!$ vanishes when $j = \ell$. So $p_{3\ell-2} \equiv 1 = p_{-2}$ and $q_{3\ell-2} \equiv (-1)^\ell = -1 = -q_{-2}$, where $p_{-2} = q_{-2} = 1$ come from running the recurrence backward (Cohn's form of the expansion supplies these terms). In the same way $p_{3\ell-1} \equiv 1 = p_{-1}$ and $q_{3\ell-1} \equiv 0 = q_{-1}$. The terms of the expansion repeat modulo $\ell$ with period $3\ell$ (only the terms $2k$ change, by $2\ell$), and the recurrence $v_{n+1} = \left(\begin{smallmatrix} a_{n+1} & 1\\ 1 & 0\end{smallmatrix}\right)v_n$ for $v_n = (q_n, q_{n-1})$ is linear, so two consecutive matches propagate to all $n$.
+
+For exactness: $3\ell$ is not a period of $q$, since $q_{3\ell} \equiv -1 \not\equiv q_0$. If $T$ is a period, then comparing $q_{j+T} = a_{j+T}q_{j-1+T} + q_{j-2+T}$ with $q_j = a_jq_{j-1} + q_{j-2}$ gives $a_{j+T}q_{j-1} \equiv a_jq_{j-1}$ for all $j \ge 2$; at $j = 2$ ($a_2 = 2$, $q_1 = 1$) this fails for $T = 2\ell$ and for $T = 6$, because $a_{2+2\ell}$ is 1 for $\ell \ne 3$ (its index is not $\equiv 2 \pmod 3$) and $a_8 = 6 \not\equiv 2$. Every proper divisor of $6\ell$ divides $3\ell$, $2\ell$ or $6$, so the period is $6\ell$. The numerators are handled the same way with $p_1 = 3 \not\equiv 0$: $a_{2+T} \equiv 2$ fails for $T = 1$ ($a_3 = 1$), $T = 3$ ($a_5 = 4$) and $T = \ell$ ($a_{2+\ell} = 1$). For $\ell = 3$ use $j = 5$, where $p_4 = 19 \not\equiv 0$ and $a_8 = 6 \not\equiv a_5 = 4 \pmod 3$; the cases $\ell = 3$ and $\ell = 2$ are also confirmed by direct computation.
+\end{proof}
+
+This sharpens \cref{prop:ob-e}: the transfer matrix over $3\ell$ steps has eigenvalues $+1$ and $-1$, the numerators live in the first eigenspace and the denominators in the second.
+
+\begin{theorem}[forced divisors]\label{thm:th-div}
+For every integer $m \ge 1$, $m$ divides $q_{3m-1}$ and $q_{3m-3}$; for $m \ge 3$ it divides $q_{3m-7}$; for $m \ge 2$ it divides $p_{3m-4}$. Consequently $q_n$ is composite for every $n \ge 3$ with $n \equiv 0$ or $2 \pmod 3$: a denominator of $e$ can be prime only if $n = 2$ or $n \equiv 1 \pmod 3$. Likewise $p_n$ is composite for every $n \ge 5$ with $n \equiv 2 \pmod 3$.
+\end{theorem}
+
+\begin{proof}
+Each claim is a closed form read modulo the right number; note that $(m+i)!/m!$ is a product of $i$ consecutive integers.
+\begin{itemize}
+\item $q_{3m-1}$, modulo $m$: by the formula for $q_{3n-1}$ with $n = m$, and $(m+i)!/m! \equiv i!$, $q_{3m-1} \equiv \pm\sum_i(-1)^i\binom{m+1}{i}i! = \pm D_{m+1}$, the number of derangements of $m + 1$ objects, and $D_{m+1} = m(D_m + D_{m-1})$.
+\item $q_{3m-3}$: the formula for $q_{3n}$ with $n = m - 1$; every term contains $(n+1+j)!/n!$, a multiple of $n + 1 = m$.
+\item $q_{3m-7}$: the formula for $q_{3n-1}$ with $n = m - 2$, modulo $n + 2 = m$; the terms with $j \ge 2$ contain the factor $n + 2$, and the terms $j = 0$ and $j = 1$ add up to $(-1)^{n+1}\bigl(1 - (n+1)^2\bigr) = (-1)^{m-1}m(2 - m) \equiv 0$.
+\item $p_{3m-4}$: the formula for $p_{3n-1}$ with $n = m - 1$; every term is a multiple of $n + 1 = m$.
+\end{itemize}
+For the consequences: $n = 3m - 1$ with $m = (n+1)/3 \ge 2$ covers $n \equiv 2 \pmod 3$, $n \ge 5$; $n = 3m - 3$ with $m = (n+3)/3 \ge 2$ covers $n \equiv 0$, $n \ge 3$; $n = 3m - 4$ with $m \ge 3$ covers $p_n$ for $n \equiv 2$, $n \ge 5$. In each case $q_n$ (or $p_n$) is larger than the divisor $m > 1$.
+\end{proof}
+
+A second proof of the first claim, found in checking: $q_{3m-1} = q_{3m} - q_{3m-2}$ because $a_{3m} = 1$, and by \eqref{eq:th-closed} this is $\equiv \sum_j(-1)^{m+j}\binom{m}{j}\bigl((j+1)! - j!\bigr) = \sum_j(-1)^{m+j}\,j\binom{m}{j}\,j! \pmod m$, where $j\binom{m}{j} = m\binom{m-1}{j-1} \equiv 0$. The three forced zeros are the zeros of the backward continuation, $q_{-1} = q_{-3} = q_{-7} = 0$, carried forward by \cref{prop:th-flip}. The script confirms all four divisibilities for every $m < \ThEdiv$, and \cref{prop:th-flip}, including the exact periods, for every odd prime below \ThElim.
+
+\paragraph{What this explains.} Section~\ref{sec:oq1} found that $e$'s denominators are divisible by a small prime $\ell$ about twice as often as random integers (the average of $\ell f_\ell$ was \OqEavg) and that the divisibility comes in clumps. Both follow. In each window of $3\ell$ indices there are three forced multiples of $\ell$, and on average over the \ThEnprimes{} odd primes below \ThElim{} there are \ThEextra{} more, about the number chance would give ($3\ell - 3$ further residues, each $0$ with chance $1/\ell$); so $f_\ell = (3 + \text{extra})/(3\ell) \ge 1/\ell$, with equality for $\ell = 5, 17, 19, 29$ and for \ThEzeroextra{} of the primes below \ThElim{} in all. And $q_{3m-1}$ is divisible by every prime factor of $m$ and of $m + 2$ at once. That the further zeros average 3 is numerical evidence, not a theorem.
+
+\paragraph{Evidence.} All ten known prime denominators of $e$ sit where \cref{thm:th-div} allows: $n = 2, 4, 7, 13, 19, 34, 40, 64, 238, 268$, and every one after $n = 2$ is $\equiv 1 \pmod 3$ (our script finds exactly these for $n \le 3{,}000$). OEIS A094007, whose index is our $n + 1$, records that there are no more up to about $n = 50{,}000$ \citep{OEIS_A094007}, well past the $n = 3{,}000$ of Chapter~\ref{ch:primeconv}. Teddy Rook's notes add a heuristic count: restricted to $n \equiv 1 \pmod 3$, the denominators are never divisible by 2, 3 or 5 and are $3.4$ times as likely as random integers to have no prime factor below 1{,}000; with that factor, the count predicted for $4 \le n \le 50{,}000$ is $3.4 \times \sum 1/\ln q_n = 3.4 \times 2.57 \approx 8.8$, against 9 found. The sum grows like $\ln\ln N$, so the forecast of Section~\ref{sec:oq1} stands: infinitely many, but very few. This is a heuristic, not a theorem, and its numbers are from his notes (we did not recompute the factor $3.4$).
+
+\paragraph{Known?} We did not find \cref{prop:th-flip} or \cref{thm:th-div} stated in the OEIS entries or in the papers they cite, but the closed forms are classical and the facts may well be known.
+
+\paragraph{Status.} The arithmetic of $e$'s convergents modulo primes is now completely proved. What remains open for $e$ is Question~1 itself: whether infinitely many $q_n$ with $n \equiv 1 \pmod 3$ are prime, which is as hard as the Fibonacci prime problem.
+
+\section{Question 1: an eleventh prime denominator for pi}\label{sec:th1}
+\addednote{\revC}
+
+\paragraph{The find (evidence).} Teddy Rook extended the search of Section~\ref{sec:oq1} from $n = 20{,}000$ to $n = 26{,}000$, with a script of his own (\texttt{c12\_third\_pisearch.py} is a cleaned version), and found one new probable prime:
+
+\begin{proposition}[computation; probable prime]\label{prop:th-q}
+The denominator $q_{25332}$ of the $25{,}332$nd convergent of $\pi$ (our indexing, with $q_1 = 7$) has \ThDigits{} decimal digits and passes the strong Baillie--PSW probable-prime test and $25$ rounds of the Miller--Rabin test with random bases. No other $q_n$ with $20{,}000 < n \le 25{,}332$ passes the Baillie--PSW test. The numerator $p_{25332}$ (\ThPdigits{} digits) is composite, so this is not a second ``both prime'' convergent.
+\end{proposition}
+
+Teddy Rook's own run also passed trial division by all primes below $2\cdot10^6$, strong probable-prime tests to bases 2, 3, 5 and 7 and ten further Miller--Rabin rounds, and found no other probable-prime denominator and no probable-prime numerator for $20{,}000 < n \le 26{,}000$; our independent check covered the denominators to $n = 25{,}332$.
+
+So, if $q_{25332}$ is prime, the prime denominators of $\pi$'s convergents up to $n = 25{,}332$ are at
+\[
+  n = 1, 3, 8, 32, 594, 1{,}126, 2{,}002, 3{,}610, 4{,}355, 6{,}925, 25{,}332,
+\]
+eleven in all. In the indexing of OEIS A259490, where $k = n + 1$, the new term is $k = 25{,}333$; that entry lists the first ten and records that the next is beyond $k = 25{,}000$ \citep{OEIS_A259490}. As far as that record goes this is the eleventh prime denominator, and it falls just past the previous search limit. We found no earlier report of it, though we cannot rule out that someone has found it and not reported it.
+
+\paragraph{How it was checked.} The search takes $\pi$'s continued fraction from a high-precision value of $\pi$ at two precisions and keeps only the terms on which the two expansions agree (certified terms, as in Chapter~\ref{ch:cf}); it builds $q_n$ by the recurrence $q_n = a_nq_{n-1} + q_{n-2}$; it removes every $q_n$ with a prime factor below $2\cdot 10^6$; and it runs a strong Fermat test to base 2 and then the strong Baillie--PSW test \citep{BaillieWagstaff1980} on the rest. For this chapter we repeated everything independently. Our script \texttt{c12\_third\_pi.py} computes the terms from mpmath's $\pi$ at two precisions and from MPFR's $\pi$ (through gmpy2) as an interval at $100{,}000$ bits; the lists agree through $n = \ThCert$. It rebuilds $q_{25332}$, compares it digit by digit with the copy published on the companion site, and repeats the tests (the Baillie--PSW test alone takes about \ThBpswSec{} seconds on one core). The terms around the new prime are $a_{25330}, \dots, a_{25334} = \ThNear$. The number begins and ends
+\[
+  q_{25332} = \texttt{\ThFirst}\ldots\texttt{\ThLast},
+\]
+and the SHA-256 hash of its decimal digits (no spaces or line breaks) is
+\begin{center}
+\texttt{\ThSha}.
+\end{center}
+All \ThDigits{} digits are printed in Appendix~\ref{app:prime}, and the site has them as a plain text file \citep{RhythmSite}.
+
+\paragraph{Status: probable prime.} No composite number is known to pass the Baillie--PSW test, but the test is not a proof. A proof for a number of this size needs an elliptic-curve certificate (Primo or CM-ECPP; \citealp{AtkinMorain1993}), which anyone can check much faster than it was found. Teddy Rook has started that computation; until it is finished, $q_{25332}$ is a probable prime, and so is every statement below that counts it.
+
+\paragraph{Against the heuristic.} \Cref{heur:primeconv} gives $q_n$ a chance $\zeta(2)/\ln q_n$ of being prime; for $q_{25332}$ that is about one in \ThOneIn. \Cref{tab:th-pi} extends \cref{tab:oq-pi} with the same exact Poisson-binomial law. The heuristic expects \ThExp{} prime denominators by $n = 25{,}332$, with a central 95\% range from \ThLo{} to \ThHi; $\pi$ has 11, and the share of the law at or below 11 is \ThShare. At $n = 26{,}000$, the end of Teddy Rook's search, it expects \ThSixQExp{} denominators (range \ThSixQRange) against 11 found, and \ThSixPExp{} numerators (range \ThSixPRange) against 15. (His notes estimate these as $13.3$ and $12.6$ by adding $2\ln 2\cdot\ln(26{,}000/20{,}000) = 0.36$ to the values at $20{,}000$; the exact sums are the ones given here.) Both counts stay well inside the 95\% ranges, and the denominators move a little toward the middle.
+
+\begin{table}[t]
+\centering
+\caption[Pi's prime denominators to $n = 25{,}332$]{Probable-prime denominators among $\pi$'s convergents, $n \le N$: the observed count, the expected count $\sum \zeta(2)/\ln q_n$ of \cref{heur:primeconv}, the central 95\% range of the Poisson-binomial law, and the share of that law at or below the observed count. The first three rows repeat \cref{tab:oq-pi}.}
+\label{tab:th-pi}
+\begin{tabular}{rrrrr}
+\toprule
+$N$ & observed & expected & 95\% range & share \\
+\midrule
+\ThPiTable
+\bottomrule
+\end{tabular}
+\end{table}
+
+The long wait between the tenth and the eleventh prime, from $n = 6{,}926$ to $n = 25{,}331$, is also ordinary. The heuristic expects \ThGapExp{} primes in that stretch, and the chance of none is about \ThGapNone. Because $\ln q_n$ grows linearly in $n$ (Lévy's theorem), the chance $\zeta(2)/\ln q_n$ falls like $1/n$, and the expected count grows only like $2\ln 2\cdot\ln n$: roughly one more prime per doubling of $n$. From $n = 25{,}332$ to $n = 100{,}000$ one would expect about \ThToHundredK{} more.
+
+\paragraph{What it means for Question 1.} Nothing is settled: one more prime is what a typical number would be expected to show sooner or later, and says nothing about infinitely many.
+
+\section{Status after the third look}\label{sec:th-status}
+\addednote{\revC}
+
+\noindent\begin{minipage}{\textwidth}
+\centering
+\fixedtablecaption[Status of the six questions after the third look]{The six questions of Section~\ref{sec:open} after this chapter. ``Probable prime'' means that a primality proof is pending.}
+\label{tab:th-status}
+\small
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+question & new in this round & status \\
+\midrule
+1. Prime convergents of $\pi$ & search extended to $n = 26{,}000$; an eleventh probable-prime denominator at $n = 25{,}332$, found by Teddy Rook (evidence). For $e$: sign flip, exact periods $6\ell$ and $3\ell$, forced divisors, primes only at $n = 2$ or $n \equiv 1 \pmod 3$ (proved) & open \\
+2. Fibonacci and Pell primes & nothing & open \\
+3. The heuristic for almost every number & nothing (\cref{thm:ob-ae} stands) & answered a.e. \\
+4. Is $\pi$ typical? & nothing & open \\
+5. The correlation matrix & $\ln\lambda_{\max}$ and $\ln(1/\lambda_{\min})$ both $(2 + o(1))\sqrt{\ln m/\ln\ln m}$; a limiting bulk law exists; the mean of $1/\lambda$ tends to $\prod_p(1 + 2/(p(p-1)))$ (all proved) & partly answered \\
+6. Prime-sized scales & nothing & answered: no \\
+\bottomrule
+\end{tabularx}
+\end{minipage}
+\medskip
+
+\paragraph{Still open,} in order of how reachable they look.
+\begin{itemize}
+\item A second-order term for $\lambda_{\max}(C_m)$. The proofs as written give a relative error no better than about $\ln\ln\ln m/\ln\ln m$; Soundararajan's analysis suggests $1/\sqrt{\ln\ln m}$ is attainable, and the data ask for a description of the small-prime factor that dominates at computable sizes.
+\item Whether $(1/\lambda_{\min})/\lambda_{\max}$ tends to a constant. It is $\ThRatioLo$ to $\ThRatioHi$ for every $m$ in \cref{tab:th-ratio}.
+\item A description of the limiting law $\nu$: a density, its behavior near 0, its tail, and whether its mean of $1/\lambda$ equals $\kappa$.
+\item For $e$, an asymptotic for the count of prime denominators among $n \equiv 1 \pmod 3$. This is as hard as the Fibonacci prime problem.
+\item Anything at all about $\pi$ itself. Nothing here, or anywhere, touches it.
+\end{itemize}
+
+\paragraph{A caution on novelty.} \Cref{thm:th-top,thm:th-min} use the resonance method exactly as number theorists use it for the zeta function, and \cref{thm:th-law} is a standard truncation argument. We searched and did not find these statements for this matrix, nor \cref{thm:th-div} for $e$, but results of this kind are often folklore. Before any of them is called new, a specialist in GCD sums should be asked; Hilberdink's paper \citep{Hilberdink2009} is the first place to look.
+
+\paragraph{Acknowledgment.} The search that found $q_{25332}$, and the statements and proofs of this chapter, are from Teddy Rook's notes and scripts of November 2026. The scripts \texttt{c12\_third\_*.py} are cleaned versions of his, extended and rerun for this chapter; the independent checks, the second proofs noted in the text and the caution on the limiting law's mean of $1/\lambda$ were added in checking.

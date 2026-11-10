@@ -121,7 +121,7 @@ For $\ell = 2$, $B(k) \equiv \left(\begin{smallmatrix} 0 & 1\\ 1 & 0\end{smallma
 The matrix carrying $v_{3k}$ to $v_{3k+3\ell}$ is $B(k+\ell)\cdots B(k+1)$, the transpose of $P(k+1)$, so its square is also $I$, and $v_{3k+6\ell} \equiv v_{3k}$ for every $k \ge 0$. The terms $a_n$ modulo $\ell$ repeat with period $3\ell$ (for $n \ge 1$), so the steps from $v_{3k}$ to $v_{3k+1}$ and $v_{3k+2}$ repeat too, and $v_{n+6\ell} \equiv v_n$ for every $n \ge 0$. The numerators satisfy the same recurrence, with other starting values, so the argument applies to them unchanged.
 \end{proof}
 
-The script confirms the proposition for every prime $\ell < \ObElim$ and checks step (b) directly for every starting block and every prime below \ObTlim. In every case computed, the period is exactly $6\ell$ for odd $\ell$ (and 6 for $\ell = 2$); we have not proved that it is never shorter.
+The script confirms the proposition for every prime $\ell < \ObElim$ and checks step (b) directly for every starting block and every prime below \ObTlim. In every case computed, the period is exactly $6\ell$ for odd $\ell$ (and 6 for $\ell = 2$); we have not proved that it is never shorter. [Update: \cref{prop:th-flip} proves that it is exactly $6\ell$. \addedon{\revC}]
 
 \paragraph{Status.} Unchanged: open for $\pi$. The structure of $e$ is now fully proved; the densities $f_\ell$ of Section~\ref{sec:oq1} are exact counts over one period of length $6\ell$.
 
@@ -155,7 +155,7 @@ because the terms with $d = 1$ or $e = 1$ are zero and $\sum_{d,e\mid P}1/\sqrt{
 where $\tau(a)$ is the number of divisors of $a$. So $\lambda_{\max}(C_m) \le 2(1 + \ln m)\max_{a \le m}\tau(a)$, and $\tau(a) \le 2^{(1 + o(1))\ln a/\ln\ln a}$ \citep[Thm.~317]{HardyWright2008}.
 \end{proof}
 
-The lower bound uses the same square-free construction that drives the theory of GCD sums, where sums of $\gcd(m,n)/\sqrt{mn}$ over arbitrary sets of $N$ integers are known to grow roughly like $e^{c\sqrt{\ln N}}$ up to iterated logarithms \citep{AistleitnerBerkesSeip2015,BondarenkoSeip2015}. Here the set is fixed (all integers up to $m$), and the true order lies somewhere between our two bounds; we do not know where.
+The lower bound uses the same square-free construction that drives the theory of GCD sums, where sums of $\gcd(m,n)/\sqrt{mn}$ over arbitrary sets of $N$ integers are known to grow roughly like $e^{c\sqrt{\ln N}}$ up to iterated logarithms \citep{AistleitnerBerkesSeip2015,BondarenkoSeip2015}. Here the set is fixed (all integers up to $m$), and the true order lies somewhere between our two bounds; we do not know where. [Update: \cref{thm:th-top} finds it: $\exp((2 + o(1))\sqrt{\ln m/\ln\ln m})$. \addedon{\revC}]
 
 The bounds say little at sizes we can compute. At $m = 10^6$ the lower bound is $\ObBoxVal$ (with $y = \ObBoxY$), the upper bound is $\ObSchur$, and the true value is $\ObTopMillion$. Over the range we computed, the data follow $(2/\pi^2)\ln^2 m\cdot\ln\ln m$ closely (\cref{tab:ob-fit}: the ratio stays between $\ObFitMin$ and $\ObFitMax$). That is a description of the data, not a law: by \cref{thm:ob-top} it must fail for large $m$, though only when $\ln m$ is in the thousands.
 

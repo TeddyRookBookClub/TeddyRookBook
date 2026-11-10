@@ -6,8 +6,8 @@ The built PDF is `static/pdfs/The-Rhythm-of-Numbers-paper.pdf`; its page is `/co
 
 ## Layout
 
-- `paper/` – the LaTeX source: `main.tex` (preamble and chapter list), `front.tex`, `ch01_intro.tex` … `ch16_openq2.tex`,
-  `appA_algorithms.tex`, `appB_methods.tex`, `appC_repro.tex`, and `refs.bib` (every entry checked against a publisher
+- `paper/` – the LaTeX source: `main.tex` (preamble and chapter list), `front.tex`, `ch01_intro.tex` … `ch16_openq2.tex`, `ch17_thirdlook.tex`,
+  `appA_algorithms.tex`, `appB_methods.tex`, `appC_repro.tex`, `appD_prime.tex`, and `refs.bib` (every entry checked against a publisher
   page, catalogue or citing source; fields that could not be confirmed were left out).
 - `paper/gen/` – LaTeX macros written by the scripts. The text uses only these macros for computed values, so never edit
   them by hand: rerun the scripts.
@@ -32,13 +32,19 @@ the exact expectation and its simulation, the correlation-matrix spectra and the
 `c12_openq2.py` belongs to Chapter 16 ("A second look at the open questions"): the overlap check behind the
 almost-everywhere theorem, e modulo primes, the correlation matrix's near-copies and bounds, the commas of 171, and two
 more tests of pi's terms.
+The `c12_third_*.py` scripts belong to Chapter 17 ("A third look"), and are cleaned versions of Teddy Rook's own
+scripts (November 2026): `c12_third_pisearch.py` searches q_n for 20,000 < n <= 25,332 (about an hour, resumable);
+`c12_third_pi.py` rebuilds the probable prime q_25332 from two sources of pi, checks it against
+`static/connections/rhythm/q25332.txt`, tests it, extends the heuristic to n = 25,332 and writes the digits for
+Appendix D (about 3 minutes); `c12_third_e.py` (closed forms, divisors and periods for e) and `c12_third_matrix.py`
+(extreme eigenvalues of the correlation matrix to m = 10^6) take about a minute together.
 
 Dates of additions: the paper marks each addition with the UTC date it was published. The dates are TeX macros in
-`paper/main.tex` (`\revO`, `\revA`, `\revB`), so a date can be corrected in one line.
+`paper/main.tex` (`\revO`, `\revA`, `\revB`, `\revC`), so a date can be corrected in one line.
 
 `c8_suite.py` reads `data/music/suite.yaml` from this repository. Random choices use fixed seeds. Scripts stop with an
 error if any asserted fact (for example 292 × 113 = 32,996, or the OEIS lists of prime convergents of pi) fails.
 
 After rebuilding, update `pdf_size` (pages and size) in content/connections/rhythm-of-numbers/paper/_index.md and the
-page and figure counts ("106 pages", "40 figures") on the hub card (layouts/connections/rhythm.html), the fractals page card
+page and figure counts ("132 pages", "40 figures") on the hub card (layouts/connections/rhythm.html), the fractals page card
 (layouts/connections/rhythm-fractals.html) and the Connections hub (content/connections/_index.md).

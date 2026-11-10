@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Data for the chart in "Working on the open questions" on /connections/rhythm-of-numbers/ (#open-questions).
 
-Writes data/rhythm/openq_pi.json: pi's probable-prime convergent denominators q_n and numerators p_n for n <= 20,000
-(the indices found by docs/papers/rhythm-of-numbers/compute/c11_openq_pisearch.py, read from the paper's generated
-macros in docs/papers/rhythm-of-numbers/paper/gen/c11_openq_primes.tex), and, on a log grid of N, the expected count
-sum zeta(2)/ln q_n and the central 95% range of the Poisson-binomial law, the same heuristic as Chapter 15 of the paper.
-It recomputes pi's first 20,000 continued-fraction terms with mpmath (two precisions that must agree) and stops if the
-expected counts and ranges at N = 1,000, 5,000 and 20,000 differ from the paper's table (OqPiTable).
+Writes data/rhythm/openq_pi.json: pi's probable-prime convergent denominators q_n for n <= 25,332 and numerators p_n
+for n <= 20,000 (the indices found by docs/papers/rhythm-of-numbers/compute/c11_openq_pisearch.py and, for
+20,000 < n <= 25,332, c12_third_pisearch.py, read from the paper's generated macros in paper/gen/c11_openq_primes.tex;
+the new denominator q_25332, found by Teddy Rook, is a probable prime with a proof pending), and, on a log grid of N,
+the expected count sum zeta(2)/ln q_n and the central 95% range of the Poisson-binomial law, the same heuristic as
+Chapters 15 and 17 of the paper. It recomputes pi's first 25,332 continued-fraction terms with mpmath (two precisions
+that must agree) and stops if the expected counts and ranges differ from the paper's tables (OqPiTable at N = 1,000,
+5,000 and 20,000; ThPiTable at N = 25,332, in gen/c12_third_pi.tex).
 Needs Python 3 with mpmath and numpy. Runtime: about 15 seconds.
 Usage: python3 scripts/rhythm/openq-chart-data.py
 """
@@ -16,8 +18,11 @@ import mpmath
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 GEN = os.path.join(ROOT, 'docs/papers/rhythm-of-numbers/paper/gen/c11_openq_primes.tex')
+GEN3 = os.path.join(ROOT, 'docs/papers/rhythm-of-numbers/paper/gen/c12_third_pi.tex')
 OUT = os.path.join(ROOT, 'data/rhythm/openq_pi.json')
-N = 20000
+N = 20000      # numerators were searched to here
+NQ = 25332     # denominators to here (Chapter 17)
+Q_NEW = [25332]
 ZETA2 = math.pi ** 2 / 6
 
 
@@ -36,25 +41,26 @@ def terms(digits):
     mpmath.mp.dps = digits
     x = +mpmath.pi
     out = []
-    for _ in range(N + 1):
+    for _ in range(NQ + 1):
         a = int(mpmath.floor(x)); out.append(a); x = 1 / (x - a)
     return out
 
 
 def main():
     gen = open(GEN, encoding='utf-8').read()
-    qi, pi_ = nums(macro('OqPiQIdx', gen)), nums(macro('OqPiPIdx', gen))
+    qi, pi_ = nums(macro('OqPiQIdx', gen)) + Q_NEW, nums(macro('OqPiPIdx', gen))
+    gen3 = open(GEN3, encoding='utf-8').read()
     assert int(macro('OqPiN', gen).replace('{,}', '')) == N
-    # 20,000 terms need about 2 * 10,268 digits; two precisions must agree
-    A = terms(22000)
-    assert A == terms(23000), 'continued fraction terms differ between precisions'
+    # 25,332 terms need about 2 * 13,017 digits; two precisions must agree
+    A = terms(27500)
+    assert A == terms(28500), 'continued fraction terms differ between precisions'
     assert A[:6] == [3, 7, 15, 1, 292, 1]
-    lnq = np.empty(N); r = None; s = 0.0
-    for n in range(1, N + 1):
+    lnq = np.empty(NQ); r = None; s = 0.0
+    for n in range(1, NQ + 1):
         a = float(A[n]); r = a if r is None else a + 1 / r
         s += math.log(r); lnq[n - 1] = s
-    lnp = lnq + math.log(math.pi); lnp[0] = math.log(22)
-    grid = sorted(set(int(round(v)) for v in np.logspace(0, math.log10(N), 70)) | {1000, 5000, N})
+    lnp = (lnq + math.log(math.pi))[:N]; lnp[0] = math.log(22)
+    grid = sorted(set(int(round(v)) for v in np.logspace(0, math.log10(NQ), 72)) | {1000, 5000, N, NQ})
     table = {}
     series = {}
     for key, pr in (('q', ZETA2 / lnq), ('p', ZETA2 / lnp)):
@@ -66,7 +72,7 @@ def main():
                 cdf = np.cumsum(dist)
                 lo, hi = int(np.searchsorted(cdf, 0.025)), int(np.searchsorted(cdf, 0.975))
                 rows.append([k, round(mean, 3), lo, hi]); gi += 1
-                if k in (1000, 5000, N):
+                if k in (1000, 5000, N, NQ):
                     table[(key, k)] = ('%.1f' % mean, '%d--%d' % (lo, hi))
         series[key] = rows
     # the paper's table: N & obs & exp & range & share (q) & obs & exp & range & share (p)
@@ -77,10 +83,14 @@ def main():
         M = int(c[0].replace('{,}', ''))
         for key, e, rg in (('q', c[2], c[3]), ('p', c[6], c[7])):
             assert table[(key, M)] == (e, rg), ('mismatch with the paper', key, M, table[(key, M)], e, rg)
+    c = [x.strip() for x in macro('ThPiTable', gen3).split('\\\\')[-2].split('&')]
+    assert int(c[0].replace('{,}', '')) == NQ and int(c[1]) == len(qi)
+    assert table[('q', NQ)] == (c[2], c[3]), ('mismatch with Chapter 17', table[('q', NQ)], c)
     data = {
-        'about': 'Pi\'s probable-prime convergents to n = 20,000 against the heuristic of Chapter 15 of The Rhythm of '
-                 'Numbers paper. Generated by scripts/rhythm/openq-chart-data.py; do not edit.',
-        'N': N, 'q_idx': qi, 'p_idx': pi_,
+        'about': 'Pi\'s probable-prime convergent denominators to n = 25,332 and numerators to n = 20,000 against the '
+                 'heuristic of Chapters 15 and 17 of The Rhythm of Numbers paper (q_25332 is a probable prime; proof '
+                 'pending). Generated by scripts/rhythm/openq-chart-data.py; do not edit.',
+        'N': NQ, 'Np': N, 'q_idx': qi, 'p_idx': pi_,
         'cols': ['N', 'expected', 'lo95', 'hi95'],
         'q': series['q'], 'p': series['p'],
     }

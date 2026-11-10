@@ -14,23 +14,26 @@ video_id: "K0l47YsgopE"
 # openq: "Working on the open questions" (#open-questions), a plain-words summary of Chapters 15 and 16 of the paper
 # (docs/papers/rhythm-of-numbers/paper/ch15_openq.tex and ch16_openq2.tex). Keep every claim and label as the paper has
 # it: "Proved" = proved in the paper (from cited results); "Evidence" = computation, never a proof; "Known" = already
-# known to others. Dates are the UTC dates the work was added (2026-11-05 = Chapter 15, 2026-11-06 = Chapter 16).
+# known to others. Dates are the UTC dates the work was added (2026-11-05 = Chapter 15, 2026-11-06 = Chapter 16,
+# 2026-11-10 = Chapter 17).
 # sec: the paper's section numbers; their PDF pages are in data/rhythm/paper_pages.yaml (checked by
 # scripts/rhythm/check-paper-links.py). The chart under question 1 reads data/rhythm/openq_pi.json
 # (scripts/rhythm/openq-chart-data.py).
-openq_intro: "The paper’s Discussion ended with six open questions. We went back to them twice: Chapter 15 of the paper (added 2026-11-05, UTC) and Chapter 16, a second look (added 2026-11-06, UTC). Most of them are famous unsolved problems, and they are still unsolved. Here is what we found, in plain words."
+openq_intro: "The paper’s Discussion ended with six open questions. We went back to them twice: Chapter 15 of the paper (added 2026-11-05, UTC) and Chapter 16, a second look (added 2026-11-06, UTC), and Chapter 17, a third look (added 2026-11-10, UTC), which brought a new probable prime. Most of them are famous unsolved problems, and they are still unsolved. Here is what we found, in plain words."
 openq:
   - id: "oq-1"
     q: "Does pi have infinitely many prime fractions?"
     status: "Open"
     kind: "open"
     ask: "Pi’s best fractions are 22/7, 333/106, 355/113, and on and on. Are infinitely many of their bottom numbers (denominators) prime? Infinitely many top numbers (numerators)?"
-    sec: ["15.1", "15.2", "16.2"]
+    sec: ["15.1", "15.2", "16.2", "17.4", "17.5"]
     chart: true
     items:
       - { date: "2026-11-05", kind: "Evidence", text: "We worked out 12,000,001 terms of pi’s continued fraction (the 3, then 12 million more), twice, at two precisions, and checked them against published records. Then we tested the first 20,000 fractions for primes. Pi has 10 prime denominators (the last at fraction number 6,925) and 15 prime numerators (the last at number 8,750). A typical number would have about 12.9 and 12.2, and both counts sit inside the range chance allows. So far only one fraction, 833,719/265,381, is prime on top and bottom." }
       - { date: "2026-11-05", kind: "Proved", text: "For e, whose terms follow a pattern, the denominators divided by any prime leave remainders that repeat forever." }
       - { date: "2026-11-06", kind: "Proved", text: "For e, those remainders, dividing by a prime ℓ, repeat with a period that divides 6ℓ." }
+      - { date: "2026-11-10", kind: "Evidence", text: "Teddy Rook carried the search further and found an 11th prime denominator, at fraction number 25,332: a number with 13,017 digits. His search ran to fraction 26,000 and found no other prime top or bottom number there. We checked the new prime independently, from two different sources of pi’s digits, and found no other prime denominator between fraction 20,000 and 25,332. It is a probable prime; a full proof is in progress. A typical number would have about 13.2 prime denominators by then, so 11 is ordinary. As far as we can find, no one has reported this one before." }
+      - { date: "2026-11-10", kind: "Proved", text: "For e, following Teddy Rook’s notes: every 3ℓ steps the denominators’ remainders flip sign and the numerators’ come back, so the remainders repeat after exactly 6ℓ and 3ℓ steps. Every whole number m divides three of the denominators (numbers 3m − 1, 3m − 3 and 3m − 7), so a denominator of e can be prime only at step 2 or at steps one more than a multiple of 3. All ten known prime denominators of e sit there. The forced divisors also account for half of a puzzle from Chapter 15: e’s denominators are divisible by small primes about twice as often as random numbers." }
     note: "For numbers this large, “prime” means the number passed the Baillie–PSW test. No number is known to fool that test, but passing it is not a proof."
   - id: "oq-2"
     q: "Fibonacci and Pell primes"
@@ -65,14 +68,16 @@ openq:
     status: "Partly answered"
     kind: "partly"
     ask: "Section 10’s matrix holds the correlation of every pair of pulse trains. What do its eigenvalues look like, and does 6/π² show up?"
-    sec: ["15.6", "16.3"]
+    sec: ["15.6", "16.3", "17.1", "17.2", "17.3"]
     site: "/connections/rhythm-of-numbers/#corr"
     items:
       - { date: "2026-11-05", kind: "Proved", text: "Take the matrix for the periods up to m. Its eigenvalues average exactly 1, and their spread (variance) tends to 2. Its determinant has an exact formula. Its largest eigenvalue is at least (2/π²) · ln² m, which is one third of 6/π² times ln² m: that is where 6/π² appears." }
       - { date: "2026-11-05", kind: "Evidence", text: "Up close, its eigenvalues are spaced like those of a random matrix. We could see that, but not explain it." }
       - { date: "2026-11-06", kind: "Proved", text: "The largest eigenvalue grows faster than any power of ln m and slower than any power of m. The spectrum also holds many near-copies of the eigenvalues of small gcd matrices." }
       - { date: "2026-11-06", kind: "Evidence", text: "Those near-copies explain part of the random-matrix look. Without them the spacings are in between random-matrix and fully random." }
-    note: "Still open: whether 6/π² shapes the bulk of the eigenvalues. It does not appear in their average or spread."
+      - { date: "2026-11-10", kind: "Proved", text: "Following Teddy Rook’s notes: the largest eigenvalue grows like e raised to the power 2√(ln m / ln ln m), up to a factor that fades as m grows, and the smallest shrinks toward 0 at exactly the mirror rate. The whole spread of eigenvalues settles down to a fixed limiting shape as m grows, and the reciprocals of the eigenvalues average a fixed number, about 3.28. Four exact constants of the spread are now known (1, 3, 0.5599 and 3.2796), and none of them is 6/π²." }
+      - { date: "2026-11-10", kind: "Known", text: "The method behind the largest eigenvalue is the “resonance method” that Soundararajan (2008) and Bondarenko and Seip used for the zeta function. We did not find the result stated for this matrix, but a specialist would regard it as a corollary of those techniques." }
+    note: "Still open: a formula for the limiting shape of the eigenvalues. 6/π² does not appear in any of its four known exact constants."
   - id: "oq-6"
     q: "Scales with a prime number of notes"
     status: "Answered: no"

@@ -1,0 +1,88 @@
+{{ define "main" }}
+{{- /* /connections/rhythm-of-numbers/new-prime/: the probable prime q_25332, the denominator of pi's 25,332nd
+   convergent, found by Teddy Rook (content/connections/rhythm-of-numbers/new-prime/_index.md holds the text and the
+   status). The digits are read at build time from static/connections/rhythm/q25332.txt (one line, no spaces; checked
+   by docs/papers/rhythm-of-numbers/compute/c12_third_pi.py, which stops if it differs from the recomputed number), and
+   the "check it yourself" code from static/connections/rhythm/check_q25332.py. Styles: rn.css and prime.css; the copy
+   button is static/connections/rhythm/prime.js (the page works without it). */ -}}
+{{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
+{{ partial "inline/ml-css.html" "connections/rhythm/prime.css" }}
+{{- $hub := "connections/rhythm-of-numbers/" | relURL }}
+{{- $txt := "connections/rhythm/q25332.txt" }}
+{{- $s := readFile (printf "static/%s" $txt) | strings.TrimSpace }}
+{{- $n := len $s }}
+{{- $code := readFile "static/connections/rhythm/check_q25332.py" }}
+{{- $pdf := "pdfs/The-Rhythm-of-Numbers-paper.pdf" | relURL }}
+{{- $pp := site.Data.rhythm.paper_pages }}
+<article class="rn rn-np">
+<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Where Music, Patterns, Math and Chemistry Meet</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <span>A new probable prime</span></nav>
+
+<header class="rn-hero">
+  <p class="rn-eyebrow">The Rhythm of Numbers · A new probable prime · added {{ .Params.added }} (UTC)</p>
+  <h1>Pi’s 25,332nd fraction has a <em>probable prime</em> on the bottom</h1>
+  <p class="rn-lede">{{ .Params.lede }}</p>
+</header>
+
+<div class="np-status" role="note" aria-label="Status">
+  <p><b>Status: {{ .Params.status }}.</b> {{ .Params.status_text }}</p>
+  <p class="rn-small rn-muted">{{ .Params.status_note }}</p>
+</div>
+
+<section class="np-sec" aria-labelledby="np-facts-h">
+  <h2 id="np-facts-h">The number at a glance</h2>
+  <dl class="np-facts">
+    <div><dt>What it is</dt><dd>The bottom number (denominator) of pi’s 25,332nd best fraction, called q<sub>25332</sub></dd></div>
+    <div><dt>Size</dt><dd>{{ lang.FormatNumber 0 $n }} digits</dd></div>
+    <div><dt>Found by</dt><dd>{{ .Params.found_by }}</dd></div>
+    <div><dt>Its place in the list</dt><dd>The 11th prime denominator of pi; the 10th is at fraction number 6,925</dd></div>
+    <div class="np-wide"><dt>First and last 30 digits</dt><dd class="np-hash">{{ substr $s 0 30 }} … {{ substr $s (sub $n 30) 30 }}</dd></div>
+    <div class="np-wide"><dt>SHA-256 of the digits (no spaces or line breaks)</dt><dd class="np-hash">{{ .Params.sha256 }}</dd></div>
+  </dl>
+</section>
+
+<section class="np-sec" aria-labelledby="np-what-h">
+  <h2 id="np-what-h">Where it comes from</h2>
+  <div class="np-prose">{{ range .Params.where }}<p>{{ . | markdownify }}</p>{{ end }}</div>
+</section>
+
+<section class="np-sec" aria-labelledby="np-pp-h">
+  <h2 id="np-pp-h">What “probable prime” means</h2>
+  <div class="np-prose">{{ range .Params.probable }}<p>{{ . | markdownify }}</p>{{ end }}</div>
+</section>
+
+<section class="np-sec" id="digits" aria-labelledby="np-dig-h">
+  <h2 id="np-dig-h">All {{ lang.FormatNumber 0 $n }} digits</h2>
+  <p class="rn-small rn-muted">In rows of 50 and groups of 10, to make them easier to read. The gray number at the start of each row is the position of its first digit. Copy or download the number as one line with no spaces.</p>
+  <div class="np-tools">
+    <button type="button" class="np-btn np-pri" id="npCopy" hidden>Copy all digits</button>
+    <a class="np-btn" href="{{ $txt | relURL }}" download="q25332.txt">⬇ Download q25332.txt ({{ lang.FormatNumber 0 (add $n 1) }} bytes)</a>
+  </div>
+  <p class="np-msg" id="npMsg" aria-live="polite"></p>
+  <div class="np-digits" id="npDigits" tabindex="0" role="region" aria-label="The {{ lang.FormatNumber 0 $n }} digits of the probable prime, in groups of 10">
+    {{- range $i := seq 0 50 (sub $n 1) }}
+    <div class="np-row"><span class="np-n" aria-hidden="true">{{ lang.FormatNumber 0 (add $i 1) }}</span><span class="np-gs">{{ range $j := seq 0 10 40 }}{{ if lt (add $i $j) $n }}<span class="np-g">{{ substr $s (add $i $j) 10 }}</span>{{ end }}{{ end }}</span></div>
+    {{- end }}
+  </div>
+</section>
+
+<section class="np-sec" id="check" aria-labelledby="np-chk-h">
+  <h2 id="np-chk-h">Check it yourself</h2>
+  <div class="np-prose">{{ range .Params.check }}<p>{{ . | markdownify }}</p>{{ end }}</div>
+  <p class="np-tools"><a class="np-btn" href="{{ "connections/rhythm/check_q25332.py" | relURL }}" download="check_q25332.py">⬇ Download check_q25332.py</a></p>
+  <pre class="np-code" tabindex="0" aria-label="Python code that rebuilds and tests the number"><code>{{ $code }}</code></pre>
+</section>
+
+<section class="np-sec" aria-labelledby="np-why-h">
+  <h2 id="np-why-h">Why it matters, and why it was a long wait</h2>
+  <div class="np-prose">{{ range .Params.why }}<p>{{ . | markdownify }}</p>{{ end }}</div>
+  <p class="np-next"><a href="{{ "connections/rhythm-of-numbers/what-it-means/" | relURL }}">What it all means, in plain words →</a><a href="{{ $hub }}#oq-1">Pi’s prime fractions on the Rhythm of Numbers page →</a><a href="{{ $pdf }}#page={{ index $pp.sections "17.5" }}" target="_blank" rel="noopener">Section 17.5 of the paper (PDF, page {{ index $pp.sections "17.5" }}) ↗</a></p>
+</section>
+
+<footer class="rn-notes" aria-labelledby="np-notes-h">
+  <h2 id="np-notes-h" class="rn-h3">Notes and sources</h2>
+  <ul>{{ range .Params.notes }}<li>{{ . | markdownify }}</li>{{ end }}</ul>
+  <p><a href="{{ $hub }}">← Back to The Rhythm of Numbers</a> · <a href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}">The paper</a></p>
+</footer>
+</article>
+{{ partial "inline/ml-js.html" "connections/rhythm/prime.js" }}
+{{ end }}

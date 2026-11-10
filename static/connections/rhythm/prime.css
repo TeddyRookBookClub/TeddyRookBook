@@ -1,0 +1,54 @@
+/* The Rhythm of Numbers: "A new probable prime" (/connections/rhythm-of-numbers/new-prime/) and "What it all means"
+   (/connections/rhythm-of-numbers/what-it-means/). Prefix np-; builds on rn.css tokens (light and dark themes). */
+.rn-np{display:grid;gap:1.5rem;padding-bottom:1rem}
+.rn-np .rn-hero{display:grid;gap:.6rem}
+.rn-np h1 em{font-style:normal;color:var(--rn-g)}
+.np-sec{display:grid;gap:.7rem}
+.np-sec h2{font-size:clamp(1.2rem,3.4vw,1.5rem)}
+.np-prose{display:grid;gap:.7rem}
+.np-prose ul,.np-prose ol{margin:0;padding-left:1.25rem;display:grid;gap:.35rem;max-width:44rem}
+.np-date{font-size:.8rem;font-weight:700;color:var(--rn-gold-t)}
+/* status box */
+.np-status{border:1px solid var(--rn-gold);border-left:5px solid var(--rn-gold);border-radius:10px;padding:.75rem 1rem;background:var(--rn-panel);display:grid;gap:.35rem}
+.np-status p{max-width:none}
+.np-status b{color:var(--rn-gold-t)}
+/* facts */
+.np-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:.6rem;margin:0}
+.np-facts>div{border:1px solid var(--rn-line);border-radius:10px;padding:.6rem .8rem;background:var(--rn-panel);min-width:0}
+.np-facts dt{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--rn-muted);font-weight:700}
+.np-facts dd{margin:.15rem 0 0;font-weight:600;overflow-wrap:anywhere}
+.np-facts .np-wide{grid-column:1/-1}
+.np-hash{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86rem;font-weight:500;overflow-wrap:anywhere}
+/* the digits */
+.np-tools{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.np-btn{display:inline-block;padding:.5rem .9rem;border-radius:10px;border:1px solid var(--rn-g);color:var(--rn-g);background:transparent;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
+.np-btn:hover,.np-btn:focus-visible{text-decoration:underline}
+.np-btn.np-pri{background:var(--rn-g);color:var(--rn-on)}
+.rn .np-btn.np-pri{color:var(--rn-on)}
+.np-msg{font-size:.88rem;color:var(--rn-muted);min-height:1.2em}
+.np-digits{border:1px solid var(--rn-line);border-radius:10px;background:var(--rn-soft);padding:.6rem .7rem;max-height:32rem;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:clamp(.72rem,2.6vw,.9rem);line-height:1.6}
+.np-digits:focus-visible{outline:2px solid var(--rn-g);outline-offset:2px}
+.np-row{display:grid;grid-template-columns:auto 1fr;gap:0 .9ch;align-items:baseline}
+.np-gs{display:flex;flex-wrap:wrap;gap:0 .9ch}
+.np-row+.np-row{margin-top:.15rem}
+.np-n{color:var(--rn-muted);min-width:6ch;text-align:right;user-select:none;-webkit-user-select:none;font-size:.85em}
+.np-g{letter-spacing:.02em;color:var(--rn-ink)}
+/* code */
+.np-code{border:1px solid var(--rn-line);border-radius:10px;background:var(--rn-soft);padding:.7rem .8rem;overflow-x:auto;font-size:.82rem;line-height:1.5;margin:0;max-width:100%}
+.np-code code{font-size:inherit;white-space:pre}
+/* what it means */
+.np-short{border:1px solid var(--rn-line);border-left:4px solid var(--rn-g);border-radius:10px;padding:.8rem 1rem;background:var(--rn-panel)}
+.np-short ul{margin:0;padding-left:1.2rem;display:grid;gap:.4rem}
+.np-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:.7rem}
+.np-card{border:1px solid var(--rn-line);border-radius:10px;padding:.7rem .9rem;background:var(--rn-panel);display:grid;gap:.35rem;align-content:start}
+.np-card h3{font-size:1rem;display:flex;flex-wrap:wrap;gap:.2rem .5rem;align-items:baseline}
+.np-card p{max-width:none}
+.np-tag{font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:0 .5rem;border:1px solid var(--rn-gold);color:var(--rn-gold-t)}
+.np-tag.np-proved{border-color:var(--rn-g);color:var(--rn-g)}
+.np-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:.7rem}
+.np-two>div{border:1px solid var(--rn-line);border-radius:10px;padding:.7rem .9rem;background:var(--rn-panel)}
+.np-two h3{margin-bottom:.35rem}
+.np-two ul{margin:0;padding-left:1.15rem;display:grid;gap:.35rem}
+.np-next{display:flex;flex-wrap:wrap;gap:.5rem 1.2rem}
+.np-next a{font-weight:700}
+@media print{.np-tools,.np-msg{display:none}.np-digits{max-height:none;overflow:visible;border:none;background:none}}

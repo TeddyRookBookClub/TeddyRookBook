@@ -1,7 +1,8 @@
 {{- /* The chart under question 1 of "Working on the open questions" (layouts/_partials/connections/rhythm-openq.html):
-   pi's prime convergent denominators and numerators to n = 20,000 against the heuristic, two small inline SVGs.
+   pi's prime convergent denominators (to n = $d.N = 25,332, Chapter 17) and numerators (to n = $d.Np = 20,000) against
+   the heuristic, two small inline SVGs.
    Data: data/rhythm/openq_pi.json (scripts/rhythm/openq-chart-data.py; rows are [N, expected, lo95, hi95]).
-   x = log of N from 1 to 20,000; y = count from 0 to 20. Hover or long-press a dot for its fraction number. */ -}}
+   x = log of N from 1 to $d.N (the numerator panel stops at $d.Np); y = count from 0 to 20. Hover or long-press a dot for its fraction number. */ -}}
 {{- $d := site.Data.rhythm.openq_pi }}
 {{- if $d }}
 {{- $L := 36.0 }}{{ $R := 312.0 }}{{ $T := 12.0 }}{{ $B := 172.0 }}{{ $YM := 20.0 }}
@@ -9,12 +10,12 @@
 {{- $w := sub $R $L }}{{ $h := sub $B $T }}
 <figure class="rn-oq-fig">
   <div class="rn-oq-charts">
-  {{- range $panel := slice (dict "key" "q" "idx" $d.q_idx "title" "Prime denominators" "what" "denominator") (dict "key" "p" "idx" $d.p_idx "title" "Prime numerators" "what" "numerator") }}
+  {{- range $panel := slice (dict "key" "q" "idx" $d.q_idx "title" "Prime denominators" "what" "denominator" "end" $d.N) (dict "key" "p" "idx" $d.p_idx "title" "Prime numerators" "what" "numerator" "end" ($d.Np | default $d.N)) }}
   {{- $rows := index $d $panel.key }}
   {{- $idx := $panel.idx }}
   {{- $last := index $rows (sub (len $rows) 1) }}
   <svg class="rn-oq-svg" viewBox="0 0 320 200" role="img" aria-labelledby="oqc-{{ $panel.key }}-t oqc-{{ $panel.key }}-d">
-    <title id="oqc-{{ $panel.key }}-t">{{ $panel.title }} of pi’s fractions, up to fraction number {{ lang.FormatNumber 0 $d.N }}</title>
+    <title id="oqc-{{ $panel.key }}-t">{{ $panel.title }} of pi’s fractions, up to fraction number {{ lang.FormatNumber 0 $panel.end }}</title>
     <desc id="oqc-{{ $panel.key }}-d">Pi has {{ len $idx }} so far. A typical number would have about {{ printf "%.1f" (index $last 1) }}, and 95% of the time between {{ index $last 2 }} and {{ index $last 3 }}.</desc>
     {{- /* grid */}}
     {{- range $v := slice 0 5 10 15 20 }}{{ $y := sub $B (mul $h (div (float $v) $YM)) }}
@@ -42,7 +43,7 @@
     {{- range $k, $n := $idx }}{{ $x := add $L (mul $w (div (math.Log (float $n)) $lmax)) }}
       {{- $path = printf "%s H%.1f V%.1f" $path $x (sub $B (mul $h (div (float (add $k 1)) $YM))) }}
     {{- end }}
-    {{- $path = printf "%s H%.1f" $path $R }}
+    {{- $path = printf "%s H%.1f" $path (add $L (mul $w (div (math.Log (float $panel.end)) $lmax))) }}
     <path class="rn-oq-pi" d="{{ $path }}"/>
     {{- range $k, $n := $idx }}{{ $x := add $L (mul $w (div (math.Log (float $n)) $lmax)) }}
     <circle class="rn-oq-dot" cx="{{ printf "%.1f" $x }}" cy="{{ printf "%.1f" (sub $B (mul $h (div (float (add $k 1)) $YM))) }}" r="3.2"><title>Prime {{ $panel.what }} number {{ add $k 1 }}: fraction number {{ lang.FormatNumber 0 $n }}</title></circle>
@@ -58,6 +59,6 @@
     <li><span class="rn-oq-sw rn-oq-sw-band"></span>where 95% of typical counts fall</li>
     <li><span class="rn-oq-sw rn-oq-sw-law"></span>2 ln 2 · ln n</li>
   </ul>
-  <figcaption class="rn-small">How many of pi’s first n fractions have a prime bottom number (the first chart) or top number (the second). The green steps are pi. The gold dashed curve is what the paper’s rule predicts for a typical number, and the shaded band is the range a typical number lands in 95% of the time. Pi stays inside the band all the way to n = {{ lang.FormatNumber 0 $d.N }}. For a typical number the count grows like 2 ln 2 · ln n (the thin dotted line climbs at the same rate); Chapter 16 proves that for almost every number. Hover over a dot, or press and hold it, to see where each prime falls.</figcaption>
+  <figcaption class="rn-small">How many of pi’s first n fractions have a prime bottom number (the first chart) or top number (the second). The green steps are pi. The gold dashed curve is what the paper’s rule predicts for a typical number, and the shaded band is the range a typical number lands in 95% of the time. Pi stays inside the band all the way: to n = {{ lang.FormatNumber 0 $d.N }} for the denominators, where the 11th prime (a probable prime, found by Teddy Rook) sits at the very end, and to n = {{ lang.FormatNumber 0 ($d.Np | default $d.N) }} for the numerators, which have not been searched further. For a typical number the count grows like 2 ln 2 · ln n (the thin dotted line climbs at the same rate); Chapter 16 proves that for almost every number. Hover over a dot, or press and hold it, to see where each prime falls.</figcaption>
 </figure>
 {{- end }}
