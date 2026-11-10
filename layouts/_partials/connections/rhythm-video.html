@@ -8,5 +8,8 @@
 <div class="rn-video">
   {{ partial "video.html" (dict "id" $id "title" ($.Params.video_title | default "The Continued-Fraction Suite, by Teddy Rook") "about" ($.Params.video_about | default "Original music built from the rhythms on this page.") "nolink" true) }}
 </div>
+<div class="rn-video">
+  {{ partial "video.html" (dict "id" "VyWMu-SFTek" "title" "The Cathedral of Numbers" "about" "Four of these numbers become a symphony for organ, orchestra and choir." "nolink" true) }}
+</div>
 {{- else }}{{ warnf "%s: video_id %q is not a YouTube video id (11 characters)" $.File.Path $id }}{{ end }}
 {{- end -}}
