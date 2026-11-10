@@ -1,7 +1,7 @@
 # Check pi's new probable primes yourself. Python 3, standard library only; with gmpy2 installed the
-# primality test at the end is much faster. Put q25332.txt, q27651.txt, q32394.txt or q37721.txt (from this page) in the
-# same folder, then run, for example,
-#   python3 check_pi_prime.py 25332      or      python3 check_pi_prime.py 37721
+# primality test at the end is much faster. Put q25332.txt, q27651.txt, q32394.txt, q37721.txt or p42037.txt (from this
+# page) in the same folder, then run, for example,
+#   python3 check_pi_prime.py 37721      (a bottom number)   or   python3 check_pi_prime.py 42037 p   (a top number)
 import hashlib, random, sys
 if hasattr(sys, "set_int_max_str_digits"):
     sys.set_int_max_str_digits(0)          # allow printing a 13,017-digit number
@@ -28,6 +28,7 @@ def terms(num, den, count):
     return out
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 25332
+TOP = len(sys.argv) > 2 and sys.argv[2] == "p"     # p: the numerator (top number) instead of the denominator
 D = int(1.03 * N) + 1500                 # digits of pi needed, with room to spare
 P = pi_floor(D)
 lo, hi = terms(P - 10, 10 ** D, N + 50), terms(P + 10, 10 ** D, N + 50)  # pi lies between the two
@@ -38,11 +39,11 @@ assert k > N + 1, "not enough certain terms; raise D"
 a = lo[:N + 1]
 print("first terms:", a[:8], " terms %d-%d:" % (N - 2, N + 2), lo[N - 2:N + 3])
 
-q0, q1 = 0, 1                             # q_{-1} = 0, q_0 = 1
+q0, q1 = (1, a[0]) if TOP else (0, 1)    # p_{-1} = 1, p_0 = 3; q_{-1} = 0, q_0 = 1
 for n in range(1, N + 1):
     q0, q1 = q1, a[n] * q1 + q0
 s = str(q1)
-print("digits:", len(s), " matches the file:", s == open("q%d.txt" % N).read().strip())
+print("digits:", len(s), " matches the file:", s == open("%s%d.txt" % ("p" if TOP else "q", N)).read().strip())
 print("SHA-256:", hashlib.sha256(s.encode()).hexdigest())
 
 try:

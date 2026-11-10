@@ -1,10 +1,46 @@
 # Teddy Rook Book videos on YouTube, keyed by the YouTube id. Shown on /videos/ (one page each, at /videos/<slug>/)
 # and embedded with the partial "video.html" (click to play; nothing loads from YouTube until then, and then only from youtube-nocookie.com).
-# Fields: slug, title, about, date (YYYY-MM-DD), length (e.g. "42 min", optional), topics, related [{label, url}],
+# Fields: slug, title, pages (paths of other pages that show the video in a "Watch" section, via _partials/videos-here.html), about, date (YYYY-MM-DD), length (e.g. "42 min", optional), topics, related [{label, url}],
 # chapters [["m:ss" or "h:mm:ss", label]], optional notes and credits (lists of strings), optionally
 # trailer: <YouTube id of the short trailer> with trailer_length, and optionally companion {title, about, url, url_label (the button, default "Read it online"), pdf, pdf_size}.
+cl_W9SkgtNs:
+  slug: the-cathedral-of-e
+  title: "The Cathedral of e: Euler's Number Builds a Cathedral, One Note at a Time"
+  about: "Every gold line that leaves the circle becomes a stone, and every stone lands on a note. The waltz from the Continued-Fraction Suite, set for organ, orchestra and choir, is played thirteen times, and e's continued fraction, e − 2 = [0; 1, 2, 1, 1, 4, 1, 1, 6, …], sets the length of every span: 4 and 3 bars, 7, then 32, 39, 71, 465, 536 and 1001. Each is the bottom of one of the fractions closest to e, and the piece ends on 2721/1001, e to six decimal places. As it plays, a cathedral rises: 2,336 stones and sixteen stained-glass windows."
+  date: 2026-11-10
+  length: "25 min"
+  topics: [Music, Math]
+  pages: ["/music/continued-fraction-suite/euler/", "/math/gallery/"]
+  chapters:
+    - ["0:00", "Cycle 1: the waltz, the floor plan, the foundations"]
+    - ["2:20", "Cycle 2 (fast): the nave arcades"]
+    - ["3:33", "Cycle 3: glass. Light, the Dove, the Cross"]
+    - ["5:51", "Cycle 4 (fast, D minor): the clerestory"]
+    - ["7:02", "Cycle 5: glass. A star over Bethlehem, loaves and fishes, the chalice"]
+    - ["9:25", "Cycle 6 (fast): the west front, the buttresses and the roof"]
+    - ["10:35", "Short cycle, bar 427: the west rose"]
+    - ["11:57", "Cycle 7 (fast, E minor): the transepts"]
+    - ["13:10", "Cycle 8: glass. The north rose, the south rose, Alpha and Omega"]
+    - ["15:27", "Cycle 9 (fast): the choir and the apse"]
+    - ["16:37", "Cycle 10 (G minor): glass. Thirteen stars and a bell, the journey west, liberty and justice"]
+    - ["18:49", "Cycle 11 (fast, D minor): the west towers"]
+    - ["19:56", "Cycle 12: glass. The Moon, a march at dawn, peace"]
+    - ["22:19", "Cycle 13 (fast): the central tower"]
+    - ["23:23", "Last short cycle: the final stones, and light"]
+    - ["24:35", "Bar 1001: the finished cathedral"]
+  related:
+    - {label: "IV. Euler: the piano waltz this video is built on, with a lesson and the score", url: "/music/continued-fraction-suite/euler/"}
+    - {label: "The Continued-Fraction Suite: all six piano pieces and a free score", url: "/music/continued-fraction-suite/"}
+    - {label: "The Rhythm of Numbers: play any number as a beat", url: "/connections/rhythm-of-numbers/"}
+    - {label: "The Cathedral of Numbers video", url: "/videos/the-cathedral-of-numbers/"}
+  notes:
+    - "What you are seeing: the circle is a times table of 127 points, each joined to a multiple of itself; the multiplier slides from 2 to 3 to 4 as the cycles go by, and gold lines flash on the number's accents. About 28 notes in every 100 carry an accent, because 3 − e = 0.2817…"
+    - "The cathedral is an original, simplified design that follows the published dimensions of Washington National Cathedral (514 feet long, a central tower 301 feet high, three rose windows of twelve petals). It is not an official or exact model, and all sixteen windows are new designs; none of the real cathedral's windows is copied. The video is not affiliated with or endorsed by Washington National Cathedral."
+  credits:
+    - "Music: Teddy Rook, from the Continued-Fraction Suite. Sound: sampled instruments (MuseScore General SoundFont) in a simulated cathedral acoustic; no live players were recorded."
 VyWMu-SFTek:
   slug: the-cathedral-of-numbers
+  pages: ["/music/continued-fraction-suite/golden/", "/music/continued-fraction-suite/silver/", "/music/continued-fraction-suite/euler/", "/music/continued-fraction-suite/pi/", "/math/gallery/"]
   title: "The Cathedral of Numbers: A Symphony Built from π, e, √2 and the Golden Ratio"
   about: "Play pi as a beat and you hear an accent every 7 notes, and now and then 8. That rhythm, and three more like it, build this symphony for organ, orchestra and choir. The themes come from Teddy Rook's Continued-Fraction Suite: four of its numbers become four linked movements, and each number's continued fraction decides how long each phrase is, when each section changes, and where the accompaniment leans. The rose window changes with each number, and the side windows belong to the instruments: the organ lights the continued fraction, the strings rebuild the prime staircase from waves, the choir sings in Ford circles, and the brass adds 1 + 1/4 + 1/9 + … toward π²/6."
   date: 2026-11-10
@@ -25,6 +61,7 @@ VyWMu-SFTek:
     - "Music: Teddy Rook, from the Continued-Fraction Suite. Sound: sampled instruments (MuseScore General SoundFont) in a simulated cathedral acoustic; no live players were recorded. Sheet music engraved with LilyPond."
 K0l47YsgopE:
   slug: the-continued-fraction-suite
+  pages: ["/math/gallery/"]
   title: "The Continued-Fraction Suite: The Rhythm of Numbers"
   about: "Original music by Teddy Rook, built from the rhythms of numbers. Play pi as a beat and you get gaps of 7, with an 8 about every sixteenth gap and a rare short phrase after 292. Those repeat counts come from pi's continued fraction, and here they become bars, phrases and sections of a piece."
   date: 2026-11-04
@@ -124,6 +161,7 @@ IuWMHo844jM:
     - {label: "New Testament Greek lessons (homeschool)", url: "/homeschool/greek/"}
 v9pNcq_TK1g:
   slug: the-iliad-against-what-followed
+  pages: ["/books/the-iliad/", "/books/the-odyssey/", "/books/the-aeneid/"]
   title: "The Iliad Against What Followed"
   about: "Homer walks through The Iliad: What Followed, setting the Iliad beside the stories that came after it in three pairings: family, duty, and whether glory is worth the life it costs."
   date: 2026-10-13

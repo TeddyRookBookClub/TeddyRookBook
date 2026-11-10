@@ -1,9 +1,9 @@
 {{ define "main" }}
-{{- /* /connections/rhythm-of-numbers/new-prime/: the probable prime q_25332, the denominator of pi's 25,332nd
-   convergent, and q_27651, both found by Teddy Rook (content/connections/rhythm-of-numbers/new-prime/_index.md holds
+{{- /* /connections/rhythm-of-numbers/new-prime/: the probable primes among pi's convergents found by Teddy Rook
+   (denominators q_n, and numerators p_n for entries with kind: p) (content/connections/rhythm-of-numbers/new-prime/_index.md holds
    the text and each prime's status in primes:). The digits are read at build time from
-   static/connections/rhythm/q<n>.txt (one line, no spaces; checked by docs/papers/rhythm-of-numbers/compute/
-   c12_third_pi.py and c12_third_twelfth.py, which stop if a file differs from the recomputed number), and the "check it
+   static/connections/rhythm/q<n>.txt or p<n>.txt (one line, no spaces; checked by docs/papers/rhythm-of-numbers/compute/
+   c12_third_pi.py, c12_third_newprimes.py, c12_third_fourteenth.py and c12_third_fifty.py, which stop if a file differs from the recomputed number), and the "check it
    yourself" code from static/connections/rhythm/check_pi_prime.py. Styles: rn.css and prime.css; the copy
    button is static/connections/rhythm/prime.js (the page works without it). */ -}}
 {{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
@@ -17,9 +17,9 @@
 
 <header class="rn-hero">
   <p class="rn-eyebrow">The Rhythm of Numbers · New probable primes · added {{ partial "connections/rn-date.html" .Params.added }}</p>
-  <h1>Three of pi’s best fractions have a <em>probable prime</em> on the bottom</h1>
+  <h1>Five of pi’s best fractions have a <em>probable prime</em> on the bottom or on top</h1>
   <p class="rn-lede">{{ .Params.lede }}</p>
-  <nav aria-label="The new primes"><p class="np-next">{{ range .Params.primes }}<a href="#q{{ .idx }}">{{ .label }}: fraction {{ lang.FormatNumber 0 .idx }} →</a>{{ end }}</p></nav>
+  <nav aria-label="The new primes"><p class="np-next">{{ range .Params.primes }}<a href="#{{ .kind | default "q" }}{{ .idx }}">{{ .label }}: fraction {{ lang.FormatNumber 0 .idx }} →</a>{{ end }}</p></nav>
 </header>
 
 <section class="np-sec" aria-labelledby="np-what-h">
@@ -28,17 +28,18 @@
 </section>
 
 {{- range $k, $pr := .Params.primes }}
-{{- $txt := printf "connections/rhythm/q%d.txt" (int $pr.idx) }}
+{{- $kd := $pr.kind | default "q" }}{{ $top := eq $kd "p" }}{{ $id := printf "%s%d" $kd (int $pr.idx) }}
+{{- $txt := printf "connections/rhythm/%s.txt" $id }}
 {{- $s := readFile (printf "static/%s" $txt) | strings.TrimSpace }}
 {{- $n := len $s }}{{ if lt $n 100 }}{{ errorf "rhythm-prime: %q is missing or empty" $txt }}{{ end }}
-<section class="np-sec np-prime" id="q{{ $pr.idx }}" aria-labelledby="q{{ $pr.idx }}-h">
-  <h2 id="q{{ $pr.idx }}-h">{{ $pr.label }}: the bottom number of fraction {{ lang.FormatNumber 0 $pr.idx }}</h2>
+<section class="np-sec np-prime" id="{{ $id }}" aria-labelledby="{{ $id }}-h">
+  <h2 id="{{ $id }}-h">{{ $pr.label }}: the {{ if $top }}<em>top</em>{{ else }}bottom{{ end }} number of fraction {{ lang.FormatNumber 0 $pr.idx }}</h2>
   <div class="np-status" role="note" aria-label="Status of the {{ $pr.label | lower }}">
     <p><b>Status: {{ $pr.status }}.</b> {{ $pr.status_text }}</p>
     {{- with $pr.status_note }}<p class="rn-small rn-muted">{{ . }}</p>{{ end }}
   </div>
   <dl class="np-facts">
-    <div><dt>What it is</dt><dd>The denominator of pi’s {{ $pr.nth }} best fraction, called q<sub>{{ $pr.idx }}</sub></dd></div>
+    <div><dt>What it is</dt><dd>The {{ if $top }}numerator (the top number){{ else }}denominator{{ end }} of pi’s {{ $pr.nth }} best fraction, called {{ $kd }}<sub>{{ $pr.idx }}</sub></dd></div>
     <div><dt>Size</dt><dd>{{ lang.FormatNumber 0 $n }} digits</dd></div>
     <div><dt>Found by</dt><dd>{{ $pr.found_by }}</dd></div>
     <div><dt>Its place in the list</dt><dd>{{ $pr.place }}</dd></div>
@@ -47,11 +48,11 @@
   </dl>
   <p class="rn-small rn-muted">All {{ lang.FormatNumber 0 $n }} digits, in rows of 50 and groups of 10. The gray number at the start of each row is the position of its first digit. Copy or download the number as one line with no spaces.</p>
   <div class="np-tools">
-    <button type="button" class="np-btn np-pri np-copy" data-target="npD{{ $pr.idx }}" hidden>Copy all digits</button>
-    <a class="np-btn" href="{{ $txt | relURL }}" download="q{{ $pr.idx }}.txt">⬇ Download q{{ $pr.idx }}.txt ({{ lang.FormatNumber 0 (add $n 1) }} bytes)</a>
+    <button type="button" class="np-btn np-pri np-copy" data-target="npD{{ $id }}" hidden>Copy all digits</button>
+    <a class="np-btn" href="{{ $txt | relURL }}" download="{{ $id }}.txt">⬇ Download {{ $id }}.txt ({{ lang.FormatNumber 0 (add $n 1) }} bytes)</a>
   </div>
-  <p class="np-msg" id="npD{{ $pr.idx }}-msg" aria-live="polite"></p>
-  <div class="np-digits" id="npD{{ $pr.idx }}" tabindex="0" role="region" aria-label="The {{ lang.FormatNumber 0 $n }} digits of q{{ $pr.idx }}, in groups of 10">
+  <p class="np-msg" id="npD{{ $id }}-msg" aria-live="polite"></p>
+  <div class="np-digits" id="npD{{ $id }}" tabindex="0" role="region" aria-label="The {{ lang.FormatNumber 0 $n }} digits of {{ $id }}, in groups of 10">
     {{- range $i := seq 0 50 (sub $n 1) }}
     <div class="np-row"><span class="np-n" aria-hidden="true">{{ lang.FormatNumber 0 (add $i 1) }}</span><span class="np-gs">{{ range $j := seq 0 10 40 }}{{ if lt (add $i $j) $n }}<span class="np-g">{{ substr $s (add $i $j) 10 }}</span>{{ end }}{{ end }}</span></div>
     {{- end }}

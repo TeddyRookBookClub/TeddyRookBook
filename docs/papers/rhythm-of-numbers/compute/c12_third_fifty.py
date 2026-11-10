@@ -1,0 +1,209 @@
+"""Chapter 17 ("A third look"), Section 17.5: the sixteenth probable-prime numerator p_42037 and the counts to n = 50,000.
+
+Based on Teddy Rook's search to n = 50,000 (numerators and denominators; November 2026), who found that p_42037 is a
+probable prime.
+  * pi's continued fraction from mpmath at two precisions and from MPFR's pi as an interval (they must agree through
+    n = 50,080); p_42037 and q_42037 rebuilt; static/connections/rhythm/p42037.txt written if missing and otherwise
+    checked, and compared digit for digit with the owner's copy when present; SHA-256; strong Baillie-PSW and 25
+    Miller-Rabin rounds on p, strong BPSW on q (probable-prime tests, not proofs);
+  * our own search coverage, read from out/third_sieve_*.json (the counts beyond it are Teddy Rook's);
+  * Heuristic 8.3 to n = 50,000 for denominators and numerators (exact Poisson-binomial law); both versions of the
+    Kolmogorov-Smirnov test to 50,000; the numerator gap from 8,750 to 42,037 in heuristic time; the odds of a fifteenth
+    prime denominator and a seventeenth prime numerator by 62,500, 100,000 and 200,000; the notes with sixteen numerators
+    and exact multinomial tails.
+Writes gen/c12_third_fifty.tex, gen/c12_third_digits5.tex, out/third_fifty.json, and the terms a_0..a_50000 to
+static/connections/rhythm/pi-terms.txt.
+Runtime: about 5 minutes."""
+import sys, hashlib, math, time, os
+import numpy as np
+import gmpy2
+from gmpy2 import mpz
+from scipy import stats
+import mpmath
+from common import *
+
+sys.set_int_max_str_digits(0)
+NEWP = 42037; NMAX = 50000; EXTRA = 80
+ZETA2 = math.pi ** 2 / 6
+STATIC = os.path.join(HERE, '..', '..', '..', '..', 'static', 'connections', 'rhythm')
+OWNER = '/tmp/work_third/update3/numbers/p42037.txt'
+NOTES = ['C', 'C$\\sharp$', 'D', 'E$\\flat$', 'E', 'F', 'F$\\sharp$', 'G', 'A$\\flat$', 'A', 'B$\\flat$', 'B']
+RES = (1, 5, 7, 11)
+Q_IDX = [1, 3, 8, 32, 594, 1126, 2002, 3610, 4355, 6925, 25332, 27651, 32394, 37721]
+P_IDX = [4, 8, 10, 15, 86, 229, 333, 593, 839, 852, 1148, 2725, 3787, 7441, 8750, 42037]
+
+
+def cf_of(num, den, n):
+    out = []
+    while den and len(out) < n:
+        a, r = gmpy2.f_divmod(num, den); out.append(int(a)); num, den = den, r
+    return out
+
+
+def mpmath_terms(dps, n):
+    mpmath.mp.dps = dps
+    x = +mpmath.pi
+    return cf_of(mpz(int(x.man)) << max(0, x.exp), mpz(1) << max(0, -x.exp), n)
+
+
+def mpfr_terms(bits, n):
+    gmpy2.get_context().precision = bits
+    m, e = gmpy2.const_pi().as_mantissa_exp()
+    lo = cf_of(mpz(m) - 2, mpz(1) << (-e), n); hi = cf_of(mpz(m) + 2, mpz(1) << (-e), n)
+    k = 0
+    while k < min(len(lo), len(hi)) and lo[k] == hi[k]:
+        k += 1
+    return lo[:k]
+
+
+A = mpmath_terms(54000, NMAX + 400); B = mpmath_terms(55000, NMAX + 400)
+k = 0
+while k < min(len(A), len(B)) and A[k] == B[k]:
+    k += 1
+assert k > NMAX + EXTRA, k
+T2 = mpfr_terms(185000, NMAX + 400)
+assert len(T2) > NMAX + EXTRA and T2[:NMAX + EXTRA + 1] == A[:NMAX + EXTRA + 1]
+T = A[:NMAX + EXTRA + 1]
+macro('FiCert', commas(NMAX + EXTRA))
+fnt = os.path.join(STATIC, 'pi-terms.txt'); txt = ','.join(str(v) for v in T[:NMAX + 1])
+if os.path.exists(fnt):
+    assert txt.startswith(open(fnt).read().strip())
+with open(fnt, 'w') as f:
+    f.write(txt + '\n')
+out = {}
+
+# ---- p_42037 ---------------------------------------------------------------------------------------------------
+p0, q0, p1, q1 = mpz(1), mpz(0), mpz(T[0]), mpz(1)
+r12q, r12p = {}, {}
+for n in range(1, NMAX + 1):
+    p0, p1 = p1, T[n] * p1 + p0
+    q0, q1 = q1, T[n] * q1 + q0
+    if n == NEWP:
+        pN, qN = p1, q1
+    if n in Q_IDX:
+        r12q[n] = int(q1 % 12)
+    if n in P_IDX:
+        r12p[n] = int(p1 % 12)
+s = str(pN)
+fn = os.path.join(STATIC, 'p%d.txt' % NEWP)
+if not os.path.exists(fn):
+    with open(fn, 'w') as f:
+        f.write(s + '\n')
+assert open(fn).read().strip() == s
+own_match = None
+if os.path.exists(OWNER):
+    own_match = open(OWNER).read().strip() == s
+    assert own_match, 'owner file differs'
+sha = hashlib.sha256(s.encode()).hexdigest()
+t = time.time(); bpsw = gmpy2.is_strong_bpsw_prp(pN); tb = time.time() - t
+mr = gmpy2.is_prime(pN, 25)
+qq = gmpy2.is_strong_bpsw_prp(qN)
+assert bpsw and mr and not qq
+print('p_%d digits %d sha %s BPSW %s (%d s) MR25 %s q prime? %s owner copy matches: %s'
+      % (NEWP, len(s), sha, bpsw, tb, mr, qq, own_match), flush=True)
+macro('FiDigits', commas(len(s))); macro('FiQdigits', commas(len(str(qN))))
+macro('FiSha', sha); macro('FiFirst', s[:30]); macro('FiLast', s[-30:])
+macro('FiNear', ', '.join(str(v) for v in T[NEWP - 2:NEWP + 3])); macro('FiBpswSec', int(round(tb)))
+macro('FiNote', NOTES[int(pN % 12)])
+macro('FiEcpp', '%.1f' % ((len(s) / 13017) ** 4))
+lines = []
+for i in range(0, len(s), 80):
+    chunk = s[i:i + 80]
+    lines.append(' '.join(chunk[j:j + 10] for j in range(0, len(chunk), 10)))
+with open(os.path.join(GEN, 'c12_third_digits5.tex'), 'w') as f:
+    f.write('% generated by compute/c12_third_fifty.py -- do not edit\n')
+    f.write('\\begin{flushleft}\\ttfamily\\scriptsize\n' + '\\\\\n'.join(lines) + '\n\\end{flushleft}\n')
+out[NEWP] = dict(digits=len(s), sha256=sha, owner_match=own_match)
+
+# ---- our coverage ------------------------------------------------------------------------------------------------
+def reach(kind, start):
+    files = [f for f in os.listdir(OUT) if f.startswith('third_sieve_%s_' % kind)]
+    S = sorted((load(f) for f in files), key=lambda S: S['start'])
+    top, found = start, []
+    for x in S:
+        if x['start'] != top + 1:
+            break
+        done = set(x['done']); found += x['prp']
+        todo = [m for m in x['survivors'] if m not in done]
+        if not todo:
+            top = x['n']
+        else:  # a run still in progress: survivors are tested in order, so everything below the first untested one is covered
+            top = todo[0] - 1
+            break
+    return top, found
+
+
+ourq, fq = reach('q', 25332); ourp, fp = reach('p', 20000)
+assert set(fq) <= set(Q_IDX) and set(fp) <= set(P_IDX), (fq, fp)
+macro('FiOurQ', commas(ourq)); macro('FiOurP', commas(ourp))
+out['coverage'] = dict(q=ourq, p=ourp, found_q=fq, found_p=fp)
+print('our coverage', out['coverage'], flush=True)
+
+# ---- Heuristic 8.3 to 50,000 -------------------------------------------------------------------------------------
+lnq = np.empty(NMAX); r = None; acc = 0.0
+for n in range(1, NMAX + 1):
+    a = float(T[n]); r = a if r is None else a + 1 / r
+    acc += math.log(r); lnq[n - 1] = acc
+lnp = lnq + math.log(math.pi); lnp[0] = math.log(22)
+for lab, arr, idx in (('Q', lnq, Q_IDX), ('P', lnp, P_IDX)):
+    pr = ZETA2 / arr; cum = np.cumsum(pr)
+    for M, tag in ((40000, 'Forty'), (NMAX, 'Fifty')):
+        dist = np.zeros(81); dist[0] = 1
+        for x in pr[:M]:
+            dist[1:] = dist[1:] * (1 - x) + dist[:-1] * x; dist[0] *= (1 - x)
+        cdf = np.cumsum(dist); obs = sum(1 for j in idx if j <= M)
+        macro('FiExp' + lab + tag, '%.1f' % pr[:M].sum()); macro('FiObs' + lab + tag, obs)
+        macro('FiRange' + lab + tag, '%d--%d' % (int(np.searchsorted(cdf, 0.025)), int(np.searchsorted(cdf, 0.975))))
+        macro('FiShare' + lab + tag, '%.2f' % cdf[obs])
+        out['exp_%s_%d' % (lab, M)] = float(pr[:M].sum())
+    u = np.array([cum[j - 1] for j in idx]) / cum[NMAX - 1]
+    macro('FiKsAll' + lab, '%.2f' % stats.kstest(u, 'uniform').pvalue)
+    sel = [j for j in idx if j >= 30]; base = cum[28]; tot = cum[NMAX - 1] - base
+    tt = np.array([cum[j - 1] for j in sel]) - base
+    macro('FiKsRook' + lab, '%.2f' % stats.kstest(tt / tot, 'uniform').pvalue)
+    macro('FiRookN' + lab, len(sel)); macro('FiRookExp' + lab, '%.1f' % tot)
+    if lab == 'P':
+        gap = float(cum[NEWP - 1] - cum[8750 - 1])
+        macro('FiGapP', '%.2f' % gap); macro('FiGapPprob', '%.2f' % math.exp(-gap))
+        out['gapP'] = gap
+    # odds of the next one from 50,000 (ln continued linearly at the slope from 20,000 to 50,000)
+    slope = (arr[-1] - arr[19999]) / (NMAX - 20000)
+    for X, name in ((62500, 'SixtyTwo'), (100000, 'Hundred'), (200000, 'TwoHundred')):
+        lam = sum(ZETA2 / (arr[-1] + slope * (n - NMAX)) for n in range(NMAX + 1, X + 1))
+        macro('FiOdds' + lab + name, '%d' % round(100 * (1 - math.exp(-lam))))
+        out['odds_%s_%d' % (lab, X)] = 1 - math.exp(-lam)
+
+# ---- the notes -------------------------------------------------------------------------------------------------
+def counts(rs):
+    return [sum(1 for x in rs if x == r) for r in RES]
+
+
+cq = counts([r12q[j] for j in Q_IDX]); cp = counts([r12p[j] for j in P_IDX]); call = [a + b for a, b in zip(cq, cp)]
+assert cq == [2, 3, 7, 2]
+macro('FiNotesP', ' & '.join(map(str, cp))); macro('FiNotesAll', ' & '.join(map(str, call)))
+macro('FiAllN', sum(call)); macro('FiAllMax', max(call))
+
+
+def multi_tail(n, pr, test):
+    tot = 0.0
+    for a in range(n + 1):
+        for b in range(n + 1 - a):
+            for c in range(n + 1 - a - b):
+                d = n - a - b - c
+                if test((a, b, c, d)):
+                    tot += math.exp(math.lgamma(n + 1) - sum(math.lgamma(x + 1) for x in (a, b, c, d))
+                                    + sum(x * math.log(p) for x, p in zip((a, b, c, d), pr)))
+    return tot
+
+
+eq = [0.25] * 4; gmax = max(call)
+macro('FiTailAll', '%.3f' % multi_tail(sum(call), eq, lambda v: max(v) >= gmax))
+big30 = [r12q[j] for j in Q_IDX if j >= 30] + [r12p[j] for j in P_IDX if j >= 30]
+g30 = counts(big30)[2]
+macro('FiBigN', len(big30)); macro('FiBigG', g30)
+macro('FiTailBigG', '%.3f' % multi_tail(len(big30), eq, lambda v: v[2] >= g30))
+macro('FiTailBigAny', '%.3f' % multi_tail(len(big30), eq, lambda v: max(v) >= g30))
+out['notes'] = dict(q=cq, p=cp, all=call)
+write_macros('c12_third_fifty.tex')
+save('third_fifty.json', out)
+print(out)

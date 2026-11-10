@@ -46,6 +46,8 @@
     {{ replace (replace .Content `<div class="sx-slot" data-slot="form"></div>` $form) `<div class="sx-slot" data-slot="play"></div>` $play | safeHTML }}
   </div>
 
+  {{ partial "videos-here.html" . }}
+
   {{ partial "inline/sx-score.html" (dict "S" $S "page" (index (split $m.pages "–") 0) "lead" (printf "This movement is on pages %s." $m.pages)) }}
 
   {{ partial "inline/mus-pn.html" . }}

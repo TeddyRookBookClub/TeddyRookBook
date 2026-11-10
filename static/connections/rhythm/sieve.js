@@ -2,7 +2,7 @@
    paper (Teddy Rook's notes). One voice per small prime l: it sounds on beat n when l divides the denominator q_n of
    the n-th convergent. Neighboring denominators share no factor, so no voice sounds on two beats running. A beat where
    every voice is silent has no small factor; every prime denominator above 19 is such a beat (marked with a gold star).
-   Only residues are computed: q_n mod l from q_n = a_n q_(n-1) + q_(n-2). The terms of pi (to n = 40,000, checked
+   Only residues are computed: q_n mod l from q_n = a_n q_(n-1) + q_(n-2). The terms of pi (to n = 50,000, checked
    by the paper's scripts) are fetched from pi-terms.txt when the section first opens; e, the golden ratio and the
    square root of 2 follow their patterns. Sound only after a press (RN.voice dispatches trb:sound-start).
    Element ids (svN, svPlay, svPrev, svNext, svJump, svBack, svStart, svCan, svRead, svLive, svNote) are the contract
@@ -20,7 +20,7 @@
     sqrt2: [1, 2, 4, 10, 12, 28, 40, 52, 58, 88, 96, 100, 166, 180, 190, 522, 928, 1216, 1300, 1360, 2086, 2272, 2392]   // P_(n+1) prime (OEIS A096650)
   };
   var NAMES = { pi: 'π', e: 'e', phi: 'the golden ratio', sqrt2: '√2' };
-  var LIMIT = { pi: 40000, e: 4000, phi: 4000, sqrt2: 4000 };
+  var LIMIT = { pi: 50000, e: 4000, phi: 4000, sqrt2: 4000 };
   var piTerms = null, loadingPi = false;
   var st = { num: 'pi', start: 1, width: 24, res: null, playing: false, timer: 0, at: -1 };
 
@@ -118,7 +118,7 @@
     stop(); st.num = num;
     if (num === 'pi' && !piTerms) { loadPi(); return; }
     st.res = residues(num); $('svStart').max = st.res.N; setStart(1);
-    $('svNote').textContent = num === 'pi' ? 'Pi’s terms here run to beat 40,000; the last four stars (25,332, 27,651, 32,394 and 37,721) are probable primes found by Teddy Rook in November 2026.'
+    $('svNote').textContent = num === 'pi' ? 'Pi’s terms here run to beat 50,000; the last four stars (25,332, 27,651, 32,394 and 37,721) are probable primes found by Teddy Rook in November 2026.'
       : num === 'e' ? 'For e each voice repeats exactly: the voice of a prime l comes back every 3l beats. Two beats out of every three can never be prime.'
         : num === 'phi' ? 'For the golden ratio the denominators are Fibonacci numbers. Each voice repeats with a fixed period, and a star can only sit on a beat n where n + 1 is prime (or on beat 3).'
           : 'For √2 the denominators are Pell numbers, which also repeat in fixed periods modulo every prime.';

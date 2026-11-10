@@ -1,13 +1,14 @@
 \chapter{A third look at the open questions}\label{ch:third}
 \addednote{\revC}
 
-Chapter~\ref{ch:openq2} ended with three loose ends that looked reachable: the true growth of the top eigenvalue of the correlation matrix, whether the period $6\ell$ for $e$ can be shorter, and a search for prime convergents of $\pi$ that stopped at $n = 20{,}000$. This chapter closes the first two with proofs and extends the third. It also takes up a practical question: is there a better way to find prime convergents than testing them one at a time, and a better way to confirm them? It follows Teddy Rook's notes and scripts (November 2026): the statements and proofs are his, edited into the style of this paper, and every one was checked again for this chapter, line by line and with independent scripts (\texttt{c12\_third\_*.py}, Appendix~\ref{app:repro}). Questions 2, 3, 4 and 6 are untouched.
+Chapter~\ref{ch:openq2} ended with three loose ends that looked reachable: the true growth of the top eigenvalue of the correlation matrix, whether the period $6\ell$ for $e$ can be shorter, and a search for prime convergents of $\pi$ that stopped at $n = 20{,}000$. This chapter closes the first two with proofs and extends the third. It also takes up a practical question: is there a better way to find prime convergents than testing them one at a time, and a better way to confirm them? It follows Teddy Rook's notes and scripts (November 2026): the statements and proofs are his, edited into the style of this paper, and every one was checked again for this chapter, line by line and with independent scripts (\texttt{c12\_third\_*.py}, Appendix~\ref{app:repro}). Questions 2 and 6 are untouched; the new primes bear on Questions 3 and 4 only as evidence (Section~\ref{sec:th7}).
 \begin{itemize}
 \item \emph{Question 5, proved.} The largest eigenvalue of the correlation matrix satisfies $\ln\lambda_{\max}(C_m) = (2 + o(1))\sqrt{\ln m/\ln\ln m}$. \Cref{thm:ob-top} had left the order open between $\sqrt{\ln m}/\ln\ln m$ and $\ln m/\ln\ln m$.
 \item \emph{Question 5, proved.} The smallest eigenvalue obeys the mirror law $\ln(1/\lambda_{\min}(C_m)) = (2 + o(1))\sqrt{\ln m/\ln\ln m}$.
 \item \emph{Question 5, proved.} The eigenvalue distribution converges to a limiting law as $m \to \infty$, and the mean of $1/\lambda$ tends to $\prod_p(1 + 2/(p(p-1))) = \ThKappa\ldots$ None of the four exact bulk constants now known is $6/\pi^2$.
 \item \emph{Question 1, proved (for $e$).} Modulo an odd prime $\ell$, $e$'s denominators change sign every $3\ell$ steps and its numerators repeat, so the periods are exactly $6\ell$ and $3\ell$. Every integer $m$ divides $q_{3m-1}$, $q_{3m-3}$ and $q_{3m-7}$, so a denominator of $e$ can be prime only at $n = 2$ or $n \equiv 1 \pmod 3$.
-\item \emph{Question 1, evidence (for $\pi$).} The denominators of $\pi$'s convergents number $25{,}332$, $27{,}651$, $32{,}394$ and $37{,}721$ are probable primes of \ThDigits, \TwDigits, \TtDigits{} and \FoDigits{} digits, found by Teddy Rook: the eleventh to fourteenth prime denominators, the first beyond the limit recorded in the OEIS. His search covers the denominators to $n = 40{,}000$ and the numerators to $n = 28{,}000$ (ours: \FoOurQ{} and \FoOurP). It uses a ``rhythm sieve'' that runs the recurrence modulo small primes. The four new primes are bunched, and the prime convergents lean toward one note; both look like chance. Primes turn out to be far more plentiful among the intermediate fractions that belong to $\pi$'s largest terms, and the opening guess of Chapter~\ref{ch:intro} belongs to such a family.
+\item \emph{Question 1, evidence (for $\pi$).} The denominators of $\pi$'s convergents number $25{,}332$, $27{,}651$, $32{,}394$ and $37{,}721$ are probable primes of \ThDigits, \TwDigits, \TtDigits{} and \FoDigits{} digits, found by Teddy Rook: the eleventh to fourteenth prime denominators, the first beyond the limit recorded in the OEIS. So is the numerator number $42{,}037$, with \FiDigits{} digits, the first new prime numerator since $n = 8{,}750$. His search covers numerators and denominators to $n = 50{,}000$ (ours: denominators to \FiOurQ{} and numerators to \FiOurP). It uses a ``rhythm sieve'' that runs the recurrence modulo small primes. The four new prime denominators are bunched, and the prime convergents lean toward one note; both look like chance. Primes turn out to be far more plentiful among the intermediate fractions that belong to $\pi$'s largest terms, and the opening guess of Chapter~\ref{ch:intro} belongs to such a family.
+\item \emph{Questions 3 and 4, evidence (for $\pi$).} With the new primes, $\pi$'s own count of prime convergents favors the constant $2\ln 2$ of \cref{heur:primeconv} over the value without its correction factor $\zeta(2)$ by about \RaFiLR{} to 1; the sieve survivors match the corrected prediction, and every small prime divides $\pi$'s denominators at its proper rate over two million convergents.
 \end{itemize}
 Nothing here proves anything about $\pi$. The labels mean what they meant in Chapter~\ref{ch:openq}: a Theorem, Proposition or Lemma without a citation in its heading is proved here from cited results; \emph{Known} marks what others found first; numbers from computation are numerical evidence.
 
@@ -279,14 +280,14 @@ A second proof of the first claim, found in checking: $q_{3m-1} = q_{3m} - q_{3m
 
 \paragraph{Status.} The arithmetic of $e$'s convergents modulo primes is now completely proved. What remains open for $e$ is Question~1 itself: whether infinitely many $q_n$ with $n \equiv 1 \pmod 3$ are prime, which is as hard as the Fibonacci prime problem.
 
-\section{Question 1: four new prime denominators for pi}\label{sec:th1}
+\section{Question 1: five new prime convergents for pi}\label{sec:th1}
 \addednote{\revC}
 
-{\sloppy\paragraph{The finds (evidence).} Section~\ref{sec:oq1} tested $\pi$'s convergents to $n = 20{,}000$ and found ten prime denominators, the last at $n = 6{,}925$. Teddy Rook has now tested every denominator to $n = 40{,}000$ and every numerator to $n = 28{,}000$, with scripts of his own (\texttt{c12\_third\_pisearch.py} and \texttt{c12\_third\_sieve.py} are cleaned versions). There are four new probable-prime denominators (\cref{tab:th-new}) and no new numerator.\par}
+{\sloppy\paragraph{The finds (evidence).} Section~\ref{sec:oq1} tested $\pi$'s convergents to $n = 20{,}000$ and found ten prime denominators, the last at $n = 6{,}925$, and fifteen prime numerators, the last at $n = 8{,}750$. Teddy Rook has now tested every denominator and every numerator to $n = 50{,}000$, with scripts of his own (\texttt{c12\_third\_pisearch.py} and \texttt{c12\_third\_sieve.py} are cleaned versions). There are four new probable-prime denominators and one new probable-prime numerator (\cref{tab:th-new}).\par}
 
 \begin{table}[t]
 \centering
-\caption[The eleventh to fourteenth prime denominators of $\pi$]{The eleventh to fourteenth prime denominators of $\pi$'s convergents. All four are probable primes. The OEIS index is $n + 1$; the note is the remainder modulo 12, as in Section~\ref{sec:primes-notes}.}
+\caption[The new prime denominators and numerator of $\pi$]{The eleventh to fourteenth prime denominators of $\pi$'s convergents, and the sixteenth prime numerator. All five are probable primes. The OEIS index is $n + 1$; the note is the remainder modulo 12, as in Section~\ref{sec:primes-notes}.}
 \label{tab:th-new}
 \scriptsize\setlength{\tabcolsep}{3pt}
 \begin{tabular}{@{}rrrllc@{}}
@@ -297,21 +298,27 @@ A second proof of the first claim, found in checking: $q_{3m-1} = q_{3m} - q_{3m
 12th & 27{,}651 & \TwDigits & \texttt{\TwFirst} & \texttt{\TwLast} & F \\
 13th & 32{,}394 & \TtDigits & \texttt{\TtFirst} & \texttt{\TtLast} & \TtNote \\
 14th & 37{,}721 & \FoDigits & \texttt{\FoFirst} & \texttt{\FoLast} & \FoNote \\
+\midrule
+num.\ 16th & 42{,}037 & \FiDigits & \texttt{\FiFirst} & \texttt{\FiLast} & \FiNote \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Each of the four survives the sieve of Section~\ref{sec:th6} (no prime factor below $10^7$) and passes the strong Baillie--PSW test, strong probable-prime tests to the bases 2, 3, 5 and 7, and ten further Miller--Rabin rounds. For each, the terms of $\pi$ up to its index were computed twice, from mpmath and from MPFR's $\pi$ as an interval, and agree. In each case the numerator $p_n$ is composite, so $n = 8$ remains the only convergent with both parts prime.
+Each of the five survives the sieve of Section~\ref{sec:th6} (no prime factor below $10^7$) and passes the strong Baillie--PSW test, strong probable-prime tests to the bases 2, 3, 5 and 7, and further Miller--Rabin rounds. For each, the terms of $\pi$ up to its index were computed twice, from mpmath and from MPFR's $\pi$ as an interval, and agree. In each case the other part of the fraction is composite, so $n = 8$ remains the only convergent with both parts prime.
 
-{\sloppy\paragraph{Our checks.} These statements were checked independently for this chapter. Each of the four numbers passes the strong Baillie--PSW test and 25 Miller--Rabin rounds with random bases in our runs, its numerator fails the Baillie--PSW test, and the digits in the files Teddy Rook sent agree with ours digit for digit. Our own searches cover the denominators for $20{,}000 < n \le \FoOurQ$ (\texttt{c12\_third\_pisearch.py} to $25{,}332$, then the rhythm sieve, \texttt{c12\_third\_sieve.py}) and the numerators for $20{,}000 < n \le \FoOurP$, and find exactly the primes listed here and nothing else. For the denominators with $\FoOurQ < n \le 40{,}000$ the statement that there are no others rests on his search alone; for the numerators our search goes further than his. His runs used trial division (later the sieve to $10^7$) and the tests above; his second search rediscovered the eleventh independently, and the seam between two of his runs ($n = 26{,}255$ to $26{,}270$) was retested.\par}
+{\sloppy\paragraph{Our checks.} These statements were checked independently for this chapter. Each of the five numbers passes the strong Baillie--PSW test and 25 Miller--Rabin rounds with random bases in our runs, the other part of its fraction fails the Baillie--PSW test, and the digits in the files Teddy Rook sent agree with ours digit for digit. Our own searches cover the denominators for $20{,}000 < n \le \FiOurQ$ (\texttt{c12\_third\_pisearch.py} to $25{,}332$, then the rhythm sieve, \texttt{c12\_third\_sieve.py}) and the numerators for $20{,}000 < n \le \FiOurP$, and find exactly the primes listed here and nothing else; our numerator search reached $p_{42037}$ on its own. For the denominators with $\FiOurQ < n \le 50{,}000$ and the numerators with $\FiOurP < n \le 50{,}000$ the statement that there are no others rests on his search alone. His runs used trial division (later the sieve to $10^7$) and the tests above; his second search rediscovered the eleventh independently, and the seam between two of his runs ($n = 26{,}255$ to $26{,}270$) was retested.\par}
 
-So, if all four are prime, the prime denominators of $\pi$'s convergents up to $n = 40{,}000$ are at
+So, if all five are prime, the prime denominators of $\pi$'s convergents up to $n = 50{,}000$ are at
 \[
   n = \FoQidx,
 \]
-\FoQn{} in all, and there are still 15 prime numerators. OEIS A259490, whose index is $n + 1$, lists ten prime denominators and states that the eleventh has index above $25{,}000$ in its numbering \citep{OEIS_A259490}. So, as far as that record goes, these are the eleventh to fourteenth, and the eleventh sat just past the previous search limit. We cannot rule out that someone has found them and not reported it.
+\FoQn{} in all, and the prime numerators are at
+\[
+  n = 4, 8, 10, 15, 86, 229, 333, 593, 839, 852, 1{,}148, 2{,}725, 3{,}787, 7{,}441, 8{,}750, 42{,}037,
+\]
+16 in all. OEIS A259490, whose index is $n + 1$, lists ten prime denominators and states that the eleventh has index above $25{,}000$ in its numbering \citep{OEIS_A259490}. So, as far as that record goes, these are the eleventh to fourteenth, and the eleventh sat just past the previous search limit. Its companion list of prime numerators, OEIS A086785, holds fifteen terms \citep{OEIS_A086785}, as many as we had found to $n = 20{,}000$, so $p_{42037}$ would be the sixteenth. We cannot rule out that someone has found any of these and not reported it.
 
-\paragraph{How they were checked.} Our script \texttt{c12\_third\_pi.py} computes $\pi$'s terms from mpmath's $\pi$ at two precisions and from MPFR's $\pi$ (through gmpy2) as an interval at $100{,}000$ bits, and the lists agree through $n = \ThCert$; \texttt{c12\_third\_newprimes.py} and \texttt{c12\_third\_fourteenth.py} repeat this at higher precision, and the lists agree through $n = \FoCert$. Each number is rebuilt by the recurrence $q_n = a_nq_{n-1} + q_{n-2}$, compared digit by digit with the copy published on the companion site, and tested again (the Baillie--PSW test alone takes about \ThBpswSec, \TwBpswSec, \TtBpswSec{} and \FoBpswSec{} seconds for the four, on one core). The SHA-256 hashes of their decimal digits (no spaces or line breaks) are
+\paragraph{How they were checked.} Our script \texttt{c12\_third\_pi.py} computes $\pi$'s terms from mpmath's $\pi$ at two precisions and from MPFR's $\pi$ (through gmpy2) as an interval at $100{,}000$ bits, and the lists agree through $n = \ThCert$; \texttt{c12\_third\_newprimes.py}, \texttt{c12\_third\_fourteenth.py} and \texttt{c12\_third\_fifty.py} repeat this at higher precision, and the lists agree through $n = \FiCert$. Each number is rebuilt by the recurrence $q_n = a_nq_{n-1} + q_{n-2}$ (or the same for $p_n$), compared digit by digit with the copy published on the companion site, and tested again (the Baillie--PSW test alone takes about \ThBpswSec, \TwBpswSec, \TtBpswSec, \FoBpswSec{} and \FiBpswSec{} seconds for the five, on one core). The SHA-256 hashes of their decimal digits (no spaces or line breaks) are
 \begin{center}
 \small
 \begin{tabular}{@{}rl@{}}
@@ -319,19 +326,20 @@ $q_{25332}$ & \texttt{\footnotesize\ThSha} \\
 $q_{27651}$ & \texttt{\footnotesize\TwSha} \\
 $q_{32394}$ & \texttt{\footnotesize\TtSha} \\
 $q_{37721}$ & \texttt{\footnotesize\FoSha} \\
+$p_{42037}$ & \texttt{\footnotesize\FiSha} \\
 \end{tabular}
 \end{center}
-The terms around them are $a_{25330}, \dots, a_{25334} = \ThNear$; $a_{27649}, \dots, a_{27653} = \TwNear$; $a_{32392}, \dots, a_{32396} = \TtNear$; and $a_{37719}, \dots, a_{37723} = \FoNear$. All their digits are printed in Appendix~\ref{app:prime}, and the companion site has them as plain text files \citep{RhythmSite}.
+{\sloppy The terms around them are $a_{25330}, \dots, a_{25334} = \ThNear$; $a_{27649}, \dots, a_{27653} = \TwNear$; $a_{32392}, \dots, a_{32396} = \TtNear$; $a_{37719}, \dots, a_{37723} = \FoNear$; and $a_{42035}, \dots, a_{42039} = \FiNear$. All their digits are printed in Appendix~\ref{app:prime}, and the companion site has them as plain text files \citep{RhythmSite}.\par}
 
 \paragraph{Status: probable primes.} No composite number is known to pass the Baillie--PSW test, but the test is not a proof. A proof for numbers of this size needs an elliptic-curve certificate (\citealp{AtkinMorain1993}; Section~\ref{sec:th6}), which anyone can check much faster than it was found.
 
-\paragraph{Proofs of primality.} A probable prime of this size can be proved prime by the elliptic curve method (ECPP). Teddy Rook is running Enge's implementation of fastECPP \citep{Enge2024} on the eleventh, $q_{25332}$, on a six-core laptop. The first two of roughly a thousand steps of its first phase took 26 and 34 minutes; the cost of a step falls roughly with the cube of the size of the number, which puts the whole run at about a week. The cost of ECPP grows with about the fourth power of the number of digits, so the twelfth, thirteenth and fourteenth would take about \TwEcpp, \TtEcpp{} and \FoEcpp{} times as long. \emph{Until a certificate exists and has been verified, each of the four is a probable prime and nothing more}, and so is every statement below that counts them.
+\paragraph{Proofs of primality.} A probable prime of this size can be proved prime by the elliptic curve method (ECPP). Teddy Rook is running Enge's implementation of fastECPP \citep{Enge2024} on the eleventh, $q_{25332}$, on a six-core laptop. The first two of roughly a thousand steps of its first phase took 26 and 34 minutes; the cost of a step falls roughly with the cube of the size of the number, which puts the whole run at about a week. The cost of ECPP grows with about the fourth power of the number of digits, so the twelfth, thirteenth and fourteenth would take about \TwEcpp, \TtEcpp{} and \FoEcpp{} times as long, and the new numerator about \FiEcpp{} times. \emph{Until a certificate exists and has been verified, each of the five is a probable prime and nothing more}, and so is every statement below that counts them.
 
-\paragraph{Against the heuristic.} \Cref{heur:primeconv} gives $q_n$ a chance $\zeta(2)/\ln q_n$ of being prime; for $q_{25332}$ that is about one in \ThOneIn. \Cref{tab:th-pi2} continues Table~15.1, and \cref{tab:th-pi} extends \cref{tab:oq-pi} with the same exact Poisson-binomial law. At $n = 40{,}000$ the heuristic expects \FoExpForty{} prime denominators (central 95\% range \FoRangeForty) against \FoQn{} found, and at $n = 32{,}394$ it expects \TwExpPB{} numerators (range \TwRangePB) against \TwPn. Both counts stay well inside the 95\% ranges. (Teddy Rook's table gives 13.4 at $n = 28{,}000$ and 13.9 at $n = 40{,}000$; the sums are $13.34$ and $13.83$, which round to \FoExpTwentyEight{} and \FoExpForty.)
+\paragraph{Against the heuristic.} \Cref{heur:primeconv} gives $q_n$ a chance $\zeta(2)/\ln q_n$ of being prime; for $q_{25332}$ that is about one in \ThOneIn. \Cref{tab:th-pi2} continues Table~15.1, and \cref{tab:th-pi} extends \cref{tab:oq-pi} with the same exact Poisson-binomial law. At $n = 50{,}000$ the heuristic expects \FiExpQFifty{} prime denominators (central 95\% range \FiRangeQFifty) against \FiObsQFifty{} found, and \FiExpPFifty{} numerators (range \FiRangePFifty) against \FiObsPFifty. Both counts stay well inside the 95\% ranges. (Teddy Rook's table gives 13.4, 13.9 and 14.2 for the denominators at $n = 28{,}000$, $40{,}000$ and $50{,}000$; the sums are $13.34$, $13.83$ and $14.14$, which round to \FoExpTwentyEight, \FoExpForty{} and \FiExpQFifty.)
 
 \begin{table}[t]
 \centering
-\caption[Table 15.1 continued]{Table~15.1 continued: probable primes among $\pi$'s convergents with $n \le N$, and the expected counts $\sum\zeta(2)/\ln$ of \cref{heur:primeconv}. Numerators have been tested to $n = 28{,}000$ by Teddy Rook and to $n = \FoOurP$ by us; denominators to $n = 40{,}000$ by him and to $n = \FoOurQ$ by us.}
+\caption[Table 15.1 continued]{Table~15.1 continued: probable primes among $\pi$'s convergents with $n \le N$, and the expected counts $\sum\zeta(2)/\ln$ of \cref{heur:primeconv}. Teddy Rook has tested numerators and denominators to $n = 50{,}000$; our own searches reach $n = \FiOurP$ for numerators and $n = \FiOurQ$ for denominators.}
 \label{tab:th-pi2}
 \begin{tabular}{rrrrr}
 \toprule
@@ -342,14 +350,15 @@ $N$ & found & expected & found & expected \\
 20{,}000 & 10 & 12.9 & 15 & 12.2 \\
 28{,}000 & \TwObsQA & \FoExpTwentyEight & \TwObsPA & \TwExpPA \\
 32{,}394 & \TwObsQB & \TwExpQB & \TwObsPB & \TwExpPB \\
-40{,}000 & \FoObsForty & \FoExpForty & -- & -- \\
+40{,}000 & \FoObsForty & \FoExpForty & \FiObsPForty & \FiExpPForty \\
+50{,}000 & \FiObsQFifty & \FiExpQFifty & \FiObsPFifty & \FiExpPFifty \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[t]
 \centering
-\caption[Pi's prime denominators to $n = 40{,}000$]{Probable-prime denominators among $\pi$'s convergents, $n \le N$: the observed count, the expected count $\sum \zeta(2)/\ln q_n$ of \cref{heur:primeconv}, the central 95\% range of the Poisson-binomial law, and the share of that law at or below the observed count. The first three rows repeat \cref{tab:oq-pi}.}
+\caption[Pi's prime denominators to $n = 50{,}000$]{Probable-prime denominators among $\pi$'s convergents, $n \le N$: the observed count, the expected count $\sum \zeta(2)/\ln q_n$ of \cref{heur:primeconv}, the central 95\% range of the Poisson-binomial law, and the share of that law at or below the observed count. The first three rows repeat \cref{tab:oq-pi}.}
 \label{tab:th-pi}
 \begin{tabular}{rrrrr}
 \toprule
@@ -360,11 +369,12 @@ $N$ & observed & expected & 95\% range & share \\
 32{,}394 & \FoObsThirteenth & \FoExpThirteenth & \FoRangeThirteenth & \FoShareThirteenth \\
 37{,}721 & \FoObsFourteenth & \FoExpFourteenth & \FoRangeFourteenth & \FoShareFourteenth \\
 40{,}000 & \FoObsForty & \FoExpForty & \FoRangeForty & \FoShareForty \\
+50{,}000 & \FiObsQFifty & \FiExpQFifty & \FiRangeQFifty & \FiShareQFifty \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{A cluster.} The total is where the heuristic puts it: \FoQn{} against \FoExpForty. But the four new primes are bunched. In the heuristic time $\Lambda(n) = \sum_{k \le n}\zeta(2)/\ln q_k$, in which a typical number's prime denominators arrive at rate 1, the stretch $25{,}000 < n \le 40{,}000$ has length \FoClusterLen, and it holds four primes; a Poisson count with mean \FoClusterLen{} reaches four with probability \FoClusterP. The window was chosen after the primes were seen, which makes that figure too small by some unknown factor, and the stretch before it ran low (10 found to $n = 20{,}000$ against 12.9). Over the whole range $30 \le n \le 40{,}000$ there are \FoRookN{} primes against \FoRookExp{} expected, and their positions are consistent with random arrivals (Kolmogorov--Smirnov $p = \FoKsRook$; the version of the test that keeps every prime and measures time from $n = 1$ gives $p = \FoKsAll$; Section~\ref{sec:th6}). We report the cluster as one of the two most lopsided things we have seen in $\pi$'s convergents; the other is next.
+\paragraph{A cluster.} The totals are where the heuristic puts them: \FiObsQFifty{} denominators against \FiExpQFifty, and \FiObsPFifty{} numerators against \FiExpPFifty. But the four new prime denominators are bunched. In the heuristic time $\Lambda(n) = \sum_{k \le n}\zeta(2)/\ln q_k$, in which a typical number's prime denominators arrive at rate 1, the stretch $25{,}000 < n \le 40{,}000$ has length \FoClusterLen, and it holds four primes; a Poisson count with mean \FoClusterLen{} reaches four with probability \FoClusterP. The window was chosen after the primes were seen, which makes that figure too small by some unknown factor; the stretch before it ran low (10 found to $n = 20{,}000$ against 12.9), and the stretch after it, $40{,}000 < n \le 50{,}000$, holds none. Over the whole range $30 \le n \le 50{,}000$ there are \FiRookNQ{} primes against \FiRookExpQ{} expected, and their positions are consistent with random arrivals (Kolmogorov--Smirnov $p = \FiKsRookQ$; the version of the test that keeps every prime and measures time from $n = 1$ gives $p = \FiKsAllQ$; Section~\ref{sec:th6}). The new numerator, by contrast, ends a long drought: nothing between $n = 8{,}750$ and $n = 42{,}037$, a gap of \FiGapP{} in heuristic time, which an exponential law exceeds with probability \FiGapPprob. We report the cluster as one of the two most lopsided things we have seen in $\pi$'s convergents; the other is next.
 
 \paragraph{The primes as notes.} Section~\ref{sec:primes-notes} plays a prime as the note given by its remainder modulo 12, so every prime above 3 lands on C$\sharp$, F, G or B (the remainders 1, 5, 7, 11; together the four notes form the chord G--B--D$\flat$--F, a dominant seventh with a flattened fifth in C major, the key of the Pi movements). Played this way the \FoQn{} prime denominators are
 \begin{center}
@@ -382,8 +392,8 @@ The first ten use only three of the four notes; the eleventh is the first to lan
 & C$\sharp$ & F & G & B \\
 \midrule
 \FoQn{} prime denominators & \FoNotesQ \\
-\FoPn{} prime numerators & \FoNotesP \\
-together (\FoAllN) & \FoNotesAll \\
+16 prime numerators & \FiNotesP \\
+together (\FiAllN) & \FiNotesAll \\
 \midrule
 all denominators coprime to 12, $n \le 33{,}000$ & \FoNotesCop \\
 prime intermediate denominators, levels 4 to 3{,}000 & \FoNotesInter \\
@@ -392,18 +402,18 @@ typical number, expected among \FoTypTotB{} primes & \FoTypB \\
 \end{tabular}
 \end{table}
 
-If the four notes were equally likely, some note would reach \FoAllMax{} of \FoAllN{} with probability \FoTailAll; leaving out the small early primes ($n < 30$), G has \FoBigG{} of \FoBigN, and some note reaches \FoBigG{} of \FoBigN{} with probability \FoTailBigAny{} (G in particular, \FoTailBigG; Teddy Rook's simulation gives 0.012, and these are exact multinomial sums). Three things say this is chance all the same. First, the denominators that \emph{could} be prime show no preference at all (fourth row; chi-square test $p = \FoCopP$): only the ones that turned out prime lean. Second, for a typical number \cref{thm:oq-exact} gives the expected count on each note exactly, and the small primes 5 and 7 tilt it by about a tenth of a prime, slightly toward F (last row). Third, an independent family of primes tied to $\pi$, the intermediate denominators of Section~\ref{sec:th6}, shows no lean toward G (fifth row, $p = \FoInterP$). We noticed the lean when there were 27 primes; the two found since are one G and one B, which is what chance predicts. The statistic was picked out after looking, in a work that has by now run several dozen tests of $\pi$. We record it, with the cluster, as something to watch: if it is chance, about a quarter of future prime convergents will be G.
+If the four notes were equally likely, some note would reach \FiAllMax{} of \FiAllN{} with probability \FiTailAll; leaving out the small early primes ($n < 30$), G has \FiBigG{} of \FiBigN, and some note reaches \FiBigG{} of \FiBigN{} with probability \FiTailBigAny{} (G in particular, \FiTailBigG; these are exact multinomial sums). Three things say this is chance all the same. First, the denominators that \emph{could} be prime show no preference at all (fourth row; chi-square test $p = \FoCopP$): only the ones that turned out prime lean. Second, for a typical number \cref{thm:oq-exact} gives the expected count on each note exactly, and the small primes 5 and 7 tilt it by about a tenth of a prime, slightly toward F (last row). Third, an independent family of primes tied to $\pi$, the intermediate denominators of Section~\ref{sec:th6}, shows no lean toward G (fifth row, $p = \FoInterP$). We noticed the lean when there were 27 primes; the three found since are one G, one B and one F, which is what chance predicts. The statistic was picked out after looking, in a work that has by now run several dozen tests of $\pi$. We record it, with the cluster, as something to watch: if it is chance, about a quarter of future prime convergents will be G.
 
-\paragraph{Can the lean speed up the search?} No. The note of every candidate is known for free from the sieve, so testing only the G candidates would cut the work to a quarter; but if the lean is chance it also finds only a quarter of the primes, and it can never certify the \emph{next} prime, because it skips three candidates in four. Of the four new primes one is G. The only safe use is ordering: test the G candidates of a range first and the rest afterwards, which costs nothing and loses nothing. The contrast with $e$ is instructive. There the restriction to $n \equiv 1 \pmod 3$ is a theorem (\cref{thm:th-div}) and a true threefold saving. For $\pi$ the note depends on the number and not on its index, and the indices of the prime denominators show no preference modulo 2, 3 or 4.
+\paragraph{Can the lean speed up the search?} No. The note of every candidate is known for free from the sieve, so testing only the G candidates would cut the work to a quarter; but if the lean is chance it also finds only a quarter of the primes, and it can never certify the \emph{next} prime, because it skips three candidates in four. Of the five new primes one is G. The only safe use is ordering: test the G candidates of a range first and the rest afterwards, which costs nothing and loses nothing. The contrast with $e$ is instructive. There the restriction to $n \equiv 1 \pmod 3$ is a theorem (\cref{thm:th-div}) and a true threefold saving. For $\pi$ the note depends on the number and not on its index, and the indices of the prime denominators show no preference modulo 2, 3 or 4.
 
-\paragraph{The primes in the form.} In the reading of Chapter~\ref{ch:rhythm} a prime denominator is a block whose length in beats is prime: it cannot be cut into equal sub-phrases, any regular pulse laid against it comes back into step only at its end, and all of its rotations are different rhythms (the necklace argument of Chapter~\ref{ch:tools}). At thirteen thousand digits and more that is a statement about form, not about anything that could be played. The fourteen-note motif can be.
+\paragraph{The primes in the form.} In the reading of Chapter~\ref{ch:rhythm} a prime denominator is a block whose length in beats is prime: it cannot be cut into equal sub-phrases, any regular pulse laid against it comes back into step only at its end, and all of its rotations are different rhythms (the necklace argument of Chapter~\ref{ch:tools}). At thirteen thousand digits and more that is a statement about form, not about anything that could be played. The fourteen-note motif of the denominators can be.
 
-\paragraph{What it means for Question 1.} Nothing is settled: four more primes are what a typical number would be expected to show sooner or later, and say nothing about infinitely many.
+\paragraph{What it means for Question 1.} Nothing is settled: five more primes are what a typical number would be expected to show sooner or later, and say nothing about infinitely many.
 
 \section{Finding prime convergents faster}\label{sec:th6}
 \addednote{\revC}
 
-This section follows Teddy Rook's text. The new prime denominators were found by testing one convergent after another. Is there a pattern that would say where to look, or a way to find many at once? There is no shortcut along the convergents themselves, there are two real speed-ups for the search, and there is a neighboring family, tied to the largest terms of $\pi$, in which primes do come many at a time.
+This section follows Teddy Rook's text. The new prime convergents were found by testing one convergent after another. Is there a pattern that would say where to look, or a way to find many at once? There is no shortcut along the convergents themselves, there are two real speed-ups for the search, and there is a neighboring family, tied to the largest terms of $\pi$, in which primes do come many at a time.
 
 \subsection{The rhythm sieve}
 
@@ -417,7 +427,7 @@ The first statement is the recurrence of \cref{prop:recurrence} reduced modulo $
 
 In the language of Chapter~\ref{ch:rhythm}, each prime $\ell$ is a voice that sounds on the beats $n$ where $\ell$ divides $q_n$. No voice sounds on two beats running; for a typical number each voice sounds on a share $1/(\ell + 1)$ of the beats (\cref{cor:divisible}); for $e$ each voice is strictly periodic, with period $3\ell$ and three forced hits (\cref{prop:th-flip,thm:th-div}). A prime denominator is a beat on which every voice is silent. The sieve of Eratosthenes is this polyrhythm for the sequence $1, 2, 3, \ldots$; \cref{prop:th-sieve} is the same sieve for the denominators of a continued fraction. The companion site plays it \citep{RhythmSite}.
 
-In practice the sieve replaces the trial division of Section~\ref{sec:oq1}. All primes below $B = 10^7$ ($664{,}579$ of them) are carried in one array, and one pass over a few tens of thousands of $n$ takes about three minutes (\TwSieveSec{} seconds in our runs), against hours for the probable-prime tests that follow. By Mertens' theorem and the correction factor of Chapter~\ref{ch:primeconv}, the share of denominators that survive is about $\zeta(2)e^{-\gamma}/\ln B = \TwSieveTheory\%$ for $B = 10^7$. In our passes over $25{,}332 < n \le \FoOurQ$, \FoSieveQSurv{} of the \FoSieveQCand{} denominators survived (\FoSieveQPct\%), and over $20{,}000 < n \le 32{,}394$, \TwSievePSurv{} of the \TwSievePCand{} numerators (\TwSievePPct\%); Teddy Rook's pass over $25{,}000 < n \le 32{,}000$ left 391 of 7{,}000 denominators (5.6\%) and 412 of 7{,}000 numerators (5.9\%). In his search all denominators that survive have been tested up to $n = 40{,}000$, and all numerators up to $n = 28{,}000$; in ours, up to $n = \FoOurQ$ and $n = \FoOurP$.
+In practice the sieve replaces the trial division of Section~\ref{sec:oq1}. All primes below $B = 10^7$ ($664{,}579$ of them) are carried in one array, and one pass over a few tens of thousands of $n$ takes about three minutes (\TwSieveSec{} seconds in our runs), against hours for the probable-prime tests that follow. By Mertens' theorem and the correction factor of Chapter~\ref{ch:primeconv}, the share of denominators that survive is about $\zeta(2)e^{-\gamma}/\ln B = \TwSieveTheory\%$ for $B = 10^7$. In our passes over $25{,}332 < n \le \FoOurQ$, \FoSieveQSurv{} of the \FoSieveQCand{} denominators survived (\FoSieveQPct\%), and over $20{,}000 < n \le 32{,}394$, \TwSievePSurv{} of the \TwSievePCand{} numerators (\TwSievePPct\%); Teddy Rook's pass over $25{,}000 < n \le 32{,}000$ left 391 of 7{,}000 denominators (5.6\%) and 412 of 7{,}000 numerators (5.9\%). In his search all survivors, numerators and denominators, have been tested up to $n = 50{,}000$; in ours, up to $n = \FiOurQ$ and $n = \FiOurP$.
 
 \subsection{A cheaper test, and what the search costs}
 
@@ -427,11 +437,11 @@ The cost of going further is easy to state. Among the indices in $(N, 2N]$ about
 
 \subsection{Is there a pattern in where they fall?}
 
-If \cref{heur:primeconv} is right, the prime denominators arrive like a Poisson process in the heuristic time $\Lambda(n)$ of Section~\ref{sec:th1}. Teddy Rook tests this for the primes with $n \ge 30$, leaving out the first few denominators, for which $1/\ln q$ is too large to be a probability. The denominators give \FoRookN{} primes to $n = 40{,}000$ against \FoRookExp{} expected, with positions consistent with uniform in heuristic time (Kolmogorov--Smirnov $p = \FoKsRook$); the numerators give \TwRookNPA{} to $n = 28{,}000$ against \TwRookExpPA{} ($p = \TwKsRookPA$). Our first version of the test kept every prime convergent and measured heuristic time from $n = 1$; it gives $p = \FoKsAll$ for the denominators to $n = 40{,}000$ and $p = \TwKsP$ for the numerators to $n = 32{,}394$. Both versions are valid tests of the same hypothesis, and they differ only in which small primes they keep; his is the better-founded one, since the heuristic is not meant for the first few $n$. The gaps between successive prime denominators, in heuristic time (the first measured from $n = 30$), are
+If \cref{heur:primeconv} is right, the prime denominators arrive like a Poisson process in the heuristic time $\Lambda(n)$ of Section~\ref{sec:th1}. Teddy Rook tests this for the primes with $n \ge 30$, leaving out the first few denominators, for which $1/\ln q$ is too large to be a probability. Up to $n = 50{,}000$ the denominators give \FiRookNQ{} primes against \FiRookExpQ{} expected, with positions consistent with uniform in heuristic time (Kolmogorov--Smirnov $p = \FiKsRookQ$); the numerators give \FiRookNP{} against \FiRookExpP{} ($p = \FiKsRookP$). Our first version of the test kept every prime convergent and measured heuristic time from $n = 1$; it gives $p = \FiKsAllQ$ and $p = \FiKsAllP$. Both versions are valid tests of the same hypothesis, and they differ only in which small primes they keep; his is the better-founded one, since the heuristic is not meant for the first few $n$. The gaps between successive prime denominators, in heuristic time (the first measured from $n = 30$), are
 \[
   \FoGaps .
 \]
-For an exponential law with mean 1 the long gap before the eleventh prime ($1.81$) has probability \FoLongGap, and short gaps are the most likely gaps; it is the run of three short ones that makes the cluster of Section~\ref{sec:th1}. The indices show no preference modulo 2, 3 or 4 (chi-square $p$-values by simulation, \FoModTests{} for the denominators), and the terms next to a prime denominator ($a_n = \FoNbBefore$; $a_{n+1} = \FoNbAfter$) show nothing we can use. With fourteen and fifteen data points these tests are weak. Two statistics stand out, the cluster and the lean toward G, and neither predicts an index. \emph{So there is no way to say where the next prime denominator is.} The heuristic gives odds only. Seen from $n = 32{,}394$, the chance of a fourteenth by $n = 40{,}000$ was about \TwOddsForty\%; one came at $n = 37{,}721$. Starting from $n = 40{,}000$, the chance of a fifteenth by $n = 50{,}000$ is about \FoOddsFifty\%, by $n = 80{,}000$ about \FoOddsEighty\%, and by $n = 160{,}000$ about \FoOddsOneSixty\% (Poisson model, with $\ln q_n$ continued beyond $n = 40{,}000$ at the slope measured from $n = 20{,}000$).
+For an exponential law with mean 1 the long gap before the eleventh prime ($1.81$) has probability \FoLongGap, and short gaps are the most likely gaps; it is the run of three short ones that makes the cluster of Section~\ref{sec:th1}. The indices show no preference modulo 2, 3 or 4 (chi-square $p$-values by simulation, \FoModTests{} for the denominators), and the terms next to a prime denominator ($a_n = \FoNbBefore$; $a_{n+1} = \FoNbAfter$) show nothing we can use. With fourteen and sixteen data points these tests are weak. Two statistics stand out, the cluster and the lean toward G, and neither predicts an index. \emph{So there is no way to say where the next prime denominator is.} The heuristic gives odds only. Seen from $n = 32{,}394$, the chance of a fourteenth by $n = 40{,}000$ was about \TwOddsForty\%; one came at $n = 37{,}721$. Starting from $n = 50{,}000$, the chance of a fifteenth prime denominator by $n = 62{,}500$ is about \FiOddsQSixtyTwo\%, by $n = 100{,}000$ about \FiOddsQHundred\%, and by $n = 200{,}000$ about \FiOddsQTwoHundred\%; the odds for a seventeenth prime numerator are the same (\FiOddsPSixtyTwo, \FiOddsPHundred{} and \FiOddsPTwoHundred\%). (Poisson model, with $\ln q_n$ continued beyond $n = 50{,}000$ at the slope measured from $n = 20{,}000$.)
 
 \subsection{Where primes do come many at a time: intermediate fractions}
 
@@ -492,6 +502,65 @@ Two cautions. These are primes in arithmetic progressions; nothing about $\pi$ g
 
 For numbers of a few hundred digits a proof of primality takes seconds with standard software (for example \texttt{isprime} in PARI/GP), so every prime of \cref{tab:th-inter} below a thousand digits can be proved at once; we report them as probable primes because we did not run those proofs here. For the new prime denominators the only practical method is ECPP \citep{AtkinMorain1993,Enge2024}, whose cost grows with about the fourth power of the number of digits (so the twelfth, thirteenth and fourteenth would take about \TwEcpp, \TtEcpp{} and \FoEcpp{} times as long as the eleventh), and no method is known that does better for a number with no special form: the fast proofs for Mersenne or Fermat-type numbers need most of $N - 1$ or $N + 1$ to be factored, and a convergent denominator offers no such factorization. The certificate, once produced, can be checked in a small fraction of the time it took to find. So of the two bottlenecks, the search can be made about eight times faster by the two devices above, and the proof cannot be shortened except by more processors.
 
+\section{What the new primes say about the six questions}\label{sec:th7}
+\addednote{\revC}
+
+This section follows Teddy Rook's text. Five more probable primes cannot settle a question about infinitely many. They do sharpen three things, all on the side of $\pi$ behaving like a typical number, and all evidence, not proof. Questions 2, 5 and 6 are untouched by them.
+
+\paragraph{Pi's own constant (Questions 1 and 3).} \Cref{thm:ob-ae} says that almost every number has $2\ln 2\cdot\ln N$ prime denominators among its first $N$ convergents. Does $\pi$? Treat the constant as unknown and estimate it from $\pi$'s data. Leaving out $n < 30$, where $1/\ln q$ is not yet a probability, $\pi$ has \FiRookNQ{} prime denominators and \FiRookNP{} prime numerators with $30 \le n \le 50{,}000$. \Cref{heur:primeconv} expects \RaFiExp; the same heuristic \emph{without} its correction factor $\zeta(2)$ (Step~2 of its derivation in Chapter~\ref{ch:primeconv}, which treats the $q_n$ as random integers) expects \RaFiNaive. \Cref{tab:th-rate} compares the two before and after the new primes.
+
+\begin{table}[t]
+\centering
+\caption[Pi's prime convergents against the heuristic with and without $\zeta(2)$]{Pi's prime convergents with $n \ge 30$ (numerators and denominators together) against \cref{heur:primeconv} with and without the factor $\zeta(2)$. The estimate of the constant $c$ in ``$c\ln N$'' and its 95\% range treat the count as Poisson; the heuristic value is $2\ln 2 = 1.386$ and the uncorrected value $12\ln 2/\pi^2 = \RaNaiveC$. The counts beyond our own search (Section~\ref{sec:th1}) are Teddy Rook's.}
+\label{tab:th-rate}
+\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{rrrrrrr}
+\toprule
+ & & \multicolumn{2}{c}{expected} & chance of so many & estimate of $c$ & likelihood \\
+search limit & found & with $\zeta(2)$ & without & without $\zeta(2)$ & (95\% range) & ratio \\
+\midrule
+20{,}000 & \RaTwObs & \RaTwExp & \RaTwNaive & \RaTwPnaive & \RaTwC{} (\RaTwClo{} to \RaTwChi) & \RaTwLR{} to 1 \\
+50{,}000 & \RaFiObs & \RaFiExp & \RaFiNaive & \RaFiPnaive & \RaFiC{} (\RaFiClo{} to \RaFiChi) & \RaFiLR{} to 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+At $n = 20{,}000$ the data could not tell the two constants apart: the uncorrected value \RaNaiveC{} lay inside the 95\% range. With the five new primes it lies outside. So for $\pi$ itself, and not only for almost every number, the count of prime convergents now favors the corrected constant by about \RaFiLR{} to 1, and is consistent with exactly $2\ln 2$. This is the first place in this work where $\pi$'s prime convergents discriminate between two candidate laws. The caveats: the two counts are pooled as if independent, twenty-three events are few, and the comparison is between two specific constants, not a proof of either.
+
+\paragraph{The correction factor, tested directly (Questions 1 and 4).} The rhythm sieve gives a far stronger test of the same factor, one that uses thousands of convergents and not a handful of primes. By Mertens' theorem a random integer has no prime factor below $B = 10^7$ with probability $e^{-\gamma}/\ln B = \RaPctNaive\%$; \cref{heur:primeconv} says that for a convergent denominator the figure is $\zeta(2)$ times larger, $\RaPctZ\%$. Among the \RaCand{} indices with $26{,}268 < n \le 50{,}000$ the sieve leaves \RaSurvQ{} denominators and \RaSurvP{} numerators. The prediction with the factor is \RaPredZ{} of each; without it, \RaPredNaive. This extends \cref{tab:modp}, which checked the small primes on the first \NT{} convergents, to every prime below ten million. Given the survivors, each has chance $e^{\gamma}\ln B/\ln q_n$ of being prime, which predicts \RaAmongExp{} primes in that range; there are \RaAmongFound{} (probability \RaAmongP{} of four or more, the cluster of Section~\ref{sec:th1} seen another way).
+
+\paragraph{A new test of typicality (Question 4).} The sieve suggests a test that the earlier chapters did not run at scale: is the voice of each prime sounding at its proper rate? For almost every number the share of $n$ with $\ell \mid q_n$ is $1/(\ell + 1)$ (\cref{cor:divisible}), and $q_n$ modulo 12 has the distribution given by the theorem of Jager and Liardet (\cref{thm:equidist}). Teddy Rook computed $2{,}000{,}000$ certified terms of $\pi$ and ran the recurrence modulo each of the 168 primes below $1{,}000$. The statistic for a prime is the standardized count of hits; its natural spread was measured on 800 random reals of $100{,}000$ terms each, expanded exactly, because the hits are far from independent coin flips (no voice sounds twice running, and for $\ell = 2$ the count fluctuates only $0.42$ times as much as a binomial count would).
+
+\begin{table}[t]
+\centering
+\caption[The voices test on two million convergents of $\pi$]{The voices test on $2{,}000{,}000$ convergents of $\pi$ (Teddy Rook's run): the share of $n$ with $\ell \mid q_n$ against $1/(\ell + 1)$, and summary statistics over the 168 primes below $1{,}000$, with $p$-values calibrated on 800 random reals.}
+\label{tab:th-voices}
+\small
+\begin{tabular}{rrrr}
+\toprule
+$\ell$ & share for $\pi$ & $1/(\ell + 1)$ & standardized deviation \\
+\midrule
+2 & 0.333295 & 0.333333 & $-0.28$ \\
+3 & 0.250157 & 0.250000 & $+0.92$ \\
+5 & 0.166717 & 0.166667 & $+0.29$ \\
+7 & 0.124899 & 0.125000 & $-0.60$ \\
+11 & 0.083145 & 0.083333 & $-1.20$ \\
+13 & 0.071356 & 0.071429 & $-0.47$ \\
+\midrule
+\multicolumn{4}{p{0.8\textwidth}}{sum of squared deviations, denominators: $181.8$ (random reals average $168.2$), $p = 0.22$} \\
+\multicolumn{4}{p{0.8\textwidth}}{sum of squared deviations, numerators: $176.1$ (average $168.3$), $p = 0.33$} \\
+\multicolumn{4}{p{0.8\textwidth}}{largest deviation: $3.24$ at $\ell = 641$ (denominators, $p = 0.18$); $2.77$ at $\ell = 271$ (numerators, $p = 0.59$)} \\
+\multicolumn{4}{p{0.8\textwidth}}{$q_n$ modulo 12 against Jager--Liardet: $\chi^2 = 11.8$ on 11 degrees of freedom, calibrated $p = 0.24$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Every statistic in \cref{tab:th-voices} is ordinary. For $\ell = 2$ the share of even denominators is $0.333295$ over two million convergents, against $1/3$. So the local half of \cref{heur:primeconv}, the part that produces $\zeta(2)$, holds for $\pi$ as far as we can measure, in two independent ways: prime by prime for the small primes, and in bulk for all primes below $10^7$.
+
+{\sloppy\paragraph{Our checks.} \texttt{c12\_third\_rate.py} recomputes \cref{tab:th-rate} and the sieve counts: it runs the rhythm sieve afresh over every $n \le 50{,}000$, for numerators and denominators, and its survivors agree with those of our search runs wherever they overlap. It repeats the voices test on the first $2{,}000{,}000$ of the twelve million certified terms of Chapter~\ref{ch:openq}, with a calibration of its own: \RaCalR{} different random reals of $100{,}000$ terms, expanded exactly. The six shares in \cref{tab:th-voices} come out the same (\RaSharea, \RaShareb, \RaSharec, \RaShared, \RaSharee{} and \RaSharef). For $\ell = 2$ our sample puts the spread at \RaSdTwo{} times the binomial one, and the standardized deviations for $\ell = 2$ to 13 are \RaZa, \RaZb, \RaZc, \RaZd, \RaZe{} and \RaZf. The sums of squares are \RaSq{} for the denominators (random reals average \RaSqCal, $p = \RaSqP$) and \RaSp{} for the numerators (\RaSpCal, $p = \RaSpP$); the largest deviations are \RaMaxQ{} at $\ell = \RaMaxQl$ and \RaMaxP{} at $\ell = \RaMaxPl$; and the $\chi^2$ for $q_n$ modulo 12 is \RaChiTwelve{} ($p = \RaChiTwelveP$). The small differences from \cref{tab:th-voices} come from the different random reals; the conclusion is the same.\par}
+
+\paragraph{What they do not say.} The cluster of four denominators and the lean toward one note (Section~\ref{sec:th1}) remain the two unusual statistics, each at about the one-in-a-hundred level and each chosen after looking. None of the five new primes has a prime partner, so $n = 8$ is still the only convergent with both parts prime, in line with the \OqBothTail{} further cases expected in Section~\ref{sec:oq1}. And nothing here bears on whether the list is infinite: a number could agree with every test above for its first two million terms and still stop producing primes.
+
 \section{Status after the third look}\label{sec:th-status}
 \addednote{\revC}
 
@@ -504,10 +573,10 @@ For numbers of a few hundred digits a proof of primality takes seconds with stan
 \toprule
 question & new in this round & status \\
 \midrule
-1. Prime convergents of $\pi$ & search to $n = 40{,}000$ with the rhythm sieve; four new probable-prime denominators, at $n = 25{,}332$, $27{,}651$, $32{,}394$ and $37{,}721$, found by Teddy Rook; a cluster and a lean toward one note, both probably chance; many primes among intermediate fractions (evidence). For $e$: sign flip, exact periods $6\ell$ and $3\ell$, forced divisors, primes only at $n = 2$ or $n \equiv 1 \pmod 3$ (proved) & open \\
+1. Prime convergents of $\pi$ & search to $n = 50{,}000$ with the rhythm sieve; four new probable-prime denominators, at $n = 25{,}332$, $27{,}651$, $32{,}394$ and $37{,}721$, and a new probable-prime numerator at $n = 42{,}037$, found by Teddy Rook; a cluster and a lean toward one note, both probably chance; many primes among intermediate fractions (evidence). For $e$: sign flip, exact periods $6\ell$ and $3\ell$, forced divisors, primes only at $n = 2$ or $n \equiv 1 \pmod 3$ (proved) & open \\
 2. Fibonacci and Pell primes & nothing & open \\
-3. The heuristic for almost every number & nothing (\cref{thm:ob-ae} stands) & answered a.e. \\
-4. Is $\pi$ typical? & nothing & open \\
+3. The heuristic for almost every number & \cref{thm:ob-ae} stands; for $\pi$ itself the data now favor the constant $2\ln 2$ over the uncorrected \RaNaiveC{} by about \RaFiLR{} to 1 (evidence) & answered a.e. \\
+4. Is $\pi$ typical? & the rate of every small prime among two million convergents, and the share with no factor below $10^7$, match a typical number (evidence) & open \\
 5. The correlation matrix & $\ln\lambda_{\max}$ and $\ln(1/\lambda_{\min})$ both $(2 + o(1))\sqrt{\ln m/\ln\ln m}$; a limiting bulk law exists; the mean of $1/\lambda$ tends to $\prod_p(1 + 2/(p(p-1)))$ (all proved) & partly answered \\
 6. Prime-sized scales & nothing & answered: no \\
 \bottomrule
@@ -527,4 +596,4 @@ question & new in this round & status \\
 
 \paragraph{A caution on novelty.} \Cref{thm:th-top,thm:th-min} use the resonance method exactly as number theorists use it for the zeta function, and \cref{thm:th-law} is a standard truncation argument. We searched and did not find these statements for this matrix, nor \cref{thm:th-div} for $e$, but results of this kind are often folklore. Before any of them is called new, a specialist in GCD sums should be asked; Hilberdink's paper \citep{Hilberdink2009} is the first place to look.
 
-\paragraph{Acknowledgment.} The searches that found $q_{25332}$, $q_{27651}$, $q_{32394}$ and $q_{37721}$, Teddy Rook's finished text of this chapter, on which this version is based, and the statements and proofs of this chapter, are from Teddy Rook's notes and scripts of November 2026. The scripts \texttt{c12\_third\_*.py} are cleaned versions of his, extended and rerun for this chapter; the independent checks, the second proofs noted in the text, the caution on the limiting law's mean of $1/\lambda$ and the corrections noted in Sections~\ref{sec:th1} and~\ref{sec:th6} were added in checking.
+\paragraph{Acknowledgment.} The searches that found $q_{25332}$, $q_{27651}$, $q_{32394}$, $q_{37721}$ and $p_{42037}$, Teddy Rook's finished text of this chapter, on which this version is based, and the statements and proofs of this chapter, are from Teddy Rook's notes and scripts of November 2026. The scripts \texttt{c12\_third\_*.py} are cleaned versions of his, extended and rerun for this chapter; the independent checks, the second proofs noted in the text, the caution on the limiting law's mean of $1/\lambda$, the repeated sieve and voices test of Section~\ref{sec:th7}, and the corrections noted in Sections~\ref{sec:th1} and~\ref{sec:th6} were added in checking.

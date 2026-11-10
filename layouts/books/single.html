@@ -40,6 +40,7 @@
     {{ with .Params.notes }}<p style="margin:.4rem 0 0;font-size:.92rem;color:#555;">{{ . }}</p>{{ end }}
   </section>
   {{ end }}
+  {{ partial "videos-here.html" . }}
   {{ $slug := .File.ContentBaseName }}
   {{ $igs := slice }}{{ range site.Data.infographics }}{{ if and .show (in (.books | default slice) $slug) }}{{ $igs = $igs | append . }}{{ end }}{{ end }}
   {{ with $igs }}

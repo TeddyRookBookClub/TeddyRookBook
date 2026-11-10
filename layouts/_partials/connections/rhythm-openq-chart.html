@@ -1,5 +1,5 @@
 {{- /* The chart under question 1 of "Working on the open questions" (layouts/_partials/connections/rhythm-openq.html):
-   pi's prime convergent denominators and numerators (denominators to n = $d.N = 40,000, numerators to $d.Np = 32,394, Chapter 17) against the heuristic,
+   pi's prime convergent denominators and numerators (both to n = $d.N = $d.Np = 50,000, Teddy Rook's search; our_q / our_p = how far the paper's own scripts confirm it) against the heuristic,
    two small inline SVGs.
    Data: data/rhythm/openq_pi.json (scripts/rhythm/openq-chart-data.py; rows are [N, expected, lo95, hi95]).
    x = log of N from 1 to $d.N (the numerator panel stops at $d.Np); y = count from 0 to 22 (ticks to 20). Hover or long-press a dot for its fraction number. */ -}}
@@ -49,6 +49,10 @@
     <circle class="rn-oq-dot" cx="{{ printf "%.1f" $x }}" cy="{{ printf "%.1f" (sub $B (mul $h (div (float (add $k 1)) $YM))) }}" r="3.2"><title>Prime {{ $panel.what }} number {{ add $k 1 }}: fraction number {{ lang.FormatNumber 0 $n }}</title></circle>
     {{- end }}
     <text class="rn-oq-ttl" x="{{ $L }}" y="9">{{ $panel.title }}: pi has {{ len $idx }}, a typical number about {{ printf "%.1f" (index $last 1) }}</text>
+    {{- with (cond (eq $panel.key "q") $d.our_q $d.our_p) }}{{ $xo := add $L (mul $w (div (math.Log (float .)) $lmax)) }}
+    <line class="rn-oq-our" x1="{{ printf "%.1f" $xo }}" x2="{{ printf "%.1f" $xo }}" y1="{{ $T }}" y2="{{ $B }}"><title>Searched by Teddy Rook to {{ lang.FormatNumber 0 $panel.end }}; checked by our own scripts to {{ lang.FormatNumber 0 . }}</title></line>
+    <text class="rn-oq-tick" x="{{ $L }}" y="198">our check: to {{ lang.FormatNumber 0 . }}</text>
+    {{- end }}
     <text class="rn-oq-tick" x="{{ $R }}" y="198" text-anchor="end">fraction number n (log scale)</text>
   </svg>
   {{- end }}
@@ -58,7 +62,8 @@
     <li><span class="rn-oq-sw rn-oq-sw-exp"></span>expected for a typical number</li>
     <li><span class="rn-oq-sw rn-oq-sw-band"></span>where 95% of typical counts fall</li>
     <li><span class="rn-oq-sw rn-oq-sw-law"></span>2 ln 2 · ln n</li>
+    {{- if $d.our_q }}<li><span class="rn-oq-sw rn-oq-sw-our"></span>how far our own scripts confirm the search</li>{{ end }}
   </ul>
-  <figcaption class="rn-small">How many of pi’s first n fractions have a prime bottom number (the first chart) or top number (the second). The green steps are pi. The gold dashed curve is what the paper’s rule predicts for a typical number, and the shaded band is the range a typical number lands in 95% of the time. Pi stays inside the band all the way: to n = {{ lang.FormatNumber 0 $d.N }} for the bottom numbers and {{ lang.FormatNumber 0 $d.Np }} for the top numbers. The last four denominator dots, at 25,332, 27,651, 32,394 and 37,721, are probable primes found by Teddy Rook, and they come close together; no new numerator turned up after 8,750. For a typical number the count grows like 2 ln 2 · ln n (the thin dotted line climbs at the same rate); Chapter 16 proves that for almost every number. Hover over a dot, or press and hold it, to see where each prime falls.</figcaption>
+  <figcaption class="rn-small">How many of pi’s first n fractions have a prime bottom number (the first chart) or top number (the second). The green steps are pi. The gold dashed curve is what the paper’s rule predicts for a typical number, and the shaded band is the range a typical number lands in 95% of the time. Pi stays inside the band all the way to n = {{ lang.FormatNumber 0 $d.N }}. The last four bottom-number dots, at 25,332, 27,651, 32,394 and 37,721, and the last top-number dot, at 42,037, are probable primes found by Teddy Rook; the four come close together, and the top-number dot ends a long wait after 8,750. The search to {{ lang.FormatNumber 0 $d.N }} is Teddy Rook’s; our own scripts confirm it to n = {{ lang.FormatNumber 0 $d.our_q }} for the bottom numbers and {{ lang.FormatNumber 0 $d.our_p }} for the top numbers. For a typical number the count grows like 2 ln 2 · ln n (the thin dotted line climbs at the same rate); Chapter 16 proves that for almost every number. Hover over a dot, or press and hold it, to see where each prime falls.</figcaption>
 </figure>
 {{- end }}

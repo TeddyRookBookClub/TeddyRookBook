@@ -33,7 +33,12 @@ python3 c12_third_sieve.py q 28001 32394   # Chapter 17: denominators to the thi
 python3 c12_third_sieve.py p 28001 32394   # Chapter 17: numerators to n = 32,394 (about 45 minutes, resumable)
 python3 c12_third_sieve.py q 32395 35000   # Chapter 17: denominators beyond the thirteenth (about 45 minutes, resumable)
 python3 c12_third_sieve.py q 35001 37721   # Chapter 17: denominators to the fourteenth (about 50 minutes, resumable)
+python3 c12_third_sieve.py q 37722 40000   # Chapter 17: denominators beyond the fourteenth (stopped at n = 38,571 for the paper; resumable)
+python3 c12_third_sieve.py p 32395 37500   # Chapter 17: numerators beyond 32,394 (about 1.5 hours, resumable)
+python3 c12_third_sieve.py p 37501 42037   # Chapter 17: numerators to the sixteenth (about 2 hours, resumable)
 python3 c12_third_newprimes.py      # Chapter 17: q_27651 and q_32394, counts, odds, pattern tests, motif (about 5 minutes)
 python3 c12_third_inter.py all      # Chapter 17: prime intermediate fractions (about an hour, resumable)
 python3 c12_third_fourteenth.py     # Chapter 17: q_37721, counts to 40,000, cluster, notes, family of the guess (about 5 minutes)
+python3 c12_third_fifty.py          # Chapter 17: p_42037, counts and tests to 50,000, notes with 16 numerators (about 6 minutes)
+python3 c12_third_rate.py           # Chapter 17, Section 17.7: pi's own constant, sieve survivors, voices test (about 40 minutes)
 echo "all numbers and figures rebuilt"

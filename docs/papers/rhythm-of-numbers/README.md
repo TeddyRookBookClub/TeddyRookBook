@@ -39,11 +39,14 @@ scripts (November 2026): `c12_third_pisearch.py` searches q_n for 20,000 < n <= 
 Appendix D (about 3 minutes); `c12_third_e.py` (closed forms, divisors and periods for e) and `c12_third_matrix.py`
 (extreme eigenvalues of the correlation matrix to m = 10^6) take about a minute together.
 `c12_third_sieve.py` (the rhythm sieve: the recurrence modulo every prime below 10^7, then base-2 and Baillie-PSW tests
-on the survivors; our search: denominators to n = 37,721, numerators to n = 32,394), `c12_third_newprimes.py` (the twelfth
+on the survivors; our search: see Section 17.5 for how far it reaches), `c12_third_newprimes.py` (the twelfth
 and thirteenth probable primes q_27651 and q_32394, the counts to 32,394, the pattern tests and the mod-12 motif),
 `c12_third_inter.py` (prime intermediate fractions, with their remainders mod 12) and `c12_third_fourteenth.py` (the fourteenth
 probable prime q_37721, the counts to 40,000, the cluster, the notes of the prime convergents, and the family (22k+3)/(7k+1)
-of the opening guess; run it after `c12_third_inter.py small`) belong to Sections 17.5 and 17.6.
+of the opening guess; run it after `c12_third_inter.py small`) and `c12_third_fifty.py` (the sixteenth probable-prime
+numerator p_42037 and the counts and tests to n = 50,000) belong to Sections 17.5 and 17.6;
+`c12_third_rate.py` (pi's own constant with and without zeta(2), the sieve survivors to n = 50,000 and the voices test on
+two million terms, after Teddy Rook's rate.py and voices.py; needs out/picf.npy) belongs to Section 17.7.
 
 Dates of additions: the paper marks each addition with the UTC date it was published. The dates are TeX macros in
 `paper/main.tex` (`\revO`, `\revA`, `\revB`, `\revC`), so a date can be corrected in one line.

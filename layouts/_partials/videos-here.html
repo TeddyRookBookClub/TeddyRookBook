@@ -1,0 +1,14 @@
+{{- /* "Watch" section: every video in data/videos.yaml whose pages list includes this page's path, newest first.
+   Context: the page. Renders nothing when no video lists the page. */ -}}
+{{- $here := .RelPermalink }}{{ $ids := slice }}{{ $vs := slice -}}
+{{- range $id, $v := site.Data.videos }}{{ if in ($v.pages | default slice) $here }}{{ $vs = $vs | append (merge $v (dict "id" $id)) }}{{ end }}{{ end -}}
+{{- with $vs }}
+<section class="trb-vids" aria-labelledby="trb-vids-h">
+  <h2 id="trb-vids-h">🎬 Watch</h2>
+  <div class="trb-vids-grid">
+    {{- range sort . "date" "desc" }}
+    {{ partial "video.html" .id }}
+    {{- end }}
+  </div>
+</section>
+{{- end -}}

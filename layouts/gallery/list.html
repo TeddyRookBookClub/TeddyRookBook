@@ -12,6 +12,7 @@
     <h1>{{ .Title }}</h1>
     <div class="gx-intro">{{ .Content }}</div>
   </header>
+  {{ partial "videos-here.html" . }}
   <div class="gx-filters" role="group" aria-label="Show pieces by tag">
     <button type="button" class="gx-chip" data-tag="" aria-pressed="true">All</button>
     {{- range $T }}{{ $k := index . 0 }}{{ if where $all "Params.gtags" "intersect" (slice $k) }}
