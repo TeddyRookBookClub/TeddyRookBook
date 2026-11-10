@@ -28,30 +28,44 @@
     return true;
   }
   var GOALS = R.GOALS.filter(available);
-  function env() { return { D: A.DATA, P: A.P, courses: CFG.courses, trades: CFG.trades, lib: CFG.lib, colors: A.COLORS, mk: A.mk, fromLib: A.fromLib }; }
+  function env() { return { D: A.DATA, P: A.P, courses: CFG.courses, trades: CFG.trades, trGoals: CFG.trGoals, lib: CFG.lib, colors: A.COLORS, mk: A.mk, fromLib: A.fromLib, log: log }; }
+  function log() { try { console.error.apply(console, arguments); } catch (e) { } }
   function on() { return GOALS.filter(function (G) { return dr.goals[G.key] && dr.goals[G.key].on; }); }
   function g(key) { return R.opts(dr, key); }
 
+  /* Build the plan once the goals' data is here. If a file is slow (2.5 s) or fails, build anyway: those goals get a rough
+     estimate (lp-resolve.js), and when the file does arrive the plan is built again. A failure is logged, never thrown. */
+  var buildNo = 0;
   function rebuild(cb) {
-    A.load(R.needs(dr), function () {
-      built = R.build(dr, env());
-      built.state.res = resInfo(built);
-      prev = A.preview(built.state);
-      cb && cb();
-    });
+    var my = ++buildNo, done = false;
+    function make(final) {
+      if (my !== buildNo || (done && !final)) return;
+      try {
+        built = R.build(dr, env()); built.state.res = resInfo(built); prev = A.preview(built.state);
+      } catch (e) { log('Life Planner: the resolution plan couldn’t be built:', e); return; }
+      done = true; if (cb) cb();
+    }
+    var t = setTimeout(function () { make(false); }, 2500);
+    try { A.load(R.needs(dr), function () { clearTimeout(t); make(true); }); } catch (e) { log('Life Planner:', e); clearTimeout(t); make(true); }
   }
   function resInfo(b) {
     var y = C.ymd(b.range[0]);
     return { title: 'My resolution for ' + (y.m === 12 && y.d > 1 ? y.y + 1 : y.y), goals: b.goals.map(function (x) { return { key: x.key, icon: x.icon, title: x.title, pace: x.pace }; }),
-      daysText: R.daysText(dr.days), mins: +dr.mins || 45, draft: JSON.parse(JSON.stringify(dr)), made: C.isoOf(A.TODAY) };
+      daysText: R.daysText(dr.days), mins: dr.check ? +dr.mins || 45 : 0, draft: JSON.parse(JSON.stringify(dr)), made: C.isoOf(A.TODAY) };
   }
-  function weekMins(ids) { var S = prev.S, m = 0; ids.forEach(function (id) { (S.items[id] || []).forEach(function (it) { m += it.mins; }); }); return m / ((S.to - S.from + 1) / 7); }
+  function weeksIn() { return (built.range[1] - built.range[0] + 1) / 7; }
+  // a goal's minutes for the year, and its number of sessions (a rough goal: spread over every session day)
+  function yearOf(x) {
+    if (x.rough) return { m: x.yr, n: 0 };
+    var S = prev.S, m = 0, n = 0; x.ids.forEach(function (id) { (S.items[id] || []).forEach(function (it) { m += it.mins; n++; }); }); return { m: m, n: n };
+  }
+  function weekMins(x) { return yearOf(x).m / weeksIn(); }
 
   // ---------- frame ----------
   box.innerHTML = '<section class="hs-sec lp-resw" aria-labelledby="lp-res-h"><h2 id="lp-res-h" class="lp-sr">Resolution builder</h2>' +
     '<ol class="lp-rsteps" id="lp-rsteps"></ol><div id="lp-rbody"></div></section>';
   function renderSteps() {
-    $('#lp-rsteps').innerHTML = [['Pick your goals', 1], ['Your days and time', 2], ['Your plan', 3]].map(function (x) {
+    $('#lp-rsteps').innerHTML = [['Pick your goals', 1], ['Your days', 2], ['Your plan', 3]].map(function (x) {
       return '<li><button type="button" class="lp-rstep" data-step="' + x[1] + '"' + (step === x[1] ? ' aria-current="step"' : '') + (x[1] > 1 && !on().length ? ' disabled' : '') + '><span>' + x[1] + '</span> ' + x[0] + '</button></li>';
     }).join('');
   }
@@ -79,35 +93,56 @@
         return '<label class="lp-wide">Work <select data-g="' + k + '" data-f="w">' + TRk.map(function (w) { return '<option value="' + w + '"' + (o.w === w ? ' selected' : '') + '>' + esc(R.TR[w][1].replace(/^Translate /, '')) + '</option>'; }).join('') + '</select></label>' +
           '<label>Finish in <select data-g="' + k + '" data-f="mo"><option value="0"' + (!mo ? ' selected' : '') + '>the usual time (' + usual + (usual === 1 ? ' month' : ' months') + ')</option>' + [1, 2, 3, 4, 6, 9, 12].map(function (m) { return '<option value="' + m + '"' + (mo === m ? ' selected' : '') + '>' + m + (m === 1 ? ' month' : ' months') + '</option>'; }).join('') + '</select></label>' +
           '<p class="hs-small lp-wide">Needs a first-year grammar first. <a href="' + esc(CFG.base) + 'languages/translate/">About Translate in a Year</a></p>';
-      case 'custom': return '<label class="lp-wide">Goal <input type="text" maxlength="60" data-g="custom" data-f="name" value="' + esc(o.name) + '"></label><label>Total <input type="number" min="1" max="100000" data-g="custom" data-f="amount" value="' + o.amount + '"></label>' +
+      case 'custom': return '<label class="lp-wide">Goal <input type="text" maxlength="60" data-g="custom" data-f="name" placeholder="Practice guitar" value="' + esc(o.name) + '"></label><label>Total <input type="number" min="1" max="100000" data-g="custom" data-f="amount" value="' + o.amount + '"></label>' +
         '<label>Unit <input type="text" maxlength="20" data-g="custom" data-f="unit" value="' + esc(o.unit) + '"></label><label>Minutes for each one <input type="number" min="1" max="600" data-g="custom" data-f="mpu" value="' + o.mpu + '"></label>';
     }
     return '';
   }
   function step1() {
-    var h = '<h3>What would you like to get done this year?</h3><p class="hs-small">Pick one to three to start. A smaller goal you keep beats a big one you drop, and you can add more later. Each card says what finishing means; the time it takes shows once you pick it.</p><div class="lp-goals">';
+    var h = '<h3>What would you like to get done this year?</h3><p class="hs-small">Pick one to three to start. A smaller goal you keep beats a big one you drop, and you can add more later. Each card says what finishing means, and the box at the bottom adds up the time as you pick.</p><div class="lp-goals">';
     GOALS.forEach(function (G) {
       var o = dr.goals[G.key] || {}, gid = 'lp-g-' + G.key, b = built && built.goals.filter(function (x) { return x.key === G.key; })[0];
-      h += '<div class="lp-goal' + (o.on ? ' on' : '') + '"><label class="lp-gtop" for="' + gid + '"><input type="checkbox" id="' + gid + '" data-goal="' + G.key + '"' + (o.on ? ' checked' : '') + '><span class="lp-gic" aria-hidden="true">' + G.icon + '</span><b>' + esc(G.title(g(G.key), env())) + '</b></label>' +
-        '<p>' + esc(G.finish) + '</p>' + (o.on ? '<div class="lp-gopts">' + field(G) + '</div>' + (b && prev ? '<p class="lp-gcost">⏱ About ' + fm(weekMins(b.ids)) + ' a week. ' + esc(b.pace) + '</p>' : '<p class="lp-gcost">⏱ Working it out…</p>') : '') + '</div>';
+      h += '<div class="lp-goal' + (o.on ? ' on' : '') + '"><label class="lp-gtop" for="' + gid + '"><input type="checkbox" id="' + gid + '" data-goal="' + G.key + '"' + (o.on ? ' checked' : '') + '><span class="lp-gic" aria-hidden="true">' + G.icon + '</span><b>' + esc(G.card || G.title(g(G.key), env())) + '</b></label>' +
+        '<p>' + esc(G.finish) + '</p>' + (o.on ? '<div class="lp-gopts">' + field(G) + '</div>' + (b && prev ? '<p class="lp-gcost' + (b.rough ? ' rough' : '') + '">⏱ ' + (b.rough ? 'Rough: about ' : 'About ') + fm(weekMins(b)) + ' a week. ' + esc(b.pace) + '</p>' : '<p class="lp-gcost">⏱ Adding up the time…</p>') : '') + '</div>';
     });
-    h += '</div><div class="lp-rnav"><button type="button" class="hs-btn pri" data-go="2"' + (on().length ? '' : ' disabled') + '>Next: your days and time →</button>' + (on().length ? '' : ' <span class="hs-small">Pick at least one goal.</span>') + '</div>';
-    return h;
+    h += '</div><div class="lp-rnav"><button type="button" class="hs-btn pri" data-go="2"' + (on().length ? '' : ' disabled') + '>Next: your days →</button>' + (on().length ? '<button type="button" class="hs-btn ghost" data-go="3">See my plan</button>' : ' <span class="hs-small">Pick at least one goal.</span>') + '</div>';
+    return h + totals();
   }
+
+  /* The running total: a box that sticks to the bottom of the screen while the cards scroll. Each goal's minutes a week,
+     minutes a session on the chosen days and hours in the year, and all of them together. */
+  function totals() {
+    var list = on();
+    if (!list.length) return '<div class="lp-rtotal" role="status" aria-live="polite"><p class="lp-rt-sum">Pick a goal to see the time it takes.</p></div>';
+    if (!built || !prev) return '<div class="lp-rtotal" role="status" aria-live="polite"><p class="lp-rt-sum">Adding up the time…</p></div>';
+    var wk = 0, yr = 0, rough = false, rows = '';
+    built.goals.forEach(function (x) {
+      var y = yearOf(x); wk += y.m / weeksIn(); yr += y.m; rough = rough || !!x.rough;
+      rows += '<tr><th scope="row"><span aria-hidden="true">' + x.icon + '</span> ' + esc(x.title) + (x.rough ? ' <small>(rough)</small>' : '') + '</th><td>' + fm(y.m / weeksIn()) + '</td><td>' + (y.n ? fm(y.m / y.n) : '–') + '</td><td>' + Math.round(y.m / 60) + ' h</td></tr>';
+    });
+    var per = yr / Math.max(1, built.sessions.length);
+    return '<div class="lp-rtotal" role="status" aria-live="polite"><details' + (openTotals ? ' open' : '') + ' id="lp-rtd"><summary><span class="lp-rt-sum"><b>' + fm(wk) + '</b> a week · about <b>' + fm(per) + '</b> a session day · <b>' + Math.round(yr / 60) + ' h</b> in the year' + (rough ? ' · rough' : '') + '</span><span class="lp-rt-more">Per goal</span></summary>' +
+      '<p class="hs-small">On ' + esc(R.daysText(dr.days)) + ' (' + built.sessions.length + ' session days). Change the days in step 2.</p>' +
+      '<div class="lp-rt-wrap"><table class="lp-rt"><thead><tr><th scope="col">Goal</th><th scope="col">A week</th><th scope="col">A session</th><th scope="col">The year</th></tr></thead><tbody>' + rows + '</tbody></table></div></details></div>';
+  }
+  var openTotals = false;
+  box.addEventListener('toggle', function (e) { if (e.target.id === 'lp-rtd') openTotals = e.target.open; }, true);
 
   // ---------- step 2: schedule ----------
   var PRESETS = [['7', [0, 1, 2, 3, 4, 5, 6], '7 days a week'], ['6', [1, 2, 3, 4, 5, 6], '6 days (Monday to Saturday)'], ['5', [1, 2, 3, 4, 5], '5 days (weekdays)'], ['3', [1, 3, 5], '3 days (Monday, Wednesday, Friday)']];
   function presetOf() { var d = dr.days.slice().sort().join(','); for (var i = 0; i < PRESETS.length; i++) if (PRESETS[i][1].join(',') === d) return PRESETS[i][0]; return 'pick'; }
   function step2() {
-    var p = presetOf(), h = '<h3>Which days, and how much time?</h3><div class="lp-form2">';
+    var p = presetOf(), h = '<h3>Which days?</h3><div class="lp-form2">';
     h += '<fieldset><legend>Days a week</legend>' + PRESETS.map(function (x) { return '<label class="lp-chk"><input type="radio" name="lp-dpw" value="' + x[0] + '"' + (p === x[0] ? ' checked' : '') + '> ' + x[2] + '</label>'; }).join('') +
       '<label class="lp-chk"><input type="radio" name="lp-dpw" value="pick"' + (p === 'pick' ? ' checked' : '') + '> Pick the days:</label><div class="lp-dows">' + [1, 2, 3, 4, 5, 6, 0].map(function (d) { return '<label><input type="checkbox" class="lp-rday" value="' + d + '"' + (dr.days.indexOf(d) >= 0 ? ' checked' : '') + '> ' + C.DOWS[d] + '</label>'; }).join('') + '</div></fieldset>';
-    h += '<fieldset><legend>Start and time</legend><label>Start date <input type="date" id="lp-rstart" value="' + esc(dr.start) + '"></label><p class="hs-small">The plan runs 365 days from here. January 1 is set to start; any day works.</p>' +
-      '<label>Minutes you can give on each of those days <input type="number" id="lp-rmins" min="5" max="600" step="5" value="' + dr.mins + '"></label></fieldset>';
+    h += '<fieldset><legend>Start</legend><label>Start date <input type="date" id="lp-rstart" value="' + esc(dr.start) + '"></label><p class="hs-small">The plan runs 365 days from here. January 1 is set to start; any day works.</p></fieldset>';
+    h += '<fieldset><legend>Check it against my free time (optional)</legend><p class="hs-small">The plan works from the time your goals take. If you like, say how much time you have, and it will tell you whether it fits.</p>' +
+      '<label class="lp-chk"><input type="checkbox" id="lp-rcheck"' + (dr.check ? ' checked' : '') + '> Check it against my free time</label>' +
+      '<label' + (dr.check ? '' : ' hidden') + ' id="lp-rminsl">Minutes free on each of those days <input type="number" id="lp-rmins" min="5" max="600" step="5" value="' + (+dr.mins || 45) + '"></label></fieldset>';
     h += '<fieldset><legend>Days off and vacations</legend><ul class="lp-offs">' + (dr.off.length ? dr.off.map(function (o, i) { return '<li>' + esc(fd(C.dnOf(o.from), { month: 'short', day: 'numeric', year: 'numeric' })) + (o.to && o.to !== o.from ? ' – ' + esc(fd(C.dnOf(o.to), { month: 'short', day: 'numeric', year: 'numeric' })) : '') + (o.label ? ': ' + esc(o.label) : '') + ' <button type="button" class="hs-btn ghost" data-roff="' + i + '" aria-label="Remove these days off">✕</button></li>'; }).join('') : '<li class="hs-small">None yet. The pace works around any you add.</li>') + '</ul>' +
       '<div class="lp-offadd"><label>From <input type="date" id="lp-roff-from"></label><label>To <input type="date" id="lp-roff-to"></label><label>Note <input type="text" id="lp-roff-label" maxlength="40" placeholder="Vacation"></label><button type="button" class="hs-btn" id="lp-roff-add">Add days off</button></div></fieldset></div>';
     h += '<div class="lp-rnav"><button type="button" class="hs-btn ghost" data-go="1">← Goals</button><button type="button" class="hs-btn pri" data-go="3">See my plan →</button></div>';
-    return h;
+    return h + totals();
   }
 
   // ---------- step 3: the plan ----------
@@ -125,14 +160,17 @@
     });
   }
   function step3() {
-    var b = built, S = prev.S, st = b.state, avail = (+dr.mins || 45) * b.dpw, need = 0, h = '';
-    b.goals.forEach(function (x) { x.wk = weekMins(x.ids); need += x.wk; });
+    var b = built, S = prev.S, st = b.state, avail = (+dr.mins || 45) * b.dpw, need = 0, h = '', yr = 0, peak = 0;
+    b.goals.forEach(function (x) { x.wk = weekMins(x); need += x.wk; yr += yearOf(x).m; });
+    S.days.forEach(function (d) { if (d.load > peak) peak = d.load; });
     var over = S.days.filter(function (d) { return d.over && d.load; }), overW = S.weeks.filter(function (w) { return w.over; }).length;
     st.res.milestones = milestones(b, st);
-    h += '<h3>' + esc(st.res.title) + '</h3><p class="lp-rlead">' + esc(fd(b.range[0], { month: 'long', day: 'numeric', year: 'numeric' })) + ' to ' + esc(fd(b.range[1], { month: 'long', day: 'numeric', year: 'numeric' })) + ' · ' + esc(R.daysText(dr.days)) + ' · ' + b.sessions.length + ' session days · up to ' + fm(+dr.mins || 45) + ' a day</p>';
-    h += '<ul class="lp-rgoals">' + b.goals.map(function (x) { return '<li><span class="lp-gic" aria-hidden="true">' + x.icon + '</span><span><b>' + esc(x.title) + '</b><small>' + esc(x.pace) + '</small></span><span class="lp-num">' + fm(x.wk) + ' a week</span></li>'; }).join('') + '</ul>';
-    h += '<p class="lp-rfit">All together: about <b>' + fm(need) + ' a week</b>, of the ' + fm(avail) + ' you have.</p>';
-    if (over.length) {
+    h += '<h3>' + esc(st.res.title) + '</h3><p class="lp-rlead">' + esc(fd(b.range[0], { month: 'long', day: 'numeric', year: 'numeric' })) + ' to ' + esc(fd(b.range[1], { month: 'long', day: 'numeric', year: 'numeric' })) + ' · ' + esc(R.daysText(dr.days)) + ' · ' + b.sessions.length + ' session days' + (dr.check ? ' · up to ' + fm(+dr.mins || 45) + ' a day' : '') + '</p>';
+    h += '<ul class="lp-rgoals">' + b.goals.map(function (x) { return '<li><span class="lp-gic" aria-hidden="true">' + x.icon + '</span><span><b>' + esc(x.title) + '</b><small>' + esc(x.pace) + '</small></span><span class="lp-num">' + (x.rough ? 'rough: ' : '') + fm(x.wk) + ' a week</span></li>'; }).join('') + '</ul>';
+    if (b.goals.some(function (x) { return x.rough; })) h += '<p class="lp-rwarn">Some of the planner’s data didn’t load, so goals marked “rough” have an estimate only and aren’t in the plan yet. Reload the page to add them.</p>';
+    h += '<p class="lp-rfit">All together: about <b>' + fm(need) + ' a week</b>' + (dr.check ? ', of the ' + fm(avail) + ' you have' : ', about ' + fm(yr / Math.max(1, b.sessions.length)) + ' on a session day (the busiest day: ' + fm(peak) + '), ' + Math.round(yr / 60) + ' hours in the year') + '.</p>';
+    if (!dr.check) h += '<div class="lp-rcheck"><p><b>Check it against my free time</b> (optional)</p><div class="hs-actions"><label class="lp-inl">Minutes free on a session day <input type="number" id="lp-rmins3" min="5" max="600" step="5" value="' + (+dr.mins || 45) + '"></label><button type="button" class="hs-btn" id="lp-rcheck3">Check</button></div></div>';
+    if (dr.check && over.length) {
       var big = b.goals.slice().sort(function (p, q) { return q.wk - p.wk; })[0], peak = 0; over.forEach(function (d) { peak = Math.max(peak, d.load - d.cap); });
       var add = Math.ceil(Math.max(need / b.dpw - (+dr.mins || 45), Math.min(peak, 30)) / 5) * 5;
       h += '<div class="lp-rwarn" role="note"><p><b>This is more than your time on ' + over.length + ' day' + (over.length === 1 ? '' : 's') + (overW ? ' (' + overW + ' week' + (overW === 1 ? '' : 's') + ')' : '') + '.</b> That’s easy to fix. Pick one:</p><div class="hs-actions">' +
@@ -140,7 +178,7 @@
         (b.goals.length > 1 ? '<button type="button" class="hs-btn" data-fix="drop" data-v="' + big.key + '">Leave out “' + esc(big.title) + '” for now</button>' : '') +
         (smaller(big.key) ? '<button type="button" class="hs-btn" data-fix="small" data-v="' + big.key + '">' + esc(smaller(big.key).text) + '</button>' : '') +
         (b.dpw < 7 ? '<button type="button" class="hs-btn" data-fix="days">Spread it over 7 days</button>' : '') + '</div></div>';
-    } else h += '<p class="lp-rok">✓ It fits your time every day.</p>';
+    } else if (dr.check) h += '<p class="lp-rok">✓ It fits your time every day. <button type="button" class="hs-btn ghost" id="lp-runcheck">Stop checking</button></p>';
     h += '<h4>Milestones</h4><table class="lp-ms"><tbody>' + st.res.milestones.map(function (m) { return '<tr><th scope="row">' + esc(m.when) + '</th><td>' + m.lines.map(esc).join('<br>') + '</td></tr>'; }).join('') + '</tbody></table>';
     h += '<h4>If you stick to it</h4>' + A.withState(st, function (S2) { return A.sumHTML(S2.from, S2.to); });
     h += '<div class="hs-note lp-rkind"><p><b>Missed a day?</b> It happens. The plan doesn’t move: tick the session when you get to it, or spread a few over the next week. If life gets busy, “move the finish date” on the planner adds a week and re-paces everything, and you can make any goal smaller.</p></div>';
@@ -149,7 +187,7 @@
       '<div class="hs-actions"><button type="button" class="hs-btn pri" id="lp-rsave" data-mode="replace">' + (hasPlan ? 'Replace my plan with this' : 'Save as my Life Planner plan') + '</button>' + (hasPlan ? '<button type="button" class="hs-btn" id="lp-rmerge" data-mode="merge">Add these goals to my plan</button>' : '') + '</div>' +
       '<div class="hs-actions"><button type="button" class="hs-btn" id="lp-rprint">🖨 Print or save as PDF</button><button type="button" class="hs-btn" id="lp-rics">📅 Calendar file</button><label class="lp-inl">Events <select id="lp-rics-mode"><option value="each">one for each session</option><option value="daily">one a day</option></select></label></div>' +
       '<p class="hs-small">The PDF starts with a cover page for your resolution, then a calendar page for each month.</p></div>';
-    h += '<div class="lp-rnav"><button type="button" class="hs-btn ghost" data-go="2">← Days and time</button><button type="button" class="hs-btn ghost" data-go="1">← Goals</button></div>';
+    h += '<div class="lp-rnav"><button type="button" class="hs-btn ghost" data-go="2">← Your days</button><button type="button" class="hs-btn ghost" data-go="1">← Goals</button></div>';
     return h;
   }
   // a gentler target for a goal, when it has one
@@ -173,7 +211,7 @@
     if (step > 1 && !on().length) step = 1;
     if (step === 3) { body.innerHTML = '<p class="lp-loading">Making your plan…</p>'; rebuild(function () { body.innerHTML = step3(); }); return; }
     body.innerHTML = step === 1 ? step1() : step2();
-    if (step === 1 && on().length) rebuild(function () { if (step === 1) { var f = D.activeElement && D.activeElement.id; body.innerHTML = step1(); if (f && D.getElementById(f)) D.getElementById(f).focus(); } });
+    if (step < 3 && on().length) rebuild(function () { if (step < 3) { var f = D.activeElement && D.activeElement.id; body.innerHTML = step === 1 ? step1() : step2(); if (f && D.getElementById(f)) D.getElementById(f).focus(); } });
   }
 
   // ---------- events ----------
@@ -185,6 +223,7 @@
     if (t.classList.contains('lp-rday')) { dr.days = $$('.lp-rday:checked', box).map(function (x) { return +x.value; }); if (!dr.days.length) dr.days = [1]; save(); render(); return; }
     if (t.id === 'lp-rstart' && C.dnOf(t.value) != null) { dr.start = t.value; dr.extend = 0; save(); return; }
     if (t.id === 'lp-rmins') { dr.mins = Math.max(5, Math.min(600, Math.round(+t.value || 45))); save(); }
+    if (t.id === 'lp-rcheck') { dr.check = t.checked; save(); $('#lp-rminsl').hidden = !t.checked; if (t.checked) $('#lp-rmins').focus(); }
   });
   box.addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
@@ -196,12 +235,14 @@
     }
     if (b.dataset.fix) {
       var fx = b.dataset.fix;
-      if (fx === 'mins') dr.mins = +b.dataset.v;
+      if (fx === 'mins') { dr.mins = +b.dataset.v; dr.check = true; }
       if (fx === 'drop') dr.goals[b.dataset.v].on = false;
       if (fx === 'small') { var sm = smaller(b.dataset.v); if (sm) sm.apply(); }
       if (fx === 'days') dr.days = [0, 1, 2, 3, 4, 5, 6];
       save(); render(); return;
     }
+    if (b.id === 'lp-rcheck3') { dr.check = true; dr.mins = Math.max(5, Math.min(600, Math.round(+$('#lp-rmins3').value || 45))); save(); render(); return; }
+    if (b.id === 'lp-runcheck') { dr.check = false; save(); render(); return; }
     if (b.id === 'lp-rsave' || b.id === 'lp-rmerge') { commit(b.dataset.mode); return; }
     if (b.id === 'lp-rprint') { var st = built.state; A.withState(st, function (S) { A.doPrint(S.from, S.to, 'month'); }); return; }
     if (b.id === 'lp-rics') {
@@ -211,6 +252,7 @@
   });
   function commit(mode) {
     var st = JSON.parse(JSON.stringify(built.state)), cur = A.get();
+    if (!dr.check) { var pk = 0; prev.S.days.forEach(function (d) { if (d.load > pk) pk = d.load; }); st.plan.budget = st.plan.budget.map(function (x) { return x ? Math.max(5, Math.ceil(pk / 5) * 5) : 0; }); }
     if (mode === 'merge' && cur && A.valid(cur)) {
       var keep = cur.tracks.filter(function (t) { return !(t.opt && t.opt.res); });
       var m = JSON.parse(JSON.stringify(cur));

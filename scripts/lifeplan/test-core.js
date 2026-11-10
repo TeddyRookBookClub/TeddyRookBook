@@ -179,12 +179,29 @@ const ALL = { bible: { on: true }, gb: { on: true, n: 52 }, ladder: { on: true, 
   if (days.length >= 2) { const Rr = T.summary(Sr, st.tracks, DR, ENV.P, Sr.from, Sr.to); ok(days.length < 3 || Rr.activity.met === Rr.activity.weeks || off.length, tag + ': Get active meets the guideline every full week'); }
 });
 // overload: the same goals in 30 minutes a day don't fit
-{ const b = RS.build({ goals: JSON.parse(JSON.stringify(ALL)), days: [1, 2, 3, 4, 5], start: '2027-01-01', mins: 30, off: [] }, ENV); const PVr = {};
+{ const b = RS.build({ goals: JSON.parse(JSON.stringify(ALL)), days: [1, 2, 3, 4, 5], start: '2027-01-01', check: true, mins: 30, off: [] }, ENV); const PVr = {};
   b.state.tracks.forEach(t => { const pv = T.provider(t, DR, ENV.P, { base: '/' }); if (pv) PVr[t.id] = pv; });
   const Sr = C.schedule(b.state.plan, b.state.tracks, PVr); ok(Sr.days.filter(d => d.over && d.load).length > 100, 'twelve goals in 30 minutes a day: overloaded days flagged');
-  const b2 = RS.build({ goals: { bible: { on: true } }, days: [0, 1, 2, 3, 4, 5, 6], start: '2027-01-01', mins: 30, off: [] }, ENV); const P2 = {};
+  const b2 = RS.build({ goals: { bible: { on: true } }, days: [0, 1, 2, 3, 4, 5, 6], start: '2027-01-01', check: true, mins: 30, off: [] }, ENV); const P2 = {};
   b2.state.tracks.forEach(t => { P2[t.id] = T.provider(t, DR, ENV.P, { base: '/' }); });
   ok(C.schedule(b2.state.plan, b2.state.tracks, P2).days.every(d => !d.over), 'the Bible alone in 30 minutes a day fits'); }
+// no free-time budget: the plan uses the goals' own time, so nothing is overloaded
+{ const b = RS.build({ goals: JSON.parse(JSON.stringify(ALL)), days: [1, 2, 3, 4, 5], start: '2027-01-01', off: [] }, ENV), PVn = {};
+  b.state.tracks.forEach(t => { const pv = T.provider(t, DR, ENV.P, { base: '/' }); if (pv) PVn[t.id] = pv; });
+  ok(C.schedule(b.state.plan, b.state.tracks, PVn).days.every(d => !d.over), 'no budget given: every goal fits (no overload without a budget)'); }
+// a goal whose data file didn't load gets a rough estimate, logged, and the others are still built
+{ const logs = [], D2 = Object.assign({}, DR); delete D2.extra;
+  const b = RS.build({ goals: { bible: { on: true }, memory: { on: true, n: 12 }, latin: { on: true }, custom: { on: true, amount: 100, unit: 'hours', mpu: 60 } }, days: [0, 1, 2, 3, 4, 5, 6], start: '2027-01-01', off: [] }, Object.assign({}, ENV, { D: D2, log: function () { logs.push([].join.call(arguments, ' ')); } }));
+  const by = k => b.goals.filter(g => g.key === k)[0];
+  ok(by('memory').rough && by('memory').yr === 720 && by('latin').rough && by('latin').yr === 2765, 'missing data: memory and Latin get rough estimates');
+  ok(!by('bible').rough && by('bible').ids.length === 1 && b.state.tracks.length === 2, 'missing data: the other goals are still planned');
+  ok(logs.length === 2, 'missing data: logged to the console', logs);
+  eq(by('custom').title, 'My goal: 100 hours', 'custom goal with no name');
+  eq(RS.goal('custom').card, 'Make your own goal', 'the custom card is “Make your own goal”'); }
+// a goal that throws doesn't stop the build
+{ const D3 = Object.assign({}, DR, { extra: { memory: null, latin: 5 } }), logs = [];
+  const b = RS.build({ goals: { latin: { on: true }, walk: { on: true, n: 300 } }, days: [1, 3, 5], start: '2027-01-01', off: [] }, Object.assign({}, ENV, { D: D3, log: function () { logs.push(1); } }));
+  ok(b.goals.length === 2 && b.goals.filter(g => g.key === 'latin')[0].rough === true && !b.goals.filter(g => g.key === 'walk')[0].rough, 'a goal that throws gets a rough estimate; the others are planned'); ok(logs.length >= 1, 'and the error is logged'); }
 eq(RS.spread([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5), [2, 4, 6, 8, 10], 'spread picks sessions evenly, ending on the last one');
 eq(RS.range({ start: '2027-01-01', extend: 7 }).map(iso), ['2027-01-01', '2028-01-07'], 'moving the finish date adds days');
 eq(T.pace(0, 2.5, 5), { i0: 0, i1: 2, fin: [0, 1], ov: [1, 1, 0.5] }, 'pace: 2.5 items a session');

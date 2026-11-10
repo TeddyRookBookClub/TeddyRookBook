@@ -1,5 +1,11 @@
 {{- /* The Life Planner page body, shared by /life-planner/ (list.html, res false) and the resolution builder
    /life-planner/resolution/ (single.html, res true). Called with (dict "res" bool "page" .). */ -}}
+{{- /* lp-url: a data file at a STABLE path with ?v=<content hash>. Not fingerprinted into the file name, so a page that
+   was cached before a redeploy (GitHub Pages lets browsers keep pages for 10 minutes) still finds the file instead of a
+   404 for a name that no longer exists. Argument: (dict "p" <path> "s" <JSON string>). */ -}}
+{{- define "_partials/inline/lp-url.html" -}}
+{{- return printf "%s?v=%s" (resources.FromString .p .s).RelPermalink (substr (md5 .s) 0 10) -}}
+{{- end -}}
 {{ partial "hs-head.html" . }}
 <link rel="stylesheet" href="{{ "life-planner/lp.css" | relURL }}?v={{ (os.Stat "static/life-planner/lp.css").ModTime.Unix }}">
 {{- /* The Life Planner (/life-planner/). The page carries the small things inline (#lp-cfg: the starter library from
@@ -35,7 +41,7 @@
     {{- $bible = merge $bible (dict $ver $days) -}}
   {{- end -}}
 {{- end -}}
-{{- $bibleURL := "" -}}{{- if $bible }}{{ $bibleURL = (resources.FromString "life-planner/bible.json" ($bible | jsonify) | fingerprint "md5").RelPermalink }}{{ end -}}
+{{- $bibleURL := "" -}}{{- if $bible }}{{ $bibleURL = (partial "inline/lp-url.html" (dict "p" "life-planner/bible.json" "s" ($bible | jsonify))) }}{{ end -}}
 {{- /* ---- Great Books in a Year ---- */ -}}
 {{- $gbURL := "" -}}
 {{- with site.Data.greatbooks -}}{{- if and .year (site.GetPage "/great-books/year") -}}
@@ -60,7 +66,7 @@
     {{- if eq .k "end" }}{{ $m = 15 }}{{ end -}}
     {{- $days = $days | append (dict "a" .k "b" $t "c" $u "d" (math.Max 5 (math.Round $m)) "e" $ids) -}}
   {{- end -}}
-  {{- $gbURL = (resources.FromString "life-planner/gb.json" (dict "days" $days | jsonify) | fingerprint "md5").RelPermalink -}}
+  {{- $gbURL = (partial "inline/lp-url.html" (dict "p" "life-planner/gb.json" "s" (dict "days" $days | jsonify))) -}}
 {{- end -}}{{- end -}}
 {{- /* ---- Harvard Classics ---- */ -}}
 {{- $hcURL := "" -}}
@@ -70,7 +76,7 @@
     {{- $mins := 15 -}}{{- with index site.Data.harvard.days . }}{{ with .minutes }}{{ $mins = . }}{{ end }}{{ end -}}
     {{- $hc = merge $hc (dict . (dict "a" (printf "Harvard Classics: %s" (replaceRE "^[^:]+:\\s*" "" $p.Title)) "b" $mins "c" $p.RelPermalink)) -}}
   {{- end -}}{{- end -}}
-  {{- $hcURL = (resources.FromString "life-planner/hc.json" ($hc | jsonify) | fingerprint "md5").RelPermalink -}}
+  {{- $hcURL = (partial "inline/lp-url.html" (dict "p" "life-planner/hc.json" "s" ($hc | jsonify))) -}}
 {{- end -}}
 {{- /* ---- the ladders: one file each, and the course list inline. Minutes a lesson: the lesson planner's estimate
    (data/hs_planner.yaml "mins" for that course), else 30 ---- */ -}}
@@ -91,7 +97,7 @@
     {{- end -}}
   {{- end -}}
   {{- if $order -}}
-    {{- $ladURLs = merge $ladURLs (dict $L.key (resources.FromString (printf "life-planner/lad-%s.json" $L.key) (dict "order" $order "c" $cs | jsonify) | fingerprint "md5").RelPermalink) -}}
+    {{- $ladURLs = merge $ladURLs (dict $L.key (partial "inline/lp-url.html" (dict "p" (printf "life-planner/lad-%s.json" $L.key) "s" (dict "order" $order "c" $cs | jsonify)))) -}}
   {{- end -}}
 {{- end -}}
 {{- /* ---- The Trades ---- */ -}}
@@ -101,7 +107,7 @@
   {{- $trades = merge $trades (dict $tk (dict "t" $T.course.title "u" (printf "/trades/%s/" $tk) "ls" $ls)) -}}
   {{- $tradeList = $tradeList | append (dict "k" $tk "t" $T.course.title "n" (len $ls)) -}}
 {{- end -}}{{- end -}}
-{{- $tradesURL := "" -}}{{- if $trades }}{{ $tradesURL = (resources.FromString "life-planner/trades.json" ($trades | jsonify) | fingerprint "md5").RelPermalink }}{{ end -}}
+{{- $tradesURL := "" -}}{{- if $trades }}{{ $tradesURL = (partial "inline/lp-url.html" (dict "p" "life-planner/trades.json" "s" ($trades | jsonify))) }}{{ end -}}
 {{- /* ---- Meal Prep ---- */ -}}
 {{- $mealsURL := "" -}}{{- $hol := dict -}}
 {{- if and site.Data.meals (site.GetPage "/meal-prep/plan") -}}
@@ -110,7 +116,7 @@
     {{- $t := .times | default dict -}}
     {{- $r = merge $r (dict .id (slice .name (add ($t.prep | default 0) ($t.cook | default 0)) (printf "/meal-prep/recipes/%s/" .id) (index (.meal | default (slice "")) 0))) -}}
   {{- end -}}{{- end -}}
-  {{- $mealsURL = (resources.FromString "life-planner/meals.json" (dict "r" $r | jsonify) | fingerprint "md5").RelPermalink -}}
+  {{- $mealsURL = (partial "inline/lp-url.html" (dict "p" "life-planner/meals.json" "s" (dict "r" $r | jsonify))) -}}
   {{- range $h := slice "hanukkah" "lunar-new-year" -}}{{- with index site.Data.meals.recipes $h -}}{{- with .collection -}}
     {{- $ds := slice -}}{{- range .dates }}{{ $ds = $ds | append (index . 0) }}{{ end -}}
     {{- $hol = merge $hol (dict $h $ds) -}}
@@ -140,7 +146,7 @@
   {{- end -}}
   {{- $extra = merge $extra (dict "lepanto" $ls) -}}
 {{- end -}}{{- end -}}
-{{- $extraURL := "" -}}{{- if $extra }}{{ $extraURL = (resources.FromString "life-planner/extra.json" ($extra | jsonify) | fingerprint "md5").RelPermalink }}{{ end -}}
+{{- $extraURL := "" -}}{{- if $extra }}{{ $extraURL = (partial "inline/lp-url.html" (dict "p" "life-planner/extra.json" "s" ($extra | jsonify))) }}{{ end -}}
 {{- /* ---- Translate in a Year: static/languages/translate/plan.json (built by scripts/translate/build.py), fetched only for
    translate tracks; its goal list (titles, days, minutes) goes inline for the library ---- */ -}}
 {{- $trURL := "" -}}{{- $trGoals := slice -}}

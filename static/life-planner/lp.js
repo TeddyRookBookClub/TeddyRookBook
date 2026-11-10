@@ -18,7 +18,7 @@
   var CFG = JSON.parse(D.getElementById('lp-cfg').textContent), BASE = CFG.base || '/';
   var KEY = 'trb-lifeplan-v1', HS = 'trb-homeschool-v1', ML = 'trb-math-v1', BY = 'trb-bibleyear-v1', MEALS = 'trb-meals-v1';
   var COLORS = ['#2e7d4f', '#1d4f91', '#b8963e', '#7a2338', '#5b3f99', '#0f7c8a', '#c0562b', '#4d6b2f', '#8a5a2b', '#5d6862'];
-  var DATA = { lad: {} }, LOADING = {};
+  var DATA = { lad: {} }, LOADING = {}, FAILED = {};
   var $ = function (s, r) { return (r || D).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || D).querySelectorAll(s)); };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -120,10 +120,17 @@
     if (LOADING[k]) return LOADING[k];
     var url = k.indexOf('lad:') === 0 ? CFG.urls.lad[k.slice(4)] : CFG.urls[k];
     if (!url) { LOADING[k] = Promise.resolve(); return LOADING[k]; }
-    LOADING[k] = fetch(url).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (j) {
+    // one retry that skips the browser cache; on failure the error goes to the console and the callers carry on (the
+    // resolution builder then shows a rough estimate for the goals that needed this file, never a spinner)
+    function get(opt) { return fetch(url, opt).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + url); return r.json(); }); }
+    LOADING[k] = get().catch(function () { return get({ cache: 'reload' }); }).then(function (j) {
       norm(k, j);
       if (k.indexOf('lad:') === 0) DATA.lad[k.slice(4)] = j; else DATA[k] = j;
-    }).catch(function () { LOADING[k] = null; msg('Some of the planner’s data didn’t load. Check your connection and reload the page.'); });
+    }).catch(function (e) {
+      LOADING[k] = null; FAILED[k] = 1;
+      try { console.error('Life Planner: couldn’t load ' + k + ':', e); } catch (e2) { }
+      msg('Some of the planner’s data didn’t load. Check your connection and reload the page.');
+    });
     return LOADING[k];
   }
   // the data files write each tuple as {a, b, c, d, e}: turn them back into lists
@@ -868,6 +875,7 @@
     valid: valid, mk: function (o) { return mk(o); }, fromLib: function (c, k, x) { return fromLib(c, k, x); }, nid: function () { return nid(); },
     ensureFor: function (s, cb) { var keep = st; st = s; var miss = needs().filter(function (k) { return !have(k); }); st = keep; if (!miss.length) cb(); else Promise.all(miss.map(fetchData)).then(cb); },
     preview: function (s) { return computeFor(s); },
+    failed: function (k) { return !!FAILED[k]; },
     load: function (keys, cb) { var miss = keys.filter(function (k) { return !have(k); }); if (!miss.length) cb(); else Promise.all(miss.map(fetchData)).then(cb); },
     // print or export a state that isn't saved (or the saved one): swap it in, build the output, swap back
     withState: function (s, fn) { var o = [st, S, PV, RANGE]; st = s; compute(); try { return fn(S); } finally { st = o[0]; S = o[1]; PV = o[2]; RANGE = o[3]; } },

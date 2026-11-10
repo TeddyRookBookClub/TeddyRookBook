@@ -3,7 +3,8 @@
 
    build(draft, env) → { state, goals, sessions, range }
      draft = { goals: { <goal key>: { on, …options } }, days: [0..6] (the days of the week to work on), start: 'YYYY-MM-DD',
-               mins: minutes a session day, off: [{ from, to, label }], extend: extra days at the end (moving the finish date) }
+               check: true to check the goals against mins (optional; without it the plan uses the goals' own time),
+               mins: minutes free on a session day, off: [{ from, to, label }], extend: extra days at the end }
      env   = { D (data, as lp-tracks.js), P (progress), courses (the inline ladder course list), lib (the starter library),
                trades (the trades list), mk (track maker: id, color…), colors }
    The plan runs 365 days from the start (plus extend). Its sessions are the chosen days of the week that aren't days off.
@@ -100,10 +101,33 @@
     { key: 'asl', icon: '🤟', need: ['extra'], def: {},
       title: function () { return 'Learn ASL basics: Lifeprint’s 60 lessons'; },
       finish: 'Dr. Bill Vicars’s free ASL 1 to ASL 4 lessons at Lifeprint, with fingerspelling practice here.' },
-    { key: 'custom', icon: '⭐', need: [], def: { name: 'Practice guitar', amount: 100, unit: 'hours', mpu: 60 },
+    { key: 'custom', icon: '✏️', need: [], def: { name: '', amount: 100, unit: 'hours', mpu: 60 }, card: 'Make your own goal',
       title: function (g) { return (g.name || 'My goal') + ': ' + g.amount + ' ' + g.unit; },
-      finish: 'Anything you can count: a name, a total and a unit, like “practice guitar 100 hours” or “write 50 letters”.' }
+      finish: 'Anything you can count, like “practice guitar 100 hours” or “write 50,000 words.”' }
   ];
+  /* ROUGH: a goal's minutes for the whole year without its data file, used when the file can't load (the card then says
+     "rough") and nowhere else. From the same numbers the build uses: the Bible ≈ 99 hours (73 books) or 86 (66), a Great
+     Books rung ≈ 18 minutes, a ladder topic at its course's minutes, a trades lesson ≈ 21, a recipe 60, a memory list 60,
+     Lepanto ≈ 10 hours, a Latin lesson 35, an ASL lesson 30, a Translate work at its days × minutes. */
+  function rough(key, g, env, N, weeks) {
+    switch (key) {
+      case 'bible': return g.ver === '66' ? 5160 : 5940;
+      case 'gb': return g.mode === 'mins' ? (+g.mins || 15) * N : (+g.n || 52) * 18;
+      case 'ladder': var c = course(env, g.c) || (env.courses || [])[0]; return c ? (+g.n || c.n) * c.m : 3000;
+      case 'trade': var t = (env.trades || []).filter(function (x) { return x.k === g.tr; })[0] || (env.trades || [])[0]; return (t ? t.n : 13) * 21;
+      case 'cook': return (+g.n || 26) * 60;
+      case 'active': return 190 * weeks;
+      case 'walk': return (+g.n || 300) * MPM;
+      case 'chores': return 240 * weeks;
+      case 'memory': return (+g.n || 12) * 60;
+      case 'lepanto': return 600;
+      case 'latin': return 79 * 35;
+      case 'asl': return 60 * 30;
+      case 'trla': case 'trgr': var tg = (env.trGoals || []).filter(function (x) { return x.k === g.w; })[0]; return tg ? tg.days * tg.mins : 30 * N;
+      case 'custom': return Math.max(1, +g.amount || 1) * Math.max(1, +g.mpu || 60);
+    }
+    return 0;
+  }
   // Translate in a Year (/languages/translate/): the works each card offers, and the usual time for each in months
   var TR = {
     aeneid: ['lat', 'Translate the Aeneid (all 12 books)', 12], aeneid6: ['lat', 'Translate the Aeneid, Books I–VI', 6],
@@ -135,6 +159,8 @@
     GOALS.forEach(function (G) {
       var g = opts(dr, G.key); if (!(dr.goals || {})[G.key] || !dr.goals[G.key].on) return;
       var made = [], pace = '', items = 0, unit = '';
+      // a goal whose data didn't load, or that fails, gets a rough estimate instead of stopping the whole build
+      try { (function () {
       switch (G.key) {
         case 'bible':
           if (!D.bible) return;
@@ -238,11 +264,20 @@
           pace = 'About ' + (amt / N >= 10 ? Math.round(amt / N) : r1(amt / N)) + ' ' + un + ' a session (' + fm(amt * mpu / N) + ')';
           break;
       }
-      if (!made.length) return;
+      })(); } catch (e) { made = []; if (env.log) env.log('Life Planner: the “' + G.key + '” goal couldn’t be worked out:', e); }
+      var title = ''; try { title = G.title(g, env); } catch (e) { title = G.card || G.key; }
+      if (!made.length) {
+        var yr = rough(G.key, g, env, N, weeks);
+        if (env.log) env.log('Life Planner: no data for the “' + G.key + '” goal; showing a rough estimate.');
+        out.push({ key: G.key, icon: G.icon, title: title, pace: 'A rough estimate: its data didn’t load. Reload the page for the exact plan.', ids: [], rough: true, yr: yr });
+        return;
+      }
       tracks = tracks.concat(made);
-      out.push({ key: G.key, icon: G.icon, title: G.title(g, env), pace: pace, ids: made.map(function (t) { return t.id; }) });
+      out.push({ key: G.key, icon: G.icon, title: title, pace: pace, ids: made.map(function (t) { return t.id; }) });
     });
-    var budget = [0, 0, 0, 0, 0, 0, 0]; days.forEach(function (d) { budget[d] = Math.max(5, Math.min(1440, +dr.mins || 45)); });
+    // the time: without a budget (dr.check off) every session day has all day, so nothing shows as overloaded; the
+    // builder then saves the plan with the busiest day's minutes as the budget
+    var budget = [0, 0, 0, 0, 0, 0, 0]; days.forEach(function (d) { budget[d] = dr.check ? Math.max(5, Math.min(1440, +dr.mins || 45)) : 1440; });
     var state = { v: 1, plan: { from: iso(R[0]), len: 'custom', to: iso(R[1]), budget: budget, off: (dr.off || []).slice() }, tracks: tracks, ticks: {}, tab: 'today', nid: 0 };
     return { state: state, goals: out, sessions: ss, range: R, dpw: dpw };
   }
@@ -252,5 +287,5 @@
     if (d === '0,1,2,3,4,5,6') return '7 days a week'; if (d === '1,2,3,4,5') return 'weekdays'; if (d === '1,2,3,4,5,6') return 'Monday to Saturday';
     return days.length + (days.length === 1 ? ' day' : ' days') + ' a week (' + days.slice().sort().map(function (x) { return DOWN[x]; }).join(', ') + ')';
   }
-  return { GOALS: GOALS, goal: goal, opts: opts, needs: needs, build: build, sessions: sessions, spread: spread, range: range, gbFor: gbFor, daysText: daysText, MPM: MPM, CHORES: CHORES, TR: TR };
+  return { GOALS: GOALS, rough: rough, goal: goal, opts: opts, needs: needs, build: build, sessions: sessions, spread: spread, range: range, gbFor: gbFor, daysText: daysText, MPM: MPM, CHORES: CHORES, TR: TR };
 });

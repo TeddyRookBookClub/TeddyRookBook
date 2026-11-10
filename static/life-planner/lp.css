@@ -246,3 +246,22 @@ html[data-theme="dark"] .lp-rstep[aria-current=step] span{background:#6cc79a;col
   .lpp-commit{margin-top:8mm;font:italic 11pt Georgia,serif}.lpp-sign{margin-top:8mm;font-size:10pt}
 }
 @media (max-width:640px){.lp-ms th{width:auto;white-space:normal;min-width:4.5rem}}
+/* resolution builder: the running total, stuck to the bottom of the screen while the goal cards scroll */
+.lp-rtotal{position:sticky;bottom:0;z-index:20;margin:1rem 0 0;background:var(--card);border:2px solid var(--g);border-radius:12px 12px 0 0;box-shadow:0 -4px 16px rgba(0,0,0,.12);padding:.5rem .8rem}
+.lp-rtotal summary{display:flex;flex-wrap:wrap;gap:.2rem .8rem;align-items:center;justify-content:space-between;cursor:pointer;list-style:none}
+.lp-rtotal summary::-webkit-details-marker{display:none}
+.lp-rt-sum{font-size:.95rem;line-height:1.35}.lp-rt-sum b{color:var(--g);font-family:Georgia,serif;font-size:1.05rem}
+.lp-rt-more{font-size:.82rem;font-weight:600;color:var(--g);white-space:nowrap}
+.lp-rt-more::after{content:" ▴"}
+.lp-rtotal details[open] .lp-rt-more::after{content:" ▾"}
+.lp-rtotal p.lp-rt-sum{margin:0}
+.lp-rtotal .hs-small{margin:.3rem 0}
+.lp-rt-wrap{max-height:38vh;overflow:auto}
+.lp-rt{width:100%;border-collapse:collapse;font-size:.85rem;display:table}
+.lp-rt th,.lp-rt td{padding:.25rem .35rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.lp-rt td{white-space:nowrap}.lp-rt thead th{font-size:.75rem;color:var(--muted)}
+.lp-rt tbody th{font-weight:600}.lp-rt small{color:var(--muted);font-weight:400}
+.lp-goal p.lp-gcost.rough{color:var(--muted);font-style:italic}
+.lp-rcheck{background:var(--paper);border:1px dashed var(--line);border-radius:12px;padding:.5rem .9rem;margin:.6rem 0}.lp-rcheck p{margin:0}
+.lp-rcheck input{width:6rem}
+@media (max-width:640px){.lp-rt th,.lp-rt td{padding:.2rem .25rem;font-size:.78rem}.lp-rtotal{padding:.45rem .6rem}}

@@ -21,10 +21,25 @@ const checks = []; function ok(c, n, x) { checks.push({ ok: !!c, n, x }); }
     await p.waitForTimeout(500);
     const cost = await p.textContent('.lp-goal.on .lp-gcost');
     ok(/a week/.test(cost), tag + ': goal cards show their weekly time', cost.trim().slice(0, 60));
+    // the running total: per goal and overall, and it stays on screen while the cards scroll
+    const tot = await p.textContent('.lp-rtotal .lp-rt-sum');
+    ok(/a week/.test(tot) && /a session day/.test(tot) && /h in the year/.test(tot), tag + ': running total: a week, a session day, the year', tot.trim());
+    await p.evaluate(() => window.scrollTo(0, document.querySelector('.lp-goals').offsetTop + 300));
+    await p.waitForTimeout(200);
+    const vis = await p.evaluate(() => { const r = document.querySelector('.lp-rtotal').getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight + 1 && getComputedStyle(document.querySelector('.lp-rtotal')).position === 'sticky'; });
+    ok(vis, tag + ': the running total stays in view while scrolling the cards');
+    await p.click('.lp-rtotal summary'); await p.waitForTimeout(150);
+    const rows = await p.$$eval('.lp-rt tbody tr', r => r.length);
+    ok(rows === 5, tag + ': per-goal rows in the running total', rows);
+    await p.click('.lp-rtotal summary');
+    // the plan without a budget: no warning, and the optional check is offered
+    await p.click('[data-go="3"]'); await p.waitForTimeout(1500);
+    ok(!(await p.$('.lp-rwarn')) && !!(await p.$('#lp-rcheck3')), tag + ': a plan without a budget: no warning; the free-time check is optional');
+    await p.click('[data-go="1"]'); await p.waitForTimeout(400);
     await p.screenshot({ path: `${out}/res1-${w}-${theme}.png`, fullPage: false });
     await p.click('[data-go="2"]'); await p.waitForTimeout(300);
     await p.check('input[name=lp-dpw][value="5"]'); await p.waitForTimeout(200);
-    await p.fill('#lp-rmins', '30'); await p.dispatchEvent('#lp-rmins', 'change');
+    await p.check('#lp-rcheck'); await p.fill('#lp-rmins', '30'); await p.dispatchEvent('#lp-rmins', 'change');
     await p.fill('#lp-roff-from', '2027-07-05'); await p.fill('#lp-roff-to', '2027-07-09'); await p.fill('#lp-roff-label', 'Vacation'); await p.click('#lp-roff-add'); await p.waitForTimeout(200);
     await p.screenshot({ path: `${out}/res2-${w}-${theme}.png`, fullPage: false });
     await p.click('[data-go="3"]'); await p.waitForTimeout(1500);
