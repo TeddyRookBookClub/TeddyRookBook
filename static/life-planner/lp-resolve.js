@@ -60,11 +60,14 @@
   // the goals: what finishing means, the options, and the tracks
   var GOALS = [
     { key: 'bible', icon: '📖', need: ['bible'], def: { ver: '73', next: false },
-      title: function (g) { return 'Read the whole Bible (' + (g.ver === '66' ? '66' : '73') + ' books)'; },
-      finish: 'Every reading of Bible in a Year, about 15 to 20 minutes a day on a 7-day week.' },
+      title: function () { return 'Read the whole Bible'; },
+      finish: 'Every reading of Bible in a Year, about 15 to 20 minutes a day on a 7-day week. Pick the 73-book or the 66-book Bible once you tick it.' },
     { key: 'gb', icon: '📚', need: ['gb'], def: { mode: 'rungs', n: 52, mins: 15 },
       title: function (g) { return g.mode === 'mins' ? 'Great Books, ' + g.mins + ' minutes a session' : 'Climb ' + g.n + ' rungs of the Great Books Ladder'; },
       finish: 'Rung by rung through Great Books in a Year: 52 rungs is about one a week; all 191 is the whole plan.' },
+    { key: 'books', icon: '📕', need: [], def: { mode: 'books', n: 12, ppb: 300, pages: 3600, pph: 40, titles: '' },
+      title: function (g) { var r = readPlan(g, 1, 1); return !r ? 'Read books' : g.mode === 'pages' ? 'Read ' + r.total.toLocaleString('en-US') + ' pages' : 'Read ' + r.n + (r.n === 1 ? ' book' : ' books'); },
+      finish: 'Say how many books (and about how long they are) or how many pages, and the plan shares out the pages and the time.' },
     { key: 'ladder', icon: '🪜', need: [], def: { c: '', n: 0 },
       title: function (g, env) { var c = course(env, g.c); return c ? 'Finish ' + c.lt + ': ' + c.t : 'Finish a ladder course'; },
       finish: 'Every lesson of a course you pick: math, history, writing, a science, logic, the Culinary or Robotics Ladder and more.' },
@@ -112,6 +115,7 @@
   function rough(key, g, env, N, weeks) {
     switch (key) {
       case 'bible': return g.ver === '66' ? 5160 : 5940;
+      case 'books': var rp = readPlan(g, N, weeks); return rp ? rp.hours * 60 : 0;
       case 'gb': return g.mode === 'mins' ? (+g.mins || 15) * N : (+g.n || 52) * 18;
       case 'ladder': var c = course(env, g.c) || (env.courses || [])[0]; return c ? (+g.n || c.n) * c.m : 3000;
       case 'trade': var t = (env.trades || []).filter(function (x) { return x.k === g.tr; })[0] || (env.trades || [])[0]; return (t ? t.n : 13) * 21;
@@ -135,6 +139,22 @@
     iliad1: ['grc', 'Translate Homer, Iliad I', 1], iliad: ['grc', 'Translate the whole Iliad', 12],
     anabasis: ['grc', 'Translate Xenophon, Anabasis I', 6], john: ['grc', 'Translate the Gospel of John in Greek', 12]
   };
+  /* READ BOOKS: books × pages a book (or a page total), shared over the sessions. Pages are whole in every session
+     (lp-tracks.js 'pages': session k reads round(k × per) to round((k + 1) × per)), at least one a session (so a short goal
+     uses fewer sessions, spread evenly). Limits: up to 1,000 books, 5,000 pages a book, 1,000,000 pages; 5 to 300 pages
+     an hour. Default speed 40 pages an hour (1.5 minutes a page); dense nonfiction is nearer 30.
+     readPlan(g, N sessions, weeks) → null (nothing to read) | { total, n (books, 0 for a page total), ppb, pph, M (sessions
+     used), per (pages a session, a fraction), pps (pages on a typical session, whole), mps (minutes a session), wk
+     (minutes a week), hours (the year), every (weeks a book) } */
+  function clampN(x, lo, hi) { x = +x; return isFinite(x) ? Math.max(lo, Math.min(hi, x)) : lo; }
+  function readPlan(g, N, weeks) {
+    var books = g.mode !== 'pages', ppb = Math.round(clampN(g.ppb || 300, 1, 5000)), n = books ? Math.floor(clampN(g.n, 0, 1000)) : 0;
+    var total = Math.round(books ? n * ppb : clampN(g.pages, 0, 1e6)), pph = clampN(g.pph || 40, 5, 300);
+    if (!total || !(N >= 1)) return null;
+    var M = Math.min(N, total), per = total / M, mins = total * 60 / pph;
+    return { total: total, n: n, ppb: books ? ppb : 0, pph: pph, M: M, per: per, pps: Math.round(per) || 1, mps: per * 60 / pph, wk: mins / weeks, hours: mins / 60, every: n ? weeks / n : 0 };
+  }
+  function titlesOf(t) { return String(t || '').split(/\r?\n/).map(function (x) { return x.trim().slice(0, 80); }).filter(Boolean).slice(0, 1000); }
   function trTitle(w, d) { return (TR[w] || TR[d])[1]; }
   function course(env, key) { var cs = env.courses || []; for (var i = 0; i < cs.length; i++) if (cs[i].l + '|' + cs[i].k === key) return cs[i]; return null; }
   function goal(key) { for (var i = 0; i < GOALS.length; i++) if (GOALS[i].key === key) return GOALS[i]; return null; }
@@ -169,7 +189,7 @@
           var left = B.length - from + 1, per = left / N, mins = 0; for (var i = from - 1; i < B.length; i++) mins += B[i][1];
           var ch = (ver === '66' ? 1189 : 1334) * left / B.length;
           made.push(mk(G, { kind: 'bible', name: 'Bible in a Year', icon: '📖', mins: Math.round(mins / N), f: everyDay, opt: { ver: ver, mode: 'seq', from: from, per: per } }));
-          pace = 'About ' + rate(ch / N, 'chapter', 'chapters') + ' a session (' + rate(per, 'day', 'days') + ' of the plan), about ' + fm(mins / N);
+          pace = (ver === '66' ? 'The 66-book Bible: about ' : 'The 73-book Bible: about ') + rate(ch / N, 'chapter', 'chapters') + ' a session (' + rate(per, 'day', 'days') + ' of the plan), about ' + fm(mins / N);
           break;
         case 'gb':
           if (!D.gb) return;
@@ -182,6 +202,13 @@
             made.push(mk(G, { kind: 'gb', name: 'Great Books', icon: '📚', mins: m2, f: everyDay, opt: { from: 0, stop: true } }));
             pace = 'About ' + fm(m2) + ' a session; a rung about every ' + rate(N / x.rungs, 'session', 'sessions') + ', ending with ' + x.title;
           }
+          break;
+        case 'books':
+          var rp = readPlan(g, N, weeks); if (!rp) return;
+          var xs = spread(ss, rp.M), tl = titlesOf(g.titles);
+          made.push(mk(G, { kind: 'pages', name: rp.n ? 'Read books' : 'Read pages', icon: '📕', mins: Math.max(1, Math.round(rp.mps)), f: rp.M >= N ? everyDay : { k: 'dates', dates: xs.map(iso) },
+            opt: { total: rp.total, per: rp.per, ppb: rp.ppb, pph: rp.pph, titles: rp.n ? tl : [], url: '/free-books/' } }));
+          pace = 'About ' + rp.pps + (rp.pps === 1 ? ' page' : ' pages') + ' a session (' + fm(rp.mps) + ')' + (rp.n ? ', about one book every ' + rate(rp.every, 'week', 'weeks') : '') + ', ' + Math.round(rp.hours) + ' hours in the year';
           break;
         case 'ladder':
           var c = course(env, g.c) || (env.courses || [])[0]; if (!c) return;
@@ -287,5 +314,5 @@
     if (d === '0,1,2,3,4,5,6') return '7 days a week'; if (d === '1,2,3,4,5') return 'weekdays'; if (d === '1,2,3,4,5,6') return 'Monday to Saturday';
     return days.length + (days.length === 1 ? ' day' : ' days') + ' a week (' + days.slice().sort().map(function (x) { return DOWN[x]; }).join(', ') + ')';
   }
-  return { GOALS: GOALS, rough: rough, goal: goal, opts: opts, needs: needs, build: build, sessions: sessions, spread: spread, range: range, gbFor: gbFor, daysText: daysText, MPM: MPM, CHORES: CHORES, TR: TR };
+  return { GOALS: GOALS, readPlan: readPlan, titlesOf: titlesOf, rough: rough, goal: goal, opts: opts, needs: needs, build: build, sessions: sessions, spread: spread, range: range, gbFor: gbFor, daysText: daysText, MPM: MPM, CHORES: CHORES, TR: TR };
 });

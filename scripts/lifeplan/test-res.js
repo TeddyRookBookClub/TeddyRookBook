@@ -82,6 +82,40 @@ const checks = []; function ok(c, n, x) { checks.push({ ok: !!c, n, x }); }
     ok(!errs.length, tag + ': no console errors', errs);
     await ctx.close();
   }
+  // the Bible's two choices and the Read books card, at 1280 light and 390 dark
+  for (const [w, theme] of [[1280, 'light'], [390, 'dark']]) {
+    const ctx = await b.newContext({ viewport: { width: w, height: 900 }, colorScheme: theme }), p = await ctx.newPage(), errs = [], tag = w + ' ' + theme;
+    p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); }); p.on('pageerror', e => errs.push(String(e)));
+    await p.addInitScript(t => { try { localStorage.setItem('pref-theme', t); } catch (e) { } }, theme);
+    await p.goto(base + 'life-planner/resolution/', { waitUntil: 'networkidle' });
+    ok((await p.textContent('label[for="lp-g-bible"] b')).trim() === 'Read the whole Bible', tag + ': the Bible card title has no version');
+    await p.check('#lp-g-bible'); await p.waitForTimeout(900);
+    const opts = await p.$$eval('.lp-seg label', l => l.map(x => x.textContent.trim()));
+    ok(opts.length === 2 && /73 books \(Catholic\)about \d+ min a session/.test(opts[0]) && /66 books \(most Protestant\)about \d+ min a session/.test(opts[1]), tag + ': both Bibles side by side, each with its time', opts);
+    const c73 = await p.textContent('.lp-goal.on .lp-gcost');
+    await p.click('.lp-seg label:nth-of-type(2)'); await p.waitForTimeout(900);
+    const c66 = await p.textContent('.lp-goal.on .lp-gcost');
+    ok(c73 !== c66 && await p.isChecked('input[name=lp-bver][value="66"]'), tag + ': the estimate updates when the choice changes', [c73.slice(0, 40), c66.slice(0, 40)]);
+    await p.check('#lp-g-books'); await p.waitForTimeout(900);
+    await p.fill('[data-g="books"][data-f="n"]', '22'); await p.dispatchEvent('[data-g="books"][data-f="n"]', 'change'); await p.waitForTimeout(900);
+    const card = await p.$eval('#lp-g-books', x => x.closest('.lp-goal').textContent);
+    ok(/Read 22 books/.test(card) && /pages a session|a session/.test(card) && /one book every/.test(card) && /Library/.test(card) && /Free Books/.test(card), tag + ': Read books: pages and time a session, a book every few weeks, ideas links');
+    await p.fill('[data-g="books"][data-f="titles"]', 'Dune\nEmma'); await p.dispatchEvent('[data-g="books"][data-f="titles"]', 'change'); await p.waitForTimeout(900);
+    const tot = await p.textContent('.lp-rtotal'); ok(/Read 22 books/.test(tot), tag + ': Read books is in the running total');
+    await p.click('[data-go="3"]'); await p.waitForTimeout(1800);
+    const mil = await p.textContent('.lp-ms'); ok(/About [\d.]+ books/.test(mil) && /Through Dune/.test(await p.textContent('.lp-sumt')) || /About [\d.]+ books/.test(mil), tag + ': milestones: about N books', mil.replace(/\s+/g, ' ').slice(0, 160));
+    await p.screenshot({ path: `${out}/books-${w}-${theme}.png`, fullPage: false });
+    ok((await p.evaluate(() => document.documentElement.scrollWidth)) <= w, tag + ': no horizontal scroll (books)');
+    if (w === 1280) {
+      await p.click('#lp-rsave'); await p.waitForURL(/life-planner\/(#saved)?$/); await p.waitForTimeout(800);
+      await p.evaluate(() => window.LPPrint.prepare(null, null, 'month'));
+      const cov = await p.textContent('.lpp-cover'); ok(/Read 22 books/.test(cov) && /one book every/.test(cov), 'the PDF cover lists Read 22 books with its pace');
+      const ics = await p.evaluate(() => window.LPIcs(null, null, { mode: 'each', rrule: true }));
+      fs.writeFileSync(out + '/books.ics', ics); ok(/SUMMARY:📕 Read \d+ pages of Dune/.test(ics), 'the .ics has the reading sessions');
+    }
+    ok(!errs.length, tag + ': no console errors (Bible and books)', errs);
+    await ctx.close();
+  }
   console.log(JSON.stringify(checks.filter(c => !c.ok).length ? checks : { passed: checks.length, sample: checks.slice(0, 6) }, null, 1));
   await b.close();
   process.exit(checks.every(c => c.ok) ? 0 : 1);

@@ -219,6 +219,18 @@
               mins: Math.max(5, Math.round(amt * (+Wk.mpu || 1))), url: ctx.base.replace(/\/$/, '') + Wk.u + '#r=' + r0 + '-' + r1, r0: c0, r1: c1, sub: 'Day ' + (k + 1) + ' of ' + ends.length };
           }
         };
+      case 'pages':
+        // Read books: session k reads the whole pages from round(k × per) to round((k + 1) × per), so the sessions add up to
+        // exactly the total. With book titles (opt.titles) each session names the book it is in (opt.ppb pages a book).
+        var totp = Math.round(+o.total || 0), perp = +o.per || 0; if (!totp || !perp) return null;
+        return {
+          item: function (k) {
+            var a = Math.round(k * perp), b = Math.min(totp, Math.round((k + 1) * perp)); if (a >= totp) return null;
+            var n = Math.max(1, b - a), bk = o.ppb ? Math.floor(a / o.ppb) : -1, ti = o.titles && bk >= 0 ? o.titles[bk] : '';
+            return { label: 'Read ' + n + ' page' + (n === 1 ? '' : 's') + (ti ? ' of ' + ti : ''), mins: Math.max(1, Math.round(n * 60 / (+o.pph || 40))), r1: b,
+              sub: o.ppb ? 'Book ' + (bk + 1) + ', pages ' + (a - bk * o.ppb + 1) + '–' + Math.min(o.ppb, b - bk * o.ppb) : 'Pages ' + (a + 1) + '–' + b, url: o.url ? ctx.base + o.url.replace(/^\//, '') : '' };
+          }
+        };
       case 'amount':
         var tot2 = +o.amount || 0; if (!tot2) return null;
         return {
@@ -318,6 +330,15 @@
           for (var q = t0; q < t1; q++) { all += Wt.c[q][1]; if (q <= rr) upto += Wt.c[q][1]; }
           var unl = Wt.unit === 'line' ? ' lines' : ' words', fmtn = function (x) { return String(x).replace(/\B(?=(\d{3})+(?!\d))/g, ','); };
           r.text.push(rr >= t1 - 1 ? Wt.s + ': all ' + fmtn(all) + unl + ' translated' : Wt.s + ': ' + fmtn(upto) + ' of ' + fmtn(all) + unl + ', through ' + trRef(trEnd(Wt, rr)));
+          break;
+        case 'pages':
+          if (!L.length) break;
+          var pg = maxR(L), tp = Math.round(+o.total || 0);
+          if (o.ppb) {
+            var books = pg / o.ppb, whole = Math.floor(books + 1e-9);
+            r.text.push(pg >= tp ? 'All ' + plural(Math.round(tp / o.ppb), 'book') + ' (' + tp.toLocaleString('en-US') + ' pages)' : 'About ' + plural(books >= 10 ? Math.round(books) : Math.round(books * 10) / 10, 'book') + ' (' + pg.toLocaleString('en-US') + ' pages)');
+            if (o.titles && o.titles.length && whole > 0) r.text.push('Through ' + (o.titles[Math.min(whole, o.titles.length) - 1] || 'book ' + whole));
+          } else r.text.push(pg.toLocaleString('en-US') + ' of ' + tp.toLocaleString('en-US') + ' pages' + (pg >= tp ? ': the whole goal' : ''));
           break;
         case 'amount':
           if (L.length) r.text.push(fmtAmt(last.r1) + ' of ' + fmtAmt(+o.amount) + ' ' + (o.unit || '') + (last.r1 >= +o.amount - 1e-6 ? ': the whole goal' : ''));

@@ -265,3 +265,13 @@ html[data-theme="dark"] .lp-rstep[aria-current=step] span{background:#6cc79a;col
 .lp-rcheck{background:var(--paper);border:1px dashed var(--line);border-radius:12px;padding:.5rem .9rem;margin:.6rem 0}.lp-rcheck p{margin:0}
 .lp-rcheck input{width:6rem}
 @media (max-width:640px){.lp-rt th,.lp-rt td{padding:.2rem .25rem;font-size:.78rem}.lp-rtotal{padding:.45rem .6rem}}
+/* resolution builder: two or more equal choices side by side (the Bible, books or pages) */
+.lp-seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:.4rem;border:none;padding:0;margin:0;min-width:0}
+.lp-seg legend{font-size:.85rem;padding:0;margin-bottom:.3rem}
+.lp-seg label{position:relative;display:block;cursor:pointer}
+.lp-seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.lp-seg span{display:block;height:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:10px;padding:.45rem .6rem;background:var(--card);line-height:1.3}
+.lp-seg b{display:block;font-size:.9rem}.lp-seg small{display:block;color:var(--muted);font-size:.78rem;margin-top:.15rem}
+.lp-seg input:checked+span{border-color:var(--g);box-shadow:0 0 0 2px var(--g) inset;background:var(--soft)}
+.lp-seg input:focus-visible+span{outline:3px solid var(--gold);outline-offset:2px}
+.lp-gopts textarea{width:100%;box-sizing:border-box}

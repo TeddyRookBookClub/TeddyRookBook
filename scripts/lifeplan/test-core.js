@@ -202,6 +202,32 @@ const ALL = { bible: { on: true }, gb: { on: true, n: 52 }, ladder: { on: true, 
 { const D3 = Object.assign({}, DR, { extra: { memory: null, latin: 5 } }), logs = [];
   const b = RS.build({ goals: { latin: { on: true }, walk: { on: true, n: 300 } }, days: [1, 3, 5], start: '2027-01-01', off: [] }, Object.assign({}, ENV, { D: D3, log: function () { logs.push(1); } }));
   ok(b.goals.length === 2 && b.goals.filter(g => g.key === 'latin')[0].rough === true && !b.goals.filter(g => g.key === 'walk')[0].rough, 'a goal that throws gets a rough estimate; the others are planned'); ok(logs.length >= 1, 'and the error is logged'); }
+// ---- Read books: books × pages ÷ sessions, whole pages each session, edge cases
+{ const rp = RS.readPlan({ mode: 'books', n: 12, ppb: 300, pph: 40 }, 365, 365 / 7);
+  ok(rp.total === 3600 && Math.abs(rp.per - 3600 / 365) < 1e-9 && rp.pps === 10 && Math.abs(rp.mps - 3600 / 365 * 1.5) < 1e-9, 'books: 12 × 300 pages over 365 sessions ≈ 10 pages, 15 min');
+  ok(Math.abs(rp.hours - 90) < 1e-9 && Math.abs(rp.every - 365 / 7 / 12) < 1e-9, 'books: 90 hours at 40 pages an hour; a book every 4.3 weeks');
+  eq(RS.readPlan({ mode: 'books', n: 0, ppb: 300 }, 365, 52), null, 'books: 0 books → nothing to plan');
+  eq(RS.readPlan({ mode: 'pages', pages: 0 }, 365, 52), null, 'pages: 0 pages → nothing to plan');
+  eq(RS.readPlan({ mode: 'pages', pages: 'abc' }, 365, 52), null, 'pages: not a number → nothing');
+  eq(RS.readPlan({ mode: 'books', n: 1e9, ppb: 1e9, pph: 40 }, 365, 52).total, 1000 * 5000, 'books: huge numbers are capped (1,000 books × 5,000 pages)');
+  eq(RS.readPlan({ mode: 'pages', pages: 1e12 }, 365, 52).total, 1e6, 'pages: capped at 1,000,000');
+  eq(RS.readPlan({ mode: 'pages', pages: 1234.6 }, 365, 52).total, 1235, 'pages: a fractional total is rounded to whole pages');
+  const sm = RS.readPlan({ mode: 'pages', pages: 50 }, 365, 52); ok(sm.M === 50 && sm.per === 1, 'pages: fewer pages than sessions → one page a session on 50 sessions');
+  eq(RS.readPlan({ mode: 'books', n: 2.7, ppb: 300 }, 365, 52).n, 2, 'books: whole books only');
+  eq(RS.readPlan({ mode: 'books', n: 5, ppb: 300, pph: 1 }, 365, 52).pph, 5, 'speed: at least 5 pages an hour');
+  // in a built plan the sessions add up to exactly the total, on the chosen days, finishing by the last one
+  [[[0, 1, 2, 3, 4, 5, 6], 3600], [[1, 3, 5], 1000], [[6], 37], [[1, 2, 3, 4, 5], 98765]].forEach(([days, pages]) => {
+    const b = RS.build({ goals: { books: { on: true, mode: 'pages', pages } }, days, start: '2027-01-01', off: [{ from: '2027-03-01', to: '2027-03-10' }] }, ENV);
+    const t = b.state.tracks[0], pv = T.provider(t, DR, ENV.P, { base: '/' }), Sb = C.schedule(b.state.plan, b.state.tracks, { [t.id]: pv });
+    const L = Sb.items[t.id], sum = L.reduce((x, it) => x + +/Read (\d+)/.exec(it.label)[1], 0);
+    ok(sum === pages && L[L.length - 1].r1 === pages && L.every(it => days.indexOf(C.dow(it.dn)) >= 0), 'pages ' + pages + ' on ' + days.length + ' days a week: sessions add up exactly, chosen days only');
+  });
+  const bt = RS.build({ goals: { books: { on: true, n: 3, ppb: 200, titles: 'Dune\nEmma\nKim' } }, days: [0, 1, 2, 3, 4, 5, 6], start: '2027-01-01', off: [] }, ENV);
+  const t3 = bt.state.tracks[0], p3 = T.provider(t3, DR, ENV.P, { base: '/' }), S3 = C.schedule(bt.state.plan, bt.state.tracks, { [t3.id]: p3 });
+  ok(/of Dune$/.test(S3.items[t3.id][0].label) && /of Kim$/.test(S3.items[t3.id].slice(-1)[0].label), 'book titles: sessions name the book they are in');
+  const R3 = T.summary(S3, bt.state.tracks, DR, ENV.P, S3.from, S3.from + 181);
+  ok(/^About 1\.5 books/.test(R3.per[0].text[0]) && /Through Dune/.test(R3.per[0].text[1]), 'halfway: about 1.5 books, through Dune', R3.per[0].text);
+  eq(bt.goals[0].title, 'Read 3 books', 'books title'); eq(RS.goal('bible').title({ ver: '66' }), 'Read the whole Bible', 'Bible title has no version'); }
 eq(RS.spread([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5), [2, 4, 6, 8, 10], 'spread picks sessions evenly, ending on the last one');
 eq(RS.range({ start: '2027-01-01', extend: 7 }).map(iso), ['2027-01-01', '2028-01-07'], 'moving the finish date adds days');
 eq(T.pace(0, 2.5, 5), { i0: 0, i1: 2, fin: [0, 1], ov: [1, 1, 0.5] }, 'pace: 2.5 items a session');

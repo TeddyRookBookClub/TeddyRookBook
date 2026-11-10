@@ -76,7 +76,13 @@
   function field(G) {
     var o = g(G.key), k = G.key;
     switch (k) {
-      case 'bible': return '<label>Bible <select data-g="bible" data-f="ver"><option value="73"' + (o.ver !== '66' ? ' selected' : '') + '>73 books (Catholic)</option><option value="66"' + (o.ver === '66' ? ' selected' : '') + '>66 books</option></select></label><label class="lp-chk"><input type="checkbox" data-g="bible" data-f="next"' + (o.next ? ' checked' : '') + '> Start at my next unread day</label>';
+      case 'bible':
+        // the two Bibles as equal choices, each with its own time
+        var Nb = R.sessions(dr).length || 1, bt = function (v) { var B = A.DATA.bible && A.DATA.bible[v], m = 0; if (B) B.forEach(function (d) { m += d[1]; }); else m = R.rough('bible', { ver: v }); return m; };
+        return '<fieldset class="lp-seg lp-wide"><legend>Which Bible?</legend>' + [['73', '73 books (Catholic)'], ['66', '66 books (most Protestant)']].map(function (x) {
+          var m = bt(x[0]); return '<label><input type="radio" name="lp-bver" data-g="bible" data-f="ver" value="' + x[0] + '"' + ((o.ver === '66' ? '66' : '73') === x[0] ? ' checked' : '') + '><span><b>' + x[1] + '</b><small>about ' + fm(m / Nb) + ' a session · ' + Math.round(m / 60) + ' h in the year</small></span></label>';
+        }).join('') + '</fieldset><label class="lp-chk"><input type="checkbox" data-g="bible" data-f="next"' + (o.next ? ' checked' : '') + '> Start at my next unread day</label>' +
+          '<p class="hs-small lp-wide">Follows <a href="' + esc(CFG.base) + 'bible-in-a-year/">Bible in a Year</a>; ticks there and here are shared.</p>';
       case 'gb': return '<label>Goal <select data-g="gb" data-f="mode"><option value="rungs"' + (o.mode !== 'mins' ? ' selected' : '') + '>a number of rungs</option><option value="mins"' + (o.mode === 'mins' ? ' selected' : '') + '>minutes a session</option></select></label>' +
         (o.mode === 'mins' ? '<label>Minutes <input type="number" min="5" max="120" step="5" data-g="gb" data-f="mins" value="' + o.mins + '"></label>' : '<label>Rungs <input type="number" min="1" max="191" data-g="gb" data-f="n" value="' + o.n + '"></label>');
       case 'ladder':
@@ -93,6 +99,16 @@
         return '<label class="lp-wide">Work <select data-g="' + k + '" data-f="w">' + TRk.map(function (w) { return '<option value="' + w + '"' + (o.w === w ? ' selected' : '') + '>' + esc(R.TR[w][1].replace(/^Translate /, '')) + '</option>'; }).join('') + '</select></label>' +
           '<label>Finish in <select data-g="' + k + '" data-f="mo"><option value="0"' + (!mo ? ' selected' : '') + '>the usual time (' + usual + (usual === 1 ? ' month' : ' months') + ')</option>' + [1, 2, 3, 4, 6, 9, 12].map(function (m) { return '<option value="' + m + '"' + (mo === m ? ' selected' : '') + '>' + m + (m === 1 ? ' month' : ' months') + '</option>'; }).join('') + '</select></label>' +
           '<p class="hs-small lp-wide">Needs a first-year grammar first. <a href="' + esc(CFG.base) + 'languages/translate/">About Translate in a Year</a></p>';
+      case 'books':
+        var Nr = R.sessions(dr).length || 1, rpl = R.readPlan(o, Nr, (R.range(dr)[1] - R.range(dr)[0] + 1) / 7), pgm = o.mode === 'pages';
+        return '<fieldset class="lp-seg lp-wide"><legend>Count it in</legend><label><input type="radio" name="lp-rbm" data-g="books" data-f="mode" value="books"' + (pgm ? '' : ' checked') + '><span><b>Books</b></span></label><label><input type="radio" name="lp-rbm" data-g="books" data-f="mode" value="pages"' + (pgm ? ' checked' : '') + '><span><b>Pages</b></span></label></fieldset>' +
+          (pgm ? '<label>Pages in all <input type="number" min="1" max="1000000" step="50" data-g="books" data-f="pages" value="' + (+o.pages || 0) + '"></label>'
+            : '<label>Books <input type="number" min="1" max="1000" data-g="books" data-f="n" value="' + (+o.n || 0) + '"></label><label>Pages in a book, about <input type="number" min="20" max="5000" step="10" data-g="books" data-f="ppb" value="' + (+o.ppb || 300) + '"></label>') +
+          '<label>Pages an hour <input type="number" min="5" max="300" step="5" data-g="books" data-f="pph" value="' + (+o.pph || 40) + '"></label>' +
+          '<p class="hs-small lp-wide">Reading speeds vary a lot: about 30 pages an hour for dense nonfiction, 40 to 60 for an easy novel. 40 is set to start.</p>' +
+          (rpl ? '<p class="hs-small lp-wide">' + rpl.total.toLocaleString('en-US') + ' pages: about ' + rpl.pps + ' a session, ' + fm(rpl.mps) + ' a session, ' + fm(rpl.wk) + ' a week, ' + Math.round(rpl.hours) + ' hours in the year' + (rpl.n ? '; about one book every ' + (rpl.every >= 10 ? Math.round(rpl.every) : Math.round(rpl.every * 10) / 10) + ' weeks' : '') + '.</p>' : '<p class="hs-small lp-wide">Enter a number above zero.</p>') +
+          (pgm ? '' : '<label class="lp-wide">Book titles, one a line (optional, to see your progress book by book) <textarea rows="3" data-g="books" data-f="titles" placeholder="The Hobbit">' + esc(o.titles || '') + '</textarea></label>') +
+          '<p class="hs-small lp-wide">Ideas: <a href="' + esc(CFG.base) + 'books/">the Library</a> and <a href="' + esc(CFG.base) + 'free-books/">Free Books</a>.</p>';
       case 'custom': return '<label class="lp-wide">Goal <input type="text" maxlength="60" data-g="custom" data-f="name" placeholder="Practice guitar" value="' + esc(o.name) + '"></label><label>Total <input type="number" min="1" max="100000" data-g="custom" data-f="amount" value="' + o.amount + '"></label>' +
         '<label>Unit <input type="text" maxlength="20" data-g="custom" data-f="unit" value="' + esc(o.unit) + '"></label><label>Minutes for each one <input type="number" min="1" max="600" data-g="custom" data-f="mpu" value="' + o.mpu + '"></label>';
     }
@@ -201,6 +217,8 @@
     if (key === 'memory' && o.n > 3) return { text: 'Aim for ' + Math.ceil(o.n / 2) + ' lists', apply: function () { dr.goals.memory.n = Math.ceil(o.n / 2); } };
     if ((key === 'trla' || key === 'trgr') && (o.w === 'aeneid' || o.w === 'iliad')) { var sm = o.w === 'aeneid' ? 'aeneid6' : 'iliad1'; return { text: 'Aim for ' + R.TR[sm][1].replace(/^Translate /, ''), apply: function () { dr.goals[key].w = sm; dr.goals[key].mo = 0; } }; }
     if ((key === 'trla' || key === 'trgr') && (+o.mo || R.TR[o.w][2]) < 12) return { text: 'Take the whole year for it', apply: function () { dr.goals[key].mo = 12; } };
+    if (key === 'books' && o.mode !== 'pages' && o.n > 2) return { text: 'Aim for ' + Math.ceil(o.n / 2) + ' books', apply: function () { dr.goals.books.n = Math.ceil(o.n / 2); } };
+    if (key === 'books' && o.mode === 'pages' && o.pages > 100) return { text: 'Aim for ' + Math.round(o.pages / 200) * 100 + ' pages', apply: function () { dr.goals.books.pages = Math.round(o.pages / 200) * 100; } };
     if (key === 'custom' && o.amount > 1) return { text: 'Aim for ' + Math.ceil(o.amount * 0.6) + ' ' + o.unit, apply: function () { dr.goals.custom.amount = Math.ceil(o.amount * 0.6); } };
     return null;
   }

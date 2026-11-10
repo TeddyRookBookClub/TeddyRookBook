@@ -164,7 +164,7 @@
         t = Object.assign({}, t, { f: { k: 'dates', dates: ctx.hol.map(function (x) { return C.isoOf(x.dn); }) } });
       }
       var pv = T.provider(t, DATA, P, ctx); if (pv) PV[t.id] = pv;
-      if (['bible', 'gb', 'hc', 'ladder', 'trade', 'lessons', 'amount', 'translate'].indexOf(t.kind) >= 0 && !pv) t = Object.assign({}, t, { off: true });
+      if (['bible', 'gb', 'hc', 'ladder', 'trade', 'lessons', 'amount', 'translate', 'pages'].indexOf(t.kind) >= 0 && !pv) t = Object.assign({}, t, { off: true });
       return t;
     });
     var sc = C.schedule(plan, tracks, pvs); sc.tracks = tracks;
