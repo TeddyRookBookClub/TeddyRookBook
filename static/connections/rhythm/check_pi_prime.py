@@ -1,5 +1,7 @@
-# Check the probable prime q_25332 yourself. Python 3, standard library only; with gmpy2 installed the
-# primality test at the end is much faster. Put q25332.txt (from this page) in the same folder.
+# Check pi's new probable primes yourself. Python 3, standard library only; with gmpy2 installed the
+# primality test at the end is much faster. Put q25332.txt, q27651.txt, q32394.txt or q37721.txt (from this page) in the
+# same folder, then run, for example,
+#   python3 check_pi_prime.py 25332      or      python3 check_pi_prime.py 37721
 import hashlib, random, sys
 if hasattr(sys, "set_int_max_str_digits"):
     sys.set_int_max_str_digits(0)          # allow printing a 13,017-digit number
@@ -25,7 +27,8 @@ def terms(num, den, count):
         num, den = den, r
     return out
 
-N, D = 25332, 27500
+N = int(sys.argv[1]) if len(sys.argv) > 1 else 25332
+D = int(1.03 * N) + 1500                 # digits of pi needed, with room to spare
 P = pi_floor(D)
 lo, hi = terms(P - 10, 10 ** D, N + 50), terms(P + 10, 10 ** D, N + 50)  # pi lies between the two
 k = 0
@@ -33,13 +36,13 @@ while k < len(lo) and lo[k] == hi[k]:
     k += 1
 assert k > N + 1, "not enough certain terms; raise D"
 a = lo[:N + 1]
-print("first terms:", a[:8], " terms 25330-25334:", lo[N - 2:N + 3])
+print("first terms:", a[:8], " terms %d-%d:" % (N - 2, N + 2), lo[N - 2:N + 3])
 
 q0, q1 = 0, 1                             # q_{-1} = 0, q_0 = 1
 for n in range(1, N + 1):
     q0, q1 = q1, a[n] * q1 + q0
 s = str(q1)
-print("digits:", len(s), " matches the file:", s == open("q25332.txt").read().strip())
+print("digits:", len(s), " matches the file:", s == open("q%d.txt" % N).read().strip())
 print("SHA-256:", hashlib.sha256(s.encode()).hexdigest())
 
 try:

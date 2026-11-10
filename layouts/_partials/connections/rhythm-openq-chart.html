@@ -1,11 +1,11 @@
 {{- /* The chart under question 1 of "Working on the open questions" (layouts/_partials/connections/rhythm-openq.html):
-   pi's prime convergent denominators (to n = $d.N = 25,332, Chapter 17) and numerators (to n = $d.Np = 20,000) against
-   the heuristic, two small inline SVGs.
+   pi's prime convergent denominators and numerators (denominators to n = $d.N = 40,000, numerators to $d.Np = 32,394, Chapter 17) against the heuristic,
+   two small inline SVGs.
    Data: data/rhythm/openq_pi.json (scripts/rhythm/openq-chart-data.py; rows are [N, expected, lo95, hi95]).
-   x = log of N from 1 to $d.N (the numerator panel stops at $d.Np); y = count from 0 to 20. Hover or long-press a dot for its fraction number. */ -}}
+   x = log of N from 1 to $d.N (the numerator panel stops at $d.Np); y = count from 0 to 22 (ticks to 20). Hover or long-press a dot for its fraction number. */ -}}
 {{- $d := site.Data.rhythm.openq_pi }}
 {{- if $d }}
-{{- $L := 36.0 }}{{ $R := 312.0 }}{{ $T := 12.0 }}{{ $B := 172.0 }}{{ $YM := 20.0 }}
+{{- $L := 36.0 }}{{ $R := 312.0 }}{{ $T := 12.0 }}{{ $B := 172.0 }}{{ $YM := 22.0 }}
 {{- $lmax := math.Log (float $d.N) }}
 {{- $w := sub $R $L }}{{ $h := sub $B $T }}
 <figure class="rn-oq-fig">
@@ -59,6 +59,6 @@
     <li><span class="rn-oq-sw rn-oq-sw-band"></span>where 95% of typical counts fall</li>
     <li><span class="rn-oq-sw rn-oq-sw-law"></span>2 ln 2 · ln n</li>
   </ul>
-  <figcaption class="rn-small">How many of pi’s first n fractions have a prime bottom number (the first chart) or top number (the second). The green steps are pi. The gold dashed curve is what the paper’s rule predicts for a typical number, and the shaded band is the range a typical number lands in 95% of the time. Pi stays inside the band all the way: to n = {{ lang.FormatNumber 0 $d.N }} for the denominators, where the 11th prime (a probable prime, found by Teddy Rook) sits at the very end, and to n = {{ lang.FormatNumber 0 ($d.Np | default $d.N) }} for the numerators, which have not been searched further. For a typical number the count grows like 2 ln 2 · ln n (the thin dotted line climbs at the same rate); Chapter 16 proves that for almost every number. Hover over a dot, or press and hold it, to see where each prime falls.</figcaption>
+  <figcaption class="rn-small">How many of pi’s first n fractions have a prime bottom number (the first chart) or top number (the second). The green steps are pi. The gold dashed curve is what the paper’s rule predicts for a typical number, and the shaded band is the range a typical number lands in 95% of the time. Pi stays inside the band all the way: to n = {{ lang.FormatNumber 0 $d.N }} for the bottom numbers and {{ lang.FormatNumber 0 $d.Np }} for the top numbers. The last four denominator dots, at 25,332, 27,651, 32,394 and 37,721, are probable primes found by Teddy Rook, and they come close together; no new numerator turned up after 8,750. For a typical number the count grows like 2 ln 2 · ln n (the thin dotted line climbs at the same rate); Chapter 16 proves that for almost every number. Hover over a dot, or press and hold it, to see where each prime falls.</figcaption>
 </figure>
 {{- end }}

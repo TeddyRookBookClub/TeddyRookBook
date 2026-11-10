@@ -15,9 +15,6 @@ from gmpy2 import mpz
 import mpmath
 from common import OUT
 
-START = int(sys.argv[1]) if len(sys.argv) > 1 else 20001
-N = int(sys.argv[2]) if len(sys.argv) > 2 else 25332
-fn = os.path.join(OUT, 'third_search.json')
 
 
 def pi_terms(dps, n):
@@ -43,6 +40,9 @@ def certified_terms(n):
 
 
 if __name__ == '__main__':
+    START = int(sys.argv[1]) if len(sys.argv) > 1 else 20001
+    N = int(sys.argv[2]) if len(sys.argv) > 2 else 25332
+    fn = os.path.join(OUT, 'third_search.json')
     T = certified_terms(N)
     LIM = 2 * 10 ** 6
     sieve = bytearray([1]) * (LIM + 1); sieve[0] = sieve[1] = 0

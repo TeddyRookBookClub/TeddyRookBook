@@ -1,0 +1,4 @@
+{{- /* A paper revision date: shows the date, keeps the UTC commit time from data/rhythm/revisions.yaml in the datetime attribute. Pass the date string (YYYY-MM-DD). */ -}}
+{{- $d := . | string -}}{{- $t := index (site.Data.rhythm.revisions | default dict) $d | default $d -}}
+<time datetime="{{ $t }}">{{ $d }}</time>
+{{- /**/ -}}

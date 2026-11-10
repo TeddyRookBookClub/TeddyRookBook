@@ -62,11 +62,60 @@ Divisibility of $e$'s denominators by small primes \addedon{\revA} & new (observ
 Structure of the correlation matrix (Gram form, determinant, mean and variance, top-eigenvalue bound) \addedon{\revA} & new presentation / new & The Gram form and determinant are the pattern of Smith's determinant \citep{Smith1875}; the moment and eigenvalue statements we did not find for this matrix. GCD matrices: \citet{LindqvistSeip1998,HongLoewy2004}. \\
 Ranking of equal temperaments, and prime sizes \addedon{\revA} & new presentation & Measures from \citet{Erlich2006}; equidistribution over primes from \citet{Vinogradov1954}. \\
 The count of prime $q_n$ is $2\ln 2\cdot\ln N\,(1 + o(1))$ for almost every $x$ \addedon{\revB} & new (theorem), as far as we found & The overlap estimates follow the Duffin--Schaeffer tradition; the variance lemma is from \citet{Harman1998} and the equidistribution of inverses from Weil's bound \citep{Weil1948}. We did not find the statement, and specialists in metric Diophantine approximation may know it (Chapter~\ref{ch:openq2}). \\
-The period of $e$'s denominators modulo $\ell$ divides $6\ell$ \addedon{\revB} & new (proof), as far as we found & An elementary trace argument; we did not find it stated. \\
+The period of $e$'s denominators modulo $\ell$ divides $6\ell$ \addedon{\revB} & new (proof), as far as we found & An elementary trace argument; we did not find it stated. [Superseded by \cref{prop:th-flip}: the period is exactly $6\ell$. \addedon{\revC}] \\
 The top eigenvalue of the correlation matrix outgrows every power of $\ln m$; near-copies of small gcd matrices in its spectrum \addedon{\revB} & new presentation / new & The square-free construction behind the lower bound is the one used for GCD sums \citep{AistleitnerBerkesSeip2015,BondarenkoSeip2015}; the near-copies we did not find. \\
 Why the 171-note temperament wins \addedon{\revB} & specialist & Known to tuning theorists: 171 tempers out the schisma, breedsma and ragisma \citep{Xen171,XenEnnealimmal}; the adjugate identity for the errors is Cramer's rule. \\
 Doeblin--Lenstra and serial-correlation tests of $\pi$'s terms \addedon{\revB} & new presentation (computation) & Classical laws \citep{BosmaJagerWiedijk1983}; the calibrated test on 12 million terms is ours. \\
+$\ln\lambda_{\max}(C_m)$ and $\ln(1/\lambda_{\min}(C_m))$ are $(2 + o(1))\sqrt{\ln m/\ln\ln m}$ \addedon{\revC} & new (theorems), as far as we found & The resonance method of \citet{Soundararajan2008}, with a Schur test for the upper bounds; the counterpart of his Theorem~2.1. Specialists in GCD sums may know it; \citet{Hilberdink2009} is the place to check (Chapter~\ref{ch:third}). \\
+A limiting law for the spectrum of $C_m$; the mean of $1/\lambda$ \addedon{\revC} & new (theorem), as far as we found & A truncation argument with the Hoffman--Wielandt inequality \citep{HoffmanWielandt1953}; the inverse is the Möbius form of Smith's determinant \citep{Smith1875}. \\
+$e$: sign flip modulo $\ell$, exact periods, forced divisors, primes only at $n \equiv 1 \pmod 3$ \addedon{\revC} & new (theorem), as far as we found & From the classical closed forms \citep{Cohn2006}. Not in OEIS A094007 \citep{OEIS_A094007} or the papers it cites; may be known. \\
+$\pi$'s denominators to $n = 40{,}000$; the eleventh to fourteenth prime denominators; the notes and the cluster \addedon{\revC} & new (computation) & OEIS A259490 lists ten terms and a limit of $25{,}000$ \citep{OEIS_A259490}. Probable primes, found by Teddy Rook; a proof of the eleventh is in progress. \\
+The family $(22k+3)/(7k+1)$ of the opening guess \addedon{\revC} & new presentation & Dirichlet's theorem; the Bateman--Horn conjecture \citep{BatemanHorn1962}. \\
+The rhythm sieve \addedon{\revC} & new presentation & Sieving a recurrence modulo small primes is standard practice in prime searching; the reading as a polyrhythm is ours. \\
+Prime intermediate fractions and the $(\ln N)^2$ heuristic \addedon{\revC} & new (heuristic and computation), as far as we found & Primes in arithmetic progressions; Khinchin's law for the sum of the terms \citep{Khinchin1964}. \\
 \end{longtable}
+
+\section{A reader's map of what is proved}\label{sec:map}
+\addednote{\revC}
+
+The paper now states about two dozen results that are proved here rather than quoted. \Cref{tab:map} lists them with what each proof rests on, so that a reader can check them one at a time. Results quoted from the literature (with a citation in their heading) and heuristics are not listed.
+
+{\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.42\textwidth}>{\raggedright\arraybackslash}p{0.2\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}@{}}
+\caption[A reader's map of what is proved]{Results proved in this work, where, and what the proof rests on.}\label{tab:map}\\
+\toprule
+statement & where & rests on \\
+\midrule
+\endfirsthead
+\toprule
+statement & where & rests on \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Floors near a convergent; near-periodicity of the rhythm & \cref{lem:floors,lem:period} & \cref{prop:error} \\
+Nested blocks: the blocks of the rhythm have lengths $q_n$ (our direct proof of a classical theorem) & \cref{thm:nested} & the two lemmas above \\
+Bjorklund's Euclidean rhythm is a Christoffel word & \cref{prop:euclid-christoffel} & the Euclidean algorithm \\
+Correlation of two pulse trains, $(\gcd(a,b) - 1)/\sqrt{(a-1)(b-1)}$ & \cref{prop:corr} & counting \\
+$e$'s denominators are periodic modulo every prime & \cref{prop:oq-e} & finite-state argument \\
+Exact expected number of $n$ with $q_n(x) = q$ & \cref{thm:oq-exact} & cylinder lengths \citep{Khinchin1964} \\
+Expected prime count $2\ln 2\cdot\ln N + O(1)$ & \cref{cor:oq-N} & \cref{thm:oq-exact}, Mertens \\
+Almost-everywhere bounds; finitely many $n$ with $p_n, q_n$ both prime & \cref{thm:oq-ae} & \citet{Erdos1970,KMY2024}, Lévy; Borel--Cantelli \\
+Gram form, determinant and geometric mean of $C_m$ & \cref{prop:oq-gram} & Gauss's identity $\sum_{d\mid g}\varphi(d) = g$ \\
+Mean 1 and variance 2 of the spectrum of $C_m$ & \cref{thm:oq-moments} & Euler's $\sum H_a/a^2 = 2\zeta(3)$ \\
+$\lambda_{\max}(C_m) \ge (2/\pi^2)\ln^2m\,(1 + o(1))$ & \cref{thm:oq-top} & a test vector, Möbius inversion \\
+The pieces of $E_q$ and their overlaps & \cref{lem:ob-pieces,lem:ob-overlap} & Weil's bound \citep{Weil1948}, Erdős--Turán, Koksma \\
+\Cref{heur:primeconv} for almost every number & \cref{thm:ob-ae} & the overlaps, Harman's variance lemma, Lévy \\
+Period of $e$'s denominators divides $6\ell$ & \cref{prop:ob-e} & a trace argument \\
+Top eigenvalue between $e^{c\sqrt{\ln m}/\ln\ln m}$ and $m^{o(1)}$ & \cref{thm:ob-top} & square-free test vector; Schur's test \\
+Near-copies of small gcd matrices in the spectrum & \cref{prop:ob-copies} & min-max principle \\
+$\ln\lambda_{\max}(C_m) = (2 + o(1))\sqrt{\ln m/\ln\ln m}$ & \cref{thm:th-top} & Schur's test; Soundararajan's resonator; prime number theorem \\
+Mirror law for $\lambda_{\min}(C_m)$ & \cref{thm:th-min} & the Möbius form of $C_m^{-1}$ (\cref{prop:th-inv}); as above \\
+A limiting law for the spectrum of $C_m$ & \cref{thm:th-law} & Hoffman--Wielandt; moments of truncations \\
+Mean of $1/\lambda$ tends to $\prod_p(1 + 2/(p(p-1)))$ & \cref{prop:th-trace} & \cref{prop:th-inv}; Dirichlet convolution \\
+Sign flip and exact periods $6\ell$, $3\ell$ for $e$ & \cref{prop:th-flip} & closed forms \eqref{eq:th-closed} \citep{Cohn2006} \\
+Forced divisors of $e$'s convergents; primes only at $n = 2$ or $n \equiv 1 \pmod 3$ & \cref{thm:th-div} & closed forms \eqref{eq:th-closed} \\
+\end{longtable}}
 
 \section{The two questions the owner asked}
 

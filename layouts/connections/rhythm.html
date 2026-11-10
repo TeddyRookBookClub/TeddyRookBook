@@ -7,7 +7,7 @@
    near the screen; formulas ($…$, class rn-tex) are typeset by static/math/core/tex.js, also loaded only when needed.
    Element ids are the instruments' contract with the scripts: keep them. */ -}}
 {{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
-{{- $v := dict }}{{ range slice "ch1" "ch2" "ch3" "ch4" "ch5" "play" "map" }}{{ $f := printf "static/connections/rhythm/%s.js" . }}{{ if fileExists $f }}{{ $v = merge $v (dict . (os.Stat $f).ModTime.Unix) }}{{ end }}{{ end }}
+{{- $v := dict }}{{ range slice "ch1" "ch2" "ch3" "ch4" "ch5" "play" "map" "sieve" }}{{ $f := printf "static/connections/rhythm/%s.js" . }}{{ if fileExists $f }}{{ $v = merge $v (dict . (os.Stat $f).ModTime.Unix) }}{{ end }}{{ end }}
 {{- $tex := "math/core/tex.js" | relURL }}{{ with os.Stat "static/math/core/tex.js" }}{{ $tex = printf "%s?v=%d" $tex .ModTime.Unix }}{{ end }}
 {{- $texcss := "math/core/core.css" | relURL }}{{ with os.Stat "static/math/core/core.css" }}{{ $texcss = printf "%s?v=%d" $texcss .ModTime.Unix }}{{ end }}
 <article class="rn" data-rn-base="{{ "connections/rhythm/" | relURL }}" data-rn-v="{{ $v | jsonify }}" data-rn-tex="{{ $tex }}" data-rn-texcss="{{ $texcss }}">
@@ -40,7 +40,7 @@
       <li>Everything is drawn and played in your browser. Nothing you do here is sent anywhere.</li>
     </ul>
   </aside>
-  <a class="rn-papercard" href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}"><span class="rn-papercard-i" aria-hidden="true">📄</span><b>Read the paper</b><span>The whole story written up like a thesis, with proofs, 40 figures, new computations on prime convergents and zeta zeros, and new work on six open questions. Free PDF, 132 pages.</span></a>
+  <a class="rn-papercard" href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}"><span class="rn-papercard-i" aria-hidden="true">📄</span><b>Read the paper</b><span>The whole story written up like a thesis, with proofs, 40 figures, new computations on prime convergents and zeta zeros, and new work on six open questions. Free PDF, 153 pages.</span></a>
   <nav aria-label="Chapters"><ul class="rn-toc">
     <li><a href="#ch1"><span>Chapter I</span><b>Pi’s machine</b></a></li>
     <li><a href="#ch2"><span>Chapter II</span><b>Pi and primes in sound</b></a></li>
@@ -130,7 +130,7 @@
     <div class="rn-tablebox"><table><thead><tr><th scope="col">#</th><th scope="col">Numerator</th><th scope="col">Denominator</th><th scope="col">Error</th></tr></thead><tbody id="cBody"></tbody></table></div>
     <p class="rn-small" id="cSum"></p>
   </div>
-  <div class="rn-link"><b>Pi ↔ primes</b><span>Among pi’s first 400 convergents, 4 denominators are prime: 7, 113, 265,381 and an 18-digit one. A fair estimate uses the odds of a random number that size (about 1 in ln q), raised a little because a convergent’s denominator never shares a factor with its numerator. That predicts about 7.4. Over the first 5,000 convergents the count is 9 prime denominators against about 10.9 expected (see the paper). So pi looks like a typical number here: its early primes are luck, not a law. Whether pi has infinitely many prime denominators is an open question (<a href="#oq-1">what we found</a>).</span></div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>Among pi’s first 400 convergents, 4 denominators are prime: 7, 113, 265,381 and an 18-digit one. A fair estimate uses the odds of a random number that size (about 1 in ln q), raised a little because a convergent’s denominator never shares a factor with its numerator. That predicts about 7.4. Over the first 5,000 convergents the count is 9 prime denominators against about 10.9 expected (see the paper), and over the first 40,000 it is 14 against about 13.8 (the last four, at 25,332, 27,651, 32,394 and 37,721, are probable primes found by Teddy Rook in November 2026). So pi looks like a typical number here: its early primes are luck, not a law. Whether pi has infinitely many prime denominators is an open question (<a href="#oq-1">what we found</a>).</span></div>
   <p class="rn-remix"><b>Remix</b> <button type="button" class="rn-ghost" data-remix='{"num":"phi"}'>φ: the denominators are Fibonacci numbers</button> <button type="button" class="rn-ghost" data-remix='{"num":"sqrt2"}'>√2: the Pell numbers</button> <button type="button" class="rn-ghost" data-remix='{"num":"e"}'>e: a pattern in the terms</button></p>
 </section>
 
@@ -463,6 +463,31 @@
 
 <!-- ============ FROM THE PAPER: the open questions (layouts/_partials/connections/rhythm-openq.html) ============ -->
 {{ partial "connections/rhythm-openq.html" . }}
+
+<!-- ============ FROM THE PAPER: the rhythm sieve (Section 17.6; static/connections/rhythm/sieve.js) ============ -->
+<section class="rn-s" id="sieve" data-mod="sieve" data-tags="primes coprime" aria-labelledby="sieve-h">
+  <div class="rn-head"><p class="rn-eyebrow">From the paper · added {{ partial "connections/rn-date.html" "2026-11-10" }}</p><h2 id="sieve-h">The rhythm sieve: hear where a <em>prime fraction</em> comes from</h2><div class="rn-tags"></div></div>
+  <div class="rn-prose"><p>Take the bottom numbers of pi’s best fractions, one per beat. Give each small prime a voice, and let it sound on the beats where it divides that beat’s bottom number. The 2 sounds on about one beat in three, the 3 on one in four, and so on. No voice ever sounds on two beats in a row, because neighboring bottom numbers share no factor. A beat where every voice is silent has no small factor, and every prime bottom number above 19 is such a beat (a gold star). This is how Teddy Rook’s search for pi’s eleventh to fourteenth prime fractions threw out 19 candidates in 20 before testing a single huge number: the same rhythm, run with every prime below ten million as a voice.</p></div>
+  <div class="rn-inst">
+    <div class="rn-controls">
+      <label>Number <select id="svN"><option value="pi">π</option><option value="e">e</option><option value="phi">golden ratio</option><option value="sqrt2">√2</option></select></label>
+      <button type="button" class="rn-play" id="svPlay" aria-pressed="false">▶ Play</button>
+      <button type="button" class="rn-ghost" id="svBack">‹ Previous prime</button>
+      <button type="button" class="rn-ghost" id="svJump">Next prime ›</button>
+    </div>
+    <canvas id="svCan" height="250" tabindex="0" role="img" aria-label="The rhythm sieve"></canvas>
+    <div class="rn-controls">
+      <button type="button" class="rn-ghost" id="svPrev" aria-label="Earlier beats">‹ Earlier</button>
+      <button type="button" class="rn-ghost" id="svNext" aria-label="Later beats">Later ›</button>
+      <label>Start at beat <input type="number" id="svStart" min="1" value="1" inputmode="numeric" style="width:7em"></label>
+    </div>
+    <p class="rn-small" id="svRead" aria-live="polite"></p>
+    <p class="rn-small" id="svLive" aria-live="polite"></p>
+    <p class="rn-small rn-muted" id="svNote"></p>
+    <p class="rn-small rn-muted">Rows are the voices 2 to 19; a green dot means that prime divides the bottom number on that beat. Shaded columns are silent beats. Keyboard: focus the picture and use the left and right arrows (one beat) or Page Up and Page Down (a screen).</p>
+  </div>
+  <div class="rn-link"><b>Pi ↔ primes</b><span>A silent beat is not yet a prime: its bottom number may still have a factor bigger than the voices can hear. Real searches use far more voices, then a fast test on what is left. See <a href="#oq-1">what we found</a> and <a href="{{ "connections/rhythm-of-numbers/new-prime/" | relURL }}">the four new probable primes</a>.</span></div>
+</section>
 
 <!-- ============ EPILOGUE ============ -->
 <div class="rn-ch" id="map"><p class="rn-eyebrow">Epilogue</p><h2>The map</h2><p>Every section, joined wherever two share an idea. Pick a thread in the bar to see its web, and press a dot to jump to it.</p></div>

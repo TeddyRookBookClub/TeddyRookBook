@@ -38,6 +38,12 @@ scripts (November 2026): `c12_third_pisearch.py` searches q_n for 20,000 < n <= 
 `static/connections/rhythm/q25332.txt`, tests it, extends the heuristic to n = 25,332 and writes the digits for
 Appendix D (about 3 minutes); `c12_third_e.py` (closed forms, divisors and periods for e) and `c12_third_matrix.py`
 (extreme eigenvalues of the correlation matrix to m = 10^6) take about a minute together.
+`c12_third_sieve.py` (the rhythm sieve: the recurrence modulo every prime below 10^7, then base-2 and Baillie-PSW tests
+on the survivors; our search: denominators to n = 37,721, numerators to n = 32,394), `c12_third_newprimes.py` (the twelfth
+and thirteenth probable primes q_27651 and q_32394, the counts to 32,394, the pattern tests and the mod-12 motif),
+`c12_third_inter.py` (prime intermediate fractions, with their remainders mod 12) and `c12_third_fourteenth.py` (the fourteenth
+probable prime q_37721, the counts to 40,000, the cluster, the notes of the prime convergents, and the family (22k+3)/(7k+1)
+of the opening guess; run it after `c12_third_inter.py small`) belong to Sections 17.5 and 17.6.
 
 Dates of additions: the paper marks each addition with the UTC date it was published. The dates are TeX macros in
 `paper/main.tex` (`\revO`, `\revA`, `\revB`, `\revC`), so a date can be corrected in one line.
@@ -46,5 +52,5 @@ Dates of additions: the paper marks each addition with the UTC date it was publi
 error if any asserted fact (for example 292 × 113 = 32,996, or the OEIS lists of prime convergents of pi) fails.
 
 After rebuilding, update `pdf_size` (pages and size) in content/connections/rhythm-of-numbers/paper/_index.md and the
-page and figure counts ("132 pages", "40 figures") on the hub card (layouts/connections/rhythm.html), the fractals page card
+page and figure counts ("147 pages", "40 figures") on the hub card (layouts/connections/rhythm.html), the fractals page card
 (layouts/connections/rhythm-fractals.html) and the Connections hub (content/connections/_index.md).

@@ -29,7 +29,7 @@
     {{- with $.Params.found_dates }}<p class="rp-dates rn-small rn-muted">{{ . }}</p>{{ end }}
     <ol class="rp-found-list">
       {{- range . }}
-      <li><h3>{{ .q }} <span class="rp-status">{{ .status }}</span></h3><p>{{ .text }}</p>{{ if .update }}<p class="rp-upd"><span class="rp-upd-d">Update, added {{ .update_date }} (UTC):</span> {{ .update }}</p>{{ end }}{{ range .updates }}<p class="rp-upd"><span class="rp-upd-d">Update, added {{ .date }} (UTC):</span> {{ .text }}{{ if .link }} <a href="{{ .link | relURL }}">{{ .link_label }}</a>{{ end }}</p>{{ end }}</li>
+      <li><h3>{{ .q }} <span class="rp-status">{{ .status }}</span></h3><p>{{ .text }}</p>{{ if .update }}<p class="rp-upd"><span class="rp-upd-d">Update, added {{ partial "connections/rn-date.html" .update_date }}:</span> {{ .update }}</p>{{ end }}{{ range .updates }}<p class="rp-upd"><span class="rp-upd-d">Update, added {{ partial "connections/rn-date.html" .date }}:</span> {{ .text }}{{ if .link }} <a href="{{ .link | relURL }}">{{ .link_label }}</a>{{ end }}</p>{{ end }}</li>
       {{- end }}
     </ol>
     {{- $cp := site.Data.rhythm.paper_pages.chapters }}

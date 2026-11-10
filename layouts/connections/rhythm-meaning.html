@@ -11,7 +11,7 @@
 <nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Where Music, Patterns, Math and Chemistry Meet</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <span>What it all means</span></nav>
 
 <header class="rn-hero">
-  <p class="rn-eyebrow">The Rhythm of Numbers · In plain words · added {{ .Params.added }} (UTC)</p>
+  <p class="rn-eyebrow">The Rhythm of Numbers · In plain words · added {{ partial "connections/rn-date.html" .Params.added }}</p>
   <h1>What it all means: <em>the open questions in plain words</em></h1>
   <p class="rn-lede">{{ .Params.lede }}</p>
 </header>
@@ -47,7 +47,7 @@
 
 <section class="np-sec" aria-labelledby="np-more-h">
   <h2 id="np-more-h">Read more</h2>
-  <p class="np-next"><a href="{{ "connections/rhythm-of-numbers/new-prime/" | relURL }}">The new probable prime, all {{ .Params.digits }} digits →</a><a href="{{ $hub }}#open-questions">Working on the open questions →</a><a href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}">The paper →</a></p>
+  <p class="np-next"><a href="{{ "connections/rhythm-of-numbers/new-prime/" | relURL }}">The four new probable primes, {{ .Params.digits }} digits →</a><a href="{{ $hub }}#open-questions">Working on the open questions →</a><a href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}">The paper →</a></p>
 </section>
 
 <footer class="rn-notes" aria-labelledby="np-mn-h">
