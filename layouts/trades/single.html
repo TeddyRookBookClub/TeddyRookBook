@@ -1,12 +1,12 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "trades/trades.css" | relURL }}?v={{ (os.Stat "static/trades/trades.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "trades/trades.css" | relURL }}?v={{ (partialCached "fv.html" "static/trades/trades.css" "static/trades/trades.css") }}">
 {{- $course := .Params.course | default "cars" }}
 {{- $d := index site.Data.trades $course }}
 {{- $c := $d.course }}
 {{- $css := printf "static/trades/%s/%s.css" $course $course }}
 {{- if fileExists $css }}
-<link rel="stylesheet" href="{{ printf "trades/%s/%s.css" $course $course | relURL }}?v={{ (os.Stat $css).ModTime.Unix }}">
+<link rel="stylesheet" href="{{ printf "trades/%s/%s.css" $course $course | relURL }}?v={{ (partialCached "fv.html" $css $css) }}">
 {{- end }}
 {{- $B := strings.TrimSuffix "x" ("x" | relURL) }}
 {{- $L := index (where $d.lessons "key" .Params.lesson) 0 }}
@@ -91,10 +91,10 @@
   </nav>
   <p class="hs-small">{{ $c.lesson_foot }}</p>
 </div>
-<script src="{{ "trades/trades.js" | relURL }}?v={{ (os.Stat "static/trades/trades.js").ModTime.Unix }}" defer></script>
+<script src="{{ "trades/trades.js" | relURL }}?v={{ (partialCached "fv.html" "static/trades/trades.js" "static/trades/trades.js") }}" defer></script>
 {{- range $L.widgets }}
 {{- $p := printf "trades/%s/%s.js" $course . }}
 {{- if in (slice "map" "finder") . }}{{ $p = printf "trades/%s.js" . }}{{ end }}
-<script src="{{ $p | relURL }}?v={{ (os.Stat (printf "static/%s" $p)).ModTime.Unix }}" defer></script>
+<script src="{{ $p | relURL }}?v={{ (partialCached "fv.html" (printf "static/%s" $p) (printf "static/%s" $p)) }}" defer></script>
 {{- end }}
 {{ end }}

@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "homeschool/ar.css" | relURL }}?v={{ (os.Stat "static/homeschool/ar.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/ar.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/ar.css" "static/homeschool/ar.css") }}">
 {{ $d := site.Data.hs_hannah }}{{ $key := .Params.course }}{{ $c := index (where $d.curricula "key" $key) 0 }}
 <div class="hs ar"{{ if eq $c.kind "lessons" }} data-ar="{{ $c.key }}" data-total="{{ $c.total }}"{{ end }}>
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/actual-reading/" | relURL }}">Actual Reading</a> › {{ $c.short }}</nav>
@@ -101,6 +101,6 @@
   {{ with $c.paperback }}<p class="hs-small">There's also <a href="{{ . }}" target="_blank" rel="noopener sponsored">a paperback edition on Amazon</a>, with the alphabet chart printed on the back cover.</p>{{ end }}
   {{ partial "report/link.html" "Homeschool lesson" }}
 </div>
-<script src="{{ "homeschool/simple.js" | relURL }}?v={{ (os.Stat "static/homeschool/simple.js").ModTime.Unix }}" defer></script>
-<script src="{{ "homeschool/ar.js" | relURL }}?v={{ (os.Stat "static/homeschool/ar.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/simple.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/simple.js" "static/homeschool/simple.js") }}" defer></script>
+<script src="{{ "homeschool/ar.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/ar.js" "static/homeschool/ar.js") }}" defer></script>
 {{ end }}

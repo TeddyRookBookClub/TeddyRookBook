@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "unit-head.html" . }}
-<link rel="stylesheet" href="{{ "business/econometrics/regression-discontinuity/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/regression-discontinuity/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/econometrics/regression-discontinuity/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/regression-discontinuity/sim.css" "static/business/econometrics/regression-discontinuity/sim.css") }}">
 <div class="lab" id="ec13-lab">
   {{ partial "unit-nav.html" . }}
   <header class="lab-hero">
@@ -243,7 +243,7 @@
   </section>
   {{ partial "unit-foot.html" . }}
 </div>
-<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
-<script src="{{ "business/econometrics/regression-discontinuity/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/regression-discontinuity/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "business/econometrics/regression-discontinuity/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/regression-discontinuity/sim.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/stats.js" "static/business/econometrics/stats.js") }}" defer></script>
+<script src="{{ "business/econometrics/regression-discontinuity/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/regression-discontinuity/model.js" "static/business/econometrics/regression-discontinuity/model.js") }}" defer></script>
+<script src="{{ "business/econometrics/regression-discontinuity/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/regression-discontinuity/sim.js" "static/business/econometrics/regression-discontinuity/sim.js") }}" defer></script>
 {{ end }}

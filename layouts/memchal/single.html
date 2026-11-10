@@ -11,7 +11,7 @@
 {{- $n := len $L.items -}}
 {{- $groups := dict "science" "Science" "history" "History" "civics" "Civics" "geography" "Geography" "math" "Math" "language" "Language" "scripture" "Scripture" "everyday" "Everyday" -}}
 {{- $css := "memory/challenges/engine.css" -}}
-<link rel="stylesheet" href="{{ $css | relURL }}?v={{ (os.Stat (printf "static/%s" $css)).ModTime.Unix }}">
+<link rel="stylesheet" href="{{ $css | relURL }}?v={{ (partialCached "fv.html" (printf "static/%s" $css) (printf "static/%s" $css)) }}">
 <article class="mc mc-page" data-slug="{{ $slug }}">
 <nav class="mc-crumbs" aria-label="Breadcrumb"><a href="{{ "memory/" | relURL }}">Memory</a> › <a href="{{ "memory/challenges/" | relURL }}">Challenges</a> › <span>{{ index $groups $L.group | default $L.group }}</span></nav>
 <header class="mc-head">
@@ -72,6 +72,6 @@
 </section>
 </article>
 <script type="application/json" id="mc-data">{{ $L | jsonify | safeJS }}</script>
-<script src="{{ "memory/challenges/core.js" | relURL }}?v={{ (os.Stat "static/memory/challenges/core.js").ModTime.Unix }}"></script>
-<script src="{{ "memory/challenges/engine.js" | relURL }}?v={{ (os.Stat "static/memory/challenges/engine.js").ModTime.Unix }}"></script>
+<script src="{{ "memory/challenges/core.js" | relURL }}?v={{ (partialCached "fv.html" "static/memory/challenges/core.js" "static/memory/challenges/core.js") }}"></script>
+<script src="{{ "memory/challenges/engine.js" | relURL }}?v={{ (partialCached "fv.html" "static/memory/challenges/engine.js" "static/memory/challenges/engine.js") }}"></script>
 {{ end }}

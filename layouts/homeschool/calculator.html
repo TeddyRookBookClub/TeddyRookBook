@@ -1,5 +1,5 @@
 {{ define "main" }}
-<link rel="stylesheet" href="{{ "homeschool/calc/calc.css" | relURL }}?v={{ (os.Stat "static/homeschool/calc/calc.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/calc/calc.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/calc/calc.css" "static/homeschool/calc/calc.css") }}">
 <div class="cx-head"><a href="{{ "homeschool/" | relURL }}">‹ Homeschool</a><h1>{{ .Title }}</h1></div>
 <div class="calc" id="calc">
   <div class="cx-top">
@@ -165,6 +165,6 @@
   <noscript><p>The calculator needs JavaScript.</p></noscript>
 </div>
 <p class="cx-foot">Made for the Teddy Rook Book homeschool pages. Everything runs in your browser, with nothing sent anywhere. It's a learning tool: check anything important with a second method.</p>
-<script src="{{ "homeschool/calc/cas.js" | relURL }}?v={{ (os.Stat "static/homeschool/calc/cas.js").ModTime.Unix }}"></script>
-<script src="{{ "homeschool/calc/calc.js" | relURL }}?v={{ (os.Stat "static/homeschool/calc/calc.js").ModTime.Unix }}"></script>
+<script src="{{ "homeschool/calc/cas.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/calc/cas.js" "static/homeschool/calc/cas.js") }}"></script>
+<script src="{{ "homeschool/calc/calc.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/calc/calc.js" "static/homeschool/calc/calc.js") }}"></script>
 {{ end }}

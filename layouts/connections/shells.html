@@ -13,7 +13,7 @@
 {{- $h := partial "comp/md.html" (dict "s" .RawContent "p" .) | string -}}
 {{- range findRESubmatch `<p>\[\[viz:([a-z0-9-]+)(?:\|([^\]<]*))?\]\]</p>` $h -}}
   {{- $vid := index . 1 }}{{ $f := printf "static/connections/v/%s.js" $vid -}}
-  {{- $src := printf "connections/v/%s.js" $vid | relURL }}{{ if fileExists $f }}{{ $src = printf "%s?v=%d" $src (os.Stat $f).ModTime.Unix }}{{ else }}{{ warnf "connections/shells: missing %s" $f }}{{ end -}}
+  {{- $src := printf "connections/v/%s.js" $vid | relURL }}{{ if fileExists $f }}{{ $src = printf "%s?v=%d" $src (partialCached "fv.html" $f $f) }}{{ else }}{{ warnf "connections/shells: missing %s" $f }}{{ end -}}
   {{- $fig := printf `<figure class="cx-viz" data-viz="%s" data-src="%s"><div class="cx-stage"></div><div class="cx-bar"></div><p class="cx-live cx-sr" aria-live="polite"></p>%s<noscript><p class="cx-err">This picture needs JavaScript. The text around it does not.</p></noscript></figure>` $vid $src (cond (ne (index . 2) "") (printf `<figcaption>%s</figcaption>` (index . 2)) "") -}}
   {{- $h = replace $h (index . 0) $fig -}}
 {{- end }}

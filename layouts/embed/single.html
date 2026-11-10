@@ -82,7 +82,7 @@
 {{- if eq $k "alphabet" }}{{ $css = $css | append "lang/alphabet.css" }}{{ end -}}
 {{- if eq $k "hieroglyphs" }}{{ $css = $css | append (slice "math/viz/viz.css" "egypt/viz/egypt.css" "languages/hieroglyphs/hiero.css") }}{{ end -}}
 {{- range $css | append "embed/lang.css" }}
-<link rel="stylesheet" href="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}">
+<link rel="stylesheet" href="{{ . | relURL }}?v={{ (partialCached "fv.html" (printf "static/%s" .) (printf "static/%s" .)) }}">
 {{- end }}
 <meta name="emb-lang-base" content="{{ "embed/lang/" | relURL }}">
 </head>
@@ -97,7 +97,7 @@
     {{ partial "embed/sources.html" "lang-word" }}
   </div>
   {{- range $js }}
-  <script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+  <script src="{{ . | relURL }}?v={{ (partialCached "fv.html" (printf "static/%s" .) (printf "static/%s" .)) }}" defer></script>
   {{- end }}
 {{- else if eq $k "lang-drill" }}
   {{- $js := slice "embed/lang-embed.js" "lang/grammar.js" "lang/core.js" "embed/lang-drill.js" }}
@@ -125,7 +125,7 @@
     {{ partial "embed/sources.html" "lang-drill" }}
   </div>
   {{- range $js }}
-  <script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+  <script src="{{ . | relURL }}?v={{ (partialCached "fv.html" (printf "static/%s" .) (printf "static/%s" .)) }}" defer></script>
   {{- end }}
 {{- else if eq $k "alphabet" }}
   <div class="lang ab-wrap emb-ab">
@@ -134,7 +134,7 @@
     {{ partial "embed/sources.html" "alphabet" }}
   </div>
   {{- range slice "js/translit.js" "lang/alphabet.js" }}
-  <script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+  <script src="{{ . | relURL }}?v={{ (partialCached "fv.html" (printf "static/%s" .) (printf "static/%s" .)) }}" defer></script>
   {{- end }}
 {{- else }}
   <div class="lang hg hc emb-hg" data-hg-root>
@@ -180,7 +180,7 @@
     {{ partial "embed/sources.html" "hieroglyphs" }}
   </div>
   {{- range slice "math/viz/core.js" "egypt/viz/egypt.js" "languages/hieroglyphs/hiero.js" "languages/hieroglyphs/cartouche.js" }}
-  <script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+  <script src="{{ . | relURL }}?v={{ (partialCached "fv.html" (printf "static/%s" .) (printf "static/%s" .)) }}" defer></script>
   {{- end }}
 {{- end }}
 </main>

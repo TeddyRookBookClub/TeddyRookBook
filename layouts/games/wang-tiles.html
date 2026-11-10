@@ -71,5 +71,5 @@ html[data-theme="dark"] .wt{--acc:#6cc79a}
 <li>Marching-squares and blob tile sets compared: <a href="https://boristhebrave.com/2013/07/14/tileset-roundup">Tileset Roundup (Boris the Brave)</a>.</li>
 </ul>
 </article>
-<script src="{{ "games/wang/wang.js" | relURL }}?v={{ (os.Stat "static/games/wang/wang.js").ModTime.Unix }}"></script>
+<script src="{{ "games/wang/wang.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/wang/wang.js" "static/games/wang/wang.js") }}"></script>
 {{ end }}

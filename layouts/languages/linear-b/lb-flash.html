@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "languages/linear-b/head.html" . }}
-<link rel="stylesheet" href="{{ "lang/flash.css" | relURL }}?v={{ (os.Stat "static/lang/flash.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "lang/flash.css" | relURL }}?v={{ (partialCached "fv.html" "static/lang/flash.css" "static/lang/flash.css") }}">
 <div class="lang fc lb lb-page" id="fc">
   <header class="lang-hero lb-hero">
     <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · <a href="{{ "languages/linear-b/" | relURL }}" style="color:inherit">Linear B</a> · Flashcards</p>
@@ -59,5 +59,5 @@
   <p class="lb-note">Want the spelling rules and real tablets too? The course <a href="{{ "ancient-scripts/linear-a-and-b/" | relURL }}">Linear A and Linear B</a> on the Ancient Scripts Ladder teaches each sign in context, with practice.</p>
   {{ partial "languages/linear-b/credits.html" . }}
 </div>
-<script src="{{ "languages/linear-b/flash.js" | relURL }}?v={{ (os.Stat "static/languages/linear-b/flash.js").ModTime.Unix }}" defer></script>
+<script src="{{ "languages/linear-b/flash.js" | relURL }}?v={{ (partialCached "fv.html" "static/languages/linear-b/flash.js" "static/languages/linear-b/flash.js") }}" defer></script>
 {{ end }}

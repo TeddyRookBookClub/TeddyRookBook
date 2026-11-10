@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
 {{ $src := partial "meal-prep/data.html" . }}
 <div class="hs mp" id="mp-print" data-src="{{ $src }}">
   {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Planner" "u" "meal-prep/plan/") (dict "t" "Print")) }}
@@ -20,7 +20,7 @@
   </div>
   <div class="mpp" id="mpp"><p class="mpp-empty">Loading your plan…</p></div>
 </div>
-<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/print.js" | relURL }}?v={{ (os.Stat "static/meal-prep/print.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/model.js" "static/meal-prep/model.js") }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/common.js" "static/meal-prep/common.js") }}" defer></script>
+<script src="{{ "meal-prep/print.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/print.js" "static/meal-prep/print.js") }}" defer></script>
 {{ end }}

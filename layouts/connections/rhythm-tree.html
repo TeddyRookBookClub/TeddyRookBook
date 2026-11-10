@@ -107,6 +107,6 @@
   <p><a href="{{ $hub }}">← Back to The Rhythm of Numbers</a> · <a href="{{ $fr }}">Chapter VII: Fractals</a> · <a href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}">The paper</a></p>
 </footer>
 </article>
-<script src="{{ "js/rule-drag.js" | relURL }}?v={{ (os.Stat "static/js/rule-drag.js").ModTime.Unix }}" defer></script>
+<script src="{{ "js/rule-drag.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/rule-drag.js" "static/js/rule-drag.js") }}" defer></script>
 {{ partial "inline/ml-js.html" "connections/rhythm/tree.js" }}
 {{ end }}

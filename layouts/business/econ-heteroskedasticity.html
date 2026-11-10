@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "unit-head.html" . }}
-<link rel="stylesheet" href="{{ "business/econometrics/heteroskedasticity/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/heteroskedasticity/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/econometrics/heteroskedasticity/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/heteroskedasticity/sim.css" "static/business/econometrics/heteroskedasticity/sim.css") }}">
 <div class="lab" id="ec8-lab">
   {{ partial "unit-nav.html" . }}
   <header class="lab-hero">
@@ -220,7 +220,7 @@
   </section>
   {{ partial "unit-foot.html" . }}
 </div>
-<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
-<script src="{{ "business/econometrics/heteroskedasticity/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/heteroskedasticity/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "business/econometrics/heteroskedasticity/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/heteroskedasticity/sim.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/stats.js" "static/business/econometrics/stats.js") }}" defer></script>
+<script src="{{ "business/econometrics/heteroskedasticity/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/heteroskedasticity/model.js" "static/business/econometrics/heteroskedasticity/model.js") }}" defer></script>
+<script src="{{ "business/econometrics/heteroskedasticity/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/heteroskedasticity/sim.js" "static/business/econometrics/heteroskedasticity/sim.js") }}" defer></script>
 {{ end }}

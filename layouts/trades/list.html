@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "trades/trades.css" | relURL }}?v={{ (os.Stat "static/trades/trades.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "trades/trades.css" | relURL }}?v={{ (partialCached "fv.html" "static/trades/trades.css" "static/trades/trades.css") }}">
 {{- $B := strings.TrimSuffix "x" ("x" | relURL) }}
 {{- /* The courses, in order. A course appears once data/trades/<key>.json exists; until then it shows as "coming next". */}}
 {{- $order := slice "cars" "plumbing" "electrical" "hvac" "construction" }}
@@ -11,7 +11,7 @@
   "construction" (dict "icon" "🏗️" "name" "Construction" "text" "How a house is built: foundations, framing, roofs, walls, and reading plans.") }}
 {{- if eq .Params.tk "hub" }}
 {{- range $order }}{{ $hc := printf "static/trades/%s/%s.css" . . }}{{ if and (index site.Data.trades .) (fileExists $hc) }}
-<link rel="stylesheet" href="{{ printf "trades/%s/%s.css" . . | relURL }}?v={{ (os.Stat $hc).ModTime.Unix }}">
+<link rel="stylesheet" href="{{ printf "trades/%s/%s.css" . . | relURL }}?v={{ (partialCached "fv.html" $hc $hc) }}">
 {{- end }}{{ end }}
 <div class="hs tr" id="tr-hub">
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> › The Trades</nav>
@@ -77,7 +77,7 @@
 {{- $nles := len $d.lessons }}
 {{- $css := printf "static/trades/%s/%s.css" $course $course }}
 {{- if fileExists $css }}
-<link rel="stylesheet" href="{{ printf "trades/%s/%s.css" $course $course | relURL }}?v={{ (os.Stat $css).ModTime.Unix }}">
+<link rel="stylesheet" href="{{ printf "trades/%s/%s.css" $course $course | relURL }}?v={{ (partialCached "fv.html" $css $css) }}">
 {{- end }}
 <div class="hs tr c-{{ $course }}" id="tr-course" data-course="{{ $course }}" data-units data-base="{{ $B }}">
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> › <a href="{{ "trades/" | relURL }}">The Trades</a> › {{ $c.short }}</nav>
@@ -141,13 +141,13 @@
   </section>
   <p class="hs-small">{{ $c.foot }}</p>
 </div>
-<script src="{{ "trades/trades.js" | relURL }}?v={{ (os.Stat "static/trades/trades.js").ModTime.Unix }}" defer></script>
-<script src="{{ "trades/map.js" | relURL }}?v={{ (os.Stat "static/trades/map.js").ModTime.Unix }}" defer></script>
+<script src="{{ "trades/trades.js" | relURL }}?v={{ (partialCached "fv.html" "static/trades/trades.js" "static/trades/trades.js") }}" defer></script>
+<script src="{{ "trades/map.js" | relURL }}?v={{ (partialCached "fv.html" "static/trades/map.js" "static/trades/map.js") }}" defer></script>
 {{- with $d.finder }}
-<script src="{{ "trades/finder.js" | relURL }}?v={{ (os.Stat "static/trades/finder.js").ModTime.Unix }}" defer></script>
+<script src="{{ "trades/finder.js" | relURL }}?v={{ (partialCached "fv.html" "static/trades/finder.js" "static/trades/finder.js") }}" defer></script>
 {{- end }}
 {{- range $c.course_widgets }}
-<script src="{{ printf "trades/%s/%s.js" $course . | relURL }}?v={{ (os.Stat (printf "static/trades/%s/%s.js" $course .)).ModTime.Unix }}" defer></script>
+<script src="{{ printf "trades/%s/%s.js" $course . | relURL }}?v={{ (partialCached "fv.html" (printf "static/trades/%s/%s.js" $course .) (printf "static/trades/%s/%s.js" $course .)) }}" defer></script>
 {{- end }}
 {{- end }}
 {{ end }}

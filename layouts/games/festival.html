@@ -1,14 +1,14 @@
 {{ define "main" }}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
-<link rel="stylesheet" href="{{ "games/fest.css" | relURL }}?v={{ (os.Stat "static/games/fest.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/fest.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/fest.css" "static/games/fest.css") }}">
 {{ partial "game-shell.html" . }}
 <div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div><div class="fest gbox" id="fest"><noscript>This game needs JavaScript.</noscript></div></div>
 <p style="font-size:.8rem;color:var(--secondary);margin-top:.5rem">Tips: drag to move around, scroll or pinch to zoom. With the path tool selected, drag to lay paths. A path must reach each building’s entrance; press R (or long-press on a touch screen) to turn a building. Space pauses, Ctrl+Z undoes. Progress is kept only in this browser; 💾 exports a save file.</p>
-<script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
-<script src="{{ "games/vocab.js" | relURL }}?v={{ (os.Stat "static/games/vocab.js").ModTime.Unix }}"></script>
-<script src="{{ "games/fest-core.js" | relURL }}?v={{ (os.Stat "static/games/fest-core.js").ModTime.Unix }}"></script>
-<script src="{{ "games/fest-data.js" | relURL }}?v={{ (os.Stat "static/games/fest-data.js").ModTime.Unix }}"></script>
-<script src="{{ "games/art.js" | relURL }}?v={{ (os.Stat "static/games/art.js").ModTime.Unix }}"></script>
-<script src="{{ "games/game.js" | relURL }}?v={{ (os.Stat "static/games/game.js").ModTime.Unix }}"></script>
+<script src="{{ "js/translit.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/translit.js" "static/js/translit.js") }}"></script>
+<script src="{{ "games/vocab.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/vocab.js" "static/games/vocab.js") }}"></script>
+<script src="{{ "games/fest-core.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/fest-core.js" "static/games/fest-core.js") }}"></script>
+<script src="{{ "games/fest-data.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/fest-data.js" "static/games/fest-data.js") }}"></script>
+<script src="{{ "games/art.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/art.js" "static/games/art.js") }}"></script>
+<script src="{{ "games/game.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/game.js" "static/games/game.js") }}"></script>
 {{ end }}

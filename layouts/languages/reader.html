@@ -39,7 +39,7 @@
   </div>
   {{ partial "lang-credits.html" . }}
 </div>
-<script src="{{ "lang/grammar.js" | relURL }}?v={{ (os.Stat "static/lang/grammar.js").ModTime.Unix }}"></script>
-<script src="{{ "lang/core.js" | relURL }}?v={{ (os.Stat "static/lang/core.js").ModTime.Unix }}"></script>
-<script src="{{ "lang/reader.js" | relURL }}?v={{ (os.Stat "static/lang/reader.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/grammar.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/grammar.js" "static/lang/grammar.js") }}"></script>
+<script src="{{ "lang/core.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/core.js" "static/lang/core.js") }}"></script>
+<script src="{{ "lang/reader.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/reader.js" "static/lang/reader.js") }}"></script>
 {{ end }}

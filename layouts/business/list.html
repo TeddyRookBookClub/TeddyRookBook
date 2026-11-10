@@ -1,5 +1,5 @@
 {{ define "main" }}
-<link rel="stylesheet" href="{{ "business/biz.css" | relURL }}?v={{ (os.Stat "static/business/biz.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/biz.css" | relURL }}?v={{ (partialCached "fv.html" "static/business/biz.css" "static/business/biz.css") }}">
 {{ $d := site.Data.business_cases }}
 <div class="bz">
   <header class="bz-hero">
@@ -53,7 +53,8 @@
   <section class="bz-sec">
     <h2>A few key takeaways</h2>
     <div class="bz-morals">
-      {{ range first 6 (shuffle $d.cases) }}<a href="{{ printf "business/cases/%s/" .slug | relURL }}"><q>{{ .moral }}</q><span>{{ .company }}, {{ .year }}</span></a>{{ end }}
+      {{- /* a different six each day (not a shuffle: the same day builds the same page, so unchanged deploys can be skipped) */ -}}
+      {{ $off := mod now.YearDay (len $d.cases) }}{{ range first 6 ((after $off $d.cases) | append (first $off $d.cases)) }}<a href="{{ printf "business/cases/%s/" .slug | relURL }}"><q>{{ .moral }}</q><span>{{ .company }}, {{ .year }}</span></a>{{ end }}
     </div>
   </section>
   <section class="bz-sec bz-note">

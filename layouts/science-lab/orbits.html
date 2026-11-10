@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "lab-head.html" . }}
-<link rel="stylesheet" href="{{ "games/orbits/sim.css" | relURL }}?v={{ (os.Stat "static/games/orbits/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/orbits/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/orbits/sim.css" "static/games/orbits/sim.css") }}">
 <div class="lab" id="orbits-lab">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Orbit Lab</nav>
   <header class="lab-hero">
@@ -217,6 +217,6 @@
     <a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a>
   </nav>
 </div>
-<script src="{{ "games/orbits/physics.js" | relURL }}?v={{ (os.Stat "static/games/orbits/physics.js").ModTime.Unix }}"></script>
-<script src="{{ "games/orbits/sim.js" | relURL }}?v={{ (os.Stat "static/games/orbits/sim.js").ModTime.Unix }}"></script>
+<script src="{{ "games/orbits/physics.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/orbits/physics.js" "static/games/orbits/physics.js") }}"></script>
+<script src="{{ "games/orbits/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/orbits/sim.js" "static/games/orbits/sim.js") }}"></script>
 {{ end }}

@@ -2,7 +2,7 @@
 {{ partial "hs-head.html" . }}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap">
-<link rel="stylesheet" href="{{ "homeschool/phonics/phonics.css" | relURL }}?v={{ (os.Stat "static/homeschool/phonics/phonics.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/phonics/phonics.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/phonics/phonics.css" "static/homeschool/phonics/phonics.css") }}">
 {{ $d := site.Data.phonics }}{{ $hc := site.Data.hs_hannah.curricula }}
 <div class="hs pp pp-hub" id="pp">
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/actual-reading/" | relURL }}">Actual Reading</a> › Phonics Practice</nav>

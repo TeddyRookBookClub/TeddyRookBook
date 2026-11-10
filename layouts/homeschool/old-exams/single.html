@@ -32,5 +32,5 @@
     <p class="hs-small">The answer notes were written for this site. Where the question's wording is unclear in the surviving copies, the note says so.{{ if eq $k "bullitt-1912" }} The museum also publishes its own suggested answers: <a href="https://www.bullittcountyhistory.org/bchistory/schoolexam1912ans.html" target="_blank" rel="noopener">Bullitt County History Museum answers ↗</a>.{{ end }}</p>
   </section>
 </div>
-<script src="{{ "homeschool/exams.js" | relURL }}?v={{ (os.Stat "static/homeschool/exams.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/exams.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/exams.js" "static/homeschool/exams.js") }}" defer></script>
 {{ end }}

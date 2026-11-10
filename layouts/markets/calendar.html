@@ -27,7 +27,7 @@
 </section>
 {{ partial "markets-foot.html" . }}
 </div>
-<script src="{{ "markets/treasury.js" | relURL }}?v={{ (os.Stat "static/markets/treasury.js").ModTime.Unix }}"></script>
+<script src="{{ "markets/treasury.js" | relURL }}?v={{ (partialCached "fv.html" "static/markets/treasury.js" "static/markets/treasury.js") }}"></script>
 <script>
 (function () {
   var $ = function (s) { return document.querySelector(s); };

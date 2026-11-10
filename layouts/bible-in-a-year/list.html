@@ -6,7 +6,7 @@
    and start date are kept in 'trb-bibleyear-v1'. A link like #day-12-66 opens that day in that version. */ -}}
 {{- $d := site.Data.bibleyear -}}
 {{- $s73 := index $d.stats "73" -}}{{- $s66 := index $d.stats "66" -}}
-<link rel="stylesheet" href="{{ "bibleyear/by.css" | relURL }}?v={{ (os.Stat "static/bibleyear/by.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "bibleyear/by.css" | relURL }}?v={{ (partialCached "fv.html" "static/bibleyear/by.css" "static/bibleyear/by.css") }}">
 <div class="by" id="by" data-planner="{{ "homeschool/planner/" | relURL }}">
   <nav class="by-crumbs by-noprint" aria-label="Breadcrumb"><a href="{{ "books/" | relURL }}">Library</a> › Bible in a Year</nav>
   <header class="by-hero">
@@ -72,5 +72,5 @@
   </section>
   <script type="application/json" id="by-data">{{ $d | jsonify | safeJS }}</script>
 </div>
-<script src="{{ "bibleyear/by.js" | relURL }}?v={{ (os.Stat "static/bibleyear/by.js").ModTime.Unix }}" defer></script>
+<script src="{{ "bibleyear/by.js" | relURL }}?v={{ (partialCached "fv.html" "static/bibleyear/by.js" "static/bibleyear/by.js") }}" defer></script>
 {{ end }}

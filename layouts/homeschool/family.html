@@ -19,8 +19,8 @@
      projects  A, B, C, D: { t: title, do: the task, rubric: [three or four things to look for] }
    Check a new unit with:  node scripts/family/test-family.js   (every id, URL and generator; Ancient Egypt for ages 6, 9, 14). */ -}}
 {{ partial "inline/ml-head.html" . }}
-<link rel="stylesheet" href="{{ "homeschool/planner.css" | relURL }}?v={{ (os.Stat "static/homeschool/planner.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "homeschool/family/family.css" | relURL }}?v={{ (os.Stat "static/homeschool/family/family.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/planner.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/planner.css" "static/homeschool/planner.css") }}">
+<link rel="stylesheet" href="{{ "homeschool/family/family.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/family/family.css" "static/homeschool/family/family.css") }}">
 {{- /* the library as one JSON file: units, and the title, URL and course grades of every topic they use */ -}}
 {{- $S := newScratch -}}{{- $units := slice -}}
 {{- range $k, $u := site.Data.family.units -}}

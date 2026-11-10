@@ -52,5 +52,5 @@
   </section>
   <script type="application/json" id="fs-base">{{ "asl/" | relURL | jsonify | safeJS }}</script>
 </div>
-<script src="{{ "asl/fingerspell.js" | relURL }}?v={{ (os.Stat "static/asl/fingerspell.js").ModTime.Unix }}" defer></script>
+<script src="{{ "asl/fingerspell.js" | relURL }}?v={{ (partialCached "fv.html" "static/asl/fingerspell.js" "static/asl/fingerspell.js") }}" defer></script>
 {{ end }}

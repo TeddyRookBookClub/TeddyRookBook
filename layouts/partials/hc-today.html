@@ -14,7 +14,7 @@
 {{- $g := index (where $days "id" $id) 0 -}}
 {{- if not $g -}}{{- $g = index $days 0 -}}{{- end -}}
 {{- $r0 := index ($g.readings | default (slice dict)) 0 -}}
-<link rel="stylesheet" href="{{ "harvard-classics/card.css" | relURL }}?v={{ (os.Stat "static/harvard-classics/card.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "harvard-classics/card.css" | relURL }}?v={{ (partialCached "fv.html" "static/harvard-classics/card.css" "static/harvard-classics/card.css") }}">
 <div class="hc-card" id="hc-card" data-id="{{ $g.id }}" data-base="{{ "harvard-classics/" | relURL }}" data-leap="{{ $leap }}"><div class="hc-card-in">
   <a class="hc-card-spine" href="{{ printf "harvard-classics/%s/" $g.slug | relURL }}" tabindex="-1" aria-hidden="true"><small>The Harvard Classics</small><b>{{ $r0.volume }}</b></a>
   <div class="hc-card-body">
@@ -27,5 +27,5 @@
     <p class="hc-card-links"><a class="hc-card-go" href="{{ printf "harvard-classics/%s/" $g.slug | relURL }}">Read today’s reading →</a> <a href="{{ "harvard-classics/calendar/" | relURL }}">The calendar</a></p>
   </div>
 </div></div>
-<script src="{{ "harvard-classics/card.js" | relURL }}?v={{ (os.Stat "static/harvard-classics/card.js").ModTime.Unix }}" defer></script>
+<script src="{{ "harvard-classics/card.js" | relURL }}?v={{ (partialCached "fv.html" "static/harvard-classics/card.js" "static/harvard-classics/card.js") }}" defer></script>
 {{- end -}}{{- end -}}{{- end -}}

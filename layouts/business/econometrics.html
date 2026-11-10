@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "unit-head.html" . }}
-<link rel="stylesheet" href="{{ "business/econometrics/hub.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/hub.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/econometrics/hub.css" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/hub.css" "static/business/econometrics/hub.css") }}">
 <div class="lab" id="ech-lab">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "business/" | relURL }}">Business</a> › Econometrics</nav>
   <header class="lab-hero ech-hero">
@@ -114,6 +114,6 @@
     <a href="{{ "business/econometrics/what-is-econometrics/" | relURL }}">Chapter 1: What Econometrics Is →</a>
   </nav>
 </div>
-<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
-<script src="{{ "business/econometrics/hub.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/hub.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/stats.js" "static/business/econometrics/stats.js") }}" defer></script>
+<script src="{{ "business/econometrics/hub.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/hub.js" "static/business/econometrics/hub.js") }}" defer></script>
 {{ end }}

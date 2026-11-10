@@ -3,8 +3,8 @@
    inline drawing, viewBox 0 0 120 80, classes in static/meal-prep/kitchen/kitchen.css), plus the "Name that tool" matching game
    (static/meal-prep/kitchen/kitchen.js; it uses the tools marked kid). */ -}}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "meal-prep/kitchen/kitchen.css" | relURL }}?v={{ (os.Stat "static/meal-prep/kitchen/kitchen.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
+<link rel="stylesheet" href="{{ "meal-prep/kitchen/kitchen.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/kitchen/kitchen.css" "static/meal-prep/kitchen/kitchen.css") }}">
 {{ $d := site.Data.meals.kitchen.tools }}
 {{ .Store.Set "trbOwnSources" true }}
 {{ $srcs := dict }}{{ range $i, $s := $d.sources }}{{ $srcs = merge $srcs (dict $s.id (add $i 1)) }}{{ end }}
@@ -59,5 +59,5 @@
     <p class="hs-small">{{ $d.note }} Updated {{ $d.updated }}.</p>
   </section>
 </div>
-<script src="{{ "meal-prep/kitchen/kitchen.js" | relURL }}?v={{ (os.Stat "static/meal-prep/kitchen/kitchen.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/kitchen/kitchen.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/kitchen/kitchen.js" "static/meal-prep/kitchen/kitchen.js") }}" defer></script>
 {{ end }}

@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{- /* /memory/games/: the memory games hub (pages in content/memory/games/, one engine: static/memory/games/games.js). */ -}}
-<link rel="stylesheet" href="{{ "memory/challenges/engine.css" | relURL }}?v={{ (os.Stat "static/memory/challenges/engine.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "memory/games/games.css" | relURL }}?v={{ (os.Stat "static/memory/games/games.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "memory/challenges/engine.css" | relURL }}?v={{ (partialCached "fv.html" "static/memory/challenges/engine.css" "static/memory/challenges/engine.css") }}">
+<link rel="stylesheet" href="{{ "memory/games/games.css" | relURL }}?v={{ (partialCached "fv.html" "static/memory/games/games.css" "static/memory/games/games.css") }}">
 <article class="mc mg-hub">
 <nav class="mc-crumbs" aria-label="Breadcrumb"><a href="{{ "memory/" | relURL }}">Memory</a> › <span>Games</span></nav>
 <header class="mc-head">

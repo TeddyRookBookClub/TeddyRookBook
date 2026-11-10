@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "meal-prep/occasions.css" | relURL }}?v={{ (os.Stat "static/meal-prep/occasions.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
+<link rel="stylesheet" href="{{ "meal-prep/occasions.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/occasions.css" "static/meal-prep/occasions.css") }}">
 {{- /* Camping and campfire cooking: data/meals/recipes/camping.json (built by scripts/meals/src/build_camping.py) holds the new recipes
    and the page plan; courses mix them with recipes from elsewhere in Meal Prep (the s'mores among them), by id.
    static/meal-prep/occasions.js runs the menu; camping.js runs the camp meal plan, the cooler list and the Dutch-oven coal calculator. */ -}}
@@ -150,8 +150,8 @@
   <div class="oc-printout" id="oc-printout" aria-hidden="true"></div>
 </div>
 <script type="application/json" id="oc-data">{{ dict "slug" "camping" "title" "Camping trip" "unit" (slice "camper" "campers") "def" $T.default_menu "half" (slice) "r" $mini | jsonify | safeJS }}</script>
-<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/occasions.js" | relURL }}?v={{ (os.Stat "static/meal-prep/occasions.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/camping.js" | relURL }}?v={{ (os.Stat "static/meal-prep/camping.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/model.js" "static/meal-prep/model.js") }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/common.js" "static/meal-prep/common.js") }}" defer></script>
+<script src="{{ "meal-prep/occasions.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/occasions.js" "static/meal-prep/occasions.js") }}" defer></script>
+<script src="{{ "meal-prep/camping.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/camping.js" "static/meal-prep/camping.js") }}" defer></script>
 {{ end }}

@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
 {{- /* "From the great kitchens": the recipes in data/meals/recipes/classics.json (built by scripts/meals/src/build_classics.py),
    grouped by kitchen, with each public-domain book and why it is public domain. */ -}}
 {{ $all := partialCached "meal-prep/recipes-all.html" "r" }}

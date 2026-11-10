@@ -33,6 +33,6 @@
   <nav class="hs-pn"><a href="{{ "homeschool/outdoor-skills/" | relURL }}">← All outdoor skills</a></nav>
   <p class="hs-small">{{ $d.about.disclaimer }}</p>
 </div>
-<script src="{{ "homeschool/outdoor.js" | relURL }}?v={{ (os.Stat "static/homeschool/outdoor.js").ModTime.Unix }}" defer></script>
-{{ if eq $b.key "signaling" }}<link rel="stylesheet" href="{{ "homeschool/morse.css" | relURL }}?v={{ (os.Stat "static/homeschool/morse.css").ModTime.Unix }}"><script src="{{ "homeschool/morse.js" | relURL }}?v={{ (os.Stat "static/homeschool/morse.js").ModTime.Unix }}" defer></script>{{ end }}
+<script src="{{ "homeschool/outdoor.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/outdoor.js" "static/homeschool/outdoor.js") }}" defer></script>
+{{ if eq $b.key "signaling" }}<link rel="stylesheet" href="{{ "homeschool/morse.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/morse.css" "static/homeschool/morse.css") }}"><script src="{{ "homeschool/morse.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/morse.js" "static/homeschool/morse.js") }}" defer></script>{{ end }}
 {{ end }}

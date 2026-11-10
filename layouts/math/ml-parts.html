@@ -100,12 +100,12 @@
 
 {{- define "_partials/inline/ml-css.html" -}}
 {{- $p := printf "static/%s" . -}}
-{{- if fileExists $p }}<link rel="stylesheet" href="{{ . | relURL }}?v={{ (os.Stat $p).ModTime.Unix }}">{{ end -}}
+{{- if fileExists $p }}<link rel="stylesheet" href="{{ . | relURL }}?v={{ (partialCached "fv.html" $p $p) }}">{{ end -}}
 {{- end -}}
 
 {{- define "_partials/inline/ml-js.html" -}}
 {{- $p := printf "static/%s" . -}}
-{{- if fileExists $p }}<script src="{{ . | relURL }}?v={{ (os.Stat $p).ModTime.Unix }}" defer></script>
+{{- if fileExists $p }}<script src="{{ . | relURL }}?v={{ (partialCached "fv.html" $p $p) }}" defer></script>
 {{ else }}<script src="{{ . | relURL }}" defer></script>
 {{ end -}}
 {{- end -}}
@@ -125,20 +125,20 @@
 {{- $g := partialCached "inline/ml-graph.html" "graph" -}}
 {{- $gen := dict -}}{{- $viz := dict -}}
 {{- range $k, $c := $g.C -}}
-  {{- $f := printf "static/%s/gen/%s.js" $c.dir $k -}}{{- if fileExists $f }}{{ $gen = merge $gen (dict $k (os.Stat $f).ModTime.Unix) }}{{ end -}}
-  {{- $v := printf "static/%s/viz/%s.js" $c.dir $k -}}{{- if fileExists $v }}{{ $viz = merge $viz (dict $k (os.Stat $v).ModTime.Unix) }}{{ end -}}
+  {{- $f := printf "static/%s/gen/%s.js" $c.dir $k -}}{{- if fileExists $f }}{{ $gen = merge $gen (dict $k (partialCached "fv.html" $f $f)) }}{{ end -}}
+  {{- $v := printf "static/%s/viz/%s.js" $c.dir $k -}}{{- if fileExists $v }}{{ $viz = merge $viz (dict $k (partialCached "fv.html" $v $v)) }}{{ end -}}
 {{- end -}}
 {{- $vb := dict -}}
 {{- range slice "basic" "adv" -}}
-  {{- $f := printf "static/math/viz/%s.js" . -}}{{- if fileExists $f }}{{ $vb = merge $vb (dict . (os.Stat $f).ModTime.Unix) }}{{ end -}}
-  {{- $c := printf "static/math/viz/%s.css" . -}}{{- if fileExists $c }}{{ $vb = merge $vb (dict (printf "%s.css" .) (os.Stat $c).ModTime.Unix) }}{{ end -}}
+  {{- $f := printf "static/math/viz/%s.js" . -}}{{- if fileExists $f }}{{ $vb = merge $vb (dict . (partialCached "fv.html" $f $f)) }}{{ end -}}
+  {{- $c := printf "static/math/viz/%s.css" . -}}{{- if fileExists $c }}{{ $vb = merge $vb (dict (printf "%s.css" .) (partialCached "fv.html" $c $c)) }}{{ end -}}
 {{- end -}}
 {{- $lads := slice -}}
 {{- range partial "inline/ml-ladders.html" "x" -}}
   {{- $lads = $lads | append (dict "key" .key "slug" .slug "title" .title "short" .short "icon" .icon "color" .color "url" .url "dir" .dir) -}}
   {{- if ne .key "math" -}}
-    {{- $f := printf "static/%s/viz/%s.js" .dir .dir -}}{{- if fileExists $f }}{{ $vb = merge $vb (dict .dir (os.Stat $f).ModTime.Unix) }}{{ end -}}
-    {{- $c := printf "static/%s/viz/%s.css" .dir .dir -}}{{- if fileExists $c }}{{ $vb = merge $vb (dict (printf "%s.css" .dir) (os.Stat $c).ModTime.Unix) }}{{ end -}}
+    {{- $f := printf "static/%s/viz/%s.js" .dir .dir -}}{{- if fileExists $f }}{{ $vb = merge $vb (dict .dir (partialCached "fv.html" $f $f)) }}{{ end -}}
+    {{- $c := printf "static/%s/viz/%s.css" .dir .dir -}}{{- if fileExists $c }}{{ $vb = merge $vb (dict (printf "%s.css" .dir) (partialCached "fv.html" $c $c)) }}{{ end -}}
   {{- end -}}
 {{- end -}}
 {{- $courses := slice -}}

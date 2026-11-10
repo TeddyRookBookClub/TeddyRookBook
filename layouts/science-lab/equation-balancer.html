@@ -4,7 +4,7 @@
    (substances, molecule drawings, the 27 reactions, tallies and an exact solver) and balancer.js (screen and controls).
    Tests: scripts/equation-balancer/test-model.js and verify.js. Element ids are balancer.js's contract. */ -}}
 {{ partial "lab-head.html" . }}
-<link rel="stylesheet" href="{{ "science-lab/equation-balancer/balancer.css" | relURL }}?v={{ (os.Stat "static/science-lab/equation-balancer/balancer.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "science-lab/equation-balancer/balancer.css" | relURL }}?v={{ (partialCached "fv.html" "static/science-lab/equation-balancer/balancer.css" "static/science-lab/equation-balancer/balancer.css") }}">
 <div class="lab" id="eb-lab">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Equation Balancer</nav>
   <header class="lab-hero">
@@ -92,7 +92,7 @@
 
   <nav class="lab-pn" aria-label="More"><a href="{{ "science-lab/" | relURL }}">← Science Lab</a><a href="{{ "chemistry/chemistry/balancing-equations/" | relURL }}">Balancing Equations lesson →</a></nav>
 </div>
-<script src="{{ "js/rule-drag.js" | relURL }}?v={{ (os.Stat "static/js/rule-drag.js").ModTime.Unix }}"></script>
-<script src="{{ "science-lab/equation-balancer/model.js" | relURL }}?v={{ (os.Stat "static/science-lab/equation-balancer/model.js").ModTime.Unix }}"></script>
-<script src="{{ "science-lab/equation-balancer/balancer.js" | relURL }}?v={{ (os.Stat "static/science-lab/equation-balancer/balancer.js").ModTime.Unix }}"></script>
+<script src="{{ "js/rule-drag.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/rule-drag.js" "static/js/rule-drag.js") }}"></script>
+<script src="{{ "science-lab/equation-balancer/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/science-lab/equation-balancer/model.js" "static/science-lab/equation-balancer/model.js") }}"></script>
+<script src="{{ "science-lab/equation-balancer/balancer.js" | relURL }}?v={{ (partialCached "fv.html" "static/science-lab/equation-balancer/balancer.js" "static/science-lab/equation-balancer/balancer.js") }}"></script>
 {{ end }}

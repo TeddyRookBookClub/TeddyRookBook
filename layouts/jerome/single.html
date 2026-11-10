@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "lang-head.html" . }}
-<link rel="stylesheet" href="{{ "lang/jerome.css" | relURL }}?v={{ (os.Stat "static/lang/jerome.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "lang/jerome.css" | relURL }}?v={{ (partialCached "fv.html" "static/lang/jerome.css" "static/lang/jerome.css") }}">
 {{- $d := site.Data.jerome }}{{ $jk := .Params.jk }}
 {{- $root := "languages/jerome/" }}
 {{- $pdf := "pdfs/Greek-and-Latin-with-Jerome-Study-Companion.pdf" | relURL }}
@@ -147,5 +147,5 @@
   <p class="jc-small">PDF page {{ (index $d.practice.sets "review").page }} · <a href="{{ $pdf }}#page={{ (index $d.practice.sets "review").page }}">open the PDF here</a></p>
 {{ end }}
 </div>
-<script src="{{ "lang/jerome.js" | relURL }}?v={{ (os.Stat "static/lang/jerome.js").ModTime.Unix }}" defer></script>
+<script src="{{ "lang/jerome.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/jerome.js" "static/lang/jerome.js") }}" defer></script>
 {{ end }}

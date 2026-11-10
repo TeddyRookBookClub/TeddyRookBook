@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "meal-prep/occasion.css" | relURL }}?v={{ (os.Stat "static/meal-prep/occasion.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
+<link rel="stylesheet" href="{{ "meal-prep/occasion.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/occasion.css" "static/meal-prep/occasion.css") }}">
 {{- /* A holiday or party collection ("occasion" page): the cookout, game day and Hanukkah pages. The content file sets
    params.collection = <slug>; data/meals/recipes/<slug>.json (built by scripts/meals/src/build_<slug>.py) holds the new
    recipes and the page plan, whose courses mix them with recipes and from-scratch pages from the rest of Meal Prep by id.
@@ -111,7 +111,7 @@
   <div class="oc-printout" id="oc-printout" aria-hidden="true"></div>
 </div>
 <script type="application/json" id="oc-data">{{ dict "title" $T.meta.title "url" $T.meta.url "coll" (dict "day" $T.day "def" $T.default_menu "full" ($T.full_courses | default slice) "event" $T.event "dates" ($T.dates | default slice) "dairy" ($T.dairy | default slice) "meat" ($T.meat | default slice)) "r" $mini | jsonify | safeJS }}</script>
-<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/occasion.js" | relURL }}?v={{ (os.Stat "static/meal-prep/occasion.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/model.js" "static/meal-prep/model.js") }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/common.js" "static/meal-prep/common.js") }}" defer></script>
+<script src="{{ "meal-prep/occasion.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/occasion.js" "static/meal-prep/occasion.js") }}" defer></script>
 {{ end }}

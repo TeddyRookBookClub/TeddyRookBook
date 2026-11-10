@@ -56,7 +56,7 @@
       <li><a href="{{ $fr }}?n={{ .slug }}#six"><canvas data-sixfrac="{{ .slug }}" data-style="rings" height="150" role="img" aria-label="Movement {{ .num }}, {{ .name }}: the nested blocks of {{ .number }} drawn as rings"></canvas><span><b>{{ .num }}</b> {{ .name }} <span class="sx-n">{{ .number }}</span></span></a></li>
       {{- end }}
     </ul>
-    {{- $js := "connections/rhythm/fr4.js" | relURL }}{{ with os.Stat "static/connections/rhythm/fr4.js" }}{{ $js = printf "%s?v=%d" $js .ModTime.Unix }}{{ end }}
+    {{- $js := "connections/rhythm/fr4.js" | relURL }}{{ $js = printf "%s?v=%d" $js (partialCached "fv.html" "static/connections/rhythm/fr4.js" "static/connections/rhythm/fr4.js") }}
     <script src="{{ $js }}" defer></script>
   </section>
 

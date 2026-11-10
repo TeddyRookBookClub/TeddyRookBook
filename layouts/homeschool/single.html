@@ -63,6 +63,6 @@
 
   <script type="application/json" id="hs-data">{{ dict "n" $n "title" $l.title "steps" $l.steps "practice" ($l.practice | default "") "materials" $l.materials "goal" $l.goal "mins" $l.mins "book" $l.book "tip" ($l.tip | default "") "scan" (printf "https://archive.org/embed/%s#page/n%d/mode/1up" $id $l.idx) "page" (printf "https://archive.org/details/%s/page/n%d/mode/1up" $id $l.idx) "next" $next "nextTitle" $nextTitle | jsonify | safeJS }}</script>
 </div>
-<script src="{{ "homeschool/hs.js" | relURL }}?v={{ (os.Stat "static/homeschool/hs.js").ModTime.Unix }}" defer></script>
-<script src="{{ "homeschool/simple.js" | relURL }}?v={{ (os.Stat "static/homeschool/simple.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/hs.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/hs.js" "static/homeschool/hs.js") }}" defer></script>
+<script src="{{ "homeschool/simple.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/simple.js" "static/homeschool/simple.js") }}" defer></script>
 {{ end }}

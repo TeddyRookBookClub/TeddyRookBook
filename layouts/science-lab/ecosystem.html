@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "lab-head.html" . }}
-<link rel="stylesheet" href="{{ "games/ecosystem/sim.css" | relURL }}?v={{ (os.Stat "static/games/ecosystem/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/ecosystem/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/ecosystem/sim.css" "static/games/ecosystem/sim.css") }}">
 <div class="lab" id="ecosystem-lab">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Predators and Prey</nav>
   <header class="lab-hero">
@@ -271,6 +271,6 @@
 
   <nav class="lab-pn" aria-label="More"><a href="{{ "science-lab/" | relURL }}">← Science Lab</a><a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a></nav>
 </div>
-<script src="{{ "games/ecosystem/model.js" | relURL }}?v={{ (os.Stat "static/games/ecosystem/model.js").ModTime.Unix }}"></script>
-<script src="{{ "games/ecosystem/sim.js" | relURL }}?v={{ (os.Stat "static/games/ecosystem/sim.js").ModTime.Unix }}"></script>
+<script src="{{ "games/ecosystem/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/ecosystem/model.js" "static/games/ecosystem/model.js") }}"></script>
+<script src="{{ "games/ecosystem/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/ecosystem/sim.js" "static/games/ecosystem/sim.js") }}"></script>
 {{ end }}

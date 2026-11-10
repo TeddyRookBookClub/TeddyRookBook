@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "puzzles/puzzles.css" | relURL }}?v={{ (os.Stat "static/puzzles/puzzles.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "puzzles/puzzles.css" | relURL }}?v={{ (partialCached "fv.html" "static/puzzles/puzzles.css" "static/puzzles/puzzles.css") }}">
 {{ $d := site.Data.puzzles.families }}
 <div class="hs pz" id="pz-hub">
   <nav class="hs-crumbs pz-noprint" aria-label="Breadcrumb"><a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> › Brain Puzzles</nav>
@@ -58,6 +58,6 @@
 </div>
 <script type="application/json" id="pz-data">{{ dict "groups" $d.groups "families" $d.families | jsonify | safeJS }}</script>
 {{ range slice "core.js" "words.js" "gen-numbers.js" "gen-logic.js" "gen-words.js" "gen-codes.js" "gen-shapes.js" "ui.js" }}
-<script src="{{ printf "puzzles/%s" . | relURL }}?v={{ (os.Stat (printf "static/puzzles/%s" .)).ModTime.Unix }}" defer></script>
+<script src="{{ printf "puzzles/%s" . | relURL }}?v={{ (partialCached "fv.html" (printf "static/puzzles/%s" .) (printf "static/puzzles/%s" .)) }}" defer></script>
 {{ end }}
 {{ end }}

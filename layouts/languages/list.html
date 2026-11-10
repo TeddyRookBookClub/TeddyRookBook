@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "lang-head.html" . }}
-<link rel="stylesheet" href="{{ "languages/hieroglyphs/hiero.css" | relURL }}?v={{ (os.Stat "static/languages/hieroglyphs/hiero.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "languages/linear-b/lb.css" | relURL }}?v={{ (os.Stat "static/languages/linear-b/lb.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "languages/hieroglyphs/hiero.css" | relURL }}?v={{ (partialCached "fv.html" "static/languages/hieroglyphs/hiero.css" "static/languages/hieroglyphs/hiero.css") }}">
+<link rel="stylesheet" href="{{ "languages/linear-b/lb.css" | relURL }}?v={{ (partialCached "fv.html" "static/languages/linear-b/lb.css" "static/languages/linear-b/lb.css") }}">
 <style>@font-face{font-family:"TRB Linear B";src:url("{{ "scripts/fonts/trb-linear-b.woff" | relURL }}") format("woff");font-display:swap;unicode-range:U+10000-1013F}.lang .sc-b{font-family:"TRB Linear B","Noto Sans Linear B","Segoe UI Historic",sans-serif;font-style:normal}.lang-linb .lang-card .big.sc-b{font-size:2.1rem;color:#0074a5;display:inline-block;min-height:2.3rem}html[data-theme="dark"] .lang-linb .lang-card .big.sc-b{color:#5ec2f2}</style>
 <div class="lang">
   <header class="lang-hero">

@@ -1,6 +1,6 @@
 {{ define "main" }}
-<link rel="stylesheet" href="/css/books.css?v={{ (os.Stat "static/css/books.css").ModTime.Unix }}">
-<link rel="stylesheet" href="/css/library.css?v={{ (os.Stat "static/css/library.css").ModTime.Unix }}">
+<link rel="stylesheet" href="/css/books.css?v={{ (partialCached "fv.html" "static/css/books.css" "static/css/books.css") }}">
+<link rel="stylesheet" href="/css/library.css?v={{ (partialCached "fv.html" "static/css/library.css" "static/css/library.css") }}">
 {{ $flags := dict "England" "🇬🇧" "Scotland" "🇬🇧" "Northern Ireland" "🇬🇧" "Ireland" "🇮🇪" "Russia" "🇷🇺" "France" "🇫🇷" "Spain" "🇪🇸" "Germany" "🇩🇪" "Denmark" "🇩🇰" "United States" "🇺🇸" "Greece" "🇬🇷" "Italy" "🇮🇹" "Rome" "🏛️" "China" "🇨🇳" "Norway" "🇳🇴" "Canada" "🇨🇦" "Japan" "🇯🇵" "Czech Republic" "🇨🇿" "Switzerland" "🇨🇭" "Palestine" "🇵🇸" "Unknown" "❔" }}
 {{ $setKeys := dict }}{{ range site.Data.sets }}{{ $setKeys = merge $setKeys (dict .name .key) }}{{ end }}
 {{ $books := where (where .Site.RegularPages "Section" "books") "Params.isListPage" "!=" true }}

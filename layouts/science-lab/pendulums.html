@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "lab-head.html" . }}
-<link rel="stylesheet" href="{{ "games/pendulums/sim.css" | relURL }}?v={{ (os.Stat "static/games/pendulums/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/pendulums/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/pendulums/sim.css" "static/games/pendulums/sim.css") }}">
 <div class="lab" id="pendulums-lab">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Pendulums and Resonance</nav>
   <header class="lab-hero">
@@ -206,6 +206,6 @@
 
   <nav class="lab-pn" aria-label="More"><a href="{{ "science-lab/" | relURL }}">← Science Lab</a><a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a></nav>
 </div>
-<script src="{{ "games/pendulums/physics.js" | relURL }}?v={{ (os.Stat "static/games/pendulums/physics.js").ModTime.Unix }}"></script>
-<script src="{{ "games/pendulums/sim.js" | relURL }}?v={{ (os.Stat "static/games/pendulums/sim.js").ModTime.Unix }}"></script>
+<script src="{{ "games/pendulums/physics.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/pendulums/physics.js" "static/games/pendulums/physics.js") }}"></script>
+<script src="{{ "games/pendulums/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/pendulums/sim.js" "static/games/pendulums/sim.js") }}"></script>
 {{ end }}

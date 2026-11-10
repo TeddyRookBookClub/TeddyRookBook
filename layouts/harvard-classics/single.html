@@ -77,5 +77,5 @@
     <a class="hc-pn-next" href="{{ printf "harvard-classics/%s/" $next.slug | relURL }}" rel="next"><small>{{ index $months (sub (int $next.month) 1) }} {{ $next.day }} →</small><span>{{ $next.title }}</span></a>
   </nav>
 </article>
-<script src="{{ "harvard-classics/hc.js" | relURL }}?v={{ (os.Stat "static/harvard-classics/hc.js").ModTime.Unix }}" defer></script>
+<script src="{{ "harvard-classics/hc.js" | relURL }}?v={{ (partialCached "fv.html" "static/harvard-classics/hc.js" "static/harvard-classics/hc.js") }}" defer></script>
 {{ end }}

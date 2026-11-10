@@ -161,5 +161,5 @@
 </section>
 {{ partial "markets-foot.html" . }}
 </div>
-<script src="{{ "markets/tools.js" | relURL }}?v={{ (os.Stat "static/markets/tools.js").ModTime.Unix }}"></script>
+<script src="{{ "markets/tools.js" | relURL }}?v={{ (partialCached "fv.html" "static/markets/tools.js" "static/markets/tools.js") }}"></script>
 {{ end }}

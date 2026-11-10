@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "unit-head.html" . }}
-<link rel="stylesheet" href="{{ "science-lab/newtons-laws/hub.css" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/hub.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "science-lab/newtons-laws/hub.css" | relURL }}?v={{ (partialCached "fv.html" "static/science-lab/newtons-laws/hub.css" "static/science-lab/newtons-laws/hub.css") }}">
 <div class="lab" id="nlh-lab">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Newton’s Laws</nav>
   <header class="lab-hero nlh-hero">
@@ -138,5 +138,5 @@
     <a href="{{ "science-lab/newtons-laws/first-law/" | relURL }}">Chapter 1: The First Law →</a>
   </nav>
 </div>
-<script src="{{ "science-lab/newtons-laws/hub.js" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/hub.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/newtons-laws/hub.js" | relURL }}?v={{ (partialCached "fv.html" "static/science-lab/newtons-laws/hub.js" "static/science-lab/newtons-laws/hub.js") }}" defer></script>
 {{ end }}

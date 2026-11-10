@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "sewing/sewing.css" | relURL }}?v={{ (os.Stat "static/sewing/sewing.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "sewing/sewing.css" | relURL }}?v={{ (partialCached "fv.html" "static/sewing/sewing.css" "static/sewing/sewing.css") }}">
 {{ $d := site.Data.sewing }}
 <div class="hs os sw" id="sw-hub" data-units>
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> › Sewing &amp; Knitting</nav>
@@ -80,5 +80,5 @@
     <p class="hs-small">{{ $d.meta.disclaimer }}</p>
   </section>
 </div>
-<script src="{{ "sewing/sewing.js" | relURL }}?v={{ (os.Stat "static/sewing/sewing.js").ModTime.Unix }}" defer></script>
+<script src="{{ "sewing/sewing.js" | relURL }}?v={{ (partialCached "fv.html" "static/sewing/sewing.js" "static/sewing/sewing.js") }}" defer></script>
 {{ end }}

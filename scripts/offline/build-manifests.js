@@ -12,8 +12,8 @@
 
   Each file is listed as [path, bytes, hash]. The hash is SHA-256 (first 12 hex digits) of
   the file with two kinds of build noise removed, so a rebuild with no real change gives
-  the same hashes: the "?v=123456" cache-busting numbers (they come from file times, which
-  change on every checkout) and the copyright year in the footer.
+  the same hashes: the "?v=123456" cache-busting numbers (they once came from file times, which
+  changed on every checkout; they now come from file contents) and the copyright year in the footer.
 
   The installable web app (/sw.js, /offline/) and the download kit's updater both compare
   these hashes with the ones they saved, and fetch only files that changed.

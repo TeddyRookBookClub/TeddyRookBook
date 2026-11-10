@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "unit-head.html" . }}
-<link rel="stylesheet" href="{{ "business/game-theory/incomplete-information/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/incomplete-information/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/game-theory/incomplete-information/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/incomplete-information/sim.css" "static/business/game-theory/incomplete-information/sim.css") }}">
 <div class="lab" id="gt8-lab">
   {{ partial "unit-nav.html" . }}
   <header class="lab-hero">
@@ -249,6 +249,6 @@
   </section>
   {{ partial "unit-foot.html" . }}
 </div>
-<script src="{{ "business/game-theory/incomplete-information/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/incomplete-information/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "business/game-theory/incomplete-information/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/incomplete-information/sim.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/incomplete-information/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/incomplete-information/model.js" "static/business/game-theory/incomplete-information/model.js") }}" defer></script>
+<script src="{{ "business/game-theory/incomplete-information/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/incomplete-information/sim.js" "static/business/game-theory/incomplete-information/sim.js") }}" defer></script>
 {{ end }}

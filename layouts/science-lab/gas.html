@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "lab-head.html" . }}
-<link rel="stylesheet" href="{{ "games/gas/sim.css" | relURL }}?v={{ (os.Stat "static/games/gas/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/gas/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/gas/sim.css" "static/games/gas/sim.css") }}">
 <div class="lab" id="gas-lab">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Gas in a Box</nav>
   <header class="lab-hero">
@@ -192,6 +192,6 @@
 
   <nav class="lab-pn" aria-label="More"><a href="{{ "science-lab/" | relURL }}">← Science Lab</a><a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a></nav>
 </div>
-<script src="{{ "games/gas/physics.js" | relURL }}?v={{ (os.Stat "static/games/gas/physics.js").ModTime.Unix }}"></script>
-<script src="{{ "games/gas/sim.js" | relURL }}?v={{ (os.Stat "static/games/gas/sim.js").ModTime.Unix }}"></script>
+<script src="{{ "games/gas/physics.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/gas/physics.js" "static/games/gas/physics.js") }}"></script>
+<script src="{{ "games/gas/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/gas/sim.js" "static/games/gas/sim.js") }}"></script>
 {{ end }}

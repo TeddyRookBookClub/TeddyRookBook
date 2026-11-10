@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "lang-head.html" . }}
-<link rel="stylesheet" href="{{ "lang/flash.css" | relURL }}?v={{ (os.Stat "static/lang/flash.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "lang/flash.css" | relURL }}?v={{ (partialCached "fv.html" "static/lang/flash.css" "static/lang/flash.css") }}">
 <div class="lang fc" id="fc">
   <header class="lang-hero">
     <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · Flashcards</p>
@@ -103,8 +103,8 @@
   }, 12000);
 })();
 </script>
-<script src="{{ "js/words.js" | relURL }}?v={{ (os.Stat "static/js/words.js").ModTime.Unix }}"></script>
-<script src="{{ "lang/grammar.js" | relURL }}?v={{ (os.Stat "static/lang/grammar.js").ModTime.Unix }}"></script>
-<script src="{{ "lang/core.js" | relURL }}?v={{ (os.Stat "static/lang/core.js").ModTime.Unix }}"></script>
-<script src="{{ "lang/flash.js" | relURL }}?v={{ (os.Stat "static/lang/flash.js").ModTime.Unix }}"></script>
+<script src="{{ "js/words.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/words.js" "static/js/words.js") }}"></script>
+<script src="{{ "lang/grammar.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/grammar.js" "static/lang/grammar.js") }}"></script>
+<script src="{{ "lang/core.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/core.js" "static/lang/core.js") }}"></script>
+<script src="{{ "lang/flash.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/flash.js" "static/lang/flash.js") }}"></script>
 {{ end }}

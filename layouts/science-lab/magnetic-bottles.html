@@ -1,8 +1,8 @@
 {{ define "main" }}
 {{ partial "lab-head.html" . }}
-<link rel="stylesheet" href="{{ "games/magnetic-bottles/sim.css" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/sim.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "games/magnetic-bottles/geometry.css" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/geometry.css").ModTime.Unix }}">
-<div class="lab" id="magnetic-bottles-lab" data-worker="{{ "games/magnetic-bottles/explore-worker.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/explore-worker.js").ModTime.Unix }}" data-physics="{{ "games/magnetic-bottles/physics.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/physics.js").ModTime.Unix }}" data-explore="{{ "games/magnetic-bottles/explore.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/explore.js").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/magnetic-bottles/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/magnetic-bottles/sim.css" "static/games/magnetic-bottles/sim.css") }}">
+<link rel="stylesheet" href="{{ "games/magnetic-bottles/geometry.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/magnetic-bottles/geometry.css" "static/games/magnetic-bottles/geometry.css") }}">
+<div class="lab" id="magnetic-bottles-lab" data-worker="{{ "games/magnetic-bottles/explore-worker.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/magnetic-bottles/explore-worker.js" "static/games/magnetic-bottles/explore-worker.js") }}" data-physics="{{ "games/magnetic-bottles/physics.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/magnetic-bottles/physics.js" "static/games/magnetic-bottles/physics.js") }}" data-explore="{{ "games/magnetic-bottles/explore.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/magnetic-bottles/explore.js" "static/games/magnetic-bottles/explore.js") }}">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Magnetic Bottles for Fusion</nav>
   <header class="lab-hero">
     <p class="lab-eyebrow">Science Lab · Physics</p>
@@ -210,7 +210,7 @@
   </section>
 
   {{/* The geometry of the donut: static/games/magnetic-bottles/geometry.js and geometry.css, loaded when the section is near the screen */}}
-  <section class="lab-sec mbg" id="mb-geo" aria-labelledby="mb-geo-h" data-js="{{ "games/magnetic-bottles/geometry.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/geometry.js").ModTime.Unix }}" data-tex-js="{{ "math/core/tex.js" | relURL }}?v={{ (os.Stat "static/math/core/tex.js").ModTime.Unix }}" data-texcss="{{ "math/core/core.css" | relURL }}?v={{ (os.Stat "static/math/core/core.css").ModTime.Unix }}">
+  <section class="lab-sec mbg" id="mb-geo" aria-labelledby="mb-geo-h" data-js="{{ "games/magnetic-bottles/geometry.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/magnetic-bottles/geometry.js" "static/games/magnetic-bottles/geometry.js") }}" data-tex-js="{{ "math/core/tex.js" | relURL }}?v={{ (partialCached "fv.html" "static/math/core/tex.js" "static/math/core/tex.js") }}" data-texcss="{{ "math/core/core.css" | relURL }}?v={{ (partialCached "fv.html" "static/math/core/core.css" "static/math/core/core.css") }}">
     <h2 id="mb-geo-h">The geometry of the donut</h2>
     <p class="mbg-intro">Every bottle on this page is built from flux surfaces: doughnut-shaped layers nested inside each other, each covered by field lines that never leave it. How a line winds around its layer matters a great deal. Tokamak scientists measure it with the <i>safety factor</i> <var>q</var>: the number of turns a line makes the long way around for each turn the short way. It is the twist ι from above, turned upside down: <var>q</var> = 1/ι.</p>
     <div class="mbg-stage">
@@ -357,10 +357,10 @@
     <a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a>
   </nav>
 </div>
-<script src="{{ "games/magnetic-bottles/physics.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/physics.js").ModTime.Unix }}"></script>
-<script src="{{ "games/magnetic-bottles/explore.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/explore.js").ModTime.Unix }}"></script>
-<script src="{{ "games/magnetic-bottles/guide-text.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/guide-text.js").ModTime.Unix }}"></script>
-<script src="{{ "games/magnetic-bottles/sim.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/sim.js").ModTime.Unix }}"></script>
-<script src="{{ "games/magnetic-bottles/guide.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/guide.js").ModTime.Unix }}"></script>
-<script src="{{ "games/magnetic-bottles/finder.js" | relURL }}?v={{ (os.Stat "static/games/magnetic-bottles/finder.js").ModTime.Unix }}"></script>
+<script src="{{ "games/magnetic-bottles/physics.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/magnetic-bottles/physics.js" "static/games/magnetic-bottles/physics.js") }}"></script>
+<script src="{{ "games/magnetic-bottles/explore.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/magnetic-bottles/explore.js" "static/games/magnetic-bottles/explore.js") }}"></script>
+<script src="{{ "games/magnetic-bottles/guide-text.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/magnetic-bottles/guide-text.js" "static/games/magnetic-bottles/guide-text.js") }}"></script>
+<script src="{{ "games/magnetic-bottles/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/magnetic-bottles/sim.js" "static/games/magnetic-bottles/sim.js") }}"></script>
+<script src="{{ "games/magnetic-bottles/guide.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/magnetic-bottles/guide.js" "static/games/magnetic-bottles/guide.js") }}"></script>
+<script src="{{ "games/magnetic-bottles/finder.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/magnetic-bottles/finder.js" "static/games/magnetic-bottles/finder.js") }}"></script>
 {{ end }}

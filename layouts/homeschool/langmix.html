@@ -2,8 +2,8 @@
 {{ partial "hs-head.html" . }}
 {{ $cats := slice (slice "animals" "Animals") (slice "nature" "Nature, weather and sky") (slice "things" "Things at home") (slice "food" "Food") (slice "places" "Places") (slice "people" "People and family") (slice "body" "The body") (slice "time" "Time") (slice "colors" "Colors") (slice "numbers" "Numbers") (slice "describing" "Describing words") (slice "actions" "Action words") (slice "ideas" "Ideas and feelings") (slice "school" "School") }}
 {{ $words := site.Data.langmix_words }}
-<link rel="stylesheet" href="{{ "homeschool/codes.css" | relURL }}?v={{ (os.Stat "static/homeschool/codes.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "homeschool/langmix.css" | relURL }}?v={{ (os.Stat "static/homeschool/langmix.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/codes.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/codes.css" "static/homeschool/codes.css") }}">
+<link rel="stylesheet" href="{{ "homeschool/langmix.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/langmix.css" "static/homeschool/langmix.css") }}">
 <style id="lm-pagecss"></style>
 <div class="hs cp lm">
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/code-practice/" | relURL }}">Code Practice</a> › Mix-and-Match Worksheets</nav>
@@ -136,5 +136,5 @@
   <div id="lm-print" class="lm-print" aria-hidden="true"></div>
   <script type="application/json" id="lm-data">{{ dict "words" $words "asl" ("asl/" | relURL) "cats" $cats | jsonify | safeJS }}</script>
 </div>
-<script src="{{ "homeschool/langmix.js" | relURL }}?v={{ (os.Stat "static/homeschool/langmix.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/langmix.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/langmix.js" "static/homeschool/langmix.js") }}" defer></script>
 {{ end }}

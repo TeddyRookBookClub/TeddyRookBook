@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "homeschool/hex.css" | relURL }}?v={{ (os.Stat "static/homeschool/hex.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "homeschool/codes.css" | relURL }}?v={{ (os.Stat "static/homeschool/codes.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/hex.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/hex.css" "static/homeschool/hex.css") }}">
+<link rel="stylesheet" href="{{ "homeschool/codes.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/codes.css" "static/homeschool/codes.css") }}">
 <div class="hs cq">
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/hexadecimal/" | relURL }}">Hexadecimal and Binary</a> › Code Quest</nav>
   <header class="hs-hero">
@@ -45,6 +45,6 @@ cookie jar</textarea></label>
     <p>Rounds of quick questions are on <a href="{{ "homeschool/code-practice/" | relURL }}">Code Practice</a>, with worksheets to print. Learn the steps in <a href="{{ "homeschool/hexadecimal/" | relURL }}">Hexadecimal and Binary</a>, and learn Morse by ear in the <a href="{{ "homeschool/outdoor-skills/morse-code/" | relURL }}">Morse code course</a>.</p>
   </section>
 </div>
-<script src="{{ "homeschool/morse.js" | relURL }}?v={{ (os.Stat "static/homeschool/morse.js").ModTime.Unix }}" defer></script>
-<script src="{{ "homeschool/codequest.js" | relURL }}?v={{ (os.Stat "static/homeschool/codequest.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/morse.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/morse.js" "static/homeschool/morse.js") }}" defer></script>
+<script src="{{ "homeschool/codequest.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/codequest.js" "static/homeschool/codequest.js") }}" defer></script>
 {{ end }}

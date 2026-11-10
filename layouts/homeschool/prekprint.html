@@ -2,7 +2,7 @@
 {{ partial "hs-head.html" . }}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap">
-<link rel="stylesheet" href="{{ "homeschool/prek/prek.css" | relURL }}?v={{ (os.Stat "static/homeschool/prek/prek.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/prek/prek.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/prek/prek.css" "static/homeschool/prek/prek.css") }}">
 <div class="hs ps pk pk-pr" id="pkp">
   <nav class="hs-crumbs ps-noprint" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/pre-k/" | relURL }}">Pre-K at home</a> › Hand-skills printables</nav>
   <header class="hs-hero pk-hero ps-noprint">
@@ -51,7 +51,7 @@
   </section>
   {{ partial "report/link.html" "Pre-K printables" }}
 </div>
-<script src="{{ "puzzles/core.js" | relURL }}?v={{ (os.Stat "static/puzzles/core.js").ModTime.Unix }}" defer></script>
-<script src="{{ "puzzles/gen-shapes.js" | relURL }}?v={{ (os.Stat "static/puzzles/gen-shapes.js").ModTime.Unix }}" defer></script>
-<script src="{{ "homeschool/prek/printables.js" | relURL }}?v={{ (os.Stat "static/homeschool/prek/printables.js").ModTime.Unix }}" defer></script>
+<script src="{{ "puzzles/core.js" | relURL }}?v={{ (partialCached "fv.html" "static/puzzles/core.js" "static/puzzles/core.js") }}" defer></script>
+<script src="{{ "puzzles/gen-shapes.js" | relURL }}?v={{ (partialCached "fv.html" "static/puzzles/gen-shapes.js" "static/puzzles/gen-shapes.js") }}" defer></script>
+<script src="{{ "homeschool/prek/printables.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/prek/printables.js" "static/homeschool/prek/printables.js") }}" defer></script>
 {{ end }}

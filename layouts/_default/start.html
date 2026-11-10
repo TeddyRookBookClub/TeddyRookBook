@@ -4,7 +4,7 @@
 {{- range $d.sections -}}{{- $us := slice .url -}}{{- range .start -}}{{- $us = $us | append .url -}}{{- end -}}
   {{- range $us -}}{{- if not (site.GetPage .) -}}{{- warnf "data/start.yaml: %q is not a page on the site" . -}}{{- end -}}{{- end -}}
 {{- end -}}
-<link rel="stylesheet" href="{{ "start/start.css" | relURL }}?v={{ (os.Stat "static/start/start.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "start/start.css" | relURL }}?v={{ (partialCached "fv.html" "static/start/start.css" "static/start/start.css") }}">
 <div class="trb-group st" id="st">
   <header class="trb-ghero">
     <p class="trb-geyebrow">Teddy Rook Book · Start here</p>
@@ -48,6 +48,6 @@
   </section>
 </div>
 <script type="application/json" id="st-data">{{ $d | jsonify | safeJS }}</script>
-<script src="{{ "start/rank.js" | relURL }}?v={{ (os.Stat "static/start/rank.js").ModTime.Unix }}" defer></script>
-<script src="{{ "start/start.js" | relURL }}?v={{ (os.Stat "static/start/start.js").ModTime.Unix }}" defer></script>
+<script src="{{ "start/rank.js" | relURL }}?v={{ (partialCached "fv.html" "static/start/rank.js" "static/start/rank.js") }}" defer></script>
+<script src="{{ "start/start.js" | relURL }}?v={{ (partialCached "fv.html" "static/start/start.js" "static/start/start.js") }}" defer></script>
 {{ end }}

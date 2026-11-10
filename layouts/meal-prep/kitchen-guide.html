@@ -4,8 +4,8 @@
    src[] (ids in the guide's sources). An "age" section (the kids guide) carries tasks, words, tools (ids in tools.json, drawn small),
    knife, recipes (ids in data/meals/recipes.json, linked to their pages), math and table (links), measure and setting. */ -}}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "meal-prep/kitchen/kitchen.css" | relURL }}?v={{ (os.Stat "static/meal-prep/kitchen/kitchen.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
+<link rel="stylesheet" href="{{ "meal-prep/kitchen/kitchen.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/kitchen/kitchen.css" "static/meal-prep/kitchen/kitchen.css") }}">
 {{ $K := site.Data.meals.kitchen }}
 {{ $g := index $K .Params.guide }}
 {{ .Store.Set "trbOwnSources" true }}

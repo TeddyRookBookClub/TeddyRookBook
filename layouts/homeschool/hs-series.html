@@ -77,5 +77,5 @@
     <p>Every {{ if $s.open }}old {{ end }}book here was published before 1931, so it is in the public domain in the United States: free to read, print and share. The scans are kept by the <a href="https://archive.org/" target="_blank" rel="noopener">Internet Archive</a>, which shows them on this page and supplies the PDF downloads. The teaching guides are written for this site. Modern reprints are also sold, if you prefer a clean printed copy.</p>
   </section>
 </div>
-<script src="{{ "homeschool/hs.js" | relURL }}?v={{ (os.Stat "static/homeschool/hs.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/hs.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/hs.js" "static/homeschool/hs.js") }}" defer></script>
 {{ end }}

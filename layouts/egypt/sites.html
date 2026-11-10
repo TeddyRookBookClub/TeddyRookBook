@@ -3,7 +3,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
 {{ partial "egypt-kit.html" . }}
-<link rel="stylesheet" href="{{ "egypt/sites.css" | relURL }}?v={{ (os.Stat "static/egypt/sites.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "egypt/sites.css" | relURL }}?v={{ (partialCached "fv.html" "static/egypt/sites.css" "static/egypt/sites.css") }}">
 {{- $D := site.Data.egypt -}}
 {{- $all := slice }}{{ range $k, $v := $D.sites }}{{ if ne $k "_groups" }}{{ $all = $all | append $v }}{{ end }}{{ end }}{{ $all = sort $all "order" -}}
 {{- $nIns := 0 }}{{ range $all }}{{ $nIns = add $nIns (len .inscriptions) }}{{ end -}}
@@ -56,5 +56,5 @@
     <p class="hs-small eg-fine">Dates follow Shaw, ed., <i>The Oxford History of Ancient Egypt</i> (2000); before 664 BC they are approximate. Site coordinates were checked against Wikipedia.</p>
   </section>
 </div>
-<script src="{{ "egypt/sites.js" | relURL }}?v={{ (os.Stat "static/egypt/sites.js").ModTime.Unix }}" defer></script>
+<script src="{{ "egypt/sites.js" | relURL }}?v={{ (partialCached "fv.html" "static/egypt/sites.js" "static/egypt/sites.js") }}" defer></script>
 {{ end }}

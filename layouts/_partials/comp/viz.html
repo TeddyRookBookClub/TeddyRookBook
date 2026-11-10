@@ -1,4 +1,4 @@
 {{- /* A visualization slot: static/comp/viz/<id>.js, loaded by comp.js when its solution is revealed. Argument: the id. */ -}}
 {{- with . -}}{{- $f := printf "static/comp/viz/%s.js" . -}}
-{{- if fileExists $f }}<div class="cp-viz" data-viz="{{ . }}" data-v="{{ (os.Stat $f).ModTime.Unix }}" role="group" aria-label="Animation"></div>{{ end -}}
+{{- if fileExists $f }}<div class="cp-viz" data-viz="{{ . }}" data-v="{{ (partialCached "fv.html" $f $f) }}" role="group" aria-label="Animation"></div>{{ end -}}
 {{- end -}}

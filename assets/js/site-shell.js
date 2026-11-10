@@ -260,7 +260,7 @@ document.addEventListener('click', function (e) {
   });
 })();
 /* Offline: only for people who saved sections on /offline/. Keeps the service worker registered and shows "Update available". */
-try{if(localStorage.getItem('trb-off')&&'serviceWorker' in navigator){var s=document.createElement('script');s.src='{{ "js/offline-notice.js" | relURL }}?v={{ (os.Stat "static/js/offline-notice.js").ModTime.Unix }}';s.defer=true;document.head.appendChild(s)}}catch(e){}
+try{if(localStorage.getItem('trb-off')&&'serviceWorker' in navigator){var s=document.createElement('script');s.src='{{ "js/offline-notice.js" | relURL }}?v={{ partialCached "fv.html" "static/js/offline-notice.js" "static/js/offline-notice.js" }}';s.defer=true;document.head.appendChild(s)}}catch(e){}
 /* Read aloud: on lessons and guides (the same list as ROOTS in assets/js/read-aloud.js, plus #hc-slot, where today's Harvard Classics reading arrives later), and only where the browser can speak,
    load assets/js/read-aloud.js and assets/css/read-aloud.css (speaker buttons beside section headings, a player bar). */
 {{- $raJS := resources.Get "js/read-aloud.js" | resources.Minify | fingerprint "md5" }}{{ $raCSS := resources.Get "css/read-aloud.css" | resources.Minify | fingerprint "md5" }}
@@ -270,7 +270,7 @@ try{if(localStorage.getItem('trb-off')&&'serviceWorker' in navigator){var s=docu
    says music was playing on the last page (under 30 minutes ago, and not in the pop-out window). Sound never starts by itself
    on a first visit. While the pop-out window plays, the page's own sounds (event trb:sound-start) are passed on to it. */
 (function () {
-  var K = 'trb-music-v1', P = '{{ "music/suite/player/" | relURL }}', V = '?v={{ with os.Stat "static/music/suite/player/player.js" }}{{ .ModTime.Unix }}{{ end }}', ld = 0, q = [], bc = null;
+  var K = 'trb-music-v1', P = '{{ "music/suite/player/" | relURL }}', V = '?v={{ partialCached "fv.html" "static/music/suite/player/player.js" "static/music/suite/player/player.js" }}', ld = 0, q = [], bc = null;
   function st() { try { return JSON.parse(localStorage.getItem(K) || 'null') || {}; } catch (e) { return {}; } }
   function go(c) {
     if (window.TRBPlayer) return window.TRBPlayer.cmd(c);

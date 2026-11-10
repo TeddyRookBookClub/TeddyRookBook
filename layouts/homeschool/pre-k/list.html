@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "homeschool/prek/prek.css" | relURL }}?v={{ (os.Stat "static/homeschool/prek/prek.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/prek/prek.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/prek/prek.css" "static/homeschool/prek/prek.css") }}">
 {{ $W := site.Data.prek.week }}
 <div class="hs pk" id="pk">
   <nav class="hs-crumbs pk-noprint" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Pre-K at home</nav>
@@ -140,5 +140,5 @@
   </section>
   {{ partial "report/link.html" "Pre-K" }}
 </div>
-<script src="{{ "homeschool/prek/week.js" | relURL }}?v={{ (os.Stat "static/homeschool/prek/week.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/prek/week.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/prek/week.js" "static/homeschool/prek/week.js") }}" defer></script>
 {{ end }}

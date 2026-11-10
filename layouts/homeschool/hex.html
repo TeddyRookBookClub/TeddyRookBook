@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "homeschool/hex.css" | relURL }}?v={{ (os.Stat "static/homeschool/hex.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/hex.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/hex.css" "static/homeschool/hex.css") }}">
 <div class="hs hx">
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Hexadecimal and Binary</nav>
   <header class="hs-hero">
@@ -60,5 +60,5 @@
     <p>Hex shows up in web colors, computer memory addresses, network addresses, error codes and Unicode character numbers (U+0041 is A). Morse code is another way to turn letters into signals: try the <a href="{{ "homeschool/outdoor-skills/morse-code/" | relURL }}">Morse code course</a>. For more math, see <a href="{{ "homeschool/rays-arithmetic/" | relURL }}">Ray's Arithmetic</a> and the <a href="{{ "homeschool/calculator/" | relURL }}">graphing calculator</a>; for more computing, <a href="https://www.khanacademy.org/computing" target="_blank" rel="noopener">Khan Academy's computing courses ↗</a> are free.</p>
   </section>
 </div>
-<script src="{{ "homeschool/hex.js" | relURL }}?v={{ (os.Stat "static/homeschool/hex.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/hex.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/hex.js" "static/homeschool/hex.js") }}" defer></script>
 {{ end }}

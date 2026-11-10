@@ -5,5 +5,5 @@
 <div id="ib"><p class="mk-note">Loading…</p></div>
 {{ partial "markets-foot.html" . }}
 </div>
-<script src="{{ "markets/indicators.js" | relURL }}?v={{ (os.Stat "static/markets/indicators.js").ModTime.Unix }}"></script>
+<script src="{{ "markets/indicators.js" | relURL }}?v={{ (partialCached "fv.html" "static/markets/indicators.js" "static/markets/indicators.js") }}"></script>
 {{ end }}

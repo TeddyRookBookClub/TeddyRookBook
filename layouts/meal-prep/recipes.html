@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
 {{ $m := site.Data.meals }}{{ $rs := partialCached "meal-prep/recipes-all.html" "r" }}
 <div class="hs mp" id="mp-recipes">
   {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Recipes")) }}
@@ -43,5 +43,5 @@
     <p>Put these on a calendar, scale them to your household and get one shopping list in the <a href="{{ "meal-prep/plan/" | relURL }}">meal planner</a>. You can add your own recipes there too.</p>
   </section>
 </div>
-<script src="{{ "meal-prep/pages.js" | relURL }}?v={{ (os.Stat "static/meal-prep/pages.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/pages.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/pages.js" "static/meal-prep/pages.js") }}" defer></script>
 {{ end }}

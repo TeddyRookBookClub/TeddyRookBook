@@ -50,8 +50,8 @@
   </div>
   <p class="rd-src">Sources: Aesop (Chambry’s edition) and Phaedrus (Mueller’s edition) with lemmas and grammar from the Perseus Ancient Greek and Latin Dependency Treebanks (CC BY-SA 3.0); dictionary meanings from Liddell–Scott–Jones (Perseus, CC BY-SA 4.0) and William Whitaker’s WORDS. The Lord’s Prayer from the site’s Gospel data (Nestle 1904 with MACULA Greek; PROIEL Vulgate) with the ESV. Psalm 23 tagged by hand for this site. Listening uses your device’s voices: modern Greek for Greek and Italian for Latin, so it is only an approximation.</p>
 </div>
-<script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
-<script src="{{ "lang/grammar.js" | relURL }}?v={{ (os.Stat "static/lang/grammar.js").ModTime.Unix }}"></script>
-<script src="{{ "lang/core.js" | relURL }}?v={{ (os.Stat "static/lang/core.js").ModTime.Unix }}"></script>
-<script src="{{ "lang/readings.js" | relURL }}?v={{ (os.Stat "static/lang/readings.js").ModTime.Unix }}"></script>
+<script src="{{ "js/translit.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/translit.js" "static/js/translit.js") }}"></script>
+<script src="{{ "lang/grammar.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/grammar.js" "static/lang/grammar.js") }}"></script>
+<script src="{{ "lang/core.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/core.js" "static/lang/core.js") }}"></script>
+<script src="{{ "lang/readings.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/readings.js" "static/lang/readings.js") }}"></script>
 {{ end }}

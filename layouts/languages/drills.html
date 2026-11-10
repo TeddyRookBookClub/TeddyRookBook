@@ -117,7 +117,7 @@
   }, 10000);
 })();
 </script>
-<script src="{{ "lang/grammar.js" | relURL }}?v={{ (os.Stat "static/lang/grammar.js").ModTime.Unix }}"></script>
-<script src="{{ "lang/core.js" | relURL }}?v={{ (os.Stat "static/lang/core.js").ModTime.Unix }}"></script>
-<script src="{{ "lang/drills.js" | relURL }}?v={{ (os.Stat "static/lang/drills.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/grammar.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/grammar.js" "static/lang/grammar.js") }}"></script>
+<script src="{{ "lang/core.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/core.js" "static/lang/core.js") }}"></script>
+<script src="{{ "lang/drills.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/drills.js" "static/lang/drills.js") }}"></script>
 {{ end }}

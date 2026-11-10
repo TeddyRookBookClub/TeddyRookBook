@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "unit-head.html" . }}
-<link rel="stylesheet" href="{{ "business/game-theory/hub.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/game-theory/hub.css" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/hub.css" "static/business/game-theory/hub.css") }}">
 <div class="lab" id="gth-lab">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "business/" | relURL }}">Business</a> › Game Theory</nav>
   <header class="lab-hero gth-hero">
@@ -135,5 +135,5 @@
     <a href="{{ "business/game-theory/games-and-payoffs/" | relURL }}">Chapter 1: Games, Players and Payoffs →</a>
   </nav>
 </div>
-<script src="{{ "business/game-theory/hub.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/hub.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/hub.js" "static/business/game-theory/hub.js") }}" defer></script>
 {{ end }}

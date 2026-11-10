@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "meal-prep/goals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/goals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
+<link rel="stylesheet" href="{{ "meal-prep/goals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/goals.css" "static/meal-prep/goals.css") }}">
 {{- /* Simple plates, all day: data/meals/recipes/plates.json (built by scripts/meals/src/build_plates.py) holds the new plate
    recipes and the page plan; groups mix them with recipes from elsewhere in Meal Prep, by id. Per-serving numbers are worked
    out by the build script from the catalog, the same way the recipe pages do. No script needed on this page. */ -}}

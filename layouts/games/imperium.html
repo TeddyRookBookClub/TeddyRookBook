@@ -1,11 +1,11 @@
 {{ define "main" }}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
-<link rel="stylesheet" href="{{ "games/imperium/game.css" | relURL }}?v={{ (os.Stat "static/games/imperium/game.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/imperium/game.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/imperium/game.css" "static/games/imperium/game.css") }}">
 <div class="imperium" id="imperium"><noscript>This game needs JavaScript.</noscript></div>
-<script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
-<script src="{{ "games/imperium/maps.js" | relURL }}?v={{ (os.Stat "static/games/imperium/maps.js").ModTime.Unix }}"></script>
-<script src="{{ "games/imperium/data.js" | relURL }}?v={{ (os.Stat "static/games/imperium/data.js").ModTime.Unix }}"></script>
-<script src="{{ "games/imperium/game.js" | relURL }}?v={{ (os.Stat "static/games/imperium/game.js").ModTime.Unix }}"></script>
-<script src="{{ "js/keys.js" | relURL }}?v={{ (os.Stat "static/js/keys.js").ModTime.Unix }}" data-sel=".im-tok" data-board="svg"></script>
+<script src="{{ "js/translit.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/translit.js" "static/js/translit.js") }}"></script>
+<script src="{{ "games/imperium/maps.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/imperium/maps.js" "static/games/imperium/maps.js") }}"></script>
+<script src="{{ "games/imperium/data.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/imperium/data.js" "static/games/imperium/data.js") }}"></script>
+<script src="{{ "games/imperium/game.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/imperium/game.js" "static/games/imperium/game.js") }}"></script>
+<script src="{{ "js/keys.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/keys.js" "static/js/keys.js") }}" data-sel=".im-tok" data-board="svg"></script>
 {{ end }}

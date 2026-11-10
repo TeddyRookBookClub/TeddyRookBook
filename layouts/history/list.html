@@ -1,7 +1,7 @@
 {{- /* /history/: the World History hub. Lists the pages in content/history/ (their title, lead and front-matter "card")
    and points to the site's other history: Stories from History, the Timeline, Egypt and the American History ladder. */ -}}
 {{ define "main" }}
-<link rel="stylesheet" href="{{ "history/history.css" | relURL }}?v={{ (os.Stat "static/history/history.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "history/history.css" | relURL }}?v={{ (partialCached "fv.html" "static/history/history.css" "static/history/history.css") }}">
 <article class="wh">
   <nav class="wh-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › World History</nav>
   <header class="wh-hero">

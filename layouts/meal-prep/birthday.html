@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "meal-prep/occasions.css" | relURL }}?v={{ (os.Stat "static/meal-prep/occasions.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
+<link rel="stylesheet" href="{{ "meal-prep/occasions.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/occasions.css" "static/meal-prep/occasions.css") }}">
 {{- /* Birthday parties: data/meals/recipes/birthday.json (built by scripts/meals/src/build_birthday.py) holds the new recipes and the
    page plan; courses mix them with party recipes from elsewhere in Meal Prep, by id. static/meal-prep/occasions.js runs the menu;
    birthday.js runs the party planner: how much to make, the cake calculator and the countdown. */ -}}
@@ -147,8 +147,8 @@
   <div class="oc-printout" id="oc-printout" aria-hidden="true"></div>
 </div>
 <script type="application/json" id="oc-data">{{ dict "slug" "birthday" "title" "Birthday party" "unit" (slice "guest" "guests") "def" $T.default_menu "half" (slice "mains" "finger" "fresh") "cakes" $T.cakes "day" $T.day "r" $mini | jsonify | safeJS }}</script>
-<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/occasions.js" | relURL }}?v={{ (os.Stat "static/meal-prep/occasions.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/birthday.js" | relURL }}?v={{ (os.Stat "static/meal-prep/birthday.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/model.js" "static/meal-prep/model.js") }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/common.js" "static/meal-prep/common.js") }}" defer></script>
+<script src="{{ "meal-prep/occasions.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/occasions.js" "static/meal-prep/occasions.js") }}" defer></script>
+<script src="{{ "meal-prep/birthday.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/birthday.js" "static/meal-prep/birthday.js") }}" defer></script>
 {{ end }}

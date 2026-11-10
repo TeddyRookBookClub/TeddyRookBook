@@ -42,6 +42,6 @@
   {{ with $keybook }}<section class="hs-sec"><h2>The answers</h2>{{ partial "hs-book.html" . }}</section>{{ end }}
   <p class="hs-small">{{ $d.book.numnote | default "Lesson numbers match the book's Roman numerals: Lesson 3 is the book's Lesson III." }} The guides are written for this site; the book is in the public domain.</p>
 </div>
-<script src="{{ "homeschool/hs.js" | relURL }}?v={{ (os.Stat "static/homeschool/hs.js").ModTime.Unix }}" defer></script>
-<script src="{{ "homeschool/simple.js" | relURL }}?v={{ (os.Stat "static/homeschool/simple.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/hs.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/hs.js" "static/homeschool/hs.js") }}" defer></script>
+<script src="{{ "homeschool/simple.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/simple.js" "static/homeschool/simple.js") }}" defer></script>
 {{ end }}

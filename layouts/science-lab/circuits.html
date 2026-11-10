@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "lab-head.html" . }}
-<link rel="stylesheet" href="{{ "games/circuits/sim.css" | relURL }}?v={{ (os.Stat "static/games/circuits/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/circuits/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/circuits/sim.css" "static/games/circuits/sim.css") }}">
 <div class="lab" id="circuits-lab">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Circuit Builder</nav>
   <header class="lab-hero">
@@ -187,6 +187,6 @@
 
   <nav class="lab-pn" aria-label="More"><a href="{{ "science-lab/" | relURL }}">← Science Lab</a><a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a></nav>
 </div>
-<script src="{{ "games/circuits/model.js" | relURL }}?v={{ (os.Stat "static/games/circuits/model.js").ModTime.Unix }}"></script>
-<script src="{{ "games/circuits/sim.js" | relURL }}?v={{ (os.Stat "static/games/circuits/sim.js").ModTime.Unix }}"></script>
+<script src="{{ "games/circuits/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/circuits/model.js" "static/games/circuits/model.js") }}"></script>
+<script src="{{ "games/circuits/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/circuits/sim.js" "static/games/circuits/sim.js") }}"></script>
 {{ end }}

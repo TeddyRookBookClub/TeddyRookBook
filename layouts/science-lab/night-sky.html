@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "lab-head.html" . }}
-<link rel="stylesheet" href="{{ "games/night-sky/sim.css" | relURL }}?v={{ (os.Stat "static/games/night-sky/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/night-sky/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/night-sky/sim.css" "static/games/night-sky/sim.css") }}">
 <div class="lab" id="night-sky-lab">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Sky and Solar System</nav>
   <header class="lab-hero">
@@ -240,6 +240,6 @@
     <a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a>
   </nav>
 </div>
-<script src="{{ "games/night-sky/sky.js" | relURL }}?v={{ (os.Stat "static/games/night-sky/sky.js").ModTime.Unix }}"></script>
-<script src="{{ "games/night-sky/sim.js" | relURL }}?v={{ (os.Stat "static/games/night-sky/sim.js").ModTime.Unix }}"></script>
+<script src="{{ "games/night-sky/sky.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/night-sky/sky.js" "static/games/night-sky/sky.js") }}"></script>
+<script src="{{ "games/night-sky/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/night-sky/sim.js" "static/games/night-sky/sim.js") }}"></script>
 {{ end }}

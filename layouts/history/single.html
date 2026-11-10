@@ -3,7 +3,7 @@
    The page lists its own sources, so the "Sources and credits" block adds only the extra items from data/credits.yaml. */ -}}
 {{ define "main" }}
 {{- .Store.Set "trbOwnSources" true -}}
-<link rel="stylesheet" href="{{ "history/history.css" | relURL }}?v={{ (os.Stat "static/history/history.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "history/history.css" | relURL }}?v={{ (partialCached "fv.html" "static/history/history.css" "static/history/history.css") }}">
 <article class="wh">
   <nav class="wh-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "history/" | relURL }}">World History</a> › {{ .Params.short | default .Title }}</nav>
   <header class="wh-hero">
@@ -15,6 +15,6 @@
   {{ .Content }}
 </article>
 {{- range .Params.scripts }}
-<script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+<script src="{{ . | relURL }}?v={{ (partialCached "fv.html" (printf "static/%s" .) (printf "static/%s" .)) }}" defer></script>
 {{- end }}
 {{ end }}

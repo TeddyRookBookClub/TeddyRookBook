@@ -1,8 +1,8 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
 {{ $d := site.Data.hs_bases }}
-<link rel="stylesheet" href="{{ "homeschool/hex.css" | relURL }}?v={{ (os.Stat "static/homeschool/hex.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "homeschool/bases.css" | relURL }}?v={{ (os.Stat "static/homeschool/bases.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/hex.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/hex.css" "static/homeschool/hex.css") }}">
+<link rel="stylesheet" href="{{ "homeschool/bases.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/bases.css" "static/homeschool/bases.css") }}">
 <div class="hs nb">
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/hexadecimal/" | relURL }}">Hexadecimal and Binary</a> › Teach It Step by Step</nav>
   <header class="hs-hero">
@@ -78,5 +78,5 @@
 
   <section class="hs-sec os-callout hs-noprint"><p>🗝️ <b>After the lessons:</b> the <a href="{{ "homeschool/hexadecimal/" | relURL }}">Hexadecimal and Binary</a> page has a live converter and nine short lessons with practice, <a href="{{ "homeschool/code-practice/" | relURL }}">Code Practice</a> has rounds and printable worksheets with answer keys, and <a href="{{ "homeschool/code-quest/" | relURL }}">Code Quest</a> is a puzzle trail that uses all four bases.</p></section>
 </div>
-<script src="{{ "homeschool/bases.js" | relURL }}?v={{ (os.Stat "static/homeschool/bases.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/bases.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/bases.js" "static/homeschool/bases.js") }}" defer></script>
 {{ end }}

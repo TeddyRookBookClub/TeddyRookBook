@@ -1,5 +1,5 @@
 {{ define "main" }}
-<link rel="stylesheet" href="/css/books.css?v={{ (os.Stat "static/css/books.css").ModTime.Unix }}">
+<link rel="stylesheet" href="/css/books.css?v={{ (partialCached "fv.html" "static/css/books.css" "static/css/books.css") }}">
 {{ $read := .Params.haveRead | default false }}
 {{ $genre := .Params.genre | default "" }}
 {{ $pages := .Params.pages | default "" }}

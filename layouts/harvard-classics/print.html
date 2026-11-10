@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Fifteen Minutes a Day</title>
-<link rel="stylesheet" href="{{ "harvard-classics/export/print.css" | relURL }}?v={{ (os.Stat "static/harvard-classics/export/print.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "harvard-classics/export/print.css" | relURL }}?v={{ (partialCached "fv.html" "static/harvard-classics/export/print.css" "static/harvard-classics/export/print.css") }}">
 <style id="hcp-pages"></style>
 </head>
 <body class="hcp">
@@ -24,7 +24,7 @@
 <main class="hcp-book" id="hcp-book" aria-live="polite"></main>
 <noscript><p class="hcp-msg">This layout is made with JavaScript, which seems to be off.</p></noscript>
 <script type="application/json" id="hc-xp-data">{{ $X.json | safeJS }}</script>
-<script src="{{ "harvard-classics/export/hc-book.js" | relURL }}?v={{ (os.Stat "static/harvard-classics/export/hc-book.js").ModTime.Unix }}"></script>
-<script src="{{ "harvard-classics/export/print.js" | relURL }}?v={{ (os.Stat "static/harvard-classics/export/print.js").ModTime.Unix }}"></script>
+<script src="{{ "harvard-classics/export/hc-book.js" | relURL }}?v={{ (partialCached "fv.html" "static/harvard-classics/export/hc-book.js" "static/harvard-classics/export/hc-book.js") }}"></script>
+<script src="{{ "harvard-classics/export/print.js" | relURL }}?v={{ (partialCached "fv.html" "static/harvard-classics/export/print.js" "static/harvard-classics/export/print.js") }}"></script>
 </body>
 </html>

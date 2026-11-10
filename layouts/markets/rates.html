@@ -63,6 +63,6 @@
 </section>
 {{ partial "markets-foot.html" . }}
 </div>
-<script src="{{ "markets/treasury.js" | relURL }}?v={{ (os.Stat "static/markets/treasury.js").ModTime.Unix }}"></script>
-<script src="{{ "markets/rates.js" | relURL }}?v={{ (os.Stat "static/markets/rates.js").ModTime.Unix }}"></script>
+<script src="{{ "markets/treasury.js" | relURL }}?v={{ (partialCached "fv.html" "static/markets/treasury.js" "static/markets/treasury.js") }}"></script>
+<script src="{{ "markets/rates.js" | relURL }}?v={{ (partialCached "fv.html" "static/markets/rates.js" "static/markets/rates.js") }}"></script>
 {{ end }}

@@ -3,7 +3,7 @@
    is the Physics Ladder's "Rocket Boys Math and Physics" at /physics/rocket-boys/. */ -}}
 {{- $sec := site.GetPage "/october-sky" -}}
 {{- $pages := slice (dict "t" "The story" "u" "october-sky/") (dict "t" "The real story" "u" "october-sky/real-story/") (dict "t" "The Space Race" "u" "october-sky/space-race/") (dict "t" "Try it safely" "u" "october-sky/try-it-safely/") (dict "t" "Read and watch" "u" "october-sky/read-and-watch/") -}}
-<link rel="stylesheet" href="{{ "october-sky/os.css" | relURL }}?v={{ (os.Stat "static/october-sky/os.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "october-sky/os.css" | relURL }}?v={{ (partialCached "fv.html" "static/october-sky/os.css" "static/october-sky/os.css") }}">
 <article class="os">
   <nav class="os-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › {{ if .IsSection }}October Sky{{ else }}<a href="{{ "october-sky/" | relURL }}">October Sky</a> › {{ .Params.short | default .Title }}{{ end }}</nav>
   <header class="os-hero">

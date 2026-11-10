@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "lang-head.html" . }}
-<link rel="stylesheet" href="{{ "games/brain-games.css" | relURL }}?v={{ (os.Stat "static/games/brain-games.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/brain-games.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/brain-games.css" "static/games/brain-games.css") }}">
 <div class="lang bg-hub" id="bg-hub">
   <nav class="bg-crumbs" aria-label="Breadcrumb"><a href="{{ "games/" | relURL }}">Games</a> › Brain games</nav>
   <header class="lang-hero">

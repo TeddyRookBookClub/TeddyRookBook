@@ -8,10 +8,10 @@
 {{- $days := $h.guide.days -}}
 {{- $X := partialCached "harvard-classics/export-data.html" . "x" -}}
 {{- $months := slice "January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "December" -}}
-{{- $v := (os.Stat "static/harvard-classics/export/export.js").ModTime.Unix -}}
-{{- $vb := (os.Stat "static/harvard-classics/export/hc-book.js").ModTime.Unix -}}
+{{- $v := (partialCached "fv.html" "static/harvard-classics/export/export.js" "static/harvard-classics/export/export.js") -}}
+{{- $vb := (partialCached "fv.html" "static/harvard-classics/export/hc-book.js" "static/harvard-classics/export/hc-book.js") -}}
 {{ partial "harvard-classics/head.html" . }}
-<link rel="stylesheet" href="{{ "harvard-classics/export/export.css" | relURL }}?v={{ (os.Stat "static/harvard-classics/export/export.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "harvard-classics/export/export.css" | relURL }}?v={{ (partialCached "fv.html" "static/harvard-classics/export/export.css" "static/harvard-classics/export/export.css") }}">
 <div class="hc hc-wide hc-xp" id="hc-xp" data-print="{{ "harvard-classics/export/print/" | relURL }}" data-fonts="{{ "harvard-classics/fonts/" | relURL }}">
   <nav class="hc-crumbs" aria-label="Breadcrumb"><a href="{{ "books/" | relURL }}">Library</a> › <a href="{{ "harvard-classics/" | relURL }}">Harvard Classics</a> › Download</nav>
 

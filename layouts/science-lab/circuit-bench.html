@@ -5,7 +5,7 @@
    test-model.js (solver values) and verify-challenges.js (a recorded solution for every challenge, run in a browser).
    Element ids are bench.js's contract. */ -}}
 {{ partial "lab-head.html" . }}
-<link rel="stylesheet" href="{{ "science-lab/circuit-bench/bench.css" | relURL }}?v={{ (os.Stat "static/science-lab/circuit-bench/bench.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "science-lab/circuit-bench/bench.css" | relURL }}?v={{ (partialCached "fv.html" "static/science-lab/circuit-bench/bench.css" "static/science-lab/circuit-bench/bench.css") }}">
 <div class="lab" id="cb-lab">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Circuit Bench</nav>
   <header class="lab-hero">
@@ -138,7 +138,7 @@
 
   <nav class="lab-pn" aria-label="More"><a href="{{ "science-lab/" | relURL }}">← Science Lab</a><a href="{{ "science-lab/circuits/" | relURL }}">Circuit Builder →</a></nav>
 </div>
-<script src="{{ "js/rule-drag.js" | relURL }}?v={{ (os.Stat "static/js/rule-drag.js").ModTime.Unix }}"></script>
-<script src="{{ "science-lab/circuit-bench/model.js" | relURL }}?v={{ (os.Stat "static/science-lab/circuit-bench/model.js").ModTime.Unix }}"></script>
-<script src="{{ "science-lab/circuit-bench/bench.js" | relURL }}?v={{ (os.Stat "static/science-lab/circuit-bench/bench.js").ModTime.Unix }}"></script>
+<script src="{{ "js/rule-drag.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/rule-drag.js" "static/js/rule-drag.js") }}"></script>
+<script src="{{ "science-lab/circuit-bench/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/science-lab/circuit-bench/model.js" "static/science-lab/circuit-bench/model.js") }}"></script>
+<script src="{{ "science-lab/circuit-bench/bench.js" | relURL }}?v={{ (partialCached "fv.html" "static/science-lab/circuit-bench/bench.js" "static/science-lab/circuit-bench/bench.js") }}"></script>
 {{ end }}

@@ -2,7 +2,7 @@
 {{ partial "lab-head.html" . }}
 {{- $d := site.Data.elements.elements -}}
 {{- $data := resources.FromString "games/elements/data.js" (printf "window.TRBElementsData=%s;" ($d | jsonify)) | fingerprint -}}
-<link rel="stylesheet" href="{{ "games/elements/elements.css" | relURL }}?v={{ (os.Stat "static/games/elements/elements.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/elements/elements.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/elements/elements.css" "static/games/elements/elements.css") }}">
 <div class="lab el" id="el-app">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › The Elements</nav>
   <header class="lab-hero">
@@ -256,9 +256,9 @@
   <div id="el-print" class="el-print" aria-hidden="true"></div>
 </div>
 <script src="{{ $data.RelPermalink }}"></script>
-<script src="{{ "music/kit/audio.js" | relURL }}?v={{ (os.Stat "static/music/kit/audio.js").ModTime.Unix }}"></script>
-<script src="{{ "games/elements/core.js" | relURL }}?v={{ (os.Stat "static/games/elements/core.js").ModTime.Unix }}"></script>
-<script src="{{ "games/elements/view3d.js" | relURL }}?v={{ (os.Stat "static/games/elements/view3d.js").ModTime.Unix }}"></script>
-<script src="{{ "games/elements/sound.js" | relURL }}?v={{ (os.Stat "static/games/elements/sound.js").ModTime.Unix }}"></script>
-<script src="{{ "games/elements/app.js" | relURL }}?v={{ (os.Stat "static/games/elements/app.js").ModTime.Unix }}"></script>
+<script src="{{ "music/kit/audio.js" | relURL }}?v={{ (partialCached "fv.html" "static/music/kit/audio.js" "static/music/kit/audio.js") }}"></script>
+<script src="{{ "games/elements/core.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/elements/core.js" "static/games/elements/core.js") }}"></script>
+<script src="{{ "games/elements/view3d.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/elements/view3d.js" "static/games/elements/view3d.js") }}"></script>
+<script src="{{ "games/elements/sound.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/elements/sound.js" "static/games/elements/sound.js") }}"></script>
+<script src="{{ "games/elements/app.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/elements/app.js" "static/games/elements/app.js") }}"></script>
 {{ end }}

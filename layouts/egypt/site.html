@@ -3,7 +3,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
 {{ partial "egypt-kit.html" . }}
-<link rel="stylesheet" href="{{ "egypt/sites.css" | relURL }}?v={{ (os.Stat "static/egypt/sites.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "egypt/sites.css" | relURL }}?v={{ (partialCached "fv.html" "static/egypt/sites.css" "static/egypt/sites.css") }}">
 {{- $D := site.Data.egypt -}}
 {{- $S := index $D.sites .Params.site -}}
 {{- $groups := index $D.sites "_groups" -}}
@@ -82,5 +82,5 @@
     {{ if lt $i (sub (len $all) 1) }}{{ $q := index $all (add $i 1) }}<a class="next" href="{{ printf "egypt/sites/%s/" $q.key | relURL }}"><small>South →</small>{{ $q.name }}</a>{{ end }}
   </nav>
 </div>
-<script src="{{ "egypt/sites.js" | relURL }}?v={{ (os.Stat "static/egypt/sites.js").ModTime.Unix }}" defer></script>
+<script src="{{ "egypt/sites.js" | relURL }}?v={{ (partialCached "fv.html" "static/egypt/sites.js" "static/egypt/sites.js") }}" defer></script>
 {{ end }}

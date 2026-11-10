@@ -1,6 +1,6 @@
 {{ define "main" }}
-<link rel="stylesheet" href="/css/books.css?v={{ (os.Stat "static/css/books.css").ModTime.Unix }}">
-<link rel="stylesheet" href="/css/infographics.css?v={{ (os.Stat "static/css/infographics.css").ModTime.Unix }}">
+<link rel="stylesheet" href="/css/books.css?v={{ (partialCached "fv.html" "static/css/books.css" "static/css/books.css") }}">
+<link rel="stylesheet" href="/css/infographics.css?v={{ (partialCached "fv.html" "static/css/infographics.css" "static/css/infographics.css") }}">
 <div class="ig-page">
   <header class="ig-header">
     <h1>{{ .Title }}</h1>

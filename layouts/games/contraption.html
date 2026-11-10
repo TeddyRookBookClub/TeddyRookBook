@@ -3,7 +3,7 @@
    (content/games/contraption.md). Scripts, all written for this site: /js/rule-drag.js (dragging that only lands on
    allowed spots), static/games/contraption/engine.js (parts and physics), levels.js, workshop.js (screen and controls).
    Every level's solution is checked by scripts/contraption/verify-levels.js. Element ids are the script's contract. */ -}}
-<link rel="stylesheet" href="{{ "games/contraption/contraption.css" | relURL }}?v={{ (os.Stat "static/games/contraption/contraption.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/contraption/contraption.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/contraption/contraption.css" "static/games/contraption/contraption.css") }}">
 {{ partial "game-shell.html" . }}
 <div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div>
 <div class="cw gbox" id="cw">
@@ -52,8 +52,8 @@
 <div class="cw-about" style="max-width:46rem;margin:1.4rem auto 0;line-height:1.6">
   {{ .Content }}
 </div>
-<script src="{{ "js/rule-drag.js" | relURL }}?v={{ (os.Stat "static/js/rule-drag.js").ModTime.Unix }}"></script>
-<script src="{{ "games/contraption/engine.js" | relURL }}?v={{ (os.Stat "static/games/contraption/engine.js").ModTime.Unix }}"></script>
-<script src="{{ "games/contraption/levels.js" | relURL }}?v={{ (os.Stat "static/games/contraption/levels.js").ModTime.Unix }}"></script>
-<script src="{{ "games/contraption/workshop.js" | relURL }}?v={{ (os.Stat "static/games/contraption/workshop.js").ModTime.Unix }}"></script>
+<script src="{{ "js/rule-drag.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/rule-drag.js" "static/js/rule-drag.js") }}"></script>
+<script src="{{ "games/contraption/engine.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/contraption/engine.js" "static/games/contraption/engine.js") }}"></script>
+<script src="{{ "games/contraption/levels.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/contraption/levels.js" "static/games/contraption/levels.js") }}"></script>
+<script src="{{ "games/contraption/workshop.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/contraption/workshop.js" "static/games/contraption/workshop.js") }}"></script>
 {{ end }}

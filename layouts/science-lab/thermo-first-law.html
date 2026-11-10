@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "unit-head.html" . }}
-<link rel="stylesheet" href="{{ "science-lab/thermodynamics/first-law/sim.css" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/first-law/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "science-lab/thermodynamics/first-law/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/science-lab/thermodynamics/first-law/sim.css" "static/science-lab/thermodynamics/first-law/sim.css") }}">
 <div class="lab" id="th2-lab">
   {{ partial "unit-nav.html" . }}
   <header class="lab-hero">
@@ -288,6 +288,6 @@
   </section>
   {{ partial "unit-foot.html" . }}
 </div>
-<script src="{{ "science-lab/thermodynamics/first-law/physics.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/first-law/physics.js").ModTime.Unix }}" defer></script>
-<script src="{{ "science-lab/thermodynamics/first-law/sim.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/first-law/sim.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/thermodynamics/first-law/physics.js" | relURL }}?v={{ (partialCached "fv.html" "static/science-lab/thermodynamics/first-law/physics.js" "static/science-lab/thermodynamics/first-law/physics.js") }}" defer></script>
+<script src="{{ "science-lab/thermodynamics/first-law/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/science-lab/thermodynamics/first-law/sim.js" "static/science-lab/thermodynamics/first-law/sim.js") }}" defer></script>
 {{ end }}

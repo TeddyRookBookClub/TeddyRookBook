@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "unit-head.html" . }}
-<link rel="stylesheet" href="{{ "business/game-theory/bargaining/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/bargaining/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/game-theory/bargaining/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/bargaining/sim.css" "static/business/game-theory/bargaining/sim.css") }}">
 <div class="lab" id="gt11-lab">
   {{ partial "unit-nav.html" . }}
   <header class="lab-hero">
@@ -201,6 +201,6 @@
   </section>
   {{ partial "unit-foot.html" . }}
 </div>
-<script src="{{ "business/game-theory/bargaining/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/bargaining/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "business/game-theory/bargaining/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/bargaining/sim.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/bargaining/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/bargaining/model.js" "static/business/game-theory/bargaining/model.js") }}" defer></script>
+<script src="{{ "business/game-theory/bargaining/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/bargaining/sim.js" "static/business/game-theory/bargaining/sim.js") }}" defer></script>
 {{ end }}

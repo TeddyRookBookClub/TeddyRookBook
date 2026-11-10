@@ -21,6 +21,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    outputs:
+      changed: ${{ steps.fp.outputs.changed }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -58,6 +60,22 @@ jobs:
       - name: Check formula colors
         run: node scripts/math/check-roles.js --quiet
 
+      # One fingerprint for the whole built site, published as /build-id.txt. A scheduled rebuild that comes out
+      # identical to the live site (no new market data) skips the upload and the deploy. Pushes always deploy.
+      # (Taken before the offline manifests, which carry the build time.)
+      - name: Fingerprint the site
+        id: fp
+        run: |
+          cd public
+          id=$(find . -type f ! -name build-id.txt -print0 | LC_ALL=C sort -z | xargs -0 sha256sum | sha256sum | cut -d' ' -f1)
+          echo "$id" > build-id.txt
+          live=$(curl -fsS -m 20 https://teddyrookbook.com/build-id.txt || true)
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ] && [ "$id" = "$live" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"; echo "Same as the live site: nothing to deploy."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
       # Lists every file of each section with a fingerprint, for /offline/ and the download kit's updater.
       - name: Offline manifests
         run: node scripts/offline/build-manifests.js public
@@ -66,17 +84,44 @@ jobs:
         run: echo "teddyrookbook.com" > public/CNAME
 
       - name: Upload artifact
+        if: steps.fp.outputs.changed == 'true'
         uses: actions/upload-pages-artifact@v4
         with:
           path: ./public
 
+  # GitHub Pages sometimes takes too long to accept a site this large and the step times out. A second or third
+  # try with the same upload nearly always works, so the job retries by itself before it reports a failure.
   deploy:
+    if: needs.build.outputs.changed == 'true'
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: https://teddyrookbook.com/
     runs-on: ubuntu-24.04
     needs: build
     steps:
       - name: Deploy to GitHub Pages
-        id: deployment
+        id: try1
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+        with:
+          timeout: 420000
+
+      - name: Wait before the second try
+        if: steps.try1.outcome == 'failure'
+        run: sleep 60
+
+      - name: Deploy to GitHub Pages (second try)
+        id: try2
+        if: steps.try1.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+        with:
+          timeout: 420000
+
+      - name: Wait before the third try
+        if: steps.try2.outcome == 'failure'
+        run: sleep 60
+
+      - name: Deploy to GitHub Pages (third try)
+        if: steps.try2.outcome == 'failure'
         uses: actions/deploy-pages@v5

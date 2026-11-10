@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "unit-head.html" . }}
-<link rel="stylesheet" href="{{ "business/game-theory/hub.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "business/game-theory/nash-equilibrium/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/nash-equilibrium/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/game-theory/hub.css" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/hub.css" "static/business/game-theory/hub.css") }}">
+<link rel="stylesheet" href="{{ "business/game-theory/nash-equilibrium/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/nash-equilibrium/sim.css" "static/business/game-theory/nash-equilibrium/sim.css") }}">
 <div class="lab" id="gt3-lab">
   {{ partial "unit-nav.html" . }}
   <header class="lab-hero">
@@ -205,7 +205,7 @@
   </section>
   {{ partial "unit-foot.html" . }}
 </div>
-<script src="{{ "business/game-theory/hub.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.js").ModTime.Unix }}" defer></script>
-<script src="{{ "business/game-theory/nash-equilibrium/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/nash-equilibrium/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "business/game-theory/nash-equilibrium/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/nash-equilibrium/sim.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/hub.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/hub.js" "static/business/game-theory/hub.js") }}" defer></script>
+<script src="{{ "business/game-theory/nash-equilibrium/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/nash-equilibrium/model.js" "static/business/game-theory/nash-equilibrium/model.js") }}" defer></script>
+<script src="{{ "business/game-theory/nash-equilibrium/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/nash-equilibrium/sim.js" "static/business/game-theory/nash-equilibrium/sim.js") }}" defer></script>
 {{ end }}

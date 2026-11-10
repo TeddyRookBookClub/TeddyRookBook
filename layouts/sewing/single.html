@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "sewing/sewing.css" | relURL }}?v={{ (os.Stat "static/sewing/sewing.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "sewing/sewing.css" | relURL }}?v={{ (partialCached "fv.html" "static/sewing/sewing.css" "static/sewing/sewing.css") }}">
 {{ $d := site.Data.sewing }}{{ $g := index (where $d.guides "key" .Params.guide) 0 }}
 {{ $sec := index (where $d.sections "key" $g.group) 0 }}
 {{ $sib := where $d.guides "group" $g.group }}{{ $prev := "" }}{{ $next := "" }}{{ $found := false }}
@@ -39,5 +39,5 @@
   </nav>
   <p class="hs-small">{{ $d.meta.disclaimer }}</p>
 </div>
-<script src="{{ "sewing/sewing.js" | relURL }}?v={{ (os.Stat "static/sewing/sewing.js").ModTime.Unix }}" defer></script>
+<script src="{{ "sewing/sewing.js" | relURL }}?v={{ (partialCached "fv.html" "static/sewing/sewing.js" "static/sewing/sewing.js") }}" defer></script>
 {{ end }}

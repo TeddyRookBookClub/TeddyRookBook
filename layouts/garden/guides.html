@@ -1,6 +1,6 @@
 {{ define "main" }}
-<link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (os.Stat "static/homeschool/hs.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "garden/garden.css" | relURL }}?v={{ (os.Stat "static/garden/garden.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/hs.css" "static/homeschool/hs.css") }}">
+<link rel="stylesheet" href="{{ "garden/garden.css" | relURL }}?v={{ (partialCached "fv.html" "static/garden/garden.css" "static/garden/garden.css") }}">
 {{ $g := site.Data.garden.guide }}{{ $a := site.Data.garden.animals }}{{ $v := site.Data.garden.viz }}
 <div class="hs gd" id="gd-gpage" data-units>
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "garden/" | relURL }}">Food Garden Planner</a> › Guides</nav>
@@ -25,6 +25,6 @@
   <script type="application/json" id="gd-data">{{ dict "crops" (slice) "an" (dict "ch" $a.chickens.numbers) "viz" (dict "sources" $v.sources "sun" $v.sun "bed" $v.bed) | jsonify | safeJS }}</script>
   <nav class="hs-pn"><a href="{{ "garden/" | relURL }}">← Food Garden Planner</a><a href="{{ "resources/" | relURL }}">More free resources →</a></nav>
 </div>
-<script src="{{ "garden/viz/model.js" | relURL }}?v={{ (os.Stat "static/garden/viz/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "garden/viz/viz.js" | relURL }}?v={{ (os.Stat "static/garden/viz/viz.js").ModTime.Unix }}" defer></script>
+<script src="{{ "garden/viz/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/garden/viz/model.js" "static/garden/viz/model.js") }}" defer></script>
+<script src="{{ "garden/viz/viz.js" | relURL }}?v={{ (partialCached "fv.html" "static/garden/viz/viz.js" "static/garden/viz/viz.js") }}" defer></script>
 {{ end }}

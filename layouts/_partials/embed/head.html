@@ -10,6 +10,6 @@
 <meta name="color-scheme" content="light dark">
 <title>{{ .Title }} · Teddy Rook Book</title>
 <base target="_blank">
-<script src="{{ "embed/embed.js" | relURL }}?v={{ (os.Stat "static/embed/embed.js").ModTime.Unix }}"></script>
-<link rel="stylesheet" href="{{ "embed/embed.css" | relURL }}?v={{ (os.Stat "static/embed/embed.css").ModTime.Unix }}">
+<script src="{{ "embed/embed.js" | relURL }}?v={{ (partialCached "fv.html" "static/embed/embed.js" "static/embed/embed.js") }}"></script>
+<link rel="stylesheet" href="{{ "embed/embed.css" | relURL }}?v={{ (partialCached "fv.html" "static/embed/embed.css" "static/embed/embed.css") }}">
 {{ partial "report/script.html" . }}

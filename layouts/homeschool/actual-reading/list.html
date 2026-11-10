@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "homeschool/ar.css" | relURL }}?v={{ (os.Stat "static/homeschool/ar.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/ar.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/ar.css" "static/homeschool/ar.css") }}">
 {{ $d := site.Data.hs_hannah }}{{ $s := $d.site }}
 <div class="hs ar">
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Actual Reading</nav>
@@ -48,5 +48,5 @@
     <p>Hannah Ward is a homeschooling mother and English teacher who has taught from preschool to university level. She is TESOL-certified and holds an M.Ed. in Education Technology and Instructional Design. She gives these curricula away, lesson by lesson, so that families who cannot pay can still teach their children. High-quality bundled PDFs and printed books are for sale at <a href="{{ $s.shop }}" target="_blank" rel="noopener">Actual Reading</a>, and buying them is the best way to support her work.</p>
   </section>
 </div>
-<script src="{{ "homeschool/ar.js" | relURL }}?v={{ (os.Stat "static/homeschool/ar.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/ar.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/ar.js" "static/homeschool/ar.js") }}" defer></script>
 {{ end }}

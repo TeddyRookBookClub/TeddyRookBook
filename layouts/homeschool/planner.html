@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "homeschool/planner.css" | relURL }}?v={{ (os.Stat "static/homeschool/planner.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/planner.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/planner.css" "static/homeschool/planner.css") }}">
 {{- /* Course kinds (data/hs_planner.yaml): data (a book on this site), ar (Hannah Ward's PDFs), ext (a course elsewhere),
    ladder + lc (a Math Ladder or other ladder course: one lesson per topic, URLs built in planner.js from base + slug),
    practice + sessions (a practice page: one session per school day), section (a section's chapters, by weight),
@@ -177,5 +177,5 @@
   </section>
   <script type="application/json" id="pl-data">{{ dict "subjects" $subs | jsonify | safeJS }}</script>
 </div>
-<script src="{{ "homeschool/planner.js" | relURL }}?v={{ (os.Stat "static/homeschool/planner.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/planner.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/planner.js" "static/homeschool/planner.js") }}" defer></script>
 {{ end }}

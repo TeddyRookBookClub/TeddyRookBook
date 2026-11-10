@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "unit-head.html" . }}
-<link rel="stylesheet" href="{{ "business/econometrics/instrumental-variables/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/instrumental-variables/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/econometrics/instrumental-variables/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/instrumental-variables/sim.css" "static/business/econometrics/instrumental-variables/sim.css") }}">
 <div class="lab" id="ec10-lab">
   {{ partial "unit-nav.html" . }}
   <header class="lab-hero">
@@ -265,7 +265,7 @@
   </section>
   {{ partial "unit-foot.html" . }}
 </div>
-<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
-<script src="{{ "business/econometrics/instrumental-variables/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/instrumental-variables/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "business/econometrics/instrumental-variables/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/instrumental-variables/sim.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/stats.js" "static/business/econometrics/stats.js") }}" defer></script>
+<script src="{{ "business/econometrics/instrumental-variables/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/instrumental-variables/model.js" "static/business/econometrics/instrumental-variables/model.js") }}" defer></script>
+<script src="{{ "business/econometrics/instrumental-variables/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/econometrics/instrumental-variables/sim.js" "static/business/econometrics/instrumental-variables/sim.js") }}" defer></script>
 {{ end }}

@@ -1,5 +1,5 @@
 {{ define "main" }}
-<link rel="stylesheet" href="{{ "business/biz.css" | relURL }}?v={{ (os.Stat "static/business/biz.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/biz.css" | relURL }}?v={{ (partialCached "fv.html" "static/business/biz.css" "static/business/biz.css") }}">
 {{ $d := site.Data.business_cases }}
 {{ $tags := slice }}{{ range $d.cases }}{{ range .tags }}{{ if not (in $tags .) }}{{ $tags = $tags | append . }}{{ end }}{{ end }}{{ end }}
 <div class="bz">
@@ -33,5 +33,5 @@
   </section>
   <p class="bz-small">These cases are written for this site from public reporting, court and regulator records and company statements, listed at the end of each case. They are summaries for learning, not legal or financial advice.</p>
 </div>
-<script src="{{ "business/biz.js" | relURL }}?v={{ (os.Stat "static/business/biz.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/biz.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/biz.js" "static/business/biz.js") }}" defer></script>
 {{ end }}

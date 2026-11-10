@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "lab-head.html" . }}
-<link rel="stylesheet" href="{{ "games/chem-lab/sim.css" | relURL }}?v={{ (os.Stat "static/games/chem-lab/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/chem-lab/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/chem-lab/sim.css" "static/games/chem-lab/sim.css") }}">
 <div class="lab" id="chem-lab-lab">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Mixing Lab</nav>
   <header class="lab-hero">
@@ -235,6 +235,6 @@
 
   <nav class="lab-pn" aria-label="More"><a href="{{ "science-lab/" | relURL }}">← Science Lab</a><a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a></nav>
 </div>
-<script src="{{ "games/chem-lab/chem.js" | relURL }}?v={{ (os.Stat "static/games/chem-lab/chem.js").ModTime.Unix }}"></script>
-<script src="{{ "games/chem-lab/sim.js" | relURL }}?v={{ (os.Stat "static/games/chem-lab/sim.js").ModTime.Unix }}"></script>
+<script src="{{ "games/chem-lab/chem.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/chem-lab/chem.js" "static/games/chem-lab/chem.js") }}"></script>
+<script src="{{ "games/chem-lab/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/chem-lab/sim.js" "static/games/chem-lab/sim.js") }}"></script>
 {{ end }}

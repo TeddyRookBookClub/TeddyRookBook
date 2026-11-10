@@ -41,5 +41,5 @@
   </section>
   {{ partial "languages/linear-b/credits.html" . }}
 </div>
-<script src="{{ "languages/linear-b/signs.js" | relURL }}?v={{ (os.Stat "static/languages/linear-b/signs.js").ModTime.Unix }}" defer></script>
+<script src="{{ "languages/linear-b/signs.js" | relURL }}?v={{ (partialCached "fv.html" "static/languages/linear-b/signs.js" "static/languages/linear-b/signs.js") }}" defer></script>
 {{ end }}

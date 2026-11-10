@@ -1,5 +1,5 @@
 {{ define "main" }}
-<link rel="stylesheet" href="{{ "shelf/shelf.css" | relURL }}?v={{ (os.Stat "static/shelf/shelf.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "shelf/shelf.css" | relURL }}?v={{ (partialCached "fv.html" "static/shelf/shelf.css" "static/shelf/shelf.css") }}">
 <div class="sh" id="shelf">
   <header class="sh-hero">
     <h1>Free Books</h1>
@@ -61,5 +61,5 @@
   <div class="sh-player" id="sh-player" hidden></div>
   <p class="sh-foot">Text: Project Gutenberg, via Gutendex. Scans: Internet Archive. Audio: LibriVox / Internet Archive. Public domain in the United States.</p>
 </div>
-<script src="{{ "shelf/shelf.js" | relURL }}?v={{ (os.Stat "static/shelf/shelf.js").ModTime.Unix }}"></script>
+<script src="{{ "shelf/shelf.js" | relURL }}?v={{ (partialCached "fv.html" "static/shelf/shelf.js" "static/shelf/shelf.js") }}"></script>
 {{ end }}

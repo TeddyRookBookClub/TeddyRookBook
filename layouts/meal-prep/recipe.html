@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
 {{ $m := site.Data.meals }}{{ $id := .Params.recipe }}
 {{ $all := partialCached "meal-prep/recipes-all.html" "r" }}{{ $r := index (where $all "id" $id) 0 }}
 {{ $cat := partialCached "meal-prep/catdict.html" "c" }}
@@ -110,7 +110,7 @@
   </div>
   <p class="hs-small">{{ if $r.origin }}Our own adaptation of a public-domain recipe, in our own words.{{ else if $r.collection }}An original Teddy Rook Book recipe, written for our {{ if $cm.blurb }}{{ $cm.blurb }}{{ else }}{{ $cm.title }} collection{{ end }}; safety steps follow USDA.{{ else }}An original Teddy Rook Book recipe.{{ end }} Nutrition is estimated from USDA FoodData Central and changes with brands and portions.</p>
 </div>
-<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/pages.js" | relURL }}?v={{ (os.Stat "static/meal-prep/pages.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/model.js" "static/meal-prep/model.js") }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/common.js" "static/meal-prep/common.js") }}" defer></script>
+<script src="{{ "meal-prep/pages.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/pages.js" "static/meal-prep/pages.js") }}" defer></script>
 {{ end }}

@@ -1,5 +1,5 @@
 {{ define "main" }}
-<link rel="stylesheet" href="{{ "business/biz.css" | relURL }}?v={{ (os.Stat "static/business/biz.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/biz.css" | relURL }}?v={{ (partialCached "fv.html" "static/business/biz.css" "static/business/biz.css") }}">
 {{ $all := sort site.Data.business_cases.cases "year" }}{{ $c := index (where $all "slug" .Params.case) 0 }}
 {{ $prev := dict }}{{ $next := dict }}{{ range $i, $x := $all }}{{ if eq $x.slug $c.slug }}{{ if gt $i 0 }}{{ $prev = index $all (sub $i 1) }}{{ end }}{{ if lt (add $i 1) (len $all) }}{{ $next = index $all (add $i 1) }}{{ end }}{{ end }}{{ end }}
 <article class="bz bz-case">
@@ -45,5 +45,5 @@
     {{ with $next }}<a href="{{ printf "business/cases/%s/" .slug | relURL }}">{{ .company }}, {{ .year }} →</a>{{ else }}<span></span>{{ end }}
   </nav>
 </article>
-<script src="{{ "business/biz.js" | relURL }}?v={{ (os.Stat "static/business/biz.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/biz.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/biz.js" "static/business/biz.js") }}" defer></script>
 {{ end }}

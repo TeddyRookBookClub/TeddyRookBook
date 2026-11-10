@@ -1,6 +1,6 @@
 {{ define "main" }}
-<link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (os.Stat "static/homeschool/hs.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "garden/garden.css" | relURL }}?v={{ (os.Stat "static/garden/garden.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/hs.css" "static/homeschool/hs.css") }}">
+<link rel="stylesheet" href="{{ "garden/garden.css" | relURL }}?v={{ (partialCached "fv.html" "static/garden/garden.css" "static/garden/garden.css") }}">
 {{ $g := site.Data.garden.guide }}{{ $a := site.Data.garden.animals }}{{ $c := site.Data.garden.crops }}{{ $v := site.Data.garden.viz }}
 {{- /* Meal Prep tie-in: for each crop, the Meal Prep recipes and from-scratch recipes that use it ("Cook it"), from
    data/meals/garden-map.json; and the crops Meal Prep can take off a shopping list (for "Plan meals around my harvest") */ -}}
@@ -79,7 +79,7 @@
 
   <section class="hs-sec" id="gd-out" aria-live="polite"></section>
 
-  <section class="hs-sec gv" id="gd-viz" aria-labelledby="gv-h" data-nounits data-js="{{ "garden/viz/model.js" | relURL }}?v={{ (os.Stat "static/garden/viz/model.js").ModTime.Unix }} {{ "garden/viz/viz.js" | relURL }}?v={{ (os.Stat "static/garden/viz/viz.js").ModTime.Unix }}">
+  <section class="hs-sec gv" id="gd-viz" aria-labelledby="gv-h" data-nounits data-js="{{ "garden/viz/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/garden/viz/model.js" "static/garden/viz/model.js") }} {{ "garden/viz/viz.js" | relURL }}?v={{ (partialCached "fv.html" "static/garden/viz/viz.js" "static/garden/viz/viz.js") }}">
     <h2 id="gv-h"><span class="pl-n">6</span> See your garden</h2>
     <p class="gv-lead">Pictures of the plan above, drawn from the same numbers. Change the plan and they change with it.</p>
     <div id="gv-root"><p class="hs-small gv-wait">Loading the pictures…</p></div>
@@ -109,5 +109,5 @@
   <p class="hs-small">Daily calories: {{ $c.kcal.text }}</p>
   <script type="application/json" id="gd-data">{{ dict "crops" $c.crops "an" (dict "ch" $a.chickens.numbers "bee" $a.bees.numbers) "viz" (dict "crops" $v.crops "sources" $v.sources "sun" $v.sun "bed" $v.bed) "cook" $cook "mealCrops" $mealCrops | jsonify | safeJS }}</script>
 </div>
-<script src="{{ "garden/garden.js" | relURL }}?v={{ (os.Stat "static/garden/garden.js").ModTime.Unix }}" defer></script>
+<script src="{{ "garden/garden.js" | relURL }}?v={{ (partialCached "fv.html" "static/garden/garden.js" "static/garden/garden.js") }}" defer></script>
 {{ end }}

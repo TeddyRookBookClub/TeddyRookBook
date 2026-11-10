@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "meal-prep/thanksgiving.css" | relURL }}?v={{ (os.Stat "static/meal-prep/thanksgiving.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
+<link rel="stylesheet" href="{{ "meal-prep/thanksgiving.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/thanksgiving.css" "static/meal-prep/thanksgiving.css") }}">
 {{- /* Thanksgiving dinner: data/meals/recipes/thanksgiving.json (built by scripts/meals/src/build_thanksgiving.py) holds the new
    recipes and the page plan. Courses mix those with recipes and from-scratch pages from elsewhere in Meal Prep, by id.
    static/meal-prep/thanksgiving.js runs the menu (shopping list, print, add to the planner) and the timeline tool. */ -}}
@@ -261,7 +261,7 @@
   <div class="tg-printout" id="tg-printout" aria-hidden="true"></div>
 </div>
 <script type="application/json" id="tg-data">{{ dict "coll" (dict "day" $T.day "methods" $T.methods "ru" $T.roast_unstuffed "rs" $T.roast_stuffed "rb" $T.breast "def" $T.default_menu) "r" $mini | jsonify | safeJS }}</script>
-<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/thanksgiving.js" | relURL }}?v={{ (os.Stat "static/meal-prep/thanksgiving.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/model.js" "static/meal-prep/model.js") }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/common.js" "static/meal-prep/common.js") }}" defer></script>
+<script src="{{ "meal-prep/thanksgiving.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/thanksgiving.js" "static/meal-prep/thanksgiving.js") }}" defer></script>
 {{ end }}

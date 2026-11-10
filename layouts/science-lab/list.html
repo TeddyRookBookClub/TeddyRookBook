@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "lab-head.html" . }}
-<link rel="stylesheet" href="{{ "css/sci-feature.css" | relURL }}?v={{ (os.Stat "static/css/sci-feature.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "css/sci-feature.css" | relURL }}?v={{ (partialCached "fv.html" "static/css/sci-feature.css" "static/css/sci-feature.css") }}">
 {{- $items := site.Data.science_lab }}
 {{- $units := slice site.Data.science_units.newton site.Data.science_units.thermo }}
 <div class="lab" id="science-lab">
@@ -77,5 +77,5 @@
 #science-lab .sl-unit li a i{font-style:normal}
 #science-lab .sl-unit li a:hover{border-color:var(--acc)}
 </style>
-<script src="{{ "js/home-donut.js" | relURL }}?v={{ (os.Stat "static/js/home-donut.js").ModTime.Unix }}" defer></script>
+<script src="{{ "js/home-donut.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/home-donut.js" "static/js/home-donut.js") }}" defer></script>
 {{ end }}

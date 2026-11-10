@@ -1,7 +1,7 @@
 <meta name="mk-base" content="{{ "markets/" | relURL }}">
-<link rel="stylesheet" href="{{ "markets/mk.css" | relURL }}?v={{ (os.Stat "static/markets/mk.css").ModTime.Unix }}">
-<script src="{{ "markets/mchart.js" | relURL }}?v={{ (os.Stat "static/markets/mchart.js").ModTime.Unix }}"></script>
-<script src="{{ "markets/mk.js" | relURL }}?v={{ (os.Stat "static/markets/mk.js").ModTime.Unix }}"></script>
+<link rel="stylesheet" href="{{ "markets/mk.css" | relURL }}?v={{ (partialCached "fv.html" "static/markets/mk.css" "static/markets/mk.css") }}">
+<script src="{{ "markets/mchart.js" | relURL }}?v={{ (partialCached "fv.html" "static/markets/mchart.js" "static/markets/mchart.js") }}"></script>
+<script src="{{ "markets/mk.js" | relURL }}?v={{ (partialCached "fv.html" "static/markets/mk.js" "static/markets/mk.js") }}"></script>
 <header class="mk-hero">
   <p class="eyebrow"><a href="{{ "markets/" | relURL }}">Markets &amp; Economy</a>{{ if ne .Kind "section" }} · {{ .Title }}{{ end }}</p>
   <h1>{{ if eq .Kind "section" }}Markets &amp; Economy{{ else }}{{ .Title }}{{ end }}</h1>

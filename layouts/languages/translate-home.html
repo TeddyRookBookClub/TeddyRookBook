@@ -2,7 +2,7 @@
 {{- /* Translate in a Year: the hub (content/languages/translate/_index.md). Cards for the works (the section's reader pages,
    by weight), then the page's own text. */ -}}
 {{ partial "lang-head.html" . }}
-<link rel="stylesheet" href="{{ "languages/translate/tr.css" | relURL }}?v={{ (os.Stat "static/languages/translate/tr.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "languages/translate/tr.css" | relURL }}?v={{ (partialCached "fv.html" "static/languages/translate/tr.css" "static/languages/translate/tr.css") }}">
 <div class="lang trn">
   <header class="lang-hero">
     <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · Translate in a Year</p>

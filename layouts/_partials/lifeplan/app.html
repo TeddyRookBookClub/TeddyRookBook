@@ -7,7 +7,7 @@
 {{- return printf "%s?v=%s" (resources.FromString .p .s).RelPermalink (substr (md5 .s) 0 10) -}}
 {{- end -}}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "life-planner/lp.css" | relURL }}?v={{ (os.Stat "static/life-planner/lp.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "life-planner/lp.css" | relURL }}?v={{ (partialCached "fv.html" "static/life-planner/lp.css" "static/life-planner/lp.css") }}">
 {{- /* The Life Planner (/life-planner/). The page carries the small things inline (#lp-cfg: the starter library from
    data/lifeplan/library.yaml, the list of ladder courses, the trades list, the URLs below). The bigger data is built here
    as separate JSON files, and static/life-planner/lp.js fetches each one only when a track needs it:
@@ -152,7 +152,7 @@
 {{- $trURL := "" -}}{{- $trGoals := slice -}}
 {{- $trF := "static/languages/translate/plan.json" -}}
 {{- if and (fileExists $trF) (site.GetPage "/languages/translate") -}}
-  {{- $trURL = printf "%s?v=%d" ("languages/translate/plan.json" | relURL) (os.Stat $trF).ModTime.Unix -}}
+  {{- $trURL = printf "%s?v=%d" ("languages/translate/plan.json" | relURL) (partialCached "fv.html" $trF $trF) -}}
   {{- $trGoals = (os.ReadFile $trF | transform.Unmarshal).goals -}}
 {{- end -}}
 {{- $hols := slice -}}
@@ -203,8 +203,8 @@
   </section>
   <script type="application/json" id="lp-cfg">{{ $cfg | jsonify | safeJS }}</script>
 </div>
-<script src="{{ "life-planner/lp-core.js" | relURL }}?v={{ (os.Stat "static/life-planner/lp-core.js").ModTime.Unix }}" defer></script>
-<script src="{{ "life-planner/lp-tracks.js" | relURL }}?v={{ (os.Stat "static/life-planner/lp-tracks.js").ModTime.Unix }}" defer></script>
-<script src="{{ "life-planner/lp.js" | relURL }}?v={{ (os.Stat "static/life-planner/lp.js").ModTime.Unix }}" defer></script>
-<script src="{{ "life-planner/lp-resolve.js" | relURL }}?v={{ (os.Stat "static/life-planner/lp-resolve.js").ModTime.Unix }}" defer></script>
-<script src="{{ "life-planner/lp-res.js" | relURL }}?v={{ (os.Stat "static/life-planner/lp-res.js").ModTime.Unix }}" defer></script>
+<script src="{{ "life-planner/lp-core.js" | relURL }}?v={{ (partialCached "fv.html" "static/life-planner/lp-core.js" "static/life-planner/lp-core.js") }}" defer></script>
+<script src="{{ "life-planner/lp-tracks.js" | relURL }}?v={{ (partialCached "fv.html" "static/life-planner/lp-tracks.js" "static/life-planner/lp-tracks.js") }}" defer></script>
+<script src="{{ "life-planner/lp.js" | relURL }}?v={{ (partialCached "fv.html" "static/life-planner/lp.js" "static/life-planner/lp.js") }}" defer></script>
+<script src="{{ "life-planner/lp-resolve.js" | relURL }}?v={{ (partialCached "fv.html" "static/life-planner/lp-resolve.js" "static/life-planner/lp-resolve.js") }}" defer></script>
+<script src="{{ "life-planner/lp-res.js" | relURL }}?v={{ (partialCached "fv.html" "static/life-planner/lp-res.js" "static/life-planner/lp-res.js") }}" defer></script>

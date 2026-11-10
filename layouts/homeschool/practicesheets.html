@@ -31,5 +31,5 @@
   <div class="hs-actions ps-noprint"><button type="button" class="hs-btn pri big" id="ps-print">🖨 Print</button><span class="hs-small" id="ps-note"></span></div>
   <div class="ps-preview" id="ps-preview"></div>
 </div>
-<script src="{{ "homeschool/sheets.js" | relURL }}?v={{ (os.Stat "static/homeschool/sheets.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/sheets.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/sheets.js" "static/homeschool/sheets.js") }}" defer></script>
 {{ end }}

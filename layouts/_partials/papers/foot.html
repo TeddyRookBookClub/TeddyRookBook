@@ -1,1 +1,1 @@
-<script src="{{ "papers/papers.js" | relURL }}?v={{ (os.Stat "static/papers/papers.js").ModTime.Unix }}" defer></script>
+<script src="{{ "papers/papers.js" | relURL }}?v={{ (partialCached "fv.html" "static/papers/papers.js" "static/papers/papers.js") }}" defer></script>

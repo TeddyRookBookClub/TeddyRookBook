@@ -18,7 +18,7 @@
   {{- if $cs }}{{ $lads = $lads | append (dict "key" $L.key "title" $L.title "courses" $cs) }}{{ end -}}
 {{- end -}}
 {{- $topics := resources.FromString "developers/topics.json" ($T | jsonify) | fingerprint "md5" -}}
-<link rel="stylesheet" href="{{ "developers/dev.css" | relURL }}?v={{ (os.Stat "static/developers/dev.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "developers/dev.css" | relURL }}?v={{ (partialCached "fv.html" "static/developers/dev.css" "static/developers/dev.css") }}">
 <div class="trb-group dev" id="dev" data-site="{{ $site }}" data-topics="{{ $topics.RelPermalink }}">
   <header class="trb-ghero">
     <p class="trb-geyebrow">Teddy Rook Book · For developers &amp; co-ops</p>
@@ -120,7 +120,7 @@
       {{- range $E.toolkit.packs }}
         <tr><th scope="row"><code>{{ .dir }}/</code></th><td>{{ .name }}. {{ .what }}.</td><td>{{ if .license_url }}<a href="{{ .license_url }}">{{ .license }}</a>{{ else }}{{ .license }}{{ end }}</td><td>{{ range $i, $k := .sources }}{{ if $i }}; {{ end }}{{ (index $E.sources $k).name }}{{ end }}</td></tr>
       {{- end }}
-        <tr><th scope="row">Everything else</th><td>The practice engine, the twelve ladders, Vocabulary and the Family Study units</td><td>Code <a href="https://opensource.org/license/mit">MIT</a>; content <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></td><td>Teddy Rook Book</td></tr>
+        <tr><th scope="row">Everything else</th><td>The practice engine, the ladders, Vocabulary and the Family Study units</td><td>Code <a href="https://opensource.org/license/mit">MIT</a>; content <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></td><td>Teddy Rook Book</td></tr>
       </tbody>
     </table>
     </div>
@@ -143,5 +143,5 @@
     <p class="dev-note">The embeds show only what’s on this site. The toolkit leaves out anything whose license doesn’t let us pass it on.</p>
   </section>
 </div>
-<script src="{{ "developers/dev.js" | relURL }}?v={{ (os.Stat "static/developers/dev.js").ModTime.Unix }}" defer></script>
+<script src="{{ "developers/dev.js" | relURL }}?v={{ (partialCached "fv.html" "static/developers/dev.js" "static/developers/dev.js") }}" defer></script>
 {{ end }}

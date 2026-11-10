@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "meal-prep/goals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/goals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
+<link rel="stylesheet" href="{{ "meal-prep/goals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/goals.css" "static/meal-prep/goals.css") }}">
 {{- /* Meet your goals: a goal planner and a recipe finder over every Meal Prep recipe. The math is in
    static/meal-prep/goals-core.js (tested by scripts/meals/goals.test.js); the page script is static/meal-prep/goals.js.
    Settings (presets, recipes the planner leaves out) come from data/meals/goals.json. */ -}}
@@ -179,8 +179,8 @@
   </section>
 </div>
 <script type="application/json" id="gl-data">{{ dict "exclude" (uniq ($ex | append $hol)) "holiday" (uniq $hol) | jsonify | safeJS }}</script>
-<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/goals-core.js" | relURL }}?v={{ (os.Stat "static/meal-prep/goals-core.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/goals.js" | relURL }}?v={{ (os.Stat "static/meal-prep/goals.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/model.js" "static/meal-prep/model.js") }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/common.js" "static/meal-prep/common.js") }}" defer></script>
+<script src="{{ "meal-prep/goals-core.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/goals-core.js" "static/meal-prep/goals-core.js") }}" defer></script>
+<script src="{{ "meal-prep/goals.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/goals.js" "static/meal-prep/goals.js") }}" defer></script>
 {{ end }}

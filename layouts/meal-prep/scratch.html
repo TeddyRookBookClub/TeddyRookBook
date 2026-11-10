@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
 {{ $m := site.Data.meals }}{{ $id := .Params.scratch }}
 {{ $s := index (where $m.scratch.recipes "id" $id) 0 }}
 {{ $cat := partialCached "meal-prep/catdict.html" "c" }}
@@ -91,7 +91,7 @@
     <p>In the <a href="{{ "meal-prep/plan/" | relURL }}">meal planner</a>, tap <b>Make it</b> next to {{ with $s.makes }}{{ with index $cat (index . 0).item }}{{ partial "meal-prep/lcname.html" .name }}{{ end }}{{ else }}an item{{ end }} on the shopping list: the list swaps it for these ingredients, scaled to your meals, and the Prep day tab fits the {{ if gt $s.times.total 120 }}waiting{{ else }}work{{ end }} into your week. <a href="{{ "meal-prep/scratch/" | relURL }}">More from-scratch recipes</a>.</p>
   </section>
 </div>
-<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/pages.js" | relURL }}?v={{ (os.Stat "static/meal-prep/pages.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/model.js" "static/meal-prep/model.js") }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/common.js" "static/meal-prep/common.js") }}" defer></script>
+<script src="{{ "meal-prep/pages.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/pages.js" "static/meal-prep/pages.js") }}" defer></script>
 {{ end }}

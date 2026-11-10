@@ -5,8 +5,8 @@
      so it prints and reads without JavaScript; uscis.js adds the search, the 65/20 filter, open/close all and the print option. */}}
 {{ $U := site.Data.civics.uscis }}
 {{ $vs := slice (index $U "2025") (index $U "2008") }}
-<link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (os.Stat "static/homeschool/hs.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "civics/uscis/uscis.css" | relURL }}?v={{ (os.Stat "static/civics/uscis/uscis.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/hs.css" "static/homeschool/hs.css") }}">
+<link rel="stylesheet" href="{{ "civics/uscis/uscis.css" | relURL }}?v={{ (partialCached "fv.html" "static/civics/uscis/uscis.css" "static/civics/uscis/uscis.css") }}">
 <div class="hs us" id="us" data-v="2025">
   <p class="hs-crumbs"><a href="{{ "american-history/" | relURL }}">American History &amp; Civics</a> › <a href="{{ "american-history/civics-and-government/" | relURL }}">Civics and Government</a> › <span>Citizenship test practice</span></p>
   <header class="hs-hero us-hero hs-noprint">
@@ -180,5 +180,5 @@
 {{ $js := dict }}
 {{ range $vs }}{{ $qs := slice }}{{ range .questions }}{{ $qs = $qs | append (dict "n" .n "q" .q "a" .a "star" .star "note" .note "changes" .changes "local" .local "section" .section "part" .part) }}{{ end }}{{ $js = merge $js (dict .version (dict "version" .version "total" .total "asked" .asked "passMark" .passMark "sections" .sections "questions" $qs)) }}{{ end }}
 <script type="application/json" id="us-data">{{ $js | jsonify | safeJS }}</script>
-<script src="{{ "civics/uscis/uscis.js" | relURL }}?v={{ (os.Stat "static/civics/uscis/uscis.js").ModTime.Unix }}" defer></script>
+<script src="{{ "civics/uscis/uscis.js" | relURL }}?v={{ (partialCached "fv.html" "static/civics/uscis/uscis.js" "static/civics/uscis/uscis.js") }}" defer></script>
 {{ end }}

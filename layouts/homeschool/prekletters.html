@@ -2,8 +2,8 @@
 {{ partial "hs-head.html" . }}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap">
-<link rel="stylesheet" href="{{ "homeschool/phonics/phonics.css" | relURL }}?v={{ (os.Stat "static/homeschool/phonics/phonics.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "homeschool/prek/prek.css" | relURL }}?v={{ (os.Stat "static/homeschool/prek/prek.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/phonics/phonics.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/phonics/phonics.css" "static/homeschool/phonics/phonics.css") }}">
+<link rel="stylesheet" href="{{ "homeschool/prek/prek.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/prek/prek.css" "static/homeschool/prek/prek.css") }}">
 {{ $step1 := "homeschool/actual-reading/phonics-practice/letters/" | relURL }}
 <div class="hs pp pk pk-l" id="pkl" data-next="{{ $step1 }}">
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/pre-k/" | relURL }}">Pre-K at home</a> › Pre-reading games</nav>
@@ -88,5 +88,5 @@
     <a class="hs-btn ghost" href="{{ $step1 }}">Next: Phonics Practice, Step 1 →</a>
   </nav>
 </div>
-<script src="{{ "homeschool/prek/letters.js" | relURL }}?v={{ (os.Stat "static/homeschool/prek/letters.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/prek/letters.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/prek/letters.js" "static/homeschool/prek/letters.js") }}" defer></script>
 {{ end }}

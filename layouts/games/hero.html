@@ -1,7 +1,7 @@
 {{ define "main" }}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
-<link rel="stylesheet" href="{{ "games/hero/game.css" | relURL }}?v={{ (os.Stat "static/games/hero/game.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/hero/game.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/hero/game.css" "static/games/hero/game.css") }}">
 {{ partial "game-shell.html" . }}
 <div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div><div class="hr gbox" id="hr">
   <canvas aria-label="Hero's Road game"></canvas>
@@ -12,7 +12,7 @@
   <noscript>This game needs JavaScript.</noscript>
 </div></div>
 <p style="font-size:.8rem;color:var(--secondary);margin-top:.5rem">Keyboard: ← → move, Space jumps, Shift runs and throws, P pauses. Phone: use the buttons; hold a direction to run.</p>
-<script src="{{ "js/words.js" | relURL }}?v={{ (os.Stat "static/js/words.js").ModTime.Unix }}"></script>
-<script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
-<script src="{{ "games/hero/game.js" | relURL }}?v={{ (os.Stat "static/games/hero/game.js").ModTime.Unix }}"></script>
+<script src="{{ "js/words.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/words.js" "static/js/words.js") }}"></script>
+<script src="{{ "js/translit.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/translit.js" "static/js/translit.js") }}"></script>
+<script src="{{ "games/hero/game.js" | relURL }}?v={{ (partialCached "fv.html" "static/games/hero/game.js" "static/games/hero/game.js") }}"></script>
 {{ end }}

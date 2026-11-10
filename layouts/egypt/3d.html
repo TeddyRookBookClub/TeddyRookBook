@@ -5,9 +5,9 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
 {{ partial "egypt-kit.html" . }}
-<link rel="stylesheet" href="{{ "egypt/3d/3d.css" | relURL }}?v={{ (os.Stat "static/egypt/3d/3d.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "egypt/3d/3d.css" | relURL }}?v={{ (partialCached "fv.html" "static/egypt/3d/3d.css" "static/egypt/3d/3d.css") }}">
 {{- range slice "egypt/3d/viewer.js" "egypt/3d/models.js" }}
-<script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+<script src="{{ . | relURL }}?v={{ (partialCached "fv.html" (printf "static/%s" .) (printf "static/%s" .)) }}" defer></script>
 {{- end }}
 <div class="hs eg-page td-page">
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "egypt/" | relURL }}">Ancient Egypt</a> › 3-D models</nav>

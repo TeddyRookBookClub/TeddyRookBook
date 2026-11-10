@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "meal-prep/ingredients.css" | relURL }}?v={{ (os.Stat "static/meal-prep/ingredients.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
+<link rel="stylesheet" href="{{ "meal-prep/ingredients.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/ingredients.css" "static/meal-prep/ingredients.css") }}">
 {{ $m := site.Data.meals }}{{ $rs := partialCached "meal-prep/recipes-all.html" "r" }}
 <div class="hs mp" id="mp-hub">
   {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep")) }}
@@ -103,5 +103,5 @@
     <p class="hs-small">Your plans are saved in this browser only; nothing is sent anywhere. Nutrition numbers are estimates. Read food labels for allergens yourself, since products change.</p>
   </section>
 </div>
-<script src="{{ "meal-prep/pages.js" | relURL }}?v={{ (os.Stat "static/meal-prep/pages.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/pages.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/pages.js" "static/meal-prep/pages.js") }}" defer></script>
 {{ end }}

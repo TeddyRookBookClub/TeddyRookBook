@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
 {{ $src := partial "meal-prep/data.html" . }}
 <div class="hs mp mp-app" id="mp" data-src="{{ $src }}" data-print="{{ "meal-prep/print/" | relURL }}" data-recipes="{{ "meal-prep/recipes/" | relURL }}">
   <nav class="hs-crumbs hs-noprint" aria-label="Breadcrumb"><a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> › <a href="{{ "meal-prep/" | relURL }}">Meal Prep</a> › Planner</nav>
@@ -106,10 +106,10 @@
     <p class="hs-small">Everything here stays in this browser (nothing is sent anywhere). Nutrition numbers are estimates from USDA FoodData Central and change with brands and portions. Cook meats to the USDA safe minimum internal temperatures given in each recipe. See the <a href="{{ "meal-prep/guides/" | relURL }}">kitchen guides</a> for cooking fats, cinnamon and more, the <a href="{{ "meal-prep/scratch/" | relURL }}">from-scratch recipes</a>, and the <a href="{{ "garden/" | relURL }}">Food Garden Planner</a> for growing your own.</p>
   </section>
 </div>
-<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/pictures.js" | relURL }}?v={{ (os.Stat "static/meal-prep/pictures.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/views.js" | relURL }}?v={{ (os.Stat "static/meal-prep/views.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/editor.js" | relURL }}?v={{ (os.Stat "static/meal-prep/editor.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/planner.js" | relURL }}?v={{ (os.Stat "static/meal-prep/planner.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/model.js" "static/meal-prep/model.js") }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/common.js" "static/meal-prep/common.js") }}" defer></script>
+<script src="{{ "meal-prep/pictures.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/pictures.js" "static/meal-prep/pictures.js") }}" defer></script>
+<script src="{{ "meal-prep/views.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/views.js" "static/meal-prep/views.js") }}" defer></script>
+<script src="{{ "meal-prep/editor.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/editor.js" "static/meal-prep/editor.js") }}" defer></script>
+<script src="{{ "meal-prep/planner.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/planner.js" "static/meal-prep/planner.js") }}" defer></script>
 {{ end }}

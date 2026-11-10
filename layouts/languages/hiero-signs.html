@@ -30,5 +30,5 @@
   </details>
   {{ partial "hiero-credits.html" . }}
 </div>
-<script src="{{ "languages/hieroglyphs/signs.js" | relURL }}?v={{ (os.Stat "static/languages/hieroglyphs/signs.js").ModTime.Unix }}" defer></script>
+<script src="{{ "languages/hieroglyphs/signs.js" | relURL }}?v={{ (partialCached "fv.html" "static/languages/hieroglyphs/signs.js" "static/languages/hieroglyphs/signs.js") }}" defer></script>
 {{ end }}

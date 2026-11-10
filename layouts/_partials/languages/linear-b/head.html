@@ -2,8 +2,8 @@
    and the area's own files (static/languages/linear-b/). The kit: static/scripts/viz/scripts.js and .css. */ -}}
 {{ partial "lang-head.html" . }}
 {{- range slice "math/viz/viz.css" "scripts/viz/scripts.css" "languages/linear-b/lb.css" }}
-<link rel="stylesheet" href="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}">
+<link rel="stylesheet" href="{{ . | relURL }}?v={{ (partialCached "fv.html" (printf "static/%s" .) (printf "static/%s" .)) }}">
 {{- end }}
 {{- range slice "math/viz/core.js" "scripts/viz/scripts.js" }}
-<script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+<script src="{{ . | relURL }}?v={{ (partialCached "fv.html" (printf "static/%s" .) (printf "static/%s" .)) }}" defer></script>
 {{- end }}

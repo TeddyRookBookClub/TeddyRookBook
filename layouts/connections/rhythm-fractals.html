@@ -6,9 +6,9 @@
    loaded when its first section comes near the screen. Element ids are the instruments' contract with the scripts.
    Every number on the page was checked by script: see the Notes and sources at the bottom. */ -}}
 {{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
-{{- $v := dict }}{{ range slice "fr1" "fr2" "fr3" "fr4" }}{{ $f := printf "static/connections/rhythm/%s.js" . }}{{ if fileExists $f }}{{ $v = merge $v (dict . (os.Stat $f).ModTime.Unix) }}{{ end }}{{ end }}
-{{- $tex := "math/core/tex.js" | relURL }}{{ with os.Stat "static/math/core/tex.js" }}{{ $tex = printf "%s?v=%d" $tex .ModTime.Unix }}{{ end }}
-{{- $texcss := "math/core/core.css" | relURL }}{{ with os.Stat "static/math/core/core.css" }}{{ $texcss = printf "%s?v=%d" $texcss .ModTime.Unix }}{{ end }}
+{{- $v := dict }}{{ range slice "fr1" "fr2" "fr3" "fr4" }}{{ $f := printf "static/connections/rhythm/%s.js" . }}{{ if fileExists $f }}{{ $v = merge $v (dict . (partialCached "fv.html" $f $f)) }}{{ end }}{{ end }}
+{{- $tex := "math/core/tex.js" | relURL }}{{ $tex = printf "%s?v=%d" $tex (partialCached "fv.html" "static/math/core/tex.js" "static/math/core/tex.js") }}
+{{- $texcss := "math/core/core.css" | relURL }}{{ $texcss = printf "%s?v=%d" $texcss (partialCached "fv.html" "static/math/core/core.css" "static/math/core/core.css") }}
 {{- $hub := "connections/rhythm-of-numbers/" | relURL }}
 <article class="rn rn-fr" data-rn-base="{{ "connections/rhythm/" | relURL }}" data-rn-v="{{ $v | jsonify }}" data-rn-tex="{{ $tex }}" data-rn-texcss="{{ $texcss }}">
 <nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Where Music, Patterns, Math and Chemistry Meet</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <span>Chapter VII</span></nav>

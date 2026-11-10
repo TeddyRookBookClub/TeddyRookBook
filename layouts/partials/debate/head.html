@@ -1,2 +1,2 @@
-<link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (os.Stat "static/homeschool/hs.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "debate/read.css" | relURL }}?v={{ (os.Stat "static/debate/read.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/hs.css" "static/homeschool/hs.css") }}">
+<link rel="stylesheet" href="{{ "debate/read.css" | relURL }}?v={{ (partialCached "fv.html" "static/debate/read.css" "static/debate/read.css") }}">

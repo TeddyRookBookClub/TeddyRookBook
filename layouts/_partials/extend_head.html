@@ -1,9 +1,9 @@
 {{- /* Installable app (static/manifest.webmanifest); saving pages for offline use is on /offline/. */ -}}
 <link rel="manifest" href="{{ "manifest.webmanifest" | relURL }}"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Teddy Rook">
 {{- /* Learner profiles (static/js/profiles.js): not deferred, so a learner switch finishes before any page script reads its save. */ -}}
-<script src="{{ "js/profiles.js" | relURL }}?v={{ (os.Stat "static/js/profiles.js").ModTime.Unix }}" data-ui="{{ "js/profiles-ui.js" | relURL }}?v={{ (os.Stat "static/js/profiles-ui.js").ModTime.Unix }}"></script>
+<script src="{{ "js/profiles.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/profiles.js" "static/js/profiles.js") }}" data-ui="{{ "js/profiles-ui.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/profiles-ui.js" "static/js/profiles-ui.js") }}"></script>
 {{- /* Backup reminders (static/js/backup.js): counts sessions of real work and now and then offers a family backup file. */ -}}
-<script src="{{ "js/backup.js" | relURL }}?v={{ (os.Stat "static/js/backup.js").ModTime.Unix }}" defer></script>
+<script src="{{ "js/backup.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/backup.js" "static/js/backup.js") }}" defer></script>
 {{- /* "Report a problem" (static/js/report.js; the channel is set in data/report.yaml). */ -}}
 {{ partial "report/script.html" . }}
 {{- /* Text size: applied before the page paints so there is no jump. Set by the Aa button in the header. */ -}}

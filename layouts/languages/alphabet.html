@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "lang-head.html" . }}
-<link rel="stylesheet" href="{{ "lang/alphabet.css" | relURL }}?v={{ (os.Stat "static/lang/alphabet.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "lang/alphabet.css" | relURL }}?v={{ (partialCached "fv.html" "static/lang/alphabet.css" "static/lang/alphabet.css") }}">
 <div class="lang ab-wrap">
   <header class="lang-hero">
     <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · Greek Alphabet</p>
@@ -10,7 +10,7 @@
   <div id="ab"><noscript>The lessons need JavaScript.</noscript></div>
   <p class="ab-note">Γράμματα (grámmata), “letters”, is the word used in John 7:15. Example words in these lessons are all found in the New Testament.</p>
 </div>
-<script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
-<script src="{{ "js/words.js" | relURL }}?v={{ (os.Stat "static/js/words.js").ModTime.Unix }}"></script>
-<script src="{{ "lang/alphabet.js" | relURL }}?v={{ (os.Stat "static/lang/alphabet.js").ModTime.Unix }}"></script>
+<script src="{{ "js/translit.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/translit.js" "static/js/translit.js") }}"></script>
+<script src="{{ "js/words.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/words.js" "static/js/words.js") }}"></script>
+<script src="{{ "lang/alphabet.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/alphabet.js" "static/lang/alphabet.js") }}"></script>
 {{ end }}

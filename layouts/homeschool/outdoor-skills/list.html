@@ -34,5 +34,5 @@
     <p class="hs-small">{{ $d.about.disclaimer }}</p>
   </section>
 </div>
-<script src="{{ "homeschool/outdoor.js" | relURL }}?v={{ (os.Stat "static/homeschool/outdoor.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/outdoor.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/outdoor.js" "static/homeschool/outdoor.js") }}" defer></script>
 {{ end }}

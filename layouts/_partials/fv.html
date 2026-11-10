@@ -1,0 +1,5 @@
+{{- /* File version for cache-busting (?v=…): a number made from the file's contents, so it changes only when the
+   file changes. (File times change on every checkout, which made every deploy re-download every script and style.)
+   Context: a path from the project root, e.g. "static/music/mus.js". Call it cached:
+   {{ partialCached "fv.html" $path $path }} */ -}}
+{{- return (int (printf "0x%s" (substr (md5 (readFile .)) 0 7))) -}}

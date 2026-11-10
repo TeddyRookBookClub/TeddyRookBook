@@ -10,4 +10,4 @@
 {{- $ph := slice -}}{{- range site.Data.phonics.steps -}}{{- $ph = $ph | append (dict "k" .key "t" .title "a" .acts) -}}{{- end -}}
 <div class="trb-wn" id="trb-wn" hidden></div>
 <script type="application/json" id="trb-wn-data">{{ dict "L" $L "C" $C "ph" $ph | jsonify | safeJS }}</script>
-<script src="{{ "js/whats-next.js" | relURL }}?v={{ (os.Stat "static/js/whats-next.js").ModTime.Unix }}" defer></script>
+<script src="{{ "js/whats-next.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/whats-next.js" "static/js/whats-next.js") }}" defer></script>

@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "homeschool/balancing.css" | relURL }}?v={{ (os.Stat "static/homeschool/balancing.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/balancing.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/balancing.css" "static/homeschool/balancing.css") }}">
 {{ $game := "science-lab/book-cart/" | relURL }}
 {{ $m := "homeschool/science/first-course-in-physics/" | relURL }}
 <div class="hs bp">

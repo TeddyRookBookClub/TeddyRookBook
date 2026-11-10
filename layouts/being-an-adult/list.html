@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "adult/adult.css" | relURL }}?v={{ (os.Stat "static/adult/adult.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "adult/adult.css" | relURL }}?v={{ (partialCached "fv.html" "static/adult/adult.css" "static/adult/adult.css") }}">
 {{ $areas := slice "house" "car" "money" "everyday" }}{{ $n := 0 }}{{ range $areas }}{{ $n = add $n (len (index site.Data.adult .).guides) }}{{ end }}
 <div class="hs os ad" id="ad-hub" data-units>
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Being an Adult 101</nav>
@@ -60,5 +60,5 @@
   </section>
   <p class="hs-small">Free how-to guides for families, with nothing to earn, pass or send in. They follow U.S. rules and sources; your owner's manual, product labels and state and local rules come first. The money guides explain how things work and aren't personal financial, tax or legal advice.</p>
 </div>
-<script src="{{ "adult/adult.js" | relURL }}?v={{ (os.Stat "static/adult/adult.js").ModTime.Unix }}" defer></script>
+<script src="{{ "adult/adult.js" | relURL }}?v={{ (partialCached "fv.html" "static/adult/adult.js" "static/adult/adult.js") }}" defer></script>
 {{ end }}

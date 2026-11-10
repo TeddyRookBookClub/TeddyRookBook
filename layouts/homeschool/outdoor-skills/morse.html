@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "homeschool/morse.css" | relURL }}?v={{ (os.Stat "static/homeschool/morse.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/morse.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/morse.css" "static/homeschool/morse.css") }}">
 <div class="hs os mc">
   <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/outdoor-skills/" | relURL }}">Outdoor Skills</a> › <a href="{{ "homeschool/outdoor-skills/signaling/" | relURL }}">Signaling</a> › Morse Code</nav>
   <header class="hs-hero os-hero">
@@ -58,5 +58,5 @@
   <section class="hs-sec os-callout"><p>🗝️ More practice: <a href="{{ "homeschool/code-practice/" | relURL }}">Code Practice</a> mixes Morse with binary and hex, and <a href="{{ "homeschool/code-quest/" | relURL }}">Code Quest</a> makes printable coded scavenger hunts for home.</p></section>
   <nav class="hs-pn"><a href="{{ "homeschool/outdoor-skills/signaling/" | relURL }}">← Signaling</a><a href="{{ "homeschool/outdoor-skills/" | relURL }}">All outdoor skills →</a></nav>
 </div>
-<script src="{{ "homeschool/morse.js" | relURL }}?v={{ (os.Stat "static/homeschool/morse.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/morse.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/morse.js" "static/homeschool/morse.js") }}" defer></script>
 {{ end }}

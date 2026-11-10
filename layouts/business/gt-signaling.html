@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "unit-head.html" . }}
-<link rel="stylesheet" href="{{ "business/game-theory/signaling/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/signaling/sim.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/game-theory/signaling/sim.css" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/signaling/sim.css" "static/business/game-theory/signaling/sim.css") }}">
 <div class="lab" id="gt10-lab">
   {{ partial "unit-nav.html" . }}
   <header class="lab-hero">
@@ -215,6 +215,6 @@
   </section>
   {{ partial "unit-foot.html" . }}
 </div>
-<script src="{{ "business/game-theory/signaling/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/signaling/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "business/game-theory/signaling/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/signaling/sim.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/signaling/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/signaling/model.js" "static/business/game-theory/signaling/model.js") }}" defer></script>
+<script src="{{ "business/game-theory/signaling/sim.js" | relURL }}?v={{ (partialCached "fv.html" "static/business/game-theory/signaling/sim.js" "static/business/game-theory/signaling/sim.js") }}" defer></script>
 {{ end }}

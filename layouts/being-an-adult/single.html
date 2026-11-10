@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "adult/adult.css" | relURL }}?v={{ (os.Stat "static/adult/adult.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "adult/adult.css" | relURL }}?v={{ (partialCached "fv.html" "static/adult/adult.css" "static/adult/adult.css") }}">
 {{ $area := index site.Data.adult .Params.area }}{{ $g := index (where $area.guides "key" .Params.guide) 0 }}
 {{ $prev := "" }}{{ $next := "" }}{{ $found := false }}
 {{ range $area.guides }}{{ if $found }}{{ if not $next }}{{ $next = . }}{{ end }}{{ else if eq .key $g.key }}{{ $found = true }}{{ else }}{{ $prev = . }}{{ end }}{{ end }}
@@ -67,5 +67,5 @@
     <p class="ad-check-foot">teddyrookbook.com/being-an-adult/{{ $g.key }}/</p>
   </div>
 </div>
-<script src="{{ "adult/adult.js" | relURL }}?v={{ (os.Stat "static/adult/adult.js").ModTime.Unix }}" defer></script>
+<script src="{{ "adult/adult.js" | relURL }}?v={{ (partialCached "fv.html" "static/adult/adult.js" "static/adult/adult.js") }}" defer></script>
 {{ end }}

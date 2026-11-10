@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "homeschool/placement.css" | relURL }}?v={{ (os.Stat "static/homeschool/placement.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/placement.css" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/placement.css" "static/homeschool/placement.css") }}">
 {{- /* Planner courses: name and page (ladder and unit courses take theirs from the ladder or unit data, as in the planner),
    the planner subject each belongs to, and for ladder courses that ladder's "Find your rung" page. Only pages in this build. */ -}}
 {{- $urls := dict -}}{{- $names := dict -}}{{- $subj := dict -}}{{- $rung := dict -}}
@@ -58,5 +58,5 @@
   </section>
   <script type="application/json" id="pc-data">{{ dict "subjects" site.Data.hs_placement.subjects "urls" $urls "names" $names "subj" $subj "rung" $rung "links" $links "science" site.Data.hs_placement.science "music" site.Data.hs_placement.music | jsonify | safeJS }}</script>
 </div>
-<script src="{{ "homeschool/placement.js" | relURL }}?v={{ (os.Stat "static/homeschool/placement.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/placement.js" | relURL }}?v={{ (partialCached "fv.html" "static/homeschool/placement.js" "static/homeschool/placement.js") }}" defer></script>
 {{ end }}

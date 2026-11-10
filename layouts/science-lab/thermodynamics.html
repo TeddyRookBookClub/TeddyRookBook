@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "unit-head.html" . }}
-<link rel="stylesheet" href="{{ "science-lab/thermodynamics/hub.css" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/hub.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "science-lab/thermodynamics/hub.css" | relURL }}?v={{ (partialCached "fv.html" "static/science-lab/thermodynamics/hub.css" "static/science-lab/thermodynamics/hub.css") }}">
 <div class="lab" id="thh-lab">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Thermodynamics</nav>
   <header class="thh-hero">
@@ -124,5 +124,5 @@
     <a href="{{ "science-lab/thermodynamics/zeroth-law/" | relURL }}">Chapter 1: Temperature and the Zeroth Law →</a>
   </nav>
 </div>
-<script src="{{ "science-lab/thermodynamics/hub.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/hub.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/thermodynamics/hub.js" | relURL }}?v={{ (partialCached "fv.html" "static/science-lab/thermodynamics/hub.js" "static/science-lab/thermodynamics/hub.js") }}" defer></script>
 {{ end }}

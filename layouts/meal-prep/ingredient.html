@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "meal-prep/ingredients.css" | relURL }}?v={{ (os.Stat "static/meal-prep/ingredients.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
+<link rel="stylesheet" href="{{ "meal-prep/ingredients.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/ingredients.css" "static/meal-prep/ingredients.css") }}">
 {{- /* One "Use it up" page, from data/meals/ingredients.yaml; recipes ranked by partial meal-prep/ing-uses.html */ -}}
 {{ $m := site.Data.meals }}{{ $Y := $m.ingredients }}
 {{ $e := index (where $Y.ingredients "id" .Params.ingredient) 0 }}
@@ -106,5 +106,5 @@
   </div>
   <p class="hs-small">Storage times and buying tips are general guides from the sources below; follow any date or instructions on the package. Cook meat, poultry, fish and eggs to the USDA safe temperatures in each recipe.</p>
 </div>
-<script src="{{ "meal-prep/ingredients.js" | relURL }}?v={{ (os.Stat "static/meal-prep/ingredients.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/ingredients.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/ingredients.js" "static/meal-prep/ingredients.js") }}" defer></script>
 {{ end }}

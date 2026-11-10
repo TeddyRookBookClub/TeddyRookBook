@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{- /* Shown by the service worker (static/sw.js) when there is no connection and the page asked for is not saved.
        The address bar still shows the page that was asked for. */ -}}
-<link rel="stylesheet" href="{{ "offline/offline.css" | relURL }}?v={{ (os.Stat "static/offline/offline.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "offline/offline.css" | relURL }}?v={{ (partialCached "fv.html" "static/offline/offline.css" "static/offline/offline.css") }}">
 <div class="trb-group off off-fb">
   <header class="trb-ghero">
     <p class="trb-geyebrow">Teddy Rook Book · No connection</p>
@@ -14,7 +14,7 @@
     <p class="off-acts"><button type="button" class="off-btn pri" onclick="location.reload()">Try again</button> <a class="off-btn" href="{{ "offline/" | relURL }}">Offline settings</a> <a class="off-btn" href="{{ "" | relURL }}">Home page</a></p>
   </section>
 </div>
-<script src="{{ "js/offline-core.js" | relURL }}?v={{ (os.Stat "static/js/offline-core.js").ModTime.Unix }}"></script>
+<script src="{{ "js/offline-core.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/offline-core.js" "static/js/offline-core.js") }}"></script>
 <script>
 (function () {
   var ul = document.querySelector('[data-off="fb-list"]');

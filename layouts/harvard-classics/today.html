@@ -34,5 +34,5 @@
   </section>
 </div>
 <script type="application/json" id="hc-days">{{ partial "harvard-classics/days-json.html" . | safeJS }}</script>
-<script src="{{ "harvard-classics/hc.js" | relURL }}?v={{ (os.Stat "static/harvard-classics/hc.js").ModTime.Unix }}" defer></script>
+<script src="{{ "harvard-classics/hc.js" | relURL }}?v={{ (partialCached "fv.html" "static/harvard-classics/hc.js" "static/harvard-classics/hc.js") }}" defer></script>
 {{ end }}

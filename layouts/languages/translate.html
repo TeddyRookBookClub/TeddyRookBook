@@ -3,7 +3,7 @@
    la (lat | grc), orig (the title in the original), plans [{t, days, from, to}], notes [things to watch for], grammar
    [{t, u}]. The text loads from static/languages/translate/<work>*.json (static/languages/translate/tr.js). */ -}}
 {{ partial "lang-head.html" . }}
-<link rel="stylesheet" href="{{ "languages/translate/tr.css" | relURL }}?v={{ (os.Stat "static/languages/translate/tr.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "languages/translate/tr.css" | relURL }}?v={{ (partialCached "fv.html" "static/languages/translate/tr.css" "static/languages/translate/tr.css") }}">
 {{ $grc := eq .Params.la "grc" }}
 <div class="lang trn{{ if $grc }} grk{{ end }}" id="trn" data-work="{{ .Params.work }}" data-base="{{ "languages/translate/" | relURL }}" data-plans="{{ .Params.plans | jsonify }}">
   <header class="lang-hero">
@@ -49,5 +49,5 @@
     <p>{{ .Params.license | markdownify }} The texts were divided into daily portions here. Dictionary links go to the Perseus Digital Library (Tufts University) and Logeion (University of Chicago).</p>
   </footer>
 </div>
-<script src="{{ "languages/translate/tr.js" | relURL }}?v={{ (os.Stat "static/languages/translate/tr.js").ModTime.Unix }}"></script>
+<script src="{{ "languages/translate/tr.js" | relURL }}?v={{ (partialCached "fv.html" "static/languages/translate/tr.js" "static/languages/translate/tr.js") }}"></script>
 {{ end }}

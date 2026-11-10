@@ -2,9 +2,9 @@
 {{ partial "lab-head.html" . }}
 {{- $v := dict -}}
 {{- range slice "model" "solve3" "solve2" "beginner" "solve4" "validate" "core" "view3d" "app" "guide" "worker" -}}
-{{- $v = merge $v (dict . (printf "games/cube/%s.js?v=%d" . (os.Stat (printf "static/games/cube/%s.js" .)).ModTime.Unix | relURL)) -}}
+{{- $v = merge $v (dict . (printf "games/cube/%s.js?v=%d" . (partialCached "fv.html" (printf "static/games/cube/%s.js" .) (printf "static/games/cube/%s.js" .)) | relURL)) -}}
 {{- end -}}
-<link rel="stylesheet" href="{{ "games/cube/cube.css" | relURL }}?v={{ (os.Stat "static/games/cube/cube.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/cube/cube.css" | relURL }}?v={{ (partialCached "fv.html" "static/games/cube/cube.css" "static/games/cube/cube.css") }}">
 <div class="lab" id="cube-lab" data-n="3" data-mode="enter" data-worker="{{ index $v "worker" }}" data-scripts="{{ index $v "model" }} {{ index $v "solve3" }} {{ index $v "solve2" }} {{ index $v "beginner" }} {{ index $v "solve4" }} {{ index $v "core" }}">
   <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Cube Solver</nav>
   <header class="lab-hero">

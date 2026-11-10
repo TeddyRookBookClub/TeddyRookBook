@@ -1,6 +1,6 @@
 {{ define "main" }}
-<link rel="stylesheet" href="/css/home.css?v={{ (os.Stat "static/css/home.css").ModTime.Unix }}">
-<link rel="stylesheet" href="/css/sci-feature.css?v={{ (os.Stat "static/css/sci-feature.css").ModTime.Unix }}">
+<link rel="stylesheet" href="/css/home.css?v={{ (partialCached "fv.html" "static/css/home.css" "static/css/home.css") }}">
+<link rel="stylesheet" href="/css/sci-feature.css?v={{ (partialCached "fv.html" "static/css/sci-feature.css" "static/css/sci-feature.css") }}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
 {{ $books := where (where site.RegularPages "Section" "books") "Params.isListPage" "!=" true }}
@@ -214,10 +214,10 @@
   </section>
 
 </div>
-<script src="/js/translit.js?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
-<script src="/games/vocab.js?v={{ (os.Stat "static/games/vocab.js").ModTime.Unix }}"></script>
-<script src="/games/art.js?v={{ (os.Stat "static/games/art.js").ModTime.Unix }}"></script>
-<script src="/js/home-donut.js?v={{ (os.Stat "static/js/home-donut.js").ModTime.Unix }}" defer></script>
+<script src="/js/translit.js?v={{ (partialCached "fv.html" "static/js/translit.js" "static/js/translit.js") }}"></script>
+<script src="/games/vocab.js?v={{ (partialCached "fv.html" "static/games/vocab.js" "static/games/vocab.js") }}"></script>
+<script src="/games/art.js?v={{ (partialCached "fv.html" "static/games/art.js" "static/games/art.js") }}"></script>
+<script src="/js/home-donut.js?v={{ (partialCached "fv.html" "static/js/home-donut.js" "static/js/home-donut.js") }}" defer></script>
 <script>
 (function () {
   try {

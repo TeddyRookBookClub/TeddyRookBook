@@ -85,7 +85,7 @@ html[data-theme="dark"] #ps-svg .lf rect{fill:#2b2a1d}html[data-theme="dark"] #p
     <p class="tr-note">The Latin sentences are from Phaedrus’s fables, the Greek from Aesop’s; trees and grammar from the Perseus Latin and Ancient Greek Dependency Treebanks (CC BY-SA 3.0), which follow their own conventions: for example, words joined by “and” hang from the “and”. The Greek of Aesop’s fables is post-classical prose, close to Koine but not New Testament Greek. English translations written for this site.</p>
   </section>
 </div>
-<script src="{{ "lang/grammar.js" | relURL }}?v={{ (os.Stat "static/lang/grammar.js").ModTime.Unix }}"></script>
-<script src="{{ "lang/core.js" | relURL }}?v={{ (os.Stat "static/lang/core.js").ModTime.Unix }}"></script>
-<script src="{{ "lang/trees.js" | relURL }}?v={{ (os.Stat "static/lang/trees.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/grammar.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/grammar.js" "static/lang/grammar.js") }}"></script>
+<script src="{{ "lang/core.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/core.js" "static/lang/core.js") }}"></script>
+<script src="{{ "lang/trees.js" | relURL }}?v={{ (partialCached "fv.html" "static/lang/trees.js" "static/lang/trees.js") }}"></script>
 {{ end }}

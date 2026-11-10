@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
 {{ $g := index site.Data.meals.guides .Params.guide }}
 {{ $cat := partialCached "meal-prep/catdict.html" "c" }}
 {{ $srcs := dict }}{{ range $i, $s := $g.sources }}{{ $srcs = merge $srcs (dict $s.id (add $i 1)) }}{{ end }}

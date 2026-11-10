@@ -1,4 +1,4 @@
-<script src="{{ "js/units.js" | relURL }}?v={{ (os.Stat "static/js/units.js").ModTime.Unix }}" defer></script>
+<script src="{{ "js/units.js" | relURL }}?v={{ (partialCached "fv.html" "static/js/units.js" "static/js/units.js") }}" defer></script>
 {{- /* Footer styles ("Expand all" bars, unit pickers, the social links): assets/css/site-foot.css, at the end of the page where they
    used to be inline, so they still come after every page style. The scripts that used to be here are in assets/js/site-shell.js,
    loaded by layouts/_partials/footer.html right after this partial. */}}

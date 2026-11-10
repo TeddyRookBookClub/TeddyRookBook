@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
-<link rel="stylesheet" href="{{ "meal-prep/feast.css" | relURL }}?v={{ (os.Stat "static/meal-prep/feast.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/meals.css" "static/meal-prep/meals.css") }}">
+<link rel="stylesheet" href="{{ "meal-prep/feast.css" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/feast.css" "static/meal-prep/feast.css") }}">
 {{- /* Holiday collections (Christmas, Easter, Lunar New Year): one layout for all three. The page's front matter names its
    collection (data/meals/recipes/<collection>.json, built by scripts/meals/src/build_<collection>.py). Courses mix the
    collection's new recipes with recipes and from-scratch pages from elsewhere in Meal Prep, by id. The sections only
@@ -96,7 +96,7 @@
   <div class="fe-printout" id="fe-printout" aria-hidden="true"></div>
 </div>
 <script type="application/json" id="fe-data">{{ dict "key" $key "title" .Title "day" $C.day "roasts" ($C.roasts | default dict) "def" $C.default_menu "defc" $defc "yield" ($C.cookie_yield | default dict) "party" ($C.party | default dict) "dates" ($C.dates | default slice) "r" $mini | jsonify | safeJS }}</script>
-<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
-<script src="{{ "meal-prep/feast.js" | relURL }}?v={{ (os.Stat "static/meal-prep/feast.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/model.js" "static/meal-prep/model.js") }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/common.js" "static/meal-prep/common.js") }}" defer></script>
+<script src="{{ "meal-prep/feast.js" | relURL }}?v={{ (partialCached "fv.html" "static/meal-prep/feast.js" "static/meal-prep/feast.js") }}" defer></script>
 {{ end }}

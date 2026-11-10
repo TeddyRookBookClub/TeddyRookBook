@@ -1,5 +1,5 @@
 {{ define "main" }}
-<link rel="stylesheet" href="/css/infographics.css?v={{ (os.Stat "static/css/infographics.css").ModTime.Unix }}">
+<link rel="stylesheet" href="/css/infographics.css?v={{ (partialCached "fv.html" "static/css/infographics.css" "static/css/infographics.css") }}">
 <article class="ig-one">
   <p class="ig-one-back"><a href="/infographics/#{{ .Params.igfile }}">‹ All infographics</a></p>
   <h1>{{ .Title }}</h1>

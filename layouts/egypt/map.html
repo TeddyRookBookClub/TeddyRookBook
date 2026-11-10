@@ -16,5 +16,5 @@
   </section>
   <p class="hs-small eg-fine">The coastlines, the river and the lakes were drawn for this site through the coordinates of known places; they are simplified, good to a few kilometers. Site coordinates were checked against Wikipedia. The Suez Canal and modern cities are shown for orientation only.</p>
 </div>
-<script src="{{ "egypt/hub.js" | relURL }}?v={{ (os.Stat "static/egypt/hub.js").ModTime.Unix }}" defer></script>
+<script src="{{ "egypt/hub.js" | relURL }}?v={{ (partialCached "fv.html" "static/egypt/hub.js" "static/egypt/hub.js") }}" defer></script>
 {{ end }}
