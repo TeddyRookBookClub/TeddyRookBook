@@ -44,3 +44,4 @@ python3 c12_third_rate.py           # Chapter 17, Section 17.7: pi's own constan
 echo "all numbers and figures rebuilt"
 python3 c14_connections.py          # Chapter 12, Section 12.8: the five-oval diagram, Sommerfeld's shapes, the break-up table (seconds;
                                     # c14_connections_kam.py and c14_connections_venn.py recompute its stored values, minutes each)
+# Chapter 19: see the docstring of c15_newton/c15_newton.py (compile nbody.c, tune, integrate, spec.py, then c15_newton.py)

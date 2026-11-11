@@ -1,0 +1,37 @@
+{{- /* Newton's Rosette (Chapter 19): panels. Script: static/connections/rhythm/inst/rosette.js; styles: inst/kepler.css. */ -}}
+<div class="wrap">
+  <section class="panel" aria-label="Choose a law of force">
+    <div class="row" id="rsPresets"></div>
+    <div class="fields">
+      <label for="rsP">The pull weakens as distance to the power</label>
+      <input id="rsP" type="range" min="-1" max="2.9" step="0.01" value="2">
+      <span class="readout" id="rsPv"></span>
+    </div>
+    <div class="fields">
+      <label for="rsE">How stretched the orbit is</label>
+      <input id="rsE" type="range" min="0.05" max="0.8" step="0.01" value="0.45">
+    </div>
+    <div class="readout" id="rsLine"></div>
+  </section>
+
+  <section class="panel" aria-label="The orbit">
+    <h2>The orbit, seen from above</h2>
+    <div class="stage"><canvas id="rsCan" width="1240" height="1240" role="img" aria-label="A body orbiting a center of force. Its path is traced, and each closest approach is marked."></canvas></div>
+    <div class="row">
+      <button class="play" id="rsPlay" type="button">▶ Play</button>
+      <button class="chip" id="rsFast" type="button">Draw 20 more laps</button>
+      <button class="chip" id="rsClear" type="button">Start again</button>
+      <button class="chip" id="rsSound" type="button" aria-pressed="false">Sound: off</button>
+    </div>
+    <div class="readout" id="rsLive"></div>
+    <p class="cap">The gold dots mark each closest approach. With Newton's inverse-square law they all fall on one spot and the orbit is a closed ellipse. With any other law the closest point steps round the center, and the orbit draws a rosette.</p>
+  </section>
+
+  <section class="panel" aria-label="The ladder">
+    <h2>The ladder behind the rosette</h2>
+    <div class="tablewrap"><table id="rsTbl"><thead><tr><th>fraction</th><th>figure</th><th>how nearly it closes</th><th>next term</th></tr></thead><tbody></tbody></table></div>
+    <p class="cap">Between one closest approach and the next, the body goes round the center by a fixed amount. Written as a fraction of a turn, that amount has a continued fraction, and its rungs are the figures the rosette almost draws: a fraction p/q is a flower of q petals drawn in p turns. A large next term means the flower nearly closes before it starts to turn.</p>
+  </section>
+
+  <p class="note">What is known and what is ours. The rule for nearly round orbits is Newton's (Principia, Book I, Proposition 45): if the pull weakens as distance to the power p, the closest and farthest points are 180°/√(3 − p) apart. That only two laws close every orbit, the inverse square and the spring, is Bertrand's theorem (1873). Reading the step as a continued fraction, and the rosette's flowers as its rungs, is this project's addition. The orbits here are computed step by step in your browser.</p>
+</div>

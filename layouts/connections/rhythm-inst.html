@@ -1,14 +1,16 @@
 {{ define "main" }}
 {{- /* /connections/rhythm-of-numbers/keplers-figures/ and /butterfly/: the two instruments of Chapter 18 of the paper.
-   Front matter: inst (kepler or butterfly), eyebrow, lede, added, how (list), notes (list). The panels, styles and
+   Also the three instruments of Chapter 19 (rosette, tides, gears), whose panels and scripts are written by hand.
+   Front matter: inst, optional css (which stylesheet in inst/, default the same name), optional parent {url, label,
+   chapter}, eyebrow, lede, added, how (list), notes (list). The panels, styles and
    script are written by scripts/rhythm/port-instrument.py from Teddy Rook's own instrument files in
    docs/papers/rhythm-of-numbers/instruments/; edit there and rerun it. */ -}}
 {{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
 {{ partial "inline/ml-css.html" "connections/rhythm/prime.css" }}
-{{ partial "inline/ml-css.html" (printf "connections/rhythm/inst/%s.css" .Params.inst) }}
-{{- $hub := "connections/rhythm-of-numbers/" | relURL }}{{ $ls := "connections/rhythm-of-numbers/large-and-small/" | relURL }}
+{{ partial "inline/ml-css.html" (printf "connections/rhythm/inst/%s.css" (.Params.css | default .Params.inst)) }}
+{{- $hub := "connections/rhythm-of-numbers/" | relURL }}{{ $par := .Params.parent | default (dict "url" "connections/rhythm-of-numbers/large-and-small/" "label" "Large and small" "chapter" "18") }}{{ $ls := $par.url | relURL }}
 <article class="rn rn-np">
-<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Connections</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <a href="{{ $ls }}">Large and small</a> <span aria-hidden="true">›</span> <span>{{ .LinkTitle }}</span></nav>
+<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Connections</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <a href="{{ $ls }}">{{ $par.label }}</a> <span aria-hidden="true">›</span> <span>{{ .LinkTitle }}</span></nav>
 
 <header class="rn-hero">
   <p class="rn-eyebrow">{{ .Params.eyebrow }} · added {{ partial "connections/rn-date.html" .Params.added }}</p>
@@ -31,7 +33,7 @@
 
 <section class="np-sec" aria-labelledby="ri-more-h">
   <h2 id="ri-more-h">Read more</h2>
-  <p class="np-next"><a href="{{ $ls }}">Large and small, in plain words →</a>{{ with .Params.other }}<a href="{{ .url | relURL }}">{{ .label }} →</a>{{ end }}<a href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}">The paper, Chapter 18 →</a></p>
+  <p class="np-next"><a href="{{ $ls }}">{{ $par.label }}, in plain words →</a>{{ with .Params.other }}<a href="{{ .url | relURL }}">{{ .label }} →</a>{{ end }}{{ range .Params.others }}<a href="{{ .url | relURL }}">{{ .label }} →</a>{{ end }}<a href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}">The paper, Chapter {{ $par.chapter }} →</a></p>
 </section>
 
 <footer class="rn-notes" aria-labelledby="ri-n-h">

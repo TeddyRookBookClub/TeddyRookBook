@@ -24,6 +24,7 @@ EXTRA = ('.rni{display:block;min-width:0;max-width:100%;color:var(--ink);font-si
          '.rni h2{color:var(--ink)}'
          '.rni .eyebrow,.rni .readout .g{color:var(--gold-t)}'
          '.rni .play{background:var(--band);color:var(--on)}'
+         '.rn .rni .play:hover,.rn .rni .play:focus,.rn .rni .play:active{background:var(--band);color:var(--on);filter:brightness(1.12)}'
          '.rni .chip[aria-pressed="true"]{color:var(--on)}'
          '.rni button{min-height:2.4rem}'
          '.rni .note{color:var(--muted);border-left-color:var(--gold)}')
@@ -49,6 +50,12 @@ for name, fn in (('kepler', 'kepler-figures-instrument.html'), ('butterfly', 'bu
     js = re.search(r'<script>(.*?)</script>', s, re.S).group(1).strip() + '\n'
     body = s[s.index('<div class="wrap">'):s.index('<script>')].strip()
     body = re.sub(r'\s*<header style=.*?</header>\n', '\n', body, count=1, flags=re.S)   # the page layout draws the header
+    # one correction to the text (the paper's Section 19.7): the great inequality is driven by the 883-year beat but does not
+    # itself repeat in exactly 883 years, because the orbits' long axes move
+    old = 'it is 883 years, the same as the period of the slow swing of Jupiter and Saturn that astronomers call the great inequality.'
+    if name == 'kepler':
+        assert old in body
+        body = body.replace(old, 'it is 883 years, the beat that drives the slow swing of Jupiter and Saturn that astronomers call the great inequality (the swing itself runs a few percent slower, because the orbits turn too).')
     assert 'getComputedStyle(document.documentElement)' in js
     js = js.replace('getComputedStyle(document.documentElement)', 'getComputedStyle(document.querySelector(".rni"))')
     head = '/* %s: ported from docs/papers/rhythm-of-numbers/instruments/%s by scripts/rhythm/port-instrument.py. Edit the source, then rerun. */\n' % (name, fn)

@@ -3,6 +3,8 @@ title: "Large and small: the same patterns in atoms and in orbits"
 linkTitle: "Large and small"
 description: "Physics joins the Rhythm of Numbers. One law of periods for a planet and an electron, moons and planets that keep time in simple ratios, a number's rhythm as an energy spectrum, and Kepler's harmonies of the planets put to the test. Chapter 18 of the paper in plain words, with two instruments."
 layout: rhythm-large
+more:
+  - { url: "connections/rhythm-of-numbers/newton/", label: "Newton: the rhythm of gravity" }
 # Plain-words summary of Chapter 18 of the paper (docs/papers/rhythm-of-numbers/paper/ch18_largesmall.tex). Keep every
 # claim as the paper states it: none of the physics is ours; say which tests failed. No hype.
 added: "2026-11-10b"
@@ -73,7 +75,7 @@ sections:
     h: "Kepler, continued"
     paras:
       - "**The triangle is a continued fraction.** On 19 July 1595 Kepler drew for his class the places in the zodiac where Jupiter and Saturn meet, about every twenty years. Each meeting falls about two thirds of the way round from the last, so three of them make a triangle, and the triangle slowly turns. The drawing gave him the idea for his first book."
-      - "Here is what the continued fraction adds. Each meeting falls a fixed step round the circle. The fractions closest to that step are the figures the meetings draw: 2/3 is the triangle. The term that follows says how many times the figure is drawn before it has turned by one of its own points. For Jupiter and Saturn that term is 14, and the triangle takes about 883 years to turn onto itself. Astronomers know the same 883 years as the period of a slow swing in the motions of Jupiter and Saturn, called the great inequality. They are one beat, seen two ways."
+      - "Here is what the continued fraction adds. Each meeting falls a fixed step round the circle. The fractions closest to that step are the figures the meetings draw: 2/3 is the triangle. The term that follows says how many times the figure is drawn before it has turned by one of its own points. For Jupiter and Saturn that term is 14, and the triangle takes about 883 years to turn onto itself. The same beat drives a slow swing in the motions of Jupiter and Saturn, called the great inequality. They are one beat, seen two ways. (The swing itself runs a few percent slower than 883 years, because the orbits are slowly turning too: see [Newton](/connections/rhythm-of-numbers/newton/#swings).)"
       - "For Venus and the Earth the figure is a five-pointed star, drawn every 8 years. One step further down the same continued fraction gives 243 years, the period after which transits of Venus across the Sun repeat. The same method gives the periods that astronomers in Babylon already used to predict the planets: 8 years for Venus, 46 for Mercury, 47 and 79 for Mars, 83 for Jupiter and 59 for Saturn."
       - "Watch any pair draw its figure in [Kepler’s Figures](/connections/rhythm-of-numbers/keplers-figures/)."
       - "**His harmonies, tested.** In 1619 Kepler compared each planet’s fastest speed across the sky, seen from the Sun, with its slowest, and heard a musical interval in each ratio: a major third for Saturn, a semitone for the Earth. We tested these three ways, with his own figures, with the orbits as they were in 1600 and with the orbits of today. Random ratios do as well as the planets about one time in six. So the harmonies of the single planets are not established. They also cannot last, because the shapes of the orbits slowly change."

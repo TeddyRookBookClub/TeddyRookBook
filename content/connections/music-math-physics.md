@@ -10,6 +10,8 @@ golinks:
   - { url: "/physics/astronomy/kepler-third-law/", why: "periods from distances" }
   - { url: "/physics/astrophysics/exoplanet-transits/", why: "how planets of other stars are timed" }
   - { url: "/physics/mechanics/driven-resonance/", why: "resonance in general" }
+  - { url: "/connections/rhythm-of-numbers/newton/#swings", title: "Newton: the long, slow swings of the planets", why: "what near-resonance does when it does not lock" }
+  - { url: "/connections/rhythm-of-numbers/huygens-gears/", title: "Huygens’s Gears", why: "the same fractions as gear wheels" }
 credits:
   - { name: "Teddy Rook, The Rhythm of Numbers, Chapter 18", url: "/connections/rhythm-of-numbers/paper/", what: "the big-term test, the periods used and the test against random ratios" }
   - { name: "NASA Space Science Data Coordinated Archive", url: "https://nssdc.gsfc.nasa.gov/planetary/factsheet/", what: "the periods of Jupiter's moons" }

@@ -51,6 +51,9 @@ script & computes \\
 \texttt{c14\_connections.py} \addedon{\revE} & Section~\ref{sec:fifth}: the numbers for the five-oval diagram, Sommerfeld's orbit shapes and \cref{tab:kam} (a few seconds; it rechecks two entries of the table) \\
 \texttt{c14\_connections\_kam.py} \addedon{\revE} & Greene's residue method for the standard map: the kick strength at which each convergent's periodic orbit reaches residue $1/4$, for the Suite's five numbers (about ten minutes) \\
 \texttt{c14\_connections\_venn.py} \addedon{\revE} & the search for the five-ellipse Venn diagram whose smallest region is roomiest (a few minutes for each starting seed) \\
+\texttt{c15\_newton/nbody.c}, \texttt{tune.py} \addedon{\revF} & Chapter~\ref{ch:newton}: the Newtonian integration of the Sun and eight planets (fourth-order symplectic, step $0.05$ days), and the tuning of its starting orbits to JPL's mean periods and mean elements (a few minutes to tune; about an hour and a half for $200{,}000$ years) \\
+\texttt{c15\_newton/spec.py} \addedon{\revF} & the search for long swings in the mean longitudes, their matching to combinations of two or three mean motions, and the perihelion rates (a few minutes) \\
+\texttt{c15\_newton/c15\_newton.py} \addedon{\revF} & the cycles of \cref{tab:nw-cycles}, Newton's rule and \cref{tab:nw-aps}, the Moon and Hall's exponent, the tides, and the macros for \cref{tab:nw-lines} (seconds) \\
 \end{longtable}}
 
 \paragraph{Building.} With Python 3 and the packages of Appendix~\ref{app:methods} installed, run \texttt{sh run\_all.sh} in \texttt{compute/}, then \texttt{latexmk -xelatex main.tex} in \texttt{paper/}. Random choices use fixed seeds, so a rebuild reproduces the same numbers, except that the GUE samples (seeded too) and timings may differ across library versions in the last digit.

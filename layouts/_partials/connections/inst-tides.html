@@ -1,0 +1,26 @@
+{{- /* The Tide Machine (Chapter 19): panels. Script: static/connections/rhythm/inst/tides.js; styles: inst/kepler.css. */ -}}
+<div class="wrap">
+  <section class="panel" aria-label="Choose a coast">
+    <div class="row" id="tdPresets"></div>
+    <div class="tablewrap"><table id="tdTbl"><thead><tr><th>wave</th><th>what makes it</th><th>comes round every</th><th>height</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="panel" aria-label="The tide">
+    <h2>Thirty days of tide</h2>
+    <canvas id="tdCan" width="1600" height="620" style="aspect-ratio:1600/620" role="img" aria-label="The height of the sea over thirty days: the sum of the waves switched on above."></canvas>
+    <div class="row">
+      <button class="play" id="tdPlay" type="button">▶ Hear the month</button>
+      <button class="chip" id="tdParts" type="button" aria-pressed="false">Show each wave</button>
+    </div>
+    <div class="readout" id="tdLine"></div>
+    <p class="cap">Day 0 is a new moon with the Moon at its closest, when every wave here starts in step. The sound is the same sum of waves, speeded up about 216,000 times and moved up to pitches you can hear, so the swelling and fading you hear are the real spring and neap tides, at 12 seconds to the month.</p>
+  </section>
+
+  <section class="panel" aria-label="The beats">
+    <h2>The beats behind the tide</h2>
+    <div class="tablewrap"><table id="tdBeats"><thead><tr><th>two waves</th><th>they drift in and out of step every</th><th>which is</th></tr></thead><tbody></tbody></table></div>
+    <p class="cap">Two waves of nearly the same period beat, exactly as two notes of nearly the same pitch do. The Moon's and the Sun's twice-daily tides beat once in 14.77 days: together at new and full moon (spring tides), opposed at the half moons (neap tides).</p>
+  </section>
+
+  <p class="note">What is known and what is ours. That the Moon and the Sun raise the tides by the difference in their pull across the Earth is Newton's (Principia, 1687). Splitting the tide into steady waves with the periods of the Sun's and Moon's motions is the harmonic method of William Thomson (Lord Kelvin) and others; Kelvin's tide-predicting machine of 1872 added the waves with pulleys and gears. The periods here are the standard ones. The heights are examples, not any real port: do not use this to plan anything on the water.</p>
+</div>

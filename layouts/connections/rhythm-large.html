@@ -1,5 +1,6 @@
 {{ define "main" }}
-{{- /* /connections/rhythm-of-numbers/large-and-small/: Chapter 18 of the paper in plain words (physics and astronomy).
+{{- /* /connections/rhythm-of-numbers/large-and-small/ and /newton/: Chapters 18 and 19 of the paper in plain words (physics and
+   astronomy). Optional front matter for the heading and links: h1, h1em, try_title, chapter, more [{url, label}].
    All text is in the page's front matter: short, try (the two instruments), sections (id, h, paras, optional table
    {caption, head, rows, note} and after), ours (three lists) and notes. Keep every claim as the paper states it.
    Styles: rn.css and prime.css; no scripts. */ -}}
@@ -7,11 +8,11 @@
 {{ partial "inline/ml-css.html" "connections/rhythm/prime.css" }}
 {{- $hub := "connections/rhythm-of-numbers/" | relURL }}
 <article class="rn rn-np">
-<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Connections</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <span>Large and small</span></nav>
+<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Connections</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <span>{{ .LinkTitle }}</span></nav>
 
 <header class="rn-hero">
   <p class="rn-eyebrow">The Rhythm of Numbers · Physics · In plain words · added {{ partial "connections/rn-date.html" .Params.added }}</p>
-  <h1>Large and small: <em>the same patterns in atoms and in orbits</em></h1>
+  <h1>{{ .Params.h1 | default "Large and small" }}: <em>{{ .Params.h1em | default "the same patterns in atoms and in orbits" }}</em></h1>
   <p class="rn-lede">{{ .Params.lede }}</p>
 </header>
 
@@ -21,7 +22,7 @@
 </section>
 
 <section class="np-sec" id="try" aria-labelledby="ls-try-h">
-  <h2 id="ls-try-h">Two instruments to play with</h2>
+  <h2 id="ls-try-h">{{ .Params.try_title | default "Two instruments to play with" }}</h2>
   <div class="np-cards">
     {{- range .Params.try }}
     <a class="np-card ls-try" href="{{ .url | relURL }}"><h3><span aria-hidden="true">{{ .icon }}</span> {{ .title }}</h3><p>{{ .text }}</p></a>
@@ -59,7 +60,7 @@
 
 <section class="np-sec" aria-labelledby="ls-more-h">
   <h2 id="ls-more-h">Read more</h2>
-  <p class="np-next"><a href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}">The paper, Chapter 18 →</a><a href="{{ "connections/rhythm-of-numbers/what-it-means/" | relURL }}">The open questions in plain words →</a><a href="{{ $hub }}#poly">The polyrhythm layerer, with orbits →</a><a href="{{ "connections/" | relURL }}">Where the subjects meet →</a></p>
+  <p class="np-next"><a href="{{ "connections/rhythm-of-numbers/paper/" | relURL }}">The paper, Chapter {{ .Params.chapter | default "18" }} →</a>{{ range .Params.more }}<a href="{{ .url | relURL }}">{{ .label }} →</a>{{ end }}<a href="{{ "connections/rhythm-of-numbers/what-it-means/" | relURL }}">The open questions in plain words →</a><a href="{{ $hub }}#poly">The polyrhythm layerer, with orbits →</a><a href="{{ "connections/" | relURL }}">Where the subjects meet →</a></p>
 </section>
 
 <footer class="rn-notes" aria-labelledby="ls-n-h">

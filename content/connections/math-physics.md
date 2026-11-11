@@ -10,6 +10,8 @@ golinks:
   - { url: "/physics/astronomy/kepler-third-law/", why: "the law of periods" }
   - { url: "/physics/mechanics/kepler-third-from-newton/", why: "Newton's proof of the third law" }
   - { url: "/connections/rhythm-of-numbers/large-and-small/", title: "Large and small", why: "the same law in an atom" }
+  - { url: "/connections/rhythm-of-numbers/newton/", title: "Newton: the rhythm of gravity", why: "why the inverse-square law is the one that closes the orbit" }
+  - { url: "/connections/rhythm-of-numbers/newtons-rosette/", title: "Newton’s Rosette", why: "change the law and watch the orbit turn" }
 credits:
   - { name: "Kepler's laws of planetary motion (Grokipedia)", url: "https://grokipedia.com/page/Kepler%27s_laws_of_planetary_motion", what: "the three laws and their dates" }
   - { name: "Johannes Kepler (Grokipedia)", url: "https://grokipedia.com/page/Johannes_Kepler", what: "his life and books" }

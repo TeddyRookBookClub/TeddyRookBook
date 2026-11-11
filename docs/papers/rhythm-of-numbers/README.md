@@ -68,3 +68,8 @@ The `c14_connections*.py` scripts belong to Section 12.8 ("The fifth subject: ph
 for the five-ellipse Venn diagram used on the site, `c14_connections_kam.py` runs Greene's residue method on the standard
 map for the Suite's five numbers (about ten minutes), and `c14_connections.py` writes the macros (its stored values come
 from the other two; it rechecks two of them).
+
+`compute/c15_newton/` belongs to Chapter 19 ("Newton: the rhythm of gravity"). `nbody.c` integrates the Sun and the eight
+planets under Newton's law (compile with `cc -O3 -o nbody nbody.c -lm`); `tune.py` tunes its starting orbits; `spec.py`
+finds the long swings in the result; `c15_newton.py` writes the macros. The docstring of `c15_newton.py` gives the
+commands in order. The 200,000-year run takes about an hour and a half and writes a 50 MB file, which is not kept.

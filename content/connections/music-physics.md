@@ -10,6 +10,7 @@ golinks:
   - { url: "/physics/physics-2/doppler/", why: "why a passing siren drops in pitch" }
   - { url: "/physics/mechanics/driven-resonance/", why: "resonance: pushing in time" }
   - { url: "/music/tuner/", title: "The tuner", why: "tune an instrument by ear and by eye" }
+  - { url: "/connections/rhythm-of-numbers/tide-machine/", title: "The Tide Machine", why: "the same beats in the sea: spring and neap tides" }
 credits:
   - { name: "Beat (acoustics) (Grokipedia)", url: "https://grokipedia.com/page/Beat_(acoustics)", what: "beats and how tuners use them" }
   - { name: "Sound (Grokipedia)", url: "https://grokipedia.com/page/Sound", what: "sound as a pressure wave" }

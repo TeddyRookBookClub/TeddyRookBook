@@ -1,0 +1,29 @@
+{{- /* Huygens's Gears (Chapter 19): panels. Script: static/connections/rhythm/inst/gears.js; styles: inst/kepler.css. */ -}}
+<div class="wrap">
+  <section class="panel" aria-label="Choose two periods">
+    <div class="row" id="ggPresets"></div>
+    <div class="fields">
+      <label for="ggA">or two periods of your own: the longer</label>
+      <input id="ggA" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="77708431">
+      <label for="ggB">the shorter</label>
+      <input id="ggB" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="2640858">
+      <button class="chip" id="ggUse" type="button">Use these</button>
+    </div>
+    <div class="readout" id="ggLine"></div>
+  </section>
+
+  <section class="panel" aria-label="The gears">
+    <h2 id="ggTitle">Two wheels</h2>
+    <canvas id="ggCan" width="1600" height="760" style="aspect-ratio:1600/760" role="img" aria-label="Two toothed wheels in mesh. Their tooth counts are the two numbers of the chosen fraction."></canvas>
+    <div class="row"><button class="play" id="ggPlay" type="button">▶ Turn the wheels</button></div>
+    <div class="readout" id="ggLive"></div>
+  </section>
+
+  <section class="panel" aria-label="The ladder">
+    <h2>Every pair of wheels worth cutting</h2>
+    <div class="tablewrap"><table id="ggTbl"><thead><tr><th>wheels</th><th>ratio they give</th><th>off by</th><th>one whole turn out after</th><th>next term</th></tr></thead><tbody></tbody></table></div>
+    <p class="cap">The rungs of the continued fraction are the best pairs of wheels: no pair with fewer teeth comes closer. Choose a row to see its wheels. A large next term marks a bargain, a small pair that is far more accurate than its size suggests.</p>
+  </section>
+
+  <p class="note">What is known and what is ours. Christiaan Huygens chose the wheels of his planetarium this way in the 1680s, and his notes are among the first to use continued fractions for a practical problem: for Saturn he arrived at wheels of 206 and 7 teeth, from the figures of his day. The 19-year cycle of 235 months is named for Meton of Athens (432 BC), and the eclipse cycle of 223 months was known in Babylon; both are built into the gearwork of the Antikythera mechanism. The periods used here are modern values. The instrument is ours.</p>
+</div>

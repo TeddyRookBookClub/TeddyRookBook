@@ -1,0 +1,168 @@
+\chapter{Newton: the rhythm of gravity}\label{ch:newton}
+\addednote{\revF}
+
+Chapter~\ref{ch:large-small} followed Kepler. This chapter follows Newton, and asks the same question of his law of gravity that the earlier chapters asked of $\pi$: where does a continued fraction decide what happens? There are five places, and in each the answer is classical physics read with the tools of this work. None of the physics is ours. What we add is the reading, one small exact statement (\cref{prop:nw-bracket}), a numerical experiment on a model of the solar system, and a correction to a sentence of Chapter~\ref{ch:large-small}.
+
+A caution, as before. Nothing here is a new theory of gravity, and nothing here could be. Newton's law has been tested from the width of a hair to the size of the solar system, and where it fails, general relativity takes over with no free numbers to adjust. Section~\ref{sec:nw-tests} lists the tests, because they are the examination that any new idea about gravity has to pass.
+
+\section{The orbit that closes}\label{sec:nw-close}
+
+Kepler's first law says that a planet's orbit is a closed ellipse. Newton asked what kind of force would do that, and in Proposition~45 of Book~I of the \emph{Principia} he gave a rule for orbits that are nearly circles \citep{Newton1687,Chandrasekhar1995}.
+
+\begin{proposition}[Newton; classical]\label{prop:nw-45}
+Let a body move in a nearly circular orbit under a central pull proportional to $r^{-p}$, with $p < 3$. Then the angle at the center between the closest point of the orbit and the next farthest point is
+\[
+\frac{180^\circ}{\sqrt{3 - p}} .
+\]
+\end{proposition}
+
+For the inverse square, $p = 2$, the angle is $180^\circ$: closest and farthest lie opposite each other, and the orbit closes after one turn. For a spring, $p = -1$, the angle is $90^\circ$ and the orbit is an ellipse centered on the force. For any other $p$ the closest point of each lap falls a fixed step beyond the last. In 1873 Bertrand proved that these two are the only laws of force for which \emph{every} bounded orbit closes \citep{Bertrand1873}. So the closed ellipse of Kepler's first law singles out the inverse square among all powers. This is the same fact as the extra conserved quantity of Section~\ref{sec:18kepler}, seen from the side of the orbit.
+
+\paragraph{The rosette is a continued fraction.} Let $\alpha$ be the fraction of a turn through which the body moves between one closest approach and the next. For a nearly round orbit \cref{prop:nw-45} gives $\alpha = 1/\sqrt{3-p}$. The successive closest points are then the orbit of a rotation by $\alpha$, exactly as the conjunctions of two planets were in \cref{prop:18conj}, and the same conclusions hold with the same proof: the closest points cut the circle into arcs of at most three lengths (\cref{thm:threegap}); each convergent $u/v$ of the fractional part of $\alpha$ is a flower of $v$ petals that the orbit almost draws in $u$ turns; and the flower has turned through the spacing of its own petals after a number of rounds between $a$ and $a + 2$, where $a$ is the term that follows $u/v$. The orbit of a planet under a law that is not quite the inverse square is a rhythm in the sense of Chapter~\ref{ch:rhythm}, and its form is read off the continued fraction of one number.
+
+\Cref{prop:nw-45} is exact only in the limit of a round orbit. \Cref{tab:nw-aps} gives the angle for stretched orbits, by numerical quadrature. For the two laws of Bertrand's theorem it does not change. For the others it drifts by up to several degrees, so the rosette of a stretched orbit has a different continued fraction from that of a round one under the same law.
+
+\begin{table}[ht]
+\centering
+\caption[Newton's rule for the apsides, for stretched orbits]{The angle from the closest point to the next farthest point for a pull proportional to $r^{-p}$. The body starts at its closest point with $\sqrt{1+s}$ times the speed of a circular orbit; $s \to 0$ is Newton's nearly round orbit.}\label{tab:nw-aps}
+\small
+\begin{tabular}{rrrrrr}
+\toprule
+$p$ & Newton's rule & $s = 0.001$ & $s = 0.2$ & $s = 0.45$ & $s = 0.8$ \\
+\midrule
+\NwApsRows
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Weighing the exponent}\label{sec:nw-hall}
+
+Read backwards, \cref{prop:nw-45} turns the slow turning of an orbit into a measurement of the exponent in the law of gravity. Two episodes show how sharp that measurement is.
+
+\paragraph{The Moon.} Newton applied his rule to the Moon. The Sun's pull stretches the Moon's orbit, and he modelled this as a small added force proportional to distance, $1/357.45$ of the Earth's pull. His rule then makes the Moon's closest point advance by $\NwMoonNewton$ in each revolution. The observed advance is $\NwMoonObs$, twice as much, and Newton said so. The discrepancy stood for sixty years and for a time was taken as evidence that the inverse-square law itself needed a correction. In 1749 Clairaut showed that carrying the same calculation to the next order supplies the missing half \citep{Clairaut1752}. The law was right; the arithmetic had stopped too soon.
+
+\paragraph{Mercury.} The closest point of Mercury's orbit advances by about $574''$ a century. The pulls of the other planets, computed from Newton's law, account for about $532''$ \citep{Clemence1947}; our own model of Section~\ref{sec:nw-sim} gives $\NwMercPeri''$. That leaves $43''$. In 1894 Asaph Hall proposed to remove it by changing the exponent \citep{Hall1894}: by \cref{prop:nw-45} an advance of $43''$ a century, which is $\NwHallStep$ of a turn in each orbit, corresponds to
+\[
+p = \NwHallP .
+\]
+The proposal was taken seriously, and Newcomb adopted it for the national ephemeris. It failed on the Moon, whose closest point would then have advanced by more than is observed. In 1915 Einstein's general relativity gave the $43''$ with nothing to adjust \citep{Einstein1915}.
+
+In the language of this work, Mercury's orbit is a rosette whose step is very nearly zero. Counting the pull of the planets and relativity together, the orbit turns once round in about $\NwMercTurn$ years; the part that Newton's law cannot supply would by itself take $\NwGRTurn$ million years, or $\NwGROrbits$ million orbits. That a law could be tested through a figure that takes three million years to draw is a measure of how well the remaining $532''$ were understood.
+
+\section{Sun, Moon and the wheels of the calendar}\label{sec:nw-cycles}
+
+The year, the month and the swing of the Moon's path are set by gravity, and their ratios are irrational. Every calendar and every eclipse cycle is therefore a rational approximation, and the good ones are convergents. \Cref{tab:nw-cycles} classifies the famous ones.
+
+\begin{table}[ht]
+\centering
+\caption[Calendar and eclipse cycles as continued fractions]{Classical cycles and the continued fractions they come from. ``Convergent'' and ``intermediate'' are in the sense of Chapter~\ref{ch:cf}; the next term is the one that follows the convergent. Modern mean values: tropical year $365.2421897$ days, synodic month $29.530588853$, draconic month $27.212220817$, anomalistic month $27.554549878$, sidereal month $27.321661547$.}\label{tab:nw-cycles}
+\footnotesize
+\begin{tabular}{@{}p{0.25\textwidth}p{0.23\textwidth}lp{0.17\textwidth}p{0.15\textwidth}@{}}
+\toprule
+cycle & ratio and expansion & fraction & kind & drift \\
+\midrule
+\NwCycleRows
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three things in the table are worth saying in words.
+
+\emph{The Metonic cycle is good for the reason $355/113$ is good.} The number of months in a year is $[12; 2, 1, 2, 1, 1, 17, \ldots]$. The convergent before the $17$ is $235/19$: nineteen years are $235$ months to within two hours. This is the big-term test of Section~\ref{sec:18resonance}, applied to the calendar; the cycle is named for Meton of Athens (432~BC) and was known in Babylon.
+
+\emph{The Saros is two things at once.} An eclipse needs the Moon to be new or full \emph{and} at a crossing point of its path. $223$ months of phases are $242$ trips through the crossing point: $242/223$ is a convergent of the ratio of those two months. The same span is also very nearly $239$ trips of the Moon from closest to closest, so that the eclipse repeats at the same distance and looks the same. But $239/223$ is not a convergent of that second ratio. It is an intermediate fraction, the fifteenth of the sixteen steps that lead from $15/14$ to $254/237$. The Saros is the place where a convergent of one ratio passes close to an intermediate of another, a coincidence of two rhythms in the sense of Section~\ref{sec:polyrhythm}.
+
+\emph{The Gregorian calendar is not a convergent.} The year exceeds $365$ days by $0.2421897 = [0; 4, 7, 1, 3, 27, \ldots]$. One leap day in four years is the first convergent, the Julian calendar. The next are $7/29$, $8/33$ and $31/128$; a rule of eight leap years in thirty-three is the one associated with the Persian calendar reform of Omar Khayyam's time, and it is right to a day in about $\NwPersianYears$ years. The Gregorian rule of $97$ leap years in $400$ is none of these. It was chosen so that leap years could be read from the number of the year, and it pays for that: it is right to a day in about $\NwGregorianYears$ years, while the rule $31/128$, with a third of its length, would be right to a day in $\NwBestYears$.
+
+\paragraph{Wheels.} A clockwork model of the sky needs pairs of toothed wheels whose tooth counts are in the ratio of two periods, with as few teeth as possible. That is the problem of best approximation, and Huygens solved it with continued fractions when he designed his planetarium in the 1680s \citep{Huygens1703}: from his figures for Saturn and the Earth, $77{,}708{,}431 : 2{,}640{,}858 = [29; 2, 2, 1, 5, \ldots]$, he took the convergent $206/7$. (With the modern ratio, $29.457 = [29; 2, 5, 3, \ldots]$, the fourth convergent is $324/11$.) Seventeen centuries earlier the makers of the Antikythera mechanism had built the Metonic $235$, the Saros $223$ and the convergent $254/19$ for the Moon's trips round the sky into bronze \citep{Freeth2006}. The instrument ``Huygens's Gears'' on the companion site draws the wheels for any two periods.
+
+\section{The tide is a chord}\label{sec:nw-tides}
+
+Newton explained the tides in the \emph{Principia} as the difference between the Moon's pull on the near and far sides of the Earth, with a smaller tide of the same kind from the Sun. The Moon's tide comes round every $12.42$ hours, half the time from one moonrise to the next; the Sun's every $12$ hours. Two waves of nearly equal period beat, as two notes of nearly equal pitch do, and here the beat is
+\[
+\frac{1}{1/12 - 1/12.4206} \ \text{hours} = \NwSpringNeap \ \text{days},
+\]
+half a month of the Moon's phases. When the two tides arrive together the range is large (spring tides, at new and full moon); when they are opposed it is small (neap tides). The ratio of the two periods is $[1; 28, 1, 1, 7, \ldots]$, and its convergent $59/57$ says that $57$ of the Moon's tides are $59$ of the Sun's, which is one month of phases.
+
+Kelvin and others carried this to its end in the 1860s: the tide at any port is a sum of steady waves whose periods are fixed by the motions of the Sun and Moon, and only their heights and timings depend on the port \citep{Thomson1881}. A third wave, from the Moon's changing distance, beats with the first once in $\NwPerigeeBeat$ days, the month from closest Moon to closest Moon; two once-a-day waves beat in $\NwDeclBeat$ days, half the month of the Moon's swing north and south. Kelvin's tide-predicting machine of 1872 added the waves with pulleys, each driven through wheels cut to approximate one of these incommensurable periods: the problem of the last section again. A tide table is the score of a chord of a few fixed notes.
+
+\section{Spin and orbit}\label{sec:nw-spin}
+
+Tides also act on the body that is raised. Over a long time they slow its spin until spin and orbit keep step. The Moon turns once for each trip round the Earth. Mercury was expected to do the same, but radar showed in 1965 that it turns three times for every two orbits \citep{PettengillDyce1965}, and Colombo recognized the resonance \citep{Colombo1965}. With the modern values, $87.9691$ days for the orbit and $58.6462$ for the spin, the ratio is $\NwSpinRatio$, and the term that follows $3/2$ in its continued fraction is in the tens of thousands: as large as the precision of the data allows. By the big-term test of Section~\ref{sec:18resonance} this is the cleanest lock in the solar system. The stretched orbit is what makes $3/2$ possible; a round orbit would have ended at $1/1$.
+
+\section{Small divisors}\label{sec:nw-small}
+
+Newton solved the motion of two bodies. For three or more, the planets disturb one another, and the disturbance of one planet by another is a sum of waves whose frequencies are the combinations $j n_1 - k n_2$ of the two mean motions. Integrating a wave of frequency $\nu$ twice, to get from a force to a displacement along the orbit, divides it by $\nu^2$. So a combination that is nearly zero is magnified enormously. These are the \emph{small divisors} of celestial mechanics, and a small divisor is a good rational approximation: $j n_1 - k n_2$ is small exactly when $n_1/n_2$ is close to $k/j$.
+
+\begin{proposition}[the length of a long inequality]\label{prop:nw-bracket}
+Let two bodies have periods $T_1 < T_2$, and let $u_k/v_k$ be a convergent of $T_2/T_1$, with $v_{k+1}$ the next denominator. Then the combination $v_k n_1 - u_k n_2$ of their mean motions has period
+\[
+P_k = \frac{T_2}{|v_k\,T_2/T_1 - u_k|}, \qquad v_{k+1}\,T_2 \;<\; P_k \;<\; (v_{k+1} + v_k)\,T_2 .
+\]
+\end{proposition}
+
+\begin{proof}
+$v_k n_1 - u_k n_2 = (2\pi/T_2)(v_k T_2/T_1 - u_k)$, and $1/(v_{k+1} + v_k) < |v_k x - u_k| < 1/v_{k+1}$ for every convergent of $x$ (Chapter~\ref{ch:cf}).
+\end{proof}
+
+So the long swing attached to a convergent lasts between $v_{k+1}$ and $v_{k+1} + v_k$ periods of the outer body: the \emph{next} denominator sets its length. For Jupiter and Saturn, $T_2/T_1 = [2; 2, 14, 2, \ldots]$ has convergents $2/1$, $5/2$, $72/29$; the combination for $5/2$ lasts between $29$ and $31$ of Saturn's periods, $854$ to $913$ years, and in fact $883$. Three things then fix how large the swing is: the mass of the disturbing planet; the factor $(n/\nu)^2$ from the small divisor; and the \emph{order} $|u_k - v_k|$, because by a rule of d'Alembert's the wave carries that power of the eccentricities and inclinations. The $5/2$ of Jupiter and Saturn is of order three, so its size is cut by the cube of an eccentricity of about $0.05$, and it is still the largest disturbance in the solar system.
+
+\section{A model solar system}\label{sec:nw-sim}
+
+To see these swings directly we integrated Newton's equations for the Sun and the eight planets for $\NwSpanKyr{,}000$ years (a fourth-order symplectic method \citep{Yoshida1990} with a step of $0.05$ days; no relativity, no Moon, no asteroids). The starting orbits were JPL's mean elements \citep{standish1992}, adjusted so that the mean periods over the run equal JPL's long-term mean periods and the mean shapes of the orbits over the first $250$ years equal the published ones. It is a solar system like ours, not an ephemeris of ours: phases are not meant to match the sky. We then took each planet's position along its orbit, removed the steady motion, and looked for the long swings that remain, with no list of expected periods. \Cref{tab:nw-lines} gives the strongest.
+
+\begin{table}[ht]
+\centering
+\caption[Long swings found in a model of the solar system]{The strongest long swings in the planets' positions along their orbits, from the first $\NwWindowKyr{,}000$ years of the model, each matched afterwards to a combination of mean motions. ``From mean motions'' is the period of that combination, with the mean motions measured in the model; ``found'' is the period of the strongest line. Sizes are in seconds of arc. The last row was looked for by name, in a narrow band, because stronger lines hide it.}\label{tab:nw-lines}
+\small
+\begin{tabular}{@{}llrrrl@{}}
+\toprule
+combination & in & mean motions (yr) & found (yr) & size ($''$) & note \\
+\midrule
+\NwLineRows
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{What the model shows.} The largest swings are the two that \cref{prop:nw-bracket} singles out. The $5/2$ of Jupiter and Saturn, the \emph{great inequality} that Laplace explained in 1785 \citep{Wilson1985}, moves Jupiter by about $\NwJSampJ''$ and Saturn by $\NwJSampS''$ near the start of the run; the classical values for the real planets are about $20'$ and $48'$ of arc (some $1200''$ and $2900''$), and our model, which is only tuned to the mean orbits, comes within about \NwJSoff{} per cent. The $2/1$ of Uranus and Neptune is larger still, $\NwUNampU''$ and $\NwUNampN''$, because its order is one and its period is $4{,}300$ years. Then come the first convergents themselves ($2/1$ for Jupiter and Saturn, $3/1$ for Saturn and Uranus) and, in the inner solar system, a swing of Mars of about $\NwMarsAmp''$ with a period near $\NwMarsPer$ years. That one involves three planets: it is $4n_E - 8n_M + 3n_J$, known to the classical theory of Mars. We did not look for it; the search found a line and the combination was matched afterwards. The $13/8$ of the Earth and Venus, the five-pointed star of Section~\ref{sec:18keplercont}, is present at $\NwVEper$ years and is small ($\NwVEamp''$), because its order is five.
+
+\paragraph{A slower beat still.} Over the whole run the largest motion of Jupiter and Saturn is none of these. It is a swing of about $\NwSlowJ''$ for Jupiter and $\NwSlowS''$ for Saturn with a period near $\NwSlowPer$ years. That is the time in which the long axes of the two orbits turn once relative to each other (the classical figure is about $54{,}000$ years), and it modulates the great inequality itself. It is the reason \cref{tab:nw-lines} uses only the first $\NwWindowKyr{,}000$ years: over longer spans each swing splits into several lines a few per cent apart.
+
+\paragraph{A correction to Chapter~\ref{ch:large-small}.} Section~\ref{sec:18keplercont} said that the triangle of Jupiter's and Saturn's conjunctions turns once in $883$ years and that this ``is exactly the period of the great inequality.'' The first half is right: $883$ years is the period of $5n_S - 2n_J$, and of the turning of the figure. The second half needs a qualification. The wave that disturbs the planets has that combination of mean motions \emph{together with} the directions of the two orbits' long axes, and those directions move slowly. In our model the strongest line of the great inequality has a period of $\NwJSline$ years, and the swing near the start of the run repeats in about $\NwJSper$; Laplace's own figure was $929$. So the figure in the sky turns in $883$ years, and the swing it drives runs a few per cent slower, because the orbits themselves are turning. The other long swings of \cref{tab:nw-lines} show the same shift. The statement that the two are ``one beat seen two ways'' stands; ``exactly the same period'' does not.
+
+\section{The examination a theory of gravity must pass}\label{sec:nw-tests}
+
+The episodes of this chapter are also a list of what any proposed change to gravity is tested against. In rough order of when each became decisive:
+\begin{itemize}
+\item \emph{Closed orbits.} Any departure from the inverse square turns every orbit, by \cref{prop:nw-45}. Mercury's orbit bounds the exponent to within about $10^{-7}$ of $2$, and the Moon's, tracked by laser to centimeters, far more tightly \citep{Williams2004}.
+\item \emph{The Moon and Mercury together.} Hall's exponent fitted Mercury and failed on the Moon. A change has to fit every orbit at once.
+\item \emph{The same fall for all bodies.} The Earth and the Moon fall toward the Sun at the same rate to about a part in $10^{13}$ \citep{Williams2004}.
+\item \emph{Short distances.} The inverse square has been checked in the laboratory down to separations of about a twentieth of a millimeter \citep{Kapner2007}.
+\item \emph{The long swings.} The great inequality and its relatives are predicted, in size and period, from the masses and the law alone. A new law must reproduce the whole of \cref{tab:nw-lines}.
+\item \emph{Relativity's additions.} The $43''$ of Mercury, measured now to better than a part in a thousand \citep{Park2017}, the bending of light and the slowing of clocks are all given by general relativity without adjustable numbers.
+\end{itemize}
+Gravity's own constant is the exception: $G$ is known only to about two parts in $10^5$, far worse than any other constant of physics, because gravity is weak and cannot be shielded. That is a statement about the difficulty of weighing things, not a gap in the law.
+
+\section{What is known and what is ours}\label{sec:nw-audit}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{p{0.34\textwidth}p{0.16\textwidth}p{0.42\textwidth}}
+\toprule
+idea & class & notes\\
+\midrule
+Newton's rule for the apsides; Bertrand's theorem & classical & \emph{Principia} I.45; Bertrand 1873.\\
+The rosette as a rotation, its flowers as convergents & new presentation & The proof is that of \cref{prop:18conj}. \Cref{tab:nw-aps} is our computation.\\
+The Moon's apse, Hall's exponent, Mercury's $43''$ & classical & Newton, Clairaut, Hall, Einstein. The exponent and the closing times are our arithmetic.\\
+Calendar and eclipse cycles as convergents & classical & Known to historians of astronomy and to Huygens. The classification of \cref{tab:nw-cycles}, with the Saros as a convergent of one ratio and an intermediate fraction of another, is our presentation.\\
+Tides as beats; Kelvin's machine & classical & Standard harmonic analysis of tides.\\
+Mercury's $3/2$ by the big-term test & new presentation & Pettengill and Dyce; Colombo.\\
+The length of a long inequality, \cref{prop:nw-bracket} & new presentation & Two lines from the theory of convergents; the small divisors themselves are classical (Laplace, Poincaré).\\
+The model solar system and \cref{tab:nw-lines} & new computation & Our integration and analysis. The inequalities it finds are classical.\\
+The great inequality's period against the $883$ years of the trigon & correction & To Section~\ref{sec:18keplercont}. The physics is Laplace's.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Still open, in the sense of this work and not of physics: \cref{prop:nw-bracket} brackets the period of a swing but not its size. A statement that ranked the swings of a planetary system from its continued fractions, masses and eccentricities alone, and could be checked against a table such as \cref{tab:nw-lines}, would be the natural next step. The three-planet swing of Mars shows that it would have to go beyond pairs.
