@@ -1,4 +1,4 @@
-/* /connections/ helper (Where Music, Patterns, Math and Chemistry Meet). Only venA edits this file.
+/* /connections/ helper (Where Music, Patterns, Math, Chemistry and Physics Meet). Only venA edits this file.
    1. The hub: the Venn diagram (hover, click or tap anywhere in a region; Tab to its pin, Enter), the side panel, the region
       list, open/close of each region section (#r-<id> in the address opens one), TeX typesetting of an opened region.
    2. Visuals: a figure <figure class="cx-viz" data-viz="<id>" data-src="…/v/<id>.js"> (written by [[viz:<id>]] in a region's
@@ -6,7 +6,7 @@
         Cx.viz('<id>', function (v) { … })
       once; the function runs for every figure with that id. v gives:
         v.el, v.stage, v.bar, v.id, v.colors() (theme palette: bg panel ink muted grid green gold blue red purple orange teal,
-        music math patterns chemistry; .dark; .a(hex, alpha)), v.reduced (prefers reduced motion), v.rng(seed)
+        music math patterns chemistry physics; .dark; .a(hex, alpha)), v.reduced (prefers reduced motion), v.rng(seed)
         v.canvas({aspect, max, min, label, hd}) -> {el, ctx, w, h, fit(), clear(col), onresize}; v.svg(viewBox, label)
         v.draw(fn(colors)) + v.redraw() (one frame on demand, redrawn on theme change and resize)
         v.loop(fn(dt, t), {label, auto}) -> {on, play(), pause(), btn}: runs only while visible; reduced motion starts paused
@@ -22,9 +22,9 @@
   function dark() { var t = D.documentElement.getAttribute('data-theme'); if (t === 'dark') return true; if (t === 'light') return false; try { return W.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) { return false; } }
   function reduced() { try { return W.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
   var LIGHT = { bg: '#ffffff', panel: '#f4f7f5', ink: '#1d2320', muted: '#5d6862', grid: '#e1e8e3', axis: '#56625b', green: '#00562f', accent: '#00562f', gold: '#9a7a2c', blue: '#1c63c0', red: '#c92a52', purple: '#6a45d8', orange: '#d1520a', teal: '#0b7a8a',
-    music: '#2c63c7', math: '#00804a', patterns: '#b8862b', chemistry: '#9a3f92' };
+    music: '#2c63c7', math: '#00804a', patterns: '#b8862b', chemistry: '#9a3f92', physics: '#c2410c' };
   var DARK = { bg: '#151d18', panel: '#1b2520', ink: '#e6ece8', muted: '#a9b8af', grid: '#2a3d32', axis: '#a9b8af', green: '#6cc79a', accent: '#6cc79a', gold: '#e2c072', blue: '#74b4fc', red: '#ff8b9a', purple: '#b6a0ff', orange: '#ffa94d', teal: '#66d9e8',
-    music: '#86b4ff', math: '#6cc79a', patterns: '#e2c072', chemistry: '#e6a0dc' };
+    music: '#86b4ff', math: '#6cc79a', patterns: '#e2c072', chemistry: '#e6a0dc', physics: '#ffa07a' };
   function rgba(hex, a) { var v = parseInt(hex.slice(1), 16); return 'rgba(' + (v >> 16 & 255) + ',' + (v >> 8 & 255) + ',' + (v & 255) + ',' + a + ')'; }
   function colors() { var s = dark() ? DARK : LIGHT, c = {}, k; for (k in s) c[k] = s[k]; c.dark = dark(); c.a = rgba; return c; }
   function warn(e) { try { console.warn('[connections]', e && e.message ? e.message : e); } catch (x) { } }
@@ -182,11 +182,13 @@
     var svg = D.querySelector('.cx-venn'), pins = {}, rgs = {};
     [].forEach.call(D.querySelectorAll('.cx-pin'), function (a) { pins[a.getAttribute('data-r')] = a; });
     [].forEach.call(D.querySelectorAll('.cx-rg'), function (g) { rgs[g.getAttribute('data-r')] = g; });
-    var E = [[350, 530, 45], [500, 430, 45], [500, 430, -45], [650, 530, -45]], K = ['music', 'math', 'patterns', 'chemistry'];
+    /* the ovals: written into the svg by layouts/connections/list.html (data-geo: key,cx,cy,tilt for each; data-ab: the half-axes) */
+    var E = [], K = [], AB = (svg.getAttribute('data-ab') || '350,200').split(',').map(Number), A2 = AB[0] * AB[0], B2 = AB[1] * AB[1];
+    (svg.getAttribute('data-geo') || '').split(';').forEach(function (q) { var f = q.split(','); if (f.length === 4) { K.push(f[0]); E.push([+f[1], +f[2], +f[3]]); } });
     var byMask = {};
     order.forEach(function (id) { var st = regions[id].s.getAttribute('data-sets').split(' '), m = 0; K.forEach(function (k, i) { if (st.indexOf(k) >= 0) m |= 1 << i; }); byMask[m] = id; });
     function at(x, y) {
-      var m = 0; E.forEach(function (e, i) { var t = e[2] * M.PI / 180, dx = x - e[0], dy = y - e[1], u = dx * M.cos(t) + dy * M.sin(t), w = -dx * M.sin(t) + dy * M.cos(t); if (u * u / 122500 + w * w / 40000 <= 1) m |= 1 << i; });
+      var m = 0; E.forEach(function (e, i) { var t = e[2] * M.PI / 180, dx = x - e[0], dy = y - e[1], u = dx * M.cos(t) + dy * M.sin(t), w = -dx * M.sin(t) + dy * M.cos(t); if (u * u / A2 + w * w / B2 <= 1) m |= 1 << i; });
       return byMask[m] || null;
     }
     function svgPt(ev) { var r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal; return [vb.x + (ev.clientX - r.left) / r.width * vb.width, vb.y + (ev.clientY - r.top) / r.height * vb.height]; }

@@ -1,9 +1,9 @@
 {{ define "main" }}
-{{- /* /connections/: "Where Music, Patterns, Math and Chemistry Meet". A four-ellipse Venn diagram (all 15 regions) as the hero;
+{{- /* /connections/: "Where Music, Patterns, Math, Chemistry and Physics Meet". A five-ellipse Venn diagram (all 31 regions) as the hero;
    each region opens its section below. Conventions for writers and builders: see the comment at the top of
    static/connections/core.js and content/connections/_index.md.
    - Regions: content/connections/<id>.md (headless: never rendered on their own), ordered by weight. Front matter: title,
-     short (2-3 words shown inside the diagram), sets [music math patterns chemistry], teaser (one sentence),
+     short (2-3 words shown inside the diagram), sets [music math patterns chemistry physics], teaser (one sentence),
      golinks [{url, title?, why?}], credits [{name, url, what, licence}].
    - Body: markdown with TeX in $…$; ### for each explainer; a paragraph that is only [[viz:<id>]] or [[viz:<id>|caption]]
      becomes an interactive figure that loads static/connections/v/<id>.js when it scrolls into view; a blockquote is a
@@ -13,24 +13,25 @@
 {{ partial "inline/ml-js.html" "math/core/tex.js" }}
 {{ partial "inline/ml-js.html" "connections/core.js" }}
 {{- $icons := partial "connections/icons.html" . -}}
+{{- /* Five congruent ovals (Grünbaum's five-ellipse Venn diagram): every one of the 31 combinations has its own region.
+   The centers, the tilt and the half-axes $RX, $RY were found by a search that makes the smallest region as roomy as
+   possible; static/connections/core.js reads the same numbers from the svg's data-geo. */ -}}
+{{- $RX := 402.3 }}{{ $RY := 226.3 -}}
 {{- $S := slice
-  (dict "k" "music" "name" "Music" "bit" 1 "cx" 350 "cy" 530 "rot" 45 "lx" 82 "ly" 236)
-  (dict "k" "math" "name" "Math" "bit" 2 "cx" 500 "cy" 430 "rot" 45 "lx" 222 "ly" 150)
-  (dict "k" "patterns" "name" "Patterns" "bit" 4 "cx" 500 "cy" 430 "rot" -45 "lx" 778 "ly" 150)
-  (dict "k" "chemistry" "name" "Chemistry" "bit" 8 "cx" 650 "cy" 530 "rot" -45 "lx" 918 "ly" 236) -}}
-{{- $SN := dict "music" "Music" "math" "Math" "patterns" "Patterns" "chemistry" "Chemistry" -}}
+  (dict "k" "music" "name" "Music" "cx" 520.4 "cy" 403.0 "rot" -58.3 "lx" 679 "ly" 95)
+  (dict "k" "math" "name" "Math" "cx" 598.5 "cy" 489.5 "rot" 13.7 "lx" 889 "ly" 515)
+  (dict "k" "patterns" "name" "Patterns" "cx" 540.5 "cy" 590.5 "rot" 85.7 "lx" 561 "ly" 839)
+  (dict "k" "chemistry" "name" "Chemistry" "cx" 426.5 "cy" 566.5 "rot" 157.7 "lx" 147 "ly" 627)
+  (dict "k" "physics" "name" "Physics" "cx" 414.1 "cy" 450.6 "rot" 229.7 "lx" 225 "ly" 165) -}}
+{{- $SN := dict "music" "Music" "math" "Math" "patterns" "Patterns" "chemistry" "Chemistry" "physics" "Physics" -}}
 {{- /* label point (x, y) and room (r) inside each region, found by a distance transform of the diagram */ -}}
 {{- $G := dict
-  "music" (slice 160 428 92) "math" (slice 342 212 68) "patterns" (slice 658 212 68) "chemistry" (slice 840 428 92)
-  "music-math" (slice 270 308 54) "music-patterns" (slice 294 612 75) "music-chemistry" (slice 500 746 69)
-  "math-patterns" (slice 500 282 87) "math-chemistry" (slice 706 612 75) "patterns-chemistry" (slice 730 308 54)
-  "music-math-patterns" (slice 374 408 92) "music-math-chemistry" (slice 594 666 42) "music-patterns-chemistry" (slice 406 666 42)
-  "math-patterns-chemistry" (slice 626 408 92) "all-four" (slice 500 560 101) -}}
+  "music" (slice 679 147 101) "math" (slice 889 567 101) "music-math" (slice 767 335 25) "patterns" (slice 561 891 101) "music-patterns" (slice 549 223 30) "math-patterns" (slice 739 703 25) "music-math-patterns" (slice 599 283 24) "chemistry" (slice 147 679 101) "music-chemistry" (slice 297 695 30) "math-chemistry" (slice 779 463 30) "music-math-chemistry" (slice 751 387 24) "patterns-chemistry" (slice 381 791 24) "music-patterns-chemistry" (slice 363 739 24) "math-patterns-chemistry" (slice 737 529 24) "all-four" (slice 673 359 37) "physics" (slice 225 217 101) "music-physics" (slice 427 195 24) "math-physics" (slice 253 365 30) "music-math-physics" (slice 329 329 24) "patterns-physics" (slice 623 753 30) "music-patterns-physics" (slice 471 225 24) "math-patterns-physics" (slice 687 703 24) "music-math-patterns-physics" (slice 423 291 37) "chemistry-physics" (slice 187 477 24) "music-chemistry-physics" (slice 281 607 24) "math-chemistry-physics" (slice 231 443 24) "music-math-chemistry-physics" (slice 277 513 37) "patterns-chemistry-physics" (slice 545 735 24) "music-patterns-chemistry-physics" (slice 445 717 37) "math-patterns-chemistry-physics" (slice 689 619 37) "all-five" (slice 499 501 183) -}}
 {{- $regs := sort .RegularPages "Weight" -}}
-{{- $groups := slice (slice 1 "One subject") (slice 2 "Where two meet") (slice 3 "Where three meet") (slice 4 "All four") -}}
+{{- $groups := slice (slice 1 "One subject") (slice 2 "Where two meet") (slice 3 "Where three meet") (slice 4 "Where four meet") (slice 5 "All five") -}}
 <article class="cx" data-cx-base="{{ "connections/v/" | relURL }}">
   <header class="cx-head">
-    <p class="cx-eyebrow">Music · Math · Patterns · Chemistry</p>
+    <p class="cx-eyebrow">Music · Math · Patterns · Chemistry · Physics</p>
     <h1>{{ .Title }}</h1>
     <div class="cx-intro">{{ .Content }}</div>
     {{- /* front matter deepdives: [{url, icon, title, text}]: long pages that grow out of the diagram (e.g. /connections/rhythm-of-numbers/) */ -}}
@@ -42,34 +43,34 @@
 
   <section class="cx-hero" aria-label="The diagram">
     <div class="cx-venn-wrap">
-      <svg class="cx-venn" viewBox="0 96 1000 734" role="group" aria-labelledby="cx-venn-t" focusable="false">
-        <title id="cx-venn-t">Four overlapping ovals for music, math, patterns and chemistry. Each of the 15 regions opens a section below.</title>
+      <svg class="cx-venn" viewBox="12 14 984 982" role="group" aria-labelledby="cx-venn-t" focusable="false" data-geo="{{ range $i, $s := $S }}{{ if $i }};{{ end }}{{ $s.k }},{{ $s.cx }},{{ $s.cy }},{{ $s.rot }}{{ end }}" data-ab="{{ $RX }},{{ $RY }}">
+        <title id="cx-venn-t">Five overlapping ovals for music, math, patterns, chemistry and physics. Each of the 31 regions opens a section below.</title>
         <defs>
           {{- range $i, $s := $S }}
-          <clipPath id="cx-c{{ $i }}"><ellipse cx="{{ $s.cx }}" cy="{{ $s.cy }}" rx="350" ry="200" transform="rotate({{ $s.rot }} {{ $s.cx }} {{ $s.cy }})"/></clipPath>
-          <mask id="cx-m{{ $i }}" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="1000"><rect x="0" y="0" width="1000" height="1000" fill="#fff"/><ellipse cx="{{ $s.cx }}" cy="{{ $s.cy }}" rx="350" ry="200" transform="rotate({{ $s.rot }} {{ $s.cx }} {{ $s.cy }})" fill="#000"/></mask>
+          <clipPath id="cx-c{{ $i }}"><ellipse cx="{{ $s.cx }}" cy="{{ $s.cy }}" rx="{{ $RX }}" ry="{{ $RY }}" transform="rotate({{ $s.rot }} {{ $s.cx }} {{ $s.cy }})"/></clipPath>
+          <mask id="cx-m{{ $i }}" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="1000"><rect x="0" y="0" width="1000" height="1000" fill="#fff"/><ellipse cx="{{ $s.cx }}" cy="{{ $s.cy }}" rx="{{ $RX }}" ry="{{ $RY }}" transform="rotate({{ $s.rot }} {{ $s.cx }} {{ $s.cy }})" fill="#000"/></mask>
           {{- end }}
         </defs>
         <g class="cx-fills" aria-hidden="true">
-          {{- range $S }}<ellipse class="cx-e cx-e-{{ .k }}" cx="{{ .cx }}" cy="{{ .cy }}" rx="350" ry="200" transform="rotate({{ .rot }} {{ .cx }} {{ .cy }})"/>{{ end }}
+          {{- range $S }}<ellipse class="cx-e cx-e-{{ .k }}" cx="{{ .cx }}" cy="{{ .cy }}" rx="{{ $RX }}" ry="{{ $RY }}" transform="rotate({{ .rot }} {{ .cx }} {{ .cy }})"/>{{ end }}
         </g>
         <g class="cx-rgs" aria-hidden="true">
           {{- range $regs }}{{ $id := .File.ContentBaseName }}{{ $in := .Params.sets | default slice }}
           {{- $open := "" }}{{ $close := "" }}
           {{- range $i, $s := $S }}{{ if in $in $s.k }}{{ $open = printf `%s<g clip-path="url(#cx-c%d)">` $open $i }}{{ else }}{{ $open = printf `%s<g mask="url(#cx-m%d)">` $open $i }}{{ end }}{{ $close = printf "%s</g>" $close }}{{ end }}
-          <g class="cx-rg" data-r="{{ $id }}">{{ safeHTML $open }}<rect x="0" y="96" width="1000" height="734"/>{{ safeHTML $close }}</g>
+          <g class="cx-rg" data-r="{{ $id }}">{{ safeHTML $open }}<rect x="0" y="0" width="1000" height="1000"/>{{ safeHTML $close }}</g>
           {{- end }}
         </g>
         <g class="cx-lines" aria-hidden="true">
-          {{- range $S }}<ellipse class="cx-o cx-o-{{ .k }}" cx="{{ .cx }}" cy="{{ .cy }}" rx="350" ry="200" transform="rotate({{ .rot }} {{ .cx }} {{ .cy }})"/>{{ end }}
+          {{- range $S }}<ellipse class="cx-o cx-o-{{ .k }}" cx="{{ .cx }}" cy="{{ .cy }}" rx="{{ $RX }}" ry="{{ $RY }}" transform="rotate({{ .rot }} {{ .cx }} {{ .cy }})"/>{{ end }}
         </g>
         <g class="cx-setl" aria-hidden="true">
           {{- range $S }}<text class="cx-sl cx-sl-{{ .k }}" x="{{ .lx }}" y="{{ .ly }}">{{ .name }}</text>{{ end }}
         </g>
         <g class="cx-pins">
           {{- range $regs }}{{ $pg := . }}{{ $id := .File.ContentBaseName }}{{ with index $G $id }}{{ $g := . }}
-          {{- $r := index $g 2 }}{{ $sc := div (float $r) 44.0 }}{{ if gt $sc 1.4 }}{{ $sc = 1.4 }}{{ end }}{{ if lt $sc 0.95 }}{{ $sc = 0.95 }}{{ end }}
-          <a href="#r-{{ $id }}" class="cx-pin{{ if lt $r 60 }} cx-pin-sm{{ end }}" data-r="{{ $id }}" transform="translate({{ index $g 0 }} {{ index $g 1 }})" aria-label="{{ range $k, $s := $pg.Params.sets }}{{ if $k }} and {{ end }}{{ index $SN $s }}{{ end }}: {{ $pg.Title }}">
+          {{- $r := index $g 2 }}{{ $sc := div (float $r) 44.0 }}{{ if gt $sc 1.4 }}{{ $sc = 1.4 }}{{ end }}{{ if lt $sc 0.5 }}{{ $sc = 0.5 }}{{ end }}
+          <a href="#r-{{ $id }}" class="cx-pin{{ if lt $r 60 }} cx-pin-sm{{ end }}{{ if lt $r 45 }} cx-pin-xs{{ end }}" data-r="{{ $id }}" transform="translate({{ index $g 0 }} {{ index $g 1 }})" aria-label="{{ range $k, $s := $pg.Params.sets }}{{ if $k }} and {{ end }}{{ index $SN $s }}{{ end }}: {{ $pg.Title }}">
             <circle class="cx-pin-bg" r="{{ mul 24 $sc }}"/>
             <g class="cx-ic" transform="scale({{ mul 0.78 $sc }})">{{ safeHTML (index $icons $id | default "") }}</g>
             {{- with $pg.Params.short }}<text class="cx-pin-t" y="{{ add (mul 24 $sc) 17 }}">{{ . }}</text>{{ end }}
@@ -93,7 +94,7 @@
   </div>
 
   <nav class="cx-index" aria-labelledby="cx-index-h">
-    <h2 id="cx-index-h">All 15 regions</h2>
+    <h2 id="cx-index-h">All 31 regions</h2>
     {{- range $groups }}{{ $n := index . 0 }}{{ $gt := index . 1 }}
     {{- $in := slice }}{{ range $regs }}{{ if eq (len (.Params.sets | default slice)) $n }}{{ $in = $in | append . }}{{ end }}{{ end }}
     {{- with $in }}

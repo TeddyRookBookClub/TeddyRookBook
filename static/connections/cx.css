@@ -1,14 +1,14 @@
-/* /connections/ (Where Music, Patterns, Math and Chemistry Meet): prefix cx-. Layout: layouts/connections/list.html;
+/* /connections/ (Where Music, Patterns, Math, Chemistry and Physics Meet): prefix cx-. Layout: layouts/connections/list.html;
    helper: static/connections/core.js; visuals: static/connections/v/<id>.js. Light and dark themes.
    Visual-specific styles go at the end, under .cx-viz[data-viz="<id>"]. Only venA edits this file (requests:
    /tmp/work_venA/REQUESTS.md). */
 main.main:has(.cx){max-width:1100px}
 .cx{--cx-g:#00562f;--cx-g2:#004225;--cx-gold:#b8963e;--cx-gold-t:#8a6a1f;--cx-card:var(--entry,#fff);--cx-bd:var(--border,#d8e0db);
   --cx-tx:var(--primary,#1d2a22);--cx-dim:var(--secondary,#5b6b61);--cx-soft:#f4f7f5;--cx-stage:#ffffff;
-  --cx-music:#2c63c7;--cx-math:#00804a;--cx-patterns:#b8862b;--cx-chemistry:#9a3f92;--cx-fo:.13;--cx-hl:#ffffff;
+  --cx-music:#2c63c7;--cx-math:#00804a;--cx-patterns:#b8862b;--cx-chemistry:#9a3f92;--cx-physics:#c2410c;--cx-fo:.11;--cx-hl:#ffffff;
   color:var(--cx-tx);max-width:100%;margin:0 auto}
 [data-theme="dark"] .cx{--cx-g:#6cc79a;--cx-g2:#6cc79a;--cx-gold-t:#e2c072;--cx-soft:#1b2520;--cx-stage:#151d18;
-  --cx-music:#86b4ff;--cx-math:#6cc79a;--cx-patterns:#e2c072;--cx-chemistry:#e6a0dc;--cx-fo:.17;--cx-hl:#000000}
+  --cx-music:#86b4ff;--cx-math:#6cc79a;--cx-patterns:#e2c072;--cx-chemistry:#e6a0dc;--cx-physics:#ffa07a;--cx-fo:.14;--cx-hl:#000000}
 .cx *{box-sizing:border-box}
 .cx [hidden]{display:none!important}
 .cx a{color:var(--cx-g)}
@@ -28,12 +28,13 @@ main.main:has(.cx){max-width:1100px}
 .cx-e-math,.cx-o-math{fill:var(--cx-math);stroke:var(--cx-math)}
 .cx-e-patterns,.cx-o-patterns{fill:var(--cx-patterns);stroke:var(--cx-patterns)}
 .cx-e-chemistry,.cx-o-chemistry{fill:var(--cx-chemistry);stroke:var(--cx-chemistry)}
+.cx-e-physics,.cx-o-physics{fill:var(--cx-physics);stroke:var(--cx-physics)}
 .cx-o{fill:none;stroke-width:3;stroke-opacity:.9}
 .cx-rg rect{fill:var(--cx-hl);fill-opacity:0;transition:fill-opacity .15s}
 .cx-rg.hov rect{fill-opacity:.42}
 .cx-rg.sel rect{fill:var(--cx-gold);fill-opacity:.36}
 .cx-sl{font:700 30px/1 system-ui,-apple-system,"Segoe UI",sans-serif;text-anchor:middle;stroke:none}
-.cx-sl-music{fill:var(--cx-music)}.cx-sl-math{fill:var(--cx-math)}.cx-sl-patterns{fill:var(--cx-patterns)}.cx-sl-chemistry{fill:var(--cx-chemistry)}
+.cx-sl-music{fill:var(--cx-music)}.cx-sl-math{fill:var(--cx-math)}.cx-sl-patterns{fill:var(--cx-patterns)}.cx-sl-chemistry{fill:var(--cx-chemistry)}.cx-sl-physics{fill:var(--cx-physics)}
 .cx .cx-pin{color:var(--cx-tx);text-decoration:none;outline:none}
 .cx-pin-bg{fill:var(--cx-card);fill-opacity:.9;stroke:var(--cx-tx);stroke-opacity:.25;stroke-width:1.5;transition:stroke .15s}
 .cx-pin:hover .cx-pin-bg,.cx-pin.hov .cx-pin-bg{stroke:var(--cx-gold);stroke-opacity:1;stroke-width:3}
@@ -47,6 +48,8 @@ main.main:has(.cx){max-width:1100px}
 .cx-pin-t{font:600 16px/1 system-ui,-apple-system,"Segoe UI",sans-serif;text-anchor:middle;fill:currentColor;stroke:var(--cx-stage);stroke-width:4px;stroke-linejoin:round;paint-order:stroke;pointer-events:none}
 @media (max-width:700px){.cx-pin-t{display:none}}
 @media (max-width:1000px){.cx-pin-sm .cx-pin-t{display:none}}
+.cx-pin-xs .cx-pin-t{display:none}
+.cx-pin-xs .cx-pin-bg{stroke-width:1}
 @media (prefers-reduced-motion:reduce){.cx-rg rect,.cx-pin-bg{transition:none}}
 
 .cx-panel{border:1px solid var(--cx-bd);border-left:4px solid var(--cx-gold);border-radius:14px;background:var(--cx-card);padding:.85rem 1rem;min-height:9rem}
@@ -57,11 +60,11 @@ main.main:has(.cx){max-width:1100px}
 
 /* set chips and dots */
 .cx-rsets{display:block;font-size:.76rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
-.cx-rs-music{color:var(--cx-music)}.cx-rs-math{color:var(--cx-math)}.cx-rs-patterns{color:var(--cx-patterns)}.cx-rs-chemistry{color:var(--cx-chemistry)}
+.cx-rs-music{color:var(--cx-music)}.cx-rs-math{color:var(--cx-math)}.cx-rs-patterns{color:var(--cx-patterns)}.cx-rs-chemistry{color:var(--cx-chemistry)}.cx-rs-physics{color:var(--cx-physics)}
 html:not([data-theme="dark"]) .cx-rs-patterns{color:#8a6a1f}
 .cx-dots{display:inline-flex;gap:2px;flex:0 0 auto}
 .cx-d{display:inline-block;width:.6rem;height:.6rem;border-radius:50%}
-.cx-d-music{background:var(--cx-music)}.cx-d-math{background:var(--cx-math)}.cx-d-patterns{background:var(--cx-patterns)}.cx-d-chemistry{background:var(--cx-chemistry)}
+.cx-d-music{background:var(--cx-music)}.cx-d-math{background:var(--cx-math)}.cx-d-patterns{background:var(--cx-patterns)}.cx-d-chemistry{background:var(--cx-chemistry)}.cx-d-physics{background:var(--cx-physics)}
 
 /* buttons and the sound bar */
 .cx-btn{display:inline-flex;align-items:center;justify-content:center;gap:.3rem;min-height:40px;font:600 .9rem/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;padding:.4rem .85rem;border-radius:10px;border:1.5px solid var(--cx-bd);background:var(--cx-card);color:var(--cx-tx);cursor:pointer}

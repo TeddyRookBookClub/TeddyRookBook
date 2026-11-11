@@ -1,6 +1,6 @@
-\chapter{Connections: music, patterns, math and chemistry}\label{ch:connections}
+\chapter{Connections: music, patterns, math, chemistry and physics}\label{ch:connections}
 
-The Rhythm of Numbers is the deep dive of a larger page on the companion site, a four-way Venn diagram of music, patterns, mathematics and chemistry whose fifteen regions each show a place where the subjects meet \citep{ConnectionsSite}. This chapter places the work of the earlier chapters in that diagram, briefly and only with claims we have checked.
+The Rhythm of Numbers is the deep dive of a larger page on the companion site, a four-way Venn diagram of music, patterns, mathematics and chemistry whose fifteen regions each show a place where the subjects meet \citep{ConnectionsSite}. [The diagram now has five subjects and thirty-one regions; see Section~\ref{sec:fifth}. \addedon{\revE}] This chapter places the work of the earlier chapters in that diagram, briefly and only with claims we have checked.
 
 \section{Music and math: ratios, clocks and rhythms}
 
@@ -42,3 +42,57 @@ At the center of the diagram is the standing wave. A string's modes are whole-nu
 The Rhythm of Numbers lives mainly in the music--math region and reaches into the others: tuning and rhythm (music and math), coprimality and diffraction (math and patterns, patterns and chemistry), the $1/n^2$ of hydrogen and the $n^2$ of shells (math and chemistry), and self-similarity, which is the subject of patterns itself. What the diagram adds is a reminder that the same few structures (ratios, standing waves, symmetry, and the continued fraction that measures how far a ratio is from simple) appear in each subject for different reasons.
 
 Chapter~\ref{ch:large-small} adds a fifth subject to the diagram, physics and astronomy: the atom and the solar system as one problem, orbital resonance as rhythm, and the energy bands of a crystal in a magnetic field as the form of a number. \addedon{\revD}
+
+\section{The fifth subject: physics}\label{sec:fifth}
+\addednote{\revE}
+
+The diagram on the site was rebuilt with physics as a fifth oval. Five sets can overlap in $2^5 - 1 = 31$ ways, and a Venn diagram must show every one of them as a single connected region. Four ellipses can do this for four sets; for five, Grünbaum showed that five congruent ellipses placed with five-fold rotational symmetry suffice \citep{Grunbaum1975}. We used his arrangement, and chose the ellipse (semi-axes in the ratio $\CxVennRatio$, with its center and tilt found by a numerical search) that makes the smallest of the 31 regions as roomy as possible. In the result the central region is by far the largest, the five single-subject regions come next, and the other twenty-five are all small: the largest circle that fits in the smallest region has $\CxVennMin$ of the radius of the largest circle in the center. A five-set Venn diagram is crowded by necessity.
+
+Physics adds sixteen regions. Each is tied to a result or a section of this work:
+\begin{itemize}
+\item \emph{Physics alone:} conservation laws and their origin in symmetry (Noether).
+\item \emph{With music:} sound as a wave, beats, resonance. \emph{With math:} Kepler's laws. \emph{With patterns:} interference. \emph{With chemistry:} Bohr's atom as a Kepler problem (Section~\ref{sec:18kepler}).
+\item \emph{Music, math, physics:} orbital resonance and the big-term test (Section~\ref{sec:18resonance}). \emph{Music, patterns, physics:} the Kirkwood gaps and the edge of Saturn's B ring. \emph{Music, chemistry, physics:} the fourth harmonic of an atom with $n \approx 1009$. \emph{Math, patterns, physics:} the standard map and the break-up of invariant curves (below). \emph{Math, chemistry, physics:} the $2n^2$ shells from the Runge--Lenz symmetry. \emph{Patterns, chemistry, physics:} Bragg's law and quasicrystals.
+\item \emph{Four at a time:} conjunction figures (\cref{prop:18conj}); Sommerfeld's ellipses (below); the normal modes of a chain of atoms; the Hall integers of Harper's equation (Section~\ref{sec:18butterfly}).
+\item \emph{All five:} the standing wave, which was already the center of the four-subject diagram.
+\end{itemize}
+
+Writing the regions turned up two small things that belong in this work. Neither is deep, and the second is a computation, not a theorem.
+
+\paragraph{Sommerfeld's orbit shapes and $6/\pi^2$.} In Sommerfeld's atom of 1916 \citep{sommerfeld1916}, level $n$ has $n$ elliptical orbits, and the ratio of the short axis to the long axis of the $k$-th is $k/n$, $k = 1, \dots, n$ (Section~\ref{sec:18keplercont}). Two orbits at different levels have the same shape exactly when their fractions are equal.
+
+\begin{proposition}[new shapes]\label{prop:sommerfeld}
+Among the $n$ orbits of level $n$, exactly $\varphi(n)$ have a shape that does not occur at any lower level. Hence the levels up to $N$ contain $N(N+1)/2$ orbits and $\Phi(N) = \sum_{n \le N}\varphi(n)$ different shapes, one for each Farey fraction of order $N$ in $(0, 1]$, and the share of orbits whose shape is new tends to $6/\pi^2$.
+\end{proposition}
+
+\begin{proof}
+The shape $k/n$ occurred at a lower level exactly when $k/n$ is not in lowest terms, so the new shapes at level $n$ are the $k \le n$ with $\gcd(k, n) = 1$. The classical estimate $\Phi(N) = 3N^2/\pi^2 + O(N\ln N)$ gives the limit.
+\end{proof}
+
+At $N = \SoN$ the share is $\SoShare$, against $6/\pi^2 = 0.6079\ldots$ So the constant of Chapter~\ref{ch:coprime}, the chance that two whole numbers share no factor, is also the chance that a Sommerfeld orbit has a shape of its own; the orbit shapes of the old quantum theory are the Farey fractions of Chapter~\ref{ch:fractals}. This is a remark about a superseded model. Quantum mechanics replaced the ellipses, though it kept the count of $n$ states of orbital shape at level $n$.
+
+\paragraph{Which of the Suite's numbers is the most robust?} Chapter~\ref{ch:large-small} quoted the theorem of Kolmogorov, Arnold and Moser: an orbit survives a small disturbance when its frequency ratio is hard to approximate by fractions. The standard map \citep{Chirikov1979}
+\[
+p' = p - \frac{K}{2\pi}\sin 2\pi x, \qquad x' = x + p' \pmod 1
+\]
+makes this quantitative. For each winding number $\omega$ there is a kick strength $K_c(\omega)$ below which an invariant curve with that winding number exists. Greene's method \citep{Greene1979} estimates it from the continued fraction of $\omega$: the periodic orbits whose winding numbers are the convergents $p/q$ of $\omega$ have a residue $R = (2 - \operatorname{tr}M)/4$, where $M$ is the tangent map of $q$ steps, and the curve is at the point of breaking when the residues of its convergents stay near $1/4$. \Cref{tab:kam} gives, for the five numbers of the Suite, the kick strength at which the residue of each convergent reaches $1/4$.
+
+\begin{table}[ht]
+\centering
+\caption[Break-up of invariant curves for the Suite's numbers]{The kick strength at which the residue of a convergent's periodic orbit reaches $1/4$ in the standard map, for the last convergents we could follow, and the term that comes next in the continued fraction. For the golden ratio the values converge to Greene's $0.971635\ldots$}\label{tab:kam}
+\small
+\begin{tabular}{llllr}
+\toprule
+number & expansion & convergents & kick strength & next term \\
+\midrule
+\KamRows
+\bottomrule
+\end{tabular}
+\end{table}
+
+For the golden ratio our values settle at $\KamGolden$, Greene's value, which checks the method. For $\sqrt2 - 1$ they settle near $\KamSilver$. For the other three the convergents we can follow give only estimates, and a large term still to come is expected to make the curve more fragile, so they should be read as upper estimates. With that caution, the order of robustness is
+\[
+\pi - 3 \;<\; e - 2 \;<\; \log_2(3/2) \;<\; \sqrt2 - 1 \;<\; \varphi - 1 ,
+\]
+and $\pi - 3$ is far below the rest: by these estimates its curve is gone by about $K = \KamPi$, a little over half the golden value, and the $292$ still ahead should lower that further. In the language of the earlier chapters, the big term that makes $355/113$ so good an approximation, and gives the Pi movement its 113-bar phrases, is the same thing that makes $\pi$'s curve the first to break. A number is musical in the sense of Chapter~\ref{ch:rhythm}, with long clear phrases, to the degree that it is fragile in the sense of Kolmogorov, Arnold and Moser. The site's picture of the standard map draws the golden curve in black so that it can be watched to the end.
+

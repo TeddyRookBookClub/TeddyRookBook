@@ -33,4 +33,4 @@ An electron in an atom is a standing wave too, but in three dimensions. Its shap
 
 Each orbital holds at most two electrons, and each shape comes in $2l + 1$ versions: 1 s orbital, 3 p, 5 d, 7 f. So the s, p, d and f families hold 2, 6, 10 and 14 electrons. Electrons fill them in a set order (1s, 2s, 2p, 3s, 3p, 4s, 3d …), and that order **is** the shape of the periodic table: two columns for s, six for p, ten for d and fourteen for f. Rows come out 2, 8, 8, 18, 18, 32 and 32 elements long.
 
-So the four subjects meet in the middle. Music gives us standing waves and their frequencies. Math describes them exactly. Their symmetry makes the patterns. And chemistry is what you get when nature fills those patterns with electrons.
+So these four subjects meet here. Music gives us standing waves and their frequencies. Math describes them exactly. Their symmetry makes the patterns. And chemistry is what you get when nature fills those patterns with electrons.

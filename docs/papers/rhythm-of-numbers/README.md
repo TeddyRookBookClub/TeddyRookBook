@@ -63,3 +63,8 @@ Rook's own scripts, kept as he wrote them (November 2026): `verify_ch18.py` reco
 chapter (250 checks, about two minutes; it builds `tr.so` from `tr.c` by itself; `--big` adds the 3 x 10^7 row of
 Table 18.2 and needs about 4 GB of memory). Unlike the other chapters, Chapter 18's numbers are typed in its text and
 not inserted from `paper/gen/`. `indep_check.py` is a separate spot check written without his scripts.
+
+The `c14_connections*.py` scripts belong to Section 12.8 ("The fifth subject: physics"): `c14_connections_venn.py` searches
+for the five-ellipse Venn diagram used on the site, `c14_connections_kam.py` runs Greene's residue method on the standard
+map for the Suite's five numbers (about ten minutes), and `c14_connections.py` writes the macros (its stored values come
+from the other two; it rechecks two of them).

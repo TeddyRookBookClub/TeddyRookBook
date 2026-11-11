@@ -42,3 +42,5 @@ python3 c12_third_fourteenth.py     # Chapter 17: q_37721, counts to 40,000, clu
 python3 c12_third_fifty.py          # Chapter 17: p_42037, counts and tests to 50,000, notes with 16 numerators (about 6 minutes)
 python3 c12_third_rate.py           # Chapter 17, Section 17.7: pi's own constant, sieve survivors, voices test (about 40 minutes)
 echo "all numbers and figures rebuilt"
+python3 c14_connections.py          # Chapter 12, Section 12.8: the five-oval diagram, Sommerfeld's shapes, the break-up table (seconds;
+                                    # c14_connections_kam.py and c14_connections_venn.py recompute its stored values, minutes each)
