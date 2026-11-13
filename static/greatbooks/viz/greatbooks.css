@@ -116,3 +116,15 @@ html[data-theme="dark"] .gbh .mlp-hero{background:linear-gradient(135deg,#2a1b07
 .gbh-jump a{display:inline-block;border:1px solid var(--line2);border-radius:999px;padding:.15rem .6rem;font-size:.85rem;text-decoration:none!important;color:var(--ink)!important}
 @media (max-width:600px){.gbh-sec>h2{font-size:1.35rem}.gb-path-h{font-size:1.2rem}}
 @media print{.gb-pathnav{display:none}.gb-quote,.gb-act,.gb-qs{break-inside:avoid}}
+
+/* a rung's reader's map (layouts/_partials/greatbooks/topic-top.html) */
+.gb-map{display:flex;align-items:stretch;gap:.9rem;margin:0 0 1.2rem;border:1px solid var(--gb-line);border-left:4px solid var(--gb-gold);border-radius:14px;overflow:hidden;background:var(--gb-paper);text-decoration:none;color:var(--ink)}
+.gb-map:hover{box-shadow:0 3px 12px rgba(0,0,0,.14)}
+.gb-map img{display:block;flex:0 0 auto;width:112px;height:auto;aspect-ratio:3/4;object-fit:cover;object-position:top;margin:0;border-radius:0}
+.gb-map>span{display:flex;flex-direction:column;justify-content:center;gap:.15rem;padding:.6rem .9rem .6rem 0;min-width:0}
+.gb-map small{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.gb-map b{font:700 1.08rem/1.3 Georgia,"Times New Roman",serif}
+.gb-map em{font-style:normal;font-size:.9rem;color:var(--muted);line-height:1.45}
+.gb-map i{font-style:normal;font-weight:600;font-size:.9rem;color:var(--gb-acc)}
+@media (max-width:420px){.gb-map img{width:84px}.gb-map em{display:none}}
+@media print{.gb-map{display:none}}

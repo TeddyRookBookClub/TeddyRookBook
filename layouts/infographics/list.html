@@ -16,25 +16,29 @@
     {{ range $tags | uniq | sort }}<button type="button" class="ig-chip" data-tag="{{ . }}">{{ . }}</button>{{ end }}
   </div>
 
+  {{ $main := where $items "series" "!=" "readers-maps" }}
+  {{ $maps := where $items "series" "readers-maps" }}
   <div class="ig-grid">
-    {{ range $items }}
-    <figure class="ig-card" id="{{ .file }}" data-tags="{{ delimit .tags "|" }}">
-      <a href="/img/infographics/{{ .file }}.jpg" class="ig-open" data-title="{{ .title }}" data-desc="{{ .description }}"{{ with .pdf }} data-pdf="/pdfs/{{ . }}"{{ end }}{{ with .pdf_title }} data-pdftitle="{{ . }}"{{ end }}>
-        <span class="ig-frame"><img src="/img/infographics/{{ .file }}-thumb.jpg" alt="{{ .title }}" loading="lazy"><span class="ig-expand" aria-hidden="true">⤢ Tap to expand</span></span>
-      </a>
-      <figcaption>
-        <strong>{{ .title }}</strong>
-        <span>{{ delimit .tags " · " }}</span>
-        {{ with .description }}<p class="ig-desc">{{ . }}</p>{{ end }}
-        {{ with .pdf }}<a class="ig-pdf" href="/pdfs/{{ . }}" target="_blank" rel="noopener">📄 Read the full paper (PDF)</a>{{ end }}
-        {{ $it := . }}{{ with .link }}<a class="ig-pagelink ig-rel" href="{{ . }}">✨ {{ $it.link_text | default "Related page" }} →</a>{{ end }}
-        <a class="ig-pagelink" href="/infographics/{{ .file }}/">🔗 Own page, to share or bookmark</a>
-        {{ with .video }}{{ with index site.Data.videos . }}<a class="ig-pagelink" href="/videos/{{ .slug }}/">🎬 Watch the video walk-through</a>{{ end }}{{ end }}
-        {{ with .books }}<span class="ig-books">📚 {{ range $i, $b := . }}{{ with site.GetPage (printf "/books/%s" $b) }}{{ if $i }} · {{ end }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}</span>{{ end }}
-      </figcaption>
-    </figure>
-    {{ end }}
+    {{ range $main }}{{ partial "infographics/card.html" . }}{{ end }}
   </div>
+
+  {{ with $maps }}
+  <section class="ig-series" id="readers-maps">
+    <h2>Great Books reader’s maps</h2>
+    <p class="ig-series-lede">{{ len . }} one-page maps, one for every work on the <a href="/great-books/">Great Books Ladder</a>. Each is a no-spoilers sheet to keep beside the book: who’s who, how the work is built, where you are, and what the first readers already knew.</p>
+    <nav class="ig-eras" aria-label="Jump to an era">
+      {{ range site.Data.greatbooks.courses }}{{ $n := len (where $maps "era" .slug) }}{{ if $n }}<a href="#maps-{{ .slug }}">{{ .title }} <small>{{ $n }}</small></a>{{ end }}{{ end }}
+    </nav>
+    {{ range site.Data.greatbooks.courses }}{{ $c := . }}{{ with where $maps "era" .slug }}
+    <div class="ig-era">
+      <h3 id="maps-{{ $c.slug }}">{{ $c.title }} <small>{{ len . }} maps · <a href="/great-books/{{ $c.slug }}/">the rungs →</a></small></h3>
+      <div class="ig-grid">
+        {{ range . }}{{ partial "infographics/card.html" . }}{{ end }}
+      </div>
+    </div>
+    {{ end }}{{ end }}
+  </section>
+  {{ end }}
 
   <div class="ig-lightbox" id="ig-lightbox" hidden>
     <button type="button" class="ig-close" aria-label="Close">×</button>
@@ -53,6 +57,7 @@
     chips.forEach(function(x){x.classList.remove('active')}); c.classList.add('active');
     var t=c.dataset.tag;
     cards.forEach(function(card){card.style.display=(t==='all'||card.dataset.tags.split('|').indexOf(t)>-1)?'':'none';});
+    document.querySelectorAll('.ig-era,.ig-series').forEach(function(g){var any=false;g.querySelectorAll('.ig-card').forEach(function(x){if(x.style.display!=='none')any=true;});g.style.display=any?'':'none';});
   });});
   var lb=document.getElementById('ig-lightbox'), img=document.getElementById('ig-lb-img');
   var goBack=false;

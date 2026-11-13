@@ -1,0 +1,16 @@
+{{- /* One gallery card (layouts/infographics/list.html). Context: an entry of data/infographics.yaml. */ -}}
+<figure class="ig-card" id="{{ .file }}" data-tags="{{ delimit .tags "|" }}">
+  <a href="/img/infographics/{{ .file }}.{{ .ext | default "jpg" }}" class="ig-open" data-title="{{ .title }}" data-desc="{{ .description }}"{{ with .pdf }} data-pdf="/pdfs/{{ . }}"{{ end }}{{ with .pdf_title }} data-pdftitle="{{ . }}"{{ end }}>
+    <span class="ig-frame"><img src="/img/infographics/{{ .file }}-thumb.{{ .ext | default "jpg" }}" alt="{{ .title }}" loading="lazy"><span class="ig-expand" aria-hidden="true">⤢ Tap to expand</span></span>
+  </a>
+  <figcaption>
+    <strong>{{ .title }}</strong>
+    <span>{{ delimit .tags " · " }}</span>
+    {{ with .description }}<p class="ig-desc">{{ . }}</p>{{ end }}
+    {{ with .pdf }}<a class="ig-pdf" href="/pdfs/{{ . }}" target="_blank" rel="noopener">📄 Read the full paper (PDF)</a>{{ end }}
+    {{ $it := . }}{{ with .link }}<a class="ig-pagelink ig-rel" href="{{ . }}">✨ {{ $it.link_text | default "Related page" }} →</a>{{ end }}
+    <a class="ig-pagelink" href="/infographics/{{ .file }}/">🔗 Own page, to share or bookmark</a>
+    {{ with .video }}{{ with index site.Data.videos . }}<a class="ig-pagelink" href="/videos/{{ .slug }}/">🎬 Watch the video walk-through</a>{{ end }}{{ end }}
+    {{ with .books }}<span class="ig-books">📚 {{ range $i, $b := . }}{{ with site.GetPage (printf "/books/%s" $b) }}{{ if $i }} · {{ end }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}</span>{{ end }}
+  </figcaption>
+</figure>

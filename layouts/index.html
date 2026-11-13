@@ -123,7 +123,7 @@
     </a>
     <a class="tile t-ig" href="/infographics/">
       <div class="tile-vis mosaic" aria-hidden="true">
-        {{ range first 4 $ig }}<img src="/img/infographics/{{ .file }}-thumb.jpg" alt="" loading="lazy">{{ end }}
+        {{ range first 4 $ig }}<img src="/img/infographics/{{ .file }}-thumb.{{ .ext | default "jpg" }}" alt="" loading="lazy">{{ end }}
       </div>
       <div class="tile-body">
         <h2>🖼️ Infographics</h2>
@@ -173,7 +173,7 @@
     <div class="hs-head"><h2>Latest infographics</h2><a href="/infographics/">All {{ len $ig }} →</a></div>
     <div class="strip">
       {{ range first 6 $ig }}
-      <a href="/infographics/#{{ .file }}"><img src="/img/infographics/{{ .file }}-thumb.jpg" alt="" loading="lazy"><span>{{ .title }}</span></a>
+      <a href="/infographics/#{{ .file }}"><img src="/img/infographics/{{ .file }}-thumb.{{ .ext | default "jpg" }}" alt="" loading="lazy"><span>{{ .title }}</span></a>
       {{ end }}
     </div>
   </section>

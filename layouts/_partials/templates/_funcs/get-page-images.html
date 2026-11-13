@@ -2,8 +2,8 @@
        pages with images: [...] use those; everything else falls back to the site picture. */ -}}
 {{- $imgs := slice }}
 {{- with .Params.igfile }}
-  {{- with resources.Get (printf "infographics/%s.jpg" .) }}
-    {{- $c := (.Resize "1200x").Crop "1200x630 top" }}
+  {{- with resources.Get (printf "infographics/%s.%s" . ($.Params.igext | default "jpg")) }}
+    {{- $c := cond (eq .MediaType.SubType "webp") ((.Resize "1200x jpg q82").Crop "1200x630 top jpg q78") ((.Resize "1200x").Crop "1200x630 top") }}
     {{- $imgs = $imgs | append (dict "Image" $c "RelPermalink" $c.RelPermalink "Permalink" $c.Permalink) }}
   {{- end }}
 {{- end }}

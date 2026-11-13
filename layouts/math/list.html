@@ -26,6 +26,9 @@
     <p class="mlp-eyebrow">{{ $L.title }} · {{ $c.band }}{{ if ne (string $c.grade) "College" }} · {{ if eq (string $c.grade) "K" }}Kindergarten{{ else if eq (string $c.grade) "Pre-K" }}Pre-K, ages 3 to 5{{ else }}Grade {{ $c.grade }}{{ end }}{{ end }}</p>
     <h1>{{ $c.title }}</h1>
     <p class="mlp-chero-blurb">{{ $c.blurb }}</p>
+    {{- if eq $lk "greatbooks" }}{{ with where (where site.Data.infographics "era" $c.slug) "show" true }}
+    <p class="mlp-chero-blurb"><a style="color:#fff;font-weight:600;text-decoration:underline" href="{{ printf "infographics/#maps-%s" $c.slug | relURL }}"><span aria-hidden="true">🗺️</span> {{ len . }} reader’s maps for this era</a>: a one-page, no-spoilers sheet for each work, also linked at the top of its rung.</p>
+    {{- end }}{{ end }}
     <div class="mlp-chero-row">
       <div class="mlp-cprog" aria-live="polite"><div class="mlp-bar" role="progressbar" aria-label="Topics passed" aria-valuemin="0" aria-valuemax="{{ $nT }}" aria-valuenow="0"><b style="width:0"></b></div><p class="mlp-cprog-t"><span data-passed>0</span> of {{ $nT }} topics passed<span data-due></span></p></div>
       <div class="mlp-chero-btns">

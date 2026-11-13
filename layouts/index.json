@@ -24,7 +24,7 @@
   {{- $out = $out | append $e -}}
 {{- end -}}
 {{- range where site.Data.infographics "show" true -}}
-  {{- $out = $out | append (dict "k" "Infographic" "t" .title "u" (printf "/infographics/%s/" .file) "d" .description "x" (delimit (.tags | default slice) " ") "i" (printf "/img/infographics/%s-thumb.jpg" .file)) -}}
+  {{- $out = $out | append (dict "k" "Infographic" "t" .title "u" (printf "/infographics/%s/" .file) "d" .description "x" (delimit (.tags | default slice) " ") "i" (printf "/img/infographics/%s-thumb.%s" .file (.ext | default "jpg"))) -}}
 {{- end -}}
 {{- with site.Data.timeline -}}{{- range .events -}}
   {{- $out = $out | append (dict "k" "Timeline" "t" (printf "%s · %s" .when .title) "u" (printf "/timeline/#%s" .id) "d" .text "x" "") -}}

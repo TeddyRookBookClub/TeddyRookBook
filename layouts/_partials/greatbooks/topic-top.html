@@ -29,4 +29,11 @@
 </section>
 {{- end }}
 {{- end -}}
+{{- /* The rung's one-page reader's map (data/infographics.yaml entries with rung: <id>). */ -}}
+{{- range first 1 (where (where site.Data.infographics "rung" .id) "show" true) }}
+<a class="gb-map" href="{{ printf "infographics/%s/" .file | relURL }}">
+  <img src="{{ printf "img/infographics/%s-thumb.%s" .file (.ext | default "jpg") | relURL }}" alt="" width="520" height="693" loading="lazy">
+  <span><small>One page to keep beside the book</small><b><span aria-hidden="true">🗺️</span> {{ .title }}</b><em>No spoilers: who’s who, how the work is built, where you are, and what the first readers already knew.</em><i>Open the map →</i></span>
+</a>
+{{- end }}
 {{- end -}}
