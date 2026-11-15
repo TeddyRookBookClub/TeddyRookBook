@@ -1,8 +1,8 @@
 \chapter{Tools that hunt primes}\label{ch:tools}
 
-The continued fraction found $355/113$. Can the same machine find primes? This chapter tries three tools from the companion site on the primes: a factoring method that is built from continued fractions, a picture of Fermat's little theorem made of rhythms, and an experiment that reads rhythms as binary numbers and tests them for primality. The first two are classical; the third is our experiment, and its result is a clear null.
+The continued fraction found $355/113$. Can the same machine find primes? This chapter tries three tools from the companion site on the primes: a factoring method that is built from continued fractions, a picture of Fermat's little theorem made of rhythms, and an experiment that reads rhythms as binary numbers and tests them for primality. The first two are classical; the third is our experiment, and its result is a clear null. Two further sections, from Teddy Rook's notes, ask whether a prime leaves a mark in the rhythm of its own square root (it does, at the middle of the period, and the theorems are known), and then how the same idea becomes the fast tests that are used on large numbers. \addedon{\revG}
 
-\section{Factoring with the continued fraction of \texorpdfstring{$\sqrt N$}{sqrt N}}
+\section{Factoring with the continued fraction of \texorpdfstring{$\sqrt N$}{sqrt N}}\label{sec:cfrac-factoring}
 
 To factor an odd number $N$ it is enough to find $x$ and $y$ with $x^2 \equiv y^2 \pmod N$ and $x \not\equiv \pm y$, because then $\gcd(x - y, N)$ is a proper factor. Continued fractions produce many congruences of the form $x^2 \equiv (\text{small number}) \pmod N$. Expand $\sqrt{N}$ (or $\sqrt{kN}$ for a small multiplier $k$) with the integer recurrence
 \begin{equation}\label{eq:cfrac}
@@ -31,7 +31,7 @@ $n$ & $a_n$ & $Q_n$ & square? \\
 
 This is the clearest case of ``pi's machine doing prime work'': the algorithm that, run on $\pi$, finds $22/7$ and $355/113$ is the algorithm that, run on $\sqrt N$, finds factors. It does not use any property of $\pi$, of course.
 
-\section{Mersenne necklaces and Fermat's little theorem}
+\section{Mersenne necklaces and Fermat's little theorem}\label{sec:necklaces}
 
 Take $m = 2^p - 1$ points on a circle and join each point $x$ to $2x \bmod m$. Write $x$ in binary with $p$ digits. Since $2^p \equiv 1 \pmod m$, doubling modulo $m$ simply rotates the digits by one place. So every orbit of the doubling map is a binary word of length $p$ together with all its rotations: a \emph{necklace}, or in our language a $p$-beat rhythm and all its rotations.
 
@@ -78,3 +78,338 @@ $\varphi - 1$ & \HuntPhi & \HuntPhiExpV{} (\HuntPhiExp) & \HuntLoPhi & \HuntHiPh
 \label{fig:hunt}
 \end{figure}
 
+\section{The rhythm of \texorpdfstring{$\sqrt N$}{sqrt N} and its middle bar}\label{sec:sqrtmiddle}
+
+\addednote{\revG}
+
+Trial division stops at $\sqrt N$. Could that square root be the first step of a continued fraction in
+which, a few steps later, something like ``remainder zero'' announces a prime? This section follows the
+idea through. It is true in one direction, and most of it is classical. One question it raises, the
+length of the period modulo $4$, has an answer for half of the primes. We found it from the data
+before we found it in the literature: it is a theorem of Kaplan and Williams from 1986
+\citep{KaplanWilliams1986}, and we give it in a different form with a short proof (Theorems~\ref{thm:7middle}
+and~\ref{thm:7mod4}). For the other half the known rule (Barkan, 1975 \citep{Barkan1975}) needs a class number and the sign of
+a factorial, and the data suggest that nothing simpler should be expected. The fast form of the idea is the subject of
+\cref{sec:fastladder}.
+
+\paragraph{A palindrome with a centre.} For a non-square $N$ the continued fraction of $\sqrt N$ is
+periodic,
+\[
+  \sqrt N=[a_0;\overline{a_1,a_2,\ldots,a_{k-1},2a_0}],
+\]
+and $a_1,\ldots,a_{k-1}$ read the same in both directions (classical; see \citep{Elia2019}). In the
+recurrence \eqref{eq:cfrac}, with multiplier $1$, the period ends at the first $n\ge1$ with $Q_n=1$. (The multiplier is $1$ from here to the end of the chapter, so the letter $k$ is free, and we use it for the length of the period.) The symmetry
+reads
+\begin{equation}\label{eq:7sym}
+  P_{k+1-j}=P_j,\qquad Q_{k-j}=Q_j .
+\end{equation}
+Write $A_n/B_n$ for the convergents, with $A_{-1}=1$ and $B_{-1}=0$. Behind \eqref{eq:cfrac-congruence} is the identity
+$A_{n-1}^{2}-NB_{n-1}^{2}=(-1)^{n}Q_n$; we call it \eqref{eq:cfrac-congruence} too. A rhythm that is a palindrome has a middle bar, and the
+arithmetic of $N$ shows there.
+
+\begin{proposition}[the middle; classical]\label{prop:7middle}
+(i) If the period is even, $k=2m$, then $Q_m$ divides $2N$.\\
+(ii) If the period is odd, $k=2m+1$, then $Q_{m+1}=Q_m$ and $N=P_{m+1}^{2}+Q_m^{2}$.
+\end{proposition}
+
+\begin{proof}
+(i) By \eqref{eq:7sym}, $P_{m+1}=P_m$, and \eqref{eq:cfrac} gives $P_{m+1}+P_m=a_mQ_m$, so $Q_m$ divides $2P_m$.
+Also $N=P_m^{2}+Q_mQ_{m-1}$, so $2N=P_m\cdot 2P_m+2Q_mQ_{m-1}$ is divisible by $Q_m$. (ii) By
+\eqref{eq:7sym}, $Q_{m+1}=Q_m$, and \eqref{eq:cfrac} gives $Q_{m+1}Q_m=N-P_{m+1}^{2}$.
+\end{proof}
+
+Part (ii) is Legendre's way of writing a number as a sum of two squares, and part (i) finds a factor
+of $2N$ \citep{Elia2019}. We checked both on every non-square $N$ up to $10^{6}$: (i) in all $896{,}338$
+cases with even period, (ii) in all $102{,}662$ with odd period. \cref{fig:7middle} shows three
+periods.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{sqrt_middle.pdf}
+\caption[The middle of the period of $\sqrt N$]{The middle of the period of $\sqrt N$. The bars are the denominators $Q_n$ of \eqref{eq:cfrac} over one
+period; the middle is in gold. For a prime $\equiv3\pmod 4$ the middle is $2$; for a prime
+$\equiv1\pmod4$ two equal bars give the two squares; for a composite the middle is usually a
+factor.}\label{fig:7middle}
+\end{figure}
+
+\begin{proposition}[the signature of a prime; classical]\label{prop:7signature}
+Let $p$ be an odd prime and $k$ the period of $\sqrt p$.\\
+(i) If $p\equiv3\pmod4$, then $k$ is even and the middle is $Q_{k/2}=2$. Moreover $k\equiv0\pmod4$ when
+$p\equiv7\pmod8$, and $k\equiv2\pmod4$ when $p\equiv3\pmod8$.\\
+(ii) If $p\equiv1\pmod4$, then $k$ is odd, and the middle writes $p$ as a sum of two squares.
+\end{proposition}
+
+\begin{proof}
+(i) If $k$ were odd, \eqref{eq:cfrac-congruence} with $n=k$ would give $A^{2}-pB^{2}=-1$, making $-1$ a square modulo $p$. So
+$k=2m$. By \cref{prop:7middle}, $Q_m$ divides $2p$; it is not $1$, since the first $Q_n=1$
+comes at $n=k$, and for $p\ge5$ it is below $2\sqrt p<p$ by \eqref{eq:cfrac-congruence}. So $Q_m=2$ (for $p=3$ directly:
+$\sqrt3=[1;\overline{1,2}]$ and $Q_1=2$). Then \eqref{eq:cfrac-congruence} gives
+$A_{m-1}^{2}-pB_{m-1}^{2}=(-1)^{m}2$, so $(-1)^{m}2$ is a square modulo $p$. For $p\equiv7\pmod8$ the
+number $2$ is a square and $-2$ is not, so $m$ is even; for $p\equiv3\pmod8$ it is the other way round.
+(ii) If $k=2m$ were even, the same argument would give $Q_m=2$ and $A_{m-1}^{2}-pB_{m-1}^{2}=\pm2$. But
+for $p\equiv1\pmod4$ the left side is odd when one of the two numbers is even, and divisible by $4$
+when both are odd. So $k$ is odd (see also \citep{OEIS_A054269}), and the rest is
+\cref{prop:7middle}.
+\end{proof}
+
+So a prime does leave a mark ``a few steps later'': at the middle of its period there is a $2$, or two
+equal bars that spell out its two squares. All $78{,}497$ odd primes up to $10^{6}$ do this. And
+composites usually give themselves away at the same place (\cref{tab:7signature}); for
+$\sqrt{217}$ the middle is $7$, and $217=7\times31$.
+
+\begin{table}[t]
+\centering
+\caption[What the middle of the period shows]{What the middle of the period shows, for odd $N\le10^{6}$.}\label{tab:7signature}
+\small
+\begin{tabular}{lrr}
+\toprule
+ & count & share\\
+\midrule
+odd primes: the signature of \cref{prop:7signature} & 78{,}497 & 100\%\\
+odd composite non-squares & 421{,}003 & \\
+\quad the middle shows a proper factor & 353{,}010 & 83.8\%\\
+\quad odd period, like a prime $\equiv1\pmod4$ & 32{,}675 & 7.8\%\\
+\quad middle $2$, like a prime $\equiv3\pmod4$ & 35{,}318 & 8.4\%\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+As a test for primes this fails twice. One odd composite in six carries the signature of a prime
+($27$, $51$, $65$, $85$, $119$ are the first): $67{,}993$ impostors against $78{,}497$ primes. And the
+middle is not ``a few steps'' away. For primes up to $10^{6}$ the period averages $0.81\sqrt p$ and
+reaches $2.68\sqrt p$ (at $p=978{,}091$); in general it can be as long as $0.72\sqrt N\ln N$
+(Kraitchik; see \citep{Elia2019}). The square root that ends trial division comes back as the length of
+the rhythm. The shortcut is the one of \cref{sec:cfrac-factoring}: do not wait for the middle, but stop at the first
+even step $n$ where $Q_n$ is a perfect square $c^{2}$, so that $A_{n-1}^{2}\equiv c^{2}\pmod N$. On
+$2{,}000$ random products of two primes between one and three million this gave a factor in $1{,}996$
+cases, after a median of $1.24\,N^{1/4}$ steps; the middle of the period lay a median of
+$0.17\sqrt N$ steps away.
+
+\paragraph{Which way round? The period modulo $4$.} For $p\equiv3\pmod4$,
+\cref{prop:7signature} reads the period modulo $4$ from $p$ modulo $8$. For $p\equiv1\pmod4$
+it cannot: the period is $1$ and $3$ modulo $4$ equally often (for $318{,}210$ and $316{,}960$ of the
+primes below $2\times10^{7}$), in both classes modulo $8$. What decides it is which of the two square
+roots of $-1$ modulo $p$ the fundamental unit is.
+
+Fix a prime $p\equiv1\pmod4$ with period $k=2m+1$. Let $a=P_{m+1}$ and $b=Q_m$, so that $p=a^{2}+b^{2}$;
+let $T+U\sqrt p=A_{k-1}+B_{k-1}\sqrt p$, the least solution of $T^{2}-pU^{2}=-1$; and let
+$s=(-1)^{m}=(-1)^{(k-1)/2}$, so that $s=+1$ means $k\equiv1\pmod4$.
+
+\begin{theorem}[the middle of an odd period; specialist]\label{thm:7middle}
+With this notation,\\
+(i) $\bigl(A_{m-1}+B_{m-1}\sqrt p\bigr)^{2}=\bigl(T+U\sqrt p\bigr)\bigl(\sqrt p-a\bigr)$;\\
+(ii) $a$ is even, $b$ is odd, and $U\equiv1\pmod4$;\\
+(iii) $T\equiv s\,a/b\pmod p$;\\
+(iv) $s=+1$ exactly when $\tfrac12(pU-Ta+b)$ is a perfect square.
+\end{theorem}
+
+\begin{proof}
+Let $\xi_j=(P_j+\sqrt p)/Q_j$ be the complete quotients. From
+$\sqrt p=(\xi_nA_{n-1}+A_{n-2})/(\xi_nB_{n-1}+B_{n-2})$ one gets
+$A_{n-1}-B_{n-1}\sqrt p=-(A_{n-2}-B_{n-2}\sqrt p)/\xi_n$, hence
+\[
+  A_{n-1}-B_{n-1}\sqrt p=\frac{(-1)^{n}}{\xi_1\xi_2\cdots\xi_n}.
+\]
+With $n=k$, since $k$ is odd and $(T-U\sqrt p)(T+U\sqrt p)=-1$, this gives $T+U\sqrt p=\xi_1\cdots\xi_k$. Put $\Pi=\xi_1\cdots\xi_m$. By \eqref{eq:7sym}, for
+$j'=k+1-j$ between $1$ and $m$ we have $\xi_j=(P_{j'}+\sqrt p)/Q_{j'-1}$, so
+$\xi_{m+2}\cdots\xi_k=\Pi\cdot Q_m/Q_0=\Pi b$, while $\xi_{m+1}=(a+\sqrt p)/b$. So
+$T+U\sqrt p=\Pi^{2}(a+\sqrt p)$. With $n=m$ the displayed formula and \eqref{eq:cfrac-congruence} give
+$\Pi=(A_{m-1}+B_{m-1}\sqrt p)/b$. Since $(a+\sqrt p)(\sqrt p-a)=b^{2}$, this is (i).
+
+Write $A=A_{m-1}$, $B=B_{m-1}$. Comparing the two sides of (i), and using \eqref{eq:cfrac-congruence},
+\begin{equation}\label{eq:7three}
+  A^{2}+pB^{2}=pU-Ta,\qquad 2AB=T-Ua,\qquad A^{2}-pB^{2}=s\,b .
+\end{equation}
+(ii) Modulo $4$ the equation $T^{2}+1=pU^{2}$ forces $T$ even and $U$ odd. If $b$ were even, then $A$
+and $B$, being coprime, would both be odd, and $2AB\equiv2\pmod4$; but $a$ would be odd and $T-Ua$ odd.
+So $b$ is odd and $a$ is even. Every prime factor of $U$ divides $T^{2}+1$, so it is $\equiv1\pmod4$,
+and so is $U$. (iii) Modulo $p$, \eqref{eq:7three} gives $A^{2}\equiv-Ta$ and $A^{2}\equiv sb$, so
+$T\equiv-s\,b/a\equiv s\,a/b$, because $a^{2}\equiv-b^{2}$. (iv) Adding the first and third equations,
+$2A^{2}=pU-Ta+sb$. So for $s=+1$ the number in (iv) is $A^{2}$. For $s=-1$, subtracting instead gives
+$\tfrac12(pU-Ta+b)=pB^{2}$ with $B\ge1$, which is not a square.
+\end{proof}
+
+Identities of this kind are Lemma 3 of Kaplan and Williams \citep{KaplanWilliams1986}, who give $T$ and $U$ in terms
+of $a$, $b$ and two further integers $\alpha$, $\gamma$. One of them, their (2.8), reads
+$sb+Ta=p(\alpha^{2}-\gamma^{2})$ in our notation, and part (iii) is that identity read modulo $p$. The
+proof above is self-contained and does not use their paper.
+
+For primes $p\equiv5\pmod8$ the theorem becomes a rule that needs only two residues modulo $8$. Write
+$\chi(n)=+1$ for $n\equiv1,3\pmod8$ and $\chi(n)=-1$ for $n\equiv5,7\pmod8$. This is the symbol
+$\bigl(\frac{-2}{n}\bigr)$; it is multiplicative, and $\chi(-1)=-1$.
+
+\begin{theorem}[the period modulo $4$ for $p\equiv5\pmod8$; Kaplan and Williams, in another form]\label{thm:7mod4}
+Let $p\equiv5\pmod8$ be prime. Then $T\equiv a\equiv2\pmod4$, and
+\[
+  (-1)^{(k-1)/2}=(-1)^{(T-a)/4}\,\chi(b).
+\]
+So $k\equiv1\pmod4$ exactly when $(T-a)/4$ is even and $b\equiv1,3\pmod8$, or $(T-a)/4$ is odd and
+$b\equiv5,7\pmod8$.
+\end{theorem}
+
+\begin{proof}
+In $A^{2}-pB^{2}=sb$ exactly one of $A$, $B$ is even. If $B=2B'$, then modulo $8$ we get
+$sb\equiv1-4B'^{2}$, which is $1$ or $5$ as $B'$ is even or odd. If $A=2A'$, then $sb\equiv4A'^{2}-5$,
+which is $3$ or $7$ as $A'$ is even or odd. In both cases $AB/2$ is even exactly when
+$sb\equiv1,3\pmod8$, that is, $(-1)^{AB/2}=\chi(sb)=s\,\chi(b)$. By
+\eqref{eq:7three}, $AB/2=(T-Ua)/4$. Modulo $8$, $T^{2}+1=pU^{2}$ gives $T\equiv2\pmod4$, and
+$a^{2}=p-b^{2}\equiv4$ gives $a\equiv2\pmod4$. Since $U\equiv1\pmod4$, the number $a(U-1)$ is divisible
+by $8$, so $(T-Ua)/4$ and $(T-a)/4$ have the same parity.
+\end{proof}
+
+For $p=13$: $T=18$, $13=2^{2}+3^{2}$, $(T-a)/4=4$ and $\chi(3)=+1$, so $k\equiv1\pmod4$;
+indeed $\sqrt{13}=[3;\overline{1,1,1,1,6}]$ has period $5$. For $p=61$: $T=29{,}718$,
+$61=6^{2}+5^{2}$, $(T-a)/4=7{,}428$ and $\chi(5)=-1$, so $k\equiv3\pmod4$; the period is
+$11$. \cref{thm:7middle} was checked exactly for the $39{,}175$ primes $p\equiv1\pmod4$ up to
+$10^{6}$, and parts (ii), (iii) and \cref{thm:7mod4} for all $635{,}170$ up to $2\times10^{7}$
+($317{,}693$ of them $\equiv5\pmod8$).
+
+\paragraph{The same rule in the form of Kaplan and Williams.} Their Theorem 2 \citep[p.~179]{KaplanWilliams1986} says:
+for every non-square $N\equiv5\pmod8$ with odd period $k$,
+\begin{equation}\label{eq:7kw}
+  k\equiv\tfrac14\bigl(abT+N-5\bigr)\pmod 4 ,
+\end{equation}
+with $a$, $b$, $T$ as here (they write $a$ for the odd and $b$ for the even number, and $t$ for $T$).
+The two forms say the same thing. Write $a=2a'$ and $T=2T'$, so that $a'$,
+$T'$ and $b$ are odd and \eqref{eq:7kw} reads $k\equiv a'T'b+\tfrac14(N-5)$. For odd $x$ and $y$ the
+product $xy$ is $\equiv1\pmod4$ exactly when $x\equiv y\pmod4$, so $a'T'\equiv(-1)^{(T-a)/4}\pmod4$. And
+$N=4a'^{2}+b^{2}\equiv4+b^{2}\pmod{32}$, so $\tfrac14(N-5)\equiv\tfrac14(b^{2}-1)\pmod8$, which is
+$0\pmod4$ for $b\equiv\pm1\pmod8$ and $2\pmod4$ for $b\equiv\pm3\pmod8$. Hence
+$b+\tfrac14(N-5)\equiv\chi(b)\pmod4$ in all four cases; and since $\tfrac14(N-5)$ is $0$ or $2$, changing
+the sign of $b$ changes the sign of the whole. So \eqref{eq:7kw} becomes
+$k\equiv(-1)^{(T-a)/4}\chi(b)\pmod4$, which is \cref{thm:7mod4}. Our proof does not need $p$ to be
+prime either, only $N\equiv5\pmod8$ and an odd period. We checked both forms on all $35{,}917$
+non-squares $N\equiv5\pmod8$ up to $10^{6}$ with odd period, of which $16{,}294$ are composite ($85$,
+$125$, $325$ are the first).
+
+\paragraph{Primes $\equiv1\pmod8$: no such rule found.} The same argument, run for $p\equiv1\pmod8$,
+gives $(-1)^{(T-a)/4}=+1$ for $b\equiv\pm1\pmod8$ and $-1$ for $b\equiv\pm3\pmod8$: a relation between
+$T$, $a$ and $b$ in which $s$ has dropped out (it holds for all $317{,}477$ such primes below
+$2\times10^{7}$). There is a reason to expect this. Part (iv) asks whether a number is a square or $p$
+times a square, and a prime $\equiv1\pmod8$ is itself a square modulo every power of $2$, so residues
+modulo powers of $2$ cannot tell the two apart in this way. That is a reason, not a proof that no rule
+exists. The data agree as far as they go: among those $317{,}477$ primes the residues of $(p,T,U,a,b)$
+modulo $64$ fall into $4{,}096$ classes, and every one of them contains primes with $k\equiv1$ and
+primes with $k\equiv3\pmod4$. The same is true modulo $8$, $16$ and $32$ ($8$, $64$ and $512$ classes).
+Beyond $64$ there are too few primes per class to say. What the literature has for these primes is a rule of another kind. Barkan \citep{Barkan1975} works
+with the period $l$ of $\tfrac12(1+\sqrt p)$. Write $p=A^{2}+4B^{2}$, choose the sign of $A_0=\pm A$ so
+that $A_0\equiv1\pmod4$, and the sign of $B_0=\pm B$ so that
+$2B_0\equiv-\bigl(\tfrac{p-1}{2}\bigr)!\,A_0\pmod p$. Then, with $h$ the class number of
+$\mathbb{Q}(\sqrt p)$,
+\[
+  l\equiv\operatorname{sgn}A_0+\operatorname{sgn}B_0+h\pmod4 .
+\]
+He proves this for $p\equiv5\pmod8$ and remarks that it remains valid for $p\equiv1\pmod8$; we checked
+it for all $1{,}125$ primes $p\equiv1\pmod4$ below $20{,}000$. Theorem 1 of \citep{KaplanWilliams1986} carries it over
+to $\sqrt p$: for $N\equiv1\pmod8$ with odd period, the period of $\sqrt N$ and the period of
+$\tfrac12(1+\sqrt N)$ differ by $2$ modulo $4$ (checked for the $7{,}699$ such $N$ up to $200{,}000$).
+So for $p\equiv1\pmod8$ the period modulo $4$ is known in terms of $h$ and the sign of a factorial
+modulo $p$, quantities that are no easier to find than the period itself.
+
+\paragraph{A link to Wilson's theorem.} For $p\equiv1\pmod4$ the half-factorial
+$\bigl(\tfrac{p-1}{2}\bigr)!$ is a square root of $-1$ modulo $p$. Chowla \citep{Chowla1961} showed which
+one (we take the statement from \citep[Lemma 1]{Williams1981}), in terms of the fundamental unit $\tfrac12(t+u\sqrt p)$ and the class number $h$ of
+$\mathbb{Q}(\sqrt p)$: $\bigl(\tfrac{p-1}{2}\bigr)!\equiv(-1)^{(h+1)/2}\,t/2\pmod p$. With
+\cref{thm:7middle}(iii) this becomes a statement about the continued fraction:
+\[
+  \Bigl(\frac{p-1}{2}\Bigr)!\equiv c\,(-1)^{(h+1)/2}\,(-1)^{(k-1)/2}\;\frac ab\pmod p ,
+\]
+where $c=-1$ if $T+U\sqrt p$ is the cube of the fundamental unit (which happens only for some
+$p\equiv5\pmod8$) and $c=+1$ otherwise. We checked Chowla's congruence and this one for the $2{,}085$
+primes $p\equiv1\pmod4$ below $40{,}000$, computing $h$ by counting cycles of reduced forms. This is
+Barkan's formula above, moved from $\tfrac12(1+\sqrt p)$ to $\sqrt p$; he obtains his from the same
+congruence of Chowla.
+
+\paragraph{What the literature has.} Barkan's note of 1975 \citep{Barkan1975} is the earliest result we
+found. For $p\equiv5\pmod8$ it gives the period of $\tfrac12(1+\sqrt p)$ modulo $4$ as
+$A+B+\tfrac12h(-2p)+h(p)+1$, in terms of class numbers, together with the formula quoted above; and it
+says that the case $p\equiv1\pmod8$ ``is more complicated''. Kaplan and Williams \citep{KaplanWilliams1986} then gave
+the rule for $\sqrt N$ itself, $N\equiv5\pmod8$, without class numbers, and the comparison between the
+two periods. Related results: Williams \citep{Williams1981} determines the class number of
+$\mathbb{Q}(\sqrt p)$ modulo $4$ for $p\equiv5\pmod8$; Halter-Koch, Kaplan, Williams and Yamamoto
+\citep{HalterKoch1991} compare the period lengths of different classes of ideals modulo $4$. So the theorems
+of this section are known. What is ours is the form of \cref{thm:7mod4} and its short proof,
+parts (i) and (iv) of \cref{thm:7middle} as stated, the observation about residue classes for
+$p\equiv1\pmod8$, and the computations.
+
+%-------------------------------------------------------------------------------------------------------
+\section{The fast ladder: a prime leaves a zero}\label{sec:fastladder}
+
+\addednote{\revG}
+
+What made the last section slow is that the ladder belonged to $\sqrt N$, and its length grows with
+$N$. The idea works at any size if the ladder is fixed and only read modulo $n$. A prime then leaves a
+zero at a step that is known in advance.
+
+\paragraph{The golden ladder.} The convergents of the golden ratio $[1;1,1,1,\ldots]$ are the ratios
+$F_{m+1}/F_m$ of Fibonacci numbers.
+
+\begin{proposition}[classical]\label{prop:7fib}
+If $p$ is a prime other than $2$ and $5$, then $p$ divides $F_{p-1}$ when $p\equiv\pm1\pmod5$, and $p$
+divides $F_{p+1}$ when $p\equiv\pm2\pmod5$.
+\end{proposition}
+
+See \citep{BaillieWagstaff1980}. The step $p\pm1$ is reached in about $\log_2p$ moves, because the ladder can be
+climbed by doubling: $F_{2m}=F_m(2F_{m+1}-F_m)$ and $F_{2m+1}=F_m^{2}+F_{m+1}^{2}$, all modulo $n$. That
+is the difference from \cref{sec:sqrtmiddle}: about $330$ doublings for a hundred-digit number,
+where the period of its square root typically has a length of the order of $10^{50}$.
+
+The converse fails, but rarely (\cref{tab:7ladder}). The composites that pass are the Fibonacci
+pseudoprimes; the first are $323=17\times19$ and $377=13\times29$. As a check on the table: with the
+multiples of $5$ put back, our count of composites passing the base-$2$ test is $2{,}057$, the number
+in Table 1 of Pomerance, Selfridge and Wagstaff \citep{PomeranceSelfridgeWagstaff1980}.
+
+\begin{table}[t]
+\centering
+\caption[The golden ladder and the base-2 test]{Two tests on every odd $n\le10^{8}$ not divisible by $5$: the golden ladder (does $n$ divide
+$F_{n\mp1}$, as in \cref{prop:7fib}?) and the base-$2$ test (is $2^{\,n-1}\equiv1\pmod n$?).}\label{tab:7ladder}
+\small
+\begin{tabular}{lr}
+\toprule
+ & count\\
+\midrule
+primes, all passing both tests & 5{,}761{,}453\\
+composites passing the golden ladder & 1{,}460\\
+composites passing the base-$2$ test & 1{,}854\\
+composites passing both & 134\\
+composites passing both, with $n\equiv\pm2\pmod5$ & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The last line is the idea of the Baillie--PSW test \citep{BaillieWagstaff1980,PomeranceSelfridgeWagstaff1980}, the test used
+throughout this paper (Appendix~\ref{app:methods}): one test with powers of $2$, one test on a ladder, with the ladder
+chosen so that $n$ falls in the class where the two almost never fail together. No composite is known
+that passes it, and none exists below $2^{64}$ \citep{WikiBPSW}. The new primes of Chapter~\ref{ch:third} are
+numbers that left this zero. The rhythm sieve of \cref{sec:th6} reads a ladder modulo small numbers too,
+in the other direction: it runs $\pi$'s own ladder modulo each small prime and discards the steps where
+a zero appears.
+
+\paragraph{Where the idea is exact.} For the Mersenne numbers $M_p=2^{p}-1$ of \cref{sec:necklaces} the test is
+an equivalence, and it is a statement about the ladder of $\sqrt3=[1;\overline{1,2}]$.
+
+\begin{proposition}[Lucas--Lehmer, on the ladder of $\sqrt3$]\label{prop:7ll}
+Let $p$ be an odd prime. Then $2^{p}-1$ is prime if and only if it divides the numerator of convergent
+number $2^{p-1}-1$ of $\sqrt3$, counting from $0$.
+\end{proposition}
+
+\begin{proof}
+The Lucas--Lehmer test \citep[Theorem 2.2]{ConradLL} says that $M_p$ is prime exactly when it
+divides $s_{p-2}$, where $s_0=4$ and $s_{j+1}=s_j^{2}-2$ (a short proof of one direction is in
+\citep{Bruce1993}). Let $x_m+y_m\sqrt3=(2+\sqrt3)^{m}$. Then $x_m^{2}-3y_m^{2}=1$ and
+$x_{2m}=x_m^{2}+3y_m^{2}=2x_m^{2}-1$, so $2x_{2m}=(2x_m)^{2}-2$; since $2x_1=4$, this gives
+$s_j=2x_{2^{j}}$. The solutions of $x^{2}-3y^{2}=1$ are the convergents of $\sqrt3$ with odd number:
+$x_m/y_m$ is convergent number $2m-1$. With $m=2^{p-2}$ that is number $2^{p-1}-1$, and $M_p$ is odd.
+\end{proof}
+
+The convergents in question are $2/1$, $7/4$, $97/56$, \ldots, numbers $1$, $3$, $7$, \ldots. For
+$p=5$: convergent number $15$ of $\sqrt3$ has numerator $\equiv0\pmod{31}$. For $p=11$ the numerator of
+number $1023$ is $\equiv868\pmod{2047}$, and $2047=23\times89$. Run for the odd primes below $130$, the
+test returns $p=3,5,7,13,17,19,31,61,89,107,127$. Each squaring doubles the position on the ladder, so
+$p-2$ squarings reach step $2^{p-1}-1$. The record prime of \cref{sec:necklaces} was first flagged by a test of
+the other kind, a power modulo $n$, and confirmed the next day by this one \citep{GIMPS2024}.
+
+\paragraph{Summary.} A prime does leave a zero on a continued-fraction ladder. On the ladder of its own
+square root the zero is honest but far away, and one composite in six imitates it. On a fixed ladder
+read modulo $n$ it is reached in about $\log_2 n$ doublings at any size, and for the Mersenne numbers,
+where $n+1$ is a power of $2$, it is a proof.

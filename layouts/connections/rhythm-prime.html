@@ -1,5 +1,5 @@
 {{ define "main" }}
-{{- /* /connections/rhythm-of-numbers/new-prime/: the probable primes among pi's convergents found by Teddy Rook
+{{- /* /connections/rhythm-of-numbers/new-prime/: the new primes (one proved, four probable) among pi's convergents found by Teddy Rook
    (denominators q_n, and numerators p_n for entries with kind: p) (content/connections/rhythm-of-numbers/new-prime/_index.md holds
    the text and each prime's status in primes:). The digits are read at build time from
    static/connections/rhythm/q<n>.txt or p<n>.txt (one line, no spaces; checked by docs/papers/rhythm-of-numbers/compute/
@@ -13,11 +13,11 @@
 {{- $pdf := "pdfs/The-Rhythm-of-Numbers-paper.pdf" | relURL }}
 {{- $pp := site.Data.rhythm.paper_pages }}
 <article class="rn rn-np">
-<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Where Music, Patterns, Math, Chemistry and Physics Meet</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <span>New probable primes</span></nav>
+<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Where Music, Patterns, Math, Chemistry and Physics Meet</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <span>New primes from pi</span></nav>
 
 <header class="rn-hero">
-  <p class="rn-eyebrow">The Rhythm of Numbers · New probable primes · added {{ partial "connections/rn-date.html" .Params.added }}</p>
-  <h1>Five of pi’s best fractions have a <em>probable prime</em> on the bottom or on top</h1>
+  <p class="rn-eyebrow">The Rhythm of Numbers · New primes from pi · added {{ partial "connections/rn-date.html" .Params.added }}{{ with .Params.updated }} · updated {{ partial "connections/rn-date.html" . }}{{ end }}</p>
+  <h1>Five of pi’s best fractions have a new prime on the bottom or on top: <em>one proved</em>, four probable</h1>
   <p class="rn-lede">{{ .Params.lede }}</p>
   <nav aria-label="The new primes"><p class="np-next">{{ range .Params.primes }}<a href="#{{ .kind | default "q" }}{{ .idx }}">{{ .label }}: fraction {{ lang.FormatNumber 0 .idx }} →</a>{{ end }}</p></nav>
 </header>
@@ -34,8 +34,8 @@
 {{- $n := len $s }}{{ if lt $n 100 }}{{ errorf "rhythm-prime: %q is missing or empty" $txt }}{{ end }}
 <section class="np-sec np-prime" id="{{ $id }}" aria-labelledby="{{ $id }}-h">
   <h2 id="{{ $id }}-h">{{ $pr.label }}: the {{ if $top }}<em>top</em>{{ else }}bottom{{ end }} number of fraction {{ lang.FormatNumber 0 $pr.idx }}</h2>
-  <div class="np-status" role="note" aria-label="Status of the {{ $pr.label | lower }}">
-    <p><b>Status: {{ $pr.status }}.</b> {{ $pr.status_text }}</p>
+  <div class="np-status{{ if $pr.proved }} np-proved{{ end }}" role="note" aria-label="Status of the {{ $pr.label | lower }}">
+    <p><b>Status: {{ if $pr.proved }}✓ {{ end }}{{ $pr.status }}.</b> {{ $pr.status_text }}{{ with $pr.cert_url }} <a href="{{ . }}" rel="noopener">{{ $pr.cert_label | default "See the certificate" }}</a>. <a href="#proof">How the proof works ↓</a>{{ end }}</p>
     {{- with $pr.status_note }}<p class="rn-small rn-muted">{{ . }}</p>{{ end }}
   </div>
   <dl class="np-facts">
@@ -64,6 +64,12 @@
   <h2 id="np-pp-h">What “probable prime” means</h2>
   <div class="np-prose">{{ range .Params.probable }}<p>{{ . | markdownify }}</p>{{ end }}</div>
 </section>
+{{ with .Params.proof }}
+<section class="np-sec" id="proof" aria-labelledby="np-pf-h">
+  <h2 id="np-pf-h">The proof of the eleventh</h2>
+  <div class="np-prose">{{ range . }}<p>{{ . | markdownify }}</p>{{ end }}</div>
+</section>
+{{ end }}
 
 <section class="np-sec" id="check" aria-labelledby="np-chk-h">
   <h2 id="np-chk-h">Check it yourself</h2>

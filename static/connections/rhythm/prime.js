@@ -1,4 +1,4 @@
-/* "New probable primes" (/connections/rhythm-of-numbers/new-prime/): the copy buttons. Each button (class np-copy,
+/* "New primes from pi" (/connections/rhythm-of-numbers/new-prime/): the copy buttons. Each button (class np-copy,
    data-target = the id of a digits box) copies the digits shown in that box (joined, no spaces) to the clipboard; it
    falls back to a hidden text area when the clipboard is not available. The page works without this script. */
 (function () {

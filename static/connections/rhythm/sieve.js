@@ -12,7 +12,7 @@
   var $ = RN.$;
   var VOICES = [2, 3, 5, 7, 11, 13, 17, 19];
   var PITCH = [0, 2, 4, 7, 9, 12, 14, 16];              // a calm pentatonic, one degree per voice (C major pentatonic)
-  // prime denominators (our indexing, q_1 = 7). For pi beyond n = 6,925 they are probable primes (Chapter 17).
+  // prime denominators (our indexing, q_1 = 7). For pi beyond n = 6,925 they are Teddy Rook's finds (Chapter 17): q_25332 is proved prime, the later ones are probable primes.
   var PRIMES = {
     pi: [1, 3, 8, 32, 594, 1126, 2002, 3610, 4355, 6925, 25332, 27651, 32394, 37721],
     e: [2, 4, 7, 13, 19, 34, 40, 64, 238, 268],
@@ -46,7 +46,7 @@
   function isPrimeBeat(n) { return PRIMES[st.num].indexOf(n) >= 0; }
   function describe(n) {
     var s = sounding(n), p = isPrimeBeat(n);
-    var big = st.num === 'pi' && n > 6925 ? ' (a probable prime, found by Teddy Rook)' : '';
+    var big = st.num === 'pi' && n > 6925 ? (n === 25332 ? ' (proved prime; found by Teddy Rook)' : ' (a probable prime, found by Teddy Rook)') : '';
     if (p && s.length) return 'Beat ' + n.toLocaleString('en-US') + ': the denominator is the prime ' + VOICES[s[0]] + ' itself, so only its own voice sounds.';
     if (p) return 'Beat ' + n.toLocaleString('en-US') + ': every voice is silent, and the denominator is prime' + big + '.';
     if (!s.length) return 'Beat ' + n.toLocaleString('en-US') + ': every voice is silent, so the denominator has no factor up to 19. It still has a larger one: it is not prime.';
@@ -118,7 +118,7 @@
     stop(); st.num = num;
     if (num === 'pi' && !piTerms) { loadPi(); return; }
     st.res = residues(num); $('svStart').max = st.res.N; setStart(1);
-    $('svNote').textContent = num === 'pi' ? 'Pi’s terms here run to beat 50,000; the last four stars (25,332, 27,651, 32,394 and 37,721) are probable primes found by Teddy Rook in November 2026.'
+    $('svNote').textContent = num === 'pi' ? 'Pi’s terms here run to beat 50,000; the last four stars (25,332, 27,651, 32,394 and 37,721) were found by Teddy Rook in November 2026: the first is proved prime, the other three are probable primes.'
       : num === 'e' ? 'For e each voice repeats exactly: the voice of a prime l comes back every 3l beats. Two beats out of every three can never be prime.'
         : num === 'phi' ? 'For the golden ratio the denominators are Fibonacci numbers. Each voice repeats with a fixed period, and a star can only sit on a beat n where n + 1 is prime (or on beat 3).'
           : 'For √2 the denominators are Pell numbers, which also repeat in fixed periods modulo every prime.';

@@ -1,4 +1,4 @@
-# Check pi's new probable primes yourself. Python 3, standard library only; with gmpy2 installed the
+# Check pi's new primes yourself (q25332 is proved prime; the others are probable primes). Python 3, standard library only; with gmpy2 installed the
 # primality test at the end is much faster. Put q25332.txt, q27651.txt, q32394.txt, q37721.txt or p42037.txt (from this
 # page) in the same folder, then run, for example,
 #   python3 check_pi_prime.py 37721      (a bottom number)   or   python3 check_pi_prime.py 42037 p   (a top number)

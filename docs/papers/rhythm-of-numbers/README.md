@@ -69,6 +69,17 @@ for the five-ellipse Venn diagram used on the site, `c14_connections_kam.py` run
 map for the Suite's five numbers (about ten minutes), and `c14_connections.py` writes the macros (its stored values come
 from the other two; it rechecks two of them).
 
+`compute/c16_sqrt_ladder/` belongs to Sections 7.4 and 7.5 ("The rhythm of sqrt N and its middle bar", "The fast
+ladder"), from Teddy Rook's notes. `verify_sec74.py` recomputes every number printed in the two sections and compares it
+with `paper/ch07_tools.tex` (38 checks, about three minutes, needs gcc); `fig_middle.py` draws Figure 7.2 into
+`paper/figures/sqrt_middle.pdf`. `verify-log.txt` is the output of the last run.
+
+`compute/c12_ecpp_check/` is Teddy Rook's independent checker for the ECPP certificate of q_25332 (Section 17.5):
+`verify_primo.py` reads a certificate in Primo format and checks every step with GMP integers only (`ecstep.c` is the
+fast form of the curve arithmetic, `trial.c` proves the last small number prime by division). The certificate itself
+(12,471,524 bytes, SHA-256 9580db717e341a3a12766e1b3c25f83cb92bd7ad9d07ed735285664f099a4469) is not in this repository;
+it is on public record at https://factordb.com/?id=1100000013644211386.
+
 `compute/c15_newton/` belongs to Chapter 19 ("Newton: the rhythm of gravity"). `nbody.c` integrates the Sun and the eight
 planets under Newton's law (compile with `cc -O3 -o nbody nbody.c -lm`); `tune.py` tunes its starting orbits; `spec.py`
 finds the long swings in the result; `c15_newton.py` writes the macros. The docstring of `c15_newton.py` gives the
