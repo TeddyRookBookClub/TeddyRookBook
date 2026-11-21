@@ -1,0 +1,350 @@
+# One entry per result of data/rhythm/rh.yaml, keyed by its slug: the text of that result's own page
+# (/connections/rhythm-of-numbers/riemann-hypothesis/<slug>/, layouts/connections/rhythm-rh-item.html).
+#   one   = the result in one sentence;  story = plain-words paragraphs (markdown);
+#   viz   = { id, cap, opt } a figure drawn by static/connections/rhythm/rhviz.js (id = the figure's name there);
+#   ours  = what we did ourselves (a computation, a tool, a written-out argument), if anything. Keep it exact:
+#           say what was checked and what was not.
+# The summary fields (was / now / left / d / src) stay in rh.yaml and are shown on the page too.
+prime-count-error:
+  one: "The logarithmic integral li(x) counts the primes up to x with an error no bigger than about the square root of x."
+  story:
+    - "Gauss noticed as a boy that near a number x about one number in ln x is prime. Add those chances up from 2 to x and you get the logarithmic integral, li(x). It is a very good guess for π(x), the true count: up to a million there are 78,498 primes and li gives 78,628."
+    - "The guess is never exactly right, and the size of the miss is the whole story of the Riemann Hypothesis. Each zero of the zeta function adds a wave to the prime count. A zero on the critical line adds a wave of size about √x. A zero off the line would add a bigger one. So “all zeros on the line” and “the miss is about √x” are the same statement."
+    - "Schoenfeld’s inequality puts a number on it: the miss is less than √x · ln x / (8π) once x is at least 2,657."
+  viz: { id: "pierr", cap: "The miss, li(x) − π(x), for x up to one million (green), inside Schoenfeld’s band ±√x · ln x / (8π) (gold). The band is now a theorem. Notice that the green line stays above zero here: see the page on Skewes’ number." }
+prime-gaps:
+  one: "After a prime p, the next prime comes within (22/25) · √p · ln p."
+  story:
+    - "Primes thin out, so the gaps between them grow. After 113 there is no prime until 127. After 1,327 the wait is 34. How long can a wait be?"
+    - "On average the gap near p is ln p, tiny. The hard question is the worst case. If the primes had a hidden lumpiness there could be long deserts. The Riemann Hypothesis rules out lumpiness above the √p scale, and that gives Cramér’s bound, with the constant 22/25 worked out in 2019."
+    - "The truth is believed to be far smaller, about (ln p)². The gap between the proved bound and the believed truth is why Legendre’s question about squares is still open."
+  viz: { id: "gaps", cap: "Record gaps between primes up to two million (green dots), the bound (22/25) · √p · ln p that is now a theorem (gold), and Cramér’s guess (ln p)² (dashed). The records hug the dashed curve, far below the gold one." }
+cubes-and-mills-constant:
+  one: "There is a prime between any two consecutive cubes, so Mills’ prime-making constant is known for certain."
+  story:
+    - "Between 8 and 27 there are five primes. Between 27 and 64 there are nine. Is there always at least one prime between n³ and (n+1)³? The cubes are about 3n² apart, and the gap bound from the Riemann Hypothesis is about n^1.5 · ln n there, which is smaller. So the answer is yes, for every n."
+    - "Mills used primes between cubes in 1947 to make a curiosity: a number A for which the whole part of A³, A⁹, A²⁷, … is always prime. Start with the prime 2. Take the next prime after 2³: 11. Then the next prime after 11³: 1,361. Then the next after 1,361³: 2,521,008,887. The constant A is whatever number makes this chain come out, about 1.3063778838."
+    - "The chain only works if each next prime arrives before the next cube. That needed the hypothesis. Now it does not."
+  viz: { id: "cubes", cap: "How many primes lie between n³ and (n+1)³, for n from 1 to 100. The count never touches zero and climbs steadily." }
+robins-inequality:
+  one: "For every number above 5,040, the sum of its divisors is less than e^γ · n · ln ln n."
+  story:
+    - "Add up the divisors of 12: 1 + 2 + 3 + 4 + 6 + 12 = 28. Write σ(12) = 28. Numbers with many small prime factors have large σ. How large can σ(n) be compared with n?"
+    - "Grönwall showed in 1913 that σ(n) / (n · ln ln n) creeps up toward e^γ = 1.7810… and no higher in the long run. Robin’s discovery was that whether it ever pokes above that line again after 5,040 is exactly the Riemann Hypothesis. A statement about adding divisors, which a child can check for any one number, turned out to be the same as a statement about the zeros of the zeta function."
+    - "There are 27 numbers that break the inequality. The largest is 5,040 = 7 × 6 × 5 × 4 × 3 × 2."
+  viz: { id: "robin", cap: "σ(n) / (n · ln ln n) for n up to 30,000. The gold line is e^γ. Red dots are the numbers that break the inequality; the last is 5,040. After it, every dot is under the line, and that is now proved for all n." }
+equivalent-forms:
+  one: "More than a hundred statements were known to be true exactly when the Riemann Hypothesis is. All of them are now true."
+  story:
+    - "One of the simplest uses the Möbius function μ(n): +1 if n is a product of an even number of different primes, −1 if an odd number, and 0 if a prime repeats. Flip a coin for each n and the running total of heads minus tails wanders about √x from zero. The running total of μ, called the Mertens function M(x), does the same if and only if the Riemann Hypothesis holds."
+    - "So the hypothesis says: the primes are arranged so that this sum looks like coin tossing. That is a good way to remember what was proved."
+    - "A warning from history. Mertens guessed in 1897 that |M(x)| never exceeds √x itself. That is stronger, and it is false: Odlyzko and te Riele disproved it in 1985. The true statement allows a little more room."
+  viz: { id: "mertens", cap: "The Mertens function M(x) for x up to 200,000 (green), with ±√x (gold). It stays inside the gold curves here, but it is known to cross them somewhere far beyond any computed range." }
+farey-fractions:
+  one: "The fractions with small bottom numbers are spaced almost perfectly evenly between 0 and 1."
+  story:
+    - "Write down every fraction between 0 and 1 whose bottom number is at most 5, in order: 0, 1/5, 1/4, 1/3, 2/5, 1/2, 3/5, 2/3, 3/4, 4/5, 1. That is the Farey sequence F₅. There are 11 of them. If they were perfectly even they would sit at 0, 1/10, 2/10, …, 1."
+    - "They are not perfectly even: they bunch away from 1/2 and crowd elsewhere. Franel and Landau showed that the total amount by which they miss even spacing is small, in a precise sense, exactly when the Riemann Hypothesis holds."
+    - "This one belongs with the rest of the Rhythm of Numbers. Neighbours in a Farey sequence are the fractions a continued fraction steps through, and the number of fractions in F_N is governed by 6/π², the chance that two numbers share no factor."
+  viz: { id: "farey", cap: "Top row: the Farey fractions with bottom number up to N. Bottom row: the same number of evenly spaced points. The lines join each fraction to its even partner. Move the slider." }
+landaus-function:
+  one: "The longest possible cycle of a shuffle of n cards grows in step with the primes."
+  story:
+    - "Shuffle a deck the same way again and again and it comes back to its starting order. How long can that take? Split 10 cards into loops of 2, 3 and 5: the loops line up again after 2 × 3 × 5 = 30 shuffles, and nothing does better for 10 cards. So g(10) = 30. This is Landau’s function."
+    - "In the language of this site, g(n) is the longest rhythm you can build from loops whose lengths add up to n. The best loops have lengths that are powers of different primes, which is why the primes control how fast g grows."
+    - "Landau proved in 1903 that ln g(n) grows like √(n · ln n). The Riemann Hypothesis is the same as a sharper statement of that kind."
+  viz: { id: "landau", cap: "ln g(n) for n up to 300 (green steps) against √(n · ln n) (gold). Move the slider to see g(n) and the loop lengths that achieve it." }
+de-bruijn-newman:
+  one: "The Riemann Hypothesis is true with no room to spare."
+  story:
+    - "Imagine the zeta function as a shape that can be warmed or cooled, with the temperature t a dial. Warm it and its zeros are pulled onto the line. Cool it and they can fall off. There is one temperature Λ above which every zero is on the line."
+    - "The untouched zeta function sits at t = 0. So the Riemann Hypothesis says Λ is at most 0. Newman guessed that Λ is at least 0, and Rodgers and Tao proved that in 2018. Put the two together and Λ is exactly 0."
+    - "It means the zeros are on the line, but only just. Nudge the function the wrong way by any amount at all and some zero leaves. That is one reason the problem was so hard: there was never any slack to work with."
+  viz: { id: "dial", cap: "The dial. To the right of Λ every zero is on the line. Rodgers and Tao showed Λ cannot be left of zero; the Riemann Hypothesis says it cannot be right of zero." }
+lindelof:
+  one: "Along the critical line the zeta function grows more slowly than any power of the height."
+  story:
+    - "Walk up the critical line and watch the size of the zeta function. It dips to zero at each zero and rises between them, and the peaks slowly get taller. How fast?"
+    - "Lindelöf guessed: slower than any power of the height t, however small the power. That is weaker than the Riemann Hypothesis but was itself out of reach; a century of work brought the proved power down only from 1/4 to about 0.155."
+    - "The hypothesis gives it at once, and more. The reason is the same as everywhere on this list: zeros on the line mean no hidden resonance that could build an unexpectedly tall peak."
+  viz: { id: "zabs", cap: "The size of the zeta function on the critical line, from height 0 to 200. Every touch of the axis is a zero. The peaks grow, but very slowly." }
+zeros-on-the-line:
+  one: "Every zero of the zeta function that matters lies on the critical line."
+  story:
+    - "This is the Riemann Hypothesis itself. On the critical line the zeta function can be turned, by a known twist, into an ordinary real-valued curve, called Z(t). Each time the curve crosses the axis there is a zero on the line."
+    - "Counting crossings is how the hypothesis was tested by computer: a separate formula says how many zeros there are up to a given height, on the line or off it, and if the crossings account for all of them, none is off the line. That check reached three trillion zeros."
+    - "What remains is a finer question: is every crossing clean, or do two zeros ever land on the same spot? Everyone expects them all to be clean."
+  viz: { id: "zline", cap: "The curve Z(t) from height 0 to 100. It crosses the axis 29 times; those are the first 29 zeros, at heights 14.13, 21.02, 25.01, …" }
+moments:
+  one: "The average size of the zeta function along the line is bounded the way random-matrix theory predicts."
+  story:
+    - "Instead of the tallest peak, ask about the average. Take the size of zeta on the line, raise it to a power, and average over a long stretch. Hardy and Littlewood found the answer for the square in 1918, Ingham for the fourth power in 1926. Nothing higher has ever been worked out."
+    - "Assuming the hypothesis, Soundararajan and then Harper proved that every such average is at most a constant times (ln T) raised to the power k². That matches what was guessed."
+    - "The missing piece is the constant in front. Keating and Snaith predicted it in 2000 by pretending that the zeta function is the characteristic polynomial of a large random matrix. Their numbers fit everything known."
+  viz: { id: "zmom", cap: "The running average of |Z(t)|² up to height T (green) against the proved formula ln(T/2π) + 2γ − 1 (gold)." }
+zero-spacing:
+  one: "Zeros of the zeta function avoid sitting close together."
+  story:
+    - "Mark the zeros on the line and stretch the picture so that on average they are one unit apart. Are the gaps random, like raindrops on a line? They are not. Small gaps are rare: the zeros repel each other."
+    - "Montgomery proved part of this in 1973, assuming the hypothesis. Over tea at Princeton he mentioned his formula to Freeman Dyson, who recognized it: it is the formula for the gaps between energy levels of heavy atomic nuclei, and between eigenvalues of large random matrices."
+    - "Our Rhythm of Numbers pages measure this pattern with computed zeros. The pattern is still a conjecture."
+  viz: { id: "spacing", cap: "Gaps between neighbouring zeros up to height 1,000, rescaled to average 1 (green bars). Gold: the random-matrix prediction. Dashed: what randomly scattered points would give." }
+square-free-numbers:
+  one: "The count of numbers with no repeated prime factor is known to within about x to the power 0.31."
+  story:
+    - "A number is square-free if no prime divides it twice: 10 = 2 × 5 is, 12 = 2 × 2 × 3 is not. About 61% of all numbers are square-free, and the exact share is 6/π², the same number that gives the chance two numbers share no factor."
+    - "So up to x there are about 6x/π² of them. The error in that estimate is tied to the zeros of zeta through the Möbius function. Without the hypothesis, the proved error was only slightly better than √x. With it, the error drops below x^(11/35)."
+    - "The data suggest the truth is about x^(1/4), which is as small as it could be."
+  viz: { id: "sqfree", cap: "The count of square-free numbers up to x, minus 6x/π², for x up to 200,000 (green), with ±x^(1/4) for scale (gold)." }
+ramanujans-inequality:
+  one: "Ramanujan’s inequality for the prime count holds for every number above 38,358,837,682."
+  story:
+    - "In his notebooks Ramanujan wrote that π(x)² is less than (e · x / ln x) · π(x/e) for all large enough x. It compares the number of primes up to x with the number up to x/e, where e = 2.718…"
+    - "It is true in the long run; that follows from the prime number theorem. But “large enough” hides a surprise. The inequality fails again and again for billions, and the last failure is at 38,358,837,682. Proving that this really is the last one needed the Riemann Hypothesis, because past that point one needs to know π(x) more accurately than could otherwise be proved."
+  viz: { id: "raminq", cap: "π(x)² divided by (e · x / ln x) · π(x/e), for x up to two million. Above the gold line the inequality fails. It keeps failing in this range; the last failure is near 38 billion." }
+primes-in-progressions:
+  one: "Primes split evenly among the possible remainders, with an error of about the square root of x."
+  story:
+    - "Divide the primes by 10 and look at the last digit. Apart from 2 and 5, every prime ends in 1, 3, 7 or 9. Dirichlet proved in 1837 that each ending gets its fair quarter of the primes in the long run."
+    - "How fair, and how soon? Each remainder pattern has its own L-function, and the zeros of those functions add waves to the counts, exactly as the zeros of zeta add waves to the count of all primes. Zeros on the line mean waves of size about √x."
+    - "Before, a usable error was proved only when the divisor q was tiny compared with x, because a single possible bad zero could not be ruled out. Now it holds for every q."
+  viz: { id: "apcount", cap: "Primes up to one million, sorted by their remainder on division by q. Each bar is one allowed remainder; the gold line is an equal share. Choose q." }
+first-prime-in-a-progression:
+  one: "The first prime leaving a given remainder on division by q appears before about q²."
+  story:
+    - "Pick a divisor, say 7, and a remainder, say 3. The numbers 3, 10, 17, 24, 31, … leave remainder 3. The first prime among them is 3 itself. For remainder 1 it is 29. How far can the first prime be, in the worst case, as the divisor grows?"
+    - "Linnik’s theorem of 1944 says a fixed power of q is always enough, which was a surprise at the time. The best proved power was about 5. Under the hypothesis for Dirichlet L-functions it is 2, with a clean bound: (φ(q) · ln q)², where φ(q) counts the allowed remainders."
+    - "In practice the first prime shows up much sooner, not far past q · (ln q)²."
+  viz: { id: "linnik", cap: "For each divisor q up to 400: the worst case over all remainders of the first prime (green dots), and the bound (φ(q) · ln q)² that is now a theorem (gold). Vertical scale is logarithmic." }
+millers-test:
+  one: "A number n is prime exactly when it passes one short test for every base up to 2 · (ln n)²."
+  story:
+    - "Fermat’s little theorem says that if n is prime then a^(n−1) leaves remainder 1 on division by n, for any base a. Composite numbers usually fail this, so it makes a quick test. Miller’s version looks a little harder at the same calculation and catches more. For any composite n, at least three bases in four expose it."
+    - "Used with random bases this is the Miller–Rabin test, which every computer uses. It can say “composite” with certainty, but “prime” only with overwhelming probability. Miller’s original point in 1976 was different: if the hypothesis for Dirichlet L-functions holds, some small base always exposes a composite number, so trying every base up to a fixed limit is a proof. Bach found the limit: 2 · (ln n)²."
+    - "The reason is the item on this list about the smallest non-square modulo p. The bases that fail to expose n form a tidy group, and the hypothesis forces a small number to lie outside it."
+  viz: { id: "miller", cap: "Miller’s test, run in your browser. Type a whole number of up to 40 digits. The answer is a proof either way: a base that exposes the number, or every base up to 2 · (ln n)² passed." }
+  ours:
+    - "**A working prover.** The box above is Miller’s test as a proof, with Bach’s limit. It starts with 14,449,613,517,291,620,243, the last number in the certificate of our 13,017-digit prime; that one needs every base up to 3,892."
+    - "It is a demonstration. For numbers of thousands of digits other proofs are much faster, as the page on our prime explains."
+least-non-residue:
+  one: "For every prime p from 5 on, some number below (ln p)² is not a square modulo p."
+  story:
+    - "Work with remainders on division by 7. The squares are 1, 4 and 2 (from 1², 2², 3²). The numbers 3, 5 and 6 are not squares. So the smallest non-square modulo 7 is 3."
+    - "Half of the remainders are squares and half are not, so one expects to meet a non-square almost at once, as if tossing a coin for each of 2, 3, 5, 7, … The smallest non-square is always a prime. For p = 71 the first non-square is 7; for p = 311 it is 11. Proving that it is always small was beyond reach: the best proof gave a bound that is a power of p."
+    - "With the hypothesis the bound is (ln p)², a number like 100 when p has six digits. This is what makes Miller’s test work, and it lets a computer find square roots modulo p by a method that never has to guess."
+  viz: { id: "nonres", cap: "The smallest non-square modulo p, for every prime p up to 200,000 (dots; the record-setters are larger), under the bound (ln p)² that is now a theorem (gold)." }
+least-primitive-root:
+  one: "Every prime p has a primitive root below a fixed multiple of (ln p)⁶."
+  story:
+    - "The powers of 3 modulo 7 are 3, 2, 6, 4, 5, 1: every non-zero remainder, each once. So 3 is a primitive root of 7. The powers of 2 are 2, 4, 1, and then they repeat, so 2 is not."
+    - "Every prime has primitive roots, and usually a very small number works: 2, 3 or 5. But the smallest one jumps about, and nobody could prove it stays small. Shoup’s theorem, under the hypothesis, bounds it by a power of ln p. Without the hypothesis the best bound was about the fourth root of p."
+  viz: { id: "primroot", cap: "The smallest primitive root of each prime up to 100,000. Most are 2, 3 or 5; the records climb very slowly. The proved bound is far above the top of this picture." }
+character-sums:
+  one: "A sum of the +1s and −1s that mark squares and non-squares modulo q never exceeds about √q · ln ln q."
+  story:
+    - "Modulo a prime q, mark each number +1 if it is a square and −1 if it is not. Add the marks up from 1 to x. Over the full range the total is exactly 0. In between it wanders."
+    - "If the marks were coin tosses the wander would be about √q. Pólya and Vinogradov proved in 1918 that it is at most √q · ln q. Montgomery and Vaughan showed that the hypothesis trims the logarithm to ln ln q, which grows so slowly it is nearly constant."
+    - "That is the end of the road: Paley had already shown that sums this large occur."
+  viz: { id: "charsum", cap: "The running total of square/non-square marks modulo a prime q. Gold: ±√q · ln ln q, the bound that is now a theorem. Dashed: ±√q · ln q, the old one. Choose q." }
+siegel-zeros-and-class-numbers:
+  one: "No L-function has a zero just to the left of 1, so class numbers of quadratic fields can be bounded with explicit constants."
+  story:
+    - "In some number systems, such as the numbers a + b√−5, factorization into primes is not unique: 6 = 2 × 3 = (1 + √−5)(1 − √−5). The class number h counts how many genuinely different kinds of factorization there are. h = 1 means unique factorization."
+    - "A formula of Dirichlet ties h to the value of an L-function at s = 1. If that L-function had a zero very close to 1, a “Siegel zero”, the value could be abnormally small and so could h. Nobody could prove such zeros do not exist. Siegel’s 1935 theorem got round them, at a price: its constants cannot be computed, even in principle."
+    - "A zero near 1 is far from the critical line. With the hypothesis for Dirichlet L-functions there are none, and the constants become explicit."
+  viz: { id: "classnum", cap: "The class number h(−d) for each fundamental discriminant −d with d up to 20,000 (dots), against √d / π (gold), the size the formula predicts when the L-value is 1." }
+  ours:
+    - "**One explicit consequence.** Lamzouri, Li and Soundararajan (2015) give the lower bound with all its constants, for d ≥ 10¹⁰. We evaluated it: at d = 10¹⁰ it is 2,843, and it grows from there. So every imaginary quadratic field with class number 2,843 or less has d below ten billion. Tables of these class numbers have been published up to d = 10¹¹ (Jacobson, Ramachandran and Williams, 2006), where the same bound gives 9,052. So the list of fields with any given class number up to 9,052 can be read off from those tables and is complete. Watkins had done this up to 100 without the hypothesis."
+    - "We have not recomputed those tables. We computed the bound, and the class numbers in the picture."
+eulers-convenient-numbers:
+  one: "Euler’s list of 65 convenient numbers has no missing members."
+  story:
+    - "Euler wanted big primes. He noticed that for certain n, if an odd number m can be written as x² + n·y² in exactly one way (with x and y sharing no factor), then m is prime. He called these n numeri idonei, convenient numbers, and used n = 1,848 to show that 18,518,809 = 197² + 1,848 × 100² is prime, a record in its day."
+    - "He found 65 such n and no more. His own test for convenience is charming: n is convenient unless n = ab + bc + ca for some whole numbers 0 < a < b < c. For example 11 = 1·2 + 2·3 + 3·1, so 11 is not convenient."
+    - "Gauss explained the list: n is convenient exactly when every “genus” of forms x² + ny² holds a single class, which is a statement about a class group. That is how the zeros come in. Chowla proved in 1934 that the list is finite. Weinberger proved in 1973 that at most two could be missing, and none under the generalized hypothesis."
+  viz: { id: "idoneal", cap: "Euler’s 65 convenient numbers. Type any n to test it with Euler’s own rule: the page finds a, b, c with n = ab + bc + ca, or reports that there are none." }
+  ours:
+    - "**We wrote out a short proof that the list is complete, and ran the computation it needs.** It does not follow Weinberger’s paper. It uses a 2015 theorem of Lamzouri, Li and Soundararajan, which assumes exactly the hypothesis that the Lean library proves."
+    - "**A lemma.** Suppose n is convenient, and p is a prime that does not divide 2n and for which −n is a square modulo p. Then p² > n. (Such a p is represented by some form of discriminant −4n. Because every class has order 1 or 2, p² is then represented by x² + ny² with x and y sharing no factor, so y is not 0 and p² ≥ 1 + n.)"
+    - "**Step 1.** By their Theorem 1.4, for 4n ≥ 20,000 there is such a prime p with p ≤ 10⁹ or p ≤ (ln 4n + 9 + 2.5 (ln ln 4n)²)². The lemma then gives n < 10¹⁸ (the second case would force n below ten million)."
+    - "**Step 2.** Write −4n as a fundamental discriminant −q times a square f². If n is convenient, the field of discriminant −q also has one class per genus, so its class number is 2^(k−1), where k is the number of primes dividing q. Their Corollary 1.3 says the class number is at least 2,843 when q ≥ 10¹⁰ and grows faster than 2^(k−1) from there (we checked the comparison for every k). So q < 10¹⁰."
+    - "**Step 3, the computation.** We searched every negative discriminant down to −10¹⁰, using the lemma as a sieve and then an exact test on the survivors. Exactly 101 have one class per genus, the largest being −7,392 = −4 × 1,848. Of these, 65 are fundamental (the largest is −5,460) and 65 have the form −4n. Those 65 values of n are Euler’s list. The search took 28 seconds on three processors."
+    - "**Step 4.** That leaves n between 2.5 × 10⁹ and 10¹⁸. Then q is one of the 65 values from Step 3, and f is at most 1.2 × 10⁹. By the lemma, every prime below 50,000 that splits in the field of discriminant −q must divide f. For each of the 65 fields the product of such primes below 200 is already more than 10²¹. So there is no such n."
+    - "**What this is and is not.** It is our own write-up, checked by our own programs (which are in the paper’s source, folder c17_idoneal), with a second, independent count of the convenient numbers up to two million by Euler’s rule. It has not been reviewed by a number theorist. It depends on the Lean certification, on the 2015 paper, and on standard facts about quadratic forms."
+chebyshevs-claim:
+  one: "In Chebyshev’s weighted sense, primes of the form 4k + 3 outnumber primes of the form 4k + 1."
+  story:
+    - "Every odd prime leaves remainder 1 or 3 on division by 4. Dirichlet’s theorem says the two kinds are equally common in the long run. Yet count them and the 4k + 3 kind is nearly always ahead: 3, 7, 11 against 5, 13. The 4k + 1 kind first takes the lead at 26,861 and loses it at once."
+    - "Chebyshev wrote to a friend in 1853 about this. His precise claim was that a certain smoothed difference between the two counts tends to infinity in favour of 4k + 3. Hardy, Littlewood and Landau showed that this claim is true exactly when one particular L-function, the one that tells the two kinds of prime apart, has all its zeros on the line."
+    - "The lead comes from squares. The square of any odd prime is of the form 4k + 1, and that tips the scale by an amount of size √x, just big enough to see when every other effect is also of size √x."
+  viz: { id: "race4", cap: "The lead of the 4k + 3 primes over the 4k + 1 primes, up to one million. It dips below zero for the first time at 26,861, briefly." }
+goldbach-exceptions:
+  one: "If Goldbach’s conjecture has exceptions, there are at most about √x of them up to x."
+  story:
+    - "Goldbach wrote to Euler in 1742: is every even number from 4 on a sum of two primes? 100 = 3 + 97 = 11 + 89 = 17 + 83 and so on. It has been checked by computer to 4 × 10¹⁸ and nobody doubts it."
+    - "A proof has never been close. What can be proved is that exceptions are rare. The hypothesis for Dirichlet L-functions makes the count of possible exceptions up to x at most about √x: out of the half-trillion even numbers up to 10¹², at most a few million could fail."
+    - "The hypothesis cannot give more by this route. It controls primes on average over many numbers; Goldbach asks about every single one."
+  viz: { id: "goldbach", cap: "Goldbach’s comet: the number of ways to write each even number up to 6,000 as a sum of two primes. The count grows, in bands. No even number in the picture has zero ways, and none is known anywhere." }
+primes-and-powers-of-two:
+  one: "Every large even number is two primes plus at most seven powers of 2."
+  story:
+    - "Linnik found a way to come close to Goldbach by allowing a little help. Every large even number is a sum of two primes and a few powers of 2, and “a few” is a fixed number that does not grow."
+    - "Powers of 2 are very sparse: there are only 40 of them below a trillion. So this says the sums of two primes miss very little. The number of powers needed was brought down over fifty years to 8 without the hypothesis and 7 with it."
+    - "Goldbach’s conjecture is the statement that the number needed is zero."
+  viz: { id: "pow2", cap: "Type an even number. The page writes it as two primes plus as few powers of 2 as it can find. For every number you can try here, it needs none." }
+abelian-fields:
+  one: "The Riemann Hypothesis holds for the zeta function of every field built from roots of unity."
+  story:
+    - "Adjoin a root of unity to the ordinary fractions, a number whose n-th power is 1, and you get a cyclotomic field. Gauss used one to construct the regular 17-sided polygon. Kummer used them on Fermat’s Last Theorem."
+    - "Every number field has a zeta function of its own, built from its primes. For cyclotomic fields and their subfields this zeta function factors into Dirichlet L-functions, one for each remainder pattern. So the hypothesis for all Dirichlet L-functions gives the hypothesis for all these fields at once."
+    - "This is the bridge between the two halves of the list. Fields of this kind are covered. Fields that are not built from roots of unity are the open half."
+  viz: { id: "roots", cap: "The n-th roots of unity: n points equally spaced on a circle. Joining them draws the regular n-sided polygon. Move the slider." }
+  ours:
+    - "**A note on one table.** Van der Linden’s 1982 paper computes the class numbers of most real abelian fields of conductor up to 200, and its summary says that in several cases it has to assume the generalized hypothesis. For an abelian field that hypothesis follows from the Dirichlet case, so those cases should now stand. We read the summary, not the full paper, and we recomputed nothing."
+central-values:
+  one: "At least 15 in 16 of the quadratic Dirichlet L-functions are non-zero at the centre point."
+  story:
+    - "The critical line has a middle: the point s = ½. Does an L-function ever vanish exactly there? For the zeta function, no. For the L-functions of elliptic curves a zero at the centre is common, and it means something: the curve has infinitely many rational points."
+    - "For Dirichlet L-functions Chowla guessed that it never happens. The hypothesis does not settle this, because it says only that zeros are on the line, not where. But knowing they are on the line lets one count how many can crowd near the centre, and that count shows at least 15/16 of the quadratic ones have no zero there."
+  viz: { id: "none", cap: "" }
+three-primes:
+  one: "Every odd number from 7 on is a sum of three primes."
+  story:
+    - "This is the “weak” Goldbach conjecture: 7 = 2 + 2 + 3, 21 = 3 + 7 + 11. With three primes to play with there is much more room than with two, and the methods of analysis can get a grip."
+    - "Its history shows how the hypothesis was used. First it was proved for large numbers assuming the hypothesis (1923). Then for large numbers without it (1937), but “large” meant numbers with millions of digits. Then for all numbers assuming the hypothesis (1997). Then, in 2013, for all numbers with no assumption, by Helfgott, who combined sharper analysis with a computer check of the smaller cases."
+  viz: { id: "three", cap: "Type an odd number from 7 up. The page finds three primes that add up to it and counts how many ways there are." }
+primality-in-polynomial-time:
+  one: "There is a fast method, proved correct with no assumptions, to decide whether a number is prime."
+  story:
+    - "“Fast” has a precise meaning here: the work grows like a fixed power of the number of digits, not like the number itself. Trial division is not fast in this sense; for a 100-digit number it would outlast the universe."
+    - "For a quarter of a century the only test that was fast and proved correct in every case was Miller’s, and it leaned on the generalized hypothesis. In 2002 three computer scientists in Kanpur, Agrawal and his students Kayal and Saxena, found a test that needs no hypothesis at all, using only algebra a strong undergraduate can follow."
+    - "It settled the question in principle. In practice their test is slower than the methods people use."
+  viz: { id: "none", cap: "" }
+gauss-class-number:
+  one: "Class numbers of imaginary quadratic fields grow without limit, a theorem first proved by assuming the hypothesis is true and then by assuming it is false."
+  story:
+    - "Gauss made tables of class numbers around 1800 and guessed that they tend to infinity, so that each value occurs only finitely often. In particular only finitely many of these number systems have unique factorization; there are exactly nine."
+    - "Hecke proved the guess in 1918, assuming the generalized hypothesis. Then came one of the strangest proofs in mathematics. Deuring showed in 1933 that if the ordinary Riemann Hypothesis is false, then class number 1 occurs only finitely often. Heilbronn pushed the same idea in 1934 to the full statement: if the generalized hypothesis is false, Gauss’s guess is true. So it is true either way."
+    - "For ninety years nobody knew which of the two proofs was the one that matched reality."
+  viz: { id: "classnum", cap: "Class numbers h(−d) for d up to 20,000. They scatter, but the whole cloud drifts upward: the smallest values thin out and stop." }
+skewes-number:
+  one: "li(x) overestimates the number of primes for every x ever computed, but not for all x; the first exception is somewhere near 10 to the power 316."
+  story:
+    - "Look at any table and li(x) is larger than π(x): by 130 at a million, by 1,701 at a billion. Gauss and Riemann both believed it always is. Littlewood proved in 1914 that it is not: the difference changes sign infinitely often. His proof gave no idea where."
+    - "Littlewood’s student Skewes found a place, in 1933: before 10 to the power 10 to the power 10 to the power 34, if the Riemann Hypothesis is true. For decades it was called the largest number ever to appear in a proof. He removed the assumption in 1955 at the cost of an even larger number."
+    - "Later work, with computed zeros, brought the first crossing down to about 1.4 × 10³¹⁶. That is still far beyond anything that can be counted directly."
+  viz: { id: "pierr", cap: "li(x) − π(x) up to one million. It is positive throughout, and stays positive far beyond any direct count. The first sign change is near 10³¹⁶." }
+unknot:
+  one: "If a loop of string is truly knotted, there is a short proof of that fact."
+  story:
+    - "A knot, to a mathematician, is a closed loop in space. The unknot is a plain circle, possibly drawn in a very tangled way. Telling whether a messy drawing is secretly the unknot is a famous hard problem."
+    - "If the loop is the unknot there is a short certificate: a sequence of moves that untangles it. The harder direction is a short certificate that it is knotted. Kuperberg found one in 2011 by turning the question into whether certain polynomial equations have a solution, and the step that keeps the certificate short used the generalized hypothesis."
+    - "Lackenby later reached the same conclusion by geometry alone."
+  viz: { id: "knot", cap: "A trefoil, the simplest true knot. No amount of pulling turns it into a plain circle, the unknot. Choose another knot, or the unknot, to draw." }
+artins-conjecture:
+  one: "The number 10 is a primitive root for about 37.4% of all primes, if the hypothesis holds for a family of number fields."
+  story:
+    - "1/7 = 0.142857142857… repeats after 6 digits. 1/17 repeats after 16. 1/13 repeats after only 6, not 12. The decimal of 1/p repeats after p − 1 digits, the most possible, exactly when 10 is a primitive root of p."
+    - "Gauss wondered how often that happens. Artin predicted the answer in 1927: a share of all primes equal to 0.3739558…, a number now called Artin’s constant, and the same for any base that is not a perfect power or −1. Nobody has proved that it happens infinitely often for any single base."
+    - "Hooley’s 1967 proof counts the primes for which 10 fails to be a primitive root, and to control that count he needs the hypothesis for the zeta functions of fields made by adjoining roots of 10. Those fields are not of the cyclotomic kind, so the new proof does not reach them."
+  viz: { id: "artin", cap: "The share of primes up to x for which the chosen base is a primitive root (green), against Artin’s constant 0.3739558… (gold). Choose the base." }
+number-fields:
+  one: "With the hypothesis for a number field’s zeta function, the first prime with a given behaviour in that field can be bounded."
+  story:
+    - "Take a polynomial such as x³ − 2 and reduce it modulo each prime. Modulo 5 it has one root. Modulo 31 it has three. Modulo 7 it has none. Chebotarev’s theorem of 1922 says how often each case happens: here one half, one sixth and one third of the time."
+    - "The effective version asks how soon each case must first appear. With the hypothesis for the field’s zeta function the answer is: within a multiple of the square of the logarithm of the field’s discriminant. Without it, the proved bounds are enormous."
+    - "A great many conditional results in algebra and computing reduce to this one statement, which is why extending the proof to number fields matters most."
+  viz: { id: "split", cap: "The polynomial x³ − 2 modulo each prime up to x: the share of primes for which it has no root, one root, or three roots, against Chebotarev’s 1/3, 1/2 and 1/6 (gold lines)." }
+class-groups-by-computer:
+  one: "Computer algebra systems compute class groups quickly by trusting a bound that assumes the hypothesis."
+  story:
+    - "To find the class group of a number field, a program collects relations among prime ideals. It has to know when it has looked at enough primes. The bound that is certain, Minkowski’s, grows like the square root of the discriminant and is hopeless for large fields."
+    - "Bach’s bound grows only like the square of the logarithm. It is the reason these computations finish in seconds, and the reason their output carries a warning that it assumes the hypothesis. A separate, slower step can certify small cases."
+  viz: { id: "none", cap: "" }
+euclidean-rings:
+  one: "Under the hypothesis for number fields, a ring of integers with infinitely many units has a Euclidean algorithm whenever it has unique factorization."
+  story:
+    - "Euclid’s algorithm finds the greatest common divisor of two whole numbers by repeated division with remainder. It works because the remainder is always smaller than the divisor. The same idea works in some larger number systems, such as the Gaussian integers a + bi, and wherever it works factorization is unique."
+    - "The converse is false in general: the numbers built from √−19 have unique factorization and no Euclidean algorithm. Weinberger showed that such examples are confined to a few imaginary quadratic fields, if the hypothesis holds. In every other case with unique factorization some notion of “smaller” makes division with remainder work."
+  viz: { id: "none", cap: "" }
+ramanujans-ternary-form:
+  one: "The odd numbers that x² + y² + 10z² cannot make are exactly eighteen, if the hypothesis holds for two families of L-function."
+  story:
+    - "Every positive whole number is a sum of four squares. Three squares miss some numbers, by a simple rule. Ramanujan looked at the form x² + y² + 10z² in 1916, found that the even numbers it misses follow a simple rule too, and wrote that the odd numbers it misses “do not seem to obey any simple law”."
+    - "They are 3, 7, 21, 31, 33, 43, 67, 79, 87, 133, 217, 219, 223, 253, 307, 391, and then, after a long silence, 679 and 2,719. Is that all? Ono and Soundararajan showed it is, assuming the hypothesis for Dirichlet L-functions and for the L-functions of a family of elliptic curves."
+  viz: { id: "ternary", cap: "Every odd number up to 3,000, coloured by whether x² + y² + 10z² can make it. The eighteen red squares are the exceptions; the page finds them afresh each time." }
+elliptic-curves:
+  one: "Several theorems about elliptic curves hold only if the hypothesis is true for the curve’s own L-function."
+  story:
+    - "An elliptic curve is an equation such as y² = x³ + x + 1. Count its solutions modulo each prime p. The count is close to p, and the miss, called a_p, is never more than 2√p. Those misses, one for each prime, are packed into the curve’s L-function, as the primes are packed into zeta."
+    - "This L-function is of a different family from Dirichlet’s, and the hypothesis for it is not proved. Results that wait on it include bounds on how many independent rational points a curve can have, and sharp counts of how the misses are distributed."
+    - "How the misses are distributed on average is known: it is a semicircle, the Sato–Tate law, proved between 2008 and 2011 by other means."
+  viz: { id: "satotate", cap: "For the curve y² = x³ + x + 1 and each prime up to 4,000: the miss a_p divided by 2√p (green bars), against the semicircle of Sato and Tate (gold)." }
+isogeny-graphs:
+  one: "Random walks between related elliptic curves mix quickly, if the hypothesis holds for L-functions attached to imaginary quadratic fields."
+  story:
+    - "Elliptic curves over a finite field can be linked by maps called isogenies. Draw each curve as a dot and each isogeny as a line and you get a graph. Some newer cryptographic schemes, designed to resist quantum computers, hide their secrets as paths in such graphs."
+    - "For that to be safe a random walk on the graph must lose all memory of where it started within a few steps. Jao, Miller and Venkatesan proved that it does, assuming the generalized hypothesis."
+  viz: { id: "none", cap: "" }
+shapes-and-equations:
+  one: "Under the hypothesis for number fields there are short randomized proofs that a system of polynomial equations has a solution."
+  story:
+    - "Does a system of polynomial equations in several unknowns have a solution in complex numbers? Hilbert’s Nullstellensatz of 1893 answers in principle. Koiran showed that, under the generalized hypothesis, a “yes” can be checked quickly: if there is a solution, then the system also has solutions modulo many small primes, and one can test a few at random."
+    - "Questions about three-dimensional shapes can be turned into such systems. That is how the hypothesis reached the problem of recognizing a knot or a sphere."
+  viz: { id: "knot", cap: "A knot is one of the three-dimensional objects these methods apply to. Choose a knot to draw." }
+grand-hypothesis:
+  one: "Every L-function that arises from arithmetic is expected to have its zeros on the line. Two families are now proved."
+  story:
+    - "The zeta function is the first of a large family. There is one for every remainder pattern (Dirichlet), one for every number field (Dedekind), for every elliptic curve, for every modular form. They share a product over primes, a symmetry between s and 1 − s, and a critical line."
+    - "Mathematicians believe all of them obey the same law, and that the true explanation, when found, will cover all at once. The Langlands programme predicts that they are all built from one kind of object."
+    - "In one setting the whole family has been understood for fifty years: over finite fields the analogue was proved by Weil and by Deligne. The author of the new proof says his method grew from Stepanov’s elementary proof of a case of Weil’s theorem."
+  viz: { id: "none", cap: "" }
+prime-races:
+  one: "The 4k + 3 primes lead the 4k + 1 primes 99.59% of the time, if the zeros are also unrelated to one another."
+  story:
+    - "Chebyshev’s observation became a sport. Race the primes ending in 1, 3, 7 and 9. Race those that are 2 more than a multiple of 3 against those that are 1 more. Some teams lead almost always, yet every team is known, or believed, to take the lead infinitely often."
+    - "Rubinstein and Sarnak worked out the exact share of the time each team leads. For 3 against 1 modulo 4 it is 99.59%. For li(x) against π(x), the race behind Skewes’ number, li leads 99.999973% of the time."
+    - "Their calculation needs two things: all zeros on the line, and no accidental relations among the heights of the zeros. The first is now proved. The second is a different kind of statement altogether, and nothing is known about it."
+  viz: { id: "race4", cap: "The 3-against-1 race modulo 4, up to one million. The 4k + 3 team trails only in a few short stretches." }
+size-of-the-error:
+  one: "How large the error in the prime count really gets is a question about how the zeros interfere with one another."
+  story:
+    - "The hypothesis says each zero contributes a wave of size about √x to the prime count. There are infinitely many waves. The error is their sum."
+    - "If the waves never lined up, the sum would stay near √x. If they could all peak together it would be larger by a power of ln x. Montgomery’s guess is in between: now and then enough of them line up to add an extra factor of about (ln ln ln x)², a number that is about 2 or less for every x anyone will ever compute."
+    - "Settling it needs to know that the waves are independent, the same missing ingredient as in the prime races."
+  viz: { id: "pierrn", cap: "The error π(x) − li(x), divided by √x / ln x, up to two million. The hypothesis says this stays within a slowly growing range; Montgomery’s guess says how slowly." }
+random-matrices:
+  one: "The zeros are spaced like the eigenvalues of large random matrices. This is observed, not proved."
+  story:
+    - "Fill a large matrix with random numbers in a symmetric way and compute its eigenvalues. They are not scattered at random: they keep their distance from each other, in a pattern first worked out by physicists studying heavy nuclei."
+    - "Odlyzko computed millions of zeros near the 10²⁰-th and found that they follow the same pattern to several decimal places. It is one of the most striking coincidences in mathematics, and it is the strongest hint that the zeros come from some hidden system that behaves like a physical one."
+    - "The pattern has always been stated assuming the zeros are on a line, since only then can one speak of the gaps between them. That assumption is now a theorem. The pattern itself is not."
+  viz: { id: "spacing", cap: "Gaps between neighbouring zeros up to height 1,000 (green), with the random-matrix curve (gold) and the curve for unrelated points (dashed)." }
+landaus-problems:
+  one: "Twin primes, Goldbach, primes between squares and primes of the form n² + 1 are as open as they were."
+  story:
+    - "At the International Congress of Mathematicians in 1912, Landau named four questions about primes that he called unattackable in the present state of science. All four can be explained to a child. None has been solved."
+    - "The Riemann Hypothesis says the primes are evenly spread down to the scale √x. Each of these problems needs information at a finer scale, or about every case and not the average case. Twin primes ask about pairs 2 apart. Legendre asks about gaps of size just under 2√x. So the hypothesis stops just short."
+    - "There has been real progress by other routes: since 2013 it is known that infinitely many pairs of primes differ by at most 246."
+  viz: { id: "twins", cap: "The number of twin prime pairs up to x (green) and the Hardy–Littlewood prediction (gold), up to two million. The fit is superb. That the count goes on for ever is unproved." }
+breaking-codes:
+  one: "A proof of the Riemann Hypothesis does not weaken encryption."
+  story:
+    - "The belief that it would is widespread and has even been the plot of films. It rests on a confusion. Encryption such as RSA is safe because multiplying two large primes is easy and undoing the multiplication is hard. The Riemann Hypothesis is about how primes are spread among all numbers. It says nothing about finding the two hidden factors of one particular number."
+    - "Some algorithms in this area were proved fast only “assuming the hypothesis”. Anyone could already run them; the assumption was needed for the guarantee, not for the running. A proof changes the guarantee and not the speed."
+    - "What does threaten RSA is a large quantum computer, for reasons that have nothing to do with zeros of the zeta function."
+  viz: { id: "none", cap: "" }
+hilbert-polya:
+  one: "A proof that the zeros are on the line need not explain why."
+  story:
+    - "A real symmetric matrix has real eigenvalues; a vibrating drum has real frequencies. If the heights of the zeros were the frequencies of some system of that kind, they would have to be real numbers, and that is the Riemann Hypothesis. This idea is credited to Hilbert and to Pólya, around 1914."
+    - "It gained weight when the zeros turned out to be spaced like the energy levels of a quantum system. Many people have looked for the system. Nobody has found it."
+    - "The new proof goes by another road, as far as its author’s outline shows. So the oldest question about the zeros, what they are the frequencies of, may outlive the hypothesis."
+  viz: { id: "zline", cap: "The first zeros, as crossings of the curve Z(t). If they are the frequencies of something, nobody yet knows of what." }
+millennium-problems:
+  one: "Five of the seven Millennium Prize problems remain."
+  story:
+    - "In 2000 the Clay Mathematics Institute chose seven problems and offered a million dollars for each. They are: the Riemann Hypothesis; the Poincaré conjecture; P versus NP; the Birch and Swinnerton-Dyer conjecture; the Hodge conjecture; the existence and smoothness of solutions of the Navier–Stokes equations; and the Yang–Mills mass gap."
+    - "Perelman proved the Poincaré conjecture in 2002 and 2003, and declined the prize. The Riemann Hypothesis now has a computer-checked proof, with the human review and the prize decision still to come."
+    - "The other five are in different parts of mathematics and are not known to depend on it. The closest relative is the Birch and Swinnerton-Dyer conjecture, which is about the L-function of an elliptic curve at its centre point."
+  viz: { id: "none", cap: "" }

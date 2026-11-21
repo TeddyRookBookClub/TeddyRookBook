@@ -1,0 +1,75 @@
+{{ define "main" }}
+{{- /* /connections/rhythm-of-numbers/riemann-hypothesis/list/: the table of every result in data/rhythm/rh.yaml, one row each,
+   with links to the results' own pages. rh.js makes it sortable and filterable (the page works without it); below 760px each
+   row becomes a card. Styles: rn.css, prime.css, rh.css. */ -}}
+{{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
+{{ partial "inline/ml-css.html" "connections/rhythm/prime.css" }}
+{{ partial "inline/ml-css.html" "connections/rhythm/rh.css" }}
+{{- $hub := "connections/rhythm-of-numbers/" | relURL }}
+{{- $D := site.Data.rhythm.rh }}
+{{- $n := 0 }}{{ range $D.groups }}{{ $n = add $n (len .items) }}{{ end }}
+{{- $needs := dict "zeta" "Riemann Hypothesis only" "dirichlet" "Dirichlet L-functions" "wider" "More L-functions (not proved)" "extra" "Hypothesis + more" "none" "No hypothesis" }}
+<article class="rn rn-np rh">
+<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ "connections/" | relURL }}">Connections</a> <span aria-hidden="true">›</span> <a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <a href="{{ "connections/rhythm-of-numbers/riemann-hypothesis/" | relURL }}">After the Riemann Hypothesis</a> <span aria-hidden="true">›</span> <span>The list</span></nav>
+
+<header class="rn-hero">
+  <p class="rn-eyebrow">After the Riemann Hypothesis · the list · added {{ partial "connections/rn-date.html" "2026-11-21" }}</p>
+  <h1>The list: <em>{{ $n }} results that assumed the Riemann Hypothesis</em></h1>
+  <p class="rn-lede">One row for each result: the open item, what the computer-checked proof of November 2026 means for it, the work still to be done, and how hard that work looks, from 0 (done) to 5. Press a title to open that result’s own page. <a href="{{ "connections/rhythm-of-numbers/riemann-hypothesis/" | relURL }}">What was proved, and what was not →</a></p>
+  <p class="rh-levels-inline">{{ range $D.levels }}<span class="rh-d rh-d{{ .lv }}" title="{{ .text }}">{{ .lv }} · {{ .name }}</span>{{ end }}</p>
+</header>
+
+<section class="np-sec" id="list" aria-labelledby="rh-list-h">
+  <h2 id="rh-list-h" class="rh-vh">The table</h2>
+  <div class="rh-tools" id="rh-tools" hidden>
+    <label class="rh-find"><span>Find</span> <input type="search" id="rh-q" placeholder="primes, Goldbach, class number …" autocomplete="off"></label>
+    <div class="rh-selects">
+      <label>Status <select id="rh-fs"><option value="">All</option>{{ range $D.groups }}{{ $st := .status }}<option value="{{ .id }}">{{ .status }}{{ if eq .id "zeta" }} (needs only the Riemann Hypothesis){{ else if eq .id "dirichlet" }} (needs Dirichlet L-functions){{ end }}</option>{{ end }}</select></label>
+      <label>Difficulty of what is left <select id="rh-fd"><option value="">All</option>{{ range $D.levels }}<option value="{{ .lv }}">{{ .lv }} · {{ .name }}</option>{{ end }}</select></label>
+      <label>Area <select id="rh-fa"><option value="">All</option>{{ $areas := slice }}{{ range $D.groups }}{{ range .items }}{{ $areas = $areas | append .area }}{{ end }}{{ end }}{{ range $areas | uniq | sort }}<option>{{ . }}</option>{{ end }}</select></label>
+      <button type="button" class="rh-chip" id="rh-reset">Show everything</button>
+    </div>
+    <p class="rn-small rn-muted"><span id="rh-count" aria-live="polite"></span> Press a column heading to sort by it; press again to reverse.</p>
+  </div>
+  <div class="rh-tw" role="region" aria-labelledby="rh-list-h" tabindex="0">
+  <table class="rh-t" id="rh-t">
+    <thead><tr>
+      <th scope="col" class="rh-c1" data-k="t" aria-sort="none"><button type="button" class="rh-sort">Open item</button></th>
+      <th scope="col" class="rh-c2" data-k="s" aria-sort="none"><button type="button" class="rh-sort">What the proof means for it</button></th>
+      <th scope="col" class="rh-c3">Open work to be done</th>
+      <th scope="col" class="rh-c4" data-k="d" aria-sort="none"><button type="button" class="rh-sort">Difficulty</button></th>
+    </tr></thead>
+    <tbody>
+      {{- $i := 0 }}{{ $gi := 0 }}
+      {{- range $D.groups }}{{ $g := . }}
+      {{- range .items }}
+      {{- $lv := index $D.levels (int .d) }}
+      <tr data-i="{{ $i }}" data-s="{{ $gi }}" data-g="{{ $g.id }}" data-d="{{ .d }}" data-a="{{ .area }}">
+        <th scope="row" class="rh-c1" data-l="Open item"><b><a href="{{ printf "connections/rhythm-of-numbers/riemann-hypothesis/%s/" .slug | relURL }}">{{ .t }}</a></b><span class="rh-tags"><span class="rh-area">{{ .area }}</span><span class="rh-need rh-n-{{ .needs }}">{{ index $needs .needs }}</span></span><span class="rh-was">{{ .was }}</span><span class="rh-src">{{ with .link }}<a href="{{ .url | relURL }}">{{ .label }} →</a> · {{ end }}Source: {{ .src }}</span></th>
+        <td class="rh-c2" data-l="What the proof means for it"><span class="rh-st rh-st-{{ $g.id }}">{{ $g.status }}</span> {{ .now }}</td>
+        <td class="rh-c3" data-l="Open work to be done">{{ .left }}</td>
+        <td class="rh-c4" data-l="Difficulty"><span class="rh-d rh-d{{ .d }}">{{ .d }} · {{ $lv.name }}</span></td>
+      </tr>
+      {{- $i = add $i 1 }}
+      {{- end }}{{ $gi = add $gi 1 }}
+      {{- end }}
+    </tbody>
+  </table>
+  </div>
+  <p class="rh-none" id="rh-none" hidden>Nothing on the list matches. Try a shorter word, or press “Show everything”.</p>
+
+  <h3 class="rh-kh">The six kinds of entry</h3>
+  <ul class="rh-kinds">{{ range $D.groups }}<li><span class="rh-st rh-st-{{ .id }}">{{ .status }}</span> <b>{{ .h }}</b> ({{ len .items }}). {{ .intro }}</li>{{ end }}</ul>
+</section>
+
+<footer class="rn-notes" aria-labelledby="rh-n-h">
+  <h2 id="rh-n-h" class="rn-h3">Notes</h2>
+  <ul>
+    <li>The difficulty levels are our own rough estimates for a general reader, not ratings from the mathematical literature. {{ range $D.levels }}<b>{{ .lv }} · {{ .name }}:</b> {{ .text }} {{ end }}</li>
+    <li>Sources for each row are in the row. The certification, its scope and its limits are described on <a href="{{ "connections/rhythm-of-numbers/riemann-hypothesis/" | relURL }}">the overview page</a>.</li>
+  </ul>
+  <p><a href="{{ "connections/rhythm-of-numbers/riemann-hypothesis/" | relURL }}">← Back to After the Riemann Hypothesis</a></p>
+</footer>
+</article>
+{{ partial "inline/ml-js.html" "connections/rhythm/rh.js" }}
+{{ end }}

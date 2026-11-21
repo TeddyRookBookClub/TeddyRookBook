@@ -1,0 +1,15 @@
+{{- /* "After the Riemann Hypothesis": the list page and one page per result, from data/rhythm/rh.yaml (summary fields) and
+   data/rhythm/rh_pages.yaml (each page's text and figure). The overview itself is _index.md in this folder.
+   /connections/rhythm-of-numbers/riemann-hypothesis/list/    -> layouts/connections/rhythm-rh-list.html
+   /connections/rhythm-of-numbers/riemann-hypothesis/<slug>/  -> layouts/connections/rhythm-rh-item.html */ -}}
+{{- $D := site.Data.rhythm.rh -}}{{- $P := site.Data.rhythm.rh_pages -}}
+{{- $n := 0 -}}{{- range $D.groups }}{{ $n = add $n (len .items) }}{{ end -}}
+{{- $.AddPage (dict "kind" "page" "path" "list" "title" (printf "The list: %d results that assumed the Riemann Hypothesis" $n) "layout" "rhythm-rh-list"
+     "params" (dict "linkTitle" "The list" "description" (printf "A table of %d results that assumed the Riemann Hypothesis or a generalized form of it: what the computer-checked proof of November 2026 means for each, the work left, and how hard it looks. Sort and filter it." $n))) -}}
+{{- range $D.groups -}}{{- $g := . -}}
+  {{- range .items -}}
+    {{- $pg := index $P .slug | default dict -}}
+    {{- $.AddPage (dict "kind" "page" "path" .slug "title" .t "layout" "rhythm-rh-item"
+         "params" (dict "rh" .slug "group" $g.id "description" (printf "%s What the proof of the Riemann Hypothesis means for it, and what is left to do." ($pg.one | default "")))) -}}
+  {{- end -}}
+{{- end -}}

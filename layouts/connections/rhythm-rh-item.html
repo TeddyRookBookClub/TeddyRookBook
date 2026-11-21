@@ -1,0 +1,84 @@
+{{ define "main" }}
+{{- /* /connections/rhythm-of-numbers/riemann-hypothesis/<slug>/: one result of data/rhythm/rh.yaml (params.rh = its slug). The
+   summary (was / now / left / difficulty / source) comes from rh.yaml, the page's own text and figure from
+   data/rhythm/rh_pages.yaml. Figures: static/connections/rhythm/rhviz.js draws into <div class="rhv" data-viz="...">.
+   Styles: rn.css, prime.css, rh.css. */ -}}
+{{ partial "inline/ml-css.html" "connections/rhythm/rn.css" }}
+{{ partial "inline/ml-css.html" "connections/rhythm/prime.css" }}
+{{ partial "inline/ml-css.html" "connections/rhythm/rh.css" }}
+{{- $hub := "connections/rhythm-of-numbers/" | relURL }}
+{{- $D := site.Data.rhythm.rh }}
+{{- $n := 0 }}{{ range $D.groups }}{{ $n = add $n (len .items) }}{{ end }}
+{{- $needs := dict "zeta" "Riemann Hypothesis only" "dirichlet" "Dirichlet L-functions" "wider" "More L-functions (not proved)" "extra" "Hypothesis + more" "none" "No hypothesis" }}
+{{- $P := site.Data.rhythm.rh_pages }}
+{{- $slug := .Params.rh }}{{ $all := slice }}{{ range $D.groups }}{{ $g := . }}{{ range .items }}{{ $all = $all | append (dict "it" . "g" $g) }}{{ end }}{{ end }}
+{{- $i := -1 }}{{ range $k, $e := $all }}{{ if eq $e.it.slug $slug }}{{ $i = $k }}{{ end }}{{ end }}
+{{- if lt $i 0 }}{{ errorf "rhythm-rh-item: no result %q in data/rhythm/rh.yaml" $slug }}{{ end }}
+{{- $e := index $all $i }}{{ $it := $e.it }}{{ $g := $e.g }}{{ $pg := index $P $slug | default dict }}{{ $lv := index $D.levels (int $it.d) }}
+{{- $base := "connections/rhythm-of-numbers/riemann-hypothesis/" }}
+<article class="rn rn-np rh rh-page">
+<nav class="rn-crumbs" aria-label="Breadcrumbs"><a href="{{ $hub }}">The Rhythm of Numbers</a> <span aria-hidden="true">›</span> <a href="{{ $base | relURL }}">After the Riemann Hypothesis</a> <span aria-hidden="true">›</span> <a href="{{ printf "%slist/" $base | relURL }}">The list</a> <span aria-hidden="true">›</span> <span>{{ $it.t }}</span></nav>
+
+<header class="rn-hero">
+  <p class="rn-eyebrow">After the Riemann Hypothesis · result {{ add $i 1 }} of {{ len $all }} · {{ $it.area }}</p>
+  <h1>{{ $it.t }}</h1>
+  <p class="rn-lede">{{ $pg.one }}</p>
+  <p class="rh-tags"><span class="rh-st rh-st-{{ $g.id }}">{{ $g.status }}</span><span class="rh-need rh-n-{{ $it.needs }}">{{ index $needs $it.needs }}</span><span class="rh-d rh-d{{ $it.d }}">Work left: {{ $it.d }} · {{ $lv.name }}</span></p>
+</header>
+
+{{- with $pg.viz }}{{ if ne .id "none" }}
+<figure class="rh-fig">
+  <div class="rhv" data-viz="{{ .id }}"><noscript><p class="rn-small rn-muted">This figure is drawn by a script, which is switched off in your browser.</p></noscript></div>
+  <figcaption class="rn-small">{{ .cap }}</figcaption>
+</figure>
+{{- end }}{{ end }}
+
+<section class="np-sec" aria-labelledby="rh-idea-h">
+  <h2 id="rh-idea-h">The idea</h2>
+  <div class="np-prose">{{ range $pg.story }}<p>{{ . | markdownify }}</p>{{ end }}</div>
+</section>
+
+<section class="np-sec" aria-labelledby="rh-stand-h">
+  <h2 id="rh-stand-h">Where it stands</h2>
+  <dl class="rh-dl">
+    <div><dt>Before</dt><dd>{{ $it.was }}</dd></div>
+    <div><dt>What the proof means for it</dt><dd><span class="rh-st rh-st-{{ $g.id }}">{{ $g.status }}</span> {{ $it.now }}</dd></div>
+    <div><dt>Open work to be done</dt><dd>{{ $it.left }}</dd></div>
+    <div><dt>Difficulty of that work</dt><dd><span class="rh-d rh-d{{ $it.d }}">{{ $it.d }} · {{ $lv.name }}</span> {{ $lv.text }} <span class="rn-muted">(Our own rough estimate.)</span></dd></div>
+  </dl>
+</section>
+
+{{- with $pg.ours }}
+<section class="np-sec rh-ours" id="ours" aria-labelledby="rh-ours-h">
+  <h2 id="rh-ours-h">What we did</h2>
+  <div class="np-prose">{{ range . }}<p>{{ . | markdownify }}</p>{{ end }}</div>
+</section>
+{{- end }}
+
+<section class="np-sec" aria-labelledby="rh-rest-h">
+  <h2 id="rh-rest-h">What it rests on</h2>
+  {{ partial "connections/rh-rests.html" $it.needs }}
+</section>
+
+<section class="np-sec" aria-labelledby="rh-nav-h">
+  <h2 id="rh-nav-h" class="rh-vh">More results</h2>
+  <p class="np-next rh-pn">
+    {{- if gt $i 0 }}{{ $p := (index $all (sub $i 1)).it }}<a href="{{ printf "%s%s/" $base $p.slug | relURL }}">← {{ $p.t }}</a>{{ end }}
+    <a href="{{ printf "%slist/" $base | relURL }}">The list of all {{ len $all }}</a>
+    {{- if lt (add $i 1) (len $all) }}{{ $q := (index $all (add $i 1)).it }}<a href="{{ printf "%s%s/" $base $q.slug | relURL }}">{{ $q.t }} →</a>{{ end }}
+  </p>
+</section>
+
+<footer class="rn-notes" aria-labelledby="rh-n-h">
+  <h2 id="rh-n-h" class="rn-h3">Notes and sources</h2>
+  <ul>
+    <li>Source for the statements on this page: {{ $it.src }}</li>
+    {{- with $it.link }}<li>On this site: <a href="{{ .url | relURL }}">{{ .label }}</a>.</li>{{ end }}
+    {{- with $pg.viz }}{{ if ne .id "none" }}<li>The figure is computed in your browser from first principles each time the page loads. It illustrates the statement; it does not prove it.</li>{{ end }}{{ end }}
+    <li>What was proved and certified in November 2026, what it covers and what it does not: <a href="{{ $base | relURL }}">After the Riemann Hypothesis</a>. This page is a summary for general readers.</li>
+  </ul>
+  <p><a href="{{ $base | relURL }}">← Back to After the Riemann Hypothesis</a></p>
+</footer>
+</article>
+{{ partial "inline/ml-js.html" "connections/rhythm/rhviz.js" }}
+{{ end }}

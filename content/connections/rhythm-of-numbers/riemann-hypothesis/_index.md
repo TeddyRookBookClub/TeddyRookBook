@@ -1,7 +1,7 @@
 ---
 title: "After the Riemann Hypothesis: what it settles, and what is left"
 linkTitle: "After the Riemann Hypothesis"
-description: "On 21 November 2026 the Lean and Mathlib communities certified a computer-checked proof of the Riemann Hypothesis. A plain-words list of 48 results that assumed it: which are now theorems, which still need more, which were never within its reach, and how hard the remaining work is."
+description: "On 21 November 2026 the Lean and Mathlib communities certified a computer-checked proof of the Riemann Hypothesis. A plain-words guide to 48 results that assumed it, each with its own page and picture: which are now theorems, which still need more, which were never within its reach, and how hard the remaining work is."
 layout: rhythm-rh
 # The list is data/rhythm/rh.yaml. Status text here follows the primary sources in notes: (the Lean and Mathlib communities'
 # joint statement of 2026-11-21, A. Sutherland's verification log, L. Alpöge's remark). Update this page when a written
@@ -15,7 +15,8 @@ short:
   - "**What it covers.** The Riemann Hypothesis for the zeta function. The same library proves it for every Dirichlet L-function, the zeta function’s cousins for primes sorted by remainder."
   - "**What it does not cover.** The zeta functions of number fields in general, and the L-functions of elliptic curves. Many famous “if” theorems need those."
   - "**What nobody has yet.** A proof a person can read. The author says the argument is very long and that he means to write it up properly."
-  - "**The list.** 48 results: 27 are now theorems, 5 had already been proved another way, 9 still wait for a wider proof, 3 need a second assumption, and 4 famous problems were never within reach."
+  - "**The list.** 48 results, each with its own page: 27 are now theorems, 5 had already been proved another way, 9 still wait for a wider proof, 3 need a second assumption, and 4 famous problems were never within reach."
+  - "**Our own work.** On two of the easier items we did something ourselves: a written-out proof, with its computation, that [Euler’s list of 65 convenient numbers is complete](/connections/rhythm-of-numbers/riemann-hypothesis/eulers-convenient-numbers/#ours), and a working [Miller’s test](/connections/rhythm-of-numbers/riemann-hypothesis/millers-test/) that proves a number prime in your browser. Neither has been reviewed by a specialist."
 sections:
   - id: "what"
     h: "What the hypothesis says"
@@ -46,9 +47,10 @@ sections:
       - "**Extend it to elliptic curves, modular forms and beyond** (difficulty 3 to 4). Nobody has claimed this."
       - "**Go through the literature** (difficulty 1 to 2). Thousands of papers contain a line like “assume GRH”. Each has to be re-read to see which form it needs, and the tables and constants that relied on it have to be re-stated."
       - "**The questions the hypothesis never answered** (difficulty 4 to 5): the exact size of the errors, whether the zeros are simple, why they are spaced like random matrices, and the famous problems about twin primes and Goldbach."
-scale_intro: "The table has four columns: the **open item** (with what was known before), **what the proof means for it**, the **open work to be done**, and the **difficulty** of that work, from 0 (done) to 5. You can sort the table by a column and filter it by status, difficulty or area."
+scale_intro: "Every result below has a page of its own and a row in [the table](/connections/rhythm-of-numbers/riemann-hypothesis/list/). Each says what was known before, **what the proof means for it**, the **open work to be done**, and the **difficulty** of that work, from 0 (done) to 5."
 scale_note: "The difficulty levels are our own rough estimates for a general reader, not ratings from the mathematical literature. Where we were not sure which form of the hypothesis a paper needs, the entry says so. The list is long but not complete: thousands of papers assume some form of the hypothesis."
 more:
+  - { url: "connections/rhythm-of-numbers/riemann-hypothesis/list/", label: "The table of all 48" }
   - { url: "connections/rhythm-of-numbers/#zeros", label: "Listen to the zeros" }
   - { url: "connections/rhythm-of-numbers/new-prime/", label: "Five new primes from pi, one proved" }
   - { url: "connections/rhythm-of-numbers/what-it-means/", label: "The Rhythm of Numbers, in plain words" }

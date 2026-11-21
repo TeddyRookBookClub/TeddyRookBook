@@ -1,0 +1,9 @@
+{{- /* "What it rests on": the four families of L-function, which of them the Lean library covers, and which this result
+   needs. Context: the value of `needs` in data/rhythm/rh.yaml (zeta, dirichlet, wider, extra, none). */ -}}
+<div class="rh-rests" role="img" aria-label="Which forms of the hypothesis are proved, and which this result needs">
+  <div class="rh-box rh-ok{{ if in (slice "zeta" "dirichlet" "extra") . }} rh-need-it{{ end }}"><b>The zeta function</b><span>✓ proved</span></div>
+  <div class="rh-box rh-ok{{ if in (slice "dirichlet" "extra") . }} rh-need-it{{ end }}"><b>Dirichlet L-functions</b><span>✓ proved</span></div>
+  <div class="rh-box rh-no{{ if eq . "wider" }} rh-need-it{{ end }}"><b>Number fields in general</b><span>not proved</span></div>
+  <div class="rh-box rh-no{{ if eq . "wider" }} rh-need-it{{ end }}"><b>Elliptic curves and beyond</b><span>not proved</span></div>
+</div>
+<p class="rn-small rn-muted">{{ if eq . "zeta" }}This result needs only the first box.{{ else if eq . "dirichlet" }}This result needs the first two boxes, and both are proved.{{ else if eq . "wider" }}This result needs one or both of the last two boxes, which the proof does not reach.{{ else if eq . "extra" }}This result needs the proved boxes and one further assumption that no form of the hypothesis supplies.{{ else }}This result does not depend on any box: either it was proved another way, or the hypothesis was never known to imply it.{{ end }} Outlined boxes are the ones it uses.</p>
