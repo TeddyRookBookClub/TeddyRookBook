@@ -17,6 +17,7 @@ short:
   - "**What nobody has yet.** A proof a person can read. The author says the argument is very long and that he means to write it up properly."
   - "**The list.** 48 results, each with its own page: 27 are now theorems, 5 had already been proved another way, 9 still wait for a wider proof, 3 need a second assumption, and 4 famous problems were never within reach."
   - "**Our own work.** On two of the easier items we did something ourselves: a written-out proof, with its computation, that [Euler’s list of 65 convenient numbers is complete](/connections/rhythm-of-numbers/riemann-hypothesis/eulers-convenient-numbers/#ours), and a working [Miller’s test](/connections/rhythm-of-numbers/riemann-hypothesis/millers-test/) that proves a number prime in your browser. Neither has been reviewed by a specialist."
+  - "**The hard ones.** We tried the eight entries marked Hard and could not advance any of them; nobody can until the proof is extended. We did find that [six of the eight wait on one and the same statement](/connections/rhythm-of-numbers/riemann-hypothesis/number-fields/#ours)."
 sections:
   - id: "what"
     h: "What the hypothesis says"
@@ -43,8 +44,8 @@ sections:
     list:
       - "**Write the proof for people** (a large job, and under way). Until the ideas are explained, nobody can reuse them, and reuse is what turns one theorem into a hundred."
       - "**Shorten it.** Seventeen million lines is far more than the argument should need. First proofs are usually long; later ones are short."
-      - "**Extend it to number fields** (difficulty 3, hard). The author writes that he expects the extended hypothesis to follow with more time. Nine entries on the list wait for this."
-      - "**Extend it to elliptic curves, modular forms and beyond** (difficulty 3 to 4). Nobody has claimed this."
+      - "**Extend it to number fields** (difficulty 3, hard). The author writes that he expects the extended hypothesis to follow with more time. We checked what each of the eight Hard entries assumes: six would be settled by this one step (Artin’s conjecture, the effective Chebotarev theorem, class groups by computer, Euclidean rings, isogeny graphs, shapes and equations), and the entry on elliptic curves would be half settled."
+      - "**Extend it to elliptic curves, modular forms and beyond** (difficulty 3 to 4). Nobody has claimed this. Ramanujan’s form x² + y² + 10z² and the rank bounds for elliptic curves wait for it; the step to number fields would not reach them."
       - "**Go through the literature** (difficulty 1 to 2). Thousands of papers contain a line like “assume GRH”. Each has to be re-read to see which form it needs, and the tables and constants that relied on it have to be re-stated."
       - "**The questions the hypothesis never answered** (difficulty 4 to 5): the exact size of the errors, whether the zeros are simple, why they are spaced like random matrices, and the famous problems about twin primes and Goldbach."
 scale_intro: "Every result below has a page of its own and a row in [the table](/connections/rhythm-of-numbers/riemann-hypothesis/list/). Each says what was known before, **what the proof means for it**, the **open work to be done**, and the **difficulty** of that work, from 0 (done) to 5."

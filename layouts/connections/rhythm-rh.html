@@ -58,7 +58,7 @@
       <a class="rh-card" href="{{ printf "connections/rhythm-of-numbers/riemann-hypothesis/%s/" .slug | relURL }}">
         <b>{{ .t }}</b>
         <span class="rh-one">{{ $pg.one }}</span>
-        <span class="rh-tags"><span class="rh-st rh-st-{{ $g.id }}">{{ $g.status }}</span><span class="rh-d rh-d{{ .d }}">Left: {{ .d }} · {{ $lv.name }}</span>{{ with $pg.viz }}{{ if ne .id "none" }}<span class="rh-area">▣ picture</span>{{ end }}{{ end }}{{ if $pg.ours }}<span class="rh-area rh-ours-tag">✎ our own work</span>{{ end }}</span>
+        <span class="rh-tags"><span class="rh-st rh-st-{{ $g.id }}">{{ $g.status }}</span><span class="rh-d rh-d{{ .d }}">Left: {{ .d }} · {{ $lv.name }}</span>{{ with $pg.viz }}{{ if ne .id "none" }}<span class="rh-area">▣ picture</span>{{ end }}{{ end }}{{ if $pg.ours }}<span class="rh-area rh-ours-tag">✎ our notes</span>{{ end }}</span>
       </a>
       {{- end }}
     </div>

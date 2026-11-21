@@ -383,7 +383,7 @@ chosen so that $n$ falls in the class where the two almost never fail together. 
 that passes it, and none exists below $2^{64}$ \citep{WikiBPSW}. The new primes of Chapter~\ref{ch:third} are
 numbers that left this zero. The rhythm sieve of \cref{sec:th6} reads a ladder modulo small numbers too,
 in the other direction: it runs $\pi$'s own ladder modulo each small prime and discards the steps where
-a zero appears.
+a zero appears. [Update: the Lean library that proves the Riemann hypothesis \citep{LeanRH2026} also proves it for every Dirichlet $L$-function, according to its public verification log. That is what Miller's test needs: an odd $n$ is prime exactly when it passes the strong test for every base up to $2(\ln n)^2$ \citep{Miller1976,Bach1990}, which is then a proof and not a probable-prime test. For the primes of Chapter~\ref{ch:third} it is of no practical use: $q_{25332}$ would need about $1.8\times10^9$ bases.] \addedon{\revH}
 
 \paragraph{Where the idea is exact.} For the Mersenne numbers $M_p=2^{p}-1$ of \cref{sec:necklaces} the test is
 an equivalence, and it is a statement about the ladder of $\sqrt3=[1;\overline{1,2}]$.

@@ -1,0 +1,22 @@
+PASS  B = (1/2) log 4pi - 1 - gamma/2 = -0.02309...  (-0.02310)
+PASS  Lemma 2.1 on real data, 13 values of x up to 3,000,000 (largest error / allowed error = 0.347)
+PASS  Lemma 2.4 on real data (largest error / allowed error = 0.343)
+PASS  Lemma 2.6 on real data (largest error / allowed error = 0.334)
+PASS  (4.3): 2|B|(sqrt X + 1) + (log 2pi) log X + 1 <= sqrt X / 20 at X = 10^9 (left side is increasing more slowly)
+PASS  E_1(X) <= -2/7 for X >= 10^9  (E_1 -> -gamma/2 = -0.28861, -2/7 = -0.28571)
+PASS  E_0(X) <= -2/7 for X >= 10^9
+PASS  (1 - 1/sqrt X)^-2 <= 1 + 5/(2 sqrt X) for X >= 64
+PASS  (7/2) log X + (log X)^2 / 3 <= sqrt X / 100 for X >= 10^9
+PASS  Lemma 2.4 gives sum <= log X - 3/2 for X >= 10^9
+      note: at h = 2, q = 20000 the proof's own bound is 46.4 and the statement's bracket is 32.0
+PASS  Theorem 1.4, h = 2: wherever the derived bound exceeds sqrt(10^9) (log q >= 31380) it is below the stated bracket (checked up to log q = 10^12)
+PASS  for the first version of our note (h = 2; no longer needed): the derived bound squared is below sqrt(q)/2 for every q >= 4 x 10^18
+PASS  Theorem 1.5: x = (log q)^2/4 >= 132 and log x = 2(log log q - log 2) for q >= 10^10
+PASS  Theorem 1.5 upper bound: the exponentiation step, q = 10^10 ... 10^(10^6)
+PASS  Theorem 1.5 lower bound: the exponentiation step (gives the term 14 log log q / log q), same range
+PASS  Lemmas 2.4 + 2.6 combine to log log x + gamma - 1/log x (algebra)
+PASS  Lemma 5.1 for p = 2, 3, 5, 7, 11, 13 and x = 100 ... 10^8 (4,000 angles each)
+PASS  Corollary 1.3 on 40 fundamental discriminants between 10^10 and 3.6 x 10^10, including the 24 most extreme we could find: smallest h / lower bound = 2.09, largest h / upper bound = 0.674
+PASS  the value used in our note: the lower bound at q = 10^10 is 2843.5, and it increases with q
+
+19 checks passed, 0 failed

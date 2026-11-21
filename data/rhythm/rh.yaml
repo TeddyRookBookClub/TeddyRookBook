@@ -225,7 +225,7 @@ groups:
         area: "Quadratic fields"
         needs: dirichlet
         was: "Euler found 65 “convenient” (idoneal) numbers n, from 1 to 1,848, for which a simple test with x² + n·y² proves a number prime. No more were ever found. Peter Weinberger proved in 1973 that at most two more could exist, and none if the generalized hypothesis holds."
-        now: "The list is complete: a question open since the 1700s. We wrote out a short proof from the certified statement and a 2015 theorem, and ran the computation it needs (every discriminant down to −10¹⁰)."
+        now: "The list is complete: a question open since the 1700s. We wrote out a short proof from the certified statement and one 2015 bound for class numbers, ran the computation it needs (every discriminant down to −10¹⁰), and re-checked what we could of the 2015 paper."
         left: "Have a number theorist check our write-up, which is on this result’s own page."
         d: 1
         src: "P. Weinberger, Acta Arith. 22 (1973)."
@@ -335,7 +335,7 @@ groups:
         needs: wider
         was: "The decimal of 1/7 repeats after 6 digits, the longest a seventh can manage. Emil Artin guessed in 1927 that 10 does this for about 37.4% of all primes, and likewise for any base that is not a square or −1. Christopher Hooley proved it in 1967, assuming the hypothesis for the zeta functions of a family of number fields."
         now: "Not settled. Those fields are not abelian, so their zeta functions are not products of Dirichlet L-functions."
-        left: "Extend the proof to number fields. Without any hypothesis, Heath-Brown proved in 1986 that the conjecture can fail for at most two prime bases, so it holds for at least one of 2, 3 and 5, though no one can say which."
+        left: "Extend the proof to number fields: the extended hypothesis, which the proof’s author expects, would settle this. Without any hypothesis, Heath-Brown proved in 1986 that the conjecture can fail for at most two prime bases, so it holds for at least one of 2, 3 and 5, though no one can say which."
         d: 3
         src: "C. Hooley, J. Reine Angew. Math. 225 (1967); D. R. Heath-Brown, Quart. J. Math. 37 (1986)."
       - slug: number-fields
@@ -344,7 +344,7 @@ groups:
         needs: wider
         was: "With the hypothesis for a number field’s zeta function, one can say how soon a prime with a given behaviour in that field must appear (Lagarias and Odlyzko, 1977; Bach and Sorenson, 1996). A long list of results rests on this “effective Chebotarev theorem”."
         now: "Proved only for abelian fields, where it is the statement about primes in progressions above."
-        left: "Extend the proof. This one step would settle most of this table."
+        left: "Extend the proof. This one statement, the extended hypothesis, would settle six of the eight hard entries on this list and half of a seventh."
         d: 3
         src: "J. Lagarias, A. Odlyzko (1977); E. Bach, J. Sorenson, Math. Comp. 65 (1996)."
       - slug: class-groups-by-computer
@@ -352,26 +352,26 @@ groups:
         area: "Algorithms"
         needs: wider
         was: "Computer algebra systems find the class group and units of a number field by trusting Bach’s bound of 1990: under the hypothesis, the prime ideals of norm up to 12 · (ln |Δ|)² are enough. Their manuals say the answer is correct “assuming GRH”."
-        now: "Still conditional in general. As far as we can tell the bound needs the hypothesis for L-functions of the field itself, not only Dirichlet’s, even for quadratic fields."
-        left: "Extend the proof; then the caveat can be deleted from the manuals."
+        now: "Still conditional. The bound needs the hypothesis for the L-functions of the characters of the field’s own class group (Belabas, Diaz y Diaz and Friedman state it this way), which are not Dirichlet’s, even for quadratic fields."
+        left: "Extend the proof to number fields. Those L-functions are factors of the zeta function of a larger field, the Hilbert class field, so the extended hypothesis would settle this, and the caveat could be deleted from the manuals."
         d: 3
-        src: "E. Bach, Math. Comp. 55 (1990)."
+        src: "E. Bach, Math. Comp. 55 (1990); K. Belabas, F. Diaz y Diaz, E. Friedman, “Small generators of the ideal class group”, Math. Comp. 77 (2008)."
       - slug: euclidean-rings
         t: "Which rings of numbers have a Euclidean algorithm"
         area: "Number fields"
         needs: wider
         was: "Weinberger proved in 1973, assuming the hypothesis for number fields, that a ring of integers with infinitely many units has a Euclidean algorithm as soon as it has unique factorization."
         now: "Not settled."
-        left: "Extend the proof. Single cases have been proved without it, such as the numbers a + b√14 (Harper, 2004)."
+        left: "Extend the proof to number fields: the hypothesis needed is for the zeta functions of fields made by adjoining roots of units, so the extended hypothesis would settle this. Single cases have been proved without it, such as the numbers a + b√14 (Harper, 2004)."
         d: 3
         src: "P. Weinberger, Proc. Sympos. Pure Math. 24 (1973); M. Harper, Canad. J. Math. 56 (2004)."
       - slug: ramanujans-ternary-form
         t: "Ramanujan’s form x² + y² + 10z²"
         area: "Sums of squares"
         needs: wider
-        was: "Ramanujan asked in 1916 which odd numbers this form misses. Ken Ono and Kannan Soundararajan proved in 1997 that they are exactly 3, 7, 21, 31, 33, 43, 67, 79, 87, 133, 217, 219, 223, 253, 307, 391, 679 and 2,719, assuming the hypothesis for Dirichlet L-functions and for the L-functions of certain modular forms."
-        now: "Half of what they assumed is proved. The modular-form half is not."
-        left: "Extend the proof to L-functions of degree 2."
+        was: "Ramanujan asked in 1916 which odd numbers this form misses. Ken Ono and Kannan Soundararajan proved in 1997 that they are exactly 3, 7, 21, 31, 33, 43, 67, 79, 87, 133, 217, 219, 223, 253, 307, 391, 679 and 2,719, assuming the hypothesis for the Dirichlet L-functions of real characters and for the L-functions of one family of elliptic curves."
+        now: "Half of what they assumed is proved. The elliptic-curve half is not. A direct search of ours finds no further exception among the odd numbers up to two billion."
+        left: "Extend the proof to the L-functions of elliptic curves. These are not zeta functions of number fields, so even the extended hypothesis would not be enough."
         d: 3
         src: "K. Ono, K. Soundararajan, Invent. Math. 130 (1997)."
       - slug: elliptic-curves
@@ -380,7 +380,7 @@ groups:
         needs: wider
         was: "Several results about elliptic curves assume the hypothesis for the curve’s own L-function or for the number fields the curve generates: Serre’s 1976 theorem on how often the points modulo p form a single cycle, bounds on the rank from the “explicit formula”, and sharp forms of the Lang–Trotter and Sato–Tate counts."
         now: "Not settled."
-        left: "Extend the proof to L-functions of degree 2 and to non-abelian number fields."
+        left: "Two different extensions. Serre’s theorem on cyclic point groups, and the counts that use the effective Chebotarev theorem, need number fields: the extended hypothesis would settle them. Bounds on ranks need the curve’s own L-function, which the extended hypothesis does not reach."
         d: 3
         src: "J.-P. Serre (1976, 1981)."
       - slug: isogeny-graphs
@@ -388,8 +388,8 @@ groups:
         area: "Algorithms"
         needs: wider
         was: "Jao, Miller and Venkatesan showed in 2009, assuming the generalized hypothesis, that random walks between elliptic curves mix quickly. Security arguments for some newer cryptographic schemes cite it."
-        now: "Not settled; as we read it, the result needs the hypothesis for L-functions attached to imaginary quadratic fields, beyond Dirichlet’s."
-        left: "Extend the proof. Nothing here makes any system easier to break."
+        now: "Not settled. The paper’s graphs come from ray class groups of number fields, and its bounds need the hypothesis for the L-functions of their characters, beyond Dirichlet’s. (We read the paper’s summary, not its full text.)"
+        left: "Extend the proof to number fields: as we understand it, the extended hypothesis would settle this. Nothing here makes any system easier to break."
         d: 3
         src: "D. Jao, S. Miller, R. Venkatesan, J. Number Theory 129 (2009)."
       - slug: shapes-and-equations
@@ -398,7 +398,7 @@ groups:
         needs: wider
         was: "Pascal Koiran showed in 1996 that, under the generalized hypothesis, there is a short randomized proof that a system of polynomial equations has a solution. Results on recognizing three-dimensional shapes, such as the 3-sphere, build on it."
         now: "Not settled: the input is the effective Chebotarev theorem for number fields."
-        left: "Extend the proof, or replace the hypothesis by a weaker one, as a preprint of November 2026 by Baldwin and Sivek sets out to do."
+        left: "Extend the proof to number fields: the extended hypothesis would settle this. Or replace the hypothesis by a weaker one, as a preprint of November 2026 by Baldwin and Sivek sets out to do."
         d: 3
         src: "P. Koiran, J. Complexity 12 (1996); J. Baldwin, S. Sivek, preprint (2026)."
       - slug: grand-hypothesis

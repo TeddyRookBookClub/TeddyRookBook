@@ -50,7 +50,7 @@
 
 {{- with $pg.ours }}
 <section class="np-sec rh-ours" id="ours" aria-labelledby="rh-ours-h">
-  <h2 id="rh-ours-h">What we did</h2>
+  <h2 id="rh-ours-h">{{ if eq $it.needs "wider" }}What we tried{{ else }}What we did{{ end }}</h2>
   <div class="np-prose">{{ range . }}<p>{{ . | markdownify }}</p>{{ end }}</div>
 </section>
 {{- end }}

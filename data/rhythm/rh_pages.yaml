@@ -164,13 +164,14 @@ eulers-convenient-numbers:
     - "Gauss explained the list: n is convenient exactly when every “genus” of forms x² + ny² holds a single class, which is a statement about a class group. That is how the zeros come in. Chowla proved in 1934 that the list is finite. Weinberger proved in 1973 that at most two could be missing, and none under the generalized hypothesis."
   viz: { id: "idoneal", cap: "Euler’s 65 convenient numbers. Type any n to test it with Euler’s own rule: the page finds a, b, c with n = ab + bc + ca, or reports that there are none." }
   ours:
-    - "**We wrote out a short proof that the list is complete, and ran the computation it needs.** It does not follow Weinberger’s paper. It uses a 2015 theorem of Lamzouri, Li and Soundararajan, which assumes exactly the hypothesis that the Lean library proves."
-    - "**A lemma.** Suppose n is convenient, and p is a prime that does not divide 2n and for which −n is a square modulo p. Then p² > n. (Such a p is represented by some form of discriminant −4n. Because every class has order 1 or 2, p² is then represented by x² + ny² with x and y sharing no factor, so y is not 0 and p² ≥ 1 + n.)"
-    - "**Step 1.** By their Theorem 1.4, for 4n ≥ 20,000 there is such a prime p with p ≤ 10⁹ or p ≤ (ln 4n + 9 + 2.5 (ln ln 4n)²)². The lemma then gives n < 10¹⁸ (the second case would force n below ten million)."
-    - "**Step 2.** Write −4n as a fundamental discriminant −q times a square f². If n is convenient, the field of discriminant −q also has one class per genus, so its class number is 2^(k−1), where k is the number of primes dividing q. Their Corollary 1.3 says the class number is at least 2,843 when q ≥ 10¹⁰ and grows faster than 2^(k−1) from there (we checked the comparison for every k). So q < 10¹⁰."
-    - "**Step 3, the computation.** We searched every negative discriminant down to −10¹⁰, using the lemma as a sieve and then an exact test on the survivors. Exactly 101 have one class per genus, the largest being −7,392 = −4 × 1,848. Of these, 65 are fundamental (the largest is −5,460) and 65 have the form −4n. Those 65 values of n are Euler’s list. The search took 28 seconds on three processors."
-    - "**Step 4.** That leaves n between 2.5 × 10⁹ and 10¹⁸. Then q is one of the 65 values from Step 3, and f is at most 1.2 × 10⁹. By the lemma, every prime below 50,000 that splits in the field of discriminant −q must divide f. For each of the 65 fields the product of such primes below 200 is already more than 10²¹. So there is no such n."
-    - "**What this is and is not.** It is our own write-up, checked by our own programs (which are in the paper’s source, folder c17_idoneal), with a second, independent count of the convenient numbers up to two million by Euler’s rule. It has not been reviewed by a number theorist. It depends on the Lean certification, on the 2015 paper, and on standard facts about quadratic forms."
+    - "**We wrote out a short proof that the list is complete, and ran the computation it needs.** It does not follow Weinberger’s paper. It uses one bound from a 2015 paper of Lamzouri, Li and Soundararajan, which assumes exactly the hypothesis that the Lean library proves. (Our first version, of 21 November, also used a second theorem of that paper. This version does not need it.)"
+    - "**Step 1, large fundamental discriminants.** Write −4n as a fundamental discriminant −q times a square f². If n is convenient, the field of discriminant −q also has one class per genus, so its class number is 2^(k−1), where k is the number of primes dividing q. Corollary 1.3 of the 2015 paper says the class number is at least 2,843 when q ≥ 10¹⁰, and more as q grows. That is over five times 2^(k−1) for every such q (we checked the comparison for every k). So q < 10¹⁰."
+    - "**Step 2, the computation.** We searched every negative discriminant down to −10¹⁰. A sieve throws most out (if every class has order 1 or 2, then any prime p that splits must have p² at least a quarter of the discriminant), and an exact test is run on the survivors. Exactly 101 discriminants have one class per genus, the largest being −7,392 = −4 × 1,848. Of these, 65 are fundamental (the largest is −5,460) and 65 have the form −4n. Those 65 values of n are Euler’s list. The search took 28 seconds on three processors."
+    - "**Step 3, large squares.** That leaves −4n = −q·f² with q one of the 65 values and f large. The class number of such a discriminant is given by a classical formula; it is at least 2^(k−1) × φ(f) / 3. With one class per genus it can be at most 2 × 2^(number of odd primes dividing n). Comparing the two forces φ(f) ≤ 12 × 2^(number of odd primes dividing f). Exactly 79 values of f satisfy that, the largest being 420. So n is at most 5,460 × 420² / 4, about 241 million, which is inside the range already searched."
+    - "**Re-checking the 2015 paper.** You asked us to look at its proofs. We read the proofs of its Theorem 1.5 and Corollary 1.3 (the bound we use) and of Theorem 1.4, in a text copy of the public version in which some formulas did not survive. What we could re-compute, we did: 19 checks, all passing. They include three of the paper’s lemmas tested against the actual primes up to three million (the error was never more than 35% of what the lemma allows); each numerical inequality in the two proofs that we could read; the final step that produces the bound; and the one step the authors did by computer."
+    - "**A test on real class numbers.** The bound says a class number cannot be too small. We looked for the discriminants between −10¹⁰ and −3.6 × 10¹⁰ most likely to have small class numbers (those in which the first 24 to 28 primes all fail to split), computed their class numbers exactly, and compared. The smallest was 2.09 times the bound. So the bound holds on the hardest cases we could find, and our Step 1 needs it only with a factor of five to spare."
+    - "**Two things we noticed in Theorem 1.4**, which we no longer use. A lemma is stated for m ≥ 3 and applied where m can be 2 (it remains true there). And the last line of the proof gives a slightly larger bound than the theorem states when the modulus is small; the theorem still holds, because it allows the alternative “p ≤ 10⁹” in exactly those cases. These are our readings of an imperfect copy and may be our mistake."
+    - "**What this is and is not.** It is our own write-up, checked by our own programs (in the paper’s source, folder c17_idoneal), with a second, independent count of the convenient numbers up to two million by Euler’s rule. We did not verify the 2015 paper’s proofs as a referee would: its lemmas about characters, and the formulas we could not read, are taken on trust, as are the Lean certification and the standard facts about quadratic forms. It has not been reviewed by a number theorist."
 chebyshevs-claim:
   one: "In Chebyshev’s weighted sense, primes of the form 4k + 3 outnumber primes of the form 4k + 1."
   story:
@@ -248,6 +249,9 @@ artins-conjecture:
     - "Gauss wondered how often that happens. Artin predicted the answer in 1927: a share of all primes equal to 0.3739558…, a number now called Artin’s constant, and the same for any base that is not a perfect power or −1. Nobody has proved that it happens infinitely often for any single base."
     - "Hooley’s 1967 proof counts the primes for which 10 fails to be a primitive root, and to control that count he needs the hypothesis for the zeta functions of fields made by adjoining roots of 10. Those fields are not of the cyclotomic kind, so the new proof does not reach them."
   viz: { id: "artin", cap: "The share of primes up to x for which the chosen base is a primitive root (green), against Artin’s constant 0.3739558… (gold). Choose the base." }
+  ours:
+    - "**What it would take.** We could not advance this one, and nobody can until the new proof is written out for people to read and is carried further. What we did was pin down the target. Hooley’s argument, in the form given by Cooke, Weinberger and Lenstra, needs the Riemann Hypothesis for the zeta functions of the fields made by adjoining roots of unity and roots of the base. That is a case of the extended hypothesis for number fields, the statement the proof’s author says he expects to reach. If that arrives, Artin’s conjecture is a theorem at once."
+    - "**Why the present proof cannot do it.** Dirichlet L-functions account for exactly the number fields built from roots of unity alone. Adjoining a root of 10 leaves that family."
 number-fields:
   one: "With the hypothesis for a number field’s zeta function, the first prime with a given behaviour in that field can be bounded."
   story:
@@ -255,24 +259,35 @@ number-fields:
     - "The effective version asks how soon each case must first appear. With the hypothesis for the field’s zeta function the answer is: within a multiple of the square of the logarithm of the field’s discriminant. Without it, the proved bounds are enormous."
     - "A great many conditional results in algebra and computing reduce to this one statement, which is why extending the proof to number fields matters most."
   viz: { id: "split", cap: "The polynomial x³ − 2 modulo each prime up to x: the share of primes for which it has no root, one root, or three roots, against Chebotarev’s 1/3, 1/2 and 1/6 (gold lines)." }
+  ours:
+    - "**The key to the hard part of the list.** We went through the eight entries marked Hard and checked, from the papers or their summaries, what each one assumes. Six would follow at once from this single statement, the Riemann Hypothesis for the zeta function of every number field: Artin’s conjecture, class groups by computer, Euclidean rings, isogeny graphs, shapes and equations, and this entry itself. Elliptic curves would be half settled. Ramanujan’s form would not."
+    - "**Why six follow.** Some of those results assume the hypothesis for L-functions of characters of class groups. Each such L-function is a factor of the zeta function of a larger number field, so nothing beyond number fields is needed. We could not advance the statement itself."
 class-groups-by-computer:
   one: "Computer algebra systems compute class groups quickly by trusting a bound that assumes the hypothesis."
   story:
     - "To find the class group of a number field, a program collects relations among prime ideals. It has to know when it has looked at enough primes. The bound that is certain, Minkowski’s, grows like the square root of the discriminant and is hopeless for large fields."
     - "Bach’s bound grows only like the square of the logarithm. It is the reason these computations finish in seconds, and the reason their output carries a warning that it assumes the hypothesis. A separate, slower step can certify small cases."
   viz: { id: "none", cap: "" }
+  ours:
+    - "**What it would take.** We could not advance this one, and nobody can until the new proof is written out for people to read and is carried further. We confirmed what the bound assumes: the Riemann Hypothesis for the L-functions of the characters of the field’s class group. Each of those is a factor of the zeta function of the field’s Hilbert class field, so the extended hypothesis for number fields would be enough."
+    - "**Why the present proof cannot do it,** even for quadratic fields: the Hilbert class field of a quadratic field is usually not built from roots of unity, so its zeta function is not a product of Dirichlet L-functions."
 euclidean-rings:
   one: "Under the hypothesis for number fields, a ring of integers with infinitely many units has a Euclidean algorithm whenever it has unique factorization."
   story:
     - "Euclid’s algorithm finds the greatest common divisor of two whole numbers by repeated division with remainder. It works because the remainder is always smaller than the divisor. The same idea works in some larger number systems, such as the Gaussian integers a + bi, and wherever it works factorization is unique."
     - "The converse is false in general: the numbers built from √−19 have unique factorization and no Euclidean algorithm. Weinberger showed that such examples are confined to a few imaginary quadratic fields, if the hypothesis holds. In every other case with unique factorization some notion of “smaller” makes division with remainder work."
   viz: { id: "none", cap: "" }
+  ours:
+    - "**What it would take.** We could not advance this one, and nobody can until the new proof is written out for people to read and is carried further. The hypothesis needed is for the zeta functions of fields made by adjoining roots of unity and roots of units. That is a case of the extended hypothesis for number fields."
 ramanujans-ternary-form:
   one: "The odd numbers that x² + y² + 10z² cannot make are exactly eighteen, if the hypothesis holds for two families of L-function."
   story:
     - "Every positive whole number is a sum of four squares. Three squares miss some numbers, by a simple rule. Ramanujan looked at the form x² + y² + 10z² in 1916, found that the even numbers it misses follow a simple rule too, and wrote that the odd numbers it misses “do not seem to obey any simple law”."
     - "They are 3, 7, 21, 31, 33, 43, 67, 79, 87, 133, 217, 219, 223, 253, 307, 391, and then, after a long silence, 679 and 2,719. Is that all? Ono and Soundararajan showed it is, assuming the hypothesis for Dirichlet L-functions and for the L-functions of a family of elliptic curves."
   viz: { id: "ternary", cap: "Every odd number up to 3,000, coloured by whether x² + y² + 10z² can make it. The eighteen red squares are the exceptions; the page finds them afresh each time." }
+  ours:
+    - "**A direct search.** We tested every odd number up to two billion. The form misses exactly the eighteen on the list and no others. The search took 25 seconds; the program is in the paper’s source (folder c18_hard). Others had checked further before us, and no search can settle the question, since it is about all numbers."
+    - "**What it would take.** Ono and Soundararajan assume the hypothesis for two families: the Dirichlet L-functions of real characters, which is now proved, and the L-functions of the elliptic curves in one family of twists. The second is the harder kind. An elliptic curve’s L-function is not a factor of any number field’s zeta function, so even the extended hypothesis would leave this open. Of the eight hard entries, this is the one furthest from the present proof."
 elliptic-curves:
   one: "Several theorems about elliptic curves hold only if the hypothesis is true for the curve’s own L-function."
   story:
@@ -280,18 +295,24 @@ elliptic-curves:
     - "This L-function is of a different family from Dirichlet’s, and the hypothesis for it is not proved. Results that wait on it include bounds on how many independent rational points a curve can have, and sharp counts of how the misses are distributed."
     - "How the misses are distributed on average is known: it is a semicircle, the Sato–Tate law, proved between 2008 and 2011 by other means."
   viz: { id: "satotate", cap: "For the curve y² = x³ + x + 1 and each prime up to 4,000: the miss a_p divided by 2√p (green bars), against the semicircle of Sato and Tate (gold)." }
+  ours:
+    - "**What it would take.** We could not advance this one, and nobody can until the new proof is written out for people to read and is carried further. This entry is really two. The results that count primes with a given behaviour in the fields a curve generates need only number fields, so the extended hypothesis would settle them. The results that bound ranks use the zeros of the curve’s own L-function, which is of a different kind."
 isogeny-graphs:
   one: "Random walks between related elliptic curves mix quickly, if the hypothesis holds for L-functions attached to imaginary quadratic fields."
   story:
     - "Elliptic curves over a finite field can be linked by maps called isogenies. Draw each curve as a dot and each isogeny as a line and you get a graph. Some newer cryptographic schemes, designed to resist quantum computers, hide their secrets as paths in such graphs."
     - "For that to be safe a random walk on the graph must lose all memory of where it started within a few steps. Jao, Miller and Venkatesan proved that it does, assuming the generalized hypothesis."
   viz: { id: "none", cap: "" }
+  ours:
+    - "**What it would take.** We could not advance this one, and nobody can until the new proof is written out for people to read and is carried further. The summary of the paper says its graphs come from ray class groups. The L-functions of their characters are factors of zeta functions of number fields, so, as far as we can tell without the full text, the extended hypothesis would be enough."
 shapes-and-equations:
   one: "Under the hypothesis for number fields there are short randomized proofs that a system of polynomial equations has a solution."
   story:
     - "Does a system of polynomial equations in several unknowns have a solution in complex numbers? Hilbert’s Nullstellensatz of 1893 answers in principle. Koiran showed that, under the generalized hypothesis, a “yes” can be checked quickly: if there is a solution, then the system also has solutions modulo many small primes, and one can test a few at random."
     - "Questions about three-dimensional shapes can be turned into such systems. That is how the hypothesis reached the problem of recognizing a knot or a sphere."
   viz: { id: "knot", cap: "A knot is one of the three-dimensional objects these methods apply to. Choose a knot to draw." }
+  ours:
+    - "**What it would take.** We could not advance this one, and nobody can until the new proof is written out for people to read and is carried further. The hypothesis enters through the effective Chebotarev theorem for a number field, so the extended hypothesis would settle these results. Baldwin and Sivek’s preprint notes that a much weaker statement about the zeros would do."
 grand-hypothesis:
   one: "Every L-function that arises from arithmetic is expected to have its zeros on the line. Two families are now proved."
   story:
