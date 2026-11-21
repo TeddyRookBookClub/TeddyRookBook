@@ -1,0 +1,438 @@
+# "After the Riemann Hypothesis" (/connections/rhythm-of-numbers/riemann-hypothesis/, layouts/connections/rhythm-rh.html).
+# One entry per result that assumed the Riemann Hypothesis (RH) or a generalized form of it.
+#
+# What the Lean archive of 2026-11-20 proves (certified by the Lean and Mathlib communities on 2026-11-21):
+#   RH for the Riemann zeta function, and the same statement for every Dirichlet L-function.
+# It does NOT cover Dedekind zeta functions of number fields in general, Hecke, Artin or elliptic-curve L-functions.
+#
+# Fields: t title; needs = zeta | dirichlet | wider | extra | none (which hypothesis the result uses);
+#   was = what was known or assumed before; now = what the proof says about it; left = the work that remains;
+#   d = our rough difficulty of that remaining work, 0 (done) to 5 (see `levels`); src = the papers behind the entry.
+# Keep every statement as its source states it. Where we are not sure which form of the hypothesis a paper needs,
+# the text says so. Difficulty is our own estimate, not a published rating.
+levels:
+  - { lv: 0, name: "Done", text: "Nothing left to prove. The statement is now simply true." }
+  - { lv: 1, name: "Easy", text: "Bookkeeping: re-read the old proof, confirm which form of the hypothesis it used, and restate the result without the “if”." }
+  - { lv: 2, name: "Moderate", text: "A paper’s worth: new computing or new explicit constants are needed, with known methods." }
+  - { lv: 3, name: "Hard", text: "The new proof has to be carried to more kinds of L-function. Its author expects part of this to work; nobody has done it." }
+  - { lv: 4, name: "Very hard", text: "The Riemann Hypothesis is not enough. A new idea about the zeros or the primes is needed, and no one knows how to get it." }
+  - { lv: 5, name: "Famous open problem", text: "Untouched. The Riemann Hypothesis was never known to imply it." }
+groups:
+  - id: zeta
+    status: "Now a theorem"
+    h: "Now theorems: results that needed only the Riemann Hypothesis itself"
+    intro: "Each of these was proved long ago in the form “if the Riemann Hypothesis is true, then …”. With the hypothesis certified, the “if” falls away."
+    items:
+      - t: "How well li(x) counts the primes"
+        area: "Counting primes"
+        needs: zeta
+        was: "The prime number theorem (1896) says the number of primes up to x, written π(x), is close to the logarithmic integral li(x). How close was the question. Helge von Koch showed in 1901 that the Riemann Hypothesis is the same statement as “the error is at most about √x · ln x”. Lowell Schoenfeld made it exact in 1976: if the hypothesis holds, the error is less than √x · ln x / (8π) for every x ≥ 2,657."
+        now: "Schoenfeld’s inequality is a theorem. For a number near 10²⁰ it pins π(x) down to about one part in 10¹⁰. Before, the best proved error was far weaker than any power saving."
+        left: "The bound is close to the truth but not exact: Littlewood proved in 1914 that the error is sometimes almost as large as √x. Its true size is still unknown."
+        d: 4
+        src: "H. von Koch (1901); L. Schoenfeld, Math. Comp. 30 (1976)."
+      - t: "The gap from one prime to the next"
+        area: "Counting primes"
+        needs: zeta
+        was: "Harald Cramér showed in 1920 that the Riemann Hypothesis keeps every gap between consecutive primes below about √p · ln p. In 2019 Carneiro, Milinovich and Soundararajan gave the constant: for every prime p > 3 the next prime comes within (22/25) · √p · ln p."
+        now: "A theorem. Before, the best proved gap was about p raised to the power 0.525 (Baker, Harman and Pintz, 2001), and only for large p."
+        left: "Legendre’s conjecture, a prime between every two consecutive squares, needs gaps a little under 2√p, just beyond this. Cramér’s own guess, gaps of about (ln p)², is far beyond it."
+        d: 5
+        src: "H. Cramér (1920); E. Carneiro, M. Milinovich, K. Soundararajan, Comment. Math. Helv. 94 (2019)."
+      - t: "A prime between every two consecutive cubes, and Mills’ constant"
+        area: "Counting primes"
+        needs: zeta
+        was: "Mills showed in 1947 that some number A makes the whole part of A^(3ⁿ) a prime for every n. The smallest such A, about 1.3063778838, was computed by Caldwell and Cheng in 2005 on the assumption that the Riemann Hypothesis holds, because that guarantees a prime between any two consecutive cubes."
+        now: "The gap bound above is a theorem, so there is a prime between n³ and (n+1)³ for every n, and the computed digits of Mills’ constant stand without an “if”."
+        left: "Nobody knows whether Mills’ constant is a rational number."
+        d: 4
+        src: "W. H. Mills (1947); C. Caldwell, Y. Cheng, J. Integer Seq. 8 (2005)."
+      - t: "Robin’s inequality: how large the sum of divisors can be"
+        area: "Equivalent statements"
+        needs: zeta
+        was: "Write σ(n) for the sum of the divisors of n. Guy Robin proved in 1984 that the Riemann Hypothesis is the same statement as: σ(n) < e^γ · n · ln ln n for every n > 5,040, where γ = 0.5772… is Euler’s constant. Jeffrey Lagarias gave a version in 2002 with no exceptions: σ(n) ≤ Hₙ + e^(Hₙ) · ln Hₙ for every n, where Hₙ = 1 + 1/2 + … + 1/n."
+        now: "Both inequalities are theorems. They can be checked by hand for small n, and 5,040 = 7! is the last number that breaks Robin’s."
+        left: "Nothing. A direct proof from first principles, not through the zeros, would still be news, since it would be a second proof of the hypothesis."
+        d: 0
+        src: "G. Robin, J. Math. Pures Appl. 63 (1984); J. Lagarias, Amer. Math. Monthly 109 (2002)."
+      - t: "The other equivalent forms"
+        area: "Equivalent statements"
+        needs: zeta
+        was: "Over a century mathematicians found many statements that are true exactly when the Riemann Hypothesis is. Kevin Broughan’s two volumes of 2017 collect them. Among them: the Mertens function (the running total of the Möbius function) stays below x^(1/2+ε) (Littlewood, 1912); the criteria of Riesz, of Nyman and Beurling, of Li and of Weil; Speiser’s statement about the derivative of zeta; a growth bound on the determinant of Redheffer’s matrix; and the statement that every Jensen polynomial of the zeta function has only real roots."
+        now: "All of them are true."
+        left: "Nothing new follows from each one separately; they are the same fact in different clothes. For the Mertens function, the true size is still unknown."
+        d: 0
+        src: "K. Broughan, Equivalents of the Riemann Hypothesis, 2 vols. (Cambridge, 2017)."
+      - t: "Farey fractions are spread as evenly as they can be"
+        area: "Equivalent statements"
+        needs: zeta
+        was: "List every fraction between 0 and 1 with bottom number at most N, in order: the Farey sequence. Franel and Landau showed in 1924 that the Riemann Hypothesis is the same as saying these fractions stay within a small, exactly stated distance of perfectly even spacing."
+        now: "A theorem. These are the fractions that this site’s continued fractions walk through, and the evenness is of the same family as the 6/π² that counts coprime pairs."
+        left: "Nothing."
+        d: 0
+        src: "J. Franel; E. Landau, Göttinger Nachrichten (1924)."
+        link: { url: "connections/rhythm-of-numbers/#ch3", label: "Where pi is made of primes" }
+      - t: "The longest cycle a shuffle can have"
+        area: "Equivalent statements"
+        needs: zeta
+        was: "Landau’s function g(n) is the largest order of a permutation of n things: the longest time before n beats, split into loops, all line up again. Massias, Nicolas and Robin showed in 1988 that the Riemann Hypothesis is the same as a certain upper bound on g(n) for all large n."
+        now: "A theorem."
+        left: "Nothing."
+        d: 0
+        src: "J.-P. Massias, J.-L. Nicolas, G. Robin, Acta Arith. 50 (1988)."
+      - t: "The de Bruijn–Newman constant is exactly zero"
+        area: "Equivalent statements"
+        needs: zeta
+        was: "Deform the zeta function by “heating” it for a time t. There is a number Λ such that the zeros are all on the line exactly when t ≥ Λ. The Riemann Hypothesis is the statement Λ ≤ 0. Newman guessed in 1976 that Λ ≥ 0, which Brad Rodgers and Terence Tao proved in 2018."
+        now: "Λ = 0. In Newman’s words, the hypothesis is true but only barely: any cooling at all pushes zeros off the line."
+        left: "Nothing."
+        d: 0
+        src: "C. Newman (1976); B. Rodgers, T. Tao, Forum Math. Pi 8 (2020)."
+      - t: "The Lindelöf hypothesis"
+        area: "The zeta function"
+        needs: zeta
+        was: "Lindelöf guessed in 1908 that the zeta function grows more slowly than any power of t along the critical line. The Riemann Hypothesis implies it, and gives a sharper bound still (Littlewood)."
+        now: "A theorem. The best bound proved without the hypothesis was about t raised to the power 0.155 (Bourgain, 2017)."
+        left: "How large the zeta function really gets on the line. There are two competing guesses."
+        d: 4
+        src: "E. Lindelöf (1908); J. E. Littlewood (1924); J. Bourgain, J. Amer. Math. Soc. 30 (2017)."
+      - t: "Every zero is on the line"
+        area: "The zeta function"
+        needs: zeta
+        was: "Hardy proved in 1914 that infinitely many zeros are on the critical line. The share proved to be on it rose slowly, to a little over 5/12 (Pratt, Robles, Zaharescu and Zeindler, 2020). By computer, Platt and Trudgian had checked every zero up to height 3 × 10¹² (2021)."
+        now: "The share is 100%."
+        left: "Whether every zero is simple (counted once). With the hypothesis, at least 19/27 of them are (Bui and Heath-Brown, 2013); that figure is now a theorem too. All of them is a separate conjecture."
+        d: 4
+        src: "K. Pratt, N. Robles, A. Zaharescu, D. Zeindler, Res. Math. Sci. 7 (2020); D. Platt, T. Trudgian, Bull. London Math. Soc. 53 (2021); H. Bui, D. R. Heath-Brown, Bull. London Math. Soc. 45 (2013)."
+      - t: "The average size of zeta on the line (its moments)"
+        area: "The zeta function"
+        needs: zeta
+        was: "The average of |ζ(½ + it)| raised to the power 2k is known exactly only for k = 1 and 2. Assuming the hypothesis, Soundararajan (2009) and Harper (2013) proved the upper bound of the right order, T · (ln T)^(k²), for every k."
+        now: "Their bounds are theorems."
+        left: "The exact constants, predicted from random matrices by Keating and Snaith in 2000."
+        d: 4
+        src: "K. Soundararajan, Ann. of Math. 170 (2009); A. Harper, preprint (2013)."
+      - t: "How the zeros space themselves"
+        area: "The zeta function"
+        needs: zeta
+        was: "Hugh Montgomery showed in 1973, assuming the hypothesis, that pairs of zeros avoid each other in a limited range, in the pattern Freeman Dyson recognized from the energy levels of heavy nuclei."
+        now: "Montgomery’s theorem holds without the “if”."
+        left: "The full pattern, that the zeros are spaced like the eigenvalues of large random matrices, is still a conjecture. Our own pages measure it; they do not prove it."
+        d: 4
+        src: "H. Montgomery, Proc. Sympos. Pure Math. 24 (1973)."
+        link: { url: "connections/rhythm-of-numbers/#zeros", label: "The zeros on the Rhythm of Numbers page" }
+      - t: "Counting square-free numbers"
+        area: "Counting primes"
+        needs: zeta
+        was: "The share of whole numbers with no repeated prime factor is 6/π². The error in that count up to x was proved to be a little under √x. Assuming the hypothesis it comes down to about x^(11/35) (Liu, 2016, after Jia’s x^(17/54) in 1993)."
+        now: "Liu’s bound is a theorem."
+        left: "The expected truth is about x^(1/4)."
+        d: 4
+        src: "C. Jia, Sci. China Ser. A 36 (1993); H.-Q. Liu, J. Number Theory 159 (2016)."
+      - t: "An inequality from Ramanujan’s notebooks"
+        area: "Counting primes"
+        needs: zeta
+        was: "Ramanujan wrote that π(x)² < (e·x / ln x) · π(x/e) for all large x. Dudek and Platt showed in 2015 that, if the hypothesis holds, the last whole number that breaks it is 38,358,837,682."
+        now: "A theorem: the inequality holds for every x beyond that number."
+        left: "Nothing."
+        d: 0
+        src: "A. Dudek, D. Platt, Exp. Math. 24 (2015)."
+  - id: dirichlet
+    status: "Now a theorem"
+    h: "Now theorems: results that needed the hypothesis for Dirichlet L-functions"
+    intro: "A Dirichlet L-function is the zeta function’s cousin for primes sorted by their remainders, such as primes that leave remainder 1 when divided by 4. The Lean library proves the hypothesis for every one of them, and that theorem passed the same independent checkers as the main one (the communities’ joint statement names only the main one). So the results that needed exactly this are now theorems as well."
+    items:
+      - t: "Primes with a given remainder are counted as accurately as primes"
+        area: "Primes in progressions"
+        needs: dirichlet
+        was: "Primes that leave remainder a when divided by q are shared out equally among the allowed remainders. Without the hypothesis this was proved with a useful error only when q is tiny compared with x. With it, the error is about √x · ln x for every q."
+        now: "A theorem, for every q at once."
+        left: "The Elliott–Halberstam conjecture asks for good counts, on average, for q well beyond √x. That is stronger than the hypothesis."
+        d: 5
+        src: "H. Davenport, Multiplicative Number Theory (3rd ed., 2000), ch. 20."
+      - t: "The first prime in a progression"
+        area: "Primes in progressions"
+        needs: dirichlet
+        was: "How far must one go to find a prime that leaves remainder a when divided by q? Linnik proved in 1944 that a fixed power of q is enough; the best proved power is about 5 (Xylouris, 2011). Assuming the hypothesis, Lamzouri, Li and Soundararajan showed in 2015 that there is one below (φ(q) · ln q)² for every q > 3."
+        now: "Their bound is a theorem: roughly q², not q⁵."
+        left: "The expected truth is not much more than q itself."
+        d: 4
+        src: "T. Xylouris, Acta Arith. 150 (2011); Y. Lamzouri, X. Li, K. Soundararajan, Math. Comp. 84 (2015)."
+      - t: "Miller’s test: a primality test with no luck in it"
+        area: "Algorithms"
+        needs: dirichlet
+        was: "Gary Miller showed in 1976 that, if the hypothesis holds for Dirichlet L-functions, a number n is prime exactly when it passes a short test for every base up to a limit. Eric Bach made the limit exact in 1990: every base up to 2 · (ln n)²."
+        now: "A theorem. Miller’s test is a proof of primality, not a test that is right with high probability."
+        left: "In practice little changes. A test that needs no hypothesis has existed since 2002 (Agrawal, Kayal and Saxena), and for big numbers other methods are faster. For the 13,017-digit prime on our own pages Miller’s test would need about 1.8 billion bases, centuries of computing on one processor; the certificate that proved it took five and a half days."
+        d: 0
+        src: "G. Miller, J. Comput. System Sci. 13 (1976); E. Bach, Math. Comp. 55 (1990)."
+        link: { url: "connections/rhythm-of-numbers/new-prime/#proof", label: "The proof of our 13,017-digit prime" }
+      - t: "The smallest number that is not a square modulo p"
+        area: "Algorithms"
+        needs: dirichlet
+        was: "Half of the numbers below a prime p are squares modulo p. How far up is the first one that is not? Vinogradov guessed it is tiny. Ankeny showed in 1952 that the hypothesis puts it below a multiple of (ln p)², and Lamzouri, Li and Soundararajan (2015) that it is below (ln p)² for every prime p ≥ 5."
+        now: "A theorem, and Vinogradov’s conjecture with it. Without the hypothesis the best bound was a power of p (Burgess, 1957)."
+        left: "A by-product: square roots modulo a prime can now be found by a method that is proved fast with no random choices. The expected truth is nearer ln p than (ln p)²."
+        d: 4
+        src: "N. Ankeny, Ann. of Math. 55 (1952); Lamzouri, Li, Soundararajan (2015)."
+      - t: "The smallest primitive root"
+        area: "Algorithms"
+        needs: dirichlet
+        was: "A primitive root of p is a number whose powers run through every remainder before repeating. Victor Shoup showed in 1992 that under the hypothesis the smallest one is below a multiple of (ln p)⁶."
+        now: "A theorem."
+        left: "Nothing here. Whether a fixed number such as 10 is a primitive root for infinitely many primes is Artin’s conjecture, which needs more: see below."
+        d: 0
+        src: "V. Shoup, Math. Comp. 58 (1992)."
+      - t: "Sums of characters"
+        area: "Primes in progressions"
+        needs: dirichlet
+        was: "A character sum adds up +1s and −1s (or other roots of unity) that record remainders. Pólya and Vinogradov bounded it by √q · ln q in 1918. Montgomery and Vaughan showed in 1977 that the hypothesis improves this to √q · ln ln q."
+        now: "A theorem, and it cannot be improved further: Paley showed in 1932 that sums this large occur."
+        left: "Nothing."
+        d: 0
+        src: "H. Montgomery, R. Vaughan, Invent. Math. 43 (1977)."
+      - t: "No Siegel zeros, and class numbers you can compute"
+        area: "Quadratic fields"
+        needs: dirichlet
+        was: "A Siegel zero would be a zero of a Dirichlet L-function very close to 1. Nobody could rule one out, and that one gap made many theorems “ineffective”: true beyond some point that could not be named. The class number of an imaginary quadratic field, which measures how badly unique factorization fails there, was the standard example."
+        now: "There are no Siegel zeros. Littlewood’s bounds of 1928 are theorems: the class number of the field of discriminant −d lies within a factor of about ln ln d of √d, with constants that can be written down."
+        left: "Turning the old ineffective theorems into explicit ones and redoing the tables. Each is a known kind of job."
+        d: 2
+        src: "J. E. Littlewood, Proc. London Math. Soc. 27 (1928)."
+      - t: "Euler’s convenient numbers: the list of 65 is complete"
+        area: "Quadratic fields"
+        needs: dirichlet
+        was: "Euler found 65 “convenient” (idoneal) numbers n, from 1 to 1,848, for which a simple test with x² + n·y² proves a number prime. No more were ever found. Peter Weinberger proved in 1973 that at most two more could exist, and none if the generalized hypothesis holds."
+        now: "As Weinberger’s result is usually stated, it uses the hypothesis for Dirichlet L-functions, so Euler’s list should now be complete: a question open since the 1700s."
+        left: "Re-read the 1973 proof against the statement that was certified."
+        d: 1
+        src: "P. Weinberger, Acta Arith. 22 (1973)."
+      - t: "Chebyshev’s claim about primes of the form 4k + 3"
+        area: "Primes in progressions"
+        needs: dirichlet
+        was: "Chebyshev wrote in 1853 that primes leaving remainder 3 when divided by 4 outnumber those leaving remainder 1, in a precise weighted sense. Hardy and Littlewood, and Landau, showed around 1917 that his claim is true exactly when the hypothesis holds for one particular Dirichlet L-function."
+        now: "Chebyshev’s claim is true."
+        left: "How often the plain count of 4k + 3 primes is ahead is a different question, in the next table."
+        d: 0
+        src: "G. H. Hardy, J. E. Littlewood, Acta Math. 41 (1917)."
+      - t: "Goldbach: how many even numbers could fail"
+        area: "Sums of primes"
+        needs: dirichlet
+        was: "Goldbach’s conjecture says every even number from 4 on is a sum of two primes. Hardy and Littlewood showed in 1924 that under the hypothesis the even numbers up to x that fail number at most about √x (Goldston sharpened the bound in 1992). Without it the best bound was about x^0.72 (Pintz)."
+        now: "The √x bound is a theorem."
+        left: "The conjecture itself, that none fail."
+        d: 5
+        src: "G. H. Hardy, J. E. Littlewood, Proc. London Math. Soc. 22 (1924); D. Goldston (1992)."
+      - t: "Two primes and a few powers of 2"
+        area: "Sums of primes"
+        needs: dirichlet
+        was: "Linnik proved that every large even number is two primes plus a bounded number of powers of 2. The number needed was 8 without the hypothesis and 7 with it (Heath-Brown and Puchta, 2002; Pintz and Ruzsa, 2003)."
+        now: "Seven is a theorem."
+        left: "Zero powers of 2 would be Goldbach’s conjecture."
+        d: 5
+        src: "D. R. Heath-Brown, J.-C. Puchta, Asian J. Math. 6 (2002); J. Pintz, I. Ruzsa, Acta Arith. 109 (2003)."
+      - t: "The hypothesis for cyclotomic and other abelian number fields"
+        area: "Number fields"
+        needs: dirichlet
+        was: "Every number field has its own zeta function. For fields built from roots of unity and their subfields (the abelian fields, which include all quadratic fields), that zeta function is a product of Dirichlet L-functions."
+        now: "So the hypothesis holds for every abelian field, though not yet for number fields in general. Class numbers of real cyclotomic fields that were computed “assuming the hypothesis” (van der Linden, 1982, and later work) should now stand without it."
+        left: "Re-check each such table against the certified statement."
+        d: 1
+        src: "F. van der Linden, Math. Comp. 39 (1982)."
+      - t: "How often an L-function is zero at its centre"
+        area: "Primes in progressions"
+        needs: dirichlet
+        was: "Chowla guessed that no Dirichlet L-function vanishes at the centre point s = ½. For the quadratic ones, Özlük and Snyder showed in 1999 that the hypothesis forces at least 15/16 of them to be non-zero there; without it the proved share was 7/8 (Soundararajan, 2000)."
+        now: "15/16 is a theorem."
+        left: "All of them. The hypothesis says the zeros are on the line; it does not say where on the line."
+        d: 4
+        src: "A. Özlük, C. Snyder, Acta Arith. 91 (1999); K. Soundararajan, Ann. of Math. 152 (2000)."
+  - id: moot
+    status: "Already proved another way"
+    h: "Results that once leaned on the hypothesis and were later proved without it"
+    intro: "These needed nothing from the new proof. They show how the hypothesis has worked for a century: first as a crutch, then as a guide to what to prove another way."
+    items:
+      - t: "Every odd number from 7 on is a sum of three primes"
+        area: "Sums of primes"
+        needs: none
+        was: "Hardy and Littlewood proved it for large odd numbers in 1923, assuming the generalized hypothesis. Vinogradov removed the assumption in 1937. Deshouillers, Effinger, te Riele and Zinoviev proved it for every odd number in 1997, again assuming the hypothesis, and Harald Helfgott proved it outright in 2013."
+        now: "Already a theorem. The new proof gives a second route to it."
+        left: "Nothing."
+        d: 0
+        src: "H. Helfgott, preprint (2013)."
+      - t: "Testing for primes in polynomial time"
+        area: "Algorithms"
+        needs: none
+        was: "From 1976 the only fast test proved correct in every case was Miller’s, which assumed the hypothesis. In 2002 Agrawal, Kayal and Saxena found one that assumes nothing."
+        now: "Already a theorem."
+        left: "Nothing."
+        d: 0
+        src: "M. Agrawal, N. Kayal, N. Saxena, Ann. of Math. 160 (2004)."
+      - t: "Gauss’s class-number problem, proved from both sides"
+        area: "Quadratic fields"
+        needs: none
+        was: "Gauss guessed that the class numbers of imaginary quadratic fields grow without limit. Hecke proved it in 1918 if the generalized hypothesis is true. Deuring and Heilbronn proved it in 1933 and 1934 if the hypothesis is false. So it was true either way, a famous oddity."
+        now: "We now know which half of that argument described the real world: Hecke’s."
+        left: "Nothing."
+        d: 0
+        src: "H. Heilbronn, Quart. J. Math. 5 (1934)."
+      - t: "Skewes’ number"
+        area: "Counting primes"
+        needs: none
+        was: "li(x) is larger than π(x) for every x anyone has computed, yet Littlewood proved in 1914 that the order reverses somewhere. Stanley Skewes showed in 1933, assuming the hypothesis, that it happens before 10^(10^(10^34)), and in 1955 without it. The place is now known to be near 1.4 × 10³¹⁶."
+        now: "Already settled without the hypothesis."
+        left: "The exact first crossing is still not known."
+        d: 2
+        src: "S. Skewes (1933, 1955); C. Bays, R. Hudson, Math. Comp. 69 (2000)."
+      - t: "Recognizing the unknot"
+        area: "Algorithms"
+        needs: none
+        was: "Is a tangled loop of string really knotted? Greg Kuperberg showed in 2011 that, assuming the generalized hypothesis, a knotted loop always has a short certificate that it is knotted. Marc Lackenby later proved the same with no hypothesis."
+        now: "Already a theorem."
+        left: "The same question for recognizing the three-dimensional sphere used a hypothesis about number fields, which the new proof does not cover: see the next table."
+        d: 0
+        src: "G. Kuperberg, Adv. Math. 256 (2014); M. Lackenby, Adv. Math. 387 (2021)."
+  - id: wider
+    status: "Still “if”"
+    h: "Still “if”: results that need the hypothesis for more kinds of L-function"
+    intro: "The Lean library covers the zeta function and Dirichlet L-functions. Many famous conditional theorems need the same statement for other families: the zeta functions of number fields in general (the “extended” hypothesis), or the L-functions of elliptic curves and modular forms. These are not proved. The proof’s author writes that he expects the extended hypothesis to follow with more time."
+    items:
+      - t: "Artin’s conjecture on primitive roots"
+        area: "Number fields"
+        needs: wider
+        was: "The decimal of 1/7 repeats after 6 digits, the longest a seventh can manage. Emil Artin guessed in 1927 that 10 does this for about 37.4% of all primes, and likewise for any base that is not a square or −1. Christopher Hooley proved it in 1967, assuming the hypothesis for the zeta functions of a family of number fields."
+        now: "Not settled. Those fields are not abelian, so their zeta functions are not products of Dirichlet L-functions."
+        left: "Extend the proof to number fields. Without any hypothesis, Heath-Brown proved in 1986 that the conjecture can fail for at most two prime bases, so it holds for at least one of 2, 3 and 5, though no one can say which."
+        d: 3
+        src: "C. Hooley, J. Reine Angew. Math. 225 (1967); D. R. Heath-Brown, Quart. J. Math. 37 (1986)."
+      - t: "The extended hypothesis for all number fields, and counting primes in them"
+        area: "Number fields"
+        needs: wider
+        was: "With the hypothesis for a number field’s zeta function, one can say how soon a prime with a given behaviour in that field must appear (Lagarias and Odlyzko, 1977; Bach and Sorenson, 1996). A long list of results rests on this “effective Chebotarev theorem”."
+        now: "Proved only for abelian fields, where it is the statement about primes in progressions above."
+        left: "Extend the proof. This one step would settle most of this table."
+        d: 3
+        src: "J. Lagarias, A. Odlyzko (1977); E. Bach, J. Sorenson, Math. Comp. 65 (1996)."
+      - t: "Class groups by computer"
+        area: "Algorithms"
+        needs: wider
+        was: "Computer algebra systems find the class group and units of a number field by trusting Bach’s bound of 1990: under the hypothesis, the prime ideals of norm up to 12 · (ln |Δ|)² are enough. Their manuals say the answer is correct “assuming GRH”."
+        now: "Still conditional in general. As far as we can tell the bound needs the hypothesis for L-functions of the field itself, not only Dirichlet’s, even for quadratic fields."
+        left: "Extend the proof; then the caveat can be deleted from the manuals."
+        d: 3
+        src: "E. Bach, Math. Comp. 55 (1990)."
+      - t: "Which rings of numbers have a Euclidean algorithm"
+        area: "Number fields"
+        needs: wider
+        was: "Weinberger proved in 1973, assuming the hypothesis for number fields, that a ring of integers with infinitely many units has a Euclidean algorithm as soon as it has unique factorization."
+        now: "Not settled."
+        left: "Extend the proof. Single cases have been proved without it, such as the numbers a + b√14 (Harper, 2004)."
+        d: 3
+        src: "P. Weinberger, Proc. Sympos. Pure Math. 24 (1973); M. Harper, Canad. J. Math. 56 (2004)."
+      - t: "Ramanujan’s form x² + y² + 10z²"
+        area: "Sums of squares"
+        needs: wider
+        was: "Ramanujan asked in 1916 which odd numbers this form misses. Ken Ono and Kannan Soundararajan proved in 1997 that they are exactly 3, 7, 21, 31, 33, 43, 67, 79, 87, 133, 217, 219, 223, 253, 307, 391, 679 and 2,719, assuming the hypothesis for Dirichlet L-functions and for the L-functions of certain modular forms."
+        now: "Half of what they assumed is proved. The modular-form half is not."
+        left: "Extend the proof to L-functions of degree 2."
+        d: 3
+        src: "K. Ono, K. Soundararajan, Invent. Math. 130 (1997)."
+      - t: "Elliptic curves"
+        area: "Elliptic curves"
+        needs: wider
+        was: "Several results about elliptic curves assume the hypothesis for the curve’s own L-function or for the number fields the curve generates: Serre’s 1976 theorem on how often the points modulo p form a single cycle, bounds on the rank from the “explicit formula”, and sharp forms of the Lang–Trotter and Sato–Tate counts."
+        now: "Not settled."
+        left: "Extend the proof to L-functions of degree 2 and to non-abelian number fields."
+        d: 3
+        src: "J.-P. Serre (1976, 1981)."
+      - t: "Isogeny graphs in cryptography"
+        area: "Algorithms"
+        needs: wider
+        was: "Jao, Miller and Venkatesan showed in 2009, assuming the generalized hypothesis, that random walks between elliptic curves mix quickly. Security arguments for some newer cryptographic schemes cite it."
+        now: "Not settled; as we read it, the result needs the hypothesis for L-functions attached to imaginary quadratic fields, beyond Dirichlet’s."
+        left: "Extend the proof. Nothing here makes any system easier to break."
+        d: 3
+        src: "D. Jao, S. Miller, R. Venkatesan, J. Number Theory 129 (2009)."
+      - t: "Three-dimensional shapes and systems of equations"
+        area: "Algorithms"
+        needs: wider
+        was: "Pascal Koiran showed in 1996 that, under the generalized hypothesis, there is a short randomized proof that a system of polynomial equations has a solution. Results on recognizing three-dimensional shapes, such as the 3-sphere, build on it."
+        now: "Not settled: the input is the effective Chebotarev theorem for number fields."
+        left: "Extend the proof, or replace the hypothesis by a weaker one, as a preprint of November 2026 by Baldwin and Sivek sets out to do."
+        d: 3
+        src: "P. Koiran, J. Complexity 12 (1996); J. Baldwin, S. Sivek, preprint (2026)."
+      - t: "The grand hypothesis for every L-function"
+        area: "Number fields"
+        needs: wider
+        was: "The same statement is expected for every L-function that arises from arithmetic: Hecke’s, Artin’s, and those of automorphic forms."
+        now: "Not proved. (Over finite fields the matching statement has been a theorem since Weil in 1948 and Deligne in 1974.)"
+        left: "A proof for each family, or one for all. No one has claimed it."
+        d: 4
+        src: "H. Iwaniec, E. Kowalski, Analytic Number Theory (2004), ch. 5."
+  - id: extra
+    status: "Half settled"
+    h: "Partly: results that need the hypothesis and something more"
+    intro: "Here the hypothesis was one of two assumptions. One is now secure; the other is not."
+    items:
+      - t: "Prime number races"
+        area: "Primes in progressions"
+        needs: extra
+        was: "Count primes of the form 4k + 3 against primes of the form 4k + 1 as x grows. Rubinstein and Sarnak showed in 1994 that the 4k + 3 team is ahead 99.59% of the time (in a logarithmic sense), assuming the generalized hypothesis and also that the zeros’ heights satisfy no hidden linear relations."
+        now: "The first assumption is proved."
+        left: "The second, “linear independence”, is wide open; no single case is known."
+        d: 4
+        src: "M. Rubinstein, P. Sarnak, Exp. Math. 3 (1994)."
+      - t: "The exact size of the error in the prime count"
+        area: "Counting primes"
+        needs: extra
+        was: "Montgomery guessed in 1980 how large π(x) − li(x) gets at its worst, using the hypothesis and a model of the zeros as independent."
+        now: "The hypothesis part is secure."
+        left: "The independence of the zeros, as above."
+        d: 4
+        src: "H. Montgomery (1980)."
+      - t: "Random matrices and the zeros"
+        area: "The zeta function"
+        needs: extra
+        was: "The Montgomery–Odlyzko law says the zeros are spaced like eigenvalues of random matrices. It is usually stated with the hypothesis assumed, so that the spacings are spacings of real numbers."
+        now: "The statement now makes sense with no assumption."
+        left: "It is still a conjecture, supported by billions of computed zeros and proved only in limited ranges."
+        d: 4
+        src: "A. Odlyzko, Math. Comp. 48 (1987)."
+        link: { url: "connections/rhythm-of-numbers/#zeros", label: "Listen to the zeros" }
+  - id: untouched
+    status: "Not settled"
+    h: "Not touched: famous problems the hypothesis was never known to settle"
+    intro: "It is often said that a proof of the Riemann Hypothesis would unlock “everything about primes”. It unlocks a great deal about how evenly primes are spread. These it does not reach."
+    items:
+      - t: "Twin primes, Goldbach, Legendre and n² + 1"
+        area: "Counting primes"
+        needs: none
+        was: "Landau listed these four in 1912 as “unattackable”: infinitely many prime pairs two apart; every even number a sum of two primes; a prime between consecutive squares; infinitely many primes one more than a square."
+        now: "None follows from the hypothesis, in any form."
+        left: "All four."
+        d: 5
+        src: "E. Landau, address to the International Congress of Mathematicians (1912)."
+      - t: "Breaking codes"
+        area: "Algorithms"
+        needs: none
+        was: "A popular belief holds that a proof of the hypothesis would break the encryption that protects the internet."
+        now: "It does not. Those systems rest on the difficulty of factoring large numbers and of related problems, and no known result turns the hypothesis into a faster way to factor. Algorithms that assumed it could already be run as if it were true."
+        left: "Nothing follows for security."
+        d: 0
+        src: "No published result turns the hypothesis into a faster way to factor."
+      - t: "Why the zeros are where they are"
+        area: "The zeta function"
+        needs: none
+        was: "Hilbert and Pólya suggested, about 1914, that the zeros are the vibration frequencies of some unknown physical-style system, which would explain the hypothesis and the random-matrix pattern together."
+        now: "A proof that the zeros are on the line does not have to supply such a system. Whether this one does will not be known until people can read it."
+        left: "Find the system, or show there is none."
+        d: 4
+        src: "See H. Montgomery (1973), and A. Odlyzko’s correspondence with G. Pólya."
+      - t: "The other Millennium Prize problems"
+        area: "Other"
+        needs: none
+        was: "The Riemann Hypothesis is one of seven problems for which the Clay Mathematics Institute offered a million dollars in 2000. One, the Poincaré conjecture, was solved by Grigori Perelman in 2003."
+        now: "The others, such as P versus NP and the Birch and Swinnerton-Dyer conjecture, are not affected."
+        left: "All five that remain."
+        d: 5
+        src: "Clay Mathematics Institute."
