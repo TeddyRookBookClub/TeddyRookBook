@@ -42,7 +42,7 @@
           <span class="egat-cardtop"><span><b>{{ .name }}</b>{{ with .anc }}<br><span class="egat-cardanc">{{ . }}</span>{{ end }}</span>{{ range first 1 (where .inscriptions "segs" "!=" nil) }}<span class="egat-cardgl" aria-hidden="true" data-segs="{{ first 1 .segs | jsonify }}"></span>{{ end }}</span>
           <span class="egat-cardsum">{{ .summary }}</span>
           <span class="egat-chips">{{ range .periods }}<span class="egat-chip">{{ index $PN . }}</span>{{ end }}</span>
-          <span class="egat-cardn">{{ len .inscriptions }} inscriptions{{ with .models3d }} · 3-D model{{ end }}</span>
+          <span class="egat-cardn">{{ len .inscriptions }} inscriptions{{ if or .models3d .explorer }} · 3-D model{{ end }}</span>
         </a>
       {{ end }}
       </div>

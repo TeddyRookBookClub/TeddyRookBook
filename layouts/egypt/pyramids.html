@@ -1,0 +1,42 @@
+{{- /* /egypt/pyramids/: the Pyramid Explorer. Seven Old Kingdom pyramids drawn with WebGL from surveyed dimensions
+   (static/egypt/pyramids/: model.js data, viewer.js renderer and panels, pyramids.css). No outside libraries.
+   Deep links: /egypt/pyramids/#khufu, #khafre, #menkaure, #meidum, #bent, #red, #djoser. Dates are written BC/AD. */ -}}
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "egypt/pyramids/pyramids.css" | relURL }}?v={{ (partialCached "fv.html" "static/egypt/pyramids/pyramids.css" "static/egypt/pyramids/pyramids.css") }}">
+{{- range slice "egypt/pyramids/model.js" "egypt/pyramids/viewer.js" }}
+<script src="{{ . | relURL }}?v={{ (partialCached "fv.html" (printf "static/%s" .) (printf "static/%s" .)) }}" defer></script>
+{{- end }}
+<div class="hs eg-page pyx-page">
+  <nav class="hs-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "egypt/" | relURL }}">Ancient Egypt</a> › Pyramid Explorer</nav>
+  <header>
+    <h1>{{ .Title }}</h1>
+    <p class="pyx-lead">Seven pyramids of the Old Kingdom, drawn at their surveyed sizes: Djoser’s Step Pyramid, Meidum, the Bent and Red Pyramids of Sneferu, and the three of Giza. Pick a pyramid, drag to turn it, make the casing see-through, and walk the passages. Each one lists its <b>known spaces</b>, the <b>number patterns</b> in its dimensions, and <b>candidate spaces</b> that no one has entered.</p>
+  </header>
+
+  <div id="px" data-pyramid-explorer aria-label="Pyramid Explorer"><p class="pyx-wait"><noscript>The Pyramid Explorer needs JavaScript. </noscript>Loading the explorer…</p></div>
+
+  <section class="hs-sec pyx-about" id="about">
+    <h2>How to read it</h2>
+    <ul>
+      <li><b>Known spaces</b> are passages and chambers that have been entered and measured. Only their surfaces are drawn, in meters and in royal cubits (one cubit is 0.5236 m).</li>
+      <li><b>Patterns</b> are regularities in the surveyed numbers, such as slopes and lengths in whole cubits. A pattern is an observation about the measurements; it does not show what the builders intended.</li>
+      <li><b>Candidates</b> are places where a space might be. Each is marked by its kind of evidence: <b>detected by instruments</b> (for example the “Big Void” that muon detectors found above the Grand Gallery in 2017), <b>suggested by pattern only</b>, or a <b>disputed claim</b>. None has been entered, and those suggested by pattern alone are guesses.</li>
+      <li>Every pyramid has a list of what is simplified or uncertain in the model, and its sources.</li>
+    </ul>
+    <ul class="pyx-jump" aria-label="Open a pyramid">
+      <li><a href="#djoser">Step Pyramid</a></li><li><a href="#meidum">Meidum</a></li><li><a href="#bent">Bent Pyramid</a></li><li><a href="#red">Red Pyramid</a></li><li><a href="#khufu">Great Pyramid</a></li><li><a href="#khafre">Khafre</a></li><li><a href="#menkaure">Menkaure</a></li>
+    </ul>
+  </section>
+
+  <section class="hs-sec pyx-about" id="more">
+    <h2>Learn more</h2>
+    <ul>
+      <li>History: <a href="{{ "egyptology/history/djoser/" | relURL }}">Djoser and the first pyramid</a> and <a href="{{ "egyptology/history/pyramid-age/" | relURL }}">the pyramid age</a>, on the Egyptology Ladder.</li>
+      <li>How a pyramid worked with its temples and causeway: <a href="{{ "egyptology/religion-art-architecture/pyramid-complex/" | relURL }}">the pyramid complex</a>.</li>
+      <li>For young explorers: <a href="{{ "egyptology/young-explorers/steps-to-smooth/" | relURL }}">from steps to smooth sides</a> and <a href="{{ "egyptology/young-explorers/giza/" | relURL }}">the pyramids of Giza</a>.</li>
+      <li>The places: <a href="{{ "egypt/sites/saqqara/" | relURL }}">Saqqara</a>, <a href="{{ "egypt/sites/dahshur/" | relURL }}">Dahshur</a> and <a href="{{ "egypt/sites/giza/" | relURL }}">Giza</a>; and the <a href="{{ "egypt/3d/" | relURL }}#giza">Giza plateau</a> and other sites <a href="{{ "egypt/3d/" | relURL }}">in 3-D</a>.</li>
+    </ul>
+  </section>
+</div>
+{{ end }}

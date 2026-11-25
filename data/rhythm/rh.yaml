@@ -229,6 +229,15 @@ groups:
         left: "Have a number theorist check our write-up, which is on this result’s own page."
         d: 1
         src: "P. Weinberger, Acta Arith. 22 (1973)."
+      - slug: class-groups-of-small-exponent
+        t: "Class groups in which every class has order 5 or less"
+        area: "Quadratic fields"
+        needs: dirichlet
+        was: "The class group of an imaginary quadratic field measures how far the field is from unique factorization. Its exponent is the largest order any class has. The fields with exponent 2, 3, 4, 5 and 8 had been listed (Boyd and Kisilevsky, 1972; Elsenhans, Klüners and Nicolae, 2020), but each list was known to be complete only if the generalized hypothesis holds, or at least if there are no Siegel zeros."
+        now: "The lists are complete: 9 fields with exponent 1, 56 with exponent 2, 17 with 3, 203 with 4 and 27 with 5; and, by the 2020 paper, 778 with exponent 8. The hypothesis they need is the one for real Dirichlet characters, which is proved. We ran the search for exponents 1 to 5 again by our own route and found the same 312 fields."
+        left: "Have a specialist check our re-run, which is on this result’s own page. Exponents 6 and 7 are still open: those lists are known to be complete only up to 3.1 × 10²⁰, and the same method would need searches to about 10²⁵ and 10³⁰."
+        d: 1
+        src: "D. Boyd, H. Kisilevsky, Proc. Amer. Math. Soc. 31 (1972); A.-S. Elsenhans, J. Klüners, F. Nicolae, Acta Arith. 193 (2020)."
       - slug: chebyshevs-claim
         t: "Chebyshev’s claim about primes of the form 4k + 3"
         area: "Primes in progressions"
@@ -261,10 +270,10 @@ groups:
         area: "Number fields"
         needs: dirichlet
         was: "Every number field has its own zeta function. For fields built from roots of unity and their subfields (the abelian fields, which include all quadratic fields), that zeta function is a product of Dirichlet L-functions."
-        now: "So the hypothesis holds for every abelian field, though not yet for number fields in general. Class numbers of real cyclotomic fields that were computed “assuming the hypothesis” (van der Linden, 1982, and later work) should now stand without it."
-        left: "Re-check each such table against the certified statement."
-        d: 1
-        src: "F. van der Linden, Math. Comp. 39 (1982)."
+        now: "So the hypothesis holds for every abelian field, though not yet for number fields in general. Counting the primes of such a field with a guaranteed error needs nothing more."
+        left: "Nothing for the statement itself. A correction to our first version: the class numbers of real cyclotomic fields that were computed “assuming the hypothesis” are not settled by this. They need the hypothesis for a larger field that is not abelian; see “Class groups by computer”."
+        d: 0
+        src: "L. Washington, Introduction to Cyclotomic Fields (Springer, 1997), ch. 4."
       - slug: central-values
         t: "How often an L-function is zero at its centre"
         area: "Primes in progressions"
@@ -352,10 +361,10 @@ groups:
         area: "Algorithms"
         needs: wider
         was: "Computer algebra systems find the class group and units of a number field by trusting Bach’s bound of 1990: under the hypothesis, the prime ideals of norm up to 12 · (ln |Δ|)² are enough. Their manuals say the answer is correct “assuming GRH”."
-        now: "Still conditional. The bound needs the hypothesis for the L-functions of the characters of the field’s own class group (Belabas, Diaz y Diaz and Friedman state it this way), which are not Dirichlet’s, even for quadratic fields."
+        now: "Still conditional. The bound needs the hypothesis for the L-functions of the characters of the field’s own class group (Belabas, Diaz y Diaz and Friedman state it this way), which are not Dirichlet’s, even for quadratic fields. The class numbers of real cyclotomic fields found “assuming the hypothesis” (van der Linden, 1982; Miller, 2015) are in the same position."
         left: "Extend the proof to number fields. Those L-functions are factors of the zeta function of a larger field, the Hilbert class field, so the extended hypothesis would settle this, and the caveat could be deleted from the manuals."
         d: 3
-        src: "E. Bach, Math. Comp. 55 (1990); K. Belabas, F. Diaz y Diaz, E. Friedman, “Small generators of the ideal class group”, Math. Comp. 77 (2008)."
+        src: "E. Bach, Math. Comp. 55 (1990); K. Belabas, F. Diaz y Diaz, E. Friedman, “Small generators of the ideal class group”, Math. Comp. 77 (2008); J. C. Miller, Math. Comp. 84 (2015)."
       - slug: euclidean-rings
         t: "Which rings of numbers have a Euclidean algorithm"
         area: "Number fields"

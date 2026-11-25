@@ -1,0 +1,28 @@
+gcc -O2 -o sieve sieve.c ; gcc -O2 -o enum enum.c -lm        (24-25 November 2026, two cores)
+
+$ ./sieve 1 50000000000 > sv1.txt ; ./sieve 50000000001 100000000000 > sv2.txt
+525840 sv1.txt
+97 sv2.txt                      (no "no split prime below 200" message: every field has a split prime under 200)
+
+$ python3 prefilter.py
+525937 survivors of the sieve; 2323 in which the least split prime has order at most 5
+
+$ gp -q classify.gp
+candidates 2323
+exponent 1: 9 fields, largest |D| = 163
+exponent 2: 56 fields, largest |D| = 5460
+exponent 3: 17 fields, largest |D| = 4027
+exponent 4: 203 fields, largest |D| = 435435
+exponent 5: 27 fields, largest |D| = 37363
+
+$ ./enum 4 396 5400 100000000000
+e=4 primes (396,5400]: x values past the wheel 1633849868, kept 0          (37 s)
+
+$ ./enum 5 119 7297 100000000000 ; ./enum 5 7297 8895 100000000000
+e=5 primes (119,7297]: x values past the wheel 154549531163, kept 0
+e=5 primes (7297,8895]: x values past the wheel 151658075411, kept 0
+(about 53 minutes of processor time each)
+
+Test of enum.c with the floor lowered: ./enum 5 18 400 10000 against a brute-force list (PARI/GP) of every
+fundamental discriminant -d, 10^4 < d <= 400,000, whose least split prime is above 18 and has order dividing 5:
+all 59 are in enum's output (which also lists fields where the prime has order 1 or 3, and some non-fundamental d).

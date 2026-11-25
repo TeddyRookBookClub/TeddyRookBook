@@ -28,6 +28,7 @@
     </div>
     {{ with $S.visual }}<figure class="egat-vis"><div class="ml-viz" data-viz="{{ .viz }}" data-opts="{{ .opts | jsonify }}" aria-label="{{ .caption }}"></div><figcaption>{{ .caption }}</figcaption></figure>{{ end }}
     {{ with $S.models3d }}<div class="egat-3d" id="about-3d">{{ range . }}<a href="{{ printf "egypt/3d/#%s" (index . 0) | relURL }}"><span aria-hidden="true">🧊</span> {{ index . 1 }} →</a>{{ end }}</div>{{ end }}
+    {{ with $S.explorer }}<div class="egat-3d" id="about-explorer">{{ range . }}<a href="{{ printf "egypt/pyramids/#%s" (index . 0) | relURL }}"><span aria-hidden="true">🔺</span> {{ index . 1 }} →</a>{{ end }}</div>{{ end }}
   </section>
 
   <section class="hs-sec" id="inscriptions">
