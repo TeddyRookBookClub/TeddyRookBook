@@ -33,6 +33,8 @@ robins-inequality:
     - "Grönwall showed in 1913 that σ(n) / (n · ln ln n) creeps up toward e^γ = 1.7810… and no higher in the long run. Robin’s discovery was that whether it ever pokes above that line again after 5,040 is exactly the Riemann Hypothesis. A statement about adding divisors, which a child can check for any one number, turned out to be the same as a statement about the zeros of the zeta function."
     - "There are 27 numbers that break the inequality. The largest is 5,040 = 7 × 6 × 5 × 4 × 3 × 2."
   viz: { id: "robin", cap: "σ(n) / (n · ln ln n) for n up to 30,000. The gold line is e^γ. Red dots are the numbers that break the inequality; the last is 5,040. After it, every dot is under the line, and that is now proved for all n." }
+  ours:
+    - "**Now checked by machine.** Robin’s criterion had been formalized in Lean on its own, as an “if and only if” with the Riemann Hypothesis, by another author. On 23 November 2026 Andrew Sutherland’s verification log joined that to the new proof, so that Robin’s inequality for every n above 5,040 and Lagarias’s inequality for every n are now Lean theorems with no hypothesis, accepted by several independent checkers. The log notes that the statements were checked by programs and not audited by a mathematician. We did nothing here ourselves beyond the picture above."
 equivalent-forms:
   one: "More than a hundred statements were known to be true exactly when the Riemann Hypothesis is. All of them are now true."
   story:
@@ -201,6 +203,7 @@ abelian-fields:
     - "This is the bridge between the two halves of the list. Fields of this kind are covered. Fields that are not built from roots of unity are the open half."
   viz: { id: "roots", cap: "The n-th roots of unity: n points equally spaced on a circle. Joining them draws the regular n-sided polygon. Move the slider." }
   ours:
+    - "**A first formal consequence.** The same verification log (24 November 2026) reports a Lean theorem derived from the Dirichlet statement for every cyclotomic field: an inequality of Robin’s kind for the sum of the norms of the divisors of an ideal. It is the first checked result we know of that uses the Dirichlet half of the proof."
     - "**A note on one table.** Van der Linden’s 1982 paper computes the class numbers of most real abelian fields of conductor up to 200, and its summary says that in several cases it has to assume the generalized hypothesis. For an abelian field that hypothesis follows from the Dirichlet case, so those cases should now stand. We read the summary, not the full paper, and we recomputed nothing."
 central-values:
   one: "At least 15 in 16 of the quadratic Dirichlet L-functions are non-zero at the centre point."
@@ -363,9 +366,10 @@ hilbert-polya:
     - "The new proof goes by another road, as far as its author’s outline shows. So the oldest question about the zeros, what they are the frequencies of, may outlive the hypothesis."
   viz: { id: "zline", cap: "The first zeros, as crossings of the curve Z(t). If they are the frequencies of something, nobody yet knows of what." }
 millennium-problems:
-  one: "Five of the seven Millennium Prize problems remain."
+  one: "The other Millennium Prize problems are separate questions, and the proof of the Riemann Hypothesis settles none of them."
   story:
     - "In 2000 the Clay Mathematics Institute chose seven problems and offered a million dollars for each. They are: the Riemann Hypothesis; the Poincaré conjecture; P versus NP; the Birch and Swinnerton-Dyer conjecture; the Hodge conjecture; the existence and smoothness of solutions of the Navier–Stokes equations; and the Yang–Mills mass gap."
     - "Perelman proved the Poincaré conjecture in 2002 and 2003, and declined the prize. The Riemann Hypothesis now has a computer-checked proof, with the human review and the prize decision still to come."
-    - "The other five are in different parts of mathematics and are not known to depend on it. The closest relative is the Birch and Swinnerton-Dyer conjecture, which is about the L-function of an elliptic curve at its centre point."
+    - "2026 has been an unusual year for the rest of the list, and the reports need care. In September a solution of the Navier–Stokes problem was claimed, with a formal proof; a team at Cambridge then reported that the formal file certifies less than the written claim, and the matter is not settled. In November a committee of physicists affirmed a computer-checked proof that Yang–Mills theory exists, and said plainly that they do not yet fully understand it; the mass gap, the other half of that problem, is still open. Also in November a computer-checked proof was posted of an algebraic cousin of P versus NP, called VP ≠ VNP. It is not P versus NP, and no mathematician has yet checked it. We have these from news reports and an encyclopedia, not from the proofs."
+    - "None of these depends on the Riemann Hypothesis. The closest relative is the Birch and Swinnerton-Dyer conjecture, which is about the L-function of an elliptic curve at its centre point; it and the Hodge conjecture have no claimed solution. The institute’s rules ask for publication, two years, and general acceptance before any prize."
   viz: { id: "none", cap: "" }

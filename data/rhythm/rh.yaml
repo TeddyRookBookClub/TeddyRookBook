@@ -55,10 +55,10 @@ groups:
         area: "Equivalent statements"
         needs: zeta
         was: "Write σ(n) for the sum of the divisors of n. Guy Robin proved in 1984 that the Riemann Hypothesis is the same statement as: σ(n) < e^γ · n · ln ln n for every n > 5,040, where γ = 0.5772… is Euler’s constant. Jeffrey Lagarias gave a version in 2002 with no exceptions: σ(n) ≤ Hₙ + e^(Hₙ) · ln Hₙ for every n, where Hₙ = 1 + 1/2 + … + 1/n."
-        now: "Both inequalities are theorems. They can be checked by hand for small n, and 5,040 = 7! is the last number that breaks Robin’s."
+        now: "Both inequalities are theorems. They can be checked by hand for small n, and 5,040 = 7! is the last number that breaks Robin’s. Since 23 November 2026 both are also stated and checked in Lean with no hypothesis, by joining a separate formalization of Robin’s criterion to the proof of the hypothesis."
         left: "Nothing. A direct proof from first principles, not through the zeros, would still be news, since it would be a second proof of the hypothesis."
         d: 0
-        src: "G. Robin, J. Math. Pures Appl. 63 (1984); J. Lagarias, Amer. Math. Monthly 109 (2002)."
+        src: "G. Robin, J. Math. Pures Appl. 63 (1984); J. Lagarias, Amer. Math. Monthly 109 (2002); the Lean check is in A. Sutherland’s verification log (math.mit.edu/~drew/grh), version of 24 November 2026."
       - slug: equivalent-forms
         t: "The other equivalent forms"
         area: "Equivalent statements"
@@ -480,7 +480,7 @@ groups:
         area: "Other"
         needs: none
         was: "The Riemann Hypothesis is one of seven problems for which the Clay Mathematics Institute offered a million dollars in 2000. One, the Poincaré conjecture, was solved by Grigori Perelman in 2003."
-        now: "The others, such as P versus NP and the Birch and Swinnerton-Dyer conjecture, are not affected."
-        left: "All five that remain."
+        now: "None of the others depends on the Riemann Hypothesis, and its proof settles none of them. Two had claims of their own in 2026, made with computer help and still being examined: see this entry’s page."
+        left: "Each is a separate problem. P versus NP, the Hodge conjecture and the Birch and Swinnerton-Dyer conjecture have no claimed solution."
         d: 5
         src: "Clay Mathematics Institute."
