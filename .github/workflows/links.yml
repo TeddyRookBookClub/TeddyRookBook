@@ -1,0 +1,68 @@
+name: Check links
+
+# Builds the site and checks every link on it: internal links against the build, external links by request.
+# It never blocks a deploy. The result is in the run's summary, and when something is broken it opens (or updates)
+# one issue named "Broken links report"; when nothing is broken it closes that issue.
+# Script: scripts/links/check-links.py
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 9 * * 1"     # Mondays, 09:23 UTC
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: "links"
+  cancel-in-progress: true
+
+jobs:
+  links:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: false
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.147.0'
+          extended: true
+
+      - name: Build
+        run: hugo --minify
+
+      - name: Check links
+        run: python3 scripts/links/check-links.py public --report links-report.md --json links-result.json
+
+      - name: Summary
+        if: always()
+        run: cat links-report.md >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Keep the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: links-report
+          path: links-report.md
+          if-no-files-found: ignore
+
+      - name: Open, update or close the issue
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          broken=$(python3 -c "import json; print(json.load(open('links-result.json'))['broken'])")
+          n=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search '"Broken links report" in:title' --json number --jq '.[0].number // empty')
+          head -c 60000 links-report.md > body.md
+          if [ "$broken" -gt 0 ]; then
+            if [ -n "$n" ]; then gh issue edit "$n" --repo "$GITHUB_REPOSITORY" --body-file body.md
+            else gh issue create --repo "$GITHUB_REPOSITORY" --title "Broken links report" --body-file body.md; fi
+          elif [ -n "$n" ]; then
+            gh issue close "$n" --repo "$GITHUB_REPOSITORY" --comment "The latest check found no broken links."
+          fi

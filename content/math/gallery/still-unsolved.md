@@ -1,6 +1,6 @@
 ---
 title: "Still unsolved"
-summary: "Four questions about whole numbers that anyone can understand and no one has answered: twin primes, Goldbach, Collatz and the Riemann hypothesis."
+summary: "Four questions about whole numbers that anyone can understand: twin primes, Goldbach, Collatz and the Riemann hypothesis. Three are still open. The fourth got a computer-checked proof in November 2026."
 emoji: "❓"
 gtags: [unsolved, numbers, famous-problems]
 weight: 320
@@ -23,6 +23,7 @@ credits:
   - { name: "Riemann hypothesis (Grokipedia)", url: "https://grokipedia.com/page/Riemann_hypothesis", what: "the statement and its history" }
   - { name: "D. Platt and T. Trudgian, The Riemann hypothesis is true up to 3·10¹², Bulletin of the London Mathematical Society 53 (2021)", url: "https://arxiv.org/abs/2004.09765v1", what: "the rigorous check of the zeros" }
   - { name: "L. Guth and J. Maynard, New large value estimates for Dirichlet polynomials, Annals of Mathematics 203 (2026)", url: "https://annals.math.princeton.edu/2026/203-2/p06", what: "the 2024 advance on how many zeros can be off the line" }
+  - { name: "Lean and Mathlib communities, Lean verification of the Riemann Hypothesis (21 November 2026)", url: "https://leanprover-community.github.io/blog/posts/riemann-hypothesis/", what: "the certification of the computer-checked proof" }
   - { name: "Clay Mathematics Institute, The Millennium Prize Problems (2006)", url: "https://www.claymath.org/library/monographs/MPPc.pdf", what: "the prize and the official statement of the problem" }
 ---
 ## What you're seeing
@@ -34,7 +35,7 @@ Pick one of four problems at the top. Each has a box to try your own numbers and
 - **Collatz.** Type a start and follow the halve-or-triple-plus-one rule down to 1. The Collatz page in this gallery explores this one in depth.
 - **Riemann hypothesis.** Pick where to start on the line, and the page draws a wave called $Z(t)$. Each place it crosses zero (red dot) is a zero of the Riemann zeta function.
 
-Every case you try will work. That's the point: no one has found a counterexample, and no one has a proof.
+Every case you try will work. For three of the four, that's the point: no one has found a counterexample, and no one has a proof. The fourth, the Riemann hypothesis, was in the same position for 167 years, until November 2026.
 
 ## Why it works
 
@@ -52,7 +53,7 @@ The chart shows how closely real counts follow this.
 
 $$\zeta(s) = 1 + \frac{1}{2^s} + \frac{1}{3^s} + \cdots,$$
 
-and Bernhard Riemann showed in 1859 that its zeros control exactly how the primes are spread out. Besides "trivial" zeros at $-2, -4, -6, \ldots$, all its zeros lie in a strip, and Riemann guessed they all lie on the middle line where $s = \tfrac12 + it$. On that line there is a real-valued wave $Z(t)$, made by Hardy, with $|Z(t)| = |\zeta(\tfrac12 + it)|$. So every sign change of $Z$ is a zero on the line. The page computes $Z(t)$ with the Riemann–Siegel formula,
+and Bernhard Riemann showed in 1859 that its zeros control exactly how the primes are spread out. Besides "trivial" zeros at $-2, -4, -6, \ldots$, all its zeros lie in a strip, and Riemann guessed in 1859 that they all lie on the middle line where $s = \tfrac12 + it$. On that line there is a real-valued wave $Z(t)$, made by Hardy, with $|Z(t)| = |\zeta(\tfrac12 + it)|$. So every sign change of $Z$ is a zero on the line. The page computes $Z(t)$ with the Riemann–Siegel formula,
 
 $$Z(t) \approx 2\sum_{n \le \sqrt{t/2\pi}} \frac{\cos\big(\theta(t) - t\ln n\big)}{\sqrt{n}},$$
 
@@ -60,7 +61,7 @@ plus a small correction term. The first zero is at $t \approx 14.1347$. The page
 
 ## Where it stands today
 
-As of 2026, all four are **unsolved**. Here is what is proved and what has been checked.
+As of late November 2026, three of the four are **unsolved**, and the Riemann hypothesis has a proof that computers have checked and people are still learning to read. Here is what is proved and what has been checked.
 
 **Twin primes** (are there infinitely many pairs $p$, $p + 2$?)
 - In 2013 Yitang Zhang proved that infinitely many pairs of primes differ by less than 70,000,000. James Maynard (and, separately, Terence Tao) soon cut this to 600, and a large online collaboration (Polymath) brought it down to **246** in 2014. Getting from 246 to 2 needs new ideas.
@@ -79,6 +80,9 @@ As of 2026, all four are **unsolved**. Here is what is proved and what has been 
 - G. H. Hardy proved in 1914 that infinitely many zeros lie on the line. Since 1989, at least 40% of them are known to be on it.
 - Every zero with $0 < t \le 3 \times 10^{12}$ has been checked and lies on the line (Platt and Trudgian, 2021).
 - In 2024 Larry Guth and James Maynard proved a new limit on how many zeros could possibly be off the line, the first big improvement of its kind since the 1940s.
+- **On 20 November 2026 Levent Alpöge released a proof** written in Lean, a language in which a computer checks every logical step. The next day the Lean and Mathlib communities certified that both the statement and the proof are correct. The proof is about 17 million lines long, and no one has yet written it out in a form a person can follow; mathematicians are working on that now.
+- So the answer is in, as far as several independent checking programs can tell: every zero is on the line. The prize has its own rules (publication, then two years of acceptance by mathematicians), and that clock has not started.
+- What the proof means for dozens of results that had assumed the hypothesis is on our page [After the Riemann Hypothesis](/connections/rhythm-of-numbers/riemann-hypothesis/).
 
 ## Try this
 

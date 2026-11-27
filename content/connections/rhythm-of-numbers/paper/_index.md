@@ -1,7 +1,7 @@
 ---
 title: "The Rhythm of Numbers: the paper"
 linkTitle: "The paper"
-description: "A thesis-style monograph by Teddy Rook on continued fractions, primes, music and self-similarity: the rhythm of pi, prime convergents, zeta zeros and random matrices, fractals, the Continued-Fraction Suite, and new work on six open questions, and a chapter on physics and astronomy. Free PDF, 200 pages."
+description: "A thesis-style monograph by Teddy Rook on continued fractions, primes, music and self-similarity: the rhythm of pi, prime convergents, zeta zeros and random matrices, fractals, the Continued-Fraction Suite, and new work on six open questions, and a chapter on physics and astronomy. Free PDF, 201 pages."
 layout: rhythm-paper
 # The PDF is static/pdfs/The-Rhythm-of-Numbers-paper.pdf. Its full TeX source, bibliography and the Python scripts
 # that compute every number and figure are in docs/papers/rhythm-of-numbers/ (see its README for build commands).
@@ -9,7 +9,7 @@ layout: rhythm-paper
 # Each chapter links to its page in the PDF (#page=N, pages in data/rhythm/paper_pages.yaml) and, through site:, to
 # the matching place on the site. After a rebuild run `python3 scripts/rhythm/check-paper-links.py` (--fix updates the pages).
 pdf: "/pdfs/The-Rhythm-of-Numbers-paper.pdf"
-pdf_size: "200 pages, 2.4 MB"
+pdf_size: "201 pages, 2.4 MB"
 paper_title: "The Rhythm of Numbers: Continued Fractions, Primes, Music and Self-Similarity"
 year: 2026
 found_intro: "The paper ended with six open questions. Chapters 15, 16 and 17 report what happened when we went back to them, three times. Most are famous unsolved problems, and they are still unsolved. Here is where each one stands."
