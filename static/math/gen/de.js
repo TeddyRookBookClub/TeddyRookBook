@@ -2599,7 +2599,7 @@
 /* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
    generator still has few different problems at a level sometimes asks the same skill in another form, built only from
    problems that generator made, so every answer is the generator's own:
-   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+   - check an answer: the question with a classmate's answer, and "Is the classmate right?" (Yes / No; not in placement). The
      classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
      checker rejects it;
    - two at once: two different short questions of the topic, answered together.
@@ -2631,8 +2631,12 @@
   function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
   function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
   // a nearby wrong answer for a number or an expression, or null
-  function wrongFor(R, a) {
+  function wrongFor(R, a, slips) {
     var v = String(ML.answerValue(a)), cands = [], m;
+    if (slips && slips.length) { // the generator's own list of real mistakes for this problem comes first
+      var sl = R.shuffle(slips.map(String).filter(function (c, i, all) { return c !== v && all.indexOf(c) === i; }));
+      for (var si = 0; si < sl.length; si++) if (okAns(a, sl[si]) === false) return sl[si];
+    }
     if (a.t === 'num') {
       if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
       else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
@@ -2677,12 +2681,12 @@
       shown = a.choices[k]; good = a.choices[a.v];
     } else {
       good = ML.answerShow(a);
-      var w = right ? null : wrongFor(R, a);
+      var w = right ? null : wrongFor(R, a, p.slips);
       if (!right && w === null) return null;
       shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
       if (!shown || /undefined|NaN/.test(shown)) return null;
     }
-    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is the classmate right?</p>';
     var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
       hint: 'Work it out yourself first, then compare.',
       steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };

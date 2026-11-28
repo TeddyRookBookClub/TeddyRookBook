@@ -1002,6 +1002,31 @@
     } catch (e) { return String(s); }
   };
 
+  // ===================================================================== TeX -> readable plain text (for problem reports)
+  // ML.texToText("5{,}618") -> "5,618";  "a^{2} + 2ab"  -> "a² + 2ab";  "\frac{1}{2}x" -> "(1/2)x";  "\sqrt{2}" -> "√2".
+  // It does not have to be perfect: whatever it does not know, it leaves as plain words without backslashes or braces.
+  ML.texToText = function (t) {
+    var SUP = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻', '+': '⁺', 'n': 'ⁿ' };
+    var SYM = { times: '×', cdot: '·', div: '÷', pm: '±', mp: '∓', le: '≤', leq: '≤', ge: '≥', geq: '≥', ne: '≠', neq: '≠', approx: '≈', equiv: '≡', pi: 'π', theta: 'θ', alpha: 'α', beta: 'β', gamma: 'γ', delta: 'δ', Delta: 'Δ', lambda: 'λ', mu: 'μ', sigma: 'σ', Sigma: 'Σ', omega: 'ω', Omega: 'Ω', phi: 'φ', varphi: 'φ', rho: 'ρ', tau: 'τ', epsilon: 'ε', varepsilon: 'ε', infty: '∞', to: '→', rightarrow: '→', Rightarrow: '⇒', leftarrow: '←', leftrightarrow: '↔', ldots: '…', dots: '…', cdots: '…', circ: '°', degree: '°', angle: '∠', triangle: '△', perp: '⊥', parallel: '∥', cup: '∪', cap: '∩', 'in': '∈', notin: '∉', subset: '⊂', subseteq: '⊆', emptyset: '∅', land: '∧', lor: '∨', neg: '¬', lnot: '¬', forall: '∀', exists: '∃', partial: '∂', nabla: '∇', int: '∫', sum: 'Σ', prod: 'Π', square: '□', mid: '|', ell: 'ℓ', hbar: 'ħ', quad: ' ', qquad: ' ', lt: '<', gt: '>', sim: '~', propto: '∝', lfloor: '⌊', rfloor: '⌋', lceil: '⌈', rceil: '⌉', langle: '⟨', rangle: '⟩', vert: '|' };
+    function simple(x) { return /^[\w.,π√°%]*$/.test(x); }
+    var s = String(t == null ? '' : t), prev, guard = 0;
+    s = s.replace(/\{,\}/g, ',').replace(/\\[,;:! ]/g, ' ').replace(/\\(left|right|big|Big|bigg|Bigg|displaystyle|textstyle|limits|nolimits)(?![A-Za-z])/g, '');
+    s = s.replace(/\\role(\[[^\]]*\])?\{[^{}]*\}/g, '');                                   // formula colors: keep the content, drop the role
+    do { prev = s;                                                                          // from the innermost braces outward
+      s = s.replace(/\\(?:text|mathrm|mathbf|mathit|mathsf|textbf|textit|operatorname|boldsymbol|mathbb|mathcal|vec|bar|overline|hat|tilde|underline)\s*\{([^{}]*)\}/g, '$1');
+      s = s.replace(/\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, function (_, a, b) { return '(' + (simple(a) ? a : '(' + a + ')') + '/' + (simple(b) ? b : '(' + b + ')') + ')'; });
+      s = s.replace(/\\sqrt\s*\[([^\]]*)\]\s*\{([^{}]*)\}/g, function (_, n, a) { return (n === '3' ? '∛' : 'root' + n + ' of ') + (simple(a) ? a : '(' + a + ')'); });
+      s = s.replace(/\\sqrt\s*\{([^{}]*)\}/g, function (_, a) { return '√' + (simple(a) ? a : '(' + a + ')'); });
+      s = s.replace(/\\binom\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, 'C($1, $2)');
+      s = s.replace(/\^\s*\{([^{}]*)\}/g, function (_, a) { a = a.replace(/\\circ/g, '°'); if (a === '°') return '°'; var ok = a.split('').every(function (c) { return SUP[c]; }); return ok && a ? a.split('').map(function (c) { return SUP[c]; }).join('') : '^' + (simple(a) ? a : '(' + a + ')'); });
+      s = s.replace(/_\s*\{([^{}]*)\}/g, function (_, a) { return '_' + (simple(a) ? a : '(' + a + ')'); });
+    } while (s !== prev && ++guard < 40);
+    s = s.replace(/\^(\d)(?!\d)/g, function (_, d) { return SUP[d]; }).replace(/\^\\circ/g, '°');
+    s = s.replace(/([A-Za-z0-9)])?\\([A-Za-z]+)/g, function (_, before, w) { before = before || ''; return SYM[w] !== undefined ? before + SYM[w] : before + (before ? ' ' : '') + w + ' '; });
+    s = s.replace(/\\([%$#&_{}|])/g, '$1').replace(/\\\\/g, '; ').replace(/[{}]/g, '').replace(/&/g, ' ').replace(/~/g, ' ');
+    return s.replace(/\s+/g, ' ').replace(/([a-z]) ([⁰¹²³⁴⁵⁶⁷⁸⁹⁻])/g, '$1$2').replace(/\( /g, '(').replace(/ \)/g, ')').trim();
+  };
+
   // ===================================================================== plain math (CAS syntax): parse, print as TeX, convert for the CAS
   var PFN = { sin: 1, cos: 1, tan: 1, sec: 1, csc: 1, cot: 1, asin: 1, acos: 1, atan: 1, arcsin: 1, arccos: 1, arctan: 1, arcsec: 1, arccsc: 1, arccot: 1, sinh: 1, cosh: 1, tanh: 1,
     sech: 1, csch: 1, coth: 1, ln: 1, log: 1, exp: 1, sqrt: 1, cbrt: 1, root: 1, nthroot: 1, abs: 1, floor: 1, ceil: 1, round: 1, sign: 1, sgn: 1, gcd: 1, lcm: 1, max: 1, min: 1,

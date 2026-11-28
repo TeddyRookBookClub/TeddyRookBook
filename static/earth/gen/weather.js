@@ -2785,10 +2785,10 @@
 /* ---- More forms of the same questions (round 7, "widen"; Physics and Earth ladders): every topic of this course keeps its own generator above and
    sometimes asks the same skill in another form, built only from problems that generator made, so every answer is the
    generator's own:
-   - check an answer: the question, one of its choices as a classmate's answer, and "Is that right?" (Yes / No; not in
+   - check an answer: the question, one of its choices as a classmate's answer, and "Is the classmate right?" (Yes / No; not in
      placement, where a guess is too easy; only for single-answer questions with three or more choices);
    - check a number: the question and a classmate's numeric answer, either the generator's own answer or that answer
-     off by a common slip (a factor of 2, 4 or 10), and "Is that right?" (Yes / No; not in placement);
+     off by a common slip (a factor of 2, 4 or 10), and "Is the classmate right?" (Yes / No; not in placement);
    - two at once: two different questions of the topic, answered together (short questions only, multiple-choice or
      numeric, each keeping its own unit; at most one of them with a picture, which then comes first).
    Placed after the generators and registered with the same ids, so lessons, ids and the engine are unchanged. ---- */
@@ -2821,7 +2821,7 @@
     if (!a || a.t !== 'mc' || Array.isArray(a.v) || !Array.isArray(a.choices) || a.choices.length < 3) return false;
     if (a.choices.some(function (c) { var t = txt(c); return !t || YN.test(t) || t.length > 180; })) return false;
     if (!p.viz && a.choices.some(function (c) { return /^[A-H]$/.test(txt(c)); })) return false; // letters name parts of a picture
-    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b/i.test(txt(p.q))) return false;
+    if (/\b(is|was) (that|this|it) (right|correct)\b|\btrue or false\b|\bis (the classmate|your friend) right\b/i.test(txt(p.q))) return false;
     return !p.unit;
   }
   function numable(p) { // a single numeric answer with a plain decimal value (not a fraction or an expression)
@@ -2839,7 +2839,7 @@
   function numCheckForm(R, p) {
     var a = p.a, v = +a.v, n = sig(a.v), right = R.coin(), f = R.pick([2, 0.5, 10, 0.1, 4, 0.25]), shown = right ? v : v * f;
     var who = 'A classmate worked it out and got', u = p.unit ? ' ' + p.unit : '';
-    var q = p.q + '<p>' + who + ': <b>' + show(shown, n) + u + '</b></p><p>Is that right?</p>';
+    var q = p.q + '<p>' + who + ': <b>' + show(shown, n) + u + '</b></p><p>Is the classmate right?</p>';
     var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
       hint: p.hint || 'Work it out yourself first, then compare.',
       steps: [(right ? 'Yes, that is right.' : 'No. The answer is ' + show(v, n) + u + '; ' + (f > 1 ? 'the classmate\'s answer is ' + f + ' times too big.' : 'the classmate\'s answer is ' + Math.round(1 / f) + ' times too small.'))].concat(p.steps) };
@@ -2863,7 +2863,7 @@
     var a = p.a, right = R.coin(), k = right ? a.v : R.pick(a.choices.map(function (_, i) { return i; }).filter(function (i) { return i !== a.v; }));
     var who = YOUNG ? 'A friend picked' : 'A classmate answered', shown = a.choices[k], good = a.choices[a.v];
     var letters = a.choices.every(function (c) { return /^[A-H]$/.test(txt(c)); });
-    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>Is that right?</p>';
+    var q = p.q + (!letters && listed(p.q.replace(/<p class="(?:ar|wr|gg)-readme">[^]*?<\/p>/, '')) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>' + who + ': <b>' + shown + '</b></p><p>' + (YOUNG ? 'Is your friend right?' : 'Is the classmate right?') + '</p>';
     var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
       hint: p.hint || 'Work it out yourself first, then compare.',
       steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is: ') + end(good)].concat(p.steps) };

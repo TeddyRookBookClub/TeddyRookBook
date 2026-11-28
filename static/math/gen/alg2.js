@@ -1255,9 +1255,11 @@
         steps: ['$x^{2} - y^{2} = ' + (x * x) + ' - ' + (y * y) + ' = ' + A + '$, $2xy = ' + B + '$, $x^{2} + y^{2} = ' + Cc + '$.', 'Check: $' + A + '^{2} + ' + B + '^{2} = ' + (A * A) + ' + ' + (B * B) + ' = ' + (Cc * Cc) + ' = ' + Cc + '^{2}$.', 'In order: $(' + s[0] + ', ' + s[1] + ', ' + Cc + ')$.'], hint: 'Compute $x^2 - y^2$, $2xy$ and $x^2 + y^2$.' }; }
     if (kind === 'mental') { var c = R.pick([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 500]), d = R.int(1, 9), sq = R.coin(); var N = c + d;
       return sq ? { q: 'Use $(a + b)^{2} = a^{2} + 2ab + b^{2}$ to find $' + N + '^{2}$ without a calculator.', a: { t: 'num', v: String(N * N) },
-        steps: ['$' + N + ' = ' + c + ' + ' + d + '$.', '$' + N + '^{2} = ' + c + '^{2} + 2(' + c + ')(' + d + ') + ' + d + '^{2} = ' + (c * c) + ' + ' + (2 * c * d) + ' + ' + (d * d) + ' = ' + (N * N) + '$.'], hint: 'Split ' + N + ' into ' + c + ' + ' + d + '.' }
+        steps: ['$' + N + ' = ' + c + ' + ' + d + '$.', '$' + N + '^{2} = ' + c + '^{2} + 2(' + c + ')(' + d + ') + ' + d + '^{2} = ' + (c * c) + ' + ' + (2 * c * d) + ' + ' + (d * d) + ' = ' + (N * N) + '$.'], hint: 'Split ' + N + ' into ' + c + ' + ' + d + '.',
+          slips: [c * c + d * d, c * c + c * d + d * d] } // the usual mistakes: leaving out 2ab, or not doubling it
         : { q: 'Use $(a + b)(a - b) = a^{2} - b^{2}$ to find $' + (c + d) + ' \\times ' + (c - d) + '$ without a calculator.', a: { t: 'num', v: String((c + d) * (c - d)) },
-          steps: ['$(' + c + ' + ' + d + ')(' + c + ' - ' + d + ') = ' + c + '^{2} - ' + d + '^{2}$.', '$= ' + (c * c) + ' - ' + (d * d) + ' = ' + ((c + d) * (c - d)) + '$.'], hint: 'Both numbers are the same distance from ' + c + '.' }; }
+          steps: ['$(' + c + ' + ' + d + ')(' + c + ' - ' + d + ') = ' + c + '^{2} - ' + d + '^{2}$.', '$= ' + (c * c) + ' - ' + (d * d) + ' = ' + ((c + d) * (c - d)) + '$.'], hint: 'Both numbers are the same distance from ' + c + '.',
+            slips: [c * c + d * d, (c - d) * (c - d)] }; } // adding the squares, or squaring the smaller number
     if (kind === 'missing' && R.coin()) { var kq = R.int(2, 6), mt = R.int(0, 2), MM;
       if (mt === 0) MM = ['(a + ' + kq + 'b)^{2} = a^{2} + \\square + ' + kq * kq + 'b^{2}', 2 * kq + '*a*b', 'Multiply $(a + ' + kq + 'b)(a + ' + kq + 'b)$: the two middle products are each $' + kq + 'ab$, so together $' + 2 * kq + 'ab$.'];
       else if (mt === 1) MM = ['(' + kq + 'a - b)(' + kq + 'a + b) = ' + kq * kq + 'a^{2} - \\square', 'b^2', 'Difference of squares: $(' + kq + 'a)^{2} - b^{2} = ' + kq * kq + 'a^{2} - b^{2}$. The middle products $' + kq + 'ab$ and $-' + kq + 'ab$ cancel.'];
@@ -2283,7 +2285,7 @@
 /* ---- More forms of the same questions (round 7, "widen", a supplement to the wider numbers above): a topic whose own
    generator still has few different problems at a level sometimes asks the same skill in another form, built only from
    problems that generator made, so every answer is the generator's own:
-   - check an answer: the question with a classmate's answer, and "Is that right?" (Yes / No; not in placement). The
+   - check an answer: the question with a classmate's answer, and "Is the classmate right?" (Yes / No; not in placement). The
      classmate's answer is either the right one or a nearby wrong one, and a wrong one is used only when the answer
      checker rejects it;
    - two at once: two different short questions of the topic, answered together.
@@ -2315,8 +2317,12 @@
   function end(s) { s = String(s).replace(/\s+$/, ''); return /[.!?…”’)]$/.test(txt(s)) ? s : s + '.'; }
   function okAns(a, v) { try { return ML.check(a, v).ok; } catch (e) { return null; } }
   // a nearby wrong answer for a number or an expression, or null
-  function wrongFor(R, a) {
+  function wrongFor(R, a, slips) {
     var v = String(ML.answerValue(a)), cands = [], m;
+    if (slips && slips.length) { // the generator's own list of real mistakes for this problem comes first
+      var sl = R.shuffle(slips.map(String).filter(function (c, i, all) { return c !== v && all.indexOf(c) === i; }));
+      for (var si = 0; si < sl.length; si++) if (okAns(a, sl[si]) === false) return sl[si];
+    }
     if (a.t === 'num') {
       if (/^-?\d+$/.test(v)) { var n = +v; cands = [n + 1, n - 1, -n, 2 * n, n + 2, n - 2, n + 10].map(String); }
       else if ((m = /^(-?)(\d+)\/(\d+)$/.exec(v))) { var s = m[1], p = +m[2], q = +m[3]; cands = [s + (p + 1) + '/' + q, s + p + '/' + (q + 1), (s ? '' : '-') + p + '/' + q, s + q + '/' + p, s + (p * 2) + '/' + q]; }
@@ -2361,12 +2367,12 @@
       shown = a.choices[k]; good = a.choices[a.v];
     } else {
       good = ML.answerShow(a);
-      var w = right ? null : wrongFor(R, a);
+      var w = right ? null : wrongFor(R, a, p.slips);
       if (!right && w === null) return null;
       shown = right ? good : ML.answerShow(Object.assign({}, a, { v: w }));
       if (!shown || /undefined|NaN/.test(shown)) return null;
     }
-    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is that right?</p>';
+    var q = p.q + (a.t === 'mc' && listed(p.q) ? '<p>The choices: ' + a.choices.join(' &middot; ') + '</p>' : '') + '<p>A classmate answered: <b>' + shown + '</b></p><p>Is the classmate right?</p>';
     var out = { q: q, a: { t: 'mc', choices: ['Yes', 'No'], v: right ? 0 : 1, keep: true },
       hint: 'Work it out yourself first, then compare.',
       steps: [(right ? 'Yes, that is right: ' : 'No. The right answer is ') + end(good)].concat(p.steps || []) };

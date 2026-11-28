@@ -269,11 +269,13 @@
       if ((o.autofocus !== false || shown > 0) && box && box.focus) setTimeout(function () { try { if (!isOffscreen()) box.focus(); } catch (e) { } }, 30);
       shown++; t0 = Date.now();
     }
-    function txt(h) { try { return (new DOMParser().parseFromString(String(h == null ? '' : h), 'text/html').body.textContent || '').replace(/\s+/g, ' ').trim(); } catch (e) { return String(h || ''); } }
+    function txt(h) { try { return (new DOMParser().parseFromString(String(h == null ? '' : h).replace(/<\/(p|div|li|tr|td|th|h[1-6])>|<br\s*\/?>/gi, '$& '), 'text/html').body.textContent || '').replace(/\s+/g, ' ').trim(); } catch (e) { return String(h || ''); } }
+    // A problem's text for a report: the math as a person would type it, not as TeX ("$5{,}618$" -> "5,618", "$a^{2}$" -> "a²").
+    function plainMath(s) { return String(s == null ? '' : s).replace(/\\\$/g, '\u0001').replace(/\$\$?([^$]*)\$\$?/g, function (_, m) { return ML.texToText ? ML.texToText(m) : m; }).replace(/\u0001/g, '$'); }
     function reportInfo() { // only the problem itself: no names, no progress (report.js reads only these fields too)
       var L = answered ? log[log.length - 1] : null, show = answered && fbOn && mode !== 'quiz' && mode !== 'place';
       return { topic: curId, topicTitle: topicTitle(curId), level: p.level, seed: p.seed, mode: card0 ? (o.genMode || 'quiz') : mode === 'try' ? 'learn' : mode,
-        question: txt(p.q), answered: !!L, given: L ? (L.skipped ? 'skipped' : txt(yours(L))) : '', expected: show ? txt(fmtAnswer(p.a)) : '' };
+        question: plainMath(txt(p.q)), answered: !!L, given: L ? (L.skipped ? 'skipped' : plainMath(txt(yours(L)))) : '', expected: show ? plainMath(txt(fmtAnswer(p.a))) : '' };
     }
     function isOffscreen() { var r = card.getBoundingClientRect(); return r.top > W.innerHeight || r.bottom < 0; }
     function showHint() { if (!p || !p.hint || answered) return; hinted = true; hintEl.hidden = false; hintEl.innerHTML = '<b>Hint.</b> ' + p.hint; typeset(hintEl); bHint.disabled = true; }
